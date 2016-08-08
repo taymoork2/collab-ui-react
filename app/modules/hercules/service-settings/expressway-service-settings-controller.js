@@ -50,17 +50,17 @@
       vm.loading = false;
       vm.sipDomain = res.sipDomain;
       vm.org = res || {};
-    }, function (err) {
+    }, function () {
       //  if (err) return notification.notify(err);
     });
 
     vm.updateSipDomain = function () {
       vm.savingSip = true;
 
-      USSService2.updateOrg(vm.org).then(function (res) {
+      USSService2.updateOrg(vm.org).then(function () {
         vm.storeEc(false);
         vm.savingSip = false;
-      }, function (err) {
+      }, function () {
         vm.savingSip = false;
         Notification.error('hercules.errors.sipDomainInvalid');
       });

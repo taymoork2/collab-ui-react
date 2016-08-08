@@ -5,16 +5,16 @@ describe('Controller: AnalyticsUtilizationGraphController', function () {
   // load the service's module
   beforeEach(angular.mock.module('Mediafusion'));
 
-  var Authinfo, controller, $scope, httpMock, $q, $modal, $state;
+  var controller, $scope, httpMock, $q, $modal;
   var MediaFusionAnalyticsService;
 
-  var clusterNameTest = 'Bangalore-Test';
-  var startTimeTest = '2016-03-28 11:05:56';
-  var endTimeTest = '2016-03-28 12:05:56';
+  // var clusterNameTest = 'Bangalore-Test';
+  // var startTimeTest = '2016-03-28 11:05:56';
+  // var endTimeTest = '2016-03-28 12:05:56';
 
-  beforeEach(angular.mock.module(function ($provide) {
-    // $provide.value("Authinfo", authInfo);
-  }));
+  // beforeEach(angular.mock.module(function ($provide) {
+  //   $provide.value("Authinfo", authInfo);
+  // }));
 
   beforeEach(inject(function ($rootScope, $state, $controller, _$httpBackend_, _$q_, _$modal_, _MediaFusionAnalyticsService_) {
     $scope = $rootScope.$new();

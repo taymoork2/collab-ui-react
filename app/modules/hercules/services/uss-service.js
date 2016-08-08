@@ -35,15 +35,15 @@
           return 'not_entitled';
         }
         switch (status.state) {
-        case 'error':
-          return 'error';
-        case 'deactivated':
-        case 'notActivated':
-          return 'pending_activation';
-        case 'activated':
-          return 'activated';
-        default:
-          return 'unknown';
+          case 'error':
+            return 'error';
+          case 'deactivated':
+          case 'notActivated':
+            return 'pending_activation';
+          case 'activated':
+            return 'activated';
+          default:
+            return 'unknown';
         }
       },
       getOrg: function (orgId, callback) {

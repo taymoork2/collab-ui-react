@@ -85,14 +85,14 @@
 
         vm.label = vm.timeSelected.label;
         date1.setMonth(date1.getMonth() - 1);
-        var prevdate = new Date(date1);
+        prevdate = new Date(date1);
         vm.date = month[prevdate.getMonth()] + ' ' + prevdate.getDate() + ',' + prevdate.getFullYear() + '-' + month[date2.getMonth()] + ' ' + date2.getDate() + ',' + date2.getFullYear();
 
       } else {
 
         vm.label = vm.timeSelected.label;
         date1.setMonth(date1.getMonth() - 3);
-        var prevdate = new Date(date1);
+        prevdate = new Date(date1);
         vm.date = month[prevdate.getMonth()] + ' ' + prevdate.getDate() + ',' + prevdate.getFullYear() + '-' + month[date2.getMonth()] + ' ' + date2.getDate() + ',' + date2.getFullYear();
 
       }
@@ -254,7 +254,7 @@
     }
 
     function setTotalCallsData() {
-      //changing the cluster ID to clister name and this should be changed back to cluster ID in future 
+      //changing the cluster ID to clister name and this should be changed back to cluster ID in future
       MetricsReportService.getTotalCallsData(vm.timeSelected, vm.clusterSelected).then(function (response) {
         if (vm.clusterId === 'All Clusters') {
           if (response === vm.ABORT) {

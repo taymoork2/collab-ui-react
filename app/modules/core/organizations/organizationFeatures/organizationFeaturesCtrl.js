@@ -45,7 +45,7 @@
 
           vm.defaults = dbFeatures.concat(stdFeatures);
         })
-        .catch(function (err) {
+        .catch(function () {
           Notification.error('organizationsPage.errorGettingToggles');
         })
         .finally(vm.resetForm);

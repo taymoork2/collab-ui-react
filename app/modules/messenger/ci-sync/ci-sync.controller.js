@@ -252,7 +252,7 @@
       if (vm.adminTypes.ops === vm.adminType) {
         // SyncService must turn the syncing boolean into the full mode
         SyncService.patchSync(vm.syncInfo.isSyncEnabled, vm.syncInfo.isAuthRedirect)
-          .then(function (successMsg) {
+          .then(function () {
             Notification.success(translatePrefix + 'patchSuccessful');
           }, function (errorObj) {
             var error = $translate.instant(translatePrefix + 'errorFailedUpdatingCISync') + errorObj.message;

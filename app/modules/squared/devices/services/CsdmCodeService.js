@@ -9,7 +9,7 @@
     var codeCache = CsdmCacheFactory.create({
       remove: $http.delete,
       update: function (url, obj) {
-        return $http.patch(url, obj).then(function (res) {
+        return $http.patch(url, obj).then(function () {
           // todo: hackorama - API is fubar
           var code = _.clone(codeCache.list()[url]);
           if (obj.description) {

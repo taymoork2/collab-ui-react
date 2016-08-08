@@ -54,9 +54,9 @@
 
     function loadDevices(userUuid) {
       return UserEndpointService.query({
-          customerId: Authinfo.getOrgId(),
-          userId: userUuid
-        }).$promise
+        customerId: Authinfo.getOrgId(),
+        userId: userUuid
+      }).$promise
         .then(function (devices) {
           var deviceList = [];
           for (var i = 0; i < devices.length; i++) {

@@ -1,7 +1,7 @@
 'use strict';
 describe('Controller: ReassignClusterControllerV2', function () {
   beforeEach(angular.mock.module('Mediafusion'));
-  var vm, redirectTargetPromise, connector, controller, cluster, MediaClusterServiceV2, XhrNotificationService, $q, $translate, modalInstanceMock, windowMock;
+  var redirectTargetPromise, connector, controller, cluster, MediaClusterServiceV2, XhrNotificationService, $q, $translate, modalInstanceMock, windowMock;
   beforeEach(inject(function ($controller, _MediaClusterServiceV2_, _XhrNotificationService_, _$q_, _$translate_) {
     connector = {
       hostname: 'hostname',

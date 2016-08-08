@@ -3,13 +3,12 @@
 describe('ReadonlyInterceptor', function () {
   beforeEach(angular.mock.module('core.readonlyinterceptor'));
 
-  var $httpBackend, Interceptor, Authinfo, Notification, $q;
+  var Interceptor, Authinfo, Notification, $q;
 
-  beforeEach(inject(function (_$q_, _$httpBackend_, _ReadonlyInterceptor_, _Authinfo_, _Notification_) {
+  beforeEach(inject(function (_$q_, _ReadonlyInterceptor_, _Authinfo_, _Notification_) {
     Interceptor = _ReadonlyInterceptor_;
     Authinfo = _Authinfo_;
     Notification = _Notification_;
-    $httpBackend = _$httpBackend_;
     $q = _$q_;
     $q.reject = sinon.spy();
   }));
@@ -63,7 +62,7 @@ describe('ReadonlyInterceptor', function () {
         data: "x",
         method: "GET"
       };
-      var response = Interceptor.request(config);
+      Interceptor.request(config);
       expect($q.reject.callCount).toEqual(0);
       expect(Notification.notifyReadOnly.callCount).toEqual(0);
     });
@@ -79,7 +78,7 @@ describe('ReadonlyInterceptor', function () {
         data: "x",
         method: "POST"
       };
-      var response = Interceptor.request(config);
+      Interceptor.request(config);
       expect($q.reject.callCount).toEqual(0);
       expect(Notification.notifyReadOnly.callCount).toEqual(0);
     });

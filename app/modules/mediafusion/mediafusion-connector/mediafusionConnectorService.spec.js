@@ -3,9 +3,8 @@
 describe('Service: MediafusionClusterService', function () {
   beforeEach(angular.mock.module('Mediafusion'));
 
-  var $httpBackend, $location, Service, converter, authinfo;
+  var $httpBackend, Service, converter, authinfo;
   var rootPath = 'https://hercules-integration.wbx2.com/v1/organizations/orgId';
-  var urlPath = 'https://hercules-integration.wbx2.com/v1/organizations';
 
   beforeEach(function () {
     angular.mock.module(function ($provide) {
@@ -16,13 +15,12 @@ describe('Service: MediafusionClusterService', function () {
     });
   });
 
-  beforeEach(inject(function ($injector, _$location_, _MediafusionClusterService_, _Authinfo_) {
+  beforeEach(inject(function ($injector, _MediafusionClusterService_, _Authinfo_) {
     authinfo = _Authinfo_;
     authinfo.getOrgId = sinon.stub().returns("orgId");
 
     Service = _MediafusionClusterService_;
     $httpBackend = $injector.get('$httpBackend');
-    $location = _$location_;
   }));
 
   afterEach(function () {
@@ -116,7 +114,7 @@ describe('Service: MediafusionClusterService', function () {
 
     var callback = sinon.stub();
 
-    var d = Service.removeGroupAssignment('clusterid', 'propertySetId').then(callback);
+    Service.removeGroupAssignment('clusterid', 'propertySetId').then(callback);
     $httpBackend.flush();
 
     expect(callback.callCount).toBe(1);
@@ -222,7 +220,7 @@ describe('Service: MediafusionClusterService', function () {
     expect(callback.args[0][0]).toBeTruthy();
     expect(callback.args[0][1]).toBeFalsy();
 
-    Service.changeRole('roles', 'clusterid', function (data, status) {
+    Service.changeRole('roles', 'clusterid', function (data) {
 
       expect(data.grp.mf.role).toBe('roles');
 

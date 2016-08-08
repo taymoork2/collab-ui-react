@@ -1,8 +1,8 @@
 'use strict';
 
 describe('Controller: HuronFeatureDeleteCtrl', function () {
-  var controller, Notification, AutoAttendantCeService, AutoAttendantCeInfoModelService, AAModelService, HuronFeatureDeleteCtrl, featDefer, AACalendarService;
-  var $rootScope, $scope, $stateParams, $q, $timeout, $translate;
+  var controller, Notification, AutoAttendantCeService, AutoAttendantCeInfoModelService, AAModelService, featDefer, AACalendarService;
+  var $rootScope, $scope, $stateParams, $q, $timeout;
 
   var cesWithNumber = getJSONFixture('huron/json/autoAttendant/callExperiencesWithNumber.json');
   var aaModel = {};
@@ -29,11 +29,10 @@ describe('Controller: HuronFeatureDeleteCtrl', function () {
   beforeEach(angular.mock.module('Huron'));
   beforeEach(angular.mock.module('Sunlight'));
 
-  beforeEach(inject(function (_$rootScope_, $controller, _$translate_, _$q_, _$timeout_, _Notification_, _AutoAttendantCeInfoModelService_, _AutoAttendantCeService_, _AAModelService_, _AACalendarService_) {
+  beforeEach(inject(function (_$rootScope_, $controller, _$q_, _$timeout_, _Notification_, _AutoAttendantCeInfoModelService_, _AutoAttendantCeService_, _AAModelService_, _AACalendarService_) {
     $rootScope = _$rootScope_;
     $scope = $rootScope.$new();
     $q = _$q_;
-    $translate = _$translate_;
     $timeout = _$timeout_;
     Notification = _Notification_;
     AutoAttendantCeService = _AutoAttendantCeService_;
@@ -143,7 +142,7 @@ describe('Controller: HuronFeatureDeleteCtrl', function () {
 
 describe('Huron Feature DeleteCtrl', function () {
 
-  var featureDeleteCtrl, rootScope, $scope, $stateParams, $q, $timeout, $translate, Authinfo, huntGroupService, autoAttendantCeService, Notification, Log, featureDelDeferred;
+  var featureDeleteCtrl, rootScope, $scope, $stateParams, $q, $timeout, $translate, huntGroupService, autoAttendantCeService, Notification, Log, featureDelDeferred;
   var spiedAuthinfo = {
     getOrgId: jasmine.createSpy('getOrgId').and.returnValue('1')
   };

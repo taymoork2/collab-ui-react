@@ -32,8 +32,8 @@
       var assignedLine;
 
       return DirectoryNumberCopyService.query({
-          customerId: Authinfo.getOrgId()
-        }).$promise
+        customerId: Authinfo.getOrgId()
+      }).$promise
         .then(function (lineTemplates) {
           var siteId = Authinfo.getOrgId() + '_000001_ULT';
           if (angular.isArray(lineTemplates.choice) && lineTemplates.choice.length > 0) {
@@ -61,8 +61,8 @@
 
     function assignDn(userUuid, dnUsage, dnPattern) {
       return DirectoryNumberCopyService.query({
-          customerId: Authinfo.getOrgId()
-        }).$promise
+        customerId: Authinfo.getOrgId()
+      }).$promise
         .then(function (lineTemplates) {
           var siteId = Authinfo.getOrgId() + '_000001_ULT';
           if (angular.isArray(lineTemplates.choice) && lineTemplates.choice.length > 0) {
@@ -82,9 +82,9 @@
 
     function getUnassignedDirectoryNumber() {
       return InternalNumberPoolService.query({
-          customerId: Authinfo.getOrgId(),
-          directorynumber: ''
-        }).$promise
+        customerId: Authinfo.getOrgId(),
+        directorynumber: ''
+      }).$promise
         .then(function (directoryNumbers) {
           if (angular.isArray(directoryNumbers) && directoryNumbers.length > 0) {
             var randomIndex = Math.floor(Math.random() * directoryNumbers.length);

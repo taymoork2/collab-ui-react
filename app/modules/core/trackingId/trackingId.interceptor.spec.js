@@ -86,7 +86,7 @@
       // Same uuid
       expect(trackingIdComponents[1]).toEqual(trackingId2Components[1]);
       // Different sequence = old + 1
-      expect(parseInt(trackingIdComponents[2]) + 1).toEqual(parseInt(trackingId2Components[2]));
+      expect(parseInt(trackingIdComponents[2], 10) + 1).toEqual(parseInt(trackingId2Components[2], 10));
     });
 
   });

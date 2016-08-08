@@ -8,7 +8,6 @@ describe('WebExXmlApiFact', function () {
   var $rootScope;
   var deferred;
   var Auth;
-  var SessionStorage;
   var TokenService;
 
   /**
@@ -29,11 +28,10 @@ describe('WebExXmlApiFact', function () {
 
   beforeEach(angular.mock.module('WebExApp'));
 
-  beforeEach(inject(function (_$q_, _$rootScope_, _WebExXmlApiFact_, _Auth_, _SessionStorage_, _TokenService_) {
+  beforeEach(inject(function (_$q_, _$rootScope_, _WebExXmlApiFact_, _Auth_, _TokenService_) {
     $rootScope = _$rootScope_;
     WebExXmlApiFact = _WebExXmlApiFact_;
     Auth = _Auth_;
-    SessionStorage = _SessionStorage_;
     TokenService = _TokenService_;
 
     deferred = _$q_.defer();

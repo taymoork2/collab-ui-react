@@ -142,8 +142,8 @@
       var scimUrl = UrlConfig.getScimUrl(Authinfo.getOrgId()) + '/' + userid;
 
       return $http.get(scimUrl, {
-          cache: true
-        })
+        cache: true
+      })
         .success(function (data, status) {
           data = data || {};
           data.success = true;
@@ -165,10 +165,10 @@
       }
 
       return $http({
-          method: 'PATCH',
-          url: scimUrl,
-          data: userData
-        })
+        method: 'PATCH',
+        url: scimUrl,
+        data: userData
+      })
         .success(function (data, status) {
           data = data || {};
           // This code is being added temporarily to update users on Squared UC
@@ -298,10 +298,10 @@
       };
 
       $http({
-          method: 'PATCH',
-          url: patchUrl,
-          data: requestBody
-        })
+        method: 'PATCH',
+        url: patchUrl,
+        data: requestBody
+      })
         .success(function (data, status) {
           data = data || {};
           data.success = true;
@@ -517,7 +517,7 @@
       var sunlightLicense = _.find(licenses, function (license) {
         return license.id.indexOf(Config.offerCodes.CDC) >= 0;
       });
-      return (typeof sunlightLicense === 'undefined') ? false : true;
+      return typeof sunlightLicense !== 'undefined';
     }
 
     function isHuronUser(allEntitlements) {

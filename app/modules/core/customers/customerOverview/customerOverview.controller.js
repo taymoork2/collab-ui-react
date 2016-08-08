@@ -45,8 +45,8 @@
     FeatureToggleService.atlasCareTrialsGetStatus()
       .then(function (result) {
         if (_.find(vm.currentCustomer.offers, {
-            id: Config.offerTypes.roomSystems
-          })) {
+          id: Config.offerTypes.roomSystems
+        })) {
           vm.showRoomSystems = true;
         }
         setOffers(result);
@@ -79,10 +79,10 @@
       initCustomer();
       getLogoSettings();
       getIsTestOrg();
-      isSetupDone().
-      then(function (results) {
-        vm.isOrgSetup = results;
-      });
+      isSetupDone()
+        .then(function (results) {
+          vm.isOrgSetup = results;
+        });
     }
 
     function resetForm() {
@@ -191,9 +191,9 @@
     function openEditTrialModal() {
       TrialService.getTrial(vm.currentCustomer.trialId).then(function (response) {
         $state.go('trialEdit.info', {
-            currentTrial: vm.currentCustomer,
-            details: response
-          })
+          currentTrial: vm.currentCustomer,
+          details: response
+        })
           .then(function () {
             $state.modal.result.then(function () {
               $state.go('partnercustomers.list', {}, {

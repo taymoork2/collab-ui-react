@@ -67,15 +67,6 @@ eg. `npm start -- --noopen` passes the `--noopen` argument to our `start` task
 
 * Run eslint on entire project
 
-### `npm run jsb`
-
-* Run `js-beautify` on the app
-
-### `npm run jsb-verify`
-
-* Run `js-beautify` on the app without modification
-* Errors on unbeautified files
-
 ### `npm run json-verify`
 
 * Verifies well-formed `.json` files

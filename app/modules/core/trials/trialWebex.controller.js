@@ -90,13 +90,13 @@
       vm.validatingUrl = true;
       return $q(function (resolve, reject) {
         TrialWebexService.validateSiteUrl(siteUrl).then(function (site) {
-            vm.siteUrlErrorCode = site.errorCode;
-            if (site.isValid) {
-              resolve();
-            } else {
-              reject();
-            }
-          })
+          vm.siteUrlErrorCode = site.errorCode;
+          if (site.isValid) {
+            resolve();
+          } else {
+            reject();
+          }
+        })
           .catch(function () {
             reject();
           })

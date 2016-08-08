@@ -4,18 +4,16 @@ describe('Auth Service', function () {
   beforeEach(angular.mock.module('core.auth'));
   beforeEach(angular.mock.module('ngSanitize'));
 
-  var Auth, Authinfo, $httpBackend, Config, Storage, SessionStorage, $rootScope, $state, $sanitize, $q, OAuthConfig, UrlConfig, WindowLocation, TokenService;
+  var Auth, Authinfo, $httpBackend, Storage, SessionStorage, $rootScope, $state, $q, OAuthConfig, UrlConfig, WindowLocation, TokenService;
 
-  beforeEach(inject(function (_Auth_, _Authinfo_, _$httpBackend_, _Config_, _Storage_, _SessionStorage_, _TokenService_, _$rootScope_, _$sanitize_, _$state_, _$q_, _OAuthConfig_, _UrlConfig_, _WindowLocation_) {
+  beforeEach(inject(function (_Auth_, _Authinfo_, _$httpBackend_, _Storage_, _SessionStorage_, _TokenService_, _$rootScope_, _$state_, _$q_, _OAuthConfig_, _UrlConfig_, _WindowLocation_) {
     $q = _$q_;
     Auth = _Auth_;
-    Config = _Config_;
     $state = _$state_;
     Storage = _Storage_;
     Authinfo = _Authinfo_;
     UrlConfig = _UrlConfig_;
     $rootScope = _$rootScope_;
-    $sanitize = _$sanitize_;
     OAuthConfig = _OAuthConfig_;
     $httpBackend = _$httpBackend_;
     SessionStorage = _SessionStorage_;

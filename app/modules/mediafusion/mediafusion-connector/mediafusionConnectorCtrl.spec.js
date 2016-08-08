@@ -6,19 +6,11 @@ describe('Controller: mediafusionConnectorCtrl', function () {
   // load the controller's module
   beforeEach(angular.mock.module('Mediafusion'));
   //Initialize variables
-  var Authinfo, controller, $scope, $state, MediaServiceDescriptor, $httpBackend, authinfo, $q, Notification, XhrNotificationService, proxy;
+  var Authinfo, controller, $scope, $state, MediaServiceDescriptor, $q, Notification, proxy;
   var mediaAgentOrgIds = ['mediafusion'];
   var serviceId = "squared-fusion-media";
   var clusterId = "367dd49b-212d-4e7e-ac12-24eb8ee9d504";
   var connectorName = "MF_Connector";
-  var connector = {
-    id: 'a3628a9d-feff-4820-aa4c-3d887c260150',
-    roleSelected: 'Something',
-    properties: {
-      displayName: 'MF_TEAM'
-    }
-
-  };
 
   beforeEach(function () {
     angular.mock.module(function ($provide) {
@@ -30,10 +22,9 @@ describe('Controller: mediafusionConnectorCtrl', function () {
     });
   });
 
-  beforeEach(inject(function ($controller, $rootScope, _$state_, _$httpBackend_, _MediaServiceDescriptor_, _$q_, _Notification_) {
+  beforeEach(inject(function ($controller, $rootScope, _$state_, _MediaServiceDescriptor_, _$q_, _Notification_) {
     $scope = $rootScope.$new();
     $state = _$state_;
-    $httpBackend = _$httpBackend_;
     $q = _$q_;
     MediaServiceDescriptor = _MediaServiceDescriptor_;
     Notification = _Notification_;
@@ -107,8 +98,6 @@ describe('Controller: mediafusionConnectorCtrl', function () {
 
   it('Cancel Delete Have Been called', function () {
 
-    var deleteClusterId = null;
-    var deleteConnectorName = null;
     //scope.cancelDelete();
     spyOn($scope, 'cancelDelete');
     $scope.cancelDelete();

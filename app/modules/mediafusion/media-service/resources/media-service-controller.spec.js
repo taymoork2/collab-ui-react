@@ -5,12 +5,10 @@ describe('Controller: MediaServiceController', function () {
   // load the service's module
   beforeEach(angular.mock.module('Mediafusion'));
 
-  var Authinfo, controller, $scope, httpMock, $q, $modal, $translate, $state;
+  var controller, $scope, httpMock, $q, $modal, $translate;
   var MediaServiceActivation, MediaClusterService, Notification, XhrNotificationService;
   var mediaAgentOrgIds = ['mediafusion'];
   var serviceId = "squared-fusion-media";
-  var clusterId = "367dd49b-212d-4e7e-ac12-24eb8ee9d504";
-  var connectorName = "MF_Connector";
 
   var authInfo = {
     getOrgId: sinon.stub().returns('5632f806-ad09-4a26-a0c0-a49a13f38873')
