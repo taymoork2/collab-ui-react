@@ -100,9 +100,9 @@
       }
 
       UserServiceCommon.update({
-          customerId: vm.currentUser.meta.organizationID,
-          userId: vm.currentUser.id
-        }, voicemailPayload).$promise
+        customerId: vm.currentUser.meta.organizationID,
+        userId: vm.currentUser.id
+      }, voicemailPayload).$promise
         .then(function () {
           resetForm();
           result.msg = $translate.instant('voicemailPanel.success');

@@ -266,13 +266,13 @@
     function hasSparkCallVoicemailService() {
       hasVoicemailService = false;
       return HuronCustomer.get().then(function (customer) {
-          _.forEach(customer.links, function (service) {
-            if (service.rel === 'voicemail') {
-              hasVoicemailService = true;
-            }
-          });
-        })
-        .catch(function (response) {
+        _.forEach(customer.links, function (service) {
+          if (service.rel === 'voicemail') {
+            hasVoicemailService = true;
+          }
+        });
+      })
+        .catch(function () {
           hasVoicemailService = false;
         });
     }
@@ -376,7 +376,7 @@
           var addedUsersList = [];
           var onboardUser = null;
 
-          _.forEach(response.data.userResponse, function (user, index) {
+          _.forEach(response.data.userResponse, function (user) {
             onboardUser = onboardedUserWithEmail(user.email);
 
             if (user.httpStatus === 200 || user.httpStatus === 201) {
@@ -422,7 +422,7 @@
           });
         } else {
           // for some reason the userResponse is incorrect.  We need to error every user.
-          _.forEach(onboardedUsers, function (user, idx) {
+          _.forEach(onboardedUsers, function (user) {
             addUserErrorWithTrackingID(user.csvRow, user.email, $translate.instant('firstTimeWizard.processBulkResponseError'), response);
           });
         }
@@ -436,12 +436,12 @@
           // need to retry this set of users
           vm.model.retryAfter = response.headers('retry-after') || vm.model.retryAfterDefault;
 
-          _.forEach(onboardedUsers, function (user, index) {
+          _.forEach(onboardedUsers, function (user) {
             vm.model.usersToRetry.push(user);
           });
         } else {
           // fatal error.  flag all users as having an error
-          _.forEach(onboardedUsers, function (user, index) {
+          _.forEach(onboardedUsers, function (user) {
             addUserErrorWithTrackingID(
               user.csvRow,
               user.email,
@@ -462,7 +462,7 @@
        */
       function onboardCsvUsers(usersToOnboard, csvPromise) {
         return csvPromise.then(function () {
-          return $q(function (resolve, reject) {
+          return $q(function (resolve) {
             if (usersToOnboard.length > 0) {
               Userservice.bulkOnboardUsers(usersToOnboard, cancelDeferred.promise).then(function (response) {
                 successCallback(response, usersToOnboard);
@@ -649,7 +649,7 @@
        * Process all of the users that need onboarding retried
        */
       function processRetryUsers() {
-        return $q(function (resolve, reject) {
+        return $q(function (resolve) {
 
           vm.model.numRetriesToAttempt--;
 

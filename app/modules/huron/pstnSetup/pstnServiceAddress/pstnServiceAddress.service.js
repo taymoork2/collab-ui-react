@@ -112,8 +112,8 @@
 
     function listCustomerSites(customerId) {
       return TerminusCustomerSiteService.query({
-          customerId: customerId
-        }).$promise
+        customerId: customerId
+      }).$promise
         .then(function (sites) {
           var promises = [];
           // Lookup each site and add the serviceAddress to original response

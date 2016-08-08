@@ -111,7 +111,8 @@
               enabled: true
             })
           };
-        }).value();
+        })
+        .value();
     }
 
     function getFeatureToggles(features) {

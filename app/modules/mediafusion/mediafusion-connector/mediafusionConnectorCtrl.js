@@ -79,7 +79,7 @@
       });
     }
 
-    MediafusionProxy.startPolling(function (err, data) {
+    MediafusionProxy.startPolling(function () {
       $scope.loading = false;
     });
 
@@ -117,7 +117,7 @@
       $state.go('mediafusionconnector');
     };
 
-    $scope.defuseConnector = function (deleteClusterId) {
+    $scope.defuseConnector = function () {
       MediafusionProxy.defuseConnector($scope.deleteClusterId);
       // function (data, status) {
       //.success(function (data, status) {
@@ -133,7 +133,7 @@
         function success() {
           $scope.enableOrpheusForMediaFusion();
         },
-        function error(data, status) {
+        function error() {
           Notification.error('mediaFusion.mediaServiceActivationFailure');
         });
       //$scope.enableOrpheusForMediaFusion();
@@ -164,7 +164,7 @@
           }
         },
 
-        function error(errorResponse, status) {
+        function error() {
           // Unable to find identityOrgId, add identityOrgId -> mediaAgentOrgId mapping
           var mediaAgentOrgIdsArray = [];
           mediaAgentOrgIdsArray.push(Authinfo.getOrgId());
@@ -176,8 +176,8 @@
 
     $scope.addUserIdentityToMediaAgentOrgMapping = function (mediaAgentOrgIdsArray) {
       MediaServiceDescriptor.setUserIdentityOrgToMediaAgentOrgMapping(mediaAgentOrgIdsArray).then(
-        function success(response) {},
-        function error(errorResponse, status) {
+        function success() {},
+        function error(errorResponse) {
           Notification.error('mediaFusion.mediaAgentOrgMappingFailure', {
             failureMessage: errorResponse.message
           });

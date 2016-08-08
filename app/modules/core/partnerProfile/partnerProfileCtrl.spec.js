@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Controller: PartnerProfileCtrl', function () {
-  var $scope, $controller, controller, $q;
+  var $scope, $controller, $q;
   var Notification, Orgservice, UserListService, FeatureToggleService;
 
   beforeEach(angular.mock.module('Core'));
@@ -33,7 +33,7 @@ describe('Controller: PartnerProfileCtrl', function () {
   }
 
   function initController() {
-    controller = $controller('PartnerProfileCtrl', {
+    $controller('PartnerProfileCtrl', {
       $scope: $scope
     });
     $scope.$apply();

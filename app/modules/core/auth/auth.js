@@ -114,19 +114,19 @@
       return httpGET(listTokensUrl)
         .then(function (response) {
           var promises = [];
-          var refreshTokenData = _.each(response.data.data, function (tokenData) {
+          _.each(response.data.data, function (tokenData) {
             var refreshTokenId = tokenData.token_id;
             var revoke = revokeAuthTokens(refreshTokenId, redirectUrl);
             promises.push(revoke);
           });
           $q.all(promises).catch(function () {
-              handleError('Failed to revoke the refresh tokens');
-            })
+            handleError('Failed to revoke the refresh tokens');
+          })
             .finally(function () {
               completeLogout(redirectUrl);
             });
         })
-        .catch(function (response) {
+        .catch(function () {
           handleError('Failed to retrieve token_id');
         });
     }
@@ -139,7 +139,7 @@
 
     function completeLogout(redirectUrl) {
       clearStorage();
-      // We store a key value in sessionStorage to  
+      // We store a key value in sessionStorage to
       // prevent a login when multiple tabs are open
       SessionStorage.put('logout', 'logout');
       WindowLocation.set(redirectUrl);
@@ -207,7 +207,7 @@
             });
           }
           return authData;
-        }).catch(function (res) {
+        }).catch(function () {
           return authData;
         });
     }

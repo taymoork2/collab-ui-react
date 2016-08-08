@@ -25,7 +25,7 @@
   /* @ngInject */
   function HideIfReadOnlyAdmin(Authinfo) {
 
-    function link(scope, element, attributes) {
+    function link(scope, element) {
       if (Authinfo.isReadOnlyAdmin()) {
         element.hide();
       }

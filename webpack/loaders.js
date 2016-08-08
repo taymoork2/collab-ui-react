@@ -8,7 +8,7 @@ exports.js = {
 
 exports.lint = {
   test: /\.js$/,
-  loaders: ['eslint', 'jscs'],
+  loaders: ['eslint'],
   exclude: [/node_modules/, /\.spec\.js$/],
 };
 

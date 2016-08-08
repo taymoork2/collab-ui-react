@@ -33,6 +33,8 @@ screenshots
 typings
 /ts/*manifest.txt
 flist-split.*.karma.shim.js
+karma.conf.local.js
+karma.shim.local.js
 
 bower_components
 build-deps.tar

@@ -136,7 +136,7 @@
     }
 
     function getUsers(getAdmins, receivedUsers) {
-      UserListService.listUsers(0, 20, null, null, function (data, status, searchStr) {
+      UserListService.listUsers(0, 20, null, null, function (data) {
         var i = 0;
 
         if (true === data.success) {

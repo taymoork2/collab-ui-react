@@ -120,7 +120,7 @@
         validateDnForUser();
         vm.isReset = true;
         vm.isResetInProgress = false;
-      }).catch(function (response) {
+      }).catch(function () {
         vm.isResetInProgress = false;
         validateDnForUser();
       });
@@ -221,7 +221,7 @@
 
     // To differentiate the Place list change made by map operation
     //  and other manual/reset operation.
-    $scope.$watch('entitylist', function (newVal, oldVal) {
+    $scope.$watch('entitylist', function () {
       if (vm.isMapped) {
         vm.isMapped = false;
       } else {

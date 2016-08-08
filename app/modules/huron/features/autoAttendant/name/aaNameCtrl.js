@@ -65,12 +65,12 @@
     function evalKeyPress($keyCode) {
       switch ($keyCode) {
         //right arrow
-      case 39:
-        nextPage();
-        break;
+        case 39:
+          nextPage();
+          break;
 
-      default:
-        break;
+        default:
+          break;
       }
     }
 

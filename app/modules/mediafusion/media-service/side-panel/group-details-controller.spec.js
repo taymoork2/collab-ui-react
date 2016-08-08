@@ -4,7 +4,7 @@ describe('Controller: GroupDetailsController', function () {
 
   beforeEach(angular.mock.module('Mediafusion'));
 
-  var $stateParams, controller;
+  var controller;
 
   beforeEach(inject(function ($stateParams, $controller) {
     $stateParams = $stateParams;

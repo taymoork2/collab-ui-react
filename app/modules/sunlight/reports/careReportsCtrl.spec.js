@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Controller: Care Reports Controller', function () {
-  var controller, $scope, $translate, $timeout, SunlightReportService, DummyCareReportService, $q, deferred;
+  var controller, $translate, $timeout, SunlightReportService, DummyCareReportService, deferred;
   var timeOptions = [{
     value: 0,
     label: 'careReportsPage.today',
@@ -36,14 +36,12 @@ describe('Controller: Care Reports Controller', function () {
   beforeEach(angular.mock.module('Core'));
   beforeEach(angular.mock.module('Sunlight'));
   beforeEach(
-    inject(function ($rootScope, $controller, _$q_, _$translate_, _$timeout_, _SunlightReportService_, _DummyCareReportService_) {
-      $q = _$q_;
-      $scope = $rootScope.$new();
+    inject(function ($controller, $q, _$translate_, _$timeout_, _SunlightReportService_, _DummyCareReportService_) {
       $translate = _$translate_;
       $timeout = _$timeout_;
       SunlightReportService = _SunlightReportService_;
       DummyCareReportService = _DummyCareReportService_;
-      deferred = _$q_.defer();
+      deferred = $q.defer();
       spyOn(SunlightReportService, 'getReportingData').and.returnValue(deferred.promise);
       spyOn(DummyCareReportService, 'dummyOrgStatsData');
       controller = $controller('CareReportsController', {

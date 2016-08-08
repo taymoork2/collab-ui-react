@@ -15,7 +15,7 @@
         return $http.delete(url);
       },
       update: function (url, obj) {
-        return $http.patch(url, obj).then(function (res) {
+        return $http.patch(url, obj).then(function () {
           // return CsdmConverter.convertDevice(res.data);
           // todo: hackorama - API is fubar
           var device = _.clone(deviceCache.list()[url]);
@@ -71,7 +71,7 @@
       return deviceCache.remove(deviceUrl);
     }
 
-    function notifyDevice(deviceUrl, message, callback) {
+    function notifyDevice(deviceUrl, message) {
       return $http.post(deviceUrl + '/notify', message);
     }
 

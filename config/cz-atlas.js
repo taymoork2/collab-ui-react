@@ -117,8 +117,8 @@ module.exports = {
           temp.open('ATLAS_GIT_COMMIT', function (err, info) {
             if (!err) {
               fs.write(info.fd, buildCommit(answers));
-              fs.close(info.fd, function (err) {
-                editor(info.path, function (code, sig) {
+              fs.close(info.fd, function () {
+                editor(info.path, function (code) {
                   if (code === 0) {
                     var commitStr = fs.readFileSync(info.path, {
                       encoding: 'utf8'

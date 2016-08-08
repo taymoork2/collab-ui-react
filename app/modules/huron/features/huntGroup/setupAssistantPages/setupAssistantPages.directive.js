@@ -18,12 +18,8 @@
   });
 
   function createSetupAssistantPageDirective(pageFile) {
-    var huntGroupSA;
-
     var directive = {
-      link: function (scope, element, attrs) {
-        huntGroupSA = scope.huntGroupSA;
-      },
+      link: function () {},
       templateUrl: 'modules/huron/features/huntGroup/setupAssistantPages/' + pageFile,
       restrict: 'EA',
       scope: false
