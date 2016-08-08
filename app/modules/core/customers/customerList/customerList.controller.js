@@ -6,7 +6,7 @@
 
   /* @ngInject */
   function CustomerListCtrl($q, $rootScope, $scope, $state, $stateParams, $templateCache, $translate, $window, Analytics, Authinfo, Config, customerListToggle, ExternalNumberService, FeatureToggleService, Log, Notification, Orgservice, PartnerService, TrialService) {
-    $scope.isCustomerPartner = Authinfo.isCustomerPartner ? true : false;
+    $scope.isCustomerPartner = !!Authinfo.isCustomerPartner;
     $scope.isPartnerAdmin = Authinfo.isPartnerAdmin();
     $scope.activeBadge = false;
     $scope.isTestOrg = false;
@@ -209,48 +209,48 @@
             $scope.currentDataPosition++;
             $scope.load = false;
             // lol getTrialsList doesnt take any params...
-            getTrialsList($scope.currentDataPosition * Config.usersperpage + 1);
+            getTrialsList(($scope.currentDataPosition * Config.usersperpage) + 1);
             $scope.gridApi.infiniteScroll.dataLoaded();
           }
         });
       },
       multiFields: {
         meeting: [{
-            columnGroup: 'conferencing',
-            columnName: 'conferencing',
-            offerCode: 'CF',
-            tooltip: $translate.instant('customerPage.meeting')
-          }, {
-            columnGroup: 'webex',
-            offerCode: 'EE',
-            columnName: 'webexEEConferencing',
-            tooltip: $translate.instant('customerPage.webex')
-          }, {
-            columnGroup: 'webex',
-            offerCode: 'CMR',
-            columnName: 'webexCMR',
-            tooltip: $translate.instant('customerPage.webex')
-          }, {
-            columnGroup: 'webex',
-            offerCode: 'MC',
-            columnName: 'webexMeetingCenter',
-            tooltip: $translate.instant('customerPage.webex')
-          }, {
-            columnGroup: 'webex',
-            offerCode: 'SC',
-            columnName: 'webexSupportCenter',
-            tooltip: $translate.instant('customerPage.webex')
-          }, {
-            columnGroup: 'webex',
-            offerCode: 'TC',
-            columnName: 'webexTrainingCenter',
-            tooltip: $translate.instant('customerPage.webex')
-          }, {
-            columnGroup: 'webex',
-            offerCode: 'EC',
-            columnName: 'webexEventCenter',
-            tooltip: $translate.instant('customerPage.webex')
-          }
+          columnGroup: 'conferencing',
+          columnName: 'conferencing',
+          offerCode: 'CF',
+          tooltip: $translate.instant('customerPage.meeting')
+        }, {
+          columnGroup: 'webex',
+          offerCode: 'EE',
+          columnName: 'webexEEConferencing',
+          tooltip: $translate.instant('customerPage.webex')
+        }, {
+          columnGroup: 'webex',
+          offerCode: 'CMR',
+          columnName: 'webexCMR',
+          tooltip: $translate.instant('customerPage.webex')
+        }, {
+          columnGroup: 'webex',
+          offerCode: 'MC',
+          columnName: 'webexMeetingCenter',
+          tooltip: $translate.instant('customerPage.webex')
+        }, {
+          columnGroup: 'webex',
+          offerCode: 'SC',
+          columnName: 'webexSupportCenter',
+          tooltip: $translate.instant('customerPage.webex')
+        }, {
+          columnGroup: 'webex',
+          offerCode: 'TC',
+          columnName: 'webexTrainingCenter',
+          tooltip: $translate.instant('customerPage.webex')
+        }, {
+          columnGroup: 'webex',
+          offerCode: 'EC',
+          columnName: 'webexEventCenter',
+          tooltip: $translate.instant('customerPage.webex')
+        }
 
         ]
       },
@@ -663,7 +663,7 @@
     }
 
     function getIsTrial(org) {
-      if (!!org.isPartner) return false;
+      if (org.isPartner) return false;
       return _.get(org, 'communications.isTrial', true);
     }
 

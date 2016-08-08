@@ -88,10 +88,10 @@
     function email(_emailData) {
       var emailData = _emailData;
       return $http.post(emailUrl, emailData)
-        .success(function (data, status, headers, config) {
+        .success(function (data, status) {
           LogMetricsService.logMetrics('Email', LogMetricsService.getEventType('EmailService (success) - Type = ' + emailData.type), LogMetricsService.getEventAction('buttonClick'), status, moment(), 1, null);
         })
-        .error(function (data, status, headers, config) {
+        .error(function (data, status) {
           LogMetricsService.logMetrics('Email', LogMetricsService.getEventType('EmailService (error) - Type = ' + emailData.type), LogMetricsService.getEventAction('buttonClick'), status, moment(), 1, null);
         });
     }

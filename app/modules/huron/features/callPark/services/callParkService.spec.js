@@ -2,9 +2,8 @@
 
 describe('Call Park Group Service', function () {
 
-  var HuronConfig, $q, $httpBackend, callParkService, callParkId, getParkListUrl, deleteCPUrl, getParkUrl, customerURL;
-  var customerId = '123',
-    userSearchServiceV2, numberSearchServiceV2;
+  var $httpBackend, callParkService, callParkId, getParkListUrl, deleteCPUrl, customerURL;
+  var customerId = '123';
 
   var spiedAuthinfo = {
     getOrgId: jasmine.createSpy('getOrgId').and.returnValue(customerId)
@@ -20,15 +19,12 @@ describe('Call Park Group Service', function () {
     $provide.value("Authinfo", spiedAuthinfo);
   }));
 
-  beforeEach(inject(function (_$q_, _HuronConfig_, _$httpBackend_, _CallParkService_) {
-    $q = _$q_;
-    HuronConfig = _HuronConfig_;
+  beforeEach(inject(function (_$httpBackend_, _CallParkService_) {
     $httpBackend = _$httpBackend_;
     callParkService = _CallParkService_;
     callParkId = '456';
 
     getParkListUrl = new RegExp(".*/customers/" + customerId + "/features/callparks.*");
-    getParkUrl = new RegExp(".*/customers/" + customerId + "/features/callparks/" + callParkId);
     deleteCPUrl = new RegExp(".*/customers/" + customerId + "/features/callparks/" + callParkId + ".*");
     customerURL = new RegExp(".*/customers/" + customerId + "/users");
   }));
@@ -56,8 +52,8 @@ describe('Call Park Group Service', function () {
 
   it('should fail to get list of callParks when server gives an error', function () {
     $httpBackend.expectGET(getParkListUrl).respond(500);
-    callParkService.getListOfCallParks().then(function (response) {}, function (response) {
-      expect(response.status).toEqual(500);
+    callParkService.getListOfCallParks().then(function () {}, function (error) {
+      expect(error.status).toEqual(500);
     });
   });
 
@@ -71,8 +67,8 @@ describe('Call Park Group Service', function () {
 
   it('should fail to delete a given callPark when server gives an error', function () {
     $httpBackend.expectDELETE(deleteCPUrl).respond(500);
-    callParkService.deleteCallPark(callParkId).then(function (response) {}, function (response) {
-      expect(response.status).toEqual(500);
+    callParkService.deleteCallPark(callParkId).then(function () {}, function (error) {
+      expect(error.status).toEqual(500);
     });
   });
 });

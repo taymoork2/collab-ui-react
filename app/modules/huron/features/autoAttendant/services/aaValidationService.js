@@ -141,9 +141,9 @@
 
     function checkAllKeys(optionMenu, whichLane, outErrors) {
 
-      _.forEach(optionMenu.entries, function (entry, index) {
+      _.forEach(optionMenu.entries, function (entry) {
 
-        /* will be defined only if a submenu. We can make use of this later to 
+        /* will be defined only if a submenu. We can make use of this later to
          * differentiate btw menu and sub menus for the error condition
          */
 

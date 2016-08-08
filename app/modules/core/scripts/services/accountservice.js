@@ -73,10 +73,10 @@
         }
 
         $http({
-            method: 'PATCH',
-            url: accountUrl,
-            data: payload
-          })
+          method: 'PATCH',
+          url: accountUrl,
+          data: payload
+        })
           .success(function (data, status) {
             data = data || {};
             data.success = true;

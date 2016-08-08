@@ -12,12 +12,11 @@
     var READY = 'ready';
     var REFRESH = 'refresh';
 
-    var entitlementsChart;
     var entId = 'entitlementsdiv';
     var entTitle = $translate.instant('reports.UsersOnboarded');
     var partnerCharts = ['entitlements', 'entitlementCount'];
     var entRefreshDiv = 'entitlements-refresh';
-    var cacheValue = (parseInt(moment.utc().format('H')) >= 8);
+    var cacheValue = (parseInt(moment.utc().format('H'), 10) >= 8);
     var dummyChartVals = [];
     var customerList = [];
     var allCustomers = {
@@ -133,12 +132,10 @@
       var formmatedData = [];
       var dateMap = {};
 
-      var dataId = 0;
       for (var i = 0; i < data.length; i++) {
         var obj = data[i];
         var countData = obj.data;
         var countKey = 'count';
-        dataId++;
 
         for (var j = 0; j < countData.length; j++) {
           var date = new Date(countData[j].date);
@@ -226,14 +223,14 @@
           formattedData = formatTimeChartData(response.data.data);
         }
 
-        entitlementsChart = updateChart(formattedData, chartColors.blue, true);
+        updateChart(formattedData, chartColors.blue, true);
       } else {
         if (!response.data.success) {
           errorMessage(entTitle, response);
         }
 
         angular.element('#' + entRefreshDiv).html('<h3 class="dummy-data-message">' + $translate.instant('reportsPage.noData') + '</h3>');
-        entitlementsChart = updateChart(dummyChartVals, chartColors.grayLight, false);
+        updateChart(dummyChartVals, chartColors.grayLight, false);
       }
     });
 

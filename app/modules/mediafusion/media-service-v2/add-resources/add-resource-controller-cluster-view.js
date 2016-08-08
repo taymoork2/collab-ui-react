@@ -44,7 +44,7 @@
       AddResourceCommonServiceV2.redirectPopUpAndClose(hostName, enteredCluster, vm.selectedClusterId, vm.firstTimeSetup);
     }
 
-    function closeSetupModal(isCloseOk) {
+    function closeSetupModal() {
       $state.modal.close();
     }
 

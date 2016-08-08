@@ -1,9 +1,8 @@
 'use strict';
 
 describe('Controller: AAHelpCtrl', function () {
-  var controller, $controller, optionController;
+  var controller, $controller;
   var $rootScope, $scope;
-  var Config;
   var $q;
   var Analytics;
   var AAMetricNameService;
@@ -15,11 +14,10 @@ describe('Controller: AAHelpCtrl', function () {
   beforeEach(angular.mock.module('Huron'));
   beforeEach(angular.mock.module('Sunlight'));
 
-  beforeEach(inject(function (_$rootScope_, _$controller_, _Config_, _$q_, _Analytics_, _AAMetricNameService_) {
+  beforeEach(inject(function (_$rootScope_, _$controller_, _$q_, _Analytics_, _AAMetricNameService_) {
     $rootScope = _$rootScope_;
     $scope = $rootScope;
     $controller = _$controller_;
-    Config = _Config_;
     $q = _$q_;
     Analytics = _Analytics_;
     AAMetricNameService = _AAMetricNameService_;

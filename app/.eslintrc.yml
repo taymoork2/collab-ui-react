@@ -7,27 +7,17 @@
     browser: false
   rules:
     # airbnb-config inherited rules
-    array-callback-return: 0
     block-scoped-var: 0
-    curly: 0
     default-case: 0
     dot-notation: 0
     guard-for-in: 0
     new-cap: 0
-    no-alert: 0
-    no-cond-assign: 0
-    no-loop-func: 0
     no-param-reassign: 0
+    no-prototype-builtins: 0
     no-restricted-syntax: 0
-    no-self-assign: 0
-    no-spaced-func: 0
-    no-throw-literal: 0
-    no-trailing-spaces: 0
     no-useless-concat: 0
-    no-useless-escape: 0
     one-var-declaration-per-line: 0
     one-var: 0
-    radix: 0
     strict: 0
     wrap-iife: 0
     yoda: 0

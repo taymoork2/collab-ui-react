@@ -3,7 +3,7 @@
 describe('TokenService', function () {
   beforeEach(angular.mock.module('core.token'));
 
-  var Config, SessionStorage, TokenService, $window;
+  var SessionStorage, TokenService, $window;
   var windowMock = {
     open: sinon.stub(),
     sessionStorage: {},
@@ -13,8 +13,7 @@ describe('TokenService', function () {
     }
   };
 
-  beforeEach(inject(function (_Config_, _SessionStorage_, _TokenService_) {
-    Config = _Config_;
+  beforeEach(inject(function (_SessionStorage_, _TokenService_) {
     SessionStorage = _SessionStorage_;
     TokenService = _TokenService_;
     $window = windowMock;

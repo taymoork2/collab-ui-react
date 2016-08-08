@@ -2,13 +2,6 @@
 
 describe('Controller: CustomerOverviewCtrl', function () {
   var $controller, $scope, $stateParams, $state, $window, $q, modal, Authinfo, BrandService, controller, currentCustomer, FeatureToggleService, identityCustomer, newCustomerViewToggle, Orgservice, PartnerService, TrialService, Userservice;
-  var testOrg;
-
-  function LicenseFeature(name, state) {
-    this['id'] = name.toString();
-    this['properties'] = null;
-    //this['state'] = state ? 'ADD' : 'REMOVE';
-  }
 
   var licenseString = 'MC_cfb817d0-ddfe-403d-a976-ada57d32a3d7_100_t30citest.webex.com';
 
@@ -82,7 +75,7 @@ describe('Controller: CustomerOverviewCtrl', function () {
     });
     spyOn(BrandService, 'getSettings').and.returnValue($q.when({}));
     spyOn(TrialService, 'getTrial').and.returnValue($q.when({}));
-    spyOn(Orgservice, 'getOrg').and.callFake(function (callback, orgId) {
+    spyOn(Orgservice, 'getOrg').and.callFake(function (callback) {
       callback(getJSONFixture('core/json/organizations/Orgservice.json').getOrg, 200);
     });
     spyOn(Orgservice, 'isSetupDone').and.returnValue($q.when(false));
@@ -163,9 +156,8 @@ describe('Controller: CustomerOverviewCtrl', function () {
 
     it('should call Userservice.updateUsers with correct license', function () {
       expect(Userservice.updateUsers).toHaveBeenCalledWith([{
-          address: "xyz123@gmail.com"
-        }], jasmine.any(Array),
-        //[new LicenseFeature(licenseString, true)],
+        address: "xyz123@gmail.com"
+      }], jasmine.any(Array),
         null, 'updateUserLicense', jasmine.any(Function));
     });
 

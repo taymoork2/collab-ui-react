@@ -110,7 +110,7 @@
     }
 
     function update(url, obj) {
-      return $http.put(url, obj).then(function (res) {
+      return $http.put(url, obj).then(function () {
         var device = _.clone(deviceList[url]);
         if (obj.description) {
           try {

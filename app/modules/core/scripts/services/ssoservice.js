@@ -66,10 +66,10 @@
         }
 
         $http({
-            method: 'PATCH',
-            url: metaUrl,
-            data: payload
-          })
+          method: 'PATCH',
+          url: metaUrl,
+          data: payload
+        })
           .success(function (data, status) {
             data = data || {};
             data.success = true;

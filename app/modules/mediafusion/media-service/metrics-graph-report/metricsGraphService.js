@@ -283,7 +283,7 @@
       return valueAxis;
     }
 
-    function createAvailabilityGraph(data, selectedCluster) {
+    function createAvailabilityGraph(data) {
       // if there are no active users for this user
       if (data === null || data === 'undefined' || data.length === 0) {
         return;

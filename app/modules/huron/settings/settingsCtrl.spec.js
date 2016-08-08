@@ -3,7 +3,7 @@
 describe('Controller: HuronSettingsCtrl', function () {
   var controller, $controller, $scope, $q, $httpBackend;
   var Authinfo, Notification;
-  var ExternalNumberService, DialPlanService, FeatureToggleService, PstnSetupService, ModalService;
+  var ExternalNumberService, DialPlanService, PstnSetupService, ModalService;
   var HuronCustomer, ServiceSetup, CallerId, HuronConfig, InternationalDialing, VoicemailMessageAction;
   var modalDefer, customer, timezones, timezone, voicemailCustomer, internalNumberRanges;
   var sites, site, companyNumbers, cosRestrictions, customerCarriers, messageAction;

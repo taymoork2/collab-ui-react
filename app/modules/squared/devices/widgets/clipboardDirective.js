@@ -24,10 +24,10 @@
             return scope.sqClipboard();
           }
         });
-        clipBoard.on('success', function (e) {
+        clipBoard.on('success', function () {
           Notification.success('clipboard.success');
         });
-        clipBoard.on('error', function (e) {
+        clipBoard.on('error', function () {
           Notification.error('clipboard.error');
         });
         scope.$on('$destroy', function () {

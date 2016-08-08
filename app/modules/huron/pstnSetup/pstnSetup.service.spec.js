@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Service: PstnSetupService', function () {
-  var $httpBackend, HuronConfig, PstnSetupService, PstnSetup, FeatureToggleService;
+  var $httpBackend, HuronConfig, PstnSetupService, PstnSetup;
 
   var customerId = '744d58c5-9205-47d6-b7de-a176e3ca431f';
   var partnerId = '4e2befa3-9d82-4fdf-ad31-bb862133f078';
@@ -52,10 +52,6 @@ describe('Service: PstnSetupService', function () {
     numbers: onlyPstnNumbers
   };
 
-  var tollFreeOrderPayload = {
-    numbers: onlyTollFreeNumbers
-  };
-
   var Authinfo = {
     getOrgId: jasmine.createSpy('getOrgId').and.returnValue(partnerId)
   };
@@ -67,12 +63,11 @@ describe('Service: PstnSetupService', function () {
     $provide.value("Authinfo", Authinfo);
   }));
 
-  beforeEach(inject(function (_$httpBackend_, _HuronConfig_, _PstnSetupService_, _PstnSetup_, _FeatureToggleService_) {
+  beforeEach(inject(function (_$httpBackend_, _HuronConfig_, _PstnSetupService_, _PstnSetup_) {
     $httpBackend = _$httpBackend_;
     HuronConfig = _HuronConfig_;
     PstnSetupService = _PstnSetupService_;
     PstnSetup = _PstnSetup_;
-    FeatureToggleService = _FeatureToggleService_;
   }));
 
   afterEach(function () {

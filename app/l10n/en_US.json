@@ -213,6 +213,7 @@
       "removeFile": "Remove File",
       "confirmCsvDownloadTitle": "Export User Attributes",
       "confirmCsvDownloadMsg": "Gathering data for export may take awhile. During this time you cannot sign out, or refresh your browser or the export will not complete.",
+      "confirmCsvDownloadMsg10K": "Because you have more than {{maxUsers}} users, the exported list will not show the entitlements that are assigned to your users.",
 
       "newUsers": "Added",
       "existingUsers": "Updated",
@@ -378,7 +379,9 @@
     "alarmsTabDesc": "Alarm Management",
     "eventsTab": "Events",
     "eventsTabDesc": "Event Management",
-    "helpdesk": "Help Desk"
+    "helpdesk": "Help Desk",
+    "careTab": "Care",
+    "careTabDesc": "Cloud Contact Center"
   },
   "index": {
     "welcome": "Welcome!",
@@ -514,6 +517,13 @@
     "assigned": "Assigned",
     "in-queue": "In-Queue",
     "abandoned": "Abandoned",
+    "queueTime": "Queue Time",
+    "avgQueueTime": "Avg Queue Time",
+    "avgHandleTime": "Avg Handle Time",
+    "handleTime": "Handle Time",
+    "averageCsat": "Average CSAT",
+    "avgCsat": "Avg CSAT ",
+    "csatRating": "CSAT Rating",
     "todayCategoryAxis": "Hours",
     "yesterdayCategoryAxis": "Hours",
     "weekCategoryAxis": "Days",
@@ -633,6 +643,14 @@
   "taskIncoming": {
     "title": "Tasks Incoming",
     "description": "The graph depicts the total number of incoming tasks {{time}}. Hover over the area chart for a breakdown of total number of {{taskStatus}} tasks for a {{interval}}."
+  },
+  "taskTime": {
+    "title": "Task Time",
+    "description": "A task time refers to the time duration of a task in its queued state or handled state. The graph depicts the task time {{time}}. Hover over the area chart for a breakdown of average queue time and average handle time of the tasks for a {{interval}}."
+  },
+  "averageCsat": {
+    "title": "Average CSAT",
+    "description": "The graph depicts the average CSAT {{time}}. Hover over the trend line to know the average CSAT rating for a {{interval}}."
   },
   "profilePage": {
     "userProfile": "User Profile",
@@ -1515,10 +1533,11 @@
       "emailAdministratorHeading": "Administrators",
       "emailAdministratorNotification": "Add email addresses to receive email notifications about service impacting alarms and software upgrades.",
       "emailUserHeading": "Users",
-      "emailUserNotification": "Turn on/off email notifications to users, such as entitlement, error message, high notification rate from Exchange Server, etc.",
+      "emailUserNotification": "By default, users receive email notifications about new Calendar Service functionality, error messages, and service status. Toggle this setting off to stop sending these email notifications to users.",
       "emailNotificationsSaving": "Saving.",
       "emailNotificationsSavingSuccess": "The email subscriber list was successfully saved.",
       "emailNotificationsSavingError": "Your changes to the email subscriber list could not be saved. Try again later.",
+      "emailUserNotificationsSavingError": "Could not save changes to user email notifications. Try again later.",
       "documentationHeading": "Documentation and software",
       "documentationHelpLink": "Visit <a href=\"http://www.cisco.com/go/hybrid-services\" target=\"_blank\">Help Central</a> for further information about Hybrid Services.",
       "documentationDownloadLink": "Download Cisco Expressway software from <a href=\"https://software.cisco.com/download/find.html?q=expressway&task=default&psaMode=AP\" target=\"_blank\">software.cisco.com</a>.",
@@ -2260,7 +2279,6 @@
   "telephonyPreview": {
     "lines": "Lines",
     "features": "Features",
-    "or": "or {{ directoryNumber }}",
     "voicemail": "Voicemail",
     "singleNumberReach": "Single Number Reach",
     "internationalDialing": "International Dialing"
@@ -2855,7 +2873,9 @@
     "customerAdministratorRemoveSuccess": "The Administrator was successfully unassigned",
     "customerAdministratorRemoveFailure": "Unable to unassigned Administrator privileges",
     "deleteAdministrator": "Remove Sales Administrator?",
-    "deleteConfirmation": "Are you sure you want to remove {{pattern}}'s Administrator Privileges?"
+    "deleteConfirmation": "Are you sure you want to remove {{pattern}}'s Administrator Privileges?",
+    "noResultsError": "No results found",
+    "tooManyResultsError": "Search returned too many results. Be more specific to find user"
   },
   "didAddModal": {
     "title": "Add Phone Numbers (Optional)"
@@ -3011,7 +3031,7 @@
       "deviceInstalled": "Where will this device be installed?",
       "deviceInstalledInstructions": "It is recommended that you use the name of your conference room or shared space as it is shown in your company directory. The video address for this device will use this name. It will also be the easiest way to search for and find the device in the system later.",
       "insertRoomName": "Insert name of room or shared space",
-      "noExistingPlaces": "There is no existing place in your organization with a Cisco Spark Room System license assigned to it. Create a new place instead."
+      "noExistingPlaces": "There is no place in your organization with a Cisco Spark Call license assigned to it. Create a new place instead."
     },
     "newSharedSpace": {
       "title": "Add Place",
@@ -3052,8 +3072,14 @@
     "expires": "Expires: {{date}}",
     "expiration": "({{timeLeft}} from now)",
     "clipboardFallback": "Press cmd+c to copy the text below.",
-    "emailSuccess": "Email sent successfully.",
-    "emailError": "Email unsuccessful.",
+    "emailSuccessTitle": "Email sent",
+    "emailSuccess": "Activation code has been sent to {{address}}",
+    "emailErrorTitle": "Email not sent",
+    "emailError": "Failed to send activation code to {{address}}",
+    "clipboardSuccessTitle": "Copied to clipboard",
+    "clipboardSuccess": "Activation code has been copied to the clipboard.",
+    "clipboardErrorTitle": "Not copied to clipboard",
+    "clipboardError": "Failed to copy activation code to the clipboard.",
     "generateErrorNotFound": "Please unlicense and relicense this Spark Call user. Contact support if the problem persists.",
     "generateError": "Unable to generate activation code. Please try again."
   },
@@ -3343,7 +3369,9 @@
       "deregisterAllconfirmation": "I understand that all the nodes in this cluster will be deregistered automatically, and that the cluster will be deleted permanently. I also understand that I cannot undo this action.",
       "unabletomovenodes": "Failed to move/defuse {{nodes}} press cancel and try again",
       "clusterdeleteSuccess": "Successfully deleted {{clustername}}",
-      "movedTo": "{{nodeName}} moved to: {{clusterName}}"
+      "movedTo": "{{nodeName}} moved to: {{clusterName}}",
+      "upgradeSchedule": "Upgrade Schedule",
+      "everyDay": "Every Day in"
     },
     "reassign": {
       "reassignHost": "Reassign Host",
@@ -4893,7 +4921,8 @@
     },
     "extended-data-dialog": {
       "copy": "Copy",
-      "copiedToClipboard": "Data copied to clipboard"
+      "copiedToClipboard": "Data copied to clipboard",
+      "unableToCopy": "Unable to copy data to clipboard"
     },
     "verification": "Verification",
     "resend": "Resend Invite",
@@ -5526,9 +5555,5 @@
     "Pacific/Tongatapu": "Pacific/Tongatapu",
     "Etc/GMT-14": "Etc/GMT-14",
     "Pacific/Kiritimati": "Pacific/Kiritimati"
-  },
-  "clipboard": {
-    "success": "Copied to clipboard",
-    "error": "Copy to clipboard failed"
   }
 }

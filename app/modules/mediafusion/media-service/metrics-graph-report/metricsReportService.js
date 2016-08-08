@@ -11,7 +11,7 @@
     var agg_cpu_utilization = '/agg_cpu_utilization';
     var total_calls = '/total_calls';
 
-    var cacheValue = (parseInt(moment.utc().format('H')) >= 8);
+    var cacheValue = (parseInt(moment.utc().format('H'), 10) >= 8);
     // Promise Tracking
     var ABORT = 'ABORT';
     var activePromise = null;

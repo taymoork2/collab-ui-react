@@ -49,8 +49,8 @@
       }
 
       return UserServiceCommonV2.save({
-          customerId: Authinfo.getOrgId()
-        }, user).$promise
+        customerId: Authinfo.getOrgId()
+      }, user).$promise
         .then(function () {
           return sendWelcomeEmail(user.userName, user.lastName, uuid, Authinfo.getOrgId(), true);
         });
@@ -68,9 +68,9 @@
         'customerId': customerId
       };
       return UserDirectoryNumberService.query({
-          customerId: customerId,
-          userId: uuid
-        }).$promise
+        customerId: customerId,
+        userId: uuid
+      }).$promise
         .then(function (userDnInfo) {
           if (userDnInfo && userDnInfo[0] && userDnInfo[0].directoryNumber && userDnInfo[0].directoryNumber.pattern) {
             emailInfo.phoneNumber = userDnInfo[0].directoryNumber.pattern;
@@ -83,9 +83,9 @@
             return acquireOTP(userName);
           } else {
             return UserOTPService.query({
-                customerId: customerId,
-                userId: uuid
-              }).$promise
+              customerId: customerId,
+              userId: uuid
+            }).$promise
               .then(function (otps) {
                 var otpList = [];
                 for (var i = 0; i < otps.length; i++) {
@@ -146,7 +146,7 @@
         var userName = '';
         userName = (user.firstName) ? user.firstName : '';
         userName = (user.lastName) ? (userName + ' ' + user.lastName) : userName;
-        userName = (userName) ? userName : data.userName;
+        userName = userName || data.userName;
         return CallerId.updateInternalCallerId(uuid, userName);
       });
     }
