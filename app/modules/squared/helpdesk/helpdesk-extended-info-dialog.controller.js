@@ -23,7 +23,7 @@
     vm.loading = true;
     $timeout(populate, 500);
 
-    vm.clipboardSuccess = function (e) {
+    vm.clipboardSuccess = function () {
       $timeout.cancel(copiedTimer);
       vm.copied = true;
       copiedTimer = $timeout(function () {
