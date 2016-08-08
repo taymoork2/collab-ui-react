@@ -5,17 +5,16 @@ describe('Controller: ExpresswayAlarmController', function () {
   beforeEach(angular.mock.module('Hercules'));
   beforeEach(angular.mock.module('Squared'));
 
-  var $scope, $controller, $stateParams, controller;
-  beforeEach(inject(function (_$controller_, $rootScope, _$stateParams_) {
+  var $scope, $controller, controller;
+  beforeEach(inject(function (_$controller_, $rootScope) {
     $scope = $rootScope.$new();
     $controller = _$controller_;
-    $stateParams = _$stateParams_;
     $scope.$apply();
   }));
 
   function initController(alarm) {
     controller = $controller('ExpresswayAlarmController', {
-      $stateParams: {alarm: alarm}
+      $stateParams: { alarm: alarm }
     });
     $scope.$apply();
   }
@@ -26,7 +25,7 @@ describe('Controller: ExpresswayAlarmController', function () {
   });
 
   it('should deal with a solution with no replacement values', function () {
-    initController({solution: 'This solution has no replacement values'});
+    initController({ solution: 'This solution has no replacement values' });
     expect(controller.alarm.alarmSolutionElements.length).toBe(1);
     expect(controller.alarm.alarmSolutionElements[0].text).toEqual('This solution has no replacement values');
     expect(controller.alarm.alarmSolutionElements[0].link).toBeUndefined();
@@ -37,7 +36,7 @@ describe('Controller: ExpresswayAlarmController', function () {
       {
         solution: 'This solution has one %s replacement value without a link',
         solutionReplacementValues: [
-          {text: 'Foo'}
+          { text: 'Foo' }
         ]
       });
     expect(controller.alarm.alarmSolutionElements.length).toBe(3);
@@ -54,8 +53,8 @@ describe('Controller: ExpresswayAlarmController', function () {
       {
         solution: 'This solution %s has two %s replacement values',
         solutionReplacementValues: [
-          {text: 'Foo', link: 'https://foo.com'},
-          {text: 'Bar', link: 'https://bar.com'}
+          { text: 'Foo', link: 'https://foo.com' },
+          { text: 'Bar', link: 'https://bar.com' }
         ]
       });
     expect(controller.alarm.alarmSolutionElements.length).toBe(5);
