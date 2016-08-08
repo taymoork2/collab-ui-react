@@ -12,6 +12,8 @@
     var monthFormat = "MMM";
     var hourFormat = 'HH:mm';
 
+    var convertInMinutes = 60 * 1000;
+
     var emptyOrgstats = {
       "numTasksAssignedState": 0,
       "avgCsatScores": 0.0,
@@ -112,6 +114,7 @@
           deferred.resolve([]);
           dataPromise = deferred.promise;
       }
+
       return dataPromise;
     }
 
@@ -134,6 +137,8 @@
       var downSampledStatsByHour = [];
       _.map(statsGroupedByHour, function (statsList) {
         var reducedForHour = _.reduce(statsList, reduceOrgStatsByHour, emptyOrgstats);
+        reducedForHour.avgTaskWaitTime = roundTwoDecimalPlaces(reducedForHour.avgTaskWaitTime / convertInMinutes);
+        reducedForHour.avgTaskCloseTime = roundTwoDecimalPlaces(reducedForHour.avgTaskCloseTime / convertInMinutes);
         downSampledStatsByHour.push(reducedForHour);
       });
       return downSampledStatsByHour;
@@ -147,6 +152,8 @@
       var downSampledStatsByDay = [];
       _.map(statsGroupedByDay, function (statsList) {
         var reducedForDay = _.reduce(statsList, reduceOrgStatsByDay, emptyOrgstats);
+        reducedForDay.avgTaskWaitTime = roundTwoDecimalPlaces(reducedForDay.avgTaskWaitTime / convertInMinutes);
+        reducedForDay.avgTaskCloseTime = roundTwoDecimalPlaces(reducedForDay.avgTaskCloseTime / convertInMinutes);
         downSampledStatsByDay.push(reducedForDay);
       });
       return downSampledStatsByDay;
@@ -159,6 +166,8 @@
       var downSampledStatsByWeek = [];
       _.map(statsGroupedByWeek, function (statsList) {
         var reducedForWeek = _.reduce(statsList, reduceOrgStatsByWeek, emptyOrgstats);
+        reducedForWeek.avgTaskWaitTime = roundTwoDecimalPlaces(reducedForWeek.avgTaskWaitTime / convertInMinutes);
+        reducedForWeek.avgTaskCloseTime = roundTwoDecimalPlaces(reducedForWeek.avgTaskCloseTime / convertInMinutes);
         downSampledStatsByWeek.push(reducedForWeek);
       });
       return downSampledStatsByWeek;
@@ -171,6 +180,8 @@
       var downSampledStatsByMonth = [];
       _.map(statsGroupedByMonth, function (statsList) {
         var reducedForMonth = _.reduce(statsList, reduceOrgStatsByMonth, emptyOrgstats);
+        reducedForMonth.avgTaskWaitTime = roundTwoDecimalPlaces(reducedForMonth.avgTaskWaitTime / convertInMinutes);
+        reducedForMonth.avgTaskCloseTime = roundTwoDecimalPlaces(reducedForMonth.avgTaskCloseTime / convertInMinutes);
         downSampledStatsByMonth.push(reducedForMonth);
       });
       return downSampledStatsByMonth;
@@ -197,6 +208,7 @@
 
     function reduceOrgStatsByMonth(stats1, stats2) {
       var resultStats = reduceOrgStats(stats1, stats2);
+
       resultStats.createdTime = moment(stats2.createdTime).format(monthFormat);
       return resultStats;
     }
@@ -207,12 +219,14 @@
       resultStats.avgTaskCloseTime = calculateCloseTime(stats1, stats2);
       resultStats.numTasksAbandonedState = stats1.numTasksAbandonedState + stats2.numTasksAbandonedState;
       resultStats.numTasksHandledState = stats1.numTasksHandledState + stats2.numTasksHandledState;
+      resultStats.numCsatScores = stats1.numCsatScores + stats2.numCsatScores;
+      resultStats.avgCsatScores = roundTwoDecimalPlaces(calculateAverageCsat(stats1, stats2));
       return resultStats;
     }
 
     function calculateAvgWaitTime(stats1, stats2) {
-      var totalTask1 = stats1.numTasksAssignedState + (stats1.numTasksAbandonedState - stats1.numTasksAssignedToAbandonedState);
-      var totalTask2 = stats2.numTasksAssignedState + (stats2.numTasksAbandonedState - stats2.numTasksAssignedToAbandonedState);
+      var totalTask1 = Math.max(stats1.numTasksAssignedState + stats1.numTasksAbandonedState - stats1.numTasksAssignedToAbandonedState, 0);
+      var totalTask2 = Math.max(stats2.numTasksAssignedState + stats2.numTasksAbandonedState - stats2.numTasksAssignedToAbandonedState, 0);
       var totalTasks = totalTask1 + totalTask2;
 
       var duration1 = (totalTask1 != 0) ? (totalTask1 * stats1.avgTaskWaitTime) : stats1.avgTaskWaitTime;
@@ -229,12 +243,24 @@
       var totalTasks = totalTask1 + totalTask2;
 
       var duration1 = (totalTask1 != 0) ? (totalTask1 * stats1.avgTaskCloseTime) : stats1.avgTaskCloseTime;
-      var duration2 = (totalTask1 != 0) ? (totalTask1 * stats2.avgTaskCloseTime) : stats2.avgTaskCloseTime;
+      var duration2 = (totalTask2 != 0) ? (totalTask2 * stats2.avgTaskCloseTime) : stats2.avgTaskCloseTime;
 
       var duration = duration1 + duration2;
 
       return ((totalTasks != 0) ? (duration / totalTasks) : 0);
+    }
 
+    function calculateAverageCsat(stats1, stats2) {
+      var totalCsatScores = stats1.numCsatScores + stats2.numCsatScores;
+      var csat = (totalCsatScores > 0) ?
+        (stats1.avgCsatScores * stats1.numCsatScores + stats2.avgCsatScores * stats2.numCsatScores) /
+        (stats1.numCsatScores + stats2.numCsatScores) : 0;
+      csat = Math.round(csat * 100) / 100; // precision upto two decimal places
+      return csat;
+    }
+
+    function roundTwoDecimalPlaces(value) {
+      return Math.round(value * 100) / 100;
     }
 
     function fillEmptyData(range, interval, localTimeData, format, excludeEnd) {

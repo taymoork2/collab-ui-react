@@ -1,7 +1,8 @@
 'use strict';
 
 describe('Controller: Care Reports Controller', function () {
-  var controller, $translate, $timeout, SunlightReportService, DummyCareReportService, deferred;
+  var controller, $scope, $translate, $timeout, SunlightReportService, DummyCareReportService, CareReportsService,
+    $q, deferred;
   var timeOptions = [{
     value: 0,
     label: 'careReportsPage.today',
@@ -36,18 +37,23 @@ describe('Controller: Care Reports Controller', function () {
   beforeEach(angular.mock.module('Core'));
   beforeEach(angular.mock.module('Sunlight'));
   beforeEach(
-    inject(function ($controller, $q, _$translate_, _$timeout_, _SunlightReportService_, _DummyCareReportService_) {
+    inject(function ($rootScope, $controller, _$q_, _$translate_, _$timeout_, _SunlightReportService_,
+                     _DummyCareReportService_, _CareReportsService_) {
+      $q = _$q_;
+      $scope = $rootScope.$new();
       $translate = _$translate_;
       $timeout = _$timeout_;
       SunlightReportService = _SunlightReportService_;
       DummyCareReportService = _DummyCareReportService_;
-      deferred = $q.defer();
+      CareReportsService = _CareReportsService_;
+      deferred = _$q_.defer();
       spyOn(SunlightReportService, 'getReportingData').and.returnValue(deferred.promise);
       spyOn(DummyCareReportService, 'dummyOrgStatsData');
       controller = $controller('CareReportsController', {
         $translate: $translate,
         SunlightReportService: SunlightReportService,
-        DummyCareReportService: DummyCareReportService
+        DummyCareReportService: DummyCareReportService,
+        CareReportsService: CareReportsService
       });
 
     })
@@ -69,9 +75,18 @@ describe('Controller: Care Reports Controller', function () {
       $timeout(function () {
         expect(DummyCareReportService.dummyOrgStatsData.calls.argsFor(0)).toEqual([1]);
         expect(SunlightReportService.getReportingData.calls.argsFor(0)).toEqual(['org_stats', 1, 'chat']);
-      }, 30);
+      }, 1000);
     });
-
+    it('should show Today and Task Incoming and Average Csat graphs on Init', function () {
+      $timeout(function () {
+        expect(CareReportsService.showTaskIncomingDummy.calls.argsFor(0)[0]).toEqual('taskIncomingdiv');
+        expect(CareReportsService.showAverageCsatDummy.calls.argsFor(0)[0]).toEqual('averageCsatDiv');
+        expect(CareReportsService.showTaskIncomingGraph.calls.argsFor(0)[0]).toEqual('taskIncomingdiv');
+        expect(CareReportsService.showAverageCsatGraph.calls.argsFor(0)[0]).toEqual('averageCsatDiv');
+        expect(CareReportsService.showTaskTimeDummy).not.toHaveBeenCalled();
+        expect(CareReportsService.showTaskTimeGraph).not.toHaveBeenCalled();
+      }, 1000);
+    });
   });
 
   describe('CareReportsController - Time Update', function () {
@@ -80,6 +95,15 @@ describe('Controller: Care Reports Controller', function () {
       controller.timeUpdate();
       expect(DummyCareReportService.dummyOrgStatsData.calls.argsFor(0)).toEqual([2]);
       expect(SunlightReportService.getReportingData.calls.argsFor(0)).toEqual(['org_stats', 2, 'chat']);
+
+      $timeout(function () {
+        expect(CareReportsService.showTaskIncomingDummy.calls.argsFor(0)[0]).toEqual('taskIncomingdiv');
+        expect(CareReportsService.showTaskTimeDummy.calls.argsFor(0)[0]).toEqual('taskTimeDiv');
+        expect(CareReportsService.showAverageCsatDummy.calls.argsFor(0)[0]).toEqual('averageCsatDiv');
+        expect(CareReportsService.showTaskIncomingGraph.calls.argsFor(0)[0]).toEqual('taskIncomingdiv');
+        expect(CareReportsService.showTaskTimeGraph.calls.argsFor(0)[0]).toEqual('taskTimeDiv');
+        expect(CareReportsService.showAverageCsatGraph.calls.argsFor(0)[0]).toEqual('averageCsatDiv');
+      }, 100);
     });
 
     it('should send options for last month on selection', function () {

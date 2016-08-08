@@ -1,12 +1,13 @@
-<cs-card id='task-incoming-card' class="large report-card" ng-class="{'hideCard': !nav.displayEngagement}">
+<cs-card id='task-time-card' class="large report-card"
+         ng-class="{'hideCard': !nav.displayEngagement || nav.timeSelected.value === 0}">
   <article>
     <header>
-      <h4 class='report-section-header' translate='taskIncoming.title'></h4>
+      <h4 class='report-section-header' translate='taskTime.title'></h4>
     </header>
     <section>
       <div class="care-card-report">
-        <p class="report-description">{{nav.taskIncomingDescription}}</p>
-        <div id="taskIncomingdiv" class="areachart"></div>
+        <p class="report-description">{{nav.taskTimeDescription}}</p>
+        <div id="taskTimeDiv" class="areachart"></div>
         <div class="spinner-position" ng-if="nav.isRefresh(nav.dataStatus)">
           <i class='icon icon-spinner icon-2x'></i>
         </div>
@@ -20,3 +21,4 @@
     </section>
   </article>
 </cs-card>
+

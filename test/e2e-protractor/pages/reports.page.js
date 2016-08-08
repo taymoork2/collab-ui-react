@@ -81,6 +81,16 @@ var ReportsPage = function () {
   this.taskIncomingDescription = element(by.css('.care-card-report')).element(by.css('.report-description'));
   this.taskIncomingGraph = element(by.id('taskIncomingdiv'));
 
+  // Task Time
+  this.taskTimeHeader = element(by.cssContainingText('.report-section-header', 'Task Time'));
+  this.taskTimeDescription = element(by.css('.care-card-report')).element(by.css('.report-description'));
+  this.taskTimeGraph = element(by.id('taskTimeDiv'));
+
+  // Average CSAT
+  this.averageCsatHeader = element(by.cssContainingText('.report-section-header', 'Average CSAT'));
+  this.averageCsatDescription = element(by.css('.care-card-report')).element(by.css('.report-description'));
+  this.averageCsatGraph = element(by.id('averageCsatDiv'));
+
   this.showHideActiveVisibility = function (show, hide, partner) {
     if (partner) {
       if (show) {
