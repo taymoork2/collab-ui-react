@@ -1467,7 +1467,8 @@
       "firstReported": "First Reported",
       "lastReported": "Last Reported",
       "description": "Description",
-      "noAlarms": "No alarms reported"
+      "noAlarms": "No alarms reported",
+      "action": "Action"
     },
     "softwareUpgrade": {
       "softwareUpgrade": "Software Upgrade",
