@@ -74,7 +74,6 @@ describe('Controller: AAHelpCtrl', function () {
     });
 
     it('should send metrics if metrics are defined', function () {
-      controller.metric = metric;
       controller.sendMetrics();
       expect(Analytics.trackEvent).toHaveBeenCalledWith(AAMetricNameService.UI_HELP, {
         type: controller.metric
@@ -82,7 +81,6 @@ describe('Controller: AAHelpCtrl', function () {
     });
 
     it('should not send metrics if metrics are undefined', function () {
-      controller.metric = "";
       controller.sendMetrics();
       expect(Analytics.trackEvent).not.toHaveBeenCalled();
     });

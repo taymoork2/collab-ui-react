@@ -623,7 +623,8 @@
       // Define vm.ui.builder.ceInfo_name for editing purpose.
       vm.ui.builder.ceInfo_name = angular.copy(vm.ui.ceInfo.name);
 
-      AutoAttendantCeInfoModelService.getCeInfosList().then(getTimeZoneOptions).then(getSystemTimeZone).finally(function () {
+      AutoAttendantCeInfoModelService.getCeInfosList().then(getTimeZoneOptions).then(getSystemTimeZone)
+      .finally(function () {
         AutoAttendantCeMenuModelService.clearCeMenuMap();
         vm.aaModel = AAModelService.getAAModel();
         vm.aaModel.aaRecord = undefined;
