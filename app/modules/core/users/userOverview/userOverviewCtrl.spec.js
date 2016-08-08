@@ -12,7 +12,6 @@ describe('Controller: UserOverviewCtrl', function () {
   beforeEach(inject(function ($controller, _$httpBackend_, $q, _$rootScope_, _Config_, _Authinfo_, _Userservice_, _FeatureToggleService_, _UrlConfig_, _Notification_) {
     $scope = _$rootScope_.$new();
     $httpBackend = _$httpBackend_;
-    $q = $q;
     $rootScope = _$rootScope_;
     Config = _Config_;
     Authinfo = _Authinfo_;

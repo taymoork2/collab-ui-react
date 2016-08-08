@@ -1,6 +1,8 @@
 (function () {
   'use strict';
 
+  /* eslint no-cond-assign:0 */
+
   angular.module('Mediafusion')
     .service('MediafusionProxy', MediafusionProxy);
 

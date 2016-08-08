@@ -7,8 +7,6 @@ describe('Controller: GroupDetailsController', function () {
   var controller;
 
   beforeEach(inject(function ($stateParams, $controller) {
-    $stateParams = $stateParams;
-
     controller = $controller('GroupDetailsController', {
       $stateParams: $stateParams
     });

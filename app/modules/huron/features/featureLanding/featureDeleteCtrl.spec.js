@@ -168,7 +168,6 @@ describe('Huron Feature DeleteCtrl', function () {
     $q = _$q_;
     $translate = _$translate_;
     $timeout = _$timeout_;
-    Authinfo = Authinfo;
     huntGroupService = _HuntGroupService_;
     autoAttendantCeService = _AutoAttendantCeService_;
     Notification = _Notification_;

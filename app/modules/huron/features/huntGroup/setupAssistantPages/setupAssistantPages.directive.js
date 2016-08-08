@@ -9,7 +9,7 @@
     'hgFallbackDestination'
   ];
 
-  pageDirectiveNames.map(function (directiveName) {
+  pageDirectiveNames.forEach(function (directiveName) {
     angular
       .module('Huron')
       .directive(directiveName, function () {

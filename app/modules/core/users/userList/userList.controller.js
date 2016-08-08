@@ -466,7 +466,7 @@
             if ($scope.load) {
               $scope.currentDataPosition++;
               $scope.load = false;
-              getUserList($scope.currentDataPosition * Config.usersperpage + 1);
+              getUserList(($scope.currentDataPosition * Config.usersperpage) + 1);
               $scope.gridApi.infiniteScroll.dataLoaded();
             }
           });

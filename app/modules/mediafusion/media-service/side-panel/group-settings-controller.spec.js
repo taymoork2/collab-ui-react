@@ -7,7 +7,6 @@ describe('Controller: GroupSettingsController', function () {
   var MediaClusterService, $q;
 
   beforeEach(inject(function ($controller, $stateParams, _MediaClusterService_, _$q_) {
-    $stateParams = $stateParams;
     MediaClusterService = _MediaClusterService_;
     $q = _$q_;
 
