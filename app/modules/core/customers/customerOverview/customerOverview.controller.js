@@ -79,10 +79,10 @@
       initCustomer();
       getLogoSettings();
       getIsTestOrg();
-      isSetupDone().
-      then(function (results) {
-        vm.isOrgSetup = results;
-      });
+      isSetupDone()
+        .then(function (results) {
+          vm.isOrgSetup = results;
+        });
     }
 
     function resetForm() {

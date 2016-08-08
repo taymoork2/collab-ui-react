@@ -94,7 +94,7 @@
       var funcName = "isWindowsIE()";
       var logMsg = "";
 
-      var result = ($window.navigator.msSaveOrOpenBlob) ? true : false;
+      var result = !!$window.navigator.msSaveOrOpenBlob;
 
       logMsg = funcName + "\n" +
         "result=" + result;

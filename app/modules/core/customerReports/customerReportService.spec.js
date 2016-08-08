@@ -35,7 +35,7 @@ describe('Service: Customer Reports Service', function () {
 
   beforeEach(angular.mock.module('Core'));
 
-  var cacheValue = (parseInt(moment.utc().format('H')) >= 8);
+  var cacheValue = (parseInt(moment.utc().format('H'), 10) >= 8);
   var dayFormat = "MMM DD";
   var timezone = "Etc/GMT";
   var timeFilter = {

@@ -208,7 +208,7 @@
 
     function associateLineEndpoint(deviceUuid, directoryNumberUuid, index) {
       var directoryNumberInfo = {
-        'index': parseInt(index) + 1,
+        'index': parseInt(index, 10) + 1,
         'directoryNumber': {
           'uuid': directoryNumberUuid
         }

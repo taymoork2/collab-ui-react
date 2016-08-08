@@ -184,7 +184,7 @@
           if (tooManyUsers && CsvDownloadService.downloadInProgress) {
             Notification.error('csvDownload.isRunning');
           } else {
-            if (!!options.suppressWarning) {
+            if (options.suppressWarning) {
               // don't warn user, just start export
               scope.downloadCsv(options.csvType, tooManyUsers);
             } else {

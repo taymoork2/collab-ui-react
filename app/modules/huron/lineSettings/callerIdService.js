@@ -180,7 +180,7 @@
           var userLine = {
             uuid: userDn.directoryNumber.uuid,
             pattern: userDn.directoryNumber.pattern,
-            isPrimary: (userDn.dnUsage === 'Primary') ? true : false,
+            isPrimary: userDn.dnUsage === 'Primary',
             userDnUuid: userDn.uuid,
             hasSharedPrimary: false,
             sharedUsers: []

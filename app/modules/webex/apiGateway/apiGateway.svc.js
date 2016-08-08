@@ -442,7 +442,7 @@
         var isT31SiteResult = (
           (null != trainReleaseOrder) &&
           (400 <= +trainReleaseOrder)
-        ) ? true : false;
+        );
 
         // logMsg = funcName + ": " + "siteUrl=" + siteUrl + "\n" +
         //   "trainReleaseOrder=" + trainReleaseOrder + "\n" +
@@ -461,9 +461,7 @@
         if ("" === siteInfoJsonObj.errId) { // got a good response
           var siteInfoJson = siteInfoJsonObj.bodyJson;
 
-          isAdminReportEnabled = (
-            "true" == siteInfoJson.ns1_siteInstance.ns1_commerceAndReporting.ns1_siteAdminReport
-          ) ? true : false;
+          isAdminReportEnabled = "true" == siteInfoJson.ns1_siteInstance.ns1_commerceAndReporting.ns1_siteAdminReport;
         }
 
         return isAdminReportEnabled;

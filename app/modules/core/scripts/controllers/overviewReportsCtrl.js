@@ -16,7 +16,7 @@
     var entTitle = $translate.instant('reports.UsersOnboarded');
     var partnerCharts = ['entitlements', 'entitlementCount'];
     var entRefreshDiv = 'entitlements-refresh';
-    var cacheValue = (parseInt(moment.utc().format('H')) >= 8);
+    var cacheValue = (parseInt(moment.utc().format('H'), 10) >= 8);
     var dummyChartVals = [];
     var customerList = [];
     var allCustomers = {

@@ -583,6 +583,24 @@
       $scope.confChk = [];
       $scope.allLicenses = [];
 
+      var formatLicense = function (site) {
+        var confMatches = _.filter(confFeatures, {
+          siteUrl: site
+        });
+        var cmrMatches = _.filter(cmrFeatures, {
+          siteUrl: site
+        });
+        var isCISiteFlag = WebExUtilsFact.isCIEnabledSite(site);
+        return {
+          site: site,
+          billing: _.uniq(_.pluck(cmrMatches, 'billing').concat(_.pluck(confMatches, 'billing'))),
+          confLic: confMatches,
+          cmrLic: cmrMatches,
+          isCISite: isCISiteFlag,
+          siteAdminUrl: (isCISiteFlag ? '' : WebExUtilsFact.getSiteAdminUrl(site))
+        };
+      };
+
       for (var i in confs) {
         var temp = {
           confFeature: confs[i],
@@ -590,39 +608,34 @@
           confId: 'conf-' + i
         };
 
-        var confNoUrl = _.chain(confs).filter(function (conf) {
-          return conf.license.licenseType !== 'freeConferencing';
-        }).filter(function (conf) {
-          return !_.has(conf, 'license.siteUrl');
-        }).map(createFeatures).remove(undefined).value();
+        var confNoUrl = _.chain(confs)
+          .filter(function (conf) {
+            return conf.license.licenseType !== 'freeConferencing';
+          })
+          .filter(function (conf) {
+            return !_.has(conf, 'license.siteUrl');
+          })
+          .map(createFeatures)
+          .remove(undefined)
+          .value();
 
-        var confFeatures = _.chain(confs).filter('license.siteUrl')
-          .map(createFeatures).remove(undefined).value();
-        var cmrFeatures = _.chain(cmrs).filter('license.siteUrl')
-          .map(createFeatures).remove(undefined).value();
+        var confFeatures = _.chain(confs)
+          .filter('license.siteUrl')
+          .map(createFeatures)
+          .remove(undefined)
+          .value();
+        var cmrFeatures = _.chain(cmrs)
+          .filter('license.siteUrl')
+          .map(createFeatures)
+          .remove(undefined)
+          .value();
 
         var siteUrls = _.map(confFeatures, function (lic) {
           return lic.siteUrl;
         });
         siteUrls = _.uniq(siteUrls);
 
-        $scope.allLicenses = _.map(siteUrls, function (site) {
-          var confMatches = _.filter(confFeatures, {
-            siteUrl: site
-          });
-          var cmrMatches = _.filter(cmrFeatures, {
-            siteUrl: site
-          });
-          var isCISiteFlag = (WebExUtilsFact.isCIEnabledSite(site)) ? true : false;
-          return {
-            site: site,
-            billing: _.uniq(_.pluck(cmrMatches, 'billing').concat(_.pluck(confMatches, 'billing'))),
-            confLic: confMatches,
-            cmrLic: cmrMatches,
-            isCISite: isCISiteFlag,
-            siteAdminUrl: (isCISiteFlag ? '' : WebExUtilsFact.getSiteAdminUrl(site))
-          };
-        });
+        $scope.allLicenses = _.map(siteUrls, formatLicense);
         $scope.allLicenses = _.union(confNoUrl, $scope.allLicenses);
 
         for (var j in cmrs) {
@@ -898,13 +911,23 @@
         if (!_.isArray(license) && license.confModel === state) {
           idList.push(license.licenseId);
         }
-        idList = idList.concat(_(license.confLic).filter({
-          confModel: state
-        }).pluck('licenseId').remove(undefined).value());
+        idList = idList.concat(_(license.confLic)
+          .filter({
+            confModel: state
+          })
+          .pluck('licenseId')
+          .remove(undefined)
+          .value()
+        );
 
-        idList = idList.concat(_(license.cmrLic).filter({
-          cmrModel: state
-        }).pluck('licenseId').remove(undefined).value());
+        idList = idList.concat(_(license.cmrLic)
+          .filter({
+            cmrModel: state
+          })
+          .pluck('licenseId')
+          .remove(undefined)
+          .value()
+        );
 
       });
 
@@ -1918,7 +1941,9 @@
       $scope.convertSelectedList = $scope.convertSelectedList.slice(Config.batchSize);
       Userservice.migrateUsers(batch, function (data) {
         var successMovedUsers = [];
-
+        var match = function (batchObj) {
+          return user.address === batchObj.userName;
+        };
         for (var i = 0; i < data.userResponse.length; i++) {
           if (data.userResponse[i].status !== 200) {
             $scope.results.errors.push(data.userResponse[i].email + $translate.instant('homePage.convertError'));
@@ -1926,9 +1951,7 @@
             var user = {
               'address': data.userResponse[i].email
             };
-            var userArray = batch.filter(function (batchObj) {
-              return user.address === batchObj.userName;
-            });
+            var userArray = batch.filter(match);
             user.assignedDn = userArray[0].assignedDn;
             user.externalNumber = userArray[0].externalNumber;
             successMovedUsers.push(user);
@@ -1986,7 +2009,7 @@
     };
 
     $scope.convertDisabled = function () {
-      return ($scope.gridApi.selection.getSelectedRows().length === 0) ? true : false;
+      return $scope.gridApi.selection.getSelectedRows().length === 0;
     };
 
     getUnlicensedUsers();
@@ -2211,9 +2234,9 @@
           return $q(function (resolve) {
             if (userArray.length > 0) {
               Userservice.onboardUsers(userArray, entitlementArray, licenseArray, cancelDeferred.promise).then(function (response) {
-                successCallback(response, startIndex - userArray.length + 1, userArray.length);
+                successCallback(response, (startIndex - userArray.length) + 1, userArray.length);
               }).catch(function (response) {
-                errorCallback(response, startIndex - userArray.length + 1, userArray.length);
+                errorCallback(response, (startIndex - userArray.length) + 1, userArray.length);
               }).finally(function () {
                 calculateProcessProgress();
                 resolve();
@@ -2227,7 +2250,7 @@
 
       function calculateProcessProgress() {
         $scope.model.numTotalUsers = $scope.model.numNewUsers + $scope.model.numExistingUsers + $scope.model.userErrorArray.length;
-        $scope.model.processProgress = Math.round($scope.model.numTotalUsers / userArray.length * 100);
+        $scope.model.processProgress = Math.round(($scope.model.numTotalUsers / userArray.length) * 100);
 
         if ($scope.model.numTotalUsers >= userArray.length) {
           $scope.model.userErrorArray.sort(function (a, b) {
@@ -2284,5 +2307,4 @@
     }
 
   }
-})
-();
+})();

@@ -160,7 +160,8 @@
           .then(reinitTokens)
           .then(function () {
             return ExternalNumberPool.getAll(customerOrgId);
-          }).then(function (results) {
+          })
+          .then(function (results) {
             didPatternsFromCmi = _.map(results, 'pattern');
           });
       } else {
@@ -201,7 +202,7 @@
     }
 
     function checkForInvalidTokens() {
-      return vm.invalidcount > 0 ? false : true;
+      return vm.invalidcount <= 0;
     }
 
     function getDIDList() {
@@ -244,7 +245,7 @@
 
       if (newDids.length > 0) {
         _.forEach(newDids, function (newDid) {
-          var addPromise = ExternalNumberPool.create(customerId ? customerId : vm.currentOrg.customerOrgId, newDid).then(function () {
+          var addPromise = ExternalNumberPool.create(customerId || vm.currentOrg.customerOrgId, newDid).then(function () {
             vm.addedCount++;
           }).catch(function (response) {
             errors.push({

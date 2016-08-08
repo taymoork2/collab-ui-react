@@ -838,7 +838,8 @@
         .filter({
           enabled: true
         })
-        .isEmpty().value();
+        .isEmpty()
+        .value();
     }
 
     function validateChecks($viewValue, $modelValue, scope) {

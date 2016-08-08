@@ -49,8 +49,20 @@ describe('FeatureToggleService', function () {
     FeatureToggleService.getFeaturesForUser(userId).then(function (data) {
       var dev = getUserFeatureToggles.developer[0];
       var ettlmt = getUserFeatureToggles.entitlement[0];
-      dev.val = dev.val === 'true' ? true : dev.val === 'false' ? false : dev.val;
-      ettlmt.val = ettlmt.val === 'true' ? true : ettlmt.val === 'false' ? false : ettlmt.val;
+      if (dev.val === 'true') {
+        dev.val = true;
+      } else if (dev.val === 'false') {
+        dev.val = false;
+      } else {
+        dev.val = dev.val;
+      }
+      if (ettlmt.val === 'true') {
+        ettlmt.val = true;
+      } else if (ettlmt.val === 'false') {
+        ettlmt.val = false;
+      } else {
+        ettlmt.val = ettlmt.val;
+      }
       expect(data.developer[0]).toEqual(dev);
       expect(data.entitlement[0]).toEqual(ettlmt);
       expect(data.user).toEqual(getUserFeatureToggles.user);

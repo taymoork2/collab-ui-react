@@ -302,7 +302,7 @@
     }
 
     function checkForInvalidTokens() {
-      return vm.invalidCount > 0 ? false : true;
+      return vm.invalidCount <= 0;
     }
 
     function _getCarriers(localScope) {

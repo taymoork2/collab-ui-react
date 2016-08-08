@@ -91,7 +91,7 @@
       var v = _.merge({
         $scope: $scope,
         $rootScope: injectedRootScope
-      }, args ? args : {});
+      }, args || {});
       tabsController = $controller('TabsCtrl',
         v
       );

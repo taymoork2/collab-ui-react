@@ -464,7 +464,7 @@
       _.forIn(model.searchResultsModel, function (value, _key) {
         if (value) {
           var key = _.parseInt(_key);
-          var searchResultsIndex = model.paginateOptions.currentPage * model.paginateOptions.pageSize + key;
+          var searchResultsIndex = (model.paginateOptions.currentPage * model.paginateOptions.pageSize) + key;
           if (searchResultsIndex < model.searchResults.length) {
             var numbers = model.searchResults[searchResultsIndex];
             if (type === NUMBER_ORDER) {
@@ -523,7 +523,7 @@
       var advancedOrder = {
         data: {
           areaCode: model.areaCode.code,
-          length: parseInt(model.quantity),
+          length: parseInt(model.quantity, 10),
           consecutive: model.consecutive
         },
         type: type

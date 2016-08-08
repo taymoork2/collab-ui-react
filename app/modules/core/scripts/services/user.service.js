@@ -517,7 +517,7 @@
       var sunlightLicense = _.find(licenses, function (license) {
         return license.id.indexOf(Config.offerCodes.CDC) >= 0;
       });
-      return (typeof sunlightLicense === 'undefined') ? false : true;
+      return typeof sunlightLicense !== 'undefined';
     }
 
     function isHuronUser(allEntitlements) {

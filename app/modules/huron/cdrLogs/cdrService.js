@@ -36,7 +36,7 @@
     function getUser(userName, calltype) {
       var defer = $q.defer();
       var name = userName.replace(/@/g, '%40').replace(/\+/g, '%2B');
-      var url = UrlConfig.getScimUrl(Authinfo.getOrgId()) + '?filter=username eq \"' + name + '\"';
+      var url = UrlConfig.getScimUrl(Authinfo.getOrgId()) + '?filter=username eq "' + name + '"';
 
       $http.get(url).success(function (data) {
         if (angular.isArray(data.Resources) && (data.Resources.length > 0)) {
@@ -85,12 +85,12 @@
     function formDate(date, time) {
       var returnDate = moment(date);
       if (time.substring(9, 10).toLowerCase() === 'p') {
-        returnDate.hours(parseInt(time.substring(0, 2)) + 12);
+        returnDate.hours(parseInt(time.substring(0, 2), 10) + 12);
       } else {
-        returnDate.hours(parseInt(time.substring(0, 2)));
+        returnDate.hours(parseInt(time.substring(0, 2), 10));
       }
-      returnDate.minutes(parseInt(time.substring(3, 5)));
-      returnDate.seconds(parseInt(time.substring(6, 8)));
+      returnDate.minutes(parseInt(time.substring(3, 5), 10));
+      returnDate.seconds(parseInt(time.substring(6, 8), 10));
       return returnDate.utc();
     }
 
@@ -352,8 +352,8 @@
         tempArray.push(call[0]);
         call.splice(0, 1);
         for (var i = 0; i < call.length; i++) {
-          if (call[i].dataParam.localSessionID === tempArray[0].dataParam.localSessionID && call[i].dataParam.remoteSessionID === tempArray[0].dataParam.remoteSessionID ||
-            call[i].dataParam.remoteSessionID === tempArray[0].dataParam.localSessionID && call[i].dataParam.localSessionID === tempArray[0].dataParam.remoteSessionID) {
+          if (call[i].dataParam.localSessionID === (tempArray[0].dataParam.localSessionID && call[i].dataParam.remoteSessionID === tempArray[0].dataParam.remoteSessionID) ||
+            (call[i].dataParam.remoteSessionID === tempArray[0].dataParam.localSessionID && call[i].dataParam.localSessionID === tempArray[0].dataParam.remoteSessionID)) {
             x++;
             call[0].name = "call" + callNum + "CDR" + x;
             tempArray.push(call[i]);

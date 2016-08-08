@@ -395,7 +395,7 @@ exports.sendKeysUpArrow = function (element, howMany) {
 exports.fileSendKeys = function (elem, value) {
   this.waitForPresence(elem).then(function () {
     log('Send file keys to element: ' + elem.locator() + ' ' + value);
-    browser.setFileDetector(new remote.FileDetector);
+    browser.setFileDetector(new remote.FileDetector());
     elem.sendKeys(value);
   });
 };

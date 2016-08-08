@@ -22,6 +22,15 @@ var VERY_LONG_TIMEOUT = 1000 * 60 * 5;
 var E2E_FAIL_RETRY = appConfig.e2eFailRetry;
 var NEWLINE = '\n';
 
+var maxInstances;
+if (process.env.SAUCE_MAX_INSTANCES) {
+  maxInstances = process.env.SAUCE_MAX_INSTANCES;
+} else if (process.env.SAUCE_USERNAME) {
+  maxInstances = 10;
+} else {
+  maxInstances = 1;
+}
+
 exports.config = {
   framework: "jasmine2",
 
@@ -32,7 +41,7 @@ exports.config = {
   sauceUser: process.env.SAUCE_USERNAME,
   sauceKey: process.env.SAUCE_ACCESS_KEY,
   sauceAgent: process.env.SAUCE_USERNAME ? agent : undefined,
-  directConnect: process.env.SAUCE_USERNAME ? false : true,
+  directConnect: !process.env.SAUCE_USERNAME,
 
   capabilities: {
     'browserName': 'chrome',
@@ -47,7 +56,7 @@ exports.config = {
       'args': ['--disable-extensions', '--window-position=0,0', '--window-size=1280,900']
     },
     shardTestFiles: true,
-    maxInstances: process.env.SAUCE_MAX_INSTANCES ? process.env.SAUCE_MAX_INSTANCES : process.env.SAUCE_USERNAME ? 10 : 1
+    maxInstances: maxInstances
   },
 
   plugins: [{
@@ -178,7 +187,12 @@ exports.config = {
     global.careChatTemplateSetupPage = new CareChatTemplateSetupPage();
 
     function initReporters(config) {
-      var testFile = _.chain(config).get('specs[0]', '').split(config.configDir).takeRight().trimLeft('/').value();
+      var testFile = _.chain(config)
+        .get('specs[0]', '')
+        .split(config.configDir)
+        .takeRight()
+        .trimLeft('/')
+        .value();
       var jenkinsSubdir = processEnvUtil.isJenkins() ? process.env.BUILD_TAG : '';
 
       jasmine.getEnv().addReporter(

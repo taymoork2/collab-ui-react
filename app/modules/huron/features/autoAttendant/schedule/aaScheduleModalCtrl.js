@@ -379,9 +379,9 @@
         var savePromise;
         var notifyName = "Calendar for " + vm.aaModel.aaRecord.callExperienceName;
 
-        vm.ui.isHolidays = (vm.holidays.length) ? true : false;
-        vm.ui.isClosedHours = (vm.openhours.length) || (vm.holidayBehavior && vm.holidays.length) ? true : false;
-        vm.ui.hasClosedHours = (vm.openhours.length) ? true : false;
+        vm.ui.isHolidays = vm.holidays.length > 0;
+        vm.ui.isClosedHours = (vm.openhours.length || (vm.holidayBehavior && vm.holidays.length));
+        vm.ui.hasClosedHours = vm.openhours.length > 0;
         if (vm.holidayBehavior && vm.holidays.length > 0) {
           vm.ui.holidaysValue = 'closedHours';
         } else {
@@ -412,8 +412,8 @@
               name: notifyName
             });
             vm.isDeleted = false;
-            vm.ui.isHolidays = (vm.holidays.length) ? true : false;
-            vm.ui.isClosedHours = (vm.openhours.length || (vm.holidayBehavior && vm.holidays.length)) ? true : false;
+            vm.ui.isHolidays = vm.holidays.length > 0;
+            vm.ui.isClosedHours = (vm.openhours.length || (vm.holidayBehavior && vm.holidays.length));
             $modalInstance.close(response);
           },
           function (response) {
@@ -553,7 +553,7 @@
       });
       vm.dayOptions = [];
       _.each(AAICalService.getTwoLetterDays(), function (value, index) {
-        vm.dayOptions[(index - 1 + 7) % 7] = {
+        vm.dayOptions[((index - 1) + 7) % 7] = {
           index: index,
           abbr: value,
           label: moment.weekdays(index)
@@ -564,7 +564,7 @@
         vm.timeZoneForm.$setPristine();
       }
 
-      vm.holidayBehavior = vm.ui.holidaysValue === 'closedHours' ? true : false;
+      vm.holidayBehavior = vm.ui.holidaysValue === 'closedHours';
 
       if (!_.isEmpty(sectionToToggle)) {
         toggleSection(sectionToToggle);

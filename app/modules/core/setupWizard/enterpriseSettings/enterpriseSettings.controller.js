@@ -197,7 +197,7 @@
     }
 
     function deleteSSO() {
-      var selfSigned = ($scope.options.SSOSelfSigned ? true : false);
+      var selfSigned = !!$scope.options.SSOSelfSigned;
       var metaUrl = null;
       var success = true;
       SSOService.getMetaInfo(function (data, status) {
@@ -250,7 +250,7 @@
     }
 
     function reEnableSSO() {
-      var selfSigned = ($scope.options.SSOSelfSigned ? true : false);
+      var selfSigned = !!$scope.options.SSOSelfSigned;
       var metaUrl = null;
       SSOService.getMetaInfo(function (data) {
         $scope.wizard.wizardNextLoad = true;
@@ -294,7 +294,7 @@
     }
 
     function postRemoteIdp() {
-      var selfSigned = ($scope.options.SSOSelfSigned ? true : false);
+      var selfSigned = !!$scope.options.SSOSelfSigned;
       SSOService.importRemoteIdp($scope.idpFile.file, selfSigned, false, function (data, status) {
         if (data.success) {
           Log.debug('Imported On-premise IdP Metadata. Status: ' + status);
@@ -310,7 +310,7 @@
     }
 
     function patchRemoteIdp(metaUrl) {
-      var selfSigned = ($scope.options.SSOSelfSigned ? true : false);
+      var selfSigned = !!$scope.options.SSOSelfSigned;
       SSOService.patchRemoteIdp(metaUrl, $scope.idpFile.file, selfSigned, false, function (data, status) {
         if (data.success) {
           Log.debug('Imported On-premise IdP Metadata. Status: ' + status);

@@ -17,7 +17,7 @@
     var dayFormat = "MMM DD";
     var monthFormat = "MMMM";
     var timezone = "Etc/GMT";
-    var cacheValue = (parseInt(moment.utc().format('H')) >= 8);
+    var cacheValue = (parseInt(moment.utc().format('H'), 10) >= 8);
 
     var overallPopulation = 0;
     var timeFilter = null;
@@ -91,8 +91,8 @@
 
       if (angular.isArray(org.data)) {
         angular.forEach(org.data, function (item, index, array) {
-          var activeUsers = parseInt(item.details.activeUsers);
-          var totalRegisteredUsers = parseInt(item.details.totalRegisteredUsers);
+          var activeUsers = parseInt(item.details.activeUsers, 10);
+          var totalRegisteredUsers = parseInt(item.details.totalRegisteredUsers, 10);
           var modifiedDate = moment.tz(item.date, timezone).format(dayFormat);
           if (filter.value > 1) {
             modifiedDate = moment.tz(item.date, timezone).format(monthFormat);
@@ -103,10 +103,10 @@
             var previousTotal = 0;
             var nextTotal = 0;
             if (index !== 0) {
-              previousTotal = parseInt(array[index - 1].details.totalRegisteredUsers);
+              previousTotal = parseInt(array[index - 1].details.totalRegisteredUsers, 10);
             }
             if (index < (array.length - 1)) {
-              nextTotal = parseInt(array[index + 1].details.totalRegisteredUsers);
+              nextTotal = parseInt(array[index + 1].details.totalRegisteredUsers, 10);
             }
             if (previousTotal < activeUsers && nextTotal < activeUsers) {
               totalRegisteredUsers = activeUsers;
@@ -256,7 +256,7 @@
       });
       var dayOffset = 0;
       if (angular.isDefined(date)) {
-        dayOffset = parseInt(moment.tz(date, timezone).format('e'));
+        dayOffset = parseInt(moment.tz(date, timezone).format('e'), 10);
         if (dayOffset >= 4) {
           dayOffset = 7 - dayOffset;
         } else {
@@ -322,9 +322,9 @@
                 angular.forEach(org.data, function (item) {
                   tableData.push({
                     orgName: org.orgName,
-                    numCalls: parseInt(item.details.sparkCalls) + parseInt(item.details.sparkUcCalls),
-                    totalActivity: parseInt(item.details.totalActivity),
-                    sparkMessages: parseInt(item.details.sparkMessages),
+                    numCalls: parseInt(item.details.sparkCalls, 10) + parseInt(item.details.sparkUcCalls, 10),
+                    totalActivity: parseInt(item.details.totalActivity, 10),
+                    sparkMessages: parseInt(item.details.sparkMessages, 10),
                     userName: item.details.userName
                   });
                 });
@@ -360,7 +360,7 @@
               date = offset.data[(offset.data.length - 1)].date;
             }
           });
-          var dayOffset = parseInt(moment.tz(date, timezone).format('e'));
+          var dayOffset = parseInt(moment.tz(date, timezone).format('e'), 10);
           if (dayOffset >= 4) {
             dayOffset = 7 - dayOffset;
           } else {
@@ -393,10 +393,10 @@
       var graph = [];
       angular.forEach(org.data, function (item) {
         if (angular.isDefined(item.details)) {
-          var totalSum = parseInt(item.details.totalDurationSum);
-          var goodSum = parseInt(item.details.goodQualityDurationSum);
-          var fairSum = parseInt(item.details.fairQualityDurationSum);
-          var poorSum = parseInt(item.details.poorQualityDurationSum);
+          var totalSum = parseInt(item.details.totalDurationSum, 10);
+          var goodSum = parseInt(item.details.goodQualityDurationSum, 10);
+          var fairSum = parseInt(item.details.fairQualityDurationSum, 10);
+          var poorSum = parseInt(item.details.poorQualityDurationSum, 10);
           var partialSum = fairSum + poorSum;
 
           if (totalSum > 0) {
@@ -466,13 +466,13 @@
           angular.forEach(response.data.data, function (item) {
             if (angular.isDefined(item.data) && angular.isArray(item.data) && angular.isDefined(item.data[0].details) && (item.data[0].details !== null)) {
               var details = item.data[0].details;
-              var totalCalls = parseInt(details.totalCalls);
+              var totalCalls = parseInt(details.totalCalls, 10);
 
               if (totalCalls > 0) {
                 transformData.labelData.numTotalCalls += totalCalls;
                 transformData.labelData.numTotalMinutes += Math.round(parseFloat(details.totalAudioDuration));
-                transformData.dataProvider[0].value += parseInt(details.totalFailedCalls);
-                transformData.dataProvider[1].value += parseInt(details.totalSuccessfulCalls);
+                transformData.dataProvider[0].value += parseInt(details.totalFailedCalls, 10);
+                transformData.dataProvider[1].value += parseInt(details.totalSuccessfulCalls, 10);
                 transformDataSet = true;
               }
             }
@@ -598,13 +598,19 @@
       } else if (filter.value === 1) {
         for (var x = 3; x >= 0; x--) {
           var temp = angular.copy(graphItem);
-          temp.modifiedDate = moment().tz(timezone).startOf('week').subtract(dayOffset + (x * 7), 'day').format(dayFormat);
+          temp.modifiedDate = moment().tz(timezone)
+            .startOf('week')
+            .subtract(dayOffset + (x * 7), 'day')
+            .format(dayFormat);
           returnGraph.push(temp);
         }
       } else {
         for (var y = 2; y >= 0; y--) {
           var item = angular.copy(graphItem);
-          item.modifiedDate = moment().tz(timezone).subtract(y, 'month').startOf('month').format(monthFormat);
+          item.modifiedDate = moment().tz(timezone)
+            .subtract(y, 'month')
+            .startOf('month')
+            .format(monthFormat);
           returnGraph.push(item);
         }
       }
