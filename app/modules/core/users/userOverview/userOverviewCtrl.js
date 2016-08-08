@@ -94,7 +94,7 @@
       if (hasEntitlement('cloud-contact-center')) {
         if (getServiceDetails('CD')) {
           SunlightConfigService.getUserInfo(vm.currentUser.id).then(
-              function(response) {
+              function () {
                 contactCenterState.detail = $translate.instant('onboardModal.paidContactCenter');
                 vm.services.push(contactCenterState);
               }
@@ -309,7 +309,7 @@
             }
             if (getInvitationDetails(response.effectiveLicenses, 'CD')) {
               SunlightConfigService.getUserInfo(vm.currentUser.id).then(
-                  function(response) {
+                  function () {
                     contactCenterState.detail = $translate.instant('onboardModal.paidContactCenter');
                     vm.services.push(contactCenterState);
                     vm.currentUser.invitations.cc = true;

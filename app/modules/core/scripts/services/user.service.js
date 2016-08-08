@@ -461,12 +461,12 @@
       _.each(userResponseSuccess, function (userResponseSuccess) {
         var userLicenses = _helpers.getUserLicence(userResponseSuccess.email, users);
         if (_helpers.isSunlightUserUpdateRequired(userLicenses)) {
-          var userData = _helpers.createUserData(userResponseSuccess);
+          var userData = _helpers.createUserData();
           var userId = userResponseSuccess.uuid;
           SunlightConfigService.updateUserInfo(userData, userId)
             .then(function (response) {
               Log.debug("SunlightConfigService.updateUserInfo success response :" + JSON.stringify(response));
-            }, function (response) {
+            }, function () {
               Notification.error($translate.instant('usersPage.careAddUserError'));
             });
         }
@@ -474,7 +474,7 @@
 
     }
 
-    function createUserData(userResponse) {
+    function createUserData() {
       var userData = {};
       userData.alias = '';
       userData.teamId = Authinfo.getOrgId();
@@ -517,7 +517,7 @@
       var addedSunlightLicense = _.find(licenses, function (license) {
         return license.id.indexOf(Config.offerCodes.CDC) >= 0 && license.idOperation === 'ADD';
       });
-      return (typeof addedSunlightLicense === 'undefined') ? false : true;
+      return typeof addedSunlightLicense !== 'undefined';
     }
 
     function isHuronUser(allEntitlements) {

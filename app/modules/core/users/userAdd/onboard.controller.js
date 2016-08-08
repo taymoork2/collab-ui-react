@@ -554,9 +554,9 @@
 
     function setCareSeviceIfUserExistInSunlight() {
       SunlightConfigService.getUserInfo($scope.currentUser.id)
-          .then(function (response) {
+          .then(function () {
             $scope.radioStates.careRadio = true;
-          }, function (response) {
+          }, function () {
             $scope.radioStates.careRadio = false;
           });
     }
