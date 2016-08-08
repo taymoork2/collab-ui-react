@@ -164,7 +164,7 @@
       return vm.offers[Config.organizations.squaredUC];
     }
 
-    function startOrganization(keepModal) {
+    function startOrganization() {
       vm.nameError = false;
       vm.emailError = false;
       vm.startOrgLoad = true;

@@ -4,7 +4,7 @@ describe('Controller: HostDeregisterControllerV2', function () {
 
   beforeEach(angular.mock.module('Mediafusion'));
 
-  var vm, $rootScope, $scope, controller, cluster, connector, orgName, MediaClusterServiceV2, XhrNotificationService, $q, $translate, modalInstanceMock, windowMock;
+  var $rootScope, controller, cluster, connector, orgName, MediaClusterServiceV2, XhrNotificationService, $q, $translate, modalInstanceMock, windowMock;
 
   beforeEach(inject(function (_$rootScope_, $controller, _XhrNotificationService_, _$q_, _$translate_) {
     $rootScope = _$rootScope_;

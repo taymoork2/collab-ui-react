@@ -519,7 +519,6 @@ describe('Controller: TrialAddCtrl', function () {
       },
       targetVal: false
     }];
-    var i = 0;
 
     beforeEach(function () {
       orgInput = controller.custInfoFields[0];

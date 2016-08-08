@@ -213,6 +213,7 @@
       "removeFile": "Remove File",
       "confirmCsvDownloadTitle": "Export User Attributes",
       "confirmCsvDownloadMsg": "Gathering data for export may take awhile. During this time you cannot sign out, or refresh your browser or the export will not complete.",
+      "confirmCsvDownloadMsg10K": "Because you have more than {{maxUsers}} users, the exported list will not show the entitlements that are assigned to your users.",
 
       "newUsers": "Added",
       "existingUsers": "Updated",
@@ -2261,7 +2262,6 @@
   "telephonyPreview": {
     "lines": "Lines",
     "features": "Features",
-    "or": "or {{ directoryNumber }}",
     "voicemail": "Voicemail",
     "singleNumberReach": "Single Number Reach",
     "internationalDialing": "International Dialing"
@@ -2856,7 +2856,9 @@
     "customerAdministratorRemoveSuccess": "The Administrator was successfully unassigned",
     "customerAdministratorRemoveFailure": "Unable to unassigned Administrator privileges",
     "deleteAdministrator": "Remove Sales Administrator?",
-    "deleteConfirmation": "Are you sure you want to remove {{pattern}}'s Administrator Privileges?"
+    "deleteConfirmation": "Are you sure you want to remove {{pattern}}'s Administrator Privileges?",
+    "noResultsError": "No results found",
+    "tooManyResultsError": "Search returned too many results. Be more specific to find user"
   },
   "didAddModal": {
     "title": "Add Phone Numbers (Optional)"
@@ -3012,7 +3014,7 @@
       "deviceInstalled": "Where will this device be installed?",
       "deviceInstalledInstructions": "It is recommended that you use the name of your conference room or shared space as it is shown in your company directory. The video address for this device will use this name. It will also be the easiest way to search for and find the device in the system later.",
       "insertRoomName": "Insert name of room or shared space",
-      "noExistingPlaces": "There is no existing place in your organization with a Cisco Spark Room System license assigned to it. Create a new place instead."
+      "noExistingPlaces": "There is no place in your organization with a Cisco Spark Call license assigned to it. Create a new place instead."
     },
     "newSharedSpace": {
       "title": "Add Place",

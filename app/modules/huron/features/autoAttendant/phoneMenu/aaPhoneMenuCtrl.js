@@ -283,7 +283,7 @@
         } else {
           AACommonService.setRouteQueueToggle(false);
         }
-      }).catch(function (e) {
+      }).catch(function () {
         AACommonService.setRouteQueueToggle(false);
       });
     }

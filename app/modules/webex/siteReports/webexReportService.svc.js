@@ -16,7 +16,6 @@
     var self = this;
     //ok, we need a unique global self.
     //the above self is overloaded in places.
-    var uself = this;
 
     //var loc = $translate.use().replace("_", "-");
 
@@ -116,27 +115,6 @@
 
     var pageid_to_navItemId_mapping_reversed = this.reverseMapping(pageid_to_navItemId_mapping);
     this.pageid_to_navItemId_mapping_reversed = pageid_to_navItemId_mapping_reversed;
-
-    //TODO: remove
-    var getFullURLGivenNavInfoAndPageId = function (navInfo, pageid) {
-      var navItemId = pageid_to_navItemId_mapping[pageid];
-      if (angular.isUndefined(navItemId)) {
-        return undefined;
-      }
-      var filterByNavItemId = function (navElement) {
-        var returnValue = false;
-        if (navElement.ns1_navItemId === navItemId) {
-          returnValue = true;
-        }
-        return returnValue;
-      };
-      var navItems = navInfo.ns1_siteAdminNavUrl.filter(filterByNavItemId);
-      var navItem = navItems[0]; //assume one and only one item returned
-      if (angular.isUndefined(navItem)) {
-        $log.log("YUTR: navItem is undefined");
-      }
-      return navItem.ns1_url;
-    };
 
     var getNavItemsByCategoryName = function (navInfo, categoryName) {
       var filterByCategoryName = function (navElement) {
@@ -287,8 +265,6 @@
       var remote_access = new ReportsSection("remote_access", siteUrl, ["/u/y/z", "www.yahoo.com"],
         "RA", "en");
 
-      var uisrefsArray = [];
-
       var mapJsonDefined = angular.isDefined(mapJson);
 
       //use the above 5 lists to gather all the UISrefs
@@ -299,7 +275,6 @@
         [event_center_pageids, event_center],
         [remote_access_pageids, remote_access]
       ].forEach(function (xs) {
-        var pageids = xs[0];
         var section = xs[1];
         var category_Name = section.category_Name;
         if (mapJsonDefined) {
@@ -339,11 +314,11 @@
     };
 
     this.initReportsObject = function (requestedSiteUrl) {
-      var funcName = "initReportsObject()";
-      var logMsg = funcName;
+      // var funcName = "initReportsObject()";
+      // var logMsg = funcName;
 
       var _this = this;
-      var displayLabel = null;
+      // var displayLabel = null;
       var siteUrl = requestedSiteUrl || '';
       var siteName = WebExUtilsFact.getSiteName(siteUrl);
 
@@ -377,8 +352,8 @@
 
       WebExXmlApiFact.getSessionTicket(siteUrl, siteName).then(
         function getSessionTicketSuccess(sessionTicket) {
-          var funcName = "initReportsObject().getSessionTicketSuccess()";
-          var logMsg = "";
+          // var funcName = "initReportsObject().getSessionTicketSuccess()";
+          // var logMsg = "";
 
           WebExXmlApiInfoSvc.xmlApiUrl = "https://" + siteUrl + "/WBXService/XMLService";
           WebExXmlApiInfoSvc.webexSiteName = siteName;
@@ -389,7 +364,7 @@
 
           navInfoDef.then(
             function getNaviationInfoSuccess(result) {
-              var resultString = JSON.stringify(result);
+              // var resultString = JSON.stringify(result);
               // $log.log("Result is ----**** " + resultString);
 
               var y = WebExUtilsFact.validateAdminPagesInfoXmlData(result.reportPagesInfoXml);
@@ -428,7 +403,7 @@
               }
             }, // getNaviationInfoSuccess()
 
-            function getNaviationInfoError(result) {
+            function getNaviationInfoError() {
               _this.webExSiteSettingsObj.hasLoadError = true;
             } // getNaviationInfoError()
           );

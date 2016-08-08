@@ -245,7 +245,7 @@ describe('Service: EdiscoveryService', function () {
     it('can patch report', function (done) {
       Service.patchReport(reportId, {
         state: "ABORTED"
-      }).then(function (result) {
+      }).then(function () {
         done();
       });
       httpBackend.flush();

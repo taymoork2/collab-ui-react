@@ -133,8 +133,8 @@
       });
 
       return $q.all(formattedResources).then(function (value) {
-          return value;
-        },
+        return value;
+      },
         function (response) {
           // if any promise fails, we want to fail (with the details) so further promises don't execute (save fails)
           return $q.reject(response);
@@ -249,12 +249,12 @@
       // For an empty list, we're done, just ensure CMI has no numbers set
       if (resources.length === 0) {
 
-        return setAANumberAssignment(customerId, cesId, resources).then(function (result) {
-            return {
-              workingResources: [],
-              failedResources: []
-            };
-          },
+        return setAANumberAssignment(customerId, cesId, resources).then(function () {
+          return {
+            workingResources: [],
+            failedResources: []
+          };
+        },
           function (response) {
             // failure
             return $q.reject(response);
@@ -282,12 +282,12 @@
             myResourceList = angular.copy(restOfListResponse.workingResources);
             myResourceList.push(myResource);
             return setAANumberAssignment(customerId, cesId, myResourceList).then(
-              function (response) {
+              function () {
                 // successfully saved with the added one, add to working
                 restOfListResponse.workingResources.push(myResource);
                 return restOfListResponse;
               },
-              function (response) {
+              function () {
                 // failed to save with the added one, add to failed
                 restOfListResponse.failedResources.push(myResource);
                 return restOfListResponse;

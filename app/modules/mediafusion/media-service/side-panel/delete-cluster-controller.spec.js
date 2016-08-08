@@ -4,7 +4,7 @@ describe('Controller: DeleteClusterController', function () {
 
   beforeEach(angular.mock.module('Mediafusion'));
 
-  var vm, controller, groupDetail, groupName, MediaClusterService, XhrNotificationService, $q, $translate, modalInstanceMock, windowMock;
+  var controller, groupDetail, groupName, MediaClusterService, XhrNotificationService, $q, $translate, modalInstanceMock, windowMock;
 
   beforeEach(inject(function ($controller, _XhrNotificationService_, _$q_, _$translate_) {
     groupName = 'trichy';

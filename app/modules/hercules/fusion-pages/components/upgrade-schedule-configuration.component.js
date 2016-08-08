@@ -111,10 +111,10 @@
     function updateUpgradeScheduleAndUI(data) {
       vm.state = 'syncing';
       return FusionClusterService.setUpgradeSchedule(vm.clusterId, {
-          scheduleTime: data.scheduleTime.value,
-          scheduleTimeZone: data.scheduleTimeZone.value,
-          scheduleDays: [data.scheduleDay.value]
-        })
+        scheduleTime: data.scheduleTime.value,
+        scheduleTimeZone: data.scheduleTimeZone.value,
+        scheduleDays: [data.scheduleDay.value]
+      })
         .then(function deleteMoratoria() {
           var promises = vm.upgradeSchedule.moratoria.map(function (moratorium) {
             return FusionClusterService.deleteMoratoria(vm.clusterId, moratorium.id);

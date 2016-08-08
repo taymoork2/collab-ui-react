@@ -3,10 +3,9 @@
 describe('OAuthConfig', function () {
   beforeEach(angular.mock.module('Core'));
 
-  var OAuthConfig, $location, Config;
+  var OAuthConfig, $location;
 
-  beforeEach(inject(function (_$location_, _OAuthConfig_, _Config_) {
-    Config = _Config_;
+  beforeEach(inject(function (_$location_, _OAuthConfig_) {
     OAuthConfig = _OAuthConfig_;
     $location = _$location_;
     spyOn($location, 'host');

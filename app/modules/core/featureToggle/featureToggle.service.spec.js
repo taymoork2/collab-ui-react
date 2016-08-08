@@ -3,23 +3,17 @@
 describe('FeatureToggleService', function () {
   beforeEach(angular.mock.module('Core'));
 
-  var httpBackend, $q, $state, Config, Authinfo, FeatureToggleService;
-  var forOrg = false;
-  var forUser = true;
+  var httpBackend, $state, Authinfo, FeatureToggleService;
   var userId = '1';
-  var orgId = '2';
   var getUserMe;
   var getUserFeatureToggles = getJSONFixture('core/json/users/me/featureToggles.json');
   var userRegex = /.*\/locus\/api\/v1\/features\/users\.*/;
-  var orgRegex = /.*\/features\/rules\.*/;
   var identityMe = 'https://identity.webex.com/identity/scim/null/v1/Users/me';
   var dirSyncRegex = /.*\/organization\/.*\/dirsync\.*/;
 
-  beforeEach(inject(function (_$httpBackend_, _$q_, _$state_, _Config_, _Authinfo_, _FeatureToggleService_) {
+  beforeEach(inject(function (_$httpBackend_, _$state_, _Authinfo_, _FeatureToggleService_) {
     httpBackend = _$httpBackend_;
-    $q = _$q_;
     $state = _$state_;
-    Config = _Config_;
     Authinfo = _Authinfo_;
     FeatureToggleService = _FeatureToggleService_;
 
@@ -55,8 +49,20 @@ describe('FeatureToggleService', function () {
     FeatureToggleService.getFeaturesForUser(userId).then(function (data) {
       var dev = getUserFeatureToggles.developer[0];
       var ettlmt = getUserFeatureToggles.entitlement[0];
-      dev.val = dev.val === 'true' ? true : dev.val === 'false' ? false : dev.val;
-      ettlmt.val = ettlmt.val === 'true' ? true : ettlmt.val === 'false' ? false : ettlmt.val;
+      if (dev.val === 'true') {
+        dev.val = true;
+      } else if (dev.val === 'false') {
+        dev.val = false;
+      } else {
+        dev.val = dev.val;
+      }
+      if (ettlmt.val === 'true') {
+        ettlmt.val = true;
+      } else if (ettlmt.val === 'false') {
+        ettlmt.val = false;
+      } else {
+        ettlmt.val = ettlmt.val;
+      }
       expect(data.developer[0]).toEqual(dev);
       expect(data.entitlement[0]).toEqual(ettlmt);
       expect(data.user).toEqual(getUserFeatureToggles.user);

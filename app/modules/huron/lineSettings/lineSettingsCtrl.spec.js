@@ -5,11 +5,9 @@ describe('Controller: LineSettingsCtrl', function () {
   var currentUser, directoryNumber, getDirectoryNumber, getDirectoryNumberBusy, getDirectoryNumberBusyNewLine, internalNumbers, simultaneousCall,
     externalNumbers, telephonyInfoWithVoicemail, telephonyInfoVoiceOnly, telephonyInfoVoiceOnlyShared, telephonyInfoSecondLine,
     modalDefer;
-  var UserListService, SharedLineInfoService, CallerId, Notification, companyNumber, DeviceService, SimultaneousCallsServiceV2, DialPlanService;
+  var UserListService, SharedLineInfoService, CallerId, companyNumber, DeviceService, DialPlanService;
   var userList = [];
-  var userData = [];
   var sharedLineUsers = [];
-  var sharedLineDevices = [];
   var sharedLineEndpoints = [];
   var selectedUsers = [];
   var userDevices = [];
@@ -22,9 +20,6 @@ describe('Controller: LineSettingsCtrl', function () {
       uuid: ''
     }
   };
-  var simultaneousCall = {
-    incomingCallMaximum: 8
-  };
   var errorResponse = {
     message: 'error',
     status: 500
@@ -33,20 +28,14 @@ describe('Controller: LineSettingsCtrl', function () {
   beforeEach(angular.mock.module('Huron'));
   beforeEach(angular.mock.module('Sunlight'));
 
-  var Config;
-  beforeEach(inject(function (_Config_) {
-    Config = _Config_;
-  }));
-
   beforeEach(inject(function (_$rootScope_, _$state_, $controller, _$q_, _$modal_, _Notification_, _DirectoryNumber_, _TelephonyInfoService_, _LineSettings_, _HuronAssignedLine_, _HuronUser_, _ServiceSetup_,
-    _UserListService_, _SharedLineInfoService_, _SimultaneousCallsServiceV2_, _CallerId_, _DeviceService_, _DialPlanService_) {
+    _UserListService_, _SharedLineInfoService_, _CallerId_, _DeviceService_, _DialPlanService_) {
     $rootScope = _$rootScope_;
     $scope = $rootScope.$new();
     $q = _$q_;
     $modal = _$modal_;
     $state = _$state_;
     Notification = _Notification_;
-    SimultaneousCallsServiceV2 = _SimultaneousCallsServiceV2_;
     DirectoryNumber = _DirectoryNumber_;
     TelephonyInfoService = _TelephonyInfoService_;
     LineSettings = _LineSettings_;

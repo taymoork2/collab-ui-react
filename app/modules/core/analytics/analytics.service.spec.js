@@ -1,16 +1,15 @@
 'use strict';
 
 describe('Service: Analytics', function () {
-  var Config, Analytics, Orgservice, $q, $scope, $window;
+  var Config, Analytics, Orgservice, $q, $scope;
 
   beforeEach(angular.mock.module('Core'));
   beforeEach(inject(dependencies));
   beforeEach(initSpies);
 
-  function dependencies(_$q_, $rootScope, _$window_, _Config_, _Analytics_, _Orgservice_) {
+  function dependencies(_$q_, $rootScope, _Config_, _Analytics_, _Orgservice_) {
     $scope = $rootScope.$new();
     $q = _$q_;
-    $window = _$window_;
     Config = _Config_;
     Analytics = _Analytics_;
     Orgservice = _Orgservice_;
@@ -20,7 +19,7 @@ describe('Service: Analytics', function () {
     spyOn(Config, 'isProd');
     spyOn(Analytics, '_init').and.returnValue($q.when());
     spyOn(Analytics, '_track').and.callFake(_.noop);
-    spyOn(Orgservice, 'getOrg').and.callFake(function (callback, oid) {
+    spyOn(Orgservice, 'getOrg').and.callFake(function (callback) {
       callback({
         success: true,
         isTestOrg: true

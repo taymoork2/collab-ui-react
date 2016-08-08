@@ -112,7 +112,7 @@
               return formatName(userObj, '');
             }
           },
-          function (error) {
+          function () {
             return formatName(userObj, '');
           }
         );
@@ -151,7 +151,7 @@
           // success
           return response[0].voiceMailProfile;
         },
-        function (response) {
+        function () {
           // failure
           return null;
         }
@@ -179,7 +179,7 @@
 
       var defer = $q.defer();
 
-      UserListService.listUsers(startat, vm.sort.maxCount, vm.sort.by, vm.sort.order, function (data, status) {
+      UserListService.listUsers(startat, vm.sort.maxCount, vm.sort.by, vm.sort.order, function (data) {
 
         if (data.success) {
           var userInfoPromises = [];

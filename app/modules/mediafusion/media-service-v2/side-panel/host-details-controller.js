@@ -15,7 +15,7 @@
         vm.selectPlaceholder = 'Select One';
         vm.organization = '';
 
-        MediaClusterServiceV2.getOrganization(function (data, status) {
+        MediaClusterServiceV2.getOrganization(function (data) {
           if (data.success) {
             vm.organization = data;
           }

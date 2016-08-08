@@ -5,10 +5,9 @@ describe('Controller: MediaServiceSettingsControllerV2', function () {
   // load the service's module
   beforeEach(angular.mock.module('Mediafusion'));
 
-  var Authinfo, controller, $q, $modal, $translate, $state, $stateParams, redirectTargetPromise;
+  var controller, $q, $modal, redirectTargetPromise;
   var $rootScope;
-  var ServiceDescriptor, NotificationConfigService, MailValidatorService, Notification, XhrNotificationService, MediaServiceActivationV2, FeatureToggleService;
-  var mediaAgentOrgIds = ['mediafusion'];
+  var ServiceDescriptor, MailValidatorService, Notification, XhrNotificationService, MediaServiceActivationV2, FeatureToggleService;
   var serviceId = "squared-fusion-media";
 
   var authInfo = {

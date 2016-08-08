@@ -390,9 +390,9 @@
         var savePromise;
         var notifyName = "Calendar for " + vm.aaModel.aaRecord.callExperienceName;
 
-        vm.ui.isHolidays = (vm.holidays.length) ? true : false;
-        vm.ui.isClosedHours = (vm.openhours.length) || (vm.holidayBehavior && vm.holidays.length) ? true : false;
-        vm.ui.hasClosedHours = (vm.openhours.length) ? true : false;
+        vm.ui.isHolidays = vm.holidays.length > 0;
+        vm.ui.isClosedHours = (vm.openhours.length || (vm.holidayBehavior && vm.holidays.length));
+        vm.ui.hasClosedHours = vm.openhours.length > 0;
         if (vm.holidayBehavior && vm.holidays.length > 0) {
           vm.ui.holidaysValue = 'closedHours';
         } else {
@@ -423,8 +423,8 @@
               name: notifyName
             });
             vm.isDeleted = false;
-            vm.ui.isHolidays = (vm.holidays.length) ? true : false;
-            vm.ui.isClosedHours = (vm.openhours.length || (vm.holidayBehavior && vm.holidays.length)) ? true : false;
+            vm.ui.isHolidays = vm.holidays.length > 0;
+            vm.ui.isClosedHours = (vm.openhours.length || (vm.holidayBehavior && vm.holidays.length));
             $modalInstance.close(response);
           },
           function (response) {
@@ -481,7 +481,7 @@
         });
       }
       return AutoAttendantCeService.updateCe(ceUrl, vm.aaModel.aaRecord)
-        .then(function (response) {
+        .then(function () {
           vm.aaModel.aaRecord.scheduleId = vm.ui.ceInfo.scheduleId;
         }, function (response) {
           // failure in updating CE with schedue id, so clean up the possible orphaned schedule and the objects
@@ -515,12 +515,11 @@
         });
       }
       return AutoAttendantCeService.updateCe(ceUrl, vm.aaModel.aaRecord)
-        .then(function (response) {
+        .then(function () {
           // reset timezone to default system time zone for UI
           vm.ui.timeZone = _.find(vm.ui.timeZoneOptions, function (tzOption) {
             return tzOption.id === vm.ui.systemTimeZone.id;
           });
-
           // success removing ScheduleId from CE, delete the calendar
           return AACalendarService.deleteCalendar(vm.ui.ceInfo.scheduleId).then(function () {
             delete vm.ui.ceInfo.scheduleId;
@@ -531,7 +530,7 @@
     function updateSchedule(calName) {
 
       return AACalendarService.updateCalendar(vm.aaModel.aaRecord.scheduleId, calName, vm.calendar)
-        .then(function (response) {
+        .then(function () {
           return updateCE(vm.aaModel.aaRecord.callExperienceName, false);
         });
     }
@@ -582,7 +581,7 @@
         vm.timeZoneForm.$setPristine();
       }
 
-      vm.holidayBehavior = vm.ui.holidaysValue === 'closedHours' ? true : false;
+      vm.holidayBehavior = vm.ui.holidaysValue === 'closedHours';
 
       vm.timeZone = vm.ui.timeZone;
       vm.timeZoneInfo = $translate.instant('autoAttendant.scheduleModalInfoTimeZone', {
@@ -602,30 +601,30 @@
         controllerAs: 'import'
       });
       importModal.result.then(function (allHours) {
-          if (allHours) {
-            AANotificationService.success('autoAttendant.successImport', {
-              holidays: allHours.holidays.length,
-              hours: allHours.hours.length
+        if (allHours) {
+          AANotificationService.success('autoAttendant.successImport', {
+            holidays: allHours.holidays.length,
+            hours: allHours.hours.length
+          });
+          allHours.hours.forEach(function (value) {
+            _.each(value.days, function (day) {
+              day.label = moment.weekdays(day.index);
             });
-            allHours.hours.forEach(function (value) {
-              _.each(value.days, function (day) {
-                day.label = moment.weekdays(day.index);
-              });
-              vm.openhours.unshift(value);
-            });
-            allHours.holidays.forEach(function (value) {
-              if (!value.exactDate) {
-                value.month.label = moment.months(value.month.index);
-                value.rank.labelTranslate = $translate.instant(value.rank.label);
-                value.day.label = moment.weekdays(value.day.index);
-              }
-              vm.holidays.unshift(value);
-            });
-            vm.holidaysForm.$setDirty();
-          }
-        },
+            vm.openhours.unshift(value);
+          });
+          allHours.holidays.forEach(function (value) {
+            if (!value.exactDate) {
+              value.month.label = moment.months(value.month.index);
+              value.rank.labelTranslate = $translate.instant(value.rank.label);
+              value.day.label = moment.weekdays(value.day.index);
+            }
+            vm.holidays.unshift(value);
+          });
+          vm.holidaysForm.$setDirty();
+        }
+      },
         //on 'fail', cancel was clicked and $dismiss will trigger this response
-        function (allHours) {
+        function () {
           //let Analytics know the property type of 'cancel'
           var type = 'cancel';
           Analytics.trackEvent(AAMetricNameService.IMPORT_SCHEDULE_FEATURE, {
