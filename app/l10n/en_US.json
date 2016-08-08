@@ -4673,6 +4673,8 @@
     "less": "Less",
     "quantity": "Qty: ",
     "upgrade": "Upgrade",
+    "purchase": "Purchase",
+    "onlineTrialUpgradeUrlError": "Unable to retrieve purchase url for trial {{trialId}}.  To purchase a paid subscription, contact your partner via email or use the purchase button on the trial banner to have one sent for you.",
     "licenseTypes": {
       "MS": "Standard Team Rooms",
       "CF": "Meeting 25 Party",
