@@ -10,13 +10,14 @@
     var wizardData = $stateParams.wizard.state().data;
     vm.name = wizardData.expressway.hostname;
     vm.next = next;
+    vm.canGoNext = canGoNext;
     vm.handleKeypress = handleKeypress;
     vm.provisioning = false;
     vm._translation = {
       help: $translate.instant('hercules.expresswayClusterSettings.renameClusterDescription'),
       placeholder: $translate.instant('hercules.addResourceDialog.clusternameWatermark')
     };
-    vm.minlength = 3;
+    vm.minlength = 1;
     vm.validationMessages = {
       required: $translate.instant('common.invalidRequired'),
       minlength: $translate.instant('common.invalidMinLength', {

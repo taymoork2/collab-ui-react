@@ -490,7 +490,8 @@
       }
 
       var voiceData = {};
-      var voiceLanguage = _.find(languages, function (language) {
+
+      _.find(languages, function (language) {
         voiceData = _.findWhere(language.voices, {
           voice: voice
         });

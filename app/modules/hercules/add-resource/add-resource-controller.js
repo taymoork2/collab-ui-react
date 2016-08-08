@@ -79,6 +79,9 @@
 
     function provisionConnector(connectorType, clusterId) {
       return FusionClusterService.provisionConnector(clusterId, connectorType)
+        .then(function () {
+          return clusterId;
+        })
         .catch(function () {
           if (connectorType === 'c_mgmt') {
             throw $translate.instant('hercules.addResourceDialog.cannotProvisionConnector', {
@@ -91,8 +94,8 @@
         });
     }
 
-    function addPreregisteredClusterToAllowList(cluster) {
-      return FusionClusterService.addPreregisteredClusterToAllowList(vm.hostname, 3600, cluster.id)
+    function addPreregisteredClusterToAllowList(clusterId) {
+      return FusionClusterService.addPreregisteredClusterToAllowList(vm.hostname, 3600, clusterId)
         .catch(function () {
           $translate.instant('hercules.addResourceDialog.cannotFinalizeAllowlisting');
         });
@@ -103,7 +106,7 @@
         .then(getAllExpressways)
         .then(_.partial(removeAlreadyProvisionedExpressways, connectorType))
         .then(updateDropdownMenu)
-        .catch(function (error) {
+        .catch(function () {
           XhrNotificationService.notify($translate.instant('hercules.addResourceDialog.cannotReadExpresswayList'));
         });
     }
@@ -178,9 +181,9 @@
         return;
       }
       $modal.open({
-          templateUrl: 'modules/hercules/add-resource/confirm-setup-cancel-dialog.html',
-          type: 'dialog'
-        })
+        templateUrl: 'modules/hercules/add-resource/confirm-setup-cancel-dialog.html',
+        type: 'dialog'
+      })
         .result.then(function (isAborting) {
           if (isAborting) {
             $modalInstance.close();

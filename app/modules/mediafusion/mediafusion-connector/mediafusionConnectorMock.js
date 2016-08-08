@@ -31,14 +31,14 @@
     var cloudServiceType = "common_identity";
     var premServiceType = "";
     switch (connectorType) {
-    case "c_cal":
-      cloudServiceType = "cal_service";
-      premServiceType = "exchange";
-      break;
-    case "c_ucmc":
-      cloudServiceType = "uc_service";
-      premServiceType = "ucm_axl";
-      break;
+      case "c_cal":
+        cloudServiceType = "cal_service";
+        premServiceType = "exchange";
+        break;
+      case "c_ucmc":
+        cloudServiceType = "uc_service";
+        premServiceType = "ucm_axl";
+        break;
     }
     return {
       "operational": true,
@@ -68,10 +68,10 @@
       };
       if (Math.floor((Math.random() * 10) % 9) === 0) {
         connector.alarms = [createAlarm({
-            title: "Unable to connect",
-            severity: "error",
-            description: "Can't connect to the damn thing. Need some help here!"
-          }),
+          title: "Unable to connect",
+          severity: "error",
+          description: "Can't connect to the damn thing. Need some help here!"
+        }),
           createAlarm({
             title: "My head is hurting",
             severity: "critical",

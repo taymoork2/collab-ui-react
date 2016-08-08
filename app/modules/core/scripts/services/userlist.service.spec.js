@@ -1,14 +1,14 @@
 'use strict';
 
 describe('User List Service', function () {
-  beforeEach(module('Core'));
+  beforeEach(angular.mock.module('Core'));
 
-  var $httpBackend, $rootScope, UserListService, Authinfo, Config, UrlConfig;
+  var $httpBackend, UserListService, Authinfo, UrlConfig;
 
   var testData;
 
   beforeEach(function () {
-    module(function ($provide) {
+    angular.mock.module(function ($provide) {
       Authinfo = {
         getOrgId: function () {
           return '12345';
@@ -19,13 +19,11 @@ describe('User List Service', function () {
     });
   });
 
-  beforeEach(inject(function (_$httpBackend_, _$rootScope_, _UserListService_, _Config_, _Authinfo_, _UrlConfig_) {
+  beforeEach(inject(function (_$httpBackend_, _UserListService_, _Authinfo_, _UrlConfig_) {
     $httpBackend = _$httpBackend_;
     UserListService = _UserListService_;
     UrlConfig = _UrlConfig_;
-    Config = _Config_;
     Authinfo = _Authinfo_;
-    $rootScope = _$rootScope_;
 
     testData = getJSONFixture('core/json/users/userlist.service.json');
   }));
@@ -54,7 +52,7 @@ describe('User List Service', function () {
 
     UserListService.listUsers(testData.listUsers.startIndex, testData.listUsers.count,
       testData.listUsers.sortBy, testData.listUsers.sortOrder,
-      function (data, status, searchStr) {
+      function (data, status) {
         expect(status).toBe(200);
         expect(data.TotalResults).toBe('2');
         expect(data.itemsPerPage).toBe('2');
@@ -81,7 +79,7 @@ describe('User List Service', function () {
 
     UserListService.listUsers(0, 10,
       null, null,
-      function (data, status, searchStr) {
+      function (data, status) {
         expect(status).toBe(200);
         expect(data.TotalResults).toBe('2');
         expect(data.itemsPerPage).toBe('2');
@@ -108,7 +106,7 @@ describe('User List Service', function () {
 
     UserListService.listUsers(0, 10,
       null, null,
-      function (data, status, searchStr) {
+      function (data, status) {
         expect(status).toBe(200);
         expect(data.TotalResults).toBe('2');
         expect(data.itemsPerPage).toBe('2');
@@ -135,7 +133,7 @@ describe('User List Service', function () {
 
     UserListService.listUsers(0, 10,
       null, null,
-      function (data, status, searchStr) {
+      function (data, status) {
         expect(status).toBe(200);
         expect(data.TotalResults).toBe('2');
         expect(data.itemsPerPage).toBe('2');

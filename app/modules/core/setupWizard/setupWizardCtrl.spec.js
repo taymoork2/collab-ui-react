@@ -1,18 +1,22 @@
 'use strict';
 
 describe('SetupWizardCtrl', function () {
-  beforeEach(module('Core'));
-  beforeEach(module('Huron'));
-  beforeEach(module('Sunlight'));
+  beforeEach(angular.mock.module('Core'));
+  beforeEach(angular.mock.module('Huron'));
+  beforeEach(angular.mock.module('Sunlight'));
 
-  var controller, $scope, $controller, Authinfo, $q, FeatureToggleService;
+  var $controller, $scope, $q, Authinfo, FeatureToggleService, Orgservice;
 
-  beforeEach(inject(function ($rootScope, _$controller_, _$q_, _Authinfo_, _FeatureToggleService_) {
+  var usageFixture = getJSONFixture('core/json/organizations/usage.json');
+  var usageOnlySharedDevicesFixture = getJSONFixture('core/json/organizations/usageOnlySharedDevices.json');
+
+  beforeEach(inject(function ($rootScope, _$controller_, _$q_, _Authinfo_, _FeatureToggleService_, _Orgservice_) {
     $scope = $rootScope.$new();
     $q = _$q_;
     $controller = _$controller_;
     Authinfo = _Authinfo_;
     FeatureToggleService = _FeatureToggleService_;
+    Orgservice = _Orgservice_;
 
     spyOn(Authinfo, 'isCustomerAdmin').and.returnValue(true);
     spyOn(Authinfo, 'isSetupDone').and.returnValue(false);
@@ -21,6 +25,8 @@ describe('SetupWizardCtrl', function () {
 
     spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(false));
     spyOn(FeatureToggleService, 'supportsDirSync').and.returnValue($q.when(false));
+    spyOn(FeatureToggleService, 'atlasDarlingGetStatus').and.returnValue($q.when(false));
+    spyOn(Orgservice, 'getAdminOrgUsage').and.returnValue($q.when(usageFixture));
   }));
 
   function _expectStepIndex(step, index) {
@@ -39,69 +45,6 @@ describe('SetupWizardCtrl', function () {
         name: subStep
       })
       .value()).toBe(index);
-  }
-
-  function _expectSubTabIndex(step, subTab, index) {
-    expect(_.chain($scope.tabs)
-      .find({
-        name: step
-      })
-      .get('subTabs')
-      .findIndex({
-        name: subTab.name
-      })
-      .value()).toBe(index);
-  }
-
-  function _expectSubTabSubStepIndex(step, subTab, subStep, index) {
-    expect(_.chain($scope.tabs)
-      .find({
-        name: step
-      })
-      .get('subTabs')
-      .find({
-        name: subTab
-      })
-      .get('steps')
-      .findIndex({
-        name: subStep.name
-      })
-      .value()).toBe(index);
-  }
-
-  function expectSubTabOrder(macroStep, subTabs) {
-    // verify substeps length
-    var subTabsVal = _.chain($scope.tabs)
-      .find({
-        name: macroStep
-      })
-      .get('subTabs')
-      .value();
-
-    expect(subTabsVal.length).toBe(subTabs.length);
-
-    _.forEach(subTabsVal, function (subTab, index) {
-      _expectSubTabIndex(macroStep, subTab, index);
-    });
-  }
-
-  function expectSubTabStepOrder(macroStep, subTab, steps) {
-    var stepsVal = _.chain($scope.tabs)
-      .find({
-        name: macroStep
-      })
-      .get('subTabs')
-      .find({
-        name: subTab
-      })
-      .get('steps')
-      .value();
-
-    expect(stepsVal.length).toBe(steps.length);
-
-    _.forEach(stepsVal, function (step, index) {
-      _expectSubTabSubStepIndex(macroStep, subTab, step, index);
-    });
   }
 
   function expectStepOrder(steps) {
@@ -127,7 +70,7 @@ describe('SetupWizardCtrl', function () {
   }
 
   function initController() {
-    controller = $controller('SetupWizardCtrl', {
+    $controller('SetupWizardCtrl', {
       $scope: $scope
     });
     $scope.$apply();
@@ -244,6 +187,20 @@ describe('SetupWizardCtrl', function () {
     });
   });
 
+  describe('When there are only shared device licenses', function () {
+    beforeEach(function () {
+      FeatureToggleService.atlasDarlingGetStatus = jasmine.createSpy().and.returnValue($q.when(true));
+      Orgservice.getAdminOrgUsage = jasmine.createSpy().and.returnValue($q.when(usageOnlySharedDevicesFixture));
+
+      initController();
+    });
+
+    it('the wizard should have 3 tabs', function () {
+      expectStepOrder(['planReview', 'enterpriseSettings', 'finish']);
+      expectSubStepOrder('enterpriseSettings', ['enterpriseSipUrl']);
+    });
+  });
+
   describe('When everything is true', function () {
     beforeEach(function () {
       Authinfo.isSetupDone.and.returnValue(true);
@@ -265,7 +222,7 @@ describe('SetupWizardCtrl', function () {
   });
 
   it('will filter tabs if onlyShowSingleTab is true', function () {
-    controller = $controller('SetupWizardCtrl', {
+    $controller('SetupWizardCtrl', {
       $scope: $scope,
       $stateParams: {
         onlyShowSingleTab: true,
@@ -278,7 +235,7 @@ describe('SetupWizardCtrl', function () {
   });
 
   it('will filter steps if onlyShowSingleTab is true and currentStep is set.', function () {
-    controller = $controller('SetupWizardCtrl', {
+    $controller('SetupWizardCtrl', {
       $scope: $scope,
       $stateParams: {
         currentTab: 'enterpriseSettings',

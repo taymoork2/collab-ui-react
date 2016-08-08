@@ -81,7 +81,7 @@ var UsersPage = function () {
   this.squaredCheckBox = element(by.css('label[for="chk_webExSquared"]'));
   this.squaredUCCheckBox = element(by.css('label[for="chk_ciscoUC"]'));
   this.paidMsgCheckbox = element(by.css('label[for="paid-msg"]'));
-  this.paidMtgCheckbox = element(by.cssContainingText('cs-checkbox', 'Meeting 25 Party'));
+  this.paidMtgCheckbox = element(by.css('label[for="paid-conf"]'));
   this.paidCareCheckbox = element(by.cssContainingText('cs-checkbox', 'Care'));
 
   this.closePreview = element(by.id('exitPreviewButton'));
@@ -104,8 +104,8 @@ var UsersPage = function () {
   this.saveButton = element(by.buttonText('Save'));
   this.finishButton = element(by.buttonText('Finish'));
 
-  this.clearButton = element(by.id('btnClear'));
-  this.backButton = element(by.buttonText('Clear'));
+  this.clearButton = element(by.css('.clear-button'));
+  this.backButton = element(by.buttonText('Back'));
   this.nextButton = element(by.buttonText('Next'));
 
   this.currentPage = element(by.css('.pagination-current a'));
@@ -255,7 +255,7 @@ var UsersPage = function () {
 
     activate.setup(null, alias);
     utils.search(alias);
-  }
+  };
 
   this.clickServiceCheckbox = function (alias, expectedMsgState, expectedMtgState, clickService) {
     function expectDisplayed(elem, state) {
@@ -275,8 +275,8 @@ var UsersPage = function () {
     utils.click(users.editServicesButton);
 
     utils.waitForModal().then(function () {
-      utils.expectCheckbox(users.paidMsgCheckbox, expectedMsgState);
-      utils.expectCheckbox(users.paidMtgCheckbox, expectedMtgState);
+      utils.expectInputCheckbox(users.paidMsgCheckbox, expectedMsgState);
+      utils.expectInputCheckbox(users.paidMtgCheckbox, expectedMtgState);
 
       // Uncheck license...
       utils.click(clickService);
@@ -298,7 +298,7 @@ var UsersPage = function () {
       .value();
     utils.writeFile(path, fileText);
     return userList;
-  }
+  };
 };
 
 module.exports = UsersPage;

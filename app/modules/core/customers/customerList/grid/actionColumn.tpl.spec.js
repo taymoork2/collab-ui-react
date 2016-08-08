@@ -1,29 +1,31 @@
 (function () {
   'use strict';
 
-  var $rootScope, $scope, $compile, $templateCache, $q, $controller, controller, view;
-  var Authinfo, customerListToggle, FeatureToggleService, Orgservice, PartnerService, TrialService;
+  var $scope, $compile, $templateCache, $q, $controller, view;
+  var customerListToggle, FeatureToggleService, Orgservice, PartnerService, TrialService;
 
   describe('Template: actionColumn.tpl.html', function () {
 
-    beforeEach(module('Core'));
-    beforeEach(module('Huron'));
-    beforeEach(module('Sunlight'));
+    beforeEach(angular.mock.module('wx2AdminWebClientApp')); // need the states for template ui-sref
+    beforeEach(angular.mock.module('Huron'));
+    beforeEach(angular.mock.module('Sunlight'));
+
     beforeEach(inject(dependencies));
 
     // TODO: refactor this once we have a way of sharing code in karma unit tests (dupe code of
     //   'customerList.tpl.spec.js')
-    function dependencies($rootScope, _$compile_, _$templateCache_, _$controller_, _$q_, _Authinfo_, _FeatureToggleService_, _Orgservice_, _PartnerService_, _TrialService_) {
+    function dependencies($rootScope, _$compile_, _$httpBackend_, _$templateCache_, _$controller_, _$q_, _FeatureToggleService_, _Orgservice_, _PartnerService_, _TrialService_) {
       $scope = $rootScope.$new();
       $compile = _$compile_;
       $templateCache = _$templateCache_;
       $controller = _$controller_;
-      Authinfo = _Authinfo_;
       PartnerService = _PartnerService_;
       FeatureToggleService = _FeatureToggleService_;
       Orgservice = _Orgservice_;
       TrialService = _TrialService_;
       $q = _$q_;
+      _$httpBackend_.whenGET('l10n/en_US.json').respond({});
+
       $rootScope.typeOfExport = {
         USER: 1,
         CUSTOMER: 2
@@ -38,7 +40,7 @@
         data: {}
       }));
       spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
-      spyOn(Orgservice, 'getOrg').and.callFake(function (callback, oid) {
+      spyOn(Orgservice, 'getOrg').and.callFake(function (callback) {
         callback({
           success: true
         }, 200);
@@ -49,7 +51,7 @@
     }
 
     function compileViewWithMockData(mockData) {
-      controller = $controller('CustomerListCtrl', {
+      $controller('CustomerListCtrl', {
         $scope: $scope,
         customerListToggle: customerListToggle
       });

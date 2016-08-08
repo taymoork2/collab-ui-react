@@ -36,29 +36,29 @@
 
       var updateFilters = function (list) {
         _.find(filters, {
-            filterValue: 'codes'
-          }).count = _.chain(list)
+          filterValue: 'codes'
+        }).count = _.chain(list)
           .filter(isActivationCode)
           .filter(matchesSearch)
           .value().length;
 
         _.find(filters, {
-            filterValue: 'issues'
-          }).count = _.chain(list)
+          filterValue: 'issues'
+        }).count = _.chain(list)
           .filter(hasIssues)
           .filter(matchesSearch)
           .value().length;
 
         _.find(filters, {
-            filterValue: 'online'
-          }).count = _.chain(list)
+          filterValue: 'online'
+        }).count = _.chain(list)
           .filter(isOnline)
           .filter(matchesSearch)
           .value().length;
 
         _.find(filters, {
-            filterValue: 'offline'
-          }).count = _.chain(list)
+          filterValue: 'offline'
+        }).count = _.chain(list)
           .filter(isOffline)
           .filter(matchesSearch)
           .value().length;
@@ -141,18 +141,18 @@
 
       function matchesFilter(item) {
         switch (currentFilter) {
-        case 'all':
-          return true;
-        case 'codes':
-          return isActivationCode(item);
-        case 'issues':
-          return hasIssues(item);
-        case 'online':
-          return isOnline(item);
-        case 'offline':
-          return isOffline(item);
-        default:
-          return true;
+          case 'all':
+            return true;
+          case 'codes':
+            return isActivationCode(item);
+          case 'issues':
+            return hasIssues(item);
+          case 'online':
+            return isOnline(item);
+          case 'offline':
+            return isOffline(item);
+          default:
+            return true;
         }
       }
 

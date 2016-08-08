@@ -1,0 +1,1078 @@
+[{
+  "url": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/clusters/cfbb1949-b2bc-4524-8bba-cc09b97af862",
+  "id": "cfbb1949-b2bc-4524-8bba-cc09b97af862",
+  "name": "Shanghai",
+  "connectors": [{
+    "url": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/clusters/cfbb1949-b2bc-4524-8bba-cc09b97af862/connectors/mf_mgmt@797e1964-ac87-4671-9b24-c14c32c27759",
+    "id": "mf_mgmt@797e1964-ac87-4671-9b24-c14c32c27759",
+    "connectorType": "mf_mgmt",
+    "upgradeState": "upgraded",
+    "state": "running",
+    "hostname": "gt-mfusion1-shn.discotheque.com",
+    "hostSerial": "797e1964-ac87-4671-9b24-c14c32c27759",
+    "alarms": [{
+      "id": "mf.linus.connectivityError",
+      "firstReported": "2016-07-23T04:02:53.124Z",
+      "lastReported": "2016-08-01T17:27:31.466Z",
+      "severity": "critical",
+      "title": "Call switching process connection failure",
+      "description": "The call switching process lost connectivity with the cloud."
+    }],
+    "runningVersion": "2016.07.14.178",
+    "packageUrl": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/channels/ALPHA/packages/mf_mgmt",
+    "registered": true
+  }],
+  "releaseChannel": "ALPHA",
+  "provisioning": [{
+    "url": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/clusters/cfbb1949-b2bc-4524-8bba-cc09b97af862/provisioning/mf_mgmt",
+    "connectorType": "mf_mgmt",
+    "provisionedVersion": "1.0",
+    "availableVersion": "1.0",
+    "packageUrl": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/channels/ALPHA/packages/mf_mgmt"
+  }],
+  "registered": true,
+  "targetType": "mf_mgmt",
+  "upgradeScheduleUrl": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/clusters/cfbb1949-b2bc-4524-8bba-cc09b97af862/upgradeSchedule",
+  "upgradeSchedule": {
+    "scheduleDays": ["sunday", "saturday", "tuesday", "wednesday", "thursday", "friday", "monday"],
+    "scheduleTime": "03:00",
+    "scheduleTimeZone": "America/Los_Angeles",
+    "moratoria": [],
+    "nextUpgradeWindow": {
+      "startTime": "2016-08-03T10:00:31.770Z",
+      "endTime": "2016-08-03T11:00:31.770Z"
+    },
+    "url": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/clusters/cfbb1949-b2bc-4524-8bba-cc09b97af862/upgradeSchedule"
+  }
+}, {
+  "url": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/clusters/83871c8f-678b-11e5-a13a-005056810cf8",
+  "id": "83871c8f-678b-11e5-a13a-005056810cf8",
+  "name": "vcs-amz4.discotheque.com",
+  "connectors": [{
+    "url": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/clusters/83871c8f-678b-11e5-a13a-005056810cf8/connectors/c_mgmt@04425696",
+    "id": "c_mgmt@04425696",
+    "connectorType": "c_mgmt",
+    "upgradeState": "upgraded",
+    "state": "running",
+    "hostname": "vcs-amz42-sjc.discotheque.com",
+    "hostSerial": "04425696",
+    "alarms": [],
+    "runningVersion": "8.7-1.0.321162",
+    "packageUrl": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/channels/GA/packages/c_mgmt",
+    "registered": true
+  }, {
+    "url": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/clusters/83871c8f-678b-11e5-a13a-005056810cf8/connectors/c_cal@08E13448",
+    "id": "c_cal@08E13448",
+    "connectorType": "c_cal",
+    "upgradeState": "upgraded",
+    "state": "not_configured",
+    "hostname": "vcs-amz41-mtv.discotheque.com",
+    "hostSerial": "08E13448",
+    "alarms": [],
+    "runningVersion": "8.7-1.0.3251",
+    "packageUrl": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/channels/GA/packages/c_cal",
+    "registered": true
+  }, {
+    "url": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/clusters/83871c8f-678b-11e5-a13a-005056810cf8/connectors/c_cal@04425696",
+    "id": "c_cal@04425696",
+    "connectorType": "c_cal",
+    "upgradeState": "upgraded",
+    "state": "not_configured",
+    "hostname": "vcs-amz42-sjc.discotheque.com",
+    "hostSerial": "04425696",
+    "alarms": [],
+    "runningVersion": "8.7-1.0.3251",
+    "packageUrl": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/channels/GA/packages/c_cal",
+    "registered": true
+  }, {
+    "url": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/clusters/83871c8f-678b-11e5-a13a-005056810cf8/connectors/c_ucmc@08E13448",
+    "id": "c_ucmc@08E13448",
+    "connectorType": "c_ucmc",
+    "upgradeState": "upgraded",
+    "state": "running",
+    "hostname": "vcs-amz41-mtv.discotheque.com",
+    "hostSerial": "08E13448",
+    "alarms": [],
+    "runningVersion": "8.7-1.0.2265",
+    "packageUrl": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/channels/GA/packages/c_ucmc",
+    "registered": true
+  }, {
+    "url": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/clusters/83871c8f-678b-11e5-a13a-005056810cf8/connectors/c_ucmc@04425696",
+    "id": "c_ucmc@04425696",
+    "connectorType": "c_ucmc",
+    "upgradeState": "upgraded",
+    "state": "running",
+    "hostname": "vcs-amz42-sjc.discotheque.com",
+    "hostSerial": "04425696",
+    "alarms": [],
+    "runningVersion": "8.7-1.0.2265",
+    "packageUrl": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/channels/GA/packages/c_ucmc",
+    "registered": true
+  }, {
+    "url": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/clusters/83871c8f-678b-11e5-a13a-005056810cf8/connectors/c_mgmt@08E13448",
+    "id": "c_mgmt@08E13448",
+    "connectorType": "c_mgmt",
+    "upgradeState": "upgraded",
+    "state": "running",
+    "hostname": "vcs-amz41-mtv.discotheque.com",
+    "hostSerial": "08E13448",
+    "alarms": [],
+    "runningVersion": "8.7-1.0.321162",
+    "packageUrl": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/channels/GA/packages/c_mgmt",
+    "registered": true
+  }],
+  "releaseChannel": "GA",
+  "provisioning": [{
+    "url": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/clusters/83871c8f-678b-11e5-a13a-005056810cf8/provisioning/c_ucmc",
+    "connectorType": "c_ucmc",
+    "provisionedVersion": "8.7-1.0.2265",
+    "availableVersion": "8.7-1.0.2265",
+    "packageUrl": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/channels/GA/packages/c_ucmc"
+  }, {
+    "url": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/clusters/83871c8f-678b-11e5-a13a-005056810cf8/provisioning/c_cal",
+    "connectorType": "c_cal",
+    "provisionedVersion": "8.7-1.0.3251",
+    "availableVersion": "8.7-1.0.3251",
+    "packageUrl": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/channels/GA/packages/c_cal"
+  }, {
+    "url": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/clusters/83871c8f-678b-11e5-a13a-005056810cf8/provisioning/c_mgmt",
+    "connectorType": "c_mgmt",
+    "provisionedVersion": "8.7-1.0.321162",
+    "availableVersion": "8.7-1.0.321162",
+    "packageUrl": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/channels/GA/packages/c_mgmt"
+  }],
+  "registered": true,
+  "targetType": "c_mgmt",
+  "upgradeScheduleUrl": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/clusters/83871c8f-678b-11e5-a13a-005056810cf8/upgradeSchedule",
+  "upgradeSchedule": {
+    "scheduleDays": ["thursday"],
+    "scheduleTime": "14:00",
+    "scheduleTimeZone": "America/Los_Angeles",
+    "moratoria": [],
+    "nextUpgradeWindow": {
+      "startTime": "2016-08-04T21:00:31.818Z",
+      "endTime": "2016-08-04T22:00:31.818Z"
+    },
+    "url": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/clusters/83871c8f-678b-11e5-a13a-005056810cf8/upgradeSchedule"
+  }
+}, {
+  "url": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/clusters/c41e9d3a-0c03-4178-9144-fdc282d21b0f",
+  "id": "c41e9d3a-0c03-4178-9144-fdc282d21b0f",
+  "name": "Galway",
+  "connectors": [{
+    "url": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/clusters/c41e9d3a-0c03-4178-9144-fdc282d21b0f/connectors/mf_mgmt@7ec017a1-2aaa-443f-a56f-74831f1d1258",
+    "id": "mf_mgmt@7ec017a1-2aaa-443f-a56f-74831f1d1258",
+    "connectorType": "mf_mgmt",
+    "upgradeState": "upgraded",
+    "state": "running",
+    "hostname": "gt-mfusion1-gwy.discotheque.com",
+    "hostSerial": "7ec017a1-2aaa-443f-a56f-74831f1d1258",
+    "alarms": [{
+      "id": "mf.linus.connectivityError",
+      "firstReported": "2016-07-26T17:18:02.363Z",
+      "lastReported": "2016-07-30T01:41:14.144Z",
+      "severity": "critical",
+      "title": "Call switching process connection failure",
+      "description": "The call switching process lost connectivity with the cloud."
+    }],
+    "runningVersion": "2016.07.14.178",
+    "packageUrl": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/channels/ALPHA/packages/mf_mgmt",
+    "registered": true
+  }],
+  "releaseChannel": "ALPHA",
+  "provisioning": [{
+    "url": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/clusters/c41e9d3a-0c03-4178-9144-fdc282d21b0f/provisioning/mf_mgmt",
+    "connectorType": "mf_mgmt",
+    "provisionedVersion": "1.0",
+    "availableVersion": "1.0",
+    "packageUrl": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/channels/ALPHA/packages/mf_mgmt"
+  }],
+  "registered": true,
+  "targetType": "mf_mgmt",
+  "upgradeScheduleUrl": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/clusters/c41e9d3a-0c03-4178-9144-fdc282d21b0f/upgradeSchedule",
+  "upgradeSchedule": {
+    "scheduleDays": ["sunday", "saturday", "tuesday", "wednesday", "thursday", "friday", "monday"],
+    "scheduleTime": "03:00",
+    "scheduleTimeZone": "America/Los_Angeles",
+    "moratoria": [],
+    "nextUpgradeWindow": {
+      "startTime": "2016-08-03T10:00:31.763Z",
+      "endTime": "2016-08-03T11:00:31.763Z"
+    },
+    "url": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/clusters/c41e9d3a-0c03-4178-9144-fdc282d21b0f/upgradeSchedule"
+  }
+}, {
+  "url": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/clusters/32b2501a-da58-45e0-9aad-06bc5acb5ac2",
+  "id": "32b2501a-da58-45e0-9aad-06bc5acb5ac2",
+  "name": "San Jose",
+  "connectors": [{
+    "url": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/clusters/32b2501a-da58-45e0-9aad-06bc5acb5ac2/connectors/mf_mgmt@b94f28c6-70c4-4693-bebd-893a631e6288",
+    "id": "mf_mgmt@b94f28c6-70c4-4693-bebd-893a631e6288",
+    "connectorType": "mf_mgmt",
+    "upgradeState": "upgraded",
+    "state": "running",
+    "hostname": "gt-mfusion2-sjc.discotheque.com",
+    "hostSerial": "b94f28c6-70c4-4693-bebd-893a631e6288",
+    "alarms": [{
+      "id": "mf.linus.connectivityError",
+      "firstReported": "2016-07-23T05:02:43.424Z",
+      "lastReported": "2016-08-01T17:43:08.760Z",
+      "severity": "critical",
+      "title": "Call switching process connection failure",
+      "description": "The call switching process lost connectivity with the cloud."
+    }],
+    "runningVersion": "2016.07.14.178",
+    "packageUrl": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/channels/ALPHA/packages/mf_mgmt",
+    "registered": true
+  }, {
+    "url": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/clusters/32b2501a-da58-45e0-9aad-06bc5acb5ac2/connectors/mf_mgmt@bffe9fdd-7bc9-490f-aa75-896f557efe92",
+    "id": "mf_mgmt@bffe9fdd-7bc9-490f-aa75-896f557efe92",
+    "connectorType": "mf_mgmt",
+    "upgradeState": "upgraded",
+    "state": "running",
+    "hostname": "gt-mfusion1-sjc.discotheque.com",
+    "hostSerial": "bffe9fdd-7bc9-490f-aa75-896f557efe92",
+    "alarms": [{
+      "id": "mf.linus.connectivityError",
+      "firstReported": "2016-07-25T19:38:34.527Z",
+      "lastReported": "2016-07-30T01:34:37.227Z",
+      "severity": "critical",
+      "title": "Call switching process connection failure",
+      "description": "The call switching process lost connectivity with the cloud."
+    }],
+    "runningVersion": "2016.07.14.178",
+    "packageUrl": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/channels/ALPHA/packages/mf_mgmt",
+    "registered": true
+  }],
+  "releaseChannel": "ALPHA",
+  "provisioning": [{
+    "url": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/clusters/32b2501a-da58-45e0-9aad-06bc5acb5ac2/provisioning/mf_mgmt",
+    "connectorType": "mf_mgmt",
+    "provisionedVersion": "1.0",
+    "availableVersion": "1.0",
+    "packageUrl": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/channels/ALPHA/packages/mf_mgmt"
+  }],
+  "registered": true,
+  "targetType": "mf_mgmt",
+  "upgradeScheduleUrl": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/clusters/32b2501a-da58-45e0-9aad-06bc5acb5ac2/upgradeSchedule",
+  "upgradeSchedule": {
+    "scheduleDays": ["sunday", "saturday", "tuesday", "wednesday", "thursday", "friday", "monday"],
+    "scheduleTime": "03:00",
+    "scheduleTimeZone": "America/Los_Angeles",
+    "moratoria": [],
+    "nextUpgradeWindow": {
+      "startTime": "2016-08-03T10:00:31.784Z",
+      "endTime": "2016-08-03T11:00:31.784Z"
+    },
+    "url": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/clusters/32b2501a-da58-45e0-9aad-06bc5acb5ac2/upgradeSchedule"
+  }
+}, {
+  "url": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/clusters/f5aba433-f5eb-11e5-8f48-005056815ded",
+  "id": "f5aba433-f5eb-11e5-8f48-005056815ded",
+  "name": "vcs-apz4.discotheque.com",
+  "connectors": [{
+    "url": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/clusters/f5aba433-f5eb-11e5-8f48-005056815ded/connectors/c_cal@06274EE5",
+    "id": "c_cal@06274EE5",
+    "connectorType": "c_cal",
+    "upgradeState": "upgraded",
+    "state": "not_configured",
+    "hostname": "vcs-apz41-sng.discotheque.com",
+    "hostSerial": "06274EE5",
+    "alarms": [],
+    "runningVersion": "8.6-1.0.2654",
+    "packageUrl": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/channels/GA/packages/c_cal",
+    "registered": true
+  }, {
+    "url": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/clusters/f5aba433-f5eb-11e5-8f48-005056815ded/connectors/c_mgmt@06274EE5",
+    "id": "c_mgmt@06274EE5",
+    "connectorType": "c_mgmt",
+    "upgradeState": "upgraded",
+    "state": "running",
+    "hostname": "vcs-apz41-sng.discotheque.com",
+    "hostSerial": "06274EE5",
+    "alarms": [],
+    "runningVersion": "8.7-1.0.321139",
+    "packageUrl": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/channels/GA/packages/c_mgmt",
+    "registered": true
+  }, {
+    "url": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/clusters/f5aba433-f5eb-11e5-8f48-005056815ded/connectors/c_mgmt@010C5A6B",
+    "id": "c_mgmt@010C5A6B",
+    "connectorType": "c_mgmt",
+    "upgradeState": "upgraded",
+    "state": "running",
+    "hostname": "vcs-apz42-sng.discotheque.com",
+    "hostSerial": "010C5A6B",
+    "alarms": [],
+    "runningVersion": "8.7-1.0.321139",
+    "packageUrl": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/channels/GA/packages/c_mgmt",
+    "registered": true
+  }, {
+    "url": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/clusters/f5aba433-f5eb-11e5-8f48-005056815ded/connectors/c_cal@010C5A6B",
+    "id": "c_cal@010C5A6B",
+    "connectorType": "c_cal",
+    "upgradeState": "upgraded",
+    "state": "not_configured",
+    "hostname": "vcs-apz42-sng.discotheque.com",
+    "hostSerial": "010C5A6B",
+    "alarms": [],
+    "runningVersion": "8.6-1.0.2654",
+    "packageUrl": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/channels/GA/packages/c_cal",
+    "registered": true
+  }, {
+    "url": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/clusters/f5aba433-f5eb-11e5-8f48-005056815ded/connectors/c_ucmc@06274EE5",
+    "id": "c_ucmc@06274EE5",
+    "connectorType": "c_ucmc",
+    "upgradeState": "upgraded",
+    "state": "running",
+    "hostname": "vcs-apz41-sng.discotheque.com",
+    "hostSerial": "06274EE5",
+    "alarms": [],
+    "runningVersion": "8.7-1.0.2094",
+    "packageUrl": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/channels/GA/packages/c_ucmc",
+    "registered": true
+  }, {
+    "url": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/clusters/f5aba433-f5eb-11e5-8f48-005056815ded/connectors/c_ucmc@010C5A6B",
+    "id": "c_ucmc@010C5A6B",
+    "connectorType": "c_ucmc",
+    "upgradeState": "upgraded",
+    "state": "installing",
+    "hostname": "vcs-apz42-sng.discotheque.com",
+    "hostSerial": "010C5A6B",
+    "alarms": [],
+    "runningVersion": "8.7-1.0.2094",
+    "packageUrl": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/channels/GA/packages/c_ucmc",
+    "registered": true
+  }],
+  "releaseChannel": "GA",
+  "provisioning": [{
+    "url": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/clusters/f5aba433-f5eb-11e5-8f48-005056815ded/provisioning/c_mgmt",
+    "connectorType": "c_mgmt",
+    "provisionedVersion": "8.7-1.0.321162",
+    "availableVersion": "8.7-1.0.321162",
+    "packageUrl": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/channels/GA/packages/c_mgmt"
+  }, {
+    "url": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/clusters/f5aba433-f5eb-11e5-8f48-005056815ded/provisioning/c_ucmc",
+    "connectorType": "c_ucmc",
+    "provisionedVersion": "8.7-1.0.2265",
+    "availableVersion": "8.7-1.0.2265",
+    "packageUrl": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/channels/GA/packages/c_ucmc"
+  }, {
+    "url": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/clusters/f5aba433-f5eb-11e5-8f48-005056815ded/provisioning/c_cal",
+    "connectorType": "c_cal",
+    "provisionedVersion": "8.7-1.0.3251",
+    "availableVersion": "8.7-1.0.3251",
+    "packageUrl": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/channels/GA/packages/c_cal"
+  }],
+  "registered": true,
+  "targetType": "c_mgmt",
+  "upgradeScheduleUrl": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/clusters/f5aba433-f5eb-11e5-8f48-005056815ded/upgradeSchedule",
+  "upgradeSchedule": {
+    "scheduleDays": ["thursday"],
+    "scheduleTime": "14:00",
+    "scheduleTimeZone": "America/Los_Angeles",
+    "moratoria": [],
+    "nextUpgradeWindow": {
+      "startTime": "2016-08-04T21:00:31.765Z",
+      "endTime": "2016-08-04T22:00:31.765Z"
+    },
+    "url": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/clusters/f5aba433-f5eb-11e5-8f48-005056815ded/upgradeSchedule"
+  }
+}, {
+  "url": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/clusters/6b144526-bdd4-420e-9bc9-cebd7f89326d",
+  "id": "6b144526-bdd4-420e-9bc9-cebd7f89326d",
+  "name": "Bedfont Lake",
+  "connectors": [{
+    "url": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/clusters/6b144526-bdd4-420e-9bc9-cebd7f89326d/connectors/mf_mgmt@128a9621-b7fc-4456-b0c2-ebe6ad23b793",
+    "id": "mf_mgmt@128a9621-b7fc-4456-b0c2-ebe6ad23b793",
+    "connectorType": "mf_mgmt",
+    "upgradeState": "upgraded",
+    "state": "running",
+    "hostname": "gt-mfusion1-gmt.discotheque.com",
+    "hostSerial": "128a9621-b7fc-4456-b0c2-ebe6ad23b793",
+    "alarms": [{
+      "id": "mf.linus.connectivityError",
+      "firstReported": "2016-07-16T17:43:23.774Z",
+      "lastReported": "2016-07-30T01:50:16.792Z",
+      "severity": "critical",
+      "title": "Call switching process connection failure",
+      "description": "The call switching process lost connectivity with the cloud."
+    }],
+    "runningVersion": "2016.07.14.178",
+    "packageUrl": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/channels/ALPHA/packages/mf_mgmt",
+    "registered": true
+  }],
+  "releaseChannel": "ALPHA",
+  "provisioning": [{
+    "url": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/clusters/6b144526-bdd4-420e-9bc9-cebd7f89326d/provisioning/mf_mgmt",
+    "connectorType": "mf_mgmt",
+    "provisionedVersion": "1.0",
+    "availableVersion": "1.0",
+    "packageUrl": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/channels/ALPHA/packages/mf_mgmt"
+  }],
+  "registered": true,
+  "targetType": "mf_mgmt",
+  "upgradeScheduleUrl": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/clusters/6b144526-bdd4-420e-9bc9-cebd7f89326d/upgradeSchedule",
+  "upgradeSchedule": {
+    "scheduleDays": ["sunday", "saturday", "tuesday", "wednesday", "thursday", "friday", "monday"],
+    "scheduleTime": "03:00",
+    "scheduleTimeZone": "America/Los_Angeles",
+    "moratoria": [],
+    "nextUpgradeWindow": {
+      "startTime": "2016-08-03T10:00:31.780Z",
+      "endTime": "2016-08-03T11:00:31.780Z"
+    },
+    "url": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/clusters/6b144526-bdd4-420e-9bc9-cebd7f89326d/upgradeSchedule"
+  }
+}, {
+  "url": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/clusters/71b25000-e1e6-11e4-af8e-00505699291a",
+  "id": "71b25000-e1e6-11e4-af8e-00505699291a",
+  "name": "gmt-fusion-vcsc.discotheque.com",
+  "connectors": [{
+    "url": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/clusters/71b25000-e1e6-11e4-af8e-00505699291a/connectors/c_mgmt@0B4FF614",
+    "id": "c_mgmt@0B4FF614",
+    "connectorType": "c_mgmt",
+    "upgradeState": "upgraded",
+    "state": "running",
+    "hostname": "gmt-fusion-vcsc2.discotheque.com",
+    "hostSerial": "0B4FF614",
+    "alarms": [],
+    "runningVersion": "8.7-1.0.321167",
+    "packageUrl": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/channels/beta/packages/c_mgmt",
+    "registered": true
+  }, {
+    "url": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/clusters/71b25000-e1e6-11e4-af8e-00505699291a/connectors/c_ucmc@0B4FF614",
+    "id": "c_ucmc@0B4FF614",
+    "connectorType": "c_ucmc",
+    "upgradeState": "upgraded",
+    "state": "running",
+    "hostname": "gmt-fusion-vcsc2.discotheque.com",
+    "hostSerial": "0B4FF614",
+    "alarms": [{
+      "id": "60303",
+      "firstReported": "1467866014",
+      "lastReported": "1470143271",
+      "severity": "warning",
+      "title": "Could not find a user with this email address.",
+      "description": "Could not find a user with this email address - user[3e43ba58-d763-44b5-ad6e-3adf7f7bc064]: lefan@discotheque.com"
+    }, {
+      "id": "60301",
+      "firstReported": "1467914485",
+      "lastReported": "1467914667",
+      "severity": "warning",
+      "title": "The user has no valid devices in the control list.",
+      "description": "The user has no valid devices in the control list - user[47c2f660-7bae-400e-b7ff-2ae5efbe810d]: xiaodawu@discotheque.com"
+    }],
+    "runningVersion": "8.7-1.0.2265",
+    "packageUrl": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/channels/beta/packages/c_ucmc",
+    "registered": true
+  }, {
+    "url": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/clusters/71b25000-e1e6-11e4-af8e-00505699291a/connectors/c_mgmt@05B20E0B",
+    "id": "c_mgmt@05B20E0B",
+    "connectorType": "c_mgmt",
+    "upgradeState": "upgraded",
+    "state": "running",
+    "hostname": "gmt-fusion-vcsc.discotheque.com",
+    "hostSerial": "05B20E0B",
+    "alarms": [],
+    "runningVersion": "8.7-1.0.321167",
+    "packageUrl": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/channels/beta/packages/c_mgmt",
+    "registered": true
+  }, {
+    "url": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/clusters/71b25000-e1e6-11e4-af8e-00505699291a/connectors/c_ucmc@05B20E0B",
+    "id": "c_ucmc@05B20E0B",
+    "connectorType": "c_ucmc",
+    "upgradeState": "upgraded",
+    "state": "running",
+    "hostname": "gmt-fusion-vcsc.discotheque.com",
+    "hostSerial": "05B20E0B",
+    "alarms": [{
+      "id": "60303",
+      "firstReported": "1467863972",
+      "lastReported": "1470143271",
+      "severity": "warning",
+      "title": "Could not find a user with this email address.",
+      "description": "Could not find a user with this email address - user[3e43ba58-d763-44b5-ad6e-3adf7f7bc064]: lefan@discotheque.com"
+    }, {
+      "id": "60301",
+      "firstReported": "1467914485",
+      "lastReported": "1467914667",
+      "severity": "warning",
+      "title": "The user has no valid devices in the control list.",
+      "description": "The user has no valid devices in the control list - user[47c2f660-7bae-400e-b7ff-2ae5efbe810d]: xiaodawu@discotheque.com"
+    }],
+    "runningVersion": "8.7-1.0.2265",
+    "packageUrl": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/channels/beta/packages/c_ucmc",
+    "registered": true
+  }, {
+    "url": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/clusters/71b25000-e1e6-11e4-af8e-00505699291a/connectors/c_cal@0B4FF614",
+    "id": "c_cal@0B4FF614",
+    "connectorType": "c_cal",
+    "upgradeState": "upgraded",
+    "state": "not_configured",
+    "hostname": "gmt-fusion-vcsc2.discotheque.com",
+    "hostSerial": "0B4FF614",
+    "alarms": [],
+    "runningVersion": "8.7-1.0.3251",
+    "packageUrl": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/channels/beta/packages/c_cal",
+    "registered": true
+  }, {
+    "url": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/clusters/71b25000-e1e6-11e4-af8e-00505699291a/connectors/c_cal@05B20E0B",
+    "id": "c_cal@05B20E0B",
+    "connectorType": "c_cal",
+    "upgradeState": "upgraded",
+    "state": "not_configured",
+    "hostname": "gmt-fusion-vcsc.discotheque.com",
+    "hostSerial": "05B20E0B",
+    "alarms": [],
+    "runningVersion": "8.7-1.0.3251",
+    "packageUrl": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/channels/beta/packages/c_cal",
+    "registered": true
+  }],
+  "releaseChannel": "beta",
+  "provisioning": [{
+    "url": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/clusters/71b25000-e1e6-11e4-af8e-00505699291a/provisioning/c_mgmt",
+    "connectorType": "c_mgmt",
+    "provisionedVersion": "8.7-1.0.321167",
+    "availableVersion": "8.7-1.0.321167",
+    "packageUrl": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/channels/beta/packages/c_mgmt"
+  }, {
+    "url": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/clusters/71b25000-e1e6-11e4-af8e-00505699291a/provisioning/c_ucmc",
+    "connectorType": "c_ucmc",
+    "provisionedVersion": "8.7-1.0.2265",
+    "availableVersion": "8.7-1.0.2265",
+    "packageUrl": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/channels/beta/packages/c_ucmc"
+  }, {
+    "url": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/clusters/71b25000-e1e6-11e4-af8e-00505699291a/provisioning/c_cal",
+    "connectorType": "c_cal",
+    "provisionedVersion": "8.7-1.0.3251",
+    "availableVersion": "8.7-1.0.3251",
+    "packageUrl": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/channels/beta/packages/c_cal"
+  }],
+  "registered": true,
+  "targetType": "c_mgmt",
+  "upgradeScheduleUrl": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/clusters/71b25000-e1e6-11e4-af8e-00505699291a/upgradeSchedule",
+  "upgradeSchedule": {
+    "scheduleDays": ["thursday"],
+    "scheduleTime": "14:00",
+    "scheduleTimeZone": "America/Los_Angeles",
+    "moratoria": [],
+    "nextUpgradeWindow": {
+      "startTime": "2016-08-04T21:00:31.759Z",
+      "endTime": "2016-08-04T22:00:31.759Z"
+    },
+    "url": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/clusters/71b25000-e1e6-11e4-af8e-00505699291a/upgradeSchedule"
+  }
+}, {
+  "url": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/clusters/8b77a54c-6023-11e5-b607-005056be3aa6",
+  "id": "8b77a54c-6023-11e5-b607-005056be3aa6",
+  "name": "shn-alpha-ucfusionc-cluster",
+  "connectors": [{
+    "url": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/clusters/8b77a54c-6023-11e5-b607-005056be3aa6/connectors/c_mgmt@0C7D2BC4",
+    "id": "c_mgmt@0C7D2BC4",
+    "connectorType": "c_mgmt",
+    "upgradeState": "upgraded",
+    "state": "running",
+    "hostname": "shn-alpha-ucfusionc1.discotheque.com",
+    "hostSerial": "0C7D2BC4",
+    "alarms": [],
+    "runningVersion": "8.7-1.0.321167",
+    "packageUrl": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/channels/beta/packages/c_mgmt",
+    "registered": true
+  }, {
+    "url": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/clusters/8b77a54c-6023-11e5-b607-005056be3aa6/connectors/c_ucmc@0C7D2BC4",
+    "id": "c_ucmc@0C7D2BC4",
+    "connectorType": "c_ucmc",
+    "upgradeState": "upgraded",
+    "state": "running",
+    "hostname": "shn-alpha-ucfusionc1.discotheque.com",
+    "hostSerial": "0C7D2BC4",
+    "alarms": [{
+      "id": "60303",
+      "firstReported": "1467914438",
+      "lastReported": "1470143271",
+      "severity": "warning",
+      "title": "Could not find a user with this email address.",
+      "description": "Could not find a user with this email address - user[3e43ba58-d763-44b5-ad6e-3adf7f7bc064]: lefan@discotheque.com"
+    }],
+    "runningVersion": "8.7-1.0.2265",
+    "packageUrl": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/channels/beta/packages/c_ucmc",
+    "registered": true
+  }, {
+    "url": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/clusters/8b77a54c-6023-11e5-b607-005056be3aa6/connectors/c_cal@0C7D2BC4",
+    "id": "c_cal@0C7D2BC4",
+    "connectorType": "c_cal",
+    "upgradeState": "upgraded",
+    "state": "not_configured",
+    "hostname": "shn-alpha-ucfusionc1.discotheque.com",
+    "hostSerial": "0C7D2BC4",
+    "alarms": [],
+    "runningVersion": "8.7-1.0.3251",
+    "packageUrl": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/channels/beta/packages/c_cal",
+    "registered": true
+  }],
+  "releaseChannel": "beta",
+  "provisioning": [{
+    "url": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/clusters/8b77a54c-6023-11e5-b607-005056be3aa6/provisioning/c_ucmc",
+    "connectorType": "c_ucmc",
+    "provisionedVersion": "8.7-1.0.2265",
+    "availableVersion": "8.7-1.0.2265",
+    "packageUrl": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/channels/beta/packages/c_ucmc"
+  }, {
+    "url": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/clusters/8b77a54c-6023-11e5-b607-005056be3aa6/provisioning/c_cal",
+    "connectorType": "c_cal",
+    "provisionedVersion": "8.7-1.0.3251",
+    "availableVersion": "8.7-1.0.3251",
+    "packageUrl": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/channels/beta/packages/c_cal"
+  }, {
+    "url": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/clusters/8b77a54c-6023-11e5-b607-005056be3aa6/provisioning/c_mgmt",
+    "connectorType": "c_mgmt",
+    "provisionedVersion": "8.7-1.0.321167",
+    "availableVersion": "8.7-1.0.321167",
+    "packageUrl": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/channels/beta/packages/c_mgmt"
+  }],
+  "registered": true,
+  "targetType": "c_mgmt",
+  "upgradeScheduleUrl": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/clusters/8b77a54c-6023-11e5-b607-005056be3aa6/upgradeSchedule",
+  "upgradeSchedule": {
+    "scheduleDays": ["thursday"],
+    "scheduleTime": "14:00",
+    "scheduleTimeZone": "America/Los_Angeles",
+    "moratoria": [],
+    "nextUpgradeWindow": {
+      "startTime": "2016-08-04T21:00:31.776Z",
+      "endTime": "2016-08-04T22:00:31.776Z"
+    },
+    "url": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/clusters/8b77a54c-6023-11e5-b607-005056be3aa6/upgradeSchedule"
+  }
+}, {
+  "url": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/clusters/79400647-f5eb-11e5-a6fd-0050568165c1",
+  "id": "79400647-f5eb-11e5-a6fd-0050568165c1",
+  "name": "vcs-emz4.discotheque.com",
+  "connectors": [{
+    "url": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/clusters/79400647-f5eb-11e5-a6fd-0050568165c1/connectors/c_cal@04B0D735",
+    "id": "c_cal@04B0D735",
+    "connectorType": "c_cal",
+    "upgradeState": "upgraded",
+    "state": "not_configured",
+    "hostname": "vcs-emz41-aer.discotheque.com",
+    "hostSerial": "04B0D735",
+    "alarms": [],
+    "runningVersion": "8.7-1.0.3251",
+    "packageUrl": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/channels/GA/packages/c_cal",
+    "registered": true
+  }, {
+    "url": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/clusters/79400647-f5eb-11e5-a6fd-0050568165c1/connectors/c_mgmt@04B0D735",
+    "id": "c_mgmt@04B0D735",
+    "connectorType": "c_mgmt",
+    "upgradeState": "upgraded",
+    "state": "running",
+    "hostname": "vcs-emz41-aer.discotheque.com",
+    "hostSerial": "04B0D735",
+    "alarms": [],
+    "runningVersion": "8.7-1.0.321162",
+    "packageUrl": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/channels/GA/packages/c_mgmt",
+    "registered": true
+  }, {
+    "url": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/clusters/79400647-f5eb-11e5-a6fd-0050568165c1/connectors/c_ucmc@0AFCD405",
+    "id": "c_ucmc@0AFCD405",
+    "connectorType": "c_ucmc",
+    "upgradeState": "upgraded",
+    "state": "running",
+    "hostname": "vcs-emz42-ams.discotheque.com",
+    "hostSerial": "0AFCD405",
+    "alarms": [],
+    "runningVersion": "8.7-1.0.2265",
+    "packageUrl": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/channels/GA/packages/c_ucmc",
+    "registered": true
+  }, {
+    "url": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/clusters/79400647-f5eb-11e5-a6fd-0050568165c1/connectors/c_cal@0AFCD405",
+    "id": "c_cal@0AFCD405",
+    "connectorType": "c_cal",
+    "upgradeState": "upgraded",
+    "state": "not_configured",
+    "hostname": "vcs-emz42-ams.discotheque.com",
+    "hostSerial": "0AFCD405",
+    "alarms": [],
+    "runningVersion": "8.7-1.0.3251",
+    "packageUrl": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/channels/GA/packages/c_cal",
+    "registered": true
+  }, {
+    "url": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/clusters/79400647-f5eb-11e5-a6fd-0050568165c1/connectors/c_ucmc@04B0D735",
+    "id": "c_ucmc@04B0D735",
+    "connectorType": "c_ucmc",
+    "upgradeState": "upgraded",
+    "state": "running",
+    "hostname": "vcs-emz41-aer.discotheque.com",
+    "hostSerial": "04B0D735",
+    "alarms": [],
+    "runningVersion": "8.7-1.0.2265",
+    "packageUrl": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/channels/GA/packages/c_ucmc",
+    "registered": true
+  }, {
+    "url": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/clusters/79400647-f5eb-11e5-a6fd-0050568165c1/connectors/c_mgmt@0AFCD405",
+    "id": "c_mgmt@0AFCD405",
+    "connectorType": "c_mgmt",
+    "upgradeState": "upgraded",
+    "state": "running",
+    "hostname": "vcs-emz42-ams.discotheque.com",
+    "hostSerial": "0AFCD405",
+    "alarms": [],
+    "runningVersion": "8.7-1.0.321162",
+    "packageUrl": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/channels/GA/packages/c_mgmt",
+    "registered": true
+  }],
+  "releaseChannel": "GA",
+  "provisioning": [{
+    "url": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/clusters/79400647-f5eb-11e5-a6fd-0050568165c1/provisioning/c_ucmc",
+    "connectorType": "c_ucmc",
+    "provisionedVersion": "8.7-1.0.2265",
+    "availableVersion": "8.7-1.0.2265",
+    "packageUrl": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/channels/GA/packages/c_ucmc"
+  }, {
+    "url": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/clusters/79400647-f5eb-11e5-a6fd-0050568165c1/provisioning/c_mgmt",
+    "connectorType": "c_mgmt",
+    "provisionedVersion": "8.7-1.0.321162",
+    "availableVersion": "8.7-1.0.321162",
+    "packageUrl": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/channels/GA/packages/c_mgmt"
+  }, {
+    "url": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/clusters/79400647-f5eb-11e5-a6fd-0050568165c1/provisioning/c_cal",
+    "connectorType": "c_cal",
+    "provisionedVersion": "8.7-1.0.3251",
+    "availableVersion": "8.7-1.0.3251",
+    "packageUrl": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/channels/GA/packages/c_cal"
+  }],
+  "registered": true,
+  "targetType": "c_mgmt",
+  "upgradeScheduleUrl": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/clusters/79400647-f5eb-11e5-a6fd-0050568165c1/upgradeSchedule",
+  "upgradeSchedule": {
+    "scheduleDays": ["thursday"],
+    "scheduleTime": "14:00",
+    "scheduleTimeZone": "America/Los_Angeles",
+    "moratoria": [],
+    "nextUpgradeWindow": {
+      "startTime": "2016-08-04T21:00:31.774Z",
+      "endTime": "2016-08-04T22:00:31.774Z"
+    },
+    "url": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/clusters/79400647-f5eb-11e5-a6fd-0050568165c1/upgradeSchedule"
+  }
+}, {
+  "url": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/clusters/76ab6a21-4cfc-11e5-b336-0050568e35d5",
+  "id": "76ab6a21-4cfc-11e5-b336-0050568e35d5",
+  "name": "",
+  "connectors": [{
+    "url": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/clusters/76ab6a21-4cfc-11e5-b336-0050568e35d5/connectors/c_cal@0C5E2651",
+    "id": "c_cal@0C5E2651",
+    "connectorType": "c_cal",
+    "upgradeState": "upgraded",
+    "state": "offline",
+    "hostname": "sqfusion-vcs-13.discotheque.com",
+    "hostSerial": "0C5E2651",
+    "alarms": [{
+      "id": "60162",
+      "firstReported": "1466020996",
+      "lastReported": "1466020996",
+      "severity": "error",
+      "title": "discotheque WebEx administrator password has expired or invalid",
+      "description": "discotheque WebEx service cannot be accessed due to expired or invalid administrator password. @webex meetings on affected site will not be processed until this is resolved. The WebEx service site name includes: \"2ad29c18-19e2-4ff9-8225-b0601b831822\""
+    }, {
+      "id": "60161",
+      "firstReported": "1466054487",
+      "lastReported": "1466092209",
+      "severity": "error",
+      "title": "WebEx user account not available",
+      "description": "\"3\" WebEx user account(s) are not available. @webex meetings for these users will not be processed until their account problems are resolved. The affected users include: \"[4be18770-8961-4010-9ea8-a58cf7a92f32]: regjohns@discotheque.com (Not found), [5cd21807-467a-32c0-bdb6-d3251b332f08]: jfrankie@discotheque.com (Not found), [47c941f3-4003-395c-8a8d-4258c0e0df1c]: lahart@discotheque.com (Not found)\""
+    }],
+    "runningVersion": "8.7-1.0.3043",
+    "packageUrl": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/channels/GA/packages/c_cal",
+    "registered": true
+  }, {
+    "url": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/clusters/76ab6a21-4cfc-11e5-b336-0050568e35d5/connectors/c_mgmt@0C5E2651",
+    "id": "c_mgmt@0C5E2651",
+    "connectorType": "c_mgmt",
+    "upgradeState": "upgraded",
+    "state": "offline",
+    "hostname": "sqfusion-vcs-13.discotheque.com",
+    "hostSerial": "0C5E2651",
+    "alarms": [],
+    "runningVersion": "8.7-1.0.321159",
+    "packageUrl": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/channels/GA/packages/c_mgmt",
+    "registered": true
+  }, {
+    "url": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/clusters/76ab6a21-4cfc-11e5-b336-0050568e35d5/connectors/c_ucmc@0C5E2651",
+    "id": "c_ucmc@0C5E2651",
+    "connectorType": "c_ucmc",
+    "upgradeState": "upgraded",
+    "state": "offline",
+    "hostname": "sqfusion-vcs-13.discotheque.com",
+    "hostSerial": "0C5E2651",
+    "alarms": [],
+    "runningVersion": "8.7-1.0.2094",
+    "packageUrl": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/channels/GA/packages/c_ucmc",
+    "registered": true
+  }],
+  "releaseChannel": "GA",
+  "provisioning": [{
+    "url": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/clusters/76ab6a21-4cfc-11e5-b336-0050568e35d5/provisioning/c_cal",
+    "connectorType": "c_cal",
+    "provisionedVersion": "8.7-1.0.3043",
+    "availableVersion": "8.7-1.0.3251",
+    "packageUrl": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/channels/GA/packages/c_cal"
+  }, {
+    "url": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/clusters/76ab6a21-4cfc-11e5-b336-0050568e35d5/provisioning/c_ucmc",
+    "connectorType": "c_ucmc",
+    "provisionedVersion": "8.7-1.0.2094",
+    "availableVersion": "8.7-1.0.2265",
+    "packageUrl": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/channels/GA/packages/c_ucmc"
+  }, {
+    "url": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/clusters/76ab6a21-4cfc-11e5-b336-0050568e35d5/provisioning/c_mgmt",
+    "connectorType": "c_mgmt",
+    "provisionedVersion": "8.7-1.0.321159",
+    "availableVersion": "8.7-1.0.321162",
+    "packageUrl": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/channels/GA/packages/c_mgmt"
+  }],
+  "registered": true,
+  "targetType": "c_mgmt",
+  "upgradeScheduleUrl": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/clusters/76ab6a21-4cfc-11e5-b336-0050568e35d5/upgradeSchedule",
+  "upgradeSchedule": {
+    "scheduleDays": ["thursday"],
+    "scheduleTime": "14:00",
+    "scheduleTimeZone": "America/Los_Angeles",
+    "moratoria": [],
+    "nextUpgradeWindow": {
+      "startTime": "2016-08-04T21:00:31.782Z",
+      "endTime": "2016-08-04T22:00:31.782Z"
+    },
+    "url": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/clusters/76ab6a21-4cfc-11e5-b336-0050568e35d5/upgradeSchedule"
+  }
+}, {
+  "url": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/clusters/9e5da278-22a4-482b-9b85-3caa8d851bec",
+  "id": "9e5da278-22a4-482b-9b85-3caa8d851bec",
+  "name": "Oslo",
+  "connectors": [{
+    "url": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/clusters/9e5da278-22a4-482b-9b85-3caa8d851bec/connectors/mf_mgmt@3d1a41e8-9a83-46d0-b956-7a8b829b8160",
+    "id": "mf_mgmt@3d1a41e8-9a83-46d0-b956-7a8b829b8160",
+    "connectorType": "mf_mgmt",
+    "upgradeState": "upgraded",
+    "state": "running",
+    "hostname": "gt-mfusion1-lys.discotheque.com",
+    "hostSerial": "3d1a41e8-9a83-46d0-b956-7a8b829b8160",
+    "alarms": [{
+      "id": "mf.linus.connectivityError",
+      "firstReported": "2016-07-26T17:05:01.530Z",
+      "lastReported": "2016-08-01T22:16:56.069Z",
+      "severity": "critical",
+      "title": "Call switching process connection failure",
+      "description": "The call switching process lost connectivity with the cloud."
+    }],
+    "runningVersion": "2016.07.14.178",
+    "packageUrl": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/channels/ALPHA/packages/mf_mgmt",
+    "registered": true
+  }],
+  "releaseChannel": "ALPHA",
+  "provisioning": [{
+    "url": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/clusters/9e5da278-22a4-482b-9b85-3caa8d851bec/provisioning/mf_mgmt",
+    "connectorType": "mf_mgmt",
+    "provisionedVersion": "1.0",
+    "availableVersion": "1.0",
+    "packageUrl": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/channels/ALPHA/packages/mf_mgmt"
+  }],
+  "registered": true,
+  "targetType": "mf_mgmt",
+  "upgradeScheduleUrl": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/clusters/9e5da278-22a4-482b-9b85-3caa8d851bec/upgradeSchedule",
+  "upgradeSchedule": {
+    "scheduleDays": ["sunday", "saturday", "tuesday", "wednesday", "thursday", "friday", "monday"],
+    "scheduleTime": "03:00",
+    "scheduleTimeZone": "America/Los_Angeles",
+    "moratoria": [],
+    "nextUpgradeWindow": {
+      "startTime": "2016-08-03T10:00:31.768Z",
+      "endTime": "2016-08-03T11:00:31.768Z"
+    },
+    "url": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/clusters/9e5da278-22a4-482b-9b85-3caa8d851bec/upgradeSchedule"
+  }
+}, {
+  "url": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/clusters/8cfab012-938a-4746-bbbd-4a561870f1d7",
+  "id": "8cfab012-938a-4746-bbbd-4a561870f1d7",
+  "name": "San Frandiscotheque",
+  "connectors": [{
+    "url": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/clusters/8cfab012-938a-4746-bbbd-4a561870f1d7/connectors/mf_mgmt@7ca72b04-861b-4297-9d51-3341295aca91",
+    "id": "mf_mgmt@7ca72b04-861b-4297-9d51-3341295aca91",
+    "connectorType": "mf_mgmt",
+    "upgradeState": "upgraded",
+    "state": "running",
+    "hostname": "gt-mfusion1-sfo.discotheque.com",
+    "hostSerial": "7ca72b04-861b-4297-9d51-3341295aca91",
+    "alarms": [{
+      "id": "mf.linus.connectivityError",
+      "firstReported": "2016-07-27T18:54:30.661Z",
+      "lastReported": "2016-08-01T17:35:13.154Z",
+      "severity": "critical",
+      "title": "Call switching process connection failure",
+      "description": "The call switching process lost connectivity with the cloud."
+    }],
+    "runningVersion": "2016.07.14.178",
+    "packageUrl": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/channels/ALPHA/packages/mf_mgmt",
+    "registered": true
+  }],
+  "releaseChannel": "ALPHA",
+  "provisioning": [{
+    "url": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/clusters/8cfab012-938a-4746-bbbd-4a561870f1d7/provisioning/mf_mgmt",
+    "connectorType": "mf_mgmt",
+    "provisionedVersion": "1.0",
+    "availableVersion": "1.0",
+    "packageUrl": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/channels/ALPHA/packages/mf_mgmt"
+  }],
+  "registered": true,
+  "targetType": "mf_mgmt",
+  "upgradeScheduleUrl": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/clusters/8cfab012-938a-4746-bbbd-4a561870f1d7/upgradeSchedule",
+  "upgradeSchedule": {
+    "scheduleDays": ["sunday", "saturday", "tuesday", "wednesday", "thursday", "friday", "monday"],
+    "scheduleTime": "03:00",
+    "scheduleTimeZone": "America/Los_Angeles",
+    "moratoria": [],
+    "nextUpgradeWindow": {
+      "startTime": "2016-08-03T10:00:31.772Z",
+      "endTime": "2016-08-03T11:00:31.772Z"
+    },
+    "url": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/clusters/8cfab012-938a-4746-bbbd-4a561870f1d7/upgradeSchedule"
+  }
+}, {
+  "url": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/clusters/5689c2fc-dbe8-11e5-95a9-0050568c73c4",
+  "id": "5689c2fc-dbe8-11e5-95a9-0050568c73c4",
+  "name": "x2-alpha-vcscluster",
+  "connectors": [{
+    "url": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/clusters/5689c2fc-dbe8-11e5-95a9-0050568c73c4/connectors/c_cal@0F18B6D9",
+    "id": "c_cal@0F18B6D9",
+    "connectorType": "c_cal",
+    "upgradeState": "upgraded",
+    "state": "running",
+    "hostname": "x2-alpha-vcsc4.discotheque.com",
+    "hostSerial": "0F18B6D9",
+    "alarms": [{
+      "id": "60161",
+      "firstReported": "1469664878",
+      "lastReported": "1470135311",
+      "severity": "warning",
+      "title": "WebEx user account not available",
+      "description": "\"4\" WebEx user account(s) are not available. @webex meetings for these users will not be processed until their account problems are resolved. The affected users include: \"[70c976fe-eda5-3036-a822-a154fb57aec4]: joemurra@discotheque.com (Not found), [861889ec-ba4d-4cc7-81e8-14c5d92027e1]: cmcdanie@discotheque.com (Not found), [8fb013cf-3fca-3718-8200-30a353a1ffb8]: khum@discotheque.com (Not found), [270a423e-e743-418d-a3d4-26788bc5e57b]: kentj@discotheque.com (Not found)\""
+    }],
+    "runningVersion": "8.7-1.0.3251",
+    "packageUrl": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/channels/beta/packages/c_cal",
+    "registered": true
+  }, {
+    "url": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/clusters/5689c2fc-dbe8-11e5-95a9-0050568c73c4/connectors/c_mgmt@0A6B8658",
+    "id": "c_mgmt@0A6B8658",
+    "connectorType": "c_mgmt",
+    "upgradeState": "upgraded",
+    "state": "running",
+    "hostname": "x2-alpha-vcsc3.discotheque.com",
+    "hostSerial": "0A6B8658",
+    "alarms": [],
+    "runningVersion": "8.7-1.0.321167",
+    "packageUrl": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/channels/beta/packages/c_mgmt",
+    "registered": true
+  }, {
+    "url": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/clusters/5689c2fc-dbe8-11e5-95a9-0050568c73c4/connectors/c_ucmc@0A6B8658",
+    "id": "c_ucmc@0A6B8658",
+    "connectorType": "c_ucmc",
+    "upgradeState": "upgraded",
+    "state": "running",
+    "hostname": "x2-alpha-vcsc3.discotheque.com",
+    "hostSerial": "0A6B8658",
+    "alarms": [{
+      "id": "60301",
+      "firstReported": "1467574256",
+      "lastReported": "1469154949",
+      "severity": "warning",
+      "title": "The user has no valid devices in the control list.",
+      "description": "The user has no valid devices in the control list - user[bea020a1-7e62-40ef-be14-49aaf36a7195]: dnoren@discotheque.com"
+    }],
+    "runningVersion": "8.7-1.0.2265",
+    "packageUrl": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/channels/beta/packages/c_ucmc",
+    "registered": true
+  }, {
+    "url": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/clusters/5689c2fc-dbe8-11e5-95a9-0050568c73c4/connectors/c_cal@0A6B8658",
+    "id": "c_cal@0A6B8658",
+    "connectorType": "c_cal",
+    "upgradeState": "upgraded",
+    "state": "running",
+    "hostname": "x2-alpha-vcsc3.discotheque.com",
+    "hostSerial": "0A6B8658",
+    "alarms": [{
+      "id": "60161",
+      "firstReported": "1469727183",
+      "lastReported": "1470138780",
+      "severity": "warning",
+      "title": "WebEx user account not available",
+      "description": "\"6\" WebEx user account(s) are not available. @webex meetings for these users will not be processed until their account problems are resolved. The affected users include: \"[41ce9f38-3f78-34a8-b0b8-b5dc2016bd9c]: sfeldman@discotheque.com (Not found), [a727ef8b-3221-380e-8883-9889c56679a1]: tfumino@discotheque.com (Not found), [35dd3b01-ac73-3dcf-b95f-662298d34c1b]: maives@discotheque.com (Not found), [8e29dfa8-9f53-3502-b105-c74803bc96b8]: dabell@discotheque.com (Not found), [945bd247-efd3-325e-a12a-d059b777a4c9]: svencill@discotheque.com (Not found), [81007095-a55d-34ca-bb5e-a1247dff49bb]: danistew@discotheque.com (Not found)\""
+    }],
+    "runningVersion": "8.7-1.0.3251",
+    "packageUrl": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/channels/beta/packages/c_cal",
+    "registered": true
+  }, {
+    "url": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/clusters/5689c2fc-dbe8-11e5-95a9-0050568c73c4/connectors/c_mgmt@0F18B6D9",
+    "id": "c_mgmt@0F18B6D9",
+    "connectorType": "c_mgmt",
+    "upgradeState": "upgraded",
+    "state": "running",
+    "hostname": "x2-alpha-vcsc4.discotheque.com",
+    "hostSerial": "0F18B6D9",
+    "alarms": [],
+    "runningVersion": "8.7-1.0.321167",
+    "packageUrl": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/channels/beta/packages/c_mgmt",
+    "registered": true
+  }, {
+    "url": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/clusters/5689c2fc-dbe8-11e5-95a9-0050568c73c4/connectors/c_ucmc@0F18B6D9",
+    "id": "c_ucmc@0F18B6D9",
+    "connectorType": "c_ucmc",
+    "upgradeState": "upgraded",
+    "state": "running",
+    "hostname": "x2-alpha-vcsc4.discotheque.com",
+    "hostSerial": "0F18B6D9",
+    "alarms": [{
+      "id": "60301",
+      "firstReported": "1467575861",
+      "lastReported": "1469154950",
+      "severity": "warning",
+      "title": "The user has no valid devices in the control list.",
+      "description": "The user has no valid devices in the control list - user[bea020a1-7e62-40ef-be14-49aaf36a7195]: dnoren@discotheque.com"
+    }],
+    "runningVersion": "8.7-1.0.2265",
+    "packageUrl": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/channels/beta/packages/c_ucmc",
+    "registered": true
+  }],
+  "releaseChannel": "beta",
+  "provisioning": [{
+    "url": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/clusters/5689c2fc-dbe8-11e5-95a9-0050568c73c4/provisioning/c_mgmt",
+    "connectorType": "c_mgmt",
+    "provisionedVersion": "8.7-1.0.321167",
+    "availableVersion": "8.7-1.0.321167",
+    "packageUrl": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/channels/beta/packages/c_mgmt"
+  }, {
+    "url": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/clusters/5689c2fc-dbe8-11e5-95a9-0050568c73c4/provisioning/c_cal",
+    "connectorType": "c_cal",
+    "provisionedVersion": "8.7-1.0.3251",
+    "availableVersion": "8.7-1.0.3251",
+    "packageUrl": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/channels/beta/packages/c_cal"
+  }, {
+    "url": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/clusters/5689c2fc-dbe8-11e5-95a9-0050568c73c4/provisioning/c_ucmc",
+    "connectorType": "c_ucmc",
+    "provisionedVersion": "8.7-1.0.2265",
+    "availableVersion": "8.7-1.0.2265",
+    "packageUrl": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/channels/beta/packages/c_ucmc"
+  }],
+  "registered": true,
+  "targetType": "c_mgmt",
+  "upgradeScheduleUrl": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/clusters/5689c2fc-dbe8-11e5-95a9-0050568c73c4/upgradeSchedule",
+  "upgradeSchedule": {
+    "scheduleDays": ["thursday"],
+    "scheduleTime": "14:00",
+    "scheduleTimeZone": "America/Los_Angeles",
+    "moratoria": [],
+    "nextUpgradeWindow": {
+      "startTime": "2016-08-04T21:00:31.778Z",
+      "endTime": "2016-08-04T22:00:31.778Z"
+    },
+    "url": "https://hercules-a.wbx2.com/hercules/api/v2/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/clusters/5689c2fc-dbe8-11e5-95a9-0050568c73c4/upgradeSchedule"
+  }
+}]

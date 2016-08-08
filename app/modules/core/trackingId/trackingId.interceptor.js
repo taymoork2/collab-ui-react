@@ -2,7 +2,7 @@
   'use strict';
 
   angular
-    .module('Core')
+    .module('core.trackingId')
     .factory('TrackingIdInterceptor', TrackingIdInterceptor);
 
   /* @ngInject */
@@ -37,7 +37,14 @@
      * @param {array} whitelistSubdomain The set of subdomains to allow
      */
     function buildBlacklistedDomainWithWhitelistedSubdomainRegex(blacklistDomain, whitelistSubdomain) {
-      var whitelistSubdomainArray = _.isArray(whitelistSubdomain) ? whitelistSubdomain : whitelistSubdomain ? [whitelistSubdomain] : [];
+      var whitelistSubdomainArray;
+      if (_.isArray(whitelistSubdomain)) {
+        whitelistSubdomainArray = whitelistSubdomain;
+      } else if (whitelistSubdomain) {
+        whitelistSubdomainArray = [whitelistSubdomain];
+      } else {
+        whitelistSubdomainArray = [];
+      }
       var regex = "^http?s:\/\/(?:";
       if (whitelistSubdomainArray.length) {
         regex += "(?!" + whitelistSubdomainArray.join('|') + ")";

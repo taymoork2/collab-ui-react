@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Service: AutoAttendantCeService', function () {
-  var QueueHelperService, $httpBackend, HuronConfig, url, queueURL;
+  var QueueHelperService, $httpBackend, HuronConfig, url;
   // require('jasmine-collection-matchers');
   var Authinfo = {
     getOrgId: jasmine.createSpy('getOrgId').and.returnValue('1')
@@ -12,10 +12,10 @@ describe('Service: AutoAttendantCeService', function () {
   var successSpy;
   var failureSpy;
 
-  beforeEach(module('uc.autoattendant'));
-  beforeEach(module('Huron'));
+  beforeEach(angular.mock.module('uc.autoattendant'));
+  beforeEach(angular.mock.module('Huron'));
 
-  beforeEach(module(function ($provide) {
+  beforeEach(angular.mock.module(function ($provide) {
     $provide.value("Authinfo", Authinfo);
   }));
 
@@ -24,7 +24,6 @@ describe('Service: AutoAttendantCeService', function () {
     $httpBackend = _$httpBackend_;
     HuronConfig = _HuronConfig_;
     url = HuronConfig.getCesUrl() + '/customers/' + Authinfo.getOrgId() + '/queues';
-    queueURL = url + '/' + '662df48-b367-4c1e-3456-aa408aaa79a1';
 
     successSpy = jasmine.createSpy('success');
     failureSpy = jasmine.createSpy('failure');

@@ -27,27 +27,25 @@ describe('Service: AANumberAssignmentService', function () {
 
   var onlyAA = [];
   var onlyCMI = [];
-  var $q;
 
   var successSpy;
   var failureSpy;
 
-  beforeEach(module('uc.autoattendant'));
-  beforeEach(module('Huron'));
-  beforeEach(module('Sunlight'));
+  beforeEach(angular.mock.module('uc.autoattendant'));
+  beforeEach(angular.mock.module('Huron'));
+  beforeEach(angular.mock.module('Sunlight'));
 
-  beforeEach(module(function ($provide) {
+  beforeEach(angular.mock.module(function ($provide) {
     $provide.value("Authinfo", Authinfo);
   }));
 
-  beforeEach(inject(function (_AANumberAssignmentService_, _$httpBackend_, _HuronConfig_, _$q_, _AutoAttendantCeInfoModelService_) {
+  beforeEach(inject(function (_AANumberAssignmentService_, _$httpBackend_, _HuronConfig_, _AutoAttendantCeInfoModelService_) {
     AANumberAssignmentService = _AANumberAssignmentService_;
     AutoAttendantCeInfoModelService = _AutoAttendantCeInfoModelService_;
     $httpBackend = _$httpBackend_;
     HuronConfig = _HuronConfig_;
     url = HuronConfig.getCmiV2Url() + '/customers/' + Authinfo.getOrgId() + '/features/autoattendants';
     cmiAAAsignmentURL = url + '/' + '2' + '/numbers';
-    $q = _$q_;
 
     successSpy = jasmine.createSpy('success');
     failureSpy = jasmine.createSpy('failure');
@@ -57,7 +55,7 @@ describe('Service: AANumberAssignmentService', function () {
     // for an external number query, return the number formatted with a +
     var externalNumberQueryUri = /\/externalnumberpools\?directorynumber=\&order=pattern\&pattern=(.+)/;
     $httpBackend.whenGET(externalNumberQueryUri)
-      .respond(function (method, url, data, headers) {
+      .respond(function (method, url) {
 
         var pattern = decodeURI(url).match(new RegExp(externalNumberQueryUri))[1];
 
@@ -330,7 +328,7 @@ describe('Service: AANumberAssignmentService', function () {
       addResource(resources, "3333333333");
 
       // CMI assignment will fail when there is any bad number in the list
-      $httpBackend.when('PUT', cmiAAAsignmentURL).respond(function (method, url, data, headers) {
+      $httpBackend.when('PUT', cmiAAAsignmentURL).respond(function (method, url, data) {
         if (JSON.stringify(data).indexOf("bad") > -1) {
           return [500, 'bad'];
         } else {

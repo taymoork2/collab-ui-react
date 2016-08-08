@@ -20,23 +20,7 @@
         </ul>
       </span>
     </div>
-    <div class="feature-list">
-      <ul>
-        <li class="feature" ng-repeat="service in userOverview.services">
-          <a id="{{service.icon}}" ui-sref="{{service.state}}" ng-if="service.actionsAvailable">
-            <i class="feature-icon"></i>
-            <span class="feature-name">{{service.name}}</span>
-            <span class="feature-status">{{service.detail}}</span>
-            <i class="feature-arrow"></i>
-          </a>
-          <a id="{{service.icon}}" class="no-services" ng-if="!service.actionsAvailable">
-            <i class="feature-icon"></i>
-            <span class="feature-name">{{service.name}}</span>
-            <span class="feature-status feature-arrow-match">{{service.detail}}</span>
-          </a>
-        </li>
-      </ul>
-    </div>
+    <feature-list features="userOverview.services"></feature-list>
   </cs-sp-section>
   <hercules-cloud-extensions user="userOverview.currentUser"></hercules-cloud-extensions>
   <cs-sp-section ng-if="userOverview.isSquaredUC">

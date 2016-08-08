@@ -2,11 +2,11 @@
 
 describe('Controller: ReassignClusterController', function () {
 
-  beforeEach(module('wx2AdminWebClientApp'));
+  beforeEach(angular.mock.module('Mediafusion'));
 
-  var vm, controller, cluster, MediaClusterService, XhrNotificationService, $q, $translate, modalInstanceMock, windowMock, log;
+  var controller, cluster, MediaClusterService, XhrNotificationService, $q, $translate, modalInstanceMock, windowMock;
 
-  beforeEach(inject(function ($controller, _MediaClusterService_, _XhrNotificationService_, _$q_, _$translate_, $log) {
+  beforeEach(inject(function ($controller, _MediaClusterService_, _XhrNotificationService_, _$q_, _$translate_) {
     cluster = {
       id: 'a',
       name: 'b',
@@ -33,8 +33,6 @@ describe('Controller: ReassignClusterController', function () {
     windowMock = {
       open: sinon.stub()
     };
-    log = $log;
-    log.reset();
 
     controller = $controller('ReassignClusterController', {
       cluster: cluster,
@@ -43,8 +41,7 @@ describe('Controller: ReassignClusterController', function () {
       $q: $q,
       $translate: $translate,
       $modalInstance: modalInstanceMock,
-      $window: windowMock,
-      log: log
+      $window: windowMock
     });
 
   }));

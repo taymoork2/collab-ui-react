@@ -4,10 +4,9 @@ describe('Controller: LineListCtrl', function () {
   var controller, $controller, $q, $scope, $timeout, FeatureToggleService, LineListService, Notification;
 
   var lines = getJSONFixture('huron/json/lines/numbers.json');
-  var count = getJSONFixture('huron/json/lines/count.json');
 
-  beforeEach(module('Huron'));
-  beforeEach(module('Sunlight'));
+  beforeEach(angular.mock.module('Huron'));
+  beforeEach(angular.mock.module('Sunlight'));
 
   beforeEach(inject(function (_$q_, $rootScope, _$controller_, _$timeout_, _FeatureToggleService_, _LineListService_, _Notification_) {
     $q = _$q_;

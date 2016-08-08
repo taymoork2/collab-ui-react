@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Controller: Overview Reports', function () {
-  var controller, $rootScope, $scope, q, Notification, PartnerService, ReportsService;
+  var $rootScope, $scope, q, Notification, PartnerService, ReportsService;
   var customerData = getJSONFixture('core/json/partnerReports/customerResponse.json');
   var REFRESH = 'refresh';
   var READY = 'ready';
@@ -25,19 +25,13 @@ describe('Controller: Overview Reports', function () {
     });
   });
 
-  var broadcastData = {
-    data: {
-      success: true
-    }
-  };
-
   // fake function used by mock services
   var emptyFunction = function () {};
   var validateService = {
     validate: emptyFunction
   };
 
-  beforeEach(module('Core'));
+  beforeEach(angular.mock.module('Core'));
 
   describe('OverviewReportsCtrl - Expected Responses', function () {
     beforeEach(inject(function ($controller, _$rootScope_, _$q_, _Notification_) {
@@ -71,7 +65,7 @@ describe('Controller: Overview Reports', function () {
         getTotalPartnerCounts: jasmine.createSpy('getTotalPartnerCounts').and.callFake(emptyFunction)
       };
 
-      controller = $controller('OverviewReportsCtrl', {
+      $controller('OverviewReportsCtrl', {
         $scope: $scope,
         Authinfo: Authinfo,
         Notification: Notification,

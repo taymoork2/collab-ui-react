@@ -5,8 +5,8 @@ describe('Template: editServices', function () {
   var SAVE_BUTTON = '#btnSaveEnt';
 
   function init() {
-    this.initModules('Core', 'Hercules', 'Huron', 'Messenger', 'Sunlight');
-    this.injectDependencies('$q', 'CsvDownloadService', 'FeatureToggleService', 'Orgservice');
+    this.initModules('Core', 'Hercules', 'Huron', 'Messenger', 'Sunlight', 'WebExApp');
+    this.injectDependencies('$q', '$previousState', 'CsvDownloadService', 'FeatureToggleService', 'Orgservice', 'WebExUtilsFact');
     initDependencySpies.apply(this);
     this.compileView('OnboardCtrl', 'modules/core/users/userPreview/editServices.tpl.html');
   }
@@ -26,9 +26,15 @@ describe('Template: editServices', function () {
     }.bind(this));
     spyOn(this.FeatureToggleService, 'supportsDirSync').and.returnValue(this.$q.when(false));
     spyOn(this.FeatureToggleService, 'atlasCareTrialsGetStatus').and.returnValue(this.$q.when(true));
+    spyOn(this.FeatureToggleService, 'supports').and.returnValue(this.$q.when(true));
     spyOn(this.Orgservice, 'getHybridServiceAcknowledged').and.returnValue(this.$q.when(this.mock.fusionServices));
     spyOn(this.Orgservice, 'getLicensesUsage').and.returnValue(this.$q.when(this.mock.getLicensesUsage));
     spyOn(this.Orgservice, 'getUnlicensedUsers');
+    spyOn(this.$previousState, 'get').and.returnValue({
+      state: {
+        name: 'test.state'
+      }
+    });
   }
 
   function initSpies() {

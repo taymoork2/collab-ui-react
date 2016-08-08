@@ -1,10 +1,10 @@
 'use strict';
 
 describe('Component: upgradeScheduleConfiguration', function () {
-  var component, Authinfo, $scope, $q, $compile, $rootScope, FusionClusterService;
+  var $scope, $q, $compile, $rootScope, FusionClusterService;
 
-  beforeEach(module('Hercules'));
-  beforeEach(module(mockDirectives));
+  beforeEach(angular.mock.module('Hercules'));
+  beforeEach(angular.mock.module(mockDirectives));
   beforeEach(inject(dependencies));
 
   var upgradeScheduleMock = {
@@ -29,8 +29,6 @@ describe('Component: upgradeScheduleConfiguration', function () {
   });
 
   describe('Controller: upgradeScheduleConfiguration', function () {
-    var controller;
-
     it('should have daily as false', function () {
       $scope.clusterId = '123';
       var controller = initController($scope);
@@ -38,7 +36,7 @@ describe('Component: upgradeScheduleConfiguration', function () {
     });
 
     it('should fetch the upgrade schedule when there is a valid cluster id', function () {
-      var controller = initController($scope);
+      initController($scope);
       expect(FusionClusterService.get.calls.count()).toBe(0);
       $scope.clusterId = '123';
       $scope.$apply();
@@ -95,7 +93,7 @@ describe('Component: upgradeScheduleConfiguration', function () {
 
   function mockDirectives($compileProvider) {
     // mock <cs-select>
-    $compileProvider.directive('csSelect', function ($interpolate) {
+    $compileProvider.directive('csSelect', function () {
       return {
         template: '<div>whatever</div>',
         // priority has to be higher than the "original" directive
@@ -111,12 +109,11 @@ describe('Component: upgradeScheduleConfiguration', function () {
     });
   }
 
-  function dependencies(_$rootScope_, _$q_, _$compile_, _Authinfo_, _FusionClusterService_) {
+  function dependencies(_$rootScope_, _$q_, _$compile_, _FusionClusterService_) {
     $rootScope = _$rootScope_;
     $scope = $rootScope.$new();
     $compile = _$compile_;
     $q = _$q_;
-    Authinfo = _Authinfo_;
     FusionClusterService = _FusionClusterService_;
     spyOn(FusionClusterService, 'get').and.returnValue($q.resolve({
       upgradeSchedule: upgradeScheduleMock

@@ -1,14 +1,13 @@
 'use strict';
 
 describe('Controller: ListOrganizationsCtrl', function () {
-  var controller, $scope, $rootScope, $state, $q, $timeout, Orgservice;
+  var controller, $scope, $timeout, Orgservice;
 
-  beforeEach(module('Core'));
+  beforeEach(angular.mock.module('Core'));
 
   beforeEach(inject(function ($rootScope, $controller, $state, $q, _$timeout_, _Orgservice_) {
     $scope = $rootScope.$new();
     $state = $state;
-    $q = $q;
     $timeout = _$timeout_;
     Orgservice = _Orgservice_;
 

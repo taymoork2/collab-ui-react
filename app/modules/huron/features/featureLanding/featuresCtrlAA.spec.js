@@ -14,11 +14,6 @@ describe('Features Controller', function () {
   var getAAListSuccessResp = function (data) {
     return data;
   };
-  var getAAListFailureResp = {
-    'data': 'Internal Server Error',
-    'status': 500,
-    'statusText': 'Internal Server Error'
-  };
   var AAs = [{
     'cardName': 'Main AA',
     'numbers': ['1111'],
@@ -41,10 +36,8 @@ describe('Features Controller', function () {
     'filterValue': 'AA'
   }];
 
-  var cesWithNumber = getJSONFixture('huron/json/autoAttendant/callExperiencesWithNumber.json');
-
-  beforeEach(module('Huron'));
-  beforeEach(module('Sunlight'));
+  beforeEach(angular.mock.module('Huron'));
+  beforeEach(angular.mock.module('Sunlight'));
 
   beforeEach(inject(function (_$rootScope_, $controller, _$q_, _$modal_, _$state_, _$filter_, _$timeout_, _Authinfo_, _AutoAttendantCeInfoModelService_, _Log_, _Notification_, _HuntGroupService_, _CallParkService_, _FeatureToggleService_) {
     $rootScope = _$rootScope_;

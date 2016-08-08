@@ -1,22 +1,21 @@
 'use strict';
 
 describe('Controller: AddResourceController', function () {
-  var controller, $scope, $controller, $q, $window, modalInstanceMock, translateMock, windowMock, clusterServiceMock, fusionClusterServiceMock;
+  var controller, $scope, $controller, $q, modalInstanceMock, translateMock, windowMock, clusterServiceMock, fusionClusterServiceMock;
 
   var clusterIdOfNewCluster = 'c6b4d8f1-6d34-465c-8d6d-b541058fc15e';
   var newConnectorType = 'c_cal';
 
-  beforeEach(module('Squared'));
-  beforeEach(module('Hercules'));
+  beforeEach(angular.mock.module('Squared'));
+  beforeEach(angular.mock.module('Hercules'));
   beforeEach(inject(dependencies));
   beforeEach(initController);
   beforeEach(initSpies);
 
-  function dependencies($rootScope, _$controller_, _$q_, _$window_) {
+  function dependencies($rootScope, _$controller_, _$q_) {
     $scope = $rootScope.$new();
     $controller = _$controller_;
     $q = _$q_;
-    $window = _$window_;
   }
 
   function initSpies() {}

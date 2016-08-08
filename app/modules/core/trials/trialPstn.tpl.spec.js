@@ -2,26 +2,25 @@
 
 describe('Template: trialPstn.tpl.spec.js:', function () {
 
-  var $compile, $controller, $scope, $templateCache, $translate;
-  var controller, view;
+  var $compile, $controller, $scope, $templateCache;
+  var view;
   var skipBtn, backBtn;
 
-  beforeEach(module('Huron'));
+  beforeEach(angular.mock.module('Huron'));
   beforeEach(inject(dependencies));
   beforeEach(compileView);
 
-  function dependencies(_$compile_, _$controller_, _$rootScope_, _$templateCache_, _$translate_) {
+  function dependencies(_$compile_, _$controller_, _$rootScope_, _$templateCache_) {
     $compile = _$compile_;
     $controller = _$controller_;
     $scope = _$rootScope_.$new();
     $templateCache = _$templateCache_;
-    $translate = _$translate_;
   }
 
   function compileView() {
     var template = $templateCache.get('modules/core/trials/trialPstn.tpl.html');
 
-    controller = $controller('TrialPstnCtrl', {
+    $controller('TrialPstnCtrl', {
       $scope: $scope
     });
 

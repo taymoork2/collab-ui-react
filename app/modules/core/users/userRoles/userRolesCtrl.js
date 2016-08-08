@@ -44,7 +44,7 @@
       id: 'partialAdmin'
     };
 
-    FeatureToggleService.supports(FeatureToggleService.features.readonlyAdmin).then(function (enabled) {
+    FeatureToggleService.supports(FeatureToggleService.features.atlasReadOnlyAdmin).then(function (enabled) {
       $scope.enableReadonlyAdminOption = !!enabled;
     });
 
@@ -140,10 +140,10 @@
     function updateRoles() {
       if ($scope.showComplianceRole && $scope.rolesObj.complianceValue != isEntitledToCompliance()) {
         EdiscoveryService.setEntitledForCompliance(Authinfo.getOrgId(), $scope.currentUser.id, $scope.rolesObj.complianceValue).then(
-          function (res) {
+          function () {
             patchUserRoles();
           },
-          function (err) {
+          function () {
             var errorMessage = [];
             errorMessage.push($translate.instant('profilePage.complianceError'));
             Notification.notify(errorMessage, 'error');
@@ -158,95 +158,95 @@
       var roles = [];
 
       switch ($scope.rolesObj.adminRadioValue) {
-      case 0: // No admin
-        for (var roleName in Config.roles) {
-          if (Config.roles[roleName] !== Config.roles.helpdesk && Config.roles[roleName] !== Config.roles.spark_synckms && Config.roles[roleName] !== Config.roles.compliance_user) {
-            roles.push({
-              'roleName': Config.roles[roleName],
-              'roleState': Config.roleState.inactive
-            });
-          }
+        case 0: // No admin
+          for (var roleName in Config.roles) {
+            if (Config.roles[roleName] !== Config.roles.helpdesk && Config.roles[roleName] !== Config.roles.spark_synckms && Config.roles[roleName] !== Config.roles.compliance_user) {
+              roles.push({
+                'roleName': Config.roles[roleName],
+                'roleState': Config.roleState.inactive
+              });
+            }
 
-        }
-        break;
-      case 1: // Full admin
-        roles.push({
-          'roleName': Config.roles.full_admin,
-          'roleState': Config.roleState.active
-        });
-        roles.push({
-          'roleName': Config.roles.readonly_admin,
-          'roleState': Config.roleState.inactive
-        });
-        roles.push({
-          'roleName': Config.roles.sales,
-          'roleState': Config.roleState.inactive
-        });
-        roles.push({
-          'roleName': Config.roles.billing,
-          'roleState': Config.roleState.inactive
-        });
-        roles.push({
-          'roleName': Config.roles.support,
-          'roleState': Config.roleState.inactive
-        });
-        roles.push({
-          'roleName': Config.roles.reports,
-          'roleState': Config.roleState.inactive
-        });
-        break;
-      case 2: // Some admin roles
-        roles.push({
-          'roleName': Config.roles.full_admin,
-          'roleState': Config.roleState.inactive
-        });
-        roles.push({
-          'roleName': Config.roles.readonly_admin,
-          'roleState': Config.roleState.inactive
-        });
-        roles.push({
-          'roleName': Config.roles.sales,
-          'roleState': checkPartialRoles($scope.rolesObj.salesAdminValue)
-        });
-        roles.push({
-          'roleName': Config.roles.billing,
-          'roleState': checkPartialRoles($scope.rolesObj.billingAdminValue)
-        });
-        roles.push({
-          'roleName': Config.roles.support,
-          'roleState': checkPartialRoles($scope.rolesObj.supportAdminValue)
-        });
-        roles.push({
-          'roleName': Config.roles.reports,
-          'roleState': checkPartialRoles($scope.rolesObj.supportAdminValue)
-        });
-        break;
-      case 3: // Readonly admin
-        roles.push({
-          'roleName': Config.roles.full_admin,
-          'roleState': Config.roleState.inactive
-        });
-        roles.push({
-          'roleName': Config.roles.readonly_admin,
-          'roleState': Config.roleState.active
-        });
-        roles.push({
-          'roleName': Config.roles.sales,
-          'roleState': Config.roleState.inactive
-        });
-        roles.push({
-          'roleName': Config.roles.billing,
-          'roleState': Config.roleState.inactive
-        });
-        roles.push({
-          'roleName': Config.roles.support,
-          'roleState': Config.roleState.inactive
-        });
-        roles.push({
-          'roleName': Config.roles.reports,
-          'roleState': Config.roleState.inactive
-        });
-        break;
+          }
+          break;
+        case 1: // Full admin
+          roles.push({
+            'roleName': Config.roles.full_admin,
+            'roleState': Config.roleState.active
+          });
+          roles.push({
+            'roleName': Config.roles.readonly_admin,
+            'roleState': Config.roleState.inactive
+          });
+          roles.push({
+            'roleName': Config.roles.sales,
+            'roleState': Config.roleState.inactive
+          });
+          roles.push({
+            'roleName': Config.roles.billing,
+            'roleState': Config.roleState.inactive
+          });
+          roles.push({
+            'roleName': Config.roles.support,
+            'roleState': Config.roleState.inactive
+          });
+          roles.push({
+            'roleName': Config.roles.reports,
+            'roleState': Config.roleState.inactive
+          });
+          break;
+        case 2: // Some admin roles
+          roles.push({
+            'roleName': Config.roles.full_admin,
+            'roleState': Config.roleState.inactive
+          });
+          roles.push({
+            'roleName': Config.roles.readonly_admin,
+            'roleState': Config.roleState.inactive
+          });
+          roles.push({
+            'roleName': Config.roles.sales,
+            'roleState': checkPartialRoles($scope.rolesObj.salesAdminValue)
+          });
+          roles.push({
+            'roleName': Config.roles.billing,
+            'roleState': checkPartialRoles($scope.rolesObj.billingAdminValue)
+          });
+          roles.push({
+            'roleName': Config.roles.support,
+            'roleState': checkPartialRoles($scope.rolesObj.supportAdminValue)
+          });
+          roles.push({
+            'roleName': Config.roles.reports,
+            'roleState': checkPartialRoles($scope.rolesObj.supportAdminValue)
+          });
+          break;
+        case 3: // Readonly admin
+          roles.push({
+            'roleName': Config.roles.full_admin,
+            'roleState': Config.roleState.inactive
+          });
+          roles.push({
+            'roleName': Config.roles.readonly_admin,
+            'roleState': Config.roleState.active
+          });
+          roles.push({
+            'roleName': Config.roles.sales,
+            'roleState': Config.roleState.inactive
+          });
+          roles.push({
+            'roleName': Config.roles.billing,
+            'roleState': Config.roleState.inactive
+          });
+          roles.push({
+            'roleName': Config.roles.support,
+            'roleState': Config.roleState.inactive
+          });
+          roles.push({
+            'roleName': Config.roles.reports,
+            'roleState': Config.roleState.inactive
+          });
+          break;
       }
 
       // Help Desk

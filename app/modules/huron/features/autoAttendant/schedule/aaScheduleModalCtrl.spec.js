@@ -1,13 +1,12 @@
 'use strict';
 
 describe('Controller: AAScheduleModalCtrl', function () {
-  var AANotificationService, AutoAttendantCeService;
+  var AANotificationService, AutoAttendantCeService, AAMetricNameService, Analytics;
   var AACalendarService, AAUiModelService, AAModelService, AutoAttendantCeInfoModelService, AAICalService, AACommonService;
-  var $scope, $translate, $modalInstance, $controller, $modal, $timeout;
+  var $q, $scope, $modalInstance, $controller, $modal, $timeout;
   var ical;
-  var ces = getJSONFixture('huron/json/autoAttendant/callExperiences.json');
   var calendar = getJSONFixture('huron/json/autoAttendant/aCalendar.json');
-  var aaModel, aaModelWithScheduleId, holidays, starttime, endtime, openhours, controller;
+  var aaModel, aaUiModel, aaModelWithScheduleId, holidays, starttime, endtime, openhours, controller;
 
   var rawCeInfo = {
     "callExperienceName": "AA1",
@@ -51,12 +50,11 @@ describe('Controller: AAScheduleModalCtrl', function () {
     return _ceInfo;
   }
 
-  beforeEach(module('uc.autoattendant'));
-  beforeEach(module('Huron'));
-  beforeEach(module('Sunlight'));
+  beforeEach(angular.mock.module('uc.autoattendant'));
+  beforeEach(angular.mock.module('Huron'));
+  beforeEach(angular.mock.module('Sunlight'));
 
-  beforeEach(inject(function (_ical_, $q, _$controller_, _$translate_, _$modal_, $rootScope, _$timeout_, _AACalendarService_, _AAModelService_, _AAUiModelService_, _AutoAttendantCeService_, _AutoAttendantCeInfoModelService_, _AAICalService_, _AACommonService_) {
-    $translate = _$translate_;
+  beforeEach(inject(function (_ical_, _$q_, _$controller_, _$modal_, $rootScope, _$timeout_, _AACalendarService_, _AAModelService_, _AAUiModelService_, _AutoAttendantCeService_, _AutoAttendantCeInfoModelService_, _AAICalService_, _AACommonService_, _AAMetricNameService_, _Analytics_) {
     $scope = $rootScope.$new();
     ical = _ical_;
     $controller = _$controller_;
@@ -68,7 +66,10 @@ describe('Controller: AAScheduleModalCtrl', function () {
     AAICalService = _AAICalService_;
     AACalendarService = _AACalendarService_;
     AACommonService = _AACommonService_;
+    AAMetricNameService = _AAMetricNameService_;
+    Analytics = _Analytics_;
     $modal = _$modal_;
+    $q = _$q_;
 
     aaModel = {
       aaRecord: {
@@ -86,12 +87,22 @@ describe('Controller: AAScheduleModalCtrl', function () {
       aaRecordUUID: '1111',
       ceInfos: []
     };
-    var aaUiModel = {
+    aaUiModel = {
       openHours: {},
       ceInfo: {
         name: 'AA2',
         scheduleId: '1'
-      }
+      },
+      systemTimeZone: {
+        id: 'America/Los_Angeles',
+        label: 'America/Los_Angeles'
+      },
+      timeZone: {
+        id: 'America/Los_Angeles',
+        label: 'America/Los_Angeles'
+      },
+      isClosedHours: true,
+      isHolidays: false
     };
     starttime = "08:00 AM";
     endtime = "05:00 PM";
@@ -291,6 +302,10 @@ describe('Controller: AAScheduleModalCtrl', function () {
         AAUiModelService: AAUiModelService,
         sectionToToggle: 'hours'
       });
+      controller.timeZoneForm = {
+        $setPristine: function () {}
+      };
+      spyOn(controller.timeZoneForm, '$setPristine');
       $timeout.flush();
     });
 
@@ -298,6 +313,11 @@ describe('Controller: AAScheduleModalCtrl', function () {
       $scope.$apply();
       expect(controller.openhours).toEqual(openhours);
       expect(controller.holidays).toEqual(holidays);
+    });
+
+    it('should have invoked $setPristine to reset timeZoneForm', function () {
+      $scope.$apply();
+      expect(controller.timeZoneForm.$setPristine).toHaveBeenCalled();
     });
 
   });
@@ -320,11 +340,16 @@ describe('Controller: AAScheduleModalCtrl', function () {
         AAUiModelService: AAUiModelService,
         sectionToToggle: 'hours'
       });
+      controller.timeZoneForm = {
+        $pristine: true
+      };
+      spyOn(controller, 'saveTimeZone');
       controller.calendar = calendar;
       controller.openhours = openhours;
       controller.holidays = holidays;
       controller.save();
       $scope.$apply();
+      expect(controller.saveTimeZone).toHaveBeenCalled();
       expect(AACalendarService.createCalendar).toHaveBeenCalledWith('AA1', controller.calendar);
       expect(AutoAttendantCeService.updateCe).toHaveBeenCalled();
       expect(AANotificationService.success).toHaveBeenCalled();
@@ -345,6 +370,9 @@ describe('Controller: AAScheduleModalCtrl', function () {
         AAUiModelService: AAUiModelService,
         sectionToToggle: 'hours'
       });
+      controller.timeZoneForm = {
+        $pristine: true
+      };
       controller.calendar = calendar;
       controller.openhours = openhours;
       controller.holidays = holidays;
@@ -371,6 +399,9 @@ describe('Controller: AAScheduleModalCtrl', function () {
         AAUiModelService: AAUiModelService,
         sectionToToggle: 'hours'
       });
+      controller.timeZoneForm = {
+        $pristine: true
+      };
       controller.openhours = [];
       controller.holidays = [];
       controller.isDeleted = true;
@@ -403,12 +434,87 @@ describe('Controller: AAScheduleModalCtrl', function () {
         AAUiModelService: AAUiModelService,
         sectionToToggle: 'hours'
       });
+      controller.timeZoneForm = {
+        $pristine: true
+      };
       controller.isDeleted = false;
       controller.save();
       $scope.$apply();
       expect(AACalendarService.createCalendar).toHaveBeenCalled();
       expect(AANotificationService.success.calls.any()).toEqual(false);
       expect($modalInstance.close.calls.any()).toEqual(false);
+    });
+
+  });
+
+  describe('saveTimeZone', function () {
+    beforeEach(function () {
+      spyOn(Analytics, 'trackEvent');
+      var ceInfo = ce2CeInfo(rawCeInfo);
+      aaModel.ceInfos.push(ceInfo);
+      controller = $controller('AAScheduleModalCtrl as vm', {
+        $scope: $scope,
+        AANotificationService: AANotificationService,
+        $modalInstance: $modalInstance,
+        AACalendarService: AACalendarService,
+        AAICalService: AAICalService,
+        AAModelService: AAModelService,
+        AAUiModelService: AAUiModelService,
+        sectionToToggle: 'hours'
+      });
+      controller.aaModel = aaModel;
+      controller.aaModel.aaRecord.assignedTimeZone = undefined;
+      controller.timeZoneForm = {
+        $pristine: true
+      };
+    });
+
+    it('should NOT store time zone into aaRecord if there is NO change in time zone drop-down list', function () {
+      controller.saveTimeZone();
+      expect(controller.aaModel.aaRecord.assignedTimeZone).toBe(undefined);
+    });
+
+    it('should store time zone into aaRecord if there is a change in time zone drop-down list', function () {
+      controller.timeZoneForm = {
+        $pristine: false
+      };
+      controller.saveTimeZone();
+      expect(controller.aaModel.aaRecord.assignedTimeZone).toBe(aaUiModel.timeZone.id);
+    });
+
+    it('should log a timezone event for a first-time change in time zone drop-down list', function () {
+      controller.timeZoneForm = {
+        $pristine: false
+      };
+      controller.saveTimeZone();
+      expect(Analytics.trackEvent).toHaveBeenCalledWith(AAMetricNameService.TIME_ZONE, {
+        type: 'change',
+        timezone: aaUiModel.timeZone.id
+      });
+      expect(controller.aaModel.aaRecord.assignedTimeZone).toBe(aaUiModel.timeZone.id);
+    });
+
+    it('should NOT log a timezone event for subsequent change in time zone drop-down list', function () {
+      controller.timeZoneForm = {
+        $pristine: false
+      };
+      controller.aaModel.aaRecord.assignedTimeZone = aaUiModel.timeZone.id;
+
+      controller.saveTimeZone();
+      expect(Analytics.trackEvent).not.toHaveBeenCalled();
+      expect(controller.aaModel.aaRecord.assignedTimeZone).toBe(aaUiModel.timeZone.id);
+    });
+
+    it('should NOT log a timezone event for 24 Hours schedule', function () {
+      controller.timeZoneForm = {
+        $pristine: false
+      };
+      controller.ui.isClosedHours = false;
+      controller.ui.isHolidays = false;
+
+      controller.saveTimeZone();
+      expect(Analytics.trackEvent).not.toHaveBeenCalled();
+      expect(controller.aaModel.aaRecord.assignedTimeZone).toBe(aaUiModel.timeZone.id);
     });
 
   });
@@ -585,6 +691,10 @@ describe('Controller: AAScheduleModalCtrl', function () {
         AAUiModelService: AAUiModelService,
         sectionToToggle: 'hours'
       });
+      controller.timeZoneForm = {
+        $setPristine: function () {}
+      };
+      spyOn(controller.timeZoneForm, '$setPristine');
       $timeout.flush();
       $scope.$apply();
       expect(controller.holidays.length).toEqual(2);
@@ -656,14 +766,14 @@ describe('Controller: AAScheduleModalCtrl', function () {
       expect($modal.open).toHaveBeenCalled();
     });
 
-    it('should close a modal for importing and send analytics', inject(function ($q, Analytics) {
+    it('should close a modal for importing and send analytics', function () {
       spyOn(Analytics, 'trackEvent').and.returnValue($q.when({}));
       controller.openImportModal();
       fakeModal.dismiss('cancel');
       $scope.$apply();
       expect($modal.open).toHaveBeenCalled();
       expect(Analytics.trackEvent).toHaveBeenCalled();
-    }));
+    });
 
     it('should add imported items', function () {
       fakeModal.close({

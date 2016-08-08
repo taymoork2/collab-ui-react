@@ -2,8 +2,8 @@
 
 describe('Controller: AARouteToUserCtrl', function () {
   var $controller;
-  var AAUiModelService, AutoAttendantCeInfoModelService, AutoAttendantCeMenuModelService, AAModelService, $q, $httpBackend, HuronConfig, Userservice, UserListService, UserServiceVoice;
-  var $rootScope, $scope, $translate, UrlConfig;
+  var AAUiModelService, AutoAttendantCeInfoModelService, AutoAttendantCeMenuModelService, AAModelService, $httpBackend, HuronConfig;
+  var $rootScope, $scope, UrlConfig;
 
   var aaModel = {
 
@@ -20,7 +20,7 @@ describe('Controller: AARouteToUserCtrl', function () {
     getOrgId: jasmine.createSpy('getOrgId').and.returnValue('1')
   };
 
-  beforeEach(module(function ($provide) {
+  beforeEach(angular.mock.module(function ($provide) {
     $provide.value("Authinfo", Authinfo);
   }));
 
@@ -293,10 +293,6 @@ describe('Controller: AARouteToUserCtrl', function () {
     "success": true
   };
 
-  var userListFailedCISResponse = {
-    "success": false
-  };
-
   var listUsersProps = {
     "attributes": "attributes=name,userName,userStatus,entitlements,displayName,photos,roles,active,trainSiteNames,licenseID",
     "filter": "filter=active%20eq%20true%20or%20displayName%20sw%20%22xz%22",
@@ -308,26 +304,26 @@ describe('Controller: AARouteToUserCtrl', function () {
 
   // we have two test users - one with all the properties like display name, extension, etc., and another without
   var users = [{
-      displayName: 'Super Admin',
-      userName: 'dudette@gmail.com',
-      id: '47026507-4F83-0B5B-9C1D-8DBA89F2E01C',
-      extension: '2252'
-    }, {
-      displayName: '',
-      userName: 'dude@gmail.com',
-      id: '5FCF9B4A-4A44-943B-4A4A-A397974E97D4',
-      extension: ''
-    }, {
-      displayName: 'Test Admin',
-      userName: 'dudette@gmail.com',
-      id: '47026507-4F83-0B5B-9C1D-8DBA89F2E01C',
-      extension: '2252'
-    }, {
-      displayName: 'AA Admin',
-      userName: 'dudette@gmail.com',
-      id: '47026507-4F83-0B5B-9C1D-8DBA89F2E01C',
-      extension: '2252'
-    },
+    displayName: 'Super Admin',
+    userName: 'dudette@gmail.com',
+    id: '47026507-4F83-0B5B-9C1D-8DBA89F2E01C',
+    extension: '2252'
+  }, {
+    displayName: '',
+    userName: 'dude@gmail.com',
+    id: '5FCF9B4A-4A44-943B-4A4A-A397974E97D4',
+    extension: ''
+  }, {
+    displayName: 'Test Admin',
+    userName: 'dudette@gmail.com',
+    id: '47026507-4F83-0B5B-9C1D-8DBA89F2E01C',
+    extension: '2252'
+  }, {
+    displayName: 'AA Admin',
+    userName: 'dudette@gmail.com',
+    id: '47026507-4F83-0B5B-9C1D-8DBA89F2E01C',
+    extension: '2252'
+  },
 
   ];
 
@@ -365,12 +361,11 @@ describe('Controller: AARouteToUserCtrl', function () {
     return _ceInfos;
   }
 
-  beforeEach(module('uc.autoattendant'));
-  beforeEach(module('Huron'));
-  beforeEach(module('Sunlight'));
+  beforeEach(angular.mock.module('uc.autoattendant'));
+  beforeEach(angular.mock.module('Huron'));
+  beforeEach(angular.mock.module('Sunlight'));
 
-  beforeEach(inject(function (_$controller_, _$q_, _$translate_, _$rootScope_, _AAUiModelService_, _AutoAttendantCeInfoModelService_, _AutoAttendantCeMenuModelService_, _AAModelService_, _$httpBackend_, _Authinfo_, _HuronConfig_, _Userservice_, _UserListService_, _UserServiceVoice_, _UrlConfig_) {
-    $translate = _$translate_;
+  beforeEach(inject(function (_$controller_, _$rootScope_, _AAUiModelService_, _AutoAttendantCeInfoModelService_, _AutoAttendantCeMenuModelService_, _AAModelService_, _$httpBackend_, _Authinfo_, _HuronConfig_, _UrlConfig_) {
     $rootScope = _$rootScope_;
     $scope = $rootScope;
 
@@ -381,13 +376,9 @@ describe('Controller: AARouteToUserCtrl', function () {
     AutoAttendantCeMenuModelService = _AutoAttendantCeMenuModelService_;
 
     $httpBackend = _$httpBackend_;
-    $q = _$q_;
     Authinfo = _Authinfo_;
     UrlConfig = _UrlConfig_;
     HuronConfig = _HuronConfig_;
-    Userservice = _Userservice_;
-    UserListService = _UserListService_;
-    UserServiceVoice = _UserServiceVoice_;
 
     $scope.schedule = schedule;
     $scope.index = index;

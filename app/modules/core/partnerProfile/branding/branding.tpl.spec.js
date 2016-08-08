@@ -11,10 +11,10 @@ describe('Template: branding', function () {
   var ALLOW_LOGO_CHECKBOX = '#allowCustomerLogo';
   var USE_LATEST_WEBEX_CHECKBOX = '#useLatestWbxVersion';
 
-  beforeEach(module('Core'));
-  beforeEach(module('Huron'));
-  beforeEach(module('Sunlight'));
-  beforeEach(module('WebExApp'));
+  beforeEach(angular.mock.module('Core'));
+  beforeEach(angular.mock.module('Huron'));
+  beforeEach(angular.mock.module('Sunlight'));
+  beforeEach(angular.mock.module('WebExApp'));
 
   beforeEach(inject(dependencies));
   beforeEach(initSpies);
@@ -72,7 +72,6 @@ describe('Template: branding', function () {
     beforeEach(compileView);
     it('client versions drop down to exist', function () {
       var clientVersionsDropDown = view.find('#' + 'webex_client_version_drop_down');
-      var at = "bctrl.wbxclientversionselected";
       expect(clientVersionsDropDown).not.toBe(null);
     });
   });

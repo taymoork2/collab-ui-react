@@ -131,6 +131,9 @@
           .danger {
             color: $color-negative-base;
           }
+          .success {
+            color: $color-cta-base;
+          }
         }
       }
       .cs-card.header-bar.cta-bar header:after {

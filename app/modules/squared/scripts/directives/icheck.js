@@ -1,7 +1,7 @@
 (function () {
   'use strict';
 
-  angular.module('wx2AdminWebClientApp')
+  angular.module('Squared')
     .directive('icheck', icheck);
 
   /* @ngInject */
@@ -10,9 +10,6 @@
       require: 'ngModel',
       link: function ($scope, element, $attrs, ngModel) {
         return $timeout(function () {
-          var value;
-          value = $attrs.value;
-
           $scope.$watch($attrs.ngModel, function () {
             $(element).iCheck('update');
           });

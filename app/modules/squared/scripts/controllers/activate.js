@@ -1,39 +1,55 @@
 (function () {
   'use strict';
 
-  angular
-    .module('Squared')
-    .controller('ActivateCtrl', ActivateCtrl);
+  module.exports = angular
+    .module('squared.activate', [
+      require('modules/core/config/urlConfig'),
+      require('modules/core/windowLocation/windowLocation'),
+      require('modules/core/scripts/services/log'),
+      require('modules/core/scripts/services/utils'),
+      require('modules/squared/scripts/services/activateService'),
+    ])
+    .controller('ActivateCtrl', ActivateCtrl)
+    .name;
 
   /* @ngInject */
-  function ActivateCtrl($scope, $location, Log, Utils, Activateservice, UrlConfig, WindowLocation) {
+  function ActivateCtrl($scope, $location, Log, Utils, ActivateService, UrlConfig, WindowLocation) {
     //initialize ng-show variables
     $scope.result = {
       provisionSuccess: false,
       codeExpired: false,
-      resendSuccess: false
+      resendSuccess: false,
+      errmsg: false
     };
 
-    var showHide = function (provision, expired, resend) {
-      $scope.result.provisionSuccess = provision;
-      $scope.result.codeExpired = expired;
-      $scope.result.resendSuccess = resend;
+    var hideAllMessages = function () {
+      $scope.result.provisionSuccess = false;
+      $scope.result.codeExpired = false;
+      $scope.result.resendSuccess = false;
+      $scope.result.errmsg = false;
     };
 
-    var activateWeb = function () {
-      showHide(true, false, false);
+    var showProvisionSuccessMessage = function () {
+      hideAllMessages();
+      $scope.result.provisionSuccess = true;
     };
 
-    var activateErrorWeb = function () {
-      showHide(false, true, false);
+    var showCodeExpiredMessage = function () {
+      hideAllMessages();
+      $scope.result.codeExpired = true;
     };
 
-    var activateMobile = function () {
+    var showResendSuccessMessage = function () {
+      hideAllMessages();
+      $scope.result.resendSuccess = true;
+    };
+
+    var redirectToSparkWithSuccess = function () {
       // launch app with URL: squared://confirmation_code_verified
       WindowLocation.set(UrlConfig.getSquaredAppUrl() + 'confirmation_code_verified');
     };
 
-    var activateErrorMobile = function (errorCode) {
+    var redirectToSparkWithError = function (errorCode) {
       // launch app with error URL: squared://confirmation_error_code/xxxx
       WindowLocation.set(UrlConfig.getSquaredAppUrl() + 'confirmation_error_code/' + errorCode);
     };
@@ -42,7 +58,7 @@
 
     if (encryptedParam) {
 
-      Activateservice.activateUser(encryptedParam)
+      ActivateService.activateUser(encryptedParam)
         .then(function (res) {
           var data = res.data;
 
@@ -52,22 +68,17 @@
           $scope.deviceId = data.deviceId;
           $scope.deviceUserAgent = data.userAgent;
 
-          if (!Utils.isWeb()) {
-            if (!data.codeException) {
-              activateMobile();
-            } else {
-              activateErrorMobile(data.codeException);
-            }
+          if (!data.codeException) {
+            showProvisionSuccessMessage();
+            redirectToSparkWithSuccess();
           } else {
-            if (!data.codeException) {
-              activateWeb();
-            } else {
-              activateErrorWeb();
-            }
+            showCodeExpiredMessage();
+            redirectToSparkWithError(data.codeException);
           }
-        }, function (status) {
+        })
+        .catch(function (status) {
           if (!Utils.isWeb()) {
-            activateErrorMobile(status);
+            redirectToSparkWithError(status);
           } else {
             $scope.result.errmsg = 'Failed to verify code and create user. Status: ' + status;
             Log.error($scope.result.errmsg);
@@ -79,12 +90,11 @@
     }
 
     $scope.resendCode = function () {
-
-      Activateservice.resendCode(encryptedParam)
+      ActivateService.resendCode(encryptedParam)
         .then(function (res) {
           if (res.data) {
+            showResendSuccessMessage();
             $scope.eqp = res.data.eqp;
-            showHide(false, false, true);
           }
         }, function (status) {
           if (status === 404) {
@@ -95,7 +105,6 @@
             $scope.result.errmsg = 'status: ' + status;
           }
         });
-
     };
   }
 })();

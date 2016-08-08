@@ -2,8 +2,8 @@
 
 describe('Controller: AADialByExtCtrl', function () {
   var $controller, $q;
-  var AAUiModelService, AutoAttendantCeInfoModelService, AutoAttendantCeMenuModelService, AAModelService, FeatureToggleService;
-  var $rootScope, $scope, $translate;
+  var AAUiModelService, AutoAttendantCeMenuModelService, AAModelService, FeatureToggleService;
+  var $rootScope, $scope;
 
   var aaModel = {
 
@@ -22,24 +22,11 @@ describe('Controller: AADialByExtCtrl', function () {
 
   var data = getJSONFixture('huron/json/autoAttendant/aaPhoneMenuCtrl.json');
 
-  function raw2MenuEntry(raw) {
-    var _menuEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
-    angular.extend(_menuEntry, raw);
-    _menuEntry.actions = [];
-    for (var j = 0; j < raw.actions.length; j++) {
-      var _action = AutoAttendantCeMenuModelService.newCeActionEntry();
-      angular.extend(_action, raw.actions[j]);
-      _menuEntry.addAction(_action);
-    }
-    return _menuEntry;
-  }
+  beforeEach(angular.mock.module('uc.autoattendant'));
+  beforeEach(angular.mock.module('Huron'));
+  beforeEach(angular.mock.module('Sunlight'));
 
-  beforeEach(module('uc.autoattendant'));
-  beforeEach(module('Huron'));
-  beforeEach(module('Sunlight'));
-
-  beforeEach(inject(function (_$controller_, _$translate_, _$rootScope_, _$q_, _AAUiModelService_, _AutoAttendantCeInfoModelService_, _AutoAttendantCeMenuModelService_, _AAModelService_, _FeatureToggleService_) {
-    $translate = _$translate_;
+  beforeEach(inject(function (_$controller_, _$rootScope_, _$q_, _AAUiModelService_, _AutoAttendantCeMenuModelService_, _AAModelService_, _FeatureToggleService_) {
     $rootScope = _$rootScope_;
     $scope = $rootScope;
     $q = _$q_;
@@ -47,7 +34,6 @@ describe('Controller: AADialByExtCtrl', function () {
     $controller = _$controller_;
     AAModelService = _AAModelService_;
     AAUiModelService = _AAUiModelService_;
-    AutoAttendantCeInfoModelService = _AutoAttendantCeInfoModelService_;
     AutoAttendantCeMenuModelService = _AutoAttendantCeMenuModelService_;
     FeatureToggleService = _FeatureToggleService_;
 

@@ -57,6 +57,7 @@
     vm.agentNamePreview = $translate.instant('careChatTpl.agentAliasPreview');
     vm.logoFile = '';
     vm.logoUploaded = false;
+    vm.logoUrl = undefined;
     vm.categoryTokensId = 'categoryTokensElement';
     vm.categoryOptionTag = '';
     vm.saveCTErrorOccurred = false;
@@ -157,7 +158,7 @@
         mediaSpecificConfiguration: {
           useOrgProfile: true,
           displayText: vm.orgName,
-          image: '',
+          orgLogoUrl: vm.logoUrl,
           useAgentRealName: false
         },
         pages: {
@@ -189,7 +190,7 @@
                 }, {
                   name: 'type',
                   value: vm.getTypeObject('name'),
-                  categoryOptions: []
+                  categoryOptions: ''
                 }]
               },
 
@@ -209,7 +210,7 @@
                 }, {
                   name: 'type',
                   value: vm.getTypeObject('email'),
-                  categoryOptions: []
+                  categoryOptions: ''
                 }]
               },
 
@@ -229,7 +230,7 @@
                 }, {
                   name: 'type',
                   value: vm.getTypeObject('category'),
-                  categoryOptions: []
+                  categoryOptions: ''
                 }]
               }
             }
@@ -329,11 +330,11 @@
 
     function evalKeyPress(keyCode) {
       switch (keyCode) {
-      case vm.escapeKey:
-        cancelModal();
-        break;
-      default:
-        break;
+        case vm.escapeKey:
+          cancelModal();
+          break;
+        default:
+          break;
       }
     }
 
@@ -367,18 +368,18 @@
 
     function nextButton() {
       switch (vm.currentState) {
-      case 'name':
-        return isNamePageValid();
-      case 'profile':
-        return isProfilePageValid();
-      case 'agentUnavailable':
-        return isAgentUnavailablePageValid();
-      case 'offHours':
-        return isOffHoursPageValid();
-      case 'summary':
-        return 'hidden';
-      default:
-        return true;
+        case 'name':
+          return isNamePageValid();
+        case 'profile':
+          return isProfilePageValid();
+        case 'agentUnavailable':
+          return isAgentUnavailablePageValid();
+        case 'offHours':
+          return isOffHoursPageValid();
+        case 'summary':
+          return 'hidden';
+        default:
+          return true;
       }
     }
 
@@ -498,12 +499,14 @@
         vm.template.configuration.mediaSpecificConfiguration = {
           useOrgProfile: true,
           displayText: vm.orgName,
-          image: ''
+          orgLogoUrl: vm.logoUrl
         };
       } else if (vm.selectedTemplateProfile === vm.profiles.agent) {
         vm.template.configuration.mediaSpecificConfiguration = {
           useOrgProfile: false,
-          useAgentRealName: false
+          useAgentRealName: false,
+          orgLogoUrl: vm.logoUrl,
+          displayText: vm.orgName
         };
       }
     }
@@ -583,6 +586,9 @@
     }
 
     function init() {
+      CTService.getLogoUrl().then(function (url) {
+        vm.logoUrl = url;
+      });
       CTService.getLogo().then(function (data) {
         vm.logoFile = 'data:image/png;base64,' + $window.btoa(String.fromCharCode.apply(null, new Uint8Array(data.data)));
         vm.logoUploaded = true;

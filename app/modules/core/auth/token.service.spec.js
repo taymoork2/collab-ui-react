@@ -1,9 +1,9 @@
 'use strict';
 
 describe('TokenService', function () {
-  beforeEach(module('Core'));
+  beforeEach(angular.mock.module('core.token'));
 
-  var Auth, Config, SessionStorage, Storage, TokenService, $rootScope, $window, $injector;
+  var SessionStorage, TokenService, $window;
   var windowMock = {
     open: sinon.stub(),
     sessionStorage: {},
@@ -13,14 +13,9 @@ describe('TokenService', function () {
     }
   };
 
-  beforeEach(inject(function (_Auth_, _Config_, _SessionStorage_, _Storage_, _TokenService_, _$injector_, _$rootScope_) {
-    Auth = _Auth_;
-    Config = _Config_;
-    $rootScope = _$rootScope_;
-    $injector = _$injector_;
+  beforeEach(inject(function (_SessionStorage_, _TokenService_) {
     SessionStorage = _SessionStorage_;
     TokenService = _TokenService_;
-    Storage = _Storage_;
     $window = windowMock;
 
     spyOn($window.localStorage, 'setItem');

@@ -1,21 +1,19 @@
 'use strict';
 
 describe('Controller: AAHelpCtrl', function () {
-  var controller, $controller, optionController;
+  var controller, $controller;
   var $rootScope, $scope;
-  var Config;
 
   var text = "Help me if you can.";
 
-  beforeEach(module('uc.autoattendant'));
-  beforeEach(module('Huron'));
-  beforeEach(module('Sunlight'));
+  beforeEach(angular.mock.module('uc.autoattendant'));
+  beforeEach(angular.mock.module('Huron'));
+  beforeEach(angular.mock.module('Sunlight'));
 
-  beforeEach(inject(function (_$rootScope_, _$controller_, _Config_) {
+  beforeEach(inject(function (_$rootScope_, _$controller_) {
     $rootScope = _$rootScope_;
     $scope = $rootScope;
     $controller = _$controller_;
-    Config = _Config_;
 
     controller = $controller('AAHelpCtrl', {
       $scope: $scope

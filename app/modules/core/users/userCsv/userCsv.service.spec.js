@@ -7,7 +7,7 @@ describe('Controller: UserCsvService', function () {
   var trackingId = ' TrackingID: ';
   var dummyId = 'TrackingID';
   var email = 'dummyEmail@fakeAccount.com';
-  var headerFuncOne = function (id) {
+  var headerFuncOne = function () {
     return null;
   };
   var headerFuncTwo = function (id) {
@@ -36,7 +36,7 @@ describe('Controller: UserCsvService', function () {
     userErrorArray: []
   };
 
-  beforeEach(module('Core'));
+  beforeEach(angular.mock.module('Core'));
   beforeEach(inject(function (_UserCsvService_, _Notification_) {
     UserCsvService = _UserCsvService_;
     Notification = _Notification_;

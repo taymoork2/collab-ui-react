@@ -1,0 +1,21 @@
+[{
+  "licenseId": "SD_1f6e5dde-f03a-4d06-88b4-8aa129211cd2",
+		"offerName": "SD",
+		"licenseType": "SHARED_DEVICES",
+		"billingServiceId": "local-offerCode-test",
+		"features": ["spark-room-system"],
+		"volume": 10,
+		"isTrial": false,
+		"status": "ACTIVE",
+		"usage": 0
+  }, {
+		"licenseId": "SB_4d198b17-caff-467e-8c38-4f98ccf1b009",
+		"offerName": "SB",
+		"licenseType": "SHARED_DEVICES",
+		"billingServiceId": "local-offerCode-test",
+		"features": ["spark-room-system"],
+		"volume": 10,
+		"isTrial": false,
+		"status": "ACTIVE",
+		"usage": 0
+}]

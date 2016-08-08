@@ -35,14 +35,14 @@
     vm.supportsExtendedInformation = false;
     vm.cardsAvailable = false;
 
-    FeatureToggleService.supports(FeatureToggleService.features.helpdeskExt).then(function (result) {
+    FeatureToggleService.supports(FeatureToggleService.features.atlasHelpDeskExt).then(function (result) {
       vm.supportsExtendedInformation = result;
     });
 
     HelpdeskService.getUser(vm.orgId, vm.userId).then(initUserView, XhrNotificationService.notify);
 
     function resendInviteEmail() {
-      HelpdeskService.resendInviteEmail(vm.user.displayName, vm.user.userName).then(function (result) {
+      HelpdeskService.resendInviteEmail(vm.user.displayName, vm.user.userName).then(function () {
         var prefix = 'helpdesk.userStatuses.';
         for (var i = 0; i < vm.user.statuses.length; i++) {
           var status = vm.user.statuses[i];
@@ -105,15 +105,15 @@
           _.each(statuses, function (status) {
             status.collapsedState = USSService2.decorateWithStatus(status);
             switch (status.serviceId) {
-            case 'squared-fusion-cal':
-              vm.hybridServicesCard.cal.status = status;
-              break;
-            case 'squared-fusion-uc':
-              vm.hybridServicesCard.uc.status = status;
-              break;
-            case 'squared-fusion-ec':
-              vm.hybridServicesCard.ec.status = status;
-              break;
+              case 'squared-fusion-cal':
+                vm.hybridServicesCard.cal.status = status;
+                break;
+              case 'squared-fusion-uc':
+                vm.hybridServicesCard.uc.status = status;
+                break;
+              case 'squared-fusion-ec':
+                vm.hybridServicesCard.ec.status = status;
+                break;
             }
           });
         }, XhrNotificationService.notify);

@@ -6,28 +6,38 @@
     .controller('UserCsvCtrl', UserCsvCtrl);
 
   /* @ngInject */
-  function UserCsvCtrl($interval, $modal, $q, $rootScope, $scope, $state, $timeout, $translate, Authinfo, Config, CsvDownloadService, FeatureToggleService, HuronCustomer, LogMetricsService, NAME_DELIMITER, Notification, Orgservice, TelephoneNumberService, UserCsvService, Userservice) {
+  function UserCsvCtrl($interval, $modal, $q, $rootScope, $scope, $state, $timeout, $translate, $previousState, $stateParams,
+    Authinfo, Config, CsvDownloadService, FeatureToggleService, HuronCustomer, LogMetricsService, NAME_DELIMITER,
+    Notification, Orgservice, TelephoneNumberService, UserCsvService, Userservice) {
     // variables
     var vm = this;
     vm.licenseUnavailable = false;
     vm.isCancelledByUser = false;
+    vm.isExporting = false;
+    vm.isCsvValid = false;
+    // todo - test this!
+    vm.isOverExportThreshold = !!$stateParams.isOverExportThreshold;
 
-    var maxUsers = 1100;
+    var maxUsers = UserCsvService.maxUsersInCSV;
     var csvUsersArray = [];
-    var isCsvValid = false;
     var cancelDeferred;
     var saveDeferred;
     var csvHeaders = null;
     var orgHeaders;
+
+    var USER_ID_EMAIL_HEADER = 'User ID/Email (Required)';
+
     CsvDownloadService.getCsv('headers').then(function (csvData) {
       orgHeaders = angular.copy(csvData.columns || []);
     }).catch(function (response) {
       Notification.errorResponse(response, 'firstTimeWizard.downloadHeadersError');
     });
-    var isDirSync = false;
+
+    vm.isDirSyncEnabled = false;
     FeatureToggleService.supportsDirSync().then(function (enabled) {
-      isDirSync = enabled;
+      vm.isDirSyncEnabled = enabled;
     });
+
     var csvPromiseChain = $q.when();
     var uniqueEmails = [];
     var processingError;
@@ -49,7 +59,6 @@
       file: null,
       desc: null,
       templateAnchorText: null,
-      exportErrorsAnchorText: null,
       enableRemove: false,
       uploadProgress: 0,
       isProcessing: false,
@@ -74,7 +83,6 @@
       maxUsers: maxUsers
     });
     vm.model.templateAnchorText = $translate.instant("firstTimeWizard.downloadStep");
-    vm.model.exportErrorsAnchorText = $translate.instant("csvUpload.exportErrors");
 
     // watches
     $scope.$watchCollection(function () {
@@ -83,7 +91,9 @@
       $timeout(vm.validateCsv);
     });
 
-    // scope functions
+    // controller functions
+    vm.onExportDownloadStatus = onExportDownloadStatus;
+
     vm.onFileSizeError = function () {
       Notification.error('firstTimeWizard.csvMaxSizeError');
       $scope.$digest();
@@ -100,15 +110,17 @@
 
     vm.validateCsv = function () {
       setUploadProgress(0);
-      isCsvValid = false;
+      vm.isCsvValid = false;
       if (vm.model.file) {
         setUploadProgress(0);
         csvUsersArray = $.csv.toArrays(vm.model.file);
         if (_.isArray(csvUsersArray) && csvUsersArray.length > 0 && _.isArray(csvUsersArray[0])) {
-          if (_.indexOf(csvUsersArray[0], 'User ID/Email (Required)') > -1) {
+          if (_.indexOf(csvUsersArray[0], USER_ID_EMAIL_HEADER) > -1) {
             csvHeaders = csvUsersArray.shift();
             if (csvUsersArray.length > 0 && csvUsersArray.length <= maxUsers) {
-              isCsvValid = true;
+              vm.isCsvValid = true;
+            } else {
+              warnCsvUserCount();
             }
           }
         }
@@ -116,11 +128,37 @@
       }
     };
 
+    var rootState = $previousState.get().state.name;
+    vm.onBack = function () {
+      $state.go(rootState);
+    };
+
     vm.startUpload = function () {
       beforeSubmitCsv().then(function () {
         bulkSaveWithIndividualLicenses();
         $state.go('users.csv.results');
       });
+    };
+
+    $scope.$on('modal.closing', function (ev) {
+      if (vm.model.isProcessing) {
+        vm.onCancelImport();
+        ev.preventDefault();
+      }
+    });
+
+    vm.onCancelImport = function () {
+      if (vm.model.isProcessing) {
+        $modal.open({
+          type: 'dialog',
+          templateUrl: 'modules/core/users/userCsv/userCsvStopImportConfirm.tpl.html'
+        }).result.then(function () {
+          // cancel the current import
+          vm.cancelProcessCsv();
+        });
+      } else {
+        $scope.$dismiss();
+      }
     };
 
     vm.cancelProcessCsv = function () {
@@ -141,19 +179,28 @@
       }
     };
 
+    /////////////////////////////
+    function onExportDownloadStatus(isExporting) {
+      vm.isExporting = isExporting;
+    }
+
+    function warnCsvUserCount() {
+      if (csvUsersArray.length > maxUsers) {
+        Notification.error('firstTimeWizard.csvMaxLinesError', {
+          max: String(maxUsers)
+        });
+      } else {
+        Notification.error('firstTimeWizard.uploadCsvEmpty');
+      }
+    }
+
     // functions
     function beforeSubmitCsv() {
       return $q(function (resolve, reject) {
-        if (isCsvValid) {
+        if (vm.isCsvValid) {
           resolve();
         } else {
-          if (csvUsersArray.length > maxUsers) {
-            Notification.error('firstTimeWizard.csvMaxLinesError', {
-              max: String(maxUsers)
-            });
-          } else {
-            Notification.error('firstTimeWizard.uploadCsvEmpty');
-          }
+          warnCsvUserCount();
           reject();
         }
       });
@@ -219,13 +266,13 @@
     function hasSparkCallVoicemailService() {
       hasVoicemailService = false;
       return HuronCustomer.get().then(function (customer) {
-          _.forEach(customer.links, function (service) {
-            if (service.rel === 'voicemail') {
-              hasVoicemailService = true;
-            }
-          });
-        })
-        .catch(function (response) {
+        _.forEach(customer.links, function (service) {
+          if (service.rel === 'voicemail') {
+            hasVoicemailService = true;
+          }
+        });
+      })
+        .catch(function () {
           hasVoicemailService = false;
         });
     }
@@ -329,7 +376,7 @@
           var addedUsersList = [];
           var onboardUser = null;
 
-          _.forEach(response.data.userResponse, function (user, index) {
+          _.forEach(response.data.userResponse, function (user) {
             onboardUser = onboardedUserWithEmail(user.email);
 
             if (user.httpStatus === 200 || user.httpStatus === 201) {
@@ -375,7 +422,7 @@
           });
         } else {
           // for some reason the userResponse is incorrect.  We need to error every user.
-          _.forEach(onboardedUsers, function (user, idx) {
+          _.forEach(onboardedUsers, function (user) {
             addUserErrorWithTrackingID(user.csvRow, user.email, $translate.instant('firstTimeWizard.processBulkResponseError'), response);
           });
         }
@@ -389,12 +436,12 @@
           // need to retry this set of users
           vm.model.retryAfter = response.headers('retry-after') || vm.model.retryAfterDefault;
 
-          _.forEach(onboardedUsers, function (user, index) {
+          _.forEach(onboardedUsers, function (user) {
             vm.model.usersToRetry.push(user);
           });
         } else {
           // fatal error.  flag all users as having an error
-          _.forEach(onboardedUsers, function (user, index) {
+          _.forEach(onboardedUsers, function (user) {
             addUserErrorWithTrackingID(
               user.csvRow,
               user.email,
@@ -415,7 +462,7 @@
        */
       function onboardCsvUsers(usersToOnboard, csvPromise) {
         return csvPromise.then(function () {
-          return $q(function (resolve, reject) {
+          return $q(function (resolve) {
             if (usersToOnboard.length > 0) {
               Userservice.bulkOnboardUsers(usersToOnboard, cancelDeferred.promise).then(function (response) {
                 successCallback(response, usersToOnboard);
@@ -526,7 +573,7 @@
           } else {
             uniqueEmails.push(id);
             // Do not send name and displayName if it's a DirSync org
-            if (isDirSync) {
+            if (vm.isDirSyncEnabled) {
               firstName = '';
               lastName = '';
               displayName = '';
@@ -560,7 +607,7 @@
         vm.isCancelledByUser = false;
 
         headers = generateHeaders(orgHeaders || null, csvHeaders || null);
-        idIndex = findHeaderIndex('User ID/Email (Required)');
+        idIndex = findHeaderIndex(USER_ID_EMAIL_HEADER);
 
         var tempUserArray = [];
 
@@ -602,7 +649,7 @@
        * Process all of the users that need onboarding retried
        */
       function processRetryUsers() {
-        return $q(function (resolve, reject) {
+        return $q(function (resolve) {
 
           vm.model.numRetriesToAttempt--;
 

@@ -1,8 +1,12 @@
 (function () {
   'use strict';
 
-  angular.module('Core')
-    .controller('StateRedirectCtrl', StateRedirectCtrl);
+  module.exports = angular.module('core.stateredirect', [
+    require('modules/core/auth/auth'),
+    require('modules/core/stateRedirect/previousState.service'),
+  ])
+    .controller('StateRedirectCtrl', StateRedirectCtrl)
+    .name;
 
   /* @ngInject */
   function StateRedirectCtrl(Auth, PreviousState) {

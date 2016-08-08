@@ -92,7 +92,7 @@
 
       handleFeaturePromises(featuresPromises);
 
-      $q.all(featuresPromises).then(function (responses) {
+      $q.all(featuresPromises).then(function () {
         showNewFeaturePageIfNeeded();
       });
     }

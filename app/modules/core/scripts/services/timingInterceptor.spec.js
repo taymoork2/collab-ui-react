@@ -1,14 +1,13 @@
 'use strict';
 
 describe('TimingInterceptor', function () {
-  beforeEach(module('Core'));
+  beforeEach(angular.mock.module('core.timinginterceptor'));
 
-  var Interceptor, Config, Authinfo, $log, now, $rootScope;
+  var Interceptor, Config, $log, now, $rootScope;
 
-  beforeEach(inject(function (_TimingInterceptor_, _Authinfo_, _$log_, _Config_, _$rootScope_) {
+  beforeEach(inject(function (_TimingInterceptor_, _$log_, _Config_, _$rootScope_) {
     $log = _$log_;
     Config = _Config_;
-    Authinfo = _Authinfo_;
     $rootScope = _$rootScope_;
     now = new Date().getTime() - 1;
     Interceptor = _TimingInterceptor_;

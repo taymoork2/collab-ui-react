@@ -1,9 +1,12 @@
 (function () {
   'use strict';
 
-  angular
-    .module('Core')
-    .factory('Config', Config);
+  module.exports = angular
+    .module('core.config', [
+      require('modules/core/scripts/services/storage')
+    ])
+    .factory('Config', Config)
+    .name;
 
   function Config($location, Storage) {
     var TEST_ENV_CONFIG = 'TEST_ENV_CONFIG';
@@ -144,8 +147,16 @@
         EC: 'EC', // Event Center (WebEx)
         CO: 'CO', // Communication
         SD: 'SD', // Spark Room System
+        SB: 'SB', // Spark Board
         CMR: 'CMR', // Collaboration Meeting Room (WebEx)
         CDC: 'CDC' // Care Digital Channel
+      },
+
+      licenseStatus: {
+        PENDING: 'PENDING',
+        ACTIVE: 'ACTIVE',
+        CANCELLED: 'CANCELLED',
+        SUSPENDED: 'SUSPENDED'
       },
 
       licenseTypes: {
@@ -223,7 +234,6 @@
         'dr-login-forward',
         'editService',
         'firsttimewizard',
-        'groups',
         'my-company',
         'overview',
         'profile',
@@ -254,7 +264,8 @@
         'site-settings',
         'site-setting',
         'webex-reports',
-        'webex-reports-iframe'
+        'webex-reports-iframe',
+        'services-overview',
       ],
       Application: ['organizations', 'organization-overview'],
       Help_Desk: ['helpdesk', 'helpdesk.search', 'helpdesk.user', 'helpdesk.org', 'helpdesklaunch'],
@@ -309,6 +320,7 @@
         'call-service',
         'cluster-list',
         'expressway-settings',
+        'services-overview',
       ],
       'squared-fusion-cal': [
         'add-resource',
@@ -329,9 +341,11 @@
         'mediafusion-settings',
         'metrics',
         'reports-metrics',
+        'services-overview',
       ],
       'webex-messenger': [
-        'messenger'
+        'messenger',
+        'services-overview',
       ],
       'contact-center-context': [
         //TODO: Remove these states when sunlight trial stories are implemented and

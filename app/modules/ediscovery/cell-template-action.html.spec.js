@@ -1,14 +1,12 @@
 'use strict';
 describe('cell-template-action', function () {
-  beforeEach(module('Core'));
-  beforeEach(module('Ediscovery'));
-  var $templateCache, $scope, $compile, httpBackend, view, html;
+  beforeEach(angular.mock.module('Ediscovery'));
+  var $templateCache, $scope, $compile, view, html;
 
-  beforeEach(inject(function (_$templateCache_, _$rootScope_, _$compile_, _$httpBackend_) {
+  beforeEach(inject(function (_$templateCache_, _$rootScope_, _$compile_) {
     $templateCache = _$templateCache_;
     $scope = _$rootScope_.$new();
     $compile = _$compile_;
-    httpBackend = _$httpBackend_;
     html = $templateCache.get("modules/ediscovery/cell-template-action.html");
   }));
 

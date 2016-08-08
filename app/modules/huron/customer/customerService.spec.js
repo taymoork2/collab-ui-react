@@ -3,13 +3,13 @@
 describe('Service: Huron Customer', function () {
   var $httpBackend, $q, HuronCustomer, HuronConfig, PstnSetupService;
 
-  beforeEach(module('Huron'));
+  beforeEach(angular.mock.module('Huron'));
 
   var Authinfo = {
     getOrgId: jasmine.createSpy('getOrgId').and.returnValue('1')
   };
 
-  beforeEach(module(function ($provide) {
+  beforeEach(angular.mock.module(function ($provide) {
     $provide.value("Authinfo", Authinfo);
   }));
 

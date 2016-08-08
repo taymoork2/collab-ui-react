@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Service: UserDetails', function () {
-  beforeEach(module('Hercules'));
+  beforeEach(angular.mock.module('Hercules'));
 
   var UserDetails, $httpBackend;
 

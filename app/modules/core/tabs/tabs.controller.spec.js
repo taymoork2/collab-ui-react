@@ -3,8 +3,6 @@
 
   describe('Controller: TabsCtrl', function () {
     var tabsController, $q, $controller, $rootScope, injectedRootScope, $scope, $location, Authinfo, Auth, UrlConfig, $httpBackend, $provide, $injector;
-    var userService = {};
-    // var AuthinfoService;
     var featureToggleService = {
       supports: function () {}
     };
@@ -36,8 +34,8 @@
 
     var states;
 
-    beforeEach(module('Core'));
-    beforeEach(module(function (_$provide_) {
+    beforeEach(angular.mock.module('Core'));
+    beforeEach(angular.mock.module(function (_$provide_) {
       $provide = _$provide_;
       $provide.value("FeatureToggleService", featureToggleService);
     }));
@@ -93,7 +91,7 @@
       var v = _.merge({
         $scope: $scope,
         $rootScope: injectedRootScope
-      }, args ? args : {});
+      }, args || {});
       tabsController = $controller('TabsCtrl',
         v
       );

@@ -1,9 +1,13 @@
 (function () {
   'use strict';
 
-  angular
-    .module('Core')
-    .factory('ServerErrorInterceptor', ServerErrorInterceptor);
+  module.exports = angular
+    .module('core.servererrorinterceptor', [
+      require('modules/core/config/config'),
+      require('modules/core/scripts/services/authinfo'),
+    ])
+    .factory('ServerErrorInterceptor', ServerErrorInterceptor)
+    .name;
 
   /* @ngInject */
   function ServerErrorInterceptor($q, $log, $injector, Config) {

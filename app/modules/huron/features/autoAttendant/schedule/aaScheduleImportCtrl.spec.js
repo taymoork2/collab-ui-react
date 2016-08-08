@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Controller: AAScheduleImportCtrl', function () {
-  var $scope, controller, $modalInstance, AACalendarService, AAICalService, AAModelService, $translate, $q, Analytics;
+  var $scope, controller, $modalInstance, AACalendarService, AAICalService, AAModelService, $q, Analytics;
   var aaModel = {
     aaRecord: {
       scheduleId: 'url-1'
@@ -14,15 +14,14 @@ describe('Controller: AAScheduleImportCtrl', function () {
       callExperienceName: 'AA2'
     }]
   };
-  beforeEach(module('uc.autoattendant'));
-  beforeEach(module('Huron'));
+  beforeEach(angular.mock.module('uc.autoattendant'));
+  beforeEach(angular.mock.module('Huron'));
 
-  beforeEach(inject(function (_AACalendarService_, _AAICalService_, _AAModelService_, _$translate_, $controller, $rootScope, _$q_, _Analytics_) {
+  beforeEach(inject(function (_AACalendarService_, _AAICalService_, _AAModelService_, $controller, $rootScope, _$q_, _Analytics_) {
     $scope = $rootScope.$new();
     AACalendarService = _AACalendarService_;
     AAICalService = _AAICalService_;
     AAModelService = _AAModelService_;
-    $translate = _$translate_;
     $q = _$q_;
     Analytics = _Analytics_;
 

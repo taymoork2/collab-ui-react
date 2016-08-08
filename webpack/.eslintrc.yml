@@ -1,0 +1,5 @@
+---
+  # we have to use the legacy flavor because we use ES5
+  extends: "airbnb-base"
+  rules:
+    import/no-extraneous-dependencies: 0

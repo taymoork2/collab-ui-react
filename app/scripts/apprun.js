@@ -1,11 +1,10 @@
 (function () {
   'use strict';
 
-  angular
-    .module('wx2AdminWebClientApp')
-    .run(wx2AdminWebClientApp);
+  module.exports = wx2AdminWebClientApp;
 
-  function wx2AdminWebClientApp($animate, $interval, $location, $rootScope, $state, $translate, $window, Auth, Authinfo, Config, formlyValidationMessages, Localize, Log, LogMetricsService, PreviousState, SessionStorage, TokenService, TrackingId, Utils) {
+  /* @ngInject */
+  function wx2AdminWebClientApp($animate, $interval, $location, $rootScope, $state, $translate, $window, Auth, Authinfo, Config, Localize, Log, LogMetricsService, PreviousState, SessionStorage, TokenService, TrackingId, Utils) {
     //Expose the localize service globally.
     $rootScope.Localize = Localize;
     $rootScope.Utils = Utils;
@@ -16,7 +15,7 @@
       USER: 1,
       CUSTOMER: 2
     };
-
+    $window.$state = $state;
     //Enable logging
     $rootScope.debug = false;
 
@@ -45,22 +44,10 @@
           }
         } else {
           e.preventDefault();
-          if (!_.isEmpty(TokenService.getAccessToken())) {
-            Auth.authorize()
-              .then(function () {
-                $state.go(to.name, toParams);
-              })
-              .catch(function () {
-                SessionStorage.put(storedState, to.name);
-                SessionStorage.putObject(storedParams, toParams);
-                $state.go('login');
-              });
-          } else {
-            SessionStorage.put(storedState, to.name);
-            SessionStorage.putObject(storedParams, toParams);
-            SessionStorage.putObject(queryParams, $location.search());
-            $state.go('login');
-          }
+          SessionStorage.put(storedState, to.name);
+          SessionStorage.putObject(storedParams, toParams);
+          SessionStorage.putObject(queryParams, $location.search());
+          $state.go('login');
         }
       }
     });
@@ -97,15 +84,15 @@
     };
 
     var delay = $interval(function () {
-        $interval.cancel(delay);
-        if (TokenService.getAccessToken()) {
-          Log.debug('starting refresh timer...');
+      $interval.cancel(delay);
+      if (TokenService.getAccessToken()) {
+        Log.debug('starting refresh timer...');
           //start refresh cycle after 15 minutes
-          refreshToken();
-        } else {
-          Auth.redirectToLogin();
-        }
-      },
+        refreshToken();
+      } else {
+        Auth.redirectToLogin();
+      }
+    },
       Config.tokenTimers.refreshDelay
     );
 
@@ -121,51 +108,6 @@
       // Add Body Class to the $rootScope on stateChange
       $rootScope.bodyClass = _.get(toState, 'data.bodyClass') || toState.name.replace(/\./g, '-') + '-state';
     });
-
-    // This is where standard form field validation messages are defined.  Any overrides need to be
-    // done in individual controllers.  Using promise returned from $translate service to ensure
-    // translation file is loaded before adding messages to formly.
-    $translate('common.invalidRequired').then(function (requiredMessage) {
-      formlyValidationMessages.addStringMessage('required', requiredMessage);
-    });
-
-    $translate('common.invalidEmail').then(function (emailMessage) {
-      formlyValidationMessages.addStringMessage('email', emailMessage);
-    });
-
-    $translate('common.invalidUrl').then(function (urlMessage) {
-      formlyValidationMessages.addStringMessage('url', urlMessage);
-    });
-
-    $translate('common.invalidPhoneNumber').then(function (phoneNumberMessage) {
-      formlyValidationMessages.addStringMessage('phoneNumber', phoneNumberMessage);
-    });
-
-    formlyValidationMessages.messages.minlength = getMinLengthMessage;
-    formlyValidationMessages.messages.maxlength = getMaxLengthMessage;
-    formlyValidationMessages.messages.max = getMaxMessage;
-
-    function getMinLengthMessage($viewValue, $modelValue, scope) {
-      return $translate.instant('common.invalidMinLength', {
-        min: function () {
-          return scope.options.templateOptions.minlength;
-        }
-      });
-    }
-
-    function getMaxLengthMessage($viewValue, $modelValue, scope) {
-      return $translate.instant('common.invalidMaxLength', {
-        max: function () {
-          return scope.options.templateOptions.maxlength;
-        }
-      });
-    }
-
-    function getMaxMessage($viewValue, $modelValue, scope) {
-      return $translate.instant('common.invalidMax', {
-        max: scope.options.templateOptions.max
-      });
-    }
 
     function getFromStandardGetParams(url) {
       var result = {};

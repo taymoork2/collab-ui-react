@@ -5,7 +5,7 @@ describe('Directive: aaKeypress', function () {
   var element;
   var Notification;
 
-  beforeEach(module('Huron'));
+  beforeEach(angular.mock.module('Huron'));
 
   beforeEach(inject(function (_$compile_, _$rootScope_, _Notification_) {
     $compile = _$compile_;

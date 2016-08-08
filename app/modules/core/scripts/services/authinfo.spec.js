@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Authinfo:', function () {
-  var provide, injector, Service;
+  var injector, Service;
 
   var defaultConfig = {
     restrictedStates: {
@@ -28,9 +28,7 @@ describe('Authinfo:', function () {
   };
 
   beforeEach(function () {
-    module('Core', function ($provide) {
-      provide = $provide;
-    });
+    angular.mock.module('Core');
     inject(function ($injector) {
       injector = $injector;
     });
@@ -258,7 +256,7 @@ describe('Authinfo:', function () {
       var Authinfo = setupUser({
         roles: ['Full_Admin']
       });
-      var a = Authinfo.updateAccountInfo(accountData);
+      Authinfo.updateAccountInfo(accountData);
       expect(Authinfo.getRoles()).toEqual(["Full_Admin", "Site_Admin"]);
     });
 
@@ -266,7 +264,7 @@ describe('Authinfo:', function () {
       var Authinfo = setupUser({
         roles: ['Readonly_Admin']
       });
-      var a = Authinfo.updateAccountInfo(accountData);
+      Authinfo.updateAccountInfo(accountData);
       expect(Authinfo.getRoles()).toEqual(["Readonly_Admin", "Site_Admin"]);
     });
   });

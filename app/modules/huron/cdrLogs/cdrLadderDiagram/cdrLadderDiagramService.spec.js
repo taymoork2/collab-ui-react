@@ -1,10 +1,10 @@
 'use strict';
 
 describe('Controller: CdrLadderDiagramService', function () {
-  beforeEach(module('uc.cdrlogsupport'));
-  beforeEach(module('Huron'));
+  beforeEach(angular.mock.module('uc.cdrlogsupport'));
+  beforeEach(angular.mock.module('Huron'));
 
-  var $httpBackend, $q, CdrLadderDiagramService, Notification, Authinfo;
+  var $httpBackend, CdrLadderDiagramService, Notification, Authinfo;
   var proxyResponse = getJSONFixture('huron/json/cdrDiagram/proxyResponse.json');
   var esQuery = getJSONFixture('huron/json/cdrDiagram/esQuery.json');
   var proxyUrl = 'https://hades.huron-int.com/api/v1/elasticsearch/logstash*/_search?pretty';
@@ -49,10 +49,9 @@ describe('Controller: CdrLadderDiagramService', function () {
   var diagnosticsServiceUrl = 'https://atlas-integration.wbx2.com/admin/api/v1/callflow/ladderdiagram';
   var activitiesServiceUrl = 'https://atlas-integration.wbx2.com/admin/api/v1/callflow/activities?id=lid.f2aa2076-77eb-329f-b5c1-a2f21fdfdc89&start=2016-05-05T21:14:16.000Z&end=2016-05-05T21:14:16.999Z';
 
-  beforeEach(inject(function (_$httpBackend_, _$q_, _CdrLadderDiagramService_, _Notification_, _Authinfo_) {
+  beforeEach(inject(function (_$httpBackend_, _CdrLadderDiagramService_, _Notification_, _Authinfo_) {
     CdrLadderDiagramService = _CdrLadderDiagramService_;
     Notification = _Notification_;
-    $q = _$q_;
     $httpBackend = _$httpBackend_;
     Authinfo = _Authinfo_;
 

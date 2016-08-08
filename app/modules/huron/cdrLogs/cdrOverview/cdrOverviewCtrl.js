@@ -9,7 +9,6 @@
   function CdrOverviewCtrl($state, $stateParams, $translate, CdrService, chartColors) {
     var vm = this;
     var call = $stateParams.call;
-    var location = "#" + $stateParams.cdrData.name;
     var logstashPath = $stateParams.logstashPath;
 
     var cdrData = formatCdr($stateParams.cdrData);

@@ -11,7 +11,7 @@ describe('Huron Setup Assistant Ctrl', function () {
   var testGroupNumber = '654-654-9874';
   var testGroupUser = 'testUser';
 
-  beforeEach(module('Huron'));
+  beforeEach(angular.mock.module('Huron'));
 
   beforeEach(inject(function ($rootScope, $controller, _$modal_, _$timeout_, _Notification_, _HuntGroupService_, _$q_, _$state_) {
     $scope = $rootScope.$new();

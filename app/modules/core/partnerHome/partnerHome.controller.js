@@ -12,7 +12,7 @@
     $scope.displayRows = 10;
     $scope.expiredRows = 3;
     $scope.showTrialsRefresh = true;
-    $scope.isCustomerPartner = Authinfo.isCustomerPartner ? true : false;
+    $scope.isCustomerPartner = !!Authinfo.isCustomerPartner;
     $scope.isTestOrg = false;
 
     $scope.launchCustomerPortal = launchCustomerPortal;
@@ -43,7 +43,7 @@
 
     function openAddTrialModal() {
       if ($scope.isTestOrg) {
-        Analytics.trackTrialStarted($state.current.name);
+        Analytics.trackTrialSteps('start', $state.current.name);
       }
       $state.go('trialAdd.info').then(function () {
         $state.modal.result.finally(getTrialsList);

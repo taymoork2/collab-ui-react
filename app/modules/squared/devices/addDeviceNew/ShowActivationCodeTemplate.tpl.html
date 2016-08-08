@@ -7,8 +7,8 @@
   <div>
     <h5 translate="addDeviceWizard.showActivationCode.activationCode"></h5>
     <p class="wizardDescription">
-      <span ng-if="showActivationCode.wizardData.deviceType==='huron'" translate="addDeviceWizard.showActivationCode.plugInDeskPhone" translate-values="{ belongsTo: showActivationCode.belongsTo }"></span>
-      <span ng-if="showActivationCode.wizardData.deviceType!=='huron'" translate="addDeviceWizard.showActivationCode.plugInRoomSystem" translate-values="{ belongsTo: showActivationCode.belongsTo }"></span>
+      <span ng-if="showActivationCode.wizardData.deviceType==='huron'" translate="addDeviceWizard.showActivationCode.plugInDeskPhone" translate-values="{ belongsTo: showActivationCode.wizardData.deviceName }"></span>
+      <span ng-if="showActivationCode.wizardData.deviceType!=='huron'" translate="addDeviceWizard.showActivationCode.plugInRoomSystem" translate-values="{ belongsTo: showActivationCode.wizardData.deviceName }"></span>
       <span ng-if="showActivationCode.activationFlowType()==='users'" translate="addDeviceWizard.showActivationCode.newCodeInUsersPage"></span>
       <span ng-if="showActivationCode.activationFlowType()==='places'" translate="addDeviceWizard.showActivationCode.newCodeInPlacesPage"></span>
       <span ng-if="showActivationCode.activationFlowType()==='devices'" translate="addDeviceWizard.showActivationCode.newCodeInDevicesPace"></span>
@@ -29,20 +29,20 @@
       </div>
       <p class="expiryTime" translate="addDeviceWizard.showActivationCode.expires" translate-values="{ expiryDate: showActivationCode.getExpiresOn() }"></p>
       <div class="qrCodeButtons">
-        <a sq-clipboard="showActivationCode.getActivationCode()">
+        <a ngclipboard ngclipboard-success="showActivationCode.onCopySuccess(e)" ngclipboard-error="showActivationCode.onCopyError(e)" data-clipboard-text="{{::showActivationCode.activationCode}}">
           <span translate="generateActivationCodeModal.copyToClipboard"></span>
-        </a>
-
-        <a class="qrCodeRightButton" cr-print print-element-id="printActivationCode">
-          <span translate="generateActivationCodeModal.print"></span>
         </a>
 
         <a
           class="qrCodeRightButton"
-          ng-show="showActivationCode.wizardData.deviceType==='huron'"
+          ng-show="showActivationCode.wizardData.deviceType==='huron' && showActivationCode.wizardData.accountType!=='shared'"
           ng-disabled="genAuthCode.showEmail"
           ng-click="showActivationCode.activateEmail()"
           translate="generateActivationCodeModal.emailCode">
+        </a>
+
+        <a class="qrCodeRightButton" cr-print print-element-id="printActivationCode">
+          <span translate="generateActivationCodeModal.print"></span>
         </a>
       </div>
       <div class="sendEmailWrapper" ng-if="showActivationCode.showEmail">

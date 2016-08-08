@@ -38,7 +38,7 @@
       var name = userName.replace(/@/g, '%40').replace(/\+/g, '%2B');
       var url = UrlConfig.getScimUrl(Authinfo.getOrgId()) + '?filter=username eq \"' + name + '\"';
 
-      $http.get(url).success(function (data, status) {
+      $http.get(url).success(function (data) {
         if (angular.isArray(data.Resources) && (data.Resources.length > 0)) {
           defer.resolve(data.Resources[0].id);
         } else {
@@ -85,12 +85,12 @@
     function formDate(date, time) {
       var returnDate = moment(date);
       if (time.substring(9, 10).toLowerCase() === 'p') {
-        returnDate.hours(parseInt(time.substring(0, 2)) + 12);
+        returnDate.hours(parseInt(time.substring(0, 2), 10) + 12);
       } else {
-        returnDate.hours(parseInt(time.substring(0, 2)));
+        returnDate.hours(parseInt(time.substring(0, 2), 10));
       }
-      returnDate.minutes(parseInt(time.substring(3, 5)));
-      returnDate.seconds(parseInt(time.substring(6, 8)));
+      returnDate.minutes(parseInt(time.substring(3, 5), 10));
+      returnDate.seconds(parseInt(time.substring(6, 8), 10));
       return returnDate.utc();
     }
 
@@ -158,26 +158,26 @@
           var results = [];
 
           var callingPromise = proxy(jsQuery, angular.copy(thisJob)).then(function (response) {
-              if (!angular.isUndefined(response.hits.hits) && (response.hits.hits.length > 0)) {
-                for (var i = 0; i < response.hits.hits.length; i++) {
-                  results.push(response.hits.hits[i]._source);
-                }
-                return recursiveQuery(results, thisJob).then(function (response) {
-                  if (response !== ABORT) {
-                    return proxyData;
-                  } else {
-                    return response;
-                  }
-                }, function (response) {
-                  if (response !== ABORT) {
-                    return;
-                  } else {
-                    return response;
-                  }
-                });
+            if (!angular.isUndefined(response.hits.hits) && (response.hits.hits.length > 0)) {
+              for (var i = 0; i < response.hits.hits.length; i++) {
+                results.push(response.hits.hits[i]._source);
               }
-              return;
-            },
+              return recursiveQuery(results, thisJob).then(function (response) {
+                if (response !== ABORT) {
+                  return proxyData;
+                } else {
+                  return response;
+                }
+              }, function (response) {
+                if (response !== ABORT) {
+                  return;
+                } else {
+                  return response;
+                }
+              });
+            }
+            return;
+          },
             function (response) {
               return errorResponse(response);
             });
@@ -211,7 +211,7 @@
 
     function generateHosts() {
       var hostsJson = '{"query_string":{"query":"id:CDR.CDR"}},';
-      angular.forEach(serverHosts, function (host, index, array) {
+      angular.forEach(serverHosts, function (host, index) {
         hostsJson += '{"query_string":{"query":"id:CDR.CDR AND eventSource.hostname:\\"' + host + '\\""}}';
         if (index + 1 < serverHosts.length) {
           hostsJson += ',';
@@ -268,23 +268,23 @@
       var jsQuery = '{"query": {"filtered": {"query": {"bool": {"should": [' + generateHosts() + ']} },"filter": {"bool": {"should":[' + item + ']}}}},"size": 2000,"sort": [{"@timestamp": {"order": "desc"}}]}';
 
       return proxy(jsQuery, thisJob).then(function (response) {
-          if (!angular.isUndefined(response.hits.hits) && (response.hits.hits.length > 0)) {
-            for (var i = 0; i < response.hits.hits.length; i++) {
-              cdrArray.push(response.hits.hits[i]._source);
-            }
+        if (!angular.isUndefined(response.hits.hits) && (response.hits.hits.length > 0)) {
+          for (var i = 0; i < response.hits.hits.length; i++) {
+            cdrArray.push(response.hits.hits[i]._source);
           }
+        }
 
-          if (queryArray.length > 0) {
-            return secondaryQuery(queryArray, thisJob).then(function (newCdrArray) {
-              if (angular.isDefined(newCdrArray)) {
-                cdrArray.concat(newCdrArray);
-              }
-              return cdrArray;
-            });
-          } else {
+        if (queryArray.length > 0) {
+          return secondaryQuery(queryArray, thisJob).then(function (newCdrArray) {
+            if (angular.isDefined(newCdrArray)) {
+              cdrArray.concat(newCdrArray);
+            }
             return cdrArray;
-          }
-        },
+          });
+        } else {
+          return cdrArray;
+        }
+      },
         function (response) {
           if (response.status === -1) {
             return ABORT;
@@ -370,10 +370,6 @@
         tempArray = [];
       }
       return callLegs;
-    }
-
-    function setCurrentJobId(jobId) {
-      currentJob = jobId;
     }
 
     function proxy(query, thisJob) {

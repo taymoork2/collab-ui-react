@@ -2,6 +2,34 @@
   'use strict';
 
   /* eslint angular/di:0 */
+  var loadedModules = [];
+
+  function loadModuleAndResolve($ocLazyLoad, resolve) {
+    return function loadModuleCallback(loadModule) {
+      var moduleName;
+      if (_.isObject(loadModule) && _.has(loadModule, 'default')) {
+        moduleName = loadModule.default;
+      } else {
+        moduleName = loadModule;
+      }
+      // Don't reload a loaded module or core angular module
+      if (_.includes(loadedModules, moduleName) || _.includes($ocLazyLoad.getModules(), moduleName) || _.startsWith(moduleName, 'ng')) {
+        resolve();
+      } else {
+        lazyLoadModule(moduleName)
+          .finally(resolve);
+      }
+    };
+
+    function lazyLoadModule(moduleName) {
+      loadedModules.push(moduleName);
+      $ocLazyLoad.toggleWatch(true);
+      return $ocLazyLoad.inject(moduleName)
+        .finally(function disableToggleWatch() {
+          $ocLazyLoad.toggleWatch(false);
+        });
+    }
+  }
 
   angular
     .module('wx2AdminWebClientApp')
@@ -22,17 +50,66 @@
 
         $urlRouterProvider.otherwise('login');
         $stateProvider
+          .state('modal', {
+            abstract: true,
+            onEnter: modalOnEnter({
+              type: 'full'
+            }),
+            onExit: modalOnExit
+          })
+          .state('modalDialog', {
+            abstract: true,
+            onEnter: modalOnEnter({
+              type: 'dialog'
+            }),
+            onExit: modalOnExit
+          })
+          .state('modalSmall', {
+            abstract: true,
+            onEnter: modalOnEnter({
+              type: 'small'
+            }),
+            onExit: modalOnExit
+          })
+          .state('wizardmodal', {
+            abstract: true,
+            onEnter: /* @ngInject */ function ($modal, $state, $previousState) {
+              $previousState.memo(wizardmodalMemo);
+              $state.modal = $modal.open({
+                template: '<div ui-view="modal"></div>',
+                controller: 'ModalWizardCtrl',
+                windowTemplateUrl: 'modules/core/modal/wizardWindow.tpl.html',
+                backdrop: 'static'
+              });
+              $state.modal.result.finally(function () {
+                $state.modal = null;
+                var previousState = $previousState.get(wizardmodalMemo);
+                if (previousState) {
+                  return $previousState.go(wizardmodalMemo);
+                }
+              });
+            },
+            onExit: ['$state', '$previousState',
+              function ($state, $previousState) {
+                if ($state.modal) {
+                  $previousState.forget(wizardmodalMemo);
+                  $state.modal.close();
+                }
+              }
+            ]
+          })
           .state('login', {
+            parent: 'loginLazyLoad',
             url: '/login',
             views: {
               'main@': {
-                templateUrl: 'modules/core/login/login.tpl.html',
-                controller: 'LoginCtrl'
+                template: '<login/>'
               }
             },
             authenticate: false
           })
           .state('activateUser', {
+            parent: 'mainLazyLoad',
             url: '/activate-user',
             views: {
               'main@': {
@@ -61,6 +138,7 @@
             authenticate: false
           })
           .state('activateProduct', {
+            parent: 'mainLazyLoad',
             url: '/activate-product',
             views: {
               'main@': {
@@ -86,6 +164,7 @@
             }
           })
           .state('unauthorized', {
+            parent: 'stateRedirectLazyLoad',
             views: {
               'main@': {
                 templateUrl: 'modules/core/stateRedirect/unauthorized.tpl.html',
@@ -96,6 +175,7 @@
             authenticate: false
           })
           .state('login-error', {
+            parent: 'stateRedirectLazyLoad',
             views: {
               'main@': {
                 templateUrl: 'modules/core/stateRedirect/loginError.tpl.html',
@@ -106,6 +186,7 @@
             authenticate: false
           })
           .state('404', {
+            parent: 'stateRedirectLazyLoad',
             url: '/404',
             views: {
               'main@': {
@@ -116,6 +197,51 @@
             },
             authenticate: false
           })
+          .state('mainLazyLoad', {
+            views: {
+              'main@': {
+                template: '<div ui-view="main"></div>'
+              }
+            },
+            resolve: {
+              lazy: /* @ngInject */ function lazyLoad($q, $ocLazyLoad) {
+                return $q(function resolveLogin(resolve) {
+                  require(['./main'], loadModuleAndResolve($ocLazyLoad, resolve));
+                });
+              }
+            },
+            abstract: true,
+          })
+          .state('loginLazyLoad', {
+            views: {
+              'main@': {
+                template: '<div ui-view="main"></div>'
+              }
+            },
+            resolve: {
+              lazy: /* @ngInject */ function lazyLoad($q, $ocLazyLoad) {
+                return $q(function resolveLogin(resolve) {
+                  require(['modules/core/login'], loadModuleAndResolve($ocLazyLoad, resolve));
+                });
+              }
+            },
+            abstract: true,
+          })
+          .state('stateRedirectLazyLoad', {
+            views: {
+              'main@': {
+                template: '<div ui-view="main"></div>'
+              }
+            },
+            resolve: {
+              lazy: /* @ngInject */ function lazyLoad($q, $ocLazyLoad) {
+                return $q(function resolveLogin(resolve) {
+                  require(['modules/core/stateRedirect/stateRedirect.controller'], loadModuleAndResolve($ocLazyLoad, resolve));
+                });
+              }
+            },
+            abstract: true,
+          })
           .state('main', {
             views: {
               'main@': {
@@ -123,6 +249,13 @@
               }
             },
             abstract: true,
+            resolve: {
+              lazy: /* @ngInject */ function lazyLoad($q, $ocLazyLoad) {
+                return $q(function resolveLogin(resolve) {
+                  require(['./main'], loadModuleAndResolve($ocLazyLoad, resolve));
+                });
+              }
+            },
             sticky: true
           })
           .state('partner', {
@@ -159,7 +292,7 @@
                 }
               }.bind($state.sidepanel));
             },
-            onExit: /* @ngInject */ function ($state, $previousState) {
+            onExit: /* @ngInject */ function ($state) {
               if ($state.sidepanel) {
                 $state.sidepanel.dismiss();
               }
@@ -181,13 +314,7 @@
         $httpProvider.interceptors.push('TimingInterceptor');
         $httpProvider.interceptors.push('ServerErrorInterceptor');
         $httpProvider.interceptors.push('ReadonlyInterceptor');
-      }
-    ]);
 
-  angular
-    .module('Squared')
-    .config(['$stateProvider',
-      function ($stateProvider) {
         var modalMemo = 'modalMemo';
         var wizardmodalMemo = 'wizardmodalMemo';
 
@@ -223,7 +350,7 @@
         }
 
         /* @ngInject */
-        function modalOnExit($state, $previousState) {
+        function modalOnExit($state) {
           if ($state.modal) {
             $state.modal.dismiss();
           }
@@ -231,7 +358,7 @@
 
         $stateProvider
           .state('addDeviceFlow', {
-            parent: 'modalSmall',
+            parent: 'modal',
             views: {
               'modal@': {
                 controller: 'ChooseDeviceTypeCtrl',
@@ -244,7 +371,7 @@
             }
           })
           .state('addDeviceFlow.chooseDeviceType', {
-            parent: 'modalSmall',
+            parent: 'modal',
             views: {
               'modal@': {
                 controller: 'ChooseDeviceTypeCtrl',
@@ -257,7 +384,7 @@
             }
           })
           .state('addDeviceFlow.chooseAccountType', {
-            parent: 'modalSmall',
+            parent: 'modal',
             views: {
               'modal@': {
                 controller: 'ChooseAccountTypeCtrl',
@@ -270,7 +397,7 @@
             }
           })
           .state('addDeviceFlow.choosePersonal', {
-            parent: 'modalSmall',
+            parent: 'modal',
             views: {
               'modal@': {
                 controller: 'ChoosePersonalCtrl',
@@ -283,7 +410,7 @@
             }
           })
           .state('addDeviceFlow.chooseSharedSpace', {
-            parent: 'modalSmall',
+            parent: 'modal',
             views: {
               'modal@': {
                 controller: 'ChooseSharedSpaceCtrl',
@@ -296,7 +423,7 @@
             }
           })
           .state('addDeviceFlow.newSharedSpace', {
-            parent: 'modalSmall',
+            parent: 'modal',
             views: {
               'modal@': {
                 controller: 'NewSharedSpaceCtrl',
@@ -309,7 +436,7 @@
             }
           })
           .state('addDeviceFlow.addServices', {
-            parent: 'modalSmall',
+            parent: 'modal',
             views: {
               'modal@': {
                 controller: 'AddServicesCtrl',
@@ -322,7 +449,7 @@
             }
           })
           .state('addDeviceFlow.addLines', {
-            parent: 'modalSmall',
+            parent: 'modal',
             views: {
               'modal@': {
                 controller: 'AddLinesCtrl',
@@ -335,7 +462,7 @@
             }
           })
           .state('addDeviceFlow.showActivationCode', {
-            parent: 'modalSmall',
+            parent: 'modal',
             params: {
               currentUser: {},
               activationCode: {},
@@ -357,6 +484,13 @@
                 controller: 'ActivateCtrl'
               }
             },
+            resolve: {
+              lazy: /* @ngInject */ function lazyLoad($q, $ocLazyLoad) {
+                return $q(function resolveLogin(resolve) {
+                  require(['modules/squared/scripts/controllers/activate'], loadModuleAndResolve($ocLazyLoad, resolve));
+                });
+              }
+            },
             authenticate: false
           })
           .state('csadmin', {
@@ -367,6 +501,7 @@
           })
           .state('downloads', {
             url: '/downloads',
+            parent: 'mainLazyLoad',
             views: {
               'main@': {
                 templateUrl: 'modules/squared/views/downloads.html',
@@ -515,23 +650,6 @@
               modalType: 'Partner'
             }
           })
-          .state('invite', {
-            url: '/invite',
-            views: {
-              'main@': {
-                templateUrl: 'modules/squared/views/invite.html',
-                controller: 'InviteCtrl'
-              }
-            },
-            authenticate: false
-          })
-          .state('invitelauncher', {
-            url: '/invitelauncher',
-            templateUrl: 'modules/squared/views/invitelauncher.html',
-            controller: 'InvitelauncherCtrl',
-            parent: 'main',
-            authenticate: false
-          })
           .state('processorder', {
             url: '/processorder',
             templateUrl: 'modules/squared/views/processorder.html',
@@ -590,6 +708,13 @@
               'tabContent': {
                 template: '<my-company-orders></my-company-orders>'
               }
+            },
+            resolve: {
+              isOnline: /* @ngInject */ function ($q, Authinfo) {
+                if (!Authinfo.isOnline()) {
+                  return $q.reject();
+                }
+              }
             }
           })
           .state('users', {
@@ -623,7 +748,7 @@
             params: {
               deleteUserOrgId: null,
               deleteUserUuId: null,
-              deleteUsername: null,
+              deleteUsername: null
             }
           })
           .state('users.deleteSelf', {
@@ -652,6 +777,7 @@
             views: {
               'modal@': {
                 controller: 'OnboardCtrl',
+                controllerAs: 'obc',
                 template: '<div ui-view="usersAdd"></div>'
               },
               'usersAdd@users.add': {
@@ -663,7 +789,7 @@
                   }
                 }
               }
-            }
+            },
           })
           .state('users.add.services', {
             views: {
@@ -698,24 +824,94 @@
               }
             }
           })
-          .state('users.convert', {
-            parent: 'modal',
-            views: {
-              'modal@': {
-                controller: 'OnboardCtrl',
-                template: '<div ui-view="usersConvert"></div>'
-              },
-              'usersConvert@users.convert': {
-                templateUrl: 'modules/core/convertUsers/convertUsersModal.tpl.html',
-                resolve: {
-                  modalInfo: function ($state) {
-                    $state.params.modalClass = 'convert-users';
-                    $state.params.modalId = 'convertDialog';
-                  }
+
+        ///////////////////////////
+        // todo - I-35 feature
+        .state('users.manage', {
+          parent: 'modal',
+          views: {
+            'modal@': {
+              controller: 'UserManageModalController',
+              controllerAs: 'ctrl',
+              template: '<div ui-view></div>'
+            }
+          },
+          params: {
+            isOverExportThreshold: {}
+          }
+        })
+          .state('users.manage.org', {
+            controller: 'UserManageOrgController',
+            controllerAs: 'umoc',
+            templateUrl: 'modules/core/users/userManage/userManageOrg.tpl.html'
+          })
+          .state('users.manage.activedir', {
+            controller: 'UserManageActiveDirController',
+            controllerAs: 'umadc',
+            templateUrl: 'modules/core/users/userManage/userManageActiveDir.tpl.html'
+          })
+
+        .state('users.manage.advanced', {
+          abstract: true,
+          controller: 'UserManageAdvancedController',
+          controllerAs: 'umac',
+          templateUrl: 'modules/core/users/userManage/userManageAdvanced.tpl.html'
+        })
+          .state('users.manage.advanced.add', {
+            abstract: true,
+            controller: 'AddUserCtrl',
+            controllerAs: 'auc',
+            template: '<div ui-view class="flex-container flex-item-resize"></div>'
+          })
+          .state('users.manage.advanced.add.ob', {
+            abstract: true,
+            controller: 'OnboardCtrl',
+            controllerAs: 'obc',
+            template: '<div ui-view class="flex-container flex-item-resize"></div>'
+          })
+          .state('users.manage.advanced.add.ob.installConnector', {
+            templateUrl: 'modules/core/setupWizard/addUsers/addUsers.installConnector.tpl.html'
+          })
+          .state('users.manage.advanced.add.ob.syncStatus', {
+            templateUrl: 'modules/core/users/userManage/userManageAdvancedSyncStatus.tpl.html'
+          })
+          .state('users.manage.advanced.add.ob.dirsyncServices', {
+            templateUrl: 'modules/core/setupWizard/addUsers/addUsers.assignServices.tpl.html',
+            controller: /* @ngInject */ function ($scope) {
+              $scope.dirsyncInitForServices();
+            }
+          })
+          .state('users.manage.advanced.add.ob.dirsyncResult', {
+            templateUrl: 'modules/core/users/userManage/userManageAdvancedResults.tpl.html',
+            controller: /* @ngInject */ function ($scope) {
+              $scope.umac.isBusy = true;
+              $scope.csv.model = $scope.model;
+              $scope.bulkSave().then(function () {
+                $scope.umac.isBusy = false;
+              });
+            }
+          })
+
+        //////////////////
+
+        .state('users.convert', {
+          parent: 'modal',
+          views: {
+            'modal@': {
+              controller: 'OnboardCtrl',
+              template: '<div ui-view="usersConvert"></div>'
+            },
+            'usersConvert@users.convert': {
+              templateUrl: 'modules/core/convertUsers/convertUsersModal.tpl.html',
+              resolve: {
+                modalInfo: function ($state) {
+                  $state.params.modalClass = 'convert-users';
+                  $state.params.modalId = 'convertDialog';
                 }
               }
             }
-          })
+          }
+        })
           .state('users.convert.services', {
             views: {
               'usersConvert@users.convert': {
@@ -738,7 +934,7 @@
             }
           })
           .state('users.csv', {
-            parent: 'modal',
+            parent: 'users.manage',
             views: {
               'modal@': {
                 controller: 'UserCsvCtrl',
@@ -780,6 +976,7 @@
             }
           })
           .state('userRedirect', {
+            parent: 'mainLazyLoad',
             url: '/userRedirect',
             views: {
               'main@': {
@@ -807,7 +1004,6 @@
             resolve: {
               currentUser: /* @ngInject */ function ($http, $stateParams, Config, Utils, Authinfo, UrlConfig) {
                 var userUrl = UrlConfig.getScimUrl(Authinfo.getOrgId()) + '/' + $stateParams.currentUser.id;
-
                 return $http.get(userUrl)
                   .then(function (response) {
                     angular.copy(response.data, this.currentUser);
@@ -897,8 +1093,8 @@
             }
           })
           .state('user-overview.hybrid-services-squared-fusion-cal', {
-            templateUrl: 'modules/hercules/hybridServices/hybridServicesPreview.tpl.html',
-            controller: 'HybridServicesPreviewCtrl',
+            templateUrl: 'modules/hercules/user-sidepanel/calendarServicePreview.tpl.html',
+            controller: 'CalendarServicePreviewCtrl',
             data: {
               displayName: 'Calendar Service'
             },
@@ -907,7 +1103,7 @@
             }
           })
           .state('user-overview.hybrid-services-squared-fusion-uc', {
-            templateUrl: 'modules/hercules/hybridServices/callServicePreview.tpl.html',
+            templateUrl: 'modules/hercules/user-sidepanel/callServicePreview.tpl.html',
             controller: 'CallServicePreviewCtrl',
             data: {
               displayName: 'Call Service'
@@ -966,55 +1162,6 @@
             data: {
               displayName: 'Roles'
             }
-          })
-
-        // .state('users.list.preview', {
-        //     templateUrl: 'modules/core/users/userPreview/userPreview.tpl.html',
-        //     controller: 'UserPreviewCtrl'
-        //   })
-        //   .state('users.list.preview.conversations', {
-        //     template: '<div user-entitlements current-user="currentUser" entitlements="entitlements" queryuserslist="queryuserslist"></div>'
-        //   })
-        //   .state('users.list.preview.roles', {
-        //     template: '<div class="sub-details-full" user-roles current-user="currentUser" entitlements="entitlements" roles="roles" queryuserslist="queryuserslist"></div>'
-        //   })
-        //   .state('users.list.preview.directorynumber', {
-        //     templateUrl: 'modules/huron/lineSettings/lineSettings.tpl.html',
-        //     controller: 'LineSettingsCtrl',
-        //     controllerAs: 'lineSettings',
-        //     params: {
-        //       showAddUsers: {},
-        //       directoryNumber: {}
-        //     }
-        //   })
-        //   .state('users.list.preview.voicemail', {
-        //     template: '<div uc-voicemail></div>'
-        //   })
-        //   .state('users.list.preview.snr', {
-        //     template: '<div uc-single-number-reach></div>'
-        //   })
-        //   .state('users.list.preview.device', {
-        //     templateUrl: 'modules/huron/device/deviceDetail.tpl.html',
-        //     controller: 'DeviceDetailCtrl',
-        //     controllerAs: 'ucDeviceDetail',
-        //     params: {
-        //       showAddUsers: {},
-        //       device: {}
-        //     }
-        //   })
-        .state('groups', {
-            abstract: true,
-            template: '<div ui-view></div>',
-            parent: 'main'
-          })
-          .state('groups.list', {
-            url: '/groups',
-            templateUrl: 'modules/core/groups/groupList/groupList.tpl.html',
-            controller: 'ListGroupsCtrl'
-          })
-          .state('groups.list.preview', {
-            templateUrl: 'modules/core/groups/groupPreview/groupPreview.tpl.html',
-            controller: 'GroupPreviewCtrl'
           })
           .state('organizations', {
             url: '/organizations',
@@ -1235,25 +1382,23 @@
           })
 
         /*
-          devices
-        */
+         devices
+         */
         .state('places', {
-            url: '/places',
-            templateUrl: 'modules/squared/places/places.html',
-            controller: 'PlacesCtrl',
-            controllerAs: 'sc',
-            parent: 'main',
-            data: {
-              bodyClass: 'places-page'
-            }
-          })
+          url: '/places',
+          templateUrl: 'modules/squared/places/places.html',
+          controller: 'PlacesCtrl',
+          controllerAs: 'sc',
+          parent: 'main',
+          data: {
+            bodyClass: 'places-page'
+          }
+        })
           .state('place-overview', {
             parent: 'sidepanel',
             views: {
               'sidepanel@': {
-                controller: 'PlaceOverviewCtrl',
-                controllerAs: 'placeOverview',
-                templateUrl: 'modules/squared/places/overview/placeOverview.tpl.html'
+                template: '<place-overview></place-overview>'
               },
               'header@place-overview': {
                 templateUrl: 'modules/squared/places/overview/placeHeader.tpl.html'
@@ -1285,6 +1430,28 @@
             },
             data: {
               displayName: 'Device Configuration'
+            }
+          })
+          .state('place-overview.communication', {
+            template: '<place-call-overview></place-call-overview>',
+            params: {
+              reloadToggle: false
+            },
+            data: {
+              displayName: 'Call'
+            }
+          })
+          .state('place-overview.communication.line-overview', {
+            template: '<line-overview owner-type="place"></line-overview>',
+            data: {
+              displayName: 'Line Configuration'
+            },
+            resolve: {
+              lazy: /* @ngInject */ function lazyLoad($q, $ocLazyLoad) {
+                return $q(function resolveLogin(resolve) {
+                  require(['modules/huron/lines/lineOverview/lineOverview.component'], loadModuleAndResolve($ocLazyLoad, resolve));
+                });
+              }
             }
           })
           .state('devices', {
@@ -1344,21 +1511,21 @@
             controllerAs: 'nav'
           })
           .state('login_swap', {
+            parent: 'loginLazyLoad',
             url: '/login/:customerOrgId/:customerOrgName',
             views: {
               'main@': {
-                templateUrl: 'modules/core/login/login.tpl.html',
-                controller: 'LoginCtrl'
+                template: '<login/>'
               }
             },
             authenticate: false
           })
           .state('launch_partner_org', {
+            parent: 'loginLazyLoad',
             url: '/login/:partnerOrgId/:partnerOrgName/:launchPartner',
             views: {
               'main@': {
-                templateUrl: 'modules/core/login/login.tpl.html',
-                controller: 'LoginCtrl'
+                template: '<login/>'
               }
             },
             authenticate: false
@@ -1405,9 +1572,15 @@
 
                 return defer.promise;
 
-                function orgCallback(data, status) {
+                function orgCallback(data) {
                   defer.resolve(data);
                 }
+              },
+              newCustomerViewToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.atlasCustomerListUpdateGetStatus()
+                  .then(function (result) {
+                    return result;
+                  });
               }
             },
             params: {
@@ -1444,6 +1617,17 @@
               currentCustomer: {}
             }
           })
+          .state('customer-overview.meetingDetail', {
+            controller: 'MeetingDetailCtrl',
+            controllerAs: 'meetingDetail',
+            templateUrl: 'modules/core/customers/customerOverview/meetingDetail.tpl.html',
+            data: {
+              displayName: 'Meeting Detail'
+            },
+            params: {
+              meetingLicenses: {}
+            }
+          })
           .state('customer-overview.pstnOrderDetail', {
             parent: 'customer-overview.pstnOrderOverview',
             controller: 'PstnOrderDetailCtrl',
@@ -1456,55 +1640,8 @@
               currentOrder: {}
             }
           })
-          .state('modal', {
-            abstract: true,
-            onEnter: modalOnEnter({
-              type: 'full'
-            }),
-            onExit: modalOnExit
-          })
-          .state('modalDialog', {
-            abstract: true,
-            onEnter: modalOnEnter({
-              type: 'dialog'
-            }),
-            onExit: modalOnExit
-          })
-          .state('modalSmall', {
-            abstract: true,
-            onEnter: modalOnEnter({
-              type: 'small'
-            }),
-            onExit: modalOnExit
-          })
-          .state('wizardmodal', {
-            abstract: true,
-            onEnter: /* @ngInject */ function ($modal, $state, $previousState) {
-              $previousState.memo(wizardmodalMemo);
-              $state.modal = $modal.open({
-                template: '<div ui-view="modal"></div>',
-                controller: 'ModalWizardCtrl',
-                windowTemplateUrl: 'modules/core/modal/wizardWindow.tpl.html',
-                backdrop: 'static'
-              });
-              $state.modal.result.finally(function () {
-                $state.modal = null;
-                var previousState = $previousState.get(wizardmodalMemo);
-                if (previousState) {
-                  return $previousState.go(wizardmodalMemo);
-                }
-              });
-            },
-            onExit: ['$state', '$previousState',
-              function ($state, $previousState) {
-                if ($state.modal) {
-                  $previousState.forget(wizardmodalMemo);
-                  $state.modal.close();
-                }
-              }
-            ]
-          })
           .state('firsttimesplash', {
+            parent: 'mainLazyLoad',
             abstract: true,
             views: {
               'main@': {
@@ -1547,6 +1684,7 @@
             parent: 'main'
           })
           .state('helpdesk-main', {
+            parent: 'mainLazyLoad',
             views: {
               'main@': {
                 controller: 'HelpdeskHeaderController',
@@ -1616,13 +1754,7 @@
               orgId: null
             }
           });
-      }
-    ]);
 
-  angular
-    .module('Huron')
-    .config(['$stateProvider',
-      function ($stateProvider) {
         $stateProvider
           .state('cdrsupport', {
             url: '/cdrsupport',
@@ -2035,13 +2167,7 @@
               feature: null
             }
           });
-      }
-    ]);
 
-  angular
-    .module('Hercules')
-    .config(['$stateProvider',
-      function ($stateProvider) {
         $stateProvider
           .state('services-overview', {
             url: '/services/overview',
@@ -2058,7 +2184,7 @@
             parent: 'main',
             resolve: {
               hasF410FeatureToggle: /* @ngInject */ function (FeatureToggleService) {
-                return FeatureToggleService.supports(FeatureToggleService.features.hybridServicesResourceList);
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridServicesResourceList);
               },
               hasMediaFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
                 return FeatureToggleService.supports(FeatureToggleService.features.atlasMediaServiceOnboarding);
@@ -2091,6 +2217,11 @@
                 controller: 'TypeSelectorController',
                 controllerAs: 'vm',
                 templateUrl: 'modules/hercules/fusion-pages/add-resource/common/type-selector.html'
+              }
+            },
+            resolve: {
+              hasMediaFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasMediaServiceOnboarding);
               }
             },
             params: {
@@ -2156,13 +2287,17 @@
             parent: 'modalSmall',
             views: {
               'modal@': {
-                controller: 'MediafusionEnterHostnameController',
-                controllerAs: 'vm',
-                templateUrl: 'modules/hercules/fusion-pages/add-resource/mediafusion/enter-hostname.html'
+                controller: 'AddResourceControllerClusterViewV2',
+                controllerAs: 'redirectResource',
+                templateUrl: 'modules/mediafusion/media-service-v2/add-resources/add-resource-dialog.html',
+                modalClass: 'redirect-add-resource'
               }
             },
             params: {
-              wizard: null
+              wizard: null,
+              firstTimeSetup: false,
+              yesProceed: false,
+              fromClusters: true
             }
           })
           .state('add-resource.mediafusion.name', {
@@ -2310,7 +2445,7 @@
             },
             resolve: {
               hasF410FeatureToggle: /* @ngInject */ function (FeatureToggleService) {
-                return FeatureToggleService.supports(FeatureToggleService.features.hybridServicesResourceList);
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridServicesResourceList);
               }
             }
           })
@@ -2357,13 +2492,7 @@
               connectorType: null
             }
           });
-      }
-    ]);
 
-  angular
-    .module('Mediafusion')
-    .config(['$stateProvider',
-      function ($stateProvider) {
         $stateProvider
 
           .state('metrics', {
@@ -2399,25 +2528,25 @@
           })
 
         .state('connector-details', {
-            parent: 'sidepanel',
-            views: {
-              'sidepanel@': {
-                controllerAs: 'groupDetails',
-                controller: 'GroupDetailsController',
-                templateUrl: 'modules/mediafusion/media-service/side-panel/group-details.html'
-              },
-              'header@connector-details': {
-                templateUrl: 'modules/mediafusion/media-service/side-panel/group-header.html'
-              }
+          parent: 'sidepanel',
+          views: {
+            'sidepanel@': {
+              controllerAs: 'groupDetails',
+              controller: 'GroupDetailsController',
+              templateUrl: 'modules/mediafusion/media-service/side-panel/group-details.html'
             },
-            data: {
-              displayName: 'Overview'
-            },
-            params: {
-              groupName: {},
-              selectedClusters: {}
+            'header@connector-details': {
+              templateUrl: 'modules/mediafusion/media-service/side-panel/group-header.html'
             }
-          })
+          },
+          data: {
+            displayName: 'Overview'
+          },
+          params: {
+            groupName: {},
+            selectedClusters: {}
+          }
+        })
           .state('connector-details.alarm-details', {
             templateUrl: 'modules/mediafusion/media-service/side-panel/alarm-details.html',
             controller: 'MediaAlarmController',
@@ -2459,11 +2588,11 @@
 
         //V2 API changes
         .state('media-service-v2', {
-            templateUrl: 'modules/mediafusion/media-service-v2/overview.html',
-            controller: 'MediaServiceControllerV2',
-            controllerAs: 'med',
-            parent: 'main'
-          })
+          templateUrl: 'modules/mediafusion/media-service-v2/overview.html',
+          controller: 'MediaServiceControllerV2',
+          controllerAs: 'med',
+          parent: 'main'
+        })
           .state('media-service-v2.list', {
             url: '/mediaserviceV2',
             views: {
@@ -2484,26 +2613,26 @@
           })
 
         .state('connector-details-v2', {
-            parent: 'sidepanel',
-            views: {
-              'sidepanel@': {
-                controllerAs: 'groupDetails',
-                controller: 'GroupDetailsControllerV2',
-                templateUrl: 'modules/mediafusion/media-service-v2/side-panel/group-details.html'
-              },
-              'header@connector-details-v2': {
-                templateUrl: 'modules/mediafusion/media-service-v2/side-panel/group-header.html'
-              }
+          parent: 'sidepanel',
+          views: {
+            'sidepanel@': {
+              controllerAs: 'groupDetails',
+              controller: 'GroupDetailsControllerV2',
+              templateUrl: 'modules/mediafusion/media-service-v2/side-panel/group-details.html'
             },
-            data: {
-              displayName: 'Overview'
-            },
-            params: {
-              clusterName: {},
-              nodes: {},
-              cluster: {}
+            'header@connector-details-v2': {
+              templateUrl: 'modules/mediafusion/media-service-v2/side-panel/group-header.html'
             }
-          })
+          },
+          data: {
+            displayName: 'Overview'
+          },
+          params: {
+            clusterName: {},
+            nodes: {},
+            cluster: {}
+          }
+        })
           .state('connector-details-v2.alarm-details', {
             templateUrl: 'modules/mediafusion/media-service-v2/side-panel/alarm-details.html',
             controller: 'MediaAlarmControllerV2',
@@ -2530,26 +2659,19 @@
               selectedCluster: null
             }
           });
-      }
-    ]);
 
-  angular
-    .module('Ediscovery')
-    .config(['$stateProvider',
-      function ($stateProvider) {
         $stateProvider
-
           .state('ediscovery-main', {
-          views: {
-            'main@': {
-              templateUrl: 'modules/ediscovery/ediscovery.tpl.html'
-            }
-          },
-          abstract: true,
-          sticky: true
-        })
-
-        .state('ediscovery', {
+            parent: 'mainLazyLoad',
+            views: {
+              'main@': {
+                templateUrl: 'modules/ediscovery/ediscovery.tpl.html'
+              }
+            },
+            abstract: true,
+            sticky: true
+          })
+          .state('ediscovery', {
             url: '/ediscovery',
             template: '<div ui-view></div>',
             parent: 'ediscovery-main'
@@ -2570,13 +2692,7 @@
             controllerAs: 'ediscoveryCtrl',
             templateUrl: 'modules/ediscovery/ediscovery-reports.html'
           });
-      }
-    ]);
 
-  angular
-    .module('Messenger')
-    .config(['$stateProvider',
-      function ($stateProvider) {
         $stateProvider
           .state('messenger', {
             parent: 'main',
@@ -2585,13 +2701,7 @@
             controller: 'CiSyncCtrl',
             controllerAs: 'sync'
           });
-      }
-    ]);
 
-  angular
-    .module('Sunlight')
-    .config(['$stateProvider',
-      function ($stateProvider) {
         $stateProvider
           .state('care', {
             parent: 'main',

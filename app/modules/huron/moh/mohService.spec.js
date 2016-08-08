@@ -3,7 +3,7 @@
 describe('Service: MohService', function () {
   var mohService, httpBackend, playlistsData, playlistData1;
 
-  beforeEach(module('uc.moh'));
+  beforeEach(angular.mock.module('uc.moh'));
 
   beforeEach(
     inject(

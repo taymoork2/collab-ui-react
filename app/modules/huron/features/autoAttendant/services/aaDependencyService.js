@@ -28,7 +28,7 @@
           deferred.resolve(event);
           return deferred.promise;
         }
-        AACalendarService.updateCalendarName(event.scheduleId, event.newName).then(function (data) {
+        AACalendarService.updateCalendarName(event.scheduleId, event.newName).then(function () {
           deferred.resolve(event);
         }, function (error) {
           AANotificationService.errorResponse(error, 'autoAttendant.errorUpdateScheduleName', {

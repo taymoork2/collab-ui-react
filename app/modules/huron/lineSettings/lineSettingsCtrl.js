@@ -17,8 +17,16 @@
       forwardNABCalls: ''
     };
 
+    vm.simultaneousModel = {
+      incomingCallMaximum: 8
+    };
+
+    vm.multipleCalls = {
+      incomingCallMaximum: 2
+    };
+
     vm.validations = {
-      phoneNumber: function (viewValue, modelValue, scope) {
+      phoneNumber: function (viewValue, modelValue) {
         var value = modelValue || viewValue;
         return /^(\+?)?[\d]{10,11}$/.test(value);
       }
@@ -200,6 +208,25 @@
       }
     }];
 
+    vm.simultaneousCalls = [{
+      key: 'simultaneousTwo',
+      defaultValue: true,
+      type: 'radio',
+      templateOptions: {
+        model: 'incomingCallMaximum',
+        label: $translate.instant('multipleCalls.two'),
+        value: 2
+      }
+    }, {
+      key: 'simultaneousEight',
+      type: 'radio',
+      templateOptions: {
+        model: 'incomingCallMaximum',
+        label: $translate.instant('multipleCalls.eight'),
+        value: 8
+      }
+    }];
+
     vm.callerIdInfo = {};
     vm.hasDevice = true;
     vm.callerIdFields = [{
@@ -218,7 +245,7 @@
         maxlength: 30,
         label: $translate.instant('callerIdPanel.customName')
       },
-      hideExpression: function ($viewValue, $modelValue, scope) {
+      hideExpression: function () {
         if (vm.callerIdInfo.callerIdSelection) {
           return vm.callerIdInfo.callerIdSelection.value.externalCallerIdType !== customCallerId_type;
         }
@@ -240,7 +267,7 @@
           }
         }
       },
-      hideExpression: function ($viewValue, $modelValue, scope) {
+      hideExpression: function () {
         if (vm.callerIdInfo.callerIdSelection) {
           return vm.callerIdInfo.callerIdSelection.value.externalCallerIdType !== customCallerId_type;
         }
@@ -296,6 +323,20 @@
       });
     }
 
+    function getMultipleCalls() {
+      LineSettings.getSimultaneousCalls(vm.telephonyInfo.currentDirectoryNumber.uuid, vm.currentUser.id).then(function (simultaneous) {
+        vm.simultaneousModel = {
+          incomingCallMaximum: simultaneous.incomingCallMaximum
+        };
+      }).catch(function (response) {
+        Notification.errorResponse(response, 'simultaneousCalls.mulitpleCallsLoadError');
+      });
+    }
+
+    function updateMultipleCalls() {
+      LineSettings.updateSimultaneousCalls(vm.telephonyInfo.currentDirectoryNumber.uuid, vm.currentUser.id, vm.simultaneousModel);
+    }
+
     function loadExternalNumberPool(pattern) {
       TelephonyInfoService.loadExternalNumberPool(pattern).then(function (externalNumberPool) {
         vm.externalNumberPool = externalNumberPool;
@@ -320,6 +361,8 @@
 
       vm.telephonyInfo = TelephonyInfoService.getTelephonyInfo();
       vm.internalNumberPool = TelephonyInfoService.getInternalNumberPool();
+      getMultipleCalls();
+
       vm.externalNumberPool = TelephonyInfoService.getExternalNumberPool();
       toggleShowExtensions();
 
@@ -479,6 +522,8 @@
             return listSharedLineUsers(vm.directoryNumber.uuid);
           });
           promises.push(promise);
+
+          updateMultipleCalls();
 
           var dnPromise;
           var dnPromises = [];
@@ -646,14 +691,14 @@
       return listSharedLineUsers(vm.telephonyInfo.currentDirectoryNumber.uuid).then(function () {
         CallerId.loadCompanyNumbers().then(function () {
             // load company numbers first
-            vm.callerIdOptions = CallerId.getCompanyNumberList();
-            vm.callerIdOptions.forEach(function (option) {
-              if (option.value.externalCallerIdType === companyCallerId_type) {
-                hasCompanyCallerID = true;
-                option.label = companyCallerId_label;
-              }
-            });
-          })
+          vm.callerIdOptions = CallerId.getCompanyNumberList();
+          vm.callerIdOptions.forEach(function (option) {
+            if (option.value.externalCallerIdType === companyCallerId_type) {
+              hasCompanyCallerID = true;
+              option.label = companyCallerId_label;
+            }
+          });
+        })
           .then(function () {
             // Direct Line
             if (angular.isDefined(vm.telephonyInfo.alternateDirectoryNumber.uuid) && vm.telephonyInfo.alternateDirectoryNumber.uuid !== '' && vm.telephonyInfo.alternateDirectoryNumber.uuid !== 'none') {
@@ -936,7 +981,7 @@
 
       var defer = $q.defer();
 
-      UserListService.listUsers(vm.sort.startAt, vm.sort.maxCount, vm.sort.by, vm.sort.order, function (data, status) {
+      UserListService.listUsers(vm.sort.startAt, vm.sort.maxCount, vm.sort.by, vm.sort.order, function (data) {
         if (data.success) {
           defer.resolve(data.Resources);
         } else {
@@ -1005,7 +1050,7 @@
 
     function addSharedLineUsers() {
       //Associate new Sharedline users
-      var uuid, name;
+      var name;
       var promises = [];
       var promise;
       if (vm.selectedUsers) {
@@ -1045,7 +1090,7 @@
             if (users.length > 1) {
               vm.sharedLineUsers = users;
             }
-            vm.sharedLineBtn = (vm.sharedLineUsers) ? true : false;
+            vm.sharedLineBtn = !!vm.sharedLineUsers;
             return users;
           })
           .then(function (users) {
@@ -1188,7 +1233,7 @@
       var userName = '';
       userName = (name && name.givenName) ? name.givenName : '';
       userName = (name && name.familyName) ? (userName + ' ' + name.familyName).trim() : userName;
-      userName = (userName) ? userName : userId;
+      userName = userName || userId;
       return userName;
     }
 

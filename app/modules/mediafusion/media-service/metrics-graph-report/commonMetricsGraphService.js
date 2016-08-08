@@ -3,6 +3,7 @@
   angular.module('Mediafusion').service('CommonMetricsGraphService', CommonMetricsGraphService);
   /* @ngInject */
   function CommonMetricsGraphService($translate, chartColors) {
+    var amchartsImages = './amcharts/images/';
     // Base variables for building grids and charts
     var baseVariables = [];
     baseVariables['column'] = {
@@ -121,10 +122,10 @@
       }
     }
 
-    function getBaseStackSerialGraph(data, startDuration, valueAxes, graphs, categoryField, catAxis) {
+    function getBaseStackSerialGraph(data, startDuration, valueAxes, graphs, categoryField, catAxis, exportData) {
       return angular.copy({
         'type': 'serial',
-        'pathToImages': './images/',
+        'pathToImages': amchartsImages,
         'startEffect': 'easeOutSine',
         'addClassNames': true,
         'fontFamily': 'CiscoSansTT Extra Light',
@@ -138,7 +139,7 @@
         'marginRight': 60,
         'usePrefixes': true,
         'prefixesOfBigNumbers': baseVariables['prefixesOfBigNumbers'],
-        'export': baseVariables['export'],
+        'export': exportData,
         'startDuration': startDuration,
         'dataProvider': data,
         'valueAxes': valueAxes,
@@ -179,7 +180,7 @@
     function getGanttGraph(data, valueAxis) {
       return angular.copy({
         'type': 'gantt',
-        'pathToImages': './images/',
+        'pathToImages': amchartsImages,
         'theme': 'light',
         'marginRight': 70,
         'dataDateFormat': 'YYYY-MM-DDTJJ:NN:SSZ',

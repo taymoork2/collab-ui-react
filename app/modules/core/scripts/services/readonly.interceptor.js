@@ -1,9 +1,14 @@
 (function () {
   'use strict';
 
-  angular
-    .module('Core')
-    .factory('ReadonlyInterceptor', ReadonlyInterceptor);
+  module.exports = angular
+    .module('core.readonlyinterceptor', [
+      require('modules/core/notifications/notifications.module'),
+      require('modules/core/scripts/services/authinfo'),
+      require('modules/core/scripts/services/log'),
+    ])
+    .factory('ReadonlyInterceptor', ReadonlyInterceptor)
+    .name;
 
   /*ngInject*/
   function ReadonlyInterceptor($q, $injector, $log) {
@@ -14,6 +19,7 @@
       '/api/v1/logs/',
       '/conversation/api/v1/users/deskFeedbackUrl',
       '/idb/oauth2/v1/revoke',
+      '/idb/oauth2/v1/tokens/user',
       '/idb/oauth2/v1/access_token',
       '/resendinvitation/invoke',
       '/sendverificationcode/invoke',

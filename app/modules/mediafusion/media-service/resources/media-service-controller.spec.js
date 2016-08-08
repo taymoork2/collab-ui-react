@@ -3,28 +3,24 @@
 describe('Controller: MediaServiceController', function () {
 
   // load the service's module
-  beforeEach(module('wx2AdminWebClientApp'));
+  beforeEach(angular.mock.module('Mediafusion'));
 
-  var Authinfo, controller, $scope, httpMock, $q, $modal, log, $translate, $state;
+  var controller, $scope, httpMock, $q, $modal, $translate;
   var MediaServiceActivation, MediaClusterService, Notification, XhrNotificationService;
   var mediaAgentOrgIds = ['mediafusion'];
   var serviceId = "squared-fusion-media";
-  var clusterId = "367dd49b-212d-4e7e-ac12-24eb8ee9d504";
-  var connectorName = "MF_Connector";
 
   var authInfo = {
     getOrgId: sinon.stub().returns('5632f806-ad09-4a26-a0c0-a49a13f38873')
   };
 
-  beforeEach(module(function ($provide) {
+  beforeEach(angular.mock.module(function ($provide) {
     $provide.value("Authinfo", authInfo);
   }));
 
-  beforeEach(inject(function ($rootScope, $state, $controller, _$httpBackend_, _$q_, _$modal_, $log, _$translate_, _MediaServiceActivation_, _MediaClusterService_, _XhrNotificationService_, _Notification_) {
+  beforeEach(inject(function ($rootScope, $state, $controller, _$httpBackend_, _$q_, _$modal_, _$translate_, _MediaServiceActivation_, _MediaClusterService_, _XhrNotificationService_, _Notification_) {
     $scope = $rootScope.$new();
     $state = $state;
-    log = $log;
-    log.reset();
     httpMock = _$httpBackend_;
     $q = _$q_;
     $modal = _$modal_;
@@ -35,8 +31,6 @@ describe('Controller: MediaServiceController', function () {
     XhrNotificationService = _XhrNotificationService_;
     Notification = _Notification_;
 
-    //$httpBackend.when('GET', 'l10n/en_US.json').respond({});
-
     //spyOn(Notification, 'errorResponse');
 
     controller = $controller('MediaServiceController', {
@@ -45,7 +39,6 @@ describe('Controller: MediaServiceController', function () {
       httpMock: httpMock,
       $q: $q,
       $modal: $modal,
-      log: log,
       $translate: $translate,
 
       MediaServiceActivation: MediaServiceActivation,

@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject */
-  function MediaServiceController(MediaServiceActivation, $state, $modal, $scope, $log, $translate, Authinfo, MediaClusterService, Notification) {
+  function MediaServiceController(MediaServiceActivation, $state, $modal, $scope, $translate, Authinfo, MediaClusterService, Notification) {
 
     MediaClusterService.subscribe('data', clustersUpdated, {
       scope: $scope
@@ -55,7 +55,6 @@
         $scope.gridApi = gridApi;
         gridApi.selection.on.rowSelectionChanged($scope, function (row) {
           vm.showClusterDetails(row.entity);
-          $log.log("entity", row.entity);
         });
       },
       columnDefs: [{
@@ -72,14 +71,10 @@
     };
 
     if (vm.currentServiceId == "squared-fusion-media") {
-      $log.log("checking isServiceEnabled");
       //vm.serviceEnabled = false;
       MediaServiceActivation.isServiceEnabled(vm.currentServiceId, function (a, b) {
         vm.serviceEnabled = b;
         vm.loading = false;
-        //$log.log("isServiceEnabled :", b);
-        //$log.log("clusters :", vm.clusters);
-        //$log.log("aggregatedClusters :", vm.aggregatedClusters);
       });
     }
 
@@ -89,8 +84,6 @@
 
     function clustersUpdated() {
       //ServiceStateChecker.checkState(vm.currentServiceType, vm.currentServiceId);
-      $log.log("clustersUpdated :");
-
       MediaClusterService.getGroups().then(function (group) {
         // vm.groups = group;
         vm.clusterList = [];
@@ -98,9 +91,7 @@
           vm.clusterList.push(group.name);
         });
         vm.clusters = _.values(MediaClusterService.getClusters());
-        //$log.log("clustersUpdated clusters :", vm.clusters);
         vm.aggregatedClusters = _.values(MediaClusterService.getAggegatedClusters(vm.clusters, vm.clusterList));
-        //$log.log("clustersUpdated aggregatedClusters :", vm.aggregatedClusters);
       });
 
     }
@@ -126,34 +117,26 @@
 
     vm.enableMediaService = function (serviceId) {
       //function enableMediaService(serviceId) {
-      //$log.log("Entered enableMediaService");
       vm.waitForEnabled = true;
       MediaServiceActivation.setServiceEnabled(serviceId, true).then(
         function success() {
-          //$log.log("media service enabled successfully");
           vm.enableOrpheusForMediaFusion();
         },
-        function error(data, status) {
-          //$log.log("Problems enabling media service");
+        function error() {
           Notification.error('mediaFusion.mediaServiceActivationFailure');
         });
       //$scope.enableOrpheusForMediaFusion();
       vm.serviceEnabled = true;
       vm.waitForEnabled = false;
-      //$log.log("Exiting enableMediaService, serviceEnabled:", $scope.serviceEnabled);
     };
 
     vm.enableOrpheusForMediaFusion = function () {
-      //$log.log("Entered enableOrpheusForMediaFusion");
       MediaServiceActivation.getUserIdentityOrgToMediaAgentOrgMapping().then(
         function success(response) {
           var mediaAgentOrgIdsArray = [];
           var orgId = Authinfo.getOrgId();
           var updateMediaAgentOrgId = false;
           mediaAgentOrgIdsArray = response.data.mediaAgentOrgIds;
-          //$log.log("User's Indentity Org to Calliope Media Agent Org mapping:", response);
-          //$log.log("Identity Org Id:", response.data.identityOrgId);
-          //$log.log("Media Agent Org Ids Array:", mediaAgentOrgIdsArray);
 
           // See if org id is already mapped to user org id
           if (mediaAgentOrgIdsArray.indexOf(orgId) == -1) {
@@ -167,12 +150,11 @@
           }
 
           if (updateMediaAgentOrgId) {
-            //$log.log("Updated Media Agent Org Ids Array:", mediaAgentOrgIdsArray);
             vm.addUserIdentityToMediaAgentOrgMapping(mediaAgentOrgIdsArray);
           }
         },
 
-        function error(errorResponse, status) {
+        function error() {
           // Unable to find identityOrgId, add identityOrgId -> mediaAgentOrgId mapping
           var mediaAgentOrgIdsArray = [];
           mediaAgentOrgIdsArray.push(Authinfo.getOrgId());
@@ -183,8 +165,8 @@
 
     vm.addUserIdentityToMediaAgentOrgMapping = function (mediaAgentOrgIdsArray) {
       MediaServiceActivation.setUserIdentityOrgToMediaAgentOrgMapping(mediaAgentOrgIdsArray).then(
-        function success(response) {},
-        function error(errorResponse, status) {
+        function success() {},
+        function error(errorResponse) {
           Notification.error('mediaFusion.mediaAgentOrgMappingFailure', {
             failureMessage: errorResponse.message
           });

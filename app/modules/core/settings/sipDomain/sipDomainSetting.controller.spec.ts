@@ -118,7 +118,7 @@ describe('Controller: EnterpriseSettingsCtrl', ()  => {
 
   describe('test checkSSAReservation', () => {
     beforeEach(initController);
-    
+
     it('should enable Next button when isSSAReserved is true', () => {
         controller.isSSAReserved = true;
         expect($scope.$emit).toHaveBeenCalledWith('wizardNextButtonDisable', false);

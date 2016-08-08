@@ -12,6 +12,7 @@
     var service = {
       getDays: getDays,
       getLogo: getLogo,
+      getLogoUrl: getLogoUrl,
       getPreviewDays: getPreviewDays,
       getTimeOptions: getTimeOptions,
       getEndTimeOptions: getEndTimeOptions,
@@ -28,6 +29,12 @@
         return $http.get(logoUrl, {
           responseType: "arraybuffer"
         });
+      });
+    }
+
+    function getLogoUrl() {
+      return BrandService.getSettings(Authinfo.getOrgId()).then(function (settings) {
+        return settings.logoUrl;
       });
     }
 

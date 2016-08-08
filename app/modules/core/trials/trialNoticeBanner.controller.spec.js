@@ -46,10 +46,10 @@ describe('Controller: TrialNoticeBannerCtrl:', function () {
     'license': {}
   }];
 
-  beforeEach(module('core.trial'));
-  beforeEach(module('Core'));
-  beforeEach(module('Huron'));
-  beforeEach(module('Sunlight'));
+  beforeEach(angular.mock.module('core.trial'));
+  beforeEach(angular.mock.module('Core'));
+  beforeEach(angular.mock.module('Huron'));
+  beforeEach(angular.mock.module('Sunlight'));
 
   /* @ngInject */
   beforeEach(inject(function ($rootScope, $controller, _$httpBackend_, _$q_, _Authinfo_, _EmailService_,
@@ -145,7 +145,7 @@ describe('Controller: TrialNoticeBannerCtrl:', function () {
       });
       it('should have called "EmailService.emailNotifyPartnerTrialConversionRequest()" once for each partner admin with correct userName', function () {
 
-        spyOn(Authinfo, 'getConferenceServices').and.callFake(function (val) {
+        spyOn(Authinfo, 'getConferenceServices').and.callFake(function () {
           return null;
         });
         spyOn(EmailService, 'emailNotifyPartnerTrialConversionRequest').and.returnValue(deferred.promise);
@@ -163,7 +163,7 @@ describe('Controller: TrialNoticeBannerCtrl:', function () {
 
       it('should return the results array of length equal to the number of admins and value corresponding to the resolve object', function () {
 
-        spyOn(Authinfo, 'getConferenceServices').and.callFake(function (val) {
+        spyOn(Authinfo, 'getConferenceServices').and.callFake(function () {
           return null;
         });
         spyOn(EmailService, 'emailNotifyPartnerTrialConversionRequest').and.returnValue(deferred.promise);
@@ -191,7 +191,7 @@ describe('Controller: TrialNoticeBannerCtrl:', function () {
         }];
 
         spyOn(controller._helpers, 'sendEmail').and.returnValue($q.when(emailResult));
-        controller.sendRequest().then(function (results) {
+        controller.sendRequest().then(function () {
           expect(controller.requestResult).toBe(controller.requestResultEnum.SUCCESS);
           expect(Notification.success).toHaveBeenCalled();
 
@@ -208,7 +208,7 @@ describe('Controller: TrialNoticeBannerCtrl:', function () {
 
         spyOn(controller._helpers, 'sendEmail').and.returnValue($q.when(emailResult));
 
-        controller.sendRequest().then(function (results) {
+        controller.sendRequest().then(function () {
           expect(controller.requestResult).toBe(controller.requestResultEnum.PARTIAL_FAILURE);
           expect(Notification.error).toHaveBeenCalled();
         });
@@ -223,7 +223,7 @@ describe('Controller: TrialNoticeBannerCtrl:', function () {
         }];
         spyOn(controller._helpers, 'sendEmail').and.returnValue($q.when(emailResult));
 
-        controller.sendRequest().then(function (results) {
+        controller.sendRequest().then(function () {
           expect(controller.requestResult).toBe(controller.requestResultEnum.TOTAL_FAILURE);
           expect(Notification.error).toHaveBeenCalled();
         });
@@ -233,7 +233,7 @@ describe('Controller: TrialNoticeBannerCtrl:', function () {
     describe('getWebexSiteUrl():', function () {
 
       it('should return null without Conference Services', function () {
-        spyOn(Authinfo, 'getConferenceServices').and.callFake(function (val) {
+        spyOn(Authinfo, 'getConferenceServices').and.callFake(function () {
           return null;
         });
         var url = controller._helpers.getWebexSiteUrl();
@@ -241,7 +241,7 @@ describe('Controller: TrialNoticeBannerCtrl:', function () {
       });
 
       it('should return null when Conference Services without webex', function () {
-        spyOn(Authinfo, 'getConferenceServices').and.callFake(function (val) {
+        spyOn(Authinfo, 'getConferenceServices').and.callFake(function () {
           return fakeConferenceDataWithoutWebex;
         });
         var url = controller._helpers.getWebexSiteUrl();
@@ -249,7 +249,7 @@ describe('Controller: TrialNoticeBannerCtrl:', function () {
       });
 
       it('should return webex siteUrl when Conference Services with webex', function () {
-        spyOn(Authinfo, 'getConferenceServices').and.callFake(function (val) {
+        spyOn(Authinfo, 'getConferenceServices').and.callFake(function () {
           return fakeConferenceDataWithWebex;
         });
         var url = controller._helpers.getWebexSiteUrl();

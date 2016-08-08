@@ -48,9 +48,9 @@ describe('Controller: HuntGroupSetupAssistantCtrl - Fallback Destination', funct
   var GetMemberUrl = new RegExp(".*/api/v2/customers/1/users/.*");
   var SaveHuntGroupUrl = new RegExp(".*/api/v2/customers/1/features/huntgroups.*");
 
-  beforeEach(module('Huron'));
+  beforeEach(angular.mock.module('Huron'));
 
-  beforeEach(module(function ($provide) {
+  beforeEach(angular.mock.module(function ($provide) {
     $provide.value("Authinfo", spiedAuthinfo);
   }));
 

@@ -1,15 +1,13 @@
 'use strict';
 
 describe('orgService', function () {
-  beforeEach(module('Core'));
+  beforeEach(angular.mock.module('Core'));
 
-  var q, deferred;
-
-  var httpBackend, Orgservice, Auth, Authinfo, Config, Log, UrlConfig, Utils;
+  var httpBackend, Orgservice, Auth, Authinfo, Config, Log, UrlConfig;
   var eftSettingRegex = /.*\/settings\/eft\.*/;
 
   beforeEach(function () {
-    module(function ($provide) {
+    angular.mock.module(function ($provide) {
       Auth = {
         setAccessToken: sinon.stub()
       };
@@ -82,7 +80,7 @@ describe('orgService', function () {
       test: 'val'
     };
     httpBackend.expect('GET', UrlConfig.getScomUrl() + '/' + Authinfo.getOrgId()).respond(200, responseObj);
-    var promise = Orgservice.getOrg(_.noop, Authinfo.getOrgId())
+    Orgservice.getOrg(_.noop, Authinfo.getOrgId())
       .then(function (response) {
         expect(response.data).toEqual(jasmine.objectContaining(_.assign({}, responseObj, {
           orgSettings: {}
@@ -436,7 +434,6 @@ describe('orgService', function () {
   });
 
   it('should fail to set organization settings', function () {
-    var callback = sinon.stub();
     var payload = {
       reportingSiteUrl: 'http://example.com',
       reportingSiteDesc: 'Description',
@@ -514,6 +511,15 @@ describe('orgService', function () {
     };
     httpBackend.when('PATCH', UrlConfig.getHerculesUrl() + '/organizations/' + Authinfo.getOrgId() + '/services/' + Config.entitlements.fusion_cal, data).respond(200, {});
     Orgservice.setHybridServiceAcknowledged('calendar-service');
+    expect(httpBackend.flush).not.toThrow();
+  });
+
+  it('should set Acknowledged for media service', function () {
+    var data = {
+      "acknowledged": true
+    };
+    httpBackend.when('PATCH', UrlConfig.getHerculesUrl() + '/organizations/' + Authinfo.getOrgId() + '/services/' + Config.entitlements.mediafusion, data).respond(200, {});
+    Orgservice.setHybridServiceAcknowledged('squared-fusion-media');
     expect(httpBackend.flush).not.toThrow();
   });
 

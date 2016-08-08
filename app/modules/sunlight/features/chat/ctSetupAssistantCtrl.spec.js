@@ -2,14 +2,13 @@
 
 describe('Care Chat Setup Assistant Ctrl', function () {
 
-  var controller, $scope, $modal, $q, $timeout, $window, Authinfo, CTService, getLogoDeferred, SunlightConfigService, $state;
+  var controller, $scope, $modal, $q, CTService, getLogoDeferred, getLogoUrlDeferred, SunlightConfigService, $state;
   var Notification, $translate;
 
   var escapeKey = 27;
   var templateName = 'Atlas UT Chat Template';
   var NAME_PAGE_INDEX = 0;
   var OVERVIEW_PAGE_INDEX = 1;
-  var CUSTOMER_PAGE_INDEX = 2;
   var AGENT_UNAVAILABLE_PAGE_INDEX = 3;
   var OFF_HOURS_PAGE_INDEX = 4;
   var FEEDBACK_PAGE_INDEX = 5;
@@ -28,6 +27,8 @@ describe('Care Chat Setup Assistant Ctrl', function () {
       data: data
     };
   };
+
+  var dummyLogoUrl = 'https://www.example.com/logo.png';
 
   var failedData = {
     success: false,
@@ -56,13 +57,13 @@ describe('Care Chat Setup Assistant Ctrl', function () {
   var startTimeOptions = businessHours.startTimeOptions;
   var defaultTimings = businessHours.defaultTimings;
 
-  beforeEach(module('Sunlight'));
-  beforeEach(module('Hercules'));
-  beforeEach(module(function ($provide) {
+  beforeEach(angular.mock.module('Sunlight'));
+  beforeEach(angular.mock.module('Hercules'));
+  beforeEach(angular.mock.module(function ($provide) {
     $provide.value("Authinfo", spiedAuthinfo);
 
     $provide.value("SunlightConfigService", {
-      createChatTemplate: function (data) {
+      createChatTemplate: function () {
         return {
           then: function (callback) {
             return callback(successData);
@@ -72,15 +73,12 @@ describe('Care Chat Setup Assistant Ctrl', function () {
     });
   }));
 
-  var intializeCtrl = function (_$rootScope_, $controller, _$modal_, _$q_, _$timeout_, _$translate_,
+  var intializeCtrl = function (_$rootScope_, $controller, _$modal_, _$q_, _$translate_,
     _$window_, _Authinfo_, _CTService_, _SunlightConfigService_, _$state_, _Notification_) {
     $scope = _$rootScope_.$new();
     $modal = _$modal_;
     $q = _$q_;
-    $timeout = _$timeout_;
     $translate = _$translate_;
-    $window = _$window_;
-    Authinfo = _Authinfo_;
     CTService = _CTService_;
     SunlightConfigService = _SunlightConfigService_;
     $state = _$state_;
@@ -90,8 +88,10 @@ describe('Care Chat Setup Assistant Ctrl', function () {
     $translate.use(businessHours.userLang);
     //create mock deferred object which will be used to return promises
     getLogoDeferred = $q.defer();
+    getLogoUrlDeferred = $q.defer();
     spyOn($modal, 'open');
     spyOn(CTService, 'getLogo').and.returnValue(getLogoDeferred.promise);
+    spyOn(CTService, 'getLogoUrl').and.returnValue(getLogoUrlDeferred.promise);
     spyOn(Notification, 'success');
 
     controller = $controller('CareChatSetupAssistantCtrl');
@@ -103,16 +103,13 @@ describe('Care Chat Setup Assistant Ctrl', function () {
     expect(controller.nextButton()).toEqual(nextButtonState);
   }
 
-  function validateKeyPressEvent(eventKey, currentPageIndex, expectedPageIndex, isFlushTimeout) {
-    controller.currentState = controller.states[currentPageIndex];
-    controller.evalKeyPress(eventKey);
-    if (isFlushTimeout) $timeout.flush();
-    $scope.$apply();
-    expect(controller.currentState).toEqual(controller.states[expectedPageIndex]);
-  }
-
   function resolveLogoPromise() {
     getLogoDeferred.resolve(getDummyLogo('abcd'));
+    $scope.$apply();
+  }
+
+  function resolveLogoUrlPromise() {
+    getLogoUrlDeferred.resolve(dummyLogoUrl);
     $scope.$apply();
   }
 
@@ -128,6 +125,7 @@ describe('Care Chat Setup Assistant Ctrl', function () {
     beforeEach(inject(intializeCtrl));
     beforeEach(function () {
       resolveLogoPromise();
+      resolveLogoUrlPromise();
     });
 
     it("it starts from the name page", function () {
@@ -205,22 +203,26 @@ describe('Care Chat Setup Assistant Ctrl', function () {
 
     it('should set template profile to org profile if org profile is selected when nextBtn is clicked', function () {
       resolveLogoPromise();
+      resolveLogoUrlPromise();
       controller.selectedTemplateProfile = controller.profiles.org;
       controller.nextButton();
       expect(controller.template.configuration.mediaSpecificConfiguration).toEqual({
         useOrgProfile: true,
         displayText: OrgName,
-        image: ''
+        orgLogoUrl: dummyLogoUrl
       });
     });
 
     it('should set template profile to agent profile if agent profile is selected when nextBtn is clicked', function () {
       resolveLogoPromise();
+      resolveLogoUrlPromise();
       controller.selectedTemplateProfile = controller.profiles.agent;
       controller.nextButton();
       expect(controller.template.configuration.mediaSpecificConfiguration).toEqual({
         useOrgProfile: false,
-        useAgentRealName: false
+        useAgentRealName: false,
+        orgLogoUrl: dummyLogoUrl,
+        displayText: OrgName,
       });
     });
 
@@ -513,7 +515,7 @@ describe('Care Chat Setup Assistant Ctrl', function () {
       spyOn($state, 'go');
       deferred.resolve({
         success: true,
-        headers: function (header) {
+        headers: function () {
           return 'something/abc123';
         },
         status: 201

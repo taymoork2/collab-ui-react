@@ -2,12 +2,11 @@
 
 describe('Controller: HostDetailsControllerV2', function () {
 
-  beforeEach(module('wx2AdminWebClientApp'));
+  beforeEach(angular.mock.module('Mediafusion'));
 
-  var $selectedRole, $clusterId, sidepanelMock, redirectTargetPromise, $q, httpBackend, $scope, $rootScope, $modal, controller, $stateParams, $state, MediaClusterServiceV2, XhrNotificationService, Notification, $translate;
+  var $selectedRole, $clusterId, httpBackend, $rootScope, $modal, controller, $stateParams, $state, MediaClusterServiceV2, XhrNotificationService;
 
-  beforeEach(inject(function (_$q_, $httpBackend, _$rootScope_, $controller, _MediaClusterServiceV2_, _XhrNotificationService_, _Notification_, $translate) {
-    $q = _$q_;
+  beforeEach(inject(function ($httpBackend, _$rootScope_, $controller, _MediaClusterServiceV2_, _XhrNotificationService_, $translate) {
     $rootScope = _$rootScope_;
     $clusterId = $clusterId;
     $selectedRole = $selectedRole;
@@ -148,13 +147,9 @@ describe('Controller: HostDetailsControllerV2', function () {
       },
       "hostLength": 1
     };
-    redirectTargetPromise = {
-      then: sinon.stub()
-    };
 
     MediaClusterServiceV2 = _MediaClusterServiceV2_;
     XhrNotificationService = _XhrNotificationService_;
-    Notification = _Notification_;
     $translate = $translate;
 
     $modal = {

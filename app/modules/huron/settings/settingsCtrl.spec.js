@@ -3,13 +3,13 @@
 describe('Controller: HuronSettingsCtrl', function () {
   var controller, $controller, $scope, $q, $httpBackend;
   var Authinfo, Notification;
-  var ExternalNumberService, DialPlanService, FeatureToggleService, PstnSetupService, ModalService;
+  var ExternalNumberService, DialPlanService, PstnSetupService, ModalService;
   var HuronCustomer, ServiceSetup, CallerId, HuronConfig, InternationalDialing, VoicemailMessageAction;
   var modalDefer, customer, timezones, timezone, voicemailCustomer, internalNumberRanges;
   var sites, site, companyNumbers, cosRestrictions, customerCarriers, messageAction;
 
-  beforeEach(module('Huron'));
-  beforeEach(module('Sunlight'));
+  beforeEach(angular.mock.module('Huron'));
+  beforeEach(angular.mock.module('Sunlight'));
 
   beforeEach(inject(function ($rootScope, _$controller_, _$q_, _$httpBackend_, _ExternalNumberService_, _DialPlanService_,
     _PstnSetupService_, _ModalService_, _Notification_, _HuronCustomer_, _ServiceSetup_, _InternationalDialing_, _Authinfo_, _HuronConfig_,

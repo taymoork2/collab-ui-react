@@ -1,9 +1,10 @@
 (function () {
   'use strict';
 
-  angular
-    .module('Core')
-    .service('Storage', Storage);
+  module.exports = angular
+    .module('core.storage', [])
+    .service('Storage', Storage)
+    .name;
 
   /* @ngInject */
   function Storage($window, $log) {

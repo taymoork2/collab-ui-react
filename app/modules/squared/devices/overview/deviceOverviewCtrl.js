@@ -139,9 +139,9 @@
       }
 
       uploadLogsPromise.then(function () {
-          var appType = 'Atlas_' + $window.navigator.userAgent;
-          return FeedbackService.getFeedbackUrl(appType, feedbackId);
-        })
+        var appType = 'Atlas_' + $window.navigator.userAgent;
+        return FeedbackService.getFeedbackUrl(appType, feedbackId);
+      })
         .then(function (res) {
           $window.open(res.data.url, '_blank');
         })
@@ -206,7 +206,14 @@
       var tag = _.trim(deviceOverview.newTag);
       if (tag && !_.contains(deviceOverview.currentDevice.tags, tag)) {
         deviceOverview.newTag = undefined;
-        var service = (deviceOverview.currentDevice.needsActivation ? CsdmCodeService : deviceOverview.currentDevice.isHuronDevice ? huronDeviceService : CsdmDeviceService);
+        var service;
+        if (deviceOverview.currentDevice.needsActivation) {
+          service = CsdmCodeService;
+        } else if (deviceOverview.currentDevice.isHuronDevice) {
+          service = huronDeviceService;
+        } else {
+          service = CsdmDeviceService;
+        }
         return service
           .updateTags(deviceOverview.currentDevice.url, deviceOverview.currentDevice.tags.concat(tag))
           .catch(XhrNotificationService.notify);
@@ -224,7 +231,15 @@
 
     deviceOverview.removeTag = function (tag) {
       var tags = _.without(deviceOverview.currentDevice.tags, tag);
-      return (deviceOverview.currentDevice.needsActivation ? CsdmCodeService : deviceOverview.currentDevice.isHuronDevice ? huronDeviceService : CsdmDeviceService)
+      var service;
+      if (deviceOverview.currentDevice.needsActivation) {
+        service = CsdmCodeService;
+      } else if (deviceOverview.currentDevice.isHuronDevice) {
+        service = huronDeviceService;
+      } else {
+        service = CsdmDeviceService;
+      }
+      return service
         .updateTags(deviceOverview.currentDevice.url, tags)
         .catch(XhrNotificationService.notify);
     };
@@ -232,6 +247,8 @@
     deviceOverview.deviceHasInformation = deviceOverview.currentDevice.ip || deviceOverview.currentDevice.mac || deviceOverview.currentDevice.serial || deviceOverview.currentDevice.software || deviceOverview.currentDevice.hasRemoteSupport || deviceOverview.currentDevice.needsActivation;
 
     deviceOverview.canChangeUpgradeChannel = channels.length > 1 && deviceOverview.currentDevice.isOnline;
+
+    deviceOverview.shouldShowUpgradeChannel = channels.length > 1 && !deviceOverview.currentDevice.isOnline;
 
     deviceOverview.upgradeChannelOptions = _.map(channels, getUpgradeChannelObject);
 

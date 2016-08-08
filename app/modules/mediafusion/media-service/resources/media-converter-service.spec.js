@@ -3,14 +3,13 @@
 describe('MediaConverterService', function () {
 
   // load the service's module
-  beforeEach(module('wx2AdminWebClientApp'));
+  beforeEach(angular.mock.module('Mediafusion'));
 
   // instantiate service
-  var Service, $q;
+  var Service;
   var clusterdata = getJSONFixture('mediafusion/json/mediaservice/clusterdata.json');
-  beforeEach(inject(function (_MediaConverterService_, _$q_) {
+  beforeEach(inject(function (_MediaConverterService_) {
     Service = _MediaConverterService_;
-    $q = _$q_;
   }));
   //Converter Service
   it('should aggregate cluster based on GroupName ', function () {

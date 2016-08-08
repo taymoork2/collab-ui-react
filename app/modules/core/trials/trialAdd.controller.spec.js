@@ -3,10 +3,10 @@
 describe('Controller: TrialAddCtrl', function () {
   var controller, $scope, $q, $translate, $state, $httpBackend, Notification, TrialService, TrialContextService, HuronCustomer, EmailService, FeatureToggleService, TrialPstnService, Orgservice;
   var addContextSpy;
-  beforeEach(module('core.trial'));
-  beforeEach(module('Huron'));
-  beforeEach(module('Sunlight'));
-  beforeEach(module('Core'));
+  beforeEach(angular.mock.module('core.trial'));
+  beforeEach(angular.mock.module('Huron'));
+  beforeEach(angular.mock.module('Sunlight'));
+  beforeEach(angular.mock.module('Core'));
 
   beforeEach(inject(function ($rootScope, $controller, _$q_, _$translate_, _$state_, _$httpBackend_, _Notification_, _TrialService_, _TrialContextService_, _HuronCustomer_, _EmailService_, _FeatureToggleService_, _TrialPstnService_, _Orgservice_) {
     $scope = $rootScope.$new();
@@ -519,7 +519,6 @@ describe('Controller: TrialAddCtrl', function () {
       },
       targetVal: false
     }];
-    var i = 0;
 
     beforeEach(function () {
       orgInput = controller.custInfoFields[0];

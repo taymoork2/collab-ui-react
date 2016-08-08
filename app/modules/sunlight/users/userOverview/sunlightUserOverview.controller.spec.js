@@ -1,7 +1,7 @@
 'use strict';
 
 describe('sunlightUserOverviewCtrl', function () {
-  var controller, $scope, $state, $stateParams, Notification, $translate, formlyValidationMessages, Log;
+  var controller, $scope, $state, $stateParams, Notification, formlyValidationMessages, Log;
   var $q, sunlightConfigService, getUserInfoDeferred, updateUserInfoDeferred;
   var userInfo = getJSONFixture('sunlight/json/sunlightTestUser.json');
   var successResponse = {
@@ -15,16 +15,15 @@ describe('sunlightUserOverviewCtrl', function () {
     'statusText': 'Intenal Server Error'
   };
 
-  beforeEach(module('Sunlight'));
+  beforeEach(angular.mock.module('Sunlight'));
 
-  beforeEach(inject(function ($rootScope, $controller, _$state_, _$q_, _SunlightConfigService_, _Notification_, _$translate_, _formlyValidationMessages_, _Log_) {
+  beforeEach(inject(function ($rootScope, $controller, _$state_, _$q_, _SunlightConfigService_, _Notification_, _formlyValidationMessages_, _Log_) {
     $scope = $rootScope.$new();
     sunlightConfigService = _SunlightConfigService_;
     $q = _$q_;
     Notification = _Notification_;
     $scope.getUserInfoSucceeds = true;
     $state = _$state_;
-    $translate = _$translate_;
     formlyValidationMessages = _formlyValidationMessages_;
     Log = _Log_;
 

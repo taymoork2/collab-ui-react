@@ -12,6 +12,8 @@
 
     vm.model = {};
 
+    vm.uniqueCtrlIdentifer = '';
+
     vm.model.phoneNumberInput = {
       phoneNumber: ''
     };
@@ -30,12 +32,6 @@
       entries: []
     };
     vm.menuKeyEntry = {};
-
-    /* If Phone Menu then key looks like: closedHours-0menu3 
-     * if Route Call it is just closedHours-0 
-     * used in aaValidateSuccess.js */
-
-    vm.uniqueCtrlIdentifer = AACommonService.makeKey($scope.schedule, $scope.menuId ? $scope.keyIndex + $scope.menuId : $scope.index);
 
     vm.populateUiModel = populateUiModel;
     vm.saveUiModel = saveUiModel;
@@ -90,7 +86,7 @@
 
     $scope.$on(
       "$destroy",
-      function (event) {
+      function () {
         AACommonService.setIsValid(vm.uniqueCtrlIdentifer, true);
       }
     );
@@ -115,6 +111,11 @@
           }
 
         }
+        vm.menuEntry.routeToId = $scope.$id;
+
+        // used by aaValidationService to identify this menu
+
+        vm.uniqueCtrlIdentifer = AACommonService.makeKey($scope.schedule, vm.menuEntry.routeToId);
 
       } else {
         vm.menuEntry = AutoAttendantCeMenuModelService.getCeMenu($scope.menuId);
@@ -125,6 +126,13 @@
           var action = AutoAttendantCeMenuModelService.newCeActionEntry(rtExtNum, '');
           vm.menuKeyEntry.addAction(action);
         }
+
+        vm.menuKeyEntry.routeToId = $scope.$id;
+
+        // used by aaValidationService to identify this menu
+
+        vm.uniqueCtrlIdentifer = AACommonService.makeKey($scope.schedule, vm.menuKeyEntry.routeToId);
+
       }
 
       populateUiModel();

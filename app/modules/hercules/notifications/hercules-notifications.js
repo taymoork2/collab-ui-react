@@ -19,12 +19,12 @@
     vm.showNotifications = false;
     vm.typeDisplayName = function (type) {
       switch (type) {
-      case NotificationService.types.ALERT:
-        return 'ALERT';
-      case NotificationService.types.NEW:
-        return 'NEW';
-      default:
-        return 'TO-DO';
+        case NotificationService.types.ALERT:
+          return 'ALERT';
+        case NotificationService.types.NEW:
+          return 'NEW';
+        default:
+          return 'TO-DO';
       }
     };
 
@@ -36,12 +36,6 @@
       return _.some(vm.filteredNotifications(), {
         type: NotificationService.types.ALERT
       }) ? NotificationService.types.ALERT : NotificationService.types.TODO;
-    };
-
-    vm.navigateToDirSyncSetup = function () {
-      $state.go('setupwizardmodal', {
-        currentTab: 'addUsers'
-      });
     };
 
     vm.navigateToUsers = function () {

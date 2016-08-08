@@ -2,9 +2,9 @@
 
 describe('Controller: GroupDetailsController', function () {
 
-  beforeEach(module('wx2AdminWebClientApp'));
+  beforeEach(angular.mock.module('Mediafusion'));
 
-  var $stateParams, controller;
+  var controller;
 
   beforeEach(inject(function ($stateParams, $controller) {
     $stateParams = $stateParams;

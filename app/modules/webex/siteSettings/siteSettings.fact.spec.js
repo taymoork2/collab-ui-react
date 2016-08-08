@@ -1,15 +1,13 @@
 'use strict';
 
 describe('WebExSiteSettingsFact Test', function () {
-  var locale = "es_LA";
-  var locale2 = "es-LA";
   var siteUrl = 'go.webex.com';
   var siteName = "go";
   var WebExXmlApiFact;
 
-  beforeEach(module('WebExApp'));
+  beforeEach(angular.mock.module('WebExApp'));
 
-  beforeEach(module(function ($provide) {
+  beforeEach(angular.mock.module(function ($provide) {
     var $stateParams = {
       'siteUrl': siteUrl
     };

@@ -4,8 +4,8 @@ describe('Controller: LineExportCtrl', function () {
   var controller, $controller, $q, $scope, $timeout, LineListService, Notification;
 
   var linesExport = getJSONFixture('huron/json/lines/numbersCsvExport.json');
-  beforeEach(module('Huron'));
-  beforeEach(module('Sunlight'));
+  beforeEach(angular.mock.module('Huron'));
+  beforeEach(angular.mock.module('Sunlight'));
 
   beforeEach(inject(function (_$q_, $rootScope, _$controller_, _$timeout_, _LineListService_, _Notification_) {
     $q = _$q_;
@@ -52,7 +52,7 @@ describe('Controller: LineExportCtrl', function () {
     it('should notify if promise rejected', function () {
       LineListService.exportCSV.calls.reset();
       LineListService.exportCSV.and.returnValue($q.reject());
-      var promise = controller.exportCSV();
+      controller.exportCSV();
       $scope.$apply();
       expect(Notification.errorResponse).toHaveBeenCalled();
     });

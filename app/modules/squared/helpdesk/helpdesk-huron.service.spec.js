@@ -1,6 +1,6 @@
 'use strict';
 describe('HelpdeskHuronService', function () {
-  beforeEach(module('wx2AdminWebClientApp'));
+  beforeEach(angular.mock.module('Hercules'));
 
   var numbersResult = {
     "numbers": [{
@@ -116,10 +116,6 @@ describe('HelpdeskHuronService', function () {
     HuronConfig = _HuronConfig_;
 
     $httpBackend
-      .when('GET', 'l10n/en_US.json')
-      .respond({});
-
-    $httpBackend
       .when('GET', HuronConfig.getCmiV2Url() + '/customers/' + orgId + '/numbers?number=' + encodeURIComponent('%' + searchString + '%') + '&limit=' + limit)
       .respond(numbersResult);
 
@@ -222,7 +218,6 @@ describe('HelpdeskHuronService', function () {
     expect(HelpdeskHuronService.sanitizeNumberSearchInput('5588')).toBe('5588');
     expect(HelpdeskHuronService.sanitizeNumberSearchInput('+1403555666')).toBe('+1403555666');
     expect(HelpdeskHuronService.sanitizeNumberSearchInput('')).toBe('');
-    httpBackend.flush();
   });
 
   function setOrgOnDevices(orgId, devices) {

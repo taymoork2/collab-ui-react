@@ -10,36 +10,73 @@
           <cs-tab-heading translate="pstnSetup.newNumbersTab"></cs-tab-heading>
             <section>
               <form name="pstnNumbers.form" novalidate class="form">
-                <formly-form model="pstnNumbers.model" fields="pstnNumbers.fields" form="pstnNumbers.form"></formly-form>
+                <formly-form model="pstnNumbers.model" fields="pstnNumbers.pstnFields" form="pstnNumbers.form"></formly-form>
               </form>
             </section>
-            <section ng-if="pstnNumbers.searchResults.length > 0">
+            <section ng-if="pstnNumbers.model.pstn.searchResults.length > 0">
               <div class="provider-flex">
                 <h5 translate="pstnSetup.searchResults"></h5>
-                <button type="button" class="btn btn--people" ng-click="pstnNumbers.addToCart('NUMBER_ORDER')" cs-btn loading="pstnNumbers.addLoading" ng-disabled="pstnNumbers.addDisabled"><span translate="common.add"></span></button>
+                <button type="button" class="btn btn--people" ng-click="pstnNumbers.addToCart('NUMBER_ORDER')" cs-btn loading="pstnNumbers.addLoading" ng-disabled="pstnNumbers.model.pstn.addDisabled"><span translate="common.add"></span></button>
               </div>
               <ul class="large-block-grid-3 medium-block-grid-2 search-results">
-                <li ng-repeat="searchResult in pstnNumbers.searchResults | startFrom: pstnNumbers.paginateOptions.currentPage*pstnNumbers.paginateOptions.pageSize | limitTo: pstnNumbers.paginateOptions.pageSize">
-                  <cs-checkbox ckid="searchResult{{$index}}" ng-model="pstnNumbers.searchResultsModel[$index]" label="{{::pstnNumbers.formatTelephoneNumber(searchResult)}}"></cs-checkbox>
+                <li ng-repeat="searchResult in pstnNumbers.model.pstn.searchResults | startFrom: pstnNumbers.model.pstn.paginateOptions.currentPage*pstnNumbers.model.pstn.paginateOptions.pageSize | limitTo: pstnNumbers.model.pstn.paginateOptions.pageSize">
+                  <cs-checkbox ckid="searchResultPstn{{$index}}" ng-model="pstnNumbers.model.pstn.searchResultsModel[$index]" label="{{::pstnNumbers.formatTelephoneNumber(searchResult)}}"></cs-checkbox>
                 </li>
               </ul>
               <div class="provider-flex">
-                <button type="button" class="btn--circle btn--primary icon icon-chevron-left" ng-click="pstnNumbers.paginateOptions.previousPage()" ng-class="{invisible: pstnNumbers.paginateOptions.currentPage === 0}"><span class="sr-only" translate="common.back"></span></button>
-                <button type="button" class="btn--circle btn--primary icon icon-chevron-right" ng-click="pstnNumbers.paginateOptions.nextPage()" ng-class="{invisible: pstnNumbers.paginateOptions.currentPage >= pstnNumbers.searchResults.length/pstnNumbers.paginateOptions.pageSize - 1}"><span class="sr-only" translate="common.next"></span></button>
+                <button type="button" class="btn--circle btn--primary icon icon-chevron-left" ng-click="pstnNumbers.model.pstn.paginateOptions.previousPage()" ng-class="{invisible: pstnNumbers.model.pstn.paginateOptions.currentPage === 0}"><span class="sr-only" translate="common.back"></span></button>
+                <button type="button" class="btn--circle btn--primary icon icon-chevron-right" ng-click="pstnNumbers.model.pstn.paginateOptions.nextPage()" ng-class="{invisible: pstnNumbers.model.pstn.paginateOptions.currentPage >= pstnNumbers.model.pstn.searchResults.length/pstnNumbers.model.pstn.paginateOptions.pageSize - 1}"><span class="sr-only" translate="common.next"></span></button>
               </div>
             </section>
-            <section class="text-center" ng-if="pstnNumbers.showAdvancedOrder">
+            <section class="text-center" ng-if="pstnNumbers.model.pstn.showAdvancedOrder">
               <section class="pad-top pad-bottom">
                 <span class="h4" translate="pstnSetup.advancedOrder.noResults"></span>
               </section>
               <section class="pad-bottom">
-                <span class="h6" translate="pstnSetup.advancedOrder.detail" translate-values="{areaCode: pstnNumbers.model.areaCode.code}"></span>
+                <span class="h6" translate="pstnSetup.advancedOrder.detail" translate-values="{areaCode: pstnNumbers.model.pstn.areaCode.code}"></span>
               </section>
               <section>
                 <div class="order-inline right-margin">
-                    <input cs-input type="text" class="input-width text-center" id="advanceQuantityInput" ng-model="pstnNumbers.model.quantity" cs-input-label="{{::'pstnSetup.quantity' | translate}}">
+                    <input cs-input type="text" class="input-width text-center" id="advanceQuantityInput" ng-model="pstnNumbers.model.pstn.quantity" cs-input-label="{{::'pstnSetup.quantity' | translate}}">
                 </div>
                 <button type="button" class="btn btn--people btn--large order-inline" ng-click="pstnNumbers.addToCart('BLOCK_ORDER')" translate="pstnSetup.advancedOrder.addNumbers"></button>
+            </section>
+          </section>
+        </cs-tab>
+        <cs-tab ng-if="pstnNumbers.showTollFreeNumbers">
+          <cs-tab-heading translate="pstnSetup.newTollFreeTab"></cs-tab-heading>
+          <section>
+            <form name="pstnNumbers.form" novalidate class="form">
+              <formly-form model="pstnNumbers.model" fields="pstnNumbers.tollFreeFields" form="pstnNumbers.form"></formly-form>
+            </form>
+          </section>
+            <section ng-if="pstnNumbers.model.tollFree.searchResults.length > 0">
+              <div class="provider-flex">
+                <h5 translate="pstnSetup.searchResults"></h5>
+                <button type="button" class="btn btn--people" ng-click="pstnNumbers.addToCart('TOLLFREE_ORDER')" cs-btn loading="pstnNumbers.addLoading" ng-disabled="pstnNumbers.model.tollFree.addDisabled"><span translate="common.add"></span></button>
+              </div>
+              <ul class="large-block-grid-3 medium-block-grid-2 search-results">
+                <li ng-repeat="searchResult in pstnNumbers.model.tollFree.searchResults | startFrom: pstnNumbers.model.tollFree.paginateOptions.currentPage*pstnNumbers.model.tollFree.paginateOptions.pageSize | limitTo: pstnNumbers.model.tollFree.paginateOptions.pageSize">
+                  <cs-checkbox ckid="searchResultTollFree{{$index}}" ng-model="pstnNumbers.model.tollFree.searchResultsModel[$index]" label="{{::pstnNumbers.formatTelephoneNumber(searchResult)}}"></cs-checkbox>
+                </li>
+              </ul>
+              <div class="provider-flex">
+                <button type="button" class="btn--circle btn--primary icon icon-chevron-left" ng-click="pstnNumbers.model.tollFree.paginateOptions.previousPage()" ng-class="{invisible: pstnNumbers.model.tollFree.paginateOptions.currentPage === 0}"><span class="sr-only" translate="common.back"></span></button>
+                <button type="button" class="btn--circle btn--primary icon icon-chevron-right" ng-click="pstnNumbers.model.tollFree.paginateOptions.nextPage()" ng-class="{invisible: pstnNumbers.model.tollFree.paginateOptions.currentPage >= pstnNumbers.model.tollFree.searchResults.length/pstnNumbers.model.tollFree.paginateOptions.pageSize - 1}"><span class="sr-only" translate="common.next"></span></button>
+              </div>
+            </section>
+            <section class="text-center" ng-if="pstnNumbers.model.tollFree.showAdvancedOrder">
+              <section class="pad-top pad-bottom">
+                <span class="h4" translate="pstnSetup.advancedOrder.noResults"></span>
+              </section>
+              <section class="pad-bottom">
+                <span class="h6" translate="pstnSetup.advancedOrder.detail" translate-values="{areaCode: pstnNumbers.model.tollFree.areaCode.code}"></span>
+              </section>
+              <section>
+                <div class="order-inline right-margin">
+                    <input cs-input type="text" class="input-width text-center" id="advanceQuantityInput" ng-model="pstnNumbers.model.tollFree.quantity" cs-input-label="{{::'pstnSetup.quantity' | translate}}">
+                </div>
+                <button type="button" class="btn btn--people btn--large order-inline" ng-click="pstnNumbers.addToCart('TOLLFREE_BLOCK_ORDER')" translate="pstnSetup.advancedOrder.addNumbers"></button>
             </section>
           </section>
         </cs-tab>

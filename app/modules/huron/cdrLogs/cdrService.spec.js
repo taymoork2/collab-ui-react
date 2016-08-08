@@ -1,10 +1,10 @@
 'use strict';
 
 describe('Controller: CdrService', function () {
-  beforeEach(module('uc.cdrlogsupport'));
-  beforeEach(module('Huron'));
+  beforeEach(angular.mock.module('uc.cdrlogsupport'));
+  beforeEach(angular.mock.module('Huron'));
 
-  var $httpBackend, $q, CdrService, Notification, Authinfo;
+  var $httpBackend, CdrService, Notification, Authinfo;
   var proxyResponse = getJSONFixture('huron/json/cdrLogs/proxyResponse.json');
   var proxyUrl = 'https://hades.huron-int.com/api/v1/elasticsearch/logstash*/_search?pretty';
   var name = 'call0CDR0';
@@ -21,20 +21,19 @@ describe('Controller: CdrService', function () {
   var formDate = function (date, time) {
     var returnDate = moment(date);
     if (time.substring(9, 10).toLowerCase() === 'p') {
-      returnDate.hours(parseInt(time.substring(0, 2)) + 12);
+      returnDate.hours(parseInt(time.substring(0, 2), 10) + 12);
     } else {
-      returnDate.hours(parseInt(time.substring(0, 2)));
+      returnDate.hours(parseInt(time.substring(0, 2), 10));
     }
-    returnDate.minutes(parseInt(time.substring(3, 5)));
-    returnDate.seconds(parseInt(time.substring(6, 8)));
+    returnDate.minutes(parseInt(time.substring(3, 5), 10));
+    returnDate.seconds(parseInt(time.substring(6, 8), 10));
     return returnDate.utc().format();
   };
 
   describe("browsers: chrome, firefox, and misc - ", function () {
-    beforeEach(inject(function (_$httpBackend_, _$q_, _CdrService_, _Notification_, _Authinfo_, $window) {
+    beforeEach(inject(function (_$httpBackend_, _CdrService_, _Notification_, _Authinfo_, $window) {
       CdrService = _CdrService_;
       Notification = _Notification_;
-      $q = _$q_;
       $httpBackend = _$httpBackend_;
       Authinfo = _Authinfo_;
       $window.URL.createObjectURL = jasmine.createSpy('createObjectURL').and.callFake(function () {

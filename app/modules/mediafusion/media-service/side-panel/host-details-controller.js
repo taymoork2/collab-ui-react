@@ -16,7 +16,7 @@
         vm.selectPlaceholder = 'Select One';
         vm.organization = '';
 
-        MediaClusterService.getOrganization(function (data, status) {
+        MediaClusterService.getOrganization(function (data) {
           if (data.success) {
             vm.organization = data;
           }
@@ -49,10 +49,10 @@
 
         vm.changeRole = function ($selectedRole, $clusterId) {
           MediaClusterService.changeRole($selectedRole, $clusterId)
-            .success(function (data) {
+            .success(function () {
               Notification.success('mediaFusion.roleAssignmentSuccess');
             })
-            .error(function (data, status) {
+            .error(function (data) {
               Notification.error('mediaFusion.roleAssignmentFailure', {
                 failureMessage: data.message
               });

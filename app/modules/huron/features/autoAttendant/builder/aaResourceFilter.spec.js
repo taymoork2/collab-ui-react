@@ -10,8 +10,6 @@ describe('Filter: aaResourceFilter', function () {
   var ceInfos = [];
 
   var AutoAttendantCeInfoModelService;
-  var successSpy;
-  var failureSpy;
 
   function ce2CeInfo(rawCeInfo) {
     var _ceInfo = AutoAttendantCeInfoModelService.newCeInfo();
@@ -39,9 +37,9 @@ describe('Filter: aaResourceFilter', function () {
     }
   }
 
-  beforeEach(module('uc.autoattendant'));
-  beforeEach(module('Huron'));
-  beforeEach(module('Sunlight'));
+  beforeEach(angular.mock.module('uc.autoattendant'));
+  beforeEach(angular.mock.module('Huron'));
+  beforeEach(angular.mock.module('Sunlight'));
 
   beforeEach(inject(function (preferredAAResourceFilter, moreAAResourcesFilter, allAAResourcesFilter, _AutoAttendantCeInfoModelService_) {
     filterPreferred = preferredAAResourceFilter;

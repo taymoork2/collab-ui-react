@@ -197,7 +197,7 @@
 
       <div class="form-group" ng-show="deviceOverview.currentDevice.software">
         <label class="col-sm-4 control-label" translate="deviceOverviewPage.software"></label>
-        <div class="col-sm-3" ng-show="deviceOverview.canChangeUpgradeChannel">
+        <div class="col-sm-4" ng-if="deviceOverview.canChangeUpgradeChannel">
           <cs-select
             ng-model="deviceOverview.selectedUpgradeChannel"
             options="deviceOverview.upgradeChannelOptions"
@@ -208,10 +208,13 @@
           >
           </cs-select>
         </div>
-        <div class="col-sm-4" ng-show="deviceOverview.updatingUpgradeChannel">
+        <div class="col-sm-4" ng-if="deviceOverview.updatingUpgradeChannel">
           <div cs-loader class="loader-example--small"></div>
         </div>
-        <div class="col-sm-8">
+        <div class="col-sm-8" ng-if="deviceOverview.shouldShowUpgradeChannel">
+          <p class="form-control-static">{{deviceOverview.selectedUpgradeChannel.label}}</p>
+        </div>
+        <div class="col-sm-8" ng-class="deviceOverview.canChangeUpgradeChannel ? 'col-sm-offset-4' : ''">
           <p class="form-control-static">{{deviceOverview.currentDevice.software}}</p>
         </div>
       </div>

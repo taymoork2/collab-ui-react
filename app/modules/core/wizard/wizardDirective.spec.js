@@ -1,14 +1,14 @@
 'use strict';
 
 describe('Controller: WizardCtrl', function () {
-  var controller, $scope, $state, $q, $translate, Authinfo, SessionStorage, $stateParams, tabs, Userservice,
+  var controller, $scope, $state, $q, $translate, tabs, Userservice,
     FeatureToggleService, ServiceSetup, rootScope;
 
   var getUserMe, getMyFeatureToggles;
 
-  beforeEach(module('Huron'));
-  beforeEach(module('Sunlight'));
-  beforeEach(module('Core'));
+  beforeEach(angular.mock.module('Huron'));
+  beforeEach(angular.mock.module('Sunlight'));
+  beforeEach(angular.mock.module('Core'));
 
   tabs = [{
     name: 'planReview',
@@ -91,16 +91,14 @@ describe('Controller: WizardCtrl', function () {
     }]
   }];
 
-  beforeEach(inject(function ($rootScope, $controller, _$state_, _$q_, _$translate_, _Authinfo_, _SessionStorage_,
+  beforeEach(inject(function ($rootScope, $controller, _$state_, _$q_, _$translate_,
     $stateParams, _Userservice_, _FeatureToggleService_, _ServiceSetup_) {
     rootScope = $rootScope;
     $scope = rootScope.$new();
-    Authinfo = _Authinfo_;
     $scope.tabs = tabs;
     $state = _$state_;
     $q = _$q_;
     $translate = _$translate_;
-    SessionStorage = _SessionStorage_;
     Userservice = _Userservice_;
     ServiceSetup = _ServiceSetup_;
     FeatureToggleService = _FeatureToggleService_;

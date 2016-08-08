@@ -1,5 +1,12 @@
 'use strict';
 
+var Promise = require('promise');
+beforeEach(angular.mock.module('oc.lazyLoad', function ($provide) {
+  var ocLazyLoadMock = jasmine.createSpyObj('$ocLazyLoad', ['load', 'inject', 'getModules', 'toggleWatch']);
+  ocLazyLoadMock.inject.and.returnValue(Promise.resolve());
+  $provide.value('$ocLazyLoad', ocLazyLoadMock);
+}));
+
 beforeEach(function () {
   /**
    * Initialize each argument as a module
@@ -7,14 +14,14 @@ beforeEach(function () {
   this.initModules = function () {
     var initModules = _.toArray(arguments);
     _.forEach(initModules, function (initModule) {
-      module(initModule);
+      angular.mock.module(initModule);
     });
   };
 
   this.injectProviders = function () {
     var providers = _.toArray(arguments);
     _.forEach(providers, function (provider) {
-      module([provider, function providerCallback(_provider) {
+      angular.mock.module([provider, function providerCallback(_provider) {
         this[provider] = _provider;
       }.bind(this)]);
     }, this);

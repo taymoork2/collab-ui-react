@@ -4,7 +4,7 @@
     var $rootScope, $httpBackend, TrackingId;
     var STATE_CHANGE_SUCCESS = '$stateChangeSuccess';
 
-    beforeEach(module('wx2AdminWebClientApp'));
+    beforeEach(angular.mock.module('wx2AdminWebClientApp'));
 
     beforeEach(inject(function (_$rootScope_, _$httpBackend_, _TrackingId_) {
       $rootScope = _$rootScope_;

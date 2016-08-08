@@ -1,6 +1,6 @@
-*.patch
 *.gz
 *.iml
+*.patch
 *.pyc
 *.rdb
 *.sublime*
@@ -8,41 +8,45 @@
 *.swo
 *.ts.spec.js
 *.spec.ts.js
+stats.json
 
+.cache
+.bower-cache
+.bower-registry
 .DS_Store
+.e2e-fail-retry
 .idea
+.last-refreshed
+.manifest-checksums
+.oauth_token_metadata
+.project
 .sauce
 .sonar
 .tmp
-.bower-cache
-.bower-registry
-.e2e-fail-retry
-.oauth_token_metadata
 .vscode
-.project
 
 build
 coverage
 dist
-screenshots
 plato
+screenshots
 typings
 /ts/*manifest.txt
-.cache
+flist-split.*.karma.shim.js
+karma.conf.local.js
+karma.shim.local.js
 
 bower_components
+build-deps.tar
 node_modules
 npm-debug.log
 npm-shrinkwrap.json
-build-deps.tar
 
-test/ts/
 test/e2e-protractor/reports
+test/ts/
 test/karma-unit-*
 test/karma-watch.js
 test/unit-test-results.html
 test/unit-test-results.xml
-.manifest-checksums
-.last-refreshed
 
 ?

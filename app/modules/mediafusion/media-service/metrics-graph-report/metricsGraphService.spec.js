@@ -2,17 +2,17 @@
 
 describe('Service: Metrics Graph Service', function () {
   var MetricsGraphService;
-  var callVolumeChart, availabilityChart;
+  // var callVolumeChart, availabilityChart;
   var validateService = {
     validate: function () {}
   };
 
-  var callVolumeData = getJSONFixture('mediafusion/json/metrics-graph-report/callVolumeGraphData.json');
-  var callVolumeData = angular.copy(callVolumeData.graphData);
-  var clusteravailabilityData = getJSONFixture('mediafusion/json/metrics-graph-report/clusterAvailabilityGraphData.json');
-  var clusteravailabilityData = angular.copy(clusteravailabilityData.data);
+  // var callVolumeData = getJSONFixture('mediafusion/json/metrics-graph-report/callVolumeGraphData.json');
+  // var callVolumeData = angular.copy(callVolumeData.graphData);
+  // var clusteravailabilityData = getJSONFixture('mediafusion/json/metrics-graph-report/clusterAvailabilityGraphData.json');
+  // var clusteravailabilityData = angular.copy(clusteravailabilityData.data);
 
-  beforeEach(module('Mediafusion'));
+  beforeEach(angular.mock.module('Mediafusion'));
 
   beforeEach(inject(function (_MetricsGraphService_) {
     MetricsGraphService = _MetricsGraphService_;

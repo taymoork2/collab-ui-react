@@ -2,7 +2,7 @@
 
 describe('Config', function () {
 
-  beforeEach(module('Core'));
+  beforeEach(angular.mock.module('Core'));
 
   var Config, $location, tabConfig, Storage;
   beforeEach(inject(function (_$location_, _Config_, _tabConfig_, _Storage_) {
@@ -21,9 +21,6 @@ describe('Config', function () {
   var cfeHost = 'cfe-admin.ciscospark.com';
   var intHost = 'int-admin.ciscospark.com';
   var prodHost = 'admin.ciscospark.com';
-
-  var orgId = 'abc123efg456';
-  var siteURL = 'webex.com';
 
   it('partner_sales_admin should have correct roleStates', function () {
     expect(Config.roleStates.PARTNER_SALES_ADMIN).toContain('partneroverview');

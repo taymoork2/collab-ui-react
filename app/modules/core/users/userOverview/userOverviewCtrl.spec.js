@@ -1,15 +1,15 @@
 'use strict';
 
 describe('Controller: UserOverviewCtrl', function () {
-  var controller, $scope, $httpBackend, $q, $rootScope, Config, Authinfo, Utils, Userservice, FeatureToggleService, Notification;
+  var controller, $scope, $httpBackend, $rootScope, Config, Authinfo, Userservice, FeatureToggleService, Notification;
 
-  var $stateParams, currentUser, updatedUser, getUserMe, getUserFeatures, UrlConfig;
+  var $stateParams, currentUser, updatedUser, getUserFeatures, UrlConfig;
   var userEmail, userName, uuid, userStatus, dirsyncEnabled, entitlements, invitations;
-  beforeEach(module('Core'));
-  beforeEach(module('Huron'));
-  beforeEach(module('Sunlight'));
+  beforeEach(angular.mock.module('Core'));
+  beforeEach(angular.mock.module('Huron'));
+  beforeEach(angular.mock.module('Sunlight'));
 
-  beforeEach(inject(function ($controller, _$httpBackend_, $q, _$rootScope_, _Config_, _Authinfo_, _Utils_, _Userservice_, _FeatureToggleService_, _UrlConfig_, _Notification_) {
+  beforeEach(inject(function ($controller, _$httpBackend_, $q, _$rootScope_, _Config_, _Authinfo_, _Userservice_, _FeatureToggleService_, _UrlConfig_, _Notification_) {
     $scope = _$rootScope_.$new();
     $httpBackend = _$httpBackend_;
     $q = $q;
@@ -17,7 +17,6 @@ describe('Controller: UserOverviewCtrl', function () {
     Config = _Config_;
     Authinfo = _Authinfo_;
     UrlConfig = _UrlConfig_;
-    Utils = _Utils_;
     Userservice = _Userservice_;
     FeatureToggleService = _FeatureToggleService_;
     Notification = _Notification_;
@@ -25,7 +24,6 @@ describe('Controller: UserOverviewCtrl', function () {
     var deferred = $q.defer();
     deferred.resolve('true');
     currentUser = angular.copy(getJSONFixture('core/json/currentUser.json'));
-    getUserMe = getJSONFixture('core/json/users/me.json');
     invitations = getJSONFixture('core/json/users/invitations.json');
     updatedUser = angular.copy(currentUser);
     getUserFeatures = getJSONFixture('core/json/users/me/featureToggles.json');
@@ -219,4 +217,5 @@ describe('Controller: UserOverviewCtrl', function () {
       expect(controller.isCSB).toBe(false);
     });
   });
+
 });

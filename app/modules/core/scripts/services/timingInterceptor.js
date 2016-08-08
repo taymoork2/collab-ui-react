@@ -3,9 +3,13 @@
 
   var THRESHOLD = 15 * 1000;
 
-  angular
-    .module('Core')
-    .factory('TimingInterceptor', TimingInterceptor);
+  module.exports = angular
+    .module('core.timinginterceptor', [
+      require('modules/core/config/config'),
+      require('modules/core/scripts/services/authinfo'),
+    ])
+    .factory('TimingInterceptor', TimingInterceptor)
+    .name;
 
   /* @ngInject */
   function TimingInterceptor($q, $log, $injector, Config) {

@@ -1,10 +1,10 @@
 /**
- * 
+ *
  */
 'use strict';
 
 describe('WebExUtilsFact: isCIEnabledSite() test', function () {
-  beforeEach(module('WebExApp'));
+  beforeEach(angular.mock.module('WebExApp'));
 
   var WebExUtilsFact;
   var Authinfo;
@@ -130,7 +130,7 @@ describe('WebExUtilsFact: isCIEnabledSite() test', function () {
 }); // describe()
 
 describe('WebExUtilsFact: utf8ToUtf16le() test', function () {
-  beforeEach(module('WebExApp'));
+  beforeEach(angular.mock.module('WebExApp'));
 
   var WebExUtilsFact;
 
@@ -156,7 +156,7 @@ describe('WebExUtilsFact: utf8ToUtf16le() test', function () {
 }); // describe()
 
 describe('WebExUtilsFact: getSiteName() test', function () {
-  beforeEach(module('WebExApp'));
+  beforeEach(angular.mock.module('WebExApp'));
 
   var WebExUtilsFact;
   var siteName;
@@ -210,7 +210,7 @@ describe('WebExUtilsFact', function () {
   var $q;
   var $rootScope;
 
-  var WebExXmlApiFact;
+  // var WebExXmlApiFact;
   var WebExUtilsFact;
   var Orgservice;
 
@@ -319,14 +319,13 @@ describe('WebExUtilsFact', function () {
     "usage": 0
   }];
 
-  beforeEach(module('Core'));
-  beforeEach(module('WebExApp'));
+  beforeEach(angular.mock.module('Core'));
+  beforeEach(angular.mock.module('WebExApp'));
 
-  beforeEach(inject(function (_$q_, _$rootScope_, _WebExXmlApiFact_, _WebExUtilsFact_, _Orgservice_) {
+  beforeEach(inject(function (_$q_, _$rootScope_, _WebExUtilsFact_, _Orgservice_) {
     $q = _$q_;
     $rootScope = _$rootScope_;
 
-    WebExXmlApiFact = _WebExXmlApiFact_;
     WebExUtilsFact = _WebExUtilsFact_;
     Orgservice = _Orgservice_;
 
@@ -338,14 +337,14 @@ describe('WebExUtilsFact', function () {
     $rootScope.lastSite = siteName + '.webex.com';
     spyOn($, "ajax");
 
-    var promise = WebExUtilsFact.logoutSite();
+    WebExUtilsFact.logoutSite();
     expect($.ajax.calls.mostRecent().args[0]["url"]).toEqual(url);
   });
 
   it('can log out from a site', function (done) {
     $rootScope.nginxHost = hostName;
     $rootScope.lastSite = siteName + '.webex.com';
-    spyOn($, "ajax").and.callFake(function (e) {
+    spyOn($, "ajax").and.callFake(function () {
       var result = $q.defer();
       result.resolve();
       return result;
@@ -373,7 +372,7 @@ describe('WebExUtilsFact', function () {
   it('does not block on error response', function (done) {
     $rootScope.nginxHost = hostName;
     $rootScope.lastSite = siteName + '.webex.com';
-    spyOn($, "ajax").and.callFake(function (e) {
+    spyOn($, "ajax").and.callFake(function () {
       var result = $q.defer();
       result.reject();
       return result;

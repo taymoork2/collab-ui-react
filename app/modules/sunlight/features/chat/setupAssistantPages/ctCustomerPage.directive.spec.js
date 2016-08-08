@@ -4,11 +4,10 @@ describe('Customer Screen Directive', function () {
   var $compile, $scope;
   var view;
 
-  beforeEach(module('Sunlight'));
+  beforeEach(angular.mock.module('Sunlight'));
   beforeEach(inject(dependencies));
   beforeEach(injectScope);
 
-  var selected = {};
   var fields = {
     "field1": {
       attributes: [{

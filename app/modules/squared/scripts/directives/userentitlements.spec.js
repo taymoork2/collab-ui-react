@@ -2,11 +2,11 @@
   'use strict';
 
   describe('Controller: UserEntitlementsCtrl', function () {
-    var controller, $controller, $rootScope, $scope, Userservice, Authinfo, currentUser, services;
+    var $controller, $rootScope, $scope, Userservice, Authinfo, currentUser, services;
 
-    beforeEach(module('Squared'));
-    beforeEach(module('Huron'));
-    beforeEach(module('Sunlight'));
+    beforeEach(angular.mock.module('Squared'));
+    beforeEach(angular.mock.module('Huron'));
+    beforeEach(angular.mock.module('Sunlight'));
 
     beforeEach(inject(function (_$rootScope_, _$controller_, _Userservice_, _Authinfo_) {
       $rootScope = _$rootScope_;
@@ -25,7 +25,7 @@
       spyOn(Authinfo, 'getServices').and.returnValue(services);
       spyOn(Userservice, 'updateUsers');
 
-      controller = $controller('UserEntitlementsCtrl', {
+      $controller('UserEntitlementsCtrl', {
         $scope: $scope
       });
       $scope.$apply();

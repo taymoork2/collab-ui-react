@@ -235,7 +235,7 @@
           return !hasUserServices();
         },
 
-        'model.licenseCount': function ($viewValue, $modelValue) {
+        'model.licenseCount': function ($viewValue) {
           if (hasUserServices()) {
             return ($viewValue === 0) ? vm.preset.licenseCount : $viewValue;
           } else {
@@ -295,7 +295,7 @@
         id: 'trialRoomSystem'
       },
       watcher: {
-        listener: function (field, newValue, oldValue, scope, stopWatching) {
+        listener: function (field, newValue, oldValue) {
           if (newValue !== oldValue) {
             field.model.details.quantity = newValue ? 5 : 0;
           }
@@ -394,7 +394,7 @@
           vm.callTrial.enabled = vm.hasCallEntitlement && vm.preset.call;
           vm.messageTrial.enabled = vm.preset.message;
           vm.pstnTrial.enabled = vm.hasCallEntitlement;
-          vm.showContextServiceTrial = results.ftContextServ;
+          vm.showContextServiceTrial = true;
           vm.contextTrial.enabled = results.tcHasService;
           vm.preset.context = results.tcHasService;
           vm.showCare = results.ftCareTrials;
@@ -444,10 +444,10 @@
     // This requires changing the label it contains as well
     function updateTrialService(templateOptionsId) {
       switch (templateOptionsId) {
-      case _messageTemplateOptionId:
-        vm.messageFields[0].model.type = Config.offerTypes.message;
-        vm.messageFields[0].templateOptions.label = $translate.instant('trials.message');
-        break;
+        case _messageTemplateOptionId:
+          vm.messageFields[0].model.type = Config.offerTypes.message;
+          vm.messageFields[0].templateOptions.label = $translate.instant('trials.message');
+          break;
       }
     }
 
@@ -477,8 +477,8 @@
     function addRemoveStates() {
       _.forEach(vm.trialStates, function (state) {
         if (!state.enabled || _.every(state.trials, {
-            enabled: false
-          })) {
+          enabled: false
+        })) {
           removeNavState(state.name);
         } else {
           addNavState(state.name);
@@ -588,7 +588,7 @@
               });
           }
         })
-        .then(function (response) {
+        .then(function () {
           if (vm.preset.context !== vm.contextTrial.enabled) {
             if (vm.contextTrial.enabled) {
               return TrialContextService.addService(custId).catch(function (response) {

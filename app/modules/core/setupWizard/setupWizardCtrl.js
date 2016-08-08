@@ -4,7 +4,7 @@
   angular.module('Core')
     .controller('SetupWizardCtrl', SetupWizardCtrl);
 
-  function SetupWizardCtrl($scope, Authinfo, FeatureToggleService, $stateParams) {
+  function SetupWizardCtrl($scope, $stateParams, Authinfo, Config, FeatureToggleService, Orgservice, Utils) {
 
     $scope.tabs = [];
     var tabs = [{
@@ -154,6 +154,27 @@
           name: 'addUsers'
         });
       }
+
+      FeatureToggleService.atlasDarlingGetStatus().then(function (toggle) {
+        if (toggle) {
+          Orgservice.getAdminOrgUsage()
+            .then(function (subscriptions) {
+              var licenseTypes = Utils.getDeepKeyValues(subscriptions, 'licenseType');
+              if (_.without(licenseTypes, Config.licenseTypes.SHARED_DEVICES).length === 0) {
+                $scope.tabs = _.reject($scope.tabs, function (tab) {
+                  return tab.name === 'messagingSetup' || tab.name === 'addUsers';
+                });
+                $scope.tabs = _.each($scope.tabs, function (tab) {
+                  if (tab.name === 'enterpriseSettings') {
+                    tab.steps = _.reject(tab.steps, function (step) {
+                      return step.name === 'init' || step.name === 'exportMetadata' || step.name === 'importIdp' || step.name === 'testSSO';
+                    });
+                  }
+                });
+              }
+            });
+        }
+      });
 
       // if we have any step thats is empty, we remove the tab
       _.forEach($scope.tabs, function (tab, index) {

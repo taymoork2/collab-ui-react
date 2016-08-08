@@ -4,10 +4,6 @@
   /* @ngInject */
   function DummyMetricsReportService(chartColors) {
     var timeFormat = "YYYY-MM-DDTHH:mm:ss";
-    var dayFormat = "MMM DD";
-    var monthFormat = "MMMM";
-    var dummyPopulation = null;
-    var customers = null;
     return {
       dummyCallVolumeData: dummyCallVolumeData,
       dummyAvailabilityData: dummyAvailabilityData,
@@ -83,7 +79,6 @@
 
     function dummyCallVolumeData(filter) {
       var dummyGraphVal = [];
-      var abs = 0;
       if (filter.value === 0) {
         for (var i = 288; i >= 1; i--) {
           dummyGraphVal.push({
@@ -96,7 +91,7 @@
           });
         }
       } else if (filter.value === 1) {
-        for (var i = 168; i >= 1; i--) {
+        for (i = 168; i >= 1; i--) {
           dummyGraphVal.push({
             timestamp: moment().subtract(i, 'hours').format(timeFormat),
             call_reject: Math.floor((Math.random() * 1) + 1),
@@ -107,7 +102,7 @@
           });
         }
       } else if (filter.value === 2) {
-        for (var i = 180; i >= 0; i--) {
+        for (i = 180; i >= 0; i--) {
           dummyGraphVal.push({
             timestamp: moment().subtract(i * 3, 'hours').format(timeFormat),
             call_reject: Math.floor((Math.random() * 1) + 1),
@@ -118,7 +113,7 @@
           });
         }
       } else {
-        for (var i = 270; i >= 0; i--) {
+        for (i = 270; i >= 0; i--) {
           dummyGraphVal.push({
             timestamp: moment().subtract(i * 8, 'hours').format(timeFormat),
             call_reject: Math.floor((Math.random() * 1) + 1),
@@ -134,7 +129,6 @@
 
     function dummyUtilizationData(filter) {
       var dummyGraphVal = [];
-      var abs = 0;
       if (filter.value === 0) {
         for (var i = 288; i >= 1; i--) {
           dummyGraphVal.push({
@@ -147,7 +141,7 @@
           });
         }
       } else if (filter.value === 1) {
-        for (var i = 168; i >= 1; i--) {
+        for (i = 168; i >= 1; i--) {
           dummyGraphVal.push({
             timestamp: moment().subtract(i, 'hours').format(timeFormat),
             average_cpu: Math.floor((Math.random() * 1) + 1),
@@ -158,7 +152,7 @@
           });
         }
       } else if (filter.value === 2) {
-        for (var i = 180; i >= 0; i--) {
+        for (i = 180; i >= 0; i--) {
           dummyGraphVal.push({
             timestamp: moment().subtract(i * 3, 'hours').format(timeFormat),
             average_cpu: Math.floor((Math.random() * 1) + 1),
@@ -169,7 +163,7 @@
           });
         }
       } else {
-        for (var i = 270; i >= 0; i--) {
+        for (i = 270; i >= 0; i--) {
           dummyGraphVal.push({
             timestamp: moment().subtract(i * 8, 'hours').format(timeFormat),
             average_cpu: Math.floor((Math.random() * 1) + 1),

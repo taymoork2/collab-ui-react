@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Service: Metrics Reports Service', function () {
-  var $httpBackend, MetricsReportService, Config, Notification;
+  var $httpBackend, MetricsReportService, Notification;
   var callVolumeUrl, UtilizationUrl, clusterAvailabilityUrl, totalCallsCard, availabilityCard, utilizationCard;
 
   var callVolumeData = getJSONFixture('mediafusion/json/metrics-graph-report/callVolumeData.json');
@@ -23,11 +23,8 @@ describe('Service: Metrics Reports Service', function () {
   var utilizationCardData = getJSONFixture('mediafusion/json/metrics-graph-report/utilizationCardData.json');
   var utilizationcarddata = utilizationCardData.utilization;
 
-  beforeEach(module('Mediafusion'));
+  beforeEach(angular.mock.module('Mediafusion'));
 
-  var cacheValue = (parseInt(moment.utc().format('H')) >= 8);
-  var dayFormat = "MMM DD";
-  var timezone = "Etc/GMT";
   var timeFilter = {
     value: 0
   };
@@ -39,14 +36,13 @@ describe('Service: Metrics Reports Service', function () {
     message: 'error'
   };
 
-  beforeEach(module(function ($provide) {
+  beforeEach(angular.mock.module(function ($provide) {
     $provide.value("Authinfo", Authinfo);
   }));
 
-  beforeEach(inject(function (_$httpBackend_, _MetricsReportService_, _Config_, _Notification_, UrlConfig) {
+  beforeEach(inject(function (_$httpBackend_, _MetricsReportService_, _Notification_, UrlConfig) {
     $httpBackend = _$httpBackend_;
     MetricsReportService = _MetricsReportService_;
-    Config = _Config_;
     Notification = _Notification_;
 
     spyOn(Notification, 'notify');

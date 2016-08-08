@@ -1,19 +1,18 @@
 'use strict';
 
 describe('Controller: PartnerHomeCtrl', function () {
-  var $scope, $q, controller, PartnerService;
+  var $scope, $q, PartnerService;
 
-  var adminJSONFixture = getJSONFixture('core/json/organizations/adminServices.json');
   var trialsListFixture = getJSONFixture('core/json/partner/trialsResponse.json');
 
-  beforeEach(module('Core'));
-  beforeEach(module('Huron'));
+  beforeEach(angular.mock.module('Core'));
+  beforeEach(angular.mock.module('Huron'));
 
   var authInfo = {
     isCustomerPartner: true
   };
 
-  beforeEach(module(function ($provide) {
+  beforeEach(angular.mock.module(function ($provide) {
     $provide.value("Authinfo", authInfo);
   }));
 
@@ -29,7 +28,7 @@ describe('Controller: PartnerHomeCtrl', function () {
 
     spyOn(PartnerService, 'getTrialList').and.returnValue($q.when(trialsListFixture));
 
-    controller = $controller('PartnerHomeCtrl', {
+    $controller('PartnerHomeCtrl', {
       $scope: $scope
     });
 

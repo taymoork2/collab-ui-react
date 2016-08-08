@@ -7,9 +7,9 @@ var utils = require('./test.utils.js');
 var request = require('request');
 
 exports.deleteUser = function (email, token) {
-  return new Promise(function (resolve, reject) {
-      resolve(token || utils.getToken());
-    })
+  return new Promise(function (resolve) {
+    resolve(token || utils.getToken());
+  })
     .then(function (token) {
       var options = {
         method: 'delete',
@@ -20,9 +20,16 @@ exports.deleteUser = function (email, token) {
         },
       };
 
-      return utils.sendRequest(options).then(function () {
-        return 200;
-      });
+      return utils.sendRequest(options)
+        .then(function () {
+          return 200;
+        })
+        .catch(function (response) {
+          // Ignore 404 errors, otherwise reject with error
+          if (_.get(response, 'statusCode') !== 404) {
+            return Promise.reject(response);
+          }
+        });
     });
 };
 
@@ -68,7 +75,7 @@ exports.deleteAutoAttendant = function (aaUrl, token) {
     }
   };
 
-  return utils.sendRequest(options).then(function (result) {
+  return utils.sendRequest(options).then(function () {
     return 200;
   });
 };
@@ -99,7 +106,7 @@ exports.deleteNumberAssignments = function (aaUrl, token) {
     }
   };
 
-  return utils.sendRequest(options).then(function (result) {
+  return utils.sendRequest(options).then(function () {
     return 200;
   });
 };
@@ -193,7 +200,7 @@ exports.deleteSchedules = function (scheduleUrl, token) {
       'Authorization': 'Bearer ' + token
     }
   };
-  return utils.sendRequest(options).then(function (results) {
+  return utils.sendRequest(options).then(function () {
     return 200;
   });
 };

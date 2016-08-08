@@ -15,9 +15,9 @@ describe('Controller: OrganizationFeaturesCtrl', function () {
     id: 1,
   };
 
-  beforeEach(module('Core'));
-  beforeEach(module('Huron'));
-  beforeEach(module('Sunlight'));
+  beforeEach(angular.mock.module('Core'));
+  beforeEach(angular.mock.module('Huron'));
+  beforeEach(angular.mock.module('Sunlight'));
 
   beforeEach(inject(function (_$stateParams_, $rootScope, _FeatureToggleService_, _Notification_, _$q_, $controller) {
     $scope = $rootScope.$new();

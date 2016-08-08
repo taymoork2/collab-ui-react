@@ -1,13 +1,15 @@
 'use strict';
 
 describe('Service: MediaClusterService', function () {
-  beforeEach(module('wx2AdminWebClientApp'));
+  beforeEach(angular.mock.module('Squared'));
+  beforeEach(angular.mock.module('Mediafusion'));
 
   var $httpBackend, $location, Service, converter, authinfo;
+  var $rootScope;
   var rootPath = 'https://hercules-integration.wbx2.com/v1/organizations/orgId';
 
   beforeEach(function () {
-    module(function ($provide) {
+    angular.mock.module(function ($provide) {
       converter = {
         convertClusters: sinon.stub()
       };
@@ -21,9 +23,7 @@ describe('Service: MediaClusterService', function () {
 
     Service = _MediaClusterService_;
     $httpBackend = $injector.get('$httpBackend');
-    $httpBackend
-      .when('GET', 'l10n/en_US.json')
-      .respond({});
+    $rootScope = $injector.get('$rootScope');
     $location = _$location_;
   }));
 
@@ -55,7 +55,7 @@ describe('Service: MediaClusterService', function () {
 
     var callback = sinon.stub();
     Service.fetch().then(callback);
-    $httpBackend.flush();
+    $rootScope.$apply();
 
     expect(callback.callCount).toBe(1);
     expect(callback.args[0][0]).toBe('foo');
@@ -69,7 +69,7 @@ describe('Service: MediaClusterService', function () {
 
     var callback = sinon.stub();
     Service.fetch().then(callback);
-    $httpBackend.flush();
+    $rootScope.$apply();
 
     expect(callback.callCount).toBe(1);
     expect(callback.args[0][0].length).toBe(0);

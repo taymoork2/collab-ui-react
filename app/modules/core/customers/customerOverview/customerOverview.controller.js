@@ -6,7 +6,7 @@
     .controller('CustomerOverviewCtrl', CustomerOverviewCtrl);
 
   /* @ngInject */
-  function CustomerOverviewCtrl($q, $state, $stateParams, $translate, $window, $modal, AccountOrgService, Authinfo, BrandService, Config, FeatureToggleService, identityCustomer, Log, Notification, Orgservice, PartnerService, TrialService, Userservice) {
+  function CustomerOverviewCtrl($q, $state, $stateParams, $translate, $window, $modal, AccountOrgService, Authinfo, BrandService, Config, FeatureToggleService, identityCustomer, Log, newCustomerViewToggle, Notification, Orgservice, PartnerService, TrialService, Userservice) {
     var vm = this;
 
     vm.currentCustomer = $stateParams.currentCustomer;
@@ -37,11 +37,16 @@
     vm.partnerOrgName = Authinfo.getOrgName();
     vm.isPartnerAdmin = Authinfo.isPartnerAdmin();
 
+    vm.freeOrPaidServices = null;
+    vm.meetingServices = null;
+
+    vm.newCustomerViewToggle = newCustomerViewToggle;
+
     FeatureToggleService.atlasCareTrialsGetStatus()
       .then(function (result) {
         if (_.find(vm.currentCustomer.offers, {
-            id: Config.offerTypes.roomSystems
-          })) {
+          id: Config.offerTypes.roomSystems
+        })) {
           vm.showRoomSystems = true;
         }
         setOffers(result);
@@ -50,6 +55,11 @@
     function setOffers(isCareEnabled) {
       var licAndOffers = PartnerService.parseLicensesAndOffers(vm.currentCustomer, isCareEnabled);
       vm.offer = vm.currentCustomer.offer = _.get(licAndOffers, 'offer');
+      if (vm.newCustomerViewToggle) {
+        var nonTrialServices = PartnerService.getFreeOrActiveServices(vm.currentCustomer, isCareEnabled);
+        vm.freeOrPaidServices = nonTrialServices.freeOrPaidServices;
+        vm.meetingServices = nonTrialServices.meetingServices;
+      }
     }
 
     init();
@@ -69,10 +79,10 @@
       initCustomer();
       getLogoSettings();
       getIsTestOrg();
-      isSetupDone().
-      then(function (results) {
-        vm.isOrgSetup = results;
-      });
+      isSetupDone()
+        .then(function (results) {
+          vm.isOrgSetup = results;
+        });
     }
 
     function resetForm() {
@@ -181,9 +191,9 @@
     function openEditTrialModal() {
       TrialService.getTrial(vm.currentCustomer.trialId).then(function (response) {
         $state.go('trialEdit.info', {
-            currentTrial: vm.currentCustomer,
-            details: response
-          })
+          currentTrial: vm.currentCustomer,
+          details: response
+        })
           .then(function () {
             $state.modal.result.then(function () {
               $state.go('partnercustomers.list', {}, {

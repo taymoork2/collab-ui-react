@@ -44,7 +44,7 @@
 
     HelpdeskService.getOrg(vm.orgId).then(initOrgView, XhrNotificationService.notify);
 
-    FeatureToggleService.supports(FeatureToggleService.features.helpdeskExt).then(function (result) {
+    FeatureToggleService.supports(FeatureToggleService.features.atlasHelpDeskExt).then(function (result) {
       vm.supportsExtendedInformation = result;
     });
 
@@ -186,12 +186,12 @@
     function keyPressHandler(event) {
       if (!modalVisible()) {
         switch (event.keyCode) {
-        case 27: // Esc
-          $window.history.back();
-          break;
-        case 83: // S
-          gotoSearchUsersAndDevices();
-          break;
+          case 27: // Esc
+            $window.history.back();
+            break;
+          case 83: // S
+            gotoSearchUsersAndDevices();
+            break;
         }
       }
     }
@@ -217,11 +217,11 @@
     function launchAtlasReadonly() {
       vm.launchingAtlas = true;
       HelpdeskService.elevateToReadonlyAdmin(vm.orgId).then(function () {
-          $window.open($state.href('login_swap', {
-            customerOrgId: vm.orgId,
-            customerOrgName: vm.org.displayName
-          }));
-        }, XhrNotificationService.notify)
+        $window.open($state.href('login_swap', {
+          customerOrgId: vm.orgId,
+          customerOrgName: vm.org.displayName
+        }));
+      }, XhrNotificationService.notify)
         .finally(function () {
           vm.launchingAtlas = false;
         });

@@ -3,15 +3,11 @@
 describe('Controller: MediaServiceSettingsControllerV2', function () {
 
   // load the service's module
-  beforeEach(module('Hercules'));
-  //beforeEach(module('Core'));
-  beforeEach(module('wx2AdminWebClientApp'));
-  beforeEach(module('Huron'));
-  beforeEach(module('Mediafusion'));
+  beforeEach(angular.mock.module('Mediafusion'));
 
-  var Authinfo, controller, httpMock, $q, $modal, log, $translate, $state, $stateParams, redirectTargetPromise;
-  var ServiceDescriptor, NotificationConfigService, MailValidatorService, Notification, XhrNotificationService, MediaServiceActivationV2, FeatureToggleService;
-  var mediaAgentOrgIds = ['mediafusion'];
+  var controller, $q, $modal, redirectTargetPromise;
+  var $rootScope;
+  var ServiceDescriptor, MailValidatorService, Notification, XhrNotificationService, MediaServiceActivationV2, FeatureToggleService;
   var serviceId = "squared-fusion-media";
 
   var authInfo = {
@@ -19,17 +15,15 @@ describe('Controller: MediaServiceSettingsControllerV2', function () {
     isSquaredUC: sinon.stub().returns(true)
   };
 
-  beforeEach(module(function ($provide) {
+  beforeEach(angular.mock.module(function ($provide) {
     $provide.value("Authinfo", authInfo);
   }));
 
   //expect(XhrNotificationService.notify).toHaveBeenCalled();
-  beforeEach(inject(function ($state, $controller, $stateParams, $httpBackend, _$q_, _$modal_, $log, $translate, _MediaServiceActivationV2_, _MailValidatorService_, _XhrNotificationService_, _Notification_, _ServiceDescriptor_, _FeatureToggleService_) {
+  beforeEach(inject(function (_$rootScope_, $state, $controller, $stateParams, _$q_, _$modal_, $translate, _MediaServiceActivationV2_, _MailValidatorService_, _XhrNotificationService_, _Notification_, _ServiceDescriptor_, _FeatureToggleService_) {
+    $rootScope = _$rootScope_;
     $state = $state;
     $stateParams = $stateParams;
-    log = $log;
-    log.reset();
-    httpMock = $httpBackend;
     $q = _$q_;
     $modal = _$modal_;
 
@@ -39,23 +33,21 @@ describe('Controller: MediaServiceSettingsControllerV2', function () {
     FeatureToggleService = _FeatureToggleService_;
     Notification = _Notification_;
     ServiceDescriptor = _ServiceDescriptor_;
-    httpMock.when('GET', /^\w+.*/).respond({});
     redirectTargetPromise = {
       then: sinon.stub()
     };
     FeatureToggleService.features = {
-      hybridServicesResourceList: 'atlas-hybrid-services-resource-list'
+      atlasHybridServicesResourceList: 'atlas-hybrid-services-resource-list'
     };
+    spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(false));
     sinon.stub(ServiceDescriptor, 'getEmailSubscribers');
     ServiceDescriptor.getEmailSubscribers.returns(redirectTargetPromise);
     sinon.stub($state, 'go');
     controller = $controller('MediaServiceSettingsControllerV2', {
       $state: $state,
       $stateParams: $stateParams,
-      httpMock: httpMock,
       $q: $q,
       $modal: $modal,
-      log: log,
       $translate: $translate,
 
       MediaServiceActivationV2: MediaServiceActivationV2,
@@ -67,18 +59,11 @@ describe('Controller: MediaServiceSettingsControllerV2', function () {
 
   }));
 
-  afterEach(function () {
-    httpMock.verifyNoOutstandingRequest();
-    //httpMock.verifyNoOutstandingExpectation();
-
-  });
-
   it('controller should be defined', function () {
     expect(controller).toBeDefined();
   });
   it('should disable media service', function () {
     spyOn(MediaServiceActivationV2, 'setServiceEnabled').and.returnValue($q.when());
-    spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(false));
     spyOn(MediaServiceActivationV2, 'getUserIdentityOrgToMediaAgentOrgMapping').and.returnValue($q.when(
       [{
         statusCode: 0,
@@ -91,7 +76,6 @@ describe('Controller: MediaServiceSettingsControllerV2', function () {
     expect(MediaServiceActivationV2.setServiceEnabled).toHaveBeenCalled();
   });
   it('should disable orpheus for mediafusion org', function () {
-    spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(false));
     spyOn(MediaServiceActivationV2, 'getUserIdentityOrgToMediaAgentOrgMapping').and.returnValue($q.when(
       [{
         statusCode: 0,
@@ -106,7 +90,6 @@ describe('Controller: MediaServiceSettingsControllerV2', function () {
   });
 
   it('should notify error while disabling media service', function () {
-    spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(false));
     spyOn(MediaServiceActivationV2, 'setServiceEnabled').and.returnValue($q.reject());
     spyOn(XhrNotificationService, 'notify');
     controller.disableMediaService(serviceId);
@@ -116,7 +99,6 @@ describe('Controller: MediaServiceSettingsControllerV2', function () {
   });
 
   it('should disable media service success call', function () {
-    spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(false));
     var getResponse = {
       data: 'this is a mocked response'
     };
@@ -127,14 +109,12 @@ describe('Controller: MediaServiceSettingsControllerV2', function () {
     sinon.stub(controller, 'disableOrpheusForMediaFusion');
     controller.disableOrpheusForMediaFusion(redirectTargetPromise);
 
-    httpMock.flush();
+    $rootScope.$apply();
     controller.disableMediaService(serviceId);
     expect(MediaServiceActivationV2.setServiceEnabled).toHaveBeenCalled();
     expect(controller.disableOrpheusForMediaFusion).toHaveBeenCalled();
-    httpMock.verifyNoOutstandingExpectation();
   });
   it('should disable media service error call', function () {
-    spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(false));
     var getResponse = {
       data: 'this is a mocked response'
     };
@@ -145,11 +125,10 @@ describe('Controller: MediaServiceSettingsControllerV2', function () {
     sinon.stub(XhrNotificationService, 'notify');
     XhrNotificationService.notify(redirectTargetPromise);
 
-    httpMock.flush();
+    $rootScope.$apply();
     controller.disableMediaService(serviceId);
     expect(MediaServiceActivationV2.setServiceEnabled).toHaveBeenCalled();
     expect(XhrNotificationService.notify).toHaveBeenCalled();
-    httpMock.verifyNoOutstandingExpectation();
   });
 
 });

@@ -8,7 +8,7 @@
     .factory('FusionClusterService', FusionClusterService);
 
   /* @ngInject */
-  function FusionClusterService($http, UrlConfig, Authinfo, FusionClusterStatesService) {
+  function FusionClusterService($http, UrlConfig, Authinfo, FusionClusterStatesService, FusionUtils) {
     var service = {
       preregisterCluster: preregisterCluster,
       addPreregisteredClusterToAllowList: addPreregisteredClusterToAllowList,
@@ -24,7 +24,11 @@
       deleteMoratoria: deleteMoratoria,
       setClusterName: setClusterName,
       deregisterCluster: deregisterCluster,
-      getReleaseNotes: getReleaseNotes
+      getReleaseNotes: getReleaseNotes,
+      getAggregatedStatusForService: getAggregatedStatusForService,
+      processClustersToAggregateStatusForService: processClustersToAggregateStatusForService,
+      serviceIsSetUp: serviceIsSetUp,
+      processClustersToSeeIfServiceIsSetup: processClustersToSeeIfServiceIsSetup
     };
 
     return service;
@@ -135,10 +139,10 @@
     function preregisterCluster(name, releaseChannel, managementConnectorType) {
       var url = UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '/clusters';
       return $http.post(url, {
-          name: name,
-          releaseChannel: releaseChannel,
-          targetType: managementConnectorType
-        })
+        name: name,
+        releaseChannel: releaseChannel,
+        targetType: managementConnectorType
+      })
         .then(extractDataFromResponse);
     }
 
@@ -208,8 +212,8 @@
     function setClusterName(clusterId, newClusterName) {
       var url = UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '/clusters/' + clusterId;
       return $http.patch(url, {
-          name: newClusterName
-        })
+        name: newClusterName
+      })
         .then(extractDataFromResponse);
     }
 
@@ -226,6 +230,90 @@
         .then(function (data) {
           return data.releaseNotes;
         });
+    }
+
+    function getAggregatedStatusForService(serviceId) {
+      return getAll()
+        .then(function (clusters) {
+          return clusters.filter(function (cluster) {
+            return cluster.targetType === 'c_mgmt';
+          });
+        })
+        .then(function (clusters) {
+          return processClustersToAggregateStatusForService(serviceId, clusters);
+        });
+    }
+
+    function processClustersToAggregateStatusForService(serviceId, clusterList) {
+
+      // get the aggregated statuses per cluster, and transform them into a flat array that
+      // represents the state of each cluster for only that service, e.g. ['stopped', 'running']
+      var allServicesStatuses = _.map(clusterList, 'servicesStatuses');
+      var statuses = _.map(allServicesStatuses, function (services) {
+        var matchingService = _.find(services, function (service) {
+          return service.serviceId === serviceId;
+        });
+        if (matchingService && matchingService.state) {
+          return matchingService.state.name;
+        } else {
+          return 'unknown';
+        }
+      });
+
+      // if no data or invalid data, assume that something is wrong
+      if (statuses.length === 0) {
+        return 'outage';
+      }
+
+      // We have an outage if all clusters have their connectors in these states or combinations of them:
+      if (_.every(statuses, function (value) {
+        return (value === 'unknown' || value === 'stopped' || value === 'disabled' || value === 'offline' || value === 'not_configured' || value === 'not_operational');
+      })) {
+        return 'outage';
+      }
+
+      // Service is degraded if one or more clusters have their connectors in one of these states:
+      if (_.find(statuses, function (value) {
+        return (value === 'has_alarms' || value === 'stopped' || value === 'not_operational' || value === 'disabled' || value === 'offline');
+      })) {
+        return 'impaired';
+      }
+
+      // fallback: if no connectors are running, return at least 'degraded'
+      if (!_.includes(statuses, 'running')) {
+        return 'impaired';
+      }
+
+      // if no other rule applies, assume we're operational!
+      return 'operational';
+
+    }
+
+    function serviceIsSetUp(serviceId) {
+      return getAll()
+        .then(function (clusterList) {
+          return processClustersToSeeIfServiceIsSetup(serviceId, clusterList);
+        });
+    }
+
+    function processClustersToSeeIfServiceIsSetup(serviceId, clusterList) {
+
+      if (!Authinfo.isEntitled(serviceId)) {
+        return false;
+      }
+
+      var target_connector = FusionUtils.serviceId2ConnectorType(serviceId);
+
+      if (target_connector === '') {
+        return false; // Cannot recognize service, default to *not* enabled
+      }
+
+      var installedConnectors = _.map(clusterList, 'connectors');
+      return _.some(installedConnectors, function (cluster) {
+        return _.some(cluster, function (connector) {
+          return connector.connectorType === target_connector;
+        });
+      });
     }
 
   }

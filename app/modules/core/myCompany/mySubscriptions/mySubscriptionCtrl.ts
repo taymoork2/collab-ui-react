@@ -17,7 +17,6 @@ namespace myCompanyPage {
 
   let licenseTypes = ['MS', 'CF', 'MC', 'TC', 'EC', 'EE', 'CMR', 'CO', 'SD'];
   let subUrl = "http://gc.digitalriver.com/store?SiteID=ciscoctg&Action=DisplaySelfServiceSubscriptionLandingPage&futureAction=DisplaySelfServiceSubscriptionUpgradePage&subscriptionID=";
-  let trial = "trial"
 
   // icon classes
   let messageClass = 'icon-message';
