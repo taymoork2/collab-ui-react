@@ -112,8 +112,8 @@
       var numTasksHandledState = graphDataItem.dataContext.numTasksHandledState;
       var categoryRange = setCategoryRange(graph.categoryAxis.title, graphDataItem.category);
 
-      var balloonTextToday = '<span class="care-graph-text">' + $translate.instant('careReportsPage.abandoned') + numTasksAbandonedState + '</span><br><span class="care-graph-text">' + $translate.instant('careReportsPage.in-queue') + numTasksQueuedState + '</span><br><span class="care-graph-text">' + $translate.instant('careReportsPage.assigned') + numTasksAssignedState + '</span><br><span class="care-graph-text">' + $translate.instant('careReportsPage.handled') + numTasksHandledState + '</span>';
-      var balloonTextPast = '<span class="care-graph-text">' + $translate.instant('careReportsPage.abandoned') + numTasksAbandonedState + '</span><br><span class="care-graph-text">' + $translate.instant('careReportsPage.handled') + numTasksHandledState + '</span>';
+      var balloonTextToday = '<span class="care-graph-text">' + $translate.instant('careReportsPage.abandoned') + ' ' + numTasksAbandonedState + '</span><br><span class="care-graph-text">' + $translate.instant('careReportsPage.in-queue') + ' ' + numTasksQueuedState + '</span><br><span class="care-graph-text">' + $translate.instant('careReportsPage.assigned') + ' ' + numTasksAssignedState + '</span><br><span class="care-graph-text">' + $translate.instant('careReportsPage.handled') + ' ' + numTasksHandledState + '</span>';
+      var balloonTextPast = '<span class="care-graph-text">' + $translate.instant('careReportsPage.abandoned') + ' ' + numTasksAbandonedState + '</span><br><span class="care-graph-text">' + $translate.instant('careReportsPage.handled') + ' ' + numTasksHandledState + '</span>';
       var balloonText = (today) ? balloonTextToday : balloonTextPast;
       return categoryRange + balloonText;
     }
@@ -122,7 +122,7 @@
       var avgTaskWaitTime = graphDataItem.dataContext.avgTaskWaitTime;
       var avgTaskCloseTime = graphDataItem.dataContext.avgTaskCloseTime;
       var categoryRange = setCategoryRange(graph.categoryAxis.title, graphDataItem.category);
-      var balloonText = '<span class="care-graph-text">' + $translate.instant('careReportsPage.avgQueueTime') + avgTaskWaitTime + '</span><br><span class="care-graph-text">Avg Handle Time ' + $translate.instant('careReportsPage.avgHandleTime') + avgTaskCloseTime + '</span>';
+      var balloonText = '<span class="care-graph-text">' + $translate.instant('careReportsPage.avgQueueTime') + ' ' + avgTaskWaitTime + 'm' + '</span><br><span class="care-graph-text">' + $translate.instant('careReportsPage.avgHandleTime') + ' ' + avgTaskCloseTime + 'm' + '</span>';
 
       return categoryRange + balloonText;
     }
@@ -130,7 +130,7 @@
     function balloonTextForAvgCsat(graphDataItem, graph) {
       var avgCsatScores = graphDataItem.dataContext.avgCsatScores;
       var categoryRange = setCategoryRange(graph.categoryAxis.title, graphDataItem.category);
-      var balloonText = '<span class="care-graph-text">' + $translate.instant('careReportsPage.avgCsat') + avgCsatScores + '</span><br>';
+      var balloonText = '<span class="care-graph-text">' + $translate.instant('careReportsPage.avgCsat') + ' ' + avgCsatScores + '</span><br>';
 
       return categoryRange + balloonText;
     }

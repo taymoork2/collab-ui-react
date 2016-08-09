@@ -5,7 +5,7 @@
     .service('MediaServiceActivationV2', MediaServiceActivationV2);
 
   /* @ngInject */
-  function MediaServiceActivationV2($http, MediaConfigServiceV2, Authinfo) {
+  function MediaServiceActivationV2($http, MediaConfigServiceV2, Authinfo, Notification) {
 
     var setServiceEnabled = function (serviceId, enabled) {
       return $http
@@ -60,13 +60,69 @@
       return $http.delete(url);
     };
 
+
+    function enableMediaService(serviceId) {
+      this.setServiceEnabled(serviceId, true).then(
+        function success() {
+          enableOrpheusForMediaFusion();
+        },
+        function error() {
+          Notification.error('mediaFusion.mediaServiceActivationFailure');
+        });
+    }
+
+    var enableOrpheusForMediaFusion = function () {
+      getUserIdentityOrgToMediaAgentOrgMapping().then(
+        function success(response) {
+          var mediaAgentOrgIdsArray = [];
+          var orgId = Authinfo.getOrgId();
+          var updateMediaAgentOrgId = false;
+          mediaAgentOrgIdsArray = response.data.mediaAgentOrgIds;
+
+          // See if org id is already mapped to user org id
+          if (mediaAgentOrgIdsArray.indexOf(orgId) == -1) {
+            mediaAgentOrgIdsArray.push(orgId);
+            updateMediaAgentOrgId = true;
+          }
+          // See if 'squared' org id is already mapped to user org id
+          if (mediaAgentOrgIdsArray.indexOf('squared') == -1) {
+            mediaAgentOrgIdsArray.push('squared');
+            updateMediaAgentOrgId = true;
+          }
+
+          if (updateMediaAgentOrgId) {
+            addUserIdentityToMediaAgentOrgMapping(mediaAgentOrgIdsArray);
+          }
+        },
+
+        function error() {
+          // Unable to find identityOrgId, add identityOrgId -> mediaAgentOrgId mapping
+          var mediaAgentOrgIdsArray = [];
+          mediaAgentOrgIdsArray.push(Authinfo.getOrgId());
+          mediaAgentOrgIdsArray.push('squared');
+          addUserIdentityToMediaAgentOrgMapping(mediaAgentOrgIdsArray);
+        });
+    };
+
+    var addUserIdentityToMediaAgentOrgMapping = function (mediaAgentOrgIdsArray) {
+      setUserIdentityOrgToMediaAgentOrgMapping(mediaAgentOrgIdsArray).then(
+        function success() {},
+        function error(errorResponse) {
+          Notification.error('mediaFusion.mediaAgentOrgMappingFailure', {
+            failureMessage: errorResponse.message
+          });
+        });
+    };
+
+
     return {
       isServiceEnabled: isServiceEnabled,
       setServiceEnabled: setServiceEnabled,
       setServiceAcknowledged: setServiceAcknowledged,
       getUserIdentityOrgToMediaAgentOrgMapping: getUserIdentityOrgToMediaAgentOrgMapping,
       setUserIdentityOrgToMediaAgentOrgMapping: setUserIdentityOrgToMediaAgentOrgMapping,
-      deleteUserIdentityOrgToMediaAgentOrgMapping: deleteUserIdentityOrgToMediaAgentOrgMapping
+      deleteUserIdentityOrgToMediaAgentOrgMapping: deleteUserIdentityOrgToMediaAgentOrgMapping,
+      enableMediaService: enableMediaService
     };
   }
 })();
