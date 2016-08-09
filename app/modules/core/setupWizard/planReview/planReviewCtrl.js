@@ -43,6 +43,7 @@
       services: []
     };
 
+    vm.roomSystemsCount = 0;
     vm.trialId = '';
     vm.trial = {};
     vm.trialExists = false;
@@ -145,6 +146,7 @@
       vm.roomServices.services = Authinfo.getLicenses() || [];
       angular.forEach(vm.roomServices.services, function (service) {
         if (service.licenseType === "SHARED_DEVICES") {
+          vm.roomSystemsCount += service.volume;
           if (service.isTrial) {
             vm.trialExists = true;
             vm.trialId = service.trialId;

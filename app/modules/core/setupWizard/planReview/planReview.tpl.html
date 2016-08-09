@@ -168,11 +168,11 @@
             <div ng-show="multipleSubscriptions.showLicenses(service.billingServiceId, service.isTrial)">
               <div ng-if="service.isTrial || planReview.roomServices.isNewTrial" class="badge badge-trial"
                  translate="firstTimeWizard.trial"></div>
-              <div class="spark-quantity">
-                <span translate="firstTimeWizard.quantity"></span>
-                <span>{{service.volume}}</span>
-              </div>
             </div>
+          </div>
+          <div class="spark-quantity">
+            <span translate="firstTimeWizard.quantity"></span>
+            <span>{{planReview.roomSystemsCount}}</span>
           </div>
         </div>
       </div>
