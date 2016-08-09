@@ -73,6 +73,7 @@
           if (data.length === 0) {
             vm.dataStatus = EMPTY;
           } else {
+            vm.reportingData = data;
             vm.dataStatus = SET;
             CareReportsService.showTaskIncomingGraph('taskIncomingdiv', data, vm.timeSelected.categoryAxisTitle, vm.timeSelected.value === 0);
             CareReportsService.showTaskTimeGraph('taskTimeDiv', data, vm.timeSelected.categoryAxisTitle, vm.timeSelected.value === 0);
