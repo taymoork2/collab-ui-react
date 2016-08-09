@@ -5,7 +5,7 @@
     .controller('HuronSettingsCtrl', HuronSettingsCtrl);
 
   /* @ngInject */
-  function HuronSettingsCtrl($scope, Authinfo, $q, $sanitize, $translate, Notification, ServiceSetup, PstnSetupService,
+  function HuronSettingsCtrl($scope, Authinfo, $q, $translate, Notification, ServiceSetup, PstnSetupService,
     CallerId, ExternalNumberService, HuronCustomer, ValidationService, TelephoneNumberService, DialPlanService,
     ModalService, CeService, HuntGroupServiceV2, DirectoryNumberService, InternationalDialing, VoicemailMessageAction) {
 
@@ -1242,7 +1242,7 @@
             // save if unable to find a matching existing number OR if the number is changing
             if (_.isUndefined(existingCallerIdNumber) || existingCallerIdNumber.pattern !== rawPattern) {
               var data = {
-                name: $sanitize(vm.model.callerId.callerIdName),
+                name: vm.model.callerId.callerIdName,
                 externalCallerIdType: COMPANY_CALLER_ID_TYPE,
                 pattern: rawPattern
               };
