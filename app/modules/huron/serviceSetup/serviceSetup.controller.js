@@ -182,87 +182,33 @@
 
     vm.initialFields = [{
       model: vm.model.site,
-      className: 'service-setup',
-      fieldGroup: [{
-        key: 'timeZone',
-        type: 'select',
-        className: 'service-setup-timezone',
-        templateOptions: {
-          label: $translate.instant('serviceSetupModal.timeZone'),
-          description: $translate.instant('serviceSetupModal.tzDescription'),
-          options: [],
-          labelfield: 'label',
-          valuefield: 'id',
-          inputPlaceholder: $translate.instant('serviceSetupModal.searchTimeZone'),
-          filter: true
-        },
-        controller: /* @ngInject */ function ($scope) {
-          $scope.$watchCollection(function () {
-            return vm.timeZoneOptions;
-          }, function (timeZones) {
-            $scope.to.options = timeZones;
-          });
-        }
-      }, {
-        key: 'steeringDigit',
-        type: 'select',
-        className: 'service-setup-steering-digit',
-        templateOptions: {
-          label: $translate.instant('serviceSetupModal.steeringDigit'),
-          description: $translate.instant('serviceSetupModal.steeringDigitDescription'),
-          warnMsg: $translate.instant('serviceSetupModal.steeringDigitChangeWarning'),
-          isWarn: false,
-          options: vm.steeringDigits
-        },
-        hideExpression: function () {
-          return vm.hideFieldSteeringDigit;
-        },
-        expressionProperties: {
-          'templateOptions.isWarn': vm.steeringDigitChangeValidation
-        }
-      }, {
-        key: 'siteSteeringDigit',
-        type: 'select',
-        className: 'service-setup-steering-digit',
-        templateOptions: {
-          label: $translate.instant('serviceSetupModal.siteSteeringDigit'),
-          description: $translate.instant('serviceSetupModal.siteSteeringDigitDescription'),
-          options: vm.steeringDigits
-        },
-        hideExpression: function () {
-          return true;
-        },
-        expressionProperties: {
-          'templateOptions.disabled': function () {
-            return vm.hasSites;
-          }
-        }
-      }, {
-        key: 'siteCode',
-        type: 'input',
-        className: 'service-setup-site-code',
-        templateOptions: {
-          label: $translate.instant('serviceSetupModal.siteCode'),
-          description: $translate.instant('serviceSetupModal.siteCodeDescription'),
-          type: 'text',
-          required: true,
-          maxlength: 5
-        },
-        hideExpression: function () {
-          return true;
-        },
-        expressionProperties: {
-          'templateOptions.disabled': function () {
-            return vm.hasSites;
-          }
-        }
-      }]
+      key: 'timeZone',
+      type: 'select',
+      className: 'service-setup service-setup-timezone',
+      templateOptions: {
+        inputClass: 'medium-4',
+        label: $translate.instant('serviceSetupModal.timeZone'),
+        description: $translate.instant('serviceSetupModal.tzDescription'),
+        options: [],
+        labelfield: 'label',
+        valuefield: 'id',
+        inputPlaceholder: $translate.instant('serviceSetupModal.searchTimeZone'),
+        filter: true
+      },
+      controller: /* @ngInject */ function ($scope) {
+        $scope.$watchCollection(function () {
+          return vm.timeZoneOptions;
+        }, function (timeZones) {
+          $scope.to.options = timeZones;
+        });
+      }
     }, {
       model: vm.model.site,
       key: 'extensionLength',
       type: 'select',
       className: 'service-setup service-setup-extension-length',
       templateOptions: {
+        inputClass: 'medium-2 small-4',
         label: $translate.instant('serviceSetupModal.extensionLength'),
         description: $translate.instant('serviceSetupModal.extensionLengthDescription'),
         helpText: $translate.instant('serviceSetupModal.extensionLengthHelpText'),
@@ -289,10 +235,12 @@
         }
       }
     }, {
+      model: vm.model,
       key: 'displayNumberRanges',
       type: 'repeater',
       className: 'service-setup service-setup-extension',
       templateOptions: {
+        className: 'medium-5',
         label: $translate.instant('serviceSetupModal.internalExtensionRange'),
         fields: [{
           className: 'formly-field-inline service-setup-extension-range',
@@ -485,95 +433,153 @@
         });
       }
     }, {
+      model: vm.model.site,
+      key: 'steeringDigit',
+      type: 'select',
+      className: 'service-setup service-setup-steering-digit',
+      templateOptions: {
+        inputClass: 'medium-2 small-4',
+        label: $translate.instant('serviceSetupModal.steeringDigit'),
+        description: $translate.instant('serviceSetupModal.steeringDigitDescription'),
+        warnMsg: $translate.instant('serviceSetupModal.steeringDigitChangeWarning'),
+        isWarn: false,
+        options: vm.steeringDigits
+      },
+      hideExpression: function () {
+        return vm.hideFieldSteeringDigit;
+      },
+      expressionProperties: {
+        'templateOptions.isWarn': vm.steeringDigitChangeValidation
+      }
+    }, {
+      model: vm.model.site,
+      key: 'siteSteeringDigit',
+      type: 'select',
+      className: 'service-setup-steering-digit',
+      templateOptions: {
+        label: $translate.instant('serviceSetupModal.siteSteeringDigit'),
+        description: $translate.instant('serviceSetupModal.siteSteeringDigitDescription'),
+        options: vm.steeringDigits
+      },
+      hideExpression: function () {
+        return true;
+      },
+      expressionProperties: {
+        'templateOptions.disabled': function () {
+          return vm.hasSites;
+        }
+      }
+    }, {
+      model: vm.model.site,
+      key: 'siteCode',
+      type: 'input',
+      className: 'service-setup-site-code',
+      templateOptions: {
+        label: $translate.instant('serviceSetupModal.siteCode'),
+        description: $translate.instant('serviceSetupModal.siteCodeDescription'),
+        type: 'text',
+        required: true,
+        maxlength: 5
+      },
+      hideExpression: function () {
+        return true;
+      },
+      expressionProperties: {
+        'templateOptions.disabled': function () {
+          return vm.hasSites;
+        }
+      }
+    }, {
       // Since it is possible to have both the FTSW and
       // huron settings page in the DOM at the same time the id
       // or key has to be unique to avoid having the same id
       // for these elements. See settingsCtrl.js
+      model: vm.model,
       key: 'ftswCompanyVoicemail',
       type: 'nested',
       className: 'service-setup',
       templateOptions: {
         inputClass: 'service-setup-company-voicemail',
-        label: $translate.instant('serviceSetupModal.companyVoicemail'),
+        label: $translate.instant('serviceSetupModal.vmAccessNumber'),
         description: $translate.instant('serviceSetupModal.companyVoicemailDescription')
       },
-      data: {
-        fields: [{
-          key: 'ftswCompanyVoicemailEnabled',
-          type: 'switch'
-        }, {
-          key: 'ftswCompanyVoicemailNumber',
-          type: 'select',
-          className: 'service-setup-company-voicemail-number',
-          templateOptions: {
-            options: [],
-            inputPlaceholder: $translate.instant('directoryNumberPanel.searchNumber'),
-            labelfield: 'label',
-            valuefield: 'uuid',
-            filter: true,
-            warnMsg: $translate.instant('serviceSetupModal.voicemailNoExternalNumbersError'),
-            isWarn: false
-          },
-          hideExpression: function () {
-            return !vm.model.ftswCompanyVoicemail.ftswCompanyVoicemailEnabled;
-          },
-          expressionProperties: {
-            'templateOptions.required': function () {
-              return vm.model.ftswCompanyVoicemail.ftswCompanyVoicemailEnabled;
-            }
-          },
-          controller: function ($scope) {
-            $scope.$watchCollection(function () {
-              return vm.externalNumberPool;
-            }, function (externalNumberPool) {
-              // remove the emergency callback number from the list of options
-              $scope.to.options = _.reject(externalNumberPool, function (externalNumber) {
-                return externalNumber.pattern === _.get(vm, 'model.site.emergencyCallBackNumber.pattern');
-              });
-              // add the existing voicemailPilotNumber back into the list of options
-              if (vm.model.site.voicemailPilotNumber && !_.find($scope.to.options, function (externalNumber) {
-                return externalNumber.pattern === vm.model.site.voicemailPilotNumber;
-              })) {
-                var tmpExternalNumber = {
-                  pattern: vm.model.site.voicemailPilotNumber,
-                  label: TelephoneNumberService.getDIDLabel(vm.model.site.voicemailPilotNumber)
-                };
-                $scope.to.options.push(tmpExternalNumber);
-              }
-              // if a warning existed, then numbers became available remove the warning
-              if ($scope.to.options.length > 0) {
-                $scope.options.templateOptions.isWarn = false;
-              }
-            });
+    }, {
+      model: vm.model.ftswCompanyVoicemail,
+      key: 'ftswCompanyVoicemailEnabled',
+      type: 'switch'
+    }, {
+      model: vm.model.ftswCompanyVoicemail,
+      key: 'ftswCompanyVoicemailNumber',
+      type: 'select',
+      className: 'service-setup-company-voicemail-number medium-4',
+      templateOptions: {
+        options: [],
+        inputPlaceholder: $translate.instant('directoryNumberPanel.searchNumber'),
+        labelfield: 'label',
+        valuefield: 'uuid',
+        filter: true,
+        warnMsg: $translate.instant('serviceSetupModal.voicemailNoExternalNumbersError'),
+        isWarn: false
+      },
+      hideExpression: function () {
+        return !vm.model.ftswCompanyVoicemail.ftswCompanyVoicemailEnabled;
+      },
+      expressionProperties: {
+        'templateOptions.required': function () {
+          return vm.model.ftswCompanyVoicemail.ftswCompanyVoicemailEnabled;
+        }
+      },
+      controller: function ($scope) {
+        $scope.$watchCollection(function () {
+          return vm.externalNumberPool;
+        }, function (externalNumberPool) {
+          // remove the emergency callback number from the list of options
+          $scope.to.options = _.reject(externalNumberPool, function (externalNumber) {
+            return externalNumber.pattern === _.get(vm, 'model.site.emergencyCallBackNumber.pattern');
+          });
+          // add the existing voicemailPilotNumber back into the list of options
+          if (vm.model.site.voicemailPilotNumber && !_.find($scope.to.options, function (externalNumber) {
+            return externalNumber.pattern === vm.model.site.voicemailPilotNumber;
+          })) {
+            var tmpExternalNumber = {
+              pattern: vm.model.site.voicemailPilotNumber,
+              label: TelephoneNumberService.getDIDLabel(vm.model.site.voicemailPilotNumber)
+            };
+            $scope.to.options.push(tmpExternalNumber);
+          }
+          // if a warning existed, then numbers became available remove the warning
+          if ($scope.to.options.length > 0) {
+            $scope.options.templateOptions.isWarn = false;
+          }
+        });
 
-            $scope.$watch(function () {
-              return vm.model.ftswCompanyVoicemail.ftswCompanyVoicemailEnabled;
-            }, function (toggleValue) {
-              if (toggleValue) {
-                var showWarning = false;
-                if ($scope.to.options.length > 0) {
-                  if (_.isUndefined(vm.model.ftswCompanyVoicemail.ftswCompanyVoicemailNumber)) {
-                    vm.model.ftswCompanyVoicemail.ftswCompanyVoicemailNumber = $scope.to.options[0];
-                  }
-                } else {
-                  showWarning = true;
-                }
-                $scope.options.templateOptions.isWarn = showWarning;
+        $scope.$watch(function () {
+          return vm.model.ftswCompanyVoicemail.ftswCompanyVoicemailEnabled;
+        }, function (toggleValue) {
+          if (toggleValue) {
+            var showWarning = false;
+            if ($scope.to.options.length > 0) {
+              if (_.isUndefined(vm.model.ftswCompanyVoicemail.ftswCompanyVoicemailNumber)) {
+                vm.model.ftswCompanyVoicemail.ftswCompanyVoicemailNumber = $scope.to.options[0];
               }
-            });
+            } else {
+              showWarning = true;
+            }
+            $scope.options.templateOptions.isWarn = showWarning;
           }
-        }, {
-          key: 'ftswVoicemailToEmail',
-          type: 'cs-input',
-          templateOptions: {
-            label: $translate.instant('serviceSetupModal.voicemailToEmailLabel'),
-            type: 'checkbox',
-            helpText: $translate.instant('serviceSetupModal.voicemailToEmailHelpText')
-          },
-          hideExpression: function () {
-            return !vm.model.ftswCompanyVoicemail.ftswCompanyVoicemailEnabled;
-          }
-        }]
+        });
+      }
+    }, {
+      model: vm.model.ftswCompanyVoicemail,
+      key: 'ftswVoicemailToEmail',
+      type: 'cs-input',
+      templateOptions: {
+        label: $translate.instant('serviceSetupModal.voicemailToEmailLabel'),
+        type: 'checkbox',
+        helpText: $translate.instant('serviceSetupModal.voicemailToEmailHelpText')
+      },
+      hideExpression: function () {
+        return !vm.model.ftswCompanyVoicemail.ftswCompanyVoicemailEnabled;
       }
     }];
 

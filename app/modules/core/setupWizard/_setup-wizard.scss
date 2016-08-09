@@ -17,7 +17,8 @@
   }
   .service-setup {
     label {
-      font-size: 24px;
+      font-size: 20px;
+      color: $gray-dark-4;
       line-height: 1;
       margin-bottom: 0;
       padding-bottom: 11px;
@@ -30,6 +31,7 @@
     }
     .description-block {
       margin-top: 0;
+      color: $gray-dark-1;
     }
     .formly-field-group {
       margin-bottom: 0;
@@ -42,20 +44,9 @@
     }
     .service-setup-timezone {
       margin-bottom: -2px;
-      .formly-input-wrapper {
-        width: 50%;
-      }
     }
     .service-setup-steering-digit {
       margin-bottom: rem(2);
-      .formly-input-wrapper {
-        width: 50%;
-      }
-    }
-    .service-setup-site-code {
-      .formly-input-wrapper {
-        width: 100px;
-      }
     }
     &.service-setup-extension {
       .formly-field-group {
@@ -63,10 +54,6 @@
       }
     }
     .service-setup-extension-range {
-      width: 375px;
-      input {
-        width: 100%;
-      }
       .popover {
         right: 0;
         left: -6.3rem;
@@ -83,13 +70,9 @@
       margin-left: 10px;
       margin-right: 13px;
     }
-    .service-setup-company-voicemail ng-form {
-      width: 100%;
-    }
     .service-setup-company-voicemail-number {
       padding-bottom: 1rem;
       padding-top: 1rem;
-      width: 50%;
     }
     .service-setup-moh {
       width: 50%;
@@ -97,8 +80,5 @@
   }
   .service-setup.service-setup-extension-length {
     margin-bottom: rem(2);
-    .formly-input-wrapper {
-      width: 50%;
-    }
   }
 }

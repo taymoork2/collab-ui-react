@@ -213,14 +213,13 @@
       return false;
     };
 
-    vm.leftPanelFields = [{
+    vm.timeZoneSelection = [{
       model: vm.model.site,
       key: 'timeZone',
       type: 'select',
       templateOptions: {
-        inputClass: 'large-10',
+        inputClass: 'medium-5',
         label: $translate.instant('serviceSetupModal.timeZone'),
-        description: $translate.instant('serviceSetupModal.tzDescription'),
         options: [],
         labelfield: 'label',
         valuefield: 'id',
@@ -231,12 +230,14 @@
         _buildTimeZoneOptions($scope);
       }
 
-    }, {
+    }];
+
+    vm.steeringDigitSelection = [{
       model: vm.model.site,
       key: 'steeringDigit',
       type: 'select',
       templateOptions: {
-        inputClass: 'large-10',
+        inputClass: 'medium-2',
         label: $translate.instant('serviceSetupModal.steeringDigit'),
         description: $translate.instant('serviceSetupModal.steeringDigitDescription'),
         warnMsg: $translate.instant('serviceSetupModal.steeringDigitChangeWarning'),
@@ -249,12 +250,15 @@
       expressionProperties: {
         'templateOptions.isWarn': vm.steeringDigitChangeValidation
       }
-    }, {
+    }];
+
+    vm.extensionLengthSelection = [{
       model: vm.model.site,
       key: 'extensionLength',
       type: 'select',
       className: 'service-setup service-setup-extension-length',
       templateOptions: {
+        inputClass: 'medium-2',
         label: $translate.instant('serviceSetupModal.extensionLength'),
         description: $translate.instant('serviceSetupModal.extensionLengthDescription'),
         helpText: $translate.instant('serviceSetupModal.extensionLengthServicesHelpText'),
@@ -280,10 +284,12 @@
           return vm.model.disableExtensions;
         }
       }
-    }, {
+    }];
+
+    vm.extensionRangeSelection = [{
       className: 'service-setup service-setup-extension',
       fieldGroup: [{
-        className: 'extension-list',
+        className: 'medium-5',
         key: 'displayNumberRanges',
         type: 'repeater',
         hideExpression: function () {
@@ -468,7 +474,9 @@
           });
         }
       }]
-    }, {
+    }];
+
+    vm.internationalDialingSelection = [{
       type: 'switch',
       key: 'internationalDialingEnabled',
       className: 'international-dialing',
@@ -485,13 +493,13 @@
       }
     }];
 
-    vm.rightPanelFields = [{
+    vm.emergencyServiceAddressSelection = [{
       key: 'showServiceAddress',
       type: 'nested',
       className: 'max-width-form',
       templateOptions: {
         label: $translate.instant('settingsServiceAddress.label'),
-        description: $translate.instant('settingsServiceAddress.description')
+        // description: $translate.instant('settingsServiceAddress.description')
       },
       hideExpression: '!model.showServiceAddress',
       data: {
@@ -500,7 +508,9 @@
           template: '<hr-settings-service-address></hr-settings-service-address>'
         }]
       }
-    }, {
+    }];
+
+    vm.emergencyServiceNumberSelection = [{
       model: vm.model,
       key: 'serviceNumber',
       type: 'select',
@@ -508,7 +518,6 @@
         type: 'csSelect',
         inputClass: 'large-5',
         label: $translate.instant('settingsServiceNumber.label'),
-        description: $translate.instant('settingsServiceNumber.description'),
         inputPlaceholder: $translate.instant('directoryNumberPanel.searchNumber'),
         options: [],
         labelfield: 'label',
@@ -525,13 +534,14 @@
           return vm.model.serviceNumberWarning;
         }
       }
-    }, {
+    }];
+
+    vm.callerIdSelection = [{
       key: 'callerId',
       type: 'nested',
       className: 'max-width-form',
       templateOptions: {
         label: $translate.instant('companyCallerId.companyCallerId'),
-        description: $translate.instant('companyCallerId.companyCallerIdDesc')
       },
       data: {
         fields: [{
@@ -587,12 +597,14 @@
           }
         }]
       }
-    }, {
+    }];
+
+    vm.companyVoicemailSelection = [{
       key: 'companyVoicemail',
       type: 'nested',
       className: 'max-width-form',
       templateOptions: {
-        label: $translate.instant('serviceSetupModal.companyVoicemail'),
+        label: $translate.instant('serviceSetupModal.vmAccessNumber'),
         description: $translate.instant('serviceSetupModal.companyVoicemailDescription')
       },
       data: {
