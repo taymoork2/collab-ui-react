@@ -27,6 +27,8 @@
       saveBtn2: false
     };
 
+    // set allowSessionMismatch=true to allow User Setting panel 3 to load
+    // even if there's user data mismatch between Atlas and WebEx
     var allowSessionMismatch = false;
 
     return {
@@ -151,12 +153,6 @@
         });
         return hasProOrStdMeetingCenter;
       }, //hasProOrStdMeetingCenter
-
-      isUserLevelPMREnabled: function () {
-        var user = this.getUserSettingsModel();
-        var hasPMR = user.pmr.value;
-        return hasPMR;
-      }, //isUserLevelPMREnabled
 
       updateCenterLicenseEntitlements: function () {
         // var funcName = "updateCenterLicenseEntitlements()";
@@ -774,7 +770,7 @@
 
               if (!isValidLicenseEntitlement) {
                 logMsg = funcName + "\n" +
-                  "ERROR -entitlement mismatch detected!" + "\n" +
+                  "ERROR - entitlement mismatch detected!" + "\n" +
                   "\n" +
                   "meetingCenter.isEntitledOnWebEx=" + WebexUserSettingsSvc.meetingCenter.isEntitledOnWebEx + "\n" +
                   "trainingCenter.isEntitledOnWebEx=" + WebexUserSettingsSvc.trainingCenter.isEntitledOnWebEx + "\n" +
@@ -932,11 +928,11 @@
           } // chkSessionType()
         ); // WebexUserSettingsSvc.sessionTypes.forEach()
 
-        if (blockSaveDueToNoSession()) {
-          return;
-        }
+        if (
+          (blockSaveDueToNoSession()) ||
+          (blockSaveDueToPMR())
+        ) {
 
-        if (blockSaveDueToPMR()) {
           return;
         }
 
