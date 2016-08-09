@@ -3,8 +3,7 @@
     <span class="section-name" translate="customerPage.webexOverview"></span>
   </div>
   <div class="feature-list " ng-if="customerWebexOverview.domains.length<3">
-   <span class="subtitle" translate="customerPage.domain" ng-if="customerWebexOverview.domains.length===1"></span>
-   <span class="subtitle" translate="customerPage.domains" ng-if="customerWebexOverview.domains.length===2"></span>
+   <span class="subtitle" translate="customerPage.domains" translate-value-domains="{{customerWebexOverview.domains.length}}"></span>
    <ul>
     <li  class="feature" ng-repeat="domain in customerWebexOverview.domains">
       <div class="feature-name">
@@ -19,7 +18,7 @@
   </ul>
 </div>
 <div class="feature-list webex-domains-list" ng-if="customerWebexOverview.domains.length>=3">
-  <ul ng-if="customerWebexOverview.domains.length>1">
+  <ul>
    <li class="feature">
      <a ui-sref="customer-overview.domainDetail({webexDomains: customerWebexOverview.domains})">
        <span class="feature-name" translate="customerPage.domains"></span>

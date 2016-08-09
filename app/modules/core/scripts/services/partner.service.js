@@ -5,7 +5,7 @@
     .service('PartnerService', PartnerService);
 
   /* @ngInject */
-  function PartnerService($http, $rootScope, $translate, Analytics, Authinfo, Auth, Config, Log, TrialService, UrlConfig) {
+  function PartnerService($http, $q, $rootScope, $translate, Analytics, Authinfo, Auth, Config, Log, TrialService, UrlConfig) {
     var managedOrgsUrl = UrlConfig.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId() + '/managedOrgs';
     var siteListUrl = UrlConfig.getAdminServiceUrl() + 'organizations/%s/siteUrls';
     var customerStatus = {
@@ -660,8 +660,13 @@
     }
 
     function getSiteUrls(customerId) {
-      var url = siteListUrl.replace('%s', customerId);
-      return $http.get(url);
+      var url;
+      if (!customerId) {
+        return $q.reject('A Customer Organization Id must be passed');
+      } else {
+        url = siteListUrl.replace('%s', customerId);
+        return $http.get(url);
+      }
     }
   }
 })();

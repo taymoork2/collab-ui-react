@@ -2876,8 +2876,9 @@
     "accountStatus": "Account Status",
     "totalUsers": "Total Users",
     "purchased": "Purchased",
-    "domains": "Domains",
+    "domains": "{domains, plural, one{# Domain} other{# Domains}}",
     "domain": "Domain"
+
   },
   "customerAdminPanel": {
     "addAdministrators": "Add Administrators",

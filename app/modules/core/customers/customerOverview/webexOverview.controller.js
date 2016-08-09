@@ -11,27 +11,30 @@
     vm.trialId = _.get($stateParams, 'currentCustomer.trialId');
     vm.custOrgId = _.get($stateParams, 'currentCustomer.customerOrgId');
     vm.domains = [];
-    vm.getDomains = getDomains;
     vm.helpers = {
       buildDomain: _buildDomain
     };
-    vm.getDomains();
+    init();
 
     ////////////////
 
-    function getDomains() {
-      var fCalls = {};
+    function init() {
+      var promises = {};
       if (vm.trialId) {
-        fCalls.trialSite = TrialWebexService.getTrialStatus(vm.trialId);
+        promises.trialSite = TrialWebexService.getTrialStatus(vm.trialId).catch(function () {
+
+        });
       }
       if (vm.custOrgId) {
-        fCalls.allSites = PartnerService.getSiteUrls(vm.custOrgId);
+        promises.allSites = PartnerService.getSiteUrls(vm.custOrgId).catch(function () {
+
+        });
       }
-      $q.all(fCalls).then(function (result) {
+      $q.all(promises).then(function (result) {
         vm.domains = _.map(_.get(result, 'allSites.data', []), function (site) {
           return vm.helpers.buildDomain(site, null, false);
         });
-        if (_.get(result, 'trialSite')) {
+        if (result.trialSite) {
           var trialSite = vm.helpers.buildDomain(result.trialSite.siteUrl, result.trialSite.timeZoneId, result.trialSite.pending);
           var existingSiteIndex = _.findIndex(vm.domains, {
             siteUrl: trialSite.siteUrl
