@@ -1,11 +1,10 @@
   'use strict';
   describe('AddResourceCommonServiceV2', function () {
     beforeEach(angular.mock.module('Mediafusion'));
-    var redirectTargetPromise, $q, httpBackend, AddResourceCommonServiceV2, MediaClusterServiceV2, MediaServiceActivationV2, authinfo;
-    beforeEach(inject(function (_AddResourceCommonServiceV2_, $httpBackend, _$q_, _MediaClusterServiceV2_, _MediaServiceActivationV2_, _Authinfo_) {
+    var redirectTargetPromise, httpBackend, AddResourceCommonServiceV2, MediaClusterServiceV2, MediaServiceActivationV2, authinfo;
+    beforeEach(inject(function (_AddResourceCommonServiceV2_, $httpBackend, _MediaClusterServiceV2_, _MediaServiceActivationV2_, _Authinfo_) {
       authinfo = _Authinfo_;
       authinfo.getOrgId = sinon.stub().returns('orgId');
-      $q = _$q_;
       httpBackend = $httpBackend;
       httpBackend.when('GET', /^\w+.*/).respond({});
       redirectTargetPromise = {
@@ -30,20 +29,10 @@
 
     });
 
-    it('MediaServiceActivationV2 setServiceEnabled should be called for enableOrpheusForMediaFusion', function () {
-      spyOn(MediaServiceActivationV2, 'setServiceEnabled').and.returnValue(redirectTargetPromise);
+    it('MediaServiceActivationV2 enableMediaService should be called for redirectPopUpAndClose', function () {
+      spyOn(MediaServiceActivationV2, 'enableMediaService');
       AddResourceCommonServiceV2.redirectPopUpAndClose('hostName', 'enteredCluster', 'clusterId', true);
-      expect(MediaServiceActivationV2.setServiceEnabled).toHaveBeenCalled();
-
-    });
-    it('MediaServiceActivationV2 setServiceEnabled should be called for enableOrpheusForMediaFusion', function () {
-      var deregisterDefered = $q.defer();
-      spyOn(MediaServiceActivationV2, 'getUserIdentityOrgToMediaAgentOrgMapping').and.returnValue(redirectTargetPromise);
-      spyOn(MediaServiceActivationV2, 'setServiceEnabled').and.returnValue(deregisterDefered.promise);
-      deregisterDefered.resolve();
-      AddResourceCommonServiceV2.redirectPopUpAndClose('hostName', 'enteredCluster', 'clusterId', true);
-      expect(MediaServiceActivationV2.setServiceEnabled).toHaveBeenCalled();
-      expect(MediaServiceActivationV2.getUserIdentityOrgToMediaAgentOrgMapping).not.toHaveBeenCalled();
+      expect(MediaServiceActivationV2.enableMediaService).toHaveBeenCalled();
 
     });
   });

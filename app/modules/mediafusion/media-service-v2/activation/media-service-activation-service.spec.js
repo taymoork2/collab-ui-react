@@ -88,4 +88,9 @@ describe('MediaServiceActivationV2', function () {
     $httpBackend.flush();
   });
 
+  it('MediaServiceActivationV2 setServiceEnabled should be called for enableMediaService', function () {
+    spyOn(Service, 'setServiceEnabled').and.callThrough();
+    Service.enableMediaService();
+    expect(Service.setServiceEnabled).toHaveBeenCalled();
+  });
 });
