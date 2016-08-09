@@ -1653,7 +1653,7 @@
             templateUrl: 'modules/huron/orderManagement/pstnOrderDetail.tpl.html',
             resolve: {
               data: /* @ngInject */ function ($state, $translate) {
-                $state.get('customer-overview.pstnOrderDetaill').data.displayName = $translate.instant('customerPage.pstnOrders');
+                $state.get('customer-overview.pstnOrderDetail').data.displayName = $translate.instant('customerPage.pstnOrders');
               }
             },
             data: {
