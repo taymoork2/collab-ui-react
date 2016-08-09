@@ -11,7 +11,6 @@
     toasterConfig['time-out'] = 0;
     toasterConfig['position-class'] = 'toast-bottom-right';
     toasterConfig['close-button'] = true;
-    //toasterConfig['body-output-type'] = 'trustedHtml';
   }
 
   /* @ngInject */
