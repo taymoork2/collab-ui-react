@@ -1650,6 +1650,7 @@
         "upgrade-schedule": "Upgrade Schedule",
         "release-channel": "Release Channel",
         "hosts": "{count, plural, one{# Host} other{# Hosts}}",
+        "nodes": "{count, plural, one{# Node} other{# Nodes}}",
         "settings": "Settings",
         "all": "All",
         "add-resource": "Add Resource",
