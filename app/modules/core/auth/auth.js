@@ -87,7 +87,7 @@
         .then(updateOauthTokens)
         .catch(function () {
           handleError('Failed to refresh access token');
-          completeLogout(redirectUrl);
+          TokenService.completeLogout(redirectUrl);
         });
       } else {
         return $q.reject('refreshtoken not found');
@@ -103,7 +103,7 @@
           return $http(response.config);
         })
         .catch(function () {
-          completeLogout(redirectUrl);
+          TokenService.completeLogout(redirectUrl);
         });
     }
 
@@ -148,7 +148,7 @@
         })
         .catch(function () {
           handleError('Failed to retrieve token_id');
-          completeLogout(redirectUrl);
+          TokenService.completeLogout(redirectUrl);
         });
     }
 
