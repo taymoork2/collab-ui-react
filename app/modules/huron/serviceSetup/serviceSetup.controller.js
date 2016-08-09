@@ -601,9 +601,9 @@
                   }
                 } else {
                   showWarning = true;
+                  vm.hideoptionalvmHelpText = true;
                 }
                 $scope.options.templateOptions.isWarn = showWarning;
-                vm.hideoptionalvmHelpText = true;
               }
             });
           }
@@ -978,8 +978,14 @@
           voicemailToggleEnabled = true;
         }
       } else if (vm.optionalVmDidFeatureToggle) {
-        if (_.get(vm, 'model.ftswCompanyVoicemail.ftswCompanyVoicemailEnabled')) {
-          voicemailToggleEnabled = true;
+        if (!_.get(vm, 'model.ftswCompanyVoicemail.ftswExternalVoicemail')) {
+          if (_.get(vm, 'model.ftswCompanyVoicemail.ftswCompanyVoicemailEnabled')) {
+            voicemailToggleEnabled = true;
+          }
+        } else {
+          if (_.get(vm, 'model.ftswCompanyVoicemail.ftswCompanyVoicemailEnabled') && _.get(vm, 'model.ftswCompanyVoicemail.ftswCompanyVoicemailNumber')) {
+            voicemailToggleEnabled = true;
+          }
         }
       }
 
