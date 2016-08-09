@@ -177,7 +177,7 @@ describe('Controller: CustomerListCtrl', function () {
       expect($scope.totalOrgs).toBe(6);
     });
 
-    it('if myOrg is in managedOrgsList, myOrg should be at top', function () {
+    it('if myOrg is in managedOrgsList, myOrg should not be added to the list', function () {
       var testOrgList = {
         "data": {
           "organizations": [{
@@ -197,8 +197,6 @@ describe('Controller: CustomerListCtrl', function () {
       PartnerService.getManagedOrgsList.and.returnValue(testOrgList);
       initController();
       expect($scope.managedOrgsList).toBeDefined();
-      expect($scope.managedOrgsList[0].customerName).toBe('testOrg');
-      expect($scope.managedOrgsList[1].customerName).toBe('ControllerTestOrg');
       expect($scope.managedOrgsList.length).toEqual(2);
       expect($scope.totalOrgs).toBe(2);
     });

@@ -65,6 +65,7 @@
       var rangeStatsList = [];
       var handleCount = initValue;
       var abandonCount = initValue / 3;
+      var avgCsatScores = 3.0;
       range.by(interval, function (moment) {
         var formattedTime = momentFormatter(moment, format);
         var rangeStats = {};
@@ -74,19 +75,23 @@
           rangeStats.numTasksAbandonedState = 0;
           rangeStats.numTasksAssignedState = 0;
           rangeStats.numTasksQueuedState = 0;
+          rangeStats.avgCsatScores = 0;
         } else {
           rangeStats.numTasksHandledState = handleCount;
           rangeStats.numTasksAbandonedState = abandonCount;
           rangeStats.numTasksAssignedState = handleCount;
           rangeStats.numTasksQueuedState = handleCount;
+          rangeStats.avgCsatScores = avgCsatScores;
         }
         rangeStatsList.push(rangeStats);
         handleCount = handleCount + changeValue;
-        abandonCount = abandonCount - changeValue / 3;
+        abandonCount = abandonCount - (changeValue / 3);
 
         if (abandonCount < 0) {
           abandonCount = 0;
         }
+
+        avgCsatScores = Math.min(avgCsatScores + 0.1, 5.0);
       });
       return rangeStatsList;
     }
@@ -96,6 +101,9 @@
       var formatter = getFormatter(interval);
       var handleCount = initValue;
       var abandonCount = initValue / 3;
+      var avgTaskWaitTime = 5;
+      var avgTaskCloseTime = 3;
+      var avgCsatScores = 3.0;
       range.by(interval, function (moment) {
         var formattedTime = formatter(moment, format);
         var rangeStats = {};
@@ -103,9 +111,15 @@
         if (moment.isAfter()) {
           rangeStats.numTasksHandledState = 0;
           rangeStats.numTasksAbandonedState = 0;
+          rangeStats.avgTaskWaitTime = 0;
+          rangeStats.avgTaskCloseTime = 0;
+          rangeStats.avgCsatScores = 0;
         } else {
           rangeStats.numTasksHandledState = handleCount;
           rangeStats.numTasksAbandonedState = abandonCount;
+          rangeStats.avgTaskWaitTime = avgTaskWaitTime;
+          rangeStats.avgTaskCloseTime = avgTaskCloseTime;
+          rangeStats.avgCsatScores = avgCsatScores;
         }
         rangeStatsList.push(rangeStats);
         if (interval === 'w' || interval === 'd') {
@@ -120,15 +134,19 @@
             abandonCount = 5;
           } else {
             handleCount = handleCount + changeValue;
-            abandonCount = abandonCount - changeValue / 3;
+            abandonCount = abandonCount - (changeValue / 3);
           }
         } else {
           handleCount = handleCount + changeValue;
-          abandonCount = abandonCount - changeValue / 3;
+          abandonCount = abandonCount - (changeValue / 3);
         }
         if (abandonCount < 0) {
           abandonCount = 0;
         }
+
+        avgTaskWaitTime = Math.min(avgTaskWaitTime + 1, 10);
+        avgTaskCloseTime = Math.min(avgTaskCloseTime + 1, 6);
+        avgCsatScores = Math.min(avgCsatScores + 0.1, 5.0);
       });
       return rangeStatsList;
     }

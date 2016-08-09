@@ -505,7 +505,7 @@ describe('Controller: AAScheduleModalCtrl', function () {
       expect(controller.aaModel.aaRecord.assignedTimeZone).toBe(aaUiModel.timeZone.id);
     });
 
-    it('should NOT log a timezone event for 24 Hours schedule', function () {
+    it('should NOT save timezone or log event for 24 Hours schedule', function () {
       controller.timeZoneForm = {
         $pristine: false
       };
@@ -514,7 +514,7 @@ describe('Controller: AAScheduleModalCtrl', function () {
 
       controller.saveTimeZone();
       expect(Analytics.trackEvent).not.toHaveBeenCalled();
-      expect(controller.aaModel.aaRecord.assignedTimeZone).toBe(aaUiModel.timeZone.id);
+      expect(controller.aaModel.aaRecord.assignedTimeZone).toBe(undefined);
     });
 
   });

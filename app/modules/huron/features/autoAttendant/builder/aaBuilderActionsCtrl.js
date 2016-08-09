@@ -117,11 +117,12 @@
         if (menuEntry.type == "MENU_OPTION") {
           vm.option = vm.options[1];
         } else if (menuEntry.actions.length > 0 && menuEntry.actions[0].getName()) {
+          var matchType = function (action) {
+            return menuEntry.actions[0].getName() === action &&
+              menuEntry.actions[0].inputType === vm.options[i].type;
+          };
           for (var i = 0; i < vm.options.length; i++) {
-            var isMatch = vm.options[i].actions.some(function (action) {
-              return menuEntry.actions[0].getName() === action &&
-                menuEntry.actions[0].inputType === vm.options[i].type;
-            });
+            var isMatch = vm.options[i].actions.some(matchType);
             if (isMatch) {
               vm.option = vm.options[i];
             }

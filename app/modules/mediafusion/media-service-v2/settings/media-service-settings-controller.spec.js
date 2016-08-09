@@ -22,8 +22,6 @@ describe('Controller: MediaServiceSettingsControllerV2', function () {
   //expect(XhrNotificationService.notify).toHaveBeenCalled();
   beforeEach(inject(function (_$rootScope_, $state, $controller, $stateParams, _$q_, _$modal_, $translate, _MediaServiceActivationV2_, _MailValidatorService_, _XhrNotificationService_, _Notification_, _ServiceDescriptor_, _FeatureToggleService_) {
     $rootScope = _$rootScope_;
-    $state = $state;
-    $stateParams = $stateParams;
     $q = _$q_;
     $modal = _$modal_;
 

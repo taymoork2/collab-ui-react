@@ -34,8 +34,10 @@
     vm.openImportModal = openImportModal;
     vm.changeBehaviour = changeBehaviour;
     vm.saveTimeZone = saveTimeZone;
-    vm.timeZonePlaceholder = $translate.instant('serviceSetupModal.searchTimeZone');
 
+    vm.timeZone = {};
+    vm.timeZonePlaceholder = $translate.instant('serviceSetupModal.searchTimeZone');
+    vm.timeZoneInfo = '';
     vm.isDeleted = false;
     vm.toggleHolidays = true;
     vm.toggleHours = true;
@@ -355,9 +357,16 @@
     }
 
     function saveTimeZone() {
+      if (!vm.ui.isClosedHours && !vm.ui.isHolidays) {
+        // time zone is only saved if some schedule is present
+        return;
+      }
+
       if (vm.timeZoneForm && !vm.timeZoneForm.$pristine) {
-        if ((vm.ui.isClosedHours || vm.ui.isHolidays) &&
-          angular.isUndefined(vm.aaModel.aaRecord.assignedTimeZone)) {
+        // copy value from modal to the ui model
+        vm.ui.timeZone = vm.timeZone;
+
+        if (angular.isUndefined(vm.aaModel.aaRecord.assignedTimeZone)) {
           // log event for first-time timezone change in a schedule
           var type = 'change';
           Analytics.trackEvent(AAMetricNameService.TIME_ZONE, {
@@ -365,6 +374,8 @@
             timezone: vm.ui.timeZone.id
           });
         }
+
+        // update model
         vm.aaModel.aaRecord.assignedTimeZone = vm.ui.timeZone.id;
       }
     }
@@ -421,6 +432,7 @@
             if (vm.isDeleted && !vm.openhours.length && !vm.holidays.length) {
               //Error deleting calendar or updating CE. Retain the scheduleId.
               vm.aaModel.aaRecord.scheduleId = vm.ui.ceInfo.scheduleId;
+              vm.aaModel.aaRecord.assignedTimeZone = vm.ui.timeZone.id;
               vm.isDeleted = false;
               AANotificationService.errorResponse(response, 'autoAttendant.errorDeleteCe', {
                 name: calName,
@@ -489,6 +501,7 @@
     }
 
     function deleteSchedule() {
+      delete vm.aaModel.aaRecord.assignedTimeZone;
       delete vm.aaModel.aaRecord.scheduleId;
 
       AACommonService.saveUiModel(vm.ui, vm.aaModel.aaRecord);
@@ -503,6 +516,10 @@
       }
       return AutoAttendantCeService.updateCe(ceUrl, vm.aaModel.aaRecord)
         .then(function () {
+          // reset timezone to default system time zone for UI
+          vm.ui.timeZone = _.find(vm.ui.timeZoneOptions, function (tzOption) {
+            return tzOption.id === vm.ui.systemTimeZone.id;
+          });
           // success removing ScheduleId from CE, delete the calendar
           return AACalendarService.deleteCalendar(vm.ui.ceInfo.scheduleId).then(function () {
             delete vm.ui.ceInfo.scheduleId;
@@ -553,7 +570,7 @@
       });
       vm.dayOptions = [];
       _.each(AAICalService.getTwoLetterDays(), function (value, index) {
-        vm.dayOptions[(index - 1 + 7) % 7] = {
+        vm.dayOptions[((index - 1) + 7) % 7] = {
           index: index,
           abbr: value,
           label: moment.weekdays(index)
@@ -565,6 +582,11 @@
       }
 
       vm.holidayBehavior = vm.ui.holidaysValue === 'closedHours';
+
+      vm.timeZone = vm.ui.timeZone;
+      vm.timeZoneInfo = $translate.instant('autoAttendant.scheduleModalInfoTimeZone', {
+        timezone: vm.ui.systemTimeZone.label
+      });
 
       if (!_.isEmpty(sectionToToggle)) {
         toggleSection(sectionToToggle);
