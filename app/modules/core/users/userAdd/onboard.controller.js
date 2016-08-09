@@ -1424,7 +1424,9 @@
             userResult.message = $translate.instant('usersPage.userExistsDomainClaimError', {
               email: userResult.email
             });
-          } else if (userStatus === 403 && (user.message === '400096' || user.message === '400109')) {
+          } else if (userStatus === 403 && user.message === '400096') {
+            userResult.message = $translate.instant('usersPage.unknownCreateUserError');
+          } else if (userStatus === 403 && user.message === '400109') {
             userResult.message = $translate.instant('usersPage.unableToMigrateError', {
               email: userResult.email
             });
@@ -1637,10 +1639,10 @@
 
         //Displaying notifications
         if (method !== 'convertUser') {
-          if ($scope.numAddedUsers + $scope.numUpdatedUsers + $scope.results.errors.length) {
+          if ($scope.results.errors.length) {
             $scope.btnOnboardLoading = false;
             $scope.btnSaveEntLoad = false;
-            Notification.error($scope.results.errors);
+            Notification.notify($scope.results.errors, 'error');
           }
         }
 

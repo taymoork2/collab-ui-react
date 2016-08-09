@@ -162,6 +162,7 @@ describe('Auth Service', function () {
   it('should refresh token and resend request', function (done) {
     OAuthConfig.getOauth2Url = sinon.stub().returns('');
     OAuthConfig.getAccessTokenUrl = sinon.stub().returns('access_token_url');
+    TokenService.getRefreshToken = sinon.stub().returns('refresh_token');
 
     $httpBackend
       .expectPOST('access_token_url')
@@ -186,6 +187,17 @@ describe('Auth Service', function () {
     });
 
     $httpBackend.flush();
+  });
+
+  it('should not refresh token and resend request, should redirect to login', function () {
+    OAuthConfig.getOauth2Url = sinon.stub().returns('');
+    OAuthConfig.getAccessTokenUrl = sinon.stub().returns('access_token_url');
+    TokenService.getRefreshToken = sinon.stub().returns(null);
+    OAuthConfig.getLogoutUrl = sinon.stub().returns('logoutUrl');
+
+    Auth.refreshAccessTokenAndResendRequest().catch(function () {
+      expect(WindowLocation.set).toHaveBeenCalledWith('logoutUrl');
+    });
   });
 
   it('should set refresh token', function () {
