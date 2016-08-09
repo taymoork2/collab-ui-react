@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Service: AAUiScheduleService', function () {
-  var $q, $scope, $rootScope, AAUiScheduleService, AAICalService, AutoAttendantCeInfoModelService, AACalendarService;
+  var $q, $scope, $rootScope, AAUiScheduleService, AAICalService, AACalendarService;
   var AANotificationService;
 
   function getRange8To5() {
@@ -59,11 +59,10 @@ describe('Service: AAUiScheduleService', function () {
   beforeEach(angular.mock.module('Huron'));
   beforeEach(angular.mock.module('Sunlight'));
 
-  beforeEach(inject(function (_$q_, _$rootScope_, _AANotificationService_, _AAUiScheduleService_, _AAICalService_, _AutoAttendantCeInfoModelService_, _AACalendarService_) {
+  beforeEach(inject(function (_$q_, _$rootScope_, _AANotificationService_, _AAUiScheduleService_, _AAICalService_, _AACalendarService_) {
     AANotificationService = _AANotificationService_;
     AAUiScheduleService = _AAUiScheduleService_;
     AAICalService = _AAICalService_;
-    AutoAttendantCeInfoModelService = _AutoAttendantCeInfoModelService_;
     AACalendarService = _AACalendarService_;
     $q = _$q_;
     $rootScope = _$rootScope_;

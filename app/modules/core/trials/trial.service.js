@@ -247,7 +247,7 @@
         })
         .map(function (trial) {
           if (trial.type === Config.offerTypes.pstn || trial.type === Config.offerTypes.context) {
-            return;
+            return undefined;
           }
           var licenseCount =
             (trial.type === Config.trials.roomSystems || trial.type === Config.offerTypes.care) ?

@@ -27,11 +27,11 @@
     }; // getUserSettingsInfo()
 
     $scope.btnReload = function () {
-      var funcName = "btnReload()";
-      var logMsg = "";
+      // var funcName = "btnReload()";
+      // var logMsg = "";
 
-      logMsg = funcName + ": " + "\n" +
-        "sessionTicketErr=" + $scope.userSettingsModel.sessionTicketErr;
+      // logMsg = funcName + ": " + "\n" +
+      //   "sessionTicketErr=" + $scope.userSettingsModel.sessionTicketErr;
       // $log.log(logMsg);
 
       if ($scope.userSettingsModel.sessionTicketErr) {

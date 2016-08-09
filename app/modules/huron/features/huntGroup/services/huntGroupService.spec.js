@@ -6,9 +6,8 @@
 
 describe('Hunt Group Service', function () {
 
-  var HuronConfig, $q, $httpBackend, huntGroupService, huntGroupId, getHuntListUrl, deleteHGUrl;
-  var customerId = '123',
-    userSearchServiceV2, numberSearchServiceV2;
+  var $httpBackend, huntGroupService, huntGroupId, getHuntListUrl, deleteHGUrl;
+  var customerId = '123';
 
   var spiedAuthinfo = {
     getOrgId: jasmine.createSpy('getOrgId').and.returnValue(customerId)
@@ -20,9 +19,7 @@ describe('Hunt Group Service', function () {
     $provide.value("Authinfo", spiedAuthinfo);
   }));
 
-  beforeEach(inject(function (_$q_, _HuronConfig_, _$httpBackend_, _HuntGroupService_) {
-    $q = _$q_;
-    HuronConfig = _HuronConfig_;
+  beforeEach(inject(function (_$httpBackend_, _HuntGroupService_) {
     $httpBackend = _$httpBackend_;
     huntGroupService = _HuntGroupService_;
     huntGroupId = '456';
@@ -46,7 +43,7 @@ describe('Hunt Group Service', function () {
 
   it('should fail to get list of huntGroups when server gives an error', function () {
     $httpBackend.expectGET(getHuntListUrl).respond(500);
-    huntGroupService.getListOfHuntGroups().then(function (response) {}, function (response) {
+    huntGroupService.getListOfHuntGroups().then(function () {}, function (response) {
       expect(response.status).toEqual(500);
     });
   });
@@ -61,7 +58,7 @@ describe('Hunt Group Service', function () {
 
   it('should fail to delete a given huntGroup when server gives an error', function () {
     $httpBackend.expectDELETE(deleteHGUrl).respond(500);
-    huntGroupService.deleteHuntGroup(huntGroupId).then(function (response) {}, function (response) {
+    huntGroupService.deleteHuntGroup(huntGroupId).then(function () {}, function (response) {
       expect(response.status).toEqual(500);
     });
   });

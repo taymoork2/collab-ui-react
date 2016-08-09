@@ -1,73 +1,61 @@
-  'use strict';
-  describe('RedirectAddResourceControllerV2', function () {
-    beforeEach(angular.mock.module('Mediafusion'));
-    var vm, yesProceed, controller, cluster, RedirectTargetService, MediaClusterServiceV2, redirectTargetServiceMock, redirectTargetPromise, mediaClusterServiceMock, MediaClusterService, $q, XhrNotificationService, $modal, modalInstanceMock, windowMock, $scope, firstTimeSetup;
-    var hostname = "MFA";
-    var enteredCluster = "blr-ecp-246";
-    var $rootScope, getClusterListDiffered, getGroupsDiffered, addRedirectTargetDiffered;
-    beforeEach(inject(function (_$rootScope_, $controller, _$q_, _XhrNotificationService_, _$modal_) {
-      $q = _$q_;
-      $scope = _$rootScope_.$new();
-      firstTimeSetup = false;
-      yesProceed = false;
-      redirectTargetPromise = {
-        then: sinon.stub()
-      };
-      addRedirectTargetDiffered = $q.defer();
-      redirectTargetServiceMock = {
-        addRedirectTarget: sinon.stub().returns(addRedirectTargetDiffered.promise)
-      };
-      getClusterListDiffered = $q.defer();
-      getGroupsDiffered = $q.defer();
-      //    createGroupDiffered = $q.defer();
-      MediaClusterServiceV2 = {
-        getClustersV2: sinon.stub().returns(redirectTargetPromise),
-        createClusterV2: sinon.stub().returns(redirectTargetPromise),
-        addRedirectTarget: sinon.stub(),
-        getAll: sinon.stub().returns(redirectTargetPromise)
-      };
-      modalInstanceMock = {
-        close: sinon.stub()
-      };
-      windowMock = {
-        open: sinon.stub()
-      };
-      XhrNotificationService = _XhrNotificationService_;
-      $modal = _$modal_;
-      controller = $controller('RedirectAddResourceControllerV2', {
-        MediaClusterServiceV2: MediaClusterServiceV2,
-        $q: $q,
-        $modalInstance: modalInstanceMock,
-        $window: windowMock,
-        XhrNotificationService: XhrNotificationService,
-        $modal: $modal,
-        $scope: $scope,
-        firstTimeSetup: firstTimeSetup,
-        yesProceed: yesProceed
-      });
-    }));
-    it('controller should be defined', function () {
-      expect(controller).toBeDefined();
+'use strict';
+
+describe('RedirectAddResourceControllerV2', function () {
+  beforeEach(angular.mock.module('Mediafusion'));
+  var redirectTargetPromise, $q, httpBackend, controller, $state, $stateParams, AddResourceCommonServiceV2, XhrNotificationService, $translate, $modalInstance, $modal, firstTimeSetup, yesProceed;
+  beforeEach(inject(function (_XhrNotificationService_, _$translate_, _$state_, _$stateParams_, _AddResourceCommonServiceV2_, $httpBackend, $controller, _$q_, _$modal_) {
+    $q = _$q_;
+    httpBackend = $httpBackend;
+    httpBackend.when('GET', /^\w+.*/).respond({});
+    redirectTargetPromise = {
+      then: sinon.stub()
+    };
+    $state = _$state_;
+    $stateParams = _$stateParams_;
+    AddResourceCommonServiceV2 = _AddResourceCommonServiceV2_;
+    $translate = _$translate_;
+    XhrNotificationService = _XhrNotificationService_;
+    $modalInstance = {
+      close: sinon.stub()
+    };
+    $modal = _$modal_;
+    yesProceed = true;
+    firstTimeSetup = true;
+    controller = $controller('RedirectAddResourceControllerV2', {
+      $q: $q,
+      XhrNotificationService: XhrNotificationService,
+      $translate: $translate,
+      $state: $state,
+      $stateParams: $stateParams,
+      AddResourceCommonServiceV2: AddResourceCommonServiceV2,
+      $modalInstance: $modalInstance,
+      $modal: $modal,
+      yesProceed: yesProceed,
+      firstTimeSetup: firstTimeSetup
     });
-    /*    it('should call the getClustersV2', function () {
-          getClusterListDiffered.resolve();
-          $scope.$apply();
-          controller.getV2Clusters();
-          expect(MediaClusterServiceV2.getClustersV2).toHaveBeenCalled();
-          expect(MediaClusterServiceV2.getClustersV2.callCount).toBe(2);
-        });*/
-    it('should call the addRedirectTargetClicked with hostname and cluster name', function () {
-      addRedirectTargetDiffered.resolve();
-      $scope.$apply();
-      controller.addRedirectTargetClicked(hostname, enteredCluster);
-      expect(MediaClusterServiceV2.createClusterV2).toHaveBeenCalled();
-    });
-    it('should call the redirectToTargetAndCloseWindowClicked', function () {
-      controller.selectedCluster = 'MF_TEAM';
-      sinon.stub(controller, 'redirectPopUpAndClose');
-      controller.redirectPopUpAndClose(redirectTargetPromise);
-      $scope.$apply();
-      controller.redirectToTargetAndCloseWindowClicked("10.20.30.40", "MF_TEAM");
-      expect(controller.redirectPopUpAndClose).toHaveBeenCalled();
-    });
+  }));
+  it('controller should be defined', function () {
+    expect(controller).toBeDefined();
   });
+
+  it('AddResourceCommonServiceV2.addRedirectTargetClicked should be called for addRedirectTargetClicked', function () {
+    spyOn(AddResourceCommonServiceV2, 'addRedirectTargetClicked').and.returnValue(redirectTargetPromise);
+    controller.addRedirectTargetClicked();
+    expect(AddResourceCommonServiceV2.addRedirectTargetClicked).toHaveBeenCalled();
+  });
+
+  it('AddResourceCommonServiceV2.redirectPopUpAndClose should be called for redirectToTargetAndCloseWindowClicked', function () {
+    spyOn(AddResourceCommonServiceV2, 'redirectPopUpAndClose').and.returnValue(redirectTargetPromise);
+    controller.redirectToTargetAndCloseWindowClicked();
+    expect(AddResourceCommonServiceV2.redirectPopUpAndClose).toHaveBeenCalled();
+  });
+
+  it('controller.addRedirectTargetClicked should be called for next', function () {
+    controller.selectedCluster = 'selectedCluster';
+    controller.hostName = 'hostName';
+    spyOn(controller, 'addRedirectTargetClicked').and.returnValue(redirectTargetPromise);
+    controller.next();
+    expect(controller.addRedirectTargetClicked).toHaveBeenCalled();
+  });
+
+});

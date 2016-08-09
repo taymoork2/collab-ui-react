@@ -9,7 +9,7 @@
         return deferredResolve(findLastLog(HelpdeskMockData.logs.search));
       }
       var deferred = $q.defer();
-      LogService.searchLogs(term, function (data, status) {
+      LogService.searchLogs(term, function (data) {
         if (data.success) {
           if (data.metadataList && data.metadataList.length > 0) {
             deferred.resolve(findLastLog(data.metadataList));
@@ -29,7 +29,7 @@
       }
 
       var deferred = $q.defer();
-      LogService.listLogs(uuid, function (data, status) {
+      LogService.listLogs(uuid, function (data) {
         if (data.success) {
           if (data.metadataList && data.metadataList.length > 0) {
             deferred.resolve(findLastLog(data.metadataList));
@@ -49,7 +49,7 @@
       }
 
       var deferred = $q.defer();
-      LogService.downloadLog(filename, function (data, status) {
+      LogService.downloadLog(filename, function (data) {
         if (data.success) {
           deferred.resolve(data.tempURL);
         } else {

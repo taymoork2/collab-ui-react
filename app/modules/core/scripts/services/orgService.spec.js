@@ -3,9 +3,7 @@
 describe('orgService', function () {
   beforeEach(angular.mock.module('Core'));
 
-  var q, deferred;
-
-  var httpBackend, Orgservice, Auth, Authinfo, Config, Log, UrlConfig, Utils;
+  var httpBackend, Orgservice, Auth, Authinfo, Config, Log, UrlConfig;
   var eftSettingRegex = /.*\/settings\/eft\.*/;
 
   beforeEach(function () {
@@ -82,7 +80,7 @@ describe('orgService', function () {
       test: 'val'
     };
     httpBackend.expect('GET', UrlConfig.getScomUrl() + '/' + Authinfo.getOrgId()).respond(200, responseObj);
-    var promise = Orgservice.getOrg(_.noop, Authinfo.getOrgId())
+    Orgservice.getOrg(_.noop, Authinfo.getOrgId())
       .then(function (response) {
         expect(response.data).toEqual(jasmine.objectContaining(_.assign({}, responseObj, {
           orgSettings: {}
@@ -436,7 +434,6 @@ describe('orgService', function () {
   });
 
   it('should fail to set organization settings', function () {
-    var callback = sinon.stub();
     var payload = {
       reportingSiteUrl: 'http://example.com',
       reportingSiteDesc: 'Description',

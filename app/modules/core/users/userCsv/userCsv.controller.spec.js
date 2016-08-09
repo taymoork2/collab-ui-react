@@ -1,24 +1,23 @@
 'use strict';
 
 describe('OnboardCtrl: Ctrl', function () {
-  var controller, $controller, $modal, $scope, $timeout, $q, $state, $stateParams, $previousState, modalDefer, $interval, Notification, Userservice, TelephonyInfoService, Orgservice, FeatureToggleService, Authinfo, CsvDownloadService, HuronCustomer, UserCsvService;
-  var getUserMe, getMigrateUsers, getMyFeatureToggles, sites;
-  var fusionServices, headers, getLicensesUsage;
-  var getLicensesUsageSpy, customer;
+  var controller, $controller, $modal, $scope, $timeout, $q, $state, $previousState, modalDefer, $interval, Notification, Userservice, Orgservice, FeatureToggleService, Authinfo, CsvDownloadService, HuronCustomer, UserCsvService;
+  var getUserMe, getMigrateUsers, getMyFeatureToggles;
+  var fusionServices, headers;
+  var customer;
   beforeEach(angular.mock.module('Core'));
   beforeEach(angular.mock.module('Hercules'));
   beforeEach(angular.mock.module('Huron'));
   beforeEach(angular.mock.module('Sunlight'));
   beforeEach(angular.mock.module('Messenger'));
 
-  beforeEach(inject(function (_$controller_, _$interval_, _$modal_, _$q_, $rootScope, _$state_, _$stateParams_, _$previousState_, _$timeout_, _Authinfo_, _CsvDownloadService_, _FeatureToggleService_, _HuronCustomer_, _Notification_, _Orgservice_, _UserCsvService_, _Userservice_) {
+  beforeEach(inject(function (_$controller_, _$interval_, _$modal_, _$q_, $rootScope, _$state_, _$previousState_, _$timeout_, _Authinfo_, _CsvDownloadService_, _FeatureToggleService_, _HuronCustomer_, _Notification_, _Orgservice_, _UserCsvService_, _Userservice_) {
     $scope = $rootScope.$new();
     $controller = _$controller_;
     $timeout = _$timeout_;
     $interval = _$interval_;
     $q = _$q_;
     $state = _$state_;
-    $stateParams = _$stateParams_;
     $modal = _$modal_;
     $previousState = _$previousState_;
 
@@ -41,7 +40,6 @@ describe('OnboardCtrl: Ctrl', function () {
     getUserMe = getJSONFixture('core/json/users/me.json');
     getMigrateUsers = getJSONFixture('core/json/users/migrate.json');
     getMyFeatureToggles = getJSONFixture('core/json/users/me/featureToggles.json');
-    sites = getJSONFixture('huron/json/settings/sites.json');
     fusionServices = getJSONFixture('core/json/authInfo/fusionServices.json');
     headers = getJSONFixture('core/json/users/headers.json');
     customer = getJSONFixture('huron/json/settings/customer.json');
@@ -91,7 +89,6 @@ describe('OnboardCtrl: Ctrl', function () {
   // ...
   // <numUsers>: user <numUsers>
   function generateUsersCsv(numUsers, invalidUsers) {
-    var invalidUsersToMake = invalidUsers || [];
     var header = ['First Name', 'Last Name', 'Display Name', 'User ID/Email (Required)', 'Directory Number', 'Direct Line', 'Calendar Service', 'Meeting 25 Party', 'Spark Call', 'Spark Message'];
     var csv = [header];
     for (var ii = 0; ii < numUsers; ii++) {
@@ -102,7 +99,6 @@ describe('OnboardCtrl: Ctrl', function () {
       ];
       if (_.contains(invalidUsers, csv.length + 1)) {
         // create an error in the CSV data for user
-        invalidUsersToMake--;
         if (_.random() % 2) {
           user[3] = '';
         } else {

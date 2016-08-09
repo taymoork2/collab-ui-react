@@ -3,7 +3,6 @@
 /* global jasmine, browser, _ */
 
 var HttpsProxyAgent = require("https-proxy-agent");
-var touch = require('touch');
 var fs = require('fs');
 var appConfig = require('./config/config');
 var processEnvUtil = require('./utils/processEnvUtil')();
@@ -17,11 +16,20 @@ var gatingSuites = _.chain(appConfig.e2eSuites).omit('huron').values().value();
 // - and at the end of each spec run, a connection back to sauce is made to report results
 var agent = mkProxyAgent();
 
-var TIMEOUT      = 1000 * 60;
+var TIMEOUT = 1000 * 60;
 var LONG_TIMEOUT = 1000 * 60 * 2;
 var VERY_LONG_TIMEOUT = 1000 * 60 * 5;
 var E2E_FAIL_RETRY = appConfig.e2eFailRetry;
 var NEWLINE = '\n';
+
+var maxInstances;
+if (process.env.SAUCE_MAX_INSTANCES) {
+  maxInstances = process.env.SAUCE_MAX_INSTANCES;
+} else if (process.env.SAUCE_USERNAME) {
+  maxInstances = 10;
+} else {
+  maxInstances = 1;
+}
 
 exports.config = {
   framework: "jasmine2",
@@ -33,7 +41,7 @@ exports.config = {
   sauceUser: process.env.SAUCE_USERNAME,
   sauceKey: process.env.SAUCE_ACCESS_KEY,
   sauceAgent: process.env.SAUCE_USERNAME ? agent : undefined,
-  directConnect: process.env.SAUCE_USERNAME ? false : true,
+  directConnect: !process.env.SAUCE_USERNAME,
 
   capabilities: {
     'browserName': 'chrome',
@@ -48,7 +56,7 @@ exports.config = {
       'args': ['--disable-extensions', '--window-position=0,0', '--window-size=1280,900']
     },
     shardTestFiles: true,
-    maxInstances: process.env.SAUCE_MAX_INSTANCES ? process.env.SAUCE_MAX_INSTANCES : process.env.SAUCE_USERNAME ? 10 : 1
+    maxInstances: maxInstances
   },
 
   plugins: [{
@@ -67,7 +75,7 @@ exports.config = {
   // with relative paths will be prepended with this.
   baseUrl: process.env.LAUNCH_URL || 'http://127.0.0.1:8000',
 
-  onPrepare: function() {
+  onPrepare: function () {
     browser.ignoreSynchronization = true;
 
     global.isProductionBackend = !!args.productionBackend;
@@ -115,7 +123,6 @@ exports.config = {
     var FirstTimeWizard = require('./test/e2e-protractor/pages/wizard.page.js');
     var ServiceSetup = require('./test/e2e-protractor/pages/servicesetup.page.js');
     var RolesPage = require('./test/e2e-protractor/pages/roles.page.js');
-    var MeetingsPage = require('./test/e2e-protractor/pages/meetings.page.js');
     var WebExUserSettingsPage = require('./test/e2e-protractor/pages/webexusersettings.page.js');
     var WebExSiteListPage = require('./test/e2e-protractor/pages/webexsitelist.page.js');
     var WebExSiteSettigsPage = require('./test/e2e-protractor/pages/webexsitesettings.page.js');
@@ -180,7 +187,12 @@ exports.config = {
     global.careChatTemplateSetupPage = new CareChatTemplateSetupPage();
 
     function initReporters(config) {
-      var testFile = _.chain(config).get('specs[0]', '').split(config.configDir).takeRight().trimLeft('/').value();
+      var testFile = _.chain(config)
+        .get('specs[0]', '')
+        .split(config.configDir)
+        .takeRight()
+        .trimLeft('/')
+        .value();
       var jenkinsSubdir = processEnvUtil.isJenkins() ? process.env.BUILD_TAG : '';
 
       jasmine.getEnv().addReporter(
@@ -228,7 +240,7 @@ exports.config = {
 
         this.specDone = function (spec) {
           if (spec.status === 'failed' && !args.nofailfast) {
-              disableSpecs();
+            disableSpecs();
           }
         };
       }
@@ -243,7 +255,7 @@ exports.config = {
     onComplete: null,
     isVerbose: true,
     showColors: true,
-    print: function() {},
+    print: function () {},
     includeStackTrace: true,
     defaultTimeoutInterval: VERY_LONG_TIMEOUT
   },
@@ -275,7 +287,7 @@ function Logger() {
   return log;
 }
 
-function mkProxyAgent () {
+function mkProxyAgent() {
   if (process.env.SAUCE_ENABLE_WEB_PROXY === 'false') {
     return;
   }

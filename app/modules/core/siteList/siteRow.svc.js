@@ -57,8 +57,8 @@
     };
 
     this.logSiteRows = function () {
-      var funcName = "logSiteRows()";
-      var logMsg = funcName + "\n" + JSON.stringify(_this.siteRows.gridData);
+      // var funcName = "logSiteRows()";
+      // var logMsg = funcName + "\n" + JSON.stringify(_this.siteRows.gridData);
       //      $log.log(logMsg);
       //      $log.log("_this.siteRows.showGridData = " + _this.siteRows.showGridData + "\n");
       //      $log.log("_this.siteRows.gridOptions = " + JSON.stringify(_this.siteRows.gridOptions) + "\n");
@@ -69,12 +69,12 @@
     this.stopPolling = function () {
       _this.siteRows.gridData.forEach(
         function cancelCsvPollInterval(siteRow) {
-          var funcName = "cancelCsvPollInterval()";
-          var logMsg = "";
+          // var funcName = "cancelCsvPollInterval()";
+          // var logMsg = "";
 
           if (null != siteRow.csvPollIntervalObj) {
-            logMsg = funcName + "\n" +
-              "siteUrl=" + siteRow.license.siteUrl;
+            // logMsg = funcName + "\n" +
+              // "siteUrl=" + siteRow.license.siteUrl;
             // $log.log(logMsg);
 
             $interval.cancel(siteRow.csvPollIntervalObj);
@@ -84,8 +84,8 @@
     };
 
     this.configureGrid = function () {
-      var funcName = "configureGrid()";
-      var logMsg = "";
+      // var funcName = "configureGrid()";
+      // var logMsg = "";
       //$log.log(logMsg);
 
       // Start of grid set up
@@ -128,11 +128,11 @@
     }; //configureGrid
 
     this.getConferenceServices = function () {
-      var funcName = "getConferenceServices()";
+      // var funcName = "getConferenceServices()";
 
       var conferenceServices = Authinfo.getConferenceServicesWithoutSiteUrl();
-      var logMsg = funcName + "\n" +
-        "conferenceServices=\n" + JSON.stringify(conferenceServices);
+      // var logMsg = funcName + "\n" +
+        // "conferenceServices=\n" + JSON.stringify(conferenceServices);
       //      $log.log(logMsg);
 
       conferenceServices.forEach(
@@ -145,9 +145,9 @@
               if (newSiteUrl == siteRow.license.siteUrl) {
                 isNewSiteUrl = false;
 
-                logMsg = funcName + ": " + "\n" +
-                  "Duplicate webex site url detected and skipped." + "\n" +
-                  "newSiteUrl=" + newSiteUrl;
+                // logMsg = funcName + ": " + "\n" +
+                //   "Duplicate webex site url detected and skipped." + "\n" +
+                //   "newSiteUrl=" + newSiteUrl;
                 //$log.log(logMsg);
               }
             }
@@ -203,14 +203,14 @@
 
     this.updateConferenceServices = function () {
 
-      var funcName = "updateConferenceServices()";
-      var logMsg = "";
+      // var funcName = "updateConferenceServices()";
+      // var logMsg = "";
       //$log.log(logMsg);
 
       if (!_.isUndefined(Authinfo.getPrimaryEmail())) {
         _this.checkAndUpdateGridOptions();
       } else {
-        Userservice.getUser('me', function (data, status) {
+        Userservice.getUser('me', function (data) {
           if (
             (data.success) &&
             (data.emails)
@@ -224,28 +224,28 @@
     }; //updateConferenceServices()
 
     this.checkAndUpdateGridOptions = function () {
-      var funcName = "checkAndUpdateGridOptions()";
-      var logMsg = "";
+      // var funcName = "checkAndUpdateGridOptions()";
+      // var logMsg = "";
 
-      logMsg = funcName + "\n" +
-        "siteRows.gridData=" + JSON.stringify(_this.siteRows.gridData);
+      // logMsg = funcName + "\n" +
+      //   "siteRows.gridData=" + JSON.stringify(_this.siteRows.gridData);
       // $log.log(logMsg);
 
       // remove grid column(s) based on feature toggles
       FeatureToggleService.supports(FeatureToggleService.features.webexCSV).then(
         function checkWebExFeaturToggleSuccess(adminUserSupportCSV) {
-          var funcName = "checkWebExFeaturToggleSuccess()";
-          var logMsg = "";
+          // var funcName = "checkWebExFeaturToggleSuccess()";
+          // var logMsg = "";
 
-          logMsg = funcName + "\n" +
-            "adminUserSupportCSV=" + adminUserSupportCSV;
+          // logMsg = funcName + "\n" +
+          //   "adminUserSupportCSV=" + adminUserSupportCSV;
           // $log.log(logMsg);
 
           // Start of hide CSV info if admin user does not have feature toggle
           _this.siteRows.gridData.forEach(
             function processSiteRow(siteRow) {
-              var funcName = "checkWebExFeaturToggleSuccess().processSiteRow()";
-              var logMsg = "";
+              // var funcName = "checkWebExFeaturToggleSuccess().processSiteRow()";
+              // var logMsg = "";
 
               siteRow.showCSVIconAndResults = adminUserSupportCSV;
             } // processSiteRow()
@@ -254,9 +254,9 @@
           _this.updateGridColumns();
         }, // checkWebExFeaturToggleSuccess()
 
-        function checkWebExFeaturToggleError(response) {
-          var funcName = "checkWebExFeaturToggleError()";
-          var logMsg = "";
+        function checkWebExFeaturToggleError() {
+          // var funcName = "checkWebExFeaturToggleError()";
+          // var logMsg = "";
 
           //$log.log(funcName);
 
@@ -267,8 +267,8 @@
     }; //checkAndUpdateGridOptions
 
     this.updateGridColumns = function () {
-      var funcName = "updateGridColumns()";
-      var logMsg = "";
+      // var funcName = "updateGridColumns()";
+      // var logMsg = "";
       //$log.log(funcName);
 
       _this.updateLicenseTypesColumn();
@@ -276,23 +276,23 @@
     }; // updateGridColumns()
 
     this.updateLicenseTypesColumn = function () {
-      var funcName = "updateLicenseTypesColumn()";
-      var logMsg = "";
+      // var funcName = "updateLicenseTypesColumn()";
+      // var logMsg = "";
       //$log.log(funcName);
 
       WebExUtilsFact.getAllSitesWebexLicenseInfo().then(
         function getWebexLicenseInfoSuccess(allSitesLicenseInfo) {
-          var funcName = "getWebexLicenseInfoSuccess()";
-          var logMsg = "";
+          // var funcName = "getWebexLicenseInfoSuccess()";
+          // var logMsg = "";
 
-          logMsg = funcName + ": " + "\n" +
-            "allSitesLicenseInfo=" + JSON.stringify(allSitesLicenseInfo);
+          // logMsg = funcName + ": " + "\n" +
+          //   "allSitesLicenseInfo=" + JSON.stringify(allSitesLicenseInfo);
           //$log.log(logMsg);
 
           _this.siteRows.gridData.forEach(
             function processGridForLicense(siteRow) {
-              var funcName = "processGridForLicense()";
-              var logMsg = "";
+              // var funcName = "processGridForLicense()";
+              // var logMsg = "";
               var siteUrl = siteRow.license.siteUrl;
               var count = 0;
               siteRow.licenseTooltipDisplay = "";
@@ -513,8 +513,8 @@
                 siteRow.licenseTooltipDisplay = null;
               }
 
-              logMsg = funcName + ": " + "\n" +
-                "siteRow=" + JSON.stringify(siteRow);
+              // logMsg = funcName + ": " + "\n" +
+              //   "siteRow=" + JSON.stringify(siteRow);
               //$log.log(logMsg);
 
               siteRow.showLicenseTypes = true;
@@ -523,12 +523,12 @@
 
         }, // getWebexLicenseInfoSuccess()
 
-        function getWebexLicenseInfoError(result) {
-          var funcName = "getWebexLicenseInfoError()";
-          var logMsg = "";
+        function getWebexLicenseInfoError(/*result*/) {
+          // var funcName = "getWebexLicenseInfoError()";
+          // var logMsg = "";
 
-          logMsg = funcName + ": " + "\n" +
-            "result=" + JSON.stringify(result);
+          // logMsg = funcName + ": " + "\n" +
+          //   "result=" + JSON.stringify(result);
           //$log.log(logMsg);
         } // getWebexLicenseInfoError()
       ); //getWebexLicenseInfo.then()
@@ -536,14 +536,14 @@
     }; // updateLicenseTypesColumn
 
     this.updateActionsColumnForAllRows = function () {
-      var funcName = "updateActionsColumnForAllRows()";
-      var logMsg = "";
+      // var funcName = "updateActionsColumnForAllRows()";
+      // var logMsg = "";
       //$log.log(funcName);
 
       _this.siteRows.gridData.forEach(
         function processSiteRow(siteRow) {
-          var funcName = "processSiteRow()";
-          var logMsg = "";
+          // var funcName = "processSiteRow()";
+          // var logMsg = "";
 
           _this.updateActionsColumnForOneRow(siteRow);
         } // processSiteRow()
@@ -576,11 +576,11 @@
 
       WebExApiGatewayService.siteFunctions(siteUrl).then(
         function siteFunctionsSuccess(result) {
-          var funcName = "siteFunctionsSuccess()";
-          var logMsg = "";
+          // var funcName = "siteFunctionsSuccess()";
+          // var logMsg = "";
 
-          logMsg = funcName + ": " + "\n" +
-            "result=" + JSON.stringify(result);
+          // logMsg = funcName + ": " + "\n" +
+          //   "result=" + JSON.stringify(result);
           // $log.log(logMsg);
 
           siteRow.isIframeSupported = result.isIframeSupported;
@@ -621,8 +621,8 @@
         }, // siteFunctionsSuccess()
 
         function siteFunctionsError(response) {
-          var funcName = "siteFunctionsError()";
-          var logMsg = "";
+          // var funcName = "siteFunctionsError()";
+          // var logMsg = "";
 
           siteRow.isIframeSupported = false;
           siteRow.isAdminReportEnabled = false;
@@ -642,12 +642,12 @@
     }; // updateActionsColumnForOneRow()
 
     this.updateCSVStatusInRow = function (siteUrl) {
-      var funcName = "updateCSVStatusInRow()";
-      var logMsg = "";
+      // var funcName = "updateCSVStatusInRow()";
+      // var logMsg = "";
 
       var siteRow = _this.getSiteRow(siteUrl);
-      logMsg = funcName + "\n" +
-        "siteRow=" + "\n" + JSON.stringify(siteRow);
+      // logMsg = funcName + "\n" +
+      //   "siteRow=" + "\n" + JSON.stringify(siteRow);
       //$log.log(logMsg);
 
       //var siteUrl = siteRow.siteUrl;
@@ -664,9 +664,9 @@
 
         mockCsvStatusReq = WebExApiGatewayConstsService.csvStatusTypes[siteRow.csvMock.mockStatusCurrentIndex];
 
-        logMsg = funcName + "\n" +
-          "mockStatusCurrentIndex=" + siteRow.csvMock.mockStatusCurrentIndex + "\n" +
-          "mockCsvStatusReq=" + mockCsvStatusReq;
+        // logMsg = funcName + "\n" +
+        //   "mockStatusCurrentIndex=" + siteRow.csvMock.mockStatusCurrentIndex + "\n" +
+        //   "mockCsvStatusReq=" + mockCsvStatusReq;
         // $log.log(logMsg);
 
         ++siteRow.csvMock.mockStatusCurrentIndex;
@@ -687,12 +687,12 @@
       ).then(
 
         function success(response) {
-          var funcName = "WebExApiGatewayService.csvStatus.success()";
-          var logMsg = "";
+          // var funcName = "WebExApiGatewayService.csvStatus.success()";
+          // var logMsg = "";
 
-          logMsg = funcName + "\n" +
-            "siteUrl=" + siteRow.siteUrl + "\n" +
-            "response=" + JSON.stringify(response);
+          // logMsg = funcName + "\n" +
+          //   "siteUrl=" + siteRow.siteUrl + "\n" +
+          //   "response=" + JSON.stringify(response);
           //$log.log(logMsg);
 
           // save the response obj into the siteRow obj... when get result (for completed job) is clicked,
@@ -704,12 +704,12 @@
         }, // csvStatusSuccess()
 
         function error(response) {
-          var funcName = "WebExApiGatewayService.csvStatus.error()";
-          var logMsg = "";
+          // var funcName = "WebExApiGatewayService.csvStatus.error()";
+          // var logMsg = "";
 
-          logMsg = funcName + "\n" +
-            "siteUrl=" + siteRow.siteUrl + "\n" +
-            "response=" + JSON.stringify(response);
+          // logMsg = funcName + "\n" +
+          //   "siteUrl=" + siteRow.siteUrl + "\n" +
+          //   "response=" + JSON.stringify(response);
           //$log.log(logMsg);
 
           if (response.errorId == "060502") {
@@ -729,11 +729,11 @@
 
     this.updateDisplayControlFlagsInRow = function (siteRow) {
 
-      var funcName = "updateDisplayControlFlagsInRow()";
-      var logMsg = "";
+      // var funcName = "updateDisplayControlFlagsInRow()";
+      // var logMsg = "";
 
-      logMsg = funcName + "\n" +
-        "siteRow.csvStatusObj=" + "\n" + JSON.stringify(siteRow.csvStatusObj);
+      // logMsg = funcName + "\n" +
+      //   "siteRow.csvStatusObj=" + "\n" + JSON.stringify(siteRow.csvStatusObj);
       // $log.log(logMsg);
 
       siteRow.showCSVInfo = true;

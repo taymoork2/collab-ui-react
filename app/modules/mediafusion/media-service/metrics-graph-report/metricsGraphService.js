@@ -20,6 +20,7 @@
     //variables for utilization graph
     var peakUtilization = $translate.instant('mediaFusion.metrics.peakutilization');
     var averageUtilization = $translate.instant('mediaFusion.metrics.averageutilization');
+    var baseVariables = [];
 
     return {
       setUtilizationGraph: setUtilizationGraph,
@@ -27,7 +28,34 @@
       setAvailabilityGraph: setAvailabilityGraph
     };
 
-    function createCallVolumeGraph(data) {
+    function getBaseExportForSerialGraph(fields, fileName) {
+      baseVariables['export'] = {
+        'enabled': true,
+        'exportFields': fields,
+        'fileName': fileName,
+        'libs': {
+          'autoLoad': false
+        },
+        'menu': [{
+          'class': 'export-main',
+          'label': $translate.instant('reportsPage.downloadOptions'),
+          'menu': [{
+            'label': $translate.instant('reportsPage.saveAs'),
+            'title': $translate.instant('reportsPage.saveAs'),
+            'class': 'export-list',
+            'menu': ['PNG', 'JPG', 'PDF']
+          }, 'PRINT', {
+            'class': 'export-list',
+            'label': 'Export',
+            'title': 'Export',
+            'menu': ['CSV']
+          }]
+        }]
+      };
+      return baseVariables['export'];
+    }
+
+    function createCallVolumeGraph(data, cluster, daterange) {
       // if there are no active users for this user
       if (data === null || data === 'undefined' || data.length === 0) {
         return;
@@ -56,7 +84,11 @@
       if (!data[0].balloon) {
         startDuration = 0;
       }
-      var chartData = CommonMetricsGraphService.getBaseStackSerialGraph(data, startDuration, valueAxes, callVolumeGraphs(data), 'timestamp', catAxis);
+      var exportFields = ['call_reject', 'active_calls', 'timestamp'];
+      cluster = cluster.replace(/\s/g, "_");
+      daterange = daterange.replace(/\s/g, "_");
+      var ExportFileName = 'CallVolume_' + cluster + '_' + daterange;
+      var chartData = CommonMetricsGraphService.getBaseStackSerialGraph(data, startDuration, valueAxes, callVolumeGraphs(data), 'timestamp', catAxis, getBaseExportForSerialGraph(exportFields, ExportFileName));
       chartData.numberFormatter = CommonMetricsGraphService.getBaseVariable(NUMFORMAT);
       var chart = AmCharts.makeChart(callVolumediv, chartData);
       chart.addListener("rendered", zoomChart);
@@ -91,7 +123,7 @@
       return graphs;
     }
 
-    function setCallVolumeGraph(data, callVolumeChart) {
+    function setCallVolumeGraph(data, callVolumeChart, cluster, daterange) {
       if (data === null || data === 'undefined' || data.length === 0) {
         return;
       } else if (callVolumeChart !== null && angular.isDefined(callVolumeChart)) {
@@ -99,13 +131,14 @@
         if (!data[0].balloon) {
           startDuration = 0;
         }
+        callVolumeChart = createCallVolumeGraph(data, cluster, daterange);
         callVolumeChart.dataProvider = data;
         callVolumeChart.graphs = callVolumeGraphs(data);
         callVolumeChart.startDuration = startDuration;
         callVolumeChart.validateData();
         return callVolumeChart;
       } else {
-        callVolumeChart = createCallVolumeGraph(data);
+        callVolumeChart = createCallVolumeGraph(data, cluster, daterange);
         callVolumeChart.dataProvider = data;
         callVolumeChart.graphs = callVolumeGraphs(data);
         callVolumeChart.startDuration = startDuration;
@@ -114,7 +147,7 @@
       }
     }
 
-    function createutilizationGraph(data) {
+    function createutilizationGraph(data, cluster, daterange) {
       if (data === null || data === 'undefined' || data.length === 0) {
         return;
       }
@@ -145,7 +178,12 @@
       if (!data[0].balloon) {
         startDuration = 0;
       }
-      var chartData = CommonMetricsGraphService.getBaseStackSerialGraph(data, startDuration, valueAxes, utilizationGraphs(data), 'timestamp', catAxis);
+      var exportFields = ['average_cpu', 'peak_cpu', 'timestamp'];
+      cluster = cluster.replace(/\s/g, "_");
+      daterange = daterange.replace(/\s/g, "_");
+      var ExportFileName = 'Utilization_' + cluster + '_' + daterange;
+
+      var chartData = CommonMetricsGraphService.getBaseStackSerialGraph(data, startDuration, valueAxes, utilizationGraphs(data), 'timestamp', catAxis, getBaseExportForSerialGraph(exportFields, ExportFileName));
       chartData.numberFormatter = CommonMetricsGraphService.getBaseVariable(NUMFORMAT);
       var chart = AmCharts.makeChart(utilizationdiv, chartData);
       chart.addListener("rendered", zoomChart);
@@ -176,7 +214,7 @@
       return graphs;
     }
 
-    function setUtilizationGraph(data, utilizationChart) {
+    function setUtilizationGraph(data, utilizationChart, cluster, daterange) {
 
       var isDummy = false;
       if (data === null || data === 'undefined' || data.length === 0) {
@@ -189,6 +227,7 @@
         if (!data[0].balloon) {
           startDuration = 0;
         }
+        utilizationChart = createutilizationGraph(data, cluster, daterange);
         utilizationChart.dataProvider = data;
         utilizationChart.graphs = utilizationGraphs(data);
         utilizationChart.startDuration = startDuration;
@@ -209,7 +248,7 @@
           isDummy = true;
         }
 
-        utilizationChart = createutilizationGraph(data);
+        utilizationChart = createutilizationGraph(data, cluster, daterange);
         utilizationChart.dataProvider = data;
         utilizationChart.graphs = utilizationGraphs(data);
         utilizationChart.startDuration = startDuration;
@@ -244,7 +283,7 @@
       return valueAxis;
     }
 
-    function createAvailabilityGraph(data, selectedCluster) {
+    function createAvailabilityGraph(data) {
       // if there are no active users for this user
       if (data === null || data === 'undefined' || data.length === 0) {
         return;

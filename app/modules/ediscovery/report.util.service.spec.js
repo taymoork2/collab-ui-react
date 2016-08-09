@@ -21,16 +21,16 @@ describe('Service: ReportUtilService', function () {
       expect(tweakedReport.hasExpired).toBe(false);
       expect(tweakedReport.isDone).toBe(false);
 
-      var report = {
+      report = {
         state: "FAILED"
       };
-      var tweakedReport = Service.tweakReport(report);
+      tweakedReport = Service.tweakReport(report);
       expect(tweakedReport.isDone).toBe(true);
 
-      var report = {
+      report = {
         state: "ABORTED"
       };
-      var tweakedReport = Service.tweakReport(report);
+      tweakedReport = Service.tweakReport(report);
       expect(tweakedReport.isDone).toBe(true);
     });
 
@@ -43,7 +43,7 @@ describe('Service: ReportUtilService', function () {
       };
       expect(Service.tweakReport(report).timeoutDetected).toBe(false);
 
-      var report = {
+      report = {
         state: "RUNNING",
         lastUpdatedTime: moment().subtract(200, 'seconds').utc().format()
       };
@@ -74,12 +74,12 @@ describe('Service: ReportUtilService', function () {
       };
       expect(Service.tweakReport(report).canBeCancelled).toBe(false);
 
-      var report = {
+      report = {
         state: "ACCEPTED"
       };
       expect(Service.tweakReport(report).canBeCancelled).toBe(true);
 
-      var report = {
+      report = {
         state: "RUNNING"
       };
       expect(Service.tweakReport(report).canBeCancelled).toBe(true);

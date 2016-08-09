@@ -89,7 +89,7 @@
           isTrial: true
         });
         aggregate.trialExpiresInDays = _.max(aggregate.licenses, 'trialExpiresInDays').trialExpiresInDays;
-        aggregate.usagePercentage = _.round((aggregate.totalUsage || 0) * 100 / aggregate.totalVolume);
+        aggregate.usagePercentage = _.round(((aggregate.totalUsage || 0) * 100) / aggregate.totalVolume);
       });
       return aggregatedLics;
     }

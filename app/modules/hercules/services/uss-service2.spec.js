@@ -220,9 +220,9 @@ describe('Service: USSService2', function () {
         });
 
       USSService2.updateOrg({
-          id: '456',
-          sipDomain: 'whatever'
-        })
+        id: '456',
+        sipDomain: 'whatever'
+      })
         .then(function (response) {
           expect(response.sipDomain).toEqual('whatever');
         });

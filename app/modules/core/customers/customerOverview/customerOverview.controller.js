@@ -38,15 +38,15 @@
     vm.isPartnerAdmin = Authinfo.isPartnerAdmin();
 
     vm.freeOrPaidServices = null;
-    vm.meetingServices = null;
+    vm.hasMeeting = false;
 
     vm.newCustomerViewToggle = newCustomerViewToggle;
 
     FeatureToggleService.atlasCareTrialsGetStatus()
       .then(function (result) {
         if (_.find(vm.currentCustomer.offers, {
-            id: Config.offerTypes.roomSystems
-          })) {
+          id: Config.offerTypes.roomSystems
+        })) {
           vm.showRoomSystems = true;
         }
         setOffers(result);
@@ -56,9 +56,10 @@
       var licAndOffers = PartnerService.parseLicensesAndOffers(vm.currentCustomer, isCareEnabled);
       vm.offer = vm.currentCustomer.offer = _.get(licAndOffers, 'offer');
       if (vm.newCustomerViewToggle) {
-        var nonTrialServices = PartnerService.getFreeOrActiveServices(vm.currentCustomer, isCareEnabled);
-        vm.freeOrPaidServices = nonTrialServices.freeOrPaidServices;
-        vm.meetingServices = nonTrialServices.meetingServices;
+        vm.freeOrPaidServices = PartnerService.getFreeOrActiveServices(vm.currentCustomer, isCareEnabled);
+        vm.hasMeeting = _.some(vm.freeOrPaidServices, {
+          isMeeting: true
+        });
       }
     }
 
@@ -79,10 +80,10 @@
       initCustomer();
       getLogoSettings();
       getIsTestOrg();
-      isSetupDone().
-      then(function (results) {
-        vm.isOrgSetup = results;
-      });
+      isSetupDone()
+        .then(function (results) {
+          vm.isOrgSetup = results;
+        });
     }
 
     function resetForm() {
@@ -191,9 +192,9 @@
     function openEditTrialModal() {
       TrialService.getTrial(vm.currentCustomer.trialId).then(function (response) {
         $state.go('trialEdit.info', {
-            currentTrial: vm.currentCustomer,
-            details: response
-          })
+          currentTrial: vm.currentCustomer,
+          details: response
+        })
           .then(function () {
             $state.modal.result.then(function () {
               $state.go('partnercustomers.list', {}, {

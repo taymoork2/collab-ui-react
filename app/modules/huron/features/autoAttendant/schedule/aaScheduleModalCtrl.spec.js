@@ -3,9 +3,8 @@
 describe('Controller: AAScheduleModalCtrl', function () {
   var AANotificationService, AutoAttendantCeService, AAMetricNameService, Analytics;
   var AACalendarService, AAUiModelService, AAModelService, AutoAttendantCeInfoModelService, AAICalService, AACommonService;
-  var $q, $scope, $translate, $modalInstance, $controller, $modal, $timeout;
+  var $q, $scope, $modalInstance, $controller, $modal, $timeout;
   var ical;
-  var ces = getJSONFixture('huron/json/autoAttendant/callExperiences.json');
   var calendar = getJSONFixture('huron/json/autoAttendant/aCalendar.json');
   var aaModel, aaUiModel, aaModelWithScheduleId, holidays, starttime, endtime, openhours, controller;
 
@@ -55,8 +54,7 @@ describe('Controller: AAScheduleModalCtrl', function () {
   beforeEach(angular.mock.module('Huron'));
   beforeEach(angular.mock.module('Sunlight'));
 
-  beforeEach(inject(function (_ical_, _$q_, _$controller_, _$translate_, _$modal_, $rootScope, _$timeout_, _AACalendarService_, _AAModelService_, _AAUiModelService_, _AutoAttendantCeService_, _AutoAttendantCeInfoModelService_, _AAICalService_, _AACommonService_, _AAMetricNameService_, _Analytics_) {
-    $translate = _$translate_;
+  beforeEach(inject(function (_ical_, _$q_, _$controller_, _$modal_, $rootScope, _$timeout_, _AACalendarService_, _AAModelService_, _AAUiModelService_, _AutoAttendantCeService_, _AutoAttendantCeInfoModelService_, _AAICalService_, _AACommonService_, _AAMetricNameService_, _Analytics_) {
     $scope = $rootScope.$new();
     ical = _ical_;
     $controller = _$controller_;
@@ -507,7 +505,7 @@ describe('Controller: AAScheduleModalCtrl', function () {
       expect(controller.aaModel.aaRecord.assignedTimeZone).toBe(aaUiModel.timeZone.id);
     });
 
-    it('should NOT log a timezone event for 24 Hours schedule', function () {
+    it('should NOT save timezone or log event for 24 Hours schedule', function () {
       controller.timeZoneForm = {
         $pristine: false
       };
@@ -516,7 +514,7 @@ describe('Controller: AAScheduleModalCtrl', function () {
 
       controller.saveTimeZone();
       expect(Analytics.trackEvent).not.toHaveBeenCalled();
-      expect(controller.aaModel.aaRecord.assignedTimeZone).toBe(aaUiModel.timeZone.id);
+      expect(controller.aaModel.aaRecord.assignedTimeZone).toBe(undefined);
     });
 
   });

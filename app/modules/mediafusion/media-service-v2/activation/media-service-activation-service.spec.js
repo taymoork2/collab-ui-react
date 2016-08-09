@@ -5,7 +5,7 @@ describe('MediaServiceActivationV2', function () {
   beforeEach(angular.mock.module('Mediafusion'));
 
   // instantiate service
-  var Service, $httpBackend, authinfo, $rootScope;
+  var Service, $httpBackend, authinfo;
   var extensionEntitlements = ['squared-fusion-media'];
   var mediaAgentOrgIds = ['mediafusion'];
 
@@ -88,4 +88,9 @@ describe('MediaServiceActivationV2', function () {
     $httpBackend.flush();
   });
 
+  it('MediaServiceActivationV2 setServiceEnabled should be called for enableMediaService', function () {
+    spyOn(Service, 'setServiceEnabled').and.callThrough();
+    Service.enableMediaService();
+    expect(Service.setServiceEnabled).toHaveBeenCalled();
+  });
 });

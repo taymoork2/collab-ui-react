@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Service: DirectoryNumber', function () {
-  var $httpBackend, $rootScope, DirectoryNumber, HuronConfig;
+  var $httpBackend, DirectoryNumber;
 
   beforeEach(angular.mock.module('Huron'));
   beforeEach(angular.mock.module('ngResource'));
@@ -49,11 +49,9 @@ describe('Service: DirectoryNumber', function () {
 
   beforeEach(
     inject(
-      function (_$httpBackend_, _$rootScope_, _DirectoryNumber_, _HuronConfig_) {
+      function (_$httpBackend_, _DirectoryNumber_) {
         $httpBackend = _$httpBackend_;
-        $rootScope = _$rootScope_;
         DirectoryNumber = _DirectoryNumber_;
-        HuronConfig = _HuronConfig_;
       }));
 
   afterEach(function () {

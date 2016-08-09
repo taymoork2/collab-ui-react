@@ -3,7 +3,7 @@
 describe('Service: AAConfigEnvMetricService', function () {
   beforeEach(angular.mock.module('uc.autoattendant'));
   beforeEach(angular.mock.module('Huron'));
-  var $location, $q, AAConfigEnvMetricService, Config, Analytics, AAMetricNameService;
+  var $q, AAConfigEnvMetricService, Config, Analytics, AAMetricNameService;
 
   beforeEach(inject(function (_$q_, _AAConfigEnvMetricService_, _Config_, _Analytics_, _AAMetricNameService_) {
     $q = _$q_;

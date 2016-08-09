@@ -9,7 +9,7 @@
     .name;
 
   /* @ngInject */
-  function ResponseInterceptor($q, $injector, Config, Log) {
+  function ResponseInterceptor($q, $injector, Log) {
 
     return {
       responseError: function (response) {
@@ -18,21 +18,15 @@
         var Auth = $injector.get('Auth');
         if (is20001Error(response)) {
           Log.warn('Refresh access token due to 20001 response.', response);
-          if (!Config.isE2E()) {
-            return Auth.refreshAccessTokenAndResendRequest(response);
-          }
+          return Auth.refreshAccessTokenAndResendRequest(response);
         }
         if (isHttpAuthError(response)) {
           Log.warn('Refresh access token due to HTTP authentication error.', response);
-          if (!Config.isE2E()) {
-            return Auth.refreshAccessTokenAndResendRequest(response);
-          }  
+          return Auth.refreshAccessTokenAndResendRequest(response);
         }
         if (isCIInvalidAccessTokenError(response)) {
           Log.warn('Refresh access token due to invalid CI error.', response);
-          if (!Config.isE2E()) {
-            return Auth.refreshAccessTokenAndResendRequest(response);
-          } 
+          return Auth.refreshAccessTokenAndResendRequest(response);
         }
 
         if (refreshTokenHasExpired(response)) {

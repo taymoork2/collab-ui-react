@@ -1,10 +1,8 @@
 'use strict';
 
 describe('Template: partnerProfile', function () {
-  var $scope, $controller, controller, $q, $templateCache, $compile, view;
+  var $scope, $controller, $q, $templateCache, $compile, view;
   var Notification, Orgservice, UserListService, BrandService, FeatureToggleService, WebexClientVersion, Authinfo;
-
-  var BRAND_TPL = '#brandingTpl';
 
   var PROBLEM_SITE_RADIO_0 = 'problemSiteRadio0';
   var PROBLEM_SITE_RADIO_1 = 'problemSiteRadio1';
@@ -61,7 +59,7 @@ describe('Template: partnerProfile', function () {
   }
 
   function compileView() {
-    controller = $controller('PartnerProfileCtrl', {
+    $controller('PartnerProfileCtrl', {
       $scope: $scope
     });
     var template = $templateCache.get('modules/core/partnerProfile/partnerProfile.tpl.html');
@@ -124,13 +122,6 @@ describe('Template: partnerProfile', function () {
       expect(radio).toHaveAttr('type', 'radio');
       expect(label.is('label')).toBeTruthy();
       expect(label).toHaveAttr('for', id);
-    };
-  }
-
-  function expectExampleLinkExist(id) {
-    return function () {
-      var link = view.find('#' + id);
-      expect(link).toExist();
     };
   }
 

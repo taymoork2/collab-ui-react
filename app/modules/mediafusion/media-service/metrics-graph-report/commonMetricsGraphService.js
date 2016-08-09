@@ -122,7 +122,7 @@
       }
     }
 
-    function getBaseStackSerialGraph(data, startDuration, valueAxes, graphs, categoryField, catAxis) {
+    function getBaseStackSerialGraph(data, startDuration, valueAxes, graphs, categoryField, catAxis, exportData) {
       return angular.copy({
         'type': 'serial',
         'pathToImages': amchartsImages,
@@ -139,7 +139,7 @@
         'marginRight': 60,
         'usePrefixes': true,
         'prefixesOfBigNumbers': baseVariables['prefixesOfBigNumbers'],
-        'export': baseVariables['export'],
+        'export': exportData,
         'startDuration': startDuration,
         'dataProvider': data,
         'valueAxes': valueAxes,

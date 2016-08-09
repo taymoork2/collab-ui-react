@@ -2,7 +2,7 @@
 
 describe('Chat template embed code control', function () {
 
-  var controller, $scope, CTService, createController, createControllerWithNoTemplateId, mockWindow;
+  var controller, $scope, CTService, createController, mockWindow;
 
   beforeEach(angular.mock.module('Sunlight'));
   beforeEach(angular.mock.module('Hercules'));
