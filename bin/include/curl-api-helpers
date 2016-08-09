@@ -141,7 +141,7 @@ function curl_get_sso_token {
 # curl an authorization end-point using an SSO token to get an authorization token
 function curl_get_authz_token {
     local sso_token=${1}
-    local scope="${2:-webexsquare:admin ciscouc:admin Identity:SCIM Identity:Config Identity:Organization ccc_config:admin}"
+    local scope="${2:-webexsquare:admin ciscouc:admin Identity:SCIM Identity:Config Identity:Organization cloud-contact-center:admin}"
     local cmd=
     local randstr="`openssl rand -base64 32`"
     local authz_code=

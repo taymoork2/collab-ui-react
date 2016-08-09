@@ -207,7 +207,7 @@ describe('Partner Service -', function () {
     // Verify additional properties are set to the corresponding license object and added to customer object.
     expect(activeList[1].conferencing.features.length).toBe(3);
     expect(activeList[1].messaging.features.length).toBe(4);
-    expect(activeList[1].care.features.length).toBe(5);
+    expect(activeList[1].care.features.length).toBe(4);
   });
 
   it('should successfully return an object containing email, orgid, and orgname from getAdminOrg', function () {
