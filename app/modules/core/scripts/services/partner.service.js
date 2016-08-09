@@ -58,21 +58,21 @@
         translatedOfferCode: $translate.instant('trials.meeting'),
         order: 1
       };
-      conferenceMapping[Config.offerCodes.EE] = {
-        translatedOfferCode: $translate.instant('customerPage.EE'),
-        order: 3
-      };
       conferenceMapping[Config.offerCodes.MC] = {
         translatedOfferCode: $translate.instant('customerPage.MC'),
         order: 2
       };
-      conferenceMapping[Config.offerCodes.SC] = {
-        translatedOfferCode: $translate.instant('customerPage.SC'),
-        order: 5
+      conferenceMapping[Config.offerCodes.EE] = {
+        translatedOfferCode: $translate.instant('customerPage.EE'),
+        order: 3
       };
       conferenceMapping[Config.offerCodes.TC] = {
         translatedOfferCode: $translate.instant('customerPage.TC'),
         order: 4
+      };
+      conferenceMapping[Config.offerCodes.SC] = {
+        translatedOfferCode: $translate.instant('customerPage.SC'),
+        order: 5
       };
       conferenceMapping[Config.offerCodes.EC] = {
         translatedOfferCode: $translate.instant('customerPage.EC'),
@@ -578,14 +578,19 @@
               partial.careLicenses = offerInfo.licenseCount;
             }
             break;
-          }
+        }
       }
 
       partial.offer.deviceBasedServices = _.uniq(deviceServiceText).join(', ');
       partial.offer.careServices = _.uniq(careServicesText).join(', ');
-      partial.offer.userServices = _.chain(userServices).sortBy('order').map(function (o) {
+      partial.offer.userServices = _.chain(userServices)
+      .sortBy('order')
+      .map(function (o) {
         return o.text;
-      }).uniq().value().join(', ');
+      })
+      .uniq()
+      .value()
+      .join(', ');
       return partial;
     }
 
@@ -594,7 +599,7 @@
       var paidServices = [];
       var meetingServices = [];
       var service = null;
-      var result = {};
+      var result = null;
 
       var meetingHeader = {
         licenseType: 'MEETING',
@@ -632,10 +637,6 @@
       if (meetingServices.length === 1) {
         var singleMeetingService = meetingServices.shift();
         helpers.addService(paidServices, singleMeetingService);
-      }
-
-      if (freeServices.length > 0 || paidServices.length > 0) {
-        result.freeOrPaidServices = _.union(freeServices, paidServices);
       }
 
       //if there is more than one

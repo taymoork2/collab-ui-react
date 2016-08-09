@@ -60,11 +60,11 @@
             <div class="feature-name" id="trial-info"> <i class="icon icon-circle-group feature-icon"></i>{{:: customerOverview.offer.userServices | translate}}</div>
             <div class="feature-details pull-right">{{customerOverview.currentCustomer.licenses}}&nbsp;{{::'common.quantity' | translate | uppercase}}</div>
           </li>
-            <li class="feature" ng-if="customerOverview.offer.careServices">
+          <li class="feature" ng-if="customerOverview.offer.careServices">
             <div class="feature-name"><i class="icon icon-circle-contact-centre feature-icon"></i>{{::customerOverview.offer.careServices | translate}}</div>
             <div class="feature-details pull-right">{{customerOverview.currentCustomer.careLicenses}}&nbsp;{{::'common.quantity' | translate | uppercase}}</div>
           </li>
-           <li class="feature" ng-if="customerOverview.showRoomSystems && customerOverview.offer.deviceBasedServices">
+          <li class="feature" ng-if="customerOverview.showRoomSystems && customerOverview.offer.deviceBasedServices">
             <div class="feature-name"><i class="icon icon-circle-telepresence feature-icon"></i>{{::customerOverview.offer.deviceBasedServices | translate}}</div>
             <div class="feature-details pull-right">{{customerOverview.currentCustomer.deviceLicenses}}&nbsp;{{::'common.quantity' | translate | uppercase}}</div>
           </li>

@@ -57,7 +57,7 @@
       vm.offer = vm.currentCustomer.offer = _.get(licAndOffers, 'offer');
       if (vm.newCustomerViewToggle) {
         vm.freeOrPaidServices = PartnerService.getFreeOrActiveServices(vm.currentCustomer, isCareEnabled);
-        vm.hasMeeting = _.find(vm.freeOrPaidServices, {
+        vm.hasMeeting = _.some(vm.freeOrPaidServices, {
           isMeeting: true
         });
       }
