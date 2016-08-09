@@ -1211,7 +1211,10 @@
             promises.push(loadVoicemailNumber());
           }
 
-          return $q.all(promises);
+          return $q.all(promises)
+            .finally(function () {
+              setExternalVoicemail();
+            });
         });
     }
 
@@ -1403,14 +1406,6 @@
           }
           vm.loading = false;
           savedModel = angular.copy(vm.model);
-          if (vm.optionalVmDidFeatureToggle && vm.model.companyVoicemail.companyVoicemailEnabled) {
-            if (vm.model.site.voicemailPilotNumberGenerated === 'false' &&
-              (vm.model.companyVoicemail.companyVoicemailNumber.pattern.length < 40)) {
-              vm.model.companyVoicemail.externalVoicemail = true;
-            } else {
-              vm.model.companyVoicemail.externalVoicemail = false;
-            }
-          }
         });
     }
 
@@ -1725,6 +1720,17 @@
       }).catch(function (response) {
         Notification.errorResponse(response, 'serviceSetupModal.errorGettingOptionaVmDidToggle');
       });
+    }
+
+    function setExternalVoicemail() {
+      if (vm.optionalVmDidFeatureToggle && vm.model.companyVoicemail.companyVoicemailEnabled) {
+        if (vm.model.site.voicemailPilotNumberGenerated === 'false' &&
+            (vm.model.companyVoicemail.companyVoicemailNumber.pattern.length < 40)) {
+          vm.model.companyVoicemail.externalVoicemail = true;
+        } else {
+          vm.model.companyVoicemail.externalVoicemail = false;
+        }
+      }
     }
 
   }
