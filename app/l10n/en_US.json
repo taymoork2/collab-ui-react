@@ -121,6 +121,7 @@
     "notSetupForManUserAddError": "{{email}} cannot be added. Unable to add users through this method because directory sync feature is on.",
     "userExistsDomainClaimError": "{{email}} cannot be added.  Either the user already exists in another organization or would end up in another organization due to a pre-existing domain claim.  User domains must be the same as one of your organization’s claimed domains or be unclaimed by a different organization, if your organization has not claimed a domain.",
     "unableToMigrateError": "Unable to migrate user {{email}}.  This user's domain is not available for conversion; please submit a problem report.",
+    "unknownCreateUserError": "An unknown error has occurred and user creation could not be completed.",
     "insufficientEntitlementsError": "{{email}} cannot be added.  There are insufficient licenses to create this user.",
     "telstraAppRedirect": "Connecting to Telstra Apps Marketplace"
   },
@@ -522,7 +523,7 @@
     "avgHandleTime": "Avg Handle Time",
     "handleTime": "Handle Time",
     "averageCsat": "Average CSAT",
-    "avgCsat": "Avg CSAT ",
+    "avgCsat": "Avg CSAT",
     "csatRating": "CSAT Rating",
     "todayCategoryAxis": "Hours",
     "yesterdayCategoryAxis": "Hours",
@@ -1320,9 +1321,10 @@
     },
     "addResourceDialog": {
       "title": "{{ServiceName}} Setup",
-      "registerNewExpressway": "Register new Expressway cluster and install {{ConnectorName}}",
-      "addToExistingExpressway": "Install {{ConnectorName}} on existing Expressway cluster",
-      "enterHostname": "Enter the hostname of the Expressway you want to register with Cisco Collaboration Cloud",
+      "subtitle": "Deploy a new Expressway or select an existing one.",
+      "registerNewExpressway": "Enter the hostname of the new Expressway that you want to register with Cisco Collaboration Cloud.",
+      "addToExistingExpressway": "Select an existing Expressway to add resources to this service.",
+      "enterHostname": "Enter the hostname of the Expressway you want to register with Cisco Collaboration Cloud.",
       "enterHostnamePlaceholder": "Enter Expressway hostname",
       "willBeInstalled": "{{ConnectorName}} will be installed as soon as you finish registration, enabling the Expressway for {{ServiceName}}.",
       "selectExisting": "Select an existing Expressway clusters",
@@ -1340,7 +1342,8 @@
       "confirmationDialogBody": "Are you sure you want to cancel service setup?",
       "setupScreenBodyAboutToSetup": "You are about to set up:",
       "setupScreenBodyPrerequisites": "Verify that you have completed the prerequisites before you start configuring {{ServiceName}}.",
-      "setupScreenBodyLinks": "Visit <a href=\"http://www.cisco.com/go/hybrid-services\" target=\"_blank\">Help Central</a> for further information about {{ServiceName}} prerequisites."
+      "setupScreenBodyLinks": "Visit <a href=\"http://www.cisco.com/go/hybrid-services\" target=\"_blank\">Help Central</a> for further information about {{ServiceName}} prerequisites.",
+      "go-to-your-expressway": "Go to your Expressway within one hour to complete registration and configure the {{ConnectorName}} Connector."
     },
     "activateService": {
       "ingress": "Extend the Cloud to your On-Premise Environment",
@@ -1488,7 +1491,8 @@
       "firstReported": "First Reported",
       "lastReported": "Last Reported",
       "description": "Description",
-      "noAlarms": "No alarms reported"
+      "noAlarms": "No alarms reported",
+      "action": "Action"
     },
     "softwareUpgrade": {
       "softwareUpgrade": "Software Upgrade",
@@ -1514,12 +1518,12 @@
       "releasechannelUsers": "Users",
       "releasechannelReleasechannel": "Release Channel",
       "deactivateServicesHeader": "Deactivate Services",
-      "deactivateServicesParagraph": "Deactivating {{ServiceName}} will remove any service related functionality from this cluster.",
+      "deactivateServicesParagraph": "Deactivate {{ServiceName}} to remove any service-related functionality from this cluster.",
       "deactivateServicesCalendarHeader": "Deactivate Calendar",
       "deactivateServicesCallHeader": "Deactivate Call",
       "noHybridServicesProvisioned": "No Hybrid Services are enabled on this Expressway. To enable a Hybrid Service, go to the relevant service page.",
-      "deregisterClusterParagraph": "Deactivate all services before removing {{ClusterName}}.",
-      "deregisterClusterExplanation": "Disconnect this cluster from Cisco Collaboration Cloud and remove all connectors and related configuration.",
+      "deregisterClusterParagraph": "To Remove {{ClusterName}} deactivate the services first.",
+      "deregisterClusterExplanation": "Remove this cluster from Cisco Collaboration Cloud. This step removes all connectors and related configuration.",
       "clusterMainSectionHeader": "Cluster",
       "renameClusterParagraph": "Rename the Expressway cluster.",
       "renameClusterDescription": "The cluster name is only used for display purposes. Changing it will not update the name on the Expressway itself.",
@@ -1583,13 +1587,12 @@
       },
       "scheduleUpgrade": {
         "title": "Upgrade Schedule",
-        "description": "Select the upgrade schedule for this cluster. All connectors will automatically upgrade to the latest version at this time.",
+        "description": "Select the upgrade schedule for this cluster. When an upgrade is available, the connectors automatically upgrade during time that you select.",
         "defaultWarning": "Confirm Default Schedule",
         "postponeLabel": "The next available upgrade is scheduled to begin:",
         "postponeAction": "Postpone",
         "postponeModalTitle": "Postpone Upgrade",
         "postponeModalText": "Are you sure you want to postpone the scheduled upgrade to begin:"
-
       }
     },
     "notifications": {
@@ -1664,16 +1667,17 @@
           "error": "Error fetching the different cluster types.",
           "title": "What type of resource do you want to add?",
           "expressway-description": "Can run Hybrid Call Service or Hybrid Calendar Service",
-          "expressway-not-setup": "Expressway no set up",
+          "expressway-not-setup": "Expressway not set up",
           "mediafusion-description": "Can run Hybrid Media Service",
           "mediafusion-not-setup": "Media Service not set up"
         },
         "expressway": {
           "services": {
             "error": "Error fetching the different service types.",
-            "title": "What services do you want the Expressway to run?",
+            "title": "Choose services that you want the Expressway to manage:",
             "call-not-setup": "Hybrid Call Service not set up",
-            "calendar-not-setup": "Hybrid Calendar Service not set up"
+            "calendar-not-setup": "Hybrid Calendar Service not set up",
+            "add-more-later": "You can add more services later by clicking Add Resource in the Call or Calendar page."
           },
           "end": {
             "line1": "You may now register the Expressway with Cisco Collaboration Cloud.",
@@ -2117,6 +2121,7 @@
     "scheduleAddAdditionalHolidays": "Add Holidays",
     "scheduleModalHelp": "Schedules let you handle calls differently when you are open, closed, or observing a holiday. You may enter multiple open hour blocks and holidays.",
     "scheduleModalHelpTimeZone": "The time zone is changed for this Auto Attendant only, overriding basic call settings.  When copying schedules, the time zone is not copied.",
+    "scheduleModalInfoTimeZone": "Overrides the default time zone {{timezone}} from call settings.",
     "selectDate": "Select Date",
     "allDay": "All Day",
     "recurAnnually": "Recur Annually",

@@ -505,7 +505,7 @@ describe('OnboardCtrl: Ctrl', function () {
       expect(this.Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
     });
 
-    it('checkUnauthorizedToAdd - 400096', function () {
+    it('checkUnknownCreateUser - 400096', function () {
       this.Userservice.onboardUsers.and.returnValue(this.$q.resolve(onboardUsersResponse(403, '400096')));
       this.$scope.onboardUsers();
       expect(this.Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');

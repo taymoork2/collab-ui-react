@@ -2469,7 +2469,7 @@
           })
           .state('cluster-details.alarm-details', {
             templateUrl: 'modules/hercules/cluster-sidepanel/alarm-details.html',
-            controller: 'AlarmController',
+            controller: 'ExpresswayAlarmController',
             controllerAs: 'alarmCtrl',
             data: {
               displayName: 'Alarm Details'
