@@ -3,7 +3,7 @@
     <span class="section-name" translate="customerPage.webexOverview"></span>
   </div>
   <div class="feature-list " ng-if="customerWebexOverview.domains.length<3">
-   <span class="subtitle" translate="customerPage.domains" translate-value-domains="{{customerWebexOverview.domains.length}}"></span>
+   <span class="subtitle" translate="customerPage.domain" translate-values="{count: customerWebexOverview.domains.length}" translate-interpolation="messageformat"></span>
    <ul>
     <li  class="feature" ng-repeat="domain in customerWebexOverview.domains">
       <div class="feature-name">
