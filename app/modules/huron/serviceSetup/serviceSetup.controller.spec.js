@@ -527,7 +527,7 @@ describe('Controller: ServiceSetup', function () {
         controller.model.ftswCompanyVoicemail.ftswCompanyVoicemailEnabled = true;
         controller.model.ftswCompanyVoicemail.ftswCompanyVoicemailNumber = selectedPilotNumber;
         controller.model.ftswCompanyVoicemail.ftswVoicemailToEmail = true;
-        controller.model.ftswCompanyVoicemail.ftswExternalVoiceMail = true;
+        controller.model.ftswCompanyVoicemail.ftswExternalVoicemail = true;
 
         controller.hasVoicemailService = true;
         controller.voicemailMessageAction = {
@@ -557,7 +557,7 @@ describe('Controller: ServiceSetup', function () {
         controller.hasSites = true;
         controller.model.ftswCompanyVoicemail.ftswCompanyVoicemailEnabled = true;
         controller.model.ftswCompanyVoicemail.ftswCompanyVoicemailNumber = selectedPilotNumber;
-        controller.model.ftswCompanyVoicemail.ftswExternalVoiceMail = true;
+        controller.model.ftswCompanyVoicemail.ftswExternalVoicemail = true;
         controller.hasVoicemailService = true;
         controller.model.site.timeZone = {
           id: 'bogus'
@@ -933,7 +933,7 @@ describe('Controller: ServiceSetup', function () {
         controller.hasSites = true;
         controller.model.ftswCompanyVoicemail.ftswCompanyVoicemailEnabled = true;
         controller.model.ftswCompanyVoicemail.ftswCompanyVoicemailNumber = selectedPilotNumber;
-        controller.model.ftswCompanyVoicemail.ftswExternalVoiceMail = true;
+        controller.model.ftswCompanyVoicemail.ftswExternalVoicemail = true;
         controller.hasVoicemailService = true;
         controller.initNext();
         $scope.$apply();
@@ -997,8 +997,8 @@ describe('Controller: ServiceSetup', function () {
     }));
     describe('Site Create/Update and voicemail update Tests', function () {
 
-      it('voicemail pilot number set to generatedVoiceMailNumber', function () {
-        expect(controller.model.ftswCompanyVoicemail.ftswExternalVoiceMail).toEqual(false);
+      it('voicemail pilot number set to generatedVoicemailNumber', function () {
+        expect(controller.model.ftswCompanyVoicemail.ftswExternalVoicemail).toEqual(false);
         expect(controller.model.site.voicemailPilotNumber).toEqual('+911234123412341234123412341234123412341234');
       });
 
@@ -1009,7 +1009,7 @@ describe('Controller: ServiceSetup', function () {
         controller.hasSites = false;
         controller.model.site.voicemailPilotNumber = undefined;
         controller.model.ftswCompanyVoicemail.ftswCompanyVoicemailEnabled = true;
-        controller.model.ftswCompanyVoicemail.ftswExternalVoiceMail = false;
+        controller.model.ftswCompanyVoicemail.ftswExternalVoicemail = false;
         controller.hasVoicemailService = true;
         controller.initNext();
         $scope.$apply();
@@ -1029,7 +1029,7 @@ describe('Controller: ServiceSetup', function () {
         controller.hasSites = true;
         controller.model.ftswCompanyVoicemail.ftswCompanyVoicemailEnabled = true;
         controller.model.ftswCompanyVoicemail.ftswCompanyVoicemailNumber = selectedPilotNumber;
-        controller.model.ftswCompanyVoicemail.ftswExternalVoiceMail = true;
+        controller.model.ftswCompanyVoicemail.ftswExternalVoicemail = true;
         controller.hasVoicemailService = true;
         controller.initNext();
         $scope.$apply();
@@ -1090,7 +1090,7 @@ describe('Controller: ServiceSetup', function () {
     }));
     describe('Site and voicemail update with generated Voice Mail Pilot with Feature Toggle ON Tests', function () {
 
-      it('voicemail pilot number set to generatedVoiceMailNumber', function () {
+      it('voicemail pilot number set to generatedVoicemailNumber', function () {
         expect(controller.model.site.voicemailPilotNumber).toEqual('+6506679080');
       });
 
@@ -1101,7 +1101,7 @@ describe('Controller: ServiceSetup', function () {
         controller.hasSites = true;
         controller.model.site.voicemailPilotNumber = undefined;
         controller.model.ftswCompanyVoicemail.ftswCompanyVoicemailEnabled = true;
-        controller.model.ftswCompanyVoicemail.ftswExternalVoiceMail = false;
+        controller.model.ftswCompanyVoicemail.ftswExternalVoicemail = false;
         controller.hasVoicemailService = true;
         controller.initNext();
         $scope.$apply();

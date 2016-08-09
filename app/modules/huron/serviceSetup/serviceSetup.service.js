@@ -181,8 +181,8 @@
           str += parseInt(hextodec, 10) >= 10 ? hextodec : "0" + hextodec;
         }
         str = countrycode + str.replace(/^0+/, "");
-        var generatedVoiceMailNumber = $filter('limitTo')(str, 40, 0);
-        return generatedVoiceMailNumber;
+        var generatedVoicemailNumber = $filter('limitTo')(str, 40, 0);
+        return generatedVoicemailNumber;
       }
     };
   }

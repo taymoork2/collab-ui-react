@@ -869,10 +869,10 @@ describe('Controller: HuronSettingsCtrl', function () {
       $httpBackend.flush();
     }));
 
-    it('externalVoiceMail is enabled', function () {
+    it('externalVoicemail is enabled', function () {
       controller.model.companyVoicemail.companyVoicemailEnabled = true;
-      $scope.$apply();
-      expect(controller.model.companyVoicemail.externalVoiceMail).toEqual(true);
+      $scope.$apply();   
+      expect(controller.model.companyVoicemail.externalVoicemail).toEqual(true);
       expect(controller.model.site.voicemailPilotNumberGenerated).toEqual("false");
     });
 
@@ -880,7 +880,7 @@ describe('Controller: HuronSettingsCtrl', function () {
 
       controller.hasVoicemailService = true;
       controller.model.companyVoicemail.companyVoicemailEnabled = true;
-      controller.model.companyVoicemail.externalVoiceMail = false;
+      controller.model.companyVoicemail.externalVoicemail = false;
       controller.save();
       $scope.$apply();
 
@@ -913,18 +913,18 @@ describe('Controller: HuronSettingsCtrl', function () {
       $httpBackend.flush();
     }));
 
-    it('externalVoiceMail and voicemailPilotNumberGenerated are false', function () {
+    it('externalVoicemail and voicemailPilotNumberGenerated are false', function () {
       controller.model.companyVoicemail.companyVoicemailEnabled = true;
       $scope.$apply();
-      expect(controller.model.companyVoicemail.externalVoiceMail).toEqual(false);
+      expect(controller.model.companyVoicemail.externalVoicemail).toEqual(false);
       expect(controller.model.site.voicemailPilotNumberGenerated).toEqual("false");
     });
 
-    it('feature toggle is off, on enabling voicemail toggle, externalVoiceMail should be false', function () {
+    it('feature toggle is off, on enabling voicemail toggle, externalVoicemail should be false', function () {
       controller.model.companyVoicemail.companyVoicemailEnabled = true;
       controller.loadSite();
       $scope.$apply();
-      expect(controller.model.companyVoicemail.externalVoiceMail).toEqual(false);
+      expect(controller.model.companyVoicemail.externalVoicemail).toEqual(false);
       expect(controller.model.site.voicemailPilotNumberGenerated).toEqual('false');
     });
   });
@@ -970,7 +970,7 @@ describe('Controller: HuronSettingsCtrl', function () {
       controller.hasVoicemailService = true;
       controller.model.companyVoicemail.companyVoicemailEnabled = true;
       controller.model.companyVoicemail.companyVoicemailNumber = pilotNumber;
-      controller.model.companyVoicemail.externalVoiceMail = true;
+      controller.model.companyVoicemail.externalVoicemail = true;
       controller.save();
       $scope.$apply();
 
@@ -981,10 +981,10 @@ describe('Controller: HuronSettingsCtrl', function () {
       expect(Notification.success).toHaveBeenCalledWith('huronSettings.saveSuccess');
     });
 
-    it('should call the generatedVoiceMailNumber ', function () {
+    it('should call the generatedVoicemailNumber ', function () {
       controller.hasVoicemailService = true;
       controller.model.companyVoicemail.companyVoicemailEnabled = true;
-      controller.model.companyVoicemail.externalVoiceMail = false;
+      controller.model.companyVoicemail.externalVoicemail = false;
       controller.model.site.voicemailPilotNumber = undefined;
       $scope.$apply();
       expect(controller.customerCountryCode).toEqual('+91');
@@ -995,7 +995,7 @@ describe('Controller: HuronSettingsCtrl', function () {
 
       controller.hasVoicemailService = true;
       controller.model.companyVoicemail.companyVoicemailEnabled = true;
-      controller.model.companyVoicemail.externalVoiceMail = false;
+      controller.model.companyVoicemail.externalVoicemail = false;
       controller.save();
       $scope.$apply();
 
