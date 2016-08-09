@@ -33,7 +33,7 @@
             return service.id === 'squared-fusion-uc' || service.id === 'squared-fusion-ec';
           });
           var filteredServices = _.filter(services, function (service) {
-            return service.id === 'squared-fusion-cal' || service.id === 'squared-fusion-mgmt';
+            return service.id === 'squared-fusion-cal' || service.id === 'squared-fusion-mgmt' || service.id === 'squared-fusion-media';
           });
           if (callServices.length > 0) {
             var callService = {
