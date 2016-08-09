@@ -522,6 +522,7 @@
     "avgQueueTime": "Avg Queue Time",
     "avgHandleTime": "Avg Handle Time",
     "handleTime": "Handle Time",
+    "taskTimeLabel": "Time in Minutes",
     "averageCsat": "Average CSAT",
     "avgCsat": "Avg CSAT",
     "csatRating": "CSAT Rating",
