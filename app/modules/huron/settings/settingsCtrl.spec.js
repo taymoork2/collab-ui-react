@@ -1,25 +1,24 @@
 'use strict';
 
 describe('Controller: HuronSettingsCtrl', function () {
-  var $controller, $scope, $q, $httpBackend;
+  var $scope, $q, $httpBackend;
   var Authinfo, Notification;
   var ExternalNumberService, DialPlanService, PstnSetupService, ModalService;
   var HuronCustomer, ServiceSetup, CallerId, HuronConfig, InternationalDialing, VoicemailMessageAction;
   var modalDefer, customer, timezones, timezone, voicemailCustomer, internalNumberRanges;
   var sites, site, companyNumbers, cosRestrictions, customerCarriers, messageAction;
-  var $rootScope, didVoicemailCustomer, genenratedVoiceMailCustomer, FeatureToggleService;
+  var $rootScope, didVoicemailCustomer, FeatureToggleService;
 
   beforeEach(angular.mock.module('Huron'));
   beforeEach(angular.mock.module('Sunlight'));
 
-  beforeEach(inject(function (_$rootScope_, _$controller_, _$q_, _$httpBackend_, _ExternalNumberService_, _DialPlanService_,
+  beforeEach(inject(function (_$rootScope_, _$q_, _$httpBackend_, _ExternalNumberService_, _DialPlanService_,
     _PstnSetupService_, _ModalService_, _Notification_, _HuronCustomer_, _ServiceSetup_, _InternationalDialing_, _Authinfo_, _HuronConfig_,
     _CallerId_, _VoicemailMessageAction_, _FeatureToggleService_) {
 
     $q = _$q_;
     $rootScope = _$rootScope_;
     $scope = $rootScope;
-    $controller = _$controller_;
     $httpBackend = _$httpBackend_;
     Authinfo = _Authinfo_;
     Notification = _Notification_;
@@ -96,7 +95,7 @@ describe('Controller: HuronSettingsCtrl', function () {
       .expectGET(HuronConfig.getCmiV2Url() + '/customers/' + customer.uuid + '/features/huntgroups')
       .respond([]);
   }));
-  
+
   describe('SettingsCtrlBasic', function () {
     var controller;
     beforeEach(inject(function ($controller) {
@@ -849,7 +848,7 @@ describe('Controller: HuronSettingsCtrl', function () {
     });
   });
 
-    describe('VoiceMail update when OptionalVmDid Featuretoggle is ON', function () {
+  describe('VoiceMail update when OptionalVmDid Featuretoggle is ON', function () {
     var controller;
     beforeEach(inject(function ($controller) {
       $scope = $rootScope;
@@ -871,7 +870,7 @@ describe('Controller: HuronSettingsCtrl', function () {
 
     it('externalVoicemail is enabled', function () {
       controller.model.companyVoicemail.companyVoicemailEnabled = true;
-      $scope.$apply();   
+      $scope.$apply();
       expect(controller.model.companyVoicemail.externalVoicemail).toEqual(true);
       expect(controller.model.site.voicemailPilotNumberGenerated).toEqual("false");
     });
@@ -945,8 +944,6 @@ describe('Controller: HuronSettingsCtrl', function () {
       $scope.$apply();
       $httpBackend.flush();
     }));
-
-
 
     it('test loadVoicemailNumber should return genereated Voice Pilot Number', function () {
       controller.hasVoicemailService = true;

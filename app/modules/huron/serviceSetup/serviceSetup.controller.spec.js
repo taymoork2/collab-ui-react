@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Controller: ServiceSetup', function () {
-  var $controller, $scope, $state, $previousState, $q, $httpBackend, ServiceSetup, Notification, HuronConfig, HuronCustomer, DialPlanService;
+  var $scope, $state, $previousState, $q, $httpBackend, ServiceSetup, Notification, HuronConfig, HuronCustomer, DialPlanService;
   var Authinfo, VoicemailMessageAction;
   var model, customer, voicemail, externalNumberPool, usertemplate, form, timeZone, ExternalNumberService, ModalService, modalDefer, messageAction;
   var $rootScope, FeatureToggleService;
@@ -16,11 +16,10 @@ describe('Controller: ServiceSetup', function () {
   beforeEach(angular.mock.module('Huron'));
   beforeEach(angular.mock.module('Sunlight'));
 
-  beforeEach(inject(function (_$rootScope_, _$previousState_, _$controller_, _$q_, _ServiceSetup_, _Notification_, _HuronConfig_, _$httpBackend_,
+  beforeEach(inject(function (_$rootScope_, _$previousState_, _$q_, _ServiceSetup_, _Notification_, _HuronConfig_, _$httpBackend_,
     _HuronCustomer_, _DialPlanService_, _ExternalNumberService_, _ModalService_, _Authinfo_, _VoicemailMessageAction_, _FeatureToggleService_) {
     $rootScope = _$rootScope_;
     $scope = $rootScope;
-    $controller = _$controller_;
     $q = _$q_;
     ServiceSetup = _ServiceSetup_;
     Notification = _Notification_;
@@ -51,7 +50,7 @@ describe('Controller: ServiceSetup', function () {
         "href": "/api/v1/voice/customers/84562afa-2f35-474f-ba0f-2def42864e12"
       }]
     };
-    
+
     timeZone = [{
       id: 'America/Los_Angeles',
       label: 'America/Los_Angeles'
