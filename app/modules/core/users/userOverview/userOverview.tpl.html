@@ -4,22 +4,10 @@
 </div>
 <cs-sp-container>
   <cs-sp-section>
-    <div class="section-title-row">
-      <span class="section-name" translate="usersPreview.servicesPreview"></span>
-      <span cs-dropdown class="actions-menu dropdown pull-right" ng-if="userOverview.hasAccount">
-        <button cs-dropdown-toggle class="actions-button btn--none dropdown-toggle">
-          <i class="icon icon-three-dots"></i>
-        </button>
-        <ul cs-dropdown-menu class="dropdown-menu dropdown-primary actions-services">
-          <li ng-if="!userOverview.isCSB">
-            <a ui-sref="editService({currentUser:userOverview.currentUser})" translate="usersPreview.editServices"></a>
-          </li>
-          <li ng-if="userOverview.isCSB">
-            <a target="_blank" ui-sref="userRedirect" translate="usersPreview.editServices"></a>
-          </li>
-        </ul>
-      </span>
-    </div>
+    <section-title
+      title-key="usersPreview.servicesPreview"
+      action-list="userOverview.actionList">
+    </section-title>
     <feature-list features="userOverview.services"></feature-list>
   </cs-sp-section>
   <hercules-cloud-extensions user="userOverview.currentUser"></hercules-cloud-extensions>

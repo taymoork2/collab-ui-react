@@ -11,8 +11,6 @@ describe('Directive: aaDialByExt', function () {
     }
   };
 
-  var schedule = 'schedule';
-
   beforeEach(angular.mock.module('Huron'));
   beforeEach(angular.mock.module('Sunlight'));
 

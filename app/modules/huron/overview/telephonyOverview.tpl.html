@@ -1,17 +1,13 @@
 <cs-sp-container>
   <cs-sp-section>
-    <div class="section-title-row">
-      <span class="section-name" translate="telephonyPreview.lines"></span>
-      <span cs-dropdown class="actions-menu dropdown pull-right">
-        <button cs-dropdown-toggle class="actions-button btn--none dropdown-toggle">
-          <i class="icon icon-three-dots"></i>
-        </button>
-        <ul cs-dropdown-menu class="dropdown-menu dropdown-primary actions-services">
-          <li><a ui-sref="user-overview.communication.directorynumber({directoryNumber: 'new'})" translate="usersPreview.addNewLinePreview"></a></li>
-        </ul>
-      </span>
-    </div>
-    <directory-number-list directory-numbers="telephonyOverview.telephonyInfo.directoryNumbers"></directory-number-list>
+    <section-title
+      title-key="telephonyPreview.lines"
+      action-list="telephonyOverview.actionList">
+    </section-title>
+    <directory-number-list
+      directory-numbers="telephonyOverview.telephonyInfo.directoryNumbers"
+      directory-number-sref="user-overview.communication.directorynumber({directoryNumber: directoryNumber})">
+    </directory-number-list>
   </cs-sp-section>
   <cs-sp-section>
     <div class="section-title-row">

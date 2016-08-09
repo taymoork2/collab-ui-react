@@ -126,21 +126,21 @@
       }
 
       switch (status) {
-      case 0:
-        result = $translate.instant(translatePrefix + 'http0');
-        break;
-      case 401:
-        result = $translate.instant(translatePrefix + 'http401');
-        break;
-      case 404:
-        result = $translate.instant(translatePrefix + 'http404');
-        break;
-      case 500:
-        result = $translate.instant(translatePrefix + 'http500');
-        break;
-      default:
-        result = $translate.instant(translatePrefix + 'httpUnknown');
-        break;
+        case 0:
+          result = $translate.instant(translatePrefix + 'http0');
+          break;
+        case 401:
+          result = $translate.instant(translatePrefix + 'http401');
+          break;
+        case 404:
+          result = $translate.instant(translatePrefix + 'http404');
+          break;
+        case 500:
+          result = $translate.instant(translatePrefix + 'http500');
+          break;
+        default:
+          result = $translate.instant(translatePrefix + 'httpUnknown');
+          break;
       }
 
       return result;
@@ -156,7 +156,7 @@
       return syncStatus;
     }
 
-    function getSimplifiedStatus(status) {
+    function getSimplifiedStatus() {
       return {
         messengerOrgName: syncStatus.messengerOrgName,
         messengerOrgId: syncStatus.messengerOrgId,
@@ -175,7 +175,7 @@
 
       if (shouldFetch) {
         fetchSyncStatus()
-          .then(function (status) {
+          .then(function () {
             defer.resolve(getSimplifiedStatus(syncStatus));
           }, function (errorObj) {
             defer.reject(errorObj);
@@ -286,41 +286,41 @@
       syncStringFromServer = syncString;
 
       switch (syncString) {
-      case syncModes.messenger.off.text:
-        syncMode = syncModes.messenger.off;
-        break;
-      case syncModes.messenger.on.text:
-        syncMode = syncModes.messenger.on;
-        break;
-      case syncModes.dirsync.off.text:
-        syncMode = syncModes.dirsync.off;
-        break;
-      case syncModes.dirsync.on.text:
-        syncMode = syncModes.dirsync.on;
-        break;
-      default:
+        case syncModes.messenger.off.text:
+          syncMode = syncModes.messenger.off;
+          break;
+        case syncModes.messenger.on.text:
+          syncMode = syncModes.messenger.on;
+          break;
+        case syncModes.dirsync.off.text:
+          syncMode = syncModes.dirsync.off;
+          break;
+        case syncModes.dirsync.on.text:
+          syncMode = syncModes.dirsync.on;
+          break;
+        default:
         // new data format handled here -- "msgr_to_spark;pwd_sync=1:spark_ent=1:usr_dis=1:usr_del=1:usr_min=0"
-        var arraySyncString = syncString.trim().split(";");
-        if (arraySyncString.length > 0) {
-          var primaryKey = arraySyncString[0];
-          switch (primaryKey) {
-          case "msgr_to_spark":
-            isNewDataFormat = true;
-            syncMode = syncModes.messenger.on;
-            break;
-          case "spark_to_msgr":
-          case "disabled":
-            isNewDataFormat = true;
-            syncMode = syncModes.messenger.off;
-            break;
-          default:
+          var arraySyncString = syncString.trim().split(";");
+          if (arraySyncString.length > 0) {
+            var primaryKey = arraySyncString[0];
+            switch (primaryKey) {
+              case "msgr_to_spark":
+                isNewDataFormat = true;
+                syncMode = syncModes.messenger.on;
+                break;
+              case "spark_to_msgr":
+              case "disabled":
+                isNewDataFormat = true;
+                syncMode = syncModes.messenger.off;
+                break;
+              default:
             // error
+                Log.error('SyncService::parseSyncMode(): Invalid sync mode \'' + syncString + '\'. Setting to Messenger Sync Mode OFF.');
+            }
+          } else {
+          // error
             Log.error('SyncService::parseSyncMode(): Invalid sync mode \'' + syncString + '\'. Setting to Messenger Sync Mode OFF.');
           }
-        } else {
-          // error
-          Log.error('SyncService::parseSyncMode(): Invalid sync mode \'' + syncString + '\'. Setting to Messenger Sync Mode OFF.');
-        }
       }
 
       return syncMode;

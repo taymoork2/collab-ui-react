@@ -32,19 +32,19 @@
       notifyReadOnly: notifyReadOnly
     };
 
-    function success(messageKey, messageParams) {
-      notify($translate.instant(messageKey, messageParams), 'success');
+    function success(messageKey, messageParams, titleKey) {
+      notify($translate.instant(messageKey, messageParams), 'success', $translate.instant(titleKey));
     }
 
-    function warning(messageKey, messageParams) {
-      notify($translate.instant(messageKey, messageParams), 'warning');
+    function warning(messageKey, messageParams, titleKey) {
+      notify($translate.instant(messageKey, messageParams), 'warning', $translate.instant(titleKey));
     }
 
-    function error(messageKey, messageParams) {
-      notify($translate.instant(messageKey, messageParams), 'error');
+    function error(messageKey, messageParams, titleKey) {
+      notify($translate.instant(messageKey, messageParams), 'error', $translate.instant(titleKey));
     }
 
-    function notifyReadOnly(rejection) {
+    function notifyReadOnly() {
       notify($translate.instant('readOnlyMessages.notAllowed'), 'warning');
       preventToasters = true;
       $timeout(function () {
@@ -52,7 +52,7 @@
       }, 1000);
     }
 
-    function notify(notifications, type) {
+    function notify(notifications, type, title) {
       if (preventToasters === true) {
         Log.warn('Deliberately prevented a notification:', notifications);
         return;
@@ -72,6 +72,7 @@
       }
       type = _.includes(types, type) ? type : 'error';
       toaster.pop({
+        title: title,
         type: type,
         body: notifications.join('<br/>'),
         timeout: type == 'success' ? SUCCESS_TIMEOUT : FAILURE_TIMEOUT,

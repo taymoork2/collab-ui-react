@@ -75,7 +75,7 @@
         .value();
     }
 
-    function stringifyField(data, options) {
+    function stringifyField(data) {
       if (angular.isString(data)) {
         // Escape double quotes
         data = data.replace(/"/g, '""');

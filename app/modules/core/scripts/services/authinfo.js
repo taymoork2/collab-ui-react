@@ -2,10 +2,10 @@
   'use strict';
 
   module.exports = angular.module('core.authinfo', [
-      'pascalprecht.translate',
-      require('modules/core/config/config'),
-      require('modules/core/config/tabConfig'),
-    ])
+    'pascalprecht.translate',
+    require('modules/core/config/config'),
+    require('modules/core/config/tabConfig'),
+  ])
     .service('Authinfo', Authinfo)
     .name;
 
@@ -160,33 +160,33 @@
               }
 
               switch (license.licenseType) {
-              case 'CONFERENCING':
-                if ((this.isCustomerAdmin() || this.isReadOnlyAdmin()) && license.siteUrl && !_.includes(authData.roles, 'Site_Admin')) {
-                  authData.roles.push('Site_Admin');
-                }
-                service = new ServiceFeature($translate.instant(Config.confMap[license.offerName], {
-                  capacity: license.capacity
-                }), x + 1, 'confRadio', license);
-                if (license.siteUrl) {
-                  confLicensesWithoutSiteUrl.push(service);
-                }
-                confLicenses.push(service);
-                break;
-              case 'MESSAGING':
-                service = new ServiceFeature($translate.instant('onboardModal.paidMsg'), x + 1, 'msgRadio', license);
-                msgLicenses.push(service);
-                break;
-              case 'COMMUNICATION':
-                service = new ServiceFeature($translate.instant('onboardModal.paidComm'), x + 1, 'commRadio', license);
-                commLicenses.push(service);
-                break;
-              case 'CARE':
-                service = new ServiceFeature($translate.instant('onboardModal.paidCare'), x + 1, 'careRadio', license);
-                careLicenses.push(service);
-                break;
-              case 'CMR':
-                service = new ServiceFeature($translate.instant('onboardModal.cmr'), x + 1, 'cmrRadio', license);
-                cmrLicenses.push(service);
+                case 'CONFERENCING':
+                  if ((this.isCustomerAdmin() || this.isReadOnlyAdmin()) && license.siteUrl && !_.includes(authData.roles, 'Site_Admin')) {
+                    authData.roles.push('Site_Admin');
+                  }
+                  service = new ServiceFeature($translate.instant(Config.confMap[license.offerName], {
+                    capacity: license.capacity
+                  }), x + 1, 'confRadio', license);
+                  if (license.siteUrl) {
+                    confLicensesWithoutSiteUrl.push(service);
+                  }
+                  confLicenses.push(service);
+                  break;
+                case 'MESSAGING':
+                  service = new ServiceFeature($translate.instant('onboardModal.paidMsg'), x + 1, 'msgRadio', license);
+                  msgLicenses.push(service);
+                  break;
+                case 'COMMUNICATION':
+                  service = new ServiceFeature($translate.instant('onboardModal.paidComm'), x + 1, 'commRadio', license);
+                  commLicenses.push(service);
+                  break;
+                case 'CARE':
+                  service = new ServiceFeature($translate.instant('onboardModal.paidCare'), x + 1, 'careRadio', license);
+                  careLicenses.push(service);
+                  break;
+                case 'CMR':
+                  service = new ServiceFeature($translate.instant('onboardModal.cmr'), x + 1, 'cmrRadio', license);
+                  cmrLicenses.push(service);
               }
             } //end for
           } //end for

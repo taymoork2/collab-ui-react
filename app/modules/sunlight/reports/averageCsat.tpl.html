@@ -1,0 +1,23 @@
+<cs-card id='average-csat-card' class="large report-card" ng-class="{'hideCard': !nav.displayQuality}">
+  <article>
+    <header>
+      <h4 class='report-section-header' translate='averageCsat.title'></h4>
+    </header>
+    <section>
+      <div class="care-card-report">
+        <p class="report-description">{{nav.averageCsatDescription}}</p>
+        <div id="averageCsatDiv" class="areachart"></div>
+        <div class="spinner-position" ng-if="nav.isRefresh(nav.dataStatus)">
+          <i class='icon icon-spinner icon-2x'></i>
+        </div>
+        <div class="no-data-center" ng-if="nav.isEmpty(nav.dataStatus)">
+          <h3 class="no-data">
+            <i class='icon icon-warning no-data-warning'></i>
+            <span translate='reportsPage.noCustomerData'></span>
+          </h3>
+        </div>
+      </div>
+    </section>
+  </article>
+</cs-card>
+

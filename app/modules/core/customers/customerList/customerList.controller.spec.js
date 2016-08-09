@@ -1,8 +1,8 @@
 'use strict';
 
 describe('Controller: CustomerListCtrl', function () {
-  var $httpBackend, $q, $rootScope, $scope, $state, $stateParams, $templateCache, $translate, $window, Authinfo, Config, customerListToggle, HuronConfig, Log, FeatureToggleService, Notification, Orgservice, PartnerService, TrialService;
-  var controller, $controller;
+  var $httpBackend, $q, $scope, $state, Authinfo, Config, customerListToggle, HuronConfig, FeatureToggleService, Notification, Orgservice, PartnerService, TrialService;
+  var $controller;
 
   var adminJSONFixture = getJSONFixture('core/json/organizations/adminServices.json');
   var partnerService = getJSONFixture('core/json/partner/partner.service.json');
@@ -36,15 +36,12 @@ describe('Controller: CustomerListCtrl', function () {
   beforeEach(angular.mock.module('Huron'));
   beforeEach(angular.mock.module('Sunlight'));
 
-  beforeEach(inject(function (_$controller_, _$httpBackend_, _$q_, $rootScope, _$state_, _$stateParams_, _$translate_, _$window_, _Authinfo_, _HuronConfig_, _FeatureToggleService_, _Notification_, _Orgservice_, _PartnerService_, _TrialService_) {
+  beforeEach(inject(function (_$controller_, _$httpBackend_, _$q_, $rootScope, _$state_, _Authinfo_, _HuronConfig_, _FeatureToggleService_, _Notification_, _Orgservice_, _PartnerService_, _TrialService_) {
     $controller = _$controller_;
     $httpBackend = _$httpBackend_;
     $q = _$q_;
     $scope = $rootScope.$new();
     $state = _$state_;
-    $stateParams = _$stateParams_;
-    $translate = _$translate_;
-    $window = _$window_;
     Authinfo = _Authinfo_;
     HuronConfig = _HuronConfig_;
     Notification = _Notification_;
@@ -74,10 +71,10 @@ describe('Controller: CustomerListCtrl', function () {
       $q.when(false)
     );
 
-    spyOn(Orgservice, 'getAdminOrg').and.callFake(function (callback, status) {
+    spyOn(Orgservice, 'getAdminOrg').and.callFake(function (callback) {
       callback(adminJSONFixture.getAdminOrg, 200);
     });
-    spyOn(Orgservice, 'getOrg').and.callFake(function (callback, orgId) {
+    spyOn(Orgservice, 'getOrg').and.callFake(function (callback) {
       callback(getJSONFixture('core/json/organizations/Orgservice.json').getOrg, 200);
     });
 
@@ -88,7 +85,7 @@ describe('Controller: CustomerListCtrl', function () {
   }));
 
   function initController() {
-    controller = $controller('CustomerListCtrl', {
+    $controller('CustomerListCtrl', {
       $scope: $scope,
       $state: $state,
       Authinfo: Authinfo,
@@ -180,7 +177,7 @@ describe('Controller: CustomerListCtrl', function () {
       expect($scope.totalOrgs).toBe(6);
     });
 
-    it('if myOrg is in managedOrgsList, myOrg should be at top', function () {
+    it('if myOrg is in managedOrgsList, myOrg should not be added to the list', function () {
       var testOrgList = {
         "data": {
           "organizations": [{
@@ -200,8 +197,6 @@ describe('Controller: CustomerListCtrl', function () {
       PartnerService.getManagedOrgsList.and.returnValue(testOrgList);
       initController();
       expect($scope.managedOrgsList).toBeDefined();
-      expect($scope.managedOrgsList[0].customerName).toBe('testOrg');
-      expect($scope.managedOrgsList[1].customerName).toBe('ControllerTestOrg');
       expect($scope.managedOrgsList.length).toEqual(2);
       expect($scope.totalOrgs).toBe(2);
     });

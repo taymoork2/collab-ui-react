@@ -22,9 +22,6 @@ describe('Config', function () {
   var intHost = 'int-admin.ciscospark.com';
   var prodHost = 'admin.ciscospark.com';
 
-  var orgId = 'abc123efg456';
-  var siteURL = 'webex.com';
-
   it('partner_sales_admin should have correct roleStates', function () {
     expect(Config.roleStates.PARTNER_SALES_ADMIN).toContain('partneroverview');
     expect(Config.roleStates.PARTNER_SALES_ADMIN).toContain('customer-overview');

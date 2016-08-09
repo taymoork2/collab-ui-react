@@ -3,7 +3,7 @@
 describe('Service : AccountOrgService', function () {
   beforeEach(angular.mock.module('Core'));
 
-  var AccountOrgService, $httpBackend, Config, Auth, UrlConfig, Authinfo;
+  var AccountOrgService, $httpBackend;
   var authInfo = {
     getOrgId: sinon.stub().returns('bcd7afcd-839d-4c61-a7a8-31c6c7f016d7')
   };
@@ -13,12 +13,9 @@ describe('Service : AccountOrgService', function () {
     $provide.value("Authinfo", authInfo);
   }));
 
-  beforeEach(inject(function (_$httpBackend_, _AccountOrgService_, _Config_, _Auth_, _UrlConfig_) {
+  beforeEach(inject(function (_$httpBackend_, _AccountOrgService_) {
     $httpBackend = _$httpBackend_;
     AccountOrgService = _AccountOrgService_;
-    Config = _Config_;
-    Auth = _Auth_;
-    UrlConfig = _UrlConfig_;
   }));
 
   afterEach(function () {

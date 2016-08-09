@@ -592,7 +592,7 @@
       },
       validation: {
         messages: {
-          pattern: function (viewValue, modelValue, scope) {
+          pattern: function () {
             return $translate.instant('common.invalidZipCode');
           }
         }
@@ -612,7 +612,7 @@
       },
       validation: {
         messages: {
-          pattern: function (viewValue, modelValue, scope) {
+          pattern: function () {
             return $translate.instant('trialModal.call.invalidDealId');
           }
         }
@@ -636,10 +636,10 @@
       vm.canAddMoreDevices = vm.isEditing && vm.hasExistingDevices();
       if (!_.isUndefined(limitsPromise)) {
         limitsPromise.then(function (data) {
-            vm.activeTrials = data.activeDeviceTrials;
-            vm.maxTrials = data.maxDeviceTrials;
-            vm.limitReached = vm.activeTrials >= vm.maxTrials;
-          })
+          vm.activeTrials = data.activeDeviceTrials;
+          vm.maxTrials = data.maxDeviceTrials;
+          vm.limitReached = vm.activeTrials >= vm.maxTrials;
+        })
           .catch(function () {
             vm.limitsError = true;
             vm.limitReached = true;
@@ -838,7 +838,8 @@
         .filter({
           enabled: true
         })
-        .isEmpty().value();
+        .isEmpty()
+        .value();
     }
 
     function validateChecks($viewValue, $modelValue, scope) {

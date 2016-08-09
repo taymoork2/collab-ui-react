@@ -11,7 +11,7 @@ function deleteTsSpecFiles() {
 
 function deleteFiles(err, files) {
   if (err) {
-    throw new Error('Error finding files: ', + err);
+    throw new Error('Error finding files: ', +err);
   }
   _.forEach(files, fs.removeSync);
 }

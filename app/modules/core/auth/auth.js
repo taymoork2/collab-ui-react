@@ -76,21 +76,34 @@
     }
 
     function refreshAccessToken() {
+      var redirectUrl = OAuthConfig.getLogoutUrl();
       var refreshToken = TokenService.getRefreshToken();
       var url = OAuthConfig.getAccessTokenUrl();
       var data = OAuthConfig.getOauthAccessCodeUrl(refreshToken);
       var token = OAuthConfig.getOAuthClientRegistrationCredentials();
 
-      return httpPOST(url, data, token)
+      if (refreshToken) {
+        return httpPOST(url, data, token)
         .then(updateOauthTokens)
-        .catch(handleError('Failed to refresh access token'));
+        .catch(function () {
+          handleError('Failed to refresh access token');
+          completeLogout(redirectUrl);
+        });
+      } else {
+        return $q.reject('refreshtoken not found');
+      }
     }
 
     function refreshAccessTokenAndResendRequest(response) {
+      var redirectUrl = OAuthConfig.getLogoutUrl();
+
       return refreshAccessToken()
         .then(function () {
           var $http = $injector.get('$http');
           return $http(response.config);
+        })
+        .catch(function () {
+          completeLogout(redirectUrl);
         });
     }
 
@@ -114,20 +127,21 @@
       return httpGET(listTokensUrl)
         .then(function (response) {
           var promises = [];
-          var refreshTokenData = _.each(response.data.data, function (tokenData) {
+          _.each(response.data.data, function (tokenData) {
             var refreshTokenId = tokenData.token_id;
             var revoke = revokeAuthTokens(refreshTokenId, redirectUrl);
             promises.push(revoke);
           });
           $q.all(promises).catch(function () {
-              handleError('Failed to revoke the refresh tokens');
-            })
+            handleError('Failed to revoke the refresh tokens');
+          })
             .finally(function () {
               completeLogout(redirectUrl);
             });
         })
-        .catch(function (response) {
+        .catch(function () {
           handleError('Failed to retrieve token_id');
+          completeLogout(redirectUrl);
         });
     }
 
@@ -139,7 +153,7 @@
 
     function completeLogout(redirectUrl) {
       clearStorage();
-      // We store a key value in sessionStorage to  
+      // We store a key value in sessionStorage to
       // prevent a login when multiple tabs are open
       SessionStorage.put('logout', 'logout');
       WindowLocation.set(redirectUrl);
@@ -207,7 +221,7 @@
             });
           }
           return authData;
-        }).catch(function (res) {
+        }).catch(function () {
           return authData;
         });
     }

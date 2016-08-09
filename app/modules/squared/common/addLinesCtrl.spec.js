@@ -1,7 +1,7 @@
 'use strict';
 
 describe('AddLinesCtrl: Ctrl', function () {
-  var controller, $stateParams, $state, $scope, Notification, $translate, $q, CommonLineService, Authinfo, CsdmPlaceService, CsdmCodeService, DialPlanService;
+  var controller, $stateParams, $state, $scope, Notification, $q, CommonLineService, CsdmPlaceService, DialPlanService;
   var $controller;
   var $httpBackend;
   var internalNumbers;

@@ -29,7 +29,7 @@
       </div>
       <p class="expiryTime" translate="addDeviceWizard.showActivationCode.expires" translate-values="{ expiryDate: showActivationCode.getExpiresOn() }"></p>
       <div class="qrCodeButtons">
-        <a sq-clipboard="showActivationCode.getActivationCode()">
+        <a ngclipboard ngclipboard-success="showActivationCode.onCopySuccess(e)" ngclipboard-error="showActivationCode.onCopyError(e)" data-clipboard-text="{{::showActivationCode.activationCode}}">
           <span translate="generateActivationCodeModal.copyToClipboard"></span>
         </a>
 

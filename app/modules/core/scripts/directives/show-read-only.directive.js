@@ -21,7 +21,7 @@
   /* @ngInject */
   function ShowReadOnly($modal, Authinfo, $translate, $window) {
 
-    function link(scope, element, attributes) {
+    function link(scope, element) {
       if (Authinfo.isReadOnlyAdmin()) {
         var wrapper = angular.element('.wrapper');
         wrapper.css('padding-top', '6rem');

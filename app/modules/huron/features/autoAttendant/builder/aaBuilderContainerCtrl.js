@@ -33,7 +33,7 @@
         modalClass: 'aa-schedule'
       });
 
-      modalInstance.result.then(function (result) {
+      modalInstance.result.then(function () {
         // Put anything needed after the modal is finished here
         vm.aaModel = AAModelService.getAAModel();
         vm.ui = AAUiModelService.getUiModel();

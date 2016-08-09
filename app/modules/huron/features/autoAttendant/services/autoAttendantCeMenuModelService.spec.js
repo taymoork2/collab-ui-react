@@ -37,7 +37,6 @@ describe('Service: AutoAttendantCeMenuModelService', function () {
   var combmenu = getJSONFixture('huron/json/autoAttendant/combinedMenu.json');
   var submenu = getJSONFixture('huron/json/autoAttendant/submenu.json');
   var ceCombined = combmenu.ceCombined;
-  var combinedMenu = combmenu.combinedMenu;
   var ceCombinedInputWithSubmenu = combmenu.ceCombinedInputWithSubmenu;
   var combinedMenuWithSubmenu = combmenu.combinedMenuWithSubmenu;
 
@@ -111,7 +110,7 @@ describe('Service: AutoAttendantCeMenuModelService', function () {
       _ceRecord.defaultActionSet = 'openHours';
 
       var _combinedMenu = AutoAttendantCeMenuModelService.getCombinedMenu(submenu.ceCombinedInputWithSubmenuGoBack, 'openHours');
-      var success = AutoAttendantCeMenuModelService.updateCombinedMenu(_ceRecord, 'openHours', _combinedMenu);
+      AutoAttendantCeMenuModelService.updateCombinedMenu(_ceRecord, 'openHours', _combinedMenu);
       expect(angular.equals(_ceRecord, submenu.ceCombinedWithSubmenuGoBack)).toBe(true);
     });
 
@@ -123,7 +122,7 @@ describe('Service: AutoAttendantCeMenuModelService', function () {
       _ceRecord.defaultActionSet = 'openHours';
 
       var _combinedMenu = AutoAttendantCeMenuModelService.getCombinedMenu(submenu.ceCombinedInputWithSubmenuDialByExt, 'openHours');
-      var success = AutoAttendantCeMenuModelService.updateCombinedMenu(_ceRecord, 'openHours', _combinedMenu);
+      AutoAttendantCeMenuModelService.updateCombinedMenu(_ceRecord, 'openHours', _combinedMenu);
       expect(angular.equals(_ceRecord, submenu.ceCombinedWithSubmenuDialByExt)).toBe(true);
     });
   });
@@ -408,9 +407,9 @@ describe('Service: AutoAttendantCeMenuModelService', function () {
 
   describe('getCeMenu', function () {
     it('should return the CeMenu with the given menuId', function () {
-      var _ceMenu = AutoAttendantCeMenuModelService.newCeMenu();
-      _ceMenu = AutoAttendantCeMenuModelService.newCeMenu();
-      _ceMenu = AutoAttendantCeMenuModelService.newCeMenu();
+      AutoAttendantCeMenuModelService.newCeMenu();
+      AutoAttendantCeMenuModelService.newCeMenu();
+      AutoAttendantCeMenuModelService.newCeMenu();
       expect(AutoAttendantCeMenuModelService.getCeMenu('menu0').id).toBe('menu0');
       expect(AutoAttendantCeMenuModelService.getCeMenu('menu1').id).toBe('menu1');
       expect(AutoAttendantCeMenuModelService.getCeMenu('menu2').id).toBe('menu2');

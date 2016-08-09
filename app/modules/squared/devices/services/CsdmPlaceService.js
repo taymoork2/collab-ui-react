@@ -82,7 +82,7 @@
     }
 
     function deletePlace(place) {
-      return $http.delete(place.url).then(function (res) {
+      return $http.delete(place.url).then(function () {
         delete placesMap[place.url];
       });
     }
@@ -100,7 +100,7 @@
 
     function createCmiPlace(name, directoryNumber) {
       return $http.post(cmiPlacesUrl, {
-        name: name,
+        displayName: name,
         directoryNumber: directoryNumber
       }, {
         headers: {

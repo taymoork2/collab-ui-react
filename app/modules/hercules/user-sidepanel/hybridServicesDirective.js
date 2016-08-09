@@ -48,16 +48,16 @@
 
     function getStatusSeverity(status) {
       switch (status) {
-      case 'not_entitled':
-        return 0;
-      case 'activated':
-        return 1;
-      case 'pending_activation':
-        return 2;
-      case 'error':
-        return 3;
-      default:
-        return -1;
+        case 'not_entitled':
+          return 0;
+        case 'activated':
+          return 1;
+        case 'pending_activation':
+          return 2;
+        case 'error':
+          return 3;
+        default:
+          return -1;
       }
     }
 
@@ -66,8 +66,8 @@
     };
 
     if (extensionEntitlements.every(function (extensionEntitlement) {
-        return !Authinfo.isEntitled(extensionEntitlement);
-      })) {
+      return !Authinfo.isEntitled(extensionEntitlement);
+    })) {
       return;
     }
 
@@ -182,7 +182,7 @@
       return offerCodes.length > 0;
     }
 
-    var hasHuronEntitlement = function (ent) {
+    var hasHuronEntitlement = function () {
       return vm.user.entitlements.indexOf('ciscouc') > -1;
     };
 

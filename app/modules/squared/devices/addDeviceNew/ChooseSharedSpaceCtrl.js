@@ -9,7 +9,7 @@
     vm.wizardData = $stateParams.wizard.state().data;
 
     vm.onlyNew = function () {
-      return vm.wizardData.function == 'addPlace' || vm.wizardData.deviceType == "cloudberry";
+      return vm.wizardData.function == 'addPlace' || vm.wizardData.deviceType == 'cloudberry';
     };
 
     vm.isNewCollapsed = !vm.onlyNew();
@@ -17,6 +17,14 @@
     vm.selected = null;
     vm.radioSelect = null;
     vm.isLoading = false;
+    vm.rooms = undefined;
+    vm.hasRooms = undefined;
+
+    function init() {
+      loadList();
+    }
+
+    init();
 
     vm.localizedCreateInstructions = function () {
       if (!vm.wizardData.showPlaces) {
@@ -28,23 +36,15 @@
       return $translate.instant('addDeviceWizard.chooseSharedSpace.newPlaceInstructions');
     };
 
-    vm.rooms = function () {
+    function loadList() {
       if (vm.wizardData.showPlaces) {
-        var placesList = CsdmPlaceService.getPlacesList();
-        return _.map(Object.keys(placesList), function (key) {
-          var place = placesList[key];
-          if (vm.wizardData.deviceType == "cloudberry") {
-            if (_.isEmpty(place.devices)) {
-              return place;
-            }
-          } else {
-            return place;
-          }
-        });
+        var filteredList = _(CsdmPlaceService.getPlacesList()).filter(function (place) {
+          return (vm.wizardData.deviceType == 'cloudberry' && place.type == 'cloudberry' && _.isEmpty(place.devices)) || (vm.wizardData.deviceType == 'huron' && place.type == 'huron');
+        }).sortBy('displayName').value();
+        vm.hasRooms = filteredList.length > 0;
+        vm.rooms = filteredList;
       }
-    };
-
-    vm.hasRooms = vm.rooms() && vm.rooms().length > 0;
+    }
 
     vm.selectPlace = function ($item) {
       vm.place = $item;
