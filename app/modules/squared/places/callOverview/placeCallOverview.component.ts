@@ -18,6 +18,7 @@ class PlaceCallOverviewCtrl {
     private $stateParams
   ) {
     this._currentPlace = $stateParams.currentPlace;
+    this.directoryNumbers = this._currentPlace.numbers;
   }
 
   private $onInit(): void {

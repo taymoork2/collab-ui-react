@@ -24,5 +24,13 @@
         on-change-fn="$ctrl.setDirectoryNumbers(internalNumber, externalNumber)">
       </uc-directory-number>
     </cs-sp-section>
+    <cs-sp-section>
+      <uc-call-forward
+        call-forward-all="$ctrl.callForwardAll"
+        call-forward-busy="$ctrl.callForwardBusy"
+        voicemail-enabled="$ctrl.voicemailEnabled"
+        on-change-fn="$ctrl.setCallForward(callForwardAll, callForwardBusy)">
+      </uc-call-forward>
+    </cs-sp-section>
   </cs-sp-container>
 </form>
