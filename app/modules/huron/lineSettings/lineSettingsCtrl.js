@@ -324,13 +324,15 @@
     }
 
     function getMultipleCalls() {
-      LineSettings.getSimultaneousCalls(vm.telephonyInfo.currentDirectoryNumber.uuid, vm.currentUser.id).then(function (simultaneous) {
-        vm.simultaneousModel = {
-          incomingCallMaximum: simultaneous.incomingCallMaximum
-        };
-      }).catch(function (response) {
-        Notification.errorResponse(response, 'simultaneousCalls.mulitpleCallsLoadError');
-      });
+      if (vm.telephonyInfo.currentDirectoryNumber.uuid !== 'new') {
+        LineSettings.getSimultaneousCalls(vm.telephonyInfo.currentDirectoryNumber.uuid, vm.currentUser.id).then(function (simultaneous) {
+          vm.simultaneousModel = {
+            incomingCallMaximum: simultaneous.incomingCallMaximum
+          };
+        }).catch(function (response) {
+          Notification.errorResponse(response, 'simultaneousCalls.mulitpleCallsLoadError');
+        });
+      }
     }
 
     function updateMultipleCalls() {
