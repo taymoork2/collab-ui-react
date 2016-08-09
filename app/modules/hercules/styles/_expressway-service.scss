@@ -208,6 +208,11 @@ Special stuff currently used for out own mail input field...
   padding: 2rem 1.25rem;
   border-bottom: 1px solid $gray-light-3;
   height: $user-statuses-bar-height;
+  @media only screen and (max-height: 950px) {
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    height: $user-statuses-bar-height - 2rem;
+  }
 }
 .user-statuses-card {
   display: flex;
