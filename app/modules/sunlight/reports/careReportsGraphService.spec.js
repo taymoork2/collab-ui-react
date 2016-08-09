@@ -37,9 +37,9 @@ describe('Service: Care Reports Graph Service', function () {
       var chartCursor = CareReportsGraphService.getBaseVariable('chartCursor');
       var categoryAxis = CareReportsGraphService.getBaseVariable('axis');
       var valueAxis = CareReportsGraphService.getBaseVariable('axis');
-      var exportMenu = CareReportsGraphService.getBaseVariable('export')
+      var exportMenu = CareReportsGraphService.getBaseVariable('export');
 
-      var serialGraph = CareReportsGraphService.buildChartConfig('dummyData', legend , graph, chartCursor, 'dummyField', categoryAxis, valueAxis, exportMenu);
+      var serialGraph = CareReportsGraphService.buildChartConfig('dummyData', legend, graph, chartCursor, 'dummyField', categoryAxis, valueAxis, exportMenu);
       expect(serialGraph).toEqual(responseData.getBaseSerialGraph);
     });
 
