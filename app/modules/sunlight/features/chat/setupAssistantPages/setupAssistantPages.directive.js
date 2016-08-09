@@ -22,12 +22,8 @@
   });
 
   function createSetupAssistantPageDirective(pageFile) {
-    var careChatSA;
-
     var directive = {
-      link: function (scope, element, attrs) {
-        careChatSA = scope.careChatSA;
-      },
+      link: function () {},
       templateUrl: 'modules/sunlight/features/chat/setupAssistantPages/' + pageFile,
       restrict: 'EA',
       scope: false

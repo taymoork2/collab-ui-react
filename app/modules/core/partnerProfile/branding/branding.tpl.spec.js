@@ -72,7 +72,6 @@ describe('Template: branding', function () {
     beforeEach(compileView);
     it('client versions drop down to exist', function () {
       var clientVersionsDropDown = view.find('#' + 'webex_client_version_drop_down');
-      var at = "bctrl.wbxclientversionselected";
       expect(clientVersionsDropDown).not.toBe(null);
     });
   });

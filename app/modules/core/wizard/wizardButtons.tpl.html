@@ -9,6 +9,7 @@
       </div>
     </div>
     <div class="pull-right">
+      <a id="wizardSkipBtn" class="skip-link" ng-click="wizard.nextTab()" ng-if="wizard.showSkipTabBtn" translate="firstTimeWizard.skipBtn"></a>
       <button id="wizardBackBtn" type="button" class="btn" ng-if="!wizard.isFirstStep() || !wizard.isFirstTab()" ng-click="wizard.previousStep()" translate="common.back"></button>
       <button type="button" class="btn btn--link btn--none" ng-if="wizard.isFirstTab()&&wizard.isFirstTime()&&wizard.showDoItLater" translate="firstTimeWizard.doLater" ng-click="wizard.loadOverview()"></button>
       <button id="wizardSaveNextBtn" type="button" id="wizardNext" cs-btn loading="wizard.wizardNextLoad" class="btn btn--primary" ng-click="wizard.nextStep()" ng-disabled="(!wizard.termsCheckbox &&!wizard.isFromPartnerLaunch()&&!wizard.isCustomerPartner()&&wizard.isFirstTime()) || wizard.isNextDisabled">{{wizard.nextText}}</button>

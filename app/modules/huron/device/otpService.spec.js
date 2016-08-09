@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Service: OtpService', function () {
-  var $httpBackend, $rootScope, OtpService, HuronConfig;
+  var $httpBackend, OtpService, HuronConfig;
 
   beforeEach(angular.mock.module('uc.device'));
   beforeEach(angular.mock.module('ui.router'));
@@ -18,9 +18,8 @@ describe('Service: OtpService', function () {
 
   beforeEach(
     inject(
-      function (_$httpBackend_, _$rootScope_, _OtpService_, _HuronConfig_) {
+      function (_$httpBackend_, _OtpService_, _HuronConfig_) {
         $httpBackend = _$httpBackend_;
-        $rootScope = _$rootScope_;
         OtpService = _OtpService_;
         HuronConfig = _HuronConfig_;
       }));

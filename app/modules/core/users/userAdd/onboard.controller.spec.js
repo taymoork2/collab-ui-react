@@ -67,7 +67,7 @@ describe('OnboardCtrl: Ctrl', function () {
     spyOn(this.Orgservice, 'getUnlicensedUsers').and.callFake(function (callback) {
       callback(this.mock.unlicensedUsers, 200);
     }.bind(this));
-    spyOn(this.Orgservice, 'getOrg').and.callFake(function (callback, status) {
+    spyOn(this.Orgservice, 'getOrg').and.callFake(function (callback) {
       callback({}, 200);
     });
 
@@ -131,7 +131,7 @@ describe('OnboardCtrl: Ctrl', function () {
     describe('process and save users', function () {
       beforeEach(function () {
         this.$scope.userList = validUserList;
-        var promise = this.$scope.syncStatusNext();
+        this.$scope.syncStatusNext();
         this.$scope.$apply();
         this.$timeout.flush();
       });
@@ -505,7 +505,7 @@ describe('OnboardCtrl: Ctrl', function () {
       expect(this.Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
     });
 
-    it('checkUnauthorizedToAdd - 400096', function () {
+    it('checkUnknownCreateUser - 400096', function () {
       this.Userservice.onboardUsers.and.returnValue(this.$q.resolve(onboardUsersResponse(403, '400096')));
       this.$scope.onboardUsers();
       expect(this.Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
@@ -723,9 +723,6 @@ describe('OnboardCtrl: Ctrl', function () {
     it('should check if CF gets checked when CMR gets checked', function () {
       this.mock.allLicensesData.allLicenses.forEach(function (lic) {
         lic.confLic.forEach(function (cfLic) {
-          lic.cmrLic.forEach(function (cmrLic) {
-            cmrLic = true; // check CMR license
-          });
           this.$scope.checkCMR(cfLic.confModel, lic.cmrLic);
           expect(cfLic.confModel).toBeTruthy(); // expect CF license to be checked
         }.bind(this));
@@ -737,9 +734,6 @@ describe('OnboardCtrl: Ctrl', function () {
         lic.confLic.forEach(function (cfLic) {
           cfLic.confModel = true; // check CF license
           this.$scope.checkCMR(cfLic.confModel, lic.cmrLic);
-          lic.cmrLic.forEach(function (cmrLic) {
-            cmrLic = false; // uncheck CMR license
-          });
           expect(cfLic.confModel).toBeTruthy(); // expect CF license to remain checked
         }.bind(this));
       }.bind(this));

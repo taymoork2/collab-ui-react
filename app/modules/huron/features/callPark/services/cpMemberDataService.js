@@ -56,7 +56,10 @@
     }
 
     function getMemberAsynchronously(user, async) {
-      CallParkService.getCallParkMemberWithSelectedNumber(user).then(function (m) {
+      CallParkService.getCallParkMember(user).then(function (m) {
+        m.user.primaryNumber = _.find(m.user.numbers, {
+          'primary': true
+        });
         selectedMembers.push(m);
         async.resolve();
       }, function () {
@@ -70,7 +73,7 @@
 
       users.forEach(function (user) {
         tempArray.some(function (u) {
-          var found = (user.userUuid === u.uuid);
+          var found = (user.memberUuid === u.user.uuid);
           var alreadyAdded = selectedMembers.indexOf(u);
           if (found && alreadyAdded === -1) {
             selectedMembers.push(u);

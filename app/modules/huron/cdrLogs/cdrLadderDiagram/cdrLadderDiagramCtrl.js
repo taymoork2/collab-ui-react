@@ -48,12 +48,12 @@
     };
 
     vm.selectSparkNodes = function () {
-      _.forEach(vm.sparkHostNamefilterOptions, function (option, key) {
+      _.forEach(vm.sparkHostNamefilterOptions, function (option) {
         option.value = vm.enabledSparkNodes;
       });
     };
 
-    $scope.$on('event-query-resolved', function (event, args) {
+    $scope.$on('event-query-resolved', function () {
       getSparkData().then(function () {
         generateLadderDiagram();
       });
@@ -74,7 +74,7 @@
       vm.hostNamefilterOptions = [];
       vm.sparkHostNames = [];
 
-      _.forEach(vm.events, function (event, key) {
+      _.forEach(vm.events, function (event) {
         if (!_.isUndefined(event.eventSource)) {
           var message = JSON.parse(event.message);
           if ((message.id === SIP_MESSAGE) && !_.isUndefined(message.dataParam.rawMsg) && (message.dataParam.rawMsg.indexOf(LOCUS) > 0)) {
@@ -111,7 +111,7 @@
       return defer.promise;
     }
 
-    function processActivitiesData(value, key) {
+    function processActivitiesData(value) {
       var srcPayload = null;
       var dstPayload = null;
       var sourceIp = null;
@@ -570,7 +570,7 @@
       return filtered;
     }
 
-    function extractUniqueSessionIDPairs(events) {
+    function extractUniqueSessionIDPairs() {
       if (vm.call === undefined) {
         return [];
       }
@@ -587,7 +587,7 @@
       var uniqueSessionIDPairs = extractUniqueSessionIDPairs(vm.events);
       vm.SessionIDPairsFilterOptions = [];
       var tempObj = {};
-      _.forEach(uniqueSessionIDPairs, function (idPair, key) {
+      _.forEach(uniqueSessionIDPairs, function (idPair) {
         tempObj.label = idPair;
         tempObj.value = true;
         vm.SessionIDPairsFilterOptions.push(tempObj);
@@ -598,7 +598,7 @@
 
     function SessionIDPairsFilter() {
       var filtered = [];
-      _.forEach(vm.SessionIDPairsFilterOptions, function (option, key) {
+      _.forEach(vm.SessionIDPairsFilterOptions, function (option) {
         if (option.value === true) {
           var sessionIds = option.label.split(' / ');
           filtered = _.union(filtered, $filter('filter')(vm.events, {
@@ -623,7 +623,7 @@
         return [];
       }
       var uniqueHostNames = [];
-      _.forEach(events, function (event, key) {
+      _.forEach(events, function (event) {
         if (!_.isUndefined(event.eventSource)) {
           if (uniqueHostNames.indexOf(event.eventSource.hostname) < 0 && !_.isUndefined(event.eventSource.hostname)) {
             uniqueHostNames.push(event.eventSource.hostname);
@@ -640,14 +640,14 @@
       vm.huronHostNamefilterOptions = [];
       var tempObj = {};
 
-      _.forEach(huronHostNames, function (name, key) {
+      _.forEach(huronHostNames, function (name) {
         tempObj.name = name;
         tempObj.value = true;
         vm.huronHostNamefilterOptions.push(tempObj);
         tempObj = {};
       });
 
-      _.forEach(vm.sparkHostNames, function (name, key) {
+      _.forEach(vm.sparkHostNames, function (name) {
         tempObj.name = name;
         tempObj.value = true;
         vm.sparkHostNamefilterOptions.push(tempObj);
@@ -657,7 +657,7 @@
 
     function hostNameFilter() {
       var filtered = [];
-      _.forEach(vm.huronHostNamefilterOptions, function (option, key) {
+      _.forEach(vm.huronHostNamefilterOptions, function (option) {
         if (option.value === true) {
           filtered = _.union(filtered, $filter('filter')(vm.events, {
             eventSource: {
@@ -667,7 +667,7 @@
         }
       });
 
-      _.forEach(vm.sparkHostNamefilterOptions, function (option, key) {
+      _.forEach(vm.sparkHostNamefilterOptions, function (option) {
         if (option.value === true) {
           filtered = _.union(filtered, $filter('filter')(vm.events, {
             eventSource: {

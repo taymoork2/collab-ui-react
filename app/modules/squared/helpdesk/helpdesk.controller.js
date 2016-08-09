@@ -27,14 +27,6 @@
     vm.showSearchHelp = showSearchHelp;
     vm.isCustomerHelpDesk = !Authinfo.isInDelegatedAdministrationOrg();
 
-    function scrollToTopOfPage() {
-      $scope.$on('$stateChangeSuccess', function (state) {
-        $("html, body").animate({
-          scrollTop: 0
-        }, 500);
-      });
-    }
-
     $scope.$on('helpdeskLoadSearchEvent', function (event, args) {
       var search = args.message;
       setCurrentSearch(search);
@@ -235,7 +227,7 @@
         setOrgOnDeviceSearchResults(vm.currentSearch.deviceSearchResults);
         HelpdeskSearchHistoryService.saveSearch(vm.currentSearch);
         vm.searchHistory = HelpdeskSearchHistoryService.getAllSearches();
-      }, function (err) {
+      }, function () {
         vm.currentSearch.deviceSearchFailure = $translate.instant('helpdesk.unexpectedError');
       }).finally(function () {
         vm.searchingForCloudberryDevices = false;
@@ -341,20 +333,20 @@
 
     function showMoreResults(type) {
       switch (type) {
-      case 'user':
-        vm.currentSearch.userLimit += vm.searchResultsPageSize;
-        HelpdeskService.findAndResolveOrgsForUserResults(
+        case 'user':
+          vm.currentSearch.userLimit += vm.searchResultsPageSize;
+          HelpdeskService.findAndResolveOrgsForUserResults(
           vm.currentSearch.userSearchResults,
           vm.currentSearch.orgFilter,
           vm.currentSearch.userLimit);
-        break;
-      case 'org':
-        vm.currentSearch.orgLimit += vm.searchResultsPageSize;
-        break;
-      case 'device':
-        vm.currentSearch.deviceLimit += vm.searchResultsPageSize;
-        HelpdeskHuronService.setOwnerAndDeviceDetails(_.take(vm.currentSearch.deviceSearchResults, vm.currentSearch.deviceLimit));
-        break;
+          break;
+        case 'org':
+          vm.currentSearch.orgLimit += vm.searchResultsPageSize;
+          break;
+        case 'device':
+          vm.currentSearch.deviceLimit += vm.searchResultsPageSize;
+          HelpdeskHuronService.setOwnerAndDeviceDetails(_.take(vm.currentSearch.deviceSearchResults, vm.currentSearch.deviceLimit));
+          break;
       }
     }
 
@@ -385,44 +377,44 @@
       var newTabIndex = -1;
 
       switch (event.keyCode) {
-      case LEFT_ARROW:
-        newTabIndex = activeTabIndex - 1;
-        break;
+        case LEFT_ARROW:
+          newTabIndex = activeTabIndex - 1;
+          break;
 
-      case UP_ARROW:
-        newTabIndex = activeTabIndex - 10;
-        break;
+        case UP_ARROW:
+          newTabIndex = activeTabIndex - 10;
+          break;
 
-      case RIGHT_ARROW:
-        newTabIndex = activeTabIndex + 1;
-        break;
+        case RIGHT_ARROW:
+          newTabIndex = activeTabIndex + 1;
+          break;
 
-      case DOWN_ARROW:
-        newTabIndex = activeTabIndex + 10;
-        break;
+        case DOWN_ARROW:
+          newTabIndex = activeTabIndex + 10;
+          break;
 
-      case ESC:
-        if (inputFieldHasFocus) {
-          initSearchWithoutOrgFilter();
-        } else {
-          angular.element('#searchInput').focus().select();
-          newTabIndex = -1;
-        }
-        break;
+        case ESC:
+          if (inputFieldHasFocus) {
+            initSearchWithoutOrgFilter();
+          } else {
+            angular.element('#searchInput').focus().select();
+            newTabIndex = -1;
+          }
+          break;
 
-      case ENTER:
-        if (!inputFieldHasFocus) {
-          activeElement.click();
-        }
-        break;
+        case ENTER:
+          if (!inputFieldHasFocus) {
+            activeElement.click();
+          }
+          break;
 
-      case S:
-        var orgLink = JSON.parse(activeElement.find("a")[0]["name"]);
+        case S:
+          var orgLink = JSON.parse(activeElement.find("a")[0]["name"]);
         // TODO: Avoid throwing console error when element not found !
-        if (orgLink) {
-          initSearchWithOrgFilter(orgLink);
-        }
-        break;
+          if (orgLink) {
+            initSearchWithOrgFilter(orgLink);
+          }
+          break;
       }
 
       if (newTabIndex != -1) {
@@ -446,7 +438,7 @@
     }
 
     function reportSearchSummary(searchString, res, startTime, orgId) {
-      var stats = HelpdeskSplunkReporterService.reportStats(searchString, res, startTime, orgId);
+      HelpdeskSplunkReporterService.reportStats(searchString, res, startTime, orgId);
     }
 
   }

@@ -6,7 +6,6 @@
     // Keys for base variables in CommonMetricsGraphService
     var COLUMN = 'column';
     var AXIS = 'axis';
-    var LEGEND = 'legend';
     var NUMFORMAT = 'numFormat';
     var SMOOTHLINED = 'smoothedLine';
     var GUIDEAXIS = 'guideaxis';
@@ -18,14 +17,10 @@
     //availablility variable
     var availabilitydiv = 'availabilitydiv';
     var utilizationdiv = 'utilizationdiv';
-    var clusterAvailableTitle = $translate.instant('mediaFusion.metrics.clusterAvailableTitle');
-    var clusterUnavailableTitle = $translate.instant('mediaFusion.metrics.clusterUnavailableTitle');
-    var clusterPartialTitle = $translate.instant('mediaFusion.metrics.clusterPartialTitle');
-    var hostAvailableTitle = $translate.instant('mediaFusion.metrics.hostAvailableTitle');
-    var hostUnavailableTitle = $translate.instant('mediaFusion.metrics.hostUnavailableTitle');
     //variables for utilization graph
     var peakUtilization = $translate.instant('mediaFusion.metrics.peakutilization');
     var averageUtilization = $translate.instant('mediaFusion.metrics.averageutilization');
+    var baseVariables = [];
 
     return {
       setUtilizationGraph: setUtilizationGraph,
@@ -33,7 +28,34 @@
       setAvailabilityGraph: setAvailabilityGraph
     };
 
-    function createCallVolumeGraph(data) {
+    function getBaseExportForSerialGraph(fields, fileName) {
+      baseVariables['export'] = {
+        'enabled': true,
+        'exportFields': fields,
+        'fileName': fileName,
+        'libs': {
+          'autoLoad': false
+        },
+        'menu': [{
+          'class': 'export-main',
+          'label': $translate.instant('reportsPage.downloadOptions'),
+          'menu': [{
+            'label': $translate.instant('reportsPage.saveAs'),
+            'title': $translate.instant('reportsPage.saveAs'),
+            'class': 'export-list',
+            'menu': ['PNG', 'JPG', 'PDF']
+          }, 'PRINT', {
+            'class': 'export-list',
+            'label': 'Export',
+            'title': 'Export',
+            'menu': ['CSV']
+          }]
+        }]
+      };
+      return baseVariables['export'];
+    }
+
+    function createCallVolumeGraph(data, cluster, daterange) {
       // if there are no active users for this user
       if (data === null || data === 'undefined' || data.length === 0) {
         return;
@@ -62,7 +84,11 @@
       if (!data[0].balloon) {
         startDuration = 0;
       }
-      var chartData = CommonMetricsGraphService.getBaseStackSerialGraph(data, startDuration, valueAxes, callVolumeGraphs(data), 'timestamp', catAxis);
+      var exportFields = ['call_reject', 'active_calls', 'timestamp'];
+      cluster = cluster.replace(/\s/g, "_");
+      daterange = daterange.replace(/\s/g, "_");
+      var ExportFileName = 'CallVolume_' + cluster + '_' + daterange;
+      var chartData = CommonMetricsGraphService.getBaseStackSerialGraph(data, startDuration, valueAxes, callVolumeGraphs(data), 'timestamp', catAxis, getBaseExportForSerialGraph(exportFields, ExportFileName));
       chartData.numberFormatter = CommonMetricsGraphService.getBaseVariable(NUMFORMAT);
       var chart = AmCharts.makeChart(callVolumediv, chartData);
       chart.addListener("rendered", zoomChart);
@@ -76,7 +102,6 @@
 
     function callVolumeGraphs(data) {
       var colors = ['colorOne', 'colorTwo'];
-      var secondaryColors = [data[0].colorOne, data[0].colorTwo];
       var values = ['active_calls', 'call_reject'];
       var titles = [callLocalTitle, callRejectTitle];
       var graphs = [];
@@ -98,7 +123,7 @@
       return graphs;
     }
 
-    function setCallVolumeGraph(data, callVolumeChart) {
+    function setCallVolumeGraph(data, callVolumeChart, cluster, daterange) {
       if (data === null || data === 'undefined' || data.length === 0) {
         return;
       } else if (callVolumeChart !== null && angular.isDefined(callVolumeChart)) {
@@ -106,13 +131,14 @@
         if (!data[0].balloon) {
           startDuration = 0;
         }
+        callVolumeChart = createCallVolumeGraph(data, cluster, daterange);
         callVolumeChart.dataProvider = data;
         callVolumeChart.graphs = callVolumeGraphs(data);
         callVolumeChart.startDuration = startDuration;
         callVolumeChart.validateData();
         return callVolumeChart;
       } else {
-        callVolumeChart = createCallVolumeGraph(data);
+        callVolumeChart = createCallVolumeGraph(data, cluster, daterange);
         callVolumeChart.dataProvider = data;
         callVolumeChart.graphs = callVolumeGraphs(data);
         callVolumeChart.startDuration = startDuration;
@@ -121,7 +147,7 @@
       }
     }
 
-    function createutilizationGraph(data) {
+    function createutilizationGraph(data, cluster, daterange) {
       if (data === null || data === 'undefined' || data.length === 0) {
         return;
       }
@@ -152,7 +178,12 @@
       if (!data[0].balloon) {
         startDuration = 0;
       }
-      var chartData = CommonMetricsGraphService.getBaseStackSerialGraph(data, startDuration, valueAxes, utilizationGraphs(data), 'timestamp', catAxis);
+      var exportFields = ['average_cpu', 'peak_cpu', 'timestamp'];
+      cluster = cluster.replace(/\s/g, "_");
+      daterange = daterange.replace(/\s/g, "_");
+      var ExportFileName = 'Utilization_' + cluster + '_' + daterange;
+
+      var chartData = CommonMetricsGraphService.getBaseStackSerialGraph(data, startDuration, valueAxes, utilizationGraphs(data), 'timestamp', catAxis, getBaseExportForSerialGraph(exportFields, ExportFileName));
       chartData.numberFormatter = CommonMetricsGraphService.getBaseVariable(NUMFORMAT);
       var chart = AmCharts.makeChart(utilizationdiv, chartData);
       chart.addListener("rendered", zoomChart);
@@ -161,7 +192,6 @@
     }
 
     function utilizationGraphs(data) {
-      var colors = ['colorOne', 'colorTwo'];
       var secondaryColors = [data[0].colorOne, data[0].colorTwo];
       var values = ['average_cpu', 'peak_cpu'];
       var titles = [averageUtilization, peakUtilization];
@@ -184,7 +214,7 @@
       return graphs;
     }
 
-    function setUtilizationGraph(data, utilizationChart) {
+    function setUtilizationGraph(data, utilizationChart, cluster, daterange) {
 
       var isDummy = false;
       if (data === null || data === 'undefined' || data.length === 0) {
@@ -197,6 +227,7 @@
         if (!data[0].balloon) {
           startDuration = 0;
         }
+        utilizationChart = createutilizationGraph(data, cluster, daterange);
         utilizationChart.dataProvider = data;
         utilizationChart.graphs = utilizationGraphs(data);
         utilizationChart.startDuration = startDuration;
@@ -217,7 +248,7 @@
           isDummy = true;
         }
 
-        utilizationChart = createutilizationGraph(data);
+        utilizationChart = createutilizationGraph(data, cluster, daterange);
         utilizationChart.dataProvider = data;
         utilizationChart.graphs = utilizationGraphs(data);
         utilizationChart.startDuration = startDuration;
@@ -238,54 +269,6 @@
 
     }
 
-    function createLegendsForAvailabilty(dummydata, selectedCluster) {
-      if (dummydata === true) {
-        var legendData = [];
-        if (selectedCluster == 'All Clusters') {
-          var length = 3;
-          var titles = [clusterAvailableTitle, clusterUnavailableTitle, clusterPartialTitle];
-          var colors = [chartColors.grayLight, chartColors.grayLight, chartColors.grayLight];
-        } else {
-          var length = 2;
-          var titles = [hostAvailableTitle, hostUnavailableTitle];
-          var colors = [chartColors.grayLight, chartColors.grayLight];
-        }
-        for (var i = 0; i < length; i++) {
-          var legend = {};
-          legendData.push(legend);
-          legendData[i].title = titles[i];
-          legendData[i].color = colors[i];
-        }
-        //      var legend = new AmCharts.AmLegend();
-        //     legend.align = 'right';
-        //    legend.position = 'top';
-        //   legend.data = legendData;
-        return legendData;
-      } else {
-        var legendData = [];
-        if (selectedCluster == 'All Clusters') {
-          var length = 3;
-          var titles = [clusterAvailableTitle, clusterUnavailableTitle, clusterPartialTitle];
-          var colors = [chartColors.colorGreen, chartColors.colorRed, chartColors.colorYellow];
-        } else {
-          var length = 2;
-          var titles = [hostAvailableTitle, hostUnavailableTitle];
-          var colors = [chartColors.colorGreen, chartColors.colorRed];
-        }
-        for (var i = 0; i < length; i++) {
-          var legend = {};
-          legendData.push(legend);
-          legendData[i].title = titles[i];
-          legendData[i].color = colors[i];
-        }
-        //      var legend = new AmCharts.AmLegend();
-        //     legend.align = 'right';
-        //    legend.position = 'top';
-        //   legend.data = legendData;
-        return legendData;
-      }
-    }
-
     function createValueAxis(data) {
       var endTime = data.data[0].endTime;
       //var endTime = str.substring(0, 10);
@@ -300,7 +283,7 @@
       return valueAxis;
     }
 
-    function createAvailabilityGraph(data, selectedCluster) {
+    function createAvailabilityGraph(data) {
       // if there are no active users for this user
       if (data === null || data === 'undefined' || data.length === 0) {
         return;

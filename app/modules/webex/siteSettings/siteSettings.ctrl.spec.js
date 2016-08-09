@@ -31,7 +31,7 @@ describe('WebExSiteSettingsCtrl Test', function () {
     spyOn(Authinfo, 'getPrimaryEmail').and.returnValue(email);
     spyOn(WebExSiteSettingsFact, 'initSiteSettingsObj').and.returnValue({});
 
-    var controller = $controller('WebExSiteSettingsCtrl', {
+    $controller('WebExSiteSettingsCtrl', {
       $scope: $scope,
       $stateParams: $stateParams,
       Authinfo: Authinfo,

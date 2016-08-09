@@ -35,7 +35,7 @@
         dirSyncResource.patch({
           customerId: Authinfo.getOrgId()
         }).$promise.then(
-          function (response) {
+          function () {
             Notification.success('userManage.ad.dirSyncDisableSuccess');
             $state.go('users.manage.org');
           },
@@ -47,17 +47,17 @@
 
     function onNext() {
       switch (vm.manageType) {
-      case 'manual':
-        $state.go('users.add');
-        break;
+        case 'manual':
+          $state.go('users.add');
+          break;
 
-      case 'bulk':
-        $state.go('users.csv');
-        break;
+        case 'bulk':
+          $state.go('users.csv');
+          break;
 
-      case 'advanced':
-        $state.go('users.manage.advanced.add.ob.syncStatus');
-        break;
+        case 'advanced':
+          $state.go('users.manage.advanced.add.ob.syncStatus');
+          break;
       }
     }
   }

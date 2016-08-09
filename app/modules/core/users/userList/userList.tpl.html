@@ -19,8 +19,8 @@
         </div>
 
         <div class="export-users">
-          <csv-download ng-if="obtainedTotalUserCount && totalUsers <= USER_EXPORT_THRESHOLD" type="user" filename="{{::'usersPage.csvFilename' | translate}}" icon="icon-content-share"></csv-download>
-          <div ng-if="obtainedTotalUserCount && totalUsers > USER_EXPORT_THRESHOLD" ng-controller="ExportCSVCtrl">
+          <csv-download ng-if="obtainedTotalUserCount && totalUsers <= userExportThreshold" type="user" filename="{{::'usersPage.csvFilename' | translate}}" icon="icon-content-share"></csv-download>
+          <div ng-if="obtainedTotalUserCount && totalUsers > userExportThreshold" ng-controller="ExportCSVCtrl">
             <a class="export-users" ng-if="!exporting" ng-csv="exportCSV()" filename="{{::'usersPage.csvFilename' | translate}}">
               <span tooltip-placement="top" tooltip="{{::'usersPage.csvBtnTitle' | translate}}" tooltip-animation="false" tooltip-append-to-body="true"><i class="icon icon-content-share icon-lg"></i></span>
             </a>

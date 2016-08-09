@@ -93,7 +93,7 @@
             if ($scope.load) {
               $scope.currentDataPosition++;
               $scope.load = false;
-              getOrgList($scope.currentDataPosition * Config.orgsPerPage + 1);
+              getOrgList(($scope.currentDataPosition * Config.orgsPerPage) + 1);
               $scope.gridApi.infiniteScroll.dataLoaded();
             }
           });

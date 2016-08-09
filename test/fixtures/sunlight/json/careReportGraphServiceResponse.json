@@ -9,7 +9,19 @@
       "titleBold": false,
       "titleColor": "#6A6B6C",
       "gridAlpha": 0,
-      "axisAlpha": 1
+      "axisAlpha": 1,
+      "stackType": "regular"
+    },
+    "graph": {
+      "lineAlpha": 1,
+      "balloonColor": "#AEAEAF",
+      "lineThickness": 1,
+      "marginTop": 10,
+      "marginLeft": 0,
+      "plotAreaBorderAlpha": 0,
+      "legendValueText": " ",
+      "showBalloon": false,
+      "fillAlphas": 0.1
     },
     "legend": {
       "color": "#444",
@@ -21,7 +33,7 @@
       "markerType": "square",
       "markerSize": 10,
       "position": "bottom",
-      "equalWidths": false,
+      "equalWidths": true,
       "horizontalGap": 5,
       "valueAlign": "left",
       "valueWidth": 0,
@@ -42,7 +54,8 @@
       "cursorColor": "#AEAEAF",
       "categoryBalloonEnabled": false,
       "valueLineBalloonEnabled": false,
-      "cursorAlpha": 1
+      "cursorAlpha": 1,
+      "graphBulletAlpha": 1
     },
     "export": {
       "libs": {
@@ -67,39 +80,96 @@
     }
   },
   "getBaseSerialGraph": {
+    "dataProvider": "dummyData",
+    "legend": {
+      "color": "#444",
+      "align": "center",
+      "autoMargins": false,
+      "switchable": false,
+      "fontSize": 13,
+      "markerLabelGap": 10,
+      "markerType": "square",
+      "markerSize": 10,
+      "position": "bottom",
+      "equalWidths": true,
+      "horizontalGap": 5,
+      "valueAlign": "left",
+      "valueWidth": 0,
+      "verticalGap": 20
+    },
+    "graphs": {
+      "lineAlpha": 1,
+      "balloonColor": "#AEAEAF",
+      "lineThickness": 1,
+      "marginTop": 10,
+      "marginLeft": 0,
+      "plotAreaBorderAlpha": 0,
+      "legendValueText": " ",
+      "showBalloon": false,
+      "fillAlphas": 0.1
+    },
+    "chartCursor": {
+      "valueLineAlpha": 0,
+      "balloonPointerOrientation": "vertical",
+      "cursorColor": "#AEAEAF",
+      "categoryBalloonEnabled": false,
+      "valueLineBalloonEnabled": false,
+      "cursorAlpha": 1,
+      "graphBulletAlpha": 1
+    },
+    "categoryField": "dummyField",
+    "categoryAxis": {
+      "axisColor": "#D7D7D8",
+      "gridColor": "#ccc",
+      "color": "#6A6B6C",
+      "fontFamily": "CiscoSansTT Light",
+      "fontSize": 12,
+      "titleBold": false,
+      "titleColor": "#6A6B6C",
+      "gridAlpha": 0,
+      "axisAlpha": 1,
+      "stackType": "regular"
+    },
+    "valueAxes": {
+      "axisColor": "#D7D7D8",
+      "gridColor": "#ccc",
+      "color": "#6A6B6C",
+      "fontFamily": "CiscoSansTT Light",
+      "fontSize": 12,
+      "titleBold": false,
+      "titleColor": "#6A6B6C",
+      "gridAlpha": 0,
+      "axisAlpha": 1,
+      "stackType": "regular"
+    },
+    "export": {
+      "libs": {
+        "autoLoad": false
+      },
+      "menu": [{
+        "class": "export-main",
+        "label": "reportsPage.downloadOptions",
+        "menu": [{
+          "label": "reportsPage.saveAs",
+          "title": "reportsPage.saveAs",
+          "class": "export-list",
+          "menu": [
+            "PNG",
+            "JPG",
+            "PDF"
+          ]
+        },
+          "PRINT"
+        ]
+      }]
+    },
     "type": "serial",
     "theme": "light",
-    "colors": ["color1", "color2"],
+    "path": "./images/",
     "marginRight": 30,
-    "legend": {
-      "data": [{
-        "title": "dummy1",
-        "color": "color2"
-      }, {
-        "title": "dummy1",
-        "color": "color1"
-      }],
-      "equalWidths": false,
-      "position": "bottom"
-    },
-    "dataProvider": "dummydata",
-    "valueAxes": {},
-    "graphs": {},
-    "balloon": {
-      "adjustBorderColor": true,
-      "borderThickness": 1,
-      "borderAlpha": 1,
-      "fillAlpha": 1,
-      "fillColor": "#fff",
-      "fixedPosition": true,
-      "shadowAlpha": 0
-    },
-    "plotAreaBorderAlpha": 0,
-    "marginTop": 40,
+    "marginTop": 40, 
     "marginLeft": 50,
-    "chartCursor": {},
-    "categoryField": "dummyData",
-    "categoryAxis": {},
-    "export": {}
+    "plotAreaBorderAlpha": 0,
+    "balloon": { "adjustBorderColor": true, "borderThickness": 1, "borderAlpha": 1, "fillAlpha": 1, "fillColor": "#fff", "fixedPosition": true, "shadowAlpha": 0 }
   }
 }

@@ -8,6 +8,7 @@
 </div>
 <div class="modal-body">
   <p class="explanation"><span translate="homePage.convertUsersText"></span></p>
+  <h4 translate="homePage.unlicensedUsers"></h4>
   <span class="spinner-example--large" ng-show="!showSearch">
       <i class="icon icon-spinner"></i>
   </span>
@@ -23,6 +24,10 @@
     <div id="unlicensedList" class="row">
       <div class="gridStyle grid-checkbox" ui-grid="convertGridOptions" ui-grid-selection ui-grid-save-state ></div>
     </div>
+  </div>
+  <div class="noUnlicensedUsers" ng-show="unlicensed == 0">
+    <h2 translate="usersPage.convertUserNoneFound"></h2>
+    <h3 translate="usersPage.convertUserTryAgain"></h3>
   </div>
 </div>
 <div class="modal-footer">

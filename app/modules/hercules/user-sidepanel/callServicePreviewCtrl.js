@@ -10,7 +10,7 @@
     $scope.saveLoading = false;
     $scope.currentUser = $stateParams.currentUser;
     var isEntitled = function (ent) {
-      return $stateParams.currentUser.entitlements && $stateParams.currentUser.entitlements.indexOf(ent) > -1 ? true : false;
+      return $stateParams.currentUser.entitlements && $stateParams.currentUser.entitlements.indexOf(ent) > -1;
     };
 
     var sipUri = _.find($scope.currentUser.sipAddresses, {
@@ -166,22 +166,6 @@
 
     $scope.getStatus = function (status) {
       return USSService.decorateWithStatus(status);
-    };
-
-    var findEnterpriseSipUri = function () {
-      USSService.getStatusesForUser($scope.currentUser.id, function (err, activationStatus) {
-        if (!activationStatus || !activationStatus.userStatuses) {
-          return;
-        }
-        $scope.callServiceAware.status = _.find(activationStatus.userStatuses, function (status) {
-          return $scope.callServiceAware.id === status.serviceId;
-        });
-        if ($scope.callServiceAware.status && $scope.callServiceAware.status.connectorId) {
-          ClusterService.getConnector($scope.callServiceAware.status.connectorId).then(function (connector) {
-            $scope.callServiceAware.homedConnector = connector;
-          });
-        }
-      });
     };
 
     $scope.domainVerificationError = false; // need to be to be backwards compatible.

@@ -2,7 +2,7 @@
   'use strict';
 
   describe('Template: customerList.tpl.html', function () {
-    var $rootScope, $scope, $compile, $templateCache, $q, $controller, controller, view;
+    var $scope, $compile, $templateCache, $q, $controller, view;
     var Authinfo, customerListToggle, Orgservice, PartnerService, FeatureToggleService, TrialService;
     var ADD_BUTTON = '#addTrial';
     var SEARCH_FILTER = '#searchFilter';
@@ -39,7 +39,7 @@
 
       spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
 
-      spyOn(Orgservice, 'getOrg').and.callFake(function (callback, oid) {
+      spyOn(Orgservice, 'getOrg').and.callFake(function (callback) {
         callback({
           success: true
         }, 200);
@@ -65,16 +65,14 @@
     describe('Customer name Search filter', function () {
       it('clicking search box should call filterList', function () {
         initAndCompile();
-        spyOn($scope, 'filterList').and.callFake(function (val) {
-
-        });
+        spyOn($scope, 'filterList').and.callFake(function () {});
         view.find(SEARCH_FILTER).val('customerName').change();
         expect($scope.filterList).toHaveBeenCalledWith('customerName');
       });
     });
 
     function initAndCompile() {
-      controller = $controller('CustomerListCtrl', {
+      $controller('CustomerListCtrl', {
         $scope: $scope,
         customerListToggle: customerListToggle
       });

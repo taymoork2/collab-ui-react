@@ -61,10 +61,6 @@ var LandingPage = function () {
   this.userBtn = element(by.css('.btn--user '));
   this.serviceSetup = element(by.css('.settings-menu')); //this button is going away. feature toggle
   this.overviewPage = element(by.css('.overview-page'));
-
-  function convertUsersSearch(query) {
-    return element.all(by.cssContainingText('.ui-grid .ui-grid-row .ui-grid-cell-contents', query)).first();
-  }
 };
 
 module.exports = LandingPage;

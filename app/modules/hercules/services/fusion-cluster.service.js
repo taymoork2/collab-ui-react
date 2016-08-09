@@ -139,10 +139,10 @@
     function preregisterCluster(name, releaseChannel, managementConnectorType) {
       var url = UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '/clusters';
       return $http.post(url, {
-          name: name,
-          releaseChannel: releaseChannel,
-          targetType: managementConnectorType
-        })
+        name: name,
+        releaseChannel: releaseChannel,
+        targetType: managementConnectorType
+      })
         .then(extractDataFromResponse);
     }
 
@@ -212,8 +212,8 @@
     function setClusterName(clusterId, newClusterName) {
       var url = UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '/clusters/' + clusterId;
       return $http.patch(url, {
-          name: newClusterName
-        })
+        name: newClusterName
+      })
         .then(extractDataFromResponse);
     }
 
@@ -267,15 +267,15 @@
 
       // We have an outage if all clusters have their connectors in these states or combinations of them:
       if (_.every(statuses, function (value) {
-          return (value === 'unknown' || value === 'stopped' || value === 'disabled' || value === 'offline' || value === 'not_configured' || value === 'not_operational');
-        })) {
+        return (value === 'unknown' || value === 'stopped' || value === 'disabled' || value === 'offline' || value === 'not_configured' || value === 'not_operational');
+      })) {
         return 'outage';
       }
 
       // Service is degraded if one or more clusters have their connectors in one of these states:
       if (_.find(statuses, function (value) {
-          return (value === 'has_alarms' || value === 'stopped' || value === 'not_operational' || value === 'disabled' || value === 'offline');
-        })) {
+        return (value === 'has_alarms' || value === 'stopped' || value === 'not_operational' || value === 'disabled' || value === 'offline');
+      })) {
         return 'impaired';
       }
 

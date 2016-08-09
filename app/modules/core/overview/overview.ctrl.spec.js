@@ -9,7 +9,7 @@ describe('Controller: OverviewCtrl', function () {
 
   var controller, $rootScope, $scope, $q, $state, $translate, Authinfo, Config, FeatureToggleService, Log, Orgservice, OverviewNotificationFactory, ReportsService, ServiceDescriptor, ServiceStatusDecriptor, TrialService;
   var orgServiceJSONFixture = getJSONFixture('core/json/organizations/Orgservice.json');
-  var usageJSONFixture = getJSONFixture('core/json/organizations/usage.json');
+  var usageOnlySharedDevicesFixture = getJSONFixture('core/json/organizations/usageOnlySharedDevices.json');
   var services = getJSONFixture('squared/json/services.json');
 
   describe('Wire up', function () {
@@ -32,6 +32,18 @@ describe('Controller: OverviewCtrl', function () {
 
     it('should have properly set trialDaysLeft', function () {
       expect(controller.trialDaysLeft).toEqual(1);
+    });
+  });
+
+  describe('Enable Devices', function () {
+    beforeEach(function () {
+      Orgservice.getAdminOrgUsage = jasmine.createSpy().and.returnValue($q.when(usageOnlySharedDevicesFixture));
+      inject(defaultWireUpFunc);
+    });
+
+    it('should call do something', function () {
+      var roomSystemsCard = getCard('overview.cards.roomSystem.title');
+      expect(roomSystemsCard.isDeviceEnabled).toBeTruthy();
     });
   });
 
@@ -278,8 +290,12 @@ describe('Controller: OverviewCtrl', function () {
     OverviewNotificationFactory = _OverviewNotificationFactory_;
     TrialService = _TrialService_;
 
+    FeatureToggleService.features = {
+      atlasHybridServicesResourceList: 'atlas-media-service-onboarding'
+    };
+
     ServiceDescriptor = {
-      services: function (eventHandler) {}
+      services: function () {}
     };
 
     ServiceStatusDecriptor = {
@@ -290,14 +306,14 @@ describe('Controller: OverviewCtrl', function () {
       }
     };
     Orgservice = {
-      getAdminOrg: function (orgEventHandler) {},
+      getAdminOrg: function () {},
       getAdminOrgUsage: function () {
         return $q.when({
           data: orgServiceJSONFixture.getLicensesUsage.singleSub
         });
       },
-      getUnlicensedUsers: function (unlicencedUsersHandler) {},
-      getOrg: jasmine.createSpy().and.callFake(function (callback, status) {
+      getUnlicensedUsers: function () {},
+      getOrg: jasmine.createSpy().and.callFake(function (callback) {
         callback(orgServiceJSONFixture.getOrgNoSip, 200);
       }),
       getHybridServiceAcknowledged: function () {
@@ -323,8 +339,8 @@ describe('Controller: OverviewCtrl', function () {
     };
 
     ReportsService = {
-      getOverviewMetrics: function (backendCach) {},
-      healthMonitor: function (eventHandler) {}
+      getOverviewMetrics: function () {},
+      healthMonitor: function () {}
     };
 
     spyOn(Authinfo, 'getConferenceServicesWithoutSiteUrl').and.returnValue([{
@@ -349,6 +365,7 @@ describe('Controller: OverviewCtrl', function () {
     spyOn(Authinfo, 'isCustomerAdmin').and.returnValue(true);
     spyOn(FeatureToggleService, 'atlasDarlingGetStatus').and.returnValue($q.when(true));
     spyOn(TrialService, 'getDaysLeftForCurrentUser').and.returnValue($q.when(1));
+    spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(false));
 
     controller = $controller('OverviewCtrl', {
       $scope: $scope,

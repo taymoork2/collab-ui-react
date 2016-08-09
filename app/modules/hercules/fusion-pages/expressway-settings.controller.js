@@ -91,20 +91,20 @@
 
     function deregisterCluster(cluster) {
       $modal.open({
-          resolve: {
-            cluster: function () {
-              return vm.cluster;
-            },
-            isF410enabled: true
+        resolve: {
+          cluster: function () {
+            return cluster;
           },
-          controller: 'ClusterDeregisterController',
-          controllerAs: 'clusterDeregister',
-          templateUrl: 'modules/hercules/cluster-deregister/deregister-dialog.html',
-          type: 'small'
-        })
-        .result.then(function (data) {
-          $state.go('cluster-list');
-        });
+          isF410enabled: true
+        },
+        controller: 'ClusterDeregisterController',
+        controllerAs: 'clusterDeregister',
+        templateUrl: 'modules/hercules/cluster-deregister/deregister-dialog.html',
+        type: 'small'
+      })
+      .result.then(function () {
+        $state.go('cluster-list');
+      });
     }
 
     function setClusterName(newClusterName) {

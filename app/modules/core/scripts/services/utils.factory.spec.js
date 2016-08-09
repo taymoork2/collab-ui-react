@@ -3,11 +3,9 @@
 describe('Utils', function () {
   beforeEach(angular.mock.module('Core'));
 
-  var $location, $rootScope, Utils;
+  var Utils;
 
-  beforeEach(inject(function (_$location_, _$rootScope_, _Utils_) {
-    $location = _$location_;
-    $rootScope = _$rootScope_;
+  beforeEach(inject(function (_Utils_) {
     Utils = _Utils_;
   }));
 

@@ -83,7 +83,6 @@
         }
       },
       lessThan: function (viewValue, modelValue, scope) {
-        var value = modelValue || viewValue;
         // we only validate this if endNumber is valid or populated
         if (angular.isUndefined(scope.model.endNumber) || scope.model.endNumber === "") {
           // trigger validation on endNumber field
@@ -172,7 +171,7 @@
       return false;
     };
 
-    vm.steeringDigitChangeValidation = function ($viewValue, $modelValue, scope) {
+    vm.steeringDigitChangeValidation = function () {
       if (vm.firstTimeSetup) {
         return false;
       } else if (vm.model.site.steeringDigit !== vm.model.ftswSteeringDigit) {
@@ -197,7 +196,7 @@
           inputPlaceholder: $translate.instant('serviceSetupModal.searchTimeZone'),
           filter: true
         },
-        controller: /* @ngInject */ function ($scope, ServiceSetup) {
+        controller: /* @ngInject */ function ($scope) {
           $scope.$watchCollection(function () {
             return vm.timeZoneOptions;
           }, function (timeZones) {
@@ -230,11 +229,11 @@
           description: $translate.instant('serviceSetupModal.siteSteeringDigitDescription'),
           options: vm.steeringDigits
         },
-        hideExpression: function ($viewValue, $modelValue, scope) {
+        hideExpression: function () {
           return true;
         },
         expressionProperties: {
-          'templateOptions.disabled': function ($viewValue, $modelValue, scope) {
+          'templateOptions.disabled': function () {
             return vm.hasSites;
           }
         }
@@ -249,11 +248,11 @@
           required: true,
           maxlength: 5
         },
-        hideExpression: function ($viewValue, $modelValue, scope) {
+        hideExpression: function () {
           return true;
         },
         expressionProperties: {
-          'templateOptions.disabled': function ($viewValue, $modelValue, scope) {
+          'templateOptions.disabled': function () {
             return vm.hasSites;
           }
         }
@@ -285,7 +284,7 @@
         }
       },
       expressionProperties: {
-        'templateOptions.disabled': function ($viewValue, $modelValue, scope) {
+        'templateOptions.disabled': function () {
           return vm.model.disableExtensions;
         }
       }
@@ -467,7 +466,7 @@
       templateOptions: {
         btnClass: 'btn-sm btn-link',
         label: $translate.instant('serviceSetupModal.addMoreExtensionRanges'),
-        onClick: function (options, scope) {
+        onClick: function () {
           vm.addInternalNumberRange();
         }
       },
@@ -533,8 +532,8 @@
               });
               // add the existing voicemailPilotNumber back into the list of options
               if (vm.model.site.voicemailPilotNumber && !_.find($scope.to.options, function (externalNumber) {
-                  return externalNumber.pattern === vm.model.site.voicemailPilotNumber;
-                })) {
+                return externalNumber.pattern === vm.model.site.voicemailPilotNumber;
+              })) {
                 var tmpExternalNumber = {
                   pattern: vm.model.site.voicemailPilotNumber,
                   label: TelephoneNumberService.getDIDLabel(vm.model.site.voicemailPilotNumber)
@@ -584,14 +583,6 @@
     vm.initServiceSetup = initServiceSetup;
     vm.initNext = initNext;
 
-    function getBeautifiedExternalNumber(pattern) {
-      var didLabel = TelephoneNumberService.getDIDLabel(pattern);
-      var externalNumber = _.findWhere(vm.externalNumberPoolBeautified, {
-        pattern: didLabel
-      });
-      return externalNumber;
-    }
-
     function initServiceSetup() {
       var errors = [];
       return HuronCustomer.get().then(function (customer) {
@@ -608,15 +599,19 @@
       }).then(function () {
         // Determine if extension ranges and length can be modified
         return enableExtensionLengthModifiable();
-      }).then(function () {
+      })
+      .then(function () {
         // TODO BLUE-1221 - make /customer requests synchronous until fixed
         return initTimeZone();
-      }).then(function () {
+      })
+      .then(function () {
         // TODO BLUE-1221 - make /customer requests synchronous until fixed
         return listInternalExtensionRanges();
-      }).then(function () {
+      })
+      .then(function () {
         return setServiceValues();
-      }).then(function () {
+      })
+      .then(function () {
         return ServiceSetup.listSites().then(function () {
           if (ServiceSetup.sites.length !== 0) {
             return ServiceSetup.getSite(ServiceSetup.sites[0].uuid).then(function (site) {
@@ -640,7 +635,8 @@
             });
           }
         });
-      }).then(function () {
+      })
+      .then(function () {
         if (vm.hasVoicemailService) {
           return ServiceSetup.getVoicemailPilotNumber().then(function (voicemail) {
             if (voicemail.pilotNumber === Authinfo.getOrgId()) {
@@ -662,19 +658,20 @@
             Notification.errorResponse(response, 'serviceSetupModal.voicemailGetError');
           });
         }
-      }).then(function () {
+      })
+      .then(function () {
         vm.fields = vm.initialFields;
         return loadExternalNumberPool();
       });
     }
 
     function adjustExtensionRanges(range, char) {
-      var length = parseInt(vm.model.site.extensionLength);
+      var length = parseInt(vm.model.site.extensionLength, 10);
 
       return (length < range.length) ? range.slice(0, length) : _.padRight(range, length, char);
     }
 
-    function loadExternalNumberPool(pattern) {
+    function loadExternalNumberPool() {
       return ExternalNumberService.refreshNumbers(Authinfo.getOrgId()).then(function () {
         vm.externalNumberPool = ExternalNumberService.getUnassignedNumbers();
       }).catch(function (response) {
@@ -694,8 +691,8 @@
 
     function testForExtensions() {
       return DirectoryNumberService.query({
-          customerId: Authinfo.getOrgId()
-        }).$promise
+        customerId: Authinfo.getOrgId()
+      }).$promise
         .then(function (extensionList) {
           if (angular.isArray(extensionList) && extensionList.length > 0) {
             vm.model.disableExtensions = true;
@@ -705,26 +702,26 @@
 
     function testForAutoAttendant() {
       return CeService.query({
-          customerId: Authinfo.getOrgId()
-        }).$promise
+        customerId: Authinfo.getOrgId()
+      }).$promise
         .then(function (autoAttendant) {
           if (angular.isArray(autoAttendant) && autoAttendant.length > 0) {
             vm.model.disableExtensions = true;
           }
-        }).catch(function (response) {
+        }).catch(function () {
           // auto attendant does not exist
         });
     }
 
     function testForHuntGroup() {
       return HuntGroupServiceV2.query({
-          customerId: Authinfo.getOrgId()
-        }).$promise
+        customerId: Authinfo.getOrgId()
+      }).$promise
         .then(function (huntGroup) {
           if (angular.isArray(huntGroup) && huntGroup.length > 0) {
             vm.model.disableExtensions = true;
           }
-        }).catch(function (response) {
+        }).catch(function () {
           // hunt group does not exist
         });
     }
@@ -890,12 +887,12 @@
     function displayDisableVoicemailWarning() {
       if (_.get(vm, 'model.site.voicemailPilotNumber') && !_.get(vm, 'model.ftswCompanyVoicemail.ftswCompanyVoicemailEnabled')) {
         return ModalService.open({
-            title: $translate.instant('huronSettings.disableCompanyVoicemailTitle'),
-            message: $translate.instant('huronSettings.disableCompanyVoicemailMessage'),
-            close: $translate.instant('common.disable'),
-            dismiss: $translate.instant('common.cancel'),
-            type: 'negative'
-          })
+          title: $translate.instant('huronSettings.disableCompanyVoicemailTitle'),
+          message: $translate.instant('huronSettings.disableCompanyVoicemailMessage'),
+          close: $translate.instant('common.disable'),
+          dismiss: $translate.instant('common.cancel'),
+          type: 'negative'
+        })
           .result
           .catch(function () {
             vm.model.ftswCompanyVoicemail.ftswCompanyVoicemailEnabled = true;

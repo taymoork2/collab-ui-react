@@ -2,13 +2,13 @@
 
 describe('Auth Service', function () {
   beforeEach(angular.mock.module('core.auth'));
+  beforeEach(angular.mock.module('ngSanitize'));
 
-  var Auth, Authinfo, $httpBackend, Config, Storage, SessionStorage, $rootScope, $state, $q, OAuthConfig, UrlConfig, WindowLocation, TokenService;
+  var Auth, Authinfo, $httpBackend, Storage, SessionStorage, $rootScope, $state, $q, OAuthConfig, UrlConfig, WindowLocation, TokenService;
 
-  beforeEach(inject(function (_Auth_, _Authinfo_, _$httpBackend_, _Config_, _Storage_, _SessionStorage_, _TokenService_, _$rootScope_, _$state_, _$q_, _OAuthConfig_, _UrlConfig_, _WindowLocation_) {
+  beforeEach(inject(function (_Auth_, _Authinfo_, _$httpBackend_, _Storage_, _SessionStorage_, _TokenService_, _$rootScope_, _$state_, _$q_, _OAuthConfig_, _UrlConfig_, _WindowLocation_) {
     $q = _$q_;
     Auth = _Auth_;
-    Config = _Config_;
     $state = _$state_;
     Storage = _Storage_;
     Authinfo = _Authinfo_;
@@ -162,6 +162,7 @@ describe('Auth Service', function () {
   it('should refresh token and resend request', function (done) {
     OAuthConfig.getOauth2Url = sinon.stub().returns('');
     OAuthConfig.getAccessTokenUrl = sinon.stub().returns('access_token_url');
+    TokenService.getRefreshToken = sinon.stub().returns('refresh_token');
 
     $httpBackend
       .expectPOST('access_token_url')
@@ -188,6 +189,17 @@ describe('Auth Service', function () {
     $httpBackend.flush();
   });
 
+  it('should not refresh token and resend request, should redirect to login', function () {
+    OAuthConfig.getOauth2Url = sinon.stub().returns('');
+    OAuthConfig.getAccessTokenUrl = sinon.stub().returns('access_token_url');
+    TokenService.getRefreshToken = sinon.stub().returns(null);
+    OAuthConfig.getLogoutUrl = sinon.stub().returns('logoutUrl');
+
+    Auth.refreshAccessTokenAndResendRequest().catch(function () {
+      expect(WindowLocation.set).toHaveBeenCalledWith('logoutUrl');
+    });
+  });
+
   it('should set refresh token', function () {
     OAuthConfig.getAccessTokenUrl = sinon.stub().returns('url');
     OAuthConfig.getOAuthClientRegistrationCredentials = stubCredentials();
@@ -211,20 +223,35 @@ describe('Auth Service', function () {
     var loggedOut = sinon.stub();
     Storage.clear = sinon.stub();
     SessionStorage.get = sinon.stub().returns('accessToken');
-    OAuthConfig.getOauthDeleteTokenUrl = sinon.stub().returns('OauthDeleteTokenUrl');
-    OAuthConfig.getOAuthClientRegistrationCredentials = stubCredentials();
+    OAuthConfig.getLogoutUrl = sinon.stub().returns('logoutUrl');
+    OAuthConfig.getOauthListTokenUrl = sinon.stub().returns('OauthListTokenUrl');
+    OAuthConfig.getOauthDeleteRefreshTokenUrl = sinon.stub().returns('refreshtoken=');
 
     $httpBackend
-      .expectPOST('OauthDeleteTokenUrl', 'token=accessToken', assertCredentials)
-      .respond(200, {});
+      .expectGET('OauthListTokenUrl')
+      .respond(200, {
+        total: 1,
+        data: [{
+          device_type: null,
+          create_time: '2016-07-28 21:39:06',
+          client_id: 'ewvmpibn34inbr433f23f4',
+          last_used_time: '2016-07-28 21:39:06',
+          token_id: 'OauthDeleteRefreshTokenUrl',
+          client_name: 'Admin Portal'
+        }]
+      });
 
-    Auth.logoutAndRedirectTo('logoutUrl').then(loggedOut);
+    $httpBackend
+      .expectDELETE('refreshtoken=OauthDeleteRefreshTokenUrl')
+      .respond(204, 'No Content');
+
+    Auth.logoutAndRedirectTo().then(loggedOut);
 
     $httpBackend.flush();
 
     expect(loggedOut.callCount).toBe(1);
     expect(Storage.clear.callCount).toBe(1);
-    expect(WindowLocation.set).toHaveBeenCalledWith('logoutUrl');
+    expect(WindowLocation.set).toHaveBeenCalled();
   });
 
   it('should logout and redirect to the default logout url', function () {

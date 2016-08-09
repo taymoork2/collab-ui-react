@@ -4,16 +4,12 @@
 /* global LONG_TIMEOUT */
 
 describe('Partner flow', function () {
-  var orgId;
-  var accessToken;
   var appWindow;
 
   describe('Login as partner admin user', function () {
 
     it('should login', function () {
-      login.login('partner-admin', '#/partner/overview').then(function (token) {
-        accessToken = token;
-      });
+      login.login('partner-admin', '#/partner/overview');
     });
 
     it('should display correct navigation colors', function () {
@@ -89,8 +85,7 @@ describe('Partner flow', function () {
       utils.search(partner.newTrial.customerName, -1);
       utils.expectIsDisplayed(partner.newTrialRow);
 
-      partner.retrieveOrgId(partner.newTrialRow).then(function (_orgId) {
-        orgId = _orgId;
+      partner.retrieveOrgId(partner.newTrialRow).then(function () {
         done();
       });
     }, LONG_TIMEOUT);
@@ -146,6 +141,7 @@ describe('Partner flow', function () {
       utils.click(wizard.nextBtn);
 
       utils.expectTextToBeSet(wizard.mainviewTitle, 'Add Users');
+      utils.expectIsDisplayed(wizard.skipBtn);
       utils.click(wizard.nextBtn);
       utils.click(wizard.saveBtn);
       notifications.clearNotifications();

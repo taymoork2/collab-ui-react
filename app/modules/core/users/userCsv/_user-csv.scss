@@ -3,6 +3,10 @@
   margin-left: rem(30);
 }
 
+.dialog-padding {
+  @include vr-spacing(mh, 2);
+}
+
 .user-csv {
   .flex-container {
     display: flex;
@@ -334,5 +338,3 @@
     }
   }
 }
-
-
