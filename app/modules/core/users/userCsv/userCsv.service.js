@@ -128,7 +128,7 @@
                   break;
                 }
               case ('400109'):
-              	{
+                {
                   responseMessage = $translate.instant('usersPage.unableToMigrateError', {
                     email: email
                   });
