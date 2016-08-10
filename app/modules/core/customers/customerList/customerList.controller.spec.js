@@ -176,30 +176,6 @@ describe('Controller: CustomerListCtrl', function () {
       expect($scope.managedOrgsList[1].customerName).toBe('Atlas_Test_Trial_vt453w4p8d');
       expect($scope.totalOrgs).toBe(6);
     });
-
-    it('if myOrg is in managedOrgsList, myOrg should not be added to the list', function () {
-      var testOrgList = {
-        "data": {
-          "organizations": [{
-            customerOrgId: '1234-34534-afdagfg-425345-afaf',
-            customerName: 'ControllerTestOrg',
-            customerEmail: 'customer@cisco.com',
-            communications: {
-              isTrial: true
-            }
-          }, {
-            customerOrgId: '1',
-            customerName: 'testOrg'
-          }]
-        }
-      };
-
-      PartnerService.getManagedOrgsList.and.returnValue(testOrgList);
-      initController();
-      expect($scope.managedOrgsList).toBeDefined();
-      expect($scope.managedOrgsList.length).toEqual(2);
-      expect($scope.totalOrgs).toBe(2);
-    });
   });
 
   describe('Click setup PSTN', function () {
