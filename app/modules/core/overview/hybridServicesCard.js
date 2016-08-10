@@ -27,7 +27,7 @@
               card.serviceList.push(getStatusForService('squared-fusion-cal', clusterList));
               card.serviceList.push(getStatusForService('squared-fusion-uc', clusterList));
 
-              card.enabled = !!_.find(card.serviceList, function (service) {
+              card.enabled = _.some(card.serviceList, function (service) {
                 return service.setup;
               });
               if (card.enabled) {
