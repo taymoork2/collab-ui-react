@@ -45,7 +45,7 @@
             "contact-center-context",
             "spark",
             "cloud-contact-center",
-            "webex-squared", "ccc_config"
+            "webex-squared"
           ],
           "volume": 100,
           "isTrial": true,
@@ -194,8 +194,7 @@
             "contact-center-context",
             "spark",
             "cloud-contact-center",
-            "webex-squared",
-            "ccc_config"
+            "webex-squared"
           ],
           "volume": 100,
           "isTrial": true,
@@ -253,8 +252,7 @@
             "contact-center-context",
             "spark",
             "cloud-contact-center",
-            "webex-squared",
-            "ccc_config"
+            "webex-squared"
           ],
           "volume": 100,
           "isTrial": true,
@@ -312,8 +310,7 @@
             "contact-center-context",
             "spark",
             "cloud-contact-center",
-            "webex-squared",
-            "ccc_config"
+            "webex-squared"
           ],
           "volume": 100,
           "isTrial": true,
@@ -481,8 +478,7 @@
       "contact-center-context",
       "spark",
       "cloud-contact-center",
-      "webex-squared",
-      "ccc_config"
+      "webex-squared"
     ],
     "volume": 100,
     "isTrial": true,
@@ -824,7 +820,7 @@
     "conferenceEntitlements": "webex-squared squared-call-initiation squared-syncup",
     "communicationsEntitlements": "",
     "roomSystemsEntitlements": "",
-    "careEntitlements": "contact-center-context spark cloud-contact-center webex-squared ccc_config"
+    "careEntitlements": "contact-center-context spark cloud-contact-center webex-squared"
   }, {
     "customerName": "Atlas_Test_Trial_t81tts9by9",
     "adminEmail": "collabctg+Atlas_Test_Trial_t81tts9by9@gmail.com",
@@ -832,7 +828,7 @@
     "conferenceEntitlements": "webex-squared squared-call-initiation squared-syncup",
     "communicationsEntitlements": "",
     "roomSystemsEntitlements": "",
-    "careEntitlements": "contact-center-context spark cloud-contact-center webex-squared ccc_config"
+    "careEntitlements": "contact-center-context spark cloud-contact-center webex-squared"
   }, {
     "customerName": "Atlas_Test_Trial_jpgjhf6or",
     "adminEmail": "collabctg+Atlas_Test_Trial_jpgjhf6or@gmail.com",
@@ -840,7 +836,7 @@
     "conferenceEntitlements": "webex-squared squared-call-initiation squared-syncup",
     "communicationsEntitlements": "",
     "roomSystemsEntitlements": "",
-    "careEntitlements": "contact-center-context spark cloud-contact-center webex-squared ccc_config"
+    "careEntitlements": "contact-center-context spark cloud-contact-center webex-squared"
   }, {
     "customerName": "Atlas_Test_Trial_0cjwm62e20",
     "adminEmail": "collabctg+Atlas_Test_Trial_0cjwm62e20@gmail.com",
