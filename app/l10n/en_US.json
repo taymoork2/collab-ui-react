@@ -123,7 +123,8 @@
     "unableToMigrateError": "Unable to migrate user {{email}}.  This user's domain is not available for conversion; please submit a problem report.",
     "unknownCreateUserError": "An unknown error has occurred and user creation could not be completed.",
     "insufficientEntitlementsError": "{{email}} cannot be added.  There are insufficient licenses to create this user.",
-    "telstraAppRedirect": "Connecting to Telstra Apps Marketplace"
+    "telstraAppRedirect": "Connecting to Telstra Apps Marketplace",
+    "careAddUserError": "Error adding user to Care."
   },
   "userManage": {
     "org": {
@@ -522,6 +523,7 @@
     "avgQueueTime": "Avg Queue Time",
     "avgHandleTime": "Avg Handle Time",
     "handleTime": "Handle Time",
+    "taskTimeLabel": "Time in Minutes",
     "averageCsat": "Average CSAT",
     "avgCsat": "Avg CSAT",
     "csatRating": "CSAT Rating",
@@ -967,7 +969,8 @@
     "continue": "Continue",
     "warning": "Warning",
     "error": "Error",
-    "turnOff": "Turn Off"
+    "turnOff": "Turn Off",
+    "overview":"Overview"
   },
   "notifications": {
     "success": "Success notifications",
@@ -1149,7 +1152,11 @@
     "voicemailToEmailHelpText": "Warning: Voicemail attachments sent via email are not secure.",
     "voicemailToEmailGetError": "Failed to get voicemail to email settings.",
     "voicemailToEmailUpdateError": "Failed to update voicemail to email settings.",
-    "voicemailTimeZoneGetError": "Failed to get voicemail time zone."
+    "voicemailTimeZoneGetError": "Failed to get voicemail time zone.",
+    "externalVoicemailAccessLabel": "External Voicemail Access",
+    "voicemailPilotHelpText": "Usage of this E164 number incurrs usage cost.",
+    "errorGettingOptionaVmDidToggle": "There was a problem getting the optionalVmDid toggle.",
+    "externalNumberDescriptionText": "Select a number that users can call to check their voicemail from outside the company network."
   },
   "dirsyncModal": {
     "chooseSync": "Choose Sync",
@@ -1654,6 +1661,7 @@
         "upgrade-schedule": "Upgrade Schedule",
         "release-channel": "Release Channel",
         "hosts": "{count, plural, one{# Host} other{# Hosts}}",
+        "nodes": "{count, plural, one{# Node} other{# Nodes}}",
         "settings": "Settings",
         "all": "All",
         "add-resource": "Add Resource",
@@ -3266,6 +3274,7 @@
       "month2": "last month",
       "threeMonths": "Last Three Months",
       "threeMonths2": "last three months",
+      "lastRefresh": "Last Refreshed at",
       "cluster": "Cluster :",
       "ecp": "ECP :",
       "fromDate": "From :",
@@ -3279,8 +3288,12 @@
       "callVolumes": "Total Calls",
       "callVolumesDescription": "Total number of on-premises calls and calls that overflowed to the Cisco Collaboration Cloud.",
       "callVolumesDescriptionForClusterSel": "Total number of calls hosted on this Hybrid Media Cluster and those that were redirected to another resource (cluster or cloud).",
-      "callLocal": "On Premises",
-      "callReject": "Overflowed to Cloud",
+      "callLocalLegend": "On Premises",
+      "callRejectLegend": "Overflowed to Cloud",
+      "callLocal": "Calls On Premises",
+      "callReject": "Calls Overflowed to Cloud",
+      "callLocalCluster":"Calls local to cluster",
+      "callRedirectedCluster":"Calls redirected by cluster",
       "callsRedirected": "Calls Redirected",
       "availabilityOfCluster": "Cluster Availability",
       "availabilityOfHost": "Node Availability",
