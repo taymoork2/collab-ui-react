@@ -91,11 +91,11 @@
     var promises = {
       mf: FeatureToggleService.atlasMediaServiceMetricsGetStatus(),
       care: FeatureToggleService.atlasCareTrialsGetStatus(),
-      sfm: MediaServiceActivationV2.getMediaServiceState()
+      isMfEnabled: MediaServiceActivationV2.getMediaServiceState()
     };
 
     $q.all(promises).then(function (features) {
-      if (features.mf && features.sfm) {
+      if (features.mf && features.isMfEnabled) {
         vm.headerTabs.unshift({
           title: $translate.instant('mediaFusion.page_title'),
           state: 'reports-metrics'
