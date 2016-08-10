@@ -119,18 +119,18 @@
 
 
     var getMediaServiceState = function () {
-      vm.isMediaService = $q.defer();
+      var isMediaService = $q.defer();
       if (angular.isDefined(vm.isMediaServiceEnabled)) {
-        vm.isMediaService.resolve(vm.isMediaServiceEnabled);
+        isMediaService.resolve(vm.isMediaServiceEnabled);
       } else {
         this.isServiceEnabled(vm.mediaServiceId, function (error, enabled) {
           if (!error) {
             vm.isMediaServiceEnabled = enabled;
           }
-          vm.isMediaService.resolve(vm.isMediaServiceEnabled);
+          isMediaService.resolve(vm.isMediaServiceEnabled);
         });
       }
-      return vm.isMediaService.promise;
+      return isMediaService.promise;
     };
 
     var setisMediaServiceEnabled = function (value) {

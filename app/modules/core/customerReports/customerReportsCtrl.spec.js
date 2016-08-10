@@ -86,7 +86,7 @@ describe('Controller: Customer Reports Ctrl', function () {
         $q.when(true)
       );
       spyOn(MediaServiceActivationV2, 'getMediaServiceState').and.returnValue(
-        $q.when(true)
+        $q.resolve(true)
       );
       // Service Spies
       spyOn(CustomerGraphService, 'setActiveUsersGraph').and.returnValue({
