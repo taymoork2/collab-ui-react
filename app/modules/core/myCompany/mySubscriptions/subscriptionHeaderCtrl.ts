@@ -1,32 +1,28 @@
 namespace myCompanyPage {
   
   class SubscriptionHeaderCtrl {
-    private _isTrial = false;
-    private _isOnline = false;
-    private _upgradeUrl: string;
-    private _upgradeTrialUrl: string;
+    public isTrial = false;
+    public isOnline = false;
+    public subId: string;
+    public upgradeUrl: string;
+    public upgradeTrialUrl: string;
 
-    get isTrial() {
-      return this._isTrial;
-    }
-    get isOnline() {
-      return this._isOnline;
-    }
-    get upgradeUrl() {
-      return this._upgradeUrl;
-    }
-    get upgradeTrialUrl(){
-      return this._upgradeTrialUrl;
-    }
 
     /* @ngInject */
-    constructor($scope, Authinfo) {
-      this._isOnline = Authinfo.isOnline();
+    constructor($scope, $timeout, $translate, Authinfo) {
+      this.isOnline = Authinfo.isOnline();
 
       $scope.$on('SUBSCRIPTION::upgradeData', (event, response) => {
-        this._isTrial = response.isTrial;
-        this._upgradeUrl = response.url;
-        this._upgradeTrialUrl = response.upgradeTrialUrl;
+        this.isTrial = response.isTrial;
+        this.subId = response.subId;
+        this.upgradeUrl = response.url;
+        this.upgradeTrialUrl = response.upgradeTrialUrl;
+
+        if (this.isOnline && !this.isTrial) {
+          $timeout(() => {
+            bmmp.init(null, null, Authinfo.getOrgId(), 'atlas', $translate.use(), null, 'https://bmmp.dmz.webex.com/api/v1');
+          }, 300);
+        }
       });
     }
   }
