@@ -191,38 +191,6 @@ describe('Controller: OverviewCtrl', function () {
       //testService('fake.service', 'warning');
 
     });
-
-    it('should set the serviceHealth on each service based on enabled and ack on each service and media service is shown', function () {
-      var hybridCard = getCard('overview.cards.hybrid.title');
-
-      hybridCard.hybridStatusEventHandler('', [{
-        id: 'squared-fusion-mgmt',
-        status: 'ok',
-        enabled: true
-      }, {
-        id: 'squared-fusion-uc',
-        status: 'warn',
-        enabled: true
-      }, {
-        id: 'squared-fusion-cal',
-        enabled: true,
-        name: 'fake noe status'
-      }, {
-        id: 'squared-fusion-media',
-        enabled: true,
-        status: 'error'
-      }]);
-
-      expect(hybridCard.services).toBeDefined();
-
-      testService(hybridCard, 'squared-fusion-mgmt', 'success');
-      testService(hybridCard, 'squared-fusion-uc', 'warning');
-      testService(hybridCard, 'squared-fusion-cal', 'warning');
-      testService(hybridCard, 'squared-fusion-media', 'danger');
-      //testService('fake.service.errorstatus', 'danger');
-      //testService('fake.service', 'warning');
-
-    });
   });
 
   describe('HybridCard', function () {
