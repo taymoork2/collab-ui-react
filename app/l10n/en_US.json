@@ -3389,7 +3389,10 @@
       "clusterdeleteSuccess": "Successfully deleted {{clustername}}",
       "movedTo": "{{nodeName}} moved to: {{clusterName}}",
       "upgradeSchedule": "Upgrade Schedule",
-      "everyDay": "Every Day in"
+      "everyDay": "Every Day in",
+      "stable": "STABLE",
+      "beta": "BETA",
+      "latest": "LATEST"
     },
     "reassign": {
       "reassignHost": "Reassign Host",
