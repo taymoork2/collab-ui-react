@@ -1,7 +1,7 @@
 (function () {
   'use strict';
   /* @ngInject */
-  function AddResourceCommonServiceV2(XhrNotificationService, $translate, $q, MediaClusterServiceV2, Authinfo, $window, MediaServiceActivationV2, Notification) {
+  function AddResourceCommonServiceV2(XhrNotificationService, $translate, $q, MediaClusterServiceV2, $window, MediaServiceActivationV2) {
     var vm = this;
     vm.clusters = null;
     vm.onlineNodeList = [];
@@ -77,63 +77,10 @@
 
     function redirectPopUpAndClose(hostName, enteredCluster, clusterId, firstTimeSetup) {
       if (firstTimeSetup) {
-        enableMediaService(vm.currentServiceId);
+        MediaServiceActivationV2.enableMediaService(vm.currentServiceId);
       }
       vm.popup = $window.open('https://' + encodeURIComponent(hostName) + '/?clusterName=' + encodeURIComponent(enteredCluster) + '&clusterId=' + encodeURIComponent(vm.selectedClusterId));
     }
-
-    function enableMediaService(serviceId) {
-      MediaServiceActivationV2.setServiceEnabled(serviceId, true).then(
-        function success() {
-          vm.enableOrpheusForMediaFusion();
-        },
-        function error() {
-          Notification.error('mediaFusion.mediaServiceActivationFailure');
-        });
-    }
-
-    vm.enableOrpheusForMediaFusion = function () {
-      MediaServiceActivationV2.getUserIdentityOrgToMediaAgentOrgMapping().then(
-        function success(response) {
-          var mediaAgentOrgIdsArray = [];
-          var orgId = Authinfo.getOrgId();
-          var updateMediaAgentOrgId = false;
-          mediaAgentOrgIdsArray = response.data.mediaAgentOrgIds;
-
-          // See if org id is already mapped to user org id
-          if (mediaAgentOrgIdsArray.indexOf(orgId) == -1) {
-            mediaAgentOrgIdsArray.push(orgId);
-            updateMediaAgentOrgId = true;
-          }
-          // See if 'squared' org id is already mapped to user org id
-          if (mediaAgentOrgIdsArray.indexOf('squared') == -1) {
-            mediaAgentOrgIdsArray.push('squared');
-            updateMediaAgentOrgId = true;
-          }
-
-          if (updateMediaAgentOrgId) {
-            vm.addUserIdentityToMediaAgentOrgMapping(mediaAgentOrgIdsArray);
-          }
-        },
-
-        function error() {
-          // Unable to find identityOrgId, add identityOrgId -> mediaAgentOrgId mapping
-          var mediaAgentOrgIdsArray = [];
-          mediaAgentOrgIdsArray.push(Authinfo.getOrgId());
-          mediaAgentOrgIdsArray.push('squared');
-          vm.addUserIdentityToMediaAgentOrgMapping(mediaAgentOrgIdsArray);
-        });
-    };
-
-    vm.addUserIdentityToMediaAgentOrgMapping = function (mediaAgentOrgIdsArray) {
-      MediaServiceActivationV2.setUserIdentityOrgToMediaAgentOrgMapping(mediaAgentOrgIdsArray).then(
-        function success() {},
-        function error(errorResponse) {
-          Notification.error('mediaFusion.mediaAgentOrgMappingFailure', {
-            failureMessage: errorResponse.message
-          });
-        });
-    };
 
     return {
       addRedirectTargetClicked: addRedirectTargetClicked,

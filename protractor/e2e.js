@@ -42,6 +42,13 @@ function retry(exitCode) {
 }
 
 function runE2E() {
+  // yargs will have already parsed args of the form '--foo-bar', so remove them before forking
+  // to 'protractor.js'
+  args = _.forEach(args, function (argVal, argName) {
+    if (/\w+-\w+/.test(argName)) {
+      delete args[argName];
+    }
+  });
   var child = cp.fork('./protractor/protractor', unparse(args));
   child.on('exit', retry);
 }
