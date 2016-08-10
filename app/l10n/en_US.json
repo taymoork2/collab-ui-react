@@ -5111,6 +5111,14 @@
           "settings": "Settings"
         }
       },
+        "care": {
+          "title": "Care",
+          "description": "Cisco Spark Care configurations for your organization offers chat service followed by voice and email.",
+          "buttons": {
+            "features": "Features",
+            "settings": "Settings"
+          }
+      },
       "hybridManagement": {
         "title": "Hybrid Management",
         "description": "Connector management for Hybrid Call and Calendar Services.",

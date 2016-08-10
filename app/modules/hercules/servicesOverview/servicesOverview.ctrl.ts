@@ -1,4 +1,5 @@
 import { CardType, ServicesOverviewCard } from './ServicesOverviewCard';
+import { ServicesOverviewCareCard } from './careCard';
 
 export class ServicesOverviewCtrl {
 
