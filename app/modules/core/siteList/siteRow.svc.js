@@ -128,84 +128,82 @@
     }; //configureGrid
 
     this.getConferenceServices = function () {
-      // var funcName = "getConferenceServices()";
+      var funcName = "getConferenceServices()";
+      var logMsg = "";
 
       var conferenceServices = Authinfo.getConferenceServicesWithoutSiteUrl();
-      // var logMsg = funcName + "\n" +
-        // "conferenceServices=\n" + JSON.stringify(conferenceServices);
-      //      $log.log(logMsg);
 
-      conferenceServices.forEach(
-        function checkConferenceService(conferenceService) {
-          var newSiteUrl = conferenceService.license.siteUrl;
-          var isNewSiteUrl = true;
+      // logMsg = funcName + "\n" +
+      //   "conferenceServices=\n" + JSON.stringify(conferenceServices);
+      // $log.log(logMsg);
 
-          _this.siteRows.gridData.forEach(
-            function checkGrid(siteRow) {
-              if (newSiteUrl == siteRow.license.siteUrl) {
-                isNewSiteUrl = false;
+      conferenceServices.forEach(function (conferenceService) {
+        var newSiteUrl = conferenceService.license.siteUrl;
 
-                // logMsg = funcName + ": " + "\n" +
-                //   "Duplicate webex site url detected and skipped." + "\n" +
-                //   "newSiteUrl=" + newSiteUrl;
-                //$log.log(logMsg);
-              }
-            }
-          );
+        var findCriteria = {
+          siteUrl: newSiteUrl,
+        };
 
-          if (isNewSiteUrl) {
+        var siteRowExists = _.find(
+          _this.siteRows.gridData,
+          findCriteria
+        );
+        // var siteRowExists = false;
 
-            conferenceService.showCSVInfo = false;
-            conferenceService.csvStatusObj = null;
-            conferenceService.csvPollIntervalObj = null;
+        if (siteRowExists) {
+          logMsg = funcName + "\n" +
+            "WARNING - duplicate siteUrl found!" + "\n" +
+            "newSiteUrl=" + newSiteUrl;
+          $log.log(logMsg);
+        } else {
+          conferenceService.showCSVInfo = false;
+          conferenceService.csvStatusObj = null;
+          conferenceService.csvPollIntervalObj = null;
 
-            conferenceService.isIframeSupported = false;
-            conferenceService.isAdminReportEnabled = false;
-            conferenceService.showSiteLinks = false;
-            conferenceService.isError = false;
-            conferenceService.isWarn = false;
-            conferenceService.isCI = true;
-            conferenceService.isCSVSupported = false;
-            conferenceService.adminEmailParam = null;
-            conferenceService.userEmailParam = null;
-            conferenceService.advancedSettings = null;
-            conferenceService.webexAdvancedUrl = null;
-            conferenceService.siteUrl = newSiteUrl;
-            conferenceService.siteAdminUrl = null;
+          conferenceService.isIframeSupported = false;
+          conferenceService.isAdminReportEnabled = false;
+          conferenceService.showSiteLinks = false;
+          conferenceService.isError = false;
+          conferenceService.isWarn = false;
+          conferenceService.isCI = true;
+          conferenceService.isCSVSupported = false;
+          conferenceService.adminEmailParam = null;
+          conferenceService.userEmailParam = null;
+          conferenceService.advancedSettings = null;
+          conferenceService.webexAdvancedUrl = null;
+          conferenceService.siteUrl = newSiteUrl;
+          conferenceService.siteAdminUrl = null;
 
-            conferenceService.showLicenseTypes = false;
-            conferenceService.multipleWebexServicesLicensed = false;
-            conferenceService.licenseTypeContentDisplay = null;
-            conferenceService.licenseTypeId = newSiteUrl + "_";
-            conferenceService.licenseTooltipDisplay = null;
-            conferenceService.MCLicensed = false;
-            conferenceService.ECLicensed = false;
-            conferenceService.SCLicensed = false;
-            conferenceService.TCLicensed = false;
-            conferenceService.EELicensed = false;
-            conferenceService.CMRLicensed = false;
+          conferenceService.showLicenseTypes = false;
+          conferenceService.multipleWebexServicesLicensed = false;
+          conferenceService.licenseTypeContentDisplay = null;
+          conferenceService.licenseTypeId = newSiteUrl + "_";
+          conferenceService.licenseTooltipDisplay = null;
+          conferenceService.MCLicensed = false;
+          conferenceService.ECLicensed = false;
+          conferenceService.SCLicensed = false;
+          conferenceService.TCLicensed = false;
+          conferenceService.EELicensed = false;
+          conferenceService.CMRLicensed = false;
 
-            conferenceService.csvMock = {
-              mockStatus: false,
-              mockStatusStartIndex: 0,
-              mockStatusEndIndex: 0,
-              mockStatusCurrentIndex: null,
-              mockExport: false,
-              mockImport: false,
-              mockFileDownload: false
-            };
+          conferenceService.csvMock = {
+            mockStatus: false,
+            mockStatusStartIndex: 0,
+            mockStatusEndIndex: 0,
+            mockStatusCurrentIndex: null,
+            mockExport: false,
+            mockImport: false,
+            mockFileDownload: false
+          };
 
-            _this.addSiteRow(conferenceService);
-          }
+          _this.addSiteRow(conferenceService);
         }
-      );
-    }; //getConferenceServices()
+      }); // conferenceServices.forEach()
+    }; // getConferenceServices()
 
     this.updateConferenceServices = function () {
-
       // var funcName = "updateConferenceServices()";
       // var logMsg = "";
-      //$log.log(logMsg);
 
       if (!_.isUndefined(Authinfo.getPrimaryEmail())) {
         _this.checkAndUpdateGridOptions();
@@ -234,7 +232,7 @@
       // remove grid column(s) based on feature toggles
       FeatureToggleService.supports(FeatureToggleService.features.webexCSV).then(
         function checkWebExFeaturToggleSuccess(adminUserSupportCSV) {
-          // var funcName = "checkWebExFeaturToggleSuccess()";
+          // var funcName = "checkAndUpdateGridOptions().checkWebExFeaturToggleSuccess()";
           // var logMsg = "";
 
           // logMsg = funcName + "\n" +
@@ -255,10 +253,8 @@
         }, // checkWebExFeaturToggleSuccess()
 
         function checkWebExFeaturToggleError() {
-          // var funcName = "checkWebExFeaturToggleError()";
+          // var funcName = "checkAndUpdateGridOptions().checkWebExFeaturToggleError()";
           // var logMsg = "";
-
-          //$log.log(funcName);
 
           _this.updateGridColumns();
         } // checkWebExFeaturToggleError()
@@ -269,7 +265,6 @@
     this.updateGridColumns = function () {
       // var funcName = "updateGridColumns()";
       // var logMsg = "";
-      //$log.log(funcName);
 
       _this.updateLicenseTypesColumn();
       _this.updateActionsColumnForAllRows();
@@ -278,16 +273,15 @@
     this.updateLicenseTypesColumn = function () {
       // var funcName = "updateLicenseTypesColumn()";
       // var logMsg = "";
-      //$log.log(funcName);
 
       WebExUtilsFact.getAllSitesWebexLicenseInfo().then(
         function getWebexLicenseInfoSuccess(allSitesLicenseInfo) {
-          // var funcName = "getWebexLicenseInfoSuccess()";
+          // var funcName = "updateLicenseTypesColumn().getWebexLicenseInfoSuccess()";
           // var logMsg = "";
 
           // logMsg = funcName + ": " + "\n" +
           //   "allSitesLicenseInfo=" + JSON.stringify(allSitesLicenseInfo);
-          //$log.log(logMsg);
+          // $log.log(logMsg);
 
           _this.siteRows.gridData.forEach(
             function processGridForLicense(siteRow) {
@@ -324,6 +318,7 @@
                     siteRow.licenseTooltipDisplay = siteRow.licenseTooltipDisplay + "<br>" + $translate.instant('helpdesk.licenseDisplayNames.' + mc.offerCode, {
                       capacity: mc.capacity
                     });
+
                     count++;
                   }
                 ); //siteMC.forEach
@@ -358,6 +353,7 @@
                     siteRow.licenseTooltipDisplay = siteRow.licenseTooltipDisplay + "<br>" + $translate.instant('helpdesk.licenseDisplayNames.' + ee.offerCode, {
                       capacity: ee.capacity
                     });
+
                     count++;
                   }
                 ); //siteEE.forEach
@@ -392,6 +388,7 @@
                     siteRow.licenseTooltipDisplay = siteRow.licenseTooltipDisplay + "<br>" + $translate.instant('helpdesk.licenseDisplayNames.' + cmr.offerCode, {
                       capacity: cmr.capacity
                     });
+
                     count++;
                   }
                 ); //siteCMR.forEach
@@ -426,6 +423,7 @@
                     siteRow.licenseTooltipDisplay = siteRow.licenseTooltipDisplay + "<br>" + $translate.instant('helpdesk.licenseDisplayNames.' + ec.offerCode, {
                       capacity: ec.capacity
                     });
+
                     count++;
                   }
                 ); //siteEC.forEach
@@ -460,6 +458,7 @@
                     siteRow.licenseTooltipDisplay = siteRow.licenseTooltipDisplay + "<br>" + $translate.instant('helpdesk.licenseDisplayNames.' + sc.offerCode, {
                       capacity: sc.capacity
                     });
+
                     count++;
                   }
                 ); //siteSC.forEach
@@ -494,6 +493,7 @@
                     siteRow.licenseTooltipDisplay = siteRow.licenseTooltipDisplay + "<br>" + $translate.instant('helpdesk.licenseDisplayNames.' + tc.offerCode, {
                       capacity: tc.capacity
                     });
+
                     count++;
                   }
                 ); //siteTC.forEach
@@ -523,13 +523,11 @@
 
         }, // getWebexLicenseInfoSuccess()
 
-        function getWebexLicenseInfoError(/*result*/) {
-          // var funcName = "getWebexLicenseInfoError()";
+        function getWebexLicenseInfoError() {
+          var funcName = "updateLicenseTypesColumn().getWebexLicenseInfoError()";
           // var logMsg = "";
 
-          // logMsg = funcName + ": " + "\n" +
-          //   "result=" + JSON.stringify(result);
-          //$log.log(logMsg);
+          $log.log(funcName);
         } // getWebexLicenseInfoError()
       ); //getWebexLicenseInfo.then()
 
@@ -538,23 +536,16 @@
     this.updateActionsColumnForAllRows = function () {
       // var funcName = "updateActionsColumnForAllRows()";
       // var logMsg = "";
-      //$log.log(funcName);
 
-      _this.siteRows.gridData.forEach(
-        function processSiteRow(siteRow) {
-          // var funcName = "processSiteRow()";
-          // var logMsg = "";
-
-          _this.updateActionsColumnForOneRow(siteRow);
-        } // processSiteRow()
-      ); // gridData.forEach()
+      _this.siteRows.gridData.forEach(function (siteRow) {
+        _this.updateActionsColumnForOneRow(siteRow);
+      }); // gridData.forEach()
 
     }; // updateActionsColumnForAllRows
 
     this.updateActionsColumnForOneRow = function (siteRow) {
-      var funcName = "updateActionsColumnForOneRow()";
-      var logMsg = "";
-      //$log.log(logMsg);
+      // var funcName = "updateActionsColumnForOneRow()";
+      // var logMsg = "";
 
       siteRow.adminEmailParam = Authinfo.getPrimaryEmail();
       siteRow.userEmailParam = Authinfo.getPrimaryEmail();
@@ -569,15 +560,14 @@
 
       siteRow.isCI = isCISite;
 
-      logMsg = funcName + ": " + "\n" +
-        "siteUrl=" + siteUrl + "\n" +
-        "isCISite=" + isCISite;
-      $log.log(logMsg);
+      // logMsg = funcName + ": " + "\n" +
+      //   "siteUrl=" + siteUrl + "\n" +
+      //   "isCISite=" + isCISite;
+      // $log.log(logMsg);
 
       WebExApiGatewayService.siteFunctions(siteUrl).then(
         function siteFunctionsSuccess(result) {
-          // var funcName = "siteFunctionsSuccess()";
-          // var logMsg = "";
+          // var funcName = "updateActionsColumnForOneRow().siteFunctionsSuccess()";
 
           // logMsg = funcName + ": " + "\n" +
           //   "result=" + JSON.stringify(result);
@@ -589,13 +579,13 @@
 
           siteRow.showSiteLinks = true;
 
-          logMsg = funcName + ": " + "\n" +
-            "siteUrl=" + siteUrl + "\n" +
-            "siteRow.isCSVSupported=" + siteRow.isCSVSupported + "\n" +
-            "siteRow.isIframeSupported=" + siteRow.isIframeSupported + "\n" +
-            "siteRow.isAdminReportEnabled=" + siteRow.isAdminReportEnabled + "\n" +
-            "siteRow.showSiteLinks=" + siteRow.showSiteLinks;
-          //$log.log(logMsg);
+          // logMsg = funcName + ": " + "\n" +
+          //   "siteUrl=" + siteUrl + "\n" +
+          //   "siteRow.isCSVSupported=" + siteRow.isCSVSupported + "\n" +
+          //   "siteRow.isIframeSupported=" + siteRow.isIframeSupported + "\n" +
+          //   "siteRow.isAdminReportEnabled=" + siteRow.isAdminReportEnabled + "\n" +
+          //   "siteRow.showSiteLinks=" + siteRow.showSiteLinks;
+          // $log.log(logMsg);
 
           if (
             (!siteRow.isCSVSupported) ||
@@ -621,8 +611,8 @@
         }, // siteFunctionsSuccess()
 
         function siteFunctionsError(response) {
-          // var funcName = "siteFunctionsError()";
-          // var logMsg = "";
+          var funcName = "updateActionsColumnForOneRow().siteFunctionsError()";
+          var logMsg = "";
 
           siteRow.isIframeSupported = false;
           siteRow.isAdminReportEnabled = false;
@@ -636,7 +626,7 @@
 
           logMsg = funcName + ": " + "\n" +
             "response=" + JSON.stringify(response);
-          //$log.log(logMsg);
+          $log.log(logMsg);
         } // siteFunctionsError()
       ); // WebExApiGatewayService.siteFunctions().then
     }; // updateActionsColumnForOneRow()
