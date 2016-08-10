@@ -6,7 +6,7 @@
     .controller('OverviewCtrl', OverviewCtrl);
 
   /* @ngInject */
-  function OverviewCtrl($rootScope, $scope, $translate, Authinfo, Config, FeatureToggleService, Log, Notification, Orgservice, OverviewCardFactory, OverviewNotificationFactory, ReportsService, ServiceDescriptor, TrialService, UrlConfig) {
+  function OverviewCtrl($rootScope, $scope, $translate, Authinfo, Config, FeatureToggleService, Log, Notification, Orgservice, OverviewCardFactory, OverviewNotificationFactory, ReportsService, TrialService, UrlConfig) {
     var vm = this;
 
     vm.pageTitle = $translate.instant('overview.pageTitle');
@@ -150,8 +150,6 @@
     Orgservice.getUnlicensedUsers(_.partial(forwardEvent, 'unlicensedUsersHandler'));
 
     ReportsService.healthMonitor(_.partial(forwardEvent, 'healthStatusUpdatedHandler'));
-
-    ServiceDescriptor.services(_.partial(forwardEvent, 'hybridStatusEventHandler'), true);
 
     init();
 
