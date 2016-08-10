@@ -1007,7 +1007,10 @@
           // $log.log(funcName);
 
           // block save if PMR is enabled but does not have PRO or STD enabled.
-          var blockSave = _self.isUserLevelPMREnabled() && !_self.hasProOrStdMeetingCenter(WebexUserSettingsSvc.sessionTypes);
+          var blockSave = (
+            WebexUserSettingsSvc.pmr.value &&
+            !_self.hasProOrStdMeetingCenter(WebexUserSettingsSvc.sessionTypes)
+          );
 
           if (blockSave) {
             loading.saveBtn = false;
