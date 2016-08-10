@@ -478,8 +478,11 @@
         .then(function (results) {
           var managed = PartnerService.loadRetrievedDataToList(_.get(results, '[0].data.organizations', []), false,
             $scope.isCareEnabled);
+          var isMyOrgInList = _.some(results[0].data.organizations, {
+            customerName: Authinfo.getOrgName()
+          });
 
-          if (results[1]) {
+          if (!isMyOrgInList && results[1]) {
             // 4/11/2016 admolla
             // TODO: for some reason if I refactor this to not need an array, karma acts up....
             if (_.isArray(results[1])) {
