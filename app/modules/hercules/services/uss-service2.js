@@ -76,9 +76,9 @@
       return getStatusesForUserInOrg(userId, Authinfo.getOrgId());
     }
 
-    function getStatusesForUserInOrg(userId) {
+    function getStatusesForUserInOrg(userId, orgId) {
       return $http
-        .get(USSUrl + '/orgs/' + Authinfo.getOrgId() + '/userStatuses?userId=' + userId)
+        .get(USSUrl + '/orgs/' + (orgId || Authinfo.getOrgId()) + '/userStatuses?userId=' + userId)
         .then(function (res) {
           return _.filter(res.data.userStatuses, function (nugget) {
             return nugget.entitled || (nugget.entitled === false && nugget.state != 'deactivated');
