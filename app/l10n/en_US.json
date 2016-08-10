@@ -3270,7 +3270,7 @@
       "month2": "last month",
       "threeMonths": "Last Three Months",
       "threeMonths2": "last three months",
-      "lastrefresh": "Last Refreshed at",
+      "lastRefresh": "Last Refreshed at",
       "cluster": "Cluster :",
       "ecp": "ECP :",
       "fromDate": "From :",
