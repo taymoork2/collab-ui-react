@@ -495,31 +495,36 @@
         }
       }
     }, {
-      // Since it is possible to have both the FTSW and
-      // huron settings page in the DOM at the same time the id
-      // or key has to be unique to avoid having the same id
-      // for these elements. See settingsCtrl.js
-      model: vm.model,
-      key: 'ftswCompanyVoicemail',
-      type: 'nested',
-      className: 'service-setup',
-      templateOptions: {
-        inputClass: 'service-setup-company-voicemail',
-        label: $translate.instant('serviceSetupModal.companyVoicemail')
-      },
-      expressionProperties: {
-        'templateOptions.description': function () {
-          if (!vm.optionalVmDidFeatureToggle) {
-            return $translate.instant('serviceSetupModal.companyVoicemailDescription');
+      className: 'row collapse-both',
+      fieldGroup: [{
+        // Since it is possible to have both the FTSW and
+        // huron settings page in the DOM at the same time the id
+        // or key has to be unique to avoid having the same id
+        // for these elements. See settingsCtrl.js
+        model: vm.model,
+        key: 'ftswCompanyVoicemail',
+        type: 'nested',
+        className: 'service-setup medium-9 left',
+        templateOptions: {
+          inputClass: 'service-setup-company-voicemail',
+          label: $translate.instant('serviceSetupModal.companyVoicemail')
+        },
+        expressionProperties: {
+          'templateOptions.description': function () {
+            if (!vm.optionalVmDidFeatureToggle) {
+              return $translate.instant('serviceSetupModal.companyVoicemailDescription');
+            }
           }
         }
-      }
+      }, {
+        model: vm.model.ftswCompanyVoicemail,
+        className: 'service-setup medium-3 right swtich-margin',
+        key: 'ftswCompanyVoicemailEnabled',
+        type: 'switch'
+      }],
     }, {
       model: vm.model.ftswCompanyVoicemail,
-      key: 'ftswCompanyVoicemailEnabled',
-      type: 'switch'
-    }, {
-      model: vm.model.ftswCompanyVoicemail,
+      className: 'service-setup vm-access-padding',
       key: 'ftswExternalVoicemail',
       type: 'cs-input',
       templateOptions: {
@@ -534,8 +539,9 @@
       model: vm.model.ftswCompanyVoicemail,
       key: 'ftswCompanyVoicemailNumber',
       type: 'select',
-      className: 'service-setup-company-voicemail-number',
+      className: 'service-setup service-setup-company-voicemail-number voicemail-padding',
       templateOptions: {
+        inputClass: 'medium-4',
         options: [],
         inputPlaceholder: $translate.instant('directoryNumberPanel.searchNumber'),
         labelfield: 'label',

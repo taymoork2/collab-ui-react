@@ -42,10 +42,10 @@
     .hide-delete {
       visibility: hidden;
     }
-    .service-setup-timezone {
+    &.service-setup-timezone {
       margin-bottom: -2px;
     }
-    .service-setup-steering-digit {
+    &.service-setup-steering-digit {
       margin-bottom: rem(2);
     }
     &.service-setup-extension {
@@ -70,15 +70,26 @@
       margin-left: 10px;
       margin-right: 13px;
     }
-    .service-setup-company-voicemail-number {
-      padding-bottom: 1rem;
-      padding-top: 1rem;
+    &.service-setup-company-voicemail-number {
+      margin-bottom: 1rem;
+    }
+    &.vm-access-padding > div > .cs-input-group{
+      margin-bottom: 0;
+      label {
+        padding-top: 0;
+      }
+    }
+    &.voicemail-padding {
+      @include vr-spacing(pl, 2);
     }
     .service-setup-moh {
       width: 50%;
     }
-  }
-  .service-setup.service-setup-extension-length {
-    margin-bottom: rem(2);
+    &.service-setup-extension-length {
+      margin-bottom: rem(2);
+    }
+    &.swtich-margin {
+      @include vr-spacing(mt, 1);
+    }
   }
 }

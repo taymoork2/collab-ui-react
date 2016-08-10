@@ -57,6 +57,14 @@
      color: $gray-dark-1;
    }
 
+   .vm-switch-margin {
+     @include vr-spacing(mt, .75, 0px, true);
+   }
+
+   .voicemail-padding {
+     @include vr-spacing(pl, 2);
+   }
+
    button.btn-link {
       color: $color-primary-base;
       background-color: transparent;
