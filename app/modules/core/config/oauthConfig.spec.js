@@ -15,7 +15,7 @@ describe('OAuthConfig', function () {
   var prodHost = 'admin.ciscospark.com';
   var cfeHost = 'cfe-admin.ciscospark.com';
   var intHost = 'int-admin.ciscospark.com';
-  var scope = encodeURIComponent('webexsquare:admin webexsquare:billing ciscouc:admin Identity:SCIM Identity:Config Identity:Organization cloudMeetings:login webex-messenger:get_webextoken ccc_config:admin cloud-contact-center:admin compliance:spark_conversations_read contact-center-context:pod_read contact-center-context:pod_write spark-admin:people_read spark-admin:people_write spark-admin:customers_read spark-admin:customers_write spark-admin:organizations_read spark-admin:licenses_read spark-admin:logs_read');
+  var scope = encodeURIComponent('webexsquare:admin webexsquare:billing ciscouc:admin Identity:SCIM Identity:Config Identity:Organization cloudMeetings:login webex-messenger:get_webextoken cloud-contact-center:admin compliance:spark_conversations_read contact-center-context:pod_read contact-center-context:pod_write spark-admin:people_read spark-admin:people_write spark-admin:customers_read spark-admin:customers_write spark-admin:organizations_read spark-admin:licenses_read spark-admin:logs_read');
 
   var whenCalling = function (fn, arg1, arg2) {
     var hosts = {

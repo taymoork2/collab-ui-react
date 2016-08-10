@@ -96,26 +96,4 @@ describe(' sunlightConfigService', function () {
     });
     $httpBackend.flush();
   });
-
-  it('should create userInfo in sunlight config service', function () {
-    var userInfo = angular.copy(getJSONFixture('sunlight/json/sunlightTestUser.json'));
-
-    $httpBackend.whenPOST(sunlightUserConfigUrl).respond(200, {});
-
-    sunlightConfigService.createUserInfo(userInfo).then(function (response) {
-      expect(response.status).toBe(200);
-    });
-    $httpBackend.flush();
-  });
-
-  it('should fail to create userInfo in sunlight config service when there is an http error', function () {
-    var userInfo = angular.copy(getJSONFixture('sunlight/json/sunlightTestUser.json'));
-    $httpBackend.whenPOST(sunlightUserConfigUrl).respond(500, errorData);
-    sunlightConfigService.createUserInfo(userInfo).then(function () {}, function (response) {
-      expect(response.data).toEqual(errorData);
-      expect(response.status).toBe(500);
-    });
-    $httpBackend.flush();
-  });
-
 });

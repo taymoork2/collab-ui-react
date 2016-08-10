@@ -23,6 +23,8 @@
     <div class="small privacy" translate="hercules.serviceHelpInfo.servicePrivacyStatement"></div>
   </div>
 
+  <h4 translate="hercules.addResourceDialog.subtitle"></h4>
+
   <form name="selectNewOrExisting" class="cs-form"
         ng-show="vm.inChooseNewOrExistingScreen()">
     <div class="cs-radio-group">
@@ -118,7 +120,8 @@
 
     <p>{{vm.localizedWillBeInstalledMessage}}</p>
 
-    <p><span translate="hercules.redirect-target-dialog.grant-success-information"></span>
+    <p><span translate="hercules.addResourceDialog.go-to-your-expressway"
+             translate-values="{ConnectorName: vm.localizedManagementConnectorName}"></span>
     </p>
   </div>
 

@@ -56,7 +56,7 @@ exports.dependencies = [{
   test: /jquery.js$/,
   loader: 'expose?$!expose?jQuery',
 }, {
-  test: /(FileSaver|fabric).js$/,
+  test: /(FileSaver|fabric|xlsx\/xlsx|jszip\/jszip).js$/,
   loader: 'script',
 }, {
   test: /(bootstrap-tokenfield).js$/,

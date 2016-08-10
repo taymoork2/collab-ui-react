@@ -3,17 +3,7 @@
 
   angular
     .module('Hercules')
-    .controller('AlarmController', AlarmController)
     .controller('ExpresswayHostDetailsController', ExpresswayHostDetailsController);
-
-  /* @ngInject */
-  function AlarmController($stateParams) {
-    var vm = this;
-    vm.alarm = $stateParams.alarm;
-    vm.parseDate = function (timestamp) {
-      return new Date(Number(timestamp) * 1000);
-    };
-  }
 
   /* @ngInject */
   function ExpresswayHostDetailsController($stateParams, $state, ClusterService, XhrNotificationService, $translate) {
@@ -42,6 +32,5 @@
           }
         }, XhrNotificationService.notify);
     };
-
   }
 }());

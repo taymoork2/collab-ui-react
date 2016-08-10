@@ -6,7 +6,7 @@
     .controller('OnboardCtrl', OnboardCtrl);
 
   /*@ngInject*/
-  function OnboardCtrl($modal, $previousState, $q, $rootScope, $scope, $state, $stateParams, $timeout, $translate, addressparser, Authinfo, Analytics, chartColors, Config, DialPlanService, FeatureToggleService, Log, LogMetricsService, NAME_DELIMITER, Notification, OnboardService, Orgservice, TelephonyInfoService, Userservice, Utils, UserCsvService, UserListService, WebExUtilsFact) {
+  function OnboardCtrl($modal, $previousState, $q, $rootScope, $scope, $state, $stateParams, $timeout, $translate, addressparser, Authinfo, Analytics, chartColors, Config, DialPlanService, FeatureToggleService, Log, LogMetricsService, NAME_DELIMITER, Notification, OnboardService, Orgservice, SunlightConfigService, TelephonyInfoService, Userservice, Utils, UserCsvService, UserListService, WebExUtilsFact) {
     var vm = this;
 
     $scope.hasAccount = Authinfo.hasAccount();
@@ -538,7 +538,7 @@
         } else if (userEnts[x] === 'squared-room-moderation') {
           $scope.radioStates.msgRadio = true;
         } else if (userEnts[x] === 'cloud-contact-center') {
-          $scope.radioStates.careRadio = true;
+          setCareSeviceIfUserExistInSunlight();
         }
       }
     }
@@ -547,6 +547,18 @@
       if (userInvites.ms) {
         $scope.radioStates.msgRadio = true;
       }
+      if (userInvites.cc) {
+        setCareSeviceIfUserExistInSunlight();
+      }
+    }
+
+    function setCareSeviceIfUserExistInSunlight() {
+      SunlightConfigService.getUserInfo($scope.currentUser.id)
+          .then(function () {
+            $scope.radioStates.careRadio = true;
+          }, function () {
+            $scope.radioStates.careRadio = false;
+          });
     }
 
     function shouldAddCallService() {
@@ -1424,7 +1436,9 @@
             userResult.message = $translate.instant('usersPage.userExistsDomainClaimError', {
               email: userResult.email
             });
-          } else if (userStatus === 403 && (user.message === '400096' || user.message === '400109')) {
+          } else if (userStatus === 403 && user.message === '400096') {
+            userResult.message = $translate.instant('usersPage.unknownCreateUserError');
+          } else if (userStatus === 403 && user.message === '400109') {
             userResult.message = $translate.instant('usersPage.unableToMigrateError', {
               email: userResult.email
             });
@@ -1637,10 +1651,10 @@
 
         //Displaying notifications
         if (method !== 'convertUser') {
-          if ($scope.numAddedUsers + $scope.numUpdatedUsers + $scope.results.errors.length) {
+          if ($scope.results.errors.length) {
             $scope.btnOnboardLoading = false;
             $scope.btnSaveEntLoad = false;
-            Notification.error($scope.results.errors);
+            Notification.notify($scope.results.errors, 'error');
           }
         }
 
