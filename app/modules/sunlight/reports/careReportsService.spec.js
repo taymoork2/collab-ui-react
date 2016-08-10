@@ -45,10 +45,10 @@ describe('Service: Care Reports Service', function () {
     it('Task Incoming Chart Config should return expected Report for Today', function () {
       var taskIncomingReport = CareReportsService.getTaskIncomingGraphConfig('dummyData', 'dummyTitle', true);
       var expectedConfig = responseData.taskIncomingReportToday;
-      _.map(taskIncomingReport.graphs, function(graph) {
+      _.map(taskIncomingReport.graphs, function (graph) {
         graph.balloonFunction = undefined;
       });
-      _.map(expectedConfig.graphs, function(graph) {
+      _.map(expectedConfig.graphs, function (graph) {
         graph.balloonFunction = undefined;
       });
       expect(taskIncomingReport).toEqual(expectedConfig);
@@ -58,15 +58,15 @@ describe('Service: Care Reports Service', function () {
       var taskIncomingReport = CareReportsService.getTaskIncomingGraphConfig('dummyData', 'dummyTitle', false);
       var expectedConfig = responseData.taskIncomingReportToday;
       expectedConfig.legend.equalWidths = true;
-      expectedConfig.graphs = _.filter(expectedConfig.graphs, function(graph) {
+      expectedConfig.graphs = _.filter(expectedConfig.graphs, function (graph) {
         if (graph.title === 'careReportsPage.handled' || graph.title === 'careReportsPage.abandoned') {
           return true;
         }
       });
-      _.map(taskIncomingReport.graphs, function(graph) {
+      _.map(taskIncomingReport.graphs, function (graph) {
         graph.balloonFunction = undefined;
       });
-      _.map(expectedConfig.graphs, function(graph) {
+      _.map(expectedConfig.graphs, function (graph) {
         graph.balloonFunction = undefined;
       });
       expect(taskIncomingReport).toEqual(expectedConfig);
@@ -81,13 +81,13 @@ describe('Service: Care Reports Service', function () {
       var taskTimeReport = CareReportsService.getTaskTimeGraphConfig('dummyData', 'dummyTitle');
       var expectedConfig = responseData.taskIncomingReportToday;
       expectedConfig.graphs = responseData.taskTimeGraphs;
-      _.map(expectedConfig.valueAxes, function(axis) {
+      _.map(expectedConfig.valueAxes, function (axis) {
         axis.title = 'careReportsPage.taskTimeLabel';
       });
-      _.map(taskTimeReport.graphs, function(graph) {
+      _.map(taskTimeReport.graphs, function (graph) {
         graph.balloonFunction = undefined;
       });
-      _.map(expectedConfig.graphs, function(graph) {
+      _.map(expectedConfig.graphs, function (graph) {
         graph.balloonFunction = undefined;
       });
       expect(taskTimeReport).toEqual(expectedConfig);
@@ -102,13 +102,13 @@ describe('Service: Care Reports Service', function () {
       var averageCsatReport = CareReportsService.getAverageCsatGraphConfig('dummyData', 'dummyTitle', false);
       var expectedConfig = responseData.taskIncomingReportToday;
       expectedConfig.graphs = responseData.csatGraphs;
-      _.map(expectedConfig.valueAxes, function(axis) {
+      _.map(expectedConfig.valueAxes, function (axis) {
         axis.title = 'careReportsPage.csatRating';
       });
-      _.map(averageCsatReport.graphs, function(graph) {
+      _.map(averageCsatReport.graphs, function (graph) {
         graph.balloonFunction = undefined;
       });
-      _.map(expectedConfig.graphs, function(graph) {
+      _.map(expectedConfig.graphs, function (graph) {
         graph.balloonFunction = undefined;
       });
       expect(averageCsatReport).toEqual(expectedConfig);
