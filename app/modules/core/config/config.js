@@ -347,7 +347,9 @@
         'messenger',
         'services-overview',
       ],
-      'cloud-contact-center': [
+      'contact-center-context': [
+        //TODO: Remove these states when sunlight trial stories are implemented and
+        // add back them to 'ccc_config' serviceState
         'care'
       ]
     };
