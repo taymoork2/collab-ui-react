@@ -143,7 +143,8 @@
       ceAllowNolockdown: 'ce-allow-nolockdown',
       webexCSV: 'webex-CSV',
       enableCrashLogs: 'csdm-enable-crash-logs',
-      csdmPlaces: 'csdm-places'
+      csdmPlaces: 'csdm-places',
+      globalStatus: 'global-status'
     };
 
     var toggles = {};
