@@ -2,7 +2,7 @@
   'use strict';
   angular.module('Mediafusion').service('MetricsGraphService', MetricsGraphService);
   /* @ngInject */
-  function MetricsGraphService($translate, CommonMetricsGraphService, chartColors, $log) {
+  function MetricsGraphService($translate, CommonMetricsGraphService, chartColors) {
     // Keys for base variables in CommonMetricsGraphService
     var COLUMN = 'column';
     var AXIS = 'axis';
@@ -107,10 +107,8 @@
       var colors = ['colorOne', 'colorTwo'];
       var values = ['active_calls', 'call_reject'];
       if (cluster === 'All Clusters') {
-        $log.log("a");
         titles = [callLocalTitle, callRejectTitle];
       } else {
-        $log.log("b");
         titles = [callLocalClusterTitle, callRedirectedClusterTitle];
       }
       var graphs = [];
