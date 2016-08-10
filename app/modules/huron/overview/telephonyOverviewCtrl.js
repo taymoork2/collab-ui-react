@@ -6,11 +6,21 @@
     .controller('TelephonyOverviewCtrl', TelephonyOverviewCtrl);
 
   /* @ngInject */
-  function TelephonyOverviewCtrl($stateParams, TelephonyInfoService) {
+  function TelephonyOverviewCtrl($state, $stateParams, TelephonyInfoService) {
     var vm = this;
     vm.currentUser = $stateParams.currentUser;
+    vm.actionList = [{
+      actionKey: 'usersPreview.addNewLinePreview',
+      actionFunction: addNewLine,
+    }];
 
     init();
+
+    function addNewLine() {
+      $state.go('user-overview.communication.directorynumber', {
+        directoryNumber: 'new'
+      });
+    }
 
     function init() {
       // TODO: Change TelephonyInfoService to return directly from this instead of having

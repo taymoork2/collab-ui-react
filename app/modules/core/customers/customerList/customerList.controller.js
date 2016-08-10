@@ -458,16 +458,11 @@
     function getManagedOrgsList(searchText) {
       $scope.showManagedOrgsRefresh = true;
       var promiselist = [PartnerService.getManagedOrgsList(searchText)];
-      var myOrgName = Authinfo.getOrgName();
-      var isPartnerAdmin = Authinfo.isPartnerAdmin();
-      var isPartnerReadOnlyAdmin = Authinfo.isPartnerReadOnlyAdmin();
-      var getOrgNameSearch = Authinfo.getOrgName().indexOf(searchText);
-      var attachMyOrg = false;
 
-      if (isPartnerAdmin || isPartnerReadOnlyAdmin) {
-        if (searchText === '' || getOrgNameSearch !== -1) {
-          attachMyOrg = true;
-          getMyOrgDetails();
+      if (Authinfo.isPartnerAdmin() || Authinfo.isPartnerReadOnlyAdmin()) {
+        // This attaches myOrg details to the managed orgs list
+        if (searchText === '' || Authinfo.getOrgName().indexOf(searchText) !== -1) {
+          promiselist.push(getMyOrgDetails());
         }
       }
 
@@ -483,13 +478,13 @@
         .then(function (results) {
           var managed = PartnerService.loadRetrievedDataToList(_.get(results, '[0].data.organizations', []), false,
             $scope.isCareEnabled);
-          var isMyOrgInList = _.some(managed, {
-            customerName: myOrgName
-          });
 
-          if (attachMyOrg && !isMyOrgInList) {
-            // add myOrg to the managed orgs list
-            managed.unshift(myOrgDetails[0]);
+          if (results[1]) {
+            // 4/11/2016 admolla
+            // TODO: for some reason if I refactor this to not need an array, karma acts up....
+            if (_.isArray(results[1])) {
+              managed.unshift(results[1][0]);
+            }
           }
 
           $scope.managedOrgsList = managed;

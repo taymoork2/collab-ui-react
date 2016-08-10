@@ -14,12 +14,14 @@
             id="timeZoneInput"
             name="timeZoneInput"
             options="aaScheduleModalCtrl.ui.timeZoneOptions"
-            ng-model="aaScheduleModalCtrl.ui.timeZone"
+            ng-model="aaScheduleModalCtrl.timeZone"
             labelfield="label"
             valuefield="id"
             input-placeholder="aaScheduleModalCtrl.timeZonePlaceholder"
-            filter="true">
+            filter="true"
+            is-disabled="aaScheduleModalCtrl.openhours.length === 0 && aaScheduleModalCtrl.holidays.length === 0">
         </cs-select>
+        <p ng-if="aaScheduleModalCtrl.timeZone !== aaScheduleModalCtrl.ui.systemTimeZone" class="cs-input__help-text">{{aaScheduleModalCtrl.timeZoneInfo}}</p>
       </div>
     </div>
   </form>

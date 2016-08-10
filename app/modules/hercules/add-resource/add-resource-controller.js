@@ -22,12 +22,8 @@
     vm.localizedConnectorName = $translate.instant('hercules.connectorNameFromConnectorType.' + vm.connectorType);
     vm.localizedServiceName = $translate.instant('hercules.serviceNames.' + vm.servicesId[0]);
     vm.localizedManagementConnectorName = $translate.instant('hercules.connectorNameFromConnectorType.c_mgmt');
-    vm.localizedAddNewExpressway = $translate.instant('hercules.addResourceDialog.registerNewExpressway', {
-      ConnectorName: vm.localizedConnectorName
-    });
-    vm.localizedAddToExistingExpressway = $translate.instant('hercules.addResourceDialog.addToExistingExpressway', {
-      ConnectorName: vm.localizedConnectorName
-    });
+    vm.localizedAddNewExpressway = $translate.instant('hercules.addResourceDialog.registerNewExpressway');
+    vm.localizedAddToExistingExpressway = $translate.instant('hercules.addResourceDialog.addToExistingExpressway');
     vm.localizedWillBeInstalledMessage = $translate.instant('hercules.addResourceDialog.willBeInstalled', {
       ConnectorName: vm.localizedConnectorName,
       ServiceName: vm.localizedServiceName

@@ -21,6 +21,7 @@
     vm.disableMediaService = function () {
       MediaServiceActivationV2.setServiceEnabled(vm.serviceId, false).then(
         function success() {
+          MediaServiceActivationV2.setisMediaServiceEnabled(false);
           MediaServiceActivationV2.setServiceAcknowledged(vm.serviceId, false);
           vm.disableOrpheusForMediaFusion();
           if (vm.featureToggled) {

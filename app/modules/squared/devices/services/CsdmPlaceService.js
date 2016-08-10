@@ -100,7 +100,7 @@
 
     function createCmiPlace(name, directoryNumber) {
       return $http.post(cmiPlacesUrl, {
-        name: name,
+        displayName: name,
         directoryNumber: directoryNumber
       }, {
         headers: {

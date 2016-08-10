@@ -9,6 +9,12 @@
   function LineSettingsCtrl($scope, $state, $stateParams, $translate, $q, $modal, Notification, DirectoryNumber, TelephonyInfoService, LineSettings, HuronAssignedLine, HuronUser, UserListService, SharedLineInfoService, ValidationService, CallerId, DialPlanService) {
     var vm = this;
 
+    vm.actionList = [{
+      actionKey: 'directoryNumberPanel.removeNumber',
+      actionFunction: deleteLineSettings
+    }];
+    vm.showActions = false;
+
     vm.cfModel = {
       forward: 'busy',
       forwardExternalCalls: false,
@@ -85,12 +91,6 @@
     // end SharedLine Info ---
 
     var name = getUserName(vm.currentUser.name, vm.currentUser.userName);
-
-    vm.additionalBtn = {
-      label: 'directoryNumberPanel.removeNumber',
-      btnclass: 'btn btn-remove',
-      id: 'btn-remove'
-    };
 
     vm.isSingleDevice = isSingleDevice;
     vm.saveLineSettings = saveLineSettings;
@@ -324,13 +324,15 @@
     }
 
     function getMultipleCalls() {
-      LineSettings.getSimultaneousCalls(vm.telephonyInfo.currentDirectoryNumber.uuid, vm.currentUser.id).then(function (simultaneous) {
-        vm.simultaneousModel = {
-          incomingCallMaximum: simultaneous.incomingCallMaximum
-        };
-      }).catch(function (response) {
-        Notification.errorResponse(response, 'simultaneousCalls.mulitpleCallsLoadError');
-      });
+      if (vm.telephonyInfo.currentDirectoryNumber.uuid !== 'new') {
+        LineSettings.getSimultaneousCalls(vm.telephonyInfo.currentDirectoryNumber.uuid, vm.currentUser.id).then(function (simultaneous) {
+          vm.simultaneousModel = {
+            incomingCallMaximum: simultaneous.incomingCallMaximum
+          };
+        }).catch(function (response) {
+          Notification.errorResponse(response, 'simultaneousCalls.mulitpleCallsLoadError');
+        });
+      }
     }
 
     function updateMultipleCalls() {
@@ -425,7 +427,7 @@
 
       if ((vm.telephonyInfo.currentDirectoryNumber.dnUsage !== 'Primary') && (vm.telephonyInfo.currentDirectoryNumber.uuid !== 'new')) {
         // Can't remove primary line
-        vm.additionalBtn.show = true;
+        vm.showActions = true;
 
         if (vm.telephonyInfo.currentDirectoryNumber.userDnUuid === "none") {
           TelephonyInfoService.resetCurrentUser(vm.telephonyInfo.currentDirectoryNumber.uuid);

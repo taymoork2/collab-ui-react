@@ -63,7 +63,6 @@
       flagMsg: 'flag-msg',
       geoHintEnabled: 'geo-hint-enabled',
       huronAACallQueue: 'huronAACallQueue',
-      huronAASubmenu: 'huron-aa-submenu',
       huronAATimeZone: 'huron-aa-timezone',
       huronMultipleCalls: 'huron-multiple-calls',
       huronClassOfService: 'COS',
@@ -143,7 +142,8 @@
       ceAllowNolockdown: 'ce-allow-nolockdown',
       webexCSV: 'webex-CSV',
       enableCrashLogs: 'csdm-enable-crash-logs',
-      csdmPlaces: 'csdm-places'
+      csdmPlaces: 'csdm-places',
+      optionalvmdid: 'optional-vm-did'
     };
 
     var toggles = {};

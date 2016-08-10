@@ -4,7 +4,7 @@ describe('OnboardCtrl: Ctrl', function () {
 
   function init() {
     this.initModules('Core', 'Hercules', 'Huron', 'Messenger', 'Sunlight', 'WebExApp');
-    this.injectDependencies('$httpBackend', '$modal', '$q', '$scope', '$state', '$stateParams', '$previousState', '$timeout', 'Authinfo', 'CsvDownloadService', 'DialPlanService', 'FeatureToggleService', 'Notification', 'Orgservice', 'SyncService', 'TelephonyInfoService', 'Userservice', 'WebExUtilsFact');
+    this.injectDependencies('$httpBackend', '$modal', '$q', '$scope', '$state', '$stateParams', '$previousState', '$timeout', 'Authinfo', 'CsvDownloadService', 'DialPlanService', 'FeatureToggleService', 'Notification', 'Orgservice', 'SyncService', 'SunlightConfigService', 'TelephonyInfoService', 'Userservice', 'UrlConfig', 'WebExUtilsFact');
     initDependencySpies.apply(this);
   }
 
@@ -505,7 +505,7 @@ describe('OnboardCtrl: Ctrl', function () {
       expect(this.Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
     });
 
-    it('checkUnauthorizedToAdd - 400096', function () {
+    it('checkUnknownCreateUser - 400096', function () {
       this.Userservice.onboardUsers.and.returnValue(this.$q.resolve(onboardUsersResponse(403, '400096')));
       this.$scope.onboardUsers();
       expect(this.Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
@@ -758,18 +758,22 @@ describe('OnboardCtrl: Ctrl', function () {
     });
 
     describe('Check if multiple licenses get assigned correctly', function () {
+      var userId = 'dbca1001-ab12-cd34-de56-abcdef123454';
       beforeEach(function () {
         spyOn(this.Authinfo, 'isInitialized').and.returnValue(true);
         spyOn(this.Authinfo, 'hasAccount').and.returnValue(true);
         spyOn(this.Authinfo, 'getCareServices').and.returnValue(this.mock.getCareServices.careLicense);
+        this.$httpBackend.expectGET(this.UrlConfig.getSunlightConfigServiceUrl() + '/user' + '/' + userId).respond(200);
         this.$stateParams.currentUser = {
           licenseID: ['CDC_da652e7d-cd34-4545-8f23-936b74359afd'],
-          entitlements: ['cloud-contact-center']
+          entitlements: ['cloud-contact-center'],
+          id: userId
         };
       });
       beforeEach(initController);
 
       it('should call getAccountLicenses correctly', function () {
+        this.$httpBackend.flush();
         var licenseFeatures = this.$scope.getAccountLicenses();
         expect(licenseFeatures[0].id).toEqual('CDC_da652e7d-cd34-4545-8f23-936b74359afd');
         expect(licenseFeatures[0].idOperation).toEqual('ADD');

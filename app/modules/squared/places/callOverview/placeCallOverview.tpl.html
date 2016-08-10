@@ -1,8 +1,9 @@
 <cs-sp-container>
   <cs-sp-section>
-    <div class="section-title-row">
-      <span class="section-name" translate="directoryNumberPanel.directNumbers"></span>
-    </div>
+    <section-title
+      title-key="directoryNumberPanel.directNumbers"
+      action-list="$ctrl.actionList">
+    </section-title>
     <directory-number-list
       directory-numbers="$ctrl.directoryNumbers"
       directory-number-sref="place-overview.communication.line-overview">
