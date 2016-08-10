@@ -74,7 +74,7 @@
 
       if (vm.fromClusters && !vm.yesProceed) {
         return true;
-      } else if (vm.yesProceed == true && angular.isDefined(vm.hostName) && vm.hostName != '' && angular.isDefined(vm.selectedCluster) && vm.selectedCluster != '') {
+      } else if (vm.yesProceed && angular.isDefined(vm.hostName) && vm.hostName != '' && angular.isDefined(vm.selectedCluster) && vm.selectedCluster != '') {
         return true;
       } else {
         return false;
