@@ -153,10 +153,8 @@
     /* Template */
     vm.template = {
       name: '',
-      //TODO: Remove this once the Sunlight API chanegs are pushed to production
       mediaType: 'chat',
       configuration: {
-        mediaType: 'chat',
         mediaSpecificConfiguration: {
           useOrgProfile: true,
           displayText: vm.orgName,
