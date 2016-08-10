@@ -93,4 +93,22 @@ describe('MediaServiceActivationV2', function () {
     Service.enableMediaService();
     expect(Service.setServiceEnabled).toHaveBeenCalled();
   });
+
+  it('MediaServiceActivationV2 isServiceEnabled should be called for getMediaServiceState', function () {
+    spyOn(Service, 'isServiceEnabled').and.callThrough();
+    Service.getMediaServiceState();
+    expect(Service.isServiceEnabled).toHaveBeenCalled();
+  });
+  it('MediaServiceActivationV2 isServiceEnabled should not be called for getMediaServiceState when isMediaServiceEnabled is set to true', function () {
+    Service.setisMediaServiceEnabled(true);
+    spyOn(Service, 'isServiceEnabled').and.callThrough();
+    Service.getMediaServiceState();
+    expect(Service.isServiceEnabled).not.toHaveBeenCalled();
+  });
+  it('MediaServiceActivationV2 isServiceEnabled should not be called for getMediaServiceState when isMediaServiceEnabled is set to false', function () {
+    Service.setisMediaServiceEnabled(false);
+    spyOn(Service, 'isServiceEnabled').and.callThrough();
+    Service.getMediaServiceState();
+    expect(Service.isServiceEnabled).not.toHaveBeenCalled();
+  });
 });
