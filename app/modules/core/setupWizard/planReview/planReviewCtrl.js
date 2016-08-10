@@ -6,7 +6,7 @@
     .controller('PlanReviewCtrl', PlanReviewCtrl);
 
   /* @ngInject */
-  function PlanReviewCtrl($scope, $translate, Authinfo, FeatureToggleService, TrialService, WebExUtilsFact) {
+  function PlanReviewCtrl($scope, $translate, Authinfo, Config, FeatureToggleService, TrialService, WebExUtilsFact) {
     var vm = this;
     var classes = {
       userService: 'user-service-',
@@ -87,7 +87,7 @@
           vm.trialExists = true;
           vm.trialId = service.license.trialId;
 
-          if (service.license.status === 'PENDING') {
+          if (service.license.status === Config.licenseStatus.PENDING) {
             vm.messagingServices.isNewTrial = true;
           }
         }
@@ -107,7 +107,7 @@
         if (service.license.isTrial) {
           vm.trialExists = true;
           vm.trialId = service.license.trialId;
-          if (service.license.status === 'PENDING') {
+          if (service.license.status === Config.licenseStatus.PENDING) {
             vm.confServices.isNewTrial = true;
           }
         }
@@ -119,7 +119,7 @@
           vm.trialExists = true;
           vm.trialId = service.license.trialId;
 
-          if (service.license.status === 'PENDING') {
+          if (service.license.status === Config.licenseStatus.PENDING) {
             vm.commServices.isNewTrial = true;
           }
         }
@@ -135,7 +135,7 @@
           }
           return false;
         }).filter(function (license) {
-          return license.status === 'PENDING';
+          return license.status === Config.licenseStatus.PENDING;
         })
         .value();
 
@@ -145,13 +145,13 @@
 
       vm.roomServices.services = Authinfo.getLicenses() || [];
       angular.forEach(vm.roomServices.services, function (service) {
-        if (service.licenseType === "SHARED_DEVICES") {
+        if (service.licenseType === Config.licenseTypes.SHARED_DEVICES) {
           vm.roomSystemsCount += service.volume;
           if (service.isTrial) {
             vm.trialExists = true;
             vm.trialId = service.trialId;
 
-            if (service.status === 'PENDING') {
+            if (service.status === Config.licenseStatus.PENDING) {
               vm.roomServices.isNewTrial = true;
             }
           }
