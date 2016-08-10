@@ -17,6 +17,10 @@ export class ServicesOverviewCareCard extends ServicesOverviewCard {
     return [];
   }
 
+  public careFeatureToggleEventHandler (hasFeature:boolean) {
+    this._display = hasFeature;
+  }
+
   public constructor(Authinfo) {
     super({
       name: 'servicesOverview.cards.care.title',

@@ -9,7 +9,8 @@ export class ServicesOverviewCtrl {
 
   /* @ngInject */
   constructor(Orgservice, private ServicesOverviewCardFactory, private $q, private Authinfo, ServiceDescriptor, FeatureToggleService) {
-    this.cards = ServicesOverviewCardFactory.createCards();
+
+    this.cards = ServicesOverviewCardFactory.createCards(false);
 
     this.loadWebexSiteList();
 
@@ -23,6 +24,10 @@ export class ServicesOverviewCtrl {
 
     FeatureToggleService.supports(FeatureToggleService.features.atlasMediaServiceOnboarding).then(supports => {
       this.forwardEvent('hybridMediaFeatureToggleEventHandler', supports);
+    });
+
+    FeatureToggleService.atlasCareTrialsGetStatus().then(supports => {
+      this.forwardEvent('careFeatureToggleEventHandler', supports);
     });
   }
 

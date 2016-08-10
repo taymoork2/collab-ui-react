@@ -11,16 +11,16 @@ import { ServicesOverviewHybridMediaCard } from './hybridMediaCard';
 import { ServicesOverviewHybridContextCard } from './hybridContextCard';
 
 /* @ngInject */
-function ServicesOverviewCardFactory(Authinfo, FeatureToggleService) {
+function ServicesOverviewCardFactory($q, Authinfo, FeatureToggleService) {
 
   return {
-    createCards: function () {
+    createCards: function (careStatus) {
 
-      var cards = [
+      return [
         new ServicesOverviewMessageCard(Authinfo),
         new ServicesOverviewMeetingCard(Authinfo),
         new ServicesOverviewCallCard(Authinfo),
-        //new ServicesOverviewCareCard(Authinfo),
+        new ServicesOverviewCareCard(Authinfo),
         new ServicesOverviewHybridManagementCard(),
         new ServicesOverviewHybridManagementF410Card(),
         new ServicesOverviewCalendarCard(),
@@ -28,27 +28,6 @@ function ServicesOverviewCardFactory(Authinfo, FeatureToggleService) {
         new ServicesOverviewHybridMediaCard(),
         // new ServicesOverviewHybridContextCard() //removed until feature is ready.
         ];
-      //console.log("1 "+cards);
-      //
-      //FeatureToggleService.atlasCareTrialsGetStatus().then(function (careStatus) {
-      //  if(careStatus) {
-      //    cards.push(new ServicesOverviewCareCard(Authinfo));
-      //  }
-      //
-      //  //return cards;
-      //});
-      //
-      //return cards;
-
-      return $q(function(resolve, reject) {
-        setTimeout(function() {
-          if (FeatureToggleService.atlasCareTrialsGetStatus()) {
-            resolve(cards);
-          } else {
-            reject(cards);
-          }
-        }, 1000);
-      });
     }
   };
 }
