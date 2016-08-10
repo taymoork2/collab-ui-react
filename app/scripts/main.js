@@ -94,7 +94,8 @@
     'Messenger',
     'Sunlight',
     'oc.lazyLoad',
-  ]).run(require('./main.run'))
+  ]).config(require('./main.config'))
+    .run(require('./main.run'))
     .name;
 
   // require all modules first
