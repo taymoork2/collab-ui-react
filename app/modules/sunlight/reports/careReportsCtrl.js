@@ -75,9 +75,12 @@
           } else {
             vm.reportingData = data;
             vm.dataStatus = SET;
-            CareReportsService.showTaskIncomingGraph('taskIncomingdiv', data, vm.timeSelected.categoryAxisTitle, vm.timeSelected.value === 0);
-            CareReportsService.showTaskTimeGraph('taskTimeDiv', data, vm.timeSelected.categoryAxisTitle, vm.timeSelected.value === 0);
-            CareReportsService.showAverageCsatGraph('averageCsatDiv', data, vm.timeSelected.categoryAxisTitle, vm.timeSelected.value === 0);
+            var categoryAxisTitle = vm.timeSelected.categoryAxisTitle;
+            var isToday = (vm.timeSelected.value === 0);
+            CareReportsService.showTaskIncomingGraph('taskIncomingdiv', data, categoryAxisTitle, isToday);
+            CareReportsService.showTaskTimeGraph('taskTimeDiv', data, categoryAxisTitle, isToday);
+            CareReportsService.showAverageCsatGraph('averageCsatDiv', data, categoryAxisTitle, isToday);
+            CareReportsService.showTaskAggregateGraph('taskAggregateDiv', data, categoryAxisTitle, isToday);
             resizeCards();
           }
         }, function () {
@@ -97,9 +100,12 @@
 
     function showReportsWithDummyData() {
       var dummyData = DummyCareReportService.dummyOrgStatsData(vm.timeSelected.value);
-      CareReportsService.showTaskIncomingDummy('taskIncomingdiv', dummyData, vm.timeSelected.categoryAxisTitle, vm.timeSelected.value === 0);
-      CareReportsService.showTaskTimeDummy('taskTimeDiv', dummyData, vm.timeSelected.categoryAxisTitle, vm.timeSelected.value === 0);
-      CareReportsService.showAverageCsatDummy('averageCsatDiv', dummyData, vm.timeSelected.categoryAxisTitle, vm.timeSelected.value === 0);
+      var categoryAxisTitle = vm.timeSelected.categoryAxisTitle;
+      var isToday = (vm.timeSelected.value === 0);
+      CareReportsService.showTaskIncomingDummy('taskIncomingdiv', dummyData, categoryAxisTitle, isToday);
+      CareReportsService.showTaskTimeDummy('taskTimeDiv', dummyData, categoryAxisTitle, isToday);
+      CareReportsService.showAverageCsatDummy('averageCsatDiv', dummyData, categoryAxisTitle, isToday);
+      CareReportsService.showTaskAggregateDummy('taskAggregateDiv', dummyData, categoryAxisTitle, isToday);
       resizeCards();
     }
 

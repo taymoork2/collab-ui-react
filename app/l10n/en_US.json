@@ -681,6 +681,10 @@
     "title": "Average CSAT",
     "description": "The graph depicts the average CSAT {{time}}. Hover over the trend line to know the average CSAT rating for a {{interval}}."
   },
+  "taskAggregate": {
+    "title": "Task Aggregation",
+    "description": "The graph depicts the in-queue and assigned tasks aggregated for today. Hover over area chart to view the aggregated tasks from the start of business hours."
+  },
   "profilePage": {
     "userProfile": "User Profile",
     "userDetails": "User Details",
