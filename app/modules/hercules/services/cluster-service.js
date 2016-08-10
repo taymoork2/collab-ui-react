@@ -227,7 +227,9 @@
     function getClustersByConnectorType(type) {
       var clusters = _.chain(clusterCache[type])
         .values() // turn them to an array
-        .sortBy('name')
+        .sortBy(function (cluster) {
+          return cluster.name.toLocaleUpperCase();
+        })
         .value();
       return clusters;
     }
