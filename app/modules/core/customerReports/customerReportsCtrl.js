@@ -6,7 +6,7 @@
     .controller('CustomerReportsCtrl', CustomerReportsCtrl);
 
   /* @ngInject */
-  function CustomerReportsCtrl($scope, $stateParams, $q, $timeout, $translate, Log, Authinfo, CustomerReportService, DummyCustomerReportService, CustomerGraphService, WebexReportService, Userservice, WebExApiGatewayService, Storage, FeatureToggleService) {
+  function CustomerReportsCtrl($scope, $stateParams, $q, $timeout, $translate, Log, Authinfo, CustomerReportService, DummyCustomerReportService, CustomerGraphService, WebexReportService, Userservice, WebExApiGatewayService, Storage, FeatureToggleService, MediaServiceActivationV2) {
     var vm = this;
     var ABORT = 'ABORT';
     var REFRESH = 'refresh';
@@ -87,12 +87,15 @@
       title: $translate.instant('reportsPage.sparkReports'),
       state: 'reports'
     }];
+
     var promises = {
       mf: FeatureToggleService.atlasMediaServiceMetricsGetStatus(),
-      care: FeatureToggleService.atlasCareTrialsGetStatus()
+      care: FeatureToggleService.atlasCareTrialsGetStatus(),
+      sfm: MediaServiceActivationV2.getMediaServiceState()
     };
+
     $q.all(promises).then(function (features) {
-      if (features.mf) {
+      if (features.mf && features.sfm) {
         vm.headerTabs.unshift({
           title: $translate.instant('mediaFusion.page_title'),
           state: 'reports-metrics'

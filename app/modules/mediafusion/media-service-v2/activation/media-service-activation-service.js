@@ -5,7 +5,9 @@
     .service('MediaServiceActivationV2', MediaServiceActivationV2);
 
   /* @ngInject */
-  function MediaServiceActivationV2($http, MediaConfigServiceV2, Authinfo, Notification) {
+  function MediaServiceActivationV2($http, MediaConfigServiceV2, Authinfo, Notification, $q) {
+    var vm = this;
+    vm.mediaServiceId = 'squared-fusion-media';
 
     var setServiceEnabled = function (serviceId, enabled) {
       return $http
@@ -64,6 +66,7 @@
     function enableMediaService(serviceId) {
       this.setServiceEnabled(serviceId, true).then(
         function success() {
+          this.setisMediaServiceEnabled(true);
           enableOrpheusForMediaFusion();
         },
         function error() {
@@ -115,7 +118,28 @@
     };
 
 
+    var getMediaServiceState = function () {
+      vm.isMediaService = $q.defer();
+      if (angular.isDefined(vm.isMediaServiceEnabled)) {
+        vm.isMediaService.resolve(vm.isMediaServiceEnabled);
+      } else {
+        this.isServiceEnabled(vm.mediaServiceId, function (error, enabled) {
+          if (!error) {
+            vm.isMediaServiceEnabled = enabled;
+          }
+          vm.isMediaService.resolve(vm.isMediaServiceEnabled);
+        });
+      }
+      return vm.isMediaService.promise;
+    };
+
+    var setisMediaServiceEnabled = function (value) {
+      vm.isMediaServiceEnabled = value;
+    };
+
     return {
+      setisMediaServiceEnabled: setisMediaServiceEnabled,
+      getMediaServiceState: getMediaServiceState,
       isServiceEnabled: isServiceEnabled,
       setServiceEnabled: setServiceEnabled,
       setServiceAcknowledged: setServiceAcknowledged,
