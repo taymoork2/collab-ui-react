@@ -28,6 +28,8 @@ function install_parallel_as_needed {
             brew install parallel                  # Mac (as of Yosemite)
         elif is_installed "dnf"; then
             sudo dnf install -y parallel           # Fedora (as of F23)
+        elif is_installed "yum"; then
+            sudo yum install -y parallel           # CentOS (as of CentOS 7)
         elif is_installed "apt-get"; then
             sudo apt-get update                    # Ubuntu (as of 14.04)
             sudo apt-get install -y parallel
