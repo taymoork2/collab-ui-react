@@ -2,7 +2,7 @@
   'use strict';
   angular.module('Mediafusion').service('MetricsGraphService', MetricsGraphService);
   /* @ngInject */
-  function MetricsGraphService($translate, CommonMetricsGraphService, chartColors) {
+  function MetricsGraphService($translate, CommonMetricsGraphService, chartColors, $log) {
     // Keys for base variables in CommonMetricsGraphService
     var COLUMN = 'column';
     var AXIS = 'axis';
@@ -14,6 +14,8 @@
     // var callVolumeBalloonText = '<span class="graph-text">' + $translate.instant('activeUsers.registeredUsers') + ' <span class="graph-number">[[totalRegisteredUsers]]</span></span><br><span class="graph-text">' + $translate.instant('activeUsers.active') + ' <span class="graph-number">[[percentage]]%</span></span>';
     var callLocalTitle = $translate.instant('mediaFusion.metrics.callLocal');
     var callRejectTitle = $translate.instant('mediaFusion.metrics.callReject');
+    var callLocalClusterTitle = $translate.instant('mediaFusion.metrics.callLocalCluster');
+    var callRedirectedClusterTitle = $translate.instant('mediaFusion.metrics.callRedirectedCluster');
     //availablility variable
     var availabilitydiv = 'availabilitydiv';
     var utilizationdiv = 'utilizationdiv';
@@ -21,6 +23,7 @@
     var peakUtilization = $translate.instant('mediaFusion.metrics.peakutilization');
     var averageUtilization = $translate.instant('mediaFusion.metrics.averageutilization');
     var baseVariables = [];
+    var titles = [];
 
     return {
       setUtilizationGraph: setUtilizationGraph,
@@ -88,7 +91,7 @@
       cluster = cluster.replace(/\s/g, "_");
       daterange = daterange.replace(/\s/g, "_");
       var ExportFileName = 'CallVolume_' + cluster + '_' + daterange;
-      var chartData = CommonMetricsGraphService.getBaseStackSerialGraph(data, startDuration, valueAxes, callVolumeGraphs(data), 'timestamp', catAxis, getBaseExportForSerialGraph(exportFields, ExportFileName));
+      var chartData = CommonMetricsGraphService.getBaseStackSerialGraph(data, startDuration, valueAxes, callVolumeGraphs(data, cluster), 'timestamp', catAxis, getBaseExportForSerialGraph(exportFields, ExportFileName));
       chartData.numberFormatter = CommonMetricsGraphService.getBaseVariable(NUMFORMAT);
       var chart = AmCharts.makeChart(callVolumediv, chartData);
       chart.addListener("rendered", zoomChart);
@@ -100,10 +103,16 @@
       chart.zoomToIndexes(chart.dataProvider.length - 40, chart.dataProvider.length - 1);
     }
 
-    function callVolumeGraphs(data) {
+    function callVolumeGraphs(data, cluster) {
       var colors = ['colorOne', 'colorTwo'];
       var values = ['active_calls', 'call_reject'];
-      var titles = [callLocalTitle, callRejectTitle];
+      if (cluster === 'All Clusters') {
+        $log.log("a");
+        titles = [callLocalTitle, callRejectTitle];
+      } else {
+        $log.log("b");
+        titles = [callLocalClusterTitle, callRedirectedClusterTitle];
+      }
       var graphs = [];
       for (var i = 0; i < values.length; i++) {
         graphs.push(CommonMetricsGraphService.getBaseVariable(COLUMN));
@@ -113,10 +122,18 @@
         graphs[i].valueField = values[i];
         //graphs[i].showBalloon = data[0].balloon;
         graphs[i].showBalloon = data[0].balloon;
-        if (graphs[i].valueField === 'active_calls') {
-          graphs[i].balloonText = '<span class="graph-text">' + $translate.instant(titles[i]) + ' <span class="graph-number">[[active_calls]]</span></span>';
+        if (cluster === 'All Clusters') {
+          if (graphs[i].valueField === 'active_calls') {
+            graphs[i].balloonText = '<span class="graph-text">' + $translate.instant(titles[i]) + ' <span class="graph-number">[[active_calls]]</span></span>';
+          } else {
+            graphs[i].balloonText = '<span class="graph-text">' + $translate.instant(titles[i]) + ' <span class="graph-number">[[call_reject]]</span></span>';
+          }
         } else {
-          graphs[i].balloonText = '<span class="graph-text">' + $translate.instant(titles[i]) + ' <span class="graph-number">[[call_reject]]</span></span>';
+          if (graphs[i].valueField === 'active_calls') {
+            graphs[i].balloonText = '<span class="graph-text">' + $translate.instant(titles[i]) + '\n' + cluster + ';' + ' <span class="graph-number">[[active_calls]]</span></span>';
+          } else {
+            graphs[i].balloonText = '<span class="graph-text">' + $translate.instant(titles[i]) + '\n' + cluster + ';' + ' <span class="graph-number">[[call_reject]]</span></span>';
+          }
         }
         graphs[i].clustered = false;
       }
@@ -133,14 +150,14 @@
         }
         callVolumeChart = createCallVolumeGraph(data, cluster, daterange);
         callVolumeChart.dataProvider = data;
-        callVolumeChart.graphs = callVolumeGraphs(data);
+        callVolumeChart.graphs = callVolumeGraphs(data, cluster);
         callVolumeChart.startDuration = startDuration;
         callVolumeChart.validateData();
         return callVolumeChart;
       } else {
         callVolumeChart = createCallVolumeGraph(data, cluster, daterange);
         callVolumeChart.dataProvider = data;
-        callVolumeChart.graphs = callVolumeGraphs(data);
+        callVolumeChart.graphs = callVolumeGraphs(data, cluster);
         callVolumeChart.startDuration = startDuration;
         callVolumeChart.validateData();
         return callVolumeChart;
