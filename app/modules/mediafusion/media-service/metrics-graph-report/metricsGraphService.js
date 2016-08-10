@@ -51,7 +51,7 @@
             'class': 'export-list',
             'label': 'Export',
             'title': 'Export',
-            'menu': ['CSV']
+            'menu': ['CSV', 'XLSX']
           }]
         }]
       };
