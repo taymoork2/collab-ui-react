@@ -5,7 +5,7 @@
     .controller('UserInfoController', UserInfoController);
 
   /* @ngInject */
-  function UserInfoController($scope, Authinfo, Auth, Log, Config, $window, $state, Userservice, Notification, $filter, FeedbackService, Utils, $translate, WebExUtilsFact, $timeout) {
+  function UserInfoController($filter, $scope, $state, $timeout, $translate, $window, Authinfo, Auth, Config, FeedbackService, Log, Notification, Userservice, Utils, WebExUtilsFact) {
     var getAuthinfoData = function () {
       $scope.username = Authinfo.getUserName();
       $scope.orgname = Authinfo.getOrgName();
@@ -17,6 +17,7 @@
       $scope.orgId = Authinfo.getOrgId();
       $scope.isPartner = Authinfo.isPartnerAdmin();
       $scope.isPartnerSales = Authinfo.isPartnerSalesAdmin();
+      $scope.isCustomerLaunchedFromPartner = Authinfo.isCustomerLaunchedFromPartner();
       $scope.roleList = _.map(roles, function (role) {
         return $translate.instant('atlasRoles.' + role);
       }).sort().join(', ');

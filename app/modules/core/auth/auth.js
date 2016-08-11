@@ -20,7 +20,7 @@
     .name;
 
   /* @ngInject */
-  function Auth($injector, $http, $translate, $q, $sanitize, $window, Log, Authinfo, Config, Utils, SessionStorage, OAuthConfig, TokenService, UrlConfig, WindowLocation) {
+  function Auth($injector, $http, $translate, $q, $sanitize, Log, Authinfo, Utils, SessionStorage, OAuthConfig, TokenService, UrlConfig, WindowLocation) {
 
     var service = {
       logout: logout,
@@ -119,14 +119,8 @@
 
     function logout() {
       var redirectUrl = OAuthConfig.getLogoutUrl();
-      triggerGlobalLogout();
+      TokenService.triggerGlobalLogout();
       return service.logoutAndRedirectTo(redirectUrl);
-    }
-
-    function triggerGlobalLogout() {
-      var logoutEvent = 'logout' + Config.getEnv();
-      $window.localStorage.setItem(logoutEvent, 'logout');
-      $window.localStorage.removeItem(logoutEvent, 'logout');
     }
 
     function logoutAndRedirectTo(redirectUrl) {
@@ -142,9 +136,9 @@
           $q.all(promises).catch(function () {
             handleError('Failed to revoke the refresh tokens');
           })
-            .finally(function () {
-              TokenService.completeLogout(redirectUrl);
-            });
+          .finally(function () {
+            TokenService.completeLogout(redirectUrl);
+          });
         })
         .catch(function () {
           handleError('Failed to retrieve token_id');

@@ -23,6 +23,7 @@
     var authData = {
       username: null,
       userId: null,
+      userOrgId: null,
       orgName: null,
       orgId: null,
       addUserEnabled: null,
@@ -65,6 +66,7 @@
         authData.username = data.name;
         authData.orgName = data.orgName;
         authData.orgId = data.orgId;
+        authData.userOrgId = data.userOrgId;
         authData.addUserEnabled = data.addUserEnabled;
         authData.entitleUserEnabled = data.entitleUserEnabled;
         authData.managedOrgs = data.managedOrgs;
@@ -354,6 +356,9 @@
       },
       isCSB: function () {
         return (_.eq(authData.customerType, 'CSB'));
+      },
+      isCustomerLaunchedFromPartner: function () {
+        return authData.orgId !== authData.userOrgId;
       },
       isDirectCustomer: function () {
         return (_.eq(authData.commerceRelation, 'Direct'));

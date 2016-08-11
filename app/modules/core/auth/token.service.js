@@ -25,6 +25,7 @@
       setAuthorizationHeader: setAuthorizationHeader,
       completeLogout: completeLogout,
       clearStorage: clearStorage,
+      triggerGlobalLogout: triggerGlobalLogout,
       init: init
     };
 
@@ -63,10 +64,15 @@
 
     function completeLogout(redirectUrl) {
       clearStorage();
-      // We store a key value in sessionStorage to  
+      // We store a key value in sessionStorage to
       // prevent a login when multiple tabs are open
       SessionStorage.put('logout', 'logout');
       WindowLocation.set(redirectUrl);
+    }
+
+    function triggerGlobalLogout() {
+      $window.localStorage.setItem(logoutEvent, 'logout');
+      $window.localStorage.removeItem(logoutEvent, 'logout');
     }
 
     function clearStorage() {
