@@ -982,6 +982,7 @@
     "online": "Online",
     "offline": "Offline",
     "unknown": "Unknown",
+    "notSet": "Not set",
     "description": "Description",
     "user": "User",
     "ipAddress": "IP Address",
