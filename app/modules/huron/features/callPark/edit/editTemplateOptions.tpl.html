@@ -17,7 +17,7 @@
         type="text" 
         ng-model="input.value" 
         ng-focus="option.currentInput = inputIndex;" 
-        ng-required="{{ option.currentInput == inputIndex }}" 
+        ng-required="option.currentInput === inputIndex" 
       />
       <input ng-if="input.type === 'number'" 
         class="form-control" 
@@ -26,33 +26,33 @@
         type="number" 
         ng-model="input.value" 
         ng-focus="option.currentInput = inputIndex" 
-        ng-required="{{ option.currentInput == inputIndex }}" 
-        ng-maxlength="{{ ::input.maxlength }}" 
-        ng-minlength="{{ ::input.minlength }}"
+        ng-required="option.currentInput === inputIndex" 
+        ng-maxlength="{{ input.maxlength }}" 
+        ng-minlength="{{ input.minlength }}"
       />
       <div ng-if="input.type === 'text'">{{ ::input.text }}</div>
       <div ng-if="input.type === 'range'" class="cp-edit-range">
-        <div class="small-5 columns">
+        <div class="small-{{ ::input.range_1.grid_size }} columns">
           <input type="{{ ::input.range_1.type }}" 
             ng-model="input.range_1.value" 
-            ng-required="{{ option.currentInput == inputIndex }}" 
+            ng-required="option.currentInput === inputIndex" 
             placeholder="{{ ::input.range_1.placeholder }}" 
             ng-focus="option.currentInput = inputIndex" 
-            ng-maxlength="{{ ::input.range_1.maxlength }}" 
-            ng-minlength="{{ ::input.range_1.minlength }}"
+            ng-maxlength="{{ input.range_1.maxlength }}" 
+            ng-minlength="{{ input.range_1.minlength }}"
           />
         </div>
         <div class="small-2 columns range-to">
           <span>{{:: 'callPark.to' | translate}}</span>
         </div>
-        <div class="small-5 columns">
+        <div class="small-{{ ::input.range_2.grid_size }} columns end">
           <input type="{{ ::input.range_2.type }}" 
             ng-model="input.range_2.value" 
-            ng-required="{{ option.currentInput == inputIndex }}" 
+            ng-required="option.currentInput === inputIndex" 
             placeholder="{{ ::input.range_2.placeholder }}" 
             ng-focus="option.currentInput = inputIndex" 
-            ng-maxlength="{{ ::input.range_2.maxlength }}" 
-            ng-minlength="{{ ::input.range_2.minlength }}"
+            ng-maxlength="{{ input.range_2.maxlength }}" 
+            ng-minlength="{{ input.range_2.minlength }}"
           />
         </div>
       </div>
