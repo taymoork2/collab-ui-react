@@ -609,6 +609,25 @@
               }
             }
           })
+          .state('status', {
+            url: '/status',
+            templateUrl: 'modules/status/dashboard/dashboard.tpl.html',
+            controller: 'DashboardCtrl',
+            controllerAs: 'dashboardCtrl',
+            parent: 'main',
+            resolve: {
+              hasFeatureToggle: function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.globalStatus);
+              }
+            }
+          })
+          /*.state('status', {
+            url: '/status-conponents',
+            templateUrl: 'modules/status/components/components.tpl.html',
+            controller: 'ComponentsCtrl',
+            controllerAs: 'componentsCtrl',
+            parent: 'main'
+          })*/
           .state('authentication.enable3rdPartyAuth', {
             parent: 'modal',
             views: {
@@ -1646,6 +1665,20 @@
               meetingLicenses: {}
             }
           })
+          .state('customer-overview.domainDetail', {
+            controller: 'DomainDetailCtrl',
+            controllerAs: 'domainDetail',
+            templateUrl: 'modules/core/customers/customerOverview/domainDetail.tpl.html',
+            resolve: {
+              data: /*ngInject */ function ($state, $translate) {
+                $state.get('customer-overview.domainDetail').data.displayName = $translate.instant('customerPage.domains');
+              }
+            },
+            data: {},
+            params: {
+              webexDomains: {}
+            }
+          })
           .state('customer-overview.pstnOrderDetail', {
             parent: 'customer-overview.pstnOrderOverview',
             controller: 'PstnOrderDetailCtrl',
@@ -1871,22 +1904,6 @@
             url: '/huntgroups',
             parent: 'callrouting',
             template: '<div></div>'
-          })
-          .state('mediaonhold', {
-            parent: 'modal',
-            url: '/mediaonhold',
-            views: {
-              'modal@': {
-                templateUrl: 'modules/huron/moh/moh.tpl.html',
-                controller: 'MohCtrl',
-                controllerAs: 'moh',
-                resolve: {
-                  modalInfo: function ($state) {
-                    $state.params.modalClass = 'moh-content';
-                  }
-                }
-              }
-            }
           })
           .state('trialAdd', {
             abstract: true,

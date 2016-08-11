@@ -1,5 +1,9 @@
 .customer-overview {
 
+  .feature-details {
+    font-size: 0.875rem;
+  }
+
   .button-container {
     left: -1px;
   }
@@ -95,6 +99,29 @@
       vertical-align: middle;
       margin-right: 7px;
       font-size: 1.25rem;
+    }
+  }
+
+
+  .webex-domains-list {
+
+    .subtitle {
+      font-size: .75rem;
+      color: $gray-base;
+    }
+
+    .feature-name {
+      color: $gray-dark-2;
+
+     .secondary {
+        margin-top: -0.5rem;
+        color: $gray-base;
+        display:block;
+      }
+    }
+
+    .status {
+      color: $gray-light-1;
     }
   }
 

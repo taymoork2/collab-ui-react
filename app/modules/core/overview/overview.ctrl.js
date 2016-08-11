@@ -86,7 +86,7 @@
                 });
               });
               if (sharedDevicesUsage === 0 || sparkBoardsUsage === 0) {
-                setEnableDevice(true);
+                setRoomSystemEnabledDevice(true);
                 if (sharedDevicesUsage === 0 && sparkBoardsUsage === 0) {
                   vm.notifications.push(OverviewNotificationFactory.createDevicesNotification('homePage.setUpDevices'));
                 } else if (sparkBoardsUsage === 0) {
@@ -95,7 +95,7 @@
                   vm.notifications.push(OverviewNotificationFactory.createDevicesNotification('homePage.setUpSharedDevices'));
                 }
               } else {
-                setEnableDevice(false);
+                setRoomSystemEnabledDevice(false);
               }
             });
         }
@@ -113,10 +113,10 @@
       }
     }
 
-    function setEnableDevice(deviceEnabled) {
+    function setRoomSystemEnabledDevice(isDeviceEnabled) {
       (_.find(vm.cards, function (card) {
         return card.name === 'overview.cards.roomSystem.title';
-      })).isDeviceEnabled = deviceEnabled;
+      })).isDeviceEnabled = isDeviceEnabled;
     }
 
     function dismissNotification(notification) {
