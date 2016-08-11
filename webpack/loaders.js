@@ -70,6 +70,9 @@ exports.dependencies = [{
 }, {
   test: /jasmine-promise-matchers.js$/,
   loader: 'script',
+}, {
+  test: /bmmp\/cisco-bmmp.js$/,
+  loader: 'script',
 }];
 
 exports.instrument = {

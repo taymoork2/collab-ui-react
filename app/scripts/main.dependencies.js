@@ -13,6 +13,8 @@ require('collab-amcharts/amcharts/plugins/export/libs/pdfmake/vfs_fonts.js');
 require('collab-amcharts/amcharts/plugins/export/libs/xlsx/xlsx.js');
 requireAll(require.context('file?name=amcharts/images/[name].[ext]!collab-amcharts/amcharts/images', false));
 
+require('bmmp/cisco-bmmp.js');
+
 require('typeahead.js/dist/typeahead.bundle.js');
 require('draggable.js/draggable.js');
 require('jquery.nicescroll/jquery.nicescroll.js');
