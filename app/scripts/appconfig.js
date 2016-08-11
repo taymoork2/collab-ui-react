@@ -2189,6 +2189,16 @@
             controller: 'CallParkSetupAssistantCtrl',
             controllerAs: 'callParkSA'
           })
+          .state('callparkedit', {
+            url: '/features/cp/edit',
+            parent: 'main',
+            templateUrl: 'modules/huron/features/callPark/edit/cpEdit.tpl.html',
+            controller: 'CallParkEditCtrl',
+            controllerAs: 'cpe',
+            params: {
+              feature: null
+            }
+          })
           .state('huronHuntGroup', {
             url: '/huronHuntGroup',
             parent: 'hurondetails',
@@ -2534,13 +2544,6 @@
 
         $stateProvider
 
-          .state('metrics', {
-            url: '/metrics',
-            controllerAs: 'GraphUtilCtrl',
-            controller: 'AnalyticsUtilizationGraphController',
-            templateUrl: 'modules/mediafusion/media-service/metrics/analytics-utilization-graph.html',
-            parent: 'main'
-          })
           //V2 API changes
           .state('media-service-v2', {
             templateUrl: 'modules/mediafusion/media-service-v2/overview.html',

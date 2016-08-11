@@ -4,7 +4,6 @@ describe('Features Controller', function () {
 
   var featureCtrl, $rootScope, $scope, $modal, $q, $state, $filter, $timeout, Authinfo, HuntGroupService, TelephoneNumberService, Log, Notification, getDeferred, AutoAttendantCeInfoModelService, AAModelService, FeatureToggleService, CallParkService;
   var listOfCPs = getJSONFixture('huron/json/features/callPark/cpList.json');
-  var cp = getJSONFixture('huron/json/features/callPark/oneCp.json');
   var emptyListOfCPs = {
     callparks: []
   };
@@ -35,6 +34,17 @@ describe('Features Controller', function () {
       "filterValue": "CP"
     }]
   };
+
+  var singlePark = {
+    "callparks": [{
+      "uuid": "abcd1234-abcd-abcd-abcddef123456",
+      "name": "Technical Support",
+      "startRange": "5010",
+      "endRange": "5010",
+      "memberCount": 2
+    }]
+  };
+
 
   beforeEach(angular.mock.module('Huron'));
   beforeEach(angular.mock.module('Sunlight'));
@@ -149,7 +159,7 @@ describe('Features Controller', function () {
   it('should receive the HURON_FEATURE_DELETED event and set pageState to newFeature if they are no features to show', function () {
     featureCtrl.listOfFeatures = [];
     expect(featureCtrl.pageState).toEqual('Loading');
-    getDeferred.resolve(getCPListSuccessResp(cp));
+    getDeferred.resolve(getCPListSuccessResp(singlePark));
     $scope.$apply();
     $timeout.flush();
     expect(featureCtrl.pageState).toEqual('showFeatures');

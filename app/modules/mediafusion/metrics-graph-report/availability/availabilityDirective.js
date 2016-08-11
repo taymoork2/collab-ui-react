@@ -9,7 +9,7 @@
     var directive = {
       restrict: 'EA',
       scope: false,
-      templateUrl: 'modules/mediafusion/media-service/metrics-graph-report/availability/availability.tpl.html'
+      templateUrl: 'modules/mediafusion/metrics-graph-report/availability/availability.tpl.html'
     };
 
     return directive;

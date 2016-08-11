@@ -14,6 +14,7 @@
     vm.helpers = {
       buildDomain: _buildDomain
     };
+    vm.isLoading = true;
     init();
 
     ////////////////
@@ -46,6 +47,7 @@
           }
 
         }
+        vm.isLoading = false;
         return vm.domains;
       });
     }

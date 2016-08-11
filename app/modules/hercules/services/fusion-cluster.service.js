@@ -8,7 +8,7 @@
     .factory('FusionClusterService', FusionClusterService);
 
   /* @ngInject */
-  function FusionClusterService($http, UrlConfig, Authinfo, FusionClusterStatesService, FusionUtils) {
+  function FusionClusterService($http, UrlConfig, Authinfo, FusionClusterStatesService, FusionUtils, $translate) {
     var service = {
       preregisterCluster: preregisterCluster,
       addPreregisteredClusterToAllowList: addPreregisteredClusterToAllowList,
@@ -28,7 +28,10 @@
       getAggregatedStatusForService: getAggregatedStatusForService,
       processClustersToAggregateStatusForService: processClustersToAggregateStatusForService,
       serviceIsSetUp: serviceIsSetUp,
-      processClustersToSeeIfServiceIsSetup: processClustersToSeeIfServiceIsSetup
+      processClustersToSeeIfServiceIsSetup: processClustersToSeeIfServiceIsSetup,
+      formatTimeAndDate: formatTimeAndDate,
+      labelForTime: labelForTime,
+      labelForDay: labelForDay
     };
 
     return service;
@@ -313,6 +316,34 @@
         return _.some(cluster, function (connector) {
           return connector.connectorType === target_connector;
         });
+      });
+    }
+
+    function formatTimeAndDate(upgradeSchedule) {
+      var time = labelForTime(upgradeSchedule.scheduleTime);
+      var day;
+      if (upgradeSchedule.scheduleDays.length === 7) {
+        day = $translate.instant('weekDays.everyDay', {
+          day: $translate.instant('weekDays.day')
+        });
+      } else {
+        day = labelForDay(upgradeSchedule.scheduleDays[0]);
+      }
+      return time + ' ' + day;
+    }
+
+    function labelForTime(time) {
+      var currentLanguage = $translate.use();
+      if (currentLanguage === 'en_US') {
+        return moment(time, 'HH:mm').format('hh:mm A');
+      } else {
+        return time;
+      }
+    }
+
+    function labelForDay(day) {
+      return $translate.instant('weekDays.everyDay', {
+        day: $translate.instant('weekDays.' + day)
       });
     }
 

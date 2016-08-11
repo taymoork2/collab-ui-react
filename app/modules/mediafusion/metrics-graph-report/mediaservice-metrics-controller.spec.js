@@ -145,6 +145,8 @@ describe('Controller:MediaServiceMetricsContoller', function () {
 
       controller.setTotalCallsData();
       $scope.$apply();
+      expect(controller.onprem).toBe(8);
+      expect(controller.cloud).toBe(4);
       expect(controller.total).toBe(12);
 
       expect(MetricsReportService.getTotalCallsData).toHaveBeenCalledWith(timeOptions[0], 'All Clusters');

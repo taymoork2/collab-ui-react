@@ -1,31 +1,35 @@
-<cs-sp-section ng-show="customerWebexOverview.domains.length > 0" class="webex-domains-list">
+
+<cs-sp-section ng-show="customerWebexOverview.domains.length > 0 || customerWebexOverview.isLoading" class="webex-domains-list">
   <div class="section-title-row">
     <span class="section-name" translate="customerPage.webexOverview"></span>
   </div>
-  <div class="feature-list " ng-if="customerWebexOverview.domains.length<3">
-   <span class="subtitle" translate="customerPage.domain" translate-values="{count: customerWebexOverview.domains.length}" translate-interpolation="messageformat"></span>
-   <ul>
-    <li  class="feature" ng-repeat="domain in customerWebexOverview.domains">
-      <div class="feature-name">
-        <span class="site">{{domain.siteUrl}}</span>
-        <span class="secondary">{{domain.timeZone}}</span>
-      </div>
-      <div class="status pull-right" ng-show="domain.pending">
-        <i class="icon icon-circle trial-pending"></i>
-        <span translate="common.pending"></span>
-      </div>
-    </li>
-  </ul>
-</div>
-<div class="feature-list webex-domains-list" ng-if="customerWebexOverview.domains.length>=3">
-  <ul>
-   <li class="feature">
-     <a ui-sref="customer-overview.domainDetail({webexDomains: customerWebexOverview.domains})">
-       <span class="feature-name" translate="customerPage.domains"></span>
-       <div class="feature-details pull-right">{{customerWebexOverview.domains.length}} </div>
-       <i class="feature-arrow"></i>
-     </a>
-   </li>
- </ul>
-</div>
+  <div class="spinner-loading" ng-show="customerWebexOverview.isLoading">
+    <i class="icon icon-spinner"></i>
+  </div>
+  <div class="feature-list" ng-if="customerWebexOverview.domains.length<3 && !customerWebexOverview.isLoading">
+    <span class="subtitle" translate="customerPage.domain" translate-values="{count: customerWebexOverview.domains.length}" translate-interpolation="messageformat"></span>
+    <ul>
+      <li class="feature" ng-repeat="domain in customerWebexOverview.domains">
+        <div class="feature-name">
+          <span class="site">{{domain.siteUrl}}</span>
+          <span class="secondary">{{domain.timeZone}}</span>
+        </div>
+        <div class="status pull-right" ng-show="domain.pending">
+          <i class="icon icon-circle trial-pending"></i>
+          <span translate="common.pending"></span>
+        </div>
+      </li>
+    </ul>
+  </div>
+  <div class="feature-list webex-domains-list" ng-if="customerWebexOverview.domains.length>=3">
+    <ul>
+     <li class="feature">
+       <a ui-sref="customer-overview.domainDetail({webexDomains: customerWebexOverview.domains})">
+         <span class="feature-name" translate="customerPage.domains"></span>
+         <div class="feature-details pull-right">{{customerWebexOverview.domains.length}} </div>
+         <i class="feature-arrow"></i>
+       </a>
+     </li>
+   </ul>
+  </div>
 </cs-sp-section>
