@@ -34,7 +34,7 @@
                 <div class="cluster-list-cat" translate="hercules.fusion.list.upgrade-schedule"></div>
                 <div class="cluster-list-info" ng-if="cluster.upgradeSchedule">{{resourceList._helpers.formatTimeAndDate(cluster.upgradeSchedule)}}<br/>
                 <div class="cluster-list-timezone" title="{{cluster.upgradeSchedule.scheduleTimeZone}}">{{cluster.upgradeSchedule.scheduleTimeZone}}</div></div>
-                <div class="cluster-list-info" ng-if="!cluster.upgradeSchedule" translate="common.unknown"></div>
+                <div class="cluster-list-info" ng-if="!cluster.upgradeSchedule" translate="common.notSet"></div>
               </div>
               <div ng-if="cluster.targetType !== 'c_mgmt'">
                 <div class="cluster-list-cat" translate="hercules.fusion.list.release-channel"></div>
