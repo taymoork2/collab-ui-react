@@ -82,6 +82,8 @@
     'CareDetails'
   ]);
 
+  angular.module('Status', ['Core']);
+
   module.exports = angular.module('Main', [
     'Core',
     'Squared',
@@ -93,6 +95,7 @@
     'WebExApp',
     'Messenger',
     'Sunlight',
+    'Status',
     'oc.lazyLoad',
   ]).config(require('./main.config'))
     .run(require('./main.run'))

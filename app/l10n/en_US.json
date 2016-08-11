@@ -1,4 +1,23 @@
 {
+  "statusPage":{
+    "pageTitle": "Status Management",
+    "dashboard": "Dashboard",
+    "incidents": "Incidents",
+    "components": "Components",
+    "addComponents": "Add A Component",
+    "componentName": "Component Name",
+    "componentDesc": "Description (optional)",
+    "componentGroup": "Component Group",
+    "nameCannotBeBlank": "Name can't be blank",
+    "createNewComponentGroup": "Create new component group",
+    "createComponent": "Create Component",
+    "componentInfo": "Component Info",
+    "editAction": "Edit",
+    "deleteAction": "Delete",
+    "update": "Update",
+    "deleteWarning": "WARNING! Deleting a component cannot be undone. All associated data will be deleted as well. Please be absolutely sure this is what you want. <br /> Type DELETE in the box below for final confirmation, then hit the delete button.",
+    "permanentlyDelete": "Permanently DELETE {{componentName}}"
+  },
   "loginPage": {
     "title": "Cloud Collaboration Management",
     "login": "Sign In",
@@ -382,6 +401,8 @@
     "eventsTab": "Events",
     "eventsTabDesc": "Event Management",
     "helpdesk": "Help Desk",
+    "statusTab": "Status",
+    "statusTabDesc": "Status Mannagement",
     "careTab": "Care",
     "careTabDesc": "Cloud Contact Center"
   },
