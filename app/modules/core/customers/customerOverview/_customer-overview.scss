@@ -105,6 +105,11 @@
 
   .webex-domains-list {
 
+    .spinner-loading {
+      font-size: 1.5rem;
+      text-align: center;
+    }
+
     .subtitle {
       font-size: .75rem;
       color: $gray-base;
