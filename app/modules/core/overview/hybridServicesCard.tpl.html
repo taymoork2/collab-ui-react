@@ -8,10 +8,9 @@
   <div class="overview-info">
     <div>{{'overview.cards.hybrid.serviceHeader' | translate }}</div>
     <ul class="hybrid-ul">
-      <li ng-repeat="service in card.services">
-        <!--<i class="icon icon-circle" ng-class="service.healthStatus || 'disabled'"></i>-->
+      <li ng-repeat="service in card.serviceList | filter: {setup: true} ">
         <i class="icon icon-circle" ng-class="service.healthStatus || 'error'"></i>
-        <span>{{ 'overview.cards.hybrid.services.'+ service.id | translate}}</span>
+        <span>{{ 'overview.cards.hybrid.services.'+ service.serviceId | translate}}</span>
       </li>
     </ul>
   </div>

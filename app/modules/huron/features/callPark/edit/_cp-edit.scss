@@ -1,0 +1,182 @@
+
+.cp-edit {
+  height: calc(100vh - #{($top-bar-height + $page-header-height)}) !important;
+  overflow-y: auto;
+  position: relative;
+  background: $color-white;
+  @include vr-spacing(mh, 0.5, 1px, true);
+  @include vr-spacing(pb, 10);
+  > .row {
+
+    @include vr-spacing(pt, 2);
+  }
+  .cs-card.small {
+    position: relative;
+    width: 43%;
+    @include vr-spacing(ph, 0);
+    i {
+      font-size: 1.5rem;
+    }
+    article > header {
+       @include vr-spacing(ph, 0.75);
+    }
+  }
+  .load {
+    font-size: 3rem;
+    text-align: center;
+    height : 80vh;
+    display : flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: center;
+    align-items: center;
+  }
+  form {
+    @include vr-spacing(m, 2);
+  }
+  label {
+    font-size: 1rem;
+  }
+  .cp-name .formly-input-wrapper {
+    width: 20rem;
+    font-family: $brand-font-light;
+    font-size: $font-size-base;
+  }
+  .cp-num .formly-input-wrapper {
+    width: 13rem;
+    font-family: $brand-font-light;
+    font-size: $font-size-base;
+  }
+  .cp-time .formly-input-wrapper {
+    width: 8.5rem;
+    font-family: $brand-font-light;
+    font-size: $font-size-base;
+  }
+  .cp-num .formly-input-wrapper,
+  .cp-time .formly-input-wrapper {
+    @include vr-spacing(mb, 1);
+  }
+
+  .typeahead .dropdown-menu {
+    .active > a {
+      background: $gray-light-2;
+    }
+
+    & span {
+      font-size: $font-size-h4;
+      font-family: $brand-font-cisco-TT-Light;
+      color: $gray-dark-2;
+    }
+
+    li .hunt-member-name {
+      @include vr-spacing(ph, 0.5);
+    }
+
+    li .hunt-member-line {
+      @include vr-spacing(ph, 0.5);
+      & span {
+        font-size: 1rem;
+      }
+    }
+  }
+
+  #call-park-name {
+    width: 100%;
+    margin-bottom: 2rem;
+  }
+
+  .cs-input-group.cs-input-radio:last-child .cs-radio {
+    margin-bottom: 2rem;
+  }
+}
+
+.cp-edit-range {
+  width: 100%; 
+  .columns {
+    text-align: center;
+    padding: 0;
+  }
+  .range-to {
+    line-height: 2.2rem;
+  }
+}
+
+.cp-wrapper {
+  @include vr-spacing(m, 1.5);
+  .form-input {
+    width: 40%;
+  }
+  p {
+    @include vr-spacing(pb, 0.5);
+  }
+  .warning-typeahead {
+    .icon {
+      @extend .icon-warning;
+			font-size: .75rem;
+      color: $color-attention;
+    }
+    .message {
+      color: $color-attention;
+    }
+    > input[type="text"] {
+      border: 1px solid $color-attention;
+    }
+  }
+}
+
+.method-container {
+  @include vr-spacing(mt, 0.75, 1px, false);
+  @include vr-spacing(mh, 0.5, 1px, true);
+}
+
+.method-desc {
+  color: $gray-dark-2;
+  font-family: $brand-font-light;
+}
+
+.cpmembers {
+  @include vr-spacing(pt, .6);
+  .form-input {
+    width: 80%;
+    @include vr-spacing(mb, 2);
+  }
+
+  .select-member{
+    @include vr-spacing(mb, 1.25);
+    input {
+      width: 78%;
+    }
+  }
+}
+
+.cpmember {
+  width: rem-calc(250) !important;
+  @include vr-spacing(mb, 0.5);
+  .cp-edit & .cs-card.small {
+    width: 100%;
+  }
+  &:focus {
+    outline: none;
+  }
+}
+.cpmember .hunt-member-card {
+  @include vr-spacing(mt, 0);
+}
+
+.dragging-source {
+  display: none;
+}
+
+.drop-placeholder  {
+  height: rem-calc(40);
+  width: rem-calc(250);
+  border: 1px dashed $gray-base;
+  @include vr-spacing(mb, .5);
+}
+
+
+.dragover {
+  .cs-card.header-background header {
+    background: $gray;
+  }
+}

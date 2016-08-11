@@ -127,17 +127,22 @@
       return httpGET(listTokensUrl)
         .then(function (response) {
           var promises = [];
-          _.each(response.data.data, function (tokenData) {
+          var clientTokens = _.filter(response.data.data, {
+            client_id: OAuthConfig.getClientId()
+          });
+
+          _.each(clientTokens, function (tokenData) {
             var refreshTokenId = tokenData.token_id;
             var revoke = revokeAuthTokens(refreshTokenId, redirectUrl);
             promises.push(revoke);
           });
+
           $q.all(promises).catch(function () {
             handleError('Failed to revoke the refresh tokens');
           })
-            .finally(function () {
-              completeLogout(redirectUrl);
-            });
+          .finally(function () {
+            completeLogout(redirectUrl);
+          });
         })
         .catch(function () {
           handleError('Failed to retrieve token_id');

@@ -609,6 +609,25 @@
               }
             }
           })
+          .state('status', {
+            url: '/status',
+            templateUrl: 'modules/status/dashboard/dashboard.tpl.html',
+            controller: 'DashboardCtrl',
+            controllerAs: 'dashboardCtrl',
+            parent: 'main',
+            resolve: {
+              hasFeatureToggle: function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.globalStatus);
+              }
+            }
+          })
+          /*.state('status', {
+            url: '/status-conponents',
+            templateUrl: 'modules/status/components/components.tpl.html',
+            controller: 'ComponentsCtrl',
+            controllerAs: 'componentsCtrl',
+            parent: 'main'
+          })*/
           .state('authentication.enable3rdPartyAuth', {
             parent: 'modal',
             views: {
@@ -1581,37 +1600,51 @@
                   .then(function (result) {
                     return result;
                   });
+              },
+              data: /* @ngInject */ function ($state, $translate) {
+                $state.get('customer-overview').data.displayName = $translate.instant('common.overview');
               }
             },
             params: {
               currentCustomer: {}
             },
             data: {
-              displayName: 'Overview'
             }
           })
           .state('customer-overview.externalNumbers', {
             controller: 'ExternalNumberDetailCtrl',
             controllerAs: 'externalNumbers',
             templateUrl: 'modules/huron/externalNumbers/externalNumberDetail.tpl.html',
+            resolve: {
+              data: /* @ngInject */ function ($state, $translate) {
+                $state.get('customer-overview.externalNumbers').data.displayName = $translate.instant('customerPage.phoneNumbers');
+              }
+            },
             data: {
-              displayName: 'Phone Numbers'
             }
           })
           .state('customer-overview.customerAdministrators', {
             controller: 'CustomerAdministratorDetailCtrl',
             controllerAs: 'customerAdmin',
             templateUrl: 'modules/core/customers/customerAdministrators/customerAdministratorDetail.tpl.html',
+            resolve: {
+              data: /* @ngInject */ function ($state, $translate) {
+                $state.get('customer-overview.customerAdministrators').data.displayName = $translate.instant('customerPage.administrators');
+              }
+            },
             data: {
-              displayName: 'Partner Administrators'
             }
           })
           .state('customer-overview.pstnOrderOverview', {
             controller: 'PstnOrderOverviewCtrl',
             controllerAs: 'pstnOrderOverview',
             templateUrl: 'modules/huron/orderManagement/pstnOrderOverview.tpl.html',
+            resolve: {
+              data: /* @ngInject */ function ($state, $translate) {
+                $state.get('customer-overview.pstnOrderOverview').data.displayName = $translate.instant('customerPage.pstnOrders');
+              }
+            },
             data: {
-              displayName: 'PSTN Orders'
             },
             params: {
               currentCustomer: {}
@@ -1621,11 +1654,29 @@
             controller: 'MeetingDetailCtrl',
             controllerAs: 'meetingDetail',
             templateUrl: 'modules/core/customers/customerOverview/meetingDetail.tpl.html',
+            resolve: {
+              data: /* @ngInject */ function ($state, $translate) {
+                $state.get('customer-overview.meetingDetail').data.displayName = $translate.instant('customerPage.meetingLicenses');
+              }
+            },
             data: {
-              displayName: 'Meeting Detail'
             },
             params: {
               meetingLicenses: {}
+            }
+          })
+          .state('customer-overview.domainDetail', {
+            controller: 'DomainDetailCtrl',
+            controllerAs: 'domainDetail',
+            templateUrl: 'modules/core/customers/customerOverview/domainDetail.tpl.html',
+            resolve: {
+              data: /*ngInject */ function ($state, $translate) {
+                $state.get('customer-overview.domainDetail').data.displayName = $translate.instant('customerPage.domains');
+              }
+            },
+            data: {},
+            params: {
+              webexDomains: {}
             }
           })
           .state('customer-overview.pstnOrderDetail', {
@@ -1633,8 +1684,12 @@
             controller: 'PstnOrderDetailCtrl',
             controllerAs: 'pstnOrderDetail',
             templateUrl: 'modules/huron/orderManagement/pstnOrderDetail.tpl.html',
+            resolve: {
+              data: /* @ngInject */ function ($state, $translate) {
+                $state.get('customer-overview.pstnOrderDetail').data.displayName = $translate.instant('customerPage.pstnOrders');
+              }
+            },
             data: {
-              displayName: 'Order'
             },
             params: {
               currentOrder: {}
@@ -1849,22 +1904,6 @@
             url: '/huntgroups',
             parent: 'callrouting',
             template: '<div></div>'
-          })
-          .state('mediaonhold', {
-            parent: 'modal',
-            url: '/mediaonhold',
-            views: {
-              'modal@': {
-                templateUrl: 'modules/huron/moh/moh.tpl.html',
-                controller: 'MohCtrl',
-                controllerAs: 'moh',
-                resolve: {
-                  modalInfo: function ($state) {
-                    $state.params.modalClass = 'moh-content';
-                  }
-                }
-              }
-            }
           })
           .state('trialAdd', {
             abstract: true,
@@ -2149,6 +2188,16 @@
             templateUrl: 'modules/huron/features/callPark/cpSetupAssistant.tpl.html',
             controller: 'CallParkSetupAssistantCtrl',
             controllerAs: 'callParkSA'
+          })
+          .state('callparkedit', {
+            url: '/features/cp/edit',
+            parent: 'main',
+            templateUrl: 'modules/huron/features/callPark/edit/cpEdit.tpl.html',
+            controller: 'CallParkEditCtrl',
+            controllerAs: 'cpe',
+            params: {
+              feature: null
+            }
           })
           .state('huronHuntGroup', {
             url: '/huronHuntGroup',
@@ -2495,13 +2544,6 @@
 
         $stateProvider
 
-          .state('metrics', {
-            url: '/metrics',
-            controllerAs: 'GraphUtilCtrl',
-            controller: 'AnalyticsUtilizationGraphController',
-            templateUrl: 'modules/mediafusion/media-service/metrics/analytics-utilization-graph.html',
-            parent: 'main'
-          })
           //V2 API changes
           .state('media-service-v2', {
             templateUrl: 'modules/mediafusion/media-service-v2/overview.html',
