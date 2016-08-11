@@ -75,6 +75,9 @@ $features-header-height : 83px;
     font-size: $font-size-large;
     @include vr-spacing(pb, 0.2);
     line-height: rem-calc(24);
+    span {
+      font-size: 1rem;
+    }
   }
 
   .card-members {

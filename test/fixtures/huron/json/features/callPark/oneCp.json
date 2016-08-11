@@ -1,9 +1,20 @@
 {
-  "callparks": [{
-    "uuid": "abcd1234-abcd-abcd-abcddef123456",
-    "name": "Technical Support",
-    "startRange": "5010",
-    "endRange": "5010",
-    "memberCount": 2
-  }]
+	"endRange": "5010",
+	"fallbackDestination": {
+		"number": null,
+		"numberUuid": null,
+		"memberUuid": null,
+		"sendToVoicemail": false
+	},
+	"members": [{
+		"memberName": "Test Name 1",
+		"memberUuid": "abcd1234-abcd-abcd-abcddef123456"
+	}, {
+		"memberName": "Test Name 2",
+		"memberUuid": "abcd5678-abcd-abcd-abcddef567890"
+	}],
+	"name": "Technical Support",
+	"startRange": "5010",
+    "url": "https://cmi.huron-int.com/api/v2/customers/abcd1234-abcd-abcd-abcddef123456/features/callparks/abcd5678-abcd-abcd-abcddef567890",
+    "uuid": "abcd1234-abcd-abcd-abcddef123456"
 }

@@ -175,6 +175,10 @@
         $state.go('huntgroupedit', {
           feature: feature
         });
+      } else if (feature.filterValue === 'CP') {
+        $state.go('callparkedit', {
+          feature: feature
+        });
       }
     };
 
