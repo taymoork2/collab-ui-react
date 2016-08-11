@@ -57,16 +57,16 @@
       <div class="feature-list trials-list">
         <ul>
           <li class="feature" ng-if="customerOverview.offer.userServices">
-            <div class="feature-name" id="trial-info"> <i class="icon icon-circle-group feature-icon"></i>{{:: customerOverview.offer.userServices | translate}}</div>
-            <div class="feature-details pull-right">{{customerOverview.currentCustomer.licenses}}&nbsp;{{::'common.quantity' | translate | uppercase}}</div>
+            <span class="feature-name" id="trial-info"> <i class="icon icon-circle-group feature-icon"></i>{{:: customerOverview.offer.userServices | translate}}</span>
+            <span class="feature-details">{{customerOverview.currentCustomer.licenses}}&nbsp;{{::'common.quantity' | translate | uppercase}}</span>
           </li>
           <li class="feature" ng-if="customerOverview.offer.careServices">
             <div class="feature-name"><i class="icon icon-circle-contact-centre feature-icon"></i>{{::customerOverview.offer.careServices | translate}}</div>
-            <div class="feature-details pull-right">{{customerOverview.currentCustomer.careLicenses}}&nbsp;{{::'common.quantity' | translate | uppercase}}</div>
+            <div class="feature-details">{{customerOverview.currentCustomer.careLicenses}}&nbsp;{{::'common.quantity' | translate | uppercase}}</div>
           </li>
           <li class="feature" ng-if="customerOverview.showRoomSystems && customerOverview.offer.deviceBasedServices">
             <div class="feature-name"><i class="icon icon-circle-telepresence feature-icon"></i>{{::customerOverview.offer.deviceBasedServices | translate}}</div>
-            <div class="feature-details pull-right">{{customerOverview.currentCustomer.deviceLicenses}}&nbsp;{{::'common.quantity' | translate | uppercase}}</div>
+            <div class="feature-details">{{customerOverview.currentCustomer.deviceLicenses}}&nbsp;{{::'common.quantity' | translate | uppercase}}</div>
           </li>
         </ul>
       </div>
@@ -79,19 +79,21 @@
     <div class="feature-list services-list" >
       <ul ng-class="{'has-meeting': customerOverview.hasMeeting}">
       <!-- services -->
-        <li class="feature" ng-repeat = "service in customerOverview.freeOrPaidServices">
-         <a ui-sref="customer-overview.meetingDetail({meetingLicenses: service.sub})" ng-if="service.isMeeting" id="meeting">
-          <div class="feature-name"><i class="icon feature-icon {{service.icon}}"></i>{{::service.name}}</div>
-          <div class="feature-details pull-right">{{service.qty}} &nbsp;{{::'common.quantity' | translate | uppercase}}</div>
-          <i class="feature-arrow"></i>
-        </a>
-        <div ng-if="!service.isMeeting">
-          <div class="feature-name"><i class="icon feature-icon" ng-class="service.icon"></i>{{:: service.name}}</div>
-          <div class="feature-details pull-right" ng-show="!service.free">{{service.qty}}&nbsp;{{::'common.quantity' | translate | uppercase}}</div>
-          <div class="feature-details pull-right" ng-show="service.free">{{::'customerPage.free' | translate | uppercase}}</div>
-        </div>
-      </li>
-    </ul>
+        <li ng-repeat = "service in customerOverview.freeOrPaidServices">
+          <div class="feature" ng-if="service.isMeeting"  id="meeting">
+            <a ui-sref="customer-overview.meetingDetail({meetingLicenses: service.sub})" >
+              <div class="feature-name"><i class="icon feature-icon {{service.icon}}"></i>{{::service.name}}</div>
+              <div class="feature-status">{{service.qty}} &nbsp;{{::'common.quantity' | translate | uppercase}}</div>
+              <i class="feature-arrow"></i>
+            </a>
+          </div>
+          <div class="feature" ng-if="!service.isMeeting">
+            <div class="feature-name"><i class="icon feature-icon" ng-class="service.icon"></i>{{:: service.name}}</div>
+            <div class="feature-details" ng-show="!service.free">{{service.qty}}&nbsp;{{::'common.quantity' | translate | uppercase}}</div>
+            <div class="feature-details" ng-show="service.free">{{::'customerPage.free' | translate | uppercase}}</div>
+          </div>
+        </li>
+      </ul>
     </div>
   </cs-sp-section>
   <trial-webex-overview ng-if="!customerOverview.newCustomerViewToggle"></trial-webex-overview>
