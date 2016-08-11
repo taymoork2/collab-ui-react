@@ -14,7 +14,7 @@
   }
 
   /* @ngInject */
-  function NotificationFn($translate, $q, toaster, $timeout, Config, Log) {
+  function NotificationFn(AlertService, $translate, $q, toaster, $timeout, Config, Log) {
     var NO_TIMEOUT = 0;
     var FAILURE_TIMEOUT = NO_TIMEOUT;
     var SUCCESS_TIMEOUT = Config.isE2E() ? NO_TIMEOUT : 3000;
@@ -74,7 +74,9 @@
       toaster.pop({
         title: title,
         type: type,
-        body: notifications.join('<br/>'),
+        body: 'bind-unsafe-html',
+        bodyOutputType: 'directive',
+        directiveData: { data: notifications },
         timeout: type == 'success' ? SUCCESS_TIMEOUT : FAILURE_TIMEOUT,
         closeHtml: closeHtml
       });
@@ -131,21 +133,15 @@
     function confirmation(message) {
       var deferred = $q.defer();
 
-      //TODO
-      /* //Update when AngularJS-Toaster 0.4.16 is released
       AlertService.setDeferred(deferred);
       AlertService.setMessage(message);
       toaster.pop({
         type: 'warning',
         body: 'cs-confirmation',
-        bodyOutputType: 'directive'
+        bodyOutputType: 'directive',
+        showCloseButton: false
       });
-      */
 
-      toaster.pop('warning', null, message +
-        '<br/> <div class="clearfix"><button type="button" class="btn btn--negative ui-ml notification-yes right">' + $translate.instant(
-          'common.yes') + '</button>' + '<button type="button" class="btn right notification-no">' + $translate.instant('common.no') +
-        '</button></div>');
       $timeout(function () {
         angular.element('.notification-yes').on('click', function () {
           toaster.clear('*');
