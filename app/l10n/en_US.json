@@ -3310,7 +3310,7 @@
       "callVolumes": "Total Calls",
       "callVolumesDescription": "Total number of on-premises calls and calls that overflowed to the Cisco Collaboration Cloud.",
       "callVolumesDescriptionForClusterSel": "Total number of calls hosted on this Hybrid Media Cluster and those that were redirected to another resource (cluster or cloud).",
-      "callLocalLegend": "on Premises",
+      "callLocalLegend": "On Premises",
       "callRejectLegend": "Overflowed to Cloud",
       "callLocal": "Calls on premise",
       "callReject": "Calls overflowed to cloud",
