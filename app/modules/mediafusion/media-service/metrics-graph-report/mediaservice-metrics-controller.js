@@ -73,7 +73,7 @@
 
         vm.label = vm.timeSelected.label;
         vm.date = date1.getHours() + ':' + (date1.getMinutes() < 10 ? '0' : '') + date1.getMinutes() + ' ' + month[date1.getMonth()] + ' ' + date1.getDate() + ',' + date1.getFullYear();
-        vm.date = $translate.instant('mediaFusion.metrics.lastrefresh') + ' ' + vm.date;
+        vm.date = $translate.instant('mediaFusion.metrics.lastRefresh') + ' ' + vm.date;
 
       } else if (vm.timeSelected.value === 1) {
 

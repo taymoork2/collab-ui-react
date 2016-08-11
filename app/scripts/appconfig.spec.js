@@ -4,6 +4,7 @@ describe('App Config', function () {
   var $scope, $compile, $httpBackend;
 
   beforeEach(angular.mock.module('wx2AdminWebClientApp'));
+  beforeEach(angular.mock.module('Main'));
 
   beforeEach(inject(function ($rootScope, _$compile_, _$httpBackend_) {
     $scope = $rootScope.$new();

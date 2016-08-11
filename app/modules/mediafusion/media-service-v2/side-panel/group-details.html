@@ -28,7 +28,7 @@
       </strong>
       <div>
         <span>
-            {{groupDetails.clusterDetail.upgradeSchedule.scheduleTime}} {{'mediaFusion.clusters.everyDay'}} {{groupDetails.clusterDetail.upgradeSchedule.scheduleTimeZone}} 
+            {{groupDetails.clusterDetail.upgradeSchedule.scheduleTime}} <span translate="mediaFusion.clusters.everyDay"/> {{groupDetails.clusterDetail.upgradeSchedule.scheduleTimeZone}} 
         </span>
       </div>
     </div>
@@ -39,7 +39,7 @@
     </strong>
     <div>
       <span>
-          {{groupDetails.clusterDetail.releaseChannel}}
+          {{groupDetails.clusterDetail.releaseChannel | uppercase}}
       </span>
     </div>
 
