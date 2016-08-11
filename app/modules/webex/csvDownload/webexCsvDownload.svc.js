@@ -7,10 +7,10 @@
 
   /* @ngInject */
   function WebExCsvDownloadService(
-    $log,
     $resource,
     $window,
-    WebExUtilsFact
+    WebExUtilsFact,
+    Log
   ) {
 
     var _this = this;
@@ -24,7 +24,7 @@
 
       logMsg = funcName + "\n" +
         "fileDownloadUrl=" + fileDownloadUrl;
-      $log.log(logMsg);
+      Log.debug(logMsg);
 
       var webexCsvResource = $resource(fileDownloadUrl, {}, {
         get: {
@@ -55,11 +55,11 @@
       logMsg = funcName + "\n" +
         "data.length=" + data.length + "\n" +
         "fileName=" + fileName;
-      //$log.log(logMsg);
+      Log.debug(logMsg);
 
       logMsg = funcName + "\n" +
         "data=" + JSON.stringify(data);
-      //$log.log(logMsg);
+      Log.debug(logMsg);
 
       var intBytes = WebExUtilsFact.utf8ToUtf16le(data);
       var newData = new Uint8Array(intBytes);
@@ -67,7 +67,7 @@
 
       logMsg = funcName + "\n" +
         "intBytes=" + intBytes;
-      //$log.log(logMsg);
+      Log.debug(logMsg);
 
       // IE download option since IE won't download the created url
       if (_this.isWindowsIE()) {
@@ -98,7 +98,7 @@
 
       logMsg = funcName + "\n" +
         "result=" + result;
-      //$log.log(logMsg);
+      Log.debug(logMsg);
 
       return result;
     }; // isWindowsIE()
