@@ -6,7 +6,7 @@
     .controller('OverviewCtrl', OverviewCtrl);
 
   /* @ngInject */
-  function OverviewCtrl($rootScope, $scope, $translate, Authinfo, Config, FeatureToggleService, Log, Notification, Orgservice, OverviewCardFactory, OverviewNotificationFactory, ReportsService, ServiceDescriptor, TrialService, UrlConfig) {
+  function OverviewCtrl($rootScope, $scope, $translate, Authinfo, Config, FeatureToggleService, Log, Notification, Orgservice, OverviewCardFactory, OverviewNotificationFactory, ReportsService, TrialService, UrlConfig) {
     var vm = this;
 
     vm.pageTitle = $translate.instant('overview.pageTitle');
@@ -86,7 +86,7 @@
                 });
               });
               if (sharedDevicesUsage === 0 || sparkBoardsUsage === 0) {
-                setEnableDevice(true);
+                setRoomSystemEnabledDevice(true);
                 if (sharedDevicesUsage === 0 && sparkBoardsUsage === 0) {
                   vm.notifications.push(OverviewNotificationFactory.createDevicesNotification('homePage.setUpDevices'));
                 } else if (sparkBoardsUsage === 0) {
@@ -95,7 +95,7 @@
                   vm.notifications.push(OverviewNotificationFactory.createDevicesNotification('homePage.setUpSharedDevices'));
                 }
               } else {
-                setEnableDevice(false);
+                setRoomSystemEnabledDevice(false);
               }
             });
         }
@@ -113,10 +113,10 @@
       }
     }
 
-    function setEnableDevice(deviceEnabled) {
+    function setRoomSystemEnabledDevice(isDeviceEnabled) {
       (_.find(vm.cards, function (card) {
         return card.name === 'overview.cards.roomSystem.title';
-      })).isDeviceEnabled = deviceEnabled;
+      })).isDeviceEnabled = isDeviceEnabled;
     }
 
     function dismissNotification(notification) {
@@ -150,8 +150,6 @@
     Orgservice.getUnlicensedUsers(_.partial(forwardEvent, 'unlicensedUsersHandler'));
 
     ReportsService.healthMonitor(_.partial(forwardEvent, 'healthStatusUpdatedHandler'));
-
-    ServiceDescriptor.services(_.partial(forwardEvent, 'hybridStatusEventHandler'), true);
 
     init();
 

@@ -6,7 +6,7 @@
     .directive('crLeaderBoardBucket', crLeaderBoardBucket);
 
   /* @ngInject */
-  function leaderBoardCtrl($scope, $translate, Authinfo, Orgservice, TrialService) {
+  function leaderBoardCtrl($scope, $translate, Authinfo, Config, Orgservice, TrialService) {
 
     // TODO: revisit after graduation (2016-02-17) - see if this can be moved into the template
     $scope.label = $translate.instant('leaderBoard.licenseUsage');
@@ -14,6 +14,7 @@
     $scope.state = 'license'; // Possible values are license, warning or error
     $scope.icon = 'check-gear';
     $scope.trialDaysLeft = undefined;
+    $scope.roomSystemsCount = 0;
 
     $scope.bucketKeys = [
       'messaging',
@@ -33,9 +34,9 @@
     var getLicenses = function () {
       Orgservice.getLicensesUsage()
         .then(function (subscriptions) {
+          $scope.roomSystemsCount = 0;
           // check if active trial exists
           $scope.hasActiveTrial = _.some(subscriptions, trialExistsInSubscription);
-
           return subscriptions;
         })
         .then(function (subscriptions) {
@@ -50,6 +51,9 @@
               subscription[bucket] = {};
               var a = subscription[bucket];
               a['services'] = [];
+              if (license.licenseType === Config.licenseTypes.SHARED_DEVICES) {
+                $scope.roomSystemsCount = $scope.roomSystemsCount + license.volume;
+              }
             }
             license.id = bucket + index + licenseIndex;
             if (license.offerName !== 'CF') {
