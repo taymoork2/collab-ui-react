@@ -38,7 +38,7 @@
     vm.isPartnerAdmin = Authinfo.isPartnerAdmin();
 
     vm.freeOrPaidServices = null;
-    vm.meetingServices = null;
+    vm.hasMeeting = false;
 
     vm.newCustomerViewToggle = newCustomerViewToggle;
 
@@ -56,9 +56,10 @@
       var licAndOffers = PartnerService.parseLicensesAndOffers(vm.currentCustomer, isCareEnabled);
       vm.offer = vm.currentCustomer.offer = _.get(licAndOffers, 'offer');
       if (vm.newCustomerViewToggle) {
-        var nonTrialServices = PartnerService.getFreeOrActiveServices(vm.currentCustomer, isCareEnabled);
-        vm.freeOrPaidServices = nonTrialServices.freeOrPaidServices;
-        vm.meetingServices = nonTrialServices.meetingServices;
+        vm.freeOrPaidServices = PartnerService.getFreeOrActiveServices(vm.currentCustomer, isCareEnabled);
+        vm.hasMeeting = _.some(vm.freeOrPaidServices, {
+          isMeeting: true
+        });
       }
     }
 

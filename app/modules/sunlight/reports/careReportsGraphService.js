@@ -40,14 +40,14 @@
       'switchable': false,
       'fontSize': 13,
       'markerLabelGap': 10,
+      'markerType': 'square',
       'markerSize': 10,
       'position': 'bottom',
       'equalWidths': true,
       'horizontalGap': 5,
       'valueAlign': 'left',
       'valueWidth': 0,
-      'verticalGap': 20,
-      'useGraphSettings': true
+      'verticalGap': 20
     };
 
     baseVariables['balloon'] = {

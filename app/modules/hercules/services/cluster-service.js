@@ -225,7 +225,13 @@
     }
 
     function getClustersByConnectorType(type) {
-      return _.values(clusterCache[type]);
+      var clusters = _.chain(clusterCache[type])
+        .values() // turn them to an array
+        .sortBy(function (cluster) {
+          return cluster.name.toLocaleUpperCase();
+        })
+        .value();
+      return clusters;
     }
 
     function upgradeSoftware(clusterId, connectorType) {

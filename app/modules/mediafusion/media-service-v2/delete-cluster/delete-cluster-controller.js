@@ -74,7 +74,7 @@
     };
 
     function defuseHost(host) {
-      MediaClusterServiceV2.defuseV2Connector(host.id).success(incrementSuccessCount(host)).error(incrementFailureCount(host));
+      MediaClusterServiceV2.defuseV2Connector(host.id).success(incrementSuccessDefuse(host)).error(incrementFailureCount(host));
     }
 
     function moveNodesTocluster() {
@@ -101,6 +101,13 @@
 
       fromCluster = vm.cluster;
       MediaClusterServiceV2.moveV2Host(host.id, fromCluster.id, toCluster.id).success(incrementSuccessCount(host, toCluster)).error(incrementFailureCount(host));
+    }
+
+    function incrementSuccessDefuse() {
+      return function () {
+        vm.successCount++;
+        deleteCluster();
+      };
     }
 
     function incrementSuccessCount(host, toCluster) {

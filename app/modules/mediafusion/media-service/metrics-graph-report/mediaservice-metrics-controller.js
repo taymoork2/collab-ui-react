@@ -73,27 +73,28 @@
 
         vm.label = vm.timeSelected.label;
         vm.date = date1.getHours() + ':' + (date1.getMinutes() < 10 ? '0' : '') + date1.getMinutes() + ' ' + month[date1.getMonth()] + ' ' + date1.getDate() + ',' + date1.getFullYear();
+        vm.date = $translate.instant('mediaFusion.metrics.lastRefresh') + ' ' + vm.date;
 
       } else if (vm.timeSelected.value === 1) {
 
         vm.label = vm.timeSelected.label;
         date1.setDate(date1.getDate() - 7);
         var prevdate = new Date(date1);
-        vm.date = month[prevdate.getMonth()] + ' ' + prevdate.getDate() + ',' + prevdate.getFullYear() + '-' + month[date2.getMonth()] + ' ' + date2.getDate() + ',' + date2.getFullYear();
+        vm.date = month[prevdate.getMonth()] + ' ' + prevdate.getDate() + ',' + ' ' + prevdate.getFullYear() + ' ' + '-' + ' ' + month[date2.getMonth()] + ' ' + date2.getDate() + ',' + ' ' + date2.getFullYear();
 
       } else if (vm.timeSelected.value === 2) {
 
         vm.label = vm.timeSelected.label;
         date1.setMonth(date1.getMonth() - 1);
         prevdate = new Date(date1);
-        vm.date = month[prevdate.getMonth()] + ' ' + prevdate.getDate() + ',' + prevdate.getFullYear() + '-' + month[date2.getMonth()] + ' ' + date2.getDate() + ',' + date2.getFullYear();
+        vm.date = month[prevdate.getMonth()] + ' ' + prevdate.getDate() + ',' + ' ' + prevdate.getFullYear() + ' ' + '-' + ' ' + month[date2.getMonth()] + ' ' + date2.getDate() + ',' + ' ' + date2.getFullYear();
 
       } else {
 
         vm.label = vm.timeSelected.label;
         date1.setMonth(date1.getMonth() - 3);
         prevdate = new Date(date1);
-        vm.date = month[prevdate.getMonth()] + ' ' + prevdate.getDate() + ',' + prevdate.getFullYear() + '-' + month[date2.getMonth()] + ' ' + date2.getDate() + ',' + date2.getFullYear();
+        vm.date = month[prevdate.getMonth()] + ' ' + prevdate.getDate() + ',' + ' ' + prevdate.getFullYear() + ' ' + '-' + ' ' + month[date2.getMonth()] + ' ' + date2.getDate() + ',' + ' ' + date2.getFullYear();
 
       }
     }
@@ -114,6 +115,7 @@
       }, XhrNotificationService.notify);
 
     function clusterUpdate() {
+      displayDate();
       vm.callVolumeStatus = vm.REFRESH;
       vm.availabilityStatus = vm.REFRESH;
       vm.utilizationStatus = vm.REFRESH;

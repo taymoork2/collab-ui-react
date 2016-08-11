@@ -1,4 +1,23 @@
 {
+  "statusPage":{
+    "pageTitle": "Status Management",
+    "dashboard": "Dashboard",
+    "incidents": "Incidents",
+    "components": "Components",
+    "addComponents": "Add A Component",
+    "componentName": "Component Name",
+    "componentDesc": "Description (optional)",
+    "componentGroup": "Component Group",
+    "nameCannotBeBlank": "Name can't be blank",
+    "createNewComponentGroup": "Create new component group",
+    "createComponent": "Create Component",
+    "componentInfo": "Component Info",
+    "editAction": "Edit",
+    "deleteAction": "Delete",
+    "update": "Update",
+    "deleteWarning": "WARNING! Deleting a component cannot be undone. All associated data will be deleted as well. Please be absolutely sure this is what you want. <br /> Type DELETE in the box below for final confirmation, then hit the delete button.",
+    "permanentlyDelete": "Permanently DELETE {{componentName}}"
+  },
   "loginPage": {
     "title": "Cloud Collaboration Management",
     "login": "Sign In",
@@ -123,7 +142,8 @@
     "unableToMigrateError": "Unable to migrate user {{email}}.  This user's domain is not available for conversion; please submit a problem report.",
     "unknownCreateUserError": "An unknown error has occurred and user creation could not be completed.",
     "insufficientEntitlementsError": "{{email}} cannot be added.  There are insufficient licenses to create this user.",
-    "telstraAppRedirect": "Connecting to Telstra Apps Marketplace"
+    "telstraAppRedirect": "Connecting to Telstra Apps Marketplace",
+    "careAddUserError": "Error adding user to Care."
   },
   "userManage": {
     "org": {
@@ -381,6 +401,8 @@
     "eventsTab": "Events",
     "eventsTabDesc": "Event Management",
     "helpdesk": "Help Desk",
+    "statusTab": "Status",
+    "statusTabDesc": "Status Mannagement",
     "careTab": "Care",
     "careTabDesc": "Cloud Contact Center"
   },
@@ -522,8 +544,9 @@
     "avgQueueTime": "Avg Queue Time",
     "avgHandleTime": "Avg Handle Time",
     "handleTime": "Handle Time",
+    "taskTimeLabel": "Time in Minutes",
     "averageCsat": "Average CSAT",
-    "avgCsat": "Avg CSAT ",
+    "avgCsat": "Avg CSAT",
     "csatRating": "CSAT Rating",
     "todayCategoryAxis": "Hours",
     "yesterdayCategoryAxis": "Hours",
@@ -967,7 +990,8 @@
     "continue": "Continue",
     "warning": "Warning",
     "error": "Error",
-    "turnOff": "Turn Off"
+    "turnOff": "Turn Off",
+    "overview":"Overview"
   },
   "notifications": {
     "success": "Success notifications",
@@ -1145,7 +1169,11 @@
     "voicemailToEmailHelpText": "Warning: Voicemail attachments sent via email are not secure.",
     "voicemailToEmailGetError": "Failed to get voicemail to email settings.",
     "voicemailToEmailUpdateError": "Failed to update voicemail to email settings.",
-    "voicemailTimeZoneGetError": "Failed to get voicemail time zone."
+    "voicemailTimeZoneGetError": "Failed to get voicemail time zone.",
+    "externalVoicemailAccessLabel": "External Voicemail Access",
+    "voicemailPilotHelpText": "Usage of this E164 number incurrs usage cost.",
+    "errorGettingOptionaVmDidToggle": "There was a problem getting the optionalVmDid toggle.",
+    "externalNumberDescriptionText": "Select a number that users can call to check their voicemail from outside the company network."
   },
   "dirsyncModal": {
     "chooseSync": "Choose Sync",
@@ -1650,6 +1678,7 @@
         "upgrade-schedule": "Upgrade Schedule",
         "release-channel": "Release Channel",
         "hosts": "{count, plural, one{# Host} other{# Hosts}}",
+        "nodes": "{count, plural, one{# Node} other{# Nodes}}",
         "settings": "Settings",
         "all": "All",
         "add-resource": "Add Resource",
@@ -2561,6 +2590,7 @@
     "daysAgo": "{{days}} days ago",
     "expireToday": "Expiring Today",
     "errGetTrialsQuery": "Failed to retrieve trials. Status: {{status}}",
+    "errGetOrgs":  "Failed to retrieve orgranizations.",
     "fifty": "50",
     "oneHundred": "100",
     "twoHundred": "200",
@@ -2867,7 +2897,10 @@
     "meetingLicenses": "Meeting Licenses",
     "accountStatus": "Account Status",
     "totalUsers": "Total Users",
-    "purchased": "Purchased"
+    "purchased": "Purchased",
+    "domain": "{count, plural, one{Domain} other{Domains}}",
+    "domains": "Domains"
+
   },
   "customerAdminPanel": {
     "addAdministrators": "Add Administrators",
@@ -3262,6 +3295,7 @@
       "month2": "last month",
       "threeMonths": "Last Three Months",
       "threeMonths2": "last three months",
+      "lastRefresh": "Last Refreshed at",
       "cluster": "Cluster :",
       "ecp": "ECP :",
       "fromDate": "From :",
@@ -3275,8 +3309,12 @@
       "callVolumes": "Total Calls",
       "callVolumesDescription": "Total number of on-premises calls and calls that overflowed to the Cisco Collaboration Cloud.",
       "callVolumesDescriptionForClusterSel": "Total number of calls hosted on this Hybrid Media Cluster and those that were redirected to another resource (cluster or cloud).",
-      "callLocal": "On Premises",
-      "callReject": "Overflowed to Cloud",
+      "callLocalLegend": "On Premises",
+      "callRejectLegend": "Overflowed to Cloud",
+      "callLocal": "Calls On Premises",
+      "callReject": "Calls Overflowed to Cloud",
+      "callLocalCluster":"Calls local to cluster",
+      "callRedirectedCluster":"Calls redirected by cluster",
       "callsRedirected": "Calls Redirected",
       "availabilityOfCluster": "Cluster Availability",
       "availabilityOfHost": "Node Availability",
@@ -3376,7 +3414,10 @@
       "clusterdeleteSuccess": "Successfully deleted {{clustername}}",
       "movedTo": "{{nodeName}} moved to: {{clusterName}}",
       "upgradeSchedule": "Upgrade Schedule",
-      "everyDay": "Every Day in"
+      "everyDay": "Every Day in",
+      "stable": "STABLE",
+      "beta": "BETA",
+      "latest": "LATEST"
     },
     "reassign": {
       "reassignHost": "Reassign Host",
@@ -4652,7 +4693,7 @@
           "squared-fusion-cal": "Calendar",
           "squared-fusion-uc": "Call",
           "squared-fusion-mgmt": "Management",
-          "squared-fusion-media": "Media Fusion"
+          "squared-fusion-media": "Media Service"
         }
       }
     }
@@ -4737,6 +4778,8 @@
     "less": "Less",
     "quantity": "Qty: ",
     "upgrade": "Upgrade",
+    "purchase": "Purchase",
+    "onlineTrialUpgradeUrlError": "Unable to retrieve purchase url for trial {{trialId}}.  To purchase a paid subscription, contact your partner via email or use the purchase button on the trial banner to have one sent for you.",
     "licenseTypes": {
       "MS": "Standard Team Rooms",
       "CF": "Meeting 25 Party",
