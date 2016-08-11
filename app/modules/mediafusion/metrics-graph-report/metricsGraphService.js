@@ -49,8 +49,8 @@
             'menu': ['PNG', 'JPG', 'PDF']
           }, 'PRINT', {
             'class': 'export-list',
-            'label': 'Export',
-            'title': 'Export',
+            'label': $translate.instant('reportsPage.export'),
+            'title': $translate.instant('reportsPage.export'),
             'menu': ['CSV', 'XLSX']
           }]
         }]

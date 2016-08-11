@@ -9,7 +9,7 @@
     var directive = {
       restrict: 'EA',
       scope: false,
-      templateUrl: 'modules/mediafusion/media-service/metrics-graph-report/callVolume/callVolume.tpl.html'
+      templateUrl: 'modules/mediafusion/metrics-graph-report/callVolume/callVolume.tpl.html'
     };
 
     return directive;

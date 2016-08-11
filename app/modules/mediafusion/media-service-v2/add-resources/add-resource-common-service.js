@@ -60,7 +60,7 @@
       });
       if (vm.clusterDetail == null) {
         var deferred = $q.defer();
-        MediaClusterServiceV2.createClusterV2(enteredCluster, 'GA').then(function (resp) {
+        MediaClusterServiceV2.createClusterV2(enteredCluster, 'stable').then(function (resp) {
           vm.selectedClusterId = resp.data.id;
           deferred.resolve(whiteListHost(hostName, vm.selectedClusterId));
         });

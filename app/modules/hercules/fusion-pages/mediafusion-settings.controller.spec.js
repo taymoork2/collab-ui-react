@@ -43,7 +43,7 @@ describe('Controller: MediafusionClusterSettingsController', function () {
   });
 
   it('it should call updateV2Cluster of MediaClusterServiceV2 ', function () {
-    controller.selected = 'DEV';
+    controller.selected = { label: 'DEV' };
     controller.displayName = 'displayName';
     controller.cluster = {
       releaseChannel: 'ALFHA',
@@ -57,7 +57,7 @@ describe('Controller: MediafusionClusterSettingsController', function () {
   });
 
   it('it should not call updateV2Cluster of MediaClusterServiceV2 ', function () {
-    controller.selected = 'DEV';
+    controller.selected = { label: 'DEV' };
     controller.displayName = 'displayName';
     controller.cluster = {
       releaseChannel: 'DEV',

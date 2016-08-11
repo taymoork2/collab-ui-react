@@ -609,6 +609,25 @@
               }
             }
           })
+          .state('status', {
+            url: '/status',
+            templateUrl: 'modules/status/dashboard/dashboard.tpl.html',
+            controller: 'DashboardCtrl',
+            controllerAs: 'dashboardCtrl',
+            parent: 'main',
+            resolve: {
+              hasFeatureToggle: function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.globalStatus);
+              }
+            }
+          })
+          /*.state('status', {
+            url: '/status-conponents',
+            templateUrl: 'modules/status/components/components.tpl.html',
+            controller: 'ComponentsCtrl',
+            controllerAs: 'componentsCtrl',
+            parent: 'main'
+          })*/
           .state('authentication.enable3rdPartyAuth', {
             parent: 'modal',
             views: {
@@ -1886,22 +1905,6 @@
             parent: 'callrouting',
             template: '<div></div>'
           })
-          .state('mediaonhold', {
-            parent: 'modal',
-            url: '/mediaonhold',
-            views: {
-              'modal@': {
-                templateUrl: 'modules/huron/moh/moh.tpl.html',
-                controller: 'MohCtrl',
-                controllerAs: 'moh',
-                resolve: {
-                  modalInfo: function ($state) {
-                    $state.params.modalClass = 'moh-content';
-                  }
-                }
-              }
-            }
-          })
           .state('trialAdd', {
             abstract: true,
             parent: 'modal',
@@ -2531,13 +2534,6 @@
 
         $stateProvider
 
-          .state('metrics', {
-            url: '/metrics',
-            controllerAs: 'GraphUtilCtrl',
-            controller: 'AnalyticsUtilizationGraphController',
-            templateUrl: 'modules/mediafusion/media-service/metrics/analytics-utilization-graph.html',
-            parent: 'main'
-          })
           //V2 API changes
           .state('media-service-v2', {
             templateUrl: 'modules/mediafusion/media-service-v2/overview.html',
