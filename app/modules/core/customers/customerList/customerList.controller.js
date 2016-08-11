@@ -458,45 +458,49 @@
     function getManagedOrgsList(searchText) {
       $scope.showManagedOrgsRefresh = true;
       var promiselist = [PartnerService.getManagedOrgsList(searchText)];
-      var myOrgName = Authinfo.getOrgName();
-      var isPartnerAdmin = Authinfo.isPartnerAdmin();
-      var isPartnerReadOnlyAdmin = Authinfo.isPartnerReadOnlyAdmin();
-      var getOrgNameSearch = Authinfo.getOrgName().indexOf(searchText);
-      var attachMyOrg = false;
 
-      if (isPartnerAdmin || isPartnerReadOnlyAdmin) {
-        if (searchText === '' || getOrgNameSearch !== -1) {
-          attachMyOrg = true;
-          getMyOrgDetails();
+      if (Authinfo.isPartnerAdmin() || Authinfo.isPartnerReadOnlyAdmin()) {
+        // This attaches myOrg details to the managed orgs list
+        if (searchText === '' || Authinfo.getOrgName().indexOf(searchText) !== -1) {
+          promiselist.push(getMyOrgDetails());
         }
       }
 
       return $q.all(promiselist)
+        .then(function (results) {
+          if (results) {
+            var orgList = _.get(results, '[0].data.organizations', []);
+            var managed = PartnerService.loadRetrievedDataToList(orgList, false,
+              $scope.isCareEnabled);
+            var isMyOrgInList = _.some(orgList, {
+              customerName: Authinfo.getOrgName()
+            });
+
+            if (!isMyOrgInList && results[1]) {
+              // 4/11/2016 admolla
+              // TODO: for some reason if I refactor this to not need an array, karma acts up....
+              if (_.isArray(results[1])) {
+                managed.unshift(results[1][0]);
+              }
+            }
+
+            $scope.managedOrgsList = managed;
+            $scope.totalOrgs = $scope.managedOrgsList.length;
+          } else {
+            Log.debug('Failed to retrieve managed orgs information.');
+            Notification.error('partnerHomePage.errGetOrgs');
+          }
+
+          // dont use a .finally(..) since this $q.all is returned
+          // (if you .finally(..), the next `then` doesnt get called)
+          $scope.showManagedOrgsRefresh = false;
+        })
         .catch(function (err) {
           Log.debug('Failed to retrieve managed orgs information. Status: ' + err.status);
           Notification.error('partnerHomePage.errGetTrialsQuery', {
             status: err.status
           });
 
-          $scope.showManagedOrgsRefresh = false;
-        })
-        .then(function (results) {
-          var managed = PartnerService.loadRetrievedDataToList(_.get(results, '[0].data.organizations', []), false,
-            $scope.isCareEnabled);
-          var isMyOrgInList = _.some(managed, {
-            customerName: myOrgName
-          });
-
-          if (attachMyOrg && !isMyOrgInList) {
-            // add myOrg to the managed orgs list
-            managed.unshift(myOrgDetails[0]);
-          }
-
-          $scope.managedOrgsList = managed;
-          $scope.totalOrgs = $scope.managedOrgsList.length;
-
-          // dont use a .finally(..) since this $q.all is returned
-          // (if you .finally(..), the next `then` doesnt get called)
           $scope.showManagedOrgsRefresh = false;
         });
     }

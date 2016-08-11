@@ -13,7 +13,7 @@
     .name;
 
   /* @ngInject */
-  function TokenService($injector, $rootScope, $window, Config, Storage, SessionStorage, OAuthConfig, WindowLocation) {
+  function TokenService($injector, $rootScope, $window, OAuthConfig, Config, Storage, SessionStorage, WindowLocation) {
     var respondSessionStorageEvent = 'sessionStorage' + Config.getEnv();
     var requestSessionStorageEvent = 'getSessionStorage' + Config.getEnv();
     var logoutEvent = 'logout' + Config.getEnv();

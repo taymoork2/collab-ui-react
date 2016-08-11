@@ -20,7 +20,7 @@
     .name;
 
   /* @ngInject */
-  function Auth($injector, $http, $translate, $q, $sanitize, Log, Authinfo, Utils, SessionStorage, OAuthConfig, TokenService, UrlConfig, WindowLocation) {
+  function Auth($http, $injector, $q, $sanitize, $translate, Authinfo, Log, OAuthConfig, SessionStorage, TokenService, UrlConfig, Utils, WindowLocation) {
 
     var service = {
       logout: logout,
@@ -128,11 +128,16 @@
       return httpGET(listTokensUrl)
         .then(function (response) {
           var promises = [];
-          _.each(response.data.data, function (tokenData) {
+          var clientTokens = _.filter(response.data.data, {
+            client_id: OAuthConfig.getClientId()
+          });
+
+          _.each(clientTokens, function (tokenData) {
             var refreshTokenId = tokenData.token_id;
             var revoke = revokeAuthTokens(refreshTokenId, redirectUrl);
             promises.push(revoke);
           });
+
           $q.all(promises).catch(function () {
             handleError('Failed to revoke the refresh tokens');
           })

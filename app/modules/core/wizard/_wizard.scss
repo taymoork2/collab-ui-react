@@ -64,6 +64,12 @@
   }
 }
 
+// workaround for safari (see: https://github.com/philipwalton/flexbugs#9-some-html-elements-cant-be-flex-containers )
+// TODO: revisit and remove this once safari becomes compliant (>9.1.2)
+cr-wizard-main, cr-wizard-nav {
+  display: flex;
+}
+
 .wizard-nav {
   width: 370px;
   height: 94vh;

@@ -274,4 +274,15 @@ describe('Service: ServiceSetup', function () {
 
   });
 
+  describe('generateVoiceMailNumber', function () {
+    var customerId = 'c127f0cb-8abf-4965-a013-ce41a0649b7e';
+    var countrycode = '+91';
+    var expectedVoiceMailPilot = '+911201020715001211081011150409060510000';
+    it('should generate generateVoiceMailNumber', function () {
+      var genNumber = ServiceSetup.generateVoiceMailNumber(customerId, countrycode);
+      expect(genNumber).toEqual(expectedVoiceMailPilot);
+      expect(genNumber.length).toEqual(40);
+    });
+  });
+
 });

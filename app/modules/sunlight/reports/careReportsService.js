@@ -59,7 +59,7 @@
       legend.equalWidths = !isToday;
 
       var valueAxes = [CareReportsGraphService.getBaseVariable('axis')];
-      valueAxes[0].title = 'Tasks';
+      valueAxes[0].title = $translate.instant('careReportsPage.tasks');
 
       var pattern = {
         "url": "line_pattern.png",
@@ -172,7 +172,7 @@
       var legend = CareReportsGraphService.getBaseVariable('legend');
 
       var valueAxes = [CareReportsGraphService.getBaseVariable('axis')];
-      valueAxes[0].title = 'Time in Minutes';
+      valueAxes[0].title = $translate.instant('careReportsPage.taskTimeLabel');
 
       var pattern = {
         "url": "line_pattern.png",
@@ -263,7 +263,10 @@
       showTaskTimeGraph: showTaskTimeGraph,
       showTaskTimeDummy: showTaskTimeDummy,
       showAverageCsatGraph: showAverageCsatGraph,
-      showAverageCsatDummy: showAverageCsatDummy
+      showAverageCsatDummy: showAverageCsatDummy,
+      getTaskIncomingGraphConfig: getTaskIncomingGraphConfig,
+      getTaskTimeGraphConfig: getTaskTimeGraphConfig,
+      getAverageCsatGraphConfig: getAverageCsatGraphConfig
     };
 
     return service;
