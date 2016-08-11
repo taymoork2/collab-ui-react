@@ -56,7 +56,6 @@
 
   angular.module('Huron', [
     'Core',
-    'uc.moh',
     'uc.device',
     'uc.callrouting',
     'uc.didadd',

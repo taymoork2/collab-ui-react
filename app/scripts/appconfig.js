@@ -1886,22 +1886,6 @@
             parent: 'callrouting',
             template: '<div></div>'
           })
-          .state('mediaonhold', {
-            parent: 'modal',
-            url: '/mediaonhold',
-            views: {
-              'modal@': {
-                templateUrl: 'modules/huron/moh/moh.tpl.html',
-                controller: 'MohCtrl',
-                controllerAs: 'moh',
-                resolve: {
-                  modalInfo: function ($state) {
-                    $state.params.modalClass = 'moh-content';
-                  }
-                }
-              }
-            }
-          })
           .state('trialAdd', {
             abstract: true,
             parent: 'modal',
