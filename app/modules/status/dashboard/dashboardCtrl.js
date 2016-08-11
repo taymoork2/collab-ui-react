@@ -8,7 +8,6 @@
   /* @ngInject */
   function DashboardCtrl($stateParams, $translate) {
     var vm = this;
-    
     vm.pageTitle = $translate.instant('statusPage.pageTitle');
 
     vm.tab = $stateParams.tab;
@@ -25,6 +24,5 @@
       title: $translate.instant('statusPage.incidents'),
       state: 'status-incidents'
     }];
-    
   }
 })();

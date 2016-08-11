@@ -11,6 +11,5 @@
     vm.components = ["WebEx Meetings", "WebEx Messenger"];
 
     vm.title = 'Components';
-
   }
 })();
