@@ -15,8 +15,7 @@
     var service = {
       getUserInfo: getUserInfo,
       updateUserInfo: updateUserInfo,
-      createChatTemplate: createChatTemplate,
-      createUserInfo: createUserInfo
+      createChatTemplate: createChatTemplate
     };
 
     return service;
@@ -31,10 +30,6 @@
 
     function createChatTemplate(chatTemplate) {
       return $http.post(sunlightChatConfigUrl, chatTemplate);
-    }
-
-    function createUserInfo(userData) {
-      return $http.post(sunlightUserConfigUrl, userData);
     }
 
   }

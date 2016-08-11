@@ -3,10 +3,11 @@
 describe('Template: editServices', function () {
 
   var SAVE_BUTTON = '#btnSaveEnt';
+  var userId = 'dbca1001-ab12-cd34-de56-abcdef123454';
 
   function init() {
     this.initModules('Core', 'Hercules', 'Huron', 'Messenger', 'Sunlight', 'WebExApp');
-    this.injectDependencies('$q', '$previousState', 'CsvDownloadService', 'FeatureToggleService', 'Orgservice', 'WebExUtilsFact');
+    this.injectDependencies('$httpBackend', '$q', '$previousState', 'CsvDownloadService', 'FeatureToggleService', 'Orgservice', 'UrlConfig', 'WebExUtilsFact');
     initDependencySpies.apply(this);
     this.compileView('OnboardCtrl', 'modules/core/users/userPreview/editServices.tpl.html');
   }
@@ -35,6 +36,7 @@ describe('Template: editServices', function () {
         name: 'test.state'
       }
     });
+    this.$httpBackend.expectGET(this.UrlConfig.getSunlightConfigServiceUrl() + '/user' + '/' + userId).respond(200);
   }
 
   function initSpies() {
@@ -47,6 +49,7 @@ describe('Template: editServices', function () {
   describe('Save button', function () {
     it('should call editServicesSave() on click', function () {
       this.view.find(SAVE_BUTTON).click();
+      this.$httpBackend.flush();
       expect(this.$scope.editServicesSave).toHaveBeenCalled();
     });
   });

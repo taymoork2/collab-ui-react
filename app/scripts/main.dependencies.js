@@ -10,6 +10,7 @@ require('collab-amcharts/amcharts/plugins/export/libs/jszip/jszip.js');
 require('collab-amcharts/amcharts/plugins/export/libs/FileSaver.js/FileSaver.js');
 require('collab-amcharts/amcharts/plugins/export/libs/pdfmake/pdfmake.js');
 require('collab-amcharts/amcharts/plugins/export/libs/pdfmake/vfs_fonts.js');
+require('collab-amcharts/amcharts/plugins/export/libs/xlsx/xlsx.js');
 requireAll(require.context('file?name=amcharts/images/[name].[ext]!collab-amcharts/amcharts/images', false));
 
 require('bmmp/cisco-bmmp.js');

@@ -1,4 +1,23 @@
 {
+  "statusPage":{
+    "pageTitle": "Status Management",
+    "dashboard": "Dashboard",
+    "incidents": "Incidents",
+    "components": "Components",
+    "addComponents": "Add A Component",
+    "componentName": "Component Name",
+    "componentDesc": "Description (optional)",
+    "componentGroup": "Component Group",
+    "nameCannotBeBlank": "Name can't be blank",
+    "createNewComponentGroup": "Create new component group",
+    "createComponent": "Create Component",
+    "componentInfo": "Component Info",
+    "editAction": "Edit",
+    "deleteAction": "Delete",
+    "update": "Update",
+    "deleteWarning": "WARNING! Deleting a component cannot be undone. All associated data will be deleted as well. Please be absolutely sure this is what you want. <br /> Type DELETE in the box below for final confirmation, then hit the delete button.",
+    "permanentlyDelete": "Permanently DELETE {{componentName}}"
+  },
   "loginPage": {
     "title": "Cloud Collaboration Management",
     "login": "Sign In",
@@ -123,7 +142,8 @@
     "unableToMigrateError": "Unable to migrate user {{email}}.  This user's domain is not available for conversion; please submit a problem report.",
     "unknownCreateUserError": "An unknown error has occurred and user creation could not be completed.",
     "insufficientEntitlementsError": "{{email}} cannot be added.  There are insufficient licenses to create this user.",
-    "telstraAppRedirect": "Connecting to Telstra Apps Marketplace"
+    "telstraAppRedirect": "Connecting to Telstra Apps Marketplace",
+    "careAddUserError": "Error adding user to Care."
   },
   "userManage": {
     "org": {
@@ -381,6 +401,8 @@
     "eventsTab": "Events",
     "eventsTabDesc": "Event Management",
     "helpdesk": "Help Desk",
+    "statusTab": "Status",
+    "statusTabDesc": "Status Mannagement",
     "careTab": "Care",
     "careTabDesc": "Cloud Contact Center"
   },
@@ -522,6 +544,7 @@
     "avgQueueTime": "Avg Queue Time",
     "avgHandleTime": "Avg Handle Time",
     "handleTime": "Handle Time",
+    "taskTimeLabel": "Time in Minutes",
     "averageCsat": "Average CSAT",
     "avgCsat": "Avg CSAT",
     "csatRating": "CSAT Rating",
@@ -959,6 +982,7 @@
     "online": "Online",
     "offline": "Offline",
     "unknown": "Unknown",
+    "notSet": "Not set",
     "description": "Description",
     "user": "User",
     "ipAddress": "IP Address",
@@ -967,7 +991,8 @@
     "continue": "Continue",
     "warning": "Warning",
     "error": "Error",
-    "turnOff": "Turn Off"
+    "turnOff": "Turn Off",
+    "overview":"Overview"
   },
   "notifications": {
     "success": "Success notifications",
@@ -1099,22 +1124,26 @@
     "tzDescription": "Specify the time zone to use for schedule-based call routing. For example, this time zone applies to calls routed based on business hours and holiday schedules.",
     "steeringDigit": "Outbound Dial Digit",
     "steeringDigitDescription": "Specify the number users must dial before placing an external call.",
+    "emergencyAddressDescription": "This is the default address that will be used for emergency services. This can be overridden by each User or Place.",
+    "extension": "Extension",
     "extensionLength": "Extension Length",
-    "extensionLengthDescription": "Specify the length of internal numbers.",
+    "extensionLengthDescription": "Specify the total number of digits users must dial before placing an external call. All sites share the same extension length.",
     "extensionLengthHelpText": "After being set, this value can only be changed if no extensions are assigned.",
     "extensionLengthServicesHelpText": "Enabled only when no extensions have been assigned.",
     "saveCallSettingsExtensionLengthAllowed": "After you specify the length of extensions, you can only change this value if you remove Auto Attendants, Hunt Groups and  the Call entitlement from all users. Removing the Call entitlement deletes all call service data for every user (for example, speed dials and voicemail messages).",
+    "reservedDigits": "Reserved Digits",
     "siteSteeringDigit": "Site-to-Site Dial Digit",
-    "siteSteeringDigitDescription": "Specify the number users must dial before placing a call to another site.",
+    "siteSteeringDigitDescription": "Select a digit to reserve for dialing between sites. Extensions between 9000 and 9999 are not recommended for assignment.",
     "siteCode": "Site Code",
     "steeringDigitChangeWarning": "Changing the outbound dial digit will cause extensions that begin with the same number to experience dialing delays. Ensure that extensions do not begin with the same number as the outbound dial digit.",
     "extensionRangeChangeWarning": "Changing the outbound dial digit will cause extensions that begin with the same number to experience dialing delays. Ensure that extensions do not begin with the same number as the outbound dial digit.",
     "siteCodeDescription": "Specify a unique number to identify a specific site.",
-    "internalExtensionRange": "Extension Range",
+    "internalExtensionRange": "Internal Extension Range",
     "internalNumberRangeDescription": "Specify range of internal numbers. Length must be {{length}} digits.",
     "extensionError": "Extension not valid: ",
-    "companyVoicemail": "Company Voicemail",
-    "companyVoicemailDescription": "Select a number that users can call to check their voicemail.",
+    "companyVoicemail": "Voicemail",
+    "vmAccessNumber": "Voicemail Access Number",
+    "companyVoicemailDescription": "Select a phone number to reserve for dialing voicemail from outside the company.",
     "to": "to",
     "addMoreExtensionRanges": "Add more extension ranges",
     "emptyNumber": "Number cannot be empty",
@@ -1145,7 +1174,11 @@
     "voicemailToEmailHelpText": "Warning: Voicemail attachments sent via email are not secure.",
     "voicemailToEmailGetError": "Failed to get voicemail to email settings.",
     "voicemailToEmailUpdateError": "Failed to update voicemail to email settings.",
-    "voicemailTimeZoneGetError": "Failed to get voicemail time zone."
+    "voicemailTimeZoneGetError": "Failed to get voicemail time zone.",
+    "externalVoicemailAccessLabel": "External Voicemail Access",
+    "voicemailPilotHelpText": "Usage of this E164 number incurrs usage cost.",
+    "errorGettingOptionaVmDidToggle": "There was a problem getting the optionalVmDid toggle.",
+    "externalNumberDescriptionText": "Select a number that users can call to check their voicemail from outside the company network."
   },
   "dirsyncModal": {
     "chooseSync": "Choose Sync",
@@ -1650,6 +1683,7 @@
         "upgrade-schedule": "Upgrade Schedule",
         "release-channel": "Release Channel",
         "hosts": "{count, plural, one{# Host} other{# Hosts}}",
+        "nodes": "{count, plural, one{# Node} other{# Nodes}}",
         "settings": "Settings",
         "all": "All",
         "add-resource": "Add Resource",
@@ -2561,6 +2595,7 @@
     "daysAgo": "{{days}} days ago",
     "expireToday": "Expiring Today",
     "errGetTrialsQuery": "Failed to retrieve trials. Status: {{status}}",
+    "errGetOrgs":  "Failed to retrieve orgranizations.",
     "fifty": "50",
     "oneHundred": "100",
     "twoHundred": "200",
@@ -2867,7 +2902,10 @@
     "meetingLicenses": "Meeting Licenses",
     "accountStatus": "Account Status",
     "totalUsers": "Total Users",
-    "purchased": "Purchased"
+    "purchased": "Purchased",
+    "domain": "{count, plural, one{Domain} other{Domains}}",
+    "domains": "Domains"
+
   },
   "customerAdminPanel": {
     "addAdministrators": "Add Administrators",
@@ -3262,6 +3300,7 @@
       "month2": "last month",
       "threeMonths": "Last Three Months",
       "threeMonths2": "last three months",
+      "lastRefresh": "Last Refreshed at",
       "cluster": "Cluster :",
       "ecp": "ECP :",
       "fromDate": "From :",
@@ -3275,8 +3314,12 @@
       "callVolumes": "Total Calls",
       "callVolumesDescription": "Total number of on-premises calls and calls that overflowed to the Cisco Collaboration Cloud.",
       "callVolumesDescriptionForClusterSel": "Total number of calls hosted on this Hybrid Media Cluster and those that were redirected to another resource (cluster or cloud).",
-      "callLocal": "On Premises",
-      "callReject": "Overflowed to Cloud",
+      "callLocalLegend": "On Premises",
+      "callRejectLegend": "Overflowed to Cloud",
+      "callLocal": "Calls On Premises",
+      "callReject": "Calls Overflowed to Cloud",
+      "callLocalCluster":"Calls local to cluster",
+      "callRedirectedCluster":"Calls redirected by cluster",
       "callsRedirected": "Calls Redirected",
       "availabilityOfCluster": "Cluster Availability",
       "availabilityOfHost": "Node Availability",
@@ -3376,7 +3419,10 @@
       "clusterdeleteSuccess": "Successfully deleted {{clustername}}",
       "movedTo": "{{nodeName}} moved to: {{clusterName}}",
       "upgradeSchedule": "Upgrade Schedule",
-      "everyDay": "Every Day in"
+      "everyDay": "Every Day in",
+      "stable": "STABLE",
+      "beta": "BETA",
+      "latest": "LATEST"
     },
     "reassign": {
       "reassignHost": "Reassign Host",
@@ -4652,7 +4698,7 @@
           "squared-fusion-cal": "Calendar",
           "squared-fusion-uc": "Call",
           "squared-fusion-mgmt": "Management",
-          "squared-fusion-media": "Media Fusion"
+          "squared-fusion-media": "Media Service"
         }
       }
     }

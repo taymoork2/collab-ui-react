@@ -10,7 +10,8 @@
       restrict: 'AE',
       scope: {
         content: "@",
-        showLink: "="
+        showLink: "=",
+        metric: "@"
       },
       controller: 'AAHelpCtrl',
       controllerAs: 'aaHelpCtrl',
