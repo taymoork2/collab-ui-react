@@ -609,6 +609,25 @@
               }
             }
           })
+          .state('status', {
+            url: '/status',
+            templateUrl: 'modules/status/dashboard/dashboard.tpl.html',
+            controller: 'DashboardCtrl',
+            controllerAs: 'dashboardCtrl',
+            parent: 'main',
+            resolve: {
+              hasFeatureToggle: function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.globalStatus);
+              }
+            }
+          })
+          /*.state('status', {
+            url: '/status-conponents',
+            templateUrl: 'modules/status/components/components.tpl.html',
+            controller: 'ComponentsCtrl',
+            controllerAs: 'componentsCtrl',
+            parent: 'main'
+          })*/
           .state('authentication.enable3rdPartyAuth', {
             parent: 'modal',
             views: {
