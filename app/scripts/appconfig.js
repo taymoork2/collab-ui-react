@@ -2534,13 +2534,6 @@
 
         $stateProvider
 
-          .state('metrics', {
-            url: '/metrics',
-            controllerAs: 'GraphUtilCtrl',
-            controller: 'AnalyticsUtilizationGraphController',
-            templateUrl: 'modules/mediafusion/media-service/metrics/analytics-utilization-graph.html',
-            parent: 'main'
-          })
           //V2 API changes
           .state('media-service-v2', {
             templateUrl: 'modules/mediafusion/media-service-v2/overview.html',
