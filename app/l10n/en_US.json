@@ -2855,6 +2855,7 @@
     "setupButton": "Setup Customer",
     "myOrgButton": "View My Organization",
     "edit": "Edit Trial",
+    "errGetTrial": "Failed to retrieve trial {{user}}. Message: {{message}}",
     "trialTerms": "Terms of Trial",
     "trialOverview": "Trial",
     "webexOverview": "WebEx",

@@ -44,6 +44,9 @@ describe('Controller: CustomerOverviewCtrl', function () {
       },
       isPartnerAdmin: function () {
         return true;
+      },
+      getUserId: function () {
+        return 'D4C3B2A1';
       }
     };
     BrandService = {

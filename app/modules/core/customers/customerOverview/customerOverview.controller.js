@@ -22,6 +22,7 @@
     vm.getIsSetupDone = getIsSetupDone;
     vm.isOwnOrg = isOwnOrg;
     vm.deleteTestOrg = deleteTestOrg;
+    vm.isPartnerCreator = isPartnerCreator;
 
     vm.uuid = '';
     vm.logoOverride = false;
@@ -36,6 +37,7 @@
     vm.partnerOrgId = Authinfo.getOrgId();
     vm.partnerOrgName = Authinfo.getOrgName();
     vm.isPartnerAdmin = Authinfo.isPartnerAdmin();
+    vm.currentAdminId = Authinfo.getUserId();
 
     vm.freeOrPaidServices = null;
     vm.hasMeeting = false;
@@ -169,13 +171,38 @@
       return false;
     }
 
+    function isPartnerCreator() {
+      return TrialService.getTrial(vm.currentCustomer.trialId)
+        .then(function (response) {
+          return response.createdBy === vm.currentAdminId;
+        })
+        .catch(function (error) {
+          Notification.error('customerPage.errGetTrial', {
+            customer: vm.customerName,
+            message: error.data.message
+          });
+          return false;
+        });
+    }
+
     function getIsSetupDone() {
       Orgservice.isSetupDone(vm.customerOrgId)
         .then(function (results) {
           vm.isOrgSetup = results;
         })
         .catch(function (error) {
-          Log.error('Query customer org isSetupDone failed. Message: ' + error.data.message);
+          // Allow trials created by another partner admin to pass through this error.
+          // The trial will not generate the error once the View/Setup Customer button
+          // is pressed. See US11827
+          isPartnerCreator()
+            .then(function (isPartnerCreator) {
+              if (isPartnerCreator) {
+                Notification.error('customerPage.isSetupDoneError', {
+                  orgName: vm.customerName,
+                  message: error.data.message
+                });
+              }
+            });
         });
     }
 
