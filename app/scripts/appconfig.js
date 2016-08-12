@@ -2720,19 +2720,21 @@
               deleteFeatureId: null,
               deleteFeatureType: null
             }
-          }).state('incidents', {
-              url: '/incidents',
-              parent: 'main',
-              templateUrl: 'modules/incidents/incidentList/incidentList.tpl.html',
-              controller: 'IncidentListController',
-              controllerAs: 'shc'
-            }).state('createIncident', {
-              url: '/createIncident',
-              parent: 'main',
-              templateUrl: 'modules/incidents/createIncident/createIncident.tpl.html',
-              controller: 'CreateIncidentController',
-              controllerAs: 'cic'
-            });
+          })
+          .state('incidents', {
+            url: '/incidents',
+            parent: 'main',
+            templateUrl: 'modules/incidents/incidentList/incidentList.tpl.html',
+            controller: 'IncidentListController',
+            controllerAs: 'shc'
+          })
+          .state('createIncident', {
+            url: '/createIncident',
+            parent: 'main',
+            templateUrl: 'modules/incidents/createIncident/createIncident.tpl.html',
+            controller: 'CreateIncidentController',
+            controllerAs: 'cic'
+          });
       }
     ]);
 })();

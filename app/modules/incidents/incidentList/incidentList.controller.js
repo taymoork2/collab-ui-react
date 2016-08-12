@@ -4,15 +4,15 @@
     .module('Incidents')
     .controller('IncidentListController', IncidentListController);
 
-  function IncidentListController ($scope, $state, IncidentsService) {
+  function IncidentListController($scope, $state, IncidentsService) {
     var vm = this;
     $scope.showList = true;
-    IncidentsService.query().$promise.then(function(incidentList) {
+    IncidentsService.query().$promise.then(function (incidentList) {
       if (incidentList.length == 0) {
         $scope.showList = false;
       }
       vm.incidentList = incidentList;
-    }, function(error) {
+    }, function () {
       $scope.showList = false;
     });
     vm.toCreatePage = function () {

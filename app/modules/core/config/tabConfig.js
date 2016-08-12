@@ -105,19 +105,19 @@
       link: '#mediaserviceV2'
     }]
   }, {
-      tab: 'incidentsTab',
-      icon: 'icon-user',
-      title: 'tabs.incidentsTab',
-      state: 'incidents',
-      link: '/incidents'
+    tab: 'incidentsTab',
+    icon: 'icon-user',
+    title: 'tabs.incidentsTab',
+    state: 'incidents',
+    link: '/incidents'
   }, {
-      tab: 'statusTab',
-      icon: 'icon-alerting',
-      title: 'tabs.statusTab',
-      desc: 'tabs.statusTabDesc',
-      feature: 'global-status',
-      state: 'status',
-      link: '/status'
+    tab: 'statusTab',
+    icon: 'icon-alerting',
+    title: 'tabs.statusTab',
+    desc: 'tabs.statusTabDesc',
+    feature: 'global-status',
+    state: 'status',
+    link: '/status'
   }];
 
   module.exports = angular

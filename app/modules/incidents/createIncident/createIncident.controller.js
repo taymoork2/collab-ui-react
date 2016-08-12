@@ -4,8 +4,7 @@
     .module('Incidents')
     .controller('CreateIncidentController', CreateIncidentController);
 
-  function CreateIncidentController ($scope, $state, $log, $window, IncidentsService) {
-    var vm = this;
+  function CreateIncidentController($scope, $state, $log, $window, IncidentsService) {
     $scope.newIncident = {
       status: '',
       msg: '',
@@ -19,6 +18,7 @@
         "message": $scope.newIncident.msg,
         "email": "chaoluo@cisco.com"
       }).$promise.then(function (req) {
+        $log.log(req);
         $window.alert("Incident successfully created!");
         $state.go("incidents");
       }, function (req) {
