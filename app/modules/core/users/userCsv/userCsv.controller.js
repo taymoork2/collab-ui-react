@@ -387,6 +387,9 @@
                     numExistingUsers: vm.model.numExistingUsers
                   });
                 });
+                if (user.message === '700000') {
+                  vm.licenseUnavailable = true;
+                }
               } else {
                 $timeout(function () {
                   vm.model.numNewUsers++;
@@ -414,9 +417,6 @@
                 addUserErrorWithTrackingID(-1, user.email, UserCsvService.getBulkErrorResponse(user.httpStatus, user.message, user.email), response);
               }
             } else {
-              if (user.message === '400112') {
-                vm.licenseUnavailable = true;
-              }
               addUserErrorWithTrackingID(onboardUser.csvRow, onboardUser.email, UserCsvService.getBulkErrorResponse(user.httpStatus, user.message, user.email), response);
             }
           });
