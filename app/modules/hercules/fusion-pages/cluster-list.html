@@ -38,7 +38,7 @@
               </div>
               <div ng-if="cluster.targetType !== 'c_mgmt'">
                 <div class="cluster-list-cat" translate="hercules.fusion.list.release-channel"></div>
-                <div class="cluster-list-info">{{cluster.releaseChannel}}</div>
+                <div class="cluster-list-info">{{cluster.releaseChannel | uppercase}}</div>
               </div>
             </div>
             <div class="columns medium-6 connection-status">

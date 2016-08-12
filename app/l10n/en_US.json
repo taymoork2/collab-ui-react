@@ -1177,7 +1177,7 @@
     "voicemailToEmailUpdateError": "Failed to update voicemail to email settings.",
     "voicemailTimeZoneGetError": "Failed to get voicemail time zone.",
     "externalVoicemailAccessLabel": "External Voicemail Access",
-    "voicemailPilotHelpText": "Usage of this E164 number incurrs usage cost.",
+    "voicemailPilotHelpText": "Usage of this E164 number incurs usage cost.",
     "errorGettingOptionaVmDidToggle": "There was a problem getting the optionalVmDid toggle.",
     "externalNumberDescriptionText": "Select a number that users can call to check their voicemail from outside the company network."
   },
@@ -2549,15 +2549,15 @@
     },
     "orderStatus": {
       "pinRequired": "Customer needs to sign PSTN Contract.",
-      "addressMismatch": "Emergency or Billing Address needs to be submitted. Contact Inteleepeer.",
-      "btnMismatch": "Billing Telephone Number needs to be submitted. Contact Inteleepeer.",
+      "addressMismatch": "Emergency or Billing Address needs to be submitted. Contact Intelepeer.",
+      "btnMismatch": "Billing Telephone Number needs to be submitted. Contact Intelepeer.",
       "trialStatus": "Order cannot be fulfilled for trials",
       "focReceived": "Scheduled transfer date received from previous carrier for number porting.",
       "invalidSig": "Invalid Signature in Letter of Authorization for number porting.",
       "loaNotSigned": "Customer needs to sign Letter of Authorization for number porting.",
       "msaNotSigned": "Customer needs to sign PSTN Contract.",
       "pendingVendor": "Scheduled transfer date requested from previous carrier for number porting.",
-      "rejected": "Order has been rejected. Contact Inteleepeer."
+      "rejected": "Order has been rejected. Contact Intelepeer."
     }
   },
   "pstnContractInformation": {
