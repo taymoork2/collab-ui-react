@@ -993,7 +993,8 @@
     "warning": "Warning",
     "error": "Error",
     "turnOff": "Turn Off",
-    "overview":"Overview"
+    "overview": "Overview",
+    "notAvailable": "N/A"
   },
   "notifications": {
     "success": "Success notifications",
@@ -2824,9 +2825,9 @@
     "notes": "Notes",
     "active": "Active",
     "free": "Free",
-    "daysRemaining": "{count, plural, one{# day remaining} other{# days remaining}}",
-    "daysLeftToPurchase": "{count, plural, one{# day left to purchase} other{# days left to purchase}}",
-    "daysLeftToRenew": "{count, plural, one{# day left to renew} other{# days left to renew}}",
+    "daysRemaining": "{count, plural, one{# day} other{# days}} remaining",
+    "daysLeftToPurchase": "{count, plural, one{# day} other{# days}} left to purchase",
+    "daysLeftToRenew": "{count, plural, one{# day} other{# days}} left to renew",
     "expiringToday": "Expiring today",
     "expired": "Expired",
     "expiredWithGracePeriod": "Expired. Purchase now",
@@ -2908,8 +2909,12 @@
     "totalUsers": "Total Users",
     "purchased": "Purchased",
     "domain": "{count, plural, one{Domain} other{Domains}}",
-    "domains": "Domains"
-
+    "domains": "Domains",
+    "quantityWithValue": "Qty: {{quantity}}",
+    "filterSelectPlaceholder": "Select a filter...",
+    "filterTrialAccounts": "Trial Accounts",
+    "filterPurchasedAccounts": "Purchased Accounts",
+    "filterExpiredAccounts": "Expired Accounts"
   },
   "customerAdminPanel": {
     "addAdministrators": "Add Administrators",
