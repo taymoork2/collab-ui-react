@@ -189,7 +189,7 @@
       model: vm.model.site,
       key: 'timeZone',
       type: 'select',
-      className: 'service-setup service-setup-timezone',
+      className: 'service-setup service-setup-timezone bottom-margin',
       templateOptions: {
         inputClass: 'medium-4',
         label: $translate.instant('serviceSetupModal.timeZone'),
@@ -211,7 +211,7 @@
       model: vm.model.site,
       key: 'extensionLength',
       type: 'select',
-      className: 'service-setup service-setup-extension-length',
+      className: 'service-setup service-setup-extension-length bottom-margin',
       templateOptions: {
         inputClass: 'medium-2 small-4',
         label: $translate.instant('serviceSetupModal.extensionLength'),
@@ -416,6 +416,7 @@
     }, {
       type: 'button',
       key: 'addBtn',
+      className: 'bottom-margin',
       templateOptions: {
         btnClass: 'btn-sm btn-link',
         label: $translate.instant('serviceSetupModal.addMoreExtensionRanges'),
@@ -441,7 +442,7 @@
       model: vm.model.site,
       key: 'steeringDigit',
       type: 'select',
-      className: 'service-setup service-setup-steering-digit',
+      className: 'service-setup service-setup-steering-digit bottom-margin',
       templateOptions: {
         inputClass: 'medium-2 small-4',
         label: $translate.instant('serviceSetupModal.steeringDigit'),
@@ -460,7 +461,7 @@
       model: vm.model.site,
       key: 'siteSteeringDigit',
       type: 'select',
-      className: 'service-setup-steering-digit',
+      className: 'service-setup-steering-digit bottom-margin',
       templateOptions: {
         label: $translate.instant('serviceSetupModal.siteSteeringDigit'),
         description: $translate.instant('serviceSetupModal.siteSteeringDigitDescription'),
@@ -478,7 +479,7 @@
       model: vm.model.site,
       key: 'siteCode',
       type: 'input',
-      className: 'service-setup-site-code',
+      className: 'service-setup-site-code bottom-margin',
       templateOptions: {
         label: $translate.instant('serviceSetupModal.siteCode'),
         description: $translate.instant('serviceSetupModal.siteCodeDescription'),
@@ -504,7 +505,7 @@
         model: vm.model,
         key: 'ftswCompanyVoicemail',
         type: 'nested',
-        className: 'service-setup medium-9 left',
+        className: 'service-setup medium-9 left voicemail-switch-width',
         templateOptions: {
           inputClass: 'service-setup-company-voicemail',
           label: $translate.instant('serviceSetupModal.companyVoicemail')
@@ -518,7 +519,7 @@
         }
       }, {
         model: vm.model.ftswCompanyVoicemail,
-        className: 'service-setup medium-3 right swtich-margin',
+        className: 'service-setup medium-3 left swtich-margin',
         key: 'ftswCompanyVoicemailEnabled',
         type: 'switch'
       }],

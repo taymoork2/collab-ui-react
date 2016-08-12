@@ -153,8 +153,6 @@
     /* Template */
     vm.template = {
       name: '',
-      //TODO: Remove mediaType here once the Sunlight API changes are pushed to production
-      mediaType: 'chat',
       configuration: {
         mediaType: 'chat',
         mediaSpecificConfiguration: {

@@ -66,7 +66,7 @@ describe('User List Service', function () {
   });
 
   it('should include entitlements in query when specified', function () {
-    var listUsersUrl = UrlConfig.getScimUrl(Authinfo.getOrgId()) + "?filter=active%20eq%20true%20and%20entitlements%20eq%20%22everything%22%20and%20(userName%20sw%20%22test%22%20or%20name.givenName%20sw%20%22test%22%20or%20name.familyName%20sw%20%22test%22%20or%20displayName%20sw%20%22test%22)&attributes=name,userName,userStatus,entitlements,displayName,photos,roles,active,trainSiteNames,licenseID&count=10";
+    var listUsersUrl = UrlConfig.getScimUrl(Authinfo.getOrgId()) + "?filter=active%20eq%20true%20and%20entitlements%20eq%20%22everything%22%20and%20(userName%20sw%20%22test%22%20or%20name.givenName%20sw%20%22test%22%20or%20name.familyName%20sw%20%22test%22%20or%20displayName%20sw%20%22test%22)&attributes=name,userName,userStatus,entitlements,displayName,photos,roles,active,trainSiteNames,licenseID,userSettings&count=10";
 
     $httpBackend.whenGET(listUsersUrl).respond(200, {
       TotalResults: "2",
@@ -93,7 +93,7 @@ describe('User List Service', function () {
   });
 
   it('should leave out entitlements in query when not specified', function () {
-    var listUsersUrl = UrlConfig.getScimUrl(Authinfo.getOrgId()) + "?filter=active%20eq%20true%20and%20(userName%20sw%20%22test%22%20or%20name.givenName%20sw%20%22test%22%20or%20name.familyName%20sw%20%22test%22%20or%20displayName%20sw%20%22test%22)&attributes=name,userName,userStatus,entitlements,displayName,photos,roles,active,trainSiteNames,licenseID&count=10";
+    var listUsersUrl = UrlConfig.getScimUrl(Authinfo.getOrgId()) + "?filter=active%20eq%20true%20and%20(userName%20sw%20%22test%22%20or%20name.givenName%20sw%20%22test%22%20or%20name.familyName%20sw%20%22test%22%20or%20displayName%20sw%20%22test%22)&attributes=name,userName,userStatus,entitlements,displayName,photos,roles,active,trainSiteNames,licenseID,userSettings&count=10";
 
     $httpBackend.whenGET(listUsersUrl).respond(200, {
       TotalResults: "2",
@@ -120,7 +120,7 @@ describe('User List Service', function () {
   });
 
   it('should include entitlements in query when specified without search filter', function () {
-    var listUsersUrl = UrlConfig.getScimUrl(Authinfo.getOrgId()) + "?filter=active%20eq%20true%20and%20entitlements%20eq%20%22everything%22&attributes=name,userName,userStatus,entitlements,displayName,photos,roles,active,trainSiteNames,licenseID&count=10";
+    var listUsersUrl = UrlConfig.getScimUrl(Authinfo.getOrgId()) + "?filter=active%20eq%20true%20and%20entitlements%20eq%20%22everything%22&attributes=name,userName,userStatus,entitlements,displayName,photos,roles,active,trainSiteNames,licenseID,userSettings&count=10";
 
     $httpBackend.whenGET(listUsersUrl).respond(200, {
       TotalResults: "2",
