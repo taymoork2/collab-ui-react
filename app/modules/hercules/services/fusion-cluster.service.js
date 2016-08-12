@@ -285,7 +285,7 @@
 
       // We have an outage if all clusters have their connectors in these states or combinations of them:
       if (_.every(statuses, function (value) {
-        return (value === 'unknown' || value === 'stopped' || value === 'disabled' || value === 'offline' || value === 'not_configured' || value === 'not_operational' || value === 'upgrading');
+        return (value === 'unknown' || value === 'stopped' || value === 'disabled' || value === 'offline' || value === 'not_configured' || value === 'not_operational');
       })) {
         return 'outage';
       }
