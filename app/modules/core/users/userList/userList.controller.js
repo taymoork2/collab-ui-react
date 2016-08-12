@@ -228,8 +228,19 @@
               } else {
                 endOfUserList = true;
               }
-              // get email status here
-              _.map($scope.userList.allUsers, function (user) {
+
+              // get email status and user status here
+              _.forEach($scope.userList.allUsers, function (user) {
+                // user status
+                var hasBeenActivated = false;
+                if (user.userSettings) {
+                  hasBeenActivated = _.some(user.userSettings, function (userSetting) {
+                    return userSetting.indexOf('sparkAdmin.licensedDate') > 0 || userSetting.indexOf('spark.signUpDate') > 0;
+                  });
+                }
+                user.userStatus = (_.isEmpty(user.licenseID) || !hasBeenActivated) ? 'pending' : 'active';
+
+                // email status
                 if (!user.active && $scope.isEmailStatusToggled) {
                   Userservice.getUsersEmailStatus(Authinfo.getOrgId(), user.id).then(function (response) {
                     var eventStatus = response.data.items[0].event;
@@ -239,7 +250,6 @@
                   });
                 }
               });
-
               $scope.setFilter($scope.activeFilter);
 
             } else {
@@ -521,9 +531,7 @@
       $scope.roles = user.roles;
       $scope.queryuserslist = $scope.gridData;
       $state.go('user-overview', {
-        currentUser: $scope.currentUser,
-        entitlements: $scope.entitlements,
-        queryuserslist: $scope.queryuserslist
+        currentUserId: $scope.currentUser.id
       });
     }
 
