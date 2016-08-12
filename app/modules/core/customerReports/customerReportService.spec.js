@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Service: Customer Reports Service', function () {
-  var $httpBackend, CustomerReportService, Config, Notification;
+  var $httpBackend, CustomerReportService, Notification;
   var avgRoomsUrl, groupRoomsUrl, oneToOneRoomsUrl, contentUrl, contentSizeUrl, mediaUrl, metricsUrl, activeUserDetailedUrl, mostActiveUrl, devicesUrl;
 
   var activeData = getJSONFixture('core/json/customerReports/activeUser.json');
@@ -35,7 +35,7 @@ describe('Service: Customer Reports Service', function () {
 
   beforeEach(angular.mock.module('Core'));
 
-  var cacheValue = (parseInt(moment.utc().format('H')) >= 8);
+  var cacheValue = (parseInt(moment.utc().format('H'), 10) >= 8);
   var dayFormat = "MMM DD";
   var timezone = "Etc/GMT";
   var timeFilter = {
@@ -68,10 +68,9 @@ describe('Service: Customer Reports Service', function () {
     $provide.value("Authinfo", Authinfo);
   }));
 
-  beforeEach(inject(function (_$httpBackend_, _CustomerReportService_, _Config_, _Notification_, UrlConfig) {
+  beforeEach(inject(function (_$httpBackend_, _CustomerReportService_, _Notification_, UrlConfig) {
     $httpBackend = _$httpBackend_;
     CustomerReportService = _CustomerReportService_;
-    Config = _Config_;
     Notification = _Notification_;
 
     spyOn(Notification, 'notify');
@@ -104,10 +103,10 @@ describe('Service: Customer Reports Service', function () {
     mediaContent.data[0].data = updateDates(mediaContent.data[0].data);
     mediaResponse = updateDates(mediaResponse, dayFormat);
 
-    angular.forEach(devicesData.data[0].data, function (item, index, array) {
+    angular.forEach(devicesData.data[0].data, function (item) {
       item.details = updateDates(item.details, null, 'recordTime');
     });
-    angular.forEach(deviceResponse.graphData, function (item, index, array) {
+    angular.forEach(deviceResponse.graphData, function (item) {
       item.graph = updateDates(item.graph, dayFormat);
     });
   }));

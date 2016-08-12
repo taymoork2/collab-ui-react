@@ -6,7 +6,7 @@
     .controller('UserOverviewCtrl', UserOverviewCtrl);
 
   /* @ngInject */
-  function UserOverviewCtrl($http, $scope, $stateParams, $translate, $resource, Authinfo, FeatureToggleService, Log, Orgservice, Notification, UrlConfig, Userservice, Utils) {
+  function UserOverviewCtrl($http, $scope, $state, $stateParams, $translate, $resource, $window, Authinfo, FeatureToggleService, Notification, SunlightConfigService, UrlConfig, Userservice, Utils) {
     var vm = this;
     vm.currentUser = $stateParams.currentUser;
     vm.entitlements = $stateParams.entitlements;
@@ -28,6 +28,7 @@
     vm.disableAuthCodeLink = disableAuthCodeLink;
     vm.getUserPhoto = Userservice.getUserPhoto;
     vm.isValidThumbnail = Userservice.isValidThumbnail;
+    vm.actionList = [];
 
     var msgState = {
       name: $translate.instant('onboardModal.message'),
@@ -91,14 +92,43 @@
         vm.services.push(commState);
       }
       if (hasEntitlement('cloud-contact-center')) {
-        if (getServiceDetails('CC')) {
-          contactCenterState.detail = $translate.instant('onboardModal.paidContactCenter');
+        if (getServiceDetails('CD')) {
+          SunlightConfigService.getUserInfo(vm.currentUser.id).then(
+              function () {
+                contactCenterState.detail = $translate.instant('onboardModal.paidContactCenter');
+                vm.services.push(contactCenterState);
+              }
+          );
         }
-        vm.services.push(contactCenterState);
+
       }
 
+      initActionList();
       getAccountStatus();
       updateUserTitleCard();
+    }
+
+    function initActionList() {
+      var action = {
+        actionKey: 'usersPreview.editServices'
+      };
+      if (Authinfo.isCSB()) {
+        action.actionFunction = goToUserRedirect;
+      } else {
+        action.actionFunction = goToEditService;
+      }
+      vm.actionList.push(action);
+    }
+
+    function goToEditService() {
+      $state.go('editService', {
+        currentUser: vm.currentUser
+      });
+    }
+
+    function goToUserRedirect() {
+      var url = $state.href('userRedirect');
+      $window.open(url, '_blank');
     }
 
     var generateOtpLink = {
@@ -277,10 +307,14 @@
               vm.services.push(confState);
               vm.currentUser.invitations.cf = confId;
             }
-            if (getInvitationDetails(response.effectiveLicenses, 'CC')) {
-              contactCenterState.detail = $translate.instant('onboardModal.paidContactCenter');
-              vm.services.push(contactCenterState);
-              vm.currentUser.invitations.cc = true;
+            if (getInvitationDetails(response.effectiveLicenses, 'CD')) {
+              SunlightConfigService.getUserInfo(vm.currentUser.id).then(
+                  function () {
+                    contactCenterState.detail = $translate.instant('onboardModal.paidContactCenter');
+                    vm.services.push(contactCenterState);
+                    vm.currentUser.invitations.cc = true;
+                  }
+              );
             }
           }
         });
@@ -295,16 +329,6 @@
           Notification.errorResponse(error, 'usersPage.emailError');
         });
       angular.element('.open').removeClass('open');
-    }
-
-    function getOrg() {
-      Orgservice.getOrg(function (data, status) {
-        if (data.success) {
-          vm.dirsyncEnabled = data.dirsyncEnabled;
-        } else {
-          Log.debug('Get existing org failed. Status: ' + status);
-        }
-      });
     }
   }
 })();

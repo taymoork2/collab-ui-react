@@ -69,16 +69,17 @@ describe('User Service', function () {
     expect($rootScope.$broadcast).toHaveBeenCalledWith('Userservice::updateUsers');
   });
 
-  it('onboardUsers success with sunlight license should send POST request to Sunlight Config', function () {
+  it('onboardUsers success with sunlight license should send PUT request to Sunlight Config', function () {
     $httpBackend
       .expectPOST(UrlConfig.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/users/onboard')
       .respond(200, testData.onboard_success_response);
-    $httpBackend.expectPOST(UrlConfig.getSunlightConfigServiceUrl() + '/user').respond(200);
+    var userId = testData.onboard_success_response.userResponse[0].uuid;
+    $httpBackend.expectPUT(UrlConfig.getSunlightConfigServiceUrl() + '/user' + '/' + userId).respond(200);
     Userservice.onboardUsers(testData.usersDataArray, testData.entitlements, [testData.sunlight_license]);
     $httpBackend.flush();
   });
 
-  it('onboardUsers failure with sunlight license should not send POST request to Sunlight Config', function () {
+  it('onboardUsers failure with sunlight license should not send PUT request to Sunlight Config', function () {
     $httpBackend
       .expectPOST(UrlConfig.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/users/onboard')
       .respond(201, testData.onboard_failure_response);
@@ -86,7 +87,7 @@ describe('User Service', function () {
     $httpBackend.flush();
   });
 
-  it('onboardUsers success without sunlight license should not send POST request to Sunlight Config', function () {
+  it('onboardUsers success without sunlight license should not send PUT request to Sunlight Config', function () {
     $httpBackend
       .expectPOST(UrlConfig.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/users/onboard')
       .respond(200, testData.onboard_success_response);

@@ -33,7 +33,7 @@
         days: []
       };
       _.each(getTwoLetterDays(), function (value, index) {
-        hours.days[(index - 1 + 7) % 7] = {
+        hours.days[((index - 1) + 7) % 7] = {
           abbr: value,
           index: index,
           active: false
@@ -360,7 +360,7 @@
           hoursRange.name = description[0];
           if (description.length > 3) {
             hoursRange.month = {};
-            hoursRange.month.number = parseInt(description[1]);
+            hoursRange.month.number = parseInt(description[1], 10);
             hoursRange.month.index = hoursRange.month.number - 1;
             hoursRange.rank = findRankByNumber(description[2]);
             hoursRange.day = {};

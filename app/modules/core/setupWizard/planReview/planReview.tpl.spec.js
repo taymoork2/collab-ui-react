@@ -2,7 +2,7 @@
 
 describe('Template: planReview', function () {
   var $scope, $controller, $httpBackend, controller, $q, $templateCache, $compile, view;
-  var FeatureToggleService, Userservice, UrlConfig, getUserMe, WebExUtilsFact;
+  var FeatureToggleService, Userservice, UrlConfig, getUserMe;
 
   beforeEach(angular.mock.module('Core'));
   beforeEach(angular.mock.module('Huron'));
@@ -27,7 +27,7 @@ describe('Template: planReview', function () {
   beforeEach(initSpies);
   beforeEach(compileView);
 
-  function dependencies(_$compile_, _$controller_, _$httpBackend_, _$q_, $rootScope, _$templateCache_, _Authinfo_, _FeatureToggleService_, _Userservice_, _UrlConfig_, _WebExUtilsFact_) {
+  function dependencies(_$compile_, _$controller_, _$httpBackend_, _$q_, $rootScope, _$templateCache_, _Authinfo_, _FeatureToggleService_, _Userservice_, _UrlConfig_) {
     $compile = _$compile_;
     $controller = _$controller_;
     $httpBackend = _$httpBackend_;
@@ -38,7 +38,6 @@ describe('Template: planReview', function () {
     FeatureToggleService = _FeatureToggleService_;
     UrlConfig = _UrlConfig_;
     Userservice = _Userservice_;
-    WebExUtilsFact = _WebExUtilsFact_;
   }
 
   function initSpies() {

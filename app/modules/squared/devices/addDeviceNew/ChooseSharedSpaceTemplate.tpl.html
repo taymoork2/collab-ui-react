@@ -18,6 +18,10 @@
           <h4 translate="addDeviceWizard.chooseSharedSpace.existingPlace"></h4>
           <span>&nbsp;</span>
         </div>
+        <div class="errorBox" ng-hide="choosePlace.hasRooms || choosePlace.isExistingCollapsed">
+          <i class="icon icon-warning"></i>
+          <span translate="addDeviceWizard.chooseSharedSpace.noExistingPlaces"></span>
+        </div>
       </div>
       <div class="typeButtonWrapper">
         <div class="typeButton"
@@ -33,14 +37,14 @@
     </div>
   </div>
 
-  <div class="chooseExistingPlace" ng-hide="choosePlace.isExistingCollapsed">
+  <div class="chooseExistingPlace" ng-hide="choosePlace.isExistingCollapsed || !choosePlace.hasRooms">
     <form class="chooseExistingPlaceForm" onsubmit="$('#next-button').click()">
       <h5 translate="addDeviceWizard.chooseSharedSpace.existingPlace"></h5>
       <p translate="addDeviceWizard.chooseSharedSpace.existingPlaceInstructions"></p>
       <div>
         <input type="text"
                ng-model="choosePlace.selected"
-               typeahead="room for room in choosePlace.rooms() | filter:$viewValue | limitTo:6"
+               typeahead="room for room in choosePlace.rooms | filter:$viewValue | limitTo:6"
                typeahead-template-url="placeTemplate.html"
                typeahead-on-select="choosePlace.selectPlace($item)"
                placeholder="{{'addDeviceWizard.chooseSharedSpace.selectPlace' | translate}}"
@@ -57,10 +61,9 @@
 
   <div class="createNewPlace" ng-hide="choosePlace.isNewCollapsed">
     <form name="placeForm" class="createNewPlaceForm" onsubmit="$('#next-button').click()">
-      <h5 ng-hide="choosePlace.onlyNew()" translate="addDeviceWizard.chooseSharedSpace.newPlace"></h5>
-      <h5 ng-show="choosePlace.onlyNew()" translate="addDeviceWizard.chooseSharedSpace.deviceInstalled"></h5>
-      <p ng-hide="choosePlace.onlyNew()" translate="addDeviceWizard.chooseSharedSpace.newPlaceInstructions"></p>
-      <p ng-show="choosePlace.onlyNew()" translate="addDeviceWizard.chooseSharedSpace.deviceInstalledInstructions"></p>
+      <h5 ng-show="choosePlace.wizardData.showPlaces" translate="addDeviceWizard.chooseSharedSpace.newPlace"></h5>
+      <h5 ng-hide="choosePlace.wizardData.showPlaces" translate="addDeviceWizard.chooseSharedSpace.deviceInstalled"></h5>
+      <p>{{ choosePlace.localizedCreateInstructions() }}</p>
       <div class="newPlaceSpacing" ng-show="choosePlace.onlyNew()"></div>
       <div class="cs-input-group" ng-class="{'error': placeForm.newPlace.$invalid && placeForm.newPlace.$touched}">
         <input

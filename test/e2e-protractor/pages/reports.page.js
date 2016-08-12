@@ -78,8 +78,18 @@ var ReportsPage = function () {
 
   // Task Incoming
   this.taskIncomingHeader = element(by.cssContainingText('.report-section-header', 'Tasks Incoming'));
-  this.taskIncomingDescription = element(by.css('.care-card-report')).element(by.css('.report-description'));
+  this.taskIncomingDescription = element(by.cssContainingText('.report-description', 'incoming tasks'));
   this.taskIncomingGraph = element(by.id('taskIncomingdiv'));
+
+  // Task Time
+  this.taskTimeHeader = element(by.cssContainingText('.report-section-header', 'Task Time'));
+  this.taskTimeDescription = element(by.cssContainingText('.report-description', 'time duration'));
+  this.taskTimeGraph = element(by.id('taskTimeDiv'));
+
+  // Average CSAT
+  this.averageCsatHeader = element(by.cssContainingText('.report-section-header', 'Average CSAT'));
+  this.averageCsatDescription = element(by.cssContainingText('.report-description', 'average CSAT'));
+  this.averageCsatGraph = element(by.id('averageCsatDiv'));
 
   this.showHideActiveVisibility = function (show, hide, partner) {
     if (partner) {

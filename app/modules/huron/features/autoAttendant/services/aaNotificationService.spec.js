@@ -1,13 +1,10 @@
 'use strict';
 
 describe('Service: AANotificationService', function () {
-  var AANotificationService, Notification, $translate;
+  var AANotificationService, Notification;
   var key = 'CES0005';
   var trackingId = 'ATLAS_09d583dc-e55a-2574-7862-ff14fe6b9aed_2';
   var description = 'No Database Entries found for the specified criteria';
-  var description = {
-    description: description
-  };
   var error = {
     key: key,
     message: [description],
@@ -30,9 +27,8 @@ describe('Service: AANotificationService', function () {
   beforeEach(angular.mock.module('uc.autoattendant'));
   beforeEach(angular.mock.module('Huron'));
 
-  beforeEach(inject(function (_AANotificationService_, _Notification_, _$translate_) {
+  beforeEach(inject(function (_AANotificationService_, _Notification_) {
     AANotificationService = _AANotificationService_;
-    $translate = _$translate_;
     Notification = _Notification_;
 
     spyOn(Notification, 'notify');

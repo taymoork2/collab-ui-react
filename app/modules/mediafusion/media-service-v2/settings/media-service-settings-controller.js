@@ -18,9 +18,11 @@
       vm.featureToggled = reply;
     });
 
-    vm.disableMediaService = function (serviceId) {
+    vm.disableMediaService = function () {
       MediaServiceActivationV2.setServiceEnabled(vm.serviceId, false).then(
         function success() {
+          MediaServiceActivationV2.setisMediaServiceEnabled(false);
+          MediaServiceActivationV2.setServiceAcknowledged(vm.serviceId, false);
           vm.disableOrpheusForMediaFusion();
           if (vm.featureToggled) {
             $state.go('services-overview');
@@ -32,7 +34,7 @@
             });
           }
         },
-        function error(data, status) {
+        function error() {
           XhrNotificationService.notify(error);
         });
     };
@@ -49,14 +51,11 @@
     };
 
     vm.disableOrpheusForMediaFusion = function () {
-      //$log.log("Entered disableOrpheusForMediaFusion");
       MediaServiceActivationV2.getUserIdentityOrgToMediaAgentOrgMapping().then(
         function success(response) {
           var mediaAgentOrgIdsArray = [];
           var orgId = Authinfo.getOrgId();
-          var updateMediaAgentOrgId = false;
           mediaAgentOrgIdsArray = response.data.mediaAgentOrgIds;
-          //$log.log("Media Agent Org Ids Array:", mediaAgentOrgIdsArray);
 
           var index = mediaAgentOrgIdsArray.indexOf(orgId);
           mediaAgentOrgIdsArray.splice(index, 1);
@@ -65,18 +64,17 @@
           mediaAgentOrgIdsArray.splice(index, 1);
 
           if (mediaAgentOrgIdsArray.length > 0) {
-            //$log.log("Updated Media Agent Org Ids Array:", mediaAgentOrgIdsArray);
             MediaServiceActivationV2.setUserIdentityOrgToMediaAgentOrgMapping(mediaAgentOrgIdsArray).then(
-              function success(response) {},
-              function error(errorResponse, status) {
+              function success() {},
+              function error(errorResponse) {
                 Notification.error('mediaFusion.mediaAgentOrgMappingFailure', {
                   failureMessage: errorResponse.message
                 });
               });
           } else {
             MediaServiceActivationV2.deleteUserIdentityOrgToMediaAgentOrgMapping(mediaAgentOrgIdsArray).then(
-              function success(response) {},
-              function error(errorResponse, status) {
+              function success() {},
+              function error(errorResponse) {
                 Notification.error('mediaFusion.mediaAgentOrgMappingFailure', {
                   failureMessage: errorResponse.message
                 });

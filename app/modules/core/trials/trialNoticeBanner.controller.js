@@ -85,9 +85,9 @@
       var partnerEmail = _.map(vm.partnerAdmin, function (admin) {
         return EmailService.emailNotifyPartnerTrialConversionRequest(
           customerName, customerEmail, admin.userName, webexSiteUrl).catch(function (err) {
-          err.userName = admin.userName;
-          return err;
-        });
+            err.userName = admin.userName;
+            return err;
+          });
       });
       return $q.all(partnerEmail);
     }

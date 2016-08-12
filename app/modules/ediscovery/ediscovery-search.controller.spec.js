@@ -243,15 +243,12 @@ describe('Controller: EdiscoverySearchController', function () {
 
   describe('entering controller with stateParams', function () {
 
-    var $stateParams;
-
-    beforeEach(inject(function (_$stateParams_, _$translate_, _EdiscoveryService_, _$q_, _$rootScope_, _$controller_) {
+    beforeEach(inject(function (_$translate_, _EdiscoveryService_, _$q_, _$rootScope_, _$controller_) {
       $scope = _$rootScope_.$new();
       $controller = _$controller_;
       EdiscoveryService = _EdiscoveryService_;
       $translate = _$translate_;
       $q = _$q_;
-      $stateParams = _$stateParams_;
     }));
 
     it('inits a rerun using stateParams content', function () {

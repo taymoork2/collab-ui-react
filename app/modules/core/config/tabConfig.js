@@ -110,7 +110,15 @@
       title: 'tabs.incidentsTab',
       state: 'incidents',
       link: '/incidents'
-    }];
+  }, {
+      tab: 'statusTab',
+      icon: 'icon-alerting',
+      title: 'tabs.statusTab',
+      desc: 'tabs.statusTabDesc',
+      feature: 'global-status',
+      state: 'status',
+      link: '/status'
+  }];
 
   module.exports = angular
     .module('core.tabconfig', [])

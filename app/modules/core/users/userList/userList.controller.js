@@ -6,7 +6,7 @@
     .controller('UserListCtrl', UserListCtrl);
 
   /* @ngInject */
-  function UserListCtrl($q, $rootScope, $scope, $state, $templateCache, $timeout, $translate, Authinfo, Config, FeatureToggleService, Log, LogMetricsService, Notification, Orgservice, Userservice, UserListService, Utils) {
+  function UserListCtrl($q, $rootScope, $scope, $state, $templateCache, $timeout, $translate, Authinfo, Config, FeatureToggleService, Log, LogMetricsService, Notification, Orgservice, Userservice, UserListService, Utils, CsvDownloadService) {
     // variables to prevent userlist 'bounce' after all users/admins have been loaded
     var endOfAdminList = false;
     var endOfUserList = false;
@@ -57,7 +57,7 @@
     $scope.isCSB = Authinfo.isCSB();
 
     $scope.exportType = $rootScope.typeOfExport.USER;
-    $scope.USER_EXPORT_THRESHOLD = 10000;
+    $scope.userExportThreshold = CsvDownloadService.userExportThreshold;
     $scope.totalUsers = 0;
     $scope.isCsvEnhancementToggled = false;
     $scope.obtainedTotalUserCount = false;
@@ -84,6 +84,8 @@
     $scope.isNotDirSyncOrException = false;
 
     $scope.getUserList = getUserList;
+    $scope.onManageUsers = onManageUsers;
+    $scope.sortDirection = sortDirection;
 
     var promises = {
       csvEnhancement: FeatureToggleService.atlasCsvEnhancementGetStatus(),
@@ -95,9 +97,9 @@
       $scope.isEmailStatusToggled = results.atlasEmailStatus;
     }).finally(init);
 
-    ////////////////
-
     configureGrid();
+
+    ////////////////
 
     function init() {
       checkOrg();
@@ -176,7 +178,7 @@
 
     function getAdmins(startIndex) {
       //get the admin users
-      UserListService.listUsers(startIndex, Config.usersperpage, $scope.sort.by, $scope.sort.order, function (data, status, searchStr) {
+      UserListService.listUsers(startIndex, Config.usersperpage, $scope.sort.by, $scope.sort.order, function (data, status) {
         if (data.success) {
           $timeout(function () {
             $scope.load = true;
@@ -273,12 +275,12 @@
 
           if (!$scope.obtainedTotalUserCount) {
             if (Authinfo.isCisco()) { // allow Cisco org (even > 10K) to export new CSV format
-              $scope.totalUsers = $scope.USER_EXPORT_THRESHOLD;
+              $scope.totalUsers = $scope.userExportThreshold;
               $scope.obtainedTotalUserCount = true;
             } else {
               UserListService.getUserCount().then(function (count) {
                 if (_.isNull(count) || _.isNaN(count) || count === -1) {
-                  count = $scope.USER_EXPORT_THRESHOLD + 1;
+                  count = $scope.userExportThreshold + 1;
                 }
                 $scope.totalUsers = count;
                 $scope.obtainedTotalUserCount = true;
@@ -289,7 +291,7 @@
     }
 
     function getPartners() {
-      UserListService.listPartners(Authinfo.getOrgId(), function (data, status, searchStr) {
+      UserListService.listPartners(Authinfo.getOrgId(), function (data, status) {
         if (data.success) {
           $timeout(function () {
             $scope.load = true;
@@ -464,10 +466,11 @@
             if ($scope.load) {
               $scope.currentDataPosition++;
               $scope.load = false;
-              getUserList($scope.currentDataPosition * Config.usersperpage + 1);
+              getUserList(($scope.currentDataPosition * Config.usersperpage) + 1);
               $scope.gridApi.infiniteScroll.dataLoaded();
             }
           });
+          gridApi.core.on.sortChanged($scope, sortDirection);
         },
         columnDefs: [{
           field: 'photos',
@@ -477,22 +480,27 @@
           width: 70
         }, {
           field: 'name.givenName',
+          id: 'givenName',
           displayName: $translate.instant('usersPage.firstnameHeader'),
           sortable: true
         }, {
           field: 'name.familyName',
+          id: 'familyName',
           displayName: $translate.instant('usersPage.lastnameHeader'),
           sortable: true
         }, {
           field: 'displayName',
+          id: 'displayName',
           displayName: $translate.instant('usersPage.displayNameHeader'),
           sortable: true
         }, {
           field: 'userName',
+          id: 'userName',
           displayName: $translate.instant('usersPage.emailHeader'),
           sortable: true
         }, {
           field: 'userStatus',
+          id: 'userStatus',
           cellFilter: 'userListFilter',
           sortable: false,
           cellTemplate: getTemplate('status.tpl'),
@@ -525,12 +533,35 @@
       return _.eq(_.get(row, 'entity.id'), _.get($scope.gridData, '[0].id')) || _.eq(_.get(row, 'entity.id'), _.get($scope.gridData, '[1].id'));
     }
 
-    function startExportUserList() {
-      if ($scope.totalUsers > $scope.USER_EXPORT_THRESHOLD) {
-        $scope.$emit('csv-download-request', 'user', true);
-      } else {
-        $scope.$emit('csv-download-request', 'user');
+    function sortDirection(scope, sortColumns) {
+      if (_.isUndefined(_.get(sortColumns, '[0]'))) {
+        return;
       }
+
+      if ($scope.load) {
+        $scope.load = false;
+        var sortBy = sortColumns[0].colDef.id;
+        var sortOrder = sortColumns[0].sort.direction === 'asc' ? 'ascending' : 'descending';
+        if ($scope.sort.by !== sortBy || $scope.sort.order !== sortOrder) {
+          $scope.sort.by = sortBy;
+          $scope.sort.order = sortOrder.toLowerCase();
+        }
+        getUserList();
+      }
+    }
+
+    function startExportUserList() {
+      var options = {
+        csvType: CsvDownloadService.typeUser,
+        tooManyUsers: ($scope.totalUsers > $scope.userExportThreshold)
+      };
+      $scope.$emit('csv-download-request', options);
+    }
+
+    function onManageUsers() {
+      $state.go('users.manage', {
+        isOverExportThreshold: ($scope.totalUsers > $scope.userExportThreshold)
+      });
     }
 
     // TODO: If using states should be be able to trigger this log elsewhere?

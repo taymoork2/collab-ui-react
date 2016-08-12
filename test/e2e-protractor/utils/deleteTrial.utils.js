@@ -34,7 +34,6 @@ var utils = require('./test.utils.js');
 
 function getBlackListOrgs() {
   var auth = helper.auth,
-    i,
     ret = {};
 
   _.forOwn(auth, function (value) {
@@ -70,7 +69,7 @@ exports.deleteOrg = function (orgId, token) {
     utils.sendRequest(options).then(function () {
       // console.log('org deleted successfully: ', orgId);
       defer.fulfill(200);
-    }, function (data) {
+    }, function () {
       // console.log('org deletion failed: ', orgId, data);
       defer.fulfill(200);
     });

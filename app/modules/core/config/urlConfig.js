@@ -126,19 +126,19 @@
       dev: 'https://config.dev.ciscoccservice.com/config/v1',
       cfe: 'https://config.appstaging.ciscoccservice.com/config/v1',
       integration: 'https://config.appstaging.ciscoccservice.com/config/v1',
-      prod: 'https://config.rciad.ciscoccservice.com/config/v1'
+      prod: 'https://config.produs1.ciscoccservice.com/config/v1'
     },
     SunlightBubbleUrl: {
       dev: 'https://bubble.dev.ciscoccservice.com',
       cfe: 'https://bubble.appstaging.ciscoccservice.com',
       integration: 'https://bubble.appstaging.ciscoccservice.com',
-      prod: 'https://bubble.rciad.ciscoccservice.com'
+      prod: 'https://bubble.produs1.ciscoccservice.com'
     },
     SunlightReportServiceUrl: {
       dev: 'https://reporting.dev.ciscoccservice.com/reporting/v1',
       cfe: 'https://reporting.appstaging.ciscoccservice.com/reporting/v1',
       integration: 'https://reporting.appstaging.ciscoccservice.com/reporting/v1',
-      prod: 'https://reporting.rciad.ciscoccservice.com/reporting/v1'
+      prod: 'https://reporting.produs1.ciscoccservice.com/reporting/v1'
     },
     CalliopeUrl: {
       dev: 'https://calliope-integration.wbx2.com/calliope/api/authorization/v1',

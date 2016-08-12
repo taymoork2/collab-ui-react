@@ -77,7 +77,6 @@
       var values = _.range(0, 24).map(function (time) {
         return _.padLeft(time, 2, '0') + ':00';
       });
-      var labels = angular.copy(values);
       return _.map(values, function (value) {
         return {
           label: labelForTime(value),
@@ -136,10 +135,10 @@
     function patch(data) {
       vm.state = 'syncing';
       return ScheduleUpgradeService.patch(Authinfo.getOrgId(), vm.connectorType, {
-          scheduleTime: data.scheduleTime.value,
-          scheduleTimeZone: data.scheduleTimeZone.value,
-          scheduleDay: data.scheduleDay.value
-        })
+        scheduleTime: data.scheduleTime.value,
+        scheduleTimeZone: data.scheduleTimeZone.value,
+        scheduleDay: data.scheduleDay.value
+      })
         .then(function (data) {
           $rootScope.$broadcast('ACK_SCHEDULE_UPGRADE');
           vm.isAdminAcknowledged = true;

@@ -54,6 +54,10 @@ eg. `npm start -- --noopen` passes the `--noopen` argument to our `start` task
 
 * Combines the unit test istanbul coverage results
 
+### `npm run commit`
+
+* Starts a wizard to write a proper [git commit message](https://github.com/angular/angular.js/blob/master/CONTRIBUTING.md#commit)
+
 ### `npm run e2e`
 
 * Runs protractor against production services and jenkins suite
@@ -62,15 +66,6 @@ eg. `npm start -- --noopen` passes the `--noopen` argument to our `start` task
 ### `npm run eslint`
 
 * Run eslint on entire project
-
-### `npm run jsb`
-
-* Run `js-beautify` on the app
-
-### `npm run jsb-verify`
-
-* Run `js-beautify` on the app without modification
-* Errors on unbeautified files
 
 ### `npm run json-verify`
 

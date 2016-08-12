@@ -4,9 +4,9 @@ describe('Controller: DeleteClusterSettingControllerV2', function () {
 
   beforeEach(angular.mock.module('Mediafusion'));
 
-  var vm, $q, httpBackend, deferred, controller, cluster, redirectTargetPromise, redirectTargetPromise1, $log, $modalInstance, $filter, MediaClusterServiceV2, $state, $translate, XhrNotificationService, Notification;
+  var $q, httpBackend, controller, cluster, $modalInstance, $filter, MediaClusterServiceV2, $state, $translate, XhrNotificationService, Notification;
 
-  beforeEach(inject(function ($httpBackend, _MediaClusterServiceV2_, $controller, _$log_, _$filter_, _$state_, _$translate_, _XhrNotificationService_, _Notification_, _$q_) {
+  beforeEach(inject(function ($httpBackend, _MediaClusterServiceV2_, $controller, _$filter_, _$state_, _$translate_, _XhrNotificationService_, _Notification_, _$q_) {
     cluster = {
       "id": "a050fcc7-9ade-4790-a06d-cca596910421",
       "name": "MFA_TEST1",
@@ -22,14 +22,10 @@ describe('Controller: DeleteClusterSettingControllerV2', function () {
       }],
       "releaseChannel": "DEV"
     };
-    $log = _$log_;
     $modalInstance = {
       close: sinon.stub()
     };
     $filter = _$filter_;
-    redirectTargetPromise = {
-      then: sinon.stub()
-    };
     /*
         MediaClusterServiceV2 = {
           get: sinon.stub().returns(redirectTargetPromise),
@@ -55,7 +51,6 @@ describe('Controller: DeleteClusterSettingControllerV2', function () {
     });
     controller = $controller('DeleteClusterSettingControllerV2', {
       cluster: cluster,
-      $log: $log,
       $modalInstance: $modalInstance,
       $filter: $filter,
       MediaClusterServiceV2: MediaClusterServiceV2,

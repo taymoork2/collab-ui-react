@@ -2,8 +2,8 @@
   'use strict';
 
   module.exports = angular.module('core.previousstate', [
-      'ui.router',
-    ]).factory('PreviousState', PreviousState)
+    'ui.router',
+  ]).factory('PreviousState', PreviousState)
     .name;
 
   /* @ngInject */

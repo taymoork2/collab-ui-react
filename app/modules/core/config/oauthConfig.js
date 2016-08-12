@@ -20,7 +20,6 @@
       'Identity:Organization',
       'cloudMeetings:login',
       'webex-messenger:get_webextoken',
-      'ccc_config:admin',
       'cloud-contact-center:admin',
       'compliance:spark_conversations_read',
       'contact-center-context:pod_read',
@@ -61,10 +60,12 @@
 
     return {
       getLogoutUrl: getLogoutUrl,
+      getClientId: getClientId,
       getOauthLoginUrl: getOauthLoginUrl,
+      getOauthListTokenUrl: getOauthListTokenUrl,
       getAccessTokenUrl: getAccessTokenUrl,
       getOauthAccessCodeUrl: getOauthAccessCodeUrl,
-      getOauthDeleteTokenUrl: getOauthDeleteTokenUrl,
+      getOauthDeleteRefreshTokenUrl: getOauthDeleteRefreshTokenUrl,
       getAccessTokenPostData: getAccessTokenPostData,
       getNewAccessTokenPostData: getNewAccessTokenPostData,
       getOAuthClientRegistrationCredentials: getOAuthClientRegistrationCredentials,
@@ -81,8 +82,8 @@
       return getOauth2Url() + 'access_token';
     }
 
-    function getOauthDeleteTokenUrl() {
-      return 'https://idbroker.webex.com/idb/oauth2/v1/revoke';
+    function getOauthDeleteRefreshTokenUrl() {
+      return 'https://idbroker.webex.com/idb/oauth2/v1/tokens/user?refreshtokens=';
     }
 
     function getOAuthClientRegistrationCredentials() {
@@ -109,6 +110,10 @@
       return Utils.sprintf(pattern, params);
     }
 
+    function getOauthListTokenUrl() {
+      return 'https://idbroker.webex.com/idb/oauth2/v1/tokens/user/';
+    }
+
     function getOauthAccessCodeUrl(refresh_token) {
       var params = [
         refresh_token,
@@ -124,6 +129,16 @@
 
     function getAccessTokenPostData() {
       return config.oauthUrl.oauth2ClientUrlPattern + oauth2Scope;
+    }
+
+    function getClientId() {
+      var clientId = {
+        'cfe': config.oauthClientRegistration.cfe.id,
+        'dev': config.oauthClientRegistration.atlas.id,
+        'prod': config.oauthClientRegistration.atlas.id,
+        'integration': config.oauthClientRegistration.atlas.id,
+      };
+      return clientId[Config.getEnv()];
     }
 
     // private
@@ -153,16 +168,6 @@
         'integration': config.oauthClientRegistration.atlas.secret,
       };
       return clientSecret[Config.getEnv()];
-    }
-
-    function getClientId() {
-      var clientId = {
-        'cfe': config.oauthClientRegistration.cfe.id,
-        'dev': config.oauthClientRegistration.atlas.id,
-        'prod': config.oauthClientRegistration.atlas.id,
-        'integration': config.oauthClientRegistration.atlas.id,
-      };
-      return clientId[Config.getEnv()];
     }
 
     function getOauth2Url() {

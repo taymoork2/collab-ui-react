@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Controller: HuronFeatureAADependsCtrl', function () {
-  var controller, createController;
+  var createController;
   var $rootScope, $scope, $stateParams;
 
   beforeEach(angular.mock.module('uc.autoattendant'));

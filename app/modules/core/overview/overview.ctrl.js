@@ -6,7 +6,7 @@
     .controller('OverviewCtrl', OverviewCtrl);
 
   /* @ngInject */
-  function OverviewCtrl($rootScope, $scope, $translate, Authinfo, Config, FeatureToggleService, Log, Notification, Orgservice, OverviewCardFactory, OverviewNotificationFactory, ReportsService, ServiceDescriptor, TrialService, UrlConfig) {
+  function OverviewCtrl($rootScope, $scope, $translate, Authinfo, Config, FeatureToggleService, Log, Notification, Orgservice, OverviewCardFactory, OverviewNotificationFactory, ReportsService, TrialService, UrlConfig) {
     var vm = this;
 
     vm.pageTitle = $translate.instant('overview.pageTitle');
@@ -23,6 +23,15 @@
     vm.trialDaysLeft = undefined;
     vm.dismissNotification = dismissNotification;
 
+    vm.hasMediaFeatureToggle = false;
+
+    function isFeatureToggled() {
+      return FeatureToggleService.supports(FeatureToggleService.features.atlasMediaServiceOnboarding);
+    }
+    isFeatureToggled().then(function (reply) {
+      vm.hasMediaFeatureToggle = reply;
+    });
+
     function init() {
       removeCardUserTitle();
       if (!Authinfo.isSetupDone() && Authinfo.isCustomerAdmin()) {
@@ -38,6 +47,8 @@
                 vm.notifications.push(OverviewNotificationFactory.createCallAwareNotification());
               } else if (item.id === Config.entitlements.fusion_ec) {
                 vm.notifications.push(OverviewNotificationFactory.createCallConnectNotification());
+              } else if (item.id === Config.entitlements.mediafusion && vm.hasMediaFeatureToggle) {
+                vm.notifications.push(OverviewNotificationFactory.createHybridMediaNotification());
               }
             }
           });
@@ -74,12 +85,17 @@
                   });
                 });
               });
-              if (sharedDevicesUsage === 0 && sparkBoardsUsage === 0) {
-                vm.notifications.push(OverviewNotificationFactory.createDevicesNotification('homePage.setUpDevices'));
-              } else if (sparkBoardsUsage === 0) {
-                vm.notifications.push(OverviewNotificationFactory.createDevicesNotification('homePage.setUpSparkBoardDevices'));
-              } else if (sharedDevicesUsage === 0) {
-                vm.notifications.push(OverviewNotificationFactory.createDevicesNotification('homePage.setUpSharedDevices'));
+              if (sharedDevicesUsage === 0 || sparkBoardsUsage === 0) {
+                setRoomSystemEnabledDevice(true);
+                if (sharedDevicesUsage === 0 && sparkBoardsUsage === 0) {
+                  vm.notifications.push(OverviewNotificationFactory.createDevicesNotification('homePage.setUpDevices'));
+                } else if (sparkBoardsUsage === 0) {
+                  vm.notifications.push(OverviewNotificationFactory.createDevicesNotification('homePage.setUpSparkBoardDevices'));
+                } else {
+                  vm.notifications.push(OverviewNotificationFactory.createDevicesNotification('homePage.setUpSharedDevices'));
+                }
+              } else {
+                setRoomSystemEnabledDevice(false);
               }
             });
         }
@@ -95,6 +111,12 @@
           name: 'overview.cards.users.title'
         });
       }
+    }
+
+    function setRoomSystemEnabledDevice(isDeviceEnabled) {
+      (_.find(vm.cards, function (card) {
+        return card.name === 'overview.cards.roomSystem.title';
+      })).isDeviceEnabled = isDeviceEnabled;
     }
 
     function dismissNotification(notification) {
@@ -128,8 +150,6 @@
     Orgservice.getUnlicensedUsers(_.partial(forwardEvent, 'unlicensedUsersHandler'));
 
     ReportsService.healthMonitor(_.partial(forwardEvent, 'healthStatusUpdatedHandler'));
-
-    ServiceDescriptor.services(_.partial(forwardEvent, 'hybridStatusEventHandler'), true);
 
     init();
 

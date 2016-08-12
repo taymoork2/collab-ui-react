@@ -17,8 +17,8 @@
     function postpone() {
       vm.state = 'sending';
       ScheduleUpgradeService.patch(Authinfo.getOrgId(), connectorType, {
-          postponed: true
-        })
+        postponed: true
+      })
         .then(function (data) {
           vm.state = 'idle';
           $modalInstance.close(data);

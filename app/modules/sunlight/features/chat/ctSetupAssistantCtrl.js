@@ -153,8 +153,10 @@
     /* Template */
     vm.template = {
       name: '',
+      //TODO: Remove mediaType here once the Sunlight API changes are pushed to production
       mediaType: 'chat',
       configuration: {
+        mediaType: 'chat',
         mediaSpecificConfiguration: {
           useOrgProfile: true,
           displayText: vm.orgName,
@@ -190,7 +192,7 @@
                 }, {
                   name: 'type',
                   value: vm.getTypeObject('name'),
-                  categoryOptions: []
+                  categoryOptions: ''
                 }]
               },
 
@@ -210,7 +212,7 @@
                 }, {
                   name: 'type',
                   value: vm.getTypeObject('email'),
-                  categoryOptions: []
+                  categoryOptions: ''
                 }]
               },
 
@@ -230,7 +232,7 @@
                 }, {
                   name: 'type',
                   value: vm.getTypeObject('category'),
-                  categoryOptions: []
+                  categoryOptions: ''
                 }]
               }
             }
@@ -330,11 +332,11 @@
 
     function evalKeyPress(keyCode) {
       switch (keyCode) {
-      case vm.escapeKey:
-        cancelModal();
-        break;
-      default:
-        break;
+        case vm.escapeKey:
+          cancelModal();
+          break;
+        default:
+          break;
       }
     }
 
@@ -368,18 +370,18 @@
 
     function nextButton() {
       switch (vm.currentState) {
-      case 'name':
-        return isNamePageValid();
-      case 'profile':
-        return isProfilePageValid();
-      case 'agentUnavailable':
-        return isAgentUnavailablePageValid();
-      case 'offHours':
-        return isOffHoursPageValid();
-      case 'summary':
-        return 'hidden';
-      default:
-        return true;
+        case 'name':
+          return isNamePageValid();
+        case 'profile':
+          return isProfilePageValid();
+        case 'agentUnavailable':
+          return isAgentUnavailablePageValid();
+        case 'offHours':
+          return isOffHoursPageValid();
+        case 'summary':
+          return 'hidden';
+        default:
+          return true;
       }
     }
 
