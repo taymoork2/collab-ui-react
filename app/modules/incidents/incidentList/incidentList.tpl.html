@@ -12,11 +12,11 @@
 	      	<h2 style="float:left;">Incidents</h2>
 	        <input style="float:right;" class="btn btn--primary" type="button" value="+ NEW INCIDENT" ng-click="shc.toCreatePage()">
       	</div>
-        <div ng-if="!showList">
+        <div ng-if="!showList" style="border:1px dashed gray;padding:20px;">
 	        <div>
 	        	<span>Looks like you've got a clean record</span>
 	        	<br/>
-	        	<span>When you have downtime: </span><a href="#">Create your first incident</a>
+	        	<span>When you have downtime: </span><a href="#/createIncident">Create your first incident</a>
 	        </div>
         </div>
         <div ng-if="showList" ng-repeat="incident in shc.incidentList">
@@ -33,7 +33,7 @@
                 <a href="#" style="margin-right:20px;">Delete</a>
               </div>
             </div>
-            <div style="float:left;clear:both;height:20px;"><span ng-if="incident.status!='resolved'">Last updated on </span><span ng-if="incident.status=='resolved'">Resolved on </span>{{incident.lastModifiedTime}}
+            <div style="float:left;clear:both;height:20px;"><span ng-if="incident.status!='resolved'">Last updated on </span><span ng-if="incident.status=='resolved'">Resolved on </span>{{incident.lastModifiedTime | date: 'medium'}}
             </div>
             <div style="clear:both;"></div>
           </div>

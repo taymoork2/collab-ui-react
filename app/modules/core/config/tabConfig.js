@@ -8,6 +8,12 @@
     state: 'overview',
     link: '/overview'
   }, {
+    tab: 'incidentsTab',
+    icon: 'icon-user',
+    title: 'tabs.incidentsTab',
+    state: 'incidents',
+    link: '/incidents'
+  }, {
     tab: 'overviewTab',
     icon: 'icon-home',
     title: 'tabs.overviewTab',
@@ -104,12 +110,6 @@
       state: 'media-service-v2',
       link: '#mediaserviceV2'
     }]
-  }, {
-    tab: 'incidentsTab',
-    icon: 'icon-user',
-    title: 'tabs.incidentsTab',
-    state: 'incidents',
-    link: '/incidents'
   }, {
     tab: 'statusTab',
     icon: 'icon-alerting',
