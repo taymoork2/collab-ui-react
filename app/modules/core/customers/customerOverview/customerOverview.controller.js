@@ -19,7 +19,7 @@
     vm.openEditTrialModal = openEditTrialModal;
     vm.getDaysLeft = getDaysLeft;
     vm.isSquaredUC = isSquaredUC();
-    vm.isSetupDone = isSetupDone;
+    vm.getIsSetupDone = getIsSetupDone;
     vm.isOwnOrg = isOwnOrg;
     vm.deleteTestOrg = deleteTestOrg;
 
@@ -80,10 +80,7 @@
       initCustomer();
       getLogoSettings();
       getIsTestOrg();
-      isSetupDone()
-        .then(function (results) {
-          vm.isOrgSetup = results;
-        });
+      getIsSetupDone();
     }
 
     function resetForm() {
@@ -172,14 +169,13 @@
       return false;
     }
 
-    function isSetupDone() {
-      return Orgservice.isSetupDone(vm.customerOrgId)
+    function getIsSetupDone() {
+      Orgservice.isSetupDone(vm.customerOrgId)
+        .then(function (results) {
+          vm.isOrgSetup = results;
+        })
         .catch(function (error) {
-          Notification.error('customerPage.isSetupDoneError', {
-            orgName: vm.customerName,
-            message: error.data.message
-          });
-          return false;
+          Log.error('Query customer org isSetupDone failed. Message: ' + error.data.message);
         });
     }
 
