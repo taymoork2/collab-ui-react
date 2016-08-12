@@ -27,6 +27,8 @@
     "mime": "github:DefinitelyTyped/DefinitelyTyped/mime/mime.d.ts#46719185c564694c5583c4b7ad94dbb786ecad46",
     "selenium-webdriver": "github:DefinitelyTyped/DefinitelyTyped/selenium-webdriver/selenium-webdriver.d.ts#001ca36ba58cef903c4c063555afb07bbc36bb58",
     "serve-static": "github:DefinitelyTyped/DefinitelyTyped/serve-static/serve-static.d.ts#46719185c564694c5583c4b7ad94dbb786ecad46",
-    "sinon": "github:DefinitelyTyped/DefinitelyTyped/sinon/sinon.d.ts#3030a4be536b6530c06b80081f1333dc0de4d703"
+    "sinon": "github:DefinitelyTyped/DefinitelyTyped/sinon/sinon.d.ts#3030a4be536b6530c06b80081f1333dc0de4d703",
+
+    "bmmp": "file:app/modules/core/myCompany/mySubscriptions/bmmp-index.d.ts"
   }
 }

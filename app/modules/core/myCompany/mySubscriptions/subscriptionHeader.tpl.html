@@ -1,3 +1,8 @@
 <div class="subscription-subheader">
-  <a ng-if="subscriptionHeader.isOnline" ng-href="{{::subscriptionHeader.upgradeUrl}}" class="btn btn--primary" translate="subscriptions.upgrade"></a>
+  <a ng-if="subscriptionHeader.upgradeUrl && subscriptionHeader.isOnline && !subscriptionHeader.isTrial" ng-href="{{::subscriptionHeader.upgradeUrl}}" class="btn btn--primary" translate="subscriptions.changePlan"></a>
+  <div class="subscription-bmmp" ng-if="subscriptionHeader.subId && subscriptionHeader.isOnline && !subscriptionHeader.isTrial && false">
+  <!-- TODO: Turn on when BMMP is available through npm and remove the button above -->
+    <span class="cisco-bmmp-cta-widget" data-product-instance-id="{{::subscriptionHeader.subId}}" data-styled="true" data-application-page="all" data-widget-location="navigation-bar"></span>
+  </div>
+  <a ng-if="subscriptionHeader.upgradeTrialUrl && subscriptionHeader.isOnline && subscriptionHeader.isTrial && subscriptionHeader.upgradeTrialUrl" ng-href="{{::subscriptionHeader.upgradeTrialUrl}}" class="btn btn--primary" translate="subscriptions.purchase"></a>
 </div>

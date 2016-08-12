@@ -7,7 +7,7 @@ describe('Controller: OverviewCtrl', function () {
   beforeEach(angular.mock.module('Huron'));
   beforeEach(angular.mock.module('Sunlight'));
 
-  var controller, $rootScope, $scope, $q, $state, $translate, Authinfo, Config, FeatureToggleService, Log, Orgservice, OverviewNotificationFactory, ReportsService, ServiceDescriptor, ServiceStatusDecriptor, TrialService;
+  var controller, $rootScope, $scope, $q, $state, $translate, Authinfo, Config, FeatureToggleService, Log, Orgservice, OverviewNotificationFactory, ReportsService, ServiceDescriptor, ServiceStatusDecriptor, TrialService, FusionClusterService;
   var orgServiceJSONFixture = getJSONFixture('core/json/organizations/Orgservice.json');
   var usageOnlySharedDevicesFixture = getJSONFixture('core/json/organizations/usageOnlySharedDevices.json');
   var services = getJSONFixture('squared/json/services.json');
@@ -62,156 +62,6 @@ describe('Controller: OverviewCtrl', function () {
       });
 
       expect(callCard.healthStatus).toEqual('danger');
-    });
-  });
-
-  describe('HybridCard with hybridStatusEvent', function () {
-    beforeEach(inject(defaultWireUpFunc));
-    it('should update the list of services', function () {
-
-      var hybridCard = getCard('overview.cards.hybrid.title');
-
-      hybridCard.hybridStatusEventHandler('', [{
-        name: 'fake.service',
-        id: 'squared-fusion-cal',
-        enabled: true
-      }]);
-
-      expect(hybridCard.services).toBeDefined();
-      expect(_.any(hybridCard.services, function (service) {
-        return service.name == 'fake.service';
-      })).toBeTruthy();
-    });
-
-    var testService = function (hybridCard, id, expectedHealth) {
-      var serviceInTest = _(hybridCard.services).filter(function (service) {
-        return service.id == id;
-      }).first();
-      expect(serviceInTest).toBeDefined();
-      expect(serviceInTest.healthStatus).toEqual(expectedHealth);
-    };
-
-    it('with service calendar having error should report cal as danger', function () {
-      var hybridCard = getCard('overview.cards.hybrid.title');
-      hybridCard.hybridStatusEventHandler('', [{
-        id: 'squared-fusion-cal',
-        status: 'error',
-        name: 'fake.service.errorstatus',
-        enabled: true
-
-      }]);
-
-      expect(hybridCard.services).toBeDefined();
-      testService(hybridCard, 'squared-fusion-cal', 'danger');
-    });
-
-    it('with uc warning and ec ok should report uc as warning', function () {
-      var hybridCard = getCard('overview.cards.hybrid.title');
-      hybridCard.hybridStatusEventHandler('', [{
-        id: 'squared-fusion-uc',
-        status: 'ok',
-        name: 'fake.service.okstatus',
-        enabled: true
-
-      }, {
-        id: 'squared-fusion-ec',
-        status: 'warn',
-        name: 'fake.service.warnstatus',
-        enabled: true
-
-      }]);
-
-      expect(hybridCard.services).toBeDefined();
-      testService(hybridCard, 'squared-fusion-uc', 'warning');
-    });
-
-    it('with uc warning and ec error should report uc as danger', function () {
-      var hybridCard = getCard('overview.cards.hybrid.title');
-      hybridCard.hybridStatusEventHandler('', [{
-        id: 'squared-fusion-uc',
-        status: 'error',
-        name: 'fake.service.errorstatus',
-        enabled: true
-
-      }, {
-        id: 'squared-fusion-ec',
-        status: 'warn',
-        name: 'fake.service.warnstatus',
-        enabled: true
-
-      }]);
-
-      expect(hybridCard.services).toBeDefined();
-      testService(hybridCard, 'squared-fusion-uc', 'danger');
-    });
-
-    it('with uc ok and ec ok should report uc as success', function () {
-      var hybridCard = getCard('overview.cards.hybrid.title');
-      hybridCard.hybridStatusEventHandler('', [{
-        id: 'squared-fusion-uc',
-        status: 'ok',
-        name: 'fake.service.okstatus',
-        enabled: true
-
-      }, {
-        id: 'squared-fusion-ec',
-        status: 'ok',
-        name: 'fake.service.okec',
-        enabled: true
-
-      }]);
-
-      expect(hybridCard.services).toBeDefined();
-      testService(hybridCard, 'squared-fusion-uc', 'success');
-    });
-
-    it('should set the serviceHealth on each service based on enabled and ack on each service', function () {
-      var hybridCard = getCard('overview.cards.hybrid.title');
-
-      hybridCard.hybridStatusEventHandler('', [{
-        id: 'squared-fusion-mgmt',
-        status: 'ok',
-        enabled: true
-      }, {
-        id: 'squared-fusion-uc',
-        status: 'warn',
-        enabled: true
-      }, {
-        id: 'squared-fusion-cal',
-        enabled: true,
-        name: 'fake noe status'
-      }]);
-
-      expect(hybridCard.services).toBeDefined();
-
-      testService(hybridCard, 'squared-fusion-mgmt', 'success');
-      testService(hybridCard, 'squared-fusion-uc', 'warning');
-      testService(hybridCard, 'squared-fusion-cal', 'warning');
-      //testService('fake.service.errorstatus', 'danger');
-      //testService('fake.service', 'warning');
-
-    });
-  });
-
-  describe('HybridCard', function () {
-    beforeEach(inject(defaultWireUpFunc));
-    it('should update the list of services from an hybridStatusEvent', function () {
-      var hybridCard = getCard('overview.cards.hybrid.title');
-      hybridCard.hybridStatusEventHandler('', [{
-        id: 'squared-fusion-cal',
-        name: 'fake.service',
-        enabled: true,
-        acknowledged: true
-          //status:'ok'  undefined status
-      }]);
-
-      expect(hybridCard.services).toBeDefined();
-      var fakeService = _(hybridCard.services).filter(function (service) {
-        return service.id == 'squared-fusion-cal';
-      }).first();
-      expect(fakeService).toBeDefined();
-      expect(fakeService.healthStatus).toBeDefined();
-      expect(fakeService.healthStatus).toEqual('warning'); //warn when undefined status
     });
   });
 
@@ -277,7 +127,7 @@ describe('Controller: OverviewCtrl', function () {
     }).first();
   }
 
-  function defaultWireUpFunc(_$rootScope_, $controller, _$state_, _$stateParams_, _$q_, _$translate_, _Authinfo_, _Config_, _FeatureToggleService_, _Log_, _Orgservice_, _OverviewNotificationFactory_, _TrialService_) {
+  function defaultWireUpFunc(_$rootScope_, $controller, _$state_, _$stateParams_, _$q_, _$translate_, _Authinfo_, _Config_, _FeatureToggleService_, _Log_, _Orgservice_, _OverviewNotificationFactory_, _TrialService_, _FusionClusterService_) {
     $rootScope = _$rootScope_;
     $scope = $rootScope.$new();
     $q = _$q_;
@@ -289,10 +139,14 @@ describe('Controller: OverviewCtrl', function () {
     Log = _Log_;
     OverviewNotificationFactory = _OverviewNotificationFactory_;
     TrialService = _TrialService_;
+    FusionClusterService = _FusionClusterService_;
 
     FeatureToggleService.features = {
       atlasHybridServicesResourceList: 'atlas-media-service-onboarding'
     };
+
+    spyOn(FusionClusterService, 'getAll');
+    FusionClusterService.getAll.and.returnValue($q.resolve());
 
     ServiceDescriptor = {
       services: function () {}

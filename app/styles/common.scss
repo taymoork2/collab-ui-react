@@ -5,19 +5,73 @@ $ui-icon-font-svg-id: "Cisco_Toolkit_Icons";
 $flagsImagePath: "../images/";
 
 // Core variables and mixins
-@import "~collab-ui/scss/collab-ui/tools/functions/functions.core";
-@import "~collab-ui/scss/collab-ui/config/variables.bootstrap";
-@import "~collab-ui/scss/collab-ui/config/settings.foundation";
-@import "~collab-ui/scss/collab-ui/config/variables.baseline";
-@import "~collab-ui/scss/collab-ui/config/variables.ui";
-@import "~collab-ui/scss/collab-ui/config/variables.colors";
-@import "~collab-ui/scss/collab-ui/tools/mixins/spacing.responsive";
-@import "~collab-ui/scss/collab-ui/tools/mixins/type";
-@import "~collab-ui/scss/collab-ui/tools/mixins/page-layout";
-@import "~collab-ui/scss/collab-ui/tools/mixins/focus";
-@import "~collab-ui/scss/collab-bootstrap/mixins";
-@import "~collab-ui/scss/collab-ui/modules/trumps.spacing.responsive";
-@import "~collab-ui/scss/collab-ui/icons/icons";
+@import "~collab-ui/scss/tools/functions/functions.core";
+@import "~collab-ui/scss/config/variables.bootstrap";
+@import "~collab-ui/scss/config/settings.foundation";
+@import "~collab-ui/scss/config/variables.baseline";
+@import "~collab-ui/scss/config/variables.ui";
+@import "~collab-ui/scss/config/variables.colors";
 
-// // Baseline
-@import "~collab-ui/scss/collab-ui/tools/baseline";
+
+// Core variables and mixins
+@import "~collab-ui/scss/tools/functions/functions.core";
+@import "~collab-ui/scss/config/variables.bootstrap";
+@import "~collab-ui/scss/config/settings.foundation";
+@import "~collab-ui/scss/config/variables.baseline";
+@import "~collab-ui/scss/config/variables.ui";
+@import "~collab-ui/scss/config/variables.colors";
+
+// Utilities
+@import "~collab-ui/scss/tools/mixins/hide-text";
+@import "~collab-ui/scss/tools/mixins/opacity";
+@import "~collab-ui/scss/tools/mixins/image";
+@import "~collab-ui/scss/tools/mixins/labels";
+@import "~collab-ui/scss/tools/mixins/reset-filter";
+@import "~collab-ui/scss/tools/mixins/resize";
+@import "~collab-ui/scss/tools/mixins/responsive-visibility";
+@import "~collab-ui/scss/tools/mixins/size";
+@import "~collab-ui/scss/tools/mixins/tab-focus";
+@import "~collab-ui/scss/tools/mixins/reset-text";
+@import "~collab-ui/scss/tools/mixins/text-emphasis";
+@import "~collab-ui/scss/tools/mixins/text-overflow";
+@import "~collab-ui/scss/tools/mixins/vendor-prefixes";
+
+// Components
+@import "~collab-ui/scss/tools/mixins/alerts";
+@import "~collab-ui/scss/tools/mixins/buttons";
+@import "~collab-ui/scss/tools/mixins/panels";
+@import "~collab-ui/scss/tools/mixins/pagination";
+@import "~collab-ui/scss/tools/mixins/list-group";
+@import "~collab-ui/scss/tools/mixins/nav-divider";
+@import "~collab-ui/scss/tools/mixins/forms";
+@import "~collab-ui/scss/tools/mixins/progress-bar";
+@import "~collab-ui/scss/tools/mixins/table-row";
+
+// Skins
+@import "~collab-ui/scss/tools/mixins/background-variant";
+@import "~collab-ui/scss/tools/mixins/border-radius";
+@import "~collab-ui/scss/tools/mixins/gradients";
+
+// Layout
+@import "~collab-ui/scss/tools/mixins/clearfix";
+@import "~collab-ui/scss/tools/mixins/center-block";
+@import "~collab-ui/scss/tools/mixins/nav-vertical-align";
+@import "~collab-ui/scss/tools/mixins/grid-framework";
+@import "~collab-ui/scss/tools/mixins/grid";
+
+@import "~collab-ui/scss/tools/mixins/spacing.responsive";
+@import "~collab-ui/scss/tools/mixins/type";
+@import "~collab-ui/scss/tools/mixins/page-layout";
+@import "~collab-ui/scss/tools/mixins/focus";
+@import "~collab-ui/scss/tools/mixins/state-colors";
+@import "~collab-ui/scss/tools/mixins/ceaser-easing";
+@import "~collab-ui/scss/tools/mixins/slideout-shadow";
+@import "~collab-ui/scss/tools/mixins/focus";
+@import "~collab-ui/scss/tools/mixins/border-radius";
+@import "~collab-ui/scss/tools/mixins/form-groups-grid";
+@import "~collab-ui/scss/tools/mixins/radio";
+@import "~collab-ui/scss/tools/mixins/checkbox";
+@import "~collab-ui/scss/tools/mixins/buttons";
+
+// Baseline
+@import "~collab-ui/scss/tools/baseline";

@@ -2,10 +2,10 @@
  *      Atlas MediaFusion Style imports
  ************************************/
 
-@import '../media-service/mediaservice';
+@import '../mediaservice';
 @import '../media-service-v2/mediaservice';
 @import '../media-service-v2/add-resources/redirect-add-resource';
-@import '../media-service/metrics-graph-report/media-service-metrics-reports';
 @import '../media-service-v2/settings/settings';
 @import '../media-service-v2/delete-cluster/deletecluster';
 @import '../media-service-v2/side-panel/host-deregister-dialogStyle';
+@import '../metrics-graph-report/media-service-metrics-reports';
