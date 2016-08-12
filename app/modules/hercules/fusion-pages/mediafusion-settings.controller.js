@@ -63,7 +63,7 @@
           });
           vm.cluster = cluster;
           vm.clusters = clusters;
-          vm.selectPlaceholder = vm.cluster.releaseChannel;
+          vm.selectPlaceholder = vm.cluster.releaseChannel.toLocaleUpperCase();
           vm.localizedTitle = $translate.instant('hercules.expresswayClusterSettings.pageTitle', {
             clusterName: cluster.name
           });
