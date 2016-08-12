@@ -29,6 +29,11 @@
     .module('wx2AdminWebClientApp')
     .config(['$httpProvider', '$stateProvider', '$urlRouterProvider', '$translateProvider', '$compileProvider', 'languagesProvider',
       function ($httpProvider, $stateProvider, $urlRouterProvider, $translateProvider, $compileProvider, languagesProvider) {
+        $httpProvider.defaults.headers.common = {};
+        $httpProvider.defaults.headers.post = {};
+        $httpProvider.defaults.headers.put = {};
+        $httpProvider.defaults.headers.patch = {};
+
         var sidepanelMemo = 'sidepanelMemo';
 
         // sidepanel helper
@@ -2707,7 +2712,19 @@
               deleteFeatureId: null,
               deleteFeatureType: null
             }
-          });
+          }).state('incidents', {
+              url: '/incidents',
+              parent: 'main',
+              templateUrl: 'modules/incidents/incidentList/incidentList.tpl.html',
+              controller: 'IncidentListController',
+              controllerAs: 'shc'
+            }).state('createIncident', {
+              url: '/createIncident',
+              parent: 'main',
+              templateUrl: 'modules/incidents/createIncident/createIncident.tpl.html',
+              controller: 'CreateIncidentController',
+              controllerAs: 'cic'
+            });
       }
     ]);
 })();

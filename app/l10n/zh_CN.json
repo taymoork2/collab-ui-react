@@ -266,7 +266,8 @@
     "expresswayManagementServiceTabDesc": "Expressway 管理服务",
     "helpdesk": "帮助台",
     "careTab": "关怀",
-    "careTabDesc": "云联络中心"
+    "careTabDesc": "云联络中心",
+    "incidentsTab": "事件"
   },
   "index": {
     "welcome": "欢迎！",

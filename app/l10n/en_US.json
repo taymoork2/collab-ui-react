@@ -274,7 +274,8 @@
     "alarmsTabDesc": "Alarm Management",
     "eventsTab": "Events",
     "eventsTabDesc": "Event Management",
-    "helpdesk": "Help Desk"
+    "helpdesk": "Help Desk",
+    "incidentsTab": "Incidents"
   },
   "index": {
     "welcome": "Welcome!",

@@ -104,7 +104,13 @@
       state: 'media-service-v2',
       link: '#mediaserviceV2'
     }]
-  }];
+  }, {
+      tab: 'incidentsTab',
+      icon: 'icon-user',
+      title: 'tabs.incidentsTab',
+      state: 'incidents',
+      link: '/incidents'
+    }];
 
   module.exports = angular
     .module('core.tabconfig', [])

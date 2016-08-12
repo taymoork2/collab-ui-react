@@ -54,6 +54,8 @@
 
   angular.module('DigitalRiver', ['Core']);
 
+  angular.module('Incidents', ['Core']);
+
   angular.module('Huron', [
     'Core',
     'uc.moh',
@@ -94,6 +96,7 @@
       'Messenger',
       'Sunlight',
       'oc.lazyLoad',
+      'Incidents',
     ]).run(require('./main.run'))
     .name;
 
