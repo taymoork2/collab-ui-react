@@ -5,14 +5,14 @@ describe('Service: Notification', function () {
 
   function MakePopResponse(title, type, message, timeout) {
     return {
-        title: title,
-        type: type,
-        body: 'bind-unsafe-html',
-        bodyOutputType: 'directive',
-        directiveData: {data: [message]},
-        timeout: timeout,
-        closeHtml: jasmine.any(String)
-      };
+      title: title,
+      type: type,
+      body: 'bind-unsafe-html',
+      bodyOutputType: 'directive',
+      directiveData: { data: [message] },
+      timeout: timeout,
+      closeHtml: jasmine.any(String)
+    };
   }
 
   beforeEach(inject(function (_Notification_, _toaster_, _Authinfo_, _Config_, _$timeout_, _Log_) {
