@@ -156,8 +156,8 @@
                 if (valid) {
                   resolve();
                 } else {
-                  resolve(); // TODO: once back end is fixed to allow for some existing users this shold be changed to reject()
                   // reject();
+                  resolve(); // TODO: once back end is fixed to allow for some existing users this shold be changed to reject()
                 }
               });
             });
