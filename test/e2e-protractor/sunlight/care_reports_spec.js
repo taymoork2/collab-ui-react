@@ -32,7 +32,7 @@ describe('Care Reports', function () {
       reports.clickFilter(reports.timeSelectCare);
     });
 
-    it('should show all reports', function () {
+    it('should show Task Incoming reports', function () {
       // Task Incoming
       utils.expectIsDisplayed(reports.taskIncomingHeader);
       utils.expectIsDisplayed(reports.taskIncomingDescription);
@@ -41,10 +41,23 @@ describe('Care Reports', function () {
 
     });
 
-    it('should be able to change time period', function () {
-      reports.clickFilter(reports.timeSelectCare);
-      utils.click(reports.getOption(reports.timeSelectCare, time[1]));
+    it('should show Average CSAT reports', function () {
+      // Average CSAT
+      utils.expectIsDisplayed(reports.averageCsatHeader);
+      utils.expectIsDisplayed(reports.averageCsatDescription);
+      utils.expectTextToBeSet(reports.averageCsatDescription, lowerTime[0]);
+      utils.expectIsDisplayed(reports.averageCsatGraph);
     });
 
+    it('should show Task Time report when time period is yesterday or older', function () {
+      // Task Time
+      reports.clickFilter(reports.timeSelectCare);
+      utils.click(reports.getOption(reports.timeSelectCare, time[1]));
+
+      utils.expectIsDisplayed(reports.taskTimeHeader);
+      utils.expectIsDisplayed(reports.taskTimeDescription);
+      utils.expectTextToBeSet(reports.taskTimeDescription, lowerTime[1]);
+      utils.expectIsDisplayed(reports.taskTimeGraph);
+    });
   });
 });

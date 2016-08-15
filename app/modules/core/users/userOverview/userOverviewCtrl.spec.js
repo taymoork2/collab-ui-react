@@ -1,23 +1,21 @@
 'use strict';
 
 describe('Controller: UserOverviewCtrl', function () {
-  var controller, $scope, $httpBackend, $q, $rootScope, Config, Authinfo, Utils, Userservice, FeatureToggleService, Notification;
+  var controller, $scope, $httpBackend, $rootScope, Config, Authinfo, Userservice, FeatureToggleService, Notification;
 
-  var $stateParams, currentUser, updatedUser, getUserMe, getUserFeatures, UrlConfig;
+  var $stateParams, currentUser, updatedUser, getUserFeatures, UrlConfig;
   var userEmail, userName, uuid, userStatus, dirsyncEnabled, entitlements, invitations;
   beforeEach(angular.mock.module('Core'));
   beforeEach(angular.mock.module('Huron'));
   beforeEach(angular.mock.module('Sunlight'));
 
-  beforeEach(inject(function ($controller, _$httpBackend_, $q, _$rootScope_, _Config_, _Authinfo_, _Utils_, _Userservice_, _FeatureToggleService_, _UrlConfig_, _Notification_) {
+  beforeEach(inject(function ($controller, _$httpBackend_, $q, _$rootScope_, _Config_, _Authinfo_, _Userservice_, _FeatureToggleService_, _UrlConfig_, _Notification_) {
     $scope = _$rootScope_.$new();
     $httpBackend = _$httpBackend_;
-    $q = $q;
     $rootScope = _$rootScope_;
     Config = _Config_;
     Authinfo = _Authinfo_;
     UrlConfig = _UrlConfig_;
-    Utils = _Utils_;
     Userservice = _Userservice_;
     FeatureToggleService = _FeatureToggleService_;
     Notification = _Notification_;
@@ -25,7 +23,6 @@ describe('Controller: UserOverviewCtrl', function () {
     var deferred = $q.defer();
     deferred.resolve('true');
     currentUser = angular.copy(getJSONFixture('core/json/currentUser.json'));
-    getUserMe = getJSONFixture('core/json/users/me.json');
     invitations = getJSONFixture('core/json/users/invitations.json');
     updatedUser = angular.copy(currentUser);
     getUserFeatures = getJSONFixture('core/json/users/me/featureToggles.json');
@@ -46,6 +43,7 @@ describe('Controller: UserOverviewCtrl', function () {
     spyOn(FeatureToggleService, 'getFeatureForUser').and.returnValue(deferred.promise);
     spyOn(FeatureToggleService, 'getFeaturesForUser').and.returnValue(deferred2.promise);
     spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
+    spyOn(FeatureToggleService, 'atlasUserPendingStatusGetStatus').and.returnValue($q.when(true));
     spyOn(Authinfo, 'isCSB').and.returnValue(false);
     spyOn(Notification, 'success');
 
@@ -191,9 +189,18 @@ describe('Controller: UserOverviewCtrl', function () {
   });
 
   describe('getAccountStatus should be called properly', function () {
-    it('should check if status is pending', function () {
+    it('and should check if status is pending', function () {
       expect(controller.pendingStatus).toBe(true);
       expect(controller.currentUser.pendingStatus).toBe(true);
+    });
+    it('and should check if status is not pending', function () {
+      updatedUser.licenseID.push('MS_d9fb2e50-2a92-4b0f-b1a4-e7003ecc93ec');
+      updatedUser.userSettings = [];
+      updatedUser.userSettings.push('{spark.signUpDate:1470262687261}');
+      $scope.$broadcast('USER_LIST_UPDATED');
+      $httpBackend.flush();
+      expect(controller.pendingStatus).toBe(false);
+      expect(controller.currentUser.pendingStatus).toBe(false);
     });
   });
 

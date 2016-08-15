@@ -75,6 +75,10 @@
       label: $translate.instant('autoAttendant.phoneMenuRouteToExtNum'),
       name: 'phoneMenuRouteToExtNum',
       action: 'route'
+    }, {
+      label: $translate.instant('autoAttendant.phoneMenuPlaySubmenu'),
+      name: 'phoneMenuPlaySubmenu',
+      action: 'runActionsOnInput'
     }];
 
     // search for a key action by its name
@@ -283,22 +287,11 @@
         } else {
           AACommonService.setRouteQueueToggle(false);
         }
-      }).catch(function (e) {
+      }).catch(function () {
         AACommonService.setRouteQueueToggle(false);
       });
     }
 
-    function toggleSubmenuFeature() {
-      return FeatureToggleService.supports(FeatureToggleService.features.huronAASubmenu).then(function (result) {
-        if (result) {
-          vm.keyActions.push({
-            label: $translate.instant('autoAttendant.phoneMenuPlaySubmenu'),
-            name: 'phoneMenuPlaySubmenu',
-            action: 'runActionsOnInput'
-          });
-        }
-      });
-    }
     /////////////////////
 
     function activate() {
@@ -326,7 +319,7 @@
       vm.menuEntry = vm.entries[$scope.index];
       vm.menuId = vm.menuEntry.id;
       AACommonService.setRouteQueueToggle(false);
-      toggleRouteToQueueFeature().then(toggleSubmenuFeature).finally(activate);
+      toggleRouteToQueueFeature().finally(activate);
     }
 
     init();

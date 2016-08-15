@@ -1,0 +1,18 @@
+<form novalidate name="$ctrl.form" role="form">
+  <cs-sp-buttons ng-show="$ctrl.form.$dirty" ng-init="$ctrl.initNewForm()">
+    <button cs-btn loading="$ctrl.saveInProcess" class="btn btn--primary" ng-click="$ctrl.saveLineSettings()" ng-disabled="$ctrl.form.$invalid || $ctrl.saveDisabled() || $ctrl.saveInProcess" type="submit">
+      <span translate="common.save"></span>
+    </button>
+    <button cs-btn ng-click="$ctrl.resetLineSettings()">
+      <span translate="common.cancel"></span>
+    </button>
+  </cs-sp-buttons>
+  <cs-sp-container>
+    <cs-sp-section>
+      <section-title
+        title-key="directoryNumberPanel.title">
+      </section-title>
+      <directory-number></directory-number>
+    </cs-sp-section>
+  </cs-sp-container>
+</form>

@@ -9,13 +9,9 @@
     var entitylist = [];
     var internalNumberPool = [];
     var externalNumberPool = [];
-    var externalNumberMapping = [];
     var telephonyInfo = {};
-    var assignedDn;
     var PATTERN_LIMIT = 50;
     var nameTemplate;
-    var internalExtensionTemplate;
-    var externalExtensionTemplate;
 
     var service = {
       loadPrimarySiteInfo: loadPrimarySiteInfo,
@@ -57,7 +53,6 @@
     // Check to see if the currently selected directory number's first digit is
     // the same as the company steering digit.
     function checkDnOverlapsSteeringDigit(entity) {
-      var dnFirstCharacter = "";
       var steeringDigit = telephonyInfo.steeringDigit;
       return _.startsWith(_.get(entity, 'assignedDn.pattern'), steeringDigit);
     }
@@ -66,7 +61,7 @@
       return entitylist;
     }
 
-    function setEntitylist(entitylist) {
+    function setEntitylist() {
       entitylist = _.cloneDeep(entitylist);
     }
 
@@ -78,11 +73,11 @@
       }
     }
 
-    function getInternalNumberPool(pattern) {
+    function getInternalNumberPool() {
       return internalNumberPool;
     }
 
-    function getExternalNumberPool(pattern) {
+    function getExternalNumberPool() {
       return externalNumberPool;
     }
 
@@ -113,7 +108,7 @@
       });
 
       // don't select any DID on loading the page
-      _.forEach(entitylist, function (entity, index) {
+      _.forEach(entitylist, function (entity) {
         entity.externalNumber = externalNumberPool[0];
         entity.didDnMapMsg = undefined;
       });

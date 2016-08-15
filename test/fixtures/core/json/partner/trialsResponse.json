@@ -59,7 +59,7 @@
       "contact-center-context",
       "spark",
       "cloud-contact-center",
-      "webex-squared", "ccc_config"
+      "webex-squared"
     ],
     "volume": 100,
     "isTrial": true,

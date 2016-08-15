@@ -40,7 +40,7 @@ var PartnerHomePage = function () {
   };
 
   this.getDidTokenClose = function (did) {
-    return element.all(by.css('.token')).filter(function (elem, index) {
+    return element.all(by.css('.token')).filter(function (elem) {
       return elem.element(by.css('.token-label')).getText().then(function (text) {
         return text === utils.formatPhoneNumbers(did);
       });

@@ -8,9 +8,11 @@
     var SET = 'set';
     var EMPTY = 'empty';
 
-    vm.taskIncomingData = [];
-    vm.taskIncomingStatus = REFRESH;
+    vm.reportingData = [];
+    vm.dataStatus = REFRESH;
     vm.taskIncomingDescription = "";
+    vm.taskTimeDescription = "";
+    vm.averageCsatDescription = "";
 
     vm.allReports = 'all';
     vm.engagement = 'engagement';
@@ -38,20 +40,13 @@
     vm.timeUpdate = timeUpdate;
 
     function timeUpdate() {
-      vm.taskIncomingStatus = REFRESH;
+      vm.dataStatus = REFRESH;
       setFilterBasedTextForCare();
 
-      setDummyData();
-      setAllGraphs();
-    }
-
-    function init() {
-      var selectedIndex = vm.timeSelected.value;
-      setFilterBasedTextForCare();
-      $timeout(function () {
-        setDummyData();
-        setAllGraphs();
-      }, 30);
+      showReportsWithDummyData();
+      showReportsWithRealData();
+      resizeCards();
+      delayedResize();
     }
 
     function setFilterBasedTextForCare() {
@@ -60,23 +55,33 @@
         interval: vm.timeSelected.intervalTxt,
         taskStatus: vm.timeSelected.taskStatus
       });
+
+      vm.taskTimeDescription = $translate.instant('taskTime.description', {
+        time: vm.timeSelected.description,
+        interval: vm.timeSelected.intervalTxt
+      });
+
+      vm.averageCsatDescription = $translate.instant('averageCsat.description', {
+        time: vm.timeSelected.description,
+        interval: vm.timeSelected.intervalTxt
+      });
     }
 
-    function setAllGraphs() {
-      setTaskIncomingGraphs();
-    }
-
-    function setTaskIncomingGraphs() {
+    function showReportsWithRealData() {
       SunlightReportService.getReportingData('org_stats', vm.timeSelected.value, 'chat')
         .then(function (data) {
           if (data.length === 0) {
-            vm.taskIncomingStatus = EMPTY;
+            vm.dataStatus = EMPTY;
           } else {
-            vm.taskIncomingStatus = SET;
-            CareReportsService.setTaskIncomingGraphs(data, vm.timeSelected.categoryAxisTitle, vm.timeSelected.value);
+            vm.reportingData = data;
+            vm.dataStatus = SET;
+            CareReportsService.showTaskIncomingGraph('taskIncomingdiv', data, vm.timeSelected.categoryAxisTitle, vm.timeSelected.value === 0);
+            CareReportsService.showTaskTimeGraph('taskTimeDiv', data, vm.timeSelected.categoryAxisTitle, vm.timeSelected.value === 0);
+            CareReportsService.showAverageCsatGraph('averageCsatDiv', data, vm.timeSelected.categoryAxisTitle, vm.timeSelected.value === 0);
+            resizeCards();
           }
-        }, function (response) {
-          vm.taskIncomingStatus = EMPTY;
+        }, function () {
+          vm.dataStatus = EMPTY;
           Notification.error($translate.instant('careReportsPage.taskIncomingError'));
         });
     }
@@ -90,9 +95,31 @@
       return tab === EMPTY;
     };
 
-    function setDummyData() {
+    function showReportsWithDummyData() {
       var dummyData = DummyCareReportService.dummyOrgStatsData(vm.timeSelected.value);
-      CareReportsService.setTaskIncomingDummyData(dummyData, vm.timeSelected.categoryAxisTitle, vm.timeSelected.value);
+      CareReportsService.showTaskIncomingDummy('taskIncomingdiv', dummyData, vm.timeSelected.categoryAxisTitle, vm.timeSelected.value === 0);
+      CareReportsService.showTaskTimeDummy('taskTimeDiv', dummyData, vm.timeSelected.categoryAxisTitle, vm.timeSelected.value === 0);
+      CareReportsService.showAverageCsatDummy('averageCsatDiv', dummyData, vm.timeSelected.categoryAxisTitle, vm.timeSelected.value === 0);
+      resizeCards();
+    }
+
+    function resizeCards() {
+      $timeout(function () {
+        $('.cs-card-layout').masonry('destroy');
+        $('.cs-card-layout').masonry({
+          itemSelector: '.cs-card',
+          columnWidth: '.cs-card',
+          isResizable: true,
+          percentPosition: true
+        });
+      }, 0);
+    }
+
+    function delayedResize() {
+      // delayed resize necessary to fix any overlapping cards on smaller screens
+      $timeout(function () {
+        $('.cs-card-layout').masonry('layout');
+      }, 500);
     }
 
     function resetCards(filter) {
@@ -107,8 +134,12 @@
         }
         vm.currentFilter = filter;
       }
+      resizeCards();
+      delayedResize();
     }
 
-    init();
+    $timeout(function () {
+      timeUpdate();
+    }, 30);
   }
 })();

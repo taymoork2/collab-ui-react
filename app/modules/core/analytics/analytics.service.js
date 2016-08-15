@@ -89,7 +89,7 @@
      */
     function checkIfTestOrg() {
       if (!isTestOrg) {
-        isTestOrg = $q(function (resolve, reject) {
+        isTestOrg = $q(function (resolve) {
           Orgservice.getOrg(function (response) {
             resolve(response.isTestOrg);
           });
@@ -115,49 +115,52 @@
      * Trial Events
      */
 
-    function trackTrialSteps(state, name) {
-      if (!state || !name) {
-        $q.reject('state or name not passed');
+    function trackTrialSteps(state, name, id) {
+      if (!state || !name || !id) {
+        $q.reject('state, name or id not passed');
       }
 
       var step = '';
 
       switch (state) {
-      case eventNames.START:
-        step = START_TRIAL;
-        break;
-      case eventNames.NEXT:
-        step = NEXT_BUTTON;
-        break;
-      case eventNames.BACK:
-        step = BACK_BUTTON;
-        break;
+        case eventNames.START:
+          step = START_TRIAL;
+          break;
+        case eventNames.NEXT:
+          step = NEXT_BUTTON;
+          break;
+        case eventNames.BACK:
+          step = BACK_BUTTON;
+          break;
       }
 
       trackEvent(step, {
-        from: name
+        from: name,
+        orgId: id
       });
     }
 
     /**
      * Partner Events
      */
-    function trackPartnerActions(state, UUID) {
-      if (!state || !UUID) {
-        $q.reject('state or uuid not passed');
+    function trackPartnerActions(state, UUID, id) {
+      if (!state || !UUID || !id) {
+        $q.reject('state, uuid or id not passed');
       }
 
       switch (state) {
-      case eventNames.ASSIGN:
-        trackEvent(ASSIGN_PARTNER, {
-          uuid: UUID
-        });
-        break;
-      case eventNames.REMOVE:
-        trackEvent(REMOVE_PARTNER, {
-          uuid: UUID
-        });
-        break;
+        case eventNames.ASSIGN:
+          trackEvent(ASSIGN_PARTNER, {
+            uuid: UUID,
+            orgId: id
+          });
+          break;
+        case eventNames.REMOVE:
+          trackEvent(REMOVE_PARTNER, {
+            uuid: UUID,
+            orgId: id
+          });
+          break;
       }
     }
 
@@ -185,13 +188,14 @@
       });
     }
 
-    function trackConvertUser(name) {
-      if (!name) {
-        $q.reject('name not passed');
+    function trackConvertUser(name, id) {
+      if (!name || !id) {
+        $q.reject('name or id not passed');
       }
 
       trackEvent(CONVERT_USER, {
-        from: name
+        from: name,
+        orgId: id
       });
     }
   }

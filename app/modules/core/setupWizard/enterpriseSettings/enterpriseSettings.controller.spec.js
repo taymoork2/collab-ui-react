@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Controller: EnterpriseSettingsCtrl', function () {
-  var controller, $scope, Config, Orgservice, $q, $controller, Notification, SSOService;
+  var $scope, Orgservice, $controller, Notification;
   var orgServiceJSONFixture = getJSONFixture('core/json/organizations/Orgservice.json');
   var getOrgStatus = 200;
   var rootScope;
@@ -18,14 +18,12 @@ describe('Controller: EnterpriseSettingsCtrl', function () {
 
   beforeEach(installPromiseMatchers);
 
-  beforeEach(inject(function ($rootScope, _$controller_, _Notification_, _Config_, _$q_, _Orgservice_) {
+  beforeEach(inject(function ($rootScope, _$controller_, _Notification_, _Orgservice_) {
     $scope = $rootScope.$new();
     rootScope = $rootScope;
-    Config = _Config_;
     $controller = _$controller_;
     Orgservice = _Orgservice_;
     Notification = _Notification_;
-    $q = _$q_;
 
     $scope.wizard = {
       nextTab: sinon.stub()
@@ -33,14 +31,14 @@ describe('Controller: EnterpriseSettingsCtrl', function () {
 
     spyOn($scope.wizard, 'nextTab');
 
-    spyOn(Orgservice, 'getOrg').and.callFake(function (callback, status) {
+    spyOn(Orgservice, 'getOrg').and.callFake(function (callback) {
       callback(orgServiceJSONFixture.getOrg, getOrgStatus);
     });
     spyOn(Notification, 'error');
   }));
 
   function initController() {
-    controller = $controller('EnterpriseSettingsCtrl', {
+    $controller('EnterpriseSettingsCtrl', {
       $scope: $scope,
       $rootScope: rootScope,
       Authinfo: authInfo

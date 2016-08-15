@@ -2,15 +2,15 @@
 
 describe('Controller: AABuilderMainCtrl', function () {
   var controller, $controller, AANotificationService, AutoAttendantCeService;
-  var AAUiModelService, AAModelService, AutoAttendantCeInfoModelService, AutoAttendantCeMenuModelService, AAValidationService, AACommonService, AANumberAssignmentService, HuronConfig, $httpBackend;
-  var $state, $rootScope, $scope, $q, $translate, $stateParams, $compile;
+  var AAUiModelService, AAModelService, AutoAttendantCeInfoModelService, AutoAttendantCeMenuModelService, AAValidationService, AANumberAssignmentService, HuronConfig, $httpBackend;
+  var $state, $rootScope, $scope, $q, $stateParams, $compile;
   var AAUiScheduleService, AACalendarService;
   var AATrackChangeService, AADependencyService;
   var FeatureToggleService;
   var ServiceSetup, timeZone, translatedTimeZone, sysModel;
+  var Analytics, AAMetricNameService;
 
   var ces = getJSONFixture('huron/json/autoAttendant/callExperiences.json');
-  var cesWithNumber = getJSONFixture('huron/json/autoAttendant/callExperiencesWithNumber.json');
   var aCe = getJSONFixture('huron/json/autoAttendant/aCallExperience.json');
   var a3LaneCe = getJSONFixture('huron/json/autoAttendant/a3LaneCe.json');
   var combinedMenus = getJSONFixture('huron/json/autoAttendant/combinedMenu.json');
@@ -26,10 +26,6 @@ describe('Controller: AABuilderMainCtrl', function () {
   };
 
   var aaModel = {};
-
-  var aaUiModel = {
-    openHours: {}
-  };
 
   function ce2CeInfo(rawCeInfo) {
     var _ceInfo = AutoAttendantCeInfoModelService.newCeInfo();
@@ -52,10 +48,10 @@ describe('Controller: AABuilderMainCtrl', function () {
   beforeEach(angular.mock.module('Huron'));
   beforeEach(angular.mock.module('Sunlight'));
 
-  beforeEach(inject(function (_$state_, _$rootScope_, _$q_, _$compile_, _$stateParams_, _$controller_, _$translate_, _AANotificationService_,
+  beforeEach(inject(function (_$state_, _$rootScope_, _$q_, _$compile_, _$stateParams_, _$controller_, _AANotificationService_,
     _AutoAttendantCeInfoModelService_, _AutoAttendantCeMenuModelService_, _AAUiModelService_, _AAModelService_, _AANumberAssignmentService_,
-    _AutoAttendantCeService_, _AAValidationService_, _HuronConfig_, _$httpBackend_, _AACommonService_, _AAUiScheduleService_,
-    _AACalendarService_, _AATrackChangeService_, _AADependencyService_, _FeatureToggleService_, _ServiceSetup_) {
+    _AutoAttendantCeService_, _AAValidationService_, _HuronConfig_, _$httpBackend_, _AAUiScheduleService_,
+    _AACalendarService_, _AATrackChangeService_, _AADependencyService_, _FeatureToggleService_, _ServiceSetup_, _Analytics_, _AAMetricNameService_) {
 
     $state = _$state_;
     $rootScope = _$rootScope_;
@@ -65,7 +61,6 @@ describe('Controller: AABuilderMainCtrl', function () {
     $scope.$dismiss = function () {
       return true;
     };
-    $translate = _$translate_;
     $stateParams = _$stateParams_;
     $controller = _$controller_;
     AAUiModelService = _AAUiModelService_;
@@ -73,7 +68,6 @@ describe('Controller: AABuilderMainCtrl', function () {
     AutoAttendantCeInfoModelService = _AutoAttendantCeInfoModelService_;
     AutoAttendantCeMenuModelService = _AutoAttendantCeMenuModelService_;
     AAValidationService = _AAValidationService_;
-    AACommonService = _AACommonService_;
     AutoAttendantCeService = _AutoAttendantCeService_;
     AANumberAssignmentService = _AANumberAssignmentService_;
     AANotificationService = _AANotificationService_;
@@ -85,6 +79,8 @@ describe('Controller: AABuilderMainCtrl', function () {
     AADependencyService = _AADependencyService_;
     FeatureToggleService = _FeatureToggleService_;
     ServiceSetup = _ServiceSetup_;
+    Analytics = _Analytics_;
+    AAMetricNameService = _AAMetricNameService_;
 
     // aaModel.dataReadyPromise = $q(function () {});
     $stateParams.aaName = '';
@@ -213,7 +209,7 @@ describe('Controller: AABuilderMainCtrl', function () {
     it('should warn on CMI assignment failure on close', function () {
 
       // CMI assignment will fail when there is any bad number in the list
-      $httpBackend.when('PUT', HuronConfig.getCmiV2Url() + '/customers/features/autoattendants/uuid/numbers').respond(function (method, url, data, headers) {
+      $httpBackend.when('PUT', HuronConfig.getCmiV2Url() + '/customers/features/autoattendants/uuid/numbers').respond(function (method, url, data) {
         if (JSON.stringify(data).indexOf("bad") > -1) {
           return [500, 'bad'];
         } else {
@@ -248,9 +244,9 @@ describe('Controller: AABuilderMainCtrl', function () {
     it('should show error message when assigning number', function () {
 
       // for an external number query, return the number formatted with a +
-      var externalNumberQueryUri = /\/externalnumberpools\?directorynumber=\&order=pattern\&pattern=(.+)/;
+      var externalNumberQueryUri = /\/externalnumberpools\?directorynumber=&order=pattern&pattern=(.+)/;
       $httpBackend.whenGET(externalNumberQueryUri)
-        .respond(function (method, url, data, headers) {
+        .respond(function (method, url) {
 
           var pattern = decodeURI(url).match(new RegExp(externalNumberQueryUri))[1];
 
@@ -765,10 +761,30 @@ describe('Controller: AABuilderMainCtrl', function () {
   });
 
   describe('setLoadingDone', function () {
+
+    beforeEach(function () {
+      spyOn(Analytics, 'trackEvent').and.returnValue($q.when({}));
+    });
+
     it('should set the vm.loading to false', function () {
       controller.setLoadingDone();
       expect($scope.vm.loading).toBeFalsy();
     });
+
+    it('should send metrics when called with a defined aa name', function () {
+      $scope.vm.isAANameDefined = true;
+      controller.setLoadingDone();
+      expect(Analytics.trackEvent).toHaveBeenCalledWith(AAMetricNameService.BUILDER_PAGE, {
+        type: 'load'
+      });
+    });
+
+    it('should not send metrics when called with a undefined aa name', function () {
+      $scope.vm.isAANameDefined = false;
+      controller.setLoadingDone();
+      expect(Analytics.trackEvent).not.toHaveBeenCalled();
+    });
+
   });
 
   describe('save8To5Schedule', function () {

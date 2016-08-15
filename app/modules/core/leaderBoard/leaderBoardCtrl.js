@@ -6,7 +6,7 @@
     .directive('crLeaderBoardBucket', crLeaderBoardBucket);
 
   /* @ngInject */
-  function leaderBoardCtrl($scope, $translate, Authinfo, Orgservice, TrialService) {
+  function leaderBoardCtrl($scope, $translate, Authinfo, Config, Orgservice, TrialService) {
 
     // TODO: revisit after graduation (2016-02-17) - see if this can be moved into the template
     $scope.label = $translate.instant('leaderBoard.licenseUsage');
@@ -14,6 +14,7 @@
     $scope.state = 'license'; // Possible values are license, warning or error
     $scope.icon = 'check-gear';
     $scope.trialDaysLeft = undefined;
+    $scope.roomSystemsCount = 0;
 
     $scope.bucketKeys = [
       'messaging',
@@ -33,53 +34,58 @@
     var getLicenses = function () {
       Orgservice.getLicensesUsage()
         .then(function (subscriptions) {
+          $scope.roomSystemsCount = 0;
           // check if active trial exists
           $scope.hasActiveTrial = _.some(subscriptions, trialExistsInSubscription);
-
           return subscriptions;
         })
         .then(function (subscriptions) {
           $scope.buckets = [];
+          var updateSubscriptionBucket = function (bucket) {
+            subscription[bucket] = {};
+            subscription[bucket].unlimited = true;
+          };
+          var updateSubscriptionAndLicenses = function (license, licenseIndex) {
+            var bucket = license.licenseType.toLowerCase();
+            if (!(bucket === 'cmr' || bucket === 'conferencing')) {
+              subscription[bucket] = {};
+              var a = subscription[bucket];
+              a['services'] = [];
+              if (license.licenseType === Config.licenseTypes.SHARED_DEVICES) {
+                $scope.roomSystemsCount = $scope.roomSystemsCount + license.volume;
+              }
+            }
+            license.id = bucket + index + licenseIndex;
+            if (license.offerName !== 'CF') {
+              if (license.siteUrl) {
+                if (!subscription['sites']) {
+                  subscription['sites'] = {};
+                }
+                if (!subscription['sites'][license.siteUrl]) {
+                  subscription['sites'][license.siteUrl] = [];
+                }
+                subscription['sites'][license.siteUrl].push(license);
+                subscription['licensesCount'] = subscription.sites[license.siteUrl].length;
+                subscription.count = Object.keys(subscription['sites']).length;
+              } else {
+                subscription[bucket]['services'].push(license);
+              }
+            } else {
+              subscription['cf'] = {
+                'services': []
+              };
+              subscription['cf']['services'].push(license);
+            }
+          };
           for (var index in subscriptions) {
             var licenses = subscriptions[index]['licenses'];
             var subscription = {};
             subscription['subscriptionId'] = subscriptions[index]['subscriptionId'];
             subscription['hasActiveTrial'] = trialExistsInSubscription(subscriptions[index]);
             if (licenses.length === 0) {
-              $scope.bucketKeys.forEach(function (bucket) {
-                subscription[bucket] = {};
-                subscription[bucket].unlimited = true;
-              });
+              $scope.bucketKeys.forEach(updateSubscriptionBucket);
             } else {
-              licenses.forEach(function (license, licenseIndex) {
-                var bucket = license.licenseType.toLowerCase();
-                if (!(bucket === 'cmr' || bucket === 'conferencing')) {
-                  subscription[bucket] = {};
-                  var a = subscription[bucket];
-                  a['services'] = [];
-                }
-                license.id = bucket + index + licenseIndex;
-                if (license.offerName !== 'CF') {
-                  if (license.siteUrl) {
-                    if (!subscription['sites']) {
-                      subscription['sites'] = {};
-                    }
-                    if (!subscription['sites'][license.siteUrl]) {
-                      subscription['sites'][license.siteUrl] = [];
-                    }
-                    subscription['sites'][license.siteUrl].push(license);
-                    subscription['licensesCount'] = subscription.sites[license.siteUrl].length;
-                    subscription.count = Object.keys(subscription['sites']).length;
-                  } else {
-                    subscription[bucket]['services'].push(license);
-                  }
-                } else {
-                  subscription['cf'] = {
-                    'services': []
-                  };
-                  subscription['cf']['services'].push(license);
-                }
-              });
+              licenses.forEach(updateSubscriptionAndLicenses);
             }
             $scope.buckets.push(subscription);
           }

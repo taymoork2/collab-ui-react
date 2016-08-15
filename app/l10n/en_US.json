@@ -1,4 +1,23 @@
 {
+  "statusPage":{
+    "pageTitle": "Status Management",
+    "dashboard": "Dashboard",
+    "incidents": "Incidents",
+    "components": "Components",
+    "addComponents": "Add A Component",
+    "componentName": "Component Name",
+    "componentDesc": "Description (optional)",
+    "componentGroup": "Component Group",
+    "nameCannotBeBlank": "Name can't be blank",
+    "createNewComponentGroup": "Create new component group",
+    "createComponent": "Create Component",
+    "componentInfo": "Component Info",
+    "editAction": "Edit",
+    "deleteAction": "Delete",
+    "update": "Update",
+    "deleteWarning": "WARNING! Deleting a component cannot be undone. All associated data will be deleted as well. Please be absolutely sure this is what you want. <br /> Type DELETE in the box below for final confirmation, then hit the delete button.",
+    "permanentlyDelete": "Permanently DELETE {{componentName}}"
+  },
   "loginPage": {
     "title": "Cloud Collaboration Management",
     "login": "Sign In",
@@ -99,7 +118,9 @@
     "emailError": "Error sending email.",
     "convertUserSuccess": "successfully converted.",
     "convertUserError": "Failed to convert",
-    "convertUserSearch": "Enter customer name or email address",
+    "convertUserSearch": "Enter display name or email address",
+    "convertUserNoneFound": "No Unlicensed Users Found",
+    "convertUserTryAgain": "Try another search.",
     "addtionalServiceSetupText": "Additional setup is required before this service can be enabled.",
     "addtionalServiceSetupConfirmation": "Are you sure you want to leave this window? You will lose your data.",
     "setUpThisService": "Set up this service",
@@ -119,8 +140,10 @@
     "notSetupForManUserAddError": "{{email}} cannot be added. Unable to add users through this method because directory sync feature is on.",
     "userExistsDomainClaimError": "{{email}} cannot be added.  Either the user already exists in another organization or would end up in another organization due to a pre-existing domain claim.  User domains must be the same as one of your organization’s claimed domains or be unclaimed by a different organization, if your organization has not claimed a domain.",
     "unableToMigrateError": "Unable to migrate user {{email}}.  This user's domain is not available for conversion; please submit a problem report.",
+    "unknownCreateUserError": "An unknown error has occurred and user creation could not be completed.",
     "insufficientEntitlementsError": "{{email}} cannot be added.  There are insufficient licenses to create this user.",
-    "telstraAppRedirect": "Connecting to Telstra Apps Marketplace"
+    "telstraAppRedirect": "Connecting to Telstra Apps Marketplace",
+    "careAddUserError": "Error adding user to Care."
   },
   "userManage": {
     "org": {
@@ -211,6 +234,7 @@
       "removeFile": "Remove File",
       "confirmCsvDownloadTitle": "Export User Attributes",
       "confirmCsvDownloadMsg": "Gathering data for export may take awhile. During this time you cannot sign out, or refresh your browser or the export will not complete.",
+      "confirmCsvDownloadMsg10K": "Because you have more than {{maxUsers}} users, the exported list will not show the entitlements that are assigned to your users.",
 
       "newUsers": "Added",
       "existingUsers": "Updated",
@@ -229,12 +253,6 @@
       "title": "Add Services for Users",
       "instructions": "Select the service entitlements that you want to provide to users."
     }
-  },
-  "groupsPage": {
-    "manageGroups": "Groups",
-    "all": "All",
-    "groupNameHeader": "Group name",
-    "membersCountHeader": "Members"
   },
   "onboardModal": {
     "spark": "Spark",
@@ -382,7 +400,11 @@
     "alarmsTabDesc": "Alarm Management",
     "eventsTab": "Events",
     "eventsTabDesc": "Event Management",
-    "helpdesk": "Help Desk"
+    "helpdesk": "Help Desk",
+    "statusTab": "Status",
+    "statusTabDesc": "Status Mannagement",
+    "careTab": "Care",
+    "careTabDesc": "Cloud Contact Center"
   },
   "index": {
     "welcome": "Welcome!",
@@ -504,6 +526,7 @@
     "careTab": "Care",
     "careTabDesc": "Cloud Contact Center",
     "saveAs": "Save As",
+    "export": "Export",
     "allCalls": "All Calls",
     "videoCalls": "Video Calls",
     "audioCalls": "Audio Only Calls",
@@ -518,6 +541,14 @@
     "assigned": "Assigned",
     "in-queue": "In-Queue",
     "abandoned": "Abandoned",
+    "queueTime": "Queue Time",
+    "avgQueueTime": "Avg Queue Time",
+    "avgHandleTime": "Avg Handle Time",
+    "handleTime": "Handle Time",
+    "taskTimeLabel": "Time in Minutes",
+    "averageCsat": "Average CSAT",
+    "avgCsat": "Avg CSAT",
+    "csatRating": "CSAT Rating",
     "todayCategoryAxis": "Hours",
     "yesterdayCategoryAxis": "Hours",
     "weekCategoryAxis": "Days",
@@ -637,6 +668,14 @@
   "taskIncoming": {
     "title": "Tasks Incoming",
     "description": "The graph depicts the total number of incoming tasks {{time}}. Hover over the area chart for a breakdown of total number of {{taskStatus}} tasks for a {{interval}}."
+  },
+  "taskTime": {
+    "title": "Task Time",
+    "description": "A task time refers to the time duration of a task in its queued state or handled state. The graph depicts the task time {{time}}. Hover over the area chart for a breakdown of average queue time and average handle time of the tasks for a {{interval}}."
+  },
+  "averageCsat": {
+    "title": "Average CSAT",
+    "description": "The graph depicts the average CSAT {{time}}. Hover over the trend line to know the average CSAT rating for a {{interval}}."
   },
   "profilePage": {
     "userProfile": "User Profile",
@@ -944,6 +983,7 @@
     "online": "Online",
     "offline": "Offline",
     "unknown": "Unknown",
+    "notSet": "Not set",
     "description": "Description",
     "user": "User",
     "ipAddress": "IP Address",
@@ -952,7 +992,8 @@
     "continue": "Continue",
     "warning": "Warning",
     "error": "Error",
-    "turnOff": "Turn Off"
+    "turnOff": "Turn Off",
+    "overview":"Overview"
   },
   "notifications": {
     "success": "Success notifications",
@@ -987,7 +1028,8 @@
     "convert": "Convert",
     "nextBtn": "Next",
     "convertUsers": "Convert Unlicensed Users",
-    "convertUsersText": "Convert employees of your organization who have signed up for Cisco Spark on their own with a company email address to a licensed user. Licensed users receive additional enterprise features, and are subject to your organization's policies and administration.",
+    "unlicensedUsers": "Unlicensed Users",
+    "convertUsersText": "Convert employees to a licensed user who have signed up for Cisco Spark on their own with a company email address.  Licensed users receive additional enterprise features, and are subject to your organization’s policies and administration.",
     "convertError": " could not be converted. Contact support for assistance converting this user.",
     "cancel": "Cancel",
     "emailAddress": "Email Address",
@@ -1019,6 +1061,7 @@
     "setUpDevices": "Activate your devices when they arrive.",
     "setUpSharedDevices": "Activate your Room System devices when they arrive.",
     "setUpSparkBoardDevices": "Activate your Spark Board devices when they arrive.",
+    "setUpHybridMediaService": "Hybrid Media Service is available. Extend cloud media to use premises-based resources for calls and meetings.",
     "getStarted": "Get Started"
   },
   "inviteModal": {
@@ -1082,22 +1125,26 @@
     "tzDescription": "Specify the time zone to use for schedule-based call routing. For example, this time zone applies to calls routed based on business hours and holiday schedules.",
     "steeringDigit": "Outbound Dial Digit",
     "steeringDigitDescription": "Specify the number users must dial before placing an external call.",
+    "emergencyAddressDescription": "This is the default address that will be used for emergency services. This can be overridden by each User or Place.",
+    "extension": "Extension",
     "extensionLength": "Extension Length",
-    "extensionLengthDescription": "Specify the length of internal numbers.",
+    "extensionLengthDescription": "Specify the total number of digits users must dial before placing an external call. All sites share the same extension length.",
     "extensionLengthHelpText": "After being set, this value can only be changed if no extensions are assigned.",
     "extensionLengthServicesHelpText": "Enabled only when no extensions have been assigned.",
     "saveCallSettingsExtensionLengthAllowed": "After you specify the length of extensions, you can only change this value if you remove Auto Attendants, Hunt Groups and  the Call entitlement from all users. Removing the Call entitlement deletes all call service data for every user (for example, speed dials and voicemail messages).",
+    "reservedDigits": "Reserved Digits",
     "siteSteeringDigit": "Site-to-Site Dial Digit",
-    "siteSteeringDigitDescription": "Specify the number users must dial before placing a call to another site.",
+    "siteSteeringDigitDescription": "Select a digit to reserve for dialing between sites. Extensions between 9000 and 9999 are not recommended for assignment.",
     "siteCode": "Site Code",
     "steeringDigitChangeWarning": "Changing the outbound dial digit will cause extensions that begin with the same number to experience dialing delays. Ensure that extensions do not begin with the same number as the outbound dial digit.",
     "extensionRangeChangeWarning": "Changing the outbound dial digit will cause extensions that begin with the same number to experience dialing delays. Ensure that extensions do not begin with the same number as the outbound dial digit.",
     "siteCodeDescription": "Specify a unique number to identify a specific site.",
-    "internalExtensionRange": "Extension Range",
+    "internalExtensionRange": "Internal Extension Range",
     "internalNumberRangeDescription": "Specify range of internal numbers. Length must be {{length}} digits.",
     "extensionError": "Extension not valid: ",
-    "companyVoicemail": "Company Voicemail",
-    "companyVoicemailDescription": "Select a number that users can call to check their voicemail.",
+    "companyVoicemail": "Voicemail",
+    "vmAccessNumber": "Voicemail Access Number",
+    "companyVoicemailDescription": "Select a phone number to reserve for dialing voicemail from outside the company.",
     "to": "to",
     "addMoreExtensionRanges": "Add more extension ranges",
     "emptyNumber": "Number cannot be empty",
@@ -1128,7 +1175,11 @@
     "voicemailToEmailHelpText": "Warning: Voicemail attachments sent via email are not secure.",
     "voicemailToEmailGetError": "Failed to get voicemail to email settings.",
     "voicemailToEmailUpdateError": "Failed to update voicemail to email settings.",
-    "voicemailTimeZoneGetError": "Failed to get voicemail time zone."
+    "voicemailTimeZoneGetError": "Failed to get voicemail time zone.",
+    "externalVoicemailAccessLabel": "External Voicemail Access",
+    "voicemailPilotHelpText": "Usage of this E164 number incurs usage cost.",
+    "errorGettingOptionaVmDidToggle": "There was a problem getting the optionalVmDid toggle.",
+    "externalNumberDescriptionText": "Select a number that users can call to check their voicemail from outside the company network."
   },
   "dirsyncModal": {
     "chooseSync": "Choose Sync",
@@ -1300,9 +1351,10 @@
     },
     "addResourceDialog": {
       "title": "{{ServiceName}} Setup",
-      "registerNewExpressway": "Register new Expressway cluster and install {{ConnectorName}}",
-      "addToExistingExpressway": "Install {{ConnectorName}} on existing Expressway cluster",
-      "enterHostname": "Enter the hostname of the Expressway you want to register with Cisco Collaboration Cloud",
+      "subtitle": "Deploy a new Expressway or select an existing one.",
+      "registerNewExpressway": "Enter the hostname of the new Expressway that you want to register with Cisco Collaboration Cloud.",
+      "addToExistingExpressway": "Select an existing Expressway to add resources to this service.",
+      "enterHostname": "Enter the hostname of the Expressway you want to register with Cisco Collaboration Cloud.",
       "enterHostnamePlaceholder": "Enter Expressway hostname",
       "willBeInstalled": "{{ConnectorName}} will be installed as soon as you finish registration, enabling the Expressway for {{ServiceName}}.",
       "selectExisting": "Select an existing Expressway clusters",
@@ -1320,7 +1372,8 @@
       "confirmationDialogBody": "Are you sure you want to cancel service setup?",
       "setupScreenBodyAboutToSetup": "You are about to set up:",
       "setupScreenBodyPrerequisites": "Verify that you have completed the prerequisites before you start configuring {{ServiceName}}.",
-      "setupScreenBodyLinks": "Visit <a href=\"http://www.cisco.com/go/hybrid-services\" target=\"_blank\">Help Central</a> for further information about {{ServiceName}} prerequisites."
+      "setupScreenBodyLinks": "Visit <a href=\"http://www.cisco.com/go/hybrid-services\" target=\"_blank\">Help Central</a> for further information about {{ServiceName}} prerequisites.",
+      "go-to-your-expressway": "Go to your Expressway within one hour to complete registration and configure the {{ConnectorName}} Connector."
     },
     "activateService": {
       "ingress": "Extend the Cloud to your On-Premise Environment",
@@ -1468,7 +1521,8 @@
       "firstReported": "First Reported",
       "lastReported": "Last Reported",
       "description": "Description",
-      "noAlarms": "No alarms reported"
+      "noAlarms": "No alarms reported",
+      "action": "Action"
     },
     "softwareUpgrade": {
       "softwareUpgrade": "Software Upgrade",
@@ -1494,12 +1548,12 @@
       "releasechannelUsers": "Users",
       "releasechannelReleasechannel": "Release Channel",
       "deactivateServicesHeader": "Deactivate Services",
-      "deactivateServicesParagraph": "Deactivating {{ServiceName}} will remove any service related functionality from this cluster.",
+      "deactivateServicesParagraph": "Deactivate {{ServiceName}} to remove any service-related functionality from this cluster.",
       "deactivateServicesCalendarHeader": "Deactivate Calendar",
       "deactivateServicesCallHeader": "Deactivate Call",
       "noHybridServicesProvisioned": "No Hybrid Services are enabled on this Expressway. To enable a Hybrid Service, go to the relevant service page.",
-      "deregisterClusterParagraph": "Deactivate all services before removing {{ClusterName}}.",
-      "deregisterClusterExplanation": "Disconnect this cluster from Cisco Collaboration Cloud and remove all connectors and related configuration.",
+      "deregisterClusterParagraph": "To Remove {{ClusterName}} deactivate the services first.",
+      "deregisterClusterExplanation": "Remove this cluster from Cisco Collaboration Cloud. This step removes all connectors and related configuration.",
       "clusterMainSectionHeader": "Cluster",
       "renameClusterParagraph": "Rename the Expressway cluster.",
       "renameClusterDescription": "The cluster name is only used for display purposes. Changing it will not update the name on the Expressway itself.",
@@ -1517,10 +1571,11 @@
       "emailAdministratorHeading": "Administrators",
       "emailAdministratorNotification": "Add email addresses to receive email notifications about service impacting alarms and software upgrades.",
       "emailUserHeading": "Users",
-      "emailUserNotification": "Turn on/off email notifications to users, such as entitlement, error message, high notification rate from Exchange Server, etc.",
+      "emailUserNotification": "By default, users receive email notifications about new Calendar Service functionality, error messages, and service status. Toggle this setting off to stop sending these email notifications to users.",
       "emailNotificationsSaving": "Saving.",
       "emailNotificationsSavingSuccess": "The email subscriber list was successfully saved.",
       "emailNotificationsSavingError": "Your changes to the email subscriber list could not be saved. Try again later.",
+      "emailUserNotificationsSavingError": "Could not save changes to user email notifications. Try again later.",
       "documentationHeading": "Documentation and software",
       "documentationHelpLink": "Visit <a href=\"http://www.cisco.com/go/hybrid-services\" target=\"_blank\">Help Central</a> for further information about Hybrid Services.",
       "documentationDownloadLink": "Download Cisco Expressway software from <a href=\"https://software.cisco.com/download/find.html?q=expressway&task=default&psaMode=AP\" target=\"_blank\">software.cisco.com</a>.",
@@ -1562,13 +1617,12 @@
       },
       "scheduleUpgrade": {
         "title": "Upgrade Schedule",
-        "description": "Select the upgrade schedule for this cluster. All connectors will automatically upgrade to the latest version at this time.",
+        "description": "Select the upgrade schedule for this cluster. When an upgrade is available, the connectors automatically upgrade during time that you select.",
         "defaultWarning": "Confirm Default Schedule",
         "postponeLabel": "The next available upgrade is scheduled to begin:",
         "postponeAction": "Postpone",
         "postponeModalTitle": "Postpone Upgrade",
         "postponeModalText": "Are you sure you want to postpone the scheduled upgrade to begin:"
-
       }
     },
     "notifications": {
@@ -1630,6 +1684,7 @@
         "upgrade-schedule": "Upgrade Schedule",
         "release-channel": "Release Channel",
         "hosts": "{count, plural, one{# Host} other{# Hosts}}",
+        "nodes": "{count, plural, one{# Node} other{# Nodes}}",
         "settings": "Settings",
         "all": "All",
         "add-resource": "Add Resource",
@@ -1643,16 +1698,17 @@
           "error": "Error fetching the different cluster types.",
           "title": "What type of resource do you want to add?",
           "expressway-description": "Can run Hybrid Call Service or Hybrid Calendar Service",
-          "expressway-not-setup": "Expressway no set up",
+          "expressway-not-setup": "Expressway not set up",
           "mediafusion-description": "Can run Hybrid Media Service",
           "mediafusion-not-setup": "Media Service not set up"
         },
         "expressway": {
           "services": {
             "error": "Error fetching the different service types.",
-            "title": "What services do you want the Expressway to run?",
+            "title": "Choose services that you want the Expressway to manage:",
             "call-not-setup": "Hybrid Call Service not set up",
-            "calendar-not-setup": "Hybrid Calendar Service not set up"
+            "calendar-not-setup": "Hybrid Calendar Service not set up",
+            "add-more-later": "You can add more services later by clicking Add Resource in the Call or Calendar page."
           },
           "end": {
             "line1": "You may now register the Expressway with Cisco Collaboration Cloud.",
@@ -2096,6 +2152,7 @@
     "scheduleAddAdditionalHolidays": "Add Holidays",
     "scheduleModalHelp": "Schedules let you handle calls differently when you are open, closed, or observing a holiday. You may enter multiple open hour blocks and holidays.",
     "scheduleModalHelpTimeZone": "The time zone is changed for this Auto Attendant only, overriding basic call settings.  When copying schedules, the time zone is not copied.",
+    "scheduleModalInfoTimeZone": "Overrides the default time zone {{timezone}} from call settings.",
     "selectDate": "Select Date",
     "allDay": "All Day",
     "recurAnnually": "Recur Annually",
@@ -2242,12 +2299,26 @@
     "successSave": "'{{callParkName}}' call park has been created successfully",
     "successUpdate": "'{{callParkName}}' call park has been updated successfully",
     "errorSave": "Failed to create the '{{callParkName}}' Call Park",
-    "errorUpdate": "Failed to update the '{{callParkName}}' Call Park"
+    "errorUpdate": "Failed to update the '{{callParkName}}' Call Park",
+    "invalidMember": "Select at least one member",
+    "nameLabel": "Call Park Name",
+    "nameDesc": "The call park name appears on the call park members' devices",
+    "numberLabel": "Call Park Number",
+    "numberDesc": "Select a single extension number or number range",
+    "memberLabel": "Call Park Members",
+    "memberDesc": "These users or places' devices will be part of this call park",
+    "memberPlaceholder": "Search & Add Members",
+    "reversionLabel": "Call Reversion Rule",
+    "reversionDesc": "If the call is not answered, send it to this destination",
+    "personWhoParked": "Person who parked the call",
+    "firstRange": "First Range",
+    "secondRange": "Second Range",
+    "saveLabel": "Do you want to save your changes?",
+    "memberFetchFailure": "Unable to get members."
   },
   "telephonyPreview": {
     "lines": "Lines",
     "features": "Features",
-    "or": "or",
     "voicemail": "Voicemail",
     "singleNumberReach": "Single Number Reach",
     "internationalDialing": "International Dialing"
@@ -2386,6 +2457,7 @@
     "advanceOrder": "Advance Numbers",
     "newNumberOrder": "New Numbers",
     "portNumberOrder": "Porting Numbers",
+    "tollFreeNumberOrder": "Toll-Free Numbers",
     "searchPlaceholder": "Search Orders"
   },
   "pstnOrderDetail": {
@@ -2406,8 +2478,9 @@
     "setupNumbers": "Set Up PSTN Numbers",
     "placeOrder": "Place Order",
     "orderBlock": "Order Block Numbers",
-    "newNumbersTab": "New Numbers",
-    "portNumbersTab": "Port Numbers",
+    "newNumbersTab": "Standard Numbers",
+    "newTollFreeTab": "Toll-Free Numbers",
+    "portNumbersTab": "Porting Numbers",
     "portNumbersPrompt": "Copy and paste customer's numbers that need to be ported.",
     "portNumbersLabel": "Porting Numbers",
     "manualAdd": "Manually Add New Numbers",
@@ -2466,19 +2539,25 @@
     },
     "errors": {
       "states": "Failed to retrieve states",
-      "inventory": "Failed to get PSTN inventory"
+      "inventory": "Failed to get PSTN inventory",
+      "tollfree": {
+        "areacodes": "Failed to retrieve toll-free area codes.",
+        "inventory": "Failed to retrieve toll-free number inventory."
+      },
+      "unsupportedNumberType": "The number type {{type}} for phone number {{number}} is currently not supported yet.",
+      "unsupportedOrderType": "Error while adding your order to the order cart. The order type {{type}} is currently not supported yet."
     },
     "orderStatus": {
       "pinRequired": "Customer needs to sign PSTN Contract.",
-      "addressMismatch": "Emergency or Billing Address needs to be submitted. Contact Inteleepeer.",
-      "btnMismatch": "Billing Telephone Number needs to be submitted. Contact Inteleepeer.",
+      "addressMismatch": "Emergency or Billing Address needs to be submitted. Contact Intelepeer.",
+      "btnMismatch": "Billing Telephone Number needs to be submitted. Contact Intelepeer.",
       "trialStatus": "Order cannot be fulfilled for trials",
       "focReceived": "Scheduled transfer date received from previous carrier for number porting.",
       "invalidSig": "Invalid Signature in Letter of Authorization for number porting.",
       "loaNotSigned": "Customer needs to sign Letter of Authorization for number porting.",
       "msaNotSigned": "Customer needs to sign PSTN Contract.",
       "pendingVendor": "Scheduled transfer date requested from previous carrier for number porting.",
-      "rejected": "Order has been rejected. Contact Inteleepeer."
+      "rejected": "Order has been rejected. Contact Intelepeer."
     }
   },
   "pstnContractInformation": {
@@ -2517,6 +2596,7 @@
     "daysAgo": "{{days}} days ago",
     "expireToday": "Expiring Today",
     "errGetTrialsQuery": "Failed to retrieve trials. Status: {{status}}",
+    "errGetOrgs":  "Failed to retrieve orgranizations.",
     "fifty": "50",
     "oneHundred": "100",
     "twoHundred": "200",
@@ -2820,10 +2900,14 @@
     "pstnOrders": "PSTN Orders",
     "addNumbers": "Add Numbers",
     "isSetupDoneError": "Unable to determine if {{orgName}} is setup. Message: {{message}}",
+    "launchCustomerPortalError": "Unable to launch the customer portal.",
     "meetingLicenses": "Meeting Licenses",
     "accountStatus": "Account Status",
     "totalUsers": "Total Users",
-    "purchased": "Purchased"
+    "purchased": "Purchased",
+    "domain": "{count, plural, one{Domain} other{Domains}}",
+    "domains": "Domains"
+
   },
   "customerAdminPanel": {
     "addAdministrators": "Add Administrators",
@@ -2834,7 +2918,9 @@
     "customerAdministratorRemoveSuccess": "The Administrator was successfully unassigned",
     "customerAdministratorRemoveFailure": "Unable to unassigned Administrator privileges",
     "deleteAdministrator": "Remove Sales Administrator?",
-    "deleteConfirmation": "Are you sure you want to remove {{pattern}}'s Administrator Privileges?"
+    "deleteConfirmation": "Are you sure you want to remove {{pattern}}'s Administrator Privileges?",
+    "noResultsError": "No results found",
+    "tooManyResultsError": "Search returned too many results. Be more specific to find user"
   },
   "didAddModal": {
     "title": "Add Phone Numbers (Optional)"
@@ -2986,10 +3072,11 @@
       "selectPlace": "Select a place",
       "newPlace": "New Place",
       "newPlaceInstructions": "What would you like to call this place? A place can be a meeting room, a reception area or even a whole department.",
+      "newPlaceOnlyInstructions": "What would you like to call the place that this room system will be assigned to? A place can be a meeting room, a reception area or even a whole department.",
       "deviceInstalled": "Where will this device be installed?",
       "deviceInstalledInstructions": "It is recommended that you use the name of your conference room or shared space as it is shown in your company directory. The video address for this device will use this name. It will also be the easiest way to search for and find the device in the system later.",
       "insertRoomName": "Insert name of room or shared space",
-      "noExistingPlaces": "There is no existing place in your organization with a Cisco Spark Room System license assigned to it. Create a new place instead."
+      "noExistingPlaces": "There is no place in your organization with a Cisco Spark Call license assigned to it. Create a new place instead."
     },
     "newSharedSpace": {
       "title": "Add Place",
@@ -3030,8 +3117,14 @@
     "expires": "Expires: {{date}}",
     "expiration": "({{timeLeft}} from now)",
     "clipboardFallback": "Press cmd+c to copy the text below.",
-    "emailSuccess": "Email sent successfully.",
-    "emailError": "Email unsuccessful.",
+    "emailSuccessTitle": "Email sent",
+    "emailSuccess": "Activation code has been sent to {{address}}",
+    "emailErrorTitle": "Email not sent",
+    "emailError": "Failed to send activation code to {{address}}",
+    "clipboardSuccessTitle": "Copied to clipboard",
+    "clipboardSuccess": "Activation code has been copied to the clipboard.",
+    "clipboardErrorTitle": "Not copied to clipboard",
+    "clipboardError": "Failed to copy activation code to the clipboard.",
     "generateErrorNotFound": "Please unlicense and relicense this Spark Call user. Contact support if the problem persists.",
     "generateError": "Unable to generate activation code. Please try again."
   },
@@ -3209,6 +3302,7 @@
       "month2": "last month",
       "threeMonths": "Last Three Months",
       "threeMonths2": "last three months",
+      "lastRefresh": "Last Refreshed at",
       "cluster": "Cluster :",
       "ecp": "ECP :",
       "fromDate": "From :",
@@ -3222,8 +3316,12 @@
       "callVolumes": "Total Calls",
       "callVolumesDescription": "Total number of on-premises calls and calls that overflowed to the Cisco Collaboration Cloud.",
       "callVolumesDescriptionForClusterSel": "Total number of calls hosted on this Hybrid Media Cluster and those that were redirected to another resource (cluster or cloud).",
-      "callLocal": "On Premises",
-      "callReject": "Overflowed to Cloud",
+      "callLocalLegend": "On Premises",
+      "callRejectLegend": "Overflowed to Cloud",
+      "callLocal": "Calls on premise",
+      "callReject": "Calls overflowed to cloud",
+      "callLocalCluster":"Calls local to cluster",
+      "callRedirectedCluster":"Calls redirected by cluster",
       "callsRedirected": "Calls Redirected",
       "availabilityOfCluster": "Cluster Availability",
       "availabilityOfHost": "Node Availability",
@@ -3321,7 +3419,12 @@
       "deregisterAllconfirmation": "I understand that all the nodes in this cluster will be deregistered automatically, and that the cluster will be deleted permanently. I also understand that I cannot undo this action.",
       "unabletomovenodes": "Failed to move/defuse {{nodes}} press cancel and try again",
       "clusterdeleteSuccess": "Successfully deleted {{clustername}}",
-      "movedTo": "{{nodeName}} moved to: {{clusterName}}"
+      "movedTo": "{{nodeName}} moved to: {{clusterName}}",
+      "upgradeSchedule": "Upgrade Schedule",
+      "everyDay": "Every Day in",
+      "stable": "STABLE",
+      "beta": "BETA",
+      "latest": "LATEST"
     },
     "reassign": {
       "reassignHost": "Reassign Host",
@@ -4184,7 +4287,15 @@
     "reloadMessage": "Please try reloading the page"
   },
   "placesPage": {
-    "placeError": "Add Place failed."
+    "nameHeader": "Name",
+    "typeHeader": "Type",
+    "deviceHeader": "No. of Devices",
+    "actionHeader": "Actions",
+    "featuresHeader": "Features",
+    "placeAdd": "Add Place",
+    "placeError": "Add Place failed.",
+    "deletePlace": "Delete Place",
+    "deletePlaceConfText": "Are you sure you want to delete {{ placeName }}?"
   },
   "linesPage": {
     "manageLines": "Numbers",
@@ -4466,7 +4577,7 @@
     "continueButton": "Continue Creation",
     "memberFetchFailure": "Unable to get members.",
     "huntGroupFetchFailure": "Failed to fetch hunt group details '{{huntGroupName}}'.",
-    "invalidMember": "Select atleast one member",
+    "invalidMember": "Select at least one member",
     "invalidFallback": "Select a number or enter a new valid number"
   },
   "digitalRiver": {
@@ -4577,6 +4688,7 @@
         "title": "Room Systems",
         "currentTitle": "Online this week",
         "previousTitle": "Last week:",
+        "enableDevices": "Enable Devices",
         "notEnabledText": "Meeting room systems seamlessly integrated with the Spark app."
       },
       "hybrid": {
@@ -4588,7 +4700,7 @@
           "squared-fusion-cal": "Calendar",
           "squared-fusion-uc": "Call",
           "squared-fusion-mgmt": "Management",
-          "squared-fusion-media": "Media Fusion"
+          "squared-fusion-media": "Media Service"
         }
       }
     }
@@ -4673,6 +4785,9 @@
     "less": "Less",
     "quantity": "Qty: ",
     "upgrade": "Upgrade",
+    "purchase": "Purchase",
+    "changePlan": "Change Plan",
+    "onlineTrialUpgradeUrlError": "Unable to retrieve purchase url for trial {{trialId}}.  To purchase a paid subscription, contact your partner via email or use the purchase button on the trial banner to have one sent for you.",
     "licenseTypes": {
       "MS": "Standard Team Rooms",
       "CF": "Meeting 25 Party",
@@ -4692,7 +4807,8 @@
     "priceHeader": "Price",
     "dateHeader": "Order Date",
     "actionsHeader": "Actions",
-    "downloadPdf": "Download PDF"
+    "downloadPdf": "Download PDF",
+    "loadError": "An error occurred while loading order history."
   },
   "ciRoles": {
     "atlas-portal.support": "Support",
@@ -4861,7 +4977,8 @@
     },
     "extended-data-dialog": {
       "copy": "Copy",
-      "copiedToClipboard": "Data copied to clipboard"
+      "copiedToClipboard": "Data copied to clipboard",
+      "unableToCopy": "Unable to copy data to clipboard"
     },
     "verification": "Verification",
     "resend": "Resend Invite",

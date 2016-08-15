@@ -92,7 +92,7 @@
 
       handleFeaturePromises(featuresPromises);
 
-      $q.all(featuresPromises).then(function (responses) {
+      $q.all(featuresPromises).then(function () {
         showNewFeaturePageIfNeeded();
       });
     }
@@ -173,6 +173,10 @@
         });
       } else if (feature.filterValue === 'HG') {
         $state.go('huntgroupedit', {
+          feature: feature
+        });
+      } else if (feature.filterValue === 'CP') {
+        $state.go('callparkedit', {
           feature: feature
         });
       }

@@ -1,5 +1,13 @@
 .customer-overview {
 
+  .feature-details {
+    font-size: 0.875rem;
+  }
+
+  .feature-status {
+    font-size: 0.875rem;
+  }
+
   .button-container {
     left: -1px;
   }
@@ -38,12 +46,9 @@
     }
   }
 
-  // .progress {
-  //   margin-bottom: auto;
-  // }
-
   .progress-bar {
     max-width: 100%;
+    height: 0.25rem;
   }
 
   #launchCustomer, #launchPartner, #deleteCustomer {
@@ -64,31 +69,17 @@
   .services-list, .trials-list {
     ul.has-meeting {
       padding-right: 20px;
-      #meeting.feature {
+      #meeting {
         .feature-details {
           padding-right: 10px;
         }
         .feature-arrow {
-          margin-right: -20px;
+          margin-right: -23px;
+        }
+        .feature-icon:before {
+          content: "\E068";
         }
       }
-    }
-
-    .feature {
-      display: block;
-      margin-bottom: 16px;
-    }
-
-    .feature-name {
-      display: inline-block;
-    }
-
-    .feature-details {
-      font-size: 0.875rem;
-    }
-
-    #meeting .feature-icon:before {
-      content: "\E068";
     }
 
     i.feature-icon {
@@ -96,6 +87,34 @@
       vertical-align: middle;
       margin-right: 7px;
       font-size: 1.25rem;
+    }
+  }
+
+
+  .webex-domains-list {
+
+    .spinner-loading {
+      font-size: 1.5rem;
+      text-align: center;
+    }
+
+    .subtitle {
+      font-size: .75rem;
+      color: $gray-base;
+    }
+
+    .feature-name {
+      color: $gray-dark-2;
+
+     .secondary {
+        margin-top: -0.5rem;
+        color: $gray-base;
+        display:block;
+      }
+    }
+
+    .status {
+      color: $gray-light-1;
     }
   }
 

@@ -143,30 +143,30 @@
 
       // Assign the number in CMI
       saveAANumberAssignments(Authinfo.getOrgId(), vm.aaModel.aaRecordUUID, resources).then(
-        function (response) {
+        function () {
 
           // after assignment, the extension ESN numbers are derived; update CE based on CMI ESN info
           AANumberAssignmentService.formatAAExtensionResourcesBasedOnCMI(Authinfo.getOrgId(), vm.aaModel.aaRecordUUID, resources).then(function (resources) {
 
               // find first e164 number, move to array[0] if not already there
-              var r = _.find(resources, function (resource) {
-                return (TelephoneNumberService.validateDID(resource.number));
-              });
+            var r = _.find(resources, function (resource) {
+              return (TelephoneNumberService.validateDID(resource.number));
+            });
 
-              if (angular.isDefined(r)) {
-                var index = _.indexOf(resources, r);
+            if (angular.isDefined(r)) {
+              var index = _.indexOf(resources, r);
 
                 // if e164 number is already the 0th element, all done
 
-                if (index >= 1) {
-                  resources.splice(0, 0, _.pullAt(resources, index)[0]);
-                }
+              if (index >= 1) {
+                resources.splice(0, 0, _.pullAt(resources, index)[0]);
               }
+            }
 
-              sortAssignedResources(resources);
-              AACommonService.setCENumberStatus(true);
-              AAScrollBar.resizeBuilderScrollBar();
-            },
+            sortAssignedResources(resources);
+            AACommonService.setCENumberStatus(true);
+            AAScrollBar.resizeBuilderScrollBar();
+          },
             function (response) {
               AANotificationService.errorResponse(response, 'autoAttendant.errorAddCMI', {
                 phoneNumber: number,
@@ -206,9 +206,9 @@
       // Un-Assign the number in CMI by setting with resource removed
       saveAANumberAssignments(Authinfo.getOrgId(),
         vm.aaModel.aaRecordUUID, resources).then(function () {
-        AACommonService.setCENumberStatus(true);
-        AAScrollBar.resizeBuilderScrollBar();
-      }).catch(
+          AACommonService.setCENumberStatus(true);
+          AAScrollBar.resizeBuilderScrollBar();
+        }).catch(
         function (response) {
           /* Use AACommonService to thwart the saving when it is in this state. */
           AACommonService.setIsValid('errorRemoveCMI', false);
@@ -367,7 +367,7 @@
       }
 
       AANumberAssignmentService.checkAANumberAssignments(Authinfo.getOrgId(), vm.aaModel.aaRecordUUID, currentResources, onlyResources, onlyCMI).then(
-        function (response) {
+        function () {
           if (onlyCMI.length > 0) {
             vm.aaModel.possibleNumberDiscrepancy = true;
             AANotificationService.error('autoAttendant.errorNumbersCMIOnly', {

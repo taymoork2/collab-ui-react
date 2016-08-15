@@ -2,9 +2,8 @@
 
 describe('Features Controller', function () {
 
-  var featureCtrl, $rootScope, $scope, $modal, $q, $state, $translate, $filter, $timeout, Authinfo, HuntGroupService, TelephoneNumberService, Log, Notification, getDeferred, HuronFeaturesListService, AutoAttendantCeInfoModelService, AAModelService, FeatureToggleService, CallParkService;
+  var featureCtrl, $rootScope, $scope, $modal, $q, $state, $filter, $timeout, Authinfo, HuntGroupService, TelephoneNumberService, Log, Notification, getDeferred, AutoAttendantCeInfoModelService, AAModelService, FeatureToggleService, CallParkService;
   var listOfCPs = getJSONFixture('huron/json/features/callPark/cpList.json');
-  var cp = getJSONFixture('huron/json/features/callPark/oneCp.json');
   var emptyListOfCPs = {
     callparks: []
   };
@@ -36,10 +35,21 @@ describe('Features Controller', function () {
     }]
   };
 
+  var singlePark = {
+    "callparks": [{
+      "uuid": "abcd1234-abcd-abcd-abcddef123456",
+      "name": "Technical Support",
+      "startRange": "5010",
+      "endRange": "5010",
+      "memberCount": 2
+    }]
+  };
+
+
   beforeEach(angular.mock.module('Huron'));
   beforeEach(angular.mock.module('Sunlight'));
 
-  beforeEach(inject(function (_$rootScope_, $controller, _$q_, _$modal_, _$state_, _$filter_, _$timeout_, _Authinfo_, _HuntGroupService_, _TelephoneNumberService_, _HuronFeaturesListService_, _AutoAttendantCeInfoModelService_, _AAModelService_, _Log_, _Notification_, _FeatureToggleService_, _CallParkService_) {
+  beforeEach(inject(function (_$rootScope_, $controller, _$q_, _$modal_, _$state_, _$filter_, _$timeout_, _Authinfo_, _HuntGroupService_, _TelephoneNumberService_, _AutoAttendantCeInfoModelService_, _AAModelService_, _Log_, _Notification_, _FeatureToggleService_, _CallParkService_) {
     $rootScope = _$rootScope_;
     $scope = _$rootScope_.$new();
     $modal = _$modal_;
@@ -51,7 +61,6 @@ describe('Features Controller', function () {
     HuntGroupService = _HuntGroupService_;
     CallParkService = _CallParkService_;
     TelephoneNumberService = _TelephoneNumberService_;
-    HuronFeaturesListService = _HuronFeaturesListService_;
     AutoAttendantCeInfoModelService = _AutoAttendantCeInfoModelService_;
     AAModelService = _AAModelService_;
     Log = _Log_;
@@ -150,7 +159,7 @@ describe('Features Controller', function () {
   it('should receive the HURON_FEATURE_DELETED event and set pageState to newFeature if they are no features to show', function () {
     featureCtrl.listOfFeatures = [];
     expect(featureCtrl.pageState).toEqual('Loading');
-    getDeferred.resolve(getCPListSuccessResp(cp));
+    getDeferred.resolve(getCPListSuccessResp(singlePark));
     $scope.$apply();
     $timeout.flush();
     expect(featureCtrl.pageState).toEqual('showFeatures');

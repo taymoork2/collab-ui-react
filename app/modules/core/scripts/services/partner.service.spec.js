@@ -4,7 +4,7 @@ describe('Partner Service -', function () {
   beforeEach(angular.mock.module('Core'));
   beforeEach(angular.mock.module('Huron'));
 
-  var $httpBackend, $q, $rootScope, $translate, Auth, Authinfo, Config, PartnerService, TrialService, UrlConfig;
+  var $httpBackend, $q, $translate, Auth, Authinfo, Config, PartnerService, TrialService, UrlConfig;
 
   var testData;
 
@@ -20,10 +20,9 @@ describe('Partner Service -', function () {
     });
   });
 
-  beforeEach(inject(function (_$httpBackend_, _$q_, _$rootScope_, _$translate_, _Auth_, _Authinfo_, _Config_, _PartnerService_, _TrialService_, _UrlConfig_) {
+  beforeEach(inject(function (_$httpBackend_, _$q_, _$translate_, _Auth_, _Authinfo_, _Config_, _PartnerService_, _TrialService_, _UrlConfig_) {
     $httpBackend = _$httpBackend_;
     $q = _$q_;
-    $rootScope = _$rootScope_;
     $translate = _$translate_;
     Auth = _Auth_;
     Authinfo = _Authinfo_;
@@ -208,7 +207,7 @@ describe('Partner Service -', function () {
     // Verify additional properties are set to the corresponding license object and added to customer object.
     expect(activeList[1].conferencing.features.length).toBe(3);
     expect(activeList[1].messaging.features.length).toBe(4);
-    expect(activeList[1].care.features.length).toBe(5);
+    expect(activeList[1].care.features.length).toBe(4);
   });
 
   it('should successfully return an object containing email, orgid, and orgname from getAdminOrg', function () {
@@ -265,7 +264,8 @@ describe('Partner Service -', function () {
         expect(data.usage).toBe(0);
         expect(data.offer).toEqual({
           userServices: '',
-          deviceBasedServices: ''
+          deviceBasedServices: '',
+          careServices: ''
         });
       });
 
@@ -324,13 +324,13 @@ describe('Partner Service -', function () {
         expect(data.offer.userServices).toContain($translate.instant('trials.message'));
       });
 
-      it('should return an object with its "offer.userServices" property as a comma separated list with the translated "trials.care" l10n key, if the offers "id" property matches `Config.offerTypes.care` and atlasCareTrials feature is enabled for the org', function () {
+      it('should return an object with its "offer.careServices" property as a comma separated list with the translated "trials.care" l10n key, if the offers "id" property matches `Config.offerTypes.care` and atlasCareTrials feature is enabled for the org', function () {
         var data = PartnerService.parseLicensesAndOffers({
           offers: [{
             id: Config.offerTypes.care
           }]
         }, true);
-        expect(data.offer.userServices).toContain($translate.instant('trials.care'));
+        expect(data.offer.careServices).toContain($translate.instant('trials.care'));
       });
 
       it('should return an object with its "offer.userServices" property without the translated "trials.care" l10n key, if atlasCareTrials feature is disabled for the org', function () {
@@ -384,13 +384,13 @@ describe('Partner Service -', function () {
 
         data = PartnerService.parseLicensesAndOffers({
           offers: [{
-              id: Config.offerTypes.spark1
-            }, {
-              id: Config.offerTypes.squaredUC
-            }, // presence anywhere in this list will set the property to true
-            {
-              id: Config.offerTypes.collab
-            },
+            id: Config.offerTypes.spark1
+          }, {
+            id: Config.offerTypes.squaredUC
+          }, // presence anywhere in this list will set the property to true
+          {
+            id: Config.offerTypes.collab
+          },
           ]
         }, true);
         expect(data.isSquaredUcOffer).toBe(true);
@@ -406,13 +406,13 @@ describe('Partner Service -', function () {
 
         data = PartnerService.parseLicensesAndOffers({
           licenses: [{
-              licenseType: Config.licenseTypes.MESSAGING
-            }, {
-              licenseType: Config.licenseTypes.COMMUNICATION
-            }, // presence anywhere in this list should set the property to true
-            {
-              licenseType: Config.licenseTypes.CONFERENCING
-            }
+            licenseType: Config.licenseTypes.MESSAGING
+          }, {
+            licenseType: Config.licenseTypes.COMMUNICATION
+          }, // presence anywhere in this list should set the property to true
+          {
+            licenseType: Config.licenseTypes.CONFERENCING
+          }
           ]
         }, true);
         expect(data.isSquaredUcOffer).toBe(true);
@@ -439,10 +439,10 @@ describe('Partner Service -', function () {
 
         data = PartnerService.parseLicensesAndOffers({
           licenses: [{
-              licenseType: undefined
-            }, {
-              licenseType: Config.licenseTypes.COMMUNICATION
-            },
+            licenseType: undefined
+          }, {
+            licenseType: Config.licenseTypes.COMMUNICATION
+          },
             undefined
           ]
         }, true);
@@ -599,31 +599,40 @@ describe('Partner Service -', function () {
 
       it('should return an object without free/paid services if none or only multiple conferencing services', function () {
         var result = PartnerService.getFreeOrActiveServices(customer, true);
-        expect(result.freeOrPaidServices).not.toBeDefined();
+        var meetingServices = _.find(result, {
+          isMeeting: true
+        });
+        expect(meetingServices).toBeDefined();
+        expect(result.length).toBe(1);
       });
 
-      it('should return an object with an array of free/paid services if present ', function () {
+      it('should return  an array of free/paid services if present ', function () {
         customer.licenseList[3].isTrial = false;
         var result = PartnerService.getFreeOrActiveServices(customer, true);
-        expect(result.freeOrPaidServices).toBeDefined();
-        expect(result.freeOrPaidServices.length).toBe(1);
+        expect(result).toBeDefined();
+        expect(result.length).toBe(2);
       });
 
-      it('should return an object with and array of meeting services and total license quantity when multiple conf. services are active ', function () {
+      it('should return an array containing an object with  array of meeting services and total license quantity when multiple conf. services are active ', function () {
         var result = PartnerService.getFreeOrActiveServices(customer, true);
-        expect(result.meetingServices.sub.length).toBe(3);
-        expect(result.meetingServices.qty).toBe(500);
+        var meeting = _.find(result, {
+          isMeeting: true
+        });
+        expect(meeting).toBeDefined();
+        expect(meeting.sub.length).toBe(3);
+        expect(meeting.qty).toBe(500);
       });
 
-      it('should return an object with an meeting as part of freeOrPaidServices and no mettingServices when only 1 conferencing service', function () {
+      it('should return an array with a meeting and no meeting subarray when only 1 conferencing service', function () {
         _.each(customer.licenseList, function (license) {
           license.isTrial = true;
         });
         customer.licenseList[2].isTrial = false;
         var result = PartnerService.getFreeOrActiveServices(customer, true);
-        expect(result.meetingPaidServices).not.toBeDefined();
-        expect(result.freeOrPaidServices).toBeDefined();
-        expect(result.freeOrPaidServices[0].licenseType).toBe(Config.licenseTypes.CONFERENCING);
+        // expect(result.meetingPaidServices).not.toBeDefined();
+        expect(result).toBeDefined();
+        expect(result[0].licenseType).toBe(Config.licenseTypes.CONFERENCING);
+        expect(result[0].sub).not.toBeDefined();
       });
     });
   });

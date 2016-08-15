@@ -49,11 +49,6 @@ module.exports = (function makeWebpackConfig() {
     failOnError: true,
   };
 
-  config.jscs = {
-    emitErrors: true,
-    failOnHint: true,
-  };
-
   config.postcss = [
     autoprefixer({
       browsers: ['last 2 version'],

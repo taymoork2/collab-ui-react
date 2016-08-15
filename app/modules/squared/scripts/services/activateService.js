@@ -2,9 +2,9 @@
   'use strict';
 
   module.exports = angular.module('squared.activateservice', [
-      require('modules/core/auth/auth'),
-      require('modules/core/config/urlConfig'),
-    ])
+    require('modules/core/auth/auth'),
+    require('modules/core/config/urlConfig'),
+  ])
     .service('ActivateService', ActivateService)
     .name;
 

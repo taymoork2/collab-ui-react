@@ -18,12 +18,14 @@
     var downloadInProgress = false;
     var isTooManyUsers = false;
     var canceler, objectBlob, templateBlob;
+    var userExportThreshold = 10000;
 
     var service = {
       typeTemplate: typeTemplate,
       typeUser: typeUser,
       typeAny: typeAny,
       typeError: typeError,
+      userExportThreshold: userExportThreshold,
       getCsv: getCsv,
       openInIE: openInIE,
       createObjectUrl: createObjectUrl,
@@ -62,7 +64,7 @@
             canceler = undefined;
           });
         } else if (csvType === typeError) {
-          return $q(function (resolve, reject) {
+          return $q(function (resolve) {
             var csvErrorArray = UserCsvService.getCsvStat().userErrorArray;
             var csvString = $.csv.fromObjects(_.union([{
               row: 'Row Number',

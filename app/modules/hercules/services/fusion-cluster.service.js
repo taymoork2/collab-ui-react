@@ -8,7 +8,7 @@
     .factory('FusionClusterService', FusionClusterService);
 
   /* @ngInject */
-  function FusionClusterService($http, UrlConfig, Authinfo, FusionClusterStatesService, FusionUtils) {
+  function FusionClusterService($http, UrlConfig, Authinfo, FusionClusterStatesService, FusionUtils, $translate) {
     var service = {
       preregisterCluster: preregisterCluster,
       addPreregisteredClusterToAllowList: addPreregisteredClusterToAllowList,
@@ -28,7 +28,10 @@
       getAggregatedStatusForService: getAggregatedStatusForService,
       processClustersToAggregateStatusForService: processClustersToAggregateStatusForService,
       serviceIsSetUp: serviceIsSetUp,
-      processClustersToSeeIfServiceIsSetup: processClustersToSeeIfServiceIsSetup
+      processClustersToSeeIfServiceIsSetup: processClustersToSeeIfServiceIsSetup,
+      formatTimeAndDate: formatTimeAndDate,
+      labelForTime: labelForTime,
+      labelForDay: labelForDay
     };
 
     return service;
@@ -139,10 +142,10 @@
     function preregisterCluster(name, releaseChannel, managementConnectorType) {
       var url = UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '/clusters';
       return $http.post(url, {
-          name: name,
-          releaseChannel: releaseChannel,
-          targetType: managementConnectorType
-        })
+        name: name,
+        releaseChannel: releaseChannel,
+        targetType: managementConnectorType
+      })
         .then(extractDataFromResponse);
     }
 
@@ -212,8 +215,8 @@
     function setClusterName(clusterId, newClusterName) {
       var url = UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '/clusters/' + clusterId;
       return $http.patch(url, {
-          name: newClusterName
-        })
+        name: newClusterName
+      })
         .then(extractDataFromResponse);
     }
 
@@ -265,17 +268,32 @@
         return 'outage';
       }
 
+      // For Hybrid Media we have to handle upgrading scenario differently than expressway
+      if (serviceId === 'squared-fusion-media') {
+        if (_.every(statuses, function (value) {
+          return (value === 'upgrading');
+        })) {
+          return 'outage';
+        }
+
+        if (_.find(statuses, function (value) {
+          return (value === 'upgrading');
+        })) {
+          return 'impaired';
+        }
+      }
+
       // We have an outage if all clusters have their connectors in these states or combinations of them:
       if (_.every(statuses, function (value) {
-          return (value === 'unknown' || value === 'stopped' || value === 'disabled' || value === 'offline' || value === 'not_configured' || value === 'not_operational');
-        })) {
+        return (value === 'unknown' || value === 'stopped' || value === 'disabled' || value === 'offline' || value === 'not_configured' || value === 'not_operational');
+      })) {
         return 'outage';
       }
 
       // Service is degraded if one or more clusters have their connectors in one of these states:
       if (_.find(statuses, function (value) {
-          return (value === 'has_alarms' || value === 'stopped' || value === 'not_operational' || value === 'disabled' || value === 'offline');
-        })) {
+        return (value === 'has_alarms' || value === 'stopped' || value === 'not_operational' || value === 'disabled' || value === 'offline');
+      })) {
         return 'impaired';
       }
 
@@ -313,6 +331,34 @@
         return _.some(cluster, function (connector) {
           return connector.connectorType === target_connector;
         });
+      });
+    }
+
+    function formatTimeAndDate(upgradeSchedule) {
+      var time = labelForTime(upgradeSchedule.scheduleTime);
+      var day;
+      if (upgradeSchedule.scheduleDays.length === 7) {
+        day = $translate.instant('weekDays.everyDay', {
+          day: $translate.instant('weekDays.day')
+        });
+      } else {
+        day = labelForDay(upgradeSchedule.scheduleDays[0]);
+      }
+      return time + ' ' + day;
+    }
+
+    function labelForTime(time) {
+      var currentLanguage = $translate.use();
+      if (currentLanguage === 'en_US') {
+        return moment(time, 'HH:mm').format('hh:mm A');
+      } else {
+        return time;
+      }
+    }
+
+    function labelForDay(day) {
+      return $translate.instant('weekDays.everyDay', {
+        day: $translate.instant('weekDays.' + day)
       });
     }
 

@@ -64,9 +64,6 @@ namespace globalsettings {
           this.$modal.open({
             type: 'dialog',
             templateUrl: 'modules/core/settings/retention/confirmLowerRetention.tpl.html',
-            controller: function () {
-              var ctrl = this;
-            },
             controllerAs: 'ctrl'
           }).result.then(() => {
             this.RetentionService.setRetention(this.orgId, this.selectedRetention.value)

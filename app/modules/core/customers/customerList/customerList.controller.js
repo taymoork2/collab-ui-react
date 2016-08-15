@@ -6,7 +6,7 @@
 
   /* @ngInject */
   function CustomerListCtrl($q, $rootScope, $scope, $state, $stateParams, $templateCache, $translate, $window, Analytics, Authinfo, Config, customerListToggle, ExternalNumberService, FeatureToggleService, Log, Notification, Orgservice, PartnerService, TrialService) {
-    $scope.isCustomerPartner = Authinfo.isCustomerPartner ? true : false;
+    $scope.isCustomerPartner = !!Authinfo.isCustomerPartner;
     $scope.isPartnerAdmin = Authinfo.isPartnerAdmin();
     $scope.activeBadge = false;
     $scope.isTestOrg = false;
@@ -209,48 +209,48 @@
             $scope.currentDataPosition++;
             $scope.load = false;
             // lol getTrialsList doesnt take any params...
-            getTrialsList($scope.currentDataPosition * Config.usersperpage + 1);
+            getTrialsList(($scope.currentDataPosition * Config.usersperpage) + 1);
             $scope.gridApi.infiniteScroll.dataLoaded();
           }
         });
       },
       multiFields: {
         meeting: [{
-            columnGroup: 'conferencing',
-            columnName: 'conferencing',
-            offerCode: 'CF',
-            tooltip: $translate.instant('customerPage.meeting')
-          }, {
-            columnGroup: 'webex',
-            offerCode: 'EE',
-            columnName: 'webexEEConferencing',
-            tooltip: $translate.instant('customerPage.webex')
-          }, {
-            columnGroup: 'webex',
-            offerCode: 'CMR',
-            columnName: 'webexCMR',
-            tooltip: $translate.instant('customerPage.webex')
-          }, {
-            columnGroup: 'webex',
-            offerCode: 'MC',
-            columnName: 'webexMeetingCenter',
-            tooltip: $translate.instant('customerPage.webex')
-          }, {
-            columnGroup: 'webex',
-            offerCode: 'SC',
-            columnName: 'webexSupportCenter',
-            tooltip: $translate.instant('customerPage.webex')
-          }, {
-            columnGroup: 'webex',
-            offerCode: 'TC',
-            columnName: 'webexTrainingCenter',
-            tooltip: $translate.instant('customerPage.webex')
-          }, {
-            columnGroup: 'webex',
-            offerCode: 'EC',
-            columnName: 'webexEventCenter',
-            tooltip: $translate.instant('customerPage.webex')
-          }
+          columnGroup: 'conferencing',
+          columnName: 'conferencing',
+          offerCode: 'CF',
+          tooltip: $translate.instant('customerPage.meeting')
+        }, {
+          columnGroup: 'webex',
+          offerCode: 'EE',
+          columnName: 'webexEEConferencing',
+          tooltip: $translate.instant('customerPage.webex')
+        }, {
+          columnGroup: 'webex',
+          offerCode: 'CMR',
+          columnName: 'webexCMR',
+          tooltip: $translate.instant('customerPage.webex')
+        }, {
+          columnGroup: 'webex',
+          offerCode: 'MC',
+          columnName: 'webexMeetingCenter',
+          tooltip: $translate.instant('customerPage.webex')
+        }, {
+          columnGroup: 'webex',
+          offerCode: 'SC',
+          columnName: 'webexSupportCenter',
+          tooltip: $translate.instant('customerPage.webex')
+        }, {
+          columnGroup: 'webex',
+          offerCode: 'TC',
+          columnName: 'webexTrainingCenter',
+          tooltip: $translate.instant('customerPage.webex')
+        }, {
+          columnGroup: 'webex',
+          offerCode: 'EC',
+          columnName: 'webexEventCenter',
+          tooltip: $translate.instant('customerPage.webex')
+        }
 
         ]
       },
@@ -357,8 +357,10 @@
     // Sort function to keep partner org at top
     function partnerAtTopSort(a, b) {
       var orgName = Authinfo.getOrgName();
-      if (a === orgName || b === orgName) {
+      if (a === orgName) {
         return -1;
+      } else if (b === orgName) {
+        return 1;
       } else {
         return sortByName(a, b);
       }
@@ -456,52 +458,49 @@
     function getManagedOrgsList(searchText) {
       $scope.showManagedOrgsRefresh = true;
       var promiselist = [PartnerService.getManagedOrgsList(searchText)];
-      var myOrgName = Authinfo.getOrgName();
-      var isPartnerAdmin = Authinfo.isPartnerAdmin();
-      var isPartnerReadOnlyAdmin = Authinfo.isPartnerReadOnlyAdmin();
-      var getOrgNameSearch = Authinfo.getOrgName().indexOf(searchText);
-      var attachMyOrg = false;
 
-      if (isPartnerAdmin || isPartnerReadOnlyAdmin) {
-        if (searchText === '' || getOrgNameSearch !== -1) {
-          attachMyOrg = true;
-          getMyOrgDetails();
+      if (Authinfo.isPartnerAdmin() || Authinfo.isPartnerReadOnlyAdmin()) {
+        // This attaches myOrg details to the managed orgs list
+        if (searchText === '' || Authinfo.getOrgName().indexOf(searchText) !== -1) {
+          promiselist.push(getMyOrgDetails());
         }
       }
 
       return $q.all(promiselist)
+        .then(function (results) {
+          if (results) {
+            var orgList = _.get(results, '[0].data.organizations', []);
+            var managed = PartnerService.loadRetrievedDataToList(orgList, false,
+              $scope.isCareEnabled);
+            var isMyOrgInList = _.some(orgList, {
+              customerName: Authinfo.getOrgName()
+            });
+
+            if (!isMyOrgInList && results[1]) {
+              // 4/11/2016 admolla
+              // TODO: for some reason if I refactor this to not need an array, karma acts up....
+              if (_.isArray(results[1])) {
+                managed.unshift(results[1][0]);
+              }
+            }
+
+            $scope.managedOrgsList = managed;
+            $scope.totalOrgs = $scope.managedOrgsList.length;
+          } else {
+            Log.debug('Failed to retrieve managed orgs information.');
+            Notification.error('partnerHomePage.errGetOrgs');
+          }
+
+          // dont use a .finally(..) since this $q.all is returned
+          // (if you .finally(..), the next `then` doesnt get called)
+          $scope.showManagedOrgsRefresh = false;
+        })
         .catch(function (err) {
           Log.debug('Failed to retrieve managed orgs information. Status: ' + err.status);
           Notification.error('partnerHomePage.errGetTrialsQuery', {
             status: err.status
           });
 
-          $scope.showManagedOrgsRefresh = false;
-        })
-        .then(function (results) {
-          var managed = PartnerService.loadRetrievedDataToList(_.get(results, '[0].data.organizations', []), false,
-            $scope.isCareEnabled);
-          var myOrgItem = _.find(managed, {
-            customerName: myOrgName
-          });
-
-          // is MyOrg returned in managedOrgs list
-          if (myOrgItem) {
-            // remove from list
-            _.remove(managed, myOrgItem);
-            // add to top
-            managed.unshift(myOrgItem);
-          } else {
-            if (attachMyOrg) {
-              // add myOrg to the top of the list
-              managed.unshift(myOrgDetails[0]);
-            }
-          }
-          $scope.managedOrgsList = managed;
-          $scope.totalOrgs = $scope.managedOrgsList.length;
-
-          // dont use a .finally(..) since this $q.all is returned
-          // (if you .finally(..), the next `then` doesnt get called)
           $scope.showManagedOrgsRefresh = false;
         });
     }
@@ -530,7 +529,7 @@
 
     function openAddTrialModal() {
       if ($scope.isTestOrg) {
-        Analytics.trackTrialSteps(Analytics.eventNames.START, $state.current.name);
+        Analytics.trackTrialSteps(Analytics.eventNames.START, $state.current.name, Authinfo.getOrgId());
       }
       $state.go('trialAdd.info').then(function () {
         $state.modal.result.finally(resetLists);
@@ -663,7 +662,7 @@
     }
 
     function getIsTrial(org) {
-      if (!!org.isPartner) return false;
+      if (org.isPartner) return false;
       return _.get(org, 'communications.isTrial', true);
     }
 

@@ -266,13 +266,13 @@
     function hasSparkCallVoicemailService() {
       hasVoicemailService = false;
       return HuronCustomer.get().then(function (customer) {
-          _.forEach(customer.links, function (service) {
-            if (service.rel === 'voicemail') {
-              hasVoicemailService = true;
-            }
-          });
-        })
-        .catch(function (response) {
+        _.forEach(customer.links, function (service) {
+          if (service.rel === 'voicemail') {
+            hasVoicemailService = true;
+          }
+        });
+      })
+        .catch(function () {
           hasVoicemailService = false;
         });
     }
@@ -302,7 +302,7 @@
     function calculateProcessProgress() {
       $timeout(function () {
         vm.model.numTotalUsers = vm.model.numNewUsers + vm.model.numExistingUsers + vm.model.userErrorArray.length;
-        vm.model.processProgress = Math.round(vm.model.numTotalUsers / csvUsersArray.length * 100);
+        vm.model.processProgress = Math.round((vm.model.numTotalUsers / csvUsersArray.length) * 100);
         UserCsvService.setCsvStat({
           numTotalUsers: vm.model.numTotalUsers,
           processProgress: vm.model.processProgress
@@ -376,7 +376,7 @@
           var addedUsersList = [];
           var onboardUser = null;
 
-          _.forEach(response.data.userResponse, function (user, index) {
+          _.forEach(response.data.userResponse, function (user) {
             onboardUser = onboardedUserWithEmail(user.email);
 
             if (user.httpStatus === 200 || user.httpStatus === 201) {
@@ -387,6 +387,9 @@
                     numExistingUsers: vm.model.numExistingUsers
                   });
                 });
+                if (user.message === '700000') {
+                  vm.licenseUnavailable = true;
+                }
               } else {
                 $timeout(function () {
                   vm.model.numNewUsers++;
@@ -414,15 +417,12 @@
                 addUserErrorWithTrackingID(-1, user.email, UserCsvService.getBulkErrorResponse(user.httpStatus, user.message, user.email), response);
               }
             } else {
-              if (user.message === '400112') {
-                vm.licenseUnavailable = true;
-              }
-              addUserErrorWithTrackingID(onboardUser.csvRow, onboardUser.email, UserCsvService.getBulkErrorResponse(user.httpStatus, user.message, user.email), response);
+              addUserErrorWithTrackingID(onboardUser.csvRow, user.email, UserCsvService.getBulkErrorResponse(user.httpStatus, user.message, user.email), response);
             }
           });
         } else {
           // for some reason the userResponse is incorrect.  We need to error every user.
-          _.forEach(onboardedUsers, function (user, idx) {
+          _.forEach(onboardedUsers, function (user) {
             addUserErrorWithTrackingID(user.csvRow, user.email, $translate.instant('firstTimeWizard.processBulkResponseError'), response);
           });
         }
@@ -432,23 +432,24 @@
       // if 429 or 503, we need to retry the whole set of users
       function errorCallback(response, onboardedUsers) {
 
-        if (response.status === 503 || response.status === 429 && vm.model.numRetriesToAttempt > 0) {
+        if ((response.status === 503 || response.status === 429) && vm.model.numRetriesToAttempt > 0) {
           // need to retry this set of users
           vm.model.retryAfter = response.headers('retry-after') || vm.model.retryAfterDefault;
 
-          _.forEach(onboardedUsers, function (user, index) {
+          _.forEach(onboardedUsers, function (user) {
             vm.model.usersToRetry.push(user);
           });
         } else {
           // fatal error.  flag all users as having an error
-          _.forEach(onboardedUsers, function (user, index) {
+          _.forEach(onboardedUsers, function (user) {
+            var email = (user.email ? user.email : user.address);
             addUserErrorWithTrackingID(
               user.csvRow,
-              user.email,
+              email,
               UserCsvService.getBulkErrorResponse(
                 response.status,
                 vm.isCancelledByUser ? '0' : '1',
-                user.email
+                email
               ),
               response
             );
@@ -462,7 +463,7 @@
        */
       function onboardCsvUsers(usersToOnboard, csvPromise) {
         return csvPromise.then(function () {
-          return $q(function (resolve, reject) {
+          return $q(function (resolve) {
             if (usersToOnboard.length > 0) {
               Userservice.bulkOnboardUsers(usersToOnboard, cancelDeferred.promise).then(function (response) {
                 successCallback(response, usersToOnboard);
@@ -639,9 +640,9 @@
 
       function msToTime(millisec) {
         return {
-          seconds: millisec / 1e3 % 60 | 0,
-          minutes: millisec / 6e4 % 60 | 0,
-          hours: millisec / 36e5 % 24 | 0
+          seconds: (millisec / 1e3) % 60 | 0,
+          minutes: (millisec / 6e4) % 60 | 0,
+          hours: (millisec / 36e5) % 24 | 0
         };
       }
 
@@ -649,7 +650,7 @@
        * Process all of the users that need onboarding retried
        */
       function processRetryUsers() {
-        return $q(function (resolve, reject) {
+        return $q(function (resolve) {
 
           vm.model.numRetriesToAttempt--;
 

@@ -12,7 +12,7 @@
     $scope.displayRows = 10;
     $scope.expiredRows = 3;
     $scope.showTrialsRefresh = true;
-    $scope.isCustomerPartner = Authinfo.isCustomerPartner ? true : false;
+    $scope.isCustomerPartner = !!Authinfo.isCustomerPartner;
     $scope.isTestOrg = false;
 
     $scope.launchCustomerPortal = launchCustomerPortal;
