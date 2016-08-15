@@ -6,7 +6,7 @@
     .controller('CustomerOverviewCtrl', CustomerOverviewCtrl);
 
   /* @ngInject */
-  function CustomerOverviewCtrl($q, $state, $stateParams, $translate, $window, $modal, AccountOrgService, Authinfo, BrandService, Config, FeatureToggleService, identityCustomer, Log, newCustomerViewToggle, Notification, Orgservice, PartnerService, TrialService, Userservice) {
+  function CustomerOverviewCtrl($q, $state, $stateParams, $translate, $window, $modal, Authinfo, BrandService, Config, FeatureToggleService, identityCustomer, Log, newCustomerViewToggle, Notification, Orgservice, PartnerService, TrialService) {
     var vm = this;
 
     vm.currentCustomer = $stateParams.currentCustomer;
@@ -123,62 +123,12 @@
         });
     }
 
-    function LicenseFeature(name, bAdd) {
-      this['id'] = name.toString();
-      this['idOperation'] = bAdd ? 'ADD' : 'REMOVE';
-      this['properties'] = null;
-    }
-
-    function collectLicenseIdsForWebexSites(liclist) {
-      var licIds = [];
-      var i = 0;
-      if (_.isUndefined(liclist)) {
-        liclist = [];
-      }
-      for (i = 0; i < liclist.length; i++) {
-        var lic = liclist[i];
-        var licId = lic.licenseId;
-        var lictype = lic.licenseType;
-        var isConfType = lictype === "CONFERENCING";
-        if (isConfType) {
-          licIds.push(new LicenseFeature(licId, (_.isUndefined(lic.siteUrl) === false)));
-        }
-      }
-      return licIds;
-    } //collectLicenses
-
     function launchCustomerPortal() {
-      var liclist = vm.currentCustomer.licenseList;
-      var licIds = collectLicenseIdsForWebexSites(liclist);
-      var partnerEmail = Authinfo.getPrimaryEmail();
-      var emailObj = {
-        'address': partnerEmail
-      };
-      var promise = $q.when();
-      if (vm.isPartnerAdmin) {
-        promise = PartnerService.modifyManagedOrgs(vm.customerOrgId);
-      }
-      promise.then(function () {
-        if (licIds.length > 0) {
-          Userservice.updateUsers([emailObj], licIds, null, 'updateUserLicense', _.noop);
-          openCustomerPortal();
-        } else {
-          AccountOrgService.getAccount(vm.customerOrgId).then(function (data) {
-            var accountsLength = _.get(data, 'accounts.length');
-            if (accountsLength) {
-              var updateUsersList = [];
-              for (var i = 0; i < accountsLength; i++) {
-                var account = data.accounts[i];
-                var lics = account.licenses;
-                var licIds = collectLicenseIdsForWebexSites(lics);
-                updateUsersList.push(Userservice.updateUsers([emailObj], licIds, null, 'updateUserLicense', _.noop));
-              }
-              $q.all(updateUsersList).then(openCustomerPortal);
-            } else {
-              openCustomerPortal();
-            }
-          });
-        }
+      $q.resolve(vm.isPartnerAdmin && PartnerService.modifyManagedOrgs(vm.customerOrgId))
+      .then(openCustomerPortal)
+      .catch(function (response) {
+        Notification.errorWithTrackingId(response, 'customerPage.launchCustomerPortalError');
+        return response;
       });
     }
 

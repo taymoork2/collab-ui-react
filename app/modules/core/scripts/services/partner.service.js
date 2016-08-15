@@ -2,10 +2,11 @@
   'use strict';
 
   angular.module('Core')
-    .service('PartnerService', PartnerService);
+    .service('PartnerService', PartnerService)
+    .factory('ScimPatchService', ScimPatchService);
 
   /* @ngInject */
-  function PartnerService($http, $q, $rootScope, $translate, Analytics, Authinfo, Auth, Config, Log, TrialService, UrlConfig) {
+  function PartnerService($http, $rootScope, $q, $translate, Analytics, Authinfo, Auth, Config, TrialService, UrlConfig, ScimPatchService) {
     var managedOrgsUrl = UrlConfig.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId() + '/managedOrgs';
     var siteListUrl = UrlConfig.getAdminServiceUrl() + 'organizations/%s/siteUrls';
     var customerStatus = {
@@ -216,8 +217,6 @@
     }
 
     function patchManagedOrgs(uuid, customerOrgId) {
-      var authUrl = UrlConfig.getScimUrl(Authinfo.getOrgId()) + '/' + uuid;
-
       var payload = {
         'schemas': [
           'urn:scim:schemas:core:1.0',
@@ -229,23 +228,22 @@
         }]
       };
 
-      return $http({
-        method: 'PATCH',
-        url: authUrl,
-        data: payload
+      return ScimPatchService.update({
+        userId: uuid
+      },
+        payload
+      ).$promise.then(function (response) {
+        Analytics.trackUserPatch(response.meta.organizationID);
+        return $q.resolve(response);
+      }).catch(function (response) {
+        return $q.reject(response);
       });
     }
 
     function modifyManagedOrgs(customerOrgId) {
       return Auth.getAuthorizationUrlList().then(function (response) {
-        if (response.status === 200) {
-          var uuid = response.data.uuid;
-          if (_.indexOf(response.data.managedOrgs, customerOrgId) < 0) {
-            patchManagedOrgs(uuid, customerOrgId);
-            Analytics.trackUserPatch(response.data.orgId, uuid);
-          }
-        } else {
-          Log.error('Query for userauthinfo failed. Status: ' + response.status);
+        if (_.chain(response).get('data.managedOrgs').includes(customerOrgId).value()) {
+          return patchManagedOrgs(response.data.uuid, customerOrgId);
         }
       });
     }
@@ -669,4 +667,15 @@
       }
     }
   }
+  /* @ngInject */
+  function ScimPatchService($resource, Authinfo, UrlConfig) {
+    return $resource(UrlConfig.getScimUrl(Authinfo.getOrgId()) + '/:userId', {
+      userId: '@userId'
+    }, {
+      'update': {
+        method: 'PATCH'
+      }
+    });
+  }
+
 })();
