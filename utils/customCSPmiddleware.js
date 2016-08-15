@@ -24,6 +24,9 @@ module.exports = csp({
       'https://wbxdmz.admin.ciscospark.com',
       'https://wbxbts.admin.ciscospark.com'
     ],
+    frameSrc: [
+      'https://store.digitalriver.com',
+    ],
     connectSrc: [
       '\'self\'',
       'https://*.cisco.com',
