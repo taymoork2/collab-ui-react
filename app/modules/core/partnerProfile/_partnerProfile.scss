@@ -67,11 +67,8 @@
       flex: 1;
     }
   }
-
+  
   .form-group {
-    & > label:hover {
-      cursor: text;
-    }
     .col-xs-12 {
       padding-left: 5px;
     }
