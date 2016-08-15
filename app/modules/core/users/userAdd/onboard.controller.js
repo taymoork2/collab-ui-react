@@ -430,7 +430,7 @@
     }
 
     $scope.ConfirmAdditionalServiceSetup = function () {
-      var promise = Notification.confirmation('usersPage.addtionalServiceSetupConfirmation');
+      var promise = Notification.confirmation($translate.instant('usersPage.addtionalServiceSetupConfirmation'));
       promise.then(function () {
         $state.go('firsttimewizard');
       });
