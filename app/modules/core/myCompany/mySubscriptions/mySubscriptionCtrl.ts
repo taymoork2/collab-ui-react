@@ -21,7 +21,6 @@ const webexClass = 'icon-webex';
 const callClass = 'icon-calls';
 
 const licenseTypes = ['MS', 'CF', 'MC', 'TC', 'EC', 'EE', 'CMR', 'CO', 'SD'];
-const subUrl = "http://gc.digitalriver.com/store?SiteID=ciscoctg&Action=DisplaySelfServiceSubscriptionLandingPage&futureAction=DisplaySelfServiceSubscriptionUpgradePage&subscriptionID=";
 
 class MySubscriptionCtrl {
   public hybridServices = [];
@@ -66,10 +65,6 @@ class MySubscriptionCtrl {
     this.hybridServicesRetrieval();
   };
 
-  public upgradeUrl(subId) {
-    return subUrl + subId;
-  };
-
   private upgradeTrialUrl(subId) {
     return this.$http.get(this.UrlConfig.getAdminServiceUrl() + 'commerce/online/' + subId).then((response) => {
       if (response.data) {
@@ -98,7 +93,6 @@ class MySubscriptionCtrl {
     this.$rootScope.$broadcast('SUBSCRIPTION::upgradeData', {
       isTrial: subscription.isTrial,
       subId: subscription.subscriptionId,
-      url: this.upgradeUrl(subscription.subscriptionId),
       upgradeTrialUrl: trialUrl
     });
   };
