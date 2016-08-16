@@ -5,6 +5,11 @@ import {
   CallForwardAll,
   CallForwardBusy
 } from '../../callForward/callForward';
+import callerId from '../../callerId/callerId.component';
+import { BLOCK_CALLERID_TYPE, 
+  DIRECT_LINE_TYPE, 
+  COMPANY_CALLERID_TYPE, 
+  CUSTOM_COMPANY_TYPE } from '../../callerId/callerId';
 
 interface IDirectoryNumber {
   uuid: string,
@@ -32,10 +37,29 @@ class LineOverviewCtrl {
 
   // Simultaneous Calls properties
   public incomingCallMaximum: number = 8;
+  
+  //callerId Component Properties
+  public callerIdOptions: Array<Object> = [];
+  public callerIdSelected: Object;
+  public customCallerIdName: string;
+  public customCallerIdNumber: string;
+  public blockedCallerId_label: string;
+  public companyCallerId_label: string;
+  public custom_label: string;
+  
+  public translate: ng.translate.ITranslateService;
+
+  constructor(private CallerId, private $translate) {
+    this.blockedCallerId_label = $translate.instant('callerIdPanel.blockedCallerId');
+    this.companyCallerId_label = $translate.instant('callerIdPanel.companyCallerId');
+    this.custom_label = 'Custom';
+    this.translate = $translate;
+  }
 
   private $onInit(): void {
     this.initDirectoryNumber();
     this.initCallForward();
+    this.initCallerId();
   }
 
   private initDirectoryNumber(): void {
@@ -70,13 +94,24 @@ class LineOverviewCtrl {
     this.form.$setPristine();
     this.form.$setUntouched();
   }
+  private initCallerId(): void {
+    this.callerIdOptions.push(this.CallerId.constructCallerIdOption(this.custom_label, CUSTOM_COMPANY_TYPE, '', null));
+    this.callerIdOptions.push(this.CallerId.constructCallerIdOption(this.blockedCallerId_label, BLOCK_CALLERID_TYPE, this.translate.instant('callerIdPanel.blockedCallerIdDescription'), '', null));
+  }
+
+  public updateCallerId(callerIdSelected, callerIdName, callerIdNumber): void {
+    this.customCallerIdName = callerIdName;
+    this.customCallerIdNumber = callerIdNumber;
+    this.callerIdSelected = callerIdSelected;
+  }
 }
 
 export default angular
   .module('huron.line-overview', [
     directoryNumber,
     callForward,
-    simultaneousCalls
+    simultaneousCalls,
+    callerId
   ])
   .component('lineOverview', {
     controller: LineOverviewCtrl,
