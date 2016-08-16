@@ -2311,8 +2311,9 @@
     "reversionLabel": "Call Reversion Rule",
     "reversionDesc": "If the call is not answered, send it to this destination",
     "personWhoParked": "Person who parked the call",
-    "firstRange": "First Range",
-    "secondRange": "Second Range",
+    "firstRange": "Starting #",
+    "secondRange": "Ending #",
+    "singleRange": "Single Park Number",
     "saveLabel": "Do you want to save your changes?",
     "memberFetchFailure": "Unable to get members."
   },
