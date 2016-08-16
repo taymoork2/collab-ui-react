@@ -1,11 +1,17 @@
 (function () {
   'use strict';
 
-  angular.module('Core')
-    .controller('BmmpBannerCtrl', BmmpBannerCtrl);
+  angular
+    .module('Core')
+    .component('crBmmpBanner', {
+      templateUrl: 'modules/core/myCompany/bmmpBanner/bmmpBanner.tpl.html',
+      controller: BmmpBannerCtrl
+    });
+
+  ////////////////////
 
   /* ngInject */
-  function BmmpBannerCtrl($translate, Authinfo, UrlConfig) {
+  function BmmpBannerCtrl($scope, $translate, Authinfo, UrlConfig) {
     var vm = this;
 
     // undocumented parameters provided by BMMP widget team
@@ -16,21 +22,20 @@
       apiBaseUrl: UrlConfig.getBmmpUrl()
     };
 
+    vm.$onInit = onInit;
+    vm.canShow = canShow;
     vm._helpers = {
       initBmmpBanner: initBmmpBanner
-    }
-
-    vm.canShow = canShow;
-
-    init();
+    };
 
     ///////////////////////
 
-    function init() {
+    function onInit() {
       initBmmpBanner(bmmpParams);
     }
 
     function initBmmpBanner(bmmpParams) {
+      /* eslint-disable no-undef */
       bmmp.init(null,
           null,
           bmmpParams.orgId,
