@@ -48,4 +48,12 @@ describe('Service: MyCompanyOrdersService', () => {
     });
     this.$httpBackend.flush();
   });
+
+  it('should get digital river order history url', function () {
+    this.$httpBackend.expectGET(this.UrlConfig.getAdminServiceUrl() + 'commerce/online/users/authtoken').respond(200, 'abc+123');
+    this.MyCompanyOrdersService.getDigitalRiverOrderHistoryUrl().then(response => {
+      expect(response).toEqual('https://store.digitalriver.com/store/ciscoctg/en_US/DisplayAccountOrderListPage?DRL=abc%2B123');
+    });
+    this.$httpBackend.flush();
+  });
 });

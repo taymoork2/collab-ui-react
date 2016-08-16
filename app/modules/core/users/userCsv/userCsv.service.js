@@ -6,7 +6,7 @@
     .factory('UserCsvService', UserCsvService);
 
   /* @ngInject */
-  function UserCsvService($translate, TrackingId) {
+  function UserCsvService($translate, Config, TrackingId) {
     var csvStat = {
       isProcessing: false,
       numMaxUsers: 0,
@@ -59,19 +59,14 @@
         case 400:
           {
             switch (messageCode) {
-              case ('400087'):
+              case Config.messageErrors.hybridServicesError:
                 {
                   responseMessage = $translate.instant('usersPage.hybridServicesError');
                   break;
                 }
-              case ('400094'):
+              case Config.messageErrors.hybridServicesComboError:
                 {
                   responseMessage = $translate.instant('usersPage.hybridServicesComboError');
-                  break;
-                }
-              case ('400112'):
-                {
-                  responseMessage = $translate.instant('usersPage.insufficientLicensesError');
                   break;
                 }
               default:
@@ -90,15 +85,15 @@
         case 403:
           {
             switch (messageCode) {
-              case ('400081'):
+              case Config.messageErrors.userExistsError:
                 {
                   responseMessage = $translate.instant('usersPage.userExistsError', {
                     email: email
                   });
                   break;
                 }
-              case ('400084'):
-              case ('400091'):
+              case Config.messageErrors.userPatchError:
+              case Config.messageErrors.claimedDomainError:
                 {
                   responseMessage = $translate.instant('usersPage.claimedDomainError', {
                     email: email,
@@ -106,40 +101,40 @@
                   });
                   break;
                 }
-              case ('400090'):
+              case Config.messageErrors.userExistsInDiffOrgError:
                 {
                   responseMessage = $translate.instant('usersPage.userExistsInDiffOrgError', {
                     email: email
                   });
                   break;
                 }
-              case ('400108'):
-                {
-                  responseMessage = $translate.instant('usersPage.userExistsDomainClaimError', {
-                    email: email
-                  });
-                  break;
-                }
-              case ('400110'):
+              case Config.messageErrors.notSetupForManUserAddError:
                 {
                   responseMessage = $translate.instant('usersPage.notSetupForManUserAddError', {
                     email: email
                   });
                   break;
                 }
-              case ('400109'):
+              case Config.messageErrors.userExistsDomainClaimError:
+                {
+                  responseMessage = $translate.instant('usersPage.userExistsDomainClaimError', {
+                    email: email
+                  });
+                  break;
+                }
+              case Config.messageErrors.unknownCreateUserError:
+                {
+                  responseMessage = $translate.instant('usersPage.unknownCreateUserError');
+                  break;
+                }
+              case Config.messageErrors.unableToMigrateError:
                 {
                   responseMessage = $translate.instant('usersPage.unableToMigrateError', {
                     email: email
                   });
                   break;
                 }
-              case ('400096'):
-                {
-                  responseMessage = $translate.instant('usersPage.unknownCreateUserError');
-                  break;
-                }
-              case ('400111'):
+              case Config.messageErrors.insufficientEntitlementsError:
                 {
                   responseMessage = $translate.instant('usersPage.insufficientEntitlementsError', {
                     email: email

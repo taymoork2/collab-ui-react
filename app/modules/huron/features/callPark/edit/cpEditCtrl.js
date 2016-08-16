@@ -5,8 +5,7 @@
     .controller('CallParkEditCtrl', CallParkEditCtrl);
 
   /* @ngInject */
-  function CallParkEditCtrl($state, $stateParams, $translate, Authinfo, CallParkService,
-    Notification, CallParkMemberDataService, CallParkEditDataService) {
+  function CallParkEditCtrl($scope, $state, $stateParams, $translate, Authinfo, CallParkService, Notification, CallParkMemberDataService, CallParkEditDataService) {
     var vm = this;
     vm.resetForm = resetForm;
     vm.saveForm = saveForm;
@@ -185,6 +184,11 @@
       });
     }
 
+    function getExtensionLength(option) {
+      var currentInput = _.get(vm.cpNumberOptions, '[0].currentInput', false);
+      return currentInput === option ? 4 : null;
+    }
+
     function initializeFields(model) {
       var currentInput = model.startRange === model.endRange ? 1 : 0;
       vm.cpNumberOptions = [{
@@ -196,6 +200,7 @@
           type: 'range',
           range_1: {
             type: 'number',
+            grid_size: 2,
             value: currentInput === 0 ? parseInt(model.startRange, 10) : '',
             maxlength: 4,
             minlength: 4,
@@ -203,6 +208,7 @@
           },
           range_2: {
             type: 'number',
+            grid_size: 2,
             value: currentInput === 0 ? parseInt(model.endRange, 10) : '',
             maxlength: 4,
             minlength: 4,
@@ -213,7 +219,7 @@
           value: currentInput === 1 ? parseInt(model.startRange, 10) : '',
           maxlength: 4,
           minlength: 4,
-          placeholder: $translate.instant('callPark.patternSingle')
+          placeholder: $translate.instant('callPark.singleRange')
         }]
       }];
 
@@ -238,6 +244,20 @@
       vm.templateRadios.push(vm.cpReversionOptions);
       */
       vm.isLoadingCompleted = true;
+
+      $scope.numberOption = vm.cpNumberOptions[0];
+
+      $scope.$watch('numberOption', function () {
+        var newLength = getExtensionLength(vm.cpNumberOptions[0].currentInput);
+        angular.forEach(vm.cpNumberOptions[0].inputs, function (input, index) {
+          var length = index === vm.cpNumberOptions[0].currentInput ? newLength : null;
+          var values = (input.type === 'range') ? [input.range_1, input.range_2] : [input];
+          angular.forEach(values, function (value) {
+            value.minlength = length;
+            value.maxlength = length;
+          });
+        });
+      }, true);
     }
   }
 })();

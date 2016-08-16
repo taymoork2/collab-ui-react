@@ -7,9 +7,9 @@
 
 <div class="modal-body user-csv user-csv-results">
   <div class="flex-item-no-resize">
-    <h4 translate="userManage.bulk.import.status"></h4>
+    <h5 translate="userManage.bulk.import.status"></h5>
+    <cr-user-csv-results on-cancel-import="csv.onCancelImport()" csv-data="csv" class="flex-container flex-item-resize"></cr-user-csv-results>
   </div>
-  <cr-user-csv-results on-cancel-import="csv.onCancelImport()" csv-data="csv" class="flex-container flex-item-resize"></cr-user-csv-results>
 </div>
 
 

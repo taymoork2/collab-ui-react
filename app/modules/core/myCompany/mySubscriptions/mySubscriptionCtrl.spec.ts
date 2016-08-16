@@ -4,7 +4,6 @@ describe('Controller: MySubscriptionCtrl', function () {
   let $httpBackend, rootScope, $scope, $controller, q, controller, Orgservice, ServiceDescriptor, Authinfo;
   let data = getJSONFixture('core/json/myCompany/subscriptionData.json');
   let subId = 'sub-id';
-  let subUrl = "http://gc.digitalriver.com/store?SiteID=ciscoctg&Action=DisplaySelfServiceSubscriptionLandingPage&futureAction=DisplaySelfServiceSubscriptionUpgradePage&subscriptionID=";
   let trialUrl = 'https://atlas-integration.wbx2.com/admin/api/v1/commerce/online/subID';
   let trialUrlResponse = 'trialUrlResponse';
 
@@ -115,9 +114,5 @@ describe('Controller: MySubscriptionCtrl', function () {
     expect(controller.visibleSubscriptions).toBeTruthy();
     expect(controller.isOnline).toBeTruthy();
     expect(rootScope.$broadcast).toHaveBeenCalled();
-  });
-
-  it('should return BMMP workaround URL', function () {
-    expect(controller.upgradeUrl(subId)).toBe(subUrl + subId);
   });
 });
