@@ -6,30 +6,31 @@
 </div>
 
 <div class="modal-body user-manage">
-  <div>
-    <div class="row sync-status">
-      <div class="columns medium-4">
-        <h3 translate="userManage.ad.adLabel"></h3>
-        <p translate="userManage.ad.adInstructions"></p>
+  <div class="sync-container">
+    <div class="row sync-status ad-top">
+      <div class="columns medium-5">
+        <h4 translate="userManage.ad.adLabel"></h4>
       </div>
       <div class="ds-sync columns medium-7">
-        <i class="working icon icon-circle" ng-class="{'failing': !ctrl.isDirSyncEnabled}"></i>
+        <i class="working icon icon-circle" ng-class="{'failing': !ummc.isDirSyncEnabled}"></i>
         <div class="details">
-          <h5 ng-if="ctrl.isDirSyncEnabled" translate="userManage.ad.adStatus"></h5>
-          <h5 ng-if="!ctrl.isDirSyncEnabled" translate="userManage.ad.adStatusDisabled"></h5>
+          <h6 ng-if="ctrl.isDirSyncEnabled" translate="userManage.ad.adStatus"></h6>
+          <h6 ng-if="!ctrl.isDirSyncEnabled" translate="userManage.ad.adStatusDisabled"></h6>
           <p translate="userManage.ad.adStatusDetails"></p>
-          <a href="" ng-click="umadc.onTurnOffDS()" translate="userManage.ad.turnOffDS"></a>
+          <a class="p" ng-click="umadc.onTurnOffDS()" translate="userManage.ad.turnOffDS"
+             tooltip="{{::'userManage.ad.turnOffDSToolTip'|translate}}"
+             tooltip-placement="bottom"></a>
         </div>
       </div>
     </div>
-    <div class="row">
+    <div class="row divider">
       <hr>
     </div>
     <div class="row">
       <form name="userModifyUsersForm">
-        <div class="columns medium-4">
-          <h3 translate="userManage.ad.typeLabel"></h3>
-          <p translate="userManage.ad.typeInstructions"></p>
+        <div class="columns medium-5">
+          <h4 translate="userManage.ad.typeLabel"></h4>
+          <p class="columns medium-10" translate="userManage.ad.typeInstructions"></p>
         </div>
         <div class="columns medium-7">
           <div class="cs-radio-group">
@@ -59,5 +60,6 @@
 
 <div class="modal-footer">
   <button type="button" id="btnClear" class="btn" ng-click="$dismiss()"><span translate="common.back"></span></button>
-  <button type="button" class="btn btn--primary" ng-click="umadc.onNext()"><span translate="common.next"></span></button>
+  <button type="button" class="btn btn--primary" ng-click="umadc.onNext()"><span translate="common.next"></span>
+  </button>
 </div>
