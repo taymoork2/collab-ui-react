@@ -1,0 +1,31 @@
+div#createIncidentPage{
+	padding:50px;
+
+	div.incidentName{
+		margin-bottom:20px;
+		input{
+			width:100%;
+		}
+	}
+
+	div.incidentStatus{
+		margin-bottom:20px;
+		label{
+			display:inline-block;
+			margin-right:20px;
+			input[type="radio"]{
+				position:inherit;
+				margin:inherit;
+				width:inherit;
+				height:inherit;
+			}
+		}
+	}
+
+	div.incidentMsg{
+		margin-bottom:20px;
+		textarea{
+			width:100%;
+		}
+	}
+}

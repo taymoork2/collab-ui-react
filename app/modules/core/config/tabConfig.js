@@ -8,12 +8,6 @@
     state: 'overview',
     link: '/overview'
   }, {
-    tab: 'incidentsTab',
-    icon: 'icon-user',
-    title: 'tabs.incidentsTab',
-    state: 'incidents',
-    link: '/incidents'
-  }, {
     tab: 'overviewTab',
     icon: 'icon-home',
     title: 'tabs.overviewTab',

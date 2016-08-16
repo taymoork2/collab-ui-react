@@ -54,8 +54,6 @@
 
   angular.module('DigitalRiver', ['Core']);
 
-  angular.module('Incidents', ['Core']);
-
   angular.module('Huron', [
     'Core',
     'uc.device',
@@ -83,7 +81,9 @@
     'CareDetails'
   ]);
 
-  angular.module('Status', ['Core']);
+  angular.module('Status.incidents', ['Core']);
+
+  angular.module('Status', ['Core', 'Status.incidents']);
 
   module.exports = angular.module('Main', [
     'Core',
@@ -98,7 +98,6 @@
     'Sunlight',
     'Status',
     'oc.lazyLoad',
-    'Incidents',
   ]).config(require('./main.config'))
     .run(require('./main.run'))
     .name;

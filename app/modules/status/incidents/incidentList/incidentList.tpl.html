@@ -4,20 +4,20 @@
   }
 </style>
 <div style="padding:20px 100px;">
-  <h1>Incidents</h1>
+  <h1>Incidents</h1>
   <tabset>
     <tab heading="Incidents">
       <div class="tab-content" style="position:relative;">
-      	<div style="height:80px;">
-	      	<h2 style="float:left;">Incidents</h2>
-	        <input style="float:right;" class="btn btn--primary" type="button" value="+ NEW INCIDENT" ng-click="shc.toCreatePage()">
-      	</div>
+        <div style="height:80px;">
+          <h2 style="float:left;">Incidents</h2>
+          <input style="float:right;" class="btn btn--primary" type="button" value="+ NEW INCIDENT" ng-click="shc.toCreatePage()">
+        </div>
         <div ng-if="!showList" style="border:1px dashed gray;padding:20px;">
-	        <div>
-	        	<span>Looks like you've got a clean record</span>
-	        	<br/>
-	        	<span>When you have downtime: </span><a href="#/createIncident">Create your first incident</a>
-	        </div>
+          <div>
+            <span>Looks like you've got a clean record</span>
+            <br/>
+            <span>When you have downtime: </span><a ui-sref=".new">Create your first incident</a>
+          </div>
         </div>
         <div ng-if="showList" ng-repeat="incident in shc.incidentList">
           <div style="margin-bottom:10px;">

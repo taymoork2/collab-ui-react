@@ -256,7 +256,7 @@
       PARTNER_SALES_ADMIN: ['status', 'overview', 'partneroverview', 'customer-overview', 'partnercustomers', 'partnerreports', 'trialAdd', 'trialEdit', 'pstnSetup', 'video', 'settings'],
       CUSTOMER_PARTNER: ['status', 'overview', 'partnercustomers', 'customer-overview'],
       //TODO User role is used by Online Ordering UI. The dr* states will be removed once the Online UI is separated from Atlas.
-      User: ['incidents', 'createIncident', 'status', 'drLoginReturn', 'drOnboard', 'drConfirmAdminOrg', 'drOnboardQuestion', 'drOnboardEnterAdminEmail', 'drOrgName', 'drAdminChoices'],
+      User: ['status', 'drLoginReturn', 'drOnboard', 'drConfirmAdminOrg', 'drOnboardQuestion', 'drOnboardEnterAdminEmail', 'drOrgName', 'drAdminChoices'],
       Site_Admin: [
         'site-list',
         'site-csv-import',

@@ -2721,19 +2721,21 @@
               deleteFeatureType: null
             }
           })
-          .state('incidents', {
+          .state('status.incidents', {
             url: '/incidents',
-            parent: 'main',
-            templateUrl: 'modules/incidents/incidentList/incidentList.tpl.html',
+            templateUrl: 'modules/status/incidents/incidentList/incidentList.tpl.html',
             controller: 'IncidentListController',
             controllerAs: 'shc'
           })
-          .state('createIncident', {
-            url: '/createIncident',
-            parent: 'main',
-            templateUrl: 'modules/incidents/createIncident/createIncident.tpl.html',
-            controller: 'CreateIncidentController',
-            controllerAs: 'cic'
+          .state('status.incidents.new', {
+            url: '/new',
+            views: {
+              '@status': {
+                templateUrl: 'modules/status/incidents/createIncident/createIncident.tpl.html',
+                controller: 'CreateIncidentController',
+                controllerAs: 'cic'
+              }
+            }
           });
       }
     ]);

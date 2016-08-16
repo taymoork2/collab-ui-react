@@ -1,0 +1,35 @@
+<div id="createIncidentPage">
+	<h1>New Incident</h1>
+
+	<div class="incidentName">
+		<h3>Incident Name</h3>
+		<input placeholder="Incident Name" type="text" name="input" ng-model="newIncident.name" required ng-trim="false">
+	</div>
+
+	<div class="incidentStatus">
+		<h3>Incident Status</h3>
+		<label>
+	    	<input type="radio" ng-model="newIncident.status" value="investigating">
+	    	Investigating
+	  	</label>
+	  	<label>
+	    	<input type="radio" ng-model="newIncident.status" value="identified">
+	    	Identified
+	  	</label>
+	  	<label>
+	    	<input type="radio" ng-model="newIncident.status" value="monitoring">
+	    	Monitoring
+	  	</label>
+	  	<label>
+	    	<input type="radio" ng-model="newIncident.status" value="resolved">
+	    	Resolved
+	  	</label>
+	</div>
+
+	<div class="incidentMsg">
+		<h3>Message</h3>
+		<textarea ng-model="newIncident.msg" placeholder="Message"></textarea>
+	</div>
+
+	<input style="" class="btn btn--primary" type="button" value="CREAT INCIDENT" ng-click="CreateIncident()">
+</div>

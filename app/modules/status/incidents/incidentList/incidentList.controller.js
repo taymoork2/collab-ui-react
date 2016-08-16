@@ -1,7 +1,7 @@
 (function () {
   'use strict';
   angular
-    .module('Incidents')
+    .module('Status.incidents')
     .controller('IncidentListController', IncidentListController);
 
   function IncidentListController($scope, $state, IncidentsService) {
@@ -16,7 +16,7 @@
       $scope.showList = false;
     });
     vm.toCreatePage = function () {
-      $state.go("createIncident");
+      $state.go(".new");
     };
   }
 

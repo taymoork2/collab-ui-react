@@ -1,7 +1,7 @@
 (function () {
   'use strict';
   angular
-    .module('Incidents')
+    .module('Status.incidents')
     .controller('CreateIncidentController', CreateIncidentController);
 
   function CreateIncidentController($scope, $state, $log, $window, IncidentsService) {
