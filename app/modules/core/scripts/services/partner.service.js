@@ -98,35 +98,31 @@
     }
 
     function _createLicenseMapping() {
-
       var licenseMapping = {};
       licenseMapping[Config.licenseTypes.MESSAGING] = {
         name: $translate.instant('trials.message'),
         icon: 'icon-circle-message',
         order: 0
-
       };
+
       licenseMapping[Config.licenseTypes.COMMUNICATION] = {
         name: $translate.instant('trials.call'),
         icon: 'icon-circle-call',
         order: 3
-
       };
 
       licenseMapping[Config.licenseTypes.SHARED_DEVICES] = {
         name: $translate.instant('trials.roomSystem'),
         icon: 'icon-circle-telepresence',
         order: 6
-
       };
-      licenseMapping[Config.offerTypes.CARE] = {
+
+      licenseMapping[Config.licenseTypes.CARE] = {
         name: $translate.instant('trials.care'),
         icon: 'icon-circle-contact-centre',
         order: 5
-
       };
       return licenseMapping;
-
     }
 
     function _createFreeServicesMapping() {
@@ -503,28 +499,10 @@
         offer: {}
       };
 
-      var userServiceMapping = {
-        MESSAGE: {
-          text: $translate.instant('trials.message'),
-          order: 0
-        },
-        CALL: {
-          text: $translate.instant('trials.call'),
-          order: 3
-        },
-        EE: {
-          text: $translate.instant('customerPage.EE'),
-          order: 2
-        },
-        MEETING: {
-          text: $translate.instant('trials.meeting'),
-          order: 1
-        }
-      };
-
-      var deviceServiceText = [];
-      var userServices = [];
-      var careServicesText = [];
+      var userServiceMapping = helpers.createLicenseMapping();
+      var conferenceServices = [];
+      var trialService = {};
+      var trialServices = [];
 
       _.forEach(_.get(customer, 'licenses', []), function (licenseInfo) {
         if (!licenseInfo) {
@@ -548,48 +526,62 @@
           offerInfo.id !== Config.offerTypes.care) {
           partial.licenses = offerInfo.licenseCount;
         }
-
+        trialService = null;
         switch (offerInfo.id) {
           case Config.offerTypes.spark1:
           case Config.offerTypes.message:
           case Config.offerTypes.collab:
-            userServices.push(userServiceMapping.MESSAGE);
+            trialService = userServiceMapping[Config.licenseTypes.MESSAGING];
             break;
           case Config.offerTypes.call:
           case Config.offerTypes.squaredUC:
             partial.isSquaredUcOffer = true;
-            userServices.push(userServiceMapping.CALL);
+            trialService = userServiceMapping[Config.licenseTypes.COMMUNICATION];
             break;
           case Config.offerTypes.webex:
           case Config.offerTypes.meetings:
-            userServices.push(userServiceMapping.EE);
+            conferenceServices.push({
+              name: $translate.instant('customerPage.EE'),
+              order: 1,
+              qty: offerInfo.licenseCount
+            });
             break;
           case Config.offerTypes.meeting:
-            userServices.push(userServiceMapping.MEETING);
+            conferenceServices.push({
+              name: $translate.instant('trials.meeting'),
+              order: 1,
+              qty: offerInfo.licenseCount
+            });
             break;
           case Config.offerTypes.roomSystems:
-            deviceServiceText.push($translate.instant('trials.roomSystem'));
+            trialService = userServiceMapping[Config.licenseTypes.SHARED_DEVICES];
             partial.deviceLicenses = offerInfo.licenseCount;
             break;
           case Config.offerTypes.care:
             if (isCareEnabled) {
-              careServicesText.push($translate.instant('trials.care'));
+              trialService = userServiceMapping[Config.licenseTypes.CARE];
               partial.careLicenses = offerInfo.licenseCount;
             }
             break;
         }
+        if (trialService) {
+          trialService.qty = offerInfo.licenseCount;
+          trialServices.push(trialService);
+        }
       }
 
-      partial.offer.deviceBasedServices = _.uniq(deviceServiceText).join(', ');
-      partial.offer.careServices = _.uniq(careServicesText).join(', ');
-      partial.offer.userServices = _.chain(userServices)
-      .sortBy('order')
-      .map(function (o) {
-        return o.text;
-      })
-      .uniq()
-      .value()
-      .join(', ');
+      if (conferenceServices.length > 0) {
+        var name = _.chain(conferenceServices).sortBy('order').map(function (o) {
+          return o.name;
+        })
+        .uniq()
+        .value()
+        .join(', ');
+        var licenseQty = conferenceServices[0].qty;
+        trialServices.push({ name: name, qty: licenseQty, icon: 'icon-circle-group', order: 1 });
+      }
+
+      partial.offer.trialServices = _.chain(trialServices).sortBy('order').uniq().value();
       return partial;
     }
 
