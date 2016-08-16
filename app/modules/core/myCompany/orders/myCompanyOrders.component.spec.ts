@@ -6,6 +6,7 @@ describe('Component: myCompanyOrders', () => {
     this.injectDependencies(
       '$q',
       '$sce',
+      'DigitalRiverService',
       'MyCompanyOrdersService',
       'Notification'
     );
@@ -36,7 +37,7 @@ describe('Component: myCompanyOrders', () => {
     spyOn(this.MyCompanyOrdersService, 'getOrderDetails').and.returnValue(this.getOrderDetailsDefer.promise);
     spyOn(this.Notification, 'errorWithTrackingId');
 
-    spyOn(this.MyCompanyOrdersService, 'getDigitalRiverOrderHistoryUrl').and.returnValue(this.getDigitalRiverOrderHistoryUrlDefer.promise);
+    spyOn(this.DigitalRiverService, 'getDigitalRiverOrderHistoryUrl').and.returnValue(this.getDigitalRiverOrderHistoryUrlDefer.promise);
     spyOn(this.$sce, 'trustAsResourceUrl').and.callThrough();
 
     this.compileComponent('myCompanyOrders');
@@ -48,7 +49,7 @@ describe('Component: myCompanyOrders', () => {
       this.getDigitalRiverOrderHistoryUrlDefer.resolve('https://some.url.com');
       this.$scope.$apply();
 
-      expect(this.MyCompanyOrdersService.getDigitalRiverOrderHistoryUrl).toHaveBeenCalled();
+      expect(this.DigitalRiverService.getDigitalRiverOrderHistoryUrl).toHaveBeenCalled();
       expect(this.$sce.trustAsResourceUrl).toHaveBeenCalledWith('https://some.url.com');
       expect(this.controller.digitalRiverOrderHistoryUrl.$$unwrapTrustedValue()).toEqual('https://some.url.com');
       expect(this.view.find('iframe')).toHaveAttr('src', 'https://some.url.com');
