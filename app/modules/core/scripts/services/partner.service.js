@@ -501,7 +501,7 @@
 
       var userServiceMapping = helpers.createLicenseMapping();
       var conferenceServices = [];
-      var trialService = {};
+      var trialService;
       var trialServices = [];
 
       _.forEach(_.get(customer, 'licenses', []), function (licenseInfo) {
