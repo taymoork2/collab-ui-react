@@ -7,9 +7,9 @@
           <span class="progressbar-label"
                 ng-if="!csv.model.isRetrying && csv.model.processProgress < 100 && !csv.isCancelledByUser"
                 translate="firstTimeWizard.processing"></span>
-            <span class="progressbar-label" ng-if="csv.isCancelledByUser"
+          <span class="progressbar-label" ng-if="csv.isCancelledByUser"
                 translate="firstTimeWizard.canceling"></span>
-            <span class="progressbar-label retry-label" ng-show="csv.model.isRetrying">
+          <span class="progressbar-label retry-label" ng-show="csv.model.isRetrying">
               <span translate="userManage.bulk.retryingUsers" translate-value-users="{{csv.model.usersToRetry.length}}"
                     translate-interpolation="messageformat"></span>
               <span translate="userManage.bulk.retryingIn"></span>
@@ -39,7 +39,8 @@
   <!-- done import status -->
   <div class="flex-item-no-resize upload-progress upload-complete" ng-show="csv.model.processProgress == 100">
       <span class="progressbar-label">
-        <span class="progressbar-label" translate="userManage.bulk.import.completedAt" translate-values="{ filename: csv.model.fileName }"></span>
+        <span class="progressbar-label" translate="userManage.bulk.import.completedAt"
+              translate-values="{ filename: csv.model.fileName }"></span>
         <span class="progressbar-label">{{csv.model.importCompletedAt | date:'short'}}</span>
       </span>
   </div>
@@ -68,7 +69,8 @@
         <h5 translate="userManage.bulk.errorUsers"></h5>
         <p>
           <span translate="userManage.bulk.import.errorResolveInstructions"></span>
-          <span class="icon icon-info" tooltip="{{::'userManage.bulk.import.errorResolveTooltip' | translate}}" tooltip-placement="top"></span>
+          <span class="icon icon-info" tooltip="{{::'userManage.bulk.import.errorResolveTooltip' | translate}}"
+                tooltip-placement="top"></span>
         </p>
         <div class="error-download" ng-disabled="csv.model.isProcessing">
           <csv-download type="error" filename="errors.csv" no-icon
