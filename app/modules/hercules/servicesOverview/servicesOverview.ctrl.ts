@@ -10,7 +10,7 @@ export class ServicesOverviewCtrl {
   /* @ngInject */
   constructor(Orgservice, private ServicesOverviewCardFactory, private $q, private Authinfo, ServiceDescriptor, FeatureToggleService) {
 
-    this.cards = ServicesOverviewCardFactory.createCards(false);
+    this.cards = ServicesOverviewCardFactory.createCards();
 
     this.loadWebexSiteList();
 

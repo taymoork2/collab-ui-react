@@ -11,10 +11,10 @@ import { ServicesOverviewHybridMediaCard } from './hybridMediaCard';
 import { ServicesOverviewHybridContextCard } from './hybridContextCard';
 
 /* @ngInject */
-function ServicesOverviewCardFactory($q, Authinfo, FeatureToggleService) {
+function ServicesOverviewCardFactory(Authinfo) {
 
   return {
-    createCards: function (careStatus) {
+    createCards: function ():Array<ServicesOverviewCard> {
 
       return [
         new ServicesOverviewMessageCard(Authinfo),
