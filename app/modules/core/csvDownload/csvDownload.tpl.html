@@ -8,11 +8,12 @@
       </span>
     </a>
   </div>
-  <div>
-    <a tooltip-placement="bottom" cs-tooltip="{{downloadingMessage}}" tooltip-animation="false" tooltip-append-to-body="true">
+  <div class="status-container">
+    <a ng-click="goToDownload()" tooltip-placement="bottom" tooltip="{{downloadingMessage}}" tooltip-animation="false" tooltip-append-to-body="true">
       <i ng-show="downloading" class="icon icon-spinner">
         <span class="sr-only" translate="common.downloading"></span>
       </i>
     </a>
+    <span ng-if="downloading" class='status-message'>{{::statusMessage}}</span>
   </div>
 </div>

@@ -2,9 +2,9 @@
   @extend %grid-subheader;
   @extend %page-background-white;
 
-  .ui-grid-cell:first-child ,
-  .ui-grid-header-cell:first-child  {
-   border-right: 0;
+  .ui-grid-cell:first-child,
+  .ui-grid-header-cell:first-child {
+    border-right: 0;
   }
 
   .ui-grid-row:last-of-type .ui-grid-cell .dropdown.open .dropdown-menu.dropdown-primary.invite.first,
@@ -39,7 +39,9 @@
   .action-panel {
 
     .block {
-      display: inline-flex;
+      display: flex;
+      flex: 1 1 auto;
+      align-items: center;
     }
 
     .icon {
@@ -51,11 +53,18 @@
     }
     .add-users-button {
       display: block;
-      margin-top: 0.6rem;
+    }
+
+    .dl-button {
+      margin-top: .5rem;
     }
   }
 
   .export-users {
+    display: flex;
+    flex: 0 0 auto;
+    align-items: center;
+
     .icon {
       color: $gray-dark-1;
       font-size: 1.5rem;
