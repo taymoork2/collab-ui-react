@@ -20,7 +20,7 @@
     .name;
 
   /* @ngInject */
-  function Auth($injector, $http, $translate, $q, $sanitize, Log, Authinfo, Utils, Storage, SessionStorage, OAuthConfig, TokenService, UrlConfig, WindowLocation) {
+  function Auth($http, $injector, $q, $sanitize, $translate, Authinfo, Log, OAuthConfig, SessionStorage, TokenService, UrlConfig, Utils, WindowLocation) {
 
     var service = {
       logout: logout,
@@ -70,7 +70,7 @@
           .then(updateOauthTokens)
           .catch(handleError('Failed to obtain new oauth access_token.'));
       } else {
-        clearStorage();
+        TokenService.clearStorage();
         return $q.reject();
       }
     }
@@ -87,7 +87,7 @@
         .then(updateOauthTokens)
         .catch(function () {
           handleError('Failed to refresh access token');
-          completeLogout(redirectUrl);
+          TokenService.completeLogout(redirectUrl);
         });
       } else {
         return $q.reject('refreshtoken not found');
@@ -103,7 +103,7 @@
           return $http(response.config);
         })
         .catch(function () {
-          completeLogout(redirectUrl);
+          TokenService.completeLogout(redirectUrl);
         });
     }
 
@@ -119,6 +119,7 @@
 
     function logout() {
       var redirectUrl = OAuthConfig.getLogoutUrl();
+      TokenService.triggerGlobalLogout();
       return service.logoutAndRedirectTo(redirectUrl);
     }
 
@@ -127,21 +128,26 @@
       return httpGET(listTokensUrl)
         .then(function (response) {
           var promises = [];
-          _.each(response.data.data, function (tokenData) {
+          var clientTokens = _.filter(response.data.data, {
+            client_id: OAuthConfig.getClientId()
+          });
+
+          _.each(clientTokens, function (tokenData) {
             var refreshTokenId = tokenData.token_id;
             var revoke = revokeAuthTokens(refreshTokenId, redirectUrl);
             promises.push(revoke);
           });
+
           $q.all(promises).catch(function () {
             handleError('Failed to revoke the refresh tokens');
           })
-            .finally(function () {
-              completeLogout(redirectUrl);
-            });
+          .finally(function () {
+            TokenService.completeLogout(redirectUrl);
+          });
         })
         .catch(function () {
           handleError('Failed to retrieve token_id');
-          completeLogout(redirectUrl);
+          TokenService.completeLogout(redirectUrl);
         });
     }
 
@@ -149,14 +155,6 @@
       var revokeUrl = OAuthConfig.getOauthDeleteRefreshTokenUrl() + $sanitize(tokenId);
       return $http.delete(revokeUrl)
         .catch(handleError('Failed to delete the oAuth token'));
-    }
-
-    function completeLogout(redirectUrl) {
-      clearStorage();
-      // We store a key value in sessionStorage to
-      // prevent a login when multiple tabs are open
-      SessionStorage.put('logout', 'logout');
-      WindowLocation.set(redirectUrl);
     }
 
     function isLoggedIn() {
@@ -327,11 +325,6 @@
 
     function verifyOauthState(testState) {
       return _.isEqual(testState, getOauthState());
-    }
-
-    function clearStorage() {
-      Storage.clear();
-      SessionStorage.clear();
     }
 
     function handleError(message) {

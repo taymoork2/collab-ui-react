@@ -68,7 +68,7 @@
     function next() {
       if (vm.radio == 0) {
         vm.noProceed = true;
-      } else if (vm.yesProceed == true) {
+      } else if (vm.yesProceed) {
         if (angular.isDefined(vm.selectedCluster) && vm.selectedCluster != '' && angular.isDefined(vm.hostName)) {
           vm.addRedirectTargetClicked(vm.hostName, vm.selectedCluster);
         }
@@ -78,9 +78,9 @@
     }
 
     function canGoNext() {
-      if (vm.firstTimeSetup == true && vm.yesProceed == false) {
+      if (vm.firstTimeSetup && !vm.yesProceed) {
         return true;
-      } else if (vm.yesProceed == true && angular.isDefined(vm.hostName) && vm.hostName != '' && angular.isDefined(vm.selectedCluster) && vm.selectedCluster != '') {
+      } else if (vm.yesProceed && angular.isDefined(vm.hostName) && vm.hostName != '' && angular.isDefined(vm.selectedCluster) && vm.selectedCluster != '') {
         return true;
       } else {
         return false;

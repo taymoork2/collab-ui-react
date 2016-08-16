@@ -19,10 +19,13 @@ fi
 source "$WX2_ADMIN_WEB_CLIENT_HOME/bin/include/pid-helpers"
 
 function ex_usage {
-    echo "usage: $(basename "$0") (dev|dist)"
+    echo "usage: $(basename "$0") (dev|dist) [--nolint]"
     echo ""
     echo "ex."
     echo "  $(basename "$0") dev"
+    echo ""
+    echo "ex."
+    echo "  $(basename "$0") dev --nolint"
     echo ""
     echo "ex."
     echo "  $(basename "$0") dist"
@@ -38,13 +41,20 @@ if [[ "$1" == "--help" \
     exit 1
 fi
 
+# allow pass-through args after first arg
+pass_through_args=( $@ )
+unset -v pass_through_args[0]
+
 # get pids of procs with 'lite-server' in the name
 pids=$(get_pids lite-server)
 
 # list of pids may contain the pid of this script's process and the basename of this script itself
 # - ensure both are excluded from list of pids to kill
-pids=$(ps -o pid= -p $pids | grep -v $$ | grep -v $(basename "$0"))
+# shellcheck disable=SC2086 disable=SC2009
+pids=$(ps -o pid= -p $pids | grep -v $$ | grep -v "$(basename "$0")")
+
+# shellcheck disable=SC2086
 kill_wait_pids $pids
 
 env_suffix="$1"
-lite-server -c "$WX2_ADMIN_WEB_CLIENT_HOME/config/lite-server-${env_suffix}.js"
+lite-server -c "$WX2_ADMIN_WEB_CLIENT_HOME/config/lite-server-${env_suffix}.js" "${pass_through_args[@]}"

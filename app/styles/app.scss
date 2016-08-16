@@ -1,4 +1,4 @@
-@import './common';
+@import './variables';
 @import '~collab-ui/scss/collab-ui';
 @import '~ng-tags-input/build/ng-tags-input.css';
 
@@ -9,18 +9,18 @@ $fa-font-path: "~font-awesome/fonts";
 
 
 // ******* Variables & Mixins **************
-@import 'partials/variables';
-@import 'partials/mixins';
+@import './partials/variables';
+@import './partials/mixins';
 
 // ******* Resets & Globals **********
-@import 'partials/common';
-@import 'unsupported';
+@import './partials/common';
+@import './unsupported';
 
 /**************************************************
  *  TODO: Styles in the _temp.scss file should be
  *  moved to the correct module where they belong
  *************************************************/
-@import 'temp';
+@import './temp';
 
 /*************************************
  *      Modules Style imports

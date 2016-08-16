@@ -387,6 +387,9 @@
                     numExistingUsers: vm.model.numExistingUsers
                   });
                 });
+                if (user.message === '700000') {
+                  vm.licenseUnavailable = true;
+                }
               } else {
                 $timeout(function () {
                   vm.model.numNewUsers++;
@@ -414,10 +417,7 @@
                 addUserErrorWithTrackingID(-1, user.email, UserCsvService.getBulkErrorResponse(user.httpStatus, user.message, user.email), response);
               }
             } else {
-              if (user.message === '400112') {
-                vm.licenseUnavailable = true;
-              }
-              addUserErrorWithTrackingID(onboardUser.csvRow, onboardUser.email, UserCsvService.getBulkErrorResponse(user.httpStatus, user.message, user.email), response);
+              addUserErrorWithTrackingID(onboardUser.csvRow, user.email, UserCsvService.getBulkErrorResponse(user.httpStatus, user.message, user.email), response);
             }
           });
         } else {
@@ -442,13 +442,14 @@
         } else {
           // fatal error.  flag all users as having an error
           _.forEach(onboardedUsers, function (user) {
+            var email = (user.email ? user.email : user.address);
             addUserErrorWithTrackingID(
               user.csvRow,
-              user.email,
+              email,
               UserCsvService.getBulkErrorResponse(
                 response.status,
                 vm.isCancelledByUser ? '0' : '1',
-                user.email
+                email
               ),
               response
             );

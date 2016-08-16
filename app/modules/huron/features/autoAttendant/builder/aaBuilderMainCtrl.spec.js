@@ -8,6 +8,7 @@ describe('Controller: AABuilderMainCtrl', function () {
   var AATrackChangeService, AADependencyService;
   var FeatureToggleService;
   var ServiceSetup, timeZone, translatedTimeZone, sysModel;
+  var Analytics, AAMetricNameService;
 
   var ces = getJSONFixture('huron/json/autoAttendant/callExperiences.json');
   var aCe = getJSONFixture('huron/json/autoAttendant/aCallExperience.json');
@@ -50,7 +51,7 @@ describe('Controller: AABuilderMainCtrl', function () {
   beforeEach(inject(function (_$state_, _$rootScope_, _$q_, _$compile_, _$stateParams_, _$controller_, _AANotificationService_,
     _AutoAttendantCeInfoModelService_, _AutoAttendantCeMenuModelService_, _AAUiModelService_, _AAModelService_, _AANumberAssignmentService_,
     _AutoAttendantCeService_, _AAValidationService_, _HuronConfig_, _$httpBackend_, _AAUiScheduleService_,
-    _AACalendarService_, _AATrackChangeService_, _AADependencyService_, _FeatureToggleService_, _ServiceSetup_) {
+    _AACalendarService_, _AATrackChangeService_, _AADependencyService_, _FeatureToggleService_, _ServiceSetup_, _Analytics_, _AAMetricNameService_) {
 
     $state = _$state_;
     $rootScope = _$rootScope_;
@@ -78,6 +79,8 @@ describe('Controller: AABuilderMainCtrl', function () {
     AADependencyService = _AADependencyService_;
     FeatureToggleService = _FeatureToggleService_;
     ServiceSetup = _ServiceSetup_;
+    Analytics = _Analytics_;
+    AAMetricNameService = _AAMetricNameService_;
 
     // aaModel.dataReadyPromise = $q(function () {});
     $stateParams.aaName = '';
@@ -758,10 +761,30 @@ describe('Controller: AABuilderMainCtrl', function () {
   });
 
   describe('setLoadingDone', function () {
+
+    beforeEach(function () {
+      spyOn(Analytics, 'trackEvent').and.returnValue($q.when({}));
+    });
+
     it('should set the vm.loading to false', function () {
       controller.setLoadingDone();
       expect($scope.vm.loading).toBeFalsy();
     });
+
+    it('should send metrics when called with a defined aa name', function () {
+      $scope.vm.isAANameDefined = true;
+      controller.setLoadingDone();
+      expect(Analytics.trackEvent).toHaveBeenCalledWith(AAMetricNameService.BUILDER_PAGE, {
+        type: 'load'
+      });
+    });
+
+    it('should not send metrics when called with a undefined aa name', function () {
+      $scope.vm.isAANameDefined = false;
+      controller.setLoadingDone();
+      expect(Analytics.trackEvent).not.toHaveBeenCalled();
+    });
+
   });
 
   describe('save8To5Schedule', function () {

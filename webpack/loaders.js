@@ -9,7 +9,7 @@ exports.js = {
 exports.lint = {
   test: /\.js$/,
   loaders: ['eslint'],
-  exclude: [/node_modules/, /\.spec\.js$/],
+  exclude: [/node_modules/],
 };
 
 exports.ts = {
@@ -56,7 +56,7 @@ exports.dependencies = [{
   test: /jquery.js$/,
   loader: 'expose?$!expose?jQuery',
 }, {
-  test: /(FileSaver|fabric).js$/,
+  test: /(FileSaver|fabric|xlsx\/xlsx|jszip\/jszip).js$/,
   loader: 'script',
 }, {
   test: /(bootstrap-tokenfield).js$/,
@@ -69,6 +69,9 @@ exports.dependencies = [{
   loader: 'script',
 }, {
   test: /jasmine-promise-matchers.js$/,
+  loader: 'script',
+}, {
+  test: /bmmp\/cisco-bmmp.js$/,
   loader: 'script',
 }];
 
