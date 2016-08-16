@@ -8,8 +8,8 @@
     var SET = 'set';
     var EMPTY = 'empty';
 
-    vm.reportingData = [];
     vm.dataStatus = REFRESH;
+    vm.snapshotDataStatus = REFRESH;
     vm.taskIncomingDescription = "";
     vm.taskTimeDescription = "";
     vm.averageCsatDescription = "";
@@ -41,6 +41,7 @@
 
     function timeUpdate() {
       vm.dataStatus = REFRESH;
+      vm.snapshotDataStatus = REFRESH;
       setFilterBasedTextForCare();
 
       showReportsWithDummyData();
@@ -73,19 +74,36 @@
           if (data.length === 0) {
             vm.dataStatus = EMPTY;
           } else {
-            vm.reportingData = data;
             vm.dataStatus = SET;
             var categoryAxisTitle = vm.timeSelected.categoryAxisTitle;
             var isToday = (vm.timeSelected.value === 0);
             CareReportsService.showTaskIncomingGraph('taskIncomingdiv', data, categoryAxisTitle, isToday);
             CareReportsService.showTaskTimeGraph('taskTimeDiv', data, categoryAxisTitle, isToday);
             CareReportsService.showAverageCsatGraph('averageCsatDiv', data, categoryAxisTitle, isToday);
-            CareReportsService.showTaskAggregateGraph('taskAggregateDiv', data, categoryAxisTitle, isToday);
             resizeCards();
           }
         }, function () {
           vm.dataStatus = EMPTY;
-          Notification.error($translate.instant('careReportsPage.taskIncomingError'));
+          Notification.error($translate.instant('careReportsPage.taskDataGetError'));
+        });
+      if (vm.timeSelected.value === 0) {
+        showSnapshotReportWithRealData();
+      }
+    }
+
+    function showSnapshotReportWithRealData() {
+      SunlightReportService.getReportingData('org_snapshot_stats', vm.timeSelected.value, 'chat')
+        .then(function (data) {
+          if (data.length === 0) {
+            vm.snapshotDataStatus = EMPTY;
+          } else {
+            vm.snapshotDataStatus = SET;
+            CareReportsService.showTaskAggregateGraph('taskAggregateDiv', data, vm.timeSelected.categoryAxisTitle);
+            resizeCards();
+          }
+        }, function () {
+          vm.snapshotDataStatus = EMPTY;
+          Notification.error($translate.instant('careReportsPage.taskSnapshotDataGetError'));
         });
     }
 

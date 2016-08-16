@@ -578,7 +578,8 @@
     "threeMonths2": "during the last three months",
     "threeMonthsTaskStatus": "handled and abandoned",
     "threeMonthsInterval": "given month",
-    "taskIncomingError": "There was an error while loading the data for Tasks Incoming."
+    "taskDataGetError": "There was an error while loading the data for Tasks.",
+    "taskSnapshotDataGetError": "There was an error while loading the data for Task Aggregation."
   },
   "activeUsers": {
     "active": "Active",
