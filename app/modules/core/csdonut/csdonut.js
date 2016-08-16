@@ -74,7 +74,7 @@
           }
 
           if (typeof hideusage !== 'undefined' && hideusage === true) {
-            $scope.text.content = '?';
+            $scope.text.content = '---';
             $scope.text.color = 'lightgray';
             $scope.dataset = [0, 1];
           } else if (typeof unlimited !== 'undefined' && unlimited === true) {
