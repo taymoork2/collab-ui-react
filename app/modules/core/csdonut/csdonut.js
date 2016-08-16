@@ -47,10 +47,10 @@
         $scope.currentAngles = {};
 
         $scope.computeTextProperties = function (value, unlimited, hideusage, tsize) {
-          if (typeof hideusage !== 'undefined' && hideusage === true) {
-            $scope.text.size = 25;
-            $scope.text.y = 12;
-          } else if (typeof unlimited !== 'undefined' && unlimited === true) {
+          if (
+            (typeof hideusage !== 'undefined' && hideusage === true) ||
+            (typeof unlimited !== 'undefined' && unlimited === true)
+          ) {
             $scope.text.size = 18;
             $scope.text.y = 6;
           } else if (typeof value === 'undefined' || value.toString().length > 3) {
@@ -75,8 +75,9 @@
 
           if (typeof hideusage !== 'undefined' && hideusage === true) {
             $scope.text.content = '---';
-            $scope.text.color = 'lightgray';
-            $scope.dataset = [0, 1];
+            $scope.colours = ['#43a942'];
+            $scope.text.color = '#6A6B6C';
+            $scope.dataset = [1];
           } else if (typeof unlimited !== 'undefined' && unlimited === true) {
             $scope.text.content = 'Unlimited';
             $scope.colours = ['#43a942'];
