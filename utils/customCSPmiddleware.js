@@ -28,6 +28,7 @@ module.exports = csp({
       '\'self\'',
       'https://*.cisco.com',
       'https://*.ciscoccservice.com',
+      'https://*.ciscospark.com',
       'https://*.huron-dev.com',
       'https://*.huron-int.com',
       'https://*.huron.uno',
