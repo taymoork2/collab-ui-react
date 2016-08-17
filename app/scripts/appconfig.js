@@ -844,21 +844,20 @@
             }
           })
 
-        ///////////////////////////
-        // todo - I-35 feature
-        .state('users.manage', {
-          parent: 'modal',
-          views: {
-            'modal@': {
-              controller: 'UserManageModalController',
-              controllerAs: 'ctrl',
-              template: '<div ui-view></div>'
+          ///////////////////////////
+          .state('users.manage', {
+            parent: 'modal',
+            views: {
+              'modal@': {
+                controller: 'UserManageModalController',
+                controllerAs: 'ummc',
+                template: '<div ui-view></div>'
+              }
+            },
+            params: {
+              isOverExportThreshold: {}
             }
-          },
-          params: {
-            isOverExportThreshold: {}
-          }
-        })
+          })
           .state('users.manage.org', {
             controller: 'UserManageOrgController',
             controllerAs: 'umoc',
@@ -870,12 +869,12 @@
             templateUrl: 'modules/core/users/userManage/userManageActiveDir.tpl.html'
           })
 
-        .state('users.manage.advanced', {
-          abstract: true,
-          controller: 'UserManageAdvancedController',
-          controllerAs: 'umac',
-          templateUrl: 'modules/core/users/userManage/userManageAdvanced.tpl.html'
-        })
+          .state('users.manage.advanced', {
+            abstract: true,
+            controller: 'UserManageAdvancedController',
+            controllerAs: 'umac',
+            templateUrl: 'modules/core/users/userManage/userManageAdvanced.tpl.html'
+          })
           .state('users.manage.advanced.add', {
             abstract: true,
             controller: 'AddUserCtrl',
@@ -1400,19 +1399,19 @@
             parent: 'main'
           })
 
-        /*
-         devices
-         */
-        .state('places', {
-          url: '/places',
-          templateUrl: 'modules/squared/places/places.html',
-          controller: 'PlacesCtrl',
-          controllerAs: 'sc',
-          parent: 'main',
-          data: {
-            bodyClass: 'places-page'
-          }
-        })
+          /*
+           devices
+           */
+          .state('places', {
+            url: '/places',
+            templateUrl: 'modules/squared/places/places.html',
+            controller: 'PlacesCtrl',
+            controllerAs: 'sc',
+            parent: 'main',
+            data: {
+              bodyClass: 'places-page'
+            }
+          })
           .state('place-overview', {
             parent: 'sidepanel',
             views: {
