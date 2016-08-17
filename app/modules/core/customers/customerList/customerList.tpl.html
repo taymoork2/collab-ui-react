@@ -15,6 +15,7 @@
       </div>
     </cs-page-sub-header-left>
     <cs-page-sub-header-right>
+      <cs-select ng-if="customerListToggle" class="filter-dropdown" ng-model="filter.selected" options="filter.options" placeholder="filter.placeholder" multi="true" singular="filter" plural="filters"></cs-select>
       <div class="center" ng-controller="ExportCSVCtrl">
         <a id="export-btn" class="export-users" ng-if="!exporting" ng-csv="exportCSV()" filename="{{'customerPage.csvFilename' | translate}}">
           <span id="export-icon"><i class="icon icon-content-share icon-lg" tooltip-placement="top" tooltip="{{'customerPage.csvBtnTitle' | translate}}" tooltip-animation="false"  tooltip-append-to-body="true"></i></span>

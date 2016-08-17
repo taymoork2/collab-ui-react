@@ -29,7 +29,11 @@
       buildService: _buildService,
       addService: _addService,
       removeFromFreeServices: _removeFromFreeServices,
-      isDisplayablePaidService: _isDisplayablePaidService
+      isDisplayablePaidService: _isDisplayablePaidService,
+      calculatePurchaseStatus: _calculatePurchaseStatus,
+      calculateTotalLicenses: _calculateTotalLicenses,
+      countUniqueServices: _countUniqueServices
+
     };
 
     var factory = {
@@ -258,6 +262,14 @@
     }
     // end series of fn's
 
+    function isLicenseTypeAny(customerData, licenseTypeField) {
+      if (!isLicenseInfoAvailable(customerData.licenseList)) {
+        return false;
+      }
+      var licenseObj = customerData[licenseTypeField] || null;
+      return isLicenseATrial(licenseObj) || isLicenseActive(licenseObj);
+    }
+
     function getLicense(licenses, offerCode) {
       return _.find(licenses, {
         offerName: offerCode
@@ -285,33 +297,46 @@
     }
 
     function setNotesSortOrder(rowData) {
-      rowData.notes = {};
+      var notes = {};
+      notes.daysLeft = rowData.daysLeft;
       if (isLicenseInfoAvailable(rowData.licenseList)) {
         if (rowData.status === 'CANCELED') {
-          rowData.notes.sortOrder = customerStatus.NOTE_CANCELED;
-          rowData.notes.text = $translate.instant('customerPage.suspended');
-        } else if (rowData.status === 'ACTIVE' && rowData.daysLeft > 0) {
-          rowData.notes.sortOrder = customerStatus.NOTE_NOT_EXPIRED;
-          rowData.notes.daysLeft = rowData.daysLeft;
-          rowData.notes.text = $translate.instant('customerPage.daysRemaining', {
-            count: rowData.daysLeft
-          });
-        } else if (rowData.isTrial && rowData.status === 'ACTIVE' && rowData.daysLeft === 0) {
-          rowData.notes.sortOrder = customerStatus.NOTE_EXPIRE_TODAY;
-          rowData.notes.daysLeft = 0;
-          rowData.notes.text = $translate.instant('customerPage.expiringToday');
-        } else if (rowData.status === 'ACTIVE' && rowData.daysLeft < 0) {
-          rowData.notes.sortOrder = customerStatus.NOTE_EXPIRED;
-          rowData.notes.daysLeft = -1;
-          rowData.notes.text = $translate.instant('customerPage.expired');
-        } else {
-          rowData.notes.sortOrder = customerStatus.NOTE_NO_LICENSE;
-          rowData.notes.text = $translate.instant('customerPage.licenseInfoNotAvailable');
+          notes.sortOrder = customerStatus.NOTE_CANCELED;
+          notes.text = $translate.instant('customerPage.suspended');
+        } else if (rowData.purchased) {
+          notes.sortOrder = customerStatus.ACTIVE;
+          notes.text = $translate.instant('customerPage.purchased');
+        } else if (rowData.customerOrgId === Authinfo.getOrgId()) {
+          notes.sortOrder = customerStatus.ACTIVE;
+          notes.text = $translate.instant('customerPage.myOrganization');
+        } else if (rowData.status === 'ACTIVE' || rowData.status === 'EXPIRED') {
+          // while "daysLeft > 0" and expired doesn't make sense, the other 2 cases have the same text
+          if (rowData.daysLeft > 0) {
+            notes.sortOrder = customerStatus.NOTE_NOT_EXPIRED;
+            notes.text = $translate.instant('customerPage.daysLeftToPurchase', {
+              count: rowData.daysLeft
+            }, 'messageformat');
+          } else if (rowData.daysLeft === 0) {
+            notes.sortOrder = customerStatus.NOTE_EXPIRE_TODAY;
+            notes.text = $translate.instant('customerPage.expiringToday');
+          } else if (rowData.daysLeft < 0) {
+            notes.sortOrder = customerStatus.NOTE_EXPIRED;
+            // equal to the maximum days past expiration, always negative!
+            var gracePeriodDays = Config.trialGracePeriod;
+            if (_.inRange(rowData.daysLeft, 0, gracePeriodDays)) {
+              notes.text = $translate.instant('customerPage.expiredWithGracePeriod');
+            } else {
+              notes.text = $translate.instant('customerPage.expired');
+            }
+          }
         }
-      } else {
-        rowData.notes.sortOrder = customerStatus.NOTE_NO_LICENSE;
-        rowData.notes.text = $translate.instant('customerPage.licenseInfoNotAvailable');
       }
+      // If any of the previous tests fail, fall back to no license info
+      if (!_.has(notes, 'text')) {
+        notes.sortOrder = customerStatus.NOTE_NO_LICENSE;
+        notes.text = $translate.instant('customerPage.licenseInfoNotAvailable');
+      }
+      rowData.notes = notes;
     }
 
     function loadRetrievedDataToList(list, isTrialData, isCareEnabled) {
@@ -328,8 +353,8 @@
         customerName: customer.customerName || customer.displayName,
         customerEmail: customer.customerEmail || customer.email,
         endDate: edate,
-        numUsers: _.get(customer, 'license[0].volume', 0), // Note that the actual numUsers isn't available yet
-        activeUsers: 0,
+        numUsers: customer.allUsers || 0, // sometimes we get back undefined users, temp workaround
+        activeUsers: customer.activeUsers || 0,
         daysLeft: 0,
         usage: 0,
         licenses: 0,
@@ -374,7 +399,7 @@
       if (isTrialData) {
         if (daysLeft < 0) {
           dataObj.status = $translate.instant('customerPage.expired');
-          dataObj.state = "EXPIRED";
+          dataObj.state = 'EXPIRED';
         }
       }
 
@@ -403,8 +428,56 @@
       // the customer list page currently works.
       dataObj.conferencing = dataObj.sparkConferencing;
 
+      dataObj.totalLicenses = _calculateTotalLicenses(dataObj, isCareEnabled);
+      dataObj.uniqueServiceCount = _countUniqueServices(dataObj);
+      dataObj.purchased = _calculatePurchaseStatus(dataObj);
+
       setNotesSortOrder(dataObj);
       return dataObj;
+    }
+
+    function _calculatePurchaseStatus(customerData) {
+      if (customerData.state === Config.licenseStatus.ACTIVE) {
+        return !_.some(customerData.licenseList, 'isTrial');
+      } else {
+        return false;
+      }
+    }
+
+    function _calculateTotalLicenses(customerData, isCareEnabled) {
+      if (customerData.purchased || customerData.isPartner) {
+        return _.sum(customerData.licenseList, function (license) {
+          if (license.licenseType === Config.licenseTypes.STORAGE) {
+            return 0;
+          } else {
+            return license.volume;
+          }
+        });
+      } else {
+        // device and care licenses can be undefined
+        return customerData.licenses +
+              (customerData.deviceLicenses || 0) +
+              (isCareEnabled ? (customerData.careLicenses || 0) : 0);
+      }
+    }
+
+    function _countUniqueServices(customerData) {
+      var count = 0;
+      // only want to add 1 for webex since it is only 1 icon
+      var foundWebex = false;
+      _.forEach(Config.licenseObjectNames, function (licenseName) {
+        if (isLicenseTypeAny(customerData, licenseName)) {
+          if (_.startsWith(licenseName, 'webex')) {
+            if (!foundWebex) {
+              count += 1;
+              foundWebex = true;
+            }
+          } else {
+            count += 1;
+          }
+        }
+      });
+      return count;
     }
 
     function initializeService(licenses, offerCode, serviceEntry) {
