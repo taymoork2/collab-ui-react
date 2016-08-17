@@ -6,7 +6,7 @@
     .controller('PlanReviewCtrl', PlanReviewCtrl);
 
   /* @ngInject */
-  function PlanReviewCtrl($scope, $translate, Authinfo, Config, FeatureToggleService, TrialService, WebExUtilsFact) {
+  function PlanReviewCtrl($translate, Authinfo, Config, FeatureToggleService, TrialService, WebExUtilsFact) {
     var vm = this;
     var classes = {
       userService: 'user-service-',
@@ -202,13 +202,6 @@
           }
           cmrService.label = $translate.instant('onboardModal.cmr') + ' ' + cmrService.license.capacity;
           vm.sites[cmrService.license.siteUrl].push(cmrService);
-        }
-      }
-
-      //set the parent property for showdoitlater button based on trial states
-      if (!vm.messagingServices.isNewTrial && vm.commServices.isNewTrial && !vm.confServices.isNewTrial) {
-        if (angular.isDefined($scope.wizard)) {
-          $scope.wizard.showDoItLater = true;
         }
       }
     }
