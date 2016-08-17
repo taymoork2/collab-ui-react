@@ -4,14 +4,18 @@ if [ -z "${WX2_ADMIN_WEB_CLIENT_HOME}" ]; then
 fi
 
 # keep around scratch files when processing sauce labs results
-sauce_results_workspace_dir=${WX2_ADMIN_WEB_CLIENT_HOME}/.cache/sauce-results-workspace
+cache_subdir=.cache
+e2e_fail_retry_dir=${WX2_ADMIN_WEB_CLIENT_HOME}/${cache_subdir}
+e2e_sauce_logs_file=${WX2_ADMIN_WEB_CLIENT_HOME}/${cache_subdir}/e2e-sauce-logs
+sauce_results_workspace_dir=${WX2_ADMIN_WEB_CLIENT_HOME}/${cache_subdir}/sauce-results-workspace
+e2e_fail_retry_prefix="e2e-fail-retry-run-"
+rm -rf ${sauce_results_workspace_dir}
 mkdir -p ${sauce_results_workspace_dir}
 test_results_file=${sauce_results_workspace_dir}/test-results
-test_urls_file=${sauce_results_workspace_dir}/test-urls
+test_ids_and_urls=${sauce_results_workspace_dir}/test-ids-and-urls
 test_summary_file=${sauce_results_workspace_dir}/test-summary
-> ${test_results_file}
-> ${test_urls_file}
-> ${test_summary_file}
+test_report_body_file=${sauce_results_workspace_dir}/test-report-body
+test_report_file=${sauce_results_workspace_dir}/test-report
 
 # compatibility shim for osx - we need 'sort -V ...'
 SORT_CMD=sort
@@ -30,16 +34,20 @@ if [ "`uname`" = "Darwin" ]; then
     fi
 fi
 
+function sort_by_version {
+    ${SORT_CMD} -V -u
+}
+
 function grep_for_sauce_link_lines {
-    grep saucelabs.com\/jobs | ${SORT_CMD} -V -u
+    grep 'saucelabs.com/jobs'
 }
 
 function grep_for_test_result_lines {
-    grep \\[launcher | grep -e passed -e failed | grep -v overall | ${SORT_CMD} -V -u
+    grep '/launcher' | grep -e passed -e failed | grep -v overall
 }
 
 function grep_for_test_summary {
-    grep \\[launcher | grep overall
+    grep '/launcher' | grep overall
 }
 
 # grep out more details for a given test id
@@ -50,6 +58,23 @@ function grep_for_test_id {
       return 1
     fi
     grep "#${test_id}\\b"
+}
+
+function grep_for_spec_file_for_test_id {
+    local test_id=${1}
+    if [ -z "${test_id}" ]; then
+      >&2 echo "Error: no test_id passed to grep_for_spec_file_for_test_id"
+      return 1
+    fi
+    grep_for_test_id ${test_id} | grep Specs:
+}
+
+function grep_for_test_id_result_from_file {
+    local test_id=${1}
+    local test_result_file=${2}
+    local test_result="$(cat "$test_result_file" | grep_for_test_id "$test_id")"
+    test_result="${test_result:-"result: N/A"}"
+    echo "$test_result"
 }
 
 function cut_url {
@@ -64,17 +89,18 @@ function cut_sauce_job_id {
     ${SED_CMD} -e 's/.*saucelabs.com\/jobs//' | cut -d'/' -f2
 }
 
-function cut_spec_file_for_test_id {
-    local test_id=${1}
-    if [ -z "${test_id}" ]; then
-      >&2 echo "Error: no test_id passed to cut_spec_file_for_test_id"
-      return 1
-    fi
-    grep_for_test_id ${test_id} | grep Specs: | ${SED_CMD} -e 's,.*test/e2e-protractor/,.../,'
+function trim_out_spec_prefix {
+    ${SED_CMD} -e 's,.*test/e2e-protractor/,.../,'
 }
 
 function trim_out_launcher_prefix {
-    ${SED_CMD} -e 's/\[launcher. //'
+    ${SED_CMD} -e 's/^.*\blauncher\b - //'
+}
+
+function prepend_lines_with {
+    local prefix="${1}"
+    local delim="${2:-" "}"
+    ${SED_CMD} -E "s/(.*)/${prefix}${delim}\\1/"
 }
 
 function get_sauce_property {
@@ -104,12 +130,66 @@ function mk_proper_sauce_link {
     echo "${url}?auth=${sauce_access_code}"
 }
 
-function filter_out_test_ids_and_urls {
-    grep_for_sauce_link_lines | ${SED_CMD} -E 's/^.*#//' | ${SED_CMD} -E 's/SauceLabs.* http/http/' | ${SED_CMD} -E 's/]//'
+function get_retry_file_for_run {
+    local run_num=$1
+    echo "${e2e_fail_retry_dir}/${e2e_fail_retry_prefix}${run_num}"
 }
 
-function filter_out_raw_urls {
-    grep_for_sauce_link_lines | cut_url
+function get_previous_run_num {
+    local run_num=${1:-0}
+    let "run_num = run_num - 1"
+    echo $run_num
+}
+
+function cat_last_retry_file_for_run {
+    local run_num=${1}
+    # early out if run is first run (ie. run 0), no retry files will be available
+    if [ $run_num -eq 0 ]; then
+        return 1
+    fi
+    last_run_num=$(get_previous_run_num $run_num)
+    last_retry_file=$(get_retry_file_for_run $last_run_num)
+    cat "$last_retry_file"
+}
+
+function is_last_run_only_a_single {
+    run_num=${1}
+    # early out if run is first run (ie. run 0), no retry files will be available
+    if [ $run_num -eq 0 ]; then
+        return 1
+    fi
+    line_count=$(cat_last_retry_file_for_run $run_num | wc -l | awk '{print $1;}')
+    [ $line_count -eq 1 ]
+    return $?
+}
+
+function is_id_in_result_line {
+    echo "$@" | grep -e '#' > /dev/null
+}
+
+function cut_out_test_id {
+    read line
+    if is_id_in_result_line "$line"; then
+        echo "$line" | cut -d']' -f1 | cut -d'#' -f2
+    else
+        echo "01"
+    fi
+}
+
+function cut_out_test_url {
+    ${SED_CMD} -E s'/.*SauceLabs.* http/http/'
+}
+
+function filter_out_test_ids_and_urls {
+    local id
+    local url
+    grep_for_sauce_link_lines | \
+        while read line; do
+            id="$( echo "$line" | cut_out_test_id )"
+            url="$( echo "$line" | cut_out_test_url )"
+            echo "$id $url"
+        done | \
+        sort_by_version
 }
 
 function transform_to_proper_urls {
@@ -123,48 +203,8 @@ function transform_to_proper_urls {
     done
 }
 
-function edit_line_to_add_spec_file {
-    local test_id=${1}
-    local spec_file=${2}
-    local test_results_file=${3}
-    if [ -z "${test_id}" ]; then
-        >&2 echo "Error: no test_id passed to edit_line_to_add_spec_file"
-        return 1
-    fi
-    if [ -z "${spec_file}" ]; then
-        >&2 echo "Error: no spec_file passed to edit_line_to_add_spec_file"
-        return 1
-    fi
-    if [ -z "${test_results_file}" ]; then
-        >&2 echo "Error: no test_results_file passed to edit_line_to_add_spec_file"
-        return 1
-    fi
-
-    ${SED_CMD} -i -E "s,(.*#${test_id}\> .*),\1 | ${spec_file}," ${test_results_file}
-}
-
-function edit_line_to_add_url {
-    local test_id=${1}
-    local url=${2}
-    local test_results_file=${3}
-    if [ -z "${test_id}" ]; then
-        >&2 echo "Error: no test_id passed to edit_line_to_add_url"
-        return 1
-    fi
-    if [ -z "${url}" ]; then
-        >&2 echo "Error: no url passed to"
-        return 1
-    fi
-    if [ -z "${test_results_file}" ]; then
-        >&2 echo "Error: no test_results_file passed to edit_line_to_add_url"
-        return 1
-    fi
-
-    ${SED_CMD} -i -E "s,(.*#${test_id}\b .*),\1 | ${url}," ${test_results_file}
-}
-
 function filter_out_test_results {
-    grep_for_test_result_lines | trim_out_launcher_prefix
+    grep_for_test_result_lines | sort_by_version | trim_out_launcher_prefix
 }
 
 function filter_out_test_summary {
@@ -172,31 +212,153 @@ function filter_out_test_summary {
 }
 
 function mk_test_report {
-    local input_file=${1}
-    if [ -z "${input_file}" ]; then
-        >&2 echo "Error: no input_file passed to mk_test_report_files"
+    local input_file="${1:-${e2e_sauce_logs_file}}"
+    if [ ! -s "${input_file}" ]; then
+        >&2 echo "Error: invalid input_file \"$input_file\" in mk_test_report"
         return 1
     fi
+    local last_run_num="$(get_last_run_from_file "${input_file}")"
+    last_run_num="${last_run_num:-E2E_RUN_COUNTER_MAX}"
+    local run_test_report_file="${test_report_file}-${run_num}"
+    for run_num in $(seq 0 $last_run_num); do
+        mk_test_report_for_run $run_num "$input_file" > "$run_test_report_file"
+        if [ -s "$run_test_report_file" ]; then
+            echo "#### Summary: run: $run_num"
+            cat "$run_test_report_file"
+        fi
+    done
+}
+
+function mk_test_report_for_run {
+    local run_num="${1}"
+    local input_file="${2:-${e2e_sauce_logs_file}}"
+    if [ -z "${input_file}" ]; then
+        >&2 echo "Error: no input_file available to mk_test_report"
+        return 1
+    fi
+    local run_log_file="${sauce_results_workspace_dir}/sauce-logs-for-run-${run_num}"
+    local run_test_results_file="${test_results_file}-${run_num}"
+    local run_test_ids_and_urls_file="${test_ids_and_urls}-${run_num}"
+    local run_test_summary_file="${test_summary_file}-${run_num}"
+    local run_test_report_body_file="${test_report_body_file}-${run_num}"
+    local run_test_report_file="${test_report_file}-${run_num}"
+
+    # grep log lines only for current run
+    cut_lines_for_run_from_file "$run_num" "$input_file" > $run_log_file
 
     # run this block in a subshell to suppress the process-background-ing notifications
     (
-        cat ${input_file} | filter_out_test_results > ${test_results_file} &
-        cat ${input_file} | filter_out_test_ids_and_urls | transform_to_proper_urls > ${test_urls_file} &
-        cat ${input_file} | filter_out_test_summary > ${test_summary_file} &
+        cat "$run_log_file" | filter_out_test_results > "$run_test_results_file" &
+        cat "$run_log_file" | filter_out_test_ids_and_urls | transform_to_proper_urls > "$run_test_ids_and_urls_file" &
+        cat "$run_log_file" | filter_out_test_summary > "$run_test_summary_file" &
         wait
     )
 
-    # edit the test results file in-place (add urls to lines with test_ids)
+    mk_test_report_body_for_run "$run_num" \
+        "$run_test_results_file" \
+        "$run_test_ids_and_urls_file" \
+        "$run_log_file" > "$run_test_report_body_file"
+
+    # summary file might be empty
+    populate_if_empty "$run_test_summary_file" "overall: N/A"
+
+    # print results and summary, and save to report file
+    cat "$run_test_report_body_file" "$run_test_summary_file" | \
+        prepend_lines_with "run-${run_num}:" | \
+        tee "$run_test_report_file"
+}
+
+function mk_test_report_body_for_run {
+    local run_num="${1}"
+    local run_test_results_file="${2}"
+    local run_test_ids_and_urls_file="${3}"
+    local run_log_file="${4}"
+    if [ -z "${run_num}" ]; then
+        >&2 echo "Error: no run_num passed to mk_test_report_body_for_run"
+        return 1
+    fi
+    if [ -z "${run_test_results_file}" ]; then
+        >&2 echo "Error: no run_test_results_file passed to mk_test_report_body_for_run"
+        return 1
+    fi
+    if [ -z "${run_test_ids_and_urls_file}" ]; then
+        >&2 echo "Error: no run_test_ids_and_urls_file passed to mk_test_report_body_for_run"
+        return 1
+    fi
+    if [ -z "${run_log_file}" ]; then
+        >&2 echo "Error: no run_log_file passed to mk_test_report_body_for_run"
+        return 1
+    fi
     local test_id
     local url
-    while read line; do
-        test_id="`echo $line | awk '{print $1;}'`"
-        url="`echo $line | awk '{print $2;}'`"
-        spec_file="`cat ${input_file} | cut_spec_file_for_test_id ${test_id}`"
-        edit_line_to_add_spec_file "${test_id}" "${spec_file}" "${test_results_file}"
-        edit_line_to_add_url "${test_id}" "${url}" "${test_results_file}"
-    done < ${test_urls_file}
+    local spec_file
 
-    # print results and summary
-    cat ${test_results_file} ${test_summary_file}
+    # use the 'ids and urls' file (because the 'results' file isn't guaranteed to be populated)
+    while read line; do
+        test_id="$(echo $line | awk '{print $1;}')"
+        url="$(echo $line | awk '{print $2;}')"
+        test_id_result="$(grep_for_test_id_result_from_file "$test_id" "$run_test_results_file")"
+
+        # when retry file only contained a single test, get spec file name from it
+        if is_last_run_only_a_single $run_num; then
+            spec_file="$(cat_last_retry_file_for_run $run_num)"
+        else
+            spec_file="$(cat $run_log_file | grep_for_spec_file_for_test_id $test_id)"
+        fi
+        spec_file="$(echo "$spec_file" | trim_out_spec_prefix)"
+
+        echo "$test_id | $test_id_result | $spec_file | $url"
+    done < "$run_test_ids_and_urls_file"
+}
+
+function get_marker_start_regex_for_run {
+    echo "Protractor: max: .*: run: ${1}: start"
+}
+
+function get_marker_end_regex_for_run {
+    echo "Protractor: max: .*: run: ${1}: end"
+}
+
+function get_last_run_from_file {
+    local input_file="${1}"
+    if [ -z "${input_file}" ]; then
+        >&2 echo "Error: no input_file passed to populate_if_empty"
+        return 1
+    fi
+    grep "Protractor: max: " "$input_file" | \
+        grep "end" | \
+        tail -1 | \
+        cut -d':' -f5 | \
+        awk '{print $1;}'
+}
+
+function cut_lines_between_markers_from_file {
+    local marker1="${1}"
+    local marker2="${2}"
+    local input_file="${3}"
+    sed -n -e "/${marker1}/,/${marker2}/ p" "$input_file"
+}
+
+function cut_lines_for_run_from_file {
+    local run_num=$1
+    local input_file=$2
+    local marker1="$(get_marker_start_regex_for_run "$run_num")"
+    local marker2="$(get_marker_end_regex_for_run "$run_num")"
+    cut_lines_between_markers_from_file "${marker1}" "${marker2}" "${input_file}"
+}
+
+function populate_if_empty {
+    local input_file="${1}"
+    local default_msg="${2}"
+    if [ -z "${input_file}" ]; then
+        >&2 echo "Error: no input_file passed to populate_if_empty"
+        return 1
+    fi
+    if [ -z "${default_msg}" ]; then
+        >&2 echo "Error: no default_msg passed to populate_if_empty"
+        return 1
+    fi
+    if [ ! -s "$input_file" ]; then
+        echo "$default_msg" > "$input_file"
+    fi
 }
