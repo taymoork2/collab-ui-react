@@ -277,12 +277,19 @@
     }
 
     function getAccountStatus() {
-      vm.currentUser.pendingStatus = false;
-      var hasBeenActivated = _.some(vm.currentUser.userSettings, function (userSetting) {
-        return userSetting.indexOf('sparkAdmin.licensedDate') > 0 || userSetting.indexOf('spark.signUpDate') > 0;
+      // user status
+      FeatureToggleService.atlasUserPendingStatusGetStatus().then(function (pendingToggle) {
+        if (pendingToggle) {
+          vm.currentUser.pendingStatus = false;
+          var hasBeenActivated = _.some(vm.currentUser.userSettings, function (userSetting) {
+            return userSetting.indexOf('sparkAdmin.licensedDate') > 0 || userSetting.indexOf('spark.signUpDate') > 0;
+          });
+          vm.pendingStatus = _.isEmpty(vm.currentUser.licenseID) || !hasBeenActivated;
+          vm.currentUser.pendingStatus = vm.pendingStatus;
+        } else {
+          vm.pendingStatus = _.indexOf(vm.currentUser.accountStatus, 'pending') >= 0;
+        }
       });
-      vm.pendingStatus = _.isEmpty(vm.currentUser.licenseID) || !hasBeenActivated;
-      vm.currentUser.pendingStatus = vm.pendingStatus;
 
       // if no licenses/services found from CI,
       // then get the invitation list from Cassandra

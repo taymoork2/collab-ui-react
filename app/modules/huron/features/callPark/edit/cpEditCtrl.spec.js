@@ -24,10 +24,10 @@ describe('Call Park EditCtrl Controller', function () {
     getOrgId: jasmine.createSpy('getOrgId').and.returnValue('1')
   };
 
-  beforeEach(inject(function (_$rootScope_, $controller, _$httpBackend_, _$q_, _$state_, _$timeout_, _Authinfo_,
+  beforeEach(inject(function ($rootScope, $controller, _$httpBackend_, _$q_, _$state_, _$timeout_, _Authinfo_,
     _CallParkService_, _CallParkEditDataService_, _CallParkMemberDataService_, _Notification_) {
     controller = $controller;
-    $scope = _$rootScope_.$new();
+    $scope = $rootScope.$new();
     $state = _$state_;
     $timeout = _$timeout_;
     $httpBackend = _$httpBackend_;
@@ -61,6 +61,7 @@ describe('Call Park EditCtrl Controller', function () {
     $httpBackend.whenGET(GetMember2Url).respond(200, user2);
 
     cpEditCtrl = $controller('CallParkEditCtrl', {
+      $scope: $scope,
       $state: $state,
       $stateParams: $stateParams,
       $timeout: $timeout,
@@ -81,6 +82,7 @@ describe('Call Park EditCtrl Controller', function () {
 
   it('should redirect to features page if cp id is unavailable', function () {
     cpEditCtrl = controller('CallParkEditCtrl', {
+      $scope: $scope,
       $state: $state,
       $stateParams: {},
       $timeout: $timeout,
@@ -96,6 +98,7 @@ describe('Call Park EditCtrl Controller', function () {
   it('should throw error notification when edit service failed to fetch cp', function () {
     spyOn(CallParkEditDataService, 'fetchCallPark').and.returnValue($q.reject("Error"));
     cpEditCtrl = controller('CallParkEditCtrl', {
+      $scope: $scope,
       $state: $state,
       $stateParams: $stateParams,
       $timeout: $timeout,

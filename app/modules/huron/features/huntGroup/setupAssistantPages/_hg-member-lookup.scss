@@ -60,6 +60,7 @@
     border-radius: 0.25rem !important;
     & i {
       @include vr-spacing(mr, 0, 0px, true);
+      font-size: 1.5rem;
     }
   }
 
