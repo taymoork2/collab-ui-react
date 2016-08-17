@@ -18,8 +18,8 @@ describe('LeaderBoard', function () {
 
     spyOn(Orgservice, 'getLicensesUsage').and.returnValue($q.when(usageOnlySharedDevicesFixture));
     spyOn(TrialService, 'getDaysLeftForCurrentUser').and.returnValue($q.when());
-    spyOn(WebExUtilsFact, 'isCIEnabledSite').andReturnValue(true);
-    spyOn(WebExUtilsFact, 'getSiteAdminUrl').andReturnValue('someUrl');
+    spyOn(WebExUtilsFact, 'isCIEnabledSite').and.returnValue(false);
+    spyOn(WebExUtilsFact, 'getSiteAdminUrl').and.returnValue('https://siteAdminUrl.junk.com');
   }));
 
   function initController() {
