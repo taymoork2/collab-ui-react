@@ -86,6 +86,9 @@ else
     fi
 fi
 
+# print top-level node module versions
+npm ls --depth=1
+
 
 # -----
 # Phase 3: Build
