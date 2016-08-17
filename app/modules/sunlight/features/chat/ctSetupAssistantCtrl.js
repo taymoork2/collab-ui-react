@@ -153,8 +153,8 @@
     /* Template */
     vm.template = {
       name: '',
-      mediaType: 'chat',
       configuration: {
+        mediaType: 'chat',
         mediaSpecificConfiguration: {
           useOrgProfile: true,
           displayText: vm.orgName,

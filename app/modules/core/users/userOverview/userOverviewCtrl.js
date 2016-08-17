@@ -10,7 +10,6 @@
     var vm = this;
     vm.currentUser = $stateParams.currentUser;
     vm.entitlements = $stateParams.entitlements;
-    vm.queryuserslist = $stateParams.queryuserslist;
     vm.services = [];
     vm.dropDownItems = [];
     vm.titleCard = '';
@@ -278,17 +277,26 @@
     }
 
     function getAccountStatus() {
-      var currentUserId = vm.currentUser.id;
-      vm.currentUser.pendingStatus = false;
-      vm.pendingStatus = _.indexOf(vm.currentUser.accountStatus, 'pending') >= 0;
-      vm.currentUser.pendingStatus = vm.pendingStatus;
-      // if there are services found, then those are licenses,
-      // which means the users has already accepted invitations,
-      // so no need to get invitation list
+      // user status
+      FeatureToggleService.atlasUserPendingStatusGetStatus().then(function (pendingToggle) {
+        if (pendingToggle) {
+          vm.currentUser.pendingStatus = false;
+          var hasBeenActivated = _.some(vm.currentUser.userSettings, function (userSetting) {
+            return userSetting.indexOf('sparkAdmin.licensedDate') > 0 || userSetting.indexOf('spark.signUpDate') > 0;
+          });
+          vm.pendingStatus = _.isEmpty(vm.currentUser.licenseID) || !hasBeenActivated;
+          vm.currentUser.pendingStatus = vm.pendingStatus;
+        } else {
+          vm.pendingStatus = _.indexOf(vm.currentUser.accountStatus, 'pending') >= 0;
+        }
+      });
+
+      // if no licenses/services found from CI,
+      // then get the invitation list from Cassandra
       if (_.isEmpty(vm.services)) {
         invitationResource.get({
           customerId: Authinfo.getOrgId(),
-          userId: currentUserId
+          userId: vm.currentUser.id
         }).$promise.then(function (response) {
           if (_.isArray(response.effectiveLicenses) && !_.isEmpty(response.effectiveLicenses)) {
             vm.currentUser.invitations = {

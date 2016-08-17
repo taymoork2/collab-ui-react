@@ -30,6 +30,7 @@
       atlasMediaServiceOnboarding: 'atlas-media-service-onboarding',
       atlasNewRoomSystems: 'atlas-new-roomSystems',
       atlasNurturingEmails: 'atlas-nurturing-emails',
+      atlasUserPendingStatus: 'atlas-user-pending-status',
       atlasPinSettings: 'atlas-pin-settings',
       atlasPstnTfn: 'atlas-pstn-tfn',
       atlasReadOnlyAdmin: 'atlas-read-only-admin',
@@ -143,7 +144,8 @@
       webexCSV: 'webex-CSV',
       enableCrashLogs: 'csdm-enable-crash-logs',
       csdmPlaces: 'csdm-places',
-      optionalvmdid: 'optional-vm-did'
+      optionalvmdid: 'optional-vm-did',
+      globalStatus: 'global-status'
     };
 
     var toggles = {};

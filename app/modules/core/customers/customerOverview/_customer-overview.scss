@@ -1,5 +1,13 @@
 .customer-overview {
 
+  .feature-details {
+    font-size: 0.875rem;
+  }
+
+  .feature-status {
+    font-size: 0.875rem;
+  }
+
   .button-container {
     left: -1px;
   }
@@ -38,10 +46,6 @@
     }
   }
 
-  // .progress {
-  //   margin-bottom: auto;
-  // }
-
   .progress-bar {
     max-width: 100%;
     height: 0.25rem;
@@ -70,7 +74,7 @@
           padding-right: 10px;
         }
         .feature-arrow {
-          margin-right: -20px;
+          margin-right: -23px;
         }
         .feature-icon:before {
           content: "\E068";
@@ -78,23 +82,39 @@
       }
     }
 
-    .feature {
-      display: block;
-    }
-
-    .feature-name {
-      display: inline-block;
-    }
-
-    .feature-details {
-      font-size: 0.875rem;
-    }
-
     i.feature-icon {
       display: inline-block;
       vertical-align: middle;
       margin-right: 7px;
       font-size: 1.25rem;
+    }
+  }
+
+
+  .webex-domains-list {
+
+    .spinner-loading {
+      font-size: 1.5rem;
+      text-align: center;
+    }
+
+    .subtitle {
+      font-size: .75rem;
+      color: $gray-base;
+    }
+
+    .feature-name {
+      color: $gray-dark-2;
+
+     .secondary {
+        margin-top: -0.5rem;
+        color: $gray-base;
+        display:block;
+      }
+    }
+
+    .status {
+      color: $gray-light-1;
     }
   }
 

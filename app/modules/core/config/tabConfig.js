@@ -104,7 +104,16 @@
       state: 'media-service-v2',
       link: '#mediaserviceV2'
     }]
-  }];
+  },
+    {
+      tab: 'statusTab',
+      icon: 'icon-alerting',
+      title: 'tabs.statusTab',
+      desc: 'tabs.statusTabDesc',
+      feature: 'global-status',
+      state: 'status',
+      link: '/status'
+    }];
 
   module.exports = angular
     .module('core.tabconfig', [])

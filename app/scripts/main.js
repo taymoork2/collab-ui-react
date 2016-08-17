@@ -56,7 +56,6 @@
 
   angular.module('Huron', [
     'Core',
-    'uc.moh',
     'uc.device',
     'uc.callrouting',
     'uc.didadd',
@@ -82,6 +81,8 @@
     'CareDetails'
   ]);
 
+  angular.module('Status', ['Core']);
+
   module.exports = angular.module('Main', [
     'Core',
     'Squared',
@@ -93,8 +94,10 @@
     'WebExApp',
     'Messenger',
     'Sunlight',
+    'Status',
     'oc.lazyLoad',
-  ]).run(require('./main.run'))
+  ]).config(require('./main.config'))
+    .run(require('./main.run'))
     .name;
 
   // require all modules first

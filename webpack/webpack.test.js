@@ -7,7 +7,6 @@ const testConfig = merge.smart(commonWebpack, {
   devtool: 'inline-source-map',
   entry: {},
   module: {
-    preLoaders: [],
     loaders: [_.merge(loaders.scss, {
       loader: 'null',
     })],

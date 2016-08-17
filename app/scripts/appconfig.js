@@ -609,6 +609,25 @@
               }
             }
           })
+          .state('status', {
+            url: '/status',
+            templateUrl: 'modules/status/dashboard/dashboard.tpl.html',
+            controller: 'DashboardCtrl',
+            controllerAs: 'dashboardCtrl',
+            parent: 'main',
+            resolve: {
+              hasFeatureToggle: function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.globalStatus);
+              }
+            }
+          })
+          /*.state('status', {
+            url: '/status-conponents',
+            templateUrl: 'modules/status/components/components.tpl.html',
+            controller: 'ComponentsCtrl',
+            controllerAs: 'componentsCtrl',
+            parent: 'main'
+          })*/
           .state('authentication.enable3rdPartyAuth', {
             parent: 'modal',
             views: {
@@ -825,21 +844,20 @@
             }
           })
 
-        ///////////////////////////
-        // todo - I-35 feature
-        .state('users.manage', {
-          parent: 'modal',
-          views: {
-            'modal@': {
-              controller: 'UserManageModalController',
-              controllerAs: 'ctrl',
-              template: '<div ui-view></div>'
+          ///////////////////////////
+          .state('users.manage', {
+            parent: 'modal',
+            views: {
+              'modal@': {
+                controller: 'UserManageModalController',
+                controllerAs: 'ummc',
+                template: '<div ui-view></div>'
+              }
+            },
+            params: {
+              isOverExportThreshold: {}
             }
-          },
-          params: {
-            isOverExportThreshold: {}
-          }
-        })
+          })
           .state('users.manage.org', {
             controller: 'UserManageOrgController',
             controllerAs: 'umoc',
@@ -851,12 +869,12 @@
             templateUrl: 'modules/core/users/userManage/userManageActiveDir.tpl.html'
           })
 
-        .state('users.manage.advanced', {
-          abstract: true,
-          controller: 'UserManageAdvancedController',
-          controllerAs: 'umac',
-          templateUrl: 'modules/core/users/userManage/userManageAdvanced.tpl.html'
-        })
+          .state('users.manage.advanced', {
+            abstract: true,
+            controller: 'UserManageAdvancedController',
+            controllerAs: 'umac',
+            templateUrl: 'modules/core/users/userManage/userManageAdvanced.tpl.html'
+          })
           .state('users.manage.advanced.add', {
             abstract: true,
             controller: 'AddUserCtrl',
@@ -1003,7 +1021,7 @@
             },
             resolve: {
               currentUser: /* @ngInject */ function ($http, $stateParams, Config, Utils, Authinfo, UrlConfig) {
-                var userUrl = UrlConfig.getScimUrl(Authinfo.getOrgId()) + '/' + $stateParams.currentUser.id;
+                var userUrl = UrlConfig.getScimUrl(Authinfo.getOrgId()) + '/' + $stateParams.currentUserId;
                 return $http.get(userUrl)
                   .then(function (response) {
                     angular.copy(response.data, this.currentUser);
@@ -1015,7 +1033,7 @@
             params: {
               currentUser: {},
               entitlements: {},
-              queryuserslist: {}
+              currentUserId: ''
             },
             data: {
               displayName: 'Overview'
@@ -1381,19 +1399,19 @@
             parent: 'main'
           })
 
-        /*
-         devices
-         */
-        .state('places', {
-          url: '/places',
-          templateUrl: 'modules/squared/places/places.html',
-          controller: 'PlacesCtrl',
-          controllerAs: 'sc',
-          parent: 'main',
-          data: {
-            bodyClass: 'places-page'
-          }
-        })
+          /*
+           devices
+           */
+          .state('places', {
+            url: '/places',
+            templateUrl: 'modules/squared/places/places.html',
+            controller: 'PlacesCtrl',
+            controllerAs: 'sc',
+            parent: 'main',
+            data: {
+              bodyClass: 'places-page'
+            }
+          })
           .state('place-overview', {
             parent: 'sidepanel',
             views: {
@@ -1646,6 +1664,20 @@
               meetingLicenses: {}
             }
           })
+          .state('customer-overview.domainDetail', {
+            controller: 'DomainDetailCtrl',
+            controllerAs: 'domainDetail',
+            templateUrl: 'modules/core/customers/customerOverview/domainDetail.tpl.html',
+            resolve: {
+              data: /*ngInject */ function ($state, $translate) {
+                $state.get('customer-overview.domainDetail').data.displayName = $translate.instant('customerPage.domains');
+              }
+            },
+            data: {},
+            params: {
+              webexDomains: {}
+            }
+          })
           .state('customer-overview.pstnOrderDetail', {
             parent: 'customer-overview.pstnOrderOverview',
             controller: 'PstnOrderDetailCtrl',
@@ -1871,22 +1903,6 @@
             url: '/huntgroups',
             parent: 'callrouting',
             template: '<div></div>'
-          })
-          .state('mediaonhold', {
-            parent: 'modal',
-            url: '/mediaonhold',
-            views: {
-              'modal@': {
-                templateUrl: 'modules/huron/moh/moh.tpl.html',
-                controller: 'MohCtrl',
-                controllerAs: 'moh',
-                resolve: {
-                  modalInfo: function ($state) {
-                    $state.params.modalClass = 'moh-content';
-                  }
-                }
-              }
-            }
           })
           .state('trialAdd', {
             abstract: true,
@@ -2171,6 +2187,16 @@
             templateUrl: 'modules/huron/features/callPark/cpSetupAssistant.tpl.html',
             controller: 'CallParkSetupAssistantCtrl',
             controllerAs: 'callParkSA'
+          })
+          .state('callparkedit', {
+            url: '/features/cp/edit',
+            parent: 'main',
+            templateUrl: 'modules/huron/features/callPark/edit/cpEdit.tpl.html',
+            controller: 'CallParkEditCtrl',
+            controllerAs: 'cpe',
+            params: {
+              feature: null
+            }
           })
           .state('huronHuntGroup', {
             url: '/huronHuntGroup',
@@ -2517,13 +2543,6 @@
 
         $stateProvider
 
-          .state('metrics', {
-            url: '/metrics',
-            controllerAs: 'GraphUtilCtrl',
-            controller: 'AnalyticsUtilizationGraphController',
-            templateUrl: 'modules/mediafusion/media-service/metrics/analytics-utilization-graph.html',
-            parent: 'main'
-          })
           //V2 API changes
           .state('media-service-v2', {
             templateUrl: 'modules/mediafusion/media-service-v2/overview.html',

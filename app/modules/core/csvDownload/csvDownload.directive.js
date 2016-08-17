@@ -13,13 +13,15 @@
    *    - call scope.downloadCsv()
    * /
    /* @ngInject */
-  function csvDownload($rootScope, $window, $q, $translate, $timeout, $modal, CsvDownloadService, Notification) {
+  function csvDownload($rootScope, $window, $q, $translate, $timeout, $modal, $state, CsvDownloadService, Notification) {
     var directive = {
       restrict: 'E',
       templateUrl: 'modules/core/csvDownload/csvDownload.tpl.html',
       scope: {
         type: '@',
-        filename: '@'
+        filename: '@',
+        statusMessage: '@',
+        downloadState: '@'
       },
       link: link
     };
@@ -33,9 +35,19 @@
       scope.downloadingMessage = '';
       scope.type = scope.type || CsvDownloadService.typeAny;
       scope.downloadCsv = downloadCsv;
+      scope.goToDownload = goToDownload;
+
+      ////////////////////
+
       var downloadAnchor = $(element.find('a')[0]);
       var downloadIcon = $(element.find('i')[0]);
       var downloadingIcon = $(element.find('i')[1]);
+
+      function goToDownload() {
+        if (scope.downloading && !_.isEmpty(scope.downloadState)) {
+          $state.go(scope.downloadState);
+        }
+      }
 
       function downloadCsv(csvType, tooManyUsers) {
         csvType = csvType || scope.type;

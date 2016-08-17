@@ -12,7 +12,17 @@
       <section-title
         title-key="directoryNumberPanel.title">
       </section-title>
-      <directory-number></directory-number>
+      <uc-directory-number
+        show-internal-extensions="$ctrl.showExtensions"
+        esn-prefix="$ctrl.esnPrefix"
+        internal-selected="$ctrl.internalNumber"
+        internal-options="$ctrl.internalOptions"
+        internal-is-warn="$ctrl.internalIsWarn"
+        internal-warn-msg="$ctrl.internalWarnMsg"
+        external-selected="$ctrl.externalNumber"
+        external-options="$ctrl.externalOptions"
+        on-change-fn="$ctrl.setDirectoryNumbers(internalNumber, externalNumber)">
+      </uc-directory-number>
     </cs-sp-section>
   </cs-sp-container>
 </form>

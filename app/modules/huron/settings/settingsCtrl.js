@@ -221,14 +221,13 @@
       return false;
     };
 
-    vm.leftPanelFields = [{
+    vm.timeZoneSelection = [{
       model: vm.model.site,
       key: 'timeZone',
       type: 'select',
       templateOptions: {
-        inputClass: 'large-10',
+        inputClass: 'medium-5',
         label: $translate.instant('serviceSetupModal.timeZone'),
-        description: $translate.instant('serviceSetupModal.tzDescription'),
         options: [],
         labelfield: 'label',
         valuefield: 'id',
@@ -239,30 +238,15 @@
         _buildTimeZoneOptions($scope);
       }
 
-    }, {
-      model: vm.model.site,
-      key: 'steeringDigit',
-      type: 'select',
-      templateOptions: {
-        inputClass: 'large-10',
-        label: $translate.instant('serviceSetupModal.steeringDigit'),
-        description: $translate.instant('serviceSetupModal.steeringDigitDescription'),
-        warnMsg: $translate.instant('serviceSetupModal.steeringDigitChangeWarning'),
-        isWarn: false,
-        options: vm.steeringDigits
-      },
-      hideExpression: function () {
-        return vm.hideFieldSteeringDigit;
-      },
-      expressionProperties: {
-        'templateOptions.isWarn': vm.steeringDigitChangeValidation
-      }
-    }, {
+    }];
+
+    vm.extensionLengthSelection = [{
       model: vm.model.site,
       key: 'extensionLength',
       type: 'select',
       className: 'service-setup service-setup-extension-length',
       templateOptions: {
+        inputClass: 'medium-2',
         label: $translate.instant('serviceSetupModal.extensionLength'),
         description: $translate.instant('serviceSetupModal.extensionLengthDescription'),
         helpText: $translate.instant('serviceSetupModal.extensionLengthServicesHelpText'),
@@ -288,10 +272,12 @@
           return vm.model.disableExtensions;
         }
       }
-    }, {
+    }];
+
+    vm.extensionRangeSelection = [{
       className: 'service-setup service-setup-extension',
       fieldGroup: [{
-        className: 'extension-list',
+        className: 'medium-5',
         key: 'displayNumberRanges',
         type: 'repeater',
         hideExpression: function () {
@@ -476,7 +462,29 @@
           });
         }
       }]
-    }, {
+    }];
+
+    vm.steeringDigitSelection = [{
+      model: vm.model.site,
+      key: 'steeringDigit',
+      type: 'select',
+      templateOptions: {
+        inputClass: 'medium-2',
+        label: $translate.instant('serviceSetupModal.steeringDigit'),
+        description: $translate.instant('serviceSetupModal.steeringDigitDescription'),
+        warnMsg: $translate.instant('serviceSetupModal.steeringDigitChangeWarning'),
+        isWarn: false,
+        options: vm.steeringDigits
+      },
+      hideExpression: function () {
+        return vm.hideFieldSteeringDigit;
+      },
+      expressionProperties: {
+        'templateOptions.isWarn': vm.steeringDigitChangeValidation
+      }
+    }];
+
+    vm.internationalDialingSelection = [{
       type: 'switch',
       key: 'internationalDialingEnabled',
       className: 'international-dialing',
@@ -493,13 +501,12 @@
       }
     }];
 
-    vm.rightPanelFields = [{
+    vm.emergencyServiceAddressSelection = [{
       key: 'showServiceAddress',
       type: 'nested',
       className: 'max-width-form',
       templateOptions: {
-        label: $translate.instant('settingsServiceAddress.label'),
-        description: $translate.instant('settingsServiceAddress.description')
+        label: $translate.instant('settingsServiceAddress.label')
       },
       hideExpression: '!model.showServiceAddress',
       data: {
@@ -508,7 +515,9 @@
           template: '<hr-settings-service-address></hr-settings-service-address>'
         }]
       }
-    }, {
+    }];
+
+    vm.emergencyServiceNumberSelection = [{
       model: vm.model,
       key: 'serviceNumber',
       type: 'select',
@@ -516,7 +525,6 @@
         type: 'csSelect',
         inputClass: 'large-5',
         label: $translate.instant('settingsServiceNumber.label'),
-        description: $translate.instant('settingsServiceNumber.description'),
         inputPlaceholder: $translate.instant('directoryNumberPanel.searchNumber'),
         options: [],
         labelfield: 'label',
@@ -533,13 +541,14 @@
           return vm.model.serviceNumberWarning;
         }
       }
-    }, {
+    }];
+
+    vm.callerIdSelection = [{
       key: 'callerId',
       type: 'nested',
       className: 'max-width-form',
       templateOptions: {
         label: $translate.instant('companyCallerId.companyCallerId'),
-        description: $translate.instant('companyCallerId.companyCallerIdDesc')
       },
       data: {
         fields: [{
@@ -595,85 +604,93 @@
           }
         }]
       }
+    }];
+
+    vm.companyVoicemailSelection = [{
+      className: 'row collapse-both voicemail-switch-width',
+      fieldGroup: [{
+        key: 'companyVoicemail',
+        type: 'nested',
+        className: 'medium-10 left',
+        templateOptions: {
+          label: $translate.instant('serviceSetupModal.vmAccessNumber'),
+        },
+        expressionProperties: {
+          'templateOptions.description': function () {
+            if (!vm.optionalVmDidFeatureToggle) {
+              return $translate.instant('serviceSetupModal.companyVoicemailDescription');
+            }
+          }
+        }
+      }, {
+        model: vm.model.companyVoicemail,
+        key: 'companyVoicemailEnabled',
+        className: 'medium-2 right vm-switch-margin',
+        type: 'switch'
+      }]
     }, {
-      key: 'companyVoicemail',
-      type: 'nested',
-      className: 'max-width-form',
+      model: vm.model.companyVoicemail,
+      key: 'externalVoicemail',
+      type: 'cs-input',
       templateOptions: {
-        label: $translate.instant('serviceSetupModal.companyVoicemail'),
+        label: $translate.instant('serviceSetupModal.externalVoicemailAccessLabel'),
+        type: 'checkbox'
+      },
+      hideExpression: function () {
+
+        return (!vm.optionalVmDidFeatureToggle) ||
+              (vm.optionalVmDidFeatureToggle && !vm.model.companyVoicemail.companyVoicemailEnabled);
+      }
+    }, {
+      model: vm.model.companyVoicemail,
+      key: 'companyVoicemailNumber',
+      type: 'select',
+      className: 'medium-12 voicemail-spacing',
+      templateOptions: {
+        inputClass: 'large-5',
+        options: [],
+        inputPlaceholder: $translate.instant('directoryNumberPanel.searchNumber'),
+        filter: true,
+        labelfield: 'label',
+        valuefield: 'pattern',
+        warnMsg: $translate.instant('serviceSetupModal.voicemailNoExternalNumbersError'),
+        isWarn: false
+      },
+      hideExpression: function () {
+        return vm.optionalVmDidFeatureToggle ? (!vm.model.companyVoicemail.externalVoicemail || !vm.model.companyVoicemail.companyVoicemailEnabled) : !vm.model.companyVoicemail.companyVoicemailEnabled;
       },
       expressionProperties: {
+        'templateOptions.required': function () {
+          return vm.optionalVmDidFeatureToggle ? (vm.model.companyVoicemail.companyVoicemailEnabled && vm.model.companyVoicemail.externalVoicemail) :
+                                                     vm.model.companyVoicemail.companyVoicemailEnabled;
+        },
         'templateOptions.description': function () {
-          if (!vm.optionalVmDidFeatureToggle) {
-            return $translate.instant('serviceSetupModal.companyVoicemailDescription');
+          if (vm.optionalVmDidFeatureToggle) {
+            return $translate.instant('serviceSetupModal.externalNumberDescriptionText');
+          }
+        },
+        'templateOptions.helpText': function () {
+          if (vm.optionalVmDidFeatureToggle && !vm.hideoptionalvmHelpText) {
+            return $translate.instant('serviceSetupModal.voicemailPilotHelpText');
           }
         }
       },
-      data: {
-        fields: [{
-          key: 'companyVoicemailEnabled',
-          type: 'switch'
-        }, {
-          key: 'externalVoicemail',
-          type: 'cs-input',
-          templateOptions: {
-            label: $translate.instant('serviceSetupModal.externalVoicemailAccessLabel'),
-            type: 'checkbox'
-          },
-          hideExpression: function () {
-
-            return (!vm.optionalVmDidFeatureToggle) ||
-              (vm.optionalVmDidFeatureToggle && !vm.model.companyVoicemail.companyVoicemailEnabled);
-          }
-        }, {
-          key: 'companyVoicemailNumber',
-          type: 'select',
-          templateOptions: {
-            inputClass: 'large-5',
-            options: [],
-            inputPlaceholder: $translate.instant('directoryNumberPanel.searchNumber'),
-            filter: true,
-            labelfield: 'label',
-            valuefield: 'pattern',
-            warnMsg: $translate.instant('serviceSetupModal.voicemailNoExternalNumbersError'),
-            isWarn: false
-          },
-          hideExpression: function () {
-            return vm.optionalVmDidFeatureToggle ? (!vm.model.companyVoicemail.externalVoicemail || !vm.model.companyVoicemail.companyVoicemailEnabled) : !vm.model.companyVoicemail.companyVoicemailEnabled;
-          },
-          expressionProperties: {
-            'templateOptions.required': function () {
-              return vm.optionalVmDidFeatureToggle ? (vm.model.companyVoicemail.companyVoicemailEnabled && vm.model.companyVoicemail.externalVoicemail) :
-                                                     vm.model.companyVoicemail.companyVoicemailEnabled;
-            },
-            'templateOptions.description': function () {
-              if (vm.optionalVmDidFeatureToggle) {
-                return $translate.instant('serviceSetupModal.externalNumberDescriptionText');
-              }
-            },
-            'templateOptions.helpText': function () {
-              if (vm.optionalVmDidFeatureToggle && !vm.hideoptionalvmHelpText) {
-                return $translate.instant('serviceSetupModal.voicemailPilotHelpText');
-              }
-            }
-          },
-          controller: function ($scope) {
-            _buildVoicemailNumberOptions($scope);
-            _voicemailEnabledWatcher($scope);
-            _callerIdNumberWatcher($scope);
-          }
-        }, {
-          key: 'voicemailToEmail',
-          type: 'cs-input',
-          templateOptions: {
-            label: $translate.instant('serviceSetupModal.voicemailToEmailLabel'),
-            type: 'checkbox',
-            helpText: $translate.instant('serviceSetupModal.voicemailToEmailHelpText')
-          },
-          hideExpression: function () {
-            return !vm.model.companyVoicemail.companyVoicemailEnabled;
-          }
-        }]
+      controller: function ($scope) {
+        _buildVoicemailNumberOptions($scope);
+        _voicemailEnabledWatcher($scope);
+        _callerIdNumberWatcher($scope);
+      }
+    }, {
+      model: vm.model.companyVoicemail,
+      key: 'voicemailToEmail',
+      type: 'cs-input',
+      templateOptions: {
+        label: $translate.instant('serviceSetupModal.voicemailToEmailLabel'),
+        type: 'checkbox',
+        helpText: $translate.instant('serviceSetupModal.voicemailToEmailHelpText')
+      },
+      hideExpression: function () {
+        return !vm.model.companyVoicemail.companyVoicemailEnabled;
       }
     }];
 

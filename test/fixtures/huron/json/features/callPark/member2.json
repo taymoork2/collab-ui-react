@@ -1,15 +1,17 @@
 {
-  "uuid": "5dea2d85-7f23-4392-a1bc-360b8a74a487",
+  "uuid": "abcd5678-abcd-abcd-abcddef567890",
   "numbers": [{
     "internal": "2065",
     "external": "",
+    "primary": true,
     "uuid": "98e2fd81-2721-4809-bb9a-e78c079b8a99"
   }, {
     "internal": "2085",
     "external": "",
+    "primary": false,
     "uuid": "87a769f0-d953-4e15-b3b1-276ed065245e"
   }],
-  "lastName": "hg",
+  "lastName": "cp",
   "firstName": "member2",
   "userName": "sonho98+457"
 }

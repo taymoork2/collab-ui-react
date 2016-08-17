@@ -116,10 +116,12 @@
     }
 
     if (hasF410FeatureToggle) {
-
+      vm.schedule = {};
       FusionClusterService.get(vm.clusterId)
         .then(function (cluster) {
           vm.F410cluster = FusionClusterService.buildSidepanelConnectorList(cluster, vm.connectorType);
+          vm.schedule.dateTime = FusionClusterService.formatTimeAndDate(cluster.upgradeSchedule);
+          vm.schedule.timeZone = cluster.upgradeSchedule.scheduleTimeZone;
         });
       vm.localizedConnectorName = $translate.instant('hercules.connectorNameFromConnectorType.' + vm.connectorType);
       vm.localizedManagementConnectorName = $translate.instant('hercules.connectorNameFromConnectorType.c_mgmt');
