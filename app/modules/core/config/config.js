@@ -169,6 +169,20 @@
         CARE: 'CARE'
       },
 
+      messageErrors: {
+        userExistsError: '400081',
+        userPatchError: '400084',
+        claimedDomainError: '400091',
+        userExistsInDiffOrgError: '400090',
+        notSetupForManUserAddError: '400110',
+        userExistsDomainClaimError: '400108',
+        unknownCreateUserError: '400096',
+        unableToMigrateError: '400109',
+        insufficientEntitlementsError: '400111',
+        hybridServicesError: '400087',
+        hybridServicesComboError: '400094',
+      },
+
       defaultEntitlements: ['webex-squared', 'squared-call-initiation'],
 
       batchSize: 10,
@@ -349,9 +363,7 @@
         'messenger',
         'services-overview',
       ],
-      'contact-center-context': [
-        //TODO: Remove these states when sunlight trial stories are implemented and
-        // add back them to 'ccc_config' serviceState
+      'cloud-contact-center': [
         'care'
       ]
     };

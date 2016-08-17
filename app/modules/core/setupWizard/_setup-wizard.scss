@@ -17,7 +17,7 @@
   }
   .service-setup {
     label {
-      font-size: 20px;
+      font-size: 24px;
       color: $gray-dark-4;
       line-height: 1;
       margin-bottom: 0;
@@ -41,12 +41,6 @@
     }
     .hide-delete {
       visibility: hidden;
-    }
-    &.service-setup-timezone {
-      margin-bottom: -2px;
-    }
-    &.service-setup-steering-digit {
-      margin-bottom: rem(2);
     }
     &.service-setup-extension {
       .formly-field-group {
@@ -81,15 +75,22 @@
     }
     &.voicemail-padding {
       @include vr-spacing(pl, 2);
+      @include vr-spacing(mb, 1.5);
     }
     .service-setup-moh {
       width: 50%;
     }
-    &.service-setup-extension-length {
-      margin-bottom: rem(2);
-    }
     &.swtich-margin {
       @include vr-spacing(mt, 1);
     }
+    .msg-container {
+      min-width: rem(500);
+    }
+  }
+  .voicemail-switch-width {
+      max-width: 40rem;
+  }
+  .bottom-margin {
+    @include vr-spacing(mb, 2.25);
   }
 }

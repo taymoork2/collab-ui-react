@@ -7,15 +7,14 @@
 
   /* @ngInject */
   function UserCsvCtrl($interval, $modal, $q, $rootScope, $scope, $state, $timeout, $translate, $previousState, $stateParams,
-    Authinfo, Config, CsvDownloadService, FeatureToggleService, HuronCustomer, LogMetricsService, NAME_DELIMITER,
-    Notification, Orgservice, TelephoneNumberService, UserCsvService, Userservice) {
+                       Authinfo, Config, CsvDownloadService, FeatureToggleService, HuronCustomer, LogMetricsService, NAME_DELIMITER,
+                       Notification, Orgservice, TelephoneNumberService, UserCsvService, Userservice) {
     // variables
     var vm = this;
     vm.licenseUnavailable = false;
     vm.isCancelledByUser = false;
     vm.isExporting = false;
     vm.isCsvValid = false;
-    // todo - test this!
     vm.isOverExportThreshold = !!$stateParams.isOverExportThreshold;
 
     var maxUsers = UserCsvService.maxUsersInCSV;
@@ -91,17 +90,22 @@
       $timeout(vm.validateCsv);
     });
 
+    // see if there is already a download started. if so, continue with that download
+    if (CsvDownloadService.downloadInProgress) {
+      $timeout(function () {
+        $rootScope.$emit('csv-download-request-started');
+      });
+    }
+
     // controller functions
     vm.onExportDownloadStatus = onExportDownloadStatus;
 
     vm.onFileSizeError = function () {
-      Notification.error('firstTimeWizard.csvMaxSizeError');
-      $scope.$digest();
+      $timeout(Notification.error('firstTimeWizard.csvMaxSizeError'));
     };
 
     vm.onFileTypeError = function () {
-      Notification.error('firstTimeWizard.csvFileTypeError');
-      $scope.$digest();
+      $timeout(Notification.error('firstTimeWizard.csvFileTypeError'));
     };
 
     vm.resetFile = function () {
@@ -303,6 +307,7 @@
       $timeout(function () {
         vm.model.numTotalUsers = vm.model.numNewUsers + vm.model.numExistingUsers + vm.model.userErrorArray.length;
         vm.model.processProgress = Math.round((vm.model.numTotalUsers / csvUsersArray.length) * 100);
+        vm.model.importCompletedAt = Date.now();
         UserCsvService.setCsvStat({
           numTotalUsers: vm.model.numTotalUsers,
           processProgress: vm.model.processProgress
@@ -417,7 +422,7 @@
                 addUserErrorWithTrackingID(-1, user.email, UserCsvService.getBulkErrorResponse(user.httpStatus, user.message, user.email), response);
               }
             } else {
-              addUserErrorWithTrackingID(onboardUser.csvRow, onboardUser.email, UserCsvService.getBulkErrorResponse(user.httpStatus, user.message, user.email), response);
+              addUserErrorWithTrackingID(onboardUser.csvRow, user.email, UserCsvService.getBulkErrorResponse(user.httpStatus, user.message, user.email), response);
             }
           });
         } else {
@@ -442,13 +447,14 @@
         } else {
           // fatal error.  flag all users as having an error
           _.forEach(onboardedUsers, function (user) {
+            var email = (user.email ? user.email : user.address);
             addUserErrorWithTrackingID(
               user.csvRow,
-              user.email,
+              email,
               UserCsvService.getBulkErrorResponse(
                 response.status,
                 vm.isCancelledByUser ? '0' : '1',
-                user.email
+                email
               ),
               response
             );

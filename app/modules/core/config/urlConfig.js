@@ -152,6 +152,12 @@
       integration: 'https://hades.huron-int.com/api/v1/elasticsearch/',
       prod: 'https://hades.huron-dev.com/api/v1/elasticsearch/'
     },
+    BmmpUrl: {
+      dev: 'https://bmmp.dmz.ciscospark.com/api/v1',
+      cfe: 'https://bmmp.ciscospark.com/api/v1',
+      integration: 'https://bmmp.ciscospark.com/api/v1',
+      prod: 'https://bmmp.ciscospark.com/api/v1'
+    },
 
     // urls same for all environments
 

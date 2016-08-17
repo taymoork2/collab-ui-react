@@ -80,6 +80,7 @@
     "forbidden": "{{email}} cannot be invited to service",
     "errInvite": "Unable to process your invitation. Status: {{status}}.",
     "exportUsers": "export Users",
+    "exportingUserAttributes": "Exporting User Attributes",
     "moreOptions": "More Actions",
     "cancel": "Cancel",
     "save": "Save",
@@ -153,7 +154,7 @@
       "manualDetails": "All you need are email addresses to add and/or edit up to {{maxUsersInManual}} users.",
       "bulkLabel": "Bulk upload or modify users using CSV",
       "bulkDetails": "Best method for adding and editing up to {{maxUsersInCSV}} users at the same time.",
-      "advancedLabel": "Advanced",
+      "advancedLabel": "Enable directory synchronization",
       "advancedDetails": "Synchronize users from Active Directory"
     },
     "ad": {
@@ -163,6 +164,7 @@
       "adStatusDisabled": "Directory Synchronization Disabled",
       "adStatusDetails": "New users will be automatically added from your directory when it synchronizes. Updates can be made directly in Cisco Directory Connector.",
       "turnOffDS": "Turn off Directory Synchronization",
+      "turnOffDSToolTip": "Turning off Directory Synchronization does not affect current users and their authentication options (SSO).",
       "confirmDirSyncDisableMsg": "Are you sure that you want to turn off directory synchronization? It can only be enabled again from Cisco Directory Connector. After it's turned off, you must manually add new users.",
       "dirSyncDisableSuccess": "Directory synchronization disabled successfully.",
       "dirSyncDisableFailure": "Failed to disabled Directory synchronization.",
@@ -184,7 +186,7 @@
       "titleModify": "Manually Modify Users",
       "titleAddModify": "Manually Add or Modify Users",
       "instructions": "Enter up to {{maxUsers}} users to modify.",
-      "tooManyUsers": "Users to modify exceeds limit of {{maxUsers}}. For larger user updates, please use the bulk CSV modify option.",
+      "tooManyUsers": "The user list exceeds the limit of {{maxUsers}}. To update more than {{maxUsers}} users, please use the bulk CSV template.",
       "ad": {
         "unsyncedUsers": "Some users are not currently synchronized with Active Directory. Please add them with Cisco Directory Connector, and then modify them after they synchronize to the cloud."
       }
@@ -210,10 +212,12 @@
         "status": "Import Status",
         "stopImportTitle": "Stop Import",
         "stopImportBody": "If you stop your import, users already processed will be updated while the remaining users will stay unmodified.",
-        "exportErrors": "Export errors to CSV file.",
-        "errorResolveInstructions": "To resolve errors, first download an updated user attributes CSV file and compare to error CSV file. Then edit the user attributes to address reported errors, and lastly reimport the updated user attributes CSV file.",
+        "exportErrors": "Export errors to CSV",
+        "errorResolveInstructions": "To resolve errors, update your user attributes CSV file and reimport.",
+        "errorResolveTooltip": "Export errors to CSV and download an updated user attributes CSV file. Edit the user attributes to address reported errors, then reimport.",
         "headerRow": "Row",
-        "headerErrorMessage": "Error Message"
+        "headerErrorMessage": "Error Message",
+        "completedAt": "Completed {{filename}} at"
       },
       "resultModalTitle": "Import User List Results",
       "desc": "Best method for adding up to {{maxUsers}} users at a time. Entitlement changes of the existing users can also be made through CSV file upload. Users cannot be deleted during this process.",
@@ -233,7 +237,7 @@
       "enableRemoveNote": "Note: User entitlements not included in the CSV file upload will not be removed.",
       "removeFile": "Remove File",
       "confirmCsvDownloadTitle": "Export User Attributes",
-      "confirmCsvDownloadMsg": "Gathering data for export may take awhile. During this time you cannot sign out, or refresh your browser or the export will not complete.",
+      "confirmCsvDownloadMsg": "Gathering data for export may take awhile. During this time you cannot sign out, or refresh your browser or the export will be canceled.",
       "confirmCsvDownloadMsg10K": "Because you have more than {{maxUsers}} users, the exported list will not show the entitlements that are assigned to your users.",
 
       "newUsers": "Added",
@@ -1944,7 +1948,7 @@
     "defaultPlaceholder": "Default",
     "installStep1": "1. <a href='{{download}}' download> Download and Install</a> the Cisco Directory Connector in your enterprise.",
     "installStep2": "2. Configure the Active Directory synchronization agreement.",
-    "installStep3": "3. Test the synchronization agreement. This operation may take some time depending on the number of users being synchronized.",
+    "installStep3": "3. Test the synchronization agreement.",
     "installWarning": "Warning:",
     "installWarningDescription": "If you have already added users manually, performing an Active Directory synchronization may cause previously added users to be removed. Please check the Cisco Directory Connector Dry Run Reports to verify that all expected users are present.",
     "nextSteps": "Press Next when you're ready to verify that identity information is being synchronized.",
@@ -2311,8 +2315,9 @@
     "reversionLabel": "Call Reversion Rule",
     "reversionDesc": "If the call is not answered, send it to this destination",
     "personWhoParked": "Person who parked the call",
-    "firstRange": "First Range",
-    "secondRange": "Second Range",
+    "firstRange": "Starting #",
+    "secondRange": "Ending #",
+    "singleRange": "Single Park Number",
     "saveLabel": "Do you want to save your changes?",
     "memberFetchFailure": "Unable to get members."
   },
@@ -2549,15 +2554,15 @@
     },
     "orderStatus": {
       "pinRequired": "Customer needs to sign PSTN Contract.",
-      "addressMismatch": "Emergency or Billing Address needs to be submitted. Contact Inteleepeer.",
-      "btnMismatch": "Billing Telephone Number needs to be submitted. Contact Inteleepeer.",
+      "addressMismatch": "Emergency or Billing Address needs to be submitted. Contact Intelepeer.",
+      "btnMismatch": "Billing Telephone Number needs to be submitted. Contact Intelepeer.",
       "trialStatus": "Order cannot be fulfilled for trials",
       "focReceived": "Scheduled transfer date received from previous carrier for number porting.",
       "invalidSig": "Invalid Signature in Letter of Authorization for number porting.",
       "loaNotSigned": "Customer needs to sign Letter of Authorization for number porting.",
       "msaNotSigned": "Customer needs to sign PSTN Contract.",
       "pendingVendor": "Scheduled transfer date requested from previous carrier for number porting.",
-      "rejected": "Order has been rejected. Contact Inteleepeer."
+      "rejected": "Order has been rejected. Contact Intelepeer."
     }
   },
   "pstnContractInformation": {
@@ -2855,6 +2860,7 @@
     "setupButton": "Setup Customer",
     "myOrgButton": "View My Organization",
     "edit": "Edit Trial",
+    "errGetTrial": "Failed to retrieve trial {{user}}. Message: {{message}}",
     "trialTerms": "Terms of Trial",
     "trialOverview": "Trial",
     "webexOverview": "WebEx",
@@ -2900,6 +2906,7 @@
     "pstnOrders": "PSTN Orders",
     "addNumbers": "Add Numbers",
     "isSetupDoneError": "Unable to determine if {{orgName}} is setup. Message: {{message}}",
+    "launchCustomerPortalError": "Unable to launch the customer portal.",
     "meetingLicenses": "Meeting Licenses",
     "accountStatus": "Account Status",
     "totalUsers": "Total Users",

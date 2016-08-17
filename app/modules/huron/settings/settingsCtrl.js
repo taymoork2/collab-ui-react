@@ -240,26 +240,6 @@
 
     }];
 
-    vm.steeringDigitSelection = [{
-      model: vm.model.site,
-      key: 'steeringDigit',
-      type: 'select',
-      templateOptions: {
-        inputClass: 'medium-2',
-        label: $translate.instant('serviceSetupModal.steeringDigit'),
-        description: $translate.instant('serviceSetupModal.steeringDigitDescription'),
-        warnMsg: $translate.instant('serviceSetupModal.steeringDigitChangeWarning'),
-        isWarn: false,
-        options: vm.steeringDigits
-      },
-      hideExpression: function () {
-        return vm.hideFieldSteeringDigit;
-      },
-      expressionProperties: {
-        'templateOptions.isWarn': vm.steeringDigitChangeValidation
-      }
-    }];
-
     vm.extensionLengthSelection = [{
       model: vm.model.site,
       key: 'extensionLength',
@@ -484,6 +464,26 @@
       }]
     }];
 
+    vm.steeringDigitSelection = [{
+      model: vm.model.site,
+      key: 'steeringDigit',
+      type: 'select',
+      templateOptions: {
+        inputClass: 'medium-2',
+        label: $translate.instant('serviceSetupModal.steeringDigit'),
+        description: $translate.instant('serviceSetupModal.steeringDigitDescription'),
+        warnMsg: $translate.instant('serviceSetupModal.steeringDigitChangeWarning'),
+        isWarn: false,
+        options: vm.steeringDigits
+      },
+      hideExpression: function () {
+        return vm.hideFieldSteeringDigit;
+      },
+      expressionProperties: {
+        'templateOptions.isWarn': vm.steeringDigitChangeValidation
+      }
+    }];
+
     vm.internationalDialingSelection = [{
       type: 'switch',
       key: 'internationalDialingEnabled',
@@ -607,7 +607,7 @@
     }];
 
     vm.companyVoicemailSelection = [{
-      className: 'row collapse-both',
+      className: 'row collapse-both voicemail-switch-width',
       fieldGroup: [{
         key: 'companyVoicemail',
         type: 'nested',
@@ -645,7 +645,7 @@
       model: vm.model.companyVoicemail,
       key: 'companyVoicemailNumber',
       type: 'select',
-      className: 'medium-12 voicemail-padding',
+      className: 'medium-12 voicemail-spacing',
       templateOptions: {
         inputClass: 'large-5',
         options: [],

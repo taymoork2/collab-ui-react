@@ -24,10 +24,14 @@ module.exports = csp({
       'https://wbxdmz.admin.ciscospark.com',
       'https://wbxbts.admin.ciscospark.com'
     ],
+    frameSrc: [
+      'https://store.digitalriver.com',
+    ],
     connectSrc: [
       '\'self\'',
       'https://*.cisco.com',
       'https://*.ciscoccservice.com',
+      'https://*.ciscospark.com',
       'https://*.huron-dev.com',
       'https://*.huron-int.com',
       'https://*.huron.uno',

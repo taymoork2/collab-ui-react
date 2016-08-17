@@ -430,7 +430,7 @@
     }
 
     $scope.ConfirmAdditionalServiceSetup = function () {
-      var promise = Notification.confirmation('usersPage.addtionalServiceSetupConfirmation');
+      var promise = Notification.confirmation($translate.instant('usersPage.addtionalServiceSetupConfirmation'));
       promise.then(function () {
         $state.go('firsttimewizard');
       });
@@ -1401,63 +1401,104 @@
             alertType: null
           };
 
-          var userStatus = user.httpStatus;
+          var httpStatus = user.httpStatus;
 
-          if (userStatus === 200 || userStatus === 201) {
-            userResult.message = $translate.instant('usersPage.onboardSuccess', {
-              email: userResult.email
-            });
-            userResult.alertType = 'success';
-            if (userStatus === 200) {
-              $scope.numUpdatedUsers++;
-            } else {
-              $scope.numAddedUsers++;
+          switch (httpStatus) {
+            case 200:
+            case 201: {
+              userResult.message = $translate.instant('usersPage.onboardSuccess', {
+                email: userResult.email
+              });
+              userResult.alertType = 'success';
+              if (httpStatus === 200) {
+                $scope.numUpdatedUsers++;
+              } else {
+                $scope.numAddedUsers++;
+              }
+              break;
             }
-          } else if (userStatus === 409) {
-            userResult.message = userResult.email + ' ' + user.message;
-          } else if (userStatus === 403 && user.message === '400081') {
-            userResult.message = $translate.instant('usersPage.userExistsError', {
-              email: userResult.email
-            });
-          } else if (userStatus === 403 && (user.message === '400084' || user.message === '400091')) {
-            userResult.message = $translate.instant('usersPage.claimedDomainError', {
-              email: userResult.email,
-              domain: userResult.email.split('@')[1]
-            });
-          } else if (userStatus === 403 && user.message === '400090') {
-            userResult.message = $translate.instant('usersPage.userExistsInDiffOrgError', {
-              email: userResult.email
-            });
-          } else if (userStatus === 403 && user.message === '400110') {
-            userResult.message = $translate.instant('usersPage.notSetupForManUserAddError', {
-              email: userResult.email
-            });
-          } else if (userStatus === 403 && user.message === '400108') {
-            userResult.message = $translate.instant('usersPage.userExistsDomainClaimError', {
-              email: userResult.email
-            });
-          } else if (userStatus === 403 && user.message === '400096') {
-            userResult.message = $translate.instant('usersPage.unknownCreateUserError');
-          } else if (userStatus === 403 && user.message === '400109') {
-            userResult.message = $translate.instant('usersPage.unableToMigrateError', {
-              email: userResult.email
-            });
-          } else if (userStatus === 403 && user.message === '400111') {
-            userResult.message = $translate.instant('usersPage.insufficientEntitlementsError', {
-              email: userResult.email
-            });
-          } else if (userStatus === 400 && user.message === '400087') {
-            userResult.message = $translate.instant('usersPage.hybridServicesError');
-          } else if (userStatus === 400 && user.message === '400094') {
-            userResult.message = $translate.instant('usersPage.hybridServicesComboError');
-          } else {
-            userResult.message = $translate.instant('usersPage.onboardError', {
-              email: userResult.email,
-              status: userStatus
-            });
+            case 409: {
+              userResult.message = userResult.email + ' ' + user.message;
+              break;
+            }
+            case 403: {
+              switch (user.message) {
+                case Config.messageErrors.userExistsError: {
+                  userResult.message = $translate.instant('usersPage.userExistsError', {
+                    email: userResult.email
+                  });
+                  break;
+                }
+                case Config.messageErrors.userPatchError:
+                case Config.messageErrors.claimedDomainError: {
+                  userResult.message = $translate.instant('usersPage.claimedDomainError', {
+                    email: userResult.email,
+                    domain: userResult.email.split('@')[1]
+                  });
+                  break;
+                }
+                case Config.messageErrors.userExistsInDiffOrgError: {
+                  userResult.message = $translate.instant('usersPage.userExistsInDiffOrgError', {
+                    email: userResult.email
+                  });
+                  break;
+                }
+                case Config.messageErrors.notSetupForManUserAddError: {
+                  userResult.message = $translate.instant('usersPage.notSetupForManUserAddError', {
+                    email: userResult.email
+                  });
+                  break;
+                }
+                case Config.messageErrors.userExistsDomainClaimError: {
+                  userResult.message = $translate.instant('usersPage.userExistsDomainClaimError', {
+                    email: userResult.email
+                  });
+                  break;
+                }
+                case Config.messageErrors.unknownCreateUserError: {
+                  userResult.message = $translate.instant('usersPage.unknownCreateUserError');
+                  break;
+                }
+                case Config.messageErrors.unableToMigrateError: {
+                  userResult.message = $translate.instant('usersPage.unableToMigrateError', {
+                    email: userResult.email
+                  });
+                  break;
+                }
+                case Config.messageErrors.insufficientEntitlementsError: {
+                  userResult.message = $translate.instant('usersPage.insufficientEntitlementsError', {
+                    email: userResult.email
+                  });
+                  break;
+                }
+                default: break;
+              }
+              break;
+            }
+            case 400: {
+              switch (user.message) {
+                case Config.messageErrors.hybridServicesError: {
+                  userResult.message = $translate.instant('usersPage.hybridServicesError');
+                  break;
+                }
+                case Config.messageErrors.hybridServicesComboError: {
+                  userResult.message = $translate.instant('usersPage.hybridServicesComboError');
+                  break;
+                }
+                default: break;
+              }
+              break;
+            }
+            default: {
+              userResult.message = $translate.instant('usersPage.onboardError', {
+                email: userResult.email,
+                status: httpStatus
+              });
+              break;
+            }
           }
 
-          if (userStatus !== 200 && userStatus !== 201) {
+          if (httpStatus !== 200 && httpStatus !== 201) {
             userResult.alertType = 'danger';
           }
 
@@ -1606,37 +1647,50 @@
             alertType: null
           };
 
-          var userStatus = data.userResponse[i].status;
+          var httpStatus = data.userResponse[i].status;
 
-          if (userStatus === 200 || userStatus === 201) {
-            userResult.message = $translate.instant('onboardModal.result.200');
-            userResult.alertType = 'success';
-            if (userStatus === 200) {
-              $scope.numUpdatedUsers++;
-            } else if (userStatus === 201) {
-              $scope.numAddedUsers++;
+          switch (httpStatus) {
+            case 200:
+            case 201: {
+              userResult.message = $translate.instant('onboardModal.result.200');
+              userResult.alertType = 'success';
+              if (httpStatus === 200) {
+                $scope.numUpdatedUsers++;
+              } else if (httpStatus === 201) {
+                $scope.numAddedUsers++;
+              }
+              break;
             }
-          } else if (userStatus === 404) {
-            userResult.message = $translate.instant('onboardModal.result.404');
-            userResult.alertType = 'danger';
-            isComplete = false;
-          } else if (userStatus === 409) {
-            userResult.message = $translate.instant('onboardModal.result.409');
-            userResult.alertType = 'danger';
-            isComplete = false;
-          } else if (data.userResponse[i].message === '400094') {
-            userResult.message = $translate.instant('onboardModal.result.400094', {
-              status: userStatus
-            });
-            userResult.alertType = 'danger';
-            isComplete = false;
-          } else {
-            userResult.message = $translate.instant('onboardModal.result.other', {
-              status: userStatus
-            });
-            userResult.alertType = 'danger';
-            isComplete = false;
+            case 404: {
+              userResult.message = $translate.instant('onboardModal.result.404');
+              userResult.alertType = 'danger';
+              isComplete = false;
+              break;
+            }
+            case 409: {
+              userResult.message = $translate.instant('onboardModal.result.409');
+              userResult.alertType = 'danger';
+              isComplete = false;
+              break;
+            }
+            default: {
+              if (data.userResponse[i].message === Config.messageErrors.hybridServicesComboError) {
+                userResult.message = $translate.instant('onboardModal.result.400094', {
+                  status: httpStatus
+                });
+                userResult.alertType = 'danger';
+                isComplete = false;
+              } else {
+                userResult.message = $translate.instant('onboardModal.result.other', {
+                  status: httpStatus
+                });
+                userResult.alertType = 'danger';
+                isComplete = false;
+              }
+              break;
+            }
           }
+
           $scope.results.resultList.push(userResult);
           if (method !== 'convertUser') {
             $scope.$dismiss();
@@ -2265,6 +2319,7 @@
       function calculateProcessProgress() {
         $scope.model.numTotalUsers = $scope.model.numNewUsers + $scope.model.numExistingUsers + $scope.model.userErrorArray.length;
         $scope.model.processProgress = Math.round(($scope.model.numTotalUsers / userArray.length) * 100);
+        $scope.model.importCompletedAt = Date.now();
 
         if ($scope.model.numTotalUsers >= userArray.length) {
           $scope.model.userErrorArray.sort(function (a, b) {

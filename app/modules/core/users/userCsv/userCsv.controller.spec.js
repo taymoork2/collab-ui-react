@@ -194,7 +194,6 @@ describe('OnboardCtrl: Ctrl', function () {
     var twoValidUsers = generateUsersCsv(2);
     var twoInvalidUsers = 'First Name,Last Name,Display Name,User ID/Email (Required),Directory Number,Direct Line,Calendar Service,Meeting 25 Party,Spark Call,Spark Message\nJohn,Doe,John Doe,johndoe@example.com,5001,,TREU,true,true,true,true,true\nJane,Doe,Jane Doe,janedoe@example.com,5002,,FASLE,false,false,false';
     var twoValidUsersWithSpaces = 'First Name,Last Name,Display Name,User ID/Email (Required),Directory Number,Direct Line,Calendar Service,Meeting 25 Party,Spark Call,Spark Message\n , , ,johndoe@example.com, , ,true,true,true,true\n , , ,janedoe@example.com, ,  ,f,f,f,f';
-
     var threeUsersOneDuplicateEmail = 'First Name,Last Name,Display Name,User ID/Email (Required),Directory Number,Direct Line,Calendar Service,Meeting 25 Party,Spark Call,Spark Message\nFirst0,Last0,First0 Last0,firstlast0@example.com,5001,,true,true,true,true\nFirst1,Last1,First1 Last1,firstlast1@example.com,5002,,true,true,true,true\nFirst2,Last2,First2 Last2,firstlast0@example.com,5002,,true,true,true,true';
 
     beforeEach(installPromiseMatchers);
@@ -446,6 +445,33 @@ describe('OnboardCtrl: Ctrl', function () {
         expect($scope.$broadcast).toHaveBeenCalledWith('timer-stop');
         expect(controller.isCancelledByUser).toEqual(true);
       });
+
+      it('should provide correct data in error array', function () {
+        controller.model.file = twoValidUsers;
+        var csvData = $.csv.toObjects(controller.model.file);
+
+        $scope.$apply();
+        $timeout.flush();
+
+        Userservice.bulkOnboardUsers.and.callFake(bulkOnboardUsersResponseMock(-1));
+        controller.startUpload();
+        $scope.$apply();
+        $timeout.flush();
+
+        // download the CSV
+        expect(controller.model.userErrorArray).toHaveLength(2);
+        _.forEach(controller.model.userErrorArray, function (value) {
+          expect(value.row).not.toBeEmpty();
+          expect(value.error).not.toBeEmpty();
+
+          var row = value.row - 2; // row counting begins at 1, and row 1 is the headers, so row 2 is the first object
+          var expectedEmail = csvData[row]['User ID/Email (Required)'];
+          expect(value.email).toEqual(expectedEmail);
+        });
+
+
+      });
+
     });
 
     describe('Process CSV with spaces and Save Users', function () {
