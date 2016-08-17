@@ -160,7 +160,7 @@ describe('Care Chat Setup Assistant Ctrl', function () {
     });
 
     it("next button should be disabled when name is more than 250 chars long", function () {
-      controller.template.name = Array(1 + 251).join("a");
+      controller.template.name = Array(252).join("a");
       checkStateOfNavigationButtons(NAME_PAGE_INDEX, 'hidden', false);
     });
   });

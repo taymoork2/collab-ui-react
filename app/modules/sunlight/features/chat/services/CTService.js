@@ -20,9 +20,18 @@
       getTimezoneOptions: getTimezoneOptions,
       getDefaultTimeZone: getDefaultTimeZone,
       generateCodeSnippet: generateCodeSnippet,
-      openEmbedCodeModal: openEmbedCodeModal
+      openEmbedCodeModal: openEmbedCodeModal,
+      getLengthValidationConstants: getLengthValidationConstants
     };
     return service;
+
+    function getLengthValidationConstants() {
+      return {
+        singleLineMaxCharLimit: 50,
+        multiLineMaxCharLimit: 250,
+        empty: 0
+      };
+    }
 
     function getLogo() {
       return BrandService.getLogoUrl(Authinfo.getOrgId()).then(function (logoUrl) {

@@ -8,15 +8,13 @@
     font-style: italic;
   }
   .ct-input-valid-border {
-    border-top: solid rem(1px) $gray-light;
+    border-top: solid 1px $gray-light;
   }
   .ct-input-invalid-border {
-    border-top: solid rem(1px) $color-negative-dark;
+    border-top: solid 1px $color-negative-dark;
   }
 
   .ct-input-error {
-    font-family: "CiscoSansTT Light";
-    font-size: rem-calc(12px);
     color: $color-negative-dark;
   }
 

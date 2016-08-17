@@ -72,6 +72,7 @@
     vm.timezoneOptions = CTService.getTimezoneOptions();
     vm.daysPreview = CTService.getPreviewDays(vm.days, true, 1, 5);
     vm.ChatTemplateButtonText = $translate.instant('common.finish');
+    vm.lengthConstants = CTService.getLengthValidationConstants();
 
     /**
      * Type enumerations
@@ -343,11 +344,11 @@
     }
 
     vm.validateNameLength = function () {
-      return vm.template.name.length == 0 || vm.template.name.length <= 250;
+      return vm.template.name.length == vm.lengthConstants.empty || vm.template.name.length <= vm.lengthConstants.multiLineMaxCharLimit;
     };
 
     vm.isNamePageValid = function () {
-      return (vm.template.name !== '' && vm.validateNameLength(5));
+      return (vm.template.name !== '' && vm.validateNameLength());
     };
 
     function isProfilePageValid() {

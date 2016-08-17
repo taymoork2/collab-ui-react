@@ -7,7 +7,7 @@
          focus-on>
   <p ng-class="careChatSA.validateNameLength() ? 'ct-input-hint ct-input-valid-border' : 'ct-input-hint ct-input-invalid-border'"
      translate="careChatTpl.nameHint"></p>
-  <div class="ct-input-error"
+  <div class="small ct-input-error"
        ng-show="!careChatSA.validateNameLength()">
     <i class="icon icon-error"></i>
     {{:: 'careChatTpl.ctValidation.errorChar250' | translate}}</div>
