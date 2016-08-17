@@ -3,6 +3,7 @@
 describe('LeaderBoard', function () {
   beforeEach(angular.mock.module('Core'));
   beforeEach(angular.mock.module('Huron'));
+  beforeEach(angular.mock.module('WebExApp'));
 
   var $controller, $q, $scope, Orgservice, TrialService, WebExUtilsFact;
   var usageOnlySharedDevicesFixture = getJSONFixture('core/json/organizations/usageOnlySharedDevices.json');
