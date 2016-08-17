@@ -11,18 +11,17 @@ var uuid = require('uuid');
 var tunnelUuid;
 
 var runCounterMax = processEnvUtil.getE2eRunCounterMax();
+var runCounter = processEnvUtil.getE2eRunCounter();
 
 cleanupOldE2E();
 setEnv();
 sauceStart();
-runE2E();
+runE2E(runCounter);
 
-function retry(exitCode) {
+function retry(runCounter, exitCode) {
   var retrySpecList;
-  var runCounter = processEnvUtil.getE2eRunCounter();
-  if (runCounter < runCounterMax && fs.existsSync(config.e2eFailRetry)) {
-    console.log('Protractor retry attempt', runCounter);
-
+  var _runCounter = runCounter;
+  if (_runCounter < runCounterMax && fs.existsSync(config.e2eFailRetry)) {
     // mv default retry file to more specific name correlating to its run
     // ex. './.e2e-fail-retry' -> './cache/e2e-fail-retry-run-0'
     retrySpecList = config.cache + '/' + _.trimLeft(config.e2eFailRetry, '.') + '-run-' + processEnvUtil.getE2eRunCounter();
@@ -32,16 +31,16 @@ function retry(exitCode) {
     args.filesFrom = retrySpecList;
 
     // now we can increment the run counter and re-run
-    processEnvUtil.setE2eRunCounter(processEnvUtil.getE2eRunCounter() + 1);
-    runE2E();
+    _runCounter += 1;
+    runE2E(_runCounter);
   } else {
-    console.log('Nothing to retry, exiting...');
+    console.log('#### Protractor: nothing to retry, exiting...');
     sauceStop();
     process.exit(exitCode);
   }
 }
 
-function runE2E() {
+function runE2E(runCounter) {
   // yargs will have already parsed args of the form '--foo-bar', so remove them before forking
   // to 'protractor.js'
   args = _.forEach(args, function (argVal, argName) {
@@ -49,8 +48,12 @@ function runE2E() {
       delete args[argName];
     }
   });
+  console.log('#### Protractor: run: ' + runCounter + ': start');
   var child = cp.fork('./protractor/protractor', unparse(args));
-  child.on('exit', retry);
+  child.on('exit', function (exitCode) {
+    console.log('#### Protractor: run: ' + runCounter + ': end');
+    retry(runCounter, exitCode);
+  });
 }
 
 function cleanupOldE2E() {
