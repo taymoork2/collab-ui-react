@@ -9,9 +9,6 @@ fi
 source "${WX2_ADMIN_WEB_CLIENT_HOME}/bin/include/pid-helpers"
 source "${WX2_ADMIN_WEB_CLIENT_HOME}/bin/include/curl-api-helpers"
 
-# Update webdriver
-npm run webdriver
-
 # Cleanup tcp processed from previous jobs
 kill_wait "lite-server"
 
