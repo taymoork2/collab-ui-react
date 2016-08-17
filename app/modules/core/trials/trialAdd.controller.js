@@ -574,6 +574,7 @@
     }
 
     function finishSetup() {
+      Analytics.trackTrialSteps(Analytics.eventNames.FINISH, $state.current.name, Authinfo.getOrgId());
       $state.go('trialAdd.finishSetup');
     }
 
