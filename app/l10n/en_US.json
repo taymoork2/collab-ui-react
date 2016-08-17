@@ -2954,7 +2954,8 @@
     "filterSelectPlaceholder": "Select a filter...",
     "filterTrialAccounts": "Trial Accounts",
     "filterPurchasedAccounts": "Purchased Accounts",
-    "filterExpiredAccounts": "Expired Accounts"
+    "filterExpiredAccounts": "Expired Accounts",
+    "subscriptions":"Subscription Info"
   },
   "customerAdminPanel": {
     "addAdministrators": "Add Administrators",
@@ -2969,6 +2970,17 @@
     "noResultsError": "No results found",
     "tooManyResultsError": "Search returned too many results. Be more specific to find user"
   },
+
+  "customerSubscriptions": {
+    "customerInfo": "Customer Info",
+    "partnerAdmin" :"Partner Admins",
+    "webexSubscriptions" : "Webex Subscriptions",
+    "emailSubscriptionInfo" : "Email Subscription Info",
+    "emailSubscriptionInfoDetail" : "Send subscription info to another contact using your email client. You can also copy the subscription into your clipboard."
+  },
+
+
+
   "didAddModal": {
     "title": "Add Phone Numbers (Optional)"
   },

@@ -28,7 +28,8 @@
           </button>
         </a>
     </cs-sp-section>
-    <cs-sp-section ng-if="customerOverview.currentCustomer.trialId">
+    <uc-customer-subscriptions-overview></uc-customer-subscriptions-overview>
+   <cs-sp-section ng-if="customerOverview.currentCustomer.trialId">
       <div class="section-title-row">
         <span class="section-name" translate="customerPage.trial"></span>
         <span cs-dropdown class="actions-menu dropdown pull-right">

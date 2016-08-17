@@ -1,0 +1,81 @@
+<cs-sp-container feature-hide="atlas-customer-list-update" class="customer-admin-detail">
+  <cs-sp-buttons ng-show="customerOverview.form.$dirty || CustomerOverview.saved">
+    <button class="btn btn--primary" ng-click="customerOverview.saveLogoSettings()" type="submit" translate="common.save"></button>
+    <button ng-click="customerOverview.reset()" translate="common.cancel"></button>
+  </cs-sp-buttons>
+  <cs-sp-section>
+    <div class="section-title-row">
+      <span class="section-name" translate="customerSubscriptions.customerInfo"></span>
+    </div>
+
+    <div class = "feature-list">
+      <ul>
+        <li>
+          <span class = "feature-name">{{customerOverview.currentCustomer.customerName}}</span>
+        </li>
+        <li>          
+        <span translate="customerPage.contactEmail"></span> {{customerOverview.currentCustomer.customerEmail}}
+        </li>
+      </ul>
+    </div>
+  </cs-sp-section>
+  <cs-sp-section>
+    <div class="section-title-row">
+      <span class="section-name" translate="customerSubscriptions.partnerAdmin"></span>
+    </div>
+    <div class = "feature-list">
+      <ul>
+        <li>
+          <span class = "feature-name">{{customerOverview.partnerOrgName}}</span>
+        </li>
+        <li>
+          <span class = "feature-name">{{customerOverview.partnerEmail}}</span>
+        </li>
+      </ul>
+    </div>
+  </cs-sp-section>
+  <cs-sp-section >
+    <div class="section-title-row" >
+      <span class="section-name" translate="customerSubscriptions.webexSubscriptions"></span>
+    </div>
+    <div class="feature-list" ng-if="customerSubscriptions.subscriptions.length>0" ng-repeat= "customerSubscription in customerSubscriptions.subscriptions" >
+      <ul >
+        <span class="feature-detail">{{customerSubscription.offerName}}</span>    
+      </ul>
+      <ul>
+        <span class="feature-name">{{customerSubscription.subscriptionId}}</span> 
+      </ul>
+      <ul>
+        <span class="feature-name">{{customerSubscription.trainSite}}</span>
+      </ul>
+      <ul>
+        <span class="feature-name"></span><br></span>
+      </ul>
+    </div>
+    <div class = "feature-list" ng-if="customerSubscriptions.subscriptions.length<1">
+          <span class="section-name" translate="No Webex Subscriptions"></span>
+    </div>
+  </cs-sp-section>
+  <cs-sp-section>
+    <div class="section-title-row">
+      <span class="section-name" translate="customerSubscriptions.emailSubscriptionInfo"></span>
+    </div>
+    <div class="feature-list">
+      <span class="feature-name" translate="customerSubscriptions.emailSubscriptionInfoDetail">
+      </span>
+      <ul>
+        <li>
+          <form novalidate role="form">
+          <button class ="bttn btn--primary" ng-click="customerSubscriptions.sendMail(customerSubscriptions.subscriptions)" translate="Email"></button>
+            <button class="btn" ngclipboard data-clipboard-text="{{customerSubscriptions.customerHeaderInfoClipboard}}">
+            <span translate="Copy"></span>
+            </button>
+          </form>
+        </li>
+      </ul>
+    </div>
+  </cs-sp-section>
+  <script type="text/ng-template" id="stateTemplate.html">
+    <a><span ng-bind-html="match.label | typeaheadHighlight:query"></span></a>
+  </script>
+</cs-sp-container>

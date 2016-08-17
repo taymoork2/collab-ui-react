@@ -1637,6 +1637,18 @@
             },
             data: {}
           })
+          .state('customer-overview.customerSubscriptions', {
+            controller: 'CustomerSubscriptionsDetailCtrl',
+            controllerAs: 'customerSubscriptions',
+            templateUrl: 'modules/core/customers/customerSubscriptions/CustomerSubscriptionsDetail.tpl.html',
+            resolve: {
+              data: /* @ngInject */ function ($state, $translate) {
+                $state.get('customer-overview.customerSubscriptions').data.displayName = $translate.instant('customerPage.subscriptions');
+              }
+            },
+            data: {
+            }
+          })
           .state('customer-overview.pstnOrderOverview', {
             controller: 'PstnOrderOverviewCtrl',
             controllerAs: 'pstnOrderOverview',
