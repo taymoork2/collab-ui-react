@@ -114,6 +114,17 @@ describe('assignServices', function () {
     });
 
     $httpBackend.whenGET('https://identity.webex.com/identity/scim/1/v1/Users/me').respond(200, {});
+    $httpBackend
+      .whenGET('https://cmi.huron-int.com/api/v1/voice/customers/1/sites')
+      .respond([{
+        "mediaTraversalMode": "TURNOnly",
+        "siteSteeringDigit": "8",
+        "vmCluster": null,
+        "uuid": "70b8d459-7f58-487a-afc8-02c0a82d53ca",
+        "steeringDigit": "9",
+        "timeZone": "America/Los_Angeles",
+        "voicemailPilotNumberGenerated": "false"
+      }]);
 
     $httpBackend
       .when('GET', 'l10n/en_US.json')
