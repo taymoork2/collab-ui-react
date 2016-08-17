@@ -1645,8 +1645,6 @@
               data: /* @ngInject */ function ($state, $translate) {
                 $state.get('customer-overview.customerSubscriptions').data.displayName = $translate.instant('customerPage.subscriptions');
               }
-            },
-            data: {
             }
           })
           .state('customer-overview.pstnOrderOverview', {

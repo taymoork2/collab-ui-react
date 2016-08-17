@@ -2,25 +2,24 @@
   'use strict';
 
   angular.module('Core')
-    .controller('CustomerSubscriptionsDetailCtrl', CustomerSubscriptionsDetail);
+  .controller('CustomerSubscriptionsDetailCtrl', CustomerSubscriptionsDetail);
 
-  function CustomerSubscriptionsDetail(CustomerSubscriptionsService, $stateParams, $window, Authinfo) {
+  function CustomerSubscriptionsDetail($stateParams, $window, Authinfo, Auth) {
 
     var vm = this;
     vm.subscriptions = [];
+    vm.test = 'hello';
     vm.currentCustomer = $stateParams.currentCustomer;
     vm.customerOrgId = vm.currentCustomer.customerOrgId;
     vm.customerName = vm.currentCustomer.customerName;
     vm.customerEmail = vm.currentCustomer.customerEmail;
+    vm.getSubscriptions = getSubscriptions;
     vm.sendMail = sendMail;
     vm.partnerOrgName = Authinfo.getOrgName();
     vm.partnerEmail = Authinfo.getPrimaryEmail();
-    vm.customerHeaderInfo = '';
     vm.customerInfo = '';
-    vm.test = 'thisisatest';
     vm.customerHeaderInfo = ['Customer Info:', vm.customerName, vm.customerEmail, '', 'Partner Admin:', vm.partnerOrgName, vm.partnerEmail, '', 'Webex Subscriptions:', ''].join('%0D%0A');
     vm.customerHeaderInfoClipboard = ['Customer Info:', vm.customerName, vm.customerEmail, '', 'Partner Admin:', vm.partnerOrgName, vm.partnerEmail, '', 'Webex Subscriptions:', ''].join('\n');
-    // vm.customerInfoClipBoard = '';
 
     init();
 
@@ -33,21 +32,21 @@
     }
 
     function getSubscriptions() {
-      CustomerSubscriptionsService.getSubscriptions(vm.customerOrgId).then(function (response) {
+      return Auth.getCustomerAccount(vm.customerOrgId).then(function (response) {
         var resources = _.get(response, 'data.customers[0].licenses', []);
-        _.forEach(resources, function (custTest) {
+        _.forEach(resources, function (customerLicenses) {
           var subscriptionId = 'Trial';
           var trainSite = '';
           var offerName = '';
           var customerSubscription = {};
-          if (custTest.billingServiceId) {
-            subscriptionId = _.get(custTest, 'billingServiceId');
+          if (customerLicenses.billingServiceId) {
+            subscriptionId = _.get(customerLicenses, 'billingServiceId');
           }
-          if (custTest.siteUrl) {
-            trainSite = _.get(custTest, 'siteUrl');
+          if (customerLicenses.siteUrl) {
+            trainSite = _.get(customerLicenses, 'siteUrl');
           }
-          if (custTest.offerName) {
-            offerName = _.get(custTest, 'offerName');
+          if (customerLicenses.offerName) {
+            offerName = _.get(customerLicenses, 'offerName');
           }
           if (trainSite !== '') {
             customerSubscription = {
@@ -56,20 +55,14 @@
               offerName: offerName
             };
             vm.subscriptions.push(customerSubscription);
-            var subString = '';
-            // var subStringClipboard = '';
+            var subString = [];
 
             _.forEach(vm.subscriptions, function (sub) {
 
               subString = ['', sub.offerName, sub.subscriptionId, sub.trainSite].join('%0D%0A');
-              // subStringClipboard = ['', sub.offerName, sub.subscriptionId, sub.trainSite].join('\n');
-
 
             });
             vm.customerInfo += subString;
-            // vm.customerInfoClipBoard +=subStringClipboard;
-            // vm.customerHeaderInfoClipboard+=customerInfoClipBoard;
-
           }
 
         });
