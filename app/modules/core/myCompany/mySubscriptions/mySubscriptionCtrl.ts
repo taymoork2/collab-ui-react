@@ -252,7 +252,7 @@ class MySubscriptionCtrl {
           if (callServices.length > 0) {
             let callService = {
               id: fusionUC,
-              enabled: _.all(callServices, {
+              enabled: _.every(callServices, {
                 enabled: true
               }),
               status: _.reduce(callServices, (result:String, serv) => {

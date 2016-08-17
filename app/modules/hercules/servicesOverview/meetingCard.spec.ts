@@ -14,6 +14,6 @@ describe('ServiceOverviewMeetingCard', ()=> {
   it('should update button list from sites', ()=> {
 
     meetingCard.updateWebexSiteList([{license: {siteUrl: 'site-url'}}]);
-    expect(_.any(meetingCard.getButtons(), {name: 'site-url'}));
+    expect(_.some(meetingCard.getButtons(), {name: 'site-url'}));
   });
 });
