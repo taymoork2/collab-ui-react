@@ -1,12 +1,23 @@
 .typeahead-large {
   .ct-input-hint {
     border: 0;
-    border-top: solid rem(1px) $gray-light;
     width: 100%;
     text-align: center;
     @include vr-spacing(p, 1);
     color: $gray;
     font-style: italic;
+  }
+  .ct-input-valid-border {
+    border-top: solid rem(1px) $gray-light;
+  }
+  .ct-input-invalid-border {
+    border-top: solid rem(1px) $color-negative-dark;
+  }
+
+  .ct-input-error {
+    font-family: "CiscoSansTT Light";
+    font-size: rem-calc(12px);
+    color: $color-negative-dark;
   }
 
   // Input control.

@@ -342,9 +342,13 @@
       return vm.states.indexOf(vm.currentState);
     }
 
-    function isNamePageValid() {
-      return (vm.template.name !== '');
-    }
+    vm.validateNameLength = function () {
+      return vm.template.name.length == 0 || vm.template.name.length <= 250;
+    };
+
+    vm.isNamePageValid = function () {
+      return (vm.template.name !== '' && vm.validateNameLength(5));
+    };
 
     function isProfilePageValid() {
       if ((vm.selectedTemplateProfile === vm.profiles.org && vm.orgName !== '') || (vm.selectedTemplateProfile === vm.profiles.agent)) {
@@ -369,7 +373,7 @@
     function nextButton() {
       switch (vm.currentState) {
         case 'name':
-          return isNamePageValid();
+          return vm.isNamePageValid();
         case 'profile':
           return isProfilePageValid();
         case 'agentUnavailable':

@@ -4448,7 +4448,10 @@
     "typeEmail": "Email",
     "typeId": "Id",
     "typePhone": "Phone",
-
+    "ctValidation":{
+      "errorChar250": "Character length cannot be more than 250.",
+      "errorChar50": "Character length cannot be more than 50."
+    },
     "ctOverview": {
       "customerInformation": {
         "title": "Customer Info",
