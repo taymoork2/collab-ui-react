@@ -36,6 +36,9 @@ describe('ServiceOverviewCtrl', ()=> {
           } else if (feature === 'MEDIA') {
             return $q.resolve(MEDIA);
           }
+        },
+        atlasCareTrialsGetStatus: function () {
+          return $q.resolve(true);
         }
       }
     });

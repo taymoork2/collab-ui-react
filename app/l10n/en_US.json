@@ -5126,6 +5126,13 @@
           "settings": "Settings"
         }
       },
+      "care": {
+        "title": "Care",
+        "description": "Cisco Spark Care configurations of media channels for your organization.",
+        "buttons": {
+          "features": "Features"
+        }
+      },
       "hybridManagement": {
         "title": "Hybrid Management",
         "description": "Connector management for Hybrid Call and Calendar Services.",
