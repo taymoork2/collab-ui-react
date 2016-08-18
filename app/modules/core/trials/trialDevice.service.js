@@ -8,6 +8,17 @@
   /* @ngInject */
   function TrialDeviceService(TrialCallService, TrialRoomSystemService) {
     var _trialData;
+    var _countries = {
+      US: ['United States'],
+      ROLLOUT1: ['United States', 'Australia', 'Austria', 'Belgium', 'Canada', 'Czech Republic',
+      'Denmark', 'Finland', 'France', 'Germany', 'Ireland', 'Italy', 'Luxembourg', 'Netherlands', 'Norway', 'Poland',
+      'Portugal', 'Slovakia', 'Spain', 'Sweden', 'Switzerland', 'United Kingdom']
+    };
+    var countryListTypes = {
+      US_ONLY: "US",
+      SX10: "ROLLOUT1"
+    };
+
     var service = {
       getData: getData,
       reset: reset,
@@ -15,6 +26,7 @@
       getStates: getStates,
       getCountries: getCountries,
       canAddDevice: canAddDevice,
+      countryListTypes: countryListTypes
     };
 
     return service;
@@ -53,10 +65,14 @@
       return _trialData.limitsPromise;
     }
 
-    function getCountries() {
-      return [{
+    function getCountries(filter) {
+      /*return [{
         country: 'United States'
-      }];
+      }];*/
+      filter = filter || 'US';
+      return _.map(_countries[filter], function (country) {
+        return { country: country };
+      });
     }
 
     function getStates() {

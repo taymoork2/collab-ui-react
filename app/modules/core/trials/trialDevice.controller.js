@@ -1,6 +1,8 @@
 (function () {
   'use strict';
 
+/* eslint-disable no-unused-vars */
+
   angular
     .module('core.trial')
     .controller('TrialDeviceController', TrialDeviceController);
@@ -9,6 +11,7 @@
   // TODO - check for removal of $q and FeatureToggleService when DX80 and MX300 are officially supported
   function TrialDeviceController($stateParams, $translate, FeatureToggleService, Notification, TrialCallService, TrialDeviceService, TrialRoomSystemService, ValidationService) {
     var vm = this;
+
 
     var _trialCallData = TrialCallService.getData();
     var _trialRoomSystemData = TrialRoomSystemService.getData();
@@ -50,6 +53,8 @@
     vm.areTemplateOptionsDisabled = _areTemplateOptionsDisabled;
     // TODO - Remove vm.showNewRoomSystems when DX80 and MX300 are officially supported
     vm.showNewRoomSystems = false;
+    vm.supportsInternationalShipping = false;
+
 
     if (_.get(_trialDeviceData, 'shippingInfo.country') === '') {
       // always default to USA
@@ -85,6 +90,8 @@
     vm.phone7841 = _.find(_trialCallData.details.phones, {
       model: 'CISCO_7841'
     });
+
+    var usOnly = [vm.dx80, vm.mx300, vm.phone8865, vm.phone8845, vm.phone8841, vm.phone7841];
 
     vm.setQuantity(vm.sx10);
     vm.setQuantity(vm.dx80);
@@ -506,7 +513,7 @@
       model: vm.shippingInfo,
       key: 'country',
       type: 'select',
-      defaultValue: _.find(TrialDeviceService.getCountries(), {
+      defaultValue: _.find(TrialDeviceService.getCountries(getCountryFilter(vm.supportsInternationalShipping)), {
         country: vm.shippingInfo.country
       }),
       className: '',
@@ -521,10 +528,11 @@
         valueProp: 'country',
 
       },
+      watcher: _countryWatcher(),
       expressionProperties: {
         'templateOptions.options': function () {
-          return _.map(TrialDeviceService.getCountries(), 'country');
-        }
+          return _.map(TrialDeviceService.getCountries(getCountryFilter(vm.supportsInternationalShipping)), 'country');
+        },
       }
     }, {
       model: vm.shippingInfo,
@@ -622,6 +630,18 @@
     init();
 
     ////////////////
+    function getCountryFilter(supportsInternationalShipping) {
+      var countryFilter = null;
+      if (supportsInternationalShipping) {
+        var hasUSOnly = _.some(usOnly, function (o) { return o.quantity > 0 && o.enabled; });
+        if (hasUSOnly) {
+          countryFilter = null;
+        } else if (vm.sx10.quantity > 0 && vm.sx10.enabled) {
+          countryFilter = TrialDeviceService.countryListTypes.SX10;
+        }
+      }
+      return countryFilter;
+    }
 
     function init() {
       var limitsPromise = TrialDeviceService.getLimitsPromise();
@@ -631,6 +651,14 @@
       FeatureToggleService.supports(FeatureToggleService.features.atlasNewRoomSystems)
         .then(function (results) {
           vm.showNewRoomSystems = results;
+        });
+
+      // TODO: - remobe toggle when shipping to additional countries is officially supported
+      // Hides options for international shipping
+
+      FeatureToggleService.supports(FeatureToggleService.features.atlasShipDevicesInternational)
+        .then(function (results) {
+          vm.supportsInternationalShipping = true; //results;
         });
 
       vm.canAddMoreDevices = vm.isEditing && vm.hasExistingDevices();
@@ -759,11 +787,30 @@
     function _addWatcher() {
       return {
         expression: function () {
+
+          return vm.calcQuantity(_trialRoomSystemData.details.roomSystems, _trialCallData.details.phones);
+        },
+        listener: function (field, newValue, oldValue) {
+          if (newValue !== oldValue && field.formControl) {
+            field.formControl.$validate();
+          }
+        }
+      };
+    }
+
+
+    function _countryWatcher() {
+      return {
+        expression: function () {
+
           return vm.calcQuantity(_trialRoomSystemData.details.roomSystems, _trialCallData.details.phones);
         },
         listener: function (field, newValue, oldValue) {
           if (newValue !== oldValue) {
-            field.formControl.$validate();
+            field.templateOptions.options = _.map(TrialDeviceService.getCountries(getCountryFilter(vm.supportsInternationalShipping)), 'country');
+            if (_.indexOf(field.templateOptions.options, field.model[field.key]) === -1) {
+              field.model[field.key] = null;
+            }
           }
         }
       };
