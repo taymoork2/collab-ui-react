@@ -9,7 +9,7 @@
   function AABuilderMainCtrl($scope, $translate, $state, $stateParams, $q, AAUiModelService,
     AAModelService, AutoAttendantCeInfoModelService, AutoAttendantCeMenuModelService, AutoAttendantCeService,
     AAValidationService, AANumberAssignmentService, AANotificationService, Authinfo, AACommonService, AAUiScheduleService, AACalendarService,
-    AATrackChangeService, AADependencyService, ServiceSetup) {
+    AATrackChangeService, AADependencyService, ServiceSetup, Analytics, AAMetricNameService) {
 
     var vm = this;
     vm.overlayTitle = $translate.instant('autoAttendant.builderTitle');
@@ -80,6 +80,15 @@
 
     function setLoadingDone() {
       vm.loading = false;
+      sendMetrics('load');
+    }
+
+    function sendMetrics(metric) {
+      if (vm.isAANameDefined && angular.isDefined(metric)) {
+        Analytics.trackEvent(AAMetricNameService.BUILDER_PAGE, {
+          type: metric
+        });
+      }
     }
 
     function setAANameFocus() {
@@ -614,7 +623,8 @@
       // Define vm.ui.builder.ceInfo_name for editing purpose.
       vm.ui.builder.ceInfo_name = angular.copy(vm.ui.ceInfo.name);
 
-      AutoAttendantCeInfoModelService.getCeInfosList().then(getTimeZoneOptions).then(getSystemTimeZone).finally(function () {
+      AutoAttendantCeInfoModelService.getCeInfosList().then(getTimeZoneOptions).then(getSystemTimeZone)
+      .finally(function () {
         AutoAttendantCeMenuModelService.clearCeMenuMap();
         vm.aaModel = AAModelService.getAAModel();
         vm.aaModel.aaRecord = undefined;

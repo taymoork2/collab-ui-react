@@ -5,7 +5,7 @@
 </div>
 <div class="modal-body device-wizard choose-shared">
   <div ng-hide="choosePlace.onlyNew()">
-    <h5 translate="addDeviceWizard.chooseSharedSpace.existingOrNewPlace"></h5>
+    <h4 translate="addDeviceWizard.chooseSharedSpace.existingOrNewPlace"></h4>
     <p class="wizardDescription" translate="addDeviceWizard.chooseSharedSpace.existingOrNewPlaceInstructions"></p>
     <div class="typeChoice">
       <div class="typeButtonWrapper typeButtonWrapperLeft">
@@ -39,7 +39,7 @@
 
   <div class="chooseExistingPlace" ng-hide="choosePlace.isExistingCollapsed || !choosePlace.hasRooms">
     <form class="chooseExistingPlaceForm" onsubmit="$('#next-button').click()">
-      <h5 translate="addDeviceWizard.chooseSharedSpace.existingPlace"></h5>
+      <h4 translate="addDeviceWizard.chooseSharedSpace.existingPlace"></h4>
       <p translate="addDeviceWizard.chooseSharedSpace.existingPlaceInstructions"></p>
       <div>
         <input type="text"
@@ -61,8 +61,8 @@
 
   <div class="createNewPlace" ng-hide="choosePlace.isNewCollapsed">
     <form name="placeForm" class="createNewPlaceForm" onsubmit="$('#next-button').click()">
-      <h5 ng-show="choosePlace.wizardData.showPlaces" translate="addDeviceWizard.chooseSharedSpace.newPlace"></h5>
-      <h5 ng-hide="choosePlace.wizardData.showPlaces" translate="addDeviceWizard.chooseSharedSpace.deviceInstalled"></h5>
+      <h4 ng-show="choosePlace.wizardData.showPlaces" translate="addDeviceWizard.chooseSharedSpace.newPlace"></h4>
+      <h4 ng-hide="choosePlace.wizardData.showPlaces" translate="addDeviceWizard.chooseSharedSpace.deviceInstalled"></h4>
       <p>{{ choosePlace.localizedCreateInstructions() }}</p>
       <div class="newPlaceSpacing" ng-show="choosePlace.onlyNew()"></div>
       <div class="cs-input-group" ng-class="{'error': placeForm.newPlace.$invalid && placeForm.newPlace.$touched}">

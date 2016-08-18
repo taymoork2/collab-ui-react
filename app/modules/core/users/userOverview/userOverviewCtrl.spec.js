@@ -43,6 +43,7 @@ describe('Controller: UserOverviewCtrl', function () {
     spyOn(FeatureToggleService, 'getFeatureForUser').and.returnValue(deferred.promise);
     spyOn(FeatureToggleService, 'getFeaturesForUser').and.returnValue(deferred2.promise);
     spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
+    spyOn(FeatureToggleService, 'atlasUserPendingStatusGetStatus').and.returnValue($q.when(true));
     spyOn(Authinfo, 'isCSB').and.returnValue(false);
     spyOn(Notification, 'success');
 
@@ -188,9 +189,18 @@ describe('Controller: UserOverviewCtrl', function () {
   });
 
   describe('getAccountStatus should be called properly', function () {
-    it('should check if status is pending', function () {
+    it('and should check if status is pending', function () {
       expect(controller.pendingStatus).toBe(true);
       expect(controller.currentUser.pendingStatus).toBe(true);
+    });
+    it('and should check if status is not pending', function () {
+      updatedUser.licenseID.push('MS_d9fb2e50-2a92-4b0f-b1a4-e7003ecc93ec');
+      updatedUser.userSettings = [];
+      updatedUser.userSettings.push('{spark.signUpDate:1470262687261}');
+      $scope.$broadcast('USER_LIST_UPDATED');
+      $httpBackend.flush();
+      expect(controller.pendingStatus).toBe(false);
+      expect(controller.currentUser.pendingStatus).toBe(false);
     });
   });
 

@@ -72,6 +72,7 @@
     vm.timezoneOptions = CTService.getTimezoneOptions();
     vm.daysPreview = CTService.getPreviewDays(vm.days, true, 1, 5);
     vm.ChatTemplateButtonText = $translate.instant('common.finish');
+    vm.lengthConstants = CTService.getLengthValidationConstants();
 
     /**
      * Type enumerations
@@ -153,8 +154,6 @@
     /* Template */
     vm.template = {
       name: '',
-      //TODO: Remove mediaType here once the Sunlight API changes are pushed to production
-      mediaType: 'chat',
       configuration: {
         mediaType: 'chat',
         mediaSpecificConfiguration: {
@@ -344,9 +343,13 @@
       return vm.states.indexOf(vm.currentState);
     }
 
-    function isNamePageValid() {
-      return (vm.template.name !== '');
-    }
+    vm.validateNameLength = function () {
+      return vm.template.name.length == vm.lengthConstants.empty || vm.template.name.length <= vm.lengthConstants.multiLineMaxCharLimit;
+    };
+
+    vm.isNamePageValid = function () {
+      return (vm.template.name !== '' && vm.validateNameLength());
+    };
 
     function isProfilePageValid() {
       if ((vm.selectedTemplateProfile === vm.profiles.org && vm.orgName !== '') || (vm.selectedTemplateProfile === vm.profiles.agent)) {
@@ -371,7 +374,7 @@
     function nextButton() {
       switch (vm.currentState) {
         case 'name':
-          return isNamePageValid();
+          return vm.isNamePageValid();
         case 'profile':
           return isProfilePageValid();
         case 'agentUnavailable':

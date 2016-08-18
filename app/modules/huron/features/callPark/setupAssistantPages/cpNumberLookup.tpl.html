@@ -8,8 +8,10 @@
   <div class="typeahead-large cpselect large">
     <div class="title" translate="callPark.selectParkNumber"></div>
     <div class="desc" translate="callPark.selectParkHint"></div>
-    <input class="form-control" placeholder="{{:: 'callPark.patternSingle' | translate}}"
-           ng-model="callParkSA.selectedSingleNumber" ng-keypress="callParkSA.enterNextPage($event.keyCode)" focus-on>
-    <p class="input-hint"></p>
+    <form novalidate class="cp-number">
+      <ng-form form="callParkSA.form" model="callParkSA.model" role="form" name="callParkSA.form">
+        <div edit-template-options options="callParkSA.cpNumberOptions" keypress="callParkSA.enterNextPage($event.keyCode)" callback="callParkSA.callback()"></div>
+      </ng-form>
+    </form>
   </div>
 </div>

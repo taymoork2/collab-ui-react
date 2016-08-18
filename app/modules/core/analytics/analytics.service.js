@@ -14,6 +14,8 @@
       START: 'start',
       NEXT: 'next',
       BACK: 'back',
+      SKIP: 'skip',
+      FINISH: 'finish',
       ASSIGN: 'assign',
       REMOVE: 'remove'
     };
@@ -44,6 +46,9 @@
     var START_TRIAL = 'Start Trial Button Click';
     var NEXT_BUTTON = 'Next Button Clicked';
     var BACK_BUTTON = 'Back Button Clicked';
+    var SKIP_BUTTON = 'Skip Button Clicked';
+    var FINISH_TRIAL = 'Finish Trial Setup';
+
 
     /* Partner Event Names */
     var ASSIGN_PARTNER = 'Partner Admin Assigning';
@@ -131,6 +136,12 @@
           break;
         case eventNames.BACK:
           step = BACK_BUTTON;
+          break;
+        case eventNames.SKIP:
+          step = SKIP_BUTTON;
+          break;
+        case eventNames.FINISH:
+          step = FINISH_TRIAL;
           break;
       }
 

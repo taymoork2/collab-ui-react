@@ -15,7 +15,7 @@
       </header>
       <section class="bucket-info">
         <div class="text-center" class="item-paid" ng-repeat="service in subscription.messaging.services">
-          <cs-donut name="service.id" value="service.usage" max="service.volume" ssize="72" class="text-center">
+          <cs-donut name="service.id" hideusage="service.hideUsage" value="service.usage" max="service.volume" ssize="72" class="text-center">
           </cs-donut>
           <div class="text-center quantity number">
             <span class="quantity-padding" translate="firstTimeWizard.quantity"></span>
@@ -36,7 +36,7 @@
       </header>
       <section ng-show="subscription.cf && subscription.cf.services.length !== 0"class="bucket-info">
         <div class="text-center" class="item-paid" ng-repeat="service in subscription.cf.services">
-          <cs-donut name="service.id" value="service.usage" max="service.volume" ssize="72" class="text-center">
+          <cs-donut name="service.id" hideusage="service.hideUsage" value="service.usage" max="service.volume" ssize="72" class="text-center">
           </cs-donut>
           <div class="text-center quantity number">
             <span class="quantity-padding" translate="firstTimeWizard.quantity"></span>
@@ -52,7 +52,7 @@
       <section  class="bucket-info" ng-if="(!subscription.cf.services || subscription.cf.services.length === 0) && subscription.count === 1 && subscription.licensesCount == 1">
         <div class="text-center" class="item-paid" ng-repeat="(siteUrl,services) in subscription.sites">
           <div class="sub-item" ng-repeat="service in services">
-            <cs-donut name="service.id" value="service.usage" max="service.volume" ssize="72" class="text-center">
+            <cs-donut name="service.id" hideusage="service.hideUsage" value="service.usage" max="service.volume" ssize="72" class="text-center">
             </cs-donut>
             <div class="text-center">
               <span class="quantity-padding" translate="firstTimeWizard.quantity"></span>
@@ -63,7 +63,7 @@
               </p>
             </div>
             <div class="text-center" class="item-paid" ng-repeat= "(siteUrl,services) in subscription.sites" >
-              <div class="site-url"> {{siteUrl}} </div>
+              <div class="site-url"> {{siteUrl}} </div> 
               <div translate="leaderBoard.{{service.offerName}}"> </div>
             </div>
           </div>
@@ -71,11 +71,11 @@
       </section>
       <section class="bucket-info" ng-if="!((!subscription.cf.services || subscription.cf.services.length === 0) && subscription.count === 1 && subscription.licensesCount == 1) && subscription.count > 0 ">
         <div class="text-center" class="item-paid" ng-repeat= "(siteUrl,services) in subscription.sites" >
-          <div ng-if="!($first && !subscription.cf)" class="site-info"> {{siteUrl}} </div>
+          <div ng-if="!($first && !subscription.cf)" class="site-info"> {{siteUrl}} </div>          
           <div ng-if="$first && !subscription.cf" class="site-info-noline"> {{siteUrl}} </div>
           <div class="sub-item text-left" ng-repeat="service in services">
             <div class="service-bucket">
-              <cs-donut name="service.id" value="service.usage" max="service.volume" ssize="48" tsize="16" class="text-center small-donut">
+              <cs-donut name="service.id" hideusage="service.hideUsage" value="service.usage"  max="service.volume" ssize="48" tsize="16" class="text-center small-donut">
               </cs-donut>
               <div class="webex">
                 <div ng-if="service.offerName !== 'MC'" translate="leaderBoard.{{service.offerName}}"></div>
@@ -83,6 +83,12 @@
                 <span ng-if="service.trial" class="quantity-badge badge badge-warning" translate="firstTimeWizard.trial"></span>
                 <span class="quantity" translate="firstTimeWizard.quantity"></span>
                 <span class ="quantity"> {{service.volume}} </span>
+                <span ng-if="null != service.siteAdminUrl">
+                  <br>
+                  <span class="site-info-noline">
+                    <a href= "{{service.siteAdminUrl}}" id="{{service.siteUrl}}_siteAdminUrl">{{::'onboardModal.siteAdminUrl' | translate}}</a>
+                  </span>
+                </span>
               </div>
             </div>
           </div>
@@ -97,7 +103,7 @@
       </header>
       <section class="bucket-info">
         <div class="text-center" class="item-paid" ng-repeat="service in subscription.communication.services">
-          <cs-donut name="service.id" value="service.usage" max="service.volume" ssize="72" class="text-center">
+          <cs-donut name="service.id" hideusage="service.hideUsage" value="service.usage" max="service.volume" ssize="72" class="text-center">
           </cs-donut>
           <div class="text-center quantity number" >
             <span class="quantity-padding" translate="firstTimeWizard.quantity"></span>
@@ -118,7 +124,7 @@
       </header>
       <section class="bucket-info">
         <div class="text-center" class="item-paid" ng-repeat="service in subscription.shared_devices.services">
-          <cs-donut name="service.id" value="service.usage" max="service.volume" ssize="72" class="text-center">
+          <cs-donut name="service.id" hideusage="service.hideUsage" value="service.usage" max="service.volume" ssize="72" class="text-center">
           </cs-donut>
           <div class="text-center quantity number">
             <span class="quantity-padding" translate="firstTimeWizard.quantity"></span>

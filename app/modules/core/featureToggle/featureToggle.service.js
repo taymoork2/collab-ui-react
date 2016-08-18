@@ -30,6 +30,7 @@
       atlasMediaServiceOnboarding: 'atlas-media-service-onboarding',
       atlasNewRoomSystems: 'atlas-new-roomSystems',
       atlasNurturingEmails: 'atlas-nurturing-emails',
+      atlasUserPendingStatus: 'atlas-user-pending-status',
       atlasPinSettings: 'atlas-pin-settings',
       atlasPstnTfn: 'atlas-pstn-tfn',
       atlasReadOnlyAdmin: 'atlas-read-only-admin',

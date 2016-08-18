@@ -11,13 +11,11 @@ export interface IOrderList {
 }
 
 export class MyCompanyOrdersService {
-
   private ordersService: ng.resource.IResourceClass<ng.resource.IResource<IOrderList>>;
 
   /* @ngInject */
   constructor(
     private $resource: ng.resource.IResourceService,
-    private $q: ng.IQService,
     private Authinfo,
     private UrlConfig
   ) {

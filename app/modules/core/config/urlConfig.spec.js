@@ -389,4 +389,13 @@ describe('UrlConfigSpec', function () {
     });
   });
 
+  it('should return correct bmmp client url', function () {
+    whenCalling('getBmmpUrl', 'foo').expectUrlToBe({
+      dev: 'https://bmmp.dmz.ciscospark.com/api/v1',
+      cfe: 'https://bmmp.ciscospark.com/api/v1',
+      integration: 'https://bmmp.dmz.ciscospark.com/api/v1',
+      prod: 'https://bmmp.ciscospark.com/api/v1'
+    });
+  });
+
 });

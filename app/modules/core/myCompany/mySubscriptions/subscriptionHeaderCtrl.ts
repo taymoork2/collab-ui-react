@@ -1,37 +1,27 @@
-namespace myCompanyPage {
-  
-  class SubscriptionHeaderCtrl {
-    private _isTrial = false;
-    private _isOnline = false;
-    private _upgradeUrl: string;
-    private _upgradeTrialUrl: string;
+class SubscriptionHeaderCtrl {
+  public isTrial = false;
+  public isOnline = false;
+  public subId: string;
+  public upgradeTrialUrl: string;
 
-    get isTrial() {
-      return this._isTrial;
-    }
-    get isOnline() {
-      return this._isOnline;
-    }
-    get upgradeUrl() {
-      return this._upgradeUrl;
-    }
-    get upgradeTrialUrl(){
-      return this._upgradeTrialUrl;
-    }
+  /* @ngInject */
+  constructor($scope, $timeout, $translate, Authinfo, UrlConfig) {
+    this.isOnline = Authinfo.isOnline();
 
-    /* @ngInject */
-    constructor($scope, Authinfo) {
-      this._isOnline = Authinfo.isOnline();
+    $scope.$on('SUBSCRIPTION::upgradeData', (event, response) => {
+      this.isTrial = response.isTrial;
+      this.subId = response.subId;
+      this.upgradeTrialUrl = response.upgradeTrialUrl;
 
-      $scope.$on('SUBSCRIPTION::upgradeData', (event, response) => {
-        this._isTrial = response.isTrial;
-        this._upgradeUrl = response.url;
-        this._upgradeTrialUrl = response.upgradeTrialUrl;
-      });
-    }
+      if (this.isOnline && !this.isTrial) {
+        $timeout(() => {
+          bmmp.init(null, null, Authinfo.getOrgId(), 'atlas', $translate.use(), null, UrlConfig.getBmmpUrl());
+        }, 300);
+      }
+    });
   }
-
-  angular
-    .module('Core')
-    .controller('SubscriptionHeaderCtrl', SubscriptionHeaderCtrl);
 }
+
+angular
+  .module('Core')
+  .controller('SubscriptionHeaderCtrl', SubscriptionHeaderCtrl);
