@@ -1,43 +1,49 @@
-<style type="text/css">
-  .tab-content{
-    background-color: transparent;
-  }
-</style>
-<div style="padding:20px 100px;">
+<div class="incidentListPage">
   <h1>Incidents</h1>
   <tabset>
+
     <tab heading="Incidents">
-      <div class="tab-content" style="position:relative;">
-        <div style="height:80px;">
-          <h2 style="float:left;">Incidents</h2>
-          <input style="float:right;" class="btn btn--primary" type="button" value="+ NEW INCIDENT" ng-click="shc.toCreatePage()">
+
+      <div class="tab-content">
+
+        <div class="incidentListPageHeader clearFloat">
+          <h2>Incidents</h2>
+          <input class="btn btn--primary" type="button" value="+ NEW INCIDENT" ng-click="toCreatePage()">
         </div>
-        <div ng-if="!showList" style="border:1px dashed gray;padding:20px;">
-          <div>
-            <span>Looks like you've got a clean record</span>
-            <br/>
-            <span>When you have downtime: </span><a ui-sref=".new">Create your first incident</a>
-          </div>
+
+        <div ng-if="!showList" class="noListNote">
+
+          <span>Looks like you've got a clean record</span>
+          <br/>
+          <span>When you have downtime: </span><a ui-sref=".new">Create your first incident</a>
+
         </div>
-        <div ng-if="showList" ng-repeat="incident in shc.incidentList">
-          <div style="margin-bottom:10px;">
-            <div style="float:left;height:20px;">{{incident.incidentName}}</div>
-            <div style="float:right;height:20px;font-size:15px;">
+
+        <div ng-if="showList" class="incidentItem" ng-repeat="incident in incidentList">
+
+            <div class="incidentName clearFloat">
+              <span>{{incident.incidentName}}</span>
+            </div>
+
+            <div class="operationHref clearFloat">
               <div ng-if="incident.status!='resolved'">
-                <a href="#" style="margin-right:20px;">Update</a>
-                <a href="#" style="margin-right:20px;">Delete</a>
+                <a href="#">Update</a>
+                <a ui-sref="status.incidents.delete({ incidentName:incident.incidentName, incidentId:incident.incidentId })">Delete</a>
               </div>
               <div ng-if="incident.status=='resolved'">
-                <a href="#" style="margin-right:20px;">Write Postmortem</a>
-                <a href="#" style="margin-right:20px;">View Incident</a>
-                <a href="#" style="margin-right:20px;">Delete</a>
+                <a href="#">Write Postmortem</a>
+                <a href="#">View Incident</a>
+                <a ui-sref="status.incidents.delete({ incidentName:incident.incidentName, incidentId:incident.incidentId })">Delete</a>
               </div>
             </div>
-            <div style="float:left;clear:both;height:20px;"><span ng-if="incident.status!='resolved'">Last updated on </span><span ng-if="incident.status=='resolved'">Resolved on </span>{{incident.lastModifiedTime | date: 'medium'}}
+
+            <div class="operationTime clearFloat">
+              <span ng-if="incident.status!='resolved'">Last updated on </span>
+              <span ng-if="incident.status=='resolved'">Resolved on </span>{{incident.lastModifiedTime | date: 'medium'}}
             </div>
-            <div style="clear:both;"></div>
-          </div>
+
         </div>
+
       </div>
     </tab>
     <tab heading="Scheduled Maintenance">

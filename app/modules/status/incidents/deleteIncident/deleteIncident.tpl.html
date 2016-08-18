@@ -1,0 +1,11 @@
+<div id="deleteIncidentPage">
+	<h1>Delete {{incidentName}}</h1>
+	<p>
+		WARNING! Deleting an incident cannot be undone. All associated data (such as downtime) will be deleted as well. Please be absolutely sure this is what you want.
+	</p>
+	<p>
+		Type DELETE in the box below for final confirmation, then hit the delete button.
+	</p>
+	<input type="text" ng-model="deleteCommand" ng-pattern="DELETE" name="delete"/>
+	<input class="btn btn--cta" type="button" value="DELETE INCIDENT" ng-click="deleteIncidentBtn()">
+</div>

@@ -2736,6 +2736,16 @@
                 controllerAs: 'cic'
               }
             }
+          })
+          .state('status.incidents.delete', {
+            url: '/delete?incidentName&incidentId',
+            views: {
+              '@status': {
+                templateUrl: 'modules/status/incidents/deleteIncident/deleteIncident.tpl.html',
+                controller: 'DeleteIncidentController',
+                controllerAs: 'dic'
+              }
+            }
           });
       }
     ]);
