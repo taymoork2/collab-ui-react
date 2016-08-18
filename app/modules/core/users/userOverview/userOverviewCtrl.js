@@ -6,7 +6,7 @@
     .controller('UserOverviewCtrl', UserOverviewCtrl);
 
   /* @ngInject */
-  function UserOverviewCtrl($http, $scope, $state, $stateParams, $translate, $resource, $window, Authinfo, FeatureToggleService, Notification, SunlightConfigService, UrlConfig, Userservice, Utils) {
+  function UserOverviewCtrl($log, $http, $scope, $state, $stateParams, $translate, $resource, $window, Authinfo, FeatureToggleService, Notification, SunlightConfigService, UrlConfig, Userservice, Utils, WebExUtilsFact) {
     var vm = this;
     vm.currentUser = $stateParams.currentUser;
     vm.entitlements = $stateParams.entitlements;
@@ -28,6 +28,23 @@
     vm.getUserPhoto = Userservice.getUserPhoto;
     vm.isValidThumbnail = Userservice.isValidThumbnail;
     vm.actionList = [];
+
+    var ciTrainSiteNames = [];
+    if (vm.currentUser.trainSiteNames) {
+      vm.currentUser.trainSiteNames.forEach(
+        function (chkSiteUrl) {
+          if (WebExUtilsFact.isCIEnabledSite(chkSiteUrl)) {
+            ciTrainSiteNames.push(chkSiteUrl);
+          }
+        }
+      );
+
+      vm.currentUser.trainSiteNames = (0 < ciTrainSiteNames.length) ? ciTrainSiteNames : null;
+    }
+
+    $log.log("UserOverviewCtrl():" + "\n" + "userName=" + vm.currentUser.userName);
+    $log.log("UserOverviewCtrl():" + "\n" + "trainSiteNames=" + JSON.stringify(vm.currentUser.trainSiteNames));
+    $log.log("UserOverviewCtrl():" + "\n" + "ciTrainSiteNames=" + JSON.stringify(ciTrainSiteNames));
 
     var msgState = {
       name: $translate.instant('onboardModal.message'),
@@ -76,7 +93,6 @@
         vm.services.push(msgState);
       }
       if (hasEntitlement('cloudmeetings')) {
-        confState.detail = $translate.instant('onboardModal.paidConfWebEx');
         vm.services.push(confState);
       } else if (hasEntitlement('squared-syncup')) {
         if (getServiceDetails('CF')) {
@@ -152,7 +168,11 @@
         for (var n = 0; n < userEntitlements.length; n++) {
           var ent = userEntitlements[n];
           if (ent === entitlement) {
-            return true;
+            if ('cloudmeetings' != entitlement) {
+              return true;
+            } else if (vm.currentUser.trainSiteNames) {
+              return true;
+            }
           }
         }
       }
