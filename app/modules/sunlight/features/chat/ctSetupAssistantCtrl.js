@@ -119,6 +119,13 @@
         fieldSet: 'cisco.base.customer',
         fieldName: 'Context_Customer_External_ID'
       }
+    }, {
+      id: 'custom',
+      text: $translate.instant('careChatTpl.typeCustom'),
+      dictionaryType: {
+        fieldSet: 'cisco.base.ccc.pod',
+        fieldName: 'custom'
+      }
     }];
 
     vm.categoryTypeOptions = [{
