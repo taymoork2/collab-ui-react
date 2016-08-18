@@ -1,4 +1,5 @@
 <div class="careChatSetup">
+  <form name="careChatSetupForm">
   <cs-overlay-panel class="care-chat overlay-panel typeahead-group" overlay-title="{{::'careChatTpl.createTitle' | translate}}" close="careChatSA.cancelModal()" ng-keyup="careChatSA.evalKeyPress($event.keyCode)">
     <cs-setup-assistant previous="careChatSA.previousButton()" next="careChatSA.nextButton()" previous-fn="careChatSA.previousPage()" next-fn="careChatSA.nextPage()">
 
@@ -42,4 +43,5 @@
 
     </cs-setup-assistant>
   </cs-overlay-panel>
+</form>
 </div>

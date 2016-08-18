@@ -997,7 +997,8 @@
     "warning": "Warning",
     "error": "Error",
     "turnOff": "Turn Off",
-    "overview":"Overview"
+    "overview": "Overview",
+    "notAvailable": "N/A"
   },
   "notifications": {
     "success": "Success notifications",
@@ -2828,9 +2829,9 @@
     "notes": "Notes",
     "active": "Active",
     "free": "Free",
-    "daysRemaining": "{count, plural, one{# day remaining} other{# days remaining}}",
-    "daysLeftToPurchase": "{count, plural, one{# day left to purchase} other{# days left to purchase}}",
-    "daysLeftToRenew": "{count, plural, one{# day left to renew} other{# days left to renew}}",
+    "daysRemaining": "{count, plural, one{# day} other{# days}} remaining",
+    "daysLeftToPurchase": "{count, plural, one{# day} other{# days}} left to purchase",
+    "daysLeftToRenew": "{count, plural, one{# day} other{# days}} left to renew",
     "expiringToday": "Expiring today",
     "expired": "Expired",
     "expiredWithGracePeriod": "Expired. Purchase now",
@@ -2912,8 +2913,12 @@
     "totalUsers": "Total Users",
     "purchased": "Purchased",
     "domain": "{count, plural, one{Domain} other{Domains}}",
-    "domains": "Domains"
-
+    "domains": "Domains",
+    "quantityWithValue": "Qty: {{quantity}}",
+    "filterSelectPlaceholder": "Select a filter...",
+    "filterTrialAccounts": "Trial Accounts",
+    "filterPurchasedAccounts": "Purchased Accounts",
+    "filterExpiredAccounts": "Expired Accounts"
   },
   "customerAdminPanel": {
     "addAdministrators": "Add Administrators",
@@ -4455,7 +4460,10 @@
     "typeId": "Id",
     "typePhone": "Phone",
     "typeCustom": "Custom",
-
+    "ctValidation":{
+      "errorChar250": "Character length cannot be more than 250.",
+      "errorChar50": "Character length cannot be more than 50."
+    },
     "ctOverview": {
       "customerInformation": {
         "title": "Customer Info",
@@ -4795,6 +4803,7 @@
     "purchase": "Purchase",
     "changePlan": "Change Plan",
     "onlineTrialUpgradeUrlError": "Unable to retrieve purchase url for trial {{trialId}}.  To purchase a paid subscription, contact your partner via email or use the purchase button on the trial banner to have one sent for you.",
+    "loadError": "An error occurred while loading subscriptions.",
     "licenseTypes": {
       "MS": "Standard Team Rooms",
       "CF": "Meeting 25 Party",

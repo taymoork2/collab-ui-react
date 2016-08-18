@@ -1,4 +1,5 @@
 import { IOrderDetail, MyCompanyOrdersService } from './myCompanyOrders.service';
+import { DigitalRiverService } from '../digitalRiver/digitalRiver.service';
 
 class MyCompanyOrdersCtrl {
 
@@ -13,6 +14,7 @@ class MyCompanyOrdersCtrl {
     private $sce: ng.ISCEService,
     private $templateCache: angular.ITemplateCacheService,
     private $translate: angular.translate.ITranslateService,
+    private DigitalRiverService: DigitalRiverService,
     private MyCompanyOrdersService: MyCompanyOrdersService,
     private Notification
   ) {}
@@ -24,7 +26,7 @@ class MyCompanyOrdersCtrl {
 
   private initIframe(): void {
     this.loading = true;
-    this.MyCompanyOrdersService.getDigitalRiverOrderHistoryUrl().then((orderHistoryUrl) => {
+    this.DigitalRiverService.getDigitalRiverOrderHistoryUrl().then((orderHistoryUrl) => {
       this.digitalRiverOrderHistoryUrl = this.$sce.trustAsResourceUrl(orderHistoryUrl);
     }).catch((response) => {
       this.Notification.errorWithTrackingId(response, 'myCompanyOrders.loadError');
