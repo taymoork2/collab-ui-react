@@ -4459,6 +4459,7 @@
     "typeEmail": "Email",
     "typeId": "Id",
     "typePhone": "Phone",
+    "typeCustom": "Custom",
     "ctValidation":{
       "errorChar250": "Character length cannot be more than 250.",
       "errorChar50": "Character length cannot be more than 50."
