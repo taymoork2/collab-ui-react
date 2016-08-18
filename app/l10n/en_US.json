@@ -4459,6 +4459,7 @@
     "typeEmail": "Email",
     "typeId": "Id",
     "typePhone": "Phone",
+    "typeCustom": "Custom",
     "ctValidation":{
       "errorChar250": "Character length cannot be more than 250.",
       "errorChar50": "Character length cannot be more than 50."
@@ -5123,6 +5124,13 @@
           "numbers": "Numbers",
           "features": "Features",
           "settings": "Settings"
+        }
+      },
+      "care": {
+        "title": "Care",
+        "description": "Cisco Spark Care configurations of media channels for your organization.",
+        "buttons": {
+          "features": "Features"
         }
       },
       "hybridManagement": {
