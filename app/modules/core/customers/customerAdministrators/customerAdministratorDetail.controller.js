@@ -5,7 +5,7 @@
     .controller('CustomerAdministratorDetailCtrl', CustomerAdministratorDetail);
 
   /* @ngInject */
-  function CustomerAdministratorDetail($stateParams, $translate, Analytics, Authinfo, CustomerAdministratorService, Notification, ModalService) {
+  function CustomerAdministratorDetail($stateParams, $translate, Analytics, Authinfo, Config, CustomerAdministratorService, Notification, ModalService) {
     var vm = this;
     var currentCustomer = $stateParams.currentCustomer;
     var customerOrgId = currentCustomer.customerOrgId;
@@ -79,8 +79,9 @@
       };
       vm.administrators.push(adminProfile);
 
-      var isNotFullAdmin = adminProfile.roles.indexOf('id_full_admin') === -1;
-      var isNotSalesAdmin = adminProfile.roles.indexOf('atlas-portal.partner.salesadmin') === -1;
+      var isNotFullAdmin = adminProfile.roles.indexOf(Config.backend_roles.full_admin) === -1;
+      var isNotSalesAdmin = adminProfile.roles.indexOf(Config.backend_roles.sales) === -1;
+
       if (isNotFullAdmin && isNotSalesAdmin) {
         patchSalesAdminRole(email);
       }
