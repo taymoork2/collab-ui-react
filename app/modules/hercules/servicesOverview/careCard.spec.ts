@@ -13,8 +13,7 @@ describe('ServicesOverviewCareCard', ()=> {
 
   it('should get button list', ()=> {
     var buttons = careCard.getButtons();
-    expect(buttons.length).toEqual(2);
+    expect(buttons.length).toEqual(1);
     expect(buttons[0].name).toMatch("features");
-    expect(buttons[1].name).toMatch("settings");
   });
 });

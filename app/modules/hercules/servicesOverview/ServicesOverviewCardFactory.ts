@@ -27,7 +27,7 @@ function ServicesOverviewCardFactory(Authinfo) {
         new ServicesOverviewHybridCallCard(),
         new ServicesOverviewHybridMediaCard(),
         // new ServicesOverviewHybridContextCard() //removed until feature is ready.
-        ];
+      ];
     }
   };
 }

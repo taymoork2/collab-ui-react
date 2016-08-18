@@ -11,7 +11,6 @@ describe('Care admin should be able to', function () {
     utils.expectIsDisplayed(careLandingPage.careIcon);
     utils.expectIsDisplayed(careLandingPage.careTitle);
     utils.expectIsDisplayed(careLandingPage.careFeature);
-    utils.expectIsDisplayed(careLandingPage.careSetting);
     utils.click(careLandingPage.careFeature);
   });
 

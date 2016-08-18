@@ -5115,8 +5115,7 @@
         "title": "Care",
         "description": "Cisco Spark Care configurations of media channels for your organization.",
         "buttons": {
-          "features": "Features",
-          "settings": "Settings"
+          "features": "Features"
         }
       },
       "hybridManagement": {

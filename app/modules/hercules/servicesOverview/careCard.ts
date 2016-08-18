@@ -7,8 +7,7 @@ export class ServicesOverviewCareCard extends ServicesOverviewCard {
   }
 
   private _buttons:Array<CardButton> = [
-    {name: 'servicesOverview.cards.care.buttons.features', link: 'careDetails/features', buttonClass: 'btn-link'},
-    {name: 'servicesOverview.cards.care.buttons.settings', link: 'careDetails/settings', buttonClass: 'btn-link'}];
+    {name: 'servicesOverview.cards.care.buttons.features', link: 'careDetails/features', buttonClass: 'btn-link'}];
 
   getButtons():Array<CardButton> {
     if (this.active) {
