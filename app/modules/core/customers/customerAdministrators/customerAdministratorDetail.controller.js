@@ -67,16 +67,23 @@
           email = emailDetail.value;
         }
       });
+      var roles = _.get(response.data, 'roles');
       var uuid = _.get(response.data, 'id');
       var avatarSyncEnabled = _.get(response.data, 'avatarSyncEnabled');
       var adminProfile = {
         uuid: uuid,
         fullName: fullName,
         avatarSyncEnabled: avatarSyncEnabled,
-        email: email
+        email: email,
+        roles: roles
       };
       vm.administrators.push(adminProfile);
-      patchSalesAdminRole(email);
+
+      var isNotFullAdmin = adminProfile.roles.indexOf('id_full_admin') === -1;
+      var isNotSalesAdmin = adminProfile.roles.indexOf('atlas-portal.partner.salesadmin') === -1;
+      if (isNotFullAdmin && isNotSalesAdmin) {
+        patchSalesAdminRole(email);
+      }
       Notification.success('customerAdminPanel.customerAdministratorAddSuccess');
       Analytics.trackPartnerActions(Analytics.eventNames.ASSIGN, uuid, Authinfo.getOrgId());
     }
