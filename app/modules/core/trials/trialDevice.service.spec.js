@@ -9,12 +9,42 @@ describe('Service: Trial Device Service:', function () {
     bard.inject(this, 'TrialCallService', 'TrialRoomSystemService', 'TrialDeviceService');
   });
 
-  describe('Get List', function () {
-    it('should contain a list of countries', function () {
+  describe('Get Countries List', function () {
+    it('should contain only US if no argument is supplied', function () {
       var countries = TrialDeviceService.getCountries();
-      expect(countries.length).toBeTruthy();
+      expect(countries.length).toBe(1);
+      expect(countries).toContain({
+        country: 'United States'
+      });
     });
 
+    it('should have a longer list for only CISCO_SX10 and contain for example "Germany"', function () {
+      var countries = TrialDeviceService.getCountries(['CISCO_SX10']);
+      expect(countries.length).toBeGreaterThan(1);
+      expect(countries).toContain({
+        country: 'Germany'
+      });
+    });
+
+    it('should contain only US if unknown device is present', function () {
+      var countries = TrialDeviceService.getCountries(['CISCO_SX10', 'SOME_OTHER']);
+      expect(countries.length).toBe(1);
+      expect(countries).toContain({
+        country: 'United States'
+      });
+    });
+
+    it('should contain US only if one of the devices supplied only supports US shipping', function () {
+      var countries = TrialDeviceService.getCountries(['CISCO_SX10', 'CISCO_8841']);
+      expect(countries.length).toBe(1);
+      expect(countries).toContain({
+        country: 'United States'
+      });
+    });
+
+  });
+
+  describe('Get States List', function () {
     it('should contain a list of states', function () {
       var states = TrialDeviceService.getStates();
       expect(states.length).toEqual(51);

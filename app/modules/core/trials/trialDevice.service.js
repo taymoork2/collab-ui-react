@@ -14,9 +14,14 @@
       'Denmark', 'Finland', 'France', 'Germany', 'Ireland', 'Italy', 'Luxembourg', 'Netherlands', 'Norway', 'Poland',
       'Portugal', 'Slovakia', 'Spain', 'Sweden', 'Switzerland', 'United Kingdom']
     };
+
     var countryListTypes = {
       US_ONLY: "US",
-      SX10: "ROLLOUT1"
+      CISCO_SX10: "ROLLOUT1",
+      CISCO_8865: "US",
+      CISCO_8845: "US",
+      CISCO_8841: "US",
+      CISCO_7841: "US"
     };
 
     var service = {
@@ -25,8 +30,7 @@
       getLimitsPromise: getLimitsPromise,
       getStates: getStates,
       getCountries: getCountries,
-      canAddDevice: canAddDevice,
-      countryListTypes: countryListTypes
+      canAddDevice: canAddDevice
     };
 
     return service;
@@ -65,12 +69,15 @@
       return _trialData.limitsPromise;
     }
 
-    function getCountries(filter) {
-      /*return [{
-        country: 'United States'
-      }];*/
-      filter = filter || 'US';
-      return _.map(_countries[filter], function (country) {
+    function getCountries(deviceArray) {
+      if (!deviceArray || deviceArray.length === 0) {
+        deviceArray = ['US_ONLY'];
+      }
+      var countryLists = _.map(deviceArray, function (device) {
+        return _countries[countryListTypes[device]] || _countries.US;
+      });
+      var result = _.intersection.apply(_, countryLists);
+      return _.map(result, function (country) {
         return { country: country };
       });
     }

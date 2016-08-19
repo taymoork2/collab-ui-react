@@ -1,8 +1,6 @@
 (function () {
   'use strict';
 
-/* eslint-disable no-unused-vars */
-
   angular
     .module('core.trial')
     .controller('TrialDeviceController', TrialDeviceController);
@@ -51,6 +49,7 @@
     vm.getQuantityInputDefault = _getQuantityInputDefault;
     vm.areAdditionalDevicesAllowed = areAdditionalDevicesAllowed;
     vm.areTemplateOptionsDisabled = _areTemplateOptionsDisabled;
+    vm.getSelectedDevices = getSelectedDevices;
     // TODO - Remove vm.showNewRoomSystems when DX80 and MX300 are officially supported
     vm.showNewRoomSystems = false;
     vm.supportsInternationalShipping = false;
@@ -90,8 +89,6 @@
     vm.phone7841 = _.find(_trialCallData.details.phones, {
       model: 'CISCO_7841'
     });
-
-    var usOnly = [vm.dx80, vm.mx300, vm.phone8865, vm.phone8845, vm.phone8841, vm.phone7841];
 
     vm.setQuantity(vm.sx10);
     vm.setQuantity(vm.dx80);
@@ -513,7 +510,7 @@
       model: vm.shippingInfo,
       key: 'country',
       type: 'select',
-      defaultValue: _.find(TrialDeviceService.getCountries(getCountryFilter(vm.supportsInternationalShipping)), {
+      defaultValue: _.find(TrialDeviceService.getCountries(getSelectedDevices(vm.supportsInternationalShipping)), {
         country: vm.shippingInfo.country
       }),
       className: '',
@@ -531,7 +528,7 @@
       watcher: _countryWatcher(),
       expressionProperties: {
         'templateOptions.options': function () {
-          return _.map(TrialDeviceService.getCountries(getCountryFilter(vm.supportsInternationalShipping)), 'country');
+          return _.map(TrialDeviceService.getCountries(getSelectedDevices(vm.supportsInternationalShipping)), 'country');
         },
       }
     }, {
@@ -630,17 +627,18 @@
     init();
 
     ////////////////
-    function getCountryFilter(supportsInternationalShipping) {
-      var countryFilter = null;
-      if (supportsInternationalShipping) {
-        var hasUSOnly = _.some(usOnly, function (o) { return o.quantity > 0 && o.enabled; });
-        if (hasUSOnly) {
-          countryFilter = null;
-        } else if (vm.sx10.quantity > 0 && vm.sx10.enabled) {
-          countryFilter = TrialDeviceService.countryListTypes.SX10;
-        }
+    function getSelectedDevices(supportsInternationalShipping) {
+      if (!supportsInternationalShipping) {
+        return null;
       }
-      return countryFilter;
+      var selectedDevices = _.chain(_.union(vm.roomSystemFields, vm.deskPhoneFields))
+      .filter(function (e) {
+        return e.model.quantity > 0 && e.model.enabled === true && e.key === 'quantity';
+      })
+      .map(function (o) {
+        return o.model.model;
+      }).value();
+      return selectedDevices;
     }
 
     function init() {
@@ -658,7 +656,7 @@
 
       FeatureToggleService.supports(FeatureToggleService.features.atlasShipDevicesInternational)
         .then(function (results) {
-          vm.supportsInternationalShipping = true; //results;
+          vm.supportsInternationalShipping = results;
         });
 
       vm.canAddMoreDevices = vm.isEditing && vm.hasExistingDevices();
@@ -802,12 +800,11 @@
     function _countryWatcher() {
       return {
         expression: function () {
-
           return vm.calcQuantity(_trialRoomSystemData.details.roomSystems, _trialCallData.details.phones);
         },
         listener: function (field, newValue, oldValue) {
           if (newValue !== oldValue) {
-            field.templateOptions.options = _.map(TrialDeviceService.getCountries(getCountryFilter(vm.supportsInternationalShipping)), 'country');
+            field.templateOptions.options = _.map(TrialDeviceService.getCountries(getSelectedDevices(vm.supportsInternationalShipping)), 'country');
             if (_.indexOf(field.templateOptions.options, field.model[field.key]) === -1) {
               field.model[field.key] = null;
             }

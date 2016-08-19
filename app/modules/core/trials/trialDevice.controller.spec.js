@@ -576,4 +576,50 @@ describe('Controller: TrialDeviceController', function () {
       expect(controller.areTemplateOptionsDisabled(device)).toBeTruthy();
     });
   });
+
+  describe('feature toggle for international shipping', function () {
+    it('should show a list of countries when only dx10 is  selected and toggle is true', function () {
+      spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
+      initController();
+
+      expect(controller.supportsInternationalShipping).toBe(true);
+      expect(FeatureToggleService.supports).toHaveBeenCalled();
+    });
+
+    it('should only show US when  only dx10 is  selected and toggle is false', function () {
+      spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(false));
+      initController();
+      expect(controller.supportsInternationalShipping).toBe(false);
+      expect(FeatureToggleService.supports).toHaveBeenCalled();
+    });
+  });
+
+  describe('Shipping to additional countries ', function () {
+    it('should show a list of selected devices when roomSystem is selected and toggle is true', function () {
+      initController();
+      controller.sx10.enabled = true;
+      controller.sx10.quantity = 1;
+      var deviceList = controller.getSelectedDevices(true);
+      expect(deviceList.length).toBe(1);
+      expect(deviceList[0]).toBe('CISCO_SX10');
+    });
+    it('should have a list of selected devices to be null when roomSystem is selected and toggle is false', function () {
+      initController();
+      controller.sx10.enabled = true;
+      controller.sx10.quantity = 1;
+      var deviceList = controller.getSelectedDevices(false);
+      expect(deviceList).toBe(null);
+
+    });
+    it('should have a list of selected devices contain both when roomSystem and phone is selected and toggle is true', function () {
+      initController();
+      controller.sx10.enabled = true;
+      controller.sx10.quantity = 1;
+      controller.phone8865.enabled = true;
+      controller.phone8865.quantity = 1;
+      var deviceList = controller.getSelectedDevices(true);
+      expect(deviceList.length).toBe(2);
+      expect(deviceList[1]).toBe('CISCO_8865');
+    });
+  });
 });
