@@ -92,15 +92,15 @@
       var columnNames = {};
       if (cluster === 'All Clusters') {
         columnNames = {
-          "active_calls": "Calls on premise",
-          "call_reject": "Calls overflowed to the cloud",
-          "timestamp": "Timestamp",
+          'active_calls': 'Calls on premise',
+          'call_reject': 'Calls overflowed to the cloud',
+          'timestamp': 'Timestamp',
         };
       } else {
         columnNames = {
-          "active_calls": "Calls on premise",
-          "call_reject": "Calls redirected to cloud",
-          "timestamp": "Timestamp",
+          'active_calls': 'Calls on premise',
+          'call_reject': 'Calls redirected to cloud',
+          'timestamp': 'Timestamp',
         };
       }
       cluster = cluster.replace(/\s/g, "_");
@@ -210,9 +210,9 @@
       }
       var exportFields = ['average_cpu', 'peak_cpu', 'timestamp'];
       var columnNames = {
-        "average_cpu": "Average Utilization",
-        "peak_cpu": "Peak Utilization",
-        "timestamp": "Timestamp"
+        'average_cpu': 'Average Utilization',
+        'peak_cpu': "Peak Utilization",
+        'timestamp': 'Timestamp'
       };
       cluster = cluster.replace(/\s/g, "_");
       daterange = daterange.replace(/\s/g, "_");
@@ -326,10 +326,10 @@
       var valueAxis = createValueAxis(data);
       var exportFields = ['task', 'startTime', 'endTime', 'category'];
       var columnNames = {
-        "task": "Availability",
-        "startTime": "start Time",
-        "endTime": "end Time",
-        "category": "Cluster"
+        'task': 'Availability',
+        'startTime': 'Start Time',
+        'endTime': 'End Time',
+        'category': 'Cluster'
       };
       cluster = cluster.replace(/\s/g, "_");
       daterange = daterange.replace(/\s/g, "_");

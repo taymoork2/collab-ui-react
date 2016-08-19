@@ -183,7 +183,6 @@
         'pathToImages': amchartsImages,
         'theme': 'light',
         'marginRight': 70,
-        //'dataDateFormat': 'YYYY-MM-DDTJJ:NN:SSZ',
         'balloonDateFormat': 'JJ:NN',
         'columnWidth': 0.035,
         'valueAxis': valueAxis,
