@@ -29,13 +29,10 @@
     vm.isValidThumbnail = Userservice.isValidThumbnail;
     vm.actionList = [];
 
-    var ciTrainSiteNames = [];
     if (vm.currentUser.trainSiteNames) {
-      vm.currentUser.trainSiteNames.forEach(
+      var ciTrainSiteNames = vm.currentUser.trainSiteNames.filter(
         function (chkSiteUrl) {
-          if (WebExUtilsFact.isCIEnabledSite(chkSiteUrl)) {
-            ciTrainSiteNames.push(chkSiteUrl);
-          }
+          return WebExUtilsFact.isCIEnabledSite(chkSiteUrl);
         }
       );
 
@@ -165,9 +162,11 @@
         for (var n = 0; n < userEntitlements.length; n++) {
           var ent = userEntitlements[n];
           if (ent === entitlement) {
-            if ('cloudmeetings' != entitlement) {
+            if ('cloudmeetings' !== entitlement) {
               return true;
-            } else if (vm.currentUser.trainSiteNames) {
+            }
+
+            if (vm.currentUser.trainSiteNames) {
               return true;
             }
           }
