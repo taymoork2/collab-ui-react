@@ -4,7 +4,7 @@
     </span>
   </button>
   <div>
-    <h5 class="modal-title" translate="mediaFusion.clusters.deletecluster">
+    <h5 class="modal-title" translate="mediaFusion.clusters.deleteclusterHeadding">
     </h5>
   </div>
 </div>
@@ -35,7 +35,7 @@
     <div ng-show="deleteClust.failedToDelete">
       {{deleteClust.unableToMoveNodes}}
     </div>
-    <div ng-show=" deleteClust.radioModel == '1' && !deleteClust.ngDisable ">
+    <div ng-show="!deleteClust.ngDisable ">
       <p class="selectTheDest" translate="mediaFusion.clusters.selectTheDest"></p>
       <table>
         <tr class="deleteClusterTableHeaderRow">
@@ -43,9 +43,9 @@
           <th translate="mediaFusion.clusters.moveTo"></th>
         </tr>
         <tr class="deleteClusterTableRow" ng-repeat="host in deleteClust.hosts">
-          <td>{{ host.hostname }} </td>
+          <td ng-disabled="deleteClust.radioModel == '2'">{{ host.hostname }} </td>
           <td>
-            <cs-select ng-model="deleteClust.selectModel[host.hostname]" options="deleteClust.options" placeholder="deleteClust.selectPlaceholder" is-warn="{{deleteClust.fillModel[host.hostname]}}">
+            <cs-select is-disabled="deleteClust.radioModel == '2'" ng-model="deleteClust.selectModel[host.hostname]" options="deleteClust.options" placeholder="deleteClust.selectPlaceholder" is-error="{{deleteClust.fillModel[host.hostname] && deleteClust.radioModel == '1'}}" error-msg="{{'mediaFusion.clusters.errorMsg'|translate}}">
             </cs-select>
           </td>
         </tr>
