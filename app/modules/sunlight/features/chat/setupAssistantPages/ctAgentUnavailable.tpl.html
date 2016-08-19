@@ -30,9 +30,18 @@
           <section>
             <div class="unavailable-attributes">
               <div class="h4 unavailable-attributes-label">Message</div>
-            <textarea id="agentUnavailableMessageField" class="h6" maxlength="250"
-                      ng-model="careChatSA.template.configuration.pages.agentUnavailable.fields.agentUnavailableMessage.displayText">
-            </textarea>
+            	<textarea
+            	cs-input
+            	class="h6 message-area"
+            	type="text"
+            	id="agentUnavailableMessageField"
+            	name="agentUnavailableMessageField"
+            	ng-model="careChatSA.template.configuration.pages.agentUnavailable.fields.agentUnavailableMessage.displayText"
+            	ng-model-options="{ allowInvalid: true }"
+            	cs-input-messages="careChatSA.multiLineValidationMessage"
+            	ng-maxlength="careChatSA.lengthConstants.multiLineMaxCharLimit"
+            	ng-required="true">
+            	</textarea>
             </div>
 
             </section>
