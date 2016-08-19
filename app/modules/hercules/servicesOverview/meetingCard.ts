@@ -40,9 +40,7 @@ export class ServicesOverviewMeetingCard extends ServicesOverviewCard {
         .map(serviceFeature=> {
           return serviceFeature && serviceFeature.license && serviceFeature.license.siteUrl;
         })
-        .filter((url)=> {
-          return !_.isUndefined(url);
-        })
+        .compact()
         .uniq()
         .map((url) => {
           return {name: url, link: 'site-list', buttonClass: 'btn-link'};
