@@ -4021,11 +4021,11 @@
     "uploading": "Uploading File",
     "success": "File Uploaded Successfully",
     "errorUnknown": "File Not Uploaded: unknown upload error",
-    "errorFileType": "File Not Uploaded: incorrect file type",
+    "errorFileType": "File Not Uploaded: incorrect file type.",
     "errorFilePNG": "The uploaded file must be a PNG file",
-    "errorDimensions": "File Not Uploaded: incorrect file dimensions",
+    "errorDimensions": "File Not Uploaded: incorrect file dimensions.",
     "errorWidthHeight": "The uploaded image must be wider than {{width}} px.",
-    "errorFileSize": "File Not Uploaded: incorrect file size",
+    "errorFileSize": "File Not Uploaded: incorrect file size.",
     "errorFileLarge": "The image file size must be less than 1 MB."
   },
   "utilizationPage": {
@@ -4462,6 +4462,7 @@
     "typeEmail": "Email",
     "typeId": "Id",
     "typePhone": "Phone",
+    "typeCustom": "Custom",
     "ctValidation":{
       "errorChar250": "Character length cannot be more than 250.",
       "errorChar50": "Character length cannot be more than 50."
@@ -5126,6 +5127,13 @@
           "numbers": "Numbers",
           "features": "Features",
           "settings": "Settings"
+        }
+      },
+      "care": {
+        "title": "Care",
+        "description": "Cisco Spark Care configurations of media channels for your organization.",
+        "buttons": {
+          "features": "Features"
         }
       },
       "hybridManagement": {
