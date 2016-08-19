@@ -125,7 +125,7 @@
       text: $translate.instant('careChatTpl.typeCustom'),
       dictionaryType: {
         fieldSet: 'cisco.base.ccc.pod',
-        fieldName: 'custom'
+        fieldName: 'cccCustom'
       }
     }];
 
