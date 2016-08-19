@@ -107,14 +107,14 @@
                 </div>
               </div>
               </div>
-              
+
               <div ng-if="!lic.isCISite" class="item-webex">
               <span>WebEx {{cfLic.label}}</span><br>
               <span class="sub-item"><a href= "{{lic.siteAdminUrl}}" id="{{lic.siteUrl}}_siteAdminUrl">{{::'siteList.siteAdminUrl' | translate}}</a></span>
               </div>
             </div>
           </div>
-          
+
         </div>
       </div>
       <!-- CALL SERVICES PANEL -->
@@ -129,9 +129,9 @@
               <input
                 cs-input
                 type="checkbox"
-                id="{{commFeature.license.licenseId}}" 
-                ng-if="!disableCommFeatureAssignment()"
-                ng-change="checkLicenseAvailability('COMMUNICATION', radioStates.commRadio)" 
+                id="{{commFeature.license.licenseId}}"
+                ng-if="!disableCommFeatureAssignment() && hasSite"
+                ng-change="checkLicenseAvailability('COMMUNICATION', radioStates.commRadio)"
                 ng-model="radioStates.commRadio"
                 ng-disabled="hybridCallServiceAware"
                 cs-input-label="{{::commFeature.label | translate}}">

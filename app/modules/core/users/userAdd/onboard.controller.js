@@ -6,7 +6,7 @@
     .controller('OnboardCtrl', OnboardCtrl);
 
   /*@ngInject*/
-  function OnboardCtrl($modal, $previousState, $q, $rootScope, $scope, $state, $stateParams, $timeout, $translate, addressparser, Authinfo, Analytics, chartColors, Config, DialPlanService, FeatureToggleService, Log, LogMetricsService, NAME_DELIMITER, Notification, OnboardService, Orgservice, SunlightConfigService, TelephonyInfoService, Userservice, Utils, UserCsvService, UserListService, WebExUtilsFact) {
+  function OnboardCtrl($modal, $previousState, $q, $rootScope, $scope, $state, $stateParams, $timeout, $translate, addressparser, Authinfo, Analytics, chartColors, Config, DialPlanService, FeatureToggleService, Log, LogMetricsService, NAME_DELIMITER, Notification, OnboardService, Orgservice, SunlightConfigService, TelephonyInfoService, Userservice, Utils, UserCsvService, UserListService, WebExUtilsFact, ServiceSetup) {
     var vm = this;
 
     $scope.hasAccount = Authinfo.hasAccount();
@@ -53,6 +53,7 @@
 
     $scope.convertUsersFlow = false;
     $scope.editServicesFlow = false;
+    $scope.hasSite = false;
 
     // model can be removed after switching to controllerAs
     $scope.model = {
@@ -150,6 +151,7 @@
     function initController() {
       $scope.currentUserCount = 1;
       setLicenseAvailability();
+      checkSite();
     }
 
     $scope.isCsvEnhancement = false;
@@ -440,6 +442,12 @@
       // disable the communication feature assignment unless the UserAdd is part of the First Time Setup Wizard work flow
       return (!Authinfo.isSetupDone() && ((typeof $state.current.data === 'undefined') || (!$state.current.data.firstTimeSetup)));
     };
+
+    function checkSite() {
+      ServiceSetup.listSites().then(function () {
+        $scope.hasSite = (ServiceSetup.sites.length !== 0);
+      });
+    }
 
     var userEnts = null;
     var userLicenseIds = null;
