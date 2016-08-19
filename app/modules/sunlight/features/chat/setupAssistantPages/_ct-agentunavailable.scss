@@ -76,7 +76,7 @@
 
   .unavailable-attributes {
     @include vr-spacing(pl, 1);
-    > textarea {
+    .message-area {
       height: 5rem;
       width: 90%;
       resize: none;
