@@ -102,6 +102,7 @@ describe('Controller: ServiceSetup', function () {
     spyOn(ServiceSetup, 'updateSite').and.returnValue($q.when());
 
     spyOn(HuronCustomer, 'get').and.returnValue($q.when(customer));
+    spyOn(HuronCustomer, 'put').and.returnValue($q.when());
     spyOn(ServiceSetup, 'listVoicemailTimezone').and.returnValue($q.when(usertemplate));
     spyOn(ServiceSetup, 'loadExternalNumberPool').and.returnValue($q.when(externalNumberPool));
     spyOn(ServiceSetup, 'updateCustomer').and.returnValue($q.when());
@@ -265,6 +266,35 @@ describe('Controller: ServiceSetup', function () {
     });
 
     describe('initNext', function () {
+      it('customer without voice service should update customer to heal missing voice service', function () {
+        var selectedPilotNumber = {
+          pattern: '+19728965000',
+          label: '(972) 896-5000'
+        };
+
+        controller.hasSites = false;
+        controller.model.ftswCompanyVoicemail.ftswCompanyVoicemailEnabled = true;
+        controller.model.ftswCompanyVoicemail.ftswCompanyVoicemailNumber = selectedPilotNumber;
+        controller.hasVoicemailService = true;
+        controller.hasVoiceService = false;
+        controller.model.site.timeZone = {
+          id: 'bogus'
+        };
+        controller.previousTimeZone = controller.model.site.timeZone;
+
+        //remove singlenumber range for it to pass
+        controller.deleteInternalNumberRange(model.numberRanges[2]);
+        controller.initNext();
+        $scope.$apply();
+
+        expect(HuronCustomer.put).toHaveBeenCalled();
+        expect(ServiceSetup.createSite).toHaveBeenCalled();
+        expect(ServiceSetup.updateCustomer).toHaveBeenCalled();
+        expect(ServiceSetup.updateVoicemailTimezone).not.toHaveBeenCalled();
+        expect(VoicemailMessageAction.update).not.toHaveBeenCalled();
+        expect(ServiceSetup.createInternalNumberRange).toHaveBeenCalled();
+        expect(ModalService.open).not.toHaveBeenCalled();
+      });
 
       it('customer with voicemail service should create site', function () {
         var selectedPilotNumber = {
@@ -292,7 +322,6 @@ describe('Controller: ServiceSetup', function () {
         expect(VoicemailMessageAction.update).not.toHaveBeenCalled();
         expect(ServiceSetup.createInternalNumberRange).toHaveBeenCalled();
         expect(ModalService.open).not.toHaveBeenCalled();
-
       });
 
       it('customer with voicemail should not disable if user cancels voicemail modal warning', function () {
