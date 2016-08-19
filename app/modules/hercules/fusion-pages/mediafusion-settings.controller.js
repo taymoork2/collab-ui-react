@@ -17,7 +17,8 @@
       description: 'mediaFusion.clusters.releaseChannelDesc'
     };
     vm.delete = {
-      title: 'mediaFusion.clusters.deleteclusterDesc'
+      title: 'mediaFusion.clusters.deletecluster',
+      description: 'mediaFusion.clusters.deleteclusterDesc'
     };
 
     //hardcoded now and will be changed in the future
