@@ -68,12 +68,12 @@
       line-height: $h5-line-height;
       @include vr-spacing(pt, 0.75);
     }
-    .message {
+    .message-area {
       height: 4.5rem;
       width: 20rem;
       background-color: $white;
       resize: none;
-      line-height: 1rem;
+      line-height: 1.4rem;
       @include vr-spacing(p, 0.75);
       @include vr-spacing(mt, 0);
     }

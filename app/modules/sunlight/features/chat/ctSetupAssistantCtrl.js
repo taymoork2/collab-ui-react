@@ -322,6 +322,9 @@
       }
     };
 
+    vm.singleLineValidationMessage = CTService.getValidationMessages(0, vm.lengthConstants.singleLineMaxCharLimit);
+    vm.multiLineValidationMessage = CTService.getValidationMessages(0, vm.lengthConstants.multiLineMaxCharLimit);
+
     vm.overview = {
       customerInformation: 'circle-user',
       agentUnavailable: 'circle-comp-negative',
