@@ -1,0 +1,33 @@
+{
+  "uuid": "2251daa6-5925-42ce-add5-cf3c3af4ee5e",
+  "url": "https://cmi.huron-int.com/api/v2/customers/cd1500f6-ebd8-4009-a79f-9f43fa9bd898/features/huntgroups/2251daa6-5925-42ce-add5-cf3c3af4ee5e",
+  "name": "HuntGroupUnitTest",
+  "numbers": [{
+    "number": "2140",
+    "uuid": "8edd0495-e642-40a5-bd94-fd12d5e823b4"
+  }, {
+    "number": "81002140",
+    "uuid": "73bbfb63-296c-43c0-a2ad-494b02843339"
+  }],
+  "huntMethod": "DA_LONGEST_IDLE_TIME",
+  "maxRingSecs": "10",
+  "maxWaitMins": "2",
+  "fallbackDestination": {
+    "number": "+19723453456",
+    "numberUuid": null,
+    "userName": null,
+    "userUuid": null,
+    "sendToVoicemail": false
+  },
+  "members": [{
+    "userName": "\"member1 hg\"",
+    "userUuid": "ba6c9d76-bed9-413f-a373-054a40df7095",
+    "number": "2043",
+    "numberUuid": "bbdfc3bc-ca48-4d13-b8cc-9554ce71203b"
+  }, {
+    "userName": "\"member2 hg\"",
+    "userUuid": "5dea2d85-7f23-4392-a1bc-360b8a74a487",
+    "number": "2065",
+    "numberUuid": "98e2fd81-2721-4809-bb9a-e78c079b8a99"
+  }]
+}

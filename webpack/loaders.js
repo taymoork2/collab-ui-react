@@ -9,7 +9,7 @@ exports.js = {
 exports.lint = {
   test: /\.js$/,
   loaders: ['eslint'],
-  exclude: [/node_modules/, /\.spec\.js$/],
+  exclude: [/node_modules/],
 };
 
 exports.ts = {
@@ -69,6 +69,9 @@ exports.dependencies = [{
   loader: 'script',
 }, {
   test: /jasmine-promise-matchers.js$/,
+  loader: 'script',
+}, {
+  test: /bmmp\/cisco-bmmp.js$/,
   loader: 'script',
 }];
 

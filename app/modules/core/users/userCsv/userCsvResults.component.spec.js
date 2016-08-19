@@ -119,10 +119,9 @@ describe('crUserCsvResults Component', function () {
 
       // make sure the required elements exist in the DOM
       expect(this.element.find('.progress-striped')).toHaveLength(1);
-      expect(this.element.find('.close')).toHaveLength(1);
+      expect(this.element.find('.icon-close')).toHaveLength(1);
       expect(this.element.find('.stat.new-users')).toHaveLength(1);
       expect(this.element.find('.stat.existing-users')).toHaveLength(1);
-      expect(this.element.find('.stat.retry-users')).toHaveLength(0);
       expect(this.element.find('.stat.error-users')).toHaveLength(1);
 
       expect(this.element.find('.upload-errors')).toHaveLength(0);
@@ -143,10 +142,9 @@ describe('crUserCsvResults Component', function () {
 
       // make sure the required elements exist in the DOM
       expect(this.element.find('.progress-striped')).toHaveLength(1);
-      expect(this.element.find('.close')).toHaveLength(1);
+      expect(this.element.find('.icon-close')).toHaveLength(1);
       expect(this.element.find('.stat.new-users')).toHaveLength(0);
       expect(this.element.find('.stat.existing-users')).toHaveLength(1);
-      expect(this.element.find('.stat.retry-users')).toHaveLength(0);
       expect(this.element.find('.stat.error-users')).toHaveLength(1);
 
       expect(this.element.find('.upload-errors')).toHaveLength(0);
@@ -178,17 +176,6 @@ describe('crUserCsvResults Component', function () {
       expect(this.element.find('.stat.existing-users .total').text()).toEqual('7');
     });
 
-    it('should show retry users count when there are users to retry', function () {
-      this.vm.csvData.model.usersToRetry = [];
-      this.$scope.$apply();
-      expect(this.element.find('.stat.retry-users')).toHaveLength(0);
-
-      this.vm.csvData.model.usersToRetry = ['a', 'b', 'c'];
-      this.$scope.$apply();
-      expect(this.element.find('.stat.retry-users')).not.toHaveClass('disabled');
-      expect(this.element.find('.stat.retry-users .total').text()).toEqual('3');
-    });
-
     it('should show error users count when there are users with errors', function () {
       this.vm.csvData.model.userErrorArray = [];
       this.$scope.$apply();
@@ -207,7 +194,7 @@ describe('crUserCsvResults Component', function () {
 
     it('should show cancel dialog when close dialog is pressed', function () {
 
-      var closeBtn = this.element.find('.close-button button');
+      var closeBtn = this.element.find('.close-button a');
       expect(closeBtn).toHaveLength(1);
       closeBtn.click();
       this.$scope.$apply();
@@ -224,7 +211,8 @@ describe('crUserCsvResults Component', function () {
     beforeEach(function () {
       this.bindings = {
         csvData: fakeCsv,
-        onCancelImport: function noop() {}
+        onCancelImport: function noop() {
+        }
       };
       initController.apply(this);
     });

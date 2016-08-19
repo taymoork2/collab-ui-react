@@ -226,6 +226,7 @@ describe('Auth Service', function () {
     OAuthConfig.getLogoutUrl = sinon.stub().returns('logoutUrl');
     OAuthConfig.getOauthListTokenUrl = sinon.stub().returns('OauthListTokenUrl');
     OAuthConfig.getOauthDeleteRefreshTokenUrl = sinon.stub().returns('refreshtoken=');
+    OAuthConfig.getClientId = sinon.stub().returns('ewvmpibn34inbr433f23f4');
 
     $httpBackend
       .expectGET('OauthListTokenUrl')

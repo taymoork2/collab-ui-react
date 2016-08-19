@@ -149,6 +149,11 @@ describe('Care Chat Setup Assistant Ctrl', function () {
       controller.template.name = '';
       checkStateOfNavigationButtons(NAME_PAGE_INDEX, 'hidden', false);
     });
+
+    it("next button should be disabled when name is more than 250 chars long", function () {
+      controller.template.name = Array(252).join("a");
+      checkStateOfNavigationButtons(NAME_PAGE_INDEX, 'hidden', false);
+    });
   });
 
   describe('Feedback Page', function () {

@@ -5,6 +5,8 @@ describe('Component: myCompanyOrders', () => {
     this.initModules('Core');
     this.injectDependencies(
       '$q',
+      '$sce',
+      'DigitalRiverService',
       'MyCompanyOrdersService',
       'Notification'
     );
@@ -30,27 +32,54 @@ describe('Component: myCompanyOrders', () => {
 
     this.purchaseOrdersList = purchaseOrdersList;
     this.getOrderDetailsDefer = this.$q.defer();
+    this.getDigitalRiverOrderHistoryUrlDefer = this.$q.defer();
 
     spyOn(this.MyCompanyOrdersService, 'getOrderDetails').and.returnValue(this.getOrderDetailsDefer.promise);
     spyOn(this.Notification, 'errorWithTrackingId');
+
+    spyOn(this.DigitalRiverService, 'getDigitalRiverOrderHistoryUrl').and.returnValue(this.getDigitalRiverOrderHistoryUrlDefer.promise);
+    spyOn(this.$sce, 'trustAsResourceUrl').and.callThrough();
 
     this.compileComponent('myCompanyOrders');
     spyOn(this.controller, 'downloadPdf');
   });
 
-  it('should render ui-grid from gridOptions', function () {
+  describe('Digital River iframe', () => {
+    it('should get digital river order history url to load iframe', function () {
+      this.getDigitalRiverOrderHistoryUrlDefer.resolve('https://some.url.com');
+      this.$scope.$apply();
+
+      expect(this.DigitalRiverService.getDigitalRiverOrderHistoryUrl).toHaveBeenCalled();
+      expect(this.$sce.trustAsResourceUrl).toHaveBeenCalledWith('https://some.url.com');
+      expect(this.controller.digitalRiverOrderHistoryUrl.$$unwrapTrustedValue()).toEqual('https://some.url.com');
+      expect(this.view.find('iframe')).toHaveAttr('src', 'https://some.url.com');
+    });
+
+    it('should notify error if unable to get digital river url', function () {
+      this.getDigitalRiverOrderHistoryUrlDefer.reject({
+        data: undefined,
+        status: 500,
+      });
+      this.$scope.$apply();
+
+      expect(this.view.find('iframe')).not.toHaveAttr('src');
+      expect(this.Notification.errorWithTrackingId).toHaveBeenCalledWith(jasmine.any(Object), 'myCompanyOrders.loadError');
+    });
+  });
+
+  xit('should render ui-grid from gridOptions', function () {
     expect(this.controller.gridOptions).toBeDefined();
     expect(this.view).toContainElement('.ui-grid-header');
   });
 
-  describe('before data loaded', () => {
+  xdescribe('before data loaded', () => {
     it('should have loading icon with no data', function () {
       expect(this.view).not.toContainElement('.ui-grid-row');
       expect(this.view).toContainElement('.grid-refresh .icon-spinner');
     });
   });
 
-  describe('if errors while loading data', () => {
+  xdescribe('if errors while loading data', () => {
     beforeEach(function () {
       this.getOrderDetailsDefer.reject({
         data: undefined,
@@ -67,7 +96,7 @@ describe('Component: myCompanyOrders', () => {
     });
   });
 
-  describe('after data loaded', () => {
+  xdescribe('after data loaded', () => {
     beforeEach(function () {
       this.getOrderDetailsDefer.resolve(this.purchaseOrdersList);
       this.$scope.$apply();

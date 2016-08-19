@@ -3,7 +3,15 @@
 describe('Care admin should be able to', function () {
 
   beforeAll(function () {
-    login.login('contactcenter-admin', '#/careDetails/features');
+    login.login('contactcenter-admin', '#/services/overview');
+  });
+
+  it('see the services page and care card with 2 links', function () {
+    utils.expectIsDisplayed(careLandingPage.careCard);
+    utils.expectIsDisplayed(careLandingPage.careIcon);
+    utils.expectIsDisplayed(careLandingPage.careTitle);
+    utils.expectIsDisplayed(careLandingPage.careFeature);
+    utils.click(careLandingPage.careFeature);
   });
 
 

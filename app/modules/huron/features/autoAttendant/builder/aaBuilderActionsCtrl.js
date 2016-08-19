@@ -17,6 +17,7 @@
       url: 'modules/huron/features/autoAttendant/sayMessage/aaSayMessage.tpl.html',
       hint: $translate.instant('autoAttendant.actionSayMessageHint'),
       help: $translate.instant('autoAttendant.sayMessageHelp') + appendSpecialCharHelp,
+      metric: 'Say-Message-Title',
       showHelpLink: true,
       actions: ['say']
     }, {
@@ -25,6 +26,7 @@
       url: 'modules/huron/features/autoAttendant/phoneMenu/aaPhoneMenu.tpl.html',
       hint: $translate.instant('autoAttendant.actionPhoneMenuHint'),
       help: $translate.instant('autoAttendant.phoneMenuHelp') + appendSpecialCharHelp,
+      metric: 'Phone-Menu-Title',
       showHelpLink: true,
       actions: ['runActionsOnInput']
     }, {
@@ -33,6 +35,7 @@
       url: 'modules/huron/features/autoAttendant/dialByExt/aaDialByExt.tpl.html',
       hint: $translate.instant('autoAttendant.actionDialByExtensionHint'),
       help: $translate.instant('autoAttendant.actionDialByExtensionHelp'),
+      metric: 'Dial-By-Extension-Title',
       showHelpLink: false,
       type: 2, // to flag that this is not phonemenu, see setOption
       actions: ['runActionsOnInput']
@@ -42,6 +45,7 @@
       url: 'modules/huron/features/autoAttendant/routeCall/aaRouteCallMenu.tpl.html',
       hint: $translate.instant('autoAttendant.actionRouteCallHint'),
       help: $translate.instant('autoAttendant.routeCallMenuHelp'),
+      metric: 'Route-Call-Title',
       showHelpLink: false,
       actions: ['route', 'goto', 'routeToUser', 'routeToVoiceMail', 'routeToHuntGroup']
     }];
