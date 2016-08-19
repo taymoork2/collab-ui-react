@@ -55,7 +55,6 @@ require('query-command-supported/dist/queryCommandSupported.js');
 require('ical.js/build/ical.js');
 require('angular-ical/dist/js/angular-ical.js');
 require('oclazyload');
-
 function requireAll(requireContext) {
   return requireContext.keys().forEach(requireContext);
 }
