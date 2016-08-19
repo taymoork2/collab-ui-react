@@ -125,7 +125,7 @@
       text: $translate.instant('careChatTpl.typeCustom'),
       dictionaryType: {
         fieldSet: 'cisco.base.ccc.pod',
-        fieldName: 'custom'
+        fieldName: 'cccCustom'
       }
     }];
 
@@ -321,6 +321,9 @@
         }
       }
     };
+
+    vm.singleLineValidationMessage = CTService.getValidationMessages(0, vm.lengthConstants.singleLineMaxCharLimit);
+    vm.multiLineValidationMessage = CTService.getValidationMessages(0, vm.lengthConstants.multiLineMaxCharLimit);
 
     vm.overview = {
       customerInformation: 'circle-user',

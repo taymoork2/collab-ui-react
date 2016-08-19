@@ -64,7 +64,6 @@
       flagMsg: 'flag-msg',
       geoHintEnabled: 'geo-hint-enabled',
       huronAACallQueue: 'huronAACallQueue',
-      huronAATimeZone: 'huron-aa-timezone',
       huronMultipleCalls: 'huron-multiple-calls',
       huronClassOfService: 'COS',
       huronInternationalDialingTrialOverride: 'huronInternationalDialingTrialOverride',

@@ -3,7 +3,7 @@
          class="form-control ct-input"
          placeholder="{{:: 'careChatTpl.namePlaceholder' | translate}}"
          ng-model="careChatSA.template.name"
-         onchange="careChatSA.isNamePageValid()"
+         ng-change="careChatSA.isNamePageValid()"
          focus-on>
   <p ng-class="careChatSA.validateNameLength() ? 'ct-input-hint ct-input-valid-border' : 'ct-input-hint ct-input-invalid-border'"
      translate="careChatTpl.nameHint"></p>

@@ -21,7 +21,8 @@
       getDefaultTimeZone: getDefaultTimeZone,
       generateCodeSnippet: generateCodeSnippet,
       openEmbedCodeModal: openEmbedCodeModal,
-      getLengthValidationConstants: getLengthValidationConstants
+      getLengthValidationConstants: getLengthValidationConstants,
+      getValidationMessages: getValidationMessages
     };
     return service;
 
@@ -204,6 +205,18 @@
           }
         }
       });
+    }
+
+    function getValidationMessages(minLength, maxLength) {
+      return {
+        required: $translate.instant('common.invalidRequired'),
+        minlength: $translate.instant('common.invalidMinLength', {
+          'min': minLength
+        }),
+        maxlength: $translate.instant('common.invalidMaxLength', {
+          'max': maxLength
+        })
+      };
     }
   }
 })();
