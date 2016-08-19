@@ -6,7 +6,7 @@
     .controller('UserOverviewCtrl', UserOverviewCtrl);
 
   /* @ngInject */
-  function UserOverviewCtrl($log, $http, $scope, $state, $stateParams, $translate, $resource, $window, Authinfo, FeatureToggleService, Notification, SunlightConfigService, UrlConfig, Userservice, Utils, WebExUtilsFact) {
+  function UserOverviewCtrl($http, $scope, $state, $stateParams, $translate, $resource, $window, Authinfo, FeatureToggleService, Notification, SunlightConfigService, UrlConfig, Userservice, Utils, WebExUtilsFact) {
     var vm = this;
     vm.currentUser = $stateParams.currentUser;
     vm.entitlements = $stateParams.entitlements;
@@ -41,10 +41,6 @@
 
       vm.currentUser.trainSiteNames = (0 < ciTrainSiteNames.length) ? ciTrainSiteNames : null;
     }
-
-    $log.log("UserOverviewCtrl():" + "\n" + "userName=" + vm.currentUser.userName);
-    $log.log("UserOverviewCtrl():" + "\n" + "trainSiteNames=" + JSON.stringify(vm.currentUser.trainSiteNames));
-    $log.log("UserOverviewCtrl():" + "\n" + "ciTrainSiteNames=" + JSON.stringify(ciTrainSiteNames));
 
     var msgState = {
       name: $translate.instant('onboardModal.message'),
