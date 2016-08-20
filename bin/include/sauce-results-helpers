@@ -4,32 +4,32 @@ if [ -z "${WX2_ADMIN_WEB_CLIENT_HOME}" ]; then
 fi
 
 # keep around scratch files when processing sauce labs results
-cache_subdir=.cache
-e2e_fail_retry_dir=${WX2_ADMIN_WEB_CLIENT_HOME}/${cache_subdir}
-e2e_sauce_logs_file=${WX2_ADMIN_WEB_CLIENT_HOME}/${cache_subdir}/e2e-sauce-logs
-sauce_results_workspace_dir=${WX2_ADMIN_WEB_CLIENT_HOME}/${cache_subdir}/sauce-results-workspace
+cache_subdir=".cache"
+e2e_fail_retry_dir="${WX2_ADMIN_WEB_CLIENT_HOME}/${cache_subdir}"
+e2e_sauce_logs_file="${WX2_ADMIN_WEB_CLIENT_HOME}/${cache_subdir}/e2e-sauce-logs"
+sauce_results_workspace_dir="${WX2_ADMIN_WEB_CLIENT_HOME}/${cache_subdir}/sauce-results-workspace"
 e2e_fail_retry_prefix="e2e-fail-retry-run-"
-rm -rf ${sauce_results_workspace_dir}
-mkdir -p ${sauce_results_workspace_dir}
-test_results_file=${sauce_results_workspace_dir}/test-results
-test_ids_and_urls=${sauce_results_workspace_dir}/test-ids-and-urls
-test_summary_file=${sauce_results_workspace_dir}/test-summary
-test_report_body_file=${sauce_results_workspace_dir}/test-report-body
-test_report_file=${sauce_results_workspace_dir}/test-report
+rm -rf "$sauce_results_workspace_dir"
+mkdir -p "$sauce_results_workspace_dir"
+test_results_file="${sauce_results_workspace_dir}/test-results"
+test_ids_and_urls="${sauce_results_workspace_dir}/test-ids-and-urls"
+test_summary_file="${sauce_results_workspace_dir}/test-summary"
+test_report_body_file="${sauce_results_workspace_dir}/test-report-body"
+test_report_file="${sauce_results_workspace_dir}/test-report"
 
 # compatibility shim for osx - we need 'sort -V ...'
-SORT_CMD=sort
-if [ `$SORT_CMD --help | grep -- -V | wc -l` -eq 0 ]; then
-    SORT_CMD=gsort
-    if [ `which $SORT_CMD | wc -l` -eq 0 ]; then
+SORT_CMD="sort"
+if [ "$("$SORT_CMD" --help | grep -c -- '-V')" -eq 0 ]; then
+    SORT_CMD="gsort"
+    if [ "$(which "$SORT_CMD" | wc -l)" -eq 0 ]; then
         >&2 echo "Error: need \`sort\` with \`-V\` option support. On OSX, this can be installed via \`brew install coreutils\`."
     fi
 fi
 
 SED_CMD=sed
-if [ "`uname`" = "Darwin" ]; then
+if [ "$(uname)" = "Darwin" ]; then
     SED_CMD=gsed
-    if [ `which $SED_CMD | wc -l` -eq 0 ]; then
+    if [ "$(which "$SED_CMD" | wc -l)" -eq 0 ]; then
         >&2 echo "Error: need \`sed\` with enhanced extended regex support. On OSX, this can be installed via \`brew install gnu-sed\`."
     fi
 fi
@@ -62,18 +62,19 @@ function grep_for_test_id {
 
 function grep_for_spec_file_for_test_id {
     local test_id=${1}
-    if [ -z "${test_id}" ]; then
+    if [ -z "$test_id" ]; then
       >&2 echo "Error: no test_id passed to grep_for_spec_file_for_test_id"
       return 1
     fi
-    grep_for_test_id ${test_id} | grep Specs:
+    grep_for_test_id "$test_id" | grep Specs:
 }
 
 function grep_for_test_id_result_from_file {
     local test_id=${1}
     local test_result_file=${2}
-    local test_result="$(cat "$test_result_file" | grep_for_test_id "$test_id")"
-    test_result="${test_result:-"result: N/A"}"
+    local test_result
+    test_result="$(grep_for_test_id "$test_id" < "$test_result_file")"
+    test_result="${test_result:-"(N/A)"}"
     echo "$test_result"
 }
 
@@ -98,7 +99,7 @@ function trim_out_launcher_prefix {
 }
 
 function prepend_lines_with {
-    local prefix="${1}"
+    local prefix="$1"
     local delim="${2:-" "}"
     ${SED_CMD} -E "s/(.*)/${prefix}${delim}\\1/"
 }
@@ -109,24 +110,28 @@ function get_sauce_property {
     if [ -z "${sauce_property}" ]; then
       >&2 echo "Error: no sauce_property passed to get_sauce_property"
       return 1
-    elif [ ! -r ${sauce_config_file} ]; then
+    elif [ ! -r "$sauce_config_file" ]; then
       >&2 echo "Error: sauce_config_file not found: ${sauce_config_file}"
       return 1
     fi
-    . $sauce_config_file
+    . "$sauce_config_file"
     echo "${!sauce_property}"
 }
 
 function md5_hmac {
-    local sauce_username=`get_sauce_property SAUCE_USERNAME`
-    local sauce_access_key=`get_sauce_property SAUCE_ACCESS_KEY`
+    local sauce_username
+    local sauce_access_key
+    sauce_username="$(get_sauce_property SAUCE_USERNAME)"
+    sauce_access_key="$(get_sauce_property SAUCE_ACCESS_KEY)"
     openssl md5 -hmac "${sauce_username}:${sauce_access_key}" | ${SED_CMD} -e 's/^.* //'
 }
 
 function mk_proper_sauce_link {
-    local url=${1}
-    local sauce_id=`echo ${url} | cut_sauce_job_id`
-    local sauce_access_code="`echo -n ${sauce_id} | md5_hmac`"
+    local url="$1"
+    local sauce_id
+    local sauce_access_code
+    sauce_id="$(echo "$url" | cut_sauce_job_id)"
+    sauce_access_code="$(echo -n "$sauce_id" | md5_hmac)"
     echo "${url}?auth=${sauce_access_code}"
 }
 
@@ -136,30 +141,30 @@ function get_retry_file_for_run {
 }
 
 function get_previous_run_num {
-    local run_num=${1:-0}
+    local run_num="${1:-0}"
     let "run_num = run_num - 1"
     echo $run_num
 }
 
 function cat_last_retry_file_for_run {
-    local run_num=${1}
+    local run_num="$1"
     # early out if run is first run (ie. run 0), no retry files will be available
-    if [ $run_num -eq 0 ]; then
+    if [ "$run_num" -eq 0 ]; then
         return 1
     fi
-    last_run_num=$(get_previous_run_num $run_num)
-    last_retry_file=$(get_retry_file_for_run $last_run_num)
+    last_run_num=$(get_previous_run_num "$run_num")
+    last_retry_file=$(get_retry_file_for_run "$last_run_num")
     cat "$last_retry_file"
 }
 
 function is_last_run_only_a_single {
-    run_num=${1}
+    local run_num="$1"
     # early out if run is first run (ie. run 0), no retry files will be available
-    if [ $run_num -eq 0 ]; then
+    if [ "$run_num" -eq 0 ]; then
         return 1
     fi
-    line_count=$(cat_last_retry_file_for_run $run_num | wc -l | awk '{print $1;}')
-    [ $line_count -eq 1 ]
+    line_count=$(cat_last_retry_file_for_run "$run_num" | wc -l | awk '{print $1;}')
+    [ "$line_count" -eq 1 ]
     return $?
 }
 
@@ -196,9 +201,9 @@ function transform_to_proper_urls {
     local url
     local prefix
     while read line; do
-      prefix="`echo $line | cut_everything_but_url`"
-      url="`echo $line | cut_url`"
-      url="`mk_proper_sauce_link ${url}`"
+      prefix="$(echo "$line" | cut_everything_but_url)"
+      url="$(echo "$line" | cut_url)"
+      url="$(mk_proper_sauce_link "$url")"
       echo "$prefix $url"
     done
 }
@@ -217,11 +222,12 @@ function mk_test_report {
         >&2 echo "Error: invalid input_file \"$input_file\" in mk_test_report"
         return 1
     fi
-    local last_run_num="$(get_last_run_from_file "${input_file}")"
-    last_run_num="${last_run_num:-E2E_RUN_COUNTER_MAX}"
+    local last_run_num
+    last_run_num="$(get_last_run_from_file "${input_file}")"
+    last_run_num="${last_run_num:-${E2E_RUN_COUNTER_MAX}}"
     local run_test_report_file="${test_report_file}-${run_num}"
-    for run_num in $(seq 0 $last_run_num); do
-        mk_test_report_for_run $run_num "$input_file" > "$run_test_report_file"
+    for run_num in $(seq 0 "$last_run_num"); do
+        mk_test_report_for_run "$run_num" "$input_file" > "$run_test_report_file"
         if [ -s "$run_test_report_file" ]; then
             echo "#### Summary: run: $run_num"
             cat "$run_test_report_file"
@@ -230,7 +236,7 @@ function mk_test_report {
 }
 
 function mk_test_report_for_run {
-    local run_num="${1}"
+    local run_num="$1"
     local input_file="${2:-${e2e_sauce_logs_file}}"
     if [ -z "${input_file}" ]; then
         >&2 echo "Error: no input_file available to mk_test_report"
@@ -244,8 +250,9 @@ function mk_test_report_for_run {
     local run_test_report_file="${test_report_file}-${run_num}"
 
     # grep log lines only for current run
-    cut_lines_for_run_from_file "$run_num" "$input_file" > $run_log_file
+    cut_lines_for_run_from_file "$run_num" "$input_file" > "$run_log_file"
 
+    # shellcheck disable=SC2002
     # run this block in a subshell to suppress the process-background-ing notifications
     (
         cat "$run_log_file" | filter_out_test_results > "$run_test_results_file" &
@@ -269,10 +276,10 @@ function mk_test_report_for_run {
 }
 
 function mk_test_report_body_for_run {
-    local run_num="${1}"
-    local run_test_results_file="${2}"
-    local run_test_ids_and_urls_file="${3}"
-    local run_log_file="${4}"
+    local run_num="$1"
+    local run_test_results_file="$2"
+    local run_test_ids_and_urls_file="$3"
+    local run_log_file="$4"
     if [ -z "${run_num}" ]; then
         >&2 echo "Error: no run_num passed to mk_test_report_body_for_run"
         return 1
@@ -295,17 +302,18 @@ function mk_test_report_body_for_run {
 
     # use the 'ids and urls' file (because the 'results' file isn't guaranteed to be populated)
     while read line; do
-        test_id="$(echo $line | awk '{print $1;}')"
-        url="$(echo $line | awk '{print $2;}')"
+        test_id="$(echo "$line" | awk '{print $1;}')"
+        url="$(echo "$line" | awk '{print $2;}')"
         test_id_result="$(grep_for_test_id_result_from_file "$test_id" "$run_test_results_file")"
 
         # when retry file only contained a single test, get spec file name from it
-        if is_last_run_only_a_single $run_num; then
-            spec_file="$(cat_last_retry_file_for_run $run_num)"
+        if is_last_run_only_a_single "$run_num"; then
+            spec_file="$(cat_last_retry_file_for_run "$run_num")"
         else
-            spec_file="$(cat $run_log_file | grep_for_spec_file_for_test_id $test_id)"
+            spec_file="$(grep_for_spec_file_for_test_id "$test_id" < "$run_log_file")"
         fi
         spec_file="$(echo "$spec_file" | trim_out_spec_prefix)"
+        spec_file="${spec_file:-"(N/A)"}"
 
         echo "$test_id | $test_id_result | $spec_file | $url"
     done < "$run_test_ids_and_urls_file"
@@ -320,7 +328,7 @@ function get_marker_end_regex_for_run {
 }
 
 function get_last_run_from_file {
-    local input_file="${1}"
+    local input_file="$1"
     if [ -z "${input_file}" ]; then
         >&2 echo "Error: no input_file passed to populate_if_empty"
         return 1
@@ -333,23 +341,25 @@ function get_last_run_from_file {
 }
 
 function cut_lines_between_markers_from_file {
-    local marker1="${1}"
-    local marker2="${2}"
-    local input_file="${3}"
+    local marker1="$1"
+    local marker2="$2"
+    local input_file="$3"
     sed -n -e "/${marker1}/,/${marker2}/ p" "$input_file"
 }
 
 function cut_lines_for_run_from_file {
     local run_num=$1
     local input_file=$2
-    local marker1="$(get_marker_start_regex_for_run "$run_num")"
-    local marker2="$(get_marker_end_regex_for_run "$run_num")"
+    local marker1
+    local marker2
+    marker1="$(get_marker_start_regex_for_run "$run_num")"
+    marker2="$(get_marker_end_regex_for_run "$run_num")"
     cut_lines_between_markers_from_file "${marker1}" "${marker2}" "${input_file}"
 }
 
 function populate_if_empty {
-    local input_file="${1}"
-    local default_msg="${2}"
+    local input_file="$1"
+    local default_msg="$2"
     if [ -z "${input_file}" ]; then
         >&2 echo "Error: no input_file passed to populate_if_empty"
         return 1
