@@ -52,3 +52,26 @@ function tr_result_line_to_list_items {
         echo "- see: $url"
     done
 }
+
+function print_key_val_to_json {
+    local key="$1"
+    local val="$2"
+    printf '{ "%s": "%s" }\n' "$key" "$val"
+}
+
+function add_key_val_to_json {
+    local key="$1"
+    local val="$2"
+    local current_json
+    local js_cmd
+    current_json="$(cat)"
+    js_cmd="$(printf "var o = %s; o['%s'] = '%s'; console.log(JSON.stringify(o));" "$current_json" "$key" "$val")"
+    node -e "$js_cmd"
+}
+
+function markdown_file_to_json {
+    local input_file="$1"
+    local markdown_stringified
+    markdown_stringified="$(concat_lines < "$input_file")"
+    print_key_val_to_json "markdown" "$markdown_stringified"
+}
