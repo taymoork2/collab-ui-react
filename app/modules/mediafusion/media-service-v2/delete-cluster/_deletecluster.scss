@@ -1,10 +1,19 @@
 .deleteClusterTableRow {
   border-top: 0;
   display: flex;
-  td {
+  td[disabled] {
     width: 40%;
     padding-left: 0rem;
+    color: #AEAEAF;
   }
+  td{
+    width: 40%;
+    padding-left: 0rem;
+  }  
+}
+.deleteClusterTableRow .alert {
+      margin-right: 0px;
+      margin-left: 0px;
 }
 
 .deleteClusterTableHeaderRow {
@@ -38,4 +47,9 @@
 .selectTheDest {
   color: #AEAEAF;
   font-style: italic;
+}
+
+.deleteClusterTableRow .select-list .msg-container {
+    position: inherit;
+    width: 100%;
 }
