@@ -243,7 +243,6 @@ describe('Care admin should be able to', function () {
   function validateContentsOfSummaryPage(successMessage) {
     utils.expectTextToBeSet(careChatTemplateSetupPage.summaryDesc, 'You have configured the chat template. Click Finish to save the configuration and generate embed code so you can start using this chat template on your organization website.');
     utils.click(careChatTemplateSetupPage.chatSetupFinishBtn);
-    //notifications.assertSuccess(careChatTemplateSetupPage.randomChatTemplateName + ' Chat Template has been created successfully');
     notifications.assertSuccess(successMessage);
   }
 
