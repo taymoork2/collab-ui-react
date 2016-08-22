@@ -57,7 +57,6 @@
     vm.unassignedExternalNumbers = [];
     vm.allExternalNumbers = [];
     vm.extensionLengthChanged = false;
-    //TODO: re-enable option '8' once it is an acceptable steering digit
     vm.steeringDigits = [
       '1', '2', '3', '4', '5', '6', '7', '8', '9'
     ];

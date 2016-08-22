@@ -44,7 +44,7 @@
       saveAutoAttendantSite: function (site) {
         return CeSiteService.save({
           customerId: Authinfo.getOrgId()
-        }, site).promise();
+        }, site).$promise;
       },
 
       loadExternalNumberPool: function (pattern) {
