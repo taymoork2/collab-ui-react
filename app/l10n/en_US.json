@@ -1557,7 +1557,7 @@
       "deactivateServicesCalendarHeader": "Deactivate Calendar",
       "deactivateServicesCallHeader": "Deactivate Call",
       "noHybridServicesProvisioned": "No Hybrid Services are enabled on this Expressway. To enable a Hybrid Service, go to the relevant service page.",
-      "deregisterClusterParagraph": "To Remove {{ClusterName}} deactivate the services first.",
+      "deregisterClusterParagraph": "To Remove “{{ClusterName}}”, deactivate the services first.",
       "deregisterClusterExplanation": "Remove this cluster from Cisco Collaboration Cloud. This step removes all connectors and related configuration.",
       "clusterMainSectionHeader": "Cluster",
       "renameClusterParagraph": "Rename the Expressway cluster.",
@@ -3416,10 +3416,11 @@
       "doYouStillWantToContinue": "Do you still want to continue ?",
       "youHostNoAvailable": "Your host will no longer be available in future",
       "clusterSettings": "Cluster Settings",
-      "releaseChannelDesc": "Select a release channel for this cluster and assign a specific group of users to it.",
+      "releaseChannelDesc": "Select a release channel for this cluster.",
       "deletecluster": "Delete Cluster",
-      "deleteclusterDesc": "Delete the cluster from Cisco Collaboration Cloud",
-      "deleteClusterBodyDesc": "If you want to delete this cluster you must first move all nodes in this cluster to another cluster or deregister all the nodes. What would you like to do ?",
+      "deleteclusterHeadding": "Delete Hybrid Media Cluster",
+      "deleteclusterDesc": "Click the Delete Cluster button to launch the Delete Cluster workflow.",
+      "deleteClusterBodyDesc": "Before you can delete this cluster you must either move all nodes to another cluster or deregister all the nodes. What would you like to do?",
       "makeASelection": "Make a selection:",
       "moveallnodes": "Move All Nodes",
       "deregisterallnodes": "Deregister All Nodes",
@@ -3436,7 +3437,8 @@
       "everyDay": "Every Day in",
       "stable": "STABLE",
       "beta": "BETA",
-      "latest": "LATEST"
+      "latest": "LATEST",
+      "errorMsg":"Before you can delete this cluster, you must either move all nodes to another cluster or deregister all nodes."
     },
     "reassign": {
       "reassignHost": "Reassign Host",
