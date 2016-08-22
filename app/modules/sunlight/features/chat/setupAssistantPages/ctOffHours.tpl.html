@@ -7,7 +7,7 @@
     <cs-card-layout >
       <cs-card>
         <div class="h4 card-info" translate="careChatTpl.preview"></div>
-        <article class="offhours-preview">
+        <article class="offhours-preview ct-article">
           <section>
             <div class="offhours-icon">
               <i class="icon icon-clock"></i>
@@ -30,7 +30,7 @@
       </cs-card >
       <cs-card>
         <div class="h4 card-info" translate="careChatTpl.attributes"></div>
-        <article class="off-hours-attributes">
+        <article class="off-hours-attributes ct-article">
           <section>
             <div class="offhours-message">
               <div class="h4 message-label" translate="careChatTpl.offHoursMessage"></div>
@@ -43,9 +43,7 @@
               </textarea>
             </div>
             <div>
-              <div class="h4">
-              	<div class="business-hours-label" translate="careChatTpl.businessHours"></div>
-              </div>
+              <div class="h4" translate="careChatTpl.businessHours"></div>
               <div class="day-picker">
                 <div class="day"
                      ng-repeat=" dayObj in careChatSA.days"

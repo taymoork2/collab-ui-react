@@ -1,5 +1,4 @@
 .ct-feedback {
-  align-items: center;
 
   @mixin placeholder {
     ::-webkit-input-placeholder {
@@ -14,6 +13,11 @@
     :-ms-input-placeholder {
       @content
     }
+  }
+
+  .ct-article {
+    box-shadow: none;
+    border: 1px solid $gray-light-1;
   }
 
   .cs-card {
