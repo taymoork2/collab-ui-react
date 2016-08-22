@@ -1,7 +1,7 @@
 'use strict';
 
 describe('UserListCtrl: Ctrl', function () {
-  var controller, $controller, $scope, $rootScope, $state, $timeout, $q, Userservice, UserListService, Orgservice, Authinfo, Config, Notification, FeatureToggleService;
+  var $controller, $scope, $state, $q, Userservice, UserListService, Orgservice, Authinfo, Config, Notification, FeatureToggleService;
   var photoUsers, currentUser, listUsers, listUsersMore, listAdmins, listAdminsMore, listPartners, getOrgJson;
   var userEmail, userName, uuid, userStatus, dirsyncEnabled, entitlements, telstraUser, failedData;
   photoUsers = getJSONFixture('core/json/users/userlist.controller.json');
@@ -16,9 +16,8 @@ describe('UserListCtrl: Ctrl', function () {
   beforeEach(angular.mock.module('Huron'));
   beforeEach(angular.mock.module('Sunlight'));
 
-  beforeEach(inject(function ($rootScope, _$state_, _$controller_, _$timeout_, _$q_, _Userservice_, _UserListService_, _Orgservice_, _Authinfo_, _Config_, _Notification_, _FeatureToggleService_) {
+  beforeEach(inject(function ($rootScope, _$state_, _$controller_, _$q_, _Userservice_, _UserListService_, _Orgservice_, _Authinfo_, _Config_, _Notification_, _FeatureToggleService_) {
     $scope = $rootScope.$new();
-    $timeout = _$timeout_;
     $state = _$state_;
     $controller = _$controller_;
     $q = _$q_;
@@ -62,7 +61,7 @@ describe('UserListCtrl: Ctrl', function () {
       callback(_.extend(listPartners, successData), 200);
     });
     spyOn(UserListService, 'getUserCount').and.returnValue($q.when(100));
-    spyOn(Orgservice, 'getOrg').and.callFake(function (callback, oid, disableCache) {
+    spyOn(Orgservice, 'getOrg').and.callFake(function (callback) {
       callback(getOrgJson, 200);
     });
     spyOn(Authinfo, 'isCSB').and.returnValue(true);
@@ -72,11 +71,11 @@ describe('UserListCtrl: Ctrl', function () {
     spyOn(FeatureToggleService, 'supportsDirSync').and.returnValue($q.when(false));
     spyOn(FeatureToggleService, 'atlasCsvEnhancementGetStatus').and.returnValue($q.when(false));
     spyOn(FeatureToggleService, 'atlasEmailStatusGetStatus').and.returnValue($q.when(false));
-
+    spyOn(FeatureToggleService, 'atlasUserPendingStatusGetStatus').and.returnValue($q.when(true));
   }));
 
   function initController() {
-    controller = $controller('UserListCtrl', {
+    $controller('UserListCtrl', {
       $scope: $scope,
       $state: $state,
       Userservice: Userservice,
@@ -211,7 +210,7 @@ describe('UserListCtrl: Ctrl', function () {
       });
     });
     it('should emit csv-download-request with tooManyUsers when there are too many users in the org', function () {
-      $scope.totalUsers = $scope.USER_EXPORT_THRESHOLD + 1;
+      $scope.totalUsers = $scope.userExportThreshold + 1;
       $scope.startExportUserList();
       $scope.$apply();
       expect($scope.$emit).toHaveBeenCalledWith("csv-download-request", {
@@ -221,20 +220,41 @@ describe('UserListCtrl: Ctrl', function () {
     });
   });
 
+  describe('getUserList sort event', function () {
+    beforeEach(initController);
+
+    it('should getUserList with sort parameters', function () {
+      UserListService.listUsers.calls.reset();
+
+      var sortColumns = [{
+        'colDef': {
+          'id': 'displayName'
+        },
+        'sort': {
+          'direction': 'asc'
+        }
+      }];
+
+      $scope.sortDirection($scope, sortColumns);
+      expect(UserListService.listUsers.calls.count()).toEqual(2);
+      expect(UserListService.listUsers.calls.mostRecent().args[0]).toEqual(0, 100, 'displayName', 'ascending', Function, '');
+    });
+  });
+
   describe('getUserCount() returns NaN', function () {
     beforeEach(function () {
-      UserListService.listUsers.and.callFake(function (startIndex, count, sortBy, sortOrder, callback, searchStr, getAdmins) {
+      UserListService.listUsers.and.callFake(function (startIndex, count, sortBy, sortOrder, callback, searchStr) {
         callback(failedData, 200, searchStr);
       });
       UserListService.getUserCount.and.returnValue($q.when(NaN));
       initController();
     });
 
-    it('should set user count to USER_EXPORT_THRESHOLD + 1', function () {
+    it('should set user count to userExportThreshold + 1', function () {
       // $scope.obtainedTotalUserCount = false;
       $scope.getUserList(); // 0 index
       expect($scope.obtainedTotalUserCount).toEqual(true);
-      expect($scope.totalUsers).toEqual($scope.USER_EXPORT_THRESHOLD + 1);
+      expect($scope.totalUsers).toEqual($scope.userExportThreshold + 1);
     });
   });
 });

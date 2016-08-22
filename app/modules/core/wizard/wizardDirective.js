@@ -281,12 +281,12 @@
       var subTabControllerAs = _.isUndefined(getSubTab()) ? undefined : getSubTab().controllerAs;
       if (getTab().name === 'serviceSetup' && getStep().name === 'init' && vm.firstTimeSetup) {
         return ModalService.open({
-            title: $translate.instant('common.warning'),
-            message: $translate.instant('serviceSetupModal.saveCallSettingsExtensionLengthAllowed'),
-            close: $translate.instant('common.continue'),
-            dismiss: $translate.instant('common.cancel'),
-            type: 'negative'
-          })
+          title: $translate.instant('common.warning'),
+          message: $translate.instant('serviceSetupModal.saveCallSettingsExtensionLengthAllowed'),
+          close: $translate.instant('common.continue'),
+          dismiss: $translate.instant('common.cancel'),
+          type: 'negative'
+        })
           .result.then(function () {
             executeNextStep(subTabControllerAs);
           });

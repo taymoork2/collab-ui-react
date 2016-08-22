@@ -7,7 +7,7 @@
 
   /* @ngInject */
   function aaKeypress(Notification) {
-    return function (scope, element, attrs) {
+    return function (scope, element) {
       var charsNotAllowed = [{
         'keyCode': 60,
         char: '<'

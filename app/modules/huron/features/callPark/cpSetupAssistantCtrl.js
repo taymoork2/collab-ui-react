@@ -8,12 +8,13 @@
     .controller('CallParkSetupAssistantCtrl', CallParkSetupAssistantCtrl);
 
   /* @ngInject */
-  function CallParkSetupAssistantCtrl($window, $q, $state, $modal, $timeout, $translate,
+  function CallParkSetupAssistantCtrl($scope, $window, $q, $state, $modal, $timeout, $translate,
     Authinfo, Notification, CallParkService, CallParkMemberDataService) {
     var vm = this;
     var customerId = Authinfo.getOrgId();
 
     // Setup assistant controller functions
+    vm.callback = callback;
     vm.nextPage = nextPage;
     vm.previousPage = previousPage;
     vm.nextButton = nextButton;
@@ -61,6 +62,7 @@
 
     function init() {
       CallParkMemberDataService.reset();
+      initializeFields();
     }
 
     function fetchNumbers(typedNumber) {
@@ -98,7 +100,7 @@
           return vm.callParkName !== '';
         },
         1: function () {
-          return vm.selectedSingleNumber !== '';
+          return !_.get(vm, 'form.$invalid', true) && !areOptionsInvalid();
         },
         2: function () {
           if (vm.selectedMembers.length !== 0) {
@@ -115,6 +117,30 @@
       };
 
       return buttonStates[$index]() || buttonStates['default']();
+    }
+
+    function areOptionsInvalid() {
+      var valid = false;
+      var input;
+      angular.forEach(vm.cpNumberOptions, function (option) {
+        input = option.inputs[option.currentInput];
+        switch (input.type) {
+          case 'range': valid = (isStringValid(input.range_1, 'value', "") === "" || isStringValid(input.range_2, 'value', "") === "") || valid;
+            break;
+          case 'number': valid = (isStringValid(input, 'value', "") === "") || valid;
+            break;
+          case 'input': valid = (isStringValid(input, 'value', "") === "") || valid;
+            break;
+          case 'text': break;
+        }
+      });
+
+      return valid;
+    }
+
+    function isStringValid(obj, prop, def) {
+      var str = _.get(obj, prop, def);
+      return str ? String(str).trim() : "";
     }
 
     function previousButton($index) {
@@ -165,33 +191,47 @@
 
     function evalKeyPress($keyCode) {
       switch ($keyCode) {
-      case 27:
+        case 27:
         //escape key
-        cancelModal();
-        break;
-      case 39:
+          cancelModal();
+          break;
+        case 39:
         //right arrow
-        if (nextButton(getPageIndex()) === true) {
-          nextPage();
-        }
-        break;
-      case 37:
+          if (nextButton(getPageIndex()) === true) {
+            nextPage();
+          }
+          break;
+        case 37:
         //left arrow
-        if (previousButton(getPageIndex()) === true) {
-          previousPage();
-        }
-        break;
-      default:
-        break;
+          if (previousButton(getPageIndex()) === true) {
+            previousPage();
+          }
+          break;
+        default:
+          break;
       }
     }
 
     function enterNextPage($keyCode) {
       if ($keyCode === 13 && nextButton(getPageIndex()) === true) {
-        if (vm.selectedNumber === undefined || vm.userSelected === undefined || vm.callParkName !== '') {
-          nextPage();
+        switch (getPageIndex()) {
+          case 0 :
+            if (vm.callParkName !== '') {
+              nextPage();
+            }
+            break;
+          case 1 :
+            if (!_.get(vm, 'form.$invalid', true) && !areOptionsInvalid()) {
+              nextPage();
+            }
+            break;
+          default : return false;
         }
       }
+    }
+
+    function callback() {
+      vm.form.$setDirty();
     }
 
     /////////////////////////////////////////////////////////
@@ -209,6 +249,12 @@
 
     function fetchMembers(nameHint) {
       return $q.when(CallParkMemberDataService.fetchCallParkMembers(nameHint)).then(function (members) {
+        angular.forEach(members, function (member) {
+          member.user.primaryNumber = _.find(member.user.numbers, {
+            'primary': true
+          });
+        });
+
         if (CallParkService.suggestionsNeeded(nameHint)) {
           vm.errorMemberInput = (members && members.length === 0);
         } else {
@@ -247,7 +293,7 @@
 
       populateMembers(data);
 
-      CallParkService.saveCallPark(customerId, data).then(function (data) {
+      CallParkService.saveCallPark(customerId, data).then(function () {
         vm.saveProgress = false;
         Notification.success('callPark.successSave', {
           callParkName: vm.callParkName
@@ -285,16 +331,67 @@
       var domElement = _.get(element, '[0]');
       if (domElement) {
         switch (method) {
-        case 'add':
-          domElement.classList.add(appliedClass);
-          break;
-        case 'remove':
-          domElement.classList.remove(appliedClass);
-          break;
-        case 'default':
-          return true;
+          case 'add':
+            domElement.classList.add(appliedClass);
+            break;
+          case 'remove':
+            domElement.classList.remove(appliedClass);
+            break;
+          case 'default':
+            return true;
         }
       }
+    }
+
+    function getExtensionLength(option) {
+      var currentInput = _.get(vm.cpNumberOptions, '[0].currentInput', false);
+      return currentInput === option ? 4 : null;
+    }
+
+    function initializeFields() {
+      vm.cpNumberOptions = [{
+        key: 'cp-number',
+        currentInput: 0,
+        inputs: [{
+          type: 'range',
+          range_1: {
+            type: 'number',
+            value: '',
+            grid_size: 5,
+            maxlength: getExtensionLength(0),
+            minlength: getExtensionLength(0),
+            placeholder: $translate.instant('callPark.firstRange')
+          },
+          range_2: {
+            type: 'number',
+            value: '',
+            grid_size: 5,
+            maxlength: getExtensionLength(1),
+            minlength: getExtensionLength(1),
+            placeholder: $translate.instant('callPark.secondRange')
+          }
+        }, {
+          type: 'number',
+          value: '',
+          maxlength: getExtensionLength(1),
+          minlength: getExtensionLength(1),
+          placeholder: $translate.instant('callPark.singleRange')
+        }]
+      }];
+
+      $scope.numberOption = vm.cpNumberOptions[0];
+
+      $scope.$watch('numberOption', function () {
+        var newLength = getExtensionLength(vm.cpNumberOptions[0].currentInput);
+        angular.forEach(vm.cpNumberOptions[0].inputs, function (input, index) {
+          var length = index == vm.cpNumberOptions[0].currentInput ? newLength : null;
+          var values = (input.type === 'range') ? [input.range_1, input.range_2] : [input];
+          angular.forEach(values, function (value) {
+            value.minlength = length;
+            value.maxlength = length;
+          });
+        });
+      }, true);
     }
   }
 })();

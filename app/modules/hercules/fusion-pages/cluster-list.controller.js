@@ -14,7 +14,6 @@
 
     var vm = this;
     var clustersCache = [];
-    var activeFilter = 'all';
 
     vm.loading = true;
     vm.backState = 'services-overview';
@@ -50,7 +49,7 @@
     vm.openSettings = openSettings;
     vm.addResource = addResource;
     vm._helpers = {
-      formatTimeAndDate: formatTimeAndDate,
+      formatTimeAndDate: FusionClusterService.formatTimeAndDate,
       hasServices: hasServices
     };
 
@@ -110,7 +109,6 @@
     }
 
     function setFilter(filter) {
-      activeFilter = filter.filterValue || 'all';
       if (filter.filterValue === 'expressway') {
         vm.displayedClusters = _.filter(clustersCache, 'targetType', 'c_mgmt');
       } else if (filter.filterValue === 'mediafusion') {
@@ -155,34 +153,6 @@
           id: id
         });
       }
-    }
-
-    function formatTimeAndDate(upgradeSchedule) {
-      var time = labelForTime(upgradeSchedule.scheduleTime);
-      var day;
-      if (upgradeSchedule.scheduleDays.length === 7) {
-        day = $translate.instant('weekDays.everyDay', {
-          day: $translate.instant('weekDays.day')
-        });
-      } else {
-        day = labelForDay(upgradeSchedule.scheduleDays[0]);
-      }
-      return time + ' ' + day;
-    }
-
-    function labelForTime(time) {
-      var currentLanguage = $translate.use();
-      if (currentLanguage === 'en_US') {
-        return moment(time, 'HH:mm').format('hh:mm A');
-      } else {
-        return time;
-      }
-    }
-
-    function labelForDay(day) {
-      return $translate.instant('weekDays.everyDay', {
-        day: $translate.instant('weekDays.' + day)
-      });
     }
 
     function hasServices(cluster) {

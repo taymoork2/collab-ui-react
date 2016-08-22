@@ -2,10 +2,10 @@
   'use strict';
 
   module.exports = angular.module('core.authinfo', [
-      'pascalprecht.translate',
-      require('modules/core/config/config'),
-      require('modules/core/config/tabConfig'),
-    ])
+    'pascalprecht.translate',
+    require('modules/core/config/config'),
+    require('modules/core/config/tabConfig'),
+  ])
     .service('Authinfo', Authinfo)
     .name;
 
@@ -23,6 +23,7 @@
     var authData = {
       username: null,
       userId: null,
+      userOrgId: null,
       orgName: null,
       orgId: null,
       addUserEnabled: null,
@@ -65,6 +66,7 @@
         authData.username = data.name;
         authData.orgName = data.orgName;
         authData.orgId = data.orgId;
+        authData.userOrgId = data.userOrgId;
         authData.addUserEnabled = data.addUserEnabled;
         authData.entitleUserEnabled = data.entitleUserEnabled;
         authData.managedOrgs = data.managedOrgs;
@@ -160,33 +162,33 @@
               }
 
               switch (license.licenseType) {
-              case 'CONFERENCING':
-                if ((this.isCustomerAdmin() || this.isReadOnlyAdmin()) && license.siteUrl && !_.includes(authData.roles, 'Site_Admin')) {
-                  authData.roles.push('Site_Admin');
-                }
-                service = new ServiceFeature($translate.instant(Config.confMap[license.offerName], {
-                  capacity: license.capacity
-                }), x + 1, 'confRadio', license);
-                if (license.siteUrl) {
-                  confLicensesWithoutSiteUrl.push(service);
-                }
-                confLicenses.push(service);
-                break;
-              case 'MESSAGING':
-                service = new ServiceFeature($translate.instant('onboardModal.paidMsg'), x + 1, 'msgRadio', license);
-                msgLicenses.push(service);
-                break;
-              case 'COMMUNICATION':
-                service = new ServiceFeature($translate.instant('onboardModal.paidComm'), x + 1, 'commRadio', license);
-                commLicenses.push(service);
-                break;
-              case 'CARE':
-                service = new ServiceFeature($translate.instant('onboardModal.paidCare'), x + 1, 'careRadio', license);
-                careLicenses.push(service);
-                break;
-              case 'CMR':
-                service = new ServiceFeature($translate.instant('onboardModal.cmr'), x + 1, 'cmrRadio', license);
-                cmrLicenses.push(service);
+                case 'CONFERENCING':
+                  if ((this.isCustomerAdmin() || this.isReadOnlyAdmin()) && license.siteUrl && !_.includes(authData.roles, 'Site_Admin')) {
+                    authData.roles.push('Site_Admin');
+                  }
+                  service = new ServiceFeature($translate.instant(Config.confMap[license.offerName], {
+                    capacity: license.capacity
+                  }), x + 1, 'confRadio', license);
+                  if (license.siteUrl) {
+                    confLicensesWithoutSiteUrl.push(service);
+                  }
+                  confLicenses.push(service);
+                  break;
+                case 'MESSAGING':
+                  service = new ServiceFeature($translate.instant('onboardModal.paidMsg'), x + 1, 'msgRadio', license);
+                  msgLicenses.push(service);
+                  break;
+                case 'COMMUNICATION':
+                  service = new ServiceFeature($translate.instant('onboardModal.paidComm'), x + 1, 'commRadio', license);
+                  commLicenses.push(service);
+                  break;
+                case 'CARE':
+                  service = new ServiceFeature($translate.instant('onboardModal.paidCare'), x + 1, 'careRadio', license);
+                  careLicenses.push(service);
+                  break;
+                case 'CMR':
+                  service = new ServiceFeature($translate.instant('onboardModal.cmr'), x + 1, 'cmrRadio', license);
+                  cmrLicenses.push(service);
               }
             } //end for
           } //end for
@@ -354,6 +356,9 @@
       },
       isCSB: function () {
         return (_.eq(authData.customerType, 'CSB'));
+      },
+      isCustomerLaunchedFromPartner: function () {
+        return authData.orgId !== authData.userOrgId;
       },
       isDirectCustomer: function () {
         return (_.eq(authData.commerceRelation, 'Direct'));

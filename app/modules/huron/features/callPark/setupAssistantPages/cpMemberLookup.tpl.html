@@ -32,21 +32,13 @@
               <h5 class="ellipsis"
                   title="{{callParkSA.getDisplayName(member.user)}}">
                 {{callParkSA.getDisplayName(member.user)}}</h5>
-            <span cs-dropdown>
               <i class="icon icon-arrow-next icon-lg"></i>
-            </span>
             </div>
           </header>
         </a>
         <section ng-if="(callParkSA.openMemberPanelUuid === member.user.uuid)">
-          <p class="email">{{member.user.email}}</p>
           <fieldset>
-            <cs-radio ng-repeat="number in member.user.numbers"
-                      label="number | callParkMemberTelephone"
-                      value="number"
-                      name="{{member.user.uuid}}"
-                      id="number.uuid"
-                      ng-model="member.selectableNumber"></cs-radio>
+            <p class="primary-number">{{ ::member.user.primaryNumber.internal }}</p>
             <p>
               <a href ng-click="callParkSA.unSelectCallParkMember(member)">{{:: 'callPark.removeMem' | translate}}</a>
             </p>

@@ -41,15 +41,15 @@
       return listCompanyNumbers().then(function (companyNumbers) {
         // Company Number
         companyNumbers.filter(function (companyNumber) {
-            return companyNumber.externalCallerIdType === companyNumber_type;
-          })
+          return companyNumber.externalCallerIdType === companyNumber_type;
+        })
           .forEach(function (companyNumber) {
             callerIdOptions.push(constructCallerIdOption(companyNumber.name, companyNumber_type, '', companyNumber.pattern, companyNumber.uuid));
           });
         // Company Caller ID
         companyNumbers.filter(function (companyNumber) {
-            return companyNumber.externalCallerIdType === companyCallerId_type;
-          })
+          return companyNumber.externalCallerIdType === companyCallerId_type;
+        })
           .forEach(function (companyNumber) { // there should be only one company caller ID record
             callerIdOptions.push(constructCallerIdOption('', companyCallerId_type, companyNumber.name, companyNumber.pattern, companyNumber.uuid));
           });
@@ -78,7 +78,7 @@
 
     function getCallerIdOption(callerIdOptions, callerIdType) {
       var retOption;
-      callerIdOptions.forEach(function (option, index) {
+      callerIdOptions.forEach(function (option) {
         if (option.value.externalCallerIdType === callerIdType) {
           retOption = option;
         }
@@ -171,27 +171,27 @@
       userDnList = [];
       // Get all the lines of the user
       return UserDirectoryNumberService.query({
-          customerId: Authinfo.getOrgId(),
-          userId: userUuid
-        }).$promise.then(function (userDnInfo) {
-          var promises = [];
-          var promise;
-          userDnInfo.forEach(function (userDn) {
-            var userLine = {
-              uuid: userDn.directoryNumber.uuid,
-              pattern: userDn.directoryNumber.pattern,
-              isPrimary: (userDn.dnUsage === 'Primary') ? true : false,
-              userDnUuid: userDn.uuid,
-              hasSharedPrimary: false,
-              sharedUsers: []
-            };
-            userDnList.push(userLine);
+        customerId: Authinfo.getOrgId(),
+        userId: userUuid
+      }).$promise.then(function (userDnInfo) {
+        var promises = [];
+        var promise;
+        userDnInfo.forEach(function (userDn) {
+          var userLine = {
+            uuid: userDn.directoryNumber.uuid,
+            pattern: userDn.directoryNumber.pattern,
+            isPrimary: userDn.dnUsage === 'Primary',
+            userDnUuid: userDn.uuid,
+            hasSharedPrimary: false,
+            sharedUsers: []
+          };
+          userDnList.push(userLine);
 
             // Get all the users of the line to decide if this line is a shared line
-            promise = DirectoryNumberUserService.query({
-                'customerId': Authinfo.getOrgId(),
-                'directoryNumberId': userLine.uuid
-              }).$promise
+          promise = DirectoryNumberUserService.query({
+            'customerId': Authinfo.getOrgId(),
+            'directoryNumberId': userLine.uuid
+          }).$promise
               .then(function (dnUserInfo) {
                 dnUserInfo.forEach(function (dnUser) {
                   this.sharedUsers.push(dnUser.user);
@@ -200,10 +200,10 @@
                   }
                 }.bind(this));
               }.bind(userLine));
-            promises.push(promise);
-          });
-          return $q.all(promises);
-        })
+          promises.push(promise);
+        });
+        return $q.all(promises);
+      })
         .catch(function (response) {
           return $q.reject(response);
         });

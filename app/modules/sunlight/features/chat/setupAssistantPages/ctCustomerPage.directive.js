@@ -10,7 +10,7 @@
     .directive('ctCustomerForm', CustomerForm);
 
   /**
-   * Handles special rendering for selected element. It supports highlighting elements as well as container 
+   * Handles special rendering for selected element. It supports highlighting elements as well as container
    * with the ct-selectable-element and ct-selectable-container css classes resp
    */
   function Selectable() {

@@ -3,12 +3,10 @@ describe('Controller: MediaServiceControllerV2', function () {
   // load the service's module
   beforeEach(angular.mock.module('Mediafusion'));
   beforeEach(angular.mock.module('Huron'));
-  var Authinfo, controller, $scope, httpMock, $q, $modal, $translate, $state;
+  var controller, $scope, httpMock, $q, $modal, $translate;
   var MediaServiceActivationV2, MediaClusterServiceV2, Notification, XhrNotificationService, redirectTargetPromise, FeatureToggleService;
   var mediaAgentOrgIds = ['mediafusion'];
   var serviceId = "squared-fusion-media";
-  var clusterId = "367dd49b-212d-4e7e-ac12-24eb8ee9d504";
-  var connectorName = "MF_Connector";
   var authInfo = {
     getOrgId: sinon.stub().returns('5632f806-ad09-4a26-a0c0-a49a13f38873')
   };
@@ -17,7 +15,6 @@ describe('Controller: MediaServiceControllerV2', function () {
   }));
   beforeEach(inject(function ($rootScope, $state, $controller, _$httpBackend_, _$q_, _$modal_, _$translate_, _MediaServiceActivationV2_, _MediaClusterServiceV2_, _XhrNotificationService_, _Notification_, _FeatureToggleService_) {
     $scope = $rootScope.$new();
-    $state = $state;
     httpMock = _$httpBackend_;
     $q = _$q_;
     $modal = _$modal_;

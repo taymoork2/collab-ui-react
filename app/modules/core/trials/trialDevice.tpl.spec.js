@@ -2,8 +2,8 @@
 
 describe('Template: trialDevice.tpl.spec.js:', function () {
 
-  var $compile, $controller, $httpBackend, $scope, $templateCache, $translate;
-  var controller, view;
+  var $compile, $controller, $httpBackend, $scope, $templateCache;
+  var view;
   var skipBtn, backBtn;
 
   beforeEach(angular.mock.module('Core'));
@@ -15,19 +15,18 @@ describe('Template: trialDevice.tpl.spec.js:', function () {
   beforeEach(compileView);
 
   // TODO - remove $httpBackend when DX80 and MX300 are officially supported
-  function dependencies(_$compile_, _$controller_, _$httpBackend_, _$rootScope_, _$templateCache_, _$translate_) {
+  function dependencies(_$compile_, _$controller_, _$httpBackend_, _$rootScope_, _$templateCache_) {
     $compile = _$compile_;
     $controller = _$controller_;
     $httpBackend = _$httpBackend_;
     $scope = _$rootScope_.$new();
     $templateCache = _$templateCache_;
-    $translate = _$translate_;
   }
 
   function compileView() {
     var template = $templateCache.get('modules/core/trials/trialDevice.tpl.html');
 
-    controller = $controller('TrialDeviceController', {
+    $controller('TrialDeviceController', {
       $scope: $scope
     });
 

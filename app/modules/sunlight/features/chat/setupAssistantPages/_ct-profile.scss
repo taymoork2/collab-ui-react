@@ -1,14 +1,14 @@
 .ct-profile {
-  align-items: center;
   .ct-profile-body {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
     .card-info {
       text-align: center;
       @include vr-spacing(pb, 0.5)
     }
+  }
+
+  .ct-article {
+    box-shadow: none;
+    border: 1px solid $gray-light-1;
   }
 
   .cs-card {
@@ -211,6 +211,7 @@
 
     .ct-display-txt {
       @include vr-spacing(pb, 0.5);
+      padding-top: 0;
     }
   }
 }

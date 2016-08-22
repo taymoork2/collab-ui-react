@@ -7,14 +7,13 @@
 
   /* @ngInject */
   function WebExCsvDownloadService(
-    $log,
     $resource,
     $window,
-    WebExUtilsFact
+    WebExUtilsFact,
+    Log
   ) {
 
     var _this = this;
-    var objectUrl;
 
     this.getWebExCsv = function (
       fileDownloadUrl
@@ -25,20 +24,20 @@
 
       logMsg = funcName + "\n" +
         "fileDownloadUrl=" + fileDownloadUrl;
-      $log.log(logMsg);
+      Log.debug(logMsg);
 
       var webexCsvResource = $resource(fileDownloadUrl, {}, {
         get: {
           method: 'POST',
           // override transformResponse function to return JSON; otherwise, $resource
           // returns string array in the case of CSV file download
-          transformResponse: function (data, headers) {
-              var resultData = {
-                content: data
-              };
+          transformResponse: function (data) {
+            var resultData = {
+              content: data
+            };
 
-              return resultData;
-            } // transformResponse()
+            return resultData;
+          } // transformResponse()
         } // get
       }); // $resource()
 
@@ -56,11 +55,11 @@
       logMsg = funcName + "\n" +
         "data.length=" + data.length + "\n" +
         "fileName=" + fileName;
-      $log.log(logMsg);
+      Log.debug(logMsg);
 
       logMsg = funcName + "\n" +
         "data=" + JSON.stringify(data);
-      $log.log(logMsg);
+      Log.debug(logMsg);
 
       var intBytes = WebExUtilsFact.utf8ToUtf16le(data);
       var newData = new Uint8Array(intBytes);
@@ -68,7 +67,7 @@
 
       logMsg = funcName + "\n" +
         "intBytes=" + intBytes;
-      $log.log(logMsg);
+      Log.debug(logMsg);
 
       // IE download option since IE won't download the created url
       if (_this.isWindowsIE()) {
@@ -95,11 +94,11 @@
       var funcName = "isWindowsIE()";
       var logMsg = "";
 
-      var result = ($window.navigator.msSaveOrOpenBlob) ? true : false;
+      var result = !!$window.navigator.msSaveOrOpenBlob;
 
       logMsg = funcName + "\n" +
         "result=" + result;
-      $log.log(logMsg);
+      Log.debug(logMsg);
 
       return result;
     }; // isWindowsIE()

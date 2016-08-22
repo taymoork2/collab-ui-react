@@ -2,7 +2,7 @@
 
 describe('assignServices', function () {
   var $scope, $state, $previousState, $httpBackend, $q;
-  var view, authinfo, csvDownloadService, hybridService, Orgservice, Userservice, FeatureToggleService, WebExUtilsFact;
+  var view, authinfo, csvDownloadService, hybridService, Orgservice, FeatureToggleService;
 
   var orgid = '1';
 
@@ -36,7 +36,7 @@ describe('assignServices', function () {
 
   beforeEach(inject(function ($compile, $rootScope, $templateCache, _$httpBackend_,
     $controller, _$q_, _$state_, _Authinfo_, _CsvDownloadService_, _HybridService_, _FeatureToggleService_,
-    _Orgservice_, _Userservice_, _$previousState_, _WebExUtilsFact_) {
+    _Orgservice_, _$previousState_) {
 
     $scope = $rootScope.$new();
     $state = _$state_;
@@ -46,14 +46,11 @@ describe('assignServices', function () {
     $previousState = _$previousState_;
 
     Orgservice = _Orgservice_;
-    Userservice = _Userservice_;
     authinfo = _Authinfo_;
     csvDownloadService = _CsvDownloadService_;
     hybridService = _HybridService_;
-    WebExUtilsFact = _WebExUtilsFact_;
     FeatureToggleService = _FeatureToggleService_;
 
-    var getUserMe = getJSONFixture('core/json/users/me.json');
     var headers = getJSONFixture('core/json/users/headers.json');
     var accountData = getJSONFixture('core/json/authInfo/msg_mtg_comm_Licenses.json');
     var getLicensesUsage = getJSONFixture('core/json/organizations/usage.json');
@@ -117,6 +114,17 @@ describe('assignServices', function () {
     });
 
     $httpBackend.whenGET('https://identity.webex.com/identity/scim/1/v1/Users/me').respond(200, {});
+    $httpBackend
+      .whenGET('https://cmi.huron-int.com/api/v1/voice/customers/1/sites')
+      .respond([{
+        "mediaTraversalMode": "TURNOnly",
+        "siteSteeringDigit": "8",
+        "vmCluster": null,
+        "uuid": "70b8d459-7f58-487a-afc8-02c0a82d53ca",
+        "steeringDigit": "9",
+        "timeZone": "America/Los_Angeles",
+        "voicemailPilotNumberGenerated": "false"
+      }]);
 
     $httpBackend
       .when('GET', 'l10n/en_US.json')

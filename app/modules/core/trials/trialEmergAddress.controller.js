@@ -31,7 +31,7 @@
         inputClass: 'medium-11'
       },
       expressionProperties: {
-        'templateOptions.disabled': function ($viewValue, $modelValue, scope) {
+        'templateOptions.disabled': function () {
           return vm.addressFound;
         }
       }
@@ -45,7 +45,7 @@
         label: $translate.instant('trialModal.pstn.unit')
       },
       expressionProperties: {
-        'templateOptions.disabled': function ($viewValue, $modelValue, scope) {
+        'templateOptions.disabled': function () {
           return vm.addressFound;
         }
       }
@@ -60,7 +60,7 @@
         label: $translate.instant('trialModal.pstn.city'),
       },
       expressionProperties: {
-        'templateOptions.disabled': function ($viewValue, $modelValue, scope) {
+        'templateOptions.disabled': function () {
           return vm.addressFound;
         }
       }
@@ -84,7 +84,7 @@
         });
       },
       expressionProperties: {
-        'templateOptions.disabled': function ($viewValue, $modelValue, scope) {
+        'templateOptions.disabled': function () {
           return vm.addressFound;
         }
       }
@@ -100,7 +100,7 @@
         onBlur: validateAddress
       },
       expressionProperties: {
-        'templateOptions.disabled': function ($viewValue, $modelValue, scope) {
+        'templateOptions.disabled': function () {
           return vm.addressFound;
         }
       }
@@ -110,12 +110,12 @@
       vm.addressLoading = true;
       vm.validation = true;
       return PstnServiceAddressService.lookupAddress({
-          streetAddress: vm.trial.details.emergAddr.streetAddress,
-          unit: vm.trial.details.emergAddr.unit,
-          city: vm.trial.details.emergAddr.city,
-          state: vm.trial.details.emergAddr.state.abbreviation,
-          zip: vm.trial.details.emergAddr.zip
-        })
+        streetAddress: vm.trial.details.emergAddr.streetAddress,
+        unit: vm.trial.details.emergAddr.unit,
+        city: vm.trial.details.emergAddr.city,
+        state: vm.trial.details.emergAddr.state.abbreviation,
+        zip: vm.trial.details.emergAddr.zip
+      })
         .then(function (response) {
           if (angular.isDefined(response)) {
             vm.addressFound = true;

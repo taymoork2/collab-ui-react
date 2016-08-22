@@ -8,14 +8,14 @@ webExCommon.testInfo.describeCount = 0;
 
 while (1 >= webExCommon.testInfo.describeCount) {
   switch (webExCommon.testInfo.describeCount) {
-  case 1:
-    webExCommon.testInfo.testType = 'T30';
-    webExCommon.testInfo.describeText = 'WebEx user settings tests for BTS ' + webExCommon.testInfo.testType + ' site ' + webExCommon.BTS3.siteUrl;
-    break;
+    case 1:
+      webExCommon.testInfo.testType = 'T30';
+      webExCommon.testInfo.describeText = 'WebEx user settings tests for BTS ' + webExCommon.testInfo.testType + ' site ' + webExCommon.BTS3.siteUrl;
+      break;
 
-  default:
-    webExCommon.testInfo.testType = 'T31';
-    webExCommon.testInfo.describeText = 'WebEx user settings tests for ' + webExCommon.testInfo.testType + ' site ' + webExCommon.BTS6.siteUrl;
+    default:
+      webExCommon.testInfo.testType = 'T31';
+      webExCommon.testInfo.describeText = 'WebEx user settings tests for ' + webExCommon.testInfo.testType + ' site ' + webExCommon.BTS6.siteUrl;
   }
 
   describe(webExCommon.testInfo.describeText, function () {

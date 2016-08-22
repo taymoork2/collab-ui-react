@@ -179,13 +179,17 @@ describe('Service: DeviceFilter', function () {
 
     it('should search on upgrade channel', function () {
       var arr = [{
-        upgradeChannel: 'xfoox'
+        upgradeChannel: {
+          value: 'xfoox',
+          label: 'xføøx'
+        }
       }, {}];
 
-      DeviceFilter.setCurrentSearch('foo');
+      DeviceFilter.setCurrentSearch('føø');
 
       expect(DeviceFilter.getFilteredList(arr).length).toBe(1);
-      expect(DeviceFilter.getFilteredList(arr)[0].upgradeChannel).toBe('xfoox');
+      expect(DeviceFilter.getFilteredList(arr)[0].upgradeChannel.value).toBe('xfoox');
+      expect(DeviceFilter.getFilteredList(arr)[0].upgradeChannel.label).toBe('xføøx');
     });
 
     it('should search on issue types', function () {

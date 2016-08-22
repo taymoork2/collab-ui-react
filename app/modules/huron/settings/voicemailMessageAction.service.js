@@ -24,9 +24,9 @@
       var userTemplateId = _userTemplateId;
 
       return VoicemailMessageActionService.query({
-          customerId: Authinfo.getOrgId(),
-          userTemplateId: userTemplateId
-        })
+        customerId: Authinfo.getOrgId(),
+        userTemplateId: userTemplateId
+      })
         .$promise
         .then(function (messageActions) {
           if (_.isArray(messageActions) && (messageActions.length > 0)) {

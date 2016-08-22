@@ -43,14 +43,14 @@ module.exports = function (config) {
     coverageReporter: {
       dir: 'test/coverage/',
       reporters: [{
-          type: 'json',
-          subdir: 'json',
-          file: shimFileName + '.json'
-        }, {
-          type: 'text-summary'
-        }, {
-          type: 'html'
-        }
+        type: 'json',
+        subdir: 'json',
+        file: shimFileName + '.json'
+      }, {
+        type: 'text-summary'
+      }, {
+        type: 'html'
+      }
       ]
     },
 

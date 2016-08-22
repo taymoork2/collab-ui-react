@@ -6,7 +6,7 @@
     .controller('TrialPstnCtrl', TrialPstnCtrl);
 
   /* @ngInject */
-  function TrialPstnCtrl($scope, $timeout, $translate, Authinfo, Notification, PstnSetupService, TelephoneNumberService, TerminusStateService, TrialPstnService) {
+  function TrialPstnCtrl($scope, $state, $timeout, $translate, Analytics, Authinfo, Notification, PstnSetupService, TelephoneNumberService, TerminusStateService, TrialPstnService) {
     var vm = this;
 
     vm.trialData = TrialPstnService.getData();
@@ -190,6 +190,7 @@
     }
 
     function skip(skipped) {
+      Analytics.trackTrialSteps(Analytics.eventNames.SKIP, $state.current.name, Authinfo.getOrgId());
       vm.trialData.enabled = !skipped;
       vm.trialData.skipped = skipped;
       $timeout($scope.trial.nextStep);
@@ -199,7 +200,7 @@
       vm.areaCodeOptions = [];
       PstnSetupService.getCarrierInventory(vm.trialData.details.pstnProvider.uuid, vm.trialData.details.pstnNumberInfo.state.abbreviation)
         .then(function (response) {
-          _.forEach(response.areaCodes, function (areaCode, index) {
+          _.forEach(response.areaCodes, function (areaCode) {
             if (areaCode.count >= pstnTokenLimit) {
               vm.areaCodeOptions.push(areaCode);
             }
@@ -234,7 +235,7 @@
       e.attrs.label = TelephoneNumberService.getDIDLabel(tokenNumber);
     }
 
-    function editedToken(e) {
+    function editedToken() {
       $('#didAddField').tokenfield('setTokens', vm.trialData.details.pstnNumberInfo.numbers.toString());
       $('#didfield-tokenfield').attr('placeholder', '');
     }
@@ -302,14 +303,14 @@
     }
 
     function checkForInvalidTokens() {
-      return vm.invalidCount > 0 ? false : true;
+      return vm.invalidCount <= 0;
     }
 
     function _getCarriers(localScope) {
       PstnSetupService.listResellerCarriers().then(function (carriers) {
-          _showCarriers(carriers, localScope);
-        })
-        .catch(function (response) {
+        _showCarriers(carriers, localScope);
+      })
+        .catch(function () {
           PstnSetupService.listDefaultCarriers().then(function (carriers) {
             _showCarriers(carriers, localScope);
           });

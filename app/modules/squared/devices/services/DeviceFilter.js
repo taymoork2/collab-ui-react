@@ -36,29 +36,29 @@
 
       var updateFilters = function (list) {
         _.find(filters, {
-            filterValue: 'codes'
-          }).count = _.chain(list)
+          filterValue: 'codes'
+        }).count = _.chain(list)
           .filter(isActivationCode)
           .filter(matchesSearch)
           .value().length;
 
         _.find(filters, {
-            filterValue: 'issues'
-          }).count = _.chain(list)
+          filterValue: 'issues'
+        }).count = _.chain(list)
           .filter(hasIssues)
           .filter(matchesSearch)
           .value().length;
 
         _.find(filters, {
-            filterValue: 'online'
-          }).count = _.chain(list)
+          filterValue: 'online'
+        }).count = _.chain(list)
           .filter(isOnline)
           .filter(matchesSearch)
           .value().length;
 
         _.find(filters, {
-            filterValue: 'offline'
-          }).count = _.chain(list)
+          filterValue: 'offline'
+        }).count = _.chain(list)
           .filter(isOffline)
           .filter(matchesSearch)
           .value().length;
@@ -112,8 +112,9 @@
           var matchesState = termMatchesState(item.state, term);
           var matchesAnyTag = termMatchesAnyTag(item.tags, term);
           var matchesAnyIssue = termMatchesAnyIssue(item.diagnosticsEvents, term);
+          var matchedAnyUpgradeChannel = termMatchesUpgradeChannel(item.upgradeChannel, term);
           var matchesFormattedMac = (item.mac || '').toLowerCase().replace(/:/g, '').indexOf((term || '')) != -1;
-          return matchesAnyFieldOfItem || matchesState || matchesAnyTag || matchesAnyIssue || matchesFormattedMac;
+          return matchesAnyFieldOfItem || matchesState || matchesAnyTag || matchesAnyIssue || matchedAnyUpgradeChannel || matchesFormattedMac;
         });
       }
 
@@ -133,26 +134,30 @@
         return state && (state.readableState || '').toLowerCase().indexOf(term || '') != -1;
       }
 
+      function termMatchesUpgradeChannel(upgradeChannel, term) {
+        return upgradeChannel && (upgradeChannel.label || '').toLowerCase().indexOf(term || '') != -1;
+      }
+
       function termMatchesAnyFieldOfItem(term, item) {
-        return ['displayName', 'product', 'ip', 'mac', 'serial', 'upgradeChannel'].some(function (field) {
+        return ['displayName', 'product', 'ip', 'mac', 'serial'].some(function (field) {
           return item && (item[field] || '').toLowerCase().indexOf(term || '') != -1;
         });
       }
 
       function matchesFilter(item) {
         switch (currentFilter) {
-        case 'all':
-          return true;
-        case 'codes':
-          return isActivationCode(item);
-        case 'issues':
-          return hasIssues(item);
-        case 'online':
-          return isOnline(item);
-        case 'offline':
-          return isOffline(item);
-        default:
-          return true;
+          case 'all':
+            return true;
+          case 'codes':
+            return isActivationCode(item);
+          case 'issues':
+            return hasIssues(item);
+          case 'online':
+            return isOnline(item);
+          case 'offline':
+            return isOffline(item);
+          default:
+            return true;
         }
       }
 

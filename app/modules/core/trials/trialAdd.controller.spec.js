@@ -1,35 +1,32 @@
 'use strict';
 
 describe('Controller: TrialAddCtrl', function () {
-  var controller, $scope, $q, $translate, $state, $httpBackend, Notification, TrialService, TrialContextService, HuronCustomer, EmailService, FeatureToggleService, TrialPstnService, Orgservice;
+  var controller, $httpBackend, $q, $scope, $state, $translate, EmailService, FeatureToggleService, HuronCustomer, Notification, Orgservice, TrialContextService, TrialPstnService, TrialService;
   var addContextSpy;
   beforeEach(angular.mock.module('core.trial'));
   beforeEach(angular.mock.module('Huron'));
   beforeEach(angular.mock.module('Sunlight'));
   beforeEach(angular.mock.module('Core'));
 
-  beforeEach(inject(function ($rootScope, $controller, _$q_, _$translate_, _$state_, _$httpBackend_, _Notification_, _TrialService_, _TrialContextService_, _HuronCustomer_, _EmailService_, _FeatureToggleService_, _TrialPstnService_, _Orgservice_) {
+  beforeEach(inject(function ($rootScope, $controller, _$httpBackend_, _$q_, _$state_, _$translate_, _EmailService_, _FeatureToggleService_, _HuronCustomer_, _Notification_, _Orgservice_, _TrialContextService_, _TrialPstnService_, _TrialService_) {
     $scope = $rootScope.$new();
-    $q = _$q_;
-    $translate = _$translate_;
-    $state = _$state_;
     $httpBackend = _$httpBackend_;
-    Notification = _Notification_;
-    TrialService = _TrialService_;
-    TrialContextService = _TrialContextService_;
-    HuronCustomer = _HuronCustomer_;
+    $q = _$q_;
+    $state = _$state_;
+    $translate = _$translate_;
     EmailService = _EmailService_;
     FeatureToggleService = _FeatureToggleService_;
-    TrialPstnService = _TrialPstnService_;
+    HuronCustomer = _HuronCustomer_;
+    Notification = _Notification_;
     Orgservice = _Orgservice_;
+    TrialService = _TrialService_;
+    TrialContextService = _TrialContextService_;
+    TrialPstnService = _TrialPstnService_;
 
-    spyOn(Notification, 'notify');
-    spyOn(Notification, 'errorResponse');
     $state.modal = jasmine.createSpyObj('modal', ['close']);
-    spyOn($state, 'go');
-    spyOn(EmailService, 'emailNotifyTrialCustomer').and.returnValue($q.when());
-    spyOn(TrialService, 'getDeviceTrialsLimit');
     addContextSpy = spyOn(TrialContextService, 'addService').and.returnValue($q.when());
+
+    spyOn(EmailService, 'emailNotifyTrialCustomer').and.returnValue($q.when());
     spyOn(FeatureToggleService, 'supports').and.callFake(function (input) {
       if (input === 'atlasTrialsShipDevices') {
         return ($q.when(false));
@@ -37,6 +34,14 @@ describe('Controller: TrialAddCtrl', function () {
         return ($q.when(true));
       }
     });
+
+    spyOn(Notification, 'notify');
+    spyOn(Notification, 'errorResponse');
+    spyOn(Orgservice, 'getOrg').and.callFake(function (callback) {
+      callback(getJSONFixture('core/json/organizations/Orgservice.json').getOrg, 200);
+    });
+    spyOn($state, 'go');
+    spyOn(TrialService, 'getDeviceTrialsLimit');
 
     $httpBackend
       .when('GET', 'https://atlas-integration.wbx2.com/admin/api/v1/organizations/null?disableCache=false')
@@ -46,13 +51,13 @@ describe('Controller: TrialAddCtrl', function () {
       $scope: $scope,
       $translate: $translate,
       $state: $state,
-      TrialService: TrialService,
-      TrialContextService: TrialContextService,
-      HuronCustomer: HuronCustomer,
-      Notification: Notification,
       EmailService: EmailService,
       FeatureToggleService: FeatureToggleService,
-      Orgservice: Orgservice
+      HuronCustomer: HuronCustomer,
+      Notification: Notification,
+      Orgservice: Orgservice,
+      TrialService: TrialService,
+      TrialContextService: TrialContextService,
     });
     $scope.$apply();
   }));
@@ -519,7 +524,6 @@ describe('Controller: TrialAddCtrl', function () {
       },
       targetVal: false
     }];
-    var i = 0;
 
     beforeEach(function () {
       orgInput = controller.custInfoFields[0];

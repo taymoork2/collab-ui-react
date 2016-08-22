@@ -7,141 +7,266 @@
   /* @ngInject */
   function CareReportsService($translate, CareReportsGraphService, chartColors) {
 
-    function setTaskIncomingGraphs(data, categoryAxisTitle, selectedIndex) {
+    var today = true;
 
-      var report = {};
-      report.data = data;
-      report.divId = 'taskIncomingdiv';
-      report.categoryTitle = categoryAxisTitle;
-      report.legendTitles = getLegendTitles(selectedIndex);
-      report.valueFields = getValueFields(selectedIndex);
-      report.colors = getColors(selectedIndex, false);
-      if (selectedIndex == 0) {
-        report.fillColors = [chartColors.colorLightGreenFill, chartColors.colorLightYellowFill, chartColors.stripeColor, chartColors.colorLightRedFill];
-        report.showBalloon = [false, false, false, true];
-        report.balloonText = '<span class="care-graph-text">' + $translate.instant('careReportsPage.abandoned') + ' [[value]]</span><br><span class="care-graph-text">' + $translate.instant('careReportsPage.in-queue') + ' [[numTasksQueuedState]]</span><br><span class="care-graph-text">' + $translate.instant('careReportsPage.assigned') + ' [[numTasksAssignedState]]</span><br><span class="care-graph-text">' + $translate.instant('careReportsPage.handled') + ' [[numTasksHandledState]]</span>';
-      } else {
-        report.fillColors = [chartColors.colorLightGreenFill, chartColors.colorLightRedFill];
-        report.showBalloon = [false, true];
-        report.balloonText = '<span class="care-graph-text">' + $translate.instant('careReportsPage.abandoned') + ' [[value]]</span><br><span class="care-graph-text">' + $translate.instant('careReportsPage.handled') + ' [[numTasksHandledState]]</span>';
-      }
-      report.enableExport = true;
-      report.cursorAlpha = 1;
-      report.fillAlphas = 0.1;
-      createCareReportsGraph(report, selectedIndex, false);
-    }
-
-    function getLegendTitles(selectedIndex) {
-      if (selectedIndex == 0) {
-        return [$translate.instant('careReportsPage.handled'),
-          $translate.instant('careReportsPage.assigned'), $translate.instant('careReportsPage.in-queue'), $translate.instant('careReportsPage.abandoned')
-        ];
-      } else {
-        return [$translate.instant('careReportsPage.handled'), $translate.instant('careReportsPage.abandoned')];
+    function dummifyGraph(chartConfig) {
+      var dummyColors = [chartColors.dummyGrayFillDarker, chartColors.dummyGrayFillDark];
+      if (today) {
+        dummyColors = [chartColors.dummyGrayFillDarker, chartColors.dummyGrayFillDark, chartColors.dummyGrayFillLighter, chartColors.dummyGrayFillLight];
       }
 
+      var dummyGraphs = _.map(chartConfig.graphs, function (graph, i) {
+        return _.assign(graph, {
+          fillAlphas: 1,
+          showBalloon: false,
+          lineColor: dummyColors[i],
+          fillColors: dummyColors[i],
+          pattern: ''
+        });
+      });
+      chartConfig.export.enabled = false;
+      chartConfig.graphs = dummyGraphs;
+      chartConfig.chartCursor.cursorAlpha = 0;
+      return chartConfig;
     }
 
-    function getValueFields(selectedIndex) {
-      if (selectedIndex == 0) {
-        return ['numTasksHandledState', 'numTasksAssignedState', 'numTasksQueuedState', 'numTasksAbandonedState'];
-      } else {
-        return ['numTasksHandledState', 'numTasksAbandonedState'];
-      }
+    function showTaskIncomingGraph(div, data, categoryAxisTitle, isToday) {
+      var chartConfig = getTaskIncomingGraphConfig(data, categoryAxisTitle, isToday);
+      return AmCharts.makeChart(div, chartConfig);
     }
 
-    function getColors(selectedIndex, isDummy) {
-      if (isDummy) {
-        if (selectedIndex == 0) {
-          return [chartColors.grayLight, chartColors.grayLighter, chartColors.dummyGrayLight, chartColors.dummyGrayLighter];
-        }
-        return [chartColors.dummyGrayLight, chartColors.dummyGrayLighter];
-      } else {
-        if (selectedIndex == 0) {
-          return [chartColors.colorLightGreen, chartColors.colorLightYellow, chartColors.colorLightYellow, chartColors.colorLightRed];
-        }
-        return [chartColors.colorLightGreen, chartColors.colorLightRed];
-      }
+    function showTaskIncomingDummy(div, data, categoryAxisTitle, isToday) {
+      var chartConfig = getTaskIncomingGraphConfig(data, categoryAxisTitle, isToday);
+
+      dummifyGraph(chartConfig);
+
+      return AmCharts.makeChart(div, chartConfig);
     }
 
-    function setTaskIncomingDummyData(data, categoryAxisTitle, selectedIndex) {
-      var dummyReport = {};
-      dummyReport.data = data;
-      dummyReport.divId = 'taskIncomingdiv';
-      dummyReport.categoryTitle = categoryAxisTitle;
-      dummyReport.legendTitles = getLegendTitles(selectedIndex);
-      dummyReport.valueFields = getValueFields(selectedIndex);
-      dummyReport.colors = getColors(selectedIndex, true);
-      dummyReport.fillColors = getColors(selectedIndex, true);
-      dummyReport.enableExport = false;
-      if (selectedIndex == 0) {
-        dummyReport.showBalloon = [false, false, false, false];
-      } else {
-        dummyReport.showBalloon = [false, false];
-      }
-      dummyReport.cursorAlpha = 0;
-      dummyReport.fillAlphas = 1;
-      createCareReportsGraph(dummyReport, selectedIndex, true);
-    }
-
-    function createCareReportsGraph(report, selectedIndex, isDummy) {
-
-      var valueAxes = [CareReportsGraphService.getBaseVariable('axis')];
-      valueAxes[0].title = 'Tasks';
-      valueAxes[0].stackType = 'regular';
-      //valueAxes[0].position = 'left';
-
-      var catAxis = CareReportsGraphService.getBaseVariable('axis');
-      catAxis.startOnAxis = true;
-      catAxis.title = report.categoryTitle;
-
+    function getTaskIncomingGraphConfig(data, categoryAxisTitle, isToday) {
+      today = isToday;
       var exportReport = CareReportsGraphService.getBaseVariable('export');
-      exportReport.enabled = report.enableExport;
+      exportReport.enabled = true;
 
       var chartCursor = CareReportsGraphService.getBaseVariable('chartCursor');
-      chartCursor.cursorAlpha = report.cursorAlpha;
+      chartCursor.cursorAlpha = 1;
 
-      var chartData = CareReportsGraphService.getBaseSerialGraph(report, valueAxes, getGraphs(report, isDummy), 'createdTime', catAxis, exportReport, chartCursor, selectedIndex);
+      var categoryAxis = CareReportsGraphService.getBaseVariable('axis');
+      categoryAxis.startOnAxis = true;
+      categoryAxis.title = categoryAxisTitle;
 
-      return AmCharts.makeChart(report.divId, chartData);
-    }
+      var legend = CareReportsGraphService.getBaseVariable('legend');
+      legend.equalWidths = !isToday;
 
-    function getGraphs(report, isDummy) {
-      var graphs = [];
+      var valueAxes = [CareReportsGraphService.getBaseVariable('axis')];
+      valueAxes[0].title = $translate.instant('careReportsPage.tasks');
 
       var pattern = {
         "url": "line_pattern.png",
         "width": 14,
         "height": 14
       };
-      var dashLength = [0, 0, 2, 0];
-      for (var i = 0; i < report.valueFields.length; i++) {
-        graphs.push(CareReportsGraphService.getBaseVariable('graph'));
-        graphs[i].title = report.legendTitles[i];
-        graphs[i].lineColor = report.colors[i];
-        graphs[i].fillColors = report.fillColors[i];
-        graphs[i].valueField = report.valueFields[i];
-        graphs[i].balloonText = report.balloonText;
-        graphs[i].fillAlphas = report.fillAlphas;
-        graphs[i].showBalloon = report.showBalloon[i];
-        graphs[i].legendValueText = ' ';
-        if (!isDummy) {
-          graphs[i].dashLength = dashLength[i];
-          if (i == 2) { // in-queue graph
-            graphs[i].pattern = pattern;
-            graphs[i].fillAlphas = 1;
-          }
-        }
-        graphs[i].plotAreaBorderAlpha = 0;
-        graphs[i].marginTop = 10;
-        graphs[i].marginLeft = 0;
+
+      var abandonedGraph = {
+        title: $translate.instant('careReportsPage.abandoned'),
+        lineColor: chartColors.colorLightRed,
+        fillColors: chartColors.colorLightRedFill,
+        valueField: 'numTasksAbandonedState'
+      };
+      var inQueueGraph = {
+        title: $translate.instant('careReportsPage.in-queue'),
+        lineColor: chartColors.colorLightYellow,
+        valueField: 'numTasksQueuedState',
+        pattern: pattern,
+        fillAlphas: 1,
+        dashLength: 2
+      };
+      var assignedGraph = {
+        title: $translate.instant('careReportsPage.assigned'),
+        lineColor: chartColors.colorLightYellow,
+        fillColors: chartColors.colorLightYellowFill,
+        valueField: 'numTasksAssignedState'
+      };
+      var handledGraph = {
+        title: $translate.instant('careReportsPage.handled'),
+        lineColor: chartColors.colorLightGreen,
+        valueField: 'numTasksHandledState',
+        showBalloon: true,
+        balloonFunction: balloonTextForTaskVolume
+      };
+
+      var graphsPartial = (isToday) ? [handledGraph, assignedGraph, inQueueGraph, abandonedGraph] : [handledGraph, abandonedGraph];
+      var graphs = _.map(graphsPartial, function (graph) {
+        return _.defaults(graph, CareReportsGraphService.getBaseVariable('graph'));
+      });
+
+      return CareReportsGraphService.buildChartConfig(data, legend, graphs, chartCursor,
+              'createdTime', categoryAxis, valueAxes, exportReport);
+    }
+
+    function balloonTextForTaskVolume(graphDataItem, graph) {
+      //var value = graphDataItem.values.value;
+      var numTasksAbandonedState = graphDataItem.dataContext.numTasksAbandonedState;
+      var numTasksQueuedState = graphDataItem.dataContext.numTasksQueuedState;
+      var numTasksAssignedState = graphDataItem.dataContext.numTasksAssignedState;
+      var numTasksHandledState = graphDataItem.dataContext.numTasksHandledState;
+      var categoryRange = setCategoryRange(graph.categoryAxis.title, graphDataItem.category);
+
+      var balloonTextToday = '<span class="care-graph-text">' + $translate.instant('careReportsPage.abandoned') + ' ' + numTasksAbandonedState + '</span><br><span class="care-graph-text">' + $translate.instant('careReportsPage.in-queue') + ' ' + numTasksQueuedState + '</span><br><span class="care-graph-text">' + $translate.instant('careReportsPage.assigned') + ' ' + numTasksAssignedState + '</span><br><span class="care-graph-text">' + $translate.instant('careReportsPage.handled') + ' ' + numTasksHandledState + '</span>';
+      var balloonTextPast = '<span class="care-graph-text">' + $translate.instant('careReportsPage.abandoned') + ' ' + numTasksAbandonedState + '</span><br><span class="care-graph-text">' + $translate.instant('careReportsPage.handled') + ' ' + numTasksHandledState + '</span>';
+      var balloonText = (today) ? balloonTextToday : balloonTextPast;
+      return categoryRange + balloonText;
+    }
+
+    function balloonTextForTaskTime(graphDataItem, graph) {
+      var avgTaskWaitTime = graphDataItem.dataContext.avgTaskWaitTime;
+      var avgTaskCloseTime = graphDataItem.dataContext.avgTaskCloseTime;
+      var categoryRange = setCategoryRange(graph.categoryAxis.title, graphDataItem.category);
+      var balloonText = '<span class="care-graph-text">' + $translate.instant('careReportsPage.avgQueueTime') + ' ' + avgTaskWaitTime + 'm' + '</span><br><span class="care-graph-text">' + $translate.instant('careReportsPage.avgHandleTime') + ' ' + avgTaskCloseTime + 'm' + '</span>';
+
+      return categoryRange + balloonText;
+    }
+
+    function balloonTextForAvgCsat(graphDataItem, graph) {
+      var avgCsatScores = graphDataItem.dataContext.avgCsatScores;
+      var categoryRange = setCategoryRange(graph.categoryAxis.title, graphDataItem.category);
+      var balloonText = '<span class="care-graph-text">' + $translate.instant('careReportsPage.avgCsat') + ' ' + avgCsatScores + '</span><br>';
+
+      return categoryRange + balloonText;
+    }
+
+    function setCategoryRange(categoryAxisTitle, category) {
+      var categoryRange = '';
+      if (categoryAxisTitle === 'Hours') {
+        var start = moment(category, 'HH:mm').subtract(1, 'hours').format('HH:mm');
+        categoryRange = '<span>' + start + ' - ' + category + '</span><br>';
       }
-      return graphs;
+
+      return categoryRange;
+    }
+
+    function showTaskTimeGraph(div, data, categoryAxisTitle) {
+      var chartConfig = getTaskTimeGraphConfig(data, categoryAxisTitle);
+      return AmCharts.makeChart(div, chartConfig);
+    }
+
+    function showTaskTimeDummy(div, data, categoryAxisTitle) {
+      var chartConfig = getTaskTimeGraphConfig(data, categoryAxisTitle);
+
+      dummifyGraph(chartConfig);
+
+      return AmCharts.makeChart(div, chartConfig);
+    }
+
+    function getTaskTimeGraphConfig(data, categoryAxisTitle) {
+      var exportReport = CareReportsGraphService.getBaseVariable('export');
+      exportReport.enabled = true;
+
+      var chartCursor = CareReportsGraphService.getBaseVariable('chartCursor');
+      chartCursor.cursorAlpha = 1;
+
+      var categoryAxis = CareReportsGraphService.getBaseVariable('axis');
+      categoryAxis.startOnAxis = true;
+      categoryAxis.title = categoryAxisTitle;
+
+      var legend = CareReportsGraphService.getBaseVariable('legend');
+
+      var valueAxes = [CareReportsGraphService.getBaseVariable('axis')];
+      valueAxes[0].title = $translate.instant('careReportsPage.taskTimeLabel');
+
+      var pattern = {
+        "url": "line_pattern.png",
+        "width": 14,
+        "height": 14
+      };
+
+      var queueGraph = {
+        title: $translate.instant('careReportsPage.queueTime'),
+        lineColor: chartColors.colorLightYellow,
+        fillColors: chartColors.colorLightYellow,
+        valueField: 'avgTaskWaitTime',
+        dashLength: 2,
+        fillAlphas: 1,
+        pattern: pattern
+      };
+      var handleGraph = {
+        title: $translate.instant('careReportsPage.handleTime'),
+        lineColor: chartColors.colorLightGreen,
+        fillColors: chartColors.colorLightGreenFill,
+        valueField: 'avgTaskCloseTime',
+        showBalloon: true,
+        balloonFunction: balloonTextForTaskTime
+      };
+
+      var graphsPartial = [handleGraph, queueGraph];
+      var graphs = _.map(graphsPartial, function (graph) {
+        return _.defaults(graph, CareReportsGraphService.getBaseVariable('graph'));
+      });
+
+      return CareReportsGraphService.buildChartConfig(data, legend, graphs, chartCursor,
+              'createdTime', categoryAxis, valueAxes, exportReport);
+    }
+
+    function showAverageCsatGraph(div, data, categoryAxisTitle) {
+      var chartConfig = getAverageCsatGraphConfig(data, categoryAxisTitle);
+      return AmCharts.makeChart(div, chartConfig);
+    }
+
+    function showAverageCsatDummy(div, data, categoryAxisTitle) {
+      var chartConfig = getAverageCsatGraphConfig(data, categoryAxisTitle);
+
+      dummifyGraph(chartConfig);
+
+      return AmCharts.makeChart(div, chartConfig);
+    }
+
+    function getAverageCsatGraphConfig(data, categoryAxisTitle) {
+      var exportReport = CareReportsGraphService.getBaseVariable('export');
+      exportReport.enabled = true;
+
+      var chartCursor = CareReportsGraphService.getBaseVariable('chartCursor');
+      chartCursor.cursorAlpha = 1;
+
+      var categoryAxis = CareReportsGraphService.getBaseVariable('axis');
+      categoryAxis.startOnAxis = true;
+      categoryAxis.title = categoryAxisTitle;
+
+      var legend = CareReportsGraphService.getBaseVariable('legend');
+
+      var valueAxes = [CareReportsGraphService.getBaseVariable('axis')];
+      valueAxes[0].title = $translate.instant('careReportsPage.csatRating');
+
+      var csatGraph = {
+        title: $translate.instant('careReportsPage.averageCsat'),
+        lineColor: chartColors.colorLightGreen,
+        fillColors: chartColors.brandWhite,
+        valueField: 'avgCsatScores',
+        showBalloon: true,
+        balloonFunction: balloonTextForAvgCsat,
+        bullet: 'circle',
+        bulletAlpha: 0,
+        bulletBorderAlpha: 0,
+        bulletSize: 2
+      };
+      var graphsPartial = [csatGraph];
+      var graphs = _.map(graphsPartial, function (graph) {
+        return _.defaults(graph, CareReportsGraphService.getBaseVariable('graph'));
+      });
+
+      return CareReportsGraphService.buildChartConfig(data, legend, graphs, chartCursor,
+              'createdTime', categoryAxis, valueAxes, exportReport);
     }
 
     var service = {
-      setTaskIncomingGraphs: setTaskIncomingGraphs,
-      setTaskIncomingDummyData: setTaskIncomingDummyData
+      showTaskIncomingGraph: showTaskIncomingGraph,
+      showTaskIncomingDummy: showTaskIncomingDummy,
+      showTaskTimeGraph: showTaskTimeGraph,
+      showTaskTimeDummy: showTaskTimeDummy,
+      showAverageCsatGraph: showAverageCsatGraph,
+      showAverageCsatDummy: showAverageCsatDummy,
+      getTaskIncomingGraphConfig: getTaskIncomingGraphConfig,
+      getTaskTimeGraphConfig: getTaskTimeGraphConfig,
+      getAverageCsatGraphConfig: getAverageCsatGraphConfig
     };
 
     return service;

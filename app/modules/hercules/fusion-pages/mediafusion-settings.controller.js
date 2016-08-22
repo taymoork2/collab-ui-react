@@ -21,17 +21,22 @@
     };
 
     //hardcoded now and will be changed in the future
-    vm.options = [
-      'GA',
-      'DEV',
-      'ALPHA'
-    ];
+    vm.options = [{
+      value: 0,
+      label: $translate.instant('mediaFusion.clusters.stable')
+    }, {
+      value: 1,
+      label: $translate.instant('mediaFusion.clusters.beta')
+    }, {
+      value: 2,
+      label: $translate.instant('mediaFusion.clusters.latest')
+    }];
 
     vm.selected = '';
 
     vm.changeReleaseChanel = function () {
-      if (vm.selected != vm.cluster.releaseChannel) {
-        MediaClusterServiceV2.updateV2Cluster(vm.cluster.id, vm.displayName, vm.selected);
+      if (vm.selected.label != vm.cluster.releaseChannel.toLocaleUpperCase()) {
+        MediaClusterServiceV2.updateV2Cluster(vm.cluster.id, vm.displayName, vm.selected.label.toLocaleLowerCase());
       }
     };
 
@@ -58,7 +63,7 @@
           });
           vm.cluster = cluster;
           vm.clusters = clusters;
-          vm.selectPlaceholder = vm.cluster.releaseChannel;
+          vm.selectPlaceholder = vm.cluster.releaseChannel.toLocaleUpperCase();
           vm.localizedTitle = $translate.instant('hercules.expresswayClusterSettings.pageTitle', {
             clusterName: cluster.name
           });

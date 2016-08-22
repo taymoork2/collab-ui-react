@@ -15,7 +15,7 @@
         vm.selectPlaceholder = 'Select One';
         vm.organization = '';
 
-        MediaClusterServiceV2.getOrganization(function (data, status) {
+        MediaClusterServiceV2.getOrganization(function (data) {
           if (data.success) {
             vm.organization = data;
           }
@@ -51,7 +51,7 @@
                 return vm.connector;
               }
             },
-            type: 'dialog',
+            type: 'small',
             controller: 'HostDeregisterControllerV2',
             controllerAs: "hostDeregister",
             templateUrl: 'modules/mediafusion/media-service-v2/side-panel/host-deregister-dialog.html'

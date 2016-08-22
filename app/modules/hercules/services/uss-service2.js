@@ -6,12 +6,42 @@
     .service('USSService2', USSService2);
 
   /* @ngInject */
-  function USSService2($http, UrlConfig, Authinfo, CsdmHubFactory) {
+  function USSService2($http, UrlConfig, Authinfo, CsdmPoller, CsdmHubFactory) {
     var cachedUserStatusSummary = [];
 
     var USSUrl = UrlConfig.getUssUrl() + 'uss/api/v1';
 
+    var fetchStatusesSummary = function () {
+      return $http
+        .get(USSUrl + '/orgs/' + Authinfo.getOrgId() + '/userStatuses/summary')
+        .then(function (res) {
+          var summary = res.data.summary;
+          // The server returns *nothing* for call and calendar
+          // but we want to show that there are 0 users so let's populate
+          // the data with defaults
+          var emptySummary = {
+            serviceId: null,
+            activated: 0,
+            notActivated: 0,
+            error: 0,
+            total: 0
+          };
+          _.forEach(['squared-fusion-cal', 'squared-fusion-uc'], function (serviceId) {
+            var found = _.find(summary, {
+              serviceId: serviceId
+            });
+            if (!found) {
+              var newSummary = angular.copy(emptySummary);
+              newSummary.serviceId = serviceId;
+              summary.push(newSummary);
+            }
+          });
+          cachedUserStatusSummary = summary;
+        });
+    };
+
     var hub = CsdmHubFactory.create();
+    CsdmPoller.create(fetchStatusesSummary, hub);
 
     var statusesParameterRequestString = function (serviceId, state, offset, limit) {
       var statefilter = state ? "&state=" + state : "";
@@ -30,15 +60,15 @@
         return 'not_entitled';
       }
       switch (status.state) {
-      case 'error':
-        return 'error';
-      case 'deactivated':
-      case 'notActivated':
-        return 'pending_activation';
-      case 'activated':
-        return 'activated';
-      default:
-        return 'unknown';
+        case 'error':
+          return 'error';
+        case 'deactivated':
+        case 'notActivated':
+          return 'pending_activation';
+        case 'activated':
+          return 'activated';
+        default:
+          return 'unknown';
       }
     }
 
@@ -48,7 +78,7 @@
 
     function getStatusesForUserInOrg(userId, orgId) {
       return $http
-        .get(USSUrl + '/orgs/' + Authinfo.getOrgId() + '/userStatuses?userId=' + userId)
+        .get(USSUrl + '/orgs/' + (orgId || Authinfo.getOrgId()) + '/userStatuses?userId=' + userId)
         .then(function (res) {
           return _.filter(res.data.userStatuses, function (nugget) {
             return nugget.entitled || (nugget.entitled === false && nugget.state != 'deactivated');

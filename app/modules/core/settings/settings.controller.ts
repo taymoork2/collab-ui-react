@@ -35,7 +35,7 @@ export class SettingsCtrl {
       this.domains = new DomainsSetting();
       this.privacy = new PrivacySetting();
       this.sipDomain = new SipDomainSetting();
-      this.retention = new RetentionSetting();
+      this.initRetention();
     }
   }
 
@@ -58,9 +58,17 @@ export class SettingsCtrl {
   }
 
   private initSecurity() {
-    this.FeatureToggleService.supports(this.FeatureToggleService.features.atlasPinSettings).then((toggle) => {
+    this.FeatureToggleService.atlasPinSettingsGetStatus().then((toggle) => {
       if (toggle) {
         this.security = new SecuritySetting();
+      }
+    });
+  }
+
+  private initRetention() {
+    this.FeatureToggleService.atlasDataRetentionSettingsGetStatus().then((toggle) => {
+      if (toggle) {
+        this.retention = new RetentionSetting();
       }
     });
   }

@@ -14,6 +14,8 @@
       START: 'start',
       NEXT: 'next',
       BACK: 'back',
+      SKIP: 'skip',
+      FINISH: 'finish',
       ASSIGN: 'assign',
       REMOVE: 'remove'
     };
@@ -44,6 +46,9 @@
     var START_TRIAL = 'Start Trial Button Click';
     var NEXT_BUTTON = 'Next Button Clicked';
     var BACK_BUTTON = 'Back Button Clicked';
+    var SKIP_BUTTON = 'Skip Button Clicked';
+    var FINISH_TRIAL = 'Finish Trial Setup';
+
 
     /* Partner Event Names */
     var ASSIGN_PARTNER = 'Partner Admin Assigning';
@@ -89,7 +94,7 @@
      */
     function checkIfTestOrg() {
       if (!isTestOrg) {
-        isTestOrg = $q(function (resolve, reject) {
+        isTestOrg = $q(function (resolve) {
           Orgservice.getOrg(function (response) {
             resolve(response.isTestOrg);
           });
@@ -123,15 +128,21 @@
       var step = '';
 
       switch (state) {
-      case eventNames.START:
-        step = START_TRIAL;
-        break;
-      case eventNames.NEXT:
-        step = NEXT_BUTTON;
-        break;
-      case eventNames.BACK:
-        step = BACK_BUTTON;
-        break;
+        case eventNames.START:
+          step = START_TRIAL;
+          break;
+        case eventNames.NEXT:
+          step = NEXT_BUTTON;
+          break;
+        case eventNames.BACK:
+          step = BACK_BUTTON;
+          break;
+        case eventNames.SKIP:
+          step = SKIP_BUTTON;
+          break;
+        case eventNames.FINISH:
+          step = FINISH_TRIAL;
+          break;
       }
 
       trackEvent(step, {
@@ -149,18 +160,18 @@
       }
 
       switch (state) {
-      case eventNames.ASSIGN:
-        trackEvent(ASSIGN_PARTNER, {
-          uuid: UUID,
-          orgId: id
-        });
-        break;
-      case eventNames.REMOVE:
-        trackEvent(REMOVE_PARTNER, {
-          uuid: UUID,
-          orgId: id
-        });
-        break;
+        case eventNames.ASSIGN:
+          trackEvent(ASSIGN_PARTNER, {
+            uuid: UUID,
+            orgId: id
+          });
+          break;
+        case eventNames.REMOVE:
+          trackEvent(REMOVE_PARTNER, {
+            uuid: UUID,
+            orgId: id
+          });
+          break;
       }
     }
 

@@ -13,13 +13,15 @@
    *    - call scope.downloadCsv()
    * /
    /* @ngInject */
-  function csvDownload($rootScope, $window, $q, $translate, $timeout, $modal, CsvDownloadService, Notification) {
+  function csvDownload($rootScope, $window, $q, $translate, $timeout, $modal, $state, CsvDownloadService, Notification) {
     var directive = {
       restrict: 'E',
       templateUrl: 'modules/core/csvDownload/csvDownload.tpl.html',
       scope: {
         type: '@',
-        filename: '@'
+        filename: '@',
+        statusMessage: '@',
+        downloadState: '@'
       },
       link: link
     };
@@ -33,9 +35,19 @@
       scope.downloadingMessage = '';
       scope.type = scope.type || CsvDownloadService.typeAny;
       scope.downloadCsv = downloadCsv;
+      scope.goToDownload = goToDownload;
+
+      ////////////////////
+
       var downloadAnchor = $(element.find('a')[0]);
       var downloadIcon = $(element.find('i')[0]);
       var downloadingIcon = $(element.find('i')[1]);
+
+      function goToDownload() {
+        if (scope.downloading && !_.isEmpty(scope.downloadState)) {
+          $state.go(scope.downloadState);
+        }
+      }
 
       function downloadCsv(csvType, tooManyUsers) {
         csvType = csvType || scope.type;
@@ -104,9 +116,9 @@
           if (_.isUndefined($window.navigator.msSaveOrOpenBlob)) {
             scope.downloadCsv = removeFocus;
             downloadAnchor.attr({
-                href: url,
-                download: FILENAME
-              })
+              href: url,
+              download: FILENAME
+            })
               .removeAttr('disabled');
           } else {
             // IE download option since IE won't download the created url
@@ -124,8 +136,8 @@
         $timeout(function () {
           scope.downloadCsv = downloadCsv;
           downloadAnchor.attr({
-              href: ''
-            })
+            href: ''
+          })
             .removeAttr('download');
         });
       }
@@ -154,7 +166,7 @@
       }
 
       function cancelDownload() {
-        return $q(function (resolve, reject) {
+        return $q(function (resolve) {
           if (CsvDownloadService.downloadInProgress) {
             CsvDownloadService.cancelDownload();
             flagDownloading(false);
@@ -184,7 +196,7 @@
           if (tooManyUsers && CsvDownloadService.downloadInProgress) {
             Notification.error('csvDownload.isRunning');
           } else {
-            if (!!options.suppressWarning) {
+            if (options.suppressWarning) {
               // don't warn user, just start export
               scope.downloadCsv(options.csvType, tooManyUsers);
             } else {

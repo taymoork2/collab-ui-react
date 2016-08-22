@@ -70,7 +70,7 @@
       if (angular.isArray(customers) && customers.length > 0) {
         var returnArray = [];
 
-        angular.forEach(customers, function (item, index, array) {
+        angular.forEach(customers, function (item, index) {
           returnArray.push({
             customerName: loadingCustomer,
             percentage: 85 - (index * 10),

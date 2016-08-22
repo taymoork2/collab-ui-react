@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Controller: UserRolesCtrl', function () {
-  var controller, $scope, $stateParams, Authinfo, Orgservice, $controller, Userservice, FeatureToggleService, $q;
+  var controller, $scope, $stateParams, Authinfo, Orgservice, $controller, Userservice, FeatureToggleService;
   var fakeUserJSONFixture = getJSONFixture('core/json/sipTestFakeUser.json');
   var careUserJSONFixture = getJSONFixture('core/json/users/careTestFakeUser.json');
   var currentUser = fakeUserJSONFixture.fakeUser1;
@@ -12,14 +12,13 @@ describe('Controller: UserRolesCtrl', function () {
   beforeEach(angular.mock.module('Squared'));
   beforeEach(angular.mock.module('Ediscovery'));
 
-  beforeEach(inject(function ($rootScope, _$stateParams_, _$controller_, _Authinfo_, _Orgservice_, _Userservice_, _FeatureToggleService_, _$q_) {
+  beforeEach(inject(function ($rootScope, _$stateParams_, _$controller_, _Authinfo_, _Orgservice_, _Userservice_, _FeatureToggleService_) {
     $scope = $rootScope.$new();
     Orgservice = _Orgservice_;
     Userservice = _Userservice_;
     $controller = _$controller_;
     Authinfo = _Authinfo_;
     FeatureToggleService = _FeatureToggleService_;
-    $q = _$q_;
     $stateParams = _$stateParams_;
     $stateParams.currentUser = currentUser;
 

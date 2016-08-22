@@ -1,5 +1,16 @@
-<div class="subscriptions-container">
-  <cr-trial-notice-banner></cr-trial-notice-banner>
+<div class="iframe-container" ng-if="mcpSubscription.isOnline">
+  <iframe
+    load-event
+    loading="mcpSubscription.loading"
+    ng-hide="mcpSubscription.loading"
+    ng-src="{{mcpSubscription.digitalRiverSubscriptionsUrl}}">
+  </iframe>
+  <div class="grid-refresh" ng-if="mcpSubscription.loading">
+    <i class='icon icon-spinner icon-2x'></i>
+  </div>
+</div>
+<div class="subscriptions-container" ng-if="!mcpSubscription.isOnline">
+  <cr-trial-notice-banner ng-if="!mcpSubscription.isOnline || mcpSubscription.trialUrlFailed"></cr-trial-notice-banner>
   <cs-card-layout block-view="true">
     <cs-card class="full subscriptions detail-view" ng-repeat="subscription in mcpSubscription.subscriptionDetails" ng-if="mcpSubscription.subscriptionDetails.length > 1" ng-class="{'subscription-expanded': subscription.viewAll}">
       <article><section>
@@ -18,12 +29,15 @@
             </div>
         </div>
         <div class="columns medium-2 subscription-upgrade">
-          <a ng-if="subscription.subscriptionId && mcpSubscription.isOnline" ng-href="{{::mcpSubscription.upgradeUrl(subscription.subscriptionId)}}" class="btn btn--primary" translate="subscriptions.upgrade"></a>
+          <div class="subscription-bmmp" ng-if="subscription.subscriptionId && !subscription.isTrial && mcpSubscription.isOnline">
+            <span class="cisco-bmmp-cta-widget" data-product-instance-id="{{::subscription.subscriptionId}}" data-styled="true" data-application-page="all" data-widget-location="navigation-bar"></span>
+          </div>
+          <a ng-if="subscription.subscriptionId && subscription.isTrial && subscription.upgradeTrialUrl && mcpSubscription.isOnline" ng-href="{{::subscription.upgradeTrialUrl}}" class="btn btn--primary" translate="subscriptions.purchase"></a>
           <div class="license-quantity">
             <span class="h6" translate="subscriptions.quantity"></span>
             <span class="h6">{{::subscription.licenses.length}}</span>
           </div>
-          <div class="subscription-id" ng-if="subscription.viewAll">
+          <div class="subscription-id" ng-if="subscription.viewAll && subscription.subscriptionId">
             <span class="h6" translate="subscriptions.subscription"></span>
             <span class="h6">{{::subscription.subscriptionId}}</span>
           </div>
@@ -35,7 +49,7 @@
       <article><section>
         <div class="row">
           <h3 class="column medium-2 sub-name" translate="subscriptions.licenseSummary"></h3>
-          <div class="column medium-2 sub-id" ng-if="mcpSubscription.subscriptionDetails.length === 1 && !mcpSubscription.subscriptionDetails[0].isTrial">
+          <div class="column medium-4 sub-id" ng-if="mcpSubscription.subscriptionDetails.length === 1 && (!mcpSubscription.subscriptionDetails[0].isTrial || mcpSubscription.isOnline) && mcpSubscription.subscriptionDetails[0].subscriptionId">
             <span class="h6" translate="subscriptions.subscription"></span>
             <span class="h6">{{::mcpSubscription.subscriptionDetails[0].subscriptionId}}</span>
           </div>

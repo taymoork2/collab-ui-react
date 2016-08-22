@@ -24,6 +24,7 @@
     vm.resetDns = resetDns;
     vm.activateDID = activateDID;
     vm.isLoading = false;
+    vm.isDisabled = true;
 
     $scope.returnInternalNumberlist = CommonLineService.returnInternalNumberlist;
     $scope.syncGridDidDn = syncGridDidDn;
@@ -88,8 +89,11 @@
 
     function activateDID() {
 
+
       $q.all([CommonLineService.loadInternalNumberPool(), CommonLineService.loadExternalNumberPool(), CommonLineService.loadPrimarySiteInfo(), toggleShowExtensions()])
         .finally(function () {
+          vm.isDisabled = false;
+
           $scope.internalNumberPool = CommonLineService.getInternalNumberPool();
           $scope.externalNumberPool = CommonLineService.getExternalNumberPool();
           $scope.externalNumber = $scope.externalNumberPool[0];
@@ -120,7 +124,7 @@
         validateDnForUser();
         vm.isReset = true;
         vm.isResetInProgress = false;
-      }).catch(function (response) {
+      }).catch(function () {
         vm.isResetInProgress = false;
         validateDnForUser();
       });
@@ -221,7 +225,7 @@
 
     // To differentiate the Place list change made by map operation
     //  and other manual/reset operation.
-    $scope.$watch('entitylist', function (newVal, oldVal) {
+    $scope.$watch('entitylist', function () {
       if (vm.isMapped) {
         vm.isMapped = false;
       } else {

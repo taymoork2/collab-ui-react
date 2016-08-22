@@ -1,15 +1,14 @@
 'use strict';
 
 describe('Controller: ProcessorderCtrl', function () {
-  var $controller, $httpBackend, $location, $q, $scope, controller, Auth, ModalService, Orgservice;
+  var $controller, $location, $q, $scope, controller, Auth, ModalService, Orgservice;
 
   beforeEach(angular.mock.module('Squared'));
   beforeEach(inject(dependencies));
   beforeEach(initSpies);
 
-  function dependencies($rootScope, _$controller_, _$httpBackend_, _$q_, _Auth_, _ModalService_, _Orgservice_) {
+  function dependencies($rootScope, _$controller_, _$q_, _Auth_, _ModalService_, _Orgservice_) {
     $controller = _$controller_;
-    $httpBackend = _$httpBackend_;
     $location = {
       search: function () {}
     };

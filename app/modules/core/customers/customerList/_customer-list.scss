@@ -5,14 +5,26 @@
   .grid-filter {
     margin-left: 0;
   }
+
+  .filter-dropdown {
+      width: 250px;
+      margin-right: 24px;
+  }
 }
 
 #customerListPanel {
+  .ui-grid-cell {
+    height: 56px;
+  }
+
   .ui-grid-cell-contents {
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    height: 56px;
     .icon {
-      color: $gray-base;
+      color: $gray-light-1;
       margin-right: 1rem;
-      font-size: 14pt;
+      font-size: 1rem;
     }
 
     .badge {
@@ -107,17 +119,25 @@
     }
   }
 
-  .status-column {
-    padding-left: 2rem;
-    .badge {
-      width: 1px;
-      min-width: 1px;
-      padding: 5px;
+  .ui-grid-row {
+    border-bottom: none;
+    height: 56px;
+  }
 
-      &.alert {
-        /* for some reason there are margins on only the alert class */
-        margin-left: 0;
-        margin-right: 0;
+  .status-column {
+    padding-left: 25%;
+    padding-right: 25%;
+    .icon {
+      font-size: 0.75rem;
+      margin-right: 0;
+      &.active {
+        color: $color-cta-base;
+      }
+      &.expired {
+        color: $color-alerts-base;
+      }
+      &.trial {
+        color: $color-attention-base;
       }
     }
   }
@@ -127,6 +147,9 @@
   padding-right: 10px;
 }
 
+.ui-grid-header-cell .ui-grid-cell-contents {
+  cursor: pointer;
+}
 .ui-grid-header-cell.align-center,
 .ui-grid-cell:last-child.align-center {
   text-align: center;

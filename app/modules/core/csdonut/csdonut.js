@@ -14,6 +14,7 @@
         value: '=',
         max: '=',
         unlimited: '=',
+        hideusage: '=',
         ssize: '=',
         tsize: '=',
         name: '='
@@ -45,8 +46,11 @@
         var colour = d3.scale.category20();
         $scope.currentAngles = {};
 
-        $scope.computeTextProperties = function (value, unlimited, tsize) {
-          if (typeof unlimited !== 'undefined' && unlimited === true) {
+        $scope.computeTextProperties = function (value, unlimited, hideusage, tsize) {
+          if (
+            (typeof hideusage !== 'undefined' && hideusage === true) ||
+            (typeof unlimited !== 'undefined' && unlimited === true)
+          ) {
             $scope.text.size = 18;
             $scope.text.y = 6;
           } else if (typeof value === 'undefined' || value.toString().length > 3) {
@@ -61,15 +65,20 @@
               $scope.text.y = 10;
             }
           }
-
         };
 
-        $scope.computeDataset = function (value, max, unlimited, ssize) {
+        $scope.computeDataset = function (value, max, unlimited, hideusage, ssize) {
           if (typeof ssize !== 'undefined') {
             $scope.width = ssize;
             $scope.height = ssize;
           }
-          if (typeof unlimited !== 'undefined' && unlimited === true) {
+
+          if (typeof hideusage !== 'undefined' && hideusage === true) {
+            $scope.text.content = '---';
+            $scope.colours = ['#43a942'];
+            $scope.text.color = '#6A6B6C';
+            $scope.dataset = [1];
+          } else if (typeof unlimited !== 'undefined' && unlimited === true) {
             $scope.text.content = 'Unlimited';
             $scope.colours = ['#43a942'];
             $scope.text.color = '#6A6B6C';
@@ -105,7 +114,7 @@
         };
 
         $scope.getTranslate = function getTranslate() {
-          return 'translate(' + $scope.getWidth() / 2 + ',' + $scope.getHeight() / 2 + ')';
+          return 'translate(' + ($scope.getWidth() / 2) + ',' + ($scope.getHeight() / 2) + ')';
         };
 
         $scope.getWidth = function getWidth() {
@@ -163,8 +172,8 @@
       link: function link(scope, element) {
 
         var radius, pie, arc, svg, path, text;
-        scope.computeDataset(scope.value, scope.max, scope.unlimited, scope.ssize);
-        scope.computeTextProperties(scope.value, scope.unlimited, scope.tsize);
+        scope.computeDataset(scope.value, scope.max, scope.unlimited, scope.hideusage, scope.ssize);
+        scope.computeTextProperties(scope.value, scope.unlimited, scope.hideusage, scope.tsize);
         scope.createDonut = function createDonut() {
           radius = Math.min(scope.getWidth(), scope.getHeight()) / 2;
           pie = d3.layout.pie().sort(null).value(function value(model) {
@@ -223,9 +232,9 @@
         };
 
         //Listen for changes in the directive attributes
-        scope.$watchGroup(['value', 'max', 'unlimited'], function () {
-          scope.computeTextProperties(scope.value, scope.unlimited);
-          scope.computeDataset(scope.value, scope.max, scope.unlimited);
+        scope.$watchGroup(['value', 'max', 'unlimited', 'hideusage'], function () {
+          scope.computeTextProperties(scope.value, scope.unlimited, scope.hideusage);
+          scope.computeDataset(scope.value, scope.max, scope.unlimited, scope.hideusage);
         });
 
         // Listen for any changes to the dataset...

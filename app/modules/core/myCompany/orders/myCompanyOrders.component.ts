@@ -1,4 +1,5 @@
 import { IOrderDetail, MyCompanyOrdersService } from './myCompanyOrders.service';
+import { DigitalRiverService } from '../digitalRiver/digitalRiver.service';
 
 class MyCompanyOrdersCtrl {
 
@@ -6,19 +7,31 @@ class MyCompanyOrdersCtrl {
   public loading: boolean = false;
   public orderDetailList: IOrderDetail[] = [];
 
+  public digitalRiverOrderHistoryUrl: string;
+
   /* @ngInject */
   constructor(
-    private $scope: ng.IScope,
+    private $sce: ng.ISCEService,
     private $templateCache: angular.ITemplateCacheService,
     private $translate: angular.translate.ITranslateService,
+    private DigitalRiverService: DigitalRiverService,
     private MyCompanyOrdersService: MyCompanyOrdersService,
     private Notification
   ) {}
 
 
   private $onInit(): void {
-    this.initGridOptions();
-    this.initData();
+    this.initIframe();
+  }
+
+  private initIframe(): void {
+    this.loading = true;
+    this.DigitalRiverService.getDigitalRiverOrderHistoryUrl().then((orderHistoryUrl) => {
+      this.digitalRiverOrderHistoryUrl = this.$sce.trustAsResourceUrl(orderHistoryUrl);
+    }).catch((response) => {
+      this.Notification.errorWithTrackingId(response, 'myCompanyOrders.loadError');
+      this.loading = false;
+    });
   }
 
   public downloadPdf(): void {
