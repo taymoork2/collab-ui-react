@@ -371,10 +371,52 @@
       }
     }
 
+    vm.isTypeDuplicate = false;
+
+    var nonHeaderFieldNames = _.filter(_.keys(vm.template.configuration.pages.customerInformation.fields),
+        function (name) { return (name !== "welcomeHeader"); });
+
+    function getConfiguredTypes() {
+      var typesConfigured = _.map(nonHeaderFieldNames, function (fieldName) {
+        return (vm.getAttributeParam("value", "type", fieldName)).id;
+      });
+      return typesConfigured;
+    }
+
+    function isSelectedTypeDuplicate(selectedType) {
+      vm.isTypeDuplicate = false;
+
+      var typesConfigured = getConfiguredTypes();
+      if (_.filter(typesConfigured, function (type) { return type === selectedType.id; }).length > 1) {
+        vm.isTypeDuplicate = true;
+        return vm.isTypeDuplicate;
+      } else {
+        return false;
+      }
+    }
+
+    function areAllTypesUnique() {
+      var configuredTypes = getConfiguredTypes();
+      var uniqueConfiguredTypes = _.unique(configuredTypes);
+
+      return (configuredTypes.length === uniqueConfiguredTypes.length);
+    }
+
+    vm.validateType = function (selectedType) {
+      return !(selectedType && isSelectedTypeDuplicate(selectedType));
+    };
+
+    function isCustomerInformationPageValid() {
+      // all customer info page validations will be here
+      return areAllTypesUnique();
+    }
+
     function nextButton() {
       switch (vm.currentState) {
         case 'name':
           return vm.isNamePageValid();
+        case 'customerInformation':
+          return isCustomerInformationPageValid();
         case 'profile':
           return isProfilePageValid();
         case 'agentUnavailable':

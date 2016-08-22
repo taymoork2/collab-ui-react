@@ -360,6 +360,57 @@ describe('Care Chat Setup Assistant Ctrl', function () {
       expect(mockElementObject.tokenfield).toHaveBeenCalledWith('createToken', 'Mock Category Token');
       expect(controller.categoryOptionTag).toEqual('');
     });
+
+    it("should validate type for a unique field", function () {
+      expect(controller.validateType({ id: 'name' })).toEqual(true);
+    });
+
+    it("should identify a duplicate type configured", function () {
+      controller.template.configuration.pages.customerInformation.fields = {
+        'field1': {
+          attributes: [{
+            name: 'type',
+            value: { id: 'name' }
+          }]
+        },
+        'field2': {
+          attributes: [{
+            name: 'type',
+            value: { id: 'name' }
+          }]
+        },
+        'field3': {
+          attributes: [{
+            name: 'type',
+            value: { id: 'category' }
+          }]
+        } };
+      expect(controller.validateType({ id: 'name' })).toEqual(false);
+    });
+
+    it("next button should get disabled when duplicate types are configured in customerInfo page", function () {
+      controller.currentState = 'customerInformation';
+      controller.template.configuration.pages.customerInformation.fields = {
+        'field1': {
+          attributes: [{
+            name: 'type',
+            value: { id: 'name' }
+          }]
+        },
+        'field2': {
+          attributes: [{
+            name: 'type',
+            value: { id: 'email' }
+          }]
+        },
+        'field3': {
+          attributes: [{
+            name: 'type',
+            value: { id: 'name' }
+          }]
+        } };
+      expect(controller.nextButton()).toEqual(false);
+    });
   });
 
   describe('Off Hours Page', function () {
