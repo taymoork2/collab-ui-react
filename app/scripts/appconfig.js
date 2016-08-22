@@ -2746,6 +2746,16 @@
                 controllerAs: 'dic'
               }
             }
+          })
+          .state('status.incidents.update', {
+            url: '/update?incidentName&incidentId',
+            views: {
+              '@status': {
+                templateUrl: 'modules/status/incidents/updateIncident/updateIncident.tpl.html',
+                controller: 'UpdateIncidentController',
+                controllerAs: 'uic'
+              }
+            }
           });
       }
     ]);

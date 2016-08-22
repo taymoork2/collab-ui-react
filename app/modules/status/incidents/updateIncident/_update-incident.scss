@@ -1,0 +1,35 @@
+div#updateIncident{
+  padding:60px;
+  &>div{
+    margin-bottom:50px;
+  }
+  div.addMsg{
+    padding:20px;
+    border:1px solid gray;
+    &>div{
+      margin-bottom:20px;
+    }
+    div.incidentStatus{
+      div>label{
+        display:inline-block;
+        margin-right:20px;
+        input[type="radio"]{
+          position:inherit;
+          margin:inherit;
+          width:inherit;
+          height:inherit;
+        }
+      }
+    }
+    div.incidentMsg{
+      textarea{
+        width:100%;
+      }
+    }
+  }
+  div.msgList{
+    div.item>div.itemRow1>span,a{
+      margin-right:10px;
+    }
+  }
+}

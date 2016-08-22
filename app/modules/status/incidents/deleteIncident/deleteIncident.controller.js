@@ -3,11 +3,11 @@
   angular
   .module('Status.incidents')
   .controller('DeleteIncidentController', DeleteIncidentController);
-  function DeleteIncidentController($scope, $stateParams, $state, IncidentsService, $window) {
+  function DeleteIncidentController($scope, $stateParams, $state, IncidentsWithoutSiteService, $window) {
     $scope.incidentName = $stateParams.incidentName;
     $scope.deleteIncidentBtn = function () {
       if ($scope.deleteCommand == 'DELETE') {
-        IncidentsService.delete({ incidentId: $stateParams.incidentId }).$promise.then(function () {
+        IncidentsWithoutSiteService.delete({ incidentId: $stateParams.incidentId }).$promise.then(function () {
           $state.go("^");
           $window.alert("Successfully delete");
         }, function () {

@@ -27,7 +27,7 @@
 
             <div class="operationHref clearFloat">
               <div ng-if="incident.status!='resolved'">
-                <a href="#">Update</a>
+                <a ui-sref="status.incidents.update( {incidentName:incident.incidentName, incidentId:incident.incidentId} )">Update</a>
                 <a ui-sref="status.incidents.delete({ incidentName:incident.incidentName, incidentId:incident.incidentId })">Delete</a>
               </div>
               <div ng-if="incident.status=='resolved'">

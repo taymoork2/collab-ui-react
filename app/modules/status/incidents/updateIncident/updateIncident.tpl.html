@@ -1,0 +1,52 @@
+<div id="updateIncident">
+	
+	<div>
+		<h1>{{incidentName}}</h1>
+	</div>
+
+	<div class="addMsg">
+
+		<div class="incidentStatus">
+			<h3>Incident Status</h3>
+			<div>
+				<label><input type="radio" ng-model="status" value="investigating">Investigating</label>
+				<label><input type="radio" ng-model="status" value="identified">Identified</label>
+				<label><input type="radio" ng-model="status" value="monitoring">Monitoring</label>
+				<label><input type="radio" ng-model="status" value="resolved">Resolved</label>
+			</div>
+		</div>
+
+		<div class="incidentMsg">
+			<h3>Message</h3>
+			<textarea ng-model="msg"></textarea>
+		</div>
+
+		<div class="componentStatuses">
+			<h3>Component Statuses</h3>
+			<p ng-show="!showComponent">You can also <a ng-click="showComponentFUN()">update a component's status.</a></p>
+			<div ng-show="showComponent">
+				hello component
+			</div>
+		</div>
+
+		<input class="btn btn--primary" type="button" value="UPDATE INCIDENT" ng-click="addIncidentMsg()">
+
+	</div>
+
+	<div class="msgList">
+		<h2>Previous Updates</h2>
+		<div class="item" ng-repeat="msg in messages">
+			<div class="itemRow1" ng-mouseover="showEdit=true" ng-mouseleave="showEdit=false">
+				<span>{{msg.status}}</span>-<span>{{msg.message}}</span><a ng-show="showEdit">Edit</a>
+			</div>
+			<div class="itemRow2">
+				<span>{{msg.postAt}}</span>
+				<a ng-click="showOrHideComponentFUN()">{{showOrHideComponent}}</a>
+			</div>
+			<div class="itemRow3" ng-show="componentSection">
+				No components were affected by this update.
+			</div>
+		</div>
+	</div>
+
+</div>
