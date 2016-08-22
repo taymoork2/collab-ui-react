@@ -29,6 +29,10 @@
   }
 }
 
+.ct-confirmation-header {
+  text-align: center;
+}
+
 .ct-confirmation-body {
   .warning-icon {
     @extend .icon;

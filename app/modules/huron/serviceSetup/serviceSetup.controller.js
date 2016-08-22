@@ -458,44 +458,6 @@
         'templateOptions.isWarn': vm.steeringDigitChangeValidation
       }
     }, {
-      model: vm.model.site,
-      key: 'siteSteeringDigit',
-      type: 'select',
-      className: 'service-setup-steering-digit bottom-margin',
-      templateOptions: {
-        label: $translate.instant('serviceSetupModal.siteSteeringDigit'),
-        description: $translate.instant('serviceSetupModal.siteSteeringDigitDescription'),
-        options: vm.steeringDigits
-      },
-      hideExpression: function () {
-        return true;
-      },
-      expressionProperties: {
-        'templateOptions.disabled': function () {
-          return vm.hasSites;
-        }
-      }
-    }, {
-      model: vm.model.site,
-      key: 'siteCode',
-      type: 'input',
-      className: 'service-setup-site-code bottom-margin',
-      templateOptions: {
-        label: $translate.instant('serviceSetupModal.siteCode'),
-        description: $translate.instant('serviceSetupModal.siteCodeDescription'),
-        type: 'text',
-        required: true,
-        maxlength: 5
-      },
-      hideExpression: function () {
-        return true;
-      },
-      expressionProperties: {
-        'templateOptions.disabled': function () {
-          return vm.hasSites;
-        }
-      }
-    }, {
       className: 'row collapse-both',
       fieldGroup: [{
         // Since it is possible to have both the FTSW and

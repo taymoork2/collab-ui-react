@@ -24,6 +24,7 @@
     vm.resetDns = resetDns;
     vm.activateDID = activateDID;
     vm.isLoading = false;
+    vm.isDisabled = true;
 
     $scope.returnInternalNumberlist = CommonLineService.returnInternalNumberlist;
     $scope.syncGridDidDn = syncGridDidDn;
@@ -88,8 +89,11 @@
 
     function activateDID() {
 
+
       $q.all([CommonLineService.loadInternalNumberPool(), CommonLineService.loadExternalNumberPool(), CommonLineService.loadPrimarySiteInfo(), toggleShowExtensions()])
         .finally(function () {
+          vm.isDisabled = false;
+
           $scope.internalNumberPool = CommonLineService.getInternalNumberPool();
           $scope.externalNumberPool = CommonLineService.getExternalNumberPool();
           $scope.externalNumber = $scope.externalNumberPool[0];

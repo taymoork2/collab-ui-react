@@ -1,3 +1,7 @@
+.iframe-container {
+  display: inline;
+}
+
 .subscriptions-container {
   @include vr-spacing(mh, 1);
   @include vr-spacing(mv, 1.25);
@@ -19,11 +23,12 @@
     .icon-header {
       height: vr-adjust(20);
       line-height: vr-adjust(20);
+      cursor: pointer;
       @include vr-spacing(pt, 1.5);
     }
     .icon-arrow-down {
-      font-size: vr-adjust(36);
-      @include vr-spacing(mr, 0.5);
+      font-size: vr-adjust(48);
+      @include vr-spacing(mr, 1);
       right: vr-adjust(8);
       width: vr-adjust(20);
     }
@@ -70,7 +75,7 @@
           }
         }
         .match-icon {
-          @include vr-spacing(pl, 2);
+          @include vr-spacing(pl, 2.5);
         }
       }
       .detail.tooltip-present:hover .icon-detail {

@@ -112,8 +112,9 @@
           var matchesState = termMatchesState(item.state, term);
           var matchesAnyTag = termMatchesAnyTag(item.tags, term);
           var matchesAnyIssue = termMatchesAnyIssue(item.diagnosticsEvents, term);
+          var matchedAnyUpgradeChannel = termMatchesUpgradeChannel(item.upgradeChannel, term);
           var matchesFormattedMac = (item.mac || '').toLowerCase().replace(/:/g, '').indexOf((term || '')) != -1;
-          return matchesAnyFieldOfItem || matchesState || matchesAnyTag || matchesAnyIssue || matchesFormattedMac;
+          return matchesAnyFieldOfItem || matchesState || matchesAnyTag || matchesAnyIssue || matchedAnyUpgradeChannel || matchesFormattedMac;
         });
       }
 
@@ -133,8 +134,12 @@
         return state && (state.readableState || '').toLowerCase().indexOf(term || '') != -1;
       }
 
+      function termMatchesUpgradeChannel(upgradeChannel, term) {
+        return upgradeChannel && (upgradeChannel.label || '').toLowerCase().indexOf(term || '') != -1;
+      }
+
       function termMatchesAnyFieldOfItem(term, item) {
-        return ['displayName', 'product', 'ip', 'mac', 'serial', 'upgradeChannel'].some(function (field) {
+        return ['displayName', 'product', 'ip', 'mac', 'serial'].some(function (field) {
           return item && (item[field] || '').toLowerCase().indexOf(term || '') != -1;
         });
       }

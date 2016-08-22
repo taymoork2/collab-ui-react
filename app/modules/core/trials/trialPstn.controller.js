@@ -6,7 +6,7 @@
     .controller('TrialPstnCtrl', TrialPstnCtrl);
 
   /* @ngInject */
-  function TrialPstnCtrl($scope, $timeout, $translate, Authinfo, Notification, PstnSetupService, TelephoneNumberService, TerminusStateService, TrialPstnService) {
+  function TrialPstnCtrl($scope, $state, $timeout, $translate, Analytics, Authinfo, Notification, PstnSetupService, TelephoneNumberService, TerminusStateService, TrialPstnService) {
     var vm = this;
 
     vm.trialData = TrialPstnService.getData();
@@ -190,6 +190,7 @@
     }
 
     function skip(skipped) {
+      Analytics.trackTrialSteps(Analytics.eventNames.SKIP, $state.current.name, Authinfo.getOrgId());
       vm.trialData.enabled = !skipped;
       vm.trialData.skipped = skipped;
       $timeout($scope.trial.nextStep);

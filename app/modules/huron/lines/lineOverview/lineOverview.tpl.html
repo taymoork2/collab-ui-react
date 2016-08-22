@@ -12,7 +12,33 @@
       <section-title
         title-key="directoryNumberPanel.title">
       </section-title>
-      <directory-number></directory-number>
+      <uc-directory-number
+        show-internal-extensions="$ctrl.showExtensions"
+        esn-prefix="$ctrl.esnPrefix"
+        internal-selected="$ctrl.internalNumber"
+        internal-options="$ctrl.internalOptions"
+        internal-is-warn="$ctrl.internalIsWarn"
+        internal-warn-msg="$ctrl.internalWarnMsg"
+        external-selected="$ctrl.externalNumber"
+        external-options="$ctrl.externalOptions"
+        on-change-fn="$ctrl.setDirectoryNumbers(internalNumber, externalNumber)">
+      </uc-directory-number>
     </cs-sp-section>
+    <cs-sp-section>
+      <uc-call-forward
+        call-forward-all="$ctrl.callForwardAll"
+        call-forward-busy="$ctrl.callForwardBusy"
+        voicemail-enabled="$ctrl.voicemailEnabled"
+        on-change-fn="$ctrl.setCallForward(callForwardAll, callForwardBusy)">
+      </uc-call-forward>
+    </cs-sp-section>
+    <div cr-feature-toggle feature-show="multipleCalls">
+      <cs-sp-section >
+        <uc-simultaneous-calls
+          incoming-call-maximum="$ctrl.incomingCallMaximum"
+          on-change-fn="$ctrl.setSimultaneousCalls(incomingCallMaximum)">
+        </uc-simultaneous-calls>
+      </cs-sp-section>
+    </div>
   </cs-sp-container>
 </form>

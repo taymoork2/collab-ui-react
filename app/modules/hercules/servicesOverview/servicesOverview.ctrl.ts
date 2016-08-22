@@ -1,4 +1,5 @@
 import { CardType, ServicesOverviewCard } from './ServicesOverviewCard';
+import { ServicesOverviewCareCard } from './careCard';
 
 export class ServicesOverviewCtrl {
 
@@ -8,6 +9,7 @@ export class ServicesOverviewCtrl {
 
   /* @ngInject */
   constructor(Orgservice, private ServicesOverviewCardFactory, private $q, private Authinfo, ServiceDescriptor, FeatureToggleService) {
+
     this.cards = ServicesOverviewCardFactory.createCards();
 
     this.loadWebexSiteList();
@@ -22,6 +24,10 @@ export class ServicesOverviewCtrl {
 
     FeatureToggleService.supports(FeatureToggleService.features.atlasMediaServiceOnboarding).then(supports => {
       this.forwardEvent('hybridMediaFeatureToggleEventHandler', supports);
+    });
+
+    FeatureToggleService.atlasCareTrialsGetStatus().then(supports => {
+      this.forwardEvent('careFeatureToggleEventHandler', supports);
     });
   }
 

@@ -21,16 +21,15 @@
     </i>
   </div>
   <div ng-hide="loading || reassignClust.error">
-    <div class="row showgrid">
-      <div class="columns medium-5">
-        <p>
-          {{reassignClust.reassignText}}
-        </p>
-      </div>
-      <div class="columns medium-6">
-        <cs-select ng-model="reassignClust.selectedCluster" options="reassignClust.options" placeholder="reassignClust.selectPlaceholder">
-        </cs-select>
-      </div>
+    <div >
+      <p>
+        {{reassignClust.reassignText}}
+      </p>
+    </div>
+    <br>
+    <div class="columns medium-8">
+      <cs-select ng-model="reassignClust.selectedCluster" options="reassignClust.options" placeholder="reassignClust.selectPlaceholder">
+      </cs-select>
     </div>
   </div>
 </div>

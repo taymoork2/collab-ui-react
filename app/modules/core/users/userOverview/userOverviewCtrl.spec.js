@@ -1,15 +1,17 @@
 'use strict';
 
 describe('Controller: UserOverviewCtrl', function () {
-  var controller, $scope, $httpBackend, $rootScope, Config, Authinfo, Userservice, FeatureToggleService, Notification;
+  var controller, $scope, $httpBackend, $rootScope, Config, Authinfo, Userservice, FeatureToggleService, Notification, WebExUtilsFact;
 
   var $stateParams, currentUser, updatedUser, getUserFeatures, UrlConfig;
   var userEmail, userName, uuid, userStatus, dirsyncEnabled, entitlements, invitations;
+
   beforeEach(angular.mock.module('Core'));
   beforeEach(angular.mock.module('Huron'));
   beforeEach(angular.mock.module('Sunlight'));
+  beforeEach(angular.mock.module('WebExApp'));
 
-  beforeEach(inject(function ($controller, _$httpBackend_, $q, _$rootScope_, _Config_, _Authinfo_, _Userservice_, _FeatureToggleService_, _UrlConfig_, _Notification_) {
+  beforeEach(inject(function ($controller, _$httpBackend_, $q, _$rootScope_, _Config_, _Authinfo_, _Userservice_, _FeatureToggleService_, _UrlConfig_, _Notification_, _WebExUtilsFact_) {
     $scope = _$rootScope_.$new();
     $httpBackend = _$httpBackend_;
     $rootScope = _$rootScope_;
@@ -19,6 +21,7 @@ describe('Controller: UserOverviewCtrl', function () {
     Userservice = _Userservice_;
     FeatureToggleService = _FeatureToggleService_;
     Notification = _Notification_;
+    WebExUtilsFact = _WebExUtilsFact_;
 
     var deferred = $q.defer();
     deferred.resolve('true');
@@ -43,8 +46,10 @@ describe('Controller: UserOverviewCtrl', function () {
     spyOn(FeatureToggleService, 'getFeatureForUser').and.returnValue(deferred.promise);
     spyOn(FeatureToggleService, 'getFeaturesForUser').and.returnValue(deferred2.promise);
     spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
+    spyOn(FeatureToggleService, 'atlasUserPendingStatusGetStatus').and.returnValue($q.when(true));
     spyOn(Authinfo, 'isCSB').and.returnValue(false);
     spyOn(Notification, 'success');
+    spyOn(WebExUtilsFact, 'isCIEnabledSite').and.returnValue(true);
 
     // eww
     var userUrl = UrlConfig.getScimUrl(Authinfo.getOrgId()) + '/' + currentUser.id;

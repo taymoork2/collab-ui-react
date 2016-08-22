@@ -15,6 +15,7 @@
   <div ng-switch-when="error" translate="hercules.fusion.add-resource.type.error"></div>
   <div ng-switch-when="success">
     <h4 translate="hercules.fusion.add-resource.type.title"></h4>
+    <br>
     <form name="resourcesType">
       <div class="cs-radio-group">
         <input
@@ -29,20 +30,18 @@
           ng-keypress="vm.handleKeypress($event)"
           cs-input-label="{{vm._translation.expressway}}"
           cs-input-help-text="{{vm._translation.expresswayHelpText}}">
-    <!-- ng-show was not working inside input tag so we added this inside a div tag. -->
-        <div ng-show="{{ vm.hasMediaFeatureToggle && vm.isEntitledTo.mediafusion }}">
-          <input
+        <input
           cs-input
           type="radio"
           ng-model="vm.selectedType"
           name="selectedType"
           value="mediafusion"
           id="selectedType_mediafusion"
+          ng-show="vm.isEntitledTo.mediafusion"
           ng-disabled="!vm.hasSetup.mediafusion"
           ng-keypress="vm.handleKeypress($event)"
           cs-input-label="{{vm._translation.mediafusion}}"
           cs-input-help-text="{{vm._translation.mediafusionHelpText}}">
-        </div>
       </div>
     </form>
   </div>

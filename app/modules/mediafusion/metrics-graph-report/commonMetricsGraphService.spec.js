@@ -45,8 +45,7 @@ describe('Service: Common  Metrics Graph Service', function () {
     });
 
     it('getGanttGraph should return expected defaults for a pie chart', function () {
-      responseData.getGanttGraph[EXPORT] = responseData.baseVariables[EXPORT];
-      expect(CommonMetricsGraphService.getGanttGraph(dummyData, dummyData, dummyData)).toEqual(responseData.getGanttGraph);
+      expect(CommonMetricsGraphService.getGanttGraph(dummyData, dummyData, dummyData, dummyData)).toEqual(responseData.getGanttGraph);
     });
   });
 

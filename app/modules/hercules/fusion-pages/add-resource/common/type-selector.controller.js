@@ -5,24 +5,43 @@
     .controller('TypeSelectorController', TypeSelectorController);
 
   /* @ngInject */
-  function TypeSelectorController($stateParams, $translate, Authinfo, Config, FusionClusterService, hasMediaFeatureToggle) {
+  function TypeSelectorController($q, $stateParams, $translate, Authinfo, Config, FusionClusterService, hasMediaFeatureToggle) {
     var vm = this;
     vm.UIstate = 'loading';
     vm.isEntitledTo = {
       expressway: Authinfo.isEntitled(Config.entitlements.fusion_mgmt),
-      mediafusion: Authinfo.isEntitled(Config.entitlements.mediafusion)
+      mediafusion: hasMediaFeatureToggle && Authinfo.isEntitled(Config.entitlements.mediafusion)
     };
     vm.selectedType = '';
     vm.next = next;
     vm.canGoNext = canGoNext;
     vm.handleKeypress = handleKeypress;
     vm._translation = {};
-    vm.hasMediaFeatureToggle = hasMediaFeatureToggle;
+
+    var servicesEntitledTo = _.chain(vm.isEntitledTo)
+      .omit(function (value) {
+        return !value;
+      })
+      .keys()
+      .value();
+
     ///////////////
 
-    getSetupState()
+    getSetupState(servicesEntitledTo)
       .then(function (setup) {
         vm.hasSetup = setup;
+        var setupServices = _.chain(vm.hasSetup)
+          .omit(function (value) {
+            return !value;
+          })
+          .keys()
+          .value();
+        if (setupServices.length > 0) {
+          vm.selectedType = setupServices[0];
+        }
+        if (servicesEntitledTo.length === 1 && canGoNext()) {
+          next();
+        }
         vm._translation = {
           expressway: $translate.instant('hercules.fusion.types.expressway'),
           mediafusion: $translate.instant('hercules.fusion.types.mediafusion'),
@@ -35,15 +54,19 @@
         vm.UIstate = 'error';
       });
 
-    function getSetupState() {
-      // A cluster type is said to be setup if there is at least one cluster with one connector
-      return FusionClusterService.getAll()
-        .then(function (clusters) {
-          return {
-            expressway: hasAConnector(clusters, 'c_mgmt'),
-            mediafusion: hasAConnector(clusters, 'mf_mgmt')
-          };
-        });
+    function getSetupState(services) {
+      var promises = _.map(services, function (service) {
+        var serviceId;
+        if (service === 'expressway') {
+          serviceId = 'squared-fusion-mgmt';
+        }
+        if (service === 'mediafusion') {
+          serviceId = 'squared-fusion-media';
+        }
+        return FusionClusterService.serviceIsSetUp(serviceId);
+      });
+      var map = _.zipObject(services, promises);
+      return $q.all(map);
     }
 
     function next() {
@@ -60,14 +83,6 @@
 
     function canGoNext() {
       return vm.selectedType !== '';
-    }
-
-    function hasAConnector(clusters, type) {
-      return _.some(clusters, function (cluster) {
-        return _.some(cluster.connectors, function (connector) {
-          return connector.connectorType === type;
-        });
-      });
     }
   }
 })();

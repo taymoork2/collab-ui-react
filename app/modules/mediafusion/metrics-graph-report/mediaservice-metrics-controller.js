@@ -213,7 +213,7 @@
           }
         });
       }
-      var tempAvailabilityChart = MetricsGraphService.setAvailabilityGraph(tempData, vm.availabilityChart, vm.clusterId);
+      var tempAvailabilityChart = MetricsGraphService.setAvailabilityGraph(tempData, vm.availabilityChart, vm.clusterId, vm.clusterSelected, vm.timeSelected.label);
       if (tempAvailabilityChart !== null && angular.isDefined(tempAvailabilityChart)) {
         vm.availabilityChart = tempAvailabilityChart;
       }

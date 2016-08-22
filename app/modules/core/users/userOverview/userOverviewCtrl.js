@@ -6,7 +6,7 @@
     .controller('UserOverviewCtrl', UserOverviewCtrl);
 
   /* @ngInject */
-  function UserOverviewCtrl($http, $scope, $state, $stateParams, $translate, $resource, $window, Authinfo, FeatureToggleService, Notification, SunlightConfigService, UrlConfig, Userservice, Utils) {
+  function UserOverviewCtrl($http, $scope, $state, $stateParams, $translate, $resource, $window, Authinfo, FeatureToggleService, Notification, SunlightConfigService, UrlConfig, Userservice, Utils, WebExUtilsFact) {
     var vm = this;
     vm.currentUser = $stateParams.currentUser;
     vm.entitlements = $stateParams.entitlements;
@@ -28,6 +28,16 @@
     vm.getUserPhoto = Userservice.getUserPhoto;
     vm.isValidThumbnail = Userservice.isValidThumbnail;
     vm.actionList = [];
+
+    if (vm.currentUser.trainSiteNames) {
+      var ciTrainSiteNames = vm.currentUser.trainSiteNames.filter(
+        function (chkSiteUrl) {
+          return WebExUtilsFact.isCIEnabledSite(chkSiteUrl);
+        }
+      );
+
+      vm.currentUser.trainSiteNames = (0 < ciTrainSiteNames.length) ? ciTrainSiteNames : null;
+    }
 
     var msgState = {
       name: $translate.instant('onboardModal.message'),
@@ -76,8 +86,10 @@
         vm.services.push(msgState);
       }
       if (hasEntitlement('cloudmeetings')) {
-        confState.detail = $translate.instant('onboardModal.paidConfWebEx');
-        vm.services.push(confState);
+        if (vm.currentUser.trainSiteNames) {
+          confState.detail = $translate.instant('onboardModal.paidConfWebEx');
+          vm.services.push(confState);
+        }
       } else if (hasEntitlement('squared-syncup')) {
         if (getServiceDetails('CF')) {
           confState.detail = $translate.instant('onboardModal.paidConf');
@@ -277,12 +289,19 @@
     }
 
     function getAccountStatus() {
-      vm.currentUser.pendingStatus = false;
-      var hasBeenActivated = _.some(vm.currentUser.userSettings, function (userSetting) {
-        return userSetting.indexOf('sparkAdmin.licensedDate') > 0 || userSetting.indexOf('spark.signUpDate') > 0;
+      // user status
+      FeatureToggleService.atlasUserPendingStatusGetStatus().then(function (pendingToggle) {
+        if (pendingToggle) {
+          vm.currentUser.pendingStatus = false;
+          var hasBeenActivated = _.some(vm.currentUser.userSettings, function (userSetting) {
+            return userSetting.indexOf('sparkAdmin.licensedDate') > 0 || userSetting.indexOf('spark.signUpDate') > 0;
+          });
+          vm.pendingStatus = _.isEmpty(vm.currentUser.licenseID) || !hasBeenActivated;
+          vm.currentUser.pendingStatus = vm.pendingStatus;
+        } else {
+          vm.pendingStatus = _.indexOf(vm.currentUser.accountStatus, 'pending') >= 0;
+        }
       });
-      vm.pendingStatus = _.isEmpty(vm.currentUser.licenseID) || !hasBeenActivated;
-      vm.currentUser.pendingStatus = vm.pendingStatus;
 
       // if no licenses/services found from CI,
       // then get the invitation list from Cassandra

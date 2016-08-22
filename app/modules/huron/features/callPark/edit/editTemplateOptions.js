@@ -10,7 +10,8 @@
       restrict: 'A',
       scope: {
         options: '=',
-        callback: '&'
+        callback: '&',
+        keypress: '&'
       },
       templateUrl: 'modules/huron/features/callPark/edit/editTemplateOptions.tpl.html',
       link: function (scope, element) {
@@ -22,6 +23,8 @@
           var optionsInputs = element.find('input');
           optionsInputs.bind('change', function () {
             scope.callback();
+          }).bind('keypress', function () {
+            scope.keypress();
           });
         });
       }
