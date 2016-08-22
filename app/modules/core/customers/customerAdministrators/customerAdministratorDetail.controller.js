@@ -79,8 +79,8 @@
       };
       vm.administrators.push(adminProfile);
 
-      var isNotFullAdmin = adminProfile.roles.indexOf(Config.backend_roles.full_admin) === -1;
-      var isNotSalesAdmin = adminProfile.roles.indexOf(Config.backend_roles.sales) === -1;
+      var isNotFullAdmin = Authinfo.hasRole(Config.backend_roles.full_admin);
+      var isNotSalesAdmin = Authinfo.hasRole(Config.backend_roles.sales);
 
       if (isNotFullAdmin && isNotSalesAdmin) {
         patchSalesAdminRole(email);
