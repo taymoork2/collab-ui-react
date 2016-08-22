@@ -7,7 +7,8 @@
   /* @ngInject */
   function HuronSettingsCtrl($scope, Authinfo, $q, $translate, Notification, ServiceSetup, PstnSetupService,
     CallerId, ExternalNumberService, HuronCustomer, ValidationService, TelephoneNumberService, DialPlanService,
-    ModalService, CeService, HuntGroupServiceV2, DirectoryNumberService, InternationalDialing, VoicemailMessageAction, FeatureToggleService) {
+    ModalService, CeService, HuntGroupServiceV2, DirectoryNumberService, InternationalDialing, VoicemailMessageAction,
+    FeatureToggleService) {
 
     var vm = this;
     vm.loading = true;
@@ -44,6 +45,7 @@
     vm._buildCallerIdOptions = _buildCallerIdOptions;
     vm._callerIdEnabledWatcher = _callerIdEnabledWatcher;
     vm._callerIdNumberWatcher = _callerIdNumberWatcher;
+    vm._buildVoicemailPrefixOptions = _buildVoicemailPrefixOptions;
     vm.loadVoicemailNumber = loadVoicemailNumber;
     vm.loadSite = loadSite;
 
@@ -57,7 +59,7 @@
     vm.extensionLengthChanged = false;
     //TODO: re-enable option '8' once it is an acceptable steering digit
     vm.steeringDigits = [
-      '0', '1', '2', '3', '4', '5', '6', '7', '9'
+      '1', '2', '3', '4', '5', '6', '7', '8', '9'
     ];
     vm.availableExtensions = [
       '3', '4', '5'
@@ -71,7 +73,10 @@
       site: {
         siteIndex: DEFAULT_SITE_INDEX,
         steeringDigit: DEFAULT_SD,
-        siteSteeringDigit: DEFAULT_SITE_SD,
+        siteSteeringDigit: {
+          voicemailPrefixLabel: DEFAULT_SITE_SD.concat(DEFAULT_SITE_CODE),
+          siteDialDigit: DEFAULT_SITE_SD
+        },
         siteCode: DEFAULT_SITE_CODE,
         timeZone: DEFAULT_TZ,
         voicemailPilotNumber: undefined,
@@ -103,6 +108,8 @@
       voicemailTimeZone: undefined,
       disableExtensions: false
     };
+
+    vm.enableSiteSteeringDigit = FeatureToggleService.supports('huron-site-dial-digit');
 
     vm.validations = {
       greaterThan: function (viewValue, modelValue, scope) {
@@ -205,11 +212,39 @@
       }
     };
 
-    vm.steeringDigitChangeValidation = function () {
-      if (vm.model.site.steeringDigit !== savedModel.site.steeringDigit) {
+    vm.siteSteeringDigitWarningValidation = function () {
+      var test = _.find(vm.model.displayNumberRanges, function (range) {
+        return _.inRange(_.get(vm, 'model.site.siteSteeringDigit.voicemailPrefixLabel'), _.get(range, 'beginNumber'), _.get(range, 'endNumber'));
+      });
+
+      if (_.isUndefined(test)) {
+        return false;
+      } else {
         return true;
       }
+    };
+
+    vm.siteAndSteeringDigitErrorValidation = function (view, model, scope) {
+      if (_.get(vm, 'model.site.siteSteeringDigit.siteDialDigit') === _.get(vm, 'model.site.steeringDigit')) {
+        scope.fields[0].formControl.$setValidity('', false);
+        return true;
+      }
+      scope.fields[0].formControl.$setValidity('', true);
       return false;
+    };
+
+    vm.steeringDigitWarningValidation = function () {
+      var test = _.find(vm.model.displayNumberRanges, function (range) {
+        return _.get(vm, 'model.site.steeringDigit.length') > 0 &&
+        ((_.startsWith(_.get(range, 'beginNumber'), _.get(vm, 'model.site.steeringDigit'))) ||
+          (_.startsWith(_.get(range, 'endNumber'), _.get(vm, 'model.site.steeringDigit'))));
+      });
+
+      if (_.isUndefined(test)) {
+        return false;
+      } else {
+        return true;
+      }
     };
 
     vm.steerDigitOverLapValidation = function ($viewValue, $modelValue, scope) {
@@ -464,6 +499,42 @@
       }]
     }];
 
+    vm.voicemailPrefixSelection = [{
+      model: vm.model.site,
+      key: 'siteSteeringDigit',
+      type: 'select',
+      className: 'inner-section-margin',
+      templateOptions: {
+        required: true,
+        inputClass: 'medium-2',
+        label: $translate.instant('serviceSetupModal.voicemailPrefixTitle'),
+        description: $translate.instant('serviceSetupModal.voicemailPrefixDesc', { 'number': vm.model.site.siteSteeringDigit.siteDialDigit }),
+        warnMsg: $translate.instant('serviceSetupModal.warning.siteSteering', { 'number': vm.model.site.siteSteeringDigit.siteDialDigit }),
+        errorMsg: $translate.instant('serviceSetupModal.error.siteSteering', { 'digit': vm.model.site.steeringDigit }),
+        isWarn: false,
+        isError: false,
+        labelfield: 'voicemailPrefixLabel',
+        valuefield: 'siteDialDigit',
+        options: [],
+        onChangeFn: function () {
+          this.description = $translate.instant('serviceSetupModal.voicemailPrefixDesc', { 'number': vm.model.site.siteSteeringDigit.siteDialDigit });
+          this.warnMsg = $translate.instant('serviceSetupModal.warning.siteSteering', { 'number': vm.model.site.siteSteeringDigit.siteDialDigit });
+          this.errorMsg = $translate.instant('serviceSetupModal.error.siteSteering', { 'digit': vm.model.site.steeringDigit });
+        }
+      },
+      hideExpression: function () {
+        return vm.hideSiteSteeringDigit;
+      },
+      expressionProperties: {
+        'templateOptions.isWarn': vm.siteSteeringDigitWarningValidation,
+        'templateOptions.isError': vm.siteAndSteeringDigitErrorValidation
+      },
+      controller: function ($scope) {
+        _buildVoicemailPrefixOptions($scope);
+
+      }
+    }];
+
     vm.steeringDigitSelection = [{
       model: vm.model.site,
       key: 'steeringDigit',
@@ -472,15 +543,21 @@
         inputClass: 'medium-2',
         label: $translate.instant('serviceSetupModal.steeringDigit'),
         description: $translate.instant('serviceSetupModal.steeringDigitDescription'),
-        warnMsg: $translate.instant('serviceSetupModal.steeringDigitChangeWarning'),
+        warnMsg: $translate.instant('serviceSetupModal.warning.outboundDialDigit', { 'number': vm.model.site.steeringDigit }),
+        errorMsg: $translate.instant('serviceSetupModal.error.outboundDialDigit', { 'prefix': vm.model.site.siteSteeringDigit.voicemailPrefixLabel }),
         isWarn: false,
-        options: vm.steeringDigits
+        options: vm.steeringDigits,
+        onChangeFn: function () {
+          this.warnMsg = $translate.instant('serviceSetupModal.warning.outboundDialDigit', { 'number': vm.model.site.steeringDigit });
+          this.errorMsg = $translate.instant('serviceSetupModal.error.outboundDialDigit', { 'prefix': vm.model.site.siteSteeringDigit.voicemailPrefixLabel });
+        }
       },
       hideExpression: function () {
         return vm.hideFieldSteeringDigit;
       },
       expressionProperties: {
-        'templateOptions.isWarn': vm.steeringDigitChangeValidation
+        'templateOptions.isWarn': vm.steeringDigitWarningValidation,
+        'templateOptions.isError': vm.siteAndSteeringDigitErrorValidation
       }
     }];
 
@@ -869,6 +946,10 @@
         siteData.extensionLength = vm.model.site.extensionLength;
       }
 
+      if (vm.model.site.siteSteeringDigit.siteDialDigit !== savedModel.site.siteSteeringDigit.siteDialDigit) {
+        siteData.siteSteeringDigit = vm.model.site.siteSteeringDigit.siteDialDigit;
+      }
+
       // Save the existing site voicemail pilot number, before overwritting with the new value
       if (vm.model.companyVoicemail.companyVoicemailEnabled) {
         // When the toggle is ON, update the site if the pilot number changed or wasn't set,
@@ -901,6 +982,17 @@
         }
       }
       return updateSiteVoicemailNumber(siteData);
+    }
+
+    function saveAutoAttendant() {
+      return ServiceSetup.saveAutoAttendantSite({
+        siteSteeringDigit: vm.model.site.siteSteeringDigit.siteDialDigit,
+        siteCode: vm.model.site.siteCode,
+        uuid: vm.model.site.uuid
+      }).catch(function (response) {
+        errors.push(Notification.processErrorResponse(response, 'serviceSetupModal.error.autoAttendantPost'));
+        return $q.reject(response);
+      });
     }
 
     function updateVoicemailUserTemplate() {
@@ -997,18 +1089,21 @@
             .then(function (site) {
               vm.firstTimeSetup = false;
               vm.model.site.steeringDigit = site.steeringDigit;
-              vm.model.site.siteSteeringDigit = site.siteSteeringDigit;
+              vm.model.site.siteSteeringDigit = {
+                siteDialDigit: site.siteSteeringDigit,
+                voicemailPrefixLabel: site.siteSteeringDigit.concat(site.siteCode)
+              };
               vm.model.site.extensionLength = vm.model.previousLength = site.extensionLength;
-              _.remove(vm.steeringDigits, function (digit) {
-                return digit === site.siteSteeringDigit;
-              });
+              // _.remove(vm.steeringDigits, function (digit) {
+              //   return digit === site.siteSteeringDigit;
+              // });
               vm.model.site.timeZone = _.find(vm.timeZoneOptions, function (timezone) {
                 return timezone.id === site.timeZone;
               });
               vm.model.site.siteCode = site.siteCode;
               vm.model.site.vmCluster = site.vmCluster;
               vm.model.site.emergencyCallBackNumber = site.emergencyCallBackNumber;
-              vm.model.uuid = site.uuid;
+              vm.model.site.uuid = site.uuid;
               vm.model.site.voicemailPilotNumberGenerated = site.voicemailPilotNumberGenerated !== null ? site.voicemailPilotNumberGenerated : 'false';
               if (_.get(site, 'emergencyCallBackNumber.pattern')) {
                 vm.model.serviceNumber = {
@@ -1240,8 +1335,10 @@
         .then(showDisableVoicemailWarning)
         .then(updateCustomerVoicemail)
         .then(updateSite)
+        .then(saveAutoAttendant)
         .then(updateVoicemailTimeZone)
         .then(updateVoicemailToEmail)
+        .then(updateVoicemailPostalCode)
         .catch(_.noop);
     }
 
@@ -1396,6 +1493,15 @@
                 return $q.reject(response);
               });
           }
+        });
+    }
+
+    function updateVoicemailPostalCode() {
+      var postalCode = vm.model.site.steeringDigit + ':' + vm.model.site.siteSteeringDigit.voicemailPrefixLabel + ':' + vm.model.site.extensionLength;
+      return ServiceSetup.updateVoicemailPostalcode(postalCode, vm.voicemailUserTemplate.objectId)
+        .catch(function (response) {
+          errors.push(Notification.processErrorResponse(response, 'serviceSetupModal.error.updateVoicemailPostalCode'));
+          return $q.reject(response);
         });
     }
 
@@ -1679,6 +1785,46 @@
         } else {
           vm.model.callerId.callerIdNumber = '';
         }
+      });
+    }
+
+    function _buildVoicemailPrefixOptions($scope) {
+      $scope.$watchCollection(function () {
+        return [vm.model.site.siteSteeringDigit, vm.model.site.extensionLength];
+      }, function () {
+        var extensionLength0, extensionLength9;
+        switch (vm.model.site.extensionLength) {
+          case '3':
+            vm.model.site.siteCode = 100;
+            extensionLength0 = '000';
+            extensionLength9 = '999';
+            break;
+          case '4':
+            vm.model.site.siteCode = 100;
+            extensionLength0 = '000';
+            extensionLength9 = '999';
+            break;
+          case '5':
+            vm.model.site.siteCode = 10;
+            extensionLength0 = '0000';
+            extensionLength9 = '9999';
+            break;
+          default:
+            vm.model.site.siteCode = 100;
+            extensionLength0 = '000';
+            extensionLength9 = '999';
+            break;
+        }
+
+        var values = [];
+        _.forEach(vm.steeringDigits, function (digit) {
+          values.push({
+            siteDialDigit: digit,
+            voicemailPrefixLabel: digit.concat(vm.model.site.siteCode)
+          });
+        });
+        $scope.to.description = $translate.instant('serviceSetupModal.voicemailPrefixDesc', { 'number': vm.model.site.siteSteeringDigit.siteDialDigit, 'extensionLength0': extensionLength0, 'extensionLength9': extensionLength9 });
+        $scope.to.options = values;
       });
     }
 

@@ -6,7 +6,7 @@
     .factory('ServiceSetup', ServiceSetup);
 
   /* @ngInject */
-  function ServiceSetup($q, $translate, $filter, Authinfo, SiteService, InternalNumberRangeService, TimeZoneService, ExternalNumberPoolService, VoicemailTimezoneService, VoicemailService, CustomerCommonService, CustomerCosRestrictionServiceV2) {
+  function ServiceSetup($q, $translate, $filter, Authinfo, SiteService, InternalNumberRangeService, TimeZoneService, ExternalNumberPoolService, VoicemailTimezoneService, VoicemailService, CustomerCommonService, CustomerCosRestrictionServiceV2, CeSiteService) {
 
     return {
       internalNumberRanges: [],
@@ -41,6 +41,12 @@
         }, site).$promise;
       },
 
+      saveAutoAttendantSite: function (site) {
+        return CeSiteService.save({
+          customerId: Authinfo.getOrgId()
+        }, site).promise();
+      },
+
       loadExternalNumberPool: function (pattern) {
         var extNumPool = [];
         var patternQuery = pattern ? '%' + pattern + '%' : undefined;
@@ -73,6 +79,15 @@
           objectId: objectId
         }, {
           timeZoneName: timeZone
+        }).$promise;
+      },
+
+      updateVoicemailPostalcode: function (postalCode, objectId) {
+        return VoicemailTimezoneService.update({
+          customerId: Authinfo.getOrgId(),
+          objectId: objectId
+        }, {
+          postalCode: postalCode
         }).$promise;
       },
 
