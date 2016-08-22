@@ -8,7 +8,8 @@
     .controller('CareChatSetupAssistantCtrl', CareChatSetupAssistantCtrl);
 
   /* @ngInject */
-  function CareChatSetupAssistantCtrl($modal, $state, $timeout, $translate, $window, Authinfo, CTService, Notification, SunlightConfigService) {
+
+  function CareChatSetupAssistantCtrl($modal, $scope, $state, $timeout, $translate, $window, Authinfo, CTService, Notification, SunlightConfigService, $stateParams) {
     var vm = this;
     init();
 
@@ -70,7 +71,6 @@
     vm.endTimeOptions = CTService.getEndTimeOptions(vm.timings.startTime);
     vm.scheduleTimeZone = CTService.getDefaultTimeZone();
     vm.timezoneOptions = CTService.getTimezoneOptions();
-    vm.daysPreview = CTService.getPreviewDays(vm.days, true, 1, 5);
     vm.ChatTemplateButtonText = $translate.instant('common.finish');
     vm.lengthConstants = CTService.getLengthValidationConstants();
 
@@ -157,6 +157,24 @@
         id: typeId
       });
     };
+    vm.overlayTitle = $translate.instant('careChatTpl.createTitle');
+
+    //Template related constants  variables used after editing template
+    if ($stateParams.isEditFeature) {
+      vm.orgName = $stateParams.template.configuration.mediaSpecificConfiguration.displayText;
+      vm.logoUrl = $stateParams.template.configuration.mediaSpecificConfiguration.orgLogoUrl;
+      vm.timings.startTime.label = $stateParams.template.configuration.pages.offHours.schedule.timings.startTime;
+      vm.timings.endTime.label = $stateParams.template.configuration.pages.offHours.schedule.timings.endTime;
+      vm.scheduleTimeZone = CTService.getTimeZone($stateParams.template.configuration.pages.offHours.schedule.timezone);
+      var businessDays = $stateParams.template.configuration.pages.offHours.schedule.businessDays;
+      vm.days = _.map(CTService.getDays(), function (day) {
+        var selectedDay = day;
+        selectedDay.isSelected = _.contains(businessDays, day.label);
+        return selectedDay;
+      });
+      vm.overlayTitle = $translate.instant('careChatTpl.editTitle');
+    }
+    setDayPreview();
 
     /* Template */
     vm.template = {
@@ -271,6 +289,7 @@
                 displayText: $translate.instant('careChatTpl.feedbackQuery')
               },
               ratings: [{
+
                 displayText: $translate.instant('careChatTpl.rating1Text'),
                 dictionaryType: {
                   fieldSet: 'cisco.base.ccc.pod',
@@ -332,10 +351,36 @@
       feedback: 'circle-star'
     };
 
+    //Use the existing template fields when editing the template
+    if ($stateParams.isEditFeature) {
+      vm.template = $stateParams.template;
+    }
+
     function cancelModal() {
+      var modelText = $stateParams.isEditFeature ? {
+        bodyMessage: $translate.instant('careChatTpl.ctEditBody'),
+        process: $translate.instant('careChatTpl.ctEditing')
+      } : {
+        bodyMessage: $translate.instant('careChatTpl.ctCreationBody'),
+        process: $translate.instant('careChatTpl.ctCreation')
+      };
+
+      vm.cancelModalText = {
+        cancelHeader: $translate.instant('careChatTpl.cancelHeader'),
+        cancelDialog: $translate.instant('careChatTpl.cancelDialog', {
+          bodyMessage: modelText.bodyMessage
+        }),
+        continueButton: $translate.instant('careChatTpl.continueButton', {
+          confirmProcess: modelText.process
+        }),
+        confirmButton: $translate.instant('careChatTpl.confirmButton', {
+          cancelProcess: modelText.process
+        })
+      };
       $modal.open({
         templateUrl: 'modules/sunlight/features/chat/ctCancelModal.tpl.html',
-        type: 'dialog'
+        type: 'dialog',
+        scope: $scope
       });
     }
 
@@ -544,9 +589,23 @@
 
     function submitChatTemplate() {
       vm.creatingChatTemplate = true;
+      if ($stateParams.isEditFeature) editChatTemplate();
+      else createChatTemplate();
+    }
+
+    function createChatTemplate() {
       SunlightConfigService.createChatTemplate(vm.template)
         .then(function (response) {
           handleChatTemplateCreation(response);
+        }, function () {
+          handleChatTemplateError();
+        });
+    }
+
+    function editChatTemplate() {
+      SunlightConfigService.editChatTemplate(vm.template, vm.template.templateId)
+        .then(function (response) {
+          handleChatTemplateEdit(response, vm.template.templateId);
         }, function () {
           handleChatTemplateError();
         });
@@ -560,6 +619,15 @@
         featureName: vm.template.name
       });
       CTService.openEmbedCodeModal(responseTemplateId, vm.template.name);
+    }
+
+    function handleChatTemplateEdit(response, templateId) {
+      vm.creatingChatTemplate = false;
+      $state.go('care.Features');
+      Notification.success('careChatTpl.editSuccessText', {
+        featureName: vm.template.name
+      });
+      CTService.openEmbedCodeModal(templateId, vm.template.name);
     }
 
     function setDay(index) {
@@ -585,7 +653,6 @@
           _.slice(vm.days, firstSelectedDayIndex, lastSelectedDayIndex + 1), {
             isSelected: false
           });
-
         vm.daysPreview = CTService.getPreviewDays(vm.days, !isDiscontinuous, firstSelectedDayIndex, lastSelectedDayIndex);
       }
     }

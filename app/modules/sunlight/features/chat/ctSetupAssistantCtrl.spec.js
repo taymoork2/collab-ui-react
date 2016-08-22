@@ -2,7 +2,7 @@
 
 describe('Care Chat Setup Assistant Ctrl', function () {
 
-  var controller, $scope, $modal, $q, CTService, getLogoDeferred, getLogoUrlDeferred, SunlightConfigService, $state;
+  var controller, $scope, $modal, $q, CTService, getLogoDeferred, getLogoUrlDeferred, SunlightConfigService, $state, $stateParams;
   var Notification, $translate;
 
   var escapeKey = 27;
@@ -38,11 +38,6 @@ describe('Care Chat Setup Assistant Ctrl', function () {
     }]
   };
 
-  var successData = {
-    success: true,
-    status: 201
-  };
-
   var deSelectAllDays = function () {
     _.forEach(controller.days, function (day, key) {
       if (day.isSelected) {
@@ -61,20 +56,10 @@ describe('Care Chat Setup Assistant Ctrl', function () {
   beforeEach(angular.mock.module('Hercules'));
   beforeEach(angular.mock.module(function ($provide) {
     $provide.value("Authinfo", spiedAuthinfo);
-
-    $provide.value("SunlightConfigService", {
-      createChatTemplate: function () {
-        return {
-          then: function (callback) {
-            return callback(successData);
-          }
-        };
-      }
-    });
   }));
 
   var intializeCtrl = function (_$rootScope_, $controller, _$modal_, _$q_, _$translate_,
-    _$window_, _Authinfo_, _CTService_, _SunlightConfigService_, _$state_, _Notification_) {
+    _$window_, _Authinfo_, _CTService_, _SunlightConfigService_, _$state_, _Notification_, _$stateParams_) {
     $scope = _$rootScope_.$new();
     $modal = _$modal_;
     $q = _$q_;
@@ -83,6 +68,7 @@ describe('Care Chat Setup Assistant Ctrl', function () {
     SunlightConfigService = _SunlightConfigService_;
     $state = _$state_;
     Notification = _Notification_;
+    $stateParams = _$stateParams_;
 
     // set language to en_US to show AM and PM for startTime and endTime
     $translate.use(businessHours.userLang);
@@ -93,8 +79,13 @@ describe('Care Chat Setup Assistant Ctrl', function () {
     spyOn(CTService, 'getLogo').and.returnValue(getLogoDeferred.promise);
     spyOn(CTService, 'getLogoUrl').and.returnValue(getLogoUrlDeferred.promise);
     spyOn(Notification, 'success');
-
-    controller = $controller('CareChatSetupAssistantCtrl');
+    $stateParams = {
+      template: undefined,
+      isEditFeature: false
+    };
+    controller = $controller('CareChatSetupAssistantCtrl', {
+      $scope: $scope
+    });
   };
 
   function checkStateOfNavigationButtons(pageIndex, previousButtonState, nextButtonState) {
@@ -501,6 +492,7 @@ describe('Care Chat Setup Assistant Ctrl', function () {
     beforeEach(function () {
       deferred = $q.defer();
       spyOn(SunlightConfigService, 'createChatTemplate').and.returnValue(deferred.promise);
+      spyOn(SunlightConfigService, 'editChatTemplate').and.returnValue(deferred.promise);
     });
 
     it("When save chat template failed, the 'saveCTErrorOccurred' is set", function () {
@@ -518,6 +510,7 @@ describe('Care Chat Setup Assistant Ctrl', function () {
       expect(controller.saveCTErrorOccurred).toBeFalsy();
 
       spyOn($state, 'go');
+      spyOn($stateParams, 'isEditFeature').and.returnValue(false);
       deferred.resolve({
         success: true,
         headers: function () {
@@ -545,6 +538,41 @@ describe('Care Chat Setup Assistant Ctrl', function () {
       expect(controller.saveCTErrorOccurred).toBeFalsy();
       expect($state.go).toHaveBeenCalled();
     });
+
+    it("should submit chat template successfully for Edit", function () {
+      //by default, this flag is false
+      expect(controller.saveCTErrorOccurred).toBeFalsy();
+
+      spyOn($state, 'go');
+      spyOn($stateParams, 'isEditFeature').and.returnValue(true);
+      deferred.resolve({
+        success: true,
+        headers: function () {
+          return 'something/abc123';
+        },
+        status: 200
+      });
+
+      controller.submitChatTemplate();
+      $scope.$apply();
+
+      expect($modal.open).toHaveBeenCalledWith({
+        templateUrl: 'modules/sunlight/features/chat/ctEmbedCodeModal.tpl.html',
+        type: 'small',
+        controller: 'EmbedCodeCtrl',
+        controllerAs: 'embedCodeCtrl',
+        resolve: {
+          templateId: jasmine.any(Function),
+          templateHeader: jasmine.any(Function)
+        }
+      });
+      expect(Notification.success).toHaveBeenCalledWith(jasmine.any(String), {
+        featureName: jasmine.any(String)
+      });
+      expect(controller.saveCTErrorOccurred).toBeFalsy();
+      expect($state.go).toHaveBeenCalled();
+    });
+
   });
 
   describe('Chat Status Messages Page', function () {

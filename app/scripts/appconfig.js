@@ -2698,7 +2698,11 @@
             parent: 'care.Details',
             templateUrl: 'modules/sunlight/features/chat/ctSetupAssistant.tpl.html',
             controller: 'CareChatSetupAssistantCtrl',
-            controllerAs: 'careChatSA'
+            controllerAs: 'careChatSA',
+            params: {
+              template: null,
+              isEditFeature: null
+            }
           })
           .state('care.Features.DeleteFeature', {
             parent: 'modalDialog',
