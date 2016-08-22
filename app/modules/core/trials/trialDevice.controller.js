@@ -10,7 +10,6 @@
   function TrialDeviceController($stateParams, $translate, FeatureToggleService, Notification, TrialCallService, TrialDeviceService, TrialRoomSystemService, ValidationService) {
     var vm = this;
 
-
     var _trialCallData = TrialCallService.getData();
     var _trialRoomSystemData = TrialRoomSystemService.getData();
     var _trialDeviceData = TrialDeviceService.getData();
@@ -53,16 +52,22 @@
     // TODO - Remove vm.showNewRoomSystems when DX80 and MX300 are officially supported
     vm.showNewRoomSystems = false;
     vm.supportsInternationalShipping = false;
+    vm.selectedCountryCode = null;
 
 
     if (_.get(_trialDeviceData, 'shippingInfo.country') === '') {
       // always default to USA
       _trialDeviceData.shippingInfo.country = 'United States';
-      if (_.has($stateParams, 'details.details.shippingInformation.country')) {
-        // nothing was supplied to us and we have something from the backend
-        _trialDeviceData.shippingInfo = $stateParams.details.details.shippingInformation;
-      }
+      vm.selectedCountryCode = 'US';
+    } else {
+      vm.selectedCountryCode = TrialDeviceService.getCountryCodeByName(_trialDeviceData.shippingInfo.country);
     }
+    if (_.has($stateParams, 'details.details.shippingInformation.country')) {
+        // nothing was supplied to us and we have something from the backend
+      _trialDeviceData.shippingInfo = $stateParams.details.details.shippingInformation;
+    }
+
+
     vm.shippingInfo = _trialDeviceData.shippingInfo;
     if (_.has($stateParams, 'currentTrial.dealId')) {
       vm.shippingInfo.dealId = $stateParams.currentTrial.dealId;
@@ -499,43 +504,31 @@
       validators: {
         phoneNumber: {
           expression: function ($viewValue, $modelValue) {
-            return ValidationService.phoneUS($viewValue, $modelValue);
+            return ValidationService.phoneAny($viewValue, $modelValue, vm.selectedCountryCode);
           },
           message: function () {
             return $translate.instant('common.invalidPhoneNumber');
           }
         }
-      }
-    }, {
-      model: vm.shippingInfo,
-      key: 'country',
-      type: 'select',
-      defaultValue: _.find(TrialDeviceService.getCountries(getSelectedDevices(vm.supportsInternationalShipping)), {
-        country: vm.shippingInfo.country
-      }),
-      className: '',
-      templateOptions: {
-        labelClass: '',
-        inputClass: '',
-        label: $translate.instant('trialModal.call.country'),
-        type: 'text',
-        required: true,
-        labelfield: 'country',
-        labelProp: 'country',
-        valueProp: 'country',
-
       },
-      watcher: _countryWatcher(),
-      expressionProperties: {
-        'templateOptions.options': function () {
-          return _.map(TrialDeviceService.getCountries(getSelectedDevices(vm.supportsInternationalShipping)), 'country');
+
+      watcher: {
+        expression: function (field) {
+          return field.model.country;
         },
+        listener: function (field, newValue, oldValue) {
+          if (newValue !== oldValue) {
+            field.formControl.$validate();
+          }
+        }
       }
+
+
     }, {
       model: vm.shippingInfo,
       key: 'addressLine1',
       type: 'input',
-      className: '',
+      className: 'pull-left medium-9 with-slim-offset',
       templateOptions: {
         labelClass: '',
         inputClass: '',
@@ -543,11 +536,25 @@
         type: 'text',
         required: true
       }
-    }, {
+    },
+    {
+      model: vm.shippingInfo,
+      key: 'addressLine2',
+      type: 'input',
+      className: 'pull-left medium-3 with-slim-offset offset-l',
+      templateOptions: {
+        labelClass: '',
+        inputClass: '',
+
+        label: $translate.instant('trialModal.call.unit'),
+        type: 'text'
+      },
+    },
+    {
       model: vm.shippingInfo,
       key: 'city',
       type: 'input',
-      className: '',
+      className: 'medium-12 ',
       templateOptions: {
         labelClass: '',
         inputClass: '',
@@ -578,9 +585,36 @@
       expressionProperties: {
         'templateOptions.options': function () {
           return _.map(TrialDeviceService.getStates(), 'abbr');
-        }
-      }
-    }, {
+        },
+        'templateOptions.required': function () {
+          return vm.selectedCountryCode === 'US';
+        },
+      },
+      hideExpression: function () {
+        return vm.selectedCountryCode !== 'US';
+      },
+    },
+    {
+      model: vm.shippingInfo,
+      key: 'state',
+      type: 'input',
+      className: 'pull-left medium-8 with-slim-offset',
+      templateOptions: {
+        labelClass: '',
+        inputClass: '',
+        label: $translate.instant('trialModal.call.province'),
+        type: 'text',
+      },
+      expressionProperties: {
+        'templateOptions.required': function () {
+          return vm.selectedCountryCode !== 'US';
+        },
+      },
+      hideExpression: function () {
+        return vm.selectedCountryCode === 'US';
+      },
+    },
+    {
       model: vm.shippingInfo,
       key: 'postalCode',
       type: 'input',
@@ -592,8 +626,14 @@
         type: 'text',
         max: 99999,
         min: 0,
-        pattern: '\\d{5}',
         required: true
+      },
+      expressionProperties: {
+        'templateOptions.pattern': function () {
+          if (vm.selectedCountryCode === 'US') {
+            return '\\d{5}';
+          }
+        },
       },
       validation: {
         messages: {
@@ -602,7 +642,37 @@
           }
         }
       }
-    }, {
+    },
+    {
+      model: vm.shippingInfo,
+      key: 'country',
+      type: 'select',
+      defaultValue: _.find(TrialDeviceService.getCountries(getSelectedDevices(vm.supportsInternationalShipping)), {
+        country: vm.shippingInfo.country
+      }),
+      className: '',
+      templateOptions: {
+        labelClass: '',
+        inputClass: '',
+        label: $translate.instant('trialModal.call.country'),
+        type: 'text',
+        required: true,
+        labelfield: 'country',
+        value: 'code',
+        onChange: function (value, options) {
+          vm.selectedCountryCode = TrialDeviceService.getCountryCodeByName(value);
+          options.model.country = value;
+          options.model.state = null;
+        }
+      },
+      watcher: _countryWatcher(),
+      expressionProperties: {
+        'templateOptions.options': function () {
+          return _.map(TrialDeviceService.getCountries(getSelectedDevices(vm.supportsInternationalShipping)), 'country');
+        },
+      }
+    },
+    {
       model: vm.shippingInfo,
       key: 'dealId',
       type: 'input',
@@ -805,8 +875,8 @@
         listener: function (field, newValue, oldValue) {
           if (newValue !== oldValue) {
             field.templateOptions.options = _.map(TrialDeviceService.getCountries(getSelectedDevices(vm.supportsInternationalShipping)), 'country');
-            if (_.indexOf(field.templateOptions.options, field.model[field.key]) === -1) {
-              field.model[field.key] = null;
+            if (_.indexOf(field.templateOptions.options, field.model.country) === -1) {
+              field.model.country = null;
             }
           }
         }

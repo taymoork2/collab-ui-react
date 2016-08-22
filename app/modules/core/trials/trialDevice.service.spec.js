@@ -14,7 +14,7 @@ describe('Service: Trial Device Service:', function () {
       var countries = TrialDeviceService.getCountries();
       expect(countries.length).toBe(1);
       expect(countries).toContain({
-        country: 'United States'
+        country: 'United States',
       });
     });
 
@@ -22,7 +22,7 @@ describe('Service: Trial Device Service:', function () {
       var countries = TrialDeviceService.getCountries(['CISCO_SX10']);
       expect(countries.length).toBeGreaterThan(1);
       expect(countries).toContain({
-        country: 'Germany'
+        country: 'Germany',
       });
     });
 
@@ -30,7 +30,7 @@ describe('Service: Trial Device Service:', function () {
       var countries = TrialDeviceService.getCountries(['CISCO_SX10', 'SOME_OTHER']);
       expect(countries.length).toBe(1);
       expect(countries).toContain({
-        country: 'United States'
+        country: 'United States',
       });
     });
 
@@ -38,10 +38,22 @@ describe('Service: Trial Device Service:', function () {
       var countries = TrialDeviceService.getCountries(['CISCO_SX10', 'CISCO_8841']);
       expect(countries.length).toBe(1);
       expect(countries).toContain({
-        country: 'United States'
+        country: 'United States',
       });
     });
 
+  });
+
+  describe('Get Country Code By Name', function () {
+    it('should return a country if it is in the list', function () {
+      var result = TrialDeviceService.getCountryCodeByName('Belgium');
+      expect(result).toBe('BE');
+
+    });
+    it('should return an empty object if country is not in the list', function () {
+      var result = TrialDeviceService.getCountryCodeByName('Blargh');
+      expect(result).toBeUndefined();
+    });
   });
 
   describe('Get States List', function () {
