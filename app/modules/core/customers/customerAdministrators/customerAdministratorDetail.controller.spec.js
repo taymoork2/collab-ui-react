@@ -26,21 +26,6 @@ describe('Controller: customerAdministratorDetailCtrl', function () {
       uuid: 'd3434d78-26452-445a2-845d8-4c1816565b3f0a'
     }];
     spyOn(CustomerAdministratorService, 'removeCustomerSalesAdmin').and.returnValue($q.when({}));
-    spyOn(CustomerAdministratorService, 'addCustomerAdmin').and.returnValue($q.when({
-      userName: 'frank.sinatra+sinatrahelpdesk@gmail.com',
-      emails: [{
-        primary: true,
-        type: 'work',
-        value: 'frank.sinatra+sinatrahelpdesk@gmail.com'
-      }],
-      name: {
-        givenName: 'Frank',
-        familyName: 'Sinatra'
-      },
-      displayName: 'Frank Sinatra',
-      id: 'd3434d78-26452-445a2-845d8-4c1816565b3f0a',
-      avatarSyncEnabled: false
-    }));
     spyOn(CustomerAdministratorService, 'getPartnerUsers').and.returnValue($q.reject({
       data: {
         Errors: [{
@@ -142,8 +127,26 @@ describe('Controller: customerAdministratorDetailCtrl', function () {
     });
   });
 
-  describe('addAdmin', function () {
-    beforeEach(initController);
+  describe('addAdmin when admin does not have full-admin or sales-admin role: ', function () {
+    beforeEach(function () {
+      CustomerAdministratorService.addCustomerAdmin = jasmine.createSpy('CustomerAdministratorService').and.returnValue($q.when({
+        userName: 'frank.sinatra+sinatrahelpdesk@gmail.com',
+        emails: [{
+          primary: true,
+          type: 'work',
+          value: 'frank.sinatra+sinatrahelpdesk@gmail.com'
+        }],
+        name: {
+          givenName: 'Frank',
+          familyName: 'Sinatra'
+        },
+        roles: ['sinatras_bank_admin'],
+        displayName: 'Frank Sinatra',
+        id: 'd3434d78-26452-445a2-845d8-4c1816565b3f0a',
+        avatarSyncEnabled: false
+      }));
+      initController();
+    });
 
     it('must push administrator into View-Model administrators array', function () {
       controller.users = testUsers;
@@ -152,7 +155,57 @@ describe('Controller: customerAdministratorDetailCtrl', function () {
         expect(controller.administrators[0].uuid).toEqual('d3434d78-26452-445a2-845d8-4c1816565b3f0a');
         expect(controller.administrators[0].fullName).toEqual('Frank Sinatra');
         expect(controller.administrators[0].avatarSyncEnabled).toEqual(false);
+      });
+    });
+
+    it('should patch Sales_admin role if user does not have full-admin and sales-admin', function () {
+      controller.users = testUsers;
+      controller.administrators = [];
+      controller.addAdmin('Frank Sinatra').then(function () {
+        expect(controller.administrators[0].uuid).toEqual('d3434d78-26452-445a2-845d8-4c1816565b3f0a');
         expect(CustomerAdministratorService.patchSalesAdminRole()).toHaveBeenCalled();
+        expect(Analytics.trackEvent()).toHaveBeenCalled();
+      });
+    });
+  });
+
+  describe('addAdmin when admin has full-admin or sales-admin role: ', function () {
+    beforeEach(function () {
+      CustomerAdministratorService.addCustomerAdmin = jasmine.createSpy('CustomerAdministratorService').and.returnValue($q.when({
+        userName: 'frank.sinatra+sinatrahelpdesk@gmail.com',
+        emails: [{
+          primary: true,
+          type: 'work',
+          value: 'frank.sinatra+sinatrahelpdesk@gmail.com'
+        }],
+        name: {
+          givenName: 'Frank',
+          familyName: 'Sinatra'
+        },
+        roles: ['atlas-portal.partner.salesadmin', 'id_full_admin'],
+        displayName: 'Frank Sinatra',
+        id: 'd3434d78-26452-445a2-845d8-4c1816565b3f0a',
+        avatarSyncEnabled: false
+      }));
+      initController();
+    });
+
+    it('must push administrator into View-Model administrators array', function () {
+      controller.users = testUsers;
+      controller.administrators = [];
+      controller.addAdmin('Frank Sinatra').then(function () {
+        expect(controller.administrators[0].uuid).toEqual('d3434d78-26452-445a2-845d8-4c1816565b3f0a');
+        expect(controller.administrators[0].fullName).toEqual('Frank Sinatra');
+        expect(controller.administrators[0].avatarSyncEnabled).toEqual(false);
+      });
+    });
+
+    it('should not patch sales-dmin role if user has full-admin and sales-admin role', function () {
+      controller.users = testUsers;
+      controller.administrators = [];
+      controller.addAdmin('Frank Sinatra').then(function () {
+        expect(controller.administrators[0].uuid).toEqual('d3434d78-26452-445a2-845d8-4c1816565b3f0a');
+        expect(CustomerAdministratorService.patchSalesAdminRole()).not.toHaveBeenCalled();
         expect(Analytics.trackEvent()).toHaveBeenCalled();
       });
     });

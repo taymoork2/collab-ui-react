@@ -6,7 +6,7 @@
     <h5 class="modal-title" translate="mediaFusion.clusters.deregisterErrorHeader"></h5>
   </div>
   <div ng-hide="loading || hostDeregister.error">
-    <h5 class="deregisterTitle" translate="mediaFusion.deregister.header"></h5>
+    <h5 class="modal-title" translate="mediaFusion.deregister.header"></h5>
   </div>
 </div>
 
@@ -20,19 +20,20 @@
   </div>
 
   <div ng-hide="loading || hostDeregister.error">
+    <p translate="mediaFusion.deregister.body"></p>
+    <br>
     <p translate="mediaFusion.deregister.body1"></p>
     <p translate="mediaFusion.deregister.body2"></p>
   </div>
 </div>
 
 <div class="modal-footer" ng-hide="hostDeregister.error">
-  <button id="convertCancelButton" class="btn pull-right" ng-click="hostDeregister.close()"
-          style="margin-right: 10px">
-    <span translate="common.no"></span>
+  <button id="convertCancelButton" class="btn" ng-click="hostDeregister.close()">
+    <span translate="common.cancel"></span>
   </button>
   <button ng-disabled="loading || saving" id="convertActionButton" class="btn btn--primary"
           ng-click="hostDeregister.deregister()">
-    <span ng-hide="saving" translate="common.yes"></span>
+    <span ng-hide="saving" translate="mediaFusion.deregister.header"></span>
       <span ng-show="saving">
         <i class="icon icon-spinner"/>
       </span>
