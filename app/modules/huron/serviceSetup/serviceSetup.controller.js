@@ -7,7 +7,7 @@
 
   /* @ngInject*/
   function ServiceSetupCtrl($q, $state, ServiceSetup, Notification, Authinfo, $translate, HuronCustomer,
-    ValidationService, ExternalNumberPool, DialPlanService, TelephoneNumberService, ExternalNumberService,
+    ValidationService, DialPlanService, TelephoneNumberService, ExternalNumberService,
     CeService, HuntGroupServiceV2, ModalService, DirectoryNumberService, VoicemailMessageAction, FeatureToggleService) {
     var vm = this;
     var DEFAULT_SITE_INDEX = '000001';
@@ -1222,26 +1222,16 @@
         });
       }
 
-      function createExternalNumber(externalNumber) {
-        //TODO: Update the external number pool with the number that got added
-        return ExternalNumberPool.create(Authinfo.getOrgId(), externalNumber)
-          .catch(function (response) {
-            errors.push(Notification.processErrorResponse(response));
-          });
-      }
-
       function setupVoiceService() {
         if (!vm.hasVoiceService) {
           return HuronCustomer.put(vm.customer.name)
+            .then(function () {
+              vm.hasVoiceService = true;
+            })
             .catch(function (response) {
               vm.hasVoiceService = false;
               errors.push(Notification.processErrorResponse(response, 'serviceSetupModal.customerPutError'));
               return $q.reject(response);
-            }).then(function () {
-              vm.hasVoiceService = true;
-              if (_.get(vm, 'model.site.voicemailPilotNumber')) {
-                return createExternalNumber(vm.model.site.voicemailPilotNumber);
-              }
             });
         }
       }
