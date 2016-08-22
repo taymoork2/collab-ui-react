@@ -1,0 +1,86 @@
+<h4 translate="callForwardPanel.title"></h4>
+<input
+  cs-input
+  type="radio"
+  id="callForwardNone"
+  name="callForwardRadio"
+  ng-model="$ctrl.forwardState"
+  ng-value="'none'"
+  ng-change="$ctrl.onCallFwdNoneChange()"
+  cs-input-label="{{::'callForwardPanel.forwardNoCalls'|translate}}">
+
+<input
+  cs-input
+  type="radio"
+  id="callForwardAll"
+  name="callForwardRadio"
+  ng-model="$ctrl.forwardState"
+  ng-value="'all'"
+  cs-input-label="{{::'callForwardPanel.forwardAllCalls'|translate}}">
+
+<div class="row" ng-if="$ctrl.forwardState === 'all'">
+  <div class="columns medium-12">
+    <cs-select
+      name="forwardAllCalls"
+      ng-model="$ctrl.forwardAllCalls"
+      selected="$ctrl.forwardAllCalls"
+      options="$ctrl.forwardOptions"
+      required="true"
+      maxlength="50"
+      combo="true"
+      on-change-fn="$ctrl.onCallFwdAllChange(value)">
+    </cs-select>
+  </div>
+</div>
+
+<input
+  cs-input
+  type="radio"
+  id="callForwardBusy"
+  name="callForwardRadio"
+  ng-model="$ctrl.forwardState"
+  ng-value="'busy'"
+  cs-input-label="{{::'callForwardPanel.forwardBusyNoAnswer'|translate}}">
+
+<div ng-if="$ctrl.forwardState === 'busy'">
+  <div class="row">
+    <div class="columns medium-12">
+      <label for="forwardNABCalls" translate="callForwardPanel.internalAndExternal"></label>
+      <cs-select
+        name="forwardNABCalls"
+        ng-model="$ctrl.forwardNABCalls"
+        selected="$ctrl.forwardNABCalls"
+        options="$ctrl.forwardOptions"
+        required="true"
+        maxlength="50"
+        combo="true"
+        on-change-fn="$ctrl.onCallFwdBusyChange(value)">
+      </cs-select>
+    </div>
+  </div>
+  <div class="row">
+    <div class="columns medium-12">
+      <input
+        cs-input
+        type="checkbox"
+        id="ckForwardExternalCalls"
+        name="ckForwardExternalCalls"
+        ng-model="$ctrl.forwardExternalCalls"
+        cs-input-label="{{::'callForwardPanel.forwardExternal'|translate}}">
+    </div>
+  </div>
+  <div class="row" ng-if="$ctrl.forwardExternalCalls">
+    <div class="columns medium-12">
+      <cs-select
+        name="forwardExternalNABCalls"
+        ng-model="$ctrl.forwardExternalNABCalls"
+        selected="$ctrl.forwardExternalNABCalls"
+        options="$ctrl.forwardOptions"
+        required="true"
+        maxlength="50"
+        combo="true"
+        on-change-fn="$ctrl.onCallFwdBusyExternal(value)">
+      </cs-select>
+    </div>
+  </div>
+</div>
