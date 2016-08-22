@@ -26,59 +26,59 @@
     <button id="launchPartner" class="btn btn--people" translate="customerPage.myOrgButton">
     </button>
   </a>
-</cs-sp-section>
-<cs-sp-section class="customer-subscriptions-overview">
-  <div class="section-title-row">
-    <span class="section-name" translate="Subscription Info"></span>
-  </div>
-  <div class="feature-list">
-    <ul>
-      <li class="feature">
-        <a ui-sref="customer-overview.customerSubscriptions">
-          <span class="feature-name" translate="View Subscription Info"></span>
-          <span class="feature-status">
-            <i class="feature-arrow"></i>
-          </a>
-        </li>
-      </ul>
-    </div>
-  </cs-sp-section>
-  <cs-sp-section ng-if="customerOverview.currentCustomer.trialId">
+  <cs-sp-section ng-if = "customerOverview.isUpdateStatusEnabled" class="customer-subscriptions-overview">
     <div class="section-title-row">
-      <span class="section-name" translate="customerPage.trial"></span>
-      <span cs-dropdown class="actions-menu dropdown pull-right">
-        <button cs-dropdown-toggle class="actions-button btn--none dropdown-toggle">
-          <i class="icon icon-three-dots"></i>
-        </button>
-        <ul cs-dropdown-menu class="dropdown-menu dropdown-primary actions-services">
-          <li><a href ng-click="customerOverview.openEditTrialModal()" translate="customerPage.edit"></a></li>
+      <span class="section-name" translate="customerPage.subscriptions"></span>
+    </div>
+    <div class="feature-list">
+      <ul>
+        <li class="feature">
+          <a ui-sref="customer-overview.customerSubscriptions">
+            <span class="feature-name" translate="customerPage.viewSubscriptionInfo"></span>
+            <span class="feature-status">
+              <i class="feature-arrow"></i>
+            </a>
+          </li>
         </ul>
-      </span>
-    </div>
-    <div class="trial-bar">
-      <div class="trial-status">
-        <div>
-          <span>{{customerOverview.currentCustomer.duration}}</span> <span translate="customerPage.dayTrial"></span>
+      </div>
+    </cs-sp-section>
+    <cs-sp-section ng-if="customerOverview.currentCustomer.trialId">
+      <div class="section-title-row">
+        <span class="section-name" translate="customerPage.trial"></span>
+        <span cs-dropdown class="actions-menu dropdown pull-right">
+          <button cs-dropdown-toggle class="actions-button btn--none dropdown-toggle">
+            <i class="icon icon-three-dots"></i>
+          </button>
+          <ul cs-dropdown-menu class="dropdown-menu dropdown-primary actions-services">
+            <li><a href ng-click="customerOverview.openEditTrialModal()" translate="customerPage.edit"></a></li>
+          </ul>
+        </span>
+      </div>
+      <div class="trial-bar">
+        <div class="trial-status">
+          <div>
+            <span>{{customerOverview.currentCustomer.duration}}</span> <span translate="customerPage.dayTrial"></span>
+          </div>
+          <div>
+            <span ng-class="{'trial-danger': customerOverview.currentCustomer.daysLeft <= 5, 'user-title': customerOverview.currentCustomer.daysLeft > 5}">{{customerOverview.getDaysLeft(customerOverview.currentCustomer.daysLeft)}}</span>
+            <span ng-if="customerOverview.currentCustomer.daysLeft > 0" ng-class="{'trial-danger': customerOverview.currentCustomer.daysLeft <= 5, 'user-title': customerOverview.currentCustomer.daysLeft > 5}" translate="customerPage.daysLeft"></span>
+          </div>
         </div>
-        <div>
-          <span ng-class="{'trial-danger': customerOverview.currentCustomer.daysLeft <= 5, 'user-title': customerOverview.currentCustomer.daysLeft > 5}">{{customerOverview.getDaysLeft(customerOverview.currentCustomer.daysLeft)}}</span>
-          <span ng-if="customerOverview.currentCustomer.daysLeft > 0" ng-class="{'trial-danger': customerOverview.currentCustomer.daysLeft <= 5, 'user-title': customerOverview.currentCustomer.daysLeft > 5}" translate="customerPage.daysLeft"></span>
+        <div class="progress">
+          <div class="progress-bar" ng-class="{'danger-bar': customerOverview.currentCustomer.daysLeft <= 5, 'warning-bar': (customerOverview.currentCustomer.daysLeft < customerOverview.currentCustomer.duration/2), 'success-bar': (customerOverview.currentCustomer.daysLeft >= customerOverview.currentCustomer.duration/2)}" role="progressbar" aria-valuenow="{{getProgressValue(customerOverview.currentCustomer)}}" aria-valuemin="0" aria-valuemax="{{customerOverview.currentCustomer.duration}}" style="width: {{customerOverview.currentCustomer.percentUsed}}%;"></div>
         </div>
       </div>
-      <div class="progress">
-        <div class="progress-bar" ng-class="{'danger-bar': customerOverview.currentCustomer.daysLeft <= 5, 'warning-bar': (customerOverview.currentCustomer.daysLeft < customerOverview.currentCustomer.duration/2), 'success-bar': (customerOverview.currentCustomer.daysLeft >= customerOverview.currentCustomer.duration/2)}" role="progressbar" aria-valuenow="{{getProgressValue(customerOverview.currentCustomer)}}" aria-valuemin="0" aria-valuemax="{{customerOverview.currentCustomer.duration}}" style="width: {{customerOverview.currentCustomer.percentUsed}}%;"></div>
-      </div>
-    </div>
-    <div class="feature-list trials-list">
-      <ul ng-if="customerOverview.offer.trialServices">
-        <li class="feature" ng-repeat="trialService in customerOverview.currentCustomer.offer.trialServices">
-          <div class="feature-name">
-            <i class="icon  feature-icon" ng-class="trialService.icon"></i>
-            {{::trialService.name }}</div>
+      <div class="feature-list trials-list">
+        <ul ng-if="customerOverview.offer.trialServices">
+          <li class="feature" ng-repeat="trialService in customerOverview.currentCustomer.offer.trialServices">
+            <div class="feature-name">
+              <i class="icon  feature-icon" ng-class="trialService.icon"></i>
+              {{::trialService.name }}
+            </div>
             <div class="feature-details">{{trialService.qty}}&nbsp;{{::'common.quantity' | translate | uppercase}}
             </div>
           </li>
-        </ul>
+        </ul>vice.icon
       </div>
     </cs-sp-section>
     <!-- services -->

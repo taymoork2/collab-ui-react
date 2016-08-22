@@ -7,14 +7,13 @@
     <div class="section-title-row">
       <span class="section-name" translate="customerSubscriptions.customerInfo"></span>
     </div>
-
-    <div class = "feature-list">
+    <div class="feature-list">
       <ul>
         <li>
-          <span class = "feature-name">{{customerOverview.currentCustomer.customerName}}</span>
+          <span class="feature-name">{{customerOverview.currentCustomer.customerName}}</span>
         </li>
         <li>          
-        <span translate="customerPage.contactEmail">{{customerOverview.currentCustomer.customerEmail}}</span> 
+        <span class="feature-name">{{customerOverview.currentCustomer.customerEmail}}</span>
         </li>
       </ul>
     </div>
@@ -23,13 +22,13 @@
     <div class="section-title-row">
       <span class="section-name" translate="customerSubscriptions.partnerAdmin"></span>
     </div>
-    <div class = "feature-list">
+    <div class="feature-list">
       <ul>
         <li>
-          <span class = "feature-name">{{customerOverview.partnerOrgName}}</span>
+          <span class="feature-name">{{customerOverview.partnerOrgName}}</span>
         </li>
         <li>
-          <span class = "feature-name">{{customerOverview.partnerEmail}}</span>
+          <span class="feature-name">{{customerSubscriptions.partnerEmail}}</span>
         </li>
       </ul>
     </div>
@@ -46,14 +45,14 @@
         <span class="feature-name">{{customerSubscription.subscriptionId}}</span> 
       </ul>
       <ul>
-        <span class="feature-name">{{customerSubscription.trainSite}}</span>
+        <span class="feature-name">{{customerSubscription.siteUrl}}</span>
       </ul>
       <ul>
-        <span class="feature-name"></span><br></span>
+        <span class="feature-name"><br></span>
       </ul>
     </div>
-    <div class = "feature-list" ng-if="customerSubscriptions.subscriptions.length<1">
-          <span class="section-name" translate="No Webex Subscriptions"></span>
+    <div class="feature-list" ng-if="customerSubscriptions.subscriptions.length<1">
+      <span class="section-name" translate="customerSubscriptions.noWebexSubscriptions"></span>
     </div>
   </cs-sp-section>
   <cs-sp-section>
@@ -66,9 +65,9 @@
       <ul>
         <li>
           <form novalidate role="form">
-          <button class ="bttn btn--primary" ng-click="customerSubscriptions.sendMail(customerSubscriptions.subscriptions)" translate="Email"></button>
-            <button class="btn" ngclipboard data-clipboard-text="{{customerSubscriptions.customerHeaderInfoClipboard}}">
-            <span translate="Copy"></span>
+            <button class ="bttn btn--primary" ng-click="customerSubscriptions.sendMail(customerSubscriptions.subscriptions)" translate="Email"></button>
+            <button class="btn" ngclipboard data-clipboard-text="{{customerSubscriptions.customerInfoClipboard}}">
+              <span translate="Copy"></span>
             </button>
           </form>
         </li>
