@@ -34,6 +34,7 @@
       atlasPinSettings: 'atlas-pin-settings',
       atlasPstnTfn: 'atlas-pstn-tfn',
       atlasReadOnlyAdmin: 'atlas-read-only-admin',
+      atlasComplianceRole: 'atlas-compliance-role',
       atlasSettingsPage: 'atlas-settings-page',
       atlasSipUriDomain: 'atlas-sip-uri-domain',
       atlasSipUriDomainEnterprise: 'atlas-sip-uri-domain-enterprise',

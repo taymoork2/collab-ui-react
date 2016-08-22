@@ -233,7 +233,7 @@
       },
         payload
       ).$promise.then(function (response) {
-        Analytics.trackUserPatch(response.meta.organizationID);
+        Analytics.trackUserPatch(response.meta.organizationID, response.id);
         return $q.resolve(response);
       }).catch(function (response) {
         return $q.reject(response);
@@ -242,7 +242,11 @@
 
     function modifyManagedOrgs(customerOrgId) {
       return Auth.getAuthorizationUrlList().then(function (response) {
-        if (_.chain(response).get('data.managedOrgs').includes(customerOrgId).value()) {
+        if (!_.chain(response)
+          .get('data.managedOrgs')
+          .map('orgId')
+          .includes(customerOrgId)
+          .value()) {
           return patchManagedOrgs(response.data.uuid, customerOrgId);
         }
       });
