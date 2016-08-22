@@ -997,7 +997,8 @@
     "warning": "Warning",
     "error": "Error",
     "turnOff": "Turn Off",
-    "overview":"Overview"
+    "overview": "Overview",
+    "notAvailable": "N/A"
   },
   "notifications": {
     "success": "Success notifications",
@@ -1680,7 +1681,7 @@
     "fusion": {
       "types": {
         "expressway": "Expressway",
-        "mediafusion": "Hybrid Media Node"
+        "mediafusion": "Media"
       },
       "list": {
         "title": "Clusters",
@@ -2828,9 +2829,9 @@
     "notes": "Notes",
     "active": "Active",
     "free": "Free",
-    "daysRemaining": "{count, plural, one{# day remaining} other{# days remaining}}",
-    "daysLeftToPurchase": "{count, plural, one{# day left to purchase} other{# days left to purchase}}",
-    "daysLeftToRenew": "{count, plural, one{# day left to renew} other{# days left to renew}}",
+    "daysRemaining": "{count, plural, one{# day} other{# days}} remaining",
+    "daysLeftToPurchase": "{count, plural, one{# day} other{# days}} left to purchase",
+    "daysLeftToRenew": "{count, plural, one{# day} other{# days}} left to renew",
     "expiringToday": "Expiring today",
     "expired": "Expired",
     "expiredWithGracePeriod": "Expired. Purchase now",
@@ -2912,8 +2913,12 @@
     "totalUsers": "Total Users",
     "purchased": "Purchased",
     "domain": "{count, plural, one{Domain} other{Domains}}",
-    "domains": "Domains"
-
+    "domains": "Domains",
+    "quantityWithValue": "Qty: {{quantity}}",
+    "filterSelectPlaceholder": "Select a filter...",
+    "filterTrialAccounts": "Trial Accounts",
+    "filterPurchasedAccounts": "Purchased Accounts",
+    "filterExpiredAccounts": "Expired Accounts"
   },
   "customerAdminPanel": {
     "addAdministrators": "Add Administrators",
@@ -3293,7 +3298,8 @@
       "scheduleText": "Choose a release channel you want this cluster to update with:"
     },
     "deregister": {
-      "header": "Are you sure you want to deregister this node?",
+      "header": "Deregister Node",
+      "body": "Are you sure you want to deregister this node?",
       "body1": "If you proceed, this node will no longer be available.",
       "body2": "To make this node available again, you will need to reregister it."
     },
@@ -3466,8 +3472,8 @@
       "cancel": "Cancel",
       "cluster-placeholder": "Create or select cluster",
       "hostname-placeholder": "Enter hostname or IP address",
-      "grant-registration-success-header-old-cluster": "You can now register the Hybrid Media Node <strong>{{hostname}}</strong>, belonging to <strong>{{clustername}}</strong> with the Cisco Collaboration Cloud.",
-      "grant-registration-success-header-new-cluster": "You can now register the Hybrid Media Node <strong>{{hostname}}</strong>, belonging to the new cluster <strong>{{clustername}}</strong> with the Cisco Collaboration Cloud.",
+      "grant-registration-success-header-old-cluster": "You can now register the Hybrid Media Node <strong>{{hostname}}</strong>, assigned to <strong>{{clustername}}</strong> with the Cisco Collaboration Cloud.",
+      "grant-registration-success-header-new-cluster": "You can now register the Hybrid Media Node <strong>{{hostname}}</strong>, assigned to the new cluster <strong>{{clustername}}</strong> with the Cisco Collaboration Cloud.",
       "grant-success-information": "Go to your Hybrid Media Node within one hour to finish registration.",
       "next": "Next",
       "back": "Back",
@@ -3480,7 +3486,7 @@
       "text3V2": "Enter the hostname or IP address of the Hybrid Media Node that you want to register with the Cisco Collaboration Cloud.",
       "serverOnline": "The media server that you are registering already exists and is online.",
       "serverOffline": "The media server that you are registering already exists and is offline. Deregister the existing server before you try again.",
-      "firstStep": "Have you installed and configured the software on your new Hybrid Media Node?",
+      "firstStep": "Before you can register your Hybrid Media Node, you must install and configure the software on your new server.",
       "firstStepYes": "During this guided setup you will need documentation.",
       "firstStepYes1": "Visit ",
       "firstStepYes2": "Help Central",
@@ -3490,10 +3496,12 @@
       "firstStepNo2": "Click here",
       "firstStepNo3": "2. Install and configure your Hybrid Media Node. For details, visit Help Central.",
       "firstStepNo4": "3. Proceed to register your Hybrid Media Node following the steps below.",
-      "yesProceed": "Yes, I’m ready to proceed.",
-      "noProceed": "No, I'm not ready to proceed.",
-      "noInfo": "Before you can proceed, install and configure the Hybrid Media Node software on your server.",
-      "noDesc1": "For detailed instructions, visit ",
+      "yesProceed": "Yes, I’m ready to register my Hybrid Media Node.",
+      "noProceed": "No, I need to install and configure the software.",
+      "noProceed-helptext": "(Software will automatically download)",
+      "noInfo": "Install and configure the software on your server and return to Cisco Cloud Collaboration Management to register your Hybrid Media Node.",
+      "noRetryInfo": "Software did not automatically download? <a href='https://7f3b835a2983943a12b7-f3ec652549fc8fa11516a139bfb29b79.ssl.cf5.rackcdn.com/Media-Fusion-Management-Connector/mfusion.ova'>Try Again.</a>",
+      "noDesc1": "For detailed on installation and configuration, visit ",
       "noDesc2": "Help Central.",
       "noDesc3": "After installation and configuration is complete, return to Cloud Collaboration Management and register your Hybrid Media Node.",
       "yesInfo": "Assign your Hybrid Media Node to a cluster and enter the hostname or IP address."
@@ -4013,11 +4021,11 @@
     "uploading": "Uploading File",
     "success": "File Uploaded Successfully",
     "errorUnknown": "File Not Uploaded: unknown upload error",
-    "errorFileType": "File Not Uploaded: incorrect file type",
+    "errorFileType": "File Not Uploaded: incorrect file type.",
     "errorFilePNG": "The uploaded file must be a PNG file",
-    "errorDimensions": "File Not Uploaded: incorrect file dimensions",
+    "errorDimensions": "File Not Uploaded: incorrect file dimensions.",
     "errorWidthHeight": "The uploaded image must be wider than {{width}} px.",
-    "errorFileSize": "File Not Uploaded: incorrect file size",
+    "errorFileSize": "File Not Uploaded: incorrect file size.",
     "errorFileLarge": "The image file size must be less than 1 MB."
   },
   "utilizationPage": {
@@ -4365,6 +4373,7 @@
     "deleteFeature": "Delete {{ featureText }}",
     "deleteFeatureTextConfirmation": "Are you sure you want to delete the {{ featureName }} {{featureText}} ?",
     "createSuccessText": "{{ featureName }} Chat Template has been created successfully",
+    "editSuccessText": "{{ featureName }} Chat Template has been updated successfully",
     "deleteSuccessText": "{{ featureName }} {{ featureText }} has been deleted successfully",
     "deleteFailedText": "Failed to delete {{ featureName }} {{ featureText }}.",
     "messageError": "Message {{ message }}",
@@ -4373,6 +4382,7 @@
     "namePlaceholder": "Name the Chat Template",
     "nameHint": "This name is for you to uniquely identify this chat template.",
     "createTitle": "Create Chat Template",
+    "editTitle": "Edit Chat Template",
     "profile": "Chat Template Profile",
     "overview": "Chat Template Overview",
     "customerInfo": "Customer Info Screen",
@@ -4398,10 +4408,14 @@
     "offHoursDayWarningMessage": "Please Select a Day",
     "chatStringsDesc": "These strings appear in the UI based on different scenarios",
     "chatStatusMessagesDesc": "Configure status messages which your customer sees on chat bubble",
-    "cancelHeader": "Cancel Chat Template Creation",
-    "cancelDialog": "Are you sure you wish to cancel chat template creation? This chat template will not be saved.",
-    "confirmButton": "Cancel Creation",
-    "continueButton": "Continue Creation",
+    "cancelHeader": "Cancel",
+    "ctCreation": "Creation",
+    "ctEditing": "Editing",
+    "ctCreationBody": "chat template creation ",
+    "ctEditBody": "editing of chat template ",
+    "cancelDialog": "Are you sure you want to cancel {{bodyMessage}} ? This chat template will not be saved.",
+    "confirmButton": "Cancel {{cancelProcess}}",
+    "continueButton": "Continue {{confirmProcess}}",
     "preview": "Preview",
     "attributes": "Attributes",
     "windowTitleLabel": "Window Title",
@@ -4454,7 +4468,11 @@
     "typeEmail": "Email",
     "typeId": "Id",
     "typePhone": "Phone",
-
+    "typeCustom": "Custom",
+    "ctValidation":{
+      "errorChar250": "Character length cannot be more than 250.",
+      "errorChar50": "Character length cannot be more than 50."
+    },
     "ctOverview": {
       "customerInformation": {
         "title": "Customer Info",
@@ -4706,7 +4724,7 @@
           "squared-fusion-cal": "Calendar",
           "squared-fusion-uc": "Call",
           "squared-fusion-mgmt": "Management",
-          "squared-fusion-media": "Media Service"
+          "squared-fusion-media": "Media"
         }
       }
     }
@@ -4794,6 +4812,7 @@
     "purchase": "Purchase",
     "changePlan": "Change Plan",
     "onlineTrialUpgradeUrlError": "Unable to retrieve purchase url for trial {{trialId}}.  To purchase a paid subscription, contact your partner via email or use the purchase button on the trial banner to have one sent for you.",
+    "loadError": "An error occurred while loading subscriptions.",
     "licenseTypes": {
       "MS": "Standard Team Rooms",
       "CF": "Meeting 25 Party",
@@ -5114,6 +5133,13 @@
           "numbers": "Numbers",
           "features": "Features",
           "settings": "Settings"
+        }
+      },
+      "care": {
+        "title": "Care",
+        "description": "Cisco Spark Care configurations of media channels for your organization.",
+        "buttons": {
+          "features": "Features"
         }
       },
       "hybridManagement": {

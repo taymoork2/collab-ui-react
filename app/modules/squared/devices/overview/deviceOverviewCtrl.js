@@ -253,7 +253,7 @@
     deviceOverview.upgradeChannelOptions = _.map(channels, getUpgradeChannelObject);
 
     function resetSelectedChannel() {
-      deviceOverview.selectedUpgradeChannel = getUpgradeChannelObject(deviceOverview.currentDevice.upgradeChannel);
+      deviceOverview.selectedUpgradeChannel = deviceOverview.currentDevice.upgradeChannel;
     }
 
     resetSelectedChannel();
@@ -272,7 +272,7 @@
 
     deviceOverview.saveUpgradeChannelAndWait = function () {
       var newValue = deviceOverview.selectedUpgradeChannel.value;
-      if (newValue !== deviceOverview.currentDevice.upgradeChannel) {
+      if (newValue !== deviceOverview.currentDevice.upgradeChannel.value) {
         deviceOverview.updatingUpgradeChannel = true;
         saveUpgradeChannel(newValue)
           .then(_.partial(waitForDeviceToUpdateUpgradeChannel, newValue))
@@ -298,7 +298,7 @@
 
     function pollDeviceForNewChannel(newValue, endTime, deferred) {
       CsdmDeviceService.getDevice(deviceOverview.currentDevice.url).then(function (device) {
-        if (device.upgradeChannel == newValue) {
+        if (device.upgradeChannel.value == newValue) {
           Notification.success('deviceOverviewPage.channelUpdated');
           return deferred.resolve();
         }

@@ -162,7 +162,6 @@
     "pathToImages": "./amcharts/images/",
     "theme": "light",
     "marginRight": 70,
-    "dataDateFormat": "YYYY-MM-DDTJJ:NN:SSZ",
     "balloonDateFormat": "JJ:NN",
     "columnWidth": 0.035,
     "valueAxis": "dummyData",
@@ -195,6 +194,7 @@
       "valueLineEnabled": true,
       "zoomable": false,
       "valueZoomable": true
-    }
+    },
+    "export": "dummyData"
   }
 }

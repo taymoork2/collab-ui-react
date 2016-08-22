@@ -6,7 +6,7 @@
 
 describe(' sunlightConfigService', function () {
   var sunlightConfigService, $httpBackend, sunlightUserConfigUrl,
-    sunlightChatConfigUrl, userData, userId, orgId;
+    sunlightChatConfigUrl, userData, userId, orgId, templateId;
   var spiedAuthinfo = {
     getOrgId: jasmine.createSpy('getOrgId').and.returnValue('deba1221-ab12-cd34-de56-abcdef123456')
   };
@@ -26,6 +26,7 @@ describe(' sunlightConfigService', function () {
     userData = getJSONFixture('sunlight/json/sunlightTestUser.json');
     userId = '111';
     orgId = 'deba1221-ab12-cd34-de56-abcdef123456';
+    templateId = 'adba1221-ab12-cd34-de56-abcdef123456';
     sunlightChatConfigUrl = UrlConfig.getSunlightConfigServiceUrl() + '/organization/' + orgId + '/template';
   }));
 
@@ -87,10 +88,30 @@ describe(' sunlightConfigService', function () {
     $httpBackend.flush();
   });
 
+
   it('should fail to create chat template in sunlight config service when there is a service error', function () {
     var chatTemplate = angular.copy(getJSONFixture('sunlight/json/sunlightTestTemplate.json'));
     $httpBackend.whenPOST(sunlightChatConfigUrl).respond(500, errorData);
     sunlightConfigService.createChatTemplate(chatTemplate).then(function (response) {
+      expect(response.data).toEqual(errorData);
+      expect(response.status).toBe(500);
+    });
+    $httpBackend.flush();
+  });
+
+  it('should update chat template in sunlight config service', function () {
+    var chatTemplate = angular.copy(getJSONFixture('sunlight/json/sunlightTestTemplate.json'));
+    $httpBackend.whenPUT(sunlightChatConfigUrl + "/" + templateId).respond(200, {});
+    sunlightConfigService.editChatTemplate(chatTemplate, templateId).then(function (response) {
+      expect(response.status).toBe(200);
+    });
+    $httpBackend.flush();
+  });
+
+  it('should fail to edit chat template in sunlight config service when there is a service error', function () {
+    var chatTemplate = angular.copy(getJSONFixture('sunlight/json/sunlightTestTemplate.json'));
+    $httpBackend.whenPUT(sunlightChatConfigUrl + "/" + templateId).respond(500, errorData);
+    sunlightConfigService.editChatTemplate(chatTemplate, templateId).then(function (response) {
       expect(response.data).toEqual(errorData);
       expect(response.status).toBe(500);
     });

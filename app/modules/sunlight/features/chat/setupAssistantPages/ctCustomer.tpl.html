@@ -42,11 +42,11 @@
       <cs-card class="ct-customer-card">
         <header class="cardHeader1 h4" translate="careChatTpl.attributes"></header>
         <article class="customer-attributes-article ct-article articleHeight">
-          <section class="ct-attribute-section ct-flex-center" ng-hide="careChatSA.activeItem !== undefined">
+          <section class="ct-attribute-section item-not-selected ct-flex-center" ng-hide="careChatSA.activeItem !== undefined">
             <div class="ct-default-msg h6 medium-8" translate="careChatTpl.defaultRightCardText"></div>
           </section>
 
-          <section class="ct-attribute-section ct-flex-topleft ng-hide" ng-hide="careChatSA.activeItem === undefined">
+          <section class="ct-attribute-section ng-hide" ng-hide="careChatSA.activeItem === undefined">
             <div class="row ct-attribute-row" ng-repeat="attribute in careChatSA.activeItem.attributes">
 
               <label

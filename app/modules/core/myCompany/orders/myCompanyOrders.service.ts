@@ -15,8 +15,6 @@ export class MyCompanyOrdersService {
 
   /* @ngInject */
   constructor(
-    private $http: ng.IHttpService,
-    private $q: ng.IQService,
     private $resource: ng.resource.IResourceService,
     private Authinfo,
     private UrlConfig
@@ -30,14 +28,6 @@ export class MyCompanyOrdersService {
     }).$promise
       .then(orderList => {
         return _.get<IOrderDetail[]>(orderList, 'commerceOrderList', []);
-      });
-  }
-
-  public getDigitalRiverOrderHistoryUrl(): ng.IPromise<string> {
-    const DIGITAL_RIVER_ORDER_HISTORY = 'https://store.digitalriver.com/store/ciscoctg/en_US/DisplayAccountOrderListPage?DRL=';
-    return this.$http.get<string>(this.UrlConfig.getAdminServiceUrl() + 'commerce/online/users/authtoken')
-      .then((response) => {
-        return DIGITAL_RIVER_ORDER_HISTORY + encodeURIComponent(response.data);
       });
   }
 }

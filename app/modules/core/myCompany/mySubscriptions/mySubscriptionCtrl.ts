@@ -1,3 +1,5 @@
+import { DigitalRiverService } from '../digitalRiver/digitalRiver.service';
+
 const baseCategory = {
   label: undefined,
   subscriptions: [],
@@ -30,18 +32,23 @@ class MySubscriptionCtrl {
   public isOnline = false;
   public trialUrlFailed = false;
 
+  public loading: boolean = false;
+  public digitalRiverSubscriptionsUrl: string;
+
   /* @ngInject */
   constructor(
-    private $rootScope: ng.IRootScopeService,
     private $http: ng.IHttpService,
-    private $translate,
-    private $timeout,
     private $q: ng.IQService,
+    private $rootScope: ng.IRootScopeService,
+    private $sce: ng.ISCEService,
+    private $timeout: ng.ITimeoutService,
+    private $translate: ng.translate.ITranslateService,
     private Authinfo,
+    private DigitalRiverService: DigitalRiverService,
+    private Notification,
     private Orgservice,
     private ServiceDescriptor,
-    private UrlConfig,
-    private Notification
+    private UrlConfig
   ) {
     // message subscriptions
     this.licenseCategory[0] = angular.copy(baseCategory);
@@ -51,19 +58,34 @@ class MySubscriptionCtrl {
     this.licenseCategory[1] = angular.copy(baseCategory);
     this.licenseCategory[1].label = $translate.instant("subscriptions.meeting");
     this.licenseCategory[1].borders = true;
-    
+
     // communication subscriptions
     this.licenseCategory[2] = angular.copy(baseCategory);
     this.licenseCategory[2].label = $translate.instant("subscriptions.call");
-    
+
     // room system subscriptions
     this.licenseCategory[3] = angular.copy(baseCategory);
     this.licenseCategory[3].label = $translate.instant("subscriptions.room");
 
     this.isOnline = Authinfo.isOnline();
-    this.subscriptionRetrieval();
-    this.hybridServicesRetrieval();
+
+    if (this.isOnline) {
+      this.initIframe();
+    } else {
+      this.subscriptionRetrieval();
+      this.hybridServicesRetrieval();
+    }
   };
+
+  private initIframe(): void {
+    this.loading = true;
+    this.DigitalRiverService.getDigitalRiverSubscriptionsUrl().then((subscriptionsUrl) => {
+      this.digitalRiverSubscriptionsUrl = this.$sce.trustAsResourceUrl(subscriptionsUrl);
+    }).catch((response) => {
+      this.loading = false;
+      this.Notification.errorWithTrackingId(response, 'subscriptions.loadError');
+    });
+  }
 
   private upgradeTrialUrl(subId) {
     return this.$http.get(this.UrlConfig.getAdminServiceUrl() + 'commerce/online/' + subId).then((response) => {
@@ -207,7 +229,7 @@ class MySubscriptionCtrl {
             newSubscription.isTrial = license.isTrial;
           }
         });
-        
+
         if (newSubscription.licenses.length > 0) {
           // sort licenses into display order/order for determining subscription name
           newSubscription.licenses.sort((a, b) => {
@@ -252,7 +274,7 @@ class MySubscriptionCtrl {
           if (callServices.length > 0) {
             let callService = {
               id: fusionUC,
-              enabled: _.all(callServices, {
+              enabled: _.every(callServices, {
                 enabled: true
               }),
               status: _.reduce(callServices, (result:String, serv) => {

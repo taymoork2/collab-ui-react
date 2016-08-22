@@ -6,7 +6,7 @@
     .controller('AddResourceControllerClusterViewV2', AddResourceControllerClusterViewV2);
 
   /* @ngInject */
-  function AddResourceControllerClusterViewV2(XhrNotificationService, $translate, $state, $stateParams, AddResourceCommonServiceV2) {
+  function AddResourceControllerClusterViewV2(XhrNotificationService, $translate, $state, $stateParams, AddResourceCommonServiceV2, $window) {
     var vm = this;
     vm.clusterList = [];
     vm.selectPlaceholder = $translate.instant('mediaFusion.add-resource-dialog.cluster-placeholder');
@@ -61,6 +61,7 @@
     function next() {
       if (vm.radio == 0) {
         vm.noProceed = true;
+        $window.open('https://7f3b835a2983943a12b7-f3ec652549fc8fa11516a139bfb29b79.ssl.cf5.rackcdn.com/Media-Fusion-Management-Connector/mfusion.ova');
       } else if (vm.yesProceed) {
         if (angular.isDefined(vm.selectedCluster) && vm.selectedCluster != '' && angular.isDefined(vm.hostName)) {
           vm.addRedirectTargetClicked(vm.hostName, vm.selectedCluster);
