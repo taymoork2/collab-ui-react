@@ -32,5 +32,13 @@
         on-change-fn="$ctrl.setCallForward(callForwardAll, callForwardBusy)">
       </uc-call-forward>
     </cs-sp-section>
+    <div cr-feature-toggle feature-show="multipleCalls">
+      <cs-sp-section >
+        <uc-simultaneous-calls
+          incoming-call-maximum="$ctrl.incomingCallMaximum"
+          on-change-fn="$ctrl.setSimultaneousCalls(incomingCallMaximum)">
+        </uc-simultaneous-calls>
+      </cs-sp-section>
+    </div>
   </cs-sp-container>
 </form>

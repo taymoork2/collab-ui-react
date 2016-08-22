@@ -1,5 +1,6 @@
 import directoryNumber from '../../directoryNumber/directoryNumber.component';
 import callForward from '../../callForward/callForward.component';
+import simultaneousCalls from '../../simultaneousCalls/simultaneousCalls.component';
 import {
   CallForwardAll,
   CallForwardBusy
@@ -13,6 +14,8 @@ interface IDirectoryNumber {
 class LineOverviewCtrl {
 
   public form: ng.IFormController;
+
+  // Directory Number properties
   public esnPrefix: string;
   public internalIsWarn: boolean;
   public internalNumber: IDirectoryNumber;
@@ -21,9 +24,14 @@ class LineOverviewCtrl {
   public externalNumber: IDirectoryNumber;
   public externalOptions: IDirectoryNumber[];
   public showExtensions: boolean;
+
+  // Call Forward properties
   public voicemailEnabled: boolean;
   public callForwardAll: CallForwardAll;
   public callForwardBusy: CallForwardBusy;
+
+  // Simultaneous Calls properties
+  public incomingCallMaximum: number = 8;
 
   private $onInit(): void {
     this.initDirectoryNumber();
@@ -54,6 +62,10 @@ class LineOverviewCtrl {
     this.callForwardBusy = callForwardBusy;
   }
 
+  public setSimultaneousCalls(incomingCallMaximum: number): void {
+    this.incomingCallMaximum = incomingCallMaximum;
+  }
+
   private resetForm(): void {
     this.form.$setPristine();
     this.form.$setUntouched();
@@ -63,7 +75,8 @@ class LineOverviewCtrl {
 export default angular
   .module('huron.line-overview', [
     directoryNumber,
-    callForward
+    callForward,
+    simultaneousCalls
   ])
   .component('lineOverview', {
     controller: LineOverviewCtrl,
