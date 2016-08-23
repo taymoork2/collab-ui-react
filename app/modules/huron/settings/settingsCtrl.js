@@ -108,8 +108,6 @@
       disableExtensions: false
     };
 
-    vm.enableSiteSteeringDigit = FeatureToggleService.supports('huron-site-dial-digit');
-
     vm.validations = {
       greaterThan: function (viewValue, modelValue, scope) {
         var value = modelValue || viewValue;
@@ -216,11 +214,7 @@
         return _.inRange(_.get(vm, 'model.site.siteSteeringDigit.voicemailPrefixLabel'), _.get(range, 'beginNumber'), _.get(range, 'endNumber'));
       });
 
-      if (_.isUndefined(test)) {
-        return false;
-      } else {
-        return true;
-      }
+      return !_.isUndefined(test);
     };
 
     vm.siteAndSteeringDigitErrorValidation = function (view, model, scope) {
@@ -239,11 +233,7 @@
           (_.startsWith(_.get(range, 'endNumber'), _.get(vm, 'model.site.steeringDigit'))));
       });
 
-      if (_.isUndefined(test)) {
-        return false;
-      } else {
-        return true;
-      }
+      return !_.isUndefined(test);
     };
 
     vm.steerDigitOverLapValidation = function ($viewValue, $modelValue, scope) {
@@ -507,19 +497,19 @@
         required: true,
         inputClass: 'medium-2',
         label: $translate.instant('serviceSetupModal.voicemailPrefixTitle'),
-        description: $translate.instant('serviceSetupModal.voicemailPrefixDesc', { 'number': vm.model.site.siteSteeringDigit.siteDialDigit }),
-        warnMsg: $translate.instant('serviceSetupModal.warning.siteSteering', { 'number': vm.model.site.siteSteeringDigit.siteDialDigit }),
-        errorMsg: $translate.instant('serviceSetupModal.error.siteSteering', { 'digit': vm.model.site.steeringDigit }),
+        description: $translate.instant('serviceSetupModal.voicemailPrefixDesc',
+          {
+            'number': vm.model.site.siteSteeringDigit.siteDialDigit,
+            'extensionLength0': vm.model.previousLength === '5' ? '0000' : '000',
+            'extensionLength9': vm.model.previousLength === '5' ? '9999' : '999'
+          }),
+        warnMsg: $translate.instant('serviceSetupModal.warning.siteSteering'),
+        errorMsg: $translate.instant('serviceSetupModal.error.siteSteering'),
         isWarn: false,
         isError: false,
         labelfield: 'voicemailPrefixLabel',
         valuefield: 'siteDialDigit',
         options: [],
-        onChangeFn: function () {
-          this.description = $translate.instant('serviceSetupModal.voicemailPrefixDesc', { 'number': vm.model.site.siteSteeringDigit.siteDialDigit });
-          this.warnMsg = $translate.instant('serviceSetupModal.warning.siteSteering', { 'number': vm.model.site.siteSteeringDigit.siteDialDigit });
-          this.errorMsg = $translate.instant('serviceSetupModal.error.siteSteering', { 'digit': vm.model.site.steeringDigit });
-        }
       },
       hideExpression: function () {
         return vm.hideSiteSteeringDigit;
@@ -529,8 +519,7 @@
         'templateOptions.isError': vm.siteAndSteeringDigitErrorValidation
       },
       controller: function ($scope) {
-        _buildVoicemailPrefixOptions($scope);
-
+        _buildVoicemailPrefixOptions($scope, vm.steeringDigitSelection[0].templateOptions);
       }
     }];
 
@@ -542,14 +531,10 @@
         inputClass: 'medium-2',
         label: $translate.instant('serviceSetupModal.steeringDigit'),
         description: $translate.instant('serviceSetupModal.steeringDigitDescription'),
-        warnMsg: $translate.instant('serviceSetupModal.warning.outboundDialDigit', { 'number': vm.model.site.steeringDigit }),
-        errorMsg: $translate.instant('serviceSetupModal.error.outboundDialDigit', { 'prefix': vm.model.site.siteSteeringDigit.voicemailPrefixLabel }),
+        warnMsg: $translate.instant('serviceSetupModal.warning.outboundDialDigit'),
+        errorMsg: $translate.instant('serviceSetupModal.error.outboundDialDigit'),
         isWarn: false,
         options: vm.steeringDigits,
-        onChangeFn: function () {
-          this.warnMsg = $translate.instant('serviceSetupModal.warning.outboundDialDigit', { 'number': vm.model.site.steeringDigit });
-          this.errorMsg = $translate.instant('serviceSetupModal.error.outboundDialDigit', { 'prefix': vm.model.site.siteSteeringDigit.voicemailPrefixLabel });
-        }
       },
       hideExpression: function () {
         return vm.hideFieldSteeringDigit;
@@ -557,7 +542,7 @@
       expressionProperties: {
         'templateOptions.isWarn': vm.steeringDigitWarningValidation,
         'templateOptions.isError': vm.siteAndSteeringDigitErrorValidation
-      }
+      },
     }];
 
     vm.internationalDialingSelection = [{
@@ -1093,9 +1078,6 @@
                 voicemailPrefixLabel: site.siteSteeringDigit.concat(site.siteCode)
               };
               vm.model.site.extensionLength = vm.model.previousLength = site.extensionLength;
-              // _.remove(vm.steeringDigits, function (digit) {
-              //   return digit === site.siteSteeringDigit;
-              // });
               vm.model.site.timeZone = _.find(vm.timeZoneOptions, function (timezone) {
                 return timezone.id === site.timeZone;
               });
@@ -1496,7 +1478,7 @@
     }
 
     function updateVoicemailPostalCode() {
-      var postalCode = vm.model.site.steeringDigit + ':' + vm.model.site.siteSteeringDigit.voicemailPrefixLabel + ':' + vm.model.site.extensionLength;
+      var postalCode = vm.model.site.siteSteeringDigit.siteDialDigit + '-' + vm.model.site.siteCode + '-' + vm.model.site.extensionLength;
       return ServiceSetup.updateVoicemailPostalcode(postalCode, vm.voicemailUserTemplate.objectId)
         .catch(function (response) {
           errors.push(Notification.processErrorResponse(response, 'serviceSetupModal.error.updateVoicemailPostalCode'));
@@ -1789,7 +1771,7 @@
 
     function _buildVoicemailPrefixOptions($scope) {
       $scope.$watchCollection(function () {
-        return [vm.model.site.siteSteeringDigit, vm.model.site.extensionLength];
+        return [vm.model.site.siteSteeringDigit, vm.model.site.extensionLength, vm.model.site.steeringDigit];
       }, function () {
         var extensionLength0, extensionLength9;
         switch (vm.model.site.extensionLength) {

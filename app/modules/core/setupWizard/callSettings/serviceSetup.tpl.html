@@ -2,8 +2,16 @@
   <i class="icon icon-spinner"></i>
 </div>
 
-<div class="container-fluid service-setup-container" ng-if="!squaredUcSetup.processing">
-  <form novalidate>
-    <formly-form model="squaredUcSetup.model" fields="squaredUcSetup.fields" form="squaredUcSetup.form"></formly-form>
-  </form>    
-</div>
+<form name="squaredUcSetup.form" novalidate>
+  <div class="container-fluid service-setup-container" ng-if="!squaredUcSetup.processing">
+    <formly-form model="squaredUcSetup.model" fields="squaredUcSetup.ftswTimeZoneSelection" form="squaredUcSetup.form"></formly-form>
+    <formly-form model="squaredUcSetup.model" fields="squaredUcSetup.ftswExtensionLengthSelection" form="squaredUcSetup.form"></formly-form>
+    <formly-form model="squaredUcSetup.model" fields="squaredUcSetup.ftswExtensionRangeSelection" form="squaredUcSetup.form"></formly-form>
+    <div cr-feature-toggle feature-show="huron-site-dial-digit">
+      <formly-form model="squaredUcSetup.model" fields="squaredUcSetup.ftswVoicemailPrefixSelection" form="squaredUcSetup.form"></formly-form>
+    </div>
+    <formly-form model="squaredUcSetup.model" fields="squaredUcSetup.ftswSteeringDigitSelection" form="squaredUcSetup.form"></formly-form>
+    <formly-form model="squaredUcSetup.model" fields="squaredUcSetup.ftswCompanyVoicemailSelection" form="squaredUcSetup.form"></formly-form>
+  </div>
+</form>    
+
