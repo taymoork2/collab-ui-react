@@ -585,6 +585,7 @@
     vm.addPortNumbersToOrder = addPortNumbersToOrder;
     vm.unsavedTokens = [];
     vm.validCount = 0;
+    vm.invalidCount = 0;
     vm.tollFreeNumberCount = 0;
     vm.tokenfieldId = 'pstn-port-numbers';
 
@@ -621,6 +622,8 @@
       }
       // add to service after validation/duplicate checks
       DidService.addDid(e.attrs.value);
+
+      vm.invalidCount = getInvalidTokens().length;
     }
 
     function isTokenInvalid(value) {
@@ -631,10 +634,6 @@
 
     function removedToken(e) {
       DidService.removeDid(e.attrs.value);
-
-      if (TelephoneNumberService.isTollFreeNumber(e.attrs.value)) {
-        vm.tollFreeNumberCount--;
-      }
       $timeout(initTokens);
     }
 
@@ -649,6 +648,7 @@
       var tmpDids = didList || DidService.getDidList();
       // reset valid and list before setTokens
       vm.validCount = 0;
+      vm.invalidCount = 0;
       vm.tollFreeNumberCount = 0;
       DidService.clearDidList();
       angular.element('#' + vm.tokenfieldId).tokenfield('setTokens', tmpDids);
@@ -656,6 +656,10 @@
 
     function getTokens() {
       return angular.element('#' + vm.tokenfieldId).tokenfield('getTokens');
+    }
+
+    function getInvalidTokens() {
+      return angular.element('#' + vm.tokenfieldId).parent().find('.token.invalid');
     }
 
     function isPortOrder(order) {
@@ -793,6 +797,7 @@
         vm.showTollFreeNumbers = result;
       });
     }
+
     toggleTollFreeNumberFeature();
 
     // We want to capture the modal close event and clear didList from service.

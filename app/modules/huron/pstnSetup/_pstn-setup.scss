@@ -89,7 +89,7 @@
   }
 
   .toll-free-warning {
-    @include vr-spacing(mb, 1);
+    @include vr-spacing(mt, 1);
     display: flex;
     flex-direction: row;
     align-item: flex-start;
