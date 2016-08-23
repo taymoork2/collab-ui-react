@@ -31,8 +31,7 @@ class MySubscriptionCtrl {
   public visibleSubscriptions = false;
   public isOnline = false;
   public trialUrlFailed = false;
-  
-  public loading: boolean = false;
+  public loading = false;
   public digitalRiverSubscriptionsUrl: string;
 
   /* @ngInject */
