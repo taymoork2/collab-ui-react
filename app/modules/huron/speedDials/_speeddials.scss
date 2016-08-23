@@ -1,0 +1,65 @@
+.speed-dials-panel {
+  .sd-spacing {
+    @include vr-spacing(mr, 1);
+  }
+
+  .sd-label {
+    color: $gray-dark-2;
+    @include vr-spacing(pb, 0.25);
+  }
+
+  .sd-readonly-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    @include vr-spacing(pv, .5);
+    @include vr-spacing(ph, 2);
+
+    .icon {
+      color: $gray-light-1;
+      &:hover {
+        color: $color-primary-base;
+      }
+    }
+  }
+
+  .sd-edit-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    padding-left: 2rem;
+    padding-right: 2rem;
+
+    input {
+      width: 13rem;
+    }
+  }
+
+  .icon-tables {
+    cursor: move;
+    cursor: grab;
+    cursor: -webkit-grab;
+    font-size: 1.5rem;
+  }
+
+  .sd-container {
+    margin-left: -1.5625rem;
+    margin-right: -1.5625rem;
+  }
+
+  .sd-reorder {
+    cursor: move;
+    cursor: grab;
+    cursor: -webkit-grab;
+  }
+
+  .sd-reorder-transit {
+    background-color: $brand-primary;
+    color: $brand-white;
+    .sd-label, .icon {
+      color: $brand-white;
+    }
+  }
+
+}
