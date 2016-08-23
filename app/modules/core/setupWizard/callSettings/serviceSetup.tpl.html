@@ -2,8 +2,8 @@
   <i class="icon icon-spinner"></i>
 </div>
 
-<form name="squaredUcSetup.form" novalidate>
-  <div class="container-fluid service-setup-container" ng-if="!squaredUcSetup.processing">
+<form name="squaredUcSetup.form" novalidate  ng-if="!squaredUcSetup.processing">
+  <div class="container-fluid service-setup-container">
     <formly-form model="squaredUcSetup.model" fields="squaredUcSetup.ftswTimeZoneSelection" form="squaredUcSetup.form"></formly-form>
     <formly-form model="squaredUcSetup.model" fields="squaredUcSetup.ftswExtensionLengthSelection" form="squaredUcSetup.form"></formly-form>
     <formly-form model="squaredUcSetup.model" fields="squaredUcSetup.ftswExtensionRangeSelection" form="squaredUcSetup.form"></formly-form>

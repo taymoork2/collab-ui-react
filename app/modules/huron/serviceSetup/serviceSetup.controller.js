@@ -1365,7 +1365,7 @@
         .then(processErrors);
     }
 
-    $q.all(initServiceSetup()).finally(function () {
+    $q.resolve(initServiceSetup()).finally(function () {
       vm.processing = false;
     });
 
