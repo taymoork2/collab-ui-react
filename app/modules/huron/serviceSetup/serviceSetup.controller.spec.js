@@ -107,6 +107,7 @@ describe('Controller: ServiceSetup', function () {
     spyOn(ServiceSetup, 'loadExternalNumberPool').and.returnValue($q.when(externalNumberPool));
     spyOn(ServiceSetup, 'updateCustomer').and.returnValue($q.when());
     spyOn(ServiceSetup, 'updateVoicemailTimezone').and.returnValue($q.when());
+    spyOn(ServiceSetup, 'updateVoicemailPostalcode').and.returnValue($q.when());
     spyOn(ExternalNumberService, 'refreshNumbers').and.returnValue($q.when());
 
     spyOn(ServiceSetup, 'listInternalNumberRanges').and.callFake(function () {
