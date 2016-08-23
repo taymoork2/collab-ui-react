@@ -86,6 +86,11 @@ var ReportsPage = function () {
   this.taskTimeDescription = element(by.cssContainingText('.report-description', 'time duration'));
   this.taskTimeGraph = element(by.id('taskTimeDiv'));
 
+  // Task Aggregate
+  this.taskAggregateHeader = element(by.cssContainingText('.report-section-header', 'Task Aggregation'));
+  this.taskAggregateDescription = element(by.cssContainingText('.report-description', 'tasks aggregated'));
+  this.taskAggregateGraph = element(by.id('taskAggregateDiv'));
+
   // Average CSAT
   this.averageCsatHeader = element(by.cssContainingText('.report-section-header', 'Average CSAT'));
   this.averageCsatDescription = element(by.cssContainingText('.report-description', 'average CSAT'));

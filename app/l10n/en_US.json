@@ -578,7 +578,7 @@
     "threeMonths2": "during the last three months",
     "threeMonthsTaskStatus": "handled and abandoned",
     "threeMonthsInterval": "given month",
-    "taskIncomingError": "There was an error while loading the data for Tasks Incoming."
+    "taskDataGetError": "There was an error while loading the data for {{dataType}}."
   },
   "activeUsers": {
     "active": "Active",
@@ -680,6 +680,10 @@
   "averageCsat": {
     "title": "Average CSAT",
     "description": "The graph depicts the average CSAT {{time}}. Hover over the trend line to know the average CSAT rating for a {{interval}}."
+  },
+  "taskAggregate": {
+    "title": "Task Aggregation",
+    "description": "The graph depicts the in-queue and assigned tasks aggregated for today. Hover over area chart to view the aggregated tasks from the start of business hours."
   },
   "profilePage": {
     "userProfile": "User Profile",
@@ -4120,7 +4124,7 @@
     "userAttributesTooltip": "Modify user attributes for multiple WebEx users at once using a spreadsheet program. Export your users into a .csv file, edit user information, and import the updated .csv file back into the WebEx site.",
     "bulkModifyUserAttributesTooltip": "Bulk Modify User Attributes",
     "csvRejectedToast-060100": "Request failed, there is already an export/import request in process.",
-    "csvRejectedToast-060107": "Import failed. The file must be in a tab-separated format.",    
+    "csvRejectedToast-060107": "Import failed. The file must be in a tab-separated format.",
     "exportBlockedTooltip": "In order to Export, you must wait for your Import to complete.",
     "exportInProgressTooltip": "This export may take a while. The export process continues until it is complete, even if you sign out or begin an export or import of user attributes for another site. A download link appears on this page after the export is complete.",
     "exportFinishedWithErrorsTooltip": "Export finished with errors.",
@@ -4474,7 +4478,8 @@
     "typeCustom": "Custom",
     "ctValidation":{
       "errorChar250": "Character length cannot be more than 250.",
-      "errorChar50": "Character length cannot be more than 50."
+      "errorChar50": "Character length cannot be more than 50.",
+      "errorTypeDuplicate": "This ‘Type’ is associated with another field. Select a different one from the available types."
     },
     "ctOverview": {
       "customerInformation": {

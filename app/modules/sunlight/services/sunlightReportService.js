@@ -139,6 +139,7 @@
         var reducedForHour = _.reduce(statsList, reduceOrgStatsByHour, emptyOrgstats);
         reducedForHour.avgTaskWaitTime = roundTwoDecimalPlaces(reducedForHour.avgTaskWaitTime / convertInMinutes);
         reducedForHour.avgTaskCloseTime = roundTwoDecimalPlaces(reducedForHour.avgTaskCloseTime / convertInMinutes);
+        reducedForHour.avgCsatScores = roundTwoDecimalPlaces(reducedForHour.avgCsatScores);
         downSampledStatsByHour.push(reducedForHour);
       });
       return downSampledStatsByHour;
@@ -154,6 +155,7 @@
         var reducedForDay = _.reduce(statsList, reduceOrgStatsByDay, emptyOrgstats);
         reducedForDay.avgTaskWaitTime = roundTwoDecimalPlaces(reducedForDay.avgTaskWaitTime / convertInMinutes);
         reducedForDay.avgTaskCloseTime = roundTwoDecimalPlaces(reducedForDay.avgTaskCloseTime / convertInMinutes);
+        reducedForDay.avgCsatScores = roundTwoDecimalPlaces(reducedForDay.avgCsatScores);
         downSampledStatsByDay.push(reducedForDay);
       });
       return downSampledStatsByDay;
@@ -168,6 +170,7 @@
         var reducedForWeek = _.reduce(statsList, reduceOrgStatsByWeek, emptyOrgstats);
         reducedForWeek.avgTaskWaitTime = roundTwoDecimalPlaces(reducedForWeek.avgTaskWaitTime / convertInMinutes);
         reducedForWeek.avgTaskCloseTime = roundTwoDecimalPlaces(reducedForWeek.avgTaskCloseTime / convertInMinutes);
+        reducedForWeek.avgCsatScores = roundTwoDecimalPlaces(reducedForWeek.avgCsatScores);
         downSampledStatsByWeek.push(reducedForWeek);
       });
       return downSampledStatsByWeek;
@@ -182,6 +185,7 @@
         var reducedForMonth = _.reduce(statsList, reduceOrgStatsByMonth, emptyOrgstats);
         reducedForMonth.avgTaskWaitTime = roundTwoDecimalPlaces(reducedForMonth.avgTaskWaitTime / convertInMinutes);
         reducedForMonth.avgTaskCloseTime = roundTwoDecimalPlaces(reducedForMonth.avgTaskCloseTime / convertInMinutes);
+        reducedForMonth.avgCsatScores = roundTwoDecimalPlaces(reducedForMonth.avgCsatScores);
         downSampledStatsByMonth.push(reducedForMonth);
       });
       return downSampledStatsByMonth;
@@ -220,7 +224,14 @@
       resultStats.numTasksAbandonedState = stats1.numTasksAbandonedState + stats2.numTasksAbandonedState;
       resultStats.numTasksHandledState = stats1.numTasksHandledState + stats2.numTasksHandledState;
       resultStats.numCsatScores = stats1.numCsatScores + stats2.numCsatScores;
-      resultStats.avgCsatScores = roundTwoDecimalPlaces(calculateAverageCsat(stats1, stats2));
+      resultStats.avgCsatScores = calculateAverageCsat(stats1, stats2);
+      if (!stats1.createdTime || moment(stats2.createdTime).isAfter(moment(stats1.createdTime))) { // take last
+        resultStats.numPendingTasks = stats2.numPendingTasks;
+        resultStats.numWorkingTasks = stats2.numWorkingTasks;
+      } else {
+        resultStats.numPendingTasks = stats1.numPendingTasks;
+        resultStats.numWorkingTasks = stats1.numWorkingTasks;
+      }
       return resultStats;
     }
 
@@ -255,7 +266,6 @@
       var csat = (totalCsatScores > 0) ?
         ((stats1.avgCsatScores * stats1.numCsatScores) + (stats2.avgCsatScores * stats2.numCsatScores)) /
         (stats1.numCsatScores + stats2.numCsatScores) : 0;
-      csat = Math.round(csat * 100) / 100; // precision upto two decimal places
       return csat;
     }
 

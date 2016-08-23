@@ -66,6 +66,10 @@
       var handleCount = initValue;
       var abandonCount = initValue / 3;
       var avgCsatScores = 3.0;
+      var numWorkingTasks = 20;
+      var numPendingTasks = 15;
+      var flip = 2;
+      var count = 1;
       range.by(interval, function (moment) {
         var formattedTime = momentFormatter(moment, format);
         var rangeStats = {};
@@ -76,22 +80,30 @@
           rangeStats.numTasksAssignedState = 0;
           rangeStats.numTasksQueuedState = 0;
           rangeStats.avgCsatScores = 0;
+          rangeStats.numWorkingTasks = 0;
+          rangeStats.numPendingTasks = 0;
         } else {
           rangeStats.numTasksHandledState = handleCount;
           rangeStats.numTasksAbandonedState = abandonCount;
           rangeStats.numTasksAssignedState = handleCount;
           rangeStats.numTasksQueuedState = handleCount;
           rangeStats.avgCsatScores = avgCsatScores;
+          rangeStats.numWorkingTasks = numWorkingTasks;
+          rangeStats.numPendingTasks = numPendingTasks;
         }
         rangeStatsList.push(rangeStats);
-        handleCount = handleCount + changeValue;
+        count = count + 1;
+        if (count % 3 === 0 || count % 4 === 0) flip = -flip;
+        numWorkingTasks = numWorkingTasks + (flip * 2) + (count % 3);
+        numPendingTasks = numPendingTasks + (flip * 3) + (count % 3);
+        handleCount = handleCount + changeValue + (flip * 2);
         abandonCount = abandonCount - (changeValue / 3);
 
         if (abandonCount < 0) {
           abandonCount = 0;
         }
 
-        avgCsatScores = Math.min(avgCsatScores + 0.1, 5.0);
+        avgCsatScores = Math.min(avgCsatScores + 0.1 + (flip * 0.25), 5.0);
       });
       return rangeStatsList;
     }

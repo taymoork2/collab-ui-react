@@ -84,6 +84,10 @@
     }
   }
 
+  .business-hours-message.h4 {
+    @include vr-spacing(pt, .5);
+  }
+
   .day-picker {
     height: 4rem;
     display: flex;
