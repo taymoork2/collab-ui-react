@@ -303,6 +303,28 @@ exports.expectTextToBeSet = function (elem, text, timeout) {
   }, timeout || TIMEOUT, 'Waiting for Text to be set: ' + elem.locator() + ' ' + text);
 };
 
+exports.waitForAttribute = function (elem, attr, value) {
+  this.wait(elem).then(function () {
+    return browser.wait(function () {
+      return elem.getAttribute(attr).then(function (attrValue) {
+        log('Waiting for element: ' + elem.locator() + ' attribute ' + attr + ' ' + attrValue + ' to be ' + value);
+        return value === attrValue;
+      });
+    });
+  });
+};
+
+exports.waitForAttributeToContain = function (elem, attr, value) {
+  this.wait(elem).then(function () {
+    return browser.wait(function () {
+      return elem.getAttribute(attr).then(function (attrValue) {
+        log('Waiting for element: ' + elem.locator() + ' attribute ' + attr + ' ' + attrValue + ' to contain ' + value);
+        return _.includes(attrValue, value);
+      });
+    });
+  });
+};
+
 exports.expectValueToBeSet = function (elem, text, timeout) {
   browser.wait(function () {
     return elem.getAttribute('value').then(function (result) {
@@ -513,6 +535,10 @@ exports.clickEscape = function () {
   this.sendKeys(element(by.tagName('body')), protractor.Key.ESCAPE);
 };
 
+exports.clickEnter = function () {
+  this.sendKeys(element(by.tagName('body')), protractor.Key.ENTER);
+};
+
 exports.expectSwitchState = function (elem, value) {
   return this.wait(elem).then(function () {
     return browser.wait(function () {
@@ -648,19 +674,32 @@ exports.clickLastBreadcrumb = function () {
   this.click(element.all(by.css('.side-panel-container')).last().all(by.css('li[ng-repeat="crumb in breadcrumbs"] a')).last());
 };
 
-exports.switchToNewWindow = function () {
+function switchToWindow(handleIndex) {
   return browser.wait(function () {
     return browser.getAllWindowHandles().then(function (handles) {
-      if (handles && handles.length > 1) {
-        var newWindow = handles[1];
+      if (handles && handles.length > handleIndex) {
+        var newWindow = handles[handleIndex];
         browser.switchTo().window(newWindow);
         return true;
       } else {
         return false;
       }
     });
-  }, 40000, 'Waiting for a new window');
+  }, 40000, 'Waiting for window');
+}
+
+exports.switchToNewWindow = function () {
+  return switchToWindow(1);
 };
+
+exports.switchToOriginalWindow = function () {
+  return switchToWindow(0);
+};
+
+exports.closeAndSwitchToOriginalWindow = function () {
+  browser.close();
+  return this.switchToOriginalWindow();
+}
 
 exports.getInnerElementByTagName = function (outerElement, tagName) {
   return outerElement.element(by.tagName(tagName));

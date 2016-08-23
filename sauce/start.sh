@@ -42,9 +42,11 @@ while [ "$i" -lt 3 ]; do
   echo "Sauce Connect startup attempt ${i}"
   i=$((i+1))
   bin/sc \
-    -D atlas-a.wbx2.com,atlas-integration.wbx2.com,identity.webex.com,idbroker.webex.com,cmi.sc-tx2.huron-dev.com,cmi.huron-int.com,hermes.sc-tx2.huron-dev.com,hermes.huron-int.com,locus-a.wbx2.com,metrics-a.wbx2.com \
+    --direct-domains *.wbx2.com,*.webex.com,*.sc-tx2.huron-dev.com,*.huron-int.com \
+    --no-ssl-bump-domains *.atlasad.koalabait.com \
     -vv \
     -l sauce_connect.log \
+    --logfile sauce_connect.log \
     --pidfile $PID_FILE \
     --readyfile $READY_FILE \
     --tunnel-identifier $SC_TUNNEL_IDENTIFIER \
