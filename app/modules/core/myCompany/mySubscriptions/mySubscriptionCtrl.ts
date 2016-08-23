@@ -72,9 +72,9 @@ class MySubscriptionCtrl {
     if (this.isOnline) {
       this.initIframe();
     } else {
-      this.subscriptionRetrieval();
       this.hybridServicesRetrieval();
     }
+    this.subscriptionRetrieval();
   };
 
   private initIframe(): void {

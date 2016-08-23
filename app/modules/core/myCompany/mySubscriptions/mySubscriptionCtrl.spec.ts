@@ -108,7 +108,7 @@ describe('Controller: MySubscriptionCtrl', function () {
     expect(rootScope.$broadcast).toHaveBeenCalled();
   });
 
-  xit('should initialize with expected data for online orgs', function () {
+  it('should initialize with expected data for online orgs', function () {
     spyOn(Authinfo, 'isOnline').and.returnValue(true);
     spyOn(Orgservice, 'getLicensesUsage').and.returnValue(q.when(data.subscriptionsResponse));
     startController();
