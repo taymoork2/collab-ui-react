@@ -69,14 +69,14 @@
     }
 
     function showReportsWithRealData() {
+      var isToday = (vm.timeSelected.value === 0);
+      var categoryAxisTitle = vm.timeSelected.categoryAxisTitle;
       SunlightReportService.getReportingData('org_stats', vm.timeSelected.value, 'chat')
         .then(function (data) {
           if (data.length === 0) {
             vm.dataStatus = EMPTY;
           } else {
             vm.dataStatus = SET;
-            var categoryAxisTitle = vm.timeSelected.categoryAxisTitle;
-            var isToday = (vm.timeSelected.value === 0);
             CareReportsService.showTaskIncomingGraph('taskIncomingdiv', data, categoryAxisTitle, isToday);
             CareReportsService.showTaskTimeGraph('taskTimeDiv', data, categoryAxisTitle, isToday);
             CareReportsService.showAverageCsatGraph('averageCsatDiv', data, categoryAxisTitle, isToday);
@@ -84,9 +84,9 @@
           }
         }, function () {
           vm.dataStatus = EMPTY;
-          Notification.error($translate.instant('careReportsPage.taskDataGetError'));
+          Notification.error($translate.instant('careReportsPage.taskDataGetError', { dataType: 'Tasks' }));
         });
-      if (vm.timeSelected.value === 0) {
+      if (isToday) {
         showSnapshotReportWithRealData();
       }
     }
@@ -103,7 +103,7 @@
           }
         }, function () {
           vm.snapshotDataStatus = EMPTY;
-          Notification.error($translate.instant('careReportsPage.taskSnapshotDataGetError'));
+          Notification.error($translate.instant('careReportsPage.taskDataGetError', { dataType: 'Task Aggregation' }));
         });
     }
 
