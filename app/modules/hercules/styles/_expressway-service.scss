@@ -17,6 +17,10 @@ $user-statuses-bar-height: 7.25rem;
       height: calc(100vh - (#{$top-bar-height} + (#{$top-bar-border-width} * 2) + #{$page-header-height} + #{$page-sub-header-height} + #{$user-statuses-bar-height}));
     }
   }
+
+  .add-resource-button {
+    margin-left: 1rem;
+  }
 }
 
 .hercules.call-service {
@@ -197,10 +201,6 @@ Special stuff currently used for out own mail input field...
   .feature-status span {
     font-size: 0.75rem;
   }
-}
-
-.add-resource-button {
-  margin-left: 25px;
 }
 
 .user-statuses-bar {

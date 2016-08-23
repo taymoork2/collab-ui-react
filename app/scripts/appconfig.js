@@ -2241,6 +2241,9 @@
             controllerAs: 'resourceList',
             parent: 'main',
             resolve: {
+              hasF237FeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasF237ResourceGroups);
+              },
               hasF410FeatureToggle: /* @ngInject */ function (FeatureToggleService) {
                 return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridServicesResourceList);
               },
@@ -2341,6 +2344,9 @@
               wizard: null
             }
           })
+          .state('add-resource.mediafusion', {
+            abstract: true
+          })
           .state('add-resource.mediafusion.hostname', {
             parent: 'modalSmall',
             views: {
@@ -2383,9 +2389,6 @@
             params: {
               wizard: null
             }
-          })
-          .state('add-resource.mediafusion', {
-            abstract: true
           })
           .state('calendar-service', {
             templateUrl: 'modules/hercules/overview/overview.html',
