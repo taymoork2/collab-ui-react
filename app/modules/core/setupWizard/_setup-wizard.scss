@@ -84,7 +84,11 @@
       @include vr-spacing(mt, 1);
     }
     .msg-container {
-      min-width: rem(500);
+      min-width: vr-adjust(600px);
+    }
+    .alert {
+      margin-right: 0;
+      margin-left: 0;
     }
   }
   .voicemail-switch-width {

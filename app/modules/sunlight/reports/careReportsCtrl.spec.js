@@ -72,14 +72,17 @@ describe('Controller: Care Reports Controller', function () {
       $timeout(function () {
         expect(DummyCareReportService.dummyOrgStatsData.calls.argsFor(0)).toEqual([1]);
         expect(SunlightReportService.getReportingData.calls.argsFor(0)).toEqual(['org_stats', 1, 'chat']);
+        expect(SunlightReportService.getReportingData.calls.argsFor(1)).toEqual(['org_snapshot_stats', 1, 'chat']);
       }, 1000);
     });
-    it('should show Today and Task Incoming and Average Csat graphs on Init', function () {
+    it('should show Today and Task Incoming, Task Aggregate and Average Csat graphs on Init', function () {
       $timeout(function () {
         expect(CareReportsService.showTaskIncomingDummy.calls.argsFor(0)[0]).toEqual('taskIncomingdiv');
         expect(CareReportsService.showAverageCsatDummy.calls.argsFor(0)[0]).toEqual('averageCsatDiv');
+        expect(CareReportsService.showTaskAggregateDummy.calls.argsFor(0)[0]).toEqual('taskAggregateDiv');
         expect(CareReportsService.showTaskIncomingGraph.calls.argsFor(0)[0]).toEqual('taskIncomingdiv');
         expect(CareReportsService.showAverageCsatGraph.calls.argsFor(0)[0]).toEqual('averageCsatDiv');
+        expect(CareReportsService.showTaskAggregateGraph.calls.argsFor(0)[0]).toEqual('taskAggregateDiv');
         expect(CareReportsService.showTaskTimeDummy).not.toHaveBeenCalled();
         expect(CareReportsService.showTaskTimeGraph).not.toHaveBeenCalled();
       }, 1000);
@@ -92,6 +95,7 @@ describe('Controller: Care Reports Controller', function () {
       controller.timeUpdate();
       expect(DummyCareReportService.dummyOrgStatsData.calls.argsFor(0)).toEqual([2]);
       expect(SunlightReportService.getReportingData.calls.argsFor(0)).toEqual(['org_stats', 2, 'chat']);
+      expect(SunlightReportService.getReportingData.calls.argsFor(1)).not.toEqual(['org_snapshot_stats', 1, 'chat']);
 
       $timeout(function () {
         expect(CareReportsService.showTaskIncomingDummy.calls.argsFor(0)[0]).toEqual('taskIncomingdiv');
@@ -100,6 +104,8 @@ describe('Controller: Care Reports Controller', function () {
         expect(CareReportsService.showTaskIncomingGraph.calls.argsFor(0)[0]).toEqual('taskIncomingdiv');
         expect(CareReportsService.showTaskTimeGraph.calls.argsFor(0)[0]).toEqual('taskTimeDiv');
         expect(CareReportsService.showAverageCsatGraph.calls.argsFor(0)[0]).toEqual('averageCsatDiv');
+        expect(CareReportsService.showTaskAggregateDummy).not.toHaveBeenCalled();
+        expect(CareReportsService.showTaskAggregateGraph).not.toHaveBeenCalled();
       }, 100);
     });
 
@@ -108,6 +114,7 @@ describe('Controller: Care Reports Controller', function () {
       controller.timeUpdate();
       expect(DummyCareReportService.dummyOrgStatsData.calls.argsFor(0)).toEqual([3]);
       expect(SunlightReportService.getReportingData.calls.argsFor(0)).toEqual(['org_stats', 3, 'chat']);
+      expect(SunlightReportService.getReportingData.calls.argsFor(1)).not.toEqual(['org_snapshot_stats', 1, 'chat']);
     });
 
     it('should send options for last 3 months on selection', function () {
@@ -115,6 +122,7 @@ describe('Controller: Care Reports Controller', function () {
       controller.timeUpdate();
       expect(DummyCareReportService.dummyOrgStatsData.calls.argsFor(0)).toEqual([4]);
       expect(SunlightReportService.getReportingData.calls.argsFor(0)).toEqual(['org_stats', 4, 'chat']);
+      expect(SunlightReportService.getReportingData.calls.argsFor(1)).not.toEqual(['org_snapshot_stats', 1, 'chat']);
     });
   });
 });

@@ -7,11 +7,13 @@
        translate="huronFeatureDetails.aaDependsTitle"></p>
   </div>
   <div class="modal-body">
-    <p translate="huronFeatureDetails.aaDependsContext"
-       translate-values="{featureName : huronFeatureAADepends.featureName}"></p>
-    <ul style="list-style-type:none;margin-left:0">
+    <div class="aa-depends-modal">
+      <p translate="huronFeatureDetails.aaDependsContext"
+         translate-values="{featureName : huronFeatureAADepends.featureName}"></p>
+      <ul>
         <li ng-repeat="aaname in huronFeatureAADepends.dependsNames"><strong>{{aaname}}</strong></li>
-    </ul>
+      </ul>
+    </div>
   </div>
   <div class="modal-footer">
     <button class="btn" ng-click="$dismiss();" translate="common.ok"></button>
