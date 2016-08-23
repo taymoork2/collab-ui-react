@@ -51,6 +51,26 @@ describe('Care Chat Setup Assistant Ctrl', function () {
     });
   };
 
+  var duplicateFieldTypeData = {
+    'field1': {
+      attributes: [{
+        name: 'type',
+        value: { id: 'name' }
+      }]
+    },
+    'field2': {
+      attributes: [{
+        name: 'type',
+        value: { id: 'email' }
+      }]
+    },
+    'field3': {
+      attributes: [{
+        name: 'type',
+        value: { id: 'name' }
+      }]
+    } };
+
   var selectedDaysByDefault = businessHours.selectedDaysByDefault;
   var defaultTimeZone = businessHours.defaultTimeZone;
   var defaultDayPreview = businessHours.defaultDayPreview;
@@ -366,49 +386,12 @@ describe('Care Chat Setup Assistant Ctrl', function () {
     });
 
     it("should identify a duplicate type configured", function () {
-      controller.template.configuration.pages.customerInformation.fields = {
-        'field1': {
-          attributes: [{
-            name: 'type',
-            value: { id: 'name' }
-          }]
-        },
-        'field2': {
-          attributes: [{
-            name: 'type',
-            value: { id: 'name' }
-          }]
-        },
-        'field3': {
-          attributes: [{
-            name: 'type',
-            value: { id: 'category' }
-          }]
-        } };
+      controller.template.configuration.pages.customerInformation.fields = duplicateFieldTypeData;
       expect(controller.validateType({ id: 'name' })).toEqual(false);
     });
 
     it("next button should get disabled when duplicate types are configured in customerInfo page", function () {
-      controller.currentState = 'customerInformation';
-      controller.template.configuration.pages.customerInformation.fields = {
-        'field1': {
-          attributes: [{
-            name: 'type',
-            value: { id: 'name' }
-          }]
-        },
-        'field2': {
-          attributes: [{
-            name: 'type',
-            value: { id: 'email' }
-          }]
-        },
-        'field3': {
-          attributes: [{
-            name: 'type',
-            value: { id: 'name' }
-          }]
-        } };
+      controller.template.configuration.pages.customerInformation.fields = duplicateFieldTypeData;
       expect(controller.nextButton()).toEqual(false);
     });
   });
