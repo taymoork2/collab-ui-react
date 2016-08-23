@@ -7,7 +7,7 @@
 
   /* @ngInject*/
   function ServiceSetupCtrl($q, $state, ServiceSetup, Notification, Authinfo, $translate, HuronCustomer,
-    ValidationService, ExternalNumberPool, DialPlanService, TelephoneNumberService, ExternalNumberService,
+    ValidationService, DialPlanService, TelephoneNumberService, ExternalNumberService,
     CeService, HuntGroupServiceV2, ModalService, DirectoryNumberService, VoicemailMessageAction, FeatureToggleService) {
     var vm = this;
     var DEFAULT_SITE_INDEX = '000001';
@@ -456,44 +456,6 @@
       },
       expressionProperties: {
         'templateOptions.isWarn': vm.steeringDigitChangeValidation
-      }
-    }, {
-      model: vm.model.site,
-      key: 'siteSteeringDigit',
-      type: 'select',
-      className: 'service-setup-steering-digit bottom-margin',
-      templateOptions: {
-        label: $translate.instant('serviceSetupModal.siteSteeringDigit'),
-        description: $translate.instant('serviceSetupModal.siteSteeringDigitDescription'),
-        options: vm.steeringDigits
-      },
-      hideExpression: function () {
-        return true;
-      },
-      expressionProperties: {
-        'templateOptions.disabled': function () {
-          return vm.hasSites;
-        }
-      }
-    }, {
-      model: vm.model.site,
-      key: 'siteCode',
-      type: 'input',
-      className: 'service-setup-site-code bottom-margin',
-      templateOptions: {
-        label: $translate.instant('serviceSetupModal.siteCode'),
-        description: $translate.instant('serviceSetupModal.siteCodeDescription'),
-        type: 'text',
-        required: true,
-        maxlength: 5
-      },
-      hideExpression: function () {
-        return true;
-      },
-      expressionProperties: {
-        'templateOptions.disabled': function () {
-          return vm.hasSites;
-        }
       }
     }, {
       className: 'row collapse-both',
@@ -1260,26 +1222,16 @@
         });
       }
 
-      function createExternalNumber(externalNumber) {
-        //TODO: Update the external number pool with the number that got added
-        return ExternalNumberPool.create(Authinfo.getOrgId(), externalNumber)
-          .catch(function (response) {
-            errors.push(Notification.processErrorResponse(response));
-          });
-      }
-
       function setupVoiceService() {
         if (!vm.hasVoiceService) {
           return HuronCustomer.put(vm.customer.name)
+            .then(function () {
+              vm.hasVoiceService = true;
+            })
             .catch(function (response) {
               vm.hasVoiceService = false;
               errors.push(Notification.processErrorResponse(response, 'serviceSetupModal.customerPutError'));
               return $q.reject(response);
-            }).then(function () {
-              vm.hasVoiceService = true;
-              if (_.get(vm, 'model.site.voicemailPilotNumber')) {
-                return createExternalNumber(vm.model.site.voicemailPilotNumber);
-              }
             });
         }
       }

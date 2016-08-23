@@ -177,13 +177,12 @@
       });
     }
 
-    function getGanttGraph(data, valueAxis) {
+    function getGanttGraph(data, valueAxis, exportData) {
       return angular.copy({
         'type': 'gantt',
         'pathToImages': amchartsImages,
         'theme': 'light',
         'marginRight': 70,
-        'dataDateFormat': 'YYYY-MM-DDTJJ:NN:SSZ',
         'balloonDateFormat': 'JJ:NN',
         'columnWidth': 0.035,
         'valueAxis': valueAxis,
@@ -216,7 +215,7 @@
           'zoomable': false,
           'valueZoomable': true
         },
-        'export': baseVariables['export']
+        'export': exportData
       });
     }
   }

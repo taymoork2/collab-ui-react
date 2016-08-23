@@ -153,9 +153,9 @@
       prod: 'https://hades.huron-dev.com/api/v1/elasticsearch/'
     },
     BmmpUrl: {
-      dev: 'https://bmmp.dmz.webex.com/api/v1',
+      dev: 'https://bmmp.dmz.ciscospark.com/api/v1',
       cfe: 'https://bmmp.ciscospark.com/api/v1',
-      integration: 'https://bmmp.ciscospark.com/api/v1',
+      integration: 'https://bmmp.dmz.ciscospark.com/api/v1',
       prod: 'https://bmmp.ciscospark.com/api/v1'
     },
 

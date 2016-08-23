@@ -70,13 +70,20 @@
 
   <cs-sp-section>
     <strong>
-      <div class="section-title-row section-name" translate="mediaFusion.reassignCluster"></div>
+      <div class="section-title-row section-name" translate="mediaFusion.actionsHeader"></div>
     </strong>
     <div>
       <a href 
               style="color:#049FD9"
               ng-click="sp.close(); hostDetails.reassignCluster();"
               translate="mediaFusion.reassign.moveNode">
+      </a>
+    </div>
+    <div>
+      <a href 
+              style="color:#049FD9"
+              ng-click="sp.close(); hostDetails.showDeregisterHostDialog();"
+              translate="mediaFusion.reassign.deregister_node">
       </a>
     </div>
   </cs-sp-section>
@@ -99,17 +106,6 @@
       </ul>
     </div>
     <p ng-if="hostDetails.connector.alarms.length == 0" translate="mediaFusion.alarms.noAlarms"></p>
-  </cs-sp-section>
-
-  <cs-sp-section>
-    <div class="section-title-row section-name" translate=""></div>
-    <div>
-      <a href 
-              style="color:#049FD9"
-              ng-click="sp.close(); hostDetails.showDeregisterHostDialog();"
-              translate="mediaFusion.reassign.deregister_node">
-      </a>
-    </div>
   </cs-sp-section>
 
 </cs-sp-container>

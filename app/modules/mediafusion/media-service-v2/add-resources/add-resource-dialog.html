@@ -47,6 +47,7 @@
       <span ng-show="redirectResource.createNewGroup" translate="mediaFusion.add-resource-dialog.grant-registration-success-header-new-cluster" translate-values="{hostname: redirectResource.hostName || '', clustername: redirectResource.selectedCluster || ''}">
       </span>
     </h3>
+    <br>
     <p>
       <span translate="mediaFusion.add-resource-dialog.grant-success-information">
       </span>
@@ -63,23 +64,30 @@
             <input cs-input type="radio" ng-model="redirectResource.radio" id="yes" name="redirectResource" value="1" cs-input-label="{{'mediaFusion.add-resource-dialog.yesProceed' | translate}}" class="radioNoTranform">
           </div>
           <div class="radioDisplay">
-            <input cs-input type="radio" ng-model="redirectResource.radio" id="no" name="redirectResource" value="0" cs-input-label="{{'mediaFusion.add-resource-dialog.noProceed' | translate}}" class="radioNoTranform">
+            <input cs-input type="radio" ng-model="redirectResource.radio" id="no" name="redirectResource" value="0" cs-input-label="{{'mediaFusion.add-resource-dialog.noProceed' | translate}}" cs-input-help-text="{{'mediaFusion.add-resource-dialog.noProceed-helptext' | translate}}" class="radioNoTranform">
           </div>
         </div>
       </form>
     </div>
   </div>
   <div ng-show="redirectResource.noProceed">
+    <a target="_self" href="https://7f3b835a2983943a12b7-f3ec652549fc8fa11516a139bfb29b79.ssl.cf5.rackcdn.com/Media-Fusion-Management-Connector/mfusion.ova" download="mfusion.ova"/>
     <div>
-      <h4 translate="mediaFusion.add-resource-dialog.noInfo"></h4></div>
+      <h4 translate="mediaFusion.add-resource-dialog.noInfo"></h4>
+    </div>
+    <br>
+    <br>
+    <div>
+      <h4 translate="mediaFusion.add-resource-dialog.noRetryInfo"></h4>
+    </div>
     <div class="addResourceBodyInfo">
       <p>
-        {{'mediaFusion.add-resource-dialog.noDesc1' | translate}} <a href="http://www.cisco.com/go/hybrid-services">{{'mediaFusion.add-resource-dialog.noDesc2' | translate}}</a>
+        {{'mediaFusion.add-resource-dialog.noDesc1' | translate}} <a href="http://www.cisco.com/go/hybrid-services"  target='_blank'>{{'mediaFusion.add-resource-dialog.noDesc2' | translate}}</a>
       </p>
     </div>
-    <div class="addResourceBodyInfo">
+    <!--div class="addResourceBodyInfo">
       <p translate="mediaFusion.add-resource-dialog.noDesc3"></p>
-    </div>
+    </div-->
   </div>
 </div>
 <div class="modal-footer">

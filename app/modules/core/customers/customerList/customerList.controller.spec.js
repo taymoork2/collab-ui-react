@@ -36,13 +36,14 @@ describe('Controller: CustomerListCtrl', function () {
   beforeEach(angular.mock.module('Huron'));
   beforeEach(angular.mock.module('Sunlight'));
 
-  beforeEach(inject(function (_$controller_, _$httpBackend_, _$q_, $rootScope, _$state_, _Authinfo_, _HuronConfig_, _FeatureToggleService_, _Notification_, _Orgservice_, _PartnerService_, _TrialService_) {
+  beforeEach(inject(function (_$controller_, _$httpBackend_, _$q_, $rootScope, _$state_, _Authinfo_, _Config_, _HuronConfig_, _FeatureToggleService_, _Notification_, _Orgservice_, _PartnerService_, _TrialService_) {
     $controller = _$controller_;
     $httpBackend = _$httpBackend_;
     $q = _$q_;
     $scope = $rootScope.$new();
     $state = _$state_;
     Authinfo = _Authinfo_;
+    Config = _Config_;
     HuronConfig = _HuronConfig_;
     Notification = _Notification_;
     FeatureToggleService = _FeatureToggleService_;
@@ -112,6 +113,8 @@ describe('Controller: CustomerListCtrl', function () {
         customerName: 'ControllerTestOrg',
         customerEmail: 'customer123@cisco.com',
         daysLeft: 50,
+        numUsers: 10,
+        activeUsers: 3,
         communications: {
           isTrial: true
         },
@@ -140,6 +143,28 @@ describe('Controller: CustomerListCtrl', function () {
       testTrialData.communications.isTrial = false;
     }
 
+    it('should properly calculate trials past the grace period', function () {
+      setTestDataExpired();
+      testTrialData.daysLeft = -99;
+      expect($scope.isPastGracePeriod(testTrialData)).toBe(true);
+      setTestDataActive();
+      expect($scope.isPastGracePeriod(testTrialData)).toBe(false);
+      setTestDataTrial();
+      expect($scope.isPastGracePeriod(testTrialData)).toBe(false);
+    });
+
+    it('should display N/A when trial is past grace period', function () {
+      setTestDataExpired();
+      testTrialData.daysLeft = -99;
+      expect($scope.getLicenseCountColumnText(testTrialData)).toBe('common.notAvailable');
+      expect($scope.getUserCountColumnText(testTrialData)).toBe('common.notAvailable');
+    });
+
+    it('should return the correct text for user count', function () {
+      setTestDataTrial();
+      expect($scope.getUserCountColumnText(testTrialData)).toBe(testTrialData.activeUsers + ' / ' + testTrialData.numUsers);
+    });
+
     it('should return the correct account status', function () {
       setTestDataExpired();
       expect($scope.getAccountStatus(testTrialData)).toBe('expired');
@@ -147,22 +172,6 @@ describe('Controller: CustomerListCtrl', function () {
       expect($scope.getAccountStatus(testTrialData)).toBe('trial');
       setTestDataActive();
       expect($scope.getAccountStatus(testTrialData)).toBe('active');
-    });
-
-    it('should return expired days left', function () {
-      setTestDataExpired();
-      expect($scope.getExpiredNotesColumnText(testTrialData)).toBe('customerPage.expiredWithGracePeriod');
-
-      testTrialData.daysLeft = -90;
-      expect($scope.getExpiredNotesColumnText(testTrialData)).toBe('customerPage.expired');
-    });
-
-    it('should return proper license counts', function () {
-      setTestDataActive();
-      expect($scope.getTotalLicenses(testTrialData)).toEqual(5);
-
-      setTestDataTrial();
-      expect($scope.getTotalLicenses(testTrialData)).toEqual(15);
     });
   });
 

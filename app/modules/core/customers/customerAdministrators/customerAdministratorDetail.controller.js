@@ -5,7 +5,7 @@
     .controller('CustomerAdministratorDetailCtrl', CustomerAdministratorDetail);
 
   /* @ngInject */
-  function CustomerAdministratorDetail($stateParams, $translate, Analytics, Authinfo, CustomerAdministratorService, Notification, ModalService) {
+  function CustomerAdministratorDetail($stateParams, $translate, Analytics, Authinfo, Config, CustomerAdministratorService, Notification, ModalService) {
     var vm = this;
     var currentCustomer = $stateParams.currentCustomer;
     var customerOrgId = currentCustomer.customerOrgId;
@@ -67,16 +67,24 @@
           email = emailDetail.value;
         }
       });
+      var roles = _.get(response.data, 'roles');
       var uuid = _.get(response.data, 'id');
       var avatarSyncEnabled = _.get(response.data, 'avatarSyncEnabled');
       var adminProfile = {
         uuid: uuid,
         fullName: fullName,
         avatarSyncEnabled: avatarSyncEnabled,
-        email: email
+        email: email,
+        roles: roles
       };
       vm.administrators.push(adminProfile);
-      patchSalesAdminRole(email);
+
+      var isNotFullAdmin = Authinfo.hasRole(Config.backend_roles.full_admin);
+      var isNotSalesAdmin = Authinfo.hasRole(Config.backend_roles.sales);
+
+      if (isNotFullAdmin && isNotSalesAdmin) {
+        patchSalesAdminRole(email);
+      }
       Notification.success('customerAdminPanel.customerAdministratorAddSuccess');
       Analytics.trackPartnerActions(Analytics.eventNames.ASSIGN, uuid, Authinfo.getOrgId());
     }

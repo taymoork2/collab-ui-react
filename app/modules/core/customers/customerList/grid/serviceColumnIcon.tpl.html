@@ -1,0 +1,5 @@
+<i ng-if="app.isLicenseTypeAny(row, type)"
+  class="icon icon-circle"
+  ng-class="translateTypeToIcon(type)"
+  tooltip="{{ getTooltipText(row, type, app) }}"
+  tooltip-append-to-body="true"></i>

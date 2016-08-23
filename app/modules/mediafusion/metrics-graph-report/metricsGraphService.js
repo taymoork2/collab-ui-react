@@ -31,10 +31,11 @@
       setAvailabilityGraph: setAvailabilityGraph
     };
 
-    function getBaseExportForSerialGraph(fields, fileName) {
+    function getBaseExportForGraph(fields, fileName, columnNames) {
       baseVariables['export'] = {
         'enabled': true,
         'exportFields': fields,
+        'columnNames': columnNames,
         'fileName': fileName,
         'libs': {
           'autoLoad': false
@@ -87,11 +88,25 @@
       if (!data[0].balloon) {
         startDuration = 0;
       }
-      var exportFields = ['call_reject', 'active_calls', 'timestamp'];
+      var exportFields = ['active_calls', 'call_reject', 'timestamp'];
+      var columnNames = {};
+      if (cluster === 'All Clusters') {
+        columnNames = {
+          'active_calls': 'Calls on premise',
+          'call_reject': 'Calls overflowed to the cloud',
+          'timestamp': 'Timestamp',
+        };
+      } else {
+        columnNames = {
+          'active_calls': 'Calls on premise',
+          'call_reject': 'Calls redirected to cloud',
+          'timestamp': 'Timestamp',
+        };
+      }
       cluster = cluster.replace(/\s/g, "_");
       daterange = daterange.replace(/\s/g, "_");
-      var ExportFileName = 'CallVolume_' + cluster + '_' + daterange;
-      var chartData = CommonMetricsGraphService.getBaseStackSerialGraph(data, startDuration, valueAxes, callVolumeGraphs(data, cluster), 'timestamp', catAxis, getBaseExportForSerialGraph(exportFields, ExportFileName));
+      var ExportFileName = 'MediaService_TotalCalls_' + cluster + '_' + daterange + '_' + new Date();
+      var chartData = CommonMetricsGraphService.getBaseStackSerialGraph(data, startDuration, valueAxes, callVolumeGraphs(data, cluster), 'timestamp', catAxis, getBaseExportForGraph(exportFields, ExportFileName, columnNames));
       chartData.numberFormatter = CommonMetricsGraphService.getBaseVariable(NUMFORMAT);
       var chart = AmCharts.makeChart(callVolumediv, chartData);
       chart.addListener("rendered", zoomChart);
@@ -194,11 +209,16 @@
         startDuration = 0;
       }
       var exportFields = ['average_cpu', 'peak_cpu', 'timestamp'];
+      var columnNames = {
+        'average_cpu': 'Average Utilization',
+        'peak_cpu': "Peak Utilization",
+        'timestamp': 'Timestamp'
+      };
       cluster = cluster.replace(/\s/g, "_");
       daterange = daterange.replace(/\s/g, "_");
-      var ExportFileName = 'Utilization_' + cluster + '_' + daterange;
+      var ExportFileName = 'MediaService_Utilization_' + cluster + '_' + daterange + '_' + new Date();
 
-      var chartData = CommonMetricsGraphService.getBaseStackSerialGraph(data, startDuration, valueAxes, utilizationGraphs(data), 'timestamp', catAxis, getBaseExportForSerialGraph(exportFields, ExportFileName));
+      var chartData = CommonMetricsGraphService.getBaseStackSerialGraph(data, startDuration, valueAxes, utilizationGraphs(data), 'timestamp', catAxis, getBaseExportForGraph(exportFields, ExportFileName, columnNames));
       chartData.numberFormatter = CommonMetricsGraphService.getBaseVariable(NUMFORMAT);
       var chart = AmCharts.makeChart(utilizationdiv, chartData);
       chart.addListener("rendered", zoomChart);
@@ -298,13 +318,23 @@
       return valueAxis;
     }
 
-    function createAvailabilityGraph(data) {
+    function createAvailabilityGraph(data, selectedCluster, cluster, daterange) {
       // if there are no active users for this user
       if (data === null || data === 'undefined' || data.length === 0) {
         return;
       }
       var valueAxis = createValueAxis(data);
-      var chartData = CommonMetricsGraphService.getGanttGraph(data.data[0].clusterCategories, valueAxis);
+      var exportFields = ['task', 'startTime', 'endTime', 'category'];
+      var columnNames = {
+        'task': 'Availability',
+        'startTime': 'Start Time',
+        'endTime': 'End Time',
+        'category': 'Cluster'
+      };
+      cluster = cluster.replace(/\s/g, "_");
+      daterange = daterange.replace(/\s/g, "_");
+      var ExportFileName = 'MediaService_Availability_' + cluster + '_' + daterange + '_' + new Date();
+      var chartData = CommonMetricsGraphService.getGanttGraph(data.data[0].clusterCategories, valueAxis, getBaseExportForGraph(exportFields, ExportFileName, columnNames));
       var chart = AmCharts.makeChart(availabilitydiv, chartData);
       return chart;
     }
@@ -316,14 +346,14 @@
       return localTime;
     }
 
-    function setAvailabilityGraph(data, availabilityChart, selectedCluster) {
+    function setAvailabilityGraph(data, availabilityChart, selectedCluster, cluster, daterange) {
       var startDate = data.data[0].startTime;
       //var startDate = str.substring(0, 10);
       startDate = convertToLocalTime(startDate);
       if (data === null || data === 'undefined' || data.length === 0) {
         return;
       } else {
-        availabilityChart = createAvailabilityGraph(data, selectedCluster);
+        availabilityChart = createAvailabilityGraph(data, selectedCluster, cluster, daterange);
         availabilityChart.period = data.data[0].period;
         availabilityChart.startDate = startDate;
         availabilityChart.validateData();

@@ -4,7 +4,7 @@ describe('Partner Service -', function () {
   beforeEach(angular.mock.module('Core'));
   beforeEach(angular.mock.module('Huron'));
 
-  var $httpBackend, $q, $translate, Auth, Authinfo, Config, PartnerService, TrialService, UrlConfig;
+  var $httpBackend, $q, $translate, Analytics, Auth, Authinfo, Config, PartnerService, $scope, TrialService, UrlConfig;
 
   var testData;
 
@@ -20,17 +20,18 @@ describe('Partner Service -', function () {
     });
   });
 
-  beforeEach(inject(function (_$httpBackend_, _$q_, _$translate_, _Auth_, _Authinfo_, _Config_, _PartnerService_, _TrialService_, _UrlConfig_) {
+  beforeEach(inject(function (_$httpBackend_, _$q_, $rootScope, _$translate_, _Analytics_, _Auth_, _Authinfo_, _Config_, _PartnerService_, _TrialService_, _UrlConfig_) {
     $httpBackend = _$httpBackend_;
     $q = _$q_;
     $translate = _$translate_;
+    Analytics = _Analytics_;
     Auth = _Auth_;
     Authinfo = _Authinfo_;
     Config = _Config_;
     PartnerService = _PartnerService_;
+    $scope = $rootScope.$new();
     TrialService = _TrialService_;
     UrlConfig = _UrlConfig_;
-
     testData = getJSONFixture('core/json/partner/partner.service.json');
     spyOn(Auth, 'getAuthorizationUrlList').and.returnValue($q.when({}));
   }));
@@ -151,7 +152,7 @@ describe('Partner Service -', function () {
     PartnerService.setNotesSortOrder(customerActive);
     expect(customerActive.notes.sortOrder).toBe(PartnerService.customerStatus.NOTE_NOT_EXPIRED);
     expect(customerActive.notes.daysLeft).toBe(45);
-    expect(customerActive.notes.text).toBe('customerPage.daysRemaining');
+    expect(customerActive.notes.text).toBe('customerPage.daysLeftToPurchase');
 
     // Customer's isTrial, status, and daysLeft properties are true, "ACTIVE", and 0.
     var customerExpireToday = testData.customers[1];
@@ -164,8 +165,8 @@ describe('Partner Service -', function () {
     var customerExpired = testData.customers[2];
     PartnerService.setNotesSortOrder(customerExpired);
     expect(customerExpired.notes.sortOrder).toBe(PartnerService.customerStatus.NOTE_EXPIRED);
-    expect(customerExpired.notes.daysLeft).toBe(-1);
-    expect(customerExpired.notes.text).toBe('customerPage.expired');
+    expect(customerExpired.notes.daysLeft).toBe(-25);
+    expect(customerExpired.notes.text).toBe('customerPage.expiredWithGracePeriod');
 
     // Customer's status property is "PENDING"
     var customerNoLicense = testData.customers[3];
@@ -248,10 +249,20 @@ describe('Partner Service -', function () {
     $httpBackend.flush();
   });
 
-  it('should successfully call modifyManagedOrgs', function () {
-    PartnerService.modifyManagedOrgs();
+  describe('modifyManagedOrgs function', function () {
+    it('should not call a patch if organization is matched', function () {
+      Auth.getAuthorizationUrlList.and.returnValue($q.when(testData.getAuthorizationUrlListResponse));
+      PartnerService.modifyManagedOrgs(testData.getAuthorizationUrlListResponse.data.managedOrgs[0].orgId);
+      $scope.$apply();
+    });
 
-    expect(Auth.getAuthorizationUrlList).toHaveBeenCalled();
+    it('should call a patch if organization is not matched', function () {
+      spyOn(Analytics, 'trackUserPatch');
+      Auth.getAuthorizationUrlList.and.returnValue($q.when(testData.getAuthorizationUrlListResponse));
+      PartnerService.modifyManagedOrgs('b3f09da0-7729-47a5-8091-1aa07a3c8671');
+      $httpBackend.expectPATCH('https://identity.webex.com/identity/scim/12345/v1/Users/' + testData.getAuthorizationUrlListResponse.data.uuid).respond(200, testData.getAuthorizationUrlListResponse);
+      $httpBackend.flush();
+    });
   });
 
   describe('helper functions -', function () {
@@ -263,9 +274,7 @@ describe('Partner Service -', function () {
         expect(data.isSquaredUcOffer).toBe(false);
         expect(data.usage).toBe(0);
         expect(data.offer).toEqual({
-          userServices: '',
-          deviceBasedServices: '',
-          careServices: ''
+          trialServices: []
         });
       });
 
@@ -308,63 +317,63 @@ describe('Partner Service -', function () {
         expect(data.deviceLicenses).toBe(10);
       });
 
-      it('should return an object with its "offer.userServices" property as a comma separated list with the translated "trials.message" l10n key, if the offers "id" property matches `Config.offerTypes.spark1` or `Config.offerTypes.message`', function () {
+      it('should return an object with its "offer.trialServices" array containing object with the name translated "trials.message" l10n key, if the offers "id" property matches `Config.offerTypes.spark1` or `Config.offerTypes.message`', function () {
         var data = PartnerService.parseLicensesAndOffers({
           offers: [{
             id: Config.offerTypes.spark1
           }]
         }, true);
-        expect(data.offer.userServices).toContain($translate.instant('trials.message'));
+        expect(_.map(data.offer.trialServices, function (o) { return o.name; })).toContain($translate.instant('trials.message'));
 
         data = PartnerService.parseLicensesAndOffers({
           offers: [{
             id: Config.offerTypes.message
           }]
         }, true);
-        expect(data.offer.userServices).toContain($translate.instant('trials.message'));
+        expect(_.map(data.offer.trialServices, function (o) { return o.name; })).toContain($translate.instant('trials.message'));
       });
 
-      it('should return an object with its "offer.careServices" property as a comma separated list with the translated "trials.care" l10n key, if the offers "id" property matches `Config.offerTypes.care` and atlasCareTrials feature is enabled for the org', function () {
+      it('should return an object with its "offer.trialServices" array containing object with the name translated "trials.care" l10n key, if the offers "id" property matches `Config.offerTypes.care` and atlasCareTrials feature is enabled for the org', function () {
         var data = PartnerService.parseLicensesAndOffers({
           offers: [{
             id: Config.offerTypes.care
           }]
         }, true);
-        expect(data.offer.careServices).toContain($translate.instant('trials.care'));
+        expect(_.map(data.offer.trialServices, function (o) { return o.name; })).toContain($translate.instant('trials.care'));
       });
 
-      it('should return an object with its "offer.userServices" property without the translated "trials.care" l10n key, if atlasCareTrials feature is disabled for the org', function () {
+      it('should return an object with its "offer.trialServices" array empty and without the translated "trials.care" l10n key, if atlasCareTrials feature is disabled for the org', function () {
         var data = PartnerService.parseLicensesAndOffers({
           offers: [{
             id: Config.offerTypes.care
           }]
         }, false);
-        expect(data.offer.userServices).toEqual('');
+        expect(data.offer.trialServices.length).toEqual(0);
       });
 
-      it('should return an object with its "offer.userServices" property as a comma separated with the translated "trials.collab" l10n key, if the offers "id" property matches `Config.offerTypes.collab`', function () {
+      it('should return an object with its "offer.trialServices" array containing object with the name translated "trials.collab" l10n key, if the offers "id" property matches `Config.offerTypes.collab`', function () {
         var data = PartnerService.parseLicensesAndOffers({
           offers: [{
             id: Config.offerTypes.collab
           }]
         }, true);
-        expect(data.offer.userServices).toContain($translate.instant('trials.message'));
+        expect(_.map(data.offer.trialServices, function (o) { return o.name; })).toContain($translate.instant('trials.message'));
       });
 
-      it('should return an object with its "offer.userServices" property as a comma separated with the translated "trials.squaredUC" l10n key, if the offers "id" property matches `Config.offerTypes.call` or `Config.offerTypes.squaredUC`', function () {
+      it('should return an object with its "offer.trialServices" array containing object with the name translated "trials.squaredUC" l10n key, if the offers "id" property matches `Config.offerTypes.call` or `Config.offerTypes.squaredUC`', function () {
         var data = PartnerService.parseLicensesAndOffers({
           offers: [{
             id: Config.offerTypes.call
           }]
         }, true);
-        expect(data.offer.userServices).toContain($translate.instant('trials.call'));
+        expect(_.map(data.offer.trialServices, function (o) { return o.name; })).toContain($translate.instant('trials.call'));
 
         data = PartnerService.parseLicensesAndOffers({
           offers: [{
             id: Config.offerTypes.squaredUC
           }]
         }, true);
-        expect(data.offer.userServices).toContain($translate.instant('trials.call'));
+        expect(_.map(data.offer.trialServices, function (o) { return o.name; })).toContain($translate.instant('trials.call'));
       });
 
       it('should return an object with "isSquaredUcOffer" property set to `true`, only if any of the offers "id" property matches `Config.offerTypes.call` or `Config.offerTypes.squaredUC`', function () {
@@ -449,29 +458,29 @@ describe('Partner Service -', function () {
         expect(data.isSquaredUcOffer).toBe(true);
       }, true);
 
-      it('should return an object with its "offer.userServices" property as a comma separated with the translated "customerPage.EE" l10n key, if the offers "id" property matches `Config.offerTypes.webex` or `Config.offerTypes.meetings`', function () {
+      it('should return an object with its "offer.trialServices" array containing object with the name translated "customerPage.EE" l10n key, if the offers "id" property matches `Config.offerTypes.webex` or `Config.offerTypes.meetings`', function () {
         var data = PartnerService.parseLicensesAndOffers({
           offers: [{
             id: Config.offerTypes.webex
           }]
         }, true);
-        expect(data.offer.userServices).toContain($translate.instant('customerPage.EE'));
+        expect(_.map(data.offer.trialServices, function (o) { return o.name; })).toContain($translate.instant('customerPage.EE'));
 
         data = PartnerService.parseLicensesAndOffers({
           offers: [{
             id: Config.offerTypes.meetings
           }]
         }, true);
-        expect(data.offer.userServices).toContain($translate.instant('customerPage.EE'));
+        expect(_.map(data.offer.trialServices, function (o) { return o.name; })).toContain($translate.instant('customerPage.EE'));
       });
 
-      it('should return an object with its "offer.deviceBasedServices" property as a comma separated with the translated "trials.roomSystem" l10n key, if the offers "id" property matches `Config.offerTypes.roomSystems`', function () {
+      it('should return an object with its "offer.trialServices" array containing object with the name translated "trials.roomSystem" l10n key, if the offers "id" property matches `Config.offerTypes.roomSystems`', function () {
         var data = PartnerService.parseLicensesAndOffers({
           offers: [{
             id: Config.offerTypes.roomSystems
           }]
         }, true);
-        expect(data.offer.deviceBasedServices).toContain($translate.instant('trials.roomSystem'));
+        expect(_.map(data.offer.trialServices, function (o) { return o.name; })).toContain($translate.instant('trials.roomSystem'));
       });
     });
 
@@ -633,6 +642,38 @@ describe('Partner Service -', function () {
         expect(result).toBeDefined();
         expect(result[0].licenseType).toBe(Config.licenseTypes.CONFERENCING);
         expect(result[0].sub).not.toBeDefined();
+      });
+    });
+
+    describe('massage data helpers', function () {
+      it('should set the correct purchase status', function () {
+        // purchased
+        var dataPurchased = testData.customers[6];
+        expect(PartnerService.helpers.calculatePurchaseStatus(dataPurchased)).toBe(true);
+        // active, but on trial
+        var dataNotPurchased1 = testData.customers[0];
+        expect(PartnerService.helpers.calculatePurchaseStatus(dataNotPurchased1)).toBe(false);
+        // not active
+        var dataNotPurchased2 = testData.customers[3];
+        expect(PartnerService.helpers.calculatePurchaseStatus(dataNotPurchased2)).toBe(false);
+      });
+
+      it('should set the service count properly', function () {
+        var dataPurchased = testData.customers[6];
+        dataPurchased.purchased = true;//this would be calculated in calculatePurchaseStatus
+        expect(PartnerService.helpers.calculateTotalLicenses(dataPurchased)).toBe(200);
+
+        var dataNotPurchased = testData.customers[7];
+        dataNotPurchased.purchased = false;
+        expect(PartnerService.helpers.calculateTotalLicenses(dataNotPurchased)).toBe(15);
+      });
+
+      it('should set the service column count correctly', function () {
+        var dataNoWebex = testData.customers[7];
+        expect(PartnerService.helpers.countUniqueServices(dataNoWebex)).toBe(1);
+
+        var dataWithWebex = testData.customers[8];// This has 2 webex's in it, should only count 1
+        expect(PartnerService.helpers.countUniqueServices(dataWithWebex)).toBe(2);
       });
     });
   });

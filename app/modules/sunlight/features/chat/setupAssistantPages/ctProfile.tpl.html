@@ -3,12 +3,11 @@
     <div class="h2 ct-title" translate="careChatTpl.profile"></div>
     <div class="h4 ct-title-desc" translate="careChatTpl.profileDesc"></div>
   </div>
-  <div class="ct-profile-body ct-sa-content">
-    <div class="cs-card-container">
+  <div class="cs-card-container ct-profile-body ct-sa-content">
       <cs-card-layout>
         <cs-card>
           <div class="h4 card-info" translate="careChatTpl.preview"></div>
-          <article class="profile-preview">
+          <article class="profile-preview ct-article">
             <header>
               <div class="img">
                 <div ng-if="careChatSA.selectedTemplateProfile === careChatSA.profiles.org">
@@ -49,7 +48,7 @@
         </cs-card>
         <cs-card>
           <div class="h4 card-info" translate="careChatTpl.attributes"></div>
-          <article class="profile-attributes">
+          <article class="profile-attributes ct-article">
             <section>
               <div class="h4 subheader-text" translate="careChatTpl.profileSelector"></div>
               <cs-radio class="h6" ng-repeat="(key, profile) in careChatSA.profiles"
@@ -62,7 +61,7 @@
                   <img class="uploaded-org-img" ng-src="{{careChatSA.logoFile}}" ng-show="careChatSA.logoUploaded"/>
                 </div>
                 <div class="h4 ct-display-txt" translate="careChatTpl.displayText"></div>
-                <input focus-on class="h6" cs-input type="text" placeholder="Enter organization name"
+                <input focus-on class="h6" cs-input type="text" ng-readonly="true"
                        ng-model="careChatSA.orgName" cs-input-group-size="medium-14">
               </div>
               <div class="profile-image" ng-if="careChatSA.selectedTemplateProfile === careChatSA.profiles.agent">
@@ -81,7 +80,5 @@
           </article>
         </cs-card>
       </cs-card-layout>
-
-    </div>
   </div>
 </div>

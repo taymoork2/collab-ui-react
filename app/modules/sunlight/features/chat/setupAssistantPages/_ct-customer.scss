@@ -52,6 +52,11 @@
     }
   }
 
+  .ct-article {
+    box-shadow: none;
+    border: 1px solid $gray-light-1;
+  }
+
   .welcomeText {
     font-family: "CiscoSansTT Light";
     font-size: rem-calc(22px);
@@ -167,9 +172,12 @@
   }
 
   .ct-attribute-section {
+    background-color: $gray-light-4;
+  }
+
+  .ct-attribute-section.item-not-selected {
     display: flex;
     flex-flow: column;
-    background-color: $gray-light-4;
     .ct-default-msg {
       text-align: center;
       flex: 0;
@@ -217,17 +225,6 @@
     flex-flow: row;
   }
 
-  .ct-attribute-section {
-    display: flex;
-    flex-flow: column;
-    background-color: $gray-light-4;
-    .ct-default-msg {
-      max-width: 60%;
-      text-align: center;
-      flex: 0;
-      color: $gray-dark-1;
-    }
-  }
 
   .ct-attribute-row {
     width: 100%;
@@ -283,5 +280,9 @@
       }
     }
   }
-
+  .ct-input-error {
+    color: $color-negative-dark;
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
 }

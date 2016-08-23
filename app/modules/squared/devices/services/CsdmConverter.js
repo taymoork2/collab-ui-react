@@ -266,7 +266,7 @@
       }
 
       function getUpgradeChannel(obj) {
-        return _.chain(getEvents(obj))
+        var channel = _.chain(getEvents(obj))
           .where({
             type: 'upgradeChannel',
             level: 'INFO'
@@ -274,6 +274,16 @@
           .pluck('description')
           .first()
           .value();
+
+        var labelKey = 'CsdmStatus.upgradeChannels.' + channel;
+        var label = $translate.instant('CsdmStatus.upgradeChannels.' + channel);
+        if (label === labelKey) {
+          label = channel;
+        }
+        return {
+          label: label,
+          value: channel
+        };
       }
 
       function getIp(obj) {

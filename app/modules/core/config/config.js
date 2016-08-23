@@ -43,6 +43,7 @@
       meetingsPerPage: 50,
       alarmsPerPage: 50,
       eventsPerPage: 50,
+      trialGracePeriod: -30, // equal to the number of days left in a trial when it passes grace period
 
       tokenTimers: {
         timeoutTimer: 3000000, // 50 mins
@@ -78,6 +79,30 @@
         care: 'CARE',
         context: 'CONTEXT'
       },
+
+      // These can be used to access object properties for trials
+      licenseObjectNames: [
+        'messaging',
+        'communications',
+        'care',
+        'roomSystems',
+        'conferencing',
+        'webexCMR',
+        'webexEEConferencing',
+        'webexEventCenter',
+        'webexMeetingCenter',
+        'webexTrainingCenter',
+        'webexSupportCenter'
+      ],
+
+      webexTypes: [
+        'webexCMR',
+        'webexEEConferencing',
+        'webexEventCenter',
+        'webexMeetingCenter',
+        'webexTrainingCenter',
+        'webexSupportCenter'
+      ],
 
       //WARNING: Deprecated, use offerTypes
       // These were how trials used to be mapped
@@ -167,6 +192,20 @@
         SHARED_DEVICES: 'SHARED_DEVICES',
         CMR: 'CMR',
         CARE: 'CARE'
+      },
+
+      messageErrors: {
+        userExistsError: '400081',
+        userPatchError: '400084',
+        claimedDomainError: '400091',
+        userExistsInDiffOrgError: '400090',
+        notSetupForManUserAddError: '400110',
+        userExistsDomainClaimError: '400108',
+        unknownCreateUserError: '400096',
+        unableToMigrateError: '400109',
+        insufficientEntitlementsError: '400111',
+        hybridServicesError: '400087',
+        hybridServicesComboError: '400094',
       },
 
       defaultEntitlements: ['webex-squared', 'squared-call-initiation'],

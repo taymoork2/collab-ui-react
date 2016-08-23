@@ -29,7 +29,11 @@
       buildService: _buildService,
       addService: _addService,
       removeFromFreeServices: _removeFromFreeServices,
-      isDisplayablePaidService: _isDisplayablePaidService
+      isDisplayablePaidService: _isDisplayablePaidService,
+      calculatePurchaseStatus: _calculatePurchaseStatus,
+      calculateTotalLicenses: _calculateTotalLicenses,
+      countUniqueServices: _countUniqueServices
+
     };
 
     var factory = {
@@ -98,35 +102,31 @@
     }
 
     function _createLicenseMapping() {
-
       var licenseMapping = {};
       licenseMapping[Config.licenseTypes.MESSAGING] = {
         name: $translate.instant('trials.message'),
         icon: 'icon-circle-message',
         order: 0
-
       };
+
       licenseMapping[Config.licenseTypes.COMMUNICATION] = {
         name: $translate.instant('trials.call'),
         icon: 'icon-circle-call',
         order: 3
-
       };
 
       licenseMapping[Config.licenseTypes.SHARED_DEVICES] = {
         name: $translate.instant('trials.roomSystem'),
         icon: 'icon-circle-telepresence',
         order: 6
-
       };
-      licenseMapping[Config.offerTypes.CARE] = {
+
+      licenseMapping[Config.licenseTypes.CARE] = {
         name: $translate.instant('trials.care'),
         icon: 'icon-circle-contact-centre',
         order: 5
-
       };
       return licenseMapping;
-
     }
 
     function _createFreeServicesMapping() {
@@ -233,7 +233,7 @@
       },
         payload
       ).$promise.then(function (response) {
-        Analytics.trackUserPatch(response.meta.organizationID);
+        Analytics.trackUserPatch(response.meta.organizationID, response.id);
         return $q.resolve(response);
       }).catch(function (response) {
         return $q.reject(response);
@@ -242,7 +242,11 @@
 
     function modifyManagedOrgs(customerOrgId) {
       return Auth.getAuthorizationUrlList().then(function (response) {
-        if (_.chain(response).get('data.managedOrgs').includes(customerOrgId).value()) {
+        if (!_.chain(response)
+          .get('data.managedOrgs')
+          .map('orgId')
+          .includes(customerOrgId)
+          .value()) {
           return patchManagedOrgs(response.data.uuid, customerOrgId);
         }
       });
@@ -261,6 +265,14 @@
       return angular.isUndefined(license.isTrial);
     }
     // end series of fn's
+
+    function isLicenseTypeAny(customerData, licenseTypeField) {
+      if (!isLicenseInfoAvailable(customerData.licenseList)) {
+        return false;
+      }
+      var licenseObj = customerData[licenseTypeField] || null;
+      return isLicenseATrial(licenseObj) || isLicenseActive(licenseObj);
+    }
 
     function getLicense(licenses, offerCode) {
       return _.find(licenses, {
@@ -289,33 +301,46 @@
     }
 
     function setNotesSortOrder(rowData) {
-      rowData.notes = {};
+      var notes = {};
+      notes.daysLeft = rowData.daysLeft;
       if (isLicenseInfoAvailable(rowData.licenseList)) {
         if (rowData.status === 'CANCELED') {
-          rowData.notes.sortOrder = customerStatus.NOTE_CANCELED;
-          rowData.notes.text = $translate.instant('customerPage.suspended');
-        } else if (rowData.status === 'ACTIVE' && rowData.daysLeft > 0) {
-          rowData.notes.sortOrder = customerStatus.NOTE_NOT_EXPIRED;
-          rowData.notes.daysLeft = rowData.daysLeft;
-          rowData.notes.text = $translate.instant('customerPage.daysRemaining', {
-            count: rowData.daysLeft
-          });
-        } else if (rowData.isTrial && rowData.status === 'ACTIVE' && rowData.daysLeft === 0) {
-          rowData.notes.sortOrder = customerStatus.NOTE_EXPIRE_TODAY;
-          rowData.notes.daysLeft = 0;
-          rowData.notes.text = $translate.instant('customerPage.expiringToday');
-        } else if (rowData.status === 'ACTIVE' && rowData.daysLeft < 0) {
-          rowData.notes.sortOrder = customerStatus.NOTE_EXPIRED;
-          rowData.notes.daysLeft = -1;
-          rowData.notes.text = $translate.instant('customerPage.expired');
-        } else {
-          rowData.notes.sortOrder = customerStatus.NOTE_NO_LICENSE;
-          rowData.notes.text = $translate.instant('customerPage.licenseInfoNotAvailable');
+          notes.sortOrder = customerStatus.NOTE_CANCELED;
+          notes.text = $translate.instant('customerPage.suspended');
+        } else if (rowData.purchased) {
+          notes.sortOrder = customerStatus.ACTIVE;
+          notes.text = $translate.instant('customerPage.purchased');
+        } else if (rowData.customerOrgId === Authinfo.getOrgId()) {
+          notes.sortOrder = customerStatus.ACTIVE;
+          notes.text = $translate.instant('customerPage.myOrganization');
+        } else if (rowData.status === 'ACTIVE' || rowData.status === 'EXPIRED') {
+          // while "daysLeft > 0" and expired doesn't make sense, the other 2 cases have the same text
+          if (rowData.daysLeft > 0) {
+            notes.sortOrder = customerStatus.NOTE_NOT_EXPIRED;
+            notes.text = $translate.instant('customerPage.daysLeftToPurchase', {
+              count: rowData.daysLeft
+            }, 'messageformat');
+          } else if (rowData.daysLeft === 0) {
+            notes.sortOrder = customerStatus.NOTE_EXPIRE_TODAY;
+            notes.text = $translate.instant('customerPage.expiringToday');
+          } else if (rowData.daysLeft < 0) {
+            notes.sortOrder = customerStatus.NOTE_EXPIRED;
+            // equal to the maximum days past expiration, always negative!
+            var gracePeriodDays = Config.trialGracePeriod;
+            if (_.inRange(rowData.daysLeft, 0, gracePeriodDays)) {
+              notes.text = $translate.instant('customerPage.expiredWithGracePeriod');
+            } else {
+              notes.text = $translate.instant('customerPage.expired');
+            }
+          }
         }
-      } else {
-        rowData.notes.sortOrder = customerStatus.NOTE_NO_LICENSE;
-        rowData.notes.text = $translate.instant('customerPage.licenseInfoNotAvailable');
       }
+      // If any of the previous tests fail, fall back to no license info
+      if (!_.has(notes, 'text')) {
+        notes.sortOrder = customerStatus.NOTE_NO_LICENSE;
+        notes.text = $translate.instant('customerPage.licenseInfoNotAvailable');
+      }
+      rowData.notes = notes;
     }
 
     function loadRetrievedDataToList(list, isTrialData, isCareEnabled) {
@@ -332,8 +357,8 @@
         customerName: customer.customerName || customer.displayName,
         customerEmail: customer.customerEmail || customer.email,
         endDate: edate,
-        numUsers: _.get(customer, 'license[0].volume', 0), // Note that the actual numUsers isn't available yet
-        activeUsers: 0,
+        numUsers: customer.allUsers || 0, // sometimes we get back undefined users, temp workaround
+        activeUsers: customer.activeUsers || 0,
         daysLeft: 0,
         usage: 0,
         licenses: 0,
@@ -378,7 +403,7 @@
       if (isTrialData) {
         if (daysLeft < 0) {
           dataObj.status = $translate.instant('customerPage.expired');
-          dataObj.state = "EXPIRED";
+          dataObj.state = 'EXPIRED';
         }
       }
 
@@ -407,8 +432,56 @@
       // the customer list page currently works.
       dataObj.conferencing = dataObj.sparkConferencing;
 
+      dataObj.totalLicenses = _calculateTotalLicenses(dataObj, isCareEnabled);
+      dataObj.uniqueServiceCount = _countUniqueServices(dataObj);
+      dataObj.purchased = _calculatePurchaseStatus(dataObj);
+
       setNotesSortOrder(dataObj);
       return dataObj;
+    }
+
+    function _calculatePurchaseStatus(customerData) {
+      if (customerData.state === Config.licenseStatus.ACTIVE) {
+        return !_.some(customerData.licenseList, 'isTrial');
+      } else {
+        return false;
+      }
+    }
+
+    function _calculateTotalLicenses(customerData, isCareEnabled) {
+      if (customerData.purchased || customerData.isPartner) {
+        return _.sum(customerData.licenseList, function (license) {
+          if (license.licenseType === Config.licenseTypes.STORAGE) {
+            return 0;
+          } else {
+            return license.volume;
+          }
+        });
+      } else {
+        // device and care licenses can be undefined
+        return customerData.licenses +
+              (customerData.deviceLicenses || 0) +
+              (isCareEnabled ? (customerData.careLicenses || 0) : 0);
+      }
+    }
+
+    function _countUniqueServices(customerData) {
+      var count = 0;
+      // only want to add 1 for webex since it is only 1 icon
+      var foundWebex = false;
+      _.forEach(Config.licenseObjectNames, function (licenseName) {
+        if (isLicenseTypeAny(customerData, licenseName)) {
+          if (_.startsWith(licenseName, 'webex')) {
+            if (!foundWebex) {
+              count += 1;
+              foundWebex = true;
+            }
+          } else {
+            count += 1;
+          }
+        }
+      });
+      return count;
     }
 
     function initializeService(licenses, offerCode, serviceEntry) {
@@ -503,28 +576,10 @@
         offer: {}
       };
 
-      var userServiceMapping = {
-        MESSAGE: {
-          text: $translate.instant('trials.message'),
-          order: 0
-        },
-        CALL: {
-          text: $translate.instant('trials.call'),
-          order: 3
-        },
-        EE: {
-          text: $translate.instant('customerPage.EE'),
-          order: 2
-        },
-        MEETING: {
-          text: $translate.instant('trials.meeting'),
-          order: 1
-        }
-      };
-
-      var deviceServiceText = [];
-      var userServices = [];
-      var careServicesText = [];
+      var userServiceMapping = helpers.createLicenseMapping();
+      var conferenceServices = [];
+      var trialService;
+      var trialServices = [];
 
       _.forEach(_.get(customer, 'licenses', []), function (licenseInfo) {
         if (!licenseInfo) {
@@ -548,48 +603,62 @@
           offerInfo.id !== Config.offerTypes.care) {
           partial.licenses = offerInfo.licenseCount;
         }
-
+        trialService = null;
         switch (offerInfo.id) {
           case Config.offerTypes.spark1:
           case Config.offerTypes.message:
           case Config.offerTypes.collab:
-            userServices.push(userServiceMapping.MESSAGE);
+            trialService = userServiceMapping[Config.licenseTypes.MESSAGING];
             break;
           case Config.offerTypes.call:
           case Config.offerTypes.squaredUC:
             partial.isSquaredUcOffer = true;
-            userServices.push(userServiceMapping.CALL);
+            trialService = userServiceMapping[Config.licenseTypes.COMMUNICATION];
             break;
           case Config.offerTypes.webex:
           case Config.offerTypes.meetings:
-            userServices.push(userServiceMapping.EE);
+            conferenceServices.push({
+              name: $translate.instant('customerPage.EE'),
+              order: 1,
+              qty: offerInfo.licenseCount
+            });
             break;
           case Config.offerTypes.meeting:
-            userServices.push(userServiceMapping.MEETING);
+            conferenceServices.push({
+              name: $translate.instant('trials.meeting'),
+              order: 1,
+              qty: offerInfo.licenseCount
+            });
             break;
           case Config.offerTypes.roomSystems:
-            deviceServiceText.push($translate.instant('trials.roomSystem'));
+            trialService = userServiceMapping[Config.licenseTypes.SHARED_DEVICES];
             partial.deviceLicenses = offerInfo.licenseCount;
             break;
           case Config.offerTypes.care:
             if (isCareEnabled) {
-              careServicesText.push($translate.instant('trials.care'));
+              trialService = userServiceMapping[Config.licenseTypes.CARE];
               partial.careLicenses = offerInfo.licenseCount;
             }
             break;
         }
+        if (trialService) {
+          trialService.qty = offerInfo.licenseCount;
+          trialServices.push(trialService);
+        }
       }
 
-      partial.offer.deviceBasedServices = _.uniq(deviceServiceText).join(', ');
-      partial.offer.careServices = _.uniq(careServicesText).join(', ');
-      partial.offer.userServices = _.chain(userServices)
-      .sortBy('order')
-      .map(function (o) {
-        return o.text;
-      })
-      .uniq()
-      .value()
-      .join(', ');
+      if (conferenceServices.length > 0) {
+        var name = _.chain(conferenceServices).sortBy('order').map(function (o) {
+          return o.name;
+        })
+        .uniq()
+        .value()
+        .join(', ');
+        var licenseQty = conferenceServices[0].qty;
+        trialServices.push({ name: name, qty: licenseQty, icon: 'icon-circle-group', order: 1 });
+      }
+
+      partial.offer.trialServices = _.chain(trialServices).sortBy('order').uniq().value();
       return partial;
     }
 

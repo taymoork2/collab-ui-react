@@ -6,7 +6,7 @@
     .directive('crLeaderBoardBucket', crLeaderBoardBucket);
 
   /* @ngInject */
-  function leaderBoardCtrl($scope, $translate, Authinfo, Config, Orgservice, TrialService) {
+  function leaderBoardCtrl($scope, $translate, Authinfo, Config, Orgservice, TrialService, WebExUtilsFact) {
 
     // TODO: revisit after graduation (2016-02-17) - see if this can be moved into the template
     $scope.label = $translate.instant('leaderBoard.licenseUsage');
@@ -47,6 +47,7 @@
           };
           var updateSubscriptionAndLicenses = function (license, licenseIndex) {
             var bucket = license.licenseType.toLowerCase();
+
             if (!(bucket === 'cmr' || bucket === 'conferencing')) {
               subscription[bucket] = {};
               var a = subscription[bucket];
@@ -55,16 +56,29 @@
                 $scope.roomSystemsCount = $scope.roomSystemsCount + license.volume;
               }
             }
+
             license.id = bucket + index + licenseIndex;
+            license.siteAdminUrl = null;
+            license.hideUsage = false;
+
             if (license.offerName !== 'CF') {
-              if (license.siteUrl) {
+              var licSiteUrl = license.siteUrl;
+
+              if (licSiteUrl) {
+                if (!WebExUtilsFact.isCIEnabledSite(licSiteUrl)) {
+                  license.siteAdminUrl = WebExUtilsFact.getSiteAdminUrl(licSiteUrl);
+                  license.hideUsage = true;
+                }
+
                 if (!subscription['sites']) {
                   subscription['sites'] = {};
                 }
-                if (!subscription['sites'][license.siteUrl]) {
-                  subscription['sites'][license.siteUrl] = [];
+
+                if (!subscription['sites'][licSiteUrl]) {
+                  subscription['sites'][licSiteUrl] = [];
                 }
-                subscription['sites'][license.siteUrl].push(license);
+
+                subscription['sites'][licSiteUrl].push(license);
                 subscription['licensesCount'] = subscription.sites[license.siteUrl].length;
                 subscription.count = Object.keys(subscription['sites']).length;
               } else {

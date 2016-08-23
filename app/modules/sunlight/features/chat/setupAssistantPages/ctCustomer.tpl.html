@@ -42,11 +42,11 @@
       <cs-card class="ct-customer-card">
         <header class="cardHeader1 h4" translate="careChatTpl.attributes"></header>
         <article class="customer-attributes-article ct-article articleHeight">
-          <section class="ct-attribute-section ct-flex-center" ng-hide="careChatSA.activeItem !== undefined">
+          <section class="ct-attribute-section item-not-selected ct-flex-center" ng-hide="careChatSA.activeItem !== undefined">
             <div class="ct-default-msg h6 medium-8" translate="careChatTpl.defaultRightCardText"></div>
           </section>
 
-          <section class="ct-attribute-section ct-flex-topleft ng-hide" ng-hide="careChatSA.activeItem === undefined">
+          <section class="ct-attribute-section ng-hide" ng-hide="careChatSA.activeItem === undefined">
             <div class="row ct-attribute-row" ng-repeat="attribute in careChatSA.activeItem.attributes">
 
               <label
@@ -117,6 +117,8 @@
               <div ng-if="attribute.name === 'type'">
                 <cs-select
                         ng-model="attribute.value"
+                        ng-init="careChatSA.validateType(attribute.value)"
+                        ng-change="careChatSA.validateType(attribute.value);"
                         options="careChatSA.typeOptions"
                         labelfield="text"
                         valuefield="id"
@@ -128,6 +130,10 @@
                         class="cs-input__label ct-attribute-field-helptext large-11">
                   <em>{{attribute.value.helpText}}</em>
                 </label>
+                <div class="small ct-input-error" ng-show="careChatSA.isTypeDuplicate">
+                  <i class="icon icon-error"></i>
+                  {{:: 'careChatTpl.ctValidation.errorTypeDuplicate' | translate}}
+                </div>
               </div>
               <div class="row ct-attribute-row ct-customer-info-category-input right-inner-addon" ng-if="attribute.name == 'type' && attribute.value.id == 'category'">
                 <i class="icon icon-add-contain" ng-click="careChatSA.addCategoryOption()"></i>

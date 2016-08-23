@@ -9,10 +9,34 @@
 }
 
 .user-manage {
+  display: flex;
+  flex: 1 1 auto;
+
+  h4 {
+    @include vr-spacing(mb, .5);
+  }
+
+  .sync-container {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
+
+    .ad-top {
+      max-height: 20rem;
+    }
+  }
+
+  .row {
+    flex: 1 1 auto;
+  }
+
+  .row.no-flex {
+    flex: 0 0 auto;
+  }
 
   form {
     .columns {
-      margin-bottom: 1rem;
+      @include vr-spacing(mb, 1);
     }
   }
 
@@ -22,15 +46,11 @@
       display: inline;
     }
 
-    hr {
-      margin: 3rem 0 3rem 0;
-    }
-
     .icon-refresh {
       font-weight: bolder;
       position: relative;
       top: .1rem;
-      margin: .5rem;
+      @include vr-spacing(m, .5);
     }
 
     .ui-grid .grid-refresh {
@@ -40,31 +60,30 @@
     }
 
     .ds-sync {
-      display: inline-flex;
+      display: flex;
       flex-direction: row;
-      padding-top: 1rem;
       padding-bottom: 1rem;
 
       h5 {
-        margin-left: .5rem;
+        @include vr-spacing(ml, .5);
       }
 
       div.details {
-        margin-left: .5rem;
-      }
+        @include vr-spacing(ml, .5);
 
-      div.details h5 {
-        margin-left: 0;
-      }
+        h5 {
+          @include vr-spacing(ml, 0);
+        }
 
-      div.details p {
-        margin-top: 1rem;
-        margin-bottom: 1rem;
+        p {
+          @include vr-spacing(mv, 1);
+        }
       }
 
       .working {
         color: $brand-success;
         top: .25rem;
+        font-size: small;
       }
 
       .failing {
@@ -73,22 +92,26 @@
     }
   }
 
+  .divider {
+    flex: 0 0 auto;
+    @include vr-spacing(mb, .75);
+  }
+
   li {
     list-style-type: none;
     padding-bottom: 1rem;
 
     .cs-input-radio.cs-input-group {
-      margin-bottom: 0.25rem;
+      @include vr-spacing(mb, .25);
 
       p {
         @extend .cs-radio-help;
-
-        margin-top: .25rem;
+        @include vr-spacing(mt, .25);
       }
     }
 
     label {
-      margin-bottom: 0rem;
+      @include vr-spacing(mb, 0);
     }
 
   }
@@ -99,5 +122,9 @@
     .ftwdirgridStyle {
       height: 100%;
     }
+  }
+
+  &.user-csv.modal-body.user-manage-advanced-results > .flex-container {
+      flex-shrink: 0;
   }
 }
