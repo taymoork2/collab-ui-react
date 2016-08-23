@@ -46,6 +46,26 @@ describe('Care Chat Setup Assistant Ctrl', function () {
     });
   };
 
+  var duplicateFieldTypeData = {
+    'field1': {
+      attributes: [{
+        name: 'type',
+        value: { id: 'name' }
+      }]
+    },
+    'field2': {
+      attributes: [{
+        name: 'type',
+        value: { id: 'email' }
+      }]
+    },
+    'field3': {
+      attributes: [{
+        name: 'type',
+        value: { id: 'name' }
+      }]
+    } };
+
   var selectedDaysByDefault = businessHours.selectedDaysByDefault;
   var defaultTimeZone = businessHours.defaultTimeZone;
   var defaultDayPreview = businessHours.defaultDayPreview;
@@ -350,6 +370,20 @@ describe('Care Chat Setup Assistant Ctrl', function () {
       expect(controller.addCategoryOption).toHaveBeenCalled();
       expect(mockElementObject.tokenfield).toHaveBeenCalledWith('createToken', 'Mock Category Token');
       expect(controller.categoryOptionTag).toEqual('');
+    });
+
+    it("should validate type for a unique field", function () {
+      expect(controller.validateType({ id: 'name' })).toEqual(true);
+    });
+
+    it("should identify a duplicate type configured", function () {
+      controller.template.configuration.pages.customerInformation.fields = duplicateFieldTypeData;
+      expect(controller.validateType({ id: 'name' })).toEqual(false);
+    });
+
+    it("next button should get disabled when duplicate types are configured in customerInfo page", function () {
+      controller.template.configuration.pages.customerInformation.fields = duplicateFieldTypeData;
+      expect(controller.nextButton()).toEqual(false);
     });
   });
 
