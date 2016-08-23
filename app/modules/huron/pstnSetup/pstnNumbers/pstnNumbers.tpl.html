@@ -87,6 +87,9 @@
             <button type="button" class="btn btn--people" ng-disabled="pstnNumbers.validCount < 1" ng-click="pstnNumbers.addToCart('PORT_ORDER')"><span translate="common.add"></span></button>
           </div>
           <cs-token-field class="port-numbers" tokens="pstnNumbers.unsavedTokens" tokenfieldid="pstnNumbers.tokenfieldId" tokenplacehoder="pstnNumbers.tokenplacehoder" tokenoptions="pstnNumbers.tokenoptions" tokenmethods="pstnNumbers.tokenmethods"></cs-token-field>
+          <div class="toll-free-warning" ng-if="pstnNumbers.tollFreeNumberCount > 0">
+            <span class="icon icon-error"></span><p translate="pstnSetup.portNumbersNoTollFree"></p>
+          </div>
         </cs-tab>
       </cs-tabset>
       <section class="flex-1">

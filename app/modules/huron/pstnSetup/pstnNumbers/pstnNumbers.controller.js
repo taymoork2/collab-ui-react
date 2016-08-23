@@ -15,8 +15,8 @@
 
   /* @ngInject */
   function PstnNumbersCtrl($q, $scope, $state, $timeout, $translate, DidService, Notification,
-    PstnSetup, PstnSetupService, TelephoneNumberService, TerminusStateService, ValidationService,
-    FeatureToggleService) {
+                           PstnSetup, PstnSetupService, TelephoneNumberService, TerminusStateService, ValidationService,
+                           FeatureToggleService) {
     var vm = this;
 
     vm.provider = PstnSetup.getProvider();
@@ -585,6 +585,7 @@
     vm.addPortNumbersToOrder = addPortNumbersToOrder;
     vm.unsavedTokens = [];
     vm.validCount = 0;
+    vm.tollFreeNumberCount = 0;
     vm.tokenfieldId = 'pstn-port-numbers';
 
     vm.tokenoptions = {
@@ -612,6 +613,9 @@
       if (isTokenInvalid(e.attrs.value)) {
         angular.element(e.relatedTarget).addClass('invalid');
         e.attrs.invalid = true;
+        if (TelephoneNumberService.isTollFreeNumber(e.attrs.value)) {
+          vm.tollFreeNumberCount++;
+        }
       } else {
         vm.validCount++;
       }
@@ -620,12 +624,17 @@
     }
 
     function isTokenInvalid(value) {
-      return !TelephoneNumberService.validateDID(value) || _.includes(DidService.getDidList(), value);
+      return !TelephoneNumberService.validateDID(value) ||
+        TelephoneNumberService.isTollFreeNumber(value) ||
+        _.includes(DidService.getDidList(), value);
     }
 
     function removedToken(e) {
       DidService.removeDid(e.attrs.value);
 
+      if (TelephoneNumberService.isTollFreeNumber(e.attrs.value)) {
+        vm.tollFreeNumberCount--;
+      }
       $timeout(initTokens);
     }
 
@@ -640,6 +649,7 @@
       var tmpDids = didList || DidService.getDidList();
       // reset valid and list before setTokens
       vm.validCount = 0;
+      vm.tollFreeNumberCount = 0;
       DidService.clearDidList();
       angular.element('#' + vm.tokenfieldId).tokenfield('setTokens', tmpDids);
     }

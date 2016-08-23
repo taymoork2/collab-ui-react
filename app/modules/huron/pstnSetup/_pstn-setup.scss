@@ -88,6 +88,25 @@
     transform: translateY(-2px);
   }
 
+  .toll-free-warning {
+    @include vr-spacing(mb, 1);
+    display: flex;
+    flex-direction: row;
+    align-item: flex-start;
+    color: $color-negative-base;
+    font-size: medium;
+
+    .icon-error {
+      @include vr-spacing(mt, .25);
+      @include vr-spacing(mr, .5);
+      font-size: medium;
+      flex: 0 1 auto;
+    }
+    p {
+      flex: 1 1 auto;
+    }
+  }
+
   .flex-container {
     padding: 0;
     background-color: $white;
@@ -149,7 +168,7 @@
   .search-button {
     margin-top: calc(#{$form-label-line-height}em + 10px - (50px - #{$input-height-base}) / 2);
   }
-  
+
   .tooltip {
     top: rem(-44px);
     .tooltip-inner {
@@ -231,7 +250,7 @@
         margin: 50px;
       }
     }
-    
+
     .package-details {
       flex: 1;
       display: flex;
@@ -249,7 +268,7 @@
       margin-left: 25px;
       margin-right: 25px;
     }
-    
+
     .package-detail-text {
       flex: 1;
       color: $gray-darkest;
@@ -276,7 +295,7 @@
       @include vr-spacing(mb,2.5);
       }
     }
-    
+
     &> div {
       @include vr-spacing(pb,1);
     }
@@ -303,7 +322,7 @@
     font-size: vr-adjust(98px);
     color: $color-people-base;
   }
- 
+
 
   .icon-information {
     color: $color-attention-base;
