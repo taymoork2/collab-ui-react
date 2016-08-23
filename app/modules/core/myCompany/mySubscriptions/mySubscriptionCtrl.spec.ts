@@ -68,6 +68,7 @@ describe('Controller: MySubscriptionCtrl', function () {
       spyOn(this.Authinfo, 'isOnline').and.returnValue(true);
       spyOn(this.DigitalRiverService, 'getDigitalRiverSubscriptionsUrl').and.returnValue(this.getDigitalRiverSubscriptionsUrlDefer.promise);
       spyOn(this.Notification, 'errorWithTrackingId');
+      spyOn(Orgservice, 'getLicensesUsage').and.returnValue(q.when(data.subscriptionsResponse));
     })
     it('should get digital river order history url to load iframe', function () {
       this.getDigitalRiverSubscriptionsUrlDefer.resolve('https://some.url.com');

@@ -111,9 +111,7 @@ describe('Care admin should be able to', function () {
     // validateTitleAndDesc('Chat Template Profile', 'Select how your company will be represented');
     utils.expectTextToBeSet(careChatTemplateSetupPage.profileTitle, 'Chat Template Profile');
     utils.expectTextToBeSet(careChatTemplateSetupPage.profileTitleDesc, 'Select how your company will be represented');
-    utils.clear(careChatTemplateSetupPage.OrgName);
-    utils.sendKeys(careChatTemplateSetupPage.OrgName, careChatTemplateSetupPage.testOrgName);
-    utils.expectTextToBeSet(careChatTemplateSetupPage.orgNamePreview, careChatTemplateSetupPage.testOrgName);
+    utils.expectIsReadOnly(careChatTemplateSetupPage.OrgName);
     utils.click(careChatTemplateSetupPage.agentProfile);
     utils.expectIsDisplayed(careChatTemplateSetupPage.agentDisplayImage);
     utils.click(careChatTemplateSetupPage.agentNameRadio);
