@@ -4,8 +4,7 @@
 		.controller('UpdateIncidentController', UpdateIncidentController);
   function UpdateIncidentController($scope, $stateParams, UpdateIncidentService, IncidentsWithoutSiteService) {
     $scope.showComponent = false;
-    $scope.componentSection = false;
-    $scope.showOrHideComponent = "Show Affected Components";
+    $scope.components = {};
     function incidentMsg() {
       IncidentsWithoutSiteService.getIncidentMsg({ incidentId: $stateParams.incidentId, isArray: false }).$promise.then(function (data) {
         $scope.incidentName = data.incidentName;
@@ -19,14 +18,6 @@
     incidentMsg();
     $scope.showComponentFUN = function () {
       $scope.showComponent = true;
-    };
-    $scope.showOrHideComponentFUN = function () {
-      $scope.componentSection = !$scope.componentSection;
-      if ($scope.componentSection) {
-        $scope.showOrHideComponent = "Hide Affected Components";
-      } else {
-        $scope.showOrHideComponent = "Show Affected Components";
-      }
     };
     $scope.addIncidentMsg = function () {
       UpdateIncidentService.save({

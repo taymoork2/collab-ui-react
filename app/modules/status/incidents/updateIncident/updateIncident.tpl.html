@@ -25,7 +25,7 @@
 			<h3>Component Statuses</h3>
 			<p ng-show="!showComponent">You can also <a ng-click="showComponentFUN()">update a component's status.</a></p>
 			<div ng-show="showComponent">
-				hello component
+				no components
 			</div>
 		</div>
 
@@ -36,16 +36,7 @@
 	<div class="msgList">
 		<h2>Previous Updates</h2>
 		<div class="item" ng-repeat="msg in messages">
-			<div class="itemRow1" ng-mouseover="showEdit=true" ng-mouseleave="showEdit=false">
-				<span>{{msg.status}}</span>-<span>{{msg.message}}</span><a ng-show="showEdit">Edit</a>
-			</div>
-			<div class="itemRow2">
-				<span>{{msg.postAt}}</span>
-				<a ng-click="showOrHideComponentFUN()">{{showOrHideComponent}}</a>
-			</div>
-			<div class="itemRow3" ng-show="componentSection">
-				No components were affected by this update.
-			</div>
+			<msg-item info='msg'></msg-item>
 		</div>
 	</div>
 

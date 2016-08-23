@@ -1,0 +1,10 @@
+<div class="itemRow1" ng-mouseover="showEdit=true" ng-mouseleave="showEdit=false">
+<span>{{msg.status}}</span>-<span>{{msg.message}}</span><a ng-show="showEdit">Edit</a>
+</div>
+<div class="itemRow2">
+<span>{{msg.postAt}}</span>
+<a ng-click="showOrHideComponentFUN()">{{showOrHideComponent}}</a>
+</div>
+<div class="itemRow3" ng-show="componentSection">
+No components were affected by this update.
+</div>
