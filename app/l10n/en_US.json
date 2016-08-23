@@ -3245,7 +3245,7 @@
     "deleteResource": "Decomission Resource"
   },
   "mediaFusion": {
-    "page_title": "Media Service",
+    "page_title": "Hybrid Media Service",
     "add-resource-button": "Add Resource",
     "connectors": {
       "group_by": "Group services by:",
@@ -3325,7 +3325,7 @@
       "clusterAvailability": "Cluster Availability for",
       "callReject": "Call Rejects  for",
       "node": "Node",
-      "callVolumes": "Total Calls",
+      "callVolumes": "Call Activity",
       "callVolumesDescription": "Total number of on-premises calls and calls that overflowed to the Cisco Collaboration Cloud.",
       "callVolumesDescriptionForClusterSel": "Total number of calls hosted on this Hybrid Media Cluster and those that were redirected to another resource (cluster or cloud).",
       "callLocalLegend": "On Premises",

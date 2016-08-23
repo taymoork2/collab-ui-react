@@ -5,8 +5,7 @@
             <div class="metrics-header" translate ='mediaFusion.metrics.total_calls'></div>
         </header>
         <section>
-            <div class="metrics-info">
-             <span translate ='mediaFusion.metrics.totalCallsDescription'></span> 
+            <div class="metrics-info"> 
                 <div class="call-counts">{{(nav.total | number) || 'N/A'}}</div>
                 <div class="last-counts">{{(nav.onprem | number) || 'N/A'}}
                 <span  class= "last-text" translate ='mediaFusion.metrics.onpremcalls'></span>
@@ -37,7 +36,6 @@
         </header>
         <section>
             <div class="metrics-info">
-             <span translate ='mediaFusion.metrics.avgerageUtilizationDescription'></span> 
                 <div class="utilization-count">{{(nav.averageUtilization) || 'N/A'}}</div>
             </div>
         </section>
@@ -50,7 +48,6 @@
         </header>
         <section>
             <div class="metrics-info">
-                <span translate ='mediaFusion.metrics.clusterAvailabilityDescription'></span> 
                 <div class="availability-count">{{(nav.clusterAvailability) || 'N/A'}}</div>
             </div>
         </section>
