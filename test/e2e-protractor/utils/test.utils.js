@@ -700,6 +700,12 @@ exports.quickDeleteUser = function (bFirst, name) {
   if (bFirst) {
     this.search(name, -1);
   }
+  
+  var spinner = element.all(by.css('.icon-spinner')).get(0);
+
+  function waitSpinner() {
+    exports.expectIsNotDisplayed(spinner);
+  }
 
   return waitUntilElemIsPresent(users.userListAction, 2000).then(function () {
     exports.click(users.userListAction);
@@ -707,6 +713,12 @@ exports.quickDeleteUser = function (bFirst, name) {
     exports.expectIsDisplayed(users.deleteUserModal);
     exports.click(users.deleteUserButton);
     notifications.assertSuccess(name, 'deleted successfully');
+
+    for (var i = 0; i < 3; i++) {
+      // Spinner may bounce repeatedly
+      exports.wait(spinner, 500).then(waitSpinner, waitSpinner);
+    }
+
     return true;
   }, function () {
     log('user is not preset');
