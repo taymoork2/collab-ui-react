@@ -19,9 +19,12 @@ namespace globalsettings {
       orgSettings: undefined
     }) {
       if (success) {
+        this.disableAllowReadOnlyAccessCheckbox = false;
+
         if (!_.isUndefined(settings.allowReadOnlyAccess)) {
           this._allowReadOnlyAccess = settings.allowReadOnlyAccess;
-          this.disableAllowReadOnlyAccessCheckbox = false;
+        } else {
+          this._allowReadOnlyAccess = true;
         }
 
         if (!_.isUndefined(settings.allowCrashLogUpload)) {
