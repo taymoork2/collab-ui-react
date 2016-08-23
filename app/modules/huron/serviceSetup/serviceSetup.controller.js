@@ -6,13 +6,8 @@
     .controller('ServiceSetupCtrl', ServiceSetupCtrl);
 
   /* @ngInject*/
-<<<<<<< HEAD
-  function ServiceSetupCtrl($q, $state, ServiceSetup, Notification, Authinfo, $translate, HuronCustomer,
-    ValidationService, DialPlanService, TelephoneNumberService, ExternalNumberService,
-=======
   function ServiceSetupCtrl($q, $state, $scope, ServiceSetup, Notification, Authinfo, $translate, HuronCustomer,
-    ValidationService, ExternalNumberPool, DialPlanService, TelephoneNumberService, ExternalNumberService,
->>>>>>> ed980ca... adding wizard files
+    ValidationService, DialPlanService, TelephoneNumberService, ExternalNumberService,
     CeService, HuntGroupServiceV2, ModalService, DirectoryNumberService, VoicemailMessageAction, FeatureToggleService) {
     var vm = this;
     var DEFAULT_SITE_INDEX = '000001';
