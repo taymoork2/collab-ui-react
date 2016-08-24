@@ -65,6 +65,7 @@ describe('Controller: HelpdeskOrgController', function () {
   describe('read only access', function () {
     beforeEach(function () {
       sinon.stub(HelpdeskService, 'usersWithRole').returns(q.resolve({}));
+      sinon.stub(HelpdeskService, 'getServiceOrder').returns(q.resolve({}));
       sinon.stub(LicenseService, 'getLicensesInOrg').returns(q.resolve({}));
 
       sinon.stub(Authinfo, 'getOrgId');

@@ -109,6 +109,7 @@
       }, XhrNotificationService.notify);
       findManagedByOrgs(org);
       findWebExSites(org);
+      findServiceOrder();
       findAdminUsers(org);
       vm.supportedBy = isTrials(org.orgSettings) ? $translate.instant('helpdesk.trials') : $translate.instant('helpdesk.ts');
       angular.element(".helpdesk-details").focus();
@@ -146,6 +147,12 @@
           vm.org.webExSites = sites;
         }, XhrNotificationService.notify);
       }
+    }
+
+    function findServiceOrder() {
+      HelpdeskService.getServiceOrder(vm.orgId).then(function (order) {
+        vm.orderSystem = order.orderingTool;
+      }, XhrNotificationService.notify);
     }
 
     function findAdminUsers(org) {
