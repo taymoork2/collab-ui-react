@@ -616,8 +616,10 @@
     };
 
     vm.addCategoryOption = function () {
-      angular.element('#categoryTokensElement').tokenfield('createToken', vm.categoryOptionTag);
-      vm.categoryOptionTag = '';
+      if (vm.categoryOptionTag) {
+        angular.element('#categoryTokensElement').tokenfield('createToken', vm.categoryOptionTag);
+        vm.categoryOptionTag = '';
+      }
     };
 
     vm.isUserProfileSelected = function () {
