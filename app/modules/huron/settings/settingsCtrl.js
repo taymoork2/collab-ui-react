@@ -108,6 +108,8 @@
       disableExtensions: false
     };
 
+    vm.previousModel = _.cloneDeep(vm.model);
+
     vm.validations = {
       greaterThan: function (viewValue, modelValue, scope) {
         var value = modelValue || viewValue;
@@ -1480,9 +1482,9 @@
 
     function updateVoicemailPostalCode() {
       if (vm.hasVoicemailService && vm.model.companyVoicemail.companyVoicemailEnabled
-        && (vm.model.site.siteSteeringDigit.siteDialDigit !== savedModel.site.siteSteeringDigit.siteDialDigit
-        || vm.model.site.extensionLength !== savedModel.site.extensionLength
-        || vm.model.site.siteCode !== savedModel.site.siteCode)) {
+        && (vm.model.site.siteSteeringDigit.siteDialDigit !== vm.previousModel.site.siteSteeringDigit.siteDialDigit
+        || vm.model.site.extensionLength !== vm.previousModel.site.extensionLength
+        || vm.model.site.siteCode !== vm.previousModel.site.siteCode)) {
         var postalCode = vm.model.site.siteSteeringDigit.siteDialDigit + '-' + vm.model.site.siteCode + '-' + vm.model.site.extensionLength;
         return ServiceSetup.updateVoicemailPostalcode(postalCode, vm.voicemailUserTemplate.objectId)
           .catch(function (response) {

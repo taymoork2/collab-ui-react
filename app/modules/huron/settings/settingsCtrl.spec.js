@@ -887,10 +887,10 @@ describe('Controller: HuronSettingsCtrl', function () {
         expect(controller.siteAndSteeringDigitErrorValidation('', '', localscope)).toBe(true);
       });
 
-      it('should save voicemail postal code if voicemail is enabled', function () {
+      it('should save voicemail postal code if voicemail is enabled and component of postal code has changed', function () {
         controller.hasVoicemailService = true;
         controller.model.companyVoicemail.companyVoicemailEnabled = true;
-
+        controller.model.site.siteSteeringDigit = 1;
         controller.save();
         $scope.$apply();
 
