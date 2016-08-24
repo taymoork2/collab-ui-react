@@ -745,6 +745,7 @@
       model: vm.model.companyVoicemail,
       key: 'voicemailToEmail',
       type: 'cs-input',
+      className: 'save-popup-margin',
       templateOptions: {
         label: $translate.instant('serviceSetupModal.voicemailToEmailLabel'),
         type: 'checkbox',
@@ -1478,12 +1479,14 @@
     }
 
     function updateVoicemailPostalCode() {
-      var postalCode = vm.model.site.siteSteeringDigit.siteDialDigit + '-' + vm.model.site.siteCode + '-' + vm.model.site.extensionLength;
-      return ServiceSetup.updateVoicemailPostalcode(postalCode, vm.voicemailUserTemplate.objectId)
-        .catch(function (response) {
-          errors.push(Notification.processErrorResponse(response, 'serviceSetupModal.error.updateVoicemailPostalCode'));
-          return $q.reject(response);
-        });
+      if (vm.hasVoicemailService && vm.model.companyVoicemail.companyVoicemailEnabled) {
+        var postalCode = vm.model.site.siteSteeringDigit.siteDialDigit + '-' + vm.model.site.siteCode + '-' + vm.model.site.extensionLength;
+        return ServiceSetup.updateVoicemailPostalcode(postalCode, vm.voicemailUserTemplate.objectId)
+          .catch(function (response) {
+            errors.push(Notification.processErrorResponse(response, 'serviceSetupModal.error.updateVoicemailPostalCode'));
+            return $q.reject(response);
+          });
+      }
     }
 
     function shouldUpdateVoicemailToEmail() {

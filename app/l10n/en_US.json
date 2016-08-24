@@ -1191,7 +1191,7 @@
     "errorGettingOptionaVmDidToggle": "There was a problem getting the optionalVmDid toggle.",
     "externalNumberDescriptionText": "Select a number that users can call to check their voicemail from outside the company network.",
     "voicemailPrefixTitle": "Voicemail Access Prefix",
-    "voicemailPrefixDesc": "Select a prefix to reserve for dialing mailboxes other than your own personal phone. Extentions between {{number}}{{extensionLength0}} and {{number}}{{extensionLength9}} are not recommended for assignment.",
+    "voicemailPrefixDesc": "Select a prefix to reserve for dialing mailboxes other than your own personal phone. This number also makes up the user’s external voicemail access code. We do not recommend using numbers between {{number}}{{extensionLength0}} and {{number}}{{extensionLength9}}",
      "error": {
        "siteSteering": "First digit of Voicemail Access Prefix conflicts with the selected Outbound Dial Digit.",
        "outboundDialDigit": "Outbound Dial Digit conflicts with the first digit of the Voicemail Access Prefix.",
