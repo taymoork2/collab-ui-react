@@ -145,6 +145,8 @@
 
           var subscription = {
             "subscriptionId": usageLicense.subscriptionId ? usageLicense.subscriptionId : trial,
+            "internalSubscriptionId": usageLicense.internalSubscriptionId ?
+                                      usageLicense.internalSubscriptionId : trial,
             "licenses": licenses
           };
           result.push(subscription);

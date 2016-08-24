@@ -114,7 +114,7 @@ class MySubscriptionCtrl {
   private broadcastSingleSubscription(subscription, trialUrl)  {
     this.$rootScope.$broadcast('SUBSCRIPTION::upgradeData', {
       isTrial: subscription.isTrial,
-      subId: subscription.subscriptionId,
+      subId: subscription.internalSubscriptionId,
       upgradeTrialUrl: trialUrl
     });
   };
@@ -163,6 +163,7 @@ class MySubscriptionCtrl {
       _.forEach(subscriptions, (subscription: any, subIndex: number) => {
         let newSubscription = {
           subscriptionId: undefined,
+          internalSubscriptionId: undefined,
           licenses: [],
           isTrial: false,
           viewAll: false,
@@ -170,6 +171,9 @@ class MySubscriptionCtrl {
         };
         if (subscription.subscriptionId && (subscription.subscriptionId !== "unknown")) {
           newSubscription.subscriptionId = subscription.subscriptionId;
+        }
+        if (subscription.internalSubscriptionId && (subscription.internalSubscriptionId !== "unknown")) {
+          newSubscription.internalSubscriptionId = subscription.internalSubscriptionId;
         }
 
         _.forEach(subscription.licenses, (license: any, licenseIndex: number) => {
@@ -241,7 +245,7 @@ class MySubscriptionCtrl {
 
       _.forEach(this.subscriptionDetails, (subscription: any) => {
         if (subscription.isTrial && this.isOnline) {
-          this.upgradeTrialUrl(subscription.subscriptionId).then((response) => {
+          this.upgradeTrialUrl(subscription.internalSubscriptionId).then((response) => {
             if (response && this.subscriptionDetails.length === 1) {
               this.broadcastSingleSubscription(this.subscriptionDetails[0], response);
             }
