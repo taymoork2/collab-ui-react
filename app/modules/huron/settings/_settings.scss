@@ -97,12 +97,17 @@
       }
     }
 
-    .service-setup-extension-length {
-      @include vr-spacing(mb, 2);
+    .service-setup-extension-length, .inner-section-margin {
+      @include vr-spacing(mb, 2.25);
     }
 
     .msg-container {
-      min-width: 500px;
+      min-width: vr-adjust(600px);
     }
+  }
+
+  .alert {
+    margin-right: 0;
+    margin-left: 0;
   }
 }

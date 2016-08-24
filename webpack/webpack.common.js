@@ -1,9 +1,25 @@
+// notes:
+// - segfaults have been occurring more recently (roughly starting around 2016-07-ish)
+// - register this to acquire more debugging info
+// - TODO: consider removing this once no longer needed
+const segfaultHandler = require('segfault-handler');
+
+const dateStr = new Date().toISOString().replace(/:/g, '_');
+const crashLogFile = `webpack-segfault-crash--${dateStr}.log`;
+segfaultHandler.registerHandler(crashLogFile);
+
 const webpack = require('webpack');
 const _ = require('lodash');
 const args = require('yargs').argv;
 const path = require('path');
 const loaders = require('./loaders');
 const autoprefixer = require('autoprefixer');
+
+/**
+ * TODO remove when math-expression-evaluator fixes their release version in 1.2.12
+ * https://github.com/redhivesoftware/math-expression-evaluator/pull/2
+ */
+Array.indexOf = _.indexOf;
 
 module.exports = (function makeWebpackConfig() {
   const config = {};
