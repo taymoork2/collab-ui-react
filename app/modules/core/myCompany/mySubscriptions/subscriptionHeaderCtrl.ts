@@ -13,7 +13,8 @@ class SubscriptionHeaderCtrl {
       this.subId = response.subId;
       this.upgradeTrialUrl = response.upgradeTrialUrl;
 
-      if (this.isOnline && !this.isTrial) {
+      if (this.isOnline) {
+        // display a BMMP Change Plan button
         $timeout(() => {
           bmmp.init(null, null, Authinfo.getOrgId(), 'atlas', $translate.use(), null, UrlConfig.getBmmpUrl());
         }, 300);

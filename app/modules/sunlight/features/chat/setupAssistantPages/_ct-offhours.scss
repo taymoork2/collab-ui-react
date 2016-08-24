@@ -89,7 +89,7 @@
   }
 
   .day-picker {
-    height: 4rem;
+    height: 3rem;
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
@@ -141,5 +141,9 @@
       width: 20rem;
       @include vr-spacing(pt, 0.5);
     }
+  }
+  .ct-input-error {
+    color: $color-negative-dark;
+    padding-bottom: 1rem;
   }
 }

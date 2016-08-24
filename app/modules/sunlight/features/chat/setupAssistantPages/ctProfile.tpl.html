@@ -61,7 +61,7 @@
                   <img class="uploaded-org-img" ng-src="{{careChatSA.logoFile}}" ng-show="careChatSA.logoUploaded"/>
                 </div>
                 <div class="h4 ct-display-txt" translate="careChatTpl.displayText"></div>
-                <input focus-on class="h6" cs-input type="text" placeholder="Enter organization name"
+                <input focus-on class="h6" cs-input type="text" ng-readonly="true"
                        ng-model="careChatSA.orgName" cs-input-group-size="medium-14">
               </div>
               <div class="profile-image" ng-if="careChatSA.selectedTemplateProfile === careChatSA.profiles.agent">
