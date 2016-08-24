@@ -312,7 +312,7 @@ describe('Service: USSService2', function () {
 
       USSService2.getUserProps('123', '456')
         .then(function (response) {
-          expect(response.length).toBe(1);
+          expect(response.userId).toBe('123');
         });
       $httpBackend.flush();
     });
