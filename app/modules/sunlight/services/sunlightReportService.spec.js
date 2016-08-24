@@ -56,7 +56,7 @@ describe(' sunlightReportService', function () {
       }
     };
     sunlightReportService.getStats('org_stats', config).then(function (response) {
-      expect(response.data.data.length).toBe(3);
+      expect(response.data.data.length).toBe(2);
       expect(response.data.metadata.jobName).toBe('org_stats_15min');
     });
     $httpBackend.flush();
@@ -156,14 +156,27 @@ describe(' sunlightReportService', function () {
       _.each(response, function (reportData) {
         expect(moment(reportData.createdTime, 'HH:mm', true).isValid()).toBe(true);
       });
+      var nonZeroDataPoint = _.find(response, function (reportData) {
+        return reportData.numCsatScores !== 0;
+      });
+      expect(nonZeroDataPoint.avgCsatScores).toBe(3.67);
     });
     $httpBackend.flush();
+  });
+
+  it('should get snapshot ReportingData for org for time selected today for mediaType chat', function () {
 
     sunlightReportService.getReportingData('org_snapshot_stats', 0, 'chat').then(function (response) {
       expect(response.length).toBe(24);
       _.each(response, function (reportData) {
         expect(moment(reportData.createdTime, 'HH:mm', true).isValid()).toBe(true);
       });
+      var nonZeroDataPoint = _.find(response, function (reportData) {
+        return reportData.numPendingTasks !== 0;
+      });
+      // The below assertions fail if run from a timezone that is at HH:15 or HH:45 offset
+      expect(nonZeroDataPoint.numWorkingTasks).toBe(7);
+      expect(nonZeroDataPoint.numPendingTasks).toBe(8);
     });
     $httpBackend.flush();
   });
