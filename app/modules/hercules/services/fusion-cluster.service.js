@@ -31,7 +31,8 @@
       processClustersToSeeIfServiceIsSetup: processClustersToSeeIfServiceIsSetup,
       formatTimeAndDate: formatTimeAndDate,
       labelForTime: labelForTime,
-      labelForDay: labelForDay
+      labelForDay: labelForDay,
+      getStatusForService: getStatusForService
     };
 
     return service;
@@ -362,5 +363,12 @@
       });
     }
 
+    function getStatusForService(serviceId, clusterList) {
+      return {
+        serviceId: serviceId,
+        setup: processClustersToSeeIfServiceIsSetup(serviceId, clusterList),
+        status: processClustersToAggregateStatusForService(serviceId, clusterList)
+      };
+    }
   }
 })();

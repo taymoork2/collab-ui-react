@@ -1,7 +1,7 @@
 import { CardButton, CardType } from './ServicesOverviewCard';
 import { ServicesOverviewHybridCard } from './ServicesOverviewHybridCard';
 
-export class ServicesOverviewCalendarCard extends ServicesOverviewHybridCard {
+export class ServicesOverviewHybridCalendarCard extends ServicesOverviewHybridCard {
   getShowMoreButton():CardButton {
     return undefined;
   }
@@ -33,7 +33,7 @@ export class ServicesOverviewCalendarCard extends ServicesOverviewHybridCard {
       name: 'servicesOverview.cards.calendar.title',
       description: 'servicesOverview.cards.calendar.description',
       activeServices: ['squared-fusion-cal'],
-      statusServices: ['squared-fusion-cal'],
+      statusService: 'squared-fusion-cal',
       statusLink: 'services/calendar',
       cardClass: 'calendar',
       cardType: CardType.hybrid
