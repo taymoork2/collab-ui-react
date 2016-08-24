@@ -175,7 +175,7 @@
         $scope.resourceGroup.current = $scope.resourceGroup.selected;
         $scope.setShouldShowButtons();
       }).catch(function () {
-        Notification.notify($translate.instant('hercules.resourceGroups.failedToSetGroup'));
+        Notification.error('hercules.resourceGroups.failedToSetGroup');
       }).finally(function () {
         $scope.resourceGroup.saving = false;
         $scope.saving = $scope.savingEntitlements;
