@@ -29,9 +29,10 @@
             </div>
         </div>
         <div class="columns medium-2 subscription-upgrade">
-          <div class="subscription-bmmp" ng-if="subscription.subscriptionId && !subscription.isTrial && mcpSubscription.isOnline">
-            <span class="cisco-bmmp-cta-widget" data-product-instance-id="{{::subscription.subscriptionId}}" data-styled="true" data-application-page="all" data-widget-location="navigation-bar"></span>
-          </div>
+          <bmmp-subscription-upgrade-button
+            ng-if="subscription.subscriptionId && !subscription.isTrial && mcpSubscription.isOnline"
+            subscription-id="::subscription.subscriptionId">
+          </bmmp-subscription-upgrade-button>
           <a ng-if="subscription.subscriptionId && subscription.isTrial && subscription.upgradeTrialUrl && mcpSubscription.isOnline" ng-href="{{::subscription.upgradeTrialUrl}}" class="btn btn--primary" translate="subscriptions.purchase"></a>
           <div class="license-quantity">
             <span class="h6" translate="subscriptions.quantity"></span>

@@ -157,7 +157,7 @@
       @include vr-spacing(ph, 1.5);
       @include vr-spacing(pv, 0.75);
       flex-direction: row-reverse;
-      position: relative;
+      align-items: center;
       .license-quantity {
         @include vr-spacing(pr, 1);
         @include vr-spacing(pt, 0.5);
@@ -169,9 +169,6 @@
         top: vr-adjust(60);
         text-align: right;
         width: vr-adjust(500);
-      }
-      .subscription-bmmp {
-        @include vr-spacing(pt, 0.5);
       }
     }
   }
@@ -186,11 +183,4 @@
   .nub {
     display: none;
   }
-}
-// TODO: currently overriding incorrect inline styling on BMMP widget
-// need to update or remove when BMMP updates to symphony standards and/or switches away from inline styling
-.subscription-bmmp .cisco-bmmp-cta-widget a {
-  font-family: $brand-font-cisco-TT-Light !important;
-  font-size: rem-calc(16) !important;
-  padding: rem-calc(12) !important;
 }

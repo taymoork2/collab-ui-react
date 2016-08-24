@@ -1,0 +1,14 @@
+@import "../../../styles/common";
+
+bmmp-subscription-upgrade-button {
+  display: inline-block;
+
+  .cisco-bmmp-cta-widget a {
+    display: inline-block !important;
+    font-family: $brand-font-cisco-TT-Light !important;
+    font-size: 1rem !important;
+    line-height: 0.8125rem !important;
+    padding: 0.8125rem 1rem 0.625rem !important;
+    border: none !important;
+  }
+}

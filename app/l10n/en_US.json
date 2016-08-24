@@ -4926,6 +4926,13 @@
       "SB": "Cisco Spark Board 55"
     }
   },
+  "onlineUpgradeModal": {
+    "title": "Account Expired",
+    "body": "Your admin account has been suspended because your subscription has lapsed. To regain access you can buy a subscription. Alternately you can use the Free version of Spark which does not come with the Cloud Collaboration Management console.",
+    "cancelButton": "Use Free Spark",
+    "cancelError": "An error has occurred while canceling your subscription.",
+    "cancelSuccess": "You now have a free Cisco Spark account."
+  },
   "myCompanyOrders": {
     "numberHeader": "Order Number",
     "descriptionHeader": "Order Detail",
