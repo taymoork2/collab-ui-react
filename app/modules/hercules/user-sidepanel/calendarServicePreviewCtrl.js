@@ -6,7 +6,7 @@
     .controller('CalendarServicePreviewCtrl', CalendarServicePreviewCtrl);
 
   /*@ngInject*/
-  function CalendarServicePreviewCtrl($scope, $state, $stateParams, Userservice, Notification, USSService, ClusterService, $timeout, $translate) {
+  function CalendarServicePreviewCtrl($scope, $state, $stateParams, Userservice, Notification, USSService2, ClusterService, $timeout, $translate, ResourceGroupService, FeatureToggleService) {
     $scope.entitlementNames = {
       'squared-fusion-cal': 'squaredFusionCal',
       'squared-fusion-uc': 'squaredFusionUC'
@@ -18,10 +18,27 @@
     $scope.localizedOnboardingWarning = $translate.instant('hercules.userSidepanel.warningInvitePending', {
       ServiceName: $scope.localizedServiceName
     });
+    $scope.resourceGroup = {
+      show: false,
+      saving: false,
+      init: function () {
+        this.options = [{ label: $translate.instant('hercules.resourceGroups.noGroupSelected'), value: '' }];
+        this.selected = this.current = this.options[0];
+      },
+      reset: function () {
+        this.selected = this.current;
+        this.saving = false;
+      },
+      hasChanged: function () {
+        return this.selected !== this.current;
+      }
+    };
+    $scope.resourceGroup.init();
 
     var isEntitled = function () {
       return $stateParams.currentUser.entitlements && $stateParams.currentUser.entitlements.indexOf($stateParams.extensionId) > -1;
     };
+
     $scope.extension = {
       id: $stateParams.extensionId,
       entitled: isEntitled()
@@ -29,16 +46,17 @@
 
     $scope.$watch('extension.entitled', function (newVal, oldVal) {
       if (newVal != oldVal) {
-        $scope.showButtons = newVal != isEntitled();
+        $scope.setShouldShowButtons();
       }
     });
 
+    var entitlementHasChanged = function () {
+      return $scope.extension.entitled !== isEntitled();
+    };
+
     var updateStatus = function () {
-      USSService.getStatusesForUser($scope.currentUser.id, function (err, activationStatus) {
-        if (!activationStatus || !activationStatus.userStatuses) {
-          return;
-        }
-        $scope.extension.status = _.find(activationStatus.userStatuses, function (status) {
+      USSService2.getStatusesForUser($scope.currentUser.id).then(function (statuses) {
+        $scope.extension.status = _.find(statuses, function (status) {
           return $scope.extension.id === status.serviceId;
         });
         if ($scope.extension.status && $scope.extension.status.connectorId) {
@@ -49,10 +67,45 @@
       });
     };
 
-    updateStatus();
+    var setSelectedResourceGroup = function (resourceGroupId) {
+      var selectedGroup = _.find($scope.resourceGroup.options, function (group) {
+        return group.value === resourceGroupId;
+      });
+      // TODO: deal with the fact that a resourceGroupId is set on the user, but no longer exists?
+      if (selectedGroup) {
+        $scope.resourceGroup.selected = selectedGroup;
+        $scope.resourceGroup.current = selectedGroup;
+      }
+    };
 
-    $scope.updateEntitlement = function (entitled) {
-      $scope.saving = true;
+    var readResourceGroups = function () {
+      if (!FeatureToggleService.supports(FeatureToggleService.features.atlasF237ResourceGroups)) {
+        return;
+      }
+      ResourceGroupService.getAll().then(function (groups) {
+        if (groups && groups.length > 0) {
+          _.each(groups, function (group) {
+            $scope.resourceGroup.options.push({
+              label: group.name + group.releaseChannel ? ' (' + group.releaseChannel + ')' : '',
+              value: group.id
+            });
+          });
+          if ($scope.extension.status && $scope.extension.status.resourceGroupId) {
+            setSelectedResourceGroup($scope.extension.status.resourceGroupId);
+          } else {
+            USSService2.getUserProps($scope.currentUser.id).then(function (props) {
+              if (props.resourceGroups && props.resourceGroups[$scope.extension.id]) {
+                setSelectedResourceGroup(props.resourceGroups[$scope.extension.id]);
+              }
+            });
+          }
+          $scope.resourceGroup.show = true;
+        }
+      });
+    };
+
+    var updateEntitlement = function (entitled) {
+      $scope.savingEntitlements = true;
       var user = [{
         'address': $scope.currentUser.userName
       }];
@@ -60,7 +113,6 @@
         entitlementName: $scope.entitlementNames[$stateParams.extensionId],
         entitlementState: entitled === true ? 'ACTIVE' : 'INACTIVE'
       }];
-      $scope.btn_saveLoad = true;
 
       Userservice.updateUsers(user, null, entitlement, 'updateEntitlement', function (data) {
         var entitleResult = {
@@ -73,13 +125,17 @@
             if (!$stateParams.currentUser.entitlements) {
               $stateParams.currentUser.entitlements = [];
             }
-            $stateParams.currentUser.entitlements.push($stateParams.extensionId);
-            $scope.showButtons = false;
             if (entitled) {
-              $timeout(function () {
-                updateStatus();
-              }, 2000); // Wait a few seconds and update the status after successful enable
+              $stateParams.currentUser.entitlements.push($stateParams.extensionId);
+            } else {
+              _.remove($stateParams.currentUser.entitlements, function (entitlement) {
+                return entitlement === $stateParams.extensionId;
+              });
             }
+            $scope.setShouldShowButtons();
+            $timeout(function () {
+              updateStatus();
+            }, 2000);
           } else if (userStatus === 404) {
             entitleResult.msg = $translate.instant('hercules.userSidepanel.entitlements-dont-exist', {
               userName: $scope.currentUser.userName
@@ -97,7 +153,6 @@
           if (userStatus !== 200) {
             Notification.notify([entitleResult.msg], entitleResult.type);
           }
-          $scope.btn_saveLoad = false;
 
         } else {
           entitleResult = {
@@ -107,14 +162,45 @@
             type: 'error'
           };
           Notification.notify([entitleResult.msg], entitleResult.type);
-          $scope.btn_saveLoad = false;
         }
-        $scope.saving = false;
+        $scope.savingEntitlements = false;
+        $scope.saving = $scope.resourceGroup.saving;
       });
     };
 
-    $scope.resetEntitlement = function () {
+    var setResourceGroupOnUser = function (resourceGroupId) {
+      $scope.resourceGroup.saving = true;
+      var props = { userId: $scope.currentUser.id, resourceGroups: { 'squared-fusion-cal': resourceGroupId } };
+      USSService2.updateUserProps(props).then(function () {
+        $scope.resourceGroup.current = $scope.resourceGroup.selected;
+        $scope.setShouldShowButtons();
+      }).catch(function () {
+        Notification.notify($translate.instant('hercules.resourceGroups.failedToSetGroup'));
+      }).finally(function () {
+        $scope.resourceGroup.saving = false;
+        $scope.saving = $scope.savingEntitlements;
+      });
+    };
+
+    updateStatus();
+    readResourceGroups();
+
+    $scope.save = function () {
+      $scope.savingEntitlements = false;
+      $scope.resourceGroup.saving = false;
+      $scope.saving = true;
+      if (entitlementHasChanged()) {
+        updateEntitlement($scope.extension.entitled);
+      }
+      if ($scope.resourceGroup.hasChanged()) {
+        setResourceGroupOnUser($scope.resourceGroup.selected.value);
+      }
+    };
+
+    $scope.reset = function () {
       $scope.extension.entitled = $scope.currentUser.entitlements.indexOf($stateParams.extensionId) > -1;
+      $scope.resourceGroup.reset();
+      $scope.showButtons = false;
     };
 
     $scope.closePreview = function () {
@@ -122,8 +208,11 @@
     };
 
     $scope.getStatus = function (status) {
-      return USSService.decorateWithStatus(status);
+      return USSService2.decorateWithStatus(status);
     };
 
+    $scope.setShouldShowButtons = function () {
+      $scope.showButtons = $scope.resourceGroup.hasChanged() || entitlementHasChanged();
+    };
   }
 }());
