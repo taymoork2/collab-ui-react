@@ -140,7 +140,7 @@
               'licenseId': license.licenseId
             });
             trial = license.isTrial ? 'Trial' : 'unknown';
-            return !(match == undefined || match.status === 'CANCELLED' || match.status === 'SUSPENDED');
+            return !(_.isUndefined(match) || match.status === 'CANCELLED' || match.status === 'SUSPENDED');
           });
 
           var subscription = {
