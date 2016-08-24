@@ -107,12 +107,12 @@
     };
 
     var countryListTypes = {
-      US_ONLY: "US",
-      CISCO_SX10: "ROLLOUT1",
-      CISCO_8865: "US",
-      CISCO_8845: "US",
-      CISCO_8841: "US",
-      CISCO_7841: "US"
+      US_ONLY: 'US',
+      CISCO_SX10: 'ROLLOUT1',
+      CISCO_8865: 'US',
+      CISCO_8845: 'US',
+      CISCO_8841: 'US',
+      CISCO_7841: 'US'
     };
 
     var service = {
@@ -168,7 +168,7 @@
       var countryLists = _.map(deviceArray, function (device) {
         return _countries[countryListTypes[device]] || _countries.US;
       });
-      return _.map(_.intersection.apply(_, countryLists), function (country) {
+      return _.map(_.intersection.apply(null, countryLists), function (country) {
         return { country: country };
       });
     }

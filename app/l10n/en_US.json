@@ -2808,6 +2808,7 @@
       "province": "State/ Province/ Region",
       "dealId": "Deal ID",
       "usOnly": "Currently U.S. only",
+      "trialDeviceShipmentLocations": "Device shipment  is supported in selected locations.  <a href='https://help.webex.com/docs/DOC-8229' target='_blank' ng-click='{{click}}'>Learn more</a>",
       "invalidDealId": "Invalid Deal ID number"
     },
     "numbers": {

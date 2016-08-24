@@ -48,7 +48,7 @@
     vm.getQuantityInputDefault = _getQuantityInputDefault;
     vm.areAdditionalDevicesAllowed = areAdditionalDevicesAllowed;
     vm.areTemplateOptionsDisabled = _areTemplateOptionsDisabled;
-    vm.getSelectedDevices = getSelectedDevices;
+    vm.getCountriesForSelectedDevices = getCountriesForSelectedDevices;
     // TODO - Remove vm.showNewRoomSystems when DX80 and MX300 are officially supported
     vm.showNewRoomSystems = false;
     vm.supportsInternationalShipping = false;
@@ -522,8 +522,6 @@
           }
         }
       }
-
-
     }, {
       model: vm.shippingInfo,
       key: 'addressLine1',
@@ -536,8 +534,7 @@
         type: 'text',
         required: true
       }
-    },
-    {
+    }, {
       model: vm.shippingInfo,
       key: 'addressLine2',
       type: 'input',
@@ -549,8 +546,7 @@
         label: $translate.instant('trialModal.call.unit'),
         type: 'text'
       },
-    },
-    {
+    }, {
       model: vm.shippingInfo,
       key: 'city',
       type: 'input',
@@ -647,7 +643,7 @@
       model: vm.shippingInfo,
       key: 'country',
       type: 'select',
-      defaultValue: _.find(TrialDeviceService.getCountries(getSelectedDevices(vm.supportsInternationalShipping)), {
+      defaultValue: _.find(getCountriesForSelectedDevices(), {
         country: vm.shippingInfo.country
       }),
       className: '',
@@ -668,7 +664,7 @@
       watcher: _countryWatcher(),
       expressionProperties: {
         'templateOptions.options': function () {
-          return _.map(TrialDeviceService.getCountries(getSelectedDevices(vm.supportsInternationalShipping)), 'country');
+          return _.map(getCountriesForSelectedDevices(), 'country');
         },
       }
     },
@@ -697,18 +693,18 @@
     init();
 
     ////////////////
-    function getSelectedDevices(supportsInternationalShipping) {
-      if (!supportsInternationalShipping) {
-        return null;
+    function getCountriesForSelectedDevices() {
+      var selectedDevices = null;
+      if (vm.supportsInternationalShipping) {
+        selectedDevices = _.chain(_.union(vm.roomSystemFields, vm.deskPhoneFields))
+        .filter(function (e) {
+          return e.model.quantity > 0 && e.model.enabled === true && e.key === 'quantity';
+        })
+        .map(function (o) {
+          return o.model.model;
+        }).value();
       }
-      var selectedDevices = _.chain(_.union(vm.roomSystemFields, vm.deskPhoneFields))
-      .filter(function (e) {
-        return e.model.quantity > 0 && e.model.enabled === true && e.key === 'quantity';
-      })
-      .map(function (o) {
-        return o.model.model;
-      }).value();
-      return selectedDevices;
+      return TrialDeviceService.getCountries(selectedDevices);
     }
 
     function init() {
@@ -721,10 +717,10 @@
           vm.showNewRoomSystems = results;
         });
 
-      // TODO: - remobe toggle when shipping to additional countries is officially supported
+      // TODO: - remove toggle when shipping to additional countries is officially supported
       // Hides options for international shipping
 
-      FeatureToggleService.supports(FeatureToggleService.features.atlasShipDevicesInternational)
+      FeatureToggleService.atlasShipDevicesInternationalGetStatus()
         .then(function (results) {
           vm.supportsInternationalShipping = results;
         });
@@ -874,7 +870,7 @@
         },
         listener: function (field, newValue, oldValue) {
           if (newValue !== oldValue) {
-            field.templateOptions.options = _.map(TrialDeviceService.getCountries(getSelectedDevices(vm.supportsInternationalShipping)), 'country');
+            field.templateOptions.options = _.map(getCountriesForSelectedDevices(), 'country');
             if (_.indexOf(field.templateOptions.options, field.model.country) === -1) {
               field.model.country = null;
             }

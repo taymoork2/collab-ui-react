@@ -578,48 +578,51 @@ describe('Controller: TrialDeviceController', function () {
   });
 
   describe('feature toggle for international shipping', function () {
-    it('should show a list of countries when only dx10 is  selected and toggle is true', function () {
-      spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
+    it('should set supportsInternationalShipping value based on feature toggle value', function () {
+      spyOn(FeatureToggleService, 'atlasShipDevicesInternationalGetStatus').and.returnValue($q.when(true));
       initController();
 
       expect(controller.supportsInternationalShipping).toBe(true);
-      expect(FeatureToggleService.supports).toHaveBeenCalled();
+      expect(FeatureToggleService.atlasShipDevicesInternationalGetStatus).toHaveBeenCalled();
     });
 
     it('should only show US when  only dx10 is  selected and toggle is false', function () {
-      spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(false));
+      spyOn(FeatureToggleService, 'atlasShipDevicesInternationalGetStatus').and.returnValue($q.when(false));
       initController();
       expect(controller.supportsInternationalShipping).toBe(false);
-      expect(FeatureToggleService.supports).toHaveBeenCalled();
+      expect(FeatureToggleService.atlasShipDevicesInternationalGetStatus).toHaveBeenCalled();
     });
   });
 
   describe('Shipping to additional countries ', function () {
-    it('should show a list of selected devices when roomSystem is selected and toggle is true', function () {
+    it('should show a larger list of countries when only CISCO_SX10 is selected and toggle is true', function () {
+      spyOn(FeatureToggleService, 'atlasShipDevicesInternationalGetStatus').and.returnValue($q.when(true));
       initController();
       controller.sx10.enabled = true;
       controller.sx10.quantity = 1;
-      var deviceList = controller.getSelectedDevices(true);
-      expect(deviceList.length).toBe(1);
-      expect(deviceList[0]).toBe('CISCO_SX10');
+      var countryList = controller.getCountriesForSelectedDevices();
+      expect(countryList.length).toBeGreaterThan(1);
     });
-    it('should have a list of selected devices to be null when roomSystem is selected and toggle is false', function () {
+    it('should have a list of countries to be US only when CISCO_SX10 is selected and toggle is false', function () {
+      spyOn(FeatureToggleService, 'atlasShipDevicesInternationalGetStatus').and.returnValue($q.when(false));
       initController();
       controller.sx10.enabled = true;
       controller.sx10.quantity = 1;
-      var deviceList = controller.getSelectedDevices(false);
-      expect(deviceList).toBe(null);
+      var countryList = controller.getCountriesForSelectedDevices();
+      expect(countryList.length).toBe(1);
+      expect(countryList).toContain({ country: 'United States' });
 
     });
-    it('should have a list of selected devices contain both when roomSystem and phone is selected and toggle is true', function () {
+    it('should have a list of countries to be US only when CISCO_SX10 and phone is selected and toggle is true', function () {
+      spyOn(FeatureToggleService, 'atlasShipDevicesInternationalGetStatus').and.returnValue($q.when(true));
       initController();
       controller.sx10.enabled = true;
       controller.sx10.quantity = 1;
       controller.phone8865.enabled = true;
       controller.phone8865.quantity = 1;
-      var deviceList = controller.getSelectedDevices(true);
-      expect(deviceList.length).toBe(2);
-      expect(deviceList[1]).toBe('CISCO_8865');
+      var countryList = controller.getCountriesForSelectedDevices();
+      expect(countryList.length).toBe(1);
+      expect(countryList).toContain({ country: 'United States' });
     });
   });
 });
