@@ -2426,7 +2426,7 @@
     "retrieveSpeedDialsFail": "Failed to retrieve speed dials.",
     "speedDialChangesFailed": "Failed to save speed dial changes.",
     "labelIncorrectCharacter": "Speed Dial Labels can not include < or >",
-    "limitSpeedDialsReach": "Maximum (125) speed dials configured."
+    "limitSpeedDialsReach": "You reached the limit of 125 speed dial entries."
   },
   "internationalDialingPanel": {
     "success": "International Dialing configuration saved successfully",
