@@ -242,12 +242,8 @@
 
     function modifyManagedOrgs(customerOrgId) {
       return Auth.getAuthorizationUrlList().then(function (response) {
-        if (!_.chain(response)
-          .get('data.managedOrgs')
-          .map('orgId')
-          .includes(customerOrgId)
-          .value()) {
-          return patchManagedOrgs(response.data.uuid, customerOrgId);
+        if (response.status === 200 && (_.indexOf(response.data.managedOrgs, customerOrgId) < 0)) {
+          patchManagedOrgs(response.data.uuid, customerOrgId);
         }
       });
     }
