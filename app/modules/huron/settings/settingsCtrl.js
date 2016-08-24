@@ -1777,8 +1777,8 @@
         switch (vm.model.site.extensionLength) {
           case '3':
             vm.model.site.siteCode = 100;
-            extensionLength0 = '000';
-            extensionLength9 = '999';
+            extensionLength0 = '00';
+            extensionLength9 = '99';
             break;
           case '4':
             vm.model.site.siteCode = 100;

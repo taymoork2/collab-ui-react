@@ -114,6 +114,18 @@
       });
     }
 
+    function getUserProps(userId, orgId) {
+      return $http
+        .get(USSUrl + '/orgs/' + (orgId || Authinfo.getOrgId()) + '/userProps/' + userId)
+        .then(extractData);
+    }
+
+    function updateUserProps(props, orgId) {
+      return $http
+        .post(USSUrl + '/orgs/' + (orgId || Authinfo.getOrgId()) + '/userProps', { userProps: [props] })
+        .then(extractData);
+    }
+
     return {
       getStatusesForUser: getStatusesForUser,
       decorateWithStatus: decorateWithStatus,
@@ -123,7 +135,9 @@
       getStatuses: getStatuses,
       subscribeStatusesSummary: hub.on,
       getStatusesForUserInOrg: getStatusesForUserInOrg,
-      extractSummaryForAService: extractSummaryForAService
+      extractSummaryForAService: extractSummaryForAService,
+      getUserProps: getUserProps,
+      updateUserProps: updateUserProps
     };
   }
 
