@@ -1479,7 +1479,10 @@
     }
 
     function updateVoicemailPostalCode() {
-      if (vm.hasVoicemailService && vm.model.companyVoicemail.companyVoicemailEnabled) {
+      if (vm.hasVoicemailService && vm.model.companyVoicemail.companyVoicemailEnabled
+        && (vm.model.site.siteSteeringDigit.siteDialDigit !== savedModel.site.siteSteeringDigit.siteDialDigit
+        || vm.model.site.extensionLength !== savedModel.site.extensionLength
+        || vm.model.site.siteCode !== savedModel.site.siteCode)) {
         var postalCode = vm.model.site.siteSteeringDigit.siteDialDigit + '-' + vm.model.site.siteCode + '-' + vm.model.site.extensionLength;
         return ServiceSetup.updateVoicemailPostalcode(postalCode, vm.voicemailUserTemplate.objectId)
           .catch(function (response) {
