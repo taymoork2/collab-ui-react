@@ -264,12 +264,12 @@
 
       var assignedGraph = {
         title: $translate.instant('careReportsPage.assigned'),
-        lineColor: chartColors.colorLightGreen,
-        fillColors: chartColors.colorLightGreenFill,
+        lineColor: chartColors.colorLightYellow,
+        fillColors: chartColors.colorLightYellowFill,
         valueField: 'numWorkingTasks',
       };
 
-      var graphsPartial = [inQueueGraph, assignedGraph];
+      var graphsPartial = [assignedGraph, inQueueGraph];
       var graphs = _.map(graphsPartial, function (graph) {
         return _.defaults(graph, CareReportsGraphService.getBaseVariable('graph'));
       });

@@ -39,7 +39,7 @@
       return $http.get(sunlightReportUrl + reportName, config);
     }
 
-    function getReportingData(reportName, timeSelected, mediaType) {
+    function getReportingData(reportName, timeSelected, mediaType, isSnapshot) {
       var config, startTimeStamp, endTimeStamp, dataPromise;
       switch (timeSelected) {
         // today
@@ -49,7 +49,7 @@
           config = getQueryConfig('fifteen_minutes', mediaType, startTimeStamp, endTimeStamp);
           dataPromise = getStats(reportName, config)
           .then(function (response) {
-            var localTimeData = downSampleByHour(response.data.data);
+            var localTimeData = downSampleByHour(response.data.data, isSnapshot);
             return fillEmptyData(
               (moment.range(startTimeStamp.add(1, 'hours').toDate(), endTimeStamp.add(1, 'days').startOf('day').toDate())),
               'h', localTimeData, hourFormat, false);
@@ -129,17 +129,22 @@
       };
     }
 
-    function downSampleByHour(data) {
+    function downSampleByHour(data, isSnapshot) {
       var statsGroupedByHour = _.groupBy(data, function (stats) {
         return moment(stats.createdTime).toDate().getHours();
       });
 
       var downSampledStatsByHour = [];
       _.map(statsGroupedByHour, function (statsList) {
-        var reducedForHour = _.reduce(statsList, reduceOrgStatsByHour, emptyOrgstats);
-        reducedForHour.avgTaskWaitTime = roundTwoDecimalPlaces(reducedForHour.avgTaskWaitTime / convertInMinutes);
-        reducedForHour.avgTaskCloseTime = roundTwoDecimalPlaces(reducedForHour.avgTaskCloseTime / convertInMinutes);
-        reducedForHour.avgCsatScores = roundTwoDecimalPlaces(reducedForHour.avgCsatScores);
+        var reducedForHour = {};
+        if (isSnapshot) {
+          reducedForHour = _.reduce(statsList, reduceOrgSnapshotStatsByHour, emptyOrgstats);
+        } else {
+          reducedForHour = _.reduce(statsList, reduceOrgStatsByHour, emptyOrgstats);
+          reducedForHour.avgTaskWaitTime = roundTwoDecimalPlaces(reducedForHour.avgTaskWaitTime / convertInMinutes);
+          reducedForHour.avgTaskCloseTime = roundTwoDecimalPlaces(reducedForHour.avgTaskCloseTime / convertInMinutes);
+          reducedForHour.avgCsatScores = roundTwoDecimalPlaces(reducedForHour.avgCsatScores);
+        }
         downSampledStatsByHour.push(reducedForHour);
       });
       return downSampledStatsByHour;
@@ -191,6 +196,12 @@
       return downSampledStatsByMonth;
     }
 
+    function reduceOrgSnapshotStatsByHour(stats1, stats2) {
+      var resultStats = reduceOrgSnapshotStats(stats1, stats2);
+      resultStats.createdTime = moment(stats2.createdTime).startOf('hour').add(1, 'hours').format(hourFormat);
+      return resultStats;
+    }
+
     function reduceOrgStatsByHour(stats1, stats2) {
       var resultStats = reduceOrgStats(stats1, stats2);
       resultStats.createdTime = moment(stats2.createdTime).startOf('hour').add(1, 'hours').format(hourFormat);
@@ -217,6 +228,13 @@
       return resultStats;
     }
 
+    function reduceOrgSnapshotStats(stats1, stats2) {
+      return _.clone(stats2);
+
+      // numWorkingTasks and numPendingTasks need to be the last one in the group. The way reduce works
+      //   (empty, first, ... last) and because of the above statement, we don't have to set these two explicitly
+    }
+
     function reduceOrgStats(stats1, stats2) {
       var resultStats = _.clone(stats2);
       resultStats.avgTaskWaitTime = calculateAvgWaitTime(stats1, stats2);
@@ -225,13 +243,6 @@
       resultStats.numTasksHandledState = stats1.numTasksHandledState + stats2.numTasksHandledState;
       resultStats.numCsatScores = stats1.numCsatScores + stats2.numCsatScores;
       resultStats.avgCsatScores = calculateAverageCsat(stats1, stats2);
-      if (!stats1.createdTime || moment(stats2.createdTime).isAfter(moment(stats1.createdTime))) { // take last
-        resultStats.numPendingTasks = stats2.numPendingTasks;
-        resultStats.numWorkingTasks = stats2.numWorkingTasks;
-      } else {
-        resultStats.numPendingTasks = stats1.numPendingTasks;
-        resultStats.numWorkingTasks = stats1.numWorkingTasks;
-      }
       return resultStats;
     }
 
