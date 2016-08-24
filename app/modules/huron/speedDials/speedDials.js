@@ -26,14 +26,12 @@
       required: $translate.instant('common.invalidRequired'),
       pattern: $translate.instant('common.incorrectFormat')
     };
-
     speedDials.reachSpeedDialLimit = function () {
       if (_.has(speedDials.speedDialList, 'length')) {
         return speedDials.speedDialList.length >= 125;
       }
       return false;
     };
-
     speedDials.add = function () {
       var sd = {
         index: speedDials.speedDialList.length + 1,
