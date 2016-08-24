@@ -7,56 +7,66 @@
     <cs-card-layout block-view="true" class="cardScroll">
       <cs-card>
         <article class="ct-article articleHeight">
-          <section class="ct-attribute-section ct-flex-topleft">
+          <section class="ct-attribute-section ct-flex-topleft ct-status-section">
 
             <div class="row ct-attribute-row labelText">
-              <label class="cs-input__label ct-attribute-field-label  h4 large-11"
+              <label class="cs-input__label ct-attribute-field-label  h4 large-11 margin-0"
                      translate="careChatTpl.connecting">
               </label>
-              <input id="connecting"
-                     class="h5 inputField ct-attribute-field-textbox large-11"
-                     type="text" maxlength="50"
-                     ng-model="careChatSA.template.configuration.chatStatusMessages.messages.connectingMessage.displayText"/>
+              <input id="connecting" cs-input name="connectingMessage"
+                     class="h5 inputField ct-attribute-field-textbox large-11 margin-0"
+                     cs-input-messages="careChatSA.singleLineValidationMessage"
+                     type="text" ng-maxlength="careChatSA.lengthConstants.singleLineMaxCharLimit"
+                     ng-model="careChatSA.template.configuration.chatStatusMessages.messages.connectingMessage.displayText"
+                     ng-model-options="{ allowInvalid: true }"/>
             </div>
 
             <div class="row ct-attribute-row">
-              <label class="cs-input__label ct-attribute-field-label  h4 large-11"
+              <label class="cs-input__label ct-attribute-field-label  h4 large-11 margin-0"
                      translate="careChatTpl.waiting">
               </label>
-              <input id="waiting"
-                     class="h5 inputField ct-attribute-field-textbox large-11"
-                     type="text" maxlength="50"
-                     ng-model="careChatSA.template.configuration.chatStatusMessages.messages.waitingMessage.displayText"/>
+              <input id="waiting" cs-input name="waitingMessage"
+                     class="h5 inputField ct-attribute-field-textbox large-11 margin-0"
+                     cs-input-messages="careChatSA.singleLineValidationMessage"
+                     type="text" ng-maxlength="careChatSA.lengthConstants.singleLineMaxCharLimit"
+                     ng-model="careChatSA.template.configuration.chatStatusMessages.messages.waitingMessage.displayText"
+                     ng-model-options="{ allowInvalid: true }"/>
             </div>
 
             <div class="row ct-attribute-row">
-              <label class="cs-input__label ct-attribute-field-label  h4 large-11"
+              <label class="cs-input__label ct-attribute-field-label  h4 large-11 margin-0"
                      translate="careChatTpl.enterRoom">
               </label>
-              <input id="enterRoom"
-                     class="h5 inputField ct-attribute-field-textbox large-11"
-                     type="text" maxlength="50"
-                     ng-model="careChatSA.template.configuration.chatStatusMessages.messages.enterRoomMessage.displayText"/>
+              <input id="enterRoom" cs-input name="enterRoomMessage"
+                     class="h5 inputField ct-attribute-field-textbox large-11 margin-0"
+                     cs-input-messages="careChatSA.singleLineValidationMessage"
+                     type="text" ng-maxlength="careChatSA.lengthConstants.singleLineMaxCharLimit"
+                     ng-model="careChatSA.template.configuration.chatStatusMessages.messages.enterRoomMessage.displayText"
+                     ng-model-options="{ allowInvalid: true }"/>
             </div>
 
             <div class="row ct-attribute-row">
-              <label class="cs-input__label ct-attribute-field-label  h4 large-11"
+              <label class="cs-input__label ct-attribute-field-label  h4 large-11 margin-0"
                      translate="careChatTpl.leaveRoom">
               </label>
-              <input id="leaveRoom"
-                     class="h5 inputField ct-attribute-field-textbox large-11"
-                     type="text" maxlength="50"
-                     ng-model="careChatSA.template.configuration.chatStatusMessages.messages.leaveRoomMessage.displayText"/>
+              <input id="leaveRoom" cs-input name="leaveRoomMessage"
+                     class="h5 inputField ct-attribute-field-textbox large-11 margin-0"
+                     cs-input-messages="careChatSA.singleLineValidationMessage"
+                     type="text" ng-maxlength="careChatSA.lengthConstants.singleLineMaxCharLimit"
+                     ng-model="careChatSA.template.configuration.chatStatusMessages.messages.leaveRoomMessage.displayText"
+                     ng-model-options="{ allowInvalid: true }"/>
             </div>
 
             <div class="row ct-attribute-row">
-              <label class="cs-input__label ct-attribute-field-label  h4 large-11"
+              <label class="cs-input__label ct-attribute-field-label  h4 large-11 margin-0"
                      translate="careChatTpl.chatting">
               </label>
-              <input id="chatting"
-                     class="h5 inputField ct-attribute-field-textbox large-11"
-                     type="text" maxlength="50"
-                     ng-model="careChatSA.template.configuration.chatStatusMessages.messages.chattingMessage.displayText"/>
+              <input id="chatting" cs-input name="chattingMessage"
+                     class="h5 inputField ct-attribute-field-textbox large-11 margin-0"
+                     cs-input-messages="careChatSA.singleLineValidationMessage"
+                     type="text" ng-maxlength="careChatSA.lengthConstants.singleLineMaxCharLimit"
+                     ng-model="careChatSA.template.configuration.chatStatusMessages.messages.chattingMessage.displayText"
+                     ng-model-options="{ allowInvalid: true }"/>
             </div>
 
           </section>
