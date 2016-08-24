@@ -145,7 +145,8 @@
       enableCrashLogs: 'csdm-enable-crash-logs',
       csdmPlaces: 'csdm-places',
       optionalvmdid: 'optional-vm-did',
-      globalStatus: 'global-status'
+      globalStatus: 'global-status',
+      atlasF237ResourceGroups: 'atlas-f237-resource-group'
     };
 
     var toggles = {};

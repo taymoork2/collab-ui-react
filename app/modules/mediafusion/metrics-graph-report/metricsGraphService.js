@@ -143,9 +143,9 @@
           }
         } else {
           if (graphs[i].valueField === 'active_calls') {
-            graphs[i].balloonText = '<span class="graph-text">' + $translate.instant(titles[i]) + '\n' + cluster + ';' + ' <span class="graph-number">[[active_calls]]</span></span>';
+            graphs[i].balloonText = '<span class="graph-text">' + $translate.instant(titles[i]) + '\n' + cluster + ':' + ' <span class="graph-number">[[active_calls]]</span></span>';
           } else {
-            graphs[i].balloonText = '<span class="graph-text">' + $translate.instant(titles[i]) + '\n' + cluster + ';' + ' <span class="graph-number">[[call_reject]]</span></span>';
+            graphs[i].balloonText = '<span class="graph-text">' + $translate.instant(titles[i]) + '\n' + cluster + ':' + ' <span class="graph-number">[[call_reject]]</span></span>';
           }
         }
         graphs[i].clustered = false;
@@ -325,12 +325,22 @@
       }
       var valueAxis = createValueAxis(data);
       var exportFields = ['task', 'startTime', 'endTime', 'category'];
-      var columnNames = {
-        'task': 'Availability',
-        'startTime': 'Start Time',
-        'endTime': 'End Time',
-        'category': 'Cluster'
-      };
+      var columnNames = {};
+      if (cluster === 'All Clusters') {
+        columnNames = {
+          'task': 'Availability',
+          'startTime': 'Start Time',
+          'endTime': 'End Time',
+          'category': 'Cluster'
+        };
+      } else {
+        columnNames = {
+          'task': 'Availability',
+          'startTime': 'Start Time',
+          'endTime': 'End Time',
+          'category': 'Node'
+        };
+      }
       cluster = cluster.replace(/\s/g, "_");
       daterange = daterange.replace(/\s/g, "_");
       var ExportFileName = 'MediaService_Availability_' + cluster + '_' + daterange + '_' + new Date();

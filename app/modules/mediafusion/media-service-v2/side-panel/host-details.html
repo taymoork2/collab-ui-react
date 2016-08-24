@@ -13,10 +13,23 @@
         <td>
           <i class="fa fa-circle status-icon"
              ng-class="hostDetails.connector.alarms.length > 0 ? 'mediafusion-state-alarm' : 'mediafusion-state-'+hostDetails.connector.state"></i>
-          <span ng-if="hostDetails.connector.alarms.length == 0"
-                translate="{{'mediaFusion.serviceStatus.' + (hostDetails.connector.state || 'unknown') }}"></span>
+          <span ng-if="hostDetails.connector.alarms.length == 0">
+              <span ng-if="hostDetails.connector.state == 'has_alarms'"  class="yellow">
+                <span class="hidden-xs">{{'mediaFusion.connectors.alarms' | translate}}  </span>
+              </span>
+              <span ng-if="hostDetails.connector.state == 'offline'" class="red">
+                <span class="hidden-xs">{{'mediaFusion.offline' | translate}} </span>
+              </span>
+              <span ng-if="hostDetails.connector.state == 'running'" class="green">
+                <span class="hidden-xs">{{'mediaFusion.active' | translate}} </span>
+              </span>
+              <span ng-if="hostDetails.connector.state == 'installing'" class="installing">
+                <span class="hidden-xs">{{'mediaFusion.installing' | translate}} </span>
+              </span>
+          </span>
           <span ng-if="hostDetails.connector.alarms.length > 0"
-                translate="mediaFusion.serviceStatus.alarm"></span>
+                translate="mediaFusion.serviceStatus.alarm">
+          </span>
         </td>
       </tr>
       <tr>
@@ -27,46 +40,9 @@
         <td translate="mediaFusion.connectors.software"></td>
         <td><span>{{hostDetails.connector.runningVersion}}</span></td>
       </tr>
-      <!--tr>
-        <td translate="mediaFusion.connectors.serial"></td>
-        <td><span>{{hostDetails.connector.host.serial}}</span></td>
-      </tr--> 
-
-      <!--tr>
-        <td translate="mediaFusion.role"></td>
-        <td>
-          <div class="row">
-            <div class="col-sm-6 columns medium-5">
-              <cs-select
-                ng-model="hostDetails.role"
-                options="hostDetails.options"
-                placeholder="hostDetails.selectPlaceholder"
-                on-change-fn="hostDetails.changeRole(hostDetails.role, hostDetails.clusterId)">
-              </cs-select>
-            </div>
-          </div>
-        </td>
-      </tr-->
       </tbody>
     </table>
   </cs-sp-section>
-
-  <!--cs-sp-section>
-    <div class="section-title-row section-name" translate="mediaFusion.actionsHeader"></div>
-    <div>
-      <table>
-        <tbody>
-          <tr>
-            <td translate="mediaFusion.connectors.goToHost"></td>
-            <td>
-            <a target="_blank" ng-href="https://{{hostDetails.connector.host.host_name}}/">
-            {{hostDetails.connector.host.host_name}}</a>
-            </td>
-          </tr>
-        <tbody>
-      </table>
-    </div>
-  </cs-sp-section-->
 
   <cs-sp-section>
     <strong>
@@ -87,7 +63,6 @@
       </a>
     </div>
   </cs-sp-section>
-
   
   <cs-sp-section>
   <strong>

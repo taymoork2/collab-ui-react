@@ -56,8 +56,7 @@
   }
 
   .inputField {
-    @include vr-spacing(ml, 1);
-    @include vr-spacing(mb, 0.1);
+    @include vr-spacing(mb, 0);
     color: $gray-dark-2;
   }
 
@@ -82,6 +81,10 @@
     justify-content: flex-start;
     align-content: flex-start;
     align-items: flex-start;
+    .feedback-right-container {
+      @include vr-spacing(ml, 1);
+      width: 95%;
+    }
   }
 
   .ct-attribute-right-section {
@@ -97,8 +100,7 @@
 
 
   .ct-attribute-field-label {
-    @include vr-spacing(mb, 0);
-    @include vr-spacing(ml, 1);
+    @include vr-spacing(m, 0);
     font-family: "CiscoSansTT Regular";
   }
 
@@ -107,7 +109,6 @@
       line-height: rem-calc(12px);
     }
     font-family: "CiscoSansTT Light";
-    @include vr-spacing(ml, 1);
     width: 90%;
     height: 2rem;
   }

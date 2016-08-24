@@ -49,16 +49,12 @@
     <strong>
       <div class="section-title-row section-name" translate="mediaFusion.connectors.nodes"></div>
     </strong>
-    <div class="feature-list">
+    <div class="feature-list node-list">
       <ul>
         <li class="feature" ng-repeat="ecp in groupDetails.nodeList" ng-class="{'list-item': !$first}">
           <a
             ui-sref="connector-details-v2.host-details({clusterId: groupDetails.clusterDetail.id, connector: ecp, hostLength: groupDetails.nodeList.length, selectedCluster: groupDetails.clusterDetail})">
             <span class="feature-name">{{ecp.hostname}}</span>
-
-            <!--span class="feature-name">{{ecp.properties["mf.role"]}} {{ecp.hosts[0].state}} {{ecp.hosts[0].offline}} {{ecp.needs_attention}} {{ecp.needs_attention &&  ecp.host[0].state == 'offline' && ecp.host[0].offline}}</span-->
-
-            {{cluster.needs_attention}}{{cluster.alarms_present}}
             <span ng-if="ecp.state == 'has_alarms'"  class="yellow">
               <i class="fa fa-circle mediafusion-state-alarm" />
               <span class="hidden-xs">{{'mediaFusion.connectors.alarms' | translate}}  </span>
