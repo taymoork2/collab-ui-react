@@ -1,6 +1,6 @@
 import { IFeature } from '../../../core/components/featureList/featureList.component';
 
-class PlaceOverviewCtrl {
+class PlaceOverview {
 
   private _currentPlace;
   private _csdmHuronUserDeviceService;
@@ -75,9 +75,12 @@ class PlaceOverviewCtrl {
     this.$state.go('place-overview.' + feature);
   }
 }
+
+class PlaceOverviewComponent {
+  public controller = PlaceOverview;
+  public templateUrl = 'modules/squared/places/overview/placeOverview.html'
+}
+
 angular
   .module('Squared')
-  .component('placeOverview', {
-    templateUrl: 'modules/squared/places/overview/placeOverview.tpl.html',
-    controller: PlaceOverviewCtrl
-  });
+  .component('placeOverview', new PlaceOverviewComponent());

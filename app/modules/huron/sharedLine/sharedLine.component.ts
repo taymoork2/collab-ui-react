@@ -42,7 +42,7 @@ class SharedLineCtrl {
   }
 }
 
-class SharedLineComponent implements ng.IComponentOptions {
+export class SharedLineComponent implements ng.IComponentOptions {
   public controller = SharedLineCtrl;
   public templateUrl = 'modules/huron/sharedLine/sharedLine.html';
   public bindings: { [binding: string]: string } = {
@@ -53,16 +53,6 @@ class SharedLineComponent implements ng.IComponentOptions {
     selectSharedLineUserFn: '&',
     getUserListFn: '&',
     isSingleDeviceFn: '&',
-    disassociateSharedLineUserFn: '&'
+    disassociateSharedLineUserFn: '&',
   };
-
 }
-
-export default angular
-  .module('huron.shared-line', [
-    'atlas.templates',
-    'cisco.ui',
-    'pascalprecht.translate',
-  ])
-  .component('ucSharedLine', new SharedLineComponent())
-  .name;
