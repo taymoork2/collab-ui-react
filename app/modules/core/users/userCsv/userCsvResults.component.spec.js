@@ -121,7 +121,7 @@ describe('crUserCsvResults Component', function () {
       expect(this.element.find('.progress-striped')).toHaveLength(1);
       expect(this.element.find('.icon-close')).toHaveLength(1);
       expect(this.element.find('.stat.new-users')).toHaveLength(1);
-      expect(this.element.find('.stat.existing-users')).toHaveLength(1);
+      expect(this.element.find('.stat.updated-users')).toHaveLength(1);
       expect(this.element.find('.stat.error-users')).toHaveLength(1);
 
       expect(this.element.find('.upload-errors')).toHaveLength(0);
@@ -144,7 +144,7 @@ describe('crUserCsvResults Component', function () {
       expect(this.element.find('.progress-striped')).toHaveLength(1);
       expect(this.element.find('.icon-close')).toHaveLength(1);
       expect(this.element.find('.stat.new-users')).toHaveLength(0);
-      expect(this.element.find('.stat.existing-users')).toHaveLength(1);
+      expect(this.element.find('.stat.updated-users')).toHaveLength(1);
       expect(this.element.find('.stat.error-users')).toHaveLength(1);
 
       expect(this.element.find('.upload-errors')).toHaveLength(0);
@@ -167,13 +167,13 @@ describe('crUserCsvResults Component', function () {
     it('should show updated users count when there are updated users', function () {
       this.vm.csvData.model.numExistingUsers = 0;
       this.$scope.$apply();
-      expect(this.element.find('.stat.existing-users')).toHaveClass('disabled');
-      expect(this.element.find('.stat.existing-users .total').text()).toEqual('0');
+      expect(this.element.find('.stat.updated-users')).toHaveClass('disabled');
+      expect(this.element.find('.stat.updated-users .total').text()).toEqual('0');
 
       this.vm.csvData.model.numExistingUsers = 7;
       this.$scope.$apply();
-      expect(this.element.find('.stat.existing-users')).not.toHaveClass('disabled');
-      expect(this.element.find('.stat.existing-users .total').text()).toEqual('7');
+      expect(this.element.find('.stat.updated-users')).not.toHaveClass('disabled');
+      expect(this.element.find('.stat.updated-users .total').text()).toEqual('7');
     });
 
     it('should show error users count when there are users with errors', function () {

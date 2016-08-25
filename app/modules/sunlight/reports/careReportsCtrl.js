@@ -92,7 +92,8 @@
     }
 
     function showSnapshotReportWithRealData() {
-      SunlightReportService.getReportingData('org_snapshot_stats', vm.timeSelected.value, 'chat')
+      var isSnapshot = true;
+      SunlightReportService.getReportingData('org_snapshot_stats', vm.timeSelected.value, 'chat', isSnapshot)
         .then(function (data) {
           if (data.length === 0) {
             vm.snapshotDataStatus = EMPTY;

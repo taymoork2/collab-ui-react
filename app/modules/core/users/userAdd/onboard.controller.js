@@ -2240,16 +2240,24 @@
       $scope.model.isProcessing = true;
       $scope.model.cancelProcessCsv = $scope.cancelProcessCsv;
 
-      function addUserError(row, errorMsg) {
+      function addUserError(row, email, errorMsg) {
         $scope.model.userErrorArray.push({
           row: row,
+          email: email,
           error: errorMsg
+        });
+        UserCsvService.setCsvStat({
+          userErrorArray: [{
+            row: row,
+            email: email,
+            error: errorMsg
+          }]
         });
       }
 
-      function addUserErrorWithTrackingID(row, errorMsg, response) {
+      function addUserErrorWithTrackingID(row, errorMsg, response, email) {
         errorMsg = UserCsvService.addErrorWithTrackingID(errorMsg, response);
-        addUserError(row, _.trim(errorMsg));
+        addUserError(row, (email || ''), _.trim(errorMsg));
       }
 
       function successCallback(response, startIndex, length) {
@@ -2271,7 +2279,7 @@
                 addedUsersList.push(addItem);
               }
             } else {
-              addUserErrorWithTrackingID(startIndex + index + 1, UserCsvService.getBulkErrorResponse(user.httpStatus, user.message, user.email), response);
+              addUserErrorWithTrackingID(startIndex + index + 1, UserCsvService.getBulkErrorResponse(user.httpStatus, user.message, user.email), response, user.email);
             }
           });
         } else {
@@ -2282,9 +2290,10 @@
       }
 
       function errorCallback(response, startIndex, length) {
-        var responseMessage = UserCsvService.getBulkErrorResponse(response.status);
         for (var k = 0; k < length; k++) {
-          addUserErrorWithTrackingID(startIndex + k + 1, responseMessage, response);
+          var email = (response.config && response.config.data && _.isArray(response.config.data.users) ? response.config.data.users[k].email : null);
+          var responseMessage = UserCsvService.getBulkErrorResponse(response.status, null, email);
+          addUserErrorWithTrackingID(startIndex + k + 1, responseMessage, response, email);
         }
       }
 

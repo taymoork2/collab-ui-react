@@ -18,7 +18,8 @@
       getDIDValue: getDIDValue,
       getDIDLabel: getDIDLabel,
       getExampleNumbers: getExampleNumbers,
-      getPhoneNumberType: getPhoneNumberType
+      getPhoneNumberType: getPhoneNumberType,
+      isTollFreeNumber: isTollFreeNumber
     };
     var TOLL_FREE = 'TOLL_FREE';
     var PREMIUM_RATE = 'PREMIUM_RATE';
@@ -63,6 +64,22 @@
 
     function getRegionCode() {
       return regionCode;
+    }
+
+    function isTollFreeNumber(number) {
+      var res = false;
+      try {
+        var phoneNumberType;
+        if (phoneUtils.isValidNumberForRegion(number, regionCode)) {
+          phoneNumberType = phoneUtils.getNumberType(number, regionCode);
+          if (phoneNumberType === TOLL_FREE) {
+            res = true;
+          }
+        }
+      } catch (e) {
+        res = false;
+      }
+      return res;
     }
 
     function validateDID(number) {

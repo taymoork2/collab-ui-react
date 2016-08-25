@@ -24,7 +24,7 @@ function retry(runCounter, exitCode) {
   if (_runCounter < runCounterMax && fs.existsSync(config.e2eFailRetry)) {
     // mv default retry file to more specific name correlating to its run
     // ex. './.e2e-fail-retry' -> './cache/e2e-fail-retry-run-0'
-    retrySpecList = config.cache + '/' + _.trimLeft(config.e2eFailRetry, '.') + '-run-' + processEnvUtil.getE2eRunCounter();
+    retrySpecList = config.cache + '/' + _.trimLeft(config.e2eFailRetry, '.') + '-run-' + runCounter;
     fs.renameSync(config.e2eFailRetry, retrySpecList);
 
     // update the source of specs for the next run
@@ -32,6 +32,7 @@ function retry(runCounter, exitCode) {
 
     // now we can increment the run counter and re-run
     _runCounter += 1;
+    processEnvUtil.setE2eRunCounter(_runCounter);
     runE2E(_runCounter);
   } else {
     console.log('#### Protractor: nothing to retry, exiting...');
@@ -48,10 +49,10 @@ function runE2E(runCounter) {
       delete args[argName];
     }
   });
-  console.log('#### Protractor: run: ' + runCounter + ': start');
+  console.log('#### Protractor: max: ' + runCounterMax + ': run: ' + runCounter + ': start');
   var child = cp.fork('./protractor/protractor', unparse(args));
   child.on('exit', function (exitCode) {
-    console.log('#### Protractor: run: ' + runCounter + ': end');
+    console.log('#### Protractor: max: ' + runCounterMax + ': run: ' + runCounter + ': end');
     retry(runCounter, exitCode);
   });
 }

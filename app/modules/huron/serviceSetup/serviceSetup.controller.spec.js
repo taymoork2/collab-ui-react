@@ -107,6 +107,7 @@ describe('Controller: ServiceSetup', function () {
     spyOn(ServiceSetup, 'loadExternalNumberPool').and.returnValue($q.when(externalNumberPool));
     spyOn(ServiceSetup, 'updateCustomer').and.returnValue($q.when());
     spyOn(ServiceSetup, 'updateVoicemailTimezone').and.returnValue($q.when());
+    spyOn(ServiceSetup, 'updateVoicemailPostalcode').and.returnValue($q.when());
     spyOn(ExternalNumberService, 'refreshNumbers').and.returnValue($q.when());
 
     spyOn(ServiceSetup, 'listInternalNumberRanges').and.callFake(function () {
@@ -209,11 +210,6 @@ describe('Controller: ServiceSetup', function () {
 
       it('should have internal number ranges', function () {
         expect(controller.model.numberRanges).toEqual(model.numberRanges);
-      });
-
-      it('should have site steering digit removed from the steeringDigits array', function () {
-        var index = _.indexOf(controller.steeringDigits, model.site.siteSteeringDigit);
-        expect(index).toEqual(-1);
       });
     });
 
@@ -563,6 +559,8 @@ describe('Controller: ServiceSetup', function () {
           voicemailAction: 3
         };
 
+        controller.model.voicemailPrefix.value = '6';
+
         //remove singlenumber range for it to pass
         controller.deleteInternalNumberRange(model.numberRanges[2]);
         controller.initNext();
@@ -688,6 +686,8 @@ describe('Controller: ServiceSetup', function () {
         controller.model.ftswCompanyVoicemail.ftswCompanyVoicemailEnabled = false;
         controller.model.ftswCompanyVoicemail.ftswCompanyVoicemailNumber = undefined;
         controller.hasVoicemailService = false;
+
+        controller.model.voicemailPrefix.value = '6';
 
         //remove singlenumber range for it to pass
         controller.deleteInternalNumberRange(model.numberRanges[2]);
@@ -872,6 +872,50 @@ describe('Controller: ServiceSetup', function () {
         expect(ServiceSetup.updateSite).toHaveBeenCalled();
         expect(ServiceSetup.updateCustomer).toHaveBeenCalled();
         expect(ServiceSetup.updateVoicemailTimezone).toHaveBeenCalledWith(controller.model.site.timeZone.id, usertemplate[0].objectId);
+      });
+    });
+
+    describe('Voicemail Access Prefix', function () {
+      it('should change the extension length and change site code', function () {
+        $scope.to = {};
+        controller._buildVoicemailPrefixOptions($scope);
+        controller.model.site.extensionLength = '5';
+        $scope.$apply();
+        expect(controller.model.site.siteCode).toEqual(10);
+      });
+
+      it('should set voicemail prefix to intersect with extension range and trigger warning', function () {
+        controller.model.voicemailPrefix.label = '1100';
+        controller.model.displayNumberRanges = [{
+          beginNumber: 1000,
+          endNumber: 1999
+        }];
+
+        expect(controller.siteSteeringDigitWarningValidation()).toBe(true);
+      });
+
+      it('should set outbound dial digit to have the same starting digit as an extension range and trigger warning', function () {
+        controller.model.site.steeringDigit = '1';
+        controller.model.displayNumberRanges = [{
+          beginNumber: 1000,
+          endNumber: 1999
+        }];
+
+        expect(controller.steeringDigitWarningValidation()).toBe(true);
+      });
+
+      it('should set site dial digit and outbound dial digit to have the same value and trigger error', function () {
+        controller.model.voicemailPrefix.value = '1';
+        controller.model.site.steeringDigit = '1';
+        var localscope = {
+          fields: [{
+            formControl: {
+              $setValidity: function () {}
+            }
+          }]
+        };
+
+        expect(controller.siteAndSteeringDigitErrorValidation('', '', localscope)).toBe(true);
       });
     });
   });

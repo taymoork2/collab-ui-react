@@ -909,6 +909,7 @@
     "errPartnerEmail": "Failed to resend welcome email to partner admin"
   },
   "weekDays": {
+    "daily": "Daily",
     "everyDay": "Every {{day}}",
     "day": "day",
     "monday": "Monday",
@@ -1188,7 +1189,19 @@
     "externalVoicemailAccessLabel": "External Voicemail Access",
     "voicemailPilotHelpText": "Usage of this E164 number incurs usage cost.",
     "errorGettingOptionaVmDidToggle": "There was a problem getting the optionalVmDid toggle.",
-    "externalNumberDescriptionText": "Select a number that users can call to check their voicemail from outside the company network."
+    "externalNumberDescriptionText": "Select a number that users can call to check their voicemail from outside the company network.",
+    "voicemailPrefixTitle": "Voicemail Access Prefix",
+    "voicemailPrefixDesc": "Select a prefix to reserve for dialing mailboxes other than your own personal phone. This number also makes up the user’s external voicemail access code. We do not recommend using numbers between {{number}}{{extensionLength0}} and {{number}}{{extensionLength9}}",
+     "error": {
+       "siteSteering": "First digit of Voicemail Access Prefix conflicts with the selected Outbound Dial Digit.",
+       "outboundDialDigit": "Outbound Dial Digit conflicts with the first digit of the Voicemail Access Prefix.",
+       "autoAttendantPost": "Failed to save Auto Attendant Site information.",
+       "updateVoicemailPostalCode": "Failed to update Voicemail Postal Code."
+     },
+     "warning": {
+       "siteSteering": "First digit of Voicemail Access Prefix conflicts with the first digit of an internal extension range. If you use this prefix, it may cause a delay when dialing extensions starting with the same number.",
+        "outboundDialDigit": "Outbound Dial Digit conflicts with the first digit of an internal extension range. If you use this digit, it may cause a delay when dialing extensions starting with the same number."
+     }
   },
   "dirsyncModal": {
     "chooseSync": "Choose Sync",
@@ -1734,6 +1747,12 @@
           }
         }
       }
+    },
+    "resourceGroups": {
+      "resourceGroupHeading": "Resource Group",
+      "setDescription": "Select the Resource Group the user is assigned to for this service.",
+      "noGroupSelected": "None",
+      "failedToSetGroup": "Failed to set the resource group"
     }
   },
   "ediscovery": {
@@ -2493,6 +2512,7 @@
     "portNumbersTab": "Porting Numbers",
     "portNumbersPrompt": "Copy and paste customer's numbers that need to be ported.",
     "portNumbersLabel": "Porting Numbers",
+    "portNumbersNoTollFree": "Toll-Free number porting is not supported at this time.  Please contact your carrier for more information.",
     "manualAdd": "Manually Add New Numbers",
     "state": "State",
     "selectState": "Select state",
@@ -3364,8 +3384,9 @@
       "overallTotalNumberOfCallsError": "There was an error while loading Total Number of calls",
       "total_calls": "Total Calls",
       "totalCallsDescription": "Calls hosted locally and that overflowed to the Cisco Collaboration Cloud.",
-      "onpremcalls": "Calls on prem |",
-      "cloudcalls": "Calls bursted to cloud"
+      "onpremcalls": "on premises |",
+      "cloudcalls": "overflowed to cloud",
+      "redirectedcalls": "redirected"
     },
     "serviceStatus": {
       "unknown": "Status unknown",
@@ -4479,7 +4500,8 @@
     "ctValidation":{
       "errorChar250": "Character length cannot be more than 250.",
       "errorChar50": "Character length cannot be more than 50.",
-      "errorTypeDuplicate": "This ‘Type’ is associated with another field. Select a different one from the available types."
+      "errorTypeDuplicate": "This ‘Type’ is associated with another field. Select a different one from the available types.",
+      "businessDaysSelection": "Select the business working days."
     },
     "ctOverview": {
       "customerInformation": {
@@ -4744,7 +4766,7 @@
       "subsectionLabel": "Branding"
     },
     "sipDomain": {
-      "title": "SIP Domain",
+      "title": "Spark SIP Address",
       "subsectionLabel": "SIP Domain Prefix",
       "subsectionDescription": "Specify a SIP domain prefix that will be used in a user's addresses when calling a user on a SIP enabled device. For example in this address: example.call.ciscospark.com, \"example\" is the prefix you are defining."
     },
@@ -4831,7 +4853,8 @@
       "EE": "Webex Enterprise Edition",
       "CMR": "WebEx Collaboration Meeting Rooms",
       "CO": "Spark Call",
-      "SD": "Spark Room Systems"
+      "SD": "Spark Shared Devices",
+      "SB": "Cisco Spark Board"
     }
   },
   "myCompanyOrders": {
@@ -4912,6 +4935,7 @@
     "contact": "Contact",
     "managedBy": "Managed By",
     "supportedBy": "Supported By",
+    "orderSystem": "Order System",
     "organizationId": "Org. ID",
     "userId": "User ID",
     "ts": "TS(TAC)",
