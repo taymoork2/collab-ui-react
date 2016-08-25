@@ -9,7 +9,7 @@
   function RetentionService($resource, $q, UrlConfig) {
     var accountUrl = UrlConfig.getAdminServiceUrl();
 
-    var retentionResource = $resource(accountUrl + 'organizations/:orgId/settings/msgDataRetention', {
+    var retentionResource = $resource(accountUrl + 'organizations/:orgId/settings/sparkDataRetentionDays', {
       orgId: '@orgId'
     }, {
       get: {
@@ -28,8 +28,9 @@
     return service;
 
     function getRetention(org) {
-      if (!org || org == '')
+      if (!org || org == '') {
         return $q.reject("No organization was provided.");
+      }
 
       return retentionResource.get({
         orgId: org
@@ -37,13 +38,15 @@
     }
 
     function setRetention(org, days) {
-      if (!org || org == '')
+      if (!org || org == '') {
         return $q.reject("No organization was provided.");
-      if (!days || days == '')
+      }
+      if (!days || days == '') {
         return $q.reject("No retention was provided.");
+      }
 
       var payload = {
-        msgDataRetention: days
+        sparkDataRetentionDays: days
       };
 
       return retentionResource.update({

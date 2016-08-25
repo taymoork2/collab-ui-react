@@ -6,13 +6,11 @@
     .factory('CiService', CiService);
 
   /* @ngInject */
-  function CiService($q, Authinfo, Log, UserListService, Userservice) {
+  function CiService($q, Authinfo, Log, UserListService, Userservice, Config) {
     // Interface ---------------------------------------------------------------
 
     // Internal storage
     var user = null;
-    var users = null;
-    var partnerAdmins = null;
 
     var ciService = {
       getCiAdmins: getCiAdmins,
@@ -25,11 +23,8 @@
       hasEntitlements: hasEntitlements,
       hasRole: hasRole,
       isLoggedInToPartnerPortal: isLoggedInToPartnerPortal,
-      isPartnerAdmin: isPartnerAdmin
+      isOrgManager: isOrgManager,
     };
-
-    // Init data
-    init();
 
     // Return the service
     return ciService;
@@ -37,10 +32,6 @@
     ////////////////////////////////////////////////////////////////////////////
 
     // Implementation ----------------------------------------------------------
-
-    function init() {
-      getPartnerAdmins();
-    }
 
     function getCiOrgInfo() {
       return [{
@@ -125,28 +116,6 @@
       return defer.promise;
     }
 
-    function getPartnerAdmins() {
-      var defer = $q.defer();
-
-      // Cache result
-      if (null === partnerAdmins) {
-        UserListService.listPartners(Authinfo.getOrgId(), function (response) {
-          if (response.success) {
-            partnerAdmins = response.partners;
-            defer.resolve(partnerAdmins);
-          } else {
-            var error = 'Failed getting parter list. Response: ' + JSON.stringify(response);
-            Log.error(error);
-            defer.reject(error);
-          }
-        });
-      } else {
-        defer.resolve(partnerAdmins);
-      }
-
-      return defer.promise;
-    }
-
     function getUser() {
       var defer = $q.defer();
 
@@ -167,7 +136,7 @@
     }
 
     function getUsers(getAdmins, receivedUsers) {
-      UserListService.listUsers(0, 20, null, null, function (data, status, searchStr) {
+      UserListService.listUsers(0, 20, null, null, function (data) {
         var i = 0;
 
         if (true === data.success) {
@@ -251,30 +220,14 @@
       return Authinfo.getRoles().indexOf('PARTNER_ADMIN') > -1;
     }
 
-    function isPartnerAdmin() {
-      var defer = $q.defer();
-
-      // Check if user ID is in the partner admin list
-      getPartnerAdmins()
-        .then(function (admins) {
-          var partnerFound = false;
-
-          // Check for user ID in admin list
-          for (var partner in admins) {
-            if (Authinfo.getUserId() === admins[partner].id) {
-              partnerFound = true;
-              break;
-            }
-          }
-
-          defer.resolve(partnerFound);
-        }, function (errorMsg) {
-          var error = 'Error checking if user is a partner admin: ' + errorMsg;
-          Log.error(error);
-          defer.reject(error);
+    function isOrgManager() {
+      return Userservice.getUser('me', _.noop)
+        .then(function (response) {
+          return _.some(response.data.managedOrgs, {
+            orgId: Authinfo.getOrgId(),
+            role: Config.backend_roles.full_admin
+          });
         });
-
-      return defer.promise;
     }
   }
 })();

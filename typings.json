@@ -1,0 +1,34 @@
+{
+  "name": "wx2adminwebclient",
+  "globalDependencies": {
+    "angular": "github:DefinitelyTyped/DefinitelyTyped/angularjs/angular.d.ts#0d501b1ff9d97a12c8b371affb64c921b6fe9832",
+    "jquery": "github:DefinitelyTyped/DefinitelyTyped/jquery/jquery.d.ts#0d501b1ff9d97a12c8b371affb64c921b6fe9832",
+    "node": "github:DefinitelyTyped/DefinitelyTyped/node/node.d.ts#7a3ca1f0b8a0960af9fc1838f3234cc9d6ce0645",
+    "lodash": "github:DefinitelyTyped/DefinitelyTyped/lodash/lodash.d.ts#25b78b03bc815ea2d19b2e1a100988a8303f931e",
+    "alertify": "github:DefinitelyTyped/DefinitelyTyped/alertify/alertify.d.ts#7a3ca1f0b8a0960af9fc1838f3234cc9d6ce0645",
+    "AmCharts": "github:DefinitelyTyped/DefinitelyTyped/amcharts/AmCharts.d.ts#7a3ca1f0b8a0960af9fc1838f3234cc9d6ce0645",
+    "angular-formly": "github:DefinitelyTyped/DefinitelyTyped/angular-formly/angular-formly.d.ts#7a3ca1f0b8a0960af9fc1838f3234cc9d6ce0645",
+    "angular-ui-router": "github:DefinitelyTyped/DefinitelyTyped/angular-ui-router/angular-ui-router.d.ts#7a3ca1f0b8a0960af9fc1838f3234cc9d6ce0645",
+    "moment": "github:DefinitelyTyped/DefinitelyTyped/moment/moment.d.ts#1a5b2a729d35b1d41e2d15818db013a3644c6ba4",
+    "moment-node": "github:DefinitelyTyped/DefinitelyTyped/moment/moment-node.d.ts#1a5b2a729d35b1d41e2d15818db013a3644c6ba4",
+    "angular-translate": "github:DefinitelyTyped/DefinitelyTyped/angular-translate/angular-translate.d.ts#0d501b1ff9d97a12c8b371affb64c921b6fe9832",
+    "ui-grid": "github:DefinitelyTyped/DefinitelyTyped/ui-grid/ui-grid.d.ts#0d501b1ff9d97a12c8b371affb64c921b6fe9832",
+    "angular-resource": "github:DefinitelyTyped/DefinitelyTyped/angularjs/angular-resource.d.ts#0d501b1ff9d97a12c8b371affb64c921b6fe9832",
+
+    "angular-mocks": "github:DefinitelyTyped/DefinitelyTyped/angularjs/angular-mocks.d.ts#46719185c564694c5583c4b7ad94dbb786ecad46",
+    "bluebird": "github:DefinitelyTyped/DefinitelyTyped/bluebird/bluebird.d.ts#46719185c564694c5583c4b7ad94dbb786ecad46",
+    "express": "github:DefinitelyTyped/DefinitelyTyped/express/express.d.ts#46719185c564694c5583c4b7ad94dbb786ecad46",
+    "jasmine": "github:DefinitelyTyped/DefinitelyTyped/jasmine/jasmine.d.ts#46719185c564694c5583c4b7ad94dbb786ecad46",
+    "jasmine-jquery": "github:DefinitelyTyped/DefinitelyTyped/jasmine-jquery/jasmine-jquery.d.ts#46719185c564694c5583c4b7ad94dbb786ecad46",
+    "jasmine-promise-matchers": "github:DefinitelyTyped/DefinitelyTyped/jasmine-promise-matchers/jasmine-promise-matchers.d.ts#46719185c564694c5583c4b7ad94dbb786ecad46",
+    "karma": "github:DefinitelyTyped/DefinitelyTyped/karma/karma.d.ts#46719185c564694c5583c4b7ad94dbb786ecad46",
+    "karma-jasmine": "github:DefinitelyTyped/DefinitelyTyped/karma-jasmine/karma-jasmine.d.ts#46719185c564694c5583c4b7ad94dbb786ecad46",
+    "log4js": "github:DefinitelyTyped/DefinitelyTyped/log4js/log4js.d.ts#46719185c564694c5583c4b7ad94dbb786ecad46",
+    "mime": "github:DefinitelyTyped/DefinitelyTyped/mime/mime.d.ts#46719185c564694c5583c4b7ad94dbb786ecad46",
+    "selenium-webdriver": "github:DefinitelyTyped/DefinitelyTyped/selenium-webdriver/selenium-webdriver.d.ts#001ca36ba58cef903c4c063555afb07bbc36bb58",
+    "serve-static": "github:DefinitelyTyped/DefinitelyTyped/serve-static/serve-static.d.ts#46719185c564694c5583c4b7ad94dbb786ecad46",
+    "sinon": "github:DefinitelyTyped/DefinitelyTyped/sinon/sinon.d.ts#3030a4be536b6530c06b80081f1333dc0de4d703",
+
+    "bmmp": "file:app/modules/core/myCompany/mySubscriptions/bmmp-index.d.ts"
+  }
+}

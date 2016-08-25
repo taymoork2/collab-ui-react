@@ -1,0 +1,18 @@
+{
+  "maxReviewers": 2,
+  "numFilesToCheck": 10,
+  "message": "Hi @pullRequester! By analyzing the annotation information on this pull request, I identified @reviewers to be potential reviewers",
+  "alwaysNotifyForPaths": [{
+    "name": "thobasse",
+    "files": ["app/modules/hercules/**/*.js"]
+  }, {
+    "name": "kribalac",
+    "files": ["app/modules/mediafusion/**/*.js"]
+  }, {
+    "name": "woulamme",
+    "files": ["app/modules/squared/devices/**/*.js"]
+  }],
+  "fileBlacklist": ["app/l10n/*.json"],
+  "userBlacklist": ["mikecan", "stimurbe"],
+  "assignToReviewer": true
+}

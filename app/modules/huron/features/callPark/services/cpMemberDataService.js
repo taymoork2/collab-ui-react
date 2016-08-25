@@ -25,7 +25,7 @@
       fetchCallParkMembers: fetchCallParkMembers,
       getDisplayName: getDisplayName,
       toggleMemberPanel: toggleMemberPanel,
-      getMembersNumberUuidJSON: getMembersNumberUuidJSON,
+      getMembersUuidJSON: getMembersUuidJSON,
       reset: reset,
       setMemberJSON: setMemberJSON,
       getCallParkMembers: getCallParkMembers,
@@ -56,7 +56,10 @@
     }
 
     function getMemberAsynchronously(user, async) {
-      CallParkService.getCallParkMemberWithSelectedNumber(user).then(function (m) {
+      CallParkService.getCallParkMember(user).then(function (m) {
+        m.user.primaryNumber = _.find(m.user.numbers, {
+          'primary': true
+        });
         selectedMembers.push(m);
         async.resolve();
       }, function () {
@@ -70,7 +73,7 @@
 
       users.forEach(function (user) {
         tempArray.some(function (u) {
-          var found = (user.userUuid === u.uuid);
+          var found = (user.memberUuid === u.user.uuid);
           var alreadyAdded = selectedMembers.indexOf(u);
           if (found && alreadyAdded === -1) {
             selectedMembers.push(u);
@@ -130,11 +133,11 @@
      * Return the JSON data format to be used for POST & PUT
      * operations.
      */
-    function getMembersNumberUuidJSON() {
+    function getMembersUuidJSON() {
       var members = [];
       selectedMembers.forEach(function (member) {
-        if (!_.contains(members, member.selectableNumber.uuid)) {
-          members.push(member.selectableNumber.uuid);
+        if (!_.contains(members, member.uuid)) {
+          members.push(member.uuid);
         }
       });
       return members;
@@ -203,7 +206,7 @@
 
     function memberFailureResponse(asyncTask) {
       return function (response) {
-        Notification.errorResponse(response, 'huronCallPark.memberFetchFailure');
+        Notification.errorResponse(response, 'callPark.memberFetchFailure');
         if (asyncTask) {
           asyncTask.reject();
         }

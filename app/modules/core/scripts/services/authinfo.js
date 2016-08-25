@@ -1,8 +1,13 @@
 (function () {
   'use strict';
 
-  angular.module('Core')
-    .service('Authinfo', Authinfo);
+  module.exports = angular.module('core.authinfo', [
+    'pascalprecht.translate',
+    require('modules/core/config/config'),
+    require('modules/core/config/tabConfig'),
+  ])
+    .service('Authinfo', Authinfo)
+    .name;
 
   /* @ngInject */
   function Authinfo($rootScope, $translate, Config) {
@@ -18,6 +23,7 @@
     var authData = {
       username: null,
       userId: null,
+      userOrgId: null,
       orgName: null,
       orgId: null,
       addUserEnabled: null,
@@ -41,57 +47,6 @@
       commerceRelation: null
     };
 
-    var getTabTitle = function (title) {
-      return $translate.instant(title);
-    };
-
-    var isAllowedState = function (state) {
-      if (!state) {
-        return false;
-      }
-
-      var roles = authData.roles;
-      var services = authData.services || [];
-      var view = (_.includes(roles, 'PARTNER_ADMIN') || _.includes(roles, 'PARTNER_USER')) ? 'partner' : 'customer';
-
-      // check if the state is part of the restricted list for this view
-      if (_.includes(Config.restrictedStates[view], state)) {
-        return false;
-      }
-
-      var parentState = state.split('.')[0];
-      // if the state is in the allowed list, all good
-      if (_.includes(Config.publicStates, parentState)) {
-        return true;
-      }
-
-      // if state for Cisco only AND user in one of Cisco's organisation
-      if (_.includes(Config.ciscoOnly, parentState) && (authData.orgId === Config.ciscoOrgId || authData.orgId === Config.ciscoMockOrgId)) {
-        return true;
-      }
-
-      // if the state is in the allowed list of one or the user's role, all good
-      var stateAllowedByARole = _.some(roles, function (role) {
-        return _.chain(Config.roleStates)
-          .get(role)
-          .includes(parentState)
-          .value();
-      });
-      if (stateAllowedByARole) {
-        return true;
-      }
-
-      // if the state is in the allowed list of one or the user's service, all good
-      var stateAllowedByAService = _.some(services, function (service) {
-        return _.chain(Config.serviceStates)
-          .get(service.ciName)
-          .includes(parentState)
-          .value();
-      });
-      return !!stateAllowedByAService;
-
-    };
-
     var isEntitled = function (entitlement) {
       var services = authData.services;
       if (services) {
@@ -111,6 +66,7 @@
         authData.username = data.name;
         authData.orgName = data.orgName;
         authData.orgId = data.orgId;
+        authData.userOrgId = data.userOrgId;
         authData.addUserEnabled = data.addUserEnabled;
         authData.entitleUserEnabled = data.entitleUserEnabled;
         authData.managedOrgs = data.managedOrgs;
@@ -178,6 +134,7 @@
           }
 
           authData.customerType = _.get(customerAccounts, '[0].customerType', '');
+          authData.customerId = _.get(customerAccounts, '[0].customerId');
           authData.commerceRelation = _.get(customerAccounts, '[0].commerceRelation', '');
 
           for (var x = 0; x < customerAccounts.length; x++) {
@@ -205,33 +162,33 @@
               }
 
               switch (license.licenseType) {
-              case 'CONFERENCING':
-                if ((this.isCustomerAdmin() || this.isReadOnlyAdmin()) && license.siteUrl && !_.includes(authData.roles, 'Site_Admin')) {
-                  authData.roles.push('Site_Admin');
-                }
-                service = new ServiceFeature($translate.instant(Config.confMap[license.offerName], {
-                  capacity: license.capacity
-                }), x + 1, 'confRadio', license);
-                if (license.siteUrl) {
-                  confLicensesWithoutSiteUrl.push(service);
-                }
-                confLicenses.push(service);
-                break;
-              case 'MESSAGING':
-                service = new ServiceFeature($translate.instant('onboardModal.paidMsg'), x + 1, 'msgRadio', license);
-                msgLicenses.push(service);
-                break;
-              case 'COMMUNICATION':
-                service = new ServiceFeature($translate.instant('onboardModal.paidComm'), x + 1, 'commRadio', license);
-                commLicenses.push(service);
-                break;
-              case 'CARE':
-                service = new ServiceFeature($translate.instant('onboardModal.paidCare'), x + 1, 'careRadio', license);
-                careLicenses.push(service);
-                break;
-              case 'CMR':
-                service = new ServiceFeature($translate.instant('onboardModal.cmr'), x + 1, 'cmrRadio', license);
-                cmrLicenses.push(service);
+                case 'CONFERENCING':
+                  if ((this.isCustomerAdmin() || this.isReadOnlyAdmin()) && license.siteUrl && !_.includes(authData.roles, 'Site_Admin')) {
+                    authData.roles.push('Site_Admin');
+                  }
+                  service = new ServiceFeature($translate.instant(Config.confMap[license.offerName], {
+                    capacity: license.capacity
+                  }), x + 1, 'confRadio', license);
+                  if (license.siteUrl) {
+                    confLicensesWithoutSiteUrl.push(service);
+                  }
+                  confLicenses.push(service);
+                  break;
+                case 'MESSAGING':
+                  service = new ServiceFeature($translate.instant('onboardModal.paidMsg'), x + 1, 'msgRadio', license);
+                  msgLicenses.push(service);
+                  break;
+                case 'COMMUNICATION':
+                  service = new ServiceFeature($translate.instant('onboardModal.paidComm'), x + 1, 'commRadio', license);
+                  commLicenses.push(service);
+                  break;
+                case 'CARE':
+                  service = new ServiceFeature($translate.instant('onboardModal.paidCare'), x + 1, 'careRadio', license);
+                  careLicenses.push(service);
+                  break;
+                case 'CMR':
+                  service = new ServiceFeature($translate.instant('onboardModal.cmr'), x + 1, 'cmrRadio', license);
+                  cmrLicenses.push(service);
               }
             } //end for
           } //end for
@@ -261,6 +218,9 @@
       },
       getOrgId: function () {
         return authData.orgId;
+      },
+      getCustomerId: function () {
+        return authData.customerId;
       },
       getUserName: function () {
         return authData.username;
@@ -324,7 +284,54 @@
         return authData.tabs;
       },
       isAllowedState: function (state) {
-        return isAllowedState(state);
+        if (!state) {
+          return false;
+        }
+
+        var roles = authData.roles;
+        var services = authData.services || [];
+        var view = (_.includes(roles, 'PARTNER_ADMIN') || _.includes(roles, 'PARTNER_USER')) ? 'partner' : 'customer';
+
+        // check if the state is part of the restricted list for this view
+        if (_.includes(Config.restrictedStates[view], state)) {
+          return false;
+        }
+
+        var parentState = state.split('.')[0];
+        // if the state is in the allowed list, all good
+        if (_.includes(Config.publicStates, parentState)) {
+          return true;
+        }
+
+        // if state for Cisco only AND user in one of Cisco's organisation
+        if (_.includes(Config.ciscoOnly, parentState) && (authData.orgId === Config.ciscoOrgId || authData.orgId === Config.ciscoMockOrgId)) {
+          return true;
+        }
+
+        // allow the support state in the special case where the user is exclusively Help Desk AND a Compliance User
+        if (parentState === "support" && this.isHelpDeskAndComplianceUserOnly()) {
+          return true;
+        }
+
+        // if the state is in the allowed list of one or the user's role, all good
+        var stateAllowedByARole = _.some(roles, function (role) {
+          return _.chain(Config.roleStates)
+            .get(role)
+            .includes(parentState)
+            .value();
+        });
+        if (stateAllowedByARole) {
+          return true;
+        }
+
+        // if the state is in the allowed list of one or the user's service, all good
+        var stateAllowedByAService = _.some(services, function (service) {
+          return _.chain(Config.serviceStates)
+            .get(service.ciName)
+            .includes(parentState)
+            .value();
+        });
+        return !!stateAllowedByAService;
       },
       isInitialized: function () {
         return authData.isInitialized;
@@ -341,11 +348,23 @@
       isCustomerAdmin: function () {
         return this.hasRole('Full_Admin');
       },
+      isOnline: function () {
+        return _.eq(authData.customerType, 'Online');
+      },
+      isPending: function () {
+        return _.eq(authData.customerType, 'Pending');
+      },
       isCSB: function () {
-        return (_.contains(authData.customerType, ['CSB']));
+        return (_.eq(authData.customerType, 'CSB'));
+      },
+      isCustomerLaunchedFromPartner: function () {
+        return authData.orgId !== authData.userOrgId;
       },
       isDirectCustomer: function () {
-        return (_.contains(authData.commerceRelation, ['Direct']));
+        return (_.eq(authData.commerceRelation, 'Direct'));
+      },
+      isPartnerManagedCustomer: function () {
+        return (_.eq(authData.customerType, 'Partner'));
       },
       isPartner: function () {
         return this.hasRole('PARTNER_USER') || this.hasRole('PARTNER_ADMIN');
@@ -392,6 +411,15 @@
         }
         return false;
       },
+      isHelpDeskAndComplianceUserOnly: function () {
+        var roles = this.getRoles();
+        if (roles && this.isHelpDeskUser() && this.isComplianceUser()) {
+          return _.all(roles, function (role) {
+            return role == Config.roles.helpdesk || role == Config.roles.compliance_user || role == 'PARTNER_USER' || role == 'User';
+          });
+        }
+        return false;
+      },
       isServiceAllowed: function (service) {
         return !(service === 'squaredTeamMember' && !this.isSquaredTeamMember());
       },
@@ -412,6 +440,12 @@
       },
       isFusionEC: function () {
         return isEntitled(Config.entitlements.fusion_ec);
+      },
+      isWebexSquared: function () {
+        return isEntitled(Config.entitlements.squared);
+      },
+      isWebexMessenger: function () {
+        return isEntitled(Config.entitlements.messenger);
       },
       hasAccount: function () {
         return authData.hasAccount;

@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Authinfo:', function () {
-  var provide, injector, Service;
+  var injector, Service;
 
   var defaultConfig = {
     restrictedStates: {
@@ -28,9 +28,7 @@ describe('Authinfo:', function () {
   };
 
   beforeEach(function () {
-    module('Core', function ($provide) {
-      provide = $provide;
-    });
+    angular.mock.module('Core');
     inject(function ($injector) {
       injector = $injector;
     });
@@ -230,6 +228,16 @@ describe('Authinfo:', function () {
 
       expect(Authinfo.isCiscoMock()).toBe(true);
     });
+
+    it('should return true if the parentState is support and the user is help desk and compliance user only', function () {
+      setupConfig();
+
+      var Authinfo = setupUser({
+        roles: ['Help_Desk', 'Compliance_User']
+      });
+
+      expect(Authinfo.isAllowedState('support')).toBe(true);
+    });
   });
 
   describe('customer with CONFERENCING license', function () {
@@ -248,7 +256,7 @@ describe('Authinfo:', function () {
       var Authinfo = setupUser({
         roles: ['Full_Admin']
       });
-      var a = Authinfo.updateAccountInfo(accountData);
+      Authinfo.updateAccountInfo(accountData);
       expect(Authinfo.getRoles()).toEqual(["Full_Admin", "Site_Admin"]);
     });
 
@@ -256,7 +264,7 @@ describe('Authinfo:', function () {
       var Authinfo = setupUser({
         roles: ['Readonly_Admin']
       });
-      var a = Authinfo.updateAccountInfo(accountData);
+      Authinfo.updateAccountInfo(accountData);
       expect(Authinfo.getRoles()).toEqual(["Readonly_Admin", "Site_Admin"]);
     });
   });

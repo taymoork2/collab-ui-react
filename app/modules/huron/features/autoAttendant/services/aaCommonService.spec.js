@@ -35,8 +35,8 @@
       "label": 'secondTestLabel'
     }];
 
-    beforeEach(module('uc.autoattendant'));
-    beforeEach(module('Huron'));
+    beforeEach(angular.mock.module('uc.autoattendant'));
+    beforeEach(angular.mock.module('Huron'));
     beforeEach(inject(function (_AACommonService_, _AutoAttendantCeMenuModelService_) {
       AACommonService = _AACommonService_;
       AutoAttendantCeMenuModelService = _AutoAttendantCeMenuModelService_;
@@ -111,6 +111,17 @@
         expect(AACommonService.isValid()).toBeTruthy();
 
       });
+
+      it('setRouteQueueToggle should set to false', function () {
+        AACommonService.setRouteQueueToggle(false);
+        expect(AACommonService.isRouteQueueToggle()).toBeFalsy();
+      });
+
+      it('setRouteQueueToggle should set to true', function () {
+        AACommonService.setRouteQueueToggle(true);
+        expect(AACommonService.isRouteQueueToggle()).toBeTruthy();
+      });
+
     });
 
     describe('saveUiModel', function () {

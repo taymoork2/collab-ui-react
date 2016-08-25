@@ -6,6 +6,7 @@
 var ReportsPage = function () {
   this.pageTitle = element(by.cssContainingText('span', 'Reports'));
   this.timeSelect = element(by.id('timeFilter'));
+  this.timeSelectCare = element(by.id('timeFilterCare'));
   this.customerSelect = element(by.id('customerFilter'));
   this.allTypes = element(by.id('allReports'));
   this.engagement = element(by.id('engagementReports'));
@@ -74,6 +75,26 @@ var ReportsPage = function () {
   this.partnerMediaHeader = element(by.id('mediaQuality')).element(by.cssContainingText('.report-section-header', 'Device Media Quality'));
   this.mediaQualityGraph = element(by.id('mediaQualityDiv'));
   this.mediaDescription = element(by.id('mediaQuality')).element(by.css('article section p'));
+
+  // Task Incoming
+  this.taskIncomingHeader = element(by.cssContainingText('.report-section-header', 'Tasks Incoming'));
+  this.taskIncomingDescription = element(by.cssContainingText('.report-description', 'incoming tasks'));
+  this.taskIncomingGraph = element(by.id('taskIncomingdiv'));
+
+  // Task Time
+  this.taskTimeHeader = element(by.cssContainingText('.report-section-header', 'Task Time'));
+  this.taskTimeDescription = element(by.cssContainingText('.report-description', 'time duration'));
+  this.taskTimeGraph = element(by.id('taskTimeDiv'));
+
+  // Task Aggregate
+  this.taskAggregateHeader = element(by.cssContainingText('.report-section-header', 'Task Aggregation'));
+  this.taskAggregateDescription = element(by.cssContainingText('.report-description', 'tasks aggregated'));
+  this.taskAggregateGraph = element(by.id('taskAggregateDiv'));
+
+  // Average CSAT
+  this.averageCsatHeader = element(by.cssContainingText('.report-section-header', 'Average CSAT'));
+  this.averageCsatDescription = element(by.cssContainingText('.report-description', 'average CSAT'));
+  this.averageCsatGraph = element(by.id('averageCsatDiv'));
 
   this.showHideActiveVisibility = function (show, hide, partner) {
     if (partner) {

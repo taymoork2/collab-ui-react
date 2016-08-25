@@ -41,9 +41,9 @@ namespace globalsettings {
         beforeEach(initGetAppSecReject());
         beforeEach(initController);
 
-        it('should not set dataloaded and no value for requireProtectedDevices', () => {
-          expect(controller.requireProtectedDevices).toBeFalsy();
-          expect(controller.requireProtectedDevicesIsLoaded).toBeFalsy();
+        it('should not set dataloaded and no value for isSparkClientSecurityEnabled', () => {
+          expect(controller.isSparkClientSecurityEnabled).toBeFalsy();
+          expect(controller.isSparkClientSecurityLoaded).toBeFalsy();
         });
       });
 
@@ -51,9 +51,9 @@ namespace globalsettings {
         beforeEach(initGetAppSecWithResult({whatsthis: false}));
         beforeEach(initController);
 
-        it('should not set dataloaded and no value for requireProtectedDevices', () => {
-          expect(controller.requireProtectedDevices).toBeFalsy();
-          expect(controller.requireProtectedDevicesIsLoaded).toBeFalsy();
+        it('should not set dataloaded and no value for isSparkClientSecurityEnabled', () => {
+          expect(controller.isSparkClientSecurityEnabled).toBeFalsy();
+          expect(controller.isSparkClientSecurityLoaded).toBeFalsy();
         });
       });
 
@@ -61,52 +61,52 @@ namespace globalsettings {
         beforeEach(initGetAppSecWithResult({data: {whatsthis: false}}));
         beforeEach(initController);
 
-        it('should not set dataloaded and no value for requireProtectedDevices', () => {
-          expect(controller.requireProtectedDevices).toBeFalsy();
-          expect(controller.requireProtectedDevicesIsLoaded).toBeFalsy();
+        it('should not set dataloaded and no value for isSparkClientSecurityEnabled', () => {
+          expect(controller.isSparkClientSecurityEnabled).toBeFalsy();
+          expect(controller.isSparkClientSecurityLoaded).toBeFalsy();
         });
       });
 
-      describe('when getAppSecurity return enforceClientSecurity set to true', ()=> {
-        beforeEach(initGetAppSecWithResult({data: {enforceClientSecurity: true}}));
+      describe('when getAppSecurity return clientSecurityPolicy set to true', ()=> {
+        beforeEach(initGetAppSecWithResult({data: {clientSecurityPolicy: true}}));
         beforeEach(initController);
 
-        it('should set dataloaded and true for requireProtectedDevices', () => {
-          expect(controller.requireProtectedDevices).toBeTruthy();
-          expect(controller.requireProtectedDevicesIsLoaded).toBeTruthy();
+        it('should set dataloaded and true for isSparkClientSecurityEnabled', () => {
+          expect(controller.isSparkClientSecurityEnabled).toBeTruthy();
+          expect(controller.isSparkClientSecurityLoaded).toBeTruthy();
         });
       });
 
-      describe('when getAppSecurity return enforceClientSecurity set to false', ()=> {
-        beforeEach(initGetAppSecWithResult({data: {enforceClientSecurity: false}}));
+      describe('when getAppSecurity return clientSecurityPolicy set to false', ()=> {
+        beforeEach(initGetAppSecWithResult({data: {clientSecurityPolicy: false}}));
         beforeEach(initController);
 
-        it('should set dataloaded and true for requireProtectedDevices', () => {
-          expect(controller.requireProtectedDevices).toBeFalsy();
-          expect(controller.requireProtectedDevicesIsLoaded).toBeTruthy();
+        it('should set dataloaded and true for isSparkClientSecurityEnabled', () => {
+          expect(controller.isSparkClientSecurityEnabled).toBeFalsy();
+          expect(controller.isSparkClientSecurityLoaded).toBeTruthy();
         });
       });
 
     });
 
-    describe('requireProtectedDevicesUpdate', ()=> {
-      beforeEach(initGetAppSecWithResult({data: {enforceClientSecurity: false}}));
+    describe('updateSparkClientSecuritySetting', ()=> {
+      beforeEach(initGetAppSecWithResult({data: {clientSecurityPolicy: false}}));
       beforeEach(initSetAppSec);
       beforeEach(initController);
 
       it('should call AccountOrgService to save the value true', () => {
-        controller.requireProtectedDevices = true;
+        controller.isSparkClientSecurityEnabled = true;
 
-        controller.requireProtectedDevicesUpdate();
+        controller.updateSparkClientSecuritySetting();
 
         expect(AccountOrgService.setAppSecurity)
           .toHaveBeenCalledWith(Authinfo.getOrgId(), true);
       });
 
       it('should call AccountOrgService to save the value false', () => {
-        controller.requireProtectedDevices = false;
+        controller.isSparkClientSecurityEnabled = false;
 
-        controller.requireProtectedDevicesUpdate();
+        controller.updateSparkClientSecuritySetting();
 
         expect(AccountOrgService.setAppSecurity)
           .toHaveBeenCalledWith(Authinfo.getOrgId(), false);

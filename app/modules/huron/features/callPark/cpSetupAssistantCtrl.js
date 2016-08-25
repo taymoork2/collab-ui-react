@@ -8,12 +8,13 @@
     .controller('CallParkSetupAssistantCtrl', CallParkSetupAssistantCtrl);
 
   /* @ngInject */
-  function CallParkSetupAssistantCtrl($q, $state, $modal, $timeout, $translate,
+  function CallParkSetupAssistantCtrl($scope, $window, $q, $state, $modal, $timeout, $translate,
     Authinfo, Notification, CallParkService, CallParkMemberDataService) {
     var vm = this;
     var customerId = Authinfo.getOrgId();
 
     // Setup assistant controller functions
+    vm.callback = callback;
     vm.nextPage = nextPage;
     vm.previousPage = previousPage;
     vm.nextButton = nextButton;
@@ -24,7 +25,9 @@
     vm.evalKeyPress = evalKeyPress;
     vm.enterNextPage = enterNextPage;
     vm.saveCallPark = saveCallPark;
+    vm.createHelpText = createHelpText;
     vm.pageIndex = 0;
+    vm.submitted = false;
     vm.animation = 'slide-left';
 
     vm.callParkName = '';
@@ -59,6 +62,7 @@
 
     function init() {
       CallParkMemberDataService.reset();
+      initializeFields();
     }
 
     function fetchNumbers(typedNumber) {
@@ -91,19 +95,52 @@
     }
 
     function nextButton($index) {
-      switch ($index) {
-      case 0:
-        return vm.callParkName !== '';
-        break;
-      case 1:
-        return vm.selectedSingleNumber !== '';
-        break;
-      case 2:
-        return vm.selectedMembers.length !== 0;
-        break;
-      default:
-        return true;
-      }
+      var buttonStates = {
+        0: function () {
+          return vm.callParkName !== '';
+        },
+        1: function () {
+          return !_.get(vm, 'form.$invalid', true) && !areOptionsInvalid();
+        },
+        2: function () {
+          if (vm.selectedMembers.length !== 0) {
+            applyElement($window.document.getElementsByClassName("helptext-btn--right"), 'enabled', 'add');
+            return true;
+          } else {
+            applyElement($window.document.getElementsByClassName("helptext-btn--right"), 'enabled', 'remove');
+            return false;
+          }
+        },
+        'default': function () {
+          return false;
+        }
+      };
+
+      return buttonStates[$index]() || buttonStates['default']();
+    }
+
+    function areOptionsInvalid() {
+      var valid = false;
+      var input;
+      angular.forEach(vm.cpNumberOptions, function (option) {
+        input = option.inputs[option.currentInput];
+        switch (input.type) {
+          case 'range': valid = (isStringValid(input.range_1, 'value', "") === "" || isStringValid(input.range_2, 'value', "") === "") || valid;
+            break;
+          case 'number': valid = (isStringValid(input, 'value', "") === "") || valid;
+            break;
+          case 'input': valid = (isStringValid(input, 'value', "") === "") || valid;
+            break;
+          case 'text': break;
+        }
+      });
+
+      return valid;
+    }
+
+    function isStringValid(obj, prop, def) {
+      var str = _.get(obj, prop, def);
+      return str ? String(str).trim() : "";
     }
 
     function previousButton($index) {
@@ -116,7 +153,15 @@
     function nextPage() {
       vm.animation = 'slide-left';
       $timeout(function () {
-        vm.pageIndex++;
+        if (getPageIndex() === 2) {
+          vm.saveCallPark();
+        } else {
+          vm.pageIndex++;
+          if (getPageIndex() === 2) {
+            applyElement($window.document.getElementsByClassName("btn--circle btn--primary btn--right"), 'saveCallPark', 'add');
+            applyElement($window.document.getElementsByClassName("helptext-btn--right"), 'active', 'add');
+          }
+        }
       }, 10);
     }
 
@@ -124,6 +169,8 @@
       vm.animation = 'slide-right';
       $timeout(function () {
         vm.pageIndex--;
+        applyElement($window.document.getElementsByClassName("btn--circle btn--primary btn--right"), 'saveCallPark', 'remove');
+        applyElement($window.document.getElementsByClassName("helptext-btn--right"), 'active', 'remove');
       }, 10);
     }
 
@@ -144,33 +191,47 @@
 
     function evalKeyPress($keyCode) {
       switch ($keyCode) {
-      case 27:
+        case 27:
         //escape key
-        cancelModal();
-        break;
-      case 39:
+          cancelModal();
+          break;
+        case 39:
         //right arrow
-        if (nextButton(getPageIndex()) === true) {
-          nextPage();
-        }
-        break;
-      case 37:
+          if (nextButton(getPageIndex()) === true) {
+            nextPage();
+          }
+          break;
+        case 37:
         //left arrow
-        if (previousButton(getPageIndex()) === true) {
-          previousPage();
-        }
-        break;
-      default:
-        break;
+          if (previousButton(getPageIndex()) === true) {
+            previousPage();
+          }
+          break;
+        default:
+          break;
       }
     }
 
     function enterNextPage($keyCode) {
       if ($keyCode === 13 && nextButton(getPageIndex()) === true) {
-        if (vm.selectedNumber === undefined || vm.userSelected === undefined || vm.callParkName !== '') {
-          nextPage();
+        switch (getPageIndex()) {
+          case 0 :
+            if (vm.callParkName !== '') {
+              nextPage();
+            }
+            break;
+          case 1 :
+            if (!_.get(vm, 'form.$invalid', true) && !areOptionsInvalid()) {
+              nextPage();
+            }
+            break;
+          default : return false;
         }
       }
+    }
+
+    function callback() {
+      vm.form.$setDirty();
     }
 
     /////////////////////////////////////////////////////////
@@ -188,6 +249,12 @@
 
     function fetchMembers(nameHint) {
       return $q.when(CallParkMemberDataService.fetchCallParkMembers(nameHint)).then(function (members) {
+        angular.forEach(members, function (member) {
+          member.user.primaryNumber = _.find(member.user.numbers, {
+            'primary': true
+          });
+        });
+
         if (CallParkService.suggestionsNeeded(nameHint)) {
           vm.errorMemberInput = (members && members.length === 0);
         } else {
@@ -203,6 +270,10 @@
       });
     }
 
+    function createHelpText() {
+      return $translate.instant('callPark.createHelpText');
+    }
+
     function getDisplayName(user) {
       return CallParkMemberDataService.getDisplayName(user);
     }
@@ -211,25 +282,29 @@
 
     // this function will be used in future milestones
     function saveCallPark() {
+      vm.submitted = true;
       vm.saveProgress = true;
       var data = {
-        name: vm.callParkName
+        name: vm.callParkName,
+        startRange: vm.selectedSingleNumber,
+        endRange: vm.selectedSingleNumber,
+        members: vm.selectedMembers
       };
 
-      populateNumbers(data);
       populateMembers(data);
 
-      CallParkService.saveCallPark(customerId, data).then(function (data) {
+      CallParkService.saveCallPark(customerId, data).then(function () {
         vm.saveProgress = false;
-        Notification.success($translate.instant('callPark.successSave', {
+        Notification.success('callPark.successSave', {
           callParkName: vm.callParkName
-        }));
+        });
         $state.go('huronfeatures');
       }, function (error) {
         vm.saveProgress = false;
-        Notification.errorResponse(error, $translate.instant('callPark.errorSave', {
+        Notification.errorResponse(error, 'callPark.errorSave', {
           callParkName: vm.callParkName
-        }));
+        });
+        vm.submitted = false;
       });
     }
 
@@ -249,7 +324,74 @@
     }
 
     function populateMembers(data) {
-      data.members = CallParkMemberDataService.getMembersNumberUuidJSON();
+      data.members = CallParkMemberDataService.getMembersUuidJSON();
+    }
+
+    function applyElement(element, appliedClass, method) {
+      var domElement = _.get(element, '[0]');
+      if (domElement) {
+        switch (method) {
+          case 'add':
+            domElement.classList.add(appliedClass);
+            break;
+          case 'remove':
+            domElement.classList.remove(appliedClass);
+            break;
+          case 'default':
+            return true;
+        }
+      }
+    }
+
+    function getExtensionLength(option) {
+      var currentInput = _.get(vm.cpNumberOptions, '[0].currentInput', false);
+      return currentInput === option ? 4 : null;
+    }
+
+    function initializeFields() {
+      vm.cpNumberOptions = [{
+        key: 'cp-number',
+        currentInput: 0,
+        inputs: [{
+          type: 'range',
+          range_1: {
+            type: 'number',
+            value: '',
+            grid_size: 5,
+            maxlength: getExtensionLength(0),
+            minlength: getExtensionLength(0),
+            placeholder: $translate.instant('callPark.firstRange')
+          },
+          range_2: {
+            type: 'number',
+            value: '',
+            grid_size: 5,
+            maxlength: getExtensionLength(1),
+            minlength: getExtensionLength(1),
+            placeholder: $translate.instant('callPark.secondRange')
+          }
+        }, {
+          type: 'number',
+          value: '',
+          maxlength: getExtensionLength(1),
+          minlength: getExtensionLength(1),
+          placeholder: $translate.instant('callPark.singleRange')
+        }]
+      }];
+
+      $scope.numberOption = vm.cpNumberOptions[0];
+
+      $scope.$watch('numberOption', function () {
+        var newLength = getExtensionLength(vm.cpNumberOptions[0].currentInput);
+        angular.forEach(vm.cpNumberOptions[0].inputs, function (input, index) {
+          var length = index == vm.cpNumberOptions[0].currentInput ? newLength : null;
+          var values = (input.type === 'range') ? [input.range_1, input.range_2] : [input];
+          angular.forEach(values, function (value) {
+            value.minlength = length;
+            value.maxlength = length;
+          });
+        });
+      }, true);
     }
   }
 })();

@@ -25,7 +25,7 @@ describe('Onboard users with Hybrid Services', function () {
       });
   });
 
-  it('should ensure services enabled', function () {
+  xit('should ensure services enabled', function () {
     navigation.ensureHybridService(navigation.calendarServicePage);
     navigation.ensureHybridService(navigation.callServicePage);
     navigation.ensureCallServiceAware();
@@ -36,7 +36,8 @@ describe('Onboard users with Hybrid Services', function () {
       navigation.clickUsers();
       users.createUser(testUser);
       utils.click(users.onboardButton);
-      notifications.assertSuccess('onboarded successfully');
+      utils.expectIsDisplayed(users.finishButton);
+      utils.click(users.finishButton);
       utils.expectIsNotDisplayed(users.manageDialog);
       activate.setup(null, testUser);
     });
@@ -63,7 +64,8 @@ describe('Onboard users with Hybrid Services', function () {
       utils.click(users.hybridServices_Cal);
 
       utils.click(users.onboardButton);
-      notifications.assertSuccess('onboarded successfully');
+      utils.expectIsDisplayed(users.finishButton);
+      utils.click(users.finishButton);
       utils.expectIsNotDisplayed(users.manageDialog);
 
       activate.setup(null, testUser);
@@ -87,7 +89,8 @@ describe('Onboard users with Hybrid Services', function () {
       utils.click(users.hybridServices_UC);
 
       utils.click(users.onboardButton);
-      notifications.assertSuccess('onboarded successfully');
+      utils.expectIsDisplayed(users.finishButton);
+      utils.click(users.finishButton);
       utils.expectIsNotDisplayed(users.manageDialog);
 
       utils.searchAndClick(testUser);
@@ -110,7 +113,8 @@ describe('Onboard users with Hybrid Services', function () {
       utils.click(users.hybridServices_UC);
 
       utils.click(users.onboardButton);
-      notifications.assertSuccess('onboarded successfully');
+      utils.expectIsDisplayed(users.finishButton);
+      utils.click(users.finishButton);
       utils.expectIsNotDisplayed(users.manageDialog);
 
       activate.setup(null, testUser);
@@ -138,7 +142,8 @@ describe('Onboard users with Hybrid Services', function () {
       utils.click(users.hybridServices_EC);
 
       utils.click(users.onboardButton);
-      notifications.assertSuccess('onboarded successfully');
+      utils.expectIsDisplayed(users.finishButton);
+      utils.click(users.finishButton);
       utils.expectIsNotDisplayed(users.manageDialog);
 
       activate.setup(null, testUser);

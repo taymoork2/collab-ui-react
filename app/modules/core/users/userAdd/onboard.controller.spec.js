@@ -3,8 +3,8 @@
 describe('OnboardCtrl: Ctrl', function () {
 
   function init() {
-    this.initModules('Core', 'Hercules', 'Huron', 'Messenger', 'Sunlight');
-    this.injectDependencies('$q', '$scope', '$state', '$stateParams', '$timeout', 'Authinfo', 'CsvDownloadService', 'DialPlanService', 'FeatureToggleService', 'Notification', 'Orgservice', 'SyncService', 'TelephonyInfoService', 'Userservice');
+    this.initModules('Core', 'Hercules', 'Huron', 'Messenger', 'Sunlight', 'WebExApp');
+    this.injectDependencies('$httpBackend', '$modal', '$q', '$scope', '$state', '$stateParams', '$previousState', '$timeout', 'Authinfo', 'CsvDownloadService', 'DialPlanService', 'FeatureToggleService', 'Notification', 'Orgservice', 'SyncService', 'SunlightConfigService', 'TelephonyInfoService', 'Userservice', 'UrlConfig', 'WebExUtilsFact', 'ServiceSetup');
     initDependencySpies.apply(this);
   }
 
@@ -25,9 +25,17 @@ describe('OnboardCtrl: Ctrl', function () {
     function isLastStep() {
       return false;
     }
+
     this.$scope.wizard.isLastStep = isLastStep;
 
+    this.$httpBackend.whenGET('https://identity.webex.com/identity/scim/null/v1/Users/me').respond(200, {});
+
     spyOn(this.$state, 'go');
+    spyOn(this.$previousState, 'get').and.returnValue({
+      state: {
+        name: 'test.state'
+      }
+    });
 
     this.mock.internalNumbers = getJSONFixture('huron/json/internalNumbers/internalNumbers.json');
     this.mock.externalNumbers = getJSONFixture('huron/json/externalNumbers/externalNumbers.json');
@@ -43,8 +51,8 @@ describe('OnboardCtrl: Ctrl', function () {
     this.mock.unlicensedUsers = getJSONFixture('core/json/organizations/unlicensedUsers.json');
     this.mock.allLicensesData = getJSONFixture('core/json/organizations/allLicenses.json');
     this.mock.getCareServices = getJSONFixture('core/json/authInfo/careServices.json');
+    this.mock.getLicensesUsage = getJSONFixture('core/json/organizations/usage.json');
 
-    spyOn(this.Orgservice, 'getHybridServiceAcknowledged').and.returnValue(this.$q.when(this.mock.fusionServices));
     spyOn(this.CsvDownloadService, 'getCsv').and.callFake(function (type) {
       if (type === 'headers') {
         return this.$q.when(this.mock.headers);
@@ -54,9 +62,14 @@ describe('OnboardCtrl: Ctrl', function () {
     }.bind(this));
 
     spyOn(this.Notification, 'notify');
+
+    spyOn(this.Orgservice, 'getHybridServiceAcknowledged').and.returnValue(this.$q.when(this.mock.fusionServices));
     spyOn(this.Orgservice, 'getUnlicensedUsers').and.callFake(function (callback) {
       callback(this.mock.unlicensedUsers, 200);
     }.bind(this));
+    spyOn(this.Orgservice, 'getOrg').and.callFake(function (callback) {
+      callback({}, 200);
+    });
 
     spyOn(this.TelephonyInfoService, 'getInternalNumberPool').and.returnValue(this.mock.internalNumbers);
     spyOn(this.TelephonyInfoService, 'loadInternalNumberPool').and.returnValue(this.$q.when(this.mock.internalNumbers));
@@ -72,12 +85,14 @@ describe('OnboardCtrl: Ctrl', function () {
     spyOn(this.FeatureToggleService, 'supportsDirSync').and.returnValue(this.$q.when(false));
     spyOn(this.FeatureToggleService, 'atlasCareTrialsGetStatus').and.returnValue(this.$q.when(true));
     spyOn(this.TelephonyInfoService, 'getPrimarySiteInfo').and.returnValue(this.$q.when(this.mock.sites));
+    spyOn(this.ServiceSetup, 'listSites').and.returnValue(this.$q.when(this.mock.sites));
 
     spyOn(this.Userservice, 'onboardUsers');
     spyOn(this.Userservice, 'bulkOnboardUsers');
     spyOn(this.Userservice, 'getUser').and.returnValue(this.mock.getUserMe);
     spyOn(this.Userservice, 'migrateUsers').and.returnValue(this.mock.getMigrateUsers);
     spyOn(this.Userservice, 'updateUsers');
+    spyOn(this.Orgservice, 'getLicensesUsage').and.returnValue(this.$q.when(this.mock.getLicensesUsage));
   }
 
   function onboardUsersResponse(statusCode, responseMessage) {
@@ -117,7 +132,7 @@ describe('OnboardCtrl: Ctrl', function () {
     describe('process and save users', function () {
       beforeEach(function () {
         this.$scope.userList = validUserList;
-        var promise = this.$scope.syncStatusNext();
+        this.$scope.syncStatusNext();
         this.$scope.$apply();
         this.$timeout.flush();
       });
@@ -171,6 +186,36 @@ describe('OnboardCtrl: Ctrl', function () {
         this.$scope.$apply();
         expect(promise).toBeResolved();
       });
+    });
+  });
+
+  describe('setLicenseAvailabity', function () {
+    beforeEach(initController);
+
+    it('Should have been initialized', function () {
+      expect(this.Orgservice.getLicensesUsage).toHaveBeenCalled();
+    });
+    it('should get licenses', function () {
+      expect(this.$scope.licenses).toBeDefined();
+    });
+    it('Should calculate the license availabilities correctly', function () {
+      expect(this.$scope.messagingLicenseAvailability).toEqual(0);
+      expect(this.$scope.communicationLicenseAvailability).toEqual(3);
+      expect(this.$scope.conferencingLicenseAvailability).toEqual(1);
+    });
+  });
+  describe('License redirect modal', function () {
+    beforeEach(initController);
+    beforeEach(function () {
+      spyOn(this.$scope, 'licenseCheckModal');
+    });
+    it('should define the modal when sufficient licenses are not available', function () {
+      this.$scope.checkLicenseAvailability('MESSAGING', true);
+      expect(this.$scope.licenseCheckModal).toHaveBeenCalled();
+    });
+    it('should not launch modal when sufficient licenses are available', function () {
+      this.$scope.checkLicenseAvailability('COMMUNICATION', false);
+      expect(this.$scope.licenseCheckModal).not.toHaveBeenCalled();
     });
   });
 
@@ -461,7 +506,7 @@ describe('OnboardCtrl: Ctrl', function () {
       expect(this.Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
     });
 
-    it('checkUnauthorizedToAdd - 400096', function () {
+    it('checkUnknownCreateUser - 400096', function () {
       this.Userservice.onboardUsers.and.returnValue(this.$q.resolve(onboardUsersResponse(403, '400096')));
       this.$scope.onboardUsers();
       expect(this.Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
@@ -679,9 +724,6 @@ describe('OnboardCtrl: Ctrl', function () {
     it('should check if CF gets checked when CMR gets checked', function () {
       this.mock.allLicensesData.allLicenses.forEach(function (lic) {
         lic.confLic.forEach(function (cfLic) {
-          lic.cmrLic.forEach(function (cmrLic) {
-            cmrLic = true; // check CMR license
-          });
           this.$scope.checkCMR(cfLic.confModel, lic.cmrLic);
           expect(cfLic.confModel).toBeTruthy(); // expect CF license to be checked
         }.bind(this));
@@ -693,9 +735,6 @@ describe('OnboardCtrl: Ctrl', function () {
         lic.confLic.forEach(function (cfLic) {
           cfLic.confModel = true; // check CF license
           this.$scope.checkCMR(cfLic.confModel, lic.cmrLic);
-          lic.cmrLic.forEach(function (cmrLic) {
-            cmrLic = false; // uncheck CMR license
-          });
           expect(cfLic.confModel).toBeTruthy(); // expect CF license to remain checked
         }.bind(this));
       }.bind(this));
@@ -720,18 +759,22 @@ describe('OnboardCtrl: Ctrl', function () {
     });
 
     describe('Check if multiple licenses get assigned correctly', function () {
+      var userId = 'dbca1001-ab12-cd34-de56-abcdef123454';
       beforeEach(function () {
         spyOn(this.Authinfo, 'isInitialized').and.returnValue(true);
         spyOn(this.Authinfo, 'hasAccount').and.returnValue(true);
         spyOn(this.Authinfo, 'getCareServices').and.returnValue(this.mock.getCareServices.careLicense);
+        this.$httpBackend.expectGET(this.UrlConfig.getSunlightConfigServiceUrl() + '/user' + '/' + userId).respond(200);
         this.$stateParams.currentUser = {
           licenseID: ['CDC_da652e7d-cd34-4545-8f23-936b74359afd'],
-          entitlements: ['cloud-contact-center']
+          entitlements: ['cloud-contact-center'],
+          id: userId
         };
       });
       beforeEach(initController);
 
       it('should call getAccountLicenses correctly', function () {
+        this.$httpBackend.flush();
         var licenseFeatures = this.$scope.getAccountLicenses();
         expect(licenseFeatures[0].id).toEqual('CDC_da652e7d-cd34-4545-8f23-936b74359afd');
         expect(licenseFeatures[0].idOperation).toEqual('ADD');

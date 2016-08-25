@@ -137,6 +137,16 @@ var auth = {
     pass: 'Cisco!23',
     org: '52cd61a3-a950-47c3-8218-55429ff88eb7'
   },
+  'wbx-t31BTSTestAdmin-UserSettings': {
+    user: 'provteam+t31ee@csgtrials.webex.com',
+    pass: 'Cisco!23',
+    org: 'b98940d4-2985-46ef-8c1a-ae8c1ef723ad'
+  },
+  'wbx-t30BTSTestAdmin-UserSettings': {
+    user: 'provteam+ee@csgtrials.webex.com',
+    pass: 'Cisco!23',
+    org: 'fc3868a5-5bfd-47d5-b39f-52af4d6ede42'
+  },
   'wbx-t31RegressionTestAdmin': {
     user: 't31r1-regression-adm@mailinator.com',
     pass: 'Cisco!23',
@@ -146,6 +156,16 @@ var auth = {
     user: 't30sp6-regression-adm@mailinator.com',
     pass: 'Cisco!23',
     org: 'a6c8fdc7-1b74-4d0c-9d24-bd8c20048a84'
+  },
+  'wbx-t30BTSTestAdmin-MultiLicense': {
+    user: 'provteam+mc25@csgtrials.webex.com',
+    pass: 'Cisco!23',
+    org: '52cd61a3-a950-47c3-8218-55429ff88eb7'
+  },
+  'wbx-t30BTSTestAdmin-SingleLicense': {
+    user: 'provteam+mc@csgtrials.webex.com',
+    pass: 'Cisco!23',
+    org: '0988dcdc-af6e-4624-9387-b4b6fa7df4e3'
   },
   'wbx-singleCenterLicenseTestAdmin': {
     user: 't30sp6-regression-adm@mailinator.com',
@@ -182,13 +202,13 @@ var getSSOToken = function (req, jar, creds) {
     req.post(opts, function (err, res, body) {
       if (err) {
         console.error(err, body);
-        reject('Failed to fetch SSO token from CI. Status: ' + (res != null ? res.statusCode : void 0));
+        reject('Failed to fetch SSO token from CI. Status: ' + (res != null ? res.statusCode : undefined));
       }
       var cookie = _.find(res.headers['set-cookie'], function (c) {
         return c.indexOf('cisPRODAMAuthCookie') !== -1;
       });
       if (!cookie) {
-        reject('Failed to retrieve a cookie with org credentials. Status: ' + (res != null ? res.statusCode : void 0));
+        reject('Failed to retrieve a cookie with org credentials. Status: ' + (res != null ? res.statusCode : undefined));
       }
       var token = cookie.match(/cisPRODAMAuthCookie=(.*); Domain/)[1];
       jar.setCookie('cisPRODiPlanetDirectoryPro=' + token + ' ; path=/; domain=.webex.com', 'https://idbroker.webex.com/');
@@ -222,12 +242,12 @@ var getAuthCode = function (req, creds) {
       var ref;
       if (err) {
         console.error(err, body);
-        reject('Failed to fetch Auth Code from CI. Status: ' + (res != null ? res.statusCode : void 0));
+        reject('Failed to fetch Auth Code from CI. Status: ' + (res != null ? res.statusCode : undefined));
       }
-      var code = (ref = body.match(/<title>(.*)</)) != null ? ref[1] : void 0;
+      var code = (ref = body.match(/<title>(.*)</)) != null ? ref[1] : undefined;
       if (!code) {
         console.error(body);
-        reject('Failed to extract Auth Code. Status: ' + (res != null ? res.statusCode : void 0));
+        reject('Failed to extract Auth Code. Status: ' + (res != null ? res.statusCode : undefined));
       }
       resolve(code);
     });
@@ -252,23 +272,21 @@ var getAccessToken = function (req, code) {
       }
     };
     req.post(opts, function (err, res, body) {
-      var e;
       if (err) {
         console.error(err, body);
-        reject('Failed to fetch Access Token from CI. Status: ' + (res != null ? res.statusCode : void 0));
+        reject('Failed to fetch Access Token from CI. Status: ' + (res != null ? res.statusCode : undefined));
       }
       var obj = (function () {
         try {
           return JSON.parse(body);
         } catch (_error) {
-          e = _error;
-          console.error(body);
-          reject('Failed to parse Access Token JSON. Status: ' + (res != null ? res.statusCode : void 0));
+          console.error(_error);
+          reject('Failed to parse Access Token JSON. Status: ' + (res != null ? res.statusCode : undefined));
         }
       })();
-      if (!(obj != null ? obj.access_token : void 0)) {
+      if (!(obj != null ? obj.access_token : undefined)) {
         console.error(body);
-        reject('Failed to extract Access Token. Status: ' + (res != null ? res.statusCode : void 0));
+        reject('Failed to extract Access Token. Status: ' + (res != null ? res.statusCode : undefined));
       }
       resolve(obj.access_token);
     });

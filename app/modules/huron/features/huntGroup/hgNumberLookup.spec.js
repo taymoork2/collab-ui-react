@@ -26,8 +26,8 @@ describe('Controller: HuntGroupSetupAssistantCtrl - Hunt Pilot Number Lookup', f
     getOrgId: jasmine.createSpy('getOrgId').and.returnValue('1')
   };
 
-  beforeEach(module('Huron'));
-  beforeEach(module(function ($provide) {
+  beforeEach(angular.mock.module('Huron'));
+  beforeEach(angular.mock.module(function ($provide) {
     $provide.value("Authinfo", spiedAuthinfo);
   }));
 

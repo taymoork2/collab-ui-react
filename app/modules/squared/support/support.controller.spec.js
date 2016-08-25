@@ -1,17 +1,13 @@
 'use strict';
 
 describe('Controller: SupportCtrl', function () {
-  beforeEach(module('Core'));
-  beforeEach(module('Huron'));
-  beforeEach(module('Sunlight'));
-  beforeEach(module('Squared'));
+  beforeEach(angular.mock.module('Core'));
+  beforeEach(angular.mock.module('Huron'));
+  beforeEach(angular.mock.module('Sunlight'));
+  beforeEach(angular.mock.module('Squared'));
 
   var controller, Authinfo, Userservice, currentUser, Config, $scope;
   var roles = ["ciscouc.devsupport", "atlas-portal.support"];
-  var user = {
-    'success': true,
-    'roles': roles
-  };
 
   beforeEach(inject(function ($rootScope, $controller, _Userservice_, _Authinfo_, _Config_) {
     Userservice = _Userservice_;
@@ -30,7 +26,6 @@ describe('Controller: SupportCtrl', function () {
     spyOn(Config, 'isProd').and.returnValue(false);
 
     $scope = $rootScope.$new();
-    Userservice = Userservice;
     controller = $controller('SupportCtrl', {
       $scope: $scope,
       Authinfo: Authinfo,

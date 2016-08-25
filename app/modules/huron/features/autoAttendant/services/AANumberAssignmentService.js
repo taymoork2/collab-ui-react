@@ -9,10 +9,8 @@
 
   /* @ngInject */
 
-  function AANumberAssignmentService($q, AssignAutoAttendantService, Authinfo, TelephonyInfoService) {
+  function AANumberAssignmentService($q, AssignAutoAttendantService, TelephonyInfoService) {
 
-    var feature;
-    var customerId = Authinfo.getOrgId();
     var service = {
       setAANumberAssignment: setAANumberAssignment,
       getAANumberAssignments: getAANumberAssignments,
@@ -61,24 +59,25 @@
           // let's just do it the straight-forward way...
 
           // find resources not in CMI
+          var matchResourceNumber = function (obj) {
+            return obj.number.replace(/\D/g, '') === resources[i].getNumber();
+          };
           var i = 0;
           for (i = 0; i < resources.length; i++) {
             // check to see if it's in the CMI assigned list
-            var cmiObj = cmiAssignedNumbers.filter(function (obj) {
-
-              return obj.number.replace(/\D/g, '') === resources[i].getNumber();
-            });
+            var cmiObj = cmiAssignedNumbers.filter(matchResourceNumber);
             if (!angular.isDefined(cmiObj) || cmiObj === null || cmiObj.length === 0) {
               onlyResources.push(resources[i].getNumber());
             }
           }
           // find CMI assigned numbers not in resources
+          var matchCmiAssignedNumber = function (obj) {
+            return obj.getNumber() === cmiAssignedNumbers[i].number.replace(/\D/g, '');
+          };
           for (i = 0; i < cmiAssignedNumbers.length; i++) {
             if (cmiAssignedNumbers[i].type != service.NUMBER_FORMAT_ENTERPRISE_LINE) {
               // check to see if it's in the resource list
-              var rscObj = resources.filter(function (obj) {
-                return obj.getNumber() === cmiAssignedNumbers[i].number.replace(/\D/g, '');
-              });
+              var rscObj = resources.filter(matchCmiAssignedNumber);
               if (!angular.isDefined(rscObj) || rscObj === null || rscObj.length === 0) {
                 onlyCMI.push(cmiAssignedNumbers[i].number);
               }
@@ -135,8 +134,8 @@
       });
 
       return $q.all(formattedResources).then(function (value) {
-          return value;
-        },
+        return value;
+      },
         function (response) {
           // if any promise fails, we want to fail (with the details) so further promises don't execute (save fails)
           return $q.reject(response);
@@ -154,6 +153,12 @@
 
       return getAANumberAssignments(orgId, cesId).then(function (cmiAssignedNumbers) {
 
+        var inCMIAssignedList = function (obj) {
+          return obj.type === service.NUMBER_FORMAT_ENTERPRISE_LINE && resources[i].getNumber() && endsWith(obj.number.replace(/\D/g, ''), resources[i].getNumber());
+        };
+        var inExtension = function (obj) {
+          return obj.type === service.NUMBER_FORMAT_EXTENSION && resources[i].getId() && endsWith(resources[i].getId().replace(/\D/g, ''), obj.number);
+        };
         var i = 0;
         for (i = 0; i < resources.length; i++) {
           if (resources[i].getType() === service.DIRECTORY_NUMBER) {
@@ -161,9 +166,7 @@
             // if we don't have an id, get it from CMI
             if (!resources[i].id) {
               // find it in CMI assigned list
-              var cmiObjESN = _.find(cmiAssignedNumbers, function (obj) {
-                return obj.type === service.NUMBER_FORMAT_ENTERPRISE_LINE && resources[i].getNumber() && endsWith(obj.number.replace(/\D/g, ''), resources[i].getNumber());
-              });
+              var cmiObjESN = _.find(cmiAssignedNumbers, inCMIAssignedList);
               if (angular.isDefined(cmiObjESN) && cmiObjESN.number) {
                 resources[i].setId(cmiObjESN.number);
               } else {
@@ -177,9 +180,7 @@
             // if we don't have a number, get it from CMI
             if (!resources[i].number) {
               // find it in CMI assigned list
-              var cmiObjExtension = _.find(cmiAssignedNumbers, function (obj) {
-                return obj.type === service.NUMBER_FORMAT_EXTENSION && resources[i].getId() && endsWith(resources[i].getId().replace(/\D/g, ''), obj.number);
-              });
+              var cmiObjExtension = _.find(cmiAssignedNumbers, inExtension);
               if (angular.isDefined(cmiObjExtension) && cmiObjExtension.number) {
                 resources[i].setNumber(cmiObjExtension.number);
               } else {
@@ -251,12 +252,12 @@
       // For an empty list, we're done, just ensure CMI has no numbers set
       if (resources.length === 0) {
 
-        return setAANumberAssignment(customerId, cesId, resources).then(function (result) {
-            return {
-              workingResources: [],
-              failedResources: []
-            };
-          },
+        return setAANumberAssignment(customerId, cesId, resources).then(function () {
+          return {
+            workingResources: [],
+            failedResources: []
+          };
+        },
           function (response) {
             // failure
             return $q.reject(response);
@@ -284,12 +285,12 @@
             myResourceList = angular.copy(restOfListResponse.workingResources);
             myResourceList.push(myResource);
             return setAANumberAssignment(customerId, cesId, myResourceList).then(
-              function (response) {
+              function () {
                 // successfully saved with the added one, add to working
                 restOfListResponse.workingResources.push(myResource);
                 return restOfListResponse;
               },
-              function (response) {
+              function () {
                 // failed to save with the added one, add to failed
                 restOfListResponse.failedResources.push(myResource);
                 return restOfListResponse;

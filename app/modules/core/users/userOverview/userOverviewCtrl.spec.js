@@ -1,31 +1,31 @@
 'use strict';
 
 describe('Controller: UserOverviewCtrl', function () {
-  var controller, $scope, $httpBackend, $q, $rootScope, Config, Authinfo, Utils, Userservice, FeatureToggleService, Notification;
+  var controller, $scope, $httpBackend, $rootScope, Config, Authinfo, Userservice, FeatureToggleService, Notification, WebExUtilsFact;
 
-  var $stateParams, currentUser, updatedUser, getUserMe, getUserFeatures, UrlConfig;
+  var $stateParams, currentUser, updatedUser, getUserFeatures, UrlConfig;
   var userEmail, userName, uuid, userStatus, dirsyncEnabled, entitlements, invitations;
-  beforeEach(module('Core'));
-  beforeEach(module('Huron'));
-  beforeEach(module('Sunlight'));
 
-  beforeEach(inject(function ($controller, _$httpBackend_, $q, _$rootScope_, _Config_, _Authinfo_, _Utils_, _Userservice_, _FeatureToggleService_, _UrlConfig_, _Notification_) {
+  beforeEach(angular.mock.module('Core'));
+  beforeEach(angular.mock.module('Huron'));
+  beforeEach(angular.mock.module('Sunlight'));
+  beforeEach(angular.mock.module('WebExApp'));
+
+  beforeEach(inject(function ($controller, _$httpBackend_, $q, _$rootScope_, _Config_, _Authinfo_, _Userservice_, _FeatureToggleService_, _UrlConfig_, _Notification_, _WebExUtilsFact_) {
     $scope = _$rootScope_.$new();
     $httpBackend = _$httpBackend_;
-    $q = $q;
     $rootScope = _$rootScope_;
     Config = _Config_;
     Authinfo = _Authinfo_;
     UrlConfig = _UrlConfig_;
-    Utils = _Utils_;
     Userservice = _Userservice_;
     FeatureToggleService = _FeatureToggleService_;
     Notification = _Notification_;
+    WebExUtilsFact = _WebExUtilsFact_;
 
     var deferred = $q.defer();
     deferred.resolve('true');
     currentUser = angular.copy(getJSONFixture('core/json/currentUser.json'));
-    getUserMe = getJSONFixture('core/json/users/me.json');
     invitations = getJSONFixture('core/json/users/invitations.json');
     updatedUser = angular.copy(currentUser);
     getUserFeatures = getJSONFixture('core/json/users/me/featureToggles.json');
@@ -46,8 +46,10 @@ describe('Controller: UserOverviewCtrl', function () {
     spyOn(FeatureToggleService, 'getFeatureForUser').and.returnValue(deferred.promise);
     spyOn(FeatureToggleService, 'getFeaturesForUser').and.returnValue(deferred2.promise);
     spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
+    spyOn(FeatureToggleService, 'atlasUserPendingStatusGetStatus').and.returnValue($q.when(true));
     spyOn(Authinfo, 'isCSB').and.returnValue(false);
     spyOn(Notification, 'success');
+    spyOn(WebExUtilsFact, 'isCIEnabledSite').and.returnValue(true);
 
     // eww
     var userUrl = UrlConfig.getScimUrl(Authinfo.getOrgId()) + '/' + currentUser.id;
@@ -97,7 +99,6 @@ describe('Controller: UserOverviewCtrl', function () {
     });
 
     it('should not set features list by default', function () {
-      $httpBackend.flush();
       expect(controller.features).toBeUndefined();
     });
 
@@ -178,7 +179,6 @@ describe('Controller: UserOverviewCtrl', function () {
 
   describe('AuthCodeLink', function () {
     it('should load dropdown items when addGenerateAuthCodeLink method is called on controller', function () {
-      $httpBackend.flush();
       controller.enableAuthCodeLink();
       expect(controller.dropDownItems.length).toBe(1);
       expect(controller.dropDownItems[0].name).toBe("generateAuthCode");
@@ -186,7 +186,6 @@ describe('Controller: UserOverviewCtrl', function () {
     });
 
     it('should find existing auth code link when addGenerateAuthCodeLink is called second time', function () {
-      $httpBackend.flush();
       controller.enableAuthCodeLink();
       expect(controller.dropDownItems.length).toBe(1);
     });
@@ -194,12 +193,18 @@ describe('Controller: UserOverviewCtrl', function () {
   });
 
   describe('getAccountStatus should be called properly', function () {
-    it('should check if status is pending', function () {
-      $httpBackend.flush();
+    it('and should check if status is pending', function () {
       expect(controller.pendingStatus).toBe(true);
       expect(controller.currentUser.pendingStatus).toBe(true);
-      expect(controller.currentUser.invitations.ms).toBe(true);
-      expect(controller.currentUser.invitations.cf).toBe('CF_5761413b-5bad-4d6a-b40d-c157c0f99062');
+    });
+    it('and should check if status is not pending', function () {
+      updatedUser.licenseID.push('MS_d9fb2e50-2a92-4b0f-b1a4-e7003ecc93ec');
+      updatedUser.userSettings = [];
+      updatedUser.userSettings.push('{spark.signUpDate:1470262687261}');
+      $scope.$broadcast('USER_LIST_UPDATED');
+      $httpBackend.flush();
+      expect(controller.pendingStatus).toBe(false);
+      expect(controller.currentUser.pendingStatus).toBe(false);
     });
   });
 
@@ -214,7 +219,6 @@ describe('Controller: UserOverviewCtrl', function () {
     });
 
     it('should call resendInvitation successfully', function () {
-      $httpBackend.flush();
       controller.resendInvitation(userEmail, userName, uuid, userStatus, dirsyncEnabled, entitlements);
       $rootScope.$apply();
       expect(Notification.success).toHaveBeenCalled();
@@ -223,8 +227,8 @@ describe('Controller: UserOverviewCtrl', function () {
 
   describe('When Authinfo.isCSB returns false', function () {
     it('should set the controller.isCSB to false', function () {
-      $httpBackend.flush();
       expect(controller.isCSB).toBe(false);
     });
   });
+
 });

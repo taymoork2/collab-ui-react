@@ -107,6 +107,9 @@
                 <span translate="firstTimeWizard.quantity"></span>
                 <span>{{service.license.volume}}</span>
               </div>
+              <div ng-if="service.license.isCI === false">
+              <a href= "{{service.license.siteAdminUrl}}" id="{{service.license.siteUrl}}_siteAdminUrl">{{::'onboardModal.siteAdminUrl' | translate}}</a>
+              </div>
             </div>
           </div>
         </div>
@@ -165,11 +168,11 @@
             <div ng-show="multipleSubscriptions.showLicenses(service.billingServiceId, service.isTrial)">
               <div ng-if="service.isTrial || planReview.roomServices.isNewTrial" class="badge badge-trial"
                  translate="firstTimeWizard.trial"></div>
-              <div class="spark-quantity">
-                <span translate="firstTimeWizard.quantity"></span>
-                <span>{{service.volume}}</span>
-              </div>
             </div>
+          </div>
+          <div class="spark-quantity">
+            <span translate="firstTimeWizard.quantity"></span>
+            <span>{{planReview.roomSystemsCount}}</span>
           </div>
         </div>
       </div>

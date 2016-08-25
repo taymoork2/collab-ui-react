@@ -1,21 +1,20 @@
 'use strict';
 
 describe('Component: upgradeScheduleConfiguration', function () {
-  var component, Authinfo, $scope, $q, $compile, $rootScope, FusionClusterService;
+  var $scope, $q, $compile, $rootScope, FusionClusterService;
 
-  beforeEach(module('Hercules'));
-  beforeEach(module(mockDirectives));
+  beforeEach(angular.mock.module('Hercules'));
+  beforeEach(angular.mock.module(mockDirectives));
   beforeEach(inject(dependencies));
 
   var upgradeScheduleMock = {
-    scheduleDays: ['3'],
+    scheduleDays: ['wednesday'],
     scheduleTime: '05:00',
     scheduleTimeZone: 'Pacific/Tahiti',
     nextUpgradeWindow: {
       startTime: '2016-06-29T15:00:57.332Z',
       endTime: '2016-06-29T16:00:57.332Z'
     },
-    acknowledged: true,
     moratoria: [{
       timeWindow: {
         startTime: '2016-06-29T15:00:35Z',
@@ -25,37 +24,25 @@ describe('Component: upgradeScheduleConfiguration', function () {
     }]
   };
 
-  it('should disable the day selector if the daily attribute is true', function () {
-    // I wasted 2 days trying to test this without success…
-  });
-
   describe('Controller: upgradeScheduleConfiguration', function () {
-    var controller;
-
-    it('should have daily as false', function () {
-      $scope.clusterId = '123';
-      var controller = initController($scope);
-      expect(controller.daily).toBe(false);
-    });
-
     it('should fetch the upgrade schedule when there is a valid cluster id', function () {
-      var controller = initController($scope);
-      expect(FusionClusterService.getUpgradeSchedule.calls.count()).toBe(0);
+      initController($scope);
+      expect(FusionClusterService.get.calls.count()).toBe(0);
       $scope.clusterId = '123';
       $scope.$apply();
-      expect(FusionClusterService.getUpgradeSchedule.calls.count()).toBe(1);
-      expect(FusionClusterService.getUpgradeSchedule).toHaveBeenCalledWith('123');
+      expect(FusionClusterService.get.calls.count()).toBe(1);
+      expect(FusionClusterService.get).toHaveBeenCalledWith('123');
       $scope.clusterId = '345';
       $scope.$apply();
-      expect(FusionClusterService.getUpgradeSchedule.calls.count()).toBe(2);
-      expect(FusionClusterService.getUpgradeSchedule).toHaveBeenCalledWith('345');
+      expect(FusionClusterService.get.calls.count()).toBe(2);
+      expect(FusionClusterService.get).toHaveBeenCalledWith('345');
     });
 
     it('should update and fetch new data when form data are changed', function () {
       $scope.clusterId = '123';
       var controller = initController($scope);
       expect(FusionClusterService.setUpgradeSchedule.calls.count()).toBe(0);
-      expect(FusionClusterService.getUpgradeSchedule.calls.count()).toBe(1);
+      expect(FusionClusterService.get.calls.count()).toBe(1);
       // modify the form
       controller.formData.scheduleTime = {
         label: '01:00',
@@ -66,7 +53,7 @@ describe('Component: upgradeScheduleConfiguration', function () {
       // trigger the next tick
       $scope.$apply();
       expect(FusionClusterService.setUpgradeSchedule.calls.count()).toBe(1);
-      expect(FusionClusterService.getUpgradeSchedule.calls.count()).toBe(2);
+      expect(FusionClusterService.get.calls.count()).toBe(2);
     });
 
     it('should delete all moratoria when changing the schedule', function () {
@@ -90,13 +77,24 @@ describe('Component: upgradeScheduleConfiguration', function () {
         preventDefault: function () {}
       });
       expect(FusionClusterService.postponeUpgradeSchedule.calls.count()).toBe(1);
-      expect(FusionClusterService.getUpgradeSchedule.calls.count()).toBe(1);
+      expect(FusionClusterService.get.calls.count()).toBe(1);
+    });
+
+    it('should set the option to "everyDay" if all days are selected', function () {
+      var modifiedUpgradeScheduleMock = upgradeScheduleMock;
+      modifiedUpgradeScheduleMock.scheduleDays = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
+      FusionClusterService.get.and.returnValue($q.resolve({
+        upgradeSchedule: upgradeScheduleMock
+      }));
+      $scope.clusterId = '123';
+      var controller = initController($scope);
+      expect(controller.formData.scheduleDay.value).toBe('everyDay');
     });
   });
 
   function mockDirectives($compileProvider) {
     // mock <cs-select>
-    $compileProvider.directive('csSelect', function ($interpolate) {
+    $compileProvider.directive('csSelect', function () {
       return {
         template: '<div>whatever</div>',
         // priority has to be higher than the "original" directive
@@ -112,14 +110,15 @@ describe('Component: upgradeScheduleConfiguration', function () {
     });
   }
 
-  function dependencies(_$rootScope_, _$q_, _$compile_, _Authinfo_, _FusionClusterService_) {
+  function dependencies(_$rootScope_, _$q_, _$compile_, _FusionClusterService_) {
     $rootScope = _$rootScope_;
     $scope = $rootScope.$new();
     $compile = _$compile_;
     $q = _$q_;
-    Authinfo = _Authinfo_;
     FusionClusterService = _FusionClusterService_;
-    spyOn(FusionClusterService, 'getUpgradeSchedule').and.returnValue($q.resolve(upgradeScheduleMock));
+    spyOn(FusionClusterService, 'get').and.returnValue($q.resolve({
+      upgradeSchedule: upgradeScheduleMock
+    }));
     spyOn(FusionClusterService, 'postponeUpgradeSchedule').and.returnValue($q.resolve());
     spyOn(FusionClusterService, 'setUpgradeSchedule').and.returnValue($q.resolve());
     spyOn(FusionClusterService, 'deleteMoratoria').and.returnValue($q.resolve());
@@ -132,7 +131,7 @@ describe('Component: upgradeScheduleConfiguration', function () {
   }
 
   function compileComponent($scope) {
-    var template = '<upgrade-schedule-configuration can-postpone="true" daily="false" cluster-id="clusterId"></upgrade-schedule-configuration>';
+    var template = '<upgrade-schedule-configuration cluster-id="clusterId"></upgrade-schedule-configuration>';
     var element = $compile(angular.element(template))($scope);
     $scope.$apply();
     return element;

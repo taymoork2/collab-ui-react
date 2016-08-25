@@ -5,7 +5,7 @@ var roomId = 'abc';
 var reportId = '123';
 
 describe('Service: EdiscoveryService', function () {
-  beforeEach(module('wx2AdminWebClientApp'));
+  beforeEach(angular.mock.module('Ediscovery'));
 
   var Service, httpBackend, UrlConfig, Authinfo, avalonRunUrl, urlBase, responseUrl;
 
@@ -245,7 +245,7 @@ describe('Service: EdiscoveryService', function () {
     it('can patch report', function (done) {
       Service.patchReport(reportId, {
         state: "ABORTED"
-      }).then(function (result) {
+      }).then(function () {
         done();
       });
       httpBackend.flush();

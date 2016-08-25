@@ -1,13 +1,12 @@
 'use strict';
 
 describe('Controller: AAScheduleModalCtrl', function () {
-  var AANotificationService, AutoAttendantCeService;
+  var AANotificationService, AutoAttendantCeService, AAMetricNameService, Analytics;
   var AACalendarService, AAUiModelService, AAModelService, AutoAttendantCeInfoModelService, AAICalService, AACommonService;
-  var $scope, $translate, $modalInstance, $controller, $modal, $timeout;
+  var $q, $scope, $modalInstance, $controller, $modal, $timeout;
   var ical;
-  var ces = getJSONFixture('huron/json/autoAttendant/callExperiences.json');
   var calendar = getJSONFixture('huron/json/autoAttendant/aCalendar.json');
-  var aaModel, aaModelWithScheduleId, holidays, starttime, endtime, openhours, controller;
+  var aaModel, aaUiModel, aaModelWithScheduleId, holidays, starttime, endtime, openhours, controller;
 
   var rawCeInfo = {
     "callExperienceName": "AA1",
@@ -51,12 +50,11 @@ describe('Controller: AAScheduleModalCtrl', function () {
     return _ceInfo;
   }
 
-  beforeEach(module('uc.autoattendant'));
-  beforeEach(module('Huron'));
-  beforeEach(module('Sunlight'));
+  beforeEach(angular.mock.module('uc.autoattendant'));
+  beforeEach(angular.mock.module('Huron'));
+  beforeEach(angular.mock.module('Sunlight'));
 
-  beforeEach(inject(function (_ical_, $q, _$controller_, _$translate_, _$modal_, $rootScope, _$timeout_, _AACalendarService_, _AAModelService_, _AAUiModelService_, _AutoAttendantCeService_, _AutoAttendantCeInfoModelService_, _AAICalService_, _AACommonService_) {
-    $translate = _$translate_;
+  beforeEach(inject(function (_ical_, _$q_, _$controller_, _$modal_, $rootScope, _$timeout_, _AACalendarService_, _AAModelService_, _AAUiModelService_, _AutoAttendantCeService_, _AutoAttendantCeInfoModelService_, _AAICalService_, _AACommonService_, _AAMetricNameService_, _Analytics_) {
     $scope = $rootScope.$new();
     ical = _ical_;
     $controller = _$controller_;
@@ -68,7 +66,10 @@ describe('Controller: AAScheduleModalCtrl', function () {
     AAICalService = _AAICalService_;
     AACalendarService = _AACalendarService_;
     AACommonService = _AACommonService_;
+    AAMetricNameService = _AAMetricNameService_;
+    Analytics = _Analytics_;
     $modal = _$modal_;
+    $q = _$q_;
 
     aaModel = {
       aaRecord: {
@@ -86,12 +87,22 @@ describe('Controller: AAScheduleModalCtrl', function () {
       aaRecordUUID: '1111',
       ceInfos: []
     };
-    var aaUiModel = {
+    aaUiModel = {
       openHours: {},
       ceInfo: {
         name: 'AA2',
         scheduleId: '1'
-      }
+      },
+      systemTimeZone: {
+        id: 'America/Los_Angeles',
+        label: 'America/Los_Angeles'
+      },
+      timeZone: {
+        id: 'America/Los_Angeles',
+        label: 'America/Los_Angeles'
+      },
+      isClosedHours: true,
+      isHolidays: false
     };
     starttime = "08:00 AM";
     endtime = "05:00 PM";
@@ -193,6 +204,50 @@ describe('Controller: AAScheduleModalCtrl', function () {
       });
     });
 
+    //tests the required error message print outs using addRange (for both start and endtime)
+    it('should print out required errors on addRange function call because of undefined start and end times ', function () {
+      controller.hoursForm = {
+        endtime0: {
+          $setDirty: function () {},
+          $validate: function () {},
+          $error: {
+            compareTo: undefined,
+            required: undefined
+          }
+        },
+        starttime0: {
+          $setDirty: function () {},
+          $validate: function () {},
+          $error: {
+            compareTo: undefined,
+            required: undefined
+          }
+        }
+      };
+      controller.openhours = [{
+        starttime: undefined,
+        endtime: undefined
+      }];
+      $scope.$apply();
+      //test the end time prints
+      spyOn(controller.hoursForm.endtime0, '$setDirty');
+      spyOn(controller.hoursForm.endtime0, '$validate');
+      //test the start time prints
+      spyOn(controller.hoursForm.starttime0, '$setDirty');
+      spyOn(controller.hoursForm.starttime0, '$validate');
+      spyOn(controller, 'isOpenHoursAfterCloseHours').and.returnValue(true);
+      expect(controller.openhours.length).toEqual(1);
+      controller.addRange();
+      expect(controller.hoursForm.endtime0.$error.required).toBeTruthy();
+      expect(controller.hoursForm.endtime0.$setDirty).toHaveBeenCalled();
+      expect(controller.hoursForm.endtime0.$validate).toHaveBeenCalled();
+      expect(controller.hoursForm.starttime0.$error.required).toBeTruthy();
+      expect(controller.hoursForm.starttime0.$setDirty).toHaveBeenCalled();
+      expect(controller.hoursForm.starttime0.$validate).toHaveBeenCalled();
+      //ensure that an extra range was not created
+      expect(controller.openhours.length).toEqual(1);
+    });
+
     it('should add a range', function () {
       expect(controller.openhours.length).toEqual(0);
       controller.addRange();
@@ -247,6 +302,10 @@ describe('Controller: AAScheduleModalCtrl', function () {
         AAUiModelService: AAUiModelService,
         sectionToToggle: 'hours'
       });
+      controller.timeZoneForm = {
+        $setPristine: function () {}
+      };
+      spyOn(controller.timeZoneForm, '$setPristine');
       $timeout.flush();
     });
 
@@ -254,6 +313,11 @@ describe('Controller: AAScheduleModalCtrl', function () {
       $scope.$apply();
       expect(controller.openhours).toEqual(openhours);
       expect(controller.holidays).toEqual(holidays);
+    });
+
+    it('should have invoked $setPristine to reset timeZoneForm', function () {
+      $scope.$apply();
+      expect(controller.timeZoneForm.$setPristine).toHaveBeenCalled();
     });
 
   });
@@ -276,11 +340,16 @@ describe('Controller: AAScheduleModalCtrl', function () {
         AAUiModelService: AAUiModelService,
         sectionToToggle: 'hours'
       });
+      controller.timeZoneForm = {
+        $pristine: true
+      };
+      spyOn(controller, 'saveTimeZone');
       controller.calendar = calendar;
       controller.openhours = openhours;
       controller.holidays = holidays;
       controller.save();
       $scope.$apply();
+      expect(controller.saveTimeZone).toHaveBeenCalled();
       expect(AACalendarService.createCalendar).toHaveBeenCalledWith('AA1', controller.calendar);
       expect(AutoAttendantCeService.updateCe).toHaveBeenCalled();
       expect(AANotificationService.success).toHaveBeenCalled();
@@ -301,6 +370,9 @@ describe('Controller: AAScheduleModalCtrl', function () {
         AAUiModelService: AAUiModelService,
         sectionToToggle: 'hours'
       });
+      controller.timeZoneForm = {
+        $pristine: true
+      };
       controller.calendar = calendar;
       controller.openhours = openhours;
       controller.holidays = holidays;
@@ -327,6 +399,9 @@ describe('Controller: AAScheduleModalCtrl', function () {
         AAUiModelService: AAUiModelService,
         sectionToToggle: 'hours'
       });
+      controller.timeZoneForm = {
+        $pristine: true
+      };
       controller.openhours = [];
       controller.holidays = [];
       controller.isDeleted = true;
@@ -359,12 +434,87 @@ describe('Controller: AAScheduleModalCtrl', function () {
         AAUiModelService: AAUiModelService,
         sectionToToggle: 'hours'
       });
+      controller.timeZoneForm = {
+        $pristine: true
+      };
       controller.isDeleted = false;
       controller.save();
       $scope.$apply();
       expect(AACalendarService.createCalendar).toHaveBeenCalled();
       expect(AANotificationService.success.calls.any()).toEqual(false);
       expect($modalInstance.close.calls.any()).toEqual(false);
+    });
+
+  });
+
+  describe('saveTimeZone', function () {
+    beforeEach(function () {
+      spyOn(Analytics, 'trackEvent');
+      var ceInfo = ce2CeInfo(rawCeInfo);
+      aaModel.ceInfos.push(ceInfo);
+      controller = $controller('AAScheduleModalCtrl as vm', {
+        $scope: $scope,
+        AANotificationService: AANotificationService,
+        $modalInstance: $modalInstance,
+        AACalendarService: AACalendarService,
+        AAICalService: AAICalService,
+        AAModelService: AAModelService,
+        AAUiModelService: AAUiModelService,
+        sectionToToggle: 'hours'
+      });
+      controller.aaModel = aaModel;
+      controller.aaModel.aaRecord.assignedTimeZone = undefined;
+      controller.timeZoneForm = {
+        $pristine: true
+      };
+    });
+
+    it('should NOT store time zone into aaRecord if there is NO change in time zone drop-down list', function () {
+      controller.saveTimeZone();
+      expect(controller.aaModel.aaRecord.assignedTimeZone).toBe(undefined);
+    });
+
+    it('should store time zone into aaRecord if there is a change in time zone drop-down list', function () {
+      controller.timeZoneForm = {
+        $pristine: false
+      };
+      controller.saveTimeZone();
+      expect(controller.aaModel.aaRecord.assignedTimeZone).toBe(aaUiModel.timeZone.id);
+    });
+
+    it('should log a timezone event for a first-time change in time zone drop-down list', function () {
+      controller.timeZoneForm = {
+        $pristine: false
+      };
+      controller.saveTimeZone();
+      expect(Analytics.trackEvent).toHaveBeenCalledWith(AAMetricNameService.TIME_ZONE, {
+        type: 'change',
+        timezone: aaUiModel.timeZone.id
+      });
+      expect(controller.aaModel.aaRecord.assignedTimeZone).toBe(aaUiModel.timeZone.id);
+    });
+
+    it('should NOT log a timezone event for subsequent change in time zone drop-down list', function () {
+      controller.timeZoneForm = {
+        $pristine: false
+      };
+      controller.aaModel.aaRecord.assignedTimeZone = aaUiModel.timeZone.id;
+
+      controller.saveTimeZone();
+      expect(Analytics.trackEvent).not.toHaveBeenCalled();
+      expect(controller.aaModel.aaRecord.assignedTimeZone).toBe(aaUiModel.timeZone.id);
+    });
+
+    it('should NOT save timezone or log event for 24 Hours schedule', function () {
+      controller.timeZoneForm = {
+        $pristine: false
+      };
+      controller.ui.isClosedHours = false;
+      controller.ui.isHolidays = false;
+
+      controller.saveTimeZone();
+      expect(Analytics.trackEvent).not.toHaveBeenCalled();
+      expect(controller.aaModel.aaRecord.assignedTimeZone).toBe(undefined);
     });
 
   });
@@ -381,6 +531,74 @@ describe('Controller: AAScheduleModalCtrl', function () {
         AAUiModelService: AAUiModelService,
         sectionToToggle: 'hours'
       });
+    });
+
+    //tests the required error message print outs using addRange (for both start and endtime)
+    it('should print out required errors on toggleSection function call because of undefined start and end times ', function () {
+      controller.hoursForm = {
+        endtime0: {
+          $setDirty: function () {},
+          $validate: function () {},
+          $error: {
+            compareTo: undefined,
+            required: undefined
+          }
+        },
+        starttime0: {
+          $setDirty: function () {},
+          $validate: function () {},
+          $error: {
+            compareTo: undefined,
+            required: undefined
+          }
+        }
+      };
+      controller.openhours = [{
+        starttime: undefined,
+        endtime: undefined
+      }];
+      $scope.$apply();
+      //test the end time prints
+      spyOn(controller.hoursForm.endtime0, '$setDirty');
+      spyOn(controller.hoursForm.endtime0, '$validate');
+      //test the start time prints
+      spyOn(controller.hoursForm.starttime0, '$setDirty');
+      spyOn(controller.hoursForm.starttime0, '$validate');
+      spyOn(controller, 'isOpenHoursAfterCloseHours').and.returnValue(true);
+      controller.toggleSection('hours');
+      expect(controller.toggleHours).toBeTruthy();
+      expect(controller.hoursForm.endtime0.$error.required).toBeTruthy();
+      expect(controller.hoursForm.endtime0.$setDirty).toHaveBeenCalled();
+      expect(controller.hoursForm.endtime0.$validate).toHaveBeenCalled();
+      expect(controller.hoursForm.starttime0.$error.required).toBeTruthy();
+      expect(controller.hoursForm.starttime0.$setDirty).toHaveBeenCalled();
+      expect(controller.hoursForm.starttime0.$validate).toHaveBeenCalled();
+    });
+
+    it('should not print out required errors on toggleSection function call with valid start and end times ', function () {
+      controller.hoursForm = {
+        endtime0: {
+          $error: {
+            compareTo: undefined,
+            required: undefined
+          }
+        },
+        starttime0: {
+          $error: {
+            compareTo: undefined,
+            required: undefined
+          }
+        }
+      };
+      controller.openhours = [{
+        starttime: starttime,
+        endtime: endtime
+      }];
+      $scope.$apply();
+      controller.toggleSection('hours');
+      expect(controller.toggleHours).toBeTruthy();
+      expect(controller.hoursForm.endtime0.$error.required).toBeFalsy();
+      expect(controller.hoursForm.starttime0.$error.required).toBeFalsy();
     });
 
     it('should toggle the sections holidays', function () {
@@ -473,6 +691,10 @@ describe('Controller: AAScheduleModalCtrl', function () {
         AAUiModelService: AAUiModelService,
         sectionToToggle: 'hours'
       });
+      controller.timeZoneForm = {
+        $setPristine: function () {}
+      };
+      spyOn(controller.timeZoneForm, '$setPristine');
       $timeout.flush();
       $scope.$apply();
       expect(controller.holidays.length).toEqual(2);
@@ -544,6 +766,15 @@ describe('Controller: AAScheduleModalCtrl', function () {
       expect($modal.open).toHaveBeenCalled();
     });
 
+    it('should close a modal for importing and send analytics', function () {
+      spyOn(Analytics, 'trackEvent').and.returnValue($q.when({}));
+      controller.openImportModal();
+      fakeModal.dismiss('cancel');
+      $scope.$apply();
+      expect($modal.open).toHaveBeenCalled();
+      expect(Analytics.trackEvent).toHaveBeenCalled();
+    });
+
     it('should add imported items', function () {
       fakeModal.close({
         holidays: [],
@@ -599,6 +830,25 @@ describe('Controller: AAScheduleModalCtrl', function () {
           }
         }
       };
+    });
+
+    it('should set the required and set dirty', function () {
+      spyOn(controller.holidaysForm.holidayForm0.holidayEnd, '$setDirty');
+      spyOn(controller.holidaysForm.holidayForm0.holidayStart, '$setDirty');
+      spyOn(controller, 'isHolidaysSavable').and.returnValue(false);
+      controller.holidays = [{
+        isOpen: true,
+        exactDate: false,
+        month: '',
+        rank: '',
+        day: ''
+      }];
+      controller.forceCheckHoliday();
+      expect(controller.holidaysForm.holidayForm0.holidayEnd.$setDirty).toHaveBeenCalled();
+      expect(controller.holidaysForm.holidayForm0.holidayStart.$setDirty).toHaveBeenCalled();
+      expect(controller.holidaysForm.holidayForm0.month.$error.required).toBeTruthy();
+      expect(controller.holidaysForm.holidayForm0.rank.$error.required).toBeTruthy();
+      expect(controller.holidaysForm.holidayForm0.day.$error.required).toBeTruthy();
     });
 
     it('should set the required', function () {
@@ -784,7 +1034,7 @@ describe('Controller: AAScheduleModalCtrl', function () {
 
     it('hours valid should have no error', function () {
       spyOn(controller, 'isOpenHoursAfterCloseHours').and.returnValue(false);
-      controller.forceOpenBeforeCloseCheck(0);
+      controller.forceOpenBeforeCloseCheck(0, 'endtime');
       expect(controller.hoursForm.endtime0.$error.compareTo).toBeFalsy();
       expect(controller.hoursForm.endtime0.$setDirty).toHaveBeenCalled();
       expect(controller.hoursForm.endtime0.$validate).toHaveBeenCalled();
@@ -792,7 +1042,7 @@ describe('Controller: AAScheduleModalCtrl', function () {
 
     it('hours invalid should have error', function () {
       spyOn(controller, 'isOpenHoursAfterCloseHours').and.returnValue(true);
-      controller.forceOpenBeforeCloseCheck(0);
+      controller.forceOpenBeforeCloseCheck(0, 'endtime');
       expect(controller.hoursForm.endtime0.$error.compareTo).toBeTruthy();
       expect(controller.hoursForm.endtime0.$setDirty).toHaveBeenCalled();
       expect(controller.hoursForm.endtime0.$validate).toHaveBeenCalled();

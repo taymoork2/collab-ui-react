@@ -18,12 +18,14 @@
     var downloadInProgress = false;
     var isTooManyUsers = false;
     var canceler, objectBlob, templateBlob;
+    var userExportThreshold = 10000;
 
     var service = {
       typeTemplate: typeTemplate,
       typeUser: typeUser,
       typeAny: typeAny,
       typeError: typeError,
+      userExportThreshold: userExportThreshold,
       getCsv: getCsv,
       openInIE: openInIE,
       createObjectUrl: createObjectUrl,
@@ -42,12 +44,13 @@
       tooManyUsers = _.isBoolean(tooManyUsers) ? tooManyUsers : false;
       isTooManyUsers = tooManyUsers;
       if (tooManyUsers) {
-        return UserListService.exportCSV().then(function (csvData) {
+        canceler = UserListService.exportCSV().then(function (csvData) {
           var csvString = $.csv.fromObjects(csvData, {
             headers: false
           });
           return createObjectUrl(csvString, csvType, fileName);
         });
+        return canceler;
       } else {
         var url = '';
         if (csvType === typeUser) {
@@ -61,7 +64,7 @@
             canceler = undefined;
           });
         } else if (csvType === typeError) {
-          return $q(function (resolve, reject) {
+          return $q(function (resolve) {
             var csvErrorArray = UserCsvService.getCsvStat().userErrorArray;
             var csvString = $.csv.fromObjects(_.union([{
               row: 'Row Number',

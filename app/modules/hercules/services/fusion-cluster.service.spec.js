@@ -3,8 +3,8 @@
 describe('Service: FusionClusterService', function () {
   var FusionClusterService, $httpBackend;
 
-  beforeEach(module('Hercules'));
-  beforeEach(module(mockDependencies));
+  beforeEach(angular.mock.module('Hercules'));
+  beforeEach(angular.mock.module(mockDependencies));
   beforeEach(inject(dependencies));
 
   function dependencies(_$httpBackend_, _FusionClusterService_) {
@@ -14,7 +14,8 @@ describe('Service: FusionClusterService', function () {
 
   function mockDependencies($provide) {
     var Authinfo = {
-      getOrgId: sinon.stub().returns('0FF1C3')
+      getOrgId: sinon.stub().returns('0FF1C3'),
+      isEntitled: sinon.stub().returns(true)
     };
     $provide.value('Authinfo', Authinfo);
     var UrlConfig = {
@@ -38,24 +39,6 @@ describe('Service: FusionClusterService', function () {
       FusionClusterService.getAll();
     });
 
-    it('should filter out non-fused clusters', function () {
-      $httpBackend
-        .when('GET', 'http://elg.no/organizations/0FF1C3?fields=@wide')
-        .respond({
-          clusters: [{
-            state: 'fused',
-            connectors: []
-          }, {
-            state: 'defused',
-            connectors: []
-          }]
-        });
-      FusionClusterService.getAll()
-        .then(function (clusters) {
-          expect(clusters.length).toBe(1);
-        });
-    });
-
     // state (fused, defused, etc.) will soon be removed from the API reponse!
     // the API will only return fused clusters
     it('should not crash if clusters do not have a state', function () {
@@ -74,45 +57,13 @@ describe('Service: FusionClusterService', function () {
         });
     });
 
-    it('should add a type property to clusters', function () {
-      $httpBackend
-        .when('GET', 'http://elg.no/organizations/0FF1C3?fields=@wide')
-        .respond({
-          clusters: [{
-            state: 'fused',
-            connectors: [{
-              alarms: [],
-              connectorType: 'c_mgmt',
-              runningState: 'running',
-              hostname: 'a.elg.no'
-            }]
-          }, {
-            state: 'fused',
-            connectors: [{
-              alarms: [],
-              connectorType: 'mf_mgmt',
-              runningState: 'running',
-              hostname: 'a.elg.no'
-            }]
-          }, {
-            state: 'fused',
-            connectors: []
-          }]
-        });
-      FusionClusterService.getAll()
-        .then(function (clusters) {
-          expect(clusters[0].type).toBe('expressway');
-          expect(clusters[1].type).toBe('mediafusion');
-          expect(clusters[2].type).toBe(undefined);
-        });
-    });
-
     it('should add servicesStatuses property to each cluster', function () {
       $httpBackend
         .when('GET', 'http://elg.no/organizations/0FF1C3?fields=@wide')
         .respond({
           clusters: [{
             state: 'fused',
+            targetType: 'c_mgmt',
             connectors: [{
               alarms: [],
               connectorType: 'c_mgmt',
@@ -126,6 +77,7 @@ describe('Service: FusionClusterService', function () {
             }]
           }, {
             state: 'fused',
+            targetType: 'mf_mgmt',
             connectors: [{
               alarms: [],
               connectorType: 'mf_mgmt',
@@ -162,8 +114,8 @@ describe('Service: FusionClusterService', function () {
         .respond(201, response);
 
       var newExpresswayPromise = FusionClusterService.preregisterCluster('man.united', 'GA');
-      newExpresswayPromise.then(function (clusterId) {
-        expect(clusterId).toBe('3803ded5-70d9-4e7d-bdc4-fe3dbf319e59');
+      newExpresswayPromise.then(function (data) {
+        expect(data.id).toBe('3803ded5-70d9-4e7d-bdc4-fe3dbf319e59');
       });
     });
 
@@ -446,6 +398,205 @@ describe('Service: FusionClusterService', function () {
 
       expect(callback.callCount).toBe(1);
       expect(callback.getCall(0).args[0]).toBe('Example calendar connector release notes.');
+    });
+
+  });
+
+  describe('.getAggregateStatusForServiceAcrossAllClusters', function () {
+
+    var twoClusters;
+    beforeEach(function () {
+      jasmine.getJSONFixtures().clearCache(); // See https://github.com/velesin/jasmine-jquery/issues/239
+      twoClusters = getJSONFixture('hercules/fusion-cluster-service-test-clusters.json');
+    });
+
+    it('should return *operational* when all hosts are *running*', function () {
+      expect(FusionClusterService.processClustersToAggregateStatusForService('squared-fusion-uc', twoClusters)).toBe('operational');
+      expect(FusionClusterService.processClustersToAggregateStatusForService('squared-fusion-mgmt', twoClusters)).toBe('operational');
+      expect(FusionClusterService.processClustersToAggregateStatusForService('squared-fusion-cal', twoClusters)).toBe('operational');
+    });
+
+    it('should return *outage* if all clusters have their Calendar Connectors stopped', function () {
+      twoClusters[0].servicesStatuses[2].state.name = 'stopped';
+      twoClusters[1].servicesStatuses[2].state.name = 'stopped';
+      expect(FusionClusterService.processClustersToAggregateStatusForService('squared-fusion-cal', twoClusters)).toBe('outage');
+    });
+
+    it('should return *outage* if all clusters have their Calendar Connectors disabled', function () {
+      twoClusters[0].servicesStatuses[2].state.name = 'disabled';
+      twoClusters[1].servicesStatuses[2].state.name = 'disabled';
+      expect(FusionClusterService.processClustersToAggregateStatusForService('squared-fusion-cal', twoClusters)).toBe('outage');
+    });
+
+    it('should return *outage* if all clusters have their Calendar Connectors not_configured', function () {
+      twoClusters[0].servicesStatuses[2].state.name = 'not_configured';
+      twoClusters[1].servicesStatuses[2].state.name = 'not_configured';
+      expect(FusionClusterService.processClustersToAggregateStatusForService('squared-fusion-cal', twoClusters)).toBe('outage');
+    });
+
+    it('should return *outage* if all clusters have their Calendar Connectors in a mix of "red" states', function () {
+      twoClusters[0].servicesStatuses[2].state.name = 'stopped';
+      twoClusters[1].servicesStatuses[2].state.name = 'offline';
+      expect(FusionClusterService.processClustersToAggregateStatusForService('squared-fusion-cal', twoClusters)).toBe('outage');
+    });
+
+    it('should return *degraded* if Calendar connectors in exactly one cluster have alarms but connectors are otherwise fine', function () {
+      twoClusters[1].servicesStatuses[2].state.name = 'has_alarms';
+      expect(FusionClusterService.processClustersToAggregateStatusForService('squared-fusion-cal', twoClusters)).toBe('impaired');
+    });
+
+    it('should return *degraded* if Calendar connectors in all clusters have alarms but connectors are otherwise fine', function () {
+      twoClusters[0].servicesStatuses[2].state.name = 'has_alarms';
+      twoClusters[1].servicesStatuses[2].state.name = 'has_alarms';
+      expect(FusionClusterService.processClustersToAggregateStatusForService('squared-fusion-cal', twoClusters)).toBe('impaired');
+    });
+
+    it('should return *outage* if one cluster is not_configured and one cluster is not_operational', function () {
+      twoClusters[0].servicesStatuses[2].state.name = 'not_operational';
+      twoClusters[1].servicesStatuses[2].state.name = 'not_configured';
+      expect(FusionClusterService.processClustersToAggregateStatusForService('squared-fusion-cal', twoClusters)).toBe('outage');
+    });
+
+    it('should return *degraded* if one host is *running* and one is *not_operational*', function () {
+      twoClusters[0].servicesStatuses[2].state.name = 'not_operational';
+      expect(FusionClusterService.processClustersToAggregateStatusForService('squared-fusion-cal', twoClusters)).toBe('impaired');
+    });
+
+    it('should return *degraded* if no connector is running, even when the statuses are temporary', function () {
+      twoClusters[0].servicesStatuses[2].state.name = 'downloading';
+      twoClusters[1].servicesStatuses[2].state.name = 'downloading';
+      expect(FusionClusterService.processClustersToAggregateStatusForService('squared-fusion-cal', twoClusters)).toBe('impaired');
+    });
+
+    it('should return *operational* during an upgrade the other cluster has at least one running connector', function () {
+      twoClusters[0].servicesStatuses[2].state.name = 'downloading';
+      expect(FusionClusterService.processClustersToAggregateStatusForService('squared-fusion-cal', twoClusters)).toBe('operational');
+      twoClusters[0].servicesStatuses[2].state.name = 'installing';
+      expect(FusionClusterService.processClustersToAggregateStatusForService('squared-fusion-cal', twoClusters)).toBe('operational');
+    });
+
+    it('should not let Call Connector statuses impact Calendar Connector aggregation', function () {
+      twoClusters[0].servicesStatuses[1].state.name = 'offline';
+      twoClusters[0].servicesStatuses[1].state.name = 'offline';
+      expect(FusionClusterService.processClustersToAggregateStatusForService('squared-fusion-cal', twoClusters)).toBe('operational');
+    });
+
+    it('should handle invalid service types by falling back to *outage*', function () {
+      expect(FusionClusterService.processClustersToAggregateStatusForService('squared-fusion-invalid-service', twoClusters)).toBe('outage');
+    });
+
+    it('should handle invalid cluster lists by falling back to *outage*', function () {
+      var malformedClusterList = {
+        clusters: 'not exactly a valid list of clusters'
+      };
+      expect(FusionClusterService.processClustersToAggregateStatusForService('squared-fusion-call', malformedClusterList)).toBe('outage');
+    });
+
+  });
+
+  describe('.getAggregateStatusForServiceAcrossAllMediaServiceClusters', function () {
+
+    var twoClusters;
+    beforeEach(function () {
+      jasmine.getJSONFixtures().clearCache(); // See https://github.com/velesin/jasmine-jquery/issues/239
+      twoClusters = getJSONFixture('hercules/fusion-cluster-service-test-clusters.json');
+    });
+
+    it('should return *operational* when all hosts are *upgrading*', function () {
+      twoClusters[0].servicesStatuses[2].serviceId = 'squared-fusion-media';
+      twoClusters[0].servicesStatuses[2].state.name = 'upgrading';
+      twoClusters[1].servicesStatuses[2].serviceId = 'squared-fusion-media';
+      twoClusters[1].servicesStatuses[2].state.name = 'upgrading';
+      expect(FusionClusterService.processClustersToAggregateStatusForService('squared-fusion-media', twoClusters)).toBe('outage');
+    });
+
+    it('should return *degraded* if one host is *running* and one is *upgrading*', function () {
+      twoClusters[0].servicesStatuses[2].serviceId = 'squared-fusion-media';
+      twoClusters[0].servicesStatuses[2].state.name = 'running';
+      twoClusters[1].servicesStatuses[2].serviceId = 'squared-fusion-media';
+      twoClusters[1].servicesStatuses[2].state.name = 'upgrading';
+      //twoClusters.clusters[0].servicesStatuses[0].state.name = 'upgrading';
+      expect(FusionClusterService.processClustersToAggregateStatusForService('squared-fusion-media', twoClusters)).toBe('impaired');
+    });
+
+  });
+
+  describe('.processClustersToSeeIfServiceIsSetup', function () {
+
+    describe('Org with Call and Calendar', function () {
+
+      // Test cluster: Two clusters where Call is installed on one cluster, and Calendar is installed on both clusters
+      var baseClusters;
+      beforeEach(function () {
+        jasmine.getJSONFixtures().clearCache(); // See https://github.com/velesin/jasmine-jquery/issues/239
+        baseClusters = getJSONFixture('hercules/fusion-cluster-service-test-clusters.json');
+      });
+
+      it('should find that Call is enabled', function () {
+        expect(FusionClusterService.processClustersToSeeIfServiceIsSetup('squared-fusion-uc', baseClusters)).toBe(true);
+      });
+
+      it('should find that Calendar is enabled', function () {
+        expect(FusionClusterService.processClustersToSeeIfServiceIsSetup('squared-fusion-cal', baseClusters)).toBe(true);
+      });
+
+      it('should find that Management is enabled', function () {
+        expect(FusionClusterService.processClustersToSeeIfServiceIsSetup('squared-fusion-mgmt', baseClusters)).toBe(true);
+      });
+
+      it('should find that InvalidService is *not* enabled', function () {
+        expect(FusionClusterService.processClustersToSeeIfServiceIsSetup('squared-fusion-invalid-service', baseClusters)).toBe(false);
+      });
+
+      it('should find that Media is *not* enabled in the base cluster list', function () {
+        expect(FusionClusterService.processClustersToSeeIfServiceIsSetup('squared-fusion-media', baseClusters)).toBe(false);
+      });
+    });
+
+    describe('Disco Systems, an org with Call, Calendar, and Media,', function () {
+
+      // Test clusters: Disco Systems, org
+      var discothequeClusters;
+      beforeEach(function () {
+        jasmine.getJSONFixtures().clearCache(); // See https://github.com/velesin/jasmine-jquery/issues/239
+        discothequeClusters = getJSONFixture('hercules/disco-systems-cluster-list.json');
+      });
+
+      it('should find that Media is enabled in the Discotheque org', function () {
+        expect(FusionClusterService.processClustersToSeeIfServiceIsSetup('squared-fusion-media', discothequeClusters)).toBe(true);
+      });
+
+      it('should find that Call is enabled in the Discotheque org', function () {
+        expect(FusionClusterService.processClustersToSeeIfServiceIsSetup('squared-fusion-uc', discothequeClusters)).toBe(true);
+      });
+
+      it('should find that Calendar is enabled in the Discotheque org', function () {
+        expect(FusionClusterService.processClustersToSeeIfServiceIsSetup('squared-fusion-cal', discothequeClusters)).toBe(true);
+      });
+
+    });
+
+    describe('An org with nothing at all,', function () {
+
+      // Test clusters: Two clusters, with nothing provisioned and nothing installed
+      var clustersWithNothingInstalled;
+      beforeEach(function () {
+        jasmine.getJSONFixtures().clearCache(); // See https://github.com/velesin/jasmine-jquery/issues/239
+        clustersWithNothingInstalled = getJSONFixture('hercules/nothing-provisioned-cluster-list.json');
+      });
+
+      it('should find that Media is *dis*-abled', function () {
+        expect(FusionClusterService.processClustersToSeeIfServiceIsSetup('squared-fusion-media', clustersWithNothingInstalled)).toBe(false);
+      });
+
+      it('should find that Call is *dis*-abled', function () {
+        expect(FusionClusterService.processClustersToSeeIfServiceIsSetup('squared-fusion-uc', clustersWithNothingInstalled)).toBe(false);
+      });
+
+      it('should find that Calendar is *dis*-abled', function () {
+        expect(FusionClusterService.processClustersToSeeIfServiceIsSetup('squared-fusion-cal', clustersWithNothingInstalled)).toBe(false);
+      });
+
     });
 
   });

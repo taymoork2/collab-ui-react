@@ -112,7 +112,7 @@
   },
   "getBaseStackSerialGraph": {
     "type": "serial",
-    "pathToImages": "./images/",
+    "pathToImages": "./amcharts/images/",
     "startEffect": "easeOutSine",
     "addClassNames": true,
     "fontFamily": "CiscoSansTT Extra Light",
@@ -130,6 +130,7 @@
     "gridAboveGraphs": true,
     "categoryField": "dummyData",
     "categoryAxis": "dummyData",
+    "export": "dummyData",
     "mouseWheelZoomEnabled": true,
     "chartCursor": {
       "cursorColor": "#55bb76",
@@ -158,10 +159,9 @@
   },
   "getGanttGraph": {
     "type": "gantt",
-    "pathToImages": "./images/",
+    "pathToImages": "./amcharts/images/",
     "theme": "light",
     "marginRight": 70,
-    "dataDateFormat": "YYYY-MM-DDTJJ:NN:SSZ",
     "balloonDateFormat": "JJ:NN",
     "columnWidth": 0.035,
     "valueAxis": "dummyData",
@@ -195,14 +195,6 @@
       "zoomable": false,
       "valueZoomable": true
     },
-    "chartScrollbar": {
-      "offset": 30,
-      "scrollbarHeight": 20
-    },
-    "legend": {
-      "align": "right",
-      "position": "top",
-      "data": "dummyData"
-    }
+    "export": "dummyData"
   }
 }

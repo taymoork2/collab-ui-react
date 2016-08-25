@@ -1,29 +1,13 @@
 <cs-sp-container>
   <cs-sp-section>
-    <div class="section-title-row">
-      <span class="section-name" translate="telephonyPreview.lines"></span>
-      <span cs-dropdown class="actions-menu dropdown pull-right">
-        <button cs-dropdown-toggle class="actions-button btn--none dropdown-toggle">
-          <i class="icon icon-three-dots"></i>
-        </button>
-        <ul cs-dropdown-menu class="dropdown-menu dropdown-primary actions-services">
-          <li><a ui-sref="user-overview.communication.directorynumber({directoryNumber: 'new'})" translate="usersPreview.addNewLinePreview"></a></li>
-        </ul>
-      </span>
-    </div>
-    <div class="feature-list">
-      <ul>
-        <li class="feature" ng-repeat="directoryNumber in telephonyOverview.telephonyInfo.directoryNumbers track by directoryNumber.uuid">
-          <a id="{{directoryNumber.uuid}}" ui-sref="user-overview.communication.directorynumber({directoryNumber: directoryNumber})">
-            <span class="feature-name">{{directoryNumber.pattern}}
-            <span class="feature-name" ng-if="directoryNumber.altDnPattern !== '' && directoryNumber.altDnPattern !== null"> {{'telephonyPreview.or' | translate}} {{directoryNumber.altDnPattern}}</span>
-            </span>
-            <span class="feature-status">{{directoryNumber.dnSharedUsage}}</span>
-            <i class="feature-arrow"></i>
-          </a>
-        </li>
-      </ul>
-    </div>
+    <section-title
+      title-key="telephonyPreview.lines"
+      action-list="telephonyOverview.actionList">
+    </section-title>
+    <directory-number-list
+      directory-numbers="telephonyOverview.telephonyInfo.directoryNumbers"
+      directory-number-sref="user-overview.communication.directorynumber({directoryNumber: directoryNumber})">
+    </directory-number-list>
   </cs-sp-section>
   <cs-sp-section>
     <div class="section-title-row">

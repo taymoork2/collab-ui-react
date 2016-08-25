@@ -6,7 +6,7 @@
     .service('Userservice', Userservice);
 
   /* @ngInject */
-  function Userservice($http, $q, $rootScope, Authinfo, Config, HuronUser, Log, NAME_DELIMITER, Notification, SunlightConfigService, TelephoneNumberService, UrlConfig) {
+  function Userservice($http, $q, $rootScope, $translate, Authinfo, Config, HuronUser, Log, NAME_DELIMITER, Notification, SunlightConfigService, TelephoneNumberService, UrlConfig) {
     var userUrl = UrlConfig.getAdminServiceUrl();
 
     var service = {
@@ -25,10 +25,13 @@
       isHuronUser: isHuronUser,
       isInvitePending: isInvitePending,
       resendInvitation: resendInvitation,
-      sendSparkWelcomeEmail: sendSparkWelcomeEmail
+      sendSparkWelcomeEmail: sendSparkWelcomeEmail,
+      getUserPhoto: getUserPhoto,
+      isValidThumbnail: isValidThumbnail
     };
+
     var _helpers = {
-      isSunlightUser: isSunlightUser,
+      isSunlightUserUpdateRequired: isSunlightUserUpdateRequired,
       getUserLicence: getUserLicence,
       createUserData: createUserData
     };
@@ -139,8 +142,8 @@
       var scimUrl = UrlConfig.getScimUrl(Authinfo.getOrgId()) + '/' + userid;
 
       return $http.get(scimUrl, {
-          cache: true
-        })
+        cache: true
+      })
         .success(function (data, status) {
           data = data || {};
           data.success = true;
@@ -162,10 +165,10 @@
       }
 
       return $http({
-          method: 'PATCH',
-          url: scimUrl,
-          data: userData
-        })
+        method: 'PATCH',
+        url: scimUrl,
+        data: userData
+      })
         .success(function (data, status) {
           data = data || {};
           // This code is being added temporarily to update users on Squared UC
@@ -295,10 +298,10 @@
       };
 
       $http({
-          method: 'PATCH',
-          url: patchUrl,
-          data: requestBody
-        })
+        method: 'PATCH',
+        url: patchUrl,
+        data: requestBody
+      })
         .success(function (data, status) {
           data = data || {};
           data.success = true;
@@ -338,7 +341,11 @@
         });
     }
 
+    /**
+     * Onboard users that share the same set of entitlements and licenses
+     */
     function onboardUsers(usersDataArray, entitlements, licenses, cancelPromise) {
+      // bind the licenses and entitlements that are shared by all users
       var getUserPayload = getUserPayloadForOnboardAPI.bind({
         licenses: licenses,
         entitlements: entitlements
@@ -347,6 +354,9 @@
       return onboardUsersAPI(userPayload, cancelPromise);
     }
 
+    /**
+     * Onboard users with each user specifiying their own set of licenses and entitlements
+     */
     function bulkOnboardUsers(usersDataArray, cancelPromise) {
       var userPayload = getUserPayloadForOnboardAPI(usersDataArray, false);
       return onboardUsersAPI(userPayload, cancelPromise);
@@ -356,6 +366,9 @@
       return $http.delete(userUrl + 'organization/' + Authinfo.getOrgId() + '/user?email=' + encodeURIComponent(userData.email));
     }
 
+    /**
+     * Generate the payload used for onboard API call.
+     */
     function getUserPayloadForOnboardAPI(users, hasSameLicenses) {
       var thisParams = this;
       users = _.isArray(users) ? users : [];
@@ -447,23 +460,23 @@
       });
       _.each(userResponseSuccess, function (userResponseSuccess) {
         var userLicenses = _helpers.getUserLicence(userResponseSuccess.email, users);
-        if (_helpers.isSunlightUser(userLicenses)) {
-          var userData = _helpers.createUserData(userResponseSuccess);
-          SunlightConfigService.createUserInfo(userData)
+        if (_helpers.isSunlightUserUpdateRequired(userLicenses)) {
+          var userData = _helpers.createUserData();
+          var userId = userResponseSuccess.uuid;
+          SunlightConfigService.updateUserInfo(userData, userId)
             .then(function (response) {
-              Log.debug("SunlightConfigService.createUserInfo success response :" + JSON.stringify(response));
-            }, function (response) {
-              Log.debug("SunlightConfigService.createUserInfo failure response :" + JSON.stringify(response));
+              Log.debug("SunlightConfigService.updateUserInfo success response :" + JSON.stringify(response));
+            }, function () {
+              Notification.error($translate.instant('usersPage.careAddUserError'));
             });
         }
       });
 
     }
 
-    function createUserData(userResponse) {
+    function createUserData() {
       var userData = {};
-      userData.userId = userResponse.uuid;
-      userData.alias = userResponse.displayName;
+      userData.alias = '';
       userData.teamId = Authinfo.getOrgId();
       userData.attributes = [];
       userData.media = ['chat'];
@@ -500,11 +513,11 @@
       });
     }
 
-    function isSunlightUser(licenses) {
-      var sunlightLicense = _.find(licenses, function (license) {
-        return license.id.indexOf(Config.offerCodes.CDC) >= 0;
+    function isSunlightUserUpdateRequired(licenses) {
+      var addedSunlightLicense = _.find(licenses, function (license) {
+        return license.id.indexOf(Config.offerCodes.CDC) >= 0 && license.idOperation === 'ADD';
       });
-      return (typeof sunlightLicense === 'undefined') ? false : true;
+      return typeof addedSunlightLicense !== 'undefined';
     }
 
     function isHuronUser(allEntitlements) {
@@ -540,6 +553,21 @@
           }
         });
       });
+    }
+
+    function getUserPhoto(user) {
+      return _.chain(user)
+        .get('photos')
+        .find(function (photo) {
+          return photo.type === 'thumbnail';
+        })
+        .get('value')
+        .value();
+    }
+
+    function isValidThumbnail(user) {
+      var userPhotoValue = getUserPhoto(user);
+      return !(_.startsWith(userPhotoValue, 'file:') || _.isEmpty(userPhotoValue));
     }
 
   }

@@ -3,18 +3,98 @@
     <i class="icon icon-spinner"></i>
   </div>
 
-  <form novalidate name="settings.form" ng-if="!settings.loading">
+  <form novalidate name="settings.form" ng-if="!settings.loading" class="huron-settings-main-container">
     <div class="save-section" ng-class="{invisible: !settings.form.$dirty}">
-      <p translate="callerIdPanel.saveConfirmation"></p>
+      <p></p>
       <button ng-click="settings.resetSettings()" translate="common.cancel"></button>
       <button class="btn btn--primary" cs-btn loading="settings.processing" ng-click="settings.save()" ng-disabled="settings.form.$invalid"><span translate="common.save"></span></button>
     </div>
-    <div class="huron-settings-main-container">
-      <div class="column service-setup-container">
-        <formly-form model="settings.model" fields="settings.leftPanelFields" form="settings.form"></formly-form>
+
+    <!-- time zone selection -->
+    <div class="cs-form__section">
+      <div class="section__info">
+        <h4 class="section__title" translate="serviceSetupModal.timeZone"></h4>
+        <h6 class="section__description" translate="serviceSetupModal.tzDescription"></h6>
       </div>
-      <div class="column service-setup-container">
-        <formly-form model="settings.model" fields="settings.rightPanelFields" form="settings.form"></formly-form>
+      <div class="section__content">
+        <formly-form model="settings.model" fields="settings.timeZoneSelection" form="settings.form"></formly-form>
+      </div>
+    </div>
+
+    <!-- extension selection -->
+    <div class="cs-form__section">
+      <div class="section__info">
+        <h4 class="section__title" translate="serviceSetupModal.extension"></h4>
+      </div>
+      <div class="section__content">
+        <formly-form model="settings.model" fields="settings.extensionLengthSelection" form="settings.form"></formly-form>
+        <formly-form model="settings.model" fields="settings.extensionRangeSelection" form="settings.form"></formly-form>
+      </div>
+    </div>
+
+    <!-- reserved digits selection -->
+    <div class="cs-form__section">
+      <div class="section__info">
+        <h4 class="section__title" translate="serviceSetupModal.reservedDigits"></h4>
+      </div>
+      <div class="section__content">
+        <div cr-feature-toggle feature-show="huron-site-dial-digit">
+          <formly-form model="settings.model" fields="settings.voicemailPrefixSelection" form="settings.form"></formly-form>
+        </div>
+        <formly-form model="settings.model" fields="settings.steeringDigitSelection" form="settings.form"></formly-form>
+      </div>
+    </div>
+
+    <!-- international dialing selection -->
+    <div class="cs-form__section">
+      <div class="section__info">
+        <h4 class="section__title" translate="internationalDialing.internationalDialing"></h4>
+      </div>
+      <div class="section__content">
+        <formly-form model="settings.model" fields="settings.internationalDialingSelection" form="settings.form"></formly-form>
+      </div>
+    </div>
+
+    <!-- emergency service address selection -->
+    <div class="cs-form__section" ng-show="settings.model.showServiceAddress">
+      <div class="section__info">
+        <h4 class="section__title" translate="settingsServiceAddress.label"></h4>
+        <h6 class="section__description" translate="serviceSetupModal.emergencyAddressDescription"></h6>
+      </div>
+      <div class="section__content">
+        <formly-form model="settings.model" fields="settings.emergencyServiceAddressSelection" form="settings.form"></formly-form>
+      </div>
+    </div>
+
+    <!-- emergency service number selection -->
+    <div class="cs-form__section" ng-show="settings.model.showServiceAddress">
+      <div class="section__info">
+        <h4 class="section__title" translate="settingsServiceNumber.label"></h4>
+        <h6 class="section__description" translate="settingsServiceNumber.description"></h6>
+      </div>
+      <div class="section__content">
+        <formly-form model="settings.model" fields="settings.emergencyServiceNumberSelection" form="settings.form"></formly-form>
+      </div>
+    </div>
+
+    <!-- caller id selection -->
+    <div class="cs-form__section">
+      <div class="section__info">
+        <h4 class="section__title" translate="companyCallerId.companyCallerId"></h4>
+        <h6 class="section__description" translate="companyCallerId.companyCallerIdDesc"></h6>
+      </div>
+      <div class="section__content">
+        <formly-form model="settings.model" fields="settings.callerIdSelection" form="settings.form"></formly-form>
+      </div>
+    </div>
+
+    <!-- company voicemail selection -->
+    <div class="cs-form__section">
+      <div class="section__info">
+        <h4 class="section__title" translate="serviceSetupModal.companyVoicemail"></h4>
+      </div>
+      <div class="section__content">
+        <formly-form model="settings.model" fields="settings.companyVoicemailSelection" form="settings.form"></formly-form>
       </div>
     </div>
   </form>

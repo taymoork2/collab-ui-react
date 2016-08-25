@@ -1,13 +1,13 @@
 'use strict';
 
 describe('ClusterService', function () {
-  beforeEach(module('Core'));
-  beforeEach(module('Squared'));
-  beforeEach(module('Hercules'));
+  beforeEach(angular.mock.module('Core'));
+  beforeEach(angular.mock.module('Squared'));
+  beforeEach(angular.mock.module('Hercules'));
 
   var $rootScope, $httpBackend, ClusterService, CsdmPoller, forceAction;
 
-  beforeEach(module(function ($provide) {
+  beforeEach(angular.mock.module(function ($provide) {
     var Authinfo = {
       getOrgId: sinon.stub().returns('orgId')
     };
@@ -340,6 +340,25 @@ describe('ClusterService', function () {
       var ucmcClusters = ClusterService.getClustersByConnectorType('c_ucmc');
       expect(ucmcClusters.length).toBe(1);
     });
+
+    it('should sort clusters by name', function () {
+      var response = org([
+        cluster([connector('c_mgmt')], { name: 'Z' }),
+        cluster([connector('c_mgmt')], { name: '👀' }),
+        cluster([connector('c_mgmt')], { name: 'A' }),
+      ]);
+
+      $httpBackend
+        .when('GET', 'http://elg.no/organizations/orgId?fields=@wide')
+        .respond(response);
+
+      ClusterService.fetch();
+      $httpBackend.flush();
+
+      var mgmtClusters = ClusterService.getClustersByConnectorType('c_mgmt');
+      expect(mgmtClusters[0].name).toBe('A');
+      expect(mgmtClusters[2].name).toBe('👀');
+    });
   });
 
   describe('.getCluster', function () {
@@ -511,7 +530,7 @@ describe('ClusterService', function () {
     });
     return {
       id: _.uniqueId('cluster_'),
-      name: 'Cluster',
+      name: options.name || 'Cluster',
       state: options.state || 'fused',
       provisioning: provisioning,
       connectors: connectors

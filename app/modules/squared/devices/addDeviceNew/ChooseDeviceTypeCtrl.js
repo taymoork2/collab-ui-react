@@ -14,11 +14,23 @@
 
     vm.wizardData = $stateParams.wizard.state().data;
     vm.selectedDeviceType = null;
+    vm.isLoading = false;
+
+    vm.isNewPlaceFlow = function () {
+      return vm.wizardData.showPlaces && vm.wizardData.function !== 'addDevice';
+    };
+
+    vm.hideCancelButton = vm.isNewPlaceFlow();
+    vm.hideBackButton = !vm.isNewPlaceFlow();
 
     vm.next = function () {
-      $stateParams.wizard.next({
-        deviceType: vm.selectedDeviceType
-      }, vm.selectedDeviceType);
+      if (vm.selectedDeviceType) {
+        vm.isLoading = true;
+        $stateParams.wizard.next({
+          deviceType: vm.selectedDeviceType,
+          deviceName: vm.wizardData.deviceName
+        }, vm.selectedDeviceType);
+      }
     };
 
     vm.cloudberry = function () {
@@ -39,6 +51,10 @@
         vm.selectedDeviceType = null;
         vm.huronError = true;
       }
+    };
+
+    vm.back = function () {
+      $stateParams.wizard.back();
     };
   }
 })();

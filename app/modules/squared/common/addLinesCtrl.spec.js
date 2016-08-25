@@ -1,8 +1,9 @@
 'use strict';
 
 describe('AddLinesCtrl: Ctrl', function () {
-  var controller, $stateParams, $state, $scope, Notification, $translate, $q, CommonLineService, Authinfo, PlaceService, CsdmCodeService, DialPlanService;
+  var controller, $stateParams, $state, $scope, Notification, $q, CommonLineService, CsdmPlaceService, DialPlanService;
   var $controller;
+  var $httpBackend;
   var internalNumbers;
   var externalNumbers;
   var externalNumberPool;
@@ -10,21 +11,21 @@ describe('AddLinesCtrl: Ctrl', function () {
   var sites;
   var entitylist;
 
-  beforeEach(module('Core'));
-  beforeEach(module('Huron'));
-  beforeEach(module('Sunlight'));
-  beforeEach(module('Squared'));
+  beforeEach(angular.mock.module('Core'));
+  beforeEach(angular.mock.module('Huron'));
+  beforeEach(angular.mock.module('Sunlight'));
+  beforeEach(angular.mock.module('Squared'));
 
-  beforeEach(inject(function (_$controller_, $rootScope, _$q_, _$state_, _$stateParams_, _Notification_, _PlaceService_, _CommonLineService_, _DialPlanService_) {
+  beforeEach(inject(function (_$controller_, $rootScope, _$q_, _$state_, _$stateParams_, _Notification_, _CsdmPlaceService_, _CommonLineService_, _DialPlanService_, _$httpBackend_) {
     $scope = $rootScope.$new();
     $controller = _$controller_;
-    //$timeout = _$timeout_;
+    $httpBackend = _$httpBackend_;
     $q = _$q_;
     $state = _$state_;
     $stateParams = _$stateParams_;
     Notification = _Notification_;
     CommonLineService = _CommonLineService_;
-    PlaceService = _PlaceService_;
+    CsdmPlaceService = _CsdmPlaceService_;
     DialPlanService = _DialPlanService_;
     var current = {
       step: {
@@ -91,7 +92,7 @@ describe('AddLinesCtrl: Ctrl', function () {
 
     entitylist[0].assignedDn = internalNumbers[0];
     spyOn(CommonLineService, 'assignDNForUserList').and.callThrough();
-    spyOn(PlaceService, 'save');
+    spyOn(CsdmPlaceService, 'createCmiPlace');
   }));
 
   function initController() {
@@ -110,6 +111,9 @@ describe('AddLinesCtrl: Ctrl', function () {
 
   describe('Places Add DID and DN assignment', function () {
     beforeEach(function () {
+      $httpBackend
+        .when('GET', 'https://identity.webex.com/identity/scim/null/v1/Users/me')
+        .respond({});
       initController();
       $scope.entitylist = [{
         name: "Red River"

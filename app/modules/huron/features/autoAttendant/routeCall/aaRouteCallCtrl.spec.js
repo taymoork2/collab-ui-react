@@ -2,8 +2,8 @@
 
 describe('Controller: AARouteCallMenuCtrl', function () {
   var controller;
-  var AAUiModelService, AutoAttendantCeService, AutoAttendantCeInfoModelService, AutoAttendantCeMenuModelService;
-  var $rootScope, $scope, $translate;
+  var AAUiModelService, AutoAttendantCeMenuModelService;
+  var $rootScope, $scope;
   var aaUiModel = {
     openHours: {}
   };
@@ -19,17 +19,15 @@ describe('Controller: AARouteCallMenuCtrl', function () {
   }, {
     "label": 'autoAttendant.phoneMenuRouteVM',
   }];
-  beforeEach(module('uc.autoattendant'));
-  beforeEach(module('Huron'));
-  beforeEach(module('Sunlight'));
+  beforeEach(angular.mock.module('uc.autoattendant'));
+  beforeEach(angular.mock.module('Huron'));
+  beforeEach(angular.mock.module('Sunlight'));
 
-  beforeEach(inject(function ($controller, _$rootScope_, _AAUiModelService_, _AutoAttendantCeService_, _AutoAttendantCeInfoModelService_, _AutoAttendantCeMenuModelService_) {
+  beforeEach(inject(function ($controller, _$rootScope_, _AAUiModelService_, _AutoAttendantCeMenuModelService_) {
     $rootScope = _$rootScope_;
     $scope = $rootScope;
 
     AAUiModelService = _AAUiModelService_;
-    AutoAttendantCeService = _AutoAttendantCeService_;
-    AutoAttendantCeInfoModelService = _AutoAttendantCeInfoModelService_;
     AutoAttendantCeMenuModelService = _AutoAttendantCeMenuModelService_;
 
     spyOn(AAUiModelService, 'getUiModel').and.returnValue(aaUiModel);

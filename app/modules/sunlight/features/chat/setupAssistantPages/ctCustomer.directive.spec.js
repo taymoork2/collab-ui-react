@@ -29,7 +29,7 @@ describe('Directive: ct-customer Customer Information Page', function () {
     }]
   };
 
-  beforeEach(module('Sunlight'));
+  beforeEach(angular.mock.module('Sunlight'));
 
   beforeEach(inject(function (_$compile_, _$rootScope_) {
     $compile = _$compile_;
@@ -54,10 +54,9 @@ describe('Directive: ct-customer Customer Information Page', function () {
     var ctCustomer = renderCtCustomerDirective();
     expect(ctCustomer.html()).toContainElement('.ct-customer-info-category-input > i.icon-add-contain');
     expect(ctCustomer.find('.icon-add-contain').attr('ng-click')).toBe('careChatSA.addCategoryOption()');
-    expect(ctCustomer.html()).toContainElement('.ct-customer-info-category-input > input.ct-attribute-field-textbox');
-    expect(ctCustomer.find('.ct-customer-info-category-input > input.ct-attribute-field-textbox').attr('ng-keypress')).toBe('careChatSA.onEnterKey($event)');
-    expect(ctCustomer.find('.ct-customer-info-category-input > input.ct-attribute-field-textbox').attr('ng-model')).toBe('careChatSA.categoryOptionTag');
-    expect(ctCustomer.find('.ct-customer-info-category-input > input.ct-attribute-field-textbox').attr('maxlength')).toBe('25');
+    expect(ctCustomer.html()).toContainElement('.ct-customer-info-category-input input.ct-attribute-field-textbox');
+    expect(ctCustomer.find('.ct-customer-info-category-input input.ct-attribute-field-textbox').attr('ng-keypress')).toBe('careChatSA.onEnterKey($event)');
+    expect(ctCustomer.find('.ct-customer-info-category-input input.ct-attribute-field-textbox').attr('ng-model')).toBe('careChatSA.categoryOptionTag');
     expect(ctCustomer.html()).toContainElement('.ct-customer-info-category-input > div.category-tokens > input.token-input');
     expect(ctCustomer.find('.ct-customer-info-category-input > div.category-tokens > input.token-input').attr('tokenfieldid')).toBe('careChatSA.categoryTokensId');
     expect(ctCustomer.find('.ct-customer-info-category-input > div.category-tokens > input.token-input').attr('tokens')).toBe('attribute.categoryOptions');

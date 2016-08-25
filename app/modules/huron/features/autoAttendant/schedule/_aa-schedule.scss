@@ -1,3 +1,5 @@
+$aa-schedule-text-color: $gray-light-1;
+
 // Schedule Panel
 .aa-schedule-container {
    &:hover {
@@ -15,16 +17,20 @@
   h3 {
     display: inline-block;
   }
+
+  &-timezone {
+    @include vr-spacing(pt, .75);
+    @include vr-spacing(pb, .25)
+    color: $aa-schedule-text-color;
+  }
 }
 
 // Schedule Modal
 .aa-schedule {
-
- h3 {
+  h3 {
     display: inline-block;
   }
-  
- 
+
   .modal-body &-subtitle {
     font-size: 1.25rem;
     line-height: 1;
@@ -47,11 +53,20 @@
   }
 
   .aa-help-icon {
-   color:$color-primary-lighter;
-   &:hover {
-     color: $white;
-     cursor: pointer;
-   }
+    color:$color-primary-lighter;
+    &:hover {
+      color: $white;
+      cursor: pointer;
+    }
+    &:focus {
+      color: $white;
+      outline: none;
+    }
+  }
+  .aa-help-wrapper {
+    & .popover {
+      @include vr-spacing(mt, 0);
+    }
   }
   .down {
     color: $aa-builder-icon-click-color;
@@ -72,6 +87,9 @@
   &-trash {
     font-size: 1.25rem;
     float: right;
+    &:hover {
+      cursor: pointer;
+    }
   }
   &-days {
     display: flex;
@@ -217,7 +235,7 @@
 
   &-hours {
     @extend .aa-schedule-info-item;
-    color: $gray-light-1;
+    color: $aa-schedule-text-color;
     text-align: left;
   }
 
@@ -230,6 +248,10 @@
     display: inline-block;
     @include vr-spacing(pr, 1);
   }
+}
+
+.import-schedule-modal {
+  @include vr-spacing(ph, 2);
 }
 
 /* Should go in toolkit for timepicker error state */

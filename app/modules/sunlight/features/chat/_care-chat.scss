@@ -9,6 +9,9 @@
   }
   .cs-setupassistant--content {
     height: calc(100vh - #{$top-bar-height + $overlay-panel-height});
+    .cs-card-container {
+      @include vr-spacing(p, 0);
+    }
   }
 }
 .care-chat {
@@ -24,6 +27,10 @@
     align-content: center;
     align-items: center;
   }
+}
+
+.ct-confirmation-header {
+  text-align: center;
 }
 
 .ct-confirmation-body {

@@ -2,105 +2,90 @@
   'use strict';
 
   angular
-    .module("Mediafusion")
-    .controller("RedirectAddResourceControllerV2", RedirectAddResourceControllerV2);
+    .module('Mediafusion')
+    .controller('RedirectAddResourceControllerV2', RedirectAddResourceControllerV2);
 
   /* @ngInject */
-  function RedirectAddResourceControllerV2(MediaClusterServiceV2, $modalInstance, $window, XhrNotificationService, $log, $translate) {
+  function RedirectAddResourceControllerV2(XhrNotificationService, $modalInstance, $translate, firstTimeSetup, yesProceed, $modal, $state, AddResourceCommonServiceV2, $window) {
     var vm = this;
     vm.clusterList = [];
-    vm.onlineNodeList = [];
-    vm.offlineNodeList = [];
-    vm.clusters = null;
-    vm.groups = null;
-    vm.combo = true;
-    vm.selectPlaceholder = 'Add new / Select existing Cluster';
+    vm.selectPlaceholder = $translate.instant('mediaFusion.add-resource-dialog.cluster-placeholder');
     vm.addRedirectTargetClicked = addRedirectTargetClicked;
     vm.redirectToTargetAndCloseWindowClicked = redirectToTargetAndCloseWindowClicked;
-    vm.redirectPopUpAndClose = redirectPopUpAndClose;
     vm.back = back;
-    //vm.getV2Clusters = getV2Clusters;
-    vm.whiteListHost = whiteListHost;
+    vm.next = next;
     vm.enableRedirectToTarget = false;
     vm.selectedCluster = '';
-    vm.clusterDetail = null;
-    vm.popup = '';
-    vm.createNewCluster = false;
     vm.selectedClusterId = '';
+    vm.firstTimeSetup = firstTimeSetup;
+    vm.closeSetupModal = closeSetupModal;
+    vm.radio = 1;
+    vm.noProceed = false;
+    vm.yesProceed = yesProceed;
+    vm.canGoNext = canGoNext;
 
-    // Forming clusterList which contains all cluster name of type mf_mgmt and sorting it.
-    MediaClusterServiceV2.getAll()
-      .then(function (clusters) {
-        vm.clusters = _.filter(clusters, 'targetType', 'mf_mgmt');
-        _.each(clusters, function (cluster) {
-          if (cluster.targetType === "mf_mgmt") {
-            vm.clusterList.push(cluster.name);
-            _.each(cluster.connectors, function (connector) {
-              if ("running" == connector.state) {
-                vm.onlineNodeList.push(connector.hostname);
-              } else {
-                vm.offlineNodeList.push(connector.hostname);
-              }
-            });
-          }
-        });
-        vm.clusterList.sort();
-      }, XhrNotificationService.notify);
+    AddResourceCommonServiceV2.updateClusterLists().then(function (clusterList) {
+      vm.clusterList = clusterList;
+    });
 
     function addRedirectTargetClicked(hostName, enteredCluster) {
-
-      //Checking if the host is already present
-      if (vm.onlineNodeList.indexOf(hostName) > -1) {
-        $modalInstance.close();
-        XhrNotificationService.notify($translate.instant('mediaFusion.add-resource-dialog.serverOnline'));
-      }
-
-      if (vm.offlineNodeList.indexOf(hostName) > -1) {
-        $modalInstance.close();
-        XhrNotificationService.notify($translate.instant('mediaFusion.add-resource-dialog.serverOffline'));
-      }
-
-      //Checking if value in selected cluster is in cluster list
-      _.each(vm.clusters, function (cluster) {
-        if (cluster.name == vm.selectedCluster) {
-          vm.clusterDetail = cluster;
-        }
-      });
-      if (vm.clusterDetail == null) {
-        MediaClusterServiceV2.createClusterV2(enteredCluster, 'GA').then(function (resp) {
-          vm.selectedClusterId = resp.data.id;
-          vm.whiteListHost(hostName, vm.selectedClusterId);
-          //vm.redirectPopUpAndClose(hostName, enteredCluster, resp.data.id);
-        });
-      } else {
-        vm.selectedClusterId = vm.clusterDetail.id;
-        vm.whiteListHost(hostName, vm.selectedClusterId);
-        //vm.redirectPopUpAndClose(hostName, enteredCluster, vm.clusterDetail.id);
-      }
-    }
-
-    function whiteListHost(hostName, clusterId) {
-      MediaClusterServiceV2.addRedirectTarget(hostName, clusterId).then(function () {
+      AddResourceCommonServiceV2.addRedirectTargetClicked(hostName, enteredCluster).then(function () {
         vm.enableRedirectToTarget = true;
-        $log.log("value is set ", vm.enableRedirectToTarget);
       }, XhrNotificationService.notify);
     }
 
     function redirectToTargetAndCloseWindowClicked(hostName, enteredCluster) {
-      vm.redirectPopUpAndClose(hostName, enteredCluster, vm.selectedClusterId);
+      $modalInstance.close();
+      AddResourceCommonServiceV2.redirectPopUpAndClose(hostName, enteredCluster, vm.selectedClusterId, vm.firstTimeSetup);
     }
 
-    function redirectPopUpAndClose(hostName, enteredCluster, clusterId) {
-      $modalInstance.close();
-      vm.popup = $window.open("https://" + encodeURIComponent(hostName) + "/?clusterName=" + encodeURIComponent(enteredCluster) + "&clusterId=" + encodeURIComponent(clusterId));
-      if (!vm.popup || vm.popup.closed || typeof vm.popup.closed == 'undefined') {
-        $log.log('popup.closed');
+    function closeSetupModal(isCloseOk) {
+      if (!firstTimeSetup) {
+        $modalInstance.close();
+        return;
       }
+      if (isCloseOk) {
+        $modalInstance.close();
+        $state.go('services-overview');
+        return;
+      }
+      $modal.open({
+        templateUrl: 'modules/hercules/add-resource/confirm-setup-cancel-dialog.html',
+        type: 'dialog'
+      })
+        .result.then(function (isAborting) {
+          if (isAborting) {
+            $modalInstance.close();
+            $state.go('services-overview');
+          }
+        });
     }
 
     function back() {
       vm.enableRedirectToTarget = false;
-      vm.createNewCluster = false;
+    }
+
+    function next() {
+      if (vm.radio == 0) {
+        vm.noProceed = true;
+        $window.open('https://7f3b835a2983943a12b7-f3ec652549fc8fa11516a139bfb29b79.ssl.cf5.rackcdn.com/Media-Fusion-Management-Connector/mfusion.ova');
+      } else if (vm.yesProceed) {
+        if (angular.isDefined(vm.selectedCluster) && vm.selectedCluster != '' && angular.isDefined(vm.hostName)) {
+          vm.addRedirectTargetClicked(vm.hostName, vm.selectedCluster);
+        }
+      } else {
+        vm.yesProceed = true;
+      }
+    }
+
+    function canGoNext() {
+      if (vm.firstTimeSetup && !vm.yesProceed) {
+        return true;
+      } else if (vm.yesProceed && angular.isDefined(vm.hostName) && vm.hostName != '' && angular.isDefined(vm.selectedCluster) && vm.selectedCluster != '') {
+        return true;
+      } else {
+        return false;
+      }
     }
   }
 }());

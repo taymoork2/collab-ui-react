@@ -2,25 +2,39 @@
   'use strict';
 
   /* @ngInject */
-  function MediaServiceSettingsControllerV2($state, $modal, MediaServiceActivationV2, Authinfo, $stateParams, $translate, ServiceDescriptor, MailValidatorService, XhrNotificationService, Notification) {
+  function MediaServiceSettingsControllerV2($state, $modal, MediaServiceActivationV2, Authinfo, $stateParams, ServiceDescriptor, MailValidatorService, XhrNotificationService, Notification, FeatureToggleService) {
     var vm = this;
     vm.config = "";
     vm.wx2users = "";
     vm.serviceType = "mf_mgmt";
     vm.serviceId = "squared-fusion-media";
     vm.cluster = $stateParams.cluster;
+    vm.featureToggled = false;
 
-    vm.disableMediaService = function (serviceId) {
+    function isFeatureToggled() {
+      return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridServicesResourceList);
+    }
+    isFeatureToggled().then(function (reply) {
+      vm.featureToggled = reply;
+    });
+
+    vm.disableMediaService = function () {
       MediaServiceActivationV2.setServiceEnabled(vm.serviceId, false).then(
         function success() {
+          MediaServiceActivationV2.setisMediaServiceEnabled(false);
+          MediaServiceActivationV2.setServiceAcknowledged(vm.serviceId, false);
           vm.disableOrpheusForMediaFusion();
-          $state.go("media-service.list", {
-            serviceType: "mf_mgmt"
-          }, {
-            reload: true
-          });
+          if (vm.featureToggled) {
+            $state.go('services-overview');
+          } else {
+            $state.go("media-service.list", {
+              serviceType: "mf_mgmt"
+            }, {
+              reload: true
+            });
+          }
         },
-        function error(data, status) {
+        function error() {
           XhrNotificationService.notify(error);
         });
     };
@@ -37,14 +51,11 @@
     };
 
     vm.disableOrpheusForMediaFusion = function () {
-      //$log.log("Entered disableOrpheusForMediaFusion");
       MediaServiceActivationV2.getUserIdentityOrgToMediaAgentOrgMapping().then(
         function success(response) {
           var mediaAgentOrgIdsArray = [];
           var orgId = Authinfo.getOrgId();
-          var updateMediaAgentOrgId = false;
           mediaAgentOrgIdsArray = response.data.mediaAgentOrgIds;
-          //$log.log("Media Agent Org Ids Array:", mediaAgentOrgIdsArray);
 
           var index = mediaAgentOrgIdsArray.indexOf(orgId);
           mediaAgentOrgIdsArray.splice(index, 1);
@@ -53,21 +64,20 @@
           mediaAgentOrgIdsArray.splice(index, 1);
 
           if (mediaAgentOrgIdsArray.length > 0) {
-            //$log.log("Updated Media Agent Org Ids Array:", mediaAgentOrgIdsArray);
             MediaServiceActivationV2.setUserIdentityOrgToMediaAgentOrgMapping(mediaAgentOrgIdsArray).then(
-              function success(response) {},
-              function error(errorResponse, status) {
-                Notification.notify([$translate.instant('mediaFusion.mediaAgentOrgMappingFailure', {
+              function success() {},
+              function error(errorResponse) {
+                Notification.error('mediaFusion.mediaAgentOrgMappingFailure', {
                   failureMessage: errorResponse.message
-                })], 'error');
+                });
               });
           } else {
             MediaServiceActivationV2.deleteUserIdentityOrgToMediaAgentOrgMapping(mediaAgentOrgIdsArray).then(
-              function success(response) {},
-              function error(errorResponse, status) {
-                Notification.notify([$translate.instant('mediaFusion.mediaAgentOrgMappingFailure', {
+              function success() {},
+              function error(errorResponse) {
+                Notification.error('mediaFusion.mediaAgentOrgMappingFailure', {
                   failureMessage: errorResponse.message
-                })], 'error');
+                });
               });
           }
         });

@@ -2,9 +2,9 @@
 'use strict';
 
 describe('Service: Trial Service:', function () {
-  beforeEach(module('core.trial'));
-  beforeEach(module('Core'));
-  beforeEach(module('Huron'));
+  beforeEach(angular.mock.module('core.trial'));
+  beforeEach(angular.mock.module('Core'));
+  beforeEach(angular.mock.module('Huron'));
 
   beforeEach(function () {
     bard.inject(this, '$httpBackend', '$q', '$rootScope', 'Config', 'Authinfo', 'LogMetricsService',
@@ -317,13 +317,13 @@ describe('Service: Trial Service:', function () {
         });
 
         it('should have called "TrialService.getTrialIds()"', function () {
-          getDaysLeftForCurrentUser().then(function (daysLeft) {
+          getDaysLeftForCurrentUser().then(function () {
             expect(TrialService.getTrialIds).toHaveBeenCalled();
           });
         });
 
         it('should have called "TrialService.getExpirationPeriod()" with the return value of "TrialService.getTrialIds()"', function () {
-          getDaysLeftForCurrentUser().then(function (daysLeft) {
+          getDaysLeftForCurrentUser().then(function () {
             expect(TrialService.getExpirationPeriod).toHaveBeenCalledWith([fakeTrialId]);
           });
         });
@@ -591,7 +591,7 @@ describe('Service: Trial Service:', function () {
       });
 
       it('should return error server down (501)', function () {
-        $httpBackend.expectPOST(UrlConfig.getAdminServiceUrl() + 'orders/actions/shallowvalidation/invoke', function (data) {
+        $httpBackend.expectPOST(UrlConfig.getAdminServiceUrl() + 'orders/actions/shallowvalidation/invoke', function () {
           return valData;
         }).respond(501);
         expectShallowVal(org, {

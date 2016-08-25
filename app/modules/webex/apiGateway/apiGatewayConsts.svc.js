@@ -12,38 +12,38 @@
     };
 
     this.csvAPIs = [{
-        request: this.csvRequests.csvStatus,
-        api: 'importexportstatus',
-        method: 'POST',
-        contentType: 'application/json;charset=utf-8',
-        data: {}
-      },
+      request: this.csvRequests.csvStatus,
+      api: 'importexportstatus',
+      method: 'POST',
+      contentType: 'application/json;charset=utf-8',
+      data: {}
+    },
 
-      {
-        request: this.csvRequests.csvExport,
-        api: 'export',
-        method: 'POST',
-        contentType: 'application/json;charset=utf-8',
-        data: {}
-      },
+    {
+      request: this.csvRequests.csvExport,
+      api: 'export',
+      method: 'POST',
+      contentType: 'application/json;charset=utf-8',
+      data: {}
+    },
 
-      {
-        request: this.csvRequests.csvImport,
-        api: 'import',
-        method: 'POST',
-        headers: {
-          contentType: 'undefined',
-        },
-        data: {}
+    {
+      request: this.csvRequests.csvImport,
+      api: 'import',
+      method: 'POST',
+      headers: {
+        contentType: 'undefined',
       },
+      data: {}
+    },
 
-      {
-        request: this.csvRequests.csvFileDownload,
-        api: null,
-        method: 'POST',
-        contentType: 'application/json;charset=utf-8',
-        data: {}
-      },
+    {
+      request: this.csvRequests.csvFileDownload,
+      api: null,
+      method: 'POST',
+      contentType: 'application/json;charset=utf-8',
+      data: {}
+    },
     ];
 
     this.csvJobTypes = {
@@ -60,6 +60,7 @@
     };
 
     this.csvStates = {
+      authTokenError: 'authTokenError',
       none: 'none',
       exportInProgress: 'exportInProgress',
       exportCompletedNoErr: 'exportCompletedNoErr',
@@ -70,6 +71,7 @@
     };
 
     this.csvStatusTypes = [
+      this.csvStates.authTokenError,
       this.csvStates.none,
       this.csvStates.exportInProgress,
       this.csvStates.exportCompletedNoErr,

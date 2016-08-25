@@ -36,62 +36,8 @@
     tab: 'servicesTab',
     icon: 'icon-cloud',
     title: 'tabs.servicesTab',
-    feature: 'atlas-services-overview',
     state: 'services-overview',
     link: 'services/overview'
-  }, {
-    tab: 'servicesTab',
-    icon: 'icon-cloud',
-    title: 'tabs.servicesTab',
-    feature: "!atlas-services-overview",
-    subPages: [{
-      title: 'tabs.conferencing',
-      desc: 'tabs.conferencingDesc',
-      state: 'site-list',
-      link: '#site-list'
-    }, {
-      title: 'tabs.huronLineDetailsTab',
-      desc: 'tabs.huronLineDetailsTabDesc',
-      state: 'huronsettings',
-      link: '#hurondetails/settings'
-    }, {
-      title: 'tabs.careTab',
-      desc: 'tabs.careTabDesc',
-      state: 'care.Features',
-      link: '#careDetails/features'
-    }, {
-      title: 'tabs.fusionDetailsTab',
-      desc: 'tabs.fusionDetailsTabDesc',
-      state: 'fusion',
-      link: '#fusion'
-    }, {
-      title: 'tabs.expresswayManagementServiceTab',
-      desc: 'tabs.expresswayManagementServiceTabDesc',
-      state: 'management-service',
-      link: '#services/expressway-management'
-    }, {
-      title: 'tabs.calendarServiceTab',
-      desc: 'tabs.calendarServiceTabDesc',
-      state: 'calendar-service',
-      link: '#services/calendar'
-    }, {
-      title: 'tabs.callServiceTab',
-      desc: 'tabs.callServiceTabDesc',
-      state: 'call-service',
-      link: '#services/call'
-    }, {
-      title: 'tabs.MediafusionDetailsTab',
-      desc: 'tabs.MediafusionDetailsTabDesc',
-      //state: 'mediafusionconnector',
-      //link: '#mediafusionconnector'
-      state: 'media-service',
-      link: '#mediaservice'
-    }, {
-      title: 'tabs.messengerTab',
-      desc: 'tabs.messengerTabDesc',
-      state: 'messenger',
-      link: '#messenger'
-    }]
   }, {
     tab: 'deviceTab',
     icon: 'icon-devices',
@@ -158,10 +104,20 @@
       state: 'media-service-v2',
       link: '#mediaserviceV2'
     }]
-  }];
+  },
+    {
+      tab: 'statusTab',
+      icon: 'icon-alerting',
+      title: 'tabs.statusTab',
+      desc: 'tabs.statusTabDesc',
+      feature: 'global-status',
+      state: 'status',
+      link: '/status'
+    }];
 
-  angular
-    .module('Core')
-    .value('tabConfig', tabs);
+  module.exports = angular
+    .module('core.tabconfig', [])
+    .value('tabConfig', tabs)
+    .name;
 
 }());

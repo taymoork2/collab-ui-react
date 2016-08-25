@@ -1,6 +1,6 @@
 'use strict';
 describe('HelpdeskService', function () {
-  beforeEach(module('wx2AdminWebClientApp'));
+  beforeEach(angular.mock.module('Squared'));
 
   var $timeout, $httpBackend, Service, urlBase, ServiceDescriptor, $scope, q, HelpdeskMockData, CsdmConverter, HelpdeskHttpRequestCanceller;
 
@@ -16,9 +16,6 @@ describe('HelpdeskService', function () {
     CsdmConverter = _CsdmConverter_;
 
     $httpBackend = _$httpBackend_;
-    $httpBackend
-      .when('GET', 'l10n/en_US.json')
-      .respond({});
   }));
 
   it('searching orgs', function () {
@@ -117,26 +114,13 @@ describe('HelpdeskService', function () {
       }]
     };
 
-    var userSearchResult = [{
-      "active": true,
-      "id": "1111",
-      "organization": {
-        id: "2222"
-      },
-      "userName": "bill.gates",
-      "displayName": "Bill Gates"
-    }];
-
     $httpBackend
       .when('GET', urlBase + 'helpdesk/search/users?phrase=whatever&limit=30&orgId=1111')
       .respond(orgSearchResponseMock);
 
-    var result;
     var error;
 
-    var x = Service.searchUsers("whatever", "1111", 30, null, null).then(function (res) {
-      result = res;
-    }).catch(function (err) {
+    Service.searchUsers("whatever", "1111", 30, null, null).then(function () {}).catch(function (err) {
       error = err;
     });
 
@@ -158,26 +142,14 @@ describe('HelpdeskService', function () {
       }]
     };
 
-    var userSearchResult = [{
-      "active": true,
-      "id": "1111",
-      "organization": {
-        id: "2222"
-      },
-      "userName": "bill.gates",
-      "displayName": "Bill Gates"
-    }];
 
     $httpBackend
       .when('GET', urlBase + 'helpdesk/search/users?phrase=whatever&limit=30&orgId=1111')
       .respond(orgSearchResponseMock);
 
-    var result;
     var error;
 
-    var x = Service.searchUsers("whatever", "1111", 30, null, null).then(function (res) {
-      result = res;
-    }).catch(function (err) {
+    Service.searchUsers("whatever", "1111", 30, null, null).then(function () {}).catch(function (err) {
       error = err;
     });
 

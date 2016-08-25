@@ -4,7 +4,6 @@ describe('Service: LineListService', function () {
   var $httpBackend, $q, $scope, ExternalNumberService, HuronConfig, LineListService, PstnSetupService;
 
   var lines = getJSONFixture('huron/json/lines/numbers.json');
-  var count = getJSONFixture('huron/json/lines/count.json');
   var linesExport = getJSONFixture('huron/json/lines/numbersCsvExport.json');
   var pendingLines = _.cloneDeep(getJSONFixture('huron/json/lines/pendingNumbers.json'));
   var formattedPendingLines = getJSONFixture('huron/json/lines/formattedPendingNumbers.json');
@@ -13,14 +12,14 @@ describe('Service: LineListService', function () {
     getOrgId: jasmine.createSpy('getOrgId').and.returnValue('1')
   };
 
-  beforeEach(module('Huron'));
-  beforeEach(module('Sunlight'));
+  beforeEach(angular.mock.module('Huron'));
+  beforeEach(angular.mock.module('Sunlight'));
 
   var authInfo = {
     getOrgId: sinon.stub().returns('1')
   };
 
-  beforeEach(module(function ($provide) {
+  beforeEach(angular.mock.module(function ($provide) {
     $provide.value('Authinfo', authInfo);
   }));
 
@@ -126,6 +125,20 @@ describe('Service: LineListService', function () {
       LineListService.getLineList(0, 100, 'userid', '-asc', '', 'pending').then(function (response) {
         expect(angular.equals(response, [])).toBe(true);
         expect(PstnSetupService.listPendingOrders).not.toHaveBeenCalled();
+      });
+    });
+
+    it('should remove any lines that already exist in the overall list and replace them', function () {
+      var exisitingLines = lines.concat(formattedPendingLines);
+      var length = exisitingLines.length;
+      PstnSetupService.listPendingOrders.and.returnValue($q.when(pendingLines));
+      PstnSetupService.translateStatusMessage.and.returnValue('Order cannot be fulfilled for trials');
+      $httpBackend.expectGET(HuronConfig.getCmiUrl() + '/voice/customers/' + Authinfo.getOrgId() + '/userlineassociations?limit=100&offset=100&order=userid-asc').respond(formattedPendingLines);
+      $scope.$apply();
+      LineListService.getLineList(100, 100, 'userid', '-asc', '', 'all', exisitingLines).then(function (response) {
+        expect(angular.equals(response, formattedPendingLines)).toBe(true);
+        exisitingLines = exisitingLines.concat(response);
+        expect(length).toEqual(exisitingLines.length);
       });
     });
   });

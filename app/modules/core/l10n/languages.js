@@ -92,13 +92,15 @@
       var language;
       var i;
 
+      var isBrowserLanguage = function (language) {
+        return language === browserLanguage;
+      };
+      var startsWithBrowserLanguage = function (language) {
+        return _.startsWith(language, browserLanguage);
+      };
       for (i = 0; i < browserLanguages.length; i++) {
         browserLanguage = browserLanguages[i];
-        language = _.find(languageKeys, function (language) {
-          return language === browserLanguage;
-        }) || _.find(languageKeys, function (language) {
-          return _.startsWith(language, browserLanguage);
-        });
+        language = _.find(languageKeys, isBrowserLanguage) || _.find(languageKeys, startsWithBrowserLanguage);
         if (language) {
           return language;
         }
@@ -136,8 +138,9 @@
     }
   }
 
-  angular
-    .module('Core')
-    .provider('languages', LanguagesProvider);
+  module.exports = angular
+    .module('core.languages', [])
+    .provider('languages', LanguagesProvider)
+    .name;
 
 }());

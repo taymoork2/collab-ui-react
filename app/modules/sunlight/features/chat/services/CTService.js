@@ -12,22 +12,40 @@
     var service = {
       getDays: getDays,
       getLogo: getLogo,
+      getLogoUrl: getLogoUrl,
       getPreviewDays: getPreviewDays,
       getTimeOptions: getTimeOptions,
       getEndTimeOptions: getEndTimeOptions,
       getDefaultTimes: getDefaultTimes,
+      getTimeZone: getTimeZone,
       getTimezoneOptions: getTimezoneOptions,
       getDefaultTimeZone: getDefaultTimeZone,
       generateCodeSnippet: generateCodeSnippet,
-      openEmbedCodeModal: openEmbedCodeModal
+      openEmbedCodeModal: openEmbedCodeModal,
+      getLengthValidationConstants: getLengthValidationConstants,
+      getValidationMessages: getValidationMessages
     };
     return service;
+
+    function getLengthValidationConstants() {
+      return {
+        singleLineMaxCharLimit: 50,
+        multiLineMaxCharLimit: 250,
+        empty: 0
+      };
+    }
 
     function getLogo() {
       return BrandService.getLogoUrl(Authinfo.getOrgId()).then(function (logoUrl) {
         return $http.get(logoUrl, {
           responseType: "arraybuffer"
         });
+      });
+    }
+
+    function getLogoUrl() {
+      return BrandService.getSettings(Authinfo.getOrgId()).then(function (settings) {
+        return settings.logoUrl;
       });
     }
 
@@ -40,7 +58,7 @@
         "  e = document.getElementsByTagName(script)[0];\n" +
         "  bubbleScript.async = true;\n" +
         "  bubbleScript.CiscoAppId =  'cisco-chat-bubble-app';\n" +
-        "  bubbleScript.DC = 'rciad.ciscoccservice.com';\n" +
+        "  bubbleScript.DC = '" + appName.split('https://bubble.')[1] + "';\n" +
         "  bubbleScript.orgId = '" + orgId + "';\n" +
         "  bubbleScript.templateId = '" + templateId + "';\n" +
         "  bubbleScript.src = '" + appName + "/bubble.js';\n" +
@@ -128,6 +146,12 @@
       });
     }
 
+    function getTimeZone(zone) {
+      return _.find(getTimezoneOptions(), {
+        value: zone
+      });
+    }
+
     function getPreviewDays(days, continuous, startIndex, endIndex) {
       if (startIndex == endIndex) {
         return days[startIndex].label;
@@ -188,6 +212,18 @@
           }
         }
       });
+    }
+
+    function getValidationMessages(minLength, maxLength) {
+      return {
+        required: $translate.instant('common.invalidRequired'),
+        minlength: $translate.instant('common.invalidMinLength', {
+          'min': minLength
+        }),
+        maxlength: $translate.instant('common.invalidMaxLength', {
+          'max': maxLength
+        })
+      };
     }
   }
 })();

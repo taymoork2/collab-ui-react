@@ -31,7 +31,7 @@
 
 .esn-number-field {
   margin-top: 10px;
-  &.steeringDigitOverlap {
+  &.steeringDigitOverlap, &.warningMargin {
     margin-top: 26px;
   }
   color: $gray-dark;
@@ -45,6 +45,18 @@
   color: $gray-dark;
 }
 
+.inline-radio {
+  & > * {
+    display: inline-block;
+    & ~ * {
+      @include vr-spacing(ml,1);
+    }
+  }
+}
+
+.multiple-calls-title {
+  padding-top: 20px;
+}
 .side-panel-section {
   & .dn-warning-text {
     @extend .warning;

@@ -5,8 +5,20 @@ module.exports = function (config) {
     // base path, that will be used to resolve files and exclude
     basePath: '../',
 
-    // increase inactivity timeout
-    browserNoActivityTimeout: 30000,
+    // time (ms) karma server waits for a browser message before disconnecting from it
+    browserNoActivityTimeout: 15000,  // default 10000
+
+    // if a browser disconnects from karma server, re-attempt N times
+    //
+    // IMPORTANT:
+    // - the current combination of npm modules:
+    //   - karma@0.13.22
+    //   - karma-phantomjs-launcher@1.0.1
+    //   - phantomjs-prebuilt@2.1.7
+    // - ...exhibit what appears to be a race condition when spawning multiple tasks to
+    //   run karma tests in parallel (either via 'gulp karma-parallel' or 'ktest-all')
+    // - to mitigate this, we increment the disconnect tolerance to 2
+    browserDisconnectTolerance: 2,    // default 0
 
     // testing framework to use (jasmine/mocha/qunit/...)
     frameworks: ['jasmine', 'sinon'],
@@ -17,7 +29,7 @@ module.exports = function (config) {
     files: [
       // inject:unitTestFiles
       // end-inject:unitTestFiles
-      , {
+      {
         pattern: 'test/fixtures/**/*.json',
         watched: true,
         served: true,

@@ -41,10 +41,10 @@
           _.set($scope, 'currentOrganization.isEFT', response.data.eft);
           $scope.currentEftSetting = response.data.eft;
         })
-        .catch(function (response) {
+        .catch(function () {
           Notification.error('organizationsPage.eftError');
         })
-        .finally(function (response) {
+        .finally(function () {
           $scope.eftToggleLoading = false;
         });
     }
@@ -54,11 +54,11 @@
         $scope.eftToggleLoading = true;
         Orgservice.setEftSetting(eft, currentOrgId)
           .then(updateEftToggle)
-          .catch(function (response) {
+          .catch(function () {
             _.set($scope, 'currentOrganization.isEFT', $scope.currentEftSetting);
             Notification.error('organizationsPage.eftError');
           })
-          .finally(function (response) {
+          .finally(function () {
             $scope.eftToggleLoading = false;
           });
       }

@@ -44,10 +44,10 @@
     function downloadReport(report) {
       $scope.downloadingReportId = report.id;
       EdiscoveryService.downloadReport(report)
-        .catch(function (err) {
-          Notification.error($translate.instant("ediscovery.unableToDownloadFile"));
+        .catch(function () {
+          Notification.error('ediscovery.unableToDownloadFile');
         })
-        .finally(function (res) {
+        .finally(function () {
           $scope.downloadingReportId = undefined;
         });
     }
@@ -59,14 +59,14 @@
       $scope.reportsBeingCancelled[id] = true;
       EdiscoveryService.patchReport(id, {
         state: "ABORTED"
-      }).then(function (res) {
+      }).then(function () {
         if (!EdiscoveryNotificationService.notificationsEnabled()) {
-          Notification.success($translate.instant('ediscovery.search.reportCancelled'));
+          Notification.success('ediscovery.search.reportCancelled');
         }
         pollAvalonReport();
       }, function (err) {
         if (err.status !== 410) {
-          Notification.error($translate.instant('ediscovery.search.reportCancelFailed'));
+          Notification.error('ediscovery.search.reportCancelFailed');
         }
       }).finally(function () {
         delete $scope.reportsBeingCancelled[id];
@@ -169,7 +169,7 @@
         if (vm.gridApi) {
           vm.gridApi.infiniteScroll.dataLoaded(false, true);
         }
-      }).finally(function (res) {
+      }).finally(function () {
         vm.readingReports = false;
       });
     }

@@ -1,8 +1,8 @@
 namespace myCompanyPage {
   class MyCompanyPageCtrl {
 
-    private _tabs;
-    private _title;
+    private _tabs: Object[];
+    private _title: string;
 
     get tabs() {
       return this._tabs;
@@ -13,7 +13,10 @@ namespace myCompanyPage {
     }
 
     /* @ngInject */
-    constructor($translate) {
+    constructor(
+      private $translate: ng.translate.ITranslateService,
+      private Authinfo
+    ) {
       this._tabs = [{
         title: $translate.instant('my-company.subscription'),
         state: 'my-company.subscriptions'
@@ -21,14 +24,15 @@ namespace myCompanyPage {
         title: $translate.instant('my-company.info'),
         state: 'my-company.info'
       }];
-    // ,{
-    //     title: $translate.instant('my-company.order'),
-    //     state: 'my-company.orders'
-    //   }];
 
       this._title = $translate.instant('my-company.pageTitle');
+      if (Authinfo.isOnline()) {
+        this._tabs.push({
+          title: $translate.instant('my-company.order'),
+          state: 'my-company.orders',
+        });
+      }
     }
-
   }
 
   angular

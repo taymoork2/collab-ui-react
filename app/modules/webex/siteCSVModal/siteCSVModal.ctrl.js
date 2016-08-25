@@ -7,7 +7,6 @@
   function SiteCSVModalCtrl(
     $scope,
     $stateParams,
-    $translate,
     $log,
     Notification,
     WebExApiGatewayService,
@@ -15,12 +14,12 @@
     Authinfo
   ) {
 
-    var funcName = "SiteCSVModalCtrl()";
-    var logMsg = '';
+    // var funcName = "SiteCSVModalCtrl()";
+    // var logMsg = '';
     var vm = this;
 
-    logMsg = funcName + "\n" +
-      "$stateParams=" + JSON.stringify($stateParams);
+    // logMsg = funcName + "\n" +
+    //   "$stateParams=" + JSON.stringify($stateParams);
     // $log.log(logMsg);
 
     vm.onFileTypeError = onFileTypeError;
@@ -51,17 +50,17 @@
     } // resetFile()
 
     function startExport() {
-      var funcName = "SiteCSVModalCtrl.startExport()";
+      // var funcName = "SiteCSVModalCtrl.startExport()";
 
       var siteRow = vm.siteRow;
       var siteUrl = siteRow.license.siteUrl;
 
-      logMsg = funcName + "\n" +
-        "siteRow=" + JSON.stringify(siteRow);
+      // logMsg = funcName + "\n" +
+      //   "siteRow=" + JSON.stringify(siteRow);
       // $log.log(logMsg);
 
-      logMsg = funcName + "\n" +
-        "siteUrl=" + siteUrl;
+      // logMsg = funcName + "\n" +
+      //   "siteUrl=" + siteUrl;
       // $log.log(logMsg);
 
       vm.requestingExport = true;
@@ -71,7 +70,7 @@
         siteRow.csvMock.mockExport
       ).then(
 
-        function success(response) {
+        function success() {
           displayResult(
             true,
             true,
@@ -106,12 +105,12 @@
     } // startExport()
 
     function startImport() {
-      var funcName = "SiteCSVModalCtrl.startImport()";
+      // var funcName = "SiteCSVModalCtrl.startImport()";
 
-      logMsg = funcName + "\n" +
-        "vm.siteUrl=" + JSON.stringify(vm.siteUrl) +
-        "vm.siteRow=" + JSON.stringify(vm.siteRow) +
-        "vm.modal.file=" + vm.modal.file;
+      // logMsg = funcName + "\n" +
+      //   "vm.siteUrl=" + JSON.stringify(vm.siteUrl) +
+      //   "vm.siteRow=" + JSON.stringify(vm.siteRow) +
+      //   "vm.modal.file=" + vm.modal.file;
       //$log.log(logMsg);
 
       vm.requestingImport = true;
@@ -130,7 +129,7 @@
       } else {
         //TBD: Don't use then(successfn,errorfn), its deprecated in some libraries. Instead use promise.catch(errorfn).then(successfn)
         WebExApiGatewayService.csvImport(vm).then(
-          function success(response) {
+          function success() {
             displayResult(
               true,
               true,
@@ -168,20 +167,20 @@
       errId
     ) {
 
-      var funcName = "displayResult()";
-      var logMsg = "";
+      // var funcName = "displayResult()";
+      // var logMsg = "";
 
       WebExSiteRowService.updateCSVStatusInRow(vm.siteUrl);
       //SiteListService.updateCSVStatusInRow(vm.siteRow);
 
       if (isSuccess) {
-        Notification.success($translate.instant(resultMsg));
+        Notification.success(resultMsg);
       } else {
         //If this is a read only admin and WebEx returns "Access denied, additional privileges are required"
         if (errId == "000001" && _.isFunction(Authinfo.isReadOnlyAdmin) && Authinfo.isReadOnlyAdmin()) {
           Notification.notifyReadOnly(errId);
         } else {
-          Notification.error($translate.instant(resultMsg));
+          Notification.error(resultMsg);
         }
       }
 

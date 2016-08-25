@@ -4,7 +4,6 @@ describe('Service: AALanguageService', function () {
   var enUs = loadEnUs();
 
   var AALanguageService;
-  var $translate;
 
   var en_USVoice = "Veronica";
   var en_US = "en_US";
@@ -13,17 +12,15 @@ describe('Service: AALanguageService', function () {
   var pt_BRVoice = "Felipe";
   var pt_BR = "pt_BR";
   var es_ESValencia = "es_ES@Valencia";
-  var es_ESValenciaVoice = "Empar";
   var es_ESValenciaCode = "es_ES";
   var defaultVoice = "Vanessa";
   var defaultLanguage = en_US;
 
-  beforeEach(module('uc.autoattendant'));
-  beforeEach(module('Huron'));
+  beforeEach(angular.mock.module('uc.autoattendant'));
+  beforeEach(angular.mock.module('Huron'));
 
-  beforeEach(inject(function (_AALanguageService_, _$translate_) {
+  beforeEach(inject(function (_AALanguageService_) {
     AALanguageService = _AALanguageService_;
-    $translate = _$translate_;
   }));
 
   describe('localizations', function () {

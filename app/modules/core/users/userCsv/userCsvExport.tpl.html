@@ -1,0 +1,20 @@
+<div class="user-csv-export">
+  <div ng-if="!$ctrl.isDownloading">
+    <!-- allow user to choose what file to download-->
+    <div ng-click="$ctrl.exportCsv()" class="hotspot">
+      <div class="icon icon-upload-contain"></div>
+      <div translate="userManage.bulk.export"></div>
+    </div>
+    <div class="prompt">
+      <span translate="userManage.bulk.exportPrompt"></span>
+      <label class="download-template" translate="userManage.bulk.downloadCsvTemplate" ng-click="$ctrl.downloadTemplate()"></label>
+    </div>
+  </div>
+  <div ng-if="$ctrl.isDownloading">
+    <div class="icon icon-spinner"></div>
+    <div class="prompt">
+      <label class="cancel-download" translate="userManage.bulk.cancelExport" ng-click="$ctrl.cancelDownload()"></label>
+    </div>
+  </div>
+  <div class="ng-hide"><a class="download-anchor"></a></div>
+</div>

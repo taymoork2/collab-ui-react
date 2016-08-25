@@ -14,6 +14,12 @@
       @content
     }
   }
+
+  .ct-article {
+    box-shadow: none;
+    border: 1px solid $gray-light-1;
+  }
+
   .cs-card {
     @include vr-spacing(ml, 2);
     width: rem-calc(366px);
@@ -27,9 +33,6 @@
     .articleHeight {
       height: 100%;
     }
-  }
-  .ct-feedback-rating {
-    width: 100%;
   }
   .ct-left-row {
     &:hover {

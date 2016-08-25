@@ -4,7 +4,7 @@
 
 describe('Launch customer as a sales admin', function () {
   it('should login as a partner sales account admin', function () {
-    login.login('partner-reports-sales-admin', '#/partner/customers');
+    login.loginThroughGui(helper.auth['partner-reports-sales-admin'].user, helper.auth['partner-reports-sales-admin'].pass, '#/partner/customers');
   });
 
   describe('Launch customer ', function () {

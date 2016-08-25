@@ -19,7 +19,10 @@ describe('Service: PstnSetupService', function () {
   var acceptedOrder = getJSONFixture('huron/json/orderManagement/acceptedOrders.json');
   var pendingOrder = _.cloneDeep(getJSONFixture('huron/json/lines/pendingNumbers.json'));
 
-  var numbers = ['123', '456'];
+  var onlyPstnNumbers = ['+14694691234', '+19724564567'];
+  var onlyTollFreeNumbers = []; // Add valid toll-free numbers when tollfree APIs are available
+  var invalidNumbers = ['123', '456'];
+  var numbers = onlyPstnNumbers.concat(onlyTollFreeNumbers, invalidNumbers);
 
   var customerPayload = {
     uuid: customerId,
@@ -45,13 +48,18 @@ describe('Service: PstnSetupService', function () {
     numbers: numbers
   };
 
+  var pstnOrderPayload = {
+    numbers: onlyPstnNumbers
+  };
+
   var Authinfo = {
     getOrgId: jasmine.createSpy('getOrgId').and.returnValue(partnerId)
   };
 
-  beforeEach(module('Huron'));
+  beforeEach(angular.mock.module('Huron'));
+  beforeEach(angular.mock.module('Sunlight')); // Remove this when FeatureToggleService is removed.
 
-  beforeEach(module(function ($provide) {
+  beforeEach(angular.mock.module(function ($provide) {
     $provide.value("Authinfo", Authinfo);
   }));
 
@@ -149,7 +157,7 @@ describe('Service: PstnSetupService', function () {
   });
 
   it('should make a number order', function () {
-    $httpBackend.expectPOST(HuronConfig.getTerminusUrl() + '/customers/' + customerId + '/carriers/' + carrierId + '/did/order', orderPayload).respond(201);
+    $httpBackend.expectPOST(HuronConfig.getTerminusUrl() + '/customers/' + customerId + '/carriers/' + carrierId + '/did/order', pstnOrderPayload).respond(201);
     PstnSetupService.orderNumbers(customerId, carrierId, orderPayload.numbers);
     $httpBackend.flush();
   });

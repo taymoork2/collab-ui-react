@@ -2,13 +2,14 @@
   'use strict';
 
   describe('Template: customerList.tpl.html', function () {
-    var $rootScope, $scope, $compile, $templateCache, $q, $controller, controller, view;
-    var Authinfo, Orgservice, PartnerService, FeatureToggleService, TrialService;
+    var $scope, $compile, $templateCache, $q, $controller, view;
+    var Authinfo, customerListToggle, Orgservice, PartnerService, FeatureToggleService, TrialService;
     var ADD_BUTTON = '#addTrial';
     var SEARCH_FILTER = '#searchFilter';
-    beforeEach(module('Core'));
-    beforeEach(module('Huron'));
-    beforeEach(module('Sunlight'));
+
+    beforeEach(angular.mock.module('Core'));
+    beforeEach(angular.mock.module('Huron'));
+    beforeEach(angular.mock.module('Sunlight'));
 
     beforeEach(inject(function ($rootScope, _$compile_, _$templateCache_, _$controller_, _$q_, _Authinfo_, _Orgservice_, _PartnerService_, _FeatureToggleService_, _TrialService_) {
       $scope = $rootScope.$new();
@@ -27,6 +28,8 @@
         CUSTOMER: 2
       };
 
+      customerListToggle = false;
+
       spyOn(TrialService, 'getTrialsList').and.returnValue($q.when({
         data: {}
       }));
@@ -36,7 +39,7 @@
 
       spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
 
-      spyOn(Orgservice, 'getOrg').and.callFake(function (callback, oid) {
+      spyOn(Orgservice, 'getOrg').and.callFake(function (callback) {
         callback({
           success: true
         }, 200);
@@ -62,17 +65,16 @@
     describe('Customer name Search filter', function () {
       it('clicking search box should call filterList', function () {
         initAndCompile();
-        spyOn($scope, 'filterList').and.callFake(function (val) {
-
-        });
+        spyOn($scope, 'filterList').and.callFake(function () {});
         view.find(SEARCH_FILTER).val('customerName').change();
         expect($scope.filterList).toHaveBeenCalledWith('customerName');
       });
     });
 
     function initAndCompile() {
-      controller = $controller('CustomerListCtrl', {
-        $scope: $scope
+      $controller('CustomerListCtrl', {
+        $scope: $scope,
+        customerListToggle: customerListToggle
       });
       var template = $templateCache.get('modules/core/customers/customerList/customerList.tpl.html');
       view = $compile(angular.element(template))($scope);

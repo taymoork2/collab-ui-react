@@ -1,25 +1,18 @@
 'use strict';
 describe('HelpdeskCardsService', function () {
-  beforeEach(module('wx2AdminWebClientApp'));
+  beforeEach(angular.mock.module('Squared'));
 
   var HelpdeskCardsOrgService;
   var LicenseService;
   var HelpdeskService;
   var $scope, q;
-  var $httpBackend;
 
-  beforeEach(inject(function (_$httpBackend_, _HelpdeskCardsOrgService_, _HelpdeskService_, _$q_, _LicenseService_, _$rootScope_) {
+  beforeEach(inject(function (_HelpdeskCardsOrgService_, _HelpdeskService_, _$q_, _LicenseService_, _$rootScope_) {
     HelpdeskCardsOrgService = _HelpdeskCardsOrgService_;
     LicenseService = _LicenseService_;
     HelpdeskService = _HelpdeskService_;
     $scope = _$rootScope_.$new();
     q = _$q_;
-
-    $httpBackend = _$httpBackend_;
-    $httpBackend
-      .when('GET', 'l10n/en_US.json')
-      .respond({});
-
   }));
 
   describe('Org Cards', function () {

@@ -22,6 +22,7 @@
       getNumberSuggestions: getNumberSuggestions,
       getMembers: getMembers,
       suggestionsNeeded: suggestionsNeeded,
+      getCallParkMember: getCallParkMember,
       NUMBER_FORMAT_DIRECT_LINE: "NUMBER_FORMAT_DIRECT_LINE",
       NUMBER_FORMAT_EXTENSION: "NUMBER_FORMAT_EXTENSION"
     };
@@ -202,7 +203,7 @@
      */
     function constructUserNumberMappingForUI(users) {
       var members = [];
-      users.map(function (user) {
+      users.forEach(function (user) {
         var flatArr = user.numbers.map(function (number) {
           return {
             displayUser: false,
@@ -221,6 +222,15 @@
       return members;
     }
 
+    function getCallParkMember(user) {
+      var callParkMember = {};
+      return getMemberInfo(customerId, user.memberUuid).then(function (u) {
+        callParkMember.uuid = user.memberUuid;
+        callParkMember.user = u;
+        return callParkMember;
+      });
+    }
+
     function suggestionsNeeded(typedText) {
       return (typedText && typedText.length >= 3);
     }
@@ -228,7 +238,7 @@
     // function will be used in future milestone
     function getListOfCallParks() {
 
-      return CallParkServiceV2.query({
+      return CallParkServiceV2.get({
         customerId: customerId
       }).$promise;
     }

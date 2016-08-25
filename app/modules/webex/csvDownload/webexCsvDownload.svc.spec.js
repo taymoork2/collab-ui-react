@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 'use strict';
 
@@ -7,17 +7,12 @@ describe('WebExCsvDownloadService.webexCreateObjectUrl() test', function () {
   var WebExCsvDownloadService;
   var WebExUtilsFact;
 
-  var $rootScope;
-
-  beforeEach(module('WebExApp'));
+  beforeEach(angular.mock.module('WebExApp'));
 
   beforeEach(inject(function (
-    _$rootScope_,
     _WebExCsvDownloadService_,
     _WebExUtilsFact_
   ) {
-
-    $rootScope = _$rootScope_;
 
     WebExCsvDownloadService = _WebExCsvDownloadService_;
     WebExUtilsFact = _WebExUtilsFact_;
@@ -42,17 +37,12 @@ describe('WebExCsvDownloadService.webexCreateObjectUrl() test2', function () {
   var WebExCsvDownloadService;
   var WebExUtilsFact;
 
-  var $rootScope;
-
-  beforeEach(module('WebExApp'));
+  beforeEach(angular.mock.module('WebExApp'));
 
   beforeEach(inject(function (
-    _$rootScope_,
     _WebExCsvDownloadService_,
     _WebExUtilsFact_
   ) {
-
-    $rootScope = _$rootScope_;
 
     WebExCsvDownloadService = _WebExCsvDownloadService_;
     WebExUtilsFact = _WebExUtilsFact_;

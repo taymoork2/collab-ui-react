@@ -15,7 +15,7 @@
   }
 
   /* @ngInject */
-  function AASubmenuCtrl($scope, $translate, AutoAttendantCeMenuModelService, AACommonService, AAScrollBar, Config) {
+  function AASubmenuCtrl($scope, $translate, AutoAttendantCeMenuModelService, AACommonService, AAScrollBar) {
 
     var vm = this;
     vm.selectPlaceholder = $translate.instant('autoAttendant.selectPlaceholder');
@@ -232,15 +232,16 @@
     /**
      * This include the list of feature which are not production ready yet
      */
-    function addAvailableFeatures() {
-      if (Config.isDev() || Config.isIntegration()) {
-        // push features here
+
+    function toggleRouteToQueueFeature() {
+
+      if (AACommonService.isRouteQueueToggle()) {
+        /* will push route to queue in list */
         vm.keyActions.push({
           label: $translate.instant('autoAttendant.phoneMenuRouteQueue'),
           name: 'phoneMenuRouteQueue',
           action: 'routeToQueue'
         });
-
       }
     }
 
@@ -251,7 +252,7 @@
       vm.menuEntry = menu.entries[$scope.keyIndex];
       vm.menuId = vm.menuEntry.id;
 
-      addAvailableFeatures();
+      toggleRouteToQueueFeature();
       vm.keyActions.sort(AACommonService.sortByProperty('name'));
 
       if (vm.menuEntry.type === 'MENU_OPTION') {

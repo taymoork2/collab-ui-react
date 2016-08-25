@@ -223,13 +223,13 @@
           maxSize: 10,
           maxSizeError: function () {
             $scope.$apply(function () {
-              Notification.notify($translate.instant('cdrLogs.jsonSizeError'), 'error');
+              Notification.error('cdrLogs.jsonSizeError');
             });
           },
           fileType: filetype,
           fileTypeError: function () {
             $scope.$apply(function () {
-              Notification.notify($translate.instant('cdrLogs.jsonTypeError'), 'error');
+              Notification.error('cdrLogs.jsonTypeError');
             });
           },
           fileSuffix: "json"
@@ -254,11 +254,11 @@
                 vm.gridData.push(addNames([jsonData.cdrs]));
               } else {
                 vm.dataState = 0;
-                Notification.notify($translate.instant('cdrLogs.jsonAllowedFormatError'), 'error');
+                Notification.error('cdrLogs.jsonAllowedFormatError');
               }
             } catch (SyntaxError) {
               vm.dataState = 0;
-              Notification.notify($translate.instant('cdrLogs.jsonSyntaxError'), 'error');
+              Notification.error('cdrLogs.jsonSyntaxError');
             }
           }
         },
@@ -276,8 +276,8 @@
 
     function addNames(cdrArray) {
       var x = 0;
-      angular.forEach(cdrArray, function (cdr, index, array) {
-        angular.forEach(cdr, function (item, itemIndex, itemArray) {
+      angular.forEach(cdrArray, function (cdr) {
+        angular.forEach(cdr, function (item) {
           item.name = "call0CDR" + x;
           x++;
         });
@@ -338,7 +338,7 @@
 
     function setupScrolling(gridData) {
       $timeout(function () {
-        angular.forEach(gridData, function (item, index, array) {
+        angular.forEach(gridData, function (item, index) {
           var scroll = $('#cdrtable' + index).getNiceScroll();
           if (scroll.length > 0) {
             scroll.remove();
@@ -365,8 +365,8 @@
       vm.selectedCDR = selectedCDR;
       var callCopy = angular.copy(call);
 
-      angular.forEach(callCopy, function (item, index, array) {
-        angular.forEach(item, function (cdr, cdrIndex, cdrArray) {
+      angular.forEach(callCopy, function (item) {
+        angular.forEach(item, function (cdr) {
           delete cdr['name'];
         });
       });

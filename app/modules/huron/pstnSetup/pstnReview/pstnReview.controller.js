@@ -39,7 +39,9 @@
     }
 
     function goToNextSteps() {
-      $state.go('pstnSetup.nextSteps');
+      $state.go('pstnSetup.nextSteps', {
+        portOrders: vm.portOrders
+      });
     }
 
     function createCustomer() {
@@ -90,9 +92,13 @@
         return _.get(order, 'type') === PstnSetupService.PORT_ORDER;
       });
 
-      vm.advancedOrders = _.remove(vm.orders, function (order) {
+      var pstnAdvancedOrders = _.remove(vm.orders, function (order) {
         return _.get(order, 'type') === PstnSetupService.BLOCK_ORDER;
       });
+      var tollFreeAdvancedOrders = _.remove(vm.orders, function (order) {
+        return _.get(order, 'type') === PstnSetupService.TOLLFREE_BLOCK_ORDER;
+      });
+      vm.advancedOrders = [].concat(pstnAdvancedOrders, tollFreeAdvancedOrders);
 
       vm.newOrders = vm.orders;
 
@@ -136,10 +142,14 @@
           .catch(pushErrorArray);
         promises.push(promise);
       }
-
       _.forEach(vm.advancedOrders, function (order) {
-        promise = PstnSetupService.orderBlock(PstnSetup.getCustomerId(), PstnSetup.getProviderId(), order.data.areaCode, order.data.length, order.data.consecutive)
-          .catch(pushErrorArray);
+        if (_.get(order, 'type') === PstnSetupService.BLOCK_ORDER) {
+          promise = PstnSetupService.orderBlock(PstnSetup.getCustomerId(), PstnSetup.getProviderId(), order.data.areaCode, order.data.length, order.data.consecutive)
+            .catch(pushErrorArray);
+        } else if (_.get(order, 'type') === PstnSetupService.TOLLFREE_BLOCK_ORDER) {
+          promise = PstnSetupService.orderTollFreeBlock(PstnSetup.getCustomerId(), PstnSetup.getProviderId(), order.data.areaCode, order.data.length, order.data.consecutive)
+            .catch(pushErrorArray);
+        }
         promises.push(promise);
       });
 

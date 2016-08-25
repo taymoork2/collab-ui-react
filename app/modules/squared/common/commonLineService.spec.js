@@ -1,32 +1,23 @@
 'use strict';
 
 describe('Service: CommonLineService', function () {
-  var CommonLineService, TelephonyInfoService, Notification, $translate;
+  var CommonLineService;
   var internalNumberPool = [];
   var externalNumberPool = [];
   var externalNumberPoolMap = [];
-  var telephonyInfo = {};
-  var assignedDn;
-  var PATTERN_LIMIT = 50;
-  var nameTemplate;
   var entitylist;
 
-  beforeEach(module('Squared'));
-  beforeEach(module('Huron'));
+  beforeEach(angular.mock.module('Squared'));
+  beforeEach(angular.mock.module('Huron'));
 
-  beforeEach(inject(function (_Notification_, _TelephonyInfoService_, $translate, _CommonLineService_) {
+  beforeEach(inject(function (_CommonLineService_) {
 
-    Notification = _Notification_;
-    $translate = $translate;
     CommonLineService = _CommonLineService_;
-    TelephonyInfoService = _TelephonyInfoService_;
 
     internalNumberPool = getJSONFixture('huron/json/internalNumbers/internalNumbers.json');
     externalNumberPool = getJSONFixture('huron/json/externalNumbers/externalNumbers.json');
     externalNumberPool = getJSONFixture('huron/json/externalNumberPoolMap/externalNumberPool.json');
     externalNumberPoolMap = getJSONFixture('huron/json/externalNumberPoolMap/externalNumberPoolMap.json');
-
-    telephonyInfo = getJSONFixture('huron/json/settings/sites.json');
 
     describe('Existence of the services', function () {
 

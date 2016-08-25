@@ -2,7 +2,7 @@
 
 describe('UrlConfigSpec', function () {
 
-  beforeEach(module('wx2AdminWebClientApp'));
+  beforeEach(angular.mock.module('core.urlconfig'));
 
   var UrlConfig, $location;
   beforeEach(inject(function (_$location_, _UrlConfig_) {
@@ -337,19 +337,19 @@ describe('UrlConfigSpec', function () {
 
   it('should return correct customer care url', function () {
     whenCalling('getSunlightConfigServiceUrl').expectUrlToBe({
-      dev: 'https://config.nva1-de.ciscoccservice.com/config/v1',
-      cfe: 'https://config.nva1-de.ciscoccservice.com/config/v1',
-      integration: 'https://config.nctx3-stg.ciscoccservice.com/config/v1',
-      prod: 'https://config.rciad.ciscoccservice.com/config/v1'
+      dev: 'https://config.dev.ciscoccservice.com/config/v1',
+      cfe: 'https://config.appstaging.ciscoccservice.com/config/v1',
+      integration: 'https://config.appstaging.ciscoccservice.com/config/v1',
+      prod: 'https://config.produs1.ciscoccservice.com/config/v1'
     });
   });
 
   it('should return correct sunlight chat bubble url', function () {
     whenCalling('getSunlightBubbleUrl').expectUrlToBe({
-      dev: 'https://bubble.nva1-de.ciscoccservice.com',
-      cfe: 'https://bubble.nva1-de.ciscoccservice.com',
-      integration: 'https://bubble.nctx3-stg.ciscoccservice.com',
-      prod: 'https://bubble.rciad.ciscoccservice.com'
+      dev: 'https://bubble.dev.ciscoccservice.com',
+      cfe: 'https://bubble.appstaging.ciscoccservice.com',
+      integration: 'https://bubble.appstaging.ciscoccservice.com',
+      prod: 'https://bubble.produs1.ciscoccservice.com'
     });
   });
 
@@ -386,6 +386,15 @@ describe('UrlConfigSpec', function () {
       cfe: 'https://web.ciscospark.com/',
       integration: 'https://web.ciscospark.com/',
       prod: 'https://web.ciscospark.com/'
+    });
+  });
+
+  it('should return correct bmmp client url', function () {
+    whenCalling('getBmmpUrl', 'foo').expectUrlToBe({
+      dev: 'https://bmmp.dmz.ciscospark.com/api/v1',
+      cfe: 'https://bmmp.ciscospark.com/api/v1',
+      integration: 'https://bmmp.dmz.ciscospark.com/api/v1',
+      prod: 'https://bmmp.ciscospark.com/api/v1'
     });
   });
 

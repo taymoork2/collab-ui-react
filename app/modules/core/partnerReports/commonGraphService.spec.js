@@ -13,7 +13,7 @@ describe('Service: Common Graph Service', function () {
   var PREFIXES = 'prefixesOfBigNumbers';
   var dummyData = 'dummyData';
 
-  beforeEach(module('Core'));
+  beforeEach(angular.mock.module('Core'));
   beforeEach(inject(function (_CommonGraphService_) {
     CommonGraphService = _CommonGraphService_;
   }));

@@ -5,18 +5,24 @@
     .controller('TrialNoticeBannerCtrl', TrialNoticeBannerCtrl);
 
   /* @ngInject */
-  function TrialNoticeBannerCtrl(Authinfo, EmailService, Notification, TrialService, UserListService) {
+  function TrialNoticeBannerCtrl($q, Authinfo, EmailService, Notification, TrialService, UserListService) {
     var vm = this;
-    var partnerAdminId;
+    var primaryPartnerAdminId;
+
+    vm.requestResultEnum = {
+      SUCCESS: 0,
+      PARTIAL_FAILURE: 1,
+      TOTAL_FAILURE: 2,
+      NOT_REQUESTED: 3
+    };
 
     vm.canShow = canShow;
     vm.daysLeft = undefined;
-    vm.hasRequested = false;
-    vm.partnerAdminEmail = undefined;
-    vm.partnerAdminDisplayName = undefined;
+    vm.requestResult = vm.requestResultEnum.NOT_REQUESTED;
+    vm.partnerAdmin = [];
     vm.sendRequest = sendRequest;
     vm._helpers = {
-      getPrimaryPartnerInfo: getPrimaryPartnerInfo,
+      getPartnerInfo: getPartnerInfo,
       sendEmail: sendEmail,
       getWebexSiteUrl: getWebexSiteUrl
     };
@@ -29,39 +35,61 @@
       TrialService.getDaysLeftForCurrentUser().then(function (daysLeft) {
         vm.daysLeft = daysLeft;
       });
-      getPrimaryPartnerInfo();
+      getPartnerInfo();
+
     }
 
     function canShow() {
-      return Authinfo.isUserAdmin() && !!TrialService.getTrialIds().length && partnerAdminId && (partnerAdminId !== Authinfo.getUserId());
+      return Authinfo.isUserAdmin() && !!TrialService.getTrialIds().length && (primaryPartnerAdminId !== Authinfo.getUserId());
+
     }
 
     function sendRequest() {
-      return vm._helpers.sendEmail()
-        .then(function () {
-          Notification.success('trials.requestConfirmNotifyMsg', {
-            partnerAdminDisplayName: vm.partnerAdminDisplayName
+      var partnerOrgName = Authinfo.getOrgName();
+      var customerEmail = Authinfo.getPrimaryEmail();
+
+      return vm._helpers.sendEmail(partnerOrgName, customerEmail)
+        .then(function (results) {
+
+          var emailError = _.filter(results, {
+            status: 400
           });
-          vm.hasRequested = true;
+          if (emailError.length === 0) {
+            Notification.success('trials.requestConfirmNotifyMsg');
+            vm.requestResult = vm.requestResultEnum.SUCCESS;
+          } else if (emailError.length === vm.partnerAdmin.length) {
+            Notification.error('trials.requestConfirmTotalFailNotifyMsg');
+            vm.requestResult = vm.requestResultEnum.TOTAL_FAILURE;
+
+          } else {
+            Notification.error('trials.requestConfirmPartialFailNotifyMsg', {
+              partnerOrgName: partnerOrgName
+            });
+            vm.requestResult = vm.requestResultEnum.PARTIAL_FAILURE;
+
+          }
+
         });
     }
 
-    function getPrimaryPartnerInfo() {
+    function getPartnerInfo() {
       return UserListService.listPartnersAsPromise(Authinfo.getOrgId()).then(function (response) {
-        vm.partnerAdminEmail = _.get(response, 'data.partners[0].userName');
-        vm.partnerAdminDisplayName = _.get(response, 'data.partners[0].displayName');
-
-        partnerAdminId = _.get(response, 'data.partners[0].id');
+        primaryPartnerAdminId = _.get(response, 'data.partners[0].id');
+        vm.partnerAdmin = _.get(response, 'data.partners');
       });
     }
 
-    function sendEmail() {
-      var customerName = Authinfo.getOrgName();
-      var customerEmail = Authinfo.getPrimaryEmail();
-      var partnerEmail = vm.partnerAdminEmail;
+    function sendEmail(customerName, customerEmail) {
       var webexSiteUrl = vm._helpers.getWebexSiteUrl();
-      return EmailService.emailNotifyPartnerTrialConversionRequest(
-        customerName, customerEmail, partnerEmail, webexSiteUrl);
+      //for all partner admins - build an array of send email function calls
+      var partnerEmail = _.map(vm.partnerAdmin, function (admin) {
+        return EmailService.emailNotifyPartnerTrialConversionRequest(
+          customerName, customerEmail, admin.userName, webexSiteUrl).catch(function (err) {
+            err.userName = admin.userName;
+            return err;
+          });
+      });
+      return $q.all(partnerEmail);
     }
 
     function getWebexSiteUrl() {

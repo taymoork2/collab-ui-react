@@ -3,10 +3,10 @@
 describe('Controller: TrialEditCtrl:', function () {
   var controller, helpers, $scope, $state, $q, $translate, $window, $httpBackend, Notification, TrialService, TrialContextService, HuronCustomer, FeatureToggleService, Orgservice;
 
-  beforeEach(module('core.trial'));
-  beforeEach(module('Core'));
-  beforeEach(module('Huron'));
-  beforeEach(module('Sunlight'));
+  beforeEach(angular.mock.module('core.trial'));
+  beforeEach(angular.mock.module('Core'));
+  beforeEach(angular.mock.module('Huron'));
+  beforeEach(angular.mock.module('Sunlight'));
   var stateParams = {
     currentTrial: {
       offers: [{
@@ -52,7 +52,7 @@ describe('Controller: TrialEditCtrl:', function () {
         return $q.when(true);
       }
     });
-    spyOn(Orgservice, 'getAdminOrg').and.returnValue($q.when({
+    spyOn(Orgservice, 'getAdminOrgAsPromise').and.returnValue($q.when({
       data: {
         success: true,
         isTestOrg: true

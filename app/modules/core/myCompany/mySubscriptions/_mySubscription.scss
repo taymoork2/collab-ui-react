@@ -1,0 +1,196 @@
+.iframe-container {
+  display: inline;
+}
+
+.subscriptions-container {
+  @include vr-spacing(mh, 1);
+  @include vr-spacing(mv, 1.25);
+  @include vr-spacing(p, 0);
+  .cs-card-layout {
+    @include vr-spacing(mt, 1.25);
+  }
+  .subscriptions {
+    @include vr-spacing(p, 0);
+    @include vr-spacing(m, 0);
+    min-width: vr-adjust(1200);
+    width: 100%;
+    .row {
+      border-bottom: rem-calc(1) solid $gray-light-3;
+    }
+    .row:last-of-type {
+      border-bottom: none;
+    }
+    .icon-header {
+      height: vr-adjust(20);
+      line-height: vr-adjust(20);
+      cursor: pointer;
+      @include vr-spacing(pt, 1.5);
+    }
+    .icon-arrow-down {
+      font-size: vr-adjust(48);
+      @include vr-spacing(mr, 1);
+      right: vr-adjust(8);
+      width: vr-adjust(20);
+    }
+    .icon-right-arrow-contained {
+      @include vr-spacing(pl, 0.75);
+    }
+    .sub-name {
+      @include vr-spacing(m, 1);
+      width: auto;
+    }
+    .sub-id {
+      text-align: right;
+      @include vr-spacing(pv, 1.25);
+      @include vr-spacing(ph, 2);
+    }
+    .subscription-type {
+      @include vr-spacing(p, 1.5);
+    }
+    .subscription-column, .subscription-item, .subscription-header, .subscription-upgrade, .license-item {
+      display: flex;
+      flex-wrap: wrap;
+    }
+    .subscription-column {
+      @include vr-spacing(p, 0);
+      border-left: rem-calc(1) solid $gray-light-3;
+      .detail {
+        @include vr-spacing(pt, 0.25);
+        @include vr-spacing(pb, 0.25);
+        width: 33%;
+        .icon-detail {
+          @include vr-spacing(pr, 0.75);
+          top: rem-calc(2);
+          cursor: default;
+        }
+        .icon-message {
+          top: vr-adjust(4);
+        }
+        .detail-break {
+          break-before: always;
+          page-break-before: always;
+          @include vr-spacing(pt, .5);
+          span {
+            color: $gray-light-1;
+          }
+        }
+        .match-icon {
+          @include vr-spacing(pl, 2.5);
+        }
+      }
+      .detail.tooltip-present:hover .icon-detail {
+        color: $color-primary-base;
+      }
+      .detail, .detail-expanded {
+        line-height: vr-adjust(12);
+        span {
+          line-height: vr-adjust(12);
+        }
+      }
+      .subscription-item {
+        @include vr-spacing(p, 1.5);
+        width: 50%;
+      }
+      .subscription-item:nth-child(1), .subscription-item:nth-child(2) {
+        @include vr-spacing(pt, 1.5);
+      }
+      .subscription-item:nth-child(odd):nth-last-of-type(2), .subscription-item:last-of-type {
+        @include vr-spacing(pb, 1.5);
+      }
+      .subscription-item.item-with-borders {
+        display: block;
+        @include vr-spacing(p, 1.5);
+        border-right: rem-calc(1) solid $gray-light-3;
+        border-bottom: rem-calc(1) solid $gray-light-3;
+      }
+      .subscription-item.item-with-borders:nth-child(even), .subscription-item.item-with-borders:last-of-type {
+        border-right: 0;
+      }
+      .subscription-item.item-with-borders:nth-child(odd):nth-last-of-type(2), .subscription-item.item-with-borders:last-of-type {
+        border-bottom: 0;
+      }
+      .subscription-site {
+        color: $gray-dark-2;
+      }
+      .hybrid-ul span, .subscription-description span, .detail {
+        color: $gray-base;
+      }
+      .subscription-description span.warning, .detail .detail-break span.warning {
+        color: $color-negative-light;
+      }
+      .hybrid-ul span.warning {
+        color: $color-negative-base;
+      }
+      .hybrid-ul {
+        @include vr-spacing(p, 1.5);
+        @include vr-spacing(m, 0);
+        .icon-circle {
+          font-size: vr-adjust(8);
+          @include vr-spacing(pr, 0.5);
+          position: relative;
+          top: rem-calc(-2);
+        }
+      }
+      .subscription-description {
+        @include vr-spacing(ml, 1);
+        @include vr-spacing(mb, 1);
+      }
+      .subscription-description span.name, .sub-name, .subscription-type {
+        color: $gray-dark-1;
+      }
+      .subscription-item:last-of-type .subscription-description {
+        @include vr-spacing(mb, 0);
+      }
+    }
+  }
+  .subscriptions.detail-view {
+    @include vr-spacing(mb, 1.25);
+    .sub-name {
+      @include vr-spacing(mt, 1.25);
+    }
+    .subscription-column {
+      border: none;
+      @include vr-spacing(ph, 1.5);
+      @include vr-spacing(pv, 1.25);
+    }
+    .subscription-upgrade {
+      @include vr-spacing(ph, 1.5);
+      @include vr-spacing(pv, 0.75);
+      flex-direction: row-reverse;
+      position: relative;
+      .license-quantity {
+        @include vr-spacing(pr, 1);
+        @include vr-spacing(pt, 0.5);
+        @include vr-spacing(pb, 0.25);
+      }
+      .subscription-id {
+        right: vr-adjust(24);
+        position: absolute;
+        top: vr-adjust(60);
+        text-align: right;
+        width: vr-adjust(500);
+      }
+      .subscription-bmmp {
+        @include vr-spacing(pt, 0.5);
+      }
+    }
+  }
+  .subscriptions.detail-view.subscription-expanded {
+    min-height: vr-adjust(96);
+  }
+}
+.subscription-tooltip {
+  .warning {
+    color: $color-negative-base;
+  }
+  .nub {
+    display: none;
+  }
+}
+// TODO: currently overriding incorrect inline styling on BMMP widget
+// need to update or remove when BMMP updates to symphony standards and/or switches away from inline styling
+.subscription-bmmp .cisco-bmmp-cta-widget a {
+  font-family: $brand-font-cisco-TT-Light !important;
+  font-size: rem-calc(16) !important;
+  padding: rem-calc(12) !important;
+}

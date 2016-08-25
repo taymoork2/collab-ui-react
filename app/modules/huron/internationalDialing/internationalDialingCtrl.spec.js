@@ -1,9 +1,7 @@
 'use strict';
 
 describe('Controller: InternationalDialingInfoCtrl', function () {
-  var controller, $controller, $scope, $q, $httpBackend, InternationalDialing, Notification, HuronConfig;
-  var url;
-  var getDeferred;
+  var controller, $controller, $scope, $q, InternationalDialing, Notification;
   var currentUser = getJSONFixture('core/json/currentUser.json');
   var cosRestrictionsObject = getJSONFixture('huron/json/user/cosRestrictionsObject.json');
 
@@ -11,21 +9,17 @@ describe('Controller: InternationalDialingInfoCtrl', function () {
     currentUser: currentUser
   };
 
-  beforeEach(module('Huron'));
-  beforeEach(module('Sunlight'));
+  beforeEach(angular.mock.module('Huron'));
+  beforeEach(angular.mock.module('Sunlight'));
 
-  beforeEach(inject(function ($rootScope, _$controller_, _$q_, _$httpBackend_, _InternationalDialing_, _Notification_, _HuronConfig_) {
+  beforeEach(inject(function ($rootScope, _$controller_, _$q_, _InternationalDialing_, _Notification_) {
     $scope = $rootScope.$new();
     $controller = _$controller_;
-    $httpBackend = _$httpBackend_;
     Notification = _Notification_;
-    HuronConfig = _HuronConfig_;
     InternationalDialing = _InternationalDialing_;
     $q = _$q_;
 
-    url = HuronConfig.getCmiUrl() + '/voice/customers/' + currentUser.meta.organizationID + '/users/' + currentUser.id + '/features/restrictions';
-
-    spyOn(Notification, 'notify');
+    spyOn(Notification, 'success');
     spyOn(InternationalDialing, 'listCosRestrictions').and.returnValue($q.when(cosRestrictionsObject));
     spyOn(InternationalDialing, 'updateCosRestriction').and.returnValue($q.when());
 
@@ -44,7 +38,7 @@ describe('Controller: InternationalDialingInfoCtrl', function () {
     $scope.$apply();
 
     expect(InternationalDialing.updateCosRestriction).toHaveBeenCalled();
-    expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'success');
+    expect(Notification.success).toHaveBeenCalledWith('internationalDialingPanel.success');
     expect(controller.model.internationalDialingEnabled.value).toEqual('1');
   });
 });

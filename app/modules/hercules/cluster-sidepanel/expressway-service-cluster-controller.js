@@ -22,11 +22,10 @@
     vm.hasF410FeatureToggle = hasF410FeatureToggle;
     vm.hasConnectorAlarm = hasConnectorAlarm;
 
-    var wasUpgrading = false;
     var promise = null;
     $scope.$watch(function () {
       return ClusterService.getCluster(vm.connectorType, vm.clusterId);
-    }, function (newValue, oldValue) {
+    }, function (newValue) {
       vm.cluster = newValue;
       var isUpgrading = vm.cluster.aggregates.upgradeState === 'upgrading';
       vm.softwareUpgrade = {
@@ -59,24 +58,22 @@
         }, 2000);
       }
       vm.showUpgradeProgress = vm.fakeUpgrade || isUpgrading || vm.upgradeJustFinished;
-
-      wasUpgrading = isUpgrading || vm.fakeUpgrade;
     }, true);
 
     function showDeregisterDialog() {
       $modal.open({
-          resolve: {
-            cluster: function () {
-              return vm.cluster;
-            },
-            isF410enabled: false
+        resolve: {
+          cluster: function () {
+            return vm.cluster;
           },
-          controller: 'ClusterDeregisterController',
-          controllerAs: 'clusterDeregister',
-          templateUrl: 'modules/hercules/cluster-deregister/deregister-dialog.html',
-          type: 'small'
-        })
-        .result.then(function (data) {
+          isF410enabled: false
+        },
+        controller: 'ClusterDeregisterController',
+        controllerAs: 'clusterDeregister',
+        templateUrl: 'modules/hercules/cluster-deregister/deregister-dialog.html',
+        type: 'small'
+      })
+        .result.then(function () {
           $state.sidepanel.close();
         });
     }
@@ -111,7 +108,7 @@
     }
 
     function findUpgradingHostname(hostnames) {
-      var upgrading = _.chain(vm.cluster.aggregates.hosts)
+      var upgrading = _.chain(hostnames)
         .find('upgradeState', 'upgrading')
         .value();
       // could be undefined if we only have upgraded and pending connectors
@@ -119,10 +116,12 @@
     }
 
     if (hasF410FeatureToggle) {
-
+      vm.schedule = {};
       FusionClusterService.get(vm.clusterId)
         .then(function (cluster) {
           vm.F410cluster = FusionClusterService.buildSidepanelConnectorList(cluster, vm.connectorType);
+          vm.schedule.dateTime = FusionClusterService.formatTimeAndDate(cluster.upgradeSchedule);
+          vm.schedule.timeZone = cluster.upgradeSchedule.scheduleTimeZone;
         });
       vm.localizedConnectorName = $translate.instant('hercules.connectorNameFromConnectorType.' + vm.connectorType);
       vm.localizedManagementConnectorName = $translate.instant('hercules.connectorNameFromConnectorType.c_mgmt');

@@ -91,33 +91,33 @@
 
     function deregisterCluster(cluster) {
       $modal.open({
-          resolve: {
-            cluster: function () {
-              return vm.cluster;
-            },
-            isF410enabled: true
+        resolve: {
+          cluster: function () {
+            return cluster;
           },
-          controller: 'ClusterDeregisterController',
-          controllerAs: 'clusterDeregister',
-          templateUrl: 'modules/hercules/cluster-deregister/deregister-dialog.html',
-          type: 'small'
-        })
-        .result.then(function (data) {
-          $state.go('cluster-list');
-        });
+          isF410enabled: true
+        },
+        controller: 'ClusterDeregisterController',
+        controllerAs: 'clusterDeregister',
+        templateUrl: 'modules/hercules/cluster-deregister/deregister-dialog.html',
+        type: 'small'
+      })
+      .result.then(function () {
+        $state.go('cluster-list');
+      });
     }
 
     function setClusterName(newClusterName) {
       if (newClusterName.length === 0) {
-        Notification.error($translate.instant('hercules.expresswayClusterSettings.clusterNameCannotByEmpty'));
+        Notification.error('hercules.expresswayClusterSettings.clusterNameCannotByEmpty');
         return;
       }
       FusionClusterService.setClusterName(vm.cluster.id, newClusterName)
         .then(function () {
           vm.cluster.name = newClusterName;
-          Notification.success($translate.instant('hercules.expresswayClusterSettings.clusterNameSaved'));
+          Notification.success('hercules.expresswayClusterSettings.clusterNameSaved');
         }, function () {
-          Notification.error($translate.instant('hercules.expresswayClusterSettings.clusterNameCannotBeSaved'));
+          Notification.error('hercules.expresswayClusterSettings.clusterNameCannotBeSaved');
         });
     }
 

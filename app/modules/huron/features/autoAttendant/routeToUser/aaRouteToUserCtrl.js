@@ -72,15 +72,17 @@
     // format name with extension
     function formatName(user, extension) {
       var name;
-      if (angular.isDefined(user.displayName))
+      if (angular.isDefined(user.displayName)) {
         name = user.displayName;
-      else
+      } else {
         name = user.userName;
+      }
 
-      if (angular.isDefined(extension) && extension.length > 0)
+      if (angular.isDefined(extension) && extension.length > 0) {
         return name + ' (' + extension + ')';
-      else
+      } else {
         return name;
+      }
     }
 
     // get user by uuid
@@ -110,7 +112,7 @@
               return formatName(userObj, '');
             }
           },
-          function (error) {
+          function () {
             return formatName(userObj, '');
           }
         );
@@ -125,11 +127,12 @@
       }).$promise.then(
         function (response) {
           // success
-          if (angular.isDefined(response.primaryDirectoryNumber) && response.primaryDirectoryNumber != null)
+          if (angular.isDefined(response.primaryDirectoryNumber) && response.primaryDirectoryNumber != null) {
             return response.primaryDirectoryNumber.pattern;
-          else
-          // the user actually has no extension - represented as null in the json, which works here as well
+          } else {
+            // the user actually has no extension - represented as null in the json, which works here as well
             return null;
+          }
         },
         function (response) {
           // failure
@@ -148,7 +151,7 @@
           // success
           return response[0].voiceMailProfile;
         },
-        function (response) {
+        function () {
           // failure
           return null;
         }
@@ -176,7 +179,7 @@
 
       var defer = $q.defer();
 
-      UserListService.listUsers(startat, vm.sort.maxCount, vm.sort.by, vm.sort.order, function (data, status) {
+      UserListService.listUsers(startat, vm.sort.maxCount, vm.sort.by, vm.sort.order, function (data) {
 
         if (data.success) {
           var userInfoPromises = [];

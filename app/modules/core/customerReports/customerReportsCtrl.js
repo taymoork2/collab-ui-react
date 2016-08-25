@@ -6,7 +6,7 @@
     .controller('CustomerReportsCtrl', CustomerReportsCtrl);
 
   /* @ngInject */
-  function CustomerReportsCtrl($scope, $stateParams, $q, $timeout, $translate, Log, Authinfo, CustomerReportService, DummyCustomerReportService, CustomerGraphService, WebexReportService, Userservice, WebExApiGatewayService, Storage, FeatureToggleService) {
+  function CustomerReportsCtrl($scope, $stateParams, $q, $timeout, $translate, Log, Authinfo, CustomerReportService, DummyCustomerReportService, CustomerGraphService, WebexReportService, Userservice, WebExApiGatewayService, Storage, FeatureToggleService, MediaServiceActivationV2) {
     var vm = this;
     var ABORT = 'ABORT';
     var REFRESH = 'refresh';
@@ -87,12 +87,15 @@
       title: $translate.instant('reportsPage.sparkReports'),
       state: 'reports'
     }];
+
     var promises = {
       mf: FeatureToggleService.atlasMediaServiceMetricsGetStatus(),
-      care: FeatureToggleService.atlasCareTrialsGetStatus()
+      care: FeatureToggleService.atlasCareTrialsGetStatus(),
+      isMfEnabled: MediaServiceActivationV2.getMediaServiceState()
     };
+
     $q.all(promises).then(function (features) {
-      if (features.mf) {
+      if (features.mf && features.isMfEnabled) {
         vm.headerTabs.unshift({
           title: $translate.instant('mediaFusion.page_title'),
           state: 'reports-metrics'
@@ -100,7 +103,7 @@
       }
       if (features.care) {
         vm.headerTabs.push({
-          title: $translate.instant('tabs.careTab'),
+          title: $translate.instant('reportsPage.careTab'),
           state: 'reports.care'
         });
       }
@@ -345,7 +348,7 @@
 
     function searchMostActive() {
       var returnArray = [];
-      angular.forEach(vm.mostActiveUsers, function (item, index, array) {
+      angular.forEach(vm.mostActiveUsers, function (item) {
         var userName = item.userName;
         if (vm.searchField === undefined || vm.searchField === '' || (angular.isDefined(userName) && (userName.toString().toLowerCase().replace(/_/g, ' ')).indexOf(vm.searchField.toLowerCase().replace(/_/g, ' ')) > -1)) {
           returnArray.push(item);
@@ -540,7 +543,7 @@
                 }
               },
 
-              function getSiteSupportsIframeError(error) {
+              function getSiteSupportsIframeError() {
                 //no-op, but needed
               }
             )
@@ -594,7 +597,7 @@
     } else {
       Userservice.getUser(
         'me',
-        function (data, status) {
+        function (data) {
           if (data.success) {
             if (data.emails) {
               Authinfo.setEmails(data.emails);

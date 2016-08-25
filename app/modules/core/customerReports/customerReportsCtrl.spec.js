@@ -1,12 +1,9 @@
 'use strict';
 
 describe('Controller: Customer Reports Ctrl', function () {
-  var controller, $scope, $stateParams, $q, $translate, $timeout, Log, Authinfo, Config, CustomerReportService, DummyCustomerReportService, CustomerGraphService, WebexReportService, WebExApiGatewayService, Userservice, FeatureToggleService;
+  var controller, $scope, $stateParams, $q, $translate, $timeout, Log, Config, CustomerReportService, DummyCustomerReportService, CustomerGraphService, WebexReportService, WebExApiGatewayService, Userservice, FeatureToggleService, MediaServiceActivationV2;
   var activeUsersSort = ['userName', 'numCalls', 'sparkMessages', 'totalActivity'];
-  var ABORT = 'ABORT';
   var REFRESH = 'refresh';
-  var SET = 'set';
-  var EMPTY = 'empty';
 
   var dummyData = getJSONFixture('core/json/partnerReports/dummyReportData.json');
   var activeData = getJSONFixture('core/json/customerReports/activeUser.json');
@@ -45,7 +42,7 @@ describe('Controller: Customer Reports Ctrl', function () {
     title: 'reportsPage.sparkReports',
     state: 'reports'
   }, {
-    title: 'tabs.careTab',
+    title: 'reportsPage.careTab',
     state: 'reports.care'
   }];
   var timeOptions = [{
@@ -62,12 +59,13 @@ describe('Controller: Customer Reports Ctrl', function () {
     description: 'reportsPage.threeMonths2'
   }];
 
-  beforeEach(module('Core'));
-  beforeEach(module('Huron'));
-  beforeEach(module('Sunlight'));
+  beforeEach(angular.mock.module('Core'));
+  beforeEach(angular.mock.module('Huron'));
+  beforeEach(angular.mock.module('Sunlight'));
+  beforeEach(angular.mock.module('Mediafusion'));
 
   describe('CustomerReportsCtrl - Expected Responses', function () {
-    beforeEach(inject(function ($rootScope, $controller, _$stateParams_, _$q_, _$translate_, _$timeout_, _Log_, _Config_, _CustomerReportService_, _DummyCustomerReportService_, _CustomerGraphService_, _FeatureToggleService_) {
+    beforeEach(inject(function ($rootScope, $controller, _$stateParams_, _$q_, _$translate_, _$timeout_, _Log_, _Config_, _CustomerReportService_, _DummyCustomerReportService_, _CustomerGraphService_, _FeatureToggleService_, _MediaServiceActivationV2_) {
       $scope = $rootScope.$new();
       $stateParams = _$stateParams_;
       $q = _$q_;
@@ -79,7 +77,7 @@ describe('Controller: Customer Reports Ctrl', function () {
       DummyCustomerReportService = _DummyCustomerReportService_;
       CustomerGraphService = _CustomerGraphService_;
       FeatureToggleService = _FeatureToggleService_;
-
+      MediaServiceActivationV2 = _MediaServiceActivationV2_;
       spyOn(FeatureToggleService, 'atlasMediaServiceMetricsGetStatus').and.returnValue(
         $q.when(true)
       );
@@ -87,7 +85,9 @@ describe('Controller: Customer Reports Ctrl', function () {
       spyOn(FeatureToggleService, 'atlasCareTrialsGetStatus').and.returnValue(
         $q.when(true)
       );
-
+      spyOn(MediaServiceActivationV2, 'getMediaServiceState').and.returnValue(
+        $q.resolve(true)
+      );
       // Service Spies
       spyOn(CustomerGraphService, 'setActiveUsersGraph').and.returnValue({
         'dataProvider': dummyData.activeUser.one
@@ -125,7 +125,7 @@ describe('Controller: Customer Reports Ctrl', function () {
 
       // Webex Requirements
       WebexReportService = {
-        initReportsObject: function (input) {}
+        initReportsObject: function () {}
       };
 
       WebExApiGatewayService = {
@@ -138,35 +138,8 @@ describe('Controller: Customer Reports Ctrl', function () {
         }
       };
 
-      Authinfo = {
-        getPrimaryEmail: function () {
-          return "some@email.com";
-        },
-        getConferenceServicesWithoutSiteUrl: function () {
-          return [{
-            license: {
-              siteUrl: 'fakesite1'
-            }
-          }, {
-            license: {
-              siteUrl: 'fakesite2'
-            }
-          }, {
-            license: {
-              siteUrl: 'fakesite3'
-            }
-          }];
-        },
-        getOrgId: function () {
-          return '1';
-        },
-        isPartner: function () {
-          return false;
-        }
-      };
-
       Userservice = {
-        getUser: function (user, innerFunction) {
+        getUser: function (user) {
           expect(user).toBe('me');
         }
       };
@@ -184,7 +157,8 @@ describe('Controller: Customer Reports Ctrl', function () {
         WebexReportService: WebexReportService,
         WebExApiGatewayService: WebExApiGatewayService,
         Userservice: Userservice,
-        FeatureToggleService: FeatureToggleService
+        FeatureToggleService: FeatureToggleService,
+        MediaServiceActivationV2: MediaServiceActivationV2
       });
       $scope.$apply();
     }));

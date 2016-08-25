@@ -1,12 +1,12 @@
 'use strict';
 
 describe('Controller: PstnSetupCtrl', function () {
-  var controller, $scope, $q, $state, $stateParams, PstnSetup;
+  var $scope, $q, $state, $stateParams, PstnSetup;
 
   var customer = getJSONFixture('huron/json/pstnSetup/customer.json');
   var deferred;
 
-  beforeEach(module('Huron'));
+  beforeEach(angular.mock.module('Huron'));
 
   beforeEach(inject(function ($rootScope, $controller, _$q_, _$state_, _$stateParams_, _PstnSetup_) {
     $scope = $rootScope.$new();
@@ -28,7 +28,7 @@ describe('Controller: PstnSetupCtrl', function () {
     spyOn(PstnSetup, 'setIsTrial');
     spyOn(PstnSetup, 'clear');
 
-    controller = $controller('PstnSetupCtrl', {
+    $controller('PstnSetupCtrl', {
       $scope: $scope
     });
 

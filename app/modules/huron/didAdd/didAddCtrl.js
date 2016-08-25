@@ -143,7 +143,7 @@
       if (customerOrgId) {
         DialPlanService.getCustomerDialPlanCountryCode(customerOrgId)
           .then(TelephoneNumberService.setCountryCode)
-          .catch(function (response) {
+          .catch(function () {
             // if customer carrier info could not be obtained from CMI, try getting partner carrier info from Terminus
             return getCarrierInfoFromTerminus(Authinfo.getOrgId()).then(setDidValidationCountry)
               .catch(function (response) {
@@ -160,7 +160,8 @@
           .then(reinitTokens)
           .then(function () {
             return ExternalNumberPool.getAll(customerOrgId);
-          }).then(function (results) {
+          })
+          .then(function (results) {
             didPatternsFromCmi = _.map(results, 'pattern');
           });
       } else {
@@ -201,7 +202,7 @@
     }
 
     function checkForInvalidTokens() {
-      return vm.invalidcount > 0 ? false : true;
+      return vm.invalidcount <= 0;
     }
 
     function getDIDList() {
@@ -244,7 +245,7 @@
 
       if (newDids.length > 0) {
         _.forEach(newDids, function (newDid) {
-          var addPromise = ExternalNumberPool.create(customerId ? customerId : vm.currentOrg.customerOrgId, newDid).then(function (response) {
+          var addPromise = ExternalNumberPool.create(customerId || vm.currentOrg.customerOrgId, newDid).then(function () {
             vm.addedCount++;
           }).catch(function (response) {
             errors.push({
@@ -292,11 +293,9 @@
         'partnerName': Authinfo.getOrgName()
       };
       DidAddEmailService.save({}, emailInfo, function () {
-        var successMsg = [$translate.instant('didManageModal.emailSuccessText')];
-        Notification.notify(successMsg, 'success');
+        Notification.success('didManageModal.emailSuccessText');
       }, function () {
-        var errorMsg = [$translate.instant('didManageModal.emailFailText')];
-        Notification.notify(errorMsg, 'error');
+        Notification.error('didManageModal.emailFailText');
       });
       $state.modal.close();
     }
@@ -307,17 +306,17 @@
             $scope.trial.model.customerEmail,
             $scope.trial.model.licenseDuration,
             $scope.trial.model.customerOrgId)
-          .then(function (response) {
-            Notification.notify([$translate.instant('didManageModal.emailSuccessText')], 'success');
+          .then(function () {
+            Notification.success('didManageModal.emailSuccessText');
           })
-          .catch(function (response) {
-            Notification.notify([$translate.instant('didManageModal.emailFailText')], 'error');
+          .catch(function () {
+            Notification.error('didManageModal.emailFailText');
           })
           .finally(function () {
             angular.element('#trialNotifyCustomer').prop('disabled', true);
           });
       } else {
-        Notification.notify([$translate.instant('didManageModal.emailFailText')], 'error');
+        Notification.error('didManageModal.emailFailText');
       }
     }
 

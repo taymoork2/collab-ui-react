@@ -25,7 +25,7 @@ describe(
     var scopeLocale = "es_MX";
     var scopeSiteName = paramsSiteUrl;
 
-    beforeEach(module('WebExApp'));
+    beforeEach(angular.mock.module('WebExApp'));
 
     beforeEach(
       inject(
@@ -46,7 +46,7 @@ describe(
           spyOn($translate, 'use').and.returnValue(useLocale);
           spyOn($sce, 'trustAsResourceUrl').and.returnValue(paramsSettingPageIframeUrl);
 
-          var controller = $controller(
+          $controller(
             'WebExSiteSettingCtrl', {
               $scope: $scope,
               $stateParams: $stateParams,

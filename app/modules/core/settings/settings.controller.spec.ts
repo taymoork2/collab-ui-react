@@ -1,4 +1,3 @@
-///<reference path="../../../../typings/tsd-testing.d.ts"/>
 /// <reference path="settings.controller.ts"/>
 namespace globalsettings {
 
@@ -21,8 +20,9 @@ namespace globalsettings {
 
     function initSpies() {
       spyOn(Orgservice, 'getOrg');
-      spyOn(FeatureToggleService, 'supports');
-      spyOn(FeatureToggleService, 'brandingWordingChangeGetStatus');
+      spyOn(FeatureToggleService, 'atlasBrandingWordingChangeGetStatus');
+      spyOn(FeatureToggleService, 'atlasDataRetentionSettingsGetStatus');
+      spyOn(FeatureToggleService, 'atlasPinSettingsGetStatus');
       spyOn(Authinfo, 'isPartner');
       spyOn(Authinfo, 'isCustomerAdmin');
       spyOn(Authinfo, 'isDirectCustomer');
@@ -39,7 +39,7 @@ namespace globalsettings {
 
     beforeEach(inject(dependencies));
     beforeEach(initSpies);
-    beforeEach(setFeatureToggle);
+    beforeEach(setFeatureToggles);
     beforeEach(setBranding);
 
     describe('for partner admin', () => {
@@ -136,16 +136,25 @@ namespace globalsettings {
 
     function setGetOrgSpy(allowBranding) {
       return () => {
-        Orgservice.getOrg.and.returnValue($q.when({orgSettings: {allowCustomerLogos: allowBranding}}));
+        Orgservice.getOrg.and.returnValue($q.when({data: {orgSettings: {allowCustomerLogos: allowBranding}}}));
       };
     }
 
-    function setFeatureToggle() {
-      FeatureToggleService.supports.and.returnValue($q.when(true));
+    function setFeatureToggles() {
+      togglePinSettings();
+      toggleDataRetentionSettings();
     }
 
     function setBranding() {
-      FeatureToggleService.brandingWordingChangeGetStatus.and.returnValue($q.when(true));
+      FeatureToggleService.atlasBrandingWordingChangeGetStatus.and.returnValue($q.when(true));
+    }
+
+    function togglePinSettings() {
+      FeatureToggleService.atlasPinSettingsGetStatus.and.returnValue($q.when(true));
+    }
+
+    function toggleDataRetentionSettings() {
+      FeatureToggleService.atlasDataRetentionSettingsGetStatus.and.returnValue($q.when(true));
     }
   });
 }

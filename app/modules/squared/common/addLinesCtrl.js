@@ -4,7 +4,7 @@
   angular.module('Squared')
     .controller('AddLinesCtrl', AddLinesCtrl);
   /* @ngInject */
-  function AddLinesCtrl($stateParams, $state, $scope, Notification, $translate, $q, CommonLineService, Authinfo, PlaceService, CsdmCodeService, DialPlanService) {
+  function AddLinesCtrl($stateParams, $state, $scope, Notification, $translate, $q, CommonLineService, Authinfo, CsdmPlaceService, CsdmCodeService, DialPlanService) {
     var vm = this;
     vm.wizardData = $stateParams.wizard.state().data;
 
@@ -23,15 +23,19 @@
     vm.mapDidToDn = mapDidToDn;
     vm.resetDns = resetDns;
     vm.activateDID = activateDID;
+    vm.isLoading = false;
+    vm.isDisabled = true;
 
     $scope.returnInternalNumberlist = CommonLineService.returnInternalNumberlist;
     $scope.syncGridDidDn = syncGridDidDn;
     $scope.checkDnOverlapsSteeringDigit = CommonLineService.checkDnOverlapsSteeringDigit;
 
     vm.next = function () {
+      vm.isLoading = true;
 
       function successCallback(code) {
         if (code && code.activationCode && code.activationCode.length > 0) {
+          vm.isLoading = false;
           $stateParams.wizard.next({
             deviceName: vm.wizardData.deviceName,
             code: code,
@@ -41,12 +45,13 @@
             organizationId: Authinfo.getOrgId()
           });
         } else {
+          vm.isLoading = false;
           $state.go('users.list');
         }
       }
 
       function failCallback() {
-
+        vm.isLoading = false;
       }
 
       function addPlace() {
@@ -55,15 +60,12 @@
             name: entity.name,
             directoryNumber: entity.assignedDn.pattern
           };
+
           if (entity.externalNumber && entity.externalNumber.pattern !== 'None') {
             placeEntity.externalNumber = entity.externalNumber.pattern;
           }
-          PlaceService.save({
-              customerId: Authinfo.getOrgId()
-            }, placeEntity, function (data, headers) {
-              data.uuid = headers('location').split("/").pop();
-              return data;
-            }).$promise
+
+          CsdmPlaceService.createCmiPlace(entity.name, entity.assignedDn.pattern)
             .then(successcb)
             .catch(function (error) {
               Notification.errorResponse(error, 'placesPage.placeError');
@@ -74,7 +76,7 @@
       function successcb(place) {
         vm.place = place;
         CsdmCodeService
-          .createCodeForExisting(place.uuid)
+          .createCodeForExisting(place.cisUuid)
           .then(successCallback) //, XhrNotificationService.notify)
           .catch(failCallback); //, XhrNotificationService.notify);
       }
@@ -87,8 +89,11 @@
 
     function activateDID() {
 
+
       $q.all([CommonLineService.loadInternalNumberPool(), CommonLineService.loadExternalNumberPool(), CommonLineService.loadPrimarySiteInfo(), toggleShowExtensions()])
         .finally(function () {
+          vm.isDisabled = false;
+
           $scope.internalNumberPool = CommonLineService.getInternalNumberPool();
           $scope.externalNumberPool = CommonLineService.getExternalNumberPool();
           $scope.externalNumber = $scope.externalNumberPool[0];
@@ -119,7 +124,7 @@
         validateDnForUser();
         vm.isReset = true;
         vm.isResetInProgress = false;
-      }).catch(function (response) {
+      }).catch(function () {
         vm.isResetInProgress = false;
         validateDnForUser();
       });
@@ -220,7 +225,7 @@
 
     // To differentiate the Place list change made by map operation
     //  and other manual/reset operation.
-    $scope.$watch('entitylist', function (newVal, oldVal) {
+    $scope.$watch('entitylist', function () {
       if (vm.isMapped) {
         vm.isMapped = false;
       } else {

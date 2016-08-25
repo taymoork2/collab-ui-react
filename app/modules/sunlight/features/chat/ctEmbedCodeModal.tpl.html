@@ -8,14 +8,14 @@
 	  <div class="warning-area">
 	  <i class="icon icon-warning warning-icon"></i>
 	  <div class="warning-message h6"> {{:: 'careChatTpl.embedCodeWarnMsg' | translate }}
-	  <a href="#/settings" class="click-here" ng-click="$dismiss()"> {{:: 'careChatTpl.clickHere' | translate }}</a> {{:: 'careChatTpl.embedCodeWarnMsgContd' | translate }}
+	  <a href="#/profile" class="click-here" ng-click="$dismiss()"> {{:: 'careChatTpl.clickHere' | translate }}</a> {{:: 'careChatTpl.embedCodeWarnMsgContd' | translate }}
 	  </div>
 	  </div>
 	</div>
 	<div class="modal-footer">
 	  <button class="btn btn-default" id="closeEmbedCodeBtn"
 	          ng-click="$dismiss()" translate="common.close"></button>
-	  <a id="downloadChatCodeTxt" download="Chat_Code_Snippet" ng-click="embedCodeCtrl.downloadEmbedCode(); $dismiss();">
+	  <a id="downloadChatCodeTxt" ng-click="embedCodeCtrl.downloadEmbedCode($event); $dismiss();">
 	  	<button class="btn btn--primary" id="copyEmbedCodeBtn" focus-on translate="careChatTpl.downloadEmbedCode"></button>
 	  </a>
 	</div>

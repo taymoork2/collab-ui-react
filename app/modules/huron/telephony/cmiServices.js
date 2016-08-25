@@ -23,11 +23,13 @@
     .factory('CallParkServiceV2', CallParkServiceV2)
     .factory('AssignAutoAttendantService', AssignAutoAttendantService)
     .factory('UserServiceVoice', UserServiceVoice)
-    .factory('VoicemailTimezoneService', VoicemailTimezoneService)
     .factory('VoicemailService', VoicemailService)
+    .factory('VoicemailTimezoneService', VoicemailTimezoneService)
+    .factory('VoicemailMessageActionService', VoicemailMessageActionService)
     .factory('CompanyNumberService', CompanyNumberService)
     // Will remove this service later
     .factory('CallRouterService', CallRouterService)
+    .factory('SimultaneousCallsServiceV2', SimultaneousCallsServiceV2)
     .factory('InternalNumberPoolService', InternalNumberPoolService)
     .factory('ExternalNumberPoolService', ExternalNumberPoolService)
     .factory('AlternateNumberService', AlternateNumberService)
@@ -239,6 +241,13 @@
   }
 
   /* @ngInject */
+  function VoicemailService($resource, HuronConfig) {
+    return $resource(HuronConfig.getCmiUrl() + '/voicemail/customers/:customerId', {
+      customerId: '@customerId'
+    });
+  }
+
+  /* @ngInject */
   function VoicemailTimezoneService($resource, HuronConfig) {
     return $resource(HuronConfig.getCmiUrl() + '/voicemail/customers/:customerId/usertemplates/:objectId', {
       customerId: '@customerId',
@@ -251,9 +260,15 @@
   }
 
   /* @ngInject */
-  function VoicemailService($resource, HuronConfig) {
-    return $resource(HuronConfig.getCmiUrl() + '/voicemail/customers/:customerId', {
-      customerId: '@customerId'
+  function VoicemailMessageActionService($resource, HuronConfig) {
+    return $resource(HuronConfig.getCmiUrl() + '/voicemail/customers/:customerId/usertemplates/:userTemplateId/messageactions/:messageActionId', {
+      customerId: '@customerId',
+      userTemplateId: '@userTemplateId',
+      messageActionId: '@messageActionId'
+    }, {
+      update: {
+        method: 'PUT'
+      }
     });
   }
 
@@ -487,6 +502,22 @@
       get: {
         method: 'GET',
         transformResponse: transformEnvelope
+      }
+    });
+  }
+
+  /* @ngInject */
+  function SimultaneousCallsServiceV2($resource, HuronConfig) {
+    return $resource(HuronConfig.getCmiV2Url() + '/customers/:customerId/places/:placesId/numbers/:numberId', {
+      customerId: '@customerId',
+      numberId: '@numberId',
+      placesId: '@placesId'
+    }, {
+      update: {
+        method: 'PUT'
+      },
+      get: {
+        method: 'GET'
       }
     });
   }

@@ -5,9 +5,11 @@
     .controller('PlacesCtrl',
 
       /* @ngInject */
-      function ($scope, $state, $templateCache, CsdmPlaceService, PlaceFilter, Authinfo, WizardFactory) {
+      function ($scope, $state, $templateCache, $translate, CsdmPlaceService, PlaceFilter, Authinfo, WizardFactory, RemPlaceModal) {
         var vm = this;
 
+        vm.data = [];
+        vm.dataLoading = false;
         vm.placeFilter = PlaceFilter;
 
         vm.existsDevices = function () {
@@ -34,6 +36,8 @@
             .value();
           return PlaceFilter.getFilteredList(filtered);
         };
+
+        vm.updateListAndFilter();
 
         vm.numDevices = function (place) {
           return _.size(place.devices);
@@ -71,7 +75,7 @@
             width: 70
           }, {
             field: 'displayName',
-            displayName: 'Name',
+            displayName: $translate.instant('placesPage.nameHeader'),
             sortingAlgorithm: sortFn,
             sort: {
               direction: 'asc',
@@ -79,42 +83,47 @@
             },
             sortCellFiltered: true
           }, {
+            field: 'type',
+            displayName: $translate.instant('placesPage.typeHeader'),
+            cellTemplate: getTemplate('_typeTpl'),
+            sortable: true
+          }, {
             field: 'devices',
-            displayName: 'Devices',
+            displayName: $translate.instant('placesPage.deviceHeader'),
             cellTemplate: getTemplate('_devicesTpl'),
             sortable: true,
-            sortingAlgorithm: sortStateFn,
-            sort: {
-              direction: 'asc',
-              priority: 0
-            }
+            sortingAlgorithm: sortStateFn
+          }, {
+            field: 'action',
+            displayName: $translate.instant('placesPage.actionHeader'),
+            cellTemplate: getTemplate('_actionsTpl'),
+            sortable: false
           }]
         };
 
         vm.startAddPlaceFlow = function () {
-
           var wizardState = {
             data: {
               function: "addPlace",
               accountType: 'shared',
-              title: "New Place",
+              showPlaces: true,
+              title: 'addDeviceWizard.newSharedSpace.title',
               isEntitledToHuron: vm.isEntitledToHuron(),
               isEntitledToRoomSystem: vm.isEntitledToRoomSystem(),
               allowUserCreation: false
             },
             history: [],
-            currentStateName: 'addDeviceFlow.chooseDeviceType',
+            currentStateName: 'addDeviceFlow.newSharedSpace',
             wizardState: {
+              'addDeviceFlow.newSharedSpace': {
+                next: 'addDeviceFlow.chooseDeviceType',
+                cloudberry: 'addDeviceFlow.showActivationCode',
+                huron_create: 'addDeviceFlow.addLines'
+              },
               'addDeviceFlow.chooseDeviceType': {
                 nextOptions: {
-                  cloudberry: 'addDeviceFlow.chooseSharedSpace',
-                  huron: 'addDeviceFlow.chooseSharedSpace'
-                }
-              },
-              'addDeviceFlow.chooseSharedSpace': {
-                nextOptions: {
                   cloudberry: 'addDeviceFlow.showActivationCode',
-                  huron_create: 'addDeviceFlow.addLines'
+                  huron: 'addDeviceFlow.addLines'
                 }
               },
               'addDeviceFlow.addLines': {
@@ -125,9 +134,14 @@
           };
 
           var wizard = WizardFactory.create(wizardState);
-          $state.go('addDeviceFlow.chooseDeviceType', {
+          $state.go(wizardState.currentStateName, {
             wizard: wizard
           });
+        };
+
+        vm.deletePlace = function ($event, place) {
+          $event.stopPropagation();
+          RemPlaceModal.open(place);
         };
 
         function getTemplate(name) {

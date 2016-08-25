@@ -5,7 +5,7 @@
 
 describe('Hunt Group EditCtrl Controller', function () {
 
-  var hgEditCtrl, controller, $httpBackend, $rootScope, $scope, $q, $state, $stateParams, $timeout, Authinfo,
+  var hgEditCtrl, controller, $httpBackend, $scope, $q, $state, $stateParams, $timeout, Authinfo,
     HuntGroupService, HuntGroupEditDataService, HuntGroupMemberDataService, Notification, form, HuntGroupFallbackDataService;
   var hgFeature = getJSONFixture('huron/json/features/edit/featureDetails.json');
   var pilotNumbers = getJSONFixture('huron/json/features/edit/pilotNumbers.json');
@@ -20,20 +20,8 @@ describe('Hunt Group EditCtrl Controller', function () {
     "users": [user1, user2]
   };
 
-  var numbers = [{
-    "internal": "8001",
-    "external": "972-510-5002",
-    "uuid": "eae8c29f-14b5-4528-b3f7-2e68f1d5c8b0",
-    "isSelected": true
-  }, {
-    "internal": "5601",
-    "external": "",
-    "uuid": "d9ba914b-7747-48b8-b7ee-2793b3984ca6",
-    "isSelected": false
-  }];
-
-  beforeEach(module('Huron'));
-  beforeEach(module(function ($provide) {
+  beforeEach(angular.mock.module('Huron'));
+  beforeEach(angular.mock.module(function ($provide) {
     $provide.value("Authinfo", spiedAuthinfo);
   }));
 

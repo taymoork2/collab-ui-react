@@ -1,5 +1,12 @@
 'use strict';
 
+var Promise = require('promise');
+beforeEach(angular.mock.module('oc.lazyLoad', function ($provide) {
+  var ocLazyLoadMock = jasmine.createSpyObj('$ocLazyLoad', ['load', 'inject', 'getModules', 'toggleWatch']);
+  ocLazyLoadMock.inject.and.returnValue(Promise.resolve());
+  $provide.value('$ocLazyLoad', ocLazyLoadMock);
+}));
+
 beforeEach(function () {
   /**
    * Initialize each argument as a module
@@ -7,14 +14,14 @@ beforeEach(function () {
   this.initModules = function () {
     var initModules = _.toArray(arguments);
     _.forEach(initModules, function (initModule) {
-      module(initModule);
+      angular.mock.module(initModule);
     });
   };
 
   this.injectProviders = function () {
     var providers = _.toArray(arguments);
     _.forEach(providers, function (provider) {
-      module([provider, function providerCallback(_provider) {
+      angular.mock.module([provider, function providerCallback(_provider) {
         this[provider] = _provider;
       }.bind(this)]);
     }, this);
@@ -83,6 +90,27 @@ beforeEach(function () {
     this.injectDependencies('$templateCache');
     var templateString = this.$templateCache.get(template);
     this.compileTemplate(templateString);
+  };
+
+  /**
+   * Constructs and compiles a component
+   * Sets this.view and this.controller with compiled template and controller
+   *
+   * @param {String} componentName Name of the component
+   * @param {String} componentParamsObj Optional object of component bindings
+   */
+  this.compileComponent = function (componentName, componentParamsObj) {
+    var component = _.kebabCase(componentName);
+    var componentParams = '';
+    if (_.isObject(componentParamsObj)) {
+      componentParams = _.reduce(componentParamsObj, function (result, value, key) {
+        result += ' ' + _.kebabCase(key) + '="' + value + '"';
+        return result;
+      }, '');
+    }
+    var componentString = '<' + component + componentParams + '></' + component + '>';
+    this.compileTemplate(componentString);
+    this.controller = this.view.controller(componentName);
   };
 });
 

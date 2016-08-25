@@ -32,6 +32,7 @@
     function mkTrialPayload(customerEmail, trialPeriod, organizationId) {
       return {
         type: _types.CUSTOMER_TRIAL,
+        addressTo: customerEmail,
         properties: {
           CustomerEmail: customerEmail,
           TrialPeriod: trialPeriod,
@@ -54,6 +55,7 @@
     function mkTrialConversionReqPayload(customerName, customerEmail, partnerEmail, webexSiteUrl) {
       return {
         type: _types.NOTIFY_PARTNER_ADMIN_CUSTOMER_TRIAL_EXT_INTEREST,
+        addressTo: partnerEmail,
         properties: {
           CUSTOMER_NAME: customerName,
           CUSTOMER_EMAIL: customerEmail,
@@ -86,10 +88,10 @@
     function email(_emailData) {
       var emailData = _emailData;
       return $http.post(emailUrl, emailData)
-        .success(function (data, status, headers, config) {
+        .success(function (data, status) {
           LogMetricsService.logMetrics('Email', LogMetricsService.getEventType('EmailService (success) - Type = ' + emailData.type), LogMetricsService.getEventAction('buttonClick'), status, moment(), 1, null);
         })
-        .error(function (data, status, headers, config) {
+        .error(function (data, status) {
           LogMetricsService.logMetrics('Email', LogMetricsService.getEventType('EmailService (error) - Type = ' + emailData.type), LogMetricsService.getEventAction('buttonClick'), status, moment(), 1, null);
         });
     }

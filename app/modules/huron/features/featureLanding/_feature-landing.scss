@@ -75,6 +75,9 @@ $features-header-height : 83px;
     font-size: $font-size-large;
     @include vr-spacing(pb, 0.2);
     line-height: rem-calc(24);
+    span {
+      font-size: 1rem;
+    }
   }
 
   .card-members {
@@ -125,10 +128,10 @@ $features-header-height : 83px;
   color: $color-primary;
 }
 .card-icon-color-HG{
-  color:  $color-eggplant;
+  color:  $color-alerts;
 }
 .card-icon-color-CP{
-  color: $color-alerts;
+  color: $color-cta;
 }
 
 .spinner-icon{
@@ -165,5 +168,17 @@ $features-header-height : 83px;
 
   & div {
     @include vr-spacing(pt, 1);
+  }
+}
+
+.feature-delete-modal {
+  @include vr-spacing(ph, 2);
+}
+
+.aa-depends-modal {
+  @include vr-spacing(ph, 2);
+  & ul {
+    list-style-type: none;
+    @include vr-spacing(ml, 0);
   }
 }

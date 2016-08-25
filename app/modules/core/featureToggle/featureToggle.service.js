@@ -1,36 +1,48 @@
 (function () {
   'use strict';
 
-  angular.module('Core')
+  module.exports = angular.module('core.featuretoggle', [
+    require('modules/core/config/config'),
+    require('modules/core/scripts/services/authinfo'),
+    require('modules/core/scripts/services/org.service'),
+    require('modules/huron/telephony/telephonyConfig'),
+  ])
     .factory('HuronCustomerFeatureToggleService', HuronCustomerFeatureToggleService)
     .factory('HuronUserFeatureToggleService', HuronUserFeatureToggleService)
-    .service('FeatureToggleService', FeatureToggleService);
+    .service('FeatureToggleService', FeatureToggleService)
+    .name;
 
   /* @ngInject */
-  function FeatureToggleService($resource, $q, Authinfo, Orgservice, Userservice, HuronCustomerFeatureToggleService, HuronUserFeatureToggleService, UrlConfig) {
+  function FeatureToggleService($http, $q, $resource, $state, Authinfo, HuronCustomerFeatureToggleService, HuronUserFeatureToggleService, UrlConfig, Orgservice) {
     var features = {
-      csvUpload: 'atlas-csv-upload',
-      csvEnhancement: 'atlas-csv-enhancement',
       dirSync: 'atlas-dir-sync',
-      atlasAppleFeatures: 'atlas-apple-features',
+      atlasBrandingWordingChange: 'atlas-branding-wording-change',
+      atlasCareTrials: 'atlas-care-trials',
       atlasContextServiceTrials: 'atlas-context-service-trials',
+      atlasCsvEnhancement: 'atlas-csv-enhancement',
+      atlasCustomerListUpdate: 'atlas-customer-list-update',
+      atlasDarling: 'atlas-darling',
+      atlasDataRetentionSettings: 'atlas-data-retention-settings',
       atlasEmailStatus: 'atlas-email-status',
-      atlasInvitePendingStatus: 'atlas-invite-pending-status',
+      atlasHelpDeskExt: 'atlas-helpdesk-extended-information',
+      atlasHybridServicesResourceList: 'atlas-hybrid-services-resource-list',
+      atlasMediaServiceMetrics: 'atlas-media-service-metrics',
+      atlasMediaServiceOnboarding: 'atlas-media-service-onboarding',
       atlasNewRoomSystems: 'atlas-new-roomSystems',
       atlasNurturingEmails: 'atlas-nurturing-emails',
+      atlasUserPendingStatus: 'atlas-user-pending-status',
+      atlasPinSettings: 'atlas-pin-settings',
+      atlasPstnTfn: 'atlas-pstn-tfn',
+      atlasReadOnlyAdmin: 'atlas-read-only-admin',
+      atlasComplianceRole: 'atlas-compliance-role',
       atlasSettingsPage: 'atlas-settings-page',
       atlasSipUriDomain: 'atlas-sip-uri-domain',
       atlasSipUriDomainEnterprise: 'atlas-sip-uri-domain-enterprise',
       atlasWebexTrials: 'atlas-webex-trials',
-      atlasPartnerAdminFeatures: 'atlas-partner-admin-features',
-      huronAASubmenu: 'huron-aa-submenu',
-      atlasTelstraCsb: 'atlas-telstra-csb',
-      huronClassOfService: 'COS',
-      huronInternationalDialingTrialOverride: 'huronInternationalDialingTrialOverride',
       androidAddGuestRelease: 'android-add-guest-release',
       androidDirectUpload: 'android-direct-upload',
-      androidKmsMessagingApiV2: 'android-kms-messaging-api-v2',
       androidImportantFilter: 'android-important-filter',
+      androidKmsMessagingApiV2: 'android-kms-messaging-api-v2',
       androidMentions: 'android-mentions',
       androidMessageSearch: 'android-message-search',
       androidModernTokenRefresh: 'android-modern-token-refresh',
@@ -52,6 +64,11 @@
       filterBadges: 'filter-badges',
       flagMsg: 'flag-msg',
       geoHintEnabled: 'geo-hint-enabled',
+      huronAACallQueue: 'huronAACallQueue',
+      huronMultipleCalls: 'huron-multiple-calls',
+      huronClassOfService: 'COS',
+      huronInternationalDialingTrialOverride: 'huronInternationalDialingTrialOverride',
+      huronKEM: 'huronKEM',
       iosActionBar: 'ios-action-bar',
       iosAecType: 'ios-aec-type',
       iosCameraview: 'ios-cameraview',
@@ -101,7 +118,6 @@
       searchTab: 'search-tab',
       sendStickies: 'send-stickies',
       sendStickies2: 'send-stickies2',
-      servicesOverview: 'atlas-services-overview',
       sparkJsSdkEcdh3: 'spark-js-sdk-ecdh-3',
       squrls: 'squrls',
       stickiesSend: 'stickies.send',
@@ -126,15 +142,11 @@
       locationSharing: 'location-sharing',
       ceAllowNolockdown: 'ce-allow-nolockdown',
       webexCSV: 'webex-CSV',
-      webexClientLockdown: 'atlas-webex-clientlockdown',
       enableCrashLogs: 'csdm-enable-crash-logs',
       csdmPlaces: 'csdm-places',
-      readonlyAdmin: 'atlas-read-only-admin',
-      helpdeskExt: 'atlas-helpdesk-extended-information',
-      brandingWordingChange: 'atlas-branding-wording-change',
-      hybridServicesResourceList: 'atlas-hybrid-services-resource-list',
-      atlasCareTrials: 'atlas-care-trials',
-      atlasMediaServiceMetrics: 'atlas-media-service-metrics'
+      optionalvmdid: 'optional-vm-did',
+      globalStatus: 'global-status',
+      atlasF237ResourceGroups: 'atlas-f237-resource-group'
     };
 
     var toggles = {};
@@ -161,6 +173,10 @@
       }
     });
 
+    var dirSyncConfigurationResource = $resource(UrlConfig.getAdminServiceUrl() + 'organization/:customerId/dirsync', {
+      customerId: '@customerId'
+    });
+
     var service = {
       getUrl: getUrl,
       getFeatureForUser: getFeatureForUser,
@@ -169,6 +185,7 @@
       getFeaturesForOrg: getFeaturesForOrg,
       setFeatureToggles: setFeatureToggles,
       generateFeatureToggleRule: generateFeatureToggleRule,
+      stateSupportsFeature: stateSupportsFeature,
       supports: supports,
       supportsDirSync: supportsDirSync,
       features: features
@@ -245,7 +262,7 @@
           }).$promise.then(function (data) {
             toggles[feature] = data.val;
             return data.val;
-          }).catch(function (err) {
+          }).catch(function () {
             return false;
           });
         } else {
@@ -255,7 +272,7 @@
           }).$promise.then(function (data) {
             toggles[feature] = data.val;
             return data.val;
-          }).catch(function (err) {
+          }).catch(function () {
             return false;
           });
         }
@@ -274,7 +291,7 @@
         return _.get(_.find(features.developer, {
           key: feature
         }), 'val', false);
-      }).catch(function (err) {
+      }).catch(function () {
         return false;
       });
 
@@ -287,8 +304,27 @@
       });
     }
 
+    function stateSupportsFeature(feature) {
+      return supports(feature).then(shouldFeatureAllowState);
+    }
+
+    function shouldFeatureAllowState(isSupported) {
+      if (!isSupported) {
+        if (currentlyInState()) {
+          return $q.reject('Requested feature is not supported by requested state');
+        } else {
+          $state.go('login');
+        }
+      }
+      return isSupported;
+    }
+
+    function currentlyInState() {
+      return !!$state.$current.name;
+    }
+
     function supports(feature) {
-      return $q(function (resolve, reject) {
+      return $q(function (resolve) {
         if (feature === features.dirSync) {
           supportsDirSync().then(function (enabled) {
             resolve(enabled);
@@ -296,8 +332,10 @@
         } else if (angular.isDefined(toggles[feature])) {
           resolve(toggles[feature]);
         } else {
-          Userservice.getUser('me', function (data, status) {
-            getFeatureForUser(data.id, feature)
+          $http.get(UrlConfig.getScimUrl(Authinfo.getOrgId()) + '/me', {
+            cache: true,
+          }).then(function (response) {
+            return getFeatureForUser(_.get(response, 'data.id'), feature)
               .then(function (result) {
                 if (!result) {
                   return getHuronToggle(false, Authinfo.getOrgId(), feature);
@@ -308,23 +346,29 @@
                 toggles[feature] = toggleValue;
                 resolve(toggleValue);
               });
+          }).catch(function () {
+            return false;
           });
         }
       });
     }
 
     function supportsDirSync() {
-      var deferred = $q.defer();
-      Orgservice.getOrgCacheOption(function (data, status) {
-        if (data.success) {
-          deferred.resolve(data.dirsyncEnabled);
-        } else {
-          deferred.reject(status);
-        }
-      }, null, {
-        cache: false
+      return dirSyncConfigurationResource.get({
+        customerId: Authinfo.getOrgId()
+      }).$promise.then(function (response) {
+        return response.serviceMode === 'ENABLED';
+      }).catch(function (response) {
+        Orgservice.getOrgCacheOption(function (data) {
+          if (data.success) {
+            return data.dirsyncEnabled;
+          } else {
+            return $q.reject(response);
+          }
+        }, null, {
+          cache: false
+        });
       });
-      return deferred.promise;
     }
 
     function setFeatureToggles(isUser, listOfFeatureToggleRules) {

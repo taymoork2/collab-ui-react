@@ -111,10 +111,6 @@
         restriction: InternationalDialing.INTERNATIONAL_DIALING,
         blocked: false
       };
-      var result = {
-        msg: null,
-        type: 'null'
-      };
 
       if (vm.model.internationalDialingEnabled.value === "0") {
         cosType.blocked = true;
@@ -125,17 +121,13 @@
       vm.saveInProcess = true;
       return InternationalDialing.updateCosRestriction(vm.currentUser.id, vm.model.internationalDialingEnabled,
           vm.model.internationalDialingUuid, cosType).then(function () {
-          initInternationalDialing();
+            initInternationalDialing();
 
-          result.msg = $translate.instant('internationalDialingPanel.success');
-          result.type = 'success';
-
-          Notification.notify([result.msg], result.type);
-          resetForm();
-        })
+            Notification.success('internationalDialingPanel.success');
+            resetForm();
+          })
         .catch(function (response) {
-          Notification.errorResponse(response, $translate.instant('internationalDialingPanel.error'));
-
+          Notification.errorResponse(response, 'internationalDialingPanel.error');
         })
         .finally(function () {
           vm.saveInProcess = false;

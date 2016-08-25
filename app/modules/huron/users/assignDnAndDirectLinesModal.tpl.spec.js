@@ -3,8 +3,8 @@
 describe('Template: assignDnAndDirectLinesModal', function () {
 
   function init() {
-    this.initModules('Core', 'Hercules', 'Huron', 'Messenger', 'Sunlight');
-    this.injectDependencies('$q', 'Orgservice', 'FeatureToggleService', 'CsvDownloadService');
+    this.initModules('Core', 'Hercules', 'Huron', 'Messenger', 'Sunlight', 'WebExApp');
+    this.injectDependencies('$httpBackend', '$q', '$previousState', 'Orgservice', 'FeatureToggleService', 'CsvDownloadService', 'WebExUtilsFact');
     initDependencySpies.apply(this);
     this.compileView('OnboardCtrl', 'modules/huron/users/assignDnAndDirectLinesModal.tpl.html');
   }
@@ -13,6 +13,7 @@ describe('Template: assignDnAndDirectLinesModal', function () {
     this.mock = {};
     this.mock.fusionServices = getJSONFixture('core/json/authInfo/fusionServices.json');
     this.mock.headers = getJSONFixture('core/json/users/headers.json');
+    this.mock.getLicensesUsage = getJSONFixture('core/json/organizations/usage.json');
 
     spyOn(this.CsvDownloadService, 'getCsv').and.callFake(function (type) {
       if (type === 'headers') {
@@ -24,8 +25,28 @@ describe('Template: assignDnAndDirectLinesModal', function () {
 
     spyOn(this.FeatureToggleService, 'supportsDirSync').and.returnValue(this.$q.when(false));
     spyOn(this.FeatureToggleService, 'atlasCareTrialsGetStatus').and.returnValue(this.$q.when(true));
+    spyOn(this.FeatureToggleService, 'supports').and.returnValue(this.$q.when(true));
     spyOn(this.Orgservice, 'getHybridServiceAcknowledged').and.returnValue(this.$q.when(this.mock.fusionServices));
     spyOn(this.Orgservice, 'getUnlicensedUsers');
+    spyOn(this.Orgservice, 'getLicensesUsage').and.returnValue(this.$q.when(this.mock.getLicensesUsage));
+
+    spyOn(this.$previousState, 'get').and.returnValue({
+      state: {
+        name: 'test.state'
+      }
+    });
+
+    this.$httpBackend
+      .whenGET('https://cmi.huron-int.com/api/v1/voice/customers/sites')
+      .respond([{
+        "mediaTraversalMode": "TURNOnly",
+        "siteSteeringDigit": "8",
+        "vmCluster": null,
+        "uuid": "70b8d459-7f58-487a-afc8-02c0a82d53ca",
+        "steeringDigit": "9",
+        "timeZone": "America/Los_Angeles",
+        "voicemailPilotNumberGenerated": "false"
+      }]);
   }
 
   function initSpies() {

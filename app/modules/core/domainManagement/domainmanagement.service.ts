@@ -96,7 +96,7 @@ class DomainManagementService {
     return this.$http.post(this._invokeUnverifyDomainUrl, requestData).then(res => {
       _.remove(this._domainList, {text: domain});
 
-      if (existingDomain && existingDomain.status != this._states.pending && !_.any(this._domainList, d => { return (d.status == this._states.verified || d.status == this._states.claimed);})){
+      if (existingDomain && existingDomain.status != this._states.pending && !_.some(this._domainList, d => { return (d.status == this._states.verified || d.status == this._states.claimed);})){
         //last domain was deleted. CI will set the _enforceUsersInVerifiedAndClaimedDomains flag to false on server side. We will do it now in our browser cache:
         this._enforceUsersInVerifiedAndClaimedDomains = false;
      }
@@ -119,8 +119,9 @@ class DomainManagementService {
       })
       .then(res => {
         let domainInList = _.find(this._domainList, {text: domain, status: this.states.pending});
-        if (domainInList)
+        if (domainInList) {
           domainInList.status = this.states.verified;
+        }
       }, err => {
         this.Log.error('Failed to verify domain:' + domain, err);
         return this.$q.reject(this.getErrorMessage(err));
@@ -139,8 +140,9 @@ class DomainManagementService {
 
         let claimedDomain = _.find(this._domainList, {text: domain, status: this.states.verified});
 
-        if (claimedDomain)
+        if (claimedDomain) {
           claimedDomain.status = this.states.claimed;
+        }
 
       }, err => {
         this.Log.error('Failed to claim domain:' + domain, err);
@@ -156,8 +158,9 @@ class DomainManagementService {
 
       let claimedDomain = _.find(this._domainList, {text: domain, status: this.states.claimed});
 
-      if (claimedDomain)
+      if (claimedDomain) {
         claimedDomain.status = this.states.verified;
+      }
 
     }, err => {
       this.Log.error('Failed to unclaim domain:' + domain, err);
@@ -167,8 +170,9 @@ class DomainManagementService {
 
   public getVerifiedDomains(disableCache:boolean=false) {
 
-    if (!disableCache && this._domainListLoaded)
+    if (!disableCache && this._domainListLoaded) {
       return this._domainList;
+    }
 
     let scomUrl = this._scomUrl + (disableCache ? '?disableCache=true' : '');
 
@@ -221,8 +225,9 @@ class DomainManagementService {
 
       if (!alreadyAddedMatch || (overridePredicate && overridePredicate(alreadyAddedMatch))) {
 
-        if (alreadyAddedMatch)
+        if (alreadyAddedMatch) {
           _.remove(this._domainList, {text: domLower});
+        }
 
         this._domainList.push({
           text: domLower,

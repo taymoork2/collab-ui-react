@@ -58,7 +58,7 @@ if [ "`uname`" = "Darwin" ]; then
   BREW_RET=$?
   if [ $BREW_RET -ne 0 ]; then
       echo "BREW not found, installing:"
-      ruby -e "$(curl -fsSL https://raw.github.com/Homebrew/homebrew/go/install)"
+      ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
   else
       echo "BREW is already installed"
   fi
@@ -78,16 +78,6 @@ else
     echo "NPM is already installed"
 fi
 
-# Check and install gulp
-which gulp > /dev/null 2>&1
-GULP_RET=$?
-if [ $GULP_RET -ne 0 ]; then
-  echo "gulp not found, installing:"
-  npm install -g gulp
-else
-  echo "gulp is already installed"
-fi
-
 # Remove component directories
 if [ $quick = "false" ]; then
   echo "Removing component directories..."
@@ -95,6 +85,12 @@ if [ $quick = "false" ]; then
   rm -rf bower_components
   rm -rf node_modules
 fi
+
+# check for and install GNU Parallel as-appropriate
+install_parallel_as_needed || exit 1
+
+# check for and install C++ compiler
+install_cpp_compiler_as_needed || exit 1
 
 # # Check for cleanup script and run
 # ls -al ./cleanUpManagedOrgs.sh > /dev/null 2>&1

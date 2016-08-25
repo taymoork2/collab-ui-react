@@ -3,10 +3,9 @@
 describe('Service: InternationalDialing', function () {
   var $q, $rootScope;
   var Authinfo, FeatureToggleService, InternationalDialing;
-  var cosRestrictions;
 
-  beforeEach(module('Huron'));
-  beforeEach(module('Sunlight'));
+  beforeEach(angular.mock.module('Huron'));
+  beforeEach(angular.mock.module('Sunlight'));
 
   beforeEach(inject(function (_$rootScope_, _$q_, _Authinfo_, _FeatureToggleService_, _InternationalDialing_) {
     $q = _$q_;
@@ -14,8 +13,6 @@ describe('Service: InternationalDialing', function () {
     FeatureToggleService = _FeatureToggleService_;
     Authinfo = _Authinfo_;
     InternationalDialing = _InternationalDialing_;
-
-    cosRestrictions = getJSONFixture('huron/json/telephonyInfo/userCosRestrictions.json');
 
     spyOn(Authinfo, 'getLicenseIsTrial').and.returnValue(true);
     spyOn(FeatureToggleService, 'supports');

@@ -18,11 +18,11 @@
       reject
     ) {
 
-      var funcName = "sendRestApiReq()";
-      var logMsg = "";
+      // var funcName = "sendRestApiReq()";
+      // var logMsg = "";
 
-      logMsg = funcName + "\n" +
-        "httpReq.url=" + JSON.stringify(httpReq.url);
+      // logMsg = funcName + "\n" +
+      //   "httpReq.url=" + JSON.stringify(httpReq.url);
       // $log.log(logMsg);
 
       $http(
@@ -46,8 +46,8 @@
         httpsReqObj
       ) {
 
-        var funcName = "csvApiRequest()";
-        var logMsg = "";
+        // var funcName = "csvApiRequest()";
+        // var logMsg = "";
 
         // $log.log(funcName);
 
@@ -69,6 +69,16 @@
           mockResult = {};
         } else {
           // mock the request csv status result
+
+          if (WebExApiGatewayConstsService.csvStates.authTokenError == mockCsvStatusReq) {
+
+            mockResult = {
+              "errorCode": "060502",
+              "errorMessage": "Auth token is invalid."
+            };
+
+            return $q.reject(mockResult);
+          }
           if (WebExApiGatewayConstsService.csvStates.none == mockCsvStatusReq) {
             mockResult = {
               jobType: WebExApiGatewayConstsService.csvJobTypes.typeNone

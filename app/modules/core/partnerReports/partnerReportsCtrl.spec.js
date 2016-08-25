@@ -34,8 +34,8 @@ describe('Controller: Partner Reports', function () {
     getOrgName: jasmine.createSpy('getOrgName').and.returnValue(customerData.customerOptions[3].label)
   };
 
-  beforeEach(module('Core'));
-  beforeEach(module('Huron'));
+  beforeEach(angular.mock.module('Core'));
+  beforeEach(angular.mock.module('Huron'));
 
   describe('PartnerReportCtrl - Expected Responses', function () {
     beforeEach(inject(function ($rootScope, $controller, _$q_, _$translate_, _PartnerReportService_, _GraphService_, _DummyReportService_) {
@@ -136,7 +136,7 @@ describe('Controller: Partner Reports', function () {
         expect(controller.activeUserPopulationRefresh).toEqual('set');
         expect(controller.showMostActiveUsers).toBeFalsy();
         expect(controller.activeUserReverse).toBeTruthy();
-        expect(controller.activeUsersTotalPages).toEqual(2);
+        expect(controller.activeUsersTotalPages).toEqual(4);
         expect(controller.activeUserCurrentPage).toEqual(1);
         expect(controller.activeUserPredicate).toEqual(activeUsersSort[4]);
         expect(controller.activeButton).toEqual([1, 2, 3]);

@@ -86,29 +86,44 @@ else
     fi
 fi
 
+# print top-level node module versions
+npm ls --depth=1
+
 
 # -----
 # Phase 3: Build
-gulp clean || exit $?
-gulp jsb:verify || exit $?
+set -e
+time npm run eslint
+time npm run json-verify
+time npm run languages-verify
+time npm run typings
+time npm run test
+time npm run combine-coverage
+set +e
 
-# TODO: we can clean this up after enabling the 'atlas-web' job for the team
-# - build - build without default 'karma-all' codepath enabled (see below)
-gulp build --nolint --nounit
-
-# - unit tests - run in parallel
-time gulp karma-parallel || exit $?
-gulp karma-combine-coverage || exit $?
+# - webpack loaders have caused segfaults frequently enough to warrant simply retrying the command
+#   until it succeeds
+# - as this script is run by a jenkins builder, the potential infinite loop is mitigated by the
+#   absolute timeout set for the job (currently 30 min.)
+export npm_lifecycle_event="build"
+time webpack --bail --progress --profile --nolint
+webpack_exit_code=$?
+while [ "$webpack_exit_code" -eq 132 -o \
+    "$webpack_exit_code" -eq 139 -o \
+    "$webpack_exit_code" -eq 255 ]; do
+    time webpack --bail --progress --profile --nolint
+    webpack_exit_code=$?
+done
 
 # - e2e tests
-gulp e2e --sauce --production-backend --nobuild --verbose | tee ./.cache/e2e-sauce-logs
+./e2e.sh | tee ./.cache/e2e-sauce-logs
 e2e_exit_code="${PIPESTATUS[0]}"
 
 # groom logs for cleaner sauce labs output
 source ./bin/include/sauce-results-helpers
 mk_test_report ./.cache/e2e-sauce-logs | tee ./.cache/e2e-report-for-${BUILD_TAG}
 
-# exit out if 'gulp e2e ...' process exited non-zero
+# exit out if e2e process exited non-zero
 test $e2e_exit_code -eq 0 || exit $e2e_exit_code
 
 

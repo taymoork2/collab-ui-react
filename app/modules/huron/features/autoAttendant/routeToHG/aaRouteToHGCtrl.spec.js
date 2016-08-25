@@ -3,7 +3,7 @@
 describe('Controller: AARouteToHGCtrl', function () {
   var $controller;
   var AAUiModelService, AutoAttendantCeInfoModelService, AutoAttendantCeMenuModelService, AAModelService, HuntGroupService;
-  var $rootScope, $scope, $translate;
+  var $rootScope, $scope;
 
   var $q;
 
@@ -92,12 +92,11 @@ describe('Controller: AARouteToHGCtrl', function () {
     return _ceInfos;
   }
 
-  beforeEach(module('uc.autoattendant'));
-  beforeEach(module('Huron'));
-  beforeEach(module('Sunlight'));
+  beforeEach(angular.mock.module('uc.autoattendant'));
+  beforeEach(angular.mock.module('Huron'));
+  beforeEach(angular.mock.module('Sunlight'));
 
-  beforeEach(inject(function (_$controller_, _$q_, _$translate_, _$rootScope_, _AAUiModelService_, _AutoAttendantCeInfoModelService_, _AutoAttendantCeMenuModelService_, _AAModelService_, _HuntGroupService_) {
-    $translate = _$translate_;
+  beforeEach(inject(function (_$controller_, _$q_, _$rootScope_, _AAUiModelService_, _AutoAttendantCeInfoModelService_, _AutoAttendantCeMenuModelService_, _AAModelService_, _HuntGroupService_) {
     $rootScope = _$rootScope_;
     $scope = $rootScope;
     $q = _$q_;

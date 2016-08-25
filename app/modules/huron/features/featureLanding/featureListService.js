@@ -43,8 +43,9 @@
       _.forEach(data.dependsIds, function (ceid) {
         var cardToUpdateIndex = 0;
         _.forEach(formattedList, function (card, index) {
-          if (ceid.aaID === card.id)
+          if (ceid.aaID === card.id) {
             cardToUpdateIndex = index;
+          }
         });
         _.forEach(ceid.dependants, function (dependant) {
           formattedList[cardToUpdateIndex].hasDepends = true;
@@ -58,8 +59,9 @@
 
           var refCardIndex = 0;
           _.forEach(formattedList, function (refcard, refindex) {
-            if (dependName === refcard.cardName)
+            if (dependName === refcard.cardName) {
               refCardIndex = refindex;
+            }
           });
           formattedList[refCardIndex].referenceNames.push(formattedList[cardToUpdateIndex].cardName);
           formattedList[refCardIndex].hasReferences = true;
@@ -74,8 +76,20 @@
       return orderByCardName(formattedList);
     }
 
-    function callParks() {
-      // TODO: Add callpark formatting service
+    function callParks(data) {
+      var formattedList = [];
+      _.forEach(data.callparks, function (callPark) {
+        formattedCard.cardName = callPark.name;
+        formattedCard.id = callPark.uuid;
+        formattedCard.startRange = callPark.startRange;
+        formattedCard.endRange = callPark.endRange;
+        formattedCard.memberCount = callPark.memberCount;
+        formattedCard.featureName = 'huronFeatureDetails.cp';
+        formattedCard.filterValue = 'CP';
+        formattedList.push(formattedCard);
+        formattedCard = {};
+      });
+      return orderByCardName(formattedList);
     }
 
     function huntGroups(data) {
@@ -85,7 +99,7 @@
         formattedCard.numbers = _.pluck(huntGroup.numbers, 'number');
         formattedCard.memberCount = huntGroup.memberCount;
         formattedCard.id = huntGroup.uuid;
-        formattedCard.featureName = 'huronHuntGroup.hg';
+        formattedCard.featureName = 'huronFeatureDetails.hg';
         formattedCard.filterValue = 'HG';
         formattedList.push(formattedCard);
         formattedCard = {};
@@ -111,13 +125,31 @@
         filterValue: filter
       });
 
+      var cardsFilteredByStartRange = $filter('filter')(list, {
+        cardName: "!" + filterText,
+        numbers: "!" + filterText,
+        startRange: filterText,
+        filterValue: filter
+      });
+
+      var cardsFilteredByEndRange = $filter('filter')(list, {
+        cardName: "!" + filterText,
+        numbers: "!" + filterText,
+        startRange: "!" + filterText,
+        endRange: filterText,
+        filterValue: filter
+      });
+
       var cardsFilteredByMemberCount = $filter('filter')(list, {
         cardName: "!" + filterText,
         numbers: "!" + filterText,
+        startRange: "!" + filterText,
+        endRange: "!" + filterText,
         memberCount: filterText,
         filterValue: filter
       });
-      return orderByFilter(cardsFilteredByName.concat(cardsFilteredByNumber, cardsFilteredByMemberCount));
+
+      return orderByFilter(cardsFilteredByName.concat(cardsFilteredByNumber, cardsFilteredByStartRange, cardsFilteredByEndRange, cardsFilteredByMemberCount));
     }
 
     function orderByCardName(list) {

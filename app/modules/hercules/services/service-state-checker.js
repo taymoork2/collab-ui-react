@@ -121,38 +121,65 @@
         serviceId: serviceId
       });
       var noUsersActivatedId = serviceId + ':noUsersActivated';
-      var needsUserActivation = summaryForService && summaryForService.activated === 0 && summaryForService.error === 0 && summaryForService.notActivated ===
-        0;
+      var needsUserActivation = summaryForService && summaryForService.activated === 0 && summaryForService.error === 0 && summaryForService.notActivated === 0;
       if (needsUserActivation) {
         switch (serviceId) {
-        case "squared-fusion-cal":
-          addNotification(noUsersActivatedId, serviceId, 'modules/hercules/notifications/no_users_activated_for_calendar.html');
-          break;
-        case "squared-fusion-uc":
-          ServiceDescriptor.isServiceEnabled("squared-fusion-ec", function (error, enabled) {
-            if (!error) {
-              if (enabled) {
-                addNotification(noUsersActivatedId, serviceId, 'modules/hercules/notifications/no_users_activated_for_call_connect.html');
-              } else {
-                addNotification(noUsersActivatedId, serviceId, 'modules/hercules/notifications/no_users_activated_for_call_aware.html');
+          case "squared-fusion-cal":
+            addNotification(noUsersActivatedId, serviceId, 'modules/hercules/notifications/no_users_activated_for_calendar.html');
+            break;
+          case "squared-fusion-uc":
+            ServiceDescriptor.isServiceEnabled("squared-fusion-ec", function (error, enabled) {
+              if (!error) {
+                if (enabled) {
+                  addNotification(noUsersActivatedId, serviceId, 'modules/hercules/notifications/no_users_activated_for_call_connect.html');
+                } else {
+                  addNotification(noUsersActivatedId, serviceId, 'modules/hercules/notifications/no_users_activated_for_call_aware.html');
+                }
               }
-            }
-          });
-          break;
-        default:
-          break;
+            });
+            break;
+          default:
+            break;
         }
       } else {
         NotificationService.removeNotification(noUsersActivatedId);
-        var userErrorsId = serviceId + ':userErrors';
-        if (summaryForService && summaryForService.error > 0) {
-          NotificationService.addNotification(
-            NotificationService.types.ALERT,
-            userErrorsId,
-            4,
-            'modules/hercules/notifications/user-errors.html', [serviceId], summaryForService);
+        if (serviceId === 'squared-fusion-uc') {
+          // Call Service has two sub-services, need special handling
+          var awareStatus = summaryForService;
+          var connectStatus = _.find(USSService2.getStatusesSummary(), {
+            serviceId: 'squared-fusion-ec'
+          });
+
+          if ((awareStatus && awareStatus.error > 0) || (connectStatus && connectStatus.error > 0)) {
+            var userErrorsId = serviceId + ':userErrors';
+            var data = [];
+            if (awareStatus.error > 0) {
+              data.push(awareStatus);
+            }
+            if (connectStatus && connectStatus.error > 0) {
+              data.push(connectStatus);
+            }
+            NotificationService.addNotification(
+              NotificationService.types.ALERT,
+              userErrorsId,
+              4,
+              'modules/hercules/notifications/call-user-errors.html', ['squared-fusion-uc'], data);
+          } else {
+            NotificationService.removeNotification(userErrorsId);
+          }
         } else {
-          NotificationService.removeNotification(userErrorsId);
+          // if we are not in the Call Service page, we must be in the Calendar Service page
+          userErrorsId = serviceId + ':userErrors';
+          if (summaryForService && summaryForService.error > 0) {
+            NotificationService.addNotification(
+              NotificationService.types.ALERT,
+              userErrorsId,
+              4,
+              'modules/hercules/notifications/calendar-user-errors.html', ['squared-fusion-cal'], summaryForService);
+          } else {
+            NotificationService.removeNotification(userErrorsId);
+          }
+
         }
       }
     }

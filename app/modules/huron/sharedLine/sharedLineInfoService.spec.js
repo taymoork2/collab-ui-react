@@ -1,16 +1,16 @@
 'use strict';
 
 describe('Service: SharedLineInfoService', function () {
-  var $httpBackend, $rootScope, SharedLineInfoService, HuronConfig;
+  var $httpBackend, SharedLineInfoService, HuronConfig;
 
-  beforeEach(module('Huron'));
-  beforeEach(module('ngResource'));
+  beforeEach(angular.mock.module('Huron'));
+  beforeEach(angular.mock.module('ngResource'));
 
   var authInfo = {
     getOrgId: sinon.stub().returns('1')
   };
 
-  beforeEach(module(function ($provide) {
+  beforeEach(angular.mock.module(function ($provide) {
     $provide.value("Authinfo", authInfo);
   }));
 
@@ -20,21 +20,11 @@ describe('Service: SharedLineInfoService', function () {
   var dn2 = {
     'uuid': '2'
   };
-  var directoryNumbers = [{
-    'directoryNumber': {
-      'uuid': '1'
-    }
-  }, {
-    'directoryNumber': {
-      'uuid': '2'
-    }
-  }];
 
   beforeEach(
     inject(
-      function (_$httpBackend_, _$rootScope_, _SharedLineInfoService_, _HuronConfig_) {
+      function (_$httpBackend_, _SharedLineInfoService_, _HuronConfig_) {
         $httpBackend = _$httpBackend_;
-        $rootScope = _$rootScope_;
         SharedLineInfoService = _SharedLineInfoService_;
         HuronConfig = _HuronConfig_;
       }));
@@ -110,7 +100,7 @@ describe('Service: SharedLineInfoService', function () {
 
     it('setDeviceSharedLine sets sharedline status', function () {
       $httpBackend.whenGET(HuronConfig.getCmiUrl() + '/voice/customers/1/sipendpoints/e787b84a-3cdf-436c-b1a7-e46e0a0ca11/directorynumbers').respond(200, getJSONFixture('huron/json/sharedLine/endpointDn.json'));
-      SharedLineInfoService.setDeviceSharedLine('e787b84a-3cdf-436c-b1a7-e46e0a0ca11', '1').then(function (data) {});
+      SharedLineInfoService.setDeviceSharedLine('e787b84a-3cdf-436c-b1a7-e46e0a0ca11', '1').then(function () {});
       $httpBackend.flush();
     });
 

@@ -5,8 +5,8 @@ describe('Controller: Trial Webex', function () {
   var controller;
   var trialData = getJSONFixture('core/json/trials/trialData.json');
 
-  beforeEach(module('core.trial'));
-  beforeEach(module('Core'));
+  beforeEach(angular.mock.module('core.trial'));
+  beforeEach(angular.mock.module('Core'));
 
   beforeEach(function () {
     bard.inject(this, '$controller', '$q', '$rootScope', 'TrialWebexService', 'TrialTimeZoneService');
@@ -14,7 +14,7 @@ describe('Controller: Trial Webex', function () {
     bard.mockService(TrialWebexService, {
       getData: trialData.enabled.trials.webexTrial,
       validateSiteUrl: function (siteUrl) {
-        return $q(function (resolve, reject) {
+        return $q(function (resolve) {
           if (siteUrl === 'acmecorp.webex.com') {
             resolve({
               isValid: true

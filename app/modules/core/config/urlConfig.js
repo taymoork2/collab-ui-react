@@ -123,16 +123,22 @@
       prod: 'https://wdm-a.wbx2.com/wdm/api/v1',
     },
     SunlightConfigServiceUrl: {
-      dev: 'https://config.nva1-de.ciscoccservice.com/config/v1',
-      cfe: 'https://config.nva1-de.ciscoccservice.com/config/v1',
-      integration: 'https://config.nctx3-stg.ciscoccservice.com/config/v1',
-      prod: 'https://config.rciad.ciscoccservice.com/config/v1'
+      dev: 'https://config.dev.ciscoccservice.com/config/v1',
+      cfe: 'https://config.appstaging.ciscoccservice.com/config/v1',
+      integration: 'https://config.appstaging.ciscoccservice.com/config/v1',
+      prod: 'https://config.produs1.ciscoccservice.com/config/v1'
     },
     SunlightBubbleUrl: {
-      dev: 'https://bubble.nva1-de.ciscoccservice.com',
-      cfe: 'https://bubble.nva1-de.ciscoccservice.com',
-      integration: 'https://bubble.nctx3-stg.ciscoccservice.com',
-      prod: 'https://bubble.rciad.ciscoccservice.com'
+      dev: 'https://bubble.dev.ciscoccservice.com',
+      cfe: 'https://bubble.appstaging.ciscoccservice.com',
+      integration: 'https://bubble.appstaging.ciscoccservice.com',
+      prod: 'https://bubble.produs1.ciscoccservice.com'
+    },
+    SunlightReportServiceUrl: {
+      dev: 'https://reporting.dev.ciscoccservice.com/reporting/v1',
+      cfe: 'https://reporting.appstaging.ciscoccservice.com/reporting/v1',
+      integration: 'https://reporting.appstaging.ciscoccservice.com/reporting/v1',
+      prod: 'https://reporting.produs1.ciscoccservice.com/reporting/v1'
     },
     CalliopeUrl: {
       dev: 'https://calliope-integration.wbx2.com/calliope/api/authorization/v1',
@@ -145,6 +151,12 @@
       cfe: 'https://hades.huron-dev.com/api/v1/elasticsearch/',
       integration: 'https://hades.huron-int.com/api/v1/elasticsearch/',
       prod: 'https://hades.huron-dev.com/api/v1/elasticsearch/'
+    },
+    BmmpUrl: {
+      dev: 'https://bmmp.dmz.ciscospark.com/api/v1',
+      cfe: 'https://bmmp.ciscospark.com/api/v1',
+      integration: 'https://bmmp.dmz.ciscospark.com/api/v1',
+      prod: 'https://bmmp.ciscospark.com/api/v1'
     },
 
     // urls same for all environments
@@ -164,9 +176,13 @@
 
   };
 
-  angular
-    .module('Core')
-    .factory('UrlConfig', UrlConfig);
+  module.exports = angular
+    .module('core.urlconfig', [
+      require('modules/core/config/config'),
+      require('modules/core/scripts/services/utils')
+    ])
+    .factory('UrlConfig', UrlConfig)
+    .name;
 
   function UrlConfig(Config, Utils) {
     return _.reduce(serviceUrlMapping, function (service, urlMapping, key) {

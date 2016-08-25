@@ -53,7 +53,7 @@
     }
 
     function getLicenseCommunicationIsTrial(isOverride) {
-      if (!!isOverride) {
+      if (isOverride) {
         // customer has trial override for international dialing
         disableInternationalDialing = false;
         return disableInternationalDialing;

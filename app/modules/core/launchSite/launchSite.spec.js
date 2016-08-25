@@ -3,14 +3,14 @@
 describe('Controller: LaunchSiteCtrl', function () {
 
   // load the controller's module
-  beforeEach(module('Core'));
+  beforeEach(angular.mock.module('Core'));
 
-  var LaunchSiteCtrl, scope;
+  var scope;
 
   // Initialize the controller and mock scope
   beforeEach(inject(function ($controller, $rootScope) {
     scope = $rootScope.$new();
-    LaunchSiteCtrl = $controller('LaunchSiteCtrl', {
+    $controller('LaunchSiteCtrl', {
       $scope: scope
     });
   }));

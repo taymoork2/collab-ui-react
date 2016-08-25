@@ -18,8 +18,8 @@ describe('Care Feature Delete Ctrl', function () {
     'statusText': 'Internal Server Error'
   };
 
-  beforeEach(module('Sunlight'));
-  beforeEach(module(function ($provide) {
+  beforeEach(angular.mock.module('Sunlight'));
+  beforeEach(angular.mock.module(function ($provide) {
     $provide.value("Authinfo", spiedAuthinfo);
   }));
 
@@ -30,7 +30,6 @@ describe('Care Feature Delete Ctrl', function () {
     $stateParams = _$stateParams_;
     $translate = _$translate_;
     $timeout = _$timeout_;
-    Authinfo = Authinfo;
     CareFeatureList = _CareFeatureList_;
     Notification = _Notification_;
     Log = _Log_;

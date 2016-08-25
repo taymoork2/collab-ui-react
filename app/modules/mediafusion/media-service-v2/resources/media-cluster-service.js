@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject */
-  function MediaClusterServiceV2($http, CsdmPoller, CsdmCacheUpdater, CsdmHubFactory, UrlConfig, Authinfo, MediaConfigServiceV2, $log) {
+  function MediaClusterServiceV2($http, CsdmPoller, CsdmCacheUpdater, CsdmHubFactory, UrlConfig, Authinfo, MediaConfigServiceV2) {
     var clusterCache = {
       mf_mgmt: {}
     };
@@ -11,19 +11,19 @@
       return res.data;
     }
 
+    function extractClustersFromResponse(response) {
+      return extractDataFromResponse(response).clusters;
+    }
+
     var fetch = function () {
       return $http
         .get(UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '?fields=@wide')
-        .then(extractDataFromResponse)
-        //removing the below code as state is no longer available
-        .then(function (response) {
-          // only keep fused clusters
-          return response.clusters; //_.filter(response.clusters, 'state', 'fused');
-        })
+        .then(extractClustersFromResponse)
         .then(function (clusters) {
-          // start modeling the response to match how the UI uses it, per connectorType
+          // start modeling the response to match how the UI uses it
+          var onlyMfMgmt = _.filter(clusters, 'targetType', 'mf_mgmt');
           return {
-            mf_mgmt: clusterType('mf_mgmt', clusters)
+            mf_mgmt: onlyMfMgmt
           };
         })
         .then(function (clusters) {
@@ -57,32 +57,32 @@
       // by the general overview page (state of Call connectors, etc.)
       var label, value;
       switch (state) {
-      case 'running':
-        label = 'ok';
-        value = 0;
-        break;
-      case 'not_installed':
-        label = 'neutral';
-        value = 1;
-        break;
-      case 'disabled':
-      case 'downloading':
-      case 'installing':
-      case 'not_configured':
-      case 'uninstalling':
-      case 'registered':
-      case 'initializing':
-        label = 'warning';
-        value = 2;
-        break;
-      case 'has_alarms':
-      case 'offline':
-      case 'stopped':
-      case 'not_operational':
-      case 'unknown':
-      default:
-        label = 'error';
-        value = 3;
+        case 'running':
+          label = 'ok';
+          value = 0;
+          break;
+        case 'not_installed':
+          label = 'neutral';
+          value = 1;
+          break;
+        case 'disabled':
+        case 'downloading':
+        case 'installing':
+        case 'not_configured':
+        case 'uninstalling':
+        case 'registered':
+        case 'initializing':
+          label = 'warning';
+          value = 2;
+          break;
+        case 'has_alarms':
+        case 'offline':
+        case 'stopped':
+        case 'not_operational':
+        case 'unknown':
+        default:
+          label = 'error';
+          value = 3;
       }
 
       return {
@@ -168,16 +168,6 @@
       });
     }
 
-    function clusterType(type, clusters) {
-      $log.log("cluster details", clusters);
-      return _.chain(clusters)
-        .map(function (cluster) {
-          cluster = angular.copy(cluster);
-          cluster.connectors = _.filter(cluster.connectors, 'connectorType', type);
-          return cluster;
-        }).value();
-    }
-
     var getClusters = function () {
       return clusterCache['mf_mgmt'];
     };
@@ -248,18 +238,6 @@
         .then(sort);
     }
 
-    function extractClustersFromResponse(response) {
-      return response.data.clusters;
-    }
-
-    function onlyKeepFusedClusters(clusters) {
-      return _.filter(clusters, 'state', 'fused');
-    }
-
-    function extractDataFromResponse(res) {
-      return res.data;
-    }
-
     function sort(clusters) {
       // Could be anything but at least make it consistent between 2 page refresh
       return _.sortBy(clusters, 'type');
@@ -282,12 +260,6 @@
     }
 
     function moveV2Host(connectorId, fromCluster, toCluster) {
-      var payLoad = {
-        "managementConnectorId": connectorId,
-        "fromClusterId": fromCluster,
-        "toClusterId": toCluster
-      };
-
       //var url = UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '/actions/moveNodeByManagementConnectorId/invoke';
       var url = UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '/actions/moveNodeByManagementConnectorId/invoke?managementConnectorId=' + connectorId + '&fromClusterId=' + fromCluster + '&toClusterId=' + toCluster;
       return $http
@@ -300,11 +272,17 @@
     }
 
     function getClustersByConnectorType(type) {
-      return _.values(clusterCache[type]);
+      var clusters = _.chain(clusterCache[type])
+        .values() // turn them to an array
+        .sortBy(function (cluster) {
+          return cluster.name.toLocaleUpperCase();
+        })
+        .value();
+      return clusters;
     }
 
     var hub = CsdmHubFactory.create();
-    var poller = CsdmPoller.create(fetch, hub);
+    CsdmPoller.create(fetch, hub);
 
     return {
       fetch: fetch,

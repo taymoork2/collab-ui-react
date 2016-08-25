@@ -3,15 +3,11 @@
 /* global LONG_TIMEOUT, deleteTrialUtils */
 
 describe('Spark Care Partner flow', function () {
-  var orgId;
-  var accessToken;
 
   describe('Add/Edit Partner Trial', function () {
 
     it('should login as care partner', function () {
-      login.login('partner-admin', '#/partner/customers').then(function (token) {
-        accessToken = token;
-      });
+      login.login('partner-admin', '#/partner/customers');
     });
 
     it('should add a new care trial', function () {
@@ -45,8 +41,7 @@ describe('Spark Care Partner flow', function () {
     it('should find the newly added care trial in customer list', function (done) {
       clickTrialRowAndPreview();
 
-      partner.retrieveOrgId(partner.newTrialRow).then(function (_orgId) {
-        orgId = _orgId;
+      partner.retrieveOrgId(partner.newTrialRow).then(function () {
         done();
       });
     });
@@ -86,7 +81,7 @@ describe('Spark Care Partner flow', function () {
       utils.click(partner.deleteCustomerButton);
       utils.waitForModal().then(function () {
         utils.click(partner.deleteCustomerOrgConfirm).then(function () {
-          notifications.assertSuccess(partner.newTrial.customerName, 'was successfully deleted');
+          notifications.assertSuccess(partner.newTrial.customerName, 'successfully deleted');
           done();
         });
       });

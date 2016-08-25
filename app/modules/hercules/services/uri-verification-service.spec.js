@@ -1,7 +1,7 @@
 'use strict';
 
 describe('URI Verification Service', function () {
-  beforeEach(module('Hercules'));
+  beforeEach(angular.mock.module('Hercules'));
 
   var service;
 
@@ -19,7 +19,7 @@ describe('URI Verification Service', function () {
     status: 'claimed'
   }];
 
-  beforeEach(module(function ($provide) {
+  beforeEach(angular.mock.module(function ($provide) {
     $provide.value("DomainManagementService", {
       getVerifiedDomains: function () {
         return null;
@@ -53,9 +53,10 @@ describe('URI Verification Service', function () {
     expect(service.isDomainVerified(dvList, 'invalid@hostname.nonVerifiedDomain.com')).toBe(false); //hostname.nonVerifiedDomain.com
     expect(service.isDomainVerified(dvList, 'invalid@ho@nonVerifiedDomain.com')).toBe(false); //nonVerifiedDomain.com
     expect(service.isDomainVerified(dvList, 'invalid@ho@hostname.nonVerifiedDomain.com')).toBe(false); //hostname.nonVerifiedDomain.com
-
+    expect(service.isDomainVerified(dvList, 'user@invalidDomain.com')).toBe(false);
     expect(service.isDomainVerified(dvList, 'validDomain.nonVerifiedDomain.com')).toBe(false);
     expect(service.isDomainVerified(dvList, 'validDomain')).toBe(false);
+    expect(service.isDomainVerified(dvList, 'invalidDomain.com')).toBe(false);
     expect(service.isDomainVerified(dvList, 'almostvalidDomain.com')).toBe(false);
 
     expect(service.isDomainVerified(dvList, 'validsubdomain.com')).toBe(false); //validDomain.com
@@ -68,6 +69,8 @@ describe('URI Verification Service', function () {
   it('should return true for valid verified domains', function () {
 
     expect(service.isDomainVerified(dvList, 'validDomain.com')).toBe(true); //validDomain.com
+    expect(service.isDomainVerified(dvList, 'VALIDDOMAIN.com')).toBe(true); //validDomain.com
+    expect(service.isDomainVerified(dvList, 'user@VALIDDOMAIN.com')).toBe(true); //validDomain.com
     expect(service.isDomainVerified(dvList, 'hostname.validDomain.com')).toBe(true); //hostname.validDomain.com
     expect(service.isDomainVerified(dvList, 'invalid@validDomain.com')).toBe(true); //validDomain.com
     expect(service.isDomainVerified(dvList, 'invalid@hostname.validDomain.com')).toBe(true); //hostname.validDomain.com

@@ -1,11 +1,11 @@
 'use strict';
 
 describe('FirstTimeWizardCtrl', function () {
-  beforeEach(module('Core'));
-  beforeEach(module('Huron'));
-  beforeEach(module('Sunlight'));
+  beforeEach(angular.mock.module('Core'));
+  beforeEach(angular.mock.module('Huron'));
+  beforeEach(angular.mock.module('Sunlight'));
 
-  var $controller, $q, $scope, Auth, Authinfo, Controller, FeatureToggleService, Userservice;
+  var $controller, $q, $scope, Auth, Authinfo, FeatureToggleService, Userservice;
 
   beforeEach(inject(function (_$controller_, _$q_, $rootScope, _Auth_, _Authinfo_,
     _FeatureToggleService_, _Userservice_) {
@@ -34,7 +34,7 @@ describe('FirstTimeWizardCtrl', function () {
     };
 
     function initController() {
-      Controller = $controller('FirstTimeWizardCtrl', {
+      $controller('FirstTimeWizardCtrl', {
         $scope: $scope
       });
       $scope.$apply();

@@ -5,7 +5,8 @@
     .controller('AddUserCtrl', AddUserCtrl);
 
   /* @ngInject */
-  function AddUserCtrl($scope, $q, $location, addressparser, DirSyncService, Log, $translate, Notification, UserListService, $filter, Userservice, LogMetricsService, Config, FeatureToggleService) {
+  function AddUserCtrl($scope, $rootScope, $q, $location, addressparser, DirSyncService, Log, $translate, Notification,
+    UserListService, $filter, Userservice, LogMetricsService, Config, FeatureToggleService) {
     $scope.maxUsers = 1100;
     var invalidcount = 0;
     $scope.options = {
@@ -95,9 +96,9 @@
     $scope.setupTokenfield = function () {
       //tokenfield setup - Should make it into a directive later.
       angular.element('#usersfield-wiz').tokenfield({
-          delimiter: [',', ';'],
-          createTokensOnBlur: true
-        })
+        delimiter: [',', ';'],
+        createTokensOnBlur: true
+      })
         .on('tokenfield:createtoken', function (e) {
           //Removing anything in brackets from user data
           var value = e.attrs.value.replace(/\s*\([^)]*\)\s*/g, ' ');
@@ -132,7 +133,7 @@
       } else if (syncOption === 'manual') {
         $scope.showStep('manual');
       } else {
-        Notification.error($translate.instant('firstTimeWizard.chooseSync'));
+        Notification.error('firstTimeWizard.chooseSync');
       }
     };
 
@@ -162,7 +163,6 @@
     };
 
     $scope.installNextStep = function () {
-      $scope.getStatus();
       $scope.showStep('syncStatus');
     };
 
@@ -248,9 +248,6 @@
           }
         } else {
           Log.debug('Failed to retrieve directory sync configuration. Status: ' + status);
-          // Notification.notify([$translate.instant('dirsyncModal.getDomainFailed', {
-          //   status: status
-          // })], 'error');
         }
       });
     };
@@ -266,9 +263,9 @@
             Log.debug('Created DirSync domain. Status: ' + status);
           } else {
             Log.debug('Failed to create directory sync domain. Status: ' + status);
-            Notification.notify([$translate.instant('dirsyncModal.setDomainFailed', {
+            Notification.error('dirsyncModal.setDomainFailed', {
               status: status
-            })], 'error');
+            });
           }
         });
       }
@@ -289,6 +286,8 @@
       $scope.useNameList = [];
       $scope.dirsyncUserCountText = '';
 
+      $rootScope.$emit('add-user-dirsync-started');
+
       DirSyncService.getDirSyncStatus(function (data, status) {
         if (data.success) {
           Log.debug('Retrieved DirSync status successfully. Status: ' + status);
@@ -298,9 +297,10 @@
           }
         } else {
           Log.debug('Failed to retrieve directory sync status. Status: ' + status);
-          Notification.notify([$translate.instant('dirsyncModal.getStatusFailed', {
+          $rootScope.$emit('add-user-dirsync-error');
+          Notification.error('dirsyncModal.getStatusFailed', {
             status: status
-          })], 'error');
+          });
         }
       });
 
@@ -328,6 +328,7 @@
           userNameObj.lastName = row.lastName;
           $scope.useNameList.push(userNameObj);
         });
+        $rootScope.$emit('add-user-dirsync-completed');
         return $q.resolve();
       });
     };
@@ -338,15 +339,15 @@
         if (data.success) {
           $scope.syncNowLoad = false;
           Log.debug('DirSync started successfully. Status: ' + status);
-          Notification.notify([$translate.instant('dirsyncModal.dirsyncSuccess', {
+          Notification.success('dirsyncModal.dirsyncSuccess', {
             status: status
-          })], 'success');
+          });
         } else {
           $scope.syncNowLoad = false;
           Log.debug('Failed to start directory sync. Status: ' + status);
-          Notification.notify([$translate.instant('dirsyncModal.dirsyncFailed', {
+          Notification.error('dirsyncModal.dirsyncFailed', {
             status: status
-          })], 'error');
+          });
         }
       });
     };
@@ -423,8 +424,6 @@
 
         if (data.success) {
           Log.info('User invitation sent successfully.', data.id);
-          // var success = [$translate.instant('usersPage.successInvite', data)];
-          // Notification.notify(success, 'success');
           for (var i = 0; i < data.inviteResponse.length; i++) {
 
             var userResult = {
@@ -493,9 +492,9 @@
 
         startLog = moment();
 
-        var i, temparray, chunk = Config.batchSize;
+        var i, chunk = Config.batchSize;
         for (i = 0; i < usersList.length; i += chunk) {
-          temparray = usersList.slice(i, i + chunk);
+          usersList.slice(i, i + chunk);
           //update entitlements
           Userservice.inviteUsers(usersList, null, callback);
         }

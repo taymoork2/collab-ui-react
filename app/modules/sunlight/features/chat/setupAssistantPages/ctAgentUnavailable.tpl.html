@@ -5,11 +5,11 @@
   </div>
   <div class="h4 ct-title-desc" translate="careChatTpl.agentUnavailableDesc"></div>
 
-  <div class="ct-agent-unavailable ct-sa-content">
-    <cs-card-layout block-view="true">
+  <div class="cs-card-container ct-agent-unavailable ct-sa-content">
+    <cs-card-layout>
       <cs-card>
-        <div class="h4 unavailable-header" translate="careChatTpl.screen"></div>
-        <article class="articleHeight">
+        <div class="h4 unavailable-header" translate="careChatTpl.preview"></div>
+        <article class="articleHeight ct-article">
           <section>
             <div class="unavailable-preview">
               <div class="unavailable">
@@ -25,14 +25,22 @@
       </cs-card>
 
       <cs-card>
-        <div class="h4 unavailable-header" translate="careChatTpl.attributesCard"></div>
-        <article class="articleHeight attributes">
+        <div class="h4 unavailable-header" translate="careChatTpl.attributes"></div>
+        <article class="articleHeight attributes ct-article">
           <section>
             <div class="unavailable-attributes">
               <div class="h4 unavailable-attributes-label">Message</div>
-            <textarea id="agentUnavailableMessageField" class="h6" maxlength="250"
-                      ng-model="careChatSA.template.configuration.pages.agentUnavailable.fields.agentUnavailableMessage.displayText">
-            </textarea>
+            	<textarea
+            	cs-input
+            	class="h6 message-area"
+            	type="text"
+            	id="agentUnavailableMessageField"
+            	name="agentUnavailableMessageField"
+            	ng-model="careChatSA.template.configuration.pages.agentUnavailable.fields.agentUnavailableMessage.displayText"
+            	ng-model-options="{ allowInvalid: true }"
+            	cs-input-messages="careChatSA.multiLineValidationMessage"
+            	ng-maxlength="careChatSA.lengthConstants.multiLineMaxCharLimit">
+            	</textarea>
             </div>
 
             </section>

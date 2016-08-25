@@ -1,11 +1,22 @@
 describe('Service: Notification', function () {
-  beforeEach(module('Core'));
+  beforeEach(angular.mock.module('Core'));
 
-  var Notification, $translate, toaster, Authinfo, Config, $timeout, Log;
+  var Notification, toaster, Authinfo, Config, $timeout, Log;
 
-  beforeEach(inject(function (_Notification_, _$translate_, _toaster_, _Authinfo_, _Config_, _$timeout_, _Log_) {
+  function MakePopResponse(title, type, message, timeout) {
+    return {
+      title: title,
+      type: type,
+      body: 'bind-unsafe-html',
+      bodyOutputType: 'directive',
+      directiveData: { data: [message] },
+      timeout: timeout,
+      closeHtml: jasmine.any(String)
+    };
+  }
+
+  beforeEach(inject(function (_Notification_, _toaster_, _Authinfo_, _Config_, _$timeout_, _Log_) {
     Notification = _Notification_;
-    $translate = _$translate_;
     toaster = _toaster_;
     Authinfo = _Authinfo_;
     Config = _Config_;
@@ -23,12 +34,26 @@ describe('Service: Notification', function () {
       var message = "operation was successful";
       var notifications = [message];
       Notification.notify(notifications, "success");
-      expect(toaster.pop).toHaveBeenCalledWith({
-        type: 'success',
-        body: message,
-        timeout: 3000,
-        closeHtml: jasmine.any(String)
-      });
+      expect(toaster.pop).toHaveBeenCalledWith(MakePopResponse(undefined, 'success', message, 3000));
+      expect(toaster.pop.calls.count()).toEqual(1);
+    });
+
+    it('creates success toaster with given message type and text', function () {
+      spyOn(toaster, "pop");
+
+      var message = "operation was successful";
+      Notification.success(message);
+      expect(toaster.pop).toHaveBeenCalledWith(MakePopResponse(undefined, 'success', message, 3000));
+      expect(toaster.pop.calls.count()).toEqual(1);
+    });
+
+    it('creates success toaster with given message type, title and text', function () {
+      spyOn(toaster, "pop");
+
+      var message = "operation was successful";
+      var title = "title";
+      Notification.success(message, undefined, title);
+      expect(toaster.pop).toHaveBeenCalledWith(MakePopResponse(title, 'success', message, 3000));
       expect(toaster.pop.calls.count()).toEqual(1);
     });
   });
@@ -42,12 +67,20 @@ describe('Service: Notification', function () {
       var error_message = "this is an error message";
       var notifications = [error_message];
       Notification.notify(notifications, "warning");
-      expect(toaster.pop).toHaveBeenCalledWith({
-        type: 'warning',
-        body: error_message,
-        timeout: 0,
-        closeHtml: jasmine.any(String)
-      });
+      expect(toaster.pop).toHaveBeenCalledWith(MakePopResponse(undefined, 'warning', error_message, 0));
+      expect(toaster.pop.calls.count()).toEqual(1);
+
+    });
+
+    it('creates toaster with given message type, title and text', function () {
+      spyOn(toaster, "pop");
+      spyOn(Authinfo, "isReadOnlyAdmin").and.returnValue(false);
+
+      var error_message = "this is an error message";
+      var notifications = [error_message];
+      var title = "title";
+      Notification.notify(notifications, "warning", title);
+      expect(toaster.pop).toHaveBeenCalledWith(MakePopResponse(title, 'warning', error_message, 0));
       expect(toaster.pop.calls.count()).toEqual(1);
 
     });
@@ -59,12 +92,7 @@ describe('Service: Notification', function () {
         spyOn(Authinfo, "isReadOnlyAdmin").and.returnValue(true);
 
         Notification.notifyReadOnly();
-        expect(toaster.pop).toHaveBeenCalledWith({
-          type: 'warning',
-          body: 'readOnlyMessages.notAllowed',
-          timeout: 0,
-          closeHtml: jasmine.any(String)
-        });
+        expect(toaster.pop).toHaveBeenCalledWith(MakePopResponse(undefined, 'warning', 'readOnlyMessages.notAllowed', 0));
         expect(toaster.pop.calls.count()).toEqual(1);
 
       });
@@ -94,8 +122,23 @@ describe('Service: Notification', function () {
         expect(Log.warn.calls.count()).toEqual(2);
 
       });
-
     });
   });
 
+  describe('Yes/No Confirmation Notifications', function () {
+
+    it('creates toaster with yes/no confirmation', function () {
+      spyOn(toaster, "pop");
+
+      var message = "confirmation was successful";
+      Notification.confirmation(message);
+      expect(toaster.pop).toHaveBeenCalledWith({
+        type: 'warning',
+        body: 'cs-confirmation',
+        bodyOutputType: 'directive',
+        showCloseButton: false
+      });
+      expect(toaster.pop.calls.count()).toEqual(1);
+    });
+  });
 });

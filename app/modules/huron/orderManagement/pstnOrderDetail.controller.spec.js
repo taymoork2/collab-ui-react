@@ -1,9 +1,9 @@
 'use strict';
 
 describe('Controller: PstnOrderDetailCtrl', function () {
-  var controller, $controller, $scope, $state, $stateParams, $translate, fulfilledBlockOrder, pendingBlockOrder, fulfilledNumberOrder;
+  var controller, $controller, $scope, $stateParams, $translate, fulfilledBlockOrder, pendingBlockOrder, fulfilledNumberOrder;
 
-  beforeEach(module('Huron'));
+  beforeEach(angular.mock.module('Huron'));
 
   beforeEach(inject(function ($rootScope, _$controller_, _$stateParams_, _$translate_) {
     $scope = $rootScope.$new();

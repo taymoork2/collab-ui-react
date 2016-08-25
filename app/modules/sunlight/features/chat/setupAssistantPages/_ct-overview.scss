@@ -7,6 +7,9 @@
 .ct-card-overview {
   height: rem-calc(220);
   box-shadow: 0px 0px 0px 0px !important;
+  .icon.ct-card-img {
+    font-size: 4rem;
+  }
   .ct-card-img {
     @include vr-spacing(mt, 1);
     text-align: center;
@@ -19,7 +22,8 @@
   }
   .ct-card-desc {
     color: $gray-dark-1;
-    text-align: center
+    text-align: center;
+    width: 100%;
   }
   section {
     display: flex;

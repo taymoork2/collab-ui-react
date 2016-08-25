@@ -1,16 +1,16 @@
 'use strict';
 
 describe('Service: DirectoryNumber', function () {
-  var $httpBackend, $rootScope, DirectoryNumber, HuronConfig;
+  var $httpBackend, DirectoryNumber;
 
-  beforeEach(module('Huron'));
-  beforeEach(module('ngResource'));
+  beforeEach(angular.mock.module('Huron'));
+  beforeEach(angular.mock.module('ngResource'));
 
   var authInfo = {
     getOrgId: sinon.stub().returns('1')
   };
 
-  beforeEach(module(function ($provide) {
+  beforeEach(angular.mock.module(function ($provide) {
     $provide.value("Authinfo", authInfo);
   }));
 
@@ -49,11 +49,9 @@ describe('Service: DirectoryNumber', function () {
 
   beforeEach(
     inject(
-      function (_$httpBackend_, _$rootScope_, _DirectoryNumber_, _HuronConfig_) {
+      function (_$httpBackend_, _DirectoryNumber_) {
         $httpBackend = _$httpBackend_;
-        $rootScope = _$rootScope_;
         DirectoryNumber = _DirectoryNumber_;
-        HuronConfig = _HuronConfig_;
       }));
 
   afterEach(function () {

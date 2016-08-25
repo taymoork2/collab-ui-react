@@ -6,27 +6,52 @@
     .controller('MediafusionClusterSettingsController', MediafusionClusterSettingsController);
 
   /* @ngInject */
-  function MediafusionClusterSettingsController($stateParams, $translate, FusionClusterService, XhrNotificationService, MediaClusterServiceV2) {
+  function MediafusionClusterSettingsController($stateParams, $translate, FusionClusterService, XhrNotificationService, MediaClusterServiceV2, $modal) {
     var vm = this;
     vm.backUrl = 'cluster-list';
     vm.upgradeSchedule = {
-      title: 'hercules.expresswayClusterSettings.upgradeScheduleHeader',
-      description: 'hercules.expresswayClusterSettings.upgradeScheduleParagraph'
+      title: 'hercules.expresswayClusterSettings.upgradeScheduleHeader'
+    };
+    vm.releaseChannel = {
+      title: 'mediaFusion.clusters.releaseChannel',
+      description: 'mediaFusion.clusters.releaseChannelDesc'
+    };
+    vm.delete = {
+      title: 'mediaFusion.clusters.deletecluster',
+      description: 'mediaFusion.clusters.deleteclusterDesc'
     };
 
-    //hardcoded now and will be changed in the future 
-    vm.options = [
-      'GA',
-      'DEV',
-      'ALPHA'
-    ];
+    //hardcoded now and will be changed in the future
+    vm.options = [{
+      value: 0,
+      label: $translate.instant('mediaFusion.clusters.stable')
+    }, {
+      value: 1,
+      label: $translate.instant('mediaFusion.clusters.beta')
+    }, {
+      value: 2,
+      label: $translate.instant('mediaFusion.clusters.latest')
+    }];
 
     vm.selected = '';
 
     vm.changeReleaseChanel = function () {
-      if (vm.selected != vm.cluster.releaseChannel) {
-        MediaClusterServiceV2.updateV2Cluster(vm.cluster.id, vm.displayName, vm.selected);
+      if (vm.selected.label != vm.cluster.releaseChannel.toLocaleUpperCase()) {
+        MediaClusterServiceV2.updateV2Cluster(vm.cluster.id, vm.displayName, vm.selected.label.toLocaleLowerCase());
       }
+    };
+
+    vm.deleteCluster = function () {
+      $modal.open({
+        resolve: {
+          cluster: function () {
+            return vm.cluster;
+          }
+        },
+        controller: 'DeleteClusterSettingControllerV2',
+        controllerAs: "deleteClust",
+        templateUrl: 'modules/mediafusion/media-service-v2/delete-cluster/delete-cluster-dialog.html'
+      });
     };
 
     loadCluster($stateParams.id);
@@ -38,7 +63,8 @@
             return c.id === clusterid;
           });
           vm.cluster = cluster;
-          vm.selectPlaceholder = vm.cluster.releaseChannel;
+          vm.clusters = clusters;
+          vm.selectPlaceholder = vm.cluster.releaseChannel.toLocaleUpperCase();
           vm.localizedTitle = $translate.instant('hercules.expresswayClusterSettings.pageTitle', {
             clusterName: cluster.name
           });

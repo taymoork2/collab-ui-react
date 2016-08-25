@@ -1,5 +1,4 @@
 .ct-agent-unavailable {
-  align-items: center;
 
   @mixin placeholder {
     ::-webkit-input-placeholder {
@@ -31,6 +30,11 @@
     }
   }
 
+  .ct-article {
+    box-shadow: none;
+    border: 1px solid $gray-light-1;
+  }
+
   .ct-agent-unavailable-icon {
     color: $alert-color;
   }
@@ -58,6 +62,9 @@
       flex-wrap: nowrap;
       width: 80%;
       color: $alert-color;
+      .icon-warning {
+        font-size: 2rem;
+      }
     }
 
     .unavailable-msg {
@@ -73,7 +80,7 @@
 
   .unavailable-attributes {
     @include vr-spacing(pl, 1);
-    > textarea {
+    .message-area {
       height: 5rem;
       width: 90%;
       resize: none;

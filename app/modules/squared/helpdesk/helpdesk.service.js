@@ -133,9 +133,9 @@
         return deferredResolve(HelpdeskMockData.users);
       }
 
-      return cancelableHttpGET(urlBase + 'helpdesk/search/users?phrase=' + encodeURIComponent(searchString) + '&limit=' + limit + (orgId ?
-          '&orgId=' +
-          encodeURIComponent(orgId) : (includeUnlicensed ? '&includeUnlicensed=true' : '')) + (role ? '&role=' + encodeURIComponent(role) : ''))
+      var includeUnlicensedStr = includeUnlicensed ? '&includeUnlicensed=true' : '';
+      var roleStr = role ? '&role=' + encodeURIComponent(role) : '';
+      return cancelableHttpGET(urlBase + 'helpdesk/search/users?phrase=' + encodeURIComponent(searchString) + '&limit=' + limit + (orgId ? '&orgId=' + encodeURIComponent(orgId) : includeUnlicensedStr) + roleStr)
         .then(extractUsers);
     }
 
@@ -316,7 +316,7 @@
       if (FeatureToggleService.supports(FeatureToggleService.features.atlasEmailStatus)) {
         return isEmailBlocked(email).then(function () {
           $http.delete(urlBase + 'email/bounces?email=' + email)
-            .then(function (response) {
+            .then(function () {
               return invokeInviteEmail(displayName, email);
             });
         }).catch(function () {
@@ -329,11 +329,11 @@
 
     function invokeInviteEmail(displayName, email) {
       return $http.post(urlBase + 'helpdesk/actions/resendinvitation/invoke', {
-          inviteList: [{
-            displayName: displayName,
-            email: email
-          }]
-        })
+        inviteList: [{
+          displayName: displayName,
+          email: email
+        }]
+      })
         .then(extractData);
     }
 
@@ -355,6 +355,15 @@
       return $http
         .get(urlBase + 'helpdesk/webexsites/' + encodeURIComponent(orgId))
         .then(extractItems);
+    }
+
+    function getServiceOrder(orgId) {
+      if (useMock()) {
+        return deferredResolve(HelpdeskMockData.serviceOrder);
+      }
+      return $http
+        .get(urlBase + 'helpdesk/serviceorder/' + encodeURIComponent(orgId))
+        .then(extractData);
     }
 
     function elevateToReadonlyAdmin(orgId) {
@@ -393,6 +402,7 @@
       getHybridServices: getHybridServices,
       resendInviteEmail: resendInviteEmail,
       getWebExSites: getWebExSites,
+      getServiceOrder: getServiceOrder,
       getCloudberryDevice: getCloudberryDevice,
       getOrgDisplayName: getOrgDisplayName,
       findAndResolveOrgsForUserResults: findAndResolveOrgsForUserResults,

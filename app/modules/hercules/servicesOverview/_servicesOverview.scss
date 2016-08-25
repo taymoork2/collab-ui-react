@@ -11,7 +11,7 @@
     color: $gray-dark-2;
   }
 
-  .icon-spinner{
+  .icon-spinner {
     display: block;
     margin-left: auto;
     margin-right: auto;
@@ -131,10 +131,16 @@
           .danger {
             color: $color-negative-base;
           }
+          .success {
+            color: $color-cta-base;
+          }
         }
       }
       .cs-card.header-bar.cta-bar header:after {
         border-top-color: $color-cta-base !important;
+      }
+      .cs-card.header-bar.care-bar header:after {
+        border-top-color: $color-people-base !important;
       }
     }
   }

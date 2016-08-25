@@ -1,18 +1,17 @@
 'use strict';
 describe('Controller: SupportCtrl', function () {
-  beforeEach(module('wx2AdminWebClientApp'));
+  beforeEach(angular.mock.module('Squared'));
 
-  var Userservice, httpBackend, $compile, controller, Authinfo, $scope, $templateCache;
+  var Userservice, httpBackend, $compile, controller, Authinfo, $scope;
 
   function stubAllHttpGetRequests() {
     httpBackend.whenGET(/.*/).respond({});
   }
 
-  beforeEach(inject(function (_Userservice_, $httpBackend, _$templateCache_, _$compile_, $rootScope, $controller, _Authinfo_) {
+  beforeEach(inject(function (_Userservice_, $httpBackend, _$compile_, $rootScope, $controller, _Authinfo_) {
     Userservice = _Userservice_;
 
     Authinfo = _Authinfo_;
-    $templateCache = _$templateCache_;
     $compile = _$compile_;
     httpBackend = $httpBackend;
     $scope = $rootScope.$new();

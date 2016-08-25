@@ -6,7 +6,7 @@
     .controller('OverviewCtrl', OverviewCtrl);
 
   /* @ngInject */
-  function OverviewCtrl($rootScope, $scope, $state, $translate, Authinfo, Config, Log, Notification, Orgservice, OverviewCardFactory, ReportsService, ServiceDescriptor, TrialService, UrlConfig) {
+  function OverviewCtrl($rootScope, $scope, $translate, Authinfo, Config, FeatureToggleService, Log, Notification, Orgservice, OverviewCardFactory, OverviewNotificationFactory, ReportsService, TrialService, UrlConfig) {
     var vm = this;
 
     vm.pageTitle = $translate.instant('overview.pageTitle');
@@ -19,11 +19,87 @@
       OverviewCardFactory.createHybridServicesCard(),
       OverviewCardFactory.createUsersCard()
     ];
+    vm.notifications = [];
     vm.trialDaysLeft = undefined;
+    vm.dismissNotification = dismissNotification;
+
+    vm.hasMediaFeatureToggle = false;
+
+    function isFeatureToggled() {
+      return FeatureToggleService.supports(FeatureToggleService.features.atlasMediaServiceOnboarding);
+    }
+    isFeatureToggled().then(function (reply) {
+      vm.hasMediaFeatureToggle = reply;
+    });
 
     function init() {
       removeCardUserTitle();
-      setSipUriNotification();
+      if (!Authinfo.isSetupDone() && Authinfo.isCustomerAdmin()) {
+        vm.notifications.push(OverviewNotificationFactory.createSetupNotification());
+      }
+      Orgservice.getHybridServiceAcknowledged().then(function (response) {
+        if (response.status === 200) {
+          angular.forEach(response.data.items, function (item) {
+            if (!item.acknowledged) {
+              if (item.id === Config.entitlements.fusion_cal) {
+                vm.notifications.push(OverviewNotificationFactory.createCalendarNotification());
+              } else if (item.id === Config.entitlements.fusion_uc) {
+                vm.notifications.push(OverviewNotificationFactory.createCallAwareNotification());
+              } else if (item.id === Config.entitlements.fusion_ec) {
+                vm.notifications.push(OverviewNotificationFactory.createCallConnectNotification());
+              } else if (item.id === Config.entitlements.mediafusion && vm.hasMediaFeatureToggle) {
+                vm.notifications.push(OverviewNotificationFactory.createHybridMediaNotification());
+              }
+            }
+          });
+        } else {
+          Log.error("Error in GET service acknowledged status");
+        }
+      });
+      Orgservice.getOrg(function (data, status) {
+        if (status === 200) {
+          if (!data.orgSettings.sipCloudDomain) {
+            vm.notifications.push(OverviewNotificationFactory.createCloudSipUriNotification());
+          }
+        } else {
+          Log.debug('Get existing org failed. Status: ' + status);
+          Notification.error('firstTimeWizard.sparkDomainManagementServiceErrorMessage');
+        }
+      });
+      FeatureToggleService.atlasDarlingGetStatus().then(function (toggle) {
+        if (toggle) {
+          Orgservice.getAdminOrgUsage()
+            .then(function (response) {
+              var sharedDevicesUsage = -1;
+              var sparkBoardsUsage = -1;
+              _.each(response.data, function (subscription) {
+                _.each(subscription, function (licenses) {
+                  _.each(licenses, function (license) {
+                    if (license.status === Config.licenseStatus.ACTIVE) {
+                      if (license.offerName === Config.offerCodes.SD) {
+                        sharedDevicesUsage = license.usage;
+                      } else if (license.offerName === Config.offerCodes.SB) {
+                        sparkBoardsUsage = license.usage;
+                      }
+                    }
+                  });
+                });
+              });
+              if (sharedDevicesUsage === 0 || sparkBoardsUsage === 0) {
+                setRoomSystemEnabledDevice(true);
+                if (sharedDevicesUsage === 0 && sparkBoardsUsage === 0) {
+                  vm.notifications.push(OverviewNotificationFactory.createDevicesNotification('homePage.setUpDevices'));
+                } else if (sparkBoardsUsage === 0) {
+                  vm.notifications.push(OverviewNotificationFactory.createDevicesNotification('homePage.setUpSparkBoardDevices'));
+                } else {
+                  vm.notifications.push(OverviewNotificationFactory.createDevicesNotification('homePage.setUpSharedDevices'));
+                }
+              } else {
+                setRoomSystemEnabledDevice(false);
+              }
+            });
+        }
+      });
       TrialService.getDaysLeftForCurrentUser().then(function (daysLeft) {
         vm.trialDaysLeft = daysLeft;
       });
@@ -35,6 +111,19 @@
           name: 'overview.cards.users.title'
         });
       }
+    }
+
+    function setRoomSystemEnabledDevice(isDeviceEnabled) {
+      (_.find(vm.cards, function (card) {
+        return card.name === 'overview.cards.roomSystem.title';
+      })).isDeviceEnabled = isDeviceEnabled;
+    }
+
+    function dismissNotification(notification) {
+      vm.notifications = _.reject(vm.notifications, {
+        name: notification.name
+      });
+      notification.dismiss();
     }
 
     function forwardEvent(handlerName) {
@@ -62,98 +151,16 @@
 
     ReportsService.healthMonitor(_.partial(forwardEvent, 'healthStatusUpdatedHandler'));
 
-    ServiceDescriptor.services(_.partial(forwardEvent, 'hybridStatusEventHandler'), true);
-
-    vm.isCalendarAcknowledged = true;
-    vm.isCallAwareAcknowledged = true;
-    vm.isCallConnectAcknowledged = true;
-    vm.isCloudSipUriSet = false;
-    vm.isSipUriAcknowledged = false;
     init();
-    vm.setSipUriNotification = setSipUriNotification;
 
-    Orgservice.getHybridServiceAcknowledged().then(function (response) {
-      if (response.status === 200) {
-        angular.forEach(response.data.items, function (items) {
-          if (items.id === Config.entitlements.fusion_cal) {
-            vm.isCalendarAcknowledged = items.acknowledged;
-          } else if (items.id === Config.entitlements.fusion_uc) {
-            vm.isCallAwareAcknowledged = items.acknowledged;
-          } else if (items.id === Config.entitlements.fusion_ec) {
-            vm.isCallConnectAcknowledged = items.acknowledged;
-          }
-        });
-      } else {
-        Log.error("Error in GET service acknowledged status");
-      }
-    });
-
-    function setSipUriNotification() {
-      Orgservice.getOrg(function (data, status) {
-        if (status === 200) {
-          vm.isCloudSipUriSet = !!data.orgSettings.sipCloudDomain;
-        } else {
-          Log.debug('Get existing org failed. Status: ' + status);
-          Notification.error('firstTimeWizard.sparkDomainManagementServiceErrorMessage');
-        }
+    $scope.$on('DISMISS_SIP_NOTIFICATION', function () {
+      vm.notifications = _.reject(vm.notifications, {
+        name: 'cloudSipUri'
       });
-    }
-
-    vm.setHybridAcknowledged = function (serviceName) {
-      if (serviceName === 'calendar-service') {
-        vm.isCalendarAcknowledged = true;
-      } else if (serviceName === 'call-aware-service') {
-        vm.isCallAwareAcknowledged = true;
-      } else if (serviceName === 'call-connect-service') {
-        vm.isCallConnectAcknowledged = true;
-      }
-      Orgservice.setHybridServiceAcknowledged(serviceName);
-    };
-
-    vm.setSipUriNotificationAcknowledged = function () {
-      vm.isSipUriAcknowledged = true;
-    };
-
-    $scope.$on('DISMISS_SIP_NOTIFICATION', vm.setSipUriNotificationAcknowledged);
+    });
 
     $rootScope.$watch('ssoEnabled', function () {
       Orgservice.getAdminOrg(_.partial(forwardEvent, 'orgEventHandler'), false, true);
     });
-
-    vm.showServiceActivationPage = function (serviceName) {
-      if (serviceName === 'calendar-service') {
-        $state.go('calendar-service.list');
-      } else if (serviceName === 'call-aware-service') {
-        $state.go('call-service.list');
-      } else if (serviceName === 'call-connect-service') {
-        $state.go('call-service.list');
-      }
-      vm.setHybridAcknowledged(serviceName);
-    };
-
-    vm.showEnterpriseSettings = function () {
-      $state.go('setupwizardmodal', {
-        currentTab: 'enterpriseSettings'
-      });
-    };
-
-    vm.showSSOSettings = function () {
-      $state.go('setupwizardmodal', {
-        currentTab: 'enterpriseSettings',
-        currentStep: 'init'
-      });
-    };
-
-    vm.setupNotDone = function () {
-      return !!(!Authinfo.isSetupDone() && Authinfo.isCustomerAdmin());
-    };
-
-    vm.openFirstTimeSetupWiz = function () {
-      $state.go('firsttimewizard');
-    };
-
-    vm.displayNotifications = function () {
-      return (vm.setupNotDone() || !(vm.isCalendarAcknowledged && vm.isCallAwareAcknowledged && vm.isCallConnectAcknowledged && (vm.isSipUriAcknowledged || vm.isCloudSipUriSet)));
-    };
   }
 })();

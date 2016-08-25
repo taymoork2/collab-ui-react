@@ -25,6 +25,10 @@
     primaryColorDarker: '#0387B8',
     dummyGrayLight: '#F3F3F3',
     dummyGrayLighter: '#FAFAFA',
+    dummyGrayFillLight: '#F5F5F6',
+    dummyGrayFillLighter: '#EBEBEC',
+    dummyGrayFillDark: '#D7D7D8',
+    dummyGrayFillDarker: '#AEAEAF',
     colorAttentionBase: '#F5A623',
     colorPeopleBase: '#14A792',
     brandRoyalBlue: '#5390E0',
@@ -32,7 +36,17 @@
     colorGreen: '#5AAE76',
     colorRed: '#F4735E',
     colorYellow: '#E99849',
-    colorPurple: '#8E5ACF'
+    colorPurple: '#8E5ACF',
+    colorLightGreen: '#43A942',
+    colorLightGreenFill: '#017900',
+    colorLightYellow: '#F5A623',
+    colorLightYellowFill: '#FFA200',
+    colorLightRed: '#F96452',
+    colorLightRedFill: '#FF0000',
+    metricLightGreen: '#7BAF5D',
+    metricDarkGreen: '#417505',
+    metricBlue: '#049FD9',
+    metricYellow: '#F5A623'
   };
 
   angular

@@ -1,12 +1,12 @@
 /**
- * 
+ *
  */
 'use strict';
 
 describe('WebExRestApiFact.csvApiRequest() test', function () {
   var WebExApiGatewayConstsService;
 
-  beforeEach(module('WebExApp'));
+  beforeEach(angular.mock.module('WebExApp'));
 
   beforeEach(inject(function (
     _WebExApiGatewayConstsService_
@@ -27,6 +27,7 @@ describe('WebExRestApiFact.csvApiRequest() test', function () {
     };
 
     WebExApiGatewayConstsService.csvStates = {
+      authTokenError: 'authTokenError',
       none: 'none',
       exportInProgress: 'exportInProgress',
       exportCompletedNoErr: 'exportCompletedNoErr',
@@ -48,8 +49,22 @@ describe('WebExRestApiFact.csvApiRequest() test', function () {
         expect(response.jobType).toEqual(WebExApiGatewayConstsService.csvJobTypes.typeNone);
       },
 
+      function csvApiRequestError() {}
+    );
+  }));
+
+  it('can redirect on auth token error', inject(function (WebExRestApiFact) {
+    WebExRestApiFact.csvApiRequest(
+      true,
+      WebExApiGatewayConstsService.csvStates.authTokenError
+    ).then(
+
+      function csvApiRequestSuccess() {},
+
       function csvApiRequestError(response) {
-        var dummy = null;
+        expect(response).not.toEqual(null);
+        expect(response.errorCode).toEqual("060502");
+        expect(response.errorMessage).toEqual("Auth token is invalid.");
       }
     );
   }));
@@ -66,9 +81,7 @@ describe('WebExRestApiFact.csvApiRequest() test', function () {
         expect(response.request).toEqual(WebExApiGatewayConstsService.csvJobStatus.statusQueued);
       },
 
-      function csvApiRequestError(response) {
-        var dummy = null;
-      }
+      function csvApiRequestError() {}
     );
   }));
 
@@ -91,9 +104,7 @@ describe('WebExRestApiFact.csvApiRequest() test', function () {
         expect(response.exportFileLink).not.toEqual(null);
       },
 
-      function csvApiRequestError(response) {
-        var dummy = null;
-      }
+      function csvApiRequestError() {}
     );
   }));
 
@@ -117,9 +128,7 @@ describe('WebExRestApiFact.csvApiRequest() test', function () {
         expect(response.exportFileLink).not.toEqual(null);
       },
 
-      function csvApiRequestError(response) {
-        var dummy = null;
-      }
+      function csvApiRequestError() {}
     );
   }));
 
@@ -135,9 +144,7 @@ describe('WebExRestApiFact.csvApiRequest() test', function () {
         expect(response.request).toEqual(WebExApiGatewayConstsService.csvJobStatus.statusQueued);
       },
 
-      function csvApiRequestError(response) {
-        var dummy = null;
-      }
+      function csvApiRequestError() {}
     );
   }));
 
@@ -160,9 +167,7 @@ describe('WebExRestApiFact.csvApiRequest() test', function () {
         expect(response.exportFileLink).not.toEqual(null);
       },
 
-      function csvApiRequestError(response) {
-        var dummy = null;
-      }
+      function csvApiRequestError() {}
     );
   }));
 
@@ -186,9 +191,7 @@ describe('WebExRestApiFact.csvApiRequest() test', function () {
         expect(response.exportFileLink).not.toEqual(null);
       },
 
-      function csvApiRequestError(response) {
-        var dummy = null;
-      }
+      function csvApiRequestError() {}
     );
   }));
 });

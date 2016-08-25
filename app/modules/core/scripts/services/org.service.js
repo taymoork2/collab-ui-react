@@ -1,19 +1,29 @@
 (function () {
   'use strict';
 
-  angular
-    .module('Core')
-    .factory('Orgservice', Orgservice);
+  module.exports = angular
+    .module('core.org', [
+      require('modules/core/auth/auth'),
+      require('modules/core/config/config'),
+      require('modules/core/config/urlConfig'),
+      require('modules/core/scripts/services/authinfo'),
+      require('modules/core/scripts/services/log'),
+      require('modules/core/scripts/services/utils'),
+    ])
+    .factory('Orgservice', Orgservice)
+    .name;
 
   /* @ngInject */
   function Orgservice($http, $q, Auth, Authinfo, Config, Log, UrlConfig, Utils) {
     var service = {
       getOrg: getOrg,
       getAdminOrg: getAdminOrg,
+      getAdminOrgAsPromise: getAdminOrgAsPromise,
       getAdminOrgUsage: getAdminOrgUsage,
       getValidLicenses: getValidLicenses,
       getLicensesUsage: getLicensesUsage,
       getUnlicensedUsers: getUnlicensedUsers,
+      isSetupDone: isSetupDone,
       setSetupDone: setSetupDone,
       setOrgSettings: setOrgSettings,
       createOrg: createOrg,
@@ -72,10 +82,10 @@
 
       var cacheDisabled = !!disableCache;
       return $http.get(adminUrl, {
-          params: {
-            disableCache: cacheDisabled
-          }
-        })
+        params: {
+          disableCache: cacheDisabled
+        }
+      })
         .success(function (data, status) {
           data = data || {};
           data.success = true;
@@ -88,6 +98,25 @@
           data.success = false;
           data.status = status;
           callback(data, status);
+        });
+    }
+
+    function getAdminOrgAsPromise(oid, disableCache) {
+      return getAdminOrg(_.noop, oid, disableCache)
+        .catch(function (data, status) {
+          data = _.extend({}, data, {
+            success: false,
+            status: status
+          });
+          return $q.reject(data);
+
+        })
+        .then(function (data, status) {
+          data = _.extend({}, data, {
+            success: true,
+            status: status
+          });
+          return data;
         });
     }
 
@@ -111,11 +140,13 @@
               'licenseId': license.licenseId
             });
             trial = license.isTrial ? 'Trial' : 'unknown';
-            return !(match.status === 'CANCELLED' || match.status === 'SUSPENDED');
+            return !(_.isUndefined(match) || match.status === 'CANCELLED' || match.status === 'SUSPENDED');
           });
 
           var subscription = {
             "subscriptionId": usageLicense.subscriptionId ? usageLicense.subscriptionId : trial,
+            "internalSubscriptionId": usageLicense.internalSubscriptionId ?
+                                      usageLicense.internalSubscriptionId : trial,
             "licenses": licenses
           };
           result.push(subscription);
@@ -316,6 +347,8 @@
         serviceUrl = serviceUrl.concat(Config.entitlements.fusion_uc);
       } else if (serviceName === 'call-connect-service') {
         serviceUrl = serviceUrl.concat(Config.entitlements.fusion_ec);
+      } else if (serviceName === 'squared-fusion-media') {
+        serviceUrl = serviceUrl.concat(Config.entitlements.mediafusion);
       } else {
         return $q(function (resolve, reject) {
           reject('serviceName is invalid: ' + serviceName);
@@ -358,6 +391,13 @@
           eft: setting
         }
       });
+    }
+
+    function isSetupDone(orgId) {
+      return $http.get(Auth.getAuthorizationUrl(orgId))
+        .then(function (data) {
+          return data.data.setupDone;
+        });
     }
   }
 })();

@@ -1,0 +1,55 @@
+.deleteClusterTableRow {
+  border-top: 0;
+  display: flex;
+  td[disabled] {
+    width: 40%;
+    padding-left: 0rem;
+    color: #AEAEAF;
+  }
+  td{
+    width: 40%;
+    padding-left: 0rem;
+  }  
+}
+.deleteClusterTableRow .alert {
+      margin-right: 0px;
+      margin-left: 0px;
+}
+
+.deleteClusterTableHeaderRow {
+  border-top: 0;
+  display: flex;
+}
+
+.deleteClusterTableHeaderRow {
+  th {
+    background-color: white;
+    width: 40%;
+    padding-left: 0rem;
+    color: #AEAEAF;
+  }
+}
+
+.radioButton1 {
+  display: inline-block;
+  padding-right: 1.2rem;
+}
+
+.makeASelection {
+  padding-top: 1rem;
+  padding-bottom: .4rem;
+}
+
+.radioGroup {
+  margin-bottom: 0rem;
+}
+
+.selectTheDest {
+  color: #AEAEAF;
+  font-style: italic;
+}
+
+.deleteClusterTableRow .select-list .msg-container {
+    position: inherit;
+    width: 100%;
+}

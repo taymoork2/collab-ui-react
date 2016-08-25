@@ -25,8 +25,8 @@ describe('Controller: CallRoutingNavCtrl', function () {
     }
   }
 
-  beforeEach(module('uc.callrouting'));
-  beforeEach(module('Huron'));
+  beforeEach(angular.mock.module('uc.callrouting'));
+  beforeEach(angular.mock.module('Huron'));
 
   beforeEach(inject(function ($rootScope, $controller, _$q_, _CallPark_) {
     $scope = $rootScope.$new();

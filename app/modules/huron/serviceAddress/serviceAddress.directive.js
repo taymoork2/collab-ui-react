@@ -14,10 +14,12 @@
       scope: {
         address: '=',
         readOnly: '=',
-        controller: '='
-      }
+        hideSearch: '=',
+        formName: '=',
+        addressValidate: '&',
+        modify: '&'
+      },
     };
-
     return directive;
   }
 

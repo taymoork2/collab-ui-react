@@ -2,7 +2,7 @@
 
  describe('Care Feature Service', function () {
 
-   var urlConfig, $q, $httpBackend, careFeatureService, templateId, getTemplatesUrl, deleteTemplateUrl;
+   var $httpBackend, careFeatureService, templateId, getTemplatesUrl, deleteTemplateUrl;
    var orgId = '123';
 
    var spiedAuthinfo = {
@@ -10,14 +10,12 @@
    };
    var templateList = getJSONFixture('sunlight/json/features/chatTemplates/chatTemplateList.json');
 
-   beforeEach(module('Sunlight'));
-   beforeEach(module(function ($provide) {
+   beforeEach(angular.mock.module('Sunlight'));
+   beforeEach(angular.mock.module(function ($provide) {
      $provide.value("Authinfo", spiedAuthinfo);
    }));
 
-   beforeEach(inject(function (_$q_, _UrlConfig_, _$httpBackend_, _CareFeatureList_) {
-     $q = _$q_;
-     urlConfig = _UrlConfig_;
+   beforeEach(inject(function (_$httpBackend_, _CareFeatureList_) {
      $httpBackend = _$httpBackend_;
      careFeatureService = _CareFeatureList_;
      templateId = '456';
@@ -41,7 +39,7 @@
 
    it('should fail to get list of templates when server gives an error', function () {
      $httpBackend.expectGET(getTemplatesUrl).respond(500);
-     careFeatureService.getChatTemplates().then(function (response) {}, function (response) {
+     careFeatureService.getChatTemplates().then(function () {}, function (response) {
        expect(response.status).toEqual(500);
      });
    });
@@ -56,7 +54,7 @@
 
    it('should fail to delete a given template when server gives an error', function () {
      $httpBackend.expectDELETE(deleteTemplateUrl).respond(500);
-     careFeatureService.deleteChatTemplate(templateId).then(function (response) {}, function (response) {
+     careFeatureService.deleteChatTemplate(templateId).then(function () {}, function (response) {
        expect(response.status).toEqual(500);
      });
    });

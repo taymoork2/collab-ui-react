@@ -4,15 +4,17 @@
 
   li .call-park-member-name {
     @include vr-spacing(ph, 2);
-    @include vr-spacing(pt, 1);
+    @include vr-spacing(pt, .5);
     @include vr-spacing(pb, 0.25);
-    background: $color-white;
-    cursor: default;
+    @include vr-spacing(mt, .5);
+    line-height: normal;
   }
 
   li .call-park-member-line {
     @include vr-spacing(ph, 2);
     @include vr-spacing(pv, 0.25);
+    background: $color-white;
+    cursor: default;
 
     & span {
       font-size: $font-size-h4;
@@ -59,7 +61,8 @@
     cursor: pointer;
     border-radius: 0.25rem !important;
     & i {
-      @include vr-spacing(mr, 0.5, 0px, true);
+      @include vr-spacing(mr, 0, 0px, true);
+      font-size: 1.5rem;
     }
   }
 
@@ -75,6 +78,7 @@
   & article > section {
     z-index: 200;
     position: absolute;
+    top: 100%;
     background-color: $brand-white;
     border-style: solid;
     border-width: rem-calc(1);
@@ -95,5 +99,9 @@
 
   & fieldset > p {
     @include vr-spacing(p, 0);
+  }
+
+  .primary-number {
+    line-height: 3rem;
   }
 }

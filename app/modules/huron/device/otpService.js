@@ -21,9 +21,9 @@
 
     function loadOtps(userUuid) {
       return UserOTPService.query({
-          customerId: Authinfo.getOrgId(),
-          userId: userUuid
-        }).$promise
+        customerId: Authinfo.getOrgId(),
+        userId: userUuid
+      }).$promise
         .then(function (otps) {
           var otpList = [];
           for (var i = 0; i < otps.length; i++) {
@@ -76,8 +76,8 @@
 
     function getQrCodeUrl(activationCode) {
       return HermesQRCodeService.get({
-          oneTimePassword: activationCode
-        })
+        oneTimePassword: activationCode
+      })
         .$promise;
     }
 

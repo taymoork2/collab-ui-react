@@ -6,18 +6,16 @@
     .controller('UserOverviewCtrl', UserOverviewCtrl);
 
   /* @ngInject */
-  function UserOverviewCtrl($http, $scope, $stateParams, $translate, $resource, Authinfo, FeatureToggleService, Log, Orgservice, Notification, UrlConfig, Userservice, Utils) {
+  function UserOverviewCtrl($http, $scope, $state, $stateParams, $translate, $resource, $window, Authinfo, FeatureToggleService, Notification, SunlightConfigService, UrlConfig, Userservice, Utils, WebExUtilsFact) {
     var vm = this;
     vm.currentUser = $stateParams.currentUser;
     vm.entitlements = $stateParams.entitlements;
-    vm.queryuserslist = $stateParams.queryuserslist;
     vm.services = [];
     vm.dropDownItems = [];
     vm.titleCard = '';
     vm.subTitleCard = '';
     vm.getAccountStatus = getAccountStatus;
     vm.resendInvitation = resendInvitation;
-    vm.atlasInvitePendingStatusToggle = false;
     vm.pendingStatus = false;
     vm.dirsyncEnabled = false;
     vm.isCSB = Authinfo.isCSB();
@@ -27,6 +25,20 @@
     vm.isFusionCal = Authinfo.isFusionCal();
     vm.enableAuthCodeLink = enableAuthCodeLink;
     vm.disableAuthCodeLink = disableAuthCodeLink;
+    vm.getUserPhoto = Userservice.getUserPhoto;
+    vm.isValidThumbnail = Userservice.isValidThumbnail;
+    vm.actionList = [];
+
+    if (vm.currentUser.trainSiteNames) {
+      var ciTrainSiteNames = vm.currentUser.trainSiteNames.filter(
+        function (chkSiteUrl) {
+          return WebExUtilsFact.isCIEnabledSite(chkSiteUrl);
+        }
+      );
+
+      vm.currentUser.trainSiteNames = (0 < ciTrainSiteNames.length) ? ciTrainSiteNames : null;
+    }
+
     var msgState = {
       name: $translate.instant('onboardModal.message'),
       icon: $translate.instant('onboardModal.message'),
@@ -60,10 +72,9 @@
       userId: '@userId'
     });
 
-    FeatureToggleService.supports(FeatureToggleService.features.atlasInvitePendingStatus)
-      .then(function (result) {
-        vm.atlasInvitePendingStatusToggle = result;
-      }).finally(init);
+    init();
+
+    /////////////////////////////
 
     function init() {
       vm.services = [];
@@ -75,8 +86,10 @@
         vm.services.push(msgState);
       }
       if (hasEntitlement('cloudmeetings')) {
-        confState.detail = $translate.instant('onboardModal.paidConfWebEx');
-        vm.services.push(confState);
+        if (vm.currentUser.trainSiteNames) {
+          confState.detail = $translate.instant('onboardModal.paidConfWebEx');
+          vm.services.push(confState);
+        }
       } else if (hasEntitlement('squared-syncup')) {
         if (getServiceDetails('CF')) {
           confState.detail = $translate.instant('onboardModal.paidConf');
@@ -90,14 +103,43 @@
         vm.services.push(commState);
       }
       if (hasEntitlement('cloud-contact-center')) {
-        if (getServiceDetails('CC')) {
-          contactCenterState.detail = $translate.instant('onboardModal.paidContactCenter');
+        if (getServiceDetails('CD')) {
+          SunlightConfigService.getUserInfo(vm.currentUser.id).then(
+              function () {
+                contactCenterState.detail = $translate.instant('onboardModal.paidContactCenter');
+                vm.services.push(contactCenterState);
+              }
+          );
         }
-        vm.services.push(contactCenterState);
+
       }
 
+      initActionList();
       getAccountStatus();
       updateUserTitleCard();
+    }
+
+    function initActionList() {
+      var action = {
+        actionKey: 'usersPreview.editServices'
+      };
+      if (Authinfo.isCSB()) {
+        action.actionFunction = goToUserRedirect;
+      } else {
+        action.actionFunction = goToEditService;
+      }
+      vm.actionList.push(action);
+    }
+
+    function goToEditService() {
+      $state.go('editService', {
+        currentUser: vm.currentUser
+      });
+    }
+
+    function goToUserRedirect() {
+      var url = $state.href('userRedirect');
+      $window.open(url, '_blank');
     }
 
     var generateOtpLink = {
@@ -145,7 +187,7 @@
     function getInvitationDetails(invitations, license) {
       if (invitations) {
         var idx = _.findIndex(invitations, function (invite) {
-          return invite.id.substring(0, 2) === license;
+          return invite.id.substring(0, 2) === license && invite.idOperation === "ADD";
         });
         if (idx > -1) {
           if (license === 'CF') {
@@ -247,46 +289,56 @@
     }
 
     function getAccountStatus() {
-      var currentUserId = vm.currentUser.id;
-      vm.currentUser.pendingStatus = false;
-      Userservice.getUser(currentUserId, function (data, status) {
-        if (data.success) {
-          vm.pendingStatus = (vm.atlasInvitePendingStatusToggle && _.indexOf(data.accountStatus, 'pending') >= 0);
+      // user status
+      FeatureToggleService.atlasUserPendingStatusGetStatus().then(function (pendingToggle) {
+        if (pendingToggle) {
+          vm.currentUser.pendingStatus = false;
+          var hasBeenActivated = _.some(vm.currentUser.userSettings, function (userSetting) {
+            return userSetting.indexOf('sparkAdmin.licensedDate') > 0 || userSetting.indexOf('spark.signUpDate') > 0;
+          });
+          vm.pendingStatus = _.isEmpty(vm.currentUser.licenseID) || !hasBeenActivated;
           vm.currentUser.pendingStatus = vm.pendingStatus;
-          if (vm.pendingStatus) {
-            invitationResource.get({
-              customerId: Authinfo.getOrgId(),
-              userId: currentUserId
-            }).$promise.then(function (response) {
-              if (_.isArray(response.effectiveLicenses) && !_.isEmpty(response.effectiveLicenses)) {
-                vm.currentUser.invitations = {
-                  ms: false,
-                  cf: '',
-                  cc: false
-                };
-                if (getInvitationDetails(response.effectiveLicenses, 'MS')) {
-                  msgState.detail = $translate.instant('onboardModal.paidMsg');
-                  vm.services.push(msgState);
-                  vm.currentUser.invitations.ms = true;
-                }
-                var confId = getInvitationDetails(response.effectiveLicenses, 'CF');
-                if (confId) {
-                  confState.detail = $translate.instant('onboardModal.paidConf');
-                  vm.services.push(confState);
-                  vm.currentUser.invitations.cf = confId;
-                }
-                if (getInvitationDetails(response.effectiveLicenses, 'CC')) {
-                  contactCenterState.detail = $translate.instant('onboardModal.paidContactCenter');
-                  vm.services.push(contactCenterState);
-                  vm.currentUser.invitations.cc = true;
-                }
-              }
-            });
-          }
         } else {
-          Log.debug('Get existing account info failed. Status: ' + status);
+          vm.pendingStatus = _.indexOf(vm.currentUser.accountStatus, 'pending') >= 0;
         }
       });
+
+      // if no licenses/services found from CI,
+      // then get the invitation list from Cassandra
+      if (_.isEmpty(vm.services)) {
+        invitationResource.get({
+          customerId: Authinfo.getOrgId(),
+          userId: vm.currentUser.id
+        }).$promise.then(function (response) {
+          if (_.isArray(response.effectiveLicenses) && !_.isEmpty(response.effectiveLicenses)) {
+            vm.currentUser.invitations = {
+              ms: false,
+              cf: '',
+              cc: false
+            };
+            if (getInvitationDetails(response.effectiveLicenses, 'MS')) {
+              msgState.detail = $translate.instant('onboardModal.paidMsg');
+              vm.services.push(msgState);
+              vm.currentUser.invitations.ms = true;
+            }
+            var confId = getInvitationDetails(response.effectiveLicenses, 'CF');
+            if (confId) {
+              confState.detail = $translate.instant('onboardModal.paidConf');
+              vm.services.push(confState);
+              vm.currentUser.invitations.cf = confId;
+            }
+            if (getInvitationDetails(response.effectiveLicenses, 'CD')) {
+              SunlightConfigService.getUserInfo(vm.currentUser.id).then(
+                  function () {
+                    contactCenterState.detail = $translate.instant('onboardModal.paidContactCenter');
+                    vm.services.push(contactCenterState);
+                    vm.currentUser.invitations.cc = true;
+                  }
+              );
+            }
+          }
+        });
+      }
     }
 
     function resendInvitation(userEmail, userName, uuid, userStatus, dirsyncEnabled, entitlements) {
@@ -297,16 +349,6 @@
           Notification.errorResponse(error, 'usersPage.emailError');
         });
       angular.element('.open').removeClass('open');
-    }
-
-    function getOrg() {
-      Orgservice.getOrg(function (data, status) {
-        if (data.success) {
-          vm.dirsyncEnabled = data.dirsyncEnabled;
-        } else {
-          Log.debug('Get existing org failed. Status: ' + status);
-        }
-      });
     }
   }
 })();

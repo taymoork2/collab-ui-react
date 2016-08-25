@@ -1,0 +1,96 @@
+<div class="modal-header">
+  <button class="close" id="convertModalClose" ng-click="deleteClust.close()" type="button">
+    <span class="sr-only" translate="common.close">
+    </span>
+  </button>
+  <div>
+    <h5 class="modal-title" translate="mediaFusion.clusters.deleteclusterHeadding">
+    </h5>
+  </div>
+</div>
+<div class="modal-body">
+  <div ng-show="deleteClust.noOfHost > 0">
+    <div ng-hide="deleteClust.failedToDelete">
+      <p translate="mediaFusion.clusters.deleteClusterBodyDesc"></p>
+      <p class="makeASelection"> <strong translate="mediaFusion.clusters.makeASelection" /></p>
+      <div class="form-group radioGroup">
+        <div class="cs-radio-group radioGroup">
+          <div class="cs-input-group cs-input-radio">
+            <div class="radioButton1">
+              <input type="radio" id="individualRadio1" ng-model="deleteClust.radioModel" ng-value='1'>
+              <label for="individualRadio1">
+                <span translate="mediaFusion.clusters.moveallnodes"></span>
+              </label>
+            </div>
+            <div class="radioButton1">
+              <input type="radio" id="individualRadio2" ng-model="deleteClust.radioModel" ng-value='2'>
+              <label for="individualRadio2">
+                <span translate="mediaFusion.clusters.deregisterallnodes"></span>
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div ng-show="deleteClust.failedToDelete">
+      {{deleteClust.unableToMoveNodes}}
+    </div>
+    <div ng-show="!deleteClust.ngDisable ">
+      <p class="selectTheDest" translate="mediaFusion.clusters.selectTheDest"></p>
+      <table>
+        <tr class="deleteClusterTableHeaderRow">
+          <th translate="mediaFusion.clusters.nodes"></th>
+          <th translate="mediaFusion.clusters.moveTo"></th>
+        </tr>
+        <tr class="deleteClusterTableRow" ng-repeat="host in deleteClust.hosts">
+          <td ng-disabled="deleteClust.radioModel == '2'">{{ host.hostname }} </td>
+          <td>
+            <cs-select is-disabled="deleteClust.radioModel == '2'" ng-model="deleteClust.selectModel[host.hostname]" options="deleteClust.options" placeholder="deleteClust.selectPlaceholder" is-error="{{deleteClust.fillModel[host.hostname] && deleteClust.radioModel == '1'}}" error-msg="{{'mediaFusion.clusters.errorMsg'|translate}}">
+            </cs-select>
+          </td>
+        </tr>
+      </table>
+    </div>
+    <div ng-show=" deleteClust.radioModel == '2' && !deleteClust.ngDisable">
+      <div class="form-group">
+        <div class="cs-checkbox-group">
+          <div class="cs-input-group cs-input-checkbox">
+            <input type="checkbox" id="individualcheckbox" ng-model="deleteClust.checkboxModel">
+            <label for="individualcheckbox">
+              <span translate="mediaFusion.clusters.deregisterAllconfirmation"></span>
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div ng-hide="deleteClust.noOfHost > 0">
+    <p>{{deleteClust.deleteAreYouSure}}</p>
+  </div>
+</div>
+<div class="modal-footer">
+  <div ng-show=" deleteClust.radioModel == '1' ">
+    <button class="btn btn--primary pull-right" id="convertActionButton" ng-click="deleteClust.continue()" ng-disabled="deleteClust.ngDisable">
+      <span ng-hide="saving" translate="mediaFusion.clusters.continue">
+    </span>
+      <span ng-show="saving">
+      <i class="icon icon-spinner">
+      </i>
+    </span>
+    </button>
+  </div>
+  <div ng-show=" deleteClust.radioModel == '2' ">
+    <button class="btn btn--negative pull-right" id="convertActionButton" ng-click="deleteClust.deleteCluster()" ng-disabled="!deleteClust.checkboxModel || deleteClust.ngDisable">
+      <span ng-hide="saving" translate="mediaFusion.clusters.deletecluster">
+    </span>
+      <span ng-show="saving">
+      <i class="icon icon-spinner">
+      </i>
+    </span>
+    </button>
+  </div>
+  <button class="btn pull-right" id="convertCancelButton" ng-click="deleteClust.close()" style="margin-right: 10px">
+    <span translate="mediaFusion.clusters.cancel">
+    </span>
+  </button>
+</div>

@@ -11,7 +11,6 @@
     var vm = this;
 
     var translatePrefix = 'messengerCiSync.';
-    var fullAdminRole = 'id_full_admin';
     var customerSuccessRole = 'webex-messenger.customer_success';
     var requiredEntitlements = ['webex-squared', 'webex-messenger'];
 
@@ -119,7 +118,7 @@
     vm.setOrgAdmin = setOrgAdmin;
     vm.setOpsAdmin = setOpsAdmin;
 
-    vm.init();
+    init();
 
     ////////////////////////////////////////////////////////////////////////////
 
@@ -136,7 +135,7 @@
             CiService.getCiNonAdmins(vm.ciUsers);
             getSyncStatus();
           }
-        }, function (errorMsg) {
+        }).catch(function (errorMsg) {
           var error = $translate.instant(translatePrefix + 'errorAuthFailed') + errorMsg;
           Notification.error(error);
           Log.error(error);
@@ -160,46 +159,45 @@
 
       // All users must have CI Full Admin role except new ReadAdmin
       //
+      // Also allow help desk user with customer org in its managed org list with id_full_admin role.
+      //
       // Customer Success Admin     --> Ops Admin
       // Non-Customer Success Admin --> must have webex-squared AND webex-messenger CI entitlements
       if (Authinfo.isReadOnlyAdmin()) {
         setReadAdmin();
         defer.resolve();
-      } else {
-        CiService.hasRole(fullAdminRole)
-          .then(function (hasAdminRole) {
-            if (hasAdminRole) {
-              // Now check for Customer Success Admin or not
-              CiService.hasRole(customerSuccessRole)
-                .then(function (hasCSRole) {
-                  if (hasCSRole) {
-                    setOpsAdmin();
-                    defer.resolve();
-                  } else {
-                    // Not a Customer Success Admin, must have entitlements
-                    CiService.hasEntitlements(requiredEntitlements)
-                      .then(function (hasEntitlements) {
-                        if (hasEntitlements) {
-                          setOrgAdmin();
-                          defer.resolve();
-                        } else {
-                          defer.reject($translate.instant(translatePrefix + 'errorLacksEntitlements') + requiredEntitlements);
-                        }
-                      }, function (errorMsg) {
-                        defer.reject($translate.instant(translatePrefix + 'errorFailedCheckingCIEntitlements') + errorMsg);
-                      });
-                  }
-                }, function (errorMsg) {
-                  defer.reject($translate.instant(translatePrefix + 'errorFailedCheckingCustSuccessRole') + errorMsg);
-                });
+      } else if (Authinfo.isCustomerAdmin()) {
+        CiService.hasRole(customerSuccessRole)
+          .then(function (hasCSRole) {
+            if (hasCSRole) {
+              setOpsAdmin();
+              defer.resolve();
             } else {
-              defer.reject($translate.instant(translatePrefix + 'errorLacksFullAdmin'));
+              if (!(Authinfo.isWebexSquared() && Authinfo.isWebexMessenger())) {
+                defer.reject($translate.instant(translatePrefix + 'errorLacksEntitlements') + requiredEntitlements);
+              } else {
+                setOrgAdmin();
+                defer.resolve();
+              }
             }
-          }, function (errorMsg) {
-            defer.reject($translate.instant(translatePrefix + 'errorFailedCheckingCIRoles') + errorMsg);
+          }).catch(function (errorMsg) {
+            defer.reject($translate.instant(translatePrefix + 'errorFailedCheckingCustSuccessRole') + errorMsg);
+          });
+      } else if (!Authinfo.isHelpDeskUser()) {
+        defer.reject($translate.instant(translatePrefix + 'errorLacksRole'));
+      } else {
+        CiService.isOrgManager()
+          .then(function (isOrgManager) {
+            if (isOrgManager) {
+              setOpsAdmin();
+              defer.resolve();
+            } else {
+              defer.reject($translate.instant(translatePrefix + 'errorNotOrgManager'));
+            }
+          }).catch(function (errorMsg) {
+            defer.reject($translate.instant(translatePrefix + 'errorFailedCheckingOrgInManagedOrgs') + errorMsg);
           });
       }
-
       return defer.promise;
     }
 
@@ -254,8 +252,8 @@
       if (vm.adminTypes.ops === vm.adminType) {
         // SyncService must turn the syncing boolean into the full mode
         SyncService.patchSync(vm.syncInfo.isSyncEnabled, vm.syncInfo.isAuthRedirect)
-          .then(function (successMsg) {
-            Notification.success($translate.instant(translatePrefix + 'patchSuccessful'));
+          .then(function () {
+            Notification.success(translatePrefix + 'patchSuccessful');
           }, function (errorObj) {
             var error = $translate.instant(translatePrefix + 'errorFailedUpdatingCISync') + errorObj.message;
 

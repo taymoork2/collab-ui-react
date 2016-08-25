@@ -14,7 +14,7 @@
     vm.formattedCertificateList = [];
     vm.readCerts = readCerts;
     vm.localizedAddEmailWatermark = $translate.instant('hercules.settings.emailNotificationsWatermark');
-
+    vm.enableEmailSendingToUser = false;
     vm.squaredFusionEc = false;
     vm.squaredFusionEcEntitled = Authinfo.isFusionEC();
     if (vm.squaredFusionEcEntitled) {
@@ -50,17 +50,17 @@
       vm.loading = false;
       vm.sipDomain = res.sipDomain;
       vm.org = res || {};
-    }, function (err) {
+    }, function () {
       //  if (err) return notification.notify(err);
     });
 
     vm.updateSipDomain = function () {
       vm.savingSip = true;
 
-      USSService2.updateOrg(vm.org).then(function (res) {
+      USSService2.updateOrg(vm.org).then(function () {
         vm.storeEc(false);
         vm.savingSip = false;
-      }, function (err) {
+      }, function () {
         vm.savingSip = false;
         Notification.error('hercules.errors.sipDomainInvalid');
       });
@@ -88,13 +88,36 @@
         vm.savingEmail = true;
         ServiceDescriptor.setEmailSubscribers(vm.servicesId[0], emailSubscribers, function (statusCode) {
           if (statusCode === 204) {
-            Notification.success($translate.instant('hercules.settings.emailNotificationsSavingSuccess'));
+            Notification.success('hercules.settings.emailNotificationsSavingSuccess');
           } else {
-            Notification.error($translate.instant('hercules.settings.emailNotificationsSavingError'));
+            Notification.error('hercules.settings.emailNotificationsSavingError');
           }
           vm.savingEmail = false;
         });
       }
+    };
+
+    function init() {
+      ServiceDescriptor.getDisableEmailSendingToUser()
+        .then(function (calSvcDisableEmailSendingToEndUser) {
+          vm.enableEmailSendingToUser = !calSvcDisableEmailSendingToEndUser;
+        });
+    }
+    init();
+
+    vm.writeEnableEmailSendingToUser = _.debounce(function (value) {
+      ServiceDescriptor.setDisableEmailSendingToUser(value)
+        .catch(function () {
+          vm.enableEmailSendingToUser = !vm.enableEmailSendingToUser;
+          return Notification.error('hercules.settings.emailUserNotificationsSavingError');
+        });
+    }, 2000, {
+      'leading': true,
+      'trailing': false
+    });
+
+    vm.setEnableEmailSendingToUser = function () {
+      vm.writeEnableEmailSendingToUser(vm.enableEmailSendingToUser);
     };
 
     vm.disableService = function (serviceId) {

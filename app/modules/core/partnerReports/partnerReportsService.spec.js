@@ -1,14 +1,14 @@
 'use strict';
 
 describe('Service: Partner Reports Service', function () {
-  var $httpBackend, PartnerReportService, Config, Notification;
+  var $httpBackend, PartnerReportService, Notification;
   var managedOrgsUrl, activeUsersDetailedUrl, mostActiveUsersUrl, mediaQualityUrl, callMetricsUrl, registeredEndpointsUrl;
   var activeUserDetailedResponse, activeUserDetailedAPI, mediaQualityResponse;
 
-  beforeEach(module('Core'));
-  beforeEach(module('Huron'));
+  beforeEach(angular.mock.module('Core'));
+  beforeEach(angular.mock.module('Huron'));
 
-  var cacheValue = (parseInt(moment.utc().format('H')) >= 8);
+  var cacheValue = (parseInt(moment.utc().format('H'), 10) >= 8);
   var dayFormat = "MMM DD";
   var timezone = "Etc/GMT";
   var timeFilter = {
@@ -42,7 +42,7 @@ describe('Service: Partner Reports Service', function () {
     getOrgId: jasmine.createSpy('getOrgId').and.returnValue('1')
   };
 
-  beforeEach(module(function ($provide) {
+  beforeEach(angular.mock.module(function ($provide) {
     $provide.value("Authinfo", Authinfo);
   }));
 
@@ -57,12 +57,12 @@ describe('Service: Partner Reports Service', function () {
 
     var baseUrl = UrlConfig.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/reports/';
     activeUsersDetailedUrl = baseUrl + 'detailed/managedOrgs/activeUsers?&intervalCount=7&intervalType=day&spanCount=1&spanType=day&cache=' + cacheValue;
-    mostActiveUsersUrl = baseUrl + 'topn/managedOrgs/activeUsers?&intervalCount=7&intervalType=day&spanCount=7&spanType=day&cache=' + cacheValue;
+    mostActiveUsersUrl = baseUrl + 'topn/managedOrgs/activeUsers?reportType=weeklyUsage&cache=' + cacheValue;
     mediaQualityUrl = baseUrl + 'detailed/managedOrgs/callQuality?&intervalCount=7&intervalType=day&spanCount=1&spanType=day&cache=' + cacheValue;
     callMetricsUrl = baseUrl + 'detailed/managedOrgs/callMetrics?&intervalCount=7&intervalType=day&spanCount=7&spanType=day&cache=' + cacheValue;
     registeredEndpointsUrl = baseUrl + 'trend/managedOrgs/registeredEndpoints?&intervalCount=7&intervalType=day&spanCount=1&spanType=day&cache=' + cacheValue;
 
-    angular.forEach(customerData.customerOptions, function (org, index, array) {
+    angular.forEach(customerData.customerOptions, function (org) {
       mostActiveUsersUrl += '&orgId=' + org.value;
       mediaQualityUrl += '&orgId=' + org.value;
       callMetricsUrl += '&orgId=' + org.value;

@@ -1,7 +1,7 @@
 'use strict';
 
 describe('RedirectTargetView', function () {
-  beforeEach(module('Hercules'));
+  beforeEach(angular.mock.module('Hercules'));
   var $scope;
   var view;
 

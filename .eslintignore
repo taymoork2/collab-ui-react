@@ -1,0 +1,8 @@
+build/*
+coverage/*
+dist/*
+plato/*
+test/coverage/*
+test/karma-*.js
+test/ts/*
+typings/*

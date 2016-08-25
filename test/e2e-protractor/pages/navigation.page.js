@@ -17,6 +17,7 @@ var Navigation = function () {
   this.callSettings = element(by.css('a[href="#/hurondetails/settings"]'));
   this.fusionTab = element(by.css('a[href="#fusion"]'));
   this.reportsTab = element(by.css('li.reportTab > a'));
+  this.careReportsTab = element(by.css('a[href="#/reports/care"]'));
   this.supportTab = element(by.css('li.supportTab > a'));
   this.cdrTab = element(by.css('a[href="#cdrsupport"]'));
   this.logsTab = element(by.css('a[href="#support"]'));
@@ -135,6 +136,11 @@ var Navigation = function () {
   this.clickReports = function () {
     utils.click(this.reportsTab);
     this.expectCurrentUrl('/reports');
+  };
+
+  this.clickCareReports = function () {
+    utils.click(this.careReportsTab);
+    this.expectCurrentUrl('/reports/care');
   };
 
   this.clickSupport = function () {
@@ -298,7 +304,7 @@ var Navigation = function () {
 
   function getUrl(url, opts) {
     var forceIntegration = opts && opts.forceIntegration;
-    var url = url || '#/login';
+    url = url || '#/login';
     url += ~url.indexOf('?') ? '&' : '?';
     url += 'test-env-config=';
     url += isProductionBackend && !forceIntegration ? 'e2e-prod' : 'e2e';

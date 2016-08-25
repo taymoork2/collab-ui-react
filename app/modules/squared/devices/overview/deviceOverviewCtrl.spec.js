@@ -2,17 +2,17 @@
 
 describe('Controller: DeviceOverviewCtrl', function () {
   var $scope, $controller, controller, $httpBackend;
-  var $q, CsdmConfigService, CsdmDeviceService, CsdmCodeService, Authinfo, Notification, RemoteSupportModal;
+  var $q, CsdmConfigService, CsdmDeviceService, CsdmCodeService, Authinfo, Notification, RemoteSupportModal, HuronConfig;
 
-  beforeEach(module('Hercules'));
-  beforeEach(module('Squared'));
-  beforeEach(module('Huron'));
-  beforeEach(module('Sunlight'));
+  beforeEach(angular.mock.module('Hercules'));
+  beforeEach(angular.mock.module('Squared'));
+  beforeEach(angular.mock.module('Huron'));
+  beforeEach(angular.mock.module('Sunlight'));
   beforeEach(inject(dependencies));
   beforeEach(initSpies);
   beforeEach(initController);
 
-  function dependencies(_$q_, $rootScope, _$controller_, _$httpBackend_, _CsdmConfigService_, _CsdmDeviceService_, _CsdmCodeService_, _Authinfo_, _Notification_, _RemoteSupportModal_) {
+  function dependencies(_$q_, $rootScope, _$controller_, _$httpBackend_, _CsdmConfigService_, _CsdmDeviceService_, _CsdmCodeService_, _Authinfo_, _Notification_, _RemoteSupportModal_, _HuronConfig_) {
     $scope = $rootScope.$new();
     $controller = _$controller_;
     $httpBackend = _$httpBackend_;
@@ -23,17 +23,23 @@ describe('Controller: DeviceOverviewCtrl', function () {
     Authinfo = _Authinfo_;
     Notification = _Notification_;
     RemoteSupportModal = _RemoteSupportModal_;
+    HuronConfig = _HuronConfig_;
   }
 
   function initSpies() {
     $httpBackend.whenGET(CsdmConfigService.getUrl() + '/organization/null/devices?checkOnline=true&checkDisplayName=false').respond(200);
     $httpBackend.whenGET(CsdmConfigService.getUrl() + '/organization/null/upgradeChannels').respond(200);
     $httpBackend.whenGET('https://identity.webex.com/identity/scim/null/v1/Users/me').respond(200);
+    $httpBackend.whenGET(HuronConfig.getCmiUrl() + '/voice/customers/sipendpoints/3/addonmodules').respond(200);
   }
 
   var $stateParams = {
     currentDevice: {
-      isHuronDevice: false
+      isHuronDevice: false,
+      product: 'Cisco 8865',
+      cisUuid: 2,
+      huronId: 3,
+      kem: []
     }
   };
 
@@ -103,7 +109,6 @@ describe('Controller: DeviceOverviewCtrl', function () {
       };
       expect(controller.showRemoteSupportButton()).toBe(true);
     });
-
   });
 
   describe('Tags', function () {
@@ -213,9 +218,10 @@ describe('Huron Device', function () {
   var $q, CsdmConfigService;
   var $stateParams, ServiceSetup, timeZone, newTimeZone;
 
-  beforeEach(module('Hercules'));
-  beforeEach(module('Squared'));
-  beforeEach(module('Huron'));
+  beforeEach(angular.mock.module('Hercules'));
+  beforeEach(angular.mock.module('Squared'));
+  beforeEach(angular.mock.module('Huron'));
+  beforeEach(angular.mock.module('Sunlight'));
   beforeEach(inject(dependencies));
   beforeEach(initSpies);
   beforeEach(initController);
@@ -243,15 +249,15 @@ describe('Huron Device', function () {
 
   function CsdmHuronDeviceService(q) {
 
-    function setTimezoneForDevice(huronDevice, timezone) {
+    function setTimezoneForDevice() {
       return q.resolve(true);
     }
 
-    function getTimezoneForDevice(huronDevice) {
+    function getTimezoneForDevice() {
       return q.resolve('America/Los_Angeles');
     }
 
-    function getLinesForDevice(huronDevice) {
+    function getLinesForDevice() {
       return q.resolve([]);
     }
 

@@ -10,6 +10,11 @@
     color: $gray-dark-1;
   }
 
+  .ct-article {
+    box-shadow: none;
+    border: 1px solid $gray-light-1;
+  }
+
   .cs-card article.offhours-preview {
     height: 26.5rem;
     width: 21.75rem;
@@ -25,10 +30,12 @@
   }
 
   .offhours-icon {
-    font-size: 3rem;
+    .icon-clock {
+      font-size: 3rem;
+    }
     line-height: 1;
     color: $color-attention;
-    @include vr-spacing(pt, 2);
+    @include vr-spacing(pt, 3);
   }
 
   .offhours-preview-message {
@@ -66,23 +73,23 @@
       line-height: $h5-line-height;
       @include vr-spacing(pt, 0.75);
     }
-    .message {
+    .message-area {
       height: 4.5rem;
       width: 20rem;
       background-color: $white;
       resize: none;
-      line-height: 1rem;
+      line-height: 1.4rem;
       @include vr-spacing(p, 0.75);
       @include vr-spacing(mt, 0);
     }
   }
-  .business-hours-label {
-    @include vr-spacing(pt, 0.5);
+
+  .business-hours-message.h4 {
+    @include vr-spacing(pt, 1.5);
   }
 
-
   .day-picker {
-    height: 4rem;
+    height: 3rem;
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
@@ -134,5 +141,9 @@
       width: 20rem;
       @include vr-spacing(pt, 0.5);
     }
+  }
+  .ct-input-error {
+    color: $color-negative-dark;
+    padding-bottom: 1rem;
   }
 }

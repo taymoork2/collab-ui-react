@@ -2,12 +2,11 @@
 
 describe('Controller: GroupDetailsControllerV2', function () {
 
-  beforeEach(module('wx2AdminWebClientApp'));
+  beforeEach(angular.mock.module('Mediafusion'));
 
-  var $modal, $stateParams, controller, $rootScope, httpBackend;
+  var $modal, controller, $rootScope, httpBackend;
 
   beforeEach(inject(function ($httpBackend, _$rootScope_, $stateParams, $controller) {
-    $stateParams = $stateParams;
     $rootScope = _$rootScope_;
     $modal = {
       open: sinon.stub().returns({
@@ -96,7 +95,7 @@ describe('Controller: GroupDetailsControllerV2', function () {
     }];
 
     controller.clusterList = clusterMockAlarmData;
-    var aggregatedAlarms = controller.alarmsSummary();
+    controller.alarmsSummary();
     //    expect(aggregatedAlarms.length).toBe(3);
     //    expect(aggregatedAlarms[0].hosts.length).toBe(2);
     //    expect(aggregatedAlarms[1].hosts.length).toBe(1);

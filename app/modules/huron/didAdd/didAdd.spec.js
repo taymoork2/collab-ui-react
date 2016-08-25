@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Controller: DidAddCtrl', function () {
-  var controller, $q, $scope, $state, $httpBackend, $window, HuronConfig, Notification, Config, EmailService, DialPlanService;
+  var controller, $q, $scope, $state, $httpBackend, $window, HuronConfig, Notification, EmailService;
 
   var customerVoiceNorthAmerica = getJSONFixture('huron/json/dialPlans/customervoice-nanp.json');
 
@@ -9,14 +9,14 @@ describe('Controller: DidAddCtrl', function () {
     getOrgId: jasmine.createSpy('getOrgId').and.returnValue('1')
   };
 
-  beforeEach(module('Huron'));
+  beforeEach(angular.mock.module('Huron'));
 
   var authInfo = {
     getOrgId: sinon.stub().returns('1'),
     getOrgName: sinon.stub().returns('awesomeco')
   };
 
-  beforeEach(module(function ($provide) {
+  beforeEach(angular.mock.module(function ($provide) {
     $provide.value("Authinfo", authInfo);
   }));
 
@@ -36,7 +36,7 @@ describe('Controller: DidAddCtrl', function () {
     }
   };
 
-  beforeEach(inject(function (_$q_, $rootScope, $controller, _$httpBackend_, _HuronConfig_, _Notification_, _Config_, _EmailService_, $timeout, _$window_, _$state_) {
+  beforeEach(inject(function (_$q_, $rootScope, $controller, _$httpBackend_, _HuronConfig_, _Notification_, _EmailService_, $timeout, _$window_, _$state_) {
     $q = _$q_;
     $scope = $rootScope.$new();
     $scope.trial = trial;
@@ -51,7 +51,6 @@ describe('Controller: DidAddCtrl', function () {
       }
     };
     HuronConfig = _HuronConfig_;
-    Config = _Config_;
     Notification = _Notification_;
     EmailService = _EmailService_;
     $httpBackend.whenGET(HuronConfig.getCmiUrl() + '/voice/customers/1/externalnumberpools?order=pattern').respond(200, [{
@@ -80,7 +79,8 @@ describe('Controller: DidAddCtrl', function () {
     $timeout.flush();
 
     spyOn(EmailService, 'emailNotifyTrialCustomer');
-    spyOn(Notification, "notify");
+    spyOn(Notification, "success");
+    spyOn(Notification, "error");
     spyOn($window, 'open');
     spyOn($state, 'href').and.callThrough();
   }));
@@ -248,14 +248,14 @@ describe('Controller: DidAddCtrl', function () {
           $httpBackend.whenPOST(HuronConfig.getEmailUrl() + '/email/didadd').respond(200);
           controller.sendEmail();
           $httpBackend.flush();
-          expect(Notification.notify.calls.count()).toEqual(1);
+          expect(Notification.success.calls.count()).toEqual(1);
         });
 
         it('should report error notification when email cannot be sent', function () {
           $httpBackend.whenPOST(HuronConfig.getEmailUrl() + '/email/didadd').respond(500);
           controller.sendEmail();
           $httpBackend.flush();
-          expect(Notification.notify.calls.count()).toEqual(1);
+          expect(Notification.error.calls.count()).toEqual(1);
         });
       });
 
@@ -274,7 +274,7 @@ describe('Controller: DidAddCtrl', function () {
 
         it('should report error notification when email cannot be sent', function () {
           controller.emailNotifyTrialCustomer();
-          expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
+          expect(Notification.error).toHaveBeenCalledWith('didManageModal.emailFailText');
         });
       });
 
@@ -291,7 +291,7 @@ describe('Controller: DidAddCtrl', function () {
 
           controller.emailNotifyTrialCustomer();
           $scope.$apply();
-          expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'success');
+          expect(Notification.success).toHaveBeenCalledWith('didManageModal.emailSuccessText');
         });
       });
 
@@ -307,7 +307,7 @@ describe('Controller: DidAddCtrl', function () {
         it('should report error notification when email cannot be sent', function () {
           controller.emailNotifyTrialCustomer();
           $scope.$apply();
-          expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
+          expect(Notification.error).toHaveBeenCalledWith('didManageModal.emailFailText');
         });
       });
 

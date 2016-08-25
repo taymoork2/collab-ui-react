@@ -1,9 +1,9 @@
 'use strict';
 
 describe('Controller: DevicesCtrlHuron', function () {
-  var controller, $scope, $q, $stateParams, $state, CsdmHuronUserDeviceService, OtpService, Config, poller;
+  var controller, $scope, $q, $stateParams, $state, CsdmHuronUserDeviceService, OtpService, poller;
 
-  beforeEach(module('Huron'));
+  beforeEach(angular.mock.module('Huron'));
 
   var deviceList = {};
 
@@ -15,14 +15,13 @@ describe('Controller: DevicesCtrlHuron', function () {
 
   var emptyArray = [];
 
-  beforeEach(inject(function (_$rootScope_, _$controller_, _$q_, _$stateParams_, _$state_, _OtpService_, _Config_, _CsdmHuronUserDeviceService_) {
+  beforeEach(inject(function (_$rootScope_, _$controller_, _$q_, _$stateParams_, _$state_, _OtpService_, _CsdmHuronUserDeviceService_) {
     $scope = _$rootScope_.$new();
     $scope.userOverview = userOverview;
     $stateParams = _$stateParams_;
     $q = _$q_;
     CsdmHuronUserDeviceService = _CsdmHuronUserDeviceService_;
     OtpService = _OtpService_;
-    Config = _Config_;
     $state = _$state_;
 
     $stateParams.currentUser = {

@@ -1,16 +1,16 @@
 'use strict';
 
-describe('MediaServiceDescriptor', function () {
+describe('MediaServiceActivationV2', function () {
   // load the service's module
-  beforeEach(module('wx2AdminWebClientApp'));
+  beforeEach(angular.mock.module('Mediafusion'));
 
   // instantiate service
-  var Service, $httpBackend, authinfo, $rootScope;
+  var Service, $httpBackend, authinfo;
   var extensionEntitlements = ['squared-fusion-media'];
   var mediaAgentOrgIds = ['mediafusion'];
 
   beforeEach(function () {
-    module(function ($provide) {
+    angular.mock.module(function ($provide) {
       authinfo = {
         getOrgId: sinon.stub()
       };
@@ -19,12 +19,9 @@ describe('MediaServiceDescriptor', function () {
     });
   });
 
-  beforeEach(inject(function ($injector, _MediaServiceDescriptor_) {
-    Service = _MediaServiceDescriptor_;
+  beforeEach(inject(function ($injector, _MediaServiceActivationV2_) {
+    Service = _MediaServiceActivationV2_;
     $httpBackend = $injector.get('$httpBackend');
-    $httpBackend
-      .when('GET', 'l10n/en_US.json')
-      .respond({});
   }));
 
   afterEach(function () {
@@ -57,6 +54,15 @@ describe('MediaServiceDescriptor', function () {
     expect($httpBackend.flush).not.toThrow();
   });
 
+  it('should set service acknowledged', function () {
+    var data = {
+      "acknowledged": true
+    };
+    $httpBackend.when('PATCH', 'https://hercules-integration.wbx2.com/v1/organizations/12345/services/' + extensionEntitlements[0], data).respond(200, {});
+    Service.setServiceAcknowledged(extensionEntitlements[0], true);
+    expect($httpBackend.flush).not.toThrow();
+  });
+
   it('should set user identity org to media agent org id mapping', function () {
     var data = {
       "identityOrgId": "12345",
@@ -82,4 +88,27 @@ describe('MediaServiceDescriptor', function () {
     $httpBackend.flush();
   });
 
+  it('MediaServiceActivationV2 setServiceEnabled should be called for enableMediaService', function () {
+    spyOn(Service, 'setServiceEnabled').and.callThrough();
+    Service.enableMediaService();
+    expect(Service.setServiceEnabled).toHaveBeenCalled();
+  });
+
+  it('MediaServiceActivationV2 isServiceEnabled should be called for getMediaServiceState', function () {
+    spyOn(Service, 'isServiceEnabled').and.callThrough();
+    Service.getMediaServiceState();
+    expect(Service.isServiceEnabled).toHaveBeenCalled();
+  });
+  it('MediaServiceActivationV2 isServiceEnabled should not be called for getMediaServiceState when isMediaServiceEnabled is set to true', function () {
+    Service.setisMediaServiceEnabled(true);
+    spyOn(Service, 'isServiceEnabled').and.callThrough();
+    Service.getMediaServiceState();
+    expect(Service.isServiceEnabled).not.toHaveBeenCalled();
+  });
+  it('MediaServiceActivationV2 isServiceEnabled should not be called for getMediaServiceState when isMediaServiceEnabled is set to false', function () {
+    Service.setisMediaServiceEnabled(false);
+    spyOn(Service, 'isServiceEnabled').and.callThrough();
+    Service.getMediaServiceState();
+    expect(Service.isServiceEnabled).not.toHaveBeenCalled();
+  });
 });

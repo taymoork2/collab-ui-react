@@ -1,8 +1,8 @@
-<cs-overlay-panel overlay-title="{{aaBuilderMain.overlayTitle}}" close="aaBuilderMain.close()">
+<cs-overlay-panel overlay-title="{{aaBuilderMain.overlayTitle}}" close="aaBuilderMain.close()" ng-keyup="aaBuilderMain.evalKeyPress($event.keyCode)">
   <div ng-include="'modules/huron/features/autoAttendant/builder/aaBuilderHeader.tpl.html'"></div>
 
-  <div class="loading-container" ng-if="aaBuilderMain.loading"> 
-    <i class="icon icon-spinner loading-spinner"></i> 
+  <div class="loading-container" ng-if="aaBuilderMain.loading">
+    <i class="icon icon-spinner loading-spinner"></i>
   </div>
 
   <div ng-if="aaBuilderMain.isAANameDefined === false">

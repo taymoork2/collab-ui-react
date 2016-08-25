@@ -42,10 +42,10 @@
         draggable: '=',
         onEnterKey: '&'
       },
-      link: function (scope, elem, attrs) {
+      link: function (scope, elem) {
         elem.attr('draggable', true);
         elem.attr('tabindex', '0');
-        elem.on('focus', function (event) {
+        elem.on('focus', function () {
           DragDropService.setData(scope.draggable);
           DragDropService.setElement(elem);
         });
@@ -94,7 +94,7 @@
         callback: '&',
         unique: '@'
       },
-      link: function (scope, elem, attrs) {
+      link: function (scope, elem) {
         var placeholder = getPlaceholderElement(),
           placeholderNode = placeholder[0],
           listNode = elem[0];
@@ -145,7 +145,7 @@
           var targetSize = targetNode.offsetHeight;
           var targetPosition = targetNode.offsetTop;
           targetPosition = relativeToParent ? targetPosition : 0;
-          return mousePointer < targetPosition + targetSize / 2;
+          return mousePointer < targetPosition + (targetSize / 2);
         }
 
         function stopDragover() {
@@ -176,9 +176,7 @@
           return false;
         });
 
-        elem.on('dragleave', function (event) {
-          event = event.originalEvent || event;
-
+        elem.on('dragleave', function () {
           elem.removeClass('dragover');
           $timeout(function () {
             if (!elem.hasClass('dragover')) {

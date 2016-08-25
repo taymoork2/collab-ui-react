@@ -1,26 +1,25 @@
 'use strict';
 
 describe('Service: OtpService', function () {
-  var $httpBackend, $rootScope, OtpService, HuronConfig;
+  var $httpBackend, OtpService, HuronConfig;
 
-  beforeEach(module('uc.device'));
-  beforeEach(module('ui.router'));
-  beforeEach(module('Huron'));
-  beforeEach(module('ngResource'));
+  beforeEach(angular.mock.module('uc.device'));
+  beforeEach(angular.mock.module('ui.router'));
+  beforeEach(angular.mock.module('Huron'));
+  beforeEach(angular.mock.module('ngResource'));
 
   var authInfo = {
     getOrgId: sinon.stub().returns('1')
   };
 
-  beforeEach(module(function ($provide) {
+  beforeEach(angular.mock.module(function ($provide) {
     $provide.value("Authinfo", authInfo);
   }));
 
   beforeEach(
     inject(
-      function (_$httpBackend_, _$rootScope_, _OtpService_, _HuronConfig_) {
+      function (_$httpBackend_, _OtpService_, _HuronConfig_) {
         $httpBackend = _$httpBackend_;
-        $rootScope = _$rootScope_;
         OtpService = _OtpService_;
         HuronConfig = _HuronConfig_;
       }));

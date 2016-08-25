@@ -14,13 +14,10 @@
     }
   }
 
-  @include vr-spacing(ml, 3);
-
   .ct-customer-card {
     width: rem-calc(414px);
     display: flex;
     flex-flow: column;
-    @include vr-spacing(mr, 1);
     .cardHeader1 {
       text-align: center;
       color: $gray-dark-1;
@@ -53,6 +50,11 @@
     &:hover {
       background-color: $color-primary-lighter;
     }
+  }
+
+  .ct-article {
+    box-shadow: none;
+    border: 1px solid $gray-light-1;
   }
 
   .welcomeText {
@@ -131,6 +133,10 @@
     }
   }
 
+  .ct-left-cs-input:focus {
+    border-color: $gray-light-3 !important;
+  }
+
   .ct-footer {
     color: $gray-light-1;
     border-top: 1px solid $gray-light-3;
@@ -141,7 +147,6 @@
   .ct-selectable-element {
     &.active {
       color: $color-primary-darker;
-      border-color: $color-primary-darker;
     }
   }
 
@@ -167,9 +172,12 @@
   }
 
   .ct-attribute-section {
+    background-color: $gray-light-4;
+  }
+
+  .ct-attribute-section.item-not-selected {
     display: flex;
     flex-flow: column;
-    background-color: $gray-light-4;
     .ct-default-msg {
       text-align: center;
       flex: 0;
@@ -217,17 +225,6 @@
     flex-flow: row;
   }
 
-  .ct-attribute-section {
-    display: flex;
-    flex-flow: column;
-    background-color: $gray-light-4;
-    .ct-default-msg {
-      max-width: 60%;
-      text-align: center;
-      flex: 0;
-      color: $gray-dark-1;
-    }
-  }
 
   .ct-attribute-row {
     width: 100%;
@@ -274,7 +271,6 @@
           @include vr-spacing(mr, 0.5);
         }
         .close {
-          float: right;
           font-size: 1.2em;
           padding-top: rem-calc(0px);
           line-height: 0.9em;
@@ -283,5 +279,13 @@
       }
     }
   }
+  .ct-input-error {
+    color: $color-negative-dark;
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+}
 
+.cs-input__messages {
+  padding-left: 1rem;
 }

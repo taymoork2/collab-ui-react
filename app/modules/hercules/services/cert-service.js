@@ -25,8 +25,8 @@
       var reader = new $window.FileReader();
       reader.onloadend = function () {
         $http.post(CertsUrl + '/certificates?orgId=' + orgId, {
-            cert: Utils.Base64.encode(reader.result)
-          })
+          cert: Utils.Base64.encode(reader.result)
+        })
           .then(deferred.resolve, deferred.reject);
       };
       reader.readAsBinaryString(file);

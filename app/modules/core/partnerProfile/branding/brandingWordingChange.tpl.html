@@ -39,8 +39,9 @@
                   accept="image/png"
                   ngf-select="bctrl.upload($file, $event)" 
                   name="file">
+                    <img class="thumbnail" alt="newLogo" ngf-src="bctrl.logoFile.blobUrl" ng-hide="bctrl.logoError" />
                     <img class="thumbnail" alt="currentLogo" ng-src="{{bctrl.tempLogoUrl}}" ng-if="!bctrl.logoFile && bctrl.tempLogoUrl" onerror="this.style.display='none'" />
-                     <p class="vertical-align text-center placeholder"  ng-hide="!bctrl.logoFile">
+                     <p class="vertical-align text-center placeholder"  ng-hide="bctrl.tempLogoUrl">
                     <i class="icon icon-upload"></i><br/>
                     <span translate="branding.logoPlaceholder"></span>
                   </p>
@@ -53,7 +54,6 @@
       </div>
     </div>
     <div class="small-12 columns form-spacing" ng-if="bctrl.isPartner">
-      <h4 translate="branding.tenantTitle"></h4>
       <div class="cs-checkbox-group">
         <input
           type="checkbox"

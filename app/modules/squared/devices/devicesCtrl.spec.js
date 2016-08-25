@@ -2,25 +2,24 @@
 
 describe('Controller: DevicesCtrl', function () {
   var $scope, $controller, controller, $httpBackend;
-  var CsdmConfigService, AccountOrgService, CsdmHuronOrgDeviceService, WizardFactory;
+  var CsdmConfigService, AccountOrgService, CsdmHuronOrgDeviceService;
 
-  beforeEach(module('Squared'));
-  beforeEach(module('Huron'));
-  beforeEach(module('Core'));
-  beforeEach(module('Sunlight'));
+  beforeEach(angular.mock.module('Squared'));
+  beforeEach(angular.mock.module('Huron'));
+  beforeEach(angular.mock.module('Core'));
+  beforeEach(angular.mock.module('Sunlight'));
 
   beforeEach(inject(dependencies));
   beforeEach(initSpies);
   beforeEach(initController);
 
-  function dependencies($rootScope, _$controller_, _$httpBackend_, _CsdmConfigService_, _AccountOrgService_, _CsdmHuronOrgDeviceService_, _WizardFactory_) {
+  function dependencies($rootScope, _$controller_, _$httpBackend_, _CsdmConfigService_, _AccountOrgService_, _CsdmHuronOrgDeviceService_) {
     $scope = $rootScope.$new();
     $controller = _$controller_;
     $httpBackend = _$httpBackend_;
     CsdmConfigService = _CsdmConfigService_;
     AccountOrgService = _AccountOrgService_;
     CsdmHuronOrgDeviceService = _CsdmHuronOrgDeviceService_;
-    WizardFactory = _WizardFactory_;
   }
 
   function initSpies() {

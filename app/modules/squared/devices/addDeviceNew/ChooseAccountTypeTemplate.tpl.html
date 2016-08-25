@@ -5,7 +5,7 @@
 </div>
 <div class="modal-body device-wizard">
   <div>
-    <h5 translate="addDeviceWizard.chooseAccountType.assignToUserOrPlace"></h5>
+    <h4 translate="addDeviceWizard.chooseAccountType.assignToUserOrPlace"></h4>
     <p class="wizardDescription" translate="addDeviceWizard.chooseAccountType.userOrPlaceInstructions"></p>
     <div class="typeChoice">
       <div class="typeButtonWrapper typeButtonWrapperLeft">
@@ -16,8 +16,8 @@
           <div class="typeImageBox">
             <img class="typeImage" type="image" src="images/devices/user-illustration.png" />
           </div>
-          <h4 translate="common.user"></h4>
-          <span class="buttonBottom" translate="addDeviceWizard.chooseAccountType.personalUsage"></span>
+          <h4 translate="addDeviceWizard.chooseAccountType.user"></h4>
+          <span translate="addDeviceWizard.chooseAccountType.personalUsage"></span>
         </div>
       </div>
       <div class="typeButtonWrapper">
@@ -29,7 +29,7 @@
             <img class="typeImage" type="image" src="images/devices/places-illustration.png" />
           </div>
           <h4 translate="addDeviceWizard.chooseAccountType.place"></h4>
-          <span class="buttonBottom" translate="addDeviceWizard.chooseAccountType.sharedUsage"></span>
+          <span translate="addDeviceWizard.chooseAccountType.sharedUsage"></span>
         </div>
       </div>
     </div>
@@ -43,9 +43,11 @@
       translate="common.back">
   </button>
   <button
+      cs-btn
+      loading="chooseAccountType.isLoading"
       class="btn btn--primary"
       ng-disabled="!chooseAccountType.radioSelect"
-      sq-click-promise="chooseAccountType.next()"
-      translate="common.next">
+      sq-click-promise="chooseAccountType.next()">
+      <span translate="common.next"></span>
   </button>
 </div>

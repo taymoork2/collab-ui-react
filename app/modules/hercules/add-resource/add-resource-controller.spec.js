@@ -1,22 +1,21 @@
 'use strict';
 
 describe('Controller: AddResourceController', function () {
-  var controller, $scope, $controller, $q, $window, modalInstanceMock, translateMock, windowMock, clusterServiceMock, fusionClusterServiceMock;
+  var controller, $scope, $controller, $q, modalInstanceMock, translateMock, windowMock, clusterServiceMock, fusionClusterServiceMock;
 
   var clusterIdOfNewCluster = 'c6b4d8f1-6d34-465c-8d6d-b541058fc15e';
   var newConnectorType = 'c_cal';
 
-  beforeEach(module('Squared'));
-  beforeEach(module('Hercules'));
+  beforeEach(angular.mock.module('Squared'));
+  beforeEach(angular.mock.module('Hercules'));
   beforeEach(inject(dependencies));
   beforeEach(initController);
   beforeEach(initSpies);
 
-  function dependencies($rootScope, _$controller_, _$q_, _$window_) {
+  function dependencies($rootScope, _$controller_, _$q_) {
     $scope = $rootScope.$new();
     $controller = _$controller_;
     $q = _$q_;
-    $window = _$window_;
   }
 
   function initSpies() {}
@@ -35,9 +34,13 @@ describe('Controller: AddResourceController', function () {
     };
 
     fusionClusterServiceMock = {
-      provisionConnector: sinon.stub().returns($q.resolve(true)),
-      preregisterCluster: sinon.stub().returns($q.resolve(clusterIdOfNewCluster)),
-      addPreregisteredClusterToAllowList: sinon.stub().returns($q.resolve(true)),
+      provisionConnector: sinon.stub().returns($q.resolve({
+        id: clusterIdOfNewCluster
+      })),
+      preregisterCluster: sinon.stub().returns($q.resolve({
+        id: clusterIdOfNewCluster
+      })),
+      addPreregisteredClusterToAllowList: sinon.stub().returns($q.resolve({})),
       getAll: sinon.stub().returns($q.resolve([{
         url: 'https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d',
         id: 'fe5acf7a-6246-484f-8f43-3e8c910fc50d',
@@ -61,7 +64,7 @@ describe('Controller: AddResourceController', function () {
         }, {
           connectorType: 'c_ucmc'
         }],
-        type: 'expressway',
+        targetType: 'c_mgmt',
         servicesStatuses: [{
           serviceId: 'squared-fusion-uc',
           state: {
@@ -93,7 +96,7 @@ describe('Controller: AddResourceController', function () {
         }, {
           connectorType: 'c_ucmc'
         }],
-        type: 'expressway',
+        targetType: 'c_mgmt',
         servicesStatuses: [{
           serviceId: 'squared-fusion-uc',
           state: {
@@ -132,7 +135,7 @@ describe('Controller: AddResourceController', function () {
         }, {
           connectorType: 'c_cal'
         }],
-        type: 'expressway',
+        targetType: 'c_mgmt',
         servicesStatuses: [{
           serviceId: 'squared-fusion-cal',
           state: {
@@ -187,7 +190,9 @@ describe('Controller: AddResourceController', function () {
 
     it('should provision the new connector, but nothing else', function () {
       spyOn(fusionClusterServiceMock, 'provisionConnector');
-      fusionClusterServiceMock.provisionConnector.and.returnValue($q.when());
+      fusionClusterServiceMock.provisionConnector.and.returnValue($q.resolve({
+        id: clusterIdOfNewCluster
+      }));
       controller.preregisterAndProvisionExpressway(newConnectorType);
       $scope.$apply();
       expect(fusionClusterServiceMock.provisionConnector).toHaveBeenCalledWith(clusterIdOfNewCluster, newConnectorType);
@@ -195,7 +200,9 @@ describe('Controller: AddResourceController', function () {
     });
 
     it('should add the new cluster to the FMS allow-list exactly once, and with the correct clusterId', function () {
-      spyOn(fusionClusterServiceMock, 'addPreregisteredClusterToAllowList').and.returnValue($q.when());
+      spyOn(fusionClusterServiceMock, 'addPreregisteredClusterToAllowList').and.returnValue($q.resolve({
+        id: clusterIdOfNewCluster
+      }));
       controller.preregisterAndProvisionExpressway(newConnectorType);
       controller.hostname = 'hostnameProvidedByUser';
       $scope.$apply();

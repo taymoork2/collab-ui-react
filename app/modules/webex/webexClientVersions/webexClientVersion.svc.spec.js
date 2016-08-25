@@ -3,11 +3,9 @@
 //Below is the Test Suit written for FaultRuleService
 describe('WebexClientVersion Test', function () {
 
-  //load the service's module
-  //beforeEach(module('wx2AdminWebClientApp'));
-  beforeEach(module('wx2AdminWebClientApp'));
+  beforeEach(angular.mock.module('WebExApp'));
 
-  var WebexClientVersion, httpBackend, $translate, UrlConfig;
+  var WebexClientVersion, httpBackend, UrlConfig;
   var clientVersions1;
 
   beforeEach(inject(function (_$httpBackend_, _UrlConfig_, _WebexClientVersion_) {
@@ -51,8 +49,6 @@ describe('WebexClientVersion Test', function () {
 
     //httpBackend.resetExpectations();
 
-    //unfortunately, this line is necessary. Not sure where it's coming from
-    httpBackend.expectGET('l10n/en_US.json').respond(200, {});
     httpBackend.whenGET(url).respond(200, clientVersions1);
     //httpBackend.expectGET('/admin/api/v1/partnertemplate/clientversions');
 
@@ -63,10 +59,6 @@ describe('WebexClientVersion Test', function () {
     });
 
     httpBackend.flush();
-  });
-
-  it('Test of a test', function () {
-    expect('x').toBe('x');
   });
 
 });

@@ -22,7 +22,7 @@
                   class="red">{{'helpdesk.licenseStatus.expired' |  translate}}</span>
           <span ng-if="aggregatedLicense.licenses.length > 1">|
             <a href ng-click="helpdeskOrgCtrl.showLicenseToggles[aggregatedLicense.key] = !helpdeskOrgCtrl.showLicenseToggles[aggregatedLicense.key]">
-              {{helpdeskOrgCtrl.showLicenseToggles[aggregatedLicense.key] ? 'helpdesk.less' : 'helpdesk.more' | translate}}   
+              {{helpdeskOrgCtrl.showLicenseToggles[aggregatedLicense.key] ? 'helpdesk.less' : 'helpdesk.more' | translate}}
             </a>
           </span>
 
@@ -70,7 +70,7 @@
                   class="red">{{'helpdesk.licenseStatus.expired' |  translate}}</span>
           <span ng-if="aggregatedLicense.licenses.length > 1">|
             <a href ng-click="helpdeskOrgCtrl.showLicenseToggles[aggregatedLicense.key] = !helpdeskOrgCtrl.showLicenseToggles[aggregatedLicense.key]">
-              {{helpdeskOrgCtrl.showLicenseToggles[aggregatedLicense.key] ? 'helpdesk.less' : 'helpdesk.more' | translate}}   
+              {{helpdeskOrgCtrl.showLicenseToggles[aggregatedLicense.key] ? 'helpdesk.less' : 'helpdesk.more' | translate}}
             </a>
           </span>
 
@@ -93,7 +93,7 @@
     </article>
   </cs-card>
 
-  <cs-card class="large header-bar people" ng-show="helpdeskOrgCtrl.callCard.entitled">
+  <cs-card class="large header-bar cta-base" ng-show="helpdeskOrgCtrl.callCard.entitled">
     <article>
       <header class="align-center">
         <div class="overview-header">
@@ -116,7 +116,7 @@
                   class="red">{{'helpdesk.licenseStatus.expired' |  translate}}</span>
           <span ng-if="aggregatedLicense.licenses.length > 1">|
             <a href ng-click="helpdeskOrgCtrl.showLicenseToggles[aggregatedLicense.key] = !helpdeskOrgCtrl.showLicenseToggles[aggregatedLicense.key]">
-              {{helpdeskOrgCtrl.showLicenseToggles[aggregatedLicense.key] ? 'helpdesk.less' : 'helpdesk.more' | translate}}   
+              {{helpdeskOrgCtrl.showLicenseToggles[aggregatedLicense.key] ? 'helpdesk.less' : 'helpdesk.more' | translate}}
             </a>
           </span>
 
@@ -162,7 +162,7 @@
                   class="red">{{'helpdesk.licenseStatus.expired' |  translate}}</span>
           <span ng-if="aggregatedLicense.licenses.length > 1">|
             <a href ng-click="helpdeskOrgCtrl.showLicenseToggles[aggregatedLicense.key] = !helpdeskOrgCtrl.showLicenseToggles[aggregatedLicense.key]">
-              {{helpdeskOrgCtrl.showLicenseToggles[aggregatedLicense.key] ? 'helpdesk.less' : 'helpdesk.more' | translate}}   
+              {{helpdeskOrgCtrl.showLicenseToggles[aggregatedLicense.key] ? 'helpdesk.less' : 'helpdesk.more' | translate}}
             </a>
           </span>
 
@@ -185,7 +185,7 @@
     </article>
   </cs-card>
 
-  <cs-card class="large header-bar cta" ng-show="helpdeskOrgCtrl.hybridServicesCard.entitled">
+  <cs-card class="large header-bar gray-light" ng-show="helpdeskOrgCtrl.hybridServicesCard.entitled">
     <article>
       <header class="align-center">
         <div class="overview-header">
@@ -226,5 +226,5 @@
       <footer></footer>
     </article>
   </cs-card>
-  
+
 </cs-card-layout>

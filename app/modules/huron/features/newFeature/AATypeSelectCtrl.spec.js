@@ -2,21 +2,23 @@
 
 describe('Controller: AATypeSelectCtrl', function () {
 
-  beforeEach(module('Huron'));
+  beforeEach(angular.mock.module('Huron'));
 
-  var controller, $scope, $state, $q, $timeout;
+  var $scope, $state, $timeout;
   var modalFake = {
     close: jasmine.createSpy('modalInstance.close'),
     dismiss: jasmine.createSpy('modalInstance.dismiss')
   };
 
-  beforeEach(inject(function ($rootScope, $controller, _$state_, _$q_, _$timeout_) {
+  beforeEach(inject(function ($rootScope, $controller, _$state_, _$timeout_, Orgservice) {
     $scope = $rootScope.$new();
-    $q = _$q_;
     $state = _$state_;
     $timeout = _$timeout_;
     spyOn($state, 'go');
-    controller = $controller('AATypeSelectCtrl', {
+    spyOn(Orgservice, 'getOrg').and.callFake(function (callback) {
+      callback({}, 200);
+    });
+    $controller('AATypeSelectCtrl', {
       $scope: $scope,
       $modalInstance: modalFake,
       $timeout: $timeout,

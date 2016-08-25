@@ -6,7 +6,7 @@
     .factory('UserCsvService', UserCsvService);
 
   /* @ngInject */
-  function UserCsvService($translate, TrackingId) {
+  function UserCsvService($translate, Config, TrackingId) {
     var csvStat = {
       isProcessing: false,
       numMaxUsers: 0,
@@ -24,7 +24,8 @@
       getBulkErrorResponse: getBulkErrorResponse,
       addErrorWithTrackingID: addErrorWithTrackingID,
       chunkSizeWithSparkCall: 2,
-      chunkSizeWithoutSparkCall: 10
+      chunkSizeWithoutSparkCall: 10,
+      maxUsersInCSV: 1100
     };
 
     return service;
@@ -54,71 +55,145 @@
       messageCode = messageCode || '';
       email = email || '';
 
-      if (status === 400) {
-        if (messageCode === '400087') {
-          responseMessage = $translate.instant('usersPage.hybridServicesError');
-        } else if (messageCode === '400094') {
-          responseMessage = $translate.instant('usersPage.hybridServicesComboError');
-        } else {
-          responseMessage = $translate.instant('firstTimeWizard.bulk400Error');
-        }
-      } else if (status === 401) {
-        responseMessage = $translate.instant('firstTimeWizard.bulk401And403Error');
-      } else if (status === 403) {
-        if (messageCode === '400081') {
-          responseMessage = $translate.instant('usersPage.userExistsError', {
-            email: email
-          });
-        } else if (messageCode === '400084' || messageCode === '400091') {
-          responseMessage = $translate.instant('usersPage.claimedDomainError', {
-            email: email,
-            domain: email.split('@')[1]
-          });
-        } else if (messageCode === '400090') {
-          responseMessage = $translate.instant('usersPage.userExistsInDiffOrgError', {
-            email: email
-          });
-        } else if (messageCode === '400096' || messageCode === '400110') {
-          responseMessage = $translate.instant('usersPage.notSetupForManUserAddError', {
-            email: email
-          });
-        } else if (messageCode === '400108') {
-          responseMessage = $translate.instant('usersPage.userExistsDomainClaimError', {
-            email: email
-          });
-        } else if (messageCode === '400109') {
-          responseMessage = $translate.instant('usersPage.unableToMigrateError', {
-            email: email
-          });
-        } else if (messageCode === '400111') {
-          responseMessage = $translate.instant('usersPage.insufficientEntitlementsError', {
-            email: email
-          });
-        } else {
-          responseMessage = $translate.instant('firstTimeWizard.bulk401And403Error');
-        }
-      } else if (status === 404) {
-        responseMessage = $translate.instant('firstTimeWizard.bulk404Error');
-      } else if (status === 408 || status == 504) {
-        responseMessage = $translate.instant('firstTimeWizard.bulk408Error');
-      } else if (status === 409) {
-        responseMessage = $translate.instant('firstTimeWizard.bulk409Error');
-      } else if (status === 500) {
-        responseMessage = $translate.instant('firstTimeWizard.bulk500Error');
-      } else if (status === 502 || status === 503) {
-        responseMessage = $translate.instant('firstTimeWizard.bulk502And503Error');
-      } else if (status === -1) {
-        if (messageCode === '0') {
-          responseMessage = $translate.instant('firstTimeWizard.bulkCancelledErrorByUser', {
-            email: email
-          });
-        } else {
-          responseMessage = $translate.instant('firstTimeWizard.bulkCancelledErrorByServer', {
-            email: email
-          });
-        }
-      } else {
-        responseMessage = $translate.instant('firstTimeWizard.processBulkError');
+      switch (status) {
+        case 400:
+          {
+            switch (messageCode) {
+              case Config.messageErrors.hybridServicesError:
+                {
+                  responseMessage = $translate.instant('usersPage.hybridServicesError');
+                  break;
+                }
+              case Config.messageErrors.hybridServicesComboError:
+                {
+                  responseMessage = $translate.instant('usersPage.hybridServicesComboError');
+                  break;
+                }
+              default:
+                {
+                  responseMessage = $translate.instant('firstTimeWizard.bulk400Error');
+                  break;
+                }
+            }
+            break;
+          }
+        case 401:
+          {
+            responseMessage = $translate.instant('firstTimeWizard.bulk401And403Error');
+            break;
+          }
+        case 403:
+          {
+            switch (messageCode) {
+              case Config.messageErrors.userExistsError:
+                {
+                  responseMessage = $translate.instant('usersPage.userExistsError', {
+                    email: email
+                  });
+                  break;
+                }
+              case Config.messageErrors.userPatchError:
+              case Config.messageErrors.claimedDomainError:
+                {
+                  responseMessage = $translate.instant('usersPage.claimedDomainError', {
+                    email: email,
+                    domain: email.split('@')[1]
+                  });
+                  break;
+                }
+              case Config.messageErrors.userExistsInDiffOrgError:
+                {
+                  responseMessage = $translate.instant('usersPage.userExistsInDiffOrgError', {
+                    email: email
+                  });
+                  break;
+                }
+              case Config.messageErrors.notSetupForManUserAddError:
+                {
+                  responseMessage = $translate.instant('usersPage.notSetupForManUserAddError', {
+                    email: email
+                  });
+                  break;
+                }
+              case Config.messageErrors.userExistsDomainClaimError:
+                {
+                  responseMessage = $translate.instant('usersPage.userExistsDomainClaimError', {
+                    email: email
+                  });
+                  break;
+                }
+              case Config.messageErrors.unknownCreateUserError:
+                {
+                  responseMessage = $translate.instant('usersPage.unknownCreateUserError');
+                  break;
+                }
+              case Config.messageErrors.unableToMigrateError:
+                {
+                  responseMessage = $translate.instant('usersPage.unableToMigrateError', {
+                    email: email
+                  });
+                  break;
+                }
+              case Config.messageErrors.insufficientEntitlementsError:
+                {
+                  responseMessage = $translate.instant('usersPage.insufficientEntitlementsError', {
+                    email: email
+                  });
+                  break;
+                }
+              default:
+                {
+                  responseMessage = $translate.instant('firstTimeWizard.bulk401And403Error');
+                  break;
+                }
+            }
+            break;
+          }
+        case 404:
+          {
+            responseMessage = $translate.instant('firstTimeWizard.bulk404Error');
+            break;
+          }
+        case 408:
+        case 504:
+          {
+            responseMessage = $translate.instant('firstTimeWizard.bulk408Error');
+            break;
+          }
+        case 409:
+          {
+            responseMessage = $translate.instant('firstTimeWizard.bulk409Error');
+            break;
+          }
+        case 500:
+          {
+            responseMessage = $translate.instant('firstTimeWizard.bulk500Error');
+            break;
+          }
+        case 502:
+        case 503:
+          {
+            responseMessage = $translate.instant('firstTimeWizard.bulk502And503Error');
+            break;
+          }
+        case -1:
+          {
+            if (messageCode === '0') {
+              responseMessage = $translate.instant('firstTimeWizard.bulkCancelledErrorByUser', {
+                email: email
+              });
+            } else {
+              responseMessage = $translate.instant('firstTimeWizard.bulkCancelledErrorByServer', {
+                email: email
+              });
+            }
+            break;
+          }
+        default:
+          {
+            responseMessage = $translate.instant('firstTimeWizard.processBulkError');
+            break;
+          }
       }
       return responseMessage;
     }

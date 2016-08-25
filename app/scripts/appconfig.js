@@ -2,6 +2,34 @@
   'use strict';
 
   /* eslint angular/di:0 */
+  var loadedModules = [];
+
+  function loadModuleAndResolve($ocLazyLoad, resolve) {
+    return function loadModuleCallback(loadModule) {
+      var moduleName;
+      if (_.isObject(loadModule) && _.has(loadModule, 'default')) {
+        moduleName = loadModule.default;
+      } else {
+        moduleName = loadModule;
+      }
+      // Don't reload a loaded module or core angular module
+      if (_.includes(loadedModules, moduleName) || _.includes($ocLazyLoad.getModules(), moduleName) || _.startsWith(moduleName, 'ng')) {
+        resolve();
+      } else {
+        lazyLoadModule(moduleName)
+          .finally(resolve);
+      }
+    };
+
+    function lazyLoadModule(moduleName) {
+      loadedModules.push(moduleName);
+      $ocLazyLoad.toggleWatch(true);
+      return $ocLazyLoad.inject(moduleName)
+        .finally(function disableToggleWatch() {
+          $ocLazyLoad.toggleWatch(false);
+        });
+    }
+  }
 
   angular
     .module('wx2AdminWebClientApp')
@@ -22,17 +50,66 @@
 
         $urlRouterProvider.otherwise('login');
         $stateProvider
+          .state('modal', {
+            abstract: true,
+            onEnter: modalOnEnter({
+              type: 'full'
+            }),
+            onExit: modalOnExit
+          })
+          .state('modalDialog', {
+            abstract: true,
+            onEnter: modalOnEnter({
+              type: 'dialog'
+            }),
+            onExit: modalOnExit
+          })
+          .state('modalSmall', {
+            abstract: true,
+            onEnter: modalOnEnter({
+              type: 'small'
+            }),
+            onExit: modalOnExit
+          })
+          .state('wizardmodal', {
+            abstract: true,
+            onEnter: /* @ngInject */ function ($modal, $state, $previousState) {
+              $previousState.memo(wizardmodalMemo);
+              $state.modal = $modal.open({
+                template: '<div ui-view="modal"></div>',
+                controller: 'ModalWizardCtrl',
+                windowTemplateUrl: 'modules/core/modal/wizardWindow.tpl.html',
+                backdrop: 'static'
+              });
+              $state.modal.result.finally(function () {
+                $state.modal = null;
+                var previousState = $previousState.get(wizardmodalMemo);
+                if (previousState) {
+                  return $previousState.go(wizardmodalMemo);
+                }
+              });
+            },
+            onExit: ['$state', '$previousState',
+              function ($state, $previousState) {
+                if ($state.modal) {
+                  $previousState.forget(wizardmodalMemo);
+                  $state.modal.close();
+                }
+              }
+            ]
+          })
           .state('login', {
+            parent: 'loginLazyLoad',
             url: '/login',
             views: {
               'main@': {
-                templateUrl: 'modules/core/login/login.tpl.html',
-                controller: 'LoginCtrl'
+                template: '<login/>'
               }
             },
             authenticate: false
           })
           .state('activateUser', {
+            parent: 'mainLazyLoad',
             url: '/activate-user',
             views: {
               'main@': {
@@ -61,6 +138,7 @@
             authenticate: false
           })
           .state('activateProduct', {
+            parent: 'mainLazyLoad',
             url: '/activate-product',
             views: {
               'main@': {
@@ -86,6 +164,7 @@
             }
           })
           .state('unauthorized', {
+            parent: 'stateRedirectLazyLoad',
             views: {
               'main@': {
                 templateUrl: 'modules/core/stateRedirect/unauthorized.tpl.html',
@@ -96,6 +175,7 @@
             authenticate: false
           })
           .state('login-error', {
+            parent: 'stateRedirectLazyLoad',
             views: {
               'main@': {
                 templateUrl: 'modules/core/stateRedirect/loginError.tpl.html',
@@ -106,6 +186,7 @@
             authenticate: false
           })
           .state('404', {
+            parent: 'stateRedirectLazyLoad',
             url: '/404',
             views: {
               'main@': {
@@ -116,6 +197,51 @@
             },
             authenticate: false
           })
+          .state('mainLazyLoad', {
+            views: {
+              'main@': {
+                template: '<div ui-view="main"></div>'
+              }
+            },
+            resolve: {
+              lazy: /* @ngInject */ function lazyLoad($q, $ocLazyLoad) {
+                return $q(function resolveLogin(resolve) {
+                  require(['./main'], loadModuleAndResolve($ocLazyLoad, resolve));
+                });
+              }
+            },
+            abstract: true,
+          })
+          .state('loginLazyLoad', {
+            views: {
+              'main@': {
+                template: '<div ui-view="main"></div>'
+              }
+            },
+            resolve: {
+              lazy: /* @ngInject */ function lazyLoad($q, $ocLazyLoad) {
+                return $q(function resolveLogin(resolve) {
+                  require(['modules/core/login'], loadModuleAndResolve($ocLazyLoad, resolve));
+                });
+              }
+            },
+            abstract: true,
+          })
+          .state('stateRedirectLazyLoad', {
+            views: {
+              'main@': {
+                template: '<div ui-view="main"></div>'
+              }
+            },
+            resolve: {
+              lazy: /* @ngInject */ function lazyLoad($q, $ocLazyLoad) {
+                return $q(function resolveLogin(resolve) {
+                  require(['modules/core/stateRedirect/stateRedirect.controller'], loadModuleAndResolve($ocLazyLoad, resolve));
+                });
+              }
+            },
+            abstract: true,
+          })
           .state('main', {
             views: {
               'main@': {
@@ -123,6 +249,13 @@
               }
             },
             abstract: true,
+            resolve: {
+              lazy: /* @ngInject */ function lazyLoad($q, $ocLazyLoad) {
+                return $q(function resolveLogin(resolve) {
+                  require(['./main'], loadModuleAndResolve($ocLazyLoad, resolve));
+                });
+              }
+            },
             sticky: true
           })
           .state('partner', {
@@ -159,7 +292,7 @@
                 }
               }.bind($state.sidepanel));
             },
-            onExit: /* @ngInject */ function ($state, $previousState) {
+            onExit: /* @ngInject */ function ($state) {
               if ($state.sidepanel) {
                 $state.sidepanel.dismiss();
               }
@@ -181,13 +314,7 @@
         $httpProvider.interceptors.push('TimingInterceptor');
         $httpProvider.interceptors.push('ServerErrorInterceptor');
         $httpProvider.interceptors.push('ReadonlyInterceptor');
-      }
-    ]);
 
-  angular
-    .module('Squared')
-    .config(['$stateProvider',
-      function ($stateProvider) {
         var modalMemo = 'modalMemo';
         var wizardmodalMemo = 'wizardmodalMemo';
 
@@ -202,12 +329,11 @@
             }
             $state.modal = $modal.open({
               template: '<div ui-view="modal"></div>',
-              size: options.size,
               windowClass: options.windowClass,
               backdrop: options.backdrop || 'static',
               modalClass: $state.params.modalClass,
               modalId: $state.params.modalId,
-              type: $state.params.modalType
+              type: options.type
             });
             $state.modal.result.finally(function () {
               if (!this.stopPreviousState) {
@@ -224,7 +350,7 @@
         }
 
         /* @ngInject */
-        function modalOnExit($state, $previousState) {
+        function modalOnExit($state) {
           if ($state.modal) {
             $state.modal.dismiss();
           }
@@ -232,7 +358,7 @@
 
         $stateProvider
           .state('addDeviceFlow', {
-            parent: 'modalSmall',
+            parent: 'modal',
             views: {
               'modal@': {
                 controller: 'ChooseDeviceTypeCtrl',
@@ -245,7 +371,7 @@
             }
           })
           .state('addDeviceFlow.chooseDeviceType', {
-            parent: 'modalSmall',
+            parent: 'modal',
             views: {
               'modal@': {
                 controller: 'ChooseDeviceTypeCtrl',
@@ -258,7 +384,7 @@
             }
           })
           .state('addDeviceFlow.chooseAccountType', {
-            parent: 'modalSmall',
+            parent: 'modal',
             views: {
               'modal@': {
                 controller: 'ChooseAccountTypeCtrl',
@@ -271,7 +397,7 @@
             }
           })
           .state('addDeviceFlow.choosePersonal', {
-            parent: 'modalSmall',
+            parent: 'modal',
             views: {
               'modal@': {
                 controller: 'ChoosePersonalCtrl',
@@ -284,7 +410,7 @@
             }
           })
           .state('addDeviceFlow.chooseSharedSpace', {
-            parent: 'modalSmall',
+            parent: 'modal',
             views: {
               'modal@': {
                 controller: 'ChooseSharedSpaceCtrl',
@@ -296,8 +422,21 @@
               wizard: null
             }
           })
+          .state('addDeviceFlow.newSharedSpace', {
+            parent: 'modal',
+            views: {
+              'modal@': {
+                controller: 'NewSharedSpaceCtrl',
+                controllerAs: 'newPlace',
+                templateUrl: 'modules/squared/devices/addPlace/NewSharedSpaceTemplate.tpl.html'
+              }
+            },
+            params: {
+              wizard: null
+            }
+          })
           .state('addDeviceFlow.addServices', {
-            parent: 'modalSmall',
+            parent: 'modal',
             views: {
               'modal@': {
                 controller: 'AddServicesCtrl',
@@ -310,7 +449,7 @@
             }
           })
           .state('addDeviceFlow.addLines', {
-            parent: 'modalSmall',
+            parent: 'modal',
             views: {
               'modal@': {
                 controller: 'AddLinesCtrl',
@@ -323,7 +462,7 @@
             }
           })
           .state('addDeviceFlow.showActivationCode', {
-            parent: 'modalSmall',
+            parent: 'modal',
             params: {
               currentUser: {},
               activationCode: {},
@@ -345,6 +484,13 @@
                 controller: 'ActivateCtrl'
               }
             },
+            resolve: {
+              lazy: /* @ngInject */ function lazyLoad($q, $ocLazyLoad) {
+                return $q(function resolveLogin(resolve) {
+                  require(['modules/squared/scripts/controllers/activate'], loadModuleAndResolve($ocLazyLoad, resolve));
+                });
+              }
+            },
             authenticate: false
           })
           .state('csadmin', {
@@ -355,6 +501,7 @@
           })
           .state('downloads', {
             url: '/downloads',
+            parent: 'mainLazyLoad',
             views: {
               'main@': {
                 templateUrl: 'modules/squared/views/downloads.html',
@@ -368,17 +515,12 @@
             parent: 'main'
           })
           .state('domainmanagement.add', {
-            parent: 'modal',
+            parent: 'modalSmall',
             views: {
               'modal@': {
                 controller: 'DomainManageAddCtrl',
                 controllerAs: 'dmpopup',
-                templateUrl: 'modules/core/domainManagement/add.tpl.html',
-                resolve: {
-                  modalInfo: function ($state) {
-                    $state.params.modalType = 'small';
-                  }
-                }
+                templateUrl: 'modules/core/domainManagement/add.tpl.html'
               }
             },
             params: {
@@ -386,17 +528,12 @@
             }
           })
           .state('domainmanagement.instructions', {
-            parent: 'modal',
+            parent: 'modalSmall',
             views: {
               'modal@': {
                 controller: 'DomainManageInstructionsCtrl',
                 controllerAs: 'dmpopup',
-                templateUrl: 'modules/core/domainManagement/instructions.tpl.html',
-                resolve: {
-                  modalInfo: function ($state) {
-                    $state.params.modalType = 'small';
-                  }
-                }
+                templateUrl: 'modules/core/domainManagement/instructions.tpl.html'
               }
             },
             params: {
@@ -405,17 +542,12 @@
             }
           })
           .state('domainmanagement.delete', {
-            parent: 'modal',
+            parent: 'modalDialog',
             views: {
               'modal@': {
                 controller: 'DomainManageDeleteCtrl',
                 controllerAs: 'dmpopup',
-                templateUrl: 'modules/core/domainManagement/delete.tpl.html',
-                resolve: {
-                  modalInfo: function ($state) {
-                    $state.params.modalType = 'dialog';
-                  }
-                }
+                templateUrl: 'modules/core/domainManagement/delete.tpl.html'
               }
             },
             params: {
@@ -424,17 +556,12 @@
             }
           })
           .state('domainmanagement.unclaim', {
-            parent: 'modal',
+            parent: 'modalSmall',
             views: {
               'modal@': {
                 controller: 'DomainManageDeleteCtrl',
                 controllerAs: 'dmpopup',
-                templateUrl: 'modules/core/domainManagement/unclaim.tpl.html',
-                resolve: {
-                  modalInfo: function ($state) {
-                    $state.params.modalType = 'small';
-                  }
-                }
+                templateUrl: 'modules/core/domainManagement/unclaim.tpl.html'
               }
             },
             params: {
@@ -443,17 +570,12 @@
             }
           })
           .state('domainmanagement.claim', {
-            parent: 'modal',
+            parent: 'modalSmall',
             views: {
               'modal@': {
                 controller: 'DomainManageClaimCtrl',
                 controllerAs: 'dmpopup',
-                templateUrl: 'modules/core/domainManagement/claim.tpl.html',
-                resolve: {
-                  modalInfo: function ($state) {
-                    $state.params.modalType = 'small';
-                  }
-                }
+                templateUrl: 'modules/core/domainManagement/claim.tpl.html'
               }
             },
             params: {
@@ -462,17 +584,12 @@
             }
           })
           .state('domainmanagement.verify', {
-            parent: 'modal',
+            parent: 'modalSmall',
             views: {
               'modal@': {
                 controller: 'DomainManageVerifyCtrl',
                 controllerAs: 'dmpopup',
-                templateUrl: 'modules/core/domainManagement/verify.tpl.html',
-                resolve: {
-                  modalInfo: function ($state) {
-                    $state.params.modalType = 'small';
-                  }
-                }
+                templateUrl: 'modules/core/domainManagement/verify.tpl.html'
               }
             },
             params: {
@@ -492,6 +609,25 @@
               }
             }
           })
+          .state('status', {
+            url: '/status',
+            templateUrl: 'modules/status/dashboard/dashboard.tpl.html',
+            controller: 'DashboardCtrl',
+            controllerAs: 'dashboardCtrl',
+            parent: 'main',
+            resolve: {
+              hasFeatureToggle: function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.globalStatus);
+              }
+            }
+          })
+          /*.state('status', {
+            url: '/status-conponents',
+            templateUrl: 'modules/status/components/components.tpl.html',
+            controller: 'ComponentsCtrl',
+            controllerAs: 'componentsCtrl',
+            parent: 'main'
+          })*/
           .state('authentication.enable3rdPartyAuth', {
             parent: 'modal',
             views: {
@@ -533,23 +669,6 @@
               modalType: 'Partner'
             }
           })
-          .state('invite', {
-            url: '/invite',
-            views: {
-              'main@': {
-                templateUrl: 'modules/squared/views/invite.html',
-                controller: 'InviteCtrl'
-              }
-            },
-            authenticate: false
-          })
-          .state('invitelauncher', {
-            url: '/invitelauncher',
-            templateUrl: 'modules/squared/views/invitelauncher.html',
-            controller: 'InvitelauncherCtrl',
-            parent: 'main',
-            authenticate: false
-          })
           .state('processorder', {
             url: '/processorder',
             templateUrl: 'modules/squared/views/processorder.html',
@@ -566,20 +685,29 @@
             parent: 'main'
           })
           .state('my-company', {
-            // url: '/my-company',
             templateUrl: 'modules/core/myCompany/myCompanyPage.tpl.html',
             controller: 'MyCompanyPageCtrl',
             controllerAs: 'mcp',
             parent: 'main',
-            abstract: true
+            abstract: true,
+            resolve: {
+              supportsMyCompany: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.stateSupportsFeature(FeatureToggleService.features.atlasSettingsPage);
+              }
+            }
           })
           .state('my-company.subscriptions', {
             url: '/my-company/subscriptions',
             views: {
               'tabContent': {
                 controllerAs: 'mcpSubscription',
-                controller: 'MyCompanyPageSubscriptionCtrl',
-                templateUrl: 'modules/core/myCompany/myCompanyPageSubscription.tpl.html'
+                controller: 'MySubscriptionCtrl',
+                templateUrl: 'modules/core/myCompany/mySubscriptions/mySubscription.tpl.html'
+              },
+              'headerRight': {
+                controllerAs: 'subscriptionHeader',
+                controller: 'SubscriptionHeaderCtrl',
+                templateUrl: 'modules/core/myCompany/mySubscriptions/subscriptionHeader.tpl.html'
               }
             }
           })
@@ -597,9 +725,14 @@
             url: '/my-company/orders',
             views: {
               'tabContent': {
-                controllerAs: 'mcpOrder',
-                controller: 'MyCompanyPageOrderCtrl',
-                templateUrl: 'modules/core/myCompany/myCompanyPageOrder.tpl.html'
+                template: '<my-company-orders></my-company-orders>'
+              }
+            },
+            resolve: {
+              isOnline: /* @ngInject */ function ($q, Authinfo) {
+                if (!Authinfo.isOnline()) {
+                  return $q.reject();
+                }
               }
             }
           })
@@ -617,7 +750,7 @@
             }
           })
           .state('users.delete', {
-            parent: 'modal',
+            parent: 'modalDialog',
             views: {
               'modal@': {
                 controller: 'UserDeleteCtrl',
@@ -627,7 +760,6 @@
                   modalInfo: function ($state) {
                     $state.params.modalId = 'deleteUserModal';
                     $state.params.modalClass = 'modalContent';
-                    $state.params.modalType = 'dialog';
                   }
                 }
               }
@@ -635,11 +767,11 @@
             params: {
               deleteUserOrgId: null,
               deleteUserUuId: null,
-              deleteUsername: null,
+              deleteUsername: null
             }
           })
           .state('users.deleteSelf', {
-            parent: 'modal',
+            parent: 'modalDialog',
             views: {
               'modal@': {
                 controller: 'UserDeleteCtrl',
@@ -649,7 +781,6 @@
                   modalInfo: function ($state) {
                     $state.params.modalId = 'deleteUserModal';
                     $state.params.modalClass = 'modalContent';
-                    $state.params.modalType = 'dialog';
                   }
                 }
               }
@@ -661,10 +792,11 @@
             }
           })
           .state('users.add', {
-            parent: 'modalLarge',
+            parent: 'modal',
             views: {
               'modal@': {
                 controller: 'OnboardCtrl',
+                controllerAs: 'obc',
                 template: '<div ui-view="usersAdd"></div>'
               },
               'usersAdd@users.add': {
@@ -676,7 +808,7 @@
                   }
                 }
               }
-            }
+            },
           })
           .state('users.add.services', {
             views: {
@@ -698,24 +830,106 @@
               }
             }
           })
-          .state('users.convert', {
-            parent: 'modalLarge',
+          .state('users.add.results', {
             views: {
-              'modal@': {
-                controller: 'OnboardCtrl',
-                template: '<div ui-view="usersConvert"></div>'
-              },
-              'usersConvert@users.convert': {
-                templateUrl: 'modules/core/convertUsers/convertUsersModal.tpl.html',
+              'usersAdd@users.add': {
+                templateUrl: 'modules/core/users/userAdd/addUsersResultsModal.tpl.html',
                 resolve: {
                   modalInfo: function ($state) {
-                    $state.params.modalClass = 'convert-users';
-                    $state.params.modalId = 'convertDialog';
+                    $state.params.modalClass = 'add-users';
+                    $state.params.modalId = 'modalContent';
                   }
                 }
               }
             }
           })
+
+          ///////////////////////////
+          .state('users.manage', {
+            parent: 'modal',
+            views: {
+              'modal@': {
+                controller: 'UserManageModalController',
+                controllerAs: 'ummc',
+                template: '<div ui-view></div>'
+              }
+            },
+            params: {
+              isOverExportThreshold: {}
+            }
+          })
+          .state('users.manage.org', {
+            controller: 'UserManageOrgController',
+            controllerAs: 'umoc',
+            templateUrl: 'modules/core/users/userManage/userManageOrg.tpl.html'
+          })
+          .state('users.manage.activedir', {
+            controller: 'UserManageActiveDirController',
+            controllerAs: 'umadc',
+            templateUrl: 'modules/core/users/userManage/userManageActiveDir.tpl.html'
+          })
+
+          .state('users.manage.advanced', {
+            abstract: true,
+            controller: 'UserManageAdvancedController',
+            controllerAs: 'umac',
+            templateUrl: 'modules/core/users/userManage/userManageAdvanced.tpl.html'
+          })
+          .state('users.manage.advanced.add', {
+            abstract: true,
+            controller: 'AddUserCtrl',
+            controllerAs: 'auc',
+            template: '<div ui-view class="flex-container flex-item-resize"></div>'
+          })
+          .state('users.manage.advanced.add.ob', {
+            abstract: true,
+            controller: 'OnboardCtrl',
+            controllerAs: 'obc',
+            template: '<div ui-view class="flex-container flex-item-resize"></div>'
+          })
+          .state('users.manage.advanced.add.ob.installConnector', {
+            templateUrl: 'modules/core/setupWizard/addUsers/addUsers.installConnector.tpl.html'
+          })
+          .state('users.manage.advanced.add.ob.syncStatus', {
+            templateUrl: 'modules/core/users/userManage/userManageAdvancedSyncStatus.tpl.html'
+          })
+          .state('users.manage.advanced.add.ob.dirsyncServices', {
+            templateUrl: 'modules/core/setupWizard/addUsers/addUsers.assignServices.tpl.html',
+            controller: /* @ngInject */ function ($scope) {
+              $scope.dirsyncInitForServices();
+            }
+          })
+          .state('users.manage.advanced.add.ob.dirsyncResult', {
+            templateUrl: 'modules/core/users/userManage/userManageAdvancedResults.tpl.html',
+            controller: /* @ngInject */ function ($scope) {
+              $scope.umac.isBusy = true;
+              $scope.csv.model = $scope.model;
+              $scope.bulkSave().then(function () {
+                $scope.umac.isBusy = false;
+              });
+            }
+          })
+
+        //////////////////
+
+        .state('users.convert', {
+          parent: 'modal',
+          views: {
+            'modal@': {
+              controller: 'OnboardCtrl',
+              template: '<div ui-view="usersConvert"></div>'
+            },
+            'usersConvert@users.convert': {
+              templateUrl: 'modules/core/convertUsers/convertUsersModal.tpl.html',
+              resolve: {
+                modalInfo: function ($state) {
+                  $state.params.modalClass = 'convert-users';
+                  $state.params.modalId = 'convertDialog';
+                }
+              }
+            }
+          }
+        })
           .state('users.convert.services', {
             views: {
               'usersConvert@users.convert': {
@@ -730,8 +944,15 @@
               }
             }
           })
+          .state('users.convert.results', {
+            views: {
+              'usersConvert@users.convert': {
+                templateUrl: 'modules/core/users/userAdd/addUsersResultsModal.tpl.html'
+              }
+            }
+          })
           .state('users.csv', {
-            parent: 'modalLarge',
+            parent: 'users.manage',
             views: {
               'modal@': {
                 controller: 'UserCsvCtrl',
@@ -751,7 +972,7 @@
             }
           })
           .state('editService', {
-            parent: 'modalLarge',
+            parent: 'modal',
             views: {
               'modal@': {
                 controller: 'OnboardCtrl',
@@ -773,6 +994,7 @@
             }
           })
           .state('userRedirect', {
+            parent: 'mainLazyLoad',
             url: '/userRedirect',
             views: {
               'main@': {
@@ -799,8 +1021,7 @@
             },
             resolve: {
               currentUser: /* @ngInject */ function ($http, $stateParams, Config, Utils, Authinfo, UrlConfig) {
-                var userUrl = UrlConfig.getScimUrl(Authinfo.getOrgId()) + '/' + $stateParams.currentUser.id;
-
+                var userUrl = UrlConfig.getScimUrl(Authinfo.getOrgId()) + '/' + $stateParams.currentUserId;
                 return $http.get(userUrl)
                   .then(function (response) {
                     angular.copy(response.data, this.currentUser);
@@ -812,7 +1033,7 @@
             params: {
               currentUser: {},
               entitlements: {},
-              queryuserslist: {}
+              currentUserId: ''
             },
             data: {
               displayName: 'Overview'
@@ -890,8 +1111,8 @@
             }
           })
           .state('user-overview.hybrid-services-squared-fusion-cal', {
-            templateUrl: 'modules/hercules/hybridServices/hybridServicesPreview.tpl.html',
-            controller: 'HybridServicesPreviewCtrl',
+            templateUrl: 'modules/hercules/user-sidepanel/calendarServicePreview.tpl.html',
+            controller: 'CalendarServicePreviewCtrl',
             data: {
               displayName: 'Calendar Service'
             },
@@ -900,7 +1121,7 @@
             }
           })
           .state('user-overview.hybrid-services-squared-fusion-uc', {
-            templateUrl: 'modules/hercules/hybridServices/callServicePreview.tpl.html',
+            templateUrl: 'modules/hercules/user-sidepanel/callServicePreview.tpl.html',
             controller: 'CallServicePreviewCtrl',
             data: {
               displayName: 'Call Service'
@@ -960,55 +1181,6 @@
               displayName: 'Roles'
             }
           })
-
-        // .state('users.list.preview', {
-        //     templateUrl: 'modules/core/users/userPreview/userPreview.tpl.html',
-        //     controller: 'UserPreviewCtrl'
-        //   })
-        //   .state('users.list.preview.conversations', {
-        //     template: '<div user-entitlements current-user="currentUser" entitlements="entitlements" queryuserslist="queryuserslist"></div>'
-        //   })
-        //   .state('users.list.preview.roles', {
-        //     template: '<div class="sub-details-full" user-roles current-user="currentUser" entitlements="entitlements" roles="roles" queryuserslist="queryuserslist"></div>'
-        //   })
-        //   .state('users.list.preview.directorynumber', {
-        //     templateUrl: 'modules/huron/lineSettings/lineSettings.tpl.html',
-        //     controller: 'LineSettingsCtrl',
-        //     controllerAs: 'lineSettings',
-        //     params: {
-        //       showAddUsers: {},
-        //       directoryNumber: {}
-        //     }
-        //   })
-        //   .state('users.list.preview.voicemail', {
-        //     template: '<div uc-voicemail></div>'
-        //   })
-        //   .state('users.list.preview.snr', {
-        //     template: '<div uc-single-number-reach></div>'
-        //   })
-        //   .state('users.list.preview.device', {
-        //     templateUrl: 'modules/huron/device/deviceDetail.tpl.html',
-        //     controller: 'DeviceDetailCtrl',
-        //     controllerAs: 'ucDeviceDetail',
-        //     params: {
-        //       showAddUsers: {},
-        //       device: {}
-        //     }
-        //   })
-        .state('groups', {
-            abstract: true,
-            template: '<div ui-view></div>',
-            parent: 'main'
-          })
-          .state('groups.list', {
-            url: '/groups',
-            templateUrl: 'modules/core/groups/groupList/groupList.tpl.html',
-            controller: 'ListGroupsCtrl'
-          })
-          .state('groups.list.preview', {
-            templateUrl: 'modules/core/groups/groupPreview/groupPreview.tpl.html',
-            controller: 'GroupPreviewCtrl'
-          })
           .state('organizations', {
             url: '/organizations',
             templateUrl: 'modules/core/organizations/organizationList/organizationList.tpl.html',
@@ -1046,7 +1218,7 @@
             }
           })
           .state('organization-overview.add', {
-            parent: 'modalLarge',
+            parent: 'modal',
             views: {
               'modal@': {
                 controller: 'OrganizationAddCtrl',
@@ -1078,17 +1250,12 @@
             parent: 'main'
           })
           .state('site-csv', {
-            parent: 'modal',
+            parent: 'modalSmall',
             views: {
               'modal@': {
                 controller: 'SiteCSVModalCtrl',
                 templateUrl: 'modules/webex/siteCSVModal/siteCSVModal.tpl.html',
-                controllerAs: 'siteCSVModalCtrl',
-                resolve: {
-                  modalInfo: function ($state) {
-                    $state.params.modalType = 'small';
-                  }
-                }
+                controllerAs: 'siteCSVModalCtrl'
               }
             },
             params: {
@@ -1096,17 +1263,12 @@
             }
           })
           .state('site-csv-results', {
-            parent: 'modal',
+            parent: 'modalSmall',
             views: {
               'modal@': {
                 controller: 'SiteCSVResultsCtrl',
                 templateUrl: 'modules/webex/siteCSVResultsModal/siteCSVResults.tpl.html',
-                controllerAs: 'siteCSVResult',
-                resolve: {
-                  modalInfo: function ($state) {
-                    $state.params.modalType = 'small';
-                  }
-                }
+                controllerAs: 'siteCSVResult'
               }
             },
             params: {
@@ -1237,10 +1399,10 @@
             parent: 'main'
           })
 
-        /*
-          devices
-        */
-        .state('places', {
+          /*
+           devices
+           */
+          .state('places', {
             url: '/places',
             templateUrl: 'modules/squared/places/places.html',
             controller: 'PlacesCtrl',
@@ -1254,9 +1416,7 @@
             parent: 'sidepanel',
             views: {
               'sidepanel@': {
-                controller: 'PlaceOverviewCtrl',
-                controllerAs: 'placeOverview',
-                templateUrl: 'modules/squared/places/overview/placeOverview.tpl.html'
+                template: '<place-overview></place-overview>'
               },
               'header@place-overview': {
                 templateUrl: 'modules/squared/places/overview/placeHeader.tpl.html'
@@ -1288,6 +1448,28 @@
             },
             data: {
               displayName: 'Device Configuration'
+            }
+          })
+          .state('place-overview.communication', {
+            template: '<place-call-overview></place-call-overview>',
+            params: {
+              reloadToggle: false
+            },
+            data: {
+              displayName: 'Call'
+            }
+          })
+          .state('place-overview.communication.line-overview', {
+            template: '<line-overview owner-type="place"></line-overview>',
+            data: {
+              displayName: 'Line Configuration'
+            },
+            resolve: {
+              lazy: /* @ngInject */ function lazyLoad($q, $ocLazyLoad) {
+                return $q(function resolveLogin(resolve) {
+                  require(['modules/huron/lines/lineOverview/lineOverview.component'], loadModuleAndResolve($ocLazyLoad, resolve));
+                });
+              }
             }
           })
           .state('devices', {
@@ -1326,7 +1508,7 @@
             }
           })
           .state('video', {
-            parent: 'modalLarge',
+            parent: 'modal',
             views: {
               'modal@': {
                 templateUrl: 'modules/core/video/videoModal.tpl.html'
@@ -1347,21 +1529,21 @@
             controllerAs: 'nav'
           })
           .state('login_swap', {
+            parent: 'loginLazyLoad',
             url: '/login/:customerOrgId/:customerOrgName',
             views: {
               'main@': {
-                templateUrl: 'modules/core/login/login.tpl.html',
-                controller: 'LoginCtrl'
+                template: '<login/>'
               }
             },
             authenticate: false
           })
           .state('launch_partner_org', {
+            parent: 'loginLazyLoad',
             url: '/login/:partnerOrgId/:partnerOrgName/:launchPartner',
             views: {
               'main@': {
-                templateUrl: 'modules/core/login/login.tpl.html',
-                controller: 'LoginCtrl'
+                template: '<login/>'
               }
             },
             authenticate: false
@@ -1377,6 +1559,17 @@
             controller: 'CustomerListCtrl',
             params: {
               filter: null
+            },
+            resolve: {
+              customerListToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.atlasCustomerListUpdateGetStatus()
+                  .then(function (result) {
+                    return result;
+                  })
+                  .catch(function () {
+                    return false;
+                  });
+              }
             }
           })
           .state('customer-overview', {
@@ -1397,43 +1590,92 @@
 
                 return defer.promise;
 
-                function orgCallback(data, status) {
+                function orgCallback(data) {
                   defer.resolve(data);
                 }
+              },
+              newCustomerViewToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.atlasCustomerListUpdateGetStatus()
+                  .then(function (result) {
+                    return result;
+                  });
+              },
+              data: /* @ngInject */ function ($state, $translate) {
+                $state.get('customer-overview').data.displayName = $translate.instant('common.overview');
               }
             },
             params: {
               currentCustomer: {}
             },
             data: {
-              displayName: 'Overview'
             }
           })
           .state('customer-overview.externalNumbers', {
             controller: 'ExternalNumberDetailCtrl',
             controllerAs: 'externalNumbers',
             templateUrl: 'modules/huron/externalNumbers/externalNumberDetail.tpl.html',
+            resolve: {
+              data: /* @ngInject */ function ($state, $translate) {
+                $state.get('customer-overview.externalNumbers').data.displayName = $translate.instant('customerPage.phoneNumbers');
+              }
+            },
             data: {
-              displayName: 'Phone Numbers'
             }
           })
           .state('customer-overview.customerAdministrators', {
             controller: 'CustomerAdministratorDetailCtrl',
             controllerAs: 'customerAdmin',
             templateUrl: 'modules/core/customers/customerAdministrators/customerAdministratorDetail.tpl.html',
+            resolve: {
+              data: /* @ngInject */ function ($state, $translate) {
+                $state.get('customer-overview.customerAdministrators').data.displayName = $translate.instant('customerPage.administrators');
+              }
+            },
             data: {
-              displayName: 'Partner Administrators'
             }
           })
           .state('customer-overview.pstnOrderOverview', {
             controller: 'PstnOrderOverviewCtrl',
             controllerAs: 'pstnOrderOverview',
             templateUrl: 'modules/huron/orderManagement/pstnOrderOverview.tpl.html',
+            resolve: {
+              data: /* @ngInject */ function ($state, $translate) {
+                $state.get('customer-overview.pstnOrderOverview').data.displayName = $translate.instant('customerPage.pstnOrders');
+              }
+            },
             data: {
-              displayName: 'PSTN Orders'
             },
             params: {
               currentCustomer: {}
+            }
+          })
+          .state('customer-overview.meetingDetail', {
+            controller: 'MeetingDetailCtrl',
+            controllerAs: 'meetingDetail',
+            templateUrl: 'modules/core/customers/customerOverview/meetingDetail.tpl.html',
+            resolve: {
+              data: /* @ngInject */ function ($state, $translate) {
+                $state.get('customer-overview.meetingDetail').data.displayName = $translate.instant('customerPage.meetingLicenses');
+              }
+            },
+            data: {
+            },
+            params: {
+              meetingLicenses: {}
+            }
+          })
+          .state('customer-overview.domainDetail', {
+            controller: 'DomainDetailCtrl',
+            controllerAs: 'domainDetail',
+            templateUrl: 'modules/core/customers/customerOverview/domainDetail.tpl.html',
+            resolve: {
+              data: /*ngInject */ function ($state, $translate) {
+                $state.get('customer-overview.domainDetail').data.displayName = $translate.instant('customerPage.domains');
+              }
+            },
+            data: {},
+            params: {
+              webexDomains: {}
             }
           })
           .state('customer-overview.pstnOrderDetail', {
@@ -1441,68 +1683,19 @@
             controller: 'PstnOrderDetailCtrl',
             controllerAs: 'pstnOrderDetail',
             templateUrl: 'modules/huron/orderManagement/pstnOrderDetail.tpl.html',
+            resolve: {
+              data: /* @ngInject */ function ($state, $translate) {
+                $state.get('customer-overview.pstnOrderDetail').data.displayName = $translate.instant('customerPage.pstnOrders');
+              }
+            },
             data: {
-              displayName: 'Order'
             },
             params: {
               currentOrder: {}
             }
           })
-          .state('modal', {
-            abstract: true,
-            onEnter: modalOnEnter(),
-            onExit: modalOnExit
-          })
-          .state('modalLarge', {
-            abstract: true,
-            onEnter: modalOnEnter({
-              size: 'lg'
-            }),
-            onExit: modalOnExit
-          })
-          .state('modalSmall', {
-            abstract: true,
-            onEnter: modalOnEnter({
-              size: 'sm'
-            }),
-            onExit: modalOnExit
-          })
-          .state('modalFull', {
-            abstract: true,
-            onEnter: modalOnEnter({
-              windowClass: 'modal-full',
-              backdrop: 'static'
-            }),
-            onExit: modalOnExit
-          })
-          .state('wizardmodal', {
-            abstract: true,
-            onEnter: /* @ngInject */ function ($modal, $state, $previousState) {
-              $previousState.memo(wizardmodalMemo);
-              $state.modal = $modal.open({
-                template: '<div ui-view="modal"></div>',
-                controller: 'ModalWizardCtrl',
-                windowTemplateUrl: 'modules/core/modal/wizardWindow.tpl.html',
-                backdrop: 'static'
-              });
-              $state.modal.result.finally(function () {
-                $state.modal = null;
-                var previousState = $previousState.get(wizardmodalMemo);
-                if (previousState) {
-                  return $previousState.go(wizardmodalMemo);
-                }
-              });
-            },
-            onExit: ['$state', '$previousState',
-              function ($state, $previousState) {
-                if ($state.modal) {
-                  $previousState.forget(wizardmodalMemo);
-                  $state.modal.close();
-                }
-              }
-            ]
-          })
           .state('firsttimesplash', {
+            parent: 'mainLazyLoad',
             abstract: true,
             views: {
               'main@': {
@@ -1545,6 +1738,7 @@
             parent: 'main'
           })
           .state('helpdesk-main', {
+            parent: 'mainLazyLoad',
             views: {
               'main@': {
                 controller: 'HelpdeskHeaderController',
@@ -1614,13 +1808,7 @@
               orgId: null
             }
           });
-      }
-    ]);
 
-  angular
-    .module('Huron')
-    .config(['$stateProvider',
-      function ($stateProvider) {
         $stateProvider
           .state('cdrsupport', {
             url: '/cdrsupport',
@@ -1651,7 +1839,7 @@
             }
           })
           .state('cdrladderdiagram', {
-            parent: 'modalFull',
+            parent: 'modal',
             views: {
               'modal@': {
                 templateUrl: 'modules/huron/cdrLogs/cdrLadderDiagram/cdrLadderDiagram.tpl.html',
@@ -1715,22 +1903,6 @@
             url: '/huntgroups',
             parent: 'callrouting',
             template: '<div></div>'
-          })
-          .state('mediaonhold', {
-            parent: 'modalLarge',
-            url: '/mediaonhold',
-            views: {
-              'modal@': {
-                templateUrl: 'modules/huron/moh/moh.tpl.html',
-                controller: 'MohCtrl',
-                controllerAs: 'moh',
-                resolve: {
-                  modalInfo: function ($state) {
-                    $state.params.modalClass = 'moh-content';
-                  }
-                }
-              }
-            }
           })
           .state('trialAdd', {
             abstract: true,
@@ -1868,7 +2040,7 @@
             }
           })
           .state('pstnSetup', {
-            parent: 'modalFull',
+            parent: 'modal',
             params: {
               customerId: {},
               customerName: {},
@@ -1916,7 +2088,10 @@
           .state('pstnSetup.nextSteps', {
             templateUrl: 'modules/huron/pstnSetup/pstnNextSteps/pstnNextSteps.tpl.html',
             controller: 'PstnNextStepsCtrl',
-            controllerAs: 'pstnNextSteps'
+            controllerAs: 'pstnNextSteps',
+            params: {
+              portOrders: null
+            }
           })
           .state('hurondetailsBase', {
             abstract: true,
@@ -1976,17 +2151,12 @@
             controllerAs: 'aaBuilderMain'
           })
           .state('huronfeatures.deleteFeature', {
-            parent: 'modal',
+            parent: 'modalDialog',
             views: {
               'modal@': {
                 controller: 'HuronFeatureDeleteCtrl',
                 controllerAs: 'huronFeatureDelete',
-                templateUrl: 'modules/huron/features/featureLanding/featureDeleteModal.tpl.html',
-                resolve: {
-                  modalInfo: function ($state) {
-                    $state.params.modalType = 'dialog';
-                  }
-                }
+                templateUrl: 'modules/huron/features/featureLanding/featureDeleteModal.tpl.html'
               }
             },
             params: {
@@ -1996,17 +2166,12 @@
             }
           })
           .state('huronfeatures.aaListDepends', {
-            parent: 'modal',
+            parent: 'modalDialog',
             views: {
               'modal@': {
                 controller: 'HuronFeatureAADependsCtrl',
                 controllerAs: 'huronFeatureAADepends',
-                templateUrl: 'modules/huron/features/featureLanding/featureAADependsModal.tpl.html',
-                resolve: {
-                  modalInfo: function ($state) {
-                    $state.params.modalType = 'dialog';
-                  }
-                }
+                templateUrl: 'modules/huron/features/featureLanding/featureAADependsModal.tpl.html'
               }
             },
             params: {
@@ -2022,6 +2187,16 @@
             templateUrl: 'modules/huron/features/callPark/cpSetupAssistant.tpl.html',
             controller: 'CallParkSetupAssistantCtrl',
             controllerAs: 'callParkSA'
+          })
+          .state('callparkedit', {
+            url: '/features/cp/edit',
+            parent: 'main',
+            templateUrl: 'modules/huron/features/callPark/edit/cpEdit.tpl.html',
+            controller: 'CallParkEditCtrl',
+            controllerAs: 'cpe',
+            params: {
+              feature: null
+            }
           })
           .state('huronHuntGroup', {
             url: '/huronHuntGroup',
@@ -2040,13 +2215,7 @@
               feature: null
             }
           });
-      }
-    ]);
 
-  angular
-    .module('Hercules')
-    .config(['$stateProvider',
-      function ($stateProvider) {
         $stateProvider
           .state('services-overview', {
             url: '/services/overview',
@@ -2062,11 +2231,15 @@
             controllerAs: 'resourceList',
             parent: 'main',
             resolve: {
-              hasFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
-                return FeatureToggleService.supports(FeatureToggleService.features.hybridServicesResourceList);
+              hasF410FeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridServicesResourceList);
+              },
+              hasMediaFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasMediaServiceOnboarding);
               }
             }
           })
+          // Cluster settings
           .state('expressway-settings', {
             url: '/services/cluster/expressway/:id/settings',
             templateUrl: 'modules/hercules/fusion-pages/expressway-settings.html',
@@ -2080,6 +2253,129 @@
             controller: 'MediafusionClusterSettingsController',
             controllerAs: 'clusterSettings',
             parent: 'main'
+          })
+          // Add Resource modal
+          .state('add-resource', {
+            abstract: true
+          })
+          .state('add-resource.type-selector', {
+            parent: 'modalSmall',
+            views: {
+              'modal@': {
+                controller: 'TypeSelectorController',
+                controllerAs: 'vm',
+                templateUrl: 'modules/hercules/fusion-pages/add-resource/common/type-selector.html'
+              }
+            },
+            resolve: {
+              hasMediaFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasMediaServiceOnboarding);
+              }
+            },
+            params: {
+              wizard: null
+            }
+          })
+          .state('add-resource.expressway', {
+            abstract: true
+          })
+          .state('add-resource.expressway.service-selector', {
+            parent: 'modalSmall',
+            views: {
+              'modal@': {
+                controller: 'ExpresswayServiceSelectorController',
+                controllerAs: 'vm',
+                templateUrl: 'modules/hercules/fusion-pages/add-resource/expressway/service-selector.html'
+              }
+            },
+            params: {
+              wizard: null
+            }
+          })
+          .state('add-resource.expressway.hostname', {
+            parent: 'modalSmall',
+            views: {
+              'modal@': {
+                controller: 'ExpresswayEnterHostnameController',
+                controllerAs: 'vm',
+                templateUrl: 'modules/hercules/fusion-pages/add-resource/expressway/enter-hostname.html'
+              }
+            },
+            params: {
+              wizard: null
+            }
+          })
+          .state('add-resource.expressway.name', {
+            parent: 'modalSmall',
+            views: {
+              'modal@': {
+                controller: 'ExpresswayEnterNameController',
+                controllerAs: 'vm',
+                templateUrl: 'modules/hercules/fusion-pages/add-resource/expressway/enter-name.html'
+              }
+            },
+            params: {
+              wizard: null
+            }
+          })
+          .state('add-resource.expressway.end', {
+            parent: 'modalSmall',
+            views: {
+              'modal@': {
+                controller: 'ExpresswayEndController',
+                controllerAs: 'vm',
+                templateUrl: 'modules/hercules/fusion-pages/add-resource/expressway/end.html'
+              }
+            },
+            params: {
+              wizard: null
+            }
+          })
+          .state('add-resource.mediafusion.hostname', {
+            parent: 'modalSmall',
+            views: {
+              'modal@': {
+                controller: 'AddResourceControllerClusterViewV2',
+                controllerAs: 'redirectResource',
+                templateUrl: 'modules/mediafusion/media-service-v2/add-resources/add-resource-dialog.html',
+                modalClass: 'redirect-add-resource'
+              }
+            },
+            params: {
+              wizard: null,
+              firstTimeSetup: false,
+              yesProceed: false,
+              fromClusters: true
+            }
+          })
+          .state('add-resource.mediafusion.name', {
+            parent: 'modalSmall',
+            views: {
+              'modal@': {
+                controller: 'MediafusionEnterNameController',
+                controllerAs: 'vm',
+                templateUrl: 'modules/hercules/fusion-pages/add-resource/mediafusion/enter-name.html'
+              }
+            },
+            params: {
+              wizard: null
+            }
+          })
+          .state('add-resource.mediafusion.end', {
+            parent: 'modalSmall',
+            views: {
+              'modal@': {
+                controller: 'MediafusionEndController',
+                controllerAs: 'vm',
+                templateUrl: 'modules/hercules/fusion-pages/add-resource/mediafusion/end.html'
+              }
+            },
+            params: {
+              wizard: null
+            }
+          })
+          .state('add-resource.mediafusion', {
+            abstract: true
           })
           .state('calendar-service', {
             templateUrl: 'modules/hercules/overview/overview.html',
@@ -2197,7 +2493,7 @@
             },
             resolve: {
               hasF410FeatureToggle: /* @ngInject */ function (FeatureToggleService) {
-                return FeatureToggleService.supports(FeatureToggleService.features.hybridServicesResourceList);
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridServicesResourceList);
               }
             }
           })
@@ -2221,7 +2517,7 @@
           })
           .state('cluster-details.alarm-details', {
             templateUrl: 'modules/hercules/cluster-sidepanel/alarm-details.html',
-            controller: 'AlarmController',
+            controller: 'ExpresswayAlarmController',
             controllerAs: 'alarmCtrl',
             data: {
               displayName: 'Alarm Details'
@@ -2244,108 +2540,11 @@
               connectorType: null
             }
           });
-      }
-    ]);
 
-  angular
-    .module('Mediafusion')
-    .config(['$stateProvider',
-      function ($stateProvider) {
         $stateProvider
 
-          .state('metrics', {
-            url: '/metrics',
-            controllerAs: 'GraphUtilCtrl',
-            controller: 'AnalyticsUtilizationGraphController',
-            templateUrl: 'modules/mediafusion/media-service/metrics/analytics-utilization-graph.html',
-            parent: 'main'
-          })
-          .state('media-service', {
-            templateUrl: 'modules/mediafusion/media-service/overview.html',
-            controller: 'MediaServiceController',
-            controllerAs: 'med',
-            parent: 'main'
-          })
-          .state('media-service.list', {
-            url: '/mediaservice',
-            views: {
-              'fullPane': {
-                templateUrl: 'modules/mediafusion/media-service/resources/cluster-list.html'
-              }
-            }
-          })
-          .state('media-service.settings', {
-            url: '/mediaservice/settings',
-            views: {
-              'fullPane': {
-                controllerAs: 'mediaServiceSettings',
-                controller: 'MediaServiceSettingsController',
-                templateUrl: 'modules/mediafusion/media-service/settings/media-service-settings.html'
-              }
-            }
-          })
-
-        .state('connector-details', {
-            parent: 'sidepanel',
-            views: {
-              'sidepanel@': {
-                controllerAs: 'groupDetails',
-                controller: 'GroupDetailsController',
-                templateUrl: 'modules/mediafusion/media-service/side-panel/group-details.html'
-              },
-              'header@connector-details': {
-                templateUrl: 'modules/mediafusion/media-service/side-panel/group-header.html'
-              }
-            },
-            data: {
-              displayName: 'Overview'
-            },
-            params: {
-              groupName: {},
-              selectedClusters: {}
-            }
-          })
-          .state('connector-details.alarm-details', {
-            templateUrl: 'modules/mediafusion/media-service/side-panel/alarm-details.html',
-            controller: 'MediaAlarmController',
-            controllerAs: 'alarmCtrl',
-            data: {
-              displayName: 'Alarm Details'
-            },
-            params: {
-              alarm: null,
-              host: null
-            }
-          })
-          .state('connector-details.host-details', {
-            templateUrl: 'modules/mediafusion/media-service/side-panel/host-details.html',
-            controller: 'HostDetailsController',
-            controllerAs: 'hostDetails',
-            data: {
-              displayName: 'Host'
-            },
-            params: {
-              clusterId: null,
-              properties: null,
-              connector: null,
-              hostLength: null
-            }
-          })
-          .state('connector-details.group-settings', {
-            templateUrl: 'modules/mediafusion/media-service/side-panel/group-settings.html',
-            controller: 'GroupSettingsController',
-            controllerAs: 'groupClusterSettingsCtrl',
-            data: {
-              displayName: 'Settings'
-            },
-            params: {
-              clusterList: null,
-              dispName: null
-            }
-          })
-
-        //V2 API changes
-        .state('media-service-v2', {
+          //V2 API changes
+          .state('media-service-v2', {
             templateUrl: 'modules/mediafusion/media-service-v2/overview.html',
             controller: 'MediaServiceControllerV2',
             controllerAs: 'med',
@@ -2369,8 +2568,7 @@
               }
             }
           })
-
-        .state('connector-details-v2', {
+          .state('connector-details-v2', {
             parent: 'sidepanel',
             views: {
               'sidepanel@': {
@@ -2417,26 +2615,19 @@
               selectedCluster: null
             }
           });
-      }
-    ]);
 
-  angular
-    .module('Ediscovery')
-    .config(['$stateProvider',
-      function ($stateProvider) {
         $stateProvider
-
           .state('ediscovery-main', {
-          views: {
-            'main@': {
-              templateUrl: 'modules/ediscovery/ediscovery.tpl.html'
-            }
-          },
-          abstract: true,
-          sticky: true
-        })
-
-        .state('ediscovery', {
+            parent: 'mainLazyLoad',
+            views: {
+              'main@': {
+                templateUrl: 'modules/ediscovery/ediscovery.tpl.html'
+              }
+            },
+            abstract: true,
+            sticky: true
+          })
+          .state('ediscovery', {
             url: '/ediscovery',
             template: '<div ui-view></div>',
             parent: 'ediscovery-main'
@@ -2457,13 +2648,7 @@
             controllerAs: 'ediscoveryCtrl',
             templateUrl: 'modules/ediscovery/ediscovery-reports.html'
           });
-      }
-    ]);
 
-  angular
-    .module('Messenger')
-    .config(['$stateProvider',
-      function ($stateProvider) {
         $stateProvider
           .state('messenger', {
             parent: 'main',
@@ -2472,13 +2657,7 @@
             controller: 'CiSyncCtrl',
             controllerAs: 'sync'
           });
-      }
-    ]);
 
-  angular
-    .module('Sunlight')
-    .config(['$stateProvider',
-      function ($stateProvider) {
         $stateProvider
           .state('care', {
             parent: 'main',
@@ -2519,20 +2698,19 @@
             parent: 'care.Details',
             templateUrl: 'modules/sunlight/features/chat/ctSetupAssistant.tpl.html',
             controller: 'CareChatSetupAssistantCtrl',
-            controllerAs: 'careChatSA'
+            controllerAs: 'careChatSA',
+            params: {
+              template: null,
+              isEditFeature: null
+            }
           })
           .state('care.Features.DeleteFeature', {
-            parent: 'modal',
+            parent: 'modalDialog',
             views: {
               'modal@': {
                 controller: 'CareFeaturesDeleteCtrl',
                 controllerAs: 'careFeaturesDeleteCtrl',
-                templateUrl: 'modules/sunlight/features/featureLanding/careFeaturesDeleteModal.tpl.html',
-                resolve: {
-                  modalInfo: function ($state) {
-                    $state.params.modalType = 'dialog';
-                  }
-                }
+                templateUrl: 'modules/sunlight/features/featureLanding/careFeaturesDeleteModal.tpl.html'
               }
             },
             params: {

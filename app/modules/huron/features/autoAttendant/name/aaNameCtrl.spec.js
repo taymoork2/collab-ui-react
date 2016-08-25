@@ -3,10 +3,9 @@
 describe('Controller: aaBuilderNameCtrl', function () {
   var controller, AANotificationService, AutoAttendantCeService;
   var AAModelService, AutoAttendantCeInfoModelService;
-  var $rootScope, $scope, $q, $translate, $stateParams;
+  var $rootScope, $scope, $q;
 
   var ces = getJSONFixture('huron/json/autoAttendant/callExperiences.json');
-  var cesWithNumber = getJSONFixture('huron/json/autoAttendant/callExperiencesWithNumber.json');
   var aCe = getJSONFixture('huron/json/autoAttendant/aCallExperience.json');
   var rawCeInfo = {
     "callExperienceName": "AAA2",
@@ -19,9 +18,8 @@ describe('Controller: aaBuilderNameCtrl', function () {
   };
 
   var aaModel = {};
-
-  var listCesSpy;
-  var saveCeSpy;
+  var rightArrow = 39;
+  var testGroupName = 'test';
 
   function ce2CeInfo(rawCeInfo) {
     var _ceInfo = AutoAttendantCeInfoModelService.newCeInfo();
@@ -40,10 +38,11 @@ describe('Controller: aaBuilderNameCtrl', function () {
     return _ceInfo;
   }
 
-  beforeEach(module('uc.autoattendant'));
-  beforeEach(module('Huron'));
+  beforeEach(angular.mock.module('uc.autoattendant'));
+  beforeEach(angular.mock.module('Huron'));
+  beforeEach(angular.mock.module('Sunlight'));
 
-  beforeEach(inject(function (_$rootScope_, _$q_, _$stateParams_, $controller, _$translate_, _AANotificationService_,
+  beforeEach(inject(function (_$rootScope_, _$q_, $controller, _AANotificationService_,
     _AutoAttendantCeInfoModelService_, _AAModelService_, _AutoAttendantCeService_) {
     $rootScope = _$rootScope_;
     $q = _$q_;
@@ -52,8 +51,6 @@ describe('Controller: aaBuilderNameCtrl', function () {
       return true;
     };
 
-    $translate = _$translate_;
-    $stateParams = _$stateParams_;
     AAModelService = _AAModelService_;
     AutoAttendantCeInfoModelService = _AutoAttendantCeInfoModelService_;
     AutoAttendantCeService = _AutoAttendantCeService_;
@@ -61,7 +58,7 @@ describe('Controller: aaBuilderNameCtrl', function () {
 
     spyOn(AAModelService, 'getAAModel').and.returnValue(aaModel);
 
-    listCesSpy = spyOn(AutoAttendantCeService, 'listCes').and.returnValue($q.when(angular.copy(ces)));
+    spyOn(AutoAttendantCeService, 'listCes').and.returnValue($q.when(angular.copy(ces)));
 
     controller = $controller('aaBuilderNameCtrl', {
       $scope: $scope
@@ -76,7 +73,7 @@ describe('Controller: aaBuilderNameCtrl', function () {
   describe('saveAARecord', function () {
 
     beforeEach(function () {
-      saveCeSpy = spyOn(AutoAttendantCeService, 'createCe').and.returnValue($q.when(angular.copy(rawCeInfo)));
+      spyOn(AutoAttendantCeService, 'createCe').and.returnValue($q.when(angular.copy(rawCeInfo)));
       spyOn(AutoAttendantCeService, 'updateCe').and.returnValue($q.when(angular.copy(rawCeInfo)));
       spyOn(AANotificationService, 'error');
       spyOn(AANotificationService, 'success');
@@ -89,6 +86,18 @@ describe('Controller: aaBuilderNameCtrl', function () {
       controller.ui = {};
       controller.ui.ceInfo = ce2CeInfo(rawCeInfo);
       controller.ui.builder = {};
+    });
+
+    it("should save a new aaRecord successfully", function () {
+      controller.name = testGroupName;
+      controller.saveAARecord();
+      expect(controller.ui.ceInfo.name).toEqual(testGroupName);
+    });
+
+    it("should save a new aaRecord successfully on right arrow press", function () {
+      controller.name = testGroupName;
+      controller.evalKeyPress(rightArrow);
+      expect(controller.ui.ceInfo.name).toEqual(testGroupName);
     });
 
     /*  Commented out as code references AutoAttendant.saveAARecords()
@@ -135,7 +144,21 @@ describe('Controller: aaBuilderNameCtrl', function () {
       expect(Notification.error).toHaveBeenCalledWith('autoAttendant.errorCreateCe');
     });
     **** */
+  });
 
+  it("should test the next Button when name is null", function () {
+    controller.name = '';
+    expect(controller.nextButton()).toEqual(false);
+  });
+
+  it("should test the next Button when name is not null", function () {
+    controller.name = testGroupName;
+    expect(controller.nextButton()).toEqual(true);
+  });
+
+  it("should test the previous  Button", function () {
+    controller.name = testGroupName;
+    expect(controller.previousButton()).toEqual("hidden");
   });
 
 });

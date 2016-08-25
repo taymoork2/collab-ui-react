@@ -1,9 +1,12 @@
 (function () {
   'use strict';
 
-  angular
-    .module('Core')
-    .factory('Config', Config);
+  module.exports = angular
+    .module('core.config', [
+      require('modules/core/scripts/services/storage')
+    ])
+    .factory('Config', Config)
+    .name;
 
   function Config($location, Storage) {
     var TEST_ENV_CONFIG = 'TEST_ENV_CONFIG';
@@ -40,6 +43,7 @@
       meetingsPerPage: 50,
       alarmsPerPage: 50,
       eventsPerPage: 50,
+      trialGracePeriod: -30, // equal to the number of days left in a trial when it passes grace period
 
       tokenTimers: {
         timeoutTimer: 3000000, // 50 mins
@@ -75,6 +79,30 @@
         care: 'CARE',
         context: 'CONTEXT'
       },
+
+      // These can be used to access object properties for trials
+      licenseObjectNames: [
+        'messaging',
+        'communications',
+        'care',
+        'roomSystems',
+        'conferencing',
+        'webexCMR',
+        'webexEEConferencing',
+        'webexEventCenter',
+        'webexMeetingCenter',
+        'webexTrainingCenter',
+        'webexSupportCenter'
+      ],
+
+      webexTypes: [
+        'webexCMR',
+        'webexEEConferencing',
+        'webexEventCenter',
+        'webexMeetingCenter',
+        'webexTrainingCenter',
+        'webexSupportCenter'
+      ],
 
       //WARNING: Deprecated, use offerTypes
       // These were how trials used to be mapped
@@ -144,8 +172,16 @@
         EC: 'EC', // Event Center (WebEx)
         CO: 'CO', // Communication
         SD: 'SD', // Spark Room System
+        SB: 'SB', // Spark Board
         CMR: 'CMR', // Collaboration Meeting Room (WebEx)
         CDC: 'CDC' // Care Digital Channel
+      },
+
+      licenseStatus: {
+        PENDING: 'PENDING',
+        ACTIVE: 'ACTIVE',
+        CANCELLED: 'CANCELLED',
+        SUSPENDED: 'SUSPENDED'
       },
 
       licenseTypes: {
@@ -156,6 +192,20 @@
         SHARED_DEVICES: 'SHARED_DEVICES',
         CMR: 'CMR',
         CARE: 'CARE'
+      },
+
+      messageErrors: {
+        userExistsError: '400081',
+        userPatchError: '400084',
+        claimedDomainError: '400091',
+        userExistsInDiffOrgError: '400090',
+        notSetupForManUserAddError: '400110',
+        userExistsDomainClaimError: '400108',
+        unknownCreateUserError: '400096',
+        unableToMigrateError: '400109',
+        insufficientEntitlementsError: '400111',
+        hybridServicesError: '400087',
+        hybridServicesComboError: '400094',
       },
 
       defaultEntitlements: ['webex-squared', 'squared-call-initiation'],
@@ -214,55 +264,38 @@
     config.roleStates = {
       // Customer Admin
       Full_Admin: [
-        'overview',
-        'domainmanagement',
-        'dr-login-forward',
-        'users',
-        'user-overview',
-        'userprofile',
-        'reports',
-        'setupwizardmodal',
-        'firsttimewizard',
-        'groups',
-        'profile',
-        'customerprofile',
-        'support',
-        'editService',
-        'trialExtInterest',
-        'cdrsupport',
+        'activateProduct',
         'cdr-overview',
         'cdrladderdiagram',
-        'activateProduct',
-        'settings',
-        'userRedirect'
-      ],
-      Readonly_Admin: [
-        'overview',
-        'users',
-        'user-overview',
-        'userprofile',
-        'reports',
-        'setupwizardmodal',
-        'firsttimewizard',
-        'groups',
-        'profile',
+        'cdrsupport',
         'customerprofile',
-        'support',
+        'domainmanagement',
+        'dr-login-forward',
         'editService',
+        'firsttimewizard',
+        'my-company',
+        'overview',
+        'profile',
+        'reports',
+        'settings',
+        'setupwizardmodal',
+        'support',
         'trialExtInterest',
-        'activateProduct',
-        'settings'
+        'user-overview',
+        'userRedirect',
+        'userprofile',
+        'users',
+        'status'
       ],
-      Support: ['support', 'reports', 'billing', 'cdrsupport', 'cdr-overview', 'cdrladderdiagram'],
-      WX2_User: ['overview', 'support', 'activateProduct'],
-      WX2_Support: ['overview', 'reports', 'support'],
+      Support: ['status', 'support', 'reports', 'billing', 'cdrsupport', 'cdr-overview', 'cdrladderdiagram'],
+      WX2_User: ['status', 'overview', 'support', 'activateProduct'],
+      WX2_Support: ['status', 'overview', 'reports', 'support'],
       WX2_SquaredInviter: [],
-      PARTNER_ADMIN: ['partneroverview', 'partnercustomers', 'customer-overview', 'partnerreports', 'trialAdd', 'trialEdit', 'profile', 'pstnSetup', 'video', 'settings'],
-      PARTNER_READ_ONLY_ADMIN: ['partneroverview', 'partnercustomers', 'customer-overview', 'partnerreports', 'trialEdit', 'profile', 'pstnSetup', 'settings'],
-      PARTNER_SALES_ADMIN: ['overview', 'partneroverview', 'customer-overview', 'partnercustomers', 'partnerreports', 'trialAdd', 'trialEdit', 'pstnSetup', 'video', 'settings'],
-      CUSTOMER_PARTNER: ['overview', 'partnercustomers', 'customer-overview'],
+      PARTNER_ADMIN: ['status', 'partneroverview', 'partnercustomers', 'customer-overview', 'partnerreports', 'trialAdd', 'trialEdit', 'profile', 'pstnSetup', 'video', 'settings'],
+      PARTNER_SALES_ADMIN: ['status', 'overview', 'partneroverview', 'customer-overview', 'partnercustomers', 'partnerreports', 'trialAdd', 'trialEdit', 'pstnSetup', 'video', 'settings'],
+      CUSTOMER_PARTNER: ['status', 'overview', 'partnercustomers', 'customer-overview'],
       //TODO User role is used by Online Ordering UI. The dr* states will be removed once the Online UI is separated from Atlas.
-      User: ['drLoginReturn', 'drOnboard', 'drConfirmAdminOrg', 'drOnboardQuestion', 'drOnboardEnterAdminEmail', 'drOrgName', 'drAdminChoices'],
+      User: ['status', 'drLoginReturn', 'drOnboard', 'drConfirmAdminOrg', 'drOnboardQuestion', 'drOnboardEnterAdminEmail', 'drOrgName', 'drAdminChoices'],
       Site_Admin: [
         'site-list',
         'site-csv-import',
@@ -271,85 +304,91 @@
         'site-settings',
         'site-setting',
         'webex-reports',
-        'webex-reports-iframe'
+        'webex-reports-iframe',
+        'services-overview',
       ],
       Application: ['organizations', 'organization-overview'],
       Help_Desk: ['helpdesk', 'helpdesk.search', 'helpdesk.user', 'helpdesk.org', 'helpdesklaunch'],
       Compliance_User: ['ediscovery', 'ediscovery.search', 'ediscovery.reports']
     };
 
+    config.roleStates.Readonly_Admin = _.clone(config.roleStates.Full_Admin);
+    config.roleStates.PARTNER_READ_ONLY_ADMIN = _.clone(config.roleStates.PARTNER_ADMIN);
+
     config.serviceStates = {
       'ciscouc': [
-        'callrouting',
-        'mediaonhold',
-        'generateauthcode',
+        'addDeviceFlow',
         'autoattendant',
         'callpark',
+        'callparkedit',
         'callpickup',
-        'intercomgroups',
-        'paginggroups',
-        'huntgroups',
-        'didadd',
-        'hurondetails',
-        'huronlines',
-        'huronsettings',
-        'huronfeatures',
-        'huronnewfeature',
-        'huronHuntGroup',
-        'huronCallPark',
-        'huntgroupedit',
-        'devices',
+        'callrouting',
         'device-overview',
-        'addDeviceFlow',
-        'places',
+        'devices',
+        'didadd',
+        'generateauthcode',
+        'huntgroups',
+        'huronCallPark',
+        'hurondetails',
+        'huronfeatures',
+        'huronHuntGroup',
+        'huronlines',
+        'huronnewfeature',
+        'huronsettings',
+        'huntgroupedit',
+        'intercomgroups',
+        'mediaonhold',
+        'paginggroups',
         'place-overview',
-        'services-overview'
+        'places',
+        'services-overview',
       ],
       'squared-fusion-mgmt': [
         'cluster-details',
+        'management-connector-details',
         'management-service',
         'services-overview',
-        'my-company',
-        'management-connector-details'
       ],
       'spark-room-system': [
-        'devices',
-        'device-overview',
         'addDeviceFlow',
+        'device-overview',
+        'devices',
+        'place-overview',
         'places',
-        'place-overview'
       ],
       'squared-fusion-uc': [
-        'cluster-list',
+        'add-resource',
         'call-service',
+        'cluster-list',
         'expressway-settings',
-        'mediafusion-settings'
+        'services-overview',
       ],
       'squared-fusion-cal': [
+        'add-resource',
         'calendar-service',
-        'services-overview',
         'cluster-list',
         'expressway-settings',
-        'mediafusion-settings'
+        'services-overview',
       ],
       'squared-team-member': [
         'organization'
       ],
       'squared-fusion-media': [
-        //'mediafusionconnector',
+        'add-resource',
+        'connector-details',
+        'connector-details-v2',
+        'media-service',
         'media-service-v2',
+        'mediafusion-settings',
         'metrics',
         'reports-metrics',
-        'media-service',
-        'connector-details',
-        'connector-details-v2'
+        'services-overview',
       ],
       'webex-messenger': [
-        'messenger'
+        'messenger',
+        'services-overview',
       ],
-      'contact-center-context': [
-        //TODO: Remove these states when sunlight trial stories are implemented and
-        // add back them to 'ccc_config' serviceState
+      'cloud-contact-center': [
         'care'
       ]
     };
@@ -362,22 +401,21 @@
         'partnerreports'
       ],
       'partner': [
-        'overview',
-        'reports',
-        'devices',
-        'fusion',
-        //'mediafusionconnector',
-        'media-service-v2',
-        'media-service',
-        'hurondetails',
-        'huronsettings',
-        'cluster-list',
-        'expressway-settings',
-        'mediafusion-settings',
         'calendar-service',
         'call-service',
+        'cluster-list',
+        'devices',
+        'expressway-settings',
+        'fusion',
+        'hurondetails',
+        'huronsettings',
         'management-service',
-        'services-overview'
+        'media-service',
+        'media-service-v2',
+        'mediafusion-settings',
+        'overview',
+        'reports',
+        'services-overview',
       ]
     };
 

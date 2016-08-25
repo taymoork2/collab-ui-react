@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject */
-  function MediaServiceControllerV2(MediaServiceActivationV2, $state, $modal, $scope, $log, $translate, Authinfo, MediaClusterServiceV2, Notification) {
+  function MediaServiceControllerV2(MediaServiceActivationV2, $state, $modal, $scope, $translate, Authinfo, MediaClusterServiceV2, Notification, FeatureToggleService) {
 
     MediaClusterServiceV2.subscribe('data', clustersUpdated, {
       scope: $scope
@@ -18,9 +18,11 @@
     vm.deleteSerial = null;
     vm.showPreview = true;
     vm.deleteConnectorName = null;
-    vm.serviceEnabled = true;
+    vm.serviceEnabled = null; // when we don't know yet, otherwise the value is true or false
     vm.currentServiceType = "mf_mgmt";
     vm.currentServiceId = "squared-fusion-media";
+    vm.featureToggled = false;
+
     // Added for cs-page-header
     vm.pageTitle = $translate.instant('mediaFusion.page_title');
     vm.tabs = [
@@ -45,7 +47,6 @@
     vm.addResourceButtonClicked = addResourceButtonClicked;
     vm.clusterList = [];
     vm.clustersUpdated = clustersUpdated;
-    var clustersCache = [];
 
     vm.clusterListGridOptions = {
       data: 'med.clusters',
@@ -59,7 +60,6 @@
         $scope.gridApi = gridApi;
         gridApi.selection.on.rowSelectionChanged($scope, function (row) {
           vm.showClusterDetails(row.entity);
-          $log.log("entity", row.entity);
         });
       },
       columnDefs: [{
@@ -76,9 +76,10 @@
     };
 
     if (vm.currentServiceId == "squared-fusion-media") {
-      MediaServiceActivationV2.isServiceEnabled(vm.currentServiceId, function (a, b) {
-        vm.serviceEnabled = b;
-        vm.loading = false;
+      MediaServiceActivationV2.isServiceEnabled(vm.currentServiceId, function (error, enabled) {
+        if (!error) {
+          vm.serviceEnabled = enabled;
+        }
       });
     }
 
@@ -100,7 +101,6 @@
       vm.clusters = MediaClusterServiceV2.getClustersByConnectorType('mf_mgmt');
       vm.clusters.sort(sortByProperty('name'));
       vm.loadingClusters = false;
-      $log.log("aggregatedClusters", vm.clusters);
 
     }
 
@@ -117,44 +117,40 @@
 
     function addResourceButtonClicked() {
       $modal.open({
+        resolve: {
+          firstTimeSetup: false,
+          yesProceed: true,
+        },
         type: 'small',
         controller: 'RedirectAddResourceControllerV2',
         controllerAs: 'redirectResource',
-        templateUrl: 'modules/mediafusion/media-service-v2/add-resources/redirect-add-resource-dialog.html',
+        templateUrl: 'modules/mediafusion/media-service-v2/add-resources/add-resource-dialog.html',
         modalClass: 'redirect-add-resource'
       });
     }
 
     vm.enableMediaService = function (serviceId) {
       //function enableMediaService(serviceId) {
-      //$log.log("Entered enableMediaService");
       vm.waitForEnabled = true;
       MediaServiceActivationV2.setServiceEnabled(serviceId, true).then(
         function success() {
-          //$log.log("media service enabled successfully");
           vm.enableOrpheusForMediaFusion();
         },
-        function error(data, status) {
-          //$log.log("Problems enabling media service");
-          Notification.notify($translate.instant('mediaFusion.mediaServiceActivationFailure'));
+        function error() {
+          Notification.error('mediaFusion.mediaServiceActivationFailure');
         });
       //$scope.enableOrpheusForMediaFusion();
       vm.serviceEnabled = true;
       vm.waitForEnabled = false;
-      //$log.log("Exiting enableMediaService, serviceEnabled:", $scope.serviceEnabled);
     };
 
     vm.enableOrpheusForMediaFusion = function () {
-      //$log.log("Entered enableOrpheusForMediaFusion");
       MediaServiceActivationV2.getUserIdentityOrgToMediaAgentOrgMapping().then(
         function success(response) {
           var mediaAgentOrgIdsArray = [];
           var orgId = Authinfo.getOrgId();
           var updateMediaAgentOrgId = false;
           mediaAgentOrgIdsArray = response.data.mediaAgentOrgIds;
-          //$log.log("User's Indentity Org to Calliope Media Agent Org mapping:", response);
-          //$log.log("Identity Org Id:", response.data.identityOrgId);
-          //$log.log("Media Agent Org Ids Array:", mediaAgentOrgIdsArray);
 
           // See if org id is already mapped to user org id
           if (mediaAgentOrgIdsArray.indexOf(orgId) == -1) {
@@ -168,12 +164,11 @@
           }
 
           if (updateMediaAgentOrgId) {
-            //$log.log("Updated Media Agent Org Ids Array:", mediaAgentOrgIdsArray);
             vm.addUserIdentityToMediaAgentOrgMapping(mediaAgentOrgIdsArray);
           }
         },
 
-        function error(errorResponse, status) {
+        function error() {
           // Unable to find identityOrgId, add identityOrgId -> mediaAgentOrgId mapping
           var mediaAgentOrgIdsArray = [];
           mediaAgentOrgIdsArray.push(Authinfo.getOrgId());
@@ -184,13 +179,42 @@
 
     vm.addUserIdentityToMediaAgentOrgMapping = function (mediaAgentOrgIdsArray) {
       MediaServiceActivationV2.setUserIdentityOrgToMediaAgentOrgMapping(mediaAgentOrgIdsArray).then(
-        function success(response) {},
-        function error(errorResponse, status) {
-          Notification.notify([$translate.instant('mediaFusion.mediaAgentOrgMappingFailure', {
+        function success() {},
+        function error(errorResponse) {
+          Notification.error('mediaFusion.mediaAgentOrgMappingFailure', {
             failureMessage: errorResponse.message
-          })], 'error');
+          });
         });
     };
+
+    function isFeatureToggled() {
+      return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridServicesResourceList);
+    }
+    isFeatureToggled().then(function (reply) {
+      vm.featureToggled = reply;
+      if (vm.featureToggled) {
+        MediaServiceActivationV2.isServiceEnabled(vm.currentServiceId, function (error, enabled) {
+          if (!enabled) {
+            firstTimeSetup();
+          }
+        });
+      }
+    });
+
+    function firstTimeSetup() {
+      $modal.open({
+        resolve: {
+          firstTimeSetup: true,
+          yesProceed: false
+        },
+        type: 'small',
+        controller: 'RedirectAddResourceControllerV2',
+        controllerAs: 'redirectResource',
+        templateUrl: 'modules/mediafusion/media-service-v2/add-resources/add-resource-dialog.html',
+        modalClass: 'redirect-add-resource'
+      });
+    }
+
   }
 
   /* @ngInject */

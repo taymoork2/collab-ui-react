@@ -6,7 +6,7 @@
     .factory('ServiceSetup', ServiceSetup);
 
   /* @ngInject */
-  function ServiceSetup($q, $translate, Authinfo, SiteService, InternalNumberRangeService, TimeZoneService, ExternalNumberPoolService, VoicemailTimezoneService, VoicemailService, CustomerCommonService, CustomerCosRestrictionServiceV2) {
+  function ServiceSetup($q, $translate, $filter, Authinfo, SiteService, InternalNumberRangeService, TimeZoneService, ExternalNumberPoolService, VoicemailTimezoneService, VoicemailService, CustomerCommonService, CustomerCosRestrictionServiceV2, CeSiteService) {
 
     return {
       internalNumberRanges: [],
@@ -38,6 +38,12 @@
         return SiteService.update({
           customerId: Authinfo.getOrgId(),
           siteId: siteUuid
+        }, site).$promise;
+      },
+
+      saveAutoAttendantSite: function (site) {
+        return CeSiteService.save({
+          customerId: Authinfo.getOrgId()
         }, site).$promise;
       },
 
@@ -73,6 +79,15 @@
           objectId: objectId
         }, {
           timeZoneName: timeZone
+        }).$promise;
+      },
+
+      updateVoicemailPostalcode: function (postalCode, objectId) {
+        return VoicemailTimezoneService.update({
+          customerId: Authinfo.getOrgId(),
+          objectId: objectId
+        }, {
+          postalCode: postalCode
         }).$promise;
       },
 
@@ -171,6 +186,18 @@
         } else {
           return $q.when();
         }
+      },
+
+      generateVoiceMailNumber: function (customerId, countrycode) {
+        var customerUuid = customerId.replace(/-/g, "");
+        var str = '';
+        for (var i = 0; i < customerUuid.length; i++) {
+          var hextodec = parseInt(customerUuid[i], 16).toString(10);
+          str += parseInt(hextodec, 10) >= 10 ? hextodec : "0" + hextodec;
+        }
+        str = countrycode + str.replace(/^0+/, "");
+        var generatedVoicemailNumber = $filter('limitTo')(str, 40, 0);
+        return generatedVoicemailNumber;
       }
     };
   }

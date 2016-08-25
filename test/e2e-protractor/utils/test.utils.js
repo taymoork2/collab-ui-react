@@ -18,19 +18,19 @@ exports.getDateTimeString = function () {
   var minute = now.getMinutes();
   var second = now.getSeconds();
   if (month.toString().length == 1) {
-    var month = '0' + month;
+    month = '0' + month;
   }
   if (day.toString().length == 1) {
-    var day = '0' + day;
+    day = '0' + day;
   }
   if (hour.toString().length == 1) {
-    var hour = '0' + hour;
+    hour = '0' + hour;
   }
   if (minute.toString().length == 1) {
-    var minute = '0' + minute;
+    minute = '0' + minute;
   }
   if (second.toString().length == 1) {
-    var second = '0' + second;
+    second = '0' + second;
   }
   var dateTime = year.toString() + month.toString() + day.toString() + '_' + hour.toString() + minute.toString() + second.toString();
   return dateTime;
@@ -76,11 +76,10 @@ exports.sendRequest = function (options) {
   return flow.execute(function () {
     var defer = protractor.promise.defer();
     request(options, function (error, response, body) {
-      var status = response && response.statusCode ? response.statusCode : 'unknown';
-      if (error) {
-        defer.reject('Send ' + options.method + ' request to ' + options.url + ' failed with status ' + status + '. Error: ' + error);
-      } else if (response && response.statusCode >= 400) {
-        defer.reject('Send ' + options.method + ' request to ' + options.url + ' failed with status ' + status + '. Body: ' + body);
+      var status = _.get(response, 'statusCode');
+      if (error || status >= 400) {
+        console.error('Send ' + options.method + ' request to ' + options.url + ' failed with status ' + status + '.  ' + (error || body));
+        defer.reject(response);
       } else {
         defer.fulfill(body);
       }
@@ -206,6 +205,12 @@ exports.waitForTextBoxValue = function (elem) {
 exports.expectIsDisplayed = function (elem) {
   this.wait(elem).then(function () {
     expect(elem.isDisplayed()).toBeTruthy();
+  });
+};
+
+exports.expectIsReadOnly = function (elem) {
+  this.wait(elem).then(function () {
+    expect(elem.getAttribute("readonly")).toBeTruthy();
   });
 };
 
@@ -336,7 +341,7 @@ exports.click = function (elem, maxRetry) {
       return elem.click().then(deferred.fulfill, deferred.reject);
     } else {
       return elem.click().then(deferred.fulfill, function (e) {
-        log('Failed to click element: ' + elem.locator() + ' Error: ' + (e && e.message || e));
+        log('Failed to click element: ' + elem.locator() + ' Error: ' + ((e && e.message) || e));
         return exports.click(elem, --maxRetry);
       });
     }
@@ -358,7 +363,7 @@ exports.clickLast = function (elem) {
 
 exports.clickAll = function (elems) {
   return this.wait(elems).then(function () {
-    elems.each(function (elem, index) {
+    elems.each(function (elem) {
       return exports.click(elem);
     });
   })
@@ -396,7 +401,7 @@ exports.sendKeysUpArrow = function (element, howMany) {
 exports.fileSendKeys = function (elem, value) {
   this.waitForPresence(elem).then(function () {
     log('Send file keys to element: ' + elem.locator() + ' ' + value);
-    browser.setFileDetector(new remote.FileDetector);
+    browser.setFileDetector(new remote.FileDetector());
     elem.sendKeys(value);
   });
 };
@@ -485,6 +490,21 @@ exports.expectCheckbox = function (elem, value) {
   });
 };
 
+exports.expectInputCheckbox = function (elem, value) {
+  return this.wait(elem).then(function () {
+    return browser.wait(function () {
+      log('Waiting for element to be checked: ' + elem.locator() + ' ' + value);
+      var input = elem.element(by.xpath('..')).element(by.tagName('input'));
+      return input.getAttribute('ng-model').then(function (ngModel) {
+        // Have to navigate up out of the isolated scope from cs-input
+        return input.element(by.xpath('../..')).evaluate(ngModel).then(function (_value) {
+          return value === _value;
+        });
+      });
+    }, TIMEOUT, 'Waiting for input checkbox to be ' + value + ': ' + elem.locator());
+  });
+};
+
 exports.expectRadioSelected = function (elem) {
   return this.wait(elem).then(function () {
     return browser.wait(function () {
@@ -544,12 +564,12 @@ exports.search = function (query, _searchCount) {
   }
 
   if (query) {
-    return exports.expectIsDisplayed(element(by.cssContainingText('.ui-grid .ui-grid-row .ui-grid-cell-contents', query)));
+    return exports.expectIsDisplayed(element.all(by.cssContainingText('.ui-grid .ui-grid-row .ui-grid-cell-contents', query)).get(0));
   }
 };
 
 exports.clickUser = function (query) {
-  return this.click(element(by.cssContainingText('.ui-grid .ui-grid-row .ui-grid-cell-contents', query)));
+  return this.click(element.all(by.cssContainingText('.ui-grid .ui-grid-row .ui-grid-cell-contents', query)).get(0));
 };
 
 exports.searchAndClick = function (query) {
@@ -558,7 +578,7 @@ exports.searchAndClick = function (query) {
 };
 
 exports.expectRowIsNotDisplayed = function (text) {
-  this.expectIsNotDisplayed(element(by.cssContainingText('.ui-grid .ui-grid-row .ui-grid-cell-contents', text)));
+  this.expectIsNotDisplayed(element.all(by.cssContainingText('.ui-grid .ui-grid-row .ui-grid-cell-contents', text)).get(0));
 };
 
 exports.formatPhoneNumbers = function (value) {

@@ -1,5 +1,9 @@
-<h5 translate="{{'hercules.settings.emailNotificationsHeading'}}"></h5>
-<p translate="{{'hercules.settings.emailNotifications'}}"></p>
+<h5 translate="hercules.settings.emailNotificationsHeading"></h5>
+<h6 class="email-subsection"><strong translate="hercules.settings.emailAdministratorHeading"
+                                     ng-if="expresswayServiceSettings.servicesId[0] === 'squared-fusion-cal'"></strong></h6>
+<p><span translate="hercules.settings.emailAdministratorNotification"></span><br>
+</p>
+
 <tags-input add-on-blur="true"
             on-tag-added="expresswayServiceSettings.writeConfig()"
             on-tag-removed="expresswayServiceSettings.writeConfig()"
@@ -10,3 +14,16 @@
             type="email"
             allowed-tags-pattern="[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?"></tags-input>
 <span class="right" ng-show="expresswayServiceSettings.savingEmail"><span translate="hercules.settings.emailNotificationsSaving"></span> <i class="icon icon-spinner"/></span>
+
+<div ng-if="expresswayServiceSettings.servicesId[0] === 'squared-fusion-cal'">
+  <h6 class="email-subsection"><strong translate="hercules.settings.emailUserHeading"></strong></h6>
+  <p><span translate="hercules.settings.emailUserNotification"></span>
+  </p>
+
+  <cs-toggle-switch ng-model="expresswayServiceSettings.enableEmailSendingToUser"
+                    ng-click="expresswayServiceSettings.setEnableEmailSendingToUser()"
+                    toggle-id="toggleEnableEmailSendingToUser"
+                    name="toggleEnableEmailSendingToUser"
+                    size="small">
+  </cs-toggle-switch>
+</div>
