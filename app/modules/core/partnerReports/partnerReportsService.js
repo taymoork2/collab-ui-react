@@ -77,7 +77,7 @@
           timeFilter = null;
         }
 
-        return returnErrorCheck(error, 'Loading overall active user population data failed.', $translate.instant('activeUsers.overallActiveUserGraphError'), TIMEOUT);
+        return returnErrorCheck(error, 'Loading overall active user population data failed.', 'activeUsers.overallActiveUserGraphError', TIMEOUT);
       });
 
       return activeUserDetailedPromise;
@@ -308,11 +308,12 @@
       if (angular.isUndefined(customerIds)) {
         return $q.when([]);
       } else {
-        var query = "?reportType=weeklyUsage&cache=";
+        // TODO: Remove unused parameters once API is fixed; currently necessary to avoid exceptions from API
+        var query = "?reportType=weeklyUsage&intervalCount=7&intervalType=day&spanCount=1&spanType=day&cache=";
         if (filter.value === 1) {
-          query = "?reportType=monthlyUsage&cache=";
+          query = "?reportType=monthlyUsage&intervalCount=7&intervalType=day&spanCount=1&spanType=day&cache=";
         } else if (filter.value === 2) {
-          query = "?reportType=threeMonthUsage&cache=";
+          query = "?reportType=threeMonthUsage&intervalCount=7&intervalType=day&spanCount=1&spanType=day&cache=";
         }
         return getService(topn + activeUserUrl + query + cacheValue + customerIds, activeTableCancelPromise).then(function (response) {
           var tableData = [];
@@ -333,7 +334,7 @@
           }
           return tableData;
         }, function (error) {
-          return returnErrorCheck(error, 'Loading most active users for the selected customer(s) failed.', $translate.instant('activeUsers.activeUserTableError'), []);
+          return returnErrorCheck(error, 'Loading most active users for the selected customer(s) failed.', 'activeUsers.activeUserTableError', []);
         });
       }
     }
@@ -385,7 +386,7 @@
         }
         return [];
       }, function (error) {
-        return returnErrorCheck(error, 'Loading call quality data for the selected customer(s) failed.', $translate.instant('mediaQuality.mediaQualityGraphError'), []);
+        return returnErrorCheck(error, 'Loading call quality data for the selected customer(s) failed.', 'mediaQuality.mediaQualityGraphError', []);
       });
     }
 
@@ -483,7 +484,7 @@
         }
         return returnArray;
       }, function (error) {
-        return returnErrorCheck(error, 'Loading call metrics data for selected customers failed.', $translate.instant('callMetrics.callMetricsChartError'), returnArray);
+        return returnErrorCheck(error, 'Loading call metrics data for selected customers failed.', 'callMetrics.callMetricsChartError', returnArray);
       });
     }
 
@@ -540,7 +541,7 @@
         }
         return returnArray;
       }, function (error) {
-        return returnErrorCheck(error, 'Loading registered endpoints for the selected customer(s) failed.', $translate.instant('registeredEndpoints.registeredEndpointsError'), []);
+        return returnErrorCheck(error, 'Loading registered endpoints for the selected customer(s) failed.', 'registeredEndpoints.registeredEndpointsError', []);
       });
     }
 
@@ -629,11 +630,7 @@
         } else {
           Log.debug(debug + '  Status: ' + error.status);
         }
-        if ((error.data !== null) && angular.isDefined(error.data) && angular.isDefined(error.data.trackingId) && (error.data.trackingId !== null)) {
-          Notification.notify([message + '<br>' + $translate.instant('reportsPage.trackingId') + error.data.trackingId], 'error');
-        } else {
-          Notification.notify([message], 'error');
-        }
+        Notification.errorWithTrackingId(error, message);
         return returnItem;
       } else {
         return ABORT;
