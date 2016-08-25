@@ -7,13 +7,13 @@
     </div>
     <div class="prompt">
       <span translate="userManage.bulk.exportPrompt"></span>
-      <label translate="userManage.bulk.downloadCsvTemplate" ng-click="$ctrl.downloadTemplate()"></label>
+      <label class="download-template" translate="userManage.bulk.downloadCsvTemplate" ng-click="$ctrl.downloadTemplate()"></label>
     </div>
   </div>
   <div ng-if="$ctrl.isDownloading">
     <div class="icon icon-spinner"></div>
     <div class="prompt">
-      <label translate="userManage.bulk.cancelExport" ng-click="$ctrl.cancelDownload()"></label>
+      <label class="cancel-download" translate="userManage.bulk.cancelExport" ng-click="$ctrl.cancelDownload()"></label>
     </div>
   </div>
   <div class="ng-hide"><a class="download-anchor"></a></div>
