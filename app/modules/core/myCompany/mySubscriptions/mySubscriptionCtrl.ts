@@ -22,7 +22,7 @@ const meetingRoomClass = 'icon-meeting-room';
 const webexClass = 'icon-webex';
 const callClass = 'icon-calls';
 
-const licenseTypes = ['MS', 'CF', 'MC', 'TC', 'EC', 'EE', 'CMR', 'CO', 'SD'];
+const licenseTypes = ['MS', 'CF', 'MC', 'TC', 'EC', 'EE', 'CMR', 'CO', 'SD', 'SB'];
 
 class MySubscriptionCtrl {
   public hybridServices = [];
@@ -31,8 +31,7 @@ class MySubscriptionCtrl {
   public visibleSubscriptions = false;
   public isOnline = false;
   public trialUrlFailed = false;
-
-  public loading: boolean = false;
+  public loading = false;
   public digitalRiverSubscriptionsUrl: string;
 
   /* @ngInject */
@@ -72,9 +71,9 @@ class MySubscriptionCtrl {
     if (this.isOnline) {
       this.initIframe();
     } else {
-      this.subscriptionRetrieval();
       this.hybridServicesRetrieval();
     }
+    this.subscriptionRetrieval();
   };
 
   private initIframe(): void {
@@ -114,7 +113,7 @@ class MySubscriptionCtrl {
   private broadcastSingleSubscription(subscription, trialUrl)  {
     this.$rootScope.$broadcast('SUBSCRIPTION::upgradeData', {
       isTrial: subscription.isTrial,
-      subId: subscription.subscriptionId,
+      subId: subscription.internalSubscriptionId,
       upgradeTrialUrl: trialUrl
     });
   };
@@ -163,6 +162,7 @@ class MySubscriptionCtrl {
       _.forEach(subscriptions, (subscription: any, subIndex: number) => {
         let newSubscription = {
           subscriptionId: undefined,
+          internalSubscriptionId: undefined,
           licenses: [],
           isTrial: false,
           viewAll: false,
@@ -170,6 +170,9 @@ class MySubscriptionCtrl {
         };
         if (subscription.subscriptionId && (subscription.subscriptionId !== "unknown")) {
           newSubscription.subscriptionId = subscription.subscriptionId;
+        }
+        if (subscription.internalSubscriptionId && (subscription.internalSubscriptionId !== "unknown")) {
+          newSubscription.internalSubscriptionId = subscription.internalSubscriptionId;
         }
 
         _.forEach(subscription.licenses, (license: any, licenseIndex: number) => {
@@ -187,38 +190,50 @@ class MySubscriptionCtrl {
             };
 
             _.forEach(licenseTypes, (type: any, index: number) => {
-              if ((license.offerName === type) && (index === 0)) {
-                offer.class = messageClass;
-                this.addSubscription(0, offer, -1);
-              } else if ((license.offerName === type) && (index === 7)) {
-                offer.class = callClass;
-                this.addSubscription(2, offer, -1);
-              } else if ((license.offerName === type) && (index === 8)) {
-                offer.class = meetingRoomClass;
-                this.addSubscription(3, offer, -1);
-              } else if (license.offerName === type) {
-                if(index === 1) {
-                  offer.class = meetingRoomClass;
-                } else {
-                  offer.class = webexClass;
-                }
+              if (license.offerName === type) {
+                switch (index) {
+                  case 0: {
+                    offer.class = messageClass;
+                    this.addSubscription(0, offer, -1);
+                    break;
+                  }
+                  case 7: {
+                    offer.class = callClass;
+                    this.addSubscription(2, offer, -1);
+                    break;
+                  }
+                  case 8:
+                  case 9: {
+                    offer.class = meetingRoomClass;
+                    this.addSubscription(3, offer, -1);
+                    break;
+                  }
+                  default: {
+                    if(index === 1) {
+                      offer.class = meetingRoomClass;
+                    } else {
+                      offer.class = webexClass;
+                    }
 
-                let existingSite = _.findIndex(this.licenseCategory[1].subscriptions, (sub: any) => {
-                  return sub.siteUrl === offer.siteUrl;
-                });
+                    let existingSite = _.findIndex(this.licenseCategory[1].subscriptions, (sub: any) => {
+                      return sub.siteUrl === offer.siteUrl;
+                    });
 
-                if (existingSite >= 0) {
-                  this.addSubscription(1, offer, existingSite);
-                } else if (offer.siteUrl) {
-                  this.licenseCategory[1].subscriptions.push({
-                    siteUrl: offer.siteUrl,
-                    offers: [offer]
-                  });
-                } else { // Meeting licenses not attached to a siteUrl should be grouped together at the front of the list
-                  this.licenseCategory[1].subscriptions.unshift({
-                    siteUrl: offer.siteUrl,
-                    offers: [offer]
-                  });
+                    if (existingSite >= 0) {
+                      this.addSubscription(1, offer, existingSite);
+                    } else if (offer.siteUrl) {
+                      this.licenseCategory[1].subscriptions.push({
+                        siteUrl: offer.siteUrl,
+                        offers: [offer]
+                      });
+                    } else { // Meeting licenses not attached to a siteUrl should be grouped together at the front of the list
+                      this.licenseCategory[1].subscriptions.unshift({
+                        siteUrl: offer.siteUrl,
+                        offers: [offer]
+                      });
+                    }
+                    break;
+                  }
                 }
               }
             });
@@ -241,7 +256,7 @@ class MySubscriptionCtrl {
 
       _.forEach(this.subscriptionDetails, (subscription: any) => {
         if (subscription.isTrial && this.isOnline) {
-          this.upgradeTrialUrl(subscription.subscriptionId).then((response) => {
+          this.upgradeTrialUrl(subscription.internalSubscriptionId).then((response) => {
             if (response && this.subscriptionDetails.length === 1) {
               this.broadcastSingleSubscription(this.subscriptionDetails[0], response);
             }

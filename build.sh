@@ -86,6 +86,9 @@ else
     fi
 fi
 
+# print top-level node module versions
+npm ls --depth=1
+
 
 # -----
 # Phase 3: Build
@@ -96,8 +99,18 @@ time npm run languages-verify
 time npm run typings
 time npm run test
 time npm run combine-coverage
-time npm run build -- --nolint
 set +e
+
+# - webpack loaders have caused segfaults frequently enough to warrant simply retrying the command
+#   until it succeeds
+# - as this script is run by a jenkins builder, the potential infinite loop is mitigated by the
+#   absolute timeout set for the job (currently 30 min.)
+export npm_lifecycle_event="build"
+webpack_exit_code=1
+while [ "$webpack_exit_code" -ne 0 ]; do
+    time webpack --bail --progress --profile --nolint
+    webpack_exit_code=$?
+done
 
 # - e2e tests
 ./e2e.sh | tee ./.cache/e2e-sauce-logs

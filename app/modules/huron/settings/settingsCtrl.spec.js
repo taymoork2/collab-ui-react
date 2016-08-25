@@ -52,6 +52,8 @@ describe('Controller: HuronSettingsCtrl', function () {
     spyOn(ServiceSetup, 'getTimeZones').and.returnValue($q.when(timezones));
     spyOn(ServiceSetup, 'listVoicemailTimezone').and.returnValue($q.when(timezone));
     spyOn(ServiceSetup, 'listInternalNumberRanges').and.returnValue($q.when(internalNumberRanges));
+    spyOn(ServiceSetup, 'saveAutoAttendantSite').and.returnValue($q.when());
+    spyOn(ServiceSetup, 'updateVoicemailPostalcode').and.returnValue($q.when());
     spyOn(ExternalNumberService, 'refreshNumbers').and.returnValue($q.when());
     spyOn(DialPlanService, 'getCustomerDialPlanDetails').and.returnValue($q.when({
       extensionGenerated: 'false',
@@ -462,11 +464,6 @@ describe('Controller: HuronSettingsCtrl', function () {
       expect(site.siteSteeringDigit).not.toEqual(controller.model.steeringDigit);
     });
 
-    it('should have site steering digit removed from the steeringDigits array', function () {
-      var index = _.indexOf(controller.steeringDigits, site.siteSteeringDigit);
-      expect(index).toEqual(-1);
-    });
-
     describe('formly watcher functions: ', function () {
       var assignedExternalNumbers = [{
         pattern: '+19725551001',
@@ -844,6 +841,70 @@ describe('Controller: HuronSettingsCtrl', function () {
         expect(ServiceSetup.updateSite).not.toHaveBeenCalled();
         expect(ServiceSetup.updateVoicemailTimezone).not.toHaveBeenCalled();
         expect(Notification.success).toHaveBeenCalledWith('huronSettings.saveSuccess');
+      });
+    });
+
+    describe('Voicemail prefix', function () {
+      it('should change the extension length and change site code', function () {
+        $scope.to = {};
+        controller._buildVoicemailPrefixOptions($scope);
+        controller.model.site.extensionLength = '5';
+        $scope.$apply();
+        expect(controller.model.site.siteCode).toEqual(10);
+      });
+
+      it('should set voicemail prefix to intersect with extension range and trigger warning', function () {
+        controller.model.site.siteSteeringDigit.voicemailPrefixLabel = '1100';
+        controller.model.displayNumberRanges = [{
+          beginNumber: 1000,
+          endNumber: 1999
+        }];
+
+        expect(controller.siteSteeringDigitWarningValidation()).toBe(true);
+      });
+
+      it('should set outbound dial digit to have the same starting digit as an extension range and trigger warning', function () {
+        controller.model.site.steeringDigit = '1';
+        controller.model.displayNumberRanges = [{
+          beginNumber: 1000,
+          endNumber: 1999
+        }];
+
+        expect(controller.steeringDigitWarningValidation()).toBe(true);
+      });
+
+      it('should set site dial digit and outbound dial digit to have the same value and trigger error', function () {
+        controller.model.site.siteSteeringDigit.siteDialDigit = '1';
+        controller.model.site.steeringDigit = '1';
+        var localscope = {
+          fields: [{
+            formControl: {
+              $setValidity: function () {}
+            }
+          }]
+        };
+
+        expect(controller.siteAndSteeringDigitErrorValidation('', '', localscope)).toBe(true);
+      });
+
+      it('should save voicemail postal code if voicemail is enabled and component of postal code has changed', function () {
+        controller.hasVoicemailService = true;
+        controller.model.companyVoicemail.companyVoicemailEnabled = true;
+        controller.model.site.siteSteeringDigit = 1;
+        controller.save();
+        $scope.$apply();
+
+        expect(ServiceSetup.updateVoicemailPostalcode).toHaveBeenCalled();
+      });
+
+      it('should not save voicemail postal code since voicemail is disabled', function () {
+        controller.hasVoicemailService = true;
+        controller.model.companyVoicemail.companyVoicemailEnabled = false;
+
+        controller.save();
+        $scope.$apply();
+
+        expect(ServiceSetup.updateVoicemailPostalcode).not.toHaveBeenCalled();
       });
     });
   });

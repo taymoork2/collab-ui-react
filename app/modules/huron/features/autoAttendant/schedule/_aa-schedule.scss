@@ -250,6 +250,10 @@ $aa-schedule-text-color: $gray-light-1;
   }
 }
 
+.import-schedule-modal {
+  @include vr-spacing(ph, 2);
+}
+
 /* Should go in toolkit for timepicker error state */
 
 .error .cs-datapicker-normal {

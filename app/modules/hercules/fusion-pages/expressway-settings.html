@@ -8,7 +8,7 @@
       <div class="sub-section">
         <h5 class="sub-section__label" translate="hercules.settings.scheduleUpgrade.title"></h5>
         <p class="sub-section__description" translate="hercules.settings.scheduleUpgrade.description"></p>
-        <upgrade-schedule-configuration can-postpone="true" daily="false" cluster-id="clusterSettings.cluster.id"></upgrade-schedule-configuration>
+        <upgrade-schedule-configuration cluster-id="clusterSettings.cluster.id"></upgrade-schedule-configuration>
       </div>
     </setting-section>
 
@@ -65,22 +65,22 @@
             cs-input-group-size="medium-8"
             cs-input-help-text="{{'hercules.expresswayClusterSettings.renameClusterDescription' | translate}}"
           >
+          <button
+            type="button"
+            class="btn btn--primary btn-save-new-name"
+            ng-click="clusterSettings.setClusterName(clusterSettings.newClusterName)"
+            translate="common.save"
+          ></button>
         </div>
-        <button
-          type="button"
-          class="btn btn--primary"
-          ng-click="clusterSettings.setClusterName(clusterSettings.newClusterName)"
-          translate="common.save"
-        ></button>
 
       </div>
 
       <div class="sub-section">
-        <h5 class="cap-long-names sub-section__label" translate="common.remove"></h5>
+        <h5 class="sub-section__label cap-long-names" translate="common.remove"></h5>
         <p class="sub-section__description" translate="hercules.expresswayClusterSettings.deregisterClusterExplanation"></p>
         <div ng-if="clusterSettings.enabledServices.length > 1">
           <button type="button" class="btn" disabled="disabled" translate="common.remove"></button>
-          <p class="cap-long-names sub-section__description" translate="hercules.expresswayClusterSettings.deregisterClusterParagraph" translate-values="{ ClusterName: clusterSettings.cluster.name}"></p>
+          <p class="cap-long-names remove-warning" translate="hercules.expresswayClusterSettings.deregisterClusterParagraph" translate-values="{ ClusterName: clusterSettings.cluster.name}"></p>
         </div>
         <div ng-if="clusterSettings.enabledServices.length < 2">
           <button type="button" class="btn" ng-click="clusterSettings.deregisterCluster(clusterSettings.cluster)" translate="common.remove"></button>

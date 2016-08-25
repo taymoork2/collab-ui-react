@@ -6,7 +6,7 @@
       <div class="sub-section">
         <h5 class="sub-section__label" translate="hercules.settings.scheduleUpgrade.title"></h5>
         <p class="sub-section__description" translate="hercules.settings.scheduleUpgrade.description"></p>
-        <upgrade-schedule-configuration can-postpone="false" daily="true" cluster-id="clusterSettings.cluster.id"></upgrade-schedule-configuration>
+        <upgrade-schedule-configuration cluster-id="clusterSettings.cluster.id"></upgrade-schedule-configuration>
       </div>
     </setting-section>
 
@@ -24,8 +24,12 @@
 
     <setting-section setting="clusterSettings.delete">
       <div class="sub-section">
-        <button type="button" class="btn" translate="mediaFusion.clusters.deletecluster" ng-click="clusterSettings.deleteCluster();">
-        </button>
+        <div class="row">
+          <div class="large-3">
+            <button type="button" class="btn btn--negative" translate="mediaFusion.clusters.deletecluster" ng-click="clusterSettings.deleteCluster();">
+            </button>
+         </div>
+        </div>
       </div>
     </setting-section>
   </div>

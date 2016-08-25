@@ -1,5 +1,4 @@
 .ct-agent-unavailable {
-  align-items: center;
 
   @mixin placeholder {
     ::-webkit-input-placeholder {
@@ -29,6 +28,11 @@
     .articleHeight {
       height: 100%;
     }
+  }
+
+  .ct-article {
+    box-shadow: none;
+    border: 1px solid $gray-light-1;
   }
 
   .ct-agent-unavailable-icon {

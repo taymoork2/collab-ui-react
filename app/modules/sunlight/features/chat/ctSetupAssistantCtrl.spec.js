@@ -2,7 +2,7 @@
 
 describe('Care Chat Setup Assistant Ctrl', function () {
 
-  var controller, $scope, $modal, $q, CTService, getLogoDeferred, getLogoUrlDeferred, SunlightConfigService, $state;
+  var controller, $scope, $modal, $q, CTService, getLogoDeferred, getLogoUrlDeferred, SunlightConfigService, $state, $stateParams;
   var Notification, $translate;
 
   var escapeKey = 27;
@@ -38,11 +38,6 @@ describe('Care Chat Setup Assistant Ctrl', function () {
     }]
   };
 
-  var successData = {
-    success: true,
-    status: 201
-  };
-
   var deSelectAllDays = function () {
     _.forEach(controller.days, function (day, key) {
       if (day.isSelected) {
@@ -50,6 +45,26 @@ describe('Care Chat Setup Assistant Ctrl', function () {
       }
     });
   };
+
+  var duplicateFieldTypeData = {
+    'field1': {
+      attributes: [{
+        name: 'type',
+        value: { id: 'name' }
+      }]
+    },
+    'field2': {
+      attributes: [{
+        name: 'type',
+        value: { id: 'email' }
+      }]
+    },
+    'field3': {
+      attributes: [{
+        name: 'type',
+        value: { id: 'name' }
+      }]
+    } };
 
   var selectedDaysByDefault = businessHours.selectedDaysByDefault;
   var defaultTimeZone = businessHours.defaultTimeZone;
@@ -61,20 +76,10 @@ describe('Care Chat Setup Assistant Ctrl', function () {
   beforeEach(angular.mock.module('Hercules'));
   beforeEach(angular.mock.module(function ($provide) {
     $provide.value("Authinfo", spiedAuthinfo);
-
-    $provide.value("SunlightConfigService", {
-      createChatTemplate: function () {
-        return {
-          then: function (callback) {
-            return callback(successData);
-          }
-        };
-      }
-    });
   }));
 
   var intializeCtrl = function (_$rootScope_, $controller, _$modal_, _$q_, _$translate_,
-    _$window_, _Authinfo_, _CTService_, _SunlightConfigService_, _$state_, _Notification_) {
+    _$window_, _Authinfo_, _CTService_, _SunlightConfigService_, _$state_, _Notification_, _$stateParams_) {
     $scope = _$rootScope_.$new();
     $modal = _$modal_;
     $q = _$q_;
@@ -83,6 +88,7 @@ describe('Care Chat Setup Assistant Ctrl', function () {
     SunlightConfigService = _SunlightConfigService_;
     $state = _$state_;
     Notification = _Notification_;
+    $stateParams = _$stateParams_;
 
     // set language to en_US to show AM and PM for startTime and endTime
     $translate.use(businessHours.userLang);
@@ -93,8 +99,13 @@ describe('Care Chat Setup Assistant Ctrl', function () {
     spyOn(CTService, 'getLogo').and.returnValue(getLogoDeferred.promise);
     spyOn(CTService, 'getLogoUrl').and.returnValue(getLogoUrlDeferred.promise);
     spyOn(Notification, 'success');
-
-    controller = $controller('CareChatSetupAssistantCtrl');
+    $stateParams = {
+      template: undefined,
+      isEditFeature: false
+    };
+    controller = $controller('CareChatSetupAssistantCtrl', {
+      $scope: $scope
+    });
   };
 
   function checkStateOfNavigationButtons(pageIndex, previousButtonState, nextButtonState) {
@@ -176,6 +187,22 @@ describe('Care Chat Setup Assistant Ctrl', function () {
       controller.currentState = controller.states[FEEDBACK_PAGE_INDEX];
       expect(controller.previousButton()).toEqual(true);
       expect(controller.nextButton()).toEqual(true);
+    });
+
+    it('next button should be disabled if feedback comment is longer than 50 characters', function () {
+      controller.template.configuration.pages.feedback.fields.comment.displayText = Array(52).join("a");
+      checkStateOfNavigationButtons(FEEDBACK_PAGE_INDEX, true, false);
+    });
+
+    it('next button should be disabled if feedback query is longer than 250 characters', function () {
+      controller.template.configuration.pages.feedback.fields.feedbackQuery.displayText = Array(252).join("a");
+      checkStateOfNavigationButtons(FEEDBACK_PAGE_INDEX, true, false);
+    });
+
+    it('next button should be enabled if feedback comment and query are valid', function () {
+      controller.template.configuration.pages.feedback.fields.comment.displayText = "Feedback comment";
+      controller.template.configuration.pages.feedback.fields.feedbackQuery.displayText = "Feedback query";
+      checkStateOfNavigationButtons(FEEDBACK_PAGE_INDEX, true, true);
     });
   });
 
@@ -360,6 +387,20 @@ describe('Care Chat Setup Assistant Ctrl', function () {
       expect(mockElementObject.tokenfield).toHaveBeenCalledWith('createToken', 'Mock Category Token');
       expect(controller.categoryOptionTag).toEqual('');
     });
+
+    it("should validate type for a unique field", function () {
+      expect(controller.validateType({ id: 'name' })).toEqual(true);
+    });
+
+    it("should identify a duplicate type configured", function () {
+      controller.template.configuration.pages.customerInformation.fields = duplicateFieldTypeData;
+      expect(controller.validateType({ id: 'name' })).toEqual(false);
+    });
+
+    it("next button should get disabled when duplicate types are configured in customerInfo page", function () {
+      controller.template.configuration.pages.customerInformation.fields = duplicateFieldTypeData;
+      expect(controller.nextButton()).toEqual(false);
+    });
   });
 
   describe('Off Hours Page', function () {
@@ -404,12 +445,13 @@ describe('Care Chat Setup Assistant Ctrl', function () {
 
     it('should disable the right btn if no days are selected', function () {
       deSelectAllDays();
-      expect(controller.nextButton()).toBe(undefined);
+      expect(controller.isBusinessDaySelected).toBe(undefined);
+      checkStateOfNavigationButtons(OFF_HOURS_PAGE_INDEX, true, false);
     });
 
-    it('should disable the right btn if off hours message is empty', function () {
-      controller.template.configuration.pages.offHours.message = '';
-      expect(controller.nextButton()).toBe(undefined);
+    it('should disable the right btn if off hours message is more than 250 characters', function () {
+      controller.template.configuration.pages.offHours.message = Array(252).join("a");
+      checkStateOfNavigationButtons(OFF_HOURS_PAGE_INDEX, true, false);
     });
 
     it('should select start time and end time correctly if startTime is less than endTime', function () {
@@ -501,6 +543,7 @@ describe('Care Chat Setup Assistant Ctrl', function () {
     beforeEach(function () {
       deferred = $q.defer();
       spyOn(SunlightConfigService, 'createChatTemplate').and.returnValue(deferred.promise);
+      spyOn(SunlightConfigService, 'editChatTemplate').and.returnValue(deferred.promise);
     });
 
     it("When save chat template failed, the 'saveCTErrorOccurred' is set", function () {
@@ -518,6 +561,7 @@ describe('Care Chat Setup Assistant Ctrl', function () {
       expect(controller.saveCTErrorOccurred).toBeFalsy();
 
       spyOn($state, 'go');
+      spyOn($stateParams, 'isEditFeature').and.returnValue(false);
       deferred.resolve({
         success: true,
         headers: function () {
@@ -545,6 +589,41 @@ describe('Care Chat Setup Assistant Ctrl', function () {
       expect(controller.saveCTErrorOccurred).toBeFalsy();
       expect($state.go).toHaveBeenCalled();
     });
+
+    it("should submit chat template successfully for Edit", function () {
+      //by default, this flag is false
+      expect(controller.saveCTErrorOccurred).toBeFalsy();
+
+      spyOn($state, 'go');
+      spyOn($stateParams, 'isEditFeature').and.returnValue(true);
+      deferred.resolve({
+        success: true,
+        headers: function () {
+          return 'something/abc123';
+        },
+        status: 200
+      });
+
+      controller.submitChatTemplate();
+      $scope.$apply();
+
+      expect($modal.open).toHaveBeenCalledWith({
+        templateUrl: 'modules/sunlight/features/chat/ctEmbedCodeModal.tpl.html',
+        type: 'small',
+        controller: 'EmbedCodeCtrl',
+        controllerAs: 'embedCodeCtrl',
+        resolve: {
+          templateId: jasmine.any(Function),
+          templateHeader: jasmine.any(Function)
+        }
+      });
+      expect(Notification.success).toHaveBeenCalledWith(jasmine.any(String), {
+        featureName: jasmine.any(String)
+      });
+      expect(controller.saveCTErrorOccurred).toBeFalsy();
+      expect($state.go).toHaveBeenCalled();
+    });
+
   });
 
   describe('Chat Status Messages Page', function () {
@@ -552,8 +631,32 @@ describe('Care Chat Setup Assistant Ctrl', function () {
     beforeEach(function () {
       resolveLogoPromise();
     });
+    beforeEach(function () {
+      controller.currentState = controller.states[CHAT_STATUS_MESSAGES_PAGE_INDEX];
+    });
     it("should have previous and next button enabled", function () {
+      controller.template.configuration.chatStatusMessages.messages.connectingMessage.displayText = "Connecting Message";
+      controller.template.configuration.chatStatusMessages.messages.waitingMessage.displayText = "Waiting Message";
+      controller.template.configuration.chatStatusMessages.messages.enterRoomMessage.displayText = "Enter Room Message";
+      controller.template.configuration.chatStatusMessages.messages.leaveRoomMessage.displayText = "Left Room Message";
+      controller.template.configuration.chatStatusMessages.messages.chattingMessage.displayText = "Chatting Message";
       checkStateOfNavigationButtons(CHAT_STATUS_MESSAGES_PAGE_INDEX, true, true);
+    });
+    it("should have next button disabled if all the status messages are more than 50 characters", function () {
+      controller.template.configuration.chatStatusMessages.messages.connectingMessage.displayText = Array(60).join("n");
+      controller.template.configuration.chatStatusMessages.messages.waitingMessage.displayText = Array(60).join("n");
+      controller.template.configuration.chatStatusMessages.messages.enterRoomMessage.displayText = Array(60).join("n");
+      controller.template.configuration.chatStatusMessages.messages.leaveRoomMessage.displayText = Array(60).join("n");
+      controller.template.configuration.chatStatusMessages.messages.chattingMessage.displayText = Array(60).join("n");
+      checkStateOfNavigationButtons(CHAT_STATUS_MESSAGES_PAGE_INDEX, true, false);
+    });
+    it("should have next button disabled if any of the status messages are more than 50 characters", function () {
+      controller.template.configuration.chatStatusMessages.messages.connectingMessage.displayText = "Connecting Message";
+      controller.template.configuration.chatStatusMessages.messages.waitingMessage.displayText = "Waiting Message";
+      controller.template.configuration.chatStatusMessages.messages.enterRoomMessage.displayText = "Enter Room Message";
+      controller.template.configuration.chatStatusMessages.messages.leaveRoomMessage.displayText = "Left Room Message";
+      controller.template.configuration.chatStatusMessages.messages.chattingMessage.displayText = Array(60).join("n");
+      checkStateOfNavigationButtons(CHAT_STATUS_MESSAGES_PAGE_INDEX, true, false);
     });
   });
 
@@ -567,8 +670,8 @@ describe('Care Chat Setup Assistant Ctrl', function () {
       checkStateOfNavigationButtons(AGENT_UNAVAILABLE_PAGE_INDEX, true, true);
     });
 
-    it("next button should be disabled when unavailable msg is not present", function () {
-      controller.template.configuration.pages.agentUnavailable.fields.agentUnavailableMessage.displayText = '';
+    it("next button should be disabled when unavailable msg is more than 250 characters", function () {
+      controller.template.configuration.pages.agentUnavailable.fields.agentUnavailableMessage.displayText = Array(252).join("a");
       checkStateOfNavigationButtons(AGENT_UNAVAILABLE_PAGE_INDEX, true, false);
     });
 

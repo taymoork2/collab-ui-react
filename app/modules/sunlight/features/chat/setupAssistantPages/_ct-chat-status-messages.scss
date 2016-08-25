@@ -3,15 +3,18 @@
 .ct-chat-status-messages {
   .cs-card {
     width: rem-calc(575px);
-    height: rem-calc(513px);
+    height: rem-calc(515px);
   }
-  .ct-attribute-field-label {
-    @include vr-spacing(mb, 0.3);
-    @include vr-spacing(ml, 3);
+  .ct-status-section {
+    @include vr-spacing(pl, 2);
+    @include vr-spacing(pr, 2);
   }
   .ct-attribute-field-textbox {
     @include vr-spacing(ml, 3);
-    width: 85%;
+    width: 100%;
     height: rem-calc(40px);
+  }
+  .margin-0 {
+    @include vr-spacing(m, 0);
   }
 }

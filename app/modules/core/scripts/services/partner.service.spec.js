@@ -4,7 +4,7 @@ describe('Partner Service -', function () {
   beforeEach(angular.mock.module('Core'));
   beforeEach(angular.mock.module('Huron'));
 
-  var $httpBackend, $q, $translate, Auth, Authinfo, Config, PartnerService, TrialService, UrlConfig;
+  var $httpBackend, $q, $translate, Analytics, Auth, Authinfo, Config, PartnerService, $scope, TrialService, UrlConfig;
 
   var testData;
 
@@ -20,17 +20,18 @@ describe('Partner Service -', function () {
     });
   });
 
-  beforeEach(inject(function (_$httpBackend_, _$q_, _$translate_, _Auth_, _Authinfo_, _Config_, _PartnerService_, _TrialService_, _UrlConfig_) {
+  beforeEach(inject(function (_$httpBackend_, _$q_, $rootScope, _$translate_, _Analytics_, _Auth_, _Authinfo_, _Config_, _PartnerService_, _TrialService_, _UrlConfig_) {
     $httpBackend = _$httpBackend_;
     $q = _$q_;
     $translate = _$translate_;
+    Analytics = _Analytics_;
     Auth = _Auth_;
     Authinfo = _Authinfo_;
     Config = _Config_;
     PartnerService = _PartnerService_;
+    $scope = $rootScope.$new();
     TrialService = _TrialService_;
     UrlConfig = _UrlConfig_;
-
     testData = getJSONFixture('core/json/partner/partner.service.json');
     spyOn(Auth, 'getAuthorizationUrlList').and.returnValue($q.when({}));
   }));
@@ -248,10 +249,20 @@ describe('Partner Service -', function () {
     $httpBackend.flush();
   });
 
-  it('should successfully call modifyManagedOrgs', function () {
-    PartnerService.modifyManagedOrgs();
+  describe('modifyManagedOrgs function', function () {
+    it('should not call a patch if organization is matched', function () {
+      Auth.getAuthorizationUrlList.and.returnValue($q.when(testData.getAuthorizationUrlListResponse));
+      PartnerService.modifyManagedOrgs(testData.getAuthorizationUrlListResponse.data.managedOrgs[0].orgId);
+      $scope.$apply();
+    });
 
-    expect(Auth.getAuthorizationUrlList).toHaveBeenCalled();
+    it('should call a patch if organization is not matched', function () {
+      spyOn(Analytics, 'trackUserPatch');
+      Auth.getAuthorizationUrlList.and.returnValue($q.when(testData.getAuthorizationUrlListResponse));
+      PartnerService.modifyManagedOrgs('b3f09da0-7729-47a5-8091-1aa07a3c8671');
+      $httpBackend.expectPATCH('https://identity.webex.com/identity/scim/12345/v1/Users/' + testData.getAuthorizationUrlListResponse.data.uuid).respond(200, testData.getAuthorizationUrlListResponse);
+      $httpBackend.flush();
+    });
   });
 
   describe('helper functions -', function () {

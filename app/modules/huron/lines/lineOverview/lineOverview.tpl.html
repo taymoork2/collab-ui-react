@@ -32,5 +32,22 @@
         on-change-fn="$ctrl.setCallForward(callForwardAll, callForwardBusy)">
       </uc-call-forward>
     </cs-sp-section>
+    <div cr-feature-toggle feature-show="multipleCalls">
+      <cs-sp-section >
+        <uc-simultaneous-calls
+          incoming-call-maximum="$ctrl.incomingCallMaximum"
+          on-change-fn="$ctrl.setSimultaneousCalls(incomingCallMaximum)">
+        </uc-simultaneous-calls>
+      </cs-sp-section>
+    </div>
+    <cs-sp-section>
+      <caller-id 
+        caller-id-options="$ctrl.callerIdOptions" 
+        custom-caller-id-name="$ctrl.customCallerIdName" 
+        custom-caller-id-number="$ctrl.customCallerIdNumber" 
+        caller-id-selected="$ctrl.callerIdSelected" 
+        on-change-fn="$ctrl.updateCallerId(callerIdSelected, customCallerIdName, customCallerIdNumber);">
+      </caller-id>
+    </cs-sp-section>
   </cs-sp-container>
 </form>

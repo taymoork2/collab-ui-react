@@ -17,6 +17,7 @@
       getTimeOptions: getTimeOptions,
       getEndTimeOptions: getEndTimeOptions,
       getDefaultTimes: getDefaultTimes,
+      getTimeZone: getTimeZone,
       getTimezoneOptions: getTimezoneOptions,
       getDefaultTimeZone: getDefaultTimeZone,
       generateCodeSnippet: generateCodeSnippet,
@@ -142,6 +143,12 @@
     function getDefaultTimeZone() {
       return _.find(getTimezoneOptions(), {
         value: 'America/New_York'
+      });
+    }
+
+    function getTimeZone(zone) {
+      return _.find(getTimezoneOptions(), {
+        value: zone
       });
     }
 
