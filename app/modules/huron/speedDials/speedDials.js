@@ -76,7 +76,8 @@
       }).result.then(function () {
         speedDials.speedDialList.splice(sd.index - 1, 1);
         updateIndex();
-        SpeedDialsService.updateSpeedDials(speedDials.currentUser.id, speedDials.speedDialList).then(function () {}, function () {
+        SpeedDialsService.updateSpeedDials(speedDials.currentUser.id, speedDials.speedDialList).then(function () {
+        }, function () {
           Notification.error('speedDials.speedDialChangesFailed');
         });
       });

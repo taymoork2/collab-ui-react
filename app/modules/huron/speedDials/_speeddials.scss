@@ -49,6 +49,8 @@
   .sd-container {
     margin-left: -1.5625rem;
     margin-right: -1.5625rem;
+    height: calc(100vh - #{$topbar-height} - 90px - 50px - 7rem); /*Removing top bar, header side bar and top content*/
+    overflow: auto;
   }
 
   .sd-reorder {
