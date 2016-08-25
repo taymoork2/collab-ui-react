@@ -63,7 +63,7 @@
       type: 'select',
       className: 'medium-8',
       templateOptions: {
-        labelfield: 'vendor',
+        labelfield: 'displayName',
         required: true,
         label: $translate.instant('trialModal.pstn.provider'),
         options: [],
@@ -319,6 +319,7 @@
 
     function _showCarriers(carriers, localScope) {
       _.forEach(carriers, function (carrier) {
+        carrier.displayName = (carrier.displayName || carrier.name);
         localScope.to.options.push(carrier);
       });
       if (localScope.to.options.length === 1) {
