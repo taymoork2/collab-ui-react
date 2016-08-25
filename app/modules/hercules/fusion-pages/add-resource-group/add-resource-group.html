@@ -2,62 +2,74 @@
   <button type="button" class="close" ng-click="$dismiss()">
     <span class="sr-only" translate="common.close"></span>
   </button>
-  <h3 class="modal-title" translate="hercules.fusion.add-resource-group.title">Create new Resource Group</h3>
+  <h3 class="modal-title" translate="hercules.fusion.add-resource-group.title"></h3>
 </div>
 <div class="modal-body add-resource-group-modal">
-  <h1 class="h4" translate="hercules.fusion.add-resource-group.name.title"></h1>
-  <form name="nameForm" novalidate>
-    <div class="row">
-      <div class="cs-input-group medium-12 columns">
-        <input
-          cs-input
-          ng-focus="true"
-          type="text"
-          name="name"
-          placeholder="{{vm._translation.name.placeholder}}"
-          cs-input-group-size="medium-10"
-          cs-input-messages="vm.validationMessages"
-          ng-minlength="{{vm.minlength}}"
-          ng-keypress="vm.handleKeypress($event)"
-          ng-required="true"
-          ng-model="vm.name">
+  <form name="formIdable" class="cs-form" novalidate>
+    <div class="cs-form__section">
+      <div class="section__info">
+        <h4 class="section__title" translate="hercules.fusion.add-resource-group.name.title"></h4>
+        <p class="section__description" translate="hercules.fusion.add-resource-group.name.description"></p>
+      </div>
+      <div class="section__content">
+        <div class="sub-section">
+          <h5 class="sub-section__label" translate="hercules.fusion.add-resource-group.name.subtitle"></h5>
+          <input
+            cs-input
+            ng-focus="true"
+            type="text"
+            name="name"
+            placeholder="{{vm._translation.name.placeholder}}"
+            cs-input-group-size="medium-6"
+            cs-input-messages="vm.validationMessages"
+            ng-minlength="{{vm.minlength}}"
+            ng-keypress="vm.handleKeypress($event)"
+            ng-required="true"
+            ng-model="vm.name">
+        </div>
       </div>
     </div>
-  </form>
-  <h1 class="h4" translate="hercules.fusion.add-resource-group.release-channel.title"></h1>
-  <p translate="hercules.fusion.add-resource-group.release-channel.description"></p>
-  <form name="releaseChannels" novalidate>
-    <div class="cs-radio-group">
-      <input
-        cs-input
-        type="radio"
-        ng-model="vm.releaseChannel"
-        name="releaseChannel"
-        value="stable"
-        id="releaseChannel_stable"
-        ng-keypress="vm.handleKeypress($event)"
-        cs-input-label="{{vm._translation.releaseChannel.stable}}"
-        cs-input-help-text="{{vm._translation.releaseChannel.stableHelpText}}">
-      <input
-        cs-input
-        type="radio"
-        ng-model="vm.releaseChannel"
-        name="releaseChannel"
-        value="beta"
-        id="releaseChannel_beta"
-        ng-keypress="vm.handleKeypress($event)"
-        cs-input-label="{{vm._translation.releaseChannel.beta}}"
-        cs-input-help-text="{{vm._translation.releaseChannel.betaHelpText}}">
-      <input
-        cs-input
-        type="radio"
-        ng-model="vm.releaseChannel"
-        name="releaseChannel"
-        value="latest"
-        id="releaseChannel_latest"
-        ng-keypress="vm.handleKeypress($event)"
-        cs-input-label="{{vm._translation.releaseChannel.latest}}"
-        cs-input-help-text="{{vm._translation.releaseChannel.latestHelpText}}">
+    <div class="cs-form__section">
+      <div class="section__info">
+        <h4 class="section__title" translate="hercules.fusion.add-resource-group.release-channel.title"></h4>
+        <p class="section__description" translate="hercules.fusion.add-resource-group.release-channel.description"></p>
+      </div>
+      <div class="section__content">
+        <div class="sub-section">
+          <div class="cs-radio-group">
+            <input
+              cs-input
+              type="radio"
+              ng-model="vm.releaseChannel"
+              name="releaseChannel"
+              value="stable"
+              id="releaseChannel_stable"
+              ng-keypress="vm.handleKeypress($event)"
+              cs-input-label="{{vm._translation.releaseChannel.stable}}"
+              cs-input-help-text="{{vm._translation.releaseChannel.stableHelpText}}">
+            <input
+              cs-input
+              type="radio"
+              ng-model="vm.releaseChannel"
+              name="releaseChannel"
+              value="beta"
+              id="releaseChannel_beta"
+              ng-keypress="vm.handleKeypress($event)"
+              cs-input-label="{{vm._translation.releaseChannel.beta}}"
+              cs-input-help-text="{{vm._translation.releaseChannel.betaHelpText}}">
+            <input
+              cs-input
+              type="radio"
+              ng-model="vm.releaseChannel"
+              name="releaseChannel"
+              value="latest"
+              id="releaseChannel_latest"
+              ng-keypress="vm.handleKeypress($event)"
+              cs-input-label="{{vm._translation.releaseChannel.latest}}"
+              cs-input-help-text="{{vm._translation.releaseChannel.latestHelpText}}">
+          </div>
+        </div>
+      </div>
     </div>
   </form>
 </div>

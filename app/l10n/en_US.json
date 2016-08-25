@@ -1747,13 +1747,15 @@
         }
       },
       "add-resource-group": {
-        "title": "Add Resource",
+        "title": "Create new Resource Group",
         "name": {
-          "title": "Enter a name for the Resource Group",
-          "placeholder": "Enter Resource Group name"
+          "title": "Resource Group Details",
+          "description": "Resource groups are a set of clusters that you may assign users to.",
+          "subtitle": "Resource Group Name",
+          "placeholder": "Enter name"
         },
         "release-channel": {
-          "title": "Select the release channel for the Resource Group",
+          "title": "Release Channel",
           "description": "All the Hybrid services in the Resource Group will run on this release channel.",
           "stable": "Stable",
           "stableHelpText": "The official release software for Hybrid Services",

@@ -33,6 +33,10 @@
     vm.createResourceGroup = createResourceGroup;
     vm.canCreate = canCreate;
     vm.handleKeypress = handleKeypress;
+    vm.plop = {
+      title: 'Resource Group Details',
+      description: 'Resource group are a set of clusters you may assign users to.'
+    };
 
     ///////////////
 
@@ -42,8 +46,9 @@
         .then(function () {
           $modalInstance.close();
         })
-        .catch(function () {
-          Notification.error('hercules.fusion.add-resource-group.release-channel.error');
+        .catch(function (response) {
+          var message = response.data.message || 'hercules.fusion.add-resource-group.release-channel.error';
+          Notification.error(message);
         })
         .finally(function () {
           vm.creating = false;

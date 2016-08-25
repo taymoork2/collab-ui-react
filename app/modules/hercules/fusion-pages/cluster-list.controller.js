@@ -6,7 +6,7 @@
     .controller('FusionClusterListController', FusionClusterListController);
 
   /* @ngInject */
-  function FusionClusterListController($filter, $log, $modal, $state, $translate, hasF237FeatureToggle, hasF410FeatureToggle, hasMediaFeatureToggle, FusionClusterService, XhrNotificationService, WizardFactory) {
+  function FusionClusterListController($filter, $modal, $state, $translate, hasF237FeatureToggle, hasF410FeatureToggle, hasMediaFeatureToggle, FusionClusterService, XhrNotificationService, WizardFactory) {
     if (!hasF410FeatureToggle) {
       // simulate a 404
       $state.go('login');
@@ -212,12 +212,6 @@
         controller: 'AddResourceGroupController',
         controllerAs: 'vm',
         templateUrl: 'modules/hercules/fusion-pages/add-resource-group/add-resource-group.html'
-      }).result
-      .then(function (succes) {
-        $log.warn('modal closed with success', succes);
-      })
-      .catch(function (error) {
-        $log.warn('modal closed with failure', error);
       });
     }
   }
