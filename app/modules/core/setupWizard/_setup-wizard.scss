@@ -17,12 +17,11 @@
   }
   .service-setup {
     label {
-      font-size: 24px;
+      line-height: 24px;
+      font-size: 16px;
       color: $gray-dark-4;
-      line-height: 1;
       margin-bottom: 0;
       padding-bottom: 11px;
-      padding-top: 28px;
       &.toggle-switch {
         margin-bottom: -2px;
         padding-bottom: 0;
