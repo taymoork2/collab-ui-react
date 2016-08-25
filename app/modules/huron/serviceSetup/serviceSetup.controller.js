@@ -83,7 +83,6 @@
     vm.generatedVoicemailNumber = undefined;
     vm.hideoptionalvmHelpText = false;
     vm.optionalVmDidFeatureToggle = false;
-    vm.enableSiteSteeringDigit = true;
     vm._buildVoicemailPrefixOptions = _buildVoicemailPrefixOptions;
 
     vm.validations = {
@@ -1161,7 +1160,7 @@
                   Notification.errorResponse(response, 'serviceSetupModal.voicemailToEmailGetError');
                   return $q.reject(response);
                 }).then(function () {
-                  var postalCode = vm.model.site.siteSteeringDigit.siteDialDigit + '-' + vm.model.site.siteCode + '-' + vm.model.site.extensionLength;
+                  var postalCode = vm.model.voicemailPrefix.value + '-' + vm.model.site.siteCode + '-' + vm.model.site.extensionLength;
                   return ServiceSetup.updateVoicemailPostalcode(postalCode, vm.voicemailTimeZone.objectId)
                     .catch(function (response) {
                       errors.push(Notification.processErrorResponse(response, 'serviceSetupModal.error.updateVoicemailPostalCode'));
@@ -1386,7 +1385,6 @@
       $scope.$watchCollection(function () {
         return [vm.model.site.siteSteeringDigit, vm.model.site.extensionLength, vm.model.voicemailPrefix];
       }, function () {
-        vm.model.site.siteSteeringDigit = vm.model.voicemailPrefix.value;
         var extensionLength0, extensionLength9;
         switch (vm.model.site.extensionLength) {
           case '3':

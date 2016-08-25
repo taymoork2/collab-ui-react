@@ -917,6 +917,18 @@ describe('Controller: ServiceSetup', function () {
 
         expect(controller.siteAndSteeringDigitErrorValidation('', '', localscope)).toBe(true);
       });
+
+      it('should change the change site steering digit and send with the update site', function () {
+        controller.model.voicemailPrefix.value = '1';
+        controller.initNext();
+        $scope.$apply();
+        expect(ServiceSetup.updateSite).toHaveBeenCalledWith(model.site.uuid,
+          {
+            siteSteeringDigit: '1',
+            voicemailPilotNumber: 'undefined8040506021015100215030504070415',
+            voicemailPilotNumberGenerated: 'true'
+          });
+      });
     });
   });
 
