@@ -88,16 +88,19 @@
     };
 
     function activateDID() {
-
-
       $q.all([CommonLineService.loadInternalNumberPool(), CommonLineService.loadExternalNumberPool(), CommonLineService.loadPrimarySiteInfo(), toggleShowExtensions()])
         .finally(function () {
-          vm.isDisabled = false;
-
           $scope.internalNumberPool = CommonLineService.getInternalNumberPool();
           $scope.externalNumberPool = CommonLineService.getExternalNumberPool();
           $scope.externalNumber = $scope.externalNumberPool[0];
           $scope.telephonyInfo = CommonLineService.getTelephonyInfo();
+          if ($scope.internalNumberPool.length === 0 || $scope.externalNumberPool.length === 0) {
+            vm.isDisabled = true;
+          } else {
+            vm.isDisabled = false;
+          }
+
+
           if (vm.showExtensions === true) {
             CommonLineService.assignDNForUserList($scope.entitylist);
             $scope.validateDnForUser();
