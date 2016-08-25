@@ -6,7 +6,7 @@
     .factory('ScimPatchService', ScimPatchService);
 
   /* @ngInject */
-  function PartnerService($http, $rootScope, $q, $translate, Analytics, Authinfo, Auth, Config, TrialService, UrlConfig, ScimPatchService) {
+  function PartnerService($http, $rootScope, $q, $translate, Analytics, Authinfo, Auth, Config, TrialService, UrlConfig) {
     var managedOrgsUrl = UrlConfig.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId() + '/managedOrgs';
     var siteListUrl = UrlConfig.getAdminServiceUrl() + 'organizations/%s/siteUrls';
     var customerStatus = {
@@ -217,6 +217,8 @@
     }
 
     function patchManagedOrgs(uuid, customerOrgId) {
+      var authUrl = UrlConfig.getScimUrl(Authinfo.getOrgId()) + '/' + uuid;
+
       var payload = {
         'schemas': [
           'urn:scim:schemas:core:1.0',
@@ -228,15 +230,10 @@
         }]
       };
 
-      return ScimPatchService.update({
-        userId: uuid
-      },
-        payload
-      ).$promise.then(function (response) {
-        Analytics.trackUserPatch(response.meta.organizationID, response.id);
-        return $q.resolve(response);
-      }).catch(function (response) {
-        return $q.reject(response);
+      return $http({
+        method: 'PATCH',
+        url: authUrl,
+        data: payload
       });
     }
 
@@ -244,6 +241,7 @@
       return Auth.getAuthorizationUrlList().then(function (response) {
         if (response.status === 200 && (_.indexOf(response.data.managedOrgs, customerOrgId) < 0)) {
           patchManagedOrgs(response.data.uuid, customerOrgId);
+          Analytics.trackUserPatch(response.data.orgId, response.data.uuid);
         }
       });
     }
