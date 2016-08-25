@@ -17,9 +17,11 @@
     var minRoomSystems = 1;
     var maxRoomSystems = 3;
     var minCallDevices = 1;
-    var maxCallDevices = 5;
     var minTotalDevices = 1;
-    var maxTotalDevices = 7;
+    vm.maxCallDevices = 4;
+    vm.maxTotalDevices = 5;
+    var trialStartDate = _.get($stateParams, 'currentTrial.startDate');
+    var grandfatherMaxDeviceDate = new Date(2016, 8, 1);
 
     // merge is apparently not pass-by-reference
     vm.details = _.merge(_trialCallData.details, _trialRoomSystemData.details);
@@ -301,7 +303,7 @@
         labelClass: 'pull-left medium-6 text-right',
         inputClass: 'pull-left medium-5 medium-offset-1 ui--mt-',
         type: 'number',
-        max: maxCallDevices,
+        max: vm.maxCallDevices,
         min: minCallDevices,
         disabled: true,
       },
@@ -351,7 +353,7 @@
         labelClass: 'pull-left medium-6 text-right',
         inputClass: 'pull-left medium-5 medium-offset-1 ui--mt-',
         type: 'number',
-        max: maxCallDevices,
+        max: vm.maxCallDevices,
         min: minCallDevices,
         disabled: true,
       },
@@ -402,7 +404,7 @@
         labelClass: 'pull-left medium-6 text-right',
         inputClass: 'pull-left medium-5 medium-offset-1 ui--mt-',
         type: 'number',
-        max: maxCallDevices,
+        max: vm.maxCallDevices,
         min: minCallDevices,
         disabled: true,
       },
@@ -452,7 +454,7 @@
         labelClass: 'pull-left medium-6 text-right',
         inputClass: 'pull-left medium-5 medium-offset-1 ui--mt-',
         type: 'number',
-        max: maxCallDevices,
+        max: vm.maxCallDevices,
         min: minCallDevices,
         disabled: true,
       },
@@ -743,6 +745,10 @@
             }
           });
       }
+      if (trialStartDate && (trialStartDate < grandfatherMaxDeviceDate)) {
+        vm.maxCallDevices = 5;
+        vm.maxTotalDevices = 7;
+      }
     }
 
     function notifyLimits() {
@@ -774,7 +780,7 @@
       if (!device.enabled) {
         return true;
       } else {
-        return (quantity >= minCallDevices && quantity <= maxCallDevices);
+        return (quantity >= minCallDevices && quantity <= vm.maxCallDevices);
       }
     }
 
@@ -784,7 +790,7 @@
     }
 
     function validatePhonesQuantity($viewValue, $modelValue, scope) {
-      return _validateTypeQuantity(scope, _trialCallData.details.phones, minCallDevices, maxCallDevices);
+      return _validateTypeQuantity(scope, _trialCallData.details.phones, minCallDevices, vm.maxCallDevices);
     }
 
     function validateTotalQuantity($viewValue, $modelValue, scope) {
@@ -795,7 +801,7 @@
       if (!device.enabled || quantity === 0) {
         return true;
       } else {
-        return !(quantity < minTotalDevices || quantity > maxTotalDevices);
+        return !(quantity < minTotalDevices || quantity > vm.maxTotalDevices);
       }
     }
 
