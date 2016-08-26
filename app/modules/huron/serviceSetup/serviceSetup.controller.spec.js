@@ -180,10 +180,11 @@ describe('Controller: ServiceSetup', function () {
         ServiceSetup: ServiceSetup
       });
 
-      controller.firstTimeSetup = true;
       controller.form = form;
       $scope.$apply();
       $httpBackend.flush();
+
+      controller.firstTimeSetup = true;
     }));
     describe('auto attendants returns an array with an element', function () {
       it('should set the disableExtensions property as true', function () {
@@ -976,10 +977,11 @@ describe('Controller: ServiceSetup', function () {
         ServiceSetup: ServiceSetup
       });
 
-      controller.firstTimeSetup = true;
       controller.form = form;
       $scope.$apply();
       $httpBackend.flush();
+
+      controller.firstTimeSetup = true;
     }));
     describe('Site is created and voicemail is set with DID featuretoggle OFF', function () {
       it('voicemailPilotNumberGenerated is false', function () {
@@ -1076,11 +1078,12 @@ describe('Controller: ServiceSetup', function () {
         ServiceSetup: ServiceSetup
       });
 
-      controller.firstTimeSetup = true;
       controller.form = form;
 
       $scope.$apply();
       $httpBackend.flush();
+
+      controller.firstTimeSetup = true;
     }));
     describe('Site Create/Update and voicemail update Tests', function () {
 
@@ -1170,11 +1173,12 @@ describe('Controller: ServiceSetup', function () {
         ServiceSetup: ServiceSetup
       });
 
-      controller.firstTimeSetup = true;
       controller.form = form;
 
       $scope.$apply();
       $httpBackend.flush();
+
+      controller.firstTimeSetup = true;
     }));
     describe('Site and voicemail update with generated Voice Mail Pilot with Feature Toggle ON Tests', function () {
 
