@@ -94,11 +94,13 @@
           $scope.externalNumberPool = CommonLineService.getExternalNumberPool();
           $scope.externalNumber = $scope.externalNumberPool[0];
           $scope.telephonyInfo = CommonLineService.getTelephonyInfo();
-          if ($scope.internalNumberPool.length === 0 || $scope.externalNumberPool.length === 0) {
+          /*if ($scope.internalNumberPool.length === 0 || $scope.externalNumberPool.length === 0) {
             vm.isDisabled = true;
           } else {
             vm.isDisabled = false;
-          }
+          }*/
+
+          vm.isDisabled = !!($scope.internalNumberPool.length === 0 || $scope.externalNumberPool.length === 0);
 
 
           if (vm.showExtensions === true) {
