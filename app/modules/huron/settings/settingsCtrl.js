@@ -108,6 +108,8 @@
       disableExtensions: false
     };
 
+    vm.previousModel = _.cloneDeep(vm.model);
+
     vm.validations = {
       greaterThan: function (viewValue, modelValue, scope) {
         var value = modelValue || viewValue;
@@ -745,6 +747,7 @@
       model: vm.model.companyVoicemail,
       key: 'voicemailToEmail',
       type: 'cs-input',
+      className: 'save-popup-margin',
       templateOptions: {
         label: $translate.instant('serviceSetupModal.voicemailToEmailLabel'),
         type: 'checkbox',
@@ -1478,12 +1481,17 @@
     }
 
     function updateVoicemailPostalCode() {
-      var postalCode = vm.model.site.siteSteeringDigit.siteDialDigit + '-' + vm.model.site.siteCode + '-' + vm.model.site.extensionLength;
-      return ServiceSetup.updateVoicemailPostalcode(postalCode, vm.voicemailUserTemplate.objectId)
-        .catch(function (response) {
-          errors.push(Notification.processErrorResponse(response, 'serviceSetupModal.error.updateVoicemailPostalCode'));
-          return $q.reject(response);
-        });
+      if (vm.hasVoicemailService && vm.model.companyVoicemail.companyVoicemailEnabled
+        && (vm.model.site.siteSteeringDigit.siteDialDigit !== vm.previousModel.site.siteSteeringDigit.siteDialDigit
+        || vm.model.site.extensionLength !== vm.previousModel.site.extensionLength
+        || vm.model.site.siteCode !== vm.previousModel.site.siteCode)) {
+        var postalCode = vm.model.site.siteSteeringDigit.siteDialDigit + '-' + vm.model.site.siteCode + '-' + vm.model.site.extensionLength;
+        return ServiceSetup.updateVoicemailPostalcode(postalCode, vm.voicemailUserTemplate.objectId)
+          .catch(function (response) {
+            errors.push(Notification.processErrorResponse(response, 'serviceSetupModal.error.updateVoicemailPostalCode'));
+            return $q.reject(response);
+          });
+      }
     }
 
     function shouldUpdateVoicemailToEmail() {
@@ -1777,8 +1785,8 @@
         switch (vm.model.site.extensionLength) {
           case '3':
             vm.model.site.siteCode = 100;
-            extensionLength0 = '000';
-            extensionLength9 = '999';
+            extensionLength0 = '00';
+            extensionLength9 = '99';
             break;
           case '4':
             vm.model.site.siteCode = 100;

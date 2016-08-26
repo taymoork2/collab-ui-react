@@ -530,14 +530,14 @@
     "careTab": "Care",
     "careTabDesc": "Cloud Contact Center",
     "saveAs": "Save As",
+    "pdf": "PDF",
     "export": "Export",
     "allCalls": "All Calls",
     "videoCalls": "Video Calls",
     "audioCalls": "Audio Only Calls",
     "customer": "Customer",
     "customers": "Customers",
-    "customerSelect": "Select a customer",
-    "trackingId": "Tracking ID: "
+    "customerSelect": "Select a customer"
   },
   "careReportsPage": {
     "tasks": "Tasks",
@@ -909,6 +909,7 @@
     "errPartnerEmail": "Failed to resend welcome email to partner admin"
   },
   "weekDays": {
+    "daily": "Daily",
     "everyDay": "Every {{day}}",
     "day": "day",
     "monday": "Monday",
@@ -1190,7 +1191,7 @@
     "errorGettingOptionaVmDidToggle": "There was a problem getting the optionalVmDid toggle.",
     "externalNumberDescriptionText": "Select a number that users can call to check their voicemail from outside the company network.",
     "voicemailPrefixTitle": "Voicemail Access Prefix",
-    "voicemailPrefixDesc": "Select a prefix to reserve for dialing mailboxes other than your own personal phone. Extentions between {{number}}{{extensionLength0}} and {{number}}{{extensionLength9}} are not recommended for assignment.",
+    "voicemailPrefixDesc": "Select a prefix to reserve for dialing mailboxes other than your own personal phone. This number also makes up the user’s external voicemail access code. We do not recommend using numbers between {{number}}{{extensionLength0}} and {{number}}{{extensionLength9}}",
      "error": {
        "siteSteering": "First digit of Voicemail Access Prefix conflicts with the selected Outbound Dial Digit.",
        "outboundDialDigit": "Outbound Dial Digit conflicts with the first digit of the Voicemail Access Prefix.",
@@ -1746,6 +1747,12 @@
           }
         }
       }
+    },
+    "resourceGroups": {
+      "resourceGroupHeading": "Resource Group",
+      "setDescription": "Select the Resource Group the user is assigned to for this service.",
+      "noGroupSelected": "None",
+      "failedToSetGroup": "Failed to set the resource group"
     }
   },
   "ediscovery": {
@@ -3377,8 +3384,9 @@
       "overallTotalNumberOfCallsError": "There was an error while loading Total Number of calls",
       "total_calls": "Total Calls",
       "totalCallsDescription": "Calls hosted locally and that overflowed to the Cisco Collaboration Cloud.",
-      "onpremcalls": "Calls on prem |",
-      "cloudcalls": "Calls bursted to cloud"
+      "onpremcalls": "on premises |",
+      "cloudcalls": "overflowed to cloud",
+      "redirectedcalls": "redirected"
     },
     "serviceStatus": {
       "unknown": "Status unknown",
@@ -4927,6 +4935,7 @@
     "contact": "Contact",
     "managedBy": "Managed By",
     "supportedBy": "Supported By",
+    "orderSystem": "Order System",
     "organizationId": "Org. ID",
     "userId": "User ID",
     "ts": "TS(TAC)",
