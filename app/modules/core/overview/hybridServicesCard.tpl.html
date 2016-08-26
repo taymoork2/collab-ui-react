@@ -20,15 +20,6 @@
         ng-if="card.enabled">
   <span class="footer-content">
     <span class="badge warning ng-scope" ng-if="card.trial">Trial</span>
-    <a ng-href="{{overview.statusPageUrl}}" target="_blank" class="monitoring-cell" ng-show="card.showHealth">
-      <i class="icon icon-circle" ng-class="card.healthStatus || 'disabled'"></i>
-      <span>{{card.levelText}}</span>
-    </a>
-  </span>
-  <span class="footer-icons">
-    <a ng-href="{{card.settingsUrl}}" ng-click="cm.menuOpen = true" ng-if="card.settingsUrl">
-      &nbsp;<i class="icon icon-tools"></i>
-    </a>
   </span>
 </footer>
 

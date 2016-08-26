@@ -12,6 +12,6 @@
 .mediafusion-settings-table .red, .mediafusion-settings-table .yellow, .mediafusion-settings-table .green, .mediafusion-settings-table .installing {
 	flex: 1;
 }
-.mediafusion-settings-table .hercules-alarm{
-	color: red;
+.mediafusion-settings-table .hercules-alarm, .node-details .icon-error{
+	color: #D35545;
 }
