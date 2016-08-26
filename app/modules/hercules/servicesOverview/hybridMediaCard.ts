@@ -13,7 +13,11 @@ export class ServicesOverviewHybridMediaCard extends ServicesOverviewHybridCard 
   };
 
   private _buttons:Array<CardButton> = [
-    {name: 'servicesOverview.cards.hybridMedia.buttons.resources', link: 'mediaserviceV2', buttonClass: 'btn-link'},
+    {
+      name: 'servicesOverview.cards.hybridMedia.buttons.resources',
+      link: 'mediaserviceV2',
+      buttonClass: 'btn-link'
+    },
     {
       name: 'servicesOverview.cards.hybridMedia.buttons.settings',
       link: 'mediaserviceV2/settings',
@@ -36,7 +40,7 @@ export class ServicesOverviewHybridMediaCard extends ServicesOverviewHybridCard 
       name: 'servicesOverview.cards.hybridMedia.title',
       description: 'servicesOverview.cards.hybridMedia.description',
       activeServices: ['squared-fusion-media'],
-      statusServices: ['squared-fusion-media'],
+      statusService: 'squared-fusion-media',
       statusLink: 'mediaserviceV2',
       active: false,
       display : false,
@@ -46,4 +50,3 @@ export class ServicesOverviewHybridMediaCard extends ServicesOverviewHybridCard 
     this._loading = false;
   }
 }
-

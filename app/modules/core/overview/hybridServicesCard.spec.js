@@ -42,8 +42,12 @@ describe('OverviewHybridServicesCard', function () {
   });
 
   it('should show the card when services are set up', function () {
-    spyOn(FusionClusterService, 'processClustersToSeeIfServiceIsSetup');
-    FusionClusterService.processClustersToSeeIfServiceIsSetup.and.returnValue(true);
+    spyOn(FusionClusterService, 'getStatusForService');
+    FusionClusterService.getStatusForService.and.returnValue({
+      serviceId: '',
+      setup: true,
+      status: 'operational'
+    });
     var clustersWithManyServices = getJSONFixture('hercules/disco-systems-cluster-list.json');
     FusionClusterService.getAll.and.returnValue($q.resolve(clustersWithManyServices));
 
@@ -54,8 +58,12 @@ describe('OverviewHybridServicesCard', function () {
   });
 
   it('should not show Call if it is not set up, but still show Calendar', function () {
-    spyOn(FusionClusterService, 'processClustersToSeeIfServiceIsSetup').and.callFake(function (serviceId) {
-      return serviceId === 'squared-fusion-cal';
+    spyOn(FusionClusterService, 'getStatusForService').and.callFake(function (serviceId) {
+      return {
+        serviceId: serviceId,
+        setup: serviceId === 'squared-fusion-cal',
+        status: 'operational'
+      };
     });
     var clustersWithManyServices = getJSONFixture('hercules/disco-systems-cluster-list.json');
     FusionClusterService.getAll.and.returnValue($q.resolve(clustersWithManyServices));
