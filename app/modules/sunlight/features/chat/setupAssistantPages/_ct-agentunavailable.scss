@@ -68,7 +68,10 @@
     }
 
     .unavailable-msg {
-      height: 15rem;
+      height: 12rem;
+      width: 17rem;
+      overflow: hidden;
+      @include vr-spacing(mb, 1);
       @include vr-spacing(pv, 1);
       font-family: $brand-font-cisco-TT-Light;
     }
