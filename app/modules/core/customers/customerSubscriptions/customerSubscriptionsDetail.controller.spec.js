@@ -1,4 +1,3 @@
-/* eslint-disable */
 'use strict';
 
 describe('Controller: customerSubscriptionsDetailCtrl', function () {
@@ -10,7 +9,7 @@ describe('Controller: customerSubscriptionsDetailCtrl', function () {
     $scope = $rootScope.$new();
     $controller = _$controller_;
     $q = _$q_;
-    spyOn(Auth, 'getCustomerAccount').and.returnValue($q.when({data:customerResponseTest}));
+    spyOn(Auth, 'getCustomerAccount').and.returnValue($q.when({ data: customerResponseTest }));
   }));
   function initController() {
     controller = $controller('CustomerSubscriptionsDetailCtrl', {
@@ -24,7 +23,7 @@ describe('Controller: customerSubscriptionsDetailCtrl', function () {
       expect(controller).toBeDefined();
       expect(controller.getSubscriptions).toBeDefined();
       expect(controller.subscriptions).toBeDefined();
-      expect(controller.subscriptions[0].trainSite).toEqual('AtlasTestRitwchau05.webex.com');
+      expect(controller.subscriptions[0].siteUrl).toEqual('AtlasTestRitwchau05.webex.com');
       expect(controller.subscriptions[0].subscriptionId).toEqual('Test-Sub-08072016a');
       expect(controller.subscriptions[0].offerName).toEqual('MC');
     });
