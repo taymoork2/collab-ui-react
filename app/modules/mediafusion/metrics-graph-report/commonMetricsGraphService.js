@@ -148,7 +148,7 @@
         //'dataDateFormat': 'YYYY-MM-DDTJJ:NN:SSZ',
         'categoryField': categoryField,
         'categoryAxis': catAxis,
-        'mouseWheelZoomEnabled': true,
+        'mouseWheelZoomEnabled': false,
         "chartCursor": {
           "cursorColor": "#55bb76",
           "categoryBalloonDateFormat": "JJ:NN, DD MMMM",

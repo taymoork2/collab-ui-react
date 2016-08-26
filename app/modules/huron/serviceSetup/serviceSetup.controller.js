@@ -1367,10 +1367,8 @@
       // Here the form can be processed in parallel,
       // most new save actions should be added in this function.
       function saveForm() {
-        var promises = [];
-        promises.push(saveInternalNumbers());
-        promises.push(saveCompanySite());
-        return $q.all(promises);
+        return saveCompanySite()
+          .then(saveInternalNumbers);
       }
 
       function processErrors() {
