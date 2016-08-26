@@ -191,7 +191,6 @@
                 removeEntitlementFromCurrentUser($scope.callServiceConnect.id);
               }
             }
-            console.log('Yes baby', $stateParams.currentUser.entitlements);
             $scope.setShouldShowButtons();
             $timeout(function () {
               updateStatus();
