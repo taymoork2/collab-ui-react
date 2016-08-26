@@ -1201,6 +1201,11 @@
      "warning": {
        "siteSteering": "First digit of Voicemail Access Prefix conflicts with the first digit of an internal extension range. If you use this prefix, it may cause a delay when dialing extensions starting with the same number.",
         "outboundDialDigit": "Outbound Dial Digit conflicts with the first digit of an internal extension range. If you use this digit, it may cause a delay when dialing extensions starting with the same number."
+     },
+     "saveModal": {
+       "title": "Dial Plan Settings",
+       "message1": "Are you sure you want to change your dial plan settings?",
+       "message2": "Changing dial plan settings during business hours can take a few minutes to propagate through the system and prevent users from placing calls during that time."
      }
   },
   "dirsyncModal": {
