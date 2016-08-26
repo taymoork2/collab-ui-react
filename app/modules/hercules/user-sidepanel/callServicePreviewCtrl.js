@@ -40,7 +40,7 @@
       show: false,
       saving: false,
       init: function () {
-        this.options = [{ label: $translate.instant('hercules.resourceGroups.noGroupSelected'), value: '' }];
+        this.options = [{label: $translate.instant('hercules.resourceGroups.noGroupSelected'), value: ''}];
         this.selected = this.current = this.options[0];
       },
       reset: function () {
@@ -229,7 +229,7 @@
 
     var setResourceGroupOnUser = function (resourceGroupId) {
       $scope.resourceGroup.saving = true;
-      var props = { userId: $scope.currentUser.id, resourceGroups: { 'squared-fusion-uc': resourceGroupId } };
+      var props = {userId: $scope.currentUser.id, resourceGroups: {'squared-fusion-uc': resourceGroupId}};
       USSService2.updateUserProps(props).then(function () {
         $scope.resourceGroup.current = $scope.resourceGroup.selected;
         $scope.setShouldShowButtons();
