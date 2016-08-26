@@ -5,10 +5,9 @@ import { ServicesOverviewCallCard } from './cloudCallCard';
 import { ServicesOverviewCareCard } from './careCard';
 import { ServicesOverviewHybridManagementCard } from './hybridManagementCard';
 import { ServicesOverviewHybridManagementF410Card } from './hybridManagementF410Card';
-import { ServicesOverviewCalendarCard } from './calendarCard';
+import { ServicesOverviewHybridCalendarCard } from './hybridCalendarCard';
 import { ServicesOverviewHybridCallCard } from './hybridCallCard';
 import { ServicesOverviewHybridMediaCard } from './hybridMediaCard';
-import { ServicesOverviewHybridContextCard } from './hybridContextCard';
 
 /* @ngInject */
 function ServicesOverviewCardFactory(Authinfo) {
@@ -23,10 +22,9 @@ function ServicesOverviewCardFactory(Authinfo) {
         new ServicesOverviewCareCard(Authinfo),
         new ServicesOverviewHybridManagementCard(),
         new ServicesOverviewHybridManagementF410Card(),
-        new ServicesOverviewCalendarCard(),
+        new ServicesOverviewHybridCalendarCard(),
         new ServicesOverviewHybridCallCard(),
-        new ServicesOverviewHybridMediaCard(),
-        // new ServicesOverviewHybridContextCard() //removed until feature is ready.
+        new ServicesOverviewHybridMediaCard()
       ];
     }
   };

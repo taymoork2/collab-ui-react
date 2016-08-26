@@ -5229,9 +5229,10 @@
       "setup": "Set up"
     },
     "cardStatus": {
-      "running": "Operational",
-      "alarms": "Impaired Service",
-      "error": "Outage",
+      "operational": "Operational",
+      "impaired": "Impaired Service",
+      "outage": "Outage",
+      "unknown": "Unknown",
       "disabled": "Disabled"
     }
   },
