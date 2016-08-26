@@ -77,6 +77,11 @@
                 class="h5 inputField ct-attribute-field-textbox large-11"
                 type="text"
                 ng-model="attribute.value"
+                cs-input
+                name="{{attribute.name }}"
+                cs-input-messages="careChatSA.singleLineValidationMessage"
+                ng-maxlength="careChatSA.lengthConstants.singleLineMaxCharLimit"
+                ng-model-options="{ allowInvalid: true }"
               />
 
               <div ng-if="attribute.name === 'required'" class="h6 cs-radio-group ct-attribute-field-radio">
@@ -161,7 +166,12 @@
                <input id="orgText"
                       class="h5 inputField ct-attribute-field-textbox large-11"
                       type="text"
-                      ng-model="careChatSA.orgName"
+                      ng-model="careChatSA.template.configuration.pages.customerInformation.fields.welcomeHeader.attributes[1].value"
+                      cs-input
+                      name="orgText"
+                      cs-input-messages="careChatSA.singleLineValidationMessage"
+                      ng-maxlength="careChatSA.lengthConstants.singleLineMaxCharLimit"
+                      ng-model-options="{ allowInvalid: true }"
                 />
               </div>
           </section>
