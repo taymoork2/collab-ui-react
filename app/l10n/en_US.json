@@ -3489,6 +3489,7 @@
       "noAlarms": "No alarms reported",
       "hostImpact": "Host Impacted",
       "nodeImpact": "Node Impacted",
+      "nodesImpact": "Nodes Impacted",
       "raised": "Raised"
     },
     "add-resource-dialog": {
@@ -3528,7 +3529,7 @@
       "noProceed-helptext": "(Software will automatically download)",
       "noInfo": "Install and configure the software on your server and return to Cisco Cloud Collaboration Management to register your Hybrid Media Node.",
       "noRetryInfo": "Software did not automatically download? <a href='https://7f3b835a2983943a12b7-f3ec652549fc8fa11516a139bfb29b79.ssl.cf5.rackcdn.com/Media-Fusion-Management-Connector/mfusion.ova'>Try Again.</a>",
-      "noDesc1": "For detailed on installation and configuration, visit ",
+      "noDesc1": "For details on installation and configuration, visit ",
       "noDesc2": "Help Central.",
       "noDesc3": "After installation and configuration is complete, return to Cloud Collaboration Management and register your Hybrid Media Node.",
       "yesInfo": "Assign your Hybrid Media Node to a cluster and enter the hostname or IP address."
