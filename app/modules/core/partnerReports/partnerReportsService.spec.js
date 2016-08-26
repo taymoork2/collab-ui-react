@@ -51,13 +51,13 @@ describe('Service: Partner Reports Service', function () {
     PartnerReportService = _PartnerReportService_;
     Notification = _Notification_;
 
-    spyOn(Notification, 'notify');
+    spyOn(Notification, 'errorWithTrackingId');
 
     managedOrgsUrl = UrlConfig.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId() + '/managedOrgs';
 
     var baseUrl = UrlConfig.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/reports/';
     activeUsersDetailedUrl = baseUrl + 'detailed/managedOrgs/activeUsers?&intervalCount=7&intervalType=day&spanCount=1&spanType=day&cache=' + cacheValue;
-    mostActiveUsersUrl = baseUrl + 'topn/managedOrgs/activeUsers?reportType=weeklyUsage&cache=' + cacheValue;
+    mostActiveUsersUrl = baseUrl + 'topn/managedOrgs/activeUsers?reportType=weeklyUsage&intervalCount=7&intervalType=day&spanCount=1&spanType=day&cache=' + cacheValue;
     mediaQualityUrl = baseUrl + 'detailed/managedOrgs/callQuality?&intervalCount=7&intervalType=day&spanCount=1&spanType=day&cache=' + cacheValue;
     callMetricsUrl = baseUrl + 'detailed/managedOrgs/callMetrics?&intervalCount=7&intervalType=day&spanCount=7&spanType=day&cache=' + cacheValue;
     registeredEndpointsUrl = baseUrl + 'trend/managedOrgs/registeredEndpoints?&intervalCount=7&intervalType=day&spanCount=1&spanType=day&cache=' + cacheValue;
@@ -116,7 +116,7 @@ describe('Service: Partner Reports Service', function () {
       activePopResponse[0].percentage = 0;
 
       PartnerReportService.getActiveUserData(customerData.customerOptions, timeFilter).then(function (response) {
-        expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
+        expect(Notification.errorWithTrackingId).toHaveBeenCalled();
         expect(response).toEqual({
           graphData: [],
           isActiveUsers: false,
@@ -140,7 +140,7 @@ describe('Service: Partner Reports Service', function () {
       $httpBackend.whenGET(mostActiveUsersUrl).respond(500, error);
 
       PartnerReportService.getActiveTableData(customerData.customerOptions, timeFilter).then(function (response) {
-        expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
+        expect(Notification.errorWithTrackingId).toHaveBeenCalled();
         expect(response).toEqual([]);
       });
       $httpBackend.flush();

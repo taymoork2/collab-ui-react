@@ -73,7 +73,7 @@ describe('Service: Customer Reports Service', function () {
     CustomerReportService = _CustomerReportService_;
     Notification = _Notification_;
 
-    spyOn(Notification, 'notify');
+    spyOn(Notification, 'errorWithTrackingId');
 
     var baseUrl = UrlConfig.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/reports/';
     var customerView = '&isCustomerView=true';
@@ -142,7 +142,7 @@ describe('Service: Customer Reports Service', function () {
           graphData: [],
           isActiveUsers: false
         });
-        expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
+        expect(Notification.errorWithTrackingId).toHaveBeenCalled();
       });
 
       $httpBackend.flush();
@@ -163,7 +163,7 @@ describe('Service: Customer Reports Service', function () {
 
       CustomerReportService.getMostActiveUserData(timeFilter).then(function (response) {
         expect(response).toEqual([]);
-        expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
+        expect(Notification.errorWithTrackingId).toHaveBeenCalled();
       });
 
       $httpBackend.flush();
@@ -190,7 +190,7 @@ describe('Service: Customer Reports Service', function () {
 
       CustomerReportService.getAvgRoomData(timeFilter).then(function (response) {
         expect(response).toEqual([]);
-        expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
+        expect(Notification.errorWithTrackingId).toHaveBeenCalled();
       });
 
       $httpBackend.flush();
@@ -215,7 +215,7 @@ describe('Service: Customer Reports Service', function () {
 
       CustomerReportService.getFilesSharedData(timeFilter).then(function (response) {
         expect(response).toEqual([]);
-        expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
+        expect(Notification.errorWithTrackingId).toHaveBeenCalled();
       });
 
       $httpBackend.flush();
@@ -238,7 +238,7 @@ describe('Service: Customer Reports Service', function () {
 
       CustomerReportService.getMediaQualityData(timeFilter).then(function (response) {
         expect(response).toEqual([]);
-        expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
+        expect(Notification.errorWithTrackingId).toHaveBeenCalled();
       });
 
       $httpBackend.flush();
@@ -261,7 +261,7 @@ describe('Service: Customer Reports Service', function () {
 
       CustomerReportService.getCallMetricsData(timeFilter).then(function (response) {
         expect(response.dataProvider).toEqual([]);
-        expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
+        expect(Notification.errorWithTrackingId).toHaveBeenCalled();
       });
 
       $httpBackend.flush();
@@ -287,7 +287,7 @@ describe('Service: Customer Reports Service', function () {
           graphData: [],
           filterArray: []
         });
-        expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
+        expect(Notification.errorWithTrackingId).toHaveBeenCalled();
       });
 
       $httpBackend.flush();
