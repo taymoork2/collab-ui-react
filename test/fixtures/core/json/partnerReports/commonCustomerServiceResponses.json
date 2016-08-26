@@ -66,8 +66,11 @@
           "label": "reportsPage.saveAs",
           "title": "reportsPage.saveAs",
           "class": "export-list",
-          "menu": ["PNG", "JPG", "PDF"]
-        }, "PRINT"]
+          "menu": ["PNG", "JPG"]
+        }, {
+          "label": "reportsPage.pdf",
+          "title": "reportsPage.pdf"
+        }]
       }]
     },
     "prefixesOfBigNumbers": [{

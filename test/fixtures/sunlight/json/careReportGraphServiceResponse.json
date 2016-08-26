@@ -375,6 +375,21 @@
   ],
   "taskAggregateGraphs": [
     {
+      "title": "careReportsPage.assigned",
+      "lineColor": "#F5A623",
+      "fillColors": "#FFA200",
+      "valueField": "numWorkingTasks",
+      "lineAlpha": 1,
+      "lineThickness": 1,
+      "marginTop": 10,
+      "marginLeft": 0,
+      "plotAreaBorderAlpha": 0,
+      "legendValueText": " ",
+      "fillAlphas": 0.1,
+      "balloonColor": "#AEAEAF",
+      "showBalloon": false
+    },
+    {
       "title": "careReportsPage.in-queue",
       "lineColor": "#F5A623",
       "fillColors": "#F5A623",
@@ -394,21 +409,6 @@
       "plotAreaBorderAlpha": 0,
       "legendValueText": " ",
       "showBalloon": true
-    },
-    {
-      "title": "careReportsPage.assigned",
-      "lineColor": "#43A942",
-      "fillColors": "#017900",
-      "valueField": "numWorkingTasks",
-      "lineAlpha": 1,
-      "lineThickness": 1,
-      "marginTop": 10,
-      "marginLeft": 0,
-      "plotAreaBorderAlpha": 0,
-      "legendValueText": " ",
-      "fillAlphas": 0.1,
-      "balloonColor": "#AEAEAF",
-      "showBalloon": false
     }
   ],
   "csatGraphs": [

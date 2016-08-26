@@ -39,10 +39,7 @@
       site: {
         siteIndex: DEFAULT_SITE_INDEX,
         steeringDigit: DEFAULT_SD,
-        siteSteeringDigit: {
-          voicemailPrefixLabel: DEFAULT_SITE_SD.concat(DEFAULT_SITE_CODE),
-          siteDialDigit: DEFAULT_SITE_SD
-        },
+        siteSteeringDigit: DEFAULT_SITE_SD,
         extensionLength: DEFAULT_EXT_LEN,
         siteCode: DEFAULT_SITE_CODE,
         timeZone: DEFAULT_TZ,
@@ -50,6 +47,10 @@
         vmCluster: undefined,
         emergencyCallBackNumber: undefined,
         voicemailPilotNumberGenerated: 'false'
+      },
+      voicemailPrefix: {
+        label: DEFAULT_SITE_SD.concat(DEFAULT_SITE_CODE),
+        value: DEFAULT_SITE_SD
       },
       //var to hold ranges in sync with DB
       numberRanges: [],
@@ -195,14 +196,14 @@
 
     vm.siteSteeringDigitWarningValidation = function () {
       var test = _.find(vm.model.displayNumberRanges, function (range) {
-        return _.inRange(_.get(vm, 'model.site.siteSteeringDigit.voicemailPrefixLabel'), _.get(range, 'beginNumber'), _.get(range, 'endNumber'));
+        return _.inRange(_.get(vm, 'model.voicemailPrefix.label'), _.get(range, 'beginNumber'), _.get(range, 'endNumber'));
       });
 
       return !_.isUndefined(test);
     };
 
     vm.siteAndSteeringDigitErrorValidation = function (view, model, scope) {
-      if (_.get(vm, 'model.site.siteSteeringDigit.siteDialDigit') === _.get(vm, 'model.site.steeringDigit')) {
+      if (_.get(vm, 'model.voicemailPrefix.value') === _.get(vm, 'model.site.steeringDigit')) {
         $scope.$emit('wizardNextButtonDisable', true);
         scope.fields[0].formControl.$setValidity('', false);
         return true;
@@ -482,8 +483,8 @@
     }];
 
     vm.ftswVoicemailPrefixSelection = [{
-      model: vm.model.site,
-      key: 'siteSteeringDigit',
+      model: vm.model,
+      key: 'voicemailPrefix',
       type: 'select',
       className: 'service-setup bottom-margin',
       templateOptions: {
@@ -492,7 +493,7 @@
         label: $translate.instant('serviceSetupModal.voicemailPrefixTitle'),
         description: $translate.instant('serviceSetupModal.voicemailPrefixDesc',
           {
-            'number': vm.model.site.siteSteeringDigit.siteDialDigit,
+            'number': vm.model.voicemailPrefix.value,
             'extensionLength0': vm.model.previousLength === '5' ? '0000' : '000',
             'extensionLength9': vm.model.previousLength === '5' ? '9999' : '999'
           }),
@@ -500,8 +501,8 @@
         errorMsg: $translate.instant('serviceSetupModal.error.siteSteering'),
         isWarn: false,
         isError: false,
-        labelfield: 'voicemailPrefixLabel',
-        valuefield: 'siteDialDigit',
+        labelfield: 'label',
+        valuefield: 'value',
         options: []
       },
       expressionProperties: {
@@ -721,10 +722,11 @@
 
               vm.model.site.steeringDigit = site.steeringDigit;
               vm.model.ftswSteeringDigit = site.steeringDigit;
-              vm.model.site.siteSteeringDigit = {
-                siteDialDigit: site.siteSteeringDigit,
-                voicemailPrefixLabel: site.siteSteeringDigit.concat(site.siteCode)
+              vm.model.voicemailPrefix = {
+                value: site.siteSteeringDigit,
+                label: site.siteSteeringDigit.concat(site.siteCode)
               };
+              vm.model.site.siteSteeringDigit = site.siteSteeringDigit;
               vm.model.site.extensionLength = vm.model.previousLength = site.extensionLength;
               vm.model.site.siteCode = site.siteCode;
               vm.model.site.vmCluster = site.vmCluster;
@@ -1181,8 +1183,8 @@
           if (_.get(vm, 'model.site.timeZone.id') !== _.get(vm, 'previousTimeZone.id')) {
             siteData.timeZone = vm.model.site.timeZone.id;
           }
-          if (vm.model.site.siteSteeringDigit.siteDialDigit !== vm.model.ftswSiteSteeringDigit.siteDialDigit) {
-            siteData.siteSteeringDigit = vm.model.site.siteSteeringDigit.siteDialDigit;
+          if (vm.model.site.siteSteeringDigit !== vm.model.voicemailPrefix.value) {
+            siteData.siteSteeringDigit = vm.model.voicemailPrefix.value;
           }
           if (vm.model.site.steeringDigit !== vm.model.ftswSteeringDigit) {
             siteData.steeringDigit = vm.model.site.steeringDigit;
@@ -1342,10 +1344,8 @@
       // Here the form can be processed in parallel,
       // most new save actions should be added in this function.
       function saveForm() {
-        var promises = [];
-        promises.push(saveInternalNumbers());
-        promises.push(saveCompanySite());
-        return $q.all(promises);
+        return saveCompanySite()
+          .then(saveInternalNumbers);
       }
 
       function processErrors() {
@@ -1382,14 +1382,15 @@
 
     function _buildVoicemailPrefixOptions($scope) {
       $scope.$watchCollection(function () {
-        return [vm.model.site.siteSteeringDigit, vm.model.site.extensionLength, vm.model.site.steeringDigit];
+        return [vm.model.site.siteSteeringDigit, vm.model.site.extensionLength, vm.model.voicemailPrefix];
       }, function () {
+        vm.model.site.siteSteeringDigit = vm.model.voicemailPrefix.value;
         var extensionLength0, extensionLength9;
         switch (vm.model.site.extensionLength) {
           case '3':
             vm.model.site.siteCode = 100;
-            extensionLength0 = '000';
-            extensionLength9 = '999';
+            extensionLength0 = '00';
+            extensionLength9 = '99';
             break;
           case '4':
             vm.model.site.siteCode = 100;
@@ -1411,13 +1412,13 @@
         var values = [];
         _.forEach(vm.steeringDigits, function (digit) {
           values.push({
-            siteDialDigit: digit,
-            voicemailPrefixLabel: digit.concat(vm.model.site.siteCode)
+            value: digit,
+            label: digit.concat(vm.model.site.siteCode)
           });
         });
         $scope.to.description = $translate.instant('serviceSetupModal.voicemailPrefixDesc',
           {
-            'number': vm.model.site.siteSteeringDigit.siteDialDigit,
+            'number': vm.model.voicemailPrefix.value,
             'extensionLength0': extensionLength0,
             'extensionLength9': extensionLength9
           });

@@ -24,6 +24,7 @@
     var monthFormat = "MMMM";
     var timezone = "Etc/GMT";
     var cacheValue = (parseInt(moment.utc().format('H'), 10) >= 8);
+    var options = ['weeklyUsage', 'monthlyUsage', 'threeMonthUsage'];
 
     // Promise Tracking
     var ABORT = 'ABORT';
@@ -67,7 +68,7 @@
           return returnData;
         }
       }, function (response) {
-        return returnErrorCheck(response, 'Active user data not returned for customer.', $translate.instant('activeUsers.overallActiveUserGraphError'), returnData);
+        return returnErrorCheck(response, 'Active user data not returned for customer.', 'activeUsers.overallActiveUserGraphError', returnData);
       });
     }
 
@@ -78,14 +79,7 @@
       }
       mostActivePromise = $q.defer();
 
-      var query = "?type=weeklyUsage&cache=";
-      if (filter.value === 1) {
-        query = "?type=monthlyUsage&cache=";
-      } else if (filter.value === 2) {
-        query = "?type=threeMonthUsage&cache=";
-      }
-
-      return getService(urlBase + mostActiveUrl + query + cacheValue, mostActivePromise).then(function (response) {
+      return getService(urlBase + mostActiveUrl + getReportTypeQuery(options[filter.value]), mostActivePromise).then(function (response) {
         var data = [];
         if (angular.isDefined(response) && angular.isDefined(response.data) && angular.isDefined(response.data.data) && angular.isArray(response.data.data)) {
           angular.forEach(response.data.data, function (item) {
@@ -100,7 +94,7 @@
         }
         return data;
       }, function (response) {
-        return returnErrorCheck(response, 'Most active user data not returned for customer.', $translate.instant('activeUsers.mostActiveError'), []);
+        return returnErrorCheck(response, 'Most active user data not returned for customer.', 'activeUsers.mostActiveError', []);
       });
     }
 
@@ -197,7 +191,7 @@
         groupData = response.data;
         return;
       }).error(function (response, status) {
-        groupData = returnErrorCheck(status, 'Group rooms data not returned for customer.', $translate.instant('avgRooms.groupError'), []);
+        groupData = returnErrorCheck(status, 'Group rooms data not returned for customer.', 'avgRooms.groupError', []);
         return;
       });
       promises.push(groupPromise);
@@ -207,7 +201,7 @@
         oneToOneData = response.data;
         return;
       }).error(function (response, status) {
-        oneToOneData = returnErrorCheck(status, 'One to One rooms data not returned for customer.', $translate.instant('avgRooms.oneToOneError'), []);
+        oneToOneData = returnErrorCheck(status, 'One to One rooms data not returned for customer.', 'avgRooms.oneToOneError', []);
         return;
       });
       promises.push(oneToOnePromise);
@@ -217,7 +211,7 @@
         avgData = response.data;
         return;
       }).error(function (response, status) {
-        avgData = returnErrorCheck(status, 'Average rooms data not returned for customer.', $translate.instant('avgRooms.avgError'), []);
+        avgData = returnErrorCheck(status, 'Average rooms data not returned for customer.', 'avgRooms.avgError', []);
         return;
       });
       promises.push(avgPromise);
@@ -363,7 +357,7 @@
         contentShareSizesData = response.data;
         return;
       }).error(function (response, status) {
-        contentShareSizesData = returnErrorCheck(status, 'Shared content data sizes not returned for customer.', $translate.instant('filesShared.contentShareSizesDataError'), []);
+        contentShareSizesData = returnErrorCheck(status, 'Shared content data sizes not returned for customer.', 'filesShared.contentShareSizesDataError', []);
         return;
       });
       promises.push(contentShareSizesPromise);
@@ -486,7 +480,7 @@
         }
         return returnArray;
       }, function (response) {
-        return returnErrorCheck(response, 'Call metrics data not returned for customer.', $translate.instant('callMetrics.customerError'), returnArray);
+        return returnErrorCheck(response, 'Call metrics data not returned for customer.', 'callMetrics.customerError', returnArray);
       });
     }
 
@@ -584,7 +578,7 @@
         }
         return graph;
       }, function (response) {
-        return returnErrorCheck(response, 'Call quality data not returned for customer.', $translate.instant('mediaQuality.customerError'), []);
+        return returnErrorCheck(response, 'Call quality data not returned for customer.', 'mediaQuality.customerError', []);
       });
     }
 
@@ -598,7 +592,7 @@
       return getService(urlBase + registeredEndpoints + getQuery(filter, cacheValue), deviceCancelPromise).then(function (response) {
         return analyzeDeviceData(response, filter);
       }, function (response) {
-        return returnErrorCheck(response, 'Registered Endpoints data not returned for customer.', $translate.instant('registeredEndpoints.customerError'), {
+        return returnErrorCheck(response, 'Registered Endpoints data not returned for customer.', 'registeredEndpoints.customerError', {
           graphData: [],
           filterArray: []
         });
@@ -682,6 +676,13 @@
       return deviceArray;
     }
 
+    function getReportTypeQuery(option, cacheOption) {
+      if (angular.isUndefined(cacheOption) || cacheOption === null) {
+        cacheOption = cacheValue;
+      }
+      return "?type=" + option + "&cache=" + cacheOption;
+    }
+
     function getQuery(filter, cacheOption) {
       if (angular.isUndefined(cacheOption) || cacheOption === null) {
         cacheOption = cacheValue;
@@ -761,11 +762,7 @@
         } else {
           Log.debug(debugMessage + '  Status: ' + error.status);
         }
-        if (angular.isDefined(error.data) && angular.isDefined(error.data.trackingId) && (error.data.trackingId !== null)) {
-          Notification.notify([message + '<br>' + $translate.instant('reportsPage.trackingId') + error.data.trackingId], 'error');
-        } else {
-          Notification.notify([message], 'error');
-        }
+        Notification.errorWithTrackingId(error, message);
         return returnItem;
       } else {
         return ABORT;

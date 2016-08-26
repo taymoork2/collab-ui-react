@@ -41,6 +41,7 @@
     vm.supportsExtendedInformation = false;
     vm.cardsAvailable = false;
     vm.adminUsersAvailable = false;
+    vm.findServiceOrder = findServiceOrder;
 
     HelpdeskService.getOrg(vm.orgId).then(initOrgView, XhrNotificationService.notify);
 
@@ -109,6 +110,7 @@
       }, XhrNotificationService.notify);
       findManagedByOrgs(org);
       findWebExSites(org);
+      findServiceOrder(vm.orgId);
       findAdminUsers(org);
       vm.supportedBy = isTrials(org.orgSettings) ? $translate.instant('helpdesk.trials') : $translate.instant('helpdesk.ts');
       angular.element(".helpdesk-details").focus();
@@ -146,6 +148,19 @@
           vm.org.webExSites = sites;
         }, XhrNotificationService.notify);
       }
+    }
+
+    function findServiceOrder(orgId) {
+      HelpdeskService.getServiceOrder(orgId).then(function (order) {
+        var orderingSystemTypes = {
+          'CCW': 'CCW',
+          'APP_DIRECT': 'Telstra AppDirect Marketplace(TAM)',
+          'DIGITAL_RIVER': 'Digital River',
+          'ATLAS_TRIALS': 'Spark Trial',
+          'default': order.orderingTool
+        };
+        vm.orderSystem = orderingSystemTypes[order.orderingTool] || orderingSystemTypes['default'];
+      }, XhrNotificationService.notify);
     }
 
     function findAdminUsers(org) {
