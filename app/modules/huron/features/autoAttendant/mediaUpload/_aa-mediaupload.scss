@@ -1,0 +1,63 @@
+.aa-media-upload {
+
+  .drop-box {
+    display: inline-block;
+    @include vr-spacing(mb, 1);
+    @include vr-spacing(pt, .75);
+    @include vr-spacing(pb, .75);
+    @include vr-spacing(pl, .75);
+    @include vr-spacing(pr, .75);
+    width: 100%;
+    height: 8rem;
+    background-color: $brand-white;
+    border: 1px solid $gray-light;
+    border-radius: 3px;
+    color: $gray-light;
+
+    &:hover {
+      cursor: pointer;
+      border-color: $brand-primary;
+    }
+
+    &.dragover {
+      border-color: $brand-primary;
+    }
+
+    &.dragover-error {
+      border-color: $brand-danger;
+    }
+
+    .icon-upload-contain {
+      font-size: 2.5rem;
+      color: $color-primary-base;
+    }
+
+    .progress-supplementary {
+      @include vr-spacing(mv, .5);
+      @include vr-spacing(mr, .5);
+      color: $gray-dark-4;
+    }
+  }
+
+  .top-bottom {
+    @include vr-spacing(mv, .75);
+  }
+
+  .center {
+    text-align: center;
+  }
+
+  .italic {
+    font-style: italic;
+  }
+
+  .spread-light {
+    color: $gray-light-1;
+    line-height: 1.5rem;
+    font-size: .75rem;
+  }
+
+  .green {
+    color: $color-cta-base;
+  }
+}

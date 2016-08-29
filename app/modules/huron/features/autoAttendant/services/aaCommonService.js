@@ -13,6 +13,7 @@
     var aaDialByExtensionStatus = false;
     var aaCENumberStatus = false;
     var routeQueueToggle = false;
+    var mediaUploadToggle = false;
 
     var invalidList = {};
     var service = {
@@ -24,6 +25,8 @@
       setCENumberStatus: setCENumberStatus,
       setRouteQueueToggle: setRouteQueueToggle,
       isRouteQueueToggle: isRouteQueueToggle,
+      setMediaUploadToggle: setMediaUploadToggle,
+      isMediaUploadToggle: isMediaUploadToggle,
       isValid: isValid,
       setIsValid: setIsValid,
       getInvalid: getInvalid,
@@ -98,11 +101,22 @@
       routeQueueToggle = status;
     }
 
+    function setMediaUploadToggle(status) {
+      mediaUploadToggle = status;
+    }
+
     /**
      * Will check the toggle status for Queue which is set while aaPhoneMenuCtrl
      */
     function isRouteQueueToggle() {
       return routeQueueToggle;
+    }
+
+    /**
+    * will check the toggle status for queue which is only allowed for say messages and not phone menu or submenu
+    */
+    function isMediaUploadToggle() {
+      return mediaUploadToggle;
     }
 
     function saveUiModel(ui, aaRecord) {

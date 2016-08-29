@@ -1,0 +1,30 @@
+<div class="aa-media-upload">
+  <div class="drop-box large-12 small-12 columns" ngf-drop="aaMediaUpload.upload($file)" ngf-select="aaMediaUpload.upload($file)" ng-model="files" ngf-drag-over-class="'dragover'" ng-multiple="false" name="mediaUploadSend">
+    <div ng-switch="aaMediaUpload.state">
+      <div ng-switch-when="WAIT" class="center">
+        <i class="icon icon-upload-contain"></i>
+        <div class="gray-light top-bottom" translate="autoAttendant.dragAndDropWav"></div>
+        <div class="gray-light" translate="autoAttendant.orClickToBrowse"></div>
+      </div>
+      <div ng-switch-when="DOWNLOAD" class="progressbar-info">
+        <div class="progress-supplementary">
+          <span ng-if="aaMediaUpload.progress < 100" translate="fileUpload.uploading"></span>
+          <span ng-if="aaMediaUpload.progress == 100" translate="fileUpload.success"></span>
+          <span class="icon icon-check green" ng-if="aaMediaUpload.progress == 100"></span>
+          <span class="progressbar-label"></span>
+          <span class="progressbar-progress">{{ aaMediaUpload.progress }}%</span>
+        </div>
+        <progressbar animate="false" value="aaMediaUpload.progress" type="success"></progressbar>
+        <div class="progress-supplementary">{{ aaMediaUpload.uploadFile | limitTo: 22 }}{{ aaMediaUpload.uploadFile.length > 25 ? '...' : '' }}</div>
+      </div>
+      <div ng-switch-when="UPLOADED" class="progress-supplementary">
+        <div class="spread-light" translate="autoAttendant.uploadedFile"></div>
+        <div class="top-bottom">
+          <span>{{ aaMediaUpload.uploadFile | limitTo: 22 }}{{ aaMediaUpload.uploadFile.length > 25 ? '...' : '' }}</span>
+          <span>{{ aaMediaUpload.uploadDate }}</span>
+          <div class="center italic top-bottom spread-light" translate="autoAttendant.callAssociatedAAPreview"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -9,7 +9,7 @@
   function AABuilderMainCtrl($scope, $translate, $state, $stateParams, $q, AAUiModelService,
     AAModelService, AutoAttendantCeInfoModelService, AutoAttendantCeMenuModelService, AutoAttendantCeService,
     AAValidationService, AANumberAssignmentService, AANotificationService, Authinfo, AACommonService, AAUiScheduleService, AACalendarService,
-    AATrackChangeService, AADependencyService, ServiceSetup, Analytics, AAMetricNameService) {
+    AATrackChangeService, AADependencyService, ServiceSetup, Analytics, AAMetricNameService, FeatureToggleService) {
 
     var vm = this;
     vm.overlayTitle = $translate.instant('autoAttendant.builderTitle');
@@ -71,6 +71,11 @@
     };
 
     setLoadingStarted();
+
+    //load the feature toggle prior to creating the elements
+    FeatureToggleService.supports(FeatureToggleService.features.huronAAMediaUpload).then(function (result) {
+      AACommonService.setMediaUploadToggle(result);
+    });
 
     /////////////////////
 
@@ -630,7 +635,6 @@
         vm.aaModel.aaRecord = undefined;
         vm.selectAA(aaName);
       });
-
     }
 
     function evalKeyPress($keyCode) {

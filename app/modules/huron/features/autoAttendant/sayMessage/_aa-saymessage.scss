@@ -14,7 +14,7 @@
   }
 
   & .aa-message-select-list {
-    @include vr-spacing(mb, 1.5);
+    @include vr-spacing(mb, .75);
     .select-toggle {
       width: 100%;
       @include vr-spacing(pr, 1.75);
@@ -26,6 +26,19 @@
     .dropdown-menu {
       width: 100%;
     }
+  }
+
+  & .aa-message-line-break {
+    border-bottom: 2px solid $gray-light-1;
+    @include vr-spacing(mb, .5);
+    width: 97%;
+    margin-left: 1.5%;
+  }
+
+  & .aa-message-subtext {
+    color: $gray-light-1;
+    @include vr-spacing(mb, .75);
+    font-style: italic;
   }
 
   & .aa-message-footer {

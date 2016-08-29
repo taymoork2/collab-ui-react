@@ -117,8 +117,8 @@ describe('Huron Auto Attendant', function () {
       utils.expectIsEnabled(autoattendant.saveButton);
 
       // language and voice
-      utils.click(autoattendant.phonesayMessageLanguage);
       autoattendant.scrollIntoView(autoattendant.phonelanguageDropDownOptions);
+      utils.click(autoattendant.phonesayMessageLanguage);
       utils.click(autoattendant.phonelanguageDropDownOptions);
       utils.click(autoattendant.phonesayMessageVoice);
       utils.click(autoattendant.phonesayMessageVoiceOptions);

@@ -42,6 +42,7 @@ module.exports = csp({
       'http://api.mixpanel.com',
       'https://api.mixpanel.com',
       'https://cdn.mxpnl.com',
+      /* remove */ 'https://angular-file-upload-cors-srv.appspot.com/upload', //remove
       // Browser Sync:
       'ws://127.0.0.1:8000',
       'ws://localhost:8000',
