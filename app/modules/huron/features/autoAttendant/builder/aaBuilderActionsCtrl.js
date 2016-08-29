@@ -17,6 +17,7 @@
       url: 'modules/huron/features/autoAttendant/sayMessage/aaSayMessage.tpl.html',
       hint: $translate.instant('autoAttendant.actionSayMessageHint'),
       help: $translate.instant('autoAttendant.sayMessageHelp') + appendSpecialCharHelp,
+      metric: 'Say-Message-Title',
       showHelpLink: true,
       actions: ['say']
     }, {
@@ -25,6 +26,7 @@
       url: 'modules/huron/features/autoAttendant/phoneMenu/aaPhoneMenu.tpl.html',
       hint: $translate.instant('autoAttendant.actionPhoneMenuHint'),
       help: $translate.instant('autoAttendant.phoneMenuHelp') + appendSpecialCharHelp,
+      metric: 'Phone-Menu-Title',
       showHelpLink: true,
       actions: ['runActionsOnInput']
     }, {
@@ -33,6 +35,7 @@
       url: 'modules/huron/features/autoAttendant/dialByExt/aaDialByExt.tpl.html',
       hint: $translate.instant('autoAttendant.actionDialByExtensionHint'),
       help: $translate.instant('autoAttendant.actionDialByExtensionHelp'),
+      metric: 'Dial-By-Extension-Title',
       showHelpLink: false,
       type: 2, // to flag that this is not phonemenu, see setOption
       actions: ['runActionsOnInput']
@@ -42,6 +45,7 @@
       url: 'modules/huron/features/autoAttendant/routeCall/aaRouteCallMenu.tpl.html',
       hint: $translate.instant('autoAttendant.actionRouteCallHint'),
       help: $translate.instant('autoAttendant.routeCallMenuHelp'),
+      metric: 'Route-Call-Title',
       showHelpLink: false,
       actions: ['route', 'goto', 'routeToUser', 'routeToVoiceMail', 'routeToHuntGroup']
     }];
@@ -74,7 +78,13 @@
       if (!vm.selectHint) {
         _.each(vm.options, function (option, index) {
           if (option.title && option.hint) {
-            vm.selectHint = vm.selectHint.concat("<i>").concat(option.title).concat("</i>").concat(" - ").concat(option.hint).concat("<br>");
+            vm.selectHint = vm.selectHint
+              .concat("<i>")
+              .concat(option.title)
+              .concat("</i>")
+              .concat(" - ")
+              .concat(option.hint)
+              .concat("<br>");
             if (index < vm.options.length - 1) {
               vm.selectHint = vm.selectHint.concat("<br>");
             }
@@ -111,11 +121,12 @@
         if (menuEntry.type == "MENU_OPTION") {
           vm.option = vm.options[1];
         } else if (menuEntry.actions.length > 0 && menuEntry.actions[0].getName()) {
+          var matchType = function (action) {
+            return menuEntry.actions[0].getName() === action &&
+              menuEntry.actions[0].inputType === vm.options[i].type;
+          };
           for (var i = 0; i < vm.options.length; i++) {
-            var isMatch = vm.options[i].actions.some(function (action) {
-              return menuEntry.actions[0].getName() === action &&
-                menuEntry.actions[0].inputType === vm.options[i].type;
-            });
+            var isMatch = vm.options[i].actions.some(matchType);
             if (isMatch) {
               vm.option = vm.options[i];
             }

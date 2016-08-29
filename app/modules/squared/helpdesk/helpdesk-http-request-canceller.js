@@ -50,7 +50,7 @@
     function forceDigestCycle(cancelled) {
       // Use this timeout to "force" the digest cycle resolve the 'cancelled' promises
       // In order to force this in test, timer must be flushed.
-      $timeout(function (res) {
+      $timeout(function () {
         cancelled.resolve(nrOfRegisteredRequests());
         cancelPromises.length = 0;
       }, 1);

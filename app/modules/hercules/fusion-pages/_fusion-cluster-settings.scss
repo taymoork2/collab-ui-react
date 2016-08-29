@@ -1,12 +1,26 @@
 .fusion-cluster-settings {
   background-color: #fff;
 
+  .btn-save-new-name {
+    margin-left: 1rem;
+  }
+
   .sub-section + .sub-section {
     margin-top: 24px;
   }
 
   .cap-long-names {
     @include text-overflow;
+  }
+
+  .remove-warning {
+    font-family: "CiscoSansTT Regular Oblique", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-style: italic;
+    font-size: 0.75rem;
+    color: #AEAEAF;
+    line-height: 1rem;
+    margin-top: 4px;
+    margin-bottom: 0.25rem;
   }
 }
 

@@ -1,7 +1,7 @@
 'use strict';
 describe('Directive: ShowReadOnly', function () {
 
-  var compile, scope, directiveElem, Authinfo, translate, controller;
+  var compile, scope, directiveElem, Authinfo, translate;
 
   beforeEach(angular.mock.module('Core'));
 

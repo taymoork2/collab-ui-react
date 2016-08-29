@@ -10,7 +10,7 @@
   /* @ngInject */
   function UserListService($http, $rootScope, $q, $timeout, Authinfo, Log, Utils, pako, $resource, UrlConfig, $window) {
     var searchFilter = 'filter=active%20eq%20true%20and%20%s(userName%20sw%20%22%s%22%20or%20name.givenName%20sw%20%22%s%22%20or%20name.familyName%20sw%20%22%s%22%20or%20displayName%20sw%20%22%s%22)';
-    var attributes = 'attributes=name,userName,userStatus,entitlements,displayName,photos,roles,active,trainSiteNames,licenseID';
+    var attributes = 'attributes=name,userName,userStatus,entitlements,displayName,photos,roles,active,trainSiteNames,licenseID,userSettings';
     var scimUrl = UrlConfig.getScimUrl(Authinfo.getOrgId()) + '?' + '&' + attributes;
     // Get last 7 day user counts
     var userCountResource = $resource(UrlConfig.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/reports/detailed/activeUsers?&intervalCount=7&intervalType=day&spanCount=1&spanType=day');
@@ -23,12 +23,21 @@
       exportCSV: exportCSV,
       listPartners: listPartners,
       listPartnersAsPromise: listPartnersAsPromise,
-      getUserCount: getUserCount
+      getUserCount: getUserCount,
+      queryUser: queryUser,
     };
 
     return service;
 
     ////////////////
+
+    function queryUser(searchEmail) {
+      return listUsers(0, 1, null, null, _.noop, searchEmail, false)
+        .then(function (response) {
+          var user = _.get(response, 'data.Resources[0]');
+          return user || $q.reject('Not found');
+        });
+    }
 
     function listUsers(startIndex, count, sortBy, sortOrder, callback, searchStr, getAdmins, entitlements) {
       var listUrl = scimUrl;
@@ -80,7 +89,7 @@
         listUrl = listUrl + '&sortOrder=' + sortOrder;
       }
 
-      $http.get(listUrl)
+      return $http.get(listUrl)
         .success(function (data, status) {
           data = data || {};
           data.success = true;
@@ -92,11 +101,6 @@
           data.success = false;
           data.status = status;
           callback(data, status, searchStr);
-          var description = null;
-          var errors = data.Errors;
-          if (errors) {
-            description = errors[0].description;
-          }
         });
     }
 
@@ -108,10 +112,10 @@
         attributes: ["name", "displayName", "userName", "entitlements", "active"]
       };
       $http({
-          method: 'POST',
-          url: generateUserReportsUrl,
-          data: requestData
-        })
+        method: 'POST',
+        url: generateUserReportsUrl,
+        data: requestData
+      })
         .success(function (data, status) {
           data = data || {};
           data.success = true;
@@ -289,11 +293,6 @@
           data.success = false;
           data.status = status;
           callback(data, status);
-          var description = null;
-          var errors = data.Errors;
-          if (errors) {
-            description = errors[0].description;
-          }
         });
     }
 

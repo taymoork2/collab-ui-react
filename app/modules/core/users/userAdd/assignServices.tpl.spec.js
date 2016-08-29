@@ -1,8 +1,8 @@
 'use strict';
 
 describe('assignServices', function () {
-  var $scope, $state, $httpBackend, $q;
-  var view, authinfo, csvDownloadService, hybridService, Orgservice, Userservice, WebExUtilsFact;
+  var $scope, $state, $previousState, $httpBackend, $q;
+  var view, authinfo, csvDownloadService, hybridService, Orgservice, FeatureToggleService;
 
   var orgid = '1';
 
@@ -35,21 +35,22 @@ describe('assignServices', function () {
   beforeEach(angular.mock.module('WebExApp'));
 
   beforeEach(inject(function ($compile, $rootScope, $templateCache, _$httpBackend_,
-    $controller, _$q_, _$state_, _Authinfo_, _CsvDownloadService_, _FeatureToggleService_,
-    _HybridService_, _Orgservice_, _Userservice_, _WebExUtilsFact_) {
+    $controller, _$q_, _$state_, _Authinfo_, _CsvDownloadService_, _HybridService_, _FeatureToggleService_,
+    _Orgservice_, _$previousState_) {
 
     $scope = $rootScope.$new();
     $state = _$state_;
+    $previousState = _$previousState_;
     $httpBackend = _$httpBackend_;
     $q = _$q_;
+    $previousState = _$previousState_;
+
     Orgservice = _Orgservice_;
-    Userservice = _Userservice_;
     authinfo = _Authinfo_;
     csvDownloadService = _CsvDownloadService_;
     hybridService = _HybridService_;
-    WebExUtilsFact = _WebExUtilsFact_;
+    FeatureToggleService = _FeatureToggleService_;
 
-    var getUserMe = getJSONFixture('core/json/users/me.json');
     var headers = getJSONFixture('core/json/users/headers.json');
     var accountData = getJSONFixture('core/json/authInfo/msg_mtg_comm_Licenses.json');
     var getLicensesUsage = getJSONFixture('core/json/organizations/usage.json');
@@ -63,6 +64,11 @@ describe('assignServices', function () {
     $scope.wizard.current = current;
 
     spyOn($state, 'go');
+    spyOn($previousState, 'get').and.returnValue({
+      state: {
+        name: 'test.state'
+      }
+    });
 
     function setupAuthinfo() {
       spyOn(authinfo, 'getConferenceServicesWithoutSiteUrl').and.returnValue([{
@@ -97,6 +103,7 @@ describe('assignServices', function () {
     spyOn(_Orgservice_, 'getUnlicensedUsers');
     spyOn(_FeatureToggleService_, 'atlasCareTrialsGetStatus').and.returnValue($q.resolve(false));
     spyOn(Orgservice, 'getLicensesUsage').and.returnValue($q.when(getLicensesUsage));
+    spyOn(FeatureToggleService, 'supportsDirSync').and.returnValue($q.when(false));
 
     spyOn(csvDownloadService, 'getCsv').and.callFake(function (type) {
       if (type === 'headers') {
@@ -105,6 +112,19 @@ describe('assignServices', function () {
         return $q.when({});
       }
     });
+
+    $httpBackend.whenGET('https://identity.webex.com/identity/scim/1/v1/Users/me').respond(200, {});
+    $httpBackend
+      .whenGET('https://cmi.huron-int.com/api/v1/voice/customers/1/sites')
+      .respond([{
+        "mediaTraversalMode": "TURNOnly",
+        "siteSteeringDigit": "8",
+        "vmCluster": null,
+        "uuid": "70b8d459-7f58-487a-afc8-02c0a82d53ca",
+        "steeringDigit": "9",
+        "timeZone": "America/Los_Angeles",
+        "voicemailPilotNumberGenerated": "false"
+      }]);
 
     $httpBackend
       .when('GET', 'l10n/en_US.json')

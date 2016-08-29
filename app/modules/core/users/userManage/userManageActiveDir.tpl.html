@@ -1,0 +1,65 @@
+<div class="modal-header">
+  <button type="button" class="close" ng-click="$dismiss()" id="closeManageUsers">
+    <span class="sr-only" translate="common.close"></span>
+  </button>
+  <h3 class="modal-title" translate="usersPage.manageUsers"></h3>
+</div>
+
+<div class="modal-body user-manage">
+  <div class="sync-container">
+    <div class="row sync-status ad-top">
+      <div class="columns medium-5">
+        <h4 translate="userManage.ad.adLabel"></h4>
+      </div>
+      <div class="ds-sync columns medium-7">
+        <i class="working icon icon-circle" ng-class="{'failing': !ummc.isDirSyncEnabled}"></i>
+        <div class="details">
+          <h6 ng-if="ctrl.isDirSyncEnabled" translate="userManage.ad.adStatus"></h6>
+          <h6 ng-if="!ctrl.isDirSyncEnabled" translate="userManage.ad.adStatusDisabled"></h6>
+          <p translate="userManage.ad.adStatusDetails"></p>
+          <a class="p" ng-click="umadc.onTurnOffDS()" translate="userManage.ad.turnOffDS"
+             tooltip="{{::'userManage.ad.turnOffDSToolTip'|translate}}"
+             tooltip-placement="bottom"></a>
+        </div>
+      </div>
+    </div>
+    <div class="row divider">
+      <hr>
+    </div>
+    <div class="row">
+      <form name="userModifyUsersForm">
+        <div class="columns medium-5">
+          <h4 translate="userManage.ad.typeLabel"></h4>
+          <p class="columns medium-10" translate="userManage.ad.typeInstructions"></p>
+        </div>
+        <div class="columns medium-7">
+          <div class="cs-radio-group">
+            <ul>
+              <li>
+                <input cs-input type="radio" ng-model="umadc.manageType" id="ad-manual" ng-value="'manual'"
+                       cs-input-label="{{::'userManage.ad.manualLabel'|translate}}"
+                       cs-input-help-text="{{'userManage.ad.manualDetails'|translate:umadc}}">
+              </li>
+              <li>
+                <input cs-input type="radio" ng-model="umadc.manageType" id="ad-bulk" ng-value="'bulk'"
+                       cs-input-label="{{::'userManage.ad.bulkLabel'|translate}}"
+                       cs-input-help-text="{{'userManage.ad.bulkDetails'|translate:umadc}}">
+              </li>
+              <li>
+                <input cs-input type="radio" ng-model="umadc.manageType" id="ad-advanced" ng-value="'advanced'"
+                       cs-input-label="{{::'userManage.ad.advancedLabel'|translate}}"
+                       cs-input-help-text="{{::'userManage.ad.advancedDetails'|translate:umadc}}">
+              </li>
+            </ul>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div class="modal-footer">
+  <button type="button" id="btnClear" class="btn" ng-click="$dismiss()"><span translate="common.back"></span></button>
+  <button type="button" class="btn btn--primary" ng-click="umadc.onNext()"><span translate="common.next"></span>
+  </button>
+</div>

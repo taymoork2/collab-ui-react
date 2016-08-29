@@ -14,7 +14,6 @@
     var _BINDINGS = 'urn:oasis:names:tc:SAML:2.0:bindings:';
     var bindingStr = 'Binding="' + _BINDINGS;
     var strBindingEnd = '" ';
-    var oldSSOValue = 0;
     $scope.updateSSO = updateSSO;
 
     $scope.options = {
@@ -145,11 +144,10 @@
     };
 
     $scope.idpFile = {};
-    $scope.$watch('idpFile.file', function (value) {
+    $scope.$watch('idpFile.file', function () {
       if ($scope.idpFile.file) {
         if ($rootScope.ssoEnabled) {
-          var r = $window.confirm($translate.instant('ssoModal.idpOverwriteWarning'));
-          if (r == true) {
+          if ($window.confirm($translate.instant('ssoModal.idpOverwriteWarning'))) {
             $timeout($scope.importRemoteIdp);
           } else {
             //reset
@@ -170,7 +168,6 @@
     $scope.importRemoteIdp = importRemoteIdp;
 
     function importRemoteIdp() {
-      var metaUrl = null;
       SSOService.getMetaInfo(function (data, status) {
         if (data.success) {
           if (data.data.length > 0) {
@@ -200,7 +197,7 @@
     }
 
     function deleteSSO() {
-      var selfSigned = ($scope.options.SSOSelfSigned ? true : false);
+      var selfSigned = !!$scope.options.SSOSelfSigned;
       var metaUrl = null;
       var success = true;
       SSOService.getMetaInfo(function (data, status) {
@@ -253,9 +250,9 @@
     }
 
     function reEnableSSO() {
-      var selfSigned = ($scope.options.SSOSelfSigned ? true : false);
+      var selfSigned = !!$scope.options.SSOSelfSigned;
       var metaUrl = null;
-      SSOService.getMetaInfo(function (data, status) {
+      SSOService.getMetaInfo(function (data) {
         $scope.wizard.wizardNextLoad = true;
         if (data.success && data.data.length > 0) {
           //check if data already exists for this entityId
@@ -297,7 +294,7 @@
     }
 
     function postRemoteIdp() {
-      var selfSigned = ($scope.options.SSOSelfSigned ? true : false);
+      var selfSigned = !!$scope.options.SSOSelfSigned;
       SSOService.importRemoteIdp($scope.idpFile.file, selfSigned, false, function (data, status) {
         if (data.success) {
           Log.debug('Imported On-premise IdP Metadata. Status: ' + status);
@@ -313,7 +310,7 @@
     }
 
     function patchRemoteIdp(metaUrl) {
-      var selfSigned = ($scope.options.SSOSelfSigned ? true : false);
+      var selfSigned = !!$scope.options.SSOSelfSigned;
       SSOService.patchRemoteIdp(metaUrl, $scope.idpFile.file, selfSigned, false, function (data, status) {
         if (data.success) {
           Log.debug('Imported On-premise IdP Metadata. Status: ' + status);
@@ -328,7 +325,7 @@
       });
     }
 
-    function checkNewEntityId(data) {
+    function checkNewEntityId() {
       var start = $scope.idpFile.file.indexOf(strEntityDesc);
       start = $scope.idpFile.file.indexOf(strEntityId, start) + strEntityId.length;
       var end = $scope.idpFile.file.indexOf(strEntityIdEnd, start);
@@ -336,7 +333,7 @@
       return newEntityId;
     }
 
-    function checkReqBinding(data) {
+    function checkReqBinding() {
       var start = $scope.idpFile.file.indexOf(strSignOn);
       start = $scope.idpFile.file.indexOf(bindingStr, start);
       var end = $scope.idpFile.file.indexOf(strLocation, start) - strBindingEnd.length;

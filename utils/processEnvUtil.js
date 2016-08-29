@@ -34,6 +34,6 @@ module.exports = function () {
   }
 
   function getEnvVarAsInt(varName) {
-    return process.env[varName] && +process.env[varName] || 0;
+    return (process.env[varName] && +process.env[varName]) || 0;
   }
 };

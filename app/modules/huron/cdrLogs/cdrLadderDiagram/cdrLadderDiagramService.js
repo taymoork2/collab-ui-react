@@ -35,7 +35,7 @@
     svc.events = null;
 
     function generateMessagebody(events) {
-      var messageBody = '@startuml \n autonumber \"<b>[0]\"\n';
+      var messageBody = '@startuml \n autonumber "<b>[0]"\n';
       var source = '';
       var remote = '';
       var note = '';
@@ -62,21 +62,21 @@
             //incommig call
             if (events[i].dataParam.direction === 'in') {
               if (!_.isUndefined(events[i].dataParam.callflowTransition) && (events[i].dataParam.callflowTransition)) {
-                messageBody += '\"' + remote + '\"' + TRANSITION_ARROW + '\"' + source + '\"' + ': ';
+                messageBody += '"' + remote + '"' + TRANSITION_ARROW + '"' + source + '"' + ': ';
               } else {
-                messageBody += '\"' + remote + '\"' + '->' + '\"' + source + '\"' + ': ';
+                messageBody += '"' + remote + '"' + '->' + '"' + source + '"' + ': ';
               }
             } else {
               if (!_.isUndefined(events[i].dataParam.callflowTransition) && (events[i].dataParam.callflowTransition)) {
-                messageBody += '\"' + source + '\"' + TRANSITION_ARROW + '\"' + remote + '\"' + ': ';
+                messageBody += '"' + source + '"' + TRANSITION_ARROW + '"' + remote + '"' + ': ';
               } else {
-                messageBody += '\"' + source + '\"' + '->' + '\"' + remote + '\"' + ': ';
+                messageBody += '"' + source + '"' + '->' + '"' + remote + '"' + ': ';
               }
             }
 
             eventNote = note;
             eventNote += events[i].dataParam.msgType;
-            messageBody += '\"' + eventNote.replace('"', ' ') + '\"\n';
+            messageBody += '"' + eventNote.replace('"', ' ') + '"\n';
           }
         }
       }
@@ -171,16 +171,16 @@
     function proxyDiagnosticService(message) {
       var defer = $q.defer();
       $http({
-          method: "POST",
-          url: callflowDiagramUrl,
-          data: {
-            "data": message
-          },
-          headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json, application/xml'
-          }
-        })
+        method: "POST",
+        url: callflowDiagramUrl,
+        data: {
+          "data": message
+        },
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json, application/xml'
+        }
+      })
         .success(function (response) {
           defer.resolve(response);
         })
@@ -203,13 +203,13 @@
     svc.getActivities = function (locusid, start, end) {
       var defer = $q.defer();
       $http({
-          method: "GET",
-          url: getActivitiesUrl + "?id=lid." + locusid + "&start=" + start + "&end=" + end,
-          headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json'
-          }
-        })
+        method: "GET",
+        url: getActivitiesUrl + "?id=lid." + locusid + "&start=" + start + "&end=" + end,
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        }
+      })
         .success(function (response) {
           defer.resolve(response);
         })

@@ -6,7 +6,7 @@
     .service('ServiceDescriptor', ServiceDescriptor);
 
   /* @ngInject */
-  function ServiceDescriptor($http, UrlConfig, Authinfo, Orgservice, XhrNotificationService) {
+  function ServiceDescriptor($http, UrlConfig, Authinfo, Orgservice) {
     var services = function (callback, includeStatus) {
       $http
         .get(UrlConfig.getHerculesUrl() + '/organizations/' + Authinfo.getOrgId() + '/services' + (includeStatus ? '?fields=status' : ''))
@@ -100,10 +100,7 @@
         calSvcDisableEmailSendingToEndUser: !!calSvcDisableEmailSendingToEndUser
       };
 
-      return Orgservice.setOrgSettings(Authinfo.getOrgId(), settings)
-        .catch(function () {
-          return XhrNotificationService.notify("error in setting disable email sending for Org.");
-        });
+      return Orgservice.setOrgSettings(Authinfo.getOrgId(), settings);
     };
 
     var setServiceEnabled = function (serviceId, enabled, callback) {

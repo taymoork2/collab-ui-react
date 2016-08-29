@@ -26,22 +26,16 @@ describe('Controller: customerAdministratorDetailCtrl', function () {
       uuid: 'd3434d78-26452-445a2-845d8-4c1816565b3f0a'
     }];
     spyOn(CustomerAdministratorService, 'removeCustomerSalesAdmin').and.returnValue($q.when({}));
-    spyOn(CustomerAdministratorService, 'addCustomerAdmin').and.returnValue($q.when({
-      userName: 'frank.sinatra+sinatrahelpdesk@gmail.com',
-      emails: [{
-        primary: true,
-        type: 'work',
-        value: 'frank.sinatra+sinatrahelpdesk@gmail.com'
-      }],
-      name: {
-        givenName: 'Frank',
-        familyName: 'Sinatra'
+    spyOn(CustomerAdministratorService, 'getPartnerUsers').and.returnValue($q.reject({
+      data: {
+        Errors: [{
+          code: '403',
+          description: 'Organization has too many users.',
+          errorCode: '200046'
+        }]
       },
-      displayName: 'Frank Sinatra',
-      id: 'd3434d78-26452-445a2-845d8-4c1816565b3f0a',
-      avatarSyncEnabled: false
+      status: 403
     }));
-    spyOn(CustomerAdministratorService, 'getPartnerUsers').and.returnValue($q.when({}));
     spyOn(CustomerAdministratorService, 'patchSalesAdminRole').and.returnValue($q.when({}));
     spyOn(CustomerAdministratorService, 'getAssignedSalesAdministrators').and.returnValue($q.when({
       data: {
@@ -69,7 +63,7 @@ describe('Controller: customerAdministratorDetailCtrl', function () {
     spyOn(Notification, 'error');
     spyOn(Notification, 'success');
 
-    spyOn(Orgservice, 'getOrg').and.callFake(function (callback, orgId) {
+    spyOn(Orgservice, 'getOrg').and.callFake(function (callback) {
       callback(getJSONFixture('core/json/organizations/Orgservice.json').getOrg, 200);
     });
   }));
@@ -92,6 +86,18 @@ describe('Controller: customerAdministratorDetailCtrl', function () {
       expect(controller.administrators[1].uuid).toEqual('2');
       expect(controller.administrators[1].fullName).toEqual('John Doe');
       expect(controller.administrators[1].avatarSyncEnabled).toEqual(true);
+    });
+  });
+
+  describe('getPartnerUsers', function () {
+    beforeEach(initController);
+
+    it('must display too many results error message', function () {
+      controller.getPartnerUsers('a');
+      $scope.$apply();
+
+      expect(controller.resultsError).toEqual(true);
+      expect(controller.resultsErrorMessage).toEqual('customerAdminPanel.tooManyResultsError');
     });
   });
 
@@ -121,8 +127,26 @@ describe('Controller: customerAdministratorDetailCtrl', function () {
     });
   });
 
-  describe('addAdmin', function () {
-    beforeEach(initController);
+  describe('addAdmin when admin does not have full-admin or sales-admin role: ', function () {
+    beforeEach(function () {
+      CustomerAdministratorService.addCustomerAdmin = jasmine.createSpy('CustomerAdministratorService').and.returnValue($q.when({
+        userName: 'frank.sinatra+sinatrahelpdesk@gmail.com',
+        emails: [{
+          primary: true,
+          type: 'work',
+          value: 'frank.sinatra+sinatrahelpdesk@gmail.com'
+        }],
+        name: {
+          givenName: 'Frank',
+          familyName: 'Sinatra'
+        },
+        roles: ['sinatras_bank_admin'],
+        displayName: 'Frank Sinatra',
+        id: 'd3434d78-26452-445a2-845d8-4c1816565b3f0a',
+        avatarSyncEnabled: false
+      }));
+      initController();
+    });
 
     it('must push administrator into View-Model administrators array', function () {
       controller.users = testUsers;
@@ -131,7 +155,57 @@ describe('Controller: customerAdministratorDetailCtrl', function () {
         expect(controller.administrators[0].uuid).toEqual('d3434d78-26452-445a2-845d8-4c1816565b3f0a');
         expect(controller.administrators[0].fullName).toEqual('Frank Sinatra');
         expect(controller.administrators[0].avatarSyncEnabled).toEqual(false);
+      });
+    });
+
+    it('should patch Sales_admin role if user does not have full-admin and sales-admin', function () {
+      controller.users = testUsers;
+      controller.administrators = [];
+      controller.addAdmin('Frank Sinatra').then(function () {
+        expect(controller.administrators[0].uuid).toEqual('d3434d78-26452-445a2-845d8-4c1816565b3f0a');
         expect(CustomerAdministratorService.patchSalesAdminRole()).toHaveBeenCalled();
+        expect(Analytics.trackEvent()).toHaveBeenCalled();
+      });
+    });
+  });
+
+  describe('addAdmin when admin has full-admin or sales-admin role: ', function () {
+    beforeEach(function () {
+      CustomerAdministratorService.addCustomerAdmin = jasmine.createSpy('CustomerAdministratorService').and.returnValue($q.when({
+        userName: 'frank.sinatra+sinatrahelpdesk@gmail.com',
+        emails: [{
+          primary: true,
+          type: 'work',
+          value: 'frank.sinatra+sinatrahelpdesk@gmail.com'
+        }],
+        name: {
+          givenName: 'Frank',
+          familyName: 'Sinatra'
+        },
+        roles: ['atlas-portal.partner.salesadmin', 'id_full_admin'],
+        displayName: 'Frank Sinatra',
+        id: 'd3434d78-26452-445a2-845d8-4c1816565b3f0a',
+        avatarSyncEnabled: false
+      }));
+      initController();
+    });
+
+    it('must push administrator into View-Model administrators array', function () {
+      controller.users = testUsers;
+      controller.administrators = [];
+      controller.addAdmin('Frank Sinatra').then(function () {
+        expect(controller.administrators[0].uuid).toEqual('d3434d78-26452-445a2-845d8-4c1816565b3f0a');
+        expect(controller.administrators[0].fullName).toEqual('Frank Sinatra');
+        expect(controller.administrators[0].avatarSyncEnabled).toEqual(false);
+      });
+    });
+
+    it('should not patch sales-dmin role if user has full-admin and sales-admin role', function () {
+      controller.users = testUsers;
+      controller.administrators = [];
+      controller.addAdmin('Frank Sinatra').then(function () {
+        expect(controller.administrators[0].uuid).toEqual('d3434d78-26452-445a2-845d8-4c1816565b3f0a');
+        expect(CustomerAdministratorService.patchSalesAdminRole()).not.toHaveBeenCalled();
         expect(Analytics.trackEvent()).toHaveBeenCalled();
       });
     });

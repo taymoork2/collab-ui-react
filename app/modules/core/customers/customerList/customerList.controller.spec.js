@@ -1,8 +1,8 @@
 'use strict';
 
 describe('Controller: CustomerListCtrl', function () {
-  var $httpBackend, $q, $rootScope, $scope, $state, $stateParams, $templateCache, $translate, $window, Authinfo, Config, customerListToggle, HuronConfig, Log, FeatureToggleService, Notification, Orgservice, PartnerService, TrialService;
-  var controller, $controller;
+  var $httpBackend, $q, $scope, $state, Authinfo, Config, customerListToggle, HuronConfig, FeatureToggleService, Notification, Orgservice, PartnerService, TrialService;
+  var $controller;
 
   var adminJSONFixture = getJSONFixture('core/json/organizations/adminServices.json');
   var partnerService = getJSONFixture('core/json/partner/partner.service.json');
@@ -36,16 +36,14 @@ describe('Controller: CustomerListCtrl', function () {
   beforeEach(angular.mock.module('Huron'));
   beforeEach(angular.mock.module('Sunlight'));
 
-  beforeEach(inject(function (_$controller_, _$httpBackend_, _$q_, $rootScope, _$state_, _$stateParams_, _$translate_, _$window_, _Authinfo_, _HuronConfig_, _FeatureToggleService_, _Notification_, _Orgservice_, _PartnerService_, _TrialService_) {
+  beforeEach(inject(function (_$controller_, _$httpBackend_, _$q_, $rootScope, _$state_, _Authinfo_, _Config_, _HuronConfig_, _FeatureToggleService_, _Notification_, _Orgservice_, _PartnerService_, _TrialService_) {
     $controller = _$controller_;
     $httpBackend = _$httpBackend_;
     $q = _$q_;
     $scope = $rootScope.$new();
     $state = _$state_;
-    $stateParams = _$stateParams_;
-    $translate = _$translate_;
-    $window = _$window_;
     Authinfo = _Authinfo_;
+    Config = _Config_;
     HuronConfig = _HuronConfig_;
     Notification = _Notification_;
     FeatureToggleService = _FeatureToggleService_;
@@ -74,10 +72,10 @@ describe('Controller: CustomerListCtrl', function () {
       $q.when(false)
     );
 
-    spyOn(Orgservice, 'getAdminOrg').and.callFake(function (callback, status) {
+    spyOn(Orgservice, 'getAdminOrg').and.callFake(function (callback) {
       callback(adminJSONFixture.getAdminOrg, 200);
     });
-    spyOn(Orgservice, 'getOrg').and.callFake(function (callback, orgId) {
+    spyOn(Orgservice, 'getOrg').and.callFake(function (callback) {
       callback(getJSONFixture('core/json/organizations/Orgservice.json').getOrg, 200);
     });
 
@@ -88,7 +86,7 @@ describe('Controller: CustomerListCtrl', function () {
   }));
 
   function initController() {
-    controller = $controller('CustomerListCtrl', {
+    $controller('CustomerListCtrl', {
       $scope: $scope,
       $state: $state,
       Authinfo: Authinfo,
@@ -115,6 +113,8 @@ describe('Controller: CustomerListCtrl', function () {
         customerName: 'ControllerTestOrg',
         customerEmail: 'customer123@cisco.com',
         daysLeft: 50,
+        numUsers: 10,
+        activeUsers: 3,
         communications: {
           isTrial: true
         },
@@ -143,6 +143,28 @@ describe('Controller: CustomerListCtrl', function () {
       testTrialData.communications.isTrial = false;
     }
 
+    it('should properly calculate trials past the grace period', function () {
+      setTestDataExpired();
+      testTrialData.daysLeft = -99;
+      expect($scope.isPastGracePeriod(testTrialData)).toBe(true);
+      setTestDataActive();
+      expect($scope.isPastGracePeriod(testTrialData)).toBe(false);
+      setTestDataTrial();
+      expect($scope.isPastGracePeriod(testTrialData)).toBe(false);
+    });
+
+    it('should display N/A when trial is past grace period', function () {
+      setTestDataExpired();
+      testTrialData.daysLeft = -99;
+      expect($scope.getLicenseCountColumnText(testTrialData)).toBe('common.notAvailable');
+      expect($scope.getUserCountColumnText(testTrialData)).toBe('common.notAvailable');
+    });
+
+    it('should return the correct text for user count', function () {
+      setTestDataTrial();
+      expect($scope.getUserCountColumnText(testTrialData)).toBe(testTrialData.activeUsers + ' / ' + testTrialData.numUsers);
+    });
+
     it('should return the correct account status', function () {
       setTestDataExpired();
       expect($scope.getAccountStatus(testTrialData)).toBe('expired');
@@ -151,21 +173,41 @@ describe('Controller: CustomerListCtrl', function () {
       setTestDataActive();
       expect($scope.getAccountStatus(testTrialData)).toBe('active');
     });
+  });
 
-    it('should return expired days left', function () {
-      setTestDataExpired();
-      expect($scope.getExpiredNotesColumnText(testTrialData)).toBe('customerPage.expiredWithGracePeriod');
+  describe('myOrg appears first in orgList', function () {
+    beforeEach(initController);
 
-      testTrialData.daysLeft = -90;
-      expect($scope.getExpiredNotesColumnText(testTrialData)).toBe('customerPage.expired');
+    it('if myOrg not in managedOrgsList, myOrg should be added to the top of managedOrgsList ', function () {
+      expect($scope.managedOrgsList).toBeDefined();
+      expect($scope.managedOrgsList[0].customerName).toBe('testOrg');
+      expect($scope.managedOrgsList.length).toEqual(6);
+      expect($scope.managedOrgsList[1].customerName).toBe('Atlas_Test_Trial_vt453w4p8d');
+      expect($scope.totalOrgs).toBe(6);
     });
 
-    it('should return proper license counts', function () {
-      setTestDataActive();
-      expect($scope.getTotalLicenses(testTrialData)).toEqual(5);
+    it('if myOrg is in managedOrgsList, myOrg should not be added to the list', function () {
+      var testOrgList = {
+        "data": {
+          "organizations": [{
+            customerOrgId: '1234-34534-afdagfg-425345-afaf',
+            customerName: 'ControllerTestOrg',
+            customerEmail: 'customer@cisco.com',
+            communications: {
+              isTrial: true
+            }
+          }, {
+            customerOrgId: '1',
+            customerName: 'testOrg'
+          }]
+        }
+      };
 
-      setTestDataTrial();
-      expect($scope.getTotalLicenses(testTrialData)).toEqual(15);
+      PartnerService.getManagedOrgsList.and.returnValue(testOrgList);
+      initController();
+      expect($scope.managedOrgsList).toBeDefined();
+      expect($scope.managedOrgsList.length).toEqual(2);
+      expect($scope.totalOrgs).toBe(2);
     });
   });
 

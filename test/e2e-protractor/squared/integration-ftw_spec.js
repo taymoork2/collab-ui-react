@@ -21,6 +21,9 @@ describe('First Time Wizard', function () {
     utils.expectTextToBeSet(wizard.mainviewTitle, 'Enterprise Settings');
     wizard.clickAddUsers();
     utils.expectTextToBeSet(wizard.mainviewTitle, 'Add Users');
+    utils.expectIsNotDisplayed(wizard.skipBtn);
+    utils.expectIsDisplayed(wizard.nextBtn);
+    utils.expectIsDisplayed(wizard.backBtn);
   });
 
   it('should complete custom sso provider flow', function () {

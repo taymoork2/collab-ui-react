@@ -2,9 +2,9 @@
   'use strict';
 
   module.exports = angular.module('core.localize', [
-      require('modules/core/scripts/services/utils'),
-      require('modules/core/scripts/services/sessionstorage'),
-    ])
+    require('modules/core/scripts/services/utils'),
+    require('modules/core/scripts/services/sessionstorage'),
+  ])
     .factory('Localize', Localize)
     .name;
 

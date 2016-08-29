@@ -82,10 +82,10 @@
 
       var cacheDisabled = !!disableCache;
       return $http.get(adminUrl, {
-          params: {
-            disableCache: cacheDisabled
-          }
-        })
+        params: {
+          disableCache: cacheDisabled
+        }
+      })
         .success(function (data, status) {
           data = data || {};
           data.success = true;
@@ -140,11 +140,13 @@
               'licenseId': license.licenseId
             });
             trial = license.isTrial ? 'Trial' : 'unknown';
-            return !(match.status === 'CANCELLED' || match.status === 'SUSPENDED');
+            return !(_.isUndefined(match) || match.status === 'CANCELLED' || match.status === 'SUSPENDED');
           });
 
           var subscription = {
             "subscriptionId": usageLicense.subscriptionId ? usageLicense.subscriptionId : trial,
+            "internalSubscriptionId": usageLicense.internalSubscriptionId ?
+                                      usageLicense.internalSubscriptionId : trial,
             "licenses": licenses
           };
           result.push(subscription);
@@ -345,6 +347,8 @@
         serviceUrl = serviceUrl.concat(Config.entitlements.fusion_uc);
       } else if (serviceName === 'call-connect-service') {
         serviceUrl = serviceUrl.concat(Config.entitlements.fusion_ec);
+      } else if (serviceName === 'squared-fusion-media') {
+        serviceUrl = serviceUrl.concat(Config.entitlements.mediafusion);
       } else {
         return $q(function (resolve, reject) {
           reject('serviceName is invalid: ' + serviceName);

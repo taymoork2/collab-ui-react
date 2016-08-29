@@ -1,9 +1,8 @@
 'use strict';
 
 describe('Controller: PartnerHomeCtrl', function () {
-  var $scope, $q, controller, PartnerService;
+  var $scope, $q, PartnerService;
 
-  var adminJSONFixture = getJSONFixture('core/json/organizations/adminServices.json');
   var trialsListFixture = getJSONFixture('core/json/partner/trialsResponse.json');
 
   beforeEach(angular.mock.module('Core'));
@@ -29,7 +28,7 @@ describe('Controller: PartnerHomeCtrl', function () {
 
     spyOn(PartnerService, 'getTrialList').and.returnValue($q.when(trialsListFixture));
 
-    controller = $controller('PartnerHomeCtrl', {
+    $controller('PartnerHomeCtrl', {
       $scope: $scope
     });
 

@@ -11,10 +11,18 @@
     vm.downloadEmbedCode = downloadEmbedCode;
     vm.templateHeader = templateHeader;
 
-    function downloadEmbedCode() {
+    function downloadEmbedCode($event) {
       var anchorElement = $window.document.getElementById('downloadChatCodeTxt');
-      var mimeType = 'text/plain';
-      anchorElement.setAttribute('href', 'data:' + mimeType + ';charset=utf-8,' + encodeURIComponent(vm.embedCodeSnippet));
+      var blob = new $window.Blob([vm.embedCodeSnippet], {
+        type: "text/plain;charset=utf-8;"
+      });
+      if ($window.navigator.msSaveOrOpenBlob) {
+        $window.navigator.msSaveBlob(blob, "Chat_Code_Snippet");
+        $event.preventDefault();
+      } else {
+        anchorElement.setAttribute('href', $window.URL.createObjectURL(blob));
+        anchorElement.setAttribute('download', "Chat_Code_Snippet");
+      }
     }
   }
 })();

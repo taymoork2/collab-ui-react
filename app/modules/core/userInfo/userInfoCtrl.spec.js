@@ -3,7 +3,7 @@
 describe('UserInfoController', function () {
   beforeEach(angular.mock.module('Core'));
 
-  var controller, $window, $scope, FeedbackService, Userservice, Utils, deferred, $rootScope;
+  var $window, $scope, FeedbackService, Userservice, Utils, deferred, $rootScope;
 
   beforeEach(angular.mock.module('WebExApp'));
 
@@ -27,7 +27,7 @@ describe('UserInfoController', function () {
       }
     };
 
-    controller = $controller('UserInfoController', {
+    $controller('UserInfoController', {
       Utils: Utils,
       $scope: $scope,
       $window: $window,
@@ -61,7 +61,7 @@ describe('UserInfoController', function () {
 
 describe('UserInfoController WebEx logout', function () {
   var Auth, deferredLogout, WebExUtilsFact, $timeout;
-  var $window, $scope, $rootScope;
+  var $scope, $rootScope;
 
   beforeEach(angular.mock.module('WebExApp'));
 

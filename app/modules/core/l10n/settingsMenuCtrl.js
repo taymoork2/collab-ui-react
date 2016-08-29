@@ -19,8 +19,12 @@
       return lang.value === $translate.use();
     }) || {};
 
+    // sets moment with the correct locale for entire app
+    moment.locale(vm.selected.value);
+
     vm.updateLanguage = function () {
       $translate.use(vm.selected.value).then(function () {
+        moment.locale(vm.selected.value);
         $state.go('login');
         $rootScope.$broadcast('TABS_UPDATED');
       });

@@ -5,7 +5,7 @@
     .service('CommonGraphService', CommonGraphService);
 
   /* @ngInject */
-  function CommonGraphService($translate, chartColors) {
+  function CommonGraphService($translate, $window, chartColors) {
     // Base variables for building grids and charts
     var baseVariables = [];
     baseVariables['column'] = {
@@ -74,8 +74,18 @@
           'label': $translate.instant('reportsPage.saveAs'),
           'title': $translate.instant('reportsPage.saveAs'),
           'class': 'export-list',
-          'menu': ['PNG', 'JPG', 'PDF']
-        }, 'PRINT']
+          'menu': ['PNG', 'JPG']
+        }, {
+          'label': $translate.instant('reportsPage.pdf'),
+          'title': $translate.instant('reportsPage.pdf'),
+          click: function () {
+            this.capture({}, function () {
+              this.toPDF({}, function (data) {
+                $window.open(data, 'amCharts.pdf');
+              });
+            });
+          }
+        }]
       }]
     };
     baseVariables['prefixesOfBigNumbers'] = [{

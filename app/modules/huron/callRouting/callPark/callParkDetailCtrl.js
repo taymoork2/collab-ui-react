@@ -29,7 +29,7 @@
         if (angular.isUndefined(scope.model.rangeMin) || scope.model.rangeMin === "") {
           return true;
         } else {
-          return parseInt(value) >= parseInt(scope.model.rangeMin);
+          return parseInt(value, 10) >= parseInt(scope.model.rangeMin, 10);
         }
       },
       lessThan: function (viewValue, modelValue, scope) {
@@ -38,7 +38,7 @@
         if (angular.isUndefined(scope.model.rangeMax) || scope.model.rangeMax === "") {
           return true;
         } else {
-          return parseInt(value) <= parseInt(scope.model.rangeMax);
+          return parseInt(value, 10) <= parseInt(scope.model.rangeMax, 10);
         }
       },
       checkNumeric: function (viewValue, modelValue, scope) {

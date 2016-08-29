@@ -80,7 +80,6 @@
       <div id="conference" class="small-4 columns column-paid">
         <div ng-if="confChk" class="item-license" translate="onboardModal.meeting"></div>
         <div class="entitle-check-grp" ng-repeat="lic in allLicenses">
-        
           <div class="ckbx" id="paidMtg" ng-show="multipleSubscriptions.showLicenses(lic.billing, lic.isTrial)" ng-if="!lic.site">
             <div class="cs-checkbox-group">
                 <input
@@ -99,25 +98,23 @@
               <span ng-if="lic.isCISite">{{lic.site}}</span>
               <span ng-if="!lic.isCISite" class="item-webex">{{lic.site}}</span>
             </div>
-            
             <div ng-show="multipleSubscriptions.showLicenses(cfLic.billing, cfLic.isTrial)" ng-repeat="cfLic in lic.confLic">
-              
               <div ng-if="lic.isCISite">
-              <input type="checkbox" cs-input id="{{cfLic.licenseId}}" ng-model="cfLic.confModel" ng-click="checkCMR(cfLic.confModel, lic.cmrLic)" cs-input-label="WebEx {{cfLic.label}}">
+              <input type="checkbox" cs-input id="{{cfLic.licenseId}}" ng-model="cfLic.confModel" ng-click="checkCMR(cfLic, lic.cmrLic)" cs-input-label="WebEx {{cfLic.label}}">
               <div class="cs-checkbox-group cs-input--nested-1" ng-if="cfLic.offerName === 'MC' || cfLic.offerName === 'EE'">
                 <div ng-repeat="cmrLic in lic.cmrLic">
                   <input type="checkbox" cs-input id="{{cmrLic.licenseId}}" ng-click="cfLic.confModel=true;updateCmrLicensesForMetric(cmrLic.cmrModel, cmrLic.licenseId)" ng-model="cmrLic.cmrModel" cs-input-label="WebEx {{cmrLic.label}}">
                 </div>
               </div>
               </div>
-              
+
               <div ng-if="!lic.isCISite" class="item-webex">
               <span>WebEx {{cfLic.label}}</span><br>
               <span class="sub-item"><a href= "{{lic.siteAdminUrl}}" id="{{lic.siteUrl}}_siteAdminUrl">{{::'siteList.siteAdminUrl' | translate}}</a></span>
               </div>
             </div>
           </div>
-          
+
         </div>
       </div>
       <!-- CALL SERVICES PANEL -->
@@ -132,9 +129,9 @@
               <input
                 cs-input
                 type="checkbox"
-                id="{{commFeature.license.licenseId}}" 
-                ng-if="!disableCommFeatureAssignment()"
-                ng-change="checkLicenseAvailability('COMMUNICATION', radioStates.commRadio)" 
+                id="{{commFeature.license.licenseId}}"
+                ng-if="!disableCommFeatureAssignment() && hasSite"
+                ng-change="checkLicenseAvailability('COMMUNICATION', radioStates.commRadio)"
                 ng-model="radioStates.commRadio"
                 ng-disabled="hybridCallServiceAware"
                 cs-input-label="{{::commFeature.label | translate}}">

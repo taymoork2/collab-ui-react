@@ -8,7 +8,6 @@ describe('Customer Screen Directive', function () {
   beforeEach(inject(dependencies));
   beforeEach(injectScope);
 
-  var selected = {};
   var fields = {
     "field1": {
       attributes: [{

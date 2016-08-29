@@ -11,14 +11,12 @@ describe('SparkDomainManagementService: Service', function () {
     $provide.value("Authinfo", authInfo);
   }));
 
-  var $httpBackend, Auth, Authinfo, Config, SparkDomainManagementService, $q;
+  var $httpBackend, SparkDomainManagementService;
   var sparkDomainRegex = /.*\/settings\/domain\.*/;
 
-  beforeEach(inject(function (_$q_, _$httpBackend_, _Config_, _SparkDomainManagementService_) {
+  beforeEach(inject(function (_$httpBackend_, _SparkDomainManagementService_) {
     $httpBackend = _$httpBackend_;
-    Config = _Config_;
     SparkDomainManagementService = _SparkDomainManagementService_;
-    $q = _$q_;
   }));
 
   afterEach(function () {

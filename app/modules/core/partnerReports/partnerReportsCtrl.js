@@ -252,7 +252,7 @@
         return a.label.localeCompare(b.label);
       });
 
-      angular.forEach(customers, function (item, index, array) {
+      angular.forEach(customers, function (item, index) {
         if (index < vm.customerMax) {
           item.isSelected = true;
           vm.customerSelected.push(item);

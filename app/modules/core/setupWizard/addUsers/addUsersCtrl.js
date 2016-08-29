@@ -5,7 +5,8 @@
     .controller('AddUserCtrl', AddUserCtrl);
 
   /* @ngInject */
-  function AddUserCtrl($scope, $q, $location, addressparser, DirSyncService, Log, $translate, Notification, UserListService, $filter, Userservice, LogMetricsService, Config, FeatureToggleService) {
+  function AddUserCtrl($scope, $rootScope, $q, $location, addressparser, DirSyncService, Log, $translate, Notification,
+    UserListService, $filter, Userservice, LogMetricsService, Config, FeatureToggleService) {
     $scope.maxUsers = 1100;
     var invalidcount = 0;
     $scope.options = {
@@ -95,9 +96,9 @@
     $scope.setupTokenfield = function () {
       //tokenfield setup - Should make it into a directive later.
       angular.element('#usersfield-wiz').tokenfield({
-          delimiter: [',', ';'],
-          createTokensOnBlur: true
-        })
+        delimiter: [',', ';'],
+        createTokensOnBlur: true
+      })
         .on('tokenfield:createtoken', function (e) {
           //Removing anything in brackets from user data
           var value = e.attrs.value.replace(/\s*\([^)]*\)\s*/g, ' ');
@@ -162,7 +163,6 @@
     };
 
     $scope.installNextStep = function () {
-      $scope.getStatus();
       $scope.showStep('syncStatus');
     };
 
@@ -286,6 +286,8 @@
       $scope.useNameList = [];
       $scope.dirsyncUserCountText = '';
 
+      $rootScope.$emit('add-user-dirsync-started');
+
       DirSyncService.getDirSyncStatus(function (data, status) {
         if (data.success) {
           Log.debug('Retrieved DirSync status successfully. Status: ' + status);
@@ -295,6 +297,7 @@
           }
         } else {
           Log.debug('Failed to retrieve directory sync status. Status: ' + status);
+          $rootScope.$emit('add-user-dirsync-error');
           Notification.error('dirsyncModal.getStatusFailed', {
             status: status
           });
@@ -325,6 +328,7 @@
           userNameObj.lastName = row.lastName;
           $scope.useNameList.push(userNameObj);
         });
+        $rootScope.$emit('add-user-dirsync-completed');
         return $q.resolve();
       });
     };
@@ -488,9 +492,9 @@
 
         startLog = moment();
 
-        var i, temparray, chunk = Config.batchSize;
+        var i, chunk = Config.batchSize;
         for (i = 0; i < usersList.length; i += chunk) {
-          temparray = usersList.slice(i, i + chunk);
+          usersList.slice(i, i + chunk);
           //update entitlements
           Userservice.inviteUsers(usersList, null, callback);
         }

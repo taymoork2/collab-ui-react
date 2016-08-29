@@ -17,7 +17,9 @@
       validateDID: validateDID,
       getDIDValue: getDIDValue,
       getDIDLabel: getDIDLabel,
-      getExampleNumbers: getExampleNumbers
+      getExampleNumbers: getExampleNumbers,
+      getPhoneNumberType: getPhoneNumberType,
+      isTollFreeNumber: isTollFreeNumber
     };
     var TOLL_FREE = 'TOLL_FREE';
     var PREMIUM_RATE = 'PREMIUM_RATE';
@@ -56,8 +58,28 @@
       }), 'number');
     }
 
+    function getPhoneNumberType(number) {
+      return phoneUtils.getNumberType(number, regionCode);
+    }
+
     function getRegionCode() {
       return regionCode;
+    }
+
+    function isTollFreeNumber(number) {
+      var res = false;
+      try {
+        var phoneNumberType;
+        if (phoneUtils.isValidNumberForRegion(number, regionCode)) {
+          phoneNumberType = phoneUtils.getNumberType(number, regionCode);
+          if (phoneNumberType === TOLL_FREE) {
+            res = true;
+          }
+        }
+      } catch (e) {
+        res = false;
+      }
+      return res;
     }
 
     function validateDID(number) {
@@ -67,12 +89,12 @@
         if (phoneUtils.isValidNumberForRegion(number, regionCode)) {
           phoneNumberType = phoneUtils.getNumberType(number, regionCode);
           switch (phoneNumberType) {
-          case PREMIUM_RATE:
-            res = false;
-            break;
-          case TOLL_FREE:
-          default:
-            res = true;
+            case PREMIUM_RATE:
+              res = false;
+              break;
+            case TOLL_FREE:
+            default:
+              res = true;
           }
         }
       } catch (e) {

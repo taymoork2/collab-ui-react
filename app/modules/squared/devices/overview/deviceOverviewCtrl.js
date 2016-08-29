@@ -139,9 +139,9 @@
       }
 
       uploadLogsPromise.then(function () {
-          var appType = 'Atlas_' + $window.navigator.userAgent;
-          return FeedbackService.getFeedbackUrl(appType, feedbackId);
-        })
+        var appType = 'Atlas_' + $window.navigator.userAgent;
+        return FeedbackService.getFeedbackUrl(appType, feedbackId);
+      })
         .then(function (res) {
           $window.open(res.data.url, '_blank');
         })
@@ -206,7 +206,14 @@
       var tag = _.trim(deviceOverview.newTag);
       if (tag && !_.contains(deviceOverview.currentDevice.tags, tag)) {
         deviceOverview.newTag = undefined;
-        var service = (deviceOverview.currentDevice.needsActivation ? CsdmCodeService : deviceOverview.currentDevice.isHuronDevice ? huronDeviceService : CsdmDeviceService);
+        var service;
+        if (deviceOverview.currentDevice.needsActivation) {
+          service = CsdmCodeService;
+        } else if (deviceOverview.currentDevice.isHuronDevice) {
+          service = huronDeviceService;
+        } else {
+          service = CsdmDeviceService;
+        }
         return service
           .updateTags(deviceOverview.currentDevice.url, deviceOverview.currentDevice.tags.concat(tag))
           .catch(XhrNotificationService.notify);
@@ -224,7 +231,15 @@
 
     deviceOverview.removeTag = function (tag) {
       var tags = _.without(deviceOverview.currentDevice.tags, tag);
-      return (deviceOverview.currentDevice.needsActivation ? CsdmCodeService : deviceOverview.currentDevice.isHuronDevice ? huronDeviceService : CsdmDeviceService)
+      var service;
+      if (deviceOverview.currentDevice.needsActivation) {
+        service = CsdmCodeService;
+      } else if (deviceOverview.currentDevice.isHuronDevice) {
+        service = huronDeviceService;
+      } else {
+        service = CsdmDeviceService;
+      }
+      return service
         .updateTags(deviceOverview.currentDevice.url, tags)
         .catch(XhrNotificationService.notify);
     };
@@ -238,7 +253,7 @@
     deviceOverview.upgradeChannelOptions = _.map(channels, getUpgradeChannelObject);
 
     function resetSelectedChannel() {
-      deviceOverview.selectedUpgradeChannel = getUpgradeChannelObject(deviceOverview.currentDevice.upgradeChannel);
+      deviceOverview.selectedUpgradeChannel = deviceOverview.currentDevice.upgradeChannel;
     }
 
     resetSelectedChannel();
@@ -257,7 +272,7 @@
 
     deviceOverview.saveUpgradeChannelAndWait = function () {
       var newValue = deviceOverview.selectedUpgradeChannel.value;
-      if (newValue !== deviceOverview.currentDevice.upgradeChannel) {
+      if (newValue !== deviceOverview.currentDevice.upgradeChannel.value) {
         deviceOverview.updatingUpgradeChannel = true;
         saveUpgradeChannel(newValue)
           .then(_.partial(waitForDeviceToUpdateUpgradeChannel, newValue))
@@ -283,7 +298,7 @@
 
     function pollDeviceForNewChannel(newValue, endTime, deferred) {
       CsdmDeviceService.getDevice(deviceOverview.currentDevice.url).then(function (device) {
-        if (device.upgradeChannel == newValue) {
+        if (device.upgradeChannel.value == newValue) {
           Notification.success('deviceOverviewPage.channelUpdated');
           return deferred.resolve();
         }

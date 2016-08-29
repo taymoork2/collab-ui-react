@@ -16,8 +16,22 @@
     vm.qrCode = undefined;
     vm.timeLeft = '';
 
-    vm.getActivationCode = function () {
-      return vm.wizardData.activationCode || (vm.wizardData.code && vm.wizardData.code.activationCode) || '';
+    vm.activationCode = vm.wizardData.activationCode || (vm.wizardData.code && vm.wizardData.code.activationCode) || '';
+
+    vm.onCopySuccess = function () {
+      Notification.success(
+        'generateActivationCodeModal.clipboardSuccess',
+        undefined,
+        'generateActivationCodeModal.clipboardSuccessTitle'
+      );
+    };
+
+    vm.onCopyError = function () {
+      Notification.error(
+        'generateActivationCodeModal.clipboardError',
+        undefined,
+        'generateActivationCodeModal.clipboardErrorTitle'
+      );
     };
 
     if (vm.wizardData.deviceType === 'huron') {
@@ -49,7 +63,7 @@
       } else {
         if (vm.wizardData.deviceType === "cloudberry") {
           vm.isLoading = true;
-          CsdmPlaceService.createPlace(vm.wizardData.deviceName, vm.wizardData.deviceType).then(function (place) {
+          CsdmPlaceService.createCsdmPlace(vm.wizardData.deviceName, vm.wizardData.deviceType).then(function (place) {
             vm.place = place;
             CsdmCodeService
               .createCodeForExisting(place.cisUuid)
@@ -78,7 +92,7 @@
       return activationCode ? activationCode.match(/.{4}/g).join('-') : '';
     }
 
-    vm.friendlyActivationCode = formatActivationCode(vm.getActivationCode());
+    vm.friendlyActivationCode = formatActivationCode(vm.activationCode);
 
     vm.activateEmail = function () {
       vm.showEmail = true;
@@ -133,31 +147,32 @@
     };
 
     vm.sendActivationCodeEmail = function sendActivationCodeEmail() {
-      var entitleResult;
       var emailInfo = {
         email: vm.email.to,
         firstName: vm.email.to,
-        oneTimePassword: vm.getActivationCode(),
+        oneTimePassword: vm.activationCode,
         expiresOn: vm.getExpiresOn(),
         userId: vm.wizardData.cisUuid,
         customerId: vm.wizardData.organizationId
       };
 
       ActivationCodeEmailService.save({}, emailInfo, function () {
-        entitleResult = {
-          msg: $translate.instant('generateActivationCodeModal.emailSuccess'),
-          type: 'success'
-        };
+        Notification.notify(
+          [$translate.instant('generateActivationCodeModal.emailSuccess', {
+            'address': vm.email.to
+          })],
+          'success',
+          $translate.instant('generateActivationCodeModal.emailSuccessTitle')
+        );
 
-        Notification.notify([entitleResult.msg], entitleResult.type);
-
-      }, function (error) {
-        entitleResult = {
-          msg: $translate.instant('generateActivationCodeModal.emailError') + "  " + error.data.error,
-          type: 'error'
-        };
-
-        Notification.notify([entitleResult.msg], entitleResult.type);
+      }, function () {
+        Notification.notify(
+          [$translate.instant('generateActivationCodeModal.emailError', {
+            'address': vm.email.to
+          })],
+          'error',
+          $translate.instant('generateActivationCodeModal.emailErrorTitle')
+        );
       });
     };
 

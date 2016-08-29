@@ -24,8 +24,8 @@
 
       var updateFilters = function (list) {
         _.find(filters, {
-            filterValue: 'devices'
-          }).count = _.chain(list)
+          filterValue: 'devices'
+        }).count = _.chain(list)
           .filter(hasDevices)
           .filter(matchesSearch)
           .value().length;
@@ -83,12 +83,12 @@
 
       function matchesFilter(item) {
         switch (currentFilter) {
-        case 'all':
-          return true;
-        case 'devices':
-          return hasDevices(item);
-        default:
-          return true;
+          case 'all':
+            return true;
+          case 'devices':
+            return hasDevices(item);
+          default:
+            return true;
         }
       }
 

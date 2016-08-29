@@ -15,6 +15,7 @@
     @include vr-spacing(pl, 1);
     @include vr-spacing(pv, 1);
     text-align: center;
+    width: 100%;
   }
 
   > button {

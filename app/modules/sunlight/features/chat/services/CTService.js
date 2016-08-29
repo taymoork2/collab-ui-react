@@ -17,12 +17,23 @@
       getTimeOptions: getTimeOptions,
       getEndTimeOptions: getEndTimeOptions,
       getDefaultTimes: getDefaultTimes,
+      getTimeZone: getTimeZone,
       getTimezoneOptions: getTimezoneOptions,
       getDefaultTimeZone: getDefaultTimeZone,
       generateCodeSnippet: generateCodeSnippet,
-      openEmbedCodeModal: openEmbedCodeModal
+      openEmbedCodeModal: openEmbedCodeModal,
+      getLengthValidationConstants: getLengthValidationConstants,
+      getValidationMessages: getValidationMessages
     };
     return service;
+
+    function getLengthValidationConstants() {
+      return {
+        singleLineMaxCharLimit: 50,
+        multiLineMaxCharLimit: 250,
+        empty: 0
+      };
+    }
 
     function getLogo() {
       return BrandService.getLogoUrl(Authinfo.getOrgId()).then(function (logoUrl) {
@@ -135,6 +146,12 @@
       });
     }
 
+    function getTimeZone(zone) {
+      return _.find(getTimezoneOptions(), {
+        value: zone
+      });
+    }
+
     function getPreviewDays(days, continuous, startIndex, endIndex) {
       if (startIndex == endIndex) {
         return days[startIndex].label;
@@ -195,6 +212,18 @@
           }
         }
       });
+    }
+
+    function getValidationMessages(minLength, maxLength) {
+      return {
+        required: $translate.instant('common.invalidRequired'),
+        minlength: $translate.instant('common.invalidMinLength', {
+          'min': minLength
+        }),
+        maxlength: $translate.instant('common.invalidMaxLength', {
+          'max': maxLength
+        })
+      };
     }
   }
 })();

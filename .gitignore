@@ -33,6 +33,8 @@ screenshots
 typings
 /ts/*manifest.txt
 flist-split.*.karma.shim.js
+karma.conf.local.js
+karma.shim.local.js
 
 bower_components
 build-deps.tar
@@ -46,5 +48,7 @@ test/karma-unit-*
 test/karma-watch.js
 test/unit-test-results.html
 test/unit-test-results.xml
+
+webpack-segfault-crash--*log
 
 ?

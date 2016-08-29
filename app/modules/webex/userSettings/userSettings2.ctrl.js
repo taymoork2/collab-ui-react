@@ -51,12 +51,12 @@
     }; // callInTeleconfChkboxClick()
 
     $scope.callBackTeleconfChkboxClick = function () {
-      var funcName = "callBackTeleconfChkboxClick()";
-      var logMsg = "";
+      // var funcName = "callBackTeleconfChkboxClick()";
+      // var logMsg = "";
 
-      logMsg = funcName + ": " + "\n" +
-        "callBackTeleconf.value=" + $scope.userSettingsModel.telephonyPriviledge.callBackTeleconf.value + "\n" +
-        "callInTeleconf.value=" + $scope.userSettingsModel.telephonyPriviledge.callInTeleconf.value;
+      // logMsg = funcName + ": " + "\n" +
+      //   "callBackTeleconf.value=" + $scope.userSettingsModel.telephonyPriviledge.callBackTeleconf.value + "\n" +
+      //   "callInTeleconf.value=" + $scope.userSettingsModel.telephonyPriviledge.callInTeleconf.value;
       // $log.log(logMsg);
 
       if ($scope.userSettingsModel.telephonyPriviledge.callBackTeleconf.value) {
@@ -68,9 +68,9 @@
           ) ? 2 : 1;
         }
 
-        logMsg = funcName + ": " + "\n" +
-          "callInTeleconf.value=" + $scope.userSettingsModel.telephonyPriviledge.callInTeleconf.value + "\n" +
-          "selectedCallInTollType=" + $scope.userSettingsModel.telephonyPriviledge.callInTeleconf.selectedCallInTollType;
+        // logMsg = funcName + ": " + "\n" +
+        //   "callInTeleconf.value=" + $scope.userSettingsModel.telephonyPriviledge.callInTeleconf.value + "\n" +
+        //   "selectedCallInTollType=" + $scope.userSettingsModel.telephonyPriviledge.callInTeleconf.selectedCallInTollType;
         // $log.log(logMsg);
       } else {
         $scope.userSettingsModel.telephonyPriviledge.callBackTeleconf.globalCallBackTeleconf.value = false;
@@ -84,8 +84,8 @@
     }; // hiQualVideoChkboxClick()
 
     $scope.btnSave2 = function (form) {
-      var funcName = "btnSave2()";
-      var logMsg = "";
+      // var funcName = "btnSave2()";
+      // var logMsg = "";
 
       WebExUserSettingsFact.updateUserSettings2(form);
     }; // btnSave2()

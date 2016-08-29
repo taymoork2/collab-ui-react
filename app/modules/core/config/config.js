@@ -43,6 +43,7 @@
       meetingsPerPage: 50,
       alarmsPerPage: 50,
       eventsPerPage: 50,
+      trialGracePeriod: -30, // equal to the number of days left in a trial when it passes grace period
 
       tokenTimers: {
         timeoutTimer: 3000000, // 50 mins
@@ -78,6 +79,30 @@
         care: 'CARE',
         context: 'CONTEXT'
       },
+
+      // These can be used to access object properties for trials
+      licenseObjectNames: [
+        'messaging',
+        'communications',
+        'care',
+        'roomSystems',
+        'conferencing',
+        'webexCMR',
+        'webexEEConferencing',
+        'webexEventCenter',
+        'webexMeetingCenter',
+        'webexTrainingCenter',
+        'webexSupportCenter'
+      ],
+
+      webexTypes: [
+        'webexCMR',
+        'webexEEConferencing',
+        'webexEventCenter',
+        'webexMeetingCenter',
+        'webexTrainingCenter',
+        'webexSupportCenter'
+      ],
 
       //WARNING: Deprecated, use offerTypes
       // These were how trials used to be mapped
@@ -169,6 +194,20 @@
         CARE: 'CARE'
       },
 
+      messageErrors: {
+        userExistsError: '400081',
+        userPatchError: '400084',
+        claimedDomainError: '400091',
+        userExistsInDiffOrgError: '400090',
+        notSetupForManUserAddError: '400110',
+        userExistsDomainClaimError: '400108',
+        unknownCreateUserError: '400096',
+        unableToMigrateError: '400109',
+        insufficientEntitlementsError: '400111',
+        hybridServicesError: '400087',
+        hybridServicesComboError: '400094',
+      },
+
       defaultEntitlements: ['webex-squared', 'squared-call-initiation'],
 
       batchSize: 10,
@@ -234,7 +273,6 @@
         'dr-login-forward',
         'editService',
         'firsttimewizard',
-        'groups',
         'my-company',
         'overview',
         'profile',
@@ -247,16 +285,17 @@
         'userRedirect',
         'userprofile',
         'users',
+        'status'
       ],
-      Support: ['support', 'reports', 'billing', 'cdrsupport', 'cdr-overview', 'cdrladderdiagram'],
-      WX2_User: ['overview', 'support', 'activateProduct'],
-      WX2_Support: ['overview', 'reports', 'support'],
+      Support: ['status', 'support', 'reports', 'billing', 'cdrsupport', 'cdr-overview', 'cdrladderdiagram'],
+      WX2_User: ['status', 'overview', 'support', 'activateProduct'],
+      WX2_Support: ['status', 'overview', 'reports', 'support'],
       WX2_SquaredInviter: [],
-      PARTNER_ADMIN: ['partneroverview', 'partnercustomers', 'customer-overview', 'partnerreports', 'trialAdd', 'trialEdit', 'profile', 'pstnSetup', 'video', 'settings'],
-      PARTNER_SALES_ADMIN: ['overview', 'partneroverview', 'customer-overview', 'partnercustomers', 'partnerreports', 'trialAdd', 'trialEdit', 'pstnSetup', 'video', 'settings'],
-      CUSTOMER_PARTNER: ['overview', 'partnercustomers', 'customer-overview'],
+      PARTNER_ADMIN: ['status', 'partneroverview', 'partnercustomers', 'customer-overview', 'partnerreports', 'trialAdd', 'trialEdit', 'profile', 'pstnSetup', 'video', 'settings'],
+      PARTNER_SALES_ADMIN: ['status', 'overview', 'partneroverview', 'customer-overview', 'partnercustomers', 'partnerreports', 'trialAdd', 'trialEdit', 'pstnSetup', 'video', 'settings'],
+      CUSTOMER_PARTNER: ['status', 'overview', 'partnercustomers', 'customer-overview'],
       //TODO User role is used by Online Ordering UI. The dr* states will be removed once the Online UI is separated from Atlas.
-      User: ['drLoginReturn', 'drOnboard', 'drConfirmAdminOrg', 'drOnboardQuestion', 'drOnboardEnterAdminEmail', 'drOrgName', 'drAdminChoices'],
+      User: ['status', 'drLoginReturn', 'drOnboard', 'drConfirmAdminOrg', 'drOnboardQuestion', 'drOnboardEnterAdminEmail', 'drOrgName', 'drAdminChoices'],
       Site_Admin: [
         'site-list',
         'site-csv-import',
@@ -281,6 +320,7 @@
         'addDeviceFlow',
         'autoattendant',
         'callpark',
+        'callparkedit',
         'callpickup',
         'callrouting',
         'device-overview',
@@ -348,9 +388,7 @@
         'messenger',
         'services-overview',
       ],
-      'contact-center-context': [
-        //TODO: Remove these states when sunlight trial stories are implemented and
-        // add back them to 'ccc_config' serviceState
+      'cloud-contact-center': [
         'care'
       ]
     };

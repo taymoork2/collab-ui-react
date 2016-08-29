@@ -4,12 +4,15 @@
   </button>
   <p class="modal-title" translate="autoAttendant.importSchedule"></p>
 </div>
-<div class="modal-body import-schedule-modal">
-  <p translate="autoAttendant.importDesc"></p>
-  <cs-select
-    ng-model="import.selected"
-    options="import.options"
-    placeholder="import.selectPlaceholder"></cs-select>
+<div class="modal-body">
+  <div class="import-schedule-modal">
+    <p translate="autoAttendant.importDesc"></p>
+    <cs-select
+      ng-model="import.selected"
+      options="import.options"
+      filter="true"
+      placeholder="import.selectPlaceholder"></cs-select>
+  </div>
 </div>
 <div class="modal-footer">
   <button class="btn" translate="common.cancel" ng-click="$dismiss()"></button>

@@ -6,11 +6,10 @@
     .controller('UserOverviewCtrl', UserOverviewCtrl);
 
   /* @ngInject */
-  function UserOverviewCtrl($http, $scope, $stateParams, $translate, $resource, Authinfo, FeatureToggleService, Log, Orgservice, Notification, UrlConfig, Userservice, Utils) {
+  function UserOverviewCtrl($http, $scope, $state, $stateParams, $translate, $resource, $window, Authinfo, FeatureToggleService, Notification, SunlightConfigService, UrlConfig, Userservice, Utils, WebExUtilsFact) {
     var vm = this;
     vm.currentUser = $stateParams.currentUser;
     vm.entitlements = $stateParams.entitlements;
-    vm.queryuserslist = $stateParams.queryuserslist;
     vm.services = [];
     vm.dropDownItems = [];
     vm.titleCard = '';
@@ -28,6 +27,17 @@
     vm.disableAuthCodeLink = disableAuthCodeLink;
     vm.getUserPhoto = Userservice.getUserPhoto;
     vm.isValidThumbnail = Userservice.isValidThumbnail;
+    vm.actionList = [];
+
+    if (vm.currentUser.trainSiteNames) {
+      var ciTrainSiteNames = vm.currentUser.trainSiteNames.filter(
+        function (chkSiteUrl) {
+          return WebExUtilsFact.isCIEnabledSite(chkSiteUrl);
+        }
+      );
+
+      vm.currentUser.trainSiteNames = (0 < ciTrainSiteNames.length) ? ciTrainSiteNames : null;
+    }
 
     var msgState = {
       name: $translate.instant('onboardModal.message'),
@@ -76,8 +86,10 @@
         vm.services.push(msgState);
       }
       if (hasEntitlement('cloudmeetings')) {
-        confState.detail = $translate.instant('onboardModal.paidConfWebEx');
-        vm.services.push(confState);
+        if (vm.currentUser.trainSiteNames) {
+          confState.detail = $translate.instant('onboardModal.paidConfWebEx');
+          vm.services.push(confState);
+        }
       } else if (hasEntitlement('squared-syncup')) {
         if (getServiceDetails('CF')) {
           confState.detail = $translate.instant('onboardModal.paidConf');
@@ -91,14 +103,43 @@
         vm.services.push(commState);
       }
       if (hasEntitlement('cloud-contact-center')) {
-        if (getServiceDetails('CC')) {
-          contactCenterState.detail = $translate.instant('onboardModal.paidContactCenter');
+        if (getServiceDetails('CD')) {
+          SunlightConfigService.getUserInfo(vm.currentUser.id).then(
+              function () {
+                contactCenterState.detail = $translate.instant('onboardModal.paidContactCenter');
+                vm.services.push(contactCenterState);
+              }
+          );
         }
-        vm.services.push(contactCenterState);
+
       }
 
+      initActionList();
       getAccountStatus();
       updateUserTitleCard();
+    }
+
+    function initActionList() {
+      var action = {
+        actionKey: 'usersPreview.editServices'
+      };
+      if (Authinfo.isCSB()) {
+        action.actionFunction = goToUserRedirect;
+      } else {
+        action.actionFunction = goToEditService;
+      }
+      vm.actionList.push(action);
+    }
+
+    function goToEditService() {
+      $state.go('editService', {
+        currentUser: vm.currentUser
+      });
+    }
+
+    function goToUserRedirect() {
+      var url = $state.href('userRedirect');
+      $window.open(url, '_blank');
     }
 
     var generateOtpLink = {
@@ -248,17 +289,26 @@
     }
 
     function getAccountStatus() {
-      var currentUserId = vm.currentUser.id;
-      vm.currentUser.pendingStatus = false;
-      vm.pendingStatus = _.indexOf(vm.currentUser.accountStatus, 'pending') >= 0;
-      vm.currentUser.pendingStatus = vm.pendingStatus;
-      // if there are services found, then those are licenses,
-      // which means the users has already accepted invitations,
-      // so no need to get invitation list
+      // user status
+      FeatureToggleService.atlasUserPendingStatusGetStatus().then(function (pendingToggle) {
+        if (pendingToggle) {
+          vm.currentUser.pendingStatus = false;
+          var hasBeenActivated = _.some(vm.currentUser.userSettings, function (userSetting) {
+            return userSetting.indexOf('sparkAdmin.licensedDate') > 0 || userSetting.indexOf('spark.signUpDate') > 0;
+          });
+          vm.pendingStatus = _.isEmpty(vm.currentUser.licenseID) || !hasBeenActivated;
+          vm.currentUser.pendingStatus = vm.pendingStatus;
+        } else {
+          vm.pendingStatus = _.indexOf(vm.currentUser.accountStatus, 'pending') >= 0;
+        }
+      });
+
+      // if no licenses/services found from CI,
+      // then get the invitation list from Cassandra
       if (_.isEmpty(vm.services)) {
         invitationResource.get({
           customerId: Authinfo.getOrgId(),
-          userId: currentUserId
+          userId: vm.currentUser.id
         }).$promise.then(function (response) {
           if (_.isArray(response.effectiveLicenses) && !_.isEmpty(response.effectiveLicenses)) {
             vm.currentUser.invitations = {
@@ -277,10 +327,14 @@
               vm.services.push(confState);
               vm.currentUser.invitations.cf = confId;
             }
-            if (getInvitationDetails(response.effectiveLicenses, 'CC')) {
-              contactCenterState.detail = $translate.instant('onboardModal.paidContactCenter');
-              vm.services.push(contactCenterState);
-              vm.currentUser.invitations.cc = true;
+            if (getInvitationDetails(response.effectiveLicenses, 'CD')) {
+              SunlightConfigService.getUserInfo(vm.currentUser.id).then(
+                  function () {
+                    contactCenterState.detail = $translate.instant('onboardModal.paidContactCenter');
+                    vm.services.push(contactCenterState);
+                    vm.currentUser.invitations.cc = true;
+                  }
+              );
             }
           }
         });
@@ -295,16 +349,6 @@
           Notification.errorResponse(error, 'usersPage.emailError');
         });
       angular.element('.open').removeClass('open');
-    }
-
-    function getOrg() {
-      Orgservice.getOrg(function (data, status) {
-        if (data.success) {
-          vm.dirsyncEnabled = data.dirsyncEnabled;
-        } else {
-          Log.debug('Get existing org failed. Status: ' + status);
-        }
-      });
     }
   }
 })();

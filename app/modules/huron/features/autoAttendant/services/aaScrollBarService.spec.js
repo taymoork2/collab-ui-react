@@ -1,7 +1,7 @@
   'use strict';
 
   describe('Service:AAScrollBar', function () {
-    var $timeout, $compile, $rootScope, $scope, $q;
+    var $timeout, $compile, $rootScope, $scope;
     var AAScrollBar, container, target0, target1;
 
     beforeEach(angular.mock.module('uc.autoattendant'));

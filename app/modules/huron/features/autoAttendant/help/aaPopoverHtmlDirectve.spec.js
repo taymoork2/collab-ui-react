@@ -1,15 +1,14 @@
 'use strict';
 
 describe('Directive: aaPopoverHtml', function () {
-  var $compile, $rootScope, $timeout, $scope;
+  var $compile, $rootScope, $scope;
   var element, divElement;
 
   beforeEach(angular.mock.module('Huron'));
 
-  beforeEach(inject(function (_$compile_, _$rootScope_, _$timeout_) {
+  beforeEach(inject(function (_$compile_, _$rootScope_) {
     $compile = _$compile_;
     $rootScope = _$rootScope_;
-    $timeout = _$timeout_;
 
     $scope = $rootScope.$new();
     element = angular.element("<span aa-popover-html='This is a <strong>test</strong>.' popover-trigger='click' popover-animation='true' popover-placement='bottom'></span>");

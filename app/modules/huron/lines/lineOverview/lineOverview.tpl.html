@@ -1,0 +1,53 @@
+<form novalidate name="$ctrl.form" role="form">
+  <cs-sp-buttons ng-show="$ctrl.form.$dirty" ng-init="$ctrl.initNewForm()">
+    <button cs-btn loading="$ctrl.saveInProcess" class="btn btn--primary" ng-click="$ctrl.saveLineSettings()" ng-disabled="$ctrl.form.$invalid || $ctrl.saveDisabled() || $ctrl.saveInProcess" type="submit">
+      <span translate="common.save"></span>
+    </button>
+    <button cs-btn ng-click="$ctrl.resetLineSettings()">
+      <span translate="common.cancel"></span>
+    </button>
+  </cs-sp-buttons>
+  <cs-sp-container>
+    <cs-sp-section>
+      <section-title
+        title-key="directoryNumberPanel.title">
+      </section-title>
+      <uc-directory-number
+        show-internal-extensions="$ctrl.showExtensions"
+        esn-prefix="$ctrl.esnPrefix"
+        internal-selected="$ctrl.internalNumber"
+        internal-options="$ctrl.internalOptions"
+        internal-is-warn="$ctrl.internalIsWarn"
+        internal-warn-msg="$ctrl.internalWarnMsg"
+        external-selected="$ctrl.externalNumber"
+        external-options="$ctrl.externalOptions"
+        on-change-fn="$ctrl.setDirectoryNumbers(internalNumber, externalNumber)">
+      </uc-directory-number>
+    </cs-sp-section>
+    <cs-sp-section>
+      <uc-call-forward
+        call-forward-all="$ctrl.callForwardAll"
+        call-forward-busy="$ctrl.callForwardBusy"
+        voicemail-enabled="$ctrl.voicemailEnabled"
+        on-change-fn="$ctrl.setCallForward(callForwardAll, callForwardBusy)">
+      </uc-call-forward>
+    </cs-sp-section>
+    <div cr-feature-toggle feature-show="multipleCalls">
+      <cs-sp-section >
+        <uc-simultaneous-calls
+          incoming-call-maximum="$ctrl.incomingCallMaximum"
+          on-change-fn="$ctrl.setSimultaneousCalls(incomingCallMaximum)">
+        </uc-simultaneous-calls>
+      </cs-sp-section>
+    </div>
+    <cs-sp-section>
+      <caller-id 
+        caller-id-options="$ctrl.callerIdOptions" 
+        custom-caller-id-name="$ctrl.customCallerIdName" 
+        custom-caller-id-number="$ctrl.customCallerIdNumber" 
+        caller-id-selected="$ctrl.callerIdSelected" 
+        on-change-fn="$ctrl.updateCallerId(callerIdSelected, customCallerIdName, customCallerIdNumber);">
+      </caller-id>
+    </cs-sp-section>
+  </cs-sp-container>
+</form>

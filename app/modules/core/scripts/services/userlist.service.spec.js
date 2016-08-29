@@ -3,7 +3,7 @@
 describe('User List Service', function () {
   beforeEach(angular.mock.module('Core'));
 
-  var $httpBackend, $rootScope, UserListService, Authinfo, Config, UrlConfig;
+  var $httpBackend, UserListService, Authinfo, UrlConfig;
 
   var testData;
 
@@ -19,13 +19,11 @@ describe('User List Service', function () {
     });
   });
 
-  beforeEach(inject(function (_$httpBackend_, _$rootScope_, _UserListService_, _Config_, _Authinfo_, _UrlConfig_) {
+  beforeEach(inject(function (_$httpBackend_, _UserListService_, _Authinfo_, _UrlConfig_) {
     $httpBackend = _$httpBackend_;
     UserListService = _UserListService_;
     UrlConfig = _UrlConfig_;
-    Config = _Config_;
     Authinfo = _Authinfo_;
-    $rootScope = _$rootScope_;
 
     testData = getJSONFixture('core/json/users/userlist.service.json');
   }));
@@ -54,7 +52,7 @@ describe('User List Service', function () {
 
     UserListService.listUsers(testData.listUsers.startIndex, testData.listUsers.count,
       testData.listUsers.sortBy, testData.listUsers.sortOrder,
-      function (data, status, searchStr) {
+      function (data, status) {
         expect(status).toBe(200);
         expect(data.TotalResults).toBe('2');
         expect(data.itemsPerPage).toBe('2');
@@ -68,7 +66,7 @@ describe('User List Service', function () {
   });
 
   it('should include entitlements in query when specified', function () {
-    var listUsersUrl = UrlConfig.getScimUrl(Authinfo.getOrgId()) + "?filter=active%20eq%20true%20and%20entitlements%20eq%20%22everything%22%20and%20(userName%20sw%20%22test%22%20or%20name.givenName%20sw%20%22test%22%20or%20name.familyName%20sw%20%22test%22%20or%20displayName%20sw%20%22test%22)&attributes=name,userName,userStatus,entitlements,displayName,photos,roles,active,trainSiteNames,licenseID&count=10";
+    var listUsersUrl = UrlConfig.getScimUrl(Authinfo.getOrgId()) + "?filter=active%20eq%20true%20and%20entitlements%20eq%20%22everything%22%20and%20(userName%20sw%20%22test%22%20or%20name.givenName%20sw%20%22test%22%20or%20name.familyName%20sw%20%22test%22%20or%20displayName%20sw%20%22test%22)&attributes=name,userName,userStatus,entitlements,displayName,photos,roles,active,trainSiteNames,licenseID,userSettings&count=10";
 
     $httpBackend.whenGET(listUsersUrl).respond(200, {
       TotalResults: "2",
@@ -81,7 +79,7 @@ describe('User List Service', function () {
 
     UserListService.listUsers(0, 10,
       null, null,
-      function (data, status, searchStr) {
+      function (data, status) {
         expect(status).toBe(200);
         expect(data.TotalResults).toBe('2');
         expect(data.itemsPerPage).toBe('2');
@@ -95,7 +93,7 @@ describe('User List Service', function () {
   });
 
   it('should leave out entitlements in query when not specified', function () {
-    var listUsersUrl = UrlConfig.getScimUrl(Authinfo.getOrgId()) + "?filter=active%20eq%20true%20and%20(userName%20sw%20%22test%22%20or%20name.givenName%20sw%20%22test%22%20or%20name.familyName%20sw%20%22test%22%20or%20displayName%20sw%20%22test%22)&attributes=name,userName,userStatus,entitlements,displayName,photos,roles,active,trainSiteNames,licenseID&count=10";
+    var listUsersUrl = UrlConfig.getScimUrl(Authinfo.getOrgId()) + "?filter=active%20eq%20true%20and%20(userName%20sw%20%22test%22%20or%20name.givenName%20sw%20%22test%22%20or%20name.familyName%20sw%20%22test%22%20or%20displayName%20sw%20%22test%22)&attributes=name,userName,userStatus,entitlements,displayName,photos,roles,active,trainSiteNames,licenseID,userSettings&count=10";
 
     $httpBackend.whenGET(listUsersUrl).respond(200, {
       TotalResults: "2",
@@ -108,7 +106,7 @@ describe('User List Service', function () {
 
     UserListService.listUsers(0, 10,
       null, null,
-      function (data, status, searchStr) {
+      function (data, status) {
         expect(status).toBe(200);
         expect(data.TotalResults).toBe('2');
         expect(data.itemsPerPage).toBe('2');
@@ -122,7 +120,7 @@ describe('User List Service', function () {
   });
 
   it('should include entitlements in query when specified without search filter', function () {
-    var listUsersUrl = UrlConfig.getScimUrl(Authinfo.getOrgId()) + "?filter=active%20eq%20true%20and%20entitlements%20eq%20%22everything%22&attributes=name,userName,userStatus,entitlements,displayName,photos,roles,active,trainSiteNames,licenseID&count=10";
+    var listUsersUrl = UrlConfig.getScimUrl(Authinfo.getOrgId()) + "?filter=active%20eq%20true%20and%20entitlements%20eq%20%22everything%22&attributes=name,userName,userStatus,entitlements,displayName,photos,roles,active,trainSiteNames,licenseID,userSettings&count=10";
 
     $httpBackend.whenGET(listUsersUrl).respond(200, {
       TotalResults: "2",
@@ -135,7 +133,7 @@ describe('User List Service', function () {
 
     UserListService.listUsers(0, 10,
       null, null,
-      function (data, status, searchStr) {
+      function (data, status) {
         expect(status).toBe(200);
         expect(data.TotalResults).toBe('2');
         expect(data.itemsPerPage).toBe('2');

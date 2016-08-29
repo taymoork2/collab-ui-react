@@ -1,0 +1,130 @@
+.modal-usermanage-dialog {
+  width: 900px;
+}
+
+.modal-usermanage-header {
+  padding: 20px;
+  border-bottom: 0px;
+  background-color: $brand-white;
+}
+
+.user-manage {
+  display: flex;
+  flex: 1 1 auto;
+
+  h4 {
+    @include vr-spacing(mb, .5);
+  }
+
+  .sync-container {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
+
+    .ad-top {
+      max-height: 20rem;
+    }
+  }
+
+  .row {
+    flex: 1 1 auto;
+  }
+
+  .row.no-flex {
+    flex: 0 0 auto;
+  }
+
+  form {
+    .columns {
+      @include vr-spacing(mb, 1);
+    }
+  }
+
+  .sync-status {
+
+    .ds-inline {
+      display: inline;
+    }
+
+    .icon-refresh {
+      font-weight: bolder;
+      position: relative;
+      top: .1rem;
+      @include vr-spacing(m, .5);
+    }
+
+    .ui-grid .grid-refresh {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+    }
+
+    .ds-sync {
+      display: flex;
+      flex-direction: row;
+      padding-bottom: 1rem;
+
+      h5 {
+        @include vr-spacing(ml, .5);
+      }
+
+      div.details {
+        @include vr-spacing(ml, .5);
+
+        h5 {
+          @include vr-spacing(ml, 0);
+        }
+
+        p {
+          @include vr-spacing(mv, 1);
+        }
+      }
+
+      .working {
+        color: $brand-success;
+        top: .25rem;
+        font-size: small;
+      }
+
+      .failing {
+        color: $brand-danger;
+      }
+    }
+  }
+
+  .divider {
+    flex: 0 0 auto;
+    @include vr-spacing(mb, .75);
+  }
+
+  li {
+    list-style-type: none;
+    padding-bottom: 1rem;
+
+    .cs-input-radio.cs-input-group {
+      @include vr-spacing(mb, .25);
+
+      p {
+        @extend .cs-radio-help;
+        @include vr-spacing(mt, .25);
+      }
+    }
+
+    label {
+      @include vr-spacing(mb, 0);
+    }
+
+  }
+
+  .dirsync-info {
+    width: 100%;
+
+    .ftwdirgridStyle {
+      height: 100%;
+    }
+  }
+
+  &.user-csv.modal-body.user-manage-advanced-results > .flex-container {
+      flex-shrink: 0;
+  }
+}

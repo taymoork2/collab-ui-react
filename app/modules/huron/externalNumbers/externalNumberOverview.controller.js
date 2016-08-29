@@ -59,7 +59,7 @@
     }
 
     function getCommTrial(org) {
-      if (!!org.isPartner) {
+      if (org.isPartner) {
         return false;
       }
       return _.get(org, 'communications.isTrial', true);

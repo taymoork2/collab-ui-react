@@ -2,34 +2,49 @@
 function get_pids {
     local grepex="\b$1\b"
     # shellcheck disable=SC2009
-    ps aux | grep -e "$grepex" | grep -v grep | awk '{print $2;}' | xargs echo
+    ps aux | grep -e "$grepex" | grep -v grep | awk '{print $2;}'
 }
 
 # kill list of PIDs (reattempt 'max_retry_count'-times, then use `kill -9`)
 function kill_wait {
+    local proc_to_kill="$1"
+    local pids=
+    pids=$(get_pids "$proc_to_kill")
+
+    # list of pids may contain the pid of this script's process and the basename of this script itself
+    # - ensure both are excluded from list of pids to kill
+    # shellcheck disable=SC2086 disable=SC2009
+    if [ -n "$pids" ]; then
+        pids=$(ps -o pid= -p $pids | grep -v $$ | grep -v -- "$(basename -- "$0")")
+    fi
+
+    # shellcheck disable=SC2086
+    kill_wait_pids $pids
+}
+
+function kill_wait_pids {
     local max_retry_count=5
     local i=0
-    proc_to_kill="$1"
 
-    echo "[INFO] procname to kill: $proc_to_kill"
-    pids=$(get_pids "$proc_to_kill")
+    pids=$*
     if [ -z "$pids" ]; then
-        echo "[INFO] no pids found, quitting."
         return
     fi
 
-    echo "[INFO] pids to kill: $pids"
-    kill ${pids[*]}
+    # shellcheck disable=SC2086
+    echo "[INFO] kill_wait_pids: pids to kill: $pids"
+    kill $pids 2>/dev/null
     sleep 2
 
-    while ps -p "$pids"; do
+    # shellcheck disable=SC2086
+    while ps -o pid= -p $pids; do
         let "i+=1"
-        echo "[INFO] trying again ($i)"
+        echo "[INFO] kill_wait_pids: trying again ($i)"
         if [ $i -lt $max_retry_count ]; then
-            kill "$pids"
+            kill $pids 2>/dev/null
         else
-            echo "[INFO] max retries reached, force killing: $proc_to_kill"
-            kill -9 "$pids"
+            echo "[INFO] kill_wait_pids: max retries reached, force killing: $pids"
+            kill -9 $pids 2>/dev/null
         fi
 
         sleep 2

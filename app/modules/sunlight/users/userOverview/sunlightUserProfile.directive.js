@@ -9,5 +9,4 @@
       templateUrl: 'modules/sunlight/users/userOverview/sunlightUserProfile.tpl.html',
     };
   }
-})
-();
+})();
