@@ -21,26 +21,26 @@
 
         <div ng-if="showList" class="incidentItem" ng-repeat="incident in incidentList">
 
-            <div class="incidentName clearFloat">
-              <span>{{incident.incidentName}}</span>
-            </div>
+          <div class="incidentName clearFloat">
+            <span>{{incident.incidentName}}</span>
+          </div>
 
-            <div class="operationHref clearFloat">
-              <div ng-if="incident.status!='resolved'">
-                <a ui-sref="status.incidents.update( {incidentName:incident.incidentName, incidentId:incident.incidentId} )">Update</a>
-                <a ui-sref="status.incidents.delete({ incidentName:incident.incidentName, incidentId:incident.incidentId })">Delete</a>
-              </div>
-              <div ng-if="incident.status=='resolved'">
-                <a href="#">Write Postmortem</a>
-                <a href="#">View Incident</a>
-                <a ui-sref="status.incidents.delete({ incidentName:incident.incidentName, incidentId:incident.incidentId })">Delete</a>
-              </div>
+          <div class="operationHref clearFloat">
+            <div ng-if="incident.status!='resolved'">
+              <a ui-sref="status.incidents.update( {incidentName:incident.incidentName, incidentId:incident.incidentId} )">Update</a>
+              <a ui-sref="status.incidents.delete({ incidentName:incident.incidentName, incidentId:incident.incidentId })">Delete</a>
             </div>
+            <div ng-if="incident.status=='resolved'">
+              <a href="#">Write Postmortem</a>
+              <a href="#">View Incident</a>
+              <a ui-sref="status.incidents.delete({ incidentName:incident.incidentName, incidentId:incident.incidentId })">Delete</a>
+            </div>
+          </div>
 
-            <div class="operationTime clearFloat">
-              <span ng-if="incident.status!='resolved'">Last updated on </span>
-              <span ng-if="incident.status=='resolved'">Resolved on </span>{{incident.lastModifiedTime | date: 'medium'}}
-            </div>
+          <div class="operationTime clearFloat">
+            <span ng-if="incident.status!='resolved'">Last updated on </span>
+            <span ng-if="incident.status=='resolved'">Resolved on </span>{{incident.lastModifiedTime | date: 'medium'}}
+          </div>
 
         </div>
 

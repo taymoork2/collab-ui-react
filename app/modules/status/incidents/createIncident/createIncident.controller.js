@@ -10,7 +10,9 @@
       msg: '',
       name: ''
     };
-    $scope.CreateIncident = function () {
+    var vm = this;
+    vm.CreateIncident = CreateIncident;
+    function CreateIncident() {
       IncidentsWithSiteService.save({
         "siteId": 1
       }, {
@@ -23,6 +25,6 @@
         $window.alert("Incident successfully created!");
       }, function () {
       });
-    };
+    }
   }
 })();

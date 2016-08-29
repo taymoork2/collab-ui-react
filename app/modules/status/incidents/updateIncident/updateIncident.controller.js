@@ -5,6 +5,8 @@
   function UpdateIncidentController($scope, $stateParams, UpdateIncidentService, IncidentsWithoutSiteService) {
     $scope.showComponent = false;
     $scope.components = {};
+   // var vm=this;
+    //vm.incidentMsg = incidentMsg;
     function incidentMsg() {
       IncidentsWithoutSiteService.getIncidentMsg({ incidentId: $stateParams.incidentId, isArray: false }).$promise.then(function (data) {
         $scope.incidentName = data.incidentName;
