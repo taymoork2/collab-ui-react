@@ -6,7 +6,7 @@
 
 <div class="container-ci-sync" ng-if="sync.authorized()">
 
-   <cs-page-header title="{{::'messengerCiSync.pageTitle' | translate}}"></cs-page-header>
+  <cs-page-header title="{{::'messengerCiSync.pageTitle' | translate}}"></cs-page-header>
 
   <div class="content">
     <!-- BEGIN CONTENT -->
@@ -37,18 +37,29 @@
           <div ng-if="sync.syncInfo.isMessengerSyncRawMode"> <!-- Native Messenger Sync mode -->
             <p tooltip-placement="top" tooltip="{{sync.syncStatusTooltip}}" translate="messengerCiSync.syncStatusHeading"></p>
             <!-- Ugly, but it seems the only way that works so far. Would be nice to find simpler way -->
-            <cs-toggle-switch ng-if="sync.adminTypes.ops !== sync.adminType" ng-model="sync.syncInfo.isSyncEnabled" toggle-id="toggleIsSyncing" name="toggleSyncing" is-disabled="true" size="small"></cs-toggle-switch>
             <cs-toggle-switch ng-if="sync.adminTypes.ops === sync.adminType" ng-model="sync.syncInfo.isSyncEnabled" toggle-id="toggleIsSyncing" name="toggleSyncing" size="small"></cs-toggle-switch>
+            <!-- text when not editable -->
+            <div ng-if="sync.adminTypes.ops !== sync.adminType">
+              <div ng-if="sync.syncInfo.isSyncEnabled" msgr-text-status-on></div>
+              <div ng-if="!sync.syncInfo.isSyncEnabled" msgr-text-status-off></div>
+            </div>
           </div>
           <div ng-if="!sync.syncInfo.isMessengerSyncRawMode"> <!-- Native CI DirSync mode -->
             <p tooltip-placement="top" tooltip="{{sync.dirsyncStatusTooltip}}" translate="messengerCiSync.dirsyncStatusHeading"></p>
-            <cs-toggle-switch ng-model="sync.syncInfo.isSyncEnabled" toggle-id="toggleIsSyncing" name="toggleSyncing" is-disabled="true" size="small"></cs-toggle-switch>
+            <!-- text when not editable -->
+            <div ng-if="sync.syncInfo.isSyncEnabled" class="smallerfont" msgr-text-status-on></div>
+            <div ng-if="!sync.syncInfo.isSyncEnabled" class="smallerfont" msgr-text-status-off></div>
           </div>
 
           <p tooltip-placement="bottom" tooltip="{{sync.authRedirectTooltip}}" translate="messengerCiSync.authRedirectHeading"></p>
           <!-- Ugly, but it seems the only way that works so far. Would be nice to find simpler way -->
-          <cs-toggle-switch ng-if="sync.adminTypes.ops !== sync.adminType"  ng-model="sync.syncInfo.isAuthRedirect" toggle-id="toggleAuthRedirect" name="toggleAuth" is-disabled="true" size="small"></cs-toggle-switch>
           <cs-toggle-switch ng-if="sync.adminTypes.ops === sync.adminType"  ng-model="sync.syncInfo.isAuthRedirect" toggle-id="toggleAuthRedirect" name="toggleAuth" size="small"></cs-toggle-switch>
+          <!-- text when not editable -->
+          <div ng-if="sync.adminTypes.ops !== sync.adminType" class="smallerfont">
+            <div ng-if="sync.syncInfo.isAuthRedirect" msgr-text-status-on></div>
+            <div ng-if="!sync.syncInfo.isAuthRedirect" msgr-text-status-off></div>
+          </div>
+
           <input class="btn btn--attention" type="submit" value="{{sync.patchSyncButtonText}}" ng-if="sync.adminTypes.ops === sync.adminType" ng-click="sync.patchSync()">
       </div>
     </div>

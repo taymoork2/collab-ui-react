@@ -3,7 +3,9 @@
 
   angular
     .module('Messenger')
-    .controller('CiSyncCtrl', CiSyncCtrl);
+    .controller('CiSyncCtrl', CiSyncCtrl)
+    .directive('msgrTextStatusOn', msgrTextStatusOn)
+    .directive('msgrTextStatusOff', msgrTextStatusOff);
 
   /* @ngInject */
   function CiSyncCtrl($q, $translate, Authinfo, Log, Notification, CiService, SyncService) {
@@ -265,5 +267,17 @@
           });
       }
     }
+  }
+
+  function msgrTextStatusOn() {
+    return {
+      template: '<p style="font-size:0.7em;display:inline;" translate="common.status"></p><p style="font-size:0.7em;display:inline;"> : </p><p style="font-size:0.7em;display:inline;" translate="common.on"></p>'
+    };
+  }
+
+  function msgrTextStatusOff() {
+    return {
+      template: '<p style="font-size:0.7em;display:inline;" translate="common.status"></p><p style="font-size:0.7em;display:inline;"> : </p><p style="font-size:0.7em;display:inline;" translate="common.off"></p>'
+    };
   }
 })();
