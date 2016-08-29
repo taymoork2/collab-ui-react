@@ -2,23 +2,29 @@
   'use strict';
 
   /* @ngInject  */
-  function CsdmPlaceService($window, $http, Authinfo, CsdmConfigService, CsdmConverter, FeatureToggleService, $q) {
+  function CsdmHuronPlaceService($window, $http, Authinfo, CsdmConverter, FeatureToggleService, $q, HuronConfig) {
 
-    var csdmPlacesUrl = CsdmConfigService.getUrl() + '/organization/' + Authinfo.getOrgId() + '/places';
+    var cmiPlacesUrl = HuronConfig.getCmiV2Url() + '/customers/' + Authinfo.getOrgId() + '/places';
     var placesCache = {};
     var loadedData = false;
 
     function init() {
-      fetchCsdmPlaces();
+      fetchCmiPlaces();
     }
 
-    function fetchCsdmPlaces() {
+    function fetchCmiPlaces() {
       return placesFeatureIsEnabled()
         .then(function (res) {
           if (res) {
-            return $http.get(csdmPlacesUrl)
+            return $http.get(cmiPlacesUrl)
               .then(function (res) {
-                placesCache = CsdmConverter.convertPlaces(res.data);
+                _.forEach(res.data.places, function (item) {
+                  item.phones = !item.phones ? [] : item.phones;
+                  item.type = 'huron';
+                  item.entitlements = ['ciscouc'];
+                  item = CsdmConverter.convertPlace(item);
+                  placesCache[item.url] = item;
+                });
                 loadedData = true;
               });
           } else {
@@ -58,14 +64,24 @@
       });
     }
 
-    function createCsdmPlace(name, deviceType) {
-      return $http.post(csdmPlacesUrl, {
-        name: name,
-        placeType: deviceType
+    function createCmiPlace(name, directoryNumber) {
+      return $http.post(cmiPlacesUrl, {
+        displayName: name,
+        directoryNumber: directoryNumber
+      }, {
+        headers: {
+          'Access-Control-Expose-Headers': 'Location'
+        }
       }).then(function (res) {
-        var place = CsdmConverter.convertPlace(res.data);
-        placesCache[place.url] = place;
-        return place;
+        var location = res.headers('Location');
+        return $http.get(location).then(function (res) {
+          res.data.phones = !res.data.phones ? [] : res.data.phones;
+          res.data.type = 'huron';
+          res.data.entitlements = ['ciscouc'];
+          var place = CsdmConverter.convertPlace(res.data);
+          placesCache[place.url] = place;
+          return place;
+        });
       });
     }
 
@@ -76,7 +92,7 @@
     return {
       placesFeatureIsEnabled: placesFeatureIsEnabled,
       deletePlace: deletePlace,
-      createCsdmPlace: createCsdmPlace,
+      createCmiPlace: createCmiPlace,
       getPlacesList: getPlacesList,
       dataLoaded: dataLoaded,
       updatePlaceName: updatePlaceName
@@ -85,6 +101,6 @@
 
   angular
     .module('Squared')
-    .service('CsdmPlaceService', CsdmPlaceService);
+    .service('CsdmHuronPlaceService', CsdmHuronPlaceService);
 
 })();
