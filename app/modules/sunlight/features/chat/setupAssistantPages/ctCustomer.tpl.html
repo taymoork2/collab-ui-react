@@ -72,9 +72,7 @@
               </label>
 
               <input
-                ng-if="attribute.name === 'header' ||
-                attribute.name === 'label' ||
-                attribute.name === 'hintText'"
+                ng-if="attribute.name === 'header' || attribute.name === 'label' || attribute.name === 'hintText'"
                 id="attribute.fieldName"
                 class="h5 inputField ct-attribute-field-textbox large-11"
                 type="text"
@@ -138,12 +136,16 @@
               <div class="row ct-attribute-row ct-customer-info-category-input right-inner-addon" ng-if="attribute.name == 'type' && attribute.value.id == 'category'">
                 <i class="icon icon-add-contain" ng-click="careChatSA.addCategoryOption()"></i>
                 <input
+                        cs-input
+                        name="categoryTextBox"
                         id="categoryTextBox"
                         class="h5 inputField ct-attribute-field-textbox large-11 ng-pristine ng-valid ng-scope ng-not-empty ng-touched icon-add-contain"
                         type="text"
                         ng-keypress="careChatSA.onEnterKey($event)"
                         ng-model="careChatSA.categoryOptionTag"
-                        maxlength="25"/>
+                        cs-input-messages="careChatSA.singleLineValidationMessage"
+                        ng-maxlength="careChatSA.lengthConstants.singleLineMaxCharLimit"
+                />
                 <div class="category-tokens">
                   <cs-token-field
                           tokenfieldid="careChatSA.categoryTokensId"
@@ -159,7 +161,8 @@
                <input id="orgText"
                       class="h5 inputField ct-attribute-field-textbox large-11"
                       type="text"
-                      ng-model="careChatSA.orgName"/>
+                      ng-model="careChatSA.orgName"
+                />
               </div>
           </section>
         </article>

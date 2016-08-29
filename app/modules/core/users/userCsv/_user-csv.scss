@@ -294,7 +294,7 @@
       &.new-users:not(.disabled) .total {
         color: $color-cta-base;
       }
-      &.existing-users:not(.disabled) .total {
+      &.updated-users:not(.disabled) .total {
         color: $color-primary-base;
       }
       &.error-users:not(.disabled) .total {

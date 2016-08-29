@@ -271,7 +271,6 @@
           @include vr-spacing(mr, 0.5);
         }
         .close {
-          float: right;
           font-size: 1.2em;
           padding-top: rem-calc(0px);
           line-height: 0.9em;
@@ -285,4 +284,8 @@
     padding-left: 1rem;
     padding-right: 1rem;
   }
+}
+
+.cs-input__messages {
+  padding-left: 1rem;
 }

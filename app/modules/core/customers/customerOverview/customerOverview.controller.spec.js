@@ -89,6 +89,7 @@ describe('Controller: CustomerOverviewCtrl', function () {
     spyOn(FeatureToggleService, 'atlasCareTrialsGetStatus').and.returnValue(
       $q.when(true)
     );
+    spyOn(FeatureToggleService, 'atlasCustomerListUpdateGetStatus').and.returnValue($q.resolve(true));
     spyOn(modal, 'open').and.callThrough();
 
     initController();
