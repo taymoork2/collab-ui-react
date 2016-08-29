@@ -29,7 +29,8 @@ describe('Component: featureList', () => {
     this.initModules('Core');
     this.injectDependencies('$scope');
     this.$scope.features = features;
-    this.compileComponent('featureList', {'features': 'features'});
+    this.$scope.onChangeFn = jasmine.createSpy('onChangeFn');
+    this.compileComponent('featureList', {'features': 'features', 'featureActions': 'onChangeFn(feature)'});
   });
 
   it('should expose a `features` object', function() {
@@ -48,5 +49,10 @@ describe('Component: featureList', () => {
 
   it('should have a Call feature', function() {
     expect(this.view).toContainElement('a#Call');
+  });
+
+  it('should call featureActions on click', function() {
+    this.view.find('a#Call').click();
+    expect(this.$scope.onChangeFn).toHaveBeenCalledWith(this.controller.features[2].state);
   });
 });
