@@ -31,7 +31,8 @@
       formatTimeAndDate: formatTimeAndDate,
       labelForTime: labelForTime,
       labelForDay: labelForDay,
-      getStatusForService: getStatusForService
+      getStatusForService: getStatusForService,
+      getResourceGroups: getResourceGroups,
     };
 
     return service;
@@ -44,12 +45,48 @@
         .then(extractDataFromResponse);
     }
 
-    function getAll(options) {
+    function getAll() {
       return $http
         .get(UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '?fields=@wide')
         .then(extractClustersFromResponse)
         .then(addServicesStatuses)
         .then(sort);
+    }
+
+    function getResourceGroups() {
+      return $http
+        .get(UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '?fields=@wide')
+        .then(extractData)
+        .then(function (org) {
+          org.clusters = addServicesStatuses(org.clusters);
+          return org;
+        })
+        .then(function (org) {
+          var resourceGroups = _.sortBy(org.resourceGroups, 'name');
+          return {
+            groups: _.map(resourceGroups, function (resourceGroup) {
+              return {
+                id: resourceGroup.id,
+                name: resourceGroup.name,
+                releaseChannel: resourceGroup.releaseChannel,
+                clusters: sort(getClustersForResourceGroup(resourceGroup.id, org.clusters)),
+              };
+            }),
+            unassigned: sort(getUnassignedClusters(org.clusters))
+          };
+        });
+    }
+
+    function getClustersForResourceGroup(id, clusters) {
+      return _.filter(clusters, function (cluster) {
+        return cluster.resourceGroupId === id;
+      });
+    }
+
+    function getUnassignedClusters(clusters) {
+      return _.filter(clusters, function (cluster) {
+        return cluster.resourceGroupId === undefined;
+      });
     }
 
     function setUpgradeSchedule(id, params) {

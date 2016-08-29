@@ -589,4 +589,35 @@ describe('Service: FusionClusterService', function () {
 
   });
 
+  describe('getResourceGroups()', function () {
+    beforeEach(function () {
+      jasmine.getJSONFixtures().clearCache(); // See https://github.com/velesin/jasmine-jquery/issues/239
+      var org = getJSONFixture('hercules/org-with-resource-groups.json');
+      $httpBackend.expectGET('http://elg.no/organizations/0FF1C3?fields=@wide').respond(org);
+    });
+
+    afterEach(function () {
+      $httpBackend.flush();
+      $httpBackend.verifyNoOutstandingExpectation();
+      $httpBackend.verifyNoOutstandingRequest();
+    });
+
+    it('extract unassigned clusters and sort them by name', function () {
+      FusionClusterService.getResourceGroups(function (response) {
+        expect(response.unassigned.length).toBe(3);
+        expect(response.unassigned[0].name).toBe('Augusta National Golf Club');
+        expect(response.unassigned[2].name).toBe('Tom er en hippie');
+      });
+    });
+
+    it('extract resource groups and put clusters inside, sorted by name', function () {
+      FusionClusterService.getResourceGroups(function (response) {
+        expect(response.groups.length).toBe(4);
+        expect(response.groups[0].name).toBe('ACE');
+        expect(response.groups[0].clusters.length).toBe(1);
+        expect(response.groups[3].name).toBe('🐷');
+      });
+    });
+  });
+
 });
