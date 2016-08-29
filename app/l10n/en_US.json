@@ -1710,6 +1710,7 @@
         "settings": "Settings",
         "all": "All",
         "add-resource": "Add Resource",
+        "add-resource-group": "Create new resource group",
         "expressway": "Expressway",
         "mediafusion": "Media",
         "no-services": "No services"
@@ -1742,8 +1743,27 @@
             "title": "Enter a name for the Hybrid Media Node",
             "help": "The cluster name is only used for display purposes."
           },
-          "end": {
-          }
+          "end": {}
+        }
+      },
+      "add-resource-group": {
+        "title": "Create new Resource Group",
+        "name": {
+          "title": "Resource Group Details",
+          "description": "Resource groups are a set of clusters that you may assign users to.",
+          "subtitle": "Resource Group Name",
+          "placeholder": "Enter name"
+        },
+        "release-channel": {
+          "title": "Release Channel",
+          "description": "All the Hybrid services in the Resource Group will run on this release channel.",
+          "stable": "Stable",
+          "stableHelpText": "The official release software for Hybrid Services",
+          "beta": "Beta",
+          "betaHelpText": "If you want your users to test new features before they are released",
+          "latest": "Latest",
+          "latestHelpText": "For developers and early adopters",
+          "error": "Could not create the Resource Group"
         }
       }
     },
