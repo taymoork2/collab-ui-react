@@ -65,6 +65,7 @@ describe('Controller: HelpdeskOrgController', function () {
   describe('read only access', function () {
     beforeEach(function () {
       sinon.stub(HelpdeskService, 'usersWithRole').returns(q.resolve({}));
+      sinon.stub(HelpdeskService, 'getServiceOrder').returns(q.resolve({}));
       sinon.stub(LicenseService, 'getLicensesInOrg').returns(q.resolve({}));
 
       sinon.stub(Authinfo, 'getOrgId');
@@ -269,6 +270,58 @@ describe('Controller: HelpdeskOrgController', function () {
       expect(orgController.allowLaunchAtlas).toBeFalsy();
     });
 
+  });
+
+  describe('service Order System', function () {
+    beforeEach(function () {
+      sinon.stub(HelpdeskService, 'usersWithRole').returns(q.resolve({}));
+      sinon.stub(LicenseService, 'getLicensesInOrg').returns(q.resolve({}));
+      sinon.stub(Authinfo, 'getOrgId');
+      Authinfo.getOrgId.returns("ce8d17f8-1734-4a54-8510-fae65acc505e");
+      sinon.stub(HelpdeskService, 'getOrgDisplayName').returns(q.resolve("Marvel"));
+      sinon.stub(FeatureToggleService, 'supports').returns(q.resolve(false));
+      sinon.stub(HelpdeskService, 'getOrg');
+      HelpdeskService.getOrg.returns(q.resolve({
+        "id": "whatever",
+        "displayName": "Marvel",
+        "managedBy": [{
+          "orgId": "ce8d17f8-1734-4a54-8510-fae65acc505e"
+        }],
+        "orgSettings": ['{}']
+      }));
+
+      orgController = $controller('HelpdeskOrgController', {
+        HelpdeskService: HelpdeskService,
+        $translate: $translate,
+        $scope: $scope,
+        LicenseService: LicenseService,
+        Config: Config,
+        $stateParams: $stateParams,
+        XhrNotificationService: XhrNotificationService
+      });
+
+    });
+
+    it('shows name based on known orderingTool code', function () {
+      sinon.stub(HelpdeskService, 'getServiceOrder').returns(q.resolve({ "orderingTool": "APP_DIRECT" }));
+      $scope.$apply();
+      orgController.findServiceOrder("12345");
+      expect(orgController.orderSystem).toBe("Telstra AppDirect Marketplace(TAM)");
+    });
+
+    it('shows service order key directly if unknown orderingTool code', function () {
+      sinon.stub(HelpdeskService, 'getServiceOrder').returns(q.resolve({ "orderingTool": "ABCD" }));
+      $scope.$apply();
+      orgController.findServiceOrder("12345");
+      expect(orgController.orderSystem).toBe("ABCD");
+    });
+
+    it('shows empty if empty orderingTool code', function () {
+      sinon.stub(HelpdeskService, 'getServiceOrder').returns(q.resolve({ "orderingTool": "" }));
+      $scope.$apply();
+      orgController.findServiceOrder("12345");
+      expect(orgController.orderSystem).toBe("");
+    });
   });
 
 });

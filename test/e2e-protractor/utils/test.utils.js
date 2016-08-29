@@ -18,19 +18,19 @@ exports.getDateTimeString = function () {
   var minute = now.getMinutes();
   var second = now.getSeconds();
   if (month.toString().length == 1) {
-    var month = '0' + month;
+    month = '0' + month;
   }
   if (day.toString().length == 1) {
-    var day = '0' + day;
+    day = '0' + day;
   }
   if (hour.toString().length == 1) {
-    var hour = '0' + hour;
+    hour = '0' + hour;
   }
   if (minute.toString().length == 1) {
-    var minute = '0' + minute;
+    minute = '0' + minute;
   }
   if (second.toString().length == 1) {
-    var second = '0' + second;
+    second = '0' + second;
   }
   var dateTime = year.toString() + month.toString() + day.toString() + '_' + hour.toString() + minute.toString() + second.toString();
   return dateTime;
@@ -208,6 +208,12 @@ exports.expectIsDisplayed = function (elem) {
   });
 };
 
+exports.expectIsReadOnly = function (elem) {
+  this.wait(elem).then(function () {
+    expect(elem.getAttribute("readonly")).toBeTruthy();
+  });
+};
+
 exports.expectAllDisplayed = function (elems) {
   this.wait(elems).then(function () {
     elems.each(function (elem) {
@@ -335,7 +341,7 @@ exports.click = function (elem, maxRetry) {
       return elem.click().then(deferred.fulfill, deferred.reject);
     } else {
       return elem.click().then(deferred.fulfill, function (e) {
-        log('Failed to click element: ' + elem.locator() + ' Error: ' + (e && e.message || e));
+        log('Failed to click element: ' + elem.locator() + ' Error: ' + ((e && e.message) || e));
         return exports.click(elem, --maxRetry);
       });
     }
@@ -357,7 +363,7 @@ exports.clickLast = function (elem) {
 
 exports.clickAll = function (elems) {
   return this.wait(elems).then(function () {
-    elems.each(function (elem, index) {
+    elems.each(function (elem) {
       return exports.click(elem);
     });
   })
@@ -395,7 +401,7 @@ exports.sendKeysUpArrow = function (element, howMany) {
 exports.fileSendKeys = function (elem, value) {
   this.waitForPresence(elem).then(function () {
     log('Send file keys to element: ' + elem.locator() + ' ' + value);
-    browser.setFileDetector(new remote.FileDetector);
+    browser.setFileDetector(new remote.FileDetector());
     elem.sendKeys(value);
   });
 };

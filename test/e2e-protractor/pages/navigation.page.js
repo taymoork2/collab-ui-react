@@ -304,7 +304,7 @@ var Navigation = function () {
 
   function getUrl(url, opts) {
     var forceIntegration = opts && opts.forceIntegration;
-    var url = url || '#/login';
+    url = url || '#/login';
     url += ~url.indexOf('?') ? '&' : '?';
     url += 'test-env-config=';
     url += isProductionBackend && !forceIntegration ? 'e2e-prod' : 'e2e';

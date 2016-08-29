@@ -8,7 +8,6 @@ describe('Huron Call Park Setup Assistant Ctrl', function () {
   var rightArrow = 39;
   var escapeKey = 27;
   var testGroupName = 'test';
-  var testGroupNumber = '5654';
   var testGroupMember = 'testUser';
 
   beforeEach(angular.mock.module('Huron'));
@@ -29,6 +28,17 @@ describe('Huron Call Park Setup Assistant Ctrl', function () {
       CallParkService: CallParkService,
       $state: $state
     });
+    var emptyForm = function () {
+      return true;
+    };
+
+    var form = {
+      '$invalid': false,
+      $setDirty: emptyForm,
+      $setPristine: emptyForm,
+      $setUntouched: emptyForm
+    };
+    controller.form = form;
 
     spyOn($modal, 'open');
     spyOn($state, 'go');
@@ -48,11 +58,16 @@ describe('Huron Call Park Setup Assistant Ctrl', function () {
     expect(controller.nextButton(0)).toEqual(true);
   });
 
-  it("should enable next button when not null on second page", function () {
-    expect(controller.nextButton(1)).toEqual(false);
-    controller.selectedSingleNumber = testGroupNumber;
-    //controller.selectedNumbers.push(testGroupNumber);
+  it("on changing radio selection to an option with invalid fields the form becomes invalid and disables the next button", function () {
+    controller.cpNumberOptions[0].currentInput = 0;
+    controller.cpNumberOptions[0].inputs[0].range_1.value = '6000';
+    controller.cpNumberOptions[0].inputs[0].range_2.value = '6010';
+    controller.cpNumberOptions[0].inputs[1].value = '';
+    $scope.$apply();
     expect(controller.nextButton(1)).toEqual(true);
+    controller.cpNumberOptions[0].currentInput = 1;
+    $scope.$apply();
+    expect(controller.nextButton(1)).toEqual(false);
   });
 
   it("should hide the next button on the last page", function () {

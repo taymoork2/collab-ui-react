@@ -28,6 +28,8 @@ function install_parallel_as_needed {
             brew install parallel                  # Mac (as of Yosemite)
         elif is_installed "dnf"; then
             sudo dnf install -y parallel           # Fedora (as of F23)
+        elif is_installed "yum"; then
+            sudo yum install -y parallel           # CentOS (as of CentOS 7)
         elif is_installed "apt-get"; then
             sudo apt-get update                    # Ubuntu (as of 14.04)
             sudo apt-get install -y parallel
@@ -37,6 +39,28 @@ function install_parallel_as_needed {
         fi
     fi
     set +x
+}
+
+# install C++ compiler as needed
+function install_cpp_compiler_as_needed {
+    if ! is_installed "c++"; then
+        # Mac
+        if [ "`uname`" = "Darwin" ]; then
+            echo "Error: please install a C++ compiler - see: https://developer.apple.com/xcode/"
+            return 1
+        fi
+        if is_installed "dnf"; then
+            sudo dnf install -y gcc-c++            # Fedora (as of F23)
+        elif is_installed "yum"; then
+            sudo yum install -y gcc-c++            # CentOS (as of CentOS 7)
+        elif is_installed "apt-get"; then
+            sudo apt-get update                    # Ubuntu (as of 14.04)
+            sudo apt-get install -y build-essential
+        else
+            >&2 echo "Error: package manager on this OS is not supported."
+            return 1
+        fi
+    fi
 }
 
 # generate a new timestamp file

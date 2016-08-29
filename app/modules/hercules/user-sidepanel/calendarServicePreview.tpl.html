@@ -1,6 +1,7 @@
 <cs-sp-buttons ng-show="showButtons">
-  <button id="btn-save" class="btn--primary btn-save" cs-btn loading="btn_saveLoad" ng-click="updateEntitlement(extension.entitled)"><span translate="common.save"></span></button>
-  <button id="btn-cancel" ng-disabled="saving" translate="common.cancel" ng-click="resetEntitlement()"></button>
+  <button id="btn-save" class="btn--primary btn-save" cs-btn loading="saving" ng-click="save()"><span
+    translate="common.save"></span></button>
+  <button id="btn-cancel" ng-disabled="saving" translate="common.cancel" ng-click="reset()"></button>
 </cs-sp-buttons>
 <cs-sp-container>
   <cs-sp-section class="cloud-extensions">
@@ -11,7 +12,6 @@
     <div>
       <p class="extension-description">{{'hercules.cloudExtensions.serviceDescriptions.' + extension.id |
         translate}}</p>
-
       <div>
         <span class="cloud-extension-label">{{'cloudExtensions.status' | translate}}:</span>
         <span ng-show="extension.entitled && extension.status"
@@ -29,6 +29,7 @@
           <a href="https://{{extension.homedConnector.host_name}}" target="_blank" style="color: #3ca8e8">{{extension.homedConnector.host_name}}</a>
         </span>
       </div>
+
       <span
         ng-show="extension.entitled && extension.status && extension.status.state === 'error' && extension.status.description"
         class="cloud-extension-label status-error">
@@ -40,7 +41,20 @@
       {{localizedOnboardingWarning}}
       </p>
     </div>
+  </cs-sp-section>
 
+  <cs-sp-section class="cloud-extensions" ng-if="resourceGroup.show">
+    <div class="section-title-row">
+      <span class="section-name" translate="hercules.resourceGroups.resourceGroupHeading"></span>
+    </div>
+    <div>
+      <p class="extension-description" translate="hercules.resourceGroups.setDescription"></p>
+      <cs-select
+        ng-model="resourceGroup.selected"
+        options="resourceGroup.options"
+        on-change-fn="setShouldShowButtons()">
+      </cs-select>
+    </div>
   </cs-sp-section>
 </cs-sp-container>
 

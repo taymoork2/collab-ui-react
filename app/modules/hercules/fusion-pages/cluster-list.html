@@ -5,6 +5,12 @@
       <cs-searchfilter filters="resourceList.filters" set-filter-fn="resourceList.setFilter(filter)" search-item-fn="resourceList.searchData(searchStr)" placeholder-text="{{resourceList.placeholder.name}}" ng-model="resourceList.placeholder.count"></cs-searchfilter>
     </cs-page-sub-header-left>
     <cs-page-sub-header-right>
+      <div ng-show="resourceList.showCreateResourceGroupLink">
+        <button class="btn btn--link"
+                type="button"
+                translate="hercules.fusion.list.add-resource-group"
+                ng-click="resourceList.addResourceGroup()"></button>
+      </div>
       <button class="btn btn--people add-resource-button"
               type="button"
               translate="hercules.fusion.list.add-resource"
@@ -23,18 +29,22 @@
         <article>
           <header>
             <h4>{{::cluster.name}}</h4>
-            <div class="cluster-list-hosts" translate="hercules.fusion.list.hosts" translate-values="{count: resourceList.countHosts(cluster)}" translate-interpolation="messageformat" tooltip-html-unsafe="{{resourceList.getHostnames(cluster)}}" tooltip-trigger="mouseenter" tooltip-placement="bottom"></div>
+            <div class="cluster-list-hosts" tooltip-html-unsafe="{{resourceList.getHostnames(cluster)}}" tooltip-trigger="mouseenter" tooltip-placement="bottom">
+              <div ng-if="cluster.targetType === 'mf_mgmt'" translate="hercules.fusion.list.nodes" translate-values="{count: resourceList.countHosts(cluster)}" translate-interpolation="messageformat"></div>
+              <div ng-if="cluster.targetType !== 'mf_mgmt'" translate="hercules.fusion.list.hosts" translate-values="{count: resourceList.countHosts(cluster)}" translate-interpolation="messageformat"></div>
+            </div>
           </header>
           <div class="row cluster-list-body">
             <div class="columns medium-6">
               <div>
                 <div class="cluster-list-cat" translate="hercules.fusion.list.upgrade-schedule"></div>
-                <div class="cluster-list-info">{{resourceList._helpers.formatTimeAndDate(cluster.upgradeSchedule)}}<br/>
+                <div class="cluster-list-info" ng-if="cluster.upgradeSchedule">{{resourceList._helpers.formatTimeAndDate(cluster.upgradeSchedule)}}<br/>
                 <div class="cluster-list-timezone" title="{{cluster.upgradeSchedule.scheduleTimeZone}}">{{cluster.upgradeSchedule.scheduleTimeZone}}</div></div>
+                <div class="cluster-list-info" ng-if="!cluster.upgradeSchedule" translate="common.notSet"></div>
               </div>
               <div ng-if="cluster.targetType !== 'c_mgmt'">
                 <div class="cluster-list-cat" translate="hercules.fusion.list.release-channel"></div>
-                <div class="cluster-list-info">{{cluster.releaseChannel}}</div>
+                <div class="cluster-list-info">{{cluster.releaseChannel | uppercase}}</div>
               </div>
             </div>
             <div class="columns medium-6 connection-status">

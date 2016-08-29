@@ -129,7 +129,7 @@
           if (vm.load) {
             vm.currentDataPosition++;
             vm.load = false;
-            getLineList(vm.currentDataPosition * Config.usersperpage + 1);
+            getLineList((vm.currentDataPosition * Config.usersperpage) + 1);
             $scope.gridApi.infiniteScroll.dataLoaded();
           }
         });

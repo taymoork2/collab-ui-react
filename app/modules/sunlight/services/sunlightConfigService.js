@@ -16,6 +16,7 @@
       getUserInfo: getUserInfo,
       updateUserInfo: updateUserInfo,
       createChatTemplate: createChatTemplate,
+      editChatTemplate: editChatTemplate,
       createUserInfo: createUserInfo
     };
 
@@ -33,9 +34,12 @@
       return $http.post(sunlightChatConfigUrl, chatTemplate);
     }
 
+    function editChatTemplate(chatTemplate, templateId) {
+      return $http.put(sunlightChatConfigUrl + '/' + templateId, chatTemplate);
+    }
+
     function createUserInfo(userData) {
       return $http.post(sunlightUserConfigUrl, userData);
     }
-
   }
 })();

@@ -24,11 +24,11 @@
     var x2js = new X2JS();
 
     this.sendXMLApiReq = function (xmlApiUrl, xmlRequest, resolve, reject) {
-      var funcName = "sendXMLApiReq()";
-      var logMsg = "";
+      // var funcName = "sendXMLApiReq()";
+      // var logMsg = "";
 
-      logMsg = funcName + ": " + "xmlRequest=" + "\n" +
-        xmlRequest;
+      // logMsg = funcName + ": " + "xmlRequest=" + "\n" +
+      //   xmlRequest;
       // $log.log(logMsg);
 
       $http({
@@ -325,7 +325,7 @@
         _this.validateToken().then(function () {
           $log.log("Token validated.");
           _this.getNewSessionTicket(wbxSiteName, wbxSiteUrl).then(
-            function getNewSessionTicketSuccess(tik) {
+            function getNewSessionTicketSuccess() {
               var funcName = "getNewSessionTicketSuccess()";
 
               if ($rootScope.sessionTickets) {
@@ -403,12 +403,12 @@
               var sessionTicket = JsonData.body.serv_body.serv_bodyContent.use_sessionTicket;
               var createTime = JsonData.body.serv_body.serv_bodyContent.use_createTime;
               var ttl = JsonData.body.serv_body.serv_bodyContent.use_timeToLive;
-              var ttlMSec = (parseInt(ttl) - 100) * 1000;
+              var ttlMSec = (parseInt(ttl, 10) - 100) * 1000;
               if (sessionTicket !== null) {
                 var ticket = {}; //new object
                 ticket.site = wbxSiteName;
                 ticket.sessionTik = sessionTicket;
-                ticket.validUntil = parseInt(createTime) + ttlMSec;
+                ticket.validUntil = parseInt(createTime, 10) + ttlMSec;
                 $log.log(ticket.validUntil);
                 if (!$rootScope.sessionTickets) {
                   $rootScope.sessionTickets = {};
@@ -444,10 +444,10 @@
       }, // getNewSessionTicket()
 
       flushWafCache: function (xmlApiAccessInfo) {
-        var funcName = "flushWafCache()";
-        var logMsg = "";
+        // var funcName = "flushWafCache()";
+        // var logMsg = "";
 
-        $log.log(funcName);
+        // $log.log(funcName);
 
         return $q(function (resolve, reject) {
           var xmlApiUrl = xmlApiAccessInfo.xmlApiUrl;
@@ -530,7 +530,7 @@
         return partnerOrgId;
       },
 
-      tokeninfo: function (accessToken) {
+      tokeninfo: function () {
         var orgId = this.getOrgId();
         var url = "https://identity.webex.com/identity/scim/" + orgId + "/v1/Users/me";
         return $http.get(url);

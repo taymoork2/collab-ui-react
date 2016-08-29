@@ -17,7 +17,7 @@ describe('ServiceOverviewCtrl', ()=> {
   let ctrl:ServicesOverviewCtrl;
   beforeEach(inject(($injector)=> {
     $httpBackend = $injector.get('$httpBackend');
-    $httpBackend.when('GET', /\/services/).respond([]);
+    $httpBackend.when('GET', /\/hercules\/api\/v2\/organizations/).respond({});
   }));
 
   function initController({F410=false, F288=true, MEDIA=true}) {
@@ -36,6 +36,9 @@ describe('ServiceOverviewCtrl', ()=> {
           } else if (feature === 'MEDIA') {
             return $q.resolve(MEDIA);
           }
+        },
+        atlasCareTrialsGetStatus: function () {
+          return $q.resolve(true);
         }
       }
     });

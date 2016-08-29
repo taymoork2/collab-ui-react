@@ -2,12 +2,13 @@
   'use strict';
 
   angular.module('Core')
-    .service('PartnerService', PartnerService);
+    .service('PartnerService', PartnerService)
+    .factory('ScimPatchService', ScimPatchService);
 
   /* @ngInject */
-  function PartnerService($http, $rootScope, $q, $translate, Analytics, Authinfo, Auth, Config, Log, TrialService, UrlConfig) {
+  function PartnerService($http, $rootScope, $q, $translate, Analytics, Authinfo, Auth, Config, TrialService, UrlConfig) {
     var managedOrgsUrl = UrlConfig.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId() + '/managedOrgs';
-
+    var siteListUrl = UrlConfig.getAdminServiceUrl() + 'organizations/%s/siteUrls';
     var customerStatus = {
       FREE: 0,
       TRIAL: 1,
@@ -28,7 +29,11 @@
       buildService: _buildService,
       addService: _addService,
       removeFromFreeServices: _removeFromFreeServices,
-      isDisplayablePaidService: _isDisplayablePaidService
+      isDisplayablePaidService: _isDisplayablePaidService,
+      calculatePurchaseStatus: _calculatePurchaseStatus,
+      calculateTotalLicenses: _calculateTotalLicenses,
+      countUniqueServices: _countUniqueServices
+
     };
 
     var factory = {
@@ -47,6 +52,7 @@
       exportCSV: exportCSV,
       parseLicensesAndOffers: parseLicensesAndOffers,
       getFreeOrActiveServices: getFreeOrActiveServices,
+      getSiteUrls: getSiteUrls,
       helpers: helpers
     };
 
@@ -54,17 +60,39 @@
 
     function _createConferenceMapping() {
       var conferenceMapping = {};
-      conferenceMapping[Config.offerCodes.CF] = $translate.instant('trials.meeting');
-      conferenceMapping[Config.offerCodes.EE] = $translate.instant('customerPage.EE');
-      conferenceMapping[Config.offerCodes.MC] = $translate.instant('customerPage.MC');
-      conferenceMapping[Config.offerCodes.SC] = $translate.instant('customerPage.SC');
-      conferenceMapping[Config.offerCodes.TC] = $translate.instant('customerPage.TC');
-      conferenceMapping[Config.offerCodes.EC] = $translate.instant('customerPage.EC');
-      conferenceMapping[Config.offerCodes.CMR] = $translate.instant('customerPage.CMR');
+      conferenceMapping[Config.offerCodes.CF] = {
+        translatedOfferCode: $translate.instant('trials.meeting'),
+        order: 1
+      };
+      conferenceMapping[Config.offerCodes.MC] = {
+        translatedOfferCode: $translate.instant('customerPage.MC'),
+        order: 2
+      };
+      conferenceMapping[Config.offerCodes.EE] = {
+        translatedOfferCode: $translate.instant('customerPage.EE'),
+        order: 3
+      };
+      conferenceMapping[Config.offerCodes.TC] = {
+        translatedOfferCode: $translate.instant('customerPage.TC'),
+        order: 4
+      };
+      conferenceMapping[Config.offerCodes.SC] = {
+        translatedOfferCode: $translate.instant('customerPage.SC'),
+        order: 5
+      };
+      conferenceMapping[Config.offerCodes.EC] = {
+        translatedOfferCode: $translate.instant('customerPage.EC'),
+        order: 6
+      };
+      conferenceMapping[Config.offerCodes.CMR] = {
+        translatedOfferCode: $translate.instant('customerPage.CMR'),
+        order: 7
+      };
 
-      conferenceMapping = _.mapValues(conferenceMapping, function (translatedOfferCode) {
+      conferenceMapping = _.mapValues(conferenceMapping, function (offer) {
         return {
-          name: translatedOfferCode,
+          name: offer.translatedOfferCode,
+          order: offer.order,
           icon: 'icon-circle-group',
           licenseType: Config.licenseTypes.CONFERENCING
         };
@@ -74,31 +102,31 @@
     }
 
     function _createLicenseMapping() {
-
       var licenseMapping = {};
       licenseMapping[Config.licenseTypes.MESSAGING] = {
         name: $translate.instant('trials.message'),
         icon: 'icon-circle-message',
-
+        order: 0
       };
+
       licenseMapping[Config.licenseTypes.COMMUNICATION] = {
         name: $translate.instant('trials.call'),
         icon: 'icon-circle-call',
-
+        order: 3
       };
 
       licenseMapping[Config.licenseTypes.SHARED_DEVICES] = {
         name: $translate.instant('trials.roomSystem'),
         icon: 'icon-circle-telepresence',
-
+        order: 6
       };
-      licenseMapping[Config.offerTypes.CARE] = {
+
+      licenseMapping[Config.licenseTypes.CARE] = {
         name: $translate.instant('trials.care'),
         icon: 'icon-circle-contact-centre',
-
+        order: 5
       };
       return licenseMapping;
-
     }
 
     function _createFreeServicesMapping() {
@@ -108,7 +136,8 @@
         icon: 'icon-circle-message',
         code: Config.offerCodes.MS,
         qty: 0,
-        free: true
+        free: true,
+        order: 20
 
       }, {
         licenseType: Config.licenseTypes.CONFERENCING,
@@ -116,14 +145,16 @@
         icon: 'icon-circle-group',
         code: Config.offerCodes.CF,
         qty: 0,
-        free: true
+        free: true,
+        order: 21
       }, {
         licenseType: Config.licenseTypes.COMMUNICATION,
         name: $translate.instant('trials.call'),
         icon: 'icon-circle-call',
         code: Config.offerCodes.CO,
         qty: 0,
-        free: true
+        free: true,
+        order: 22
       }];
       return freeServices;
 
@@ -208,14 +239,9 @@
 
     function modifyManagedOrgs(customerOrgId) {
       return Auth.getAuthorizationUrlList().then(function (response) {
-        if (response.status === 200) {
-          var uuid = response.data.uuid;
-          if (_.indexOf(response.data.managedOrgs, customerOrgId) < 0) {
-            patchManagedOrgs(uuid, customerOrgId);
-            Analytics.trackUserPatch(response.data.orgId, uuid);
-          }
-        } else {
-          Log.error('Query for userauthinfo failed. Status: ' + response.status);
+        if (response.status === 200 && (_.indexOf(response.data.managedOrgs, customerOrgId) < 0)) {
+          patchManagedOrgs(response.data.uuid, customerOrgId);
+          Analytics.trackUserPatch(response.data.orgId, response.data.uuid);
         }
       });
     }
@@ -233,6 +259,14 @@
       return angular.isUndefined(license.isTrial);
     }
     // end series of fn's
+
+    function isLicenseTypeAny(customerData, licenseTypeField) {
+      if (!isLicenseInfoAvailable(customerData.licenseList)) {
+        return false;
+      }
+      var licenseObj = customerData[licenseTypeField] || null;
+      return isLicenseATrial(licenseObj) || isLicenseActive(licenseObj);
+    }
 
     function getLicense(licenses, offerCode) {
       return _.find(licenses, {
@@ -261,33 +295,46 @@
     }
 
     function setNotesSortOrder(rowData) {
-      rowData.notes = {};
+      var notes = {};
+      notes.daysLeft = rowData.daysLeft;
       if (isLicenseInfoAvailable(rowData.licenseList)) {
         if (rowData.status === 'CANCELED') {
-          rowData.notes.sortOrder = customerStatus.NOTE_CANCELED;
-          rowData.notes.text = $translate.instant('customerPage.suspended');
-        } else if (rowData.status === 'ACTIVE' && rowData.daysLeft > 0) {
-          rowData.notes.sortOrder = customerStatus.NOTE_NOT_EXPIRED;
-          rowData.notes.daysLeft = rowData.daysLeft;
-          rowData.notes.text = $translate.instant('customerPage.daysRemaining', {
-            count: rowData.daysLeft
-          });
-        } else if (rowData.isTrial && rowData.status === 'ACTIVE' && rowData.daysLeft === 0) {
-          rowData.notes.sortOrder = customerStatus.NOTE_EXPIRE_TODAY;
-          rowData.notes.daysLeft = 0;
-          rowData.notes.text = $translate.instant('customerPage.expiringToday');
-        } else if (rowData.status === 'ACTIVE' && rowData.daysLeft < 0) {
-          rowData.notes.sortOrder = customerStatus.NOTE_EXPIRED;
-          rowData.notes.daysLeft = -1;
-          rowData.notes.text = $translate.instant('customerPage.expired');
-        } else {
-          rowData.notes.sortOrder = customerStatus.NOTE_NO_LICENSE;
-          rowData.notes.text = $translate.instant('customerPage.licenseInfoNotAvailable');
+          notes.sortOrder = customerStatus.NOTE_CANCELED;
+          notes.text = $translate.instant('customerPage.suspended');
+        } else if (rowData.purchased) {
+          notes.sortOrder = customerStatus.ACTIVE;
+          notes.text = $translate.instant('customerPage.purchased');
+        } else if (rowData.customerOrgId === Authinfo.getOrgId()) {
+          notes.sortOrder = customerStatus.ACTIVE;
+          notes.text = $translate.instant('customerPage.myOrganization');
+        } else if (rowData.status === 'ACTIVE' || rowData.status === 'EXPIRED') {
+          // while "daysLeft > 0" and expired doesn't make sense, the other 2 cases have the same text
+          if (rowData.daysLeft > 0) {
+            notes.sortOrder = customerStatus.NOTE_NOT_EXPIRED;
+            notes.text = $translate.instant('customerPage.daysLeftToPurchase', {
+              count: rowData.daysLeft
+            }, 'messageformat');
+          } else if (rowData.daysLeft === 0) {
+            notes.sortOrder = customerStatus.NOTE_EXPIRE_TODAY;
+            notes.text = $translate.instant('customerPage.expiringToday');
+          } else if (rowData.daysLeft < 0) {
+            notes.sortOrder = customerStatus.NOTE_EXPIRED;
+            // equal to the maximum days past expiration, always negative!
+            var gracePeriodDays = Config.trialGracePeriod;
+            if (_.inRange(rowData.daysLeft, 0, gracePeriodDays)) {
+              notes.text = $translate.instant('customerPage.expiredWithGracePeriod');
+            } else {
+              notes.text = $translate.instant('customerPage.expired');
+            }
+          }
         }
-      } else {
-        rowData.notes.sortOrder = customerStatus.NOTE_NO_LICENSE;
-        rowData.notes.text = $translate.instant('customerPage.licenseInfoNotAvailable');
       }
+      // If any of the previous tests fail, fall back to no license info
+      if (!_.has(notes, 'text')) {
+        notes.sortOrder = customerStatus.NOTE_NO_LICENSE;
+        notes.text = $translate.instant('customerPage.licenseInfoNotAvailable');
+      }
+      rowData.notes = notes;
     }
 
     function loadRetrievedDataToList(list, isTrialData, isCareEnabled) {
@@ -304,8 +351,8 @@
         customerName: customer.customerName || customer.displayName,
         customerEmail: customer.customerEmail || customer.email,
         endDate: edate,
-        numUsers: _.get(customer, 'license[0].volume', 0), // Note that the actual numUsers isn't available yet
-        activeUsers: 0,
+        numUsers: customer.allUsers || 0, // sometimes we get back undefined users, temp workaround
+        activeUsers: customer.activeUsers || 0,
         daysLeft: 0,
         usage: 0,
         licenses: 0,
@@ -350,7 +397,7 @@
       if (isTrialData) {
         if (daysLeft < 0) {
           dataObj.status = $translate.instant('customerPage.expired');
-          dataObj.state = "EXPIRED";
+          dataObj.state = 'EXPIRED';
         }
       }
 
@@ -379,8 +426,56 @@
       // the customer list page currently works.
       dataObj.conferencing = dataObj.sparkConferencing;
 
+      dataObj.totalLicenses = _calculateTotalLicenses(dataObj, isCareEnabled);
+      dataObj.uniqueServiceCount = _countUniqueServices(dataObj);
+      dataObj.purchased = _calculatePurchaseStatus(dataObj);
+
       setNotesSortOrder(dataObj);
       return dataObj;
+    }
+
+    function _calculatePurchaseStatus(customerData) {
+      if (customerData.state === Config.licenseStatus.ACTIVE) {
+        return !_.some(customerData.licenseList, 'isTrial');
+      } else {
+        return false;
+      }
+    }
+
+    function _calculateTotalLicenses(customerData, isCareEnabled) {
+      if (customerData.purchased || customerData.isPartner) {
+        return _.sum(customerData.licenseList, function (license) {
+          if (license.licenseType === Config.licenseTypes.STORAGE) {
+            return 0;
+          } else {
+            return license.volume;
+          }
+        });
+      } else {
+        // device and care licenses can be undefined
+        return customerData.licenses +
+              (customerData.deviceLicenses || 0) +
+              (isCareEnabled ? (customerData.careLicenses || 0) : 0);
+      }
+    }
+
+    function _countUniqueServices(customerData) {
+      var count = 0;
+      // only want to add 1 for webex since it is only 1 icon
+      var foundWebex = false;
+      _.forEach(Config.licenseObjectNames, function (licenseName) {
+        if (isLicenseTypeAny(customerData, licenseName)) {
+          if (_.startsWith(licenseName, 'webex')) {
+            if (!foundWebex) {
+              count += 1;
+              foundWebex = true;
+            }
+          } else {
+            count += 1;
+          }
+        }
+      });
+      return count;
     }
 
     function initializeService(licenses, offerCode, serviceEntry) {
@@ -392,9 +487,6 @@
     }
 
     function exportCSV(isCareEnabled) {
-      var deferred = $q.defer();
-
-      var customers = [];
       $rootScope.exporting = true;
       $rootScope.$broadcast('EXPORTING');
 
@@ -478,17 +570,19 @@
         offer: {}
       };
 
-      var deviceServiceText = [];
-      var userServices = [];
+      var userServiceMapping = helpers.createLicenseMapping();
+      var conferenceServices = [];
+      var trialService;
+      var trialServices = [];
 
       _.forEach(_.get(customer, 'licenses', []), function (licenseInfo) {
         if (!licenseInfo) {
           return;
         }
         switch (licenseInfo.licenseType) {
-        case Config.licenseTypes.COMMUNICATION:
-          partial.isSquaredUcOffer = true;
-          break;
+          case Config.licenseTypes.COMMUNICATION:
+            partial.isSquaredUcOffer = true;
+            break;
         }
       });
 
@@ -503,40 +597,62 @@
           offerInfo.id !== Config.offerTypes.care) {
           partial.licenses = offerInfo.licenseCount;
         }
-
+        trialService = null;
         switch (offerInfo.id) {
-        case Config.offerTypes.spark1:
-        case Config.offerTypes.message:
-        case Config.offerTypes.collab:
-          userServices.push($translate.instant('trials.message'));
-          break;
-        case Config.offerTypes.call:
-        case Config.offerTypes.squaredUC:
-          partial.isSquaredUcOffer = true;
-          userServices.push($translate.instant('trials.call'));
-          break;
-        case Config.offerTypes.webex:
-        case Config.offerTypes.meetings:
-          userServices.push($translate.instant('customerPage.EE'));
-          break;
-        case Config.offerTypes.meeting:
-          userServices.push($translate.instant('trials.meeting'));
-          break;
-        case Config.offerTypes.roomSystems:
-          deviceServiceText.push($translate.instant('trials.roomSystem'));
-          partial.deviceLicenses = offerInfo.licenseCount;
-          break;
-        case Config.offerTypes.care:
-          if (isCareEnabled) {
-            userServices.push($translate.instant('trials.care'));
-          }
-          break;
+          case Config.offerTypes.spark1:
+          case Config.offerTypes.message:
+          case Config.offerTypes.collab:
+            trialService = userServiceMapping[Config.licenseTypes.MESSAGING];
+            break;
+          case Config.offerTypes.call:
+          case Config.offerTypes.squaredUC:
+            partial.isSquaredUcOffer = true;
+            trialService = userServiceMapping[Config.licenseTypes.COMMUNICATION];
+            break;
+          case Config.offerTypes.webex:
+          case Config.offerTypes.meetings:
+            conferenceServices.push({
+              name: $translate.instant('customerPage.EE'),
+              order: 1,
+              qty: offerInfo.licenseCount
+            });
+            break;
+          case Config.offerTypes.meeting:
+            conferenceServices.push({
+              name: $translate.instant('trials.meeting'),
+              order: 1,
+              qty: offerInfo.licenseCount
+            });
+            break;
+          case Config.offerTypes.roomSystems:
+            trialService = userServiceMapping[Config.licenseTypes.SHARED_DEVICES];
+            partial.deviceLicenses = offerInfo.licenseCount;
+            break;
+          case Config.offerTypes.care:
+            if (isCareEnabled) {
+              trialService = userServiceMapping[Config.licenseTypes.CARE];
+              partial.careLicenses = offerInfo.licenseCount;
+            }
+            break;
+        }
+        if (trialService) {
+          trialService.qty = offerInfo.licenseCount;
+          trialServices.push(trialService);
         }
       }
 
-      partial.offer.deviceBasedServices = _.uniq(deviceServiceText).join(', ');
-      partial.offer.userServices = _.uniq(userServices).join(', ');
+      if (conferenceServices.length > 0) {
+        var name = _.chain(conferenceServices).sortBy('order').map(function (o) {
+          return o.name;
+        })
+        .uniq()
+        .value()
+        .join(', ');
+        var licenseQty = conferenceServices[0].qty;
+        trialServices.push({ name: name, qty: licenseQty, icon: 'icon-circle-group', order: 1 });
+      }
 
+      partial.offer.trialServices = _.chain(trialServices).sortBy('order').uniq().value();
       return partial;
     }
 
@@ -545,12 +661,14 @@
       var paidServices = [];
       var meetingServices = [];
       var service = null;
-      var result = {};
+      var result = null;
 
       var meetingHeader = {
         licenseType: 'MEETING',
+        isMeeting: true,
         name: $translate.instant('customerPage.meeting'),
         icon: 'icon-circle-group',
+        order: 1
       };
 
       var licenseMapping = helpers.createLicenseMapping();
@@ -566,25 +684,18 @@
             if (licenseInfo.licenseType === Config.licenseTypes.CONFERENCING || licenseInfo.licenseType === Config.licenseTypes.CMR) {
               service = helpers.buildService(licenseInfo, conferenceMapping);
               helpers.addService(meetingServices, service);
-
             } else {
               service = helpers.buildService(licenseInfo, licenseMapping);
               helpers.addService(paidServices, service);
-
             }
           }
         }
-
       });
 
       //if only one meeting service -- move to the services list
       if (meetingServices.length === 1) {
         var singleMeetingService = meetingServices.shift();
         helpers.addService(paidServices, singleMeetingService);
-      }
-
-      if (freeServices.length > 0 || paidServices.length > 0) {
-        result.freeOrPaidServices = _.union(freeServices, paidServices);
       }
 
       //if there is more than one
@@ -597,12 +708,37 @@
 
         _.merge(meetingHeader, {
           qty: totalQ.qty,
-          sub: meetingServices
+          sub: _.sortBy(meetingServices, 'order')
         });
-        result.meetingServices = meetingHeader;
+
+        paidServices.push(meetingHeader);
       }
 
+      if (freeServices.length > 0 || paidServices.length > 0) {
+        result = _.sortBy(_.union(freeServices, paidServices), 'order');
+      }
       return result;
     }
+
+    function getSiteUrls(customerId) {
+      var url;
+      if (!customerId) {
+        return $q.reject('A Customer Organization Id must be passed');
+      } else {
+        url = siteListUrl.replace('%s', customerId);
+        return $http.get(url);
+      }
+    }
   }
+  /* @ngInject */
+  function ScimPatchService($resource, Authinfo, UrlConfig) {
+    return $resource(UrlConfig.getScimUrl(Authinfo.getOrgId()) + '/:userId', {
+      userId: '@userId'
+    }, {
+      'update': {
+        method: 'PATCH'
+      }
+    });
+  }
+
 })();

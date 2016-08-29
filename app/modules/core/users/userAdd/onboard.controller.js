@@ -6,7 +6,7 @@
     .controller('OnboardCtrl', OnboardCtrl);
 
   /*@ngInject*/
-  function OnboardCtrl($modal, $previousState, $q, $rootScope, $scope, $state, $stateParams, $timeout, $translate, addressparser, Authinfo, Analytics, chartColors, Config, DialPlanService, FeatureToggleService, Log, LogMetricsService, NAME_DELIMITER, Notification, OnboardService, Orgservice, TelephonyInfoService, Userservice, Utils, UserCsvService, UserListService, WebExUtilsFact) {
+  function OnboardCtrl($modal, $previousState, $q, $rootScope, $scope, $state, $stateParams, $timeout, $translate, addressparser, Authinfo, Analytics, chartColors, Config, DialPlanService, FeatureToggleService, Log, LogMetricsService, NAME_DELIMITER, Notification, OnboardService, Orgservice, SunlightConfigService, TelephonyInfoService, Userservice, Utils, UserCsvService, UserListService, WebExUtilsFact, ServiceSetup) {
     var vm = this;
 
     $scope.hasAccount = Authinfo.hasAccount();
@@ -53,6 +53,7 @@
 
     $scope.convertUsersFlow = false;
     $scope.editServicesFlow = false;
+    $scope.hasSite = false;
 
     // model can be removed after switching to controllerAs
     $scope.model = {
@@ -101,23 +102,17 @@
           $scope.licenses = result[0].licenses;
           _.forEach($scope.licenses, function (license) {
             switch (license.licenseType) {
-            case Config.licenseTypes.MESSAGING:
-              {
+              case Config.licenseTypes.MESSAGING:
                 $scope.messagingLicenseAvailability = license.volume - license.usage;
                 break;
-              }
-            case Config.licenseTypes.COMMUNICATION:
-              {
+              case Config.licenseTypes.COMMUNICATION:
                 $scope.communicationLicenseAvailability = license.volume - license.usage;
                 break;
-              }
-            case Config.licenseTypes.CONFERENCING:
-              {
+              case Config.licenseTypes.CONFERENCING:
                 $scope.conferencingLicenseAvailability = license.volume - license.usage;
                 break;
-              }
-            default:
-              break;
+              default:
+                break;
             }
           });
         });
@@ -156,6 +151,7 @@
     function initController() {
       $scope.currentUserCount = 1;
       setLicenseAvailability();
+      checkSite();
     }
 
     $scope.isCsvEnhancement = false;
@@ -201,7 +197,6 @@
     // Check to see if the currently selected directory number's first digit is
     // the same as the company steering digit.
     function checkDnOverlapsSteeringDigit(userEntity) {
-      var dnFirstCharacter = "";
       var steeringDigit = $scope.telephonyInfo.steeringDigit;
       return _.startsWith(_.get(userEntity, 'assignedDn.pattern'), steeringDigit);
     }
@@ -260,7 +255,7 @@
       });
 
       // don't select any DID on loading the page
-      _.forEach($scope.usrlist, function (user, index) {
+      _.forEach($scope.usrlist, function (user) {
         user.externalNumber = $scope.externalNumberPool[0];
         user.didDnMapMsg = undefined;
       });
@@ -274,7 +269,7 @@
         $scope.validateDnForUser();
         $scope.isReset = true;
         $scope.isResetInProgress = false;
-      }).catch(function (response) {
+      }).catch(function () {
         $scope.isResetInProgress = false;
         $scope.validateDnForUser();
       });
@@ -437,7 +432,7 @@
     }
 
     $scope.ConfirmAdditionalServiceSetup = function () {
-      var promise = Notification.confirmation('usersPage.addtionalServiceSetupConfirmation');
+      var promise = Notification.confirmation($translate.instant('usersPage.addtionalServiceSetupConfirmation'));
       promise.then(function () {
         $state.go('firsttimewizard');
       });
@@ -447,6 +442,12 @@
       // disable the communication feature assignment unless the UserAdd is part of the First Time Setup Wizard work flow
       return (!Authinfo.isSetupDone() && ((typeof $state.current.data === 'undefined') || (!$state.current.data.firstTimeSetup)));
     };
+
+    function checkSite() {
+      ServiceSetup.listSites().then(function () {
+        $scope.hasSite = (ServiceSetup.sites.length !== 0);
+      });
+    }
 
     var userEnts = null;
     var userLicenseIds = null;
@@ -545,7 +546,7 @@
         } else if (userEnts[x] === 'squared-room-moderation') {
           $scope.radioStates.msgRadio = true;
         } else if (userEnts[x] === 'cloud-contact-center') {
-          $scope.radioStates.careRadio = true;
+          setCareSeviceIfUserExistInSunlight();
         }
       }
     }
@@ -554,6 +555,18 @@
       if (userInvites.ms) {
         $scope.radioStates.msgRadio = true;
       }
+      if (userInvites.cc) {
+        setCareSeviceIfUserExistInSunlight();
+      }
+    }
+
+    function setCareSeviceIfUserExistInSunlight() {
+      SunlightConfigService.getUserInfo($scope.currentUser.id)
+          .then(function () {
+            $scope.radioStates.careRadio = true;
+          }, function () {
+            $scope.radioStates.careRadio = false;
+          });
     }
 
     function shouldAddCallService() {
@@ -590,6 +603,24 @@
       $scope.confChk = [];
       $scope.allLicenses = [];
 
+      var formatLicense = function (site) {
+        var confMatches = _.filter(confFeatures, {
+          siteUrl: site
+        });
+        var cmrMatches = _.filter(cmrFeatures, {
+          siteUrl: site
+        });
+        var isCISiteFlag = WebExUtilsFact.isCIEnabledSite(site);
+        return {
+          site: site,
+          billing: _.uniq(_.pluck(cmrMatches, 'billing').concat(_.pluck(confMatches, 'billing'))),
+          confLic: confMatches,
+          cmrLic: cmrMatches,
+          isCISite: isCISiteFlag,
+          siteAdminUrl: (isCISiteFlag ? '' : WebExUtilsFact.getSiteAdminUrl(site))
+        };
+      };
+
       for (var i in confs) {
         var temp = {
           confFeature: confs[i],
@@ -597,39 +628,34 @@
           confId: 'conf-' + i
         };
 
-        var confNoUrl = _.chain(confs).filter(function (conf) {
-          return conf.license.licenseType !== 'freeConferencing';
-        }).filter(function (conf) {
-          return !_.has(conf, 'license.siteUrl');
-        }).map(createFeatures).remove(undefined).value();
+        var confNoUrl = _.chain(confs)
+          .filter(function (conf) {
+            return conf.license.licenseType !== 'freeConferencing';
+          })
+          .filter(function (conf) {
+            return !_.has(conf, 'license.siteUrl');
+          })
+          .map(createFeatures)
+          .remove(undefined)
+          .value();
 
-        var confFeatures = _.chain(confs).filter('license.siteUrl')
-          .map(createFeatures).remove(undefined).value();
-        var cmrFeatures = _.chain(cmrs).filter('license.siteUrl')
-          .map(createFeatures).remove(undefined).value();
+        var confFeatures = _.chain(confs)
+          .filter('license.siteUrl')
+          .map(createFeatures)
+          .remove(undefined)
+          .value();
+        var cmrFeatures = _.chain(cmrs)
+          .filter('license.siteUrl')
+          .map(createFeatures)
+          .remove(undefined)
+          .value();
 
         var siteUrls = _.map(confFeatures, function (lic) {
           return lic.siteUrl;
         });
         siteUrls = _.uniq(siteUrls);
 
-        $scope.allLicenses = _.map(siteUrls, function (site) {
-          var confMatches = _.filter(confFeatures, {
-            siteUrl: site
-          });
-          var cmrMatches = _.filter(cmrFeatures, {
-            siteUrl: site
-          });
-          var isCISiteFlag = (WebExUtilsFact.isCIEnabledSite(site)) ? true : false;
-          return {
-            site: site,
-            billing: _.uniq(_.pluck(cmrMatches, 'billing').concat(_.pluck(confMatches, 'billing'))),
-            confLic: confMatches,
-            cmrLic: cmrMatches,
-            isCISite: isCISiteFlag,
-            siteAdminUrl: (isCISiteFlag ? '' : WebExUtilsFact.getSiteAdminUrl(site))
-          };
-        });
+        $scope.allLicenses = _.map(siteUrls, formatLicense);
         $scope.allLicenses = _.union(confNoUrl, $scope.allLicenses);
 
         for (var j in cmrs) {
@@ -800,7 +826,7 @@
 
     // To differentiate the user list change made by map operation
     //  and other manual/reset operation.
-    $scope.$watch('usrlist', function (newVal, oldVal) {
+    $scope.$watch('usrlist', function () {
       if ($scope.isMapped) {
         $scope.isMapped = false;
       } else {
@@ -830,7 +856,7 @@
       }
     });
 
-    $scope.$watch('wizard.current.step', function (newVal, oldVal) {
+    $scope.$watch('wizard.current.step', function () {
       if (angular.isDefined($scope.wizard) && $scope.wizard.current.step.name === 'assignServices') {
         if (shouldAddCallService()) {
           $scope.$emit('wizardNextText', 'next');
@@ -905,13 +931,23 @@
         if (!_.isArray(license) && license.confModel === state) {
           idList.push(license.licenseId);
         }
-        idList = idList.concat(_(license.confLic).filter({
-          confModel: state
-        }).pluck('licenseId').remove(undefined).value());
+        idList = idList.concat(_(license.confLic)
+          .filter({
+            confModel: state
+          })
+          .pluck('licenseId')
+          .remove(undefined)
+          .value()
+        );
 
-        idList = idList.concat(_(license.cmrLic).filter({
-          cmrModel: state
-        }).pluck('licenseId').remove(undefined).value());
+        idList = idList.concat(_(license.cmrLic)
+          .filter({
+            cmrModel: state
+          })
+          .pluck('licenseId')
+          .remove(undefined)
+          .value()
+        );
 
       });
 
@@ -928,7 +964,7 @@
         if (str.length >= 3 || str === '') {
           $scope.searchStr = str;
           getUnlicensedUsers();
-          Analytics.trackConvertUser($state.current.name);
+          Analytics.trackConvertUser($state.current.name, Authinfo.getOrgId());
         }
       }, $scope.timeoutVal);
     }
@@ -1027,16 +1063,6 @@
         .value();
     };
 
-    var getEntitlementStrings = function (entList) {
-      var entStrings = [];
-      for (var e = 0; e < entList.length; e++) {
-        if (entList[e].entitlementName) {
-          entStrings.push(entList[e].entitlementName);
-        }
-      }
-      return entStrings;
-    };
-
     $scope.updateUserLicense = function () {
       var users = [];
       if (_.get($scope, 'usrlist.length')) {
@@ -1053,7 +1079,7 @@
       $scope.btnSaveEntLoad = true;
 
       // make sure we have any internal extension and direct line set up for the users
-      _.forEach(users, function (user, idx) {
+      _.forEach(users, function (user) {
         user.internalExtension = _.get(user, 'assignedDn.pattern');
         if (user.externalNumber && user.externalNumber.pattern !== 'None') {
           user.directLine = user.externalNumber.pattern;
@@ -1203,7 +1229,7 @@
           $scope.invalidcount--;
         }
       },
-      removedtoken: function (e) {
+      removedtoken: function () {
         // Reset the token list and validate all tokens
         $timeout(function () {
           $scope.invalidcount = 0;
@@ -1322,7 +1348,6 @@
     $scope.validateTokens = function () {
       wizardNextText();
       return $timeout(function () {
-        var tokenfield = angular.element('#usersfield');
         //reset the invalid count
         $scope.invalidcount = 0;
         angular.element('#usersfield').tokenfield('setTokens', $scope.model.userList);
@@ -1370,7 +1395,6 @@
       $scope.results = {
         resultList: []
       };
-      var isComplete = true;
       usersList = getUsersList();
       Log.debug('Entitlements: ', usersList);
 
@@ -1379,73 +1403,111 @@
         $rootScope.$broadcast('USER_LIST_UPDATED');
         $scope.numAddedUsers = 0;
         $scope.numUpdatedUsers = 0;
-        var hybridCheck = false;
-
         _.forEach(response.data.userResponse, function (user) {
           var userResult = {
             email: user.email,
             alertType: null
           };
 
-          var userStatus = user.httpStatus;
+          var httpStatus = user.httpStatus;
 
-          if (userStatus === 200 || userStatus === 201) {
-            userResult.message = $translate.instant('usersPage.onboardSuccess', {
-              email: userResult.email
-            });
-            userResult.alertType = 'success';
-            if (userStatus === 200) {
-              $scope.numUpdatedUsers++;
-            } else {
-              $scope.numAddedUsers++;
+          switch (httpStatus) {
+            case 200:
+            case 201: {
+              userResult.message = $translate.instant('usersPage.onboardSuccess', {
+                email: userResult.email
+              });
+              userResult.alertType = 'success';
+              if (httpStatus === 200) {
+                $scope.numUpdatedUsers++;
+              } else {
+                $scope.numAddedUsers++;
+              }
+              break;
             }
-          } else if (userStatus === 409) {
-            userResult.message = userResult.email + ' ' + user.message;
-          } else if (userStatus === 403 && user.message === '400081') {
-            userResult.message = $translate.instant('usersPage.userExistsError', {
-              email: userResult.email
-            });
-          } else if (userStatus === 403 && (user.message === '400084' || user.message === '400091')) {
-            userResult.message = $translate.instant('usersPage.claimedDomainError', {
-              email: userResult.email,
-              domain: userResult.email.split('@')[1]
-            });
-          } else if (userStatus === 403 && user.message === '400090') {
-            userResult.message = $translate.instant('usersPage.userExistsInDiffOrgError', {
-              email: userResult.email
-            });
-          } else if (userStatus === 403 && user.message === '400110') {
-            userResult.message = $translate.instant('usersPage.notSetupForManUserAddError', {
-              email: userResult.email
-            });
-          } else if (userStatus === 403 && user.message === '400108') {
-            userResult.message = $translate.instant('usersPage.userExistsDomainClaimError', {
-              email: userResult.email
-            });
-          } else if (userStatus === 403 && (user.message === '400096' || user.message === '400109')) {
-            userResult.message = $translate.instant('usersPage.unableToMigrateError', {
-              email: userResult.email
-            });
-          } else if (userStatus === 403 && user.message === '400111') {
-            userResult.message = $translate.instant('usersPage.insufficientEntitlementsError', {
-              email: userResult.email
-            });
-          } else if (userStatus === 400 && user.message === '400087') {
-            userResult.message = $translate.instant('usersPage.hybridServicesError');
-            hybridCheck = true;
-          } else if (userStatus === 400 && user.message === '400094') {
-            userResult.message = $translate.instant('usersPage.hybridServicesComboError');
-            hybridCheck = true;
-          } else {
-            userResult.message = $translate.instant('usersPage.onboardError', {
-              email: userResult.email,
-              status: userStatus
-            });
+            case 409: {
+              userResult.message = userResult.email + ' ' + user.message;
+              break;
+            }
+            case 403: {
+              switch (user.message) {
+                case Config.messageErrors.userExistsError: {
+                  userResult.message = $translate.instant('usersPage.userExistsError', {
+                    email: userResult.email
+                  });
+                  break;
+                }
+                case Config.messageErrors.userPatchError:
+                case Config.messageErrors.claimedDomainError: {
+                  userResult.message = $translate.instant('usersPage.claimedDomainError', {
+                    email: userResult.email,
+                    domain: userResult.email.split('@')[1]
+                  });
+                  break;
+                }
+                case Config.messageErrors.userExistsInDiffOrgError: {
+                  userResult.message = $translate.instant('usersPage.userExistsInDiffOrgError', {
+                    email: userResult.email
+                  });
+                  break;
+                }
+                case Config.messageErrors.notSetupForManUserAddError: {
+                  userResult.message = $translate.instant('usersPage.notSetupForManUserAddError', {
+                    email: userResult.email
+                  });
+                  break;
+                }
+                case Config.messageErrors.userExistsDomainClaimError: {
+                  userResult.message = $translate.instant('usersPage.userExistsDomainClaimError', {
+                    email: userResult.email
+                  });
+                  break;
+                }
+                case Config.messageErrors.unknownCreateUserError: {
+                  userResult.message = $translate.instant('usersPage.unknownCreateUserError');
+                  break;
+                }
+                case Config.messageErrors.unableToMigrateError: {
+                  userResult.message = $translate.instant('usersPage.unableToMigrateError', {
+                    email: userResult.email
+                  });
+                  break;
+                }
+                case Config.messageErrors.insufficientEntitlementsError: {
+                  userResult.message = $translate.instant('usersPage.insufficientEntitlementsError', {
+                    email: userResult.email
+                  });
+                  break;
+                }
+                default: break;
+              }
+              break;
+            }
+            case 400: {
+              switch (user.message) {
+                case Config.messageErrors.hybridServicesError: {
+                  userResult.message = $translate.instant('usersPage.hybridServicesError');
+                  break;
+                }
+                case Config.messageErrors.hybridServicesComboError: {
+                  userResult.message = $translate.instant('usersPage.hybridServicesComboError');
+                  break;
+                }
+                default: break;
+              }
+              break;
+            }
+            default: {
+              userResult.message = $translate.instant('usersPage.onboardError', {
+                email: userResult.email,
+                status: httpStatus
+              });
+              break;
+            }
           }
 
-          if (userStatus !== 200 && userStatus !== 201) {
+          if (httpStatus !== 200 && httpStatus !== 201) {
             userResult.alertType = 'danger';
-            isComplete = false;
           }
 
           $scope.results.resultList.push(userResult);
@@ -1516,7 +1578,6 @@
           Notification.notify(error, 'error');
         }
         Notification.notify([error], 'error');
-        isComplete = false;
         $scope.btnOnboardLoading = false;
         deferred.reject();
       };
@@ -1524,19 +1585,18 @@
       if (angular.isArray(usersList) && usersList.length > 0) {
         $scope.btnOnboardLoading = true;
 
-        var i, j;
-        for (i = 0; i < usersList.length; i++) {
+        _.each(usersList, function (userItem) {
           var userAndDnObj = $scope.usrlist.filter(function (user) {
-            return (user.address == usersList[i].address);
+            return (user.address == userItem.address);
           });
 
           if (userAndDnObj[0].assignedDn && userAndDnObj[0].assignedDn.pattern.length > 0) {
-            usersList[i].internalExtension = userAndDnObj[0].assignedDn.pattern;
+            userItem.internalExtension = userAndDnObj[0].assignedDn.pattern;
           }
           if (userAndDnObj[0].externalNumber && userAndDnObj[0].externalNumber.pattern !== "None") {
-            usersList[i].directLine = userAndDnObj[0].externalNumber.pattern;
+            userItem.directLine = userAndDnObj[0].externalNumber.pattern;
           }
-        }
+        });
 
         var tempUserArray = [],
           entitleList = [],
@@ -1549,7 +1609,7 @@
         }
         entitleList = entitleList.concat(getExtensionEntitlements('add'));
 
-        for (i = 0; i < usersList.length; i += chunk) {
+        for (var i = 0; i < usersList.length; i += chunk) {
           tempUserArray = usersList.slice(i, i + chunk);
           Userservice.onboardUsers(tempUserArray, entitleList, licenseList)
             .then(successCallback)
@@ -1595,37 +1655,50 @@
             alertType: null
           };
 
-          var userStatus = data.userResponse[i].status;
+          var httpStatus = data.userResponse[i].status;
 
-          if (userStatus === 200 || userStatus === 201) {
-            userResult.message = $translate.instant('onboardModal.result.200');
-            userResult.alertType = 'success';
-            if (userStatus === 200) {
-              $scope.numUpdatedUsers++;
-            } else if (userStatus === 201) {
-              $scope.numAddedUsers++;
+          switch (httpStatus) {
+            case 200:
+            case 201: {
+              userResult.message = $translate.instant('onboardModal.result.200');
+              userResult.alertType = 'success';
+              if (httpStatus === 200) {
+                $scope.numUpdatedUsers++;
+              } else if (httpStatus === 201) {
+                $scope.numAddedUsers++;
+              }
+              break;
             }
-          } else if (userStatus === 404) {
-            userResult.message = $translate.instant('onboardModal.result.404');
-            userResult.alertType = 'danger';
-            isComplete = false;
-          } else if (userStatus === 409) {
-            userResult.message = $translate.instant('onboardModal.result.409');
-            userResult.alertType = 'danger';
-            isComplete = false;
-          } else if (data.userResponse[i].message === '400094') {
-            userResult.message = $translate.instant('onboardModal.result.400094', {
-              status: userStatus
-            });
-            userResult.alertType = 'danger';
-            isComplete = false;
-          } else {
-            userResult.message = $translate.instant('onboardModal.result.other', {
-              status: userStatus
-            });
-            userResult.alertType = 'danger';
-            isComplete = false;
+            case 404: {
+              userResult.message = $translate.instant('onboardModal.result.404');
+              userResult.alertType = 'danger';
+              isComplete = false;
+              break;
+            }
+            case 409: {
+              userResult.message = $translate.instant('onboardModal.result.409');
+              userResult.alertType = 'danger';
+              isComplete = false;
+              break;
+            }
+            default: {
+              if (data.userResponse[i].message === Config.messageErrors.hybridServicesComboError) {
+                userResult.message = $translate.instant('onboardModal.result.400094', {
+                  status: httpStatus
+                });
+                userResult.alertType = 'danger';
+                isComplete = false;
+              } else {
+                userResult.message = $translate.instant('onboardModal.result.other', {
+                  status: httpStatus
+                });
+                userResult.alertType = 'danger';
+                isComplete = false;
+              }
+              break;
+            }
           }
+
           $scope.results.resultList.push(userResult);
           if (method !== 'convertUser') {
             $scope.$dismiss();
@@ -1640,10 +1713,10 @@
 
         //Displaying notifications
         if (method !== 'convertUser') {
-          if ($scope.numAddedUsers + $scope.numUpdatedUsers + $scope.results.errors.length) {
+          if ($scope.results.errors.length) {
             $scope.btnOnboardLoading = false;
             $scope.btnSaveEntLoad = false;
-            Notification.error($scope.results.errors);
+            Notification.notify($scope.results.errors, 'error');
           }
         }
 
@@ -1878,7 +1951,7 @@
       }
 
       // copy numbers to convertSelectedList
-      _.forEach($scope.usrlist, function (user, index) {
+      _.forEach($scope.usrlist, function (user) {
         var userArray = $scope.convertSelectedList.filter(function (selectedUser) {
           return user.address === selectedUser.userName;
         });
@@ -1903,7 +1976,7 @@
         $scope.processing = true;
         // Copying selected users to user list
         $scope.usrlist = [];
-        _.forEach($scope.convertSelectedList, function (selectedUser, index) {
+        _.forEach($scope.convertSelectedList, function (selectedUser) {
           var user = {};
           var givenName = "";
           var familyName = "";
@@ -1942,9 +2015,11 @@
     function convertUsersInBatch() {
       var batch = $scope.convertSelectedList.slice(0, Config.batchSize);
       $scope.convertSelectedList = $scope.convertSelectedList.slice(Config.batchSize);
-      Userservice.migrateUsers(batch, function (data, status) {
+      Userservice.migrateUsers(batch, function (data) {
         var successMovedUsers = [];
-
+        var match = function (batchObj) {
+          return user.address === batchObj.userName;
+        };
         for (var i = 0; i < data.userResponse.length; i++) {
           if (data.userResponse[i].status !== 200) {
             $scope.results.errors.push(data.userResponse[i].email + $translate.instant('homePage.convertError'));
@@ -1952,9 +2027,7 @@
             var user = {
               'address': data.userResponse[i].email
             };
-            var userArray = batch.filter(function (batchObj) {
-              return user.address === batchObj.userName;
-            });
+            var userArray = batch.filter(match);
             user.assignedDn = userArray[0].assignedDn;
             user.externalNumber = userArray[0].externalNumber;
             successMovedUsers.push(user);
@@ -2012,7 +2085,7 @@
     };
 
     $scope.convertDisabled = function () {
-      return ($scope.gridApi.selection.getSelectedRows().length === 0) ? true : false;
+      return $scope.gridApi.selection.getSelectedRows().length === 0;
     };
 
     getUnlicensedUsers();
@@ -2167,16 +2240,24 @@
       $scope.model.isProcessing = true;
       $scope.model.cancelProcessCsv = $scope.cancelProcessCsv;
 
-      function addUserError(row, errorMsg) {
+      function addUserError(row, email, errorMsg) {
         $scope.model.userErrorArray.push({
           row: row,
+          email: email,
           error: errorMsg
+        });
+        UserCsvService.setCsvStat({
+          userErrorArray: [{
+            row: row,
+            email: email,
+            error: errorMsg
+          }]
         });
       }
 
-      function addUserErrorWithTrackingID(row, errorMsg, response) {
+      function addUserErrorWithTrackingID(row, errorMsg, response, email) {
         errorMsg = UserCsvService.addErrorWithTrackingID(errorMsg, response);
-        addUserError(row, _.trim(errorMsg));
+        addUserError(row, (email || ''), _.trim(errorMsg));
       }
 
       function successCallback(response, startIndex, length) {
@@ -2198,7 +2279,7 @@
                 addedUsersList.push(addItem);
               }
             } else {
-              addUserErrorWithTrackingID(startIndex + index + 1, UserCsvService.getBulkErrorResponse(user.httpStatus, user.message, user.email), response);
+              addUserErrorWithTrackingID(startIndex + index + 1, UserCsvService.getBulkErrorResponse(user.httpStatus, user.message, user.email), response, user.email);
             }
           });
         } else {
@@ -2209,9 +2290,10 @@
       }
 
       function errorCallback(response, startIndex, length) {
-        var responseMessage = UserCsvService.getBulkErrorResponse(response.status);
         for (var k = 0; k < length; k++) {
-          addUserErrorWithTrackingID(startIndex + k + 1, responseMessage, response);
+          var email = (response.config && response.config.data && _.isArray(response.config.data.users) ? response.config.data.users[k].email : null);
+          var responseMessage = UserCsvService.getBulkErrorResponse(response.status, null, email);
+          addUserErrorWithTrackingID(startIndex + k + 1, responseMessage, response, email);
         }
       }
 
@@ -2234,12 +2316,12 @@
 
       function onboardCsvUsers(startIndex, userArray, entitlementArray, licenseArray, csvPromise) {
         return csvPromise.then(function () {
-          return $q(function (resolve, reject) {
+          return $q(function (resolve) {
             if (userArray.length > 0) {
               Userservice.onboardUsers(userArray, entitlementArray, licenseArray, cancelDeferred.promise).then(function (response) {
-                successCallback(response, startIndex - userArray.length + 1, userArray.length);
+                successCallback(response, (startIndex - userArray.length) + 1, userArray.length);
               }).catch(function (response) {
-                errorCallback(response, startIndex - userArray.length + 1, userArray.length);
+                errorCallback(response, (startIndex - userArray.length) + 1, userArray.length);
               }).finally(function () {
                 calculateProcessProgress();
                 resolve();
@@ -2253,7 +2335,8 @@
 
       function calculateProcessProgress() {
         $scope.model.numTotalUsers = $scope.model.numNewUsers + $scope.model.numExistingUsers + $scope.model.userErrorArray.length;
-        $scope.model.processProgress = Math.round($scope.model.numTotalUsers / userArray.length * 100);
+        $scope.model.processProgress = Math.round(($scope.model.numTotalUsers / userArray.length) * 100);
+        $scope.model.importCompletedAt = Date.now();
 
         if ($scope.model.numTotalUsers >= userArray.length) {
           $scope.model.userErrorArray.sort(function (a, b) {
@@ -2310,5 +2393,4 @@
     }
 
   }
-})
-();
+})();

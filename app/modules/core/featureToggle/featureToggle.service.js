@@ -2,11 +2,11 @@
   'use strict';
 
   module.exports = angular.module('core.featuretoggle', [
-      require('modules/core/config/config'),
-      require('modules/core/scripts/services/authinfo'),
-      require('modules/core/scripts/services/org.service'),
-      require('modules/huron/telephony/telephonyConfig'),
-    ])
+    require('modules/core/config/config'),
+    require('modules/core/scripts/services/authinfo'),
+    require('modules/core/scripts/services/org.service'),
+    require('modules/huron/telephony/telephonyConfig'),
+  ])
     .factory('HuronCustomerFeatureToggleService', HuronCustomerFeatureToggleService)
     .factory('HuronUserFeatureToggleService', HuronUserFeatureToggleService)
     .service('FeatureToggleService', FeatureToggleService)
@@ -30,9 +30,11 @@
       atlasMediaServiceOnboarding: 'atlas-media-service-onboarding',
       atlasNewRoomSystems: 'atlas-new-roomSystems',
       atlasNurturingEmails: 'atlas-nurturing-emails',
+      atlasUserPendingStatus: 'atlas-user-pending-status',
       atlasPinSettings: 'atlas-pin-settings',
       atlasPstnTfn: 'atlas-pstn-tfn',
       atlasReadOnlyAdmin: 'atlas-read-only-admin',
+      atlasComplianceRole: 'atlas-compliance-role',
       atlasSettingsPage: 'atlas-settings-page',
       atlasSipUriDomain: 'atlas-sip-uri-domain',
       atlasSipUriDomainEnterprise: 'atlas-sip-uri-domain-enterprise',
@@ -63,8 +65,6 @@
       flagMsg: 'flag-msg',
       geoHintEnabled: 'geo-hint-enabled',
       huronAACallQueue: 'huronAACallQueue',
-      huronAASubmenu: 'huron-aa-submenu',
-      huronAATimeZone: 'huron-aa-timezone',
       huronMultipleCalls: 'huron-multiple-calls',
       huronClassOfService: 'COS',
       huronInternationalDialingTrialOverride: 'huronInternationalDialingTrialOverride',
@@ -143,7 +143,10 @@
       ceAllowNolockdown: 'ce-allow-nolockdown',
       webexCSV: 'webex-CSV',
       enableCrashLogs: 'csdm-enable-crash-logs',
-      csdmPlaces: 'csdm-places'
+      csdmPlaces: 'csdm-places',
+      optionalvmdid: 'optional-vm-did',
+      globalStatus: 'global-status',
+      atlasF237ResourceGroups: 'atlas-f237-resource-group'
     };
 
     var toggles = {};
@@ -259,7 +262,7 @@
           }).$promise.then(function (data) {
             toggles[feature] = data.val;
             return data.val;
-          }).catch(function (err) {
+          }).catch(function () {
             return false;
           });
         } else {
@@ -269,7 +272,7 @@
           }).$promise.then(function (data) {
             toggles[feature] = data.val;
             return data.val;
-          }).catch(function (err) {
+          }).catch(function () {
             return false;
           });
         }
@@ -288,7 +291,7 @@
         return _.get(_.find(features.developer, {
           key: feature
         }), 'val', false);
-      }).catch(function (err) {
+      }).catch(function () {
         return false;
       });
 
@@ -321,7 +324,7 @@
     }
 
     function supports(feature) {
-      return $q(function (resolve, reject) {
+      return $q(function (resolve) {
         if (feature === features.dirSync) {
           supportsDirSync().then(function (enabled) {
             resolve(enabled);
@@ -356,7 +359,7 @@
       }).$promise.then(function (response) {
         return response.serviceMode === 'ENABLED';
       }).catch(function (response) {
-        Orgservice.getOrgCacheOption(function (data, status) {
+        Orgservice.getOrgCacheOption(function (data) {
           if (data.success) {
             return data.dirsyncEnabled;
           } else {

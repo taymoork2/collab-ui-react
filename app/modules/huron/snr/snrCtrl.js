@@ -18,7 +18,7 @@
 
       if (angular.isString(code)) {
         code = code.toLowerCase();
-        angular.forEach(CountryCodes, function (value, key) {
+        angular.forEach(CountryCodes, function (value) {
           if (code === value.code) {
             deferred.resolve(value);
             isCountryCodeFound = true;
@@ -126,7 +126,7 @@
       }
     }
 
-    function reset(form) {
+    function reset() {
       resetForm();
       init();
     }
@@ -154,9 +154,9 @@
       };
 
       return RemoteDestinationService.save({
-          customerId: user.meta.organizationID,
-          userId: user.id
-        }, rdBean,
+        customerId: user.meta.organizationID,
+        userId: user.id
+      }, rdBean,
         function () {
           TelephonyInfoService.updateSnr(vm.snrInfo);
 
@@ -176,10 +176,10 @@
       };
 
       return RemoteDestinationService.delete({
-          customerId: user.meta.organizationID,
-          userId: user.id,
-          remoteDestId: vm.snrInfo.remoteDestinations[0].uuid
-        },
+        customerId: user.meta.organizationID,
+        userId: user.id,
+        remoteDestId: vm.snrInfo.remoteDestinations[0].uuid
+      },
         function () {
           vm.snrInfo.remoteDest.phoneNumber = null;
           vm.snrInfo.remoteDestinations = null;
@@ -206,10 +206,10 @@
       };
 
       return RemoteDestinationService.update({
-          customerId: user.meta.organizationID,
-          userId: user.id,
-          remoteDestId: vm.snrInfo.remoteDestinations[0].uuid
-        }, rdBean,
+        customerId: user.meta.organizationID,
+        userId: user.id,
+        remoteDestId: vm.snrInfo.remoteDestinations[0].uuid
+      }, rdBean,
         function () {
           vm.snrInfo.answerTooLateTimer = answerTooLateTimer;
           TelephonyInfoService.updateSnr(vm.snrInfo);
@@ -236,7 +236,7 @@
         }
       } else if (vm.snrInfo.singleNumberReachEnabled) {
         createRemoteDestinationInfo(vm.currentUser, vm.snrInfo.remoteDest, vm.snrWaitSeconds.value)
-          .then(function (response) {
+          .then(function () {
             TelephonyInfoService.getRemoteDestinationInfo(vm.currentUser.id);
             resetForm();
           });

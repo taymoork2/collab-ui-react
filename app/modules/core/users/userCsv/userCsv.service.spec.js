@@ -7,7 +7,7 @@ describe('Controller: UserCsvService', function () {
   var trackingId = ' TrackingID: ';
   var dummyId = 'TrackingID';
   var email = 'dummyEmail@fakeAccount.com';
-  var headerFuncOne = function (id) {
+  var headerFuncOne = function () {
     return null;
   };
   var headerFuncTwo = function (id) {
@@ -87,7 +87,7 @@ describe('Controller: UserCsvService', function () {
     });
 
     it('getBulkErrorResponse should return expected response for status:403 messageCode:400096', function () {
-      expect(UserCsvService.getBulkErrorResponse(403, '400096', email)).toEqual('usersPage.unableToMigrateError');
+      expect(UserCsvService.getBulkErrorResponse(403, '400096', email)).toEqual('usersPage.unknownCreateUserError');
     });
 
     it('getBulkErrorResponse should return expected response for status:403 messageCode:400110', function () {

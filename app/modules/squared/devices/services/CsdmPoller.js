@@ -79,7 +79,7 @@
       return (channels[event] || []).length;
     }
 
-    function emit(event, data) {
+    function emit(event) {
       var args = arguments;
       _.each(channels[event], function (subscription) {
         subscription.notify([].slice.call(args, 1));

@@ -4,7 +4,7 @@
     "angular": "github:DefinitelyTyped/DefinitelyTyped/angularjs/angular.d.ts#0d501b1ff9d97a12c8b371affb64c921b6fe9832",
     "jquery": "github:DefinitelyTyped/DefinitelyTyped/jquery/jquery.d.ts#0d501b1ff9d97a12c8b371affb64c921b6fe9832",
     "node": "github:DefinitelyTyped/DefinitelyTyped/node/node.d.ts#7a3ca1f0b8a0960af9fc1838f3234cc9d6ce0645",
-    "lodash": "github:DefinitelyTyped/DefinitelyTyped/lodash/lodash.d.ts#c560ba6f0f55ce6f50e9d06e37b5bc0e2b9117b0",
+    "lodash": "github:DefinitelyTyped/DefinitelyTyped/lodash/lodash.d.ts#25b78b03bc815ea2d19b2e1a100988a8303f931e",
     "alertify": "github:DefinitelyTyped/DefinitelyTyped/alertify/alertify.d.ts#7a3ca1f0b8a0960af9fc1838f3234cc9d6ce0645",
     "AmCharts": "github:DefinitelyTyped/DefinitelyTyped/amcharts/AmCharts.d.ts#7a3ca1f0b8a0960af9fc1838f3234cc9d6ce0645",
     "angular-formly": "github:DefinitelyTyped/DefinitelyTyped/angular-formly/angular-formly.d.ts#7a3ca1f0b8a0960af9fc1838f3234cc9d6ce0645",
@@ -27,6 +27,8 @@
     "mime": "github:DefinitelyTyped/DefinitelyTyped/mime/mime.d.ts#46719185c564694c5583c4b7ad94dbb786ecad46",
     "selenium-webdriver": "github:DefinitelyTyped/DefinitelyTyped/selenium-webdriver/selenium-webdriver.d.ts#001ca36ba58cef903c4c063555afb07bbc36bb58",
     "serve-static": "github:DefinitelyTyped/DefinitelyTyped/serve-static/serve-static.d.ts#46719185c564694c5583c4b7ad94dbb786ecad46",
-    "sinon": "github:DefinitelyTyped/DefinitelyTyped/sinon/sinon.d.ts#3030a4be536b6530c06b80081f1333dc0de4d703"
+    "sinon": "github:DefinitelyTyped/DefinitelyTyped/sinon/sinon.d.ts#3030a4be536b6530c06b80081f1333dc0de4d703",
+
+    "bmmp": "file:app/modules/core/myCompany/mySubscriptions/bmmp-index.d.ts"
   }
 }

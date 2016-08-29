@@ -1,3 +1,5 @@
 <div class="subscription-subheader">
-  <a ng-if="subscriptionHeader.isOnline" ng-href="{{::subscriptionHeader.upgradeUrl}}" class="btn btn--primary" translate="subscriptions.upgrade"></a>
+  <div class="subscription-bmmp" ng-if="subscriptionHeader.isOnline">
+    <span class="cisco-bmmp-cta-widget" data-product-instance-id="{{::subscriptionHeader.subId}}" data-styled="true" data-application-page="all" data-widget-location="navigation-bar"></span>
+  </div>
 </div>

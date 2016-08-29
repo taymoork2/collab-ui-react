@@ -6,7 +6,7 @@
   <!-- Sub Header and Reports -->
   <div ng-switch on="nav.tab">
     <div ng-switch-when="metrics">
-      <div ng-controller="MediaServiceMetricsContoller as nav" ng-include="'modules/mediafusion/media-service/metrics-graph-report/mediaServiceMetricsReports.tpl.html'"></div>
+      <div ng-controller="MediaServiceMetricsContoller as nav" ng-include="'modules/mediafusion/metrics-graph-report/mediaServiceMetricsReports.tpl.html'"></div>
     </div>
     <div ng-switch-when="care">
       <div ng-controller="CareReportsController as nav" ng-include="'modules/sunlight/reports/careReports.tpl.html'"></div>

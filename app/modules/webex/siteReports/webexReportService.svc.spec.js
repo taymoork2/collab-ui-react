@@ -14,7 +14,7 @@ describe('WebexReportService Test', function () {
   //   });
   // }));
   //Initialize variables
-  var WebexReportService, WebExUtilsFact, testReports, $translate, reportService;
+  var WebexReportService, testReports, $translate;
   var ref1, ref2;
 
   beforeEach(inject(function (_WebexReportService_, _$translate_) {

@@ -31,12 +31,12 @@ var Notifications = function () {
           alert.click().then(function () {
             log('Clicked: ' + alert.locator());
           }, function (e) {
-            log('Failed to click: ' + alert.locator() + '. Error: ' + (e && e.message || e));
+            log('Failed to click: ' + alert.locator() + '. Error: ' + ((e && e.message) || e));
           });
         }
         return false;
       }, function (e) {
-        log('Alert.isDisplayed error: ' + alert.locator() + '. Error: ' + (e && e.message || e));
+        log('Alert.isDisplayed error: ' + alert.locator() + '. Error: ' + ((e && e.message) || e));
         return true;
       });
     }, TIMEOUT);

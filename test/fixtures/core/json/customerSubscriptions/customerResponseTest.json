@@ -1,0 +1,65 @@
+{
+  "customers": [{
+    "customerId": "bf55390b-8328-415a-9df3-868d111902f7",
+    "customerName": "Atlas_Test_ritwchau05",
+    "customerOrgId": "d0e22b97-36cb-439a-abdd-9df7a9dc3a47",
+    "customerAdminEmail": "atlascsco+ritwchau05a@gmail.com",
+    "licenses": [{
+      "licenseId": "MC_2f09ab6d-81c1-46e8-a04d-677d4673faf9_AtlasTestRitwchau05.webex.com",
+      "offerName": "MC",
+      "licenseType": "CONFERENCING",
+      "billingServiceId": "Test-Sub-08072016a",
+      "features": [
+        "cloudmeetings"
+      ],
+      "volume": 40,
+      "isTrial": false,
+      "status": "PENDING",
+      "capacity": 100,
+      "siteUrl": "AtlasTestRitwchau05.webex.com",
+      "partnerEmail": "boulder.vail@gmail.com",
+      "isCIUnifiedSite": true
+    }, {
+      "licenseId": "MS_f2afedfa-4512-466f-9e42-2b3e72925e25",
+      "offerName": "MS",
+      "licenseType": "MESSAGING",
+      "billingServiceId": "Test-Sub-08072016a",
+      "features": [
+        "squared-room-moderation"
+      ],
+      "volume": 200,
+      "isTrial": false,
+      "status": "PENDING",
+      "partnerEmail": "boulder.vail@gmail.com"
+    }, {
+      "licenseId": "CF_bc01e69a-2617-43c6-9ebc-21394e240935",
+      "offerName": "CF",
+      "licenseType": "CONFERENCING",
+      "billingServiceId": "Test-Sub-08072016a",
+      "features": [
+        "squared-syncup"
+      ],
+      "volume": 20,
+      "isTrial": false,
+      "status": "PENDING",
+      "partnerEmail": "boulder.vail@gmail.com"
+    }, {
+      "licenseId": "ST_4d4060d6-7610-4a27-a9ed-2f03932d5d90",
+      "offerName": "ST",
+      "licenseType": "STORAGE",
+      "billingServiceId": "Test-Sub-08072016a",
+      "features": [],
+      "volume": 0,
+      "isTrial": false,
+      "status": "PENDING",
+      "capacity": 10,
+      "partnerEmail": "boulder.vail@gmail.com"
+    }],
+    "customerType": "Enterprise",
+    "commerceRelation": "Partner",
+    "licenseEnforcement": {
+      "licenseExceedAction": "NOTHING",
+      "licenseExceedThreshold": "NA"
+    }
+  }]
+}

@@ -86,7 +86,7 @@
 
     $scope.$on(
       "$destroy",
-      function (event) {
+      function () {
         AACommonService.setIsValid(vm.uniqueCtrlIdentifer, true);
       }
     );

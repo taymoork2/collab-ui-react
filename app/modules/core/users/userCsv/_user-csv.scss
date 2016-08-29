@@ -1,6 +1,10 @@
 .template-anchor {
   @extend .left;
-  margin-left: rem(30);
+  @include vr-spacing(ml, 2);
+}
+
+.dialog-padding {
+  @include vr-spacing(mh, 1.5);
 }
 
 .user-csv {
@@ -43,37 +47,38 @@
   justify-content: flex-start;
 
   ul {
-    margin-top: 1rem;
+    @include vr-spacing(mt, 1);
     li {
       list-style-type: none;
       padding-bottom: 1rem;
 
       .cs-input-radio.cs-input-group {
-        margin-bottom: -0.25rem;
+        @include vr-spacing(mb, -0.25);
       }
 
       label {
-        margin-bottom: 0.25rem;
+        @include vr-spacing(mb, 0.25);
       }
     }
   }
 
   .columns .box {
     @extend .center;
-    margin: 1rem;
+    @include vr-spacing(m, 1);
     border: thin solid $gray-light-2;
+    color: $gray-base;
     display: flex;
     align-items: center;
     justify-content: center;
 
     .box-content {
-      flex: 1;
       align-self: center;
       width: 26rem;
       height: 12rem;
-      padding-top: 1.5rem;
-      padding-bottom: 1.5rem;
-      background: $brand-white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: transparent;
     }
 
     .disabled {
@@ -128,7 +133,7 @@
       }
 
       .csv-download {
-        margin: 0;
+        @include vr-spacing(m, 0);
       }
 
       .prompt {
@@ -145,11 +150,29 @@
       }
     }
 
+    .flex-center-container {
+      flex: 1 1 auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+    }
+
+    cr-user-csv-file {
+      @extend .flex-center-container;
+    }
+
     .user-csv-upload {
+      flex: 1 1 auto;
+      height: 100%;
 
       .file-drop {
+        @extend .flex-center-container;
+        flex-direction: column;
+
         &.dragover {
-          background: $gray-light-2;
+          background: $color-primary-lighter;
+          border: dashed $color-primary;
         }
         input {
           display: none;
@@ -159,10 +182,6 @@
       .file-drop-inactive {
         @extend .file-drop;
 
-        .center-vert {
-          @include vr-spacing(mt, 2);
-        }
-
         .file-drop-content {
           background: $gray-light-4;
           .icon-check {
@@ -170,7 +189,7 @@
           }
         }
         .file-name {
-          margin-top: rem(5);
+          @include vr-spacing(mt, .25);
         }
       }
       .csv-enable-remove {
@@ -203,18 +222,29 @@
       flex-direction: row;
       align-items: center;
       justify-content: center;
-      margin-top: 1rem;
+      @include vr-spacing(mt, 1);
       width: 55%;
       .progressbar {
         width: 100%;
+        @include vr-spacing(mb, 2.25);
       }
       .csv-filename {
-        margin-top: rem(3);
-        color: $gray-dark-4;
+        @include vr-spacing(mt, .25);
+        font-size: small;
       }
       .close-button {
-        margin-left: 1rem;
-        margin-top: -10px;
+        @include vr-spacing(ml, 1);
+        @include vr-spacing(mt, -1.5);
+        font-size: medium;
+
+        a {
+          color: $gray-light-1;
+
+          &:hover {
+            color: $color-primary-base;
+          }
+        }
+
       }
       .retry-label span {
         @extend .progressbar-progress;
@@ -223,48 +253,52 @@
     }
   }
 
+  .upload-complete {
+    align-items: flex-start;
+    @include vr-spacing(mv, .5);
+  }
+
   // boxes containing counts of added, updated, retry, and error users
   .upload-stats {
     display: flex;
     flex-direction: row;
     justify-content: center;
-    min-height: rem(150);
-    margin-top: 1rem;
+    height: 5rem;
+    @include vr-spacing(mb, 1);
 
     .stat {
-      flex: 1;
+      flex: 1 1 auto;
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
       background-color: $gray-light-4;
-      min-height: rem(150);
-      max-width: rem(150);
-      min-width: rem(150);
+
       position: relative;
       & + .stat {
-        margin-left: rem(40);
+        @include vr-spacing(ml, 1);
       }
 
       .total {
-        font-size: 64px;
+        font-size: 2rem;
         line-height: 1;
         font-family: "CiscoSansTT Thin";
       }
       .total-title {
-        margin: 0 0 5px;
+        @include vr-spacing(mb, .1);
+        font-size: .75rem;
       }
       &.disabled {
-        color: $gray-light;
+        color: $gray-light-1;
       }
       &.new-users:not(.disabled) .total {
-        color: $brand-success;
+        color: $color-cta-base;
       }
-      &.existing-users:not(.disabled) .total {
-        color: $brand-info;
+      &.updated-users:not(.disabled) .total {
+        color: $color-primary-base;
       }
       &.error-users:not(.disabled) .total {
-        color: $brand-danger;
+        color: $color-negative-light;
       }
       &.retry-users:not(.disabled) .total {
         color: $brand-warning;
@@ -274,22 +308,36 @@
 
   // Timer display
   .upload-timer {
-    margin: 1rem 0 1rem 0;
+    @include vr-spacing(mv, 1);
+    @include vr-spacing(mh, 0);
     text-align: center;
   }
 
   // Error display
   .upload-errors {
 
-    background-color: $brand-white;
+    background-color: transparent;
+
+    .error-download {
+      display: flex;
+      justify-content: flex-end;
+      flex-direction: row;
+    }
 
     .csv-download {
+      font-size: small;
       margin: 0;
-      justify-content: flex-start;
     }
 
     p {
-      margin-bottom: 1rem;
+      .icon {
+        color: $gray-light-1;
+        top: .1rem;
+
+        &:hover {
+          color: $color-primary-base;
+        }
+      }
     }
 
     .row {
@@ -299,7 +347,7 @@
       border-right-width: thin;
       border-top-width: thin;
       border-bottom-width: 0;
-      overflow-x: hidden;
+      display: flex;
     }
     div.row:last-child {
       border-bottom-width: thin;
@@ -307,6 +355,7 @@
 
     .error-row {
       padding: .5rem 1rem .5rem 1rem;
+      overflow-x: hidden;
     }
 
     .error-desc {
@@ -334,5 +383,3 @@
     }
   }
 }
-
-

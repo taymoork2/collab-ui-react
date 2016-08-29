@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Service: Customer Reports Service', function () {
-  var $httpBackend, CustomerReportService, Config, Notification;
+  var $httpBackend, CustomerReportService, Notification;
   var avgRoomsUrl, groupRoomsUrl, oneToOneRoomsUrl, contentUrl, contentSizeUrl, mediaUrl, metricsUrl, activeUserDetailedUrl, mostActiveUrl, devicesUrl;
 
   var activeData = getJSONFixture('core/json/customerReports/activeUser.json');
@@ -35,7 +35,7 @@ describe('Service: Customer Reports Service', function () {
 
   beforeEach(angular.mock.module('Core'));
 
-  var cacheValue = (parseInt(moment.utc().format('H')) >= 8);
+  var cacheValue = (parseInt(moment.utc().format('H'), 10) >= 8);
   var dayFormat = "MMM DD";
   var timezone = "Etc/GMT";
   var timeFilter = {
@@ -68,13 +68,12 @@ describe('Service: Customer Reports Service', function () {
     $provide.value("Authinfo", Authinfo);
   }));
 
-  beforeEach(inject(function (_$httpBackend_, _CustomerReportService_, _Config_, _Notification_, UrlConfig) {
+  beforeEach(inject(function (_$httpBackend_, _CustomerReportService_, _Notification_, UrlConfig) {
     $httpBackend = _$httpBackend_;
     CustomerReportService = _CustomerReportService_;
-    Config = _Config_;
     Notification = _Notification_;
 
-    spyOn(Notification, 'notify');
+    spyOn(Notification, 'errorWithTrackingId');
 
     var baseUrl = UrlConfig.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/reports/';
     var customerView = '&isCustomerView=true';
@@ -104,10 +103,10 @@ describe('Service: Customer Reports Service', function () {
     mediaContent.data[0].data = updateDates(mediaContent.data[0].data);
     mediaResponse = updateDates(mediaResponse, dayFormat);
 
-    angular.forEach(devicesData.data[0].data, function (item, index, array) {
+    angular.forEach(devicesData.data[0].data, function (item) {
       item.details = updateDates(item.details, null, 'recordTime');
     });
-    angular.forEach(deviceResponse.graphData, function (item, index, array) {
+    angular.forEach(deviceResponse.graphData, function (item) {
       item.graph = updateDates(item.graph, dayFormat);
     });
   }));
@@ -143,7 +142,7 @@ describe('Service: Customer Reports Service', function () {
           graphData: [],
           isActiveUsers: false
         });
-        expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
+        expect(Notification.errorWithTrackingId).toHaveBeenCalled();
       });
 
       $httpBackend.flush();
@@ -164,7 +163,7 @@ describe('Service: Customer Reports Service', function () {
 
       CustomerReportService.getMostActiveUserData(timeFilter).then(function (response) {
         expect(response).toEqual([]);
-        expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
+        expect(Notification.errorWithTrackingId).toHaveBeenCalled();
       });
 
       $httpBackend.flush();
@@ -191,7 +190,7 @@ describe('Service: Customer Reports Service', function () {
 
       CustomerReportService.getAvgRoomData(timeFilter).then(function (response) {
         expect(response).toEqual([]);
-        expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
+        expect(Notification.errorWithTrackingId).toHaveBeenCalled();
       });
 
       $httpBackend.flush();
@@ -216,7 +215,7 @@ describe('Service: Customer Reports Service', function () {
 
       CustomerReportService.getFilesSharedData(timeFilter).then(function (response) {
         expect(response).toEqual([]);
-        expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
+        expect(Notification.errorWithTrackingId).toHaveBeenCalled();
       });
 
       $httpBackend.flush();
@@ -239,7 +238,7 @@ describe('Service: Customer Reports Service', function () {
 
       CustomerReportService.getMediaQualityData(timeFilter).then(function (response) {
         expect(response).toEqual([]);
-        expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
+        expect(Notification.errorWithTrackingId).toHaveBeenCalled();
       });
 
       $httpBackend.flush();
@@ -262,7 +261,7 @@ describe('Service: Customer Reports Service', function () {
 
       CustomerReportService.getCallMetricsData(timeFilter).then(function (response) {
         expect(response.dataProvider).toEqual([]);
-        expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
+        expect(Notification.errorWithTrackingId).toHaveBeenCalled();
       });
 
       $httpBackend.flush();
@@ -288,7 +287,7 @@ describe('Service: Customer Reports Service', function () {
           graphData: [],
           filterArray: []
         });
-        expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
+        expect(Notification.errorWithTrackingId).toHaveBeenCalled();
       });
 
       $httpBackend.flush();

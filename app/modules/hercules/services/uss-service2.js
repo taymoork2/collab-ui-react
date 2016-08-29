@@ -41,7 +41,7 @@
     };
 
     var hub = CsdmHubFactory.create();
-    var userStatusesSummaryPoller = CsdmPoller.create(fetchStatusesSummary, hub);
+    CsdmPoller.create(fetchStatusesSummary, hub);
 
     var statusesParameterRequestString = function (serviceId, state, offset, limit) {
       var statefilter = state ? "&state=" + state : "";
@@ -60,15 +60,15 @@
         return 'not_entitled';
       }
       switch (status.state) {
-      case 'error':
-        return 'error';
-      case 'deactivated':
-      case 'notActivated':
-        return 'pending_activation';
-      case 'activated':
-        return 'activated';
-      default:
-        return 'unknown';
+        case 'error':
+          return 'error';
+        case 'deactivated':
+        case 'notActivated':
+          return 'pending_activation';
+        case 'activated':
+          return 'activated';
+        default:
+          return 'unknown';
       }
     }
 
@@ -78,7 +78,7 @@
 
     function getStatusesForUserInOrg(userId, orgId) {
       return $http
-        .get(USSUrl + '/orgs/' + Authinfo.getOrgId() + '/userStatuses?userId=' + userId)
+        .get(USSUrl + '/orgs/' + (orgId || Authinfo.getOrgId()) + '/userStatuses?userId=' + userId)
         .then(function (res) {
           return _.filter(res.data.userStatuses, function (nugget) {
             return nugget.entitled || (nugget.entitled === false && nugget.state != 'deactivated');
@@ -114,6 +114,18 @@
       });
     }
 
+    function getUserProps(userId, orgId) {
+      return $http
+        .get(USSUrl + '/orgs/' + (orgId || Authinfo.getOrgId()) + '/userProps/' + userId)
+        .then(extractData);
+    }
+
+    function updateUserProps(props, orgId) {
+      return $http
+        .post(USSUrl + '/orgs/' + (orgId || Authinfo.getOrgId()) + '/userProps', { userProps: [props] })
+        .then(extractData);
+    }
+
     return {
       getStatusesForUser: getStatusesForUser,
       decorateWithStatus: decorateWithStatus,
@@ -123,7 +135,9 @@
       getStatuses: getStatuses,
       subscribeStatusesSummary: hub.on,
       getStatusesForUserInOrg: getStatusesForUserInOrg,
-      extractSummaryForAService: extractSummaryForAService
+      extractSummaryForAService: extractSummaryForAService,
+      getUserProps: getUserProps,
+      updateUserProps: updateUserProps
     };
   }
 

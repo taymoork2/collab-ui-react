@@ -1,13 +1,12 @@
 import { ServicesOverviewHybridCard } from './ServicesOverviewHybridCard.ts';
 import { ServicesOverviewHybridCallCard } from './hybridCallCard.ts';
 import { ServicesOverviewHybridManagementCard } from './hybridManagementCard.ts';
-import { ServicesOverviewCalendarCard } from './calendarCard.ts';
+import { ServicesOverviewHybridCalendarCard } from './hybridCalendarCard.ts';
 import { ServicesOverviewHybridMediaCard } from './hybridMediaCard.ts';
-import { ServicesOverviewHybridContextCard } from './hybridContextCard.ts';
 
-describe('ServiceOverviewCard', ()=> {
+describe('ServiceOverviewCard', () => {
 
-  describe('hybrid cards', ()=> {
+  describe('hybrid cards', () => {
     let cards:Array<{card:ServicesOverviewHybridCard,services:Array<string>}>;
 
     cards = [
@@ -24,10 +23,7 @@ describe('ServiceOverviewCard', ()=> {
         card: new ServicesOverviewHybridManagementCard(),
         services: ['squared-fusion-mgmt', 'squared-fusion-uc']
       }, {
-        card: new ServicesOverviewHybridManagementCard(),
-        services: ['squared-fusion-mgmt', 'squared-fusion-media']
-      }, {
-        card: new ServicesOverviewCalendarCard(),
+        card: new ServicesOverviewHybridCalendarCard(),
         services: ['squared-fusion-cal']
       }, {
         card: new ServicesOverviewHybridMediaCard(),
@@ -38,83 +34,81 @@ describe('ServiceOverviewCard', ()=> {
 
     cards.forEach((cardService)=> {
       describe('' + cardService.card.name, ()=> {
-        it('should set enable if expected service(s) are enabled', ()=> {
-          let statuses = _.map(cardService.services, (service)=> {
-            return {id: service, status: '', enabled: true};
+        it('should set enable if expected service(s) are enabled', () => {
+          let statuses = _.map(cardService.services, (serviceId)=> {
+            return {serviceId: serviceId, status: '', setup: true};
           });
           cardService.card.hybridStatusEventHandler(statuses);
-          expect(cardService.card.active).toBeTruthy();
+          expect(cardService.card.active).toBe(true);
         });
 
-        it('should set disable if expected service(s) are disabled', ()=> {
-          let statuses = _.map(cardService.services, (service)=> {
-            return {id: service, status: '', enabled: false};
+        it('should set disable if expected service(s) are disabled', () => {
+          let statuses = _.map(cardService.services, (serviceId)=> {
+            return {serviceId: serviceId, status: '', setup: false};
           });
           cardService.card.hybridStatusEventHandler(statuses);
-          expect(cardService.card.active).toBeFalsy();
+          expect(cardService.card.active).toBe(false);
         });
 
 
         if (cardService.card.name !== 'servicesOverview.cards.hybridManagement.title') {
           //not applicable to mgmt card
-          it('should set disable if one of expected service(s) are disabled', ()=> {
+          it('should set disable if one of expected service(s) are not setup', () => {
             let enabledFlag = true;
-            let statuses = _.map(cardService.services, (service)=> {
+            let statuses = _.map(cardService.services, (serviceId)=> {
               enabledFlag = !enabledFlag;
-              return {id: service, status: '', enabled: enabledFlag}
+              return {serviceId: serviceId, status: '', setup: enabledFlag}
             });
             cardService.card.hybridStatusEventHandler(statuses);
             expect(cardService.card.active).toBeFalsy();
           });
 
-          it('should set disable if no status from expected services and unexpected services are enabled', ()=> {
-            let statuses = _.chain(allServices).difference(cardService.services).map((service)=> {
-              return {id: service, status: '', enabled: true};
+          it('should set disable if no status from expected services and unexpected services are setup', () => {
+            let statuses = _.chain(allServices).difference(cardService.services).map((serviceId)=> {
+              return {serviceId: serviceId, status: '', setup: true};
             }).value();
             cardService.card.hybridStatusEventHandler(statuses);
             expect(cardService.card.active).toBeFalsy();
           });
 
-          it('should set disable if expected service are disabled and unexpected services are enabled', ()=> {
-            let statuses = _.chain(allServices).difference(cardService.services).map((service)=> {
-              return {id: service, status: '', enabled: true}
-            }).concat(_.map(cardService.services, (service)=> {
-              return {id: service, status: '', enabled: false};
+          it('should set disable if expected service are disabled and unexpected services are setup', () => {
+            let statuses = _.chain(allServices).difference(cardService.services).map((serviceId)=> {
+              return {serviceId: serviceId, status: '', setup: true}
+            }).concat(_.map(cardService.services, (serviceId)=> {
+              return {serviceId: serviceId, status: '', setup: false};
             })).value();
             cardService.card.hybridStatusEventHandler(statuses);
             expect(cardService.card.active).toBeFalsy();
           });
         }
 
-        it('should set disable no status is received', ()=> {
-          let statuses = _.map(cardService.services, (service)=> {
-            return {id: service + 'wrong-id', status: '', enabled: true}
+        it('should set disable no status is received', () => {
+          let statuses = _.map(cardService.services, (serviceId)=> {
+            return {serviceId: serviceId + 'wrong-id', status: '', setup: true}
           });
           cardService.card.hybridStatusEventHandler(statuses);
           expect(cardService.card.active).toBeFalsy();
         });
 
-        it('should set status to undefined if no status is received', ()=> {
-          let statuses = _.map(cardService.services, (service)=> {
-            return {id: service + 'wrong-id', status: 'ok', enabled: true}
+        it('should set status to undefined if no status is received', () => {
+          let statuses = _.map(cardService.services, (serviceId)=> {
+            return {serviceId: serviceId + 'wrong-id', status: 'ok', setup: true}
           });
           cardService.card.hybridStatusEventHandler(statuses);
           expect(cardService.card.status.status).toEqual(undefined);
         });
 
         let statuses:any = {
-          ok: 'success',
-          warn: 'warning',
-          error: 'danger',
-          disabled: 'disabled',
-          undefined: undefined,
-          notKnown: undefined
+          operational: 'success',
+          impaired: 'warning',
+          outage: 'danger',
+          unknown: 'warning'
         };
 
         _.forEach(statuses, (cssExpectedStatus:string, status:string)=> {
-          it('should set status to ' + cssExpectedStatus + ' when ' + status + ' is received', ()=> {
-            let stats = _.map(cardService.services, (service)=> {
-              return {id: service, status: status, enabled: true}
+          it('should set status to ' + cssExpectedStatus + ' when ' + status + ' is received', () => {
+            let stats = _.map(cardService.services, (serviceId)=> {
+              return {serviceId: serviceId, status: status, setup: true}
             });
             let tempCard = angular.copy(cardService.card);
             tempCard.hybridStatusEventHandler(stats);
@@ -123,18 +117,16 @@ describe('ServiceOverviewCard', ()=> {
         });
 
         let statusesTxt:any = {
-          ok: 'servicesOverview.cardStatus.running',
-          warn: 'servicesOverview.cardStatus.alarms',
-          error: 'servicesOverview.cardStatus.error',
-          disabled: 'servicesOverview.cardStatus.disabled',
-          undefined: undefined,
-          notKnown: undefined
+          operational: 'servicesOverview.cardStatus.operational',
+          impaired: 'servicesOverview.cardStatus.impaired',
+          outage: 'servicesOverview.cardStatus.outage',
+          unknown: 'servicesOverview.cardStatus.unknown'
         };
 
         _.forEach(statusesTxt, (expectedStatusTxt:string, statusTxt:string)=> {
-          it('should set status text to ' + expectedStatusTxt + ' when ' + statusTxt + ' is received', ()=> {
-            let stats = _.map(cardService.services, (service)=> {
-              return {id: service, status: statusTxt, enabled: true}
+          it('should set status text to ' + expectedStatusTxt + ' when ' + statusTxt + ' is received', () => {
+            let stats = _.map(cardService.services, (serviceId)=> {
+              return {serviceId: serviceId, status: statusTxt, setup: true}
             });
             cardService.card.hybridStatusEventHandler(stats);
             expect(cardService.card.status.text).toEqual(expectedStatusTxt);

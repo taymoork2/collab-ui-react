@@ -1,33 +1,23 @@
 <div class="sq-places-page-overview">
   <div ui-view="header"></div>
   <cs-sp-container>
-
-    <cs-sp-section>
+    <cs-sp-section ng-if="$ctrl.currentPlace.type === 'cloudberry'">
       <div class="section-title-row">
         <span class="section-name" translate="spacesPage.informationHeader"></span>
       </div>
-      <div class="form-group" ng-show="placeOverview.currentPlace.sipUrl">
+      <div class="form-group" ng-show="$ctrl.currentPlace.sipUrl">
         <label class="col-sm-4 control-label" translate="deviceOverviewPage.sipUrl"></label>
         <div class="col-sm-8">
-          <p class="form-control-static">{{placeOverview.currentPlace.sipUrl}}</p>
+          <p class="form-control-static">{{$ctrl.currentPlace.sipUrl}}</p>
         </div>
       </div>
     </cs-sp-section>
 
     <cs-sp-section>
       <div class="section-title-row">
-        <span class="section-name" translate="spacesPage.actionsHeader"></span>
+        <span class="section-name" translate="placesPage.featuresHeader"></span>
       </div>
-      <div class="form-group">
-        <button
-          ng-click="placeOverview.deletePlace()"
-          class="btn btn-action">
-          <span
-            translate="common.delete">
-          </span>
-        </button>
-      </div>
-
+      <feature-list features="$ctrl.services" feature-actions="$ctrl.serviceActions(feature)"></feature-list>
     </cs-sp-section>
 
     <cs-sp-section>
@@ -36,9 +26,8 @@
       </div>
       <div class="feature-list">
         <ul>
-
-          <li class="feature" ng-repeat="device in placeOverview.currentPlace.devices ">
-            <a ng-click="placeOverview.showDeviceDetails(device)">
+          <li class="feature" ng-repeat="device in $ctrl.currentPlace.devices ">
+            <a ng-click="$ctrl.showDeviceDetails(device)">
               <i class="fa fa-circle device-status" ng-class="device.cssColorClass"></i>
               <span class="feature-name">{{device.product}}</span>
               <i class="feature-arrow"></i>

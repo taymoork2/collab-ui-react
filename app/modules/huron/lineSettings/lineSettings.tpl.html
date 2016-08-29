@@ -9,18 +9,12 @@
   </cs-sp-buttons>
   <cs-sp-container>
     <cs-sp-section>
-      <div class="section-title-row">
-        <span class="section-name" translate="directoryNumberPanel.title"></span>
-        <span cs-dropdown class="actions-menu dropdown pull-right" ng-if="lineSettings.additionalBtn.show">
-          <button cs-dropdown-toggle class="actions-button btn--none dropdown-toggle">
-            <i class="icon icon-three-dots"></i>
-          </button>
-          <ul cs-dropdown-menu class="dropdown-menu dropdown-primary actions-services">
-            <li><a ng-click="lineSettings.deleteLineSettings()" translate="directoryNumberPanel.removeNumber"></a></li>
-          </ul>
-        </span>
-      </div>
-      <uc-directory-number></uc-directory-number>
+      <section-title
+        title-key="directoryNumberPanel.title"
+        action-list="lineSettings.actionList"
+        show-actions="lineSettings.showActions">
+      </section-title>
+      <uc-directory-number-old></uc-directory-number-old>
     </cs-sp-section>
     <cs-sp-section>
       <h4 translate="callForwardPanel.title"></h4>
@@ -34,13 +28,15 @@
         <p>{{lineSettings.callerIdInfo.callerIdSelection.value.pattern}}</p>
       </div>
     </cs-sp-section>
-    <cs-sp-section ng-show="!FeatureToggleService.huronMultipleCallsGetStatus()">
-      <h4 class="multiple-calls-title" translate="multipleCalls.title"></h4>
-      <label translate="multipleCalls.multipleCallsDescription" class = "caller-id-description"></label>
-      <formly-form model="lineSettings.simultaneousModel" class="inline-radio" fields="lineSettings.simultaneousCalls"></formly-form>
-    </cs-sp-section>
+    <div cr-feature-toggle feature-show="multipleCalls">
+      <cs-sp-section >
+        <h4 class="multiple-calls-title" translate="multipleCalls.title"></h4>
+        <label translate="multipleCalls.multipleCallsDescription" class = "caller-id-description"></label>
+        <formly-form model="lineSettings.simultaneousModel" class="inline-radio" fields="lineSettings.simultaneousCalls"></formly-form>
+      </cs-sp-section>
+    </div>
     <cs-sp-section>
-      <uc-shared-line></uc-shared-line>
+      <uc-shared-line-old></uc-shared-line-old>
     </cs-sp-section>
   </cs-sp-container>
 </form>

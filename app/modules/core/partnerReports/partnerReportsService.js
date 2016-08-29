@@ -14,12 +14,10 @@
     var qualityUrl = '/managedOrgs/callQuality';
     var registeredUrl = 'trend/managedOrgs/registeredEndpoints';
     var orgId = "&orgId=";
-    var dateFormat = "MMM DD, YYYY";
     var dayFormat = "MMM DD";
     var monthFormat = "MMMM";
     var timezone = "Etc/GMT";
-    var customerList = null;
-    var cacheValue = (parseInt(moment.utc().format('H')) >= 8);
+    var cacheValue = (parseInt(moment.utc().format('H'), 10) >= 8);
 
     var overallPopulation = 0;
     var timeFilter = null;
@@ -79,7 +77,7 @@
           timeFilter = null;
         }
 
-        return returnErrorCheck(error, 'Loading overall active user population data failed.', $translate.instant('activeUsers.overallActiveUserGraphError'), TIMEOUT);
+        return returnErrorCheck(error, 'Loading overall active user population data failed.', 'activeUsers.overallActiveUserGraphError', TIMEOUT);
       });
 
       return activeUserDetailedPromise;
@@ -93,8 +91,8 @@
 
       if (angular.isArray(org.data)) {
         angular.forEach(org.data, function (item, index, array) {
-          var activeUsers = parseInt(item.details.activeUsers);
-          var totalRegisteredUsers = parseInt(item.details.totalRegisteredUsers);
+          var activeUsers = parseInt(item.details.activeUsers, 10);
+          var totalRegisteredUsers = parseInt(item.details.totalRegisteredUsers, 10);
           var modifiedDate = moment.tz(item.date, timezone).format(dayFormat);
           if (filter.value > 1) {
             modifiedDate = moment.tz(item.date, timezone).format(monthFormat);
@@ -105,10 +103,10 @@
             var previousTotal = 0;
             var nextTotal = 0;
             if (index !== 0) {
-              previousTotal = parseInt(array[index - 1].details.totalRegisteredUsers);
+              previousTotal = parseInt(array[index - 1].details.totalRegisteredUsers, 10);
             }
             if (index < (array.length - 1)) {
-              nextTotal = parseInt(array[index + 1].details.totalRegisteredUsers);
+              nextTotal = parseInt(array[index + 1].details.totalRegisteredUsers, 10);
             }
             if (previousTotal < activeUsers && nextTotal < activeUsers) {
               totalRegisteredUsers = activeUsers;
@@ -150,7 +148,6 @@
     }
 
     function getActiveUserData(customer, filter) {
-      var tableData = [];
       var overallStatus = TIMEOUT;
       var promise = null;
 
@@ -222,7 +219,7 @@
       };
       var date = undefined;
       var activeDataSet = [];
-      angular.forEach(customer, function (org, orgIndex, orgArray) {
+      angular.forEach(customer, function (org) {
         var orgData = activeUserCustomerGraphs[org.value];
         var emptyPopGraph = {
           customerName: org.label,
@@ -259,7 +256,7 @@
       });
       var dayOffset = 0;
       if (angular.isDefined(date)) {
-        dayOffset = parseInt(moment.tz(date, timezone).format('e'));
+        dayOffset = parseInt(moment.tz(date, timezone).format('e'), 10);
         if (dayOffset >= 4) {
           dayOffset = 7 - dayOffset;
         } else {
@@ -270,7 +267,7 @@
       // combine the active user data into a single graph
       var baseGraph = getReturnGraph(filter, dayOffset, graphItem);
       var emptyGraph = true;
-      angular.forEach(activeDataSet, function (item, index, array) {
+      angular.forEach(activeDataSet, function (item) {
         if (angular.isArray(item) && (item.length > 0)) {
           baseGraph = combineMatchingDates(baseGraph, item);
           emptyGraph = false;
@@ -311,23 +308,24 @@
       if (angular.isUndefined(customerIds)) {
         return $q.when([]);
       } else {
-        var query = "?reportType=weeklyUsage&cache=";
+        // TODO: Remove unused parameters once API is fixed; currently necessary to avoid exceptions from API
+        var query = "?reportType=weeklyUsage&intervalCount=7&intervalType=day&spanCount=1&spanType=day&cache=";
         if (filter.value === 1) {
-          query = "?reportType=monthlyUsage&cache=";
+          query = "?reportType=monthlyUsage&intervalCount=7&intervalType=day&spanCount=1&spanType=day&cache=";
         } else if (filter.value === 2) {
-          query = "?reportType=threeMonthUsage&cache=";
+          query = "?reportType=threeMonthUsage&intervalCount=7&intervalType=day&spanCount=1&spanType=day&cache=";
         }
         return getService(topn + activeUserUrl + query + cacheValue + customerIds, activeTableCancelPromise).then(function (response) {
           var tableData = [];
           if (response.data && angular.isArray(response.data.data)) {
-            angular.forEach(response.data.data, function (org, orgIndex, orgArray) {
+            angular.forEach(response.data.data, function (org) {
               if (org.data) {
-                angular.forEach(org.data, function (item, index, array) {
+                angular.forEach(org.data, function (item) {
                   tableData.push({
                     orgName: org.orgName,
-                    numCalls: parseInt(item.details.sparkCalls) + parseInt(item.details.sparkUcCalls),
-                    totalActivity: parseInt(item.details.totalActivity),
-                    sparkMessages: parseInt(item.details.sparkMessages),
+                    numCalls: parseInt(item.details.sparkCalls, 10) + parseInt(item.details.sparkUcCalls, 10),
+                    totalActivity: parseInt(item.details.totalActivity, 10),
+                    sparkMessages: parseInt(item.details.sparkMessages, 10),
                     userName: item.details.userName
                   });
                 });
@@ -336,7 +334,7 @@
           }
           return tableData;
         }, function (error) {
-          return returnErrorCheck(error, 'Loading most active users for the selected customer(s) failed.', $translate.instant('activeUsers.activeUserTableError'), []);
+          return returnErrorCheck(error, 'Loading most active users for the selected customer(s) failed.', 'activeUsers.activeUserTableError', []);
         });
       }
     }
@@ -358,12 +356,12 @@
             balloon: true
           };
           var date = undefined;
-          angular.forEach(response.data.data, function (offset, offsetIndex, offsetArray) {
+          angular.forEach(response.data.data, function (offset) {
             if (angular.isArray(offset.data) && (angular.isUndefined(date) || offset.data[(offset.data.length - 1)].date)) {
               date = offset.data[(offset.data.length - 1)].date;
             }
           });
-          var dayOffset = parseInt(moment.tz(date, timezone).format('e'));
+          var dayOffset = parseInt(moment.tz(date, timezone).format('e'), 10);
           if (dayOffset >= 4) {
             dayOffset = 7 - dayOffset;
           } else {
@@ -372,7 +370,7 @@
           var baseGraph = getReturnGraph(filter, dayOffset, graphItem);
           var graphUpdated = false;
 
-          angular.forEach(response.data.data, function (org, orgIndex, orgArray) {
+          angular.forEach(response.data.data, function (org) {
             if (angular.isArray(org.data)) {
               var graph = parseMediaQualityData(org, filter);
               if (graph.length > 0) {
@@ -388,18 +386,18 @@
         }
         return [];
       }, function (error) {
-        return returnErrorCheck(error, 'Loading call quality data for the selected customer(s) failed.', $translate.instant('mediaQuality.mediaQualityGraphError'), []);
+        return returnErrorCheck(error, 'Loading call quality data for the selected customer(s) failed.', 'mediaQuality.mediaQualityGraphError', []);
       });
     }
 
     function parseMediaQualityData(org, filter) {
       var graph = [];
-      angular.forEach(org.data, function (item, index, array) {
+      angular.forEach(org.data, function (item) {
         if (angular.isDefined(item.details)) {
-          var totalSum = parseInt(item.details.totalDurationSum);
-          var goodSum = parseInt(item.details.goodQualityDurationSum);
-          var fairSum = parseInt(item.details.fairQualityDurationSum);
-          var poorSum = parseInt(item.details.poorQualityDurationSum);
+          var totalSum = parseInt(item.details.totalDurationSum, 10);
+          var goodSum = parseInt(item.details.goodQualityDurationSum, 10);
+          var fairSum = parseInt(item.details.fairQualityDurationSum, 10);
+          var poorSum = parseInt(item.details.poorQualityDurationSum, 10);
           var partialSum = fairSum + poorSum;
 
           if (totalSum > 0) {
@@ -423,8 +421,8 @@
     }
 
     function combineQualityGraphs(baseGraph, graph) {
-      angular.forEach(graph, function (graphItem, graphIndex, graphArray) {
-        angular.forEach(baseGraph, function (baseGraphItem, baseGraphIndex, baseGraphArray) {
+      angular.forEach(graph, function (graphItem) {
+        angular.forEach(baseGraph, function (baseGraphItem) {
           if (graphItem.modifiedDate === baseGraphItem.modifiedDate) {
             baseGraphItem.totalDurationSum += graphItem.totalDurationSum;
             baseGraphItem.goodQualityDurationSum += graphItem.goodQualityDurationSum;
@@ -466,16 +464,16 @@
             }
           };
 
-          angular.forEach(response.data.data, function (item, index, array) {
+          angular.forEach(response.data.data, function (item) {
             if (angular.isDefined(item.data) && angular.isArray(item.data) && angular.isDefined(item.data[0].details) && (item.data[0].details !== null)) {
               var details = item.data[0].details;
-              var totalCalls = parseInt(details.totalCalls);
+              var totalCalls = parseInt(details.totalCalls, 10);
 
               if (totalCalls > 0) {
                 transformData.labelData.numTotalCalls += totalCalls;
                 transformData.labelData.numTotalMinutes += Math.round(parseFloat(details.totalAudioDuration));
-                transformData.dataProvider[0].value += parseInt(details.totalFailedCalls);
-                transformData.dataProvider[1].value += parseInt(details.totalSuccessfulCalls);
+                transformData.dataProvider[0].value += parseInt(details.totalFailedCalls, 10);
+                transformData.dataProvider[1].value += parseInt(details.totalSuccessfulCalls, 10);
                 transformDataSet = true;
               }
             }
@@ -486,7 +484,7 @@
         }
         return returnArray;
       }, function (error) {
-        return returnErrorCheck(error, 'Loading call metrics data for selected customers failed.', $translate.instant('callMetrics.callMetricsChartError'), returnArray);
+        return returnErrorCheck(error, 'Loading call metrics data for selected customers failed.', 'callMetrics.callMetricsChartError', returnArray);
       });
     }
 
@@ -499,7 +497,7 @@
       return getService(registeredUrl + getTrendQuery(time) + getCustomerUuids(customer), endpointsCancelPromise).then(function (response) {
         var returnArray = [];
         if (angular.isDefined(response.data) && angular.isArray(response.data.data)) {
-          angular.forEach(response.data.data, function (item, index, array) {
+          angular.forEach(response.data.data, function (item) {
             if (angular.isDefined(item.details) && (item.details !== null)) {
               var returnObject = item.details;
               returnObject.customer = getCustomerName(customer, returnObject.orgId);
@@ -543,14 +541,14 @@
         }
         return returnArray;
       }, function (error) {
-        return returnErrorCheck(error, 'Loading registered endpoints for the selected customer(s) failed.', $translate.instant('registeredEndpoints.registeredEndpointsError'), []);
+        return returnErrorCheck(error, 'Loading registered endpoints for the selected customer(s) failed.', 'registeredEndpoints.registeredEndpointsError', []);
       });
     }
 
     function getCustomerName(customer, uuid) {
       if (angular.isArray(customer)) {
         var customerName = "";
-        angular.forEach(customer, function (org, orgIndex, orgArray) {
+        angular.forEach(customer, function (org) {
           if (org.value === uuid) {
             customerName = org.label;
           }
@@ -564,7 +562,7 @@
     function getCustomerUuids(customer) {
       var url = "";
       if (angular.isArray(customer)) {
-        angular.forEach(customer, function (item, index, array) {
+        angular.forEach(customer, function (item) {
           url += orgId + item.value;
         });
       } else {
@@ -576,7 +574,7 @@
     function getAllowedCustomerUuids(customer) {
       var url = undefined;
       if (angular.isArray(customer)) {
-        angular.forEach(customer, function (item, index, array) {
+        angular.forEach(customer, function (item) {
           if (item.isAllowedToManage && angular.isDefined(url)) {
             url += orgId + item.value;
           } else {
@@ -601,13 +599,19 @@
       } else if (filter.value === 1) {
         for (var x = 3; x >= 0; x--) {
           var temp = angular.copy(graphItem);
-          temp.modifiedDate = moment().tz(timezone).startOf('week').subtract(dayOffset + (x * 7), 'day').format(dayFormat);
+          temp.modifiedDate = moment().tz(timezone)
+            .startOf('week')
+            .subtract(dayOffset + (x * 7), 'day')
+            .format(dayFormat);
           returnGraph.push(temp);
         }
       } else {
         for (var y = 2; y >= 0; y--) {
           var item = angular.copy(graphItem);
-          item.modifiedDate = moment().tz(timezone).subtract(y, 'month').startOf('month').format(monthFormat);
+          item.modifiedDate = moment().tz(timezone)
+            .subtract(y, 'month')
+            .startOf('month')
+            .format(monthFormat);
           returnGraph.push(item);
         }
       }
@@ -626,11 +630,7 @@
         } else {
           Log.debug(debug + '  Status: ' + error.status);
         }
-        if ((error.data !== null) && angular.isDefined(error.data) && angular.isDefined(error.data.trackingId) && (error.data.trackingId !== null)) {
-          Notification.notify([message + '<br>' + $translate.instant('reportsPage.trackingId') + error.data.trackingId], 'error');
-        } else {
-          Notification.notify([message], 'error');
-        }
+        Notification.errorWithTrackingId(error, message);
         return returnItem;
       } else {
         return ABORT;

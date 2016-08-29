@@ -494,6 +494,33 @@ describe('Service: FusionClusterService', function () {
 
   });
 
+  describe('.getAggregateStatusForServiceAcrossAllMediaServiceClusters', function () {
+
+    var twoClusters;
+    beforeEach(function () {
+      jasmine.getJSONFixtures().clearCache(); // See https://github.com/velesin/jasmine-jquery/issues/239
+      twoClusters = getJSONFixture('hercules/fusion-cluster-service-test-clusters.json');
+    });
+
+    it('should return *operational* when all hosts are *upgrading*', function () {
+      twoClusters[0].servicesStatuses[2].serviceId = 'squared-fusion-media';
+      twoClusters[0].servicesStatuses[2].state.name = 'upgrading';
+      twoClusters[1].servicesStatuses[2].serviceId = 'squared-fusion-media';
+      twoClusters[1].servicesStatuses[2].state.name = 'upgrading';
+      expect(FusionClusterService.processClustersToAggregateStatusForService('squared-fusion-media', twoClusters)).toBe('outage');
+    });
+
+    it('should return *degraded* if one host is *running* and one is *upgrading*', function () {
+      twoClusters[0].servicesStatuses[2].serviceId = 'squared-fusion-media';
+      twoClusters[0].servicesStatuses[2].state.name = 'running';
+      twoClusters[1].servicesStatuses[2].serviceId = 'squared-fusion-media';
+      twoClusters[1].servicesStatuses[2].state.name = 'upgrading';
+      //twoClusters.clusters[0].servicesStatuses[0].state.name = 'upgrading';
+      expect(FusionClusterService.processClustersToAggregateStatusForService('squared-fusion-media', twoClusters)).toBe('impaired');
+    });
+
+  });
+
   describe('.processClustersToSeeIfServiceIsSetup', function () {
 
     describe('Org with Call and Calendar', function () {

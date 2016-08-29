@@ -4,39 +4,11 @@
 </div>
 <cs-sp-container>
   <cs-sp-section>
-    <div class="section-title-row">
-      <span class="section-name" translate="usersPreview.servicesPreview"></span>
-      <span cs-dropdown class="actions-menu dropdown pull-right" ng-if="userOverview.hasAccount">
-        <button cs-dropdown-toggle class="actions-button btn--none dropdown-toggle">
-          <i class="icon icon-three-dots"></i>
-        </button>
-        <ul cs-dropdown-menu class="dropdown-menu dropdown-primary actions-services">
-          <li ng-if="!userOverview.isCSB">
-            <a ui-sref="editService({currentUser:userOverview.currentUser})" translate="usersPreview.editServices"></a>
-          </li>
-          <li ng-if="userOverview.isCSB">
-            <a target="_blank" ui-sref="userRedirect" translate="usersPreview.editServices"></a>
-          </li>
-        </ul>
-      </span>
-    </div>
-    <div class="feature-list">
-      <ul>
-        <li class="feature" ng-repeat="service in userOverview.services">
-          <a id="{{service.icon}}" ui-sref="{{service.state}}" ng-if="service.actionsAvailable">
-            <i class="feature-icon"></i>
-            <span class="feature-name">{{service.name}}</span>
-            <span class="feature-status">{{service.detail}}</span>
-            <i class="feature-arrow"></i>
-          </a>
-          <a id="{{service.icon}}" class="no-services" ng-if="!service.actionsAvailable">
-            <i class="feature-icon"></i>
-            <span class="feature-name">{{service.name}}</span>
-            <span class="feature-status feature-arrow-match">{{service.detail}}</span>
-          </a>
-        </li>
-      </ul>
-    </div>
+    <section-title
+      title-key="usersPreview.servicesPreview"
+      action-list="userOverview.actionList">
+    </section-title>
+    <feature-list features="userOverview.services" feature-actions="userOverview.serviceActions(feature)"></feature-list>
   </cs-sp-section>
   <hercules-cloud-extensions user="userOverview.currentUser"></hercules-cloud-extensions>
   <cs-sp-section ng-if="userOverview.isSquaredUC">

@@ -19,13 +19,15 @@
     var featureToBeDeleted = {};
     vm.searchData = searchData;
     vm.deleteCareFeature = deleteCareFeature;
-    vm.generateChatCodeSnippet = generateChatCodeSnippet;
+    vm.openEmbedCodeModal = openEmbedCodeModal;
     vm.listOfFeatures = [];
     vm.pageState = pageStates.loading;
     vm.cardColor = {};
     vm.placeholder = {
       name: 'Search'
     };
+    vm.template = null;
+
     /* LIST OF FEATURES
      *
      *  To add a New Feature (like Voice Templates)
@@ -55,7 +57,7 @@
 
       handleFeaturePromises(featuresPromises);
 
-      $q.all(featuresPromises).then(function (responses) {
+      $q.all(featuresPromises).then(function () {
         showNewFeaturePageIfNeeded();
       });
     }
@@ -142,6 +144,15 @@
       reInstantiateMasonry();
     }
 
+    vm.editCareFeature = function (feature) {
+      CareFeatureList.getChatTemplate(feature.templateId).then(function (template) {
+        $state.go('care.ChatSA', {
+          isEditFeature: true,
+          template: template
+        });
+      });
+    };
+
     function deleteCareFeature(feature) {
       featureToBeDeleted = feature;
       if (feature.featureType == 'CT') {
@@ -153,8 +164,8 @@
       }
     }
 
-    function generateChatCodeSnippet(feature) {
-      return CTService.generateCodeSnippet(feature.templateId);
+    function openEmbedCodeModal(feature) {
+      CTService.openEmbedCodeModal(feature.templateId, feature.name);
     }
 
     //list is updated by deleting a feature

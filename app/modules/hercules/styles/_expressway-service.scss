@@ -17,6 +17,10 @@ $user-statuses-bar-height: 7.25rem;
       height: calc(100vh - (#{$top-bar-height} + (#{$top-bar-border-width} * 2) + #{$page-header-height} + #{$page-sub-header-height} + #{$user-statuses-bar-height}));
     }
   }
+
+  .add-resource-button {
+    margin-left: 1rem;
+  }
 }
 
 .hercules.call-service {
@@ -99,6 +103,8 @@ Special stuff currently used for out own mail input field...
 }
 
 .hercules-clusters-list {
+  position: relative;
+
   i {
     margin-right: 10px;
   }
@@ -109,6 +115,10 @@ Special stuff currently used for out own mail input field...
     left: 0;
     right: 0;
     text-align: center;
+
+    .with-user-statuses-bar & {
+      top: 50px;
+    }
   }
 
   .centered-info-pane {
@@ -193,15 +203,16 @@ Special stuff currently used for out own mail input field...
   }
 }
 
-.add-resource-button {
-  margin-left: 25px;
-}
-
 .user-statuses-bar {
   display: flex;
   padding: 2rem 1.25rem;
   border-bottom: 1px solid $gray-light-3;
   height: $user-statuses-bar-height;
+  @media only screen and (max-height: 950px) {
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    height: $user-statuses-bar-height - 2rem;
+  }
 }
 .user-statuses-card {
   display: flex;

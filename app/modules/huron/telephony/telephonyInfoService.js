@@ -188,9 +188,9 @@
 
     function getRemoteDestinationInfo(userUuid) {
       return RemoteDestinationService.query({
-          customerId: Authinfo.getOrgId(),
-          userId: userUuid
-        }).$promise
+        customerId: Authinfo.getOrgId(),
+        userId: userUuid
+      }).$promise
         .then(function (remoteDestinationInfo) {
           var snrInfo = angular.copy(telephonyInfo.snrInfo);
           if (remoteDestinationInfo) {
@@ -215,9 +215,9 @@
 
     function getUserDnInfo(userUuid) {
       return UserDirectoryNumberService.query({
-          customerId: Authinfo.getOrgId(),
-          userId: userUuid
-        }).$promise
+        customerId: Authinfo.getOrgId(),
+        userId: userUuid
+      }).$promise
         .then(function (userDnInfo) {
           if (userDnInfo) {
             var userDnList = [];
@@ -247,9 +247,9 @@
               }.bind(userLine));
 
               DirectoryNumberUserService.query({
-                  'customerId': Authinfo.getOrgId(),
-                  'directoryNumberId': userLine.uuid
-                }).$promise
+                'customerId': Authinfo.getOrgId(),
+                'directoryNumberId': userLine.uuid
+              }).$promise
                 .then(function (data) {
                   if (this.dnUsage === 'Primary') {
                     this.dnSharedUsage = 'Primary';
@@ -279,9 +279,9 @@
 
     function getTelephonyUserInfo(userUuid) {
       return UserServiceCommon.get({
-          customerId: Authinfo.getOrgId(),
-          userId: userUuid
-        }).$promise
+        customerId: Authinfo.getOrgId(),
+        userId: userUuid
+      }).$promise
         .then(function (telephonyUserInfo) {
           updateUserServices(telephonyUserInfo.services);
         })
@@ -311,14 +311,14 @@
     function loadInternalNumberPool(pattern, limit) {
       var intNumPool = [];
       var patternQuery = pattern ? '%' + pattern + '%' : undefined;
-      var patternlimit = limit ? limit : undefined;
+      var patternlimit = limit || undefined;
       return InternalNumberPoolService.query({
-          customerId: Authinfo.getOrgId(),
-          directorynumber: '',
-          order: 'pattern',
-          pattern: patternQuery,
-          limit: patternlimit
-        }).$promise
+        customerId: Authinfo.getOrgId(),
+        directorynumber: '',
+        order: 'pattern',
+        pattern: patternQuery,
+        limit: patternlimit
+      }).$promise
         .then(function (intPool) {
           for (var i = 0; i < intPool.length; i++) {
             var dn = {
@@ -347,11 +347,11 @@
       }];
       var patternQuery = pattern ? '%' + pattern + '%' : undefined;
       return ExternalNumberPoolService.query({
-          customerId: Authinfo.getOrgId(),
-          directorynumber: '',
-          order: 'pattern',
-          pattern: patternQuery
-        }).$promise
+        customerId: Authinfo.getOrgId(),
+        directorynumber: '',
+        order: 'pattern',
+        pattern: patternQuery
+      }).$promise
         .then(function (extPool) {
           for (var i = 0; i < extPool.length; i++) {
             var dn = {
@@ -373,12 +373,12 @@
 
     function loadExtPoolWithMapping(count) {
       return ExternalNumberPoolService.query({
-          customerId: Authinfo.getOrgId(),
-          directorynumber: '',
-          order: 'pattern',
-          automaptodn: true,
-          automaptodncount: count
-        }).$promise
+        customerId: Authinfo.getOrgId(),
+        directorynumber: '',
+        order: 'pattern',
+        automaptodn: true,
+        automaptodncount: count
+      }).$promise
         .then(function (extPool) {
           var extNumPool = extPool.map(function (extPoolValue) {
             var dn = {

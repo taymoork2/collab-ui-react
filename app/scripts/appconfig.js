@@ -5,7 +5,13 @@
   var loadedModules = [];
 
   function loadModuleAndResolve($ocLazyLoad, resolve) {
-    return function loadModuleCallback(moduleName) {
+    return function loadModuleCallback(loadModule) {
+      var moduleName;
+      if (_.isObject(loadModule) && _.has(loadModule, 'default')) {
+        moduleName = loadModule.default;
+      } else {
+        moduleName = loadModule;
+      }
       // Don't reload a loaded module or core angular module
       if (_.includes(loadedModules, moduleName) || _.includes($ocLazyLoad.getModules(), moduleName) || _.startsWith(moduleName, 'ng')) {
         resolve();
@@ -286,7 +292,7 @@
                 }
               }.bind($state.sidepanel));
             },
-            onExit: /* @ngInject */ function ($state, $previousState) {
+            onExit: /* @ngInject */ function ($state) {
               if ($state.sidepanel) {
                 $state.sidepanel.dismiss();
               }
@@ -344,7 +350,7 @@
         }
 
         /* @ngInject */
-        function modalOnExit($state, $previousState) {
+        function modalOnExit($state) {
           if ($state.modal) {
             $state.modal.dismiss();
           }
@@ -603,6 +609,25 @@
               }
             }
           })
+          .state('status', {
+            url: '/status',
+            templateUrl: 'modules/status/dashboard/dashboard.tpl.html',
+            controller: 'DashboardCtrl',
+            controllerAs: 'dashboardCtrl',
+            parent: 'main',
+            resolve: {
+              hasFeatureToggle: function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.globalStatus);
+              }
+            }
+          })
+          /*.state('status', {
+           url: '/status-conponents',
+           templateUrl: 'modules/status/components/components.tpl.html',
+           controller: 'ComponentsCtrl',
+           controllerAs: 'componentsCtrl',
+           parent: 'main'
+           })*/
           .state('authentication.enable3rdPartyAuth', {
             parent: 'modal',
             views: {
@@ -701,6 +726,13 @@
             views: {
               'tabContent': {
                 template: '<my-company-orders></my-company-orders>'
+              }
+            },
+            resolve: {
+              isOnline: /* @ngInject */ function ($q, Authinfo) {
+                if (!Authinfo.isOnline()) {
+                  return $q.reject();
+                }
               }
             }
           })
@@ -812,14 +844,13 @@
             }
           })
 
-        ///////////////////////////
-        // todo - I-35 feature
-        .state('users.manage', {
+          ///////////////////////////
+          .state('users.manage', {
             parent: 'modal',
             views: {
               'modal@': {
                 controller: 'UserManageModalController',
-                controllerAs: 'ctrl',
+                controllerAs: 'ummc',
                 template: '<div ui-view></div>'
               }
             },
@@ -838,7 +869,7 @@
             templateUrl: 'modules/core/users/userManage/userManageActiveDir.tpl.html'
           })
 
-        .state('users.manage.advanced', {
+          .state('users.manage.advanced', {
             abstract: true,
             controller: 'UserManageAdvancedController',
             controllerAs: 'umac',
@@ -879,9 +910,9 @@
             }
           })
 
-        //////////////////
+          //////////////////
 
-        .state('users.convert', {
+          .state('users.convert', {
             parent: 'modal',
             views: {
               'modal@': {
@@ -990,8 +1021,7 @@
             },
             resolve: {
               currentUser: /* @ngInject */ function ($http, $stateParams, Config, Utils, Authinfo, UrlConfig) {
-                var userUrl = UrlConfig.getScimUrl(Authinfo.getOrgId()) + '/' + $stateParams.currentUser.id;
-
+                var userUrl = UrlConfig.getScimUrl(Authinfo.getOrgId()) + '/' + $stateParams.currentUserId;
                 return $http.get(userUrl)
                   .then(function (response) {
                     angular.copy(response.data, this.currentUser);
@@ -1003,7 +1033,7 @@
             params: {
               currentUser: {},
               entitlements: {},
-              queryuserslist: {}
+              currentUserId: ''
             },
             data: {
               displayName: 'Overview'
@@ -1062,6 +1092,12 @@
             template: '<div uc-single-number-reach></div>',
             data: {
               displayName: 'Single Number Reach'
+            }
+          })
+          .state('user-overview.communication.speedDials', {
+            template: '<div uc-speed-dials></div>',
+            data: {
+              displayName: 'Speed Dials'
             }
           })
           .state('user-overview.communication.internationalDialing', {
@@ -1150,55 +1186,6 @@
             data: {
               displayName: 'Roles'
             }
-          })
-
-        // .state('users.list.preview', {
-        //     templateUrl: 'modules/core/users/userPreview/userPreview.tpl.html',
-        //     controller: 'UserPreviewCtrl'
-        //   })
-        //   .state('users.list.preview.conversations', {
-        //     template: '<div user-entitlements current-user="currentUser" entitlements="entitlements" queryuserslist="queryuserslist"></div>'
-        //   })
-        //   .state('users.list.preview.roles', {
-        //     template: '<div class="sub-details-full" user-roles current-user="currentUser" entitlements="entitlements" roles="roles" queryuserslist="queryuserslist"></div>'
-        //   })
-        //   .state('users.list.preview.directorynumber', {
-        //     templateUrl: 'modules/huron/lineSettings/lineSettings.tpl.html',
-        //     controller: 'LineSettingsCtrl',
-        //     controllerAs: 'lineSettings',
-        //     params: {
-        //       showAddUsers: {},
-        //       directoryNumber: {}
-        //     }
-        //   })
-        //   .state('users.list.preview.voicemail', {
-        //     template: '<div uc-voicemail></div>'
-        //   })
-        //   .state('users.list.preview.snr', {
-        //     template: '<div uc-single-number-reach></div>'
-        //   })
-        //   .state('users.list.preview.device', {
-        //     templateUrl: 'modules/huron/device/deviceDetail.tpl.html',
-        //     controller: 'DeviceDetailCtrl',
-        //     controllerAs: 'ucDeviceDetail',
-        //     params: {
-        //       showAddUsers: {},
-        //       device: {}
-        //     }
-        //   })
-        .state('groups', {
-            abstract: true,
-            template: '<div ui-view></div>',
-            parent: 'main'
-          })
-          .state('groups.list', {
-            url: '/groups',
-            templateUrl: 'modules/core/groups/groupList/groupList.tpl.html',
-            controller: 'ListGroupsCtrl'
-          })
-          .state('groups.list.preview', {
-            templateUrl: 'modules/core/groups/groupPreview/groupPreview.tpl.html',
-            controller: 'GroupPreviewCtrl'
           })
           .state('organizations', {
             url: '/organizations',
@@ -1418,10 +1405,10 @@
             parent: 'main'
           })
 
-        /*
-         devices
-         */
-        .state('places', {
+          /*
+           devices
+           */
+          .state('places', {
             url: '/places',
             templateUrl: 'modules/squared/places/places.html',
             controller: 'PlacesCtrl',
@@ -1435,9 +1422,7 @@
             parent: 'sidepanel',
             views: {
               'sidepanel@': {
-                controller: 'PlaceOverviewCtrl',
-                controllerAs: 'placeOverview',
-                templateUrl: 'modules/squared/places/overview/placeOverview.tpl.html'
+                template: '<place-overview></place-overview>'
               },
               'header@place-overview': {
                 templateUrl: 'modules/squared/places/overview/placeHeader.tpl.html'
@@ -1469,6 +1454,41 @@
             },
             data: {
               displayName: 'Device Configuration'
+            }
+          })
+          .state('place-overview.communication', {
+            template: '<place-call-overview></place-call-overview>',
+            params: {
+              reloadToggle: false
+            },
+            data: {
+              displayName: 'Call'
+            }
+          })
+          .state('place-overview.communication.internationalDialing', {
+            template: '<international-dialing-comp owner-type="place" identifier="cisUuid"></international-dialing-comp>',
+            data: {
+              displayName: 'International Dialing'
+            },
+            resolve: {
+              lazy: /* @ngInject */ function lazyLoad($q, $ocLazyLoad) {
+                return $q(function resolveLogin(resolve) {
+                  require(['modules/huron/internationalDialing/internationalDialing.component'], loadModuleAndResolve($ocLazyLoad, resolve));
+                });
+              }
+            }
+          })
+          .state('place-overview.communication.line-overview', {
+            template: '<line-overview owner-type="place"></line-overview>',
+            data: {
+              displayName: 'Line Configuration'
+            },
+            resolve: {
+              lazy: /* @ngInject */ function lazyLoad($q, $ocLazyLoad) {
+                return $q(function resolveLogin(resolve) {
+                  require(['modules/huron/lines/lineOverview/lineOverview.component'], loadModuleAndResolve($ocLazyLoad, resolve));
+                });
+              }
             }
           })
           .state('devices', {
@@ -1589,7 +1609,7 @@
 
                 return defer.promise;
 
-                function orgCallback(data, status) {
+                function orgCallback(data) {
                   defer.resolve(data);
                 }
               },
@@ -1598,38 +1618,58 @@
                   .then(function (result) {
                     return result;
                   });
+              },
+              data: /* @ngInject */ function ($state, $translate) {
+                $state.get('customer-overview').data.displayName = $translate.instant('common.overview');
               }
             },
             params: {
               currentCustomer: {}
             },
-            data: {
-              displayName: 'Overview'
-            }
+            data: {}
           })
           .state('customer-overview.externalNumbers', {
             controller: 'ExternalNumberDetailCtrl',
             controllerAs: 'externalNumbers',
             templateUrl: 'modules/huron/externalNumbers/externalNumberDetail.tpl.html',
-            data: {
-              displayName: 'Phone Numbers'
-            }
+            resolve: {
+              data: /* @ngInject */ function ($state, $translate) {
+                $state.get('customer-overview.externalNumbers').data.displayName = $translate.instant('customerPage.phoneNumbers');
+              }
+            },
+            data: {}
           })
           .state('customer-overview.customerAdministrators', {
             controller: 'CustomerAdministratorDetailCtrl',
             controllerAs: 'customerAdmin',
             templateUrl: 'modules/core/customers/customerAdministrators/customerAdministratorDetail.tpl.html',
-            data: {
-              displayName: 'Partner Administrators'
+            resolve: {
+              data: /* @ngInject */ function ($state, $translate) {
+                $state.get('customer-overview.customerAdministrators').data.displayName = $translate.instant('customerPage.administrators');
+              }
+            },
+            data: {}
+          })
+          .state('customer-overview.customerSubscriptions', {
+            controller: 'CustomerSubscriptionsDetailCtrl',
+            controllerAs: 'customerSubscriptions',
+            templateUrl: 'modules/core/customers/customerSubscriptions/CustomerSubscriptionsDetail.tpl.html',
+            resolve: {
+              data: /* @ngInject */ function ($state, $translate) {
+                $state.get('customer-overview.customerSubscriptions').data.displayName = $translate.instant('customerPage.subscriptions');
+              }
             }
           })
           .state('customer-overview.pstnOrderOverview', {
             controller: 'PstnOrderOverviewCtrl',
             controllerAs: 'pstnOrderOverview',
             templateUrl: 'modules/huron/orderManagement/pstnOrderOverview.tpl.html',
-            data: {
-              displayName: 'PSTN Orders'
+            resolve: {
+              data: /* @ngInject */ function ($state, $translate) {
+                $state.get('customer-overview.pstnOrderOverview').data.displayName = $translate.instant('customerPage.pstnOrders');
+              }
             },
+            data: {},
             params: {
               currentCustomer: {}
             }
@@ -1638,11 +1678,28 @@
             controller: 'MeetingDetailCtrl',
             controllerAs: 'meetingDetail',
             templateUrl: 'modules/core/customers/customerOverview/meetingDetail.tpl.html',
-            data: {
-              displayName: 'Meeting Detail'
+            resolve: {
+              data: /* @ngInject */ function ($state, $translate) {
+                $state.get('customer-overview.meetingDetail').data.displayName = $translate.instant('customerPage.meetingLicenses');
+              }
             },
+            data: {},
             params: {
               meetingLicenses: {}
+            }
+          })
+          .state('customer-overview.domainDetail', {
+            controller: 'DomainDetailCtrl',
+            controllerAs: 'domainDetail',
+            templateUrl: 'modules/core/customers/customerOverview/domainDetail.tpl.html',
+            resolve: {
+              data: /*ngInject */ function ($state, $translate) {
+                $state.get('customer-overview.domainDetail').data.displayName = $translate.instant('customerPage.domains');
+              }
+            },
+            data: {},
+            params: {
+              webexDomains: {}
             }
           })
           .state('customer-overview.pstnOrderDetail', {
@@ -1650,9 +1707,12 @@
             controller: 'PstnOrderDetailCtrl',
             controllerAs: 'pstnOrderDetail',
             templateUrl: 'modules/huron/orderManagement/pstnOrderDetail.tpl.html',
-            data: {
-              displayName: 'Order'
+            resolve: {
+              data: /* @ngInject */ function ($state, $translate) {
+                $state.get('customer-overview.pstnOrderDetail').data.displayName = $translate.instant('customerPage.pstnOrders');
+              }
             },
+            data: {},
             params: {
               currentOrder: {}
             }
@@ -1866,22 +1926,6 @@
             url: '/huntgroups',
             parent: 'callrouting',
             template: '<div></div>'
-          })
-          .state('mediaonhold', {
-            parent: 'modal',
-            url: '/mediaonhold',
-            views: {
-              'modal@': {
-                templateUrl: 'modules/huron/moh/moh.tpl.html',
-                controller: 'MohCtrl',
-                controllerAs: 'moh',
-                resolve: {
-                  modalInfo: function ($state) {
-                    $state.params.modalClass = 'moh-content';
-                  }
-                }
-              }
-            }
           })
           .state('trialAdd', {
             abstract: true,
@@ -2167,6 +2211,16 @@
             controller: 'CallParkSetupAssistantCtrl',
             controllerAs: 'callParkSA'
           })
+          .state('callparkedit', {
+            url: '/features/cp/edit',
+            parent: 'main',
+            templateUrl: 'modules/huron/features/callPark/edit/cpEdit.tpl.html',
+            controller: 'CallParkEditCtrl',
+            controllerAs: 'cpe',
+            params: {
+              feature: null
+            }
+          })
           .state('huronHuntGroup', {
             url: '/huronHuntGroup',
             parent: 'hurondetails',
@@ -2200,6 +2254,9 @@
             controllerAs: 'resourceList',
             parent: 'main',
             resolve: {
+              hasF237FeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasF237ResourceGroups);
+              },
               hasF410FeatureToggle: /* @ngInject */ function (FeatureToggleService) {
                 return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridServicesResourceList);
               },
@@ -2300,17 +2357,17 @@
               wizard: null
             }
           })
+          .state('add-resource.mediafusion', {
+            abstract: true
+          })
           .state('add-resource.mediafusion.hostname', {
             parent: 'modalSmall',
             views: {
               'modal@': {
-                /*                controller: 'AddResourceControllerClusterViewV2',
-                                controllerAs: 'redirectResource',
-                                templateUrl: 'modules/mediafusion/media-service-v2/add-resources/add-resource-dialog.html',
-                                modalClass: 'redirect-add-resource'*/
-                controller: 'MediafusionEnterHostnameController',
-                controllerAs: 'vm',
-                templateUrl: 'modules/hercules/fusion-pages/add-resource/mediafusion/enter-hostname.html'
+                controller: 'AddResourceControllerClusterViewV2',
+                controllerAs: 'redirectResource',
+                templateUrl: 'modules/mediafusion/media-service-v2/add-resources/add-resource-dialog.html',
+                modalClass: 'redirect-add-resource'
               }
             },
             params: {
@@ -2345,9 +2402,6 @@
             params: {
               wizard: null
             }
-          })
-          .state('add-resource.mediafusion', {
-            abstract: true
           })
           .state('calendar-service', {
             templateUrl: 'modules/hercules/overview/overview.html',
@@ -2489,7 +2543,7 @@
           })
           .state('cluster-details.alarm-details', {
             templateUrl: 'modules/hercules/cluster-sidepanel/alarm-details.html',
-            controller: 'AlarmController',
+            controller: 'ExpresswayAlarmController',
             controllerAs: 'alarmCtrl',
             data: {
               displayName: 'Alarm Details'
@@ -2515,99 +2569,8 @@
 
         $stateProvider
 
-          .state('metrics', {
-            url: '/metrics',
-            controllerAs: 'GraphUtilCtrl',
-            controller: 'AnalyticsUtilizationGraphController',
-            templateUrl: 'modules/mediafusion/media-service/metrics/analytics-utilization-graph.html',
-            parent: 'main'
-          })
-          .state('media-service', {
-            templateUrl: 'modules/mediafusion/media-service/overview.html',
-            controller: 'MediaServiceController',
-            controllerAs: 'med',
-            parent: 'main'
-          })
-          .state('media-service.list', {
-            url: '/mediaservice',
-            views: {
-              'fullPane': {
-                templateUrl: 'modules/mediafusion/media-service/resources/cluster-list.html'
-              }
-            }
-          })
-          .state('media-service.settings', {
-            url: '/mediaservice/settings',
-            views: {
-              'fullPane': {
-                controllerAs: 'mediaServiceSettings',
-                controller: 'MediaServiceSettingsController',
-                templateUrl: 'modules/mediafusion/media-service/settings/media-service-settings.html'
-              }
-            }
-          })
-
-        .state('connector-details', {
-            parent: 'sidepanel',
-            views: {
-              'sidepanel@': {
-                controllerAs: 'groupDetails',
-                controller: 'GroupDetailsController',
-                templateUrl: 'modules/mediafusion/media-service/side-panel/group-details.html'
-              },
-              'header@connector-details': {
-                templateUrl: 'modules/mediafusion/media-service/side-panel/group-header.html'
-              }
-            },
-            data: {
-              displayName: 'Overview'
-            },
-            params: {
-              groupName: {},
-              selectedClusters: {}
-            }
-          })
-          .state('connector-details.alarm-details', {
-            templateUrl: 'modules/mediafusion/media-service/side-panel/alarm-details.html',
-            controller: 'MediaAlarmController',
-            controllerAs: 'alarmCtrl',
-            data: {
-              displayName: 'Alarm Details'
-            },
-            params: {
-              alarm: null,
-              host: null
-            }
-          })
-          .state('connector-details.host-details', {
-            templateUrl: 'modules/mediafusion/media-service/side-panel/host-details.html',
-            controller: 'HostDetailsController',
-            controllerAs: 'hostDetails',
-            data: {
-              displayName: 'Host'
-            },
-            params: {
-              clusterId: null,
-              properties: null,
-              connector: null,
-              hostLength: null
-            }
-          })
-          .state('connector-details.group-settings', {
-            templateUrl: 'modules/mediafusion/media-service/side-panel/group-settings.html',
-            controller: 'GroupSettingsController',
-            controllerAs: 'groupClusterSettingsCtrl',
-            data: {
-              displayName: 'Settings'
-            },
-            params: {
-              clusterList: null,
-              dispName: null
-            }
-          })
-
         //V2 API changes
-        .state('media-service-v2', {
+          .state('media-service-v2', {
             templateUrl: 'modules/mediafusion/media-service-v2/overview.html',
             controller: 'MediaServiceControllerV2',
             controllerAs: 'med',
@@ -2631,8 +2594,7 @@
               }
             }
           })
-
-        .state('connector-details-v2', {
+          .state('connector-details-v2', {
             parent: 'sidepanel',
             views: {
               'sidepanel@': {
@@ -2762,7 +2724,11 @@
             parent: 'care.Details',
             templateUrl: 'modules/sunlight/features/chat/ctSetupAssistant.tpl.html',
             controller: 'CareChatSetupAssistantCtrl',
-            controllerAs: 'careChatSA'
+            controllerAs: 'careChatSA',
+            params: {
+              template: null,
+              isEditFeature: null
+            }
           })
           .state('care.Features.DeleteFeature', {
             parent: 'modalDialog',

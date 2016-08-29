@@ -201,14 +201,14 @@
 
     function getQuantity(type) {
       switch (type) {
-      case ALL:
-        return getAllNumbers().length + getPendingOrderQuantity();
-      case PENDING:
-        return getPendingNumbers().length + getPendingOrderQuantity();
-      case UNASSIGNED:
-        return getUnassignedNumbersWithoutPending().length;
-      default:
-        break;
+        case ALL:
+          return getAllNumbers().length + getPendingOrderQuantity();
+        case PENDING:
+          return getPendingNumbers().length + getPendingOrderQuantity();
+        case UNASSIGNED:
+          return getUnassignedNumbersWithoutPending().length;
+        default:
+          break;
       }
     }
   }

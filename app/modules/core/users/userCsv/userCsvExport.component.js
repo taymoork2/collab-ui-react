@@ -45,21 +45,40 @@
       blobAnchor = $element.find('.download-anchor');
     }
 
+    function beginUserCsvDownload() {
+      // start the export
+      if (vm.useCsvDownloadDirective) {
+        $rootScope.$emit('csv-download-request', {
+          csvType: CsvDownloadService.typeUser,
+          tooManyUsers: vm.isOverExportThreshold,
+          suppressWarning: true,
+          filename: exportFilename
+        });
+      } else {
+        startDownload(CsvDownloadService.typeUser, exportFilename);
+      }
+    }
+
     function exportCsv() {
       $modal.open({
         type: 'dialog',
         templateUrl: 'modules/core/users/userCsv/userCsvExportConfirm.tpl.html'
       }).result.then(function () {
-        // start the export
-        if (vm.useCsvDownloadDirective) {
-          $rootScope.$emit('csv-download-request', {
-            csvType: CsvDownloadService.typeUser,
-            tooManyUsers: vm.isOverExportThreshold,
-            suppressWarning: true,
-            filename: exportFilename
+        if (vm.isOverExportThreshold) {
+          // warn that entitlements won't be exported since there are too many users
+          $modal.open({
+            type: 'dialog',
+            templateUrl: 'modules/core/users/userCsv/userCsvExportConfirm10K.tpl.html',
+            controller: function () {
+              var ctrl = this;
+              ctrl.maxUsers = CsvDownloadService.userExportThreshold;
+            },
+            controllerAs: 'ctrl'
+          }).result.then(function () {
+            beginUserCsvDownload();
           });
         } else {
-          startDownload(CsvDownloadService.typeUser, exportFilename);
+          beginUserCsvDownload();
         }
       });
     }

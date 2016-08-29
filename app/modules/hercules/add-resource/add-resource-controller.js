@@ -22,12 +22,8 @@
     vm.localizedConnectorName = $translate.instant('hercules.connectorNameFromConnectorType.' + vm.connectorType);
     vm.localizedServiceName = $translate.instant('hercules.serviceNames.' + vm.servicesId[0]);
     vm.localizedManagementConnectorName = $translate.instant('hercules.connectorNameFromConnectorType.c_mgmt');
-    vm.localizedAddNewExpressway = $translate.instant('hercules.addResourceDialog.registerNewExpressway', {
-      ConnectorName: vm.localizedConnectorName
-    });
-    vm.localizedAddToExistingExpressway = $translate.instant('hercules.addResourceDialog.addToExistingExpressway', {
-      ConnectorName: vm.localizedConnectorName
-    });
+    vm.localizedAddNewExpressway = $translate.instant('hercules.addResourceDialog.registerNewExpressway');
+    vm.localizedAddToExistingExpressway = $translate.instant('hercules.addResourceDialog.addToExistingExpressway');
     vm.localizedWillBeInstalledMessage = $translate.instant('hercules.addResourceDialog.willBeInstalled', {
       ConnectorName: vm.localizedConnectorName,
       ServiceName: vm.localizedServiceName
@@ -79,6 +75,9 @@
 
     function provisionConnector(connectorType, clusterId) {
       return FusionClusterService.provisionConnector(clusterId, connectorType)
+        .then(function () {
+          return clusterId;
+        })
         .catch(function () {
           if (connectorType === 'c_mgmt') {
             throw $translate.instant('hercules.addResourceDialog.cannotProvisionConnector', {
@@ -91,8 +90,8 @@
         });
     }
 
-    function addPreregisteredClusterToAllowList(cluster) {
-      return FusionClusterService.addPreregisteredClusterToAllowList(vm.hostname, 3600, cluster.id)
+    function addPreregisteredClusterToAllowList(clusterId) {
+      return FusionClusterService.addPreregisteredClusterToAllowList(vm.hostname, 3600, clusterId)
         .catch(function () {
           $translate.instant('hercules.addResourceDialog.cannotFinalizeAllowlisting');
         });
@@ -103,7 +102,7 @@
         .then(getAllExpressways)
         .then(_.partial(removeAlreadyProvisionedExpressways, connectorType))
         .then(updateDropdownMenu)
-        .catch(function (error) {
+        .catch(function () {
           XhrNotificationService.notify($translate.instant('hercules.addResourceDialog.cannotReadExpresswayList'));
         });
     }
@@ -178,9 +177,9 @@
         return;
       }
       $modal.open({
-          templateUrl: 'modules/hercules/add-resource/confirm-setup-cancel-dialog.html',
-          type: 'dialog'
-        })
+        templateUrl: 'modules/hercules/add-resource/confirm-setup-cancel-dialog.html',
+        type: 'dialog'
+      })
         .result.then(function (isAborting) {
           if (isAborting) {
             $modalInstance.close();

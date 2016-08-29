@@ -9,7 +9,7 @@
   function AABuilderMainCtrl($scope, $translate, $state, $stateParams, $q, AAUiModelService,
     AAModelService, AutoAttendantCeInfoModelService, AutoAttendantCeMenuModelService, AutoAttendantCeService,
     AAValidationService, AANumberAssignmentService, AANotificationService, Authinfo, AACommonService, AAUiScheduleService, AACalendarService,
-    AATrackChangeService, AADependencyService, ServiceSetup) {
+    AATrackChangeService, AADependencyService, ServiceSetup, Analytics, AAMetricNameService) {
 
     var vm = this;
     vm.overlayTitle = $translate.instant('autoAttendant.builderTitle');
@@ -80,6 +80,15 @@
 
     function setLoadingDone() {
       vm.loading = false;
+      sendMetrics('load');
+    }
+
+    function sendMetrics(metric) {
+      if (vm.isAANameDefined && angular.isDefined(metric)) {
+        Analytics.trackEvent(AAMetricNameService.BUILDER_PAGE, {
+          type: metric
+        });
+      }
     }
 
     function setAANameFocus() {
@@ -235,7 +244,7 @@
         aaRecord);
 
       updateResponsePromise.then(
-        function (response) {
+        function () {
           // update successfully
           aaRecords[recNum].callExperienceName = aaRecord.callExperienceName;
           aaRecords[recNum].assignedResources = angular.copy(aaRecord.assignedResources);
@@ -379,9 +388,9 @@
 
           var currentlyShownResources = AutoAttendantCeInfoModelService.getCeInfo(aaRecord).getResources();
 
-          return saveAANumberAssignmentWithErrorDetail(currentlyShownResources).then(function (assignmentResults) {
+          return saveAANumberAssignmentWithErrorDetail(currentlyShownResources).then(function () {
 
-            return AANumberAssignmentService.formatAAExtensionResourcesBasedOnCMI(Authinfo.getOrgId(), vm.aaModel.aaRecordUUID, currentlyShownResources).then(function (resources) {
+            return AANumberAssignmentService.formatAAExtensionResourcesBasedOnCMI(Authinfo.getOrgId(), vm.aaModel.aaRecordUUID, currentlyShownResources).then(function () {
 
               updateCE(recNum);
 
@@ -568,7 +577,7 @@
           // Sucessfully created new CE Definition, leave Name-assignment page
           vm.isAANameDefined = true;
         },
-        function (error) {
+        function () {
           return $q.reject('CE_SAVE_FAILURE');
         }
       );
@@ -614,7 +623,8 @@
       // Define vm.ui.builder.ceInfo_name for editing purpose.
       vm.ui.builder.ceInfo_name = angular.copy(vm.ui.ceInfo.name);
 
-      AutoAttendantCeInfoModelService.getCeInfosList().then(getTimeZoneOptions).then(getSystemTimeZone).finally(function () {
+      AutoAttendantCeInfoModelService.getCeInfosList().then(getTimeZoneOptions).then(getSystemTimeZone)
+      .finally(function () {
         AutoAttendantCeMenuModelService.clearCeMenuMap();
         vm.aaModel = AAModelService.getAAModel();
         vm.aaModel.aaRecord = undefined;
@@ -626,11 +636,11 @@
     function evalKeyPress($keyCode) {
       switch ($keyCode) {
         // esc key
-      case 27:
-        closePanel();
-        break;
-      default:
-        break;
+        case 27:
+          closePanel();
+          break;
+        default:
+          break;
       }
     }
 

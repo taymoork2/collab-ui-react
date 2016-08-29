@@ -7,7 +7,8 @@
       <tbody>
       <tr>
         <td translate="hercules.alarms.severity"></td>
-        <td><span ng-class="alarmCtrl.alarm.alarm.severity == 'warning' ? 'hercules-state-warning' : 'hercules-state-error'" translate="{{'hercules.alarms.' + alarmCtrl.alarm.severity}}"></span></td>
+        <td><span ng-class="alarmCtrl.alarm.severity == 'warning' ? 'hercules-state-warning' : 'hercules-state-error'"
+                  translate="{{'hercules.alarms.' + alarmCtrl.alarm.severity}}"></span></td>
       </tr>
       <tr>
         <td translate="hercules.alarms.firstReported"></td>
@@ -22,8 +23,16 @@
   </cs-sp-section>
   <cs-sp-section>
     <div class="section-title-row section-name" translate="hercules.alarms.description"></div>
-    <p ng-if="!alarmCtrl.alarm.alarm">
+    <p>
       {{alarmCtrl.alarm.description}}
+    </p>
+  </cs-sp-section>
+  <cs-sp-section ng-if="alarmCtrl.alarm.solution">
+    <div class="section-title-row section-name" translate="hercules.alarms.action"></div>
+    <p>
+      <span ng-repeat="element in alarmCtrl.alarm.alarmSolutionElements"><a ng-if="element.link"
+                                                                            target="_blank"
+                                                                            href="{{element.link}}">{{element.text}}</a>{{!element.link ? element.text : ''}}</span>
     </p>
   </cs-sp-section>
 </cs-sp-container>

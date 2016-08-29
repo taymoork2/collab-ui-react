@@ -1,10 +1,11 @@
 "use strict";
 
 describe(' sunlightReportService', function () {
-  var sunlightReportService, $httpBackend, orgId;
+  var sunlightReportService, $httpBackend;
   var dummyStats = getJSONFixture('sunlight/json/features/careReport/sunlightReportStats.json');
 
   var fifteenMinutesOrgStats = dummyStats.fifteenMinutesOrgStats;
+  var fifteenMinutesOrgSnapshotStats = dummyStats.fifteenMinutesOrgSnapshotStats;
   var hourlyOrgStats = dummyStats.hourlyOrgStats;
   var dailyOrgStats = dummyStats.dailyOrgStats;
   var weeklyOrgStats = dummyStats.weeklyOrgStats;
@@ -21,7 +22,6 @@ describe(' sunlightReportService', function () {
   beforeEach(inject(function (_SunlightReportService_, _$httpBackend_) {
     sunlightReportService = _SunlightReportService_;
     $httpBackend = _$httpBackend_;
-    orgId = '676a82cd-64e9-4ebd-933c-4dce087a02bd';
     $httpBackend.whenGET(/.*?org_stats?.*/g)
       .respond(function (method, url, data, headers, params) {
         if (params.viewType === 'fifteen_minutes') {
@@ -36,9 +36,17 @@ describe(' sunlightReportService', function () {
           return [200, []];
         }
       });
+    $httpBackend.whenGET(/.*?org_snapshot_stats?.*/g)
+      .respond(function (method, url, data, headers, params) {
+        if (params.viewType === 'fifteen_minutes') {
+          return [200, fifteenMinutesOrgSnapshotStats];
+        } else {
+          return [200, []];
+        }
+      });
   }));
 
-  it('should get stats for org for given fifteen minutes viewType and time range', function () {
+  it('should get and snapshot stats for org for given fifteen minutes viewType and time range', function () {
     var config = {
       "params": {
         "viewType": 'fifteen_minutes',
@@ -48,8 +56,14 @@ describe(' sunlightReportService', function () {
       }
     };
     sunlightReportService.getStats('org_stats', config).then(function (response) {
-      expect(response.data.data.length).toBe(3);
+      expect(response.data.data.length).toBe(2);
       expect(response.data.metadata.jobName).toBe('org_stats_15min');
+    });
+    $httpBackend.flush();
+
+    sunlightReportService.getStats('org_snapshot_stats', config).then(function (response) {
+      expect(response.data.data.length).toBe(4);
+      expect(response.data.metadata.jobName).toBe('org_snapshot_stats_15min');
     });
     $httpBackend.flush();
 
@@ -142,6 +156,27 @@ describe(' sunlightReportService', function () {
       _.each(response, function (reportData) {
         expect(moment(reportData.createdTime, 'HH:mm', true).isValid()).toBe(true);
       });
+      var nonZeroDataPoint = _.find(response, function (reportData) {
+        return reportData.numCsatScores !== 0;
+      });
+      expect(nonZeroDataPoint.avgCsatScores).toBe(3.67);
+    });
+    $httpBackend.flush();
+  });
+
+  it('should get snapshot ReportingData for org for time selected today for mediaType chat', function () {
+
+    sunlightReportService.getReportingData('org_snapshot_stats', 0, 'chat').then(function (response) {
+      expect(response.length).toBe(24);
+      _.each(response, function (reportData) {
+        expect(moment(reportData.createdTime, 'HH:mm', true).isValid()).toBe(true);
+      });
+      var nonZeroDataPoint = _.find(response, function (reportData) {
+        return reportData.numPendingTasks !== 0;
+      });
+      // The below assertions fail if run from a timezone that is at HH:15 or HH:45 offset
+      expect(nonZeroDataPoint.numWorkingTasks).toBe(7);
+      expect(nonZeroDataPoint.numPendingTasks).toBe(8);
     });
     $httpBackend.flush();
   });

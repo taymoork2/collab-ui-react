@@ -35,10 +35,17 @@ export class ServicesOverviewMeetingCard extends ServicesOverviewCard {
       return
     }
 
-    _.forEach(data, (serviceFeature)=> {
-      this._buttons.push({name: serviceFeature.license.siteUrl, link: 'site-list', buttonClass: 'btn-link'});
-    });
-
+    this._buttons =
+      _.chain(data)
+        .map(serviceFeature=> {
+          return serviceFeature && serviceFeature.license && serviceFeature.license.siteUrl;
+        })
+        .compact()
+        .uniq()
+        .map((url) => {
+          return {name: url, link: 'site-list', buttonClass: 'btn-link'};
+        })
+        .value();
     this._loading = false;
   }
 }

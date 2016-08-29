@@ -36,6 +36,13 @@
   border-top: 0px;
 }
 
+.modal-body {
+  .modal-spacing {
+    padding-bottom: 20px;
+  }
+}
+
+
 .modal-icon-flex-row {
   width: 33px;
 }
@@ -53,11 +60,12 @@
   .unsynced-users {
     display: inherit;
     margin-bottom: 1rem;
+    color: $color-negative-base;
 
     .icon-error {
-      color: $color-alerts-dark;
       margin-right: .5rem;
       margin-top: .4rem;
+      font-size: medium;
     }
     p {
       display: inline-block;
@@ -290,11 +298,10 @@
 }
 
 .user-input-option-radio-group {
-  margin-top: 15px;
-  margin-bottom: 15px;
+  margin-bottom: 2rem;
 }
 
-.user-name-email-input {
+.onboard-users .user-name-email-input {
   display: flex;
   align-items: center;
   .flex1 {

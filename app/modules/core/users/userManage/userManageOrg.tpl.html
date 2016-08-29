@@ -8,8 +8,8 @@
 <div class="modal-body user-manage">
   <form name="userModifyUsersForm">
     <div class="columns medium-5">
-      <h3 translate="userManage.org.typeLabel"></h3>
-      <p translate="userManage.org.typeInstructions"></p>
+      <h4 translate="userManage.org.typeLabel"></h4>
+      <p class="columns medium-10" translate="userManage.org.typeInstructions"></p>
     </div>
     <div class="columns medium-7">
       <div class="cs-radio-group">
@@ -17,12 +17,12 @@
           <li>
             <input cs-input type="radio" ng-model="umoc.manageType" id="org-manual" ng-value="'manual'"
                    cs-input-label="{{::'userManage.org.manualLabel'|translate}}"
-                  cs-input-help-text="{{::'userManage.org.manualDetails'|translate:'{maxUsers: umoc.maxUsersInManual}'}}">
+                  cs-input-help-text="{{::'userManage.org.manualDetails'|translate:umoc}}">
           </li>
           <li>
             <input cs-input type="radio" ng-model="umoc.manageType" id="org-bulk" ng-value="'bulk'"
                    cs-input-label="{{::'userManage.org.bulkLabel'|translate}}"
-                   cs-input-help-text="{{::'userManage.org.bulkDetails'|translate:'{maxUsers: umoc.maxUsersInCSV}'}}">
+                   cs-input-help-text="{{::'userManage.org.bulkDetails'|translate:umoc}}">
           </li>
           <li>
             <input cs-input type="radio" ng-model="umoc.manageType" id="org-advanced" ng-value="'advanced'"

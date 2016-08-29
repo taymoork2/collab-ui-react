@@ -220,9 +220,9 @@ describe('Service: USSService2', function () {
         });
 
       USSService2.updateOrg({
-          id: '456',
-          sipDomain: 'whatever'
-        })
+        id: '456',
+        sipDomain: 'whatever'
+      })
         .then(function (response) {
           expect(response.sipDomain).toEqual('whatever');
         });
@@ -299,6 +299,20 @@ describe('Service: USSService2', function () {
       USSService2.getStatusesForUserInOrg('123', '456')
         .then(function (response) {
           expect(response.length).toBe(1);
+        });
+      $httpBackend.flush();
+    });
+  });
+
+  describe('getUserProps', function () {
+    it('should return props for a given user in org', function () {
+      $httpBackend
+        .when('GET', rootPath + 'orgs/456/userProps/123')
+        .respond({ userId: '123', resourceGroups: {} });
+
+      USSService2.getUserProps('123', '456')
+        .then(function (response) {
+          expect(response.userId).toBe('123');
         });
       $httpBackend.flush();
     });

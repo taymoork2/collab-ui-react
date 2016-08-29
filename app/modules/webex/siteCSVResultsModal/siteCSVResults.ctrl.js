@@ -43,7 +43,7 @@
     var splitResult = formattedFinishedTime.split(currentYear); //Results in an array of length 2
     var displayFinishedTime = splitResult[0] + currentYear + " at" + splitResult[1];
 
-    var logMsg = funcName + "\n" +
+    logMsg = funcName + "\n" +
       "formattedCreatedTime=" + formattedCreatedTime + "\n" +
       "formattedStartedTime=" + formattedStartedTime + "\n" +
       "formattedFinishedTime=" + formattedFinishedTime + "\n" +

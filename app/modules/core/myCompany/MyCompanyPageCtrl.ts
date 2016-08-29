@@ -15,7 +15,7 @@ namespace myCompanyPage {
     /* @ngInject */
     constructor(
       private $translate: ng.translate.ITranslateService,
-      private MyCompanyOrdersService: MyCompanyOrdersService
+      private Authinfo
     ) {
       this._tabs = [{
         title: $translate.instant('my-company.subscription'),
@@ -26,15 +26,12 @@ namespace myCompanyPage {
       }];
 
       this._title = $translate.instant('my-company.pageTitle');
-
-      this.MyCompanyOrdersService.supportsOrderHistory().then(supportsOrderHistory => {
-        if (supportsOrderHistory) {
-          this._tabs.push({
-            title: $translate.instant('my-company.order'),
-            state: 'my-company.orders',
-          });
-        }
-      });
+      if (Authinfo.isOnline()) {
+        this._tabs.push({
+          title: $translate.instant('my-company.order'),
+          state: 'my-company.orders',
+        });
+      }
     }
   }
 

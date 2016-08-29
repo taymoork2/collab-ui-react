@@ -26,6 +26,7 @@
         card.helper = OverviewHelper;
         card.showHealth = true;
         card.isCSB = Authinfo.isCSB();
+        card.isDeviceEnabled = false;
 
         card.healthStatusUpdatedHandler = function (data) {
           _.each(data.components, function (component) {

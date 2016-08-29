@@ -139,7 +139,6 @@
         return;
       }
 
-      var graphs = (data);
       var catAxis = CommonGraphService.getBaseVariable(AXIS);
       catAxis.gridPosition = 'start';
 

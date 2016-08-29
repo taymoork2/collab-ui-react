@@ -2,7 +2,7 @@
 
 describe('Service: WebExSiteRowService', function () {
 
-  var controller, $rootScope, $scope, $q, WebExSiteRowService, Auth, Authinfo, FeatureToggleService, WebExUtilsFact, WebExApiGatewayService, WebExApiGatewayConstsService, deferred_licenseInfo, deferredIsSiteSupportsIframe, deferredCsvStatus;
+  var $rootScope, $q, WebExSiteRowService, Auth, Authinfo, FeatureToggleService, WebExUtilsFact, WebExApiGatewayService, WebExApiGatewayConstsService, deferred_licenseInfo, deferredIsSiteSupportsIframe, deferredCsvStatus;
 
   var fakeSiteRow1 = {
     "label": "Meeting Center 200",
@@ -134,24 +134,24 @@ describe('Service: WebExSiteRowService', function () {
     "asyncErr": false
   };
 
-  var fakeConferenceService1 = {
-    "label": "Meeting Center 200",
-    "value": 1,
-    "name": "confRadio",
-    "license": {
-      "licenseId": "MC_5320533d-da5d-4f92-b95e-1a42567c55a0_cisjsite031.webex.com",
-      "offerName": "MC",
-      "licenseType": "CONFERENCING",
-      "billingServiceId": "1446768353",
-      "features": ["cloudmeetings"],
-      "volume": 25,
-      "isTrial": false,
-      "status": "ACTIVE",
-      "capacity": 200,
-      "siteUrl": "cisjsite031.webex.com"
-    },
-    "isCustomerPartner": false
-  };
+  // var fakeConferenceService1 = {
+  //   "label": "Meeting Center 200",
+  //   "value": 1,
+  //   "name": "confRadio",
+  //   "license": {
+  //     "licenseId": "MC_5320533d-da5d-4f92-b95e-1a42567c55a0_cisjsite031.webex.com",
+  //     "offerName": "MC",
+  //     "licenseType": "CONFERENCING",
+  //     "billingServiceId": "1446768353",
+  //     "features": ["cloudmeetings"],
+  //     "volume": 25,
+  //     "isTrial": false,
+  //     "status": "ACTIVE",
+  //     "capacity": 200,
+  //     "siteUrl": "cisjsite031.webex.com"
+  //   },
+  //   "isCustomerPartner": false
+  // };
   var fakeConferenceService2 = {
     "label": "Meeting Center 200",
     "value": 1,
@@ -659,13 +659,13 @@ describe('Service: WebExSiteRowService', function () {
 
   });
 
-  //test to determine CI sites 
+  //test to determine CI sites
   it('can correctly determine CI sites and display the actions column in sitelist page', function () {
     var fakeSiteUrl = "sjsite04.webex.com";
     var searchResult = WebExUtilsFact.isCIEnabledSite(fakeSiteUrl);
     expect(searchResult).toBe(true);
 
-    WebExApiGatewayService.siteFunctions(fakeSiteUrl).then(function (e) {
+    WebExApiGatewayService.siteFunctions(fakeSiteUrl).then(function () {
       expect(WebExSiteRowService.siteFunctionsSuccess).toHaveBeenCalled();
       expect(WebExSiteRowService.updateCSVStatusInRow).toHaveBeenCalled();
     });
@@ -676,7 +676,7 @@ describe('Service: WebExSiteRowService', function () {
     var searchResult = WebExUtilsFact.isCIEnabledSite(fakeSiteUrl);
     expect(searchResult).toBe(false);
 
-    WebExApiGatewayService.siteFunctions(fakeSiteUrl).then(function (e) {
+    WebExApiGatewayService.siteFunctions(fakeSiteUrl).then(function () {
       expect(WebExSiteRowService.siteFunctionsSuccess).toHaveBeenCalled();
       expect(WebExSiteRowService.updateCSVStatusInRow).not.toHaveBeenCalled();
     });

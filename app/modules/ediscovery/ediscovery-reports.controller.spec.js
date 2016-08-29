@@ -2,17 +2,15 @@
 describe('Controller: EdiscoveryReportsController', function () {
   beforeEach(angular.mock.module('Ediscovery'));
 
-  var $controller, $q, $scope, $state, $translate, Authinfo, controller, EdiscoveryService, ReportUtilService;
+  var $controller, $q, $scope, $translate, Authinfo, controller, EdiscoveryService;
 
-  beforeEach(inject(function (_$controller_, _$q_, _$rootScope_, _$state_, _$translate_, _Authinfo_, _EdiscoveryService_, _ReportUtilService_) {
-    $state = _$state_;
+  beforeEach(inject(function (_$controller_, _$q_, _$rootScope_, _$translate_, _Authinfo_, _EdiscoveryService_) {
     $scope = _$rootScope_.$new();
     $controller = _$controller_;
     $translate = _$translate_;
     $q = _$q_;
     Authinfo = _Authinfo_;
     EdiscoveryService = _EdiscoveryService_;
-    ReportUtilService = _ReportUtilService_;
 
     sinon.stub(Authinfo, 'getOrgId');
     Authinfo.getOrgId.returns("ce8d17f8-1734-4a54-8510-fae65acc505e");

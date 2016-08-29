@@ -6,18 +6,16 @@
     .controller('CallServicePreviewCtrl', CallServicePreviewCtrl);
 
   /*@ngInject*/
-  function CallServicePreviewCtrl($scope, $state, $stateParams, Authinfo, Userservice, Notification, USSService, ClusterService, $timeout, ServiceDescriptor, UriVerificationService, DomainManagementService, $translate) {
+  function CallServicePreviewCtrl($scope, $state, $stateParams, Authinfo, Userservice, Notification, USSService2, ClusterService, $timeout, ServiceDescriptor, UriVerificationService, DomainManagementService, $translate, FeatureToggleService, ResourceGroupService) {
     $scope.saveLoading = false;
     $scope.currentUser = $stateParams.currentUser;
     var isEntitled = function (ent) {
-      return $stateParams.currentUser.entitlements && $stateParams.currentUser.entitlements.indexOf(ent) > -1 ? true : false;
+      return $stateParams.currentUser.entitlements && $stateParams.currentUser.entitlements.indexOf(ent) > -1;
     };
 
     var sipUri = _.find($scope.currentUser.sipAddresses, {
       type: "enterprise"
     });
-
-    //sipUri = {"type": "enterprise", "value":"sqintegration1234@gmail.com"};
 
     $scope.isInvitePending = Userservice.isInvitePending($scope.currentUser);
     $scope.localizedServiceName = $translate.instant('hercules.serviceNames.' + $stateParams.extensionId);
@@ -38,6 +36,22 @@
       orgEntitled: Authinfo.isFusionEC(),
       enabledInFMS: false
     };
+    $scope.resourceGroup = {
+      show: false,
+      saving: false,
+      init: function () {
+        this.options = [{ label: $translate.instant('hercules.resourceGroups.noGroupSelected'), value: '' }];
+        this.selected = this.current = this.options[0];
+      },
+      reset: function () {
+        this.selected = this.current;
+        this.saving = false;
+      },
+      hasChanged: function () {
+        return this.selected !== this.current;
+      }
+    };
+    $scope.resourceGroup.init();
 
     // Only show callServiceConnect if it's enabled
     if ($scope.callServiceConnect.orgEntitled) {
@@ -50,25 +64,26 @@
 
     $scope.$watch('callServiceAware.entitled', function (newVal, oldVal) {
       if (newVal != oldVal) {
-        $scope.showButtons = newVal != isEntitled($scope.callServiceAware.id) || $scope.callServiceConnect.entitled != isEntitled($scope.callServiceConnect.id);
+        $scope.setShouldShowButtons();
       }
     });
 
     $scope.$watch('callServiceConnect.entitled', function (newVal, oldVal) {
       if (newVal != oldVal) {
-        $scope.showButtons = newVal != isEntitled($scope.callServiceConnect.id) || $scope.callServiceAware.entitled != isEntitled($scope.callServiceAware.id);
+        $scope.setShouldShowButtons();
       }
     });
 
+    var entitlementHasChanged = function () {
+      return $scope.callServiceConnect.entitled !== isEntitled($scope.callServiceConnect.id) || $scope.callServiceAware.entitled !== isEntitled($scope.callServiceAware.id);
+    };
+
     var updateStatus = function () {
-      USSService.getStatusesForUser($scope.currentUser.id, function (err, activationStatus) {
-        if (!activationStatus || !activationStatus.userStatuses) {
-          return;
-        }
-        $scope.callServiceAware.status = _.find(activationStatus.userStatuses, function (status) {
+      USSService2.getStatusesForUser($scope.currentUser.id).then(function (statuses) {
+        $scope.callServiceAware.status = _.find(statuses, function (status) {
           return $scope.callServiceAware.id === status.serviceId;
         });
-        $scope.callServiceConnect.status = _.find(activationStatus.userStatuses, function (status) {
+        $scope.callServiceConnect.status = _.find(statuses, function (status) {
           return $scope.callServiceConnect.id === status.serviceId;
         });
         if ($scope.callServiceAware.status && $scope.callServiceAware.status.connectorId) {
@@ -84,10 +99,60 @@
       });
     };
 
-    updateStatus();
+    var setSelectedResourceGroup = function (resourceGroupId) {
+      var selectedGroup = _.find($scope.resourceGroup.options, function (group) {
+        return group.value === resourceGroupId;
+      });
+      // TODO: deal with the fact that a resourceGroupId is set on the user, but no longer exists?
+      if (selectedGroup) {
+        $scope.resourceGroup.selected = selectedGroup;
+        $scope.resourceGroup.current = selectedGroup;
+      }
+    };
 
-    $scope.updateEntitlements = function () {
-      $scope.saving = true;
+    var readResourceGroups = function () {
+      if (!FeatureToggleService.supports(FeatureToggleService.features.atlasF237ResourceGroups)) {
+        return;
+      }
+      ResourceGroupService.getAll().then(function (groups) {
+        if (groups && groups.length > 0) {
+          _.each(groups, function (group) {
+            $scope.resourceGroup.options.push({
+              label: group.name + (group.releaseChannel ? ' (' + group.releaseChannel + ')' : ''),
+              value: group.id
+            });
+          });
+          if ($scope.callServiceAware.status && $scope.callServiceAware.status.resourceGroupId) {
+            setSelectedResourceGroup($scope.callServiceAware.status.resourceGroupId);
+          } else {
+            USSService2.getUserProps($scope.currentUser.id).then(function (props) {
+              if (props.resourceGroups && props.resourceGroups[$scope.callServiceAware.id]) {
+                setSelectedResourceGroup(props.resourceGroups[$scope.callServiceAware.id]);
+              }
+            });
+          }
+          $scope.resourceGroup.show = true;
+        }
+      });
+    };
+
+    updateStatus();
+    readResourceGroups();
+
+    var addEntitlementToCurrentUser = function (entitlement) {
+      if (!_.includes($stateParams.currentUser.entitlements, entitlement)) {
+        $stateParams.currentUser.entitlements.push(entitlement);
+      }
+    };
+
+    var removeEntitlementFromCurrentUser = function (entitlement) {
+      _.remove($stateParams.currentUser.entitlements, function (e) {
+        return e === entitlement;
+      });
+    };
+
+    var updateEntitlements = function () {
+      $scope.savingEntitlements = true;
       var user = [{
         'address': $scope.currentUser.userName
       }];
@@ -102,8 +167,6 @@
         });
       }
 
-      $scope.saveLoading = true;
-
       Userservice.updateUsers(user, null, entitlements, 'updateEntitlement', function (data) {
         var entitleResult = {
           msg: null,
@@ -115,13 +178,23 @@
             if (!$stateParams.currentUser.entitlements) {
               $stateParams.currentUser.entitlements = [];
             }
-            $stateParams.currentUser.entitlements.push($stateParams.extensionId);
-            $scope.showButtons = false;
             if ($scope.callServiceAware.entitled) {
-              $timeout(function () {
-                updateStatus();
-              }, 2000); // Wait a few seconds and update the status after successful enable
+              addEntitlementToCurrentUser($scope.callServiceAware.id);
+            } else {
+              removeEntitlementFromCurrentUser($scope.callServiceAware.id);
+              $scope.callServiceConnect.entitled = false;
             }
+            if ($scope.callServiceConnect.orgEntitled && $scope.callServiceConnect.enabledInFMS) {
+              if ($scope.callServiceConnect.entitled) {
+                addEntitlementToCurrentUser($scope.callServiceConnect.id);
+              } else {
+                removeEntitlementFromCurrentUser($scope.callServiceConnect.id);
+              }
+            }
+            $scope.setShouldShowButtons();
+            $timeout(function () {
+              updateStatus();
+            }, 2000);
           } else if (userStatus === 404) {
             entitleResult.msg = $translate.instant('hercules.userSidepanel.entitlements-dont-exist', {
               userName: $scope.currentUser.userName
@@ -139,7 +212,6 @@
           if (userStatus !== 200) {
             Notification.notify([entitleResult.msg], entitleResult.type);
           }
-          $scope.saveLoading = false;
 
         } else {
           entitleResult = {
@@ -149,15 +221,43 @@
             type: 'error'
           };
           Notification.notify([entitleResult.msg], entitleResult.type);
-          $scope.saveLoading = false;
         }
-        $scope.saving = false;
+        $scope.savingEntitlements = false;
+        $scope.saving = $scope.resourceGroup.saving;
       });
     };
 
-    $scope.resetEntitlements = function () {
+    var setResourceGroupOnUser = function (resourceGroupId) {
+      $scope.resourceGroup.saving = true;
+      var props = { userId: $scope.currentUser.id, resourceGroups: { 'squared-fusion-uc': resourceGroupId } };
+      USSService2.updateUserProps(props).then(function () {
+        $scope.resourceGroup.current = $scope.resourceGroup.selected;
+        $scope.setShouldShowButtons();
+      }).catch(function () {
+        Notification.error('hercules.resourceGroups.failedToSetGroup');
+      }).finally(function () {
+        $scope.resourceGroup.saving = false;
+        $scope.saving = $scope.savingEntitlements;
+      });
+    };
+
+    $scope.save = function () {
+      $scope.savingEntitlements = false;
+      $scope.resourceGroup.saving = false;
+      $scope.saving = true;
+      if (entitlementHasChanged()) {
+        updateEntitlements();
+      }
+      if ($scope.resourceGroup.hasChanged()) {
+        setResourceGroupOnUser($scope.resourceGroup.selected.value);
+      }
+    };
+
+    $scope.reset = function () {
       $scope.callServiceAware.entitled = isEntitled($scope.callServiceAware.id);
       $scope.callServiceConnect.entitled = isEntitled($scope.callServiceConnect.id);
+      $scope.resourceGroup.reset();
+      $scope.showButtons = false;
     };
 
     $scope.closePreview = function () {
@@ -165,23 +265,7 @@
     };
 
     $scope.getStatus = function (status) {
-      return USSService.decorateWithStatus(status);
-    };
-
-    var findEnterpriseSipUri = function () {
-      USSService.getStatusesForUser($scope.currentUser.id, function (err, activationStatus) {
-        if (!activationStatus || !activationStatus.userStatuses) {
-          return;
-        }
-        $scope.callServiceAware.status = _.find(activationStatus.userStatuses, function (status) {
-          return $scope.callServiceAware.id === status.serviceId;
-        });
-        if ($scope.callServiceAware.status && $scope.callServiceAware.status.connectorId) {
-          ClusterService.getConnector($scope.callServiceAware.status.connectorId).then(function (connector) {
-            $scope.callServiceAware.homedConnector = connector;
-          });
-        }
-      });
+      return USSService2.decorateWithStatus(status);
     };
 
     $scope.domainVerificationError = false; // need to be to be backwards compatible.
@@ -204,6 +288,10 @@
 
     $scope.navigateToCallSettings = function () {
       $state.go('call-service.settings');
+    };
+
+    $scope.setShouldShowButtons = function () {
+      $scope.showButtons = $scope.resourceGroup.hasChanged() || entitlementHasChanged();
     };
   }
 

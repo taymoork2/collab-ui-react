@@ -15,6 +15,7 @@
             cursorwidth: 10,
             horizrailenabled: false,
             scrollspeed: 120,
+            autohidemode: false
           });
         });
       }
