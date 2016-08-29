@@ -141,4 +141,46 @@
 
     });
   });
+
+  describe('Unit testing msgr-text-status-on directive', function() {
+    var $compile,
+        $rootScope;
+
+    beforeEach(angular.mock.module('Messenger'));
+
+    beforeEach(inject(function(_$compile_, _$rootScope_){
+      $compile = _$compile_;
+      $rootScope = _$rootScope_;
+    }));
+
+    it('Replaces the element with the appropriate content', function() {
+      // Compile a piece of HTML containing the directive
+      var element = $compile("<div msgr-text-status-on></div>")($rootScope);
+      $rootScope.$digest();
+      // Check that the compiled element contains the templated content
+      expect(element.html()).toContain("common.status");
+      expect(element.html()).toContain("common.on");
+    });
+  });
+  describe('Unit testing msgr-text-status-off directive', function() {
+    var $compile,
+        $rootScope;
+
+    beforeEach(angular.mock.module('Messenger'));
+
+    beforeEach(inject(function(_$compile_, _$rootScope_){
+      $compile = _$compile_;
+      $rootScope = _$rootScope_;
+    }));
+
+    it('Replaces the element with the appropriate content', function() {
+      // Compile a piece of HTML containing the directive
+      var element = $compile("<div msgr-text-status-off></div>")($rootScope);
+      $rootScope.$digest();
+      // Check that the compiled element contains the templated content
+      expect(element.html()).toContain("common.status");
+      expect(element.html()).toContain("common.off");
+    });
+  });
+
 })();
