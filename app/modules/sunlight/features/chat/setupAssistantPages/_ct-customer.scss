@@ -230,6 +230,9 @@
     width: 100%;
     .ct-customer-info-category-input {
       @include vr-spacing(mt, 0.25);
+      .cs-input__messages {
+        padding-left: 1rem;
+      }
     }
   }
 
@@ -280,12 +283,9 @@
     }
   }
   .ct-input-error {
-    color: $color-negative-dark;
+    color: $color-alerts-base;
     padding-left: 1rem;
     padding-right: 1rem;
   }
 }
 
-.cs-input__messages {
-  padding-left: 1rem;
-}

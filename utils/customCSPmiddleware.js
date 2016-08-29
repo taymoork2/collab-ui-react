@@ -25,7 +25,7 @@ module.exports = csp({
       'https://wbxbts.admin.ciscospark.com'
     ],
     frameSrc: [
-      'https://store.digitalriver.com',
+      'https://buy.ciscospark.com',
     ],
     connectSrc: [
       '\'self\'',
