@@ -2057,12 +2057,13 @@
             entitleList = getEntitlements('add');
           }
           entitleList = entitleList.concat(getExtensionEntitlements('add'));
-
+          convertPending = false;
           Userservice.updateUsers(successMovedUsers, licenseList, entitleList, 'convertUser', entitleUserCallback);
         } else {
           if ($scope.convertSelectedList.length > 0 && convertCancelled === false && convertBacked === false) {
             convertUsersInBatch();
           } else {
+            convertPending = false;
             if (convertBacked === false) {
               $scope.btnConvertLoad = false;
               $state.go('users.convert.results');
