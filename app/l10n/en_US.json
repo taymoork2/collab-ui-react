@@ -4729,6 +4729,10 @@
         "title": "Call",
         "notEnabledText": "Basic external calling and call routing features enabled for your organization."
       },
+      "care": {
+        "title": "Care",
+        "notEnabledText": "Use Spark Care services to collaborate with your customer. Customize care interfaces using configuration wizard."
+      },
       "roomSystem": {
         "title": "Room Systems",
         "currentTitle": "Online this week",
