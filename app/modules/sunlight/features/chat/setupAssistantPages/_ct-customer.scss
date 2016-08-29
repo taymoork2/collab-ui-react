@@ -280,12 +280,12 @@
     }
   }
   .ct-input-error {
-    color: $color-negative-dark;
+    color: $color-alerts-base;
     padding-left: 1rem;
     padding-right: 1rem;
   }
+  .cs-input__messages {
+    padding-left: 1rem;
+  }
 }
 
-.cs-input__messages {
-  padding-left: 1rem;
-}

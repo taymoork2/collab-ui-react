@@ -169,6 +169,35 @@ describe('Controller: customerAdministratorDetailCtrl', function () {
     });
   });
 
+  describe('Upon AddAdmin : ', function () {
+    beforeEach(function () {
+      CustomerAdministratorService.addCustomerAdmin = jasmine.createSpy('CustomerAdministratorService').and.returnValue($q.when({
+        userName: 'frank.sinatra+sinatrahelpdesk@gmail.com',
+        emails: [{
+          primary: true,
+          type: 'work',
+          value: 'frank.sinatra+sinatrahelpdesk@gmail.com'
+        }],
+        name: {
+          givenName: 'Frank',
+          familyName: 'Sinatra'
+        },
+        displayName: 'Frank Sinatra',
+        id: 'd3434d78-26452-445a2-845d8-4c1816565b3f0a',
+        avatarSyncEnabled: false
+      }));
+      initController();
+    });
+
+    it('should patch Sales_admin role if user does not have roles from CI', function () {
+      controller.users = testUsers;
+      controller.administrators = [];
+      controller.addAdmin('Frank Sinatra').then(function () {
+        expect(CustomerAdministratorService.patchSalesAdminRole()).toHaveBeenCalled();
+      });
+    });
+  });
+
   describe('addAdmin when admin has full-admin or sales-admin role: ', function () {
     beforeEach(function () {
       CustomerAdministratorService.addCustomerAdmin = jasmine.createSpy('CustomerAdministratorService').and.returnValue($q.when({

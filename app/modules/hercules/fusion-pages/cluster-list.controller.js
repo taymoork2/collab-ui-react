@@ -6,7 +6,7 @@
     .controller('FusionClusterListController', FusionClusterListController);
 
   /* @ngInject */
-  function FusionClusterListController($filter, $state, $translate, hasF410FeatureToggle, hasMediaFeatureToggle, FusionClusterService, XhrNotificationService, WizardFactory) {
+  function FusionClusterListController($filter, $modal, $state, $translate, hasF237FeatureToggle, hasF410FeatureToggle, hasMediaFeatureToggle, FusionClusterService, XhrNotificationService, WizardFactory) {
     if (!hasF410FeatureToggle) {
       // simulate a 404
       $state.go('login');
@@ -23,6 +23,7 @@
       filterValue: 'all',
       count: 0
     };
+    vm.showCreateResourceGroupLink = hasF237FeatureToggle;
 
     if (hasMediaFeatureToggle) {
       vm.filters = [{
@@ -48,6 +49,7 @@
     vm.openService = openService;
     vm.openSettings = openSettings;
     vm.addResource = addResource;
+    vm.addResourceGroup = addResourceGroup;
     vm._helpers = {
       formatTimeAndDate: FusionClusterService.formatTimeAndDate,
       hasServices: hasServices
@@ -201,6 +203,15 @@
       var wizard = WizardFactory.create(initialState);
       $state.go(initialState.currentStateName, {
         wizard: wizard
+      });
+    }
+
+    function addResourceGroup() {
+      $modal.open({
+        type: 'modal',
+        controller: 'AddResourceGroupController',
+        controllerAs: 'vm',
+        templateUrl: 'modules/hercules/fusion-pages/add-resource-group/add-resource-group.html'
       });
     }
   }

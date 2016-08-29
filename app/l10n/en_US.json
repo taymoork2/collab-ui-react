@@ -1710,6 +1710,7 @@
         "settings": "Settings",
         "all": "All",
         "add-resource": "Add Resource",
+        "add-resource-group": "Create new resource group",
         "expressway": "Expressway",
         "mediafusion": "Media",
         "no-services": "No services"
@@ -1742,8 +1743,27 @@
             "title": "Enter a name for the Hybrid Media Node",
             "help": "The cluster name is only used for display purposes."
           },
-          "end": {
-          }
+          "end": {}
+        }
+      },
+      "add-resource-group": {
+        "title": "Create new Resource Group",
+        "name": {
+          "title": "Resource Group Details",
+          "description": "Resource groups are a set of clusters that you may assign users to.",
+          "subtitle": "Resource Group Name",
+          "placeholder": "Enter name"
+        },
+        "release-channel": {
+          "title": "Release Channel",
+          "description": "All the Hybrid services in the Resource Group will run on this release channel.",
+          "stable": "Stable",
+          "stableHelpText": "The official release software for Hybrid Services",
+          "beta": "Beta",
+          "betaHelpText": "If you want your users to test new features before they are released",
+          "latest": "Latest",
+          "latestHelpText": "For developers and early adopters",
+          "error": "Could not create the Resource Group"
         }
       }
     },
@@ -2901,6 +2921,7 @@
     "trialTerms": "Terms of Trial",
     "trialOverview": "Trial",
     "webexOverview": "WebEx",
+    "webexSiteCount": "{count, plural, one{# more site} other{# more sites}}",
     "licenses": "Number of Licenses",
     "totalQuantity": "Total Quantity",
     "totalLicenses": "Total Licenses",
@@ -2954,7 +2975,9 @@
     "filterSelectPlaceholder": "Select a filter...",
     "filterTrialAccounts": "Trial Accounts",
     "filterPurchasedAccounts": "Purchased Accounts",
-    "filterExpiredAccounts": "Expired Accounts"
+    "filterExpiredAccounts": "Expired Accounts",
+    "subscriptions": "Subscription Info",
+    "viewSubscriptionInfo": "View Subscription Info"
   },
   "customerAdminPanel": {
     "addAdministrators": "Add Administrators",
@@ -2968,6 +2991,14 @@
     "deleteConfirmation": "Are you sure you want to remove {{pattern}}'s Administrator Privileges?",
     "noResultsError": "No results found",
     "tooManyResultsError": "Search returned too many results. Be more specific to find user"
+  },
+  "customerSubscriptions": {
+    "customerInfo": "Customer Info",
+    "partnerAdmin": "Partner Admins",
+    "webexSubscriptions": "Webex Subscriptions",
+    "noWebexSubscriptions": "No Webex Subscriptions",
+    "emailSubscriptionInfo": "Email Subscription Info",
+    "emailSubscriptionInfoDetail": "Send subscription info to another contact using your email client. You can also copy the subscription into your clipboard."
   },
   "didAddModal": {
     "title": "Add Phone Numbers (Optional)"
@@ -3501,6 +3532,7 @@
       "noAlarms": "No alarms reported",
       "hostImpact": "Host Impacted",
       "nodeImpact": "Node Impacted",
+      "nodesImpact": "Nodes Impacted",
       "raised": "Raised"
     },
     "add-resource-dialog": {
@@ -3540,7 +3572,7 @@
       "noProceed-helptext": "(Software will automatically download)",
       "noInfo": "Install and configure the software on your server and return to Cisco Cloud Collaboration Management to register your Hybrid Media Node.",
       "noRetryInfo": "Software did not automatically download? <a href='https://7f3b835a2983943a12b7-f3ec652549fc8fa11516a139bfb29b79.ssl.cf5.rackcdn.com/Media-Fusion-Management-Connector/mfusion.ova'>Try Again.</a>",
-      "noDesc1": "For detailed on installation and configuration, visit ",
+      "noDesc1": "For details on installation and configuration, visit ",
       "noDesc2": "Help Central.",
       "noDesc3": "After installation and configuration is complete, return to Cloud Collaboration Management and register your Hybrid Media Node.",
       "yesInfo": "Assign your Hybrid Media Node to a cluster and enter the hostname or IP address."
@@ -3692,6 +3724,7 @@
     "defaultNotWebExAdminError": "You have not yet been provisioned to this site as an administrator. This process may take a moment.",
     "defaultAccessError": "Unable to access server at this time.",
     "defaultDbMismatchError": "User account changes are being synchronized among the servers. This process may take a while.",
+    "defaultNoNavUrlError": "Invalid data encountered",
     "defaultReloadMsg": "Please try reloading the page."
   },
   "webexUserSettingLabels": {

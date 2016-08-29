@@ -481,13 +481,24 @@
       return (configuredTypes.length === uniqueConfiguredTypes.length);
     }
 
+    function areAllFixedFieldsValid() {
+      return isValidSinglelineField(vm.getAttributeParam('value', 'header', 'welcomeHeader'))
+          && isValidSinglelineField(vm.getAttributeParam('value', 'organization', 'welcomeHeader'));
+    }
+
+    function areAllDynamicFieldsValid() {
+      return _.reduce(_.map(nonHeaderFieldNames, function (fieldName) {
+        return isValidSinglelineField(vm.getAttributeParam('value', 'label', fieldName))
+                && isValidSinglelineField(vm.getAttributeParam('value', 'hintText', fieldName));
+      }), function (x, y) { return x && y; }, true);
+    }
+
     vm.validateType = function (selectedType) {
       return !(selectedType && isSelectedTypeDuplicate(selectedType));
     };
 
     function isCustomerInformationPageValid() {
-      // all customer info page validations will be here
-      return areAllTypesUnique();
+      return areAllTypesUnique() && areAllFixedFieldsValid() && areAllDynamicFieldsValid();
     }
 
     function nextButton() {
