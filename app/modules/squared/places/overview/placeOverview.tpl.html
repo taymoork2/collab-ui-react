@@ -28,7 +28,7 @@
         <ul>
           <li class="feature" ng-repeat="device in $ctrl.currentPlace.devices ">
             <a ng-click="$ctrl.showDeviceDetails(device)">
-              <i class="fa fa-circle device-status" ng-class="device.cssColorClass"></i>
+              <i class="icon icon-circle status-indicator" ng-class="device.cssColorClass"></i>
               <span class="feature-name">{{device.product}}</span>
               <i class="feature-arrow"></i>
             </a>
