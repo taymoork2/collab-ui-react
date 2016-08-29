@@ -131,7 +131,7 @@
     "categoryField": "dummyData",
     "categoryAxis": "dummyData",
     "export": "dummyData",
-    "mouseWheelZoomEnabled": true,
+    "mouseWheelZoomEnabled": false,
     "chartCursor": {
       "cursorColor": "#55bb76",
       "categoryBalloonDateFormat": "JJ:NN, DD MMMM",

@@ -4,7 +4,7 @@ describe('Partner Service -', function () {
   beforeEach(angular.mock.module('Core'));
   beforeEach(angular.mock.module('Huron'));
 
-  var $httpBackend, $q, $translate, Analytics, Auth, Authinfo, Config, PartnerService, $scope, TrialService, UrlConfig;
+  var $httpBackend, $q, $translate, $scope, Analytics, Auth, Authinfo, Config, PartnerService, TrialService, UrlConfig;
 
   var testData;
 
@@ -21,6 +21,7 @@ describe('Partner Service -', function () {
   });
 
   beforeEach(inject(function (_$httpBackend_, _$q_, $rootScope, _$translate_, _Analytics_, _Auth_, _Authinfo_, _Config_, _PartnerService_, _TrialService_, _UrlConfig_) {
+    $scope = $rootScope.$new();
     $httpBackend = _$httpBackend_;
     $q = _$q_;
     $translate = _$translate_;
@@ -29,11 +30,12 @@ describe('Partner Service -', function () {
     Authinfo = _Authinfo_;
     Config = _Config_;
     PartnerService = _PartnerService_;
-    $scope = $rootScope.$new();
     TrialService = _TrialService_;
     UrlConfig = _UrlConfig_;
+
     testData = getJSONFixture('core/json/partner/partner.service.json');
     spyOn(Auth, 'getAuthorizationUrlList').and.returnValue($q.when({}));
+    spyOn(Analytics, 'trackUserPatch');
   }));
 
   afterEach(function () {
@@ -250,15 +252,12 @@ describe('Partner Service -', function () {
   });
 
   describe('modifyManagedOrgs function', function () {
-    it('should not call a patch if organization is matched', function () {
+    beforeEach(function () {
       Auth.getAuthorizationUrlList.and.returnValue($q.when(testData.getAuthorizationUrlListResponse));
-      PartnerService.modifyManagedOrgs(testData.getAuthorizationUrlListResponse.data.managedOrgs[0].orgId);
       $scope.$apply();
     });
 
     it('should call a patch if organization is not matched', function () {
-      spyOn(Analytics, 'trackUserPatch');
-      Auth.getAuthorizationUrlList.and.returnValue($q.when(testData.getAuthorizationUrlListResponse));
       PartnerService.modifyManagedOrgs('b3f09da0-7729-47a5-8091-1aa07a3c8671');
       $httpBackend.expectPATCH('https://identity.webex.com/identity/scim/12345/v1/Users/' + testData.getAuthorizationUrlListResponse.data.uuid).respond(200, testData.getAuthorizationUrlListResponse);
       $httpBackend.flush();

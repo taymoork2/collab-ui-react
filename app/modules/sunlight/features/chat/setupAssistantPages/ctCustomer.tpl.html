@@ -17,7 +17,7 @@
             <label title="{{careChatSA.getAttributeParam('value', 'header', 'welcomeHeader')}}"
                    class="welcomeText textOverflow">{{careChatSA.getAttributeParam('value', 'header', 'welcomeHeader')}}</label>
             <label title="{{careChatSA.orgName}}"
-                   class="orgText textOverflow">{{careChatSA.orgName}}</label>
+                   class="orgText textOverflow">{{careChatSA.template.configuration.pages.customerInformation.fields.welcomeHeader.attributes[1].value}}</label>
           </header>
 
           <section>
@@ -72,13 +72,16 @@
               </label>
 
               <input
-                ng-if="attribute.name === 'header' ||
-                attribute.name === 'label' ||
-                attribute.name === 'hintText'"
+                ng-if="attribute.name === 'header' || attribute.name === 'label' || attribute.name === 'hintText'"
                 id="attribute.fieldName"
                 class="h5 inputField ct-attribute-field-textbox large-11"
                 type="text"
                 ng-model="attribute.value"
+                cs-input
+                name="{{attribute.name }}"
+                cs-input-messages="careChatSA.singleLineValidationMessage"
+                ng-maxlength="careChatSA.lengthConstants.singleLineMaxCharLimit"
+                ng-model-options="{ allowInvalid: true }"
               />
 
               <div ng-if="attribute.name === 'required'" class="h6 cs-radio-group ct-attribute-field-radio">
@@ -138,12 +141,16 @@
               <div class="row ct-attribute-row ct-customer-info-category-input right-inner-addon" ng-if="attribute.name == 'type' && attribute.value.id == 'category'">
                 <i class="icon icon-add-contain" ng-click="careChatSA.addCategoryOption()"></i>
                 <input
+                        cs-input
+                        name="categoryTextBox"
                         id="categoryTextBox"
                         class="h5 inputField ct-attribute-field-textbox large-11 ng-pristine ng-valid ng-scope ng-not-empty ng-touched icon-add-contain"
                         type="text"
                         ng-keypress="careChatSA.onEnterKey($event)"
                         ng-model="careChatSA.categoryOptionTag"
-                        maxlength="25"/>
+                        cs-input-messages="careChatSA.singleLineValidationMessage"
+                        ng-maxlength="careChatSA.lengthConstants.singleLineMaxCharLimit"
+                />
                 <div class="category-tokens">
                   <cs-token-field
                           tokenfieldid="careChatSA.categoryTokensId"
@@ -159,7 +166,13 @@
                <input id="orgText"
                       class="h5 inputField ct-attribute-field-textbox large-11"
                       type="text"
-                      ng-model="careChatSA.orgName"/>
+                      ng-model="careChatSA.template.configuration.pages.customerInformation.fields.welcomeHeader.attributes[1].value"
+                      cs-input
+                      name="orgText"
+                      cs-input-messages="careChatSA.singleLineValidationMessage"
+                      ng-maxlength="careChatSA.lengthConstants.singleLineMaxCharLimit"
+                      ng-model-options="{ allowInvalid: true }"
+                />
               </div>
           </section>
         </article>

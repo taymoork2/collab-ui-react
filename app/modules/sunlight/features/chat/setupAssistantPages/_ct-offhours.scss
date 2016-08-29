@@ -40,6 +40,7 @@
 
   .offhours-preview-message {
     height: 7rem;
+    overflow: hidden;
     @include vr-spacing(pt, 1);
     @include vr-spacing(mh, 4);
   }
@@ -85,7 +86,7 @@
   }
 
   .business-hours-message.h4 {
-    @include vr-spacing(pt, .5);
+    @include vr-spacing(pt, 1.5);
   }
 
   .day-picker {

@@ -357,6 +357,15 @@
         .then(extractItems);
     }
 
+    function getServiceOrder(orgId) {
+      if (useMock()) {
+        return deferredResolve(HelpdeskMockData.serviceOrder);
+      }
+      return $http
+        .get(urlBase + 'helpdesk/serviceorder/' + encodeURIComponent(orgId))
+        .then(extractData);
+    }
+
     function elevateToReadonlyAdmin(orgId) {
       return $http.post(urlBase + 'helpdesk/organizations/' + encodeURIComponent(orgId) + '/actions/elevatereadonlyadmin/invoke');
     }
@@ -393,6 +402,7 @@
       getHybridServices: getHybridServices,
       resendInviteEmail: resendInviteEmail,
       getWebExSites: getWebExSites,
+      getServiceOrder: getServiceOrder,
       getCloudberryDevice: getCloudberryDevice,
       getOrgDisplayName: getOrgDisplayName,
       findAndResolveOrgsForUserResults: findAndResolveOrgsForUserResults,
