@@ -2,9 +2,9 @@
   'use strict';
 
   /* @ngInject */
-  function DeleteClusterSettingControllerV2(cluster, $modalInstance, $filter, MediaClusterServiceV2, $state, $translate, XhrNotificationService, Notification) {
+  function DeleteClusterSettingControllerV2($q, cluster, $modalInstance, $filter, MediaClusterServiceV2, $state, $translate, XhrNotificationService, Notification) {
     var vm = this;
-    vm.selectPlaceholder = 'Select a cluster';
+    vm.selectPlaceholder = 'Create or select cluster';
     vm.options = [];
     vm.close = $modalInstance.close;
     vm.selectModel = {};
@@ -18,6 +18,7 @@
     vm.failedToDelete = false;
     vm.hosts = '';
     vm.ngDisable = false;
+    vm.canContinue = canContinue;
 
     vm.deleteAreYouSure = $translate.instant(
       'mediaFusion.deleteGroup.message', {
@@ -78,29 +79,69 @@
     }
 
     function moveNodesTocluster() {
+      var loopPromises = createCluster();
+      var promise = $q.all(loopPromises);
+      promise.then(function (response) {
+        var clusterArray = _.compact(response);
+        for (var i = 0; i < vm.hosts.length; i++) {
+          var hostname = vm.hosts[i].hostname;
+          var toClusterName = vm.selectModel[hostname];
+          moveHost(hostname, toClusterName, clusterArray);
+        }
+      });
+    }
 
+    var recoverPromise = function () {
+      return undefined;
+    };
+
+    function createCluster() {
+      var loopPromises = [];
+      var clusterListNames = [];
       for (var i = 0; i < vm.hosts.length; i++) {
         var hostname = vm.hosts[i].hostname;
         var toClusterName = vm.selectModel[hostname];
-        moveHost(hostname, toClusterName);
+        var toCluster = $filter('filter')(vm.clusters, {
+          'name': toClusterName
+        }, true)[0];
+
+        if (!_.includes(clusterListNames, toClusterName)) {
+          if (angular.isDefined(toCluster)) {
+            var deferred = $q.defer();
+            loopPromises.push(deferred.promise.catch(recoverPromise));
+            var response = { 'data': toCluster };
+            deferred.resolve(response);
+          } else {
+            var promise = MediaClusterServiceV2.createClusterV2(toClusterName, 'stable');
+            loopPromises.push(promise.catch(recoverPromise));
+          }
+          clusterListNames.push(toClusterName);
+        }
       }
+      return loopPromises;
     }
 
-    function moveHost(hostname, toClusterName) {
+    function moveHost(hostname, toClusterName, response) {
       var host;
       var fromCluster;
       var toCluster;
+
+      toCluster = _.find(response, function (res) {
+        return res.data.name === toClusterName;
+      });
 
       host = $filter('filter')(vm.hosts, {
         'hostname': hostname
       }, true)[0];
 
-      toCluster = $filter('filter')(vm.clusters, {
-        'name': toClusterName
-      }, true)[0];
-
-      fromCluster = vm.cluster;
-      MediaClusterServiceV2.moveV2Host(host.id, fromCluster.id, toCluster.id).success(incrementSuccessCount(host, toCluster)).error(incrementFailureCount(host));
+      if (!angular.isDefined(toCluster)) {
+        vm.errorCount++;
+        vm.failedHostMove.push(host.hostname);
+        deleteCluster();
+      } else {
+        fromCluster = vm.cluster;
+        MediaClusterServiceV2.moveV2Host(host.id, fromCluster.id, toCluster.data.id).success(incrementSuccessCount(host, toCluster)).error(incrementFailureCount(host));
+      }
     }
 
     function incrementSuccessDefuse() {
@@ -115,7 +156,7 @@
         vm.successCount++;
         vm.successMove = $translate.instant('mediaFusion.clusters.movedTo', {
           nodeName: host.hostname,
-          clusterName: toCluster.name
+          clusterName: toCluster.data.name
         });
         Notification.notify(vm.successMove, 'success');
         deleteCluster();
@@ -160,7 +201,15 @@
           });
       }
     }
-
+    function canContinue() {
+      for (var i = 0; i < vm.hosts.length; i++) {
+        var key = vm.hosts[i].hostname;
+        if (vm.selectModel[key] == vm.selectPlaceholder || vm.selectModel[key] == '') {
+          return false;
+        }
+      }
+      return true;
+    }
   }
 
   angular

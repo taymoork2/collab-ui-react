@@ -39,9 +39,8 @@ describe('Controller: DeleteClusterSettingControllerV2', function () {
     Notification = _Notification_;
     $q = _$q_;
     httpBackend = $httpBackend;
-    httpBackend
-      .when('GET', 'l10n/en_US.json')
-      .respond({});
+    httpBackend.when('GET', /^\w+.*/).respond({});
+    httpBackend.when('POST', /^\w+.*/).respond({});
 
     spyOn(MediaClusterServiceV2, 'get').and.returnValue({
       then: _.noop
@@ -92,6 +91,9 @@ describe('Controller: DeleteClusterSettingControllerV2', function () {
     spyOn(MediaClusterServiceV2, 'moveV2Host').and.callThrough();
     controller.continue();
     expect(controller.isMove).toBe(true);
+    httpBackend.flush();
+    httpBackend.verifyNoOutstandingExpectation();
+    httpBackend.verifyNoOutstandingRequest();
     expect(MediaClusterServiceV2.moveV2Host).toHaveBeenCalled();
     expect(MediaClusterServiceV2.moveV2Host.calls.count()).toEqual(2);
   });
