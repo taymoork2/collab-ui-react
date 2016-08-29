@@ -230,6 +230,9 @@
     width: 100%;
     .ct-customer-info-category-input {
       @include vr-spacing(mt, 0.25);
+      .cs-input__messages {
+        padding-left: 1rem;
+      }
     }
   }
 
@@ -286,6 +289,3 @@
   }
 }
 
-.cs-input__messages {
-  padding-left: 1rem;
-}
