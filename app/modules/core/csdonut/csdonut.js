@@ -75,7 +75,7 @@
 
           if (typeof hideusage !== 'undefined' && hideusage === true) {
             $scope.text.content = '---';
-            $scope.colours = ['#43a942'];
+            $scope.colours = ['lightgray'];
             $scope.text.color = '#6A6B6C';
             $scope.dataset = [1];
           } else if (typeof unlimited !== 'undefined' && unlimited === true) {
