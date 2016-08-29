@@ -25,7 +25,7 @@
     <div ng-if="sync.dataStates.loaded === sync.dataStatus">
       <div class="right">
         <span class="icon icon-refresh" ng-click="sync.refreshStatus()"></span><span class="right-5" ng-click="sync.refreshStatus()">{{sync.refresh}}</span>
-        | <a href="{{sync.orgAdminUrl}}" target="_blank" translate="messengerCiSync.orgAdminLinkText"></a>
+        | <a tooltip-placement="left" tooltip="{{sync.orgAdminLinkTooltip}}" href="{{sync.orgAdminUrl}}" target="_blank" translate="messengerCiSync.orgAdminLinkText"></a>
       </div>
 
       <div class="col-md-4 sync-stats">
