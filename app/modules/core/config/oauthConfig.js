@@ -114,12 +114,19 @@
       return 'https://idbroker.webex.com/idb/oauth2/v1/tokens/user/';
     }
 
-    function getOauthAccessCodeUrl(refresh_token) {
+    function getOauthAccessCodeUrl(refresh_token, options) {
+      // If the app is trying to refresh the access token, oauth2Scope param is not needed
       var params = [
         refresh_token,
-        oauth2Scope
+        ''
       ];
-      return Utils.sprintf(config.oauthUrl.oauth2AccessCodeUrlPattern, params);
+      var oauthAccessCodeUrl = Utils.sprintf(config.oauthUrl.oauth2AccessCodeUrlPattern, params);
+
+      if (_.has(options, 'pattern') && _.has(options, 'params')) {
+        oauthAccessCodeUrl = Utils.sprintf(options.pattern, options.params);
+      }
+
+      return oauthAccessCodeUrl;
     }
 
     function getNewAccessTokenPostData(code) {

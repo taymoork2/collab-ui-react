@@ -183,6 +183,8 @@ describe('Controller: ServiceSetup', function () {
       controller.form = form;
       $scope.$apply();
       $httpBackend.flush();
+
+      controller.firstTimeSetup = true;
     }));
     describe('auto attendants returns an array with an element', function () {
       it('should set the disableExtensions property as true', function () {
@@ -917,6 +919,18 @@ describe('Controller: ServiceSetup', function () {
 
         expect(controller.siteAndSteeringDigitErrorValidation('', '', localscope)).toBe(true);
       });
+
+      it('should change the change site steering digit and send with the update site', function () {
+        controller.model.voicemailPrefix.value = '1';
+        controller.initNext();
+        $scope.$apply();
+        expect(ServiceSetup.updateSite).toHaveBeenCalledWith(model.site.uuid,
+          {
+            siteSteeringDigit: '1',
+            voicemailPilotNumber: 'undefined8040506021015100215030504070415',
+            voicemailPilotNumberGenerated: 'true'
+          });
+      });
     });
   });
 
@@ -966,6 +980,8 @@ describe('Controller: ServiceSetup', function () {
       controller.form = form;
       $scope.$apply();
       $httpBackend.flush();
+
+      controller.firstTimeSetup = true;
     }));
     describe('Site is created and voicemail is set with DID featuretoggle OFF', function () {
       it('voicemailPilotNumberGenerated is false', function () {
@@ -1066,6 +1082,8 @@ describe('Controller: ServiceSetup', function () {
 
       $scope.$apply();
       $httpBackend.flush();
+
+      controller.firstTimeSetup = true;
     }));
     describe('Site Create/Update and voicemail update Tests', function () {
 
@@ -1159,6 +1177,8 @@ describe('Controller: ServiceSetup', function () {
 
       $scope.$apply();
       $httpBackend.flush();
+
+      controller.firstTimeSetup = true;
     }));
     describe('Site and voicemail update with generated Voice Mail Pilot with Feature Toggle ON Tests', function () {
 

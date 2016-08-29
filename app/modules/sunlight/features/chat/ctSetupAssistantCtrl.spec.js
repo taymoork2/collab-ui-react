@@ -65,6 +65,32 @@ describe('Care Chat Setup Assistant Ctrl', function () {
         value: { id: 'name' }
       }]
     } };
+  var customerInfoWithLongAttributeValue = {
+    'welcomeHeader': {
+      'attributes': [
+        { 'name': 'header', 'value': 'Welcome to' },
+        { 'name': 'organization', 'value': Array(52).join("c") }
+      ]
+    },
+    'field1': {
+      'attributes': [
+        { 'name': 'label', 'value': 'Name' },
+        { 'name': 'hintText', 'value': 'Something' },
+        { 'name': 'type', 'value': { id: 'name' } }
+      ] },
+    'field2': {
+      'attributes': [
+        { 'name': 'label', 'value': 'Email' },
+        { 'name': 'hintText', 'value': Array(52).join("d") },
+        { 'name': 'type', 'value': { id: 'email' } }
+      ] },
+    'field3': {
+      'attributes': [
+        { 'name': 'label', 'value': 'SomethingElse' },
+        { 'name': 'hintText', 'value': 'SomethingElse' },
+        { 'name': 'type', 'value': { id: 'custom' } }
+      ] }
+  };
 
   var selectedDaysByDefault = businessHours.selectedDaysByDefault;
   var defaultTimeZone = businessHours.defaultTimeZone;
@@ -399,6 +425,11 @@ describe('Care Chat Setup Assistant Ctrl', function () {
 
     it("next button should get disabled when duplicate types are configured in customerInfo page", function () {
       controller.template.configuration.pages.customerInformation.fields = duplicateFieldTypeData;
+      expect(controller.nextButton()).toEqual(false);
+    });
+
+    it("next button should get disabled when attributes of customerInfo: Static and Dynamic fields have value > 50 chars", function () {
+      controller.template.configuration.pages.customerInformation.fields = customerInfoWithLongAttributeValue;
       expect(controller.nextButton()).toEqual(false);
     });
   });

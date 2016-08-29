@@ -5,6 +5,12 @@
       <cs-searchfilter filters="resourceList.filters" set-filter-fn="resourceList.setFilter(filter)" search-item-fn="resourceList.searchData(searchStr)" placeholder-text="{{resourceList.placeholder.name}}" ng-model="resourceList.placeholder.count"></cs-searchfilter>
     </cs-page-sub-header-left>
     <cs-page-sub-header-right>
+      <div ng-show="resourceList.showCreateResourceGroupLink">
+        <button class="btn btn--link"
+                type="button"
+                translate="hercules.fusion.list.add-resource-group"
+                ng-click="resourceList.addResourceGroup()"></button>
+      </div>
       <button class="btn btn--people add-resource-button"
               type="button"
               translate="hercules.fusion.list.add-resource"

@@ -32,7 +32,7 @@ class PlaceOverviewCtrl {
       let service: IFeature = {
         name: this.$translate.instant('onboardModal.call'),
         icon: this.$translate.instant('onboardModal.call'),
-        state: 'place-overview.communication',
+        state: 'communication',
         detail: this.$translate.instant('onboardModal.callFree'),
         actionsAvailable: true
       }
@@ -63,6 +63,10 @@ class PlaceOverviewCtrl {
       });
     }
     return hasEntitlement;
+  }
+
+  public serviceActions(feature) {
+    this.$state.go('place-overview.' + feature);
   }
 }
 angular

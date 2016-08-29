@@ -36,6 +36,7 @@
     vm.init = init;
     vm.save = save;
     vm.resetSettings = resetSettings;
+    vm.openSaveModal = openSaveModal;
 
     vm._voicemailNumberWatcher = _voicemailNumberWatcher;
     vm._voicemailEnabledWatcher = _voicemailEnabledWatcher;
@@ -1485,7 +1486,7 @@
         && (vm.model.site.siteSteeringDigit.siteDialDigit !== vm.previousModel.site.siteSteeringDigit.siteDialDigit
         || vm.model.site.extensionLength !== vm.previousModel.site.extensionLength
         || vm.model.site.siteCode !== vm.previousModel.site.siteCode)) {
-        var postalCode = vm.model.site.siteSteeringDigit.siteDialDigit + '-' + vm.model.site.siteCode + '-' + vm.model.site.extensionLength;
+        var postalCode = [vm.model.site.siteSteeringDigit.siteDialDigit, vm.model.site.siteCode, vm.model.site.extensionLength].join('-');
         return ServiceSetup.updateVoicemailPostalcode(postalCode, vm.voicemailUserTemplate.objectId)
           .catch(function (response) {
             errors.push(Notification.processErrorResponse(response, 'serviceSetupModal.error.updateVoicemailPostalCode'));
@@ -1518,6 +1519,20 @@
           }
           vm.loading = false;
           savedModel = angular.copy(vm.model);
+        });
+    }
+
+    function openSaveModal() {
+      return ModalService.open({
+        title: $translate.instant('serviceSetupModal.saveModal.title'),
+        message: $translate.instant('serviceSetupModal.saveModal.message1') + '<br/><br/>'
+          + $translate.instant('serviceSetupModal.saveModal.message2'),
+        close: $translate.instant('common.yes'),
+        dismiss: $translate.instant('common.no')
+      })
+        .result.then(save)
+        .catch(function (errors) {
+          Notification.notify(errors, 'error');
         });
     }
 
