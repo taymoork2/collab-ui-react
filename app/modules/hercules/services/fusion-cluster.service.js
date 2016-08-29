@@ -16,7 +16,6 @@
       deprovisionConnector: deprovisionConnector,
       getAllProvisionedConnectorTypes: getAllProvisionedConnectorTypes,
       getAll: getAll,
-      getAllNonMediaClusters: getAllNonMediaClusters,
       get: get,
       buildSidepanelConnectorList: buildSidepanelConnectorList,
       setUpgradeSchedule: setUpgradeSchedule,
@@ -45,19 +44,10 @@
         .then(extractDataFromResponse);
     }
 
-    function getAll() {
+    function getAll(options) {
       return $http
         .get(UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '?fields=@wide')
         .then(extractClustersFromResponse)
-        .then(addServicesStatuses)
-        .then(sort);
-    }
-
-    function getAllNonMediaClusters() {
-      return $http
-        .get(UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '?fields=@wide')
-        .then(extractClustersFromResponse)
-        .then(removeMediaClusters)
         .then(addServicesStatuses)
         .then(sort);
     }
@@ -89,19 +79,6 @@
 
     function extractDataFromResponse(res) {
       return res.data;
-    }
-
-    function removeMediaClusters(clusters) {
-      return _.filter(clusters, function (cluster) {
-        return cluster.targetType !== 'mf_mgmt';
-      });
-      /*var clustersWithOutMedia = [];
-      _.forEach(clusters, function (cluster) {
-        if (cluster.targetType !== 'mf_mgmt') {
-          clustersWithOutMedia.push(cluster);
-        }
-      });
-      return clustersWithOutMedia;*/
     }
 
     function addServicesStatuses(clusters) {
