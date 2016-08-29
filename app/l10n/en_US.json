@@ -2921,6 +2921,7 @@
     "trialTerms": "Terms of Trial",
     "trialOverview": "Trial",
     "webexOverview": "WebEx",
+    "webexSiteCount": "{count, plural, one{# more site} other{# more sites}}",
     "licenses": "Number of Licenses",
     "totalQuantity": "Total Quantity",
     "totalLicenses": "Total Licenses",
@@ -3723,6 +3724,7 @@
     "defaultNotWebExAdminError": "You have not yet been provisioned to this site as an administrator. This process may take a moment.",
     "defaultAccessError": "Unable to access server at this time.",
     "defaultDbMismatchError": "User account changes are being synchronized among the servers. This process may take a while.",
+    "defaultNoNavUrlError": "Invalid data encountered",
     "defaultReloadMsg": "Please try reloading the page."
   },
   "webexUserSettingLabels": {

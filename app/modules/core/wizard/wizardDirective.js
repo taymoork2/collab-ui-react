@@ -466,7 +466,7 @@
       var cancelSubTabWatch = scope.$watch('wizard.current.subTab', recompile);
 
       function recompile(newValue, oldValue) {
-        if (newValue !== oldValue) {
+        if (newValue !== oldValue && oldValue !== undefined) {
           cancelTabWatch();
           cancelSubTabWatch();
           $timeout(function () {
