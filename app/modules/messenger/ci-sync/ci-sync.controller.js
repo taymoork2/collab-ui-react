@@ -272,13 +272,13 @@
 
   function msgrTextStatusOn() {
     return {
-      template: '<p style="font-size:0.7em;display:inline;" translate="common.status"></p><p style="font-size:0.7em;display:inline;"> : </p><p style="font-size:0.7em;display:inline;" translate="common.on"></p>'
+      templateUrl: 'modules/messenger/ci-sync/ciSyncTextStatusOn.html'
     };
   }
 
   function msgrTextStatusOff() {
     return {
-      template: '<p style="font-size:0.7em;display:inline;" translate="common.status"></p><p style="font-size:0.7em;display:inline;"> : </p><p style="font-size:0.7em;display:inline;" translate="common.off"></p>'
+      templateUrl: 'modules/messenger/ci-sync/ciSyncTextStatusOff.html'
     };
   }
 })();
