@@ -54,9 +54,12 @@
       return deferred;
     }
 
-    function getCustomerAccount(org) {
-      var url = UrlConfig.getAdminServiceUrl() + 'customers?orgId=' + org;
-      return httpGET(url);
+    function getCustomerAccount(orgId) {
+      if (!orgId || orgId === '') {
+        return $q.reject('An Organization Id must be passed');
+      }
+      var url = UrlConfig.getAdminServiceUrl() + 'customers?orgId=' + orgId;
+      return $http.get(url);
     }
 
     function getNewAccessToken(params) {

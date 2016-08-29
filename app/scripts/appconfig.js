@@ -622,12 +622,12 @@
             }
           })
           /*.state('status', {
-            url: '/status-conponents',
-            templateUrl: 'modules/status/components/components.tpl.html',
-            controller: 'ComponentsCtrl',
-            controllerAs: 'componentsCtrl',
-            parent: 'main'
-          })*/
+           url: '/status-conponents',
+           templateUrl: 'modules/status/components/components.tpl.html',
+           controller: 'ComponentsCtrl',
+           controllerAs: 'componentsCtrl',
+           parent: 'main'
+           })*/
           .state('authentication.enable3rdPartyAuth', {
             parent: 'modal',
             views: {
@@ -910,26 +910,26 @@
             }
           })
 
-        //////////////////
+          //////////////////
 
-        .state('users.convert', {
-          parent: 'modal',
-          views: {
-            'modal@': {
-              controller: 'OnboardCtrl',
-              template: '<div ui-view="usersConvert"></div>'
-            },
-            'usersConvert@users.convert': {
-              templateUrl: 'modules/core/convertUsers/convertUsersModal.tpl.html',
-              resolve: {
-                modalInfo: function ($state) {
-                  $state.params.modalClass = 'convert-users';
-                  $state.params.modalId = 'convertDialog';
+          .state('users.convert', {
+            parent: 'modal',
+            views: {
+              'modal@': {
+                controller: 'OnboardCtrl',
+                template: '<div ui-view="usersConvert"></div>'
+              },
+              'usersConvert@users.convert': {
+                templateUrl: 'modules/core/convertUsers/convertUsersModal.tpl.html',
+                resolve: {
+                  modalInfo: function ($state) {
+                    $state.params.modalClass = 'convert-users';
+                    $state.params.modalId = 'convertDialog';
+                  }
                 }
               }
             }
-          }
-        })
+          })
           .state('users.convert.services', {
             views: {
               'usersConvert@users.convert': {
@@ -1092,6 +1092,12 @@
             template: '<div uc-single-number-reach></div>',
             data: {
               displayName: 'Single Number Reach'
+            }
+          })
+          .state('user-overview.communication.speedDials', {
+            template: '<div uc-speed-dials></div>',
+            data: {
+              displayName: 'Speed Dials'
             }
           })
           .state('user-overview.communication.internationalDialing', {
@@ -1607,8 +1613,7 @@
             params: {
               currentCustomer: {}
             },
-            data: {
-            }
+            data: {}
           })
           .state('customer-overview.externalNumbers', {
             controller: 'ExternalNumberDetailCtrl',
@@ -1619,8 +1624,7 @@
                 $state.get('customer-overview.externalNumbers').data.displayName = $translate.instant('customerPage.phoneNumbers');
               }
             },
-            data: {
-            }
+            data: {}
           })
           .state('customer-overview.customerAdministrators', {
             controller: 'CustomerAdministratorDetailCtrl',
@@ -1631,7 +1635,16 @@
                 $state.get('customer-overview.customerAdministrators').data.displayName = $translate.instant('customerPage.administrators');
               }
             },
-            data: {
+            data: {}
+          })
+          .state('customer-overview.customerSubscriptions', {
+            controller: 'CustomerSubscriptionsDetailCtrl',
+            controllerAs: 'customerSubscriptions',
+            templateUrl: 'modules/core/customers/customerSubscriptions/CustomerSubscriptionsDetail.tpl.html',
+            resolve: {
+              data: /* @ngInject */ function ($state, $translate) {
+                $state.get('customer-overview.customerSubscriptions').data.displayName = $translate.instant('customerPage.subscriptions');
+              }
             }
           })
           .state('customer-overview.pstnOrderOverview', {
@@ -1643,8 +1656,7 @@
                 $state.get('customer-overview.pstnOrderOverview').data.displayName = $translate.instant('customerPage.pstnOrders');
               }
             },
-            data: {
-            },
+            data: {},
             params: {
               currentCustomer: {}
             }
@@ -1658,8 +1670,7 @@
                 $state.get('customer-overview.meetingDetail').data.displayName = $translate.instant('customerPage.meetingLicenses');
               }
             },
-            data: {
-            },
+            data: {},
             params: {
               meetingLicenses: {}
             }
@@ -1688,8 +1699,7 @@
                 $state.get('customer-overview.pstnOrderDetail').data.displayName = $translate.instant('customerPage.pstnOrders');
               }
             },
-            data: {
-            },
+            data: {},
             params: {
               currentOrder: {}
             }
@@ -2543,7 +2553,7 @@
 
         $stateProvider
 
-          //V2 API changes
+        //V2 API changes
           .state('media-service-v2', {
             templateUrl: 'modules/mediafusion/media-service-v2/overview.html',
             controller: 'MediaServiceControllerV2',
