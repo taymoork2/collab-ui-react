@@ -72,11 +72,6 @@
 
     setLoadingStarted();
 
-    //load the feature toggle prior to creating the elements
-    FeatureToggleService.supports(FeatureToggleService.features.huronAAMediaUpload).then(function (result) {
-      AACommonService.setMediaUploadToggle(result);
-    });
-
     /////////////////////
 
     function setLoadingStarted() {
@@ -614,6 +609,13 @@
       }
     });
 
+    //load the feature toggle prior to creating the elements
+    function setUpFeatureToggles() {
+      return FeatureToggleService.supports(FeatureToggleService.features.huronAAMediaUpload).then(function (result) {
+        AACommonService.setMediaUploadToggle(result);
+      });
+    }
+
     function activate() {
       var aaName = $stateParams.aaName;
       AAUiModelService.initUiModel();
@@ -628,7 +630,7 @@
       // Define vm.ui.builder.ceInfo_name for editing purpose.
       vm.ui.builder.ceInfo_name = angular.copy(vm.ui.ceInfo.name);
 
-      AutoAttendantCeInfoModelService.getCeInfosList().then(getTimeZoneOptions).then(getSystemTimeZone)
+      AutoAttendantCeInfoModelService.getCeInfosList().then(setUpFeatureToggles).then(getTimeZoneOptions).then(getSystemTimeZone)
       .finally(function () {
         AutoAttendantCeMenuModelService.clearCeMenuMap();
         vm.aaModel = AAModelService.getAAModel();
