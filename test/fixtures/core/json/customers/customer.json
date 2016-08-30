@@ -1,0 +1,70 @@
+{
+  "customerOrgId": "1234-34534-afdagfg-425345-acac",
+  "customerName": "ControllerTestOrg",
+  "customerEmail": "customer123@cisco.com",
+  "communications": {
+    "isTrial": true,
+    "licenseId": 12345,
+    "daysLeft": -10,
+    "volume": 25
+  },
+  "conferencing": {
+    "isTrial": false,
+    "licenseId": 12345,
+    "daysLeft": "NaN",
+    "volume": 50
+  },
+  "messaging": {
+  },
+  "roomSystems": {
+    "isTrial": true,
+    "licenseId": 12345,
+    "daysLeft": 10,
+    "volume": 10
+  },
+  "webexCMR": {
+    "isTrial": true,
+    "licenseId": 12345,
+    "daysLeft": 15,
+    "volume": 50,
+    "siteUrl": "example.webex.com"
+  },
+  "licenseList": [{
+    "name": "webexCMR",
+    "isTrial": false,
+    "siteUrl": "testurl.webex.com",
+    "licenseId": 12345,
+    "daysLeft": "NaN",
+    "volume": 50
+  }, {
+    "name": "communications",
+    "isTrial": true,
+    "licenseId": 12345,
+    "daysLeft": -10,
+    "volume": 25
+  }, {
+    "name": "roomSystems",
+    "isTrial": true,
+    "licenseId": 12345,
+    "daysLeft": 10,
+    "volume": 10
+  }, {
+    "name": "conferencing",
+    "isTrial": false,
+    "licenseId": 12345,
+    "daysLeft": "NaN",
+    "volume": 50
+  }, {
+    "name": "webexCMR",
+    "isTrial": true,
+    "licenseId": 12345,
+    "daysLeft": 15,
+    "volume": 50,
+    "siteUrl": "example.webex.com"
+  }],
+  "webexEEConferencing": {},
+  "webexEventCenter": {},
+  "webexMeetingCenter": {},
+  "webexTrainingCenter": {},
+  "webexSupportCenter": {}
+}

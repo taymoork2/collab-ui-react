@@ -1465,6 +1465,19 @@
               displayName: 'Call'
             }
           })
+          .state('place-overview.communication.internationalDialing', {
+            template: '<international-dialing-comp owner-type="place" identifier="cisUuid"></international-dialing-comp>',
+            data: {
+              displayName: 'International Dialing'
+            },
+            resolve: {
+              lazy: /* @ngInject */ function lazyLoad($q, $ocLazyLoad) {
+                return $q(function resolveLogin(resolve) {
+                  require(['modules/huron/internationalDialing/internationalDialing.component'], loadModuleAndResolve($ocLazyLoad, resolve));
+                });
+              }
+            }
+          })
           .state('place-overview.communication.line-overview', {
             template: '<line-overview owner-type="place"></line-overview>',
             data: {
@@ -2241,6 +2254,9 @@
             controllerAs: 'resourceList',
             parent: 'main',
             resolve: {
+              hasF237FeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasF237ResourceGroups);
+              },
               hasF410FeatureToggle: /* @ngInject */ function (FeatureToggleService) {
                 return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridServicesResourceList);
               },
@@ -2341,6 +2357,9 @@
               wizard: null
             }
           })
+          .state('add-resource.mediafusion', {
+            abstract: true
+          })
           .state('add-resource.mediafusion.hostname', {
             parent: 'modalSmall',
             views: {
@@ -2383,9 +2402,6 @@
             params: {
               wizard: null
             }
-          })
-          .state('add-resource.mediafusion', {
-            abstract: true
           })
           .state('calendar-service', {
             templateUrl: 'modules/hercules/overview/overview.html',
