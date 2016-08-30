@@ -1465,6 +1465,19 @@
               displayName: 'Call'
             }
           })
+          .state('place-overview.communication.internationalDialing', {
+            template: '<international-dialing-comp owner-type="place" identifier="cisUuid"></international-dialing-comp>',
+            data: {
+              displayName: 'International Dialing'
+            },
+            resolve: {
+              lazy: /* @ngInject */ function lazyLoad($q, $ocLazyLoad) {
+                return $q(function resolveLogin(resolve) {
+                  require(['modules/huron/internationalDialing/internationalDialing.component'], loadModuleAndResolve($ocLazyLoad, resolve));
+                });
+              }
+            }
+          })
           .state('place-overview.communication.line-overview', {
             template: '<line-overview owner-type="place"></line-overview>',
             data: {

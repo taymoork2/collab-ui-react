@@ -6,7 +6,14 @@ export interface IFeature {
   actionsAvailable: boolean
 }
 
-class FeatureListCtrl {}
+class FeatureListCtrl {
+  featureActions: Function;
+  action(feature) {
+    this.featureActions({
+      feature: feature.state
+    });
+  }
+}
 
 angular
   .module('Core')
@@ -14,6 +21,7 @@ angular
     templateUrl: 'modules/core/components/featureList/featureList.tpl.html',
     controller: FeatureListCtrl,
     bindings: {
-      features: '<'
+      features: '<',
+      featureActions: '&'
     }
   })

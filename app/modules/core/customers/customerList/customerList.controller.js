@@ -245,7 +245,6 @@
     };
 
     var myOrgDetails = {};
-    var nonFreeLicenses = ['roomSystems', 'webex', 'care'];
 
     $scope.gridColumns = [];
 
@@ -707,29 +706,16 @@
 
     function isLicenseTypeFree(rowData, licenseTypeField) {
       return (isLicenseInfoAvailable(rowData.licenseList) && PartnerService.isLicenseFree(getLicenseObj(rowData, licenseTypeField)) &&
-        !_.includes(nonFreeLicenses, licenseTypeField));
+        _.includes(Config.freeLicenses, licenseTypeField));
     }
 
     function isNoLicense(rowData, licenseTypeField) {
       return (isLicenseInfoAvailable(rowData.licenseList) && PartnerService.isLicenseFree(getLicenseObj(rowData, licenseTypeField)) &&
-        _.includes(nonFreeLicenses, licenseTypeField));
+        !_.includes(Config.freeLicenses, licenseTypeField));
     }
 
     function isLicenseTypeAny(rowData, licenseTypeField) {
-      if (!isLicenseInfoAvailable(rowData.licenseList)) {
-        return false;
-      }
-      if (licenseTypeField === 'webex') {
-        // since webex is 1 icon on the ui, use this to check all the possibilities
-        return _.some(Config.webexTypes, function (webexType) {
-          var licenseObj = getLicenseObj(rowData, webexType);
-          return PartnerService.isLicenseATrial(licenseObj) || PartnerService.isLicenseActive(licenseObj);
-        });
-      } else {
-        var licenseObj = getLicenseObj(rowData, licenseTypeField);
-        var isFreeLicense = PartnerService.isLicenseFree(licenseObj) && !_.includes(nonFreeLicenses, licenseTypeField);
-        return PartnerService.isLicenseATrial(licenseObj) || PartnerService.isLicenseActive(licenseObj) || isFreeLicense;
-      }
+      return PartnerService.isLicenseTypeAny(rowData, licenseTypeField);
     }
 
     function getLicenseCountColumnText(rowData) {
@@ -740,7 +726,7 @@
     }
 
     function isPastGracePeriod(rowData) {
-      return rowData.daysLeft < Config.trialGracePeriod; // HACK: Remove this magic number with a backend call
+      return rowData.daysLeft < Config.trialGracePeriod;
     }
 
     function getUserCountColumnText(rowData) {

@@ -63,7 +63,7 @@
       type: 'select',
       className: 'medium-8',
       templateOptions: {
-        labelfield: 'displayName',
+        labelfield: 'name',
         required: true,
         label: $translate.instant('trialModal.pstn.provider'),
         options: [],
