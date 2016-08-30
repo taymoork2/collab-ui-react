@@ -415,16 +415,16 @@
       function getCssColorClass(obj) {
         switch (obj.state) {
           case 'UNCLAIMED':
-            return 'device-status-gray';
+            return 'disabled';
           default:
             switch ((obj.status || {}).connectionStatus) {
               case 'CONNECTED':
                 if (hasIssues(obj)) {
-                  return 'device-status-yellow';
+                  return 'warning';
                 }
-                return 'device-status-green';
+                return 'success';
               default:
-                return 'device-status-red';
+                return 'danger';
             }
         }
       }
