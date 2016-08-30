@@ -11,6 +11,13 @@ import { BLOCK_CALLERID_TYPE,
   COMPANY_CALLERID_TYPE, 
   CUSTOM_COMPANY_TYPE } from '../../callerId/callerId';
 
+import sharedLine from '../../sharedLine/sharedLine.component';
+import {
+  SharedLineUser,
+  User,
+  SharedLineDevice,
+} from '../../sharedLine/sharedLine';
+
 interface IDirectoryNumber {
   uuid: string,
   pattern: string,
@@ -18,6 +25,7 @@ interface IDirectoryNumber {
 
 class LineOverviewCtrl {
 
+  static CISCOUC: string = 'ciscouc';
   public form: ng.IFormController;
 
   // Directory Number properties
@@ -46,7 +54,15 @@ class LineOverviewCtrl {
   public blockedCallerId_label: string;
   public companyCallerId_label: string;
   public custom_label: string;
-  
+
+  //SharedLine
+  public selected: SharedLineUser = undefined;
+  public sharedLineEndpoints: SharedLineDevice[];
+  public devices: string[];
+  public sharedLineUsers: SharedLineUser[];
+  public selectedUsers: SharedLineUser[];
+  //SharedLine
+
   public translate: ng.translate.ITranslateService;
 
   constructor(private CallerId, private $translate) {
@@ -90,10 +106,81 @@ class LineOverviewCtrl {
     this.incomingCallMaximum = incomingCallMaximum;
   }
 
+  public getUserName(name: { givenName: string, familyName: string }, userId: string): string {
+    var userName = '';
+    userName = (name && name.givenName) ? name.givenName : '';
+    userName = (name && name.familyName) ? (userName + ' ' + name.familyName).trim() : userName;
+    userName = userName || userId;
+    return userName;
+  }
+
+  public getUsersList(filter: string): User[] { ///TODO -- services
+    var users: User[] = [];
+    return users;
+  }
+
+  public selectSharedLineUser(user: User): void {
+    var userInfo = {
+      'uuid': user.uuid,
+      'userName': user.userName,
+      'userDnUuid': 'none',
+      'entitlements': user.entitlements,
+      'dnUsage': '',
+      'name': this.getUserName(user.name, user.userName),
+    };
+    this.selected = undefined;
+
+    if (this.isValidSharedLineUser(userInfo)) {
+      this.selectedUsers.push(userInfo);
+      this.sharedLineUsers.push(userInfo);
+    }
+  }
+
+  private isValidSharedLineUser(userInfo: SharedLineUser): boolean {
+    var isVoiceUser = false;
+    var isValidUser = true;
+
+    angular.forEach(userInfo.entitlements, function (e) {
+
+      if (e === this.CISCOUC) {
+        isVoiceUser = true;
+      }
+    });
+    //TODO
+    // if (!isVoiceUser || userInfo.uuid == this.currentUser.id) {
+    //   // Exclude users without Voice service to be shared line User
+    //   // Exclude current user
+    //   if (!isVoiceUser) {
+    //     Notification.error('sharedLinePanel.invalidUser', {
+    //       user: userInfo.name
+    //     });
+    //   }
+    //   isValidUser = false;
+    // }
+    if (isValidUser) {
+      // Exclude selection of already selected users
+      angular.forEach(this.selectedUsers, function (user) {
+        if (user.uuid === userInfo.uuid) {
+          isValidUser = false;
+        }
+      });
+      if (isValidUser) {
+        //Exclude current sharedLine users
+        angular.forEach(this.sharedLineUsers, function (user) {
+          if (user.uuid === userInfo.uuid) {
+            isValidUser = false;
+          }
+        });
+      }
+    }
+    return isValidUser;
+  }
+
   private resetForm(): void {
     this.form.$setPristine();
     this.form.$setUntouched();
   }
+
   private initCallerId(): void {
     this.callerIdOptions.push(this.CallerId.constructCallerIdOption(this.custom_label, CUSTOM_COMPANY_TYPE, '', null));
     this.callerIdOptions.push(this.CallerId.constructCallerIdOption(this.blockedCallerId_label, BLOCK_CALLERID_TYPE, this.translate.instant('callerIdPanel.blockedCallerIdDescription'), '', null));
@@ -111,7 +198,8 @@ export default angular
     directoryNumber,
     callForward,
     simultaneousCalls,
-    callerId
+    callerId,
+    sharedLine,
   ])
   .component('lineOverview', {
     controller: LineOverviewCtrl,
