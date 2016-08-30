@@ -102,7 +102,7 @@ var UsersPage = function () {
 
   this.cancelButton = element(by.buttonText('Cancel'));
   this.saveButton = element(by.buttonText('Save'));
-  this.finishButton = element(by.buttonText('Finish'));
+  this.finishButton = element(by.id('btnOnboard'));
 
   this.clearButton = element(by.css('.clear-button'));
   this.backButton = element(by.buttonText('Back'));
