@@ -7,18 +7,21 @@
   <cs-sp-container>
     <div class="warning" ng-show="speedDials.reachSpeedDialLimit() && !speedDials.editing && !speedDials.reordering">
       <div class="cs-input__messages">
-        <div class="message" translate="speedDials.limitSpeedDialsReach"></div>
+        <div class="message limit-reach-warning" translate="speedDials.limitSpeedDialsReach"></div>
       </div>
     </div>
     <cs-sp-section>
-      <div class="section-title-row" ng-class="{'sd-title-with-warning': speedDials.reachSpeedDialLimit() && !speedDials.editing && !speedDials.reordering}">
+      <div class="section-title-row"
+           ng-class="{'sd-title-with-warning': speedDials.reachSpeedDialLimit() && !speedDials.editing && !speedDials.reordering}">
         <span class="section-name" translate="speedDials.title"></span>
         <span cs-dropdown class="actions-menu dropdown pull-right">
-        <button cs-dropdown-toggle class="actions-button btn--none dropdown-toggle" ng-hide="speedDials.reordering">
+        <button cs-dropdown-toggle class="actions-button btn--none dropdown-toggle"
+                ng-hide="speedDials.editing || speedDials.reordering">
           <i class="icon icon-three-dots"></i>
         </button>
         <ul cs-dropdown-menu class="dropdown-menu dropdown-primary actions-services">
-          <li><a ng-hide="speedDials.reachSpeedDialLimit()" translate="speedDials.addSpeedDial" ng-click="speedDials.add()"></a></li>
+          <li><a ng-hide="speedDials.reachSpeedDialLimit()" translate="speedDials.addSpeedDial"
+                 ng-click="speedDials.add()"></a></li>
           <li><a translate="speedDials.reorder" ng-click="speedDials.setReorder()"></a></li>
         </ul>
       </span>
@@ -33,36 +36,40 @@
                   <p>{{sd.number | telephoneNumber}}</p>
                 </div>
                 <div ng-if="!speedDials.editing && !speedDials.reordering">
-                  <a class="icon icon-edit sd-spacing" ng-click="speedDials.setEdit(sd)"></a>
+                  <a class="icon icon-edit sd-spacing-edit" ng-click="speedDials.setEdit(sd)"></a>
                   <a class="icon icon-trash" ng-click="speedDials.delete(sd)"></a>
                 </div>
                 <div ng-if="speedDials.reordering">
                   <a class="icon icon-tables"></a>
                 </div>
               </div>
-              <div ng-if="sd.edit" class="sd-edit-wrapper">
-                <input
-                  cs-input
-                  type="text"
-                  id="label{{$index}}"
-                  name="label{{$index}}"
-                  ng-model="speedDials.newLabel"
-                  cs-input-label="{{:: 'speedDials.label' | translate}}"
-                  class="sd-spacing"
-                  ng-required="true"
-                  maxlength="30"
-                  cs-input-messages="speedDials.labelMessages"
-                  pattern="^((?!<).)*$">
-                <input
-                  cs-input
-                  type="text"
-                  id="number{{$index}}"
-                  name="number{{$index}}"
-                  ng-model="speedDials.newNumber"
-                  cs-input-label="{{:: 'speedDials.number' | translate}}"
-                  ng-required="true"
-                  cs-input-messages="speedDials.numberMessages"
-                  pattern="[A-z0-9._%+-]+@[A-z0-9.-]+\.[A-z]{2,}|\+?[0-9]">
+              <div ng-if="sd.edit" class="sd-edit-wrapper row">
+                <div class="medium-6 sd-spacing-input">
+                  <input
+                    id="{{'sd-'+sd.index}}"
+                    cs-input
+                    type="text"
+                    id="label{{$index}}"
+                    name="label{{$index}}"
+                    ng-model="speedDials.newLabel"
+                    cs-input-label="{{:: 'speedDials.label' | translate}}"
+                    ng-required="true"
+                    maxlength="30"
+                    cs-input-messages="speedDials.labelMessages"
+                    pattern="^((?!<).)*$"/>
+                </div>
+                <div class="medium-6 sd-spacing-input">
+                  <input
+                    cs-input
+                    type="text"
+                    id="number{{$index}}"
+                    name="number{{$index}}"
+                    ng-model="speedDials.newNumber"
+                    cs-input-label="{{:: 'speedDials.number' | translate}}"
+                    ng-required="true"
+                    cs-input-messages="speedDials.numberMessages"
+                    pattern="(^[A-z0-9._%+-]+@[A-z0-9.-]+\.[A-z]{2,}$)|(^\+?[0-9]+$)"/>
+                </div>
               </div>
             </div>
           </div>

@@ -3,8 +3,12 @@
     @include vr-spacing(pt, 0);
   }
 
-  .sd-spacing {
+  .sd-spacing-edit {
     @include vr-spacing(mr, 1);
+  }
+
+  .sd-spacing-input {
+    @include vr-spacing(pr, .25);
   }
 
   .sd-label {
@@ -64,6 +68,11 @@
     .sd-label, .icon {
       color: $brand-white;
     }
+  }
+
+  .limit-reach-warning {
+    @include vr-spacing(pl, 0);
+    color: $gray-dark-2;
   }
 
 }
