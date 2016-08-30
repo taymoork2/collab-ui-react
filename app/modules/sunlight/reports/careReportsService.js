@@ -153,28 +153,20 @@
       var minutes = parseInt((durationInMillis / convertInMinutes) % 60, radix);
       var hours = parseInt((durationInMillis / convertInHours), radix);
 
-      var timeFormat = "";
+      var timeFormat = '';
       if (hours != 0) {
-        if (minutes != 0 || seconds != 0) {
-          timeFormat = timeFormat + hours + "h ";
-        } else {
-          return hours + "h";
-        }
+        timeFormat = hours + 'h ';
       }
       if (minutes != 0) {
-        if (seconds != 0) {
-          timeFormat = timeFormat + minutes + "m ";
-        } else {
-          return timeFormat + minutes + "m";
-        }
+        timeFormat = timeFormat + minutes + 'm ';
       }
       if (seconds != 0) {
-        timeFormat = timeFormat + seconds + "s";
+        timeFormat = timeFormat + seconds + 's';
       }
-      if (hours != 0 || minutes != 0 || seconds != 0) {
+      if (timeFormat) {
         return timeFormat;
       } else {
-        return "0s";
+        return '0s';
       }
     }
 
