@@ -5,7 +5,7 @@
     .controller('PlacesCtrl',
 
       /* @ngInject */
-      function ($scope, $state, $templateCache, $translate, CsdmPlaceService, PlaceFilter, Authinfo, WizardFactory, RemPlaceModal) {
+      function ($scope, $state, $templateCache, $translate, CsdmPlaceService, CsdmHuronPlaceService, PlaceFilter, Authinfo, WizardFactory, RemPlaceModal) {
         var vm = this;
 
         vm.data = [];
@@ -13,12 +13,12 @@
         vm.placeFilter = PlaceFilter;
 
         vm.existsDevices = function () {
-          return (vm.shouldShowList() && (
-            Object.keys(CsdmPlaceService.getPlacesList()).length > 0));
+          return (vm.shouldShowList()
+          && (Object.keys(CsdmPlaceService.getPlacesList()).length > 0 || Object.keys(CsdmHuronPlaceService.getPlacesList()).length > 0));
         };
 
         vm.shouldShowList = function () {
-          return CsdmPlaceService.dataLoaded();
+          return CsdmPlaceService.dataLoaded() && CsdmHuronPlaceService.dataLoaded();
         };
 
         vm.isEntitledToRoomSystem = function () {
@@ -32,12 +32,11 @@
         vm.updateListAndFilter = function () {
           var filtered = _.chain({})
             .extend(CsdmPlaceService.getPlacesList())
+            .extend(CsdmHuronPlaceService.getPlacesList())
             .values()
             .value();
           return PlaceFilter.getFilteredList(filtered);
         };
-
-        vm.updateListAndFilter();
 
         vm.numDevices = function (place) {
           return _.size(place.devices);
@@ -141,7 +140,9 @@
 
         vm.deletePlace = function ($event, place) {
           $event.stopPropagation();
-          RemPlaceModal.open(place);
+          RemPlaceModal
+            .open(place)
+            .then(vm.updateListAndFilter());
         };
 
         function getTemplate(name) {
