@@ -8,6 +8,7 @@
 
       function CloudberryDevice(obj) {
         this.url = obj.url;
+        this.type = 'cloudberry';
         this.mac = obj.mac;
         this.ip = getIp(obj);
         this.serial = obj.serial;
@@ -63,6 +64,7 @@
 
       function HuronDevice(obj) {
         this.url = obj.url;
+        this.type = 'huron';
         this.mac = obj.mac;
         this.ip = getIp(obj);
         this.cisUuid = obj.cisUuid;
@@ -137,6 +139,7 @@
 
       function UnusedAccount(obj) {
         this.url = obj.url;
+        this.type = 'cloudberry';
         this.cisUuid = obj.id;
         this.displayName = obj.displayName;
         this.product = t('spacesPage.account');
@@ -162,6 +165,7 @@
         obj.state = obj.status;
 
         this.url = obj.url;
+        this.type = 'cloudberry';
         this.cisUuid = obj.id;
         this.tags = getTags(obj.description);
         this.expiryTime = obj.expiryTime;
