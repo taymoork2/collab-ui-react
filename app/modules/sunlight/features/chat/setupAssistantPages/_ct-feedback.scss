@@ -135,8 +135,10 @@
     font-family: CiscoSansTT Light;
     color: $gray-dark-2;
     align-self: center;
-    height: 3rem;
+    height: 4rem;
     overflow: hidden;
+    width: 18rem;
+    text-align: center;
     @include vr-spacing(pr, 1);
     @include vr-spacing(pl, 1);
   }
