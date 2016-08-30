@@ -4396,7 +4396,7 @@
     "labelOrgName": "Jabber Messenger Organization Name",
     "labelUnauthorizedUser": "Unauthorized User",
     "loading": "Loading Jabber Messenger Synchronization Status",
-    "orgAdminLinkText": "Launch Webex Messenger Admin Tool",
+    "orgAdminLinkText": "Launch Jabber Messenger Admin Tool",
     "orgAdminLinkTooltip": "Continue to mange your Jabber users in the Messenger Org Admin tool",
     "pageTitle": "Jabber Messenger",
     "patchSuccessful": "Jabber Messenger Sync updated successfully",
