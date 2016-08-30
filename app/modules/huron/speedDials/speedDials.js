@@ -41,8 +41,7 @@
       speedDials.speedDialList.push(sd);
       speedDials.setEdit(sd);
       $timeout(function () {
-        var $newSd = $('#sd-' + sd.index);
-        $newSd.focus();
+        $('#sd-' + sd.index).focus();
       }, 100);
     };
 
