@@ -156,14 +156,14 @@
       var timeFormat = "";
       if (hours != 0) {
         if (minutes != 0 || seconds != 0) {
-          timeFormat = timeFormat + hours + "h_";
+          timeFormat = timeFormat + hours + "h ";
         } else {
           return hours + "h";
         }
       }
       if (minutes != 0) {
         if (seconds != 0) {
-          timeFormat = timeFormat + minutes + "m_";
+          timeFormat = timeFormat + minutes + "m ";
         } else {
           return timeFormat + minutes + "m";
         }
