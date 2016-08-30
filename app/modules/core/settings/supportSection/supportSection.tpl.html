@@ -1,6 +1,6 @@
 <!-- support title / description -->
 
-<div class="sub-section">
+<div class="sub-section small-12 columns">
   <h5 class="sub-section__label" translate="partnerProfile.supportTitle"></h5>
   <p ng-if="!ctrl.isPartner" class="sub-section__description" translate="customerProfile.supportInfo"
      translate-values="{app : ctrl.appType}"></p>
@@ -9,7 +9,7 @@
 </div>
 
 <!-- trouble ticket reporting location form -->
-<div class="cs-radio-group" id="troubleReportingPanel">
+<div class="cs-radio-group small-12 columns" id="troubleReportingPanel">
   <h5 translate="partnerProfile.supportSetup"></h5>
   <!-- partner problem reporting site form -->
   <input type="checkbox" id="customSupportUrlBox" ng-model="ctrl.useCustomSupportUrl">
@@ -31,7 +31,7 @@
   </div>
 </div>
 
-<div class="cs-radio-group" id="helpPanel">
+<div class="cs-radio-group small-12 columns" id="helpPanel">
   <h5 translate="partnerProfile.helpFaq"></h5>
   <div class="cs-input-group cs-input-radio" id="helpCiscoPanel">
     <input type="checkbox" id="customHelpSite" ng-model="ctrl.useCustomHelpSite">
