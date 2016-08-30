@@ -5,7 +5,7 @@
     .controller('RemDeviceController',
 
       /* @ngInject */
-      function ($modalInstance, CsdmCodeService, CsdmDeviceService, CsdmHuronDeviceService, CsdmUnusedAccountsService, XhrNotificationService, deviceOrCode) {
+      function ($modalInstance, CsdmCodeService, CsdmDeviceService, CsdmHuronOrgDeviceService, CsdmUnusedAccountsService, XhrNotificationService, deviceOrCode) {
         var rdc = this;
 
         rdc.deleteDeviceOrCode = function () {
@@ -19,6 +19,7 @@
             return CsdmDeviceService.deleteDevice(deviceOrCode.url)
               .then($modalInstance.close, XhrNotificationService.notify);
           } else {
+            var CsdmHuronDeviceService = CsdmHuronOrgDeviceService.create();
             return CsdmHuronDeviceService.deleteDevice(deviceOrCode.url)
               .then($modalInstance.close, XhrNotificationService.notify);
           }
