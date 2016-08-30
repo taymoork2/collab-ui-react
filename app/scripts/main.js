@@ -43,6 +43,7 @@
     'ui.grid.infiniteScroll',
     'timer',
     'toaster',
+    'dragularModule',
     require('modules/core/featureToggle/featureToggle.service'),
     require('modules/core/scripts/services/org.service'),
   ])

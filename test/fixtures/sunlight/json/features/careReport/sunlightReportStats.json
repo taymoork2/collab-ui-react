@@ -18,7 +18,7 @@
     }, {
       "mediaType": "chat",
       "numTasksAssignedState": 4,
-      "avgCsatScores": 0.0,
+      "avgCsatScores": 3.0,
       "numWorkingTasks": 0,
       "orgId": "676a82cd-64e9-4ebd-933c-4dce087a02bd",
       "createdTime": "2016-07-01T11:15:00.000Z",
@@ -28,22 +28,7 @@
       "numTasksAssignedToAbandonedState": 0,
       "avgTaskCloseTime": 67463,
       "avgTaskWaitTime": 15405,
-      "numCsatScores": 0,
-      "numPendingTasks": 0
-    }, {
-      "mediaType": "chat",
-      "numTasksAssignedState": 1,
-      "avgCsatScores": 0.0,
-      "numWorkingTasks": 0,
-      "orgId": "676a82cd-64e9-4ebd-933c-4dce087a02bd",
-      "createdTime": "2016-07-01T11:30:00.000Z",
-      "numTasksHandledState": 2,
-      "numTasksQueuedState": 3,
-      "numTasksAbandonedState": 2,
-      "numTasksAssignedToAbandonedState": 0,
-      "avgTaskCloseTime": 93687,
-      "avgTaskWaitTime": 10273,
-      "numCsatScores": 0,
+      "numCsatScores": 100,
       "numPendingTasks": 0
     }],
     "metadata": {
@@ -51,7 +36,37 @@
       "lastRunTime": "2016-07-05T16:30:00.000Z"
     }
   },
-
+  "fifteenMinutesOrgSnapshotStats": {
+    "data": [{
+      "mediaType": "chat",
+      "numWorkingTasks": 5,
+      "orgId": "676a82cd-64e9-4ebd-933c-4dce087a02bd",
+      "createdTime": "2016-07-01T10:00:00.000Z",
+      "numPendingTasks": 6
+    }, {
+      "mediaType": "chat",
+      "numWorkingTasks": 7,
+      "orgId": "676a82cd-64e9-4ebd-933c-4dce087a02bd",
+      "createdTime": "2016-07-01T10:15:00.000Z",
+      "numPendingTasks": 8
+    }, {
+      "mediaType": "chat",
+      "numWorkingTasks": 5,
+      "orgId": "676a82cd-64e9-4ebd-933c-4dce087a02bd",
+      "createdTime": "2016-07-01T10:30:00.000Z",
+      "numPendingTasks": 6
+    }, {
+      "mediaType": "chat",
+      "numWorkingTasks": 7,
+      "orgId": "676a82cd-64e9-4ebd-933c-4dce087a02bd",
+      "createdTime": "2016-07-01T10:45:00.000Z",
+      "numPendingTasks": 8
+    }],
+    "metadata": {
+      "jobName": "org_snapshot_stats_15min",
+      "lastRunTime": "2016-07-05T16:30:00.000Z"
+    }
+  },
   "hourlyOrgStats": {
     "data": [{
       "mediaType": "chat",

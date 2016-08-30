@@ -5,13 +5,12 @@
   <h3 class="modal-title" translate="usersPage.manageUsers"></h3>
 </div>
 
-<div class="modal-body user-manage user-csv user-csv-results">
+<div class="modal-body user-manage user-csv user-csv-results user-manage-advanced-results">
   <div ng-if="umac.getCurrentState() == 'dirsyncServices'">
     <h3 translate="userManage.ad.typeLabel"></h3>
   </div>
   <div ng-if="umac.getCurrentState() == 'dirsyncResult'">
-    <h3 translate="userManage.advanced.updating"></h3>
-    <br>
+    <h5 translate="userManage.advanced.updating"></h5>
   </div>
   <div ui-view class="flex-container flex-item-resize"></div>
 </div>

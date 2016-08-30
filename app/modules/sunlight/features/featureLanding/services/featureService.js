@@ -12,6 +12,7 @@
       getChatTemplates: getChatTemplates,
       formatChatTemplates: formatChatTemplates,
       deleteChatTemplate: deleteChatTemplate,
+      getChatTemplate: getChatTemplate,
       filterCards: filterCards
     };
 
@@ -26,6 +27,13 @@
 
     function deleteChatTemplate(templateId) {
       return ConfigTemplateService.delete({
+        orgId: Authinfo.getOrgId(),
+        templateId: templateId
+      }).$promise;
+    }
+
+    function getChatTemplate(templateId) {
+      return ConfigTemplateService.get({
         orgId: Authinfo.getOrgId(),
         templateId: templateId
       }).$promise;

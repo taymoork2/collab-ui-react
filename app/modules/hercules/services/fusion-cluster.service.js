@@ -31,7 +31,8 @@
       processClustersToSeeIfServiceIsSetup: processClustersToSeeIfServiceIsSetup,
       formatTimeAndDate: formatTimeAndDate,
       labelForTime: labelForTime,
-      labelForDay: labelForDay
+      labelForDay: labelForDay,
+      getStatusForService: getStatusForService
     };
 
     return service;
@@ -268,6 +269,21 @@
         return 'outage';
       }
 
+      // For Hybrid Media we have to handle upgrading scenario differently than expressway
+      if (serviceId === 'squared-fusion-media') {
+        if (_.every(statuses, function (value) {
+          return (value === 'upgrading');
+        })) {
+          return 'outage';
+        }
+
+        if (_.find(statuses, function (value) {
+          return (value === 'upgrading');
+        })) {
+          return 'impaired';
+        }
+      }
+
       // We have an outage if all clusters have their connectors in these states or combinations of them:
       if (_.every(statuses, function (value) {
         return (value === 'unknown' || value === 'stopped' || value === 'disabled' || value === 'offline' || value === 'not_configured' || value === 'not_operational');
@@ -347,5 +363,12 @@
       });
     }
 
+    function getStatusForService(serviceId, clusterList) {
+      return {
+        serviceId: serviceId,
+        setup: processClustersToSeeIfServiceIsSetup(serviceId, clusterList),
+        status: processClustersToAggregateStatusForService(serviceId, clusterList)
+      };
+    }
   }
 })();

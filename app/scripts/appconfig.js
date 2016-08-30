@@ -627,12 +627,12 @@
             }
           })
           /*.state('status', {
-            url: '/status-conponents',
-            templateUrl: 'modules/status/components/components.tpl.html',
-            controller: 'ComponentsCtrl',
-            controllerAs: 'componentsCtrl',
-            parent: 'main'
-          })*/
+           url: '/status-conponents',
+           templateUrl: 'modules/status/components/components.tpl.html',
+           controller: 'ComponentsCtrl',
+           controllerAs: 'componentsCtrl',
+           parent: 'main'
+           })*/
           .state('authentication.enable3rdPartyAuth', {
             parent: 'modal',
             views: {
@@ -849,21 +849,20 @@
             }
           })
 
-        ///////////////////////////
-        // todo - I-35 feature
-        .state('users.manage', {
-          parent: 'modal',
-          views: {
-            'modal@': {
-              controller: 'UserManageModalController',
-              controllerAs: 'ctrl',
-              template: '<div ui-view></div>'
+          ///////////////////////////
+          .state('users.manage', {
+            parent: 'modal',
+            views: {
+              'modal@': {
+                controller: 'UserManageModalController',
+                controllerAs: 'ummc',
+                template: '<div ui-view></div>'
+              }
+            },
+            params: {
+              isOverExportThreshold: {}
             }
-          },
-          params: {
-            isOverExportThreshold: {}
-          }
-        })
+          })
           .state('users.manage.org', {
             controller: 'UserManageOrgController',
             controllerAs: 'umoc',
@@ -875,12 +874,12 @@
             templateUrl: 'modules/core/users/userManage/userManageActiveDir.tpl.html'
           })
 
-        .state('users.manage.advanced', {
-          abstract: true,
-          controller: 'UserManageAdvancedController',
-          controllerAs: 'umac',
-          templateUrl: 'modules/core/users/userManage/userManageAdvanced.tpl.html'
-        })
+          .state('users.manage.advanced', {
+            abstract: true,
+            controller: 'UserManageAdvancedController',
+            controllerAs: 'umac',
+            templateUrl: 'modules/core/users/userManage/userManageAdvanced.tpl.html'
+          })
           .state('users.manage.advanced.add', {
             abstract: true,
             controller: 'AddUserCtrl',
@@ -916,26 +915,26 @@
             }
           })
 
-        //////////////////
+          //////////////////
 
-        .state('users.convert', {
-          parent: 'modal',
-          views: {
-            'modal@': {
-              controller: 'OnboardCtrl',
-              template: '<div ui-view="usersConvert"></div>'
-            },
-            'usersConvert@users.convert': {
-              templateUrl: 'modules/core/convertUsers/convertUsersModal.tpl.html',
-              resolve: {
-                modalInfo: function ($state) {
-                  $state.params.modalClass = 'convert-users';
-                  $state.params.modalId = 'convertDialog';
+          .state('users.convert', {
+            parent: 'modal',
+            views: {
+              'modal@': {
+                controller: 'OnboardCtrl',
+                template: '<div ui-view="usersConvert"></div>'
+              },
+              'usersConvert@users.convert': {
+                templateUrl: 'modules/core/convertUsers/convertUsersModal.tpl.html',
+                resolve: {
+                  modalInfo: function ($state) {
+                    $state.params.modalClass = 'convert-users';
+                    $state.params.modalId = 'convertDialog';
+                  }
                 }
               }
             }
-          }
-        })
+          })
           .state('users.convert.services', {
             views: {
               'usersConvert@users.convert': {
@@ -1027,7 +1026,7 @@
             },
             resolve: {
               currentUser: /* @ngInject */ function ($http, $stateParams, Config, Utils, Authinfo, UrlConfig) {
-                var userUrl = UrlConfig.getScimUrl(Authinfo.getOrgId()) + '/' + $stateParams.currentUser.id;
+                var userUrl = UrlConfig.getScimUrl(Authinfo.getOrgId()) + '/' + $stateParams.currentUserId;
                 return $http.get(userUrl)
                   .then(function (response) {
                     angular.copy(response.data, this.currentUser);
@@ -1039,7 +1038,7 @@
             params: {
               currentUser: {},
               entitlements: {},
-              queryuserslist: {}
+              currentUserId: ''
             },
             data: {
               displayName: 'Overview'
@@ -1098,6 +1097,12 @@
             template: '<div uc-single-number-reach></div>',
             data: {
               displayName: 'Single Number Reach'
+            }
+          })
+          .state('user-overview.communication.speedDials', {
+            template: '<div uc-speed-dials></div>',
+            data: {
+              displayName: 'Speed Dials'
             }
           })
           .state('user-overview.communication.internationalDialing', {
@@ -1405,19 +1410,19 @@
             parent: 'main'
           })
 
-        /*
-         devices
-         */
-        .state('places', {
-          url: '/places',
-          templateUrl: 'modules/squared/places/places.html',
-          controller: 'PlacesCtrl',
-          controllerAs: 'sc',
-          parent: 'main',
-          data: {
-            bodyClass: 'places-page'
-          }
-        })
+          /*
+           devices
+           */
+          .state('places', {
+            url: '/places',
+            templateUrl: 'modules/squared/places/places.html',
+            controller: 'PlacesCtrl',
+            controllerAs: 'sc',
+            parent: 'main',
+            data: {
+              bodyClass: 'places-page'
+            }
+          })
           .state('place-overview', {
             parent: 'sidepanel',
             views: {
@@ -1463,6 +1468,19 @@
             },
             data: {
               displayName: 'Call'
+            }
+          })
+          .state('place-overview.communication.internationalDialing', {
+            template: '<international-dialing-comp owner-type="place" identifier="cisUuid"></international-dialing-comp>',
+            data: {
+              displayName: 'International Dialing'
+            },
+            resolve: {
+              lazy: /* @ngInject */ function lazyLoad($q, $ocLazyLoad) {
+                return $q(function resolveLogin(resolve) {
+                  require(['modules/huron/internationalDialing/internationalDialing.component'], loadModuleAndResolve($ocLazyLoad, resolve));
+                });
+              }
             }
           })
           .state('place-overview.communication.line-overview', {
@@ -1613,8 +1631,7 @@
             params: {
               currentCustomer: {}
             },
-            data: {
-            }
+            data: {}
           })
           .state('customer-overview.externalNumbers', {
             controller: 'ExternalNumberDetailCtrl',
@@ -1625,8 +1642,7 @@
                 $state.get('customer-overview.externalNumbers').data.displayName = $translate.instant('customerPage.phoneNumbers');
               }
             },
-            data: {
-            }
+            data: {}
           })
           .state('customer-overview.customerAdministrators', {
             controller: 'CustomerAdministratorDetailCtrl',
@@ -1637,7 +1653,16 @@
                 $state.get('customer-overview.customerAdministrators').data.displayName = $translate.instant('customerPage.administrators');
               }
             },
-            data: {
+            data: {}
+          })
+          .state('customer-overview.customerSubscriptions', {
+            controller: 'CustomerSubscriptionsDetailCtrl',
+            controllerAs: 'customerSubscriptions',
+            templateUrl: 'modules/core/customers/customerSubscriptions/CustomerSubscriptionsDetail.tpl.html',
+            resolve: {
+              data: /* @ngInject */ function ($state, $translate) {
+                $state.get('customer-overview.customerSubscriptions').data.displayName = $translate.instant('customerPage.subscriptions');
+              }
             }
           })
           .state('customer-overview.pstnOrderOverview', {
@@ -1649,8 +1674,7 @@
                 $state.get('customer-overview.pstnOrderOverview').data.displayName = $translate.instant('customerPage.pstnOrders');
               }
             },
-            data: {
-            },
+            data: {},
             params: {
               currentCustomer: {}
             }
@@ -1664,8 +1688,7 @@
                 $state.get('customer-overview.meetingDetail').data.displayName = $translate.instant('customerPage.meetingLicenses');
               }
             },
-            data: {
-            },
+            data: {},
             params: {
               meetingLicenses: {}
             }
@@ -1694,8 +1717,7 @@
                 $state.get('customer-overview.pstnOrderDetail').data.displayName = $translate.instant('customerPage.pstnOrders');
               }
             },
-            data: {
-            },
+            data: {},
             params: {
               currentOrder: {}
             }
@@ -2237,6 +2259,9 @@
             controllerAs: 'resourceList',
             parent: 'main',
             resolve: {
+              hasF237FeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasF237ResourceGroups);
+              },
               hasF410FeatureToggle: /* @ngInject */ function (FeatureToggleService) {
                 return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridServicesResourceList);
               },
@@ -2337,6 +2362,9 @@
               wizard: null
             }
           })
+          .state('add-resource.mediafusion', {
+            abstract: true
+          })
           .state('add-resource.mediafusion.hostname', {
             parent: 'modalSmall',
             views: {
@@ -2379,9 +2407,6 @@
             params: {
               wizard: null
             }
-          })
-          .state('add-resource.mediafusion', {
-            abstract: true
           })
           .state('calendar-service', {
             templateUrl: 'modules/hercules/overview/overview.html',
@@ -2549,7 +2574,7 @@
 
         $stateProvider
 
-          //V2 API changes
+        //V2 API changes
           .state('media-service-v2', {
             templateUrl: 'modules/mediafusion/media-service-v2/overview.html',
             controller: 'MediaServiceControllerV2',
@@ -2704,7 +2729,11 @@
             parent: 'care.Details',
             templateUrl: 'modules/sunlight/features/chat/ctSetupAssistant.tpl.html',
             controller: 'CareChatSetupAssistantCtrl',
-            controllerAs: 'careChatSA'
+            controllerAs: 'careChatSA',
+            params: {
+              template: null,
+              isEditFeature: null
+            }
           })
           .state('care.Features.DeleteFeature', {
             parent: 'modalDialog',

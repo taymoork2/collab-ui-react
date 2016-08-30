@@ -33,11 +33,14 @@
         <br>
         <i class="icon icon-spinner icon-2x"></i>
       </div>
-      <div id="loadErrSection" name="loadErrSection" ng-if="siteSettingsObj.hasLoadError">
+      <div ng-if="siteSettingsObj.hasLoadError" id="loadErrSection" name="loadErrSection">
         <div class="nodata-icon">
           <i class="icon icon-circle-clock"></i>
         </div>
-        <div class="nodata-message">
+        <div ng-if="siteSettingsObj.invalidNavUrls" class="nodata-message">
+          <span translate="webexUserSettingsAccessErrors.defaultNoNavUrlError"></span>
+        </div>
+        <div ng-if="!siteSettingsObj.invalidNavUrls" class="nodata-message">
           <span translate="webexUserSettingsAccessErrors.defaultAccessError"></span>
           <br>
           <span translate="webexUserSettingsAccessErrors.defaultReloadMsg"></span>

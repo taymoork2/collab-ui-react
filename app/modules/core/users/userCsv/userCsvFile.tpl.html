@@ -1,5 +1,5 @@
 <div class="user-csv-upload" ng-disabled="vm.disabled">
-  <div ng-if="!csv.isCsvValid">
+  <div class="flex-center-container" ng-if="!csv.isCsvValid">
     <div class="file-drop"
          cr-file-drop
          file="csv.model.file"
@@ -34,7 +34,7 @@
     <div class="center-vert">
       <h5 translate="userManage.bulk.readyForImport"></h5>
       <p>{{csv.model.fileName}}</p>
-      <a href="" ng-click="csv.resetFile()" translate="userManage.bulk.removeFile" class="ng-scope"></a>
+      <a href="" ng-click="csv.resetFile()" translate="userManage.bulk.removeFile" class="reset-file"></a>
     </div>
 
   </div>

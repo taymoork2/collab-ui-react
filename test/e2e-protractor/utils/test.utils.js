@@ -208,6 +208,12 @@ exports.expectIsDisplayed = function (elem) {
   });
 };
 
+exports.expectIsReadOnly = function (elem) {
+  this.wait(elem).then(function () {
+    expect(elem.getAttribute("readonly")).toBeTruthy();
+  });
+};
+
 exports.expectAllDisplayed = function (elems) {
   this.wait(elems).then(function () {
     elems.each(function (elem) {

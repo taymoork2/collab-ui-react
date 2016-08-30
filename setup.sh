@@ -89,6 +89,9 @@ fi
 # check for and install GNU Parallel as-appropriate
 install_parallel_as_needed || exit 1
 
+# check for and install C++ compiler
+install_cpp_compiler_as_needed || exit 1
+
 # # Check for cleanup script and run
 # ls -al ./cleanUpManagedOrgs.sh > /dev/null 2>&1
 # CLEANUP_RET=$?

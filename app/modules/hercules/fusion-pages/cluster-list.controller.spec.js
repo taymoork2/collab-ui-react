@@ -24,6 +24,7 @@ describe('Controller: FusionClusterListController', function () {
 
   function initController() {
     controller = $controller('FusionClusterListController', {
+      hasF237FeatureToggle: true,
       hasF410FeatureToggle: true,
       hasMediaFeatureToggle: true
     });
@@ -31,6 +32,7 @@ describe('Controller: FusionClusterListController', function () {
 
   function initControllerNoMedia() {
     controller = $controller('FusionClusterListController', {
+      hasF237FeatureToggle: true,
       hasF410FeatureToggle: true,
       hasMediaFeatureToggle: false
     });

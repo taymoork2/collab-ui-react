@@ -17,7 +17,8 @@
       description: 'mediaFusion.clusters.releaseChannelDesc'
     };
     vm.delete = {
-      title: 'mediaFusion.clusters.deleteclusterDesc'
+      title: 'mediaFusion.clusters.deletecluster',
+      description: 'mediaFusion.clusters.deleteclusterDesc'
     };
 
     //hardcoded now and will be changed in the future
@@ -63,7 +64,7 @@
           });
           vm.cluster = cluster;
           vm.clusters = clusters;
-          vm.selectPlaceholder = vm.cluster.releaseChannel;
+          vm.selectPlaceholder = vm.cluster.releaseChannel.toLocaleUpperCase();
           vm.localizedTitle = $translate.instant('hercules.expresswayClusterSettings.pageTitle', {
             clusterName: cluster.name
           });

@@ -10,7 +10,8 @@
       "usage": 7,
       "volume": 100
     }],
-    "subscriptionId": "subID"
+    "subscriptionId": "subID",
+    "internalSubscriptionId": "intSubID"
   }],
   "trialLicenseData": [{
     "label": "subscriptions.message",
@@ -40,6 +41,7 @@
   }],
   "trialSubscriptionData": [{
     "subscriptionId": "subID",
+    "internalSubscriptionId": "intSubID",
     "licenses": [{
       "licenseId": "MS_aa250b26-56d6-4e3c-8244-127d2cb49006",
       "licenseType": "MESSAGING",
@@ -141,7 +143,8 @@
       "usage": 3,
       "volume": 100
     }],
-    "subscriptionId": "subID"
+    "subscriptionId": "subID",
+    "internalSubscriptionId": "intSubID"
   }],
   "licensesFormatted": [{
     "label": "subscriptions.message",
@@ -256,6 +259,7 @@
   }],
   "subscriptionsFormatted": [{
     "subscriptionId": "subID",
+    "internalSubscriptionId": "intSubID",
     "licenses": [{
       "licenseId": "MS_aa250b26-56d6-4e3c-8244-127d2cb49006",
       "licenseType": "MESSAGING",

@@ -148,6 +148,19 @@
     },
     "status": 200
   },
+  "getAuthorizationUrlListResponse": {
+    "data":{
+      "managedOrgs": [{
+        "orgId": "b93b10ad-ae24-4abf-9c21-76e8b86faf01",
+        "role": "ID_Full_Admin"
+      }],
+      "uuid": "feaba56d-97d0-43ce-9f60-e7310bc715a0"
+    },
+    "meta":{
+     "organizationID": "b93b10ad-ae24-4abf-9c21-76e8b86faf01"
+    },
+    "status": 200
+  },
   "managedOrgsResponse": {
     "data": {
       "organizations": [{
@@ -761,6 +774,87 @@
     "trialId": "123b5a17-f520-412c-b619-8c1a231fa036",
     "isAllowedToManage": false,
     "createdDate": "2015-07-31T00:00:00.000Z"
+  }, {
+    "customerOrgId": "1234daee-4247-4d67-a812-932382682642",
+    "startDate": "2015-08-19T00:00:00.000Z",
+    "trialPeriod": 90,
+    "offers": [{
+      "id": "COLLAB",
+      "licenseCount": 100,
+      "usageCount": 0
+    }],
+    "licenseList": [{
+      "licenseId": "MS_5e24ce80-2779-4a25-9881-1fcb1197d278",
+      "offerName": "MS",
+      "licenseType": "MESSAGING",
+      "features": [
+        "webex-squared",
+        "squared-call-initiation",
+        "webex-messenger",
+        "squared-room-moderation"
+      ],
+      "volume": 100,
+      "isTrial": false,
+      "status": "ACTIVE"
+    }, {
+      "licenseId": "CF_826b52bb-58f1-4503-998a-d01919c7d436",
+      "offerName": "CF",
+      "licenseType": "CONFERENCING",
+      "features": [
+        "webex-squared",
+        "squared-call-initiation",
+        "squared-syncup"
+      ],
+      "volume": 100,
+      "isTrial": false,
+      "status": "ACTIVE"
+    }],
+    "state": "ACTIVE",
+    "status": "ACTIVE",
+    "createdBy": "17256dc8-db74-41b5-8a7c-e20e4f594a0a",
+    "customerName": "Atlas_Test_Trial_t81tts9by9",
+    "customerEmail": "collabctg+Atlas_Test_Trial_t81tts9by9@gmail.com",
+    "isAllowedToManage": false,
+    "status": "ACTIVE",
+    "daysLeft": 0,
+    "isTrial": false,
+    "createdDate": "2015-08-19T00:00:00.000Z"
+  }, {
+    "customerOrgId": "1234-34534-afdagfg-425345-acac",
+    "customerName": "ControllerTestOrg",
+    "customerEmail": "customer123@cisco.com",
+    "daysLeft": 50,
+    "communications": {
+      "isTrial": true
+    },
+    "licenses": 10,
+    "deviceLicenses": 5,
+    "licenseList": [{
+      "isTrial": false,
+      "volume": 5,
+      "name": "communications"
+    }]
+  }, {
+    "customerOrgId": "1234-34534-afdagfg-425345-acac",
+    "customerName": "ControllerTestOrg",
+    "customerEmail": "customer123@cisco.com",
+    "daysLeft": 50,
+    "communications": {
+      "isTrial": true
+    },
+    "webexCMR": {
+      "isTrial": true
+    },
+    "webexEEConferencing": {
+      "isTrial": true
+    },
+    "licenses": 10,
+    "deviceLicenses": 5,
+    "licenseList": [{
+      "isTrial": false,
+      "volume": 5,
+      "name": "communications"
+    }]
   }],
   "exportCSVResult": [{
     "customerName": "customerPage.csvHeaderCustomerName",

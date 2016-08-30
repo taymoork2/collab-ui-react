@@ -25,8 +25,6 @@
       setPristine: setPristine
     };
 
-    ////////////////
-
     function setPristine(updatedCP) {
       pristineCPData = angular.copy(updatedCP);
     }

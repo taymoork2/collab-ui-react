@@ -1,4 +1,10 @@
-<div
+<iframe
+  load-event
+  loading="$ctrl.loading"
+  ng-hide="$ctrl.loading"
+  ng-src="{{$ctrl.digitalRiverOrderHistoryUrl}}">
+</iframe>
+<div ng-if="false"
   gridscrollbar
   class="gridStyle"
   ui-grid="$ctrl.gridOptions">

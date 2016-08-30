@@ -36,19 +36,79 @@
     $scope.showCustomerDetails = showCustomerDetails;
     $scope.closeActionsDropdown = closeActionsDropdown;
     $scope.addNumbers = addNumbers;
-    $scope.getTotalLicenses = getTotalLicenses;
+    $scope.getLicenseCountColumnText = getLicenseCountColumnText;
     $scope.getAccountStatus = getAccountStatus;
     $scope.isLicenseTypeAny = isLicenseTypeAny;
-    $scope.getExpiredNotesColumnText = getExpiredNotesColumnText;
+    $scope.getUserCountColumnText = getUserCountColumnText;
+    $scope.isPastGracePeriod = isPastGracePeriod;
+
+    $scope.convertStatusToInt = convertStatusToInt;
 
     $scope.exportType = $rootScope.typeOfExport.CUSTOMER;
     $scope.filterList = _.debounce(filterAction, $scope.timeoutVal);
+
 
     $scope.customerListToggle = customerListToggle;
 
     // expecting this guy to be unset on init, and set every time after
     // check resetLists fn to see how its being used
     $scope.activeFilter = 'all';
+    $scope.filter = {
+      selected: [],
+      placeholder: $translate.instant('customerPage.filterSelectPlaceholder'),
+      options: [{
+        value: 'expired',
+        label: $translate.instant('customerPage.filterExpiredAccounts'),
+        isSelected: false,
+        isAccountFilter: true
+      }, {
+        value: 'active',
+        label: $translate.instant('customerPage.filterPurchasedAccounts'),
+        isSelected: false,
+        isAccountFilter: true
+      }, {
+        value: 'trial',
+        label: $translate.instant('customerPage.filterTrialAccounts'),
+        isSelected: false,
+        isAccountFilter: true
+      }, {
+        value: 'care',
+        label: $translate.instant('customerPage.care'),
+        isSelected: false,
+        isAccountFilter: false // a non-account filter filters on services instead
+      }, {
+        value: 'roomSystems',
+        label: $translate.instant('customerPage.roomSystems'),
+        isSelected: false,
+        isAccountFilter: false
+      }, {
+        value: 'communications',
+        label: $translate.instant('customerPage.call'),
+        isSelected: false,
+        isAccountFilter: false
+      }, {
+        value: 'webex',
+        label: $translate.instant('customerPage.webexOverview'),
+        isSelected: false,
+        isAccountFilter: false
+      }, {
+        value: 'conferencing',
+        label: $translate.instant('customerPage.meeting'),
+        isSelected: false,
+        isAccountFilter: false
+      }, {
+        value: 'messaging',
+        label: $translate.instant('customerPage.message'),
+        isSelected: false,
+        isAccountFilter: false
+      }]
+    };
+    $scope.$watch('filter.selected', function () {
+      if ($scope.gridApi) {
+        // This refreshes the grid, forcing it to recalculate the filters/sorts/etc.
+        $scope.gridApi.grid.refresh();
+      }
+    }, true);
 
     // for testing purposes
     $scope._helpers = {
@@ -148,12 +208,11 @@
       }
     };
     var allServicesField = {
-      field: 'services',
+      field: 'uniqueServiceCount',
       displayName: $translate.instant('customerPage.services'),
-      width: '20%',
+      width: '16%',
       cellTemplate: compactServiceTemplate,
-      headerCellClass: 'align-center',
-      sortingAlgorithm: serviceSort
+      headerCellClass: 'align-center'
     };
     var accountStatusField = {
       field: 'accountStatus',
@@ -161,23 +220,22 @@
       width: '12%',
       cellTemplate: accountStatusTemplate,
       headerCellClass: 'align-center',
-      sortingAlgorithm: serviceSort
+      sortingAlgorithm: accountStatusSort
     };
     var licenseQuantityField = {
-      field: 'accountStatus',
+      field: 'totalLicenses',
       displayName: $translate.instant('customerPage.totalLicenses'),
-      width: '14%',
+      width: '12%',
       cellTemplate: licenseCountTemplate,
-      headerCellClass: 'align-center',
-      sortingAlgorithm: serviceSort
+      headerCellClass: 'align-center'
     };
     var totalUsersField = {
       field: 'totalUsers',
       displayName: $translate.instant('customerPage.active') + ' / ' + $translate.instant('customerPage.totalUsers'),
-      width: '12%',
+      width: '16%',
       cellTemplate: totalUsersTemplate,
       headerCellClass: 'align-center',
-      sortingAlgorithm: serviceSort
+      sortingAlgorithm: userSort
     };
     var notesField = {
       field: 'notes',
@@ -187,14 +245,13 @@
     };
 
     var myOrgDetails = {};
-    var noFreeLicense = ['roomSystems', 'webexEEConferencing'];
 
     $scope.gridColumns = [];
 
     $scope.gridOptions = {
       data: 'gridData',
       multiSelect: false,
-      rowHeight: 44,
+      rowHeight: 56,
       enableRowHeaderSelection: false,
       enableColumnMenus: false,
       enableColumnResizing: true,
@@ -213,6 +270,7 @@
             $scope.gridApi.infiniteScroll.dataLoaded();
           }
         });
+        gridApi.grid.registerRowsProcessor(rowFilter, 150); // This is run between column filtering (100) and sorting (200)
       },
       multiFields: {
         meeting: [{
@@ -250,9 +308,7 @@
           offerCode: 'EC',
           columnName: 'webexEventCenter',
           tooltip: $translate.instant('customerPage.webex')
-        }
-
-        ]
+        }]
       },
       columnDefs: $scope.gridColumns
     };
@@ -264,10 +320,13 @@
       initColumns();
       FeatureToggleService.atlasCareTrialsGetStatus().then(function (careStatus) {
         $scope.isCareEnabled = careStatus;
+        // FIXME: Remove this if block once the customer list refactor goes live
+        // (This check is taken care of in the compactServiceColumn directive)
         if (!careStatus) {
           _.remove($scope.gridColumns, careField);
         }
       }, function () {
+        // FIXME: Remove this if block once the customer list refactor goes live
         // if getting care feature status fails, fall back to the old behavior
         _.remove($scope.gridColumns, careField);
       }).finally(function () {
@@ -298,14 +357,14 @@
     }
 
     function initColumns() {
-      $scope.gridColumns.push(customerNameField);
+      var columns = [customerNameField];
       if ($scope.customerListToggle) {
-        $scope.gridColumns.push(allServicesField, accountStatusField, licenseQuantityField, totalUsersField, notesField);
+        columns = columns.concat(allServicesField, accountStatusField, licenseQuantityField, totalUsersField, notesField);
       } else {
-        // use this way instead of concat so we can maintain the ref inside gridOptions
-        Array.prototype.push.apply($scope.gridColumns, splitServicesFields);
-        $scope.gridColumns.push(oldNotesField, actionField);
+        columns = columns.concat(splitServicesFields, oldNotesField, actionField);
       }
+      $scope.gridColumns = columns;
+      $scope.gridOptions.columnDefs = columns;
     }
 
     function isOrgSetup(customer) {
@@ -366,6 +425,37 @@
       }
     }
 
+    function accountStatusSort(a, b, rowA, rowB) {
+      var aStatus = $scope.convertStatusToInt($scope.getAccountStatus(rowA.entity));
+      var bStatus = $scope.convertStatusToInt($scope.getAccountStatus(rowB.entity));
+      return aStatus - bStatus;
+    }
+
+    function convertStatusToInt(a) {
+      // These numbers are simply used for sorting, meaning lower numbers come first for ascending
+      var statuses = ['active', 'expired', 'trial'];
+      var index = statuses.indexOf(a);
+      if (index === -1) {
+        return statuses.length;
+      }
+      return index;
+    }
+
+    function userSort(a, b, rowA, rowB) {
+      var noUsersA = rowA.entity.numUsers === 0;
+      var noUsersB = rowB.entity.numUsers === 0;
+      if (noUsersA && noUsersB) {
+        return 0;
+      } else if (noUsersA) {
+        return -1;
+      } else if (noUsersB) {
+        return 1;
+      }
+      var aPercent = rowA.entity.activeUsers / rowA.entity.numUsers;
+      var bPercent = rowB.entity.activeUsers / rowB.entity.numUsers;
+      return aPercent - bPercent;
+    }
+
     function setNotesTextOrder() {
       var textSuspended = $translate.instant('customerPage.suspended'),
         textExpiringToday = $translate.instant('customerPage.expiringToday'),
@@ -392,12 +482,35 @@
     }
 
     function notesSort(a, b) {
-      if (a.sortOrder === PartnerService.customerStatus.NOTE_NOT_EXPIRED &&
-        b.sortOrder === PartnerService.customerStatus.NOTE_NOT_EXPIRED) {
-        return a.daysLeft - b.daysLeft;
-      } else {
+      if (a.sortOrder !== b.sortOrder) {
         return a.sortOrder - b.sortOrder;
+      } else if (a.sortOrder === PartnerService.customerStatus.NOTE_NOT_EXPIRED ||
+                 a.sortOrder === PartnerService.customerStatus.NOTE_EXPIRED) {
+        return Math.abs(a.daysLeft) - Math.abs(b.daysLeft);
+      } else {
+        return 0;
       }
+    }
+
+    // this function is called every time the grid needs to refresh after column filtering and before sorting
+    // No changes to the length of rows can be made here, only visibility
+    function rowFilter(rows) {
+      if (!customerListToggle) {
+        // never want to filter with old design
+        return rows;
+      }
+      _.forEach(rows, function (row) {
+        _.forEach($scope.filter.selected, function (filterToApply) {
+          var rowVisible = true;
+          if (filterToApply.isAccountFilter) {
+            rowVisible = $scope.getAccountStatus(row.entity) === filterToApply.value;
+          } else {
+            rowVisible = $scope.isLicenseTypeAny(row.entity, filterToApply.value);
+          }
+          row.visible = rowVisible;
+        });
+      });
+      return rows;
     }
 
     function setFilter(filter) {
@@ -593,27 +706,34 @@
 
     function isLicenseTypeFree(rowData, licenseTypeField) {
       return (isLicenseInfoAvailable(rowData.licenseList) && PartnerService.isLicenseFree(getLicenseObj(rowData, licenseTypeField)) &&
-        !_.includes(noFreeLicense, licenseTypeField));
+        _.includes(Config.freeLicenses, licenseTypeField));
     }
 
     function isNoLicense(rowData, licenseTypeField) {
       return (isLicenseInfoAvailable(rowData.licenseList) && PartnerService.isLicenseFree(getLicenseObj(rowData, licenseTypeField)) &&
-        _.includes(noFreeLicense, licenseTypeField));
+        !_.includes(Config.freeLicenses, licenseTypeField));
     }
 
     function isLicenseTypeAny(rowData, licenseTypeField) {
-      if (!isLicenseInfoAvailable(rowData.licenseList)) {
-        return false;
-      }
-      var licenseObj = getLicenseObj(rowData, licenseTypeField);
-      return PartnerService.isLicenseATrial(licenseObj) || PartnerService.isLicenseActive(licenseObj);
+      return PartnerService.isLicenseTypeAny(rowData, licenseTypeField);
     }
 
-    function getTotalLicenses(rowData) {
-      if (getAccountStatus(rowData) === 'active') {
-        return _.sum(rowData.licenseList, 'volume');
+    function getLicenseCountColumnText(rowData) {
+      if (isPastGracePeriod(rowData)) {
+        return $translate.instant('common.notAvailable');
+      }
+      return rowData.totalLicenses;
+    }
+
+    function isPastGracePeriod(rowData) {
+      return rowData.daysLeft < Config.trialGracePeriod;
+    }
+
+    function getUserCountColumnText(rowData) {
+      if (isPastGracePeriod(rowData)) {
+        return $translate.instant('common.notAvailable');
       } else {
-        return rowData.licenses + rowData.deviceLicenses;
+        return rowData.activeUsers + ' / ' + rowData.numUsers;
       }
     }
 
@@ -630,24 +750,13 @@
     }
 
     function getAccountStatus(rowData) {
-      var licenseTypes = ['messaging', 'communications', 'care', 'roomSystems', 'conferencing'];
-      if (rowData.daysLeft <= 0) {
+      if (rowData.daysLeft <= 0 || _.isUndefined(rowData.licenseList) || rowData.licenseList.length === 0) {
         return 'expired';
       }
-      var isTrial = _.some(licenseTypes, function (type) {
+      var isTrial = _.some(Config.licenseObjectNames, function (type) {
         return isLicenseTypeATrial(rowData, type);
       });
       return isTrial ? 'trial' : 'active';
-    }
-
-    function getExpiredNotesColumnText(rowData) {
-      // Can renew up to 30 days after expiration (grace period)
-      var maxExpiredDaysLeft = -30;
-      if (_.inRange(rowData.daysLeft, 0, maxExpiredDaysLeft)) {
-        return $translate.instant('customerPage.expiredWithGracePeriod');
-      } else {
-        return $translate.instant('customerPage.expired');
-      }
     }
 
     function showCustomerDetails(customer) {

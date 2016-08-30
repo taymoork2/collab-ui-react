@@ -6,7 +6,7 @@
     .controller('TrialPstnCtrl', TrialPstnCtrl);
 
   /* @ngInject */
-  function TrialPstnCtrl($scope, $timeout, $translate, Authinfo, Notification, PstnSetupService, TelephoneNumberService, TerminusStateService, TrialPstnService) {
+  function TrialPstnCtrl($scope, $state, $timeout, $translate, Analytics, Authinfo, Notification, PstnSetupService, TelephoneNumberService, TerminusStateService, TrialPstnService) {
     var vm = this;
 
     vm.trialData = TrialPstnService.getData();
@@ -63,7 +63,7 @@
       type: 'select',
       className: 'medium-8',
       templateOptions: {
-        labelfield: 'vendor',
+        labelfield: 'name',
         required: true,
         label: $translate.instant('trialModal.pstn.provider'),
         options: [],
@@ -190,6 +190,7 @@
     }
 
     function skip(skipped) {
+      Analytics.trackTrialSteps(Analytics.eventNames.SKIP, $state.current.name, Authinfo.getOrgId());
       vm.trialData.enabled = !skipped;
       vm.trialData.skipped = skipped;
       $timeout($scope.trial.nextStep);
@@ -318,6 +319,7 @@
 
     function _showCarriers(carriers, localScope) {
       _.forEach(carriers, function (carrier) {
+        carrier.displayName = (carrier.displayName || carrier.name);
         localScope.to.options.push(carrier);
       });
       if (localScope.to.options.length === 1) {

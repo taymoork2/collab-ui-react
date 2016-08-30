@@ -1,12 +1,21 @@
 .typeahead-large {
   .ct-input-hint {
     border: 0;
-    border-top: solid rem(1px) $gray-light;
     width: 100%;
     text-align: center;
     @include vr-spacing(p, 1);
     color: $gray;
     font-style: italic;
+  }
+  .ct-input-valid-border {
+    border-top: solid 1px $gray-light;
+  }
+  .ct-input-invalid-border {
+    border-top: solid 1px $color-negative-dark;
+  }
+
+  .ct-input-error {
+    color: $color-alerts-base;
   }
 
   // Input control.

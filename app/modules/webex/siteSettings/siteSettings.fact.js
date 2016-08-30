@@ -6,9 +6,9 @@
   /* @ngInject */
   function WebExSiteSettingsFact(
     $q,
-    $log,
     $stateParams,
     $translate,
+    Log,
     Authinfo,
     WebExUtilsFact,
     WebExXmlApiFact,
@@ -30,6 +30,7 @@
         var webExSiteSettingsObj = {
           viewReady: false,
           hasLoadError: false,
+          invalidNavUrls: false,
           sessionTicketError: false,
           errMsg: "",
           pageTitle: pageTitle,
@@ -140,7 +141,7 @@
           "siteName=" + siteName + "\n" +
           "pageTitle=" + pageTitle + "\n" +
           "pageTitleFull=" + pageTitleFull;
-        $log.log(logMsg);
+        Log.debug(logMsg);
 
         _this.webExSiteSettingsObj = _this.newWebExSiteSettingsObj(
           siteUrl,
@@ -170,7 +171,7 @@
             var logMsg = "";
 
             logMsg = funcName + ": " + "errId=" + errId;
-            $log.log(logMsg);
+            Log.debug(logMsg);
 
             _this.webExSiteSettingsObj.sessionTicketError = true;
             _this.webExSiteSettingsObj.hasLoadError = true;
@@ -188,13 +189,15 @@
 
         _this.getSiteSettingsInfoXml().then(
           function getSiteSettingsInfoXmlSuccess(getInfoResult) {
-            // var funcName = "getSiteSettingsInfoXmlSuccess()";
-            // var logMsg = "";
+            var funcName = "getSiteSettingsInfoXmlSuccess()";
+            var logMsg = "";
 
             // logMsg = funcName + ": " + "getInfoResult=" + JSON.stringify(getInfoResult);
             // $log.log(logMsg);
 
             var settingPagesInfo = WebExUtilsFact.validateAdminPagesInfoXmlData(getInfoResult.settingPagesInfoXml);
+            var siteAdminNavUrls = settingPagesInfo.bodyJson.ns1_siteAdminNavUrl;
+
             _this.webExSiteSettingsObj.settingPagesInfo = settingPagesInfo;
 
             if (
@@ -203,8 +206,21 @@
             ) {
 
               _this.webExSiteSettingsObj.hasLoadError = true;
+
+            } else if (
+              (null === siteAdminNavUrls) ||
+              (0 >= siteAdminNavUrls.length)
+            ) {
+
+              logMsg = funcName + "\n" +
+                "ERROR: siteAdminNavUrls=" + JSON.stringify(siteAdminNavUrls) + "\n" +
+                "siteUrl=" + _this.webExSiteSettingsObj.siteUrl;
+              Log.error(logMsg);
+
+              _this.webExSiteSettingsObj.hasLoadError = true;
+              _this.webExSiteSettingsObj.invalidNavUrls = true;
             } else {
-              _this.processSettingPagesInfo(settingPagesInfo);
+              _this.processSettingPagesInfo(siteAdminNavUrls);
               _this.copyFromInfoCategoryToCommonCategory();
               _this.pinPageInCategory();
               _this.updateDisplayInfo();
@@ -217,49 +233,41 @@
             var logMsg = "";
 
             logMsg = funcName + ": " + "getInfoResult=" + JSON.stringify(getInfoResult);
-            $log.log(logMsg);
+            Log.debug(logMsg);
 
             _this.webExSiteSettingsObj.hasLoadError = true;
           } // getSiteSettingsInfoXmlError()
         ); // _this.getSiteSettingsInfoXml().then()
       }, // getSiteSettingsInfo()
 
-      processSettingPagesInfo: function () {
+      processSettingPagesInfo: function (siteAdminNavUrls) {
         var funcName = "processSettingPagesInfo()";
         var logMsg = "";
 
         var _this = this;
 
-        var siteAdminNavUrls = _this.webExSiteSettingsObj.settingPagesInfo.bodyJson.ns1_siteAdminNavUrl;
+        siteAdminNavUrls.forEach(function (siteAdminNavUrl) {
+          logMsg = funcName + ": " +
+            "siteAdminNavUrl=" + "\n" +
+            JSON.stringify(siteAdminNavUrl);
+          Log.debug(logMsg);
 
-        logMsg = funcName + ": " + "\n" +
-          "siteAdminNavUrls.length=" + siteAdminNavUrls.length;
-        $log.log(logMsg);
+          var category = siteAdminNavUrl.ns1_category;
+          var pageId = siteAdminNavUrl.ns1_navItemId;
+          var iframeUrl = siteAdminNavUrl.ns1_url;
 
-        siteAdminNavUrls.forEach(
-          function processSiteAdminNavUrl(siteAdminNavUrl) {
-            logMsg = funcName + ": " +
-              "siteAdminNavUrl=" + "\n" +
-              JSON.stringify(siteAdminNavUrl);
-            // $log.log(logMsg);
+          logMsg = funcName + ": " + "\n" +
+            "category=" + category + "\n" +
+            "pageId=" + pageId + "\n" +
+            "iframeUrl=" + iframeUrl;
+          // $log.log(logMsg);
 
-            var category = siteAdminNavUrl.ns1_category;
-            var pageId = siteAdminNavUrl.ns1_navItemId;
-            var iframeUrl = siteAdminNavUrl.ns1_url;
-
-            logMsg = funcName + ": " + "\n" +
-              "category=" + category + "\n" +
-              "pageId=" + pageId + "\n" +
-              "iframeUrl=" + iframeUrl;
-            // $log.log(logMsg);
-
-            _this.addPage(
-              category,
-              pageId,
-              iframeUrl
-            );
-          } // processSiteAdminNavUrl()
-        ); // siteAdminNavUrls.forEach()
+          _this.addPage(
+            category,
+            pageId,
+            iframeUrl
+          );
+        }); // siteAdminNavUrls.forEach()
       }, // processSettingPagesInfo()
 
       copyFromInfoCategoryToCommonCategory: function () {
@@ -342,7 +350,7 @@
         if (null == categoryObj) {
           logMsg = funcName + ": " +
             categoryId + " cannot be processed!!!";
-          $log.log(logMsg);
+          Log.error(logMsg);
         } else {
           var pinPageId = categoryObj.pinPageId;
 

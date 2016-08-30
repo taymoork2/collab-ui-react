@@ -9,7 +9,7 @@
 
     <cs-page-sub-header-right class="action-panel" ng-show="Utils.isAdminPage()">
       <!-- Pre-I-35 Feature -->
-      <div ng-if="!isCsvEnhancementToggled" class="block">
+      <div class="export-users" ng-if="!isCsvEnhancementToggled" >
 
         <div ng-if="!isCSB">
           <button id="addUsers" class="btn btn--people add-users-button" ui-sref="users.add" translate="usersPage.inviteUsers"></button>
@@ -18,7 +18,7 @@
           <button class="btn btn--people add-users-button" ui-sref="userRedirect" translate="usersPage.inviteUsers"></button>
         </div>
 
-        <div class="export-users">
+        <div class="dl-button">
           <csv-download ng-if="obtainedTotalUserCount && totalUsers <= userExportThreshold" type="user" filename="{{::'usersPage.csvFilename' | translate}}" icon="icon-content-share"></csv-download>
           <div ng-if="obtainedTotalUserCount && totalUsers > userExportThreshold" ng-controller="ExportCSVCtrl">
             <a class="export-users" ng-if="!exporting" ng-csv="exportCSV()" filename="{{::'usersPage.csvFilename' | translate}}">
@@ -33,8 +33,9 @@
       </div>
 
       <!-- Post-I-35 Feature -->
-      <div ng-if="isCsvEnhancementToggled">
-        <button ng-disabled="!obtainedTotalUserCount" class="btn btn--people" ng-click="onManageUsers()"
+      <div class="export-users" ng-if="isCsvEnhancementToggled">
+        <csv-download type="any" filename="exported_file.csv" no-icon status-message="{{::'usersPage.exportingUserAttributes' | translate}}" download-state="users.csv"></csv-download>
+        <button ng-disabled="!obtainedTotalUserCount" id="manageUsers" class="btn btn--people" ng-click="onManageUsers()"
                 translate="usersPage.manageUsers">
         </button>
       </div>
