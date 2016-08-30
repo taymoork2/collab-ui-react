@@ -4,7 +4,7 @@
   /* @ngInject */
   function DeleteClusterSettingControllerV2($q, cluster, $modalInstance, $filter, MediaClusterServiceV2, $state, $translate, XhrNotificationService, Notification) {
     var vm = this;
-    vm.selectPlaceholder = 'Create or select cluster';
+    vm.selectPlaceholder = $translate.instant('mediaFusion.add-resource-dialog.cluster-placeholder');
     vm.options = [];
     vm.close = $modalInstance.close;
     vm.selectModel = {};
