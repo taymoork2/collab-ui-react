@@ -320,8 +320,8 @@
         } else if (!angular.isDefined(response.data) || response.data.length === 0 || !angular.isDefined(response.data.avgCpu) || !angular.isDefined(response.data.peakCpu)) {
           vm.averageUtilization = vm.EMPTY;
           vm.peakUtilization = vm.EMPTY;
-          vm.averageUtilization = '';
-          vm.peakUtilization = '';
+          vm.averageUtilization = 'N/A';
+          vm.peakUtilization = 'N/A';
         } else {
           vm.averageUtilization = response.data.avgCpu + '%';
           vm.peakUtilization = response.data.peakCpu + '%';
@@ -336,7 +336,7 @@
           return;
         } else if (!angular.isDefined(response.data) || response.data.length === 0 || !angular.isDefined(response.data.availabilityPercent)) {
           vm.clusterAvailability = vm.EMPTY;
-          vm.clusterAvailability = '';
+          vm.clusterAvailability = 'N/A';
         } else {
           vm.clusterAvailability = response.data.availabilityPercent + '%';
         }
