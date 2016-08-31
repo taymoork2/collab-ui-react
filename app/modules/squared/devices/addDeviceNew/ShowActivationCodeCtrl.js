@@ -4,14 +4,15 @@
   angular.module('Core')
     .controller('ShowActivationCodeCtrl', ShowActivationCodeCtrl);
   /* @ngInject */
-  function ShowActivationCodeCtrl($q, UserListService, OtpService, CsdmPlaceService, CsdmCodeService, $stateParams, XhrNotificationService, ActivationCodeEmailService, $translate, Notification) {
+  function ShowActivationCodeCtrl($q, UserListService, OtpService, CsdmPlaceService, CsdmCodeService, $stateParams, XhrNotificationService, ActivationCodeEmailService, $translate, Notification, $http, UrlConfig) {
     var vm = this;
     vm.wizardData = $stateParams.wizard.state().data;
     vm.hideBackButton = vm.wizardData.function == "showCode";
     vm.showEmail = false;
     vm.selectedUser = "" + vm.wizardData.displayName + " (" + vm.wizardData.userName + ")";
     vm.email = {
-      to: vm.wizardData.userName
+      to: vm.wizardData.userName,
+      id: vm.wizardData.cisUuid
     };
     vm.qrCode = undefined;
     vm.timeLeft = '';
@@ -143,42 +144,71 @@
     vm.selectUser = function ($item) {
       vm.selectedUser = "" + $item.extractedName + " (" + $item.userName + ")";
       vm.email.to = $item.userName;
+      vm.email.id = $item.id;
       vm.foundUser = "";
     };
 
     vm.sendActivationCodeEmail = function sendActivationCodeEmail() {
-      var emailInfo = {
-        email: vm.email.to,
-        firstName: vm.email.to,
-        oneTimePassword: vm.activationCode,
-        expiresOn: vm.getExpiresOn(),
-        userId: vm.wizardData.cisUuid,
-        customerId: vm.wizardData.organizationId
-      };
+      if (vm.wizardData.deviceType === 'huron') {
+        var emailInfo = {
+          email: vm.email.to,
+          firstName: vm.email.to,
+          oneTimePassword: vm.activationCode,
+          expiresOn: vm.getExpiresOn(),
+          userId: vm.wizardData.cisUuid,
+          customerId: vm.wizardData.organizationId
+        };
 
-      ActivationCodeEmailService.save({}, emailInfo, function () {
-        Notification.notify(
-          [$translate.instant('generateActivationCodeModal.emailSuccess', {
-            'address': vm.email.to
-          })],
-          'success',
-          $translate.instant('generateActivationCodeModal.emailSuccessTitle')
-        );
+        ActivationCodeEmailService.save({}, emailInfo, function () {
+          Notification.notify(
+            [$translate.instant('generateActivationCodeModal.emailSuccess', {
+              'address': vm.email.to
+            })],
+            'success',
+            $translate.instant('generateActivationCodeModal.emailSuccessTitle')
+          );
 
-      }, function () {
-        Notification.notify(
-          [$translate.instant('generateActivationCodeModal.emailError', {
-            'address': vm.email.to
-          })],
-          'error',
-          $translate.instant('generateActivationCodeModal.emailErrorTitle')
-        );
-      });
+        }, function () {
+          Notification.notify(
+            [$translate.instant('generateActivationCodeModal.emailError', {
+              'address': vm.email.to
+            })],
+            'error',
+            $translate.instant('generateActivationCodeModal.emailErrorTitle')
+          );
+        });
+      } else if (vm.wizardData.deviceType === 'cloudberry') {
+        var url = UrlConfig.getAdminServiceUrl() + 'organization/' + vm.wizardData.organizationId + '/deviceActivation/emailActivationCode';
+        var cbEmailInfo = {
+          toUserId: vm.email.id,
+          machineAccountId: vm.wizardData.code.cisUuid,
+          activationCode: vm.activationCode,
+          expiryTime: vm.getExpiresOn()
+        };
+
+        $http.post(url, cbEmailInfo).then(function () {
+          Notification.notify(
+            [$translate.instant('generateActivationCodeModal.emailSuccess', {
+              'address': vm.email.to
+            })],
+            'success',
+            $translate.instant('generateActivationCodeModal.emailSuccessTitle')
+          );
+        }, function () {
+          Notification.notify(
+            [$translate.instant('generateActivationCodeModal.emailError', {
+              'address': vm.email.to
+            })],
+            'error',
+            $translate.instant('generateActivationCodeModal.emailErrorTitle')
+          );
+        });
+
+      }
     };
 
     vm.back = function () {
       $stateParams.wizard.back();
     };
-
   }
 })();
