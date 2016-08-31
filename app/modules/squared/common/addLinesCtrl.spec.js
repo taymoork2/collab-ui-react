@@ -1,7 +1,7 @@
 'use strict';
 
 describe('AddLinesCtrl: Ctrl', function () {
-  var controller, $stateParams, $state, $scope, Notification, $q, CommonLineService, CsdmPlaceService, DialPlanService;
+  var controller, $stateParams, $state, $scope, Notification, $q, CommonLineService, CsdmHuronPlaceService, DialPlanService;
   var $controller;
   var $httpBackend;
   var internalNumbers;
@@ -16,7 +16,7 @@ describe('AddLinesCtrl: Ctrl', function () {
   beforeEach(angular.mock.module('Sunlight'));
   beforeEach(angular.mock.module('Squared'));
 
-  beforeEach(inject(function (_$controller_, $rootScope, _$q_, _$state_, _$stateParams_, _Notification_, _CsdmPlaceService_, _CommonLineService_, _DialPlanService_, _$httpBackend_) {
+  beforeEach(inject(function (_$controller_, $rootScope, _$q_, _$state_, _$stateParams_, _Notification_, _CsdmHuronPlaceService_, _CommonLineService_, _DialPlanService_, _$httpBackend_) {
     $scope = $rootScope.$new();
     $controller = _$controller_;
     $httpBackend = _$httpBackend_;
@@ -25,7 +25,7 @@ describe('AddLinesCtrl: Ctrl', function () {
     $stateParams = _$stateParams_;
     Notification = _Notification_;
     CommonLineService = _CommonLineService_;
-    CsdmPlaceService = _CsdmPlaceService_;
+    CsdmHuronPlaceService = _CsdmHuronPlaceService_;
     DialPlanService = _DialPlanService_;
     var current = {
       step: {
@@ -92,7 +92,7 @@ describe('AddLinesCtrl: Ctrl', function () {
 
     entitylist[0].assignedDn = internalNumbers[0];
     spyOn(CommonLineService, 'assignDNForUserList').and.callThrough();
-    spyOn(CsdmPlaceService, 'createCmiPlace');
+    spyOn(CsdmHuronPlaceService, 'createCmiPlace');
   }));
 
   function initController() {

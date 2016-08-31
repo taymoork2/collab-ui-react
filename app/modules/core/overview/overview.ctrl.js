@@ -15,6 +15,7 @@
       OverviewCardFactory.createMessageCard(),
       OverviewCardFactory.createMeetingCard(),
       OverviewCardFactory.createCallCard(),
+      OverviewCardFactory.createCareCard(),
       OverviewCardFactory.createRoomSystemsCard(),
       OverviewCardFactory.createHybridServicesCard(),
       OverviewCardFactory.createUsersCard()

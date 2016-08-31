@@ -73,6 +73,7 @@
     vm.timezoneOptions = CTService.getTimezoneOptions();
     vm.ChatTemplateButtonText = $translate.instant('common.finish');
     vm.lengthConstants = CTService.getLengthValidationConstants();
+    vm.isBusinessDaySelected = true;
 
     /**
      * Type enumerations
@@ -399,7 +400,7 @@
     }
 
     vm.validateNameLength = function () {
-      return vm.template.name.length == vm.lengthConstants.empty || vm.template.name.length <= vm.lengthConstants.multiLineMaxCharLimit;
+      return vm.template.name.length == vm.lengthConstants.empty || isValidMultilineField(vm.template.name);
     };
 
     vm.isNamePageValid = function () {
@@ -414,16 +415,39 @@
       return false;
     }
 
+    function isValidSinglelineField(fieldDisplayText) {
+      return (fieldDisplayText.length <= vm.lengthConstants.singleLineMaxCharLimit);
+    }
+
+    function isValidMultilineField(fieldDisplayText) {
+      return (fieldDisplayText.length <= vm.lengthConstants.multiLineMaxCharLimit);
+    }
+
     function isAgentUnavailablePageValid() {
-      return (vm.template.configuration.pages.agentUnavailable.fields.agentUnavailableMessage.displayText !== '');
+      return isValidMultilineField(vm.template.configuration.pages.agentUnavailable.fields.agentUnavailableMessage.displayText);
     }
 
     function isOffHoursPageValid() {
       setOffHoursWarning();
-      if (vm.template.configuration.pages.offHours.message != '' && _.find(vm.days, 'isSelected')) {
+      if (isValidMultilineField(vm.template.configuration.pages.offHours.message) && vm.isBusinessDaySelected) {
         setOffHoursData();
         return true;
       }
+      return false;
+    }
+
+    function isFeedbackPageValid() {
+      return (isValidMultilineField(vm.template.configuration.pages.feedback.fields.feedbackQuery.displayText)
+      && isValidSinglelineField(vm.template.configuration.pages.feedback.fields.comment.displayText));
+    }
+
+    function isStatusMessagesPageValid() {
+      var chatStatusMessagesObj = vm.template.configuration.chatStatusMessages.messages;
+      return isValidSinglelineField(chatStatusMessagesObj.connectingMessage.displayText)
+      && isValidSinglelineField(chatStatusMessagesObj.waitingMessage.displayText)
+      && isValidSinglelineField(chatStatusMessagesObj.enterRoomMessage.displayText)
+      && isValidSinglelineField(chatStatusMessagesObj.leaveRoomMessage.displayText)
+      && isValidSinglelineField(chatStatusMessagesObj.chattingMessage.displayText);
     }
 
     vm.isTypeDuplicate = false;
@@ -457,13 +481,24 @@
       return (configuredTypes.length === uniqueConfiguredTypes.length);
     }
 
+    function areAllFixedFieldsValid() {
+      return isValidSinglelineField(vm.getAttributeParam('value', 'header', 'welcomeHeader'))
+          && isValidSinglelineField(vm.getAttributeParam('value', 'organization', 'welcomeHeader'));
+    }
+
+    function areAllDynamicFieldsValid() {
+      return _.reduce(_.map(nonHeaderFieldNames, function (fieldName) {
+        return isValidSinglelineField(vm.getAttributeParam('value', 'label', fieldName))
+                && isValidSinglelineField(vm.getAttributeParam('value', 'hintText', fieldName));
+      }), function (x, y) { return x && y; }, true);
+    }
+
     vm.validateType = function (selectedType) {
       return !(selectedType && isSelectedTypeDuplicate(selectedType));
     };
 
     function isCustomerInformationPageValid() {
-      // all customer info page validations will be here
-      return areAllTypesUnique();
+      return areAllTypesUnique() && areAllFixedFieldsValid() && areAllDynamicFieldsValid();
     }
 
     function nextButton() {
@@ -478,6 +513,10 @@
           return isAgentUnavailablePageValid();
         case 'offHours':
           return isOffHoursPageValid();
+        case 'feedback':
+          return isFeedbackPageValid();
+        case 'chatStatusMessages':
+          return isStatusMessagesPageValid();
         case 'summary':
           return 'hidden';
         default:
@@ -588,8 +627,10 @@
     };
 
     vm.addCategoryOption = function () {
-      angular.element('#categoryTokensElement').tokenfield('createToken', vm.categoryOptionTag);
-      vm.categoryOptionTag = '';
+      if (vm.categoryOptionTag) {
+        angular.element('#categoryTokensElement').tokenfield('createToken', vm.categoryOptionTag);
+        vm.categoryOptionTag = '';
+      }
     };
 
     vm.isUserProfileSelected = function () {
@@ -674,6 +715,7 @@
 
     function setDay(index) {
       vm.days[index].isSelected = !vm.days[index].isSelected;
+      vm.isBusinessDaySelected = _.find(vm.days, 'isSelected');
       setDayPreview();
     }
 

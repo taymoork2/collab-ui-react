@@ -24,17 +24,7 @@ describe('Component: upgradeScheduleConfiguration', function () {
     }]
   };
 
-  it('should disable the day selector if the daily attribute is true', function () {
-    // I wasted 2 days trying to test this without success…
-  });
-
   describe('Controller: upgradeScheduleConfiguration', function () {
-    it('should have daily as false', function () {
-      $scope.clusterId = '123';
-      var controller = initController($scope);
-      expect(controller.daily).toBe(false);
-    });
-
     it('should fetch the upgrade schedule when there is a valid cluster id', function () {
       initController($scope);
       expect(FusionClusterService.get.calls.count()).toBe(0);
@@ -89,6 +79,17 @@ describe('Component: upgradeScheduleConfiguration', function () {
       expect(FusionClusterService.postponeUpgradeSchedule.calls.count()).toBe(1);
       expect(FusionClusterService.get.calls.count()).toBe(1);
     });
+
+    it('should set the option to "everyDay" if all days are selected', function () {
+      var modifiedUpgradeScheduleMock = upgradeScheduleMock;
+      modifiedUpgradeScheduleMock.scheduleDays = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
+      FusionClusterService.get.and.returnValue($q.resolve({
+        upgradeSchedule: upgradeScheduleMock
+      }));
+      $scope.clusterId = '123';
+      var controller = initController($scope);
+      expect(controller.formData.scheduleDay.value).toBe('everyDay');
+    });
   });
 
   function mockDirectives($compileProvider) {
@@ -130,7 +131,7 @@ describe('Component: upgradeScheduleConfiguration', function () {
   }
 
   function compileComponent($scope) {
-    var template = '<upgrade-schedule-configuration can-postpone="true" daily="false" cluster-id="clusterId"></upgrade-schedule-configuration>';
+    var template = '<upgrade-schedule-configuration cluster-id="clusterId"></upgrade-schedule-configuration>';
     var element = $compile(angular.element(template))($scope);
     $scope.$apply();
     return element;

@@ -10,7 +10,8 @@
                 <div class="last-counts">{{(nav.onprem | number) || 'N/A'}}
                 <span  class= "last-text" translate ='mediaFusion.metrics.onpremcalls'></span>
                 <span class="last-counts">{{(nav.cloud | number) || 'N/A'}}
-                <span class="last-text" translate ='mediaFusion.metrics.cloudcalls'></span>
+                <span class="last-text" translate ='mediaFusion.metrics.cloudcalls' ng-if="nav.clusterSelected === 'All Clusters'"></span>
+                <span class="last-text" translate ='mediaFusion.metrics.redirectedcalls' ng-if="nav.clusterSelected !== 'All Clusters'"></span>
             </div>
             </div>
         </section>

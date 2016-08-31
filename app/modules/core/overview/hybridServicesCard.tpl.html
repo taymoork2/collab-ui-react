@@ -9,7 +9,7 @@
     <div>{{'overview.cards.hybrid.serviceHeader' | translate }}</div>
     <ul class="hybrid-ul">
       <li ng-repeat="service in card.serviceList | filter: {setup: true} ">
-        <i class="icon icon-circle" ng-class="service.healthStatus || 'error'"></i>
+        <i class="icon icon-circle status-indicator" ng-class="service.healthStatus || 'error'"></i>
         <span>{{ 'overview.cards.hybrid.services.'+ service.serviceId | translate}}</span>
       </li>
     </ul>
@@ -20,15 +20,6 @@
         ng-if="card.enabled">
   <span class="footer-content">
     <span class="badge warning ng-scope" ng-if="card.trial">Trial</span>
-    <a ng-href="{{overview.statusPageUrl}}" target="_blank" class="monitoring-cell" ng-show="card.showHealth">
-      <i class="icon icon-circle" ng-class="card.healthStatus || 'disabled'"></i>
-      <span>{{card.levelText}}</span>
-    </a>
-  </span>
-  <span class="footer-icons">
-    <a ng-href="{{card.settingsUrl}}" ng-click="cm.menuOpen = true" ng-if="card.settingsUrl">
-      &nbsp;<i class="icon icon-tools"></i>
-    </a>
   </span>
 </footer>
 

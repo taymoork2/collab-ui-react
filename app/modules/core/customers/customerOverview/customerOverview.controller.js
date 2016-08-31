@@ -33,6 +33,7 @@
     vm.isTest = false;
     vm.isDeleting = false;
     vm.isOrgSetup = false;
+    vm.isUpdateStatusEnabled = false;
 
     vm.partnerOrgId = Authinfo.getOrgId();
     vm.partnerOrgName = Authinfo.getOrgName();
@@ -52,6 +53,11 @@
           vm.showRoomSystems = true;
         }
         setOffers(result);
+      });
+
+    FeatureToggleService.atlasCustomerListUpdateGetStatus()
+      .then(function (result) {
+        vm.isUpdateStatusEnabled = result;
       });
 
     function setOffers(isCareEnabled) {

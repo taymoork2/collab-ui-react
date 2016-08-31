@@ -18,8 +18,10 @@
   <i class='icon icon-spinner icon-2x'></i>
 </section>
 <footer ng-if="card.showStatus">
-  <a class="status" ng-href="#/{{card.status.link}}">
-    <i class="icon icon-circle" ng-class="card.status.status || 'disabled'"></i>
-    <span>{{card.status.text| translate}}</span>
-  </a>
+  <div>
+    <a class="status" ng-href="#/{{card.status.link}}">
+      <i class="icon icon-circle status-indicator" ng-class="card.status.status || 'disabled'"></i>
+      <span>{{card.status.text| translate}}</span>
+    </a>
+  </div>
 </footer>

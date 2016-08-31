@@ -1423,6 +1423,12 @@
               } else {
                 $scope.numAddedUsers++;
               }
+              if (user.message === '700000') {
+                userResult.message = $translate.instant('usersPage.onboardedWithoutLicense', {
+                  email: userResult.email
+                });
+                userResult.alertType = 'warning';
+              }
               break;
             }
             case 409: {
@@ -1479,7 +1485,12 @@
                   });
                   break;
                 }
-                default: break;
+                default: {
+                  userResult.message = $translate.instant('usersPage.accessDeniedError', {
+                    email: userResult.email
+                  });
+                  break;
+                }
               }
               break;
             }
@@ -1521,9 +1532,12 @@
 
         //concatenating the results in an array of strings for notify function
         $scope.results.errors = [];
+        $scope.results.warnings = [];
         for (var idx in $scope.results.resultList) {
           if ($scope.results.resultList[idx].alertType === 'success' && $scope.results.resultList[idx].email) {
             removeEmailFromTokenfield($scope.results.resultList[idx].email);
+          } else if ($scope.results.resultList[idx].alertType === 'warning' && $scope.results.resultList[idx].email) {
+            $scope.results.warnings.push(UserCsvService.addErrorWithTrackingID($scope.results.resultList[idx].message, response));
           } else {
             $scope.results.errors.push(UserCsvService.addErrorWithTrackingID($scope.results.resultList[idx].message, response));
           }
@@ -2043,12 +2057,13 @@
             entitleList = getEntitlements('add');
           }
           entitleList = entitleList.concat(getExtensionEntitlements('add'));
-
+          convertPending = false;
           Userservice.updateUsers(successMovedUsers, licenseList, entitleList, 'convertUser', entitleUserCallback);
         } else {
           if ($scope.convertSelectedList.length > 0 && convertCancelled === false && convertBacked === false) {
             convertUsersInBatch();
           } else {
+            convertPending = false;
             if (convertBacked === false) {
               $scope.btnConvertLoad = false;
               $state.go('users.convert.results');
@@ -2240,16 +2255,24 @@
       $scope.model.isProcessing = true;
       $scope.model.cancelProcessCsv = $scope.cancelProcessCsv;
 
-      function addUserError(row, errorMsg) {
+      function addUserError(row, email, errorMsg) {
         $scope.model.userErrorArray.push({
           row: row,
+          email: email,
           error: errorMsg
+        });
+        UserCsvService.setCsvStat({
+          userErrorArray: [{
+            row: row,
+            email: email,
+            error: errorMsg
+          }]
         });
       }
 
-      function addUserErrorWithTrackingID(row, errorMsg, response) {
+      function addUserErrorWithTrackingID(row, errorMsg, response, email) {
         errorMsg = UserCsvService.addErrorWithTrackingID(errorMsg, response);
-        addUserError(row, _.trim(errorMsg));
+        addUserError(row, (email || ''), _.trim(errorMsg));
       }
 
       function successCallback(response, startIndex, length) {
@@ -2271,7 +2294,7 @@
                 addedUsersList.push(addItem);
               }
             } else {
-              addUserErrorWithTrackingID(startIndex + index + 1, UserCsvService.getBulkErrorResponse(user.httpStatus, user.message, user.email), response);
+              addUserErrorWithTrackingID(startIndex + index + 1, UserCsvService.getBulkErrorResponse(user.httpStatus, user.message, user.email), response, user.email);
             }
           });
         } else {
@@ -2282,9 +2305,10 @@
       }
 
       function errorCallback(response, startIndex, length) {
-        var responseMessage = UserCsvService.getBulkErrorResponse(response.status);
         for (var k = 0; k < length; k++) {
-          addUserErrorWithTrackingID(startIndex + k + 1, responseMessage, response);
+          var email = (response.config && response.config.data && _.isArray(response.config.data.users) ? response.config.data.users[k].email : null);
+          var responseMessage = UserCsvService.getBulkErrorResponse(response.status, null, email);
+          addUserErrorWithTrackingID(startIndex + k + 1, responseMessage, response, email);
         }
       }
 

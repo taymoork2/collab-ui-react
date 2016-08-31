@@ -8,15 +8,21 @@ export class ServicesOverviewCtrl {
   public showFilterDropDown:boolean = false;
 
   /* @ngInject */
-  constructor(Orgservice, private ServicesOverviewCardFactory, private $q, private Authinfo, ServiceDescriptor, FeatureToggleService) {
+  constructor(Orgservice, private ServicesOverviewCardFactory, private $q, private Authinfo, FusionClusterService, FeatureToggleService) {
 
     this.cards = ServicesOverviewCardFactory.createCards();
 
     this.loadWebexSiteList();
 
-    ServiceDescriptor.services((err, services)=> {
-      this.forwardEvent('hybridStatusEventHandler', services)
-    }, true);
+    FusionClusterService.getAll()
+      .then((clusterList) => {
+        var services = [];
+        services.push(FusionClusterService.getStatusForService('squared-fusion-mgmt', clusterList));
+        services.push(FusionClusterService.getStatusForService('squared-fusion-cal', clusterList));
+        services.push(FusionClusterService.getStatusForService('squared-fusion-uc', clusterList));
+        services.push(FusionClusterService.getStatusForService('squared-fusion-media', clusterList));
+        this.forwardEvent('hybridStatusEventHandler', services);
+      });
 
     FeatureToggleService.supports(FeatureToggleService.features.atlasHybridServicesResourceList).then(supports => {
       this.forwardEvent('f410FeatureEventHandler', supports);

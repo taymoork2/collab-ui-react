@@ -104,6 +104,12 @@
         'webexSupportCenter'
       ],
 
+      freeLicenses: [
+        'messaging',
+        'communications',
+        'conferencing'
+      ],
+
       //WARNING: Deprecated, use offerTypes
       // These were how trials used to be mapped
       trials: {

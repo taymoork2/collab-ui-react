@@ -6,8 +6,8 @@
   /* @ngInject */
   function WebexReportService(
     $q,
-    $log,
     $translate,
+    Log,
     Authinfo,
     WebExUtilsFact,
     WebExXmlApiFact,
@@ -317,8 +317,6 @@
       // var funcName = "initReportsObject()";
       // var logMsg = funcName;
 
-      var _this = this;
-      // var displayLabel = null;
       var siteUrl = requestedSiteUrl || '';
       var siteName = WebExUtilsFact.getSiteName(siteUrl);
 
@@ -364,6 +362,9 @@
 
           navInfoDef.then(
             function getNaviationInfoSuccess(result) {
+              var funcName = "initReportsObject().getNaviationInfoSuccess()";
+              var logMsg = "";
+
               // var resultString = JSON.stringify(result);
               // $log.log("Result is ----**** " + resultString);
 
@@ -374,37 +375,51 @@
                 ("" !== y.errReason)
               ) {
 
-                _this.webExSiteSettingsObj.hasLoadError = true;
+                reportsObject.hasLoadError = true;
               } else {
                 // $log.log("Validated Result is ==== " + JSON.stringify(y.bodyJson));
 
                 reportsObject["mapJson"] = y;
 
                 var rpts = self.getReports(siteUrl, y);
-                reportsObject["reports"] = rpts;
+                if (
+                  (null == rpts) ||
+                  (0 >= rpts.length)
+                ) {
 
-                var i = 0;
-                var j = 0;
+                  logMsg = funcName + "\n" +
+                    "ERROR: rpts=" + JSON.stringify(rpts) + "\n" +
+                    "siteUrl=" + reportsObject.siteUrl;
+                  Log.error(logMsg);
 
-                for (i = 0; i < rpts.sections.length; i++) {
-                  if (rpts.sections[i].section_name === "common_reports") {
-                    for (j = 0; j < rpts.sections[i].uisrefs.length; j++) {
-                      if (rpts.sections[i].uisrefs[j].reportPageId === "meeting_in_progess") {
-                        reportsObject.infoCardObj.iframeLinkObj1.iframePageObj.uiSref = rpts.sections[i].uisrefs[j].toUIsrefString();
-                      }
-                      if (rpts.sections[i].uisrefs[j].reportPageId === "meeting_usage") {
-                        reportsObject.infoCardObj.iframeLinkObj2.iframePageObj.uiSref = rpts.sections[i].uisrefs[j].toUIsrefString();
+                  reportsObject.hasLoadError = true;
+                  reportsObject.invalidNavUrls = true;
+                } else {
+                  reportsObject["reports"] = rpts;
+
+                  var i = 0;
+                  var j = 0;
+
+                  for (i = 0; i < rpts.sections.length; i++) {
+                    if (rpts.sections[i].section_name === "common_reports") {
+                      for (j = 0; j < rpts.sections[i].uisrefs.length; j++) {
+                        if (rpts.sections[i].uisrefs[j].reportPageId === "meeting_in_progess") {
+                          reportsObject.infoCardObj.iframeLinkObj1.iframePageObj.uiSref = rpts.sections[i].uisrefs[j].toUIsrefString();
+                        }
+                        if (rpts.sections[i].uisrefs[j].reportPageId === "meeting_usage") {
+                          reportsObject.infoCardObj.iframeLinkObj2.iframePageObj.uiSref = rpts.sections[i].uisrefs[j].toUIsrefString();
+                        }
                       }
                     }
                   }
-                }
 
-                reportsObject["viewReady"] = true;
+                  reportsObject["viewReady"] = true;
+                }
               }
             }, // getNaviationInfoSuccess()
 
             function getNaviationInfoError() {
-              _this.webExSiteSettingsObj.hasLoadError = true;
+              reportsObject.hasLoadError = true;
             } // getNaviationInfoError()
           );
 
@@ -417,7 +432,7 @@
           var logMsg = "";
 
           logMsg = funcName + ": " + "errId=" + errId;
-          $log.log(logMsg);
+          Log.debug(logMsg);
 
           reportsObject["sessionTicketError"] = true;
           reportsObject["hasLoadError"] = true;

@@ -106,8 +106,11 @@ set +e
 # - as this script is run by a jenkins builder, the potential infinite loop is mitigated by the
 #   absolute timeout set for the job (currently 30 min.)
 export npm_lifecycle_event="build"
-webpack_exit_code=1
-while [ "$webpack_exit_code" -ne 0 ]; do
+time webpack --bail --progress --profile --nolint
+webpack_exit_code=$?
+while [ "$webpack_exit_code" -eq 132 -o \
+    "$webpack_exit_code" -eq 139 -o \
+    "$webpack_exit_code" -eq 255 ]; do
     time webpack --bail --progress --profile --nolint
     webpack_exit_code=$?
 done

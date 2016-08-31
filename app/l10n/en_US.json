@@ -1,5 +1,5 @@
 {
-  "statusPage":{
+  "statusPage": {
     "pageTitle": "Status Management",
     "dashboard": "Dashboard",
     "incidents": "Incidents",
@@ -29,7 +29,7 @@
     "assignDnAndDirectLines": "Assign Numbers",
     "addUsers": "Add Users",
     "convertUsers": "Convert Users",
-    "errorMessages": "Error Messages",
+    "errorWarningMessages": "Warnings and Errors",
     "skipErrorsAndFinish": "Skip Errors and Finish",
     "newUsers": "{newusers, plural, one{# New user} other{# New users}}",
     "updatedUsers": "{updatedusers, plural, one{# Updated user} other{# Updated users}}",
@@ -107,6 +107,8 @@
     "deleteUserDnFallbackError": "Error deleting user. The user's directory number is used as the fallback destination for Hunt Group(s).",
     "onboardSuccess": "{{email}} onboarded successfully",
     "onboardError": "{{email}} not onboarded. Status: {{status}}",
+    "onboardedWithoutLicense": "{{email}} onboarded without a license",
+    "accessDeniedError": "{{email}} cannot be added. Access is denied.",
     "ciscoucError": "{{email}} did not successfully onboard Call service.",
     "messageError": "Message: {{message}}",
     "userListError": "Error retrieving the user list. Please try reloading the page.",
@@ -172,7 +174,6 @@
       "dirSyncProcessing": "Processing...",
       "dirSyncSuccess": "Success",
       "dirSyncError": "Error",
-
       "typeLabel": "Modify Users",
       "typeInstructions": "Select a method to modify users and the services they use.",
       "manualLabel": "Manually modify users",
@@ -200,7 +201,6 @@
         "title": "Bulk Add or Modify Users",
         "instructions": "Export the current user attributes, edit the CSV file, and then import the edited version to add or update users."
       },
-
       "import": {
         "label": "Import",
         "title": "Import Options",
@@ -222,7 +222,6 @@
       "resultModalTitle": "Import User List Results",
       "desc": "Best method for adding up to {{maxUsers}} users at a time. Entitlement changes of the existing users can also be made through CSV file upload. Users cannot be deleted during this process.",
       "readyForImport": "File ready for import",
-
       "uploadPrompt": "Drag and Drop your CSV file here or",
       "fileBrowser": "click to browse",
       "export": "Export",
@@ -231,7 +230,6 @@
       "exportPrompt": "Export user attributes or",
       "exportSuccessTitle": "Successful CSV Export",
       "exportSuccessBody": "{{type}} attributes have been successfully, exported to '{{filename}}'.",
-
       "downloadCsvTemplate": "download CSV template",
       "enableRemoveLabel": "Match user entitlements exactly from CSV",
       "enableRemoveNote": "Note: User entitlements not included in the CSV file upload will not be removed.",
@@ -239,7 +237,6 @@
       "confirmCsvDownloadTitle": "Export User Attributes",
       "confirmCsvDownloadMsg": "Gathering data for export may take awhile. During this time you cannot sign out, or refresh your browser or the export will be canceled.",
       "confirmCsvDownloadMsg10K": "Because you have more than {{maxUsers}} users, the exported list will not show the entitlements that are assigned to your users.",
-
       "newUsers": "Added",
       "existingUsers": "Updated",
       "errorUsers": "Errors",
@@ -530,14 +527,14 @@
     "careTab": "Care",
     "careTabDesc": "Cloud Contact Center",
     "saveAs": "Save As",
+    "pdf": "PDF",
     "export": "Export",
     "allCalls": "All Calls",
     "videoCalls": "Video Calls",
     "audioCalls": "Audio Only Calls",
     "customer": "Customer",
     "customers": "Customers",
-    "customerSelect": "Select a customer",
-    "trackingId": "Tracking ID: "
+    "customerSelect": "Select a customer"
   },
   "careReportsPage": {
     "tasks": "Tasks",
@@ -909,6 +906,7 @@
     "errPartnerEmail": "Failed to resend welcome email to partner admin"
   },
   "weekDays": {
+    "daily": "Daily",
     "everyDay": "Every {{day}}",
     "day": "day",
     "monday": "Monday",
@@ -955,6 +953,7 @@
     "invalidMinLength": "This entry is too short. Minimum length is {{min}}.",
     "invalidMaxLength": "This entry is too long. Maximum length is {{max}}.",
     "invalidMax": "Maximum value is {{max}}.",
+    "incorrectFormat": "Incorrect format",
     "on": "On",
     "off": "Off",
     "enabled": "Enabled",
@@ -1190,7 +1189,7 @@
     "errorGettingOptionaVmDidToggle": "There was a problem getting the optionalVmDid toggle.",
     "externalNumberDescriptionText": "Select a number that users can call to check their voicemail from outside the company network.",
     "voicemailPrefixTitle": "Voicemail Access Prefix",
-    "voicemailPrefixDesc": "Select a prefix to reserve for dialing mailboxes other than your own personal phone. Extentions between {{number}}{{extensionLength0}} and {{number}}{{extensionLength9}} are not recommended for assignment.",
+    "voicemailPrefixDesc": "Select a prefix to reserve for dialing mailboxes other than your own personal phone. This number also makes up the user’s external voicemail access code. We do not recommend using numbers between {{number}}{{extensionLength0}} and {{number}}{{extensionLength9}}",
      "error": {
        "siteSteering": "First digit of Voicemail Access Prefix conflicts with the selected Outbound Dial Digit.",
        "outboundDialDigit": "Outbound Dial Digit conflicts with the first digit of the Voicemail Access Prefix.",
@@ -1200,6 +1199,11 @@
      "warning": {
        "siteSteering": "First digit of Voicemail Access Prefix conflicts with the first digit of an internal extension range. If you use this prefix, it may cause a delay when dialing extensions starting with the same number.",
         "outboundDialDigit": "Outbound Dial Digit conflicts with the first digit of an internal extension range. If you use this digit, it may cause a delay when dialing extensions starting with the same number."
+     },
+     "saveModal": {
+       "title": "Dial Plan Settings",
+       "message1": "Are you sure you want to change your dial plan settings?",
+       "message2": "Changing dial plan settings during business hours can take a few minutes to propagate through the system and prevent users from placing calls during that time."
      }
   },
   "dirsyncModal": {
@@ -1312,7 +1316,6 @@
     "licenseSuspendedWarning": "Your room systems license is suspended.",
     "retrieveDevicesFail": "Failed to load device information",
     "retrieveKemFail": "Failed to retrieve key expansion module count."
-
   },
   "hercules": {
     "page_title": "Connector Management",
@@ -1709,6 +1712,7 @@
         "settings": "Settings",
         "all": "All",
         "add-resource": "Add Resource",
+        "add-resource-group": "Create new resource group",
         "expressway": "Expressway",
         "mediafusion": "Media",
         "no-services": "No services"
@@ -1741,11 +1745,35 @@
             "title": "Enter a name for the Hybrid Media Node",
             "help": "The cluster name is only used for display purposes."
           },
-          "end": {
-
-          }
+          "end": {}
+        }
+      },
+      "add-resource-group": {
+        "title": "Create new Resource Group",
+        "name": {
+          "title": "Resource Group Details",
+          "description": "Resource groups are a set of clusters that you may assign users to.",
+          "subtitle": "Resource Group Name",
+          "placeholder": "Enter name"
+        },
+        "release-channel": {
+          "title": "Release Channel",
+          "description": "All the Hybrid services in the Resource Group will run on this release channel.",
+          "stable": "Stable",
+          "stableHelpText": "The official release software for Hybrid Services",
+          "beta": "Beta",
+          "betaHelpText": "If you want your users to test new features before they are released",
+          "latest": "Latest",
+          "latestHelpText": "For developers and early adopters",
+          "error": "Could not create the Resource Group"
         }
       }
+    },
+    "resourceGroups": {
+      "resourceGroupHeading": "Resource Group",
+      "setDescription": "Select the Resource Group the user is assigned to for this service.",
+      "noGroupSelected": "None",
+      "failedToSetGroup": "Failed to set the resource group"
     }
   },
   "ediscovery": {
@@ -2343,6 +2371,7 @@
     "features": "Features",
     "voicemail": "Voicemail",
     "singleNumberReach": "Single Number Reach",
+    "speedDials": "Speed Dials",
     "internationalDialing": "International Dialing"
   },
   "directoryNumberPanel": {
@@ -2435,6 +2464,19 @@
     "error": "Single Number Reach configuration failed.",
     "unitedStates": "United States of America",
     "austrailia": "Austrailia"
+  },
+  "speedDials": {
+    "title": "Speed Dial Numbers",
+    "addSpeedDial": "Add Speed Dial",
+    "reorder": "Reorder",
+    "label": "Contact Name",
+    "number": "Contact Address",
+    "deleteConfirmationHeader": "Confirm Delete",
+    "deleteConfirmation": "Are you sure you want to delete?",
+    "retrieveSpeedDialsFail": "Failed to retrieve speed dials.",
+    "speedDialChangesFailed": "Failed to save speed dial changes.",
+    "labelIncorrectCharacter": "Speed Dial Labels can not include < or >",
+    "limitSpeedDialsReach": "You reached the limit of 125 speed dial entries."
   },
   "internationalDialingPanel": {
     "success": "International Dialing configuration saved successfully",
@@ -2619,7 +2661,7 @@
     "daysAgo": "{{days}} days ago",
     "expireToday": "Expiring Today",
     "errGetTrialsQuery": "Failed to retrieve trials. Status: {{status}}",
-    "errGetOrgs":  "Failed to retrieve orgranizations.",
+    "errGetOrgs": "Failed to retrieve orgranizations.",
     "fifty": "50",
     "oneHundred": "100",
     "twoHundred": "200",
@@ -2823,7 +2865,6 @@
     "trialDuration": "Trial Duration",
     "callServiceDisabled": "This service is temporarily unavailable for trial."
   },
-
   "status": {
     "noResults": "No results available.",
     "errorProcessing": "Error processing request."
@@ -2882,6 +2923,7 @@
     "trialTerms": "Terms of Trial",
     "trialOverview": "Trial",
     "webexOverview": "WebEx",
+    "webexSiteCount": "{count, plural, one{# more site} other{# more sites}}",
     "licenses": "Number of Licenses",
     "totalQuantity": "Total Quantity",
     "totalLicenses": "Total Licenses",
@@ -2935,7 +2977,9 @@
     "filterSelectPlaceholder": "Select a filter...",
     "filterTrialAccounts": "Trial Accounts",
     "filterPurchasedAccounts": "Purchased Accounts",
-    "filterExpiredAccounts": "Expired Accounts"
+    "filterExpiredAccounts": "Expired Accounts",
+    "subscriptions": "Subscription Info",
+    "viewSubscriptionInfo": "View Subscription Info"
   },
   "customerAdminPanel": {
     "addAdministrators": "Add Administrators",
@@ -2949,6 +2993,14 @@
     "deleteConfirmation": "Are you sure you want to remove {{pattern}}'s Administrator Privileges?",
     "noResultsError": "No results found",
     "tooManyResultsError": "Search returned too many results. Be more specific to find user"
+  },
+  "customerSubscriptions": {
+    "customerInfo": "Customer Info",
+    "partnerAdmin": "Partner Admins",
+    "webexSubscriptions": "Webex Subscriptions",
+    "noWebexSubscriptions": "No Webex Subscriptions",
+    "emailSubscriptionInfo": "Email Subscription Info",
+    "emailSubscriptionInfoDetail": "Send subscription info to another contact using your email client. You can also copy the subscription into your clipboard."
   },
   "didAddModal": {
     "title": "Add Phone Numbers (Optional)"
@@ -3074,7 +3126,7 @@
       "userOrPlaceInstructions": "A place can be a meeting room, a reception area or even a whole department. All devices under a single user or place will share the same calling configuration. For example, desk phones will share the same lines.",
       "personalUsage": "Personal Usage",
       "place": "Place",
-      "user":"Existing User",
+      "user": "Existing User",
       "sharedUsage": "Shared Usage"
     },
     "choosePersonal": {
@@ -3349,8 +3401,8 @@
       "callRejectLegend": "Overflowed to Cloud",
       "callLocal": "Calls on premise",
       "callReject": "Calls overflowed to cloud",
-      "callLocalCluster":"Calls local to cluster",
-      "callRedirectedCluster":"Calls redirected by cluster",
+      "callLocalCluster": "Calls local to cluster",
+      "callRedirectedCluster": "Calls redirected by cluster",
       "callsRedirected": "Calls Redirected",
       "availabilityOfCluster": "Cluster Availability",
       "availabilityOfHost": "Node Availability",
@@ -3377,8 +3429,9 @@
       "overallTotalNumberOfCallsError": "There was an error while loading Total Number of calls",
       "total_calls": "Total Calls",
       "totalCallsDescription": "Calls hosted locally and that overflowed to the Cisco Collaboration Cloud.",
-      "onpremcalls": "Calls on prem |",
-      "cloudcalls": "Calls bursted to cloud"
+      "onpremcalls": "on premises |",
+      "cloudcalls": "overflowed to cloud",
+      "redirectedcalls": "redirected"
     },
     "serviceStatus": {
       "unknown": "Status unknown",
@@ -3455,7 +3508,7 @@
       "stable": "STABLE",
       "beta": "BETA",
       "latest": "LATEST",
-      "errorMsg":"Before you can delete this cluster, you must either move all nodes to another cluster or deregister all nodes."
+      "errorMsg": "Before you can delete this cluster, you must either move all nodes to another cluster or deregister all nodes."
     },
     "reassign": {
       "reassignHost": "Reassign Host",
@@ -3481,6 +3534,7 @@
       "noAlarms": "No alarms reported",
       "hostImpact": "Host Impacted",
       "nodeImpact": "Node Impacted",
+      "nodesImpact": "Nodes Impacted",
       "raised": "Raised"
     },
     "add-resource-dialog": {
@@ -3520,7 +3574,7 @@
       "noProceed-helptext": "(Software will automatically download)",
       "noInfo": "Install and configure the software on your server and return to Cisco Cloud Collaboration Management to register your Hybrid Media Node.",
       "noRetryInfo": "Software did not automatically download? <a href='https://7f3b835a2983943a12b7-f3ec652549fc8fa11516a139bfb29b79.ssl.cf5.rackcdn.com/Media-Fusion-Management-Connector/mfusion.ova'>Try Again.</a>",
-      "noDesc1": "For detailed on installation and configuration, visit ",
+      "noDesc1": "For details on installation and configuration, visit ",
       "noDesc2": "Help Central.",
       "noDesc3": "After installation and configuration is complete, return to Cloud Collaboration Management and register your Hybrid Media Node.",
       "yesInfo": "Assign your Hybrid Media Node to a cluster and enter the hostname or IP address."
@@ -3672,6 +3726,7 @@
     "defaultNotWebExAdminError": "You have not yet been provisioned to this site as an administrator. This process may take a moment.",
     "defaultAccessError": "Unable to access server at this time.",
     "defaultDbMismatchError": "User account changes are being synchronized among the servers. This process may take a while.",
+    "defaultNoNavUrlError": "Invalid data encountered",
     "defaultReloadMsg": "Please try reloading the page."
   },
   "webexUserSettingLabels": {
@@ -3711,12 +3766,9 @@
     "emailAllHostsBtnTitle": "Email All Hosts",
     "commonSettingsCardTitle": "Common Settings",
     "commonSettingsCardNote": "These settings apply across centers.",
-
     "indexPageLabel_EMAIL_send_email_to_all": "Email All Hosts",
-
     "indexPageLabel_SiteInfo_site_info": "Site Information",
     "indexPageLabel_SiteInfo_site_features": "Site Features",
-
     "indexPageLabel_CommonSettings_cmr": "Collaboration Meeting Rooms (CMR)",
     "indexPageLabel_CommonSettings_mobile": "Mobile",
     "indexPageLabel_CommonSettings_navigation": "Navigation Customization",
@@ -3731,18 +3783,15 @@
     "indexPageLabel_CommonSettings_user_priv": "User Privileges",
     "indexPageLabel_CommonSettings_site_info": "Site Information",
     "indexPageLabel_CommonSettings_pda_settings": "Partner Delegated Authentication",
-
     "indexPageLabel_MC_mc_options": "Site Options",
     "indexPageLabel_MC_mc_default_options": "Default Options",
     "indexPageLabel_MC_mc_scheduling_templates": "Scheduling Templates",
     "indexPageLabel_MC_mc_navigation_customization": "Navigation Customization",
-
     "indexPageLabel_TC_tc_ecommerce": "E-Commerce",
     "indexPageLabel_TC_tc_options": "Site Options",
     "indexPageLabel_TC_tc_navigation_customization": "Navigation Customization",
     "indexPageLabel_TC_tc_scheduling_templates": "Scheduling Templates",
     "indexPageLabel_TC_tc_default_options": "Default Options",
-
     "indexPageLabel_EC_ec_ecommerce": "E-Commerce",
     "indexPageLabel_EC_ec_options": "Site Options",
     "indexPageLabel_EC_ec_default_options": "Default Options",
@@ -3750,7 +3799,6 @@
     "indexPageLabel_EC_ec_scheduling_templates": "Scheduling Templates",
     "indexPageLabel_EC_host_reassign": "Reassignment",
     "indexPageLabel_EC_required_fields": "Registration Form",
-
     "indexPageLabel_SC_sc_options": "CSR Preferences",
     "indexPageLabel_SC_sc_customer_preferences": "Customer Preferences",
     "indexPageLabel_SC_sc_default_options": "Default Options",
@@ -3758,19 +3806,14 @@
     "indexPageLabel_SC_sc_promotion": "Promotion",
     "indexPageLabel_SC_branding": "Branding",
     "indexPageLabel_SC_forms": "Forms",
-
     "indexPageLabel_WebACD_webacd_settings": "Settings",
     "indexPageLabel_WebACD_webacd_queues": "Queues",
     "indexPageLabel_WebACD_webacd_form": "Forms",
-
     "indexPageLabel_RA_remote_options": "Settings",
     "indexPageLabel_RA_remote_groups": "Groups",
-
     "settingPageLabel_EMAIL_send_email_to_all": "Email All Hosts",
-
     "settingPageLabel_SiteInfo_site_info": "Site Overview",
     "settingPageLabel_SiteInfo_site_features": "Site Overview",
-
     "settingPageLabel_CommonSettings_cmr": "Common Settings",
     "settingPageLabel_CommonSettings_mobile": "Common Settings",
     "settingPageLabel_CommonSettings_navigation": "Common Settings",
@@ -3785,18 +3828,15 @@
     "settingPageLabel_CommonSettings_user_priv": "User Privileges",
     "settingPageLabel_CommonSettings_site_info": "Site Overview",
     "settingPageLabel_CommonSettings_pda_settings": "Partner Delegated Authentication",
-
     "settingPageLabel_MC_mc_options": "Meeting Center Settings",
     "settingPageLabel_MC_mc_default_options": "Meeting Center Settings",
     "settingPageLabel_MC_mc_scheduling_templates": "Meeting Center Settings",
     "settingPageLabel_MC_mc_navigation_customization": "Meeting Center Settings",
-
     "settingPageLabel_TC_tc_ecommerce": "Training Center E-Commerce",
     "settingPageLabel_TC_tc_options": "Training Center Settings",
     "settingPageLabel_TC_tc_navigation_customization": "Training Center Settings",
     "settingPageLabel_TC_tc_scheduling_templates": "Training Center Settings",
     "settingPageLabel_TC_tc_default_options": "Training Center Settings",
-
     "settingPageLabel_EC_ec_ecommerce": "Event Center E-Commerce",
     "settingPageLabel_EC_ec_options": "Event Center Settings",
     "settingPageLabel_EC_ec_default_options": "Event Center Settings",
@@ -3804,7 +3844,6 @@
     "settingPageLabel_EC_ec_scheduling_templates": "Event Center Settings",
     "settingPageLabel_EC_host_reassign": "Event Center Reassignment",
     "settingPageLabel_EC_required_fields": "Event Center Registration Form",
-
     "settingPageLabel_SC_sc_options": "Support Center Settings",
     "settingPageLabel_SC_sc_customer_preferences": "Support Center Settings",
     "settingPageLabel_SC_sc_default_options": "Support Center Settings",
@@ -3812,11 +3851,9 @@
     "settingPageLabel_SC_sc_promotion": "Support Center Settings",
     "settingPageLabel_SC_branding": "Support Center Branding",
     "settingPageLabel_SC_forms": "Support Center Forms",
-
     "settingPageLabel_WebACD_webacd_settings": "WebACD Settings",
     "settingPageLabel_WebACD_webacd_queues": "WebACD Queues",
     "settingPageLabel_WebACD_webacd_form": "WebACD Leave Message Forms",
-
     "settingPageLabel_RA_remote_options": "Remote Access Settings",
     "settingPageLabel_RA_remote_groups": "Remote Access Groups"
   },
@@ -3827,41 +3864,34 @@
     "event_center": "Event Center",
     "support_center": "Support Center",
     "remote_access": "Remote Access",
-
     "meeting_in_progess": "Meetings in Progress",
     "meeting_usage": "Meeting Usage",
     "recordings_storage_usage": "Storage Usage",
     "recording_usage": "Recording Usage",
     "inactive_user": "Inactive Users",
-
     "training_usage": "Training Usage",
     "registration": "Registration",
     "recording": "Recordings",
     "coupon": "Coupons",
     "attendee": "Attendees",
-
     "event_center_overview": "Overview",
     "event_center_site_summary": "Site Summary",
     "event_center_scheduled_events": "Scheduled Events",
     "event_center_held_events": "Held Events",
     "event_center_report_template": "Report Templates",
-
     "support_center_support_sessions": "Support Sessions",
     "support_center_call_volume": "Call Volume",
     "support_center_csr_activity": "CSR Activities",
     "support_center_url_referral": "URL Referral",
     "support_center_allocation_queue": "Allocation Queues",
-
     "remote_access_computer_usage": "Computer Usage",
     "remote_access_csrs_usage": "CSR",
     "remote_access_computer_tracking": "Computer Tracking",
-
     "storage_utilization": "Storage Usage",
     "programs_events_recordings": "Programs Events Recordings",
     "summary": "Summary",
     "scheduled_events_dashboard": "Scheduled Events Dashboard",
     "held_events_dashboard": "Held Events Dashboard",
-
     "session_query_tool": "Session Query Tool",
     "call_volume": "Call Volume",
     "csr_activity": "CSR Activities",
@@ -3873,14 +3903,11 @@
     "webacd_csr_activity": "Webacd Csr Activity",
     "webacd_url_referal": "Webacd Url Referal",
     "webacd_allocation_queue": "Webacd Allocation Queue",
-
     "usage": "Usage",
-
     "recorded_session_access": "Recorded Session Access",
     "coupon_usage": "Coupon Usage",
     "training_record_attendee": "Training Record Attendee",
     "access_anywhere_usage": "Access Anywhere Usage",
-
     "adminReportNotEnabled": "Reports are not enabled for this site"
   },
   "webexReportsPageTitles": {
@@ -3915,7 +3942,6 @@
   "webexCSVResultsModal": {
     "csvExportTitle": "Export Results",
     "csvImportTitle": "Import Results",
-
     "csvStarted": "Started:",
     "csvFinished": "Completed:",
     "csvRecordsRequested": "Records requested:",
@@ -4009,7 +4035,6 @@
     "supportContacts": "Support Contacts",
     "partnerAdmin": "Partner Administrators",
     "brandingInfo": "If you want to display your own branding in addition to Cisco Spark, upload your logo below.",
-
     "usePartnerLogo": "Use the same logo in use by {{partner}}",
     "supportInfo": "If you are providing support for your users, enter your support parameters below. These parameters will be displayed under Support Options in the Spark application.",
     "supportAccessTitle": "Support Access",
@@ -4297,7 +4322,6 @@
     "settingsTitle": "Settings",
     "featuresTitle": "Features"
   },
-
   "huronFeatureDetails": {
     "members": " Members",
     "numbers": " Numbers",
@@ -4349,18 +4373,17 @@
     "assignedTo": "Assigned to",
     "inProgress": "In Progress"
   },
-
   "messengerCiSync": {
     "authRedirectHeading": "Redirect Users to Common Identity Login Flow",
-    "authRedirectTooltip": "When enabled, Jabber clients login through Common Identity",
+    "authRedirectTooltip": "Jabber Users Login to CI Login Flow",
     "errorAuthFailed": "Authorization failed: ",
     "errorFailedCheckingCIEntitlements": "Failed checking user entitlements from Common Identity: ",
     "errorFailedCheckingCIRoles": "Failed checking Common Identity user roles: ",
     "errorFailedCheckingCustSuccessRole": "Failed checking if user has Customer Success Admin CI Role: ",
     "errorFailedCheckingOrgInManagedOrgs": "Failed checking if user has customer org in its managed orgs: ",
-    "errorFailedGettingCISyncStatus": "Failed getting Messenger Sync status: ",
-    "errorFailedRefreshingCISyncStatus": "Failed refreshing Messenger Sync status: ",
-    "errorFailedUpdatingCISync": "Failed updating Messenger Sync status: ",
+    "errorFailedGettingCISyncStatus": "Failed getting Jabber Messenger Sync status: ",
+    "errorFailedRefreshingCISyncStatus": "Failed refreshing Jabber Messenger Sync status: ",
+    "errorFailedUpdatingCISync": "Failed updating Jabber Messenger Sync status: ",
     "errorLacksEntitlements": "User lacks Customer Success Admin Role or Common Identity entitlements to view this content: ",
     "errorLacksFullAdmin": "User lacks Full Admin role in Common Identity to view this content",
     "errorLacksRole": "User lacks appropriate role in Common Identity to view this content",
@@ -4372,18 +4395,19 @@
     "http500": "500 Server Error",
     "httpUnknown": " Unknown HTTP Error",
     "labelCILinkDate": "Link Date",
-    "labelOrgId": "Messenger Organization ID",
-    "labelOrgName": "Messenger Organization Name",
+    "labelOrgId": "Jabber Messenger Organization ID",
+    "labelOrgName": "Jabber Messenger Organization Name",
     "labelUnauthorizedUser": "Unauthorized User",
-    "loading": "Loading Messenger Synchronization Status",
-    "orgAdminLinkText": "Launch Webex Messenger Admin Tool",
-    "pageTitle": "Webex Messenger",
-    "patchSuccessful": "Messenger Sync updated successfully",
+    "loading": "Loading Jabber Messenger Synchronization Status",
+    "orgAdminLinkText": "Launch Jabber Messenger Admin Tool",
+    "orgAdminLinkTooltip": "Continue to mange your Jabber users in the Messenger Org Admin tool",
+    "pageTitle": "Jabber Messenger",
+    "patchSuccessful": "Jabber Messenger Sync updated successfully",
     "patchSyncButtonText": "Update",
     "refresh": "Refresh",
-    "refreshFailed": "Failed refreshing Messenger Sync status",
-    "syncStatusHeading": "Messenger User Synchronization",
-    "syncStatusTooltip": "When enabled, users are actively being synced from Messenger",
+    "refreshFailed": "Failed refreshing Jabber Messenger Sync status",
+    "syncStatusHeading": "Jabber Messenger User Synchronization",
+    "syncStatusTooltip": "Jabber Messenger users added to Org Admin are synced to Common Identity",
     "dirsyncStatusHeading": "Common Identity Directory Synchronization",
     "dirsyncStatusTooltip": "To access Spark platform capabilities, WebEx Messenger users need to be synchronized with the Common Identity service."
   },
@@ -4489,10 +4513,11 @@
     "typeId": "Id",
     "typePhone": "Phone",
     "typeCustom": "Custom",
-    "ctValidation":{
+    "ctValidation": {
       "errorChar250": "Character length cannot be more than 250.",
       "errorChar50": "Character length cannot be more than 50.",
-      "errorTypeDuplicate": "This ‘Type’ is associated with another field. Select a different one from the available types."
+      "errorTypeDuplicate": "This ‘Type’ is associated with another field. Select a different one from the available types.",
+      "businessDaysSelection": "Select the business working days."
     },
     "ctOverview": {
       "customerInformation": {
@@ -4729,6 +4754,10 @@
         "title": "Call",
         "notEnabledText": "Basic external calling and call routing features enabled for your organization."
       },
+      "care": {
+        "title": "Care",
+        "notEnabledText": "Use Spark Care services to collaborate with your customer. Customize care interfaces using configuration wizard."
+      },
       "roomSystem": {
         "title": "Room Systems",
         "currentTitle": "Online this week",
@@ -4757,7 +4786,7 @@
       "subsectionLabel": "Branding"
     },
     "sipDomain": {
-      "title": "SIP Domain",
+      "title": "Spark SIP Address",
       "subsectionLabel": "SIP Domain Prefix",
       "subsectionDescription": "Specify a SIP domain prefix that will be used in a user's addresses when calling a user on a SIP enabled device. For example in this address: example.call.ciscospark.com, \"example\" is the prefix you are defining."
     },
@@ -4844,7 +4873,8 @@
       "EE": "Webex Enterprise Edition",
       "CMR": "WebEx Collaboration Meeting Rooms",
       "CO": "Spark Call",
-      "SD": "Spark Room Systems"
+      "SD": "Spark Shared Devices",
+      "SB": "Cisco Spark Board"
     }
   },
   "myCompanyOrders": {
@@ -4925,6 +4955,7 @@
     "contact": "Contact",
     "managedBy": "Managed By",
     "supportedBy": "Supported By",
+    "orderSystem": "Order System",
     "organizationId": "Org. ID",
     "userId": "User ID",
     "ts": "TS(TAC)",
@@ -5173,7 +5204,7 @@
       },
       "clusterList": {
         "title": "Clusters",
-        "description": "On-prem clusters and configuration for your organization.",
+        "description": "On-premises clusters and configuration for your organization.",
         "buttons": {
           "all": "All Clusters",
           "expressway": "Expressway",
@@ -5218,9 +5249,10 @@
       "setup": "Set up"
     },
     "cardStatus": {
-      "running": "Operational",
-      "alarms": "Impaired Service",
-      "error": "Outage",
+      "operational": "Operational",
+      "impaired": "Impaired Service",
+      "outage": "Outage",
+      "unknown": "Unknown",
       "disabled": "Disabled"
     }
   },

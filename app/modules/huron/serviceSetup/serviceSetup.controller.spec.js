@@ -183,6 +183,8 @@ describe('Controller: ServiceSetup', function () {
       controller.form = form;
       $scope.$apply();
       $httpBackend.flush();
+
+      controller.firstTimeSetup = true;
     }));
     describe('auto attendants returns an array with an element', function () {
       it('should set the disableExtensions property as true', function () {
@@ -559,7 +561,7 @@ describe('Controller: ServiceSetup', function () {
           voicemailAction: 3
         };
 
-        controller.model.site.siteSteeringDigit.siteDialDigit = '8';
+        controller.model.voicemailPrefix.value = '6';
 
         //remove singlenumber range for it to pass
         controller.deleteInternalNumberRange(model.numberRanges[2]);
@@ -687,7 +689,7 @@ describe('Controller: ServiceSetup', function () {
         controller.model.ftswCompanyVoicemail.ftswCompanyVoicemailNumber = undefined;
         controller.hasVoicemailService = false;
 
-        controller.model.site.siteSteeringDigit.siteDialDigit = '8';
+        controller.model.voicemailPrefix.value = '6';
 
         //remove singlenumber range for it to pass
         controller.deleteInternalNumberRange(model.numberRanges[2]);
@@ -885,7 +887,7 @@ describe('Controller: ServiceSetup', function () {
       });
 
       it('should set voicemail prefix to intersect with extension range and trigger warning', function () {
-        controller.model.site.siteSteeringDigit.voicemailPrefixLabel = '1100';
+        controller.model.voicemailPrefix.label = '1100';
         controller.model.displayNumberRanges = [{
           beginNumber: 1000,
           endNumber: 1999
@@ -905,7 +907,7 @@ describe('Controller: ServiceSetup', function () {
       });
 
       it('should set site dial digit and outbound dial digit to have the same value and trigger error', function () {
-        controller.model.site.siteSteeringDigit.siteDialDigit = '1';
+        controller.model.voicemailPrefix.value = '1';
         controller.model.site.steeringDigit = '1';
         var localscope = {
           fields: [{
@@ -916,6 +918,18 @@ describe('Controller: ServiceSetup', function () {
         };
 
         expect(controller.siteAndSteeringDigitErrorValidation('', '', localscope)).toBe(true);
+      });
+
+      it('should change the change site steering digit and send with the update site', function () {
+        controller.model.voicemailPrefix.value = '1';
+        controller.initNext();
+        $scope.$apply();
+        expect(ServiceSetup.updateSite).toHaveBeenCalledWith(model.site.uuid,
+          {
+            siteSteeringDigit: '1',
+            voicemailPilotNumber: 'undefined8040506021015100215030504070415',
+            voicemailPilotNumberGenerated: 'true'
+          });
       });
     });
   });
@@ -966,6 +980,8 @@ describe('Controller: ServiceSetup', function () {
       controller.form = form;
       $scope.$apply();
       $httpBackend.flush();
+
+      controller.firstTimeSetup = true;
     }));
     describe('Site is created and voicemail is set with DID featuretoggle OFF', function () {
       it('voicemailPilotNumberGenerated is false', function () {
@@ -1066,6 +1082,8 @@ describe('Controller: ServiceSetup', function () {
 
       $scope.$apply();
       $httpBackend.flush();
+
+      controller.firstTimeSetup = true;
     }));
     describe('Site Create/Update and voicemail update Tests', function () {
 
@@ -1159,6 +1177,8 @@ describe('Controller: ServiceSetup', function () {
 
       $scope.$apply();
       $httpBackend.flush();
+
+      controller.firstTimeSetup = true;
     }));
     describe('Site and voicemail update with generated Voice Mail Pilot with Feature Toggle ON Tests', function () {
 
