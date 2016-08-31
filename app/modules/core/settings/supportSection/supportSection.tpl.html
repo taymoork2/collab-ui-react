@@ -24,7 +24,7 @@
                 </textarea>
     <h6 translate="partnerProfile.matchingTix"></h6>
     <p class="body-small form-section" translate="partnerProfile.matchingDescr"></p>
-    <button cs-btn class="btn btn--primary" ng-if="ctrl.useCustomSupportUrlDirty"
+    <button cs-btn class="btn btn--primary" ng-if="ctrl.showCustomSupportUrlSaveButton"
             ng-click="ctrl.saveUseCustomSupportUrl()"
             loading="ctrl.savingProgress">{{"common.save" | translate}}
     </button>
@@ -45,7 +45,7 @@
            ng-disabled="!ctrl.useCustomHelpSite">
 
   </div>
-  <button cs-btn class="btn btn--primary" ng-if="ctrl.useCustomHelpSiteDirty" ng-click="ctrl.saveUseCustomHelpSite()"
+  <button cs-btn class="btn btn--primary" ng-if="ctrl.showCustomHelpSiteSaveButton" ng-click="ctrl.saveUseCustomHelpSite()"
           loading="ctrl.savingProgress">{{"common.save" | translate}}
   </button>
 </div>
