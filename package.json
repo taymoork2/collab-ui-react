@@ -57,7 +57,7 @@
     "clipboard": "~1.5.5",
     "collab-amcharts": "~3.19.4",
     "collab-ui": "~2.29.1",
-    "collab-ui-angular": "~1.5.1",
+    "collab-ui-angular": "~1.5.3",
     "d3": "~3.5.5",
     "draggable.js": "git+https://github.com/gtramontina/draggable.js.git#v1.0.1",
     "dragular": "~4.2.0",

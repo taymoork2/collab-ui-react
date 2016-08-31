@@ -4375,15 +4375,15 @@
   },
   "messengerCiSync": {
     "authRedirectHeading": "Redirect Users to Common Identity Login Flow",
-    "authRedirectTooltip": "When enabled, Jabber clients login through Common Identity",
+    "authRedirectTooltip": "Jabber Users Login to CI Login Flow",
     "errorAuthFailed": "Authorization failed: ",
     "errorFailedCheckingCIEntitlements": "Failed checking user entitlements from Common Identity: ",
     "errorFailedCheckingCIRoles": "Failed checking Common Identity user roles: ",
     "errorFailedCheckingCustSuccessRole": "Failed checking if user has Customer Success Admin CI Role: ",
     "errorFailedCheckingOrgInManagedOrgs": "Failed checking if user has customer org in its managed orgs: ",
-    "errorFailedGettingCISyncStatus": "Failed getting Messenger Sync status: ",
-    "errorFailedRefreshingCISyncStatus": "Failed refreshing Messenger Sync status: ",
-    "errorFailedUpdatingCISync": "Failed updating Messenger Sync status: ",
+    "errorFailedGettingCISyncStatus": "Failed getting Jabber Messenger Sync status: ",
+    "errorFailedRefreshingCISyncStatus": "Failed refreshing Jabber Messenger Sync status: ",
+    "errorFailedUpdatingCISync": "Failed updating Jabber Messenger Sync status: ",
     "errorLacksEntitlements": "User lacks Customer Success Admin Role or Common Identity entitlements to view this content: ",
     "errorLacksFullAdmin": "User lacks Full Admin role in Common Identity to view this content",
     "errorLacksRole": "User lacks appropriate role in Common Identity to view this content",
@@ -4395,18 +4395,19 @@
     "http500": "500 Server Error",
     "httpUnknown": " Unknown HTTP Error",
     "labelCILinkDate": "Link Date",
-    "labelOrgId": "Messenger Organization ID",
-    "labelOrgName": "Messenger Organization Name",
+    "labelOrgId": "Jabber Messenger Organization ID",
+    "labelOrgName": "Jabber Messenger Organization Name",
     "labelUnauthorizedUser": "Unauthorized User",
-    "loading": "Loading Messenger Synchronization Status",
-    "orgAdminLinkText": "Launch Webex Messenger Admin Tool",
-    "pageTitle": "Webex Messenger",
-    "patchSuccessful": "Messenger Sync updated successfully",
+    "loading": "Loading Jabber Messenger Synchronization Status",
+    "orgAdminLinkText": "Launch Jabber Messenger Admin Tool",
+    "orgAdminLinkTooltip": "Continue to mange your Jabber users in the Messenger Org Admin tool",
+    "pageTitle": "Jabber Messenger",
+    "patchSuccessful": "Jabber Messenger Sync updated successfully",
     "patchSyncButtonText": "Update",
     "refresh": "Refresh",
-    "refreshFailed": "Failed refreshing Messenger Sync status",
-    "syncStatusHeading": "Messenger User Synchronization",
-    "syncStatusTooltip": "When enabled, users are actively being synced from Messenger",
+    "refreshFailed": "Failed refreshing Jabber Messenger Sync status",
+    "syncStatusHeading": "Jabber Messenger User Synchronization",
+    "syncStatusTooltip": "Jabber Messenger users added to Org Admin are synced to Common Identity",
     "dirsyncStatusHeading": "Common Identity Directory Synchronization",
     "dirsyncStatusTooltip": "To access Spark platform capabilities, WebEx Messenger users need to be synchronized with the Common Identity service."
   },
@@ -4752,6 +4753,10 @@
       "call": {
         "title": "Call",
         "notEnabledText": "Basic external calling and call routing features enabled for your organization."
+      },
+      "care": {
+        "title": "Care",
+        "notEnabledText": "Use Spark Care services to collaborate with your customer. Customize care interfaces using configuration wizard."
       },
       "roomSystem": {
         "title": "Room Systems",
@@ -5199,7 +5204,7 @@
       },
       "clusterList": {
         "title": "Clusters",
-        "description": "On-prem clusters and configuration for your organization.",
+        "description": "On-premises clusters and configuration for your organization.",
         "buttons": {
           "all": "All Clusters",
           "expressway": "Expressway",

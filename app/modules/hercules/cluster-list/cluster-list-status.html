@@ -1,5 +1,5 @@
 <div class="ui-grid-cell-contents" style="padding-top: 1.5rem">
-  <i class="fa fa-circle hercules-state-{{grid.appScope.exp.getSeverity(row.entity.aggregates.state).label}}"></i>
+  <i class="icon icon-circle status-indicator" ng-class="{'danger':'{{grid.appScope.exp.getSeverity(row.entity.aggregates.state).label}}' === 'error', 'success': '{{grid.appScope.exp.getSeverity(row.entity.aggregates.state).label}}' === 'ok', 'warning': '{{grid.appScope.exp.getSeverity(row.entity.aggregates.state).label}}' === 'warning' }"></i>
   <span translate="{{'hercules.status.' + row.entity.aggregates.state}}"></span>
   <span ng-if="row.entity.aggregates.upgradeState === 'upgrading'"> | <span translate="hercules.status.upgrading"></span></span>
 </div>

@@ -4,7 +4,7 @@
   angular.module('Core')
     .controller('ChooseSharedSpaceCtrl', ChooseSharedSpaceCtrl);
   /* @ngInject */
-  function ChooseSharedSpaceCtrl(CsdmCodeService, CsdmPlaceService, XhrNotificationService, $stateParams, $state, $translate, Authinfo) {
+  function ChooseSharedSpaceCtrl(CsdmCodeService, CsdmPlaceService, CsdmHuronPlaceService, XhrNotificationService, $stateParams, $state, $translate, Authinfo) {
     var vm = this;
     vm.wizardData = $stateParams.wizard.state().data;
 
@@ -38,9 +38,14 @@
 
     function loadList() {
       if (vm.wizardData.showPlaces) {
-        var filteredList = _(CsdmPlaceService.getPlacesList()).filter(function (place) {
-          return (vm.wizardData.deviceType == 'cloudberry' && place.type == 'cloudberry' && _.isEmpty(place.devices)) || (vm.wizardData.deviceType == 'huron' && place.type == 'huron');
-        }).sortBy('displayName').value();
+        var filteredList;
+        if (vm.wizardData.deviceType == 'cloudberry') {
+          filteredList = _(CsdmPlaceService.getPlacesList()).filter(function (place) {
+            return _.isEmpty(place.devices);
+          }).sortBy('displayName').value();
+        } else {
+          filteredList = _(CsdmHuronPlaceService.getPlacesList()).sortBy('displayName').value();
+        }
         vm.hasRooms = filteredList.length > 0;
         vm.rooms = filteredList;
       }
