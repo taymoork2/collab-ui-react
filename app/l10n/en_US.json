@@ -29,7 +29,7 @@
     "assignDnAndDirectLines": "Assign Numbers",
     "addUsers": "Add Users",
     "convertUsers": "Convert Users",
-    "errorMessages": "Error Messages",
+    "errorWarningMessages": "Warnings and Errors",
     "skipErrorsAndFinish": "Skip Errors and Finish",
     "newUsers": "{newusers, plural, one{# New user} other{# New users}}",
     "updatedUsers": "{updatedusers, plural, one{# Updated user} other{# Updated users}}",
@@ -107,6 +107,8 @@
     "deleteUserDnFallbackError": "Error deleting user. The user's directory number is used as the fallback destination for Hunt Group(s).",
     "onboardSuccess": "{{email}} onboarded successfully",
     "onboardError": "{{email}} not onboarded. Status: {{status}}",
+    "onboardedWithoutLicense": "{{email}} onboarded without a license",
+    "accessDeniedError": "{{email}} cannot be added. Access is denied.",
     "ciscoucError": "{{email}} did not successfully onboard Call service.",
     "messageError": "Message: {{message}}",
     "userListError": "Error retrieving the user list. Please try reloading the page.",
@@ -1710,6 +1712,7 @@
         "settings": "Settings",
         "all": "All",
         "add-resource": "Add Resource",
+        "add-resource-group": "Create new resource group",
         "expressway": "Expressway",
         "mediafusion": "Media",
         "no-services": "No services"
@@ -1742,8 +1745,27 @@
             "title": "Enter a name for the Hybrid Media Node",
             "help": "The cluster name is only used for display purposes."
           },
-          "end": {
-          }
+          "end": {}
+        }
+      },
+      "add-resource-group": {
+        "title": "Create new Resource Group",
+        "name": {
+          "title": "Resource Group Details",
+          "description": "Resource groups are a set of clusters that you may assign users to.",
+          "subtitle": "Resource Group Name",
+          "placeholder": "Enter name"
+        },
+        "release-channel": {
+          "title": "Release Channel",
+          "description": "All the Hybrid services in the Resource Group will run on this release channel.",
+          "stable": "Stable",
+          "stableHelpText": "The official release software for Hybrid Services",
+          "beta": "Beta",
+          "betaHelpText": "If you want your users to test new features before they are released",
+          "latest": "Latest",
+          "latestHelpText": "For developers and early adopters",
+          "error": "Could not create the Resource Group"
         }
       }
     },
@@ -2901,6 +2923,7 @@
     "trialTerms": "Terms of Trial",
     "trialOverview": "Trial",
     "webexOverview": "WebEx",
+    "webexSiteCount": "{count, plural, one{# more site} other{# more sites}}",
     "licenses": "Number of Licenses",
     "totalQuantity": "Total Quantity",
     "totalLicenses": "Total Licenses",
@@ -3511,6 +3534,7 @@
       "noAlarms": "No alarms reported",
       "hostImpact": "Host Impacted",
       "nodeImpact": "Node Impacted",
+      "nodesImpact": "Nodes Impacted",
       "raised": "Raised"
     },
     "add-resource-dialog": {
@@ -3550,7 +3574,7 @@
       "noProceed-helptext": "(Software will automatically download)",
       "noInfo": "Install and configure the software on your server and return to Cisco Cloud Collaboration Management to register your Hybrid Media Node.",
       "noRetryInfo": "Software did not automatically download? <a href='https://7f3b835a2983943a12b7-f3ec652549fc8fa11516a139bfb29b79.ssl.cf5.rackcdn.com/Media-Fusion-Management-Connector/mfusion.ova'>Try Again.</a>",
-      "noDesc1": "For detailed on installation and configuration, visit ",
+      "noDesc1": "For details on installation and configuration, visit ",
       "noDesc2": "Help Central.",
       "noDesc3": "After installation and configuration is complete, return to Cloud Collaboration Management and register your Hybrid Media Node.",
       "yesInfo": "Assign your Hybrid Media Node to a cluster and enter the hostname or IP address."
@@ -3702,6 +3726,7 @@
     "defaultNotWebExAdminError": "You have not yet been provisioned to this site as an administrator. This process may take a moment.",
     "defaultAccessError": "Unable to access server at this time.",
     "defaultDbMismatchError": "User account changes are being synchronized among the servers. This process may take a while.",
+    "defaultNoNavUrlError": "Invalid data encountered",
     "defaultReloadMsg": "Please try reloading the page."
   },
   "webexUserSettingLabels": {
@@ -4350,15 +4375,15 @@
   },
   "messengerCiSync": {
     "authRedirectHeading": "Redirect Users to Common Identity Login Flow",
-    "authRedirectTooltip": "When enabled, Jabber clients login through Common Identity",
+    "authRedirectTooltip": "Jabber Users Login to CI Login Flow",
     "errorAuthFailed": "Authorization failed: ",
     "errorFailedCheckingCIEntitlements": "Failed checking user entitlements from Common Identity: ",
     "errorFailedCheckingCIRoles": "Failed checking Common Identity user roles: ",
     "errorFailedCheckingCustSuccessRole": "Failed checking if user has Customer Success Admin CI Role: ",
     "errorFailedCheckingOrgInManagedOrgs": "Failed checking if user has customer org in its managed orgs: ",
-    "errorFailedGettingCISyncStatus": "Failed getting Messenger Sync status: ",
-    "errorFailedRefreshingCISyncStatus": "Failed refreshing Messenger Sync status: ",
-    "errorFailedUpdatingCISync": "Failed updating Messenger Sync status: ",
+    "errorFailedGettingCISyncStatus": "Failed getting Jabber Messenger Sync status: ",
+    "errorFailedRefreshingCISyncStatus": "Failed refreshing Jabber Messenger Sync status: ",
+    "errorFailedUpdatingCISync": "Failed updating Jabber Messenger Sync status: ",
     "errorLacksEntitlements": "User lacks Customer Success Admin Role or Common Identity entitlements to view this content: ",
     "errorLacksFullAdmin": "User lacks Full Admin role in Common Identity to view this content",
     "errorLacksRole": "User lacks appropriate role in Common Identity to view this content",
@@ -4370,18 +4395,19 @@
     "http500": "500 Server Error",
     "httpUnknown": " Unknown HTTP Error",
     "labelCILinkDate": "Link Date",
-    "labelOrgId": "Messenger Organization ID",
-    "labelOrgName": "Messenger Organization Name",
+    "labelOrgId": "Jabber Messenger Organization ID",
+    "labelOrgName": "Jabber Messenger Organization Name",
     "labelUnauthorizedUser": "Unauthorized User",
-    "loading": "Loading Messenger Synchronization Status",
-    "orgAdminLinkText": "Launch Webex Messenger Admin Tool",
-    "pageTitle": "Webex Messenger",
-    "patchSuccessful": "Messenger Sync updated successfully",
+    "loading": "Loading Jabber Messenger Synchronization Status",
+    "orgAdminLinkText": "Launch Jabber Messenger Admin Tool",
+    "orgAdminLinkTooltip": "Continue to mange your Jabber users in the Messenger Org Admin tool",
+    "pageTitle": "Jabber Messenger",
+    "patchSuccessful": "Jabber Messenger Sync updated successfully",
     "patchSyncButtonText": "Update",
     "refresh": "Refresh",
-    "refreshFailed": "Failed refreshing Messenger Sync status",
-    "syncStatusHeading": "Messenger User Synchronization",
-    "syncStatusTooltip": "When enabled, users are actively being synced from Messenger",
+    "refreshFailed": "Failed refreshing Jabber Messenger Sync status",
+    "syncStatusHeading": "Jabber Messenger User Synchronization",
+    "syncStatusTooltip": "Jabber Messenger users added to Org Admin are synced to Common Identity",
     "dirsyncStatusHeading": "Common Identity Directory Synchronization",
     "dirsyncStatusTooltip": "To access Spark platform capabilities, WebEx Messenger users need to be synchronized with the Common Identity service."
   },
@@ -4727,6 +4753,10 @@
       "call": {
         "title": "Call",
         "notEnabledText": "Basic external calling and call routing features enabled for your organization."
+      },
+      "care": {
+        "title": "Care",
+        "notEnabledText": "Use Spark Care services to collaborate with your customer. Customize care interfaces using configuration wizard."
       },
       "roomSystem": {
         "title": "Room Systems",
@@ -5174,7 +5204,7 @@
       },
       "clusterList": {
         "title": "Clusters",
-        "description": "On-prem clusters and configuration for your organization.",
+        "description": "On-premises clusters and configuration for your organization.",
         "buttons": {
           "all": "All Clusters",
           "expressway": "Expressway",

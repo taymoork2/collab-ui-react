@@ -25,6 +25,7 @@ describe('Controller: OverviewCtrl', function () {
       expect(_.contains(cardnames, 'overview.cards.meeting.title')).toBeTruthy();
       expect(_.contains(cardnames, 'overview.cards.roomSystem.title')).toBeTruthy();
       expect(_.contains(cardnames, 'overview.cards.call.title')).toBeTruthy();
+      expect(_.contains(cardnames, 'overview.cards.care.title')).toBeTruthy();
       expect(_.contains(cardnames, 'overview.cards.hybrid.title')).toBeTruthy();
       expect(_.contains(cardnames, 'overview.cards.users.title')).toBeTruthy();
       expect(_.contains(cardnames, 'overview.cards.undefined.title')).toBeFalsy();
