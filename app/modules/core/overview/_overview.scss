@@ -1,4 +1,9 @@
 .overview-page {
+    a.monitoring-cell {
+      &:focus {
+        box-shadow: none;
+      }
+    }
   padding-bottom: 20px;
   .service-name {
     flex-direction: column;
@@ -10,20 +15,7 @@
       text-align: center;
     }
   }
-  i.icon-circle {
-    &.success {
-      color: $color-cta-base;
-    }
-    &.warning {
-      color: $color-attention-base;
-    }
-    &.danger {
-      color: $color-alerts-base;
-    }
-    &.disabled {
-      color: $gray-base;
-    }
-  }
+
   .footer-menu {
     display: flex;
     align-items: center;
@@ -44,11 +36,6 @@
     article {
       height: 100%;
       position: relative;
-      section {
-        .icon-circle:before {
-          font-size: .75em;
-        }
-      }
       footer {
         padding-right: 1rem !important;
         padding-left: 1rem !important;
@@ -67,7 +54,6 @@
         }
         .icon-circle {
           margin-right: -0.3rem;
-          font-size: 0.75em;
         }
       }
     }
@@ -102,9 +88,6 @@
       text-align: left;
       color: $gray-dark-1;
       line-height: rem-calc(24);
-      .icon {
-        margin-right: 4px;
-      }
     }
     .hybrid-disabled-footer {
       padding-bottom: 40px;
@@ -121,6 +104,11 @@
   .gray-light {
     header:after {
             border-top: 5px solid $gray-light-1;
+    }
+  }
+  .care-card {
+    header:after {
+      border-top-color: $color-people-base;
     }
   }
   .user-card {
@@ -162,6 +150,7 @@
     padding-right: 1rem;
     .monitoring-panel {
       padding: 1.5rem 1.5rem 0;
+      overflow-y: hidden;
       .notification-style {
         padding-top: 1.5rem;
         margin-top: 0.5rem;

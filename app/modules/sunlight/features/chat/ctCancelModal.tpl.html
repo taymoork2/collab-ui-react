@@ -1,11 +1,11 @@
-<div class="modal-header">
+<div class="modal-header ct-confirmation-header" >
   <button type="button" class="close" ng-click="$dismiss()"><span class="sr-only" translate="common.close"></span></button>
-  <span class="h3 modal-title" translate="careChatTpl.cancelHeader" ></span>
+  <span class="h3 modal-title">{{careChatSA.cancelModalText.cancelHeader}}</span>
 </div>
 <div class="modal-body ct-confirmation-body">
-  <div class="ct-confirmation-message" translate="careChatTpl.cancelDialog"></div>
+  <div class="ct-confirmation-message">{{careChatSA.cancelModalText.cancelDialog}}</div>
 </div>
 <div class="modal-footer">
-  <button class="btn btn--primary" id="continueChat" ng-click="$dismiss()" translate="careChatTpl.continueButton" focus-on></button>
-  <button class="btn btn--negative" id="cancelChat" ng-click="$dismiss()" ui-sref="care.Features" translate="careChatTpl.confirmButton"></button>
+  <button class="btn btn--primary" id="continueChat" ng-click="$dismiss()" focus-on>{{careChatSA.cancelModalText.continueButton}}</button>
+  <button class="btn btn--negative" id="cancelChat" ng-click="$dismiss()" ui-sref="care.Features">{{careChatSA.cancelModalText.confirmButton}}</button>
 </div>

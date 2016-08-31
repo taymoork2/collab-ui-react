@@ -37,8 +37,28 @@ describe('Service: Care Reports Service', function () {
       expect(AmCharts.makeChart).toHaveBeenCalled();
     });
 
+    it('should have created a graph when showTaskAggregateDummy is called', function () {
+      CareReportsService.showTaskAggregateDummy('taskAggregateDiv', 'dummyData', 'dummyData');
+      expect(AmCharts.makeChart).toHaveBeenCalled();
+    });
+
     it('should have created a graph when showTaskIncomingGraph is called', function () {
       CareReportsService.showTaskIncomingGraph('taskIncomingdiv', 'dummyData', 'dummyData', true);
+      expect(AmCharts.makeChart).toHaveBeenCalled();
+    });
+
+    it('should have created a graph when showTaskTimeGraph is called', function () {
+      CareReportsService.showTaskTimeGraph('taskTimeDiv', 'dummyData', 'dummyData');
+      expect(AmCharts.makeChart).toHaveBeenCalled();
+    });
+
+    it('should have created a graph when showAverageCsatGraph is called', function () {
+      CareReportsService.showAverageCsatGraph('averageCsatDiv', 'dummyData', 'dummyData');
+      expect(AmCharts.makeChart).toHaveBeenCalled();
+    });
+
+    it('should have created a graph when showTaskAggregateGraph is called', function () {
+      CareReportsService.showTaskAggregateGraph('taskAggregateDiv', 'dummyData', 'dummyData');
       expect(AmCharts.makeChart).toHaveBeenCalled();
     });
 
@@ -72,11 +92,6 @@ describe('Service: Care Reports Service', function () {
       expect(taskIncomingReport).toEqual(expectedConfig);
     });
 
-    it('should have created a graph when showTaskTimeGraph is called', function () {
-      CareReportsService.showTaskTimeGraph('taskTimeDiv', 'dummyData', 'dummyData');
-      expect(AmCharts.makeChart).toHaveBeenCalled();
-    });
-
     it('Task Time Chart Config should return expected Report', function () {
       var taskTimeReport = CareReportsService.getTaskTimeGraphConfig('dummyData', 'dummyTitle');
       var expectedConfig = responseData.taskIncomingReportToday;
@@ -93,11 +108,6 @@ describe('Service: Care Reports Service', function () {
       expect(taskTimeReport).toEqual(expectedConfig);
     });
 
-    it('should have created a graph when showAverageCsatGraph is called', function () {
-      CareReportsService.showAverageCsatGraph('averageCsatDiv', 'dummyData', 'dummyData');
-      expect(AmCharts.makeChart).toHaveBeenCalled();
-    });
-
     it('Average Csat Chart Config should return expected Report', function () {
       var averageCsatReport = CareReportsService.getAverageCsatGraphConfig('dummyData', 'dummyTitle', false);
       var expectedConfig = responseData.taskIncomingReportToday;
@@ -112,6 +122,22 @@ describe('Service: Care Reports Service', function () {
         graph.balloonFunction = undefined;
       });
       expect(averageCsatReport).toEqual(expectedConfig);
+    });
+
+    it('Task Aggregate Chart Config should return expected Report', function () {
+      var taskAggregateReport = CareReportsService.getTaskAggregateGraphConfig('dummyData', 'dummyTitle', false);
+      var expectedConfig = responseData.taskIncomingReportToday;
+      expectedConfig.graphs = responseData.taskAggregateGraphs;
+      _.map(expectedConfig.valueAxes, function (axis) {
+        axis.title = 'careReportsPage.tasks';
+      });
+      _.map(taskAggregateReport.graphs, function (graph) {
+        graph.balloonFunction = undefined;
+      });
+      _.map(expectedConfig.graphs, function (graph) {
+        graph.balloonFunction = undefined;
+      });
+      expect(taskAggregateReport).toEqual(expectedConfig);
     });
   });
 });

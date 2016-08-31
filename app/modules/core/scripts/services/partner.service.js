@@ -6,7 +6,7 @@
     .factory('ScimPatchService', ScimPatchService);
 
   /* @ngInject */
-  function PartnerService($http, $rootScope, $q, $translate, Analytics, Authinfo, Auth, Config, TrialService, UrlConfig, ScimPatchService) {
+  function PartnerService($http, $rootScope, $q, $translate, Analytics, Authinfo, Auth, Config, TrialService, UrlConfig) {
     var managedOrgsUrl = UrlConfig.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId() + '/managedOrgs';
     var siteListUrl = UrlConfig.getAdminServiceUrl() + 'organizations/%s/siteUrls';
     var customerStatus = {
@@ -53,6 +53,7 @@
       parseLicensesAndOffers: parseLicensesAndOffers,
       getFreeOrActiveServices: getFreeOrActiveServices,
       getSiteUrls: getSiteUrls,
+      isLicenseTypeAny: isLicenseTypeAny,
       helpers: helpers
     };
 
@@ -217,6 +218,8 @@
     }
 
     function patchManagedOrgs(uuid, customerOrgId) {
+      var authUrl = UrlConfig.getScimUrl(Authinfo.getOrgId()) + '/' + uuid;
+
       var payload = {
         'schemas': [
           'urn:scim:schemas:core:1.0',
@@ -228,24 +231,24 @@
         }]
       };
 
-      return ScimPatchService.update({
-        userId: uuid
-      },
-        payload
-      ).$promise.then(function (response) {
-        Analytics.trackUserPatch(response.meta.organizationID);
-        return $q.resolve(response);
-      }).catch(function (response) {
-        return $q.reject(response);
+      return $http({
+        method: 'PATCH',
+        url: authUrl,
+        data: payload
       });
     }
 
     function modifyManagedOrgs(customerOrgId) {
       return Auth.getAuthorizationUrlList().then(function (response) {
-        if (_.chain(response).get('data.managedOrgs').includes(customerOrgId).value()) {
-          return patchManagedOrgs(response.data.uuid, customerOrgId);
+        if (response.status === 200 && (_.indexOf(response.data.managedOrgs, customerOrgId) < 0)) {
+          patchManagedOrgs(response.data.uuid, customerOrgId);
+          Analytics.trackUserPatch(response.data.orgId, response.data.uuid);
         }
       });
+    }
+
+    function getLicenseObj(rowData, licenseTypeField) {
+      return rowData[licenseTypeField] || null;
     }
 
     // Series of fns dont make any sense, unless isTrial = null means something...
@@ -258,7 +261,7 @@
     }
 
     function isLicenseFree(license) {
-      return angular.isUndefined(license.isTrial);
+      return license && angular.isUndefined(license.isTrial);
     }
     // end series of fn's
 
@@ -266,8 +269,17 @@
       if (!isLicenseInfoAvailable(customerData.licenseList)) {
         return false;
       }
-      var licenseObj = customerData[licenseTypeField] || null;
-      return isLicenseATrial(licenseObj) || isLicenseActive(licenseObj);
+      if (licenseTypeField === 'webex') {
+        // if given generic "webex" check all possibilities
+        return _.some(Config.webexTypes, function (webexType) {
+          var licenseObj = getLicenseObj(customerData, webexType);
+          return isLicenseATrial(licenseObj) || isLicenseActive(licenseObj);
+        });
+      } else {
+        var licenseObj = getLicenseObj(customerData, licenseTypeField);
+        var isFreeLicense = isLicenseFree(licenseObj) && _.includes(Config.freeLicenses, licenseTypeField);
+        return isLicenseATrial(licenseObj) || isLicenseActive(licenseObj) || isFreeLicense;
+      }
     }
 
     function getLicense(licenses, offerCode) {

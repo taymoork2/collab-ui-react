@@ -4,7 +4,7 @@ describe('OnboardCtrl: Ctrl', function () {
 
   function init() {
     this.initModules('Core', 'Hercules', 'Huron', 'Messenger', 'Sunlight', 'WebExApp');
-    this.injectDependencies('$httpBackend', '$modal', '$q', '$scope', '$state', '$stateParams', '$previousState', '$timeout', 'Authinfo', 'CsvDownloadService', 'DialPlanService', 'FeatureToggleService', 'Notification', 'Orgservice', 'SyncService', 'SunlightConfigService', 'TelephonyInfoService', 'Userservice', 'UrlConfig', 'WebExUtilsFact');
+    this.injectDependencies('$httpBackend', '$modal', '$q', '$scope', '$state', '$stateParams', '$previousState', '$timeout', 'Authinfo', 'CsvDownloadService', 'DialPlanService', 'FeatureToggleService', 'Notification', 'Orgservice', 'SyncService', 'SunlightConfigService', 'TelephonyInfoService', 'Userservice', 'UrlConfig', 'WebExUtilsFact', 'ServiceSetup');
     initDependencySpies.apply(this);
   }
 
@@ -85,6 +85,7 @@ describe('OnboardCtrl: Ctrl', function () {
     spyOn(this.FeatureToggleService, 'supportsDirSync').and.returnValue(this.$q.when(false));
     spyOn(this.FeatureToggleService, 'atlasCareTrialsGetStatus').and.returnValue(this.$q.when(true));
     spyOn(this.TelephonyInfoService, 'getPrimarySiteInfo').and.returnValue(this.$q.when(this.mock.sites));
+    spyOn(this.ServiceSetup, 'listSites').and.returnValue(this.$q.when(this.mock.sites));
 
     spyOn(this.Userservice, 'onboardUsers');
     spyOn(this.Userservice, 'bulkOnboardUsers');

@@ -38,11 +38,30 @@ describe('Care Reports', function () {
       utils.expectIsDisplayed(reports.taskIncomingDescription);
       utils.expectTextToBeSet(reports.taskIncomingDescription, lowerTime[0]);
       utils.expectIsDisplayed(reports.taskIncomingGraph);
+    });
 
+    it('should show Task Aggregate report for today', function () {
+      reports.clickFilter(reports.timeSelectCare);
+      utils.click(reports.getOption(reports.timeSelectCare, time[0]));
+
+      utils.expectIsDisplayed(reports.taskAggregateHeader);
+      utils.expectIsDisplayed(reports.taskAggregateDescription);
+      utils.expectTextToBeSet(reports.taskAggregateDescription, lowerTime[0]);
+      utils.expectIsDisplayed(reports.taskAggregateGraph);
+    });
+
+    it('should not show Task Aggregate report for past days', function () {
+      reports.clickFilter(reports.timeSelectCare);
+      utils.click(reports.getOption(reports.timeSelectCare, time[2]));
+
+      utils.expectIsNotDisplayed(reports.taskAggregateGraph);
     });
 
     it('should show Average CSAT reports', function () {
       // Average CSAT
+      reports.clickFilter(reports.timeSelectCare);
+      utils.click(reports.getOption(reports.timeSelectCare, time[0]));
+
       utils.expectIsDisplayed(reports.averageCsatHeader);
       utils.expectIsDisplayed(reports.averageCsatDescription);
       utils.expectTextToBeSet(reports.averageCsatDescription, lowerTime[0]);

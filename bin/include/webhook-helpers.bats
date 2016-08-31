@@ -3,22 +3,22 @@
 source ./webhook-helpers
 
 @test "tr_result_line_to_list_items - should print a block of line items given a line from a sauce labs report" {
-    local line_entry="foo | bar | baz"
+    local line_entry="foo1: foo2 | bar | baz | biz"
     echo "$line_entry" | {
         run tr_result_line_to_list_items
         [ $status -eq 0 ]
         [ "${lines[0]}" = "-----" ]
-        [ "${lines[1]}" = "- test: foo" ]
-        [ "${lines[2]}" = "- spec file: bar" ]
-        [ "${lines[3]}" = "- see: baz" ]
+        [ "${lines[1]}" = "- test: foo1: bar" ]
+        [ "${lines[2]}" = "- spec file: baz" ]
+        [ "${lines[3]}" = "- see: biz" ]
     }
 
-    line_entry="chrome #1-0 passed | .../squared/activate_spec.js | http://saucelabs.com/jobs/7bcabd803efb4f98a79ff2ad240eb318?auth=b4d9a463b043e10b97eaf8ea43d3cdf6"
+    line_entry="run-0: 01-0 | chrome #1-0 passed | .../squared/activate_spec.js | http://saucelabs.com/jobs/7bcabd803efb4f98a79ff2ad240eb318?auth=b4d9a463b043e10b97eaf8ea43d3cdf6"
     echo "$line_entry" | {
         run tr_result_line_to_list_items
         [ $status -eq 0 ]
         [ "${lines[0]}" = "-----" ]
-        [ "${lines[1]}" = "- test: chrome #1-0 passed" ]
+        [ "${lines[1]}" = "- test: run-0: chrome #1-0 passed" ]
         [ "${lines[2]}" = "- spec file: .../squared/activate_spec.js" ]
         [ "${lines[3]}" = "- see: http://saucelabs.com/jobs/7bcabd803efb4f98a79ff2ad240eb318?auth=b4d9a463b043e10b97eaf8ea43d3cdf6" ]
     }
@@ -84,8 +84,8 @@ _EOF
 
 @test "mk_notification_flat_payload - with arg specifying sauce labs report file pretty-prints a flat file with build summary message" {
     cat > ./tmp_file <<_EOF
-chrome #1-2 failed 1 test(s) | .../squared/assign_user_spec.js | http://saucelabs.com/jobs/3b9bdcb109cc4d52a62358c6acaf0607?auth=3ce5ad5c7a0f16a5e2721b6ceba5ba04
-overall: 1 failed spec(s)
+run-0: 01-2 | chrome #1-2 failed 1 test(s) | .../squared/assign_user_spec.js | http://saucelabs.com/jobs/3b9bdcb109cc4d52a62358c6acaf0607?auth=3ce5ad5c7a0f16a5e2721b6ceba5ba04
+run-0: overall: 1 failed spec(s)
 _EOF
 
     BUILD_URL="http://www.example.com"
@@ -93,10 +93,10 @@ _EOF
     [ "${lines[0]}" = "Build Failed!" ]
     [ "${lines[1]}" = "- Build: http://www.example.com" ]
     [ "${lines[2]}" = "E2E Test Summary:" ]
-    [ "${lines[3]}" = "- overall: 1 failed spec(s)" ]
+    [ "${lines[3]}" = "- run-0: overall: 1 failed spec(s)" ]
     [ "${lines[4]}" = "E2E Test Results:" ]
     [ "${lines[5]}" = "-----" ]
-    [ "${lines[6]}" = "- test: chrome #1-2 failed 1 test(s)" ]
+    [ "${lines[6]}" = "- test: run-0: chrome #1-2 failed 1 test(s)" ]
     [ "${lines[7]}" = "- spec file: .../squared/assign_user_spec.js" ]
     [ "${lines[8]}" = "- see: http://saucelabs.com/jobs/3b9bdcb109cc4d52a62358c6acaf0607?auth=3ce5ad5c7a0f16a5e2721b6ceba5ba04" ]
 

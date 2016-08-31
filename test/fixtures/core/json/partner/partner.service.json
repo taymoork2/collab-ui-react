@@ -148,6 +148,19 @@
     },
     "status": 200
   },
+  "getAuthorizationUrlListResponse": {
+    "data":{
+      "managedOrgs": [{
+        "orgId": "b93b10ad-ae24-4abf-9c21-76e8b86faf01",
+        "role": "ID_Full_Admin"
+      }],
+      "uuid": "feaba56d-97d0-43ce-9f60-e7310bc715a0"
+    },
+    "meta":{
+     "organizationID": "b93b10ad-ae24-4abf-9c21-76e8b86faf01"
+    },
+    "status": 200
+  },
   "managedOrgsResponse": {
     "data": {
       "organizations": [{

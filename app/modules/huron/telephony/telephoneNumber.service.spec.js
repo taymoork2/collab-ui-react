@@ -59,4 +59,15 @@ describe('Service: TelephoneNumberService', function () {
     expect(TelephoneNumberService.validateDID(premiumNumber)).toEqual(false);
   });
 
+  it('should identify toll-free numbers', function () {
+    expect(TelephoneNumberService.isTollFreeNumber(validE164)).toEqual(false);
+    expect(TelephoneNumberService.isTollFreeNumber(validNumber)).toEqual(false);
+    expect(TelephoneNumberService.isTollFreeNumber(premiumNumber)).toEqual(false);
+    expect(TelephoneNumberService.isTollFreeNumber(invalidNumber)).toEqual(false);
+    expect(TelephoneNumberService.isTollFreeNumber(invalidE164)).toEqual(false);
+    expect(TelephoneNumberService.isTollFreeNumber(invalidNumberNoFormat)).toEqual(false);
+
+    expect(TelephoneNumberService.isTollFreeNumber(tollFreeNumber)).toEqual(true);
+  });
+
 });

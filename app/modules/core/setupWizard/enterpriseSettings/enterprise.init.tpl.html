@@ -4,11 +4,11 @@
     <ul>
       <li>
         <div ng-show="!ssoEnabled">
-          <i class="icon icon-circle sso-status-circle-disabled"></i>
+          <i class="icon icon-circle status-indicator disabled"></i>
           <span translate="ssoModal.ssoNotEnabledStatus"></span>
         </div>
         <div ng-show="ssoEnabled">
-          <i class="icon icon-circle sso-status-circle"></i>
+          <i class="icon icon-circle status-indicator success"></i>
           <span translate="ssoModal.ssoEnabledStatus"></span>
           <a ng-if="!options.modifySSO" translate="ssoModal.modifySSOLabel" ng-click="handleModify()"></a>
         </div>

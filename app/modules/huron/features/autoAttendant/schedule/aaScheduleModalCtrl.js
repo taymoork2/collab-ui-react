@@ -195,9 +195,11 @@
         var indexForm = 'holidayForm' + index;
         if (!isHolidaysSavable()) {
           vm.holidaysForm[indexForm].holidayName.$setDirty();
-          vm.holidaysForm[indexForm].holidayDate.$setDirty();
           vm.holidaysForm[indexForm].holidayStart.$setDirty();
           vm.holidaysForm[indexForm].holidayEnd.$setDirty();
+          if (angular.isDefined(vm.holidaysForm[indexForm].holidayDate)) {
+            vm.holidaysForm[indexForm].holidayDate.$setDirty();
+          }
         }
         if (!vm.holidays[index].exactDate) {
           if (vm.holidays[index].month == '') {
