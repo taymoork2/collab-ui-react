@@ -20,10 +20,10 @@
       scope.translateTypeToIcon = translateTypeToIcon;
       scope.getTooltipText = getTooltipText;
       scope.isVisible = PartnerService.isLicenseTypeAny(scope.row, scope.type);
-      scope.$watch('row', function () {
+      scope.$watch('row', _.throttle(function () {
         // When filtering, directives aren't "re-linked", so recalculate this
         scope.isVisible = PartnerService.isLicenseTypeAny(scope.row, scope.type);
-      });
+      }, 25));
       // caching some of the expensive and repeated operations
       scope.TOOLTIP_TEMPLATE = $($templateCache.get('modules/core/customers/customerList/grid/serviceIconTooltip.tpl.html'));
       scope.WEBEX_TRANSLATION = $translate.instant('customerPage.webex');
