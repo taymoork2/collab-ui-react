@@ -1326,18 +1326,18 @@
     "connectors": {
       "group_by": "Group services by:",
       "cluster_id": "Cluster",
-      "host_name": "Host",
+      "host_name": "Node",
       "display_name": "Service Name",
       "connector_type": "Connector Type",
       "serial": "Serial",
       "version": "Version",
       "status": "Status",
       "alarms": "Alarms",
-      "hosts": "Hosts",
-      "goToHost": "Go to Host",
+      "hosts": "Nodes",
+      "goToHost": "Go to Node",
       "removeButton": "Remove",
       "removeSectionHeader": "Remove",
-      "removeSectionBody": "Remove this host from Cisco Collaboration Cloud.",
+      "removeSectionBody": "Remove this node from Cisco Collaboration Cloud.",
       "localizedConnectorAndHostHeader": "{{connectorName}} on {{hostname}}",
       "actions": "Actions"
     },
@@ -1434,7 +1434,7 @@
       "deregisterCausesListItem2": "All connectors and related configuration will be removed from {{clusterName}}.",
       "deregisterCausesListItem3": "If the system is in a cluster, you do not need to deregister the other peers. This will happen automatically.",
       "deregisterErrorGeneric": "Unable to deregister {{clusterName}}. {{errorMessage}}",
-      "notInstalled": "The {{serviceName}} is not installed on this cluster.",
+      "notInstalled": "{{serviceName}} is not installed on this cluster.",
       "deregisterSectionHeader": "Deregister",
       "deregisterSectionBody": "Disconnect this cluster from Cisco Collaboration Cloud and remove all connectors and related configuration."
     },
@@ -1552,7 +1552,7 @@
       "softwareUpgrade": "Software Upgrade",
       "currentVersion": "Current Version",
       "newVersion": "New Version",
-      "explanation": "You are about to upgrade {{connectorType}} to version {{newVersion}} on all hosts in your Expressway cluster",
+      "explanation": "You are about to upgrade {{connectorType}} to version {{newVersion}} on all nodes in your Expressway cluster",
       "releaseNotes": "Release Notes",
       "pending": "Pending",
       "upgrade": "Upgrade",
@@ -1561,7 +1561,7 @@
       "upgradeDone": "Upgrade completed!",
       "upToDate": "{{connectorType}} is up to date on this cluster.",
       "upgradePossible": "A new version is available for {{connectorType}}: {{availableVersion}}.",
-      "upgradeWarning": "This cluster has one or more offline hosts. It is recommended to bring all hosts online before initiating an upgrade."
+      "upgradeWarning": "This cluster has one or more offline nodes. It is recommended to bring all nodes online before initiating an upgrade."
     },
     "expresswayClusterSettings": {
       "pageTitle": "{{clusterName}} settings",
@@ -1707,7 +1707,6 @@
         "empty": "No clusters found.",
         "upgrade-schedule": "Upgrade Schedule",
         "release-channel": "Release Channel",
-        "hosts": "{count, plural, one{# Host} other{# Hosts}}",
         "nodes": "{count, plural, one{# Node} other{# Nodes}}",
         "settings": "Settings",
         "all": "All",
@@ -4191,7 +4190,7 @@
     "cloudExtensions": "Hybrid Services",
     "enableService": "Activate service for this user",
     "status": "Status",
-    "host": "Host",
+    "host": "Node",
     "sipUri": "Directory URI"
   },
   "validation": {
