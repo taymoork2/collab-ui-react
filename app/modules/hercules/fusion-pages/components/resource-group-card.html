@@ -1,0 +1,26 @@
+<cs-card class="full header-bar cta">
+  <article>
+    <header>
+      <button class="resource-group-caret" ng-click="$ctrl.toggleDetails()">
+        <i ng-show="!$ctrl.showDetails" class="fa fa-caret-right"></i>
+        <i ng-show="$ctrl.showDetails" class="fa fa-caret-down"></i>
+        <h4>{{::$ctrl.group.name}}</h4>
+      </button>
+      <span class="resource-group-release-channel"><span translate="hercules.fusion.list.release-channel"></span>: {{::$ctrl.group.releaseChannel}}</span>
+      <span class="resource-group-release-cluster-number"><span translate="hercules.fusion.list.clusters"></span>: {{::$ctrl.group.clusters.length}}</span>
+      <a ui-sref="resource-group-settings({id: $ctrl.group.id})" class="resource-group-settings-link"><i class="icon icon-settings"></i></a>
+    </header>
+    <section ng-show="$ctrl.showDetails">
+      <div class="resource-group-banner">
+        <div class="resource-group-banner-message" translate="hercules.fusion.list.complete-setup"></div>
+        <button class="resource-group-banner-link" ng-click="$ctrl.openAddClusterModal($ctrl.group.id)" translate="hercules.fusion.list.add-clusters"></button>
+      </div>
+      <div class="resource-group-empty" ng-if="$ctrl.group.clusters.length === 0">
+        <p translate="hercules.fusion.list.empty-group-list"></p>
+      </div>
+      <cs-card-layout block-view="true" ng-if="$ctrl.group.clusters.length > 0">
+        <cluster-card ng-repeat="cluster in $ctrl.group.clusters" cluster="cluster"></cluster-card>
+      </cs-card-layout>
+    </section>
+  </article>
+</cs-card>
