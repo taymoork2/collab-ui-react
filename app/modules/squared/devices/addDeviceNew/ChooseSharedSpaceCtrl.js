@@ -4,7 +4,7 @@
   angular.module('Core')
     .controller('ChooseSharedSpaceCtrl', ChooseSharedSpaceCtrl);
   /* @ngInject */
-  function ChooseSharedSpaceCtrl(CsdmCodeService, CsdmPlaceService, CsdmHuronPlaceService, XhrNotificationService, $stateParams, $state, $translate, Authinfo) {
+  function ChooseSharedSpaceCtrl(CsdmCodeService, CsdmPlaceService, CsdmHuronPlaceService, XhrNotificationService, $stateParams, $translate, Authinfo) {
     var vm = this;
     vm.wizardData = $stateParams.wizard.state().data;
 
@@ -143,10 +143,6 @@
 
     vm.back = function () {
       $stateParams.wizard.back();
-    };
-
-    vm.clickUsers = function () {
-      $state.go('users.list');
     };
   }
 })();
