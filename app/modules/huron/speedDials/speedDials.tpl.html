@@ -28,7 +28,7 @@
       </div>
       <div>
         <form name="speedDials.form" novalidate role="form">
-          <div id="speedDialContainer" class="sd-container">
+          <div id="speedDialContainer" class="sd-container" cs-scroll>
             <div ng-repeat="sd in speedDials.speedDialList" ng-class="{'sd-reorder': speedDials.reordering}">
               <div ng-if="!sd.edit" class="sd-readonly-wrapper">
                 <div>
