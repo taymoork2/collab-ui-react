@@ -53,6 +53,17 @@
         template: 'modules/core/setupWizard/enterpriseSettings/enterprise.testSSO.tpl.html'
       }]
     }, {
+      name: 'careSetup',
+      label: 'firstTimeWizard.careSetup',
+      description: 'firstTimeWizard.careSetupSub',
+      icon: 'icon-circle-contact-centre',
+      title: 'firstTimeWizard.careSetup',
+      controller: 'CareSetupCtrl',
+      steps: [{
+        name: 'setup',
+        template: 'modules/sunlight/setup/careSetup.tpl.html'
+      }]
+    }, {
       name: 'addUsers',
       label: 'firstTimeWizard.addUsers',
       description: 'firstTimeWizard.addUsersSubDescription',
