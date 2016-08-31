@@ -37,7 +37,8 @@
             </div>
           </div>
 
-          <div class="operationTime clearFloat">
+
+        <div class="operationTime clearFloat">
             <span ng-if="incident.status!='resolved'">Last updated on </span>
             <span ng-if="incident.status=='resolved'">Resolved on </span>{{incident.lastModifiedTime | date: 'medium'}}
           </div>

@@ -2,14 +2,14 @@
  * Created by pso on 16-8-23.
  */
 
-'use strict'
+'use strict';
 
-describe('IncidentsWithSite service',function(){
+describe('IncidentsWithSite service', function () {
   var $httpBackend;
   var IncidentsWithSiteService;
 
-  var getSiteURL ='https://dataservicesbts.webex.com/status/services/1/incidents';
-  var mockData=[
+  var getSiteURL = 'https://dataservicesbts.webex.com/status/services/1/incidents';
+  var mockData = [
     {
       incidentId: 221,
       incidentName: "INC001",
@@ -47,9 +47,9 @@ describe('IncidentsWithSite service',function(){
       lastModifiedTime: "2016-08-22T06:31:27Z"
     }
   ];
-  function dependencies(_$httpBackend_,_IncidentsWithSiteService_){
-    $httpBackend=_$httpBackend_;
-    IncidentsWithSiteService=_IncidentsWithSiteService_;
+  function dependencies(_$httpBackend_, _IncidentsWithSiteService_) {
+    $httpBackend = _$httpBackend_;
+    IncidentsWithSiteService = _IncidentsWithSiteService_;
   }
   beforeEach(angular.mock.module('Status.incidents'));
   beforeEach(inject(dependencies));
@@ -58,18 +58,11 @@ describe('IncidentsWithSite service',function(){
     expect(IncidentsWithSiteService).toBeDefined();
   });
 
-
-
   it('Should get getActiveHostsURL', function () {
     $httpBackend.whenGET(getSiteURL).respond(mockData);
     IncidentsWithSiteService.query({"siteId": 1}).$promise.then(function (data) {
-
       expect(data.toString()).toEqual(mockData.toString());
-
-
     });
     $httpBackend.flush();
   });
-
-
-})
+});
