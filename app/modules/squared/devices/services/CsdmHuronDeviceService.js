@@ -1,8 +1,6 @@
 (function () {
   'use strict';
 
-  // var errorRetrieveKEM = false;
-
   angular
     .module('Squared')
     .service('CsdmHuronOrgDeviceService', CsdmHuronOrgDeviceService)
