@@ -205,25 +205,6 @@
               $translate.instant('generateActivationCodeModal.emailErrorTitle')
             );
           });
-
-        // $http.post(url, cbEmailInfo).then(function () {
-        //   Notification.notify(
-        //     [$translate.instant('generateActivationCodeModal.emailSuccess', {
-        //       'address': vm.email.to
-        //     })],
-        //     'success',
-        //     $translate.instant('generateActivationCodeModal.emailSuccessTitle')
-        //   );
-        // }, function () {
-        //   Notification.notify(
-        //     [$translate.instant('generateActivationCodeModal.emailError', {
-        //       'address': vm.email.to
-        //     })],
-        //     'error',
-        //     $translate.instant('generateActivationCodeModal.emailErrorTitle')
-        //   );
-        // });
-
       }
     };
 
