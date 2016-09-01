@@ -92,6 +92,7 @@ var PartnerHomePage = function () {
   this.exitPreviewButton = element(by.css('.panel-close'));
   this.partnerFilter = element(by.id('partnerFilter'));
   this.trialFilter = element(by.cssContainingText('.filter', 'Trial'));
+  this.searchFilter = element(by.id('searchFilter'));
   this.allFilter = element(by.cssContainingText('.filter', 'All'));
   this.partnerEmail = element.all(by.binding('userName'));
   this.messageTrialCheckbox = element(by.css('label[for="messageTrial"]'));

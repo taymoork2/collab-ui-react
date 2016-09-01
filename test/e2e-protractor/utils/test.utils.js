@@ -202,6 +202,19 @@ exports.waitForTextBoxValue = function (elem) {
   });
 };
 
+exports.waitForSpinner = function () {
+  var spinner = element.all(by.css('.icon-spinner')).get(0);
+
+  function waitSpinner() {
+    exports.expectIsNotDisplayed(spinner);
+  }
+
+  for (var i = 0; i < 3; i++) {
+    // Spinner may bounce repeatedly
+    exports.wait(spinner, 500).then(waitSpinner, waitSpinner);
+  }
+};
+
 exports.expectIsDisplayed = function (elem) {
   this.wait(elem).then(function () {
     expect(elem.isDisplayed()).toBeTruthy();
@@ -533,7 +546,6 @@ exports.findDirectoryNumber = function (message, lineNumber) {
 
 // use _searchCount = -1 for unbounded search
 exports.search = function (query, _searchCount) {
-  var spinner = element.all(by.css('.icon-spinner')).get(0);
   var searchCount = _searchCount || 1;
 
   function logAndWait() {
@@ -544,19 +556,12 @@ exports.search = function (query, _searchCount) {
     });
   }
 
-  function waitSpinner() {
-    exports.expectIsNotDisplayed(spinner);
-  }
-
   exports.click(exports.searchbox);
   exports.clear(exports.searchField);
   if (query) {
     exports.sendKeys(exports.searchField, query + protractor.Key.ENTER);
     exports.expectValueToBeSet(exports.searchField, query, TIMEOUT);
-    for (var i = 0; i < 3; i++) {
-      // Spinner may bounce repeatedly
-      exports.wait(spinner, 500).then(waitSpinner, waitSpinner);
-    }
+    exports.waitForSpinner();
   }
 
   if (searchCount > -1) {
@@ -698,19 +703,13 @@ exports.deleteIfUserExists = function (name) {
   function waitUntilElemIsPresent(elem, timeout) {
     return exports.wait(elem, timeout).then(function () {
       return elem.isDisplayed();
-    })
+    });
   }
 };
 
 exports.quickDeleteUser = function (bFirst, name) {
   if (bFirst) {
     this.search(name, -1);
-  }
-  
-  var spinner = element.all(by.css('.icon-spinner')).get(0);
-
-  function waitSpinner() {
-    exports.expectIsNotDisplayed(spinner);
   }
 
   return waitUntilElemIsPresent(users.userListAction, 2000).then(function () {
@@ -719,12 +718,7 @@ exports.quickDeleteUser = function (bFirst, name) {
     exports.expectIsDisplayed(users.deleteUserModal);
     exports.click(users.deleteUserButton);
     notifications.assertSuccess(name, 'deleted successfully');
-
-    for (var i = 0; i < 3; i++) {
-      // Spinner may bounce repeatedly
-      exports.wait(spinner, 500).then(waitSpinner, waitSpinner);
-    }
-
+    exports.waitForSpinner();
     return true;
   }, function () {
     log('user is not preset');
