@@ -2565,6 +2565,18 @@
               clusterId: null,
               connectorType: null
             }
+          })
+          .state('resource-group-settings', {
+            url: '/services/resourceGroups/:id/settings',
+            templateUrl: 'modules/hercules/fusion-pages/resource-group-settings/resource-group-settings.html',
+            controller: 'ResourceGroupSettingsController',
+            controllerAs: 'rgsCtrl',
+            parent: 'main',
+            resolve: {
+              hasF237FeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasF237ResourceGroups);
+              }
+            }
           });
 
         $stateProvider

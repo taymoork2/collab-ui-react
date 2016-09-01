@@ -47,8 +47,11 @@
           $modalInstance.close();
         })
         .catch(function (response) {
-          var message = response.data.message || 'hercules.fusion.add-resource-group.release-channel.error';
-          Notification.error(message);
+          if (response.status === 409) {
+            Notification.error('hercules.resourceGroupSettings.duplicateName');
+          } else {
+            Notification.error('hercules.genericFailure');
+          }
         })
         .finally(function () {
           vm.creating = false;
