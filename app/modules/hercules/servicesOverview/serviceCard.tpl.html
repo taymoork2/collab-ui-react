@@ -3,7 +3,7 @@
 </header>
 <section ng-if="!card.loading">
   <p>
-    {{card.description | translate}} {{card.description | translate}} 
+    {{card.description | translate}}
   </p>
   <div class="card-button" ng-class="{alignedButtons: !card.loading && card.status}">
     <a ng-href="#/{{button.link}}" ng-repeat="button in card.getButtons()">
