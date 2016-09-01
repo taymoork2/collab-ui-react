@@ -6,7 +6,7 @@
     .controller('CustomerReportsCtrl', CustomerReportsCtrl);
 
   /* @ngInject */
-  function CustomerReportsCtrl($scope, $stateParams, $q, $timeout, $translate, Log, Authinfo, CustomerReportService, DummyCustomerReportService, CustomerGraphService, WebexReportService, Userservice, WebExApiGatewayService, Storage, FeatureToggleService, MediaServiceActivationV2) {
+  function CustomerReportsCtrl($scope, $state, $stateParams, $q, $timeout, $translate, Log, Authinfo, CustomerReportService, DummyCustomerReportService, CustomerGraphService, WebexReportService, Userservice, WebExApiGatewayService, Storage, FeatureToggleService, MediaServiceActivationV2) {
     var vm = this;
     var ABORT = 'ABORT';
     var REFRESH = 'refresh';
@@ -27,8 +27,6 @@
     var activeUsersSort = ['userName', 'numCalls', 'sparkMessages', 'totalActivity'];
     var activeUsersChart = null;
     var previousSearch = "";
-    vm.activeUserDescription = "";
-    vm.mostActiveTitle = "";
     vm.activeUserStatus = REFRESH;
     vm.mostActiveUserStatus = REFRESH;
     vm.searchPlaceholder = $translate.instant('activeUsers.search');
@@ -43,11 +41,9 @@
     vm.activeButton = [1, 2, 3];
 
     var avgRoomsChart = null;
-    vm.avgRoomsDescription = "";
     vm.avgRoomStatus = REFRESH;
 
     var filesSharedChart = null;
-    vm.filesSharedDescription = '';
     vm.filesSharedStatus = REFRESH;
 
     var mediaChart = null;
@@ -74,12 +70,10 @@
     };
     vm.deviceStatus = REFRESH;
     vm.isDevicesEmpty = true;
-    vm.deviceDescription = '';
     vm.deviceFilter = [angular.copy(defaultDeviceFilter)];
     vm.selectedDevice = vm.deviceFilter[0];
 
     var metricsChart = null;
-    vm.metricsDescription = '';
     vm.metricStatus = REFRESH;
     vm.metrics = {};
 
@@ -129,6 +123,9 @@
     vm.resetCards = resetCards;
     vm.searchMostActive = searchMostActive;
     vm.deviceUpdate = deviceUpdate;
+    vm.getDescription = getDescription;
+    vm.getHeader = getHeader;
+    vm.goToUsersTab = goToUsersTab;
 
     // Graph data status checks
     vm.isRefresh = function (tab) {
@@ -186,7 +183,6 @@
 
     function init() {
       if (!vm.tab) {
-        setFilterBasedText();
         $timeout(function () {
           setDummyData();
           setAllGraphs();
@@ -205,7 +201,6 @@
       vm.metrics = {};
       vm.mediaSelected = vm.mediaOptions[0];
 
-      setFilterBasedText();
       setDummyData();
       setAllGraphs();
     }
@@ -261,34 +256,20 @@
       }
     }
 
-    function setFilterBasedText() {
-      vm.activeUserDescription = $translate.instant('activeUsers.customerPortalDescription', {
+    function getDescription(text) {
+      return $translate.instant(text, {
         time: vm.timeSelected.description
       });
+    }
 
-      vm.mostActiveTitle = $translate.instant("activeUsers.mostActiveUsers", {
+    function getHeader(text) {
+      return $translate.instant(text, {
         time: vm.timeSelected.label
       });
+    }
 
-      vm.avgRoomsDescription = $translate.instant("avgRooms.avgRoomsDescription", {
-        time: vm.timeSelected.description
-      });
-
-      vm.filesSharedDescription = $translate.instant("filesShared.filesSharedDescription", {
-        time: vm.timeSelected.description
-      });
-
-      vm.metricsDescription = $translate.instant("callMetrics.customerDescription", {
-        time: vm.timeSelected.description
-      });
-
-      vm.videoDescription = $translate.instant("callMetrics.videoDescription", {
-        time: vm.timeSelected.description
-      });
-
-      vm.deviceDescription = $translate.instant("registeredEndpoints.customerDescription", {
-        time: vm.timeSelected.description
-      });
+    function goToUsersTab() {
+      $state.go('users.list');
     }
 
     function setDummyData() {
@@ -330,6 +311,7 @@
         }
         resizeCards();
       });
+
       CustomerReportService.getMostActiveUserData(vm.timeSelected).then(function (response) {
         if (response === ABORT) {
           return;
