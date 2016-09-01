@@ -5,6 +5,7 @@
 
   /* @ngInject */
   function WebExSiteSettingsFact(
+    $log,
     $q,
     $stateParams,
     $translate,
@@ -192,7 +193,39 @@
             var funcName = "getSiteSettingsInfoXmlSuccess()";
             var logMsg = "";
 
-            // logMsg = funcName + ": " + "getInfoResult=" + JSON.stringify(getInfoResult);
+            // start of replacing "result" with something we want to test
+            /*
+            var settingPagesInfoXml = '';
+
+            settingPagesInfoXml = settingPagesInfoXml + '<?xml version="1.0" encoding="UTF-8"?><serv:message xmlns:serv="http://www.webex.com/schemas/2002/06/service" xmlns:com="http://www.webex.com/schemas/2002/06/common" xmlns:ns1="http://www.webex.com/schemas/2002/06/service/site" xmlns:event="http://www.webex.com/schemas/2002/06/service/event"><serv:header><serv:response><serv:result>SUCCESS</serv:result><serv:gsbStatus>PRIMARY</serv:gsbStatus></serv:response></serv:header><serv:body><serv:bodyContent xsi:type="ns1:getSiteAdminNavUrlResponse" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">';
+            settingPagesInfoXml = settingPagesInfoXml + '<ns1:siteAdminNavUrl><ns1:type>SiteConfig</ns1:type><ns1:category>CommonSettings</ns1:category><ns1:navItemId>address</ns1:navItemId><ns1:url>https://wbxdmz.admin.ciscospark.com/wbxadmin/address/addressbook.do?proxyfrom=atlas&amp;siteurl=sjsite04&amp;actionFlag=first&amp;currentPageNum=1&amp;index=ALL</ns1:url></ns1:siteAdminNavUrl>';
+            settingPagesInfoXml = settingPagesInfoXml + '<ns1:siteAdminNavUrl><ns1:type>SiteConfig</ns1:type><ns1:category>CommonSettings</ns1:category><ns1:navItemId>cmr</ns1:navItemId><ns1:url>https://wbxdmz.admin.ciscospark.com/wbxadmin/sitesetting.do?proxyfrom=atlas&amp;siteurl=sjsite04#anchor_cmr</ns1:url></ns1:siteAdminNavUrl>';
+            settingPagesInfoXml = settingPagesInfoXml + '<ns1:siteAdminNavUrl><ns1:type>SiteConfig</ns1:type><ns1:category>CommonSettings</ns1:category><ns1:navItemId>common_options</ns1:navItemId><ns1:url>https://wbxdmz.admin.ciscospark.com/wbxadmin/sitesetting.do?proxyfrom=atlas&amp;siteurl=sjsite04#anchor_site_option</ns1:url></ns1:siteAdminNavUrl>';
+            settingPagesInfoXml = settingPagesInfoXml + '<ns1:siteAdminNavUrl><ns1:type>SiteConfig</ns1:type><ns1:category>CommonSettings</ns1:category><ns1:navItemId>disclaimer</ns1:navItemId><ns1:url>https://wbxdmz.admin.ciscospark.com/wbxadmin/disclaimer.do?proxyfrom=atlas&amp;siteurl=sjsite04</ns1:url></ns1:siteAdminNavUrl>';
+            settingPagesInfoXml = settingPagesInfoXml + '<ns1:siteAdminNavUrl><ns1:type>SiteConfig</ns1:type><ns1:category>CommonSettings</ns1:category><ns1:navItemId>mobile</ns1:navItemId><ns1:url>https://wbxdmz.admin.ciscospark.com/wbxadmin/sitesetting.do?proxyfrom=atlas&amp;siteurl=sjsite04#anchor_mobile</ns1:url></ns1:siteAdminNavUrl>';
+            settingPagesInfoXml = settingPagesInfoXml + '<ns1:siteAdminNavUrl><ns1:type>SiteConfig</ns1:type><ns1:category>CommonSettings</ns1:category><ns1:navItemId>navigation</ns1:navItemId><ns1:url>https://wbxdmz.admin.ciscospark.com/wbxadmin/sitesetting.do?proxyfrom=atlas&amp;siteurl=sjsite04#anchor_navigation</ns1:url></ns1:siteAdminNavUrl>';
+            settingPagesInfoXml = settingPagesInfoXml + '<ns1:siteAdminNavUrl><ns1:type>SiteConfig</ns1:type><ns1:category>CommonSettings</ns1:category><ns1:navItemId>productivity</ns1:navItemId><ns1:url>https://wbxdmz.admin.ciscospark.com/wbxadmin/ptools.do?proxyfrom=atlas&amp;siteurl=sjsite04</ns1:url></ns1:siteAdminNavUrl>';
+            settingPagesInfoXml = settingPagesInfoXml + '<ns1:siteAdminNavUrl><ns1:type>SiteConfig</ns1:type><ns1:category>CommonSettings</ns1:category><ns1:navItemId>scheduler</ns1:navItemId><ns1:url>https://wbxdmz.admin.ciscospark.com/wbxadmin/sitesetting.do?proxyfrom=atlas&amp;siteurl=sjsite04#anchor_scheduler</ns1:url></ns1:siteAdminNavUrl>';
+            settingPagesInfoXml = settingPagesInfoXml + '<ns1:siteAdminNavUrl><ns1:type>SiteConfig</ns1:type><ns1:category>CommonSettings</ns1:category><ns1:navItemId>security</ns1:navItemId><ns1:url>https://wbxdmz.admin.ciscospark.com/wbxadmin/sitesetting.do?proxyfrom=atlas&amp;siteurl=sjsite04#anchor_security</ns1:url></ns1:siteAdminNavUrl>';
+            settingPagesInfoXml = settingPagesInfoXml + '<ns1:siteAdminNavUrl><ns1:type>SiteConfig</ns1:type><ns1:category>CommonSettings</ns1:category><ns1:navItemId>session_type</ns1:navItemId><ns1:url>https://wbxdmz.admin.ciscospark.com/wbxadmin/SessionTypeList.do?proxyfrom=atlas&amp;siteurl=sjsite04</ns1:url></ns1:siteAdminNavUrl>';
+            settingPagesInfoXml = settingPagesInfoXml + '<ns1:siteAdminNavUrl><ns1:type>SiteConfig</ns1:type><ns1:category>CommonSettings</ns1:category><ns1:navItemId>user_priv</ns1:navItemId><ns1:url>https://wbxdmz.admin.ciscospark.com/wbxadmin/userPrivilege.do?proxyfrom=atlas&amp;siteurl=sjsite04</ns1:url></ns1:siteAdminNavUrl>';
+            settingPagesInfoXml = settingPagesInfoXml + '<ns1:siteAdminNavUrl><ns1:type>SiteConfig</ns1:type><ns1:category>EMAIL</ns1:category><ns1:navItemId>send_email_to_all</ns1:navItemId><ns1:url>https://wbxdmz.admin.ciscospark.com/wbxadmin/sendemailtoall.do?proxyfrom=atlas&amp;siteurl=sjsite04</ns1:url></ns1:siteAdminNavUrl>';
+            settingPagesInfoXml = settingPagesInfoXml + '<ns1:siteAdminNavUrl><ns1:type>SiteConfig</ns1:type><ns1:category>MC</ns1:category><ns1:navItemId>mc_default_options</ns1:navItemId><ns1:url>https://wbxdmz.admin.ciscospark.com/wbxadmin/meetingcenter/site/mcoption.do?proxyfrom=atlas&amp;siteurl=sjsite04#anchor_mc_default_options</ns1:url></ns1:siteAdminNavUrl>';
+            settingPagesInfoXml = settingPagesInfoXml + '<ns1:siteAdminNavUrl><ns1:type>SiteConfig</ns1:type><ns1:category>MC</ns1:category><ns1:navItemId>mc_navigation_customization</ns1:navItemId><ns1:url>https://wbxdmz.admin.ciscospark.com/wbxadmin/meetingcenter/site/mcoption.do?proxyfrom=atlas&amp;siteurl=sjsite04#anchor_mc_navigation_customization</ns1:url></ns1:siteAdminNavUrl>';
+            settingPagesInfoXml = settingPagesInfoXml + '<ns1:siteAdminNavUrl><ns1:type>SiteConfig</ns1:type><ns1:category>MC</ns1:category><ns1:navItemId>mc_options</ns1:navItemId><ns1:url>https://wbxdmz.admin.ciscospark.com/wbxadmin/meetingcenter/site/mcoption.do?proxyfrom=atlas&amp;siteurl=sjsite04#anchor_mc_options</ns1:url></ns1:siteAdminNavUrl>';
+            settingPagesInfoXml = settingPagesInfoXml + '<ns1:siteAdminNavUrl><ns1:type>SiteConfig</ns1:type><ns1:category>MC</ns1:category><ns1:navItemId>mc_scheduling_templates</ns1:navItemId><ns1:url>https://wbxdmz.admin.ciscospark.com/wbxadmin/meetingcenter/site/mcoption.do?proxyfrom=atlas&amp;siteurl=sjsite04#anchor_mc_scheduling_templates</ns1:url></ns1:siteAdminNavUrl>';
+            settingPagesInfoXml = settingPagesInfoXml + '<ns1:siteAdminNavUrl><ns1:type>SiteConfig</ns1:type><ns1:category>SiteInfo</ns1:category><ns1:navItemId>site_features</ns1:navItemId><ns1:url>https://wbxdmz.admin.ciscospark.com/wbxadmin/homepage.do?proxyfrom=atlas&amp;siteurl=sjsite04#anchor_features</ns1:url></ns1:siteAdminNavUrl>';
+            settingPagesInfoXml = settingPagesInfoXml + '<ns1:siteAdminNavUrl><ns1:type>SiteConfig</ns1:type><ns1:category>SiteInfo</ns1:category><ns1:navItemId>site_info</ns1:navItemId><ns1:url>https://wbxdmz.admin.ciscospark.com/wbxadmin/homepage.do?proxyfrom=atlas&amp;siteurl=sjsite04#anchor_info</ns1:url></ns1:siteAdminNavUrl>';
+            settingPagesInfoXml = settingPagesInfoXml + '</serv:bodyContent></serv:body></serv:message>';
+
+            getInfoResult = {
+              'settingPagesInfoXml': settingPagesInfoXml
+            };
+            */
+            // end of replace
+
+            logMsg = funcName + ": " + "getInfoResult=" + "\n" +
+              JSON.stringify(getInfoResult);
             // $log.log(logMsg);
 
             var settingPagesInfo = WebExUtilsFact.validateAdminPagesInfoXmlData(getInfoResult.settingPagesInfoXml);
@@ -206,12 +239,7 @@
             ) {
 
               _this.webExSiteSettingsObj.hasLoadError = true;
-
-            } else if (
-              (null === siteAdminNavUrls) ||
-              (0 >= siteAdminNavUrls.length)
-            ) {
-
+            } else if (angular.isUndefined(siteAdminNavUrls)) {
               logMsg = funcName + "\n" +
                 "ERROR: siteAdminNavUrls=" + JSON.stringify(siteAdminNavUrls) + "\n" +
                 "siteUrl=" + _this.webExSiteSettingsObj.siteUrl;

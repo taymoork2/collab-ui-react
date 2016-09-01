@@ -378,16 +378,16 @@
               var funcName = "initReportsObject().getNaviationInfoSuccess()";
               var logMsg = "";
 
-              // start of replacing result with something we want to test
+              // start of replacing "result" with something we want to test
               /*
               var reportPagesInfoXml = '';
 
               reportPagesInfoXml = reportPagesInfoXml + '<?xml version="1.0" encoding="UTF-8"?>\n<serv:message xmlns:serv="http://www.webex.com/schemas/2002/06/service" xmlns:com="http://www.webex.com/schemas/2002/06/common" xmlns:ns1="http://www.webex.com/schemas/2002/06/service/site" xmlns:event="http://www.webex.com/schemas/2002/06/service/event"><serv:header><serv:response><serv:result>SUCCESS</serv:result><serv:gsbStatus>PRIMARY</serv:gsbStatus></serv:response></serv:header><serv:body><serv:bodyContent xsi:type="ns1:getSiteAdminNavUrlResponse" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">';
-              // reportPagesInfoXml = reportPagesInfoXml + '<ns1:siteAdminNavUrl><ns1:type>Report</ns1:type><ns1:category>CommonReports</ns1:category><ns1:navItemId>meetings_in_progress</ns1:navItemId><ns1:url>https://wbxdmz.admin.ciscospark.com/wbxadmin/MeetingsInProgress.do?proxyfrom=atlas&amp;siteurl=sjsite04</ns1:url></ns1:siteAdminNavUrl>';
+              reportPagesInfoXml = reportPagesInfoXml + '<ns1:siteAdminNavUrl><ns1:type>Report</ns1:type><ns1:category>CommonReports</ns1:category><ns1:navItemId>meetings_in_progress</ns1:navItemId><ns1:url>https://wbxdmz.admin.ciscospark.com/wbxadmin/MeetingsInProgress.do?proxyfrom=atlas&amp;siteurl=sjsite04</ns1:url></ns1:siteAdminNavUrl>';
               reportPagesInfoXml = reportPagesInfoXml + '<ns1:siteAdminNavUrl><ns1:type>Report</ns1:type><ns1:category>CommonReports</ns1:category><ns1:navItemId>inactive_user</ns1:navItemId><ns1:url>https://wbxdmz.admin.ciscospark.com/wbxadmin/inactiveUsersReport.do?proxyfrom=atlas&amp;siteurl=sjsite04</ns1:url></ns1:siteAdminNavUrl>';
-              // reportPagesInfoXml = reportPagesInfoXml + '<ns1:siteAdminNavUrl><ns1:type>Report</ns1:type><ns1:category>CommonReports</ns1:category><ns1:navItemId>meeting_usage</ns1:navItemId><ns1:url>https://wbxdmz.admin.ciscospark.com/wbxadmin/usageReport.do?proxyfrom=atlas&amp;siteurl=sjsite04</ns1:url></ns1:siteAdminNavUrl>';
-              // reportPagesInfoXml = reportPagesInfoXml + '<ns1:siteAdminNavUrl><ns1:type>Report</ns1:type><ns1:category>CommonReports</ns1:category><ns1:navItemId>recording_storage_usage</ns1:navItemId><ns1:url>https://wbxdmz.admin.ciscospark.com/wbxadmin/nbrReport.do?proxyfrom=atlas&amp;siteurl=sjsite04</ns1:url></ns1:siteAdminNavUrl>';
-              // reportPagesInfoXml = reportPagesInfoXml + '<ns1:siteAdminNavUrl><ns1:type>Report</ns1:type><ns1:category>CommonReports</ns1:category><ns1:navItemId>storage_utilization_by_user</ns1:navItemId><ns1:url>https://wbxdmz.admin.ciscospark.com/wbxadmin/storageReport.do?proxyfrom=atlas&amp;siteurl=sjsite04</ns1:url></ns1:siteAdminNavUrl>';
+              reportPagesInfoXml = reportPagesInfoXml + '<ns1:siteAdminNavUrl><ns1:type>Report</ns1:type><ns1:category>CommonReports</ns1:category><ns1:navItemId>meeting_usage</ns1:navItemId><ns1:url>https://wbxdmz.admin.ciscospark.com/wbxadmin/usageReport.do?proxyfrom=atlas&amp;siteurl=sjsite04</ns1:url></ns1:siteAdminNavUrl>';
+              reportPagesInfoXml = reportPagesInfoXml + '<ns1:siteAdminNavUrl><ns1:type>Report</ns1:type><ns1:category>CommonReports</ns1:category><ns1:navItemId>recording_storage_usage</ns1:navItemId><ns1:url>https://wbxdmz.admin.ciscospark.com/wbxadmin/nbrReport.do?proxyfrom=atlas&amp;siteurl=sjsite04</ns1:url></ns1:siteAdminNavUrl>';
+              reportPagesInfoXml = reportPagesInfoXml + '<ns1:siteAdminNavUrl><ns1:type>Report</ns1:type><ns1:category>CommonReports</ns1:category><ns1:navItemId>storage_utilization_by_user</ns1:navItemId><ns1:url>https://wbxdmz.admin.ciscospark.com/wbxadmin/storageReport.do?proxyfrom=atlas&amp;siteurl=sjsite04</ns1:url></ns1:siteAdminNavUrl>';
               reportPagesInfoXml = reportPagesInfoXml + '</serv:bodyContent></serv:body></serv:message>';
 
               result = {
@@ -398,17 +398,10 @@
 
               logMsg = funcName + ": " + "result=" + "\n" +
                 JSON.stringify(result);
-              $log.log(logMsg);
+              // $log.log(logMsg);
 
               var reportPagesInfoJson = WebExUtilsFact.validateAdminPagesInfoXmlData(result.reportPagesInfoXml);
-
-              logMsg = funcName + ": " + "reportPagesInfoJson.headerJson=" + "\n" +
-                JSON.stringify(reportPagesInfoJson.headerJson);
-              // $log.log(logMsg);
-
-              logMsg = funcName + ": " + "reportPagesInfoJson.bodyJson=" + "\n" +
-                JSON.stringify(reportPagesInfoJson.bodyJson);
-              // $log.log(logMsg);
+              var siteAdminNavUrls = reportPagesInfoJson.bodyJson.ns1_siteAdminNavUrl;
 
               if (
                 ("" !== reportPagesInfoJson.errId) ||
@@ -416,45 +409,38 @@
               ) {
 
                 reportsObject.hasLoadError = true;
+              } else if (angular.isUndefined(siteAdminNavUrls)) {
+                logMsg = funcName + "\n" +
+                  "ERROR: siteAdminNavUrls=" + JSON.stringify(siteAdminNavUrls) + "\n" +
+                  "siteUrl=" + siteUrl;
+                Log.error(logMsg);
+
+                reportsObject.hasLoadError = true;
+                reportsObject.invalidNavUrls = true;
               } else {
                 reportsObject["mapJson"] = reportPagesInfoJson;
 
                 var rpts = self.getReports(siteUrl, reportPagesInfoJson);
+                reportsObject["reports"] = rpts;
 
-                if (
-                  (null == rpts) ||
-                  (0 >= rpts.length)
-                ) {
+                var i = 0;
+                var j = 0;
 
-                  logMsg = funcName + "\n" +
-                    "ERROR: rpts=" + JSON.stringify(rpts) + "\n" +
-                    "siteUrl=" + reportsObject.siteUrl;
-                  Log.error(logMsg);
+                for (i = 0; i < rpts.sections.length; i++) {
+                  if (rpts.sections[i].section_name === "common_reports") {
+                    for (j = 0; j < rpts.sections[i].uisrefs.length; j++) {
+                      if (rpts.sections[i].uisrefs[j].reportPageId === "meetings_in_progress") {
+                        reportsObject.infoCardObj.iframeLinkObj1.iframePageObj.uiSref = rpts.sections[i].uisrefs[j].toUIsrefString();
+                      }
 
-                  reportsObject.hasLoadError = true;
-                  reportsObject.invalidNavUrls = true;
-                } else {
-                  reportsObject["reports"] = rpts;
-
-                  var i = 0;
-                  var j = 0;
-
-                  for (i = 0; i < rpts.sections.length; i++) {
-                    if (rpts.sections[i].section_name === "common_reports") {
-                      for (j = 0; j < rpts.sections[i].uisrefs.length; j++) {
-                        if (rpts.sections[i].uisrefs[j].reportPageId === "meetings_in_progress") {
-                          reportsObject.infoCardObj.iframeLinkObj1.iframePageObj.uiSref = rpts.sections[i].uisrefs[j].toUIsrefString();
-                        }
-
-                        if (rpts.sections[i].uisrefs[j].reportPageId === "meeting_usage") {
-                          reportsObject.infoCardObj.iframeLinkObj2.iframePageObj.uiSref = rpts.sections[i].uisrefs[j].toUIsrefString();
-                        }
+                      if (rpts.sections[i].uisrefs[j].reportPageId === "meeting_usage") {
+                        reportsObject.infoCardObj.iframeLinkObj2.iframePageObj.uiSref = rpts.sections[i].uisrefs[j].toUIsrefString();
                       }
                     }
                   }
-
-                  reportsObject["viewReady"] = true;
                 }
+
+                reportsObject["viewReady"] = true;
               }
             }, // getNaviationInfoSuccess()
 
