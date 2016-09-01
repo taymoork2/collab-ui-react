@@ -1794,7 +1794,9 @@
     },
     "assignClustersModal": {
       "title": "Assign Clusters to {{groupName}}",
-      "description": "Click on the clusters you want to move to/from this resource group."
+      "description": "Select the clusters you want to assign to the resource group.",
+      "assigned": "Cluster \"{{clusterName}}\" successfully assigned to \"{{groupName}}\"",
+      "removed": "Cluster \"{{clusterName}}\" successfully removed from \"{{groupName}}\""
     },
     "confirmChangeReleaseChannelModal": {
       "title": "Change Release Channel",
