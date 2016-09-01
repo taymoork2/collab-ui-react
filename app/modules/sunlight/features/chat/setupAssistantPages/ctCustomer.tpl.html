@@ -134,8 +134,8 @@
                   <em>{{attribute.value.helpText}}</em>
                 </label>
                 <div class="small ct-input-error" ng-show="careChatSA.isTypeDuplicate">
-                  <i class="icon icon-error"></i>
-                  {{:: 'careChatTpl.ctValidation.errorTypeDuplicate' | translate}}
+                  <div class="ct-error-icon"><i class="icon icon-error icon-lg"></i></div>
+                  <div>{{:: 'careChatTpl.ctValidation.errorTypeDuplicate' | translate}}</div>
                 </div>
               </div>
               <div class="row ct-attribute-row ct-customer-info-category-input right-inner-addon" ng-if="attribute.name == 'type' && attribute.value.id == 'category'">

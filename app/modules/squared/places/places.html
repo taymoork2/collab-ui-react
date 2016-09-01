@@ -37,13 +37,9 @@
           <i class="icon icon-circle-telepresence" />
           <span class="h5" translate="spacesPage.nothingHere"></span>
           <span class="h1" translate="spacesPage.noDevices"></span>
-          <button class="btn btn--people btn--large add-button" ng-click="sc.showAddDeviceDialog()" ng-show="sc.isEntitledToRoomSystem()">
+          <button class="btn btn--people btn--large add-button" ng-click="sc.startAddPlaceFlow()">
             <span translate="spacesPage.addBtn"></span>
           </button>
-          <div ng-show="sc.isEntitledToHuron()">
-            <br/>
-            <span translate="spacesPage.addPersonalDeviceDesc" translate-value-onclick="sc.clickUsers()" translate-compile></span>
-          </div>
         </div>
       </div>
     </div>
