@@ -1785,9 +1785,8 @@
       "removeGroup": "Remove",
       "removeGroupDescription": "Remove the resource group from Cisco Collaboration Cloud",
       "groupNameCannotByEmpty": "Resource group name cannot be empty",
-      "groupNameSaved": "Name saved successfully",
-      "saveFailed": "An unexpected error occurred. Try again later.",
-      "groupNameDuplicate": "A resource group with that name already exists. Please choose another name.",
+      "groupNameSaved": "Rename successful",
+      "duplicateName": "A resource group with that name already exists. Please choose another name.",
       "loadFailed": "Unable to load the resource group details. Please try again later.",
       "groupReleaseChannelSaved": "Release channel saved successfully",
       "removeGroupReq": "To remove this resource group, all assigned clusters and user must be removed first",
@@ -1801,7 +1800,8 @@
       "title": "Change Release Channel",
       "description": "Are you sure you want to change the release channel for \"{{groupName}}\" to {{channelName}}?",
       "change": "Change"
-    }
+    },
+    "genericFailure": "An unexpected error occurred. Please try again later."
   },
   "ediscovery": {
     "browserTabHeaderTitle": "Spark Activity Reports",

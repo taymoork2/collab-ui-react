@@ -37,6 +37,7 @@
           cs-input
           type="text"
           ng-model="rgsCtrl.newGroupName"
+          ng-keypress="rgsCtrl.handleKeypress($event)"
           cs-input-group-size="medium-8">
         <button
           type="button"

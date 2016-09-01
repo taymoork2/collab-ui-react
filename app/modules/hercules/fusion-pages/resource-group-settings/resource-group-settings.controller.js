@@ -27,6 +27,7 @@
     vm.releaseChannelChanged = releaseChannelChanged;
     vm.deleteGroup = deleteGroup;
     vm.openAssignClustersModal = openAssignClustersModal;
+    vm.handleKeypress = handleKeypress;
 
     loadResourceGroup($stateParams.id);
     determineIfRemoveAllowed();
@@ -66,11 +67,11 @@
             groupName: newName
           });
           Notification.success('hercules.resourceGroupSettings.groupNameSaved');
-        }, function (err) {
-          if (err.status === 400) {
-            Notification.error('hercules.resourceGroupSettings.groupNameDuplicate');
+        }, function (response) {
+          if (response.status === 409) {
+            Notification.error('hercules.resourceGroupSettings.duplicateName');
           } else {
-            Notification.error('hercules.resourceGroupSettings.saveFailed');
+            Notification.error('hercules.genericFailure');
           }
         });
     }
@@ -117,7 +118,7 @@
           Notification.success('hercules.resourceGroupSettings.deleteSuccess');
           $state.go('cluster-list');
         }, function () {
-          Notification.error('hercules.resourceGroupSettings.saveFailed');
+          Notification.error('hercules.genericFailure');
         });
     }
 
@@ -129,7 +130,7 @@
           }
         },
         controller: 'AssignClustersController',
-        controllerAs: 'assignClustersCtrl',
+        controllerAs: 'vm',
         templateUrl: 'modules/hercules/fusion-pages/resource-group-settings/assign-clusters.html',
         type: 'small'
       });
@@ -139,6 +140,12 @@
       vm.releaseChannelSelected = _.find(vm.releaseChannelOptions, function (option) {
         return option.value === vm.group.releaseChannel.toLowerCase();
       });
+    }
+
+    function handleKeypress(event) {
+      if (event.keyCode === 13) {
+        setGroupName(vm.newGroupName);
+      }
     }
   }
 })();

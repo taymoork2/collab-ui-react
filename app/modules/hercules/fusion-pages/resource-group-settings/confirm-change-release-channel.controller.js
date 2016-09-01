@@ -18,7 +18,7 @@
           Notification.success('hercules.resourceGroupSettings.groupReleaseChannelSaved');
           $modalInstance.close();
         }, function () {
-          Notification.error('hercules.resourceGroupSettings.saveFailed');
+          Notification.error('hercules.genericFailure');
         });
     }
   }

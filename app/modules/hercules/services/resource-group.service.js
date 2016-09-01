@@ -11,7 +11,7 @@
       getAll: getAll,
       get: get,
       create: create,
-      deleteGroup: deleteGroup,
+      remove: remove,
       getAllowedChannels: getAllowedChannels,
       setName: setName,
       setReleaseChannel: setReleaseChannel
@@ -31,14 +31,14 @@
 
     function create(name, releaseChannel) {
       return $http
-        .post(UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '/resourceGroups', {
+        .post(UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '/resourceGroup', {
           name: name,
           releaseChannel: releaseChannel
         })
         .then(extractDataFromResponse);
     }
 
-    function deleteGroup(resourceGroupId) {
+    function remove(resourceGroupId) {
       return $http.delete(UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '/resourceGroups/' + resourceGroupId);
     }
 
