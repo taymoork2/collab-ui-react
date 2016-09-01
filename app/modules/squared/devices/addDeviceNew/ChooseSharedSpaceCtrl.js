@@ -4,7 +4,7 @@
   angular.module('Core')
     .controller('ChooseSharedSpaceCtrl', ChooseSharedSpaceCtrl);
   /* @ngInject */
-  function ChooseSharedSpaceCtrl(CsdmCodeService, CsdmPlaceService, CsdmHuronPlaceService, XhrNotificationService, $stateParams, $state, $translate, Authinfo) {
+  function ChooseSharedSpaceCtrl(CsdmCodeService, CsdmPlaceService, CsdmHuronPlaceService, XhrNotificationService, $stateParams, $translate, Authinfo) {
     var vm = this;
     vm.wizardData = $stateParams.wizard.state().data;
 
@@ -16,6 +16,7 @@
     vm.isExistingCollapsed = true;
     vm.selected = null;
     vm.radioSelect = null;
+    vm.placesLoaded = false;
     vm.isLoading = false;
     vm.rooms = undefined;
     vm.hasRooms = undefined;
@@ -38,16 +39,21 @@
 
     function loadList() {
       if (vm.wizardData.showPlaces) {
-        var filteredList;
         if (vm.wizardData.deviceType == 'cloudberry') {
-          filteredList = _(CsdmPlaceService.getPlacesList()).filter(function (place) {
-            return _.isEmpty(place.devices);
-          }).sortBy('displayName').value();
+          CsdmPlaceService.getPlacesList().then(function (placesList) {
+            vm.rooms = _(placesList).filter(function (place) {
+              return _.isEmpty(place.devices);
+            }).sortBy('displayName').value();
+            vm.hasRooms = vm.rooms.length > 0;
+            vm.placesLoaded = true;
+          });
         } else {
-          filteredList = _(CsdmHuronPlaceService.getPlacesList()).sortBy('displayName').value();
+          CsdmHuronPlaceService.getPlacesList().then(function (placesList) {
+            vm.rooms = _(placesList).sortBy('displayName').value();
+            vm.hasRooms = vm.rooms.length > 0;
+            vm.placesLoaded = true;
+          });
         }
-        vm.hasRooms = filteredList.length > 0;
-        vm.rooms = filteredList;
       }
     }
 
@@ -137,10 +143,6 @@
 
     vm.back = function () {
       $stateParams.wizard.back();
-    };
-
-    vm.clickUsers = function () {
-      $state.go('users.list');
     };
   }
 })();

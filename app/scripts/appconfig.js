@@ -2564,7 +2564,7 @@
             controller: 'ExpresswayHostDetailsController',
             controllerAs: 'hostDetailsCtrl',
             data: {
-              displayName: 'Host'
+              displayName: 'Node'
             },
             params: {
               host: null,

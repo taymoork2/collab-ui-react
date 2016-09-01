@@ -2,7 +2,7 @@
   'use strict';
   angular.module('Mediafusion').controller('MediaServiceMetricsContoller', MediaServiceMetricsContoller);
   /* @ngInject */
-  function MediaServiceMetricsContoller($timeout, $translate, MediaClusterServiceV2, XhrNotificationService, MetricsReportService, MetricsGraphService, DummyMetricsReportService) {
+  function MediaServiceMetricsContoller($timeout, $translate, MediaClusterServiceV2, XhrNotificationService, MetricsReportService, MetricsGraphService, DummyMetricsReportService, $interval, $scope) {
     var vm = this;
     vm.ABORT = 'ABORT';
     vm.REFRESH = 'refresh';
@@ -136,6 +136,13 @@
       setDummyData();
       setAllGraphs();
     }
+
+    // Code for auto reload the rest calls every 5 minutes
+    var interval = $interval(clusterUpdate, 300000);
+    $scope.$on('$destroy', function () {
+      $interval.cancel(interval);
+    });
+
     // Graph data status checks
     function isRefresh(tab) {
       return tab === vm.REFRESH;

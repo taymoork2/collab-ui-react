@@ -117,14 +117,10 @@ done
 
 # - e2e tests
 ./e2e.sh | tee ./.cache/e2e-sauce-logs
-e2e_exit_code="${PIPESTATUS[0]}"
 
 # groom logs for cleaner sauce labs output
 source ./bin/include/sauce-results-helpers
 mk_test_report ./.cache/e2e-sauce-logs | tee ./.cache/e2e-report-for-${BUILD_TAG}
-
-# exit out if e2e process exited non-zero
-test $e2e_exit_code -eq 0 || exit $e2e_exit_code
 
 
 # -----

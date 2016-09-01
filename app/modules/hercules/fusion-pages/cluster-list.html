@@ -30,8 +30,7 @@
           <header>
             <h4>{{::cluster.name}}</h4>
             <div class="cluster-list-hosts" tooltip-html-unsafe="{{resourceList.getHostnames(cluster)}}" tooltip-trigger="mouseenter" tooltip-placement="bottom">
-              <div ng-if="cluster.targetType === 'mf_mgmt'" translate="hercules.fusion.list.nodes" translate-values="{count: resourceList.countHosts(cluster)}" translate-interpolation="messageformat"></div>
-              <div ng-if="cluster.targetType !== 'mf_mgmt'" translate="hercules.fusion.list.hosts" translate-values="{count: resourceList.countHosts(cluster)}" translate-interpolation="messageformat"></div>
+              <div translate="hercules.fusion.list.nodes" translate-values="{count: resourceList.countHosts(cluster)}" translate-interpolation="messageformat"></div>
             </div>
           </header>
           <div class="row cluster-list-body">
