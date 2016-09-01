@@ -597,7 +597,9 @@
     "description": "An active user is defined as someone who has made or received a call using a device or has sent a message using the Cisco Spark app.  In this report you can compare the number of registered users to the number of active users in the selected customer(s) over the {{time}}.",
     "mostActiveDescription": "During the {{time}}, these are the most active users for the selected customer(s).",
     "customerPortalDescription": "An active user is defined as someone who has made or received a call using a device or has sent a message using the Cisco Spark app. In this report you can compare the total number of registered users to the number of active users over the {{time}}.",
-    "customerMostActiveDescription": "The table below displays the user activity for the top 500 most active users.  It can be sorted by the user name, total calls, or spark messages and searched based on the user name."
+    "customerMostActiveDescription": "During the last {{time}}, these are the most active users.  The table can be sorted by the user name, total calls, or spark messages and searched based on the user name.",
+    "noActiveUsers": "During the last {{time}}, there have been no active users.  To see user status and resend invitations to those still pending, visit the ",
+    "usersTab": "users tab."
   },
   "avgRooms": {
     "avgRooms": "Total Rooms",
