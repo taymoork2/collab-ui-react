@@ -1982,7 +1982,7 @@
     "setSipDomainErrorMessage": "Not available. Please try another name",
     "setSipDomainErrorMessageInvalidDomain": "Invalid domain, please try another name",
     "setSipDomainSuccessMessage": "The Spark SIP Address has been successfully saved",
-    "setSipDomainConfirmText": "I acknowledge this is a one-time setting that cannot be changed later.",
+    "setSipDomainConfirmText": "I acknowledge that this is a one-time setting that cannot be changed later.",
     "sparkDomainManagementServiceErrorMessage": "Failed to reach Spark Domain Management Service",
     "messageSettings": "Message Settings",
     "callSettings": "Call Settings",
@@ -3458,7 +3458,10 @@
       "totalCallsDescription": "Calls hosted locally and that overflowed to the Cisco Collaboration Cloud.",
       "onpremcalls": "on premises |",
       "cloudcalls": "overflowed to cloud",
-      "redirectedcalls": "redirected"
+      "redirectedcalls": "redirected",
+      "nodata": "N/A",
+      "allclusters": "All Clusters",
+      "percentage": "%"
     },
     "serviceStatus": {
       "unknown": "Status unknown",

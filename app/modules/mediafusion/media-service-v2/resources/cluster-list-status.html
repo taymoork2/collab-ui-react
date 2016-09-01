@@ -1,10 +1,10 @@
 <div class="ui-grid-cell-contents" style="padding-top: 1.5rem">
 <span ng-switch="row.entity.aggregates.state">
-   <span ng-switch-when="has_alarms"> <i class="icon icon-circle status-indicator danger" /> </span>  
-  <span ng-switch-when="offline"> <i class="icon icon-circle status-indicator disabled" /> </span>  
+   <span ng-switch-when="has_alarms"> <i class="icon icon-circle status-indicator warning" /> </span>  
+  <span ng-switch-when="offline"> <i class="icon icon-circle status-indicator danger" /> </span>  
   <span ng-switch-when="running"> <i class="icon icon-circle status-indicator success" /> </span>  
   <span ng-switch-when="installing"> <i class="icon icon-circle status-indicator warning" /> </span>  
-  <span ng-switch-default> <i class="icon icon-circle status-indicator"/></span>  
+  <span ng-switch-default> <i class="icon icon-circle status-indicator disabled"/></span>  
 </span>
   <span translate="{{'mediaFusion.serviceStatus.' + row.entity.aggregates.state}}"></span>
   <span ng-if="row.entity.aggregates.upgradeState === 'upgrading'"> | <span translate="mediaFusion.serviceStatus.upgrading"></span></span>
