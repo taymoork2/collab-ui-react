@@ -46,7 +46,6 @@ describe('OAuthConfig', function () {
   };
 
   it('should return correct access code url', function () {
-    var scope = '';
     whenCalling('getOauthAccessCodeUrl', 'foo').expectUrlToBe({
       dev: 'grant_type=refresh_token&refresh_token=foo&scope=' + scope,
       cfe: 'grant_type=refresh_token&refresh_token=foo&scope=' + scope,
