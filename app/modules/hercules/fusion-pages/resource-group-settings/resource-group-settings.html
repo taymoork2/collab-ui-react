@@ -1,0 +1,60 @@
+<div class="fusion-cluster-settings">
+
+  <cs-page-header title="{{rgsCtrl.localizedTitle}}" back="true" back-url="rgsCtrl.backUrl"></cs-page-header>
+
+  <div class="cs-form" ng-if="rgsCtrl.group">
+
+    <setting-section setting="rgsCtrl.clusters">
+      <h5 class="sub-section__label" translate="hercules.resourceGroupSettings.clustersAssign"></h5>
+      <p class="sub-section__description" translate="hercules.resourceGroupSettings.clustersDescription"></p>
+      <button
+        type="button"
+        class="btn btn--primary"
+        translate="hercules.resourceGroupSettings.clustersAssign"
+        ng-click="rgsCtrl.openAssignClustersModal()"></button>
+    </setting-section>
+
+    <setting-section setting="rgsCtrl.releaseChannel">
+      <h5 class="sub-section__label" translate="hercules.resourceGroupSettings.releaseChannelHeader"></h5>
+      <p class="sub-section__description" translate="hercules.resourceGroupSettings.releaseChannelDescription"></p>
+      <div class="row">
+        <div class="medium-8 columns" style="padding: 0">
+          <cs-select
+            ng-model="rgsCtrl.releaseChannelSelected"
+            options="rgsCtrl.releaseChannelOptions"
+            placeholder="rgsCtrl.releaseChannelPlaceholder"
+            on-change-fn="rgsCtrl.releaseChannelChanged()">
+          </cs-select>
+        </div>
+      </div>
+    </setting-section>
+
+    <setting-section setting="rgsCtrl.resourceGroup">
+      <h5 class="sub-section__label" translate="hercules.resourceGroupSettings.renameGroup"></h5>
+      <p class="sub-section__description" translate="hercules.resourceGroupSettings.renameGroupDescription"></p>
+      <div class="row">
+        <input
+          cs-input
+          type="text"
+          ng-model="rgsCtrl.newGroupName"
+          cs-input-group-size="medium-8">
+        <button
+          type="button"
+          class="btn btn--primary btn-save-new-name"
+          ng-click="rgsCtrl.setGroupName(rgsCtrl.newGroupName)"
+          translate="common.save"></button>
+      </div>
+
+      <h5 class="sub-section__label" translate="hercules.resourceGroupSettings.removeGroup"></h5>
+      <p class="sub-section__description" translate="hercules.resourceGroupSettings.removeGroupDescription"></p>
+      <div ng-if="!rgsCtrl.allowRemove">
+        <button type="button" class="btn" disabled="disabled" translate="common.remove"></button>
+        <p class="cap-long-names remove-warning" translate="hercules.resourceGroupSettings.removeGroupReq"></p>
+      </div>
+      <div ng-if="rgsCtrl.allowRemove">
+        <button type="button" class="btn" ng-click="rgsCtrl.deleteGroup()" translate="common.remove"></button>
+      </div>
+    </setting-section>
+
+  </div>
+</div>

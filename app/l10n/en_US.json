@@ -1774,6 +1774,35 @@
       "setDescription": "Select the Resource Group the user is assigned to for this service.",
       "noGroupSelected": "None",
       "failedToSetGroup": "Failed to set the resource group"
+    },
+    "resourceGroupSettings": {
+      "pageTitle": "{{groupName}} Settings",
+      "releaseChannelHeader": "Release Channel",
+      "releaseChannelDescription": "Select the Release Channel for all services in this group",
+      "clustersHeader" : "Clusters",
+      "clustersAssign" : "Assign Clusters",
+      "clustersDescription" : "Add one or more existing clusters to this group",
+      "renameGroup": "Rename",
+      "renameGroupDescription": "Rename the resource group",
+      "removeGroup": "Remove",
+      "removeGroupDescription": "Remove the resource group from Cisco Collaboration Cloud",
+      "groupNameCannotByEmpty": "Resource group name cannot be empty",
+      "groupNameSaved": "Name saved successfully",
+      "saveFailed": "An unexpected error occurred. Try again later.",
+      "groupNameDuplicate": "A resource group with that name already exists. Please choose another name.",
+      "loadFailed": "Unable to load the resource group details. Please try again later.",
+      "groupReleaseChannelSaved": "Release channel saved successfully",
+      "removeGroupReq": "To remove this resource group, all assigned clusters and user must be removed first",
+      "deleteSuccess": "Resource group successfully deleted"
+    },
+    "assignClustersModal": {
+      "title": "Assign Clusters to {{groupName}}",
+      "description": "Click on the clusters you want to move to/from this resource group."
+    },
+    "confirmChangeReleaseChannelModal": {
+      "title": "Change Release Channel",
+      "description": "Are you sure you want to change the release channel for \"{{groupName}}\" to {{channelName}}?",
+      "change": "Change"
     }
   },
   "ediscovery": {
