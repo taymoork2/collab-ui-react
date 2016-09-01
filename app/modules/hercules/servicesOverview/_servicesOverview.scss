@@ -112,28 +112,21 @@
         }
         footer {
           border-top: 1px solid $gray-light-4;
-          height: 3rem;
-          .status {
-            position: relative;
-            top: 0.9rem;
-            display: block;
+          display: flex;
+          div {
+            width: 100%;
+            justify-content: flex-start;
+            padding-top: rem(12);
+          }
+          .status {    
+            &:focus {
+              box-shadow: none;
+            }
             span {
               color: $gray-base;
-              position: relative;
-              top: -0.2rem;
-              left: 0.1rem;
-            }
-            .icon {
-              font-size: 0.825rem;
-              top: -0.2rem;
             }
           }
-          .danger {
-            color: $color-negative-base;
-          }
-          .success {
-            color: $color-cta-base;
-          }
+         
         }
       }
       .cs-card.header-bar.cta-bar header:after {

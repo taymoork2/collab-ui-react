@@ -29,7 +29,7 @@
     "assignDnAndDirectLines": "Assign Numbers",
     "addUsers": "Add Users",
     "convertUsers": "Convert Users",
-    "errorMessages": "Error Messages",
+    "errorWarningMessages": "Warnings and Errors",
     "skipErrorsAndFinish": "Skip Errors and Finish",
     "newUsers": "{newusers, plural, one{# New user} other{# New users}}",
     "updatedUsers": "{updatedusers, plural, one{# Updated user} other{# Updated users}}",
@@ -107,6 +107,8 @@
     "deleteUserDnFallbackError": "Error deleting user. The user's directory number is used as the fallback destination for Hunt Group(s).",
     "onboardSuccess": "{{email}} onboarded successfully",
     "onboardError": "{{email}} not onboarded. Status: {{status}}",
+    "onboardedWithoutLicense": "{{email}} onboarded without a license",
+    "accessDeniedError": "{{email}} cannot be added. Access is denied.",
     "ciscoucError": "{{email}} did not successfully onboard Call service.",
     "messageError": "Message: {{message}}",
     "userListError": "Error retrieving the user list. Please try reloading the page.",
@@ -950,8 +952,8 @@
     "invalidRequired": "This field is required.",
     "invalidEmail": "This is not a valid Email Address.",
     "invalidUrl": "This is not a valid URL.",
-    "invalidMinLength": "This entry is too short. Minimum length is {{min}}.",
-    "invalidMaxLength": "This entry is too long. Maximum length is {{max}}.",
+    "invalidMinLength": "Character length cannot be less than {{min}}.",
+    "invalidMaxLength": "Character length cannot be more than {{max}}.",
     "invalidMax": "Maximum value is {{max}}.",
     "incorrectFormat": "Incorrect format",
     "on": "On",
@@ -1293,7 +1295,6 @@
     "informationHeader": "Settings",
     "newCustomTagPlaceholder": "Enter tag...",
     "addPersonalDevice": "Trying to add a personal device?",
-    "addPersonalDeviceDesc": "To add a personal device, generate an activation code for a specific user in the <a ng-click=\"{{onclick}}\">Users</a> page.",
     "deleteDevice": "Delete Device",
     "rebootDevice": "Reboot Device",
     "reboot": "Reboot",
@@ -1326,18 +1327,18 @@
     "connectors": {
       "group_by": "Group services by:",
       "cluster_id": "Cluster",
-      "host_name": "Host",
+      "host_name": "Node",
       "display_name": "Service Name",
       "connector_type": "Connector Type",
       "serial": "Serial",
       "version": "Version",
       "status": "Status",
       "alarms": "Alarms",
-      "hosts": "Hosts",
-      "goToHost": "Go to Host",
+      "hosts": "Nodes",
+      "goToHost": "Go to Node",
       "removeButton": "Remove",
       "removeSectionHeader": "Remove",
-      "removeSectionBody": "Remove this host from Cisco Collaboration Cloud.",
+      "removeSectionBody": "Remove this node from Cisco Collaboration Cloud.",
       "localizedConnectorAndHostHeader": "{{connectorName}} on {{hostname}}",
       "actions": "Actions"
     },
@@ -1434,7 +1435,7 @@
       "deregisterCausesListItem2": "All connectors and related configuration will be removed from {{clusterName}}.",
       "deregisterCausesListItem3": "If the system is in a cluster, you do not need to deregister the other peers. This will happen automatically.",
       "deregisterErrorGeneric": "Unable to deregister {{clusterName}}. {{errorMessage}}",
-      "notInstalled": "The {{serviceName}} is not installed on this cluster.",
+      "notInstalled": "{{serviceName}} is not installed on this cluster.",
       "deregisterSectionHeader": "Deregister",
       "deregisterSectionBody": "Disconnect this cluster from Cisco Collaboration Cloud and remove all connectors and related configuration."
     },
@@ -1552,7 +1553,7 @@
       "softwareUpgrade": "Software Upgrade",
       "currentVersion": "Current Version",
       "newVersion": "New Version",
-      "explanation": "You are about to upgrade {{connectorType}} to version {{newVersion}} on all hosts in your Expressway cluster",
+      "explanation": "You are about to upgrade {{connectorType}} to version {{newVersion}} on all nodes in your Expressway cluster",
       "releaseNotes": "Release Notes",
       "pending": "Pending",
       "upgrade": "Upgrade",
@@ -1561,7 +1562,7 @@
       "upgradeDone": "Upgrade completed!",
       "upToDate": "{{connectorType}} is up to date on this cluster.",
       "upgradePossible": "A new version is available for {{connectorType}}: {{availableVersion}}.",
-      "upgradeWarning": "This cluster has one or more offline hosts. It is recommended to bring all hosts online before initiating an upgrade."
+      "upgradeWarning": "This cluster has one or more offline nodes. It is recommended to bring all nodes online before initiating an upgrade."
     },
     "expresswayClusterSettings": {
       "pageTitle": "{{clusterName}} settings",
@@ -1707,7 +1708,6 @@
         "empty": "No clusters found.",
         "upgrade-schedule": "Upgrade Schedule",
         "release-channel": "Release Channel",
-        "hosts": "{count, plural, one{# Host} other{# Hosts}}",
         "nodes": "{count, plural, one{# Node} other{# Nodes}}",
         "settings": "Settings",
         "all": "All",
@@ -1774,7 +1774,38 @@
       "setDescription": "Select the Resource Group the user is assigned to for this service.",
       "noGroupSelected": "None",
       "failedToSetGroup": "Failed to set the resource group"
-    }
+    },
+    "resourceGroupSettings": {
+      "pageTitle": "{{groupName}} Settings",
+      "releaseChannelHeader": "Release Channel",
+      "releaseChannelDescription": "Select the Release Channel for all services in this group",
+      "clustersHeader" : "Clusters",
+      "clustersAssign" : "Assign Clusters",
+      "clustersDescription" : "Add one or more existing clusters to this group",
+      "renameGroup": "Rename",
+      "renameGroupDescription": "Rename the resource group",
+      "removeGroup": "Remove",
+      "removeGroupDescription": "Remove the resource group from Cisco Collaboration Cloud",
+      "groupNameCannotByEmpty": "Resource group name cannot be empty",
+      "groupNameSaved": "Rename successful",
+      "duplicateName": "A resource group with that name already exists. Please choose another name.",
+      "loadFailed": "Unable to load the resource group details. Please try again later.",
+      "groupReleaseChannelSaved": "Release channel saved successfully",
+      "removeGroupReq": "To remove this resource group, all assigned clusters and user must be removed first",
+      "deleteSuccess": "Resource group successfully deleted"
+    },
+    "assignClustersModal": {
+      "title": "Assign Clusters to {{groupName}}",
+      "description": "Select the clusters you want to assign to the resource group.",
+      "assigned": "Cluster \"{{clusterName}}\" successfully assigned to \"{{groupName}}\"",
+      "removed": "Cluster \"{{clusterName}}\" successfully removed from \"{{groupName}}\""
+    },
+    "confirmChangeReleaseChannelModal": {
+      "title": "Change Release Channel",
+      "description": "Are you sure you want to change the release channel for \"{{groupName}}\" to {{channelName}}?",
+      "change": "Change"
+    },
+    "genericFailure": "An unexpected error occurred. Please try again later."
   },
   "ediscovery": {
     "browserTabHeaderTitle": "Spark Activity Reports",
@@ -1955,7 +1986,7 @@
     "setSipDomainErrorMessage": "Not available. Please try another name",
     "setSipDomainErrorMessageInvalidDomain": "Invalid domain, please try another name",
     "setSipDomainSuccessMessage": "The Spark SIP Address has been successfully saved",
-    "setSipDomainConfirmText": "I acknowledge this is a one-time setting that cannot be changed later.",
+    "setSipDomainConfirmText": "I acknowledge that this is a one-time setting that cannot be changed later.",
     "sparkDomainManagementServiceErrorMessage": "Failed to reach Spark Domain Management Service",
     "messageSettings": "Message Settings",
     "callSettings": "Call Settings",
@@ -3431,7 +3462,10 @@
       "totalCallsDescription": "Calls hosted locally and that overflowed to the Cisco Collaboration Cloud.",
       "onpremcalls": "on premises |",
       "cloudcalls": "overflowed to cloud",
-      "redirectedcalls": "redirected"
+      "redirectedcalls": "redirected",
+      "nodata": "N/A",
+      "allclusters": "All Clusters",
+      "percentage": "%"
     },
     "serviceStatus": {
       "unknown": "Status unknown",
@@ -3502,6 +3536,7 @@
       "deregisterAllconfirmation": "I understand that all the nodes in this cluster will be deregistered automatically, and that the cluster will be deleted permanently. I also understand that I cannot undo this action.",
       "unabletomovenodes": "Failed to move/defuse {{nodes}} press cancel and try again",
       "clusterdeleteSuccess": "Successfully deleted {{clustername}}",
+      "clusterCreationFailed": "Failed to create new cluster: {{enteredCluster}}",
       "movedTo": "{{nodeName}} moved to: {{clusterName}}",
       "upgradeSchedule": "Upgrade Schedule",
       "everyDay": "Every Day in",
@@ -4191,7 +4226,7 @@
     "cloudExtensions": "Hybrid Services",
     "enableService": "Activate service for this user",
     "status": "Status",
-    "host": "Host",
+    "host": "Node",
     "sipUri": "Directory URI"
   },
   "validation": {
@@ -4375,15 +4410,15 @@
   },
   "messengerCiSync": {
     "authRedirectHeading": "Redirect Users to Common Identity Login Flow",
-    "authRedirectTooltip": "When enabled, Jabber clients login through Common Identity",
+    "authRedirectTooltip": "Jabber Users Login to CI Login Flow",
     "errorAuthFailed": "Authorization failed: ",
     "errorFailedCheckingCIEntitlements": "Failed checking user entitlements from Common Identity: ",
     "errorFailedCheckingCIRoles": "Failed checking Common Identity user roles: ",
     "errorFailedCheckingCustSuccessRole": "Failed checking if user has Customer Success Admin CI Role: ",
     "errorFailedCheckingOrgInManagedOrgs": "Failed checking if user has customer org in its managed orgs: ",
-    "errorFailedGettingCISyncStatus": "Failed getting Messenger Sync status: ",
-    "errorFailedRefreshingCISyncStatus": "Failed refreshing Messenger Sync status: ",
-    "errorFailedUpdatingCISync": "Failed updating Messenger Sync status: ",
+    "errorFailedGettingCISyncStatus": "Failed getting Jabber Messenger Sync status: ",
+    "errorFailedRefreshingCISyncStatus": "Failed refreshing Jabber Messenger Sync status: ",
+    "errorFailedUpdatingCISync": "Failed updating Jabber Messenger Sync status: ",
     "errorLacksEntitlements": "User lacks Customer Success Admin Role or Common Identity entitlements to view this content: ",
     "errorLacksFullAdmin": "User lacks Full Admin role in Common Identity to view this content",
     "errorLacksRole": "User lacks appropriate role in Common Identity to view this content",
@@ -4395,18 +4430,19 @@
     "http500": "500 Server Error",
     "httpUnknown": " Unknown HTTP Error",
     "labelCILinkDate": "Link Date",
-    "labelOrgId": "Messenger Organization ID",
-    "labelOrgName": "Messenger Organization Name",
+    "labelOrgId": "Jabber Messenger Organization ID",
+    "labelOrgName": "Jabber Messenger Organization Name",
     "labelUnauthorizedUser": "Unauthorized User",
-    "loading": "Loading Messenger Synchronization Status",
-    "orgAdminLinkText": "Launch Webex Messenger Admin Tool",
-    "pageTitle": "Webex Messenger",
-    "patchSuccessful": "Messenger Sync updated successfully",
+    "loading": "Loading Jabber Messenger Synchronization Status",
+    "orgAdminLinkText": "Launch Jabber Messenger Admin Tool",
+    "orgAdminLinkTooltip": "Continue to mange your Jabber users in the Messenger Org Admin tool",
+    "pageTitle": "Jabber Messenger",
+    "patchSuccessful": "Jabber Messenger Sync updated successfully",
     "patchSyncButtonText": "Update",
     "refresh": "Refresh",
-    "refreshFailed": "Failed refreshing Messenger Sync status",
-    "syncStatusHeading": "Messenger User Synchronization",
-    "syncStatusTooltip": "When enabled, users are actively being synced from Messenger",
+    "refreshFailed": "Failed refreshing Jabber Messenger Sync status",
+    "syncStatusHeading": "Jabber Messenger User Synchronization",
+    "syncStatusTooltip": "Jabber Messenger users added to Org Admin are synced to Common Identity",
     "dirsyncStatusHeading": "Common Identity Directory Synchronization",
     "dirsyncStatusTooltip": "To access Spark platform capabilities, WebEx Messenger users need to be synchronized with the Common Identity service."
   },
@@ -4752,6 +4788,10 @@
       "call": {
         "title": "Call",
         "notEnabledText": "Basic external calling and call routing features enabled for your organization."
+      },
+      "care": {
+        "title": "Care",
+        "notEnabledText": "Use Spark Care services to collaborate with your customer. Customize care interfaces using configuration wizard."
       },
       "roomSystem": {
         "title": "Room Systems",
@@ -5199,7 +5239,7 @@
       },
       "clusterList": {
         "title": "Clusters",
-        "description": "On-prem clusters and configuration for your organization.",
+        "description": "On-premises clusters and configuration for your organization.",
         "buttons": {
           "all": "All Clusters",
           "expressway": "Expressway",

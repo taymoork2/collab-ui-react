@@ -1,5 +1,5 @@
 <div class="wizard-main">
-  <div id="wizardTitle" class="wizard-main-title"><span translate="{{wizard.current.tab.title}}"></span><span ng-if="wizard.current.subTab && !wizard.isFirstStep()"> <span ng-if="wizard.current.step.title" class="title-separator-pipe">|</span> <span ng-if="wizard.current.step.title" translate="{{wizard.current.step.title}}"></span><span ng-if="!wizard.current.step.title" translate="{{wizard.current.subTab.title}}"></span></span>
+  <div id="wizardTitle" class="wizard-main-title"><span ng-if="!wizard.onlyShowSingleTab" translate="{{wizard.current.tab.title}}"></span><span ng-if="wizard.current.subTab && !wizard.isFirstStep()"> <span ng-if="wizard.current.step.title" class="title-separator-pipe">|</span> <span ng-if="wizard.current.step.title" translate="{{wizard.current.step.title}}"></span><span ng-if="!wizard.current.step.title" translate="{{wizard.current.subTab.title}}"></span></span>
     <button type="button" class="close" ng-if="!wizard.isFirstTime()" ng-click="wizard.closeModal()">
       <span class="sr-only" translate="common.close"></span>
     </button>

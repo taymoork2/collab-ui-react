@@ -58,28 +58,23 @@
     loadClusters();
 
     function loadClusters() {
-      if (hasMediaFeatureToggle) {
-        FusionClusterService.getAll()
-          .then(function (clusters) {
-            clustersCache = clusters;
-            updateFilters();
-            vm.displayedClusters = clusters;
-          }, XhrNotificationService.notify)
-          .finally(function () {
-            vm.loading = false;
-          });
-      } else {
-        FusionClusterService.getAllNonMediaClusters()
-          .then(function (clusters) {
-            clustersCache = clusters;
-            updateFilters();
-            vm.displayedClusters = clusters;
-          }, XhrNotificationService.notify)
-          .finally(function () {
-            vm.loading = false;
-          });
-      }
-
+      FusionClusterService.getAll()
+        .then(function (clusters) {
+          if (!hasMediaFeatureToggle) {
+            return _.filter(clusters, function (cluster) {
+              return cluster.targetType !== 'mf_mgmt';
+            });
+          }
+          return clusters;
+        })
+        .then(function (clusters) {
+          clustersCache = clusters;
+          updateFilters();
+          vm.displayedClusters = clusters;
+        }, XhrNotificationService.notify)
+        .finally(function () {
+          vm.loading = false;
+        });
     }
 
     function countHosts(cluster) {

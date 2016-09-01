@@ -20,7 +20,9 @@
                 </div>
               </div>
               <div class="h5 profile-name" ng-if="careChatSA.selectedTemplateProfile === careChatSA.profiles.org"
-                   title="{{ careChatSA.orgName | translate}}">{{careChatSA.orgName | translate}}</div>
+                   title="{{careChatSA.getAttributeParam('value', 'organization', 'welcomeHeader')}}">
+                {{careChatSA.getAttributeParam('value', 'organization', 'welcomeHeader')}}
+              </div>
               <div class="h5 profile-name" ng-if="careChatSA.selectedTemplateProfile === careChatSA.profiles.agent">
                 <div>{{careChatSA.agentNamePreview | translate}}</div>
                 <div class="agent" translate="careChatTpl.agent"></div>

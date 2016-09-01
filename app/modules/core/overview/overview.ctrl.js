@@ -6,11 +6,12 @@
     .controller('OverviewCtrl', OverviewCtrl);
 
   /* @ngInject */
-  function OverviewCtrl($rootScope, $scope, $translate, Authinfo, Config, FeatureToggleService, Log, Notification, Orgservice, OverviewCardFactory, OverviewNotificationFactory, ReportsService, TrialService, UrlConfig) {
+  function OverviewCtrl($rootScope, $scope, $translate, Authinfo, Config, FeatureToggleService, Log, Notification, Orgservice, OverviewCardFactory, OverviewNotificationFactory, ReportsService, TrialService, UrlConfig, hasCareFeatureToggle) {
     var vm = this;
 
     vm.pageTitle = $translate.instant('overview.pageTitle');
     vm.isCSB = Authinfo.isCSB();
+
     vm.cards = [
       OverviewCardFactory.createMessageCard(),
       OverviewCardFactory.createMeetingCard(),
@@ -19,6 +20,12 @@
       OverviewCardFactory.createHybridServicesCard(),
       OverviewCardFactory.createUsersCard()
     ];
+    // TODO Need to be removed once Care is graduated on atlas.
+    if (hasCareFeatureToggle) {
+      // Add care card after call card
+      vm.cards.splice(3, 0, OverviewCardFactory.createCareCard());
+    }
+
     vm.notifications = [];
     vm.trialDaysLeft = undefined;
     vm.dismissNotification = dismissNotification;

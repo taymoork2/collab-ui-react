@@ -30,8 +30,7 @@
           <header>
             <h4>{{::cluster.name}}</h4>
             <div class="cluster-list-hosts" tooltip-html-unsafe="{{resourceList.getHostnames(cluster)}}" tooltip-trigger="mouseenter" tooltip-placement="bottom">
-              <div ng-if="cluster.targetType === 'mf_mgmt'" translate="hercules.fusion.list.nodes" translate-values="{count: resourceList.countHosts(cluster)}" translate-interpolation="messageformat"></div>
-              <div ng-if="cluster.targetType !== 'mf_mgmt'" translate="hercules.fusion.list.hosts" translate-values="{count: resourceList.countHosts(cluster)}" translate-interpolation="messageformat"></div>
+              <div translate="hercules.fusion.list.nodes" translate-values="{count: resourceList.countHosts(cluster)}" translate-interpolation="messageformat"></div>
             </div>
           </header>
           <div class="row cluster-list-body">
@@ -57,7 +56,7 @@
                 </div>
                 <div class="connection-status-services">
                   <div class="connection-status-service" ng-repeat="service in cluster.servicesStatuses | filter: {serviceId: '!squared-fusion-mgmt'}" ng-if="service.total > 0">
-                    <a ng-click="resourceList.openService(service.serviceId, cluster.id)"><i class="fa fa-circle hercules-state-{{service.state.label}}"></i> <span>{{::'overview.cards.hybrid.services.' + service.serviceId | translate}}</span></a>
+                    <a ng-click="resourceList.openService(service.serviceId, cluster.id)"><i class="icon icon-circle status-indicator" ng-class="{'success' : '{{service.state.label}}' === 'ok', 'warning': '{{service.state.label}}' === 'warning', 'danger': '{{service.state.label}}' === 'error'}"></i> <span>{{::'overview.cards.hybrid.services.' + service.serviceId | translate}}</span></a>
                   </div>
                 </div>
               </div>

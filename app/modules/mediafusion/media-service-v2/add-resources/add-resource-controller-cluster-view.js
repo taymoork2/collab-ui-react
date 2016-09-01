@@ -6,11 +6,10 @@
     .controller('AddResourceControllerClusterViewV2', AddResourceControllerClusterViewV2);
 
   /* @ngInject */
-  function AddResourceControllerClusterViewV2(XhrNotificationService, $translate, $state, $stateParams, AddResourceCommonServiceV2, $window) {
+  function AddResourceControllerClusterViewV2($translate, $state, $stateParams, AddResourceCommonServiceV2, $window) {
     var vm = this;
     vm.clusterList = [];
     vm.selectPlaceholder = $translate.instant('mediaFusion.add-resource-dialog.cluster-placeholder');
-    vm.addRedirectTargetClicked = addRedirectTargetClicked;
     vm.redirectToTargetAndCloseWindowClicked = redirectToTargetAndCloseWindowClicked;
     vm.back = back;
     vm.next = next;
@@ -33,15 +32,11 @@
       vm.clusterList = clusterList;
     });
 
-    function addRedirectTargetClicked(hostName, enteredCluster) {
-      AddResourceCommonServiceV2.addRedirectTargetClicked(hostName, enteredCluster).then(function () {
-        vm.enableRedirectToTarget = true;
-      }, XhrNotificationService.notify);
-    }
-
     function redirectToTargetAndCloseWindowClicked(hostName, enteredCluster) {
       $state.modal.close();
-      AddResourceCommonServiceV2.redirectPopUpAndClose(hostName, enteredCluster, vm.selectedClusterId, vm.firstTimeSetup);
+      AddResourceCommonServiceV2.addRedirectTargetClicked(hostName, enteredCluster).then(function () {
+        AddResourceCommonServiceV2.redirectPopUpAndClose(hostName, enteredCluster, vm.selectedClusterId, vm.firstTimeSetup);
+      });
     }
 
     function closeSetupModal() {
@@ -64,7 +59,7 @@
         $window.open('https://7f3b835a2983943a12b7-f3ec652549fc8fa11516a139bfb29b79.ssl.cf5.rackcdn.com/Media-Fusion-Management-Connector/mfusion.ova');
       } else if (vm.yesProceed) {
         if (angular.isDefined(vm.selectedCluster) && vm.selectedCluster != '' && angular.isDefined(vm.hostName)) {
-          vm.addRedirectTargetClicked(vm.hostName, vm.selectedCluster);
+          vm.enableRedirectToTarget = true;
         }
       } else {
         vm.yesProceed = true;
