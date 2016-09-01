@@ -113,7 +113,7 @@
     }
 
     function deleteGroup() {
-      ResourceGroupService.deleteGroup(vm.group.id)
+      ResourceGroupService.remove(vm.group.id)
         .then(function () {
           Notification.success('hercules.resourceGroupSettings.deleteSuccess');
           $state.go('cluster-list');
