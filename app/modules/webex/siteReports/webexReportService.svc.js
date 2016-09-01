@@ -442,7 +442,7 @@
                   for (i = 0; i < rpts.sections.length; i++) {
                     if (rpts.sections[i].section_name === "common_reports") {
                       for (j = 0; j < rpts.sections[i].uisrefs.length; j++) {
-                        if (rpts.sections[i].uisrefs[j].reportPageId === "meetings_in_progess") {
+                        if (rpts.sections[i].uisrefs[j].reportPageId === "meetings_in_progress") {
                           reportsObject.infoCardObj.iframeLinkObj1.iframePageObj.uiSref = rpts.sections[i].uisrefs[j].toUIsrefString();
                         }
 
