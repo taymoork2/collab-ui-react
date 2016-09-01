@@ -31,7 +31,8 @@ describe('Controller: OverviewCtrl', function () {
       expect(_.contains(cardnames, 'overview.cards.undefined.title')).toBeFalsy();
     });
 
-    it('should not display care card if feature is not toggled', function () {
+    // TODO Need to be removed once Care is graduated on atlas.
+    it('should not display care card if feature is toggled off', function () {
       expect(controllerCareFeatureDisabled.cards).toBeDefined();
 
       var cardnames = _.map(controllerCareFeatureDisabled.cards, function (card) {
@@ -255,6 +256,7 @@ describe('Controller: OverviewCtrl', function () {
       hasCareFeatureToggle: true
     });
 
+    // TODO Need to be removed once Care is graduated on atlas.
     controllerCareFeatureDisabled = $controller('OverviewCtrl', {
       $scope: $scope,
       $rootScope: $rootScope,
