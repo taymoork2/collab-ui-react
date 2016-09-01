@@ -266,6 +266,7 @@ describe('Care Chat Setup Assistant Ctrl', function () {
       controller.nextButton();
       expect(controller.template.configuration.mediaSpecificConfiguration).toEqual({
         useOrgProfile: true,
+        useAgentRealName: false,
         displayText: OrgName,
         orgLogoUrl: dummyLogoUrl
       });
