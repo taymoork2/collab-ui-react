@@ -1,0 +1,15 @@
+<div>
+  <div ng-if="careSettings.state !== 'unknown' && careSettings.state !== 'onboarded'">
+    <p class="paragraphSpacing">Click here to complete Care setup. This will open a new tab or window.</p><br>
+  </div>
+  <div ng-if="careSettings.state === 'onboarded'">
+    <p class="paragraphSpacing">Care Setup is complete.</p><br>
+  </div>
+  <div ng-if="careSettings.state === 'failed'">
+    <p class="paragraphSpacing">Care Setup failed. Try Again.</p><br>
+  </div>
+  <div class="example-spacing">
+    <button cs-btn class="btn btn--primary" id="ccfsBtn" ng-click="careSettings.onboardToCs()" loading="careSettings.state === 'inProgress'"
+      ng-disabled="careSettings.state === 'unknown' || careSettings.state === 'onboarded'">Setup Care</button>
+  </div>
+</div>

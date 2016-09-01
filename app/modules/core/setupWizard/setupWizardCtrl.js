@@ -53,17 +53,6 @@
         template: 'modules/core/setupWizard/enterpriseSettings/enterprise.testSSO.tpl.html'
       }]
     }, {
-      name: 'careSetup',
-      label: 'firstTimeWizard.careSetup',
-      description: 'firstTimeWizard.careSetupSub',
-      icon: 'icon-circle-contact-centre',
-      title: 'firstTimeWizard.careSetup',
-      controller: 'CareSetupCtrl',
-      steps: [{
-        name: 'setup',
-        template: 'modules/sunlight/setup/careSetup.tpl.html'
-      }]
-    }, {
       name: 'addUsers',
       label: 'firstTimeWizard.addUsers',
       description: 'firstTimeWizard.addUsersSubDescription',
@@ -142,6 +131,26 @@
             name: 'init',
             template: 'modules/core/setupWizard/callSettings/serviceSetup.tpl.html'
           }]
+        });
+      }
+
+      if (Authinfo.isCare()) {
+        FeatureToggleService.atlasCareTrialsGetStatus().then(function () {
+          var careTab = {
+            name: 'careSettings',
+            label: 'firstTimeWizard.careSettings',
+            description: 'firstTimeWizard.careSettingsSub',
+            icon: 'icon-circle-contact-centre',
+            title: 'firstTimeWizard.careSettings',
+            controller: 'CareSettingsCtrl as careSettings',
+            steps: [{
+              name: 'csonboard',
+              template: 'modules/core/setupWizard/careSettings/careSettings.tpl.html'
+            }]
+          };
+          var userTabIndex = _.findIndex($scope.tabs, { name: 'addUsers' });
+
+          $scope.tabs.splice(userTabIndex, 0, careTab);
         });
       }
 

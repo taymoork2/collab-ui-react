@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject */
-  function LoginCtrl($location, $log, $rootScope, $scope, $state, $stateParams, Auth, Authinfo, Log, LogMetricsService, PageParam, SessionStorage, TokenService, Utils) {
+  function LoginCtrl($location, $rootScope, $scope, $state, $stateParams, Auth, Authinfo, Log, LogMetricsService, PageParam, SessionStorage, TokenService, Utils) {
     var storedState = 'storedState';
     var storedParams = 'storedParams';
     var queryParams = SessionStorage.popObject('queryParams');
@@ -40,8 +40,6 @@
         reauthorize: $stateParams.reauthorize
       })
         .then(function () {
-          $log.debug("Debug: forcing first time setup");
-          $state.go('firsttimewizard');
           if (!Authinfo.isSetupDone() && Authinfo.isCustomerAdmin()) {
             $state.go('firsttimewizard');
           } else {
@@ -80,27 +78,6 @@
           $state.go('login-error');
         });
     };
-
-    $rootScope.$on('$stateChangeStart', function (event, toState, toParams) {
-      $log.debug('$stateChangeStart to ' + toState.to + '- fired when the transition begins. toState,toParams : \n' + JSON.stringify(toState) + JSON.stringify(toParams));
-    });
-    $rootScope.$on('$stateChangeError', function () {
-      $log.debug('$stateChangeError - fired when an error occurs during transition.');
-      $log.debug(arguments);
-    });
-    $rootScope.$on('$stateChangeSuccess', function (event, toState) {
-      $log.debug('$stateChangeSuccess to ' + toState.name + '- fired once the state transition is complete.');
-    });
-    $rootScope.$on('$viewContentLoading', function (event, viewConfig) {
-      $log.debug('$viewContentLoading - view begins loading - dom not rendered' + viewConfig);
-    });
-    // $rootScope.$on('$viewContentLoaded',function(event){
-    //   // runs on individual scopes, so putting it in "run" doesn't work.
-    //   $log.debug('$viewContentLoaded - fired after dom rendered',event);
-    $rootScope.$on('$stateNotFound', function (event, unfoundState, fromState, fromParams) {
-      $log.debug('$stateNotFound ' + unfoundState.to + '  - fired when a state cannot be found by its name.');
-      $log.debug(unfoundState, fromState, fromParams);
-    });
 
     $scope.$on('ACCESS_TOKEN_RETRIEVED', function () {
       authorizeUser();

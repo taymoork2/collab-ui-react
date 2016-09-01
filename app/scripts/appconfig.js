@@ -1783,13 +1783,6 @@
               firstTimeSetup: true
             }
           })
-          .state('cscallback', {
-            url: '/cscallback',
-            templateUrl: 'modules/sunlight/setup/csCallback.tpl.html',
-            controller: 'CsCallbackCtrl',
-            authenticate: false,
-            parent: 'main'
-          })
           .state('setupwizardmodal', {
             parent: 'wizardmodal',
             views: {

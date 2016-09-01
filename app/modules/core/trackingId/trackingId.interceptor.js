@@ -18,14 +18,16 @@
 
     // These services don't allow TrackingID header
     var blacklist = [
-      'statuspage.io'
+      'statuspage.io',
+      'management.produs1.ciscoccservice.com'
     ];
 
     // These services don't allow Access-Control-Expose-Headers header
     var accessControlExposeHeadersRegexBlacklist = [
       // Disallow all webex.com domains except for identity.webex.com subdomain
       buildBlacklistedDomainWithWhitelistedSubdomainRegex('webex.com', ['identity']),
-      buildBlacklistedDomainRegex('webexconnect.com')
+      buildBlacklistedDomainRegex('webexconnect.com'),
+      buildBlacklistedDomainRegex('management.produs1.ciscoccservice.com')
     ];
 
     return interceptor;

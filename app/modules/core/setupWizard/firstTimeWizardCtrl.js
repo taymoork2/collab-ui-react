@@ -6,7 +6,7 @@
 
   /* @ngInject */
   function FirstTimeWizardCtrl($q, $scope, $state, $translate, Auth, Authinfo,
-    Config, FeatureToggleService, Log, Orgservice, Userservice, WindowLocation) {
+    Config, FeatureToggleService, Log, Orgservice, Userservice) {
     $scope.greeting = $translate.instant('index.greeting', {
       name: Authinfo.getUserName()
     });
@@ -32,49 +32,22 @@
       /**
        * Patch the first time admin login with SyncKms role and Care entitlements.
        */
-      var isCareEnabled = FeatureToggleService.atlasCareTrialsGetStatus()
-        .then(isEntitledForCare);
-
-      isCareEnabled
-        .then(getCareAdminUser)
-        .then(isPatchRequired)
-        .then(patchAdmin)
-        .then(updateAccessToken)
-        .then(function () {
-          Log.info('Admin user patched successfully.');
-        })
-        .catch(onFailure);
-
-      isCareEnabled
-        .then(isCsOnboardingNeeded)
-        .then(onboardToContextService)
-        .catch(onFailureCsOnboarding);
-
-      // TODO how to prevent setting setupDone if Context Service onboarding fails
-    }
-
-    function isCsOnboardingNeeded(careEnabled) {
-      if (!careEnabled) {
-        return $q.reject();
+      if (adminPatchNeeded()) {
+        FeatureToggleService.atlasCareTrialsGetStatus()
+          .then(getCareAdminUser)
+          .then(isPatchRequired)
+          .then(patchAdmin)
+          .then(updateAccessToken)
+          .then(function () {
+            Log.info('Admin user patched successfully.');
+          })
+          .catch(onFailure);
       }
-      return $q.resolve({ status: 200, data: { onboarded: false } }); // TODO get real CS onboarding status
     }
 
-    function isEntitledForCare() {
+    function adminPatchNeeded() {
       return (!Authinfo.isInDelegatedAdministrationOrg() &&
         Authinfo.getCareServices().length > 0);
-    }
-
-    function onboardToContextService(response) {
-      if (isFailed(response)) {
-        Log.error('Getting CS Onboarding status failed :', response);
-        return $q.reject();
-      }
-
-      if (!response.data.onboarded) {
-        var ccfsUrl = 'https://ccfs.rciad.ciscoccservice.com/v1/authorize?callbackUrl=https://admin.ciscospark.com&appType=sunlight&delegation=true';
-        WindowLocation.set(ccfsUrl);
-      }
     }
 
     function getCareAdminUser(careEnabled) {
@@ -132,10 +105,6 @@
 
     function onFailure(data) {
       Log.error('First time admin patch operation failed.', data);
-    }
-
-    function onFailureCsOnboarding(data) {
-      Log.error('Context Service Onboarding operation failed.', data);
     }
   }
 })();
