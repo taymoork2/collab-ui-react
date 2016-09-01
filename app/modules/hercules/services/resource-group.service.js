@@ -31,7 +31,7 @@
 
     function create(name, releaseChannel) {
       return $http
-        .post(UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '/resourceGroup', {
+        .post(UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '/resourceGroups', {
           name: name,
           releaseChannel: releaseChannel
         })
