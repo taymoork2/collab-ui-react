@@ -19,6 +19,7 @@ class PlaceOverviewCtrl {
     private $state,
     private $stateParams,
     private CsdmPlaceService,
+    private CsdmHuronPlaceService,
     private CsdmHuronUserDeviceService,
     private $translate,
     private XhrNotificationService
@@ -32,7 +33,7 @@ class PlaceOverviewCtrl {
       let service: IFeature = {
         name: this.$translate.instant('onboardModal.call'),
         icon: this.$translate.instant('onboardModal.call'),
-        state: 'place-overview.communication',
+        state: 'communication',
         detail: this.$translate.instant('onboardModal.callFree'),
         actionsAvailable: true
       }
@@ -41,7 +42,12 @@ class PlaceOverviewCtrl {
   }
 
   public save(newName: string) {
-    return this.CsdmPlaceService
+    if (this._currentPlace.type === 'cloudberry') {
+      return this.CsdmPlaceService
+        .updatePlaceName(this._currentPlace.url, newName)
+        .catch(this.XhrNotificationService.notify);
+    }
+    return this.CsdmHuronPlaceService
       .updatePlaceName(this._currentPlace.url, newName)
       .catch(this.XhrNotificationService.notify);
   }
@@ -63,6 +69,10 @@ class PlaceOverviewCtrl {
       });
     }
     return hasEntitlement;
+  }
+
+  public serviceActions(feature) {
+    this.$state.go('place-overview.' + feature);
   }
 }
 angular

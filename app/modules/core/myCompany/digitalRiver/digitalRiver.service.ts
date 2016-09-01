@@ -17,7 +17,7 @@ export class DigitalRiverService {
   }
 
   private getDigitalRiverUrl(path: string): ng.IPromise<string> {
-    const DIGITAL_RIVER_URL = 'https://store.digitalriver.com/store/ciscoctg/en_US/';
+    const DIGITAL_RIVER_URL = 'https://drhadmin-cte.digitalriver.com/store/ciscoctg/en_US/';
     return this.getEncodedDigitalRiverToken()
       .then((response) => {
         return DIGITAL_RIVER_URL + path + '?DRL=' + response;

@@ -19,16 +19,31 @@
     </div>
   </div>
   <div class="results-total">{{results.resultList.length}} <span translate="firstTimeWizard.totalProcessed"></span></div>
-  <div class="error-table table-header" ng-if="results.errors.length > 0">
+  <div class="error-table table-header" ng-if="results.errors.length > 0 || results.warnings.length > 0">
     <table class="table table-bordered">
       <colgroup>
         <col class="medium-10">
       </colgroup>
       <thead>
         <tr>
-          <th translate='usersPage.errorMessages'></th>
+          <th translate='usersPage.errorWarningMessages'></th>
         </tr>
       </thead>
+    </table>
+  </div>
+  <div cs-scroll class="error-table table-body warning-table" ng-if="results.warnings.length > 0">
+    <table id="warningTable" class="table table-bordered">
+      <colgroup>
+        <col class="medium-10">
+      </colgroup>
+      <tbody>
+        <tr ng-repeat="msg in results.warnings">
+          <td>
+            <i class="icon icon-warning"></i>
+            {{::msg}}
+          </td>
+        </tr>
+      </tbody>
     </table>
   </div>
   <div cs-scroll class="error-table table-body" ng-if="results.errors.length > 0">
@@ -38,7 +53,10 @@
       </colgroup>
       <tbody>
         <tr ng-repeat="msg in results.errors">
-          <td>{{::msg}}</td>
+          <td>
+            <i class="icon icon-error"></i>
+            {{::msg}}
+          </td>
         </tr>
       </tbody>
     </table>

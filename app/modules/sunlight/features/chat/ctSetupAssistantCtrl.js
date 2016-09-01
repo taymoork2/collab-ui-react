@@ -289,26 +289,6 @@
               feedbackQuery: {
                 displayText: $translate.instant('careChatTpl.feedbackQuery')
               },
-              ratings: [{
-
-                displayText: $translate.instant('careChatTpl.rating1Text'),
-                dictionaryType: {
-                  fieldSet: 'cisco.base.ccc.pod',
-                  fieldName: 'cccRatingPoints'
-                }
-              }, {
-                displayText: $translate.instant('careChatTpl.rating2Text'),
-                dictionaryType: {
-                  fieldSet: 'cisco.base.ccc.pod',
-                  fieldName: 'cccRatingPoints'
-                }
-              }, {
-                displayText: $translate.instant('careChatTpl.rating3Text'),
-                dictionaryType: {
-                  fieldSet: 'cisco.base.ccc.pod',
-                  fieldName: 'cccRatingPoints'
-                }
-              }],
               comment: {
                 displayText: $translate.instant('careChatTpl.ratingComment'),
                 dictionaryType: {
@@ -481,13 +461,24 @@
       return (configuredTypes.length === uniqueConfiguredTypes.length);
     }
 
+    function areAllFixedFieldsValid() {
+      return isValidSinglelineField(vm.getAttributeParam('value', 'header', 'welcomeHeader'))
+          && isValidSinglelineField(vm.getAttributeParam('value', 'organization', 'welcomeHeader'));
+    }
+
+    function areAllDynamicFieldsValid() {
+      return _.reduce(_.map(nonHeaderFieldNames, function (fieldName) {
+        return isValidSinglelineField(vm.getAttributeParam('value', 'label', fieldName))
+                && isValidSinglelineField(vm.getAttributeParam('value', 'hintText', fieldName));
+      }), function (x, y) { return x && y; }, true);
+    }
+
     vm.validateType = function (selectedType) {
       return !(selectedType && isSelectedTypeDuplicate(selectedType));
     };
 
     function isCustomerInformationPageValid() {
-      // all customer info page validations will be here
-      return areAllTypesUnique();
+      return areAllTypesUnique() && areAllFixedFieldsValid() && areAllDynamicFieldsValid();
     }
 
     function nextButton() {

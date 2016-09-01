@@ -17,7 +17,7 @@
             <label title="{{careChatSA.getAttributeParam('value', 'header', 'welcomeHeader')}}"
                    class="welcomeText textOverflow">{{careChatSA.getAttributeParam('value', 'header', 'welcomeHeader')}}</label>
             <label title="{{careChatSA.orgName}}"
-                   class="orgText textOverflow">{{careChatSA.orgName}}</label>
+                   class="orgText textOverflow">{{careChatSA.template.configuration.pages.customerInformation.fields.welcomeHeader.attributes[1].value}}</label>
           </header>
 
           <section>
@@ -77,6 +77,11 @@
                 class="h5 inputField ct-attribute-field-textbox large-11"
                 type="text"
                 ng-model="attribute.value"
+                cs-input
+                name="{{attribute.name }}"
+                cs-input-messages="careChatSA.singleLineValidationMessage"
+                ng-maxlength="careChatSA.lengthConstants.singleLineMaxCharLimit"
+                ng-model-options="{ allowInvalid: true }"
               />
 
               <div ng-if="attribute.name === 'required'" class="h6 cs-radio-group ct-attribute-field-radio">
@@ -129,8 +134,8 @@
                   <em>{{attribute.value.helpText}}</em>
                 </label>
                 <div class="small ct-input-error" ng-show="careChatSA.isTypeDuplicate">
-                  <i class="icon icon-error"></i>
-                  {{:: 'careChatTpl.ctValidation.errorTypeDuplicate' | translate}}
+                  <div class="ct-error-icon"><i class="icon icon-error icon-lg"></i></div>
+                  <div>{{:: 'careChatTpl.ctValidation.errorTypeDuplicate' | translate}}</div>
                 </div>
               </div>
               <div class="row ct-attribute-row ct-customer-info-category-input right-inner-addon" ng-if="attribute.name == 'type' && attribute.value.id == 'category'">
@@ -161,7 +166,12 @@
                <input id="orgText"
                       class="h5 inputField ct-attribute-field-textbox large-11"
                       type="text"
-                      ng-model="careChatSA.orgName"
+                      ng-model="careChatSA.template.configuration.pages.customerInformation.fields.welcomeHeader.attributes[1].value"
+                      cs-input
+                      name="orgText"
+                      cs-input-messages="careChatSA.singleLineValidationMessage"
+                      ng-maxlength="careChatSA.lengthConstants.singleLineMaxCharLimit"
+                      ng-model-options="{ allowInvalid: true }"
                 />
               </div>
           </section>
