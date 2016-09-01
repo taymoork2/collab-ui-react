@@ -117,24 +117,19 @@
     var pageid_to_navItemId_mapping_reversed = this.reverseMapping(pageid_to_navItemId_mapping);
     this.pageid_to_navItemId_mapping_reversed = pageid_to_navItemId_mapping_reversed;
 
-    this.getNavItemsByCategoryName = function (navInfo, categoryName) {
-      var funcName = "getNavItemsByCategoryName()";
-      var logMsg = "";
+    this.getNavItemsByCategoryName = function (
+      categoryName,
+      ns1_siteAdminNavUrl
+    ) {
 
-      var siteAdminNavUrl = null;
+      var siteAdminNavUrls = null;
 
-      if (navInfo.ns1_siteAdminNavUrl.length) {
-        siteAdminNavUrl = navInfo.ns1_siteAdminNavUrl;
+      if (ns1_siteAdminNavUrl.length) {
+        siteAdminNavUrls = ns1_siteAdminNavUrl;
       } else {
-        siteAdminNavUrl = [];
-        siteAdminNavUrl.push(navInfo.ns1_siteAdminNavUrl);
+        siteAdminNavUrls = [];
+        siteAdminNavUrls.push(ns1_siteAdminNavUrl);
       }
-
-      logMsg = funcName + "\n" +
-        "categoryName=" + categoryName + "\n" +
-        "navInfo.ns1_siteAdminNavUrl=" + JSON.stringify(navInfo.ns1_siteAdminNavUrl) + "\n" +
-        "siteAdminNavUrl=" + JSON.stringify(siteAdminNavUrl);
-      $log.log(logMsg);
 
       var filterByCategoryName = function (navElement) {
         var returnValue = false;
@@ -146,7 +141,7 @@
         return returnValue;
       };
 
-      return siteAdminNavUrl.filter(filterByCategoryName);
+      return siteAdminNavUrls.filter(filterByCategoryName);
     };
 
     var UIsref = function (theUrl, rid, siteUrl) {
@@ -300,8 +295,8 @@
           var category_Name = section.category_Name;
 
           var navItemsFilteredByCategoryName = self.getNavItemsByCategoryName(
-            mapJson.bodyJson,
-            category_Name
+            category_Name,
+            mapJson.bodyJson.ns1_siteAdminNavUrl
           );
 
           section.uisrefs = getUISrefs(navItemsFilteredByCategoryName, siteUrl);
@@ -396,12 +391,8 @@
               */
               // end of replace
 
-              logMsg = funcName + ": " + "result=" + "\n" +
-                JSON.stringify(result);
-              // $log.log(logMsg);
-
               var reportPagesInfoJson = WebExUtilsFact.validateAdminPagesInfoXmlData(result.reportPagesInfoXml);
-              var siteAdminNavUrls = reportPagesInfoJson.bodyJson.ns1_siteAdminNavUrl;
+              reportsObject["mapJson"] = reportPagesInfoJson;
 
               if (
                 ("" !== reportPagesInfoJson.errId) ||
@@ -409,16 +400,20 @@
               ) {
 
                 reportsObject.hasLoadError = true;
-              } else if (angular.isUndefined(siteAdminNavUrls)) {
+              } else if (angular.isUndefined(reportPagesInfoJson.bodyJson.ns1_siteAdminNavUrl)) {
                 logMsg = funcName + "\n" +
-                  "ERROR: siteAdminNavUrls=" + JSON.stringify(siteAdminNavUrls) + "\n" +
+                  "ERROR: ns1_siteAdminNavUrl is undefined" + "\n" +
                   "siteUrl=" + siteUrl;
                 Log.error(logMsg);
 
                 reportsObject.hasLoadError = true;
                 reportsObject.invalidNavUrls = true;
               } else {
-                reportsObject["mapJson"] = reportPagesInfoJson;
+                var ns1_siteAdminNavUrl = reportPagesInfoJson.bodyJson.ns1_siteAdminNavUrl;
+
+                logMsg = funcName + ": " + "ns1_siteAdminNavUrl=" + "\n" +
+                  JSON.stringify(ns1_siteAdminNavUrl);
+                $log.log(logMsg);
 
                 var rpts = self.getReports(siteUrl, reportPagesInfoJson);
                 reportsObject["reports"] = rpts;
