@@ -3534,6 +3534,7 @@
       "deregisterAllconfirmation": "I understand that all the nodes in this cluster will be deregistered automatically, and that the cluster will be deleted permanently. I also understand that I cannot undo this action.",
       "unabletomovenodes": "Failed to move/defuse {{nodes}} press cancel and try again",
       "clusterdeleteSuccess": "Successfully deleted {{clustername}}",
+      "clusterCreationFailed": "Failed to create new cluster: {{enteredCluster}}",
       "movedTo": "{{nodeName}} moved to: {{clusterName}}",
       "upgradeSchedule": "Upgrade Schedule",
       "everyDay": "Every Day in",

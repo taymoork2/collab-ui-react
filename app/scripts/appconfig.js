@@ -2652,6 +2652,19 @@
               hostLength: null,
               selectedCluster: null
             }
+          })
+          .state('connector-details-v2.alarm-detailsForNode', {
+            parent: 'connector-details-v2.host-details',
+            templateUrl: 'modules/mediafusion/media-service-v2/side-panel/alarm-details.html',
+            controller: 'MediaAlarmControllerV2',
+            controllerAs: 'alarmCtrl',
+            data: {
+              displayName: 'Alarm Details'
+            },
+            params: {
+              alarm: null,
+              host: null
+            }
           });
 
         $stateProvider
