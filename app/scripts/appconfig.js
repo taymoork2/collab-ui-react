@@ -2571,6 +2571,18 @@
               clusterId: null,
               connectorType: null
             }
+          })
+          .state('resource-group-settings', {
+            url: '/services/resourceGroups/:id/settings',
+            templateUrl: 'modules/hercules/fusion-pages/resource-group-settings/resource-group-settings.html',
+            controller: 'ResourceGroupSettingsController',
+            controllerAs: 'rgsCtrl',
+            parent: 'main',
+            resolve: {
+              hasF237FeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasF237ResourceGroups);
+              }
+            }
           });
 
         $stateProvider
@@ -2645,6 +2657,19 @@
               connector: null,
               hostLength: null,
               selectedCluster: null
+            }
+          })
+          .state('connector-details-v2.alarm-detailsForNode', {
+            parent: 'connector-details-v2.host-details',
+            templateUrl: 'modules/mediafusion/media-service-v2/side-panel/alarm-details.html',
+            controller: 'MediaAlarmControllerV2',
+            controllerAs: 'alarmCtrl',
+            data: {
+              displayName: 'Alarm Details'
+            },
+            params: {
+              alarm: null,
+              host: null
             }
           });
 

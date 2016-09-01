@@ -59,7 +59,8 @@
         "Cisco TelePresence MX800 SpeakerTrack": "images/devices-hi/mx800speakertrack.png",
         "Project Swedish Island": "images/devices-hi/swedish_island.png",
         "Cisco Spark Board 55": "images/devices-hi/spark_board_55.png",
-        "Darling": "images/devices-hi/spark_board_55.png"
+        "Darling": "images/devices-hi/spark_board_55.png",
+        "Eve": "images/devices-hi/eve.png"
       };
 
       function HuronDevice(obj) {
@@ -84,7 +85,6 @@
         this.product = obj.product in huron_model_map ? huron_model_map[obj.product].displayName : getProduct(obj);
         this.image = obj.product in huron_model_map ? huron_model_map[obj.product].image : "images/devices-hi/unknown.png";
         this.huronId = getHuronId(obj);
-        this.addOnModuleCount = obj.addOnModuleCount;
       }
 
       var huron_model_map = {

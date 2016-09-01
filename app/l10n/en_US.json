@@ -1772,7 +1772,38 @@
       "setDescription": "Select the Resource Group the user is assigned to for this service.",
       "noGroupSelected": "None",
       "failedToSetGroup": "Failed to set the resource group"
-    }
+    },
+    "resourceGroupSettings": {
+      "pageTitle": "{{groupName}} Settings",
+      "releaseChannelHeader": "Release Channel",
+      "releaseChannelDescription": "Select the Release Channel for all services in this group",
+      "clustersHeader" : "Clusters",
+      "clustersAssign" : "Assign Clusters",
+      "clustersDescription" : "Add one or more existing clusters to this group",
+      "renameGroup": "Rename",
+      "renameGroupDescription": "Rename the resource group",
+      "removeGroup": "Remove",
+      "removeGroupDescription": "Remove the resource group from Cisco Collaboration Cloud",
+      "groupNameCannotByEmpty": "Resource group name cannot be empty",
+      "groupNameSaved": "Rename successful",
+      "duplicateName": "A resource group with that name already exists. Please choose another name.",
+      "loadFailed": "Unable to load the resource group details. Please try again later.",
+      "groupReleaseChannelSaved": "Release channel saved successfully",
+      "removeGroupReq": "To remove this resource group, all assigned clusters and user must be removed first",
+      "deleteSuccess": "Resource group successfully deleted"
+    },
+    "assignClustersModal": {
+      "title": "Assign Clusters to {{groupName}}",
+      "description": "Select the clusters you want to assign to the resource group.",
+      "assigned": "Cluster \"{{clusterName}}\" successfully assigned to \"{{groupName}}\"",
+      "removed": "Cluster \"{{clusterName}}\" successfully removed from \"{{groupName}}\""
+    },
+    "confirmChangeReleaseChannelModal": {
+      "title": "Change Release Channel",
+      "description": "Are you sure you want to change the release channel for \"{{groupName}}\" to {{channelName}}?",
+      "change": "Change"
+    },
+    "genericFailure": "An unexpected error occurred. Please try again later."
   },
   "ediscovery": {
     "browserTabHeaderTitle": "Spark Activity Reports",
@@ -1953,7 +1984,7 @@
     "setSipDomainErrorMessage": "Not available. Please try another name",
     "setSipDomainErrorMessageInvalidDomain": "Invalid domain, please try another name",
     "setSipDomainSuccessMessage": "The Spark SIP Address has been successfully saved",
-    "setSipDomainConfirmText": "I acknowledge this is a one-time setting that cannot be changed later.",
+    "setSipDomainConfirmText": "I acknowledge that this is a one-time setting that cannot be changed later.",
     "sparkDomainManagementServiceErrorMessage": "Failed to reach Spark Domain Management Service",
     "messageSettings": "Message Settings",
     "callSettings": "Call Settings",
@@ -3429,7 +3460,10 @@
       "totalCallsDescription": "Calls hosted locally and that overflowed to the Cisco Collaboration Cloud.",
       "onpremcalls": "on premises |",
       "cloudcalls": "overflowed to cloud",
-      "redirectedcalls": "redirected"
+      "redirectedcalls": "redirected",
+      "nodata": "N/A",
+      "allclusters": "All Clusters",
+      "percentage": "%"
     },
     "serviceStatus": {
       "unknown": "Status unknown",
@@ -3500,6 +3534,7 @@
       "deregisterAllconfirmation": "I understand that all the nodes in this cluster will be deregistered automatically, and that the cluster will be deleted permanently. I also understand that I cannot undo this action.",
       "unabletomovenodes": "Failed to move/defuse {{nodes}} press cancel and try again",
       "clusterdeleteSuccess": "Successfully deleted {{clustername}}",
+      "clusterCreationFailed": "Failed to create new cluster: {{enteredCluster}}",
       "movedTo": "{{nodeName}} moved to: {{clusterName}}",
       "upgradeSchedule": "Upgrade Schedule",
       "everyDay": "Every Day in",
