@@ -6,13 +6,13 @@
         </header>
         <section>
             <div class="metrics-info"> 
-                <div class="call-counts">{{(nav.total)}}</div>
-                   <div class="spinner-position" ng-if="!nav.total">
+                <div class="call-counts">{{nav.total}}</div>
+                   <div class="spinner-position" ng-if="!nav.total && !nav.onprem && !nav.cloud">
                       <i class='icon icon-spinner icon-2x'></i>
                     </div>
-                <div class="last-counts" ng-if="nav.onprem">{{(nav.onprem)}}
+                <div class="last-counts" ng-if="nav.onprem">{{nav.onprem}}
                 <span  class= "last-text" translate ='mediaFusion.metrics.onpremcalls'></span>
-                <span class="last-counts" ng-if="nav.cloud">{{(nav.cloud)}}
+                <span class="last-counts" ng-if="nav.cloud">{{nav.cloud}}
                 <span class="last-text" translate ='mediaFusion.metrics.cloudcalls' ng-if="nav.clusterSelected === 'All Clusters'"></span>
                 <span class="last-text" translate ='mediaFusion.metrics.redirectedcalls' ng-if="nav.clusterSelected !== 'All Clusters'"></span>
             </div>
@@ -40,7 +40,7 @@
         </header>
         <section>
             <div class="metrics-info">
-                <div class="utilization-count">{{(nav.averageUtilization)}}</div>
+                <div class="utilization-count">{{nav.averageUtilization}}</div>
                    <div class="spinner-position" ng-if="!nav.averageUtilization">
                       <i class='icon icon-spinner icon-2x'></i>
                     </div>
@@ -55,7 +55,7 @@
         </header>
         <section>
             <div class="metrics-info">
-                <div class="availability-count">{{(nav.clusterAvailability)}}</div>
+                <div class="availability-count">{{nav.clusterAvailability}}</div>
                    <div class="spinner-position" ng-if="!nav.clusterAvailability">
                       <i class='icon icon-spinner icon-2x'></i>
                     </div>

@@ -3429,7 +3429,10 @@
       "totalCallsDescription": "Calls hosted locally and that overflowed to the Cisco Collaboration Cloud.",
       "onpremcalls": "on premises |",
       "cloudcalls": "overflowed to cloud",
-      "redirectedcalls": "redirected"
+      "redirectedcalls": "redirected",
+      "nodata": "N/A",
+      "allclusters": "All Clusters",
+      "percentage": "%"
     },
     "serviceStatus": {
       "unknown": "Status unknown",
