@@ -611,6 +611,8 @@
 
     //load the feature toggle prior to creating the elements
     function setUpFeatureToggles() {
+      var featureToggleDefault = false;
+      AACommonService.setMediaUploadToggle(featureToggleDefault);
       return FeatureToggleService.supports(FeatureToggleService.features.huronAAMediaUpload).then(function (result) {
         AACommonService.setMediaUploadToggle(result);
       });

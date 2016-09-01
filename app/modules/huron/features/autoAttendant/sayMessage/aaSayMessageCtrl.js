@@ -6,7 +6,7 @@
   .controller('AASayMessageCtrl', AASayMessageCtrl);
 
   /* @ngInject */
-  function AASayMessageCtrl($rootScope, $scope, $translate, AAUiModelService, AutoAttendantCeMenuModelService, AALanguageService, AACommonService) {
+  function AASayMessageCtrl($scope, $translate, AAUiModelService, AutoAttendantCeMenuModelService, AALanguageService, AACommonService) {
 
     var vm = this;
 
@@ -100,26 +100,6 @@
 
       return mediaUploadOn;
     }
-
-    $rootScope.$on('AAUploadSuccess', function (event, args) {
-      if (args.uploadSchedule == $scope.schedule && args.uploadIndex == $scope.index) {
-        var obj = {};
-
-        var action = getSayAction(vm.menuEntry);
-
-        action.value = args.uploadUrl + "/" + args.uploadFname;
-
-        obj.uploadFile = args.uploadFname;
-        obj.date = args.uploadFdate;
-
-        action.description = JSON.stringify(obj);
-
-        vm.uploadedFile = args.uploadFname;
-        vm.uploadedDate = args.uploadFdate;
-        angular.copy(action, saveAction[action.name]);
-        AACommonService.setSayMessageStatus(true);
-      }
-    });
 
     function setMessageOptions() {
 
@@ -307,6 +287,8 @@
     }
 
     function setActionEntry() {
+      var ui;
+
       switch (vm.sayMessageType) {
         case sayMessageType.MENUHEADER:
         case sayMessageType.SUBMENU_HEADER:
@@ -327,7 +309,7 @@
 
               if (vm.sayMessageType === sayMessageType.SUBMENU_HEADER) {
                 // For new submenu, copy voice option from main menu
-                var ui = AAUiModelService.getUiModel();
+                ui = AAUiModelService.getUiModel();
                 var uiMenu = ui[$scope.schedule];
                 var mainMenu = uiMenu.entries[$scope.index];
                 var mainMenuSayHeader = getSayActionHeader(mainMenu);
@@ -377,21 +359,6 @@
             }
             vm.actionEntry = sayAction;
             angular.copy(sayAction, saveAction[sayAction.name]);
-
-            if (sayAction.name === 'play') {
-              // description holds the file name plus the date
-              try {
-                var desc = JSON.parse(sayAction.getDescription());
-                vm.uploadedFile = desc.uploadFile;
-                vm.uploadedDate = desc.date;
-              } catch (exception) {
-                //if somehow a bad format came through
-                //catch and keep disallowed
-                vm.uploadedFile = '';
-                vm.uploadedDate = '';
-              }
-
-            }
 
             return;
           }

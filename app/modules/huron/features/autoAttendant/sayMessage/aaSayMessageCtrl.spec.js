@@ -14,10 +14,6 @@ describe('Controller: AASayMessageCtrl', function () {
   var valueInput = 'This is another test.';
   var voice = 'Tom';
 
-  var url = 'https://angular-file-upload-cors-srv.appspot.com/upload';
-  var file = 'test.wav';
-  var date = '08/08/2016';
-
   function getBasePhoneMenuWithHeader() {
     var menu = AutoAttendantCeMenuModelService.newCeMenu();
     menu.type = 'MENU_OPTION';
@@ -63,21 +59,6 @@ describe('Controller: AASayMessageCtrl', function () {
     aaUiModel[schedule] = AutoAttendantCeMenuModelService.newCeMenu();
     aaUiModel[schedule].addEntryAt(index, AutoAttendantCeMenuModelService.newCeMenuEntry());
   }));
-
-  describe('on broadcast', function () {
-    beforeEach(function () {
-      $rootScope.$broadcast('AAUploadSuccess', {
-        uploadFname: file,
-        uploadUrl: url,
-        uploadFdate: date
-      });
-
-      it('should catch the broadcast and extract the values', function () {
-        expect(controller.uploadedFile).toEqual(file);
-        expect(controller.uploadedDate).toEqual(date);
-      });
-    });
-  });
 
   describe('create say action', function () {
     beforeEach(inject(function ($controller) {
