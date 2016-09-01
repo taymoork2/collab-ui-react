@@ -5,6 +5,7 @@
 
   /* @ngInject */
   function WebexReportService(
+    $log,
     $q,
     $translate,
     Log,
@@ -19,7 +20,7 @@
 
     //var loc = $translate.use().replace("_", "-");
 
-    var common_reports_pageids = ["meeting_in_progess",
+    var common_reports_pageids = ["meetings_in_progess",
       "meeting_usage",
       "recording_usage",
       "storage_utilization",
@@ -116,19 +117,37 @@
     var pageid_to_navItemId_mapping_reversed = this.reverseMapping(pageid_to_navItemId_mapping);
     this.pageid_to_navItemId_mapping_reversed = pageid_to_navItemId_mapping_reversed;
 
-    var getNavItemsByCategoryName = function (navInfo, categoryName) {
+    this.getNavItemsByCategoryName = function (navInfo, categoryName) {
+      var funcName = "getNavItemsByCategoryName()";
+      var logMsg = "";
+
+      var siteAdminNavUrl = null;
+
+      if (navInfo.ns1_siteAdminNavUrl.length) {
+        siteAdminNavUrl = navInfo.ns1_siteAdminNavUrl;
+      } else {
+        siteAdminNavUrl = [];
+        siteAdminNavUrl.push(navInfo.ns1_siteAdminNavUrl);
+      }
+
+      logMsg = funcName + "\n" +
+        "categoryName=" + categoryName + "\n" +
+        "navInfo.ns1_siteAdminNavUrl=" + JSON.stringify(navInfo.ns1_siteAdminNavUrl) + "\n" +
+        "siteAdminNavUrl=" + JSON.stringify(siteAdminNavUrl);
+      $log.log(logMsg);
+
       var filterByCategoryName = function (navElement) {
         var returnValue = false;
+
         if (navElement.ns1_category === categoryName) {
           returnValue = true;
         }
+
         return returnValue;
       };
-      var navItems = navInfo.ns1_siteAdminNavUrl.filter(filterByCategoryName);
-      return navItems;
-    };
 
-    this.getNavItemsByCategoryName = getNavItemsByCategoryName;
+      return siteAdminNavUrl.filter(filterByCategoryName);
+    };
 
     var UIsref = function (theUrl, rid, siteUrl) {
       this.siteUrl = siteUrl;
@@ -252,57 +271,51 @@
         return this.sections;
       };
     };
+
     this.getReports = function (siteUrl, mapJson) {
+      var funcName = "getReports()";
+      var logMsg = "";
+
+      logMsg = funcName + "\n" +
+        "siteUrl=" + siteUrl;
+      $log.log(logMsg);
+
       //get the reports list, for now hard code.
-      var common_reports = new ReportsSection("common_reports", siteUrl, ["/x/y/z", "/u/io/p"],
-        "CommonReports");
-      var event_center = new ReportsSection("event_center", siteUrl, ["/u/y/z", "www.yahoo.com"],
-        "EC", "en");
-      var support_center = new ReportsSection("support_center", siteUrl, ["/u/y/z", "www.yahoo.com"],
-        "SC", "en");
-      var training_center = new ReportsSection("training_center", siteUrl, ["/u/y/z", "www.yahoo.com"],
-        "TC", "en");
-      var remote_access = new ReportsSection("remote_access", siteUrl, ["/u/y/z", "www.yahoo.com"],
-        "RA", "en");
+      var common_reports = new ReportsSection("common_reports", siteUrl, ["/x/y/z", "/u/io/p"], "CommonReports");
+      var event_center = new ReportsSection("event_center", siteUrl, ["/u/y/z", "www.yahoo.com"], "EC", "en");
+      var support_center = new ReportsSection("support_center", siteUrl, ["/u/y/z", "www.yahoo.com"], "SC", "en");
+      var training_center = new ReportsSection("training_center", siteUrl, ["/u/y/z", "www.yahoo.com"], "TC", "en");
+      var remote_access = new ReportsSection("remote_access", siteUrl, ["/u/y/z", "www.yahoo.com"], "RA", "en");
 
-      var mapJsonDefined = angular.isDefined(mapJson);
+      if (angular.isDefined(mapJson)) {
+        //use the above 5 lists to gather all the UISrefs
+        [
+          [common_reports_pageids, common_reports],
+          [training_center_pageids, training_center],
+          [support_center_pageids, support_center],
+          [event_center_pageids, event_center],
+          [remote_access_pageids, remote_access]
+        ].forEach(function (xs) {
+          var section = xs[1];
+          var category_Name = section.category_Name;
 
-      //use the above 5 lists to gather all the UISrefs
-      [
-        [common_reports_pageids, common_reports],
-        [training_center_pageids, training_center],
-        [support_center_pageids, support_center],
-        [event_center_pageids, event_center],
-        [remote_access_pageids, remote_access]
-      ].forEach(function (xs) {
-        var section = xs[1];
-        var category_Name = section.category_Name;
-        if (mapJsonDefined) {
-          var navItemsFilteredByCategoryName = getNavItemsByCategoryName(mapJson.bodyJson,
-            category_Name);
+          var navItemsFilteredByCategoryName = self.getNavItemsByCategoryName(
+            mapJson.bodyJson,
+            category_Name
+          );
+
           section.uisrefs = getUISrefs(navItemsFilteredByCategoryName, siteUrl);
-        }
-        // section.uisrefs = pageids.map(function (rid) {
-        //   var theUrl = "www.yahoo.com";
-        //   if (mapJsonDefined) {
-        //     var tempUrl = getFullURLGivenNavInfoAndPageId(mapJson.bodyJson, rid);
-        //     if (angular.isDefined(tempUrl)) {
-        //       theUrl = tempUrl;
-        //     }
-        //   }
-        //   return new UIsref(theUrl, rid, siteUrl);
-        // });
-      });
+        });
 
-      if (remote_access.isNotEmpty()) {
-        support_center.addSubsection(remote_access);
-        remote_access.sort();
-        remote_access.doPin();
+        if (remote_access.isNotEmpty()) {
+          support_center.addSubsection(remote_access);
+          remote_access.sort();
+          remote_access.doPin();
+        }
       }
 
-      var sections = [common_reports, training_center, support_center,
-        event_center
-      ];
+      var sections = [common_reports, training_center, support_center, event_center];
+
       sections.forEach(function (sec) {
         sec.sort();
         sec.doPin();
@@ -311,7 +324,7 @@
       var repts = new Reports();
       repts.setSections(sections);
       return repts;
-    };
+    }; // getReports()
 
     this.initReportsObject = function (requestedSiteUrl) {
       // var funcName = "initReportsObject()";
@@ -365,23 +378,49 @@
               var funcName = "initReportsObject().getNaviationInfoSuccess()";
               var logMsg = "";
 
-              // var resultString = JSON.stringify(result);
-              // $log.log("Result is ----**** " + resultString);
+              // start of replacing result with something we want to test
+              /*
+              var reportPagesInfoXml = '';
 
-              var y = WebExUtilsFact.validateAdminPagesInfoXmlData(result.reportPagesInfoXml);
+              reportPagesInfoXml = reportPagesInfoXml + '<?xml version="1.0" encoding="UTF-8"?>\n<serv:message xmlns:serv="http://www.webex.com/schemas/2002/06/service" xmlns:com="http://www.webex.com/schemas/2002/06/common" xmlns:ns1="http://www.webex.com/schemas/2002/06/service/site" xmlns:event="http://www.webex.com/schemas/2002/06/service/event"><serv:header><serv:response><serv:result>SUCCESS</serv:result><serv:gsbStatus>PRIMARY</serv:gsbStatus></serv:response></serv:header><serv:body><serv:bodyContent xsi:type="ns1:getSiteAdminNavUrlResponse" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">';
+              // reportPagesInfoXml = reportPagesInfoXml + '<ns1:siteAdminNavUrl><ns1:type>Report</ns1:type><ns1:category>CommonReports</ns1:category><ns1:navItemId>meetings_in_progress</ns1:navItemId><ns1:url>https://wbxdmz.admin.ciscospark.com/wbxadmin/MeetingsInProgress.do?proxyfrom=atlas&amp;siteurl=sjsite04</ns1:url></ns1:siteAdminNavUrl>';
+              reportPagesInfoXml = reportPagesInfoXml + '<ns1:siteAdminNavUrl><ns1:type>Report</ns1:type><ns1:category>CommonReports</ns1:category><ns1:navItemId>inactive_user</ns1:navItemId><ns1:url>https://wbxdmz.admin.ciscospark.com/wbxadmin/inactiveUsersReport.do?proxyfrom=atlas&amp;siteurl=sjsite04</ns1:url></ns1:siteAdminNavUrl>';
+              // reportPagesInfoXml = reportPagesInfoXml + '<ns1:siteAdminNavUrl><ns1:type>Report</ns1:type><ns1:category>CommonReports</ns1:category><ns1:navItemId>meeting_usage</ns1:navItemId><ns1:url>https://wbxdmz.admin.ciscospark.com/wbxadmin/usageReport.do?proxyfrom=atlas&amp;siteurl=sjsite04</ns1:url></ns1:siteAdminNavUrl>';
+              // reportPagesInfoXml = reportPagesInfoXml + '<ns1:siteAdminNavUrl><ns1:type>Report</ns1:type><ns1:category>CommonReports</ns1:category><ns1:navItemId>recording_storage_usage</ns1:navItemId><ns1:url>https://wbxdmz.admin.ciscospark.com/wbxadmin/nbrReport.do?proxyfrom=atlas&amp;siteurl=sjsite04</ns1:url></ns1:siteAdminNavUrl>';
+              // reportPagesInfoXml = reportPagesInfoXml + '<ns1:siteAdminNavUrl><ns1:type>Report</ns1:type><ns1:category>CommonReports</ns1:category><ns1:navItemId>storage_utilization_by_user</ns1:navItemId><ns1:url>https://wbxdmz.admin.ciscospark.com/wbxadmin/storageReport.do?proxyfrom=atlas&amp;siteurl=sjsite04</ns1:url></ns1:siteAdminNavUrl>';
+              reportPagesInfoXml = reportPagesInfoXml + '</serv:bodyContent></serv:body></serv:message>';
+
+              result = {
+                'reportPagesInfoXml': reportPagesInfoXml
+              };
+              */
+              // end of replace
+
+              logMsg = funcName + ": " + "result=" + "\n" +
+                JSON.stringify(result);
+              $log.log(logMsg);
+
+              var reportPagesInfoJson = WebExUtilsFact.validateAdminPagesInfoXmlData(result.reportPagesInfoXml);
+
+              logMsg = funcName + ": " + "reportPagesInfoJson.headerJson=" + "\n" +
+                JSON.stringify(reportPagesInfoJson.headerJson);
+              // $log.log(logMsg);
+
+              logMsg = funcName + ": " + "reportPagesInfoJson.bodyJson=" + "\n" +
+                JSON.stringify(reportPagesInfoJson.bodyJson);
+              // $log.log(logMsg);
 
               if (
-                ("" !== y.errId) ||
-                ("" !== y.errReason)
+                ("" !== reportPagesInfoJson.errId) ||
+                ("" !== reportPagesInfoJson.errReason)
               ) {
 
                 reportsObject.hasLoadError = true;
               } else {
-                // $log.log("Validated Result is ==== " + JSON.stringify(y.bodyJson));
+                reportsObject["mapJson"] = reportPagesInfoJson;
 
-                reportsObject["mapJson"] = y;
+                var rpts = self.getReports(siteUrl, reportPagesInfoJson);
 
-                var rpts = self.getReports(siteUrl, y);
                 if (
                   (null == rpts) ||
                   (0 >= rpts.length)
@@ -403,9 +442,10 @@
                   for (i = 0; i < rpts.sections.length; i++) {
                     if (rpts.sections[i].section_name === "common_reports") {
                       for (j = 0; j < rpts.sections[i].uisrefs.length; j++) {
-                        if (rpts.sections[i].uisrefs[j].reportPageId === "meeting_in_progess") {
+                        if (rpts.sections[i].uisrefs[j].reportPageId === "meetings_in_progess") {
                           reportsObject.infoCardObj.iframeLinkObj1.iframePageObj.uiSref = rpts.sections[i].uisrefs[j].toUIsrefString();
                         }
+
                         if (rpts.sections[i].uisrefs[j].reportPageId === "meeting_usage") {
                           reportsObject.infoCardObj.iframeLinkObj2.iframePageObj.uiSref = rpts.sections[i].uisrefs[j].toUIsrefString();
                         }
