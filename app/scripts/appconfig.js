@@ -682,7 +682,13 @@
             templateUrl: 'modules/core/overview/overview.tpl.html',
             controller: 'OverviewCtrl',
             controllerAs: 'overview',
-            parent: 'main'
+            parent: 'main',
+            resolve: {
+              // TODO Need to be removed once Care is graduated on atlas.
+              hasCareFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasCareTrials);
+              }
+            }
           })
           .state('my-company', {
             templateUrl: 'modules/core/myCompany/myCompanyPage.tpl.html',
