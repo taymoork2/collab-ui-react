@@ -29,6 +29,7 @@
 
     display: block;
     min-height: 85vh;
+
     width: 100%;
     width: calc(100% + 2rem);
 
@@ -53,8 +54,7 @@
       .cs-card {
         padding-bottom: 1rem;
         display: block;
-        height: 350px;
-        min-height: 320px;
+        height: auto;
         position: relative;
         .cardLink {
           position: absolute;
@@ -65,7 +65,7 @@
           height: 100%;
         }
         article {
-          height: 100%;
+          min-height: 370px;
         }
         h4 {
           font-size: 1.63rem;
@@ -141,18 +141,6 @@
       }
       .cs-card.header-bar.care-bar header:after {
         border-top-color: $color-people-base !important;
-      }
-    }
-  }
-}
-
-@media only screen and (max-width: 1200px) {
-  .servicesOverview {
-    .servicesBlock {
-      .cs-card-layout {
-        .cs-card {
-          height: 350px;
-        }
       }
     }
   }
