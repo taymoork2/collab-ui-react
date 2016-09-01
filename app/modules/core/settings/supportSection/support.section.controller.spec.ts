@@ -47,6 +47,55 @@ namespace globalsettings {
 
     describe('validation()', ()=> {
 
+      describe('showCustomHelpSiteSaveButton', ()=> {
+
+        describe('checkBox enabled and url set', ()=> {
+          beforeEach(() => {
+            controller.customHelpSite.enable = true;
+            controller.customHelpSite.url = 'initialUrl';
+          });
+
+          it('should not show save button if it was enabled with the same url', () => {
+            controller.oldCustomHelpSite.enable = true;
+            controller.oldCustomHelpSite.url = 'initialUrl';
+            expect(controller.showCustomHelpSiteSaveButton).toBeFalsy();
+          });
+
+          it('should show save button if it was enabled with a different url', () => {
+            controller.oldCustomHelpSite.enable = true;
+            controller.oldCustomHelpSite.url = 'oldDifferentUrl';
+            expect(controller.showCustomHelpSiteSaveButton).toBeTruthy();
+          });
+
+          it('should show save button if it was disabled', () => {
+            controller.oldCustomHelpSite.enable = false;
+            expect(controller.showCustomHelpSiteSaveButton).toBeTruthy();
+          });
+
+          it('should show not save button if it was disabled but has no url now', () => {
+            controller.oldCustomHelpSite.enable = false;
+            controller.customHelpSite.url = '';
+            expect(controller.showCustomHelpSiteSaveButton).toBeFalsy();
+          });
+        });
+
+        describe('checkBox disabled', ()=> {
+
+          it('should not show save button if it was disabled', () => {
+            controller.customHelpSite.enable = false;
+            controller.oldCustomHelpSite.enable = false;
+
+            expect(controller.showCustomHelpSiteSaveButton).toBeFalsy();
+          });
+
+          it('should show save button if it was enabled', () => {
+            controller.customHelpSite.enable = false;
+            controller.oldCustomHelpSite.enable = true;
+            expect(controller.showCustomHelpSiteSaveButton).toBeTruthy();
+          });
+        });
+      });
+
       describe('saving org settings data', ()=> {
 
         it('saves data via Orgservice', ()=> {

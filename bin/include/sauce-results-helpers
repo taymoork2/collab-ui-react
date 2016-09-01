@@ -3,6 +3,8 @@ if [ -z "${WX2_ADMIN_WEB_CLIENT_HOME}" ]; then
     return 1
 fi
 
+source ${WX2_ADMIN_WEB_CLIENT_HOME}/bin/include/markdown-helpers
+
 # keep around scratch files when processing sauce labs results
 cache_subdir=".cache"
 e2e_fail_retry_dir="${WX2_ADMIN_WEB_CLIENT_HOME}/${cache_subdir}"
@@ -39,7 +41,7 @@ function sort_by_version {
 }
 
 function grep_for_sauce_link_lines {
-    grep 'saucelabs.com/jobs'
+    grep 'results available at .*saucelabs.com/jobs'
 }
 
 function grep_for_test_result_lines {
@@ -223,7 +225,7 @@ function mk_test_report {
         return 1
     fi
     local last_run_num
-    last_run_num="$(get_last_run_from_file "${input_file}")"
+    last_run_num="$(get_last_run_from_log_file "${input_file}")"
     last_run_num="${last_run_num:-${E2E_RUN_COUNTER_MAX}}"
     local run_test_report_file="${test_report_file}-${run_num}"
     for run_num in $(seq 0 "$last_run_num"); do
@@ -313,7 +315,7 @@ function mk_test_report_body_for_run {
             spec_file="$(grep_for_spec_file_for_test_id "$test_id" < "$run_log_file")"
         fi
         spec_file="$(echo "$spec_file" | trim_out_spec_prefix)"
-        spec_file="${spec_file:-"(N/A)"}"
+        spec_file="${spec_file:-(N/A)}"
 
         echo "$test_id | $test_id_result | $spec_file | $url"
     done < "$run_test_ids_and_urls_file"
@@ -327,7 +329,7 @@ function get_marker_end_regex_for_run {
     echo "Protractor: max: .*: run: ${1}: end"
 }
 
-function get_last_run_from_file {
+function get_last_run_from_log_file {
     local input_file="$1"
     if [ -z "${input_file}" ]; then
         >&2 echo "Error: no input_file passed to populate_if_empty"
@@ -371,4 +373,60 @@ function populate_if_empty {
     if [ ! -s "$input_file" ]; then
         echo "$default_msg" > "$input_file"
     fi
+}
+
+function get_saved_e2e_exit_code {
+    # exit status code from running 'e2e.sh' will have been saved to a temp file
+    local exit_code_file="${1:-${WX2_ADMIN_WEB_CLIENT_HOME}/.cache/${E2E_EXIT_CODE_FILE}}"
+    if [ -f "$exit_code_file" -a -s "$exit_code_file" ]; then
+        cat "$exit_code_file"
+    else
+        echo "-1"
+    fi
+}
+
+# env vars that must be set:
+# - RESULTS_URL => set after 'print-e2e-test-env-vars.sh' is run and sourced
+# - NUM_RETRIES => set after 'print-e2e-test-env-vars.sh' is run and sourced
+function mk_build_report_payload {
+    local report_file="$1"
+    local num_failed_tests
+
+    # - header
+    if [ -n "$RESULTS_URL" -a -n "$NUM_RETRIES" ]; then
+        echo "**E2E Report:**"
+        echo "- [Test Results]($RESULTS_URL) (Retries: $NUM_RETRIES)"
+    fi
+
+    # - test recordings (print only if 1+ failed tests exist)
+    if [ -f "$report_file" -a -s "$report_file" ]; then
+        num_failed_tests="$(print_e2e_test_links_from_report_file "$report_file" | wc -l)"
+        if [ "$num_failed_tests" -gt 0 ]; then
+            echo ""
+            echo "**E2E Failed Test Recordings:**"
+            print_e2e_test_links_from_report_file "$report_file"
+        fi
+    fi
+}
+
+function grep_failed_test_entries {
+    grep '^run-' \
+        | grep -v " overall: " \
+        | grep 'failed .* test(s)'
+}
+
+function print_repeated_failed_specs {
+    grep_failed_test_entries \
+        | awk -F'|' '{print $3;}' \
+        | $SORT_CMD \
+        | uniq -c \
+        | grep -v '^ *1 ' \
+        | awk '{print $2;}'
+}
+
+function print_e2e_test_links_from_report_file {
+    local report_file="$1"
+    grep_failed_test_entries < "$report_file" \
+        | tr_result_line_to_md_list_item \
+        | $SORT_CMD
 }

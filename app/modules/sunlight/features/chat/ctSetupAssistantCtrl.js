@@ -289,26 +289,6 @@
               feedbackQuery: {
                 displayText: $translate.instant('careChatTpl.feedbackQuery')
               },
-              ratings: [{
-
-                displayText: $translate.instant('careChatTpl.rating1Text'),
-                dictionaryType: {
-                  fieldSet: 'cisco.base.ccc.pod',
-                  fieldName: 'cccRatingPoints'
-                }
-              }, {
-                displayText: $translate.instant('careChatTpl.rating2Text'),
-                dictionaryType: {
-                  fieldSet: 'cisco.base.ccc.pod',
-                  fieldName: 'cccRatingPoints'
-                }
-              }, {
-                displayText: $translate.instant('careChatTpl.rating3Text'),
-                dictionaryType: {
-                  fieldSet: 'cisco.base.ccc.pod',
-                  fieldName: 'cccRatingPoints'
-                }
-              }],
               comment: {
                 displayText: $translate.instant('careChatTpl.ratingComment'),
                 dictionaryType: {
