@@ -4,7 +4,7 @@
   angular.module('Core')
     .controller('ShowActivationCodeCtrl', ShowActivationCodeCtrl);
   /* @ngInject */
-  function ShowActivationCodeCtrl($q, UserListService, OtpService, CsdmPlaceService, CsdmCodeService, $stateParams, XhrNotificationService, ActivationCodeEmailService, $translate, Notification, $http, UrlConfig) {
+  function ShowActivationCodeCtrl($q, UserListService, OtpService, CsdmPlaceService, CsdmCodeService, $stateParams, XhrNotificationService, ActivationCodeEmailService, $translate, Notification, CsdmEmailService, UrlConfig) {
     var vm = this;
     vm.wizardData = $stateParams.wizard.state().data;
     vm.hideBackButton = vm.wizardData.function == "showCode";
@@ -186,23 +186,43 @@
           expiryTime: vm.getExpiresOn()
         };
 
-        $http.post(url, cbEmailInfo).then(function () {
-          Notification.notify(
-            [$translate.instant('generateActivationCodeModal.emailSuccess', {
-              'address': vm.email.to
-            })],
-            'success',
-            $translate.instant('generateActivationCodeModal.emailSuccessTitle')
-          );
-        }, function () {
-          Notification.notify(
-            [$translate.instant('generateActivationCodeModal.emailError', {
-              'address': vm.email.to
-            })],
-            'error',
-            $translate.instant('generateActivationCodeModal.emailErrorTitle')
-          );
-        });
+        CsdmEmailService
+          .sendCloudberryEmail(url, cbEmailInfo)
+          .then(function () {
+            Notification.notify(
+              [$translate.instant('generateActivationCodeModal.emailSuccess', {
+                'address': vm.email.to
+              })],
+              'success',
+              $translate.instant('generateActivationCodeModal.emailSuccessTitle')
+            );
+          }, function () {
+            Notification.notify(
+              [$translate.instant('generateActivationCodeModal.emailError', {
+                'address': vm.email.to
+              })],
+              'error',
+              $translate.instant('generateActivationCodeModal.emailErrorTitle')
+            );
+          });
+
+        // $http.post(url, cbEmailInfo).then(function () {
+        //   Notification.notify(
+        //     [$translate.instant('generateActivationCodeModal.emailSuccess', {
+        //       'address': vm.email.to
+        //     })],
+        //     'success',
+        //     $translate.instant('generateActivationCodeModal.emailSuccessTitle')
+        //   );
+        // }, function () {
+        //   Notification.notify(
+        //     [$translate.instant('generateActivationCodeModal.emailError', {
+        //       'address': vm.email.to
+        //     })],
+        //     'error',
+        //     $translate.instant('generateActivationCodeModal.emailErrorTitle')
+        //   );
+        // });
 
       }
     };
