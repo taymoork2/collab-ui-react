@@ -72,7 +72,7 @@
       <ul>
         <li class="feature" ng-repeat="alarm in hostDetails.connector.alarms" ng-class="{'list-item': !$first}">
           <a
-            ui-sref="connector-details-v2.alarm-details({alarm: alarm, host: hostDetails.connector.hostname})">
+            ui-sref="connector-details-v2.alarm-detailsForNode({alarm: alarm, host: hostDetails.connector.hostname})">
             <i class="icon icon-error status-icon"/>
             <span class="feature-name">{{alarm.title}}</span>
             <i class="feature-arrow"></i>
