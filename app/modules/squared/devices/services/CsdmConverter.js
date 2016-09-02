@@ -85,6 +85,7 @@
         this.product = obj.product in huron_model_map ? huron_model_map[obj.product].displayName : getProduct(obj);
         this.image = obj.product in huron_model_map ? huron_model_map[obj.product].image : "images/devices-hi/unknown.png";
         this.huronId = getHuronId(obj);
+        this.addOnModuleCount = obj.addOnModuleCount;
       }
 
       var huron_model_map = {
