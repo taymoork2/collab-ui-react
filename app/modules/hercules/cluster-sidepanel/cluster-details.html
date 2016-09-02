@@ -69,7 +69,7 @@
             ng-class="{'list-item': !$first}">
           <a
             ui-sref="cluster-details.host-details({host: host.hostname, clusterId: clusterDetailsCtrl.clusterId, connectorType: clusterDetailsCtrl.connectorType})">
-            <i class="icon icon-circle status-icon" ng-class="'hercules-state-' + clusterDetailsCtrl.getSeverity(host.state).label"></i>
+            <i class="icon icon-circle status-indicator" ng-class="'hercules-state-' + clusterDetailsCtrl.getSeverity(host.state).label"></i>
             <span class="feature-name">{{host.hostname}}</span>
             <span class="feature-status">
               <span translate="{{'hercules.status.' + host.state }}"></span>
@@ -92,10 +92,10 @@
             <a ng-if="connector.connectorType === 'c_mgmt'"
                ui-sref="management-connector-details({host: host.hostname, clusterId: clusterDetailsCtrl.clusterId, connectorType: 'c_mgmt'})"
             >
-              <i class="icon icon-circle status-icon"
+              <i class="icon icon-circle status-indicator"
                  ng-class="'hercules-state-' + clusterDetailsCtrl.getSeverity(connector.state).label"
                  ng-if="!clusterDetailsCtrl.hasConnectorAlarm(connector)"></i>
-              <i class="icon icon-circle status-icon hercules-state-error"
+              <i class="icon icon-circle status-indicator danger"
                  ng-if="clusterDetailsCtrl.hasConnectorAlarm(connector)" ></i>
               <span class="feature-name">{{clusterDetailsCtrl.localizedManagementConnectorName}}</span>
               <span ng-if="connector.connectorType !== 'c_mgmt'" class="feature-name">{{clusterDetailsCtrl.localizedConnectorName}}</span>
@@ -105,10 +105,10 @@
             <a ng-if="connector.connectorType !== 'c_mgmt'"
                ui-sref="cluster-details.host-details({host: host.hostname, clusterId: clusterDetailsCtrl.clusterId, connectorType: connector.connectorType})"
             >
-              <i class="icon icon-circle status-icon"
+              <i class="icon icon-circle status-indicator"
                  ng-class="'hercules-state-' + clusterDetailsCtrl.getSeverity(connector.state).label"
                  ng-if="!clusterDetailsCtrl.hasConnectorAlarm(connector)"></i>
-              <i class="icon icon-circle status-icon hercules-state-error"
+              <i class="icon icon-circle status-indicator danger"
                  ng-if="clusterDetailsCtrl.hasConnectorAlarm(connector)" ></i>
               <span class="feature-name">{{clusterDetailsCtrl.localizedConnectorName}}</span>
               <span class="feature-status">{{connector.runningVersion}}</span>

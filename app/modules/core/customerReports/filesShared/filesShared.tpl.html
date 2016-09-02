@@ -5,7 +5,7 @@
     </header>
     <section>
       <div class="customer-files-shared">
-        <p class="report-description">{{nav.filesSharedDescription}}</p>
+        <p class="report-description">{{nav.getDescription('filesShared.filesSharedDescription')}}</p>
         <div id="filesSharedDiv" class="barchart" ng-class="{'active-chart': !nav.isEmpty(nav.filesSharedStatus) && !nav.isRefresh(nav.filesSharedStatus)}"></div>
         <div class="spinner-position" ng-if="nav.isRefresh(nav.filesSharedStatus)">
           <i class='icon icon-spinner icon-2x'></i>

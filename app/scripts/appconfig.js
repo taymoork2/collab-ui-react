@@ -682,7 +682,13 @@
             templateUrl: 'modules/core/overview/overview.tpl.html',
             controller: 'OverviewCtrl',
             controllerAs: 'overview',
-            parent: 'main'
+            parent: 'main',
+            resolve: {
+              // TODO Need to be removed once Care is graduated on atlas.
+              hasCareFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasCareTrials);
+              }
+            }
           })
           .state('my-company', {
             templateUrl: 'modules/core/myCompany/myCompanyPage.tpl.html',
@@ -1425,7 +1431,7 @@
                 template: '<place-overview></place-overview>'
               },
               'header@place-overview': {
-                templateUrl: 'modules/squared/places/overview/placeHeader.tpl.html'
+                templateUrl: 'modules/squared/places/overview/placeHeader.html'
               }
             },
             params: {
@@ -1463,6 +1469,13 @@
             },
             data: {
               displayName: 'Call'
+            },
+            resolve: {
+              lazy: /* @ngInject */ function lazyLoad($q, $ocLazyLoad) {
+                return $q(function resolveLogin(resolve) {
+                  require(['modules/squared/places/callOverview'], loadModuleAndResolve($ocLazyLoad, resolve));
+                });
+              }
             }
           })
           .state('place-overview.communication.internationalDialing', {
@@ -1473,20 +1486,29 @@
             resolve: {
               lazy: /* @ngInject */ function lazyLoad($q, $ocLazyLoad) {
                 return $q(function resolveLogin(resolve) {
-                  require(['modules/huron/internationalDialing/internationalDialing.component'], loadModuleAndResolve($ocLazyLoad, resolve));
+                  require(['modules/huron/internationalDialing'], loadModuleAndResolve($ocLazyLoad, resolve));
                 });
               }
             }
           })
           .state('place-overview.communication.line-overview', {
-            template: '<line-overview owner-type="place"></line-overview>',
+            // TODO(jlowery): remove templateProvider once we can upgrade ui-router to a
+            // version that supports route to component natively
+            templateProvider: /* @ngInject */ function ($stateParams) {
+              var ownerId = _.get($stateParams.currentPlace, 'cisUuid');
+              var numberId = $stateParams.numberId;
+              return '<line-overview owner-type="place" owner-id="' + ownerId + '" number-id="' + numberId + '"></line-overview>';
+            },
+            params: {
+              numberId: '',
+            },
             data: {
               displayName: 'Line Configuration'
             },
             resolve: {
               lazy: /* @ngInject */ function lazyLoad($q, $ocLazyLoad) {
                 return $q(function resolveLogin(resolve) {
-                  require(['modules/huron/lines/lineOverview/lineOverview.component'], loadModuleAndResolve($ocLazyLoad, resolve));
+                  require(['modules/huron/lines/lineOverview'], loadModuleAndResolve($ocLazyLoad, resolve));
                 });
               }
             }
@@ -2565,6 +2587,18 @@
               clusterId: null,
               connectorType: null
             }
+          })
+          .state('resource-group-settings', {
+            url: '/services/resourceGroups/:id/settings',
+            templateUrl: 'modules/hercules/fusion-pages/resource-group-settings/resource-group-settings.html',
+            controller: 'ResourceGroupSettingsController',
+            controllerAs: 'rgsCtrl',
+            parent: 'main',
+            resolve: {
+              hasF237FeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasF237ResourceGroups);
+              }
+            }
           });
 
         $stateProvider
@@ -2639,6 +2673,19 @@
               connector: null,
               hostLength: null,
               selectedCluster: null
+            }
+          })
+          .state('connector-details-v2.alarm-detailsForNode', {
+            parent: 'connector-details-v2.host-details',
+            templateUrl: 'modules/mediafusion/media-service-v2/side-panel/alarm-details.html',
+            controller: 'MediaAlarmControllerV2',
+            controllerAs: 'alarmCtrl',
+            data: {
+              displayName: 'Alarm Details'
+            },
+            params: {
+              alarm: null,
+              host: null
             }
           });
 
