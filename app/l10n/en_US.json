@@ -2407,8 +2407,7 @@
     "voicemail": "Voicemail",
     "singleNumberReach": "Single Number Reach",
     "speedDials": "Speed Dials",
-    "internationalDialing": "International Dialing",
-    "maxLines": "You reached the limit of 125 lines. Please remove a line from this user before provisioning additional lines."
+    "internationalDialing": "International Dialing"
   },
   "directoryNumberPanel": {
     "title": "Line Configuration",
