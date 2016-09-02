@@ -149,6 +149,7 @@
       type: 'select',
       className: 'medium-4 inline-row left',
       templateOptions: {
+        required: true,
         label: $translate.instant('pstnSetup.areaCode'),
         labelfield: 'code',
         valuefield: 'code',
@@ -198,6 +199,7 @@
 
     function getStateInventory() {
       vm.areaCodeOptions = [];
+      vm.trialData.details.pstnNumberInfo.areaCode.code = null;
       PstnSetupService.getCarrierInventory(vm.trialData.details.pstnProvider.uuid, vm.trialData.details.pstnNumberInfo.state.abbreviation)
         .then(function (response) {
           _.forEach(response.areaCodes, function (areaCode) {
@@ -329,12 +331,14 @@
     }
 
     function disableNextButton() {
-      if (!vm.showOrdering && vm.trialData.details.swivelNumbers.length === 0) {
-        return true;
-      } else if (!checkForInvalidTokens()) {
-        return true;
+      if (!vm.showOrdering) {
+        return _.size(vm.trialData.details.swivelNumbers) === 0;
       } else {
-        return false;
+        if (!checkForInvalidTokens() || _.size(vm.trialData.details.pstnNumberInfo.numbers) === 0) {
+          return true;
+        } else {
+          return false;
+        }
       }
     }
 
