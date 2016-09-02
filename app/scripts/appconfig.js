@@ -1490,16 +1490,31 @@
             }
           })
           .state('place-overview.communication.internationalDialing', {
-            template: '<international-dialing-comp owner-type="place" identifier="cisUuid"></international-dialing-comp>',
+            templateProvider: /* @ngInject */ function ($stateParams) {
+              var watcher = $stateParams.watcher;
+              var selected = $stateParams.selected;
+              return '<uc-dialing watcher=' + watcher + ' selected="' + selected + '"></uc-dialing>';
+            },
+            params: {
+              watcher: null,
+              selected: null
+            },
             data: {
               displayName: 'International Dialing'
+            }
+          })
+          .state('place-overview.communication.local', {
+            templateProvider: /* @ngInject */ function ($stateParams) {
+              var watcher = $stateParams.watcher;
+              var selected = $stateParams.selected;
+              return '<uc-dialing  watcher=' + watcher + ' selected="' + selected + '"></uc-dialing>';
             },
-            resolve: {
-              lazy: /* @ngInject */ function lazyLoad($q, $ocLazyLoad) {
-                return $q(function resolveLogin(resolve) {
-                  require(['modules/huron/internationalDialing'], loadModuleAndResolve($ocLazyLoad, resolve));
-                });
-              }
+            params: {
+              watcher: null,
+              selected: null
+            },
+            data: {
+              displayName: 'Local Dialing'
             }
           })
           .state('place-overview.communication.line-overview', {
