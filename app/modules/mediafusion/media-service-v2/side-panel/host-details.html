@@ -12,7 +12,7 @@
         <td translate="mediaFusion.connectors.status"></td>
         <td>
           <i class="icon icon-circle status-indicator"
-             ng-class="hostDetails.connector.alarms.length > 0 ? 'mediafusion-state-alarm' : 'mediafusion-state-'+hostDetails.connector.state"></i>
+             ng-class="hostDetails.connector.alarms.length > 0 && hostDetails.connector.state != 'offline' ? 'mediafusion-state-alarm' : 'mediafusion-state-'+hostDetails.connector.state"></i>
           <span ng-if="hostDetails.connector.alarms.length == 0">
               <span ng-if="hostDetails.connector.state == 'has_alarms'"  class="yellow">
                 <span class="hidden-xs">{{'mediaFusion.connectors.alarms' | translate}}  </span>
@@ -27,8 +27,11 @@
                 <span class="hidden-xs">{{'mediaFusion.installing' | translate}} </span>
               </span>
           </span>
-          <span ng-if="hostDetails.connector.alarms.length > 0"
+          <span ng-if="hostDetails.connector.alarms.length > 0 && hostDetails.connector.state != 'offline' "
                 translate="mediaFusion.serviceStatus.alarm">
+          </span>
+          <span ng-if="hostDetails.connector.alarms.length > 0 && hostDetails.connector.state == 'offline' "
+                translate="mediaFusion.offline">
           </span>
         </td>
       </tr>
@@ -72,7 +75,7 @@
       <ul>
         <li class="feature" ng-repeat="alarm in hostDetails.connector.alarms" ng-class="{'list-item': !$first}">
           <a
-            ui-sref="connector-details-v2.alarm-details({alarm: alarm, host: hostDetails.connector.hostname})">
+            ui-sref="connector-details-v2.alarm-detailsForNode({alarm: alarm, host: hostDetails.connector.hostname})">
             <i class="icon icon-error status-icon"/>
             <span class="feature-name">{{alarm.title}}</span>
             <i class="feature-arrow"></i>

@@ -1,14 +1,16 @@
 interface IDirectoryNumberOption {
-  uuid: string,
-  pattern: string,
+  value: string,
+  label: string,
 }
 
-class DirectoryNumberCtrl {
-  public externalOptions: IDirectoryNumberOption[];
+class DirectoryNumber {
+
   public externalRefreshFn: Function;
   public externalSelected: IDirectoryNumberOption;
+  public externalNumbers: string[];
   public inputPlaceholder: string;
-  public internalOptions: IDirectoryNumberOption[];
+  public internalNumbers: string[];
+  public esnPrefix: string;
   public internalRefreshFn: Function;
   public internalSelected: IDirectoryNumberOption;
   public nonePlaceholder: string;
@@ -16,15 +18,54 @@ class DirectoryNumberCtrl {
   public placeholder: string;
   public showInternalExtensions: boolean;
 
+  private externalOptions: IDirectoryNumberOption[] = [];
+  private internalOptions: IDirectoryNumberOption[] = [];
+  private noneOption: IDirectoryNumberOption;
+
   /* @ngInject */
   constructor(
     private $translate: ng.translate.ITranslateService
-  ) {}
-
-  private $onInit(): void {
+  ) {
     this.inputPlaceholder = this.$translate.instant('directoryNumberPanel.searchNumber');
-    this.nonePlaceholder = this.$translate.instant('directoryNumberPanel.none');
     this.placeholder = this.$translate.instant('directoryNumberPanel.chooseNumber');
+    this.nonePlaceholder = this.$translate.instant('directoryNumberPanel.none');
+    this.noneOption = {
+      value: null,
+      label: this.nonePlaceholder,
+    };
+  }
+
+  private $onChanges(changes): void {
+    // populate internalOptions
+    if (changes.internalNumbers) {
+      if (changes.internalNumbers.currentValue && _.isArray(changes.internalNumbers.currentValue)) {
+        this.internalOptions = this.convertStringArrayToDirectoryNumberOptionsArray(changes.internalNumbers.currentValue);
+      }
+    }
+
+    // populate externalOptions
+    if (changes.externalNumbers) {
+      if (changes.externalNumbers.currentValue && _.isArray(changes.externalNumbers.currentValue)) {
+        this.externalOptions = this.convertStringArrayToDirectoryNumberOptionsArray(changes.externalNumbers.currentValue);
+        this.externalOptions.unshift(this.noneOption);
+      }
+    }
+
+    // add internalSelected as an IDirectoryNumberOption object to internalOptions
+    if (changes.internalSelected) {
+      if (changes.internalSelected.currentValue) {
+        this.internalSelected = this.setCurrentOption(changes.internalSelected.currentValue, this.internalOptions);
+      }
+    }
+
+    // add externalSelected as an IDirectoryNumberOption object to externalOptions
+    if (changes.externalSelected) {
+      if (changes.externalSelected.currentValue) {
+        this.externalSelected = this.setCurrentOption(changes.externalSelected.currentValue, this.externalOptions);
+      } else {
+        this.externalSelected = this.noneOption;
+      }
+    }
   }
 
   public get showExtensions(): boolean {
@@ -54,46 +95,61 @@ class DirectoryNumberCtrl {
     });
   }
 
+  private setCurrentOption(currentValue: string, existingOptions: IDirectoryNumberOption[]) {
+    let existingOption: IDirectoryNumberOption = _.find(existingOptions, { value: currentValue });
+    if (!existingOption) {
+      let currentExternalNumberOption: IDirectoryNumberOption = {
+        value: currentValue,
+        label: currentValue,
+      }
+      existingOptions.unshift(currentExternalNumberOption);
+      return currentExternalNumberOption;
+    } else {
+      return existingOption;
+    }
+  }
+
   private change(): void {
     this.onChangeFn({
-      internalNumber: this.internalSelected,
-      externalNumber: this.externalSelected,
+      internalNumber: this.internalSelected.value,
+      externalNumber: this.externalSelected.value,
     });
   }
 
   private setMatchingExternalNumber(): void {
     let matchingExternalNumber = _.find(this.externalOptions, (externalOption) => {
-      return _.endsWith(externalOption.pattern, this.internalSelected.pattern);
+      return _.endsWith(externalOption.value, this.internalSelected.value);
     });
     if (matchingExternalNumber) {
       this.externalSelected = matchingExternalNumber;
     }
   }
+
+  private convertStringArrayToDirectoryNumberOptionsArray(dirNumbers: string[]): IDirectoryNumberOption[] {
+    return _.map(dirNumbers, (dirNumber) => {
+      return {
+        value: dirNumber,
+        label: dirNumber,
+      };
+    });
+  }
+
 }
 
-class DirectoryNumberComponent implements ng.IComponentOptions {
-  public controller = DirectoryNumberCtrl;
+export class DirectoryNumberComponent implements ng.IComponentOptions {
+  public controller = DirectoryNumber;
   public templateUrl = 'modules/huron/directoryNumber/directoryNumber.html';
   public bindings: {[binding: string]: string} = {
     showInternalExtensions: '<',
     internalSelected: '<',
-    internalOptions: '<',
+    internalNumbers: '<',
     internalRefreshFn: '&',
     internalIsWarn: '<',
     internalWarnMsg: '<',
     esnPrefix: '<',
     externalSelected: '<',
-    externalOptions: '<',
+    externalNumbers: '<',
     externalRefreshFn: '&',
     onChangeFn: '&',
   };
 }
-
-export default angular
-  .module('huron.directory-number', [
-    'atlas.templates',
-    'cisco.ui',
-    'pascalprecht.translate',
-  ])
-  .component('ucDirectoryNumber', new DirectoryNumberComponent())
-  .name;

@@ -597,7 +597,9 @@
     "description": "An active user is defined as someone who has made or received a call using a device or has sent a message using the Cisco Spark app.  In this report you can compare the number of registered users to the number of active users in the selected customer(s) over the {{time}}.",
     "mostActiveDescription": "During the {{time}}, these are the most active users for the selected customer(s).",
     "customerPortalDescription": "An active user is defined as someone who has made or received a call using a device or has sent a message using the Cisco Spark app. In this report you can compare the total number of registered users to the number of active users over the {{time}}.",
-    "customerMostActiveDescription": "The table below displays the user activity for the top 500 most active users.  It can be sorted by the user name, total calls, or spark messages and searched based on the user name."
+    "customerMostActiveDescription": "During the last {{time}}, these are the most active users.  The table can be sorted by the user name, total calls, or spark messages and searched based on the user name.",
+    "noActiveUsers": "During the last {{time}}, there have been no active users.  To see user status and resend invitations to those still pending, visit the ",
+    "usersTab": "users tab."
   },
   "avgRooms": {
     "avgRooms": "Total Rooms",
@@ -1705,15 +1707,19 @@
         "title": "Clusters",
         "empty": "No clusters found.",
         "upgrade-schedule": "Upgrade Schedule",
+        "clusters": "Clusters",
         "release-channel": "Release Channel",
         "nodes": "{count, plural, one{# Node} other{# Nodes}}",
         "settings": "Settings",
         "all": "All",
         "add-resource": "Add Resource",
         "add-resource-group": "Create new resource group",
+        "add-clusters": "Add Clusters",
         "expressway": "Expressway",
         "mediafusion": "Media",
-        "no-services": "No services"
+        "no-services": "No services",
+        "complete-setup": "Complete Resource Group setup",
+        "empty-group-list": "This Resource Group is empty"
       },
       "add-resource": {
         "title": "Add Resource",
@@ -1794,7 +1800,9 @@
     },
     "assignClustersModal": {
       "title": "Assign Clusters to {{groupName}}",
-      "description": "Click on the clusters you want to move to/from this resource group."
+      "description": "Select the clusters you want to assign to the resource group.",
+      "assigned": "Cluster \"{{clusterName}}\" successfully assigned to \"{{groupName}}\"",
+      "removed": "Cluster \"{{clusterName}}\" successfully removed from \"{{groupName}}\""
     },
     "confirmChangeReleaseChannelModal": {
       "title": "Change Release Channel",
@@ -3532,6 +3540,7 @@
       "deregisterAllconfirmation": "I understand that all the nodes in this cluster will be deregistered automatically, and that the cluster will be deleted permanently. I also understand that I cannot undo this action.",
       "unabletomovenodes": "Failed to move/defuse {{nodes}} press cancel and try again",
       "clusterdeleteSuccess": "Successfully deleted {{clustername}}",
+      "clusterCreationFailed": "Failed to create new cluster: {{enteredCluster}}",
       "movedTo": "{{nodeName}} moved to: {{clusterName}}",
       "upgradeSchedule": "Upgrade Schedule",
       "everyDay": "Every Day in",

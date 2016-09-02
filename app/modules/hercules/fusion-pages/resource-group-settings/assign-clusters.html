@@ -4,12 +4,22 @@
   </button>
   <h3 class="modal-title" translate="hercules.assignClustersModal.title" translate-values="{ groupName: vm.resourceGroup.name }"></h3>
 </div>
-<div class="modal-body">
+<div class="modal-body hercules-fix-paragraphs">
   <p translate="hercules.assignClustersModal.description"></p>
+  <div class="cs-checkbox-group">
+    <input
+      cs-input
+      type="checkbox"
+      ng-model="vm.assignments[checkbox.id]"
+      id="{{checkbox.id}}"
+      name="{{checkbox.name}}"
+      cs-input-label="{{checkbox.label}}"
+      ng-repeat="checkbox in vm.clusterCheckboxes">
+  </div>
 </div>
 <div class="modal-footer">
   <button class="btn btn-default" ng-click="$dismiss()" translate="common.cancel"></button>
-  <button cs-btn class="btn btn-primary" ng-click="vm.saveClusterAssignments()" loading="vm.saving">
-    <span translate="common.done"></span>
+  <button cs-btn class="btn btn-primary" ng-click="vm.saveAssignments()">
+    <span translate="common.save"></span>
   </button>
 </div>

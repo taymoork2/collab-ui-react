@@ -14,7 +14,8 @@
       remove: remove,
       getAllowedChannels: getAllowedChannels,
       setName: setName,
-      setReleaseChannel: setReleaseChannel
+      setReleaseChannel: setReleaseChannel,
+      assign: assign
     };
 
     function get(resourceGroupId, orgId) {
@@ -71,6 +72,11 @@
         cache: true
       });
       return deferred.promise;
+    }
+
+    function assign(clusterId, resourceGroupId) {
+      return $http.patch(UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '/clusters/' + clusterId, { "resourceGroupId": resourceGroupId })
+        .then(extractDataFromResponse);
     }
 
     function extractDataFromResponse(res) {
