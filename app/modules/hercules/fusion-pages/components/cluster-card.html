@@ -1,0 +1,55 @@
+<cs-card class="cluster-card medium header-bar {{'card-' + $ctrl.cluster.targetType}}">
+  <article>
+    <header>
+      <h4>{{::$ctrl.cluster.name}}</h4>
+      <div class="cluster-list-hosts" tooltip-html-unsafe="{{$ctrl.getHostnames($ctrl.cluster)}}" tooltip-trigger="mouseenter" tooltip-placement="bottom">
+        <div translate="hercules.fusion.list.nodes" translate-values="{count: resourceList.countHosts(cluster)}" translate-interpolation="messageformat"></div>
+      </div>
+    </header>
+    <div class="row cluster-list-body">
+      <div class="columns medium-6">
+        <div>
+          <div class="cluster-list-cat" translate="hercules.fusion.list.upgrade-schedule"></div>
+          <div class="cluster-list-info" ng-if="$ctrl.cluster.upgradeSchedule">{{$ctrl.formatTimeAndDate($ctrl.cluster.upgradeSchedule)}}<br/>
+          <div class="cluster-list-timezone" title="{{$ctrl.cluster.upgradeSchedule.scheduleTimeZone}}">{{$ctrl.cluster.upgradeSchedule.scheduleTimeZone}}</div></div>
+          <div class="cluster-list-info" ng-if="!$ctrl.cluster.upgradeSchedule" translate="common.notSet"></div>
+        </div>
+        <div ng-if="$ctrl.cluster.targetType !== 'c_mgmt'">
+          <div class="cluster-list-cat" translate="hercules.fusion.list.release-channel"></div>
+          <div class="cluster-list-info">{{$ctrl.cluster.releaseChannel | uppercase}}</div>
+        </div>
+      </div>
+      <div class="columns medium-6 connection-status">
+        <div class="connection-status-column" ng-if="$ctrl.hasServices($ctrl.cluster)">
+          <div class="connection-status-eyecandy">
+            <div class="connection-status-icon connection-status-cloud-icon"></div>
+            <div class="connection-status-cable-vertical"></div>
+            <div class="connection-status-cable-horizontal"></div>
+            <div class=" connection-status-icon connection-status-premises-icon"></div>
+          </div>
+          <div class="connection-status-services">
+            <div class="connection-status-service" ng-repeat="service in $ctrl.cluster.servicesStatuses | filter: {serviceId: '!squared-fusion-mgmt'}" ng-if="service.total > 0">
+              <a ng-click="$ctrl.openService(service.serviceId, $ctrl.cluster.id)"><i class="icon icon-circle status-indicator" ng-class="{'success' : '{{service.state.label}}' === 'ok', 'warning': '{{service.state.label}}' === 'warning', 'danger': '{{service.state.label}}' === 'error'}"></i> <span>{{::'overview.cards.hybrid.services.' + service.serviceId | translate}}</span></a>
+            </div>
+          </div>
+        </div>
+        <div class="connection-status-column no-connectors" ng-if="!$ctrl.hasServices($ctrl.cluster)">
+          <div class="connection-status-eyecandy">
+            <div class="connection-status-icon connection-status-cloud-icon"></div>
+            <div class="connection-status-cable-vertical"></div>
+            <div class="connection-status-cable-horizontal"></div>
+            <div class=" connection-status-icon connection-status-premises-icon"></div>
+          </div>
+          <div class="connection-status-services">
+            <div class="connection-status-service">
+              <span translate="hercules.fusion.list.no-services"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <footer>
+      <a ng-click="$ctrl.openSettings($ctrl.cluster.targetType, $ctrl.cluster.id)" translate="hercules.fusion.list.settings"></a>
+    </footer>
+  </article>
+</cs-card>
