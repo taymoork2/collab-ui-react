@@ -48,7 +48,6 @@
     vm.addResource = addResource;
     vm.addResourceGroup = addResourceGroup;
 
-    // eslint-disable-next-line
     if (hasF237FeatureToggle) {
       loadResourceGroups();
     } else {
@@ -97,10 +96,7 @@
           return response;
         })
         .then(function (groups) {
-          // eslint-disable-next-line
-          // groupsCache = groups;
-          // vm.groupsCache = groups;
-          // TODO: displayedGroups
+          // TODO: update cache
           // TODO: updateFilters();
           vm.displayedGroups = groups;
         }, XhrNotificationService.notify)
