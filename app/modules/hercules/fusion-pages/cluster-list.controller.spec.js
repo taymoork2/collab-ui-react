@@ -24,7 +24,7 @@ describe('Controller: FusionClusterListController', function () {
   function initController(options) {
     var hasMediaFeatureToggle = _.get(options, 'hasMediaFeatureToggle', true);
     controller = $controller('FusionClusterListController', {
-      hasF237FeatureToggle: true,
+      hasF237FeatureToggle: false,
       hasF410FeatureToggle: true,
       hasMediaFeatureToggle: hasMediaFeatureToggle
     });
