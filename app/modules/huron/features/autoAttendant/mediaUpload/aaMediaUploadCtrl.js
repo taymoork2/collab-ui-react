@@ -5,18 +5,17 @@
     .controller('AAMediaUploadCtrl', AAMediaUploadCtrl);
 
   /* @ngInject */
-  function AAMediaUploadCtrl($scope, Upload, AANotificationService, AACommonService, AAUiModelService) {
-
+  function AAMediaUploadCtrl($scope, AANotificationService, AACommonService, AAMediaUploadService, AAUiModelService) {
     var vm = this;
 
     vm.uploadFile = '';
     vm.uploadDate = '';
-    vm.uploadUrl = 'https://angular-file-upload-cors-srv.appspot.com/upload';
     vm.WAIT = "WAIT";
     vm.DOWNLOAD = "DOWNLOAD";
     vm.UPLOADED = "UPLOADED";
     vm.state = vm.WAIT;
     vm.menuEntry = {};
+    vm.wavFile = '';
 
     var saveOn = 'uploadingInProgress';
     var actionName = 'play';
@@ -26,27 +25,19 @@
     //////////////////////////////////////////////////////
 
     function upload(file) {
-      if (file) {
-        if (validateFile(file.name)) {
+      if (angular.isDefined(file)) {
+        if (AAMediaUploadService.validateFile(file.name)) {
           AACommonService.setIsValid(saveOn, false);
           vm.state = vm.DOWNLOAD;
           vm.uploadFile = file.name;
           vm.uploadDate = moment().format("MM/DD/YYYY");
           vm.progress = 10;
-          Upload.upload({
-            url: vm.uploadUrl,
-            data: file,
-          }).then(uploadSuccess, uploadError, uploadProgress)
-          .finally(cleanUp);
+          AAMediaUploadService.upload(file)
+            .then(uploadSuccess, uploadError, uploadProgress)
+            .finally(cleanUp);
+        } else {
+          AANotificationService.error('fileUpload.errorFileType');
         }
-      }
-    }
-
-    function validateFile(fileName) {
-      if (_.endsWith(fileName, '.wav')) {
-        return true;
-      } else {
-        AANotificationService.error('fileUpload.errorFileType');
       }
     }
 
@@ -55,13 +46,13 @@
       AACommonService.setMediaUploadStatus(true);
     }
 
-    function uploadSuccess() {
+    function uploadSuccess(result) {
       var action = getPlayAction(vm.menuEntry);
       var fd = {};
       fd.uploadFile = vm.uploadFile;
       fd.uploadDate = vm.uploadDate;
       action.setDescription(JSON.stringify(fd));
-      action.setValue(vm.uploadUrl + '/' + vm.uploadFile);
+      action.setValue('http://' + result.data.PlaybackUri);
       vm.state = vm.UPLOADED;
     }
 
