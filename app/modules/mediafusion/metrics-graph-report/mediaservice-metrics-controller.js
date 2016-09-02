@@ -102,20 +102,22 @@
       }
     }
 
-    MediaClusterServiceV2.getAll()
-      .then(function (clusters) {
-        vm.clusters = _.filter(clusters, 'targetType', 'mf_mgmt');
-        _.each(clusters, function (cluster) {
-          if (cluster.targetType === "mf_mgmt") {
-            vm.clusterOptions.push(cluster.name);
-            vm.Map[cluster.name] = cluster.id;
+    function getCluster() {
+      MediaClusterServiceV2.getAll()
+        .then(function (clusters) {
+          vm.clusters = _.filter(clusters, 'targetType', 'mf_mgmt');
+          _.each(clusters, function (cluster) {
+            if (cluster.targetType === "mf_mgmt") {
+              vm.clusterOptions.push(cluster.name);
+              vm.Map[cluster.name] = cluster.id;
 
-          }
-        });
-        vm.clusterId = vm.clusterOptions[0];
-        vm.clusterSelected = vm.clusterOptions[0];
+            }
+          });
+          vm.clusterId = vm.clusterOptions[0];
+          vm.clusterSelected = vm.clusterOptions[0];
 
-      }, XhrNotificationService.notify);
+        }, XhrNotificationService.notify);
+    }
 
     function clusterUpdate() {
       displayDate();
@@ -139,6 +141,13 @@
       setDummyData();
       setAllGraphs();
     }
+
+    function loadDatas() {
+      getCluster();
+      clusterUpdate();
+    }
+
+    loadDatas();
 
     // Code for auto reload the rest calls every 5 minutes
     var interval = $interval(clusterUpdate, 300000);
