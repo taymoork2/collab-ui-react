@@ -192,8 +192,6 @@ describe('Controller: TrialPstnCtrl', function () {
       controller._getCarriers($scope);
       $scope.$apply();
       expect(controller.trialData.details.pstnProvider).toEqual(swivelCarrierDetails[0]);
-      expect(controller.showOrdering).toBe(false);
-
       expect(controller.showOrdering).toBeFalsy();
       expect(controller.invalidCount).toEqual(0);
       expect(controller.trialData.details.swivelNumbers).toHaveLength(0);
@@ -213,6 +211,48 @@ describe('Controller: TrialPstnCtrl', function () {
       expect(controller.trialData.details.swivelNumbers).toHaveLength(1);
       expect(controller.trialData.details.pstnNumberInfo.numbers).toHaveLength(0);
       expect(controller.disableNextButton()).toBeFalsy();
+
+    });
+
+    it('should disable next button when any invalid numbers', function () {
+
+      $scope.to = {};
+      $scope.to.options = [];
+
+      var swivelCarrierDetails = [{
+        "uuid": "4f5f5bf7-0034-4ade-8b1c-db63777f062c",
+        "name": "INTELEPEER-SWIVEL",
+        "apiExists": false,
+        "countryCode": "+1",
+        "country": "US",
+        "defaultOffer": true,
+        "vendor": "INTELEPEER",
+        "url": "https://terminus.huron-int.com/api/v1/customers/744d58c5-9205-47d6-b7de-a176e3ca431f/carriers/4f5f5bf7-0034-4ade-8b1c-db63777f062c"
+      }];
+      PstnSetupService.listResellerCarriers.and.returnValue($q.reject());
+      PstnSetupService.listDefaultCarriers.and.returnValue($q.when(swivelCarrierDetails));
+      controller._getCarriers($scope);
+      $scope.$apply();
+      expect(controller.trialData.details.pstnProvider).toEqual(swivelCarrierDetails[0]);
+      expect(controller.showOrdering).toBeFalsy();
+      expect(controller.invalidCount).toEqual(0);
+      expect(controller.trialData.details.swivelNumbers).toHaveLength(0);
+      expect(controller.trialData.details.pstnNumberInfo.numbers).toHaveLength(0);
+      expect(controller.disableNextButton()).toBeTruthy();
+
+      // add a number
+      controller.manualTokenMethods.createdtoken({
+        attrs: {
+          value: 'abc1234'
+        },
+        relatedTarget: '<div></div>'
+      });
+      $scope.$apply();
+
+      expect(controller.invalidCount).toEqual(1);
+      expect(controller.trialData.details.swivelNumbers).toHaveLength(1);
+      expect(controller.trialData.details.pstnNumberInfo.numbers).toHaveLength(0);
+      expect(controller.disableNextButton()).toBeTruthy();
 
     });
 

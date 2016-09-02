@@ -207,7 +207,8 @@
               vm.areaCodeOptions.push(areaCode);
             }
           });
-        }).catch(function (response) {
+        })
+        .catch(function (response) {
           Notification.errorResponse(response, 'trialModal.pstn.error.areaCodes');
         });
     }
@@ -226,7 +227,8 @@
             vm.trialData.details.pstnNumberInfo.numbers.push(numberRanges[0][index]);
           }
           $('#didAddField').tokenfield('setTokens', vm.trialData.details.pstnNumberInfo.numbers.toString());
-        }).catch(function (response) {
+        })
+        .catch(function (response) {
           Notification.errorResponse(response, 'trialModal.pstn.error.numbers');
         });
     }
@@ -331,14 +333,18 @@
     }
 
     function disableNextButton() {
-      if (!vm.showOrdering) {
-        return _.size(vm.trialData.details.swivelNumbers) === 0;
+      if (!checkForInvalidTokens()) {
+        // there are invalid tokens
+        return true;
+      } else if (!vm.showOrdering && _.size(vm.trialData.details.swivelNumbers) === 0) {
+        // no swivel numbers entered
+        return true;
+      } else if (vm.showOrdering && _.size(vm.trialData.details.pstnNumberInfo.numbers) === 0) {
+        // no PSTN numbers
+        return true;
       } else {
-        if (!checkForInvalidTokens() || _.size(vm.trialData.details.pstnNumberInfo.numbers) === 0) {
-          return true;
-        } else {
-          return false;
-        }
+        // have some valid numbers
+        return false;
       }
     }
 
