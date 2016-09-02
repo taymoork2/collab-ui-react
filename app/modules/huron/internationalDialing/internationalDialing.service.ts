@@ -1,4 +1,9 @@
-import { IOption } from './internationalDialing';
+export const INT_DIAL_CHANGE = 'INT_DIAL_CHANGE';
+
+export interface IOption {
+  label: string;
+  value: string;
+}
 
 export class InternationalDialingService {
   public cbUseGlobal: IOption;
@@ -28,7 +33,3 @@ export class InternationalDialingService {
     this.internationalDialing = item;
   }
 }
-
-angular
-  .module('Squared')
-  .service('InternationalDialingService', InternationalDialingService);

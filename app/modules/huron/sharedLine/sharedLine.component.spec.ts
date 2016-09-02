@@ -1,9 +1,5 @@
-import sharedLineModule from './sharedLine.component';
-import {
-  SharedLineUser,
-  User,
-  SharedLineDevice,
-} from './sharedLine';
+import sharedLineModule from './index';
+import { SharedLineUser, User, SharedLineDevice } from './index';
 
 
 describe('Component: sharedLine', () => {

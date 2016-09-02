@@ -1,32 +1,29 @@
 import { IDirectoryNumber } from '../../../huron/overview/directoryNumberList.component';
-import { INT_DIAL_CHANGE } from '../../../huron/internationalDialing/internationalDialing';
+import { INT_DIAL_CHANGE } from '../../../huron/internationalDialing';
 import { InternationalDialingService } from '../../../huron/internationalDialing/internationalDialing.service';
+import { LineService, LineConsumerType, Number } from '../../../huron/lines/services';
 import { ActionItem } from '../../../core/components/sectionTitle/sectionTitle.component';
 import { IFeature } from '../../../core/components/featureList/featureList.component';
 
-class PlaceCallOverviewCtrl {
+class PlaceCallOverview {
 
-  private _currentPlace;
-  private actionList: ActionItem[];
-
-  public directoryNumbers: IDirectoryNumber[] = [];
-
+  public currentPlace;
+  public actionList: ActionItem[];
   public features: IFeature[];
 
-  get currentPlace() {
-    return this._currentPlace;
-  }
+  public directoryNumbers: Number[];
 
   /* @ngInject */
   constructor(
     private $scope: ng.IScope,
     private $state: ng.ui.IStateService,
-    private $stateParams,
+    private $stateParams: any,
     private $translate: ng.translate.ITranslateService,
+    private LineService: LineService,
     private InternationalDialingService: InternationalDialingService
   ) {
-    this._currentPlace = $stateParams.currentPlace;
-    this.directoryNumbers = this._currentPlace.numbers;
+    this.currentPlace = $stateParams.currentPlace;
+    this.directoryNumbers = this.currentPlace.numbers;
     $scope.$on(INT_DIAL_CHANGE, (data) => {
       this.initFeatures();
     });
@@ -61,14 +58,13 @@ class PlaceCallOverviewCtrl {
   public featureActions(feature) {
     if (feature === 'international') {
       this.$state.go('place-overview.communication.internationalDialing', {
-        currentPlace: this._currentPlace
+        currentPlace: this.currentPlace
       });
     }
   }
 }
-angular
-  .module('Squared')
-  .component('placeCallOverview', {
-    templateUrl: 'modules/squared/places/callOverview/placeCallOverview.tpl.html',
-    controller: PlaceCallOverviewCtrl
-  });
+
+export class PlaceCallOverviewComponent {
+  public controller = PlaceCallOverview;
+  public templateUrl = 'modules/squared/places/callOverview/placeCallOverview.html';
+}
