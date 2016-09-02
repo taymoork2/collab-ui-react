@@ -123,6 +123,10 @@
       });
     }
 
+    function deleteDevice(deviceUrl) {
+      return $http.delete(deviceUrl);
+    }
+
     function getLinesForDevice(huronDevice) {
       return $http.get(getDirectoryNumbersUrl(huronDevice.cisUuid))
         .then(function (res) {
@@ -190,6 +194,7 @@
     return {
       dataLoaded: dataLoaded,
       getDeviceList: getDeviceList,
+      deleteDevice: deleteDevice,
       getLinesForDevice: getLinesForDevice,
       getTimezoneForDevice: getTimezoneForDevice,
       setTimezoneForDevice: setTimezoneForDevice,
