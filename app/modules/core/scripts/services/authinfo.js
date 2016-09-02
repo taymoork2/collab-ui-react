@@ -162,7 +162,7 @@
               }
 
               switch (license.licenseType) {
-                case Config.licenseType.CONFERENCING:
+                case Config.licenseTypes.CONFERENCING:
                   if ((this.isCustomerAdmin() || this.isReadOnlyAdmin()) && license.siteUrl && !_.includes(authData.roles, 'Site_Admin')) {
                     authData.roles.push('Site_Admin');
                   }
@@ -174,19 +174,19 @@
                   }
                   confLicenses.push(service);
                   break;
-                case Config.licenseType.MESSAGING:
+                case Config.licenseTypes.MESSAGING:
                   service = new ServiceFeature($translate.instant('onboardModal.paidMsg'), x + 1, 'msgRadio', license);
                   msgLicenses.push(service);
                   break;
-                case Config.licenseType.COMMUNICATION:
+                case Config.licenseTypes.COMMUNICATION:
                   service = new ServiceFeature($translate.instant('onboardModal.paidComm'), x + 1, 'commRadio', license);
                   commLicenses.push(service);
                   break;
-                case Config.licenseType.CARE:
+                case Config.licenseTypes.CARE:
                   service = new ServiceFeature($translate.instant('onboardModal.paidCare'), x + 1, 'careRadio', license);
                   careLicenses.push(service);
                   break;
-                case Config.licenseType.CMR:
+                case Config.licenseTypes.CMR:
                   service = new ServiceFeature($translate.instant('onboardModal.cmr'), x + 1, 'cmrRadio', license);
                   cmrLicenses.push(service);
               }
