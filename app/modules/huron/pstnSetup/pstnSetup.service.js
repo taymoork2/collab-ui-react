@@ -19,6 +19,7 @@
     var INTELEPEER = "INTELEPEER";
     var TATA = "TATA";
     var TELSTRA = "TELSTRA";
+    var WESTUC = 'WESTUC';
     //e911 order operations
     var UPDATE = 'UPDATE';
     var DELETE = 'DELETE';
@@ -79,6 +80,7 @@
       INTELEPEER: INTELEPEER,
       TATA: TATA,
       TELSTRA: TELSTRA,
+      WESTUC: WESTUC,
       PSTN: PSTN,
       PENDING: PENDING,
       QUEUED: QUEUED,
