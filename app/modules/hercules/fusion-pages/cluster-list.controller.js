@@ -6,7 +6,7 @@
     .controller('FusionClusterListController', FusionClusterListController);
 
   /* @ngInject */
-  function FusionClusterListController($filter, $state, $translate, hasF410FeatureToggle, hasMediaFeatureToggle, FusionClusterService, XhrNotificationService, WizardFactory) {
+  function FusionClusterListController($filter, $modal, $state, $translate, hasF237FeatureToggle, hasF410FeatureToggle, hasMediaFeatureToggle, FusionClusterService, XhrNotificationService, WizardFactory) {
     if (!hasF410FeatureToggle) {
       // simulate a 404
       $state.go('login');
@@ -14,88 +14,95 @@
 
     var vm = this;
     var clustersCache = [];
+    // var groupsCache = {};
 
     vm.loading = true;
     vm.backState = 'services-overview';
     vm.displayedClusters = [];
+    vm.displayedGroups = {
+      groups: [],
+      unassigned: []
+    };
     vm.placeholder = {
       name: $translate.instant('hercules.fusion.list.all'),
       filterValue: 'all',
       count: 0
     };
+    vm.showResourceGroups = hasF237FeatureToggle;
 
+    vm.filters = [{
+      name: $translate.instant('hercules.fusion.list.expressway'),
+      filterValue: 'expressway',
+      count: 0
+    }];
     if (hasMediaFeatureToggle) {
-      vm.filters = [{
-        name: $translate.instant('hercules.fusion.list.expressway'),
-        filterValue: 'expressway',
-        count: 0
-      }, {
+      vm.filters.push({
         name: $translate.instant('hercules.fusion.list.mediafusion'),
         filterValue: 'mediafusion',
         count: 0
-      }];
-    } else {
-      vm.filters = [{
-        name: $translate.instant('hercules.fusion.list.expressway'),
-        filterValue: 'expressway',
-        count: 0
-      }];
+      });
     }
-    vm.countHosts = countHosts;
-    vm.getHostnames = getHostnames;
+
     vm.setFilter = setFilter;
     vm.searchData = searchData;
-    vm.openService = openService;
-    vm.openSettings = openSettings;
     vm.addResource = addResource;
-    vm._helpers = {
-      formatTimeAndDate: FusionClusterService.formatTimeAndDate,
-      hasServices: hasServices
-    };
+    vm.addResourceGroup = addResourceGroup;
 
-    loadClusters();
+    if (hasF237FeatureToggle) {
+      loadResourceGroups();
+    } else {
+      loadClusters();
+    }
 
     function loadClusters() {
-      if (hasMediaFeatureToggle) {
-        FusionClusterService.getAll()
-          .then(function (clusters) {
-            clustersCache = clusters;
-            updateFilters();
-            vm.displayedClusters = clusters;
-          }, XhrNotificationService.notify)
-          .finally(function () {
-            vm.loading = false;
-          });
-      } else {
-        FusionClusterService.getAllNonMediaClusters()
-          .then(function (clusters) {
-            clustersCache = clusters;
-            updateFilters();
-            vm.displayedClusters = clusters;
-          }, XhrNotificationService.notify)
-          .finally(function () {
-            vm.loading = false;
-          });
-      }
-
+      FusionClusterService.getAll()
+        .then(function removeHybridMediaClustersIfNecessary(clusters) {
+          if (!hasMediaFeatureToggle) {
+            return _.filter(clusters, function (cluster) {
+              return cluster.targetType !== 'mf_mgmt';
+            });
+          }
+          return clusters;
+        })
+        .then(function (clusters) {
+          clustersCache = clusters;
+          updateFilters();
+          vm.displayedClusters = clusters;
+        }, XhrNotificationService.notify)
+        .finally(function () {
+          vm.loading = false;
+        });
     }
 
-    function countHosts(cluster) {
-      return _.chain(cluster.connectors)
-        .map('hostname')
-        .uniq()
-        .size()
-        .value();
-    }
-
-    function getHostnames(cluster) {
-      return _.chain(cluster.connectors)
-        .map('hostname')
-        .uniq()
-        .sort()
-        .map(_.escape)
-        .join('<br />')
-        .value();
+    function loadResourceGroups() {
+      FusionClusterService.getResourceGroups()
+        .then(function removeHybridMediaClustersIfNecessary(response) {
+          if (!hasMediaFeatureToggle) {
+            var filterHMClusters = function (clusters) {
+              _.filter(clusters, function (cluster) {
+                return cluster.targetType !== 'mf_mgmt';
+              });
+            };
+            return {
+              // Hybrid Media should never be part of any resource group as of now
+              // but we never know…
+              groups: _.map(response.groups, function (group) {
+                group.clusters = filterHMClusters(group.clusters);
+                return group;
+              }),
+              unassigned: filterHMClusters(response.unassigned)
+            };
+          }
+          return response;
+        })
+        .then(function (groups) {
+          // TODO: update cache
+          // TODO: updateFilters();
+          vm.displayedGroups = groups;
+        }, XhrNotificationService.notify)
+        .finally(function () {
+          vm.loading = false;
+        });
     }
 
     function updateFilters() {
@@ -127,38 +134,6 @@
           name: searchStr
         });
       }
-    }
-
-    function openService(serviceId, clusterId) {
-      if (serviceId === 'squared-fusion-uc') {
-        $state.go('call-service.list', {
-          'clusterId': clusterId
-        });
-      } else if (serviceId === 'squared-fusion-cal') {
-        $state.go('calendar-service.list', {
-          'clusterId': clusterId
-        });
-      } else if (serviceId === 'squared-fusion-media') {
-        $state.go('media-service-v2.list');
-      }
-    }
-
-    function openSettings(type, id) {
-      if (type === 'c_mgmt') {
-        $state.go('expressway-settings', {
-          id: id
-        });
-      } else if (type === 'mf_mgmt') {
-        $state.go('mediafusion-settings', {
-          id: id
-        });
-      }
-    }
-
-    function hasServices(cluster) {
-      return cluster.servicesStatuses.some(function (serviceStatus) {
-        return serviceStatus.serviceId !== 'squared-fusion-mgmt' && serviceStatus.total > 0;
-      });
     }
 
     function addResource() {
@@ -201,6 +176,15 @@
       var wizard = WizardFactory.create(initialState);
       $state.go(initialState.currentStateName, {
         wizard: wizard
+      });
+    }
+
+    function addResourceGroup() {
+      $modal.open({
+        type: 'modal',
+        controller: 'AddResourceGroupController',
+        controllerAs: 'vm',
+        templateUrl: 'modules/hercules/fusion-pages/add-resource-group/add-resource-group.html'
       });
     }
   }

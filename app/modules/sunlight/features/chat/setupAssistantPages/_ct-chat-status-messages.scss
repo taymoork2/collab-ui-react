@@ -13,6 +13,7 @@
     @include vr-spacing(ml, 3);
     width: 100%;
     height: rem-calc(40px);
+    width: 30rem;
   }
   .margin-0 {
     @include vr-spacing(m, 0);

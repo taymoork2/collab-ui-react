@@ -1,0 +1,19 @@
+function tr_user_id_to_mention_by_email {
+    local user_id="$1"
+    local display_name="${2:-"${user_id}"}"
+    local email="${user_id}@cisco.com"
+    printf "<@personEmail:%s|%s>\n" "$email" "$display_name"
+}
+
+function tr_result_line_to_md_list_item {
+    while read line; do
+        # start from index 1 (vs. 0)
+        run_num="$(echo "$line" | cut -d'|' -f1 | cut -d':' -f1 | cut -d'-' -f2 | xargs echo)"
+        run_num="$(( run_num + 1 ))"
+        spec_file="$(echo "$line" | cut -d'|' -f3 | xargs echo)"
+        spec_file="${spec_file:-"(N/A)"}"
+        url="$(echo "$line" | awk -F'|' '{print $4;}' | xargs echo)"
+        url="${url:-"(N/A)"}"
+        printf -- "- [%s (%s)](%s)\n" "$spec_file" "$run_num" "$url"
+    done
+}

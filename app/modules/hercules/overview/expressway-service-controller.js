@@ -6,11 +6,11 @@
     .controller('ExpresswayServiceController', ExpresswayServiceController);
 
   /* @ngInject */
-  function ExpresswayServiceController($state, $modal, $scope, $translate, XhrNotificationService, ServiceStateChecker, ServiceDescriptor, ClusterService, USSService2, FusionUtils, FeatureToggleService, $stateParams) {
+  function ExpresswayServiceController($state, $modal, $scope, $translate, XhrNotificationService, ServiceStateChecker, ServiceDescriptor, ClusterService, USSService, FusionUtils, FeatureToggleService, $stateParams) {
     ClusterService.subscribe('data', clustersUpdated, {
       scope: $scope
     });
-    USSService2.subscribeStatusesSummary('data', extractSummaryForAService, {
+    USSService.subscribeStatusesSummary('data', extractSummaryForAService, {
       scope: $scope
     });
 
@@ -94,7 +94,7 @@
     }
 
     function extractSummaryForAService() {
-      vm.userStatusSummary = USSService2.extractSummaryForAService(vm.servicesId);
+      vm.userStatusSummary = USSService.extractSummaryForAService(vm.servicesId);
     }
 
     function openUserStatusReportModal() {

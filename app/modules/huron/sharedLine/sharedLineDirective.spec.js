@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Directive: ucSharedline', function () {
+describe('Directive: ucSharedlineOld', function () {
   var $compile, $rootScope;
 
   beforeEach(angular.mock.module('Huron'));
@@ -11,7 +11,7 @@ describe('Directive: ucSharedline', function () {
   }));
 
   it('replaces the element with the appropriate content', function () {
-    var element = $compile("<uc-shared-line/>")($rootScope);
+    var element = $compile("<uc-shared-line-old/>")($rootScope);
     $rootScope.$digest();
 
     expect(element.html()).toContain("form-group");

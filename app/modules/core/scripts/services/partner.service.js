@@ -53,6 +53,7 @@
       parseLicensesAndOffers: parseLicensesAndOffers,
       getFreeOrActiveServices: getFreeOrActiveServices,
       getSiteUrls: getSiteUrls,
+      isLicenseTypeAny: isLicenseTypeAny,
       helpers: helpers
     };
 
@@ -246,6 +247,10 @@
       });
     }
 
+    function getLicenseObj(rowData, licenseTypeField) {
+      return rowData[licenseTypeField] || null;
+    }
+
     // Series of fns dont make any sense, unless isTrial = null means something...
     function isLicenseATrial(license) {
       return license && license.isTrial === true;
@@ -256,7 +261,7 @@
     }
 
     function isLicenseFree(license) {
-      return angular.isUndefined(license.isTrial);
+      return license && angular.isUndefined(license.isTrial);
     }
     // end series of fn's
 
@@ -264,8 +269,17 @@
       if (!isLicenseInfoAvailable(customerData.licenseList)) {
         return false;
       }
-      var licenseObj = customerData[licenseTypeField] || null;
-      return isLicenseATrial(licenseObj) || isLicenseActive(licenseObj);
+      if (licenseTypeField === 'webex') {
+        // if given generic "webex" check all possibilities
+        return _.some(Config.webexTypes, function (webexType) {
+          var licenseObj = getLicenseObj(customerData, webexType);
+          return isLicenseATrial(licenseObj) || isLicenseActive(licenseObj);
+        });
+      } else {
+        var licenseObj = getLicenseObj(customerData, licenseTypeField);
+        var isFreeLicense = isLicenseFree(licenseObj) && _.includes(Config.freeLicenses, licenseTypeField);
+        return isLicenseATrial(licenseObj) || isLicenseActive(licenseObj) || isFreeLicense;
+      }
     }
 
     function getLicense(licenses, offerCode) {

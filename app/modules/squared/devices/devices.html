@@ -6,7 +6,7 @@
       </cs-searchfilter>
     </cs-page-sub-header-left>
     <cs-page-sub-header-right>
-      <button class="btn btn--people add-button" ng-if="sc.isEntitledToRoomSystem()" ng-click="sc.startAddDeviceFlow()">
+      <button class="btn btn--people add-button" ng-click="sc.startAddDeviceFlow()">
         <span translate="spacesPage.addBtn"></span>
       </button>
     </cs-page-sub-header-right>
@@ -51,7 +51,7 @@
           <i class="icon icon-circle-telepresence" />
           <span class="h5" translate="spacesPage.nothingHere"></span>
           <span class="h1" translate="spacesPage.noDevices"></span>
-          <button class="btn btn--people btn--large add-button" ng-click="sc.startAddDeviceFlow()" ng-show="sc.isEntitledToRoomSystem()">
+          <button class="btn btn--people btn--large add-button" ng-click="sc.startAddDeviceFlow()">
             <span translate="spacesPage.addBtn"></span>
           </button>
         </div>
