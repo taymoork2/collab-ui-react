@@ -23,20 +23,15 @@
     padding-right: 1.5rem;
     padding-top: 1rem;
     padding-bottom: 1rem;
-
     margin-top: 1rem;
     margin-left: -1rem;
-
     display: block;
     min-height: 85vh;
-
     width: 100%;
     width: calc(100% + 2rem);
-
     .cluster-list.header-bar header:after {
       border-top-color: transparent !important;
     }
-
     h5 {
       margin-bottom: 0;
       margin-left: 0.5rem;
