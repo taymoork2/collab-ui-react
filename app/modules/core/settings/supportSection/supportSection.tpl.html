@@ -1,6 +1,6 @@
 <!-- support title / description -->
 
-<div class="sub-section">
+<div class="sub-section small-12 columns">
   <h5 class="sub-section__label" translate="partnerProfile.supportTitle"></h5>
   <p ng-if="!ctrl.isPartner" class="sub-section__description" translate="customerProfile.supportInfo"
      translate-values="{app : ctrl.appType}"></p>
@@ -9,7 +9,7 @@
 </div>
 
 <!-- trouble ticket reporting location form -->
-<div class="cs-radio-group" id="troubleReportingPanel">
+<div class="cs-radio-group small-12 columns" id="troubleReportingPanel">
   <h5 translate="partnerProfile.supportSetup"></h5>
   <!-- partner problem reporting site form -->
   <input type="checkbox" id="customSupportUrlBox" ng-model="ctrl.useCustomSupportUrl">
@@ -24,14 +24,14 @@
                 </textarea>
     <h6 translate="partnerProfile.matchingTix"></h6>
     <p class="body-small form-section" translate="partnerProfile.matchingDescr"></p>
-    <button cs-btn class="btn btn--primary" ng-if="ctrl.useCustomSupportUrlDirty"
+    <button cs-btn class="btn btn--primary" ng-if="ctrl.showCustomSupportUrlSaveButton"
             ng-click="ctrl.saveUseCustomSupportUrl()"
             loading="ctrl.savingProgress">{{"common.save" | translate}}
     </button>
   </div>
 </div>
 
-<div class="cs-radio-group" id="helpPanel">
+<div class="cs-radio-group small-12 columns" id="helpPanel">
   <h5 translate="partnerProfile.helpFaq"></h5>
   <div class="cs-input-group cs-input-radio" id="helpCiscoPanel">
     <input type="checkbox" id="customHelpSite" ng-model="ctrl.useCustomHelpSite">
@@ -45,7 +45,7 @@
            ng-disabled="!ctrl.useCustomHelpSite">
 
   </div>
-  <button cs-btn class="btn btn--primary" ng-if="ctrl.useCustomHelpSiteDirty" ng-click="ctrl.saveUseCustomHelpSite()"
+  <button cs-btn class="btn btn--primary" ng-if="ctrl.showCustomHelpSiteSaveButton" ng-click="ctrl.saveUseCustomHelpSite()"
           loading="ctrl.savingProgress">{{"common.save" | translate}}
   </button>
 </div>

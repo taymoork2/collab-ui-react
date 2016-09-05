@@ -6,7 +6,7 @@
 
     var cmiPlacesUrl = HuronConfig.getCmiV2Url() + '/customers/' + Authinfo.getOrgId() + '/places';
     var placesCache = {};
-    var loadedData = false;
+    var placesDeferred = $q.defer();
 
     function init() {
       fetchCmiPlaces();
@@ -25,19 +25,20 @@
                   item = CsdmConverter.convertPlace(item);
                   placesCache[item.url] = item;
                 });
-                loadedData = true;
               });
           } else {
-            loadedData = true;
             throw new Error('feature not enabled');
           }
+        })
+        .finally(function () {
+          placesDeferred.resolve(placesCache);
         });
     }
 
     init();
 
     function getPlacesList() {
-      return placesCache;
+      return placesDeferred.promise;
     }
 
     function placesFeatureIsEnabled() {
@@ -85,16 +86,11 @@
       });
     }
 
-    function dataLoaded() {
-      return loadedData;
-    }
-
     return {
       placesFeatureIsEnabled: placesFeatureIsEnabled,
       deletePlace: deletePlace,
       createCmiPlace: createCmiPlace,
       getPlacesList: getPlacesList,
-      dataLoaded: dataLoaded,
       updatePlaceName: updatePlaceName
     };
   }

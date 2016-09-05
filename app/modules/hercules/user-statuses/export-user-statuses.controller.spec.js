@@ -4,7 +4,7 @@ describe('ExportUserStatusesController', function () {
   beforeEach(angular.mock.module('Core'));
   beforeEach(angular.mock.module('Hercules'));
 
-  var vm, Authinfo, scope, $httpBackend, $q, $rootScope, UserDetails, USSService2, ClusterService, ExcelService;
+  var vm, Authinfo, scope, $httpBackend, $q, $rootScope, UserDetails, USSService, ClusterService, ExcelService;
 
   beforeEach(function () {
     angular.mock.module(function ($provide) {
@@ -47,7 +47,7 @@ describe('ExportUserStatusesController', function () {
       notEntitled: 0
     }];
 
-    USSService2 = {
+    USSService = {
       getStatuses: function () {
         return $q.when({
           // 51 to be over numberOfUsersPrCiRequest (which should be 50)
@@ -67,7 +67,7 @@ describe('ExportUserStatusesController', function () {
         });
       }
     };
-    sinon.spy(USSService2, 'getStatuses');
+    sinon.spy(USSService, 'getStatuses');
 
     ClusterService = {
       getConnector: function (id) {
@@ -103,7 +103,7 @@ describe('ExportUserStatusesController', function () {
       servicesId: ['squared-fusion-cal'],
       userStatusSummary: userStatusSummary,
       Authinfo: Authinfo,
-      USSService2: USSService2,
+      USSService: USSService,
       UserDetails: UserDetails,
       ExcelService: ExcelService,
       ClusterService: ClusterService
@@ -128,10 +128,10 @@ describe('ExportUserStatusesController', function () {
   });
 
   describe('exportCSV', function () {
-    it('should call USSService2.getStatuses', function () {
+    it('should call USSService.getStatuses', function () {
       vm.exportCSV();
       $rootScope.$apply();
-      expect(USSService2.getStatuses.called).toBe(true);
+      expect(USSService.getStatuses.called).toBe(true);
     });
     it('should call ClusterService.getConnector if there at least one connectorId', function () {
       vm.exportCSV();

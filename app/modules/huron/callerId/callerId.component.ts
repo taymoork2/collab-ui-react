@@ -1,11 +1,11 @@
-class CallerIdCtrl {
+class CallerId {
   private onChangeFn: Function;
   private customCallerIdName: string;
   private customCallerIdNumber: string;
   private callerIdSelected: {label: string, value: Object};
 
   private $onInit(): void {
-    
+
   }
 
   public onChange(): void {
@@ -21,9 +21,9 @@ class CallerIdCtrl {
   }
 }
 
-class CallerIdComponnent implements ng.IComponentOptions {
-  public controller = CallerIdCtrl;
-  public templateUrl = 'modules/huron/callerId/callerId.tpl.html';
+export class CallerIdComponent implements ng.IComponentOptions {
+  public controller = CallerId;
+  public templateUrl = 'modules/huron/callerId/callerId.html';
   public bindings: {[binding: string]: string} = {
     callerIdOptions: '<',
     callerIdSelected: '<',
@@ -32,12 +32,3 @@ class CallerIdComponnent implements ng.IComponentOptions {
     onChangeFn: '&'
   }
 }
-
-export default angular
-  .module('huron.caller-id', [
-    'atlas.templates',
-    'cisco.ui',
-    'pascalprecht.translate'
-  ])
-  .component('callerId', new CallerIdComponnent())
-  .name;

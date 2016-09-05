@@ -6,7 +6,7 @@
     .controller('HelpdeskUserController', HelpdeskUserController);
 
   /* @ngInject */
-  function HelpdeskUserController($stateParams, HelpdeskService, XhrNotificationService, USSService2, HelpdeskCardsUserService, Config, LicenseService, HelpdeskHuronService, HelpdeskLogService, Authinfo, $window, $modal, WindowLocation, FeatureToggleService) {
+  function HelpdeskUserController($stateParams, HelpdeskService, XhrNotificationService, USSService, HelpdeskCardsUserService, Config, LicenseService, HelpdeskHuronService, HelpdeskLogService, Authinfo, $window, $modal, WindowLocation, FeatureToggleService) {
     $('body').css('background', 'white');
     var vm = this;
     if ($stateParams.user) {
@@ -103,7 +103,7 @@
       if (vm.hybridServicesCard.entitled) {
         HelpdeskService.getHybridStatusesForUser(vm.userId, vm.orgId).then(function (statuses) {
           _.each(statuses, function (status) {
-            status.collapsedState = USSService2.decorateWithStatus(status);
+            status.collapsedState = USSService.decorateWithStatus(status);
             switch (status.serviceId) {
               case 'squared-fusion-cal':
                 vm.hybridServicesCard.cal.status = status;

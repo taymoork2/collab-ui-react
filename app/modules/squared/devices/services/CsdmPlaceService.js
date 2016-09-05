@@ -6,7 +6,7 @@
 
     var csdmPlacesUrl = CsdmConfigService.getUrl() + '/organization/' + Authinfo.getOrgId() + '/places';
     var placesCache = {};
-    var loadedData = false;
+    var placesDeferred = $q.defer();
 
     function init() {
       fetchCsdmPlaces();
@@ -19,19 +19,20 @@
             return $http.get(csdmPlacesUrl)
               .then(function (res) {
                 placesCache = CsdmConverter.convertPlaces(res.data);
-                loadedData = true;
               });
           } else {
-            loadedData = true;
             throw new Error('feature not enabled');
           }
+        })
+        .finally(function () {
+          placesDeferred.resolve(placesCache);
         });
     }
 
     init();
 
     function getPlacesList() {
-      return placesCache;
+      return placesDeferred.promise;
     }
 
     function placesFeatureIsEnabled() {
@@ -69,16 +70,11 @@
       });
     }
 
-    function dataLoaded() {
-      return loadedData;
-    }
-
     return {
       placesFeatureIsEnabled: placesFeatureIsEnabled,
       deletePlace: deletePlace,
       createCsdmPlace: createCsdmPlace,
       getPlacesList: getPlacesList,
-      dataLoaded: dataLoaded,
       updatePlaceName: updatePlaceName
     };
   }

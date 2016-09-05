@@ -1,0 +1,31 @@
+<h4 translate="callerIdPanel.title"></h4>
+<cs-select
+  name="callerIdSelection"
+  ng-model="$ctrl.callerIdSelected"
+  options="$ctrl.callerIdOptions"
+  on-change-fn="$ctrl.onChange()">
+</cs-select>
+<div ng-if="$ctrl.showCustom()">
+  <div class="row">
+    <input
+      name="callerIdName"
+      class="form-control"
+      type="text"
+      ng-model="$ctrl.customCallerIdName"
+      cs-input cs-input-label="{{'callerIdPanel.customName' | translate}}"
+      ng-change="$ctrl.onChange()">
+  </div>
+  <div class="row">
+    <input
+      name="callerIdNumber"
+      class="form-control"
+      type="text"
+      ng-model="$ctrl.customCallerIdNumber"
+      cs-input cs-input-label="{{'callerIdPanel.customNumber' | translate}}"
+      ng-change="$ctrl.onChange()">
+  </div>
+</div>
+<div class="caller-id-description">
+  <p>{{$ctrl.callerIdSelected.value.name}}</p>
+  <p>{{$ctrl.callerIdSelected.value.pattern}}</p>
+</div>
