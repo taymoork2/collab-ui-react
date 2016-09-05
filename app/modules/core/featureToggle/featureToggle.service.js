@@ -58,7 +58,6 @@
       deleteContent: 'delete-content',
       disableCacheForFeatures: 'disableCacheForFeatures',
       enforceSparkContentEncryption: 'enforce-spark-content-encryption',
-      extensionLength: 'huron-extension-length',
       featureToggleRules: 'feature-toggle-rules',
       feedbackViaEmail: 'feedback-via-email',
       filterBadges: 'filter-badges',

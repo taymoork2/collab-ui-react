@@ -6,7 +6,7 @@
     .controller('AADialByExtCtrl', AADialByExtCtrl);
 
   /* @ngInject */
-  function AADialByExtCtrl($scope, $translate, AAUiModelService, AutoAttendantCeMenuModelService, AACommonService, AALanguageService, FeatureToggleService) {
+  function AADialByExtCtrl($scope, $translate, AAUiModelService, AutoAttendantCeMenuModelService, AACommonService, AALanguageService) {
     var vm = this;
 
     var runActionName = 'runActionsOnInput';
@@ -95,17 +95,8 @@
     }
 
     function setActionMinMax(action) {
-
-      FeatureToggleService.supports(FeatureToggleService.features.extensionLength).then(function (result) {
-
-        if (result) {
-          action.minNumberOfCharacters = 0;
-          action.maxNumberOfCharacters = 0;
-        } else {
-          action.minNumberOfCharacters = 4;
-          action.maxNumberOfCharacters = 4;
-        }
-      });
+      action.minNumberOfCharacters = 4;
+      action.maxNumberOfCharacters = 4;
     }
 
     function setPhoneMenuMinMaxEntry() {
