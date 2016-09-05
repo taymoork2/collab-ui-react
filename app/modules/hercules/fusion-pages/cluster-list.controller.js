@@ -160,6 +160,9 @@
             next: 'add-resource.expressway.name'
           },
           'add-resource.expressway.name': {
+            next: 'add-resource.expressway.resource-group'
+          },
+          'add-resource.expressway.resource-group': {
             next: 'add-resource.expressway.end'
           },
           'add-resource.expressway.end': {},

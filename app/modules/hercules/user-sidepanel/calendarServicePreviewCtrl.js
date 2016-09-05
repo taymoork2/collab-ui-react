@@ -86,7 +86,7 @@
         if (groups && groups.length > 0) {
           _.each(groups, function (group) {
             $scope.resourceGroup.options.push({
-              label: group.name + (group.releaseChannel ? ' (' + group.releaseChannel + ')' : ''),
+              label: group.name + (group.releaseChannel ? ' (' + $translate.instant('hercules.fusion.add-resource-group.release-channel.' + group.releaseChannel) + ')' : ''),
               value: group.id
             });
           });
