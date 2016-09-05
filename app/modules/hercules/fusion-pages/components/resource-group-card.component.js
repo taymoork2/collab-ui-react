@@ -17,6 +17,7 @@
     ctrl.showDetails = false;
     ctrl.openAddClusterModal = openAddClusterModal;
     ctrl.toggleDetails = toggleDetails;
+    ctrl.showWarningText = showWarningText;
 
     function toggleDetails() {
       ctrl.showDetails = !ctrl.showDetails;
@@ -34,6 +35,10 @@
         templateUrl: 'modules/hercules/fusion-pages/resource-group-settings/assign-clusters.html',
         type: 'small'
       });
+    }
+
+    function showWarningText() {
+      return ctrl.group.clusters.length === 0;
     }
   }
 

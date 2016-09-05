@@ -6,10 +6,11 @@ describe('Component: resourceGroupCard', function () {
   describe('Controller', function () {
     var $componentController;
     var controller;
-    // TODO: improve the mock…
-    var mockGroups = {
-      groups: [],
-      unassigned: []
+    var mockGroup = {
+      clusters: [],
+      id: '1',
+      name: 'Bøler',
+      releaseChannel: 'stable'
     };
 
     beforeEach(inject(function ($injector) {
@@ -17,12 +18,18 @@ describe('Component: resourceGroupCard', function () {
       controller = $componentController('resourceGroupCard', {
         $scope: {}
       }, {
-        group: mockGroups
+        group: mockGroup
       });
     }));
 
     it('should bind to the correct group', function () {
-      expect(controller.group.unassigned.length).toEqual(mockGroups.unassigned.length);
+      expect(controller.group.id).toEqual(mockGroup.id);
+    });
+
+    describe('showWarningText()', function () {
+      it('should be true is there are 0 clusters', function () {
+        expect(controller.showWarningText()).toEqual(true);
+      });
     });
   });
 });
