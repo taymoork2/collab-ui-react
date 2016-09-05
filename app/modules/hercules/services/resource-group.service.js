@@ -75,7 +75,7 @@
     }
 
     function assign(clusterId, resourceGroupId) {
-      return $http.patch(UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '/clusters/' + clusterId, { "resourceGroupId": resourceGroupId })
+      return $http.patch(UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '/clusters/' + clusterId, { resourceGroupId: resourceGroupId })
         .then(extractDataFromResponse);
     }
 

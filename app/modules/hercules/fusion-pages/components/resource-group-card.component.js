@@ -4,7 +4,8 @@
   angular.module('Hercules')
     .component('resourceGroupCard', {
       bindings: {
-        group: '<resourceGroup'
+        group: '<resourceGroup',
+        onChange: '&'
       },
       templateUrl: 'modules/hercules/fusion-pages/components/resource-group-card.html',
       controller: ResourceGroupCardController
@@ -34,7 +35,8 @@
         controllerAs: 'vm',
         templateUrl: 'modules/hercules/fusion-pages/resource-group-settings/assign-clusters.html',
         type: 'small'
-      });
+      }).result
+      .then(ctrl.onChange);
     }
 
     function showWarningText() {
