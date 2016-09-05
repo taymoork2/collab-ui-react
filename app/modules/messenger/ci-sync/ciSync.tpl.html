@@ -60,6 +60,38 @@
             <div ng-if="!sync.syncInfo.isAuthRedirect" msgr-text-status-off></div>
           </div>
 
+          <div ng-if="sync.syncInfo.isNewDataFormat"> <!-- new org ext data -->
+            <!-- using toggles when editable -->
+            <div ng-if="sync.adminTypes.ops === sync.adminType">
+              <p tooltip-placement="top" tooltip="{{sync.pwdSyncTooltip}}" translate="messengerCiSync.pwdSyncHeading"></p>
+              <cs-toggle-switch ng-model="sync.syncInfo.isPwdSync" toggle-id="tidPwdSync" name="tnPwdSync" size="small"></cs-toggle-switch>
+              <p tooltip-placement="top" tooltip="{{sync.sparkEntTooltip}}" translate="messengerCiSync.sparkEntHeading"></p>
+              <cs-toggle-switch ng-model="sync.syncInfo.isSparkEnt" toggle-id="tidSparkEnt" name="tnSparkEnt" size="small"></cs-toggle-switch>
+              <p tooltip-placement="top" tooltip="{{sync.usrDisTooltip}}" translate="messengerCiSync.usrDisHeading"></p>
+              <cs-toggle-switch ng-model="sync.syncInfo.isUsrDis" toggle-id="tidUsrDis" name="tnUsrDis" size="small"></cs-toggle-switch>
+              <p tooltip-placement="top" tooltip="{{sync.usrMinTooltip}}" translate="messengerCiSync.usrMinHeading"></p>
+              <cs-toggle-switch ng-model="sync.syncInfo.isUsrMin" toggle-id="tidUsrMin" name="tnUsrMin" size="small"></cs-toggle-switch>
+            </div>
+            <!-- text when not editable -->
+            <div ng-if="sync.adminTypes.ops !== sync.adminType">
+              <p tooltip-placement="top" tooltip="{{sync.pwdSyncTooltip}}" translate="messengerCiSync.pwdSyncHeading"></p>
+              <div ng-if="sync.syncInfo.isPwdSync" msgr-text-status-on></div>
+              <div ng-if="!sync.syncInfo.isPwdSync" msgr-text-status-off></div>
+
+              <p tooltip-placement="top" tooltip="{{sync.sparkEntTooltip}}" translate="messengerCiSync.sparkEntHeading"></p>
+              <div ng-if="sync.syncInfo.isSparkEnt" msgr-text-status-on></div>
+              <div ng-if="!sync.syncInfo.isSparkEnt" msgr-text-status-off></div>
+
+              <p tooltip-placement="top" tooltip="{{sync.usrDisTooltip}}" translate="messengerCiSync.usrDisHeading"></p>
+              <div ng-if="sync.syncInfo.isUsrDis" msgr-text-status-on></div>
+              <div ng-if="!sync.syncInfo.isUsrDis" msgr-text-status-off></div>
+
+              <p tooltip-placement="top" tooltip="{{sync.usrMinTooltip}}" translate="messengerCiSync.usrMinHeading"></p>
+              <div ng-if="sync.syncInfo.isUsrMin" msgr-text-status-on></div>
+              <div ng-if="!sync.syncInfo.isUsrMin" msgr-text-status-off></div>
+            </div>
+          </div>
+
           <input class="btn btn--attention" type="submit" value="{{sync.patchSyncButtonText}}" ng-if="sync.adminTypes.ops === sync.adminType" ng-click="sync.patchSync()">
       </div>
     </div>

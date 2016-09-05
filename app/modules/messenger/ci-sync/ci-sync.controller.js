@@ -67,6 +67,10 @@
     vm.authRedirectTooltip = $translate.instant(translatePrefix + 'authRedirectTooltip');
     vm.patchSyncButtonText = $translate.instant(translatePrefix + 'patchSyncButtonText');
     vm.orgAdminLinkTooltip = $translate.instant(translatePrefix + 'orgAdminLinkTooltip');
+    vm.pwdSyncTooltip = $translate.instant(translatePrefix + 'pwdSyncTooltip');
+    vm.sparkEntTooltip = $translate.instant(translatePrefix + 'sparkEntTooltip');
+    vm.usrDisTooltip = $translate.instant(translatePrefix + 'usrDisTooltip');
+    vm.usrMinTooltip = $translate.instant(translatePrefix + 'usrMinTooltip');
 
     vm.syncInfo = {
       messengerOrgName: 'Unknown',
@@ -74,7 +78,12 @@
       linkDate: 'Unknown',
       isAuthRedirect: false,
       isSyncEnabled: false,
-      isMessengerSyncRawMode: false
+      isMessengerSyncRawMode: false,
+      isNewDataFormat: false,
+      isPwdSync: true,
+      isSparkEnt: true,
+      isUsrDis: true,
+      isUsrMin: false
     };
 
     vm.fields = [{
@@ -254,7 +263,7 @@
       // Double-check that they are ops for security
       if (vm.adminTypes.ops === vm.adminType) {
         // SyncService must turn the syncing boolean into the full mode
-        SyncService.patchSync(vm.syncInfo.isSyncEnabled, vm.syncInfo.isAuthRedirect)
+        SyncService.patchSync(vm.syncInfo)
           .then(function () {
             Notification.success(translatePrefix + 'patchSuccessful');
           }, function (errorObj) {

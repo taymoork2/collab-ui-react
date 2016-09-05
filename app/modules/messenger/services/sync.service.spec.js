@@ -162,5 +162,22 @@
       service.parseSyncMode('disabled;pwd_sync=1:spark_ent=1:usr_dis=1:usr_del=1:usr_min=0');
       expect(service.getNewDataFormat()).toEqual(true);
     });
+
+    it('check new data format parsing : other data non-default values', function () {
+      service.parseSyncMode('msgr_to_spark;pwd_sync=0:spark_ent=0:usr_dis=0:usr_min=1');
+      expect(service.getNewDataFormat()).toEqual(true);
+      expect(service.getSimplifiedStatus().isPwdSync).toEqual(false);
+      expect(service.getSimplifiedStatus().isSparkEnt).toEqual(false);
+      expect(service.getSimplifiedStatus().isUsrDis).toEqual(false);
+      expect(service.getSimplifiedStatus().isUsrMin).toEqual(true);
+    });
+    it('check new data format parsing : other data default for missing data', function () {
+      service.parseSyncMode('msgr_to_spark;pwd_sync=1:spark_ent=1');
+      expect(service.getNewDataFormat()).toEqual(true);
+      expect(service.getSimplifiedStatus().isPwdSync).toEqual(true);
+      expect(service.getSimplifiedStatus().isSparkEnt).toEqual(true);
+      expect(service.getSimplifiedStatus().isUsrDis).toEqual(true);
+      expect(service.getSimplifiedStatus().isUsrMin).toEqual(false);
+    });
   });
 })();
