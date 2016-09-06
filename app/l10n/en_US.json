@@ -3120,7 +3120,7 @@
     "serial": "Serial",
     "ipAddr": "IP Address",
     "macAddr": "MAC Address",
-    "sipUrl": "Sip Address",
+    "sipUrl": "SIP Address",
     "issues": "Issues",
     "lastSeen": "since:",
     "notYetActivated": "No device has been activated for this location.",
