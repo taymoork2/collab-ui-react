@@ -4,7 +4,7 @@
   angular.module('Core')
     .controller('ChoosePersonalCtrl', ChoosePersonalCtrl);
   /* @ngInject */
-  function ChoosePersonalCtrl($q, $http, UserListService, OtpService, Notification, CsdmConfigService, Authinfo, $stateParams, $translate) {
+  function ChoosePersonalCtrl($q, UserListService, OtpService, Notification, $stateParams, $translate) {
     var vm = this;
     vm.wizardData = $stateParams.wizard.state().data;
     vm.userType = 'existing';
@@ -12,9 +12,6 @@
     vm.selected = undefined;
     vm.selectedStates = [];
     vm.selectUser = selectUser;
-
-    var devicesUrl = CsdmConfigService.getUrl() + '/organization/' + Authinfo.getOrgId() + '/huronDevices';
-    var userDeviceCount = {};
 
     vm.model = {
       userInputOption: 0,
@@ -26,23 +23,6 @@
 
     vm.isExistingCollapsed = vm.wizardData.allowUserCreation;
     vm.isLoading = false;
-
-    function init() {
-      loadUserDeviceCount();
-    }
-
-    init();
-
-    function loadUserDeviceCount() {
-      $http.get(devicesUrl).then(function (res) {
-        _.forEach(res.data, function (device) {
-          if (!userDeviceCount[device.cisUuid]) {
-            userDeviceCount[device.cisUuid] = 0;
-          }
-          userDeviceCount[device.cisUuid] += 1;
-        });
-      });
-    }
 
     vm.validateTokens = function () {
       vm.deviceName = "NOT IMPLEMENTED";
@@ -76,8 +56,6 @@
             }
             r.extractedName = name;
             return r;
-          }).filter(function (u) {
-            return !(u.id in userDeviceCount) || userDeviceCount[u.id] < 10;
           }).value();
           vm.noResults = _.isEmpty(userList);
           deferred.resolve(userList);
