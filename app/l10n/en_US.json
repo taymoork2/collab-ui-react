@@ -2805,13 +2805,15 @@
       "name": "Recipient Name",
       "phone": "Phone",
       "country": "Country",
-      "address": "Address",
+      "address": "Street Address",
       "unit": "Unit",
       "city": "City",
       "state": "State",
-      "zip": "Zip",
+      "zip": "Zip/ Postal Code",
+      "province": "State/ Province/ Region",
       "dealId": "Deal ID",
       "usOnly": "Currently U.S. only",
+      "trialDeviceShipmentLocations": "Device shipment  is supported in selected locations.  <a href='https://help.webex.com/docs/DOC-8229' target='_blank' ng-click='{{click}}'>Learn more</a>",
       "invalidDealId": "Invalid Deal ID number"
     },
     "numbers": {
@@ -3152,7 +3154,7 @@
     "newDevice": "New Device",
     "chooseDeviceType": {
       "deviceType": "What kind of device do you want to set up?",
-      "deviceTypeInstructions": "A new device requires a unique activation code to be input during setup so that it can be assigned to either a user or a place. What kind of device do you want to activate?",
+      "deviceTypeInstructions": "A new device requires a unique activation code to be input during setup. What kind of device do you want to activate?",
       "deviceTypeNewPlace": "What kind of device do you want to set up in this place?",
       "deviceTypeInstructionsNewPlace": "A place containing desk phones will be assigned a Spark Call license. A place containing a room system will be assigned a Spark Room System license. Proceeding acknowledges that a license will be assigned.",
       "deskPhone": "Desk Phone",
@@ -3475,7 +3477,7 @@
       "onpremcalls": "on premises |",
       "cloudcalls": "overflowed to cloud",
       "redirectedcalls": "redirected",
-      "nodata": "N/A",
+      "nodata": "Data Not Available",
       "allclusters": "All Clusters",
       "percentage": "%"
     },
