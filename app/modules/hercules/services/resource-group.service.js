@@ -6,7 +6,7 @@
     .factory('ResourceGroupService', ResourceGroupService);
 
   /* @ngInject */
-  function ResourceGroupService($http, UrlConfig, Authinfo, Orgservice, $q) {
+  function ResourceGroupService($http, UrlConfig, Authinfo, Orgservice, $q, $translate) {
     return {
       getAll: getAll,
       get: get,
@@ -15,7 +15,8 @@
       getAllowedChannels: getAllowedChannels,
       setName: setName,
       setReleaseChannel: setReleaseChannel,
-      assign: assign
+      assign: assign,
+      getAllAsOptions: getAllAsOptions
     };
 
     function get(resourceGroupId, orgId) {
@@ -77,6 +78,21 @@
     function assign(clusterId, resourceGroupId) {
       return $http.patch(UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '/clusters/' + clusterId, { "resourceGroupId": resourceGroupId })
         .then(extractDataFromResponse);
+    }
+
+    function getAllAsOptions(orgId) {
+      return getAll(orgId).then(function (groups) {
+        var options = [];
+        if (groups && groups.length > 0) {
+          _.each(groups, function (group) {
+            options.push({
+              label: group.name + (group.releaseChannel ? ' (' + $translate.instant('hercules.fusion.add-resource-group.release-channel.' + group.releaseChannel) + ')' : ''),
+              value: group.id
+            });
+          });
+        }
+        return options;
+      });
     }
 
     function extractDataFromResponse(res) {

@@ -10,7 +10,15 @@
     font-size: 3rem;
   }
 
+  .select-resource-group {
+    margin-left: 2rem;
+  }
+
   h4 {
     margin-bottom: 1rem;
   }
+}
+
+.select-resource-group-modal {
+  overflow: visible !important;
 }

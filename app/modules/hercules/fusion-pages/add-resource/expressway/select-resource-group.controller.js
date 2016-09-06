@@ -10,9 +10,15 @@
     var wizardData = $stateParams.wizard.state().data;
     vm.clusterId = wizardData.expressway.clusterId;
     vm.loading = true;
-    vm.resourceGroupOptions = [{ label: $translate.instant('hercules.resourceGroups.noGroupSelected'), value: '' }];
+    vm.resourceGroupOptions = [{ label: $translate.instant('hercules.addResourceDialog.selectGroup'), value: '' }];
     vm.selectedResourceGroup = vm.resourceGroupOptions[0];
+    vm.assignToResourceGroup = 'no';
+    vm._translation = {
+      assignYes: $translate.instant('hercules.addResourceDialog.assignYes'),
+      assignNo: $translate.instant('hercules.addResourceDialog.assignNo'),
+    };
     vm.next = next;
+    vm.canGoNext = canGoNext;
 
     init();
 
@@ -21,14 +27,9 @@
         $stateParams.wizard.next();
         return;
       }
-      ResourceGroupService.getAll().then(function (groups) {
-        if (groups && groups.length > 0) {
-          _.each(groups, function (group) {
-            vm.resourceGroupOptions.push({
-              label: group.name + (group.releaseChannel ? ' (' + $translate.instant('hercules.fusion.add-resource-group.release-channel.' + group.releaseChannel) + ')' : ''),
-              value: group.id
-            });
-          });
+      ResourceGroupService.getAllAsOptions().then(function (options) {
+        if (options.length > 0) {
+          vm.resourceGroupOptions = vm.resourceGroupOptions.concat(options);
           vm.loading = false;
         } else {
           $stateParams.wizard.next();
@@ -36,6 +37,10 @@
       }, function () {
         Notification.error('hercules.genericFailure');
       });
+    }
+
+    function canGoNext() {
+      return !vm.loading && (vm.assignToResourceGroup === 'no' || vm.selectedResourceGroup.value !== '');
     }
 
     function next() {

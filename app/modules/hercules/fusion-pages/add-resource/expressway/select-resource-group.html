@@ -4,7 +4,7 @@
   </button>
   <h3 class="modal-title" translate="hercules.fusion.add-resource.title"></h3>
 </div>
-<div class="modal-body add-resource-modal">
+<div class="modal-body add-resource-modal hercules-fix-paragraphs select-resource-group-modal">
   <div ng-if="vm.loading" class="loading">
     <div>
       <span class="spinner--large">
@@ -13,14 +13,33 @@
     </div>
   </div>
   <div ng-if="!vm.loading">
-    <h4 translate="hercules.addResourceDialog.selectResourceGroup"></h4>
-    <cs-select
-      ng-model="vm.selectedResourceGroup"
-      options="vm.resourceGroupOptions">
-    </cs-select>
+    <h4 translate="hercules.addResourceDialog.selectResourceGroupPrompt"></h4>
+    <input
+      cs-input
+      type="radio"
+      ng-model="vm.assignToResourceGroup"
+      name="assignToResourceGroup"
+      value="no"
+      id="assignToResourceGroup_no"
+      cs-input-label="{{vm._translation.assignNo}}">
+    <input
+      cs-input
+      type="radio"
+      ng-model="vm.assignToResourceGroup"
+      name="assignToResourceGroup"
+      value="yes"
+      id="assignToResourceGroup_yes"
+      cs-input-label="{{vm._translation.assignYes}}">
+    <div ng-if="vm.assignToResourceGroup === 'yes'" class="select-resource-group">
+      <p translate="hercules.addResourceDialog.selectResourceGroup"></p>
+      <cs-select
+        ng-model="vm.selectedResourceGroup"
+        options="vm.resourceGroupOptions">
+      </cs-select>
+    </div>
   </div>
 </div>
 <div class="modal-footer">
   <button class="btn btn-default" ng-click="$dismiss()" translate="common.cancel"></button>
-  <button class="btn btn-primary" ng-click="vm.next()" ng-disabled="vm.loading" translate="common.next"></button>
+  <button class="btn btn-primary" ng-click="vm.next()" ng-disabled="!vm.canGoNext()" translate="common.next"></button>
 </div>

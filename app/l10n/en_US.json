@@ -1402,7 +1402,11 @@
       "setupScreenBodyPrerequisites": "Verify that you have completed the prerequisites before you start configuring {{ServiceName}}.",
       "setupScreenBodyLinks": "Visit <a href=\"http://www.cisco.com/go/hybrid-services\" target=\"_blank\">Help Central</a> for further information about {{ServiceName}} prerequisites.",
       "go-to-your-expressway": "Go to your Expressway within one hour to complete registration and configure the {{ConnectorName}} Connector.",
-      "selectResourceGroup": "Select the Resource Group where you want to place the Expressway."
+      "selectResourceGroupPrompt": "Do you want to assign this Expressway to a Resource Group?",
+      "selectResourceGroup": "Select the Resource Group where you want to place the Expressway.",
+      "assignYes": "Yes, assign now",
+      "assignNo": "No, don't assign",
+      "selectGroup": "Select..."
     },
     "activateService": {
       "ingress": "Extend the Cloud to your On-Premise Environment",
