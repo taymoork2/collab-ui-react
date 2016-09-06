@@ -48,6 +48,7 @@
     require('modules/core/scripts/services/org.service'),
   ])
     .constant('pako', require('pako'))
+    .constant('phone', require('google-libphonenumber'))
     .constant('addressparser', require('emailjs-addressparser'));
 
   // TODO fix circular dependencies between modules

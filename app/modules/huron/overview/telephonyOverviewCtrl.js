@@ -14,7 +14,7 @@
       actionKey: 'usersPreview.addNewLinePreview',
       actionFunction: addNewLine,
     }];
-    vm.reachedMaxLines = false;
+
     init();
 
     function addNewLine() {
@@ -22,13 +22,6 @@
         directoryNumber: 'new'
       });
     }
-
-    vm.reachedMaxLines = function () {
-      if (_.has(vm.telephonyInfo.directoryNumbers, 'length')) {
-        return (vm.telephonyInfo.directoryNumbers.length >= 125);
-      }
-      return false;
-    };
 
     function init() {
       // TODO: Change TelephonyInfoService to return directly from this instead of having
@@ -43,7 +36,7 @@
       TelephonyInfoService.loadExternalNumberPool();
       TelephonyInfoService.getInternationalDialing(vm.currentUser.id);
       vm.telephonyInfo = TelephonyInfoService.getTelephonyInfoObject();
-      FeatureToggleService.supports(FeatureToggleService.features.huronKEM).then(function (result) {
+      FeatureToggleService.supports(FeatureToggleService.features.huronSpeedDial).then(function (result) {
         vm.showSpeedDials = result;
       });
     }
