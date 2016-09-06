@@ -73,8 +73,13 @@ describe('Onboard Users using CSV File', function () {
 
   afterAll(function () {
     utils.deleteFile(CSV_FILE_PATH);
-    _.each(userList, function (user) {
-      deleteUtils.deleteUser(user, token);
+    _.each(userList, function (user, ind) {
+      deleteUtils.deleteUser(user, token).then(function() {
+        console.log('Deleting user #' + ind + ' (' + user + ')' );
+        if ( ind == (userList.length - 1) ) {
+          console.log('All users deleted.');
+        }
+      });
     });
   }, 60000 * 4);
 });

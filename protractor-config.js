@@ -78,6 +78,7 @@ exports.config = {
   onPrepare: function () {
     browser.ignoreSynchronization = true;
 
+    global.isSauce = !!(process.env.SAUCE_USERNAME && process.env.SAUCE_USERNAME.length > 0); 
     global.isProductionBackend = !!args.productionBackend;
     global.log = new Logger();
 

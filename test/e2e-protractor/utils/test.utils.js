@@ -68,6 +68,9 @@ exports.randomTestGmail = function () {
 };
 
 exports.randomTestGmailwithSalt = function (salt) {
+  if ( !isSauce ) {
+    salt = 'LOC_' + salt;
+  }
   return 'collabctg+' + salt + '_' + this.getDateTimeString() + '_' + this.randomId() + '@gmail.com';
 };
 
