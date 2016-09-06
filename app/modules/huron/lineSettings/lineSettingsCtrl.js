@@ -55,6 +55,7 @@
     vm.nonePlaceholder = $translate.instant('directoryNumberPanel.none');
 
     vm.loadInternalNumberPool = loadInternalNumberPool;
+    vm.updateMultipleCalls = updateMultipleCalls;
     vm.loadExternalNumberPool = loadExternalNumberPool;
     vm.saveDisabled = saveDisabled;
     vm.callerIdOptions = [];
@@ -336,7 +337,7 @@
     }
 
     function updateMultipleCalls() {
-      LineSettings.updateSimultaneousCalls(vm.telephonyInfo.currentDirectoryNumber.uuid, vm.currentUser.id, vm.simultaneousModel);
+      LineSettings.updateSimultaneousCalls(vm.telephonyInfo.currentDirectoryNumber.uuid, vm.currentUser.id, vm.simultaneousModel.incomingCallMaximum);
     }
 
     function loadExternalNumberPool(pattern) {

@@ -59,7 +59,8 @@
         "Cisco TelePresence MX800 SpeakerTrack": "images/devices-hi/mx800speakertrack.png",
         "Project Swedish Island": "images/devices-hi/swedish_island.png",
         "Cisco Spark Board 55": "images/devices-hi/spark_board_55.png",
-        "Darling": "images/devices-hi/spark_board_55.png"
+        "Darling": "images/devices-hi/spark_board_55.png",
+        "Eve": "images/devices-hi/eve.png"
       };
 
       function HuronDevice(obj) {

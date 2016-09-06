@@ -276,7 +276,7 @@
     "colorOne": "#99cf78",
     "colorTwo": "#6ab140",
     "balloon": true,
-    "modifiedDate": "Feb 25"
+    "date": "Feb 25"
   }, {
     "totalRegisteredUsers": 9,
     "activeUsers": 3,
@@ -284,7 +284,7 @@
     "colorOne": "#99cf78",
     "colorTwo": "#6ab140",
     "balloon": true,
-    "modifiedDate": "Feb 26"
+    "date": "Feb 26"
   }, {
     "totalRegisteredUsers": 9,
     "activeUsers": 3,
@@ -292,7 +292,7 @@
     "colorOne": "#99cf78",
     "colorTwo": "#6ab140",
     "balloon": true,
-    "modifiedDate": "Feb 27"
+    "date": "Feb 27"
   }, {
     "totalRegisteredUsers": 9,
     "activeUsers": 3,
@@ -300,7 +300,7 @@
     "colorOne": "#99cf78",
     "colorTwo": "#6ab140",
     "balloon": true,
-    "modifiedDate": "Feb 28"
+    "date": "Feb 28"
   }, {
     "totalRegisteredUsers": 9,
     "activeUsers": 3,
@@ -308,7 +308,7 @@
     "colorOne": "#99cf78",
     "colorTwo": "#6ab140",
     "balloon": true,
-    "modifiedDate": "Feb 29"
+    "date": "Feb 29"
   }, {
     "totalRegisteredUsers": 9,
     "activeUsers": 3,
@@ -316,7 +316,7 @@
     "colorOne": "#99cf78",
     "colorTwo": "#6ab140",
     "balloon": true,
-    "modifiedDate": "Mar 01"
+    "date": "Mar 01"
   }, {
     "totalRegisteredUsers": 9,
     "activeUsers": 3,
@@ -324,7 +324,7 @@
     "colorOne": "#99cf78",
     "colorTwo": "#6ab140",
     "balloon": true,
-    "modifiedDate": "Mar 02"
+    "date": "Mar 02"
   }],
   "mostActiveResponse": [{
     "orgName": "Test Org One",
