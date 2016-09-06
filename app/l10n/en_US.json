@@ -3472,7 +3472,7 @@
       "onpremcalls": "on premises |",
       "cloudcalls": "overflowed to cloud",
       "redirectedcalls": "redirected",
-      "nodata": "N/A",
+      "nodata": "Data Not Available",
       "allclusters": "All Clusters",
       "percentage": "%"
     },
