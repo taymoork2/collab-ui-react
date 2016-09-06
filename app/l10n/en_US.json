@@ -3047,9 +3047,9 @@
     "domains": "Domains",
     "quantityWithValue": "Qty: {{quantity}}",
     "filterSelectPlaceholder": "Select a filter...",
-    "filterTrialAccounts": "Trial Accounts",
-    "filterPurchasedAccounts": "Purchased Accounts",
-    "filterExpiredAccounts": "Expired Accounts",
+    "trialAccountsFilter": "Trial Accounts ({{count}})",
+    "activeAccountsFilter": "Purchased Accounts ({{count}})",
+    "expiredAccountsFilter": "Expired Accounts ({{count}})",
     "subscriptions": "Subscription Info",
     "viewSubscriptionInfo": "View Subscription Info"
   },
