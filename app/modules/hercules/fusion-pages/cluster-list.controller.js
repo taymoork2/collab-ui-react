@@ -47,14 +47,20 @@
     vm.searchData = searchData;
     vm.addResource = addResource;
     vm.addResourceGroup = addResourceGroup;
+    vm.refreshList = refreshList;
 
-    if (hasF237FeatureToggle) {
-      loadResourceGroups();
-    } else {
-      loadClusters();
+    refreshList();
+
+    function refreshList() {
+      if (hasF237FeatureToggle) {
+        loadResourceGroups();
+      } else {
+        loadClusters();
+      }
     }
 
     function loadClusters() {
+      vm.loading = true;
       FusionClusterService.getAll()
         .then(function removeHybridMediaClustersIfNecessary(clusters) {
           if (!hasMediaFeatureToggle) {
@@ -75,6 +81,7 @@
     }
 
     function loadResourceGroups() {
+      vm.loading = true;
       FusionClusterService.getResourceGroups()
         .then(function removeHybridMediaClustersIfNecessary(response) {
           if (!hasMediaFeatureToggle) {
@@ -99,7 +106,8 @@
           // TODO: update cache
           // TODO: updateFilters();
           vm.displayedGroups = groups;
-        }, XhrNotificationService.notify)
+        })
+        .catch(XhrNotificationService.notify)
         .finally(function () {
           vm.loading = false;
         });
@@ -188,7 +196,8 @@
         controller: 'AddResourceGroupController',
         controllerAs: 'vm',
         templateUrl: 'modules/hercules/fusion-pages/add-resource-group/add-resource-group.html'
-      });
+      }).result
+      .then(refreshList);
     }
   }
 })();

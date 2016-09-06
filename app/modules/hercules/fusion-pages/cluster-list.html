@@ -27,7 +27,7 @@
     <div ng-if="!resourceList.loading">
       <div ng-if="resourceList.showResourceGroups">
         <cs-card-layout block-view="true" class="resource-groups-list">
-          <resource-group-card ng-repeat="group in resourceList.displayedGroups.groups" resource-group="group"></resource-group-card>
+          <resource-group-card ng-repeat="group in resourceList.displayedGroups.groups" resource-group="group" on-change="resourceList.refreshList()"></resource-group-card>
         </cs-card-layout>
         <cs-card-layout block-view="true">
           <cluster-card ng-repeat="cluster in resourceList.displayedGroups.unassigned" cluster="cluster"></cluster-card>
