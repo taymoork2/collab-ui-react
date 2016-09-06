@@ -4,7 +4,7 @@
   angular.module('Core')
     .controller('ChooseSharedSpaceCtrl', ChooseSharedSpaceCtrl);
   /* @ngInject */
-  function ChooseSharedSpaceCtrl(CsdmCodeService, CsdmPlaceService, CsdmHuronPlaceService, XhrNotificationService, $stateParams, $translate, Authinfo) {
+  function ChooseSharedSpaceCtrl(Userservice, CsdmCodeService, CsdmPlaceService, CsdmHuronPlaceService, XhrNotificationService, $stateParams, $translate, Authinfo) {
     var vm = this;
     vm.wizardData = $stateParams.wizard.state().data;
 
@@ -23,6 +23,7 @@
 
     function init() {
       loadList();
+      fetchDisplayNameForLoggedInUser();
     }
 
     init();
@@ -36,6 +37,14 @@
       }
       return $translate.instant('addDeviceWizard.chooseSharedSpace.newPlaceInstructions');
     };
+
+    function fetchDisplayNameForLoggedInUser() {
+      Userservice.getUser('me', function (data) {
+        if (data.success) {
+          vm.adminDisplayName = data.displayName;
+        }
+      });
+    }
 
     function loadList() {
       if (vm.wizardData.showPlaces) {
@@ -112,8 +121,8 @@
           code: code,
           // expiryTime: code.expiryTime,
           cisUuid: Authinfo.getUserId(),
-          userName: Authinfo.getUserName(),
-          displayName: Authinfo.getUserName(),
+          email: Authinfo.getPrimaryEmail(),
+          displayName: vm.adminDisplayName,
           organizationId: Authinfo.getOrgId()
         }, nextOption);
       }
