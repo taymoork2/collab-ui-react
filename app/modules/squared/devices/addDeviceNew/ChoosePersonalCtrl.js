@@ -112,7 +112,7 @@
             code: code,
             expiryTime: code.friendlyExpiresOn,
             cisUuid: vm.cisUuid,
-            userName: vm.userName,
+            email: vm.userName,
             displayName: vm.displayName,
             organizationId: vm.organizationId
           }, vm.userType);
