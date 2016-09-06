@@ -31,13 +31,13 @@
 
 /* Remove when Microsoft fixes flexbox problem *\
    when min-height is defined.  See
-\* messagebox-small in ToolKit.                */
+\* message-box in ToolKit.                */
 .vertical-ie-workaround {
   height: 0px;
 }
 
 .login-box {
-  .messagebox-small {
+  .message-box {
     padding-top: 40px;
   }
   h3 {

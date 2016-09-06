@@ -1,5 +1,5 @@
 <div class="messagebox login-box" ng-class="{loading: loading}">
-  <div class="messagebox-small" ng-class="checkForIeWorkaround">
+  <div class="message-box" ng-class="checkForIeWorkaround">
     <i class="icon icon-2x icon-cisco-logo messagebox-heading"></i>
     <div class="h3" translate="loginPage.title"></div>
     <div ng-show="result">
@@ -8,7 +8,7 @@
     <form novalidate name="loginForm" class="typeahead-group" autocomplete="off">
       <input type="email" class="underline" name="email" ng-model="email" placeholder="Email Address" required focus-on ng-keypress="login($event.which)">
     </form>
-    <button class="btn btn--primary btn--large btn--expand messagebox-btn" role="button" ng-click="login()" ng-disabled="loginForm.email.$invalid">
+    <button class="btn btn--primary btn--large btn--expand message-box__btn" role="button" ng-click="login()" ng-disabled="loginForm.email.$invalid">
       <span translate="loginPage.login"></span>
     </button>
     <h6 translate="loginPage.license"></h6>
