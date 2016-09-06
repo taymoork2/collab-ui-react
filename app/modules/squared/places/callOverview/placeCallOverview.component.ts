@@ -1,7 +1,6 @@
-import { IDirectoryNumber } from '../../../huron/overview/directoryNumberList.component';
-import { LineService, LineConsumerType, Number } from '../../../huron/lines/services';
 import { DialingType } from '../../../huron/dialing/index';
-import { DialingService } from '../../../huron/dialing/dialing.service';
+import { DialingService } from '../../../huron/dialing';
+import { LineService, LineConsumerType, Number, LINE_CHANGE } from '../../../huron/lines/services';
 import { ActionItem } from '../../../core/components/sectionTitle/sectionTitle.component';
 import { IFeature } from '../../../core/components/featureList/featureList.component';
 
@@ -25,7 +24,6 @@ class PlaceCallOverview {
     private Notification
   ) {
     this.currentPlace = $stateParams.currentPlace;
-    this.directoryNumbers = this.currentPlace.numbers;
     $scope.$on(DialingType.INTERNATIONAL, (e, data) => {
       this.DialingService.setInternationalDialing(data, LineConsumerType.PLACES, this.currentPlace.cisUuid).then(()=> {
         this.DialingService.initializeDialing(LineConsumerType.PLACES, this.currentPlace.cisUuid).then(() => {
@@ -44,6 +42,9 @@ class PlaceCallOverview {
         Notification.errorResponse(response, 'internationalDialingPanel.error');
       });
     });
+    $scope.$on(LINE_CHANGE, (data) => {
+      this.initNumbers();
+    });
   }
 
   private $onInit(): void {
@@ -51,6 +52,7 @@ class PlaceCallOverview {
     this.DialingService.initializeDialing(LineConsumerType.PLACES, this.currentPlace.cisUuid).then(() => {
       this.initFeatures();
     });
+    this.initNumbers();
   }
 
   private initActions(): void {
@@ -80,6 +82,11 @@ class PlaceCallOverview {
       actionsAvailable: true,
     };
     this.features.push(service);
+  }
+
+  private initNumbers(): void {
+    this.LineService.getLineList(LineConsumerType.PLACES, this.currentPlace.cisUuid)
+      .then(lines => this.directoryNumbers = lines)
   }
 
   public featureActions(feature) {
