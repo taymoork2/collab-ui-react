@@ -82,7 +82,7 @@
     vm.devices = [];
     vm.sharedLineUsers = [];
     vm.oneAtATime = true;
-    vm.maxLines = 5;
+    vm.maxLines = 25;
     vm.sort = {
       by: 'name',
       order: 'ascending',

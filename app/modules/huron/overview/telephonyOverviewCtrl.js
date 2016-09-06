@@ -14,6 +14,7 @@
       actionKey: 'usersPreview.addNewLinePreview',
       actionFunction: addNewLine,
     }];
+    vm.reachedMaxLines = false;
 
     init();
 
@@ -22,6 +23,13 @@
         directoryNumber: 'new'
       });
     }
+
+    vm.reachedMaxLines = function () {
+      if (_.has(vm.telephonyInfo.directoryNumbers, 'length')) {
+        return (vm.telephonyInfo.directoryNumbers.length >= 25);
+      }
+      return false;
+    };
 
     function init() {
       // TODO: Change TelephonyInfoService to return directly from this instead of having

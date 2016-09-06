@@ -1,8 +1,14 @@
 <cs-sp-container>
   <cs-sp-section>
+    <div class="warning" ng-show="telephonyOverview.reachedMaxLines()">
+      <div class="cs-input__messages">
+        <div class="message" translate="telephonyPreview.maxLines"></div>
+      </div>
+    </div>
     <section-title
       title-key="telephonyPreview.lines"
-      action-list="telephonyOverview.actionList">
+      action-list="telephonyOverview.actionList"
+      show-actions="!telephonyOverview.reachedMaxLines()">
     </section-title>
     <directory-number-list
       directory-numbers="telephonyOverview.telephonyInfo.directoryNumbers"
