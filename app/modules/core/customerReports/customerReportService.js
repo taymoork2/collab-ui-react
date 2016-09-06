@@ -24,6 +24,7 @@
     var monthFormat = "MMMM";
     var timezone = "Etc/GMT";
     var cacheValue = (parseInt(moment.utc().format('H'), 10) >= 8);
+    var options = ['weeklyUsage', 'monthlyUsage', 'threeMonthUsage'];
 
     // Promise Tracking
     var ABORT = 'ABORT';
@@ -67,7 +68,7 @@
           return returnData;
         }
       }, function (response) {
-        return returnErrorCheck(response, 'Active user data not returned for customer.', $translate.instant('activeUsers.overallActiveUserGraphError'), returnData);
+        return returnErrorCheck(response, 'Active user data not returned for customer.', 'activeUsers.overallActiveUserGraphError', returnData);
       });
     }
 
@@ -78,14 +79,7 @@
       }
       mostActivePromise = $q.defer();
 
-      var query = "?type=weeklyUsage&cache=";
-      if (filter.value === 1) {
-        query = "?type=monthlyUsage&cache=";
-      } else if (filter.value === 2) {
-        query = "?type=threeMonthUsage&cache=";
-      }
-
-      return getService(urlBase + mostActiveUrl + query + cacheValue, mostActivePromise).then(function (response) {
+      return getService(urlBase + mostActiveUrl + getReportTypeQuery(options[filter.value]), mostActivePromise).then(function (response) {
         var data = [];
         if (angular.isDefined(response) && angular.isDefined(response.data) && angular.isDefined(response.data.data) && angular.isArray(response.data.data)) {
           angular.forEach(response.data.data, function (item) {
@@ -100,7 +94,7 @@
         }
         return data;
       }, function (response) {
-        return returnErrorCheck(response, 'Most active user data not returned for customer.', $translate.instant('activeUsers.mostActiveError'), []);
+        return returnErrorCheck(response, 'Most active user data not returned for customer.', 'activeUsers.mostActiveError', []);
       });
     }
 
@@ -157,7 +151,7 @@
 
         if (activeUsers > 0 || totalRegisteredUsers > 0) {
           for (var i = 0; i < returnGraph.length; i++) {
-            if (returnGraph[i].modifiedDate === date) {
+            if (returnGraph[i].date === date) {
               returnGraph[i].totalRegisteredUsers = totalRegisteredUsers;
               returnGraph[i].activeUsers = activeUsers;
               returnGraph[i].percentage = Math.round((activeUsers / totalRegisteredUsers) * 100);
@@ -197,7 +191,7 @@
         groupData = response.data;
         return;
       }).error(function (response, status) {
-        groupData = returnErrorCheck(status, 'Group rooms data not returned for customer.', $translate.instant('avgRooms.groupError'), []);
+        groupData = returnErrorCheck(status, 'Group rooms data not returned for customer.', 'avgRooms.groupError', []);
         return;
       });
       promises.push(groupPromise);
@@ -207,7 +201,7 @@
         oneToOneData = response.data;
         return;
       }).error(function (response, status) {
-        oneToOneData = returnErrorCheck(status, 'One to One rooms data not returned for customer.', $translate.instant('avgRooms.oneToOneError'), []);
+        oneToOneData = returnErrorCheck(status, 'One to One rooms data not returned for customer.', 'avgRooms.oneToOneError', []);
         return;
       });
       promises.push(oneToOnePromise);
@@ -217,7 +211,7 @@
         avgData = response.data;
         return;
       }).error(function (response, status) {
-        avgData = returnErrorCheck(status, 'Average rooms data not returned for customer.', $translate.instant('avgRooms.avgError'), []);
+        avgData = returnErrorCheck(status, 'Average rooms data not returned for customer.', 'avgRooms.avgError', []);
         return;
       });
       promises.push(avgPromise);
@@ -279,7 +273,7 @@
         for (var index = 0; index < returnGraph.length; index++) {
           var returnItem = returnGraph[index];
 
-          if (returnItem.modifiedDate === modDate) {
+          if (returnItem.date === modDate) {
             returnItem.groupRooms = parseInt(groupItem.count, 10);
             returnItem.totalRooms += parseInt(groupItem.count, 10);
 
@@ -300,7 +294,7 @@
         for (var index = 0; index < returnGraph.length; index++) {
           var returnItem = returnGraph[index];
 
-          if (returnItem.modifiedDate === modDate) {
+          if (returnItem.date === modDate) {
             returnItem.oneToOneRooms = parseInt(oneToOneItem.count, 10);
             returnItem.totalRooms += parseInt(oneToOneItem.count, 10);
             if (returnItem.oneToOneRooms !== 0) {
@@ -321,7 +315,7 @@
           for (var index = 0; index < returnGraph.length; index++) {
             var returnItem = returnGraph[index];
 
-            if (returnItem.modifiedDate === modDate) {
+            if (returnItem.date === modDate) {
               returnItem.avgRooms = parseFloat(avgItem.count).toFixed(2);
               break;
             }
@@ -363,7 +357,7 @@
         contentShareSizesData = response.data;
         return;
       }).error(function (response, status) {
-        contentShareSizesData = returnErrorCheck(status, 'Shared content data sizes not returned for customer.', $translate.instant('filesShared.contentShareSizesDataError'), []);
+        contentShareSizesData = returnErrorCheck(status, 'Shared content data sizes not returned for customer.', 'filesShared.contentShareSizesDataError', []);
         return;
       });
       promises.push(contentShareSizesPromise);
@@ -418,7 +412,7 @@
         for (var index = 0; index < returnGraph.length; index++) {
           var returnItem = returnGraph[index];
 
-          if (returnItem.modifiedDate === modDate) {
+          if (returnItem.date === modDate) {
             returnItem.contentShared = parseInt(contentItem.count, 10);
             if (returnItem.contentShared !== 0) {
               emptyGraph = false;
@@ -438,7 +432,7 @@
           for (var index = 0; index < returnGraph.length; index++) {
             var returnItem = returnGraph[index];
 
-            if (returnItem.modifiedDate === modDate) {
+            if (returnItem.date === modDate) {
               returnItem.contentShareSizes = parseFloat(shareItem.count).toFixed(2);
               break;
             }
@@ -486,7 +480,7 @@
         }
         return returnArray;
       }, function (response) {
-        return returnErrorCheck(response, 'Call metrics data not returned for customer.', $translate.instant('callMetrics.customerError'), returnArray);
+        return returnErrorCheck(response, 'Call metrics data not returned for customer.', 'callMetrics.customerError', returnArray);
       });
     }
 
@@ -553,7 +547,7 @@
               }
 
               for (var i = 0; i < graph.length; i++) {
-                if (graph[i].modifiedDate === modifiedDate) {
+                if (graph[i].date === modifiedDate) {
                   graph[i].totalDurationSum = totalSum;
                   graph[i].goodQualityDurationSum = goodSum;
                   graph[i].fairQualityDurationSum = fairSum;
@@ -584,7 +578,7 @@
         }
         return graph;
       }, function (response) {
-        return returnErrorCheck(response, 'Call quality data not returned for customer.', $translate.instant('mediaQuality.customerError'), []);
+        return returnErrorCheck(response, 'Call quality data not returned for customer.', 'mediaQuality.customerError', []);
       });
     }
 
@@ -598,7 +592,7 @@
       return getService(urlBase + registeredEndpoints + getQuery(filter, cacheValue), deviceCancelPromise).then(function (response) {
         return analyzeDeviceData(response, filter);
       }, function (response) {
-        return returnErrorCheck(response, 'Registered Endpoints data not returned for customer.', $translate.instant('registeredEndpoints.customerError'), {
+        return returnErrorCheck(response, 'Registered Endpoints data not returned for customer.', 'registeredEndpoints.customerError', {
           graphData: [],
           filterArray: []
         });
@@ -667,7 +661,7 @@
               }
 
               for (var i = 0; i < baseGraph.length; i++) {
-                if (baseGraph[i].modifiedDate === modifiedDate) {
+                if (baseGraph[i].date === modifiedDate) {
                   tempGraph.graph[i].totalRegisteredDevices = parseInt(detail.totalRegisteredDevices, 10);
                   deviceArray.graphData[0].graph[i].totalRegisteredDevices += parseInt(detail.totalRegisteredDevices, 10);
                   break;
@@ -680,6 +674,13 @@
       }
 
       return deviceArray;
+    }
+
+    function getReportTypeQuery(option, cacheOption) {
+      if (angular.isUndefined(cacheOption) || cacheOption === null) {
+        cacheOption = cacheValue;
+      }
+      return "?type=" + option + "&cache=" + cacheOption;
     }
 
     function getQuery(filter, cacheOption) {
@@ -714,13 +715,13 @@
       if (filter.value === 0) {
         for (var i = 6; i >= 0; i--) {
           var tmpItem = angular.copy(graphItem);
-          tmpItem.modifiedDate = moment().tz(timezone).subtract(i + 1, 'day').format(dayFormat);
+          tmpItem.date = moment().tz(timezone).subtract(i + 1, 'day').format(dayFormat);
           returnGraph.push(tmpItem);
         }
       } else if (filter.value === 1) {
         for (var x = 3; x >= 0; x--) {
           var temp = angular.copy(graphItem);
-          temp.modifiedDate = moment().tz(timezone)
+          temp.date = moment().tz(timezone)
             .startOf('week')
             .subtract(dayOffset + (x * 7), 'day')
             .format(dayFormat);
@@ -729,7 +730,7 @@
       } else {
         for (var y = 2; y >= 0; y--) {
           var item = angular.copy(graphItem);
-          item.modifiedDate = moment().tz(timezone)
+          item.date = moment().tz(timezone)
             .subtract(y, 'month')
             .startOf('month')
             .format(monthFormat);
@@ -761,11 +762,7 @@
         } else {
           Log.debug(debugMessage + '  Status: ' + error.status);
         }
-        if (angular.isDefined(error.data) && angular.isDefined(error.data.trackingId) && (error.data.trackingId !== null)) {
-          Notification.notify([message + '<br>' + $translate.instant('reportsPage.trackingId') + error.data.trackingId], 'error');
-        } else {
-          Notification.notify([message], 'error');
-        }
+        Notification.errorWithTrackingId(error, message);
         return returnItem;
       } else {
         return ABORT;

@@ -39,7 +39,7 @@
       return $http.get(sunlightReportUrl + reportName, config);
     }
 
-    function getReportingData(reportName, timeSelected, mediaType) {
+    function getReportingData(reportName, timeSelected, mediaType, isSnapshot) {
       var config, startTimeStamp, endTimeStamp, dataPromise;
       switch (timeSelected) {
         // today
@@ -49,7 +49,7 @@
           config = getQueryConfig('fifteen_minutes', mediaType, startTimeStamp, endTimeStamp);
           dataPromise = getStats(reportName, config)
           .then(function (response) {
-            var localTimeData = downSampleByHour(response.data.data);
+            var localTimeData = downSampleByHour(response.data.data, isSnapshot);
             return fillEmptyData(
               (moment.range(startTimeStamp.add(1, 'hours').toDate(), endTimeStamp.add(1, 'days').startOf('day').toDate())),
               'h', localTimeData, hourFormat, false);
@@ -129,16 +129,22 @@
       };
     }
 
-    function downSampleByHour(data) {
+    function downSampleByHour(data, isSnapshot) {
       var statsGroupedByHour = _.groupBy(data, function (stats) {
         return moment(stats.createdTime).toDate().getHours();
       });
 
       var downSampledStatsByHour = [];
       _.map(statsGroupedByHour, function (statsList) {
-        var reducedForHour = _.reduce(statsList, reduceOrgStatsByHour, emptyOrgstats);
-        reducedForHour.avgTaskWaitTime = roundTwoDecimalPlaces(reducedForHour.avgTaskWaitTime / convertInMinutes);
-        reducedForHour.avgTaskCloseTime = roundTwoDecimalPlaces(reducedForHour.avgTaskCloseTime / convertInMinutes);
+        var reducedForHour = {};
+        if (isSnapshot) {
+          reducedForHour = _.reduce(statsList, reduceOrgSnapshotStatsByHour, emptyOrgstats);
+        } else {
+          reducedForHour = _.reduce(statsList, reduceOrgStatsByHour, emptyOrgstats);
+          reducedForHour.avgTaskWaitTime = roundTwoDecimalPlaces(reducedForHour.avgTaskWaitTime / convertInMinutes);
+          reducedForHour.avgTaskCloseTime = roundTwoDecimalPlaces(reducedForHour.avgTaskCloseTime / convertInMinutes);
+          reducedForHour.avgCsatScores = roundTwoDecimalPlaces(reducedForHour.avgCsatScores);
+        }
         downSampledStatsByHour.push(reducedForHour);
       });
       return downSampledStatsByHour;
@@ -154,6 +160,7 @@
         var reducedForDay = _.reduce(statsList, reduceOrgStatsByDay, emptyOrgstats);
         reducedForDay.avgTaskWaitTime = roundTwoDecimalPlaces(reducedForDay.avgTaskWaitTime / convertInMinutes);
         reducedForDay.avgTaskCloseTime = roundTwoDecimalPlaces(reducedForDay.avgTaskCloseTime / convertInMinutes);
+        reducedForDay.avgCsatScores = roundTwoDecimalPlaces(reducedForDay.avgCsatScores);
         downSampledStatsByDay.push(reducedForDay);
       });
       return downSampledStatsByDay;
@@ -168,6 +175,7 @@
         var reducedForWeek = _.reduce(statsList, reduceOrgStatsByWeek, emptyOrgstats);
         reducedForWeek.avgTaskWaitTime = roundTwoDecimalPlaces(reducedForWeek.avgTaskWaitTime / convertInMinutes);
         reducedForWeek.avgTaskCloseTime = roundTwoDecimalPlaces(reducedForWeek.avgTaskCloseTime / convertInMinutes);
+        reducedForWeek.avgCsatScores = roundTwoDecimalPlaces(reducedForWeek.avgCsatScores);
         downSampledStatsByWeek.push(reducedForWeek);
       });
       return downSampledStatsByWeek;
@@ -182,9 +190,16 @@
         var reducedForMonth = _.reduce(statsList, reduceOrgStatsByMonth, emptyOrgstats);
         reducedForMonth.avgTaskWaitTime = roundTwoDecimalPlaces(reducedForMonth.avgTaskWaitTime / convertInMinutes);
         reducedForMonth.avgTaskCloseTime = roundTwoDecimalPlaces(reducedForMonth.avgTaskCloseTime / convertInMinutes);
+        reducedForMonth.avgCsatScores = roundTwoDecimalPlaces(reducedForMonth.avgCsatScores);
         downSampledStatsByMonth.push(reducedForMonth);
       });
       return downSampledStatsByMonth;
+    }
+
+    function reduceOrgSnapshotStatsByHour(stats1, stats2) {
+      var resultStats = reduceOrgSnapshotStats(stats1, stats2);
+      resultStats.createdTime = moment(stats2.createdTime).startOf('hour').add(1, 'hours').format(hourFormat);
+      return resultStats;
     }
 
     function reduceOrgStatsByHour(stats1, stats2) {
@@ -213,6 +228,13 @@
       return resultStats;
     }
 
+    function reduceOrgSnapshotStats(stats1, stats2) {
+      return _.clone(stats2);
+
+      // numWorkingTasks and numPendingTasks need to be the last one in the group. The way reduce works
+      //   (empty, first, ... last) and because of the above statement, we don't have to set these two explicitly
+    }
+
     function reduceOrgStats(stats1, stats2) {
       var resultStats = _.clone(stats2);
       resultStats.avgTaskWaitTime = calculateAvgWaitTime(stats1, stats2);
@@ -220,7 +242,7 @@
       resultStats.numTasksAbandonedState = stats1.numTasksAbandonedState + stats2.numTasksAbandonedState;
       resultStats.numTasksHandledState = stats1.numTasksHandledState + stats2.numTasksHandledState;
       resultStats.numCsatScores = stats1.numCsatScores + stats2.numCsatScores;
-      resultStats.avgCsatScores = roundTwoDecimalPlaces(calculateAverageCsat(stats1, stats2));
+      resultStats.avgCsatScores = calculateAverageCsat(stats1, stats2);
       return resultStats;
     }
 
@@ -255,7 +277,6 @@
       var csat = (totalCsatScores > 0) ?
         ((stats1.avgCsatScores * stats1.numCsatScores) + (stats2.avgCsatScores * stats2.numCsatScores)) /
         (stats1.numCsatScores + stats2.numCsatScores) : 0;
-      csat = Math.round(csat * 100) / 100; // precision upto two decimal places
       return csat;
     }
 

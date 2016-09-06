@@ -1,0 +1,17 @@
+.add-resource-group-modal {
+  // Following CSS should be merged into the toolkit
+  .cs-form__section {
+    padding: 0 0 1em 0;
+    & + .cs-form__section {
+      padding-top: 2rem;
+    }
+  }
+
+  .section__info {
+    margin-bottom: 2rem;
+  }
+
+  .section__content {
+    width: calc(75% - 8.33333%);
+  }
+}

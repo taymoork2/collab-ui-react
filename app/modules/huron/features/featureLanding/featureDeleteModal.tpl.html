@@ -7,8 +7,10 @@
       translate-values="{featureType : huronFeatureDelete.featureType}"></p>
 </div>
 <div class="modal-body">
-  <p><span translate="huronFeatureDetails.deleteConfirmText"
-            translate-values="{featureName : huronFeatureDelete.featureName, featureType : huronFeatureDelete.featureType }"></span></p>
+  <div class="feature-delete-modal">
+    <p translate="huronFeatureDetails.deleteConfirmText"
+       translate-values="{featureName : huronFeatureDelete.featureName, featureType : huronFeatureDelete.featureType }"></p>
+  </div>
 </div>
 <div class="modal-footer">
   <button id="cancelDeleteFeature" class="btn" ng-click="$dismiss();" translate="common.cancel"></button>

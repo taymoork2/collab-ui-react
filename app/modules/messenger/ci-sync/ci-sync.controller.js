@@ -3,7 +3,9 @@
 
   angular
     .module('Messenger')
-    .controller('CiSyncCtrl', CiSyncCtrl);
+    .controller('CiSyncCtrl', CiSyncCtrl)
+    .directive('msgrTextStatusOn', msgrTextStatusOn)
+    .directive('msgrTextStatusOff', msgrTextStatusOff);
 
   /* @ngInject */
   function CiSyncCtrl($q, $translate, Authinfo, Log, Notification, CiService, SyncService) {
@@ -64,6 +66,7 @@
     vm.dirsyncStatusTooltip = $translate.instant(translatePrefix + 'dirsyncStatusTooltip');
     vm.authRedirectTooltip = $translate.instant(translatePrefix + 'authRedirectTooltip');
     vm.patchSyncButtonText = $translate.instant(translatePrefix + 'patchSyncButtonText');
+    vm.orgAdminLinkTooltip = $translate.instant(translatePrefix + 'orgAdminLinkTooltip');
 
     vm.syncInfo = {
       messengerOrgName: 'Unknown',
@@ -265,5 +268,17 @@
           });
       }
     }
+  }
+
+  function msgrTextStatusOn() {
+    return {
+      templateUrl: 'modules/messenger/ci-sync/ciSyncTextStatusOn.html'
+    };
+  }
+
+  function msgrTextStatusOff() {
+    return {
+      templateUrl: 'modules/messenger/ci-sync/ciSyncTextStatusOff.html'
+    };
   }
 })();

@@ -40,6 +40,7 @@
 
   .offhours-preview-message {
     height: 7rem;
+    overflow: hidden;
     @include vr-spacing(pt, 1);
     @include vr-spacing(mh, 4);
   }
@@ -76,7 +77,6 @@
     .message-area {
       height: 4.5rem;
       width: 20rem;
-      background-color: $white;
       resize: none;
       line-height: 1.4rem;
       @include vr-spacing(p, 0.75);
@@ -84,8 +84,12 @@
     }
   }
 
+  .business-hours-message.h4 {
+    @include vr-spacing(pt, 1.5);
+  }
+
   .day-picker {
-    height: 4rem;
+    height: 3rem;
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
@@ -137,5 +141,9 @@
       width: 20rem;
       @include vr-spacing(pt, 0.5);
     }
+  }
+  .ct-input-error {
+    color: $color-alerts-base;
+    padding-bottom: 1rem;
   }
 }

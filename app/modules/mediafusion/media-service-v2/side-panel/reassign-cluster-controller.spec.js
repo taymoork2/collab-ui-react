@@ -51,4 +51,11 @@ describe('Controller: ReassignClusterControllerV2', function () {
     expect(controller.saving).toBe(true);
     expect(MediaClusterServiceV2.moveV2Host).toHaveBeenCalled();
   });
+  it('check if createClusterV2 is called with  clusterId', function () {
+    controller.clusterDetail = null;
+    spyOn(MediaClusterServiceV2, 'createClusterV2').and.returnValue(redirectTargetPromise);
+    controller.reassign();
+    expect(controller.saving).toBe(true);
+    expect(MediaClusterServiceV2.createClusterV2).toHaveBeenCalled();
+  });
 });

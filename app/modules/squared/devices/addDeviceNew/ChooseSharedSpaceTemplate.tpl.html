@@ -18,7 +18,10 @@
           <h4 translate="addDeviceWizard.chooseSharedSpace.existingPlace"></h4>
           <span>&nbsp;</span>
         </div>
-        <div class="errorBox" ng-hide="choosePlace.hasRooms || choosePlace.isExistingCollapsed">
+        <div ng-hide="choosePlace.hasRooms || choosePlace.isExistingCollapsed || choosePlace.placesLoaded">
+          <div cs-loader class="loader-example--large"></div>
+        </div>
+        <div class="errorBox" ng-hide="choosePlace.hasRooms || choosePlace.isExistingCollapsed || !choosePlace.placesLoaded">
           <i class="icon icon-warning"></i>
           <span translate="addDeviceWizard.chooseSharedSpace.noExistingPlaces"></span>
         </div>
@@ -37,7 +40,7 @@
     </div>
   </div>
 
-  <div class="chooseExistingPlace" ng-hide="choosePlace.isExistingCollapsed || !choosePlace.hasRooms">
+  <div class="chooseExistingPlace" ng-hide="choosePlace.isExistingCollapsed || !choosePlace.hasRooms || !choosePlace.placesLoaded">
     <form class="chooseExistingPlaceForm" onsubmit="$('#next-button').click()">
       <h4 translate="addDeviceWizard.chooseSharedSpace.existingPlace"></h4>
       <p translate="addDeviceWizard.chooseSharedSpace.existingPlaceInstructions"></p>

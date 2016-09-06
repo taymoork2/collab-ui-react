@@ -5,7 +5,7 @@
     </header>
     <section>
       <div class="customer-avg-rooms">
-        <p class="report-description">{{nav.avgRoomsDescription}}</p>
+        <p class="report-description">{{nav.getDescription('avgRooms.avgRoomsDescription')}}</p>
         <div id="avgRoomsdiv" class="barchart" ng-class="{'active-chart': !nav.isEmpty(nav.avgRoomStatus) && !nav.isRefresh(nav.avgRoomStatus)}"></div>
         <div class="spinner-position" ng-if="nav.isRefresh(nav.avgRoomStatus)">
           <i class='icon icon-spinner icon-2x'></i>

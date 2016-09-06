@@ -4,7 +4,7 @@
   angular.module('Squared')
     .controller('AddLinesCtrl', AddLinesCtrl);
   /* @ngInject */
-  function AddLinesCtrl($stateParams, $state, $scope, Notification, $translate, $q, CommonLineService, Authinfo, CsdmPlaceService, CsdmCodeService, DialPlanService) {
+  function AddLinesCtrl($stateParams, $state, $scope, Notification, $translate, $q, CommonLineService, Authinfo, CsdmHuronPlaceService, CsdmCodeService, DialPlanService) {
     var vm = this;
     vm.wizardData = $stateParams.wizard.state().data;
 
@@ -65,7 +65,7 @@
             placeEntity.externalNumber = entity.externalNumber.pattern;
           }
 
-          CsdmPlaceService.createCmiPlace(entity.name, entity.assignedDn.pattern)
+          CsdmHuronPlaceService.createCmiPlace(entity.name, entity.assignedDn.pattern)
             .then(successcb)
             .catch(function (error) {
               Notification.errorResponse(error, 'placesPage.placeError');
@@ -88,16 +88,21 @@
     };
 
     function activateDID() {
-
-
       $q.all([CommonLineService.loadInternalNumberPool(), CommonLineService.loadExternalNumberPool(), CommonLineService.loadPrimarySiteInfo(), toggleShowExtensions()])
         .finally(function () {
-          vm.isDisabled = false;
-
           $scope.internalNumberPool = CommonLineService.getInternalNumberPool();
           $scope.externalNumberPool = CommonLineService.getExternalNumberPool();
           $scope.externalNumber = $scope.externalNumberPool[0];
           $scope.telephonyInfo = CommonLineService.getTelephonyInfo();
+          /*if ($scope.internalNumberPool.length === 0 || $scope.externalNumberPool.length === 0) {
+            vm.isDisabled = true;
+          } else {
+            vm.isDisabled = false;
+          }*/
+
+          vm.isDisabled = !!($scope.internalNumberPool.length === 0 || $scope.externalNumberPool.length === 0);
+
+
           if (vm.showExtensions === true) {
             CommonLineService.assignDNForUserList($scope.entitylist);
             $scope.validateDnForUser();

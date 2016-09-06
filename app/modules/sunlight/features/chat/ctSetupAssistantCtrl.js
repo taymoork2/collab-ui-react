@@ -73,6 +73,7 @@
     vm.timezoneOptions = CTService.getTimezoneOptions();
     vm.ChatTemplateButtonText = $translate.instant('common.finish');
     vm.lengthConstants = CTService.getLengthValidationConstants();
+    vm.isBusinessDaySelected = true;
 
     /**
      * Type enumerations
@@ -161,12 +162,15 @@
 
     //Template related constants  variables used after editing template
     if ($stateParams.isEditFeature) {
-      vm.orgName = $stateParams.template.configuration.mediaSpecificConfiguration.displayText;
-      vm.logoUrl = $stateParams.template.configuration.mediaSpecificConfiguration.orgLogoUrl;
-      vm.timings.startTime.label = $stateParams.template.configuration.pages.offHours.schedule.timings.startTime;
-      vm.timings.endTime.label = $stateParams.template.configuration.pages.offHours.schedule.timings.endTime;
-      vm.scheduleTimeZone = CTService.getTimeZone($stateParams.template.configuration.pages.offHours.schedule.timezone);
-      var businessDays = $stateParams.template.configuration.pages.offHours.schedule.businessDays;
+      var config = $stateParams.template.configuration;
+      vm.selectedTemplateProfile = config.mediaSpecificConfiguration.useOrgProfile ? vm.profiles.org : vm.profiles.agent;
+      vm.selectedAgentProfile = config.mediaSpecificConfiguration.useAgentRealName ? vm.agentNames.realName : vm.agentNames.alias;
+      vm.orgName = config.mediaSpecificConfiguration.displayText;
+      vm.logoUrl = config.mediaSpecificConfiguration.orgLogoUrl;
+      vm.timings.startTime.label = config.pages.offHours.schedule.timings.startTime;
+      vm.timings.endTime.label = config.pages.offHours.schedule.timings.endTime;
+      vm.scheduleTimeZone = CTService.getTimeZone(config.pages.offHours.schedule.timezone);
+      var businessDays = config.pages.offHours.schedule.businessDays;
       vm.days = _.map(CTService.getDays(), function (day) {
         var selectedDay = day;
         selectedDay.isSelected = _.contains(businessDays, day.label);
@@ -288,26 +292,6 @@
               feedbackQuery: {
                 displayText: $translate.instant('careChatTpl.feedbackQuery')
               },
-              ratings: [{
-
-                displayText: $translate.instant('careChatTpl.rating1Text'),
-                dictionaryType: {
-                  fieldSet: 'cisco.base.ccc.pod',
-                  fieldName: 'cccRatingPoints'
-                }
-              }, {
-                displayText: $translate.instant('careChatTpl.rating2Text'),
-                dictionaryType: {
-                  fieldSet: 'cisco.base.ccc.pod',
-                  fieldName: 'cccRatingPoints'
-                }
-              }, {
-                displayText: $translate.instant('careChatTpl.rating3Text'),
-                dictionaryType: {
-                  fieldSet: 'cisco.base.ccc.pod',
-                  fieldName: 'cccRatingPoints'
-                }
-              }],
               comment: {
                 displayText: $translate.instant('careChatTpl.ratingComment'),
                 dictionaryType: {
@@ -399,7 +383,7 @@
     }
 
     vm.validateNameLength = function () {
-      return vm.template.name.length == vm.lengthConstants.empty || vm.template.name.length <= vm.lengthConstants.multiLineMaxCharLimit;
+      return vm.template.name.length == vm.lengthConstants.empty || isValidMultilineField(vm.template.name);
     };
 
     vm.isNamePageValid = function () {
@@ -414,28 +398,108 @@
       return false;
     }
 
+    function isValidSinglelineField(fieldDisplayText) {
+      return (fieldDisplayText.length <= vm.lengthConstants.singleLineMaxCharLimit);
+    }
+
+    function isValidMultilineField(fieldDisplayText) {
+      return (fieldDisplayText.length <= vm.lengthConstants.multiLineMaxCharLimit);
+    }
+
     function isAgentUnavailablePageValid() {
-      return (vm.template.configuration.pages.agentUnavailable.fields.agentUnavailableMessage.displayText !== '');
+      return isValidMultilineField(vm.template.configuration.pages.agentUnavailable.fields.agentUnavailableMessage.displayText);
     }
 
     function isOffHoursPageValid() {
       setOffHoursWarning();
-      if (vm.template.configuration.pages.offHours.message != '' && _.find(vm.days, 'isSelected')) {
+      if (isValidMultilineField(vm.template.configuration.pages.offHours.message) && vm.isBusinessDaySelected) {
         setOffHoursData();
         return true;
       }
+      return false;
+    }
+
+    function isFeedbackPageValid() {
+      return (isValidMultilineField(vm.template.configuration.pages.feedback.fields.feedbackQuery.displayText)
+      && isValidSinglelineField(vm.template.configuration.pages.feedback.fields.comment.displayText));
+    }
+
+    function isStatusMessagesPageValid() {
+      var chatStatusMessagesObj = vm.template.configuration.chatStatusMessages.messages;
+      return isValidSinglelineField(chatStatusMessagesObj.connectingMessage.displayText)
+      && isValidSinglelineField(chatStatusMessagesObj.waitingMessage.displayText)
+      && isValidSinglelineField(chatStatusMessagesObj.enterRoomMessage.displayText)
+      && isValidSinglelineField(chatStatusMessagesObj.leaveRoomMessage.displayText)
+      && isValidSinglelineField(chatStatusMessagesObj.chattingMessage.displayText);
+    }
+
+    vm.isTypeDuplicate = false;
+
+    var nonHeaderFieldNames = _.filter(_.keys(vm.template.configuration.pages.customerInformation.fields),
+        function (name) { return (name !== "welcomeHeader"); });
+
+    function getConfiguredTypes() {
+      var typesConfigured = _.map(nonHeaderFieldNames, function (fieldName) {
+        return (vm.getAttributeParam("value", "type", fieldName)).id;
+      });
+      return typesConfigured;
+    }
+
+    function isSelectedTypeDuplicate(selectedType) {
+      vm.isTypeDuplicate = false;
+
+      var typesConfigured = getConfiguredTypes();
+      if (_.filter(typesConfigured, function (type) { return type === selectedType.id; }).length > 1) {
+        vm.isTypeDuplicate = true;
+        return vm.isTypeDuplicate;
+      } else {
+        return false;
+      }
+    }
+
+    function areAllTypesUnique() {
+      var configuredTypes = getConfiguredTypes();
+      var uniqueConfiguredTypes = _.unique(configuredTypes);
+
+      return (configuredTypes.length === uniqueConfiguredTypes.length);
+    }
+
+    function areAllFixedFieldsValid() {
+      return isValidSinglelineField(vm.getAttributeParam('value', 'header', 'welcomeHeader'))
+          && isValidSinglelineField(vm.getAttributeParam('value', 'organization', 'welcomeHeader'));
+    }
+
+    function areAllDynamicFieldsValid() {
+      return _.reduce(_.map(nonHeaderFieldNames, function (fieldName) {
+        return isValidSinglelineField(vm.getAttributeParam('value', 'label', fieldName))
+                && isValidSinglelineField(vm.getAttributeParam('value', 'hintText', fieldName));
+      }), function (x, y) { return x && y; }, true);
+    }
+
+    vm.validateType = function (selectedType) {
+      return !(selectedType && isSelectedTypeDuplicate(selectedType));
+    };
+
+    function isCustomerInformationPageValid() {
+      return areAllTypesUnique() && areAllFixedFieldsValid() && areAllDynamicFieldsValid();
     }
 
     function nextButton() {
       switch (vm.currentState) {
         case 'name':
           return vm.isNamePageValid();
+        case 'customerInformation':
+          return isCustomerInformationPageValid();
         case 'profile':
           return isProfilePageValid();
         case 'agentUnavailable':
           return isAgentUnavailablePageValid();
         case 'offHours':
           return isOffHoursPageValid();
+        case 'feedback':
+          return isFeedbackPageValid();
+        case 'chatStatusMessages':
+          return isStatusMessagesPageValid();
         case 'summary':
           return 'hidden';
         default:
@@ -546,8 +610,10 @@
     };
 
     vm.addCategoryOption = function () {
-      angular.element('#categoryTokensElement').tokenfield('createToken', vm.categoryOptionTag);
-      vm.categoryOptionTag = '';
+      if (vm.categoryOptionTag) {
+        angular.element('#categoryTokensElement').tokenfield('createToken', vm.categoryOptionTag);
+        vm.categoryOptionTag = '';
+      }
     };
 
     vm.isUserProfileSelected = function () {
@@ -555,20 +621,12 @@
     };
 
     function setTemplateProfile() {
-      if (vm.selectedTemplateProfile === vm.profiles.org) {
-        vm.template.configuration.mediaSpecificConfiguration = {
-          useOrgProfile: true,
-          displayText: vm.orgName,
-          orgLogoUrl: vm.logoUrl
-        };
-      } else if (vm.selectedTemplateProfile === vm.profiles.agent) {
-        vm.template.configuration.mediaSpecificConfiguration = {
-          useOrgProfile: false,
-          useAgentRealName: false,
-          orgLogoUrl: vm.logoUrl,
-          displayText: vm.orgName
-        };
-      }
+      vm.template.configuration.mediaSpecificConfiguration = {
+        useOrgProfile: vm.selectedTemplateProfile === vm.profiles.org,
+        useAgentRealName: vm.selectedAgentProfile === vm.agentNames.realName,
+        orgLogoUrl: vm.logoUrl,
+        displayText: vm.getAttributeParam('value', 'organization', 'welcomeHeader')
+      };
     }
 
     function setOffHoursData() {
@@ -632,6 +690,7 @@
 
     function setDay(index) {
       vm.days[index].isSelected = !vm.days[index].isSelected;
+      vm.isBusinessDaySelected = _.find(vm.days, 'isSelected');
       setDayPreview();
     }
 

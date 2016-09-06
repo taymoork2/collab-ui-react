@@ -61,11 +61,11 @@ namespace globalsettings {
         expect(controller.allowReadOnlyAccess).toBeDefined();
       });
 
-      it('should query org service and keep allowReadOnlyAccess undefined if not set in orgData', ()=> {
+      it('should query org service and set allowReadOnlyAccess true if not set in orgData', ()=> {
         initController({success: true, orgSettings: {}});
 
         expect(Orgservice.getOrg).toHaveBeenCalledWith(jasmine.any(Function), orgId, jasmine.any(Boolean));
-        expect(controller.allowReadOnlyAccess).toBeUndefined()
+        expect(controller.allowReadOnlyAccess).toBeTruthy()
       });
 
       it('should query org service and set allowCrashLogUpload to true from orgData', ()=> {

@@ -4,7 +4,7 @@
 
 describe('Onboard users with Message Service', function () {
   var token;
-  var testUser = utils.randomTestGmailwithSalt('meetings');
+  var testUser = utils.randomTestGmailwithSalt('message');
   var LICENSE = users.paidMsgCheckbox;
 
   function checkAndClickInterop(curState, targetState) {

@@ -34,7 +34,9 @@
       atlasPinSettings: 'atlas-pin-settings',
       atlasPstnTfn: 'atlas-pstn-tfn',
       atlasReadOnlyAdmin: 'atlas-read-only-admin',
+      atlasComplianceRole: 'atlas-compliance-role',
       atlasSettingsPage: 'atlas-settings-page',
+      atlasShipDevicesInternational: 'atlas-ship-devices-international',
       atlasSipUriDomain: 'atlas-sip-uri-domain',
       atlasSipUriDomainEnterprise: 'atlas-sip-uri-domain-enterprise',
       atlasWebexTrials: 'atlas-webex-trials',
@@ -68,6 +70,7 @@
       huronClassOfService: 'COS',
       huronInternationalDialingTrialOverride: 'huronInternationalDialingTrialOverride',
       huronKEM: 'huronKEM',
+      huronSpeedDial: 'huronSpeedDial',
       iosActionBar: 'ios-action-bar',
       iosAecType: 'ios-aec-type',
       iosCameraview: 'ios-cameraview',
@@ -144,7 +147,8 @@
       enableCrashLogs: 'csdm-enable-crash-logs',
       csdmPlaces: 'csdm-places',
       optionalvmdid: 'optional-vm-did',
-      globalStatus: 'global-status'
+      globalStatus: 'global-status',
+      atlasF237ResourceGroups: 'atlas-f237-resource-group'
     };
 
     var toggles = {};

@@ -832,6 +832,25 @@ describe('Controller: AAScheduleModalCtrl', function () {
       };
     });
 
+    it('should set the required and set dirty', function () {
+      spyOn(controller.holidaysForm.holidayForm0.holidayEnd, '$setDirty');
+      spyOn(controller.holidaysForm.holidayForm0.holidayStart, '$setDirty');
+      spyOn(controller, 'isHolidaysSavable').and.returnValue(false);
+      controller.holidays = [{
+        isOpen: true,
+        exactDate: false,
+        month: '',
+        rank: '',
+        day: ''
+      }];
+      controller.forceCheckHoliday();
+      expect(controller.holidaysForm.holidayForm0.holidayEnd.$setDirty).toHaveBeenCalled();
+      expect(controller.holidaysForm.holidayForm0.holidayStart.$setDirty).toHaveBeenCalled();
+      expect(controller.holidaysForm.holidayForm0.month.$error.required).toBeTruthy();
+      expect(controller.holidaysForm.holidayForm0.rank.$error.required).toBeTruthy();
+      expect(controller.holidaysForm.holidayForm0.day.$error.required).toBeTruthy();
+    });
+
     it('should set the required', function () {
       controller.holidays = [{
         isOpen: true,

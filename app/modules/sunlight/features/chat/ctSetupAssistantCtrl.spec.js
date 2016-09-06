@@ -46,6 +46,52 @@ describe('Care Chat Setup Assistant Ctrl', function () {
     });
   };
 
+  var duplicateFieldTypeData = {
+    'field1': {
+      attributes: [{
+        name: 'type',
+        value: { id: 'name' }
+      }]
+    },
+    'field2': {
+      attributes: [{
+        name: 'type',
+        value: { id: 'email' }
+      }]
+    },
+    'field3': {
+      attributes: [{
+        name: 'type',
+        value: { id: 'name' }
+      }]
+    } };
+  var customerInfoWithLongAttributeValue = {
+    'welcomeHeader': {
+      'attributes': [
+        { 'name': 'header', 'value': 'Welcome to' },
+        { 'name': 'organization', 'value': Array(52).join("c") }
+      ]
+    },
+    'field1': {
+      'attributes': [
+        { 'name': 'label', 'value': 'Name' },
+        { 'name': 'hintText', 'value': 'Something' },
+        { 'name': 'type', 'value': { id: 'name' } }
+      ] },
+    'field2': {
+      'attributes': [
+        { 'name': 'label', 'value': 'Email' },
+        { 'name': 'hintText', 'value': Array(52).join("d") },
+        { 'name': 'type', 'value': { id: 'email' } }
+      ] },
+    'field3': {
+      'attributes': [
+        { 'name': 'label', 'value': 'SomethingElse' },
+        { 'name': 'hintText', 'value': 'SomethingElse' },
+        { 'name': 'type', 'value': { id: 'custom' } }
+      ] }
+  };
+
   var selectedDaysByDefault = businessHours.selectedDaysByDefault;
   var defaultTimeZone = businessHours.defaultTimeZone;
   var defaultDayPreview = businessHours.defaultDayPreview;
@@ -168,6 +214,22 @@ describe('Care Chat Setup Assistant Ctrl', function () {
       expect(controller.previousButton()).toEqual(true);
       expect(controller.nextButton()).toEqual(true);
     });
+
+    it('next button should be disabled if feedback comment is longer than 50 characters', function () {
+      controller.template.configuration.pages.feedback.fields.comment.displayText = Array(52).join("a");
+      checkStateOfNavigationButtons(FEEDBACK_PAGE_INDEX, true, false);
+    });
+
+    it('next button should be disabled if feedback query is longer than 250 characters', function () {
+      controller.template.configuration.pages.feedback.fields.feedbackQuery.displayText = Array(252).join("a");
+      checkStateOfNavigationButtons(FEEDBACK_PAGE_INDEX, true, false);
+    });
+
+    it('next button should be enabled if feedback comment and query are valid', function () {
+      controller.template.configuration.pages.feedback.fields.comment.displayText = "Feedback comment";
+      controller.template.configuration.pages.feedback.fields.feedbackQuery.displayText = "Feedback query";
+      checkStateOfNavigationButtons(FEEDBACK_PAGE_INDEX, true, true);
+    });
   });
 
   describe('Profile Page', function () {
@@ -204,6 +266,7 @@ describe('Care Chat Setup Assistant Ctrl', function () {
       controller.nextButton();
       expect(controller.template.configuration.mediaSpecificConfiguration).toEqual({
         useOrgProfile: true,
+        useAgentRealName: false,
         displayText: OrgName,
         orgLogoUrl: dummyLogoUrl
       });
@@ -213,6 +276,7 @@ describe('Care Chat Setup Assistant Ctrl', function () {
       resolveLogoPromise();
       resolveLogoUrlPromise();
       controller.selectedTemplateProfile = controller.profiles.agent;
+      controller.selectedAgentProfile = controller.agentNames.alias;
       controller.nextButton();
       expect(controller.template.configuration.mediaSpecificConfiguration).toEqual({
         useOrgProfile: false,
@@ -351,6 +415,25 @@ describe('Care Chat Setup Assistant Ctrl', function () {
       expect(mockElementObject.tokenfield).toHaveBeenCalledWith('createToken', 'Mock Category Token');
       expect(controller.categoryOptionTag).toEqual('');
     });
+
+    it("should validate type for a unique field", function () {
+      expect(controller.validateType({ id: 'name' })).toEqual(true);
+    });
+
+    it("should identify a duplicate type configured", function () {
+      controller.template.configuration.pages.customerInformation.fields = duplicateFieldTypeData;
+      expect(controller.validateType({ id: 'name' })).toEqual(false);
+    });
+
+    it("next button should get disabled when duplicate types are configured in customerInfo page", function () {
+      controller.template.configuration.pages.customerInformation.fields = duplicateFieldTypeData;
+      expect(controller.nextButton()).toEqual(false);
+    });
+
+    it("next button should get disabled when attributes of customerInfo: Static and Dynamic fields have value > 50 chars", function () {
+      controller.template.configuration.pages.customerInformation.fields = customerInfoWithLongAttributeValue;
+      expect(controller.nextButton()).toEqual(false);
+    });
   });
 
   describe('Off Hours Page', function () {
@@ -395,12 +478,13 @@ describe('Care Chat Setup Assistant Ctrl', function () {
 
     it('should disable the right btn if no days are selected', function () {
       deSelectAllDays();
-      expect(controller.nextButton()).toBe(undefined);
+      expect(controller.isBusinessDaySelected).toBe(undefined);
+      checkStateOfNavigationButtons(OFF_HOURS_PAGE_INDEX, true, false);
     });
 
-    it('should disable the right btn if off hours message is empty', function () {
-      controller.template.configuration.pages.offHours.message = '';
-      expect(controller.nextButton()).toBe(undefined);
+    it('should disable the right btn if off hours message is more than 250 characters', function () {
+      controller.template.configuration.pages.offHours.message = Array(252).join("a");
+      checkStateOfNavigationButtons(OFF_HOURS_PAGE_INDEX, true, false);
     });
 
     it('should select start time and end time correctly if startTime is less than endTime', function () {
@@ -580,8 +664,32 @@ describe('Care Chat Setup Assistant Ctrl', function () {
     beforeEach(function () {
       resolveLogoPromise();
     });
+    beforeEach(function () {
+      controller.currentState = controller.states[CHAT_STATUS_MESSAGES_PAGE_INDEX];
+    });
     it("should have previous and next button enabled", function () {
+      controller.template.configuration.chatStatusMessages.messages.connectingMessage.displayText = "Connecting Message";
+      controller.template.configuration.chatStatusMessages.messages.waitingMessage.displayText = "Waiting Message";
+      controller.template.configuration.chatStatusMessages.messages.enterRoomMessage.displayText = "Enter Room Message";
+      controller.template.configuration.chatStatusMessages.messages.leaveRoomMessage.displayText = "Left Room Message";
+      controller.template.configuration.chatStatusMessages.messages.chattingMessage.displayText = "Chatting Message";
       checkStateOfNavigationButtons(CHAT_STATUS_MESSAGES_PAGE_INDEX, true, true);
+    });
+    it("should have next button disabled if all the status messages are more than 50 characters", function () {
+      controller.template.configuration.chatStatusMessages.messages.connectingMessage.displayText = Array(60).join("n");
+      controller.template.configuration.chatStatusMessages.messages.waitingMessage.displayText = Array(60).join("n");
+      controller.template.configuration.chatStatusMessages.messages.enterRoomMessage.displayText = Array(60).join("n");
+      controller.template.configuration.chatStatusMessages.messages.leaveRoomMessage.displayText = Array(60).join("n");
+      controller.template.configuration.chatStatusMessages.messages.chattingMessage.displayText = Array(60).join("n");
+      checkStateOfNavigationButtons(CHAT_STATUS_MESSAGES_PAGE_INDEX, true, false);
+    });
+    it("should have next button disabled if any of the status messages are more than 50 characters", function () {
+      controller.template.configuration.chatStatusMessages.messages.connectingMessage.displayText = "Connecting Message";
+      controller.template.configuration.chatStatusMessages.messages.waitingMessage.displayText = "Waiting Message";
+      controller.template.configuration.chatStatusMessages.messages.enterRoomMessage.displayText = "Enter Room Message";
+      controller.template.configuration.chatStatusMessages.messages.leaveRoomMessage.displayText = "Left Room Message";
+      controller.template.configuration.chatStatusMessages.messages.chattingMessage.displayText = Array(60).join("n");
+      checkStateOfNavigationButtons(CHAT_STATUS_MESSAGES_PAGE_INDEX, true, false);
     });
   });
 
@@ -595,8 +703,8 @@ describe('Care Chat Setup Assistant Ctrl', function () {
       checkStateOfNavigationButtons(AGENT_UNAVAILABLE_PAGE_INDEX, true, true);
     });
 
-    it("next button should be disabled when unavailable msg is not present", function () {
-      controller.template.configuration.pages.agentUnavailable.fields.agentUnavailableMessage.displayText = '';
+    it("next button should be disabled when unavailable msg is more than 250 characters", function () {
+      controller.template.configuration.pages.agentUnavailable.fields.agentUnavailableMessage.displayText = Array(252).join("a");
       checkStateOfNavigationButtons(AGENT_UNAVAILABLE_PAGE_INDEX, true, false);
     });
 
