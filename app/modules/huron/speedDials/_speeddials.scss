@@ -75,4 +75,13 @@
     color: $gray-dark-2;
   }
 
+  .cs-input__messages {
+    display: block;
+    visibility: hidden;
+  }
+
+  .error .cs-input__messages {
+    visibility: visible;
+  }
+
 }
