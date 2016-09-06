@@ -4,7 +4,7 @@ describe('Controller: ServiceSetup', function () {
   var $scope, $state, $previousState, $q, $httpBackend, ServiceSetup, Notification, HuronConfig, HuronCustomer, DialPlanService;
   var Authinfo, VoicemailMessageAction;
   var model, customer, voicemail, externalNumberPool, usertemplate, form, timeZone, ExternalNumberService, ModalService, modalDefer, messageAction;
-  var $rootScope, FeatureToggleService;
+  var $rootScope, FeatureToggleService, PstnSetupService;
   var dialPlanDetailsNorthAmerica = [{
     countryCode: "+1",
     extensionGenerated: "false",
@@ -17,7 +17,8 @@ describe('Controller: ServiceSetup', function () {
   beforeEach(angular.mock.module('Sunlight'));
 
   beforeEach(inject(function (_$rootScope_, _$previousState_, _$q_, _ServiceSetup_, _Notification_, _HuronConfig_, _$httpBackend_,
-    _HuronCustomer_, _DialPlanService_, _ExternalNumberService_, _ModalService_, _Authinfo_, _VoicemailMessageAction_, _FeatureToggleService_) {
+    _HuronCustomer_, _DialPlanService_, _ExternalNumberService_, _ModalService_, _Authinfo_, _VoicemailMessageAction_, _FeatureToggleService_,
+    _PstnSetupService_) {
     $rootScope = _$rootScope_;
     $scope = $rootScope;
     $q = _$q_;
@@ -34,6 +35,7 @@ describe('Controller: ServiceSetup', function () {
     VoicemailMessageAction = _VoicemailMessageAction_;
     $previousState = _$previousState_;
     FeatureToggleService = _FeatureToggleService_;
+    PstnSetupService = _PstnSetupService_;
 
     customer = {
       "uuid": "84562afa-2f35-474f-ba0f-2def42864e12",
@@ -81,7 +83,10 @@ describe('Controller: ServiceSetup', function () {
     };
 
     form = {
-      '$invalid': false
+      '$invalid': false,
+      'ftswLocalDialingRadio': {
+        $setValidity: function () {}
+      }
     };
 
     messageAction = getJSONFixture('huron/json/settings/messageAction.json');
@@ -109,7 +114,7 @@ describe('Controller: ServiceSetup', function () {
     spyOn(ServiceSetup, 'updateVoicemailTimezone').and.returnValue($q.when());
     spyOn(ServiceSetup, 'updateVoicemailPostalcode').and.returnValue($q.when());
     spyOn(ExternalNumberService, 'refreshNumbers').and.returnValue($q.when());
-
+    spyOn(PstnSetupService, 'getCustomer').and.returnValue($q.when());
     spyOn(ServiceSetup, 'listInternalNumberRanges').and.callFake(function () {
       ServiceSetup.internalNumberRanges = model.numberRanges;
       return $q.when();
@@ -118,7 +123,10 @@ describe('Controller: ServiceSetup', function () {
     spyOn(ServiceSetup, 'getTimeZones').and.returnValue($q.when(timeZone));
     spyOn(Notification, 'notify');
     spyOn(Notification, 'errorResponse');
-    spyOn(DialPlanService, 'getCustomerDialPlanDetails').and.returnValue($q.when(dialPlanDetailsNorthAmerica));
+    spyOn(DialPlanService, 'getCustomerVoice').and.returnValue($q.when({
+      dialPlanDetails: dialPlanDetailsNorthAmerica
+    }));
+    spyOn(DialPlanService, 'updateCustomerVoice').and.returnValue($q.when());
     spyOn(ModalService, 'open').and.returnValue({
       result: modalDefer.promise
     });
@@ -800,7 +808,7 @@ describe('Controller: ServiceSetup', function () {
       });
 
       it('should call getCustomerDialPlanDetails()', function () {
-        expect(DialPlanService.getCustomerDialPlanDetails).toHaveBeenCalled();
+        expect(DialPlanService.getCustomerVoice).toHaveBeenCalled();
       });
 
       it('should call createInternalNumberRange() if hideFieldInternalNumberRange is false', function () {
@@ -821,7 +829,7 @@ describe('Controller: ServiceSetup', function () {
     describe('setServiceValues', function () {
 
       it('should call DialPlanService()', function () {
-        expect(DialPlanService.getCustomerDialPlanDetails).toHaveBeenCalled();
+        expect(DialPlanService.getCustomerVoice).toHaveBeenCalled();
       });
     });
 
@@ -930,6 +938,24 @@ describe('Controller: ServiceSetup', function () {
             voicemailPilotNumber: 'undefined8040506021015100215030504070415',
             voicemailPilotNumberGenerated: 'true'
           });
+      });
+    });
+
+    describe('dailing habits', function () {
+      it('should not call DialPlanService when dailing habit is not changed', function () {
+        controller.model.regionCode = '';
+        controller.model.initialRegionCode = '';
+        controller.initNext();
+        $scope.$apply();
+        expect(DialPlanService.updateCustomerVoice).not.toHaveBeenCalled();
+      });
+
+      it('should call DialPlanService when dailing habit is changed', function () {
+        controller.model.regionCode = '214';
+        controller.model.initialRegionCode = '';
+        controller.initNext();
+        $scope.$apply();
+        expect(DialPlanService.updateCustomerVoice).toHaveBeenCalled();
       });
     });
   });
