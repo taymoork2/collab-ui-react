@@ -4,7 +4,7 @@
   module.exports = wx2AdminWebClientApp;
 
   /* @ngInject */
-  function wx2AdminWebClientApp($timeout, $animate, $interval, $location, $rootScope, $state, $translate, $window, Auth, Authinfo, Config, Localize, Log, LogMetricsService, OnlineUpgradeService, PreviousState, SessionStorage, TokenService, TrackingId, Utils) {
+  function wx2AdminWebClientApp($animate, $interval, $location, $rootScope, $state, $translate, $window, Auth, Authinfo, Config, Localize, Log, LogMetricsService, OnlineUpgradeService, PreviousState, SessionStorage, TokenService, TrackingId, Utils) {
     //Expose the localize service globally.
     $rootScope.Localize = Localize;
     $rootScope.Utils = Utils;

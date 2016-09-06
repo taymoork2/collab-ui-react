@@ -1,5 +1,4 @@
 import { BmmpService } from '../index';
-require('./subscriptionUpgradeButton.scss');
 
 interface IChangesObj {
   subscriptionId: ng.IChangesObject;

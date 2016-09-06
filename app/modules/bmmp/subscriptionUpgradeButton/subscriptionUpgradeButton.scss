@@ -1,14 +1,37 @@
 @import "../../../styles/common";
 
-bmmp-subscription-upgrade-button {
+bmmp-subscription-upgrade-button.btn {
   display: inline-block;
+  padding: 0;
 
-  .cisco-bmmp-cta-widget a {
-    display: inline-block !important;
-    font-family: $brand-font-cisco-TT-Light !important;
-    font-size: 1rem !important;
-    line-height: 0.8125rem !important;
-    padding: 0.8125rem 1rem 0.625rem !important;
-    border: none !important;
+  .cisco-bmmp-cta-widget {
+    a {
+      display: inherit !important;
+      font-family: inherit !important;
+      font-size: inherit !important;
+      line-height: inherit !important;
+      padding: 0.8125rem 1rem 0.625rem !important;
+      border: inherit !important;
+      background-color: inherit !important;
+      color: inherit !important;
+    }
+
+    .reveal-modal.dialog & * {
+      display: inline-flex !important;
+      justify-content: center;
+      align-items: center;
+      height: 100% !important;
+      width: 100% !important;
+      line-height: inherit !important;
+
+    }
+
+    .reveal-modal.dialog & .loading-button,
+    .loading-button {
+      display: inline-block !important;
+      .loading {
+        width: auto !important;
+      }
+    }
   }
 }

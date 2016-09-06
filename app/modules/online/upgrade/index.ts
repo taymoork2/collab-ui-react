@@ -2,6 +2,8 @@ import { OnlineUpgradeComponent } from './upgradeModal.component';
 import { OnlineUpgradeService } from './upgrade.service';
 import subscriptionUpgradeButtonModule from '../../bmmp/subscriptionUpgradeButton';
 
+require('./upgradeModal.scss');
+
 export * from './upgrade.service';
 
 export default angular

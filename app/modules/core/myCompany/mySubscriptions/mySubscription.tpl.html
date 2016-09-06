@@ -30,6 +30,7 @@
         </div>
         <div class="columns medium-2 subscription-upgrade">
           <bmmp-subscription-upgrade-button
+            class="btn btn--primary"
             ng-if="subscription.subscriptionId && !subscription.isTrial && mcpSubscription.isOnline"
             subscription-id="::subscription.subscriptionId">
           </bmmp-subscription-upgrade-button>

@@ -5,19 +5,20 @@
   <div>
     <span translate="onlineUpgradeModal.body"></span>
   </div>
-  <div>
-    <button
-      ng-if="$ctrl.showCancelButton"
-      class="btn btn--default"
-      cs-btn
-      loading="$ctrl.cancelLoading"
-      ng-click="$ctrl.cancel()">
-      <span translate="onlineUpgradeModal.cancelButton"></span>
-    </button>
-    <bmmp-subscription-upgrade-button
-      show-loading="true"
-      subscription-id="$ctrl.subscriptionId"
-      widget-location="online-upgrade-modal">
-    </bmmp-subscription-upgrade-button>
-  </div>
+</div>
+<div class="modal-footer online-upgrade-modal">
+  <button
+    ng-if="$ctrl.showCancelButton"
+    class="btn btn--default"
+    cs-btn
+    loading="$ctrl.cancelLoading"
+    ng-click="$ctrl.cancel()">
+    <span translate="onlineUpgradeModal.cancelButton"></span>
+  </button>
+  <bmmp-subscription-upgrade-button
+    class="btn btn--primary"
+    show-loading="true"
+    subscription-id="$ctrl.subscriptionId"
+    widget-location="online-upgrade-modal">
+  </bmmp-subscription-upgrade-button>
 </div>
