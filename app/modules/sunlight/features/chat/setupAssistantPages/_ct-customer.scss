@@ -199,6 +199,7 @@
   .ct-attribute-field-label {
     @include vr-spacing(mb, 0);
     @include vr-spacing(ml, 1);
+    @include vr-spacing(pt, 0.5);
     font-family: "CiscoSansTT Regular";
   }
 
@@ -230,9 +231,6 @@
     width: 100%;
     .ct-customer-info-category-input {
       @include vr-spacing(mt, 0.25);
-      .cs-input__messages {
-        padding-left: 1rem;
-      }
     }
   }
 
@@ -286,6 +284,16 @@
     color: $color-alerts-base;
     padding-left: 1rem;
     padding-right: 1rem;
+    padding-bottom: 1rem;
+    line-height: 1.25rem;
+  }
+  .cs-input__messages {
+    padding-left: 1rem;
+  }
+  .ct-error-icon {
+    float: left;
+    padding-bottom: 0.4rem;
+    padding-right: 0.4rem;
   }
 }
 

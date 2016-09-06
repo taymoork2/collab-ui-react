@@ -77,7 +77,6 @@
     .message-area {
       height: 4.5rem;
       width: 20rem;
-      background-color: $white;
       resize: none;
       line-height: 1.4rem;
       @include vr-spacing(p, 0.75);
@@ -144,7 +143,7 @@
     }
   }
   .ct-input-error {
-    color: $color-negative-dark;
+    color: $color-alerts-base;
     padding-bottom: 1rem;
   }
 }

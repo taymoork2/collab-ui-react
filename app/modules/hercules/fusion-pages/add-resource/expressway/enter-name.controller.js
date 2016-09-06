@@ -64,7 +64,7 @@
     }
 
     function isValidName(name) {
-      return name && name.length >= 3;
+      return name && name.length >= vm.minlength;
     }
 
     function next() {

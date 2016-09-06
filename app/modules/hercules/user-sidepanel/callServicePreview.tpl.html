@@ -1,11 +1,11 @@
 <cs-sp-buttons ng-if="showButtons">
   <button id="btn-save" class="btn--primary btn-save"
-    cs-btn loading="saveLoading"
-    ng-click="updateEntitlements()">
+          cs-btn loading="saving"
+          ng-click="save()">
     <span translate="common.save"></span>
   </button>
   <button id="btn-cancel" ng-disabled="saving" translate="common.cancel"
-          ng-click="resetEntitlements()"></button>
+          ng-click="reset()"></button>
 </cs-sp-buttons>
 <cs-sp-container>
   <cs-sp-section class="cloud-extensions">
@@ -95,5 +95,18 @@
       {{callServiceConnect.status.description.defaultMessage}}
     </span>
 
+  </cs-sp-section>
+  <cs-sp-section class="cloud-extensions" ng-if="resourceGroup.show">
+    <div class="section-title-row">
+      <span class="section-name" translate="hercules.resourceGroups.resourceGroupHeading"></span>
+    </div>
+    <div>
+      <p class="extension-description" translate="hercules.resourceGroups.setDescription"></p>
+      <cs-select
+        ng-model="resourceGroup.selected"
+        options="resourceGroup.options"
+        on-change-fn="setShouldShowButtons()">
+      </cs-select>
+    </div>
   </cs-sp-section>
 </cs-sp-container>

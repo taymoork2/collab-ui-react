@@ -385,6 +385,9 @@
             onboardUser = onboardedUserWithEmail(user.email);
 
             if (user.httpStatus === 200 || user.httpStatus === 201) {
+              if (user.message === '700000') {
+                vm.licenseUnavailable = true;
+              }
               if (user.httpStatus === 200) {
                 $timeout(function () {
                   vm.model.numExistingUsers++;
@@ -392,9 +395,6 @@
                     numExistingUsers: vm.model.numExistingUsers
                   });
                 });
-                if (user.message === '700000') {
-                  vm.licenseUnavailable = true;
-                }
               } else {
                 $timeout(function () {
                   vm.model.numNewUsers++;

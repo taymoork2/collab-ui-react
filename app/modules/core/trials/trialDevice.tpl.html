@@ -44,7 +44,8 @@
       <div class="section__info">
         <h4 translate="trialModal.call.selectDevicesHeader"></h4>
         <p class="section__description" translate="trialModal.call.deviceLimitDescription"></p>
-        <p class="section__description" translate="trialModal.call.usOnly"></p>
+        <p class="section__description" ng-show = "!callTrial.supportsInternationalShipping" translate="trialModal.call.usOnly"></p>
+        <p class="section__description" ng-show = "callTrial.supportsInternationalShipping" translate="trialModal.call.trialDeviceShipmentLocations"></p>
       </div>
       <div class="section__content">
         <div class="sub-section">
