@@ -18,6 +18,11 @@
     function loadAssignments() {
       FusionClusterService.getAll()
         .then(function (clusters) {
+          return _.filter(clusters, function (cluster) {
+            return cluster.targetType === 'c_mgmt';
+          });
+        })
+        .then(function (clusters) {
           vm.clusters = clusters;
           _.forEach(vm.clusters, function (c) {
             vm.assignments[c.id] = c.resourceGroupId === resourceGroup.id;
