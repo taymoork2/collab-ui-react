@@ -1,6 +1,3 @@
-/**
- * Created by sumshami on 28/08/16.
- */
 (function () {
   'use strict';
 
@@ -24,7 +21,28 @@
         card.notEnabledText = 'overview.cards.care.notEnabledText';
         card.notEnabledFooter = 'overview.contactPartner';
         card.helper = OverviewHelper;
-        card.showHealth = false;
+        card.showHealth = true;
+
+        card.licenseEventHandler = function (licenses) {
+          card.allLicenses = licenses;
+          card.trial = _.some(filterLicenses(licenses), 'isTrial');
+
+          if (filterLicenses(licenses).length > 0) {
+            card.enabled = true; //don't disable if no licenses in case test org..
+          }
+        };
+
+        card.orgEventHandler = function (data) {
+          if (data.success && data.isTestOrg && card.allLicenses && card.allLicenses.length === 0) {
+            card.enabled = true; //If we are a test org and allLicenses is empty, enable the card.
+          }
+        };
+
+        function filterLicenses(licenses) {
+          return _.filter(licenses, function (license) {
+            return license.licenseType === 'CARE' && card.helper.isntCancelledOrSuspended(license);
+          });
+        }
 
         return card;
       }
