@@ -9,10 +9,18 @@
 		<div class="incidentStatus">
 			<h3>Incident Status</h3>
 			<div>
-				<label><input type="radio" ng-model="status" value="investigating">Investigating</label>
-				<label><input type="radio" ng-model="status" value="identified">Identified</label>
-				<label><input type="radio" ng-model="status" value="monitoring">Monitoring</label>
-				<label><input type="radio" ng-model="status" value="resolved">Resolved</label>
+				<label><input ng-click="toOperational=false" type="radio" ng-model="status" value="investigating">Investigating</label>
+				<label><input ng-click="toOperational=false" type="radio" ng-model="status" value="identified">Identified</label>
+				<label><input ng-click="toOperational=false" type="radio" ng-model="status" value="monitoring">Monitoring</label>
+				<label><input ng-click="toOperational=true" type="radio" ng-model="status" value="resolved">Resolved</label>
+			</div>
+			<div ng-model="toOperational" ng-init="toOperational=false" ng-show="toOperational">
+				<p ng-if="showOperational">
+					You can also <a ng-click="toOperationalFUN()">set your components to operational.</a>
+				</p>
+				<p ng-if="!showOperational">
+					Components will be set to operational upon submission of this incident update.
+				</p>
 			</div>
 		</div>
 
@@ -25,7 +33,34 @@
 			<h3>Component Statuses</h3>
 			<p ng-show="!showComponent">You can also <a ng-click="showComponentFUN()">update a component's status.</a></p>
 			<div ng-show="showComponent">
-				no components
+				<div ng-repeat="componentGroup in componentsTree">
+					<div class="groupComponent" ng-init="componentVisible=false">
+						<i class="icon icon-chevron-right" ng-click="componentVisible=true" ng-hide="componentVisible"></i>
+						<i class="icon icon-chevron-down" ng-click="componentVisible=false" ng-show="componentVisible"></i>
+						<span class="componentName">{{componentGroup.componentName}}</span>
+						<span class="isOverridden" ng-hide="componentGroup.isOverridden" ng-click="getOverriddenComponent(componentGroup)">overriddes</span>
+						<span class="isOverridden" ng-show="componentGroup.isOverridden" ng-click="componentGroup.isOverridden=false">hide</span>
+						<select ng-model="componentGroup.status" ng-disabled="componentGroup.isOverridden">
+							<option value="operational">Operational</option>
+							<option value="under_maintenance">Under Maintenance</option>
+							<option value="degraded_performance">Degraded Performance</option>
+							<option value="partial_outage">Partial Outage</option>
+							<option value="major_outage">Major Outage</option>
+						</select>
+					</div>
+					<div ng-repeat="component in componentGroup.components" ng-show="componentVisible">
+						<div class="component">
+							<span>{{component.componentName}}</span>
+							<select ng-model="component.status" ng-change="getChildStatus(component,componentGroup)">
+								<option value="under_maintenance">Under Maintenance</option>
+								<option value="degraded_performance">Degraded Performance</option>
+								<option value="partial_outage">Partial Outage</option>
+								<option value="major_outage">Major Outage</option>
+								<option value="operational">Operational</option>
+							</select>
+						</div>
+					</div>
+				</div>
 			</div>
 		</div>
 

@@ -32,4 +32,36 @@ div#updateIncident{
       margin-right:10px;
     }
   }
+  select{
+    width:200px;
+    float:right;
+  }
+  .componentStatuses span.componentName{
+    width:200px;
+    display:inline-block;
+  }
+  .componentStatuses span.isOverridden{
+    margin-left:200px;
+  }
+  i.icon{
+    &:hover{
+      cursor:pointer;
+    }
+    float:left;
+    margin-top:3px;
+  }
+  i.icon-chevron-right{
+    margin: 3px 7.74px;
+  }
+  .groupComponent:after,.component:after{
+    clear:both;
+    content:'.';
+    display:block;
+    width: 0;
+    height: 0;
+    visibility:hidden;
+  }
+  .component{
+    margin-left:25px;
+  }
 }
