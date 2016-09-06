@@ -5,7 +5,7 @@
     .controller('AssignClustersController', AssignClustersController);
 
   /* @ngInject */
-  function AssignClustersController($modalInstance, resourceGroup, FusionClusterService, ResourceGroupService, $translate, Notification) {
+  function AssignClustersController($modalInstance, $q, resourceGroup, FusionClusterService, ResourceGroupService, $translate, Notification) {
     var vm = this;
     vm.clusters = [];
     vm.assignments = {};
@@ -19,8 +19,7 @@
       FusionClusterService.getAll()
         .then(function (clusters) {
           vm.clusters = clusters;
-          // eslint-disable-next-line no-unused-expressions
-          !_.forEach(vm.clusters, function (c) {
+          _.forEach(vm.clusters, function (c) {
             vm.assignments[c.id] = c.resourceGroupId === resourceGroup.id;
             vm.clusterCheckboxes.push({
               label: c.name,
@@ -28,14 +27,14 @@
               id: c.id
             });
           });
-        }, angular.noop);
+        });
     }
 
     function saveAssignments() {
-      // eslint-disable-next-line no-unused-expressions
-      !_.forEach(vm.clusters, function (c) {
+      var promises = [];
+      _.forEach(vm.clusters, function (c) {
         if ((c.resourceGroupId === resourceGroup.id && !vm.assignments[c.id]) || (c.resourceGroupId !== resourceGroup.id && vm.assignments[c.id])) {
-          ResourceGroupService.assign(c.id, vm.assignments[c.id] ? vm.resourceGroup.id : '')
+          var promise = ResourceGroupService.assign(c.id, vm.assignments[c.id] ? vm.resourceGroup.id : '')
             .then(function () {
               Notification.success($translate.instant('hercules.assignClustersModal.' + (vm.assignments[c.id] ? 'assigned' : 'removed'), {
                 clusterName: c.name,
@@ -44,9 +43,14 @@
             }, function () {
               Notification.error('hercules.genericFailure');
             });
+          promises.push(promise);
         }
+        return $q.resolve();
       });
-      $modalInstance.close();
+      return $q.all(promises)
+        .finally(function () {
+          $modalInstance.close();
+        });
     }
   }
 })();
