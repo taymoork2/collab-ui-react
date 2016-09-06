@@ -27,7 +27,7 @@ describe('Component: resourceGroupCard', function () {
     });
 
     describe('showWarningText()', function () {
-      it('should be true is there are 0 clusters', function () {
+      it('should be true if there are 0 clusters', function () {
         expect(controller.showWarningText()).toEqual(true);
       });
     });
