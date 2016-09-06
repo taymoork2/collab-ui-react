@@ -6,7 +6,7 @@
     .controller('ExpresswayServiceSettingsController', ExpresswayServiceSettingsController);
 
   /* @ngInject */
-  function ExpresswayServiceSettingsController($state, $modal, ServiceDescriptor, Authinfo, USSService2, MailValidatorService, XhrNotificationService, CertService, Notification, FusionUtils, CertificateFormatterService, $translate) {
+  function ExpresswayServiceSettingsController($state, $modal, ServiceDescriptor, Authinfo, USSService, MailValidatorService, XhrNotificationService, CertService, Notification, FusionUtils, CertificateFormatterService, $translate) {
     var vm = this;
     vm.emailSubscribers = '';
     vm.connectorType = $state.current.data.connectorType;
@@ -46,7 +46,7 @@
     };
 
     vm.loading = true;
-    USSService2.getOrg(Authinfo.getOrgId()).then(function (res) {
+    USSService.getOrg(Authinfo.getOrgId()).then(function (res) {
       vm.loading = false;
       vm.sipDomain = res.sipDomain;
       vm.org = res || {};
@@ -57,7 +57,7 @@
     vm.updateSipDomain = function () {
       vm.savingSip = true;
 
-      USSService2.updateOrg(vm.org).then(function () {
+      USSService.updateOrg(vm.org).then(function () {
         vm.storeEc(false);
         vm.savingSip = false;
       }, function () {

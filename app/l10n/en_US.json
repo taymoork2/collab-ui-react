@@ -1707,15 +1707,19 @@
         "title": "Clusters",
         "empty": "No clusters found.",
         "upgrade-schedule": "Upgrade Schedule",
+        "clusters": "Clusters",
         "release-channel": "Release Channel",
         "nodes": "{count, plural, one{# Node} other{# Nodes}}",
         "settings": "Settings",
         "all": "All",
         "add-resource": "Add Resource",
         "add-resource-group": "Create new resource group",
+        "add-clusters": "Add Clusters",
         "expressway": "Expressway",
         "mediafusion": "Media",
-        "no-services": "No services"
+        "no-services": "No services",
+        "complete-setup": "Complete Resource Group setup",
+        "empty-group-list": "This Resource Group is empty"
       },
       "add-resource": {
         "title": "Add Resource",
