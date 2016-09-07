@@ -195,7 +195,6 @@
         "title": "careReportsPage.handled",
         "lineColor": "#43A942",
         "valueField": "numTasksHandledState",
-        "showBalloon": true,
         "lineAlpha": 1,
         "balloonColor": "#AEAEAF",
         "lineThickness": 1,
@@ -203,6 +202,7 @@
         "marginLeft": 0,
         "plotAreaBorderAlpha": 0,
         "legendValueText": " ",
+        "showBalloon": false,
         "fillAlphas": 0.1
       },
       {
@@ -245,6 +245,7 @@
         "lineColor": "#F96452",
         "fillColors": "#FF0000",
         "valueField": "numTasksAbandonedState",
+        "showBalloon": true,
         "lineAlpha": 1,
         "balloonColor": "#AEAEAF",
         "lineThickness": 1,
@@ -252,7 +253,6 @@
         "marginLeft": 0,
         "plotAreaBorderAlpha": 0,
         "legendValueText": " ",
-        "showBalloon": false,
         "fillAlphas": 0.1
       }
     ],
@@ -341,7 +341,6 @@
       "lineColor": "#43A942",
       "fillColors": "#017900",
       "valueField": "avgTaskCloseTime",
-      "showBalloon": true,
       "lineAlpha": 1,
       "balloonColor": "#AEAEAF",
       "lineThickness": 1,
@@ -349,6 +348,7 @@
       "marginLeft": 0,
       "plotAreaBorderAlpha": 0,
       "legendValueText": " ",
+      "showBalloon": false,
       "fillAlphas": 0.1
     },
     {
@@ -363,14 +363,14 @@
         "width": 14,
         "height": 14
       },
+      "showBalloon": true,
       "lineAlpha": 1,
       "balloonColor": "#AEAEAF",
       "lineThickness": 1,
       "marginTop": 10,
       "marginLeft": 0,
       "plotAreaBorderAlpha": 0,
-      "legendValueText": " ",
-      "showBalloon": false
+      "legendValueText": " "
     }
   ],
   "taskAggregateGraphs": [

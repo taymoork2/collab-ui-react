@@ -12,7 +12,9 @@
     </header>
     <section ng-show="$ctrl.showDetails">
       <div class="resource-group-banner">
-        <div class="resource-group-banner-message" translate="hercules.fusion.list.complete-setup"></div>
+        <div class="resource-group-banner-message">
+          <span ng-if="$ctrl.showWarningText()" translate="hercules.fusion.list.complete-setup"></span>
+        </div>
         <button class="resource-group-banner-link" ng-click="$ctrl.openAddClusterModal()" translate="hercules.fusion.list.add-clusters"></button>
       </div>
       <div class="resource-group-empty" ng-if="$ctrl.group.clusters.length === 0">
