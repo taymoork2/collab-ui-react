@@ -3,8 +3,11 @@
 </div>
 <div class="itemRow2">
 <span>{{msg.postAt}}</span>
-<a ng-click="showOrHideComponentFUN()">{{showOrHideComponent}}</a>
+<a ng-click="showOrHideComponentFUN(msg.messageId)">{{showOrHideComponent}}</a>
 </div>
 <div class="itemRow3" ng-show="componentSection">
-No components were affected by this update.
+<ul class="affectedComponentsList" ng-if="affectedComponents.length>0">
+  <li ng-repeat="component in affectedComponents">{{component.componentName}}</li>
+</ul>
+<p ng-if="affectedComponents.length === 0">No components were affected by this update.</p>
 </div>

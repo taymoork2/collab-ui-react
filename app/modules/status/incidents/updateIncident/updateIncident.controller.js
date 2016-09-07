@@ -3,7 +3,6 @@
   angular.module('Status.incidents')
 		.controller('UpdateIncidentController', UpdateIncidentController);
   function UpdateIncidentController($scope, $stateParams, UpdateIncidentService, IncidentsWithoutSiteService, ComponentService, $log) {
-    $scope.showComponent = false;
     $scope.showOperational = true;
     var originComponentsTree = [];
     function incidentMsg() {
@@ -12,6 +11,7 @@
         $scope.status = data.status;
         $scope.msg = '';
         $scope.messages = data.messages;
+        $scope.showComponent = false;
         getComponentsTree();
       }, function () {
 
@@ -19,7 +19,7 @@
     }
     function getComponentsTree() {
       ComponentService.query({ siteId: '101' }).$promise.then(function (data) {
-        data = [{ "componentId": 195, "serviceId": 101, "componentName": "YvetteTest", "status": "partial_outage", "description": "", "position": 1, "components": [{ "componentId": 197, "serviceId": 101, "componentName": "Y1", "status": "operational", "description": "" }, { "componentId": 197, "serviceId": 101, "componentName": "Y11", "status": "degraded_performance", "description": "" }], "isOverridden": false }, { "componentId": 195, "serviceId": 101, "componentName": "Yvette", "status": "under_maintenance", "description": "", "position": 1, "components": [{ "componentId": 197, "serviceId": 101, "componentName": "Ye1", "status": "major_outage", "description": "" }, { "componentId": 197, "serviceId": 101, "componentName": "Ye11", "status": "degraded_performance", "description": "" }], "isOverridden": false }];
+        /*data = [{ "componentId": 195, "serviceId": 101, "componentName": "YvetteTest", "status": "partial_outage", "description": "", "position": 1, "components": [{ "componentId": 197, "serviceId": 101, "componentName": "Y1", "status": "operational", "description": "" }, { "componentId": 197, "serviceId": 101, "componentName": "Y11", "status": "degraded_performance", "description": "" }], "isOverridden": false }, { "componentId": 195, "serviceId": 101, "componentName": "Yvette", "status": "under_maintenance", "description": "", "position": 1, "components": [{ "componentId": 197, "serviceId": 101, "componentName": "Ye1", "status": "major_outage", "description": "" }, { "componentId": 197, "serviceId": 101, "componentName": "Ye11", "status": "degraded_performance", "description": "" }], "isOverridden": false }];*/
         $scope.componentsTree = data;
         angular.copy(data, originComponentsTree);
       });

@@ -64,4 +64,20 @@ div#updateIncident{
   .component{
     margin-left:25px;
   }
+  ul.affectedComponentsList:after{
+    clear:both;
+    content:'.';
+    display:block;
+    width: 0;
+    height: 0;
+    visibility:hidden;
+  }
+  ul.affectedComponentsList{
+    list-style:none;
+    li{
+      float:left;
+      margin-right:10px;
+      background-color:#cacaca;
+    }
+  }
 }
