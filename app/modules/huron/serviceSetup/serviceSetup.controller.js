@@ -1207,7 +1207,8 @@
             regionCode: vm.model.regionCode
           })
           .catch(function (error) {
-            Notification.processErrorResponse(error, 'serviceSetupModal.error.updateCustomerVoice');
+            Notification.errorWithTrackingId(error, 'serviceSetupModal.error.updateCustomerVoice');
+            return $q.reject(error);
           });
         }
       }
@@ -1531,9 +1532,9 @@
     });
 
     $scope.$watch(function () {
-      return vm.form;
-    }, function (form) {
-      if (_.get(form, '$invalid') === true) {
+      return _.get(vm, 'form.$invalid');
+    }, function (invalid) {
+      if (invalid) {
         $scope.$emit('wizardNextButtonDisable', true);
       } else {
         $scope.$emit('wizardNextButtonDisable', false);
