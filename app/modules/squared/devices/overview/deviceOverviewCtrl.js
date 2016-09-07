@@ -163,17 +163,14 @@
     deviceOverview.resetCode = function () {
       deviceOverview.resettingCode = true;
       var displayName = deviceOverview.currentDevice.displayName;
-      CsdmCodeService.deleteCode(deviceOverview.currentDevice);
-      $state.sidepanel.close();
-      CsdmCodeService.createCode(displayName)
-        .then(function (result) {
+      CsdmCodeService.deleteCode(deviceOverview.currentDevice)
+        .then(function () {
           var wizardState = {
             data: {
               function: "showCode",
               deviceType: "cloudberry",
-              deviceName: result.displayName,
-              expiryTime: result.friendlyExpiryTime,
-              activationCode: result.activationCode
+              deviceName: displayName,
+              title: "addDeviceWizard.newCode"
             },
             history: [],
             currentStateName: 'addDeviceFlow.showActivationCode',
@@ -186,6 +183,7 @@
             wizard: wizard
           });
         });
+      $state.sidepanel.close();
     };
 
     deviceOverview.showRemoteSupportDialog = function () {
