@@ -31,16 +31,16 @@
               <a ui-sref="status.incidents.delete({ incidentName:incident.incidentName, incidentId:incident.incidentId })">Delete</a>
             </div>
             <div ng-if="incident.status=='resolved'">
-              <a href="#">Write Postmortem</a>
               <a href="#">View Incident</a>
               <a ui-sref="status.incidents.delete({ incidentName:incident.incidentName, incidentId:incident.incidentId })">Delete</a>
             </div>
           </div>
 
 
-        <div class="operationTime clearFloat">
+          <div class="operationTime clearFloat">
             <span ng-if="incident.status!='resolved'">Last updated on </span>
-            <span ng-if="incident.status=='resolved'">Resolved on </span>{{incident.lastModifiedTime | date: 'medium'}}
+            <span ng-if="incident.status=='resolved'">Resolved on </span>
+            <span class="modifiedTime">{{incident.lastModifiedTime | date: 'medium'}}</span>
           </div>
 
         </div>

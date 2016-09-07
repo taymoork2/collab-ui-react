@@ -2,12 +2,13 @@
   'use strict';
   angular.module('Status.incidents')
 		.controller('UpdateIncidentController', UpdateIncidentController);
-  function UpdateIncidentController($scope, $stateParams, UpdateIncidentService, IncidentsWithoutSiteService, ComponentService, $window) {
+  function UpdateIncidentController($scope, $stateParams, UpdateIncidentService, IncidentsWithoutSiteService, ComponentService, $window, $log) {
     $scope.showOperational = true;
     var originComponentsTree = [];
     var originIncidentName, originImpact;
     function incidentMsg() {
       IncidentsWithoutSiteService.getIncidentMsg({ incidentId: $stateParams.incidentId }).$promise.then(function (data) {
+        $log.log(data);
         $scope.msg = '';
         $scope.showComponent = false;
         $scope.incidentWithMsg = data;
@@ -19,10 +20,11 @@
       });
     }
     function getComponentsTree() {
-      ComponentService.query({ siteId: '101' }).$promise.then(function (data) {
+      ComponentService.query({ "siteId": 101 }).$promise.then(function (metadata) {
+        $log.log(metadata);
         /*data = [{ "componentId": 195, "serviceId": 101, "componentName": "YvetteTest", "status": "partial_outage", "description": "", "position": 1, "components": [{ "componentId": 197, "serviceId": 101, "componentName": "Y1", "status": "operational", "description": "" }, { "componentId": 197, "serviceId": 101, "componentName": "Y11", "status": "degraded_performance", "description": "" }], "isOverridden": false }, { "componentId": 195, "serviceId": 101, "componentName": "Yvette", "status": "under_maintenance", "description": "", "position": 1, "components": [{ "componentId": 197, "serviceId": 101, "componentName": "Ye1", "status": "major_outage", "description": "" }, { "componentId": 197, "serviceId": 101, "componentName": "Ye11", "status": "degraded_performance", "description": "" }], "isOverridden": false }];*/
-        $scope.componentsTree = data;
-        angular.copy(data, originComponentsTree);
+        $scope.componentsTree = metadata;
+        angular.copy(metadata, originComponentsTree);
       });
     }
     incidentMsg();
@@ -46,9 +48,9 @@
       });
     };
     $scope.toOperationalFUN = function () {
-      for (var i in $scope.componentsTree) {
+      for (var i = 0; i < ($scope.componentsTree).length; i++) {
         ($scope.componentsTree)[i].status = "operational";
-        for (var j in ($scope.componentsTree)[i].components) {
+        for (var j = 0; j < (($scope.componentsTree)[i].components).length; j++) {
           (($scope.componentsTree)[i].components)[j].status = "operational";
         }
       }
@@ -138,7 +140,7 @@
     $scope.addIncidentMsg = function () {
       var affectComponents = [];
       var tempObj;
-      for (var i in originComponentsTree) {
+      for (var i = 0; i < originComponentsTree.length; i++) {
         if (($scope.componentsTree)[i].isOverridden) {
           tempObj = {};
           tempObj.status = "overridden";
@@ -152,7 +154,7 @@
             affectComponents.push(tempObj);
           }
         }
-        for (var j in originComponentsTree[i].components) {
+        for (var j = 0; j < (originComponentsTree[i].components).length; j++) {
           if ((($scope.componentsTree)[i].components)[j].status != (originComponentsTree[i].components)[j].status) {
             tempObj = {};
             tempObj.status = (($scope.componentsTree)[i].components)[j].status;

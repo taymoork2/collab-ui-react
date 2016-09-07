@@ -6,3 +6,7 @@
 @import '../incidents/incidentList/_incident-list';
 @import '../incidents/deleteIncident/_delete-incident';
 @import '../incidents/updateIncident/_update-incident';
+
+div.incidentsWraper{
+  background:#fff;
+}

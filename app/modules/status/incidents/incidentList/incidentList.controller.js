@@ -4,11 +4,12 @@
     .module('Status.incidents')
     .controller('IncidentListController', IncidentListController);
 
-  function IncidentListController($scope, $state, IncidentsWithSiteService) {
+  function IncidentListController($scope, $state, IncidentsWithSiteService, $log) {
     $scope.showList = true;
     IncidentsWithSiteService.query({
       "siteId": 1
     }).$promise.then(function (incidentList) {
+      $log.log(incidentList);
       if (incidentList.length == 0) {
         $scope.showList = false;
       }
