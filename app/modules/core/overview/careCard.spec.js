@@ -20,6 +20,20 @@ describe('OverviewCareCard', function () {
     expect(card.name).toEqual('overview.cards.care.title');
   });
 
+  it('should mark health status to warning', function () {
+    var card = OverviewCareCard.createCard();
+    $rootScope.$apply();
+    expect(card.showHealth).toBe(true);
+    var data = {
+      components: [{
+        id: card.helper.statusIds.SPARK_CARE,
+        status: 'partial_outage'
+      }]
+    };
+    card.healthStatusUpdatedHandler(data);
+    expect(card.healthStatus).toEqual('warning');
+  });
+
   it('should create enabled care card with trial disabled', function () {
     var card = OverviewCareCard.createCard();
     $rootScope.$apply();

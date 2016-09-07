@@ -23,6 +23,14 @@
         card.helper = OverviewHelper;
         card.showHealth = true;
 
+        card.healthStatusUpdatedHandler = function messageHealthEventHandler(data) {
+          _.each(data.components, function (component) {
+            if (component.id === card.helper.statusIds.SPARK_CARE) {
+              card.healthStatus = card.helper.mapStatus(card.healthStatus, component.status);
+            }
+          });
+        };
+
         card.licenseEventHandler = function (licenses) {
           card.allLicenses = licenses;
           card.trial = _.some(filterLicenses(licenses), 'isTrial');
@@ -43,7 +51,6 @@
             return license.licenseType === 'CARE' && card.helper.isntCancelledOrSuspended(license);
           });
         }
-
         return card;
       }
     };
