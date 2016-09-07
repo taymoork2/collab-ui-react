@@ -82,13 +82,20 @@
         }).$promise;
       },
 
-      updateVoicemailPostalcode: function (postalCode, objectId) {
+      updateVoicemailPostalcode: function (postalcode, objectId) {
         return VoicemailTimezoneService.update({
           customerId: Authinfo.getOrgId(),
           objectId: objectId
         }, {
-          postalCode: postalCode
+          postalCode: postalcode
         }).$promise;
+      },
+
+      updateVoicemailUserTemplate: function (payload, objectId) {
+        return VoicemailTimezoneService.update({
+          customerId: Authinfo.getOrgId(),
+          objectId: objectId
+        }, payload).$promise;
       },
 
       getVoicemailPilotNumber: function () {

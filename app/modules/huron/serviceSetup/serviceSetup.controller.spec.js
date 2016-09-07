@@ -112,7 +112,7 @@ describe('Controller: ServiceSetup', function () {
     spyOn(ServiceSetup, 'loadExternalNumberPool').and.returnValue($q.when(externalNumberPool));
     spyOn(ServiceSetup, 'updateCustomer').and.returnValue($q.when());
     spyOn(ServiceSetup, 'updateVoicemailTimezone').and.returnValue($q.when());
-    spyOn(ServiceSetup, 'updateVoicemailPostalcode').and.returnValue($q.when());
+    spyOn(ServiceSetup, 'updateVoicemailUserTemplate').and.returnValue($q.when());
     spyOn(ExternalNumberService, 'refreshNumbers').and.returnValue($q.when());
     spyOn(PstnSetupService, 'getCustomer').and.returnValue($q.when());
     spyOn(ServiceSetup, 'listInternalNumberRanges').and.callFake(function () {
@@ -176,7 +176,8 @@ describe('Controller: ServiceSetup', function () {
         }, {
           beginNumber: '4000',
           endNumber: '4000'
-        }]
+        }],
+        previousSiteCode: 200
       };
       spyOn(ServiceSetup, 'getSite').and.returnValue($q.when(model.site));
       spyOn(ServiceSetup, 'getVoicemailPilotNumber').and.returnValue($q.when(voicemail));
@@ -286,7 +287,7 @@ describe('Controller: ServiceSetup', function () {
         controller.model.site.timeZone = {
           id: 'bogus'
         };
-        controller.previousTimeZone = controller.model.site.timeZone;
+        // controller.previousTimeZone = controller.model.site.timeZone;
 
         //remove singlenumber range for it to pass
         controller.deleteInternalNumberRange(model.numberRanges[2]);
@@ -296,7 +297,7 @@ describe('Controller: ServiceSetup', function () {
         expect(HuronCustomer.put).toHaveBeenCalled();
         expect(ServiceSetup.createSite).toHaveBeenCalled();
         expect(ServiceSetup.updateCustomer).toHaveBeenCalled();
-        expect(ServiceSetup.updateVoicemailTimezone).not.toHaveBeenCalled();
+        expect(ServiceSetup.updateVoicemailTimezone).toHaveBeenCalled();
         expect(VoicemailMessageAction.update).not.toHaveBeenCalled();
         expect(ServiceSetup.createInternalNumberRange).toHaveBeenCalled();
         expect(ModalService.open).not.toHaveBeenCalled();
@@ -324,7 +325,7 @@ describe('Controller: ServiceSetup', function () {
 
         expect(ServiceSetup.createSite).toHaveBeenCalled();
         expect(ServiceSetup.updateCustomer).toHaveBeenCalled();
-        expect(ServiceSetup.updateVoicemailTimezone).not.toHaveBeenCalled();
+        expect(ServiceSetup.updateVoicemailTimezone).toHaveBeenCalled();
         expect(VoicemailMessageAction.update).not.toHaveBeenCalled();
         expect(ServiceSetup.createInternalNumberRange).toHaveBeenCalled();
         expect(ModalService.open).not.toHaveBeenCalled();
@@ -891,7 +892,7 @@ describe('Controller: ServiceSetup', function () {
         controller._buildVoicemailPrefixOptions($scope);
         controller.model.site.extensionLength = '5';
         $scope.$apply();
-        expect(controller.model.site.siteCode).toEqual(10);
+        expect(controller.model.site.siteCode).toEqual('10');
       });
 
       it('should set voicemail prefix to intersect with extension range and trigger warning', function () {

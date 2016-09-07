@@ -1301,13 +1301,6 @@
           });
       }
 
-      function saveTimezone() {
-        if (vm.hasVoicemailService && vm.model.ftswCompanyVoicemail.ftswCompanyVoicemailEnabled &&
-          (_.get(vm, 'model.site.timeZone') !== _.get(vm, 'previousTimeZone'))) {
-          return updateTimezone(_.get(vm, 'model.site.timeZone.id'));
-        }
-      }
-
       function saveVoicemailToEmail() {
         return $q.when(true)
           .then(function () {
@@ -1328,17 +1321,23 @@
           (vm.model.ftswCompanyVoicemail.ftswVoicemailToEmail !== VoicemailMessageAction.isVoicemailToEmailEnabled(vm.voicemailMessageAction.voicemailAction));
       }
 
-      function updateVoicemailPostalcode() {
-        if (vm.hasVoicemailService && vm.model.ftswCompanyVoicemail.ftswCompanyVoicemailEnabled &&
-          (vm.model.site.siteSteeringDigit !== vm.model.voicemailPrefix.value
-          || vm.model.site.extensionLength !== vm.model.previousLength
-          || vm.model.site.siteCode !== vm.model.site.previousSiteCode)) {
-          var postalCode = [vm.model.voicemailPrefix.value, vm.model.site.siteCode, vm.model.site.extensionLength].join('-');
-          return ServiceSetup.updateVoicemailPostalcode(postalCode, vm.voicemailTimeZone.objectId)
-            .catch(function (response) {
-              errors.push(Notification.processErrorResponse(response, 'serviceSetupModal.error.updateVoicemailPostalCode'));
-              return $q.reject(response);
-            });
+      function updateVoicemailUserTemplate() {
+        if (vm.hasVoicemailService && vm.model.ftswCompanyVoicemail.ftswCompanyVoicemailEnabled) {
+          if (vm.model.site.siteSteeringDigit !== vm.model.voicemailPrefix.value
+            || vm.model.site.extensionLength !== vm.model.previousLength
+            || vm.model.site.siteCode !== vm.model.previousSiteCode) {
+            var payload = {
+              postalCode: [vm.model.voicemailPrefix.value, vm.model.site.siteCode, vm.model.site.extensionLength].join('-'),
+              timeZoneName: _.get(vm, 'model.site.timeZone.id')
+            };
+            return ServiceSetup.updateVoicemailUserTemplate(payload, vm.voicemailTimeZone.objectId)
+              .catch(function (response) {
+                errors.push(Notification.processErrorResponse(response, 'serviceSetupModal.error.updateVoicemailPostalCode'));
+                return $q.reject(response);
+              });
+          } else {
+            return updateTimezone(_.get(vm, 'model.site.timeZone.id'));
+          }
         }
       }
 
@@ -1407,10 +1406,9 @@
           .then(saveCustomer)
           .then(saveSite)
           .then(saveAutoAttendantSite)
-          .then(saveTimezone)
-          .then(saveVoicemailToEmail)
-          .then(updateVoicemailPostalcode)
           .then(updateCustomerVoice)
+          .then(updateVoicemailUserTemplate)
+          .then(saveVoicemailToEmail)
           .catch(_.noop);
       }
 
@@ -1481,22 +1479,22 @@
         var extensionLength0, extensionLength9;
         switch (vm.model.site.extensionLength) {
           case '3':
-            vm.model.site.siteCode = 100;
+            vm.model.site.siteCode = '100';
             extensionLength0 = '00';
             extensionLength9 = '99';
             break;
           case '4':
-            vm.model.site.siteCode = 100;
+            vm.model.site.siteCode = '100';
             extensionLength0 = '000';
             extensionLength9 = '999';
             break;
           case '5':
-            vm.model.site.siteCode = 10;
+            vm.model.site.siteCode = '10';
             extensionLength0 = '0000';
             extensionLength9 = '9999';
             break;
           default:
-            vm.model.site.siteCode = 100;
+            vm.model.site.siteCode = '100';
             extensionLength0 = '000';
             extensionLength9 = '999';
             break;
@@ -1534,11 +1532,7 @@
     $scope.$watch(function () {
       return _.get(vm, 'form.$invalid');
     }, function (invalid) {
-      if (invalid) {
-        $scope.$emit('wizardNextButtonDisable', true);
-      } else {
-        $scope.$emit('wizardNextButtonDisable', false);
-      }
+      $scope.$emit('wizardNextButtonDisable', !!invalid);
     });
   }
 })();
