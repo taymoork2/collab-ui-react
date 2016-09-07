@@ -142,7 +142,7 @@
                 <i class="icon icon-add-contain" ng-click="careChatSA.addCategoryOption()"></i>
                 <input
                         cs-input
-                        ng-readonly="!{{careChatSA.validateType(attribute.value)}}"
+                        ng-readonly="{{!careChatSA.validateType(attribute.value)}}"
                         name="categoryTextBox"
                         id="categoryTextBox"
                         class="h5 inputField ct-attribute-field-textbox large-11 ng-pristine ng-valid ng-scope ng-not-empty ng-touched icon-add-contain"
