@@ -12,6 +12,8 @@ describe('Controller: Care Settings', function () {
       $interval = _$interval_;
       $window = _$window_;
       $intervalSpy = jasmine.createSpy('$interval', $interval).and.callThrough();
+      $scope.wizard = {};
+      $scope.wizard.isNextDisabled = false;
       controller = $controller('CareSettingsCtrl', {
         $scope: $scope,
         $interval: $intervalSpy,
@@ -23,20 +25,20 @@ describe('Controller: Care Settings', function () {
 
   describe('CareSettings - Init', function () {
     it('should show enabled setup care button and disabled save button, if Org is not onboarded already', function () {
-      $httpBackend.expectGET(/.*produs1.*/g).respond(404, {});
+      $httpBackend.expectGET(/.*config.*ciscoccservice.*\/chat/g).respond(404, {});
       expect(controller).toBeDefined();
       expect(controller.state).toBe('unknown');
       $httpBackend.flush();
       expect(controller.state).toBe('notOnboarded');
-      // expect($scope.wizard.isNextDisabled).toBe(true);
+      expect($scope.wizard.isNextDisabled).toBe(true);
     });
 
     it('should allow proceeding with next steps, if already onboarded', function () {
-      $httpBackend.expectGET(/.*produs1.*/g).respond(200, { name: 'salt' });
+      $httpBackend.expectGET(/.*config.*ciscoccservice.*\/chat/g).respond(200, { csConnString: 'testConnectionString' });
       expect(controller.state).toBe('unknown');
       $httpBackend.flush();
       expect(controller.state).toBe('onboarded');
-        // expect(controller.wizard.isNextDisabled).toBe(false);
+      expect($scope.wizard.isNextDisabled).toBe(false);
     });
   });
 
@@ -45,24 +47,23 @@ describe('Controller: Care Settings', function () {
       spyOn($window, 'open').and.callFake(function () {
         return true;
       });
-      $httpBackend.expectGET(/.*produs1.*/g).respond(404, {});
+      $httpBackend.expectGET(/.*config.*ciscoccservice.*\/chat/g).respond(404, {});
       controller.onboardToCs();
       $httpBackend.flush();
       expect(controller.state).toBe('inProgress');
       expect($window.open).toHaveBeenCalled();
-      // assert setup care button is loading
     });
 
     it('should allow proceeding with next steps, after ccfs tab completes onboarding', function () {
       spyOn(Notification, 'success').and.callFake(function () {
         return true;
       });
-      $httpBackend.expectGET(/.*produs1.*/g).respond(200, { name: 'salt' });
+      $httpBackend.expectGET(/.*config.*ciscoccservice.*\/chat/g).respond(200, { csConnString: 'abcdef' });
       controller.onboardToCs();
       $httpBackend.flush();
       expect(controller.state).toBe('onboarded');
       expect(Notification.success).toHaveBeenCalled();
-      // expect(controller.wizard.isNextDisabled).toBe(false);
+      expect($scope.wizard.isNextDisabled).toBe(false);
     });
   });
 
@@ -71,30 +72,32 @@ describe('Controller: Care Settings', function () {
       spyOn(Notification, 'error').and.callFake(function () {
         return true;
       });
-      $httpBackend.whenGET(/.*produs1.*/g).respond(404, {});
+      $httpBackend.whenGET(/.*config.*ciscoccservice.*\/chat/g).respond(404, {});
       controller.onboardToCs();
       for (var i = 30; i >= 0; i--) {
-        $httpBackend.whenGET(/.*produs1.*/g).respond(404, {});
+        $httpBackend.whenGET(/.*config.*ciscoccservice.*\/chat/g).respond(404, {});
         $interval.flush(10000);
       }
       $httpBackend.flush();
-      expect(controller.state).toBe('failed');
+      expect(controller.state).toBe('notOnboarded');
       expect(Notification.error).toHaveBeenCalled();
-      // expect(controller.wizard.isNextDisabled).toBe(true);
+      expect($scope.wizard.isNextDisabled).toBe(true);
     });
 
     it('should show error toaster if backend API fails', function () {
       spyOn(Notification, 'error').and.callFake(function () {
         return true;
       });
-      $httpBackend.whenGET(/.*produs1.*/g).respond(500, {});
+      $httpBackend.whenGET(/.*config.*ciscoccservice.*\/chat/g).respond(500, {});
       controller.onboardToCs();
-      $httpBackend.whenGET(/.*produs1.*/g).respond(500, {});
-      $interval.flush(10001);
+      for (var i = 15; i >= 0; i--) {
+        $httpBackend.whenGET(/.*config.*ciscoccservice.*\/chat/g).respond(500, {});
+        $interval.flush(10000);
+      }
       $httpBackend.flush();
       expect(controller.state).toBe('unknown');
       expect(Notification.error).toHaveBeenCalled();
-      // expect(controller.wizard.isNextDisabled).toBe(true);
+      expect($scope.wizard.isNextDisabled).toBe(false);
     });
   });
 });

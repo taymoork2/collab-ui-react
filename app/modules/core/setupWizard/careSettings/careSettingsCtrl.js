@@ -4,24 +4,24 @@
   angular.module('Core')
     .controller('CareSettingsCtrl', CareSettingsCtrl);
 
-  function CareSettingsCtrl($http, $interval, $scope, $window, Authinfo, Log, Notification, TokenService, UrlConfig) {
+  function CareSettingsCtrl($http, $interval, $scope, $translate, $window, Authinfo, Log, Notification, TokenService, UrlConfig) {
     var vm = this;
     var callbackUrl = UrlConfig.getSunlightConfigServiceUrl() + '/organization/' + Authinfo.getOrgId() + '/csonboard?accessToken='
       + TokenService.getAccessToken();
-    vm.ccfsUrl = UrlConfig.getCcfsUrl() + callbackUrl;
+    var ccfsUrl = UrlConfig.getCcfsUrl() + callbackUrl;
+    var statusUrl = UrlConfig.getSunlightConfigServiceUrl() + '/organization/' + Authinfo.getOrgId() + '/chat';
 
-    var UNKNOWN = 'unknown';
-    var ONBOARDED = 'onboarded';
-    var NOT_ONBOARDED = 'notOnboarded';
-    var IN_PROGRESS = 'inProgress';
-    var FAILED = 'failed';
+    vm.UNKNOWN = 'unknown';
+    vm.ONBOARDED = 'onboarded';
+    vm.NOT_ONBOARDED = 'notOnboarded';
+    vm.IN_PROGRESS = 'inProgress';
 
-    vm.state = UNKNOWN;
-    vm.error = undefined;
+    vm.state = vm.UNKNOWN;
+    vm.pollCount = 0;
 
     vm.onboardToCs = function () {
-      $window.open(vm.ccfsUrl, '_blank');
-      vm.state = IN_PROGRESS;
+      $window.open(ccfsUrl, '_blank');
+      vm.state = vm.IN_PROGRESS;
       startPolling();
     };
 
@@ -36,63 +36,70 @@
     function startPolling() {
       if (!_.isUndefined(poller)) return;
 
+      vm.pollCount = 0;
       poller = $interval(processOnboardStatus, pollInterval, pollRetryCount);
       poller.then(processTimeout);
     }
+
     function stopPolling() {
       if (!_.isUndefined(poller)) {
         $interval.cancel(poller);
         poller = undefined;
       }
+      vm.pollCount = 0;
+      _.set($scope.wizard, 'isNextDisabled', false);
     }
 
     function processOnboardStatus() {
-      $scope.getStatus().then(function (result) {
-        Log.debug('CS salt: ', result);
-        if (_.get(result, 'data.name')) {
-          if (vm.state === IN_PROGRESS) {
-            Notification.success('Care Setup completed.');
+      vm.pollCount = vm.pollCount + 1;
+      getStatus().then(function (result) {
+        if (_.get(result, 'data.csConnString')) {
+          if (vm.state === vm.IN_PROGRESS) {
+            Notification.success($translate.instant('firstTimeWizard.careSettingsComplete'));
           }
-          vm.state = ONBOARDED;
-          vm.error = undefined;
-          _.set($scope.wizard, 'isNextDisabled', false);
+          vm.state = vm.ONBOARDED;
           stopPolling();
         } else {
-          Log.debug('Bad response from CS: ' + result);
+          Log.debug('Bad response for GET Chat Config: ' + result);
         }
-      }, function (result) {
+      })
+      .catch(function (result) {
         if (result.status === 404) {
-          if (vm.state === UNKNOWN) {
-            vm.state = NOT_ONBOARDED;
+          if (vm.state === vm.UNKNOWN) {
+            vm.state = vm.NOT_ONBOARDED;
           }
         } else {
-          vm.state = UNKNOWN; // if getting status fails, allow proceeding with setup
-          Notification.error('Error retrieving onboarding status.');
-          _.set($scope.wizard, 'isNextDisabled', false);
-          stopPolling();
+          Log.debug('Poll status failed: ' + result);
+          if (vm.pollCount >= pollRetryCount / 2) {
+            vm.state = vm.UNKNOWN;
+            Notification.error($translate.instant('firstTimeWizard.careSettingsFetchFailed'));
+            stopPolling();
+          }
         }
       });
     }
 
     function processTimeout(pollerResult) {
       Log.debug('Poll timed out after ' + pollerResult + ' attempts.');
-      vm.error = 'Timeout';
-      vm.state = FAILED;
-      Notification.error('Timed out checking onbaording status.');
+      vm.state = vm.NOT_ONBOARDED;
+      Notification.error($translate.instant('firstTimeWizard.careSettingsTimeout'));
     }
 
-    $scope.getStatus = function () {
-      var url = 'https://management.produs1.ciscoccservice.com/management/property/v1/user/propertyName/org.search.hash.salt';
+    function getStatus() {
       var config = {
         headers: {
           'Authorization': 'Bearer ' + TokenService.getAccessToken()
         }
       };
       Log.debug('getStatus called.');
-      return $http.get(url, config);
-    };
+      return $http.get(statusUrl, config);
+    }
 
-    processOnboardStatus();
-    _.set($scope.wizard, 'isNextDisabled', vm.state !== ONBOARDED);
+    function init() {
+      _.set($scope.wizard, 'isNextDisabled', vm.state !== vm.ONBOARDED);
+      processOnboardStatus();
+    }
+
+    init();
   }
 })();
