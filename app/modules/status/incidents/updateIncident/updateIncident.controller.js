@@ -2,16 +2,14 @@
   'use strict';
   angular.module('Status.incidents')
 		.controller('UpdateIncidentController', UpdateIncidentController);
-  function UpdateIncidentController($scope, $stateParams, UpdateIncidentService, IncidentsWithoutSiteService, ComponentService, $log) {
+  function UpdateIncidentController($scope, $stateParams, UpdateIncidentService, IncidentsWithoutSiteService, ComponentService, $window) {
     $scope.showOperational = true;
     var originComponentsTree = [];
     function incidentMsg() {
-      IncidentsWithoutSiteService.getIncidentMsg({ incidentId: $stateParams.incidentId, isArray: false }).$promise.then(function (data) {
-        $scope.incidentName = data.incidentName;
-        $scope.status = data.status;
+      IncidentsWithoutSiteService.getIncidentMsg({ incidentId: $stateParams.incidentId }).$promise.then(function (data) {
         $scope.msg = '';
-        $scope.messages = data.messages;
         $scope.showComponent = false;
+        $scope.incidentWithMsg = data;
         getComponentsTree();
       }, function () {
 
@@ -27,6 +25,15 @@
     incidentMsg();
     $scope.showComponentFUN = function () {
       $scope.showComponent = true;
+    };
+    $scope.modifyIncident = function () {
+      IncidentsWithoutSiteService.modifyIncident({ incidentId: $scope.incidentWithMsg.incidentId }, { incidentName: $scope.incidentWithMsg.incidentName, impact: $scope.incidentWithMsg.impact }).$promise.then(function (data) {
+        $scope.incidentWithMsg.impact = data.impact;
+        $scope.incidentWithMsg.incidentName = data.incidentName;
+        $scope.incidentWithMsg.lastModifiedTime = data.lastModifiedTime;
+        $scope.showIncidentName = true;
+        $window.alert("Successfully modify incident");
+      });
     };
     $scope.toOperationalFUN = function () {
       for (var i in $scope.componentsTree) {
@@ -144,18 +151,18 @@
           }
         }
       }
-      $log.log(affectComponents);
       UpdateIncidentService.save({
         incidentId: $stateParams.incidentId
       }, {
-        status: $scope.status,
+        status: $scope.incidentWithMsg.status,
         message: $scope.msg,
         email: 'chaoluo@cisco.com',
         affectComponents: affectComponents
       }).$promise.then(function () {
         incidentMsg();
+        $window.alert("Successfully update incident");
       }, function () {
-        $scope.incidentName = 'fail';
+
       });
     };
   }

@@ -1,7 +1,21 @@
 <div id="updateIncident">
 	
 	<div>
-		<h1>{{incidentName}}</h1>
+		<div class="incidentName" ng-mouseover="showEdit=true" ng-mouseleave="showEdit=false" ng-show="showIncidentName" ng-init="showIncidentName=true">
+			<span ng-class="incidentWithMsg.impact">{{incidentWithMsg.incidentName}}</span><a ng-show="showEdit" ng-click="showIncidentName=false">Edit</a>
+		</div>
+		<div class="editIncidentName" ng-hide="showIncidentName">
+			<input type="text" value="{{incidentWithMsg.incidentName}}"/>
+			<select ng-model="incidentWithMsg.impact">
+				<option value="none">Override impact to None</option>
+				<option value="minor">Override impact to Minor</option>
+				<option value="major">Override impact to Major</option>
+				<option value="critical">Override impact to Critical</option>
+				<option value="maintenance">Override impact to Maintenance</option>
+			</select>
+			<input class="btn btn--primary" type="button" value="SAVE" ng-click="modifyIncident()">
+			<a ng-click="showIncidentName=true">Cancel</a>
+		</div>
 	</div>
 
 	<div class="addMsg">
@@ -9,10 +23,10 @@
 		<div class="incidentStatus">
 			<h3>Incident Status</h3>
 			<div>
-				<label><input ng-click="toOperational=false" type="radio" ng-model="status" value="investigating">Investigating</label>
-				<label><input ng-click="toOperational=false" type="radio" ng-model="status" value="identified">Identified</label>
-				<label><input ng-click="toOperational=false" type="radio" ng-model="status" value="monitoring">Monitoring</label>
-				<label><input ng-click="toOperational=true" type="radio" ng-model="status" value="resolved">Resolved</label>
+				<label><input ng-click="toOperational=false" type="radio" ng-model="incidentWithMsg.status" value="investigating">Investigating</label>
+				<label><input ng-click="toOperational=false" type="radio" ng-model="incidentWithMsg.status" value="identified">Identified</label>
+				<label><input ng-click="toOperational=false" type="radio" ng-model="incidentWithMsg.status" value="monitoring">Monitoring</label>
+				<label><input ng-click="toOperational=true" type="radio" ng-model="incidentWithMsg.status" value="resolved">Resolved</label>
 			</div>
 			<div ng-model="toOperational" ng-init="toOperational=false" ng-show="toOperational">
 				<p ng-if="showOperational">
@@ -70,7 +84,7 @@
 
 	<div class="msgList">
 		<h2>Previous Updates</h2>
-		<div class="item" ng-repeat="msg in messages">
+		<div class="item" ng-repeat="msg in incidentWithMsg.messages">
 			<msg-item info='msg'></msg-item>
 		</div>
 	</div>

@@ -64,6 +64,9 @@ div#updateIncident{
   .component{
     margin-left:25px;
   }
+
+  /* affected component */
+
   ul.affectedComponentsList:after{
     clear:both;
     content:'.';
@@ -78,6 +81,45 @@ div#updateIncident{
       float:left;
       margin-right:10px;
       background-color:#cacaca;
+    }
+  }
+
+  /* incident name */
+  div.incidentName{
+    span{
+      font-size:30px;
+      font-weight: bold;
+      &.none,&.maintenance{
+        color:#e67e22;
+      }
+      &.minor{
+        color:#f3c40f;
+      }
+      &.major{
+        color:#e97e22;
+      }
+      &.critical{
+        color:#e74c3c;
+      }
+    }
+    a{
+      margin-left:20px;
+    }
+  }
+  div.editIncidentName{
+    input{
+      float:left;
+      display:inline-block;
+    }
+    select{
+      float:left;
+      height:36px;
+      margin:0px 10px;
+    }
+    a{
+      position: relative;
+      margin: 10px;
+      top: 5px;
     }
   }
 }
