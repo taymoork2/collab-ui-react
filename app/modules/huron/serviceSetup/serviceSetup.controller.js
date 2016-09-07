@@ -1207,7 +1207,7 @@
             regionCode: vm.model.regionCode
           })
           .catch(function (error) {
-            Notification.errorWithTrackingId(error, 'serviceSetupModal.error.updateCustomerVoice');
+            errors.push(Notification.processErrorResponse(error, 'serviceSetupModal.error.updateCustomerVoice'));
             return $q.reject(error);
           });
         }

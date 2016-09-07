@@ -287,7 +287,6 @@ describe('Controller: ServiceSetup', function () {
         controller.model.site.timeZone = {
           id: 'bogus'
         };
-        // controller.previousTimeZone = controller.model.site.timeZone;
 
         //remove singlenumber range for it to pass
         controller.deleteInternalNumberRange(model.numberRanges[2]);
