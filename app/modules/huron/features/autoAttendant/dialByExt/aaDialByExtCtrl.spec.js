@@ -161,8 +161,8 @@ describe('Controller: AADialByExtCtrl', function () {
       controller.saveUiModel();
       $scope.$apply();
 
-      expect(controller.menuEntry.actions[0].minNumberOfCharacters).toEqual(0);
-      expect(controller.menuEntry.actions[0].maxNumberOfCharacters).toEqual(0);
+      expect(controller.menuEntry.actions[0].minNumberOfCharacters).toEqual(4);
+      expect(controller.menuEntry.actions[0].maxNumberOfCharacters).toEqual(4);
 
       expect(controller.menuEntry.actions[0].voice.value).toEqual(voiceOption.value);
       expect(controller.menuEntry.actions[0].language.value).toEqual(languageOption.value);
@@ -174,8 +174,8 @@ describe('Controller: AADialByExtCtrl', function () {
 
       $scope.$apply();
 
-      expect(controller.menuEntry.actions[0].minNumberOfCharacters).toEqual(0);
-      expect(controller.menuEntry.actions[0].maxNumberOfCharacters).toEqual(0);
+      expect(controller.menuEntry.actions[0].minNumberOfCharacters).toEqual(4);
+      expect(controller.menuEntry.actions[0].maxNumberOfCharacters).toEqual(4);
 
     });
 
@@ -222,7 +222,7 @@ describe('Controller: AADialByExtCtrl', function () {
 
       expect(controller).toBeDefined();
 
-      expect(controller.menuEntry.actions[0].minNumberOfCharacters).toEqual(0);
+      expect(controller.menuEntry.actions[0].minNumberOfCharacters).toEqual(4);
       expect(controller.menuEntry.actions[0].getName()).toEqual('runActionsOnInput');
       expect(controller.menuEntry.getVoice()).toEqual('Claire');
 
