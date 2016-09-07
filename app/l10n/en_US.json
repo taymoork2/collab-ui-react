@@ -3183,7 +3183,7 @@
   },
   "generateActivationCodeModal": {
     "title": "Activation Code",
-    "activateBody": "Plug in your new Cisco desk phone or TelePresence device and enter the activation code when you are prompted or use the device camera to scan the QR code.",
+    "activateBody": "Plug in your new Cisco desk phone and enter the activation code when you are prompted or use the device camera to scan the QR code.",
     "emailCode": "Email",
     "copyToClipboard": "Copy",
     "print": "Print",
