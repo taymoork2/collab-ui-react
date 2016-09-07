@@ -1,6 +1,7 @@
 describe('OverviewCareCard', function () {
 
   var OverviewCareCard, $rootScope;
+  var dummyStats = getJSONFixture('sunlight/json/features/careReport/sunlightReportStats.json');
 
   beforeEach(angular.mock.module('Core'));
 
@@ -18,6 +19,14 @@ describe('OverviewCareCard', function () {
     expect(card.showHealth).toBe(true);
     expect(card.trial).toBe(false);
     expect(card.name).toEqual('overview.cards.care.title');
+  });
+
+  it('should set incomingChatTasksCount when handler is called', function () {
+    var card = OverviewCareCard.createCard();
+    $rootScope.$apply();
+    card.reportDataEventHandler({ name: 'incomingChatTasksLoaded' }, dummyStats.overviewStats);
+    expect(card.current).toBe(dummyStats.overviewStats.data.values[0].count);
+    expect(card.previous).toBe(dummyStats.overviewStats.data.values[1].count);
   });
 
   it('should mark health status to warning', function () {

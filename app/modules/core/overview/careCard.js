@@ -23,7 +23,7 @@
         card.helper = OverviewHelper;
         card.showHealth = true;
 
-        card.healthStatusUpdatedHandler = function messageHealthEventHandler(data) {
+        card.healthStatusUpdatedHandler = function (data) {
           _.each(data.components, function (component) {
             if (component.id === card.helper.statusIds.SPARK_CARE) {
               card.healthStatus = card.helper.mapStatus(card.healthStatus, component.status);
@@ -46,11 +46,21 @@
           }
         };
 
+        card.reportDataEventHandler = function (event, response) {
+          if (response.data.success) {
+            if (event.name === 'incomingChatTasksLoaded' && response.data.mediaType === 'chat' && response.data.spanType === 'month' && response.data.intervalCount >= 2) {
+              card.current = _.find(response.data.values, { interval: 1 }).count;
+              card.previous = _.find(response.data.values, { interval: 2 }).count;
+            }
+          }
+        };
+
         function filterLicenses(licenses) {
           return _.filter(licenses, function (license) {
             return license.licenseType === 'CARE' && card.helper.isntCancelledOrSuspended(license);
           });
         }
+
         return card;
       }
     };
