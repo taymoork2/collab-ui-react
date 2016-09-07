@@ -19,15 +19,6 @@ describe('Service: AAMediaUploadService', function () {
   var fd = {};
   var blob = {};
   var uploadUrl = 'http://54.183.25.170:8001/api/notify/upload' + '?customerId=' + null;
-  /*var successResponse = {
-    'status': 200,
-    'statusText': 'OK',
-    success: true,
-  };*/
-  /*var errorResponse = {
-    'status': 500,
-    'statusText': 'Internal Server Error',
-  };*/
 
   beforeEach(angular.mock.module('uc.autoattendant'));
   beforeEach(angular.mock.module('Huron'));

@@ -169,12 +169,6 @@
       vm.voiceOption = AALanguageService.getVoiceOption(vm.actionEntry.getVoice());
       vm.languageOption = AALanguageService.getLanguageOption(vm.actionEntry.getVoice());
 
-      if (vm.actionEntry.name === "say") {
-        vm.messageOption = vm.messageOptions[actionType.SAY];
-      } else {
-        vm.messageOption = vm.messageOptions[actionType.PLAY];
-      }
-
       vm.messageOption = vm.messageOptions[_.get(actionType, vm.actionEntry.name.toUpperCase())];
 
       vm.voiceBackup = vm.voiceOption;

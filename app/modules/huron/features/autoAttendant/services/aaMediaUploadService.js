@@ -14,19 +14,33 @@
       validateFile: validateFile,
     };
 
+    var devUploadBaseUrl = 'http://54.183.25.170:8001/api/notify/upload';
+    // var clioUploadBaseUrl = 'https://clio-manager-integration.wbx2.com/clio-manager/api/v1/recordings/media';
+
+    // We are using the dev test upload endpoint for now
+    var uploadBaseUrl = devUploadBaseUrl;
+
     return service;
 
     function upload(file, event) {
       return uploadByAngular(file, event);
     }
 
+    function getUploadUrl() {
+      if (uploadBaseUrl == devUploadBaseUrl) {
+        return uploadBaseUrl + '?customerId=' + Authinfo.getOrgId();
+      } else {
+        return uploadBaseUrl;
+      }
+    }
+
 
     function uploadByUploadService(file, event) {
 
       // this is to stop the complaint about event being unused
-      var uploadUrl = 'http://54.183.25.170:8001/api/notify/upload' + event;
+      var uploadUrl = event;
 
-      uploadUrl = 'http://54.183.25.170:8001/api/notify/upload' + '?customerId=' + Authinfo.getOrgId();
+      uploadUrl = getUploadUrl();
 
       var blob = new $window.Blob([file], {
         type: 'multipart/form-data'
@@ -47,9 +61,9 @@
     function uploadByAngular(file, event) {
 
       // this is to stop the complaint about event being unused
-      var uploadUrl = 'http://54.183.25.170:8001/api/notify/upload' + event;
+      var uploadUrl = event;
 
-      uploadUrl = 'http://54.183.25.170:8001/api/notify/upload' + '?customerId=' + Authinfo.getOrgId();
+      uploadUrl = getUploadUrl();
 
       var fd = new $window.FormData();
       fd.append('file', file);
