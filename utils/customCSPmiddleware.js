@@ -26,6 +26,7 @@ module.exports = csp({
     ],
     frameSrc: [
       'https://drhadmin-cte.digitalriver.com',
+      'http://drhadmin-cte.digitalriver.com',
     ],
     connectSrc: [
       '\'self\'',

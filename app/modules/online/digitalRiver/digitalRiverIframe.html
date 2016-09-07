@@ -1,0 +1,17 @@
+<iframe
+  ng-if="$ctrl.logoutLoading"
+  load-event
+  loading="$ctrl.logoutLoading"
+  ng-hide="true"
+  ng-src="{{$ctrl.logoutUrl}}">
+</iframe>
+<iframe
+  ng-if="!$ctrl.logoutLoading"
+  load-event
+  loading="$ctrl.iframeLoading"
+  ng-hide="$ctrl.iframeLoading"
+  ng-src="{{$ctrl.requestedUrl}}">
+</iframe>
+<div class="loading-wrapper" ng-if="$ctrl.iframeLoading">
+  <i class='icon icon-spinner icon-2x'></i>
+</div>
