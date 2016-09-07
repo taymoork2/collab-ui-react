@@ -6,40 +6,43 @@
   <div class="loading" ng-if="!genAuthCode.otp.code">
     <i class="icon icon-spinner"></i>
   </div>
-  <div id="printActivationCode" ng-if="genAuthCode.otp.code">
-    <div translate="generateActivationCodeModal.activateBody" translate-values="{ belongsTo: genAuthCode.userName }">></div>
-    <div class="row">
-      <div class="col-sm-5">
-        <img data-ng-src="data:image/JPEG;base64,{{genAuthCode.qrCode}}">
+  <div id="printActivationCode" ng-if="genAuthCode.otp.code" class="device-wizard view-activation-code">
+    <h4 translate="addDeviceWizard.showActivationCode.activationCode"></h4>
+    <p class="wizardDescription">
+      <span translate="generateActivationCodeModal.activateBody" translate-values="{ belongsTo: genAuthCode.userName }"></span>
+    </p>
+
+    <div class="qrCodeSection">
+      <img class="qrCodeImage" data-ng-src="data:image/JPEG;base64,{{genAuthCode.qrCode}}">
+
+      <div class="activation-code">
+        <h2>
+            {{genAuthCode.otp.friendlyCode}}
+        </h2>
       </div>
-      <div class="col-sm-7">
-        <div class="activation-code">
-          {{genAuthCode.otp.friendlyCode}}
-        </div>
-        <div class="expiration">
-          <span translate="generateActivationCodeModal.expires" translate-values="{date: genAuthCode.otp.friendlyExpiresOn}"></span>
-        </div>
+      <p class="expiryTime" translate="generateActivationCodeModal.expires" translate-values="{date: genAuthCode.otp.friendlyExpiresOn}"></p>
+
+      <div class="qrCodeButtons">
+        <a class="" ngclipboard data-clipboard-text="{{::genAuthCode.otp.friendlyCode}}" ngclipboard-error="genAuthCode.clipboardFallback()"><span translate="generateActivationCodeModal.copyToClipboard"></span></a>
+        <a class="qrCodeRightButton" cr-print print-element-id="printActivationCode" translate="generateActivationCodeModal.print"></a>
+        <a class="qrCodeRightButton" ng-disabled="genAuthCode.showEmail" ng-click="genAuthCode.activateEmail()" translate="generateActivationCodeModal.emailCode"></a>
       </div>
-    </div>
-    <div class="flex-space-between" ng-if="genAuthCode.otp.code">
-      <div>
-        <button class="btn btn--link btn--large" ngclipboard data-clipboard-text="{{::genAuthCode.otp.friendlyCode}}" ngclipboard-error="genAuthCode.clipboardFallback()"><span translate="generateActivationCodeModal.copyToClipboard"></span></button>
-        <button class="btn btn--link btn--large" cr-print print-element-id="printActivationCode" translate="generateActivationCodeModal.print"></button>
-      </div>
-      <button class="btn btn--large" ng-disabled="genAuthCode.showEmail" ng-click="genAuthCode.activateEmail()" translate="generateActivationCodeModal.emailCode"></button>
-    </div>
-    <div ng-show="genAuthCode.showEmail">
-      <div class="form-horizontal">
-        <div class="form-group">
-          <label for="to" class="col-sm-1 control-label" translate="generateActivationCodeModal.to"></label>
-          <div class="col-sm-6">
-            <input type="email" id="to" class="form-control" ng-model="genAuthCode.email.to">
+
+      <div class="sendEmailWrapper" ng-if="genAuthCode.showEmail">
+        <div class="sendEmailForm">
+          <div class="selectedAddress">
+            <div class="spacingBeforeSearch"></div>
+            <label for="to" class="cs-input__label" translate="generateActivationCodeModal.to"></label>
+            <a class="sendMailArrow"  ng-click="genAuthCode.sendActivationCodeEmail()"><i class="icon icon-send-email"></i></a>
           </div>
+          <div class="typeahead-group userSearch">
+            <input id="userInput"
+             <input type="email" id="to" class="underline userInput" ng-model="genAuthCode.email.to">
+          </div>
+          <div class="scrollSpace"></div>
         </div>
       </div>
-      <div>
-        <button class="btn btn--primary btn--large pull-right" ng-click="genAuthCode.sendActivationCodeEmail()" translate="generateActivationCodeModal.send"></button>
-      </div>
     </div>
+
   </div>
 </div>
