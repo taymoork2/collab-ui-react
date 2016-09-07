@@ -194,6 +194,9 @@ Special stuff currently used for out own mail input field...
     margin-right: 10px;
     line-height: $feature-line-height;
   }
+  .status-indicator {
+    line-height: $feature-line-height;
+  }
 
   .feature-status span {
     font-size: 0.75rem;

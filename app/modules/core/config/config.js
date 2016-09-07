@@ -354,6 +354,8 @@
         'management-connector-details',
         'management-service',
         'services-overview',
+        'resource-group-settings',
+        'cluster-list'
       ],
       'spark-room-system': [
         'addDeviceFlow',
@@ -389,6 +391,7 @@
         'metrics',
         'reports-metrics',
         'services-overview',
+        'cluster-list'
       ],
       'webex-messenger': [
         'messenger',

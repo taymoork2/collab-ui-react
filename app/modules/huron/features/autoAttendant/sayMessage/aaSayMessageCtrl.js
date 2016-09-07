@@ -2,20 +2,23 @@
   'use strict';
 
   angular
-    .module('uc.autoattendant')
-    .controller('AASayMessageCtrl', AASayMessageCtrl);
+  .module('uc.autoattendant')
+  .controller('AASayMessageCtrl', AASayMessageCtrl);
 
   /* @ngInject */
   function AASayMessageCtrl($scope, $translate, AAUiModelService, AutoAttendantCeMenuModelService, AALanguageService, AACommonService) {
 
     var vm = this;
+
+
     var properties = {
-      NAME: "say",
+      NAME: ["play", "say"],
       REPEAT_NAME: "repeatActionsOnInput",
       LABEL: "label",
       VALUE: "value",
       HEADER_TYPE: "MENU_OPTION_ANNOUNCEMENT"
     };
+
     var sayMessageType = {
       ACTION: 1,
       MENUHEADER: 2,
@@ -23,23 +26,30 @@
       SUBMENU_HEADER: 4
     };
 
-    var messageInput = '';
     var languageOption = {
       label: '',
       value: ''
     };
+
     var voiceOption = {
       label: '',
       value: ''
     };
 
-    var selectPlaceholder = $translate.instant('autoAttendant.selectPlaceholder');
 
+    var actionType = {
+      PLAY: 0,
+      SAY: 1,
+    };
+
+    var saveAction = {};
+
+    var selectPlaceholder = $translate.instant('autoAttendant.selectPlaceholder');
     vm.menuEntry = {};
     vm.actionEntry = {};
     vm.sayMessageType = sayMessageType.ACTION;
 
-    vm.messageInput = messageInput;
+    vm.messageInput = '';
     vm.messageInputPlaceholder = $translate.instant('autoAttendant.sayMessagePlaceholder');
 
     vm.languageOption = languageOption;
@@ -58,7 +68,55 @@
     vm.isMessageInputOnly = isMessageInputOnly;
     vm.updateVoiceOption = updateVoiceOption;
 
+    vm.messageOption = {
+      label: '',
+      value: ''
+    };
+
+    vm.messageOptions = [{
+      "label": $translate.instant('autoAttendant.uploadedFile'),
+      "value": "uploadFile"
+    }, {
+      "label": $translate.instant('autoAttendant.actionSayMessage'),
+      "value": "sayMessage"
+    }];
+
+    vm.uploadedFile = undefined;
+    vm.uploadedDate = undefined;
+    vm.setMessageOptions = setMessageOptions;
+
+    vm.isMediaUploadToggle = isMediaUploadToggle;
+
     /////////////////////
+
+    //the media upload only is set for the say message action,
+    //not for phone menu, dial by ext, or submenu at this point
+    //and is also feature toggled
+    function isMediaUploadToggle() {
+      var mediaUploadOn = false;
+      if (vm.sayMessageType == sayMessageType.ACTION && (AACommonService.isMediaUploadToggle())) {
+        mediaUploadOn = true;
+      }
+
+      return mediaUploadOn;
+    }
+
+    function setMessageOptions() {
+
+      var action = vm.actionEntry;
+
+      angular.copy(action, saveAction[action.name]);
+
+      if (vm.messageOption.value === 'sayMessage') {
+
+        angular.copy(saveAction['say'], action);
+
+        vm.messageInput = action.getValue();
+      } else {
+        angular.copy(saveAction['play'], action);
+      }
+    }
+
     function setVoiceOptions() {
       vm.voiceOptions = _.sortBy(AALanguageService.getVoiceOptions(vm.languageOption), properties.LABEL);
       setVoiceOption();
@@ -105,18 +163,22 @@
 
     function populateUiModel() {
       vm.messageInput = vm.actionEntry.getValue();
+
       vm.languageOptions = _.sortBy(AALanguageService.getLanguageOptions(), properties.LABEL);
 
       vm.voiceOption = AALanguageService.getVoiceOption(vm.actionEntry.getVoice());
       vm.languageOption = AALanguageService.getLanguageOption(vm.actionEntry.getVoice());
+
+      vm.messageOption = vm.messageOptions[_.get(actionType, vm.actionEntry.name.toUpperCase())];
+
       vm.voiceBackup = vm.voiceOption;
       setVoiceOptions();
     }
 
     /*
-     * Update voice option in the menu's say-message keys, menu's submenus and its
-     * say-message keys.
-     */
+    * Update voice option in the menu's say-message keys, menu's submenus and its
+    * say-message keys.
+    */
     function updateVoiceOption(menu) {
       if (menu.entries) {
         _.each(menu.entries, function (entry) {
@@ -142,6 +204,10 @@
     }
 
     function saveUiModel() {
+      if (vm.messageOption.value === 'uploadFile') {
+        return;
+      }
+
       vm.actionEntry.setValue(vm.messageInput);
       AACommonService.setSayMessageStatus(true);
 
@@ -150,6 +216,8 @@
       }
 
       vm.actionEntry.setVoice(vm.voiceOption.value);
+      saveAction['say'].setVoice(vm.voiceOption.value);
+
       switch (vm.sayMessageType) {
         case sayMessageType.MENUHEADER:
           {
@@ -177,12 +245,12 @@
 
     function createMenuEntry() {
       var menuEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
-      menuEntry.addAction(createSayAction());
+      menuEntry.addAction(createSayAction(actionType.SAY));
       return menuEntry;
     }
 
-    function createSayAction() {
-      return AutoAttendantCeMenuModelService.newCeActionEntry(properties.NAME, '');
+    function createSayAction(which) {
+      return AutoAttendantCeMenuModelService.newCeActionEntry(properties.NAME[which], '');
     }
 
     function getSayActionHeader(menuEntry) {
@@ -197,7 +265,7 @@
     function getSayAction(menuEntry) {
       if (menuEntry && menuEntry.actions && menuEntry.actions.length > 0) {
         var action = _.find(menuEntry.actions, function (action) {
-          return action.name === properties.NAME;
+          return _.indexOf(properties.NAME, action.name) >= 0;
         });
         return action;
       }
@@ -213,6 +281,8 @@
     }
 
     function setActionEntry() {
+      var ui;
+
       switch (vm.sayMessageType) {
         case sayMessageType.MENUHEADER:
         case sayMessageType.SUBMENU_HEADER:
@@ -224,7 +294,7 @@
             // existing say action from the existing header
               vm.actionEntry = action;
             } else {
-            // reset the headers and add new entry with say action
+              // reset the headers and add new entry with say action
               var headerEntry = createMenuEntry();
               headerEntry.setType(properties.HEADER_TYPE);
               vm.menuEntry.headers = [];
@@ -232,8 +302,8 @@
               vm.actionEntry = headerEntry.actions[0];
 
               if (vm.sayMessageType === sayMessageType.SUBMENU_HEADER) {
-              // For new submenu, copy voice option from main menu
-                var ui = AAUiModelService.getUiModel();
+                // For new submenu, copy voice option from main menu
+                ui = AAUiModelService.getUiModel();
                 var uiMenu = ui[$scope.schedule];
                 var mainMenu = uiMenu.entries[$scope.index];
                 var mainMenuSayHeader = getSayActionHeader(mainMenu);
@@ -253,7 +323,7 @@
               if (keyAction) {
                 vm.actionEntry = keyAction;
               } else {
-                vm.actionEntry = createSayAction();
+                vm.actionEntry = createSayAction(actionType.SAY);
                 vm.menuEntry.entries[$scope.menuKeyIndex].actions[0] = vm.actionEntry;
               }
             } else {
@@ -278,10 +348,12 @@
             vm.menuEntry = uiMenu.entries[$scope.index];
             var sayAction = getSayAction(vm.menuEntry);
             if (!sayAction) {
-              sayAction = createSayAction();
+              sayAction = createSayAction(actionType.SAY);
               vm.menuEntry.addAction(sayAction);
             }
             vm.actionEntry = sayAction;
+            angular.copy(sayAction, saveAction[sayAction.name]);
+
             return;
           }
       }
@@ -296,6 +368,8 @@
         vm.sayMessageType = sayMessageType.MENUKEY;
       }
 
+      saveAction['say'] = createSayAction(actionType.SAY);
+      saveAction['play'] = createSayAction(actionType.PLAY);
       setActionEntry();
       populateUiModel();
     }

@@ -71,7 +71,9 @@
         title: $translate.instant('careReportsPage.abandoned'),
         lineColor: chartColors.colorLightRed,
         fillColors: chartColors.colorLightRedFill,
-        valueField: 'numTasksAbandonedState'
+        valueField: 'numTasksAbandonedState',
+        showBalloon: true,
+        balloonFunction: balloonTextForTaskVolume
       };
       var inQueueGraph = {
         title: $translate.instant('careReportsPage.in-queue'),
@@ -90,9 +92,7 @@
       var handledGraph = {
         title: $translate.instant('careReportsPage.handled'),
         lineColor: chartColors.colorLightGreen,
-        valueField: 'numTasksHandledState',
-        showBalloon: true,
-        balloonFunction: balloonTextForTaskVolume
+        valueField: 'numTasksHandledState'
       };
 
       var graphsPartial = (isToday) ? [handledGraph, assignedGraph, inQueueGraph, abandonedGraph] : [handledGraph, abandonedGraph];
@@ -118,10 +118,11 @@
     }
 
     function balloonTextForTaskTime(graphDataItem, graph) {
+      var convertToMillis = 60 * 1000;
       var avgTaskWaitTime = _.get(graphDataItem, 'dataContext.avgTaskWaitTime', 0);
       var avgTaskCloseTime = _.get(graphDataItem, 'dataContext.avgTaskCloseTime', 0);
       var categoryRange = setCategoryRange(graph.categoryAxis.title, graphDataItem.category);
-      var balloonText = '<span class="care-graph-text">' + $translate.instant('careReportsPage.avgQueueTime') + ' ' + avgTaskWaitTime + 'm' + '</span><br><span class="care-graph-text">' + $translate.instant('careReportsPage.avgHandleTime') + ' ' + avgTaskCloseTime + 'm' + '</span>';
+      var balloonText = '<span class="care-graph-text">' + $translate.instant('careReportsPage.avgQueueTime') + ' ' + millisToTime(avgTaskWaitTime * convertToMillis) + '</span><br><span class="care-graph-text">' + $translate.instant('careReportsPage.avgHandleTime') + ' ' + millisToTime(avgTaskCloseTime * convertToMillis) + '</span>';
 
       return categoryRange + balloonText;
     }
@@ -141,6 +142,32 @@
       var balloonText = '<span class="care-graph-text">' + $translate.instant('careReportsPage.avgCsat') + ' ' + avgCsatScores + '</span><br>';
 
       return categoryRange + balloonText;
+    }
+
+    function millisToTime(durationInMillis) {
+      var convertInSeconds = 1000;
+      var convertInMinutes = 1000 * 60;
+      var convertInHours = 1000 * 60 * 60;
+      var radix = 10;
+      var seconds = parseInt((durationInMillis / convertInSeconds) % 60, radix);
+      var minutes = parseInt((durationInMillis / convertInMinutes) % 60, radix);
+      var hours = parseInt((durationInMillis / convertInHours), radix);
+
+      var timeFormat = '';
+      if (hours != 0) {
+        timeFormat = hours + 'h ';
+      }
+      if (minutes != 0) {
+        timeFormat = timeFormat + minutes + 'm ';
+      }
+      if (seconds != 0) {
+        timeFormat = timeFormat + seconds + 's';
+      }
+      if (timeFormat) {
+        return timeFormat;
+      } else {
+        return '0s';
+      }
     }
 
     function setCategoryRange(categoryAxisTitle, category) {
@@ -195,15 +222,15 @@
         valueField: 'avgTaskWaitTime',
         dashLength: 2,
         fillAlphas: 1,
-        pattern: pattern
+        pattern: pattern,
+        showBalloon: true,
+        balloonFunction: balloonTextForTaskTime
       };
       var handleGraph = {
         title: $translate.instant('careReportsPage.handleTime'),
         lineColor: chartColors.colorLightGreen,
         fillColors: chartColors.colorLightGreenFill,
-        valueField: 'avgTaskCloseTime',
-        showBalloon: true,
-        balloonFunction: balloonTextForTaskTime
+        valueField: 'avgTaskCloseTime'
       };
 
       var graphsPartial = [handleGraph, queueGraph];

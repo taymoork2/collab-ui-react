@@ -5,7 +5,7 @@
     </header>
     <section>
       <div class="customer-devices">
-        <p class="report-description">{{nav.deviceDescription}}</p>
+        <p class="report-description">{{nav.getDescription('registeredEndpoints.customerDescription')}}</p>
         <cs-select id="deviceFilter" name="deviceFilter" class='customer-report-filter device-filter' ng-model="nav.selectedDevice" options="nav.deviceFilter" on-change-fn="nav.deviceUpdate()" is-disabled="nav.isDevicesEmpty"></cs-select>
         <div id="devicesDiv" class="barchart" ng-class="{'active-chart': !nav.isEmpty(nav.deviceStatus) && !nav.isRefresh(nav.deviceStatus)}"></div>
         <div class="spinner-position" ng-if="nav.isRefresh(nav.deviceStatus)">

@@ -1,4 +1,4 @@
-import callForwardModule from './callForward.component';
+import callForwardModule from './index';
 import {
   CallForwardAll,
   CallForwardBusy

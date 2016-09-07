@@ -1,7 +1,7 @@
 "use strict";
 
 describe(' sunlightReportService', function () {
-  var sunlightReportService, $httpBackend;
+  var sunlightReportService, $httpBackend, scope, q;
   var dummyStats = getJSONFixture('sunlight/json/features/careReport/sunlightReportStats.json');
 
   var fifteenMinutesOrgStats = dummyStats.fifteenMinutesOrgStats;
@@ -9,6 +9,7 @@ describe(' sunlightReportService', function () {
   var hourlyOrgStats = dummyStats.hourlyOrgStats;
   var dailyOrgStats = dummyStats.dailyOrgStats;
   var weeklyOrgStats = dummyStats.weeklyOrgStats;
+  var overviewStats = dummyStats.overviewStats;
 
   var spiedAuthinfo = {
     getOrgId: jasmine.createSpy('getOrgId').and.returnValue('676a82cd-64e9-4ebd-933c-4dce087a02bd')
@@ -22,7 +23,7 @@ describe(' sunlightReportService', function () {
   beforeEach(inject(function (_SunlightReportService_, _$httpBackend_) {
     sunlightReportService = _SunlightReportService_;
     $httpBackend = _$httpBackend_;
-    $httpBackend.whenGET(/.*?org_stats?.*/g)
+    $httpBackend.whenGET(/.*\/org_stats.*/g)
       .respond(function (method, url, data, headers, params) {
         if (params.viewType === 'fifteen_minutes') {
           return [200, fifteenMinutesOrgStats];
@@ -36,7 +37,7 @@ describe(' sunlightReportService', function () {
           return [200, []];
         }
       });
-    $httpBackend.whenGET(/.*?org_snapshot_stats?.*/g)
+    $httpBackend.whenGET(/.*\/org_snapshot_stats.*/g)
       .respond(function (method, url, data, headers, params) {
         if (params.viewType === 'fifteen_minutes') {
           return [200, fifteenMinutesOrgSnapshotStats];
@@ -44,6 +45,19 @@ describe(' sunlightReportService', function () {
           return [200, []];
         }
       });
+    $httpBackend.whenGET(/.*\/org_stats.*/g)
+      .respond(function (method, url, data, headers, params) {
+        if (params.viewType === 'daily') {
+          return [200, dailyOrgStats];
+        } else {
+          return [200, []];
+        }
+      });
+  }));
+
+  beforeEach(inject(function ($rootScope, $q) {
+    scope = $rootScope.$new();
+    q = $q;
   }));
 
   it('should get and snapshot stats for org for given fifteen minutes viewType and time range', function () {
@@ -101,6 +115,22 @@ describe(' sunlightReportService', function () {
     });
     $httpBackend.flush();
 
+  });
+
+  it('should get overview data with daily aggregation', function () {
+    sunlightReportService.getOverviewData();
+    var defer = q.defer();
+    scope.$on('incomingChatTasksLoaded', function (event, message) {
+      defer.resolve(message);
+    });
+    defer.promise.then(function (message) {
+      expect(message.data.intervalCount).toBe(overviewStats.data.intervalCount);
+      expect(message.data.spanType).toBe(overviewStats.data.spanType);
+      expect(message.data.mediaType).toBe(overviewStats.data.mediaType);
+      expect(message.data.values[0].count).toBe(overviewStats.data.values[0].count);
+      expect(message.data.values[1].count).toBe(overviewStats.data.values[1].count);
+    });
+    $httpBackend.flush();
   });
 
   it('should get stats for org for given weekly viewType and time range', function () {

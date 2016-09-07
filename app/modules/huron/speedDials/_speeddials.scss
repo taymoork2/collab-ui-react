@@ -3,8 +3,12 @@
     @include vr-spacing(pt, 0);
   }
 
-  .sd-spacing {
+  .sd-spacing-edit {
     @include vr-spacing(mr, 1);
+  }
+
+  .sd-spacing-input {
+    @include vr-spacing(pr, .25);
   }
 
   .sd-label {
@@ -49,7 +53,7 @@
   .sd-container {
     margin-left: -1.5625rem;
     margin-right: -1.5625rem;
-    height: calc(100vh - #{$topbar-height} - 90px - 50px - 7rem); /*Removing top bar, header side bar and top content*/
+    height: calc(100vh - #{$topbar-height} - 90px - 50px - 8rem); /*Removing top bar, header side bar and top content*/
     overflow: auto;
   }
 
@@ -64,6 +68,24 @@
     .sd-label, .icon {
       color: $brand-white;
     }
+  }
+
+  .limit-reach-warning {
+    @include vr-spacing(pl, 0);
+    color: $gray-dark-2;
+  }
+
+  .cs-input__messages {
+    display: block;
+    visibility: hidden;
+  }
+
+  .error .cs-input__messages {
+    visibility: visible;
+  }
+
+  .warning .cs-input__messages {
+    visibility: visible;
   }
 
 }

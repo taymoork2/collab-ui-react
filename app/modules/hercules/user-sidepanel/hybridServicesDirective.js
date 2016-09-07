@@ -32,18 +32,15 @@
           mostSignificantStatus = getMostSignificantStatus(callServiceStatuses);
         }
       }
-
       return USSService.decorateWithStatus(mostSignificantStatus === undefined || mostSignificantStatus.status === undefined ? status : mostSignificantStatus.status);
     };
 
     function getMostSignificantStatus(statuses) {
-      var mostSignificant = _.max(statuses, function (s) {
+      return _.max(statuses, function (s) {
         if (s && s.status) {
           return getStatusSeverity(USSService.decorateWithStatus(s.status));
         }
       });
-
-      return mostSignificant;
     }
 
     function getStatusSeverity(status) {
@@ -121,16 +118,15 @@
     // Periodically update the user statuses from USS
     function updateStatusForUser() {
       if (angular.isDefined(vm.user)) {
-        USSService.getStatusesForUser(vm.user.id, function (err, activationStatus) {
-          if (activationStatus && activationStatus.userStatuses) {
+        USSService.getStatusesForUser(vm.user.id)
+          .then(function (userStatuses) {
             _.forEach(vm.extensions, function (extension) {
-              extension.status = _.find(activationStatus.userStatuses, function (status) {
+              extension.status = _.find(userStatuses, function (status) {
                 return extension.id === status.serviceId;
               });
             });
-          }
-          delayedUpdateStatusForUser();
-        });
+            delayedUpdateStatusForUser();
+          });
       }
     }
 
@@ -147,7 +143,6 @@
       if (!angular.isDefined(vm.user)) {
         return false;
       }
-
       return vm.user.entitlements && vm.user.entitlements.indexOf(entitlement) > -1;
     }
 

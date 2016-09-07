@@ -125,7 +125,7 @@
                         options="careChatSA.typeOptions"
                         labelfield="text"
                         valuefield="id"
-                        class="ct-attribute-field-textbox"
+                        ng-class="careChatSA.validateType(attribute.value) ? 'ct-attribute-field-textbox' : 'ct-attribute-field-textbox_error'"
                         placeholder="attribute.defaultValue">
                 </cs-select>
                 <label
@@ -134,14 +134,15 @@
                   <em>{{attribute.value.helpText}}</em>
                 </label>
                 <div class="small ct-input-error" ng-show="careChatSA.isTypeDuplicate">
-                  <i class="icon icon-error"></i>
-                  {{:: 'careChatTpl.ctValidation.errorTypeDuplicate' | translate}}
+                  <div class="ct-error-icon"><i class="icon icon-error icon-lg"></i></div>
+                  <div>{{:: 'careChatTpl.ctValidation.errorTypeDuplicate' | translate}}</div>
                 </div>
               </div>
               <div class="row ct-attribute-row ct-customer-info-category-input right-inner-addon" ng-if="attribute.name == 'type' && attribute.value.id == 'category'">
                 <i class="icon icon-add-contain" ng-click="careChatSA.addCategoryOption()"></i>
                 <input
                         cs-input
+                        ng-readonly="{{!careChatSA.validateType(attribute.value)}}"
                         name="categoryTextBox"
                         id="categoryTextBox"
                         class="h5 inputField ct-attribute-field-textbox large-11 ng-pristine ng-valid ng-scope ng-not-empty ng-touched icon-add-contain"

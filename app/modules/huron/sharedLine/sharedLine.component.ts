@@ -5,7 +5,7 @@ import {
 } from './sharedLine';
 
 class SharedLineCtrl {
-  public selected: SharedLineUser;
+  public selectedUser: SharedLineUser;
   public sharedLineUsers: SharedLineUser[];
   public sharedLineEndpoints: SharedLineDevice[];
   public oneAtATime: boolean = true;
@@ -16,14 +16,23 @@ class SharedLineCtrl {
   public disassociateSharedLineUserFn: Function;
 
   public getUserList(filter: string): void {
-    this.getUserListFn({
-      viewValue: filter,
+    return this.getUserListFn({
+      filter: filter,
     });
   }
 
+  public getUserName(name: { givenName: string, familyName: string }, userId: string): string {
+    var userName = _.get(name, 'name.givenName', '') +  ' '  +  _.get(name, 'name.familyName', '');
+    return userName.trim() || userId;
+  }
+
   public selectSharedLineUser(user: User): void {
+    this.selectedUser = undefined;
+    let userInfo: SharedLineUser = new SharedLineUser();
+    _.assign(userInfo, user);
+    userInfo.name = this.getUserName(user.name, user.userName);
     this.selectSharedLineUserFn({
-      user: user,
+      user: userInfo,
     });
   }
 
@@ -42,27 +51,17 @@ class SharedLineCtrl {
   }
 }
 
-class SharedLineComponent implements ng.IComponentOptions {
+export class SharedLineComponent implements ng.IComponentOptions {
   public controller = SharedLineCtrl;
   public templateUrl = 'modules/huron/sharedLine/sharedLine.html';
   public bindings: { [binding: string]: string } = {
-    selected: '<',
+    selectedUser: '<',
     sharedLineUsers: '<',
     sharedLineEndpoints: '<',
     oneAtATime: '<',
     selectSharedLineUserFn: '&',
     getUserListFn: '&',
     isSingleDeviceFn: '&',
-    disassociateSharedLineUserFn: '&'
+    disassociateSharedLineUserFn: '&',
   };
-
 }
-
-export default angular
-  .module('huron.shared-line', [
-    'atlas.templates',
-    'cisco.ui',
-    'pascalprecht.translate',
-  ])
-  .component('ucSharedLine', new SharedLineComponent())
-  .name;

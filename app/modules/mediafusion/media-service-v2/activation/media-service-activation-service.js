@@ -66,7 +66,7 @@
     function enableMediaService(serviceId) {
       this.setServiceEnabled(serviceId, true).then(
         function success() {
-          this.setisMediaServiceEnabled(true);
+          setisMediaServiceEnabled(true);
           enableOrpheusForMediaFusion();
         },
         function error() {
