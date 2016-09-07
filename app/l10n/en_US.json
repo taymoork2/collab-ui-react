@@ -4805,7 +4805,7 @@
       },
       "care": {
         "title": "Care",
-        "notEnabledText": "Use Spark Care services to collaborate with your customer. Customize care interfaces using configuration wizard."
+        "notEnabledText": "Use Spark Care services to collaborate with your customer. Customize care interfaces using the configuration wizard."
       },
       "roomSystem": {
         "title": "Collaboration Devices",
