@@ -5,11 +5,14 @@
   function UpdateIncidentController($scope, $stateParams, UpdateIncidentService, IncidentsWithoutSiteService, ComponentService, $window) {
     $scope.showOperational = true;
     var originComponentsTree = [];
+    var originIncidentName, originImpact;
     function incidentMsg() {
       IncidentsWithoutSiteService.getIncidentMsg({ incidentId: $stateParams.incidentId }).$promise.then(function (data) {
         $scope.msg = '';
         $scope.showComponent = false;
         $scope.incidentWithMsg = data;
+        originIncidentName = data.incidentName;
+        originImpact = data.impact;
         getComponentsTree();
       }, function () {
 
@@ -26,12 +29,19 @@
     $scope.showComponentFUN = function () {
       $scope.showComponent = true;
     };
+    $scope.cancleModifyIncident = function () {
+      $scope.showIncidentName = true;
+      $scope.incidentWithMsg.impact = originImpact;
+      $scope.incidentWithMsg.incidentName = originIncidentName;
+    };
     $scope.modifyIncident = function () {
       IncidentsWithoutSiteService.modifyIncident({ incidentId: $scope.incidentWithMsg.incidentId }, { incidentName: $scope.incidentWithMsg.incidentName, impact: $scope.incidentWithMsg.impact }).$promise.then(function (data) {
         $scope.incidentWithMsg.impact = data.impact;
         $scope.incidentWithMsg.incidentName = data.incidentName;
         $scope.incidentWithMsg.lastModifiedTime = data.lastModifiedTime;
         $scope.showIncidentName = true;
+        originIncidentName = data.incidentName;
+        originImpact = data.impact;
         $window.alert("Successfully modify incident");
       });
     };
