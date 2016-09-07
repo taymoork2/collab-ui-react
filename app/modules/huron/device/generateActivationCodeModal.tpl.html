@@ -7,7 +7,7 @@
     <i class="icon icon-spinner"></i>
   </div>
   <div id="printActivationCode" ng-if="genAuthCode.otp.code">
-    <div translate="generateActivationCodeModal.activateBody"></div>
+    <div translate="generateActivationCodeModal.activateBody" translate-values="{ belongsTo: genAuthCode.userName }">></div>
     <div class="row">
       <div class="col-sm-5">
         <img data-ng-src="data:image/JPEG;base64,{{genAuthCode.qrCode}}">
