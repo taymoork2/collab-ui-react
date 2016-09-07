@@ -81,7 +81,7 @@
             error: 'trialModal.errorServerDown'
           };
         } else {
-          if (obj.isExist === 'true') {
+          if (obj.isExist === 'true' && !(key === 'endCustomerEmail' && obj.isConsumer === 'true')) {
             return {
               error: 'trialModal.errorInUse'
             };
