@@ -95,8 +95,8 @@
     }
 
     function setActionMinMax(action) {
-      action.minNumberOfCharacters = 4;
-      action.maxNumberOfCharacters = 4;
+      action.minNumberOfCharacters = 0;
+      action.maxNumberOfCharacters = 0;
     }
 
     function setPhoneMenuMinMaxEntry() {
