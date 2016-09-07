@@ -1,6 +1,6 @@
 import { IFeature } from '../../../core/components/featureList/featureList.component';
 
-class PlaceOverviewCtrl {
+class PlaceOverview {
 
   private _currentPlace;
   private _csdmHuronUserDeviceService;
@@ -19,6 +19,7 @@ class PlaceOverviewCtrl {
     private $state,
     private $stateParams,
     private CsdmPlaceService,
+    private CsdmHuronPlaceService,
     private CsdmHuronUserDeviceService,
     private $translate,
     private XhrNotificationService
@@ -41,7 +42,12 @@ class PlaceOverviewCtrl {
   }
 
   public save(newName: string) {
-    return this.CsdmPlaceService
+    if (this._currentPlace.type === 'cloudberry') {
+      return this.CsdmPlaceService
+        .updatePlaceName(this._currentPlace.url, newName)
+        .catch(this.XhrNotificationService.notify);
+    }
+    return this.CsdmHuronPlaceService
       .updatePlaceName(this._currentPlace.url, newName)
       .catch(this.XhrNotificationService.notify);
   }
@@ -69,9 +75,12 @@ class PlaceOverviewCtrl {
     this.$state.go('place-overview.' + feature);
   }
 }
+
+class PlaceOverviewComponent {
+  public controller = PlaceOverview;
+  public templateUrl = 'modules/squared/places/overview/placeOverview.html'
+}
+
 angular
   .module('Squared')
-  .component('placeOverview', {
-    templateUrl: 'modules/squared/places/overview/placeOverview.tpl.html',
-    controller: PlaceOverviewCtrl
-  });
+  .component('placeOverview', new PlaceOverviewComponent());

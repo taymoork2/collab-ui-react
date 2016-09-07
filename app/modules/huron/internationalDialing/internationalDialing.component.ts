@@ -1,21 +1,21 @@
-import { IOption, INT_DIAL_CHANGE } from './internationalDialing';
-import { InternationalDialingService } from './internationalDialing.service'
+import {
+  IOption,
+  INT_DIAL_CHANGE,
+  InternationalDialingService
+} from './index';
 
-class InternationalDialingCtrl {
+class InternationalDialing {
   selected: IOption;
-  
+
   options: IOption[] = [];
   form: ng.IFormController;
-  constructor(private $translate, 
-    private InternationalDialingService: InternationalDialingService, 
+  constructor(private $translate,
+    private InternationalDialingService: InternationalDialingService,
     private $scope: ng.IScope) {
     this.options.push(InternationalDialingService.cbUseGlobal);
     this.options.push(InternationalDialingService.cbAlwaysAllow);
     this.options.push(InternationalDialingService.cbNeverAllow);
     this.selected = InternationalDialingService.getInternationalDialing();
-  }
-  private $onInit(): void {
-    
   }
 
   save() {
@@ -29,20 +29,10 @@ class InternationalDialingCtrl {
   }
 }
 
-class InternationalDialingComponnent implements ng.IComponentOptions {
-  public controller = InternationalDialingCtrl;
+export class InternationalDialingComponnent implements ng.IComponentOptions {
+  public controller = InternationalDialing;
   public templateUrl = 'modules/huron/internationalDialing/internationalDialing.html';
   public bindings: {[binding: string]: string} = {
-    
+
   }
 }
-
-export default angular
-  .module('huron.international-dialing', [
-    'atlas.templates',
-    'cisco.ui',
-    'pascalprecht.translate',
-    'Squared'
-  ])
-  .component('internationalDialingComp', new InternationalDialingComponnent())
-  .name;

@@ -576,4 +576,53 @@ describe('Controller: TrialDeviceController', function () {
       expect(controller.areTemplateOptionsDisabled(device)).toBeTruthy();
     });
   });
+
+  describe('feature toggle for international shipping', function () {
+    it('should set supportsInternationalShipping value based on feature toggle value', function () {
+      spyOn(FeatureToggleService, 'atlasShipDevicesInternationalGetStatus').and.returnValue($q.when(true));
+      initController();
+
+      expect(controller.supportsInternationalShipping).toBe(true);
+      expect(FeatureToggleService.atlasShipDevicesInternationalGetStatus).toHaveBeenCalled();
+    });
+
+    it('should only show US when  only dx10 is  selected and toggle is false', function () {
+      spyOn(FeatureToggleService, 'atlasShipDevicesInternationalGetStatus').and.returnValue($q.when(false));
+      initController();
+      expect(controller.supportsInternationalShipping).toBe(false);
+      expect(FeatureToggleService.atlasShipDevicesInternationalGetStatus).toHaveBeenCalled();
+    });
+  });
+
+  describe('Shipping to additional countries ', function () {
+    it('should show a larger list of countries when only CISCO_SX10 is selected and toggle is true', function () {
+      spyOn(FeatureToggleService, 'atlasShipDevicesInternationalGetStatus').and.returnValue($q.when(true));
+      initController();
+      controller.sx10.enabled = true;
+      controller.sx10.quantity = 1;
+      var countryList = controller.getCountriesForSelectedDevices();
+      expect(countryList.length).toBeGreaterThan(1);
+    });
+    it('should have a list of countries to be US only when CISCO_SX10 is selected and toggle is false', function () {
+      spyOn(FeatureToggleService, 'atlasShipDevicesInternationalGetStatus').and.returnValue($q.when(false));
+      initController();
+      controller.sx10.enabled = true;
+      controller.sx10.quantity = 1;
+      var countryList = controller.getCountriesForSelectedDevices();
+      expect(countryList.length).toBe(1);
+      expect(countryList).toContain({ country: 'United States' });
+
+    });
+    it('should have a list of countries to be US only when CISCO_SX10 and phone is selected and toggle is true', function () {
+      spyOn(FeatureToggleService, 'atlasShipDevicesInternationalGetStatus').and.returnValue($q.when(true));
+      initController();
+      controller.sx10.enabled = true;
+      controller.sx10.quantity = 1;
+      controller.phone8865.enabled = true;
+      controller.phone8865.quantity = 1;
+      var countryList = controller.getCountriesForSelectedDevices();
+      expect(countryList.length).toBe(1);
+      expect(countryList).toContain({ country: 'United States' });
+    });
+  });
 });

@@ -26,7 +26,7 @@
         for (var i = 7; i >= 1; i--) {
           abs = 7 - i;
           dummyGraph.push({
-            modifiedDate: moment().subtract(i, 'day').format(dayFormat),
+            date: moment().subtract(i, 'day').format(dayFormat),
             totalRegisteredUsers: 25 + (25 * abs),
             activeUsers: 25 * abs,
             percentage: Math.round(((25 * abs) / (25 + (25 * abs))) * 100),
@@ -39,7 +39,7 @@
         for (var x = 3; x >= 0; x--) {
           abs = 3 - x;
           dummyGraph.push({
-            modifiedDate: moment().startOf('week').subtract(1 + (x * 7), 'day').format(dayFormat),
+            date: moment().startOf('week').subtract(1 + (x * 7), 'day').format(dayFormat),
             totalRegisteredUsers: 25 + (25 * abs),
             activeUsers: 25 * abs,
             percentage: Math.round(((25 * abs) / (25 + (25 * abs))) * 100),
@@ -52,7 +52,7 @@
         for (var y = 2; y >= 0; y--) {
           abs = 2 - y;
           dummyGraph.push({
-            modifiedDate: moment().subtract(y, 'month').format(monthFormat),
+            date: moment().subtract(y, 'month').format(monthFormat),
             totalRegisteredUsers: 25 + (25 * abs),
             activeUsers: 25 * abs,
             percentage: Math.round(((25 * abs) / (25 + (25 * abs))) * 100),
@@ -74,7 +74,7 @@
         for (var i = 7; i >= 1; i--) {
           abs = 7 - i;
           dummyGraph.push({
-            modifiedDate: moment().subtract(i, 'day').format(dayFormat),
+            date: moment().subtract(i, 'day').format(dayFormat),
             totalRooms: 10 + (10 * abs),
             oneToOneRooms: 10 * abs,
             groupRooms: 0,
@@ -88,7 +88,7 @@
         for (var x = 3; x >= 0; x--) {
           abs = 3 - x;
           dummyGraph.push({
-            modifiedDate: moment().startOf('week').subtract(1 + (x * 7), 'day').format(dayFormat),
+            date: moment().startOf('week').subtract(1 + (x * 7), 'day').format(dayFormat),
             totalRooms: 10 + (10 * abs),
             oneToOneRooms: 10 * abs,
             avgRooms: 0,
@@ -102,7 +102,7 @@
         for (var y = 2; y >= 0; y--) {
           abs = 2 - y;
           dummyGraph.push({
-            modifiedDate: moment().subtract(y, 'month').format(monthFormat),
+            date: moment().subtract(y, 'month').format(monthFormat),
             totalRooms: 10 + (10 * abs),
             oneToOneRooms: 10 * abs,
             avgRooms: 0,
@@ -125,7 +125,7 @@
         for (var i = 7; i >= 1; i--) {
           abs = 7 - i;
           dummyGraph.push({
-            modifiedDate: moment().subtract(i, 'day').format(dayFormat),
+            date: moment().subtract(i, 'day').format(dayFormat),
             contentShared: 80 - (10 * abs),
             contentShareSizes: 0,
             color: chartColors.dummyGray,
@@ -136,7 +136,7 @@
         for (var x = 3; x >= 0; x--) {
           abs = 3 - x;
           dummyGraph.push({
-            modifiedDate: moment().startOf('week').subtract(1 + (x * 7), 'day').format(dayFormat),
+            date: moment().startOf('week').subtract(1 + (x * 7), 'day').format(dayFormat),
             contentShared: 50 - (10 * abs),
             contentShareSizes: 0,
             color: chartColors.dummyGray,
@@ -147,7 +147,7 @@
         for (var y = 2; y >= 0; y--) {
           abs = 2 - y;
           dummyGraph.push({
-            modifiedDate: moment().subtract(y, 'month').format(monthFormat),
+            date: moment().subtract(y, 'month').format(monthFormat),
             contentShared: 40 - (10 * abs),
             contentShareSizes: 0,
             color: chartColors.dummyGray,
@@ -167,7 +167,7 @@
         for (var i = 7; i >= 1; i--) {
           abs = 7 - i;
           dummyGraph.push({
-            modifiedDate: moment().subtract(i + 1, 'day').format(dayFormat),
+            date: moment().subtract(i + 1, 'day').format(dayFormat),
             totalDurationSum: (25 + (15 * abs)) + (15 + (10 * abs)) + (5 + (5 * abs)),
             goodQualityDurationSum: 25 + (15 * abs),
             fairQualityDurationSum: 15 + (10 * abs),
@@ -182,7 +182,7 @@
         for (var x = 3; x >= 0; x--) {
           abs = 3 - x;
           dummyGraph.push({
-            modifiedDate: moment().startOf('week').subtract(1 + (x * 7), 'day').format(dayFormat),
+            date: moment().startOf('week').subtract(1 + (x * 7), 'day').format(dayFormat),
             totalDurationSum: (25 + (15 * abs)) + (15 + (10 * abs)) + (5 + (5 * abs)),
             goodQualityDurationSum: 25 + (15 * abs),
             fairQualityDurationSum: 15 + (10 * abs),
@@ -197,7 +197,7 @@
         for (var y = 2; y >= 0; y--) {
           abs = 2 - y;
           dummyGraph.push({
-            modifiedDate: moment().subtract(y, 'month').format(monthFormat),
+            date: moment().subtract(y, 'month').format(monthFormat),
             totalDurationSum: (25 + (15 * abs)) + (15 + (10 * abs)) + (5 + (5 * abs)),
             goodQualityDurationSum: 25 + (15 * abs),
             fairQualityDurationSum: 15 + (10 * abs),
@@ -238,7 +238,7 @@
         for (var i = 7; i >= 1; i--) {
           abs = 7 - i;
           dummyGraph.push({
-            modifiedDate: moment().subtract(i, 'day').format(dayFormat),
+            date: moment().subtract(i, 'day').format(dayFormat),
             totalRegisteredDevices: 15 + (15 * abs)
           });
         }
@@ -246,7 +246,7 @@
         for (var x = 3; x >= 0; x--) {
           abs = 3 - x;
           dummyGraph.push({
-            modifiedDate: moment().startOf('week').subtract(1 + (x * 7), 'day').format(dayFormat),
+            date: moment().startOf('week').subtract(1 + (x * 7), 'day').format(dayFormat),
             totalRegisteredDevices: 15 + (15 * abs)
           });
         }
@@ -254,7 +254,7 @@
         for (var y = 2; y >= 0; y--) {
           abs = 2 - y;
           dummyGraph.push({
-            modifiedDate: moment().subtract(y, 'month').format(monthFormat),
+            date: moment().subtract(y, 'month').format(monthFormat),
             totalRegisteredDevices: 15 + (15 * abs)
           });
         }

@@ -1,6 +1,6 @@
 <script type="text/ng-template" id="numberTemplate.html">
   <a>
-    <span ng-bind-html="(match.label.number | telephoneNumber) | typeaheadHighlight:query" ></span>
+    <span ng-bind-html="(match.label.number | telephoneNumber) | typeaheadHighlight:query"></span>
   </a>
 </script>
 <div class="pilot-number-details">
@@ -15,10 +15,21 @@
            typeahead-min-length="3" typeahead-wait-ms="200" focus-on/>
     <p class="input-description" translate="huronHuntGroup.numberHint"></p>
   </div>
-  <div class="pilot-number-container">
-        <span class="pilot-number-item" ng-repeat="num in huntGroupSA.selectedPilotNumbers">
-          <span class="pilot-number">{{num.number | telephoneNumber}}</span>
-          <a href='#' class="icon icon-close icon-lg" ng-click="huntGroupSA.unSelectPilotNumber(num)"></a>
-        </span>
-  </div>
 </div>
+
+<div class="pilot-number-container">
+  <cs-card-layout>
+    <cs-card class="small header-background primary hunt-member-card pilot-number-item"
+             ng-repeat="num in huntGroupSA.selectedPilotNumbers">
+      <article>
+        <header ng-class="{'open-panel' : huntGroupSA.openMemberPanelUuid === member.user.uuid}">
+          <div class="header-with-right-icon">
+            <h5 class="ellipsis" title="{{num.number | telephoneNumber}}">{{num.number | telephoneNumber}}</h5>
+            <i class="icon icon-close icon-lg" ng-click="huntGroupSA.unSelectPilotNumber(num)"></i>
+          </div>
+        </header>
+      </article>
+    </cs-card>
+  </cs-card-layout>
+</div>
+

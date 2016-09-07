@@ -5,7 +5,7 @@ describe('LeaderBoard', function () {
   beforeEach(angular.mock.module('Huron'));
   beforeEach(angular.mock.module('WebExApp'));
 
-  var $controller, $q, $scope, Orgservice, TrialService, WebExUtilsFact;
+  var $controller, $q, $scope, controller, Orgservice, TrialService, WebExUtilsFact;
   var usageOnlySharedDevicesFixture = getJSONFixture('core/json/organizations/usageOnlySharedDevices.json');
 
   beforeEach(inject(function (_$controller_, _$q_, $rootScope, _Orgservice_, _TrialService_, _WebExUtilsFact_) {
@@ -23,7 +23,7 @@ describe('LeaderBoard', function () {
   }));
 
   function initController() {
-    $controller('leaderBoardCtrl', {
+    controller = $controller('leaderBoardCtrl', {
       $scope: $scope
     });
     $scope.$apply();
@@ -33,7 +33,7 @@ describe('LeaderBoard', function () {
     beforeEach(initController);
 
     it('should aggregate the Shared Devices volume', function () {
-      expect($scope.roomSystemsCount).toBe(20);
+      expect(controller.roomSystemsCount).toBe(20);
     });
   });
 });

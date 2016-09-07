@@ -77,7 +77,6 @@
     .message-area {
       height: 4.5rem;
       width: 20rem;
-      background-color: $white;
       resize: none;
       line-height: 1.4rem;
       @include vr-spacing(p, 0.75);
@@ -90,7 +89,7 @@
   }
 
   .day-picker {
-    height: 3rem;
+    height: 2.8rem;
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
@@ -145,6 +144,14 @@
   }
   .ct-input-error {
     color: $color-alerts-base;
-    padding-bottom: 1rem;
+    @include vr-spacing(pr, 1);
+    @include vr-spacing(pb, 1);
+    line-height: 1.25rem;
+  }
+
+  .ct-error-icon {
+    float: left;
+    @include vr-spacing(pr, 0.4);
+    @include vr-spacing(pb, 0.4);
   }
 }

@@ -5,20 +5,40 @@
     .controller('PlacesCtrl',
 
       /* @ngInject */
-      function ($scope, $state, $templateCache, $translate, CsdmPlaceService, PlaceFilter, Authinfo, WizardFactory, RemPlaceModal) {
+      function ($scope, $state, $templateCache, $translate, CsdmPlaceService, CsdmHuronPlaceService, PlaceFilter, Authinfo, WizardFactory, RemPlaceModal) {
         var vm = this;
 
         vm.data = [];
-        vm.dataLoading = false;
+        vm.csdmLoaded = false;
+        vm.huronLoaded = false;
         vm.placeFilter = PlaceFilter;
+        var csdmPlacesList;
+        var huronPlacesList;
+
+        function init() {
+          loadLists();
+        }
+
+        function loadLists() {
+          CsdmPlaceService.getPlacesList().then(function (list) {
+            csdmPlacesList = list;
+            vm.csdmLoaded = true;
+          });
+          CsdmHuronPlaceService.getPlacesList().then(function (list) {
+            huronPlacesList = list;
+            vm.huronLoaded = true;
+          });
+        }
+
+        init();
 
         vm.existsDevices = function () {
-          return (vm.shouldShowList() && (
-            Object.keys(CsdmPlaceService.getPlacesList()).length > 0));
+          return (vm.shouldShowList()
+          && (Object.keys(csdmPlacesList).length > 0 || Object.keys(huronPlacesList).length > 0));
         };
 
         vm.shouldShowList = function () {
-          return CsdmPlaceService.dataLoaded();
+          return vm.csdmLoaded && vm.huronLoaded;
         };
 
         vm.isEntitledToRoomSystem = function () {
@@ -31,13 +51,12 @@
 
         vm.updateListAndFilter = function () {
           var filtered = _.chain({})
-            .extend(CsdmPlaceService.getPlacesList())
+            .extend(csdmPlacesList)
+            .extend(huronPlacesList)
             .values()
             .value();
           return PlaceFilter.getFilteredList(filtered);
         };
-
-        vm.updateListAndFilter();
 
         vm.numDevices = function (place) {
           return _.size(place.devices);
@@ -48,10 +67,6 @@
           $state.go('place-overview', {
             currentPlace: place
           });
-        };
-
-        vm.clickUsers = function () {
-          $state.go('users.list');
         };
 
         vm.gridOptions = {
@@ -141,7 +156,9 @@
 
         vm.deletePlace = function ($event, place) {
           $event.stopPropagation();
-          RemPlaceModal.open(place);
+          RemPlaceModal
+            .open(place)
+            .then(vm.updateListAndFilter());
         };
 
         function getTemplate(name) {

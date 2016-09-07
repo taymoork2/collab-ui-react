@@ -47,7 +47,6 @@
     $scope.exportType = $rootScope.typeOfExport.CUSTOMER;
     $scope.filterList = _.debounce(filterAction, $scope.timeoutVal);
 
-
     $scope.customerListToggle = customerListToggle;
 
     // expecting this guy to be unset on init, and set every time after
@@ -105,7 +104,6 @@
     };
     $scope.$watch('filter.selected', function () {
       if ($scope.gridApi) {
-        // This refreshes the grid, forcing it to recalculate the filters/sorts/etc.
         $scope.gridApi.grid.refresh();
       }
     }, true);
@@ -131,7 +129,9 @@
     var multiServiceTemplate = $templateCache.get('modules/core/customers/customerList/grid/multiServiceColumn.tpl.html');
     var oldNoteTemplate = $templateCache.get('modules/core/customers/customerList/grid/noteColumn.tpl.html');
     var actionTemplate = $templateCache.get('modules/core/customers/customerList/grid/actionColumn.tpl.html');
-    // new templates
+    // END SECTION TO BE DELETED
+
+    // new templates (These should be kept when feature toggle is removed)
     var licenseCountTemplate = $templateCache.get('modules/core/customers/customerList/grid/licenseCountColumn.tpl.html');
     var totalUsersTemplate = $templateCache.get('modules/core/customers/customerList/grid/totalUsersColumn.tpl.html');
     var compactServiceTemplate = $templateCache.get('modules/core/customers/customerList/grid/compactServiceColumn.tpl.html');
@@ -162,7 +162,6 @@
       cellTemplate: oldNoteTemplate,
       sortingAlgorithm: notesSort
     };
-    // This array is all the old services, but split into separate columns
     var splitServicesFields = [{
       field: 'messaging',
       displayName: $translate.instant('customerPage.message'),
@@ -245,7 +244,6 @@
     };
 
     var myOrgDetails = {};
-    var nonFreeLicenses = ['roomSystems', 'webex', 'care'];
 
     $scope.gridColumns = [];
 
@@ -266,12 +264,11 @@
           if ($scope.load) {
             $scope.currentDataPosition++;
             $scope.load = false;
-            // lol getTrialsList doesnt take any params...
             getTrialsList(($scope.currentDataPosition * Config.usersperpage) + 1);
             $scope.gridApi.infiniteScroll.dataLoaded();
           }
         });
-        gridApi.grid.registerRowsProcessor(rowFilter, 150); // This is run between column filtering (100) and sorting (200)
+        gridApi.grid.registerRowsProcessor(rowFilter, 150);
       },
       multiFields: {
         meeting: [{
@@ -707,29 +704,16 @@
 
     function isLicenseTypeFree(rowData, licenseTypeField) {
       return (isLicenseInfoAvailable(rowData.licenseList) && PartnerService.isLicenseFree(getLicenseObj(rowData, licenseTypeField)) &&
-        !_.includes(nonFreeLicenses, licenseTypeField));
+        _.includes(Config.freeLicenses, licenseTypeField));
     }
 
     function isNoLicense(rowData, licenseTypeField) {
       return (isLicenseInfoAvailable(rowData.licenseList) && PartnerService.isLicenseFree(getLicenseObj(rowData, licenseTypeField)) &&
-        _.includes(nonFreeLicenses, licenseTypeField));
+        !_.includes(Config.freeLicenses, licenseTypeField));
     }
 
     function isLicenseTypeAny(rowData, licenseTypeField) {
-      if (!isLicenseInfoAvailable(rowData.licenseList)) {
-        return false;
-      }
-      if (licenseTypeField === 'webex') {
-        // since webex is 1 icon on the ui, use this to check all the possibilities
-        return _.some(Config.webexTypes, function (webexType) {
-          var licenseObj = getLicenseObj(rowData, webexType);
-          return PartnerService.isLicenseATrial(licenseObj) || PartnerService.isLicenseActive(licenseObj);
-        });
-      } else {
-        var licenseObj = getLicenseObj(rowData, licenseTypeField);
-        var isFreeLicense = PartnerService.isLicenseFree(licenseObj) && !_.includes(nonFreeLicenses, licenseTypeField);
-        return PartnerService.isLicenseATrial(licenseObj) || PartnerService.isLicenseActive(licenseObj) || isFreeLicense;
-      }
+      return PartnerService.isLicenseTypeAny(rowData, licenseTypeField);
     }
 
     function getLicenseCountColumnText(rowData) {
@@ -740,7 +724,7 @@
     }
 
     function isPastGracePeriod(rowData) {
-      return rowData.daysLeft < Config.trialGracePeriod; // HACK: Remove this magic number with a backend call
+      return rowData.daysLeft < Config.trialGracePeriod;
     }
 
     function getUserCountColumnText(rowData) {
