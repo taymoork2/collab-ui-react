@@ -4928,8 +4928,9 @@
   },
   "onlineUpgradeModal": {
     "title": "Account Expired",
-    "body": "Your admin account has been suspended because your subscription has lapsed. To regain access you can buy a subscription. Alternately you can use the Free version of Spark which does not come with the Cloud Collaboration Management console.",
-    "cancelButton": "Use Free Spark",
+    "body": "Your admin account has been suspended because your subscription has lapsed. To regain access to the Cloud Collaboration Management portal you can buy a subscription.",
+    "cancelBody": "Alternately you can use the free version of Cisco Spark which does not come with the Cloud Collaboration Management portal.",
+    "cancelButton": "Use free Cisco Spark",
     "cancelError": "An error has occurred while canceling your subscription.",
     "cancelSuccess": "You now have a free Cisco Spark account."
   },

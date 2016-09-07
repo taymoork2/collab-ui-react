@@ -2,9 +2,9 @@
   <h3 class="modal-title" translate="onlineUpgradeModal.title"></h3>
 </div>
 <div class="modal-body">
-  <div>
-    <span translate="onlineUpgradeModal.body"></span>
-  </div>
+  <span translate="onlineUpgradeModal.body"></span>
+  <span ng-if="$ctrl.showCancelButton"
+    translate="onlineUpgradeModal.cancelBody"></span>
 </div>
 <div class="modal-footer online-upgrade-modal">
   <button
