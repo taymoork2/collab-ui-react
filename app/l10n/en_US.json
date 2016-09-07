@@ -146,7 +146,8 @@
     "unknownCreateUserError": "An unknown error has occurred and user creation could not be completed.",
     "insufficientEntitlementsError": "{{email}} cannot be added.  There are insufficient licenses to create this user.",
     "telstraAppRedirect": "Connecting to Telstra Apps Marketplace",
-    "careAddUserError": "Error adding user to Care."
+    "careAddUserError": "Error adding user to Care.",
+    "careAddUserRoleError": "Error adding roles to user."
   },
   "userManage": {
     "org": {
