@@ -90,7 +90,7 @@ describe('Controller: Care Settings', function () {
       });
       $httpBackend.whenGET(/.*config.*ciscoccservice.*\/chat/g).respond(500, {});
       controller.onboardToCs();
-      for (var i = 15; i >= 0; i--) {
+      for (var i = 3; i >= 0; i--) {
         $httpBackend.whenGET(/.*config.*ciscoccservice.*\/chat/g).respond(500, {});
         $interval.flush(10000);
       }

@@ -17,7 +17,7 @@
     vm.IN_PROGRESS = 'inProgress';
 
     vm.state = vm.UNKNOWN;
-    vm.pollCount = 0;
+    vm.errorCount = 0;
 
     vm.onboardToCs = function () {
       $window.open(ccfsUrl, '_blank');
@@ -28,6 +28,7 @@
     var poller;
     var pollInterval = 10000;
     var pollRetryCount = 30;
+    var pollErrorCount = 3;
     $scope.$on('$destroy', function () {
       $interval.cancel(poller);
       poller = undefined;
@@ -36,7 +37,7 @@
     function startPolling() {
       if (!_.isUndefined(poller)) return;
 
-      vm.pollCount = 0;
+      vm.errorCount = 0;
       poller = $interval(processOnboardStatus, pollInterval, pollRetryCount);
       poller.then(processTimeout);
     }
@@ -46,12 +47,10 @@
         $interval.cancel(poller);
         poller = undefined;
       }
-      vm.pollCount = 0;
       _.set($scope.wizard, 'isNextDisabled', false);
     }
 
     function processOnboardStatus() {
-      vm.pollCount = vm.pollCount + 1;
       getStatus().then(function (result) {
         if (_.get(result, 'data.csConnString')) {
           if (vm.state === vm.IN_PROGRESS) {
@@ -60,7 +59,7 @@
           vm.state = vm.ONBOARDED;
           stopPolling();
         } else {
-          Log.debug('Bad response for GET Chat Config: ' + result);
+          Log.debug('Bad response for GET Chat Config: ', result);
         }
       })
       .catch(function (result) {
@@ -69,8 +68,8 @@
             vm.state = vm.NOT_ONBOARDED;
           }
         } else {
-          Log.debug('Poll status failed: ' + result);
-          if (vm.pollCount >= pollRetryCount / 2) {
+          Log.debug('Fetching Care setup status failed: ', result);
+          if (vm.errorCount++ >= pollErrorCount) {
             vm.state = vm.UNKNOWN;
             Notification.error($translate.instant('firstTimeWizard.careSettingsFetchFailed'));
             stopPolling();
@@ -91,7 +90,6 @@
           'Authorization': 'Bearer ' + TokenService.getAccessToken()
         }
       };
-      Log.debug('getStatus called.');
       return $http.get(statusUrl, config);
     }
 
