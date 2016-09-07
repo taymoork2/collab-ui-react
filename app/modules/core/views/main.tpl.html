@@ -7,8 +7,8 @@
         </div>
       </cs-header-left>
       <cs-header-right>
-        <div ng-show="buckets && buckets.length > 0" class="leaderboard-push-trigger" ng-controller="leaderBoardCtrl" ng-if="headerCtrl.showLicenseUsageDropDown()">
-          <cs-header-push-trigger icon="icon" state="state" label="label" ng-if="isCustomer"></cs-header-push-trigger>
+        <div ng-show="lBoardCtrl.buckets && lBoardCtrl.buckets.length > 0" class="leaderboard-push-trigger" ng-controller="leaderBoardCtrl as lBoardCtrl" ng-if="headerCtrl.showLicenseUsageDropDown()">
+          <cs-header-push-trigger icon="lBoardCtrl.icon" state="lBoardCtrl.state" label="lBoardCtrl.label" ng-if="lBoardCtrl.isCustomer"></cs-header-push-trigger>
         </div>
         <cr-setup-dropdown
           ng-if="headerCtrl.showFirstTimeSetupDropDown() && !headerCtrl.newTabDisplay">

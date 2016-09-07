@@ -2366,6 +2366,19 @@
               wizard: null
             }
           })
+          .state('add-resource.expressway.resource-group', {
+            parent: 'modalSmall',
+            views: {
+              'modal@': {
+                controller: 'ExpresswaySelectResourceGroupController',
+                controllerAs: 'vm',
+                templateUrl: 'modules/hercules/fusion-pages/add-resource/expressway/select-resource-group.html'
+              }
+            },
+            params: {
+              wizard: null
+            }
+          })
           .state('add-resource.expressway.end', {
             parent: 'modalSmall',
             views: {
