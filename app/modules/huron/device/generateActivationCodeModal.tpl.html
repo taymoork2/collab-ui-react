@@ -30,14 +30,8 @@
 
       <div class="sendEmailWrapper" ng-if="genAuthCode.showEmail">
         <div class="sendEmailForm">
-          <div class="selectedAddress">
-            <div class="spacingBeforeSearch"></div>
-            <label for="to" class="cs-input__label" translate="generateActivationCodeModal.to"></label>
-            <a class="sendMailArrow"  ng-click="genAuthCode.sendActivationCodeEmail()"><i class="icon icon-send-email"></i></a>
-          </div>
           <div class="typeahead-group userSearch">
-            <input id="userInput"
-             <input type="email" id="to" class="underline userInput" ng-model="genAuthCode.email.to">
+            <input type="email" id="to" class="underline userInput" ng-model="genAuthCode.email.to"><a class="sendMailArrow"  ng-click="genAuthCode.sendActivationCodeEmail()"><i class="icon icon-send-email"></i></a>
           </div>
           <div class="scrollSpace"></div>
         </div>
