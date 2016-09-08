@@ -81,6 +81,7 @@
             error: 'trialModal.errorServerDown'
           };
         } else {
+          // we allow duplicate emails for the  the user who is a consumer
           if (obj.isExist === 'true' && !(key === 'endCustomerEmail' && obj.isConsumer === 'true')) {
             return {
               error: 'trialModal.errorInUse'
