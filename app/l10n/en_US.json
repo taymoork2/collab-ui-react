@@ -4431,8 +4431,6 @@
     "sparkEntTooltip": "If enabled, all users in your messenger organization will be given access to free Spark.  If disabled, only admins will automatically be given free Spark.",
     "usrDisHeading": "Sync User Disabling From Messenger",
     "usrDisTooltip": "If enabled, disabling a user on OrgAdmin will cause the user to be disabled on Spark.  If disabled, disabling a user on OrgAdmin will NOT affect the user on the Spark side.",
-    "usrMinHeading": "Minimal sync",
-    "usrMinTooltip": "If enabled, only the username and the ability to user Jabber will be synchronized between Messenger and Spark.",
     "errorAuthFailed": "Authorization failed: ",
     "errorFailedCheckingCIEntitlements": "Failed checking user entitlements from Common Identity: ",
     "errorFailedCheckingCIRoles": "Failed checking Common Identity user roles: ",
