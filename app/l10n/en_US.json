@@ -2808,7 +2808,7 @@
       "phone8841": "8841",
       "phone7841": "7841",
       "quantity": "Quantity",
-      "invalidQuantity": "Quantity must be between 1 and 5",
+      "invalidQuantity": "Quantity must be between 1 and {{max}}",
       "invalidTotalQuantity": "Entire order must have between 1 and {{max}} devices",
       "invalidRoomSystemsQuantity": "Limited to 3 Spark Collaboration Devices",
       "invalidPhonesQuantity": "Limited to 5 Personal & Shared Desk Phones",
