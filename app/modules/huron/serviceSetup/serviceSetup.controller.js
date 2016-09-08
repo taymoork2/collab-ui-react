@@ -8,8 +8,13 @@
   /* @ngInject*/
   function ServiceSetupCtrl($q, $state, $scope, ServiceSetup, Notification, Authinfo, $translate, HuronCustomer,
     ValidationService, DialPlanService, TelephoneNumberService, ExternalNumberService,
-    CeService, HuntGroupServiceV2, ModalService, DirectoryNumberService, VoicemailMessageAction, FeatureToggleService) {
+    CeService, HuntGroupServiceV2, ModalService, DirectoryNumberService, VoicemailMessageAction, FeatureToggleService,
+    PstnSetupService) {
     var vm = this;
+
+    vm.NATIONAL = 'national';
+    vm.LOCAL = 'local';
+
     var DEFAULT_SITE_INDEX = '000001';
     var DEFAULT_TZ = {
       id: 'America/Los_Angeles',
@@ -21,6 +26,7 @@
     var DEFAULT_SITE_CODE = '100';
     var DEFAULT_FROM = '5000';
     var DEFAULT_TO = '5999';
+    var DEFAULT_DIAL_HABIT = vm.NATIONAL;
 
     var VOICE_ONLY = 'VOICE_ONLY';
     var DEMO_STANDARD = 'DEMO_STANDARD';
@@ -69,7 +75,10 @@
         voicemailPrefixLabel: DEFAULT_SITE_SD.concat(DEFAULT_SITE_CODE),
         siteDialDigit: DEFAULT_SITE_SD
       },
-      disableExtensions: false
+      disableExtensions: false,
+      dialingHabit: DEFAULT_DIAL_HABIT,
+      regionCode: '',
+      initialRegionCode: ''
     };
 
     vm.firstTimeSetup = $state.current.data.firstTimeSetup;
@@ -85,6 +94,11 @@
     vm.hideoptionalvmHelpText = false;
     vm.optionalVmDidFeatureToggle = false;
     vm._buildVoicemailPrefixOptions = _buildVoicemailPrefixOptions;
+    vm.isTerminusCustomer = false;
+
+    PstnSetupService.getCustomer(Authinfo.getOrgId()).then(function () {
+      vm.isTerminusCustomer = true;
+    });
 
     vm.validations = {
       greaterThan: function (viewValue, modelValue, scope) {
@@ -204,11 +218,9 @@
 
     vm.siteAndSteeringDigitErrorValidation = function (view, model, scope) {
       if (_.get(vm, 'model.voicemailPrefix.value') === _.get(vm, 'model.site.steeringDigit')) {
-        $scope.$emit('wizardNextButtonDisable', true);
         scope.fields[0].formControl.$setValidity('', false);
         return true;
       }
-      $scope.$emit('wizardNextButtonDisable', false);
       scope.fields[0].formControl.$setValidity('', true);
       return false;
     };
@@ -973,26 +985,47 @@
     }
 
     function setServiceValues() {
-      DialPlanService.getCustomerDialPlanDetails(Authinfo.getOrgId()).then(function (response) {
-        if (response.extensionGenerated === 'true') {
+      return DialPlanService.getCustomerVoice(Authinfo.getOrgId()).then(function (response) {
+        if (response.dialPlan === null) {
+          // if customer's dialPlan attribute is defined but null, assume the customer is on the
+          // North American Dial Plan. Look up uuid for NANP and insert it into customer dialPlan.
+          response.dialPlanDetails = {
+            countryCode: "+1",
+            extensionGenerated: "false",
+            steeringDigitRequired: "true",
+            supportSiteCode: "true",
+            supportSiteSteeringDigit: "true"
+          };
+        }
+
+        vm.model.regionCode = vm.model.initialRegionCode = response.regionCode;
+
+        if (response.regionCode === '') {
+          vm.model.dialingHabit = vm.NATIONAL;
+        } else {
+          vm.model.dialingHabit = vm.LOCAL;
+        }
+
+        if (response.dialPlanDetails.extensionGenerated === 'true') {
           vm.hideFieldInternalNumberRange = true;
         } else {
           vm.hideFieldInternalNumberRange = false;
         }
-        if (response.steeringDigitRequired === 'true') {
+        if (response.dialPlanDetails.steeringDigitRequired === 'true') {
           vm.hideFieldSteeringDigit = false;
         } else {
           vm.hideFieldSteeringDigit = true;
           vm.model.site.steeringDigit = undefined;
         }
-        if (response.supportSiteSteeringDigit !== 'true') {
+        if (response.dialPlanDetails.supportSiteSteeringDigit !== 'true') {
           vm.model.site.siteSteeringDigit = undefined;
         }
-        if (response.supportSiteCode !== 'true') {
+        if (response.dialPlanDetails.supportSiteCode !== 'true') {
           vm.model.site.siteCode = undefined;
         }
-        if (response.countryCode !== null) {
-          vm.generatedVoicemailNumber = ServiceSetup.generateVoiceMailNumber(Authinfo.getOrgId(), response.countryCode);
+        if (response.dialPlanDetails.countryCode !== null) {
+          TelephoneNumberService.setCountryCode(response.dialPlanDetails.countryCode);
+          vm.generatedVoicemailNumber = ServiceSetup.generateVoiceMailNumber(Authinfo.getOrgId(), response.dialPlanDetails.countryCode);
         }
       }).catch(function (response) {
         vm.hideFieldInternalNumberRange = false;
@@ -1165,6 +1198,21 @@
           });
       }
 
+      function updateCustomerVoice() {
+        if (vm.model.dialingHabit === vm.NATIONAL) {
+          vm.model.regionCode = '';
+        }
+        if (vm.model.regionCode !== vm.model.initialRegionCode) {
+          return DialPlanService.updateCustomerVoice(Authinfo.getOrgId(), {
+            regionCode: vm.model.regionCode
+          })
+          .catch(function (error) {
+            errors.push(Notification.processErrorResponse(error, 'serviceSetupModal.error.updateCustomerVoice'));
+            return $q.reject(error);
+          });
+        }
+      }
+
       function saveSite() {
         if (!vm.hasSites) {
           //make sure siteSteering is set
@@ -1253,13 +1301,6 @@
           });
       }
 
-      function saveTimezone() {
-        if (vm.hasVoicemailService && vm.model.ftswCompanyVoicemail.ftswCompanyVoicemailEnabled &&
-          (_.get(vm, 'model.site.timeZone') !== _.get(vm, 'previousTimeZone'))) {
-          return updateTimezone(_.get(vm, 'model.site.timeZone.id'));
-        }
-      }
-
       function saveVoicemailToEmail() {
         return $q.when(true)
           .then(function () {
@@ -1280,16 +1321,23 @@
           (vm.model.ftswCompanyVoicemail.ftswVoicemailToEmail !== VoicemailMessageAction.isVoicemailToEmailEnabled(vm.voicemailMessageAction.voicemailAction));
       }
 
-      function updateVoicemailPostalcode() {
-        if (vm.model.site.siteSteeringDigit !== vm.model.voicemailPrefix.value
-          || vm.model.site.extensionLength !== vm.model.previousLength
-          || vm.model.site.siteCode !== vm.model.site.previousSiteCode) {
-          var postalCode = [vm.model.voicemailPrefix.value, vm.model.site.siteCode, vm.model.site.extensionLength].join('-');
-          return ServiceSetup.updateVoicemailPostalcode(postalCode, vm.voicemailTimeZone.objectId)
-            .catch(function (response) {
-              errors.push(Notification.processErrorResponse(response, 'serviceSetupModal.error.updateVoicemailPostalCode'));
-              return $q.reject(response);
-            });
+      function updateVoicemailUserTemplate() {
+        if (vm.hasVoicemailService && vm.model.ftswCompanyVoicemail.ftswCompanyVoicemailEnabled) {
+          if (vm.model.site.siteSteeringDigit !== vm.model.voicemailPrefix.value
+            || vm.model.site.extensionLength !== vm.model.previousLength
+            || vm.model.site.siteCode !== vm.model.previousSiteCode) {
+            var payload = {
+              postalCode: [vm.model.voicemailPrefix.value, vm.model.site.siteCode, vm.model.site.extensionLength].join('-'),
+              timeZoneName: _.get(vm, 'model.site.timeZone.id')
+            };
+            return ServiceSetup.updateVoicemailUserTemplate(payload, vm.voicemailTimeZone.objectId)
+              .catch(function (response) {
+                errors.push(Notification.processErrorResponse(response, 'serviceSetupModal.error.updateVoicemailPostalCode'));
+                return $q.reject(response);
+              });
+          } else {
+            return updateTimezone(_.get(vm, 'model.site.timeZone.id'));
+          }
         }
       }
 
@@ -1358,9 +1406,9 @@
           .then(saveCustomer)
           .then(saveSite)
           .then(saveAutoAttendantSite)
-          .then(saveTimezone)
+          .then(updateCustomerVoice)
+          .then(updateVoicemailUserTemplate)
           .then(saveVoicemailToEmail)
-          .then(updateVoicemailPostalcode)
           .catch(_.noop);
       }
 
@@ -1431,22 +1479,22 @@
         var extensionLength0, extensionLength9;
         switch (vm.model.site.extensionLength) {
           case '3':
-            vm.model.site.siteCode = 100;
+            vm.model.site.siteCode = '100';
             extensionLength0 = '00';
             extensionLength9 = '99';
             break;
           case '4':
-            vm.model.site.siteCode = 100;
+            vm.model.site.siteCode = '100';
             extensionLength0 = '000';
             extensionLength9 = '999';
             break;
           case '5':
-            vm.model.site.siteCode = 10;
+            vm.model.site.siteCode = '10';
             extensionLength0 = '0000';
             extensionLength9 = '9999';
             break;
           default:
-            vm.model.site.siteCode = 100;
+            vm.model.site.siteCode = '100';
             extensionLength0 = '000';
             extensionLength9 = '999';
             break;
@@ -1469,5 +1517,22 @@
       });
     }
 
+    $scope.$watchCollection(function () {
+      return [vm.model.regionCode, vm.model.dialingHabit];
+    }, function () {
+      if (vm.form && vm.model.dialingHabit === vm.LOCAL && vm.model.regionCode === '') {
+        vm.form.ftswLocalDialingRadio.$setValidity('', false);
+      } else if (vm.form && vm.model.dialingHabit === vm.LOCAL) {
+        vm.form.ftswLocalDialingRadio.$setValidity('', TelephoneNumberService.isPossibleAreaCode(vm.model.regionCode));
+      } else if (vm.form) {
+        vm.form.ftswLocalDialingRadio.$setValidity('', true);
+      }
+    });
+
+    $scope.$watch(function () {
+      return _.get(vm, 'form.$invalid');
+    }, function (invalid) {
+      $scope.$emit('wizardNextButtonDisable', !!invalid);
+    });
   }
 })();
