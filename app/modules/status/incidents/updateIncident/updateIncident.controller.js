@@ -2,13 +2,12 @@
   'use strict';
   angular.module('Status.incidents')
 		.controller('UpdateIncidentController', UpdateIncidentController);
-  function UpdateIncidentController($scope, $stateParams, UpdateIncidentService, IncidentsWithoutSiteService, ComponentService, $window, $log) {
+  function UpdateIncidentController($scope, $stateParams, UpdateIncidentService, IncidentsWithoutSiteService, ComponentService, $state, $window, $log) {
     $scope.showOperational = true;
     var originComponentsTree = [];
     var originIncidentName, originImpact;
     function incidentMsg() {
       IncidentsWithoutSiteService.getIncidentMsg({ incidentId: $stateParams.incidentId }).$promise.then(function (data) {
-        $log.log(data);
         $scope.msg = '';
         $scope.showComponent = false;
         $scope.incidentWithMsg = data;
@@ -171,7 +170,11 @@
         email: 'chaoluo@cisco.com',
         affectComponents: affectComponents
       }).$promise.then(function () {
-        incidentMsg();
+        if (angular.equals($scope.incidentWithMsg.status, "resolved")) {
+          $state.go('^');
+        } else {
+          incidentMsg();
+        }
         $window.alert("Successfully update incident");
       }, function () {
 

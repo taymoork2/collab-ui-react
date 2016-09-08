@@ -123,4 +123,21 @@ div#updateIncident{
       top: 5px;
     }
   }
+
+  /* edit message info */
+  div.editMsg{
+    margin-bottom:20px;
+    cs-datepicker{
+      float:left;
+      margin-right:10px;
+    }
+    textarea{
+      width:50%;
+    }
+  }
+  div.itemRow1{
+    a{
+      margin-left:10px;
+    }
+  }
 }

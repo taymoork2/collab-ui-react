@@ -1,13 +1,25 @@
 <div class="itemRow1" ng-mouseover="showEdit=true" ng-mouseleave="showEdit=false">
-<span>{{msg.status}}</span>-<span>{{msg.message}}</span><a ng-show="showEdit">Edit</a>
+  <span>{{msg.status}}</span>-<span>{{msg.message}}</span><a ng-click="showMsgInfo=false" ng-show="showEdit">Edit</a>
 </div>
-<div class="itemRow2">
-<span>{{msg.postAt}}</span>
-<a ng-click="showOrHideComponentFUN(msg.messageId)">{{showOrHideComponent}}</a>
+
+<div class="editMsg" ng-hide="showMsgInfo">
+  <cs-datepicker class="datePlugin" ng-model="dateVal" placeholder="Choose a day" required></cs-datepicker>
+  <input type="text" id="time2" cs-timepicker twentyfourhour="true" ng-model="timeVal" class="timepicker-input" placeholder="00:00">
+  <textarea ng-model="msg.message"></textarea>
+  <input class="btn btn--primary" type="button" value="SAVE" ng-click="modifyMsg()">
+  <a ng-click="cancleModifyMsg()">Cancel</a>
 </div>
-<div class="itemRow3" ng-show="componentSection">
-<ul class="affectedComponentsList" ng-if="affectedComponents.length>0">
-  <li ng-repeat="component in affectedComponents">{{component.componentName}}</li>
-</ul>
-<p ng-if="affectedComponents.length === 0">No components were affected by this update.</p>
+
+<div class="msgInfo" ng-show="showMsgInfo">
+  <div class="itemRow2">
+    <span>{{msg.postAt | date: 'medium'}}</span>
+    <a ng-click="showOrHideComponentFUN(msg.messageId)">{{showOrHideComponent}}</a>
+  </div>
+  <div class="itemRow3" ng-show="componentSection">
+    <ul class="affectedComponentsList" ng-if="affectedComponents.length>0">
+      <li ng-repeat="component in affectedComponents">{{component.componentName}}</li>
+    </ul>
+    <p ng-if="affectedComponents.length === 0">No components were affected by this update.</p>
+  </div>
 </div>
+
