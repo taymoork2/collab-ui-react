@@ -2785,6 +2785,16 @@
                 controllerAs: 'uic'
               }
             }
+          })
+          .state('status.incidents.view', {
+            url: '/view?incidentName&incidentId',
+            views: {
+              '@status': {
+                templateUrl: 'modules/status/incidents/viewIncident/incidentInfo.tpl.html',
+                controller: 'UpdateIncidentController',
+                controllerAs: 'uic'
+              }
+            }
           });
       }
     ]);

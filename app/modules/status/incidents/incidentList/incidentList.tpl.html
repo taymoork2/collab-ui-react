@@ -31,7 +31,7 @@
               <a ui-sref="status.incidents.delete({ incidentName:incident.incidentName, incidentId:incident.incidentId })">Delete</a>
             </div>
             <div ng-if="incident.status=='resolved'">
-              <a href="#">View Incident</a>
+              <a ui-sref="status.incidents.view( {incidentName:incident.incidentName, incidentId:incident.incidentId} )">View Incident</a>
               <a ui-sref="status.incidents.delete({ incidentName:incident.incidentName, incidentId:incident.incidentId })">Delete</a>
             </div>
           </div>

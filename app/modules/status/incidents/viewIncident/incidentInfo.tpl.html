@@ -1,0 +1,28 @@
+<div id="incidentInfo">
+  
+  <div>
+    <div class="incidentName" ng-mouseover="showEdit=true" ng-mouseleave="showEdit=false" ng-show="showIncidentName" ng-init="showIncidentName=true">
+      <span ng-class="incidentWithMsg.impact">{{incidentWithMsg.incidentName}}</span><a ng-show="showEdit" ng-click="showIncidentName=false">Edit</a>
+    </div>
+    <div class="editIncidentName" ng-hide="showIncidentName">
+      <input type="text" ng-model="incidentWithMsg.incidentName"/>
+      <select ng-model="incidentWithMsg.impact">
+        <option value="none">Override impact to None</option>
+        <option value="minor">Override impact to Minor</option>
+        <option value="major">Override impact to Major</option>
+        <option value="critical">Override impact to Critical</option>
+        <option value="maintenance">Override impact to Maintenance</option>
+      </select>
+      <input class="btn btn--primary" type="button" value="SAVE" ng-click="modifyIncident()">
+      <a ng-click="cancleModifyIncident()">Cancel</a>
+    </div>
+  </div>
+
+  <div class="msgList">
+    <h2>Previous Updates</h2>
+    <div class="item" ng-repeat="msg in incidentWithMsg.messages">
+      <msg-item info='msg'></msg-item>
+    </div>
+  </div>
+
+</div>
