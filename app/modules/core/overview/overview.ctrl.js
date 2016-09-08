@@ -6,20 +6,26 @@
     .controller('OverviewCtrl', OverviewCtrl);
 
   /* @ngInject */
-  function OverviewCtrl($rootScope, $scope, $translate, Authinfo, Config, FeatureToggleService, Log, Notification, Orgservice, OverviewCardFactory, OverviewNotificationFactory, ReportsService, TrialService, UrlConfig) {
+  function OverviewCtrl($rootScope, $scope, $translate, Authinfo, Config, FeatureToggleService, Log, Notification, Orgservice, OverviewCardFactory, OverviewNotificationFactory, ReportsService, SunlightReportService, TrialService, UrlConfig, hasCareFeatureToggle) {
     var vm = this;
 
     vm.pageTitle = $translate.instant('overview.pageTitle');
     vm.isCSB = Authinfo.isCSB();
+
     vm.cards = [
       OverviewCardFactory.createMessageCard(),
       OverviewCardFactory.createMeetingCard(),
       OverviewCardFactory.createCallCard(),
-      OverviewCardFactory.createCareCard(),
       OverviewCardFactory.createRoomSystemsCard(),
       OverviewCardFactory.createHybridServicesCard(),
       OverviewCardFactory.createUsersCard()
     ];
+    // TODO Need to be removed once Care is graduated on atlas.
+    if (hasCareFeatureToggle) {
+      // Add care card after call card
+      vm.cards.splice(3, 0, OverviewCardFactory.createCareCard());
+    }
+
     vm.notifications = [];
     vm.trialDaysLeft = undefined;
     vm.dismissNotification = dismissNotification;
@@ -140,11 +146,13 @@
 
     vm.statusPageUrl = UrlConfig.getStatusPageUrl();
 
-    _.each(['oneOnOneCallsLoaded', 'groupCallsLoaded', 'conversationsLoaded', 'activeRoomsLoaded'], function (eventType) {
+    _.each(['oneOnOneCallsLoaded', 'groupCallsLoaded', 'conversationsLoaded', 'activeRoomsLoaded', 'incomingChatTasksLoaded'], function (eventType) {
       $scope.$on(eventType, _.partial(forwardEvent, 'reportDataEventHandler'));
     });
 
     ReportsService.getOverviewMetrics(true);
+
+    SunlightReportService.getOverviewData();
 
     Orgservice.getAdminOrg(_.partial(forwardEvent, 'orgEventHandler'), false, true);
 

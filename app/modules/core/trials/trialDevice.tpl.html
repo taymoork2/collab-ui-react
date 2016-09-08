@@ -43,8 +43,9 @@
     <div class="cs-form__section">
       <div class="section__info">
         <h4 translate="trialModal.call.selectDevicesHeader"></h4>
-        <p class="section__description" translate="trialModal.call.deviceLimitDescription"></p>
-        <p class="section__description" translate="trialModal.call.usOnly"></p>
+        <p class="section__description" translate="trialModal.call.deviceLimitDescription" translate-values='{ max: callTrial.maxTotalDevices}'></p>
+        <p class="section__description" ng-show = "!callTrial.supportsInternationalShipping" translate="trialModal.call.usOnly"></p>
+        <p class="section__description" ng-show = "callTrial.supportsInternationalShipping" translate="trialModal.call.trialDeviceShipmentLocations"></p>
       </div>
       <div class="section__content">
         <div class="sub-section">
@@ -52,7 +53,7 @@
           <formly-form model="callTrial.details.roomSystems" fields="callTrial.roomSystemFields"></formly-form>
         </div>
         <div class="sub-section">
-          <h5 class="sub-section__label" translate="trialModal.call.deskPhones"></h5>
+          <h5 class="sub-section__label" translate="trialModal.call.deskPhones" translate-values='{ max: callTrial.maxCallDevices}'></h5>
           <formly-form model="callTrial.details.phones" fields="callTrial.deskPhoneFields"></formly-form>
         </div>
       </div>

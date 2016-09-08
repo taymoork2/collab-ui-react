@@ -51,8 +51,8 @@
                      ng-click="careChatSA.setDay($index)">{{dayObj.day}}</div>
               </div>
               <div class="small ct-input-error" ng-show="!careChatSA.isBusinessDaySelected">
-                <i class="icon icon-error"></i>
-                {{:: 'careChatTpl.ctValidation.businessDaysSelection' | translate}}
+                <div class="ct-error-icon"><i class="icon icon-error icon-lg"></i></div>
+                <div>{{:: 'careChatTpl.ctValidation.businessDaysSelection' | translate}}</div>
               </div>
               <div class="time-and-timezone-picker">
                 <cs-checkbox class="h5"

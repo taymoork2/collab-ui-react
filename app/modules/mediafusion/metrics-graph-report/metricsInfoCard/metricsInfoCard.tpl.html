@@ -6,15 +6,18 @@
         </header>
         <section>
             <div class="metrics-info"> 
-                <div class="call-counts">{{nav.total}}</div>
-                   <div class="spinner-position" ng-if="!nav.total && !nav.onprem && !nav.cloud">
-                      <i class='icon icon-spinner icon-2x'></i>
-                    </div>
-                <div class="last-counts" ng-if="nav.onprem">{{nav.onprem}}
-                <span  class= "last-text" translate ='mediaFusion.metrics.onpremcalls'></span>
-                <span class="last-counts" ng-if="nav.cloud">{{nav.cloud}}
-                <span class="last-text" translate ='mediaFusion.metrics.cloudcalls' ng-if="nav.clusterSelected === 'All Clusters'"></span>
-                <span class="last-text" translate ='mediaFusion.metrics.redirectedcalls' ng-if="nav.clusterSelected !== 'All Clusters'"></span>
+                <div class="no-data" ng-if="nav.total === nav.noData">{{nav.total}}</div>
+                <div ng-if="nav.total !== nav.noData">
+                    <div class="call-counts">{{nav.total}}</div>
+                       <div class="spinner-position" ng-if="!nav.total && !nav.onprem && !nav.cloud">
+                          <i class='icon icon-spinner icon-2x'></i>
+                        </div>
+                    <div class="last-counts" ng-if="nav.onprem || nav.onprem === 0">{{nav.onprem}}
+                    <span  class= "last-text" translate ='mediaFusion.metrics.onpremcalls'></span>
+                    <span class="last-counts" ng-if="nav.cloud || nav.cloud === 0">{{nav.cloud}}
+                    <span class="last-text" translate ='mediaFusion.metrics.cloudcalls' ng-if="nav.clusterSelected === 'All Clusters'"></span>
+                    <span class="last-text" translate ='mediaFusion.metrics.redirectedcalls' ng-if="nav.clusterSelected !== 'All Clusters'"></span>
+                </div>
             </div>
             </div>
         </section>
@@ -40,10 +43,13 @@
         </header>
         <section>
             <div class="metrics-info">
-                <div class="utilization-count">{{nav.averageUtilization}}</div>
-                   <div class="spinner-position" ng-if="!nav.averageUtilization">
-                      <i class='icon icon-spinner icon-2x'></i>
-                    </div>
+                <div class="no-data" ng-if="nav.averageUtilization === nav.noData">{{nav.averageUtilization}}</div>
+                <div ng-if="nav.averageUtilization !== nav.noData">
+                    <div class="utilization-count">{{nav.averageUtilization}}</div>
+                       <div class="spinner-position" ng-if="!nav.averageUtilization">
+                          <i class='icon icon-spinner icon-2x'></i>
+                        </div>
+                </div>    
             </div>
         </section>
     </article>
@@ -55,10 +61,13 @@
         </header>
         <section>
             <div class="metrics-info">
-                <div class="availability-count">{{nav.clusterAvailability}}</div>
-                   <div class="spinner-position" ng-if="!nav.clusterAvailability">
-                      <i class='icon icon-spinner icon-2x'></i>
-                    </div>
+                <div class="no-data" ng-if="nav.clusterAvailability === nav.noData">{{nav.clusterAvailability}}</div>
+                <div ng-if="nav.clusterAvailability !== nav.noData">
+                    <div class="availability-count">{{nav.clusterAvailability}}</div>
+                       <div class="spinner-position" ng-if="!nav.clusterAvailability">
+                          <i class='icon icon-spinner icon-2x'></i>
+                        </div>
+                </div>    
             </div>
         </section>
     </article>

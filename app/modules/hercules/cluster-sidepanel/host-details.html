@@ -8,7 +8,7 @@
       <tr>
         <td translate="common.status"></td>
         <td>
-          <i class="fa fa-circle status-icon"
+          <i class="icon icon-circle status-indicator"
              ng-class="'hercules-state-' + clusterDetailsCtrl.getSeverity(hostDetailsCtrl.host.state).label"></i>
           <span translate="{{'hercules.status.' + hostDetailsCtrl.host.state }}"></span><span ng-if="hostDetailsCtrl.host.upgradeState === 'upgrading'"> | <span translate="hercules.status.upgrading"></span></span>
         </td>

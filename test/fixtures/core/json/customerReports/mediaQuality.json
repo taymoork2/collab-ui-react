@@ -309,7 +309,7 @@
     "poorVideoQualityDurationSum": 14,
     "partialVideoSum": 20,
     "balloon": true,
-    "modifiedDate": "Dec31"
+    "date": "Dec31"
   }, {
     "totalDurationSum": 400,
     "goodQualityDurationSum": 289,
@@ -327,7 +327,7 @@
     "poorVideoQualityDurationSum": 20,
     "partialVideoSum": 22,
     "balloon": true,
-    "modifiedDate": "Jan01"
+    "date": "Jan01"
   }, {
     "totalDurationSum": 398,
     "goodQualityDurationSum": 393,
@@ -345,7 +345,7 @@
     "poorVideoQualityDurationSum": 10,
     "partialVideoSum": 10,
     "balloon": true,
-    "modifiedDate": "Jan02"
+    "date": "Jan02"
   }, {
     "totalDurationSum": 456,
     "goodQualityDurationSum": 448,
@@ -363,7 +363,7 @@
     "poorVideoQualityDurationSum": 11,
     "partialVideoSum": 15,
     "balloon": true,
-    "modifiedDate": "Jan03"
+    "date": "Jan03"
   }, {
     "totalDurationSum": 9168,
     "goodQualityDurationSum": 9071,
@@ -381,7 +381,7 @@
     "poorVideoQualityDurationSum": 94,
     "partialVideoSum": 101,
     "balloon": true,
-    "modifiedDate": "Jan04"
+    "date": "Jan04"
   }, {
     "totalDurationSum": 11237,
     "goodQualityDurationSum": 10933,
@@ -399,7 +399,7 @@
     "poorVideoQualityDurationSum": 169,
     "partialVideoSum": 195,
     "balloon": true,
-    "modifiedDate": "Jan05"
+    "date": "Jan05"
   }, {
     "totalDurationSum": 7693,
     "goodQualityDurationSum": 7504,
@@ -417,6 +417,6 @@
     "poorVideoQualityDurationSum": 184,
     "partialVideoSum": 215,
     "balloon": true,
-    "modifiedDate": "Jan06"
+    "date": "Jan06"
   }]
 }

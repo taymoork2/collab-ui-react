@@ -5,7 +5,7 @@
       <cs-searchfilter filters="resourceList.filters" set-filter-fn="resourceList.setFilter(filter)" search-item-fn="resourceList.searchData(searchStr)" placeholder-text="{{resourceList.placeholder.name}}" ng-model="resourceList.placeholder.count"></cs-searchfilter>
     </cs-page-sub-header-left>
     <cs-page-sub-header-right>
-      <div ng-show="resourceList.showCreateResourceGroupLink">
+      <div ng-show="resourceList.showResourceGroups">
         <button class="btn btn--link"
                 type="button"
                 translate="hercules.fusion.list.add-resource-group"
@@ -23,64 +23,23 @@
         <i class="icon icon-spinner"></i>
       </span>
     </div>
-    <div ng-if="!resourceList.loading && resourceList.displayedClusters.length === 0" class="empty-list" translate="hercules.fusion.list.empty"></div>
-    <cs-card-layout block-view="true" ng-if="!resourceList.loading">
-      <cs-card class="medium header-bar {{'card-' + cluster.targetType}}" ng-repeat="cluster in resourceList.displayedClusters">
-        <article>
-          <header>
-            <h4>{{::cluster.name}}</h4>
-            <div class="cluster-list-hosts" tooltip-html-unsafe="{{resourceList.getHostnames(cluster)}}" tooltip-trigger="mouseenter" tooltip-placement="bottom">
-              <div translate="hercules.fusion.list.nodes" translate-values="{count: resourceList.countHosts(cluster)}" translate-interpolation="messageformat"></div>
-            </div>
-          </header>
-          <div class="row cluster-list-body">
-            <div class="columns medium-6">
-              <div>
-                <div class="cluster-list-cat" translate="hercules.fusion.list.upgrade-schedule"></div>
-                <div class="cluster-list-info" ng-if="cluster.upgradeSchedule">{{resourceList._helpers.formatTimeAndDate(cluster.upgradeSchedule)}}<br/>
-                <div class="cluster-list-timezone" title="{{cluster.upgradeSchedule.scheduleTimeZone}}">{{cluster.upgradeSchedule.scheduleTimeZone}}</div></div>
-                <div class="cluster-list-info" ng-if="!cluster.upgradeSchedule" translate="common.notSet"></div>
-              </div>
-              <div ng-if="cluster.targetType !== 'c_mgmt'">
-                <div class="cluster-list-cat" translate="hercules.fusion.list.release-channel"></div>
-                <div class="cluster-list-info">{{cluster.releaseChannel | uppercase}}</div>
-              </div>
-            </div>
-            <div class="columns medium-6 connection-status">
-              <div class="connection-status-column" ng-if="resourceList._helpers.hasServices(cluster)">
-                <div class="connection-status-eyecandy">
-                  <div class="connection-status-icon connection-status-cloud-icon"></div>
-                  <div class="connection-status-cable-vertical"></div>
-                  <div class="connection-status-cable-horizontal"></div>
-                  <div class=" connection-status-icon connection-status-premises-icon"></div>
-                </div>
-                <div class="connection-status-services">
-                  <div class="connection-status-service" ng-repeat="service in cluster.servicesStatuses | filter: {serviceId: '!squared-fusion-mgmt'}" ng-if="service.total > 0">
-                    <a ng-click="resourceList.openService(service.serviceId, cluster.id)"><i class="icon icon-circle status-indicator" ng-class="{'success' : '{{service.state.label}}' === 'ok', 'warning': '{{service.state.label}}' === 'warning', 'danger': '{{service.state.label}}' === 'error'}"></i> <span>{{::'overview.cards.hybrid.services.' + service.serviceId | translate}}</span></a>
-                  </div>
-                </div>
-              </div>
-              <div class="connection-status-column no-connectors" ng-if="!resourceList._helpers.hasServices(cluster)">
-                <div class="connection-status-eyecandy">
-                  <div class="connection-status-icon connection-status-cloud-icon"></div>
-                  <div class="connection-status-cable-vertical"></div>
-                  <div class="connection-status-cable-horizontal"></div>
-                  <div class=" connection-status-icon connection-status-premises-icon"></div>
-                </div>
-                <div class="connection-status-services">
-                  <div class="connection-status-service">
-                    <span translate="hercules.fusion.list.no-services"></span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <footer>
-              <a ng-click="resourceList.openSettings(cluster.targetType, cluster.id)" translate="hercules.fusion.list.settings"></a>
-            </div>
-          </footer>
-        </article>
-      </cs-card>
-    </cs-card-layout>
+
+    <div ng-if="!resourceList.loading">
+      <div ng-if="resourceList.showResourceGroups">
+        <cs-card-layout block-view="true" class="resource-groups-list">
+          <resource-group-card ng-repeat="group in resourceList.displayedGroups.groups" resource-group="group" on-change="resourceList.refreshList()"></resource-group-card>
+        </cs-card-layout>
+        <cs-card-layout block-view="true">
+          <cluster-card ng-repeat="cluster in resourceList.displayedGroups.unassigned" cluster="cluster"></cluster-card>
+        </cs-card-layout>
+      </div>
+
+      <div ng-if="!resourceList.showResourceGroups">
+        <div ng-if="!resourceList.loading && resourceList.displayedClusters.length === 0" class="empty-list" translate="hercules.fusion.list.empty"></div>
+        <cs-card-layout block-view="true">
+          <cluster-card ng-repeat="cluster in resourceList.displayedClusters" cluster="cluster"></cluster-card>
+        </cs-card-layout>
+      </div>
+    </div>
   </div>
 </div>

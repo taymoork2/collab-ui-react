@@ -1,17 +1,14 @@
-import sharedLineModule from './sharedLine.component';
-import {
-  SharedLineUser,
-  User,
-  SharedLineDevice,
-} from './sharedLine';
+import sharedLineModule from './index';
+import { SharedLineUser, User, SharedLineDevice } from './index';
 
 
 describe('Component: sharedLine', () => {
   const SHAREDLINE_LABEL = 'label[for="sharedLine"]';
   const SHAREDLINE_INPUT = 'input#userInput';
   const SHAREDLINE_DIV = 'div.shared-line';
-  const TYPEAHEAD_SELECT = '.typeahead-dropdown ul li a';
-  const TYPEAHEAD_INPUT = '.typeahead-dropdown #userInput';
+  const TYPEAHEAD_DROPDOWN = '.shared-line .typeahead-dropdown';
+  const TYPEAHEAD_SELECT = '.shared-line .typeahead-dropdown ul li';
+  const TYPEAHEAD_INPUT = '.typeahead-dropdown input';
   const DROPDOWN_OPTIONS = '.dropdown-menu ul li a';
   const ACCORDION_LIST = '.accordion ul li';
   const ACCORDION = '.shared-line .accordion a';
@@ -21,12 +18,11 @@ describe('Component: sharedLine', () => {
     this.initModules(sharedLineModule);
     this.injectDependencies(
       '$scope',
-      '$timeout'
+      '$timeout',
+      '$q'
     );
 
-    this.$scope.sharedLineUsers = getJSONFixture('huron/json/sharedLine/sharedUsers.json');
-    this.$scope.sharedLineEndpoints = getJSONFixture('huron/json/sharedLine/sharedDevices.json');
-    this.$scope.getUserListFn = jasmine.createSpy('getUserListFn');
+    this.$scope.getUserList= jasmine.createSpy('getUserList').and.returnValue(this.$q.when([]));
     this.$scope.selectSharedLineUserFn = jasmine.createSpy('selectSharedLineUserFn');
     this.$scope.isSingleDeviceFn = jasmine.createSpy('isSingleDeviceFn');
     this.$scope.disassociateSharedLineUserFn = jasmine.createSpy('disassociateSharedLineUserFn');
@@ -34,15 +30,19 @@ describe('Component: sharedLine', () => {
 
   function initComponent() {
     this.compileComponent('ucSharedLine', {
-      selected: 'selected',
+      selectedUser: 'selectedUser',
       sharedLineUsers: 'sharedLineUsers',
       sharedLineEndpoints: 'sharedLineEndpoints',
       oneAtATime: 'oneAtATime',
       selectSharedLineUserFn: 'selectSharedLineUserFn(user)',
-      getUserListFn: 'getUserListFn(filter)',
+      getUserListFn: 'getUserList(filter)',
       isSingleDeviceFn: 'isSingleDeviceFn(uuid)',
       disassociateSharedLineUserFn: 'disassociateSharedLineUserFn(user,false)'
     });
+    this.$scope.sharedLineUsers = getJSONFixture('huron/json/sharedLine/sharedUsers.json');
+    this.$scope.sharedLineEndpoints = getJSONFixture('huron/json/sharedLine/sharedDevices.json');
+    this.$scope.selectedUser = this.$scope.sharedLineUsers[0];
+    this.$scope.$apply();
   }
 
   describe('should show Shared line elements', () => {
@@ -69,10 +69,11 @@ describe('Component: sharedLine', () => {
     });
 
     it('should have sharedline typeahead input', function () {
-      expect(this.view.find(TYPEAHEAD_INPUT).val('peter').val()).toBe('peter');
-      expect(this.view.find(TYPEAHEAD_SELECT)).toBeDefined();
-      expect(this.getUserListFn).toHaveBeenCalled;
-      expect(this.selectSharedLineUserFn).toHaveBeenCalled;
+      var elem = this.view.find(TYPEAHEAD_DROPDOWN);
+      this.view.find(TYPEAHEAD_INPUT).val('a').change();
+      this.$timeout.flush();
+      expect(this.$scope.getUserList).toHaveBeenCalledWith('a');
+
     });
   });
 
@@ -81,23 +82,19 @@ describe('Component: sharedLine', () => {
 
     it('Should get all the sharedline users', function () {
       expect(this.$scope.sharedLineUsers).toHaveLength(2);
-      expect(this.view.find(ACCORDION_LIST)).toBeDefined();
-      expect(this.view.find(ACCORDION_LIST).get(0).innerHTML).toEqual('Peter@yahoo.com');
+      expect(this.view.find(ACCORDION_LIST).get(0)).toHaveText('Peter@yahoo.com');
     });
 
     it('should list accordion sharedline device for a user', function () {
-      expect(this.view.find(ACCORDION_LIST).find(DROPDOWN_OPTIONS)).toBeDefined();
       this.view.find(ACCORDION).get(0).click();
-      expect(this.isSingleDeviceFn).toHaveBeenCalled;
-      expect(this.view.find('cs-checkbox label').get(0).innerHTML).toContainText('DX650');
-      });
+      expect(this.$scope.isSingleDeviceFn).toHaveBeenCalled();
+      expect(this.view.find('cs-checkbox label').get(0)).toHaveText('DX650');
+    });
 
     it('should invoke to delete sharedline user', function () {
-      expect(this.view.find(ACCORDION_LIST).find(DROPDOWN_OPTIONS)).toBeDefined();
       this.view.find(ACCORDION).get(0).click();
       this.view.find(REMOVE_LINK).click();
-      // TODO: this.view.find('.modal.modal-footer #removeMemberButton').click();
-      expect(this.disassociateSharedLineUserFn).toHaveBeenCalled;
+      expect(this.$scope.disassociateSharedLineUserFn).toHaveBeenCalled();
     });
   });
 

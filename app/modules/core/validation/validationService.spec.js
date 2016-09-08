@@ -60,11 +60,11 @@ describe('Service: ValidationService', function () {
     it('should accept "(214)590-9089" as valid', function () {
       expect(ValidationService.phoneUS('(214)590-9089')).toBe(true);
     });
-    it('should reject "(214)590-9-089" as invalid', function () {
-      expect(ValidationService.phoneUS('(214)590-9-089')).toBe(false);
+    it('should accept "(214)590-9-089" as valid', function () {
+      expect(ValidationService.phoneUS('(214)590-9-089')).toBe(true);
     });
     it('should reject "(214)590-99089" as invalid', function () {
-      expect(ValidationService.phoneUS('(214)590-9-089')).toBe(false);
+      expect(ValidationService.phoneUS('(214)590-99089')).toBe(false);
     });
     it('should accept "1-(214)590-9909" as valid', function () {
       expect(ValidationService.phoneUS('1-(214)590-9909')).toBe(true);

@@ -5,7 +5,7 @@
     </header>
     <section>
       <div class="call-metrics-customer">
-        <p class="report-description">{{nav.metricsDescription}}</p>
+        <p class="report-description">{{nav.getDescription('callMetrics.customerDescription')}}</p>
         <div id="metricsGraphDiv" class="timechartDiv"></div>
         <div class="spinner-position" ng-if="nav.isRefresh(nav.metricStatus)">
           <i class='icon icon-spinner icon-2x'></i>

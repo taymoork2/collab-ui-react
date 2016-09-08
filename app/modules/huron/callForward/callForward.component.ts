@@ -106,7 +106,7 @@ class CallForward {
   }
 }
 
-class CallForwardComponent implements ng.IComponentOptions {
+export class CallForwardComponent implements ng.IComponentOptions {
   public controller = CallForward;
   public templateUrl = 'modules/huron/callForward/callForward.html';
   public bindings: {[binding: string]: string} = {
@@ -116,12 +116,3 @@ class CallForwardComponent implements ng.IComponentOptions {
     onChangeFn: '&'
   };
 }
-
-export default angular
-  .module('huron.call-forward', [
-    'atlas.templates',
-    'cisco.ui',
-    'pascalprecht.translate'
-  ])
-  .component('ucCallForward', new CallForwardComponent())
-  .name;
