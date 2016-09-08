@@ -7,7 +7,7 @@
     <cs-card-layout >
       <cs-card>
         <div class="h4 card-info" translate="careChatTpl.preview"></div>
-        <article class="offhours-preview">
+        <article class="offhours-preview ct-article">
           <section>
             <div class="offhours-icon">
               <i class="icon icon-clock"></i>
@@ -30,21 +30,29 @@
       </cs-card >
       <cs-card>
         <div class="h4 card-info" translate="careChatTpl.attributes"></div>
-        <article class="off-hours-attributes">
+        <article class="off-hours-attributes ct-article">
           <section>
             <div class="offhours-message">
               <div class="h4 message-label" translate="careChatTpl.offHoursMessage"></div>
-              <textarea class="h6 message" type="text" maxlength="100"
+              <textarea cs-input class="h6 message-area" type="text"
+                        ng-maxlength="careChatSA.lengthConstants.multiLineMaxCharLimit"
+                        cs-input-messages="careChatSA.multiLineValidationMessage"
                         ng-model="careChatSA.template.configuration.pages.offHours.message"
+                        ng-model-options="{ allowInvalid: true }" name="offHoursMessage"
                         ng-class="{'no-message': !careChatSA.isOffHoursMessageValid}"/>
+              </textarea>
             </div>
             <div>
-              <div class="h4 business-hours-label" translate="careChatTpl.businessHours"></div>
+              <div class="h4 business-hours-message" translate="careChatTpl.businessHours"></div>
               <div class="day-picker">
                 <div class="day"
                      ng-repeat=" dayObj in careChatSA.days"
                      ng-class="{ 'day-selected': dayObj.isSelected, 'day-unselected': !dayObj.isSelected }"
                      ng-click="careChatSA.setDay($index)">{{dayObj.day}}</div>
+              </div>
+              <div class="small ct-input-error" ng-show="!careChatSA.isBusinessDaySelected">
+                <div class="ct-error-icon"><i class="icon icon-error icon-lg"></i></div>
+                <div>{{:: 'careChatTpl.ctValidation.businessDaysSelection' | translate}}</div>
               </div>
               <div class="time-and-timezone-picker">
                 <cs-checkbox class="h5"

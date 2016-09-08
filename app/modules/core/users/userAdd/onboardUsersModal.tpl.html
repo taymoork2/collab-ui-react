@@ -11,10 +11,10 @@
   <p translate="userManage.manual.instructions" translate-values="{maxUsers: obc.maxUsersInManual}"></p>
   <br>
   <cr-onboard-users></cr-onboard-users>
-    <div class="unsynced-users" ng-if="invalidDirSyncUsersCount > 0">
+    <div class="unsynced-users error-invalid-dirsync" ng-if="invalidDirSyncUsersCount > 0">
       <span class="icon icon-error icon-lg"></span><p translate="userManage.manual.ad.unsyncedUsers"></p>
     </div>
-    <div class="unsynced-users" ng-if="getNumUsersInTokenField() > obc.maxUsersInManual">
+    <div class="unsynced-users error-over-max-users" ng-if="getNumUsersInTokenField() > obc.maxUsersInManual">
       <span class="icon icon-error icon-lg"></span><p translate="userManage.manual.tooManyUsers" translate-values="{ maxUsers: obc.maxUsersInManual }"></p>
     </div>
 </div>

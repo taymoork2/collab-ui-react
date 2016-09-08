@@ -3,7 +3,7 @@
 
   /* @ngInject */
 
-  function HelpdeskService($http, $location, $q, $translate, $window, CacheFactory, Config, CsdmConfigService, CsdmConverter, FeatureToggleService, HelpdeskHttpRequestCanceller, HelpdeskMockData, ServiceDescriptor, UrlConfig, USSService2) {
+  function HelpdeskService($http, $location, $q, $translate, $window, CacheFactory, Config, CsdmConfigService, CsdmConverter, FeatureToggleService, HelpdeskHttpRequestCanceller, HelpdeskMockData, ServiceDescriptor, UrlConfig, USSService) {
     var urlBase = UrlConfig.getAdminServiceUrl();
     var orgCache = CacheFactory.get('helpdeskOrgCache');
     if (!orgCache) {
@@ -357,6 +357,15 @@
         .then(extractItems);
     }
 
+    function getServiceOrder(orgId) {
+      if (useMock()) {
+        return deferredResolve(HelpdeskMockData.serviceOrder);
+      }
+      return $http
+        .get(urlBase + 'helpdesk/serviceorder/' + encodeURIComponent(orgId))
+        .then(extractData);
+    }
+
     function elevateToReadonlyAdmin(orgId) {
       return $http.post(urlBase + 'helpdesk/organizations/' + encodeURIComponent(orgId) + '/actions/elevatereadonlyadmin/invoke');
     }
@@ -365,7 +374,7 @@
       if (useMock()) {
         return deferredResolve(HelpdeskMockData.userStatuses);
       }
-      return USSService2.getStatusesForUserInOrg(userId, orgId);
+      return USSService.getStatusesForUserInOrg(userId, orgId);
     }
 
     function deferredResolve(resolved) {
@@ -393,6 +402,7 @@
       getHybridServices: getHybridServices,
       resendInviteEmail: resendInviteEmail,
       getWebExSites: getWebExSites,
+      getServiceOrder: getServiceOrder,
       getCloudberryDevice: getCloudberryDevice,
       getOrgDisplayName: getOrgDisplayName,
       findAndResolveOrgsForUserResults: findAndResolveOrgsForUserResults,

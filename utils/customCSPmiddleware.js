@@ -24,10 +24,14 @@ module.exports = csp({
       'https://wbxdmz.admin.ciscospark.com',
       'https://wbxbts.admin.ciscospark.com'
     ],
+    frameSrc: [
+      'https://drhadmin-cte.digitalriver.com',
+    ],
     connectSrc: [
       '\'self\'',
       'https://*.cisco.com',
       'https://*.ciscoccservice.com',
+      'https://*.ciscospark.com',
       'https://*.huron-dev.com',
       'https://*.huron-int.com',
       'https://*.huron.uno',
@@ -38,6 +42,7 @@ module.exports = csp({
       'http://api.mixpanel.com',
       'https://api.mixpanel.com',
       'https://cdn.mxpnl.com',
+      'http://54.183.25.170:8001',
       // Browser Sync:
       'ws://127.0.0.1:8000',
       'ws://localhost:8000',

@@ -1,11 +1,29 @@
+csv-download {
+  display: inline-flex;
+}
+
 .csv-download {
-  display: flex;
-  flex-direction: row;
-  align-content: center;
-  justify-content: center;
-  margin: 0.9rem 0.7rem 0.7rem 0.7rem;
+  display: block;
+  margin-right: 1.5rem;
+  margin-left: 1rem;
+
   .icon {
     font-size: 1.5rem;
     color: $gray-dark-1;
+  }
+
+  .status-container {
+    display: flex;
+    align-items: center;
+    flex: 1 1 auto;
+
+    a {
+      display: flex;
+    }
+
+    .status-message {
+      color: $gray-light-1;
+      font-size: small;
+    }
   }
 }

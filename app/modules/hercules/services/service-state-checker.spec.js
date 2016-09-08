@@ -4,7 +4,7 @@ describe('ServiceStateChecker', function () {
   beforeEach(angular.mock.module('Hercules'));
   beforeEach(angular.mock.module('Huron')); // Because FeatureToggle is used
 
-  var $q, $rootScope, $httpBackend, ClusterService, NotificationService, ServiceStateChecker, AuthInfo, USSService2, ScheduleUpgradeService, ServiceDescriptor, DomainManagementService, FeatureToggleService, Orgservice;
+  var $q, $rootScope, $httpBackend, ClusterService, NotificationService, ServiceStateChecker, AuthInfo, USSService, ScheduleUpgradeService, ServiceDescriptor, DomainManagementService, FeatureToggleService, Orgservice;
 
   var notConfiguredClusterMockData = {
     id: 0,
@@ -51,7 +51,7 @@ describe('ServiceStateChecker', function () {
     AuthInfo = {
       getOrgId: sinon.stub()
     };
-    USSService2 = {
+    USSService = {
       getStatusesSummary: sinon.stub(),
       getOrg: sinon.stub(),
       getOrgId: sinon.stub()
@@ -80,7 +80,7 @@ describe('ServiceStateChecker', function () {
     AuthInfo.getOrgId.returns('orgId');
     $provide.value('ClusterService', ClusterService);
     $provide.value('Authinfo', AuthInfo);
-    $provide.value('USSService2', USSService2);
+    $provide.value('USSService', USSService);
     $provide.value('ScheduleUpgradeService', ScheduleUpgradeService);
     $provide.value('ServiceDescriptor', ServiceDescriptor);
     $provide.value('DomainManagementService', DomainManagementService);
@@ -140,7 +140,7 @@ describe('ServiceStateChecker', function () {
   });
 
   it('should raise the "noUsersActivated" message and clear appropriately when there are no users activated ', function () {
-    USSService2.getStatusesSummary.returns([{
+    USSService.getStatusesSummary.returns([{
       serviceId: 'squared-fusion-cal',
       activated: 0,
       error: 0,
@@ -153,7 +153,7 @@ describe('ServiceStateChecker', function () {
     ServiceStateChecker.checkState('c_cal', 'squared-fusion-cal');
     expect(NotificationService.getNotificationLength()).toEqual(1);
     expect(NotificationService.getNotifications()[0].id).toEqual('squared-fusion-cal:noUsersActivated');
-    USSService2.getStatusesSummary.returns([{
+    USSService.getStatusesSummary.returns([{
       serviceId: 'squared-fusion-cal',
       activated: 1
     }]);
@@ -162,7 +162,7 @@ describe('ServiceStateChecker', function () {
   });
 
   it('should raise the "userErrors" message and clear appropriately when there are users with errors ', function () {
-    USSService2.getStatusesSummary.returns([{
+    USSService.getStatusesSummary.returns([{
       serviceId: 'squared-fusion-cal',
       activated: 0,
       error: 5,
@@ -175,7 +175,7 @@ describe('ServiceStateChecker', function () {
     ServiceStateChecker.checkState('c_cal', 'squared-fusion-cal');
     expect(NotificationService.getNotificationLength()).toEqual(1);
     expect(NotificationService.getNotifications()[0].id).toEqual('squared-fusion-cal:userErrors');
-    USSService2.getStatusesSummary.returns([{
+    USSService.getStatusesSummary.returns([{
       serviceId: 'squared-fusion-cal',
       activated: 1
     }]);
@@ -185,7 +185,7 @@ describe('ServiceStateChecker', function () {
 
   // Will happen if connector toggles back to "not_configured" state.
   it('should clear all user and service notifications when connector is not configured ', function () {
-    USSService2.getStatusesSummary.returns([{
+    USSService.getStatusesSummary.returns([{
       serviceId: 'squared-fusion-uc',
       activated: 0,
       error: 0,
@@ -225,15 +225,15 @@ describe('ServiceStateChecker', function () {
   });
 
   it('should clear connect available notification when connect is configured ', function () {
-    USSService2.getStatusesSummary.returns([{
+    USSService.getStatusesSummary.returns([{
       serviceId: 'squared-fusion-uc',
       activated: 1,
       error: 0,
       notActivated: 0
     }]);
 
-    USSService2.getOrgId.returns('orgId');
-    USSService2.getOrg.returns($q.when({}));
+    USSService.getOrgId.returns('orgId');
+    USSService.getOrg.returns($q.when({}));
 
     ServiceDescriptor.isServiceEnabled = function (type, cb) {
       cb(null, true);
@@ -272,15 +272,15 @@ describe('ServiceStateChecker', function () {
   });
 
   it('should add a notification when no domains are added ', function () {
-    USSService2.getStatusesSummary.returns([{
+    USSService.getStatusesSummary.returns([{
       serviceId: 'squared-fusion-uc',
       activated: 1,
       error: 0,
       notActivated: 0
     }]);
 
-    USSService2.getOrgId.returns('orgId');
-    USSService2.getOrg.returns($q.when({}));
+    USSService.getOrgId.returns('orgId');
+    USSService.getOrg.returns($q.when({}));
 
     ServiceDescriptor.isServiceEnabled = function (type, cb) {
       cb(null, true);
@@ -301,15 +301,15 @@ describe('ServiceStateChecker', function () {
   });
 
   it('should clear the domain verification notification when one domain is added ', function () {
-    USSService2.getStatusesSummary.returns([{
+    USSService.getStatusesSummary.returns([{
       serviceId: 'squared-fusion-uc',
       activated: 1,
       error: 0,
       notActivated: 0
     }]);
 
-    USSService2.getOrgId.returns('orgId');
-    USSService2.getOrg.returns($q.when({}));
+    USSService.getOrgId.returns('orgId');
+    USSService.getOrg.returns($q.when({}));
 
     ServiceDescriptor.isServiceEnabled = function (type, cb) {
       cb(null, true);
@@ -339,14 +339,14 @@ describe('ServiceStateChecker', function () {
   });
 
   it('should add sip uri domain notification when sip uri domain is not set ', function () {
-    USSService2.getStatusesSummary.returns([{
+    USSService.getStatusesSummary.returns([{
       serviceId: 'squared-fusion-uc',
       activated: 1,
       error: 0,
       notActivated: 0
     }]);
-    USSService2.getOrgId.returns('orgId');
-    USSService2.getOrg.returns($q.when({
+    USSService.getOrgId.returns('orgId');
+    USSService.getOrg.returns($q.when({
       'sipDomain': 'somedomain'
     }));
     ServiceDescriptor.isServiceEnabled = function (type, cb) {
@@ -376,14 +376,14 @@ describe('ServiceStateChecker', function () {
   });
 
   it('should remove sip uri domain notification when sip uri domain is set', function () {
-    USSService2.getStatusesSummary.returns([{
+    USSService.getStatusesSummary.returns([{
       serviceId: 'squared-fusion-uc',
       activated: 1,
       error: 0,
       notActivated: 0
     }]);
-    USSService2.getOrgId.returns('orgId');
-    USSService2.getOrg.returns($q.when({
+    USSService.getOrgId.returns('orgId');
+    USSService.getOrg.returns($q.when({
       'sipDomain': 'somedomain'
     }));
     ServiceDescriptor.isServiceEnabled = function (type, cb) {

@@ -23,10 +23,10 @@
         function init() {
           FusionClusterService.getAll()
             .then(function (clusterList) {
-              card.serviceList.push(getStatusForService('squared-fusion-mgmt', clusterList));
-              card.serviceList.push(getStatusForService('squared-fusion-cal', clusterList));
-              card.serviceList.push(getStatusForService('squared-fusion-uc', clusterList));
-
+              card.serviceList.push(FusionClusterService.getStatusForService('squared-fusion-mgmt', clusterList));
+              card.serviceList.push(FusionClusterService.getStatusForService('squared-fusion-cal', clusterList));
+              card.serviceList.push(FusionClusterService.getStatusForService('squared-fusion-uc', clusterList));
+              card.serviceList.push(FusionClusterService.getStatusForService('squared-fusion-media', clusterList));
               card.enabled = _.some(card.serviceList, function (service) {
                 return service.setup;
               });
@@ -38,14 +38,6 @@
             });
         }
         init();
-
-        function getStatusForService(serviceId, clusterList) {
-          return {
-            serviceId: serviceId,
-            setup: FusionClusterService.processClustersToSeeIfServiceIsSetup(serviceId, clusterList),
-            status: FusionClusterService.processClustersToAggregateStatusForService(serviceId, clusterList)
-          };
-        }
 
         card.serviceStatusToCss = {
           operational: 'success',

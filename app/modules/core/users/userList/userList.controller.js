@@ -62,6 +62,7 @@
     $scope.isCsvEnhancementToggled = false;
     $scope.obtainedTotalUserCount = false;
     $scope.isEmailStatusToggled = false;
+    $scope.isUserPendingStatusToggled = false;
 
     // Functions
     $scope.setFilter = setFilter;
@@ -89,12 +90,14 @@
 
     var promises = {
       csvEnhancement: FeatureToggleService.atlasCsvEnhancementGetStatus(),
-      atlasEmailStatus: FeatureToggleService.atlasEmailStatusGetStatus()
+      atlasEmailStatus: FeatureToggleService.atlasEmailStatusGetStatus(),
+      atlasUserPendingStatus: FeatureToggleService.atlasUserPendingStatusGetStatus()
     };
 
     $q.all(promises).then(function (results) {
       $scope.isCsvEnhancementToggled = results.csvEnhancement;
       $scope.isEmailStatusToggled = results.atlasEmailStatus;
+      $scope.isUserPendingStatusToggled = results.atlasUserPendingStatus;
     }).finally(init);
 
     configureGrid();
@@ -228,8 +231,23 @@
               } else {
                 endOfUserList = true;
               }
-              // get email status here
-              _.map($scope.userList.allUsers, function (user) {
+
+              // get email status and user status here
+              _.forEach($scope.userList.allUsers, function (user) {
+                // user status
+                if ($scope.isUserPendingStatusToggled) {
+                  var hasBeenActivated = false;
+                  if (user.userSettings) {
+                    hasBeenActivated = _.some(user.userSettings, function (userSetting) {
+                      return userSetting.indexOf('sparkAdmin.licensedDate') > 0 || userSetting.indexOf('spark.signUpDate') > 0;
+                    });
+                  }
+                  user.userStatus = (_.isEmpty(user.licenseID) || !hasBeenActivated) ? 'pending' : 'active';
+                } else {
+                  user.userStatus = (_.indexOf(user.accountStatus, 'pending') >= 0) ? 'pending' : 'active';
+                }
+
+                // email status
                 if (!user.active && $scope.isEmailStatusToggled) {
                   Userservice.getUsersEmailStatus(Authinfo.getOrgId(), user.id).then(function (response) {
                     var eventStatus = response.data.items[0].event;
@@ -239,7 +257,6 @@
                   });
                 }
               });
-
               $scope.setFilter($scope.activeFilter);
 
             } else {
@@ -521,9 +538,7 @@
       $scope.roles = user.roles;
       $scope.queryuserslist = $scope.gridData;
       $state.go('user-overview', {
-        currentUser: $scope.currentUser,
-        entitlements: $scope.entitlements,
-        queryuserslist: $scope.queryuserslist
+        currentUserId: $scope.currentUser.id
       });
     }
 

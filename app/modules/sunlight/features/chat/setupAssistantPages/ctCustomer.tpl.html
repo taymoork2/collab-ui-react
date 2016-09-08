@@ -17,7 +17,7 @@
             <label title="{{careChatSA.getAttributeParam('value', 'header', 'welcomeHeader')}}"
                    class="welcomeText textOverflow">{{careChatSA.getAttributeParam('value', 'header', 'welcomeHeader')}}</label>
             <label title="{{careChatSA.orgName}}"
-                   class="orgText textOverflow">{{careChatSA.orgName}}</label>
+                   class="orgText textOverflow">{{careChatSA.template.configuration.pages.customerInformation.fields.welcomeHeader.attributes[1].value}}</label>
           </header>
 
           <section>
@@ -42,11 +42,11 @@
       <cs-card class="ct-customer-card">
         <header class="cardHeader1 h4" translate="careChatTpl.attributes"></header>
         <article class="customer-attributes-article ct-article articleHeight">
-          <section class="ct-attribute-section ct-flex-center" ng-hide="careChatSA.activeItem !== undefined">
+          <section class="ct-attribute-section item-not-selected ct-flex-center" ng-hide="careChatSA.activeItem !== undefined">
             <div class="ct-default-msg h6 medium-8" translate="careChatTpl.defaultRightCardText"></div>
           </section>
 
-          <section class="ct-attribute-section ct-flex-topleft ng-hide" ng-hide="careChatSA.activeItem === undefined">
+          <section class="ct-attribute-section ng-hide" ng-hide="careChatSA.activeItem === undefined">
             <div class="row ct-attribute-row" ng-repeat="attribute in careChatSA.activeItem.attributes">
 
               <label
@@ -72,13 +72,16 @@
               </label>
 
               <input
-                ng-if="attribute.name === 'header' ||
-                attribute.name === 'label' ||
-                attribute.name === 'hintText'"
+                ng-if="attribute.name === 'header' || attribute.name === 'label' || attribute.name === 'hintText'"
                 id="attribute.fieldName"
                 class="h5 inputField ct-attribute-field-textbox large-11"
                 type="text"
                 ng-model="attribute.value"
+                cs-input
+                name="{{attribute.name }}"
+                cs-input-messages="careChatSA.singleLineValidationMessage"
+                ng-maxlength="careChatSA.lengthConstants.singleLineMaxCharLimit"
+                ng-model-options="{ allowInvalid: true }"
               />
 
               <div ng-if="attribute.name === 'required'" class="h6 cs-radio-group ct-attribute-field-radio">
@@ -117,10 +120,12 @@
               <div ng-if="attribute.name === 'type'">
                 <cs-select
                         ng-model="attribute.value"
+                        ng-init="careChatSA.validateType(attribute.value)"
+                        ng-change="careChatSA.validateType(attribute.value);"
                         options="careChatSA.typeOptions"
                         labelfield="text"
                         valuefield="id"
-                        class="ct-attribute-field-textbox"
+                        ng-class="careChatSA.validateType(attribute.value) ? 'ct-attribute-field-textbox' : 'ct-attribute-field-textbox_error'"
                         placeholder="attribute.defaultValue">
                 </cs-select>
                 <label
@@ -128,16 +133,25 @@
                         class="cs-input__label ct-attribute-field-helptext large-11">
                   <em>{{attribute.value.helpText}}</em>
                 </label>
+                <div class="small ct-input-error" ng-show="careChatSA.isTypeDuplicate">
+                  <div class="ct-error-icon"><i class="icon icon-error icon-lg"></i></div>
+                  <div>{{:: 'careChatTpl.ctValidation.errorTypeDuplicate' | translate}}</div>
+                </div>
               </div>
               <div class="row ct-attribute-row ct-customer-info-category-input right-inner-addon" ng-if="attribute.name == 'type' && attribute.value.id == 'category'">
                 <i class="icon icon-add-contain" ng-click="careChatSA.addCategoryOption()"></i>
                 <input
+                        cs-input
+                        ng-readonly="{{!careChatSA.validateType(attribute.value)}}"
+                        name="categoryTextBox"
                         id="categoryTextBox"
                         class="h5 inputField ct-attribute-field-textbox large-11 ng-pristine ng-valid ng-scope ng-not-empty ng-touched icon-add-contain"
                         type="text"
                         ng-keypress="careChatSA.onEnterKey($event)"
                         ng-model="careChatSA.categoryOptionTag"
-                        maxlength="25"/>
+                        cs-input-messages="careChatSA.singleLineValidationMessage"
+                        ng-maxlength="careChatSA.lengthConstants.singleLineMaxCharLimit"
+                />
                 <div class="category-tokens">
                   <cs-token-field
                           tokenfieldid="careChatSA.categoryTokensId"
@@ -153,7 +167,13 @@
                <input id="orgText"
                       class="h5 inputField ct-attribute-field-textbox large-11"
                       type="text"
-                      ng-model="careChatSA.orgName"/>
+                      ng-model="careChatSA.template.configuration.pages.customerInformation.fields.welcomeHeader.attributes[1].value"
+                      cs-input
+                      name="orgText"
+                      cs-input-messages="careChatSA.singleLineValidationMessage"
+                      ng-maxlength="careChatSA.lengthConstants.singleLineMaxCharLimit"
+                      ng-model-options="{ allowInvalid: true }"
+                />
               </div>
           </section>
         </article>

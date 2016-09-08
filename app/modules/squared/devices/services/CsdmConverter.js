@@ -8,6 +8,7 @@
 
       function CloudberryDevice(obj) {
         this.url = obj.url;
+        this.type = 'cloudberry';
         this.mac = obj.mac;
         this.ip = getIp(obj);
         this.serial = obj.serial;
@@ -58,11 +59,13 @@
         "Cisco TelePresence MX800 SpeakerTrack": "images/devices-hi/mx800speakertrack.png",
         "Project Swedish Island": "images/devices-hi/swedish_island.png",
         "Cisco Spark Board 55": "images/devices-hi/spark_board_55.png",
-        "Darling": "images/devices-hi/spark_board_55.png"
+        "Darling": "images/devices-hi/spark_board_55.png",
+        "Eve": "images/devices-hi/eve.png"
       };
 
       function HuronDevice(obj) {
         this.url = obj.url;
+        this.type = 'huron';
         this.mac = obj.mac;
         this.ip = getIp(obj);
         this.cisUuid = obj.cisUuid;
@@ -137,6 +140,7 @@
 
       function UnusedAccount(obj) {
         this.url = obj.url;
+        this.type = 'cloudberry';
         this.cisUuid = obj.id;
         this.displayName = obj.displayName;
         this.product = t('spacesPage.account');
@@ -162,6 +166,7 @@
         obj.state = obj.status;
 
         this.url = obj.url;
+        this.type = 'cloudberry';
         this.cisUuid = obj.id;
         this.tags = getTags(obj.description);
         this.expiryTime = obj.expiryTime;
@@ -266,7 +271,7 @@
       }
 
       function getUpgradeChannel(obj) {
-        return _.chain(getEvents(obj))
+        var channel = _.chain(getEvents(obj))
           .where({
             type: 'upgradeChannel',
             level: 'INFO'
@@ -274,6 +279,16 @@
           .pluck('description')
           .first()
           .value();
+
+        var labelKey = 'CsdmStatus.upgradeChannels.' + channel;
+        var label = $translate.instant('CsdmStatus.upgradeChannels.' + channel);
+        if (label === labelKey) {
+          label = channel;
+        }
+        return {
+          label: label,
+          value: channel
+        };
       }
 
       function getIp(obj) {
@@ -401,16 +416,16 @@
       function getCssColorClass(obj) {
         switch (obj.state) {
           case 'UNCLAIMED':
-            return 'device-status-gray';
+            return 'disabled';
           default:
             switch ((obj.status || {}).connectionStatus) {
               case 'CONNECTED':
                 if (hasIssues(obj)) {
-                  return 'device-status-yellow';
+                  return 'warning';
                 }
-                return 'device-status-green';
+                return 'success';
               default:
-                return 'device-status-red';
+                return 'danger';
             }
         }
       }

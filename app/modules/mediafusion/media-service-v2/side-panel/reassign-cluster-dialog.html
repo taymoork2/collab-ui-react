@@ -3,54 +3,27 @@
     <span class="sr-only" translate="common.close">
     </span>
   </button>
-  <div ng-show="reassignClust.error">
-    <h5 class="modal-title" translate="mediaFusion.reassign.reassignErrorHeader">
-    </h5>
-  </div>
-  <div ng-hide="loading || reassignClust.error">
-    <h5 class="modal-title" translate="mediaFusion.reassign.moveNode">
-    </h5>
-  </div>
+  <h5 class="modal-title" translate="mediaFusion.reassign.moveNode">
 </div>
 <div class="modal-body">
-  <div class="alert alert-danger" ng-show="reassignClust.error" style="margin-bottom: 30px">
-    {{reassignClust.error}}
+  <div >
+    <p>
+      {{reassignClust.reassignText}}
+    </p>
   </div>
-  <div ng-show="loading" style="text-align: center; padding: 60px;">
-    <i class="icon icon-spinner icon-2x">
-    </i>
-  </div>
-  <div ng-hide="loading || reassignClust.error">
-    <div class="row showgrid">
-      <div class="columns medium-5">
-        <p>
-          {{reassignClust.reassignText}}
-        </p>
-      </div>
-      <div class="columns medium-6">
-        <cs-select ng-model="reassignClust.selectedCluster" options="reassignClust.options" placeholder="reassignClust.selectPlaceholder">
-        </cs-select>
-      </div>
-    </div>
+  <br>
+  <div class="columns medium-8 moveNodeDropDown">
+    <cs-select ng-model="reassignClust.selectedCluster" options="reassignClust.options" placeholder="reassignClust.selectPlaceholder" combo="true">
+    </cs-select>
   </div>
 </div>
-<div class="modal-footer" ng-hide="reassignClust.error">
-  <button class="btn btn--primary pull-right" id="convertActionButton" ng-click="reassignClust.reassign()" ng-disabled="loading || saving">
-    <span ng-hide="saving" translate="mediaFusion.reassign.moveNode">
-    </span>
-    <span ng-show="saving">
-      <i class="icon icon-spinner">
-      </i>
+<div class="modal-footer" >
+  <button class="btn btn--primary pull-right" id="convertActionButton" ng-click="reassignClust.reassign()" ng-disabled="!reassignClust.canContinue()">
+    <span translate="mediaFusion.reassign.moveNode">
     </span>
   </button>
   <button class="btn pull-right" id="convertCancelButton" ng-click="reassignClust.close()" style="margin-right: 10px">
     <span translate="mediaFusion.clusters.deregisterCancel">
-    </span>
-  </button>
-</div>
-<div class="modal-footer" ng-show="reassignClust.error">
-  <button class="btn pull-right" id="convertCancelButton" ng-click="reassignClust.close()" style="margin-right: 10px">
-    <span translate="common.ok">
     </span>
   </button>
 </div>

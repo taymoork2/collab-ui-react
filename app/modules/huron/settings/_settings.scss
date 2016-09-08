@@ -61,8 +61,9 @@
      @include vr-spacing(mt, .75, 0px, true);
    }
 
-   .voicemail-padding {
+   .voicemail-spacing {
      @include vr-spacing(pl, 2);
+     @include vr-spacing(mb, 2);
    }
 
    button.btn-link {
@@ -76,5 +77,41 @@
         background-color: $gray-dark-2;
       }
     }
+
+    .voicemail-switch-width {
+      max-width: 40rem;
+    }
+
+    .save-section {
+      position: fixed; 
+      bottom: 0;
+      display: flex;
+      align-items: center;
+      width: 100%;
+      padding: 1.25rem 8.25rem 1.25rem 4rem;
+      z-index: $zindex-popover;
+      background-color: $gray-light-4;
+
+      p {
+        flex: 1;
+      }
+    }
+
+    .service-setup-extension-length, .inner-section-margin {
+      @include vr-spacing(mb, 2.25);
+    }
+
+    .msg-container {
+      min-width: vr-adjust(600px);
+    }
+  }
+
+  .alert {
+    margin-right: 0;
+    margin-left: 0;
+  }
+
+  .save-popup-margin {
+    margin-bottom: vr-adjust(60px)
   }
 }

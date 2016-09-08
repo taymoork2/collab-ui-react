@@ -6,9 +6,10 @@
     .controller('TelephonyOverviewCtrl', TelephonyOverviewCtrl);
 
   /* @ngInject */
-  function TelephonyOverviewCtrl($state, $stateParams, TelephonyInfoService) {
+  function TelephonyOverviewCtrl($state, $stateParams, TelephonyInfoService, FeatureToggleService) {
     var vm = this;
     vm.currentUser = $stateParams.currentUser;
+    vm.showSpeedDials = false;
     vm.actionList = [{
       actionKey: 'usersPreview.addNewLinePreview',
       actionFunction: addNewLine,
@@ -35,6 +36,9 @@
       TelephonyInfoService.loadExternalNumberPool();
       TelephonyInfoService.getInternationalDialing(vm.currentUser.id);
       vm.telephonyInfo = TelephonyInfoService.getTelephonyInfoObject();
+      FeatureToggleService.supports(FeatureToggleService.features.huronSpeedDial).then(function (result) {
+        vm.showSpeedDials = result;
+      });
     }
   }
 })();

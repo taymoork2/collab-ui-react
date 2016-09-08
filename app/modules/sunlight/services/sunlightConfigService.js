@@ -15,7 +15,9 @@
     var service = {
       getUserInfo: getUserInfo,
       updateUserInfo: updateUserInfo,
-      createChatTemplate: createChatTemplate
+      createChatTemplate: createChatTemplate,
+      editChatTemplate: editChatTemplate,
+      createUserInfo: createUserInfo
     };
 
     return service;
@@ -32,5 +34,12 @@
       return $http.post(sunlightChatConfigUrl, chatTemplate);
     }
 
+    function editChatTemplate(chatTemplate, templateId) {
+      return $http.put(sunlightChatConfigUrl + '/' + templateId, chatTemplate);
+    }
+
+    function createUserInfo(userData) {
+      return $http.post(sunlightUserConfigUrl, userData);
+    }
   }
 })();

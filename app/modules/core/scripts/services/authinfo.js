@@ -23,6 +23,7 @@
     var authData = {
       username: null,
       userId: null,
+      userOrgId: null,
       orgName: null,
       orgId: null,
       addUserEnabled: null,
@@ -65,6 +66,7 @@
         authData.username = data.name;
         authData.orgName = data.orgName;
         authData.orgId = data.orgId;
+        authData.userOrgId = data.userOrgId;
         authData.addUserEnabled = data.addUserEnabled;
         authData.entitleUserEnabled = data.entitleUserEnabled;
         authData.managedOrgs = data.managedOrgs;
@@ -74,7 +76,7 @@
         //if Full_Admin or WX2_User and has managedOrgs, add partnerustomers tab as allowed tab
         if (authData.managedOrgs && authData.managedOrgs.length > 0) {
           for (var i = 0; i < authData.roles.length; i++) {
-            if (authData.roles[i] === 'Full_Admin' || authData.roles[i] === 'User') {
+            if (authData.roles[i] === Config.roles.full_admin || authData.roles[i] === 'User') {
               this.isCustomerPartner = true;
               authData.roles.push('CUSTOMER_PARTNER');
               break;
@@ -155,12 +157,12 @@
               authData.licenses.push(license);
 
               // Do not store invalid licenses in service buckets
-              if (license.status === 'CANCELLED' || license.status === 'SUSPENDED') {
+              if (license.status === Config.licenseStatus.CANCELLED || license.status === Config.licenseStatus.SUSPENDED) {
                 continue;
               }
 
               switch (license.licenseType) {
-                case 'CONFERENCING':
+                case Config.licenseTypes.CONFERENCING:
                   if ((this.isCustomerAdmin() || this.isReadOnlyAdmin()) && license.siteUrl && !_.includes(authData.roles, 'Site_Admin')) {
                     authData.roles.push('Site_Admin');
                   }
@@ -172,19 +174,19 @@
                   }
                   confLicenses.push(service);
                   break;
-                case 'MESSAGING':
+                case Config.licenseTypes.MESSAGING:
                   service = new ServiceFeature($translate.instant('onboardModal.paidMsg'), x + 1, 'msgRadio', license);
                   msgLicenses.push(service);
                   break;
-                case 'COMMUNICATION':
+                case Config.licenseTypes.COMMUNICATION:
                   service = new ServiceFeature($translate.instant('onboardModal.paidComm'), x + 1, 'commRadio', license);
                   commLicenses.push(service);
                   break;
-                case 'CARE':
+                case Config.licenseTypes.CARE:
                   service = new ServiceFeature($translate.instant('onboardModal.paidCare'), x + 1, 'careRadio', license);
                   careLicenses.push(service);
                   break;
-                case 'CMR':
+                case Config.licenseTypes.CMR:
                   service = new ServiceFeature($translate.instant('onboardModal.cmr'), x + 1, 'cmrRadio', license);
                   cmrLicenses.push(service);
               }
@@ -338,13 +340,13 @@
         return this.hasRole('Application');
       },
       isAdmin: function () {
-        return this.hasRole('Full_Admin') || this.hasRole('PARTNER_ADMIN');
+        return this.hasRole(Config.roles.full_admin) || this.hasRole('PARTNER_ADMIN');
       },
       isReadOnlyAdmin: function () {
         return this.hasRole('Readonly_Admin') && !this.isAdmin();
       },
       isCustomerAdmin: function () {
-        return this.hasRole('Full_Admin');
+        return this.hasRole(Config.roles.full_admin);
       },
       isOnline: function () {
         return _.eq(authData.customerType, 'Online');
@@ -354,6 +356,9 @@
       },
       isCSB: function () {
         return (_.eq(authData.customerType, 'CSB'));
+      },
+      isCustomerLaunchedFromPartner: function () {
+        return authData.orgId !== authData.userOrgId;
       },
       isDirectCustomer: function () {
         return (_.eq(authData.commerceRelation, 'Direct'));
@@ -455,7 +460,7 @@
         return isEntitled(entitlement);
       },
       isUserAdmin: function () {
-        return this.getRoles().indexOf('Full_Admin') > -1;
+        return this.getRoles().indexOf(Config.roles.full_admin) > -1;
       },
       isInDelegatedAdministrationOrg: function () {
         return authData.isInDelegatedAdministrationOrg;

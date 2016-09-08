@@ -13,7 +13,7 @@ class DirectoryNumberListCtrl {}
 angular
   .module('Huron')
   .component('directoryNumberList', {
-    templateUrl: 'modules/huron/overview/directoryNumberList.tpl.html',
+    templateUrl: 'modules/huron/overview/directoryNumberList.html',
     controller: DirectoryNumberListCtrl,
     bindings: {
       directoryNumbers: '<',

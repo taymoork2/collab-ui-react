@@ -15,7 +15,7 @@
           <span class="secondary">{{domain.timeZone}}</span>
         </div>
         <div class="status pull-right" ng-show="domain.pending">
-          <i class="icon icon-circle trial-pending"></i>
+          <i class="icon icon-circle status-indicator warning"></i>
           <span translate="common.pending"></span>
         </div>
       </li>
@@ -26,7 +26,7 @@
      <li class="feature">
        <a ui-sref="customer-overview.domainDetail({webexDomains: customerWebexOverview.domains})">
          <span class="feature-name" translate="customerPage.domains"></span>
-         <div class="feature-details pull-right">{{customerWebexOverview.domains.length}} </div>
+         <div class="feature-status pull-right">{{customerWebexOverview.domains.length}} </div>
          <i class="feature-arrow"></i>
        </a>
      </li>

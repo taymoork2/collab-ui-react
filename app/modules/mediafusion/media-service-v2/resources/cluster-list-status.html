@@ -1,19 +1,11 @@
 <div class="ui-grid-cell-contents" style="padding-top: 1.5rem">
-  <span ng-if="row.entity.aggregates.state == 'has_alarms'" class="yellow">
-    <i class="fa fa-circle mediafusion-state-alarm" />
-  </span>
-  <span ng-if="row.entity.aggregates.state == 'offline'" class="red">
-  	<i class="fa fa-circle mediafusion-state-offline" />
-  </span>
-  <span ng-if="row.entity.aggregates.state == 'running'" class="green">
-  	<i class="fa fa-circle mediafusion-state-running" />
-  </span>
-    <span ng-if="row.entity.aggregates.state == 'installing'" class="green">
-    <i class="fa fa-circle mediafusion-state-installing" />
-  </span>
-  <span ng-if="row.entity.aggregates.state == 'no_hosts'" class="grey">
-  	<i class="fa fa-circle"/>
-  </span>
+<span ng-switch="row.entity.aggregates.state">
+   <span ng-switch-when="has_alarms"> <i class="icon icon-circle status-indicator warning" /> </span>  
+  <span ng-switch-when="offline"> <i class="icon icon-circle status-indicator danger" /> </span>  
+  <span ng-switch-when="running"> <i class="icon icon-circle status-indicator success" /> </span>  
+  <span ng-switch-when="installing"> <i class="icon icon-circle status-indicator warning" /> </span>  
+  <span ng-switch-default> <i class="icon icon-circle status-indicator disabled"/></span>  
+</span>
   <span translate="{{'mediaFusion.serviceStatus.' + row.entity.aggregates.state}}"></span>
   <span ng-if="row.entity.aggregates.upgradeState === 'upgrading'"> | <span translate="mediaFusion.serviceStatus.upgrading"></span></span>
 </div>

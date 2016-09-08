@@ -294,7 +294,7 @@ describe('Controller: AARouteToUserCtrl', function () {
   };
 
   var listUsersProps = {
-    "attributes": "attributes=name,userName,userStatus,entitlements,displayName,photos,roles,active,trainSiteNames,licenseID",
+    "attributes": "attributes=name,userName,userStatus,entitlements,displayName,photos,roles,active,trainSiteNames,licenseID,userSettings",
     "filter": "filter=active%20eq%20true%20or%20displayName%20sw%20%22xz%22",
     "startIndex": 0,
     "count": 10,

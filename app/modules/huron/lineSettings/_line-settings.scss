@@ -31,7 +31,7 @@
 
 .esn-number-field {
   margin-top: 10px;
-  &.steeringDigitOverlap {
+  &.steeringDigitOverlap, &.warningMargin {
     margin-top: 26px;
   }
   color: $gray-dark;

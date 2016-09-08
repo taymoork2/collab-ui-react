@@ -1,0 +1,53 @@
+<h4 translate="directoryNumberPanel.directNumbers"></h4>
+<div class="form-group">
+  <span translate="directoryNumberPanel.internalNumberLabel"></span>
+</div>
+<div class="form-group">
+  <label ng-if="$ctrl.showExtensions"
+    for="internalNumber"
+    translate="directoryNumberPanel.internalNumberExtension">
+  </label>
+  <label ng-if="!$ctrl.showExtensions"
+    for="internalNumber"
+    translate="directoryNumberPanel.externalNumberLabel">
+  </label>
+  <cs-select
+    name="internalNumber"
+    ng-model="$ctrl.internalSelected"
+    options="$ctrl.internalOptions"
+    refresh-data-fn="$ctrl.refreshInternal(filter)"
+    wait-time="0"
+    placeholder="$ctrl.placeholder"
+    input-placeholder="$ctrl.inputPlaceholder"
+    required="true"
+    is-warn="{{$ctrl.internalIsWarn}}"
+    warn-msg="{{$ctrl.internalWarnMsg}}"
+    on-change-fn="$ctrl.changeInternal()"
+    filter="true">
+  </cs-select>
+  <div class="esn-number-field" ng-class="{warningMargin: $ctrl.internalIsWarn}">
+    <p ng-if="$ctrl.showExtensions">
+      <span translate="directoryNumberPanel.enterpriseSiteNumberLabel"></span>
+      <span ng-bind="$ctrl.esnPrefix"></span><strong class="esn-extension" ng-bind="$ctrl.internalSelected.value"></strong>
+    </p>
+    <p ng-if="!$ctrl.showExtensions">
+      <span translate="directoryNumberPanel.nationalNumberLabel"></span>:
+      <span ng-bind="$ctrl.externalSelected.label"></span>
+    </p>
+  </div>
+</div>
+<div class="form-group" ng-if="$ctrl.showExtensions">
+  <label for="externalNumber" translate="directoryNumberPanel.externalNumberLabel">
+  </label>
+  <cs-select
+    name="externalNumber"
+    ng-model="$ctrl.externalSelected"
+    options="$ctrl.externalOptions"
+    refresh-data-fn="$ctrl.refreshExternal(filter)"
+    wait-time="0"
+    placeholder="$ctrl.nonePlaceholder"
+    input-placeholder="$ctrl.inputPlaceholder"
+    filter="true"
+    on-change-fn="$ctrl.changeExternal()">
+  </cs-select>
+</div>

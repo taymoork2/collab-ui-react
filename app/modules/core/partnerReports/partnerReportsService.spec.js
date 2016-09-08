@@ -15,12 +15,12 @@ describe('Service: Partner Reports Service', function () {
     value: 0
   };
 
-  var updateDates = function (data) {
+  var updateDates = function (data, format) {
     for (var i = data.length - 1; i >= 0; i--) {
-      if (angular.isDefined(data[i].date)) {
-        data[i].date = moment().tz(timezone).subtract(data.length - i, 'day').format();
+      if (format) {
+        data[i].date = moment().tz(timezone).subtract(data.length - i, 'day').format(format);
       } else {
-        data[i].modifiedDate = moment().tz(timezone).subtract(data.length - i, 'day').format(dayFormat);
+        data[i].date = moment().tz(timezone).subtract(data.length - i, 'day').format();
       }
     }
     return data;
@@ -51,13 +51,13 @@ describe('Service: Partner Reports Service', function () {
     PartnerReportService = _PartnerReportService_;
     Notification = _Notification_;
 
-    spyOn(Notification, 'notify');
+    spyOn(Notification, 'errorWithTrackingId');
 
     managedOrgsUrl = UrlConfig.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId() + '/managedOrgs';
 
     var baseUrl = UrlConfig.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/reports/';
     activeUsersDetailedUrl = baseUrl + 'detailed/managedOrgs/activeUsers?&intervalCount=7&intervalType=day&spanCount=1&spanType=day&cache=' + cacheValue;
-    mostActiveUsersUrl = baseUrl + 'topn/managedOrgs/activeUsers?reportType=weeklyUsage&cache=' + cacheValue;
+    mostActiveUsersUrl = baseUrl + 'topn/managedOrgs/activeUsers?reportType=weeklyUsage&intervalCount=7&intervalType=day&spanCount=1&spanType=day&cache=' + cacheValue;
     mediaQualityUrl = baseUrl + 'detailed/managedOrgs/callQuality?&intervalCount=7&intervalType=day&spanCount=1&spanType=day&cache=' + cacheValue;
     callMetricsUrl = baseUrl + 'detailed/managedOrgs/callMetrics?&intervalCount=7&intervalType=day&spanCount=7&spanType=day&cache=' + cacheValue;
     registeredEndpointsUrl = baseUrl + 'trend/managedOrgs/registeredEndpoints?&intervalCount=7&intervalType=day&spanCount=1&spanType=day&cache=' + cacheValue;
@@ -69,12 +69,12 @@ describe('Service: Partner Reports Service', function () {
       registeredEndpointsUrl += '&orgId=' + org.value;
     });
 
-    activeUserDetailedResponse = updateDates(activeUserData.detailedResponse);
+    activeUserDetailedResponse = updateDates(activeUserData.detailedResponse, dayFormat);
     activeUserDetailedAPI = activeUserData.detailedAPI;
     activeUserDetailedAPI.data[0].data = updateDates(activeUserDetailedAPI.data[0].data);
     activeUserDetailedAPI.data[1].data = updateDates(activeUserDetailedAPI.data[1].data);
 
-    mediaQualityResponse = updateDates(mediaQualityData.mediaQualityResponse);
+    mediaQualityResponse = updateDates(mediaQualityData.mediaQualityResponse, dayFormat);
   }));
 
   afterEach(function () {
@@ -116,7 +116,7 @@ describe('Service: Partner Reports Service', function () {
       activePopResponse[0].percentage = 0;
 
       PartnerReportService.getActiveUserData(customerData.customerOptions, timeFilter).then(function (response) {
-        expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
+        expect(Notification.errorWithTrackingId).toHaveBeenCalled();
         expect(response).toEqual({
           graphData: [],
           isActiveUsers: false,
@@ -140,7 +140,7 @@ describe('Service: Partner Reports Service', function () {
       $httpBackend.whenGET(mostActiveUsersUrl).respond(500, error);
 
       PartnerReportService.getActiveTableData(customerData.customerOptions, timeFilter).then(function (response) {
-        expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
+        expect(Notification.errorWithTrackingId).toHaveBeenCalled();
         expect(response).toEqual([]);
       });
       $httpBackend.flush();

@@ -11,7 +11,7 @@ describe('Directive: ucDirectoryNumber', function () {
   }));
 
   it('replaces the element with the appropriate content', function () {
-    var element = $compile("<uc-directory-number/>")($rootScope);
+    var element = $compile("<uc-directory-number-old/>")($rootScope);
     $rootScope.$digest();
 
     expect(element.html()).toContain("form-group");

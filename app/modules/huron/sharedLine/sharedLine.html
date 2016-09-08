@@ -1,0 +1,35 @@
+<script type="text/ng-template" id="customTemplate.html">
+  <a>
+      <span ng-bind-html="match.label.name.givenName | typeaheadHighlight:query" ng-if="match.label.name.givenName"></span>
+      <span ng-bind-html="match.label.name.familyName | typeaheadHighlight:query" ng-if="match.label.name.familyName"></span>
+      <span ng-show="match.label.name.familyName">(<span ng-bind-html="match.label.userName | typeaheadHighlight:query"></span>)</span>
+      <span ng-show="!match.label.name.familyName" ng-bind-html="match.label.userName | typeaheadHighlight:query"></span>
+  </a>
+</script>
+<div class="shared-line">
+  <h4 class="shared-line-title" translate="sharedLinePanel.title"></h4>
+  <p><small translate="sharedLinePanel.description"></small></p>
+  <div class="form-group typeahead-form-group">
+    <div class="typeahead-dropdown">
+      <input id="userInput" type="text" ng-model="$ctrl.selectedUser" class="form-control"
+        typeahead="user for user in $ctrl.getUserList($viewValue) | limitTo:10"
+        typeahead-on-select="$ctrl.selectSharedLineUser($item)"
+        typeahead-template-url="customTemplate.html" placeholder="{{'sharedLinePanel.addMember' | translate}}" typeahead-wait-ms="500"/>
+      <i class="icon icon-search"></i>
+    </div>
+    <div ng-if="$ctrl.sharedLineUsers.length">
+      <p class="no-margin"><span translate="sharedLinePanel.member"></span></p>
+      <cs-accordion close-others="$ctrl.oneAtATime">
+        <cs-accordion-group ng-repeat="user in $ctrl.sharedLineUsers" id="{{user.userName}}-AccordionGroup" display-status="primary" show-caret="true">
+          <cs-accordion-heading ng-if="user.name">{{user.name}}<span class="pull-right caret"></span></cs-accordion-heading>
+          <cs-accordion-heading ng-if="!user.name">{{user.userName}}<span class="pull-right caret"></span> </cs-accordion-heading>
+          <ul class="list-group">
+            <li class="list-group-item" ng-if="user.name">{{user.userName}}</span></li>
+            <cs-checkbox ng-if="device.userUuid == user.uuid"  ng-repeat="device in $ctrl.sharedLineEndpoints" class="list-group-item" ckid="{{$index}}-{{device.model}}-{{user.userName}}" ng-model="device.isSharedLine" label="{{device.model}}" isdisabled="$ctrl.isSingleDevice($ctrl.sharedLineEndpoints, user.uuid)"></cs-checkbox>
+            <a class="list-group-item list-item-anchor"  ng-if="user.dnUsage != 'Primary'" id="removeMemberLink" href="" translate="sharedLinePanel.remove" ng-click="$ctrl.disassociateSharedLineUser(user, false)"/>
+          </ul>
+        </cs-accordion-group>
+      </cs-accordion>
+    </div>
+  </div>
+</div>

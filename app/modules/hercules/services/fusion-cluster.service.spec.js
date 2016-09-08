@@ -383,7 +383,7 @@ describe('Service: FusionClusterService', function () {
 
   });
 
-  describe('.getReleaseNotes', function () {
+  describe('getReleaseNotes()', function () {
 
     it('should return release notes', function () {
       $httpBackend
@@ -402,7 +402,7 @@ describe('Service: FusionClusterService', function () {
 
   });
 
-  describe('.getAggregateStatusForServiceAcrossAllClusters', function () {
+  describe('processClustersToAggregateStatusForService()', function () {
 
     var twoClusters;
     beforeEach(function () {
@@ -492,9 +492,24 @@ describe('Service: FusionClusterService', function () {
       expect(FusionClusterService.processClustersToAggregateStatusForService('squared-fusion-call', malformedClusterList)).toBe('outage');
     });
 
+    it('should return *outage* when all hosts are *upgrading*', function () {
+      twoClusters[0].servicesStatuses[2].serviceId = 'squared-fusion-media';
+      twoClusters[0].servicesStatuses[2].state.name = 'upgrading';
+      twoClusters[1].servicesStatuses[2].serviceId = 'squared-fusion-media';
+      twoClusters[1].servicesStatuses[2].state.name = 'upgrading';
+      expect(FusionClusterService.processClustersToAggregateStatusForService('squared-fusion-media', twoClusters)).toBe('outage');
+    });
+
+    it('should return *impaired* if one host is *running* and one is *upgrading*', function () {
+      twoClusters[0].servicesStatuses[2].serviceId = 'squared-fusion-media';
+      twoClusters[0].servicesStatuses[2].state.name = 'running';
+      twoClusters[1].servicesStatuses[2].serviceId = 'squared-fusion-media';
+      twoClusters[1].servicesStatuses[2].state.name = 'upgrading';
+      expect(FusionClusterService.processClustersToAggregateStatusForService('squared-fusion-media', twoClusters)).toBe('impaired');
+    });
   });
 
-  describe('.processClustersToSeeIfServiceIsSetup', function () {
+  describe('processClustersToSeeIfServiceIsSetup()', function () {
 
     describe('Org with Call and Calendar', function () {
 
@@ -572,6 +587,37 @@ describe('Service: FusionClusterService', function () {
 
     });
 
+  });
+
+  describe('getResourceGroups()', function () {
+    beforeEach(function () {
+      jasmine.getJSONFixtures().clearCache(); // See https://github.com/velesin/jasmine-jquery/issues/239
+      var org = getJSONFixture('hercules/org-with-resource-groups.json');
+      $httpBackend.expectGET('http://elg.no/organizations/0FF1C3?fields=@wide').respond(org);
+    });
+
+    afterEach(function () {
+      $httpBackend.flush();
+      $httpBackend.verifyNoOutstandingExpectation();
+      $httpBackend.verifyNoOutstandingRequest();
+    });
+
+    it('extract unassigned clusters and sort them by name', function () {
+      FusionClusterService.getResourceGroups(function (response) {
+        expect(response.unassigned.length).toBe(3);
+        expect(response.unassigned[0].name).toBe('Augusta National Golf Club');
+        expect(response.unassigned[2].name).toBe('Tom er en hippie');
+      });
+    });
+
+    it('extract resource groups and put clusters inside, sorted by name', function () {
+      FusionClusterService.getResourceGroups(function (response) {
+        expect(response.groups.length).toBe(4);
+        expect(response.groups[0].name).toBe('ACE');
+        expect(response.groups[0].clusters.length).toBe(1);
+        expect(response.groups[3].name).toBe('🐷');
+      });
+    });
   });
 
 });

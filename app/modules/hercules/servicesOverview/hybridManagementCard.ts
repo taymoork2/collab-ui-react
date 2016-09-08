@@ -41,10 +41,9 @@ export class ServicesOverviewHybridManagementCard extends ServicesOverviewHybrid
       name: 'servicesOverview.cards.hybridManagement.title',
       description: 'servicesOverview.cards.hybridManagement.description',
       activeServices: ['squared-fusion-cal', 'squared-fusion-uc', 'squared-fusion-media'],
-      statusServices: ['squared-fusion-mgmt'],
+      statusService: 'squared-fusion-mgmt',
       statusLink: 'services/expressway-management',
       cardClass: '', cardType: CardType.hybrid
     });
   }
 }
-

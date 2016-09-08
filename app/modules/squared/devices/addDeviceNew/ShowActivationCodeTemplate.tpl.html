@@ -5,7 +5,7 @@
 </div>
 <div class="modal-body device-wizard view-activation-code" id="printActivationCode">
   <div>
-    <h5 translate="addDeviceWizard.showActivationCode.activationCode"></h5>
+    <h4 translate="addDeviceWizard.showActivationCode.activationCode"></h4>
     <p class="wizardDescription">
       <span ng-if="showActivationCode.wizardData.deviceType==='huron'" translate="addDeviceWizard.showActivationCode.plugInDeskPhone" translate-values="{ belongsTo: showActivationCode.wizardData.deviceName }"></span>
       <span ng-if="showActivationCode.wizardData.deviceType!=='huron'" translate="addDeviceWizard.showActivationCode.plugInRoomSystem" translate-values="{ belongsTo: showActivationCode.wizardData.deviceName }"></span>
@@ -23,20 +23,20 @@
            ng-style="{'visibility': showActivationCode.qrCode === undefined ? 'hidden' : 'visible'}"
            data-ng-src="data:image/JPEG;base64,{{showActivationCode.qrCode}}">
       <div class="activation-code">
-        <h4>
+        <h2>
           {{showActivationCode.friendlyActivationCode}}
-        </h4>
+        </h2>
       </div>
       <p class="expiryTime" translate="addDeviceWizard.showActivationCode.expires" translate-values="{ expiryDate: showActivationCode.getExpiresOn() }"></p>
       <div class="qrCodeButtons">
-        <a ngclipboard ngclipboard-success="showActivationCode.onCopySuccess(e)" ngclipboard-error="showActivationCode.onCopyError(e)" data-clipboard-text="{{::showActivationCode.activationCode}}">
+        <a ngclipboard ngclipboard-success="showActivationCode.onCopySuccess(e)" ngclipboard-error="showActivationCode.onCopyError(e)" data-clipboard-text="{{::showActivationCode.friendlyActivationCode}}">
           <span translate="generateActivationCodeModal.copyToClipboard"></span>
         </a>
 
         <a
           class="qrCodeRightButton"
-          ng-show="showActivationCode.wizardData.deviceType==='huron' && showActivationCode.wizardData.accountType!=='shared'"
-          ng-disabled="genAuthCode.showEmail"
+          ng-disabled="genAuthCode.showEmail" 
+          ng-hide="showActivationCode.wizardData.deviceType==='huron' && showActivationCode.wizardData.accountType==='shared'"
           ng-click="showActivationCode.activateEmail()"
           translate="generateActivationCodeModal.emailCode">
         </a>
@@ -45,6 +45,7 @@
           <span translate="generateActivationCodeModal.print"></span>
         </a>
       </div>
+
       <div class="sendEmailWrapper" ng-if="showActivationCode.showEmail">
         <div class="sendEmailForm">
           <div class="selectedAddress">

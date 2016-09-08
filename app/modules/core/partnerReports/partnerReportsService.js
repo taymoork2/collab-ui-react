@@ -77,7 +77,7 @@
           timeFilter = null;
         }
 
-        return returnErrorCheck(error, 'Loading overall active user population data failed.', $translate.instant('activeUsers.overallActiveUserGraphError'), TIMEOUT);
+        return returnErrorCheck(error, 'Loading overall active user population data failed.', 'activeUsers.overallActiveUserGraphError', TIMEOUT);
       });
 
       return activeUserDetailedPromise;
@@ -122,8 +122,7 @@
               activeUsers: activeUsers,
               totalRegisteredUsers: totalRegisteredUsers,
               percentage: Math.round((activeUsers / totalRegisteredUsers) * 100),
-              modifiedDate: modifiedDate,
-              date: item.date
+              date: modifiedDate
             });
 
             totalActive += activeUsers;
@@ -284,7 +283,7 @@
       angular.forEach(customerData, function (dateData) {
         if (graphData.length > 0) {
           for (var i = 0; i < graphData.length; i++) {
-            if (graphData[i].modifiedDate.indexOf(dateData.modifiedDate) !== -1) {
+            if (graphData[i].date.indexOf(dateData.date) !== -1) {
               graphData[i].totalRegisteredUsers += dateData.totalRegisteredUsers;
               graphData[i].activeUsers += dateData.activeUsers;
               graphData[i].percentage = Math.round((graphData[i].activeUsers / graphData[i].totalRegisteredUsers) * 100);
@@ -308,11 +307,12 @@
       if (angular.isUndefined(customerIds)) {
         return $q.when([]);
       } else {
-        var query = "?reportType=weeklyUsage&cache=";
+        // TODO: Remove unused parameters once API is fixed; currently necessary to avoid exceptions from API
+        var query = "?reportType=weeklyUsage&intervalCount=7&intervalType=day&spanCount=1&spanType=day&cache=";
         if (filter.value === 1) {
-          query = "?reportType=monthlyUsage&cache=";
+          query = "?reportType=monthlyUsage&intervalCount=7&intervalType=day&spanCount=1&spanType=day&cache=";
         } else if (filter.value === 2) {
-          query = "?reportType=threeMonthUsage&cache=";
+          query = "?reportType=threeMonthUsage&intervalCount=7&intervalType=day&spanCount=1&spanType=day&cache=";
         }
         return getService(topn + activeUserUrl + query + cacheValue + customerIds, activeTableCancelPromise).then(function (response) {
           var tableData = [];
@@ -333,7 +333,7 @@
           }
           return tableData;
         }, function (error) {
-          return returnErrorCheck(error, 'Loading most active users for the selected customer(s) failed.', $translate.instant('activeUsers.activeUserTableError'), []);
+          return returnErrorCheck(error, 'Loading most active users for the selected customer(s) failed.', 'activeUsers.activeUserTableError', []);
         });
       }
     }
@@ -385,7 +385,7 @@
         }
         return [];
       }, function (error) {
-        return returnErrorCheck(error, 'Loading call quality data for the selected customer(s) failed.', $translate.instant('mediaQuality.mediaQualityGraphError'), []);
+        return returnErrorCheck(error, 'Loading call quality data for the selected customer(s) failed.', 'mediaQuality.mediaQualityGraphError', []);
       });
     }
 
@@ -411,7 +411,7 @@
               fairQualityDurationSum: fairSum,
               poorQualityDurationSum: poorSum,
               partialSum: partialSum,
-              modifiedDate: modifiedDate
+              date: modifiedDate
             });
           }
         }
@@ -422,7 +422,7 @@
     function combineQualityGraphs(baseGraph, graph) {
       angular.forEach(graph, function (graphItem) {
         angular.forEach(baseGraph, function (baseGraphItem) {
-          if (graphItem.modifiedDate === baseGraphItem.modifiedDate) {
+          if (graphItem.date === baseGraphItem.date) {
             baseGraphItem.totalDurationSum += graphItem.totalDurationSum;
             baseGraphItem.goodQualityDurationSum += graphItem.goodQualityDurationSum;
             baseGraphItem.fairQualityDurationSum += graphItem.fairQualityDurationSum;
@@ -483,7 +483,7 @@
         }
         return returnArray;
       }, function (error) {
-        return returnErrorCheck(error, 'Loading call metrics data for selected customers failed.', $translate.instant('callMetrics.callMetricsChartError'), returnArray);
+        return returnErrorCheck(error, 'Loading call metrics data for selected customers failed.', 'callMetrics.callMetricsChartError', returnArray);
       });
     }
 
@@ -540,7 +540,7 @@
         }
         return returnArray;
       }, function (error) {
-        return returnErrorCheck(error, 'Loading registered endpoints for the selected customer(s) failed.', $translate.instant('registeredEndpoints.registeredEndpointsError'), []);
+        return returnErrorCheck(error, 'Loading registered endpoints for the selected customer(s) failed.', 'registeredEndpoints.registeredEndpointsError', []);
       });
     }
 
@@ -592,13 +592,13 @@
       if (filter.value === 0) {
         for (var i = 6; i >= 0; i--) {
           var tmpItem = angular.copy(graphItem);
-          tmpItem.modifiedDate = moment().tz(timezone).subtract(i + 1, 'day').format(dayFormat);
+          tmpItem.date = moment().tz(timezone).subtract(i + 1, 'day').format(dayFormat);
           returnGraph.push(tmpItem);
         }
       } else if (filter.value === 1) {
         for (var x = 3; x >= 0; x--) {
           var temp = angular.copy(graphItem);
-          temp.modifiedDate = moment().tz(timezone)
+          temp.date = moment().tz(timezone)
             .startOf('week')
             .subtract(dayOffset + (x * 7), 'day')
             .format(dayFormat);
@@ -607,7 +607,7 @@
       } else {
         for (var y = 2; y >= 0; y--) {
           var item = angular.copy(graphItem);
-          item.modifiedDate = moment().tz(timezone)
+          item.date = moment().tz(timezone)
             .subtract(y, 'month')
             .startOf('month')
             .format(monthFormat);
@@ -629,11 +629,7 @@
         } else {
           Log.debug(debug + '  Status: ' + error.status);
         }
-        if ((error.data !== null) && angular.isDefined(error.data) && angular.isDefined(error.data.trackingId) && (error.data.trackingId !== null)) {
-          Notification.notify([message + '<br>' + $translate.instant('reportsPage.trackingId') + error.data.trackingId], 'error');
-        } else {
-          Notification.notify([message], 'error');
-        }
+        Notification.errorWithTrackingId(error, message);
         return returnItem;
       } else {
         return ABORT;

@@ -4,6 +4,10 @@
     font-size: 0.875rem;
   }
 
+  .feature-status {
+    font-size: 0.875rem;
+  }
+
   .button-container {
     left: -1px;
   }
@@ -28,23 +32,11 @@
   .status {
     i {
       padding-right: 0.5em;
-      font-size: 0.75em;
     }
-
-    i.icon-circle {
-      &.trial-pending {
-        color: $color-attention-base;
-      }
-    }
-
     span {
       font-size: 0.875em;
     }
   }
-
-  // .progress {
-  //   margin-bottom: auto;
-  // }
 
   .progress-bar {
     max-width: 100%;
@@ -74,24 +66,12 @@
           padding-right: 10px;
         }
         .feature-arrow {
-          margin-right: -20px;
+          margin-right: -23px;
         }
         .feature-icon:before {
           content: "\E068";
         }
       }
-    }
-
-    .feature {
-      display: block;
-    }
-
-    .feature-name {
-      display: inline-block;
-    }
-
-    .feature-details {
-      font-size: 0.875rem;
     }
 
     i.feature-icon {

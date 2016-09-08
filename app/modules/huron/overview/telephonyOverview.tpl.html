@@ -29,6 +29,12 @@
             <i class="feature-arrow"></i>
           </a>
         </li>
+        <li class="feature" ng-if="telephonyOverview.showSpeedDials">
+          <a ui-sref="user-overview.communication.speedDials">
+            <span class="feature-name" translate="telephonyPreview.speedDials"></span>
+            <i class="feature-arrow"></i>
+          </a>
+        </li>
         <li class="feature" ng-if="!telephonyOverview.telephonyInfo.hideInternationalDialing">
           <a ui-sref="user-overview.communication.internationalDialing">
             <span class="feature-name" translate="telephonyPreview.internationalDialing"></span>

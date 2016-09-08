@@ -204,6 +204,11 @@
       border-bottom: none;
     }
   }
+  .warning-table {
+    .table-bordered > tbody > tr > td {
+      color: $brand-warning;
+    }
+  }
   .error-table {
     min-height: 46px;
     max-height: 100%;
@@ -262,6 +267,7 @@
   .installStepHead {
     margin-top: rem(15);
     margin-bottom: rem(15);
+    font-weight: bold;
   }
   .installStep {
     margin-bottom: rem(1);

@@ -170,3 +170,15 @@ $features-header-height : 83px;
     @include vr-spacing(pt, 1);
   }
 }
+
+.feature-delete-modal {
+  @include vr-spacing(ph, 2);
+}
+
+.aa-depends-modal {
+  @include vr-spacing(ph, 2);
+  & ul {
+    list-style-type: none;
+    @include vr-spacing(ml, 0);
+  }
+}

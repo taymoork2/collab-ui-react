@@ -16,7 +16,6 @@
       deprovisionConnector: deprovisionConnector,
       getAllProvisionedConnectorTypes: getAllProvisionedConnectorTypes,
       getAll: getAll,
-      getAllNonMediaClusters: getAllNonMediaClusters,
       get: get,
       buildSidepanelConnectorList: buildSidepanelConnectorList,
       setUpgradeSchedule: setUpgradeSchedule,
@@ -31,7 +30,9 @@
       processClustersToSeeIfServiceIsSetup: processClustersToSeeIfServiceIsSetup,
       formatTimeAndDate: formatTimeAndDate,
       labelForTime: labelForTime,
-      labelForDay: labelForDay
+      labelForDay: labelForDay,
+      getStatusForService: getStatusForService,
+      getResourceGroups: getResourceGroups,
     };
 
     return service;
@@ -52,13 +53,40 @@
         .then(sort);
     }
 
-    function getAllNonMediaClusters() {
+    function getResourceGroups() {
       return $http
         .get(UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '?fields=@wide')
-        .then(extractClustersFromResponse)
-        .then(removeMediaClusters)
-        .then(addServicesStatuses)
-        .then(sort);
+        .then(extractData)
+        .then(function (org) {
+          org.clusters = addServicesStatuses(org.clusters);
+          return org;
+        })
+        .then(function (org) {
+          var resourceGroups = _.sortBy(org.resourceGroups, 'name');
+          return {
+            groups: _.map(resourceGroups, function (resourceGroup) {
+              return {
+                id: resourceGroup.id,
+                name: resourceGroup.name,
+                releaseChannel: resourceGroup.releaseChannel,
+                clusters: sort(getClustersForResourceGroup(resourceGroup.id, org.clusters)),
+              };
+            }),
+            unassigned: sort(getUnassignedClusters(org.clusters))
+          };
+        });
+    }
+
+    function getClustersForResourceGroup(id, clusters) {
+      return _.filter(clusters, function (cluster) {
+        return cluster.resourceGroupId === id;
+      });
+    }
+
+    function getUnassignedClusters(clusters) {
+      return _.filter(clusters, function (cluster) {
+        return cluster.resourceGroupId === undefined;
+      });
     }
 
     function setUpgradeSchedule(id, params) {
@@ -88,19 +116,6 @@
 
     function extractDataFromResponse(res) {
       return res.data;
-    }
-
-    function removeMediaClusters(clusters) {
-      return _.filter(clusters, function (cluster) {
-        return cluster.targetType !== 'mf_mgmt';
-      });
-      /*var clustersWithOutMedia = [];
-      _.forEach(clusters, function (cluster) {
-        if (cluster.targetType !== 'mf_mgmt') {
-          clustersWithOutMedia.push(cluster);
-        }
-      });
-      return clustersWithOutMedia;*/
     }
 
     function addServicesStatuses(clusters) {
@@ -268,6 +283,21 @@
         return 'outage';
       }
 
+      // For Hybrid Media we have to handle upgrading scenario differently than expressway
+      if (serviceId === 'squared-fusion-media') {
+        if (_.every(statuses, function (value) {
+          return (value === 'upgrading');
+        })) {
+          return 'outage';
+        }
+
+        if (_.find(statuses, function (value) {
+          return (value === 'upgrading');
+        })) {
+          return 'impaired';
+        }
+      }
+
       // We have an outage if all clusters have their connectors in these states or combinations of them:
       if (_.every(statuses, function (value) {
         return (value === 'unknown' || value === 'stopped' || value === 'disabled' || value === 'offline' || value === 'not_configured' || value === 'not_operational');
@@ -347,5 +377,12 @@
       });
     }
 
+    function getStatusForService(serviceId, clusterList) {
+      return {
+        serviceId: serviceId,
+        setup: processClustersToSeeIfServiceIsSetup(serviceId, clusterList),
+        status: processClustersToAggregateStatusForService(serviceId, clusterList)
+      };
+    }
   }
 })();

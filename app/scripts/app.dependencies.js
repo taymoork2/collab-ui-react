@@ -17,6 +17,7 @@ require('ui-router-extras/release/modular/ct-ui-router-extras.previous.js');
 require('collab-ui-angular/dist/collab-ui.js');
 require('angularjs-toaster/toaster.js');
 require('oclazyload');
+require('dragular/dist/dragular.js');
 
 function requireAll(requireContext) {
   return requireContext.keys().forEach(requireContext);

@@ -4,7 +4,7 @@
     </span>
   </button>
   <div>
-    <h5 class="modal-title" translate="mediaFusion.clusters.deletecluster">
+    <h5 class="modal-title" translate="mediaFusion.clusters.deleteclusterHeadding">
     </h5>
   </div>
 </div>
@@ -35,7 +35,7 @@
     <div ng-show="deleteClust.failedToDelete">
       {{deleteClust.unableToMoveNodes}}
     </div>
-    <div ng-show=" deleteClust.radioModel == '1' && !deleteClust.ngDisable ">
+    <div ng-show="!deleteClust.ngDisable ">
       <p class="selectTheDest" translate="mediaFusion.clusters.selectTheDest"></p>
       <table>
         <tr class="deleteClusterTableHeaderRow">
@@ -43,9 +43,11 @@
           <th translate="mediaFusion.clusters.moveTo"></th>
         </tr>
         <tr class="deleteClusterTableRow" ng-repeat="host in deleteClust.hosts">
-          <td>{{ host.hostname }} </td>
+          <td ng-disabled="deleteClust.radioModel == '2'">{{ host.hostname }} </td>
           <td>
-            <cs-select ng-model="deleteClust.selectModel[host.hostname]" options="deleteClust.options" placeholder="deleteClust.selectPlaceholder" is-warn="{{deleteClust.fillModel[host.hostname]}}">
+            <cs-select ng-hide="deleteClust.radioModel == '2'" ng-model="deleteClust.selectModel[host.hostname]" options="deleteClust.options" placeholder="deleteClust.selectPlaceholder" combo="true">
+            </cs-select>
+            <cs-select ng-hide="deleteClust.radioModel == '1'" is-disabled="deleteClust.radioModel == '2'" ng-model="deleteClust.selectModel[host.hostname]" options="deleteClust.options" placeholder="deleteClust.selectPlaceholder" >
             </cs-select>
           </td>
         </tr>
@@ -70,7 +72,7 @@
 </div>
 <div class="modal-footer">
   <div ng-show=" deleteClust.radioModel == '1' ">
-    <button class="btn btn--primary pull-right" id="convertActionButton" ng-click="deleteClust.continue()" ng-disabled="deleteClust.ngDisable">
+    <button class="btn btn--primary pull-right" id="convertActionButton" ng-click="deleteClust.continue()" ng-disabled="!deleteClust.canContinue()" ng-hide="deleteClust.ngDisable">
       <span ng-hide="saving" translate="mediaFusion.clusters.continue">
     </span>
       <span ng-show="saving">

@@ -7,8 +7,10 @@
   @include vr-spacing(mh, 0.5, 1px, true);
   @include vr-spacing(pb, 10);
   > .row {
-
     @include vr-spacing(pt, 2);
+  }
+  .cs-input, .form-control {
+    width: 50%
   }
   .cs-card.small {
     position: relative;
@@ -33,6 +35,11 @@
   }
   form {
     @include vr-spacing(m, 2);
+    max-width: 70%;
+    input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button { 
+      -webkit-appearance: none; 
+      margin: 0; 
+    }
   }
   label {
     font-size: 1rem;
@@ -81,7 +88,6 @@
   }
 
   #call-park-name {
-    width: 100%;
     margin-bottom: 2rem;
   }
 

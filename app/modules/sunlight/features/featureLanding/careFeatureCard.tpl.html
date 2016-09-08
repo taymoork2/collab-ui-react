@@ -11,9 +11,9 @@
           </div>
         </header>
         <footer class="card-footer">
-          <div class="embed-code-txt h6 left" sq-clipboard="careFeaturesCtrl.generateChatCodeSnippet(careFeature)"><span translate="careChatTpl.copyEmbedCode"></span></div>
+          <div class="embed-code-txt h6 left" sq-clipboard="careFeaturesCtrl.openEmbedCodeModal(careFeature)"><span translate="careChatTpl.downloadEmbedCode"></span></div>
           <div class="right">
-            <a class="icon icon-edit"><span class="sr-only" translate="careChatTpl.editAction"></span></a>
+            <a class="icon icon-edit" ng-click="careFeaturesCtrl.editCareFeature((careFeature))"> <span class="sr-only" translate="careChatTpl.editAction"></span></a>
             <a class="icon icon-trash" ng-click="careFeaturesCtrl.deleteCareFeature(careFeature)"><span class="sr-only" translate="careChatTpl.deleteAction"></span></a>
           </div>
         </footer>

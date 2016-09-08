@@ -23,19 +23,15 @@
     padding-right: 1.5rem;
     padding-top: 1rem;
     padding-bottom: 1rem;
-
     margin-top: 1rem;
     margin-left: -1rem;
-
     display: block;
     min-height: 85vh;
     width: 100%;
     width: calc(100% + 2rem);
-
     .cluster-list.header-bar header:after {
       border-top-color: transparent !important;
     }
-
     h5 {
       margin-bottom: 0;
       margin-left: 0.5rem;
@@ -53,8 +49,7 @@
       .cs-card {
         padding-bottom: 1rem;
         display: block;
-        height: 350px;
-        min-height: 320px;
+        height: auto;
         position: relative;
         .cardLink {
           position: absolute;
@@ -65,7 +60,7 @@
           height: 100%;
         }
         article {
-          height: 100%;
+          min-height: 370px;
         }
         h4 {
           font-size: 1.63rem;
@@ -112,44 +107,28 @@
         }
         footer {
           border-top: 1px solid $gray-light-4;
-          height: 3rem;
-          .status {
-            position: relative;
-            top: 0.9rem;
-            display: block;
+          display: flex;
+          div {
+            width: 100%;
+            justify-content: flex-start;
+            padding-top: rem(12);
+          }
+          .status {    
+            &:focus {
+              box-shadow: none;
+            }
             span {
               color: $gray-base;
-              position: relative;
-              top: -0.2rem;
-              left: 0.1rem;
-            }
-            .icon {
-              font-size: 0.825rem;
-              top: -0.2rem;
             }
           }
-          .danger {
-            color: $color-negative-base;
-          }
-          .success {
-            color: $color-cta-base;
-          }
+         
         }
       }
       .cs-card.header-bar.cta-bar header:after {
         border-top-color: $color-cta-base !important;
       }
-    }
-  }
-}
-
-@media only screen and (max-width: 1200px) {
-  .servicesOverview {
-    .servicesBlock {
-      .cs-card-layout {
-        .cs-card {
-          height: 350px;
-        }
+      .cs-card.header-bar.care-bar header:after {
+        border-top-color: $color-people-base !important;
       }
     }
   }

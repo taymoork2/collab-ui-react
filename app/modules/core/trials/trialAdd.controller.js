@@ -151,12 +151,13 @@
       asyncValidators: {
         uniqueEmail: {
           expression: function ($viewValue, $modelValue, scope) {
-            return $q(function (resolve, reject) {
+            return $q(function (resolve /*, reject*/) {
               validateField($viewValue, scope, 'endCustomerEmail', 'uniqueEmail', 'uniqueEmailError').then(function (valid) {
                 if (valid) {
                   resolve();
                 } else {
-                  reject();
+                  // reject();
+                  resolve(); // TODO: once back end is fixed to allow for some existing users this shold be changed to reject()
                 }
               });
             });
@@ -573,6 +574,7 @@
     }
 
     function finishSetup() {
+      Analytics.trackTrialSteps(Analytics.eventNames.FINISH, $state.current.name, Authinfo.getOrgId());
       $state.go('trialAdd.finishSetup');
     }
 

@@ -6,7 +6,7 @@
     .controller('TrialPstnCtrl', TrialPstnCtrl);
 
   /* @ngInject */
-  function TrialPstnCtrl($scope, $timeout, $translate, Authinfo, Notification, PstnSetupService, TelephoneNumberService, TerminusStateService, TrialPstnService) {
+  function TrialPstnCtrl($scope, $state, $timeout, $translate, Analytics, Authinfo, Notification, PstnSetupService, TelephoneNumberService, TerminusStateService, TrialPstnService) {
     var vm = this;
 
     vm.trialData = TrialPstnService.getData();
@@ -63,7 +63,7 @@
       type: 'select',
       className: 'medium-8',
       templateOptions: {
-        labelfield: 'vendor',
+        labelfield: 'name',
         required: true,
         label: $translate.instant('trialModal.pstn.provider'),
         options: [],
@@ -149,6 +149,7 @@
       type: 'select',
       className: 'medium-4 inline-row left',
       templateOptions: {
+        required: true,
         label: $translate.instant('pstnSetup.areaCode'),
         labelfield: 'code',
         valuefield: 'code',
@@ -190,6 +191,7 @@
     }
 
     function skip(skipped) {
+      Analytics.trackTrialSteps(Analytics.eventNames.SKIP, $state.current.name, Authinfo.getOrgId());
       vm.trialData.enabled = !skipped;
       vm.trialData.skipped = skipped;
       $timeout($scope.trial.nextStep);
@@ -197,6 +199,7 @@
 
     function getStateInventory() {
       vm.areaCodeOptions = [];
+      vm.trialData.details.pstnNumberInfo.areaCode.code = null;
       PstnSetupService.getCarrierInventory(vm.trialData.details.pstnProvider.uuid, vm.trialData.details.pstnNumberInfo.state.abbreviation)
         .then(function (response) {
           _.forEach(response.areaCodes, function (areaCode) {
@@ -204,7 +207,8 @@
               vm.areaCodeOptions.push(areaCode);
             }
           });
-        }).catch(function (response) {
+        })
+        .catch(function (response) {
           Notification.errorResponse(response, 'trialModal.pstn.error.areaCodes');
         });
     }
@@ -223,7 +227,8 @@
             vm.trialData.details.pstnNumberInfo.numbers.push(numberRanges[0][index]);
           }
           $('#didAddField').tokenfield('setTokens', vm.trialData.details.pstnNumberInfo.numbers.toString());
-        }).catch(function (response) {
+        })
+        .catch(function (response) {
           Notification.errorResponse(response, 'trialModal.pstn.error.numbers');
         });
     }
@@ -318,6 +323,7 @@
 
     function _showCarriers(carriers, localScope) {
       _.forEach(carriers, function (carrier) {
+        carrier.displayName = (carrier.displayName || carrier.name);
         localScope.to.options.push(carrier);
       });
       if (localScope.to.options.length === 1) {
@@ -327,11 +333,17 @@
     }
 
     function disableNextButton() {
-      if (!vm.showOrdering && vm.trialData.details.swivelNumbers.length === 0) {
+      if (!checkForInvalidTokens()) {
+        // there are invalid tokens
         return true;
-      } else if (!checkForInvalidTokens()) {
+      } else if (!vm.showOrdering && _.size(vm.trialData.details.swivelNumbers) === 0) {
+        // no swivel numbers entered
+        return true;
+      } else if (vm.showOrdering && _.size(vm.trialData.details.pstnNumberInfo.numbers) === 0) {
+        // no PSTN numbers
         return true;
       } else {
+        // have some valid numbers
         return false;
       }
     }

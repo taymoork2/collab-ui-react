@@ -5,10 +5,11 @@
 
   /* @ngInject */
   function WebExSiteSettingsFact(
-    $q,
     $log,
+    $q,
     $stateParams,
     $translate,
+    Log,
     Authinfo,
     WebExUtilsFact,
     WebExXmlApiFact,
@@ -30,6 +31,7 @@
         var webExSiteSettingsObj = {
           viewReady: false,
           hasLoadError: false,
+          invalidNavUrls: false,
           sessionTicketError: false,
           errMsg: "",
           pageTitle: pageTitle,
@@ -140,7 +142,7 @@
           "siteName=" + siteName + "\n" +
           "pageTitle=" + pageTitle + "\n" +
           "pageTitleFull=" + pageTitleFull;
-        $log.log(logMsg);
+        Log.debug(logMsg);
 
         _this.webExSiteSettingsObj = _this.newWebExSiteSettingsObj(
           siteUrl,
@@ -170,7 +172,7 @@
             var logMsg = "";
 
             logMsg = funcName + ": " + "errId=" + errId;
-            $log.log(logMsg);
+            Log.debug(logMsg);
 
             _this.webExSiteSettingsObj.sessionTicketError = true;
             _this.webExSiteSettingsObj.hasLoadError = true;
@@ -188,11 +190,39 @@
 
         _this.getSiteSettingsInfoXml().then(
           function getSiteSettingsInfoXmlSuccess(getInfoResult) {
-            // var funcName = "getSiteSettingsInfoXmlSuccess()";
-            // var logMsg = "";
+            var funcName = "getSiteSettingsInfoXmlSuccess()";
+            var logMsg = "";
 
-            // logMsg = funcName + ": " + "getInfoResult=" + JSON.stringify(getInfoResult);
-            // $log.log(logMsg);
+            // start of replacing "result" with something we want to test
+            /*
+            var settingPagesInfoXml = '';
+
+            settingPagesInfoXml = settingPagesInfoXml + '<?xml version="1.0" encoding="UTF-8"?><serv:message xmlns:serv="http://www.webex.com/schemas/2002/06/service" xmlns:com="http://www.webex.com/schemas/2002/06/common" xmlns:ns1="http://www.webex.com/schemas/2002/06/service/site" xmlns:event="http://www.webex.com/schemas/2002/06/service/event"><serv:header><serv:response><serv:result>SUCCESS</serv:result><serv:gsbStatus>PRIMARY</serv:gsbStatus></serv:response></serv:header><serv:body><serv:bodyContent xsi:type="ns1:getSiteAdminNavUrlResponse" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">';
+            settingPagesInfoXml = settingPagesInfoXml + '<ns1:siteAdminNavUrl><ns1:type>SiteConfig</ns1:type><ns1:category>EMAIL</ns1:category><ns1:navItemId>send_email_to_all</ns1:navItemId><ns1:url>https://wbxdmz.admin.ciscospark.com/wbxadmin/sendemailtoall.do?proxyfrom=atlas&amp;siteurl=sjsite04</ns1:url></ns1:siteAdminNavUrl>';
+            settingPagesInfoXml = settingPagesInfoXml + '<ns1:siteAdminNavUrl><ns1:type>SiteConfig</ns1:type><ns1:category>CommonSettings</ns1:category><ns1:navItemId>address</ns1:navItemId><ns1:url>https://wbxdmz.admin.ciscospark.com/wbxadmin/address/addressbook.do?proxyfrom=atlas&amp;siteurl=sjsite04&amp;actionFlag=first&amp;currentPageNum=1&amp;index=ALL</ns1:url></ns1:siteAdminNavUrl>';
+            settingPagesInfoXml = settingPagesInfoXml + '<ns1:siteAdminNavUrl><ns1:type>SiteConfig</ns1:type><ns1:category>CommonSettings</ns1:category><ns1:navItemId>cmr</ns1:navItemId><ns1:url>https://wbxdmz.admin.ciscospark.com/wbxadmin/sitesetting.do?proxyfrom=atlas&amp;siteurl=sjsite04#anchor_cmr</ns1:url></ns1:siteAdminNavUrl>';
+            settingPagesInfoXml = settingPagesInfoXml + '<ns1:siteAdminNavUrl><ns1:type>SiteConfig</ns1:type><ns1:category>CommonSettings</ns1:category><ns1:navItemId>common_options</ns1:navItemId><ns1:url>https://wbxdmz.admin.ciscospark.com/wbxadmin/sitesetting.do?proxyfrom=atlas&amp;siteurl=sjsite04#anchor_site_option</ns1:url></ns1:siteAdminNavUrl>';
+            settingPagesInfoXml = settingPagesInfoXml + '<ns1:siteAdminNavUrl><ns1:type>SiteConfig</ns1:type><ns1:category>CommonSettings</ns1:category><ns1:navItemId>disclaimer</ns1:navItemId><ns1:url>https://wbxdmz.admin.ciscospark.com/wbxadmin/disclaimer.do?proxyfrom=atlas&amp;siteurl=sjsite04</ns1:url></ns1:siteAdminNavUrl>';
+            settingPagesInfoXml = settingPagesInfoXml + '<ns1:siteAdminNavUrl><ns1:type>SiteConfig</ns1:type><ns1:category>CommonSettings</ns1:category><ns1:navItemId>mobile</ns1:navItemId><ns1:url>https://wbxdmz.admin.ciscospark.com/wbxadmin/sitesetting.do?proxyfrom=atlas&amp;siteurl=sjsite04#anchor_mobile</ns1:url></ns1:siteAdminNavUrl>';
+            settingPagesInfoXml = settingPagesInfoXml + '<ns1:siteAdminNavUrl><ns1:type>SiteConfig</ns1:type><ns1:category>CommonSettings</ns1:category><ns1:navItemId>navigation</ns1:navItemId><ns1:url>https://wbxdmz.admin.ciscospark.com/wbxadmin/sitesetting.do?proxyfrom=atlas&amp;siteurl=sjsite04#anchor_navigation</ns1:url></ns1:siteAdminNavUrl>';
+            settingPagesInfoXml = settingPagesInfoXml + '<ns1:siteAdminNavUrl><ns1:type>SiteConfig</ns1:type><ns1:category>CommonSettings</ns1:category><ns1:navItemId>productivity</ns1:navItemId><ns1:url>https://wbxdmz.admin.ciscospark.com/wbxadmin/ptools.do?proxyfrom=atlas&amp;siteurl=sjsite04</ns1:url></ns1:siteAdminNavUrl>';
+            settingPagesInfoXml = settingPagesInfoXml + '<ns1:siteAdminNavUrl><ns1:type>SiteConfig</ns1:type><ns1:category>CommonSettings</ns1:category><ns1:navItemId>scheduler</ns1:navItemId><ns1:url>https://wbxdmz.admin.ciscospark.com/wbxadmin/sitesetting.do?proxyfrom=atlas&amp;siteurl=sjsite04#anchor_scheduler</ns1:url></ns1:siteAdminNavUrl>';
+            settingPagesInfoXml = settingPagesInfoXml + '<ns1:siteAdminNavUrl><ns1:type>SiteConfig</ns1:type><ns1:category>CommonSettings</ns1:category><ns1:navItemId>security</ns1:navItemId><ns1:url>https://wbxdmz.admin.ciscospark.com/wbxadmin/sitesetting.do?proxyfrom=atlas&amp;siteurl=sjsite04#anchor_security</ns1:url></ns1:siteAdminNavUrl>';
+            settingPagesInfoXml = settingPagesInfoXml + '<ns1:siteAdminNavUrl><ns1:type>SiteConfig</ns1:type><ns1:category>CommonSettings</ns1:category><ns1:navItemId>session_type</ns1:navItemId><ns1:url>https://wbxdmz.admin.ciscospark.com/wbxadmin/SessionTypeList.do?proxyfrom=atlas&amp;siteurl=sjsite04</ns1:url></ns1:siteAdminNavUrl>';
+            settingPagesInfoXml = settingPagesInfoXml + '<ns1:siteAdminNavUrl><ns1:type>SiteConfig</ns1:type><ns1:category>CommonSettings</ns1:category><ns1:navItemId>user_priv</ns1:navItemId><ns1:url>https://wbxdmz.admin.ciscospark.com/wbxadmin/userPrivilege.do?proxyfrom=atlas&amp;siteurl=sjsite04</ns1:url></ns1:siteAdminNavUrl>';
+            settingPagesInfoXml = settingPagesInfoXml + '<ns1:siteAdminNavUrl><ns1:type>SiteConfig</ns1:type><ns1:category>MC</ns1:category><ns1:navItemId>mc_default_options</ns1:navItemId><ns1:url>https://wbxdmz.admin.ciscospark.com/wbxadmin/meetingcenter/site/mcoption.do?proxyfrom=atlas&amp;siteurl=sjsite04#anchor_mc_default_options</ns1:url></ns1:siteAdminNavUrl>';
+            settingPagesInfoXml = settingPagesInfoXml + '<ns1:siteAdminNavUrl><ns1:type>SiteConfig</ns1:type><ns1:category>MC</ns1:category><ns1:navItemId>mc_navigation_customization</ns1:navItemId><ns1:url>https://wbxdmz.admin.ciscospark.com/wbxadmin/meetingcenter/site/mcoption.do?proxyfrom=atlas&amp;siteurl=sjsite04#anchor_mc_navigation_customization</ns1:url></ns1:siteAdminNavUrl>';
+            settingPagesInfoXml = settingPagesInfoXml + '<ns1:siteAdminNavUrl><ns1:type>SiteConfig</ns1:type><ns1:category>MC</ns1:category><ns1:navItemId>mc_options</ns1:navItemId><ns1:url>https://wbxdmz.admin.ciscospark.com/wbxadmin/meetingcenter/site/mcoption.do?proxyfrom=atlas&amp;siteurl=sjsite04#anchor_mc_options</ns1:url></ns1:siteAdminNavUrl>';
+            settingPagesInfoXml = settingPagesInfoXml + '<ns1:siteAdminNavUrl><ns1:type>SiteConfig</ns1:type><ns1:category>MC</ns1:category><ns1:navItemId>mc_scheduling_templates</ns1:navItemId><ns1:url>https://wbxdmz.admin.ciscospark.com/wbxadmin/meetingcenter/site/mcoption.do?proxyfrom=atlas&amp;siteurl=sjsite04#anchor_mc_scheduling_templates</ns1:url></ns1:siteAdminNavUrl>';
+            settingPagesInfoXml = settingPagesInfoXml + '<ns1:siteAdminNavUrl><ns1:type>SiteConfig</ns1:type><ns1:category>SiteInfo</ns1:category><ns1:navItemId>site_features</ns1:navItemId><ns1:url>https://wbxdmz.admin.ciscospark.com/wbxadmin/homepage.do?proxyfrom=atlas&amp;siteurl=sjsite04#anchor_features</ns1:url></ns1:siteAdminNavUrl>';
+            settingPagesInfoXml = settingPagesInfoXml + '<ns1:siteAdminNavUrl><ns1:type>SiteConfig</ns1:type><ns1:category>SiteInfo</ns1:category><ns1:navItemId>site_info</ns1:navItemId><ns1:url>https://wbxdmz.admin.ciscospark.com/wbxadmin/homepage.do?proxyfrom=atlas&amp;siteurl=sjsite04#anchor_info</ns1:url></ns1:siteAdminNavUrl>';
+            settingPagesInfoXml = settingPagesInfoXml + '</serv:bodyContent></serv:body></serv:message>';
+
+            getInfoResult = {
+              'settingPagesInfoXml': settingPagesInfoXml
+            };
+            */
+            // end of replace
 
             var settingPagesInfo = WebExUtilsFact.validateAdminPagesInfoXmlData(getInfoResult.settingPagesInfoXml);
             _this.webExSiteSettingsObj.settingPagesInfo = settingPagesInfo;
@@ -203,8 +233,22 @@
             ) {
 
               _this.webExSiteSettingsObj.hasLoadError = true;
+            } else if (angular.isUndefined(settingPagesInfo.bodyJson.ns1_siteAdminNavUrl)) {
+              logMsg = funcName + "\n" +
+                "ERROR: ns1_siteAdminNavUrl is undefined" + "\n" +
+                "siteUrl=" + _this.webExSiteSettingsObj.siteUrl;
+              Log.error(logMsg);
+
+              _this.webExSiteSettingsObj.hasLoadError = true;
+              _this.webExSiteSettingsObj.invalidNavUrls = true;
             } else {
-              _this.processSettingPagesInfo(settingPagesInfo);
+              var ns1_siteAdminNavUrl = settingPagesInfo.bodyJson.ns1_siteAdminNavUrl;
+
+              logMsg = funcName + ": " + "ns1_siteAdminNavUrl=" + "\n" +
+                JSON.stringify(ns1_siteAdminNavUrl);
+              $log.log(logMsg);
+
+              _this.processSettingPagesInfo(ns1_siteAdminNavUrl);
               _this.copyFromInfoCategoryToCommonCategory();
               _this.pinPageInCategory();
               _this.updateDisplayInfo();
@@ -217,49 +261,41 @@
             var logMsg = "";
 
             logMsg = funcName + ": " + "getInfoResult=" + JSON.stringify(getInfoResult);
-            $log.log(logMsg);
+            Log.debug(logMsg);
 
             _this.webExSiteSettingsObj.hasLoadError = true;
           } // getSiteSettingsInfoXmlError()
         ); // _this.getSiteSettingsInfoXml().then()
       }, // getSiteSettingsInfo()
 
-      processSettingPagesInfo: function () {
+      processSettingPagesInfo: function (ns1_siteAdminNavUrl) {
         var funcName = "processSettingPagesInfo()";
         var logMsg = "";
 
         var _this = this;
 
-        var siteAdminNavUrls = _this.webExSiteSettingsObj.settingPagesInfo.bodyJson.ns1_siteAdminNavUrl;
+        ns1_siteAdminNavUrl.forEach(function (siteAdminNavUrl) {
+          logMsg = funcName + ": " +
+            "siteAdminNavUrl=" + "\n" +
+            JSON.stringify(siteAdminNavUrl);
+          Log.debug(logMsg);
 
-        logMsg = funcName + ": " + "\n" +
-          "siteAdminNavUrls.length=" + siteAdminNavUrls.length;
-        $log.log(logMsg);
+          var category = siteAdminNavUrl.ns1_category;
+          var pageId = siteAdminNavUrl.ns1_navItemId;
+          var iframeUrl = siteAdminNavUrl.ns1_url;
 
-        siteAdminNavUrls.forEach(
-          function processSiteAdminNavUrl(siteAdminNavUrl) {
-            logMsg = funcName + ": " +
-              "siteAdminNavUrl=" + "\n" +
-              JSON.stringify(siteAdminNavUrl);
-            // $log.log(logMsg);
+          logMsg = funcName + ": " + "\n" +
+            "category=" + category + "\n" +
+            "pageId=" + pageId + "\n" +
+            "iframeUrl=" + iframeUrl;
+          Log.debug(logMsg);
 
-            var category = siteAdminNavUrl.ns1_category;
-            var pageId = siteAdminNavUrl.ns1_navItemId;
-            var iframeUrl = siteAdminNavUrl.ns1_url;
-
-            logMsg = funcName + ": " + "\n" +
-              "category=" + category + "\n" +
-              "pageId=" + pageId + "\n" +
-              "iframeUrl=" + iframeUrl;
-            // $log.log(logMsg);
-
-            _this.addPage(
-              category,
-              pageId,
-              iframeUrl
-            );
-          } // processSiteAdminNavUrl()
-        ); // siteAdminNavUrls.forEach()
+          _this.addPage(
+            category,
+            pageId,
+            iframeUrl
+          );
+        }); // siteAdminNavUrls.forEach()
       }, // processSettingPagesInfo()
 
       copyFromInfoCategoryToCommonCategory: function () {
@@ -342,7 +378,7 @@
         if (null == categoryObj) {
           logMsg = funcName + ": " +
             categoryId + " cannot be processed!!!";
-          $log.log(logMsg);
+          Log.error(logMsg);
         } else {
           var pinPageId = categoryObj.pinPageId;
 

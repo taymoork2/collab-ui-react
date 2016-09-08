@@ -55,6 +55,7 @@
     vm.nonePlaceholder = $translate.instant('directoryNumberPanel.none');
 
     vm.loadInternalNumberPool = loadInternalNumberPool;
+    vm.updateMultipleCalls = updateMultipleCalls;
     vm.loadExternalNumberPool = loadExternalNumberPool;
     vm.saveDisabled = saveDisabled;
     vm.callerIdOptions = [];
@@ -336,7 +337,7 @@
     }
 
     function updateMultipleCalls() {
-      LineSettings.updateSimultaneousCalls(vm.telephonyInfo.currentDirectoryNumber.uuid, vm.currentUser.id, vm.simultaneousModel);
+      LineSettings.updateSimultaneousCalls(vm.telephonyInfo.currentDirectoryNumber.uuid, vm.currentUser.id, vm.simultaneousModel.incomingCallMaximum);
     }
 
     function loadExternalNumberPool(pattern) {
@@ -803,20 +804,11 @@
         vm.cfModel.forwardExternalNABCalls = vm.directoryNumber.callForwardBusy.destination;
       }
 
-      // error case
-      // throw notification when vm is disabled but is not updated in db cfwdynamic and dnfeaturesettings table.
-      if ((vm.telephonyInfo.voicemail === 'Off') && (vm.directoryNumber.callForwardAll.voicemailEnabled === 'true')) {
-        Notification.errorResponse(vm.vmFwdMismatch);
-      }
+      if ((vm.telephonyInfo.voicemail === 'Off') && ((vm.directoryNumber.callForwardAll.voicemailEnabled === 'true') || (vm.directoryNumber.callForwardBusy.intVoiceMailEnabled === 'true') || (vm.directoryNumber.callForwardNoAnswer.intVoiceMailEnabled === 'true') ||
+      (vm.directoryNumber.callForwardBusy.voicemailEnabled === 'true') || (vm.directoryNumber.callForwardNoAnswer.voicemailEnabled === 'true'))) {
+        vm.cfModel.forward = 'none';
 
-      if ((vm.telephonyInfo.voicemail === 'Off') && (vm.directoryNumber.callForwardBusy.intVoiceMailEnabled === 'true' || vm.directoryNumber.callForwardNoAnswer.intVoiceMailEnabled === 'true')) {
-        Notification.errorResponse(vm.vmFwdMismatch);
       }
-
-      if ((vm.telephonyInfo.voicemail === 'Off') && (vm.directoryNumber.callForwardBusy.voicemailEnabled === 'true' || vm.directoryNumber.callForwardNoAnswer.voicemailEnabled === 'true')) {
-        Notification.errorResponse(vm.vmFwdMismatch);
-      }
-
     }
 
     function processCallForward() {

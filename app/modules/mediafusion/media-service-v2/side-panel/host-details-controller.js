@@ -51,7 +51,7 @@
                 return vm.connector;
               }
             },
-            type: 'dialog',
+            type: 'small',
             controller: 'HostDeregisterControllerV2',
             controllerAs: "hostDeregister",
             templateUrl: 'modules/mediafusion/media-service-v2/side-panel/host-deregister-dialog.html'
