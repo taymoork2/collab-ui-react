@@ -42,8 +42,11 @@
 
     var deferred;
 
-    function authorize() {
-      if (deferred) return deferred;
+    function authorize(options) {
+      var reauthorize = _.get(options, 'reauthorize');
+      if (deferred && !reauthorize) {
+        return deferred;
+      }
 
       deferred = httpGET(getAuthorizationUrl())
         .then(replaceOrTweakServices)

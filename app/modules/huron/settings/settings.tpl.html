@@ -21,6 +21,47 @@
       </div>
     </div>
 
+    <!-- local dialing selection -->
+    <div class="cs-form__section" cr-feature-toggle feature-show="huron-local-dialing">
+      <div class="section__info">
+        <h4 class="section__title" translate="serviceSetupModal.dialing"></h4>
+      </div>
+      <div class="section__content">
+        <div class="cs-radio-group" form="settings.form" name="dialingHabit">
+          <input
+            cs-input
+            type="radio"
+            ng-model="settings.model.dialingHabit"
+            name="nationalDialingRadio"
+            id="nationalDialing"
+            value="{{::settings.NATIONAL}}"
+            cs-input-label="{{:: 'serviceSetupModal.nationalDialingTitle' | translate}}"
+            cs-input-help-text="{{:: 'serviceSetupModal.nationalDialingDesc' | translate}}">
+          <input
+            cs-input
+            type="radio"
+            ng-model="settings.model.dialingHabit"
+            id="localDialing"
+            name="localDialingRadio"
+            value="{{::settings.LOCAL}}"
+            cs-input-label="{{:: 'serviceSetupModal.localDialingTitle' | translate}}"
+            cs-input-help-text="{{:: 'serviceSetupModal.localDialingDesc' | translate}}"
+            ng-disabled="!settings.isTerminusCustomer">
+        </div>
+        <div class="row columns indent-area-code" ng-if="settings.isTerminusCustomer">
+          <label class="cs-input__label" for="areacode-input" translate="serviceSetupModal.localDialingNumberTitle"></label>
+          <input
+            warning
+            ng-model="settings.model.regionCode" 
+            id="areacode-input" 
+            class="medium-4 columns text-center" 
+            type="text" 
+            ng-disabled="settings.model.dialingHabit === settings.NATIONAL">
+        </div>
+        <p class="row columns warning terminus-warning indent-area-code" ng-if="!settings.isTerminusCustomer"><i class="icon icon-warning"></i>{{::'serviceSetupModal.warning.localDialing' | translate}}</p>
+      </div>
+    </div>
+
     <!-- extension selection -->
     <div class="cs-form__section">
       <div class="section__info">

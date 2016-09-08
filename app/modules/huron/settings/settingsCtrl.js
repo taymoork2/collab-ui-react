@@ -13,6 +13,9 @@
     var vm = this;
     vm.loading = true;
 
+    vm.NATIONAL = 'national';
+    vm.LOCAL = 'local';
+
     var DEFAULT_SITE_INDEX = '000001';
     var DEFAULT_TZ = {
       id: 'America/Los_Angeles',
@@ -29,6 +32,7 @@
     var INTERNATIONAL_DIALING = 'DIALINGCOSTAG_INTERNATIONAL';
     var COMPANY_CALLER_ID_TYPE = 'Company Caller ID';
     var COMPANY_NUMBER_TYPE = 'Company Number';
+    var DEFAULT_DIAL_HABIT = vm.NATIONAL;
 
     var savedModel = null;
     var errors = [];
@@ -106,10 +110,17 @@
       serviceNumber: undefined,
       serviceNumberWarning: false,
       voicemailTimeZone: undefined,
-      disableExtensions: false
+      disableExtensions: false,
+      dialingHabit: DEFAULT_DIAL_HABIT,
+      regionCode: ''
     };
 
     vm.previousModel = _.cloneDeep(vm.model);
+    vm.isTerminusCustomer = false;
+
+    PstnSetupService.getCustomer(Authinfo.getOrgId()).then(function () {
+      vm.isTerminusCustomer = true;
+    });
 
     vm.validations = {
       greaterThan: function (viewValue, modelValue, scope) {
@@ -1250,19 +1261,40 @@
     }
 
     function loadDialPlan() {
-      return DialPlanService.getCustomerDialPlanDetails(Authinfo.getOrgId()).then(function (response) {
-        if (response.extensionGenerated === 'true') {
+      return DialPlanService.getCustomerVoice(Authinfo.getOrgId()).then(function (response) {
+        if (response.dialPlan === null) {
+          // if customer's dialPlan attribute is defined but null, assume the customer is on the
+          // North American Dial Plan. Look up uuid for NANP and insert it into customer dialPlan.
+          response.dialPlanDetails = {
+            countryCode: "+1",
+            extensionGenerated: "false",
+            steeringDigitRequired: "true",
+            supportSiteCode: "true",
+            supportSiteSteeringDigit: "true"
+          };
+        }
+
+        vm.model.regionCode = vm.previousModel.regionCode = response.regionCode;
+
+        if (response.regionCode === '') {
+          vm.model.dialingHabit = vm.NATIONAL;
+        } else {
+          vm.model.dialingHabit = vm.LOCAL;
+        }
+
+        if (response.dialPlanDetails.extensionGenerated === 'true') {
           vm.hideFieldInternalNumberRange = true;
         } else {
           vm.hideFieldInternalNumberRange = false;
         }
-        if (response.steeringDigitRequired === 'true') {
+        if (response.dialPlanDetails.steeringDigitRequired === 'true') {
           vm.hideFieldSteeringDigit = false;
         } else {
           vm.hideFieldSteeringDigit = true;
         }
-        if (response.countryCode !== null) {
-          vm.customerCountryCode = response.countryCode;
+        if (response.dialPlanDetails.countryCode !== null) {
+          vm.customerCountryCode = response.dialPlanDetails.countryCode;
+          TelephoneNumberService.setCountryCode(response.dialPlanDetails.countryCode);
           vm.generatedVoicemailNumber = ServiceSetup.generateVoiceMailNumber(Authinfo.getOrgId(), vm.customerCountryCode);
         }
       }).catch(function (response) {
@@ -1332,7 +1364,8 @@
         .then(releaseCallerIdNumber)
         .then(saveVoicemailNumber)
         .then(saveCallerId)
-        .then(saveEmergencyCallBack);
+        .then(saveEmergencyCallBack)
+        .then(updateCustomerVoice);
     }
 
     function saveCompanyNumbers() {
@@ -1500,6 +1533,20 @@
       return vm.hasVoicemailService && vm.model.companyVoicemail.companyVoicemailEnabled &&
         _.get(vm, 'voicemailMessageAction.voicemailAction') && _.get(vm, 'voicemailMessageAction.objectId') && _.get(vm, 'voicemailUserTemplate.objectId') &&
         (vm.model.companyVoicemail.voicemailToEmail !== VoicemailMessageAction.isVoicemailToEmailEnabled(vm.voicemailMessageAction.voicemailAction));
+    }
+
+    function updateCustomerVoice() {
+      if (vm.model.dialingHabit === vm.NATIONAL) {
+        vm.model.regionCode = '';
+      }
+      if (vm.model.regionCode !== vm.previousModel.regionCode) {
+        return DialPlanService.updateCustomerVoice(Authinfo.getOrgId(), {
+          regionCode: vm.model.regionCode
+        }).catch(function (error) {
+          errors.push(Notification.processErrorResponse(error, 'serviceSetupModal.error.updateCustomerVoice'));
+          return $q.reject(error);
+        });
+      }
     }
 
     function init() {
@@ -1900,5 +1947,16 @@
       }
     }
 
+    $scope.$watchCollection(function () {
+      return [vm.model.regionCode, vm.model.dialingHabit];
+    }, function () {
+      if (vm.form && vm.model.dialingHabit === vm.LOCAL && vm.model.regionCode === '') {
+        vm.form.localDialingRadio.$setValidity('', false);
+      } else if (vm.form && vm.model.dialingHabit === vm.LOCAL) {
+        vm.form.localDialingRadio.$setValidity('', TelephoneNumberService.isPossibleAreaCode(vm.model.regionCode));
+      } else if (vm.form) {
+        vm.form.localDialingRadio.$setValidity('', true);
+      }
+    });
   }
 })();
