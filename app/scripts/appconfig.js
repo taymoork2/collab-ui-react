@@ -2293,7 +2293,12 @@
             templateUrl: 'modules/hercules/fusion-pages/expressway-settings.html',
             controller: 'ExpresswayClusterSettingsController',
             controllerAs: 'clusterSettings',
-            parent: 'main'
+            parent: 'main',
+            resolve: {
+              hasF237FeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasF237ResourceGroups);
+              }
+            }
           })
           .state('mediafusion-settings', {
             url: '/services/cluster/mediafusion/:id/settings',

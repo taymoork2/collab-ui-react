@@ -12,22 +12,34 @@
       </div>
     </setting-section>
 
-    <setting-section setting="clusterSettings.releasechannel" ng-if="false">
-      <h5 class="sub-section__label" translate="hercules.expresswayClusterSettings.releasechannelUsers"></h5>
-      <cs-select
-        ng-model="clusterSettings.usersSelected"
-        options="clusterSettings.usersOptions"
-        placeholder="clusterSettings.usersPlaceholder"
-        is-disabled="true"
-      >
-      </cs-select>
-      <h5 class="sub-section__label" translate="hercules.expresswayClusterSettings.releasechannelReleasechannel"></h5>
-      <cs-select
-        ng-model="clusterSettings.releasechannelsSelected"
-        options="clusterSettings.releasechannelsOptions"
-        placeholder="clusterSettings.releasechannelsPlaceholder"
-      >
-      </cs-select>
+    <setting-section setting="clusterSettings.resourceGroup" ng-if="clusterSettings.showResourceGroups">
+
+      <h5 class="sub-section__label" translate="hercules.expresswayClusterSettings.resourceGroupsSubHeader" id="RG-section-test"></h5>
+      <p class="sub-section__description" translate="hercules.expresswayClusterSettings.resourcegroupsParagraph"></p>
+
+      <div class="medium-8">
+        <cs-select
+          ng-model="clusterSettings.selectedResourceGroup"
+          options="clusterSettings.resourceGroupOptions"
+          on-change-fn="clusterSettings.showResourceGroupModal()"
+        >
+        </cs-select>
+      </div>
+    </setting-section>
+
+    <setting-section setting="clusterSettings.releasechannel" ng-if="clusterSettings.showResourceGroups">
+
+      <h5 class="sub-section__label" translate="hercules.expresswayClusterSettings.releasechannelSubHeader" id="RC-section-test"></h5>
+      <p class="sub-section__description" translate="hercules.expresswayClusterSettings.releasechannelParagraph"></p>
+      <div class="medium-8">
+        <cs-select
+          ng-model="clusterSettings.releasechannelsSelected"
+          options="clusterSettings.releasechannelsOptions"
+          placeholder="clusterSettings.releasechannelsPlaceholder"
+          is-disabled="true"
+        >
+        </cs-select>
+      </div>
     </setting-section>
 
     <setting-section setting="clusterSettings.deactivateServices">
