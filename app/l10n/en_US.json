@@ -529,6 +529,7 @@
     "saveAs": "Save As",
     "pdf": "PDF",
     "export": "Export",
+    "print": "Print",
     "allCalls": "All Calls",
     "videoCalls": "Video Calls",
     "audioCalls": "Audio Only Calls",
