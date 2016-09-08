@@ -106,6 +106,9 @@
                 template: '<login/>'
               }
             },
+            params: {
+              reauthorize: undefined
+            },
             authenticate: false
           })
           .state('activateUser', {

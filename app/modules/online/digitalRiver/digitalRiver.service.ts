@@ -31,7 +31,3 @@ export class DigitalRiverService {
       });
   }
 }
-
-angular
-  .module('Core')
-  .service('DigitalRiverService', DigitalRiverService);

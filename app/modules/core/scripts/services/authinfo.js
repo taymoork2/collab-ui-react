@@ -35,6 +35,7 @@
       isInitialized: false,
       setupDone: false,
       licenses: [],
+      subscriptions: [],
       messageServices: null,
       conferenceServices: null,
       communicationServices: null,
@@ -136,6 +137,7 @@
           authData.customerType = _.get(customerAccounts, '[0].customerType', '');
           authData.customerId = _.get(customerAccounts, '[0].customerId');
           authData.commerceRelation = _.get(customerAccounts, '[0].commerceRelation', '');
+          authData.subscriptions = _.get(customerAccounts, '[0].subscriptions', []);
 
           for (var x = 0; x < customerAccounts.length; x++) {
 
@@ -248,6 +250,9 @@
       },
       getLicenses: function () {
         return authData.licenses;
+      },
+      getSubscriptions: function () {
+        return authData.subscriptions;
       },
       getMessageServices: function () {
         return authData.messageServices;
