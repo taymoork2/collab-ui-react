@@ -765,7 +765,6 @@ describe('OnboardCtrl: Ctrl', function () {
         spyOn(this.Authinfo, 'hasAccount').and.returnValue(true);
         spyOn(this.Authinfo, 'getCareServices').and.returnValue(this.mock.getCareServices.careLicense);
         this.$httpBackend.expectGET(this.UrlConfig.getSunlightConfigServiceUrl() + '/user' + '/' + userId).respond(200);
-        this.$httpBackend.expectGET(this.UrlConfig.getScimUrl(this.Authinfo.getOrgId()) + '/' + userId).respond(200);
         this.$stateParams.currentUser = {
           licenseID: ['CDC_da652e7d-cd34-4545-8f23-936b74359afd'],
           entitlements: ['cloud-contact-center'],
