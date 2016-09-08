@@ -76,6 +76,8 @@ exports.config = {
   baseUrl: process.env.LAUNCH_URL || 'http://127.0.0.1:8000',
 
   onPrepare: function () {
+    global._ = require('lodash');
+	    
     browser.ignoreSynchronization = true;
 
     global.isProductionBackend = !!args.productionBackend;
@@ -93,13 +95,11 @@ exports.config = {
     global.baseUrl = exports.config.baseUrl;
 
     global.helper = require('./test/api_sanity/test_helper');
-
     global.utils = require('./test/e2e-protractor/utils/test.utils.js');
     global.deleteUtils = require('./test/e2e-protractor/utils/delete.utils.js');
+    global.createUtils = require('./test/e2e-protractor/utils/create.utils.js');
     global.config = require('./test/e2e-protractor/utils/test.config.js');
     global.deleteTrialUtils = require('./test/e2e-protractor/utils/deleteTrial.utils.js');
-
-    global._ = require('lodash');
 
     var Navigation = require('./test/e2e-protractor/pages/navigation.page.js');
     var Notifications = require('./test/e2e-protractor/pages/notifications.page.js');

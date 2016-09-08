@@ -98,6 +98,13 @@ exports.getAutoAttendantsUrl = function (customerUuid) {
   return this.cesUrl.integration + 'customers/' + customerUuid + '/callExperiences';
 };
 
+
+// queue URL
+exports.getAutoAttendantQueueUrl = function (customerUuid) {
+  return this.cesUrl.integration + 'customers/' + customerUuid + '/queues' + '/420f-b49a-ee9db0c7b61c';
+};
+
+
 /* We drive the AA  testing via the AA name, so to delete the test
 schedules created with AA name. we need to fetch all of the schedules for the customer so we can find
 the one (if any) with a matching name.
