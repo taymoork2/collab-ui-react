@@ -1,7 +1,16 @@
 /*****  _telephonyoverview  *****/
 
 directory-number-list > div {
-  height: 12em;
+  max-height: 100%;
   overflow-x: hidden;
   overflow-y: auto;
+}
+
+.line-title-with-warning .section-title-row {
+    @include vr-spacing(pt, 0);
+}
+
+.limit-reach-warning {
+  @include vr-spacing(pl, 0);
+  color: $gray-dark-2;
 }
