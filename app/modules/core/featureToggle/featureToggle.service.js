@@ -65,6 +65,7 @@
       flagMsg: 'flag-msg',
       geoHintEnabled: 'geo-hint-enabled',
       huronAACallQueue: 'huronAACallQueue',
+      huronAAMediaUpload: 'huron-aa-mediaupload',
       huronClassOfService: 'COS',
       huronInternationalDialingTrialOverride: 'huronInternationalDialingTrialOverride',
       huronKEM: 'huronKEM',
