@@ -10,6 +10,7 @@
 
     var service = {
       getCustomerVoice: getCustomerVoice,
+      updateCustomerVoice: updateCustomerVoice,
       getCustomerDialPlanDetails: getCustomerDialPlanDetails,
       getCustomerDialPlanCountryCode: getCustomerDialPlanCountryCode
     };
@@ -22,6 +23,12 @@
         customerId: customerId || Authinfo.getOrgId()
       };
       return CustomerVoiceCmiService.get(queryString).$promise;
+    }
+
+    function updateCustomerVoice(customerId, payload) {
+      return CustomerVoiceCmiService.update({
+        customerId: customerId
+      }, payload).$promise;
     }
 
     function getCustomerDialPlanCountryCode(customerId) {

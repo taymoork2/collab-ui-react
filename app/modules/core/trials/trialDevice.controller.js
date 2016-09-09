@@ -890,7 +890,7 @@
         inputQuantity: {
           expression: vm.validateInputQuantity,
           message: function () {
-            return $translate.instant('trialModal.call.invalidQuantity');
+            return $translate.instant('trialModal.call.invalidQuantity', { max: maxRoomSystems });
           }
         },
         roomSystemsQuantity: {
@@ -902,7 +902,7 @@
         totalQuantity: {
           expression: vm.validateTotalQuantity,
           message: function () {
-            return $translate.instant('trialModal.call.invalidTotalQuantity');
+            return $translate.instant('trialModal.call.invalidTotalQuantity', { max: vm.maxTotalDevices });
           }
         }
       };
@@ -913,19 +913,19 @@
         inputQuantity: {
           expression: vm.validateInputQuantity,
           message: function () {
-            return $translate.instant('trialModal.call.invalidQuantity');
+            return $translate.instant('trialModal.call.invalidQuantity', { max: vm.maxCallDevices });
           }
         },
         phonesQuantity: {
           expression: vm.validatePhonesQuantity,
           message: function () {
-            return $translate.instant('trialModal.call.invalidPhonesQuantity');
+            return $translate.instant('trialModal.call.invalidPhonesQuantity', { max: vm.maxCallDevices });
           }
         },
         totalQuantity: {
           expression: vm.validateTotalQuantity,
           message: function () {
-            return $translate.instant('trialModal.call.invalidTotalQuantity');
+            return $translate.instant('trialModal.call.invalidTotalQuantity', { max: vm.maxTotalDevices });
           }
         }
       };

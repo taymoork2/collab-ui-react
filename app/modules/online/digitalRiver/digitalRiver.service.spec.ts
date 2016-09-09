@@ -1,6 +1,8 @@
+import digitalRiverModule from './index';
+
 describe('Service: DigitalRiverService', () => {
   beforeEach(function () {
-    this.initModules('Core');
+    this.initModules(digitalRiverModule);
     this.injectDependencies(
       '$httpBackend',
       'DigitalRiverService',
