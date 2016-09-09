@@ -506,7 +506,7 @@
       validators: {
         phoneNumber: {
           expression: function ($viewValue, $modelValue) {
-            return ValidationService.phoneAny($viewValue, $modelValue, vm.selectedCountryCode);
+            return ValidationService.phoneAny($viewValue, $modelValue);
           },
           message: function () {
             return $translate.instant('common.invalidPhoneNumber');

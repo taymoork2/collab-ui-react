@@ -2825,7 +2825,7 @@
       "invalidQuantity": "Quantity must be between 1 and {{max}}",
       "invalidTotalQuantity": "Entire order must have between 1 and {{max}} devices",
       "invalidRoomSystemsQuantity": "Limited to 3 Spark Collaboration Devices",
-      "invalidPhonesQuantity": "Limited to 5 Personal & Shared Desk Phones",
+      "invalidPhonesQuantity": "Limited to {{max}} Personal & Shared Desk Phones",
       "shippingInfo": "Shipping Information",
       "address": "John Q. Partner\n555 Main St.\nSan Francisco, CA 43211",
       "recipient": "Where will the devices be shipped?",
