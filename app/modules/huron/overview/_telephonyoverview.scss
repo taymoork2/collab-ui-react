@@ -1,7 +1,7 @@
 /*****  _telephonyoverview  *****/
 
 directory-number-list > div {
-  max-height: 100%;
+  max-height:  vr-adjust(200);
   overflow-x: hidden;
   overflow-y: auto;
 }
