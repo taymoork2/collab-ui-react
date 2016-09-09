@@ -6,7 +6,7 @@
     .controller('DevicesCtrlHuron', DevicesCtrlHuron);
 
   /* @ngInject */
-  function DevicesCtrlHuron($scope, $state, $stateParams, OtpService, Config, CsdmHuronUserDeviceService) {
+  function DevicesCtrlHuron($scope, $state, $stateParams, OtpService, Config, CsdmHuronUserDeviceService, CsdmCodeService, WizardFactory) {
     var vm = this;
     vm.devices = {};
     vm.otps = [];
@@ -39,6 +39,32 @@
         currentDevice: device,
         huronDeviceService: vm.csdmHuronUserDeviceService
       });
+    };
+
+    vm.resetCode = function (obj) {
+      vm.resettingCode = true;
+      var displayName = obj.currentUser.displayName;
+      CsdmCodeService.createCode(displayName)
+        .then(function (result) {
+          var wizardState = {
+            data: {
+              function: "showCode",
+              deviceType: "cloudberry",
+              deviceName: result.displayName,
+              expiryTime: result.friendlyExpiryTime,
+              activationCode: result.activationCode
+            },
+            history: [],
+            currentStateName: 'addDeviceFlow.showActivationCode',
+            wizardState: {
+              'addDeviceFlow.showActivationCode': {}
+            }
+          };
+          var wizard = WizardFactory.create(wizardState);
+          $state.go('addDeviceFlow.showActivationCode', {
+            wizard: wizard
+          });
+        });
     };
 
     function activate() {

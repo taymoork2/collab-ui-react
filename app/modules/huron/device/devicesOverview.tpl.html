@@ -3,8 +3,9 @@
     <div class="generate-activation-code" translate="usersPreview.generateActivationCodeText"></div>
     <div class="generate-activation-code" translate="usersPreview.generateActivationCodeDesc"></div>
     <button class="btn btn--people btn-center"
-            ui-sref="generateauthcode({currentUser: ucDevices.currentUser, activationCode: 'new'})"
+            ng-click="ucDevices.resetCode({currentUser: ucDevices.currentUser, activationCode: 'new'})"
             translate="usersPreview.generateActivationCode"></button>
+
   </div>
 </div>
 
@@ -13,7 +14,7 @@
     <li class="feature" ng-repeat="device in ucDevices.devices">
       <a ng-click="ucDevices.showDeviceDetails(device)">
         <i class="icon icon-circle status-indicator" ng-class="device.cssColorClass"></i>
-        <span class="feature-name">{{device.product}}</span> <span class="feature-status" ng-if="device.kem.length > 0">{{ :: 'deviceOverviewPage.kemAbbreviation' | translate }}: {{device.kem.length}}</span>
+        <span class="feature-name">{{device.product}}</span> <span class="feature-status" ng-if="device.addOnModuleCount > 0">{{ :: 'deviceOverviewPage.kemAbbreviation' | translate }}: {{device.addOnModuleCount}}</span>
         <i class="feature-arrow"></i>
       </a>
     </li>
