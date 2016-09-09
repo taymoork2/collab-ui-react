@@ -25,10 +25,7 @@
     }
 
     vm.reachedMaxLines = function () {
-      if (_.has(vm.telephonyInfo.directoryNumbers, 'length')) {
-        return (vm.telephonyInfo.directoryNumbers.length >= 25);
-      }
-      return false;
+      return _.get(vm.telephonyInfo, 'directoryNumbers.length', 0) >= 25;
     };
 
     function init() {
