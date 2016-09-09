@@ -1,13 +1,8 @@
 <div class="iframe-container" ng-if="mcpSubscription.isOnline">
-  <iframe
-    load-event
-    loading="mcpSubscription.loading"
-    ng-hide="mcpSubscription.loading"
-    ng-src="{{mcpSubscription.digitalRiverSubscriptionsUrl}}">
-  </iframe>
-  <div class="grid-refresh" ng-if="mcpSubscription.loading">
-    <i class='icon icon-spinner icon-2x'></i>
-  </div>
+  <digital-river-iframe
+    iframe-src="mcpSubscription.digitalRiverSubscriptionsUrl"
+    iframe-loading="mcpSubscription.loading">
+  </digital-river-iframe>
 </div>
 <div class="subscriptions-container" ng-if="!mcpSubscription.isOnline">
   <cr-trial-notice-banner ng-if="!mcpSubscription.isOnline || mcpSubscription.trialUrlFailed"></cr-trial-notice-banner>
