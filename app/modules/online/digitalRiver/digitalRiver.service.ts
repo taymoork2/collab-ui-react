@@ -1,4 +1,4 @@
-const DIGITAL_RIVER_URL = 'https://drhadmin-cte.digitalriver.com/store/ciscoctg/en_US/';
+const DIGITAL_RIVER_URL = 'https://buy.ciscospark.com/store/ciscoctg/en_US/';
 
 export class DigitalRiverService {
 
