@@ -134,10 +134,14 @@ set -x
 # shellcheck disable=SC2086
 if [ "${no_parallel}" = "true" ]; then
     karma start $shim_file_args $pass_through_opts
+    exit_status=$?
 else
-    parallel karma start $pass_through_opts ::: $shim_file_args
+    parallel_job_log=$(mktemp "$temp_dir/parallel_job_log.XXXXX")
+    parallel --joblog $parallel_job_log karma start $pass_through_opts ::: $shim_file_args
+    exit_status=$?
+    echo "INFO: parallel job log for ktest:"
+    cat "$parallel_job_log" || :
 fi
-exit_status=$?
 set +x
 popd > /dev/null
 

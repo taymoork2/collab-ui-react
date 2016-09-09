@@ -137,9 +137,11 @@ set +e
 
 
 # webpack must complete before running e2e tests
+set -x
 wait "$webpack_pid"
 read webpack_exit_code < ./.cache/webpack_exit_code
 [ "$webpack_exit_code" -eq 0 ] || exit "$webpack_exit_code"
+set +x
 
 
 # e2e tests
