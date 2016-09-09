@@ -5072,6 +5072,8 @@
     "software": "Software",
     "serial": "Serial",
     "macAddress": "MAC Address",
+    "deviceId": "Device ID",
+    "placeId": "Place ID",
     "badOrgSearchInput": "Enter at least three characters.",
     "unknown": "Unknown",
     "showMore": "Show more results",
