@@ -245,6 +245,19 @@
       });
     }
 
+    function getOrgSiteInfo(orgId) {
+      return $http
+        .get(HuronConfig.getCmiUrl() + '/voice/customers/' + orgId + '/sites/')
+        .then(extractData);
+    }
+
+    function getTenantInfo(orgId) {
+      return $http
+        .get(HuronConfig.getCmiUrl() + '/voice/customers/' + orgId)
+        .then(extractData);
+    }
+
+
     function extractData(res) {
       return res.data;
     }
@@ -329,7 +342,9 @@
       setOwnerAndDeviceDetails: setOwnerAndDeviceDetails,
       getNumber: getNumber,
       findDevicesMatchingNumber: findDevicesMatchingNumber,
-      sanitizeNumberSearchInput: sanitizeNumberSearchInput
+      sanitizeNumberSearchInput: sanitizeNumberSearchInput,
+      getOrgSiteInfo: getOrgSiteInfo,
+      getTenantInfo: getTenantInfo
     };
   }
 
