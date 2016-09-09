@@ -707,6 +707,9 @@
           })
           .state('my-company.subscriptions', {
             url: '/my-company/subscriptions',
+            onEnter: /* @ngInject */ function (OnlineAnalyticsService) {
+              OnlineAnalyticsService.track(OnlineAnalyticsService.MY_COMPANY_SUBSCRIPTIONS);
+            },
             views: {
               'tabContent': {
                 controllerAs: 'mcpSubscription',
@@ -722,6 +725,9 @@
           })
           .state('my-company.info', {
             url: '/my-company',
+            onEnter: /* @ngInject */ function (OnlineAnalyticsService) {
+              OnlineAnalyticsService.track(OnlineAnalyticsService.MY_COMPANY_INFO);
+            },
             views: {
               'tabContent': {
                 controllerAs: 'mcpInfo',
@@ -732,6 +738,9 @@
           })
           .state('my-company.orders', {
             url: '/my-company/orders',
+            onEnter: /* @ngInject */ function (OnlineAnalyticsService) {
+              OnlineAnalyticsService.track(OnlineAnalyticsService.MY_COMPANY_ORDER_HISTORY);
+            },
             views: {
               'tabContent': {
                 template: '<my-company-orders></my-company-orders>'
