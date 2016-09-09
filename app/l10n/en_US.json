@@ -154,7 +154,7 @@
       "typeInstructions": "Select a method to upload and/or modify users and the services they use.",
       "manualLabel": "Manually add or modify users",
       "manualDetails": "All you need are email addresses to add and/or edit up to {{maxUsersInManual}} users.",
-      "bulkLabel": "Bulk upload or modify users using CSV",
+      "bulkLabel": "Export and import users with a CSV file",
       "bulkDetails": "Best method for adding and editing up to {{maxUsersInCSV}} users at the same time.",
       "advancedLabel": "Enable directory synchronization",
       "advancedDetails": "Synchronize users from Active Directory"
@@ -178,7 +178,7 @@
       "typeInstructions": "Select a method to modify users and the services they use.",
       "manualLabel": "Manually modify users",
       "manualDetails": "All you need are email addresses to edit up to {{maxUsersInManual}} users.",
-      "bulkLabel": "Bulk modify users using CSV",
+      "bulkLabel": "Export and modify users with a CSV file",
       "bulkDetails": "Best method for editing up to {{maxUsersInCSV}} users at the same time.",
       "advancedLabel": "Modify all synchronized users",
       "advancedDetails": "Add new licenses to all users."
@@ -1193,21 +1193,29 @@
     "externalNumberDescriptionText": "Select a number that users can call to check their voicemail from outside the company network.",
     "voicemailPrefixTitle": "Voicemail Access Prefix",
     "voicemailPrefixDesc": "Select a prefix to reserve for dialing mailboxes other than your own personal phone. This number also makes up the user’s external voicemail access code. We do not recommend using numbers between {{number}}{{extensionLength0}} and {{number}}{{extensionLength9}}",
-     "error": {
-       "siteSteering": "First digit of Voicemail Access Prefix conflicts with the selected Outbound Dial Digit.",
-       "outboundDialDigit": "Outbound Dial Digit conflicts with the first digit of the Voicemail Access Prefix.",
-       "autoAttendantPost": "Failed to save Auto Attendant Site information.",
-       "updateVoicemailPostalCode": "Failed to update Voicemail Postal Code."
-     },
-     "warning": {
-       "siteSteering": "First digit of Voicemail Access Prefix conflicts with the first digit of an internal extension range. If you use this prefix, it may cause a delay when dialing extensions starting with the same number.",
-        "outboundDialDigit": "Outbound Dial Digit conflicts with the first digit of an internal extension range. If you use this digit, it may cause a delay when dialing extensions starting with the same number."
-     },
-     "saveModal": {
-       "title": "Dial Plan Settings",
-       "message1": "Are you sure you want to change your dial plan settings?",
-       "message2": "Changing dial plan settings during business hours can take a few minutes to propagate through the system and prevent users from placing calls during that time."
-     }
+    "dialing": "Dialing",
+    "nationalDialingTitle": "National Dialing",
+    "nationalDialingDesc": "Require the user to dial the full phone number for each PSTN call.",
+    "localDialingTitle": "Local Dialing",
+    "localDialingDesc": "Auto-prepend a country code and area code to phone calls for simplified local dialing. Not recommended for locations with multiple area codes.",
+    "localDialingNumberTitle": "Prepended Area Code",
+    "error": {
+      "siteSteering": "First digit of Voicemail Access Prefix conflicts with the selected Outbound Dial Digit.",
+      "outboundDialDigit": "Outbound Dial Digit conflicts with the first digit of the Voicemail Access Prefix.",
+      "autoAttendantPost": "Failed to save Auto Attendant Site information.",
+      "updateVoicemailPostalCode": "Failed to update Voicemail Postal Code.",
+      "updateCustomerVoice": "Customer voice plan failed to update."
+    },
+    "warning": {
+      "siteSteering": "First digit of Voicemail Access Prefix conflicts with the first digit of an internal extension range. If you use this prefix, it may cause a delay when dialing extensions starting with the same number.",
+      "outboundDialDigit": "Outbound Dial Digit conflicts with the first digit of an internal extension range. If you use this digit, it may cause a delay when dialing extensions starting with the same number.",
+      "localDialing": "To use local dialing, you must setup your PSTN service. Contact your partner admin to begin PSTN service setup."
+    },
+    "saveModal": {
+      "title": "Dial Plan Settings",
+      "message1": "Are you sure you want to change your dial plan settings?",
+      "message2": "Changing dial plan settings during business hours can take a few minutes to propagate through the system and prevent users from placing calls during that time."
+    }
   },
   "dirsyncModal": {
     "chooseSync": "Choose Sync",
@@ -2801,7 +2809,7 @@
       "phone8841": "8841",
       "phone7841": "7841",
       "quantity": "Quantity",
-      "invalidQuantity": "Quantity must be between 1 and 5",
+      "invalidQuantity": "Quantity must be between 1 and {{max}}",
       "invalidTotalQuantity": "Entire order must have between 1 and {{max}} devices",
       "invalidRoomSystemsQuantity": "Limited to 3 Spark Collaboration Devices",
       "invalidPhonesQuantity": "Limited to 5 Personal & Shared Desk Phones",
@@ -3160,6 +3168,7 @@
   },
   "addDeviceWizard": {
     "newDevice": "New Device",
+    "newCode": "New Code",
     "chooseDeviceType": {
       "deviceType": "What kind of device do you want to set up?",
       "deviceTypeInstructions": "A new device requires a unique activation code to be input during setup. What kind of device do you want to activate?",
@@ -4933,6 +4942,14 @@
       "SD": "Spark Shared Devices",
       "SB": "Cisco Spark Board 55"
     }
+  },
+  "onlineUpgradeModal": {
+    "title": "Account Expired",
+    "body": "Your admin account has been suspended because your subscription has lapsed. To regain access to the Cloud Collaboration Management portal you can buy a subscription.",
+    "cancelBody": "Alternately you can use the free version of Cisco Spark which does not come with the Cloud Collaboration Management portal.",
+    "cancelButton": "Use free Cisco Spark",
+    "cancelError": "An error has occurred while canceling your subscription.",
+    "cancelSuccess": "You now have a free Cisco Spark account."
   },
   "myCompanyOrders": {
     "numberHeader": "Order Number",

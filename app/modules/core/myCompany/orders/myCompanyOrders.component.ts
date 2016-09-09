@@ -1,5 +1,5 @@
 import { IOrderDetail, MyCompanyOrdersService } from './myCompanyOrders.service';
-import { DigitalRiverService } from '../digitalRiver/digitalRiver.service';
+import { DigitalRiverService } from '../../../online/digitalRiver/digitalRiver.service';
 
 class MyCompanyOrdersCtrl {
 

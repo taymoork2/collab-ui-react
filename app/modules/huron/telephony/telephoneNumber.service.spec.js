@@ -70,4 +70,18 @@ describe('Service: TelephoneNumberService', function () {
     expect(TelephoneNumberService.isTollFreeNumber(tollFreeNumber)).toEqual(true);
   });
 
+  it('should identify possible US area codes', function () {
+    expect(TelephoneNumberService.isPossibleAreaCode('9')).toEqual(false);
+    expect(TelephoneNumberService.isPossibleAreaCode('97')).toEqual(false);
+    expect(TelephoneNumberService.isPossibleAreaCode('972')).toEqual(true);
+  });
+
+  it('should identify possible au area codes', function () {
+    TelephoneNumberService.setCountryCode('61');
+    expect(TelephoneNumberService.isPossibleAreaCode('9')).toEqual(false);
+    expect(TelephoneNumberService.isPossibleAreaCode('7')).toEqual(true);
+    expect(TelephoneNumberService.isPossibleAreaCode('5')).toEqual(true);
+    expect(TelephoneNumberService.isPossibleAreaCode('3')).toEqual(true);
+  });
+
 });
