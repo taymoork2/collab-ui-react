@@ -86,7 +86,7 @@
         .then(function removeHybridMediaClustersIfNecessary(response) {
           if (!hasMediaFeatureToggle) {
             var filterHMClusters = function (clusters) {
-              _.filter(clusters, function (cluster) {
+              return _.filter(clusters, function (cluster) {
                 return cluster.targetType !== 'mf_mgmt';
               });
             };
