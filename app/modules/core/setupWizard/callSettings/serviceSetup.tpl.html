@@ -5,6 +5,40 @@
 <form name="squaredUcSetup.form" novalidate  ng-if="!squaredUcSetup.processing">
   <div class="container-fluid service-setup-container">
     <formly-form model="squaredUcSetup.model" fields="squaredUcSetup.ftswTimeZoneSelection" form="squaredUcSetup.form"></formly-form>
+    <div class="row bottom-margin" cr-feature-toggle feature-show="huron-local-dialing">
+      <h5 class="title-margin-bottom" translate="serviceSetupModal.dialing"></h5>
+      <div class="cs-radio-group columns medium-8">
+        <input
+          cs-input
+          type="radio"
+          ng-model="squaredUcSetup.model.dialingHabit"
+          id="nationalDialing"
+          name="ftswNationalDialingRadio"
+          value="{{::squaredUcSetup.NATIONAL}}"
+          cs-input-label="{{:: 'serviceSetupModal.nationalDialingTitle' | translate}}"
+          cs-input-help-text="{{:: 'serviceSetupModal.nationalDialingDesc' | translate}}">
+        <input
+          cs-input
+          type="radio"
+          ng-model="squaredUcSetup.model.dialingHabit"
+          id="localDialing"
+          name="ftswLocalDialingRadio"
+          value="{{::squaredUcSetup.LOCAL}}"
+          cs-input-label="{{:: 'serviceSetupModal.localDialingTitle' | translate}}"
+          cs-input-help-text="{{:: 'serviceSetupModal.localDialingDesc' | translate}}"
+          ng-disabled="!squaredUcSetup.isTerminusCustomer">
+      </div>
+      <div class="medium-12 columns indent-area-code" ng-if="squaredUcSetup.isTerminusCustomer">
+        <label class="cs-input__label" for="areacode-input">{{:: 'serviceSetupModal.localDialingNumberTitle' | translate}}</label>
+        <input
+          ng-model="squaredUcSetup.model.regionCode" 
+          id="areacode-input" 
+          class="medium-2 columns text-center" 
+          type="text" 
+          ng-disabled="squaredUcSetup.model.dialingHabit === squaredUcSetup.NATIONAL">
+      </div>
+      <p class="row columns warning terminus-warning indent-area-code" ng-if="!squaredUcSetup.isTerminusCustomer"><i class="icon icon-warning"></i>{{::'serviceSetupModal.warning.localDialing' | translate}}</p>
+    </div>
     <formly-form model="squaredUcSetup.model" fields="squaredUcSetup.ftswExtensionLengthSelection" form="squaredUcSetup.form"></formly-form>
     <formly-form model="squaredUcSetup.model" fields="squaredUcSetup.ftswExtensionRangeSelection" form="squaredUcSetup.form"></formly-form>
     <div cr-feature-toggle feature-show="huron-site-dial-digit">

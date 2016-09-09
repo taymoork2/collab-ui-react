@@ -55,10 +55,14 @@ describe('Controller: HuronSettingsCtrl', function () {
     spyOn(ServiceSetup, 'saveAutoAttendantSite').and.returnValue($q.when());
     spyOn(ServiceSetup, 'updateVoicemailPostalcode').and.returnValue($q.when());
     spyOn(ExternalNumberService, 'refreshNumbers').and.returnValue($q.when());
-    spyOn(DialPlanService, 'getCustomerDialPlanDetails').and.returnValue($q.when({
-      extensionGenerated: 'false',
-      countryCode: '+91'
+    spyOn(PstnSetupService, 'getCustomer').and.returnValue($q.when());
+    spyOn(DialPlanService, 'getCustomerVoice').and.returnValue($q.when({
+      dialPlanDetails: {
+        extensionGenerated: 'false',
+        countryCode: '+1'
+      }
     }));
+    spyOn(DialPlanService, 'updateCustomerVoice').and.returnValue($q.when());
     spyOn(ServiceSetup, 'listSites').and.callFake(function () {
       ServiceSetup.sites = sites;
       return $q.when();
@@ -907,6 +911,24 @@ describe('Controller: HuronSettingsCtrl', function () {
         expect(ServiceSetup.updateVoicemailPostalcode).not.toHaveBeenCalled();
       });
     });
+
+    describe('dailing habits', function () {
+      it('should not call DialPlanService when dailing habit is not changed', function () {
+        controller.model.regionCode = '';
+        controller.previousModel.regionCode = '';
+        controller.save();
+        $scope.$apply();
+        expect(DialPlanService.updateCustomerVoice).not.toHaveBeenCalled();
+      });
+
+      it('should call DialPlanService when dailing habit is changed', function () {
+        controller.model.regionCode = '214';
+        controller.previousModel.regionCode = '';
+        controller.save();
+        $scope.$apply();
+        expect(DialPlanService.updateCustomerVoice).toHaveBeenCalled();
+      });
+    });
   });
 
   describe('VoiceMail update when OptionalVmDid Featuretoggle is ON', function () {
@@ -1045,7 +1067,7 @@ describe('Controller: HuronSettingsCtrl', function () {
       controller.model.companyVoicemail.externalVoicemail = false;
       controller.model.site.voicemailPilotNumber = undefined;
       $scope.$apply();
-      expect(controller.customerCountryCode).toEqual('+91');
+      expect(controller.customerCountryCode).toEqual('+1');
       expect(ServiceSetup.generateVoiceMailNumber).toHaveBeenCalled();
     });
 

@@ -19,12 +19,17 @@
       if (result) {
         deviceOverview.isKEMAvailable = KemService.isKEMAvailable(deviceOverview.currentDevice.product);
         if (deviceOverview.isKEMAvailable) {
-          if (!_.has(deviceOverview.currentDevice, 'kem')) {
+          CmiKemService.getKEM(deviceOverview.currentDevice.huronId).then(
+            function (data) {
+              deviceOverview.currentDevice.kem = data;
+
+              deviceOverview.kemNumber = KemService.getKemOption(deviceOverview.currentDevice.kem.length);
+              deviceOverview.kemOptions = KemService.getOptionList(deviceOverview.currentDevice.product);
+            }
+          ).catch(function () {
             deviceOverview.currentDevice.kem = [];
             deviceOverview.isError = true;
-          }
-          deviceOverview.kemNumber = KemService.getKemOption(deviceOverview.currentDevice.kem.length);
-          deviceOverview.kemOptions = KemService.getOptionList(deviceOverview.currentDevice.product);
+          });
         }
       }
     });
@@ -163,17 +168,14 @@
     deviceOverview.resetCode = function () {
       deviceOverview.resettingCode = true;
       var displayName = deviceOverview.currentDevice.displayName;
-      CsdmCodeService.deleteCode(deviceOverview.currentDevice);
-      $state.sidepanel.close();
-      CsdmCodeService.createCode(displayName)
-        .then(function (result) {
+      CsdmCodeService.deleteCode(deviceOverview.currentDevice)
+        .then(function () {
           var wizardState = {
             data: {
               function: "showCode",
               deviceType: "cloudberry",
-              deviceName: result.displayName,
-              expiryTime: result.friendlyExpiryTime,
-              activationCode: result.activationCode
+              deviceName: displayName,
+              title: "addDeviceWizard.newCode"
             },
             history: [],
             currentStateName: 'addDeviceFlow.showActivationCode',
@@ -186,6 +188,7 @@
             wizard: wizard
           });
         });
+      $state.sidepanel.close();
     };
 
     deviceOverview.showRemoteSupportDialog = function () {

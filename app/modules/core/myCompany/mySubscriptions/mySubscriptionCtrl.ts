@@ -1,4 +1,4 @@
-import { DigitalRiverService } from '../digitalRiver/digitalRiver.service';
+import { DigitalRiverService } from '../../../online/digitalRiver/digitalRiver.service';
 
 const baseCategory = {
   label: undefined,
@@ -266,12 +266,6 @@ class MySubscriptionCtrl {
           this.broadcastSingleSubscription(this.subscriptionDetails[0], undefined);
         }
       });
-
-      if (this.isOnline && this.subscriptionDetails.length > 1) {
-        this.$timeout(() => {
-          bmmp.init(null, null, this.Authinfo.getOrgId(), 'atlas', this.$translate.use(), null, this.UrlConfig.getBmmpUrl());
-        }, 300);
-      }
     });
   };
 

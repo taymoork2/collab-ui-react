@@ -584,9 +584,8 @@
             var managed = PartnerService.loadRetrievedDataToList(orgList, false,
               $scope.isCareEnabled);
             var isMyOrgInList = _.some(orgList, {
-              customerName: Authinfo.getOrgName()
+              customerOrgId: Authinfo.getOrgId()
             });
-
             if (!isMyOrgInList && results[1]) {
               // 4/11/2016 admolla
               // TODO: for some reason if I refactor this to not need an array, karma acts up....
