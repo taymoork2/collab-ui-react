@@ -1,4 +1,3 @@
-<!--<header><h4 translate="overview.cards.users.title"></h4></header>-->
 <header>
   <div class="overview-header">
   <i class="icon" ng-class="card.icon"></i>
@@ -6,13 +5,19 @@
   </div>
 </header>
 <section>
-  <!--<h4>{{(card.usersToConvert | number) || 'N/A'}}</h4>-->
   <div class="convert-block">
     <div class="convert-text">
-      <span class="convert-nr">{{(card.usersToConvert | number) || 'N/A'}}</span>&nbsp;
-      <span translate="overview.cards.users.convertText" id="convertText"></span>
+      <div ng-if="!card.showLicenseCard">
+        <span class="convert-nr">{{(card.usersToConvert | number) || 'N/A'}}</span>&nbsp;
+        <span translate="overview.cards.users.convertText" id="convertText"></span>
+      </div>
+      <div ng-if="card.showLicenseCard">
+        <span>{{card.text}}</span>
+      </div>
     </div>
-    <button id="convertButton" class="btn btn--cta" translate="overview.cards.users.convertButton" ng-click="card.openConvertModal()" ng-disabled="!card.usersToConvert">
+    <button ng-if="!card.showLicenseCard" id="convertButton" class="btn btn--cta" translate="overview.cards.users.convertButton" ng-click="card.openConvertModal()" ng-disabled="!card.usersToConvert">
+    </button>
+    <button ng-if="card.showLicenseCard" id="convertButton" class="btn btn--people" translate="overview.cards.licenses.manageUsersButton" ng-click="card.manageUsers()">
     </button>
   </div>
   <div class="status-block">

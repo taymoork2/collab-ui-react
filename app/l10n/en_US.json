@@ -4866,6 +4866,11 @@
           "squared-fusion-mgmt": "Management",
           "squared-fusion-media": "Media"
         }
+      },
+      "licenses": {
+        "title": "Licenses",
+        "text": "You have {{number}} {{licenseType}} Licenses that you have not assigned to anyone",
+        "manageUsersButton": "Manage Users"
       }
     }
   },
