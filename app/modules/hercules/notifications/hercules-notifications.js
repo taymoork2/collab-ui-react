@@ -46,6 +46,10 @@
       $state.go('call-service.settings');
     };
 
+    vm.locatedinCallSettings = function () {
+      return $state.is('call-service.settings');
+    };
+
     vm.navigateToCurrentServiceSettings = function () {
       vm.showNotifications = false;
       $state.go($state.current.name.split('.')[0] + '.settings');
