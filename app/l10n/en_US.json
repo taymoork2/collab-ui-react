@@ -4,19 +4,35 @@
     "dashboard": "Dashboard",
     "incidents": "Incidents",
     "components": "Components",
-    "addComponents": "Add A Component",
-    "componentName": "Component Name",
-    "componentDesc": "Description (optional)",
-    "componentGroup": "Component Group",
-    "nameCannotBeBlank": "Name can't be blank",
-    "createNewComponentGroup": "Create new component group",
-    "createComponent": "Create Component",
-    "componentInfo": "Component Info",
+    "addStatusPage": "Add Another Page",
     "editAction": "Edit",
     "deleteAction": "Delete",
     "update": "Update",
     "deleteWarning": "WARNING! Deleting a component cannot be undone. All associated data will be deleted as well. Please be absolutely sure this is what you want. <br /> Type DELETE in the box below for final confirmation, then hit the delete button.",
-    "permanentlyDelete": "Permanently DELETE {{componentName}}"
+    "permanentlyDelete": "Permanently DELETE {{componentName}}",
+    "componentsPage": {
+      "listing": {
+        "noComponentHeading": "No Component Added",
+        "noComponentText": "Click the ADD botton to get started."
+      },
+      "addComponent": {
+        "title": "Add A Component",
+        "componentName": "Component Name",
+        "componentDesc": "Description (optional)",
+        "componentDesc-placeholder": "Frontend application and API servers",
+        "componentGroup": "Component Group",
+        "nameCannotBeBlank": "Name can't be blank",
+        "createNewComponentGroup": "Create new component group",
+        "createComponent": "Create Component",
+        "componentInfo": "Component Info",
+        "groupName": "Group name",
+        "cancelCreateNewGroup": "Cancel new group creation"
+      },
+      "delComponent":{
+        "delComponentBtn": "PERMANENTLY DELETE {{}}",
+        "delTips": "<p><em>WARNING! </em> <strong>Deleting a component cannot be undone. </strong> All associated data will be deleted as well. Please be absolutely sure this is what you want.</p><p>Type <em>DELETE </em> in the box below for final confirmation, then hit the delete button.</p>"
+      }
+    }
   },
   "loginPage": {
     "title": "Cloud Collaboration Management",

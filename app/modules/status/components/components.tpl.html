@@ -1,6 +1,37 @@
-<div>
-	<h3>{{componentsCtrl.title}}</h3>
-	<ul>
-		<li ng-repeat="component in componentsCtrl.components | orderBy">{{component}}</li>
-	</ul>
+<div class="status-components">
+
+  <cs-page-sub-header>
+    <cs-page-sub-header-left>
+        {{comp.title}}
+    </cs-page-sub-header-left>
+    <cs-page-sub-header-right>
+      <button class="btn btn--people add-resource-button" type="submit"
+              translate="statusPage.componentsPage.addComponent.title"
+              ng-click="comp.addComponent()"></button>
+    </cs-page-sub-header-right>
+  </cs-page-sub-header>
+
+  <div ng-if="comp.components.length" class="status-components-list  small-12 large-10 xlarge-8">
+    <div ng-repeat="component in comp.components | orderBy: 'position'">
+      <span class="icon icon-circle componentStatus-{{component.status}}"></span>
+      {{component.componentName}}
+      <a translate="statusPage.deleteAction"></a>
+      <a translate="statusPage.editAction"></a>
+      <ul>
+        <li ng-repeat="subComponent in component.components">
+          <span class="icon icon-circle componentStatus-{{subComponent.status}}"></span>
+          {{subComponent.componentName}}
+          <a translate="statusPage.deleteAction" ng-click="comp.delComponent(subComponent)"></a>
+          <a translate="statusPage.editAction"></a>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div ng-if="!comp.components.length">
+    <div class="centered-info-pane">
+      <h3 translate="{{'statusPage.componentsPage.listing.noComponentHeading'}}"></h3>
+      <p translate="{{'statusPage.componentsPage.listing.noComponentText'}}"></p>
+    </div>
+  </div>
 </div>

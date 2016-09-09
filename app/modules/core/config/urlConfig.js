@@ -158,7 +158,12 @@
       integration: 'https://bmmp.dmz.ciscospark.com/api/v1',
       prod: 'https://bmmp.ciscospark.com/api/v1'
     },
-
+    StatusUrl: {
+      dev: 'https://dataservicesbts.webex.com/status',
+      cfe: 'https://dataservicesbts.webex.com/status',
+      integration: 'https://dataservicesbts.webex.com/status',
+      prod: 'https://dataservices.webex.com/status'
+    },
     // urls same for all environments
 
     ProdAdminServiceUrl: 'https://atlas-a.wbx2.com/admin/api/v1/',

@@ -614,25 +614,6 @@
               }
             }
           })
-          .state('status', {
-            url: '/status',
-            templateUrl: 'modules/status/dashboard/dashboard.tpl.html',
-            controller: 'DashboardCtrl',
-            controllerAs: 'dashboardCtrl',
-            parent: 'main',
-            resolve: {
-              hasFeatureToggle: function (FeatureToggleService) {
-                return FeatureToggleService.supports(FeatureToggleService.features.globalStatus);
-              }
-            }
-          })
-          /*.state('status', {
-           url: '/status-conponents',
-           templateUrl: 'modules/status/components/components.tpl.html',
-           controller: 'ComponentsCtrl',
-           controllerAs: 'componentsCtrl',
-           parent: 'main'
-           })*/
           .state('authentication.enable3rdPartyAuth', {
             parent: 'modal',
             views: {
@@ -2749,6 +2730,24 @@
               deleteFeatureId: null,
               deleteFeatureType: null
             }
+          })
+          .state('status', {
+            url: '/status',
+            templateUrl: 'modules/status/statusPage.html',
+            controller: 'statusPageCtrl',
+            controllerAs: 'status',
+            parent: 'main',
+            resolve: {
+              hasFeatureToggle: function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.globalStatus);
+              }
+            }
+          })
+          .state('status.components', {
+            url: '/components',
+            templateUrl: 'modules/status/components/components.tpl.html',
+            controller: 'componentsCtrl',
+            controllerAs: 'comp'
           })
           .state('status.incidents', {
             url: '/incidents',
