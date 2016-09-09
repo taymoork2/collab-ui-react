@@ -2,7 +2,7 @@
   'use strict';
   angular.module('Mediafusion').service('MetricsGraphService', MetricsGraphService);
   /* @ngInject */
-  function MetricsGraphService($translate, CommonMetricsGraphService, chartColors) {
+  function MetricsGraphService($translate, CommonMetricsGraphService, chartColors, $window) {
     // Keys for base variables in CommonMetricsGraphService
     var COLUMN = 'column';
     var AXIS = 'axis';
@@ -47,8 +47,18 @@
             'label': $translate.instant('reportsPage.saveAs'),
             'title': $translate.instant('reportsPage.saveAs'),
             'class': 'export-list',
-            'menu': ['PNG', 'JPG', 'PDF']
-          }, 'PRINT', {
+            'menu': ['PNG', 'JPG']
+          }, {
+            'label': $translate.instant('reportsPage.print'),
+            'title': $translate.instant('reportsPage.print'),
+            click: function () {
+              this.capture({}, function () {
+                this.toPDF({}, function (data) {
+                  $window.open(data, 'amCharts.pdf');
+                });
+              });
+            }
+          }, {
             'class': 'export-list',
             'label': $translate.instant('reportsPage.export'),
             'title': $translate.instant('reportsPage.export'),
@@ -324,14 +334,15 @@
         return;
       }
       var valueAxis = createValueAxis(data);
-      var exportFields = ['task', 'startTime', 'endTime', 'category'];
+      var exportFields = ['availability', 'nodes', 'startTime', 'endTime', 'category', 'task'];
       var columnNames = {};
       if (cluster === 'All Clusters') {
         columnNames = {
-          'task': 'Availability',
+          'availability': 'Availability',
           'startTime': 'Start Time',
           'endTime': 'End Time',
-          'category': 'Cluster'
+          'category': 'Cluster',
+          'nodes': 'Nodes'
         };
       } else {
         columnNames = {

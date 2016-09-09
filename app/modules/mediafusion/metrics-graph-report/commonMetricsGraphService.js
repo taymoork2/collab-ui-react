@@ -189,7 +189,7 @@
         'brightnessStep': 0,
         'graph': {
           'fillAlphas': 1,
-          'balloonText': '<b>[[task]]</b>'
+          'balloonText': '<b>[[availability]]</b></br><b>[[nodes]]</b>'
         },
         'rotate': true,
         'categoryField': 'category',

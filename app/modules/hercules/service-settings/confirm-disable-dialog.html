@@ -1,23 +1,27 @@
-<div class="modal-header">
+<div class="modal-header deregister-expressway-modal">
   <div class="modal-title"><span translate="common.deactivate"></span> <span translate="hercules.serviceNames.{{disableConfirmDialog.serviceId}}"></span></div>
 </div>
-<div class="modal-body hercules-fix-paragraphs">
-  <p translate="hercules.settings.call.disableConfirmDialogText1"></p>
+<div class="modal-body hercules-fix-paragraphs deregister-expressway-modal">
+  <p translate="hercules.settings.call.deactivateServiceOpening"></p>
   <p>
-    <i class="{{disableConfirmDialog.serviceIconClass}} icon-2x" style="vertical-align: middle;"></i>
-    <span translate="hercules.serviceNames.{{disableConfirmDialog.serviceId}}"></span>
+    <i class="{{disableConfirmDialog.serviceIconClass}} icon-2x serviceicon"></i>
+    <strong translate="hercules.serviceNames.{{disableConfirmDialog.serviceId}}" class="serviceicon"></strong>
   </p>
-  <p translate="hercules.settings.call.disableConfirmDialogText2"></p>
+
+  <p translate="hercules.settings.call.fromCiscoSpark"
+      translate-values="{orgName: disableConfirmDialog.companyName}"></p>
+
   <p>
-    <ul>
-      <li translate="hercules.settings.call.disableConfirmDialogText3"></li>
-      <li translate="hercules.settings.call.disableConfirmDialogText4"></li>
-      <li translate="hercules.settings.call.disableConfirmDialogText5"></li>
-    </ul>
+    <span translate="hercules.settings.call.connectorsAndDataWillBeWiped"
+     translate-values="{connectorName: disableConfirmDialog.connectorName}"></span>
+    <span translate="hercules.settings.call.usersWillBeDisentitled"
+       translate-values="{serviceName: disableConfirmDialog.serviceName}"></span>
   </p>
-  <p translate="hercules.settings.call.disableConfirmDialogText6"></p>
+
+  <p translate="hercules.settings.call.noClustersWillBeDeregistered"></p>
+
 </div>
-<div class="modal-footer">
+<div class="modal-footer deregister-expressway-modal">
   <button ng-click="disableConfirmDialog.cancel()" class="btn" translate="common.cancel"></button>
-  <button ng-click="disableConfirmDialog.ok()" class="btn btn--alert fix-alert-margins" translate="common.confirm"></button>
+  <button ng-click="disableConfirmDialog.ok()" class="btn btn--alert fix-alert-margins" translate="hercules.deactivateServiceSingleCluster.confirmButton"></button>
 </div>

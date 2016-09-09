@@ -8,7 +8,7 @@ describe('Controller: CustomerListCtrl', function () {
   var partnerService = getJSONFixture('core/json/partner/partner.service.json');
   var managedOrgsResponse = partnerService.managedOrgsResponse;
   var trialsResponse = partnerService.trialsResponse;
-  var orgId = 1;
+  var orgId = '1';
   var orgName = 'testOrg';
   var testOrg = {
     customerOrgId: '1234-34534-afdagfg-425345-afaf',
