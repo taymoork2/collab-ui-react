@@ -11,6 +11,7 @@
     var AXIS = 'axis';
     var LEGEND = 'legend';
     var NUMFORMAT = 'numFormat';
+    var CURSOR = 'cursor';
 
     // variables for the active users section
     var activeUserDiv = 'activeUsersdiv';
@@ -242,13 +243,7 @@
 
       var chartData = CommonGraphService.getBaseSerialGraph(data, startDuration, valueAxes, populationGraphs(data), 'customerName', catAxis);
       chartData.marginBottom = 60;
-      chartData.chartCursor = {
-        "cursorAlpha": 0,
-        "categoryBalloonEnabled": false,
-        "oneBalloonOnly": true,
-        "balloonPointerOrientation": "vertical",
-        "showNextAvailable": true
-      };
+      chartData.chartCursor = CommonGraphService.getBaseVariable[CURSOR];
 
       return AmCharts.makeChart(activePopDiv, chartData);
     }

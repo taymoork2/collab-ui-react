@@ -580,6 +580,7 @@
   "activeUsers": {
     "active": "Active",
     "activeUsers": "Active Users",
+    "allUsers": "All Users",
     "overallActiveUserGraphError": "There was an error while loading detailed active user data.",
     "activeUserTableError": "There was an error while loading most active user data for the selected customer(s).",
     "mostActiveError": "There was an error while loading the data for Most Active Users.",
