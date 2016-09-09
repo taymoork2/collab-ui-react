@@ -3068,7 +3068,8 @@
     "trialAccountsFilter": "Trial Accounts ({{count}})",
     "activeAccountsFilter": "Purchased Accounts ({{count}})",
     "expiredAccountsFilter": "Expired Accounts ({{count}})",
-    "subscriptions": "Subscription Info",
+    "orderRequest": "Order Request",
+    "subscriptions": "Subscriptions",
     "viewSubscriptionInfo": "View Subscription Info"
   },
   "customerAdminPanel": {
@@ -3085,12 +3086,16 @@
     "tooManyResultsError": "Search returned too many results. Be more specific to find user"
   },
   "customerSubscriptions": {
-    "customerInfo": "Customer Info",
+    "customerAdmin": "Customer Admin",
+    "subscriptionInfo": "{{name}} Subscription Info",
     "partnerAdmin": "Partner Admins",
     "webexSubscriptions": "Webex Subscriptions",
     "noWebexSubscriptions": "No Webex Subscriptions",
-    "emailSubscriptionInfo": "Email Subscription Info",
-    "emailSubscriptionInfoDetail": "Send subscription info to another contact using your email client. You can also copy the subscription into your clipboard."
+    "orderRequest": "Order Request",
+    "sendOrderRequest": "Send Order Request",
+    "copyToClipboard": "Copy to Clipboard",
+    "emailSubscriptionInfoDetail1": "Use the customer subscription information on this page to begin a trial conversion or place additional orders for Cisco Spark Services.",
+    "emailSubscriptionInfoDetail2":"To begin a trial conversion or place an order, send an order request using your email client. You can also copy the customer subscription info to your clipboard."
   },
   "didAddModal": {
     "title": "Add Phone Numbers (Optional)"

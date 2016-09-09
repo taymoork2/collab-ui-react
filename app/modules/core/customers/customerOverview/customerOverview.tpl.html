@@ -26,22 +26,6 @@
     <button id="launchPartner" class="btn btn--people" translate="customerPage.myOrgButton">
     </button>
   </a>
-  <cs-sp-section ng-if = "customerOverview.isUpdateStatusEnabled" class="customer-subscriptions-overview">
-    <div class="section-title-row">
-      <span class="section-name" translate="customerPage.subscriptions"></span>
-    </div>
-    <div class="feature-list">
-      <ul>
-        <li class="feature">
-          <a ui-sref="customer-overview.customerSubscriptions">
-            <span class="feature-name" translate="customerPage.viewSubscriptionInfo"></span>
-            <span class="feature-status">
-              <i class="feature-arrow"></i>
-            </a>
-          </li>
-        </ul>
-      </div>
-    </cs-sp-section>
     <cs-sp-section ng-if="customerOverview.currentCustomer.trialId">
       <div class="section-title-row">
         <span class="section-name" translate="customerPage.trial"></span>
@@ -69,13 +53,26 @@
         </div>
       </div>
       <div class="feature-list trials-list">
-        <ul ng-if="customerOverview.offer.trialServices">
-          <li class="feature" ng-repeat="trialService in customerOverview.currentCustomer.offer.trialServices">
-            <div class="feature-name">
-              <i class="icon  feature-icon" ng-class="trialService.icon"></i>
-              {{::trialService.name }}
+        <ul ng-if="customerOverview.offer.trialServices" ng-class="{'has-subviews': customerOverview.hasSubviews(customerOverview.offer.trialServices)}">
+          <li ng-repeat="trialService in customerOverview.currentCustomer.offer.trialServices">
+            <div class= "feature" ng-if="!customerOverview.hasSubview(trialService)">
+              <div class="feature-name">
+                <i class="icon  feature-icon" ng-class="trialService.icon"></i>
+                {{::trialService.name }}
+              </div>
+              <div class="feature-details">{{trialService.qty}}&nbsp;{{::'common.quantity' | translate | uppercase}}
+              </div>
             </div>
-            <div class="feature-details">{{trialService.qty}}&nbsp;{{::'common.quantity' | translate | uppercase}}
+            <div class="feature feature-with-subview" ng-if="customerOverview.hasSubview(trialService)">
+              <a ng-click="customerOverview.goToSubview(trialService)" >
+                <div class="feature-name">
+                  <i class="icon feature-icon" ng-class="trialService.icon"></i>
+                  {{::trialService.name }}
+                </div>
+                <div class="feature-details">{{trialService.qty}}&nbsp;{{::'common.quantity' | translate | uppercase}}
+                </div>
+                <i class="feature-arrow"></i>
+              </a>
             </div>
           </li>
         </ul>
@@ -87,28 +84,43 @@
         <span class="section-name" translate="customerPage.services"></span>
       </div>
       <div class="feature-list services-list" >
-        <ul ng-class="{'has-meeting': customerOverview.hasMeeting}">
+        <ul ng-class="{'has-subviews': customerOverview.hasSubviews(customerOverview.freeOrPaidServices)}">
           <!-- services -->
           <li ng-repeat = "service in customerOverview.freeOrPaidServices">
-            <div class="feature" ng-if="service.isMeeting"  id="meeting">
-              <a ui-sref="customer-overview.meetingDetail({meetingLicenses: service.sub})" >
+            <div class="feature" ng-if="!customerOverview.hasSubview(service)">
+              <div class="feature-name"><i class="icon feature-icon" ng-class="service.icon"></i>{{:: service.name}}</div>
+              <div class="feature-details" ng-show="!service.free">{{service.qty}}&nbsp;{{::'common.quantity' | translate | uppercase}}</div>
+              <div class="feature-details" ng-show="service.free">{{::'customerPage.free' | translate | uppercase}}</div>
+            </div>
+            <div class="feature feature-with-subview" ng-if="customerOverview.hasSubview(service)">
+              <a ng-click="customerOverview.goToSubview(service)">
                 <div class="feature-name"><i class="icon feature-icon {{service.icon}}"></i>{{::service.name}}</div>
                 <div class="feature-status">{{service.qty}} &nbsp;{{::'common.quantity' | translate | uppercase}}</div>
                 <i class="feature-arrow"></i>
               </a>
             </div>
-            <div class="feature" ng-if="!service.isMeeting">
-              <div class="feature-name"><i class="icon feature-icon" ng-class="service.icon"></i>{{:: service.name}}</div>
-              <div class="feature-details" ng-show="!service.free">{{service.qty}}&nbsp;{{::'common.quantity' | translate | uppercase}}</div>
-              <div class="feature-details" ng-show="service.free">{{::'customerPage.free' | translate | uppercase}}</div>
-            </div>
           </li>
         </ul>
       </div>
     </cs-sp-section>
+    <cs-sp-section ng-if = "customerOverview.isUpdateStatusEnabled" class="customer-subscriptions-overview">
+      <div class="section-title-row">
+        <span class="section-name" translate="customerPage.subscriptions"></span>
+      </div>
+      <div class="feature-list">
+        <ul>
+          <li class="feature">
+            <a ui-sref="customer-overview.customerSubscriptions">
+              <span class="feature-name" translate="customerPage.orderRequest"></span>
+              <span class="feature-status"></span>
+                <i class="feature-arrow"></i>
+              </a>
+            </li>
+          </ul>
+        </div>
+    </cs-sp-section>
     <trial-webex-overview ng-if="!customerOverview.newCustomerViewToggle"></trial-webex-overview>
-    <customer-webex-overview ng-if= "customerOverview.newCustomerViewToggle"></customer-webex-overview>
-    <uc-external-number-overview ng-if="customerOverview.isSquaredUC"></uc-external-number-overview>
+    <uc-external-number-overview ng-if="customerOverview.isSquaredUC && !customerOverview.newCustomerViewToggle"></uc-external-number-overview>
     <cs-sp-section>
       <div class="section-title-row">
         <span class="section-name" translate="customerPage.branding"></span>

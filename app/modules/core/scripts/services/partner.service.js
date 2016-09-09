@@ -113,6 +113,7 @@
       licenseMapping[Config.licenseTypes.COMMUNICATION] = {
         name: $translate.instant('trials.call'),
         icon: 'icon-circle-call',
+        isCall: true,
         order: 3
       };
 
@@ -142,7 +143,7 @@
 
       }, {
         licenseType: Config.licenseTypes.CONFERENCING,
-        name: $translate.instant('trials.meeting'),
+        name: $translate.instant('customerPage.meeting'),
         icon: 'icon-circle-group',
         code: Config.offerCodes.CF,
         qty: 0,
@@ -155,6 +156,7 @@
         code: Config.offerCodes.CO,
         qty: 0,
         free: true,
+        isCall: true,
         order: 22
       }];
       return freeServices;
@@ -623,13 +625,15 @@
           case Config.offerTypes.squaredUC:
             partial.isSquaredUcOffer = true;
             trialService = userServiceMapping[Config.licenseTypes.COMMUNICATION];
+            trialService.isCall = true;
             break;
           case Config.offerTypes.webex:
           case Config.offerTypes.meetings:
             conferenceServices.push({
               name: $translate.instant('customerPage.EE'),
               order: 1,
-              qty: offerInfo.licenseCount
+              qty: offerInfo.licenseCount,
+              isWebex: true
             });
             break;
           case Config.offerTypes.meeting:
@@ -664,7 +668,8 @@
         .value()
         .join(', ');
         var licenseQty = conferenceServices[0].qty;
-        trialServices.push({ name: name, qty: licenseQty, icon: 'icon-circle-group', order: 1 });
+        var hasWebex = _.some(conferenceServices, { 'isWebex': true });
+        trialServices.push({ name: name, qty: licenseQty, icon: 'icon-circle-group', order: 1, 'hasWebex': hasWebex });
       }
 
       partial.offer.trialServices = _.chain(trialServices).sortBy('order').uniq().value();

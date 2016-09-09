@@ -59,26 +59,54 @@
   }
 
   .services-list, .trials-list {
-    ul.has-meeting {
+    ul.has-subviews {
       padding-right: 20px;
-      #meeting {
+      .feature.feature-with-subview {
         .feature-details {
           padding-right: 10px;
         }
         .feature-arrow {
           margin-right: -23px;
         }
-        .feature-icon:before {
+        .feature-icon.icon-circle-group:before {
           content: "\E068";
         }
+        .feature-icon.icon-circle-message:before {
+          content: "\E070";
+        }
+        .feature-icon.icon-circle-call:before {
+          content: "\E057";
+        }
+        .feature-icon.icon-circle-telepresence:before {
+          content: "\E078";
+        }
+        .feature-icon.icon-circle-contact-centre:before {
+          content: "\E062";
+        }
+
+
       }
     }
-
     i.feature-icon {
       display: inline-block;
       vertical-align: middle;
       margin-right: 7px;
       font-size: 1.25rem;
+    }
+  }
+
+  .external-number-detail {
+    .external-number-overview {
+      .section-title-row {
+        display: none;
+      }
+      #external-number-add {
+        display: block;
+        text-align: center;
+        padding-bottom: 0.875rem;
+        border-bottom: 1px solid #D7D7D8;
+        color: #6A6B6C;
+      }
     }
   }
 
@@ -110,6 +138,30 @@
     }
   }
 
+  .subscriptions-detail {
+    .button-container {
+      position: static;
+      background-color: transparent;
+      padding: 0;
+      border: none;
+    }
+
+    p.intro {
+      padding-bottom: 0.75rem;
+    }
+
+    h6 {
+      font-size: 0.75rem;
+    }
+    .feature-list li {
+      padding-bottom: 0.75rem;
+
+      ul li {
+        padding-bottom: 0;
+      }
+    }
+  }
+
   .btn--delete {
     font-size: .875rem;
     color:  $gray-light-1;
@@ -119,4 +171,7 @@
       outline: none;
     }
   }
+
+
+
 }
