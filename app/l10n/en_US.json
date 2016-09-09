@@ -1667,7 +1667,7 @@
       },
       "calendar": {
         "title": "Enable Calendar Service for Users",
-        "navigateToUsers": "Go to <a ng-click=\"{{onclick}}\">User connectHeadingand Group Management</a> to enable Calendar Service for your users."
+        "navigateToUsers": "Go to <a ng-click=\"{{onclick}}\">User and Group Management</a> to enable Calendar Service for your users."
       },
       "connect": {
         "title": "Enable Call Service Connect for Users",
