@@ -5,16 +5,10 @@
 			<span ng-class="incidentWithMsg.impact">{{incidentWithMsg.incidentName}}</span><a ng-show="showEdit" ng-click="showIncidentName=false">Edit</a>
 		</div>
 		<div class="editIncidentName" ng-hide="showIncidentName">
-			<input type="text" ng-model="incidentWithMsg.incidentName"/>
-			<select ng-model="incidentWithMsg.impact">
-				<option value="none">Override impact to None</option>
-				<option value="minor">Override impact to Minor</option>
-				<option value="major">Override impact to Major</option>
-				<option value="critical">Override impact to Critical</option>
-				<option value="maintenance">Override impact to Maintenance</option>
-			</select>
+			<input type="text" class="cs-input" ng-model="incidentWithMsg.incidentName"/>
+			<cs-select class="impactStatuses" ng-model="selectedImpactStatus" options="impactStatuses"></cs-select>
 			<input class="btn btn--primary" type="button" value="SAVE" ng-click="modifyIncident()">
-			<a ng-click="cancleModifyIncident()">Cancel</a>
+			<a class="cancleModifyIncident" ng-click="cancleModifyIncident()">Cancel</a>
 		</div>
 	</div>
 
@@ -22,11 +16,43 @@
 
 		<div class="incidentStatus">
 			<h3>Incident Status</h3>
-			<div>
-				<label><input ng-click="toOperational=false" type="radio" ng-model="incidentWithMsg.status" value="investigating">Investigating</label>
-				<label><input ng-click="toOperational=false" type="radio" ng-model="incidentWithMsg.status" value="identified">Identified</label>
-				<label><input ng-click="toOperational=false" type="radio" ng-model="incidentWithMsg.status" value="monitoring">Monitoring</label>
-				<label><input ng-click="toOperational=true" type="radio" ng-model="incidentWithMsg.status" value="resolved">Resolved</label>
+			<div class="cs-radio-group">
+				<input
+	        cs-input
+	        type="radio"
+	        ng-model="incidentWithMsg.status"
+	        id="individualRadio1"
+	        name="individualRadio"
+	        value="investigating"
+	        ng-click="toOperational=false"
+	        cs-input-label="Investigating">
+	      <input
+	        cs-input
+	        type="radio"
+	        ng-model="model"
+	        id="individualRadio2"
+	        name="individualRadio"
+	        value="identified"
+	        ng-click="toOperational=false"
+	        cs-input-label="Identified">
+	      <input
+	        cs-input
+	        type="radio"
+	        ng-model="incidentWithMsg.status"
+	        id="individualRadio3"
+	        name="individualRadio"
+	        value="monitoring"
+	        ng-click="toOperational=false"
+	        cs-input-label="Monitoring">
+	      <input
+	        cs-input
+	        type="radio"
+	        ng-model="incidentWithMsg.status"
+	        id="individualRadio4"
+	        name="individualRadio"
+	        value="resolved"
+	        ng-click="toOperational=true"
+	        cs-input-label="Resolved">
 			</div>
 			<div ng-model="toOperational" ng-init="toOperational=false" ng-show="toOperational">
 				<p ng-if="showOperational">
@@ -52,26 +78,18 @@
 						<i class="icon icon-chevron-right" ng-click="componentVisible=true" ng-hide="componentVisible"></i>
 						<i class="icon icon-chevron-down" ng-click="componentVisible=false" ng-show="componentVisible"></i>
 						<span class="componentName">{{componentGroup.componentName}}</span>
-						<span class="isOverridden" ng-hide="componentGroup.isOverridden" ng-click="getOverriddenComponent(componentGroup)">overriddes</span>
-						<span class="isOverridden" ng-show="componentGroup.isOverridden" ng-click="componentGroup.isOverridden=false">hide</span>
-						<select ng-model="componentGroup.status" ng-disabled="componentGroup.isOverridden">
-							<option value="operational">Operational</option>
-							<option value="under_maintenance">Under Maintenance</option>
-							<option value="degraded_performance">Degraded Performance</option>
-							<option value="partial_outage">Partial Outage</option>
-							<option value="major_outage">Major Outage</option>
-						</select>
+						<span class="isOverridden" ng-hide="componentGroup.isOverridden" ng-click="getOverriddenComponent(componentGroup)">Overrid this status</span>
+						<span class="isOverridden" ng-show="componentGroup.isOverridden" ng-click="componentGroup.isOverridden=false">Use derived status</span>
+
+						<cs-select class="componentSelect" ng-model="componentGroup.statusObj" options="componentStatuses" is-disabled="componentGroup.isOverridden" on-change-fn="setSelectedStatus(componentGroup)"></cs-select>
+
 					</div>
 					<div ng-repeat="component in componentGroup.components" ng-show="componentVisible">
 						<div class="component">
 							<span>{{component.componentName}}</span>
-							<select ng-model="component.status" ng-change="getChildStatus(component,componentGroup)">
-								<option value="under_maintenance">Under Maintenance</option>
-								<option value="degraded_performance">Degraded Performance</option>
-								<option value="partial_outage">Partial Outage</option>
-								<option value="major_outage">Major Outage</option>
-								<option value="operational">Operational</option>
-							</select>
+
+							<cs-select class="componentSelect" ng-model="component.statusObj" options="componentStatuses" on-change-fn="getChildStatus(component,componentGroup)"></cs-select>
+
 						</div>
 					</div>
 				</div>

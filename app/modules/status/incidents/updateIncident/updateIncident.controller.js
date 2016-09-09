@@ -6,6 +6,40 @@
     $scope.showOperational = true;
     var originComponentsTree = [];
     var originIncidentName, originImpact;
+    $scope.impactStatuses = [{ label: 'Override impact to None', value: 'none' }, { label: 'Override impact to Minor', value: 'minor' }, { label: 'Override impact to Major', value: 'major' }, { label: 'Override impact to Critical', value: 'critical' }, { label: 'Override impact to Maintenance', value: 'maintenance' }];
+    $scope.componentStatuses = [{ label: 'Operational', value: 'operational' }, { label: 'Degraded Performance', value: 'degraded_performance' }, { label: 'Partial Outage', value: 'partial_outage' }, { label: 'Major Outage', value: 'major_outage' }, { label: 'Under Maintenance', value: 'under_maintenance' }];
+    function getComponentStatusObj(status) {
+      switch (status) {
+        case "operational":
+          return ($scope.componentStatuses)[0];
+        case "degraded_performance":
+          return ($scope.componentStatuses)[1];
+        case "partial_outage":
+          return ($scope.componentStatuses)[2];
+        case "major_outage":
+          return ($scope.componentStatuses)[3];
+        case "under_maintenance":
+          return ($scope.componentStatuses)[4];
+        default:
+          break;
+      }
+    }
+    function getImpactStatusObj(status) {
+      switch (status) {
+        case "none":
+          return ($scope.impactStatuses)[0];
+        case "minor":
+          return ($scope.impactStatuses)[1];
+        case "major":
+          return ($scope.impactStatuses)[2];
+        case "critical":
+          return ($scope.impactStatuses)[3];
+        case "maintenance":
+          return ($scope.impactStatuses)[4];
+        default:
+          break;
+      }
+    }
     function incidentMsg() {
       IncidentsWithoutSiteService.getIncidentMsg({ incidentId: $stateParams.incidentId }).$promise.then(function (data) {
         $scope.msg = '';
@@ -13,6 +47,7 @@
         $scope.incidentWithMsg = data;
         originIncidentName = data.incidentName;
         originImpact = data.impact;
+        $scope.selectedImpactStatus = getImpactStatusObj(data.impact);
         getComponentsTree();
       }, function () {
 
@@ -21,22 +56,29 @@
     function getComponentsTree() {
       ComponentService.query({ "siteId": 101 }).$promise.then(function (metadata) {
         $log.log(metadata);
-        /*data = [{ "componentId": 195, "serviceId": 101, "componentName": "YvetteTest", "status": "partial_outage", "description": "", "position": 1, "components": [{ "componentId": 197, "serviceId": 101, "componentName": "Y1", "status": "operational", "description": "" }, { "componentId": 197, "serviceId": 101, "componentName": "Y11", "status": "degraded_performance", "description": "" }], "isOverridden": false }, { "componentId": 195, "serviceId": 101, "componentName": "Yvette", "status": "under_maintenance", "description": "", "position": 1, "components": [{ "componentId": 197, "serviceId": 101, "componentName": "Ye1", "status": "major_outage", "description": "" }, { "componentId": 197, "serviceId": 101, "componentName": "Ye11", "status": "degraded_performance", "description": "" }], "isOverridden": false }];*/
         $scope.componentsTree = metadata;
         angular.copy(metadata, originComponentsTree);
+        for (var i = 0; i < ($scope.componentsTree).length; i++) {
+          ($scope.componentsTree)[i].statusObj = getComponentStatusObj(($scope.componentsTree)[i].status);
+          for (var j = 0; j < (($scope.componentsTree)[i].components).length; j++) {
+            (($scope.componentsTree)[i].components)[j].statusObj = getComponentStatusObj((($scope.componentsTree)[i].components)[j].status);
+          }
+        }
       });
     }
-    incidentMsg();
     $scope.showComponentFUN = function () {
       $scope.showComponent = true;
     };
+    $scope.setSelectedStatus = function (scope) {
+      scope.status = scope.statusObj.value;
+    };
     $scope.cancleModifyIncident = function () {
       $scope.showIncidentName = true;
-      $scope.incidentWithMsg.impact = originImpact;
+      $scope.selectedImpactStatus = getImpactStatusObj(originImpact);
       $scope.incidentWithMsg.incidentName = originIncidentName;
     };
     $scope.modifyIncident = function () {
-      IncidentsWithoutSiteService.modifyIncident({ incidentId: $scope.incidentWithMsg.incidentId }, { incidentName: $scope.incidentWithMsg.incidentName, impact: $scope.incidentWithMsg.impact }).$promise.then(function (data) {
+      IncidentsWithoutSiteService.modifyIncident({ incidentId: $scope.incidentWithMsg.incidentId }, { incidentName: $scope.incidentWithMsg.incidentName, impact: $scope.selectedImpactStatus.value }).$promise.then(function (data) {
         $scope.incidentWithMsg.impact = data.impact;
         $scope.incidentWithMsg.incidentName = data.incidentName;
         $scope.incidentWithMsg.lastModifiedTime = data.lastModifiedTime;
@@ -49,13 +91,16 @@
     $scope.toOperationalFUN = function () {
       for (var i = 0; i < ($scope.componentsTree).length; i++) {
         ($scope.componentsTree)[i].status = "operational";
+        ($scope.componentsTree)[i].statusObj = getComponentStatusObj("operational");
         for (var j = 0; j < (($scope.componentsTree)[i].components).length; j++) {
           (($scope.componentsTree)[i].components)[j].status = "operational";
+          (($scope.componentsTree)[i].components)[j].statusObj = getComponentStatusObj("operational");
         }
       }
       $scope.showOperational = false;
     };
     $scope.getChildStatus = function (scope, parent) {
+      scope.status = scope.statusObj.value;
       if (!(parent.isOverridden)) {
         return;
       }
@@ -100,6 +145,7 @@
     $scope.getOverriddenComponent = function (scope) {
       scope.isOverridden = true;
       var components = scope.components;
+      $log.log(components);
       /*
         component status relation:
         operational<degraded_performance<partical_outage<major_outage<under_maintenance
@@ -108,30 +154,35 @@
       for (index = 0; index < components.length; index++) {
         if (angular.equals("under_maintenance", components[index].status)) {
           scope.status = components[index].status;
+          scope.statusObj = ($scope.componentStatuses)[4];
           return;
         }
       }
       for (index = 0; index < components.length; index++) {
         if (angular.equals("major_outage", components[index].status)) {
           scope.status = components[index].status;
+          scope.statusObj = ($scope.componentStatuses)[3];
           return;
         }
       }
       for (index = 0; index < components.length; index++) {
         if (angular.equals("partical_outage", components[index].status)) {
           scope.status = components[index].status;
+          scope.statusObj = ($scope.componentStatuses)[2];
           return;
         }
       }
       for (index = 0; index < components.length; index++) {
         if (angular.equals("degraded_performance", components[index].status)) {
           scope.status = components[index].status;
+          scope.statusObj = ($scope.componentStatuses)[1];
           return;
         }
       }
       for (index = 0; index < components.length; index++) {
         if (angular.equals("operational", components[index].status)) {
           scope.status = components[index].status;
+          scope.statusObj = ($scope.componentStatuses)[0];
           return;
         }
       }
@@ -180,5 +231,6 @@
 
       });
     };
+    incidentMsg();
   }
 })();

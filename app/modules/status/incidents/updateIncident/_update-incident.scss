@@ -9,16 +9,20 @@ div#incidentInfo{
     &>div{
       margin-bottom:20px;
     }
-    div.incidentStatus{
-      div>label{
-        display:inline-block;
-        margin-right:20px;
-        input[type="radio"]{
-          position:inherit;
-          margin:inherit;
-          width:inherit;
-          height:inherit;
-        }
+    div.cs-radio-group{
+      margin-top: 1.5rem;
+      margin-bottom: 0rem;
+      div.cs-input-group.cs-input-radio{
+        width:150px;
+        float:left;
+      }
+      &:after{
+        clear:both;
+        content:'.';
+        display:block;
+        width: 0;
+        height: 0;
+        visibility:hidden;
       }
     }
     div.incidentMsg{
@@ -32,16 +36,18 @@ div#incidentInfo{
       margin-right:10px;
     }
   }
-  select{
-    width:200px;
-    float:right;
-  }
-  .componentStatuses span.componentName{
-    width:200px;
-    display:inline-block;
-  }
-  .componentStatuses span.isOverridden{
-    margin-left:200px;
+  .componentStatuses{
+    span.componentName{
+      width:200px;
+      display:inline-block;
+    }
+    .componentSelect{
+      width:200px;
+      float:right;
+    }
+    span.isOverridden{
+      margin-left:200px;
+    }
   }
   i.icon{
     &:hover{
@@ -111,13 +117,12 @@ div#incidentInfo{
       float:left;
       display:inline-block;
     }
-    select{
+    .impactStatuses{
       float:left;
-      height:36px;
       margin:0px 10px;
       width:250px;
     }
-    a{
+    a.cancleModifyIncident{
       position: relative;
       margin: 10px;
       top: 5px;
