@@ -5,16 +5,10 @@
       <span ng-class="incidentWithMsg.impact">{{incidentWithMsg.incidentName}}</span><a ng-show="showEdit" ng-click="showIncidentName=false">Edit</a>
     </div>
     <div class="editIncidentName" ng-hide="showIncidentName">
-      <input type="text" ng-model="incidentWithMsg.incidentName"/>
-      <select ng-model="incidentWithMsg.impact">
-        <option value="none">Override impact to None</option>
-        <option value="minor">Override impact to Minor</option>
-        <option value="major">Override impact to Major</option>
-        <option value="critical">Override impact to Critical</option>
-        <option value="maintenance">Override impact to Maintenance</option>
-      </select>
+      <input type="text" class="cs-input" ng-model="incidentWithMsg.incidentName"/>
+      <cs-select class="impactStatuses" ng-model="selectedImpactStatus" options="impactStatuses"></cs-select>
       <input class="btn btn--primary" type="button" value="SAVE" ng-click="modifyIncident()">
-      <a ng-click="cancleModifyIncident()">Cancel</a>
+      <a class="cancleModifyIncident" ng-click="cancleModifyIncident()">Cancel</a>
     </div>
   </div>
 
