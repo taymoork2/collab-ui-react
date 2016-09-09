@@ -5163,7 +5163,14 @@
     "customerPortalViewHeading": "Customer Portal View",
     "customerPortalViewDetails": "You will be able to view the customer's entire portal, you cannot make any changes.",
     "customerDoesNotAllowReadOnlyAccess": "The customer does not allow Cisco or Partner Support read-only access to the management application.",
-    "view": "View"
+    "view": "View",
+    "dialing": "Dialing",
+    "dialingPlan": {
+      "national": "National",
+      "local": "Local"
+    },
+    "vmprefix": "Voice Mailbox Prefix",
+    "outbounddigit": "Outbound Dial Digit"
   },
   "activation": {
     "verificationComplete": "Verification Complete",

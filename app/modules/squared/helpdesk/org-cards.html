@@ -133,6 +133,18 @@
             <span ng-if="license.isTrial && license.trialExpiresInDays == 0"
                   class="red">{{'helpdesk.licenseStatus.expired' |  translate}}</span>
           </div>
+          <div ng-if="helpdeskOrgCtrl.supportsLocalDialing">
+            <h5 translate="helpdesk.dialing"></h5>
+            <span>{{'helpdesk.dialingPlan.' + (helpdeskOrgCtrl.callCard.dialing | lowercase) | translate}}</span>
+          </div>
+          <div ng-if="helpdeskOrgCtrl.supportsSiteDialDigit && helpdeskOrgCtrl.callCard.voiceMailPrefix">
+            <h5 translate="helpdesk.vmprefix"></h5>
+            <span>{{helpdeskOrgCtrl.callCard.voiceMailPrefix}}</span>
+          </div>
+          <div ng-if="helpdeskOrgCtrl.supportsSiteDialDigit && helpdeskOrgCtrl.callCard.outboundDialDigit">
+            <h5 translate="helpdesk.outbounddigit"></h5>
+            <span>{{helpdeskOrgCtrl.callCard.outboundDialDigit}}</span>
+          </div>
         </div>
       </section>
       <footer></footer>
