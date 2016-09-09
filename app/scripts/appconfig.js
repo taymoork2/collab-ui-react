@@ -2749,6 +2749,19 @@
             controller: 'componentsCtrl',
             controllerAs: 'comp'
           })
+          .state('status.components.deleteComponent', {
+            url: '/delete',
+            views: {
+              '@status': {
+                controller: 'RedirectDelComponentCtrl',
+                controllerAs: 'delComponent',
+                templateUrl: 'modules/status/components/deleteComponent/deleteComponent.tpl.html'
+              }
+            },
+            params: {
+              component: null
+            }
+          })
           .state('status.incidents', {
             url: '/incidents',
             templateUrl: 'modules/status/incidents/incidentList/incidentList.tpl.html',

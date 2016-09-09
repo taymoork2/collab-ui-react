@@ -1,0 +1,8 @@
+<div class="deleteIncidentPage"><!-- reuse delete IncidentPage style-->
+  <h1>Delete {{delComponent.componentName}}</h1>
+  <p translate="statusPage.componentsPage.delComponent.delTips"></p>
+  <input class="cs-input" ng-model="delComponent.delText" placeholder="" type="text" ng-pattern="DELETE">
+  <button class="btn activate-button btn--negative" ng-class="{disabled:!delComponent.validation()}" ng-click="delComponent.delComponentBtnClicked()">
+    <span translate="statusPage.componentsPage.delComponent.delComponentBtn"></span>
+  </button>
+</div>

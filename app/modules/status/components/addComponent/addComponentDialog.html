@@ -1,0 +1,65 @@
+<div class="addComponent">
+  <div class="modal-header">
+    <button type="button" class="close" ng-click="addComponent.closeAddModal()">
+      <!--ng-click="redirectAddComponent.closeModal()"-->
+      <span class="sr-only" translate="common.close"></span>
+    </button>
+    <h5 class="modal-title">
+    <span translate="statusPage.componentsPage.addComponent.title">
+    </span>
+    </h5>
+  </div>
+
+  <div class="modal-body">
+    <form name="addComponentForm" class="addComponentForm" novalidate>
+      <div>
+        <br>
+        <div class="row">
+          <div class="columns medium-4">
+            <span translate="statusPage.componentsPage.addComponent.componentName"></span>
+          </div>
+          <div class="columns medium-8">
+            <input class="cs-input" ng-model="addComponent.componentName"
+                   placeholder="{{'statusPage.componentsPage.addComponent.componentName' | translate}} " type="text">
+          </div>
+        </div>
+        <div class="row">
+          <div class="columns medium-4">
+            <span translate="statusPage.componentsPage.addComponent.componentDesc"></span>
+          </div>
+          <div class="columns medium-8">
+            <input class="cs-input" ng-model="addComponent.componentDesc"
+                   placeholder="{{'statusPage.componentsPage.addComponent.componentDesc-placeholder' | translate}} "
+                   type="text">
+          </div>
+        </div>
+        <div class="row">
+          <div class="columns medium-4">
+            <span translate="statusPage.componentsPage.addComponent.componentGroup"></span>
+          </div>
+          <div class="columns medium-8">
+            <cs-select ng-show="addComponent.selectedGroup.value!=='create'" is-warn="addComponent.selectedGroup==''"
+                       ng-model="addComponent.selectedGroup" options="addComponent.groupOptions"
+                       placeholder="addComponent.selectPlaceholder" on-change-fn="addComponent.groupSelect()">
+            </cs-select>
+            <div ng-show="addComponent.selectedGroup.value==='create'">
+              <input class="cs-input" ng-model="addComponent.groupName"
+                     placeholder="{{'statusPage.componentsPage.addComponent.groupName' | translate}} " type="text"
+                     ng-minlength="3" ng-maxlength="20">
+              <button class="cancelCreateNewGroup" ng-click="addComponent.cancelCreateNewGroup()">
+                <span translate="statusPage.componentsPage.addComponent.cancelCreateNewGroup"></span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <div>
+      <button class="btn activate-button btn--primary" ng-class="{disabled:!addComponent.validation()}" ng-click="addComponent.createComponent()">
+        <span translate="statusPage.componentsPage.addComponent.createComponent"></span>
+      </button>
+    </div>
+  </div>
+</div>
