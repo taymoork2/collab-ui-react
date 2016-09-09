@@ -103,6 +103,7 @@ function do_webpack {
         time webpack --bail --progress --profile --nolint
         webpack_exit_code=$?
         if [ "$webpack_exit_code" -ne 132 -a \
+            "$webpack_exit_code" -ne 137 -a \
             "$webpack_exit_code" -ne 139 -a \
             "$webpack_exit_code" -ne 255 ]; then
             break
