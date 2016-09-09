@@ -47,7 +47,7 @@
 
     function adminPatchNeeded() {
       return (!Authinfo.isInDelegatedAdministrationOrg() &&
-        Authinfo.getCareServices().length > 0);
+        Authinfo.getCareServices().length > 0); // TODO this uses careServices instead of entitlements ??
     }
 
     function getCareAdminUser(careEnabled) {

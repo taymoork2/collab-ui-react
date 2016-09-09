@@ -32,9 +32,11 @@ export class ServicesOverviewCtrl {
       this.forwardEvent('hybridMediaFeatureToggleEventHandler', supports);
     });
 
-    FeatureToggleService.atlasCareTrialsGetStatus().then(supports => {
-      this.forwardEvent('careFeatureToggleEventHandler', supports);
-    });
+    if (Authinfo.isCare()) {
+      FeatureToggleService.atlasCareTrialsGetStatus().then(supports => {
+        this.forwardEvent('careFeatureToggleEventHandler', supports);
+      });
+    }
   }
 
   get hybridCards() {

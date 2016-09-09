@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Controller: Customer Reports Ctrl', function () {
-  var controller, $scope, $state, $stateParams, $q, $translate, $timeout, Log, Config, CustomerReportService, DummyCustomerReportService, CustomerGraphService, WebexReportService, WebExApiGatewayService, Userservice, FeatureToggleService, MediaServiceActivationV2;
+  var controller, $scope, $state, $stateParams, $q, $translate, $timeout, Authinfo, Log, Config, CustomerReportService, DummyCustomerReportService, CustomerGraphService, WebexReportService, WebExApiGatewayService, Userservice, FeatureToggleService, MediaServiceActivationV2;
   var activeUsersSort = ['userName', 'numCalls', 'sparkMessages', 'totalActivity'];
   var REFRESH = 'refresh';
 
@@ -65,13 +65,14 @@ describe('Controller: Customer Reports Ctrl', function () {
   beforeEach(angular.mock.module('Mediafusion'));
 
   describe('CustomerReportsCtrl - Expected Responses', function () {
-    beforeEach(inject(function ($rootScope, $controller, _$state_, _$stateParams_, _$q_, _$translate_, _$timeout_, _Log_, _Config_, _CustomerReportService_, _DummyCustomerReportService_, _CustomerGraphService_, _FeatureToggleService_, _MediaServiceActivationV2_) {
+    beforeEach(inject(function ($rootScope, $controller, _$state_, _$stateParams_, _$q_, _$translate_, _$timeout_, _Authinfo_, _Log_, _Config_, _CustomerReportService_, _DummyCustomerReportService_, _CustomerGraphService_, _FeatureToggleService_, _MediaServiceActivationV2_) {
       $scope = $rootScope.$new();
       $state = _$state_;
       $stateParams = _$stateParams_;
       $q = _$q_;
       $translate = _$translate_;
       $timeout = _$timeout_;
+      Authinfo = _Authinfo_;
       Log = _Log_;
       Config = _Config_;
       CustomerReportService = _CustomerReportService_;
@@ -83,6 +84,7 @@ describe('Controller: Customer Reports Ctrl', function () {
         $q.when(true)
       );
 
+      Authinfo.isCare.and.returnValue(true);
       spyOn(FeatureToggleService, 'atlasCareTrialsGetStatus').and.returnValue(
         $q.when(true)
       );

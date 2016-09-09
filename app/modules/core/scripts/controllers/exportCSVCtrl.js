@@ -11,7 +11,7 @@
     var promise = null;
 
     $scope.isCareEnabled = false;
-    FeatureToggleService.atlasCareTrialsGetStatus().then(function (careStatus) {
+    FeatureToggleService.atlasCareTrialsGetStatus().then(function (careStatus) { // TODO
       $scope.isCareEnabled = careStatus;
     });
 

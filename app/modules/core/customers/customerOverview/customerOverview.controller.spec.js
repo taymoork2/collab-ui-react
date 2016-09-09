@@ -86,6 +86,7 @@ describe('Controller: CustomerOverviewCtrl', function () {
     spyOn(Orgservice, 'isSetupDone').and.returnValue($q.when(false));
     spyOn(PartnerService, 'modifyManagedOrgs').and.returnValue($q.when({}));
     spyOn($window, 'confirm').and.returnValue(true);
+    spyOn(Authinfo, 'isCare').and.returnValue(true);
     spyOn(FeatureToggleService, 'atlasCareTrialsGetStatus').and.returnValue(
       $q.when(true)
     );

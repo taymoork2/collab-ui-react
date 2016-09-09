@@ -95,7 +95,7 @@
           state: 'reports-metrics'
         });
       }
-      if (features.care) {
+      if (Authinfo.isCare() && features.care) {
         vm.headerTabs.push({
           title: $translate.instant('reportsPage.careTab'),
           state: 'reports.care'
