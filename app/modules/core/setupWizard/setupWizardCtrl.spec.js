@@ -22,6 +22,7 @@ describe('SetupWizardCtrl', function () {
     spyOn(Authinfo, 'isSetupDone').and.returnValue(false);
     spyOn(Authinfo, 'isSquaredUC').and.returnValue(false);
     spyOn(Authinfo, 'isCSB').and.returnValue(true);
+    spyOn(Authinfo, 'isCare').and.returnValue(false);
 
     spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(false));
     spyOn(FeatureToggleService, 'supportsDirSync').and.returnValue($q.when(false));
@@ -171,6 +172,48 @@ describe('SetupWizardCtrl', function () {
 
   });
 
+  describe('When Authinfo.isCare is enabled and addUsers too', function () {
+    beforeEach(function () {
+      Authinfo.isCare.and.returnValue(true);
+      Authinfo.isCSB.and.returnValue(false);
+      FeatureToggleService.atlasCareTrialsGetStatus = jasmine.createSpy().and.returnValue($q.when(true));
+      initController();
+    });
+
+    it('the wizard should have the 6 steps', function () {
+      expectStepOrder(['planReview', 'messagingSetup', 'enterpriseSettings', 'careSettings', 'addUsers', 'finish']);
+    });
+
+    it('careSettings should have a single substep', function () {
+      expectSubStepOrder('careSettings', ['csonboard']);
+    });
+  });
+
+  describe('When Authinfo.isCare is enabled ', function () {
+    beforeEach(function () {
+      Authinfo.isCare.and.returnValue(true);
+      FeatureToggleService.atlasCareTrialsGetStatus = jasmine.createSpy().and.returnValue($q.when(true));
+      initController();
+    });
+
+    it('the wizard should have the 5 steps', function () {
+      expectStepOrder(['planReview', 'messagingSetup', 'enterpriseSettings', 'careSettings', 'finish']);
+    });
+  });
+
+  describe('When Authinfo.isCare is enabled and not first time setup', function () {
+    beforeEach(function () {
+      Authinfo.isCare.and.returnValue(true);
+      FeatureToggleService.atlasCareTrialsGetStatus = jasmine.createSpy().and.returnValue($q.when(true));
+      Authinfo.isSetupDone.and.returnValue(true);
+      initController();
+    });
+
+    it('the wizard should have the 4 steps', function () {
+      expectStepOrder(['planReview', 'messagingSetup', 'enterpriseSettings', 'careSettings']);
+    });
+  });
+
   describe('When dirsync is enabled', function () {
     beforeEach(function () {
       FeatureToggleService.supports.and.callFake(function (val) {
@@ -205,19 +248,22 @@ describe('SetupWizardCtrl', function () {
     beforeEach(function () {
       Authinfo.isSetupDone.and.returnValue(true);
       Authinfo.isSquaredUC.and.returnValue(true);
+      Authinfo.isCare.and.returnValue(true);
 
       FeatureToggleService.supports.and.returnValue($q.when(true));
       FeatureToggleService.supportsDirSync.and.returnValue($q.when(true));
+      FeatureToggleService.atlasCareTrialsGetStatus = jasmine.createSpy().and.returnValue($q.when(true));
 
       initController();
     });
 
     it('the wizard should have a lot of settings', function () {
-      expectStepOrder(['planReview', 'serviceSetup', 'messagingSetup', 'enterpriseSettings']);
+      expectStepOrder(['planReview', 'serviceSetup', 'messagingSetup', 'enterpriseSettings', 'careSettings']);
       expectSubStepOrder('planReview', ['init']);
       expectSubStepOrder('serviceSetup', ['init']);
       expectSubStepOrder('messagingSetup', ['setup']);
       expectSubStepOrder('enterpriseSettings', ['enterpriseSipUrl', 'init', 'exportMetadata', 'importIdp', 'testSSO']);
+      expectSubStepOrder('careSettings', ['csonboard']);
     });
   });
 

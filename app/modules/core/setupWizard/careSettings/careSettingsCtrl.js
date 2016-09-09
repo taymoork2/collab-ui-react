@@ -94,7 +94,7 @@
     }
 
     function init() {
-      _.set($scope.wizard, 'isNextDisabled', vm.state !== vm.ONBOARDED);
+      _.set($scope.wizard, 'isNextDisabled', true);
       processOnboardStatus();
     }
 

@@ -27,17 +27,17 @@ describe('Controller: Care Settings', function () {
     it('should show enabled setup care button and disabled save button, if Org is not onboarded already', function () {
       $httpBackend.expectGET(/.*config.*ciscoccservice.*\/chat/g).respond(404, {});
       expect(controller).toBeDefined();
-      expect(controller.state).toBe('unknown');
+      expect(controller.state).toBe(controller.UNKNOWN);
       $httpBackend.flush();
-      expect(controller.state).toBe('notOnboarded');
+      expect(controller.state).toBe(controller.NOT_ONBOARDED);
       expect($scope.wizard.isNextDisabled).toBe(true);
     });
 
     it('should allow proceeding with next steps, if already onboarded', function () {
       $httpBackend.expectGET(/.*config.*ciscoccservice.*\/chat/g).respond(200, { csConnString: 'testConnectionString' });
-      expect(controller.state).toBe('unknown');
+      expect(controller.state).toBe(controller.UNKNOWN);
       $httpBackend.flush();
-      expect(controller.state).toBe('onboarded');
+      expect(controller.state).toBe(controller.ONBOARDED);
       expect($scope.wizard.isNextDisabled).toBe(false);
     });
   });
@@ -50,7 +50,7 @@ describe('Controller: Care Settings', function () {
       $httpBackend.expectGET(/.*config.*ciscoccservice.*\/chat/g).respond(404, {});
       controller.onboardToCs();
       $httpBackend.flush();
-      expect(controller.state).toBe('inProgress');
+      expect(controller.state).toBe(controller.IN_PROGRESS);
       expect($window.open).toHaveBeenCalled();
     });
 
@@ -61,7 +61,7 @@ describe('Controller: Care Settings', function () {
       $httpBackend.expectGET(/.*config.*ciscoccservice.*\/chat/g).respond(200, { csConnString: 'abcdef' });
       controller.onboardToCs();
       $httpBackend.flush();
-      expect(controller.state).toBe('onboarded');
+      expect(controller.state).toBe(controller.ONBOARDED);
       expect(Notification.success).toHaveBeenCalled();
       expect($scope.wizard.isNextDisabled).toBe(false);
     });
@@ -79,7 +79,7 @@ describe('Controller: Care Settings', function () {
         $interval.flush(10000);
       }
       $httpBackend.flush();
-      expect(controller.state).toBe('notOnboarded');
+      expect(controller.state).toBe(controller.NOT_ONBOARDED);
       expect(Notification.error).toHaveBeenCalled();
       expect($scope.wizard.isNextDisabled).toBe(true);
     });
@@ -95,7 +95,7 @@ describe('Controller: Care Settings', function () {
         $interval.flush(10000);
       }
       $httpBackend.flush();
-      expect(controller.state).toBe('unknown');
+      expect(controller.state).toBe(controller.UNKNOWN);
       expect(Notification.error).toHaveBeenCalled();
       expect($scope.wizard.isNextDisabled).toBe(false);
     });

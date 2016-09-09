@@ -148,9 +148,16 @@
               template: 'modules/core/setupWizard/careSettings/careSettings.tpl.html'
             }]
           };
-          var userTabIndex = _.findIndex($scope.tabs, { name: 'addUsers' });
 
-          $scope.tabs.splice(userTabIndex, 0, careTab);
+          var userOrFinishTabIndex = _.findIndex($scope.tabs, function (tab) {
+            return (tab.name === 'finish' || tab.name === 'addUsers');
+          });
+
+          if (userOrFinishTabIndex === -1) { // addUsers and finish tab not found
+            $scope.tabs.push(careTab);
+          } else {
+            $scope.tabs.splice(userOrFinishTabIndex, 0, careTab);
+          }
         });
       }
 
