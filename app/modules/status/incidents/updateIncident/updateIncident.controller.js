@@ -1,7 +1,18 @@
 (function () {
   'use strict';
   angular.module('Status.incidents')
-		.controller('UpdateIncidentController', UpdateIncidentController);
+		.controller('UpdateIncidentController', UpdateIncidentController)
+    .filter('titleCase', titleCase);
+  function titleCase() {
+    var titleCaseFilter = function (input) {
+      var words = input.split(' ');
+      for (var i = 0; i < words.length; i++) {
+        words[i] = words[i].charAt(0).toUpperCase() + words[i].slice(1);
+      }
+      return words.join(' ');
+    };
+    return titleCaseFilter;
+  }
   function UpdateIncidentController($scope, $stateParams, UpdateIncidentService, IncidentsWithoutSiteService, ComponentService, $state, $window, $log) {
     $scope.showOperational = true;
     var originComponentsTree = [];

@@ -1,5 +1,4 @@
 <div class="incidentListPage">
-  <h1>Incidents</h1>
   <tabset>
 
     <tab heading="Incidents">
@@ -7,7 +6,7 @@
       <div class="tab-content">
 
         <div class="incidentListPageHeader clearFloat">
-          <h2>Incidents</h2>
+          <span class="incidentTitle">Incidents</span>
           <input class="btn btn--primary" type="button" value="+ NEW INCIDENT" ng-click="toCreatePage()">
         </div>
 
@@ -38,9 +37,9 @@
 
 
           <div class="operationTime clearFloat">
-            <span ng-if="incident.status!='resolved'">Last updated on </span>
-            <span ng-if="incident.status=='resolved'">Resolved on </span>
-            <span class="modifiedTime">{{incident.lastModifiedTime | date: 'medium'}}</span>
+            <span class="setColor" ng-if="incident.status!='resolved'">Last updated on </span>
+            <span class="setColor" ng-if="incident.status=='resolved'">Resolved on </span>
+            <span class="modifiedTime setColor">{{incident.lastModifiedTime | date: 'medium'}}</span>
           </div>
 
         </div>

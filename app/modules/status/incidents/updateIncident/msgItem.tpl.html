@@ -1,5 +1,5 @@
 <div class="itemRow1" ng-mouseover="showEdit=true" ng-mouseleave="showEdit=false">
-  <span>{{msg.status}}</span>-<span>{{msg.message}}</span><a ng-click="showMsgInfo=false" ng-show="showEdit">Edit</a>
+  <span class="msgStatus" style="font-size:18px;">{{msg.status | titleCase}} </span>-<span> {{msg.message}}</span><a ng-click="showMsgInfo=false" ng-show="showEdit">Edit</a>
 </div>
 
 <div class="editMsg" ng-hide="showMsgInfo">
@@ -12,14 +12,14 @@
 
 <div class="msgInfo" ng-show="showMsgInfo">
   <div class="itemRow2">
-    <span>{{msg.postAt | date: 'medium'}}</span>
+    <span class="setColor">{{msg.postAt | date: 'medium'}}</span>
     <a ng-click="showOrHideComponentFUN(msg.messageId)">{{showOrHideComponent}}</a>
   </div>
   <div class="itemRow3" ng-show="componentSection">
     <ul class="affectedComponentsList" ng-if="affectedComponents.length>0">
       <li ng-repeat="component in affectedComponents">{{component.componentName}}</li>
     </ul>
-    <p ng-if="affectedComponents.length === 0">No components were affected by this update.</p>
+    <p ng-if="affectedComponents.length === 0"><span class="setColor">No components were affected by this update.</span></p>
   </div>
 </div>
 

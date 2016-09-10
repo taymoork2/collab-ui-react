@@ -3,14 +3,26 @@ div#incidentInfo{
   &>div{
     margin-bottom:50px;
   }
+  span.labelTitle{
+    font-size:20px;
+    display:inline-block;
+    margin-bottom:10px;
+  }
+  span.setColor{
+    color:#afafaf;
+  }
+  span.msgListTitle{
+    font-size:30px;
+    display:inline-block;
+    margin-bottom:10px;
+  }
   div.addMsg{
     padding:20px;
-    border:1px solid gray;
+    border:1px solid #e0d0d0;
     &>div{
       margin-bottom:20px;
     }
     div.cs-radio-group{
-      margin-top: 1.5rem;
       margin-bottom: 0rem;
       div.cs-input-group.cs-input-radio{
         width:150px;
@@ -28,12 +40,16 @@ div#incidentInfo{
     div.incidentMsg{
       textarea{
         width:100%;
+        display:inline-block;
+        margin-bottom:20px;
       }
     }
   }
   div.msgList{
-    div.item>div.itemRow1>span,a{
-      margin-right:10px;
+    div.item>div.itemRow1{
+      a{
+        margin-right:10px;
+      }
     }
   }
   .componentStatuses{

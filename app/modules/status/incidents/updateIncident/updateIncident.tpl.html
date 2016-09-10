@@ -15,7 +15,7 @@
 	<div class="addMsg">
 
 		<div class="incidentStatus">
-			<h3>Incident Status</h3>
+			<span class="labelTitle">Incident Status</span>
 			<div class="cs-radio-group">
 				<input
 	        cs-input
@@ -56,30 +56,30 @@
 			</div>
 			<div ng-model="toOperational" ng-init="toOperational=false" ng-show="toOperational">
 				<p ng-if="showOperational">
-					You can also <a ng-click="toOperationalFUN()">set your components to operational.</a>
+					<span class="setColor">You can also </span><a ng-click="toOperationalFUN()">set your components to operational.</a>
 				</p>
 				<p ng-if="!showOperational">
-					Components will be set to operational upon submission of this incident update.
+					<span class="setColor">Components will be set to operational upon submission of this incident update.</span>
 				</p>
 			</div>
 		</div>
 
 		<div class="incidentMsg">
-			<h3>Message</h3>
-			<textarea ng-model="msg"></textarea>
+			<span class="labelTitle">Message</span>
+			<textarea ng-model="msg" placeholder="Message"></textarea>
 		</div>
 
 		<div class="componentStatuses">
-			<h3>Component Statuses</h3>
-			<p ng-show="!showComponent">You can also <a ng-click="showComponentFUN()">update a component's status.</a></p>
+			<span class="labelTitle">Component Statuses</span>
+			<p ng-show="!showComponent"><span class="setColor">You can also </span><a ng-click="showComponentFUN()">update a component's status.</a></p>
 			<div ng-show="showComponent">
 				<div ng-repeat="componentGroup in componentsTree">
 					<div class="groupComponent" ng-init="componentVisible=false">
 						<i class="icon icon-chevron-right" ng-click="componentVisible=true" ng-hide="componentVisible"></i>
 						<i class="icon icon-chevron-down" ng-click="componentVisible=false" ng-show="componentVisible"></i>
 						<span class="componentName">{{componentGroup.componentName}}</span>
-						<span class="isOverridden" ng-hide="componentGroup.isOverridden" ng-click="getOverriddenComponent(componentGroup)">Overrid this status</span>
-						<span class="isOverridden" ng-show="componentGroup.isOverridden" ng-click="componentGroup.isOverridden=false">Use derived status</span>
+						<span class="isOverridden setColor" ng-hide="componentGroup.isOverridden" ng-click="getOverriddenComponent(componentGroup)">Overrid this status</span>
+						<span class="isOverridden setColor" ng-show="componentGroup.isOverridden" ng-click="componentGroup.isOverridden=false">Use derived status</span>
 
 						<cs-select class="componentSelect" ng-model="componentGroup.statusObj" options="componentStatuses" is-disabled="componentGroup.isOverridden" on-change-fn="setSelectedStatus(componentGroup)"></cs-select>
 
@@ -101,7 +101,7 @@
 	</div>
 
 	<div class="msgList">
-		<h2>Previous Updates</h2>
+		<span class="msgListTitle">Previous Updates</span>
 		<div class="item" ng-repeat="msg in incidentWithMsg.messages">
 			<msg-item info='msg'></msg-item>
 		</div>

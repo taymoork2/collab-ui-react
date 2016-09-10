@@ -16,7 +16,9 @@ span.modifiedTime{
 div.incidentListPage{
 	padding:20px 100px;
 	div.incidentListPageHeader{
-		h2{
+		span.incidentTitle{
+			font-size:30px;
+			display:inline-block;
 			float:left;
 		}
 		input{
@@ -32,6 +34,7 @@ div.incidentListPage{
 			height:20px;
 			span{
 				float:left;
+				font-size:18px;
 			}
 		}
 		div.operationHref{
@@ -46,6 +49,9 @@ div.incidentListPage{
 		div.operationTime{
 			span{
 				float:left;
+			}
+			span.setColor{
+				color:#afafaf;
 			}
 		}
 	}
