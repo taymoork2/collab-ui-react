@@ -13,12 +13,12 @@
   </cs-page-sub-header>
 
   <div ng-if="comp.components.length" class="status-components-list  small-12 large-10 xlarge-8">
-    <div ng-repeat="component in comp.components | orderBy: 'position'">
-      <span class="icon icon-circle componentStatus-{{component.status}}"></span>
+    <div ng-repeat="component in comp.components | orderBy: 'position'" ng-init="hide = false">
+      <span class="icon icon-circle componentStatus-{{component.status}}" ng-click="hide = !hide"></span>
       {{component.componentName}}
       <a translate="statusPage.deleteAction" ng-click="comp.delComponent(component)"></a>
       <a translate="statusPage.editAction" ng-click="comp.updateComponent(component)"></a>
-      <ul>
+      <ul ng-hide="hide">
         <li ng-repeat="subComponent in component.components">
           <span class="icon icon-circle componentStatus-{{subComponent.status}}"></span>
           {{subComponent.componentName}}

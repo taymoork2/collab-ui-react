@@ -1,96 +1,111 @@
 .componentPage{
-.status{
-  background-color: $brand-white;
+  .status{
+    background-color: $brand-white;
 
-  .tags {
-    border-radius: 3px;
-    .tag-item {
-      background: none;
-      background-color: $brand-primary-light;
-      color: $brand-white;
-
-      .remove-button {
+    .tags {
+      border-radius: 3px;
+      .tag-item {
+        background: none;
+        background-color: $brand-primary-light;
         color: $brand-white;
+
+        .remove-button {
+          color: $brand-white;
+        }
+      }
+      .input.invalid-tag {
+        color: $brand-danger;
       }
     }
-    .input.invalid-tag {
-      color: $brand-danger;
-    }
-  }
 
-  .typography-airy {
-    h5{
-      font-weight: bold;
-      margin-bottom: .25rem;
-      margin-top: .5rem;
+    .typography-airy {
+      h5{
+        font-weight: bold;
+        margin-bottom: .25rem;
+        margin-top: .5rem;
+      }
+      p:first-line{
+        margin-bottom: 1rem;
+      }
+      p:last-child{
+        margin-bottom: 1rem;
+      }
+      hr{
+        margin-top:0.3rem;
+        margin-bottom:0.3rem;
+      }
     }
-    p:first-line{
-      margin-bottom: 1rem;
-    }
-    p:last-child{
-      margin-bottom: 1rem;
-    }
-    hr{
-      margin-top:0.3rem;
-      margin-bottom:0.3rem;
-    }
-  }
 
-  .large-margin {
-    padding-left:2rem;
-    padding-right:2rem;
-    padding-top:1rem;
-    padding-bottom:1rem;
-  }
-
-  .small-margin {
-    padding-left:1rem;
-    padding-right:1rem;
-    padding-top:0.5rem;
-    padding-bottom:0.3rem;
-  }
-
-  .small-padding-top {
-    /*border-top:1px solid $brand-white;*/
-  }
-
-  .page-header {
-    .title-heading {
-      margin-right: 1rem;
+    .large-margin {
+      padding-left:2rem;
+      padding-right:2rem;
+      padding-top:1rem;
+      padding-bottom:1rem;
     }
-    .menu {
-      position: absolute;
-      right: 0;
-      bottom: 24px;
-      a {
-        color: $brand-default;
-        font-size: 1.25rem;
-        padding-bottom: 24px;
+
+    .small-margin {
+      padding-left:1rem;
+      padding-right:1rem;
+      padding-top:0.5rem;
+      padding-bottom:0.3rem;
+    }
+
+    .small-padding-top {
+      /*border-top:1px solid $brand-white;*/
+    }
+
+    .page-header {
+      .title-heading {
         margin-right: 1rem;
       }
-      a:hover {
-        color: $brand-default;
-        border-bottom: 3px solid $brand-default;
+      .menu {
+        position: absolute;
+        right: 0;
+        bottom: 24px;
+        a {
+          color: $brand-default;
+          font-size: 1.25rem;
+          padding-bottom: 24px;
+          margin-right: 1rem;
+        }
+        a:hover {
+          color: $brand-default;
+          border-bottom: 3px solid $brand-default;
+        }
+        a.active {
+          color: $brand-primary;
+          border-bottom: 3px solid $brand-primary;
+          padding-bottom: 23px;
+          margin-right: 1rem;
+          box-shadow: none;
+        }
       }
-      a.active {
-        color: $brand-primary;
-        border-bottom: 3px solid $brand-primary;
-        padding-bottom: 23px;
-        margin-right: 1rem;
-        box-shadow: none;
+      .page-title {
+        position: relative;
       }
     }
-    .page-title {
-      position: relative;
+
+
+    .full-height {
+      min-height: 100vh;
+      min-height: calc(100vh - 150px);
+    }
+
+    .btn--alert{
+      margin-left:0;
+    }
+    .btn--primary,.btn--alert {
+      margin-top: 1rem;
+      margin-bottom: 1rem;
     }
   }
 
   .centered-info-pane {
     background-color: $brand-white;
-    width:100%;
-    height:100%;
+    width:500px;
+    height:300px;
+    margin:100px auto;
     text-align:center;
-    padding:20%;
     color: $gray-base;
 
     h2 {
@@ -103,21 +118,6 @@
       margin-bottom: 1rem;
     }
   }
-
-  .full-height {
-    min-height: 100vh;
-    min-height: calc(100vh - 150px);
-  }
-
-  .btn--alert{
-    margin-left:0;
-  }
-  .btn--primary,.btn--alert {
-    margin-top: 1rem;
-    margin-bottom: 1rem;
-  }
-}
-
 
 .status-components{
   background-color: $brand-white;
