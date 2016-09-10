@@ -256,7 +256,6 @@ var AutoAttendantPage = function () {
   this.assertImportSuccess = assertImportSuccess;
   this.assertCalendarUpdateSuccess = assertCalendarUpdateSuccess;
   this.assertDeleteSuccess = assertDeleteSuccess;
-  //this.scrollIntoView = scrollIntoView;
 
   function assertUpdateSuccess(test) {
     notifications.assertSuccess(test + ' updated successfully');
