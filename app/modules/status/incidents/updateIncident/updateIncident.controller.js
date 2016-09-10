@@ -13,7 +13,7 @@
     };
     return titleCaseFilter;
   }
-  function UpdateIncidentController($scope, $stateParams, UpdateIncidentService, IncidentsWithoutSiteService, ComponentService, $state, $window, $log) {
+  function UpdateIncidentController($scope, $stateParams, UpdateIncidentService, IncidentsWithoutSiteService, ComponentService, $state, statusService, $window, $log) {
     $scope.showOperational = true;
     var originComponentsTree = [];
     var originIncidentName, originImpact;
@@ -51,6 +51,16 @@
           break;
       }
     }
+    $scope.$watch(
+      function () {
+        return statusService.getServiceId();
+      },
+      function (newServiceId, oldServiceId) {
+        if (newServiceId === oldServiceId) {
+          return;
+        }
+        $state.go("status.components");
+      });
     function incidentMsg() {
       IncidentsWithoutSiteService.getIncidentMsg({ incidentId: $stateParams.incidentId }).$promise.then(function (data) {
         $scope.msg = '';
@@ -65,7 +75,7 @@
       });
     }
     function getComponentsTree() {
-      ComponentService.query({ "siteId": 101 }).$promise.then(function (metadata) {
+      ComponentService.query({ "siteId": statusService.getServiceId() }).$promise.then(function (metadata) {
         $log.log(metadata);
         $scope.componentsTree = metadata;
         angular.copy(metadata, originComponentsTree);

@@ -1,6 +1,16 @@
 div#createIncidentPage{
 	padding:50px;
 
+	span.pageTitle{
+		display:inline-block;
+		font-size:30px;
+		margin-bottom:30px;
+	}
+	span.labelTitle{
+		display:inline-block;
+		font-size:20px;
+		margin-bottom:20px;
+	}
 	div.incidentName{
 		margin-bottom:20px;
 		input{

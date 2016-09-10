@@ -4,7 +4,7 @@
     .module('Status.incidents')
     .controller('CreateIncidentController', CreateIncidentController);
 
-  function CreateIncidentController($scope, $state, $window, IncidentsWithSiteService) {
+  function CreateIncidentController($scope, $state, $window, IncidentsWithSiteService, statusService) {
     $scope.newIncident = {
       status: '',
       msg: '',
@@ -12,9 +12,19 @@
     };
     var vm = this;
     vm.CreateIncident = CreateIncident;
+    $scope.$watch(
+      function () {
+        return statusService.getServiceId();
+      },
+      function (newServiceId, oldServiceId) {
+        if (newServiceId === oldServiceId) {
+          return;
+        }
+        $state.go("status.components");
+      });
     function CreateIncident() {
       IncidentsWithSiteService.save({
-        "siteId": 1
+        "siteId": statusService.getServiceId()
       }, {
         "incidentName": $scope.newIncident.name,
         "status": $scope.newIncident.status,

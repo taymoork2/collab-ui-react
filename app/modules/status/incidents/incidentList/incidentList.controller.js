@@ -4,10 +4,10 @@
     .module('Status.incidents')
     .controller('IncidentListController', IncidentListController);
 
-  function IncidentListController($scope, $state, IncidentsWithSiteService, $log) {
+  function IncidentListController($scope, $state, IncidentsWithSiteService, statusService, $log) {
     $scope.showList = true;
     IncidentsWithSiteService.query({
-      "siteId": 1
+      "siteId": statusService.getServiceId()
     }).$promise.then(function (incidentList) {
       $log.log(incidentList);
       if (incidentList.length == 0) {
@@ -20,5 +20,15 @@
     $scope.toCreatePage = function () {
       $state.go(".new");
     };
+    $scope.$watch(
+      function () {
+        return statusService.getServiceId();
+      },
+      function (newServiceId, oldServiceId) {
+        if (newServiceId === oldServiceId) {
+          return;
+        }
+        $state.go("status.components");
+      });
   }
 })();
