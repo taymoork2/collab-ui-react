@@ -38,11 +38,11 @@
             <span translate="statusPage.componentsPage.addComponent.componentGroup"></span>
           </div>
           <div class="columns medium-8">
-            <cs-select ng-show="addComponent.selectedGroup.value!=='create'" is-warn="addComponent.selectedGroup==''"
+            <cs-select ng-show="addComponent.selectedGroup.value!=='createGroup'" is-warn="addComponent.selectedGroup==''"
                        ng-model="addComponent.selectedGroup" options="addComponent.groupOptions"
                        placeholder="addComponent.selectPlaceholder" on-change-fn="addComponent.groupSelect()">
             </cs-select>
-            <div ng-show="addComponent.selectedGroup.value==='create'">
+            <div ng-show="addComponent.selectedGroup.value==='createGroup'">
               <input class="cs-input" ng-model="addComponent.groupName"
                      placeholder="{{'statusPage.componentsPage.addComponent.groupName' | translate}} " type="text"
                      ng-minlength="3" ng-maxlength="20">

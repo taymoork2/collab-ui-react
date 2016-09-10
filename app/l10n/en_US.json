@@ -28,6 +28,19 @@
         "groupName": "Group name",
         "cancelCreateNewGroup": "Cancel new group creation"
       },
+      "updateComponent": {
+        "title": "Update A Component",
+        "componentName": "Component Name",
+        "componentDesc": "Description (optional)",
+        "componentDesc-placeholder": "Frontend application and API servers",
+        "componentGroup": "Component Group",
+        "nameCannotBeBlank": "Name can't be blank",
+        "createNewComponentGroup": "Create new component group",
+        "updateComponent": "Update Component",
+        "componentInfo": "Component Info",
+        "groupName": "Group name",
+        "cancelCreateNewGroup": "Cancel new group creation"
+      },
       "delComponent":{
         "delComponentBtn": "PERMANENTLY DELETE {{}}",
         "delTips": "<p><em>WARNING! </em> <strong>Deleting a component cannot be undone. </strong> All associated data will be deleted as well. Please be absolutely sure this is what you want.</p><p>Type <em>DELETE </em> in the box below for final confirmation, then hit the delete button.</p>"

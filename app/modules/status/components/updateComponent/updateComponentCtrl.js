@@ -3,24 +3,26 @@
 
   angular
     .module('Status')
-    .controller('RedirectAddComponentCtrl', RedirectAddComponentCtrl);
+    .controller('updateComponentCtrl', UpdateComponentCtrl);
 
   /* @ngInject */
-  function RedirectAddComponentCtrl($modalInstance, $log, $translate, ComponentsService, statusService) {
+  function UpdateComponentCtrl($modalInstance, $log, $translate, ComponentsService, statusService, component, groupComponent) {
     var vm = this;
+    if (!groupComponent) {
+      vm.updateGroup = true;
+    }
     vm.closeAddModal = closeAddModal;
-    vm.componentName = "";
-    vm.componentDesc = "";
+    vm.componentName = component.componentName;
+    vm.componentDesc = component.description;
     vm.groupName = "";
     vm.selectPlaceholder = 'Select or Create group';
+    vm.selectedGroup = "";
     vm.groupOptions = [{
       value: 'createGroup',
       label: $translate.instant('statusPage.componentsPage.addComponent.createNewComponentGroup'),
       name: $translate.instant('statusPage.componentsPage.addComponent.createNewComponentGroup'),
       description: $translate.instant('statusPage.componentsPage.addComponent.createNewComponentGroup')
     }];
-
-    vm.selectedGroup = "";
     function closeAddModal() {
       $modalInstance.close();
     }
@@ -28,16 +30,20 @@
     //获取group
     ComponentsService.getGroupComponents(statusService.getServiceId()).then(function (groupOptions) {
       _.forEach(groupOptions, function (group) {
-        vm.groupOptions.unshift({
+        var groupOption = {
           value: group.componentId,
           label: group.componentName,
           description: group.description
-        });
+        };
+        vm.groupOptions.unshift(groupOption);
+        if (groupComponent && group.componentId === groupComponent.componentId) {
+          vm.selectedGroup = groupOption;
+        }
       });
     });
 
     vm.validation = function () {
-      return (!(vm.componentName === "") && angular.isNumber(vm.selectedGroup.value)) || (vm.selectedGroup.value === 'createGroup' && vm.componentName !== "" && vm.groupName !== "");
+      return vm.updateGroup || (!(vm.componentName === "") && angular.isNumber(vm.selectedGroup.value)) || (vm.selectedGroup.value === 'createGroup' && vm.componentName !== "" && vm.groupName !== "");
     };
 
     vm.createComponent = function () {
@@ -45,6 +51,7 @@
         return;
       }
       var newComponent = {
+        "componentId": component.componentId,
         "componentName": vm.componentName,
         "description": vm.componentDesc,
         "groupName": vm.groupName
@@ -55,7 +62,7 @@
       }
 
       ComponentsService
-        .addComponent(statusService.getServiceId(), newComponent)
+        .modifyComponent(newComponent)
         .then(function () {
           $modalInstance.close();
         });

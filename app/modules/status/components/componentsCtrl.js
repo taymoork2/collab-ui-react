@@ -29,10 +29,6 @@
     vm.title = $translate.instant('statusPage.components');
     vm.addComponent = function addComponent() {
       var addComponentModal = $modal.open({
-        resolve: {
-          firstTimeSetup: false,
-          yesProceed: true
-        },
         type: 'small',
         controller: 'RedirectAddComponentCtrl',
         controllerAs: 'addComponent',
@@ -40,6 +36,26 @@
         modalClass: 'redirect-add-component'
       });
       addComponentModal.result.then(function () {
+        ComponentsService
+          .getComponents(vm.statusService.getServiceId())
+          .then(function (components) {
+            vm.components = components;
+          });
+      });
+    };
+    vm.updateComponent = function updateComponent(component, groupComponent) {
+      var updateComponentModal = $modal.open({
+        resolve: {
+          component: component,
+          groupComponent: groupComponent
+        },
+        type: 'small',
+        controller: 'updateComponentCtrl',
+        controllerAs: 'updateCtrl',
+        templateUrl: 'modules/status/components/updateComponent/updateComponent.tpl.html',
+        modalClass: 'redirect-add-component'
+      });
+      updateComponentModal.result.then(function () {
         ComponentsService
           .getComponents(vm.statusService.getServiceId())
           .then(function (components) {

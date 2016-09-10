@@ -7,7 +7,7 @@
     var componentsUrl = _.template(UrlConfig.getStatusUrl() + '/services/${ serviceId }/components');
     var groupCompnentsUrl = _.template(UrlConfig.getStatusUrl() + '/services/${ serviceId }/components/groups');
     var delComponentUrl = _.template(UrlConfig.getStatusUrl() + '/components/${ componentId }');
-
+    var modifyComponentUrl = _.template(UrlConfig.getStatusUrl() + '/components/${ componentId }');
     function getComponents(serviceId) {
       return $http.get(componentsUrl({
         serviceId: serviceId
@@ -38,11 +38,18 @@
       }));
     }
 
+    function modifyComponent(component) {
+      return $http.put(modifyComponentUrl({
+        componentId: component.componentId
+      }), component);
+    }
+
     return {
       getComponents: getComponents,
       getGroupComponents: getGroupComponents,
       addComponent: addComponent,
-      delComponent: delComponent
+      delComponent: delComponent,
+      modifyComponent: modifyComponent
     };
   }
 

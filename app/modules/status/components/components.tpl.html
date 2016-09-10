@@ -16,14 +16,14 @@
     <div ng-repeat="component in comp.components | orderBy: 'position'">
       <span class="icon icon-circle componentStatus-{{component.status}}"></span>
       {{component.componentName}}
-      <a translate="statusPage.deleteAction"></a>
-      <a translate="statusPage.editAction"></a>
+      <a translate="statusPage.deleteAction" ng-click="comp.delComponent(component)"></a>
+      <a translate="statusPage.editAction" ng-click="comp.updateComponent(component)"></a>
       <ul>
         <li ng-repeat="subComponent in component.components">
           <span class="icon icon-circle componentStatus-{{subComponent.status}}"></span>
           {{subComponent.componentName}}
           <a translate="statusPage.deleteAction" ng-click="comp.delComponent(subComponent)"></a>
-          <a translate="statusPage.editAction"></a>
+          <a translate="statusPage.editAction" ng-click="comp.updateComponent(subComponent, component)"></a>
         </li>
       </ul>
     </div>
