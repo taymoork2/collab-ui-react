@@ -117,6 +117,13 @@ exports.scrollBottom = function (selector) {
   browser.executeScript('$("' + selector + '").first().scrollTop($("' + selector + '").first().scrollHeight);');
 };
 
+exports.scrollIntoView = function (el) {
+    var webel = el.getWebElement();
+    browser.executeScript(function (e) {
+      e.scrollIntoView();
+    }, webel);
+};
+
 exports.refresh = function () {
   return browser.refresh();
 };
