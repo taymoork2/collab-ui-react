@@ -39,7 +39,6 @@ class MySubscriptionCtrl {
     private $http: ng.IHttpService,
     private $q: ng.IQService,
     private $rootScope: ng.IRootScopeService,
-    private $sce: ng.ISCEService,
     private $timeout: ng.ITimeoutService,
     private $translate: ng.translate.ITranslateService,
     private Authinfo,
@@ -78,8 +77,8 @@ class MySubscriptionCtrl {
 
   private initIframe(): void {
     this.loading = true;
-    this.DigitalRiverService.getDigitalRiverSubscriptionsUrl().then((subscriptionsUrl) => {
-      this.digitalRiverSubscriptionsUrl = this.$sce.trustAsResourceUrl(subscriptionsUrl);
+    this.DigitalRiverService.getSubscriptionsUrl().then((subscriptionsUrl) => {
+      this.digitalRiverSubscriptionsUrl = subscriptionsUrl;
     }).catch((response) => {
       this.loading = false;
       this.Notification.errorWithTrackingId(response, 'subscriptions.loadError');
