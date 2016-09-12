@@ -42,17 +42,12 @@
     vm.cardsAvailable = false;
     vm.adminUsersAvailable = false;
     vm.findServiceOrder = findServiceOrder;
-    vm.supportsSiteDialDigit = false;
     vm.supportsLocalDialing = false;
 
     HelpdeskService.getOrg(vm.orgId).then(initOrgView, XhrNotificationService.notify);
 
     FeatureToggleService.supports(FeatureToggleService.features.atlasHelpDeskExt).then(function (result) {
       vm.supportsExtendedInformation = result;
-    });
-
-    FeatureToggleService.getCustomerHuronToggle(vm.orgId, FeatureToggleService.features.huronSiteDialDigit).then(function (result) {
-      vm.supportsSiteDialDigit = result;
     });
 
     FeatureToggleService.getCustomerHuronToggle(vm.orgId, FeatureToggleService.features.huronLocalDialing).then(function (result) {
