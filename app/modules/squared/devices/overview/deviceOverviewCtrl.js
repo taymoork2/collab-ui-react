@@ -19,12 +19,17 @@
       if (result) {
         deviceOverview.isKEMAvailable = KemService.isKEMAvailable(deviceOverview.currentDevice.product);
         if (deviceOverview.isKEMAvailable) {
-          if (!_.has(deviceOverview.currentDevice, 'kem')) {
+          CmiKemService.getKEM(deviceOverview.currentDevice.huronId).then(
+            function (data) {
+              deviceOverview.currentDevice.kem = data;
+
+              deviceOverview.kemNumber = KemService.getKemOption(deviceOverview.currentDevice.kem.length);
+              deviceOverview.kemOptions = KemService.getOptionList(deviceOverview.currentDevice.product);
+            }
+          ).catch(function () {
             deviceOverview.currentDevice.kem = [];
             deviceOverview.isError = true;
-          }
-          deviceOverview.kemNumber = KemService.getKemOption(deviceOverview.currentDevice.kem.length);
-          deviceOverview.kemOptions = KemService.getOptionList(deviceOverview.currentDevice.product);
+          });
         }
       }
     });

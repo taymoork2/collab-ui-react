@@ -745,6 +745,7 @@
             }
           });
       }
+      trialStartDate = Date.parse(trialStartDate);
       if (trialStartDate && (trialStartDate < grandfatherMaxDeviceDate)) {
         vm.maxCallDevices = 5;
         vm.maxTotalDevices = 7;

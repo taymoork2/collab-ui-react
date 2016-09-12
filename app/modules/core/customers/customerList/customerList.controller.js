@@ -57,17 +57,23 @@
       placeholder: $translate.instant('customerPage.filterSelectPlaceholder'),
       options: [{
         value: 'expired',
-        label: $translate.instant('customerPage.filterExpiredAccounts'),
+        label: $translate.instant('customerPage.expiredAccountsFilter', {
+          count: 0
+        }),
         isSelected: false,
         isAccountFilter: true
       }, {
         value: 'active',
-        label: $translate.instant('customerPage.filterPurchasedAccounts'),
+        label: $translate.instant('customerPage.activeAccountsFilter', {
+          count: 0
+        }),
         isSelected: false,
         isAccountFilter: true
       }, {
         value: 'trial',
-        label: $translate.instant('customerPage.filterTrialAccounts'),
+        label: $translate.instant('customerPage.trialAccountsFilter', {
+          count: 0
+        }),
         isSelected: false,
         isAccountFilter: true
       }, {
@@ -596,6 +602,17 @@
 
             $scope.managedOrgsList = managed;
             $scope.totalOrgs = $scope.managedOrgsList.length;
+            var statusTypeCounts = _.countBy($scope.managedOrgsList, function (value) {
+              return $scope.getAccountStatus(value);
+            });
+            _.forEach(statusTypeCounts, function (count, type) {
+              var option = _.find($scope.filter.options, { value: type });
+              if (angular.isDefined(option)) {
+                option.label = $translate.instant('customerPage.' + type + 'AccountsFilter', {
+                  count: count
+                });
+              }
+            });
           } else {
             Log.debug('Failed to retrieve managed orgs information.');
             Notification.error('partnerHomePage.errGetOrgs');

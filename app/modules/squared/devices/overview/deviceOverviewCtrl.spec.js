@@ -217,6 +217,8 @@ describe('Huron Device', function () {
   var $scope, $controller, controller, $httpBackend;
   var $q, CsdmConfigService;
   var $stateParams, ServiceSetup, timeZone, newTimeZone;
+  var FeatureToggleService;
+  var HuronConfig;
 
   beforeEach(angular.mock.module('Hercules'));
   beforeEach(angular.mock.module('Squared'));
@@ -224,9 +226,9 @@ describe('Huron Device', function () {
   beforeEach(angular.mock.module('Sunlight'));
   beforeEach(inject(dependencies));
   beforeEach(initSpies);
-  beforeEach(initController);
 
-  function dependencies(_$q_, $rootScope, _$controller_, _$httpBackend_, _CsdmConfigService_, _$stateParams_, _ServiceSetup_) {
+
+  function dependencies(_$q_, $rootScope, _$controller_, _$httpBackend_, _CsdmConfigService_, _$stateParams_, _ServiceSetup_, _FeatureToggleService_, _HuronConfig_) {
     $scope = $rootScope.$new();
     $controller = _$controller_;
     $httpBackend = _$httpBackend_;
@@ -234,6 +236,8 @@ describe('Huron Device', function () {
     CsdmConfigService = _CsdmConfigService_;
     ServiceSetup = _ServiceSetup_;
     $stateParams = _$stateParams_;
+    FeatureToggleService = _FeatureToggleService_;
+    HuronConfig = _HuronConfig_;
     $stateParams = {
       currentDevice: {
         isHuronDevice: true
@@ -275,6 +279,7 @@ describe('Huron Device', function () {
 
     spyOn(ServiceSetup, 'getTimeZones').and.returnValue($q.when(timeZone));
     spyOn($stateParams.huronDeviceService, 'setTimezoneForDevice').and.returnValue($q.when(true));
+
   }
 
   function initController() {
@@ -287,15 +292,42 @@ describe('Huron Device', function () {
     $scope.$apply();
   }
 
-  it('should init controller', function () {
-    expect(controller).toBeDefined();
+  describe('timezone support', function () {
+    beforeEach(initController);
+
+
+    it('should init controller', function () {
+      expect(controller).toBeDefined();
+    });
+
+    it('should update timezone id', function () {
+      controller.selectedTimeZone = newTimeZone;
+      controller.saveTimeZoneAndWait();
+      $scope.$apply();
+
+      expect($stateParams.huronDeviceService.setTimezoneForDevice).toHaveBeenCalledWith(jasmine.any(Object), newTimeZone.id);
+    });
   });
 
-  it('should update timezone id', function () {
-    controller.selectedTimeZone = newTimeZone;
-    controller.saveTimeZoneAndWait();
-    $scope.$apply();
+  describe('kem support', function () {
+    beforeEach(function () {
+      $stateParams.currentDevice.product = 'Cisco 8865';
+      spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve(true));
+      $httpBackend.whenGET(HuronConfig.getCmiUrl() + '/voice/customers/sipendpoints/addonmodules').respond(200, [{
+        customerId: 'fake-customer-id',
+        sipEndpointId: 'fake-huron-id',
+        addOnModuleId: 1
+      }]);
+    });
+    beforeEach(initController);
 
-    expect($stateParams.huronDeviceService.setTimezoneForDevice).toHaveBeenCalledWith(jasmine.any(Object), newTimeZone.id);
+    it('should fetch KEM info for the device', function () {
+      $httpBackend.flush();
+      expect(controller.currentDevice.kem).not.toBeNull();
+      expect(controller.currentDevice.kem).not.toBeUndefined();
+      expect(controller.kemNumber.value).toBe(1);
+      expect(controller.currentDevice.kem[0].customerId).toBe('fake-customer-id');
+    });
+
   });
 });
