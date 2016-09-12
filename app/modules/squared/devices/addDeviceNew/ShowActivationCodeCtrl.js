@@ -48,9 +48,11 @@
     } else if (!vm.wizardData.code || !vm.wizardData.code.activationCode) {
       var success = function success(code) {
         vm.isLoading = false;
-        vm.wizardData.code = code;
-        vm.activationCode = code.activationCode;
-        vm.friendlyActivationCode = formatActivationCode(code.activationCode);
+        if (code) {
+          vm.wizardData.code = code;
+          vm.activationCode = code.activationCode;
+          vm.friendlyActivationCode = formatActivationCode(code.activationCode);
+        }
       };
       var error =
         function error(err) {

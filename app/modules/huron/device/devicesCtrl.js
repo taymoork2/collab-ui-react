@@ -6,7 +6,7 @@
     .controller('DevicesCtrlHuron', DevicesCtrlHuron);
 
   /* @ngInject */
-  function DevicesCtrlHuron($scope, $state, $stateParams, OtpService, Config, CsdmHuronUserDeviceService, CsdmCodeService, WizardFactory) {
+  function DevicesCtrlHuron($scope, $state, $stateParams, OtpService, Config, CsdmHuronUserDeviceService, WizardFactory, Notification) {
     var vm = this;
     vm.devices = {};
     vm.otps = [];
@@ -41,30 +41,35 @@
       });
     };
 
-    vm.resetCode = function (obj) {
+    vm.resetCode = function () {
       vm.resettingCode = true;
-      var displayName = obj.currentUser.displayName;
-      CsdmCodeService.createCode(displayName)
-        .then(function (result) {
-          var wizardState = {
-            data: {
-              function: "showCode",
-              deviceType: "cloudberry",
-              deviceName: result.displayName,
-              expiryTime: result.friendlyExpiryTime,
-              activationCode: result.activationCode
-            },
-            history: [],
-            currentStateName: 'addDeviceFlow.showActivationCode',
-            wizardState: {
-              'addDeviceFlow.showActivationCode': {}
-            }
-          };
-          var wizard = WizardFactory.create(wizardState);
-          $state.go('addDeviceFlow.showActivationCode', {
-            wizard: wizard
-          });
+      OtpService.generateOtp(vm.currentUser.userName).then(function (code) {
+        var wizardState = {
+          data: {
+            function: "showCode",
+            deviceName: vm.deviceName,
+            activationCode: code.code,
+            code: code,
+            expiryTime: code.friendlyExpiresOn,
+            cisUuid: vm.currentUser.id,
+            email: vm.currentUser.email,
+            displayName: vm.currentUser.displayName,
+            organizationId: vm.currentUser.meta.organizationID
+          },
+          history: [],
+          currentStateName: 'addDeviceFlow.showActivationCode',
+          wizardState: {
+            'addDeviceFlow.showActivationCode': {}
+          }
+        };
+        var wizard = WizardFactory.create(wizardState);
+        $state.go('addDeviceFlow.showActivationCode', {
+          wizard: wizard
         });
+      }, function (err) {
+        vm.isLoading = false;
+        Notification.error(err.statusText);
+      });
     };
 
     function activate() {
