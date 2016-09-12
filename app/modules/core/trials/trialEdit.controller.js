@@ -460,8 +460,8 @@
       }
       setViewState('trialEdit.call', canAddDevice());
       setViewState('trialEdit.webex', hasEnabledWebexTrial());
-      setViewState('trialEdit.pstn', vm.pstnTrial.enabled);
-      setViewState('trialEdit.emergAddress', vm.pstnTrial.enabled);
+      setViewState('trialEdit.pstn', hasEnabledCallTrial());
+      setViewState('trialEdit.emergAddress', hasEnabledCallTrial());
 
       addRemoveStates();
 
