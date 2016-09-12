@@ -6,7 +6,7 @@
     .factory('OverviewUsersCard', OverviewUsersCard);
 
   /* @ngInject */
-  function OverviewUsersCard($state, $rootScope, $translate, Auth, Authinfo) {
+  function OverviewUsersCard($state, $rootScope, $translate, Auth, Authinfo, Config) {
     return {
       createCard: function createCard() {
         var card = {};
@@ -39,7 +39,7 @@
               if (data.volume >= max) {
                 max = data.volume;
                 if (data.volume === max) {
-                  if (!(license.licenseType) || license.licenseType !== 'MESSAGING') {
+                  if (!(license.licenseType) || license.licenseType !== Config.licenseTypes.MESSAGING) {
                     license = data;
                   }
                 } else {
@@ -50,6 +50,8 @@
                 number: max,
                 licenseType: license.licenseType
               });
+              card.licenseNumber = max;
+              card.licenseType = license.licenseType;
             });
           });
         }

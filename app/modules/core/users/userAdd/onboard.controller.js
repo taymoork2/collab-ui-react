@@ -1551,6 +1551,10 @@
           }
         };
 
+        $scope.goToUsersPage = function () {
+          $state.go('users.list');
+        };
+
         $scope.fixBulkErrors = function () {
           if (isFTW) {
             $scope.wizard.goToStep('manualEntry');

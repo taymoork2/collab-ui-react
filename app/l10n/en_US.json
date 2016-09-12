@@ -4869,7 +4869,7 @@
       },
       "licenses": {
         "title": "Licenses",
-        "text": "You have {{number}} {{licenseType}} Licenses that you have not assigned to anyone",
+        "text": "You have {{number}} unassigned {{licenseType}} licenses",
         "manageUsersButton": "Manage Users"
       }
     }
