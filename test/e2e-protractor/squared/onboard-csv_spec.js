@@ -74,9 +74,9 @@ describe('Onboard Users using CSV File', function () {
   afterAll(function () {
     utils.deleteFile(CSV_FILE_PATH);
     _.each(userList, function (user, ind) {
-      deleteUtils.deleteUser(user, token).then(function() {
-        console.log('Deleting user #' + ind + ' (' + user + ')' );
-        if ( ind == (userList.length - 1) ) {
+      deleteUtils.deleteUser(user, token).then(function () {
+        console.log('Deleting user #' + ind + ' (' + user + ')');
+        if (ind == (userList.length - 1)) {
           console.log('All users deleted.');
         }
       });

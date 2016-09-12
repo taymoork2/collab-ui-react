@@ -1,6 +1,6 @@
 'use strict';
 
-/*global TIMEOUT*/
+/*global TIMEOUT, isSauce*/
 
 var config = require('./test.config.js');
 var request = require('request');
@@ -68,7 +68,7 @@ exports.randomTestGmail = function () {
 };
 
 exports.randomTestGmailwithSalt = function (salt) {
-  if ( !isSauce ) {
+  if (!isSauce) {
     salt = 'LOC_' + salt;
   }
   return 'collabctg+' + salt + '_' + this.getDateTimeString() + '_' + this.randomId() + '@gmail.com';

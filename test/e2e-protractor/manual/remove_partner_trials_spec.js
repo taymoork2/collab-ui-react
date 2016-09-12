@@ -1,6 +1,6 @@
 'use strict';
 
-/*global deleteTrialUtils*/
+/*global TIMEOUT, deleteTrialUtils*/
 
 describe('Remove partner trials from partner org page', function () {
 
@@ -12,22 +12,22 @@ describe('Remove partner trials from partner org page', function () {
     });
   });
 
-  describe('should remove all trials matching query string', function() {
+  describe('should remove all trials matching query string', function () {
     _.times(25, deleteCurrentPage);
 
     function deleteCurrentPage(i) {
       var query = "Atlas_Test_UI";
 
       it('should select trials matching "' + query + '"', function () {
-        utils.sendKeys(partner.searchFilter, query + protractor.Key.ENTER );
+        utils.sendKeys(partner.searchFilter, query + protractor.Key.ENTER);
         utils.expectValueToBeSet(partner.searchFilter, query, TIMEOUT);
         utils.waitForSpinner();
-        utils.click(partner.allFilter).then( function() {
+        utils.click(partner.allFilter).then(function () {
           console.log('Removing all trials starting with "' + query + '"');
         });
       });
 
-      it ('should delete all trials on page #' + (i + 1), function() {
+      it('should delete all trials on page #' + (i + 1), function () {
         utils.waitForSpinner();
         element.all(by.css('.ui-grid .ui-grid-row')).each(function (elem) {
           elem.getText().then(function (text) {
