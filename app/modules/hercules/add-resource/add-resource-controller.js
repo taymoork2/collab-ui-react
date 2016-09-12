@@ -6,14 +6,15 @@
     .controller('AddResourceController', AddResourceController);
 
   /* @ngInject */
-  function AddResourceController($modalInstance, $window, $translate, connectorType, servicesId, firstTimeSetup, XhrNotificationService, FusionClusterService, FusionUtils, $modal, $state) {
+  function AddResourceController($modalInstance, $window, $translate, connectorType, servicesId, firstTimeSetup, XhrNotificationService, FusionClusterService, FusionUtils, $modal, $state, ResourceGroupService, FeatureToggleService) {
     var vm = this;
     vm.hostname = '';
-    vm.releaseChannel = 'GA'; // hard-coded for now, release channel support is not part of phase 1
+    vm.releaseChannel = 'GA'; // always create a new cluster with 'GA'.
     vm.connectorType = connectorType;
     vm.servicesId = servicesId;
-    vm.preregistrationCompleted = false;
+    vm.preregistrationCompletedGoToExpressway = false;
     vm.provisioningToExistingExpresswayCompleted = false;
+    vm.gettingResourceGroupInput = false;
     vm.selectedAction = 'new';
     vm.closeSetupModal = closeSetupModal;
     vm.firstTimeSetup = firstTimeSetup;
@@ -46,6 +47,15 @@
     vm.selectedCluster = '';
     vm.expresswayOptions = [];
 
+    vm.optionalSelectResourceGroupStep = true;
+    vm.resourceGroupOptions = [{ label: $translate.instant('hercules.addResourceDialog.selectGroup'), value: '' }];
+    vm.selectedResourceGroup = vm.resourceGroupOptions[0];
+    vm.assignToResourceGroup = 'no';
+    vm._translation = {
+      assignYes: $translate.instant('hercules.addResourceDialog.assignYes'),
+      assignNo: $translate.instant('hercules.addResourceDialog.assignNo'),
+    };
+
     vm.provisionExpresswayWithNewConnector = provisionExpresswayWithNewConnector;
     vm.addPreregisteredClusterToAllowList = addPreregisteredClusterToAllowList;
     vm.getIconClassForService = getIconClassForService;
@@ -58,12 +68,16 @@
         .then(_.partialRight(_.get, 'id'))
         .then(_.partial(provisionConnector, connectorType))
         .then(addPreregisteredClusterToAllowList)
-        .then(pregistrationSucceeded)
+        .then(displayResourceGroupsOrEndWizard)
         .catch(XhrNotificationService.notify);
     };
 
-    function pregistrationSucceeded() {
-      vm.preregistrationCompleted = true;
+    function displayResourceGroupsOrEndWizard() {
+      if (vm.optionalSelectResourceGroupStep) {
+        vm.gettingResourceGroupInput = true;
+      } else {
+        vm.preregistrationCompletedGoToExpressway = true;
+      }
     }
 
     function preregisterCluster(clusterName) {
@@ -92,6 +106,9 @@
 
     function addPreregisteredClusterToAllowList(clusterId) {
       return FusionClusterService.addPreregisteredClusterToAllowList(vm.hostname, 3600, clusterId)
+        .then(function () {
+          vm.clusterId = clusterId;
+        })
         .catch(function () {
           $translate.instant('hercules.addResourceDialog.cannotFinalizeAllowlisting');
         });
@@ -197,7 +214,7 @@
     };
 
     vm.inChooseNewOrExistingScreen = function () {
-      return !(vm.preregistrationCompleted || vm.provisioningToExistingExpresswayCompleted || !vm.welcomeScreenAccepted || vm.chooseClusterName);
+      return !(vm.preregistrationCompletedGoToExpressway || vm.provisioningToExistingExpresswayCompleted || !vm.welcomeScreenAccepted || vm.chooseClusterName);
     };
 
     vm.inHostnameSelectionScreen = function () {
@@ -210,7 +227,7 @@
     };
 
     vm.inClusterNameSelectionScreen = function () {
-      return vm.chooseClusterName && !vm.preregistrationCompleted;
+      return vm.chooseClusterName && !vm.gettingResourceGroupInput && !vm.preregistrationCompletedGoToExpressway;
     };
 
     vm.completeClusterNameScreen = function () {
@@ -226,12 +243,42 @@
     };
 
     vm.inFinalScreen = function () {
-      return vm.preregistrationCompleted || vm.provisioningToExistingExpresswayCompleted;
+      return vm.preregistrationCompletedGoToExpressway || vm.provisioningToExistingExpresswayCompleted;
     };
 
     vm.completeAddResourceModal = function () {
       $modalInstance.close();
       $window.open("https://" + encodeURIComponent(vm.hostname) + "/fusionregistration");
+    };
+
+    if (FeatureToggleService.supports(FeatureToggleService.features.atlasF237ResourceGroups)) {
+      ResourceGroupService.getAllAsOptions().then(function (options) {
+        if (options.length > 0) {
+          vm.resourceGroupOptions = vm.resourceGroupOptions.concat(options);
+        } else {
+          vm.optionalSelectResourceGroupStep = false;
+        }
+      }, function () {
+        vm.couldNotReadResourceGroupsFromServer = true;
+      });
+    } else {
+      vm.optionalSelectResourceGroupStep = false;
+    }
+
+    vm.saveResourceGroup = function () {
+      if (vm.selectedResourceGroup.value !== '') {
+        ResourceGroupService.assign(vm.clusterId, vm.selectedResourceGroup.value)
+          .catch(function () {
+            XhrNotificationService.notify($translate.instant('hercules.addResourceDialog.CouldNotSaveResourceGroup'));
+          })
+          .finally(function () {
+            vm.preregistrationCompletedGoToExpressway = true;
+            vm.gettingResourceGroupInput = false;
+          });
+      } else {
+        vm.preregistrationCompletedGoToExpressway = true;
+        vm.gettingResourceGroupInput = false;
+      }
     };
 
   }

@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Controller: AddResourceController', function () {
-  var controller, $scope, $controller, $q, modalInstanceMock, translateMock, windowMock, clusterServiceMock, fusionClusterServiceMock;
+  var controller, $scope, $controller, $q, modalInstanceMock, translateMock, windowMock, clusterServiceMock, fusionClusterServiceMock, FeatureToggleServiceMock;
 
   var clusterIdOfNewCluster = 'c6b4d8f1-6d34-465c-8d6d-b541058fc15e';
   var newConnectorType = 'c_cal';
@@ -10,15 +10,12 @@ describe('Controller: AddResourceController', function () {
   beforeEach(angular.mock.module('Hercules'));
   beforeEach(inject(dependencies));
   beforeEach(initController);
-  beforeEach(initSpies);
 
   function dependencies($rootScope, _$controller_, _$q_) {
     $scope = $rootScope.$new();
     $controller = _$controller_;
     $q = _$q_;
   }
-
-  function initSpies() {}
 
   function initController() {
     translateMock = {
@@ -147,6 +144,11 @@ describe('Controller: AddResourceController', function () {
       }]))
     };
 
+    FeatureToggleServiceMock = {
+      supports: sinon.stub(),
+      features: ''
+    };
+
     controller = $controller('AddResourceController', {
       $scope: $scope,
       $modalInstance: modalInstanceMock,
@@ -156,7 +158,8 @@ describe('Controller: AddResourceController', function () {
       servicesId: 'squared-fusion-cal',
       ClusterService: clusterServiceMock,
       FusionClusterService: fusionClusterServiceMock,
-      firstTimeSetup: false
+      firstTimeSetup: false,
+      FeatureToggleService: FeatureToggleServiceMock
     });
     $scope.$apply();
   }
@@ -208,6 +211,11 @@ describe('Controller: AddResourceController', function () {
       $scope.$apply();
       expect(fusionClusterServiceMock.addPreregisteredClusterToAllowList).toHaveBeenCalledTimes(1);
       expect(fusionClusterServiceMock.addPreregisteredClusterToAllowList).toHaveBeenCalledWith('hostnameProvidedByUser', 3600, clusterIdOfNewCluster);
+    });
+
+    it('should not show the Resource Group step unless you are feature toggled', function () {
+      $scope.$apply();
+      expect(controller.optionalSelectResourceGroupStep).toBe(false);
     });
 
   });
