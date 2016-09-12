@@ -1539,7 +1539,9 @@
     "errors": {
       "enableServiceEntitlementFailure": "Failed! Your organization is missing entitlements that are needed to add the {{serviceName}}. Contact your support representative to fix the issue.",
       "enableServiceFailure": "Adding the {{serviceName}} failed.",
-      "sipDomainInvalid": "SIP destination was invalid. Please enter a valid SIP destination or IP address",
+      "failedToEnableConnect": "Could not enable Call Service Connect.",
+      "sipDomainSaved": "SIP Destination saved successfully.",
+      "sipDomainInvalid": "Could not save SIP Destination. Try again later.",
       "invalidEmail": "Please enter a list of comma-separated email addresses"
     },
     "cloudExtensions": {
@@ -1637,10 +1639,8 @@
       "call": {
         "featureHeading": "Feature Settings",
         "feature": "Enable or disable Call Service features.",
-        "awareHeading": "Aware",
         "aware": "Users can share content from the Cisco Spark app during a call from their work phones and view their call history in the app.",
         "on": "On by default",
-        "connectHeading": "Connect",
         "connectSettingsHeading": "Connect Settings",
         "connectSettings": "Required settings for the Connect feature.",
         "connect": "Users' incoming calls will ring their work phones and the Cisco Spark app. Users can call their colleagues from either their phones or the app, too.",
@@ -1716,14 +1716,16 @@
       },
       "add-SIP-destination": {
         "title": "Complete Call Service Connect Configuration",
-        "description": "Add the SIP Destination for call routing under <a ng-click=\"{{onclick}}\">Settings.</a>"
+        "description": "Add the SIP Destination for call routing under <a ng-click=\"{{onclick}}\">Settings.</a>",
+        "description-already-in-settings-page": "Add the SIP Destination for call routing below."
       },
       "no-fuse-yet": {
         "title": "Register your Cisco Expressways for Hybrid Services"
       },
       "add-call-service-connect": {
         "title": "Add Call Service Connect",
-        "description": "Activate Call Service Connect and add SIP destination under <a ng-click=\"{{onclick}}\">Settings.</a>"
+        "description": "Activate Call Service Connect and add the SIP destination under <a ng-click=\"{{onclick}}\">Settings.</a>",
+        "description-already-in-settings-page": "Activate Call Service Connect and add the SIP Destination for call routing below."
       }
     },
     "fusion": {
