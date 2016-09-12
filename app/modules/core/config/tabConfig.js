@@ -107,7 +107,7 @@
   },
     {
       tab: 'statusTab',
-      icon: 'icon-alerting',
+      icon: 'icon-bell',
       title: 'tabs.statusTab',
       desc: 'tabs.statusTabDesc',
       feature: 'global-status',

@@ -64,7 +64,6 @@
     "draggable.js": "git+https://github.com/gtramontina/draggable.js.git#v1.0.1",
     "dragular": "~4.2.0",
     "emailjs-addressparser": "~1.0.1",
-    "font-awesome": "~4.0.3",
     "google-libphonenumber": "^1.1.0",
     "ical.js": "~1.2.1",
     "jquery-csv": "~0.8.1",
