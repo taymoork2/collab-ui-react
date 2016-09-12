@@ -148,7 +148,6 @@
       optionalvmdid: 'optional-vm-did',
       globalStatus: 'global-status',
       atlasF237ResourceGroups: 'atlas-f237-resource-group',
-      huronSiteDialDigit: 'huron-site-dial-digit',
       huronLocalDialing: 'huron-local-dialing'
     };
 
