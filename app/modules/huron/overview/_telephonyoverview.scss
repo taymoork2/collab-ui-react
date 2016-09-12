@@ -1,13 +1,7 @@
 /*****  _telephonyoverview  *****/
 
-directory-number-list >  .feature-list {
-  max-height:  vr-adjust(200);
-  overflow-x: hidden;
-  overflow-y: auto;
-}
-
 .line-title-with-warning .section-title-row {
-    @include vr-spacing(pt, 0);
+  @include vr-spacing(pt, 0);
 }
 
 .limit-reach-warning {
