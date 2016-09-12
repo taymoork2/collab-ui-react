@@ -35,7 +35,7 @@
           function (err) {
             // TODO: fix this callback crap!
             if (err) {
-              vm.squaredFusionEc = !vm.squaredFusionEc
+              vm.squaredFusionEc = !vm.squaredFusionEc;
               Notification.error('hercules.errors.failedToEnableConnect');
             }
           }
