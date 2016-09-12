@@ -98,7 +98,7 @@
           //function for sorting based on which piece of data the row has
           angular.forEach($scope.gridData, function (row) {
             row.displayField = function () {
-              return this.userId || this.status;
+              return (this.userId ? this.userId : $translate.instant('linesPage.unassignedLines')) + (this.status ? ' - ' + this.status : '');
             };
           });
           vm.gridRefresh = false;

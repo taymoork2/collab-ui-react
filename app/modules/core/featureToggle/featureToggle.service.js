@@ -147,7 +147,9 @@
       csdmPlaces: 'csdm-places',
       optionalvmdid: 'optional-vm-did',
       globalStatus: 'global-status',
-      atlasF237ResourceGroups: 'atlas-f237-resource-group'
+      atlasF237ResourceGroups: 'atlas-f237-resource-group',
+      huronSiteDialDigit: 'huron-site-dial-digit',
+      huronLocalDialing: 'huron-local-dialing'
     };
 
     var toggles = {};
@@ -189,7 +191,8 @@
       stateSupportsFeature: stateSupportsFeature,
       supports: supports,
       supportsDirSync: supportsDirSync,
-      features: features
+      features: features,
+      getCustomerHuronToggle: getCustomerHuronToggle
     };
 
     init();
@@ -267,19 +270,23 @@
             return false;
           });
         } else {
-          return HuronCustomerFeatureToggleService.get({
-            customerId: id,
-            featureName: feature
-          }).$promise.then(function (data) {
-            toggles[feature] = data.val;
-            return data.val;
-          }).catch(function () {
-            return false;
-          });
+          return getCustomerHuronToggle(id, feature);
         }
       } else {
         return $q.when(false);
       }
+    }
+
+    function getCustomerHuronToggle(id, feature) {
+      return HuronCustomerFeatureToggleService.get({
+        customerId: id,
+        featureName: feature
+      }).$promise.then(function (data) {
+        toggles[feature] = data.val;
+        return data.val;
+      }).catch(function () {
+        return false;
+      });
     }
 
     function getFeature(isUser, id, feature) {

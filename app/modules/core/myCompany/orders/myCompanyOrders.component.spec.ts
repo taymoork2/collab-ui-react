@@ -5,7 +5,6 @@ describe('Component: myCompanyOrders', () => {
     this.initModules('Core');
     this.injectDependencies(
       '$q',
-      '$sce',
       'DigitalRiverService',
       'MyCompanyOrdersService',
       'Notification'
@@ -37,8 +36,7 @@ describe('Component: myCompanyOrders', () => {
     spyOn(this.MyCompanyOrdersService, 'getOrderDetails').and.returnValue(this.getOrderDetailsDefer.promise);
     spyOn(this.Notification, 'errorWithTrackingId');
 
-    spyOn(this.DigitalRiverService, 'getDigitalRiverOrderHistoryUrl').and.returnValue(this.getDigitalRiverOrderHistoryUrlDefer.promise);
-    spyOn(this.$sce, 'trustAsResourceUrl').and.callThrough();
+    spyOn(this.DigitalRiverService, 'getOrderHistoryUrl').and.returnValue(this.getDigitalRiverOrderHistoryUrlDefer.promise);
 
     this.compileComponent('myCompanyOrders');
     spyOn(this.controller, 'downloadPdf');
@@ -49,10 +47,8 @@ describe('Component: myCompanyOrders', () => {
       this.getDigitalRiverOrderHistoryUrlDefer.resolve('https://some.url.com');
       this.$scope.$apply();
 
-      expect(this.DigitalRiverService.getDigitalRiverOrderHistoryUrl).toHaveBeenCalled();
-      expect(this.$sce.trustAsResourceUrl).toHaveBeenCalledWith('https://some.url.com');
-      expect(this.controller.digitalRiverOrderHistoryUrl.$$unwrapTrustedValue()).toEqual('https://some.url.com');
-      expect(this.view.find('iframe')).toHaveAttr('src', 'https://some.url.com');
+      expect(this.DigitalRiverService.getOrderHistoryUrl).toHaveBeenCalled();
+      expect(this.controller.digitalRiverOrderHistoryUrl).toEqual('https://some.url.com');
     });
 
     it('should notify error if unable to get digital river url', function () {
@@ -62,7 +58,7 @@ describe('Component: myCompanyOrders', () => {
       });
       this.$scope.$apply();
 
-      expect(this.view.find('iframe')).not.toHaveAttr('src');
+      expect(this.controller.loading).toBe(false);
       expect(this.Notification.errorWithTrackingId).toHaveBeenCalledWith(jasmine.any(Object), 'myCompanyOrders.loadError');
     });
   });
