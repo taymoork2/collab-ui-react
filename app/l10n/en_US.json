@@ -2667,6 +2667,7 @@
     "duplicateNumber": "{{number}} is a duplicate number.",
     "orderNumbersError": "There was a problem with your order. Please check order history for details.",
     "blockOrderError": "Failed to order {{quantity}} block number(s) with area code {{areaCode}}.",
+    "swivel": "SWIVEL",
     "swivelAddError": "Failed to add {{number}}.",
     "swivelDuplicateError": "Failed to add {{number}}. Number already exists.",
     "customerCreateError": "Failed to create customer with the carrier.",
