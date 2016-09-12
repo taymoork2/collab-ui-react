@@ -1,15 +1,15 @@
 <div class="ui-grid-cell-contents align-left status-column" ng-click="grid.appScope.partnerClicked(row.entity.customerOrgId)" ng-class="{'selected' : row.isSelected}">
   <div ng-switch="grid.appScope.getAccountStatus(row.entity)">
     <div ng-switch-when="active">
-      <i class="icon icon-circle active"></i>
+      <i class="icon icon-circle status-indicator success"></i>
       <span translate="customerPage.purchased"></span>
     </div>
     <div ng-switch-when="trial">
-      <i class="icon icon-circle trial"></i>
+      <i class="icon icon-circle status-indicator warning"></i>
       <span translate="customerPage.trial"></span>
     </div>
     <div ng-switch-when="expired">
-      <i class="icon icon-circle expired"></i>
+      <i class="icon icon-circle status-indicator danger"></i>
       <span translate="customerPage.expired"></span>
     </div>
     <div ng-switch-default>

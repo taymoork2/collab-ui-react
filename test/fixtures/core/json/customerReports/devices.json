@@ -257,25 +257,25 @@
       "deviceType": "registeredEndpoints.allDevices",
       "graph": [{
         "totalRegisteredDevices": 104,
-        "modifiedDate": "Jan 26"
+        "date": "Jan 26"
       }, {
         "totalRegisteredDevices": 440,
-        "modifiedDate": "Jan 27"
+        "date": "Jan 27"
       }, {
         "totalRegisteredDevices": 427,
-        "modifiedDate": "Jan 28"
+        "date": "Jan 28"
       }, {
         "totalRegisteredDevices": 427,
-        "modifiedDate": "Jan 29"
+        "date": "Jan 29"
       }, {
         "totalRegisteredDevices": 426,
-        "modifiedDate": "Jan 30"
+        "date": "Jan 30"
       }, {
         "totalRegisteredDevices": 429,
-        "modifiedDate": "Jan 31"
+        "date": "Jan 31"
       }, {
         "totalRegisteredDevices": 427,
-        "modifiedDate": "Feb 01"
+        "date": "Feb 01"
       }],
       "emptyGraph": false,
       "balloon": true
@@ -283,25 +283,25 @@
       "deviceType": "Cisco 8845",
       "graph": [{
         "totalRegisteredDevices": 1,
-        "modifiedDate": "Jan 26"
+        "date": "Jan 26"
       }, {
         "totalRegisteredDevices": 163,
-        "modifiedDate": "Jan 27"
+        "date": "Jan 27"
       }, {
         "totalRegisteredDevices": 154,
-        "modifiedDate": "Jan 28"
+        "date": "Jan 28"
       }, {
         "totalRegisteredDevices": 154,
-        "modifiedDate": "Jan 29"
+        "date": "Jan 29"
       }, {
         "totalRegisteredDevices": 154,
-        "modifiedDate": "Jan 30"
+        "date": "Jan 30"
       }, {
         "totalRegisteredDevices": 155,
-        "modifiedDate": "Jan 31"
+        "date": "Jan 31"
       }, {
         "totalRegisteredDevices": 154,
-        "modifiedDate": "Feb 01"
+        "date": "Feb 01"
       }],
       "emptyGraph": false,
       "balloon": true
@@ -309,25 +309,25 @@
       "deviceType": "Cisco 8865",
       "graph": [{
         "totalRegisteredDevices": 1,
-        "modifiedDate": "Jan 26"
+        "date": "Jan 26"
       }, {
         "totalRegisteredDevices": 182,
-        "modifiedDate": "Jan 27"
+        "date": "Jan 27"
       }, {
         "totalRegisteredDevices": 179,
-        "modifiedDate": "Jan 28"
+        "date": "Jan 28"
       }, {
         "totalRegisteredDevices": 179,
-        "modifiedDate": "Jan 29"
+        "date": "Jan 29"
       }, {
         "totalRegisteredDevices": 178,
-        "modifiedDate": "Jan 30"
+        "date": "Jan 30"
       }, {
         "totalRegisteredDevices": 179,
-        "modifiedDate": "Jan 31"
+        "date": "Jan 31"
       }, {
         "totalRegisteredDevices": 178,
-        "modifiedDate": "Feb 01"
+        "date": "Feb 01"
       }],
       "emptyGraph": false,
       "balloon": true
@@ -335,25 +335,25 @@
       "deviceType": "Cisco 7841",
       "graph": [{
         "totalRegisteredDevices": 23,
-        "modifiedDate": "Jan 26"
+        "date": "Jan 26"
       }, {
         "totalRegisteredDevices": 21,
-        "modifiedDate": "Jan 27"
+        "date": "Jan 27"
       }, {
         "totalRegisteredDevices": 21,
-        "modifiedDate": "Jan 28"
+        "date": "Jan 28"
       }, {
         "totalRegisteredDevices": 21,
-        "modifiedDate": "Jan 29"
+        "date": "Jan 29"
       }, {
         "totalRegisteredDevices": 21,
-        "modifiedDate": "Jan 30"
+        "date": "Jan 30"
       }, {
         "totalRegisteredDevices": 21,
-        "modifiedDate": "Jan 31"
+        "date": "Jan 31"
       }, {
         "totalRegisteredDevices": 21,
-        "modifiedDate": "Feb 01"
+        "date": "Feb 01"
       }],
       "emptyGraph": false,
       "balloon": true
@@ -361,25 +361,25 @@
       "deviceType": "Cisco 8861",
       "graph": [{
         "totalRegisteredDevices": 26,
-        "modifiedDate": "Jan 26"
+        "date": "Jan 26"
       }, {
         "totalRegisteredDevices": 25,
-        "modifiedDate": "Jan 27"
+        "date": "Jan 27"
       }, {
         "totalRegisteredDevices": 25,
-        "modifiedDate": "Jan 28"
+        "date": "Jan 28"
       }, {
         "totalRegisteredDevices": 25,
-        "modifiedDate": "Jan 29"
+        "date": "Jan 29"
       }, {
         "totalRegisteredDevices": 25,
-        "modifiedDate": "Jan 30"
+        "date": "Jan 30"
       }, {
         "totalRegisteredDevices": 25,
-        "modifiedDate": "Jan 31"
+        "date": "Jan 31"
       }, {
         "totalRegisteredDevices": 26,
-        "modifiedDate": "Feb 01"
+        "date": "Feb 01"
       }],
       "emptyGraph": false,
       "balloon": true
@@ -387,25 +387,25 @@
       "deviceType": "Cisco 8851",
       "graph": [{
         "totalRegisteredDevices": 19,
-        "modifiedDate": "Jan 26"
+        "date": "Jan 26"
       }, {
         "totalRegisteredDevices": 19,
-        "modifiedDate": "Jan 27"
+        "date": "Jan 27"
       }, {
         "totalRegisteredDevices": 19,
-        "modifiedDate": "Jan 28"
+        "date": "Jan 28"
       }, {
         "totalRegisteredDevices": 19,
-        "modifiedDate": "Jan 29"
+        "date": "Jan 29"
       }, {
         "totalRegisteredDevices": 19,
-        "modifiedDate": "Jan 30"
+        "date": "Jan 30"
       }, {
         "totalRegisteredDevices": 19,
-        "modifiedDate": "Jan 31"
+        "date": "Jan 31"
       }, {
         "totalRegisteredDevices": 19,
-        "modifiedDate": "Feb 01"
+        "date": "Feb 01"
       }],
       "emptyGraph": false,
       "balloon": true
@@ -413,25 +413,25 @@
       "deviceType": "Cisco 7811",
       "graph": [{
         "totalRegisteredDevices": 2,
-        "modifiedDate": "Jan 26"
+        "date": "Jan 26"
       }, {
         "totalRegisteredDevices": 2,
-        "modifiedDate": "Jan 27"
+        "date": "Jan 27"
       }, {
         "totalRegisteredDevices": 2,
-        "modifiedDate": "Jan 28"
+        "date": "Jan 28"
       }, {
         "totalRegisteredDevices": 2,
-        "modifiedDate": "Jan 29"
+        "date": "Jan 29"
       }, {
         "totalRegisteredDevices": 2,
-        "modifiedDate": "Jan 30"
+        "date": "Jan 30"
       }, {
         "totalRegisteredDevices": 2,
-        "modifiedDate": "Jan 31"
+        "date": "Jan 31"
       }, {
         "totalRegisteredDevices": 2,
-        "modifiedDate": "Feb 01"
+        "date": "Feb 01"
       }],
       "emptyGraph": false,
       "balloon": true
@@ -439,25 +439,25 @@
       "deviceType": "Cisco 7821",
       "graph": [{
         "totalRegisteredDevices": 3,
-        "modifiedDate": "Jan 26"
+        "date": "Jan 26"
       }, {
         "totalRegisteredDevices": 1,
-        "modifiedDate": "Jan 27"
+        "date": "Jan 27"
       }, {
         "totalRegisteredDevices": 1,
-        "modifiedDate": "Jan 28"
+        "date": "Jan 28"
       }, {
         "totalRegisteredDevices": 1,
-        "modifiedDate": "Jan 29"
+        "date": "Jan 29"
       }, {
         "totalRegisteredDevices": 1,
-        "modifiedDate": "Jan 30"
+        "date": "Jan 30"
       }, {
         "totalRegisteredDevices": 1,
-        "modifiedDate": "Jan 31"
+        "date": "Jan 31"
       }, {
         "totalRegisteredDevices": 1,
-        "modifiedDate": "Feb 01"
+        "date": "Feb 01"
       }],
       "emptyGraph": false,
       "balloon": true
@@ -465,25 +465,25 @@
       "deviceType": "Cisco 8811",
       "graph": [{
         "totalRegisteredDevices": 13,
-        "modifiedDate": "Jan 26"
+        "date": "Jan 26"
       }, {
         "totalRegisteredDevices": 12,
-        "modifiedDate": "Jan 27"
+        "date": "Jan 27"
       }, {
         "totalRegisteredDevices": 11,
-        "modifiedDate": "Jan 28"
+        "date": "Jan 28"
       }, {
         "totalRegisteredDevices": 11,
-        "modifiedDate": "Jan 29"
+        "date": "Jan 29"
       }, {
         "totalRegisteredDevices": 11,
-        "modifiedDate": "Jan 30"
+        "date": "Jan 30"
       }, {
         "totalRegisteredDevices": 12,
-        "modifiedDate": "Jan 31"
+        "date": "Jan 31"
       }, {
         "totalRegisteredDevices": 11,
-        "modifiedDate": "Feb 01"
+        "date": "Feb 01"
       }],
       "emptyGraph": false,
       "balloon": true
@@ -491,25 +491,25 @@
       "deviceType": "Cisco DX650",
       "graph": [{
         "totalRegisteredDevices": 1,
-        "modifiedDate": "Jan 26"
+        "date": "Jan 26"
       }, {
         "totalRegisteredDevices": 1,
-        "modifiedDate": "Jan 27"
+        "date": "Jan 27"
       }, {
         "totalRegisteredDevices": 1,
-        "modifiedDate": "Jan 28"
+        "date": "Jan 28"
       }, {
         "totalRegisteredDevices": 1,
-        "modifiedDate": "Jan 29"
+        "date": "Jan 29"
       }, {
         "totalRegisteredDevices": 1,
-        "modifiedDate": "Jan 30"
+        "date": "Jan 30"
       }, {
         "totalRegisteredDevices": 1,
-        "modifiedDate": "Jan 31"
+        "date": "Jan 31"
       }, {
         "totalRegisteredDevices": 1,
-        "modifiedDate": "Feb 01"
+        "date": "Feb 01"
       }],
       "emptyGraph": false,
       "balloon": true
@@ -517,25 +517,25 @@
       "deviceType": "Cisco 8841",
       "graph": [{
         "totalRegisteredDevices": 15,
-        "modifiedDate": "Jan 26"
+        "date": "Jan 26"
       }, {
         "totalRegisteredDevices": 14,
-        "modifiedDate": "Jan 27"
+        "date": "Jan 27"
       }, {
         "totalRegisteredDevices": 14,
-        "modifiedDate": "Jan 28"
+        "date": "Jan 28"
       }, {
         "totalRegisteredDevices": 14,
-        "modifiedDate": "Jan 29"
+        "date": "Jan 29"
       }, {
         "totalRegisteredDevices": 14,
-        "modifiedDate": "Jan 30"
+        "date": "Jan 30"
       }, {
         "totalRegisteredDevices": 14,
-        "modifiedDate": "Jan 31"
+        "date": "Jan 31"
       }, {
         "totalRegisteredDevices": 14,
-        "modifiedDate": "Feb 01"
+        "date": "Feb 01"
       }],
       "emptyGraph": false,
       "balloon": true
@@ -579,25 +579,25 @@
     "one": [{
       "deviceType": "registeredEndpoints.allDevices",
       "graph": [{
-        "modifiedDate": "Jan 26",
+        "date": "Jan 26",
         "totalRegisteredDevices": 15
       }, {
-        "modifiedDate": "Jan 27",
+        "date": "Jan 27",
         "totalRegisteredDevices": 30
       }, {
-        "modifiedDate": "Jan 28",
+        "date": "Jan 28",
         "totalRegisteredDevices": 45
       }, {
-        "modifiedDate": "Jan 29",
+        "date": "Jan 29",
         "totalRegisteredDevices": 60
       }, {
-        "modifiedDate": "Jan 30",
+        "date": "Jan 30",
         "totalRegisteredDevices": 75
       }, {
-        "modifiedDate": "Jan 31",
+        "date": "Jan 31",
         "totalRegisteredDevices": 90
       }, {
-        "modifiedDate": "Feb 01",
+        "date": "Feb 01",
         "totalRegisteredDevices": 105
       }],
       "balloon": false
@@ -605,16 +605,16 @@
     "two": [{
       "deviceType": "registeredEndpoints.allDevices",
       "graph": [{
-        "modifiedDate": "Jan 09",
+        "date": "Jan 09",
         "totalRegisteredDevices": 15
       }, {
-        "modifiedDate": "Jan 16",
+        "date": "Jan 16",
         "totalRegisteredDevices": 30
       }, {
-        "modifiedDate": "Jan 23",
+        "date": "Jan 23",
         "totalRegisteredDevices": 45
       }, {
-        "modifiedDate": "Jan 30",
+        "date": "Jan 30",
         "totalRegisteredDevices": 60
       }],
       "balloon": false
@@ -622,13 +622,13 @@
     "three": [{
       "deviceType": "registeredEndpoints.allDevices",
       "graph": [{
-        "modifiedDate": "December",
+        "date": "December",
         "totalRegisteredDevices": 15
       }, {
-        "modifiedDate": "January",
+        "date": "January",
         "totalRegisteredDevices": 30
       }, {
-        "modifiedDate": "February",
+        "date": "February",
         "totalRegisteredDevices": 45
       }],
       "balloon": false

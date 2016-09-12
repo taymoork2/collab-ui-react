@@ -5,7 +5,7 @@
     .module('Huron')
     .controller('SpeedDialsCtrl', SpeedDialsCtrl);
 
-  function SpeedDialsCtrl($translate, $stateParams, $scope, $modal, dragularService, SpeedDialsService, Notification) {
+  function SpeedDialsCtrl($translate, $stateParams, $scope, $modal, $timeout, dragularService, SpeedDialsService, Notification) {
     var speedDials = this;
     speedDials.currentUser = $stateParams.currentUser;
     if (_.has(speedDials, 'currentUser') && _.has(speedDials.currentUser, 'id')) {
@@ -40,6 +40,9 @@
       };
       speedDials.speedDialList.push(sd);
       speedDials.setEdit(sd);
+      $timeout(function () {
+        $('#sd-' + sd.index).focus();
+      }, 100);
     };
 
     speedDials.setEdit = function (sd) {
@@ -118,7 +121,7 @@
         });
         sd.edit = false;
         sd.label = speedDials.newLabel;
-        sd.number = speedDials.newNumber;
+        sd.number = speedDials.newNumber.replace(/ /g, '');
         speedDials.newLabel = '';
         speedDials.newNumber = '';
       } else if (speedDials.reordering) {

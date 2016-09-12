@@ -90,49 +90,49 @@
     "date": "2015-12-10T17:52:47.411Z"
   },
   "response": [{
-    "modifiedDate": "Dec 03",
+    "date": "Dec 03",
     "balloon": true,
     "totalRooms": 0,
     "groupRooms": 0,
     "oneToOneRooms": 0,
     "avgRooms": "0.00"
   }, {
-    "modifiedDate": "Dec 04",
+    "date": "Dec 04",
     "balloon": true,
     "totalRooms": 0,
     "groupRooms": 0,
     "oneToOneRooms": 0,
     "avgRooms": "0.00"
   }, {
-    "modifiedDate": "Dec 05",
+    "date": "Dec 05",
     "balloon": true,
     "totalRooms": 0,
     "groupRooms": 0,
     "oneToOneRooms": 0,
     "avgRooms": "0.00"
   }, {
-    "modifiedDate": "Dec 06",
+    "date": "Dec 06",
     "balloon": true,
     "totalRooms": 0,
     "groupRooms": 0,
     "oneToOneRooms": 0,
     "avgRooms": "0.00"
   }, {
-    "modifiedDate": "Dec 07",
+    "date": "Dec 07",
     "balloon": true,
     "totalRooms": 0,
     "groupRooms": 0,
     "oneToOneRooms": 0,
     "avgRooms": "0.00"
   }, {
-    "modifiedDate": "Dec 08",
+    "date": "Dec 08",
     "balloon": true,
     "totalRooms": 446,
     "groupRooms": 394,
     "oneToOneRooms": 52,
     "avgRooms": "1.15"
   }, {
-    "modifiedDate": "Dec 09",
+    "date": "Dec 09",
     "balloon": true,
     "totalRooms": 0,
     "groupRooms": 0,

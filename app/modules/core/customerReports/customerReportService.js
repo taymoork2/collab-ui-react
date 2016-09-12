@@ -151,7 +151,7 @@
 
         if (activeUsers > 0 || totalRegisteredUsers > 0) {
           for (var i = 0; i < returnGraph.length; i++) {
-            if (returnGraph[i].modifiedDate === date) {
+            if (returnGraph[i].date === date) {
               returnGraph[i].totalRegisteredUsers = totalRegisteredUsers;
               returnGraph[i].activeUsers = activeUsers;
               returnGraph[i].percentage = Math.round((activeUsers / totalRegisteredUsers) * 100);
@@ -273,7 +273,7 @@
         for (var index = 0; index < returnGraph.length; index++) {
           var returnItem = returnGraph[index];
 
-          if (returnItem.modifiedDate === modDate) {
+          if (returnItem.date === modDate) {
             returnItem.groupRooms = parseInt(groupItem.count, 10);
             returnItem.totalRooms += parseInt(groupItem.count, 10);
 
@@ -294,7 +294,7 @@
         for (var index = 0; index < returnGraph.length; index++) {
           var returnItem = returnGraph[index];
 
-          if (returnItem.modifiedDate === modDate) {
+          if (returnItem.date === modDate) {
             returnItem.oneToOneRooms = parseInt(oneToOneItem.count, 10);
             returnItem.totalRooms += parseInt(oneToOneItem.count, 10);
             if (returnItem.oneToOneRooms !== 0) {
@@ -315,7 +315,7 @@
           for (var index = 0; index < returnGraph.length; index++) {
             var returnItem = returnGraph[index];
 
-            if (returnItem.modifiedDate === modDate) {
+            if (returnItem.date === modDate) {
               returnItem.avgRooms = parseFloat(avgItem.count).toFixed(2);
               break;
             }
@@ -412,7 +412,7 @@
         for (var index = 0; index < returnGraph.length; index++) {
           var returnItem = returnGraph[index];
 
-          if (returnItem.modifiedDate === modDate) {
+          if (returnItem.date === modDate) {
             returnItem.contentShared = parseInt(contentItem.count, 10);
             if (returnItem.contentShared !== 0) {
               emptyGraph = false;
@@ -432,7 +432,7 @@
           for (var index = 0; index < returnGraph.length; index++) {
             var returnItem = returnGraph[index];
 
-            if (returnItem.modifiedDate === modDate) {
+            if (returnItem.date === modDate) {
               returnItem.contentShareSizes = parseFloat(shareItem.count).toFixed(2);
               break;
             }
@@ -547,7 +547,7 @@
               }
 
               for (var i = 0; i < graph.length; i++) {
-                if (graph[i].modifiedDate === modifiedDate) {
+                if (graph[i].date === modifiedDate) {
                   graph[i].totalDurationSum = totalSum;
                   graph[i].goodQualityDurationSum = goodSum;
                   graph[i].fairQualityDurationSum = fairSum;
@@ -661,7 +661,7 @@
               }
 
               for (var i = 0; i < baseGraph.length; i++) {
-                if (baseGraph[i].modifiedDate === modifiedDate) {
+                if (baseGraph[i].date === modifiedDate) {
                   tempGraph.graph[i].totalRegisteredDevices = parseInt(detail.totalRegisteredDevices, 10);
                   deviceArray.graphData[0].graph[i].totalRegisteredDevices += parseInt(detail.totalRegisteredDevices, 10);
                   break;
@@ -715,13 +715,13 @@
       if (filter.value === 0) {
         for (var i = 6; i >= 0; i--) {
           var tmpItem = angular.copy(graphItem);
-          tmpItem.modifiedDate = moment().tz(timezone).subtract(i + 1, 'day').format(dayFormat);
+          tmpItem.date = moment().tz(timezone).subtract(i + 1, 'day').format(dayFormat);
           returnGraph.push(tmpItem);
         }
       } else if (filter.value === 1) {
         for (var x = 3; x >= 0; x--) {
           var temp = angular.copy(graphItem);
-          temp.modifiedDate = moment().tz(timezone)
+          temp.date = moment().tz(timezone)
             .startOf('week')
             .subtract(dayOffset + (x * 7), 'day')
             .format(dayFormat);
@@ -730,7 +730,7 @@
       } else {
         for (var y = 2; y >= 0; y--) {
           var item = angular.copy(graphItem);
-          item.modifiedDate = moment().tz(timezone)
+          item.date = moment().tz(timezone)
             .subtract(y, 'month')
             .startOf('month')
             .format(monthFormat);

@@ -1,0 +1,26 @@
+<div class="modal-header">
+  <h5 class="modal-title" translate="hercules.expresswayClusterSettings.moveResourceGroupDialogHeader"></h5>
+</div>
+
+<div class="modal-body">
+
+  <span translate="hercules.expresswayClusterSettings.moveResourceGroupDialogParagraph"
+        translate-values="{ClusterName: ctrl.clusterName, NewResourceGroup: ctrl.newGroup}"></span>
+
+  <span ng-if="ctrl.isUpgradingConnectors" translate="hercules.expresswayClusterSettings.moveResourceGroupDialogConnectorsList"></span>
+    <span ng-if="ctrl.isUpgradingConnectors" ng-repeat="connector in ctrl.connectors">
+      <span ng-if="!$last">{{connector}}, </span>
+      <span ng-if="$last">{{connector}}.</span>
+    </span>
+
+</div>
+
+<div class="modal-footer">
+  <button class="btn" ng-click="$dismiss()">
+    <span translate="common.cancel"></span>
+  </button>
+  <button class="btn btn--primary" ng-click="$close(true)">
+    <span translate="common.assign"></span>
+  </button>
+
+</div>

@@ -204,6 +204,11 @@
       border-bottom: none;
     }
   }
+  .warning-table {
+    .table-bordered > tbody > tr > td {
+      color: $brand-warning;
+    }
+  }
   .error-table {
     min-height: 46px;
     max-height: 100%;

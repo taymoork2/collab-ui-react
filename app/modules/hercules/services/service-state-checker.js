@@ -6,7 +6,7 @@
     .service('ServiceStateChecker', ServiceStateChecker);
 
   /*@ngInject*/
-  function ServiceStateChecker($rootScope, NotificationService, ClusterService, USSService2, ServiceDescriptor, Authinfo, ScheduleUpgradeService, FeatureToggleService, Orgservice, DomainManagementService) {
+  function ServiceStateChecker($rootScope, NotificationService, ClusterService, USSService, ServiceDescriptor, Authinfo, ScheduleUpgradeService, FeatureToggleService, Orgservice, DomainManagementService) {
     var vm = this;
 
     vm.isSipUriAcknowledged = false;
@@ -117,7 +117,7 @@
       if (serviceId === 'squared-fusion-mgmt') {
         return;
       }
-      var summaryForService = _.find(USSService2.getStatusesSummary(), {
+      var summaryForService = _.find(USSService.getStatusesSummary(), {
         serviceId: serviceId
       });
       var noUsersActivatedId = serviceId + ':noUsersActivated';
@@ -146,7 +146,7 @@
         if (serviceId === 'squared-fusion-uc') {
           // Call Service has two sub-services, need special handling
           var awareStatus = summaryForService;
-          var connectStatus = _.find(USSService2.getStatusesSummary(), {
+          var connectStatus = _.find(USSService.getStatusesSummary(), {
             serviceId: 'squared-fusion-ec'
           });
 
@@ -218,7 +218,7 @@
             // we need to clear the notification after admin has setup enabled
             NotificationService.removeNotification('callServiceConnectAvailable');
             handleAtlasSipUriDomainEnterpriseNotification(serviceId);
-            USSService2.getOrg(Authinfo.getOrgId()).then(function (org) {
+            USSService.getOrg(Authinfo.getOrgId()).then(function (org) {
               if (!org || !org.sipDomain || org.sipDomain === '') {
                 NotificationService.addNotification(
                   NotificationService.types.TODO,

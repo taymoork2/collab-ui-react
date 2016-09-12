@@ -63,6 +63,11 @@
         MediaClusterServiceV2.createClusterV2(enteredCluster, 'stable').then(function (resp) {
           vm.selectedClusterId = resp.data.id;
           deferred.resolve(whiteListHost(hostName, vm.selectedClusterId));
+        }, function () {
+          var error = $translate.instant('mediaFusion.clusters.clusterCreationFailed', {
+            enteredCluster: enteredCluster
+          });
+          XhrNotificationService.notify(error);
         });
         return deferred.promise;
       } else {

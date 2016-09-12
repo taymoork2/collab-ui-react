@@ -1,10 +1,60 @@
 'use strict';
+/* globals fit */
 
 describe('Controller: TrialPstnCtrl', function () {
   var controller, trials, $httpBackend, $scope, $q, HuronConfig, TrialPstnService, TrialService, PstnSetupService;
 
   var customerName = 'Wayne Enterprises';
   var customerEmail = 'batman@darknight.com';
+
+  var carrier = {
+    name: 'IntelePeer',
+    uuid: '23453-235sdfaf-3245a-asdfa4'
+  };
+  var numberInfo = {
+    state: {
+      name: 'Texas',
+      abbreviation: 'TX'
+    },
+    areaCode: {
+      code: '469',
+      count: 25
+    },
+    numbers: ["+14696500030", "+14696500102", "+14696500194", "+14696500208", "+14696500220"]
+  };
+
+  var carrierId = '25452345-agag-ava-43523452';
+
+  var stateSearch = 'TX';
+
+  var areaCodeResponse = {
+    areaCodes: [{
+      code: '469',
+      count: 25
+    }, {
+      code: '817',
+      count: 25
+    }, {
+      code: '123',
+      count: 4
+    }],
+    count: 85
+  };
+
+  var newAreaCodes = [{
+    code: '469',
+    count: 25
+  }, {
+    code: '817',
+    count: 25
+  }];
+
+  var contractInfo = {
+    companyName: 'Sample Company',
+    signeeFirstName: 'Samp',
+    signeeLastName: 'Le',
+    email: 'sample@snapple.com'
+  };
 
   beforeEach(angular.mock.module('core.trial'));
   beforeEach(angular.mock.module('Huron'));
@@ -49,53 +99,6 @@ describe('Controller: TrialPstnCtrl', function () {
   });
 
   describe('Enter info to the controller and expect the same out of the service', function () {
-    var carrier = {
-      name: 'IntelePeer',
-      uuid: '23453-235sdfaf-3245a-asdfa4'
-    };
-    var numberInfo = {
-      state: {
-        name: 'Texas',
-        abbreviation: 'TX'
-      },
-      areaCode: {
-        code: '469',
-        count: 25
-      },
-      numbers: ["+14696500030", "+14696500102", "+14696500194", "+14696500208", "+14696500220"]
-    };
-    var contractInfo = {
-      companyName: 'Sample Company',
-      signeeFirstName: 'Samp',
-      signeeLastName: 'Le',
-      email: 'sample@snapple.com'
-    };
-
-    var carrierId = '25452345-agag-ava-43523452';
-
-    var stateSearch = 'TX';
-
-    var areaCodeResponse = {
-      areaCodes: [{
-        code: '469',
-        count: 25
-      }, {
-        code: '817',
-        count: 25
-      }, {
-        code: '123',
-        count: 4
-      }],
-      count: 85
-    };
-
-    var newAreaCodes = [{
-      code: '469',
-      count: 25
-    }, {
-      code: '817',
-      count: 25
-    }];
 
     it('should set the carrier', function () {
       controller.trialData.details.pstnProvider = carrier;
@@ -144,7 +147,7 @@ describe('Controller: TrialPstnCtrl', function () {
       controller._getCarriers($scope);
       $scope.$apply();
       expect(controller.trialData.details.pstnProvider).toEqual(swivelCarrierDetails[0]);
-      expect(controller.showOrdering).toBe(false);
+      expect(controller.showOrdering).toBeFalsy();
     });
 
     it('should show number ordering', function () {
@@ -166,7 +169,134 @@ describe('Controller: TrialPstnCtrl', function () {
       controller._getCarriers($scope);
       $scope.$apply();
       expect(controller.trialData.details.pstnProvider).toEqual(orderCarrierDetails[0]);
-      expect(controller.showOrdering).toBe(true);
+      expect(controller.showOrdering).toBeTruthy();
+    });
+
+    it('should disable next button when required data missing for SWIVEL', function () {
+
+      $scope.to = {};
+      $scope.to.options = [];
+
+      var swivelCarrierDetails = [{
+        "uuid": "4f5f5bf7-0034-4ade-8b1c-db63777f062c",
+        "name": "INTELEPEER-SWIVEL",
+        "apiExists": false,
+        "countryCode": "+1",
+        "country": "US",
+        "defaultOffer": true,
+        "vendor": "INTELEPEER",
+        "url": "https://terminus.huron-int.com/api/v1/customers/744d58c5-9205-47d6-b7de-a176e3ca431f/carriers/4f5f5bf7-0034-4ade-8b1c-db63777f062c"
+      }];
+      PstnSetupService.listResellerCarriers.and.returnValue($q.reject());
+      PstnSetupService.listDefaultCarriers.and.returnValue($q.when(swivelCarrierDetails));
+      controller._getCarriers($scope);
+      $scope.$apply();
+      expect(controller.trialData.details.pstnProvider).toEqual(swivelCarrierDetails[0]);
+      expect(controller.showOrdering).toBeFalsy();
+      expect(controller.invalidCount).toEqual(0);
+      expect(controller.trialData.details.swivelNumbers).toHaveLength(0);
+      expect(controller.trialData.details.pstnNumberInfo.numbers).toHaveLength(0);
+      expect(controller.disableNextButton()).toBeTruthy();
+
+      // add a number
+      controller.manualTokenMethods.createdtoken({
+        attrs: {
+          value: '9728131449'
+        },
+        relatedTarget: '<div></div>'
+      });
+      $scope.$apply();
+
+      expect(controller.invalidCount).toEqual(0);
+      expect(controller.trialData.details.swivelNumbers).toHaveLength(1);
+      expect(controller.trialData.details.pstnNumberInfo.numbers).toHaveLength(0);
+      expect(controller.disableNextButton()).toBeFalsy();
+
+    });
+
+    it('should disable next button when any invalid numbers', function () {
+
+      $scope.to = {};
+      $scope.to.options = [];
+
+      var swivelCarrierDetails = [{
+        "uuid": "4f5f5bf7-0034-4ade-8b1c-db63777f062c",
+        "name": "INTELEPEER-SWIVEL",
+        "apiExists": false,
+        "countryCode": "+1",
+        "country": "US",
+        "defaultOffer": true,
+        "vendor": "INTELEPEER",
+        "url": "https://terminus.huron-int.com/api/v1/customers/744d58c5-9205-47d6-b7de-a176e3ca431f/carriers/4f5f5bf7-0034-4ade-8b1c-db63777f062c"
+      }];
+      PstnSetupService.listResellerCarriers.and.returnValue($q.reject());
+      PstnSetupService.listDefaultCarriers.and.returnValue($q.when(swivelCarrierDetails));
+      controller._getCarriers($scope);
+      $scope.$apply();
+      expect(controller.trialData.details.pstnProvider).toEqual(swivelCarrierDetails[0]);
+      expect(controller.showOrdering).toBeFalsy();
+      expect(controller.invalidCount).toEqual(0);
+      expect(controller.trialData.details.swivelNumbers).toHaveLength(0);
+      expect(controller.trialData.details.pstnNumberInfo.numbers).toHaveLength(0);
+      expect(controller.disableNextButton()).toBeTruthy();
+
+      // add a number
+      controller.manualTokenMethods.createdtoken({
+        attrs: {
+          value: 'abc1234'
+        },
+        relatedTarget: '<div></div>'
+      });
+      $scope.$apply();
+
+      expect(controller.invalidCount).toEqual(1);
+      expect(controller.trialData.details.swivelNumbers).toHaveLength(1);
+      expect(controller.trialData.details.pstnNumberInfo.numbers).toHaveLength(0);
+      expect(controller.disableNextButton()).toBeTruthy();
+
+    });
+
+    it('should disable next button when required data missing for PSTN', function () {
+
+      $scope.to = {};
+      $scope.to.options = [];
+
+      var orderCarrierDetails = [{
+        "uuid": "4f5f5bf7-0034-4ade-8b1c-db63777f062c",
+        "name": "INTELEPEER",
+        "apiExists": true,
+        "countryCode": "+1",
+        "country": "US",
+        "defaultOffer": true,
+        "vendor": "INTELEPEER",
+        "url": "https://terminus.huron-int.com/api/v1/customers/744d58c5-9205-47d6-b7de-a176e3ca431f/carriers/4f5f5bf7-0034-4ade-8b1c-db63777f062c"
+      }];
+      PstnSetupService.listResellerCarriers.and.returnValue($q.reject());
+      PstnSetupService.listDefaultCarriers.and.returnValue($q.when(orderCarrierDetails));
+      controller._getCarriers($scope);
+      $scope.$apply();
+      expect(controller.trialData.details.pstnProvider).toEqual(orderCarrierDetails[0]);
+      expect(controller.showOrdering).toBeTruthy();
+
+      expect(controller.invalidCount).toEqual(0);
+      expect(controller.trialData.details.swivelNumbers).toHaveLength(0);
+      expect(controller.trialData.details.pstnNumberInfo.numbers).toHaveLength(0);
+      expect(controller.disableNextButton()).toBeTruthy();
+
+      // add contact info
+      controller.trialData.details.pstnContractInfo = contractInfo;
+      expect(controller.disableNextButton()).toBeTruthy();
+
+      // add a number
+      controller.trialData.details.pstnNumberInfo = numberInfo;
+      $scope.$apply();
+
+      expect(controller.invalidCount).toEqual(0);
+      expect(controller.trialData.details.swivelNumbers).toHaveLength(0);
+      expect(controller.trialData.details.pstnNumberInfo.numbers).toHaveLength(_.size(numberInfo.numbers));
+
+      expect(controller.disableNextButton()).toBeFalsy();
+
     });
   });
 });

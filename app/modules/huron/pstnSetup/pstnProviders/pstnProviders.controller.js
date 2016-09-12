@@ -174,6 +174,13 @@
           features: [],
           selectFn: goToNumbers
         });
+      } else if (carrier.vendor === PstnSetupService.WESTUC) {
+        _.extend(carrierObj, {
+          logoSrc: 'images/carriers/logo_westuc.jpg',
+          logoAlt: 'West Corporation',
+          features: [],
+          selectFn: goToNumbers
+        });
       }
       vm.providers.push(carrierObj);
     }

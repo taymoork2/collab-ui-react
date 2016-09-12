@@ -10,7 +10,10 @@
       <div class="nodata-icon">
         <i class="icon icon-circle-clock"></i>
       </div>
-      <div class="nodata-message">
+      <div ng-if="webexReportsObject.invalidNavUrls" class="nodata-message">
+        <span translate="webexUserSettingsAccessErrors.defaultNoNavUrlError"></span>
+      </div>
+      <div ng-if="!webexReportsObject.invalidNavUrls" class="nodata-message">
         <span translate="webexUserSettingsAccessErrors.defaultAccessError"></span>
         <br>
         <span translate="webexUserSettingsAccessErrors.defaultReloadMsg"></span>

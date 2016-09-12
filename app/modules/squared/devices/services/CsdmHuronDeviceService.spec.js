@@ -154,4 +154,16 @@ describe('CsdmHuronOrgDeviceService', function () {
 
     $httpBackend.flush();
   });
+
+  it('should call delete', function (done) {
+    $httpBackend
+      .expectDELETE('testUrl')
+      .respond(204);
+
+    csdmHuronOrgDeviceService.deleteDevice('testUrl').then(function () {
+      _.defer(done);
+    });
+
+    $httpBackend.flush();
+  });
 });

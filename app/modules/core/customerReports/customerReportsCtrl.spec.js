@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Controller: Customer Reports Ctrl', function () {
-  var controller, $scope, $stateParams, $q, $translate, $timeout, Log, Config, CustomerReportService, DummyCustomerReportService, CustomerGraphService, WebexReportService, WebExApiGatewayService, Userservice, FeatureToggleService, MediaServiceActivationV2;
+  var controller, $scope, $state, $stateParams, $q, $translate, $timeout, Log, Config, CustomerReportService, DummyCustomerReportService, CustomerGraphService, WebexReportService, WebExApiGatewayService, Userservice, FeatureToggleService, MediaServiceActivationV2;
   var activeUsersSort = ['userName', 'numCalls', 'sparkMessages', 'totalActivity'];
   var REFRESH = 'refresh';
 
@@ -65,8 +65,9 @@ describe('Controller: Customer Reports Ctrl', function () {
   beforeEach(angular.mock.module('Mediafusion'));
 
   describe('CustomerReportsCtrl - Expected Responses', function () {
-    beforeEach(inject(function ($rootScope, $controller, _$stateParams_, _$q_, _$translate_, _$timeout_, _Log_, _Config_, _CustomerReportService_, _DummyCustomerReportService_, _CustomerGraphService_, _FeatureToggleService_, _MediaServiceActivationV2_) {
+    beforeEach(inject(function ($rootScope, $controller, _$state_, _$stateParams_, _$q_, _$translate_, _$timeout_, _Log_, _Config_, _CustomerReportService_, _DummyCustomerReportService_, _CustomerGraphService_, _FeatureToggleService_, _MediaServiceActivationV2_) {
       $scope = $rootScope.$new();
+      $state = _$state_;
       $stateParams = _$stateParams_;
       $q = _$q_;
       $translate = _$translate_;
@@ -123,6 +124,8 @@ describe('Controller: Customer Reports Ctrl', function () {
       spyOn(CustomerReportService, 'getCallMetricsData').and.returnValue($q.when(metricsData));
       spyOn(CustomerReportService, 'getDeviceData').and.returnValue($q.when(deviceResponse));
 
+      spyOn($state, 'go');
+
       // Webex Requirements
       WebexReportService = {
         initReportsObject: function () {}
@@ -145,6 +148,7 @@ describe('Controller: Customer Reports Ctrl', function () {
       };
 
       controller = $controller('CustomerReportsCtrl', {
+        $state: $state,
         $stateParams: $stateParams,
         $scope: $scope,
         $q: $q,
@@ -201,8 +205,6 @@ describe('Controller: Customer Reports Ctrl', function () {
         expect(controller.displayEngagement).toBeTruthy();
         expect(controller.displayQuality).toBeTruthy();
 
-        expect(controller.activeUserDescription).toEqual('activeUsers.customerPortalDescription');
-        expect(controller.mostActiveTitle).toEqual('activeUsers.mostActiveUsers');
         expect(controller.activeUserStatus).toEqual(REFRESH);
         expect(controller.showMostActiveUsers).toBeFalsy();
         expect(controller.displayMostActive).toBeFalsy();
@@ -214,11 +216,8 @@ describe('Controller: Customer Reports Ctrl', function () {
         expect(controller.activeUserPredicate).toEqual(activeUsersSort[3]);
         expect(controller.activeButton).toEqual([1, 2, 3]);
 
-        expect(controller.avgRoomsDescription).toEqual('avgRooms.avgRoomsDescription');
         expect(controller.avgRoomStatus).toEqual(REFRESH);
-        expect(controller.filesSharedDescription).toEqual('filesShared.filesSharedDescription');
         expect(controller.filesSharedStatus).toEqual(REFRESH);
-        expect(controller.metricsDescription).toEqual('callMetrics.customerDescription');
         expect(controller.metricStatus).toEqual(REFRESH);
         expect(controller.metrics).toEqual({});
 
@@ -226,7 +225,6 @@ describe('Controller: Customer Reports Ctrl', function () {
         expect(controller.mediaOptions).toEqual(mediaOptions);
         expect(controller.mediaSelected).toEqual(mediaOptions[0]);
 
-        expect(controller.deviceDescription).toEqual('registeredEndpoints.customerDescription');
         expect(controller.deviceStatus).toEqual(REFRESH);
         expect(controller.deviceFilter).toEqual([defaultDeviceFilter]);
         expect(controller.selectedDevice).toEqual(defaultDeviceFilter);
@@ -290,143 +288,133 @@ describe('Controller: Customer Reports Ctrl', function () {
     });
 
     describe('helper functions', function () {
-      describe('resetCards', function () {
-        it('should alter the visible reports based on filters', function () {
-          controller.resetCards(controller.engagement);
-          expect(controller.displayEngagement).toBeTruthy();
-          expect(controller.displayQuality).toBeFalsy();
-
-          controller.resetCards(controller.quality);
-          expect(controller.displayEngagement).toBeFalsy();
-          expect(controller.displayQuality).toBeTruthy();
-
-          controller.resetCards(controller.allReports);
-          expect(controller.displayEngagement).toBeTruthy();
-          expect(controller.displayQuality).toBeTruthy();
-        });
+      it('getDescription and getHeader should return translated strings', function () {
+        expect(controller.getDescription('text')).toEqual('text');
+        expect(controller.getHeader('text')).toEqual('text');
       });
 
-      describe('searchMostActive', function () {
-        it('should return a list of users based on mostActiveUsers and the searchField', function () {
-          expect(controller.searchMostActive()).toEqual([]);
-
-          controller.mostActiveUsers = responseMostActiveData;
-          expect(controller.searchMostActive()).toEqual(responseMostActiveData);
-
-          controller.searchField = 'le';
-          expect(controller.searchMostActive()).toEqual([responseMostActiveData[0], responseMostActiveData[11]]);
-        });
+      it('goToUsersTab should send the customer to the users tab', function () {
+        controller.goToUsersTab();
+        expect($state.go).toHaveBeenCalled();
       });
 
-      describe('mostActiveUserSwitch', function () {
-        it('should toggle the state for showMostActiveUsers', function () {
-          expect(controller.showMostActiveUsers).toBeFalsy();
-          controller.mostActiveUserSwitch();
-          expect(controller.showMostActiveUsers).toBeTruthy();
-          controller.mostActiveUserSwitch();
-          expect(controller.showMostActiveUsers).toBeFalsy();
-        });
+      it('resetCards should alter the visible reports based on filters', function () {
+        controller.resetCards(controller.engagement);
+        expect(controller.displayEngagement).toBeTruthy();
+        expect(controller.displayQuality).toBeFalsy();
+
+        controller.resetCards(controller.quality);
+        expect(controller.displayEngagement).toBeFalsy();
+        expect(controller.displayQuality).toBeTruthy();
+
+        controller.resetCards(controller.allReports);
+        expect(controller.displayEngagement).toBeTruthy();
+        expect(controller.displayQuality).toBeTruthy();
       });
 
-      describe('activePage', function () {
-        it('should return true when called with the same value as activeUserCurrentPage', function () {
-          controller.activeUserCurrentPage = 1;
-          expect(controller.activePage(controller.activeUserCurrentPage)).toBeTruthy();
-        });
+      it('searchMostActive should return a list of users based on mostActiveUsers and the searchField', function () {
+        expect(controller.searchMostActive()).toEqual([]);
 
-        it('should return false when called with a different value as activeUserCurrentPage', function () {
-          expect(controller.activePage(7)).toBeFalsy();
-        });
+        controller.mostActiveUsers = responseMostActiveData;
+        expect(controller.searchMostActive()).toEqual(responseMostActiveData);
+
+        controller.searchField = 'le';
+        expect(controller.searchMostActive()).toEqual([responseMostActiveData[0], responseMostActiveData[11]]);
       });
 
-      describe('changePage', function () {
-        it('should change the value of activeUserCurrentPage', function () {
-          controller.changePage(3);
-          expect(controller.activeUserCurrentPage).toEqual(3);
-        });
+      it('mostActiveUserSwitch should toggle the state for showMostActiveUsers', function () {
+        expect(controller.showMostActiveUsers).toBeFalsy();
+        controller.mostActiveUserSwitch();
+        expect(controller.showMostActiveUsers).toBeTruthy();
+        controller.mostActiveUserSwitch();
+        expect(controller.showMostActiveUsers).toBeFalsy();
       });
 
-      describe('isRefresh', function () {
-        it('should return true when sent "refresh"', function () {
-          expect(controller.isRefresh('refresh')).toBeTruthy();
-        });
-
-        it('should return false when sent "set" or "empty"', function () {
-          expect(controller.isRefresh('set')).toBeFalsy();
-          expect(controller.isRefresh('empty')).toBeFalsy();
-        });
+      it('activePage should return true when called with the same value as activeUserCurrentPage', function () {
+        controller.activeUserCurrentPage = 1;
+        expect(controller.activePage(controller.activeUserCurrentPage)).toBeTruthy();
       });
 
-      describe('isEmpty', function () {
-        it('should return true when sent "empty"', function () {
-          expect(controller.isEmpty('empty')).toBeTruthy();
-        });
-
-        it('should return false when sent "set" or "refresh"', function () {
-          expect(controller.isEmpty('set')).toBeFalsy();
-          expect(controller.isEmpty('refresh')).toBeFalsy();
-        });
+      it('activePage should return false when called with a different value as activeUserCurrentPage', function () {
+        expect(controller.activePage(7)).toBeFalsy();
       });
 
-      describe('mostActiveSort', function () {
-        it('should sort by userName', function () {
-          controller.mostActiveSort(0);
-          expect(controller.activeUserPredicate).toBe(activeUsersSort[0]);
-          expect(controller.activeUserReverse).toBeFalsy();
-        });
-
-        it('should sort by calls', function () {
-          controller.mostActiveSort(1);
-          expect(controller.activeUserPredicate).toBe(activeUsersSort[1]);
-          expect(controller.activeUserReverse).toBeTruthy();
-        });
-
-        it('should sort by posts', function () {
-          controller.mostActiveSort(2);
-          expect(controller.activeUserPredicate).toBe(activeUsersSort[2]);
-          expect(controller.activeUserReverse).toBeTruthy();
-        });
+      it('changePage should change the value of activeUserCurrentPage', function () {
+        controller.changePage(3);
+        expect(controller.activeUserCurrentPage).toEqual(3);
       });
 
-      describe('pageForward', function () {
-        it('should change carousel button numbers', function () {
-          controller.activeUsersTotalPages = 4;
-          controller.activeUserCurrentPage = 1;
-
-          controller.pageForward();
-          expect(controller.activeButton[0]).toBe(1);
-          expect(controller.activeButton[1]).toBe(2);
-          expect(controller.activeButton[2]).toBe(3);
-          expect(controller.activeUserCurrentPage).toBe(2);
-
-          controller.pageForward();
-          expect(controller.activeButton[0]).toBe(2);
-          expect(controller.activeButton[1]).toBe(3);
-          expect(controller.activeButton[2]).toBe(4);
-          expect(controller.activeUserCurrentPage).toBe(3);
-        });
+      it('isRefresh should return true when sent "refresh"', function () {
+        expect(controller.isRefresh('refresh')).toBeTruthy();
       });
 
-      describe('pageBackward', function () {
-        it('should change carousel button numbers', function () {
-          controller.activeUsersTotalPages = 4;
-          controller.activeButton[0] = 2;
-          controller.activeButton[1] = 3;
-          controller.activeButton[2] = 4;
-          controller.activeUserCurrentPage = 3;
+      it('isRefresh should return false when sent "set" or "empty"', function () {
+        expect(controller.isRefresh('set')).toBeFalsy();
+        expect(controller.isRefresh('empty')).toBeFalsy();
+      });
 
-          controller.pageBackward();
-          expect(controller.activeButton[0]).toBe(1);
-          expect(controller.activeButton[1]).toBe(2);
-          expect(controller.activeButton[2]).toBe(3);
-          expect(controller.activeUserCurrentPage).toBe(2);
+      it('isEmpty should return true when sent "empty"', function () {
+        expect(controller.isEmpty('empty')).toBeTruthy();
+      });
 
-          controller.pageBackward();
-          expect(controller.activeButton[0]).toBe(1);
-          expect(controller.activeButton[1]).toBe(2);
-          expect(controller.activeButton[2]).toBe(3);
-          expect(controller.activeUserCurrentPage).toBe(1);
-        });
+      it('isEmpty should return false when sent "set" or "refresh"', function () {
+        expect(controller.isEmpty('set')).toBeFalsy();
+        expect(controller.isEmpty('refresh')).toBeFalsy();
+      });
+
+      it('mostActiveSort should sort by userName', function () {
+        controller.mostActiveSort(0);
+        expect(controller.activeUserPredicate).toBe(activeUsersSort[0]);
+        expect(controller.activeUserReverse).toBeFalsy();
+      });
+
+      it('mostActiveSort should sort by calls', function () {
+        controller.mostActiveSort(1);
+        expect(controller.activeUserPredicate).toBe(activeUsersSort[1]);
+        expect(controller.activeUserReverse).toBeTruthy();
+      });
+
+      it('mostActiveSort should sort by posts', function () {
+        controller.mostActiveSort(2);
+        expect(controller.activeUserPredicate).toBe(activeUsersSort[2]);
+        expect(controller.activeUserReverse).toBeTruthy();
+      });
+
+      it('pageForward should change carousel button numbers', function () {
+        controller.activeUsersTotalPages = 4;
+        controller.activeUserCurrentPage = 1;
+
+        controller.pageForward();
+        expect(controller.activeButton[0]).toBe(1);
+        expect(controller.activeButton[1]).toBe(2);
+        expect(controller.activeButton[2]).toBe(3);
+        expect(controller.activeUserCurrentPage).toBe(2);
+
+        controller.pageForward();
+        expect(controller.activeButton[0]).toBe(2);
+        expect(controller.activeButton[1]).toBe(3);
+        expect(controller.activeButton[2]).toBe(4);
+        expect(controller.activeUserCurrentPage).toBe(3);
+      });
+
+      it('pageBackward should change carousel button numbers', function () {
+        controller.activeUsersTotalPages = 4;
+        controller.activeButton[0] = 2;
+        controller.activeButton[1] = 3;
+        controller.activeButton[2] = 4;
+        controller.activeUserCurrentPage = 3;
+
+        controller.pageBackward();
+        expect(controller.activeButton[0]).toBe(1);
+        expect(controller.activeButton[1]).toBe(2);
+        expect(controller.activeButton[2]).toBe(3);
+        expect(controller.activeUserCurrentPage).toBe(2);
+
+        controller.pageBackward();
+        expect(controller.activeButton[0]).toBe(1);
+        expect(controller.activeButton[1]).toBe(2);
+        expect(controller.activeButton[2]).toBe(3);
+        expect(controller.activeUserCurrentPage).toBe(1);
       });
     });
 

@@ -1,5 +1,3 @@
-import directoryNumberModule from './directoryNumber.component';
-
 describe('Component: directoryNumber', () => {
   const INTERNAL_LABEL = 'label[for="internalNumber"]';
   const INTERNAL_SELECT = '.csSelect-container[name="internalNumber"]';
@@ -9,31 +7,30 @@ describe('Component: directoryNumber', () => {
   const DROPDOWN_OPTIONS = '.dropdown-menu ul li a';
   const ESN_NUMBER = '.esn-number-field';
 
+  let internalNumbers: string[] = [
+    '12345',
+    '67890',
+    '75023'
+  ];
+
+  let externalNumbers: string[] = [
+    '+12345',
+    '+67890'
+  ];
+
   beforeEach(function () {
-    this.initModules(directoryNumberModule);
+    this.initModules('huron.directory-number');
     this.injectDependencies(
       '$scope',
       '$timeout'
     );
-    this.$scope.esnPrefix = '7100';
-    this.$scope.internalOptions = [{
-      pattern: '12345',
-      uuid: '55555',
-    }, {
-      pattern: '67890',
-      uuid: '66666',
-    }, {
-      pattern: '75023',
-      uuid: '77777',
-    }];
+    this.$scope.esnPrefix;
+    this.$scope.internalNumbers;
+    this.$scope.internalOptions;
+    this.$scope.internalSelected;
     this.$scope.internalRefreshFn = jasmine.createSpy('internalRefreshFn');
-    this.$scope.externalOptions = [{
-      pattern: '+12345',
-      uuid: '88888',
-    }, {
-      pattern: '+67890',
-      uuid: '99999',
-    }];
+    this.$scope.externalNumbers;
+    this.$scope.externalOptions;
     this.$scope.externalRefreshFn = jasmine.createSpy('externalRefreshFn');
     this.$scope.onChangeFn = jasmine.createSpy('onChangeFn');
   });
@@ -43,13 +40,21 @@ describe('Component: directoryNumber', () => {
       showInternalExtensions: 'showInternalExtensions',
       esnPrefix: 'esnPrefix',
       internalSelected: 'internalSelected',
-      internalOptions: 'internalOptions',
+      internalNumbers: 'internalNumbers',
       internalRefreshFn: 'internalRefreshFn(filter)',
       externalSelected: 'externalSelected',
-      externalOptions: 'externalOptions',
+      externalNumbers: 'externalNumbers',
       externalRefreshFn: 'externalRefreshFn(filter)',
       onChangeFn: 'onChangeFn(internalNumber, externalNumber)',
     });
+
+    // This simulates values being set after component has been initialized
+    // i.e. during asynchronous data fetching.
+    this.$scope.internalNumbers = internalNumbers;
+    this.$scope.internalSelected = '12345';
+    this.$scope.externalNumbers = externalNumbers;
+    this.$scope.esnPrefix = '7100';
+    this.$scope.$apply(); // triggers $onChanges lifecycle hook.
   }
 
   describe('with show internal extensions', () => {
@@ -63,10 +68,10 @@ describe('Component: directoryNumber', () => {
     });
 
     it('should invoke onChangeFn with internalNumber on option click', function () {
-      this.view.find(INTERNAL_SELECT).find(DROPDOWN_OPTIONS).get(0).click();
+      this.view.find(INTERNAL_SELECT).find(DROPDOWN_OPTIONS).get(1).click();
       expect(this.$scope.onChangeFn).toHaveBeenCalledWith(
-        this.$scope.internalOptions[0],
-        undefined
+        this.controller.internalOptions[1].value,
+        this.controller.externalOptions[0].value
       );
     });
 
@@ -78,15 +83,16 @@ describe('Component: directoryNumber', () => {
 
     it('should have an external extension select with options', function () {
       expect(this.view.find(EXTERNAL_LABEL)).toHaveText('directoryNumberPanel.externalNumberLabel');
-      expect(this.view.find(EXTERNAL_SELECT).find(DROPDOWN_OPTIONS).get(0)).toHaveText('+12345');
-      expect(this.view.find(EXTERNAL_SELECT).find(DROPDOWN_OPTIONS).get(1)).toHaveText('+67890');
+      expect(this.view.find(EXTERNAL_SELECT).find(DROPDOWN_OPTIONS).get(0)).toHaveText('directoryNumberPanel.none');
+      expect(this.view.find(EXTERNAL_SELECT).find(DROPDOWN_OPTIONS).get(1)).toHaveText('+12345');
+      expect(this.view.find(EXTERNAL_SELECT).find(DROPDOWN_OPTIONS).get(2)).toHaveText('+67890');
     });
 
     it('should invoke onChangeFn with externalNumber on option click', function () {
-      this.view.find(EXTERNAL_SELECT).find(DROPDOWN_OPTIONS).get(0).click();
+      this.view.find(EXTERNAL_SELECT).find(DROPDOWN_OPTIONS).get(1).click();
       expect(this.$scope.onChangeFn).toHaveBeenCalledWith(
-        undefined,
-        this.$scope.externalOptions[0]
+        this.controller.internalOptions[0].value,
+        this.controller.externalOptions[1].value
       );
     });
 
@@ -99,7 +105,7 @@ describe('Component: directoryNumber', () => {
     it('should show ESN', function () {
       expect(this.view.find(ESN_NUMBER)).toContainText(this.$scope.esnPrefix);
       this.view.find(INTERNAL_SELECT).find(DROPDOWN_OPTIONS).get(0).click();
-      expect(this.view.find(ESN_NUMBER)).toContainText(this.$scope.esnPrefix + this.$scope.internalOptions[0].pattern);
+      expect(this.view.find(ESN_NUMBER)).toContainText(this.$scope.esnPrefix + this.controller.internalOptions[0].value);
     });
   });
 
@@ -117,31 +123,31 @@ describe('Component: directoryNumber', () => {
     });
 
     it('should invoke onChangeFn with internalNumber and matching externalNumber on option click', function () {
-      this.view.find(INTERNAL_SELECT).find(DROPDOWN_OPTIONS).get(0).click(); // has matching externalNumber
+      this.view.find(INTERNAL_SELECT).find(DROPDOWN_OPTIONS).get(1).click(); // has matching externalNumber
       expect(this.$scope.onChangeFn).toHaveBeenCalledWith(
-        this.$scope.internalOptions[0],
-        this.$scope.externalOptions[0]
+        this.controller.internalOptions[1].value,
+        this.controller.externalOptions[2].value
       );
 
       this.$scope.onChangeFn.calls.reset();
       this.view.find(INTERNAL_SELECT).find(DROPDOWN_OPTIONS).get(2).click(); // does not have matching externalNumber
       expect(this.$scope.onChangeFn).toHaveBeenCalledWith(
-        this.$scope.internalOptions[2],
-        this.$scope.externalOptions[0] // not updated because no matching pattern
+        this.controller.internalOptions[2].value,
+        this.controller.externalOptions[2].value // not updated because no matching pattern
       );
     });
 
     it('should invoke onChangeFn with internalNumber and no matching externalNumber on option click', function () {
       this.view.find(INTERNAL_SELECT).find(DROPDOWN_OPTIONS).get(2).click(); // does not have matching externalNumber
       expect(this.$scope.onChangeFn).toHaveBeenCalledWith(
-        this.$scope.internalOptions[2],
-        undefined // not defined because no matching pattern and never set
+        this.controller.internalOptions[2].value,
+        this.controller.externalOptions[0].value // not defined because no matching pattern and never set
       );
     });
 
     it('should show ESN from hidden externalNumber', function () {
-      this.view.find(INTERNAL_SELECT).find(DROPDOWN_OPTIONS).get(0).click();
-      expect(this.view.find(ESN_NUMBER)).toContainText(this.$scope.externalOptions[0].pattern);
+      this.view.find(INTERNAL_SELECT).find(DROPDOWN_OPTIONS).get(1).click();
+      expect(this.view.find(ESN_NUMBER)).toContainText(this.controller.externalOptions[2].value);
     });
   });
 });

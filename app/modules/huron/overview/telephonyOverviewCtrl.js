@@ -36,7 +36,7 @@
       TelephonyInfoService.loadExternalNumberPool();
       TelephonyInfoService.getInternationalDialing(vm.currentUser.id);
       vm.telephonyInfo = TelephonyInfoService.getTelephonyInfoObject();
-      FeatureToggleService.supports(FeatureToggleService.features.huronKEM).then(function (result) {
+      FeatureToggleService.supports(FeatureToggleService.features.huronSpeedDial).then(function (result) {
         vm.showSpeedDials = result;
       });
     }

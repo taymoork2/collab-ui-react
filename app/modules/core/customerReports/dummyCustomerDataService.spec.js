@@ -38,15 +38,15 @@ describe('Controller: Dummy Customer Reports', function () {
 
     if (filter.value === 0) {
       for (var i = 6; i >= 0; i--) {
-        data[i].modifiedDate = moment().subtract(7 - i, 'day').format(dayFormat);
+        data[i].date = moment().subtract(7 - i, 'day').format(dayFormat);
       }
     } else if (filter.value === 1) {
       for (var x = 0; x <= 3; x++) {
-        data[x].modifiedDate = moment().startOf('week').subtract(1 + ((3 - x) * 7), 'day').format(dayFormat);
+        data[x].date = moment().startOf('week').subtract(1 + ((3 - x) * 7), 'day').format(dayFormat);
       }
     } else {
       for (var y = 0; y <= 2; y++) {
-        data[y].modifiedDate = moment().subtract((2 - y), 'month').format(monthFormat);
+        data[y].date = moment().subtract((2 - y), 'month').format(monthFormat);
       }
     }
     return data;
@@ -57,15 +57,15 @@ describe('Controller: Dummy Customer Reports', function () {
     var monthFormat = "MMMM";
     if (filter.value === 0) {
       for (var i = 6; i >= 0; i--) {
-        data[i].modifiedDate = moment().subtract(8 - i, 'day').format(dayFormat);
+        data[i].date = moment().subtract(8 - i, 'day').format(dayFormat);
       }
     } else if (filter.value === 1) {
       for (var x = 0; x <= 3; x++) {
-        data[x].modifiedDate = moment().startOf('week').subtract(1 + ((3 - x) * 7), 'day').format(dayFormat);
+        data[x].date = moment().startOf('week').subtract(1 + ((3 - x) * 7), 'day').format(dayFormat);
       }
     } else {
       for (var y = 0; y <= 2; y++) {
-        data[y].modifiedDate = moment().subtract((2 - y), 'month').format(monthFormat);
+        data[y].date = moment().subtract((2 - y), 'month').format(monthFormat);
       }
     }
     return data;

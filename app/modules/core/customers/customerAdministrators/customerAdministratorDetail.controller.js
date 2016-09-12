@@ -67,7 +67,7 @@
           email = emailDetail.value;
         }
       });
-      var roles = _.get(response.data, 'roles');
+      var roles = _.get(response.data, 'roles', false);
       var uuid = _.get(response.data, 'id');
       var avatarSyncEnabled = _.get(response.data, 'avatarSyncEnabled');
       var adminProfile = {
@@ -82,7 +82,7 @@
       var isNotFullAdmin = Authinfo.hasRole(Config.backend_roles.full_admin);
       var isNotSalesAdmin = Authinfo.hasRole(Config.backend_roles.sales);
 
-      if (isNotFullAdmin && isNotSalesAdmin) {
+      if ((isNotFullAdmin && isNotSalesAdmin) || !roles) {
         patchSalesAdminRole(email);
       }
       Notification.success('customerAdminPanel.customerAdministratorAddSuccess');

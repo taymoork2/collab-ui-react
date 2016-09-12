@@ -1,0 +1,20 @@
+<form name="$ctrl.form" novalidate role="form">
+  <cs-sp-buttons ng-if="$ctrl.form.$dirty">
+    <button cs-btn loading="$ctrl.saveInProcess" class="btn-primary" ng-click="$ctrl.save()" type="submit">
+      <span translate="common.save"></span>
+    </button>
+    <button class="btn-default" translate="common.cancel" ng-click="$ctrl.reset()"></button>
+  </cs-sp-buttons>
+  <cs-sp-container>
+    <cs-sp-section>
+      <div class="section-title-row">
+        <span class="section-name" translate="internationalDialingPanel.title"></span>
+      </div>
+      <cs-select
+        name="internationalDialing"
+        ng-model="$ctrl.selected"
+        options="$ctrl.options"
+      ></cs-select>
+    </cs-sp-section>
+  </cs-sp-container>
+</form>

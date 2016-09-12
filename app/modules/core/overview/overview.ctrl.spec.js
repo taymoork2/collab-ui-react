@@ -7,7 +7,7 @@ describe('Controller: OverviewCtrl', function () {
   beforeEach(angular.mock.module('Huron'));
   beforeEach(angular.mock.module('Sunlight'));
 
-  var controller, $rootScope, $scope, $q, $state, $translate, Authinfo, Config, FeatureToggleService, Log, Orgservice, OverviewNotificationFactory, ReportsService, ServiceDescriptor, ServiceStatusDecriptor, TrialService, FusionClusterService;
+  var controller, controllerCareFeatureDisabled, $rootScope, $scope, $q, $state, $translate, Authinfo, Config, FeatureToggleService, Log, Orgservice, OverviewNotificationFactory, ReportsService, ServiceDescriptor, ServiceStatusDecriptor, TrialService, FusionClusterService, SunlightReportService;
   var orgServiceJSONFixture = getJSONFixture('core/json/organizations/Orgservice.json');
   var usageOnlySharedDevicesFixture = getJSONFixture('core/json/organizations/usageOnlySharedDevices.json');
   var services = getJSONFixture('squared/json/services.json');
@@ -25,6 +25,24 @@ describe('Controller: OverviewCtrl', function () {
       expect(_.contains(cardnames, 'overview.cards.meeting.title')).toBeTruthy();
       expect(_.contains(cardnames, 'overview.cards.roomSystem.title')).toBeTruthy();
       expect(_.contains(cardnames, 'overview.cards.call.title')).toBeTruthy();
+      expect(_.contains(cardnames, 'overview.cards.care.title')).toBeTruthy();
+      expect(_.contains(cardnames, 'overview.cards.hybrid.title')).toBeTruthy();
+      expect(_.contains(cardnames, 'overview.cards.users.title')).toBeTruthy();
+      expect(_.contains(cardnames, 'overview.cards.undefined.title')).toBeFalsy();
+    });
+
+    // TODO Need to be removed once Care is graduated on atlas.
+    it('should not display care card if feature is toggled off', function () {
+      expect(controllerCareFeatureDisabled.cards).toBeDefined();
+
+      var cardnames = _.map(controllerCareFeatureDisabled.cards, function (card) {
+        return card.name;
+      });
+      expect(_.contains(cardnames, 'overview.cards.message.title')).toBeTruthy();
+      expect(_.contains(cardnames, 'overview.cards.meeting.title')).toBeTruthy();
+      expect(_.contains(cardnames, 'overview.cards.roomSystem.title')).toBeTruthy();
+      expect(_.contains(cardnames, 'overview.cards.call.title')).toBeTruthy();
+      expect(_.contains(cardnames, 'overview.cards.care.title')).toBeFalsy();
       expect(_.contains(cardnames, 'overview.cards.hybrid.title')).toBeTruthy();
       expect(_.contains(cardnames, 'overview.cards.users.title')).toBeTruthy();
       expect(_.contains(cardnames, 'overview.cards.undefined.title')).toBeFalsy();
@@ -127,7 +145,7 @@ describe('Controller: OverviewCtrl', function () {
     }).first();
   }
 
-  function defaultWireUpFunc(_$rootScope_, $controller, _$state_, _$stateParams_, _$q_, _$translate_, _Authinfo_, _Config_, _FeatureToggleService_, _Log_, _Orgservice_, _OverviewNotificationFactory_, _TrialService_, _FusionClusterService_) {
+  function defaultWireUpFunc(_$rootScope_, $controller, _$state_, _$stateParams_, _$q_, _$translate_, _Authinfo_, _Config_, _FeatureToggleService_, _Log_, _Orgservice_, _OverviewNotificationFactory_, _TrialService_, _FusionClusterService_, _SunlightReportService_) {
     $rootScope = _$rootScope_;
     $scope = $rootScope.$new();
     $q = _$q_;
@@ -140,6 +158,10 @@ describe('Controller: OverviewCtrl', function () {
     OverviewNotificationFactory = _OverviewNotificationFactory_;
     TrialService = _TrialService_;
     FusionClusterService = _FusionClusterService_;
+    SunlightReportService = _SunlightReportService_;
+
+    spyOn(SunlightReportService, 'getOverviewData');
+    SunlightReportService.getOverviewData.and.returnValue({});
 
     FeatureToggleService.features = {
       atlasHybridServicesResourceList: 'atlas-media-service-onboarding'
@@ -234,8 +256,29 @@ describe('Controller: OverviewCtrl', function () {
       ServiceStatusDecriptor: ServiceStatusDecriptor,
       Config: Config,
       TrialService: TrialService,
-      OverviewNotificationFactory: OverviewNotificationFactory
+      OverviewNotificationFactory: OverviewNotificationFactory,
+      SunlightReportService: SunlightReportService,
+      hasCareFeatureToggle: true
     });
+
+    // TODO Need to be removed once Care is graduated on atlas.
+    controllerCareFeatureDisabled = $controller('OverviewCtrl', {
+      $scope: $scope,
+      $rootScope: $rootScope,
+      Log: Log,
+      Authinfo: Authinfo,
+      $translate: $translate,
+      $state: $state,
+      ReportsService: ReportsService,
+      Orgservice: Orgservice,
+      ServiceDescriptor: ServiceDescriptor,
+      ServiceStatusDecriptor: ServiceStatusDecriptor,
+      Config: Config,
+      TrialService: TrialService,
+      OverviewNotificationFactory: OverviewNotificationFactory,
+      hasCareFeatureToggle: false
+    });
+
     $scope.$apply();
   }
 });

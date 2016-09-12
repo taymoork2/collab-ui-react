@@ -65,7 +65,7 @@
         startDuration = 0;
       }
 
-      var chartData = CommonGraphService.getBaseSerialGraph(data, startDuration, valueAxes, activeUserGraphs(data), 'modifiedDate', catAxis);
+      var chartData = CommonGraphService.getBaseSerialGraph(data, startDuration, valueAxes, activeUserGraphs(data), 'date', catAxis);
       chartData.numberFormatter = CommonGraphService.getBaseVariable(NUMFORMAT);
       chartData.legend = CommonGraphService.getBaseVariable(LEGEND);
       chartData.legend.labelText = '[[title]]';
@@ -152,7 +152,7 @@
         startDuration = 0;
       }
 
-      var chartData = CommonGraphService.getBaseSerialGraph(data, startDuration, valueAxes, avgRoomsGraphs(data), 'modifiedDate', catAxis);
+      var chartData = CommonGraphService.getBaseSerialGraph(data, startDuration, valueAxes, avgRoomsGraphs(data), 'date', catAxis);
       chartData.numberFormatter = CommonGraphService.getBaseVariable(NUMFORMAT);
       chartData.legend = CommonGraphService.getBaseVariable(LEGEND);
 
@@ -220,7 +220,7 @@
         startDuration = 0;
       }
 
-      var chartData = CommonGraphService.getBaseSerialGraph(data, startDuration, valueAxes, filesSharedGraphs(data), 'modifiedDate', catAxis);
+      var chartData = CommonGraphService.getBaseSerialGraph(data, startDuration, valueAxes, filesSharedGraphs(data), 'date', catAxis);
       chartData.numberFormatter = CommonGraphService.getBaseVariable(NUMFORMAT);
 
       return AmCharts.makeChart(filesSharedDiv, chartData);
@@ -275,7 +275,7 @@
         startDuration = 0;
       }
 
-      var chartData = CommonGraphService.getBaseSerialGraph(data, startDuration, valueAxes, mediaGraphs(data, mediaFilter), 'modifiedDate', catAxis);
+      var chartData = CommonGraphService.getBaseSerialGraph(data, startDuration, valueAxes, mediaGraphs(data, mediaFilter), 'date', catAxis);
       chartData.numberFormatter = CommonGraphService.getBaseVariable(NUMFORMAT);
       chartData.legend = CommonGraphService.getBaseVariable(LEGEND);
 
@@ -361,7 +361,7 @@
         startDuration = 0;
       }
 
-      var chartData = CommonGraphService.getBaseSerialGraph(data[graphNumber].graph, startDuration, valueAxes, deviceGraphs(data, filter), 'modifiedDate', catAxis);
+      var chartData = CommonGraphService.getBaseSerialGraph(data[graphNumber].graph, startDuration, valueAxes, deviceGraphs(data, filter), 'date', catAxis);
       chartData.numberFormatter = CommonGraphService.getBaseVariable(NUMFORMAT);
 
       return AmCharts.makeChart(devicesDiv, chartData);

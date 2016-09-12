@@ -3,7 +3,7 @@
 
   angular
     .module('Huron')
-    .directive('ucSharedLine', ucSharedLine);
+    .directive('ucSharedLineOld', ucSharedLine);
 
   function ucSharedLine() {
     var directive = {

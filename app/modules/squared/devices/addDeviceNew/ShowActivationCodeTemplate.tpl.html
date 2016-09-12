@@ -35,8 +35,8 @@
 
         <a
           class="qrCodeRightButton"
-          ng-show="showActivationCode.wizardData.deviceType==='huron' && showActivationCode.wizardData.accountType!=='shared'"
-          ng-disabled="genAuthCode.showEmail"
+          ng-disabled="genAuthCode.showEmail" 
+          ng-hide="showActivationCode.wizardData.deviceType==='huron' && showActivationCode.wizardData.accountType==='shared'"
           ng-click="showActivationCode.activateEmail()"
           translate="generateActivationCodeModal.emailCode">
         </a>
@@ -45,6 +45,7 @@
           <span translate="generateActivationCodeModal.print"></span>
         </a>
       </div>
+
       <div class="sendEmailWrapper" ng-if="showActivationCode.showEmail">
         <div class="sendEmailForm">
           <div class="selectedAddress">

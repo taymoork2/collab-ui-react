@@ -1,4 +1,3 @@
-
 class SimultaneousCalls {
   public incomingCallMaximum: number;
   public onChangeFn: Function;
@@ -14,7 +13,7 @@ class SimultaneousCalls {
   }
 }
 
-class SimultaneousCallsComponent implements ng.IComponentOptions {
+export class SimultaneousCallsComponent implements ng.IComponentOptions {
   public controller = SimultaneousCalls;
   public templateUrl = 'modules/huron/simultaneousCalls/simultaneousCalls.html';
   public bindings: {[bindings: string]: string} = {
@@ -22,12 +21,3 @@ class SimultaneousCallsComponent implements ng.IComponentOptions {
     onChangeFn: '&'
   }
 }
-
-export default angular
-  .module('huron.simultaneous-calls', [
-    'atlas.templates',
-    'cisco.ui',
-    'pascalprecht.translate'
-  ])
-  .component('ucSimultaneousCalls', new SimultaneousCallsComponent())
-  .name;

@@ -42,8 +42,10 @@ export class SupportSettings {
     }
   }
 
-  get useCustomHelpSiteDirty() {
-    return this.customHelpSite.enable != this.oldCustomHelpSite.enable || (this.customHelpSite.enable && this.customHelpSite.url != this.oldCustomHelpSite.url);
+  get showCustomHelpSiteSaveButton() {
+    return this.customHelpSite.enable != this.oldCustomHelpSite.enable //Switched
+      && (!this.customHelpSite.enable || this.customHelpSite.url) //to disabled or has an url set
+      || (this.customHelpSite.enable && this.customHelpSite.url && this.customHelpSite.url != this.oldCustomHelpSite.url); //or enabled with a new url set
   }
 
   get useCustomSupportUrl() {
@@ -58,9 +60,10 @@ export class SupportSettings {
     }
   }
 
-  get useCustomSupportUrlDirty():boolean {
-    return this.customSupport.enable != this.oldCustomSupport.enable
-      || ( this.customSupport.enable && (this.customSupport.url != this.oldCustomSupport.url || this.oldCustomSupport.text != this.customSupport.text));
+  get showCustomSupportUrlSaveButton():boolean {
+    return this.customSupport.enable != this.oldCustomSupport.enable //Switched
+      && (!this.customSupport.enable || this.customSupport.url) //to disabled or has an url set
+      || ( this.customSupport.enable && this.customSupport.url && (this.customSupport.url != this.oldCustomSupport.url || this.oldCustomSupport.text != this.customSupport.text));
   }
 
   get isPartner():boolean {

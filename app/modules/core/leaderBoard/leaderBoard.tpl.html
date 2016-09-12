@@ -1,12 +1,13 @@
-<div class="leader-board row" ng-init="init()" ng-class="{
-    'is-customer-admin': isCustomerAdmin,
-    'has-active-trial': hasActiveTrial
+<div class="leader-board row" ng-init="lBoardCtrl.init()" ng-class="{
+    'is-customer-admin': lBoard.isCustomer,
+    'has-active-trial': lBoard.hasActiveTrial
   }">
+
   <cr-trial-notice-banner></cr-trial-notice-banner>
-  <div class="subscription" ng-repeat="subscription in buckets">
+  <div class="subscription" ng-repeat="subscription in lBoardCtrl.buckets">
     <div class="subscriptionId"
       ng-class="{ 'has-active-trial': subscription.hasActiveTrial }"
-      ng-show="buckets.length > 1 && subscription.subscriptionId !== 'undefined'">
+      ng-show="lBoardCtrl.buckets.length > 1 && subscription.subscriptionId !== 'undefined'">
       Subscription ID {{subscription.subscriptionId}}</div>
     <cs-card class="small header-bar" ng-show="subscription.messaging && subscription.messaging.services.length !== 0">
     <article>
@@ -21,8 +22,8 @@
             <span class="quantity-padding" translate="firstTimeWizard.quantity"></span>
             <span class="quantity" >{{service.volume}}</span>
             <p ng-show="service.isTrial" class="text-center trial">
-              <span class="quantity-badge badge badge-warning" ng-show="trialDaysLeft > 0" translate="customerPage.trial"></span>
-              <span class="quantity-badge badge alert" ng-show="trialDaysLeft <= 0" translate="customerPage.expired"></span>
+              <span class="quantity-badge badge badge-warning" ng-show="lBoardCtrl.trialDaysLeft > 0" translate="customerPage.trial"></span>
+              <span class="quantity-badge badge alert" ng-show="lBoardCtrl.trialDaysLeft <= 0" translate="customerPage.expired"></span>
             </p>
           </div>
         </div>
@@ -42,8 +43,8 @@
             <span class="quantity-padding" translate="firstTimeWizard.quantity"></span>
             <span class="quantity" >{{service.volume}}</span>
             <p ng-show="service.isTrial" class="text-center trial">
-              <span class="quantity-badge badge badge-warning" ng-show="trialDaysLeft > 0" translate="customerPage.trial"></span>
-              <span class="quantity-badge badge alert" ng-show="trialDaysLeft <= 0" translate="customerPage.expired"></span>
+              <span class="quantity-badge badge badge-warning" ng-show="lBoardCtrl.trialDaysLeft > 0" translate="customerPage.trial"></span>
+              <span class="quantity-badge badge alert" ng-show="lBoardCtrl.trialDaysLeft <= 0" translate="customerPage.expired"></span>
             </p>
           </div>
         </div>
@@ -58,12 +59,12 @@
               <span class="quantity-padding" translate="firstTimeWizard.quantity"></span>
               <span class="quantity" >{{service.volume}}</span>
               <p ng-show="service.isTrial" class="text-center trial">
-                <span class="quantity-badge badge badge-warning" ng-show="trialDaysLeft > 0" translate="customerPage.trial"></span>
-                <span class="quantity-badge badge alert" ng-show="trialDaysLeft <= 0" translate="customerPage.expired"></span>
+                <span class="quantity-badge badge badge-warning" ng-show="lBoardCtrl.trialDaysLeft > 0" translate="customerPage.trial"></span>
+                <span class="quantity-badge badge alert" ng-show="lBoardCtrl.trialDaysLeft <= 0" translate="customerPage.expired"></span>
               </p>
             </div>
             <div class="text-center" class="item-paid" ng-repeat= "(siteUrl,services) in subscription.sites" >
-              <div class="site-url"> {{siteUrl}} </div> 
+              <div class="site-url"> {{siteUrl}} </div>
               <div translate="leaderBoard.{{service.offerName}}"> </div>
             </div>
           </div>
@@ -71,7 +72,7 @@
       </section>
       <section class="bucket-info" ng-if="!((!subscription.cf.services || subscription.cf.services.length === 0) && subscription.count === 1 && subscription.licensesCount == 1) && subscription.count > 0 ">
         <div class="text-center" class="item-paid" ng-repeat= "(siteUrl,services) in subscription.sites" >
-          <div ng-if="!($first && !subscription.cf)" class="site-info"> {{siteUrl}} </div>          
+          <div ng-if="!($first && !subscription.cf)" class="site-info"> {{siteUrl}} </div>
           <div ng-if="$first && !subscription.cf" class="site-info-noline"> {{siteUrl}} </div>
           <div class="sub-item text-left" ng-repeat="service in services">
             <div class="service-bucket">
@@ -109,8 +110,8 @@
             <span class="quantity-padding" translate="firstTimeWizard.quantity"></span>
             <span class="quantity">{{service.volume}}</span>
             <p ng-show="service.isTrial" class="text-center trial">
-              <span class="quantity-badge badge badge-warning" ng-show="trialDaysLeft > 0" translate="customerPage.trial"></span>
-              <span class="quantity-badge badge alert" ng-show="trialDaysLeft <= 0" translate="customerPage.expired"></span>
+              <span class="quantity-badge badge badge-warning" ng-show="lBoardCtrl.trialDaysLeft > 0" translate="customerPage.trial"></span>
+              <span class="quantity-badge badge alert" ng-show="lBoardCtrl.trialDaysLeft <= 0" translate="customerPage.expired"></span>
             </p>
           </div>
         </div>
@@ -128,10 +129,10 @@
           </cs-donut>
           <div class="text-center quantity number">
             <span class="quantity-padding" translate="firstTimeWizard.quantity"></span>
-            <span  class="quantity">{{roomSystemsCount}}</span>
+            <span  class="quantity">{{lBoardCtrl.roomSystemsCount}}</span>
             <p ng-show="service.isTrial" class="text-center trial">
-              <span class="quantity-badge badge badge-warning" ng-show="trialDaysLeft > 0" translate="customerPage.trial"></span>
-              <span class="quantity-badge badge alert" ng-show="trialDaysLeft <= 0" translate="customerPage.expired"></span>
+              <span class="quantity-badge badge badge-warning" ng-show="lBoardCtrl.trialDaysLeft > 0" translate="customerPage.trial"></span>
+              <span class="quantity-badge badge alert" ng-show="lBoardCtrl.trialDaysLeft <= 0" translate="customerPage.expired"></span>
             </p>
           </div>
         </div>

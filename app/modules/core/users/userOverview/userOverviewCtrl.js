@@ -27,6 +27,7 @@
     vm.disableAuthCodeLink = disableAuthCodeLink;
     vm.getUserPhoto = Userservice.getUserPhoto;
     vm.isValidThumbnail = Userservice.isValidThumbnail;
+    vm.serviceActions = serviceActions;
     vm.actionList = [];
 
     if (vm.currentUser.trainSiteNames) {
@@ -42,28 +43,28 @@
     var msgState = {
       name: $translate.instant('onboardModal.message'),
       icon: $translate.instant('onboardModal.message'),
-      state: 'user-overview.messaging',
+      state: 'messaging',
       detail: $translate.instant('onboardModal.msgFree'),
       actionsAvailable: getDisplayableServices('MESSAGING')
     };
     var commState = {
       name: $translate.instant('onboardModal.call'),
       icon: $translate.instant('onboardModal.call'),
-      state: 'user-overview.communication',
+      state: 'communication',
       detail: $translate.instant('onboardModal.callFree'),
       actionsAvailable: true
     };
     var confState = {
       name: $translate.instant('onboardModal.meeting'),
       icon: $translate.instant('onboardModal.meeting'),
-      state: 'user-overview.conferencing',
+      state: 'conferencing',
       detail: $translate.instant('onboardModal.mtgFree'),
       actionsAvailable: getDisplayableServices('CONFERENCING') || angular.isArray(vm.currentUser.trainSiteNames)
     };
     var contactCenterState = {
       name: $translate.instant('onboardModal.contactCenter'),
       icon: 'ContactCenter',
-      state: 'user-overview.contactCenter',
+      state: 'contactCenter',
       detail: $translate.instant('onboardModal.freeContactCenter'),
       actionsAvailable: true
     };
@@ -349,6 +350,10 @@
           Notification.errorResponse(error, 'usersPage.emailError');
         });
       angular.element('.open').removeClass('open');
+    }
+
+    function serviceActions(feature) {
+      $state.go('user-overview.' + feature);
     }
   }
 })();

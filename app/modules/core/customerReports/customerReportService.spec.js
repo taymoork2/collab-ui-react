@@ -51,7 +51,7 @@ describe('Service: Customer Reports Service', function () {
           data[i][altDate] = moment().tz(timezone).subtract(data.length - i, 'day').format();
         }
       } else {
-        data[i].modifiedDate = moment().tz(timezone).subtract(data.length - i, 'day').format(filter);
+        data[i].date = moment().tz(timezone).subtract(data.length - i, 'day').format(filter);
       }
     }
     return data;
@@ -89,7 +89,7 @@ describe('Service: Customer Reports Service', function () {
     devicesUrl = baseUrl + 'trend/registeredEndpointsByDeviceType?&intervalCount=7&intervalType=day&spanCount=1&spanType=day&cache=' + cacheValue;
 
     activeUserData.data[0].data = updateDates(activeUserData.data[0].data);
-    responseActiveData = updateDates(responseActiveData, dayFormat);
+    responseActiveData = updateDates(responseActiveData, dayFormat, null);
 
     groupRoomData.data = updateDates(groupRoomData.data);
     avgRoomData.data = updateDates(avgRoomData.data);

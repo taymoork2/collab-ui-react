@@ -1,5 +1,5 @@
-<i ng-if="app.isLicenseTypeAny(row, type)"
-  class="icon icon-circle"
+<i ng-if="isVisible"
+  class="service-icon icon"
   ng-class="translateTypeToIcon(type)"
-  tooltip="{{ getTooltipText(row, type, app) }}"
+  tooltip-html-unsafe="{{getTooltipText(row, type)}}"
   tooltip-append-to-body="true"></i>

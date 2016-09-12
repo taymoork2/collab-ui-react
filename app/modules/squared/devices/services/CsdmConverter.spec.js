@@ -190,7 +190,7 @@ describe('CsdmConverterSpec', function () {
       }];
       expect(converter.convertCloudberryDevices(arr)[0].state.readableState).toBe('CsdmStatus.OnlineWithIssues');
       expect(converter.convertCloudberryDevices(arr)[0].state.priority).toBe("1");
-      expect(converter.convertCloudberryDevices(arr)[0].cssColorClass).toBe('device-status-yellow');
+      expect(converter.convertCloudberryDevices(arr)[0].cssColorClass).toBe('warning');
     });
 
     it('should convert device with issues yellow color but keep status', function () {
@@ -202,7 +202,7 @@ describe('CsdmConverterSpec', function () {
       }];
       expect(converter.convertCloudberryDevices(arr)[0].state.readableState).toBe('CsdmStatus.OnlineWithIssues');
       expect(converter.convertCloudberryDevices(arr)[0].state.priority).toBe("1");
-      expect(converter.convertCloudberryDevices(arr)[0].cssColorClass).toBe('device-status-yellow');
+      expect(converter.convertCloudberryDevices(arr)[0].cssColorClass).toBe('warning');
     });
 
     it('should convert state UNCLAIMED to Requires Activation and gray', function () {
@@ -211,7 +211,7 @@ describe('CsdmConverterSpec', function () {
       }];
       expect(converter.convertCloudberryDevices(arr)[0].state.readableState).toBe('CsdmStatus.RequiresActivation');
       expect(converter.convertCloudberryDevices(arr)[0].state.priority).toBe("3");
-      expect(converter.convertCloudberryDevices(arr)[0].cssColorClass).toBe('device-status-gray');
+      expect(converter.convertCloudberryDevices(arr)[0].cssColorClass).toBe('disabled');
     });
 
     it('should convert state CLAIMED and connection status CONNECTED to Online and green', function () {
@@ -223,7 +223,7 @@ describe('CsdmConverterSpec', function () {
       }];
       expect(converter.convertCloudberryDevices(arr)[0].state.readableState).toBe('CsdmStatus.Online');
       expect(converter.convertCloudberryDevices(arr)[0].state.priority).toBe("5");
-      expect(converter.convertCloudberryDevices(arr)[0].cssColorClass).toBe('device-status-green');
+      expect(converter.convertCloudberryDevices(arr)[0].cssColorClass).toBe('success');
     });
 
     it('should convert connection status CONNECTED to Online and green', function () {
@@ -234,7 +234,7 @@ describe('CsdmConverterSpec', function () {
       }];
       expect(converter.convertCloudberryDevices(arr)[0].state.readableState).toBe('CsdmStatus.Online');
       expect(converter.convertCloudberryDevices(arr)[0].state.priority).toBe("5");
-      expect(converter.convertCloudberryDevices(arr)[0].cssColorClass).toBe('device-status-green');
+      expect(converter.convertCloudberryDevices(arr)[0].cssColorClass).toBe('success');
     });
 
     it('should convert state CLAIMED and connection status UNKNOWN to Offline and red', function () {
@@ -246,7 +246,7 @@ describe('CsdmConverterSpec', function () {
       }];
       expect(converter.convertCloudberryDevices(arr)[0].state.readableState).toBe('CsdmStatus.Offline');
       expect(converter.convertCloudberryDevices(arr)[0].state.priority).toBe("2");
-      expect(converter.convertCloudberryDevices(arr)[0].cssColorClass).toBe('device-status-red');
+      expect(converter.convertCloudberryDevices(arr)[0].cssColorClass).toBe('danger');
     });
 
     it('should convert connection status UNKNOWN to Offline and red', function () {
@@ -257,7 +257,7 @@ describe('CsdmConverterSpec', function () {
       }];
       expect(converter.convertCloudberryDevices(arr)[0].state.readableState).toBe('CsdmStatus.Offline');
       expect(converter.convertCloudberryDevices(arr)[0].state.priority).toBe("2");
-      expect(converter.convertCloudberryDevices(arr)[0].cssColorClass).toBe('device-status-red');
+      expect(converter.convertCloudberryDevices(arr)[0].cssColorClass).toBe('danger');
     });
 
     it('should convert state CLAIMED and no connection status to Offline and red', function () {
@@ -266,7 +266,7 @@ describe('CsdmConverterSpec', function () {
       }];
       expect(converter.convertCloudberryDevices(arr)[0].state.readableState).toBe('CsdmStatus.Offline');
       expect(converter.convertCloudberryDevices(arr)[0].state.priority).toBe("2");
-      expect(converter.convertCloudberryDevices(arr)[0].cssColorClass).toBe('device-status-red');
+      expect(converter.convertCloudberryDevices(arr)[0].cssColorClass).toBe('danger');
     });
 
   }); // aggregatedState & cssColorClass

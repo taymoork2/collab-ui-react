@@ -1,0 +1,24 @@
+<div class="modal-header">
+  <h3 class="modal-title" translate="onlineUpgradeModal.title"></h3>
+</div>
+<div class="modal-body">
+  <span translate="onlineUpgradeModal.body"></span>
+  <span ng-if="$ctrl.showCancelButton"
+    translate="onlineUpgradeModal.cancelBody"></span>
+</div>
+<div class="modal-footer online-upgrade-modal">
+  <button
+    ng-if="$ctrl.showCancelButton"
+    class="btn btn--default"
+    cs-btn
+    loading="$ctrl.cancelLoading"
+    ng-click="$ctrl.cancel()">
+    <span translate="onlineUpgradeModal.cancelButton"></span>
+  </button>
+  <bmmp-subscription-upgrade-button
+    class="btn btn--primary"
+    show-loading="true"
+    subscription-id="$ctrl.subscriptionId"
+    widget-location="online-upgrade-modal">
+  </bmmp-subscription-upgrade-button>
+</div>

@@ -286,12 +286,13 @@
       vm.saveProgress = true;
       var data = {
         name: vm.callParkName,
-        startRange: vm.selectedSingleNumber,
-        endRange: vm.selectedSingleNumber,
+        startRange: '',
+        endRange: '',
         members: vm.selectedMembers
       };
 
       populateMembers(data);
+      populateNumbers(data);
 
       CallParkService.saveCallPark(customerId, data).then(function () {
         vm.saveProgress = false;
@@ -309,18 +310,17 @@
     }
 
     function populateNumbers(data) {
-      data.numbers = [];
-      vm.selectedNumbers.forEach(function (number) {
-        if (number.type === 'internal') {
-          number.type = 'NUMBER_FORMAT_EXTENSION';
-        } else if (number.type === 'external') {
-          number.type = 'NUMBER_FORMAT_DIRECT_LINE';
-        }
-        data.numbers.push({
-          type: number.type,
-          number: number.number
-        });
-      });
+      var form = _.get(vm.cpNumberOptions, [0]);
+      var input;
+      if (form.currentInput === 0) {
+        input = form.inputs[0];
+        data.startRange = input.range_1.value;
+        data.endRange = input.range_2.value;
+      } else {
+        input = form.inputs[1];
+        data.startRange = input.value;
+        data.endRange = input.value;
+      }
     }
 
     function populateMembers(data) {

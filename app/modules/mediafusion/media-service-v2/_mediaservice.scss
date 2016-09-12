@@ -173,45 +173,11 @@
 }
 
 .media-clusters-list {
-  i {
-    margin-right: 10px;
-  }
   .ngVerticalBar {
     display: none;
   }
 }
 
-.mediafusion-state-alarm {
-  color: $color-attention-base;
-}
-
-.mediafusion-state-stopped {
-  color: $color-attention-base;
-}
-.mediafusion-state-running {
-  color: $color-cta-base;
-}
-.mediafusion-state-installing {
-  color: $color-attention-base;
-}
-.mediafusion-state-not_configured {
-  color: $color-attention-base
-}
-.mediafusion-state-disabled {
-  color: $color-attention-base;
-}
-.mediafusion-state-not_installed {
-  color: $gray-base;
-}
-.mediafusion-state-offline {
-  color: $color-negative-base;
-}
-.mediafusion-state-unknown {
-  color: $gray-base;
-}
-.mediafusion-state-nohosts {
-  color: $color-attention-base;
-}
 .mediafusion-settings-table {
   table {
     td {

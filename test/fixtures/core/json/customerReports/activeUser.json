@@ -61,7 +61,7 @@
     "colorOne": "#99cf78",
     "colorTwo": "#6ab140",
     "balloon": true,
-    "modifiedDate": "Jan15"
+    "date": "Jan15"
   }, {
     "totalRegisteredUsers": 4437,
     "activeUsers": 4437,
@@ -69,7 +69,7 @@
     "colorOne": "#99cf78",
     "colorTwo": "#6ab140",
     "balloon": true,
-    "modifiedDate": "Jan16"
+    "date": "Jan16"
   }, {
     "totalRegisteredUsers": 3321,
     "activeUsers": 3321,
@@ -77,7 +77,7 @@
     "colorOne": "#99cf78",
     "colorTwo": "#6ab140",
     "balloon": true,
-    "modifiedDate": "Jan17"
+    "date": "Jan17"
   }, {
     "totalRegisteredUsers": 8268,
     "activeUsers": 8268,
@@ -85,7 +85,7 @@
     "colorOne": "#99cf78",
     "colorTwo": "#6ab140",
     "balloon": true,
-    "modifiedDate": "Jan18"
+    "date": "Jan18"
   }, {
     "totalRegisteredUsers": 12335,
     "activeUsers": 12335,
@@ -93,7 +93,7 @@
     "colorOne": "#99cf78",
     "colorTwo": "#6ab140",
     "balloon": true,
-    "modifiedDate": "Jan19"
+    "date": "Jan19"
   }, {
     "totalRegisteredUsers": 13055,
     "activeUsers": 13055,
@@ -101,7 +101,7 @@
     "colorOne": "#99cf78",
     "colorTwo": "#6ab140",
     "balloon": true,
-    "modifiedDate": "Jan20"
+    "date": "Jan20"
   }, {
     "totalRegisteredUsers": 12917,
     "activeUsers": 12917,
@@ -109,7 +109,7 @@
     "colorOne": "#99cf78",
     "colorTwo": "#6ab140",
     "balloon": true,
-    "modifiedDate": "Jan21"
+    "date": "Jan21"
   }],
   "mostActive": {
     "orgId": "1eb65fdf-9643-417f-9974-ad72cae0e10f",

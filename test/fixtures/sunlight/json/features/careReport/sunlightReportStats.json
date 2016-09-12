@@ -192,5 +192,32 @@
       "jobName": "org_stats_weekly",
       "lastRunTime": "2016-07-05T16:30:00.000Z"
     }
+  },
+  "overviewStats": {
+    "data": {
+      "success": true,
+      "values": [
+        {
+          "count": 6,
+          "interval": 1,
+          "viewType": "daily",
+          "mediaType": "chat",
+          "startTime": 1469836800000,
+          "endTime": 1472515200000
+        },
+        {
+          "count": 6,
+          "interval": 2,
+          "viewType": "daily",
+          "mediaType": "chat",
+          "startTime": 1467244800000,
+          "endTime": 1469836800000
+        }
+      ],
+      "intervalCount": 2,
+      "spanType": "month",
+      "viewType": "daily",
+      "mediaType": "chat"
+    }
   }
 }

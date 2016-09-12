@@ -4,4 +4,5 @@
 
 interface Window {
     pako?: any;
+    libphonenumber?: any;
 }

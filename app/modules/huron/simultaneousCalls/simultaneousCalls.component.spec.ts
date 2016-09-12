@@ -1,4 +1,4 @@
-import simultaneousCallsModule from './simultaneousCalls.component';
+import { default as simultaneousCallsModule } from './index';
 
 describe('Component: simultaneousCalls', () => {
   const TWO = 2;

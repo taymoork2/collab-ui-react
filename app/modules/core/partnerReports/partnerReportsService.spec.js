@@ -15,12 +15,12 @@ describe('Service: Partner Reports Service', function () {
     value: 0
   };
 
-  var updateDates = function (data) {
+  var updateDates = function (data, format) {
     for (var i = data.length - 1; i >= 0; i--) {
-      if (angular.isDefined(data[i].date)) {
-        data[i].date = moment().tz(timezone).subtract(data.length - i, 'day').format();
+      if (format) {
+        data[i].date = moment().tz(timezone).subtract(data.length - i, 'day').format(format);
       } else {
-        data[i].modifiedDate = moment().tz(timezone).subtract(data.length - i, 'day').format(dayFormat);
+        data[i].date = moment().tz(timezone).subtract(data.length - i, 'day').format();
       }
     }
     return data;
@@ -69,12 +69,12 @@ describe('Service: Partner Reports Service', function () {
       registeredEndpointsUrl += '&orgId=' + org.value;
     });
 
-    activeUserDetailedResponse = updateDates(activeUserData.detailedResponse);
+    activeUserDetailedResponse = updateDates(activeUserData.detailedResponse, dayFormat);
     activeUserDetailedAPI = activeUserData.detailedAPI;
     activeUserDetailedAPI.data[0].data = updateDates(activeUserDetailedAPI.data[0].data);
     activeUserDetailedAPI.data[1].data = updateDates(activeUserDetailedAPI.data[1].data);
 
-    mediaQualityResponse = updateDates(mediaQualityData.mediaQualityResponse);
+    mediaQualityResponse = updateDates(mediaQualityData.mediaQualityResponse, dayFormat);
   }));
 
   afterEach(function () {

@@ -38,24 +38,20 @@ describe('RedirectAddResourceControllerV2', function () {
     expect(controller).toBeDefined();
   });
 
-  it('AddResourceCommonServiceV2.addRedirectTargetClicked should be called for addRedirectTargetClicked', function () {
-    spyOn(AddResourceCommonServiceV2, 'addRedirectTargetClicked').and.returnValue(redirectTargetPromise);
-    controller.addRedirectTargetClicked();
-    expect(AddResourceCommonServiceV2.addRedirectTargetClicked).toHaveBeenCalled();
-  });
-
   it('AddResourceCommonServiceV2.redirectPopUpAndClose should be called for redirectToTargetAndCloseWindowClicked', function () {
+    spyOn(AddResourceCommonServiceV2, 'addRedirectTargetClicked').and.returnValue($q.when());
     spyOn(AddResourceCommonServiceV2, 'redirectPopUpAndClose').and.returnValue(redirectTargetPromise);
     controller.redirectToTargetAndCloseWindowClicked();
+    httpBackend.flush();
+    expect(AddResourceCommonServiceV2.addRedirectTargetClicked).toHaveBeenCalled();
     expect(AddResourceCommonServiceV2.redirectPopUpAndClose).toHaveBeenCalled();
   });
 
-  it('controller.addRedirectTargetClicked should be called for next', function () {
+  it('controller.enableRedirectToTarget should be true next', function () {
     controller.selectedCluster = 'selectedCluster';
     controller.hostName = 'hostName';
-    spyOn(controller, 'addRedirectTargetClicked').and.returnValue(redirectTargetPromise);
     controller.next();
-    expect(controller.addRedirectTargetClicked).toHaveBeenCalled();
+    expect(controller.enableRedirectToTarget).toBe(true);
   });
 
 });

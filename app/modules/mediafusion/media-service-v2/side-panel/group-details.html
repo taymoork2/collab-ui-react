@@ -56,19 +56,19 @@
             ui-sref="connector-details-v2.host-details({clusterId: groupDetails.clusterDetail.id, connector: ecp, hostLength: groupDetails.nodeList.length, selectedCluster: groupDetails.clusterDetail})">
             <span class="feature-name">{{ecp.hostname}}</span>
             <span ng-if="ecp.state == 'has_alarms'"  class="yellow">
-              <i class="fa fa-circle mediafusion-state-alarm" />
+              <i class="icon icon-circle status-indicator warning" />
               <span class="hidden-xs">{{'mediaFusion.connectors.alarms' | translate}}  </span>
             </span>
             <span ng-if="ecp.state == 'offline'" class="red">
-              <i class="fa fa-circle mediafusion-state-offline" />
+              <i class="icon icon-circle status-indicator danger" />
               <span class="hidden-xs">{{'mediaFusion.offline' | translate}} </span>
             </span>
             <span ng-if="ecp.state == 'running'" class="green">
-              <i class="fa fa-circle mediafusion-state-running" />
+              <i class="icon icon-circle status-indicator success" />
               <span class="hidden-xs">{{'mediaFusion.active' | translate}} </span>
             </span>
             <span ng-if="ecp.state == 'installing'" class="installing">
-              <i class="fa fa-circle mediafusion-state-installing" />
+              <i class="icon icon-circle status-indicator warning" />
               <span class="hidden-xs">{{'mediaFusion.installing' | translate}} </span>
             </span>
             <i class="feature-arrow"></i>

@@ -18,11 +18,11 @@
   <div class="status-block">
     <ul>
       <li>
-        <i class="icon icon-circle" ng-class="card.dirsyncEnabled ? 'success' : 'disabled'"></i>
+        <i class="icon icon-circle status-indicator" ng-class="card.dirsyncEnabled ? 'success' : 'disabled'"></i>
         <span translate="overview.cards.users.directorySynchronization"></span>
       </li>
       <li>
-        <i class="icon icon-circle" ng-class="card.ssoEnabled ? 'success' : 'disabled' "></i>
+        <i class="icon icon-circle status-indicator" ng-class="card.ssoEnabled ? 'success' : 'disabled' "></i>
         <span translate="overview.cards.users.singleSignOn"></span>
         <a class="icon-settings icon" ng-click="card.showSSOSettings()"></a>
       </li>

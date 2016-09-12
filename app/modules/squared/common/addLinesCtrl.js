@@ -4,7 +4,7 @@
   angular.module('Squared')
     .controller('AddLinesCtrl', AddLinesCtrl);
   /* @ngInject */
-  function AddLinesCtrl($stateParams, $state, $scope, Notification, $translate, $q, CommonLineService, Authinfo, CsdmPlaceService, CsdmCodeService, DialPlanService) {
+  function AddLinesCtrl($stateParams, $state, $scope, Notification, $translate, $q, CommonLineService, Authinfo, CsdmHuronPlaceService, CsdmCodeService, DialPlanService) {
     var vm = this;
     vm.wizardData = $stateParams.wizard.state().data;
 
@@ -65,7 +65,7 @@
             placeEntity.externalNumber = entity.externalNumber.pattern;
           }
 
-          CsdmPlaceService.createCmiPlace(entity.name, entity.assignedDn.pattern)
+          CsdmHuronPlaceService.createCmiPlace(entity.name, entity.assignedDn.pattern)
             .then(successcb)
             .catch(function (error) {
               Notification.errorResponse(error, 'placesPage.placeError');

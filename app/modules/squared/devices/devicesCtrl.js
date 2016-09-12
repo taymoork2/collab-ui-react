@@ -82,10 +82,6 @@
           });
         };
 
-        vm.clickUsers = function () {
-          $state.go('users.list');
-        };
-
         vm.gridOptions = {
           data: 'sc.updateListAndFilter()',
           rowHeight: 45,

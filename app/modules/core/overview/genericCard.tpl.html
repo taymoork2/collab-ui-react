@@ -23,7 +23,7 @@
   <span class="badge warning" ng-if="card.trial && (overview.trialDaysLeft > 0 || !overview.trialDaysLeft)" translate="customerPage.trial"></span>
   <span class="badge alert" ng-if="card.trial && overview.trialDaysLeft <= 0" translate="customerPage.expired"></span>
   <a ng-href="{{overview.statusPageUrl}}" target="_blank" class="monitoring-cell" ng-show="card.showHealth">
-    <i class="icon icon-circle" ng-class="card.healthStatus || 'disabled'"></i>
+    <cs-statusindicator ng-model="card.healthStatus"></cs-statusindicator>
     <span>{{card.levelText}}</span>
   </a>
   </span>

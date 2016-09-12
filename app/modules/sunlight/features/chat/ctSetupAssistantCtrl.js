@@ -162,12 +162,15 @@
 
     //Template related constants  variables used after editing template
     if ($stateParams.isEditFeature) {
-      vm.orgName = $stateParams.template.configuration.mediaSpecificConfiguration.displayText;
-      vm.logoUrl = $stateParams.template.configuration.mediaSpecificConfiguration.orgLogoUrl;
-      vm.timings.startTime.label = $stateParams.template.configuration.pages.offHours.schedule.timings.startTime;
-      vm.timings.endTime.label = $stateParams.template.configuration.pages.offHours.schedule.timings.endTime;
-      vm.scheduleTimeZone = CTService.getTimeZone($stateParams.template.configuration.pages.offHours.schedule.timezone);
-      var businessDays = $stateParams.template.configuration.pages.offHours.schedule.businessDays;
+      var config = $stateParams.template.configuration;
+      vm.selectedTemplateProfile = config.mediaSpecificConfiguration.useOrgProfile ? vm.profiles.org : vm.profiles.agent;
+      vm.selectedAgentProfile = config.mediaSpecificConfiguration.useAgentRealName ? vm.agentNames.realName : vm.agentNames.alias;
+      vm.orgName = config.mediaSpecificConfiguration.displayText;
+      vm.logoUrl = config.mediaSpecificConfiguration.orgLogoUrl;
+      vm.timings.startTime.label = config.pages.offHours.schedule.timings.startTime;
+      vm.timings.endTime.label = config.pages.offHours.schedule.timings.endTime;
+      vm.scheduleTimeZone = CTService.getTimeZone(config.pages.offHours.schedule.timezone);
+      var businessDays = config.pages.offHours.schedule.businessDays;
       vm.days = _.map(CTService.getDays(), function (day) {
         var selectedDay = day;
         selectedDay.isSelected = _.contains(businessDays, day.label);
@@ -289,26 +292,6 @@
               feedbackQuery: {
                 displayText: $translate.instant('careChatTpl.feedbackQuery')
               },
-              ratings: [{
-
-                displayText: $translate.instant('careChatTpl.rating1Text'),
-                dictionaryType: {
-                  fieldSet: 'cisco.base.ccc.pod',
-                  fieldName: 'cccRatingPoints'
-                }
-              }, {
-                displayText: $translate.instant('careChatTpl.rating2Text'),
-                dictionaryType: {
-                  fieldSet: 'cisco.base.ccc.pod',
-                  fieldName: 'cccRatingPoints'
-                }
-              }, {
-                displayText: $translate.instant('careChatTpl.rating3Text'),
-                dictionaryType: {
-                  fieldSet: 'cisco.base.ccc.pod',
-                  fieldName: 'cccRatingPoints'
-                }
-              }],
               comment: {
                 displayText: $translate.instant('careChatTpl.ratingComment'),
                 dictionaryType: {
@@ -638,20 +621,12 @@
     };
 
     function setTemplateProfile() {
-      if (vm.selectedTemplateProfile === vm.profiles.org) {
-        vm.template.configuration.mediaSpecificConfiguration = {
-          useOrgProfile: true,
-          displayText: vm.orgName,
-          orgLogoUrl: vm.logoUrl
-        };
-      } else if (vm.selectedTemplateProfile === vm.profiles.agent) {
-        vm.template.configuration.mediaSpecificConfiguration = {
-          useOrgProfile: false,
-          useAgentRealName: false,
-          orgLogoUrl: vm.logoUrl,
-          displayText: vm.orgName
-        };
-      }
+      vm.template.configuration.mediaSpecificConfiguration = {
+        useOrgProfile: vm.selectedTemplateProfile === vm.profiles.org,
+        useAgentRealName: vm.selectedAgentProfile === vm.agentNames.realName,
+        orgLogoUrl: vm.logoUrl,
+        displayText: vm.getAttributeParam('value', 'organization', 'welcomeHeader')
+      };
     }
 
     function setOffHoursData() {

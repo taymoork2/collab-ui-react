@@ -291,7 +291,32 @@ describe('Controller: TrialDeviceController', function () {
       expect(valid).toBe(true);
     });
 
-    it('should validate quantity between 1 and 5', function () {
+    it('should validate quantity between 1 and 4 for new trial', function () {
+      var valid1 = controller.validateInputQuantity(1, 1, {
+        model: {
+          enabled: true
+        }
+      });
+      var valid2 = controller.validateInputQuantity(4, 4, {
+        model: {
+          enabled: true
+        }
+      });
+
+      expect(valid1).toBe(true);
+      expect(valid2).toBe(true);
+    });
+
+
+    it('should validate quantity between 1 and 5 for trial prior to 9/1/2016', function () {
+      var stateParams = {
+        currentTrial: {
+          startDate: new Date(2016, 7, 1)
+        }
+      };
+
+      var controller = $controller('TrialDeviceController', { $stateParams: stateParams });
+
       var valid1 = controller.validateInputQuantity(1, 1, {
         model: {
           enabled: true
@@ -331,7 +356,25 @@ describe('Controller: TrialDeviceController', function () {
       }
     };
 
-    it('should validate when quantity is between 1 and 7', function () {
+    it('should validate when quantity is between 1 and 5 for new trial', function () {
+      spyOn(controller, 'calcQuantity').and.returnValues(0, 1, 0, 5);
+
+      var valid1 = controller.validateTotalQuantity(null, null, model);
+      var valid2 = controller.validateTotalQuantity(null, null, model);
+
+      expect(valid1).toBe(true);
+      expect(valid2).toBe(true);
+    });
+
+    it('should validate when quantity is between 1 and 7 for trial prior to 9/1/2016', function () {
+      var stateParams = {
+        currentTrial: {
+          startDate: new Date(2016, 7, 1)
+        }
+      };
+
+      var controller = $controller('TrialDeviceController', { $stateParams: stateParams });
+
       spyOn(controller, 'calcQuantity').and.returnValues(0, 1, 0, 7);
 
       var valid1 = controller.validateTotalQuantity(null, null, model);
@@ -408,7 +451,24 @@ describe('Controller: TrialDeviceController', function () {
       }
     };
 
-    it('should validate when quantity is 5 or less', function () {
+    it('should validate when quantity is 4 or less for new trial', function () {
+      spyOn(controller, 'calcQuantity').and.returnValue(4);
+
+      var valid = controller.validatePhonesQuantity(null, null, model);
+
+      expect(valid).toBe(true);
+    });
+
+    it('should validate when quantity is 5 or less for trial prior to 9/1/16', function () {
+
+      var stateParams = {
+        currentTrial: {
+          startDate: new Date(2016, 7, 1)
+        }
+      };
+
+      var controller = $controller('TrialDeviceController', { $stateParams: stateParams });
+
       spyOn(controller, 'calcQuantity').and.returnValue(5);
 
       var valid = controller.validatePhonesQuantity(null, null, model);
@@ -574,6 +634,55 @@ describe('Controller: TrialDeviceController', function () {
         valid: true
       };
       expect(controller.areTemplateOptionsDisabled(device)).toBeTruthy();
+    });
+  });
+
+  describe('feature toggle for international shipping', function () {
+    it('should set supportsInternationalShipping value based on feature toggle value', function () {
+      spyOn(FeatureToggleService, 'atlasShipDevicesInternationalGetStatus').and.returnValue($q.when(true));
+      initController();
+
+      expect(controller.supportsInternationalShipping).toBe(true);
+      expect(FeatureToggleService.atlasShipDevicesInternationalGetStatus).toHaveBeenCalled();
+    });
+
+    it('should only show US when  only dx10 is  selected and toggle is false', function () {
+      spyOn(FeatureToggleService, 'atlasShipDevicesInternationalGetStatus').and.returnValue($q.when(false));
+      initController();
+      expect(controller.supportsInternationalShipping).toBe(false);
+      expect(FeatureToggleService.atlasShipDevicesInternationalGetStatus).toHaveBeenCalled();
+    });
+  });
+
+  describe('Shipping to additional countries ', function () {
+    it('should show a larger list of countries when only CISCO_SX10 is selected and toggle is true', function () {
+      spyOn(FeatureToggleService, 'atlasShipDevicesInternationalGetStatus').and.returnValue($q.when(true));
+      initController();
+      controller.sx10.enabled = true;
+      controller.sx10.quantity = 1;
+      var countryList = controller.getCountriesForSelectedDevices();
+      expect(countryList.length).toBeGreaterThan(1);
+    });
+    it('should have a list of countries to be US only when CISCO_SX10 is selected and toggle is false', function () {
+      spyOn(FeatureToggleService, 'atlasShipDevicesInternationalGetStatus').and.returnValue($q.when(false));
+      initController();
+      controller.sx10.enabled = true;
+      controller.sx10.quantity = 1;
+      var countryList = controller.getCountriesForSelectedDevices();
+      expect(countryList.length).toBe(1);
+      expect(countryList).toContain({ country: 'United States' });
+
+    });
+    it('should have a list of countries to be US only when CISCO_SX10 and phone is selected and toggle is true', function () {
+      spyOn(FeatureToggleService, 'atlasShipDevicesInternationalGetStatus').and.returnValue($q.when(true));
+      initController();
+      controller.sx10.enabled = true;
+      controller.sx10.quantity = 1;
+      controller.phone8865.enabled = true;
+      controller.phone8865.quantity = 1;
+      var countryList = controller.getCountriesForSelectedDevices();
+      expect(countryList.length).toBe(1);
+      expect(countryList).toContain({ country: 'United States' });
     });
   });
 });

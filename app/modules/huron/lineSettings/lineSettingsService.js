@@ -99,12 +99,15 @@
       return SimultaneousCallsServiceV2.get(queryString).$promise;
     }
 
-    function updateSimultaneousCalls(numberId, placesId, incomingCallMaximum) {
+    function updateSimultaneousCalls(numberId, placesId, incomingCallMaximumValue) {
+      var multipleCalls = {
+        incomingCallMaximum: incomingCallMaximumValue
+      };
       return SimultaneousCallsServiceV2.update({
         customerId: Authinfo.getOrgId(),
         numberId: numberId,
         placesId: placesId
-      }, incomingCallMaximum).$promise;
+      }, multipleCalls).$promise;
     }
 
     function deleteExternalLine(_dnUuid, _altNumUuid) {

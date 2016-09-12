@@ -1,0 +1,137 @@
+resource-group-card {
+  display: block;
+  width: 100%;
+
+  .cs-card-layout {
+    padding-bottom: 0 !important;
+    margin: 0 !important;
+  }
+
+  > .cs-card {
+    > article > header {
+      display: flex;
+      padding: 1.25rem 1rem 0.9375rem !important;
+      align-items: center;
+      border-bottom: 1px solid $gray-light-3;
+
+      > button > h4 {
+        display: inline;
+        @include text-overflow;
+        font-size: 16px;
+        margin-right: auto;
+      }
+    }
+
+    .resource-group-caret {
+      background-color: transparent;
+      color: inherit;
+      padding: 0;
+      min-width: 0;
+      font-size: 1.25rem;
+      margin-right: 1rem;
+      flex: 1;
+      text-align: left;
+
+      .fa {
+        width: 1rem;
+        margin-top: -2px;
+      }
+    }
+
+    .resource-group-release-channel {
+      margin-right: 1.25rem;
+    }
+
+    .resource-group-release-cluster-number {
+      margin-right: 1.25rem;
+    }
+
+    .resource-group-settings-link {
+      color: inherit;
+
+      .icon {
+        display: block;
+        margin-top: -2px;
+      }
+    }
+
+    .resource-group-banner {
+      display: flex;
+      align-items: center;
+      border-bottom: 1px solid $gray-light-3;
+      font-size: 0.875rem;
+      padding: 0 1rem;
+      height: 1.75rem;
+    }
+
+    .resource-group-banner-message {
+      margin-right: auto;
+    }
+
+    .resource-group-banner-link {
+      height: 100%;
+      padding: 0;
+      font-size: inherit;
+      line-height: inherit;
+      background-color: transparent;
+      color: $color-primary-base;
+    }
+
+    .resource-group-empty {
+      height: 314px;
+      text-align: center;
+    }
+  }
+
+  // override the cluster-card design
+  cluster-card {
+    position: relative;
+
+    &:after {
+      content: '';
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 1px;
+    }
+
+    &:nth-child(3n):after {
+      width: 0;
+    }
+
+    &:nth-child(3n+1):after {
+      right: 5px;
+      background-color: $gray-light-3;
+    }
+
+    &:nth-child(3n+2):after {
+      right: -2px;
+      background-color: $gray-light-3;
+    }
+
+    .cs-card {
+      article {
+        box-shadow: none;
+      }
+
+      header {
+        padding: 0 !important;
+        &:after {
+          height: 0 !important;
+          border-top: 0 !important;
+        }
+        h4 {
+          padding-top: 0;
+        }
+      }
+
+      .columns {
+        padding-left: 0;
+      }
+
+      footer a {
+        border-top: 0;
+      }
+    }
+  }
+}

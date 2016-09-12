@@ -19,8 +19,6 @@
     wait-time="0"
     placeholder="$ctrl.placeholder"
     input-placeholder="$ctrl.inputPlaceholder"
-    labelfield="pattern"
-    valuefield="uuid"
     required="true"
     is-warn="{{$ctrl.internalIsWarn}}"
     warn-msg="{{$ctrl.internalWarnMsg}}"
@@ -30,11 +28,11 @@
   <div class="esn-number-field" ng-class="{warningMargin: $ctrl.internalIsWarn}">
     <p ng-if="$ctrl.showExtensions">
       <span translate="directoryNumberPanel.enterpriseSiteNumberLabel"></span>
-      <span ng-bind="$ctrl.esnPrefix"></span><strong class="esn-extension" ng-bind="$ctrl.internalSelected.pattern"></strong>
+      <span ng-bind="$ctrl.esnPrefix"></span><strong class="esn-extension" ng-bind="$ctrl.internalSelected.value"></strong>
     </p>
     <p ng-if="!$ctrl.showExtensions">
       <span translate="directoryNumberPanel.nationalNumberLabel"></span>:
-      <span ng-bind="$ctrl.externalSelected.pattern"></span>
+      <span ng-bind="$ctrl.externalSelected.label"></span>
     </p>
   </div>
 </div>
@@ -49,8 +47,6 @@
     wait-time="0"
     placeholder="$ctrl.nonePlaceholder"
     input-placeholder="$ctrl.inputPlaceholder"
-    labelfield="pattern"
-    valuefield="uuid"
     filter="true"
     on-change-fn="$ctrl.changeExternal()">
   </cs-select>

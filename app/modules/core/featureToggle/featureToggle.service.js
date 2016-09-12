@@ -36,6 +36,7 @@
       atlasReadOnlyAdmin: 'atlas-read-only-admin',
       atlasComplianceRole: 'atlas-compliance-role',
       atlasSettingsPage: 'atlas-settings-page',
+      atlasShipDevicesInternational: 'atlas-ship-devices-international',
       atlasSipUriDomain: 'atlas-sip-uri-domain',
       atlasSipUriDomainEnterprise: 'atlas-sip-uri-domain-enterprise',
       atlasWebexTrials: 'atlas-webex-trials',
@@ -58,17 +59,17 @@
       deleteContent: 'delete-content',
       disableCacheForFeatures: 'disableCacheForFeatures',
       enforceSparkContentEncryption: 'enforce-spark-content-encryption',
-      extensionLength: 'huron-extension-length',
       featureToggleRules: 'feature-toggle-rules',
       feedbackViaEmail: 'feedback-via-email',
       filterBadges: 'filter-badges',
       flagMsg: 'flag-msg',
       geoHintEnabled: 'geo-hint-enabled',
       huronAACallQueue: 'huronAACallQueue',
-      huronMultipleCalls: 'huron-multiple-calls',
+      huronAAMediaUpload: 'huron-aa-mediaupload',
       huronClassOfService: 'COS',
       huronInternationalDialingTrialOverride: 'huronInternationalDialingTrialOverride',
       huronKEM: 'huronKEM',
+      huronSpeedDial: 'huronSpeedDial',
       iosActionBar: 'ios-action-bar',
       iosAecType: 'ios-aec-type',
       iosCameraview: 'ios-cameraview',
@@ -146,7 +147,9 @@
       csdmPlaces: 'csdm-places',
       optionalvmdid: 'optional-vm-did',
       globalStatus: 'global-status',
-      atlasF237ResourceGroups: 'atlas-f237-resource-group'
+      atlasF237ResourceGroups: 'atlas-f237-resource-group',
+      huronSiteDialDigit: 'huron-site-dial-digit',
+      huronLocalDialing: 'huron-local-dialing'
     };
 
     var toggles = {};
@@ -188,7 +191,8 @@
       stateSupportsFeature: stateSupportsFeature,
       supports: supports,
       supportsDirSync: supportsDirSync,
-      features: features
+      features: features,
+      getCustomerHuronToggle: getCustomerHuronToggle
     };
 
     init();
@@ -266,19 +270,23 @@
             return false;
           });
         } else {
-          return HuronCustomerFeatureToggleService.get({
-            customerId: id,
-            featureName: feature
-          }).$promise.then(function (data) {
-            toggles[feature] = data.val;
-            return data.val;
-          }).catch(function () {
-            return false;
-          });
+          return getCustomerHuronToggle(id, feature);
         }
       } else {
         return $q.when(false);
       }
+    }
+
+    function getCustomerHuronToggle(id, feature) {
+      return HuronCustomerFeatureToggleService.get({
+        customerId: id,
+        featureName: feature
+      }).$promise.then(function (data) {
+        toggles[feature] = data.val;
+        return data.val;
+      }).catch(function () {
+        return false;
+      });
     }
 
     function getFeature(isUser, id, feature) {

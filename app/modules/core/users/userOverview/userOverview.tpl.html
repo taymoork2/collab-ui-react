@@ -8,7 +8,7 @@
       title-key="usersPreview.servicesPreview"
       action-list="userOverview.actionList">
     </section-title>
-    <feature-list features="userOverview.services"></feature-list>
+    <feature-list features="userOverview.services" feature-actions="userOverview.serviceActions(feature)"></feature-list>
   </cs-sp-section>
   <hercules-cloud-extensions user="userOverview.currentUser"></hercules-cloud-extensions>
   <cs-sp-section ng-if="userOverview.isSquaredUC">

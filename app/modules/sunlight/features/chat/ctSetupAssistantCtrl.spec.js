@@ -266,6 +266,7 @@ describe('Care Chat Setup Assistant Ctrl', function () {
       controller.nextButton();
       expect(controller.template.configuration.mediaSpecificConfiguration).toEqual({
         useOrgProfile: true,
+        useAgentRealName: false,
         displayText: OrgName,
         orgLogoUrl: dummyLogoUrl
       });
@@ -275,6 +276,7 @@ describe('Care Chat Setup Assistant Ctrl', function () {
       resolveLogoPromise();
       resolveLogoUrlPromise();
       controller.selectedTemplateProfile = controller.profiles.agent;
+      controller.selectedAgentProfile = controller.agentNames.alias;
       controller.nextButton();
       expect(controller.template.configuration.mediaSpecificConfiguration).toEqual({
         useOrgProfile: false,

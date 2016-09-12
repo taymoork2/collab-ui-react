@@ -26,6 +26,7 @@ module.exports = csp({
     ],
     frameSrc: [
       'https://buy.ciscospark.com',
+      'http://buy.ciscospark.com',
     ],
     connectSrc: [
       '\'self\'',
@@ -42,6 +43,7 @@ module.exports = csp({
       'http://api.mixpanel.com',
       'https://api.mixpanel.com',
       'https://cdn.mxpnl.com',
+      'http://54.183.25.170:8001',
       // Browser Sync:
       'ws://127.0.0.1:8000',
       'ws://localhost:8000',

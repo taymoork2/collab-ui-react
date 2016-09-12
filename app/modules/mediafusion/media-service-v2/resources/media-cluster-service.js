@@ -45,7 +45,7 @@
     };
 
     function overrideStateIfAlarms(connector) {
-      if (connector.alarms.length > 0) {
+      if (connector.alarms.length > 0 && connector.state !== 'offline') {
         connector.state = 'has_alarms';
       }
       return connector;

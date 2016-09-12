@@ -6,7 +6,7 @@
     .directive('herculesNotifications', herculesNotificationsDirective);
 
   /* @ngInject */
-  function HerculesNotificationsController(NotificationService, $state, $scope, $modal, ServiceDescriptor, ServiceStateChecker, USSService2) {
+  function HerculesNotificationsController(NotificationService, $state, $scope, $modal, ServiceDescriptor, ServiceStateChecker, USSService) {
     var vm = this;
     vm.notificationsLength = function () {
       return NotificationService.getNotificationLength();
@@ -62,7 +62,7 @@
             return servicesId;
           },
           userStatusSummary: function () {
-            return USSService2.extractSummaryForAService(servicesId);
+            return USSService.extractSummaryForAService(servicesId);
           }
         }
       });
