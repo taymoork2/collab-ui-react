@@ -1,5 +1,5 @@
 'use strict';
-'eslint-enable';
+/*eslint-enable */
 
 
 describe('Huron Auto Attendant', function () {
