@@ -6,7 +6,7 @@
     .controller('statusPageCtrl', StatusPageCtrl);
 
   /* @ngInject */
-  function StatusPageCtrl($translate, $scope, statusService) {
+  function StatusPageCtrl($translate, $scope, statusService, $state) {
     var vm = this;
     vm.service = statusService;
 
@@ -14,16 +14,16 @@
     vm.pageTitle = $translate.instant('statusPage.pageTitle');
     vm.headerTabs = [
       {
-        title: $translate.instant('statusPage.dashboard'),
-        state: '.dashboard'
-      },
-      {
         title: $translate.instant('statusPage.components'),
         state: '.components'
       },
       {
         title: $translate.instant('statusPage.incidents'),
         state: '.incidents'
+      },
+      {
+        title: $translate.instant('statusPage.dashboard'),
+        state: '.dashboard'
       }
     ];
 
@@ -47,6 +47,7 @@
       });
       vm.options = [].concat(sList, vm.options);
       vm.selected = vm.options[0];
+      $state.go(".components");
       return sList;
     });
 
