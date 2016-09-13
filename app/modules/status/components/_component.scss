@@ -1,5 +1,5 @@
-.componentPage{
-  .status{
+.componentPage {
+  .status {
     background-color: $brand-white;
 
     .tags {
@@ -19,35 +19,35 @@
     }
 
     .typography-airy {
-      h5{
+      h5 {
         font-weight: bold;
         margin-bottom: .25rem;
         margin-top: .5rem;
       }
-      p:first-line{
+      p:first-line {
         margin-bottom: 1rem;
       }
-      p:last-child{
+      p:last-child {
         margin-bottom: 1rem;
       }
-      hr{
-        margin-top:0.3rem;
-        margin-bottom:0.3rem;
+      hr {
+        margin-top: 0.3rem;
+        margin-bottom: 0.3rem;
       }
     }
 
     .large-margin {
-      padding-left:2rem;
-      padding-right:2rem;
-      padding-top:1rem;
-      padding-bottom:1rem;
+      padding-left: 2rem;
+      padding-right: 2rem;
+      padding-top: 1rem;
+      padding-bottom: 1rem;
     }
 
     .small-margin {
-      padding-left:1rem;
-      padding-right:1rem;
-      padding-top:0.5rem;
-      padding-bottom:0.3rem;
+      padding-left: 1rem;
+      padding-right: 1rem;
+      padding-top: 0.5rem;
+      padding-bottom: 0.3rem;
     }
 
     .small-padding-top {
@@ -85,16 +85,15 @@
       }
     }
 
-
     .full-height {
       min-height: 100vh;
       min-height: calc(100vh - 150px);
     }
 
-    .btn--alert{
-      margin-left:0;
+    .btn--alert {
+      margin-left: 0;
     }
-    .btn--primary,.btn--alert {
+    .btn--primary, .btn--alert {
       margin-top: 1rem;
       margin-bottom: 1rem;
     }
@@ -102,10 +101,10 @@
 
   .centered-info-pane {
     background-color: $brand-white;
-    width:500px;
-    height:300px;
-    margin:100px auto;
-    text-align:center;
+    width: 500px;
+    height: 300px;
+    margin: 100px auto;
+    text-align: center;
     color: $gray-base;
 
     h2 {
@@ -119,54 +118,61 @@
     }
   }
 
-.status-components{
-  background-color: $brand-white;
-}
-.status-components-list{
-  margin: 0 auto;
-  padding: 2rem;
-  line-height:3rem;
-  color:#333;
-}
-.status-components-list:not(:last-child){
-  border-bottom: 1px solid #ccc;
-}
-.status-components-list ul li{
-  list-style-type:none;
-  line-height:2rem;
-  color:#999;
-}
-.status-components-list a{
-  float:right;
-  color: #66c5e8;
-  margin: auto 10px;
-}
-.status-components-list span.icon{
-  margin: auto 10px;
-}
-.componentStatus-operational{
-  color: #43a942;
-}
-.componentStatus-degraded_performance{
-  color: #f5a623;
-}
-.componentStatus-under_maintenance{
-  color: #049fd9;
-}
-.componentStatus-partial_outage{
-  color: #e9691e;
-}
-.componentStatus-major_outage{
-  color: #f96452;
+  .status-components {
+    background-color: $brand-white;
+  }
+  .status-components-list {
+    margin: 0 auto;
+    padding: 2rem;
+    line-height: 3rem;
+    color: #333;
+  }
+  .status-components-list:not(:last-child) {
+    border-bottom: 1px solid #ccc;
+  }
+  .status-components-list ul li {
+    list-style-type: none;
+    line-height: 2rem;
+    color: #999;
+  }
+  .status-components-list a {
+    float: right;
+    color: #66c5e8;
+    margin: auto 10px;
+  }
+  .status-components-list span.icon {
+    margin: auto 10px;
+  }
+  .componentStatus-operational {
+    color: #43a942;
+  }
+  .componentStatus-degraded_performance {
+    color: #f5a623;
+  }
+  .componentStatus-under_maintenance {
+    color: #049fd9;
+  }
+  .componentStatus-partial_outage {
+    color: #e9691e;
+  }
+  .componentStatus-major_outage {
+    color: #f96452;
+  }
+
+  .addComponentForm .columns.medium-4 {
+    margin-top: 8px;
+    text-align: right;
+  }
+  .addComponentForm .cancelCreateNewGroup {
+    background: none;
+    font-size: 0.8rem;
+    color: lightblue;
+  }
 }
 
-.addComponentForm .columns.medium-4{
-  margin-top:8px;
-  text-align:right;
+.modal-content.small.status-add-service {
+  height: 144px;
 }
-.addComponentForm .cancelCreateNewGroup{
-  background: none;
-  font-size: 0.8rem;
-  color: lightblue;
-}
+.reveal-modal.full .modal-content.status-add-service{
+  top: 200px;
 }

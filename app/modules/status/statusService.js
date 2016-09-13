@@ -19,6 +19,11 @@
       setServiceId: function (_serviceId) {
         $log.debug('set serviceId to ', _serviceId);
         serviceId = _serviceId;
+      },
+      addService: function (serviceName) {
+        return $http.post(url, {
+          serviceName: serviceName
+        });
       }
     };
   }
