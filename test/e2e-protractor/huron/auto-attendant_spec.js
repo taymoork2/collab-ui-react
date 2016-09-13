@@ -134,6 +134,27 @@ describe('Huron Auto Attendant', function () {
       utils.expectIsDisabled(autoattendant.saveButton);
     }, 60000);
 
+    it('should add Play Message, select Language and Voice to the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
+      var absolutePath = utils.resolvePath(autoattendant.mediaFileToUpload);
+      autoattendant.scrollIntoView(autoattendant.sayMessage);
+
+      // media upload
+      utils.click(autoattendant.messageOptions);
+      utils.click(autoattendant.playMessageOption);
+      $(autoattendant.mediaUploadSend).sendKeys(absolutePath);
+
+      // and save
+      utils.wait(autoattendant.saveButton, 12000);
+
+      utils.expectIsEnabled(autoattendant.saveButton);
+      utils.click(autoattendant.saveButton);
+      autoattendant.assertUpdateSuccess(deleteUtils.testAAName);
+
+      utils.expectIsDisabled(autoattendant.saveButton);
+
+    }, 60000);
+//
+
     it('should add Phone Menu Say to the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
 
       autoattendant.scrollIntoView(autoattendant.phoneMenuSay);
@@ -145,8 +166,8 @@ describe('Huron Auto Attendant', function () {
       utils.expectIsEnabled(autoattendant.saveButton);
 
       // language and voice
-      utils.click(autoattendant.phonesayMessageLanguage);
       autoattendant.scrollIntoView(autoattendant.phonelanguageDropDownOptions);
+      utils.click(autoattendant.phonesayMessageLanguage);
       utils.click(autoattendant.phonelanguageDropDownOptions);
       utils.click(autoattendant.phonesayMessageVoice);
       utils.click(autoattendant.phonesayMessageVoiceOptions);

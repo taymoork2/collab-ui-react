@@ -1,7 +1,7 @@
 import simultaneousCalls from '../../simultaneousCalls';
 import { CallForwardAll, CallForwardBusy } from '../../callForward/callForward';
 import { BLOCK_CALLERID_TYPE, DIRECT_LINE_TYPE, COMPANY_CALLERID_TYPE, CUSTOM_COMPANY_TYPE } from '../../callerId';
-import { SharedLineUser, User, SharedLineDevice } from '../../sharedLine/sharedLine';
+import { SharedLineUser, User, SharedLineDevice } from '../../sharedLine';
 import { LineService, LineConsumerType } from '../services';
 import { LineOverviewService, LineOverviewData } from './index';
 import { DirectoryNumberOptionsService } from '../../directoryNumber';
@@ -17,7 +17,6 @@ class LineOverview {
   private numberId: string;
   private consumerType: LineConsumerType;
 
-  static CISCOUC: string = 'ciscouc';
   public form: ng.IFormController;
   public saveInProcess: boolean = false;
 
@@ -46,8 +45,8 @@ class LineOverview {
   public companyCallerId_label: string;
   public custom_label: string;
 
-  //Shared Line Properties
-  public selected: SharedLineUser = undefined;
+  //SharedLine Properties
+  public selectedUser: SharedLineUser;
   public sharedLineEndpoints: SharedLineDevice[];
   public devices: string[];
   public sharedLineUsers: SharedLineUser[];
@@ -67,7 +66,8 @@ class LineOverview {
     private $translate: ng.translate.ITranslateService,
     private $state,
     private CallerId,
-    private Notification
+    private Notification,
+    private Config
   ) {
     this.blockedCallerId_label = $translate.instant('callerIdPanel.blockedCallerId');
     this.companyCallerId_label = $translate.instant('callerIdPanel.companyCallerId');
@@ -138,29 +138,13 @@ class LineOverview {
     }
   }
 
-  public getUserName(name: { givenName: string, familyName: string }, userId: string): string {
-    var userName = '';
-    userName = (name && name.givenName) ? name.givenName : '';
-    userName = (name && name.familyName) ? (userName + ' ' + name.familyName).trim() : userName;
-    userName = userName || userId;
-    return userName;
-  }
-
-  public getUsersList(filter: string): User[] { ///TODO -- services
+  public getUserList(filter: string): User[] { ///TODO -- services
     var users: User[] = [];
     return users;
   }
 
-  public selectSharedLineUser(user: User): void {
-    var userInfo = {
-      'uuid': user.uuid,
-      'userName': user.userName,
-      'userDnUuid': 'none',
-      'entitlements': user.entitlements,
-      'dnUsage': '',
-      'name': this.getUserName(user.name, user.userName),
-    };
-    this.selected = undefined;
+  public selectSharedLineUser(userInfo: SharedLineUser): void {
+    this.selectedUser = undefined;
 
     if (this.isValidSharedLineUser(userInfo)) {
       this.selectedUsers.push(userInfo);
@@ -172,33 +156,34 @@ class LineOverview {
     var isVoiceUser = false;
     var isValidUser = true;
 
-    angular.forEach(userInfo.entitlements, function (e) {
+    _.forEach(userInfo.entitlements, e => {
 
-      if (e === this.CISCOUC) {
+      if (e === this.Config.entitlements.huron) {
         isVoiceUser = true;
       }
     });
-    //TODO
-    // if (!isVoiceUser || userInfo.uuid == this.currentUser.id) {
-    //   // Exclude users without Voice service to be shared line User
-    //   // Exclude current user
-    //   if (!isVoiceUser) {
-    //     Notification.error('sharedLinePanel.invalidUser', {
-    //       user: userInfo.name
-    //     });
-    //   }
-    //   isValidUser = false;
-    // }
+
+    if (!isVoiceUser || userInfo.uuid == this.$state.currentUser.id) {
+      // Exclude users without Voice service to be shared line User
+      // Exclude current user
+      if (!isVoiceUser) {
+        this.Notification.error('sharedLinePanel.invalidUser', {
+          user: userInfo.name
+        });
+      }
+      isValidUser = false;
+    }
+
     if (isValidUser) {
       // Exclude selection of already selected users
-      angular.forEach(this.selectedUsers, function (user) {
+      _.forEach(this.selectedUsers, function (user) {
         if (user.uuid === userInfo.uuid) {
           isValidUser = false;
         }
       });
       if (isValidUser) {
         //Exclude current sharedLine users
-        angular.forEach(this.sharedLineUsers, function (user) {
+        _.forEach(this.sharedLineUsers, function (user) {
           if (user.uuid === userInfo.uuid) {
             isValidUser = false;
           }
@@ -206,6 +191,14 @@ class LineOverview {
       }
     }
     return isValidUser;
+  }
+
+  public isSingleDevice(sharedLineEndpoints, uuid): Boolean {
+    return true;
+  }
+
+  public disassociateSharedLineUser(user, bulkDevice): void {
+
   }
 
   private resetForm(): void {

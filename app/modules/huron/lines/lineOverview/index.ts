@@ -17,6 +17,7 @@ export default angular
     serviceModule,
     callerId,
     sharedLine,
+    require('modules/core/config/config'),
   ])
   .component('lineOverview', new LineOverviewComponent())
   .service('LineOverviewService', LineOverviewService)

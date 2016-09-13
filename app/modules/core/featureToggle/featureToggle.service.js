@@ -29,8 +29,8 @@
       atlasMediaServiceMetrics: 'atlas-media-service-metrics',
       atlasMediaServiceOnboarding: 'atlas-media-service-onboarding',
       atlasNewRoomSystems: 'atlas-new-roomSystems',
+      atlasNewUserExport: 'atlas-new-user-export',
       atlasNurturingEmails: 'atlas-nurturing-emails',
-      atlasUserPendingStatus: 'atlas-user-pending-status',
       atlasPinSettings: 'atlas-pin-settings',
       atlasPstnTfn: 'atlas-pstn-tfn',
       atlasReadOnlyAdmin: 'atlas-read-only-admin',
@@ -39,6 +39,7 @@
       atlasShipDevicesInternational: 'atlas-ship-devices-international',
       atlasSipUriDomain: 'atlas-sip-uri-domain',
       atlasSipUriDomainEnterprise: 'atlas-sip-uri-domain-enterprise',
+      atlasUserPendingStatus: 'atlas-user-pending-status',
       atlasWebexTrials: 'atlas-webex-trials',
       androidAddGuestRelease: 'android-add-guest-release',
       androidDirectUpload: 'android-direct-upload',
@@ -59,14 +60,14 @@
       deleteContent: 'delete-content',
       disableCacheForFeatures: 'disableCacheForFeatures',
       enforceSparkContentEncryption: 'enforce-spark-content-encryption',
-      extensionLength: 'huron-extension-length',
       featureToggleRules: 'feature-toggle-rules',
       feedbackViaEmail: 'feedback-via-email',
       filterBadges: 'filter-badges',
       flagMsg: 'flag-msg',
+      fmcCommandDispatch: 'fmc-command-dispatch',
       geoHintEnabled: 'geo-hint-enabled',
       huronAACallQueue: 'huronAACallQueue',
-      huronMultipleCalls: 'huron-multiple-calls',
+      huronAAMediaUpload: 'huron-aa-mediaupload',
       huronClassOfService: 'COS',
       huronInternationalDialingTrialOverride: 'huronInternationalDialingTrialOverride',
       huronKEM: 'huronKEM',
@@ -148,7 +149,8 @@
       csdmPlaces: 'csdm-places',
       optionalvmdid: 'optional-vm-did',
       globalStatus: 'global-status',
-      atlasF237ResourceGroups: 'atlas-f237-resource-group'
+      atlasF237ResourceGroups: 'atlas-f237-resource-group',
+      huronLocalDialing: 'huron-local-dialing'
     };
 
     var toggles = {};
@@ -190,7 +192,8 @@
       stateSupportsFeature: stateSupportsFeature,
       supports: supports,
       supportsDirSync: supportsDirSync,
-      features: features
+      features: features,
+      getCustomerHuronToggle: getCustomerHuronToggle
     };
 
     init();
@@ -268,19 +271,23 @@
             return false;
           });
         } else {
-          return HuronCustomerFeatureToggleService.get({
-            customerId: id,
-            featureName: feature
-          }).$promise.then(function (data) {
-            toggles[feature] = data.val;
-            return data.val;
-          }).catch(function () {
-            return false;
-          });
+          return getCustomerHuronToggle(id, feature);
         }
       } else {
         return $q.when(false);
       }
+    }
+
+    function getCustomerHuronToggle(id, feature) {
+      return HuronCustomerFeatureToggleService.get({
+        customerId: id,
+        featureName: feature
+      }).$promise.then(function (data) {
+        toggles[feature] = data.val;
+        return data.val;
+      }).catch(function () {
+        return false;
+      });
     }
 
     function getFeature(isUser, id, feature) {

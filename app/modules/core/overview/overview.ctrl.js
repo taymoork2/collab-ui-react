@@ -6,7 +6,7 @@
     .controller('OverviewCtrl', OverviewCtrl);
 
   /* @ngInject */
-  function OverviewCtrl($rootScope, $scope, $translate, Authinfo, Config, FeatureToggleService, Log, Notification, Orgservice, OverviewCardFactory, OverviewNotificationFactory, ReportsService, TrialService, UrlConfig, hasCareFeatureToggle) {
+  function OverviewCtrl($rootScope, $scope, $translate, Authinfo, Config, FeatureToggleService, Log, Notification, Orgservice, OverviewCardFactory, OverviewNotificationFactory, ReportsService, SunlightReportService, TrialService, UrlConfig, hasCareFeatureToggle) {
     var vm = this;
 
     vm.pageTitle = $translate.instant('overview.pageTitle');
@@ -146,11 +146,13 @@
 
     vm.statusPageUrl = UrlConfig.getStatusPageUrl();
 
-    _.each(['oneOnOneCallsLoaded', 'groupCallsLoaded', 'conversationsLoaded', 'activeRoomsLoaded'], function (eventType) {
+    _.each(['oneOnOneCallsLoaded', 'groupCallsLoaded', 'conversationsLoaded', 'activeRoomsLoaded', 'incomingChatTasksLoaded'], function (eventType) {
       $scope.$on(eventType, _.partial(forwardEvent, 'reportDataEventHandler'));
     });
 
     ReportsService.getOverviewMetrics(true);
+
+    SunlightReportService.getOverviewData();
 
     Orgservice.getAdminOrg(_.partial(forwardEvent, 'orgEventHandler'), false, true);
 

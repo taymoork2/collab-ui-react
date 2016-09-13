@@ -66,10 +66,19 @@
 
       <div class="row">
         <div class="small-4 medium-3 large-2 columns details-heading">
-          <span>{{'common.id' | translate}}:</span>
+          <span>{{'helpdesk.deviceId' | translate}}:</span>
         </div>
         <div class="small-8 medium-9 large-10 columns details-value-device">
           <span>{{helpdeskDeviceCtrl.deviceId}}</span>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="small-4 medium-3 large-2 columns details-heading">
+          <span>{{'helpdesk.placeId' | translate}}:</span>
+        </div>
+        <div class="small-8 medium-9 large-10 columns details-value-device">
+          <span>{{helpdeskDeviceCtrl.device.cisUuid}}</span>
         </div>
       </div>
 

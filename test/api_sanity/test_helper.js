@@ -84,7 +84,7 @@ var auth = {
   },
   'media-super-admin': {
     user: 'super-admin@mfusion1webex.com',
-    pass: 'C1sc0123!',
+    pass: 'C1sc01234!',
     org: 'baab1ece-498c-452b-aea8-1a727413c818'
   },
   'customer-support-admin': {

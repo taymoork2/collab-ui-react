@@ -19,7 +19,8 @@
       getDIDLabel: getDIDLabel,
       getExampleNumbers: getExampleNumbers,
       getPhoneNumberType: getPhoneNumberType,
-      isTollFreeNumber: isTollFreeNumber
+      isTollFreeNumber: isTollFreeNumber,
+      isPossibleAreaCode: isPossibleAreaCode
     };
     var TOLL_FREE = 'TOLL_FREE';
     var PREMIUM_RATE = 'PREMIUM_RATE';
@@ -123,6 +124,17 @@
 
     function getExampleNumbers() {
       return exampleNumbers[regionCode];
+    }
+
+    function isPossibleAreaCode(areaCode) {
+      //TODO: needs to be looked at again when service in other countries is available
+      if (regionCode === 'us') {
+        return phoneUtils.isPossibleNumber(areaCode + '0000000', regionCode);
+      } else if (regionCode === 'au') {
+        return phoneUtils.isValidNumber(areaCode + '00000000', regionCode);
+      } else {
+        return true;
+      }
     }
   }
 })();

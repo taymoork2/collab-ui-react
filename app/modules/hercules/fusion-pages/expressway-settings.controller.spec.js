@@ -7,7 +7,7 @@ describe('Controller: ExpresswayClusterSettingsController', function () {
   var html;
   var $compile;
 
-  beforeEach(inject(function ($rootScope, $templateCache, _$compile_, $q, FusionClusterService) {
+  beforeEach(inject(function ($rootScope, $templateCache, _$compile_) {
     $scope = $rootScope.$new();
     $compile = _$compile_;
     html = $templateCache.get('modules/hercules/fusion-pages/expressway-settings.html');
@@ -17,7 +17,7 @@ describe('Controller: ExpresswayClusterSettingsController', function () {
     };
     // This view will load the <upgrade-schedule-configuration> component which will trigger
     // an HTTP request for nothing. The line below blocks it.
-    spyOn(FusionClusterService, 'getUpgradeSchedule').and.returnValue($q.reject({}));
+    //spyOn(FusionClusterService, 'getUpgradeSchedule').and.returnValue($q.reject({}));
     view = $compile(angular.element(html))($scope);
     $scope.$digest();
   }));
@@ -36,4 +36,10 @@ describe('Controller: ExpresswayClusterSettingsController', function () {
     expect(view.find('#deactivateCalendar').length).toBe(0);
 
   });
+
+  it('should hide Release Channels and Resource Groups by default if you are not feature toggled', function () {
+    expect(view.find('#RC-section-test').length).toBe(0);
+    expect(view.find('#RG-section-test').length).toBe(0);
+  });
+
 });

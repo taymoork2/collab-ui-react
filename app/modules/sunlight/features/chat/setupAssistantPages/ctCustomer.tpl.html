@@ -125,7 +125,7 @@
                         options="careChatSA.typeOptions"
                         labelfield="text"
                         valuefield="id"
-                        class="ct-attribute-field-textbox"
+                        ng-class="careChatSA.validateType(attribute.value) ? 'ct-attribute-field-textbox' : 'ct-attribute-field-textbox_error'"
                         placeholder="attribute.defaultValue">
                 </cs-select>
                 <label
@@ -142,6 +142,7 @@
                 <i class="icon icon-add-contain" ng-click="careChatSA.addCategoryOption()"></i>
                 <input
                         cs-input
+                        ng-readonly="{{!careChatSA.validateType(attribute.value)}}"
                         name="categoryTextBox"
                         id="categoryTextBox"
                         class="h5 inputField ct-attribute-field-textbox large-11 ng-pristine ng-valid ng-scope ng-not-empty ng-touched icon-add-contain"

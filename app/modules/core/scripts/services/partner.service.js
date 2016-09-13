@@ -365,6 +365,7 @@
         customerName: customer.customerName || customer.displayName,
         customerEmail: customer.customerEmail || customer.email,
         endDate: edate,
+        startDate: customer.startDate,
         numUsers: customer.allUsers || 0, // sometimes we get back undefined users, temp workaround
         activeUsers: customer.activeUsers || 0,
         daysLeft: 0,

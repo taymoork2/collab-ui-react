@@ -8,7 +8,24 @@ export interface IDirectoryNumber {
   dnSharedUsage?: string
 }
 
-class DirectoryNumberListCtrl {}
+class DirectoryNumberListCtrl {
+
+  public numberOfLines: number=5;
+  public directoryNumbers: Array<Object>;
+  public hideShowMoreButton: boolean=false;
+
+  public showMoreClicked(): void {
+    this.hideShowMoreButton = true;
+    this.numberOfLines = undefined;
+  }
+
+  public showMoreButton(): boolean {
+    if (this.directoryNumbers.length > this.numberOfLines && !this.hideShowMoreButton)
+      return true;
+    else
+      return false;
+  }
+}
 
 angular
   .module('Huron')

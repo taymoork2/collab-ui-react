@@ -9,7 +9,7 @@
                 <div class="no-data" ng-if="nav.total === nav.noData">{{nav.total}}</div>
                 <div ng-if="nav.total !== nav.noData">
                     <div class="call-counts">{{nav.total}}</div>
-                       <div class="spinner-position" ng-if="!nav.total && !nav.onprem && !nav.cloud">
+                       <div class="spinner-position" ng-if="!nav.total && nav.total !== 0 && !nav.onprem && !nav.cloud">
                           <i class='icon icon-spinner icon-2x'></i>
                         </div>
                     <div class="last-counts" ng-if="nav.onprem || nav.onprem === 0">{{nav.onprem}}

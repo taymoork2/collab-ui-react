@@ -1,4 +1,5 @@
-<div ng-if="!aaSay.isMessageInputOnly()" id ="say" class="panel aa-message-panel">
+<div ng-if="!aaSay.isMediaUploadToggle()">
+  <div ng-if="!aaSay.isMessageInputOnly()" id ="say" class="panel aa-message-panel">
     <div class="row">
       <div class="small-12 columns">
         <label for="sayMessageInput{{ schedule + index + menuKeyIndex }}" translate="{{ :: aaSay.getMessageLabel() }}"></label>
@@ -17,14 +18,56 @@
         </cs-select>
       </div>
     </div>
-
     <div class="row">
       <div class="small-12 columns">
         <p class="body-small aa-message-footer" translate="{{ :: aaSay.getFooter() }}"></p>
       </div>
     </div>
-</div>
-<div ng-if="aaSay.isMessageInputOnly()">
+  </div>
+  <div ng-if="aaSay.isMessageInputOnly()">
     <label class="control-label" for="sayMessageInput{{ schedule + index + menuKeyIndex }}" translate="{{ :: aaSay.getMessageLabel() }}"></label>
     <textarea aa-keypress ng-change="aaSay.saveUiModel()" ng-model="aaSay.messageInput" type="text" id="sayMessageInput{{ schedule + index + menuKeyIndex }}" name="sayMessageInput" placeholder="{{ :: aaSay.messageInputPlaceholder }}" rows="4" maxlength="2000"></textarea>
+  </div>
+</div>
+<div ng-if="aaSay.isMediaUploadToggle()">
+  <div ng-if="!aaSay.isMessageInputOnly()" id ="say" class="panel aa-message-panel">
+    <div class="row">
+      <div class="large-6 small-12 columns aa-message-select-list">
+        <label for="languageSelect{{ schedule + index + menuKeyIndex }}" translate="common.language"></label>
+        <cs-select id="languageSelect{{ schedule + index + menuKeyIndex }}" name="languageSelect" ng-model="aaSay.languageOption" options="aaSay.languageOptions" icon="icon-chevron-down" labelfield="label" valuefield="value" placeholder="aaSay.languagePlaceholder" ng-change="aaSay.setVoiceOptions(); aaSay.saveUiModel()">
+        </cs-select>
+      </div>
+      <div class="large-6 small-12 columns aa-message-select-list">
+        <label for="voiceSelect{{ schedule + index + menuKeyIndex }}" translate="autoAttendant.sayMessageVoice"></label>
+        <cs-select id="voiceSelect{{ schedule + index + menuKeyIndex }}" name="voiceSelect" options="aaSay.voiceOptions" icon="icon-chevron-down" labelfield="label" valuefield="value" ng-model="aaSay.voiceOption" placeholder="aaSay.voicePlaceholder" ng-change="aaSay.saveUiModel()">
+        </cs-select>
+      </div>
+    </div>
+    <div class="row">
+      <span class="small-12 columns aa-message-subtext" translate="autoAttendant.sayAndError"></span>
+      <hr class="aa-message-line-break"></hr>
+    </div>
+    <div class="row">
+      <div class="large-6 small-6 columns aa-message-select-list">
+        <label for="messageSelect{{ schedule + index + menuKeyIndex }}" translate="autoAttendant.messageType"></label>
+        <cs-select id="messageSelect{{ schedule + index + menuKeyIndex }}" name="messageSelect" options="aaSay.messageOptions" icon="icon-chevron-down" labelfield="label" valuefield="value" ng-model="aaSay.messageOption" ng-change="aaSay.setMessageOptions()">
+        </cs-select>
+      </div>
+    </div>
+    <div class="row">
+      <div ng-switch="aaSay.messageOption.value" class="large-12 small-12 columns">
+        <aa-media-upload ng-switch-when="uploadFile" aa-uploaded-fdate="{{ aaSay.uploadedDate }}" aa-uploaded-fname="{{ aaSay.uploadedFile }}" id="mediaUploadInput{{ schedule + index + menuKeyIndex }}" name="mediaUploadInput" aa-index="index" aa-schedule="{{schedule}}"></aa-media-upload>
+        <textarea ng-switch-when="sayMessage" class="aa-message-textarea" aa-keypress ng-change="aaSay.saveUiModel()" ng-model="aaSay.messageInput" type="text" id="sayMessageInput{{ schedule + index + menuKeyIndex }}" name="sayMessageInput" placeholder="{{ :: aaSay.messageInputPlaceholder }}" cols="5" rows="5" maxlength="2000"></textarea>
+      </div>
+    </div>
+    <div class="row">
+      <div class="small-12 columns">
+        <p class="body-small aa-message-footer" translate="{{ :: aaSay.getFooter() }}"></p>
+      </div>
+    </div>
+  </div>
+  <div ng-if="aaSay.isMessageInputOnly()">
+    <label class="control-label" for="sayMessageInput{{ schedule + index + menuKeyIndex }}" translate="{{ :: aaSay.getMessageLabel() }}"></label>
+    <textarea aa-keypress ng-change="aaSay.saveUiModel()" ng-model="aaSay.messageInput" type="text" id="sayMessageInput{{ schedule + index + menuKeyIndex }}" name="sayMessageInput" placeholder="{{ :: aaSay.messageInputPlaceholder }}" rows="4" maxlength="2000"></textarea>
+  </div>
 </div>

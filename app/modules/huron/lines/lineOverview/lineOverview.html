@@ -51,13 +51,13 @@
     </cs-sp-section>
     <cs-sp-section>
       <uc-shared-line
-        selected="$ctrl.selected"
+        selected-user="$ctrl.selectedUser"
         shared-line-users="$ctrl.sharedLineUsers"
         shared-line-endpoints="$ctrl.sharedLineEndpoints"
-        select-shared-line-user="$ctrl.selectUser(user)"
-        get-user-list="$ctrl.getUserList(filter)"
-        is-single-device="$ctrl.isSingleDevice(sharedLineEndpoints, uuid)"
-        disassociate-shared-line-user="$ctrl.disassociateSharedLineUser(user, bulkDevice)">
+        select-shared-line-user-fn="$ctrl.selectSharedLineUser(user)"
+        get-user-list-fn="$ctrl.getUserList(filter)"
+        is-single-device-fn="$ctrl.isSingleDevice(sharedLineEndpoints, uuid)"
+        disassociate-shared-line-user-fn="$ctrl.disassociateSharedLineUser(user, bulkDevice)">
       </uc-shared-line>
     </cs-sp-section>
   </cs-sp-container>

@@ -106,6 +106,9 @@
                 template: '<login/>'
               }
             },
+            params: {
+              reauthorize: undefined
+            },
             authenticate: false
           })
           .state('activateUser', {
@@ -704,6 +707,9 @@
           })
           .state('my-company.subscriptions', {
             url: '/my-company/subscriptions',
+            onEnter: /* @ngInject */ function (OnlineAnalyticsService) {
+              OnlineAnalyticsService.track(OnlineAnalyticsService.MY_COMPANY_SUBSCRIPTIONS);
+            },
             views: {
               'tabContent': {
                 controllerAs: 'mcpSubscription',
@@ -719,6 +725,9 @@
           })
           .state('my-company.info', {
             url: '/my-company',
+            onEnter: /* @ngInject */ function (OnlineAnalyticsService) {
+              OnlineAnalyticsService.track(OnlineAnalyticsService.MY_COMPANY_INFO);
+            },
             views: {
               'tabContent': {
                 controllerAs: 'mcpInfo',
@@ -729,6 +738,9 @@
           })
           .state('my-company.orders', {
             url: '/my-company/orders',
+            onEnter: /* @ngInject */ function (OnlineAnalyticsService) {
+              OnlineAnalyticsService.track(OnlineAnalyticsService.MY_COMPANY_ORDER_HISTORY);
+            },
             views: {
               'tabContent': {
                 template: '<my-company-orders></my-company-orders>'
@@ -1339,7 +1351,6 @@
             }
           })
           .state('reports.care', {
-            url: '/reports/care',
             templateUrl: 'modules/core/customerReports/customerReports.tpl.html',
             controller: 'CustomerReportsCtrl',
             controllerAs: 'nav',
@@ -1479,16 +1490,31 @@
             }
           })
           .state('place-overview.communication.internationalDialing', {
-            template: '<international-dialing-comp owner-type="place" identifier="cisUuid"></international-dialing-comp>',
+            templateProvider: /* @ngInject */ function ($stateParams) {
+              var watcher = $stateParams.watcher;
+              var selected = $stateParams.selected;
+              return '<uc-dialing watcher=' + watcher + ' selected="' + selected + '"></uc-dialing>';
+            },
+            params: {
+              watcher: null,
+              selected: null
+            },
             data: {
               displayName: 'International Dialing'
+            }
+          })
+          .state('place-overview.communication.local', {
+            templateProvider: /* @ngInject */ function ($stateParams) {
+              var watcher = $stateParams.watcher;
+              var selected = $stateParams.selected;
+              return '<uc-dialing  watcher=' + watcher + ' selected="' + selected + '"></uc-dialing>';
             },
-            resolve: {
-              lazy: /* @ngInject */ function lazyLoad($q, $ocLazyLoad) {
-                return $q(function resolveLogin(resolve) {
-                  require(['modules/huron/internationalDialing'], loadModuleAndResolve($ocLazyLoad, resolve));
-                });
-              }
+            params: {
+              watcher: null,
+              selected: null
+            },
+            data: {
+              displayName: 'Local Dialing'
             }
           })
           .state('place-overview.communication.line-overview', {
@@ -2293,7 +2319,12 @@
             templateUrl: 'modules/hercules/fusion-pages/expressway-settings.html',
             controller: 'ExpresswayClusterSettingsController',
             controllerAs: 'clusterSettings',
-            parent: 'main'
+            parent: 'main',
+            resolve: {
+              hasF237FeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasF237ResourceGroups);
+              }
+            }
           })
           .state('mediafusion-settings', {
             url: '/services/cluster/mediafusion/:id/settings',
@@ -2555,6 +2586,9 @@
             resolve: {
               hasF410FeatureToggle: /* @ngInject */ function (FeatureToggleService) {
                 return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridServicesResourceList);
+              },
+              hasF237FeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasF237ResourceGroups);
               }
             }
           })
