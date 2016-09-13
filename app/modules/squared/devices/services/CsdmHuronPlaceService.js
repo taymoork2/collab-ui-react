@@ -50,12 +50,12 @@
     }
 
     function updatePlaceName(placeUrl, name) {
+      var place = placeUrl;
+      var place_name = name;
       return $http.put(placeUrl, {
-        name: name
-      }).then(function (res) {
-        var place = CsdmConverter.convertPlace(res.data);
-        placesCache[place.url] = place;
-        return place;
+        displayName: name
+      }).then(function () {
+        placesCache[place].displayName = place_name;
       });
     }
 
