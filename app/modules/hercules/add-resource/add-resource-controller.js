@@ -9,7 +9,7 @@
   function AddResourceController($modalInstance, $window, $translate, connectorType, servicesId, firstTimeSetup, XhrNotificationService, FusionClusterService, FusionUtils, $modal, $state, ResourceGroupService, FeatureToggleService) {
     var vm = this;
     vm.hostname = '';
-    vm.releaseChannel = 'GA'; // always create a new cluster with 'GA'.
+    vm.releaseChannel = 'stable'; // clusters default to 'stable', must be changed via Resource Group
     vm.connectorType = connectorType;
     vm.servicesId = servicesId;
     vm.preregistrationCompletedGoToExpressway = false;
