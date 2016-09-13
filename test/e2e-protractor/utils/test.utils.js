@@ -391,25 +391,28 @@ exports.getCheckboxVal = function (elem) {
     var input = elem.element(by.xpath('..')).element(by.tagName('input'));
     return input.getAttribute('ng-model').then(function (ngModel) {
       return input.evaluate(ngModel).then(function (_value) {
+        console.log('getCheckboxVal returing ' + value);
         return value;
       });
     });
-  }, TIMEOUT, 'Waiting for checkbox to be visible: ' + elem.locator());
+  });
 };
 
 // Wait (timeout ms) for checkbox to be display, if it is, set it to val, if not return
 exports.setCheckboxIfDisplayed = function (elem, val, timeout) {
-  return this.wait(elem, timeout).then(function () {
-    var curVal = exports.getCheckboxVal(elem);
-    if ( curVal !== val ) {
-      // checkbox value needs to be toggled
-      exports.click(elem);
-      return true;
-    }
-  }, function() { 
-    // element not displayed within (timeout) ms
-    return true;
-  });
+  return this.wait(elem, timeout).then( function () {
+    console.log('element ' + elem.locator() + ' is visible.');
+    return exports.getCheckboxVal(elem).then( function(curVal) {
+      if ( curVal !== val ) {
+        // checkbox value needs to be toggled
+        console.log('clicking elem ' + elem.locator() );
+        exports.click(elem);
+      }
+      else {
+        console.log('elem ' + elem.locator() + ' is already set to ' + val );
+      }
+    });
+  }, return true; );
 };
 
 exports.isSelected = function (elem) {

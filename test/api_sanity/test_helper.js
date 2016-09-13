@@ -18,9 +18,9 @@ var auth = {
     org: '4214d345-7caf-4e32-b015-34de878d1158'
   },
   'partner-admin': {
-    user: 'atlaspartneradmin@atlas.test.com',
-    pass: 'P@ssword123',
-    org: 'c054027f-c5bd-4598-8cd8-07c08163e8cd'
+    user: 'fakeuserunodostres+admin1@gmail.com',
+    pass: 'Cisco1608!',
+    org: 'd69426bf-0ace-4c53-bc65-cd5a5c25b610'
   },
   'partner-reports': {
     user: 'admin@sparkucreports-testpartner.com',
