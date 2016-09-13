@@ -84,6 +84,7 @@
     require('modules/core/scripts/services/serverErrorInterceptor'),
     require('modules/core/stateRedirect/previousState.service'),
     require('modules/core/trackingId/trackingId.module'),
+    require('modules/online/analytics').default,
     require('modules/online/upgrade').default,
     'atlas.templates',
     'cisco.ui',
