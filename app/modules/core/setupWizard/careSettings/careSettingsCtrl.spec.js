@@ -99,5 +99,13 @@ describe('Controller: Care Settings', function () {
       expect(Notification.error).toHaveBeenCalled();
       expect($scope.wizard.isNextDisabled).toBe(false);
     });
+
+    it('should allow proceeding with next steps, if failed to get status on loading', function () {
+      $httpBackend.expectGET(/.*config.*ciscoccservice.*\/chat/g).respond(403, {});
+      expect(controller.state).toBe(controller.UNKNOWN);
+      $httpBackend.flush();
+      expect(controller.state).toBe(controller.UNKNOWN);
+      expect($scope.wizard.isNextDisabled).toBe(false);
+    });
   });
 });

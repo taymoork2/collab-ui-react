@@ -69,7 +69,7 @@
           }
         } else {
           Log.debug('Fetching Care setup status failed: ', result);
-          if (vm.errorCount++ >= pollErrorCount) {
+          if (vm.state === vm.UNKNOWN || vm.errorCount++ >= pollErrorCount) {
             vm.state = vm.UNKNOWN;
             Notification.error($translate.instant('firstTimeWizard.careSettingsFetchFailed'));
             stopPolling();
