@@ -37,7 +37,8 @@
           function (err) {
             // TODO: fix this callback crap!
             if (err) {
-              XhrNotificationService.notify('Failed to enable Aware');
+              vm.squaredFusionEc = !vm.squaredFusionEc;
+              Notification.error('hercules.errors.failedToEnableConnect');
             }
           }
         );
@@ -62,6 +63,7 @@
       USSService.updateOrg(vm.org).then(function () {
         vm.storeEc(false);
         vm.savingSip = false;
+        Notification.success('hercules.errors.sipDomainSaved');
       }, function () {
         vm.savingSip = false;
         Notification.error('hercules.errors.sipDomainInvalid');

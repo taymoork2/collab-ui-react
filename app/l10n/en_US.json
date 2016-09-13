@@ -1539,7 +1539,9 @@
     "errors": {
       "enableServiceEntitlementFailure": "Failed! Your organization is missing entitlements that are needed to add the {{serviceName}}. Contact your support representative to fix the issue.",
       "enableServiceFailure": "Adding the {{serviceName}} failed.",
-      "sipDomainInvalid": "SIP destination was invalid. Please enter a valid SIP destination or IP address",
+      "failedToEnableConnect": "Could not enable Call Service Connect.",
+      "sipDomainSaved": "SIP Destination saved successfully.",
+      "sipDomainInvalid": "Could not save SIP Destination. Try again later.",
       "invalidEmail": "Please enter a list of comma-separated email addresses"
     },
     "cloudExtensions": {
@@ -1637,10 +1639,8 @@
       "call": {
         "featureHeading": "Feature Settings",
         "feature": "Enable or disable Call Service features.",
-        "awareHeading": "Aware",
         "aware": "Users can share content from the Cisco Spark app during a call from their work phones and view their call history in the app.",
         "on": "On by default",
-        "connectHeading": "Connect",
         "connectSettingsHeading": "Connect Settings",
         "connectSettings": "Required settings for the Connect feature.",
         "connect": "Users' incoming calls will ring their work phones and the Cisco Spark app. Users can call their colleagues from either their phones or the app, too.",
@@ -1716,14 +1716,16 @@
       },
       "add-SIP-destination": {
         "title": "Complete Call Service Connect Configuration",
-        "description": "Add the SIP Destination for call routing under <a ng-click=\"{{onclick}}\">Settings.</a>"
+        "description": "Add the SIP Destination for call routing under <a ng-click=\"{{onclick}}\">Settings.</a>",
+        "description-already-in-settings-page": "Add the SIP Destination for call routing below."
       },
       "no-fuse-yet": {
         "title": "Register your Cisco Expressways for Hybrid Services"
       },
       "add-call-service-connect": {
         "title": "Add Call Service Connect",
-        "description": "Activate Call Service Connect and add SIP destination under <a ng-click=\"{{onclick}}\">Settings.</a>"
+        "description": "Activate Call Service Connect and add the SIP destination under <a ng-click=\"{{onclick}}\">Settings.</a>",
+        "description-already-in-settings-page": "Activate Call Service Connect and add the SIP Destination for call routing below."
       }
     },
     "fusion": {
@@ -2825,7 +2827,7 @@
       "invalidQuantity": "Quantity must be between 1 and {{max}}",
       "invalidTotalQuantity": "Entire order must have between 1 and {{max}} devices",
       "invalidRoomSystemsQuantity": "Limited to 3 Spark Collaboration Devices",
-      "invalidPhonesQuantity": "Limited to 5 Personal & Shared Desk Phones",
+      "invalidPhonesQuantity": "Limited to {{max}} Personal & Shared Desk Phones",
       "shippingInfo": "Shipping Information",
       "address": "John Q. Partner\n555 Main St.\nSan Francisco, CA 43211",
       "recipient": "Where will the devices be shipped?",
@@ -3049,9 +3051,9 @@
     "domains": "Domains",
     "quantityWithValue": "Qty: {{quantity}}",
     "filterSelectPlaceholder": "Select a filter...",
-    "filterTrialAccounts": "Trial Accounts",
-    "filterPurchasedAccounts": "Purchased Accounts",
-    "filterExpiredAccounts": "Expired Accounts",
+    "trialAccountsFilter": "Trial Accounts ({{count}})",
+    "activeAccountsFilter": "Purchased Accounts ({{count}})",
+    "expiredAccountsFilter": "Expired Accounts ({{count}})",
     "subscriptions": "Subscription Info",
     "viewSubscriptionInfo": "View Subscription Info"
   },
@@ -4067,7 +4069,7 @@
     "supportSetup": "Problem Reports",
     "save": "Save",
     "processing": "This may take a few minutes to process...",
-    "brandingInfo": "If you want to display your own branding in addition to Cisco Spark, upload your logo below. Also, if you would like to allow all your customers to use their own logo you can check the checkbox.",
+    "brandingInfo": "Brand your customer's experience with Cisco Applications by uploading your company logo below.",
     "allowCustomerLogo": "Enable all customers to use their own logo",
     "useCiscoLogo": "Use Cisco Spark logo",
     "logoPlaceholder": "Drag and drop your logo here",
@@ -5086,6 +5088,8 @@
     "software": "Software",
     "serial": "Serial",
     "macAddress": "MAC Address",
+    "deviceId": "Device ID",
+    "placeId": "Place ID",
     "badOrgSearchInput": "Enter at least three characters.",
     "unknown": "Unknown",
     "showMore": "Show more results",
@@ -5165,7 +5169,14 @@
     "customerPortalViewHeading": "Customer Portal View",
     "customerPortalViewDetails": "You will be able to view the customer's entire portal, you cannot make any changes.",
     "customerDoesNotAllowReadOnlyAccess": "The customer does not allow Cisco or Partner Support read-only access to the management application.",
-    "view": "View"
+    "view": "View",
+    "dialing": "Dialing",
+    "dialingPlan": {
+      "national": "National",
+      "local": "Local"
+    },
+    "vmprefix": "Voice Mailbox Prefix",
+    "outbounddigit": "Outbound Dial Digit"
   },
   "activation": {
     "verificationComplete": "Verification Complete",

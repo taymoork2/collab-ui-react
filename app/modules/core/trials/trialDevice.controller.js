@@ -506,7 +506,7 @@
       validators: {
         phoneNumber: {
           expression: function ($viewValue, $modelValue) {
-            return ValidationService.phoneAny($viewValue, $modelValue, vm.selectedCountryCode);
+            return ValidationService.phoneAny($viewValue, $modelValue);
           },
           message: function () {
             return $translate.instant('common.invalidPhoneNumber');
@@ -745,6 +745,7 @@
             }
           });
       }
+      trialStartDate = Date.parse(trialStartDate);
       if (trialStartDate && (trialStartDate < grandfatherMaxDeviceDate)) {
         vm.maxCallDevices = 5;
         vm.maxTotalDevices = 7;

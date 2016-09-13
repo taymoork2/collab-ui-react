@@ -1342,7 +1342,6 @@
             }
           })
           .state('reports.care', {
-            url: '/reports/care',
             templateUrl: 'modules/core/customerReports/customerReports.tpl.html',
             controller: 'CustomerReportsCtrl',
             controllerAs: 'nav',
