@@ -15,7 +15,7 @@
     vm.headerTabs = [
       {
         title: $translate.instant('statusPage.dashboard'),
-        state: 'status-dashboard'
+        state: '.dashboard'
       },
       {
         title: $translate.instant('statusPage.components'),

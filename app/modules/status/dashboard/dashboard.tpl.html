@@ -79,13 +79,13 @@
         <div ng-repeat="component in dbc.components | orderBy: 'position'" ng-init="hide = false">
           <div class="table-row">
           <span class="Component-Name" ng-click="hide = !hide">{{component.componentName}}</span>
-          <cs-select class="testDropdown" ng-model="selectedStatus" options="statuses" placeholder="selectPlaceholder">
+          <cs-select class="testDropdown" ng-model="selectPlaceholder" options="statuses">
           </cs-select>
             </div>
           <ul class="UL" ng-hide="hide">
             <li class="subRow" ng-repeat="subComponent in component.components">
               <span class="component-name">{{subComponent.componentName}}</span>
-              <cs-select class="testDropdown" ng-model="selectedStatus" options="statuses" placeholder="selectPlaceholder"></cs-select>
+              <cs-select class="testDropdown" ng-model="selectPlaceholder" options="statuses"></cs-select>
             </li>
           </ul>
         </div>

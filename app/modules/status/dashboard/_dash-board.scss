@@ -45,6 +45,9 @@ a {
   color: white;
   text-decoration: none;
 }
+a:hover{
+  color: white;
+}
 
 .tab-content{
   background-color: transparent;
@@ -94,6 +97,7 @@ a {
         background-color: #e67e22;
         border: 2px solid white;
         vertical-align: middle;
+        padding:10px;
       }
     }
     .DoperationTime{
@@ -163,7 +167,7 @@ a {
   padding: 0px;
   margin-bottom: 30px;
   color: #000;
-
+  cursor: pointer;
 }
 .current-status {
   width: 240px;
