@@ -2743,6 +2743,12 @@
               }
             }
           })
+          .state('status.dashboard', {
+            url: '/dashboard',
+            templateUrl: 'modules/status/dashboard/dashboard.tpl.html',
+            controller: 'DashboardCtrl',
+            controllerAs: 'dbc'
+          })
           .state('status.components', {
             url: '/components',
             templateUrl: 'modules/status/components/components.tpl.html',

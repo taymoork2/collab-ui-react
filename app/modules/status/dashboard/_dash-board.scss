@@ -1,0 +1,265 @@
+
+
+.section-header{
+  //font-family: "proxima-nova", "Helvetica Neue", Helvetica, Arial, San-Serif;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 24px;
+  color: #333333;
+  margin-bottom:30px;
+
+}
+#title1{
+  display:inline-block;
+  margin-left:0px !important;
+  font-weight: 500;
+  margin-right:700px;
+  font-size: 2rem !important;
+}
+#title2{
+  font-weight: 200;
+  font-size: 2rem !important;
+  color:black;
+}
+.templateToggle{
+  display:inline-block;
+
+  color: #3498db;
+}
+.caret {
+  vertical-align: middle;
+  margin-left: .375rem;
+  opacity: 0.3;
+  display: inline-block;
+  width: 0;
+  height: 0;
+  text-indent: -99999px;
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  border-top: 4px solid #000000;
+  content: "\2193";
+}
+
+
+a {
+  color: white;
+  text-decoration: none;
+}
+
+.tab-content{
+  background-color: transparent;
+}
+.clearFloat:after{
+  clear:both;
+  content:'.';
+  display:block;
+  width: 0;
+  height: 0;
+  visibility:hidden;
+}
+.first-block{
+
+  .incidentListPageHeader{
+    h2{
+      float:left;
+    }
+    input{
+      float:right;
+    }
+  }
+  .noListNote{
+    border:1px dashed gray;padding:20px;
+  }
+  .DincidentItem{
+    margin-top:40px;
+
+    .incidentInfo{
+      height:60px;
+      background-color:#e67e22;
+      .DincidentName{
+        float:left;
+        display: inline-block;
+        margin:16px;
+        span{
+          color:white;
+          font-size: 1rem;
+        }
+      }
+
+      .DoperationHref{
+        font-size: 15px;
+        float: right;
+        margin: 10px;
+        display: inline-block;
+        background-color: #e67e22;
+        border: 2px solid white;
+        vertical-align: middle;
+      }
+    }
+    .DoperationTime{
+      border: 1px solid #e67e22;
+      padding:10px;
+      .info1{
+        font-weight:bold;
+        color:black;
+      }
+      .time{
+        font-size:12px;
+      }
+    }
+  }
+}
+
+
+.content-area{
+  border:1px solid #e0e0e0;
+  padding:2rem ;
+  margin-top:10px;
+}
+.cpt-table{
+  margin-bottom:4rem;
+  position:relative;
+}
+.first-block{
+  padding:3rem 0;
+  width:68.75rem;
+  margin-left:auto;
+  margin-right:auto;
+}
+.second-block{
+  padding:3rem 0;
+  width:68.75rem;
+  margin-left:auto;
+  margin-right:auto;
+}
+.table-row{
+  padding:0px;
+  margin:0px;
+  height:50px;
+
+}
+
+.component-name{
+  vertical-align: middle;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  float: left;
+  margin-top: 9px;
+  font-weight: 500;
+  width: 40%;
+  padding: 0px;
+  margin: 0px;
+}
+.Component-Name{
+  vertical-align: middle;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  float: left;
+  margin-top: 9px;
+  font-weight: 900;
+  width: 40%;
+  padding: 0px;
+  margin-bottom: 30px;
+  color: #000;
+
+}
+.current-status {
+  width: 240px;
+  height: 40px;
+  line-height: 40px;
+  border: solid 1px #bfbfbf;
+  float:right;
+  padding:0px;
+  margin:0px;
+}
+.current-status option{
+  width: 240px;
+  height: 40px;
+  margin: 0px;
+  padding: 0px;
+}
+
+.testDropdown{
+  width: 240px;
+  height: 40px;
+  line-height: 40px;
+
+  float:right;
+  padding:0px;
+  margin:0px;
+}
+a {
+  display: inline-block;
+  font: normal normal normal 14px/1 FontAwesome;
+
+  font-size: inherit;
+  text-rendering: auto;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+.status-components-list{
+  margin: 0 auto;
+  padding: 2rem;
+  line-height:3rem;
+  color:#333;
+}
+.status-components-list:not(:last-child){
+  border-bottom: 1px solid #ccc;
+}
+.status-components-list ul li{
+  list-style-type:none;
+  line-height:2rem;
+  color:#999;
+}
+.status-components-list a{
+  float:right;
+  color: black;
+  margin: auto 10px;
+}
+.status-components-list span.icon{
+  margin: auto 10px;
+}
+.componentStatus-operational{
+  color: #43a942;
+}
+.componentStatus-degraded_performance{
+  color: #f5a623;
+}
+.componentStatus-under_maintenance{
+  color: #049fd9;
+}
+.componentStatus-partial_outage{
+  color: #e9691e;
+}
+.componentStatus-major_outage{
+  color: #f96452;
+}
+.select-options .select-selected > a {
+  color: black !important;
+}
+.component-status{
+  width: 238px;
+  height: 36px;
+  line-height: 40px;
+
+  float:right;
+  padding:0px;
+  margin:0px;
+}
+.subRow{
+  margin-top:30px;
+  padding:0px;
+  margin:0px;
+  height:75px;
+  border-bottom: none !important;
+  border-top: 1px solid #e7e7e7;
+  backgroud-color:white;
+}
+.UL{
+  margin-top:30px;
+}
+.GroupCompo{
+  margin-bottom:30px;
+}
