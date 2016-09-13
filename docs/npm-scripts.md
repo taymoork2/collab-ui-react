@@ -66,6 +66,7 @@ eg. `npm start -- --noopen` passes the `--noopen` argument to our `start` task
 ### `npm run eslint`
 
 * Run eslint on entire project
+* Use `npm run eslint -- --fix` to try to autofix as many issues as possible
 
 ### `npm run json-verify`
 

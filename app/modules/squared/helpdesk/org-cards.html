@@ -137,11 +137,11 @@
             <h5 translate="helpdesk.dialing"></h5>
             <span>{{'helpdesk.dialingPlan.' + (helpdeskOrgCtrl.callCard.dialing | lowercase) | translate}}</span>
           </div>
-          <div ng-if="helpdeskOrgCtrl.supportsSiteDialDigit && helpdeskOrgCtrl.callCard.voiceMailPrefix">
+          <div ng-if="helpdeskOrgCtrl.callCard.voiceMailPrefix">
             <h5 translate="helpdesk.vmprefix"></h5>
             <span>{{helpdeskOrgCtrl.callCard.voiceMailPrefix}}</span>
           </div>
-          <div ng-if="helpdeskOrgCtrl.supportsSiteDialDigit && helpdeskOrgCtrl.callCard.outboundDialDigit">
+          <div ng-if="helpdeskOrgCtrl.callCard.outboundDialDigit">
             <h5 translate="helpdesk.outbounddigit"></h5>
             <span>{{helpdeskOrgCtrl.callCard.outboundDialDigit}}</span>
           </div>

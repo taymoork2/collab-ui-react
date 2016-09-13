@@ -6,7 +6,7 @@
     .controller('ExpresswayServiceClusterController', ExpresswayServiceClusterController);
 
   /* @ngInject */
-  function ExpresswayServiceClusterController($scope, $state, $modal, $stateParams, $translate, ClusterService, FusionUtils, $timeout, hasF410FeatureToggle, FusionClusterService) {
+  function ExpresswayServiceClusterController($scope, $state, $modal, $stateParams, $translate, ClusterService, FusionUtils, $timeout, hasF410FeatureToggle, hasF237FeatureToggle, FusionClusterService) {
     var vm = this;
     vm.state = $state;
     vm.clusterId = $stateParams.clusterId;
@@ -20,6 +20,7 @@
     vm.showUpgradeDialog = showUpgradeDialog;
     vm.fakeUpgrade = false;
     vm.hasF410FeatureToggle = hasF410FeatureToggle;
+    vm.hasF237FeatureToggle = hasF237FeatureToggle;
     vm.hasConnectorAlarm = hasConnectorAlarm;
 
     var promise = null;
@@ -27,6 +28,7 @@
       return ClusterService.getCluster(vm.connectorType, vm.clusterId);
     }, function (newValue) {
       vm.cluster = newValue;
+      vm.releaseChannel = $translate.instant('hercules.fusion.add-resource-group.release-channel.' + vm.cluster.releaseChannel);
       var isUpgrading = vm.cluster.aggregates.upgradeState === 'upgrading';
       vm.softwareUpgrade = {
         provisionedVersion: vm.cluster.aggregates.provisioning.provisionedVersion,
