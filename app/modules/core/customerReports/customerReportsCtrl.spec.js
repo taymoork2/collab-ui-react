@@ -150,7 +150,6 @@ describe('Controller: Customer Reports Ctrl', function () {
       controller = $controller('CustomerReportsCtrl', {
         $state: $state,
         $stateParams: $stateParams,
-        $scope: $scope,
         $q: $q,
         $translate: $translate,
         Log: Log,
@@ -164,6 +163,7 @@ describe('Controller: Customer Reports Ctrl', function () {
         FeatureToggleService: FeatureToggleService,
         MediaServiceActivationV2: MediaServiceActivationV2
       });
+
       $scope.$apply();
     }));
 
@@ -424,7 +424,7 @@ describe('Controller: Customer Reports Ctrl', function () {
       });
 
       it('should not have anything in the dropdown for webex reports', function () {
-        expect($scope.webexOptions.length).toBe(0);
+        expect(controller.webexOptions.length).toBe(0);
       });
     });
   });
