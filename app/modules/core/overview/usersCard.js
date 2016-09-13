@@ -6,7 +6,7 @@
     .factory('OverviewUsersCard', OverviewUsersCard);
 
   /* @ngInject */
-  function OverviewUsersCard($state, $rootScope, $translate, Auth, Authinfo, Config) {
+  function OverviewUsersCard($rootScope, $state, Auth, Authinfo, Config) {
     return {
       createCard: function createCard() {
         var card = {};
@@ -31,25 +31,21 @@
         };
 
         function unassignedLicenses() {
-          Auth.getCustomerAccount(Authinfo.getOrgId()).then(function (data) {
+          Auth.getCustomerAccount(Authinfo.getOrgId()).then(function (response) {
             var max = 0;
             var license = {};
-            var licenses = data.data.customers[0].licenses;
+            var licenses = response.data.customers[0].licenses;
             _.forEach(licenses, function (data) {
               if (data.volume >= max) {
-                max = data.volume;
                 if (data.volume === max) {
                   if (!(license.licenseType) || license.licenseType !== Config.licenseTypes.MESSAGING) {
                     license = data;
                   }
+                  max = data.volume;
                 } else {
                   license = data;
                 }
               }
-              card.text = $translate.instant('overview.cards.licenses.text', {
-                number: max,
-                licenseType: license.licenseType
-              });
               card.licenseNumber = max;
               card.licenseType = license.licenseType;
             });

@@ -4869,7 +4869,6 @@
       },
       "licenses": {
         "title": "Licenses",
-        "text": "You have {{number}} unassigned {{licenseType}} licenses",
         "manageUsersButton": "Manage Users"
       }
     }
