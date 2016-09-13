@@ -59,7 +59,6 @@ describe('Partner flow', function () {
     });
 
     it('should add a new trial', function () {
-      log.verbose = true;
       utils.click(partner.trialFilter);
       utils.click(partner.addButton);
       utils.expectIsDisplayed(partner.addTrialForm);
@@ -72,7 +71,7 @@ describe('Partner flow', function () {
       utils.click(partner.roomSystemsTrialCheckbox); // no room systems on this trial
       utils.expectCheckbox(partner.squaredUCTrialCheckbox, false);
       utils.expectCheckbox(partner.roomSystemsTrialCheckbox, false);
-      utils.setCheckboxIfDisplayed(partner.webExTrialCheckbox, true, 100);
+      utils.setCheckboxIfDisplayed(partner.webExTrialCheckbox, false, 100);
 
       utils.sendKeys(partner.customerNameInput, partner.newTrial.customerName);
       utils.sendKeys(partner.customerEmailInput, partner.newTrial.customerEmail);

@@ -68,7 +68,7 @@ exports.randomTestGmail = function () {
 };
 
 exports.randomTestGmailwithSalt = function (salt) {
-  if ( !isSauce ) {
+  if (!isSauce) {
     salt = 'LOC_' + salt;
   }
   return 'collabctg+' + salt + '_' + this.getDateTimeString() + '_' + this.randomId() + '@gmail.com';
@@ -390,8 +390,7 @@ exports.getCheckboxVal = function (elem) {
   return this.wait(elem).then(function () {
     var input = elem.element(by.xpath('..')).element(by.tagName('input'));
     return input.getAttribute('ng-model').then(function (ngModel) {
-      return input.evaluate(ngModel).then(function (_value) {
-        console.log('getCheckboxVal returing ' + value);
+      return input.evaluate(ngModel).then(function (value) {
         return value;
       });
     });
@@ -400,19 +399,17 @@ exports.getCheckboxVal = function (elem) {
 
 // Wait (timeout ms) for checkbox to be display, if it is, set it to val, if not return
 exports.setCheckboxIfDisplayed = function (elem, val, timeout) {
-  return this.wait(elem, timeout).then( function () {
-    console.log('element ' + elem.locator() + ' is visible.');
-    return exports.getCheckboxVal(elem).then( function(curVal) {
-      if ( curVal !== val ) {
+  return this.wait(elem, timeout).then(function () {
+    return exports.getCheckboxVal(elem).then(function (curVal) {
+      if (curVal !== val) {
         // checkbox value needs to be toggled
-        console.log('clicking elem ' + elem.locator() );
         exports.click(elem);
       }
-      else {
-        console.log('elem ' + elem.locator() + ' is already set to ' + val );
-      }
     });
-  }, return true; );
+  }, function () {
+    // checkbox not present, move on
+    return true;
+  });
 };
 
 exports.isSelected = function (elem) {
