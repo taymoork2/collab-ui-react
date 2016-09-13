@@ -1,9 +1,11 @@
 const DIGITAL_RIVER_URL = 'https://buy.ciscospark.com/store/ciscoctg/en_US/';
+const DIGITAL_RIVER_COOKIE = 'webexToken';
 
 export class DigitalRiverService {
 
   /* @ngInject */
   constructor(
+    private $document: ng.IDocumentService,
     private $http: ng.IHttpService,
     private UrlConfig
   ) {}
@@ -23,16 +25,20 @@ export class DigitalRiverService {
   }
 
   private getDigitalRiverUrl(path: string): ng.IPromise<string> {
-    return this.getEncodedDigitalRiverToken()
+    return this.getDigitalRiverToken()
+      .then((response) => this.setDRCookie(response))
       .then((response) => {
-        return DIGITAL_RIVER_URL + path + '?DRL=' + response;
+        return DIGITAL_RIVER_URL + path + '?DRL=' + encodeURIComponent(response);
       });
   }
 
-  private getEncodedDigitalRiverToken(): ng.IPromise<string> {
+  private setDRCookie(authToken: string) {
+    this.$document.prop('cookie', DIGITAL_RIVER_COOKIE + '=' + authToken + ';domain=ciscospark.com;secure');
+    return authToken;
+  }
+
+  private getDigitalRiverToken(): ng.IPromise<string> {
     return this.$http.get<string>(this.UrlConfig.getAdminServiceUrl() + 'commerce/online/users/authtoken')
-      .then((response) => {
-          return encodeURIComponent(response.data);
-      });
+      .then((response) => response.data);
   }
 }

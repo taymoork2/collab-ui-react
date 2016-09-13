@@ -1411,12 +1411,14 @@
       "setupScreenBodyAboutToSetup": "You are about to set up:",
       "setupScreenBodyPrerequisites": "Verify that you have completed the prerequisites before you start configuring {{ServiceName}}.",
       "setupScreenBodyLinks": "Visit <a href=\"http://www.cisco.com/go/hybrid-services\" target=\"_blank\">Help Central</a> for further information about {{ServiceName}} prerequisites.",
-      "go-to-your-expressway": "Go to your Expressway within one hour to complete registration and configure the {{ConnectorName}} Connector.",
+      "go-to-your-expressway": "Go to your Expressway within one hour to complete registration and configure {{ConnectorName}}.",
       "selectResourceGroupPrompt": "Do you want to assign this Expressway to a Resource Group?",
       "selectResourceGroup": "Select the Resource Group where you want to place the Expressway.",
       "assignYes": "Yes, assign now",
       "assignNo": "No, don't assign",
-      "selectGroup": "Select..."
+      "selectGroup": "Select…",
+      "couldNotReadResourceGroups": "Could not read Resource Groups.",
+      "CouldNotSaveResourceGroup": "Resource Group could not be saved. Continue with the registration process, and then try assigning a Resource Group again later."
     },
     "activateService": {
       "ingress": "Extend the Cloud to your On-Premise Environment",
@@ -2447,7 +2449,8 @@
     "internationalDialing": "International Dialing",
     "maxLines": "You reached the limit of 25 lines. Please remove a line from this user before provisioning additional lines.",
     "showMore": "Show more",
-    "showLess": "Show less"
+    "showLess": "Show less",
+    "localDialing": "Local Dialing"
   },
   "directoryNumberPanel": {
     "title": "Line Configuration",
@@ -5257,7 +5260,8 @@
     "confirmCsvCancelMsg": "This will cancel the current data export. The action cannot be reversed.",
     "isRunning": "An export task is already running. Please try again later.",
     "inProgress": "Background task 'Export {{type}} list' is running...",
-    "success": "Your {{type}} list has been compiled and your download has started."
+    "success": "Your {{type}} list has been compiled and your download has started.",
+    "error": "Export user reports failed."
   },
   "servicesOverview": {
     "title": "Services",

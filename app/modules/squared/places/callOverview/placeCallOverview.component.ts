@@ -1,7 +1,7 @@
 import { IDirectoryNumber } from '../../../huron/overview/directoryNumberList.component';
-import { INT_DIAL_CHANGE } from '../../../huron/internationalDialing';
-import { InternationalDialingService } from '../../../huron/internationalDialing/internationalDialing.service';
 import { LineService, LineConsumerType, Number } from '../../../huron/lines/services';
+import { DialingType } from '../../../huron/dialing/index';
+import { DialingService } from '../../../huron/dialing/dialing.service';
 import { ActionItem } from '../../../core/components/sectionTitle/sectionTitle.component';
 import { IFeature } from '../../../core/components/featureList/featureList.component';
 
@@ -20,18 +20,37 @@ class PlaceCallOverview {
     private $stateParams: any,
     private $translate: ng.translate.ITranslateService,
     private LineService: LineService,
-    private InternationalDialingService: InternationalDialingService
+    private DialingService: DialingService,
+    private $q: ng.IQService,
+    private Notification
   ) {
     this.currentPlace = $stateParams.currentPlace;
     this.directoryNumbers = this.currentPlace.numbers;
-    $scope.$on(INT_DIAL_CHANGE, (data) => {
-      this.initFeatures();
+    $scope.$on(DialingType.INTERNATIONAL, (e, data) => {
+      this.DialingService.setInternationalDialing(data, LineConsumerType.PLACES, this.currentPlace.cisUuid).then(()=> {
+        this.DialingService.initializeDialing(LineConsumerType.PLACES, this.currentPlace.cisUuid).then(() => {
+          this.initFeatures();
+        });
+      }, (response) => {
+        Notification.errorResponse(response, 'internationalDialingPanel.error');
+      });
+    });
+    $scope.$on(DialingType.LOCAL, (e, data) => {
+      this.DialingService.setLocalDialing(data, LineConsumerType.PLACES, this.currentPlace.cisUuid).then(()=> {
+        this.DialingService.initializeDialing(LineConsumerType.PLACES, this.currentPlace.cisUuid).then(() => {
+          this.initFeatures();
+        });
+      }, (response) => {
+        Notification.errorResponse(response, 'internationalDialingPanel.error');
+      });
     });
   }
 
   private $onInit(): void {
     this.initActions();
-    this.initFeatures();
+    this.DialingService.initializeDialing(LineConsumerType.PLACES, this.currentPlace.cisUuid).then(() => {
+      this.initFeatures();
+    });
   }
 
   private initActions(): void {
@@ -48,19 +67,26 @@ class PlaceCallOverview {
     let service: IFeature = {
       name: this.$translate.instant('telephonyPreview.internationalDialing'),
       icon: 'NO-ICON',
-      state: 'international',
-      detail: this.InternationalDialingService.getInternationalDialing().label,
-      actionsAvailable: true
-    }
+      state: 'internationalDialing',
+      detail: this.DialingService.getInternationalDialing(LineConsumerType.PLACES),
+      actionsAvailable: true,
+    };
+    this.features.push(service);
+    service = {
+      name: this.$translate.instant('telephonyPreview.localDialing'),
+      icon: 'NO-ICON',
+      state: 'local',
+      detail: this.DialingService.getLocalDialing(LineConsumerType.PLACES),
+      actionsAvailable: true,
+    };
     this.features.push(service);
   }
 
   public featureActions(feature) {
-    if (feature === 'international') {
-      this.$state.go('place-overview.communication.internationalDialing', {
-        currentPlace: this.currentPlace
-      });
-    }
+    this.$state.go('place-overview.communication.'+ feature, {
+      watcher: feature === 'local' ? DialingType.LOCAL: DialingType.INTERNATIONAL,
+      selected: feature === 'local'? this.DialingService.getLocalDialing(LineConsumerType.PLACES): this.DialingService.getInternationalDialing(LineConsumerType.PLACES),
+    });
   }
 }
 
