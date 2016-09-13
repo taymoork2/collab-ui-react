@@ -40,12 +40,11 @@ div.status-dashboard{
   content: "\2193";
 }
 
-
-a {
+.DoperationHref {
   color: white;
   text-decoration: none;
 }
-a:hover{
+.DoperationHref:hover{
   color: white;
 }
 
@@ -195,7 +194,7 @@ a:hover{
   margin:0px;
 }
 a {
-  display: inline-block;
+
   font: normal normal normal 14px/1 FontAwesome;
 
   font-size: inherit;

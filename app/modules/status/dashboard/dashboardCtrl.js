@@ -88,6 +88,10 @@
             vm.components = components;
           });
       });
-    $scope.selectPlaceholder = 'Operational';
+    $scope.selectPlaceholder = { label: 'Under Maintenance', value: 'critical' };
+
+    vm.modifyStatus = function () {
+
+    };
   }
 })();
