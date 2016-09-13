@@ -12,18 +12,21 @@ class DirectoryNumberListCtrl {
 
   public numberOfLines: number=5;
   public directoryNumbers: Array<Object>;
-  public hideShowMoreButton: boolean=false;
 
   public showMoreClicked(): void {
-    this.hideShowMoreButton = true;
     this.numberOfLines = undefined;
   }
 
+  public showLessClicked(): void {
+    this.numberOfLines = 5;
+  }
+
   public showMoreButton(): boolean {
-    if (this.directoryNumbers.length > this.numberOfLines && !this.hideShowMoreButton)
-      return true;
-    else
-      return false;
+    return (this.directoryNumbers.length > 5 && this.numberOfLines == 5);
+  }
+
+  public showLessButton(): boolean {
+    return (this.directoryNumbers.length > 5 && this.numberOfLines == undefined);
   }
 }
 
