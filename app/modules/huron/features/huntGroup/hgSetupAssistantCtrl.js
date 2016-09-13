@@ -74,12 +74,14 @@
     vm.populateHuntPilotNumbers = populateHuntPilotNumbers;
     vm.populateHuntMembers = populateHuntMembers;
     vm.populateFallbackDestination = populateFallbackDestination;
+    vm.allowLocalValidation = false;
 
     init();
 
     function init() {
       HuntGroupFallbackDataService.reset();
       HuntGroupMemberDataService.reset();
+      allowLocalValidation();
     }
 
     function fetchNumbers(typedNumber) {
@@ -293,7 +295,7 @@
     }
 
     function populateFallbackDestination(data) {
-      data.fallbackDestination = HuntGroupFallbackDataService.getFallbackDestinationJSON();
+      data.fallbackDestination = HuntGroupFallbackDataService.getFallbackDestinationJSON(vm.allowLocalValidation);
     }
     /////////////////////////////////////////////////////////
 
@@ -334,6 +336,12 @@
           type: number.type,
           number: number.number
         });
+      });
+    }
+
+    function allowLocalValidation() {
+      HuntGroupFallbackDataService.allowLocalValidation().then(function (result) {
+        vm.allowLocalValidation = result;
       });
     }
   }

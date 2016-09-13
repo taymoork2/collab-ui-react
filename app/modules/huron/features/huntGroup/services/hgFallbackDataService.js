@@ -12,7 +12,8 @@
 
   /* @ngInject */
 
-  function HuntGroupFallbackDataService(TelephoneNumberService, HuntGroupService, Notification, $q, DirectoryNumberService) {
+  function HuntGroupFallbackDataService(TelephoneNumberService, HuntGroupService, Notification, $q, DirectoryNumberService,
+    DialPlanService, Authinfo) {
 
     var isValidInternalNumber = false;
     var isValidExternalNumber = false;
@@ -34,7 +35,8 @@
       getFallbackMember: getFallbackMember,
       isFallbackDirty: isFallbackDirty,
       setAsPristine: setAsPristine,
-      isVoicemailDisabled: isVoicemailDisabled
+      isVoicemailDisabled: isVoicemailDisabled,
+      allowLocalValidation: allowLocalValidation
     };
 
     ////////////////
@@ -172,11 +174,15 @@
      * This is the JSON data that will be used in POST &
      * PUT apis for the hunt group fallback destination object.
      */
-    function getFallbackDestinationJSON() {
+    function getFallbackDestinationJSON(allowLocalValidation) {
       var data = {};
       if (isValidInternalNumber || isValidExternalNumber) {
         data.fallbackDestination = {
           number: TelephoneNumberService.getDIDValue(fallbackNumber)
+        };
+      } else if ((!isValidInternalNumber || !isValidExternalNumber) && allowLocalValidation) {
+        data.fallbackDestination = {
+          number: fallbackNumber
         };
       } else {
         data.fallbackDestination = {
@@ -257,6 +263,12 @@
         directoryNumberId: fallbackUuid
       }).$promise.then(function (data) {
         return !data.voiceMailProfile;
+      });
+    }
+
+    function allowLocalValidation() {
+      return DialPlanService.getCustomerVoice(Authinfo.getOrgId()).then(function (response) {
+        return response.regionCode !== '';
       });
     }
   }
