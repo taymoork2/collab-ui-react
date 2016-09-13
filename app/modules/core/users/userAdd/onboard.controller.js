@@ -1552,6 +1552,7 @@
         };
 
         $scope.goToUsersPage = function () {
+          $previousState.forget('modalMemo');
           $state.go('users.list');
         };
 

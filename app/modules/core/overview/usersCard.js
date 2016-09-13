@@ -41,10 +41,10 @@
                   if (!(license.licenseType) || license.licenseType !== Config.licenseTypes.MESSAGING) {
                     license = data;
                   }
-                  max = data.volume;
                 } else {
                   license = data;
                 }
+                max = data.volume;
               }
               card.licenseNumber = max;
               card.licenseType = license.licenseType;
