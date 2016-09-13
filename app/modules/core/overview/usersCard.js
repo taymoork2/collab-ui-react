@@ -25,29 +25,25 @@
             if (card.usersToConvert === 0) {
               card.name = 'overview.cards.licenses.title';
               card.showLicenseCard = true;
-              unassignedLicenses();
+              getUnassignedLicenses();
             }
           }
         };
 
-        function unassignedLicenses() {
+        function getUnassignedLicenses() {
           Auth.getCustomerAccount(Authinfo.getOrgId()).then(function (response) {
             var max = 0;
-            var license = {};
             var licenses = response.data.customers[0].licenses;
+            var licenseType;
             _.forEach(licenses, function (data) {
-              if (data.volume >= max) {
-                if (data.volume === max) {
-                  if (!(license.licenseType) || license.licenseType !== Config.licenseTypes.MESSAGING) {
-                    license = data;
-                  }
-                } else {
-                  license = data;
-                }
+              if (data.volume > max) {
                 max = data.volume;
+                licenseType = data.licenseType;
+              } else if (data.volume === max && data.licenseType === Config.licenseTypes.MESSAGING) {
+                licenseType = Config.licenseTypes.MESSAGING;
               }
               card.licenseNumber = max;
-              card.licenseType = license.licenseType;
+              card.licenseType = licenseType;
             });
           });
         }
