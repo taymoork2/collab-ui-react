@@ -2444,7 +2444,9 @@
     "voicemail": "Voicemail",
     "singleNumberReach": "Single Number Reach",
     "speedDials": "Speed Dials",
-    "internationalDialing": "International Dialing"
+    "internationalDialing": "International Dialing",
+    "maxLines": "You reached the limit of 25 lines. Please remove a line from this user before provisioning additional lines.",
+    "showMore": "Show more"
   },
   "directoryNumberPanel": {
     "title": "Line Configuration",
