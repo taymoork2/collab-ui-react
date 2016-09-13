@@ -343,10 +343,9 @@
             // parse other data first before PK parse because of dependency
             if (arraySyncString.length > 1) {
               var arrayOtherData = arraySyncString[1].trim().split(":");
-              var i;
-              for (i = 0; i < arrayOtherData.length; i++) {
+              _.forEach(arrayOtherData, function (data) {
                 // we only check non-default values
-                switch (arrayOtherData[i]) {
+                switch (data) {
                   case "pwd_sync=0":
                     syncStatus.isPwdSync = false;
                     break;
@@ -360,7 +359,7 @@
                     syncStatus.isUsrMin = true;
                     break;
                 }
-              }
+              });
             }
             // parse primary key
             var primaryKey = arraySyncString[0];
