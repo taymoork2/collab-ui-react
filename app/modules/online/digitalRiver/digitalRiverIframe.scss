@@ -1,0 +1,11 @@
+digital-river-iframe {
+  position: relative;
+  display: flex;
+  height: 100%;
+
+  .loading-wrapper {
+    position: absolute;
+    top: 5rem;
+    left: 50%;
+  }
+}

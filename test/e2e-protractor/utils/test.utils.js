@@ -1,6 +1,6 @@
 'use strict';
 
-/*global TIMEOUT*/
+/*global TIMEOUT, isSauce*/
 
 var config = require('./test.config.js');
 var request = require('request');

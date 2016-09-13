@@ -1,9 +1,14 @@
 'use strict';
 
 describe('Directive: csvDownload', function () {
-  var $compile, $rootScope, $scope, $timeout, $httpBackend, CsvDownloadService;
+  var $compile, $rootScope, $scope, $timeout, $httpBackend, CsvDownloadService, FeatureToggleService, $q;
 
   beforeEach(angular.mock.module('Core'));
+  beforeEach(inject(function (_FeatureToggleService_, _$q_) {
+    FeatureToggleService = _FeatureToggleService_;
+    $q = _$q_;
+    spyOn(FeatureToggleService, 'atlasNewUserExportGetStatus').and.returnValue($q.when(true));
+  }));
 
   describe("Browser: Firefox, Chrome, and cross-browser tests", function () {
 

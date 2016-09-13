@@ -5,13 +5,14 @@ class MyCompanyOrdersCtrl {
 
   public gridOptions: uiGrid.IGridOptions;
   public loading: boolean = false;
+  public logoutLoading: boolean = true;
   public orderDetailList: IOrderDetail[] = [];
 
   public digitalRiverOrderHistoryUrl: string;
+  public digitalRiverLogoutUrl: string;
 
   /* @ngInject */
   constructor(
-    private $sce: ng.ISCEService,
     private $templateCache: angular.ITemplateCacheService,
     private $translate: angular.translate.ITranslateService,
     private DigitalRiverService: DigitalRiverService,
@@ -26,8 +27,8 @@ class MyCompanyOrdersCtrl {
 
   private initIframe(): void {
     this.loading = true;
-    this.DigitalRiverService.getDigitalRiverOrderHistoryUrl().then((orderHistoryUrl) => {
-      this.digitalRiverOrderHistoryUrl = this.$sce.trustAsResourceUrl(orderHistoryUrl);
+    this.DigitalRiverService.getOrderHistoryUrl().then((orderHistoryUrl) => {
+      this.digitalRiverOrderHistoryUrl = orderHistoryUrl;
     }).catch((response) => {
       this.Notification.errorWithTrackingId(response, 'myCompanyOrders.loadError');
       this.loading = false;

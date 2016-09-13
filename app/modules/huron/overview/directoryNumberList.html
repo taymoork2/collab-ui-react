@@ -1,6 +1,6 @@
 <div class="feature-list">
   <ul>
-    <li class="feature" ng-repeat="directoryNumber in $ctrl.directoryNumbers track by directoryNumber.uuid">
+    <li class="feature" ng-repeat="directoryNumber in $ctrl.directoryNumbers | limitTo:$ctrl.numberOfLines track by directoryNumber.uuid">
       <a id="{{::directoryNumber.uuid}}"
         ng-if="::$ctrl.directoryNumberSref"
         ui-sref="{{::$ctrl.directoryNumberSref}}">
@@ -15,4 +15,7 @@
       </a>
     </li>
   </ul>
+  <a class="line-show-more-text" ng-click="$ctrl.showMoreClicked()" ng-show="$ctrl.showMoreButton()">
+    <span>{{::'telephonyPreview.showMore' | translate}}</span>
+  </a>
 </div>
