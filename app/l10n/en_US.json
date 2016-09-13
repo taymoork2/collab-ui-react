@@ -1407,7 +1407,7 @@
       "assignYes": "Yes, assign now",
       "assignNo": "No, don't assign",
       "selectGroup": "Select…",
-      "CouldNotReadResourceGroups": "Could not read Resource Groups.",
+      "couldNotReadResourceGroups": "Could not read Resource Groups.",
       "CouldNotSaveResourceGroup": "Resource Group could not be saved. Continue with the registration process, and then try assigning a Resource Group again later."
     },
     "activateService": {

@@ -36,6 +36,7 @@
     vm.localizedServiceIsReady = $translate.instant('hercules.addResourceDialog.serviceIsReady', {
       ServiceName: vm.localizedServiceName
     });
+    vm.optionalSelectResourceGroupStep = false;
     vm.chooseClusterName = false;
     vm.validationMessages = {
       required: $translate.instant('common.invalidRequired')
@@ -47,7 +48,6 @@
     vm.selectedCluster = '';
     vm.expresswayOptions = [];
 
-    vm.optionalSelectResourceGroupStep = true;
     vm.resourceGroupOptions = [{ label: $translate.instant('hercules.addResourceDialog.selectGroup'), value: '' }];
     vm.selectedResourceGroup = vm.resourceGroupOptions[0];
     vm.assignToResourceGroup = 'no';
@@ -251,25 +251,25 @@
       $window.open("https://" + encodeURIComponent(vm.hostname) + "/fusionregistration");
     };
 
-    if (FeatureToggleService.supports(FeatureToggleService.features.atlasF237ResourceGroups)) {
-      ResourceGroupService.getAllAsOptions().then(function (options) {
-        if (options.length > 0) {
-          vm.resourceGroupOptions = vm.resourceGroupOptions.concat(options);
-        } else {
-          vm.optionalSelectResourceGroupStep = false;
+    FeatureToggleService.supports(FeatureToggleService.features.atlasF237ResourceGroups)
+      .then(function (support) {
+        if (support) {
+          ResourceGroupService.getAllAsOptions().then(function (options) {
+            if (options.length > 0) {
+              vm.resourceGroupOptions = vm.resourceGroupOptions.concat(options);
+              vm.optionalSelectResourceGroupStep = true;
+            }
+          }, function () {
+            vm.couldNotReadResourceGroupsFromServer = true;
+          });
         }
-      }, function () {
-        vm.couldNotReadResourceGroupsFromServer = true;
       });
-    } else {
-      vm.optionalSelectResourceGroupStep = false;
-    }
 
     vm.saveResourceGroup = function () {
       if (vm.selectedResourceGroup.value !== '') {
         ResourceGroupService.assign(vm.clusterId, vm.selectedResourceGroup.value)
           .catch(function () {
-            XhrNotificationService.notify($translate.instant('hercules.addResourceDialog.CouldNotSaveResourceGroup'));
+            XhrNotificationService.notify($translate.instant('hercules.addResourceDialog.couldNotSaveResourceGroup'));
           })
           .finally(function () {
             vm.preregistrationCompletedGoToExpressway = true;

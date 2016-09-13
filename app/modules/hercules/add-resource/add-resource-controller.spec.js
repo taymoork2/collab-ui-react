@@ -145,7 +145,7 @@ describe('Controller: AddResourceController', function () {
     };
 
     FeatureToggleServiceMock = {
-      supports: sinon.stub(),
+      supports: sinon.stub().returns($q.resolve(false)),
       features: ''
     };
 
