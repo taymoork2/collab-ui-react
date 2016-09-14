@@ -24,9 +24,9 @@
     </p>
   </cs-sp-section>
 
-  <cs-sp-section ng-if="!(clusterDetailsCtrl.cluster.releaseChannel === 'GA' || clusterDetailsCtrl.cluster.releaseChannel === 'stable')">
-    <div class="section-title-row section-name" translate="hercules.expresswayClusterSettings.releasechannelReleasechannel"></div>
-      <p class="hercules-capitalize">{{clusterDetailsCtrl.cluster.releaseChannel}}</p>
+  <cs-sp-section ng-if="clusterDetailsCtrl.hasF237FeatureToggle">
+    <div class="section-title-row section-name" translate="hercules.expresswayClusterSettings.releasechannelHeader"></div>
+      <p class="hercules-capitalize">{{clusterDetailsCtrl.releaseChannel}}</p>
   </cs-sp-section>
 
   <cs-sp-section>

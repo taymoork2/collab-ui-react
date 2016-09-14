@@ -1,4 +1,5 @@
 @import "planReview/plan-review";
+@import "careSettings/care-settings";
 @import "addUsers/add-users";
 @import "messageSettings/message-settings";
 @import "enterpriseSettings/enterprise-settings";
@@ -95,5 +96,21 @@
   }
   .bottom-margin {
     @include vr-spacing(mb, 2.25);
+  }
+  .indent-area-code {
+    padding-left: vr-adjust(32px);
+  }
+  .cs-radio-group {
+    margin-bottom: 1rem;
+  }
+  .title-margin-bottom {
+    color: $gray-dark-4;
+    margin-bottom: vr-adjust(12px);
+  }
+  .terminus-warning {
+    font-size: .75rem;
+    .icon-warning {
+      margin-right: .25rem;
+    }
   }
 }

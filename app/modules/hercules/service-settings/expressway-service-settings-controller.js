@@ -17,6 +17,8 @@
     vm.enableEmailSendingToUser = false;
     vm.squaredFusionEc = false;
     vm.squaredFusionEcEntitled = Authinfo.isFusionEC();
+    vm.localizedServiceName = $translate.instant('hercules.serviceNames.' + vm.servicesId[0]);
+    vm.localizedConnectorName = $translate.instant('hercules.connectorNames.' + vm.servicesId[0]);
     if (vm.squaredFusionEcEntitled) {
       ServiceDescriptor.isServiceEnabled('squared-fusion-ec', function (a, b) {
         vm.squaredFusionEc = b;
@@ -35,7 +37,8 @@
           function (err) {
             // TODO: fix this callback crap!
             if (err) {
-              XhrNotificationService.notify('Failed to enable Aware');
+              vm.squaredFusionEc = !vm.squaredFusionEc;
+              Notification.error('hercules.errors.failedToEnableConnect');
             }
           }
         );
@@ -60,6 +63,7 @@
       USSService.updateOrg(vm.org).then(function () {
         vm.storeEc(false);
         vm.savingSip = false;
+        Notification.success('hercules.errors.sipDomainSaved');
       }, function () {
         vm.savingSip = false;
         Notification.error('hercules.errors.sipDomainInvalid');
@@ -126,7 +130,7 @@
         if (error !== null) {
           XhrNotificationService.notify(error);
         } else {
-          $state.go('overview'); // once F410 goes public, let's go to to 'services-overview' instead.
+          $state.go('services-overview');
         }
       });
     };
@@ -181,10 +185,13 @@
   }
 
   /* @ngInject */
-  function DisableConfirmController(FusionUtils, $modalInstance, serviceId) {
+  function DisableConfirmController(FusionUtils, $modalInstance, serviceId, $translate, Authinfo) {
     var modalVm = this;
     modalVm.serviceId = serviceId;
     modalVm.serviceIconClass = FusionUtils.serviceId2Icon(serviceId);
+    modalVm.serviceName = $translate.instant('hercules.serviceNames.' + serviceId);
+    modalVm.connectorName = $translate.instant('hercules.connectorNames.' + serviceId);
+    modalVm.companyName = Authinfo.getOrgName();
 
     modalVm.ok = function () {
       $modalInstance.close();

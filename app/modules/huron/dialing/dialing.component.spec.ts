@@ -1,13 +1,13 @@
-describe('component: internationalDialingComp', () => {
-  const INT_DIAL_SELECT = '.csSelect-container[name="internationalDialing"]';
+describe('component: dialing', () => {
+  const INT_DIAL_SELECT = '.csSelect-container[name="dialing"]';
   const DROPDOWN_OPTIONS = '.dropdown-menu ul li a';
   const BUTTON_RESET = 'button.btn-default';
 
   beforeEach(function() {
-    this.initModules('huron.international-dialing');
+    this.initModules('huron.dialing');
     this.injectDependencies('$scope', '$timeout');
     this.$scope.onChangeFn = jasmine.createSpy('onChangeFn');
-    this.compileComponent('internationalDialingComp', { });
+    this.compileComponent('ucDialing', { });
   });
 
   it('should have international dialing selection with options', function() {
@@ -21,5 +21,5 @@ describe('component: internationalDialingComp', () => {
     this.view.find(INT_DIAL_SELECT).find(DROPDOWN_OPTIONS).get(2).click();
     expect(this.view.find(BUTTON_RESET)).toExist();
   });
-    
+
 });
