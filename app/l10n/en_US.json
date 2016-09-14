@@ -3095,7 +3095,7 @@
     "sendOrderRequest": "Send Order Request",
     "copyToClipboard": "Copy to Clipboard",
     "emailSubscriptionInfoDetail1": "Use the customer subscription information on this page to begin a trial conversion or place additional orders for Cisco Spark Services.",
-    "emailSubscriptionInfoDetail2":"To begin a trial conversion or place an order, send an order request using your email client. You can also copy the customer subscription info to your clipboard."
+    "emailSubscriptionInfoDetail2": "To begin a trial conversion or place an order, send an order request using your email client. You can also copy the customer subscription info to your clipboard."
   },
   "didAddModal": {
     "title": "Add Phone Numbers (Optional)"

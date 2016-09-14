@@ -104,8 +104,8 @@
         display: block;
         text-align: center;
         padding-bottom: 0.875rem;
-        border-bottom: 1px solid #D7D7D8;
-        color: #6A6B6C;
+        border-bottom: 1px solid $gray-light-2;
+        color: $gray-dark-1;
       }
     }
   }
@@ -171,7 +171,5 @@
       outline: none;
     }
   }
-
-
 
 }

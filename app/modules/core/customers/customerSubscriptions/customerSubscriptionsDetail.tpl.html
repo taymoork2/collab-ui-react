@@ -7,7 +7,7 @@
     <div class="section-title-row">
       <span class="section-name" translate="customerSubscriptions.orderRequest"></span>
     </div>
-    <p  class="intro" translate="customerSubscriptions.emailSubscriptionInfoDetail1"></p>
+    <p class="intro" translate="customerSubscriptions.emailSubscriptionInfoDetail1"></p>
      <p translate="customerSubscriptions.emailSubscriptionInfoDetail2"></p>
 
     <cs-sp-buttons class="subscriptions">
@@ -15,7 +15,7 @@
         <button class="btn" ngclipboard data-clipboard-text="{{customerSubscriptions.customerInfoClipboard}}">
           <span translate="customerSubscriptions.copyToClipboard"></span>
         </button>
-        <button class ="bttn btn--primary" ng-click="customerSubscriptions.sendMail(customerSubscriptions.subscriptions)" translate="customerSubscriptions.sendOrderRequest"></button>
+        <button class="bttn btn--primary" ng-click="customerSubscriptions.sendMail(customerSubscriptions.subscriptions)" translate="customerSubscriptions.sendOrderRequest"></button>
       </form>
     </cs-sp-buttons>
   </cs-sp-section>
@@ -25,22 +25,22 @@
     </div>
     <div class="feature-list">
       <ul>
-        <li >
+        <li>
           <h6 translate="customerSubscriptions.customerAdmin"></h6>
-          <div >{{customerOverview.currentCustomer.customerName}} - {{customerOverview.currentCustomer.customerEmail}}</div>
+          <div>{{customerOverview.currentCustomer.customerName}} - {{customerOverview.currentCustomer.customerEmail}}</div>
         </li>
-        <li >
-          <h6  translate="customerSubscriptions.partnerAdmin"></h6>
-          <div >{{customerOverview.partnerOrgName}} - {{customerSubscriptions.partnerEmail}}</div>
+        <li>
+          <h6 translate="customerSubscriptions.partnerAdmin"></h6>
+          <div>{{customerOverview.partnerOrgName}} - {{customerSubscriptions.partnerEmail}}</div>
         </li>
         <li ng-if="customerSubscriptions.subscriptions.length>0">
-        <h6 translate="customerSubscriptions.webexSubscriptions"></h6>
-          <ul class="feature-list" ng-if="customerSubscriptions.subscriptions.length>0"  >
-            <li ng-repeat= "customerSubscription in customerSubscriptions.subscriptions">
+          <h6 translate="customerSubscriptions.webexSubscriptions"></h6>
+          <ul class="feature-list" ng-if="customerSubscriptions.subscriptions.length>0">
+            <li ng-repeat="customerSubscription in customerSubscriptions.subscriptions">
               <span class="feature-detail">{{customerSubscription.subscriptionId}} - {{customerSubscription.siteUrl}}</span>
             </li>
           </ul>
-          </li>
+        </li>
       </ul>
     </div>
   </cs-sp-section>

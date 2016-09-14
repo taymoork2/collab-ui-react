@@ -1738,8 +1738,6 @@
             }
           })
           .state('customer-overview.externalNumberDetail', {
-            controller: function () {
-            },
             templateUrl: 'modules/core/customers/customerOverview/externalNumberDetail.tpl.html',
             resolve: {
               data: /* @ngInject */ function ($state, $translate) {

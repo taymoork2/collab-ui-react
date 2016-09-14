@@ -668,8 +668,8 @@
         .value()
         .join(', ');
         var licenseQty = conferenceServices[0].qty;
-        var hasWebex = _.some(conferenceServices, { 'isWebex': true });
-        trialServices.push({ name: name, qty: licenseQty, icon: 'icon-circle-group', order: 1, 'hasWebex': hasWebex });
+        var hasWebex = _.some(conferenceServices, { isWebex: true });
+        trialServices.push({ name: name, qty: licenseQty, icon: 'icon-circle-group', order: 1, hasWebex: hasWebex });
       }
 
       partial.offer.trialServices = _.chain(trialServices).sortBy('order').uniq().value();
