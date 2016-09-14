@@ -15,9 +15,11 @@
     vm.connectorName = $translate.instant('hercules.connectorNames.' + servicesId[0]);
     vm.releaseNotes = '';
 
-    FusionClusterService.getReleaseNotes('GA', connectorType)
+    FusionClusterService.getReleaseNotes(cluster.releaseChannel, connectorType)
       .then(function (res) {
         vm.releaseNotes = res;
+      }, function () {
+        vm.releaseNotes = 'Not Found';
       });
 
     vm.upgrade = function () {

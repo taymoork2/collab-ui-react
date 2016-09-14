@@ -121,7 +121,7 @@
       var connectors = cluster.connectors;
       var provisioning = _.find(cluster.provisioning, 'connectorType', type);
       var upgradeAvailable = provisioning && _.some(cluster.connectors, function (connector) {
-        return connector.runningVersion !== provisioning.availableVersion;
+        return provisioning.availableVersion && connector.runningVersion !== provisioning.availableVersion;
       });
       var hosts = _.chain(connectors)
         .pluck('hostname')
