@@ -4,12 +4,11 @@
   angular.module('Core')
     .controller('CareSettingsCtrl', CareSettingsCtrl);
 
-  function CareSettingsCtrl($http, $interval, $scope, $translate, $window, Authinfo, Log, Notification, TokenService, UrlConfig) {
+  function CareSettingsCtrl($interval, $scope, $translate, $window, Authinfo, Log, Notification, SunlightConfigService, TokenService, UrlConfig) {
     var vm = this;
     var callbackUrl = UrlConfig.getSunlightConfigServiceUrl() + '/organization/' + Authinfo.getOrgId() + '/csonboard?accessToken='
       + TokenService.getAccessToken();
     var ccfsUrl = UrlConfig.getCcfsUrl() + callbackUrl;
-    var statusUrl = UrlConfig.getSunlightConfigServiceUrl() + '/organization/' + Authinfo.getOrgId() + '/chat';
 
     vm.UNKNOWN = 'unknown';
     vm.ONBOARDED = 'onboarded';
@@ -47,29 +46,23 @@
         $interval.cancel(poller);
         poller = undefined;
       }
-      _.set($scope.wizard, 'isNextDisabled', false);
+      enableNext();
     }
 
     function processOnboardStatus() {
-      getStatus().then(function (result) {
+      SunlightConfigService.getChatConfig().then(function (result) {
         if (_.get(result, 'data.csConnString')) {
-          if (vm.state === vm.IN_PROGRESS) {
-            Notification.success($translate.instant('firstTimeWizard.careSettingsComplete'));
-          }
+          Notification.success($translate.instant('firstTimeWizard.careSettingsComplete'));
           vm.state = vm.ONBOARDED;
           stopPolling();
         } else {
-          Log.debug('Bad response for GET Chat Config: ', result);
+          Log.debug('Chat Config does not have CS connection string: ', result);
         }
       })
       .catch(function (result) {
-        if (result.status === 404) {
-          if (vm.state === vm.UNKNOWN) {
-            vm.state = vm.NOT_ONBOARDED;
-          }
-        } else {
+        if (result.status !== 404) {
           Log.debug('Fetching Care setup status failed: ', result);
-          if (vm.state === vm.UNKNOWN || vm.errorCount++ >= pollErrorCount) {
+          if (vm.errorCount++ >= pollErrorCount) {
             vm.state = vm.UNKNOWN;
             Notification.error($translate.instant('firstTimeWizard.careSettingsFetchFailed'));
             stopPolling();
@@ -82,20 +75,34 @@
       Log.debug('Poll timed out after ' + pollerResult + ' attempts.');
       vm.state = vm.NOT_ONBOARDED;
       Notification.error($translate.instant('firstTimeWizard.careSettingsTimeout'));
+      enableNext();
     }
 
-    function getStatus() {
-      var config = {
-        headers: {
-          'Authorization': 'Bearer ' + TokenService.getAccessToken()
-        }
-      };
-      return $http.get(statusUrl, config);
+    function enableNext() {
+      _.set($scope.wizard, 'isNextDisabled', false);
+    }
+
+    function disableNext() {
+      _.set($scope.wizard, 'isNextDisabled', true);
     }
 
     function init() {
-      _.set($scope.wizard, 'isNextDisabled', true);
-      processOnboardStatus();
+      disableNext();
+
+      SunlightConfigService.getChatConfig().then(function (result) {
+        if (_.get(result, 'data.csConnString')) {
+          vm.state = vm.ONBOARDED;
+          enableNext();
+        }
+      })
+      .catch(function (result) {
+        if (result.status === 404) {
+          vm.state = vm.NOT_ONBOARDED;
+        } else {
+          Log.debug('Fetching Care setup status, on load, failed: ', result);
+          enableNext();
+        }
+      });
     }
 
     init();

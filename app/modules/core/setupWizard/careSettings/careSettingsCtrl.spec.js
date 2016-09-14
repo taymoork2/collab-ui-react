@@ -1,11 +1,11 @@
 'use strict';
 
 describe('Controller: Care Settings', function () {
-  var controller, $httpBackend, Notification, $interval, $intervalSpy, $scope, $window;
+  var controller, sunlightChatConfigUrl, $httpBackend, Notification, $interval, $intervalSpy, $scope, $window;
   beforeEach(angular.mock.module('Core'));
   beforeEach(angular.mock.module('Sunlight'));
   beforeEach(
-    inject(function ($controller, _$rootScope_, _$httpBackend_, _Notification_, _$interval_, _$window_) {
+    inject(function ($controller, _$rootScope_, _$httpBackend_, _Notification_, _$interval_, _$window_, Authinfo, UrlConfig) {
       $httpBackend = _$httpBackend_;
       Notification = _Notification_;
       $scope = _$rootScope_.$new();
@@ -14,6 +14,7 @@ describe('Controller: Care Settings', function () {
       $intervalSpy = jasmine.createSpy('$interval', $interval).and.callThrough();
       $scope.wizard = {};
       $scope.wizard.isNextDisabled = false;
+      sunlightChatConfigUrl = UrlConfig.getSunlightConfigServiceUrl() + '/organization/' + Authinfo.getOrgId() + '/chat';
       controller = $controller('CareSettingsCtrl', {
         $scope: $scope,
         $interval: $intervalSpy,
@@ -25,7 +26,7 @@ describe('Controller: Care Settings', function () {
 
   describe('CareSettings - Init', function () {
     it('should show enabled setup care button and disabled save button, if Org is not onboarded already', function () {
-      $httpBackend.expectGET(/.*config.*ciscoccservice.*\/chat/g).respond(404, {});
+      $httpBackend.expectGET(sunlightChatConfigUrl).respond(404, {});
       expect(controller).toBeDefined();
       expect(controller.state).toBe(controller.UNKNOWN);
       $httpBackend.flush();
@@ -34,7 +35,7 @@ describe('Controller: Care Settings', function () {
     });
 
     it('should allow proceeding with next steps, if already onboarded', function () {
-      $httpBackend.expectGET(/.*config.*ciscoccservice.*\/chat/g).respond(200, { csConnString: 'testConnectionString' });
+      $httpBackend.expectGET(sunlightChatConfigUrl).respond(200, { csConnString: 'testConnectionString' });
       expect(controller.state).toBe(controller.UNKNOWN);
       $httpBackend.flush();
       expect(controller.state).toBe(controller.ONBOARDED);
@@ -47,19 +48,26 @@ describe('Controller: Care Settings', function () {
       spyOn($window, 'open').and.callFake(function () {
         return true;
       });
-      $httpBackend.expectGET(/.*config.*ciscoccservice.*\/chat/g).respond(404, {});
-      controller.onboardToCs();
+      $httpBackend.expectGET(sunlightChatConfigUrl).respond(404, {});
       $httpBackend.flush();
-      expect(controller.state).toBe(controller.IN_PROGRESS);
+      expect(controller.state).toBe(controller.NOT_ONBOARDED);
+      controller.onboardToCs();
+      $httpBackend.expectGET(sunlightChatConfigUrl).respond(404, {});
       expect($window.open).toHaveBeenCalled();
+      expect(controller.state).toBe(controller.IN_PROGRESS);
+      expect($scope.wizard.isNextDisabled).toBe(true);
     });
 
     it('should allow proceeding with next steps, after ccfs tab completes onboarding', function () {
       spyOn(Notification, 'success').and.callFake(function () {
         return true;
       });
-      $httpBackend.expectGET(/.*config.*ciscoccservice.*\/chat/g).respond(200, { csConnString: 'abcdef' });
+      $httpBackend.expectGET(sunlightChatConfigUrl).respond(404, {});
+      $httpBackend.flush();
+      expect(controller.state).toBe(controller.NOT_ONBOARDED);
       controller.onboardToCs();
+      $httpBackend.expectGET(sunlightChatConfigUrl).respond(200, { csConnString: 'abcdef' });
+      $interval.flush(10001);
       $httpBackend.flush();
       expect(controller.state).toBe(controller.ONBOARDED);
       expect(Notification.success).toHaveBeenCalled();
@@ -72,26 +80,26 @@ describe('Controller: Care Settings', function () {
       spyOn(Notification, 'error').and.callFake(function () {
         return true;
       });
-      $httpBackend.whenGET(/.*config.*ciscoccservice.*\/chat/g).respond(404, {});
+      $httpBackend.whenGET(sunlightChatConfigUrl).respond(404, {});
       controller.onboardToCs();
       for (var i = 30; i >= 0; i--) {
-        $httpBackend.whenGET(/.*config.*ciscoccservice.*\/chat/g).respond(404, {});
+        $httpBackend.whenGET(sunlightChatConfigUrl).respond(404, {});
         $interval.flush(10000);
       }
       $httpBackend.flush();
       expect(controller.state).toBe(controller.NOT_ONBOARDED);
       expect(Notification.error).toHaveBeenCalled();
-      expect($scope.wizard.isNextDisabled).toBe(true);
+      expect($scope.wizard.isNextDisabled).toBe(false);
     });
 
     it('should show error toaster if backend API fails', function () {
       spyOn(Notification, 'error').and.callFake(function () {
         return true;
       });
-      $httpBackend.whenGET(/.*config.*ciscoccservice.*\/chat/g).respond(500, {});
+      $httpBackend.whenGET(sunlightChatConfigUrl).respond(500, {});
       controller.onboardToCs();
       for (var i = 3; i >= 0; i--) {
-        $httpBackend.whenGET(/.*config.*ciscoccservice.*\/chat/g).respond(500, {});
+        $httpBackend.whenGET(sunlightChatConfigUrl).respond(500, {});
         $interval.flush(10000);
       }
       $httpBackend.flush();
@@ -101,8 +109,8 @@ describe('Controller: Care Settings', function () {
     });
 
     it('should allow proceeding with next steps, if failed to get status on loading', function () {
-      $httpBackend.expectGET(/.*config.*ciscoccservice.*\/chat/g).respond(403, {});
       expect(controller.state).toBe(controller.UNKNOWN);
+      $httpBackend.expectGET(sunlightChatConfigUrl).respond(403, {});
       $httpBackend.flush();
       expect(controller.state).toBe(controller.UNKNOWN);
       expect($scope.wizard.isNextDisabled).toBe(false);
