@@ -1339,6 +1339,21 @@
               siteUrl: null
             }
           })
+          .state('reports.usage', {
+            url: '/reports/usage',
+            templateUrl: 'modules/core/customerReports/usage/usageReports.tpl.html',
+            controller: 'UsageReportsCtrl',
+            controllerAs: 'usageReport',
+            parent: 'main',
+            params: {
+              deviceReportType: 'peakHour'
+            },
+            resolve: {
+              deviceUsageFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasDeviceUsageReport);
+              },
+            }
+          })
           .state('webex-reports', {
             url: '/reports/webex',
             templateUrl: 'modules/core/customerReports/customerReports.tpl.html',

@@ -41,6 +41,7 @@
       atlasSipUriDomainEnterprise: 'atlas-sip-uri-domain-enterprise',
       atlasUserPendingStatus: 'atlas-user-pending-status',
       atlasWebexTrials: 'atlas-webex-trials',
+      atlasDeviceUsageReport: 'atlas-device-usage-report',
       androidAddGuestRelease: 'android-add-guest-release',
       androidDirectUpload: 'android-direct-upload',
       androidImportantFilter: 'android-important-filter',
