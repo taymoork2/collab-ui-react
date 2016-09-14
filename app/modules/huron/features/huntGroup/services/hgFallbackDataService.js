@@ -180,7 +180,8 @@
         data.fallbackDestination = {
           number: TelephoneNumberService.getDIDValue(fallbackNumber)
         };
-      } else if ((!isValidInternalNumber || !isValidExternalNumber) && allowLocalValidation) {
+      } else if ((!isValidInternalNumber || !isValidExternalNumber)
+        && allowLocalValidation && _.isUndefined(fallbackMember)) {
         data.fallbackDestination = {
           number: fallbackNumber
         };
