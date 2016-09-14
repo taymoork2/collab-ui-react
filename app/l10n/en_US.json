@@ -3510,9 +3510,10 @@
       "overallTotalNumberOfCallsError": "There was an error while loading Total Number of calls",
       "total_calls": "Total Calls",
       "totalCallsDescription": "Calls hosted locally and that overflowed to the Cisco Collaboration Cloud.",
-      "onpremcalls": "on premises |",
-      "cloudcalls": "overflowed to cloud",
-      "redirectedcalls": "redirected",
+      "onpremcalls": "Hosted On-Premises",
+      "cloudcalls": "Overflowed to Cloud",
+      "hostedcalls": "Hosted by this Cluster",
+      "redirectedcalls": "Redirected by this Cluster",
       "nodata": "Data Not Available",
       "allclusters": "All Clusters",
       "percentage": "%"
