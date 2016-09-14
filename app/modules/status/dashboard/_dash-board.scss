@@ -1,5 +1,8 @@
 div.status-dashboard{
 
+div.tab-content{
+  border:none;
+}
 .section-header{
   //font-family: "proxima-nova", "Helvetica Neue", Helvetica, Arial, San-Serif;
   font-weight: 400;
@@ -257,11 +260,11 @@ a {
   padding-bottom:20px;
   margin:0px;
   height:75px;
-  border-bottom: 1px solid #e7e7e7;
   backgroud-color:white;
 }
 .UL{
   margin-top:30px;
+  list-style:none;
 }
 .GroupCompo{
   margin-bottom:30px;

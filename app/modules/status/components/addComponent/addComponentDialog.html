@@ -20,7 +20,7 @@
           </div>
           <div class="columns medium-8">
             <input class="cs-input" ng-model="addComponent.componentName"
-                   placeholder="{{'statusPage.componentsPage.addComponent.componentName' | translate}} " type="text">
+                   placeholder="{{'statusPage.componentsPage.addComponent.componentName' | translate}} " type="text" minlength="3" maxlength="20">
           </div>
         </div>
         <div class="row">
@@ -45,7 +45,7 @@
             <div ng-show="addComponent.selectedGroup.value==='createGroup'">
               <input class="cs-input" ng-model="addComponent.groupName"
                      placeholder="{{'statusPage.componentsPage.addComponent.groupName' | translate}} " type="text"
-                     ng-minlength="3" ng-maxlength="20">
+                     minlength="3" maxlength="20">
               <button class="cancelCreateNewGroup" ng-click="addComponent.cancelCreateNewGroup()">
                 <span translate="statusPage.componentsPage.addComponent.cancelCreateNewGroup"></span>
               </button>

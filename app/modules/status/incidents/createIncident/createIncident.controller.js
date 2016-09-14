@@ -6,7 +6,7 @@
 
   function CreateIncidentController($scope, $state, $window, IncidentsWithSiteService, statusService) {
     $scope.newIncident = {
-      status: '',
+      status: 'investigating',
       msg: '',
       name: ''
     };
