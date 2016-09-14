@@ -1812,7 +1812,9 @@
           "betaHelpText": "If you want your users to test new features before they are released",
           "latest": "Latest",
           "latestHelpText": "For developers and early adopters",
-          "error": "Could not create the Resource Group"
+          "error": "Could not create the Resource Group",
+          "saveReleaseChannelSuccess": "Release Channel updated successfully.",
+          "saveReleaseChannelError": "Could Not save Release Channel. Try again later."
         }
       }
     },

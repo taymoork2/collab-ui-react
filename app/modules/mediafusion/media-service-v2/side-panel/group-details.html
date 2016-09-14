@@ -13,7 +13,7 @@
             <i class="icon icon-error hercules-alarm status-icon"/>
             <span class="feature-name">{{alarm.alarm.title}}</span>
             <i class="feature-arrow"></i>
-          </a>  
+          </a>
         </li>
       </ul>
     </div>
@@ -28,7 +28,7 @@
       </strong>
       <div>
         <span>
-            {{groupDetails.clusterDetail.upgradeSchedule.scheduleTime}} <span translate="mediaFusion.clusters.everyDay"/> {{groupDetails.clusterDetail.upgradeSchedule.scheduleTimeZone}} 
+            {{groupDetails.clusterDetail.upgradeSchedule.scheduleTime}} <span translate="mediaFusion.clusters.everyDay"/> {{groupDetails.clusterDetail.upgradeSchedule.scheduleTimeZone}}
         </span>
       </div>
     </div>
@@ -39,7 +39,7 @@
     </strong>
     <div>
       <span>
-          {{groupDetails.clusterDetail.releaseChannel | uppercase}}
+          {{groupDetails.releaseChannel}}
       </span>
     </div>
 
@@ -122,7 +122,7 @@
   <cs-sp-section>
     <strong>
       <div class="section-title-row section-name" translate="mediaFusion.clusters.clusterSettings"></div>
-    </strong>    
+    </strong>
     <div>
       <a href ng-click="groupDetails.openSettings(groupDetails.clusterDetail.type, groupDetails.clusterDetail.id)"
         style="color:#049FD9"> {{groupDetails.displayName}}
