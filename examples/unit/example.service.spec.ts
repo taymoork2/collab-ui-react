@@ -1,30 +1,29 @@
-'use strict';
+import exampleModule from './index';
 
-describe('Service: ExampleService', function () {
-  function init() {
-    this.initModules('AtlasExample');
-    this.injectDependencies('$httpBackend', 'ExampleService');
-  }
-
-  function verifyHttpBackend() {
+describe('Service: ExampleService', () => {
+  beforeEach(function () {
+    this.initModules(exampleModule);
+    this.injectDependencies(
+      '$httpBackend',
+      'ExampleService'
+    );
+  });
+  afterEach(function () {
     this.$httpBackend.verifyNoOutstandingExpectation();
     this.$httpBackend.verifyNoOutstandingRequest();
-  }
+  });
 
-  beforeEach(init);
-  afterEach(verifyHttpBackend);
-
-  describe('getAndAddSomething()', function () {
+  describe('getAndAddSomething()', () => {
     it('should make a parametrized GET and modify the response', function () {
       this.$httpBackend.expectGET('/example/test').respond({
-        name: 'exampleTest'
+        name: 'exampleTest',
       });
 
       this.ExampleService.getAndAddSomething('test')
-        .then(function (response) {
+        .then((response) => {
           expect(response).toEqual(jasmine.objectContaining({
             name: 'exampleTest',
-            something: 'mySomething'
+            something: 'mySomething',
           }));
         });
 
@@ -35,7 +34,7 @@ describe('Service: ExampleService', function () {
       this.$httpBackend.expectGET('/example/test').respond(500);
 
       this.ExampleService.getAndAddSomething('test')
-        .then(function (response) {
+        .then((response) => {
           expect(response).toEqual({});
         });
 
