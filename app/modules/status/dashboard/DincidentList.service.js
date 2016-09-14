@@ -4,9 +4,9 @@
 (function () {
   'use strict';
   angular.module('Status')
-    .factory('DashboardService', DashboardService);
+    .factory('DincidentListService', DashboardService);
   function DashboardService($resource) {
-    return $resource('https://dataservicesbts.webex.com/status/services/:siteId/incidents/');
+    return $resource('https://dataservicesbts.webex.com/status/services/:siteId/incidents/:incidentId');
   }
 
 })();
