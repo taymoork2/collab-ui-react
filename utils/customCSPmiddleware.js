@@ -68,7 +68,8 @@ module.exports = csp({
       'https://*.localytics.com',
       'https://*.webex.com',
       'https://api.mixpanel.com',
-      'https://cdn.mxpnl.com'
+      'https://cdn.mxpnl.com',
+      'http://assets.adobedtm.com'
     ],
     styleSrc: [
       '\'self\'',

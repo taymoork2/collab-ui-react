@@ -15,7 +15,7 @@
     vm.assignToResourceGroup = 'no';
     vm._translation = {
       assignYes: $translate.instant('hercules.addResourceDialog.assignYes'),
-      assignNo: $translate.instant('hercules.addResourceDialog.assignNo'),
+      assignNo: $translate.instant('hercules.addResourceDialog.assignNo')
     };
     vm.next = next;
     vm.canGoNext = canGoNext;
@@ -23,20 +23,25 @@
     init();
 
     function init() {
-      if (!FeatureToggleService.supports(FeatureToggleService.features.atlasF237ResourceGroups)) {
-        $stateParams.wizard.next();
-        return;
-      }
-      ResourceGroupService.getAllAsOptions().then(function (options) {
-        if (options.length > 0) {
-          vm.resourceGroupOptions = vm.resourceGroupOptions.concat(options);
-          vm.loading = false;
-        } else {
-          $stateParams.wizard.next();
-        }
-      }, function () {
-        Notification.error('hercules.genericFailure');
-      });
+
+      FeatureToggleService.supports(FeatureToggleService.features.atlasF237ResourceGroups)
+        .then(function (supported) {
+          if (!supported) {
+            $stateParams.wizard.next();
+          } else {
+            ResourceGroupService.getAllAsOptions()
+              .then(function (options) {
+                if (options.length > 0) {
+                  vm.resourceGroupOptions = vm.resourceGroupOptions.concat(options);
+                  vm.loading = false;
+                } else {
+                  $stateParams.wizard.next();
+                }
+              }, function () {
+                Notification.error('hercules.genericFailure');
+              });
+          }
+        });
     }
 
     function canGoNext() {

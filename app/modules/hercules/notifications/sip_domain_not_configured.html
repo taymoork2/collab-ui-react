@@ -1,2 +1,9 @@
 <strong translate="hercules.notifications.add-SIP-destination.title"></strong>
-<p translate="hercules.notifications.add-SIP-destination.description" translate-value-onclick="notificationController.navigateToCallSettings()" translate-compile></p>
+<p ng-if="!notificationController.locatedinCallSettings()"
+   translate="hercules.notifications.add-SIP-destination.description"
+   translate-value-onclick="notificationController.navigateToCallSettings()"
+   translate-compile></p>
+
+<p ng-if="notificationController.locatedinCallSettings()"
+   translate="hercules.notifications.add-SIP-destination.description-already-in-settings-page">
+</p>
