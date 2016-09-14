@@ -1,17 +1,18 @@
 'use strict';
 
 describe('Controller: FusionClusterListController', function () {
-  var controller, $controller, $q, $rootScope, FusionClusterService, XhrNotificationService;
+  var controller, $controller, $q, $rootScope, Authinfo, FusionClusterService, XhrNotificationService;
 
   beforeEach(angular.mock.module('Squared'));
   beforeEach(angular.mock.module('Hercules'));
   beforeEach(inject(dependencies));
   beforeEach(initSpies);
 
-  function dependencies(_$rootScope_, _$controller_, _$q_, _FusionClusterService_, _XhrNotificationService_) {
+  function dependencies(_$rootScope_, _$controller_, _$q_, _Authinfo_, _FusionClusterService_, _XhrNotificationService_) {
     $rootScope = _$rootScope_;
     $controller = _$controller_;
     $q = _$q_;
+    Authinfo = _Authinfo_;
     FusionClusterService = _FusionClusterService_;
     XhrNotificationService = _XhrNotificationService_;
   }
@@ -19,6 +20,7 @@ describe('Controller: FusionClusterListController', function () {
   function initSpies() {
     spyOn(FusionClusterService, 'getAll');
     spyOn(XhrNotificationService, 'notify');
+    spyOn(Authinfo, 'isEntitled').and.returnValue(true);
   }
 
   function initController(options) {
