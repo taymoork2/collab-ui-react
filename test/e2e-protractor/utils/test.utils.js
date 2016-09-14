@@ -118,10 +118,7 @@ exports.scrollBottom = function (selector) {
 };
 
 exports.scrollIntoView = function (el) {
-    var webel = el.getWebElement();
-    browser.executeScript(function (e) {
-      e.scrollIntoView();
-    }, webel);
+	browser.executeScript('arguments[0].scrollIntoView()', el.getWebElement());
 };
 
 exports.refresh = function () {

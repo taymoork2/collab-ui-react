@@ -14,22 +14,13 @@ describe('Huron Auto Attendant', function () {
 
   }, 120000);
 
-  // See AUTOATTN-556
-  beforeEach(function () {
-    browser.ignoreSynchronization = false;
-  });
-
-  afterEach(function () {
-    browser.ignoreSynchronization = initialIgnoreSync;
-  });
-
   describe('Create and Delete AA', function () {
 
     // TEST CASES
     it('should navigate to AA landing page', function () {
 
       // First ensure the test AA and queue is deleted (in case last test run failed for example)
-      var flow = protractor.promise.controlFlow();
+      var flow = browser.controlFlow();
       flow.execute(deleteUtils.deleteRouteToQueue);
       flow.execute(deleteUtils.findAndDeleteTestAA);
 
@@ -65,7 +56,7 @@ describe('Huron Auto Attendant', function () {
     it('should create the queue', function () {
 
         // create the queue with the name Sunlight 1
-      var flow = protractor.promise.controlFlow();
+      var flow = browser.controlFlow();
       flow.execute(createUtils.createRouteToQueue);
         
     });
@@ -136,7 +127,7 @@ describe('Huron Auto Attendant', function () {
     
     it('should delete the queue', function () {
         // Delete the queue
-      var flow = protractor.promise.controlFlow();
+      var flow = browser.controlFlow();
       flow.execute(deleteUtils.deleteRouteToQueue);
 
     });
