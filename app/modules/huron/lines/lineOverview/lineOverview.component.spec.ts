@@ -1,10 +1,10 @@
-import { LineConsumerType, Number } from '../services'
+import { LineConsumerType, Line } from '../services';
 
 describe('Component: lineOverview', () => {
   const BUTTON_SAVE = '.button-container .btn--primary';
   const BUTTON_CANCEL = '.button-container button:not(.btn--primary)';
 
-  let existingLinePrimary: Number = {
+  let existingLinePrimary: Line = {
     uuid: '0000',
     internal: '1234',
     external: '+5555551212',
@@ -13,7 +13,7 @@ describe('Component: lineOverview', () => {
     primary: true,
   };
 
-  let existingLineNonPrimary: Number = {
+  let existingLineNonPrimary: Line = {
     uuid: '0001',
     internal: '6789',
     external: '+5555551313',
@@ -72,7 +72,7 @@ describe('Component: lineOverview', () => {
     beforeEach(function () {
       this.$scope.numberId = this.existingLinePrimary.uuid;
       this.lineOverview = {
-        line: this.existingLinePrimary
+        line: this.existingLinePrimary,
       };
     });
 
@@ -111,7 +111,7 @@ describe('Component: lineOverview', () => {
     beforeEach(initComponent);
     beforeEach(function () {
       this.lineOverview = {
-        line: new Number()
+        line: new Line(),
       };
       this.getInternalNumberOptionsDefer.resolve(this.internalNumbers);
       this.getLineOverviewDataDefer.resolve(this.lineOverview);

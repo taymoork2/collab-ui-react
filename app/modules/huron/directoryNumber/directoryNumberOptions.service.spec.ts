@@ -12,25 +12,25 @@ describe('Service: DirectoryNumberOptionsService', () => {
     spyOn(this.Authinfo, 'getOrgId').and.returnValue('12345');
 
     let internalNumbersResponse: IDirectoryNumber[] = [
-      {pattern: '12345'},
-      {pattern: '67890'},
-      {pattern: '75023'},
+      { pattern: '12345' },
+      { pattern: '67890' },
+      { pattern: '75023' },
     ];
 
     let internalNumbers: string[] = [
       '12345',
       '67890',
-      '75023'
+      '75023',
     ];
 
     let externalNumbersResponse: IDirectoryNumber[] = [
-      {pattern: '+12345'},
-      {pattern: '+67890'},
+      { pattern: '+12345' },
+      { pattern: '+67890' },
     ];
 
     let externalNumbers: string[] = [
       '+12345',
-      '+67890'
+      '+67890',
     ];
 
     this.internalNumbers = internalNumbers;
@@ -50,7 +50,7 @@ describe('Service: DirectoryNumberOptionsService', () => {
       .respond(200, this.internalNumbersResponse);
     this.DirectoryNumberOptionsService.getInternalNumberOptions().then(response => {
       expect(response).toEqual(this.internalNumbers);
-    })
+    });
     this.$httpBackend.flush();
   });
 
@@ -66,7 +66,7 @@ describe('Service: DirectoryNumberOptionsService', () => {
       .respond(200, this.externalNumbersResponse);
     this.DirectoryNumberOptionsService.getExternalNumberOptions().then(response => {
       expect(response).toEqual(this.externalNumbers);
-    })
+    });
     this.$httpBackend.flush();
   });
 

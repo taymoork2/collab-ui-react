@@ -1,6 +1,6 @@
 import { LineOverviewComponent } from './lineOverview.component';
 import { LineOverviewService } from './lineOverview.service';
-import { default as lineServiceModule } from '../services';
+import lineServiceModule from '../services';
 import directoryNumber from '../../directoryNumber';
 import callForward from '../../callForward';
 import simultaneousCalls from '../../simultaneousCalls';

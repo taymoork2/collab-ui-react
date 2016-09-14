@@ -1,9 +1,9 @@
-import { Number } from '../lines/services';
+import { Line } from '../lines/services';
 
-class DirectoryNumberListCtrl {
+class DirectoryNumberListCtrl implements ng.IComponentController {
 
   public numberOfLines: number = 5;
-  public directoryNumbers: Array<Number>;
+  public directoryNumbers: Array<Line>;
   public hideShowMoreButton: boolean = false;
   private primaryLabel: string;
 
@@ -40,4 +40,4 @@ angular
       directoryNumbers: '<',
       directoryNumberSref: '@',
     },
-  })
+  });

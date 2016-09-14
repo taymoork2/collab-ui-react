@@ -1,23 +1,23 @@
-import { Number } from '../lines/services';
+import { Line } from '../lines/services';
 
 describe('Component: directoryNumberList', () => {
-  let directoryNumbers: Number[] = [
+  let directoryNumbers: Line[] = [
    {
-      'uuid': '6d3f07a6-f868-4ae7-990d-286ce033834d',
-      'internal': '2329',
-      'external': '',
-      'siteToSite': '71002329',
-      'incomingCallMaximum': 2,
-      'primary': true,
+      uuid: '6d3f07a6-f868-4ae7-990d-286ce033834d',
+      internal: '2329',
+      external: '',
+      siteToSite: '71002329',
+      incomingCallMaximum: 2,
+      primary: true,
    },
    {
-      'uuid': '35fb962b-824c-44f3-9e13-2ed171e69249',
-      'internal': '5015',
-      'external': '7100XXXX',
-      'siteToSite': '71005015',
-      'incomingCallMaximum': 8,
-      'primary': false,
-   }
+      uuid: '35fb962b-824c-44f3-9e13-2ed171e69249',
+      internal: '5015',
+      external: '7100XXXX',
+      siteToSite: '71005015',
+      incomingCallMaximum: 8,
+      primary: false,
+   },
 ];
 
   beforeEach(function() {

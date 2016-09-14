@@ -1,18 +1,17 @@
-import simultaneousCalls from '../../simultaneousCalls';
 import { CallForwardAll, CallForwardBusy } from '../../callForward/callForward';
-import { BLOCK_CALLERID_TYPE, DIRECT_LINE_TYPE, COMPANY_CALLERID_TYPE, CUSTOM_COMPANY_TYPE, CallerIdConfig, CallerIdOption } from '../../callerId';
+import { BLOCK_CALLERID_TYPE, CUSTOM_COMPANY_TYPE, CallerIdConfig, CallerIdOption } from '../../callerId';
 import { SharedLineUser, User, SharedLineDevice } from '../../sharedLine';
-import { LineService, LineConsumerType, LINE_CHANGE, Number } from '../services';
+import { LineService, LineConsumerType, LINE_CHANGE, Line } from '../services';
 import { LineOverviewService, LineOverviewData } from './index';
 import { DirectoryNumberOptionsService } from '../../directoryNumber';
-import { ActionItem } from '../../../core/components/sectionTitle/sectionTitle.component';
+import { IActionItem } from '../../../core/components/sectionTitle/sectionTitle.component';
 
 interface IDirectoryNumber {
-  uuid: string,
-  pattern: string,
+  uuid: string;
+  pattern: string;
 }
 
-class LineOverview {
+class LineOverview implements ng.IComponentController {
   private ownerType: string;
   private ownerId: string;
   private ownerName: string;
@@ -21,7 +20,7 @@ class LineOverview {
 
   public form: ng.IFormController;
   public saveInProcess: boolean = false;
-  public actionList: ActionItem[];
+  public actionList: IActionItem[];
   public showActions: boolean = false;
   public deleteConfirmation: string;
 
@@ -78,7 +77,7 @@ class LineOverview {
     this.custom_label = 'Custom';
   }
 
-  private $onInit(): void {
+  public $onInit(): void {
     this.initActions();
     this.initConsumerType();
     this.initDirectoryNumber();
@@ -110,7 +109,7 @@ class LineOverview {
               this.form.$setDirty();
             }
           });
-      })
+      });
 
     this.LineOverviewService.getEsnPrefix().then(esnPrefix => this.esnPrefix = esnPrefix);
     this.DirectoryNumberOptionsService.getExternalNumberOptions().then(numbers => this.externalNumbers = numbers);
@@ -152,7 +151,7 @@ class LineOverview {
   }
 
   public getUserList(filter: string): User[] { ///TODO -- services
-    var users: User[] = [];
+    let users: User[] = [];
     return users;
   }
 
@@ -205,7 +204,7 @@ class LineOverview {
     this.$modal.open({
       templateUrl: 'modules/huron/lines/lineOverview/lineDelete.html',
       scope: this.$scope,
-      type: 'dialog'
+      type: 'dialog',
     }).result.then( () => {
       if (!this.lineOverviewData.line.primary) {
         return this.LineService.deleteLine(this.consumerType, this.ownerId, this.lineOverviewData.line.uuid)
@@ -220,8 +219,8 @@ class LineOverview {
   }
 
   private isValidSharedLineUser(userInfo: SharedLineUser): boolean {
-    var isVoiceUser = false;
-    var isValidUser = true;
+    let isVoiceUser = false;
+    let isValidUser = true;
 
     _.forEach(userInfo.entitlements, e => {
 
@@ -230,12 +229,12 @@ class LineOverview {
       }
     });
 
-    if (!isVoiceUser || userInfo.uuid == this.$state.currentUser.id) {
+    if (!isVoiceUser || userInfo.uuid === this.$state.currentUser.id) {
       // Exclude users without Voice service to be shared line User
       // Exclude current user
       if (!isVoiceUser) {
         this.Notification.error('sharedLinePanel.invalidUser', {
-          user: userInfo.name
+          user: userInfo.name,
         });
       }
       isValidUser = false;
@@ -282,7 +281,7 @@ class LineOverview {
     return _.cloneDeep(lineOverviewData);
   }
 
-  private setShowActionsFlag(line: Number): boolean {
+  private setShowActionsFlag(line: Line): boolean {
     return (line.uuid && !line.primary);
   }
 
@@ -302,7 +301,7 @@ class LineOverview {
 export class LineOverviewComponent implements ng.IComponentOptions {
   public controller = LineOverview;
   public templateUrl = 'modules/huron/lines/lineOverview/lineOverview.html';
-  public bindings: {[binding: string]: string} = {
+  public bindings = <{ [binding: string]: string }>{
     ownerType: '@',
     ownerId: '@',
     ownerName: '@',

@@ -13,20 +13,20 @@ describe('component: callerId', () => {
       value: {
         name: '',
         externalCallerIdType: 'Custom',
-      }
+      },
     }, {
       label: 'Blocked Outbound Caller ID',
       value: {
         name: 'Caller will not see any caller ID or number',
         externalCallerIdType: 'Blocked Outbound Caller ID',
-      }
-    }]
+      },
+    }];
     this.compileComponent('ucCallerId', {
       callerIdOptions: 'callerIdOptions',
       callerIdSelected: 'callerIdSelected',
       customCallerIdName: 'customCallerIdName',
       customCallerIdNumber: 'customCallerIdNumber',
-      onChangeFn: 'onChangeFn(callerIdSelected, customCallerIdName, customCallerIdNumber)'
+      onChangeFn: 'onChangeFn(callerIdSelected, customCallerIdName, customCallerIdNumber)',
     });
   });
 
