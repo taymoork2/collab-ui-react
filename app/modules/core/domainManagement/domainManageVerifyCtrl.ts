@@ -15,7 +15,7 @@ namespace domainManagement {
       if (this._domain && this._domain.text && !this._domain.token) {
         DomainManagementService.getToken(this._domain.text).then((res) => {
           this._domain.token = res;
-        })
+        });
       }
     }
 
@@ -53,7 +53,7 @@ namespace domainManagement {
         this.recordMetrics({
           msg: 'ok',
           startLog: start,
-          data: {domain: this._domain.text, action: 'verify'}
+          data: { domain: this._domain.text, action: 'verify' },
         });
         this.$previousState.go();
       }, err => {
@@ -61,7 +61,7 @@ namespace domainManagement {
           msg: 'error',
           status: 500,
           startLog: start,
-          data: {domain: this._domain.text, error: err, action: 'verify'}
+          data: { domain: this._domain.text, error: err, action: 'verify' },
         });
         this._error = err;
       });
@@ -71,7 +71,7 @@ namespace domainManagement {
       this.recordMetrics({
         msg: 'cancel',
         status: 100,
-        data: {domain: this._domain.text, action: 'cancel'}
+        data: { domain: this._domain.text, action: 'cancel' },
       });
       this.$previousState.go();
     }
@@ -80,11 +80,11 @@ namespace domainManagement {
       this.recordMetrics({
         msg: 'read more',
         startLog: this._loadTime,
-        data: {domain: this._domain.text, action: 'manual'}
+        data: { domain: this._domain.text, action: 'manual' },
       });
     }
 
-    recordMetrics({msg, status = 200, startLog = moment(), data}) {
+    public recordMetrics({ msg, status = 200, startLog = moment(), data }) {
       this.LogMetricsService.logMetrics(
         'domainManage verify ' + msg,
         this.LogMetricsService.eventType.domainManageVerify,
