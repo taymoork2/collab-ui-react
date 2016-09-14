@@ -2510,7 +2510,7 @@
     "title": "Simultaneous Calls",
     "two": "2",
     "eight": "8",
-    "multipleCallsDescription": " The maximum number of simultaneous incoming calls this line can recieve.",
+    "multipleCallsDescription": " The maximum number of simultaneous incoming calls this line can receive.",
     "mulitpleCallsLoadError": "Multiple Calls failed to load."
   },
   "callerIdPanel": {

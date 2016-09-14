@@ -1522,8 +1522,9 @@
             // version that supports route to component natively
             templateProvider: /* @ngInject */ function ($stateParams) {
               var ownerId = _.get($stateParams.currentPlace, 'cisUuid');
+              var ownerName = _.get($stateParams.currentPlace, 'displayName');
               var numberId = $stateParams.numberId;
-              return '<line-overview owner-type="place" owner-id="' + ownerId + '" number-id="' + numberId + '"></line-overview>';
+              return '<uc-line-overview owner-type="place" owner-name="' + ownerName + '" owner-id="' + ownerId + '" number-id="' + numberId + '"></line-overview>';
             },
             params: {
               numberId: '',

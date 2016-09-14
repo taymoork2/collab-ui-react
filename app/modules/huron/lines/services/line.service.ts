@@ -1,3 +1,5 @@
+export const LINE_CHANGE = 'LINE_CHANGE';
+
 export class Number {
   uuid: string;
   primary: boolean = false;
@@ -30,9 +32,17 @@ export class LineService {
       method: 'PUT',
     }
 
+    let saveAction: ng.resource.IActionDescriptor = {
+      method: 'POST',
+      headers: {
+        'Access-Control-Expose-Headers': 'Location'
+      },
+    };
+
     this.lineService = <INumberResource>$resource(HuronConfig.getCmiV2Url() + '/customers/:customerId/:type/:typeId/numbers/:numberId', {},
       {
         update: updateAction,
+        save: saveAction,
       });
   }
 
@@ -45,20 +55,31 @@ export class LineService {
     }).$promise;
   }
 
-  public getLineList(type: LineConsumerType, typeId: string): ng.IPromise<ng.resource.IResourceArray<ng.resource.IResource<Number>>> {
-    return this.lineService.query({
+  public getLineList(type: LineConsumerType, typeId: string): ng.IPromise<Number[]> {
+    return this.lineService.get({
       customerId: this.Authinfo.getOrgId(),
       type: type,
       typeId: typeId,
-    }).$promise;
+    }).$promise
+    .then(lineList => {
+      return _.get<Number[]>(lineList, 'numbers', []);
+    });
   }
 
-  public createLine(type: LineConsumerType, typeId: string, data: Number): ng.IPromise<Number> {
+  public createLine(type: LineConsumerType, typeId: string, data: Number): ng.IPromise<string> {
+    let location: string;
     return this.lineService.save({
       customerId: this.Authinfo.getOrgId(),
       type: type,
       typeId: typeId,
-    }, data).$promise;
+    }, {
+      internal: data.internal,
+      external: data.external,
+      incomingCallMaximum: data.incomingCallMaximum,
+    }, (response, headers) => {
+      location = headers('Location');
+    }).$promise
+    .then( () => location);
   }
 
   public updateLine(type: LineConsumerType, typeId: string, numberId: string, data: Number): ng.IPromise<Number> {
@@ -72,6 +93,15 @@ export class LineService {
       external: data.external,
       incomingCallMaximum: data.incomingCallMaximum,
     }).$promise;
+  }
+
+  public deleteLine(type: LineConsumerType, typeId: string, numberId: string): ng.IPromise<any> {
+    return this.lineService.remove({
+      customerId: this.Authinfo.getOrgId(),
+      type: type,
+      typeId: typeId,
+      numberId: numberId,
+    }).$promise
   }
 
 }

@@ -66,12 +66,11 @@
           vm.upgradeSchedule = upgradeSchedule;
           vm.nextUpdateOffset = moment.tz(upgradeSchedule.nextUpgradeWindow.startTime, upgradeSchedule.scheduleTimeZone).format('Z');
           vm.formOptions.day = getDayOptions();
+          vm.syncing = false;
         })
         .catch(function (error) {
+          // Do not reset vm.syncing if there was an error
           Notification.error(error.message || error.statusText);
-        })
-        .finally(function () {
-          vm.syncing = false;
         });
     }
 
