@@ -158,7 +158,7 @@
         this.image = "images/devices-hi/unknown.png";
         this.diagnosticsEvents = [{
           type: translateOrDefault('CsdmStatus.errorCodes.inactive.type', 'Account with no device'),
-          message: translateOrDefault('CsdmStatus.errorCodes.inactive.message', 'There exists an account for a ' +
+          message: translateOrDefault('CsdmStatus.errorCodes.inactive.message', 'An account named ' + this.displayName +
             'device, but no corresponding device or activation code. You can probably delete this account.')
         }];
       }
