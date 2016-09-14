@@ -1,7 +1,7 @@
 <div>
   <div class="typeahead-large">
     <input ng-model="huntGroupSA.selectedFallbackNumber"
-           ng-class="{'error': huntGroupSA.isErrorFallbackInput() && !huntGroupSA.allowLocalValidation}"
+           ng-class="{'error': huntGroupSA.isErrorFallbackInput()}"
            typeahead="user for user in huntGroupSA.fetchFallbackDestination($viewValue) | limitTo:10"
            typeahead-on-select="huntGroupSA.selectFallback($item)"
            typeahead-template-url="userTemplate.html"

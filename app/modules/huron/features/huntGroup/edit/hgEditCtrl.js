@@ -163,7 +163,7 @@
     }
 
     function shouldShowFallbackWarning() {
-      return HuntGroupFallbackDataService.isFallbackInvalid();
+      return HuntGroupFallbackDataService.isFallbackInvalid() && !vm.allowLocalValidation;
     }
 
     function removeFallbackDest() {

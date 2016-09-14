@@ -61,7 +61,7 @@
 
     DialPlanService.getCustomerVoice(Authinfo.getOrgId()).then(function (response) {
       vm.regionCode = response.regionCode;
-      vm.CustomerLocalDialing = vm.regionCode !== '';
+      vm.CustomerLocalDialing = !!vm.regionCode;
 
       if (!vm.customerLocalDialing) {
         vm.snrFormFields = [{

@@ -30,13 +30,13 @@
         <p>{{:: 'huronHuntGroup.fallbackDesc' | translate}}</p>
 
         <div ng-if="hge.shouldShowFallbackLookup()" class="form-input typeahead"
-             ng-class="{'warning-typeahead': hge.shouldShowFallbackWarning() && !hge.allowLocalValidation}">
+             ng-class="{'warning-typeahead': hge.shouldShowFallbackWarning()}">
           <input type="text" ng-model="hge.selectedFallbackNumber"
                  typeahead="user for user in hge.fetchFallbackDestination($viewValue) | limitTo: 10"
                  typeahead-template-url="userTemplate.html" typeahead-on-select="hge.selectFallback($item)"
                  ng-keyup="hge.validateFallbackNumber()" placeholder="{{:: 'huronHuntGroup.numberLabel' | translate}}"/>
         </div>
-        <div class="ellipsis warning-typeahead" ng-if="hge.shouldShowFallbackWarning() && !hge.allowLocalValidation">
+        <div class="ellipsis warning-typeahead" ng-if="hge.shouldShowFallbackWarning()">
             <span class="icon"></span> <span class="message">{{:: 'huronHuntGroup.invalidFallback' | translate}}</span>
         </div>
         <div ng-if="hge.shouldShowFallbackPill()">

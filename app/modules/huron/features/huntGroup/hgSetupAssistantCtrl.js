@@ -270,7 +270,7 @@
     function isErrorFallbackInput() {
       return (HuntGroupService.suggestionsNeeded(vm.selectedFallbackNumber) &&
         !vm.fallbackSuggestionsAvailable &&
-        !isFallbackValid());
+        !isFallbackValid() && !vm.allowLocalValidation);
     }
 
     function fetchFallbackDestination(nameHint) {

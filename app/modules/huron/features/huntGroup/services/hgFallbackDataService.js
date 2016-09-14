@@ -268,7 +268,7 @@
 
     function allowLocalValidation() {
       return DialPlanService.getCustomerVoice(Authinfo.getOrgId()).then(function (response) {
-        return response.regionCode !== '';
+        return !!response.regionCode;
       });
     }
   }
