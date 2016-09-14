@@ -89,7 +89,6 @@ describe('OnboardCtrl: Ctrl', function () {
 
     spyOn(this.Userservice, 'onboardUsers');
     spyOn(this.Userservice, 'bulkOnboardUsers');
-    //spyOn(this.Userservice, 'getUser').and.returnValue(this.mock.getUserMe);
     spyOn(this.Userservice, 'migrateUsers').and.returnValue(this.mock.getMigrateUsers);
     spyOn(this.Userservice, 'updateUsers');
     spyOn(this.Orgservice, 'getLicensesUsage').and.returnValue(this.$q.when(this.mock.getLicensesUsage));
