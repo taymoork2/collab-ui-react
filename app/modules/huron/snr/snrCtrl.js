@@ -11,7 +11,7 @@
     vm.saveSingleNumberReach = saveSingleNumberReach;
     vm.reset = reset;
     vm.snrInfo = angular.copy(TelephonyInfoService.getTelephonyInfo().snrInfo);
-    vm.CustomerLocalDialing = false;
+    vm.customerLocalDialing = false;
     vm.regionCode = '';
 
     function getCountryInfo(code) {
@@ -61,7 +61,7 @@
 
     DialPlanService.getCustomerVoice(Authinfo.getOrgId()).then(function (response) {
       vm.regionCode = response.regionCode;
-      vm.CustomerLocalDialing = !!vm.regionCode;
+      vm.customerLocalDialing = !!vm.regionCode;
 
       if (!vm.customerLocalDialing) {
         vm.snrFormFields = [{
@@ -98,7 +98,7 @@
 
       if (snrInfo.remoteDest) {
         vm.snrInfo.remoteDest = snrInfo.remoteDest;
-      } else if (snrInfo.destination && vm.CustomerLocalDialing) {
+      } else if (snrInfo.destination && vm.customerLocalDialing) {
         getCountryInfo(phoneUtils.getRegionCodeForNumber(vm.regionCode.toString() + snrInfo.destination.toString()))
           .then(function (data) {
             vm.snrInfo.remoteDest = {
