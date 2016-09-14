@@ -5,9 +5,9 @@
         ng-if="::$ctrl.directoryNumberSref"
         ui-sref="{{::$ctrl.directoryNumberSref}}">
         <span class="feature-name">
-          <span ng-bind="::directoryNumber.internal"></span>
+          <span ng-bind="directoryNumber.internal"></span>
           <span class="feature-name" ng-if="directoryNumber.external">
-            <span translate="common.or"></span> <span ng-bind="::directoryNumber.external"></span>
+            <span translate="common.or"></span> <span ng-bind="directoryNumber.external"></span>
           </span>
         </span>
         <span class="feature-status" ng-bind="$ctrl.setLineUseLabel(directoryNumber.primary)"></span>
