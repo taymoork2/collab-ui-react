@@ -59,7 +59,7 @@
       legend.equalWidths = !isToday;
 
       var valueAxes = [CareReportsGraphService.getBaseVariable('axis')];
-      valueAxes[0].title = $translate.instant('careReportsPage.tasks');
+      valueAxes[0].title = $translate.instant('careReportsPage.contacts');
 
       var pattern = {
         "url": "line_pattern.png",
@@ -76,7 +76,7 @@
         balloonFunction: balloonTextForTaskVolume
       };
       var inQueueGraph = {
-        title: $translate.instant('careReportsPage.in-queue'),
+        title: $translate.instant('careReportsPage.in-progress'),
         lineColor: chartColors.colorLightYellow,
         valueField: 'numTasksQueuedState',
         pattern: pattern,
@@ -84,13 +84,13 @@
         dashLength: 2
       };
       var assignedGraph = {
-        title: $translate.instant('careReportsPage.assigned'),
+        title: $translate.instant('careReportsPage.waiting'),
         lineColor: chartColors.colorLightYellow,
         fillColors: chartColors.colorLightYellowFill,
         valueField: 'numTasksAssignedState'
       };
       var handledGraph = {
-        title: $translate.instant('careReportsPage.handled'),
+        title: $translate.instant('careReportsPage.addressed'),
         lineColor: chartColors.colorLightGreen,
         valueField: 'numTasksHandledState'
       };
@@ -111,8 +111,8 @@
       var numTasksHandledState = _.get(graphDataItem, 'dataContext.numTasksHandledState', 0);
       var categoryRange = setCategoryRange(graph.categoryAxis.title, graphDataItem.category);
 
-      var balloonTextToday = '<span class="care-graph-text">' + $translate.instant('careReportsPage.abandoned') + ' ' + numTasksAbandonedState + '</span><br><span class="care-graph-text">' + $translate.instant('careReportsPage.in-queue') + ' ' + numTasksQueuedState + '</span><br><span class="care-graph-text">' + $translate.instant('careReportsPage.assigned') + ' ' + numTasksAssignedState + '</span><br><span class="care-graph-text">' + $translate.instant('careReportsPage.handled') + ' ' + numTasksHandledState + '</span>';
-      var balloonTextPast = '<span class="care-graph-text">' + $translate.instant('careReportsPage.abandoned') + ' ' + numTasksAbandonedState + '</span><br><span class="care-graph-text">' + $translate.instant('careReportsPage.handled') + ' ' + numTasksHandledState + '</span>';
+      var balloonTextToday = '<span class="care-graph-text">' + $translate.instant('careReportsPage.abandoned') + ' ' + numTasksAbandonedState + '</span><br><span class="care-graph-text">' + $translate.instant('careReportsPage.in-progress') + ' ' + numTasksQueuedState + '</span><br><span class="care-graph-text">' + $translate.instant('careReportsPage.waiting') + ' ' + numTasksAssignedState + '</span><br><span class="care-graph-text">' + $translate.instant('careReportsPage.addressed') + ' ' + numTasksHandledState + '</span>';
+      var balloonTextPast = '<span class="care-graph-text">' + $translate.instant('careReportsPage.abandoned') + ' ' + numTasksAbandonedState + '</span><br><span class="care-graph-text">' + $translate.instant('careReportsPage.addressed') + ' ' + numTasksHandledState + '</span>';
       var balloonText = (today) ? balloonTextToday : balloonTextPast;
       return categoryRange + balloonText;
     }
@@ -122,7 +122,7 @@
       var avgTaskWaitTime = _.get(graphDataItem, 'dataContext.avgTaskWaitTime', 0);
       var avgTaskCloseTime = _.get(graphDataItem, 'dataContext.avgTaskCloseTime', 0);
       var categoryRange = setCategoryRange(graph.categoryAxis.title, graphDataItem.category);
-      var balloonText = '<span class="care-graph-text">' + $translate.instant('careReportsPage.avgQueueTime') + ' ' + millisToTime(avgTaskWaitTime * convertToMillis) + '</span><br><span class="care-graph-text">' + $translate.instant('careReportsPage.avgHandleTime') + ' ' + millisToTime(avgTaskCloseTime * convertToMillis) + '</span>';
+      var balloonText = '<span class="care-graph-text">' + $translate.instant('careReportsPage.avgWaitTime') + ' ' + millisToTime(avgTaskWaitTime * convertToMillis) + '</span><br><span class="care-graph-text">' + $translate.instant('careReportsPage.avgCompletionTime') + ' ' + millisToTime(avgTaskCloseTime * convertToMillis) + '</span>';
 
       return categoryRange + balloonText;
     }
@@ -131,7 +131,7 @@
       var numPendingTasks = _.get(graphDataItem, 'dataContext.numPendingTasks', 0);
       var numWorkingTasks = _.get(graphDataItem, 'dataContext.numWorkingTasks', 0);
       var categoryRange = setCategoryRange(graph.categoryAxis.title, graphDataItem.category);
-      var balloonText = '<span class="care-graph-text">' + $translate.instant('careReportsPage.in-queue') + ' ' + numPendingTasks + '</span><br><span class="care-graph-text">' + $translate.instant('careReportsPage.assigned') + ' ' + numWorkingTasks + '</span>';
+      var balloonText = '<span class="care-graph-text">' + $translate.instant('careReportsPage.in-progress') + ' ' + numPendingTasks + '</span><br><span class="care-graph-text">' + $translate.instant('careReportsPage.waiting') + ' ' + numWorkingTasks + '</span>';
 
       return categoryRange + balloonText;
     }
@@ -216,7 +216,7 @@
       };
 
       var queueGraph = {
-        title: $translate.instant('careReportsPage.queueTime'),
+        title: $translate.instant('careReportsPage.waitTime'),
         lineColor: chartColors.colorLightYellow,
         fillColors: chartColors.colorLightYellow,
         valueField: 'avgTaskWaitTime',
@@ -227,7 +227,7 @@
         balloonFunction: balloonTextForTaskTime
       };
       var handleGraph = {
-        title: $translate.instant('careReportsPage.handleTime'),
+        title: $translate.instant('careReportsPage.completionTime'),
         lineColor: chartColors.colorLightGreen,
         fillColors: chartColors.colorLightGreenFill,
         valueField: 'avgTaskCloseTime'
@@ -269,7 +269,7 @@
       var legend = CareReportsGraphService.getBaseVariable('legend');
 
       var valueAxes = [CareReportsGraphService.getBaseVariable('axis')];
-      valueAxes[0].title = $translate.instant('careReportsPage.tasks');
+      valueAxes[0].title = $translate.instant('careReportsPage.contacts');
 
       var pattern = {
         "url": "line_pattern.png",
@@ -278,7 +278,7 @@
       };
 
       var inQueueGraph = {
-        title: $translate.instant('careReportsPage.in-queue'),
+        title: $translate.instant('careReportsPage.in-progress'),
         lineColor: chartColors.colorLightYellow,
         fillColors: chartColors.colorLightYellow,
         valueField: 'numPendingTasks',
@@ -290,7 +290,7 @@
       };
 
       var assignedGraph = {
-        title: $translate.instant('careReportsPage.assigned'),
+        title: $translate.instant('careReportsPage.waiting'),
         lineColor: chartColors.colorLightYellow,
         fillColors: chartColors.colorLightYellowFill,
         valueField: 'numWorkingTasks',
