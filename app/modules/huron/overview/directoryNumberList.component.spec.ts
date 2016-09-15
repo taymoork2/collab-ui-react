@@ -123,18 +123,23 @@ describe('Component: directoryNumberList', () => {
     it('should show more button', function () {
       expect(this.controller.showMoreButton()).toBeTruthy();
       expect(this.controller.showLessButton()).toBeFalsy();
+      expect(this.view.find('li a').length).toEqual(5);
     });
 
-    it('should show less when show more clicked', function () {
+    it('should display Show less button, but more numbers when Show more clicked', function () {
       this.controller.showMoreClicked();
+      this.$scope.$apply();
       expect(this.controller.showMoreButton()).toBeFalsy();
       expect(this.controller.showLessButton()).toBeTruthy();
+      expect(this.view.find('li a').length).toEqual(6);
     });
 
-    it('should show more when show less clicked', function () {
+    it('should display Show more button, but less numbers when Show less clicked', function () {
       this.controller.showLessClicked();
+      this.$scope.$apply();
       expect(this.controller.showMoreButton()).toBeTruthy();
       expect(this.controller.showLessButton()).toBeFalsy();
+      expect(this.view.find('li a').length).toEqual(5);
     });
   });
 });

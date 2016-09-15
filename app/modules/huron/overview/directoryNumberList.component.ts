@@ -42,6 +42,6 @@ angular
     bindings: {
       directoryNumbers: '<',
       directoryNumberSref: '@',
-      lineThreshold: '<',
+      lineThreshold: '@',
     },
   });
