@@ -2,7 +2,7 @@
 
 describe('Huron Setup Assistant Ctrl', function () {
 
-  var controller, $scope, $modal, $timeout, Notification, HuntGroupService, $q, $state;
+  var controller, $scope, $modal, $timeout, Notification, HuntGroupService, $q, $state, HuntGroupFallbackDataService;
 
   var leftArrow = 37;
   var rightArrow = 39;
@@ -13,7 +13,7 @@ describe('Huron Setup Assistant Ctrl', function () {
 
   beforeEach(angular.mock.module('Huron'));
 
-  beforeEach(inject(function ($rootScope, $controller, _$modal_, _$timeout_, _Notification_, _HuntGroupService_, _$q_, _$state_) {
+  beforeEach(inject(function ($rootScope, $controller, _$modal_, _$timeout_, _Notification_, _HuntGroupService_, _$q_, _$state_, _HuntGroupFallbackDataService_) {
     $scope = $rootScope.$new();
     $modal = _$modal_;
     $timeout = _$timeout_;
@@ -21,6 +21,14 @@ describe('Huron Setup Assistant Ctrl', function () {
     HuntGroupService = _HuntGroupService_;
     $q = _$q_;
     $state = _$state_;
+    HuntGroupFallbackDataService = _HuntGroupFallbackDataService_;
+
+    spyOn($modal, 'open');
+    spyOn($state, 'go');
+    spyOn(Notification, 'success');
+    spyOn(Notification, 'error');
+    spyOn(HuntGroupService, 'saveHuntGroup').and.returnValue($q.when());
+    spyOn(HuntGroupFallbackDataService, 'allowLocalValidation').and.returnValue($q.when(false));
 
     controller = $controller('HuntGroupSetupAssistantCtrl', {
       $scope: $scope,
@@ -29,12 +37,6 @@ describe('Huron Setup Assistant Ctrl', function () {
       HuntGroupService: HuntGroupService,
       $state: $state
     });
-
-    spyOn($modal, 'open');
-    spyOn($state, 'go');
-    spyOn(Notification, 'success');
-    spyOn(Notification, 'error');
-    spyOn(HuntGroupService, 'saveHuntGroup').and.returnValue($q.when());
   }));
 
   it("should test that the page index starts at 0", function () {

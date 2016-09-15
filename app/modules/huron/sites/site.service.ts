@@ -1,23 +1,23 @@
 export class EmergencyCallBackNumber {
-  uuid: string;
-  pattern: string;
+  public uuid: string;
+  public pattern: string;
 }
 
 export class Site {
-  uuid: string;
-  siteIndex: string;
-  siteCode: string;
-  steeringDigit: string;
-  siteSteeringDigit: string;
-  timeZone: string;
-  voicemailPilotNumber: string;
-  mediaTraversalMode: string;
-  siteDescription: string;
-  vmCluster: string;
-  allowInternationalDialing: string;
-  extensionLength: string;
-  voicemailPilotNumberGenerated: string;
-  emergencyCallBackNumber: EmergencyCallBackNumber;
+  public uuid: string;
+  public siteIndex: string;
+  public siteCode: string;
+  public steeringDigit: string;
+  public siteSteeringDigit: string;
+  public timeZone: string;
+  public voicemailPilotNumber: string;
+  public mediaTraversalMode: string;
+  public siteDescription: string;
+  public vmCluster: string;
+  public allowInternationalDialing: string;
+  public extensionLength: string;
+  public voicemailPilotNumberGenerated: string;
+  public emergencyCallBackNumber: EmergencyCallBackNumber;
 }
 
 interface ISiteResource extends ng.resource.IResourceClass<ng.resource.IResource<Site>> {}
@@ -65,6 +65,6 @@ export class HuronSiteService {
       return _.map(sites, (site) => {
         return _.pick(site, this.sitePickList);
       });
-    })
+    });
   }
 }

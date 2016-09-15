@@ -1,25 +1,25 @@
 export const LINE_CHANGE = 'LINE_CHANGE';
 
-export class Number {
-  uuid: string;
-  primary: boolean = false;
-  internal: string;
-  external: string;
-  siteToSite: string;
-  incomingCallMaximum: number = 2;
-};
+export class Line {
+  public uuid: string;
+  public primary: boolean = false;
+  public internal: string;
+  public external: string;
+  public siteToSite: string;
+  public incomingCallMaximum: number = 2;
+}
 
-interface INumberResource extends ng.resource.IResourceClass<ng.resource.IResource<Number>> {
-  update: ng.resource.IResourceMethod<ng.resource.IResource<Number>>;
+interface ILineResource extends ng.resource.IResourceClass<ng.resource.IResource<Line>> {
+  update: ng.resource.IResourceMethod<ng.resource.IResource<Line>>;
 }
 
 export class LineConsumerType {
-  static USERS = 'users';
-  static PLACES = 'places';
+  public static USERS = 'users';
+  public static PLACES = 'places';
 }
 
 export class LineService {
-  private lineService: INumberResource;
+  private lineService: ILineResource;
 
   /* @ngInject */
   constructor(
@@ -30,23 +30,23 @@ export class LineService {
 
     let updateAction: ng.resource.IActionDescriptor = {
       method: 'PUT',
-    }
+    };
 
     let saveAction: ng.resource.IActionDescriptor = {
       method: 'POST',
       headers: {
-        'Access-Control-Expose-Headers': 'Location'
+        'Access-Control-Expose-Headers': 'Location',
       },
     };
 
-    this.lineService = <INumberResource>$resource(HuronConfig.getCmiV2Url() + '/customers/:customerId/:type/:typeId/numbers/:numberId', {},
+    this.lineService = <ILineResource>$resource(HuronConfig.getCmiV2Url() + '/customers/:customerId/:type/:typeId/numbers/:numberId', {},
       {
         update: updateAction,
         save: saveAction,
       });
   }
 
-  public getLine(type: LineConsumerType, typeId: string, numberId: string): ng.IPromise<Number> {
+  public getLine(type: LineConsumerType, typeId: string, numberId: string): ng.IPromise<Line> {
     return this.lineService.get({
       customerId: this.Authinfo.getOrgId(),
       type: type,
@@ -55,18 +55,18 @@ export class LineService {
     }).$promise;
   }
 
-  public getLineList(type: LineConsumerType, typeId: string): ng.IPromise<Number[]> {
+  public getLineList(type: LineConsumerType, typeId: string): ng.IPromise<Line[]> {
     return this.lineService.get({
       customerId: this.Authinfo.getOrgId(),
       type: type,
       typeId: typeId,
     }).$promise
     .then(lineList => {
-      return _.get<Number[]>(lineList, 'numbers', []);
+      return _.get<Line[]>(lineList, 'numbers', []);
     });
   }
 
-  public createLine(type: LineConsumerType, typeId: string, data: Number): ng.IPromise<string> {
+  public createLine(type: LineConsumerType, typeId: string, data: Line): ng.IPromise<string> {
     let location: string;
     return this.lineService.save({
       customerId: this.Authinfo.getOrgId(),
@@ -82,7 +82,7 @@ export class LineService {
     .then( () => location);
   }
 
-  public updateLine(type: LineConsumerType, typeId: string, numberId: string, data: Number): ng.IPromise<Number> {
+  public updateLine(type: LineConsumerType, typeId: string, numberId: string, data: Line): ng.IPromise<Line> {
     return this.lineService.update({
       customerId: this.Authinfo.getOrgId(),
       type: type,
@@ -101,7 +101,7 @@ export class LineService {
       type: type,
       typeId: typeId,
       numberId: numberId,
-    }).$promise
+    }).$promise;
   }
 
 }

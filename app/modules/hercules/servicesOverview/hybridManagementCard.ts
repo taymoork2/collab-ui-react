@@ -1,38 +1,38 @@
 import { ServicesOverviewHybridCard } from './ServicesOverviewHybridCard';
-import { CardButton, CardType } from './ServicesOverviewCard';
+import { ICardButton, CardType } from './ServicesOverviewCard';
 
 export class ServicesOverviewHybridManagementCard extends ServicesOverviewHybridCard {
-  getShowMoreButton():CardButton {
+  public getShowMoreButton(): ICardButton {
     return undefined;
   }
 
-  private _setupButton:CardButton = {
+  private _setupButton: ICardButton = {
     name: 'servicesOverview.genericButtons.setup',
     link: 'services/expressway-management',
-    buttonClass: 'btn'
+    buttonClass: 'btn',
   };
 
-  private _buttons:Array<CardButton> = [
+  private _buttons: Array<ICardButton> = [
     {
       name: 'servicesOverview.cards.hybridManagement.buttons.resources',
       link: 'services/expressway-management',
-      buttonClass: 'btn-link'
+      buttonClass: 'btn-link',
     },
     {
       name: 'servicesOverview.cards.hybridManagement.buttons.settings',
       link: 'services/expressway-management/settings',
-      buttonClass: 'btn-link'
-    }
+      buttonClass: 'btn-link',
+    },
   ];
 
-  getButtons():Array<CardButton> {
+  public getButtons(): Array<ICardButton> {
     if (this.active) {
       return _.take(this._buttons, 3);
     }
     return [this._setupButton];
   }
 
-  public f410FeatureEventHandler(hasFeature:boolean) {
+  public f410FeatureEventHandler(hasFeature: boolean) {
     this._display = !hasFeature;
   }
 
@@ -43,7 +43,7 @@ export class ServicesOverviewHybridManagementCard extends ServicesOverviewHybrid
       activeServices: ['squared-fusion-cal', 'squared-fusion-uc', 'squared-fusion-media'],
       statusService: 'squared-fusion-mgmt',
       statusLink: 'services/expressway-management',
-      cardClass: '', cardType: CardType.hybrid
+      cardClass: '', cardType: CardType.hybrid,
     });
   }
 }

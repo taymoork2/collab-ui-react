@@ -10,7 +10,7 @@ export default angular
   .module('huron.caller-id', [
     'atlas.templates',
     'cisco.ui',
-    'pascalprecht.translate'
+    'pascalprecht.translate',
   ])
   .component('ucCallerId', new CallerIdComponent())
   .name;

@@ -6,7 +6,7 @@
     .controller('CustomerOverviewCtrl', CustomerOverviewCtrl);
 
   /* @ngInject */
-  function CustomerOverviewCtrl($q, $state, $stateParams, $translate, $window, $modal, Authinfo, BrandService, Config, FeatureToggleService, identityCustomer, Log, newCustomerViewToggle, Notification, Orgservice, PartnerService, TrialService) {
+  function CustomerOverviewCtrl($modal, $q, $state, $stateParams, $translate, $window, Authinfo, BrandService, Config, FeatureToggleService, identityCustomer, Log, newCustomerViewToggle, Notification, Orgservice, PartnerService, TrialService) {
     var vm = this;
 
     vm.currentCustomer = $stateParams.currentCustomer;
@@ -23,6 +23,9 @@
     vm.isOwnOrg = isOwnOrg;
     vm.deleteTestOrg = deleteTestOrg;
     vm.isPartnerCreator = isPartnerCreator;
+    vm.hasSubviews = hasSubviews;
+    vm.hasSubview = hasSubview;
+    vm.goToSubview = goToSubview;
 
     vm.uuid = '';
     vm.logoOverride = false;
@@ -41,7 +44,6 @@
     vm.currentAdminId = Authinfo.getUserId();
 
     vm.freeOrPaidServices = null;
-    vm.hasMeeting = false;
 
     vm.newCustomerViewToggle = newCustomerViewToggle;
 
@@ -65,9 +67,6 @@
       vm.offer = vm.currentCustomer.offer = _.get(licAndOffers, 'offer');
       if (vm.newCustomerViewToggle) {
         vm.freeOrPaidServices = PartnerService.getFreeOrActiveServices(vm.currentCustomer, isCareEnabled);
-        vm.hasMeeting = _.some(vm.freeOrPaidServices, {
-          isMeeting: true
-        });
       }
     }
 
@@ -189,6 +188,30 @@
           });
           return false;
         });
+    }
+
+    function hasSubviews(services) {
+      return _.some(services, function (service) {
+        return hasSubview(service);
+      });
+    }
+
+    function hasSubview(service) {
+      var hasWebexOrMultMeeting = (service.hasWebex === true || service.isMeeting);
+      var hasCallDetail = isSquaredUC() && (service.isCall === true);
+      if (!newCustomerViewToggle) {
+        return false;
+      } else {
+        return (hasCallDetail || hasWebexOrMultMeeting);
+      }
+    }
+
+    function goToSubview(service) {
+      if (service.hasWebex || service.isMeeting) {
+        $state.go('customer-overview.meetingDetail', { meetingLicenses: service.sub });
+      } else if (service.isCall) {
+        $state.go('customer-overview.externalNumberDetail', {});
+      }
     }
 
     function getIsSetupDone() {
