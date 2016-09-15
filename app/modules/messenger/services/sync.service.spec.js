@@ -13,129 +13,44 @@
       });
     });
 
-    it('should default to sync mode disabled', function () {
-      service.isSyncEnabled()
-        .then(function (result) {
-          expect(result).toBe(false);
-        }, function (errorMsg) {
-          fail(errorMsg);
-        });
-    });
+    it('check defaults after getSyncStatus()', function () {
+      expect(service.getSimplifiedStatus().isSyncEnabled).toEqual(false);
+      expect(service.getSimplifiedStatus().isMessengerSyncRawMode).toEqual(true);
+      expect(service.getSimplifiedStatus().isAuthRedirect).toEqual(false);
 
-    it('should default to Messenger sync mode', function () {
-      service.isMessengerSync()
-        .then(function (result) {
-          expect(result).toBe(true);
-        }, function (errorMsg) {
-          fail(errorMsg);
-        });
-
-      service.isDirSync()
-        .then(function (result) {
-          expect(result).toBe(false);
-        }, function (errorMsg) {
-          fail(errorMsg);
-        });
+      expect(service.getNewDataFormat()).toEqual(false);
+      expect(service.getSimplifiedStatus().isPwdSync).toEqual(true);
+      expect(service.getSimplifiedStatus().isSparkEnt).toEqual(true);
+      expect(service.getSimplifiedStatus().isUsrDis).toEqual(true);
+      expect(service.getNewDirSyncFlag()).toEqual(false);
     });
 
     it('should tell if org is in Messenger Sync mode ON', function () {
       service.setMessengerSyncMode(true);
 
-      service.isSyncEnabled()
-        .then(function (result) {
-          expect(result).toBe(true);
-        }, function (errorMsg) {
-          fail(errorMsg);
-        });
-
-      service.isMessengerSync()
-        .then(function (result) {
-          expect(result).toBe(true);
-        }, function (errorMsg) {
-          fail(errorMsg);
-        });
-
-      service.isDirSync()
-        .then(function (result) {
-          expect(result).toBe(false);
-        }, function (errorMsg) {
-          fail(errorMsg);
-        });
+      expect(service.getSimplifiedStatus().isSyncEnabled).toEqual(true);
+      expect(service.getSimplifiedStatus().isMessengerSyncRawMode).toEqual(true);
     });
 
     it('should tell if org is in DirSync mode ON', function () {
       service.setDirSyncMode(true);
 
-      service.isSyncEnabled()
-        .then(function (result) {
-          expect(result).toBe(true);
-        }, function (errorMsg) {
-          fail(errorMsg);
-        });
-
-      service.isMessengerSync()
-        .then(function (result) {
-          expect(result).toBe(false);
-        }, function (errorMsg) {
-          fail(errorMsg);
-        });
-
-      service.isDirSync()
-        .then(function (result) {
-          expect(result).toBe(true);
-        }, function (errorMsg) {
-          fail(errorMsg);
-        });
+      expect(service.getSimplifiedStatus().isSyncEnabled).toEqual(true);
+      expect(service.getSimplifiedStatus().isMessengerSyncRawMode).toEqual(false);
     });
 
     it('should tell if org is in Messenger Sync mode OFF', function () {
       service.setMessengerSyncMode(false);
 
-      service.isSyncEnabled()
-        .then(function (result) {
-          expect(result).toBe(false);
-        }, function (errorMsg) {
-          fail(errorMsg);
-        });
-
-      service.isMessengerSync()
-        .then(function (result) {
-          expect(result).toBe(true);
-        }, function (errorMsg) {
-          fail(errorMsg);
-        });
-
-      service.isDirSync()
-        .then(function (result) {
-          expect(result).toBe(false);
-        }, function (errorMsg) {
-          fail(errorMsg);
-        });
+      expect(service.getSimplifiedStatus().isSyncEnabled).toEqual(false);
+      expect(service.getSimplifiedStatus().isMessengerSyncRawMode).toEqual(true);
     });
 
     it('should tell if org is in DirSync mode OFF', function () {
       service.setDirSyncMode(false);
 
-      service.isSyncEnabled()
-        .then(function (result) {
-          expect(result).toBe(false);
-        }, function (errorMsg) {
-          fail(errorMsg);
-        });
-
-      service.isMessengerSync()
-        .then(function (result) {
-          expect(result).toBe(false);
-        }, function (errorMsg) {
-          fail(errorMsg);
-        });
-
-      service.isDirSync()
-        .then(function (result) {
-          expect(result).toBe(true);
-        }, function (errorMsg) {
-          fail(errorMsg);
-        });
+      expect(service.getSimplifiedStatus().isSyncEnabled).toEqual(false);
+      expect(service.getSimplifiedStatus().isMessengerSyncRawMode).toEqual(false);
     });
 
     it('check old data format parsing : sync enabled', function () {
