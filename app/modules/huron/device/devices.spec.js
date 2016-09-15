@@ -133,4 +133,35 @@ describe('Controller: DevicesCtrlHuron', function () {
       expect(controller.showGenerateOtpButton).toBeFalsy();
     });
   });
+
+  describe('resetCode() method', function () {
+    beforeEach(function () {
+      $stateParams.currentUser.meta = { organizationID: 'as,jdf' };
+    });
+
+    describe('and otp failure', function () {
+      beforeEach(function () {
+        spyOn(OtpService, 'generateOtp').and.returnValue($q.reject({ statusText: 'ijihu' }));
+        spyOn($state, 'go');
+        controller.resetCode();
+        $scope.$apply();
+      });
+      it('on failure should not the wizarState with activation code from  OtpService ', function () {
+        expect($state.go.calls.count()).toEqual(0);
+      });
+    });
+
+    describe('otp succes', function () {
+      beforeEach(function () {
+        spyOn(OtpService, 'generateOtp').and.returnValue($q.when({ code: 'code1' }));
+        spyOn($state, 'go');
+        controller.resetCode();
+        $scope.$apply();
+      });
+      it('on success should set the wizarState with activation code from  OtpService ', function () {
+        expect($state.go).toHaveBeenCalled();
+        expect($state.go.calls.mostRecent().args[1].wizard.state().data.code.code).toEqual('code1');
+      });
+    });
+  });
 });
