@@ -4,38 +4,39 @@ describe('Component: directoryNumberList', () => {
 
   describe('Line Display: numbers listed correctly', () => {
 
-  let directoryNumbers: Line[] = [
-   {
-      uuid: '6d3f07a6-f868-4ae7-990d-286ce033834d',
-      internal: '2329',
-      external: '',
-      siteToSite: '71002329',
-      incomingCallMaximum: 2,
-      primary: true,
-   },
-   {
-      uuid: '35fb962b-824c-44f3-9e13-2ed171e69249',
-      internal: '5015',
-      external: '7100XXXX',
-      siteToSite: '71005015',
-      incomingCallMaximum: 8,
-      primary: false,
-   },
-];
+    let directoryNumbers: Line[] = [
+      {
+        uuid: '6d3f07a6-f868-4ae7-990d-286ce033834d',
+        internal: '2329',
+        external: '',
+        siteToSite: '71002329',
+        incomingCallMaximum: 2,
+        primary: true,
+      },
+      {
+        uuid: '35fb962b-824c-44f3-9e13-2ed171e69249',
+        internal: '5015',
+        external: '7100XXXX',
+        siteToSite: '71005015',
+        incomingCallMaximum: 8,
+        primary: false,
+      },
+    ];
 
-  beforeEach(function() {
-    this.initModules('Huron');
-    this.injectDependencies('$scope');
-    this.$scope.directoryNumbers = directoryNumbers;
-    this.compileComponent('directoryNumberList', {
-      directoryNumbers: 'directoryNumbers',
-      directoryNumberSref: 'test.state',
+    beforeEach(function () {
+      this.initModules('Huron');
+      this.injectDependencies('$scope');
+      this.$scope.directoryNumbers = directoryNumbers;
+      this.compileComponent('directoryNumberList', {
+        directoryNumbers: 'directoryNumbers',
+        directoryNumberSref: 'test.state',
+      });
     });
 
     it('should expose a `directoryNumbers` object', function () {
       expect(this.controller.directoryNumbers).toBeDefined();
       expect(this.controller.directoryNumbers.length).toBeGreaterThan(0);
-      expect(this.controller.directoryNumbers[0].pattern).toBe('2329');
+      expect(this.controller.directoryNumbers[0].internal).toBe('2329');
     });
 
     it('should create directory number link with usage type', function () {
@@ -57,49 +58,55 @@ describe('Component: directoryNumberList', () => {
 
   describe('Line Display: show more, less lines', () => {
 
-    let directoryNumbers: IDirectoryNumber[] = [
+    let directoryNumbers: Line[] = [
       {
-        "dnUsage": "Primary",
-        "uuid": "6d3f07a6-f868-4ae7-990d-286ce033834d",
-        "pattern": "2329",
-        "userDnUuid": "e67db8f7-4193-4b29-aa67-9a1096c2d87f",
-        "dnSharedUsage": "Primary"
+        uuid: '6d3f07a6-f868-4ae7-990d-286ce033834d',
+        internal: '2329',
+        external: '',
+        siteToSite: '71002329',
+        incomingCallMaximum: 2,
+        primary: true,
       },
       {
-        "dnUsage": "",
-        "uuid": "35fb962b-824c-44f3-9e13-2ed171e69249",
-        "pattern": "5015",
-        "userDnUuid": "374dc685-6be9-458e-b7f9-4ffb769662db",
-        "dnSharedUsage": ""
+        uuid: '35fb962b-824c-44f3-9e13-2ed171e69249',
+        internal: '5015',
+        external: '7100XXXX',
+        siteToSite: '71005015',
+        incomingCallMaximum: 8,
+        primary: false,
       },
       {
-        "dnUsage": "",
-        "uuid": "35fb962b-824c-44f3-9e13-2ed171e69248",
-        "pattern": "5016",
-        "userDnUuid": "374dc685-6be9-458e-b7f9-4ffb769652db",
-        "dnSharedUsage": ""
+        uuid: '35fb962b-824c-44f3-9e13-2ed171e69248',
+        internal: '5016',
+        external: '7100XXXX',
+        siteToSite: '71005016',
+        incomingCallMaximum: 8,
+        primary: false,
       },
       {
-        "dnUsage": "",
-        "uuid": "35fb962b-824c-44f3-9e13-2ed171e69247",
-        "pattern": "5017",
-        "userDnUuid": "374dc685-6be9-458e-b7f9-4ffb769642db",
-        "dnSharedUsage": ""
+        uuid: '35fb962b-824c-44f3-9e13-2ed171e69247',
+        internal: '5017',
+        external: '7100XXXX',
+        siteToSite: '71005017',
+        incomingCallMaximum: 8,
+        primary: false,
       },
       {
-        "dnUsage": "",
-        "uuid": "35fb962b-824c-44f3-9e13-2ed171e69246",
-        "pattern": "5018",
-        "userDnUuid": "374dc685-6be9-458e-b7f9-4ffb769632db",
-        "dnSharedUsage": ""
+        uuid: '35fb962b-824c-44f3-9e13-2ed171e69246',
+        internal: '5018',
+        external: '7100XXXX',
+        siteToSite: '71005018',
+        incomingCallMaximum: 8,
+        primary: false,
       },
       {
-        "dnUsage": "",
-        "uuid": "35fb962b-824c-44f3-9e13-2ed171e69245",
-        "pattern": "5019",
-        "userDnUuid": "374dc685-6be9-458e-b7f9-4ffb769622db",
-        "dnSharedUsage": ""
-      }
+        uuid: '35fb962b-824c-44f3-9e13-2ed171e69245',
+        internal: '5019',
+        external: '7100XXXX',
+        siteToSite: '71005019',
+        incomingCallMaximum: 8,
+        primary: false,
+      },
     ];
 
     beforeEach(function () {
@@ -109,6 +116,7 @@ describe('Component: directoryNumberList', () => {
       this.compileComponent('directoryNumberList', {
         directoryNumbers: 'directoryNumbers',
         directoryNumberSref: 'test.state',
+        lineThreshold: 5,
       });
     });
 
