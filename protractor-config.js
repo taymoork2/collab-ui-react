@@ -77,7 +77,6 @@ exports.config = {
 
   onPrepare: function () {
     global._ = require('lodash');
-	    
     browser.ignoreSynchronization = true;
 
     global.isSauce = !!(process.env.SAUCE_USERNAME && process.env.SAUCE_USERNAME.length > 0);

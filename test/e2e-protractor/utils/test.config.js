@@ -101,7 +101,7 @@ exports.getAutoAttendantsUrl = function (customerUuid) {
 
 // queue URL
 exports.getAutoAttendantQueueUrl = function (customerUuid) {
-  return this.cesUrl.integration + 'customers/' + customerUuid + '/queues' + '/420f-b49a-ee9db0c7b61c';
+  return this.cesUrl.integration + 'customers/' + customerUuid + '/queues/420f-b49a-ee9db0c7b61c';
 };
 
 

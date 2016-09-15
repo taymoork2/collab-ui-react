@@ -4,11 +4,7 @@
 
 describe('Huron Auto Attendant', function () {
 
-  var initialIgnoreSync = true;
-
   beforeAll(function () {
-
-    initialIgnoreSync = browser.ignoreSynchronization;
 
     login.login('aa-admin');
 

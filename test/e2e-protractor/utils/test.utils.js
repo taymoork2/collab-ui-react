@@ -121,7 +121,7 @@ exports.scrollBottom = function (selector) {
 };
 
 exports.scrollIntoView = function (el) {
-	browser.executeScript('arguments[0].scrollIntoView()', el.getWebElement());
+  browser.executeScript('arguments[0].scrollIntoView()', el.getWebElement());
 };
 
 exports.refresh = function () {
