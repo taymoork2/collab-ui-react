@@ -10,18 +10,18 @@ import { PrivacySetting } from './privacySection/privacySettings.component';
 
 export class SettingsCtrl {
 
-  public security:SettingSection;
-  public privacy:SettingSection;
-  public domains:SettingSection;
-  public sipDomain:SettingSection;
-  public authentication:SettingSection;
-  public branding:SettingSection;
-  public support:SettingSection;
-  public retention:SettingSection;
+  public security: SettingSection;
+  public privacy: SettingSection;
+  public domains: SettingSection;
+  public sipDomain: SettingSection;
+  public authentication: SettingSection;
+  public branding: SettingSection;
+  public support: SettingSection;
+  public retention: SettingSection;
 
   /* @ngInject */
   constructor($state, private Authinfo, private Orgservice, private FeatureToggleService, private hasFeatureToggle) {
-    if(!hasFeatureToggle) {
+    if (!hasFeatureToggle) {
       $state.go('login');
     }
     // provide these settings to everyone
@@ -29,7 +29,7 @@ export class SettingsCtrl {
     this.support = new SupportSetting();
 
     // if they are not a partner, provide everything else
-    if(!this.Authinfo.isPartner()) {
+    if (!this.Authinfo.isPartner()) {
       this.initSecurity();
       this.authentication = new AuthenticationSetting();
       this.domains = new DomainsSetting();
@@ -40,15 +40,15 @@ export class SettingsCtrl {
   }
 
   private initBranding() {
-    if(this.Authinfo.isPartner()) {
+    if (this.Authinfo.isPartner()) {
       this.FeatureToggleService.atlasBrandingWordingChangeGetStatus().then(() => {
         // this is done to prevent flashing between the two branding templates,
         // it will be revealed after toggle is resolved
         this.branding = new BrandingSetting();
       });
-    } else if(this.Authinfo.isDirectCustomer()) {
+    } else if (this.Authinfo.isDirectCustomer()) {
       this.branding = new BrandingSetting();
-    } else if(this.Authinfo.isCustomerAdmin()) {
+    } else if (this.Authinfo.isCustomerAdmin()) {
       this.Orgservice.getOrg(_.noop).then(response => {
         if (_.get(response, 'data.orgSettings.allowCustomerLogos')) {
           this.branding = new BrandingSetting();

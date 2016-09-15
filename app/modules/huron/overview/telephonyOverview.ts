@@ -7,6 +7,6 @@ namespace telephony {
   .module('Core')
   .component('telephonyOverview', {
     templateUrl: 'modules/huron/overview/telephonyOverview.tpl.html',
-    controller: TelephonyOverviewCtrl
+    controller: TelephonyOverviewCtrl,
   });
 }

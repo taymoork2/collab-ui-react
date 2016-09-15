@@ -1537,8 +1537,9 @@
             // version that supports route to component natively
             templateProvider: /* @ngInject */ function ($stateParams) {
               var ownerId = _.get($stateParams.currentPlace, 'cisUuid');
+              var ownerName = _.get($stateParams.currentPlace, 'displayName');
               var numberId = $stateParams.numberId;
-              return '<line-overview owner-type="place" owner-id="' + ownerId + '" number-id="' + numberId + '"></line-overview>';
+              return '<uc-line-overview owner-type="place" owner-name="' + ownerName + '" owner-id="' + ownerId + '" number-id="' + numberId + '"></line-overview>';
             },
             params: {
               numberId: '',
@@ -1719,7 +1720,7 @@
             templateUrl: 'modules/core/customers/customerSubscriptions/CustomerSubscriptionsDetail.tpl.html',
             resolve: {
               data: /* @ngInject */ function ($state, $translate) {
-                $state.get('customer-overview.customerSubscriptions').data.displayName = $translate.instant('customerPage.subscriptions');
+                $state.get('customer-overview.customerSubscriptions').data.displayName = $translate.instant('customerPage.orderRequest');
               }
             }
           })
@@ -1744,6 +1745,18 @@
             resolve: {
               data: /* @ngInject */ function ($state, $translate) {
                 $state.get('customer-overview.meetingDetail').data.displayName = $translate.instant('customerPage.meetingLicenses');
+              }
+            },
+            data: {},
+            params: {
+              meetingLicenses: {}
+            }
+          })
+          .state('customer-overview.externalNumberDetail', {
+            templateUrl: 'modules/core/customers/customerOverview/externalNumberDetail.tpl.html',
+            resolve: {
+              data: /* @ngInject */ function ($state, $translate) {
+                $state.get('customer-overview.externalNumberDetail').data.displayName = $translate.instant('customerPage.call');
               }
             },
             data: {},
