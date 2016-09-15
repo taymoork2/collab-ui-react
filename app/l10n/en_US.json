@@ -3095,7 +3095,8 @@
     "expiredAccountsFilter": "Expired Accounts ({{count}})",
     "orderRequest": "Order Request",
     "subscriptions": "Subscriptions",
-    "viewSubscriptionInfo": "View Subscription Info"
+    "viewSubscriptionInfo": "View Subscription Info",
+    "noAccountInfo": "No account information available for this organization. This is most likely due to accessing an Integration server based organization on a Production server.  Please verify that this organization exists on the server you are using."
   },
   "customerAdminPanel": {
     "addAdministrators": "Add Administrators",
