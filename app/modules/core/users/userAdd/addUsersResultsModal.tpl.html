@@ -14,10 +14,8 @@
 </div>
 
 <div class="modal-footer">
-  <button ng-if="!convertUsersFlow" type="button" id="btnOnboard" cs-btn loading="btnOnboardLoading" class="btn btn--primary" ng-click="goToUsersPage()">
-    <span translate="{{skipErrorsOrFinish()}}"></span>
+  <button ng-if="!convertUsersFlow" type="button" id="btnOnboard" cs-btn loading="btnOnboardLoading" class="btn btn--primary" ng-click="goToUsersPage()" translate="{{skipErrorsOrFinish()}}">
   </button>
-  <button ng-if="convertUsersFlow" type="button" id="btnOnboard" class="btn btn--primary" ng-click="$dismiss()">
-    <span translate="common.finish"></span>
+  <button ng-if="convertUsersFlow" type="button" id="btnOnboard" class="btn btn--primary" ng-click="$dismiss()" translate="common.finish">
   </button>
 </div>
