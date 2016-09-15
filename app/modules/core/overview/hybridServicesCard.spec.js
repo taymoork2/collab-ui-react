@@ -71,8 +71,8 @@ describe('OverviewHybridServicesCard', function () {
     var card = OverviewHybridServicesCard.createCard();
     $rootScope.$apply();
 
-    expect(card.serviceList[1].setup).toBe(true);
-    expect(card.serviceList[2].setup).toBe(false);
+    expect(card.serviceList[0].setup).toBe(true);
+    expect(card.serviceList[1].setup).toBe(false);
   });
 
 });
