@@ -8,6 +8,7 @@ class DirectoryNumberListCtrl implements ng.IComponentController {
   private primaryLabel: string;
 
   public numberOfLines: number=5;
+  public directoryNumbers: Array<Object>;
 
   constructor(
     private $translate: ng.translate.ITranslateService
