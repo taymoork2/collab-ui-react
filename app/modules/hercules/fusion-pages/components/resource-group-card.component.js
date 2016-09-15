@@ -13,11 +13,11 @@
     });
 
   /* @ngInject */
-  function ResourceGroupCardController($modal) {
+  function ResourceGroupCardController($state) {
     var ctrl = this;
 
     ctrl.showDetails = false;
-    ctrl.openAddClusterModal = openAddClusterModal;
+    ctrl.openResourceGroupSettings = openResourceGroupSettings;
     ctrl.toggleDetails = toggleDetails;
     ctrl.showWarningText = showWarningText;
     ctrl.$onChanges = $onChanges;
@@ -32,19 +32,8 @@
       }
     }
 
-    function openAddClusterModal() {
-      $modal.open({
-        resolve: {
-          resourceGroup: function () {
-            return ctrl.group;
-          }
-        },
-        controller: 'AssignClustersController',
-        controllerAs: 'vm',
-        templateUrl: 'modules/hercules/fusion-pages/resource-group-settings/assign-clusters.html',
-        type: 'small'
-      }).result
-      .then(ctrl.onChange);
+    function openResourceGroupSettings() {
+      $state.go('resource-group-settings', { id: ctrl.group.id });
     }
 
     function showWarningText() {

@@ -11,15 +11,11 @@
       <a ui-sref="resource-group-settings({id: $ctrl.group.id})" class="resource-group-settings-link"><i class="icon icon-settings"></i></a>
     </header>
     <section ng-show="$ctrl.showDetails">
-      <div class="resource-group-banner">
-        <div class="resource-group-banner-message">
-          <span ng-if="$ctrl.showWarningText()" translate="hercules.fusion.list.complete-setup"></span>
+      <div class="resource-group-banner" ng-if="$ctrl.showWarningText()">
+        <div class="resource-group-banner-message" translate="hercules.fusion.list.missing-clusters" translate-value-onclick="$ctrl.openResourceGroupSettings()" translate-compile>
         </div>
-        <button class="resource-group-banner-link" ng-click="$ctrl.openAddClusterModal()" translate="hercules.fusion.list.add-clusters"></button>
       </div>
-      <div class="resource-group-empty" ng-if="$ctrl.group.clusters.length === 0">
-        <p translate="hercules.fusion.list.empty-group-list"></p>
-      </div>
+      <div class="resource-group-empty" ng-if="$ctrl.group.clusters.length === 0"></div>
       <cs-card-layout block-view="true" ng-if="$ctrl.group.clusters.length > 0">
         <cluster-card ng-repeat="cluster in $ctrl.group.clusters" cluster="cluster"></cluster-card>
       </cs-card-layout>

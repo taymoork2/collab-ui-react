@@ -1756,12 +1756,10 @@
         "all": "All",
         "add-resource": "Add Resource",
         "add-resource-group": "Create new resource group",
-        "add-clusters": "Add Clusters",
         "expressway": "Expressway",
         "mediafusion": "Media",
         "no-services": "No services",
-        "complete-setup": "Complete Resource Group setup",
-        "empty-group-list": "This Resource Group is empty"
+        "missing-clusters": "<a ng-click=\"{{onclick}}\">Assign clusters</a> to complete this group"
       },
       "add-resource": {
         "title": "Add Resource",
