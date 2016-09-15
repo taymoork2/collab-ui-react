@@ -32,7 +32,7 @@ var AutoAttendantPage = function () {
   this.testImportCardDelete = this.testImportCardName.element(by.xpath('ancestor::article')).element(by.css('.icon-trash'));
   this.aaCard = element(by.css('.card-body'));
 
-  this.deleteModalConfirmText = element(by.css('.modal-body')).element(by.css('span'));
+  this.deleteModalConfirmText = element(by.css('.modal-body')).element(by.css('p'));
 
   this.deleteModalConfirmButton = element(by.id('deleteFeature'));
 
@@ -43,7 +43,7 @@ var AutoAttendantPage = function () {
 
   this.messageOptions = element(by.css('div.aa-panel-body[name="Say Message"]')).element(by.css('select[name="messageSelect"] + div a.select-toggle'));
   this.playMessageOption = element(by.css('div.aa-panel-body[name="Say Message"]')).element(by.css('select[name="messageSelect"] + div div.dropdown-menu')).all(by.tagName('li')).first();
-  this.mediaUploadSend = ('input[type="file"][ng-model="files"][name="mediaUploadSend"]');
+  this.mediaUploadSend = ('input[type="file"][name="mediaUploadSend"]');
   this.mediaFileToUpload = '../data/sample-media-upload.wav';
 
   this.sayMessage = element(by.css('div.aa-panel-body[name="Say Message"]'));

@@ -76,6 +76,10 @@ module.exports = csp({
       '\'unsafe-inline\'',
       // Webpack Dev
       'blob:',
+    ],
+    mediaSrc: [
+      '\'self\'',
+      'blob:'
     ]
   }
 });

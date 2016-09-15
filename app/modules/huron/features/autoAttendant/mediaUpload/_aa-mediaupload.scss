@@ -7,7 +7,7 @@
     @include vr-spacing(pb, .75);
     @include vr-spacing(pl, .75);
     @include vr-spacing(pr, .75);
-    width: 100%;
+    width: 27rem;
     height: 8rem;
     background-color: $brand-white;
     border: 1px solid $gray-light;
@@ -23,20 +23,64 @@
       border-color: $brand-primary;
     }
 
-    &.dragover-error {
-      border-color: $brand-danger;
-    }
-
     .icon-upload-contain {
       font-size: 2.5rem;
       color: $color-primary-base;
     }
 
-    .progress-supplementary {
-      @include vr-spacing(mv, .5);
-      @include vr-spacing(mr, .5);
-      color: $gray-dark-4;
+    .small-center {
+      font-size: .75rem;
+      max-width: 18.75rem;
+      margin-left: 25%;
+      width: 50%;
     }
+  }
+
+  .box {
+    display: inline-block;
+    @include vr-spacing(mb, 1);
+    @include vr-spacing(pt, .75);
+    @include vr-spacing(pb, .75);
+    @include vr-spacing(pl, .75);
+    @include vr-spacing(pr, .75);
+    width: 27rem;
+    height: 8rem;
+    background-color: $brand-white;
+    border: 1px solid $gray-light;
+    border-radius: 3px;
+    color: $gray-light;
+
+    .cancel-media {
+      margin-left: auto;
+      float: right;
+      clear: right;
+      margin-top: -2.25rem;
+      margin-right: -1rem;
+      width: 10%;
+      .cancel-media-icon {
+        @extend .icon;
+
+        @extend .icon-close;
+
+        color: $gray-light-2;
+        font-size: 1rem;
+
+        &:hover {
+          cursor: pointer;
+          color: $aa-builder-icon-click-color;
+        }
+      }
+    }
+
+    .progress-meta {
+      width: 90%;
+    }
+  }
+
+  .progress-supplementary {
+    @include vr-spacing(mv, .5);
+    @include vr-spacing(mr, .5);
+    color: $gray-dark-4;
   }
 
   .top-bottom {
@@ -51,11 +95,12 @@
     font-style: italic;
   }
 
-  .spread-light {
+  .gray-light {
     color: $gray-light-1;
+  }
+
+  .spread {
     line-height: 1.5rem;
-    font-size: .75rem;
-    max-width: 22rem;
   }
 
   .green {

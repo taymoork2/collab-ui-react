@@ -1,12 +1,14 @@
 <div class="aa-media-upload">
-  <div class="drop-box large-12 small-12 columns" ngf-drop="aaMediaUpload.upload($file)" ngf-select="aaMediaUpload.upload($file)" ng-model="aaSay.wavFile" ngf-drag-over-class="'dragover'" ng-multiple="false" name="mediaUploadSend">
-    <div ng-switch="aaMediaUpload.state">
-      <div ng-switch-when="WAIT" class="center">
-        <i class="icon icon-upload-contain"></i>
-        <div class="gray-light top-bottom" translate="autoAttendant.dragAndDropWav"></div>
-        <div class="gray-light" translate="autoAttendant.orClickToBrowse"></div>
+  <div ng-switch="aaMediaUpload.state">
+    <div ng-switch-when="WAIT" class="drop-box large-12 small-12 columns center" ngf-drop="aaMediaUpload.upload($file)" ngf-select="aaMediaUpload.upload($file)" ng-model="aaMediaUpload.wavFile" ngf-drag-over-class="'dragover'" ng-multiple="false" name="mediaUploadSend">
+      <div>
+        <span class="icon icon-upload-contain"></span>
+        <p>import</p>
       </div>
-      <div ng-switch-when="DOWNLOAD" class="progressbar-info">
+      <div class="small-center spread gray-light" translate="autoAttendant.dragAndDropWav"></div>
+    </div>
+    <div ng-switch-when="DOWNLOAD" class="large-12 small-12 columns progressbar-info box" name="mediaUploadSend">
+      <div class="progress-meta">
         <div class="progress-supplementary">
           <span ng-if="aaMediaUpload.progress < 100" translate="fileUpload.uploading"></span>
           <span ng-if="aaMediaUpload.progress == 100" translate="fileUpload.success"></span>
@@ -17,14 +19,22 @@
         <progressbar animate="false" value="aaMediaUpload.progress" type="success"></progressbar>
         <div class="progress-supplementary">{{ aaMediaUpload.uploadFile | limitTo: 22 }}{{ aaMediaUpload.uploadFile.length > 25 ? '...' : '' }}</div>
       </div>
-      <div ng-switch-when="UPLOADED" class="progress-supplementary">
-        <div class="spread-light" translate="autoAttendant.uploadedFile"></div>
+      <div class="cancel-media">
+        <a ng-click="aaMediaUpload.openModal(aaMediaUpload.dialogModalTypes.cancel)">
+          <span class="cancel-media-icon" aria-label="common.delete"></span>
+        </a>
+      </div>
+    </div>
+    <div ng-switch-when="UPLOADED" class="drop-box large-12 small-12 columns progress-supplementary" ngf-drop="aaMediaUpload.upload($file)" ngf-select="aaMediaUpload.upload($file)" ng-model="aaSay.wavFile" ngf-drag-over-class="'dragover'" ng-multiple="false" name="mediaUploadSend">
+      <div class="progress-meta">
+        <span class="spread gray-light" translate="autoAttendant.uploadedFile"></span>
         <div class="top-bottom">
           <span>{{ aaMediaUpload.uploadFile | limitTo: 22 }}{{ aaMediaUpload.uploadFile.length > 25 ? '...' : '' }}</span>
+          <span>{{ aaMediaUpload.uploadDuration }}</span>
           <span>{{ aaMediaUpload.uploadDate }}</span>
-          <div class="center italic top-bottom spread-light" translate="autoAttendant.callAssociatedAAPreview"></div>
         </div>
       </div>
+      <div class="center italic spread small-center gray-light" translate="autoAttendant.callAssociatedAAPreview"></div>
     </div>
   </div>
 </div>
