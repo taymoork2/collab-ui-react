@@ -62,10 +62,26 @@
 
       expect(response.headers[EXPOSE_HEADERS]).not.toContain(TRACKING_ID);
       expect(response.headers[EXPOSE_HEADERS]).toContain('Location');
+
+      response = TrackingIdInterceptor.request(buildRequestWithExistingHeaders('https://identity-fake.webex.com/identity/scim/<uuid>/v1/Users/me'));
+
+      expect(response.headers[EXPOSE_HEADERS]).not.toContain(TRACKING_ID);
+      expect(response.headers[EXPOSE_HEADERS]).toContain('Location');
+
+      response = TrackingIdInterceptor.request(buildRequestWithExistingHeaders('https://identitylabs12.webex.com/identity/scim/<uuid>/v1/Users/me'));
+
+      expect(response.headers[EXPOSE_HEADERS]).not.toContain(TRACKING_ID);
+      expect(response.headers[EXPOSE_HEADERS]).toContain('Location');
     });
 
     it('should add an Access-Control-Expose-Header header if on a whitelisted subdomain', function () {
       var response = TrackingIdInterceptor.request(buildRequestWithExistingHeaders('https://identity.webex.com/identity/scim/<uuid>/v1/Users/me'));
+
+      expect(response.headers[EXPOSE_HEADERS]).toContain(TRACKING_ID);
+      expect(response.headers[EXPOSE_HEADERS]).toContain('Location');
+
+      // regex specified in buildBlacklistedDomainWithWhitelistedSubdomainRegex will also match such a sub domain.
+      response = TrackingIdInterceptor.request(buildRequestWithExistingHeaders('https://identity.fake.webex.com/identity/scim/<uuid>/v1/Users/me'));
 
       expect(response.headers[EXPOSE_HEADERS]).toContain(TRACKING_ID);
       expect(response.headers[EXPOSE_HEADERS]).toContain('Location');

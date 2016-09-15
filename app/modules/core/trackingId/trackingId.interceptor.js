@@ -47,9 +47,9 @@
       }
       var regex = "^http?s://(?:";
       if (whitelistSubdomainArray.length) {
-        regex += "(?!" + whitelistSubdomainArray.join('|') + ")";
+        regex += "(?!" + whitelistSubdomainArray.join('|') + "\\.)";
       }
-      regex += ".*)" + blacklistDomain;
+      regex += ".*)" + blacklistDomain.replace(".", "\\.");
       return new RegExp(regex);
     }
 
