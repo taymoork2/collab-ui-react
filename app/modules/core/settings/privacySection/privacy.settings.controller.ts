@@ -1,7 +1,7 @@
 namespace globalsettings {
   export class PrivacySettingController {
-    private _allowReadOnlyAccess: boolean = undefined;
-    public disableAllowReadOnlyAccessCheckbox: boolean = true;
+    private _allowReadOnlyAccess:boolean = undefined;
+    disableAllowReadOnlyAccessCheckbox:boolean = true;
     private orgId;
     private _allowCrashLogUpload = false;
 
@@ -9,14 +9,14 @@ namespace globalsettings {
     constructor(private Orgservice, Authinfo, private Notification) {
       this.orgId = Authinfo.getOrgId();
 
-      Orgservice.getOrg((data) => {
-        this.orgDataLoaded(data);
+      Orgservice.getOrg((data)=> {
+        this.orgDataLoaded(data)
       }, this.orgId, false);
     }
 
-    public orgDataLoaded({ success: success = false, orgSettings: settings = undefined } = {
+    orgDataLoaded({success:success = false, orgSettings:settings = undefined}={
       success: false,
-      orgSettings: undefined,
+      orgSettings: undefined
     }) {
       if (success) {
         this.disableAllowReadOnlyAccessCheckbox = false;
@@ -35,37 +35,38 @@ namespace globalsettings {
       }
     }
 
-    get allowReadOnlyAccess(): boolean {
+    get allowReadOnlyAccess():boolean {
       return this._allowReadOnlyAccess;
     }
 
-    set allowReadOnlyAccess(value: boolean) {
+    set allowReadOnlyAccess(value:boolean) {
       this._allowReadOnlyAccess = value;
       this.updateAllowReadOnlyOrgAccess();
     }
 
-    get allowCrashLogUpload(): boolean {
+    get allowCrashLogUpload():boolean {
       return this._allowCrashLogUpload;
     }
 
-    set allowCrashLogUpload(value: boolean) {
+    set allowCrashLogUpload(value:boolean) {
       this._allowCrashLogUpload = value;
       this.updateAllowCrashLogUpload();
     }
 
-    public updateAllowReadOnlyOrgAccess() {
+    updateAllowReadOnlyOrgAccess() {
       let settings = {
         allowReadOnlyAccess: this.allowReadOnlyAccess,
       };
       this.updateOrgSettings(this.orgId, settings);
     }
 
-    public updateAllowCrashLogUpload() {
+    updateAllowCrashLogUpload() {
       let settings = {
         allowCrashLogUpload: this.allowCrashLogUpload,
       };
       this.updateOrgSettings(this.orgId, settings);
     }
+
 
     private updateOrgSettings(orgId, settings) {
       this.Orgservice.setOrgSettings(orgId, settings)
@@ -76,7 +77,7 @@ namespace globalsettings {
 
     private notifyError(response) {
       this.Notification.errorResponse(response, 'errors.statusError', {
-        status: response.status,
+        status: response.status
       });
     }
 

@@ -1,6 +1,11 @@
 import { DigitalRiverService } from './digitalRiver.service';
 
-class DigitalRiverIframe implements ng.IComponentController {
+interface IChangesObject {
+  iframeSrc: ng.IChangesObject;
+  iframeLoading: ng.IChangesObject;
+}
+
+class DigitalRiverIframe {
   public iframeLoading: boolean = true;
   public logoutLoading: boolean = true;
 
@@ -14,14 +19,13 @@ class DigitalRiverIframe implements ng.IComponentController {
     private DigitalRiverService: DigitalRiverService
   ) {}
 
-  public $onInit(): void {
+  private $onInit(): void {
     this.logoutUrl = this.$sce.trustAsResourceUrl(this.DigitalRiverService.getLogoutUrl());
   }
 
-  public $onChanges(changes: { [property: string]: ng.IChangesObject }): void {
-    let iframeSrcChange = changes['iframeSrc'];
-    if (iframeSrcChange && iframeSrcChange.currentValue) {
-      this.requestedUrl = this.$sce.trustAsResourceUrl(iframeSrcChange.currentValue);
+  private $onChanges(changes: IChangesObject): void {
+    if (changes.iframeSrc && changes.iframeSrc.currentValue) {
+      this.requestedUrl = this.$sce.trustAsResourceUrl(changes.iframeSrc.currentValue);
     }
   }
 }
@@ -29,7 +33,7 @@ class DigitalRiverIframe implements ng.IComponentController {
 export class DigitalRiverIframeComponent implements ng.IComponentOptions {
   public controller = DigitalRiverIframe;
   public templateUrl = 'modules/online/digitalRiver/digitalRiverIframe.html';
-  public bindings = <{ [bindings: string]: string }>{
+  public bindings: { [bindings: string]: string} = {
     iframeSrc: '<',
     iframeLoading: '<',
   };

@@ -62,8 +62,6 @@ describe('Controller: HuntGroupSetupAssistantCtrl - Fallback Destination', funct
     $q = _$q_;
     HuntGroupFallbackDataService = _HuntGroupFallbackDataService_;
 
-    spyOn(HuntGroupFallbackDataService, 'allowLocalValidation').and.returnValue($q.when(false));
-
     controller = $controller('HuntGroupSetupAssistantCtrl', {
       $scope: $scope,
       $state: $state,

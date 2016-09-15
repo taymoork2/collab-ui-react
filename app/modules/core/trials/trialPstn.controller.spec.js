@@ -136,7 +136,6 @@ describe('Controller: TrialPstnCtrl', function () {
         "uuid": "4f5f5bf7-0034-4ade-8b1c-db63777f062c",
         "name": "INTELEPEER-SWIVEL",
         "apiExists": false,
-        "apiImplementation": "SWIVEL",
         "countryCode": "+1",
         "country": "US",
         "defaultOffer": true,
@@ -148,7 +147,7 @@ describe('Controller: TrialPstnCtrl', function () {
       controller._getCarriers($scope);
       $scope.$apply();
       expect(controller.trialData.details.pstnProvider).toEqual(swivelCarrierDetails[0]);
-      expect(controller.providerImplementation).toEqual(swivelCarrierDetails[0].apiImplementation);
+      expect(controller.showOrdering).toBeFalsy();
     });
 
     it('should show number ordering', function () {
@@ -159,7 +158,6 @@ describe('Controller: TrialPstnCtrl', function () {
         "uuid": "4f5f5bf7-0034-4ade-8b1c-db63777f062c",
         "name": "INTELEPEER",
         "apiExists": true,
-        "apiImplementation": "INTELEPEER",
         "countryCode": "+1",
         "country": "US",
         "defaultOffer": true,
@@ -171,7 +169,7 @@ describe('Controller: TrialPstnCtrl', function () {
       controller._getCarriers($scope);
       $scope.$apply();
       expect(controller.trialData.details.pstnProvider).toEqual(orderCarrierDetails[0]);
-      expect(controller.providerImplementation).toEqual(orderCarrierDetails[0].apiImplementation);
+      expect(controller.showOrdering).toBeTruthy();
     });
 
     it('should disable next button when required data missing for SWIVEL', function () {
@@ -183,7 +181,6 @@ describe('Controller: TrialPstnCtrl', function () {
         "uuid": "4f5f5bf7-0034-4ade-8b1c-db63777f062c",
         "name": "INTELEPEER-SWIVEL",
         "apiExists": false,
-        "apiImplementation": "SWIVEL",
         "countryCode": "+1",
         "country": "US",
         "defaultOffer": true,
@@ -195,6 +192,7 @@ describe('Controller: TrialPstnCtrl', function () {
       controller._getCarriers($scope);
       $scope.$apply();
       expect(controller.trialData.details.pstnProvider).toEqual(swivelCarrierDetails[0]);
+      expect(controller.showOrdering).toBeFalsy();
       expect(controller.invalidCount).toEqual(0);
       expect(controller.trialData.details.swivelNumbers).toHaveLength(0);
       expect(controller.trialData.details.pstnNumberInfo.numbers).toHaveLength(0);
@@ -225,7 +223,6 @@ describe('Controller: TrialPstnCtrl', function () {
         "uuid": "4f5f5bf7-0034-4ade-8b1c-db63777f062c",
         "name": "INTELEPEER-SWIVEL",
         "apiExists": false,
-        "apiImplementation": "SWIVEL",
         "countryCode": "+1",
         "country": "US",
         "defaultOffer": true,
@@ -237,7 +234,7 @@ describe('Controller: TrialPstnCtrl', function () {
       controller._getCarriers($scope);
       $scope.$apply();
       expect(controller.trialData.details.pstnProvider).toEqual(swivelCarrierDetails[0]);
-      expect(controller.providerImplementation).toEqual(swivelCarrierDetails[0].apiImplementation);
+      expect(controller.showOrdering).toBeFalsy();
       expect(controller.invalidCount).toEqual(0);
       expect(controller.trialData.details.swivelNumbers).toHaveLength(0);
       expect(controller.trialData.details.pstnNumberInfo.numbers).toHaveLength(0);
@@ -268,7 +265,6 @@ describe('Controller: TrialPstnCtrl', function () {
         "uuid": "4f5f5bf7-0034-4ade-8b1c-db63777f062c",
         "name": "INTELEPEER",
         "apiExists": true,
-        "apiImplementation": "INTELEPEER",
         "countryCode": "+1",
         "country": "US",
         "defaultOffer": true,
@@ -280,7 +276,7 @@ describe('Controller: TrialPstnCtrl', function () {
       controller._getCarriers($scope);
       $scope.$apply();
       expect(controller.trialData.details.pstnProvider).toEqual(orderCarrierDetails[0]);
-      expect(controller.providerImplementation).toEqual('INTELEPEER');
+      expect(controller.showOrdering).toBeTruthy();
 
       expect(controller.invalidCount).toEqual(0);
       expect(controller.trialData.details.swivelNumbers).toHaveLength(0);

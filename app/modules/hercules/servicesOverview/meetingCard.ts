@@ -1,18 +1,18 @@
-import { ICardButton, ServicesOverviewCard } from './ServicesOverviewCard';
+import { CardButton, CardType, ServicesOverviewCard } from './ServicesOverviewCard';
 
 export class ServicesOverviewMeetingCard extends ServicesOverviewCard {
-  private moreButton: ICardButton = { name: 'servicesOverview.showMore', link: 'site-list', buttonClass: 'btn-link' };
+  private moreButton:CardButton = {name: 'servicesOverview.showMore', link: 'site-list', buttonClass: 'btn-link'};
 
-  public getShowMoreButton(): ICardButton {
+  getShowMoreButton():CardButton {
     if (this.active) {
       return this.moreButton;
     }
     return undefined;
   }
 
-  private _buttons: Array<ICardButton> = [];
+  private _buttons:Array<CardButton> = [];
 
-  public getButtons(): Array<ICardButton> {
+  getButtons():Array<CardButton> {
     if (this.active) {
       return _.take(this._buttons, 3);
     }
@@ -25,25 +25,25 @@ export class ServicesOverviewMeetingCard extends ServicesOverviewCard {
       description: 'servicesOverview.cards.meeting.description',
       icon: 'icon-circle-group',
       active: Authinfo.isAllowedState('site-list'),
-      cardClass: 'meetings',
+      cardClass: 'meetings'
     });
   }
 
-  public updateWebexSiteList(data: Array<{ license: { siteUrl: string } }>) {
+  public updateWebexSiteList(data:Array<{license:{siteUrl:string}}>) {
     if (!data) {
       this._loading = false;
-      return;
+      return
     }
 
     this._buttons =
       _.chain(data)
-        .map(serviceFeature => {
+        .map(serviceFeature=> {
           return serviceFeature && serviceFeature.license && serviceFeature.license.siteUrl;
         })
         .compact()
         .uniq()
         .map((url) => {
-          return { name: url, link: 'site-list', buttonClass: 'btn-link' };
+          return {name: url, link: 'site-list', buttonClass: 'btn-link'};
         })
         .value();
     this._loading = false;

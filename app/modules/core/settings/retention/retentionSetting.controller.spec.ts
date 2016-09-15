@@ -1,18 +1,19 @@
 /// <reference path="retentionSetting.controller.ts"/>
 namespace globalsettings {
 
-  describe('Controller: RetentionSettingController', () => {
+  describe('Controller: RetentionSettingController', ()=> {
 
-    let controller: RetentionSettingController;
+    let controller:RetentionSettingController;
     let $scope, $controller, $q;
     let RetentionService, Authinfo;
-    let secondRetentionOption: string;
+    let secondRetentionOption:string;
 
     beforeEach(angular.mock.module('Core'));
     beforeEach(angular.mock.module('Huron'));
 
     beforeEach(inject(dependencies));
     beforeEach(initSpies);
+
 
     function dependencies($rootScope, _$controller_, _$q_, _RetentionService_, _Authinfo_) {
       $scope = $rootScope.$new();
@@ -29,14 +30,14 @@ namespace globalsettings {
 
     function initController() {
       controller = $controller('RetentionSettingController', {
-        $scope: $scope,
+        $scope: $scope
       });
       $scope.$apply();
 
       secondRetentionOption = controller.retentionOptions[0].value; // We just pick one of them
     }
 
-    describe('contructor()', () => {
+    describe('contructor()', ()=> {
 
       describe('when getRetention is not provided with parameters', () => {
         beforeEach(initFailureSpy);
@@ -48,7 +49,7 @@ namespace globalsettings {
         });
 
         function initFailureSpy() {
-          RetentionService.getRetention.and.returnValue($q.reject(''));
+          RetentionService.getRetention.and.returnValue($q.reject(""));
         }
       });
 
@@ -64,7 +65,7 @@ namespace globalsettings {
 
         function initSpyWithRetention() {
           RetentionService.getRetention.and.returnValue($q.when({
-            sparkDataRetentionDays: secondRetentionOption,
+            sparkDataRetentionDays:secondRetentionOption
           }));
         }
       });
@@ -80,7 +81,7 @@ namespace globalsettings {
 
         function initSpyWithRetention() {
           RetentionService.getRetention.and.returnValue($q.when({
-            sparkDataRetentionDays: 45444,
+            sparkDataRetentionDays:45444
           }));
         }
       });
@@ -101,7 +102,7 @@ namespace globalsettings {
       });
     });
 
-    describe('updateRetention', () => {
+    describe('updateRetention', ()=> {
       beforeEach(initSpyIncompleteResponse);
       beforeEach(initController);
 

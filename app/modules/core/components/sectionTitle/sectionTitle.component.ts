@@ -1,13 +1,13 @@
-export interface IActionItem {
-  actionKey: string;
-  actionFunction: Function;
-}
+export interface ActionItem {
+  actionKey: string,
+  actionFunction: Function,
+};
 
-class SectionTitle implements ng.IComponentController {
+class SectionTitle {
   private showActions: boolean;
-  private actionList: IActionItem[];
+  private actionList: ActionItem[];
 
-  public shouldShowActions(): boolean {
+  private shouldShowActions(): boolean {
     return _.get(this.actionList, 'length') && (_.isUndefined(this.showActions) || this.showActions);
   }
 }

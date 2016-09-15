@@ -1,26 +1,27 @@
-import { ICardButton, CardType } from './ServicesOverviewCard';
+import { CardButton, CardType } from './ServicesOverviewCard';
 import { ServicesOverviewHybridCard } from './ServicesOverviewHybridCard';
 
 export class ServicesOverviewHybridCalendarCard extends ServicesOverviewHybridCard {
-  public getShowMoreButton(): ICardButton {
+  getShowMoreButton():CardButton {
     return undefined;
   }
 
-  private _setupButton: ICardButton = {
+  private _setupButton:CardButton = {
     name: 'servicesOverview.genericButtons.setup',
     link: 'services/calendar',
-    buttonClass: 'btn',
+    buttonClass: 'btn'
   };
 
-  private _buttons: Array<ICardButton> = [
-    { name: 'servicesOverview.cards.calendar.buttons.resources', link: 'services/calendar', buttonClass: 'btn-link' },
+  private _buttons:Array<CardButton> = [
+    {name: 'servicesOverview.cards.calendar.buttons.resources', link: 'services/calendar', buttonClass: 'btn-link'},
     {
       name: 'servicesOverview.cards.calendar.buttons.settings',
       link: 'services/calendar/settings',
-      buttonClass: 'btn-link',
+      buttonClass: 'btn-link'
     }];
 
-  public getButtons(): Array<ICardButton> {
+
+  getButtons():Array<CardButton> {
     if (this.active) {
       return _.take(this._buttons, 3);
     }
@@ -35,7 +36,7 @@ export class ServicesOverviewHybridCalendarCard extends ServicesOverviewHybridCa
       statusService: 'squared-fusion-cal',
       statusLink: 'services/calendar',
       cardClass: 'calendar',
-      cardType: CardType.hybrid,
+      cardType: CardType.hybrid
     });
   }
 }

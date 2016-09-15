@@ -1,28 +1,24 @@
+import simultaneousCalls from '../../simultaneousCalls';
 import { CallForwardAll, CallForwardBusy } from '../../callForward/callForward';
-import { BLOCK_CALLERID_TYPE, CUSTOM_COMPANY_TYPE, CallerIdConfig, CallerIdOption } from '../../callerId';
+import { BLOCK_CALLERID_TYPE, DIRECT_LINE_TYPE, COMPANY_CALLERID_TYPE, CUSTOM_COMPANY_TYPE } from '../../callerId';
 import { SharedLineUser, User, SharedLineDevice } from '../../sharedLine';
-import { LineService, LineConsumerType, LINE_CHANGE, Line } from '../services';
+import { LineService, LineConsumerType } from '../services';
 import { LineOverviewService, LineOverviewData } from './index';
 import { DirectoryNumberOptionsService } from '../../directoryNumber';
-import { IActionItem } from '../../../core/components/sectionTitle/sectionTitle.component';
 
 interface IDirectoryNumber {
-  uuid: string;
-  pattern: string;
+  uuid: string,
+  pattern: string,
 }
 
-class LineOverview implements ng.IComponentController {
+class LineOverview {
   private ownerType: string;
   private ownerId: string;
-  private ownerName: string;
   private numberId: string;
   private consumerType: LineConsumerType;
 
   public form: ng.IFormController;
   public saveInProcess: boolean = false;
-  public actionList: IActionItem[];
-  public showActions: boolean = false;
-  public deleteConfirmation: string;
 
   // Directory Number properties
   public esnPrefix: string;
@@ -56,19 +52,20 @@ class LineOverview implements ng.IComponentController {
   public sharedLineUsers: SharedLineUser[];
   public selectedUsers: SharedLineUser[];
 
+
+  public translate: ng.translate.ITranslateService;
+
   // Data from services
   public lineOverviewData: LineOverviewData;
-  public lineOverviewDataCopy: LineOverviewData;
+  public LineOverviewDataCopy: LineOverviewData;
 
   /* @ngInject */
   constructor(
     private LineOverviewService: LineOverviewService,
-    private LineService: LineService,
     private DirectoryNumberOptionsService: DirectoryNumberOptionsService,
     private $translate: ng.translate.ITranslateService,
-    private $scope: ng.IScope,
     private $state,
-    private $modal,
+    private CallerId,
     private Notification,
     private Config
   ) {
@@ -77,21 +74,11 @@ class LineOverview implements ng.IComponentController {
     this.custom_label = 'Custom';
   }
 
-  public $onInit(): void {
-    this.initActions();
+  private $onInit(): void {
     this.initConsumerType();
     this.initDirectoryNumber();
     this.initCallForward();
     this.initCallerId();
-  }
-
-  private initActions(): void {
-    this.actionList = [{
-      actionKey: 'directoryNumberPanel.deleteLineTitle',
-      actionFunction: () => {
-        this.deleteLine();
-      },
-    }];
   }
 
   private initDirectoryNumber(): void {
@@ -102,14 +89,14 @@ class LineOverview implements ng.IComponentController {
         this.LineOverviewService.getLineOverviewData(this.consumerType, this.ownerId, this.numberId)
           .then(lineOverviewData => {
             this.lineOverviewData = lineOverviewData;
-            this.lineOverviewDataCopy = this.cloneLineOverviewData(lineOverviewData);
-            this.showActions = this.setShowActionsFlag(this.lineOverviewData.line);
+            // TODO (jlowery): Put this caching mechanism into a function.
+            this.LineOverviewDataCopy = _.cloneDeep<LineOverviewData>(lineOverviewData);
             if (!this.lineOverviewData.line.uuid) { // new line, grab first available internal number
               this.lineOverviewData.line.internal = this.internalNumbers[0];
               this.form.$setDirty();
             }
           });
-      });
+      })
 
     this.LineOverviewService.getEsnPrefix().then(esnPrefix => this.esnPrefix = esnPrefix);
     this.DirectoryNumberOptionsService.getExternalNumberOptions().then(numbers => this.externalNumbers = numbers);
@@ -145,13 +132,14 @@ class LineOverview implements ng.IComponentController {
     if (!this.lineOverviewData.line.uuid) {
       this.$state.go(this.$state.$current.parent.name);
     } else {
-      this.lineOverviewData = this.cloneLineOverviewData(this.lineOverviewDataCopy);
+      // TODO (jlowery): Put this caching mechanism into a function.
+      this.lineOverviewData = _.cloneDeep<LineOverviewData>(this.LineOverviewDataCopy);
       this.resetForm();
     }
   }
 
   public getUserList(filter: string): User[] { ///TODO -- services
-    let users: User[] = [];
+    var users: User[] = [];
     return users;
   }
 
@@ -164,63 +152,9 @@ class LineOverview implements ng.IComponentController {
     }
   }
 
-  public saveLine() {
-    this.saveInProcess = true;
-    // TODO (jlowery): Figure out what exactly has changed and only update those things
-    if (this.lineOverviewData.line.uuid) {
-      this.LineOverviewService.updateLine(this.consumerType, this.ownerId, this.lineOverviewData.line.uuid, this.lineOverviewData.line)
-        .then( () => {
-          this.$scope.$emit(LINE_CHANGE);
-          this.lineOverviewDataCopy = this.cloneLineOverviewData(this.lineOverviewData);
-          this.Notification.success('directoryNumberPanel.success');
-        })
-        .catch( (response) => this.Notification.errorResponse(response, 'directoryNumberPanel.error'))
-        .finally( () => {
-          this.saveInProcess = false;
-          this.resetForm();
-        });
-    } else {
-      this.LineOverviewService.createLine(this.consumerType, this.ownerId, this.lineOverviewData.line)
-        .then( (line) => {
-          this.$scope.$emit(LINE_CHANGE);
-          this.lineOverviewData.line = line;
-          this.lineOverviewDataCopy = this.cloneLineOverviewData(this.lineOverviewData);
-          this.showActions = this.setShowActionsFlag(line);
-          this.Notification.success('directoryNumberPanel.success');
-        })
-        .catch( (response) => this.Notification.errorResponse(response, 'directoryNumberPanel.error'))
-        .finally( () => {
-          this.saveInProcess = false;
-          this.resetForm();
-        });
-    }
-  }
-
-  public deleteLine() {
-    this.deleteConfirmation = this.$translate.instant('directoryNumberPanel.deleteConfirmation', {
-        line: this.lineOverviewData.line.internal,
-        user: this.ownerName,
-      });
-    this.$modal.open({
-      templateUrl: 'modules/huron/lines/lineOverview/lineDelete.html',
-      scope: this.$scope,
-      type: 'dialog',
-    }).result.then( () => {
-      if (!this.lineOverviewData.line.primary) {
-        return this.LineService.deleteLine(this.consumerType, this.ownerId, this.lineOverviewData.line.uuid)
-          .then( () => {
-            this.$scope.$emit(LINE_CHANGE);
-            this.Notification.success('directoryNumberPanel.disassociationSuccess');
-            this.$state.go(this.$state.$current.parent.name);
-          })
-          .catch( (response) => this.Notification.errorResponse(response, 'directoryNumberPanel.error'));
-      }
-    });
-  }
-
   private isValidSharedLineUser(userInfo: SharedLineUser): boolean {
-    let isVoiceUser = false;
-    let isValidUser = true;
+    var isVoiceUser = false;
+    var isValidUser = true;
 
     _.forEach(userInfo.entitlements, e => {
 
@@ -229,12 +163,12 @@ class LineOverview implements ng.IComponentController {
       }
     });
 
-    if (!isVoiceUser || userInfo.uuid === this.$state.currentUser.id) {
+    if (!isVoiceUser || userInfo.uuid == this.$state.currentUser.id) {
       // Exclude users without Voice service to be shared line User
       // Exclude current user
       if (!isVoiceUser) {
         this.Notification.error('sharedLinePanel.invalidUser', {
-          user: userInfo.name,
+          user: userInfo.name
         });
       }
       isValidUser = false;
@@ -273,16 +207,20 @@ class LineOverview implements ng.IComponentController {
   }
 
   private initCallerId(): void {
-    this.callerIdOptions.push(new CallerIdOption(this.custom_label, new CallerIdConfig(null, '',  null, CUSTOM_COMPANY_TYPE)));
-    this.callerIdOptions.push(new CallerIdOption(this.blockedCallerId_label, new CallerIdConfig(null, this.$translate.instant('callerIdPanel.blockedCallerIdDescription'), null, BLOCK_CALLERID_TYPE)));
+    this.callerIdOptions.push(this.CallerId.constructCallerIdOption(this.custom_label, CUSTOM_COMPANY_TYPE, '', null));
+    this.callerIdOptions.push(this.CallerId.constructCallerIdOption(this.blockedCallerId_label, BLOCK_CALLERID_TYPE, this.$translate.instant('callerIdPanel.blockedCallerIdDescription'), '', null));
   }
 
-  private cloneLineOverviewData(lineOverviewData: LineOverviewData): LineOverviewData {
-    return _.cloneDeep(lineOverviewData);
-  }
-
-  private setShowActionsFlag(line: Line): boolean {
-    return (line.uuid && !line.primary);
+  public saveLineSettings() {
+    this.saveInProcess = true;
+    // TODO (jlowery): Figure out what exactly has changed and only update those things
+    this.LineOverviewService.updateLine(this.consumerType, this.ownerId, this.numberId, this.lineOverviewData.line)
+      .then( () => this.Notification.success('directoryNumberPanel.success'))
+      .catch( (response) => this.Notification.errorResponse(response, 'directoryNumberPanel.error'))
+      .finally( () => {
+        this.saveInProcess = false;
+        this.resetForm();
+      });
   }
 
   private initConsumerType(): void {
@@ -296,15 +234,15 @@ class LineOverview implements ng.IComponentController {
       }
     }
   }
+
 }
 
 export class LineOverviewComponent implements ng.IComponentOptions {
   public controller = LineOverview;
   public templateUrl = 'modules/huron/lines/lineOverview/lineOverview.html';
-  public bindings = <{ [binding: string]: string }>{
+  public bindings: {[binding: string]: string} = {
     ownerType: '@',
     ownerId: '@',
-    ownerName: '@',
     numberId: '@',
   };
 }

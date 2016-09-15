@@ -10,8 +10,8 @@ export class SharedLineUser extends CommonUser {
   public name: string;
 }
 
-export class User extends CommonUser {
-  public name: { givenName: string, familyName: string };
+export class User extends CommonUser{
+  public name: {givenName: string, familyName: string};
 }
 
 export class  SharedLineDevice {

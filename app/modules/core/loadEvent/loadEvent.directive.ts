@@ -1,4 +1,4 @@
-interface ILoadEventScope extends ng.IScope {
+interface LoadEventScope extends ng.IScope {
   loading: boolean;
 }
 
@@ -7,7 +7,7 @@ export class LoadEvent implements ng.IDirective {
   public scope = {
     loading: '=',
   };
-  public link: ng.IDirectiveLinkFn = (scope: ILoadEventScope, elem: JQuery) => {
+  public link: ng.IDirectiveLinkFn = (scope: LoadEventScope, elem: JQuery) => {
     elem.bind('load', () => {
       scope.loading = false;
       scope.$apply();

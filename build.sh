@@ -129,7 +129,7 @@ set -e
 ) &
 webpack_pid=$!
 
-npm run lint
+npm run eslint
 npm run json-verify
 npm run languages-verify
 npm run test

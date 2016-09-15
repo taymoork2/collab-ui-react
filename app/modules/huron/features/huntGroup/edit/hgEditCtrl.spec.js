@@ -64,7 +64,6 @@ describe('Hunt Group EditCtrl Controller', function () {
     spyOn(HuntGroupService, 'getDetails').and.returnValue($q.when(hgFeature));
     spyOn(HuntGroupService, 'getAllUnassignedPilotNumbers').and.returnValue($q.when(pilotNumbers));
     spyOn(HuntGroupFallbackDataService, 'isVoicemailDisabled').and.returnValue($q.defer().promise);
-    spyOn(HuntGroupFallbackDataService, 'allowLocalValidation').and.returnValue($q.when());
     member1ResponseHandler = $httpBackend.whenGET(GetMember1Url).respond(200, user1);
     member2ResponseHandler = $httpBackend.whenGET(GetMember2Url).respond(200, user2);
 
@@ -211,7 +210,6 @@ describe('Hunt Group EditCtrl Controller', function () {
     hgEditCtrl.form.$invalid = false;
     expect(hgEditCtrl.showDisableSave()).toBeFalsy();
     hgEditCtrl.removeFallbackDest();
-    hgEditCtrl.allowLocalValidation = false;
     expect(hgEditCtrl.showDisableSave()).toBeTruthy();
 
     hgEditCtrl.selectedFallbackNumber = "+19723453456";

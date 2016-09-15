@@ -1,6 +1,7 @@
 import { LineConsumerType } from '../../huron/lines/services';
 import { DialingType, ICOSRestrictionResponse } from './dialing.service';
 
+
 describe('Service: DialingService', () => {
   beforeEach(function() {
     this.initModules('huron.dialing');
@@ -18,7 +19,7 @@ describe('Service: DialingService', () => {
 
     let getDialingResponseEmpty: ICOSRestrictionResponse = {
       customer: [],
-      place: [],
+      place: []
     };
 
     let getDialingResponse: ICOSRestrictionResponse = {
@@ -26,12 +27,12 @@ describe('Service: DialingService', () => {
       place: [{
         restriction: DialingType.INTERNATIONAL,
         blocked: true,
-        uuid: '11111',
+        uuid: '11111'
       }, {
         restriction: DialingType.LOCAL,
         blocked: false,
-        uuid: '22222',
-      }],
+        uuid: '22222'
+      }]
     };
 
     this.getDialingResponseEmpty = getDialingResponseEmpty;

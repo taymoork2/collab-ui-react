@@ -1,5 +1,5 @@
 namespace domainManagement {
-  declare let punycode: any;
+  declare let punycode:any;
 
   class DomainManageAddCtrl {
     private _loggedOnUser;
@@ -19,11 +19,11 @@ namespace domainManagement {
       this._adding = true;
       let startAdd = moment();
       this.DomainManagementService.addDomain(this.domainToAdd).then(
-        () => {
+        ()=> {
           this.recordMetrics({
             msg: 'ok',
             startLog: startAdd,
-            data: { domain: this.domainToAdd, action: 'add' },
+            data: {domain: this.domainToAdd, action: 'add'}
           });
           this.$previousState.go();
           this._adding = false;
@@ -33,12 +33,12 @@ namespace domainManagement {
             msg: 'ok',
             status: 500,
             startLog: startAdd,
-            data: { domain: this.domainToAdd, error: err, action: 'add' },
+            data: {domain: this.domainToAdd, error: err, action: 'add'}
           });
           this._error = err;
           this._adding = false;
         }
-      );
+      )
     }
 
     public keyPressInInputField(keyEvent) {
@@ -47,7 +47,7 @@ namespace domainManagement {
       }
     }
 
-    public recordMetrics({ msg, status = 200, startLog = moment(), data }) {
+    recordMetrics({msg, status = 200, startLog = moment(), data}) {
       this.LogMetricsService.logMetrics(
         'domainManage add ' + msg,
         this.LogMetricsService.eventType.domainManageAdd,
@@ -63,7 +63,7 @@ namespace domainManagement {
       this.recordMetrics({
         msg: 'cancel',
         status: 100,
-        data: { domain: this.domainToAdd, action: 'cancel' },
+        data: {domain: this.domainToAdd, action: 'cancel'}
       });
       this.$previousState.go();
     }
@@ -71,7 +71,7 @@ namespace domainManagement {
     get exampleDomain() {
       //If the user is not a partner, and if not already added, suggest the logged on user's domain:
       if (this._loggedOnUser.isLoaded && !this._loggedOnUser.isPartner
-        && !_.some(this.DomainManagementService.domainList, { text: this._loggedOnUser.domain })) {
+        && !_.some(this.DomainManagementService.domainList, {text: this._loggedOnUser.domain})) {
         return this._loggedOnUser.domain;
       } else {
         return null;
@@ -91,7 +91,7 @@ namespace domainManagement {
       let domain = (this.domain || '').toLowerCase();
       return {
         show: encodedDomain !== domain,
-        text: this.$translate.instant('domainManagement.add.encodedIDN', { domain: encodedDomain }),
+        text: this.$translate.instant('domainManagement.add.encodedIDN', {domain: encodedDomain})
       };
     }
 
@@ -108,11 +108,11 @@ namespace domainManagement {
     }
 
     set domain(domain) {
-      if (domain === this._domain) {
+      if (domain == this._domain) {
         return;
       }
 
-      this._error = null; //reset error
+      this._error = null;//reset error
       this._domain = domain;
     }
 
@@ -121,18 +121,18 @@ namespace domainManagement {
       let domain = this.domainToAdd;
 
       if (domain.length < 3) {
-        return { valid: false, empty: !this._domain, error: 'domainManagement.add.invalidDomain' };
+        return {valid: false, empty: !this._domain, error: 'domainManagement.add.invalidDomain'};
       }
 
       if (!(/^(([a-z0-9\-]+\.)+[a-z0-9\-]{2,})$/g.test(domain))) {
-        return { valid: false, empty: !this._domain, error: 'domainManagement.add.invalidDomain' };
+        return {valid: false, empty: !this._domain, error: 'domainManagement.add.invalidDomain'};
       }
 
-      if (!this._adding && _.some(this.DomainManagementService.domainList, { text: domain })) {
-        return { valid: false, empty: !this._domain, error: 'domainManagement.add.invalidDomainAdded' }; //already added!
+      if (!this._adding && _.some(this.DomainManagementService.domainList, {text: domain})) {
+        return {valid: false, empty: !this._domain, error: 'domainManagement.add.invalidDomainAdded'}; //already added!
       }
 
-      return { valid: true, empty: false, error: undefined };
+      return {valid: true, empty: false, error: undefined};
     }
 
     get isValid() {

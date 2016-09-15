@@ -1056,7 +1056,7 @@
     function loadServiceAddress() {
       return PstnSetupService.listCustomerCarriers(Authinfo.getOrgId())
         .then(function (carriers) {
-          if (_.get(carriers, '[0].apiImplementation') !== "SWIVEL") {
+          if (_.get(carriers, '[0].apiExists') === true) {
             showServiceAddress();
           }
         })

@@ -114,7 +114,7 @@
         .find('upgradeState', 'upgrading')
         .value();
       // could be undefined if we only have upgraded and pending connectors
-      return _.get(upgrading, 'hostname', '');
+      return _.get(upgrading, 'hostname', 'some host');
     }
 
     if (hasF410FeatureToggle) {

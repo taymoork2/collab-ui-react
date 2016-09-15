@@ -39,7 +39,7 @@
     }
 
     function isAuthorizedForLog() {
-      return (Authinfo.isCisco() && (Authinfo.isSupportUser() || Authinfo.isAdmin() || Authinfo.isAppAdmin() || Authinfo.isHelpDeskUser));
+      return (Authinfo.isCisco() && (Authinfo.isSupportUser() || Authinfo.isAdmin() || Authinfo.isAppAdmin()));
     }
 
     function downloadLog(filename) {

@@ -23,7 +23,7 @@
     ////////////////////////
 
     function goToNumbers() {
-      if (vm.provider.apiImplementation !== "SWIVEL") {
+      if (vm.provider.apiExists) {
         goToOrderNumbers();
       } else {
         goToSwivelNumbers();
@@ -74,7 +74,7 @@
 
     function createSite() {
       // Only create site for API providers
-      if (vm.provider.apiImplementation !== "SWIVEL" && !PstnSetup.isSiteExists()) {
+      if (vm.provider.apiExists && !PstnSetup.isSiteExists()) {
         return PstnServiceAddressService.createCustomerSite(PstnSetup.getCustomerId(), PstnSetup.getCustomerName(), PstnSetup.getServiceAddress())
           .then(function () {
             PstnSetup.setSiteExists(true);

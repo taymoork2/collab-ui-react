@@ -1,13 +1,13 @@
-import { ICardButton, ServicesOverviewCard } from './ServicesOverviewCard';
+import { CardButton, CardType, ServicesOverviewCard } from './ServicesOverviewCard';
 
 export class ServicesOverviewMessageCard extends ServicesOverviewCard {
-  public getShowMoreButton(): ICardButton {
+  getShowMoreButton():CardButton {
     return undefined;
   }
 
-  private _buttons: Array<ICardButton>;
+  private _buttons:Array<CardButton>;
 
-  public getButtons(): Array<ICardButton> {
+  getButtons():Array<CardButton> {
     return this._buttons;
   }
 
@@ -19,7 +19,7 @@ export class ServicesOverviewMessageCard extends ServicesOverviewCard {
     });
 
     this._buttons = Authinfo.isAllowedState('messenger')
-      ? [{ name: 'servicesOverview.cards.message.buttons.webexMessenger', link: 'messenger', buttonClass: 'btn-link' }]
+      ? [{name: 'servicesOverview.cards.message.buttons.webexMessenger', link: 'messenger', buttonClass: 'btn-link'}]
       : [];
 
     this._loading = false;

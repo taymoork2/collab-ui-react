@@ -109,8 +109,8 @@ describe('Component: myCompanyOrders', () => {
     });
 
     it('should concat descriptions into single column', function () {
-      expect(this.view.find('.ui-grid-row: first .ui-grid-cell-contents: nth(1)')).toHaveText('first description');
-      expect(this.view.find('.ui-grid-row: last .ui-grid-cell-contents: nth(1)')).toHaveText('fourth description, fifth description');
+      expect(this.view.find('.ui-grid-row:first .ui-grid-cell-contents:nth(1)')).toHaveText('first description');
+      expect(this.view.find('.ui-grid-row:last .ui-grid-cell-contents:nth(1)')).toHaveText('fourth description, fifth description');
     });
 
     // TODO investigate more on unit testing ui-grid sorting

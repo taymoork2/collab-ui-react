@@ -11,22 +11,20 @@ describe('component: callerId', () => {
     this.$scope.callerIdOptions = [{
       label: 'Custom',
       value: {
-        name: '',
-        externalCallerIdType: 'Custom',
-      },
+        name: 'Custom'
+      }
     }, {
       label: 'Blocked Outbound Caller ID',
       value: {
-        name: 'Caller will not see any caller ID or number',
-        externalCallerIdType: 'Blocked Outbound Caller ID',
-      },
-    }];
-    this.compileComponent('ucCallerId', {
+        name: 'blockedCallerIdDescription'
+      }
+    }]
+    this.compileComponent('callerId', {
       callerIdOptions: 'callerIdOptions',
       callerIdSelected: 'callerIdSelected',
       customCallerIdName: 'customCallerIdName',
       customCallerIdNumber: 'customCallerIdNumber',
-      onChangeFn: 'onChangeFn(callerIdSelected, customCallerIdName, customCallerIdNumber)',
+      onChangeFn: 'onChangeFn(callerIdSelected, customCallerIdName, customCallerIdNumber)'
     });
   });
 
@@ -35,7 +33,7 @@ describe('component: callerId', () => {
     expect(this.view.find(CALLERID_SELECT).find(DROPDOWN_OPTIONS).get(1)).toHaveText('Blocked Outbound Caller ID');
     expect(this.view.find(CALLERIDNAME_INPUT)).not.toExist();
   });
-
+    
   it('should invoke onChangeFn with internalNumber on option click', function () {
     this.view.find(CALLERID_SELECT).find(DROPDOWN_OPTIONS).get(0).click();
     expect(this.$scope.onChangeFn).toHaveBeenCalledWith(

@@ -7,11 +7,11 @@ describe('Controller: EnterpriseSettingsCtrl', ()  => {
   let rootScope;
 
   let authInfo = {
-    getOrgId: sinon.stub().returns('bcd7afcd-839d-4c61-a7a8-31c6c7f016d7'),
+    getOrgId: sinon.stub().returns('bcd7afcd-839d-4c61-a7a8-31c6c7f016d7')
   };
 
   beforeEach(angular.mock.module(($provide) => {
-    $provide.value('Authinfo', authInfo);
+    $provide.value("Authinfo", authInfo);
   }));
 
   beforeEach(angular.mock.module('Core'));
@@ -29,7 +29,7 @@ describe('Controller: EnterpriseSettingsCtrl', ()  => {
     $q = _$q_;
 
     $scope.wizard = {
-      nextTab: sinon.stub(),
+      nextTab: sinon.stub()
     };
 
     spyOn($scope.wizard, 'nextTab');
@@ -37,21 +37,21 @@ describe('Controller: EnterpriseSettingsCtrl', ()  => {
     spyOn(SparkDomainManagementService, 'checkDomainAvailability').and.returnValue($q.when({
       data: {
         isDomainAvailable: true,
-        isDomainReserved: false,
-      },
+        isDomainReserved: false
+      }
     }));
 
     spyOn(SparkDomainManagementService, 'addSipDomain').and.returnValue($q.when({
       data: {
         isDomainAvailable: false,
-        isDomainReserved: true,
-      },
+        isDomainReserved: true
+      }
     }));
 
     spyOn(Orgservice, 'getLicensesUsage').and.returnValue($q.when([{
       licenses: [{
-        offerName: 'SD',
-      }],
+        offerName: 'SD'
+      }]
     }]));
 
     spyOn(Orgservice, 'getOrg').and.callFake((callback, status) => {
@@ -64,7 +64,7 @@ describe('Controller: EnterpriseSettingsCtrl', ()  => {
     controller = $controller('SipDomainSettingController', {
       $scope: $scope,
       $rootScope: rootScope,
-      Authinfo: authInfo,
+      Authinfo: authInfo
     });
 
     $scope.$apply();
@@ -78,7 +78,7 @@ describe('Controller: EnterpriseSettingsCtrl', ()  => {
       initController();
     });
 
-    it('should gracefully error', () => {
+    it('should gracefully error',() => {
       expect(Notification.error).toHaveBeenCalled();
     });
   });
@@ -101,7 +101,7 @@ describe('Controller: EnterpriseSettingsCtrl', ()  => {
     });
 
     it('should disable the field and clear error on the field validation', () => {
-      controller._inputValue = controller._validatedValue = 'alalalalalong!';
+      controller._inputValue = controller._validatedValue = "alalalalalong!";
       controller.isConfirmed = true;
       controller.saveDomain();
       $scope.$apply();
@@ -138,7 +138,7 @@ describe('Controller: EnterpriseSettingsCtrl', ()  => {
 
     it('addSipDomain should error gracefully', () => {
 
-      controller._inputValue = controller._validatedValue = 'alalalalalong!';
+      controller._inputValue = controller._validatedValue = "alalalalalong!";
       controller.isConfirmed = true;
       controller.saveDomain();
       $scope.$apply();
@@ -158,8 +158,8 @@ describe('Controller: EnterpriseSettingsCtrl', ()  => {
     beforeEach(() => {
       Orgservice.getLicensesUsage.and.returnValue($q.when([{
         licenses: [{
-          offerName: 'CF',
-        }],
+          offerName: 'CF'
+        }]
       }]));
       initController();
     });

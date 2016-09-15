@@ -5,6 +5,5 @@
   "id": "111",
   "meta": {
     "organizationID": "222"
-  },
-  "roles": ["spark.synckms"]
+  }
 }

@@ -1,7 +1,7 @@
 /// <reference path="settings.controller.ts"/>
 namespace globalsettings {
 
-  describe('SettingsCtrl', () => {
+  describe('SettingsCtrl', ()=> {
 
     let controller, $controller, Authinfo, FeatureToggleService, Orgservice, $q, $scope;
 
@@ -31,7 +31,7 @@ namespace globalsettings {
     function initController() {
       controller = $controller('SettingsCtrl', {
         $scope: $scope,
-        hasFeatureToggle: true,
+        hasFeatureToggle: true
       });
 
       $scope.$apply();
@@ -47,7 +47,7 @@ namespace globalsettings {
       beforeEach(setAuthinfoIsPartnerSpy(true));
       beforeEach(initController);
 
-      it('should create the ctrl and add the partner setting sections', () => {
+      it('should create the ctrl and add the partner setting sections', ()=> {
         expect(controller.security).toBeFalsy();
         expect(controller.domains).toBeFalsy();
         expect(controller.sipDomain).toBeFalsy();
@@ -86,7 +86,7 @@ namespace globalsettings {
         beforeEach(setGetOrgSpy(true));
         beforeEach(initController);
 
-        it('should create the ctrl and add the normal setting sections', () => {
+        it('should create the ctrl and add the normal setting sections', ()=> {
           expect(controller.security).toBeTruthy();
           expect(controller.domains).toBeTruthy();
           expect(controller.sipDomain).toBeTruthy();
@@ -103,7 +103,7 @@ namespace globalsettings {
         beforeEach(setGetOrgSpy(false));
         beforeEach(initController);
 
-        it('should create the ctrl and add the normal setting sections', () => {
+        it('should create the ctrl and add the normal setting sections', ()=> {
           expect(controller.security).toBeTruthy();
           expect(controller.domains).toBeTruthy();
           expect(controller.sipDomain).toBeTruthy();
@@ -136,7 +136,7 @@ namespace globalsettings {
 
     function setGetOrgSpy(allowBranding) {
       return () => {
-        Orgservice.getOrg.and.returnValue($q.when({ data: { orgSettings: { allowCustomerLogos: allowBranding } } }));
+        Orgservice.getOrg.and.returnValue($q.when({data: {orgSettings: {allowCustomerLogos: allowBranding}}}));
       };
     }
 

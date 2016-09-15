@@ -11,10 +11,10 @@ describe('Controller: SubscriptionHeaderCtrl', function () {
     Authinfo = _Authinfo_;
 
     spyOn(Authinfo, 'isOnline').and.returnValue(true);
-
+    
     controller = $controller('SubscriptionHeaderCtrl', {
       $scope: $scope,
-      Authinfo: Authinfo,
+      Authinfo: Authinfo
     });
     $scope.$apply();
   }));
@@ -28,11 +28,11 @@ describe('Controller: SubscriptionHeaderCtrl', function () {
   it('should update on broadcast', function () {
     rootscope.$broadcast('SUBSCRIPTION::upgradeData', {
       isTrial: true,
-      subId: 'subId',
-      upgradeTrialUrl: 'Url',
+      subId: "subId",
+      upgradeTrialUrl: "Url"
     });
     expect(controller.isTrial).toBeTruthy();
-    expect(controller.subId).toBe('subId');
-    expect(controller.upgradeTrialUrl).toBe('Url');
+    expect(controller.subId).toBe("subId");
+    expect(controller.upgradeTrialUrl).toBe("Url");
   });
 });

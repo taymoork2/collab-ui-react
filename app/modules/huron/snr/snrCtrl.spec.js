@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Controller: SingleNumberReachInfoCtrl', function () {
-  var controller, $scope, $httpBackend, TelephonyInfoService, Notification, HuronConfig, DialPlanService, $q;
+  var controller, $scope, $httpBackend, TelephonyInfoService, Notification, HuronConfig;
   var url;
   var currentUser = getJSONFixture('core/json/currentUser.json');
   var telephonyInfoWithDest = getJSONFixture('huron/json/telephonyInfo/snrEnabledWithDest.json');
@@ -14,21 +14,18 @@ describe('Controller: SingleNumberReachInfoCtrl', function () {
   beforeEach(angular.mock.module('Huron'));
   beforeEach(angular.mock.module('Sunlight'));
 
-  beforeEach(inject(function ($rootScope, $controller, _$httpBackend_, _TelephonyInfoService_, _Notification_, _HuronConfig_, _DialPlanService_, _$q_) {
+  beforeEach(inject(function ($rootScope, $controller, _$httpBackend_, _TelephonyInfoService_, _Notification_, _HuronConfig_) {
     $scope = $rootScope.$new();
     $httpBackend = _$httpBackend_;
     TelephonyInfoService = _TelephonyInfoService_;
     Notification = _Notification_;
     HuronConfig = _HuronConfig_;
-    DialPlanService = _DialPlanService_;
-    $q = _$q_;
 
     url = HuronConfig.getCmiUrl() + '/voice/customers/' + currentUser.meta.organizationID + '/users/' + currentUser.id + '/remotedestinations';
 
     spyOn(TelephonyInfoService, 'getTelephonyInfo').and.returnValue(telephonyInfoWithDest);
     spyOn(TelephonyInfoService, 'getRemoteDestinationInfo');
     spyOn(Notification, 'notify');
-    spyOn(DialPlanService, 'getCustomerVoice').and.returnValue($q.when({ regionCode: '' }));
 
     controller = $controller('SingleNumberReachInfoCtrl', {
       $scope: $scope,

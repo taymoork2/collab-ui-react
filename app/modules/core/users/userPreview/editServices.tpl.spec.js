@@ -37,7 +37,6 @@ describe('Template: editServices', function () {
       }
     });
     this.$httpBackend.expectGET(this.UrlConfig.getSunlightConfigServiceUrl() + '/user' + '/' + userId).respond(200);
-    this.$httpBackend.expectGET(this.UrlConfig.getScimUrl('null') + '/' + userId).respond(200);
     this.$httpBackend
       .whenGET('https://cmi.huron-int.com/api/v1/voice/customers/sites')
       .respond([{

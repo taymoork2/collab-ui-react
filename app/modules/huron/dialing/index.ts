@@ -1,5 +1,5 @@
 import { DialingComponent } from './dialing.component';
-import { DialingService } from './dialing.service';
+import { DialingService, DialingType, IOption } from './dialing.service';
 export * from './dialing.service';
 
 export default angular

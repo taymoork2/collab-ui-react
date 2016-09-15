@@ -6,10 +6,7 @@
     .controller('OnboardCtrl', OnboardCtrl);
 
   /*@ngInject*/
-  function OnboardCtrl($modal, $previousState, $q, $rootScope, $scope, $state, $stateParams, $timeout, $translate,
-                       addressparser, Authinfo, Analytics, chartColors, Config, DialPlanService, FeatureToggleService,
-                       Log, LogMetricsService, NAME_DELIMITER, Notification, OnboardService, Orgservice,
-                       SunlightConfigService, TelephonyInfoService, Userservice, Utils, UserCsvService, UserListService, WebExUtilsFact, ServiceSetup) {
+  function OnboardCtrl($modal, $previousState, $q, $rootScope, $scope, $state, $stateParams, $timeout, $translate, addressparser, Authinfo, Analytics, chartColors, Config, DialPlanService, FeatureToggleService, Log, LogMetricsService, NAME_DELIMITER, Notification, OnboardService, Orgservice, SunlightConfigService, TelephonyInfoService, Userservice, Utils, UserCsvService, UserListService, WebExUtilsFact, ServiceSetup) {
     var vm = this;
 
     $scope.hasAccount = Authinfo.hasAccount();
@@ -549,7 +546,7 @@
         } else if (userEnts[x] === 'squared-room-moderation') {
           $scope.radioStates.msgRadio = true;
         } else if (userEnts[x] === 'cloud-contact-center') {
-          setCareSevice();
+          setCareSeviceIfUserExistInSunlight();
         }
       }
     }
@@ -559,29 +556,18 @@
         $scope.radioStates.msgRadio = true;
       }
       if (userInvites.cc) {
-        setCareSevice();
+        setCareSeviceIfUserExistInSunlight();
       }
     }
 
-    function setCareSevice() {
+    function setCareSeviceIfUserExistInSunlight() {
       SunlightConfigService.getUserInfo($scope.currentUser.id)
           .then(function () {
-            Userservice.getUser($scope.currentUser.id, function (data) {
-              if (data.success) {
-                var hasSyncKms = _.find(data.roles, function (r) {
-                  return r === Config.backend_roles.spark_synckms;
-                });
-                if (hasSyncKms) {
-                  $scope.radioStates.careRadio = true;
-                }
-              }
-            });
-          },
-        function () {
-          $scope.radioStates.careRadio = false;
-        });
+            $scope.radioStates.careRadio = true;
+          }, function () {
+            $scope.radioStates.careRadio = false;
+          });
     }
-
 
     function shouldAddCallService() {
       return !currentUserHasCall && ($scope.radioStates.commRadio || $scope.entitlements.ciscoUC);
@@ -1563,11 +1549,6 @@
           } else {
             return 'common.finish';
           }
-        };
-
-        $scope.goToUsersPage = function () {
-          $previousState.forget('modalMemo');
-          $state.go('users.list');
         };
 
         $scope.fixBulkErrors = function () {

@@ -646,7 +646,7 @@ describe('Controller: TrialDeviceController', function () {
       expect(FeatureToggleService.atlasShipDevicesInternationalGetStatus).toHaveBeenCalled();
     });
 
-    xit('should only show US when  only dx10 is  selected and toggle is false', function () {
+    it('should only show US when  only dx10 is  selected and toggle is false', function () {
       spyOn(FeatureToggleService, 'atlasShipDevicesInternationalGetStatus').and.returnValue($q.when(false));
       initController();
       expect(controller.supportsInternationalShipping).toBe(false);
@@ -663,7 +663,7 @@ describe('Controller: TrialDeviceController', function () {
       var countryList = controller.getCountriesForSelectedDevices();
       expect(countryList.length).toBeGreaterThan(1);
     });
-    xit('should have a list of countries to be US only when CISCO_SX10 is selected and toggle is false', function () {
+    it('should have a list of countries to be US only when CISCO_SX10 is selected and toggle is false', function () {
       spyOn(FeatureToggleService, 'atlasShipDevicesInternationalGetStatus').and.returnValue($q.when(false));
       initController();
       controller.sx10.enabled = true;

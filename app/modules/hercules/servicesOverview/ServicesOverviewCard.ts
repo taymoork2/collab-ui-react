@@ -1,13 +1,13 @@
-export interface ICardButton {
-  name: String;
-  buttonClass?: String;
-  link: String;
+export interface CardButton {
+  name:String;
+  buttonClass?:String;
+  link:String;
 }
 
-export interface ICardStatus {
-  status: String;
-  text: String;
-  link: String;
+export interface CardStatus {
+  status:String,
+  text:String,
+  link:String,
 }
 
 export enum CardType {
@@ -15,29 +15,29 @@ export enum CardType {
   hybrid
 }
 
-export interface ICardParams {
-  active?: boolean;
-  display?: boolean;
-  cardClass?: string;
-  cardType?: CardType;
-  description: string;
-  icon?: string;
-  name: string;
-  template?: string;
+export interface CardParams {
+  active?:boolean;
+  display?:boolean;
+  cardClass?:string;
+  cardType?:CardType;
+  description:string;
+  icon?:string;
+  name:string;
+  template?:string;
 }
 
 export abstract class ServicesOverviewCard {
 
-  protected _status: ICardStatus;
+  protected _status:CardStatus;
   protected _loading = true;
-  protected _active: boolean;
-  protected _display: boolean;
-  private _cardClass: string;
-  private _cardType: CardType;
-  private _description: string;
-  private _icon: string;
-  private _template: string;
-  private _name: string;
+  protected _active:boolean;
+  protected _display:boolean;
+  private _cardClass:string;
+  private _cardType:CardType;
+  private _description:string;
+  private _icon:string;
+  private _template:string;
+  private _name:string;
 
   get active() {
     return this._active;
@@ -83,20 +83,20 @@ export abstract class ServicesOverviewCard {
     return this._template;
   }
 
-  public abstract getButtons(): Array<ICardButton>;
+  abstract getButtons():Array<CardButton>;
 
-  public abstract getShowMoreButton(): ICardButton;
+  abstract getShowMoreButton():CardButton;
 
   public constructor({
-    template: _template = 'modules/hercules/servicesOverview/serviceCard.tpl.html',
-    name: _name,
-    description: _description,
-    icon: _icon = '',
-    active: _active = true,
-    display: _display = true,
-    cardClass: _cardClass = 'cs-card',
-    cardType: _cardType = CardType.cloud,
-  }: ICardParams) {
+    template:_template='modules/hercules/servicesOverview/serviceCard.tpl.html',
+    name:_name,
+    description:_description,
+    icon:_icon='',
+    active:_active=true,
+    display:_display=true,
+    cardClass:_cardClass='cs-card',
+    cardType:_cardType = CardType.cloud
+  }:CardParams) {
     this._active = _active;
     this._display = _display;
     this._cardClass = _cardClass;

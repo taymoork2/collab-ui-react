@@ -1,13 +1,13 @@
 import { IFeature } from '../../../core/components/featureList/featureList.component';
 
-class PlaceOverview implements ng.IComponentController {
+class PlaceOverview {
 
   private _currentPlace;
   private _csdmHuronUserDeviceService;
   private _services: IFeature[] = [];
 
   get currentPlace() {
-    return this._currentPlace;
+    return this._currentPlace
   }
 
   get services() {
@@ -28,15 +28,15 @@ class PlaceOverview implements ng.IComponentController {
     this._csdmHuronUserDeviceService = CsdmHuronUserDeviceService.create(this._currentPlace.cisUuid);
   }
 
-  public $onInit(): void {
+  private $onInit(): void {
     if (this.hasEntitlement('ciscouc')) {
       let service: IFeature = {
         name: this.$translate.instant('onboardModal.call'),
         icon: this.$translate.instant('onboardModal.call'),
         state: 'communication',
         detail: this.$translate.instant('onboardModal.callFree'),
-        actionsAvailable: true,
-      };
+        actionsAvailable: true
+      }
       this._services.push(service);
     }
   }
@@ -55,7 +55,7 @@ class PlaceOverview implements ng.IComponentController {
   public showDeviceDetails(device) {
     this.$state.go('place-overview.csdmDevice', {
       currentDevice: device,
-      huronDeviceService: this._csdmHuronUserDeviceService,
+      huronDeviceService: this._csdmHuronUserDeviceService
     });
   }
 
@@ -76,9 +76,9 @@ class PlaceOverview implements ng.IComponentController {
   }
 }
 
-class PlaceOverviewComponent implements ng.IComponentOptions {
+class PlaceOverviewComponent {
   public controller = PlaceOverview;
-  public templateUrl = 'modules/squared/places/overview/placeOverview.html';
+  public templateUrl = 'modules/squared/places/overview/placeOverview.html'
 }
 
 angular

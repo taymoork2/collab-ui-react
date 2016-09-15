@@ -4,7 +4,7 @@ import {
   SharedLineDevice,
 } from './sharedLine';
 
-class SharedLineCtrl implements ng.IComponentController {
+class SharedLineCtrl {
   public selectedUser: SharedLineUser;
   public sharedLineUsers: SharedLineUser[];
   public sharedLineEndpoints: SharedLineDevice[];
@@ -22,7 +22,7 @@ class SharedLineCtrl implements ng.IComponentController {
   }
 
   public getUserName(name: { givenName: string, familyName: string }, userId: string): string {
-    let userName = _.get(name, 'name.givenName', '') +  ' '  +  _.get(name, 'name.familyName', '');
+    var userName = _.get(name, 'name.givenName', '') +  ' '  +  _.get(name, 'name.familyName', '');
     return userName.trim() || userId;
   }
 
@@ -40,21 +40,21 @@ class SharedLineCtrl implements ng.IComponentController {
     return this.isSingleDeviceFn({
       sharedLineEndpoints: this.sharedLineEndpoints,
       uuid: userUuid,
-    });
+    })
   }
 
   public disassociateSharedLineUser(user: SharedLineUser, batchDelete: boolean): void {
     this.disassociateSharedLineUserFn({
       userInfo: user,
-      batchDelete: batchDelete,
-    });
+      batchDelete: batchDelete
+    })
   }
 }
 
 export class SharedLineComponent implements ng.IComponentOptions {
   public controller = SharedLineCtrl;
   public templateUrl = 'modules/huron/sharedLine/sharedLine.html';
-  public bindings = <{ [binding: string]: string }>{
+  public bindings: { [binding: string]: string } = {
     selectedUser: '<',
     sharedLineUsers: '<',
     sharedLineEndpoints: '<',

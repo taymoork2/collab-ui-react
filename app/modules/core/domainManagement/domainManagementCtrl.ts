@@ -6,7 +6,7 @@ namespace domainManagement {
       domain: null,
       email: null,
       isLoaded: false,
-      isPartner: false,
+      isPartner: false
     };
 
     /* @ngInject */
@@ -16,7 +16,7 @@ namespace domainManagement {
 
         let myOrgId = Authinfo.getOrgId();
 
-        if (curUser.managedOrgs && _.some(curUser.managedOrgs, { orgId: myOrgId })) {
+        if (curUser.managedOrgs && _.some(curUser.managedOrgs, {orgId: myOrgId})) {
           //Partner is logged on, skip verification test
           this._loggedOnUser.isPartner = true;
         } else {

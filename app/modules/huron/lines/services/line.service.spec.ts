@@ -1,4 +1,4 @@
-import { Line, LineConsumerType } from './index';
+import { Number, LineConsumerType } from './index';
 
 describe('Service: LineService', () => {
   beforeEach(function () {
@@ -11,7 +11,7 @@ describe('Service: LineService', () => {
     );
     spyOn(this.Authinfo, 'getOrgId').and.returnValue('12345');
 
-    let getLineResponse: Line = {
+    let getLineResponse: Number = {
       uuid: '0000000',
       primary: true,
       internal: '12345',
@@ -20,9 +20,12 @@ describe('Service: LineService', () => {
       incomingCallMaximum: 2,
     };
 
-    let createLinePayload: any = {
+    let createLinePayload: Number = {
+      uuid: undefined,
+      primary: true,
       internal: '12345',
       external: '+99999',
+      siteToSite: '710012345',
       incomingCallMaximum: 2,
     };
 
@@ -56,7 +59,7 @@ describe('Service: LineService', () => {
     this.LineService.getLine(LineConsumerType.PLACES, '12345', '0000000').then(response => {
       expect(response.data).toBeUndefined();
       expect(response.status).toEqual(500);
-    });
+    })
     this.$httpBackend.flush();
   });
 
@@ -70,24 +73,14 @@ describe('Service: LineService', () => {
   });
 
   it('should create a line for a place', function () {
-    this.$httpBackend.expectPOST(this.HuronConfig.getCmiV2Url() + '/customers/' + this.Authinfo.getOrgId() + '/places/12345/numbers', this.createLinePayload).respond(201, {},
-      {
-        Location: 'http://some/url/123456',
-      });
-    this.LineService.createLine(LineConsumerType.PLACES, '12345', this.createLinePayload).then(location => {
-      expect(location).toEqual('http://some/url/123456');
-    });
+    this.$httpBackend.expectPOST(this.HuronConfig.getCmiV2Url() + '/customers/' + this.Authinfo.getOrgId() + '/places/12345/numbers', this.createLinePayload).respond(201);
+    this.LineService.createLine(LineConsumerType.PLACES, '12345', this.createLinePayload);
     this.$httpBackend.flush();
   });
 
   it('should create a line for a user', function () {
-    this.$httpBackend.expectPOST(this.HuronConfig.getCmiV2Url() + '/customers/' + this.Authinfo.getOrgId() + '/users/12345/numbers', this.createLinePayload).respond(201, {},
-      {
-        Location: 'http://some/url/123456',
-      });
-    this.LineService.createLine(LineConsumerType.USERS, '12345', this.createLinePayload).then(location => {
-      expect(location).toEqual('http://some/url/123456');
-    });
+    this.$httpBackend.expectPOST(this.HuronConfig.getCmiV2Url() + '/customers/' + this.Authinfo.getOrgId() + '/users/12345/numbers', this.createLinePayload).respond(201);
+    this.LineService.createLine(LineConsumerType.USERS, '12345', this.createLinePayload);
     this.$httpBackend.flush();
   });
 
@@ -100,18 +93,6 @@ describe('Service: LineService', () => {
   it('should update a line for a user', function () {
     this.$httpBackend.expectPUT(this.HuronConfig.getCmiV2Url() + '/customers/' + this.Authinfo.getOrgId() + '/users/12345/numbers/0000000', this.updateLinePayload).respond(200);
     this.LineService.updateLine(LineConsumerType.USERS, '12345', '0000000', this.updateLinePayload);
-    this.$httpBackend.flush();
-  });
-
-  it('should delete a line for a place', function () {
-    this.$httpBackend.expectDELETE(this.HuronConfig.getCmiV2Url() + '/customers/' + this.Authinfo.getOrgId() + '/places/12345/numbers/0000000').respond(204);
-    this.LineService.deleteLine(LineConsumerType.PLACES, '12345', '0000000');
-    this.$httpBackend.flush();
-  });
-
-  it('should delete a line for a user', function () {
-    this.$httpBackend.expectDELETE(this.HuronConfig.getCmiV2Url() + '/customers/' + this.Authinfo.getOrgId() + '/users/12345/numbers/0000000').respond(204);
-    this.LineService.deleteLine(LineConsumerType.USERS, '12345', '0000000');
     this.$httpBackend.flush();
   });
 

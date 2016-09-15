@@ -74,14 +74,12 @@
     vm.populateHuntPilotNumbers = populateHuntPilotNumbers;
     vm.populateHuntMembers = populateHuntMembers;
     vm.populateFallbackDestination = populateFallbackDestination;
-    vm.allowLocalValidation = false;
 
     init();
 
     function init() {
       HuntGroupFallbackDataService.reset();
       HuntGroupMemberDataService.reset();
-      allowLocalValidation();
     }
 
     function fetchNumbers(typedNumber) {
@@ -270,7 +268,7 @@
     function isErrorFallbackInput() {
       return (HuntGroupService.suggestionsNeeded(vm.selectedFallbackNumber) &&
         !vm.fallbackSuggestionsAvailable &&
-        !isFallbackValid() && !vm.allowLocalValidation);
+        !isFallbackValid());
     }
 
     function fetchFallbackDestination(nameHint) {
@@ -295,7 +293,7 @@
     }
 
     function populateFallbackDestination(data) {
-      data.fallbackDestination = HuntGroupFallbackDataService.getFallbackDestinationJSON(vm.allowLocalValidation);
+      data.fallbackDestination = HuntGroupFallbackDataService.getFallbackDestinationJSON();
     }
     /////////////////////////////////////////////////////////
 
@@ -336,12 +334,6 @@
           type: number.type,
           number: number.number
         });
-      });
-    }
-
-    function allowLocalValidation() {
-      HuntGroupFallbackDataService.allowLocalValidation().then(function (result) {
-        vm.allowLocalValidation = result;
       });
     }
   }

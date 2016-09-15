@@ -89,6 +89,7 @@ describe('OnboardCtrl: Ctrl', function () {
 
     spyOn(this.Userservice, 'onboardUsers');
     spyOn(this.Userservice, 'bulkOnboardUsers');
+    spyOn(this.Userservice, 'getUser').and.returnValue(this.mock.getUserMe);
     spyOn(this.Userservice, 'migrateUsers').and.returnValue(this.mock.getMigrateUsers);
     spyOn(this.Userservice, 'updateUsers');
     spyOn(this.Orgservice, 'getLicensesUsage').and.returnValue(this.$q.when(this.mock.getLicensesUsage));
@@ -764,7 +765,6 @@ describe('OnboardCtrl: Ctrl', function () {
         spyOn(this.Authinfo, 'hasAccount').and.returnValue(true);
         spyOn(this.Authinfo, 'getCareServices').and.returnValue(this.mock.getCareServices.careLicense);
         this.$httpBackend.expectGET(this.UrlConfig.getSunlightConfigServiceUrl() + '/user' + '/' + userId).respond(200);
-        this.$httpBackend.expectGET(this.UrlConfig.getScimUrl('null') + '/' + userId).respond(200, this.mock.getUserMe);
         this.$stateParams.currentUser = {
           licenseID: ['CDC_da652e7d-cd34-4545-8f23-936b74359afd'],
           entitlements: ['cloud-contact-center'],

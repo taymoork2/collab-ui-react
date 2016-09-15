@@ -146,8 +146,7 @@
     "unknownCreateUserError": "An unknown error has occurred and user creation could not be completed.",
     "insufficientEntitlementsError": "{{email}} cannot be added.  There are insufficient licenses to create this user.",
     "telstraAppRedirect": "Connecting to Telstra Apps Marketplace",
-    "careAddUserError": "Error adding user to Care.",
-    "careAddUserRoleError": "Error adding roles to user."
+    "careAddUserError": "Error adding user to Care."
   },
   "userManage": {
     "org": {
@@ -1374,7 +1373,7 @@
       "clusters-title": "Expressway Clusters",
       "status-title": "Service Status",
       "add-resource-button": "Add Resource",
-      "add-resource-button-information": "Click \"Add Resource\" to start the registration and configuration of your Expressways.",
+      "add-resource-button-information": " to start the registration and configuration of your Expressways.",
       "setupCloudSipUriHeader": "Define Spark SIP Address"
     },
     "redirect-target-dialog": {
@@ -1581,7 +1580,6 @@
       "pending": "Pending",
       "upgrade": "Upgrade",
       "upgradeNow": "Upgrade Now",
-      "upgradeProcessInitiating": "Initiating the upgrade to version {{version}}…",
       "upgradingHost": "Upgrading {{host}} to {{version}}",
       "upgradeDone": "Upgrade completed!",
       "upToDate": "{{connectorType}} is up to date on this cluster.",
@@ -1612,8 +1610,8 @@
       "deactivateServicesCalendarHeader": "Deactivate Calendar",
       "deactivateServicesCallHeader": "Deactivate Call",
       "noHybridServicesProvisioned": "No Hybrid Services are enabled on this Expressway. To enable a Hybrid Service, go to the relevant service page.",
-      "deregisterClusterParagraph": "There are still services active on “{{ClusterName}}”.",
-      "deregisterClusterExplanation": "Remove this cluster from Cisco Collaboration Cloud. All services must be deactivated on a cluster before it can be removed.",
+      "deregisterClusterParagraph": "To Remove “{{ClusterName}}”, deactivate the services first.",
+      "deregisterClusterExplanation": "Remove this cluster from Cisco Collaboration Cloud. This step removes all connectors and related configuration.",
       "clusterMainSectionHeader": "Cluster",
       "renameClusterParagraph": "Rename the Expressway cluster.",
       "renameClusterDescription": "The cluster name is only used for display purposes. Changing it will not update the name on the Expressway itself.",
@@ -2037,14 +2035,6 @@
     "accountReview": "Account Review",
     "serviceSetupSub": "Phone-related settings",
     "unifiedCommunication": "Call Settings",
-    "careSettings": "Care Settings",
-    "careSettingsSub": "Setup Care Service",
-    "careSettingsDescription": "Click here to complete Care setup.",
-    "careSettingsComplete": "Care setup is complete.",
-    "careSettingsButton": "Setup Care",
-    "careSettingsFetchFailed": "Error retrieving onboarding status.",
-    "careSettingsTimeout": "Request timed out while checking Care setup status.",
-    "careSettingsChecking": "Checking Care setup status.",
     "addUsers": "Add Users",
     "addUsersSubDescription": "Invite users and assign services",
     "addUsersDescription": "Select a method to upload your users.",
@@ -2512,7 +2502,7 @@
     "title": "Simultaneous Calls",
     "two": "2",
     "eight": "8",
-    "multipleCallsDescription": " The maximum number of simultaneous incoming calls this line can receive.",
+    "multipleCallsDescription": " The maximum number of simultaneous incoming calls this line can recieve.",
     "mulitpleCallsLoadError": "Multiple Calls failed to load."
   },
   "callerIdPanel": {
@@ -2668,7 +2658,6 @@
     "duplicateNumber": "{{number}} is a duplicate number.",
     "orderNumbersError": "There was a problem with your order. Please check order history for details.",
     "blockOrderError": "Failed to order {{quantity}} block number(s) with area code {{areaCode}}.",
-    "swivel": "SWIVEL",
     "swivelAddError": "Failed to add {{number}}.",
     "swivelDuplicateError": "Failed to add {{number}}. Number already exists.",
     "customerCreateError": "Failed to create customer with the carrier.",
@@ -3069,8 +3058,7 @@
     "trialAccountsFilter": "Trial Accounts ({{count}})",
     "activeAccountsFilter": "Purchased Accounts ({{count}})",
     "expiredAccountsFilter": "Expired Accounts ({{count}})",
-    "orderRequest": "Order Request",
-    "subscriptions": "Subscriptions",
+    "subscriptions": "Subscription Info",
     "viewSubscriptionInfo": "View Subscription Info"
   },
   "customerAdminPanel": {
@@ -3087,16 +3075,12 @@
     "tooManyResultsError": "Search returned too many results. Be more specific to find user"
   },
   "customerSubscriptions": {
-    "customerAdmin": "Customer Admin",
-    "subscriptionInfo": "{{name}} Subscription Info",
+    "customerInfo": "Customer Info",
     "partnerAdmin": "Partner Admins",
     "webexSubscriptions": "Webex Subscriptions",
     "noWebexSubscriptions": "No Webex Subscriptions",
-    "orderRequest": "Order Request",
-    "sendOrderRequest": "Send Order Request",
-    "copyToClipboard": "Copy to Clipboard",
-    "emailSubscriptionInfoDetail1": "Use the customer subscription information on this page to begin a trial conversion or place additional orders for Cisco Spark Services.",
-    "emailSubscriptionInfoDetail2": "To begin a trial conversion or place an order, send an order request using your email client. You can also copy the customer subscription info to your clipboard."
+    "emailSubscriptionInfo": "Email Subscription Info",
+    "emailSubscriptionInfoDetail": "Send subscription info to another contact using your email client. You can also copy the subscription into your clipboard."
   },
   "didAddModal": {
     "title": "Add Phone Numbers (Optional)"
@@ -3526,10 +3510,9 @@
       "overallTotalNumberOfCallsError": "There was an error while loading Total Number of calls",
       "total_calls": "Total Calls",
       "totalCallsDescription": "Calls hosted locally and that overflowed to the Cisco Collaboration Cloud.",
-      "onpremcalls": "Hosted On-Premises",
-      "cloudcalls": "Overflowed to Cloud",
-      "hostedcalls": "Hosted by this Cluster",
-      "redirectedcalls": "Redirected by this Cluster",
+      "onpremcalls": "on premises |",
+      "cloudcalls": "overflowed to cloud",
+      "redirectedcalls": "redirected",
       "nodata": "Data Not Available",
       "allclusters": "All Clusters",
       "percentage": "%"
@@ -4477,13 +4460,7 @@
   },
   "messengerCiSync": {
     "authRedirectHeading": "Redirect Users to Common Identity Login Flow",
-    "authRedirectTooltip": "If enabled, users will login to Common Identity. If disabled, users will login to Messenger.",
-    "pwdSyncHeading": "Sync Passwords From Messenger",
-    "pwdSyncTooltip": "If enabled, user password changes through Jabber client or through OrgAdmin will be synchronized over to their Spark accounts. If disabled, user password changes through Jabber client or through OrgAdmin remain in Messenger.",
-    "sparkEntHeading": "Users can access Free Spark",
-    "sparkEntTooltip": "If enabled, all users in your Messenger organization will be given access to Free Spark. If disabled, only Administrators will be given access to Free Spark.",
-    "usrDisHeading": "Replicate Users between Messenger & Spark",
-    "usrDisTooltip": "If enabled, users added in OrgAdmin will appear in Spark. If disabled, users in OrgAdmin will not appear in Spark.",
+    "authRedirectTooltip": "Jabber Users Login to CI Login Flow",
     "errorAuthFailed": "Authorization failed: ",
     "errorFailedCheckingCIEntitlements": "Failed checking user entitlements from Common Identity: ",
     "errorFailedCheckingCIRoles": "Failed checking Common Identity user roles: ",
@@ -4884,10 +4861,6 @@
           "squared-fusion-mgmt": "Management",
           "squared-fusion-media": "Media"
         }
-      },
-      "licenses": {
-        "title": "Licenses",
-        "manageUsersButton": "Manage Users"
       }
     }
   },

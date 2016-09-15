@@ -3,7 +3,7 @@ import { SettingSection } from './settingSection';
 export class SipDomainSetting extends SettingSection {
 
   /* @ngInject */
-  public constructor() {
+  constructor() {
     super('sipDomain');
     this.subsectionLabel = 'firstTimeWizard.setSipDomainTitle';
     this.subsectionDescription = '';
@@ -11,8 +11,8 @@ export class SipDomainSetting extends SettingSection {
 }
 angular.module('Core').component('sipdomainSetting', {
   bindings: {
-    showSaveButton: '<',
+    showSaveButton: '<'
   },
   controller: 'SipDomainSettingController as vm',
-  templateUrl: 'modules/core/settings/sipDomain/sipDomainSetting.tpl.html',
+  templateUrl:'modules/core/settings/sipDomain/sipDomainSetting.tpl.html',
 });

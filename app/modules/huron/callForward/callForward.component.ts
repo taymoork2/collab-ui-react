@@ -1,13 +1,13 @@
 import {
   CallForwardAll,
-  CallForwardBusy,
+  CallForwardBusy
 } from './callForward';
 
-class CallForward implements ng.IComponentController {
-  public static ALL: string = 'all';
-  public static BUSY: string = 'busy';
-  public static NONE: string = 'none';
-  public static VOICEMAIL: string = 'voicemail';
+class CallForward {
+  static ALL: string = 'all';
+  static BUSY: string = 'busy';
+  static NONE: string = 'none';
+  static VOICEMAIL: string = 'voicemail';
 
   public forwardState: string;
   public forwardExternalCalls: boolean = false;
@@ -21,7 +21,7 @@ class CallForward implements ng.IComponentController {
   public callForwardBusy: CallForwardBusy;
   public onChangeFn: Function;
 
-  public $onInit(): void {
+  private $onInit(): void {
     this.initForwardOptions();
     this.initCallForward();
   }
@@ -101,18 +101,18 @@ class CallForward implements ng.IComponentController {
   private change(callForwardAll: CallForwardAll, callForwardBusy: CallForwardBusy): void {
     this.onChangeFn({
       callForwardAll: callForwardAll,
-      callForwardBusy: callForwardBusy,
-    });
+      callForwardBusy: callForwardBusy
+    })
   }
 }
 
 export class CallForwardComponent implements ng.IComponentOptions {
   public controller = CallForward;
   public templateUrl = 'modules/huron/callForward/callForward.html';
-  public bindings = <{ [binding: string]: string }>{
+  public bindings: {[binding: string]: string} = {
     voicemailEnabled: '<',
     callForwardAll: '<',
     callForwardBusy: '<',
-    onChangeFn: '&',
+    onChangeFn: '&'
   };
 }

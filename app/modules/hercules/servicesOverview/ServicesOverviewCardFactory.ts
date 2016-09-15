@@ -13,7 +13,7 @@ import { ServicesOverviewHybridMediaCard } from './hybridMediaCard';
 function ServicesOverviewCardFactory(Authinfo) {
 
   return {
-    createCards: function (): Array<ServicesOverviewCard> {
+    createCards: function ():Array<ServicesOverviewCard> {
 
       return [
         new ServicesOverviewMessageCard(Authinfo),
@@ -24,9 +24,9 @@ function ServicesOverviewCardFactory(Authinfo) {
         new ServicesOverviewHybridManagementF410Card(),
         new ServicesOverviewHybridCalendarCard(),
         new ServicesOverviewHybridCallCard(),
-        new ServicesOverviewHybridMediaCard(),
+        new ServicesOverviewHybridMediaCard()
       ];
-    },
+    }
   };
 }
 

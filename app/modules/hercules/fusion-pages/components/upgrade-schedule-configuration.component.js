@@ -4,11 +4,10 @@
   angular.module('Hercules')
     .component('upgradeScheduleConfiguration', {
       bindings: {
-        clusterId: '<',
-        onlyDaily: '<',
+        clusterId: '<'
       },
       controller: UpgradeScheduleConfigurationCtrl,
-      templateUrl: 'modules/hercules/fusion-pages/components/upgrade-schedule-configuration.html',
+      templateUrl: 'modules/hercules/fusion-pages/components/upgrade-schedule-configuration.html'
     });
 
   /* @ngInject */
@@ -34,9 +33,6 @@
     }
 
     function $onChanges(changes) {
-      if (changes.onlyDaily) {
-        vm.onlyDaily = changes.onlyDaily.currentValue;
-      }
       if (changes.clusterId) {
         if (changes.clusterId.currentValue &&
           changes.clusterId.previousValue !== changes.clusterId.currentValue) {
@@ -66,11 +62,12 @@
           vm.upgradeSchedule = upgradeSchedule;
           vm.nextUpdateOffset = moment.tz(upgradeSchedule.nextUpgradeWindow.startTime, upgradeSchedule.scheduleTimeZone).format('Z');
           vm.formOptions.day = getDayOptions();
-          vm.syncing = false;
         })
         .catch(function (error) {
-          // Do not reset vm.syncing if there was an error
           Notification.error(error.message || error.statusText);
+        })
+        .finally(function () {
+          vm.syncing = false;
         });
     }
 
@@ -176,15 +173,11 @@
         var sunday = days.pop();
         days = [sunday].concat(days);
       }
-      if (!vm.onlyDaily) {
-        // add daily option at the top
-        return [{
-          label: $translate.instant('weekDays.daily'),
-          value: 'everyDay'
-        }].concat(days);
-      } else {
-        return days;
-      }
+      // add daily option at the top
+      return [{
+        label: $translate.instant('weekDays.daily'),
+        value: 'everyDay'
+      }].concat(days);
     }
 
     function labelForTimeZone(zone) {

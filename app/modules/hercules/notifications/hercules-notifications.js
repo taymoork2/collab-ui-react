@@ -77,6 +77,15 @@
       NotificationService.removeNotification(notificationId);
     };
 
+    vm.openAddResourceModal = function () {
+      $modal.open({
+        controller: 'RedirectTargetController',
+        controllerAs: 'redirectTarget',
+        templateUrl: 'modules/hercules/redirect-target/redirect-target-dialog.html',
+        type: 'small'
+      });
+    };
+
     vm.showEnterpriseSettings = function () {
       $state.go('setupwizardmodal', {
         currentTab: 'enterpriseSettings'

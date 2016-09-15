@@ -131,7 +131,10 @@
       pointer-events: none;
       position: absolute;
     }
-    background-color: $white !important;
+  }
+
+  .ct-left-cs-input:focus {
+    border-color: $gray-light-3 !important;
   }
 
   .ct-footer {
@@ -307,9 +310,6 @@
   }
   .ct-error-border {
     border-color: $color-alerts-base;
-  }
-  .ct-add-contain::before {
-    cursor: pointer;
   }
 }
 

@@ -1,44 +1,44 @@
 namespace globalsettings {
 
-  interface IRetentionResponse {
+  interface RetentionResponse {
     data: {
-      sparkDataRetentionDays: string
-    };
+      sparkDataRetentionDays:string
+    }
   }
 
   export class RetentionSettingController {
 
     public dataLoaded = false;
-    private orgId: string;
+    private orgId:string;
 
     // default is to keep until storage is full => -1
-    public RETENTION_DEFAULT: string = '-1';
+    public RETENTION_DEFAULT:string = '-1';
 
-    public initialRetention: {
-      value: string,
-      label: string
+    initialRetention:{
+      value:string,
+      label:string
     };
 
-    public selectedRetention: {
-      value: string,
-      label: string
+    selectedRetention:{
+      value:string,
+      label:string
     };
 
-    public retentionOptions = [{
+    retentionOptions = [{
       value: '90',
-      label: this.$translate.instant('globalSettings.retention.retentionOption1'),
+      label: this.$translate.instant('globalSettings.retention.retentionOption1')
     }, {
       value: '180',
-      label: this.$translate.instant('globalSettings.retention.retentionOption2'),
+      label: this.$translate.instant('globalSettings.retention.retentionOption2')
     }, {
       value: '365',
-      label: this.$translate.instant('globalSettings.retention.retentionOption3'),
+      label: this.$translate.instant('globalSettings.retention.retentionOption3')
     }, {
       value: '730',
-      label: this.$translate.instant('globalSettings.retention.retentionOption4'),
+      label: this.$translate.instant('globalSettings.retention.retentionOption4')
     }, {
       value: '-1',
-      label: this.$translate.instant('globalSettings.retention.retentionOption5'),
+      label: this.$translate.instant('globalSettings.retention.retentionOption5')
     }];
 
     /* @ngInject */
@@ -47,8 +47,8 @@ namespace globalsettings {
 
       this.RetentionService.getRetention(this.orgId)
         .then((response) => {
-          let sparkDataRetentionDays = response.sparkDataRetentionDays || this.RETENTION_DEFAULT;
-          let retentionGuiOption = _.find(this.retentionOptions, { value: sparkDataRetentionDays });
+          var sparkDataRetentionDays = response.sparkDataRetentionDays || this.RETENTION_DEFAULT;
+          var retentionGuiOption = _.find(this.retentionOptions, {value: sparkDataRetentionDays});
           if (retentionGuiOption) {
             this.initialRetention = retentionGuiOption;
             this.selectedRetention = retentionGuiOption;
@@ -60,11 +60,11 @@ namespace globalsettings {
 
     public updateRetention() {
       if (this.dataLoaded && this.selectedRetention && this.initialRetention) {
-        if ((Number(this.selectedRetention.value) !== -1 && Number(this.selectedRetention.value) < Number(this.initialRetention.value)) || Number(this.initialRetention.value) === -1) {
+        if((Number(this.selectedRetention.value) != -1 && Number(this.selectedRetention.value) < Number(this.initialRetention.value)) || Number(this.initialRetention.value) == -1) {
           this.$modal.open({
             type: 'dialog',
             templateUrl: 'modules/core/settings/retention/confirmLowerRetention.tpl.html',
-            controllerAs: 'ctrl',
+            controllerAs: 'ctrl'
           }).result.then(() => {
             this.RetentionService.setRetention(this.orgId, this.selectedRetention.value)
               .then((response) => {

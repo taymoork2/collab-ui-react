@@ -6,7 +6,7 @@
     .controller('CustomerReportsCtrl', CustomerReportsCtrl);
 
   /* @ngInject */
-  function CustomerReportsCtrl($state, $stateParams, $q, $timeout, $translate, Log, Authinfo, CustomerReportService, DummyCustomerReportService, CustomerGraphService, WebexReportService, Userservice, WebExApiGatewayService, Storage, FeatureToggleService, MediaServiceActivationV2) {
+  function CustomerReportsCtrl($scope, $state, $stateParams, $q, $timeout, $translate, Log, Authinfo, CustomerReportService, DummyCustomerReportService, CustomerGraphService, WebexReportService, Userservice, WebExApiGatewayService, Storage, FeatureToggleService, MediaServiceActivationV2) {
     var vm = this;
     var ABORT = 'ABORT';
     var REFRESH = 'refresh';
@@ -481,10 +481,9 @@
     }
 
     // WEBEX side of the page has been copied from the existing reports page
-    vm.webexReportsObject = {};
-    vm.webexOptions = [];
-    vm.webexSelected = null;
-    vm.updateWebexReports = updateWebexReports;
+    $scope.webexReportsObject = {};
+    $scope.webexOptions = [];
+    $scope.webexSelected = null;
 
     function onlyUnique(value, index, self) {
       return self.indexOf(value) === index;
@@ -513,7 +512,7 @@
             WebExApiGatewayService.siteFunctions(url).then(
               function getSiteSupportsIframeSuccess(result) {
                 if (result.isAdminReportEnabled && result.isIframeSupported) {
-                  vm.webexOptions.push(result.siteUrl);
+                  $scope.webexOptions.push(result.siteUrl);
 
                   if (!vm.showWebexTab) {
                     vm.headerTabs.push({
@@ -545,10 +544,10 @@
 
             // get the information needed for the webex reports index page
             var stateParamsSiteUrl = $stateParams.siteUrl;
-            var stateParamsSiteUrlIndex = vm.webexOptions.indexOf(stateParamsSiteUrl);
+            var stateParamsSiteUrlIndex = $scope.webexOptions.indexOf(stateParamsSiteUrl);
 
             var storageReportsSiteUrl = Storage.get('webexReportsSiteUrl');
-            var storageReportsSiteUrlIndex = vm.webexOptions.indexOf(storageReportsSiteUrl);
+            var storageReportsSiteUrlIndex = $scope.webexOptions.indexOf(storageReportsSiteUrl);
 
             // initialize the site that the webex reports index page will display
             var webexSelected = null;
@@ -557,7 +556,7 @@
             } else if (-1 !== storageReportsSiteUrlIndex) { // otherwise, if a valid siteUrl is in the local storage, the reports index page should reflect that site
               webexSelected = storageReportsSiteUrl;
             } else { // otherwise, the reports index page should reflect the 1st site that is in the dropdown list
-              webexSelected = vm.webexOptions[0];
+              webexSelected = $scope.webexOptions[0];
             }
 
             logMsg = funcName + ": " + "\n" +
@@ -568,8 +567,8 @@
               "webexSelected=" + webexSelected;
             Log.debug(logMsg);
 
-            vm.webexSelected = webexSelected;
-            updateWebexReports();
+            $scope.webexSelected = webexSelected;
+            $scope.updateWebexReports();
           }
         }
       );
@@ -591,24 +590,22 @@
       );
     }
 
-    function updateWebexReports() {
-      var funcName = "updateWebexReports()";
-      var logMsg = "";
-
+    $scope.updateWebexReports = function () {
       var storageReportsSiteUrl = Storage.get('webexReportsSiteUrl');
-      var webexSelected = vm.webexSelected;
+      var scopeWebexSelected = $scope.webexSelected;
 
-      logMsg = funcName + "\n" +
-        "storageReportsSiteUrl=" + storageReportsSiteUrl + "\n" +
-        "webexSelected=" + webexSelected;
+      var logMsg = "updateWebexReports(): " + "\n" +
+        "scopeWebexSelected=" + scopeWebexSelected + "\n" +
+        "storageReportsSiteUrl=" + storageReportsSiteUrl;
       Log.debug(logMsg);
 
-      vm.webexReportsObject = WebexReportService.initReportsObject(webexSelected);
+      $scope.webexReportsObject = WebexReportService.initReportsObject(scopeWebexSelected);
+      $scope.infoCardObj = $scope.webexReportsObject.infoCardObj;
 
-      if (webexSelected !== storageReportsSiteUrl) {
-        Storage.put('webexReportsSiteUrl', webexSelected);
+      if (scopeWebexSelected !== storageReportsSiteUrl) {
+        Storage.put('webexReportsSiteUrl', scopeWebexSelected);
       }
-    }
+    };
 
     init();
   }

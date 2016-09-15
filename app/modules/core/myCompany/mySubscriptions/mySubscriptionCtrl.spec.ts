@@ -3,6 +3,7 @@
 describe('Controller: MySubscriptionCtrl', function () {
   let $httpBackend, rootScope, $scope, $controller, q, controller, Orgservice, ServiceDescriptor, Authinfo;
   let data = getJSONFixture('core/json/myCompany/subscriptionData.json');
+  let subId = 'sub-id';
   let trialUrl = 'https://atlas-integration.wbx2.com/admin/api/v1/commerce/online/subID';
   let trialUrlResponse = 'trialUrlResponse';
 
@@ -49,7 +50,7 @@ describe('Controller: MySubscriptionCtrl', function () {
       $rootScope: rootScope,
       Orgservice: Orgservice,
       ServiceDescriptor: ServiceDescriptor,
-      Authinfo: Authinfo,
+      Authinfo: Authinfo
     });
   };
 
@@ -66,7 +67,7 @@ describe('Controller: MySubscriptionCtrl', function () {
       spyOn(this.DigitalRiverService, 'getSubscriptionsUrl').and.returnValue(this.getDigitalRiverSubscriptionsUrlDefer.promise);
       spyOn(this.Notification, 'errorWithTrackingId');
       spyOn(Orgservice, 'getLicensesUsage').and.returnValue(q.when(data.subscriptionsResponse));
-    });
+    })
     it('should get digital river order history url to load iframe', function () {
       this.getDigitalRiverSubscriptionsUrlDefer.resolve('https://some.url.com');
       startController();

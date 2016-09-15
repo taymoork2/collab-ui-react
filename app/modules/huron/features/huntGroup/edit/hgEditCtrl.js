@@ -48,7 +48,6 @@
     vm.selectedFallbackNumber = undefined;
     vm.selectedFallbackMember = undefined;
     vm.disableVoicemail = false;
-    vm.allowLocalValidation = false;
 
     vm.showDisableSave = showDisableSave;
 
@@ -67,7 +66,6 @@
     ////////////////
 
     function init() {
-      allowLocalValidation();
       HuntGroupEditDataService.reset();
       HuntGroupEditDataService.fetchHuntGroup(customerId, vm.hgId)
         .then(function (pristineData) {
@@ -149,7 +147,7 @@
 
     function showDisableSave() {
       return (vm.form.$invalid ||
-        (HuntGroupFallbackDataService.isFallbackInvalid() && !vm.allowLocalValidation) ||
+        HuntGroupFallbackDataService.isFallbackInvalid() ||
         vm.isMembersInvalid());
     }
 
@@ -163,7 +161,7 @@
     }
 
     function shouldShowFallbackWarning() {
-      return HuntGroupFallbackDataService.isFallbackInvalid() && !vm.allowLocalValidation;
+      return HuntGroupFallbackDataService.isFallbackInvalid();
     }
 
     function removeFallbackDest() {
@@ -252,7 +250,7 @@
         huntMethod: vm.model.huntMethod,
         maxRingSecs: vm.model.maxRingSecs.value,
         maxWaitMins: vm.model.maxWaitMins.value,
-        fallbackDestination: HuntGroupFallbackDataService.getFallbackDestinationJSON(vm.allowLocalValidation),
+        fallbackDestination: HuntGroupFallbackDataService.getFallbackDestinationJSON(),
         members: HuntGroupMemberDataService.getMembersNumberUuidJSON()
       };
     }
@@ -358,12 +356,6 @@
         }
       }];
       vm.isLoadingCompleted = true;
-    }
-
-    function allowLocalValidation() {
-      HuntGroupFallbackDataService.allowLocalValidation().then(function (result) {
-        vm.allowLocalValidation = result;
-      });
     }
   }
 })();

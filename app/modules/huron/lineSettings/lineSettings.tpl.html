@@ -17,11 +17,11 @@
       <uc-directory-number-old></uc-directory-number-old>
     </cs-sp-section>
     <cs-sp-section>
-      <h4 class="top-padding-section-title" translate="callForwardPanel.title"></h4>
+      <h4 translate="callForwardPanel.title"></h4>
       <formly-form model="lineSettings.cfModel" fields="lineSettings.callForwardingFields"></formly-form>
     </cs-sp-section>
     <cs-sp-section>
-      <h4 class="top-padding-section-title" translate="callerIdPanel.title"></h4>
+      <h4 translate="callerIdPanel.title"></h4>
       <formly-form model="lineSettings.callerIdInfo" fields="lineSettings.callerIdFields"></formly-form>
       <div class="caller-id-description">
         <p>{{lineSettings.callerIdInfo.callerIdSelection.value.name}}</p>
@@ -30,9 +30,9 @@
     </cs-sp-section>
     <div>
       <cs-sp-section >
-        <h4 class="top-padding-section-title" translate="multipleCalls.title"></h4>
+        <h4 class="multiple-calls-title" translate="multipleCalls.title"></h4>
         <label translate="multipleCalls.multipleCallsDescription" class = "caller-id-description"></label>
-        <formly-form model="lineSettings.simultaneousModel" fields="lineSettings.simultaneousCalls"></formly-form>
+        <formly-form model="lineSettings.simultaneousModel" class="inline-radio" fields="lineSettings.simultaneousCalls"></formly-form>
       </cs-sp-section>
     </div>
     <cs-sp-section>

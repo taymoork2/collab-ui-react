@@ -3,7 +3,7 @@ import { SettingSection } from './settingSection';
 export class AuthenticationSetting extends SettingSection {
 
   /* @ngInject */
-  public constructor() {
+  constructor() {
     super('authentication');
     this.subsectionDescription = '';
   }

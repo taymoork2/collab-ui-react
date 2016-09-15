@@ -146,8 +146,8 @@ describe('Care admin should be able to', function () {
     utils.expectIsDisplayed(careChatTemplateSetupPage.customerInfo_Header_Welcome);
     utils.expectIsDisplayed(careChatTemplateSetupPage.customerInfo_Header_Org);
     utils.expectIsDisplayed(careChatTemplateSetupPage.customerInfo_screen_optional3);
+
     utils.expectIsDisplayed(careChatTemplateSetupPage.customerInfo_attCard_default_Content);
-    utils.expectIsDisabled(careChatTemplateSetupPage.templatePreviewTextField);
   }
 
   function validateHeaderChange() {
@@ -201,7 +201,6 @@ describe('Care admin should be able to', function () {
 
   function validateContentsOfFeedbackPage() {
     validateTitleAndDesc('Feedback Screen', 'This screen is used to collect feedback from the customer after the chat ends');
-    utils.expectIsDisabled(careChatTemplateSetupPage.templatePreviewTextField);
   }
 
   function validateContentsOfAgentUnavailablePage() {

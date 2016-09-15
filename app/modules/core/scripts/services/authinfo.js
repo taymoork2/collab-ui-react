@@ -452,9 +452,6 @@
       isWebexMessenger: function () {
         return isEntitled(Config.entitlements.messenger);
       },
-      isCare: function () {
-        return isEntitled(Config.entitlements.care);
-      },
       hasAccount: function () {
         return authData.hasAccount;
       },

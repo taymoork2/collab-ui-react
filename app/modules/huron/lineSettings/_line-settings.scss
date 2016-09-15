@@ -1,4 +1,9 @@
 /*****  _line-settings  *****/
+
+.call-forward-all {
+  margin-bottom: 20px;
+}
+
 .confirmation-body {
   .warning-icon {
     @extend .icon;
@@ -40,8 +45,16 @@
   color: $gray-dark;
 }
 
-// TODO: (jlowery) remove when new user/place components are done.
-.top-padding-section-title {
+.inline-radio {
+  & > * {
+    display: inline-block;
+    & ~ * {
+      @include vr-spacing(ml,1);
+    }
+  }
+}
+
+.multiple-calls-title {
   padding-top: 20px;
 }
 .side-panel-section {

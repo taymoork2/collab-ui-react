@@ -6,7 +6,7 @@ export class SipDomainSettingController {
   public isDisabled = false;
   public isButtonDisabled = false;
   public isLoading = false;
-  public isConfirmed: boolean = null;
+  public isConfirmed:boolean = null;
 
   public isRoomLicensed = false;
   public isSSAReserved = false;
@@ -32,15 +32,15 @@ export class SipDomainSettingController {
     this.checkSSAReservation();
   }
 
-  get isUrlAvailable(): boolean {
+  get isUrlAvailable():boolean {
     return this._inputValue && (this._inputValue === this._validatedValue);
   }
 
-  get inputValue(): string {
+  get inputValue():string {
     return this._inputValue;
   }
 
-  set inputValue(newValue: string) {
+  set inputValue(newValue:string) {
 
     if (newValue !== this._validatedValue && !this.isDisabled) {
       this.isError = false;
@@ -51,9 +51,10 @@ export class SipDomainSettingController {
   }
 
   public checkSSAReservation() {
-    if (this.isSSAReserved || this.Config.isE2E()) {
+    if(this.isSSAReserved || this.Config.isE2E()) {
       this.$scope.$emit('wizardNextButtonDisable', false);
-    } else {
+    }
+    else {
       this.$scope.$emit('wizardNextButtonDisable', !this.isConfirmed);
     }
   }
@@ -116,11 +117,12 @@ export class SipDomainSettingController {
       });
   }
 
+
   private checkRoomLicense() {
     this.Orgservice.getLicensesUsage().then((response) => {
-      let licenses: any = _.get(response, '[0].licenses');
+      let licenses:any = _.get(response, '[0].licenses');
       let roomLicensed = _.find(licenses, {
-        offerName: 'SD',
+        offerName: 'SD'
       });
       this.isRoomLicensed = !_.isUndefined(roomLicensed);
       this.subdomainCount++;

@@ -5,14 +5,12 @@
     .module('Huron')
     .controller('SingleNumberReachInfoCtrl', SingleNumberReachInfoCtrl);
 
-  function SingleNumberReachInfoCtrl($scope, $stateParams, RemoteDestinationService, TelephonyInfoService, Notification, $translate, CountryCodes, $q, DialPlanService, Authinfo) {
+  function SingleNumberReachInfoCtrl($scope, $stateParams, RemoteDestinationService, TelephonyInfoService, Notification, $translate, CountryCodes, $q) {
     var vm = this;
     vm.currentUser = $stateParams.currentUser;
     vm.saveSingleNumberReach = saveSingleNumberReach;
     vm.reset = reset;
     vm.snrInfo = angular.copy(TelephonyInfoService.getTelephonyInfo().snrInfo);
-    vm.customerLocalDialing = false;
-    vm.regionCode = '';
 
     function getCountryInfo(code) {
       var deferred = $q.defer();
@@ -35,6 +33,26 @@
 
       return deferred.promise;
     }
+
+    vm.snrFormFields = [{
+      key: 'remoteDest',
+      type: 'countrylist',
+      templateOptions: {
+        placeholder: $translate.instant('singleNumberReachPanel.snrRemoteDestinationNumberPlaceholder'),
+        inputClass: 'col-sm-12',
+        maxLength: '24',
+        required: true,
+        options: [{
+          name: $translate.instant('singleNumberReachPanel.unitedStates'),
+          code: 'us',
+          number: '1'
+        }, {
+          name: $translate.instant('singleNumberReachPanel.austrailia'),
+          code: 'au',
+          number: '61'
+        }]
+      }
+    }];
 
     vm.snrWaitSecondsOptions = [{
       name: '20',
@@ -59,34 +77,7 @@
     }];
     vm.snrLineOption = vm.snrOptions[0];
 
-    DialPlanService.getCustomerVoice(Authinfo.getOrgId()).then(function (response) {
-      vm.regionCode = response.regionCode;
-      vm.customerLocalDialing = !!vm.regionCode;
-
-      if (!vm.customerLocalDialing) {
-        vm.snrFormFields = [{
-          key: 'remoteDest',
-          type: 'countrylist',
-          templateOptions: {
-            placeholder: $translate.instant('singleNumberReachPanel.snrRemoteDestinationNumberPlaceholder'),
-            inputClass: 'col-sm-12',
-            maxLength: '24',
-            required: true,
-            options: [{
-              name: $translate.instant('singleNumberReachPanel.unitedStates'),
-              code: 'us',
-              number: '1'
-            }, {
-              name: $translate.instant('singleNumberReachPanel.austrailia'),
-              code: 'au',
-              number: '61'
-            }]
-          }
-        }];
-      }
-
-      init();
-    });
+    init();
 
     $scope.$on('telephonyInfoUpdated', function () {
       init();
@@ -98,16 +89,6 @@
 
       if (snrInfo.remoteDest) {
         vm.snrInfo.remoteDest = snrInfo.remoteDest;
-      } else if (snrInfo.destination && vm.customerLocalDialing) {
-        getCountryInfo(phoneUtils.getRegionCodeForNumber(vm.regionCode.toString() + snrInfo.destination.toString()))
-          .then(function (data) {
-            vm.snrInfo.remoteDest = {
-              name: data.name,
-              code: data.code,
-              number: data.number,
-              phoneNumber: snrInfo.destination
-            };
-          });
       } else if (snrInfo.destination) {
         getCountryInfo(phoneUtils.getRegionCodeForNumber(snrInfo.destination))
           .then(function (data) {

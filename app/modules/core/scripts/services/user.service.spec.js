@@ -75,8 +75,6 @@ describe('User Service', function () {
       .respond(200, testData.onboard_success_response);
     var userId = testData.onboard_success_response.userResponse[0].uuid;
     $httpBackend.expectPUT(UrlConfig.getSunlightConfigServiceUrl() + '/user' + '/' + userId).respond(200);
-    $httpBackend.expectGET(UrlConfig.getScimUrl(Authinfo.getOrgId()) + '/' + userId).respond(200);
-    $httpBackend.expectPATCH(UrlConfig.getScimUrl(Authinfo.getOrgId()) + '/' + userId).respond(200);
     Userservice.onboardUsers(testData.usersDataArray, testData.entitlements, [testData.sunlight_license]);
     $httpBackend.flush();
   });

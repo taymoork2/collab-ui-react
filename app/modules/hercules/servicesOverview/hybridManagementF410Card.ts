@@ -1,24 +1,24 @@
-import { ICardButton, CardType, ServicesOverviewCard } from './ServicesOverviewCard';
+import { CardButton, CardType, ServicesOverviewCard } from './ServicesOverviewCard';
 
 export class ServicesOverviewHybridManagementF410Card extends ServicesOverviewCard {
-  public getShowMoreButton(): ICardButton {
+  getShowMoreButton():CardButton {
     return undefined;
   }
 
-  private _buttons: Array<ICardButton> = [
+  private _buttons:Array<CardButton> = [
     {
       name: 'servicesOverview.cards.clusterList.buttons.all',
       link: 'services/clusters',
-      buttonClass: 'btn-link',
-    },
+      buttonClass: 'btn-link'
+    }
   ];
 
-  public getButtons(): Array<ICardButton> {
+  getButtons():Array<CardButton> {
     // TODO: remove buttons for types when there are no clusters for this type?
     return this._buttons;
   }
 
-  public f410FeatureEventHandler(hasFeature: boolean) {
+  public f410FeatureEventHandler(hasFeature:boolean) {
     this._display = hasFeature;
   }
 
@@ -28,7 +28,7 @@ export class ServicesOverviewHybridManagementF410Card extends ServicesOverviewCa
       description: 'servicesOverview.cards.clusterList.description',
       cardClass: 'cluster-list',
       cardType: CardType.hybrid,
-      display : false,
+      display : false
     });
     this._loading = false;
   }

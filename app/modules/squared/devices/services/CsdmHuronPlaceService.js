@@ -16,7 +16,7 @@
       return placesFeatureIsEnabled()
         .then(function (res) {
           if (res) {
-            return $http.get(cmiPlacesUrl + '?wide=true')
+            return $http.get(cmiPlacesUrl)
               .then(function (res) {
                 _.forEach(res.data.places, function (item) {
                   item.phones = !item.phones ? [] : item.phones;

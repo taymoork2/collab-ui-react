@@ -11,15 +11,13 @@
   /* @ngInject */
   function sunlightConfigService($http, UrlConfig, Authinfo) {
     var sunlightUserConfigUrl = UrlConfig.getSunlightConfigServiceUrl() + '/user';
-    var sunlightChatTemplateUrl = UrlConfig.getSunlightConfigServiceUrl() + '/organization/' + Authinfo.getOrgId() + '/template';
-    var sunlightChatConfigBase = UrlConfig.getSunlightConfigServiceUrl() + '/organization';
+    var sunlightChatConfigUrl = UrlConfig.getSunlightConfigServiceUrl() + '/organization/' + Authinfo.getOrgId() + '/template';
     var service = {
       getUserInfo: getUserInfo,
       updateUserInfo: updateUserInfo,
       createChatTemplate: createChatTemplate,
       editChatTemplate: editChatTemplate,
-      createUserInfo: createUserInfo,
-      getChatConfig: getChatConfig
+      createUserInfo: createUserInfo
     };
 
     return service;
@@ -33,20 +31,15 @@
     }
 
     function createChatTemplate(chatTemplate) {
-      return $http.post(sunlightChatTemplateUrl, chatTemplate);
+      return $http.post(sunlightChatConfigUrl, chatTemplate);
     }
 
     function editChatTemplate(chatTemplate, templateId) {
-      return $http.put(sunlightChatTemplateUrl + '/' + templateId, chatTemplate);
+      return $http.put(sunlightChatConfigUrl + '/' + templateId, chatTemplate);
     }
 
     function createUserInfo(userData) {
       return $http.post(sunlightUserConfigUrl, userData);
-    }
-
-    function getChatConfig() {
-      var sunlightChatConfigUrl = sunlightChatConfigBase + '/' + Authinfo.getOrgId() + '/chat';
-      return $http.get(sunlightChatConfigUrl);
     }
   }
 })();

@@ -1,37 +1,37 @@
 import { ServicesOverviewHybridCard } from './ServicesOverviewHybridCard';
-import { ICardButton, CardType } from './ServicesOverviewCard';
+import { CardButton, CardType } from './ServicesOverviewCard';
 
 export class ServicesOverviewHybridMediaCard extends ServicesOverviewHybridCard {
-  public getShowMoreButton(): ICardButton {
+  getShowMoreButton():CardButton {
     return undefined;
   }
 
-  private _setupButton: ICardButton = {
+  private _setupButton:CardButton = {
     name: 'servicesOverview.genericButtons.setup',
     link: 'mediaserviceV2',
-    buttonClass: 'btn',
+    buttonClass: 'btn'
   };
 
-  private _buttons: Array<ICardButton> = [
+  private _buttons:Array<CardButton> = [
     {
       name: 'servicesOverview.cards.hybridMedia.buttons.resources',
       link: 'mediaserviceV2',
-      buttonClass: 'btn-link',
+      buttonClass: 'btn-link'
     },
     {
       name: 'servicesOverview.cards.hybridMedia.buttons.settings',
       link: 'mediaserviceV2/settings',
-      buttonClass: 'btn-link',
+      buttonClass: 'btn-link'
     }];
 
-  public getButtons(): Array<ICardButton> {
+  getButtons():Array<CardButton> {
     if (this.active) {
       return _.take(this._buttons, 3);
     }
     return [this._setupButton];
   }
 
-  public hybridMediaFeatureToggleEventHandler(hasFeature: boolean) {
+  public hybridMediaFeatureToggleEventHandler(hasFeature:boolean) {
     this._display = hasFeature;
   }
 
@@ -45,7 +45,7 @@ export class ServicesOverviewHybridMediaCard extends ServicesOverviewHybridCard 
       active: false,
       display : false,
       cardClass: 'media',
-      cardType: CardType.hybrid,
+      cardType: CardType.hybrid
     });
     this._loading = false;
   }

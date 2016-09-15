@@ -1,29 +1,29 @@
 <div id="webexSiteReports" name="webexSiteReports" class="webex-site-reports">
-  <div ng-if="!nav.webexReportsObject.viewReady" align="center">
-    <div ng-if="!nav.webexReportsObject.hasLoadError" id="reportsIndexLoading" name="reportsIndexLoading">
+  <div ng-if="!webexReportsObject.viewReady" align="center">
+    <div ng-if="!webexReportsObject.hasLoadError" id="reportsIndexLoading" name="reportsIndexLoading">
       <br>
       <br>
       <br>
       <i class="icon icon-spinner icon-2x"></i>
     </div>
-    <div ng-if="nav.webexReportsObject.hasLoadError" id="reportsIndexLoadError" name="reportsIndexLoadError">
+    <div ng-if="webexReportsObject.hasLoadError" id="reportsIndexLoadError" name="reportsIndexLoadError">
       <div class="nodata-icon">
         <i class="icon icon-circle-clock"></i>
       </div>
-      <div ng-if="nav.webexReportsObject.invalidNavUrls" class="nodata-message">
+      <div ng-if="webexReportsObject.invalidNavUrls" class="nodata-message">
         <span translate="webexUserSettingsAccessErrors.defaultNoNavUrlError"></span>
       </div>
-      <div ng-if="!nav.webexReportsObject.invalidNavUrls" class="nodata-message">
+      <div ng-if="!webexReportsObject.invalidNavUrls" class="nodata-message">
         <span translate="webexUserSettingsAccessErrors.defaultAccessError"></span>
         <br>
         <span translate="webexUserSettingsAccessErrors.defaultReloadMsg"></span>
       </div>
     </div>
   </div>
-  <div ng-if="nav.webexReportsObject.viewReady" id="{{nav.webexReportsObject.cardsSectionId}}" name="{{nav.webexReportsObject.cardsSectionId}}">
+  <div ng-if="webexReportsObject.viewReady" id="{{webexReportsObject.cardsSectionId}}" name="{{webexReportsObject.cardsSectionId}}">
     <div class="cs-card-container multiple-layouts">
       <cs-card-layout class="third">
-        <div ng-repeat="sec in nav.webexReportsObject.reports.sections">
+        <div ng-repeat="sec in webexReportsObject.reports.sections">
           <cs-card class="full" ng-if="$index === 0">
             <article>
               <header id="{{sec.section_name}}" name="{{sec.section_name}}" class="no-bullet">
@@ -45,7 +45,7 @@
         </div>
       </cs-card-layout>
       <cs-card-layout class="two-thirds">
-        <div ng-repeat="sec in nav.webexReportsObject.reports.sections">
+        <div ng-repeat="sec in webexReportsObject.reports.sections">
           <cs-card class="large" ng-if="$index != 0">
             <article>
               <header id="{{sec.section_name}}" name="{{sec.section_name}}" class="no-bullet">

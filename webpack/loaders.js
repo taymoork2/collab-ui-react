@@ -6,15 +6,9 @@ exports.js = {
   exclude: [/node_modules/, /\.spec\.js$/],
 };
 
-exports.eslint = {
+exports.lint = {
   test: /\.js$/,
   loaders: ['eslint'],
-  exclude: [/node_modules/],
-};
-
-exports.tslint = {
-  test: /\.ts$/,
-  loaders: ['tslint'],
   exclude: [/node_modules/],
 };
 
