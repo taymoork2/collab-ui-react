@@ -5,9 +5,9 @@
         <i ng-show="!$ctrl.showDetails" class="fa fa-caret-right"></i>
         <i ng-show="$ctrl.showDetails" class="fa fa-caret-down"></i>
         <h4>{{::$ctrl.group.name}}</h4>
+        <div class="resource-group-release-channel"><span translate="hercules.fusion.list.release-channel"></span>: {{::$ctrl.group.releaseChannel}}</div>
+        <div class="resource-group-release-cluster-number"><span translate="hercules.fusion.list.clusters"></span>: {{::$ctrl.group.clusters.length}}</div>
       </button>
-      <span class="resource-group-release-channel"><span translate="hercules.fusion.list.release-channel"></span>: {{::$ctrl.group.releaseChannel}}</span>
-      <span class="resource-group-release-cluster-number"><span translate="hercules.fusion.list.clusters"></span>: {{::$ctrl.group.clusters.length}}</span>
       <a ui-sref="resource-group-settings({id: $ctrl.group.id})" class="resource-group-settings-link"><i class="icon icon-settings"></i></a>
     </header>
     <section ng-show="$ctrl.showDetails">
