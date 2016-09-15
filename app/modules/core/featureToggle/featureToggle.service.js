@@ -32,6 +32,7 @@
       atlasNewUserExport: 'atlas-new-user-export',
       atlasNurturingEmails: 'atlas-nurturing-emails',
       atlasPinSettings: 'atlas-pin-settings',
+      atlasPMRonM2: 'atlas-pmr-on-m2',
       atlasPstnTfn: 'atlas-pstn-tfn',
       atlasReadOnlyAdmin: 'atlas-read-only-admin',
       atlasComplianceRole: 'atlas-compliance-role',
