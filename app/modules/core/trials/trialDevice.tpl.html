@@ -11,7 +11,7 @@
 <!-- body -->
 <div class="modal-body trials">
 <!-- error state - cannot add more devices -->
-    <div class="splash-msg" ng-if="callTrial.areAdditionalDevicesAllowed()">
+    <div class="messagebox-backdrop" ng-if="!callTrial.areAdditionalDevicesAllowed()">
       <div class="splash-msg__title">
         <h2 translate="trialModal.call.deviceTrialCapacityHeader"></h2>
       </div>
@@ -36,7 +36,7 @@
     </div>
   <form id="addDevicesForm" class="cs-form trial-modal" name="trialForm">
     <!-- normal state -->
-  <div ng-if="!callTrial.areAdditionalDevicesAllowed()">
+  <div ng-if="callTrial.areAdditionalDevicesAllowed()">
     <!-- select devices -->
     <div class="cs-form__section">
       <div class="section__info">
