@@ -2462,6 +2462,7 @@
     "internationalDialing": "International Dialing",
     "maxLines": "You reached the limit of 25 lines. Please remove a line from this user before provisioning additional lines.",
     "showMore": "Show more",
+    "showLess": "Show less",
     "localDialing": "Local Dialing"
   },
   "directoryNumberPanel": {
