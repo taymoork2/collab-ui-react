@@ -1,17 +1,21 @@
-export interface IDirectoryNumber {
-  dnUsage: string,
-  uuid: string,
-  pattern: string,
-  userDnUuid?: string,
-  altDnUuid?: string,
-  altDnPattern?: string,
-  dnSharedUsage?: string
-}
+import { Line } from '../lines/services';
 
-class DirectoryNumberListCtrl {
+class DirectoryNumberListCtrl implements ng.IComponentController {
 
-  public numberOfLines: number=5;
-  public directoryNumbers: Array<Object>;
+  public numberOfLines: number = 5;
+  public directoryNumbers: Array<Line>;
+  public hideShowMoreButton: boolean = false;
+  private primaryLabel: string;
+
+  constructor(
+    private $translate: ng.translate.ITranslateService
+  ) {
+    this.primaryLabel = this.$translate.instant('helpdesk.primary');
+  }
+
+  public setLineUseLabel(primary: boolean): string {
+   return (primary) ? this.primaryLabel : '';
+  }
 
   public showMoreClicked(): void {
     this.numberOfLines = undefined;
@@ -39,4 +43,4 @@ angular
       directoryNumbers: '<',
       directoryNumberSref: '@',
     },
-  })
+  });

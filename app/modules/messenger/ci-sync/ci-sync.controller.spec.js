@@ -52,14 +52,26 @@
         expect(ctrl.adminType).toBe(ctrl.adminTypes.ops);
       });
 
-      it('should initialize user with adminTypes.ops with Customer Admin', function () {
+      it('should initialize user with adminTypes.org with non-org-manager Customer Admin', function () {
         spyOn(Authinfo, 'isReadOnlyAdmin').and.returnValue(false);
         spyOn(Authinfo, 'isCustomerAdmin').and.returnValue(true);
         spyOn(CiService, 'hasRole').and.returnValue($q.when());
         spyOn(Authinfo, 'isWebexSquared').and.returnValue(true);
         spyOn(Authinfo, 'isWebexMessenger').and.returnValue(true);
+        spyOn(CiService, 'isOrgManager').and.returnValue($q.when(false));
         initController();
         expect(ctrl.adminType).toBe(ctrl.adminTypes.org);
+      });
+
+      it('should initialize user with adminTypes.ops with Customer Admin & Org Manager', function () {
+        spyOn(Authinfo, 'isReadOnlyAdmin').and.returnValue(false);
+        spyOn(Authinfo, 'isCustomerAdmin').and.returnValue(true);
+        spyOn(CiService, 'hasRole').and.returnValue($q.when());
+        spyOn(Authinfo, 'isWebexSquared').and.returnValue(true);
+        spyOn(Authinfo, 'isWebexMessenger').and.returnValue(true);
+        spyOn(CiService, 'isOrgManager').and.returnValue($q.when(true));
+        initController();
+        expect(ctrl.adminType).toBe(ctrl.adminTypes.ops);
       });
 
       it('should initialize with errorFailedCheckingCustSuccessRole error and user is adminTypes.unknown with Customer Admin',

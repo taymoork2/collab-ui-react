@@ -15,13 +15,13 @@ namespace domainManagement {
       this.recordMetrics({
         msg: 'open',
         done: false,
-        data: {domain: this.domain.text, action: 'open'}
+        data: { domain: this.domain.text, action: 'open' },
       });
 
       if (this._domain && this._domain.text && !this._domain.token) {
         DomainManagementService.getToken(this._domain.text).then((res) => {
           this._domain.token = res;
-        })
+        });
       }
     }
 
@@ -30,7 +30,7 @@ namespace domainManagement {
         msg: 'close',
         done: true,
         startLog: this._loadTime,
-        data: {domain: this.domain.text, action: 'close'}
+        data: { domain: this.domain.text, action: 'close' },
       });
       this.$previousState.go();
     }
@@ -44,11 +44,11 @@ namespace domainManagement {
         msg: 'read more',
         done: true,
         startLog: this._loadTime,
-        data: {domain: this.domain.text, action: 'manual'}
+        data: { domain: this.domain.text, action: 'manual' },
       });
     }
 
-    recordMetrics({msg, done, status = 200, startLog = moment(), data}) {
+    public recordMetrics({ msg, done, status = 200, startLog = moment(), data }) {
       this.LogMetricsService.logMetrics(
         'domainManage instructions ' + msg,
         this.LogMetricsService.eventType.domainManageInstructions,

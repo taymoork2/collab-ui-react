@@ -19,10 +19,10 @@ namespace myCompanyPage {
     ) {
       this._tabs = [{
         title: $translate.instant('my-company.subscription'),
-        state: 'my-company.subscriptions'
+        state: 'my-company.subscriptions',
       }, {
         title: $translate.instant('my-company.info'),
-        state: 'my-company.info'
+        state: 'my-company.info',
       }];
 
       this._title = $translate.instant('my-company.pageTitle');
