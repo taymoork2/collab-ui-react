@@ -464,14 +464,35 @@
           var userData = _helpers.createUserData();
           var userId = userResponseSuccess.uuid;
           SunlightConfigService.updateUserInfo(userData, userId)
-            .then(function (response) {
-              Log.debug("SunlightConfigService.updateUserInfo success response :" + JSON.stringify(response));
+            .then(function () {
+              checkAndPatchSyncKmsRole(userId);
             }, function () {
               Notification.error($translate.instant('usersPage.careAddUserError'));
             });
         }
       });
 
+    }
+
+    function checkAndPatchSyncKmsRole(userId) {
+      getUser(userId, function (data) {
+        if (data.success) {
+          var hasSyncKms = _.find(data.roles, function (r) {
+            return r === Config.backend_roles.spark_synckms;
+          });
+          if (!hasSyncKms) {
+            var userRoleData = {
+              schemas: Config.scimSchemas,
+              roles: [Config.backend_roles.spark_synckms]
+            };
+            updateUserProfile(userId, userRoleData, function (data) {
+              if (!data.success) {
+                Notification.error($translate.instant('usersPage.careAddUserRoleError'));
+              }
+            });
+          }
+        }
+      });
     }
 
     function createUserData() {

@@ -1,15 +1,9 @@
 import sharedLineModule from './index';
-import { SharedLineUser, User, SharedLineDevice } from './index';
-
 
 describe('Component: sharedLine', () => {
-  const SHAREDLINE_LABEL = 'label[for="sharedLine"]';
   const SHAREDLINE_INPUT = 'input#userInput';
   const SHAREDLINE_DIV = 'div.shared-line';
-  const TYPEAHEAD_DROPDOWN = '.shared-line .typeahead-dropdown';
-  const TYPEAHEAD_SELECT = '.shared-line .typeahead-dropdown ul li';
   const TYPEAHEAD_INPUT = '.typeahead-dropdown input';
-  const DROPDOWN_OPTIONS = '.dropdown-menu ul li a';
   const ACCORDION_LIST = '.accordion ul li';
   const ACCORDION = '.shared-line .accordion a';
   const REMOVE_LINK = 'a#removeMemberLink';
@@ -22,7 +16,7 @@ describe('Component: sharedLine', () => {
       '$q'
     );
 
-    this.$scope.getUserList= jasmine.createSpy('getUserList').and.returnValue(this.$q.when([]));
+    this.$scope.getUserList = jasmine.createSpy('getUserList').and.returnValue(this.$q.when([]));
     this.$scope.selectSharedLineUserFn = jasmine.createSpy('selectSharedLineUserFn');
     this.$scope.isSingleDeviceFn = jasmine.createSpy('isSingleDeviceFn');
     this.$scope.disassociateSharedLineUserFn = jasmine.createSpy('disassociateSharedLineUserFn');
@@ -37,7 +31,7 @@ describe('Component: sharedLine', () => {
       selectSharedLineUserFn: 'selectSharedLineUserFn(user)',
       getUserListFn: 'getUserList(filter)',
       isSingleDeviceFn: 'isSingleDeviceFn(uuid)',
-      disassociateSharedLineUserFn: 'disassociateSharedLineUserFn(user,false)'
+      disassociateSharedLineUserFn: 'disassociateSharedLineUserFn(user,false)',
     });
     this.$scope.sharedLineUsers = getJSONFixture('huron/json/sharedLine/sharedUsers.json');
     this.$scope.sharedLineEndpoints = getJSONFixture('huron/json/sharedLine/sharedDevices.json');
@@ -69,11 +63,9 @@ describe('Component: sharedLine', () => {
     });
 
     it('should have sharedline typeahead input', function () {
-      var elem = this.view.find(TYPEAHEAD_DROPDOWN);
       this.view.find(TYPEAHEAD_INPUT).val('a').change();
       this.$timeout.flush();
       expect(this.$scope.getUserList).toHaveBeenCalledWith('a');
-
     });
   });
 

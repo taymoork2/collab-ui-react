@@ -2,14 +2,14 @@ namespace domainManagement {
 
   describe('DomainManageDeleteCtrl', () => {
 
-    let Config, $q, $rootScope, $controller, $translate, DomainManagementService:any;
+    let Config, $q, $rootScope, $controller, $translate, DomainManagementService: any;
 
     //noinspection TypeScriptValidateTypes
     beforeEach(angular.mock.module('Core'));
     //noinspection TypeScriptValidateTypes
     beforeEach(angular.mock.module('Hercules'));
 
-    beforeEach(inject((_$q_, _$rootScope_, _Config_, _$controller_, _$translate_, _DomainManagementService_)=> {
+    beforeEach(inject((_$q_, _$rootScope_, _Config_, _$controller_, _$translate_, _DomainManagementService_) => {
       Config = _Config_;
       $q = _$q_;
       $rootScope = _$rootScope_;
@@ -18,27 +18,27 @@ namespace domainManagement {
       DomainManagementService = _DomainManagementService_;
     }));
 
-    let controllerFactory = (domain, user?)=> {
+    let controllerFactory = (domain, user?) => {
 
       if (!user) {
-        user = {email: 'user@same.domain', domain: 'same.domain'};
+        user = { email: 'user@same.domain', domain: 'same.domain' };
       }
 
       return $controller('DomainManageDeleteCtrl', {
-        $stateParams: {domain: domain, loggedOnUser: user},
-        $previousState: {go: sinon.stub()}
+        $stateParams: { domain: domain, loggedOnUser: user },
+        $previousState: { go: sinon.stub() },
       });
     };
 
-    it('constructor should create the ctrl and set domain', ()=> {
-      let ctrl = controllerFactory({text: 'test.example.com'});
+    it('constructor should create the ctrl and set domain', () => {
+      let ctrl = controllerFactory({ text: 'test.example.com' });
       expect(ctrl.domain).toBe('test.example.com');
     });
 
     it('with a pending domain should not set showWarning if enforce is on', () => {
       //noinspection TypeScriptUnresolvedVariable
       DomainManagementService._enforceUsersInVerifiedAndClaimedDomains = true;
-      let ctrl = controllerFactory({text: 'test.example.com', status: 'pending'});
+      let ctrl = controllerFactory({ text: 'test.example.com', status: 'pending' });
       expect(ctrl.showWarning).toBeFalsy();
     });
 
@@ -50,10 +50,10 @@ namespace domainManagement {
       DomainManagementService._domainList = [ {
         text: 'same.domain',
         token: '',
-        status: DomainManagementService.states.verified
+        status: DomainManagementService.states.verified,
       }];
 
-      let ctrl = controllerFactory({text: 'same.domain', status: 'verified'});
+      let ctrl = controllerFactory({ text: 'same.domain', status: 'verified' });
       expect(ctrl.showWarning).toBeFalsy();
       expect(ctrl.error).toBeFalsy();
     });
@@ -66,10 +66,10 @@ namespace domainManagement {
       DomainManagementService._domainList = [ {
         text: 'same.domain',
         token: '',
-        status: DomainManagementService.states.claimed
+        status: DomainManagementService.states.claimed,
       }];
 
-      let ctrl = controllerFactory({text: 'same.domain', status: 'verified'});
+      let ctrl = controllerFactory({ text: 'same.domain', status: 'verified' });
       expect(ctrl.showWarning).toBeFalsy();
       expect(ctrl.error).toBeFalsy();
     });
@@ -82,14 +82,14 @@ namespace domainManagement {
       DomainManagementService._domainList = [ {
         text: 'same.domain',
         token: '',
-        status: DomainManagementService.states.claimed
+        status: DomainManagementService.states.claimed,
       }, {
           text: 'other.domain',
           token: '',
-          status: DomainManagementService.states.pending
+          status: DomainManagementService.states.pending,
         }];
 
-      let ctrl = controllerFactory({text: 'same.domain', status: 'verified'});
+      let ctrl = controllerFactory({ text: 'same.domain', status: 'verified' });
       expect(ctrl.showWarning).toBeFalsy();
       expect(ctrl.error).toBeFalsy();
     });
@@ -97,7 +97,7 @@ namespace domainManagement {
     it('with a pending domain should not set showWarning if enforce is off', () => {
       //noinspection TypeScriptUnresolvedVariable
       DomainManagementService._enforceUsersInVerifiedAndClaimedDomains = false;
-      let ctrl = controllerFactory({text: 'test.example.com', status: 'pending'});
+      let ctrl = controllerFactory({ text: 'test.example.com', status: 'pending' });
       expect(ctrl.showWarning).toBeFalsy();
     });
 
@@ -108,21 +108,21 @@ namespace domainManagement {
       DomainManagementService._domainList = [ {
         text: 'same.domain',
         token: '',
-        status: DomainManagementService.states.verified
+        status: DomainManagementService.states.verified,
       },
         {
           text: 'other.domain',
           token: '',
-          status: DomainManagementService.states.verified
+          status: DomainManagementService.states.verified,
         }];
-      let ctrl = controllerFactory({text: 'test.example.com', status: 'verified'});
+      let ctrl = controllerFactory({ text: 'test.example.com', status: 'verified' });
       expect(ctrl.showWarning).toBeTruthy();
     });
 
     it('with a non pending domain should not set showWarning if enforce is off', () => {
       //noinspection TypeScriptUnresolvedVariable
       DomainManagementService._enforceUsersInVerifiedAndClaimedDomains = false;
-      let ctrl = controllerFactory({text: 'test.example.com', status: 'verified'});
+      let ctrl = controllerFactory({ text: 'test.example.com', status: 'verified' });
       expect(ctrl.showWarning).toBeFalsy();
     });
 
@@ -133,15 +133,15 @@ namespace domainManagement {
       DomainManagementService._domainList = [ {
         text: 'same.domain',
         token: '',
-        status: DomainManagementService.states.verified
+        status: DomainManagementService.states.verified,
       },
         {
           text: 'other.domain',
           token: '',
-          status: DomainManagementService.states.verified
+          status: DomainManagementService.states.verified,
         }];
 
-      let ctrl = controllerFactory({text: 'same.domain', status: DomainManagementService.states.verified});
+      let ctrl = controllerFactory({ text: 'same.domain', status: DomainManagementService.states.verified });
 
       expect(ctrl.error).toBe('domainManagement.delete.preventLockoutError');
     });
@@ -151,13 +151,13 @@ namespace domainManagement {
       //noinspection TypeScriptUnresolvedVariable
       DomainManagementService._enforceUsersInVerifiedAndClaimedDomains = false;
 
-      let ctrl = controllerFactory({text: 'same.domain', status: 'not-pending'});
+      let ctrl = controllerFactory({ text: 'same.domain', status: 'not-pending' });
 
       expect(ctrl.error).toBeUndefined();
     });
 
     it('delete a verified domain should invoke unverifyDomain on service', () => {
-      let ctrl = controllerFactory({text: 'test.example.com', status: 'verified'});
+      let ctrl = controllerFactory({ text: 'test.example.com', status: 'verified' });
       DomainManagementService.unverifyDomain = sinon.stub().returns($q.resolve());
 
       ctrl.deleteDomain();
@@ -167,7 +167,7 @@ namespace domainManagement {
     });
 
     it('delete a claimed domain should invoke unclaimDomain on service', () => {
-      let ctrl = controllerFactory({text: 'test.example.com', status: 'claimed'});
+      let ctrl = controllerFactory({ text: 'test.example.com', status: 'claimed' });
       DomainManagementService.unclaimDomain = sinon.stub().returns($q.resolve());
 
       ctrl.deleteDomain();
@@ -177,7 +177,7 @@ namespace domainManagement {
     });
 
     it('delete a non-verified domain should invoke unclaimDomain on service', () => {
-      let ctrl = controllerFactory({text: 'test.example.com', status: 'not-verified'});
+      let ctrl = controllerFactory({ text: 'test.example.com', status: 'not-verified' });
       DomainManagementService.unclaimDomain = sinon.stub().returns($q.resolve());
 
       ctrl.deleteDomain();
@@ -187,7 +187,7 @@ namespace domainManagement {
     });
 
     it('delete a proper pending domain should invoke unverifyDomain on service', () => {
-      let ctrl = controllerFactory({text: 'test.example.com', status: 'pending'});
+      let ctrl = controllerFactory({ text: 'test.example.com', status: 'pending' });
       DomainManagementService.unclaimDomain = sinon.stub().returns($q.resolve());
       DomainManagementService.unverifyDomain = sinon.stub().returns($q.resolve());
 

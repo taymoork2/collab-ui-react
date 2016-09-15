@@ -1,6 +1,6 @@
 namespace globalsettings {
 
-  describe('Controller: AuthenticationSettingController', ()=> {
+  describe('Controller: AuthenticationSettingController', () => {
 
     let $scope, $controller, controller, $q;
     let Orgservice;
@@ -11,7 +11,6 @@ namespace globalsettings {
     beforeEach(inject(dependencies));
     beforeEach(initSpies);
 
-
     function dependencies($rootScope, _$controller_, _$q_, _Orgservice_) {
       $scope = $rootScope.$new();
       $controller = _$controller_;
@@ -21,20 +20,20 @@ namespace globalsettings {
 
     function initSpies() {
       spyOn(Orgservice, 'getAdminOrg').and.callFake(function (callback) {
-        callback({ success:true, ssoEnabled:false});
+        callback({ success: true, ssoEnabled: false });
       });
     }
 
     function initController() {
       controller = $controller('AuthenticationSettingController', {
-        $scope: $scope
+        $scope: $scope,
       });
       $scope.$apply();
     }
 
-    describe('contructor()', ()=> {
+    describe('contructor()', () => {
 
-      describe('when getOrgSettings return failure', ()=> {
+      describe('when getOrgSettings return failure', () => {
         beforeEach(inject(dependencies));
         beforeEach(initSpyFailure);
         beforeEach(initController);
@@ -49,7 +48,7 @@ namespace globalsettings {
         }
       });
 
-      describe('when getOrgSettings sso status true', ()=> {
+      describe('when getOrgSettings sso status true', () => {
         beforeEach(inject(dependencies));
         beforeEach(initSpySSOEnabled);
         beforeEach(initController);
@@ -62,12 +61,12 @@ namespace globalsettings {
 
         function initSpySSOEnabled() {
           Orgservice.getAdminOrg.and.callFake(function (callback) {
-            callback({ success:true, ssoEnabled:true});
+            callback({ success: true, ssoEnabled: true });
           });
         }
       });
 
-      describe('when getOrgSettings sso status false', ()=> {
+      describe('when getOrgSettings sso status false', () => {
         beforeEach(inject(dependencies));
         beforeEach(initSpySSODisabled);
         beforeEach(initController);
@@ -80,7 +79,7 @@ namespace globalsettings {
 
         function initSpySSODisabled() {
           Orgservice.getAdminOrg.and.callFake(function (callback) {
-            callback({ success:true, ssoEnabled:false});
+            callback({ success: true, ssoEnabled: false });
           });
         }
       });
