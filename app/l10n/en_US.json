@@ -22,7 +22,10 @@
     "title": "Cloud Collaboration Management",
     "login": "Sign In",
     "loading": "Loading",
-    "license": "By using Cisco Spark Services you accept the Terms of Service and Privacy Statement."
+    "license": "By using Cisco Spark Services you accept the Terms of Service and Privacy Statement.",
+    "tos": "Terms of Service",
+    "privacy": "Privacy Statement",
+    "copyright": "Cisco and/or affiliates. All rights reserved."
   },
   "usersPage": {
     "assignServices": "Assign Services",

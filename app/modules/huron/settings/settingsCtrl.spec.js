@@ -1086,6 +1086,18 @@ describe('Controller: HuronSettingsCtrl', function () {
       expect(Notification.success).toHaveBeenCalledWith('huronSettings.saveSuccess');
     });
 
-  });
+    it('should have the correct payload for the esn site update', function () {
+      controller.model.site.uuid = '1234-56789';
+      controller.model.serviceNumber = {
+        pattern: '+19723456789'
+      };
 
+      controller.saveEmergencyCallBack();
+      expect(ServiceSetup.updateSite).toHaveBeenCalledWith(controller.model.site.uuid, {
+        emergencyCallBackNumber: {
+          pattern: controller.model.serviceNumber.pattern
+        }
+      });
+    });
+  });
 });
