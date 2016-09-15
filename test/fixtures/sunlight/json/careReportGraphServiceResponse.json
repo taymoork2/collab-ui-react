@@ -192,7 +192,7 @@
     },
     "graphs": [
       {
-        "title": "careReportsPage.handled",
+        "title": "careReportsPage.addressed",
         "lineColor": "#43A942",
         "valueField": "numTasksHandledState",
         "lineAlpha": 1,
@@ -206,7 +206,7 @@
         "fillAlphas": 0.1
       },
       {
-        "title": "careReportsPage.assigned",
+        "title": "careReportsPage.waiting",
         "lineColor": "#F5A623",
         "fillColors": "#FFA200",
         "valueField": "numTasksAssignedState",
@@ -221,7 +221,7 @@
         "fillAlphas": 0.1
       },
       {
-        "title": "careReportsPage.in-queue",
+        "title": "careReportsPage.in-progress",
         "lineColor": "#F5A623",
         "valueField": "numTasksQueuedState",
         "pattern": {
@@ -291,7 +291,7 @@
       "gridAlpha": 0,
       "axisAlpha": 1,
       "stackType": "regular",
-      "title": "careReportsPage.tasks"
+      "title": "careReportsPage.contacts"
     }],
     "export": {
       "libs": {
@@ -337,7 +337,7 @@
   },
   "taskTimeGraphs": [
     {
-      "title": "careReportsPage.handleTime",
+      "title": "careReportsPage.completionTime",
       "lineColor": "#43A942",
       "fillColors": "#017900",
       "valueField": "avgTaskCloseTime",
@@ -352,7 +352,7 @@
       "fillAlphas": 0.1
     },
     {
-      "title": "careReportsPage.queueTime",
+      "title": "careReportsPage.waitTime",
       "lineColor": "#F5A623",
       "fillColors": "#F5A623",
       "valueField": "avgTaskWaitTime",
@@ -375,22 +375,22 @@
   ],
   "taskAggregateGraphs": [
     {
-      "title": "careReportsPage.assigned",
+      "title": "careReportsPage.waiting",
       "lineColor": "#F5A623",
       "fillColors": "#FFA200",
       "valueField": "numWorkingTasks",
       "lineAlpha": 1,
+      "balloonColor": "#AEAEAF",
       "lineThickness": 1,
       "marginTop": 10,
       "marginLeft": 0,
       "plotAreaBorderAlpha": 0,
       "legendValueText": " ",
       "fillAlphas": 0.1,
-      "balloonColor": "#AEAEAF",
       "showBalloon": false
     },
     {
-      "title": "careReportsPage.in-queue",
+      "title": "careReportsPage.in-progress",
       "lineColor": "#F5A623",
       "fillColors": "#F5A623",
       "valueField": "numPendingTasks",
@@ -401,14 +401,15 @@
         "width": 14,
         "height": 14
       },
+      "showBalloon": true,
+      "balloonFunction": "undefined",
       "lineAlpha": 1,
       "balloonColor": "#AEAEAF",
       "lineThickness": 1,
       "marginTop": 10,
       "marginLeft": 0,
       "plotAreaBorderAlpha": 0,
-      "legendValueText": " ",
-      "showBalloon": true
+      "legendValueText": " "
     }
   ],
   "csatGraphs": [

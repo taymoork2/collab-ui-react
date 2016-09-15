@@ -79,7 +79,7 @@ describe('Service: Care Reports Service', function () {
       var expectedConfig = responseData.taskIncomingReportToday;
       expectedConfig.legend.equalWidths = true;
       expectedConfig.graphs = _.filter(expectedConfig.graphs, function (graph) {
-        if (graph.title === 'careReportsPage.handled' || graph.title === 'careReportsPage.abandoned') {
+        if (graph.title === 'careReportsPage.addressed' || graph.title === 'careReportsPage.abandoned') {
           return true;
         }
       });
@@ -129,7 +129,7 @@ describe('Service: Care Reports Service', function () {
       var expectedConfig = responseData.taskIncomingReportToday;
       expectedConfig.graphs = responseData.taskAggregateGraphs;
       _.map(expectedConfig.valueAxes, function (axis) {
-        axis.title = 'careReportsPage.tasks';
+        axis.title = 'careReportsPage.contacts';
       });
       _.map(taskAggregateReport.graphs, function (graph) {
         graph.balloonFunction = undefined;
