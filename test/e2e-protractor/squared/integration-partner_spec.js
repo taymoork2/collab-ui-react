@@ -5,7 +5,6 @@
 
 describe('Partner flow', function () {
   var appWindow;
-  log.verbose = true;
 
   describe('Login as partner admin user', function () {
 
