@@ -55,6 +55,7 @@
       callMultiDevice: 'call-multi-device',
       calliopeDiscovery: 'calliope-discovery',
       callParkService: 'call-park-service',
+      calsvcDetectCmrLoc: 'calsvc-detect-cmr-loc',
       clientRingbackV2: 'client-ringback-v2',
       console: 'console',
       deleteContent: 'delete-content',

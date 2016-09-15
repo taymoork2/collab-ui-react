@@ -724,6 +724,7 @@
 
       FeatureToggleService.atlasShipDevicesInternationalGetStatus()
         .then(function (results) {
+          results = true;
           vm.supportsInternationalShipping = results;
         });
 

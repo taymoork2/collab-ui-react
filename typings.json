@@ -19,7 +19,7 @@
     "jquery": "github:DefinitelyTyped/DefinitelyTyped/jquery/jquery.d.ts#0d501b1ff9d97a12c8b371affb64c921b6fe9832",
     "karma": "github:DefinitelyTyped/DefinitelyTyped/karma/karma.d.ts#46719185c564694c5583c4b7ad94dbb786ecad46",
     "karma-jasmine": "github:DefinitelyTyped/DefinitelyTyped/karma-jasmine/karma-jasmine.d.ts#46719185c564694c5583c4b7ad94dbb786ecad46",
-    "lodash": "github:DefinitelyTyped/DefinitelyTyped/lodash/lodash.d.ts#25b78b03bc815ea2d19b2e1a100988a8303f931e",
+    "lodash": "github:DefinitelyTyped/DefinitelyTyped/lodash/lodash-3.10.d.ts#fdddacc2e801364decd875dee45bbaf90110631d",
     "log4js": "github:DefinitelyTyped/DefinitelyTyped/log4js/log4js.d.ts#46719185c564694c5583c4b7ad94dbb786ecad46",
     "mime": "github:DefinitelyTyped/DefinitelyTyped/mime/mime.d.ts#46719185c564694c5583c4b7ad94dbb786ecad46",
     "moment": "github:DefinitelyTyped/DefinitelyTyped/moment/moment.d.ts#1a5b2a729d35b1d41e2d15818db013a3644c6ba4",
