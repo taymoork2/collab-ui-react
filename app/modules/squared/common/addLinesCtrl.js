@@ -4,7 +4,7 @@
   angular.module('Squared')
     .controller('AddLinesCtrl', AddLinesCtrl);
   /* @ngInject */
-  function AddLinesCtrl($stateParams, $state, $scope, Notification, $translate, $q, CommonLineService, Authinfo, CsdmHuronPlaceService, CsdmCodeService, DialPlanService) {
+  function AddLinesCtrl($stateParams, $state, $scope, Notification, $translate, $q, CommonLineService, Authinfo, CsdmHuronPlaceService, DialPlanService) {
     var vm = this;
     vm.wizardData = $stateParams.wizard.state().data;
 
@@ -38,7 +38,10 @@
           vm.isLoading = false;
           $stateParams.wizard.next({
             deviceName: vm.wizardData.deviceName,
-            code: code,
+            code: {
+                activationCode: code.password,
+                expiryTime: code.expiryTime
+            },
             cisUuid: Authinfo.getUserId(),
             userName: Authinfo.getUserName(),
             displayName: Authinfo.getUserName(),
@@ -72,13 +75,12 @@
             });
         });
       }
-      //This is temp code to be removed when CMI GDS code is ready
       function successcb(place) {
         vm.place = place;
-        CsdmCodeService
-          .createCodeForExisting(place.cisUuid)
-          .then(successCallback) //, XhrNotificationService.notify)
-          .catch(failCallback); //, XhrNotificationService.notify);
+        CsdmHuronPlaceService
+            .createOtp(place.cisUuid)
+            .then(successCallback)
+            .catch(failCallback);
       }
       addPlace();
     };

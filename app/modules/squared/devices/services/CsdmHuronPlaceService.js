@@ -4,6 +4,7 @@
   /* @ngInject  */
   function CsdmHuronPlaceService($window, $http, Authinfo, CsdmConverter, FeatureToggleService, $q, HuronConfig) {
 
+    var cmiOtpUri = HuronConfig.getCmiUrl() + '/identity/machines/otp';
     var cmiPlacesUrl = HuronConfig.getCmiV2Url() + '/customers/' + Authinfo.getOrgId() + '/places';
     var placesCache = {};
     var placesDeferred = $q.defer();
@@ -65,6 +66,12 @@
       });
     }
 
+    function createOtp(machineUuid) {
+      return $http.post(cmiOtpUri, {
+        machineUuid: machineUuid
+      });
+    }
+
     function createCmiPlace(name, directoryNumber) {
       return $http.post(cmiPlacesUrl, {
         displayName: name,
@@ -91,7 +98,8 @@
       deletePlace: deletePlace,
       createCmiPlace: createCmiPlace,
       getPlacesList: getPlacesList,
-      updatePlaceName: updatePlaceName
+      updatePlaceName: updatePlaceName,
+      createOtp: createOtp
     };
   }
 
