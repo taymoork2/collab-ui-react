@@ -3,7 +3,7 @@ import { SettingSection } from './settingSection';
 export class RetentionSetting extends SettingSection {
 
   /* @ngInject */
-  constructor() {
+  public constructor() {
     super('retention');
   }
 }
@@ -11,5 +11,5 @@ angular.module('Core').component('retentionSetting', {
   bindings: {
   },
   controller: 'RetentionSettingController as vm',
-  templateUrl:'modules/core/settings/retention/retentionSetting.tpl.html',
+  templateUrl: 'modules/core/settings/retention/retentionSetting.tpl.html',
 });

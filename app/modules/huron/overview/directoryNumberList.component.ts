@@ -1,29 +1,36 @@
-export interface IDirectoryNumber {
-  dnUsage: string,
-  uuid: string,
-  pattern: string,
-  userDnUuid?: string,
-  altDnUuid?: string,
-  altDnPattern?: string,
-  dnSharedUsage?: string
-}
+import { Line } from '../lines/services';
 
-class DirectoryNumberListCtrl {
+class DirectoryNumberListCtrl implements ng.IComponentController {
 
-  public numberOfLines: number=5;
-  public directoryNumbers: Array<Object>;
-  public hideShowMoreButton: boolean=false;
+  public directoryNumbers: Array<Line>;
+  private primaryLabel: string;
+  private lineThreshold: number;
+  public numberOfLines: number = this.lineThreshold;
+
+  constructor(
+    private $translate: ng.translate.ITranslateService
+  ) {
+    this.primaryLabel = this.$translate.instant('helpdesk.primary');
+  }
+
+  public setLineUseLabel(primary: boolean): string {
+   return (primary) ? this.primaryLabel : '';
+  }
 
   public showMoreClicked(): void {
-    this.hideShowMoreButton = true;
     this.numberOfLines = undefined;
   }
 
+  public showLessClicked(): void {
+    this.numberOfLines = this.lineThreshold;
+  }
+
   public showMoreButton(): boolean {
-    if (this.directoryNumbers.length > this.numberOfLines && !this.hideShowMoreButton)
-      return true;
-    else
-      return false;
+    return (this.directoryNumbers.length > this.lineThreshold && this.numberOfLines === this.lineThreshold);
+  }
+
+  public showLessButton(): boolean {
+    return (this.directoryNumbers.length > this.lineThreshold && this.numberOfLines === undefined);
   }
 }
 
@@ -35,5 +42,6 @@ angular
     bindings: {
       directoryNumbers: '<',
       directoryNumberSref: '@',
+      lineThreshold: '@',
     },
-  })
+  });

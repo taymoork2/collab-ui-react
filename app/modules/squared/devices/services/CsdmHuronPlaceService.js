@@ -16,7 +16,7 @@
       return placesFeatureIsEnabled()
         .then(function (res) {
           if (res) {
-            return $http.get(cmiPlacesUrl)
+            return $http.get(cmiPlacesUrl + '?wide=true')
               .then(function (res) {
                 _.forEach(res.data.places, function (item) {
                   item.phones = !item.phones ? [] : item.phones;
@@ -50,12 +50,12 @@
     }
 
     function updatePlaceName(placeUrl, name) {
+      var place = placeUrl;
+      var place_name = name;
       return $http.put(placeUrl, {
-        name: name
-      }).then(function (res) {
-        var place = CsdmConverter.convertPlace(res.data);
-        placesCache[place.url] = place;
-        return place;
+        displayName: name
+      }).then(function () {
+        placesCache[place].displayName = place_name;
       });
     }
 

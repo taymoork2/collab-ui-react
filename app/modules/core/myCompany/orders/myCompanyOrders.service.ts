@@ -1,13 +1,13 @@
 export interface IOrderDetail {
-  externalOrderId: string,
-  orderDate: Date,
-  status: string,
-  total: number,
-  productDescriptionList: string[],
+  externalOrderId: string;
+  orderDate: Date;
+  status: string;
+  total: number;
+  productDescriptionList: string[];
 }
 
 export interface IOrderList {
-  commerceOrderList: IOrderDetail[]
+  commerceOrderList: IOrderDetail[];
 }
 
 export class MyCompanyOrdersService {
