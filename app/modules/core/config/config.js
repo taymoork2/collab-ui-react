@@ -178,7 +178,7 @@
         EC: 'EC', // Event Center (WebEx)
         CO: 'CO', // Communication
         SD: 'SD', // Spark Room System
-        SB: 'SB', // Spark Board
+        SB: 'SB', // Seagull
         CMR: 'CMR', // Collaboration Meeting Room (WebEx)
         CDC: 'CDC' // Care Digital Channel
       },
