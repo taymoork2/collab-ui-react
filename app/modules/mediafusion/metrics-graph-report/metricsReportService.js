@@ -127,7 +127,7 @@
     }
 
     function getTotalCallsData(time, cluster) {
-      if (cluster != allClusters) {
+      if (cluster !== allClusters) {
         cluster = cluster.replace(/\W/g, '');
         cluster = cluster.toLowerCase();
       }
