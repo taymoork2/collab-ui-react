@@ -329,7 +329,7 @@
       categoryAxis.startOnAxis = true;
       categoryAxis.title = categoryAxisTitle;
 
-      var legend = CareReportsGraphService.getBaseVariable('legend');
+      var legend = "";
 
       var valueAxes = [CareReportsGraphService.getBaseVariable('axis')];
       valueAxes[0].title = $translate.instant('careReportsPage.csatRating');
