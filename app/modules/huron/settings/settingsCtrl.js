@@ -41,6 +41,7 @@
     vm.save = save;
     vm.resetSettings = resetSettings;
     vm.openSaveModal = openSaveModal;
+    vm.saveEmergencyCallBack = saveEmergencyCallBack;
 
     vm._voicemailNumberWatcher = _voicemailNumberWatcher;
     vm._voicemailEnabledWatcher = _voicemailEnabledWatcher;
@@ -923,7 +924,7 @@
           pattern: vm.model.serviceNumber.pattern
         };
 
-        return ServiceSetup.updateSite(vm.model.uuid, site)
+        return ServiceSetup.updateSite(vm.model.site.uuid, site)
           .catch(function (response) {
             errors.push(Notification.processErrorResponse(response, 'settingsServiceNumber.saveError'));
             return $q.reject(response);

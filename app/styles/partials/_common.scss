@@ -105,9 +105,11 @@ a[href="http://www.amcharts.com/javascript-charts/"] {
   transform: translateY(-50%);
 }
 
-.messagebox,
 .messagebox-backdrop {
   background-image: url(../images/bg_3515.jpg);
+  .message-box:before {
+    background-image: url(../images/bg_3515.jpg);
+  }
 }
 
 .actions-menu.open .dropdown-menu, .actions-menu.open .dropdown-menu .sub-menu, .dropdown-menu .actions-menu.open .sub-menu {
