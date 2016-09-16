@@ -25,6 +25,7 @@ describe('Spark Care Partner flow', function () {
       utils.expectCheckbox(partner.careTrialCheckbox, true);
       utils.expectCheckbox(partner.squaredUCTrialCheckbox, true);
       utils.expectCheckbox(partner.roomSystemsTrialCheckbox, true);
+      utils.setCheckboxIfDisplayed(partner.webExTrialCheckbox, false, 100);
 
       utils.sendKeys(partner.customerNameInput, partner.newTrial.customerName);
       utils.sendKeys(partner.customerEmailInput, partner.newTrial.customerEmail);

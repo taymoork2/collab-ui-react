@@ -71,6 +71,7 @@ describe('Partner flow', function () {
       utils.click(partner.roomSystemsTrialCheckbox); // no room systems on this trial
       utils.expectCheckbox(partner.squaredUCTrialCheckbox, false);
       utils.expectCheckbox(partner.roomSystemsTrialCheckbox, false);
+      utils.setCheckboxIfDisplayed(partner.webExTrialCheckbox, false, 100);
 
       utils.sendKeys(partner.customerNameInput, partner.newTrial.customerName);
       utils.sendKeys(partner.customerEmailInput, partner.newTrial.customerEmail);
