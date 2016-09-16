@@ -127,6 +127,10 @@
     }
 
     function getTotalCallsData(time, cluster) {
+      if (cluster != allClusters) {
+        cluster = cluster.replace(/\W/g, '');
+        cluster = cluster.toLowerCase();
+      }
       // cancel any currently running jobs
       if (activePromiseForTotalCalls !== null && angular.isDefined(activePromiseForTotalCalls)) {
         activePromiseForTotalCalls.resolve(ABORT);
