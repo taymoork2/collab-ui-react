@@ -71,7 +71,7 @@ describe('Partner flow', function () {
       utils.click(partner.roomSystemsTrialCheckbox); // no room systems on this trial
       utils.expectCheckbox(partner.squaredUCTrialCheckbox, false);
       utils.expectCheckbox(partner.roomSystemsTrialCheckbox, false);
-      utils.setCheckboxIfDisplayed(partner.webExTrialCheckbox, false, 100);
+      utils.setCheckboxIfDisplayed(partner.webexTrialCheckbox, false, 100);
 
       utils.sendKeys(partner.customerNameInput, partner.newTrial.customerName);
       utils.sendKeys(partner.customerEmailInput, partner.newTrial.customerEmail);
@@ -161,10 +161,8 @@ describe('Partner flow', function () {
       appWindow = browser.getWindowHandle();
 
       utils.click(partner.exitPreviewButton);
-
-      utils.click(partner.actionsButton);
-      utils.expectIsDisplayed(partner.launchCustomerButton);
-      utils.click(partner.launchCustomerButton);
+      utils.click(partner.newTrialRow);
+      utils.click(partner.launchCustomerPanelButton);
       utils.switchToNewWindow().then(function () {
 
         // backend services are slow to check userauthinfo/accounts

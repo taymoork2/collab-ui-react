@@ -23,22 +23,37 @@
     vm.displayQuality = true;
 
     vm.tab = $stateParams.tab;
+    vm.headerTabs = [{
+      title: $translate.instant('reportsPage.sparkReports'),
+      state: 'reports'
+    }];
 
+    var activeUserData = [];
+    var isActiveUsers = false;
     var activeUsersSort = ['userName', 'numCalls', 'sparkMessages', 'totalActivity'];
     var activeUsersChart = null;
-    var previousSearch = "";
+    var previousSearch = '';
+    var reportsUpdateToggle = FeatureToggleService.atlasReportsUpdateGetStatus();
     vm.activeUserStatus = REFRESH;
     vm.mostActiveUserStatus = REFRESH;
     vm.searchPlaceholder = $translate.instant('activeUsers.search');
-    vm.searchField = "";
+    vm.searchField = '';
     vm.mostActiveUsers = [];
     vm.showMostActiveUsers = false;
-    vm.displayMostActive = false;
     vm.activeUserReverse = true;
     vm.activeUsersTotalPages = 0;
     vm.activeUserCurrentPage = 0;
     vm.activeUserPredicate = activeUsersSort[3];
     vm.activeButton = [1, 2, 3];
+    vm.activeOptions = [{
+      value: 0,
+      label: $translate.instant('activeUsers.allUsers')
+    }, {
+      value: 1,
+      label: $translate.instant('activeUsers.activeUsers')
+    }];
+    vm.activeSelected = vm.activeOptions[0];
+    vm.displayActiveLineGraph = false;
 
     var avgRoomsChart = null;
     vm.avgRoomStatus = REFRESH;
@@ -76,11 +91,6 @@
     var metricsChart = null;
     vm.metricStatus = REFRESH;
     vm.metrics = {};
-
-    vm.headerTabs = [{
-      title: $translate.instant('reportsPage.sparkReports'),
-      state: 'reports'
-    }];
 
     var promises = {
       mf: FeatureToggleService.atlasMediaServiceMetricsGetStatus(),
@@ -120,6 +130,8 @@
 
     vm.timeUpdate = timeUpdate;
     vm.mediaUpdate = mediaUpdate;
+    vm.activityUpdate = activityUpdate;
+    vm.isActiveDisabled = isActiveDisabled;
     vm.resetCards = resetCards;
     vm.searchMostActive = searchMostActive;
     vm.deviceUpdate = deviceUpdate;
@@ -182,12 +194,15 @@
     };
 
     function init() {
-      if (!vm.tab) {
-        $timeout(function () {
-          setDummyData();
-          setAllGraphs();
-        }, 30);
-      }
+      reportsUpdateToggle.then(function (response) {
+        vm.displayActiveLineGraph = response;
+        if (!vm.tab) {
+          $timeout(function () {
+            setDummyData();
+            setAllGraphs();
+          }, 30);
+        }
+      });
     }
 
     function timeUpdate() {
@@ -200,16 +215,22 @@
       vm.metricStatus = REFRESH;
       vm.metrics = {};
       vm.mediaSelected = vm.mediaOptions[0];
+      vm.activeSelected = vm.activeOptions[0];
 
       setDummyData();
       setAllGraphs();
     }
 
     function mediaUpdate() {
-      var tempMediaChart = CustomerGraphService.setMediaQualityGraph(mediaData, mediaChart, vm.mediaSelected);
-      if (tempMediaChart !== null && angular.isDefined(tempMediaChart)) {
-        mediaChart = tempMediaChart;
-      }
+      setMediaGraph(mediaData);
+    }
+
+    function activityUpdate() {
+      setActiveGraph(activeUserData);
+    }
+
+    function isActiveDisabled() {
+      return (vm.isEmpty(vm.activeUserStatus) || vm.isRefresh(vm.activeUserStatus) || !isActiveUsers);
     }
 
     function setAllGraphs() {
@@ -273,41 +294,48 @@
     }
 
     function setDummyData() {
-      setActiveGraph(DummyCustomerReportService.dummyActiveUserData(vm.timeSelected));
+      setActiveGraph(DummyCustomerReportService.dummyActiveUserData(vm.timeSelected, vm.displayActiveLineGraph));
       setAverageGraph(DummyCustomerReportService.dummyAvgRoomData(vm.timeSelected));
       setFilesGraph(DummyCustomerReportService.dummyFilesSharedData(vm.timeSelected));
       setMetricGraph(DummyCustomerReportService.dummyMetricsData());
       setDeviceGraph(DummyCustomerReportService.dummyDeviceData(vm.timeSelected));
-      setMediaGraph(DummyCustomerReportService.dummyMediaData(vm.timeSelected), {
-        value: 0
-      });
+      setMediaGraph(DummyCustomerReportService.dummyMediaData(vm.timeSelected));
 
       resizeCards();
     }
 
     function setActiveGraph(data) {
-      var tempActiveUserChart = CustomerGraphService.setActiveUsersGraph(data, activeUsersChart);
+      var tempActiveUserChart;
+      if (vm.displayActiveLineGraph) {
+        tempActiveUserChart = CustomerGraphService.setActiveLineGraph(data, activeUsersChart, vm.activeSelected);
+      } else {
+        tempActiveUserChart = CustomerGraphService.setActiveUsersGraph(data, activeUsersChart);
+      }
+
       if (tempActiveUserChart !== null && angular.isDefined(tempActiveUserChart)) {
         activeUsersChart = tempActiveUserChart;
       }
     }
 
     function setActiveUserData() {
+      // reset defaults
       vm.activeUsersTotalPages = 0;
       vm.activeUserCurrentPage = 0;
-      vm.searchField = "";
-      previousSearch = "";
+      vm.searchField = '';
+      previousSearch = '';
       vm.showMostActiveUsers = false;
-      vm.displayMostActive = false;
+      isActiveUsers = false;
+
       CustomerReportService.getActiveUserData(vm.timeSelected).then(function (response) {
         if (response === ABORT) {
           return;
-        } else if (response.graphData.length === 0) {
+        } else if (_.isArray(response.graphData) && response.graphData.length === 0) {
           vm.activeUserStatus = EMPTY;
         } else {
           setActiveGraph(response.graphData);
+          activeUserData = response.graphData;
+          isActiveUsers = response.isActiveUsers;
           vm.activeUserStatus = SET;
-          vm.displayMostActive = response.isActiveUsers;
         }
         resizeCards();
       });
@@ -386,8 +414,8 @@
       });
     }
 
-    function setMediaGraph(data, mediaFilter) {
-      var tempMediaChart = CustomerGraphService.setMediaQualityGraph(data, mediaChart, mediaFilter);
+    function setMediaGraph(data) {
+      var tempMediaChart = CustomerGraphService.setMediaQualityGraph(data, mediaChart, vm.mediaSelected);
       if (tempMediaChart !== null && angular.isDefined(tempMediaChart)) {
         mediaChart = tempMediaChart;
       }
@@ -402,7 +430,7 @@
           vm.mediaQualityStatus = EMPTY;
         } else {
           mediaData = response;
-          setMediaGraph(mediaData, vm.mediaSelected);
+          setMediaGraph(mediaData);
           vm.mediaQualityStatus = SET;
         }
       });
@@ -419,7 +447,7 @@
       CustomerReportService.getCallMetricsData(vm.timeSelected).then(function (response) {
         if (response === ABORT) {
           return;
-        } else if (response.dataProvider.length === 0) {
+        } else if (_.isArray(response.dataProvider) && response.dataProvider.length === 0) {
           vm.metricStatus = EMPTY;
         } else {
           setMetricGraph(response);
