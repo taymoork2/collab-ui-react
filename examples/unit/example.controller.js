@@ -17,7 +17,7 @@
     vm.doSomething = doSomething;
 
     function incrementCount() {
-      vm.count++;
+      vm.count += 1;
     }
 
     function doSomething(something) {
