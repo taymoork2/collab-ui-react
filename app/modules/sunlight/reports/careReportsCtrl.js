@@ -42,7 +42,7 @@
     function timeUpdate() {
       vm.dataStatus = REFRESH;
       vm.snapshotDataStatus = REFRESH;
-      setFilterBasedTextForCare(vm.timeSelected.value);
+      setFilterBasedTextForCare();
 
       showReportsWithDummyData();
       showReportsWithRealData();
@@ -50,29 +50,19 @@
       delayedResize();
     }
 
-    function setFilterBasedTextForCare(timeSelected) {
-      var descriptions = ['descriptionToday', 'descriptionYesterday', 'descriptionLastWeek', 'descriptionLastMonth', 'descriptionLastThreeMonths'];
-      vm.descriptionOptions = _.map(descriptions, function (name) {
-        return {
-          taskIncomingDescription: $translate.instant('taskIncoming.' + name),
-          taskTimeDescription: $translate.instant('taskTime.' + name),
-          averageCsatDescription: $translate.instant('averageCsat.' + name),
-        };
-      });
-      vm.description = vm.descriptionOptions[timeSelected];
-
-      vm.taskIncomingDescription = $translate.instant(vm.description.taskIncomingDescription, {
+    function setFilterBasedTextForCare() {
+      vm.taskIncomingDescription = $translate.instant('taskIncoming.description', {
         time: vm.timeSelected.description,
         interval: vm.timeSelected.intervalTxt,
         taskStatus: vm.timeSelected.taskStatus
       });
 
-      vm.taskTimeDescription = $translate.instant(vm.description.taskTimeDescription, {
+      vm.taskTimeDescription = $translate.instant('taskTime.description', {
         time: vm.timeSelected.description,
         interval: vm.timeSelected.intervalTxt
       });
 
-      vm.averageCsatDescription = $translate.instant(vm.description.averageCsatDescription, {
+      vm.averageCsatDescription = $translate.instant('averageCsat.description', {
         time: vm.timeSelected.description,
         interval: vm.timeSelected.intervalTxt
       });

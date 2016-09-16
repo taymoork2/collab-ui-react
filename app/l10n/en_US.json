@@ -539,15 +539,15 @@
     "customerSelect": "Select a customer"
   },
   "careReportsPage": {
-    "contacts": "Contacts",
-    "addressed": "Addressed",
-    "waiting": "Waiting",
-    "in-progress": "In-Progress",
+    "tasks": "Contacts",
+    "handled": "Addressed",
+    "assigned": "Waiting",
+    "in-queue": "In-Progress",
     "abandoned": "Abandoned",
-    "waitTime": "Wait Time",
-    "avgWaitTime": "Avg Wait Time",
-    "avgCompletionTime": "Avg Completion Time",
-    "completionTime": "Completion Time",
+    "queueTime": "Wait Time",
+    "avgQueueTime": "Avg Wait Time",
+    "avgHandleTime": "Avg Completion Time",
+    "handleTime": "Completion Time",
     "taskTimeLabel": "Time in Minutes",
     "averageCsat": "Average CSAT",
     "avgCsat": "Avg CSAT",
@@ -559,23 +559,23 @@
     "threeMonthsCategoryAxis": "Months",
     "today": "Today",
     "today2": "for today",
-    "todayTaskStatus": "handled, assigned, in-queue and abandoned",
+    "todayTaskStatus": "addressed, waiting, in-progress and abandoned",
     "todayInterval": "one hour time interval",
     "yesterday": "Yesterday",
     "yesterday2": "for yesterday",
-    "yesterdayTaskStatus": "handled and abandoned",
+    "yesterdayTaskStatus": "addressed and abandoned",
     "yesterdayInterval": "one hour time interval",
     "week": "Last Week",
     "week2": "during the last week",
-    "weekTaskStatus": "handled and abandoned",
+    "weekTaskStatus": "addressed and abandoned",
     "weekInterval": "given day",
     "month": "Last Month",
     "month2": "during the last month",
-    "monthTaskStatus": "handled and abandoned",
+    "monthTaskStatus": "addressed and abandoned",
     "monthInterval": "given week",
     "threeMonths": "Last Three Months",
     "threeMonths2": "during the last three months",
-    "threeMonthsTaskStatus": "handled and abandoned",
+    "threeMonthsTaskStatus": "addressed and abandoned",
     "threeMonthsInterval": "given month",
     "taskDataGetError": "There was an error while loading the data for {{dataType}}."
   },
@@ -672,31 +672,19 @@
   },
   "taskIncoming": {
     "title": "Total Completed Contacts",
-    "descriptionToday": "The graph depicts the total number of customer contacts completed for today. Hover over the area chart for a breakdown of addressed and abandoned contacts during a one hour time interval.",
-    "descriptionYesterday": "The graph depicts the total number of customer contacts completed for yesterday. Hover over the area chart for a breakdown of addressed and abandoned contacts during a one hour time interval.",
-    "descriptionLastWeek": "The graph depicts the total number of customer contacts completed for the last week. Hover over the area chart for a breakdown of addressed and abandoned contacts during a given day.",
-    "descriptionLastMonth": "The graph depicts the total number of customer contacts completed for the last month. Hover over the area chart for a breakdown of addressed and abandoned contacts during a given week.",
-    "descriptionLastThreeMonths": "The graph depicts the total number of customer contacts completed for the last three months. Hover over the area chart for a breakdown of addressed and abandoned contacts during a given month."
+    "description": "The graph depicts the total number of customer contacts completed {{time}}. Hover over the area chart for a breakdown of {{taskStatus}} contacts during a {{interval}}."
   },
   "taskTime": {
     "title": "Contact Time Measure",
-    "descriptionToday": "",
-    "descriptionYesterday": "The graph depicts the average time spent by a customer waiting for an agent and in getting their enquiries completed for yesterday. Hover over the area chart for a breakdown of average waiting time and average time taken to complete a customer enquiry during a one hour time interval.",
-    "descriptionLastWeek": "The graph depicts the average time spent by a customer waiting for an agent and in getting their enquiries completed for the last week. Hover over the area chart for a breakdown of average waiting time and average time taken to complete a customer enquiry during a given day.",
-    "descriptionLastMonth": "The graph depicts the average time spent by a customer waiting for an agent and in getting their enquiries completed for the last month. Hover over the area chart for a breakdown of average waiting time and average time taken to complete a customer enquiry during a given week.",
-    "descriptionLastThreeMonths": "The graph depicts the average time spent by a customer waiting for an agent and in getting their enquiries completed for the last three months. Hover over the area chart for a breakdown of average waiting time and average time taken to complete a customer enquiry during a given month."
+    "description": "The graph depicts the average time spent by a customer waiting for an agent and in getting their enquiries completed {{time}}. Hover over the area chart for a breakdown of average waiting time and average time taken to complete a customer enquiry during a {{interval}}."
   },
   "averageCsat": {
     "title": "Customer Satisfaction",
-    "descriptionToday": "The graph depicts the customer satisfaction rating for today. Hover over the trend line to know the average customer satisfaction rating during a one hour time interval.​​",
-    "descriptionYesterday": "The graph depicts the customer satisfaction rating for yesterday. Hover over the trend line to know the average customer satisfaction rating during a one hour time interval.​",
-    "descriptionLastWeek": "The graph depicts the customer satisfaction rating for the last week. Hover over the trend line to know the average customer satisfaction rating during a given day.",
-    "descriptionLastMonth": "The graph depicts the customer satisfaction rating for the last month. Hover over the trend line to know the average customer satisfaction rating during a given week.​",
-    "descriptionLastThreeMonths": "The graph depicts the customer satisfaction rating for the last three months. Hover over the trend line to know the average customer satisfaction rating during a given month.​"
+    "description": "The graph depicts the customer satisfaction rating {{time}}. Hover over the trend line to know the average customer satisfaction rating during a {{interval}}.​​"
   },
   "taskAggregate": {
     "title": "Aggregated Contacts",
-    "description": "The graph depicts the number of waiting and in-progress customer contacts aggregated for today. Hover over the area chart to view the count of waiting and in-progress contacts aggregated from the start of business hours."
+    "description": "The graph depicts the number of waiting and in-progress customer contacts aggregated {{time}}. Hover over the area chart to view the count of waiting and in-progress contacts aggregated from the start of business hours."
   },
   "profilePage": {
     "userProfile": "User Profile",
