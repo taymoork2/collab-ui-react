@@ -60,7 +60,7 @@ describe('Spark UC Partner flow', function () {
       utils.waitForModal().then(function () {
         utils.expectIsDisplayed(partner.editTrialForm);
 
-        utils.expectClass(partner.messageTrialCheckbox, 'disabled');
+        utils.waitClass(partner.messageTrialCheckbox, 'disabled');
         utils.expectCheckbox(partner.messageTrialCheckbox, true);
 
         // enabled advanced spark call
@@ -84,11 +84,11 @@ describe('Spark UC Partner flow', function () {
       utils.waitForModal().then(function () {
         utils.expectIsDisplayed(partner.editTrialForm);
 
-        utils.expectClass(partner.messageTrialCheckbox, 'disabled');
+        utils.waitClass(partner.messageTrialCheckbox, 'disabled');
         utils.expectCheckbox(partner.messageTrialCheckbox, true);
 
         // verify checkbox is checked and disabled
-        utils.expectClass(partner.squaredUCTrialCheckbox, 'disabled');
+        utils.waitClass(partner.squaredUCTrialCheckbox, 'disabled');
         utils.expectCheckbox(partner.squaredUCTrialCheckbox, true);
 
         utils.click(partner.saveUpdateButton);
