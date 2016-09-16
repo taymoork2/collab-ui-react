@@ -69,6 +69,12 @@
     function createOtp(machineUuid) {
       return $http.post(cmiOtpUri, {
         machineUuid: machineUuid
+      }).then(function (res) {
+        var activationCode = {
+          activationCode: res.data.password,
+          expiryTime: res.data.expiresOn
+        };
+        return activationCode;
       });
     }
 

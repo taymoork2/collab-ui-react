@@ -32,16 +32,13 @@
 
     vm.next = function () {
       vm.isLoading = true;
-
       function successCallback(code) {
+
         if (code && code.activationCode && code.activationCode.length > 0) {
           vm.isLoading = false;
           $stateParams.wizard.next({
             deviceName: vm.wizardData.deviceName,
-            code: {
-                activationCode: code.password,
-                expiryTime: code.expiryTime
-            },
+            code: code,
             cisUuid: Authinfo.getUserId(),
             userName: Authinfo.getUserName(),
             displayName: Authinfo.getUserName(),
