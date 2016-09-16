@@ -403,7 +403,7 @@ exports.setCheckboxIfDisplayed = function (elem, val, timeout) {
     return exports.getCheckboxVal(elem).then(function (curVal) {
       if (curVal !== val) {
         // checkbox value needs to be toggled
-        exports.click(elem);
+        return exports.click(elem);
       }
     });
   }, function () {
