@@ -1,257 +1,245 @@
 {
-  "deviceData": {
-    "data": [{
-      "orgId": "1eb65fdf-9643-417f-9974-ad72cae0e10f",
-      "orgName": "Cisco Systems, Inc.",
-      "data": [{
-        "deviceType": "Cisco 8845",
-        "details": [{
-          "recordTime": "2016-01-05T00:00:00.000Z",
-          "totalRegisteredDevices": "1"
-        }, {
-          "recordTime": "2016-01-04T00:00:00.000Z",
-          "totalRegisteredDevices": "163"
-        }, {
-          "recordTime": "2016-01-03T00:00:00.000Z",
-          "totalRegisteredDevices": "154"
-        }, {
-          "recordTime": "2016-01-02T00:00:00.000Z",
-          "totalRegisteredDevices": "154"
-        }, {
-          "recordTime": "2016-01-01T00:00:00.000Z",
-          "totalRegisteredDevices": "154"
-        }, {
-          "recordTime": "2015-12-31T00:00:00.000Z",
-          "totalRegisteredDevices": "155"
-        }, {
-          "recordTime": "2015-12-30T00:00:00.000Z",
-          "totalRegisteredDevices": "154"
-        }]
-      }, {
-        "deviceType": "Cisco 8865",
-        "details": [{
-          "recordTime": "2016-01-05T00:00:00.000Z",
-          "totalRegisteredDevices": "1"
-        }, {
-          "recordTime": "2016-01-04T00:00:00.000Z",
-          "totalRegisteredDevices": "182"
-        }, {
-          "recordTime": "2016-01-03T00:00:00.000Z",
-          "totalRegisteredDevices": "179"
-        }, {
-          "recordTime": "2016-01-02T00:00:00.000Z",
-          "totalRegisteredDevices": "179"
-        }, {
-          "recordTime": "2016-01-01T00:00:00.000Z",
-          "totalRegisteredDevices": "178"
-        }, {
-          "recordTime": "2015-12-31T00:00:00.000Z",
-          "totalRegisteredDevices": "179"
-        }, {
-          "recordTime": "2015-12-30T00:00:00.000Z",
-          "totalRegisteredDevices": "178"
-        }]
-      }, {
-        "deviceType": "Cisco 7841",
-        "details": [{
-          "recordTime": "2016-01-04T00:00:00.000Z",
-          "totalRegisteredDevices": "23"
-        }, {
-          "recordTime": "2016-01-03T00:00:00.000Z",
-          "totalRegisteredDevices": "21"
-        }, {
-          "recordTime": "2016-01-02T00:00:00.000Z",
-          "totalRegisteredDevices": "21"
-        }, {
-          "recordTime": "2016-01-01T00:00:00.000Z",
-          "totalRegisteredDevices": "21"
-        }, {
-          "recordTime": "2015-12-31T00:00:00.000Z",
-          "totalRegisteredDevices": "21"
-        }, {
-          "recordTime": "2015-12-30T00:00:00.000Z",
-          "totalRegisteredDevices": "21"
-        }, {
-          "recordTime": "2015-12-29T00:00:00.000Z",
-          "totalRegisteredDevices": "21"
-        }]
-      }, {
-        "deviceType": "Cisco 8861",
-        "details": [{
-          "recordTime": "2016-01-04T00:00:00.000Z",
-          "totalRegisteredDevices": "26"
-        }, {
-          "recordTime": "2016-01-03T00:00:00.000Z",
-          "totalRegisteredDevices": "25"
-        }, {
-          "recordTime": "2016-01-02T00:00:00.000Z",
-          "totalRegisteredDevices": "25"
-        }, {
-          "recordTime": "2016-01-01T00:00:00.000Z",
-          "totalRegisteredDevices": "25"
-        }, {
-          "recordTime": "2015-12-31T00:00:00.000Z",
-          "totalRegisteredDevices": "25"
-        }, {
-          "recordTime": "2015-12-30T00:00:00.000Z",
-          "totalRegisteredDevices": "25"
-        }, {
-          "recordTime": "2015-12-29T00:00:00.000Z",
-          "totalRegisteredDevices": "26"
-        }]
-      }, {
-        "deviceType": "Cisco 8851",
-        "details": [{
-          "recordTime": "2016-01-04T00:00:00.000Z",
-          "totalRegisteredDevices": "19"
-        }, {
-          "recordTime": "2016-01-03T00:00:00.000Z",
-          "totalRegisteredDevices": "19"
-        }, {
-          "recordTime": "2016-01-02T00:00:00.000Z",
-          "totalRegisteredDevices": "19"
-        }, {
-          "recordTime": "2016-01-01T00:00:00.000Z",
-          "totalRegisteredDevices": "19"
-        }, {
-          "recordTime": "2015-12-31T00:00:00.000Z",
-          "totalRegisteredDevices": "19"
-        }, {
-          "recordTime": "2015-12-30T00:00:00.000Z",
-          "totalRegisteredDevices": "19"
-        }, {
-          "recordTime": "2015-12-29T00:00:00.000Z",
-          "totalRegisteredDevices": "19"
-        }]
-      }, {
-        "deviceType": "Cisco 7811",
-        "details": [{
-          "recordTime": "2016-01-04T00:00:00.000Z",
-          "totalRegisteredDevices": "2"
-        }, {
-          "recordTime": "2016-01-03T00:00:00.000Z",
-          "totalRegisteredDevices": "2"
-        }, {
-          "recordTime": "2016-01-02T00:00:00.000Z",
-          "totalRegisteredDevices": "2"
-        }, {
-          "recordTime": "2016-01-01T00:00:00.000Z",
-          "totalRegisteredDevices": "2"
-        }, {
-          "recordTime": "2015-12-31T00:00:00.000Z",
-          "totalRegisteredDevices": "2"
-        }, {
-          "recordTime": "2015-12-30T00:00:00.000Z",
-          "totalRegisteredDevices": "2"
-        }, {
-          "recordTime": "2015-12-29T00:00:00.000Z",
-          "totalRegisteredDevices": "2"
-        }]
-      }, {
-        "deviceType": "Cisco 7821",
-        "details": [{
-          "recordTime": "2016-01-04T00:00:00.000Z",
-          "totalRegisteredDevices": "3"
-        }, {
-          "recordTime": "2016-01-01T00:00:00.000Z",
-          "totalRegisteredDevices": "1"
-        }, {
-          "recordTime": "2015-12-31T00:00:00.000Z",
-          "totalRegisteredDevices": "1"
-        }, {
-          "recordTime": "2015-12-30T00:00:00.000Z",
-          "totalRegisteredDevices": "1"
-        }, {
-          "recordTime": "2015-12-29T00:00:00.000Z",
-          "totalRegisteredDevices": "1"
-        }, {
-          "recordTime": "2015-12-28T00:00:00.000Z",
-          "totalRegisteredDevices": "1"
-        }, {
-          "recordTime": "2015-12-27T00:00:00.000Z",
-          "totalRegisteredDevices": "1"
-        }]
-      }, {
-        "deviceType": "Cisco 8811",
-        "details": [{
-          "recordTime": "2016-01-04T00:00:00.000Z",
-          "totalRegisteredDevices": "13"
-        }, {
-          "recordTime": "2016-01-03T00:00:00.000Z",
-          "totalRegisteredDevices": "12"
-        }, {
-          "recordTime": "2016-01-02T00:00:00.000Z",
-          "totalRegisteredDevices": "11"
-        }, {
-          "recordTime": "2016-01-01T00:00:00.000Z",
-          "totalRegisteredDevices": "11"
-        }, {
-          "recordTime": "2015-12-31T00:00:00.000Z",
-          "totalRegisteredDevices": "11"
-        }, {
-          "recordTime": "2015-12-30T00:00:00.000Z",
-          "totalRegisteredDevices": "12"
-        }, {
-          "recordTime": "2015-12-29T00:00:00.000Z",
-          "totalRegisteredDevices": "11"
-        }]
-      }, {
-        "deviceType": "Cisco DX650",
-        "details": [{
-          "recordTime": "2016-01-04T00:00:00.000Z",
-          "totalRegisteredDevices": "1"
-        }, {
-          "recordTime": "2016-01-03T00:00:00.000Z",
-          "totalRegisteredDevices": "1"
-        }, {
-          "recordTime": "2016-01-02T00:00:00.000Z",
-          "totalRegisteredDevices": "1"
-        }, {
-          "recordTime": "2016-01-01T00:00:00.000Z",
-          "totalRegisteredDevices": "1"
-        }, {
-          "recordTime": "2015-12-31T00:00:00.000Z",
-          "totalRegisteredDevices": "1"
-        }, {
-          "recordTime": "2015-12-30T00:00:00.000Z",
-          "totalRegisteredDevices": "1"
-        }, {
-          "recordTime": "2015-12-29T00:00:00.000Z",
-          "totalRegisteredDevices": "1"
-        }]
-      }, {
-        "deviceType": "Cisco 8841",
-        "details": [{
-          "recordTime": "2016-01-04T00:00:00.000Z",
-          "totalRegisteredDevices": "15"
-        }, {
-          "recordTime": "2016-01-03T00:00:00.000Z",
-          "totalRegisteredDevices": "14"
-        }, {
-          "recordTime": "2016-01-02T00:00:00.000Z",
-          "totalRegisteredDevices": "14"
-        }, {
-          "recordTime": "2016-01-01T00:00:00.000Z",
-          "totalRegisteredDevices": "14"
-        }, {
-          "recordTime": "2015-12-31T00:00:00.000Z",
-          "totalRegisteredDevices": "14"
-        }, {
-          "recordTime": "2015-12-30T00:00:00.000Z",
-          "totalRegisteredDevices": "14"
-        }, {
-          "recordTime": "2015-12-29T00:00:00.000Z",
-          "totalRegisteredDevices": "14"
-        }]
-      }]
-    }],
-    "type": "deviceRegistrations",
-    "date": "2016-01-21T20:16:08.249Z",
-    "spanCount": 1,
-    "spanType": "day",
-    "intervalCount": 31,
-    "intervalType": "day"
-  },
+  "deviceData": [{
+    "deviceType": "Cisco 8845",
+    "details": [{
+      "recordTime": "2016-01-05T00:00:00.000Z",
+      "totalRegisteredDevices": "1"
+    }, {
+      "recordTime": "2016-01-04T00:00:00.000Z",
+      "totalRegisteredDevices": "163"
+    }, {
+      "recordTime": "2016-01-03T00:00:00.000Z",
+      "totalRegisteredDevices": "154"
+    }, {
+      "recordTime": "2016-01-02T00:00:00.000Z",
+      "totalRegisteredDevices": "154"
+    }, {
+      "recordTime": "2016-01-01T00:00:00.000Z",
+      "totalRegisteredDevices": "154"
+    }, {
+      "recordTime": "2015-12-31T00:00:00.000Z",
+      "totalRegisteredDevices": "155"
+    }, {
+      "recordTime": "2015-12-30T00:00:00.000Z",
+      "totalRegisteredDevices": "154"
+    }]
+  }, {
+    "deviceType": "Cisco 8865",
+    "details": [{
+      "recordTime": "2016-01-05T00:00:00.000Z",
+      "totalRegisteredDevices": "1"
+    }, {
+      "recordTime": "2016-01-04T00:00:00.000Z",
+      "totalRegisteredDevices": "182"
+    }, {
+      "recordTime": "2016-01-03T00:00:00.000Z",
+      "totalRegisteredDevices": "179"
+    }, {
+      "recordTime": "2016-01-02T00:00:00.000Z",
+      "totalRegisteredDevices": "179"
+    }, {
+      "recordTime": "2016-01-01T00:00:00.000Z",
+      "totalRegisteredDevices": "178"
+    }, {
+      "recordTime": "2015-12-31T00:00:00.000Z",
+      "totalRegisteredDevices": "179"
+    }, {
+      "recordTime": "2015-12-30T00:00:00.000Z",
+      "totalRegisteredDevices": "178"
+    }]
+  }, {
+    "deviceType": "Cisco 7841",
+    "details": [{
+      "recordTime": "2016-01-04T00:00:00.000Z",
+      "totalRegisteredDevices": "23"
+    }, {
+      "recordTime": "2016-01-03T00:00:00.000Z",
+      "totalRegisteredDevices": "21"
+    }, {
+      "recordTime": "2016-01-02T00:00:00.000Z",
+      "totalRegisteredDevices": "21"
+    }, {
+      "recordTime": "2016-01-01T00:00:00.000Z",
+      "totalRegisteredDevices": "21"
+    }, {
+      "recordTime": "2015-12-31T00:00:00.000Z",
+      "totalRegisteredDevices": "21"
+    }, {
+      "recordTime": "2015-12-30T00:00:00.000Z",
+      "totalRegisteredDevices": "21"
+    }, {
+      "recordTime": "2015-12-29T00:00:00.000Z",
+      "totalRegisteredDevices": "21"
+    }]
+  }, {
+    "deviceType": "Cisco 8861",
+    "details": [{
+      "recordTime": "2016-01-04T00:00:00.000Z",
+      "totalRegisteredDevices": "26"
+    }, {
+      "recordTime": "2016-01-03T00:00:00.000Z",
+      "totalRegisteredDevices": "25"
+    }, {
+      "recordTime": "2016-01-02T00:00:00.000Z",
+      "totalRegisteredDevices": "25"
+    }, {
+      "recordTime": "2016-01-01T00:00:00.000Z",
+      "totalRegisteredDevices": "25"
+    }, {
+      "recordTime": "2015-12-31T00:00:00.000Z",
+      "totalRegisteredDevices": "25"
+    }, {
+      "recordTime": "2015-12-30T00:00:00.000Z",
+      "totalRegisteredDevices": "25"
+    }, {
+      "recordTime": "2015-12-29T00:00:00.000Z",
+      "totalRegisteredDevices": "26"
+    }]
+  }, {
+    "deviceType": "Cisco 8851",
+    "details": [{
+      "recordTime": "2016-01-04T00:00:00.000Z",
+      "totalRegisteredDevices": "19"
+    }, {
+      "recordTime": "2016-01-03T00:00:00.000Z",
+      "totalRegisteredDevices": "19"
+    }, {
+      "recordTime": "2016-01-02T00:00:00.000Z",
+      "totalRegisteredDevices": "19"
+    }, {
+      "recordTime": "2016-01-01T00:00:00.000Z",
+      "totalRegisteredDevices": "19"
+    }, {
+      "recordTime": "2015-12-31T00:00:00.000Z",
+      "totalRegisteredDevices": "19"
+    }, {
+      "recordTime": "2015-12-30T00:00:00.000Z",
+      "totalRegisteredDevices": "19"
+    }, {
+      "recordTime": "2015-12-29T00:00:00.000Z",
+      "totalRegisteredDevices": "19"
+    }]
+  }, {
+    "deviceType": "Cisco 7811",
+    "details": [{
+      "recordTime": "2016-01-04T00:00:00.000Z",
+      "totalRegisteredDevices": "2"
+    }, {
+      "recordTime": "2016-01-03T00:00:00.000Z",
+      "totalRegisteredDevices": "2"
+    }, {
+      "recordTime": "2016-01-02T00:00:00.000Z",
+      "totalRegisteredDevices": "2"
+    }, {
+      "recordTime": "2016-01-01T00:00:00.000Z",
+      "totalRegisteredDevices": "2"
+    }, {
+      "recordTime": "2015-12-31T00:00:00.000Z",
+      "totalRegisteredDevices": "2"
+    }, {
+      "recordTime": "2015-12-30T00:00:00.000Z",
+      "totalRegisteredDevices": "2"
+    }, {
+      "recordTime": "2015-12-29T00:00:00.000Z",
+      "totalRegisteredDevices": "2"
+    }]
+  }, {
+    "deviceType": "Cisco 7821",
+    "details": [{
+      "recordTime": "2016-01-04T00:00:00.000Z",
+      "totalRegisteredDevices": "3"
+    }, {
+      "recordTime": "2016-01-01T00:00:00.000Z",
+      "totalRegisteredDevices": "1"
+    }, {
+      "recordTime": "2015-12-31T00:00:00.000Z",
+      "totalRegisteredDevices": "1"
+    }, {
+      "recordTime": "2015-12-30T00:00:00.000Z",
+      "totalRegisteredDevices": "1"
+    }, {
+      "recordTime": "2015-12-29T00:00:00.000Z",
+      "totalRegisteredDevices": "1"
+    }, {
+      "recordTime": "2015-12-28T00:00:00.000Z",
+      "totalRegisteredDevices": "1"
+    }, {
+      "recordTime": "2015-12-27T00:00:00.000Z",
+      "totalRegisteredDevices": "1"
+    }]
+  }, {
+    "deviceType": "Cisco 8811",
+    "details": [{
+      "recordTime": "2016-01-04T00:00:00.000Z",
+      "totalRegisteredDevices": "13"
+    }, {
+      "recordTime": "2016-01-03T00:00:00.000Z",
+      "totalRegisteredDevices": "12"
+    }, {
+      "recordTime": "2016-01-02T00:00:00.000Z",
+      "totalRegisteredDevices": "11"
+    }, {
+      "recordTime": "2016-01-01T00:00:00.000Z",
+      "totalRegisteredDevices": "11"
+    }, {
+      "recordTime": "2015-12-31T00:00:00.000Z",
+      "totalRegisteredDevices": "11"
+    }, {
+      "recordTime": "2015-12-30T00:00:00.000Z",
+      "totalRegisteredDevices": "12"
+    }, {
+      "recordTime": "2015-12-29T00:00:00.000Z",
+      "totalRegisteredDevices": "11"
+    }]
+  }, {
+    "deviceType": "Cisco DX650",
+    "details": [{
+      "recordTime": "2016-01-04T00:00:00.000Z",
+      "totalRegisteredDevices": "1"
+    }, {
+      "recordTime": "2016-01-03T00:00:00.000Z",
+      "totalRegisteredDevices": "1"
+    }, {
+      "recordTime": "2016-01-02T00:00:00.000Z",
+      "totalRegisteredDevices": "1"
+    }, {
+      "recordTime": "2016-01-01T00:00:00.000Z",
+      "totalRegisteredDevices": "1"
+    }, {
+      "recordTime": "2015-12-31T00:00:00.000Z",
+      "totalRegisteredDevices": "1"
+    }, {
+      "recordTime": "2015-12-30T00:00:00.000Z",
+      "totalRegisteredDevices": "1"
+    }, {
+      "recordTime": "2015-12-29T00:00:00.000Z",
+      "totalRegisteredDevices": "1"
+    }]
+  }, {
+    "deviceType": "Cisco 8841",
+    "details": [{
+      "recordTime": "2016-01-04T00:00:00.000Z",
+      "totalRegisteredDevices": "15"
+    }, {
+      "recordTime": "2016-01-03T00:00:00.000Z",
+      "totalRegisteredDevices": "14"
+    }, {
+      "recordTime": "2016-01-02T00:00:00.000Z",
+      "totalRegisteredDevices": "14"
+    }, {
+      "recordTime": "2016-01-01T00:00:00.000Z",
+      "totalRegisteredDevices": "14"
+    }, {
+      "recordTime": "2015-12-31T00:00:00.000Z",
+      "totalRegisteredDevices": "14"
+    }, {
+      "recordTime": "2015-12-30T00:00:00.000Z",
+      "totalRegisteredDevices": "14"
+    }, {
+      "recordTime": "2015-12-29T00:00:00.000Z",
+      "totalRegisteredDevices": "14"
+    }]
+  }],
   "response": {
     "graphData": [{
       "deviceType": "registeredEndpoints.allDevices",
