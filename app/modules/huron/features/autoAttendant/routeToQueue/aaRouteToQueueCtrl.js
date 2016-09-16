@@ -6,7 +6,7 @@
     .controller('AARouteToQueueCtrl', AARouteToQueueCtrl);
 
   /* @ngInject */
-  function AARouteToQueueCtrl($scope, $translate, QueueHelperService, AAUiModelService, AutoAttendantCeMenuModelService, AACommonService) {
+  function AARouteToQueueCtrl($scope, $translate, $modal, QueueHelperService, AAUiModelService, AutoAttendantCeMenuModelService, AACommonService) {
 
     var vm = this;
 
@@ -27,10 +27,18 @@
 
     var rtQueue = 'routeToQueue';
     var fromRouteCall = false;
+    vm.openTreatmentModal = openTreatmentModal;
 
     vm.populateUiModel = populateUiModel;
     vm.saveUiModel = saveUiModel;
-    /////////////////////
+    function openTreatmentModal() {
+      $modal.open({
+        templateUrl: 'modules/huron/features/autoAttendant/routeToQueue/newTreatmentModal.tpl.html',
+        controller: 'NewTreatmentModalCtrl',
+        controllerAs: 'newTreatmentModalCtrl',
+        size: 'lg'
+      });
+    }
 
     function populateUiModel() {
 

@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Controller: AARouteToQueueCtrl', function () {
-  var $controller;
+  var $controller, $modal;
   var AAUiModelService, AutoAttendantCeInfoModelService, AutoAttendantCeMenuModelService, AAModelService, QueueHelperService;
   var $rootScope, $scope;
 
@@ -15,6 +15,20 @@ describe('Controller: AARouteToQueueCtrl', function () {
     openHours: {},
     ceInfo: {
       name: 'AA2'
+    }
+  };
+  var fakeModal = {
+    result: {
+      then: function (okCallback, cancelCallback) {
+        this.okCallback = okCallback;
+        this.cancelCallback = cancelCallback;
+      }
+    },
+    close: function (item) {
+      this.result.okCallback(item);
+    },
+    dismiss: function (type) {
+      this.result.cancelCallback(type);
     }
   };
 
@@ -54,9 +68,10 @@ describe('Controller: AARouteToQueueCtrl', function () {
   beforeEach(angular.mock.module('Huron'));
   beforeEach(angular.mock.module('Sunlight'));
 
-  beforeEach(inject(function (_$controller_, _$q_, _$rootScope_, _AAUiModelService_, _AutoAttendantCeInfoModelService_, _AutoAttendantCeMenuModelService_, _AAModelService_, _QueueHelperService_) {
+  beforeEach(inject(function (_$controller_, _$q_, _$rootScope_, _$modal_, _AAUiModelService_, _AutoAttendantCeInfoModelService_, _AutoAttendantCeMenuModelService_, _AAModelService_, _QueueHelperService_) {
     $rootScope = _$rootScope_;
     $scope = $rootScope;
+    $modal = _$modal_;
     $q = _$q_;
 
     $controller = _$controller_;
@@ -80,6 +95,18 @@ describe('Controller: AARouteToQueueCtrl', function () {
     aaUiModel[schedule].addEntryAt(index, AutoAttendantCeMenuModelService.newCeMenu());
     spyOn(QueueHelperService, 'listQueues').and.returnValue($q.when(queues));
   }));
+
+  describe('openTreatmentModal', function () {
+    it('should open the Modal on Validation success', function () {
+      spyOn($modal, 'open').and.returnValue(fakeModal);
+      var controller = $controller('AARouteToQueueCtrl', {
+        $scope: $scope
+      });
+      controller.openTreatmentModal();
+      $scope.$apply();
+      expect($modal.open).toHaveBeenCalled();
+    });
+  });
 
   describe('fromRouteCall overwrite', function () {
     beforeEach(function () {

@@ -1,2 +1,9 @@
 <cs-select aa-key="$index" ng-model="aaRouteToQueue.queueSelected" options="aaRouteToQueue.queues" labelfield="description" valuefield="id" placeholder="aaRouteToQueue.selectPlaceholder" filter="true" on-change-fn="aaRouteToQueue.saveUiModel()" icon="icon-chevron-down" input-placeholder="aaRouteToQueue.inputPlaceHolder">
 </cs-select>
+<br>
+<div>
+  <a ng-click="aaRouteToQueue.openTreatmentModal()">
+   <span>Queue Settings</span>
+  </a>
+
+</div>
