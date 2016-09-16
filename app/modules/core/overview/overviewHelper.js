@@ -25,7 +25,9 @@
           CCMAdministration: '7v9ds0q2zfsy',
           SparkHybridServices: 'f8tnkxbzs12q',
           DeveloperApi: 'vn0b18kjj7nf',
-          SparkAccount: 'kq245y682023'
+          SparkAccount: 'kq245y682023',
+          // Currently using id of Spark call. This is temporary.
+          SPARK_CARE: 'gfg7cvjszyw0'
         };
 
         return {

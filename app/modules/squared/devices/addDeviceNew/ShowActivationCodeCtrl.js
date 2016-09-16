@@ -9,9 +9,9 @@
     vm.wizardData = $stateParams.wizard.state().data;
     vm.hideBackButton = vm.wizardData.function == "showCode";
     vm.showEmail = false;
-    vm.selectedUser = "" + vm.wizardData.displayName + " (" + vm.wizardData.userName + ")";
+    vm.selectedUser = "" + vm.wizardData.displayName + " (" + vm.wizardData.email + ")";
     vm.email = {
-      to: vm.wizardData.userName,
+      to: vm.wizardData.email,
       id: vm.wizardData.cisUuid
     };
     vm.qrCode = undefined;

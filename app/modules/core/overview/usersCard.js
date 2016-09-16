@@ -6,7 +6,7 @@
     .factory('OverviewUsersCard', OverviewUsersCard);
 
   /* @ngInject */
-  function OverviewUsersCard($state, $rootScope) {
+  function OverviewUsersCard($rootScope, $state, Auth, Authinfo, Config) {
     return {
       createCard: function createCard() {
         var card = {};
@@ -16,12 +16,37 @@
         card.cardClass = 'user-card';
         card.icon = 'icon-circle-user';
 
+        card.showLicenseCard = false;
+
         card.unlicensedUsersHandler = function (data) {
           if (data.success) {
-            card.usersToConvert = Math.max((data.resources || []).length, data.totalResults);
             // for now use the length to get the count as there is a bug in CI and totalResults is not accurate.
+            card.usersToConvert = Math.max((data.resources || []).length, data.totalResults);
+            if (card.usersToConvert === 0) {
+              card.name = 'overview.cards.licenses.title';
+              card.showLicenseCard = true;
+              getUnassignedLicenses();
+            }
           }
         };
+
+        function getUnassignedLicenses() {
+          Auth.getCustomerAccount(Authinfo.getOrgId()).then(function (response) {
+            var max = 0;
+            var licenses = response.data.customers[0].licenses;
+            var licenseType;
+            _.forEach(licenses, function (data) {
+              if (data.volume > max) {
+                max = data.volume;
+                licenseType = data.licenseType;
+              } else if (data.volume === max && data.licenseType === Config.licenseTypes.MESSAGING) {
+                licenseType = Config.licenseTypes.MESSAGING;
+              }
+              card.licenseNumber = max;
+              card.licenseType = licenseType;
+            });
+          });
+        }
 
         card.orgEventHandler = function (data) {
           if (data.success) {
@@ -43,6 +68,10 @@
             currentTab: 'enterpriseSettings',
             currentStep: 'init'
           });
+        };
+
+        card.manageUsers = function () {
+          $state.go('users.manage', {});
         };
 
         return card;

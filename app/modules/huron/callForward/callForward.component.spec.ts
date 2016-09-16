@@ -1,7 +1,7 @@
 import callForwardModule from './index';
 import {
   CallForwardAll,
-  CallForwardBusy
+  CallForwardBusy,
 } from './callForward';
 
 describe('Component: callForward', () => {
@@ -61,7 +61,7 @@ describe('Component: callForward', () => {
       expect(this.view).not.toContainElement(CALL_FWD_BUSY_SELECT);
       expect(this.view).not.toContainElement(CALL_FWD_BUSY_EXT_SELECT);
     });
-  })
+  });
 
   describe('Call Forward All with voicemailEnabled = true', () => {
     beforeEach(initComponent);

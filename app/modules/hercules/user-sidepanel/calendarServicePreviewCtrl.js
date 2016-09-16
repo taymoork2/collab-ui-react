@@ -82,14 +82,9 @@
       if (!FeatureToggleService.supports(FeatureToggleService.features.atlasF237ResourceGroups)) {
         return;
       }
-      ResourceGroupService.getAll().then(function (groups) {
-        if (groups && groups.length > 0) {
-          _.each(groups, function (group) {
-            $scope.resourceGroup.options.push({
-              label: group.name + (group.releaseChannel ? ' (' + group.releaseChannel + ')' : ''),
-              value: group.id
-            });
-          });
+      ResourceGroupService.getAllAsOptions().then(function (options) {
+        if (options.length > 0) {
+          $scope.resourceGroup.options = $scope.resourceGroup.options.concat(options);
           if ($scope.extension.status && $scope.extension.status.resourceGroupId) {
             setSelectedResourceGroup($scope.extension.status.resourceGroupId);
           } else {

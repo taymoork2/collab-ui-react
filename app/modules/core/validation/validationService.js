@@ -8,7 +8,7 @@
     .factory('ValidationService', ValidationService);
 
   /* @ngInject */
-  function ValidationService() {
+  function ValidationService(phone) {
 
     var factory = {
       trialLicenseCount: trialLicenseCount,
@@ -20,7 +20,8 @@
       numeric: numeric,
       positiveNumber: positiveNumber,
       maxNumber100: maxNumber100,
-      phoneUS: phoneUS
+      phoneUS: phoneUS,
+      phoneAny: phoneAny
     };
 
     return factory;
@@ -71,9 +72,22 @@
     }
 
     function phoneUS(viewValue, modelValue) {
-      var value = modelValue || viewValue;
-      return /^(\(?1\)?[-. ]?)?\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/.test(value);
+      return phoneAny(viewValue, modelValue, 'US');
     }
 
+    function phoneAny(viewValue, modelValue, country) {
+      var value = modelValue || viewValue;
+      var phoneUtil = phone.PhoneNumberUtil.getInstance();
+      try {
+        if (country) {
+          return phoneUtil.isValidNumber(phoneUtil.parse(value, country));
+        } else {
+          country = 'US';
+          return phoneUtil.isPossibleNumber(phoneUtil.parse(value, country));
+        }
+      } catch (e) {
+        return false;
+      }
+    }
   }
 })();

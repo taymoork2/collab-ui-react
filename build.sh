@@ -92,30 +92,60 @@ npm ls --depth=1
 
 # -----
 # Phase 3: Build
+function do_webpack {
+    # - webpack loaders have caused segfaults frequently enough to warrant simply retrying the command
+    #   until it succeeds
+    # - as this script is run by a jenkins builder, the potential infinite loop is mitigated by the
+    #   absolute timeout set for the job (currently 30 min.)
+    local webpack_exit_code
+    export npm_lifecycle_event="build"
+    while true; do
+        time webpack --bail --progress --profile --nolint
+        webpack_exit_code=$?
+        if [ "$webpack_exit_code" -ne 132 -a \
+            "$webpack_exit_code" -ne 137 -a \
+            "$webpack_exit_code" -ne 139 -a \
+            "$webpack_exit_code" -ne 255 ]; then
+            break
+        fi
+    done
+    return "$webpack_exit_code"
+}
+
 set -e
-time npm run eslint
-time npm run json-verify
-time npm run languages-verify
-time npm run typings
-time npm run test
-time npm run combine-coverage
+
+# notes:
+# - building the prod-version of webpack takes 5+ min.
+# - start it in the background at the beginning to leverage concurrency
+#   - it is single-threaded, so will not monopolize all the available cpu
+#   - capture the pid, so we can wait on it before proceeding to e2e tests
+(
+    set +e
+    # - 'typings' seems to be required for webpack to succeed
+    npm run typings
+    time do_webpack
+    echo $? > ./.cache/webpack_exit_code
+    set -e
+) &
+webpack_pid=$!
+
+npm run lint
+npm run json-verify
+npm run languages-verify
+npm run test
+npm run combine-coverage
 set +e
 
-# - webpack loaders have caused segfaults frequently enough to warrant simply retrying the command
-#   until it succeeds
-# - as this script is run by a jenkins builder, the potential infinite loop is mitigated by the
-#   absolute timeout set for the job (currently 30 min.)
-export npm_lifecycle_event="build"
-time webpack --bail --progress --profile --nolint
-webpack_exit_code=$?
-while [ "$webpack_exit_code" -eq 132 -o \
-    "$webpack_exit_code" -eq 139 -o \
-    "$webpack_exit_code" -eq 255 ]; do
-    time webpack --bail --progress --profile --nolint
-    webpack_exit_code=$?
-done
 
-# - e2e tests
+# webpack must complete before running e2e tests
+set -x
+wait "$webpack_pid"
+read webpack_exit_code < ./.cache/webpack_exit_code
+[ "$webpack_exit_code" -eq 0 ] || exit "$webpack_exit_code"
+set +x
+
+
+# e2e tests
 ./e2e.sh | tee ./.cache/e2e-sauce-logs
 
 # groom logs for cleaner sauce labs output

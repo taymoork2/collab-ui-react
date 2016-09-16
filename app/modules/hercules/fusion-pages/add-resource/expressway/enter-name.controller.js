@@ -29,21 +29,21 @@
 
     function provisionCluster(data) {
       vm.provisioning = true;
-      var clusterId = null;
+      vm.clusterId = null;
       return FusionClusterService.preregisterCluster(data.name, 'GA', 'c_mgmt')
         .then(function (cluster) {
-          clusterId = cluster.id;
+          vm.clusterId = cluster.id;
           var promises = [];
           if (data.selectedServices.call) {
-            promises.push(FusionClusterService.provisionConnector(clusterId, 'c_ucmc'));
+            promises.push(FusionClusterService.provisionConnector(vm.clusterId, 'c_ucmc'));
           }
           if (data.selectedServices.calendar) {
-            promises.push(FusionClusterService.provisionConnector(clusterId, 'c_cal'));
+            promises.push(FusionClusterService.provisionConnector(vm.clusterId, 'c_cal'));
           }
           return $q.all(promises);
         })
         .then(function () {
-          return FusionClusterService.addPreregisteredClusterToAllowList(data.hostname, 3600, clusterId);
+          return FusionClusterService.addPreregisteredClusterToAllowList(data.hostname, 3600, vm.clusterId);
         })
         .catch(function () {
           throw $translate.instant('hercules.addResourceDialog.cannotCreateCluster');
@@ -73,7 +73,8 @@
         .then(function () {
           $stateParams.wizard.next({
             expressway: {
-              name: vm.name
+              name: vm.name,
+              clusterId: vm.clusterId
             }
           });
         })

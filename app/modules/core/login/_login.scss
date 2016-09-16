@@ -31,38 +31,8 @@
 
 /* Remove when Microsoft fixes flexbox problem *\
    when min-height is defined.  See
-\* messagebox-small in ToolKit.                */
+\* message-box in ToolKit.                */
 .vertical-ie-workaround {
   height: 0px;
 }
 
-.login-box {
-  .messagebox-small {
-    padding-top: 40px;
-  }
-  h3 {
-    margin-top: 0.5rem;
-    color: $gray-dark-1;
-  }
-  input {
-    margin-top: 0.5rem;
-    font-size: 1rem;
-    width: 100%;
-  }
-  h6 {
-    font-size: 10px;
-    padding: 0 1.75rem;
-  }
-  .icon-spinner {
-    position: relative;
-    top: -60px;
-  }
-  &.loading {
-    h3 {
-      margin-top: -116px;
-    }
-    form, h6, button {
-      display: none;
-    }
-  }
-}

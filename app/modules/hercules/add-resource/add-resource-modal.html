@@ -112,8 +112,45 @@
     </form>
   </div>
 
+  <div ng-show="vm.gettingResourceGroupInput" class="select-resource-group-step">
 
-  <div ng-show="vm.preregistrationCompleted">
+    <h4 translate="hercules.addResourceDialog.selectResourceGroupPrompt"></h4>
+
+    <form name="resourceGroupSelectionForm" class="cs-form">
+      <input
+        cs-input
+        type="radio"
+        ng-model="vm.assignToResourceGroup"
+        name="assignToResourceGroup"
+        value="no"
+        id="assignToResourceGroup_no"
+        cs-input-label="{{vm._translation.assignNo}}">
+      <input
+        cs-input
+        type="radio"
+        ng-model="vm.assignToResourceGroup"
+        name="assignToResourceGroup"
+        value="yes"
+        id="assignToResourceGroup_yes"
+        cs-input-label="{{vm._translation.assignYes}}"
+        ng-disabled="vm.couldNotReadResourceGroupsFromServer"
+      >
+      <div ng-if="vm.assignToResourceGroup === 'yes'" class="select-resource-group">
+        <p translate="hercules.addResourceDialog.selectResourceGroup"></p>
+        <cs-select
+          ng-model="vm.selectedResourceGroup"
+          options="vm.resourceGroupOptions">
+        </cs-select>
+      </div>
+    </form>
+
+    <div ng-if="vm.couldNotReadResourceGroupsFromServer">
+      <i class="icon icon-error cannotReadResourceGroupsError"></i>
+      <span class="cannotReadResourceGroupsError" translate="hercules.addResourceDialog.couldNotReadResourceGroups"></span>
+    </div>
+  </div>
+
+  <div ng-show="vm.preregistrationCompletedGoToExpressway">
     <p><span translate="hercules.redirect-target-dialog.grant-registration-success-header"
              translate-values="{hostname: vm.clustername || ''}"></span>
     </p>
@@ -121,9 +158,12 @@
     <p>{{vm.localizedWillBeInstalledMessage}}</p>
 
     <p><span translate="hercules.addResourceDialog.go-to-your-expressway"
-             translate-values="{ConnectorName: vm.localizedManagementConnectorName}"></span>
+             translate-values="{ConnectorName: vm.localizedConnectorName}"></span>
     </p>
+
   </div>
+
+
 
   <div ng-show="vm.provisioningToExistingExpresswayCompleted" class="hercules-fix-paragraphs deregister-expressway-modal">
     <p translate="hercules.addResourceDialog.connectorIsProvisioned" translate-values="{ClusterName: vm.selectedCluster.label}"></p>
@@ -170,6 +210,15 @@
           ng-show="vm.inSelectExistingExpresswayScreen()"
           ng-click="vm.completeExistingExpresswayScreen()"
           ng-disabled="!vm.selectedCluster">
+
+    <span translate="hercules.redirect-target-dialog.activate-resource-button"></span>
+  </button>
+
+  <button class="btn btn--primary"
+          ng-show="vm.gettingResourceGroupInput"
+          ng-click="vm.saveResourceGroup()"
+          ng-disabled="!(vm.assignToResourceGroup === 'no' || vm.selectedResourceGroup.value !== '')"
+          >
 
     <span translate="hercules.redirect-target-dialog.activate-resource-button"></span>
   </button>

@@ -29,17 +29,20 @@
       atlasMediaServiceMetrics: 'atlas-media-service-metrics',
       atlasMediaServiceOnboarding: 'atlas-media-service-onboarding',
       atlasNewRoomSystems: 'atlas-new-roomSystems',
+      atlasNewUserExport: 'atlas-new-user-export',
       atlasNurturingEmails: 'atlas-nurturing-emails',
-      atlasUserPendingStatus: 'atlas-user-pending-status',
       atlasPinSettings: 'atlas-pin-settings',
       atlasPstnTfn: 'atlas-pstn-tfn',
       atlasReadOnlyAdmin: 'atlas-read-only-admin',
       atlasReportsUpdate: 'atlas-reports-update',
       atlasComplianceRole: 'atlas-compliance-role',
       atlasSettingsPage: 'atlas-settings-page',
+      atlasShipDevicesInternational: 'atlas-ship-devices-international',
       atlasSipUriDomain: 'atlas-sip-uri-domain',
       atlasSipUriDomainEnterprise: 'atlas-sip-uri-domain-enterprise',
+      atlasUserPendingStatus: 'atlas-user-pending-status',
       atlasWebexTrials: 'atlas-webex-trials',
+      atlasDeviceUsageReport: 'atlas-device-usage-report',
       androidAddGuestRelease: 'android-add-guest-release',
       androidDirectUpload: 'android-direct-upload',
       androidImportantFilter: 'android-important-filter',
@@ -54,22 +57,25 @@
       callMultiDevice: 'call-multi-device',
       calliopeDiscovery: 'calliope-discovery',
       callParkService: 'call-park-service',
+      calsvcDetectCmrLoc: 'calsvc_detect_cmr_loc',
       clientRingbackV2: 'client-ringback-v2',
       console: 'console',
       deleteContent: 'delete-content',
       disableCacheForFeatures: 'disableCacheForFeatures',
       enforceSparkContentEncryption: 'enforce-spark-content-encryption',
-      extensionLength: 'huron-extension-length',
       featureToggleRules: 'feature-toggle-rules',
       feedbackViaEmail: 'feedback-via-email',
       filterBadges: 'filter-badges',
       flagMsg: 'flag-msg',
+      fmcCommandDispatch: 'fmc-command-dispatch',
       geoHintEnabled: 'geo-hint-enabled',
       huronAACallQueue: 'huronAACallQueue',
-      huronMultipleCalls: 'huron-multiple-calls',
+      huronAAMediaUpload: 'huron-aa-mediaupload',
       huronClassOfService: 'COS',
       huronInternationalDialingTrialOverride: 'huronInternationalDialingTrialOverride',
       huronKEM: 'huronKEM',
+      huronSpeedDial: 'huronSpeedDial',
+      huronPagingGroup: 'huronPagingGroup',
       iosActionBar: 'ios-action-bar',
       iosAecType: 'ios-aec-type',
       iosCameraview: 'ios-cameraview',
@@ -147,7 +153,8 @@
       csdmPlaces: 'csdm-places',
       optionalvmdid: 'optional-vm-did',
       globalStatus: 'global-status',
-      atlasF237ResourceGroups: 'atlas-f237-resource-group'
+      atlasF237ResourceGroups: 'atlas-f237-resource-group',
+      huronLocalDialing: 'huron-local-dialing'
     };
 
     var toggles = {};
@@ -189,7 +196,8 @@
       stateSupportsFeature: stateSupportsFeature,
       supports: supports,
       supportsDirSync: supportsDirSync,
-      features: features
+      features: features,
+      getCustomerHuronToggle: getCustomerHuronToggle
     };
 
     init();
@@ -267,19 +275,23 @@
             return false;
           });
         } else {
-          return HuronCustomerFeatureToggleService.get({
-            customerId: id,
-            featureName: feature
-          }).$promise.then(function (data) {
-            toggles[feature] = data.val;
-            return data.val;
-          }).catch(function () {
-            return false;
-          });
+          return getCustomerHuronToggle(id, feature);
         }
       } else {
         return $q.when(false);
       }
+    }
+
+    function getCustomerHuronToggle(id, feature) {
+      return HuronCustomerFeatureToggleService.get({
+        customerId: id,
+        featureName: feature
+      }).$promise.then(function (data) {
+        toggles[feature] = data.val;
+        return data.val;
+      }).catch(function () {
+        return false;
+      });
     }
 
     function getFeature(isUser, id, feature) {

@@ -8,6 +8,113 @@
   /* @ngInject */
   function TrialDeviceService(TrialCallService, TrialRoomSystemService) {
     var _trialData;
+    var _countryReference = [
+      {
+        country: 'United States',
+        code: 'US'
+      },
+      {
+        country: 'Australia',
+        code: 'AU'
+      },
+      {
+        country: 'Austria',
+        code: 'AT'
+      },
+      {
+        country: 'Belgium',
+        code: 'BE'
+      },
+      {
+        country: 'Canada',
+        code: 'CA'
+      },
+      {
+        country: 'Czech Republic',
+        code: 'CZ'
+      },
+      {
+        country: 'Denmark',
+        code: 'DK'
+      },
+      {
+        country: 'Finland',
+        code: 'FI'
+      },
+      {
+        country: 'France',
+        code: 'FR'
+      },
+      {
+        country: 'Germany',
+        code: 'GE'
+      },
+      {
+        country: 'Ireland',
+        code: 'IE'
+      },
+      {
+        country: 'Italy',
+        code: 'IT'
+      },
+      {
+        country: 'Luxembourg',
+        code: 'LU'
+      },
+      {
+        country: 'Netherlands',
+        code: 'NL'
+      },
+      {
+        country: 'Norway',
+        code: 'NO'
+      },
+      {
+        country: 'Poland',
+        code: 'PL'
+      },
+      {
+        country: 'Portugal',
+        code: 'PT'
+      },
+      {
+        country: 'Slovakia',
+        code: 'SK'
+      },
+      {
+        country: 'Spain',
+        code: 'ES'
+      },
+      {
+        country: 'Sweden',
+        code: 'SE'
+      },
+      {
+        country: 'Switzerland',
+        code: 'SC'
+      },
+      {
+        country: 'United Kingdom',
+        code: 'GB'
+      }
+    ];
+    var _countries = {
+      US: ['United States'],
+      ROLLOUT1: ['United States', 'Australia', 'Austria', 'Belgium', 'Canada', 'Czech Republic',
+      'Denmark', 'Finland', 'France', 'Germany', 'Ireland', 'Italy', 'Luxembourg', 'Netherlands', 'Norway', 'Poland',
+      'Portugal', 'Slovakia', 'Spain', 'Sweden', 'Switzerland', 'United Kingdom']
+
+    };
+
+    var countryListTypes = {
+      US_ONLY: 'US',
+      CISCO_SX10: 'ROLLOUT1',
+      CISCO_8865: 'US',
+      CISCO_8845: 'US',
+      CISCO_8841: 'US',
+      CISCO_7841: 'US'
+    };
+
     var service = {
       getData: getData,
       reset: reset,
@@ -15,6 +122,7 @@
       getStates: getStates,
       getCountries: getCountries,
       canAddDevice: canAddDevice,
+      getCountryCodeByName: getCountryCodeByName
     };
 
     return service;
@@ -53,10 +161,20 @@
       return _trialData.limitsPromise;
     }
 
-    function getCountries() {
-      return [{
-        country: 'United States'
-      }];
+    function getCountries(deviceArray) {
+      if (!deviceArray || deviceArray.length === 0) {
+        deviceArray = ['US_ONLY'];
+      }
+      var countryLists = _.map(deviceArray, function (device) {
+        return _countries[countryListTypes[device]] || _countries.US;
+      });
+      return _.map(_.intersection.apply(null, countryLists), function (country) {
+        return { country: country };
+      });
+    }
+
+    function getCountryCodeByName(countryName) {
+      return _.chain(_countryReference).find({ country: countryName }).get('code').value();
     }
 
     function getStates() {
