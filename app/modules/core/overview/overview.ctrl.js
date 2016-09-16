@@ -6,7 +6,7 @@
     .controller('OverviewCtrl', OverviewCtrl);
 
   /* @ngInject */
-  function OverviewCtrl($rootScope, $scope, $translate, Authinfo, Config, FeatureToggleService, Log, Notification, Orgservice, OverviewCardFactory, OverviewNotificationFactory, ReportsService, TrialService, UrlConfig, hasCareFeatureToggle) {
+  function OverviewCtrl($rootScope, $scope, $translate, Authinfo, Config, FeatureToggleService, Log, Notification, Orgservice, OverviewCardFactory, OverviewNotificationFactory, ReportsService, SunlightReportService, TrialService, UrlConfig, hasCareFeatureToggle) {
     var vm = this;
 
     vm.pageTitle = $translate.instant('overview.pageTitle');
@@ -78,7 +78,7 @@
           Orgservice.getAdminOrgUsage()
             .then(function (response) {
               var sharedDevicesUsage = -1;
-              var sparkBoardsUsage = -1;
+              var seaGullsUsage = -1;
               _.each(response.data, function (subscription) {
                 _.each(subscription, function (licenses) {
                   _.each(licenses, function (license) {
@@ -86,18 +86,18 @@
                       if (license.offerName === Config.offerCodes.SD) {
                         sharedDevicesUsage = license.usage;
                       } else if (license.offerName === Config.offerCodes.SB) {
-                        sparkBoardsUsage = license.usage;
+                        seaGullsUsage = license.usage;
                       }
                     }
                   });
                 });
               });
-              if (sharedDevicesUsage === 0 || sparkBoardsUsage === 0) {
+              if (sharedDevicesUsage === 0 || seaGullsUsage === 0) {
                 setRoomSystemEnabledDevice(true);
-                if (sharedDevicesUsage === 0 && sparkBoardsUsage === 0) {
+                if (sharedDevicesUsage === 0 && seaGullsUsage === 0) {
                   vm.notifications.push(OverviewNotificationFactory.createDevicesNotification('homePage.setUpDevices'));
-                } else if (sparkBoardsUsage === 0) {
-                  vm.notifications.push(OverviewNotificationFactory.createDevicesNotification('homePage.setUpSparkBoardDevices'));
+                } else if (seaGullsUsage === 0) {
+                  vm.notifications.push(OverviewNotificationFactory.createDevicesNotification('homePage.setUpSeaGullDevices'));
                 } else {
                   vm.notifications.push(OverviewNotificationFactory.createDevicesNotification('homePage.setUpSharedDevices'));
                 }
@@ -146,11 +146,13 @@
 
     vm.statusPageUrl = UrlConfig.getStatusPageUrl();
 
-    _.each(['oneOnOneCallsLoaded', 'groupCallsLoaded', 'conversationsLoaded', 'activeRoomsLoaded'], function (eventType) {
+    _.each(['oneOnOneCallsLoaded', 'groupCallsLoaded', 'conversationsLoaded', 'activeRoomsLoaded', 'incomingChatTasksLoaded'], function (eventType) {
       $scope.$on(eventType, _.partial(forwardEvent, 'reportDataEventHandler'));
     });
 
     ReportsService.getOverviewMetrics(true);
+
+    SunlightReportService.getOverviewData();
 
     Orgservice.getAdminOrg(_.partial(forwardEvent, 'orgEventHandler'), false, true);
 

@@ -3,7 +3,6 @@
 describe('Controller: MySubscriptionCtrl', function () {
   let $httpBackend, rootScope, $scope, $controller, q, controller, Orgservice, ServiceDescriptor, Authinfo;
   let data = getJSONFixture('core/json/myCompany/subscriptionData.json');
-  let subId = 'sub-id';
   let trialUrl = 'https://atlas-integration.wbx2.com/admin/api/v1/commerce/online/subID';
   let trialUrlResponse = 'trialUrlResponse';
 
@@ -50,7 +49,7 @@ describe('Controller: MySubscriptionCtrl', function () {
       $rootScope: rootScope,
       Orgservice: Orgservice,
       ServiceDescriptor: ServiceDescriptor,
-      Authinfo: Authinfo
+      Authinfo: Authinfo,
     });
   };
 
@@ -58,26 +57,23 @@ describe('Controller: MySubscriptionCtrl', function () {
     beforeEach(function () {
       this.injectDependencies(
         '$q',
-        '$sce',
         'Authinfo',
         'DigitalRiverService',
         'Notification'
       );
       this.getDigitalRiverSubscriptionsUrlDefer = this.$q.defer();
-      spyOn(this.$sce, 'trustAsResourceUrl').and.callThrough();
       spyOn(this.Authinfo, 'isOnline').and.returnValue(true);
-      spyOn(this.DigitalRiverService, 'getDigitalRiverSubscriptionsUrl').and.returnValue(this.getDigitalRiverSubscriptionsUrlDefer.promise);
+      spyOn(this.DigitalRiverService, 'getSubscriptionsUrl').and.returnValue(this.getDigitalRiverSubscriptionsUrlDefer.promise);
       spyOn(this.Notification, 'errorWithTrackingId');
       spyOn(Orgservice, 'getLicensesUsage').and.returnValue(q.when(data.subscriptionsResponse));
-    })
+    });
     it('should get digital river order history url to load iframe', function () {
       this.getDigitalRiverSubscriptionsUrlDefer.resolve('https://some.url.com');
       startController();
       $scope.$apply();
 
-      expect(this.DigitalRiverService.getDigitalRiverSubscriptionsUrl).toHaveBeenCalled();
-      expect(this.$sce.trustAsResourceUrl).toHaveBeenCalledWith('https://some.url.com');
-      expect(controller.digitalRiverSubscriptionsUrl.$$unwrapTrustedValue()).toEqual('https://some.url.com');
+      expect(this.DigitalRiverService.getSubscriptionsUrl).toHaveBeenCalled();
+      expect(controller.digitalRiverSubscriptionsUrl).toEqual('https://some.url.com');
     });
 
     it('should notify error if unable to get digital river url', function () {

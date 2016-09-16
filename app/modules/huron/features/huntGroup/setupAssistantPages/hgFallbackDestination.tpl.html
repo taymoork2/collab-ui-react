@@ -56,8 +56,8 @@
     <div class="text-center fallback-container-item">
       <button class="btn" cs-btn loading="huntGroupSA.saveProgress"
               ng-click="huntGroupSA.saveHuntGroup()"
-              ng-class="{'btn--success': (huntGroupSA.isFallbackValid())}""
-              ng-disabled="!huntGroupSA.isFallbackValid()">
+              ng-class="{'btn--success': (huntGroupSA.isFallbackValid() || huntGroupSA.allowLocalValidation)}""
+              ng-disabled="!huntGroupSA.isFallbackValid() && !huntGroupSA.allowLocalValidation">
         <span translate="huronHuntGroup.createGroupLabel"></span>
       </button>
     </div>

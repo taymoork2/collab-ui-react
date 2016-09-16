@@ -4,7 +4,7 @@
   module.exports = wx2AdminWebClientApp;
 
   /* @ngInject */
-  function wx2AdminWebClientApp($animate, $interval, $location, $rootScope, $state, $translate, $window, Auth, Authinfo, Config, Localize, Log, LogMetricsService, PreviousState, SessionStorage, TokenService, TrackingId, Utils) {
+  function wx2AdminWebClientApp($animate, $interval, $location, $rootScope, $state, $translate, $window, Auth, Authinfo, Config, Localize, Log, LogMetricsService, OnlineUpgradeService, PreviousState, SessionStorage, TokenService, TrackingId, Utils) {
     //Expose the localize service globally.
     $rootScope.Localize = Localize;
     $rootScope.Utils = Utils;
@@ -38,6 +38,9 @@
           if (!Authinfo.isAllowedState(to.name)) {
             e.preventDefault();
             $state.go('unauthorized');
+          } else if (OnlineUpgradeService.shouldForceUpgrade()) {
+            e.preventDefault();
+            OnlineUpgradeService.openUpgradeModal();
           } else if (!Authinfo.isSetupDone() && Authinfo.isCustomerAdmin() && to.name !== 'firsttimewizard') {
             e.preventDefault();
             $state.go('firsttimewizard');

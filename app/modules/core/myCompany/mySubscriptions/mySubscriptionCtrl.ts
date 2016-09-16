@@ -1,9 +1,9 @@
-import { DigitalRiverService } from '../digitalRiver/digitalRiver.service';
+import { DigitalRiverService } from '../../../online/digitalRiver/digitalRiver.service';
 
 const baseCategory = {
   label: undefined,
   subscriptions: [],
-  borders: false
+  borders: false,
 };
 
 // hybrid service types
@@ -13,8 +13,8 @@ const fusionCAL = 'squared-fusion-cal';
 const fusionMGT = 'squared-fusion-mgmt';
 
 // hybrid service weight/status
-const serviceStatusWeight:Array<String> = [ "undefined", "ok","warn", "error" ];
-const serviceStatusToCss:Array<String> = [ "warning", "success", "warning", "danger" ];
+const serviceStatusWeight: Array<String> = [ 'undefined', 'ok', 'warn', 'error' ];
+const serviceStatusToCss: Array<String> = [ 'warning', 'success', 'warning', 'danger' ];
 
 // icon classes
 const messageClass = 'icon-message';
@@ -39,7 +39,6 @@ class MySubscriptionCtrl {
     private $http: ng.IHttpService,
     private $q: ng.IQService,
     private $rootScope: ng.IRootScopeService,
-    private $sce: ng.ISCEService,
     private $timeout: ng.ITimeoutService,
     private $translate: ng.translate.ITranslateService,
     private Authinfo,
@@ -51,20 +50,20 @@ class MySubscriptionCtrl {
   ) {
     // message subscriptions
     this.licenseCategory[0] = angular.copy(baseCategory);
-    this.licenseCategory[0].label = $translate.instant("subscriptions.message");
+    this.licenseCategory[0].label = $translate.instant('subscriptions.message');
 
     // meeting subscriptions
     this.licenseCategory[1] = angular.copy(baseCategory);
-    this.licenseCategory[1].label = $translate.instant("subscriptions.meeting");
+    this.licenseCategory[1].label = $translate.instant('subscriptions.meeting');
     this.licenseCategory[1].borders = true;
 
     // communication subscriptions
     this.licenseCategory[2] = angular.copy(baseCategory);
-    this.licenseCategory[2].label = $translate.instant("subscriptions.call");
+    this.licenseCategory[2].label = $translate.instant('subscriptions.call');
 
     // room system subscriptions
     this.licenseCategory[3] = angular.copy(baseCategory);
-    this.licenseCategory[3].label = $translate.instant("subscriptions.room");
+    this.licenseCategory[3].label = $translate.instant('subscriptions.room');
 
     this.isOnline = Authinfo.isOnline();
 
@@ -74,12 +73,12 @@ class MySubscriptionCtrl {
       this.hybridServicesRetrieval();
     }
     this.subscriptionRetrieval();
-  };
+  }
 
   private initIframe(): void {
     this.loading = true;
-    this.DigitalRiverService.getDigitalRiverSubscriptionsUrl().then((subscriptionsUrl) => {
-      this.digitalRiverSubscriptionsUrl = this.$sce.trustAsResourceUrl(subscriptionsUrl);
+    this.DigitalRiverService.getSubscriptionsUrl().then((subscriptionsUrl) => {
+      this.digitalRiverSubscriptionsUrl = subscriptionsUrl;
     }).catch((response) => {
       this.loading = false;
       this.Notification.errorWithTrackingId(response, 'subscriptions.loadError');
@@ -96,27 +95,27 @@ class MySubscriptionCtrl {
     }, (error) => {
       return this.upgradeTrialErrorResponse(error, subId);
     });
-  };
+  }
 
   private upgradeTrialErrorResponse(error, subId) {
     this.Notification.errorWithTrackingId(error, 'subscriptions.onlineTrialUpgradeUrlError', {
-      trialId: subId
+      trialId: subId,
     });
     return this.emptyOnlineTrialUrl();
-  };
+  }
 
   private emptyOnlineTrialUrl() {
     this.trialUrlFailed = true;
     return undefined;
-  };
+  }
 
   private broadcastSingleSubscription(subscription, trialUrl)  {
     this.$rootScope.$broadcast('SUBSCRIPTION::upgradeData', {
       isTrial: subscription.isTrial,
       subId: subscription.internalSubscriptionId,
-      upgradeTrialUrl: trialUrl
+      upgradeTrialUrl: trialUrl,
     });
-  };
+  }
 
   // generating the subscription view tooltips
   private generateTooltip(offerName, usage, volume) {
@@ -131,7 +130,7 @@ class MySubscriptionCtrl {
     } else {
       return undefined;
     }
-  };
+  }
 
   // combines licenses for the license view
   private addSubscription(index, item, existingSite) {
@@ -145,7 +144,7 @@ class MySubscriptionCtrl {
     }
 
     _.forEach(subscriptions, (subscription: any) => {
-      if(!exists && subscription.offerName === item.offerName){
+      if (!exists && subscription.offerName === item.offerName) {
         subscriptions[0].usage += item.usage;
         subscriptions[0].volume += item.volume;
         exists = true;
@@ -155,7 +154,7 @@ class MySubscriptionCtrl {
     if (!exists) {
       subscriptions.push(item);
     }
-  };
+  }
 
   private subscriptionRetrieval() {
     this.Orgservice.getLicensesUsage().then((subscriptions) => {
@@ -166,12 +165,12 @@ class MySubscriptionCtrl {
           licenses: [],
           isTrial: false,
           viewAll: false,
-          upgradeTrialUrl: undefined
+          upgradeTrialUrl: undefined,
         };
-        if (subscription.subscriptionId && (subscription.subscriptionId !== "unknown")) {
+        if (subscription.subscriptionId && (subscription.subscriptionId !== 'unknown')) {
           newSubscription.subscriptionId = subscription.subscriptionId;
         }
-        if (subscription.internalSubscriptionId && (subscription.internalSubscriptionId !== "unknown")) {
+        if (subscription.internalSubscriptionId && (subscription.internalSubscriptionId !== 'unknown')) {
           newSubscription.internalSubscriptionId = subscription.internalSubscriptionId;
         }
 
@@ -186,7 +185,7 @@ class MySubscriptionCtrl {
               siteUrl: license.siteUrl,
               id: 'donutId' + subIndex + licenseIndex,
               tooltip: this.generateTooltip(license.offerName, license.usage, license.volume),
-              class: undefined
+              class: undefined,
             };
 
             _.forEach(licenseTypes, (type: any, index: number) => {
@@ -209,7 +208,7 @@ class MySubscriptionCtrl {
                     break;
                   }
                   default: {
-                    if(index === 1) {
+                    if (index === 1) {
                       offer.class = meetingRoomClass;
                     } else {
                       offer.class = webexClass;
@@ -224,12 +223,12 @@ class MySubscriptionCtrl {
                     } else if (offer.siteUrl) {
                       this.licenseCategory[1].subscriptions.push({
                         siteUrl: offer.siteUrl,
-                        offers: [offer]
+                        offers: [offer],
                       });
                     } else { // Meeting licenses not attached to a siteUrl should be grouped together at the front of the list
                       this.licenseCategory[1].subscriptions.unshift({
                         siteUrl: offer.siteUrl,
-                        offers: [offer]
+                        offers: [offer],
                       });
                     }
                     break;
@@ -248,7 +247,7 @@ class MySubscriptionCtrl {
         if (newSubscription.licenses.length > 0) {
           // sort licenses into display order/order for determining subscription name
           newSubscription.licenses.sort((a, b) => {
-            return licenseTypes.indexOf(a.offerName) - licenseTypes.indexOf(b.offerName)
+            return licenseTypes.indexOf(a.offerName) - licenseTypes.indexOf(b.offerName);
           });
           this.subscriptionDetails.push(newSubscription);
         }
@@ -266,19 +265,13 @@ class MySubscriptionCtrl {
           this.broadcastSingleSubscription(this.subscriptionDetails[0], undefined);
         }
       });
-
-      if (this.isOnline && this.subscriptionDetails.length > 1) {
-        this.$timeout(() => {
-          bmmp.init(null, null, this.Authinfo.getOrgId(), 'atlas', this.$translate.use(), null, this.UrlConfig.getBmmpUrl());
-        }, 300);
-      }
     });
-  };
+  }
 
   private hybridServicesRetrieval() {
     this.ServiceDescriptor.servicesInOrg(this.Authinfo.getOrgId(), true)
       .then(services => {
-        if(_.isArray(services)) {
+        if (_.isArray(services)) {
           let callServices = services.filter((service) => {
             return service.id === fusionUC || service.id === fusionEC;
           });
@@ -290,11 +283,11 @@ class MySubscriptionCtrl {
             let callService = {
               id: fusionUC,
               enabled: _.every(callServices, {
-                enabled: true
+                enabled: true,
               }),
-              status: _.reduce(callServices, (result:String, serv) => {
+              status: _.reduce(callServices, (result: String, serv) => {
                 return serviceStatusWeight.indexOf(serv.status) > serviceStatusWeight.indexOf(result) ? serv.status : result;
-              }, serviceStatusWeight[1])
+              }, serviceStatusWeight[1]),
             };
 
             if (callService.enabled) {
@@ -312,7 +305,7 @@ class MySubscriptionCtrl {
           }
         }
       });
-  };
+  }
 }
 
 angular

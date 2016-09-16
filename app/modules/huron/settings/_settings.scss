@@ -114,4 +114,19 @@
   .save-popup-margin {
     margin-bottom: vr-adjust(60px)
   }
+
+  .indent-area-code {
+    padding-left: vr-adjust(32px);
+  }
+
+  .cs-radio-group {
+    margin-bottom: 1rem;
+  }
+
+  .terminus-warning {
+    font-size: .75rem;
+    .icon-warning {
+      margin-right: .25rem;
+    }
+  }
 }

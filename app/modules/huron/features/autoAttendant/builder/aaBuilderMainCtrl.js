@@ -9,7 +9,7 @@
   function AABuilderMainCtrl($scope, $translate, $state, $stateParams, $q, AAUiModelService,
     AAModelService, AutoAttendantCeInfoModelService, AutoAttendantCeMenuModelService, AutoAttendantCeService,
     AAValidationService, AANumberAssignmentService, AANotificationService, Authinfo, AACommonService, AAUiScheduleService, AACalendarService,
-    AATrackChangeService, AADependencyService, ServiceSetup, Analytics, AAMetricNameService) {
+    AATrackChangeService, AADependencyService, ServiceSetup, Analytics, AAMetricNameService, FeatureToggleService) {
 
     var vm = this;
     vm.overlayTitle = $translate.instant('autoAttendant.builderTitle');
@@ -609,6 +609,15 @@
       }
     });
 
+    //load the feature toggle prior to creating the elements
+    function setUpFeatureToggles() {
+      var featureToggleDefault = false;
+      AACommonService.setMediaUploadToggle(featureToggleDefault);
+      return FeatureToggleService.supports(FeatureToggleService.features.huronAAMediaUpload).then(function (result) {
+        AACommonService.setMediaUploadToggle(result);
+      });
+    }
+
     function activate() {
       var aaName = $stateParams.aaName;
       AAUiModelService.initUiModel();
@@ -623,14 +632,13 @@
       // Define vm.ui.builder.ceInfo_name for editing purpose.
       vm.ui.builder.ceInfo_name = angular.copy(vm.ui.ceInfo.name);
 
-      AutoAttendantCeInfoModelService.getCeInfosList().then(getTimeZoneOptions).then(getSystemTimeZone)
+      AutoAttendantCeInfoModelService.getCeInfosList().then(setUpFeatureToggles).then(getTimeZoneOptions).then(getSystemTimeZone)
       .finally(function () {
         AutoAttendantCeMenuModelService.clearCeMenuMap();
         vm.aaModel = AAModelService.getAAModel();
         vm.aaModel.aaRecord = undefined;
         vm.selectAA(aaName);
       });
-
     }
 
     function evalKeyPress($keyCode) {

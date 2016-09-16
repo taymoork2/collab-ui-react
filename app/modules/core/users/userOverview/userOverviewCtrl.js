@@ -6,7 +6,7 @@
     .controller('UserOverviewCtrl', UserOverviewCtrl);
 
   /* @ngInject */
-  function UserOverviewCtrl($http, $scope, $state, $stateParams, $translate, $resource, $window, Authinfo, FeatureToggleService, Notification, SunlightConfigService, UrlConfig, Userservice, Utils, WebExUtilsFact) {
+  function UserOverviewCtrl($http, $scope, $state, $stateParams, $translate, $resource, $window, Authinfo, Config, FeatureToggleService, Notification, SunlightConfigService, UrlConfig, Userservice, Utils, WebExUtilsFact) {
     var vm = this;
     vm.currentUser = $stateParams.currentUser;
     vm.entitlements = $stateParams.entitlements;
@@ -107,8 +107,7 @@
         if (getServiceDetails('CD')) {
           SunlightConfigService.getUserInfo(vm.currentUser.id).then(
               function () {
-                contactCenterState.detail = $translate.instant('onboardModal.paidContactCenter');
-                vm.services.push(contactCenterState);
+                setCareCheck(false);
               }
           );
         }
@@ -331,15 +330,30 @@
             if (getInvitationDetails(response.effectiveLicenses, 'CD')) {
               SunlightConfigService.getUserInfo(vm.currentUser.id).then(
                   function () {
-                    contactCenterState.detail = $translate.instant('onboardModal.paidContactCenter');
-                    vm.services.push(contactCenterState);
-                    vm.currentUser.invitations.cc = true;
+                    setCareCheck(true);
                   }
               );
             }
           }
         });
       }
+    }
+
+    function setCareCheck(setCCInvitationReqd) {
+      Userservice.getUser(vm.currentUser.id, function (data) {
+        if (data.success) {
+          var hasSyncKms = _.find(data.roles, function (r) {
+            return r === Config.backend_roles.spark_synckms;
+          });
+          if (hasSyncKms) {
+            contactCenterState.detail = $translate.instant('onboardModal.paidContactCenter');
+            vm.services.push(contactCenterState);
+            if (setCCInvitationReqd) {
+              vm.currentUser.invitations.cc = true;
+            }
+          }
+        }
+      });
     }
 
     function resendInvitation(userEmail, userName, uuid, userStatus, dirsyncEnabled, entitlements) {

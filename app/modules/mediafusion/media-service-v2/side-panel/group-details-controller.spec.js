@@ -102,13 +102,4 @@ describe('Controller: GroupDetailsControllerV2', function () {
     //    expect(aggregatedAlarms[2].hosts.length).toBe(1);
   });
 
-  it('should open a model when delete group is called', function () {
-
-    controller.deleteGroup({
-      preventDefault: function () {}
-    });
-    $rootScope.$digest();
-    expect($modal.open.calledOnce).toBe(true);
-
-  });
 });

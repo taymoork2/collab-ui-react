@@ -79,8 +79,12 @@
       var value = modelValue || viewValue;
       var phoneUtil = phone.PhoneNumberUtil.getInstance();
       try {
-        var result = phoneUtil.parse(value, country);
-        return phoneUtil.isValidNumber(result);
+        if (country) {
+          return phoneUtil.isValidNumber(phoneUtil.parse(value, country));
+        } else {
+          country = 'US';
+          return phoneUtil.isPossibleNumber(phoneUtil.parse(value, country));
+        }
       } catch (e) {
         return false;
       }

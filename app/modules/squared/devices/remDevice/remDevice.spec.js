@@ -21,7 +21,7 @@ describe('Controller: RemDeviceController', function () {
       CsdmUnusedAccountsService = _CsdmUnusedAccountsService_;
       $httpBackend.whenGET('https://identity.webex.com/identity/scim/null/v1/Users/me').respond({});
       $httpBackend.whenGET('https://csdm-integration.wbx2.com/csdm/api/v1/organization/null/huronDevices?checkDisplayName=false').respond([]);
-      $httpBackend.whenGET('https://csdm-integration.wbx2.com/csdm/api/v1/organization/null/devices?checkOnline=true&checkDisplayName=false').respond([]);
+      $httpBackend.whenGET('https://csdm-integration.wbx2.com/csdm/api/v1/organization/null/devices?checkDisplayName=false&checkOnline=false').respond([]);
       $httpBackend.whenGET('https://csdm-integration.wbx2.com/csdm/api/v1/organization/null/nonExistingDevices').respond([]);
 
       CsdmHuronDeviceService = {

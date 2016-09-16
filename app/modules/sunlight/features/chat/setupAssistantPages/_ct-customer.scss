@@ -131,10 +131,7 @@
       pointer-events: none;
       position: absolute;
     }
-  }
-
-  .ct-left-cs-input:focus {
-    border-color: $gray-light-3 !important;
+    background-color: $white !important;
   }
 
   .ct-footer {
@@ -212,6 +209,18 @@
     width: 90%;
   }
 
+  .ct-attribute-field-textbox_error{
+    @include placeholder {
+      line-height: rem-calc(12px);
+    }
+    font-family: "CiscoSansTT Light";
+    @include vr-spacing(ml, 1);
+    width: 90%;
+    > div > div > a {
+      border-color: $color-alerts-base;
+    }
+  }
+
   .ct-attribute-field-radio {
     @include vr-spacing(ml, 1);
     @include vr-spacing(mt, 1);
@@ -245,8 +254,8 @@
   .right-inner-addon i {
     position: absolute;
     right: 0rem;
-    @include vr-spacing(pv, 0.6);
-    @include vr-spacing(ph, 2);
+    @include vr-spacing(mv, 0.6);
+    @include vr-spacing(mh, 2);
   }
 
   .category-tokens {
@@ -282,18 +291,25 @@
   }
   .ct-input-error {
     color: $color-alerts-base;
-    padding-left: 1rem;
-    padding-right: 1rem;
-    padding-bottom: 1rem;
+    @include vr-spacing(pl, 1);
+    @include vr-spacing(pr, 1);
+    @include vr-spacing(pb, 1);
     line-height: 1.25rem;
   }
   .cs-input__messages {
+    @include vr-spacing(pl, 1);
     padding-left: 1rem;
   }
   .ct-error-icon {
     float: left;
-    padding-bottom: 0.4rem;
-    padding-right: 0.4rem;
+    @include vr-spacing(pb, 0.4);
+    @include vr-spacing(pr, 0.4);
+  }
+  .ct-error-border {
+    border-color: $color-alerts-base;
+  }
+  .ct-add-contain {
+    cursor: pointer;
   }
 }
 

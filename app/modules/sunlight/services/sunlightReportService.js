@@ -5,7 +5,7 @@
     .service('SunlightReportService', sunlightReportService);
 
   /* @ngInject */
-  function sunlightReportService($http, $q, Authinfo, UrlConfig) {
+  function sunlightReportService($http, $q, $rootScope, Authinfo, UrlConfig) {
     var sunlightReportUrl = UrlConfig.getSunlightReportServiceUrl() + '/organization/' + Authinfo.getOrgId() + '/report/';
 
     var dayFormat = "MMM DD";
@@ -30,13 +30,60 @@
 
     var service = {
       getStats: getStats,
-      getReportingData: getReportingData
+      getReportingData: getReportingData,
+      getOverviewData: getOverviewData
     };
 
     return service;
 
     function getStats(reportName, config) {
       return $http.get(sunlightReportUrl + reportName, config);
+    }
+
+    function getOverviewData() {
+      var reportNames = ['org_stats'];
+      getTimeCharts(reportNames, {
+        intervalCount: 2,
+        spanType: 'month',
+        viewType: 'daily',
+        mediaType: 'chat'
+      });
+    }
+
+    function getTimeCharts(reportNames, paramBase) {
+      _.forEach(reportNames, function (reportName) {
+        var promises = [];
+        for (var interval = 1; interval <= paramBase.intervalCount; interval++) {
+          promises[interval - 1] = getOverviewDataCall(reportName, paramBase, interval);
+        }
+        $q.all(promises).then(function (values) {
+          sendOverviewResponse({ data: _.assign({ success: true, values: values }, paramBase) }, 'incomingChatTasks');
+        }, function (error) {
+          sendOverviewResponse({ data: _.assign({ success: false, data: error }, paramBase) }, 'incomingChatTasks');
+        });
+      });
+    }
+
+    function getOverviewDataCall(reportName, paramBase, interval) {
+      var deferred = $q.defer();
+      var endTime = moment.utc().subtract(1, 'days').subtract(interval - 1, 'M').startOf('day');
+      var startTime = moment.utc().subtract(1, 'days').subtract(interval, 'M').startOf('day');
+      var config = getQueryConfig(paramBase.viewType, paramBase.mediaType, startTime, endTime);
+      var responseBase = _.assign({ interval: interval }, config.params);
+      getStats(reportName, config).then(function (response) {
+        deferred.resolve(_.assign({ count: rollUpTaskCount(response.data.data) }, responseBase));
+      }, function (response) {
+        deferred.reject(_.assign({ count: response.message }), responseBase);
+      });
+      return deferred.promise;
+    }
+
+    function rollUpTaskCount(dataArray) {
+      return _.reduce(dataArray, function (sum, n) { return n.numTasksQueuedState + sum; }, 0);
+    }
+
+    function sendOverviewResponse(response, metricType) {
+      $rootScope.$broadcast(metricType + 'Loaded', response);
     }
 
     function getReportingData(reportName, timeSelected, mediaType, isSnapshot) {
@@ -141,8 +188,8 @@
           reducedForHour = _.reduce(statsList, reduceOrgSnapshotStatsByHour, emptyOrgstats);
         } else {
           reducedForHour = _.reduce(statsList, reduceOrgStatsByHour, emptyOrgstats);
-          reducedForHour.avgTaskWaitTime = roundTwoDecimalPlaces(reducedForHour.avgTaskWaitTime / convertInMinutes);
-          reducedForHour.avgTaskCloseTime = roundTwoDecimalPlaces(reducedForHour.avgTaskCloseTime / convertInMinutes);
+          reducedForHour.avgTaskWaitTime = (reducedForHour.avgTaskWaitTime / convertInMinutes);
+          reducedForHour.avgTaskCloseTime = (reducedForHour.avgTaskCloseTime / convertInMinutes);
           reducedForHour.avgCsatScores = roundTwoDecimalPlaces(reducedForHour.avgCsatScores);
         }
         downSampledStatsByHour.push(reducedForHour);
@@ -158,8 +205,8 @@
       var downSampledStatsByDay = [];
       _.map(statsGroupedByDay, function (statsList) {
         var reducedForDay = _.reduce(statsList, reduceOrgStatsByDay, emptyOrgstats);
-        reducedForDay.avgTaskWaitTime = roundTwoDecimalPlaces(reducedForDay.avgTaskWaitTime / convertInMinutes);
-        reducedForDay.avgTaskCloseTime = roundTwoDecimalPlaces(reducedForDay.avgTaskCloseTime / convertInMinutes);
+        reducedForDay.avgTaskWaitTime = (reducedForDay.avgTaskWaitTime / convertInMinutes);
+        reducedForDay.avgTaskCloseTime = (reducedForDay.avgTaskCloseTime / convertInMinutes);
         reducedForDay.avgCsatScores = roundTwoDecimalPlaces(reducedForDay.avgCsatScores);
         downSampledStatsByDay.push(reducedForDay);
       });
@@ -173,8 +220,8 @@
       var downSampledStatsByWeek = [];
       _.map(statsGroupedByWeek, function (statsList) {
         var reducedForWeek = _.reduce(statsList, reduceOrgStatsByWeek, emptyOrgstats);
-        reducedForWeek.avgTaskWaitTime = roundTwoDecimalPlaces(reducedForWeek.avgTaskWaitTime / convertInMinutes);
-        reducedForWeek.avgTaskCloseTime = roundTwoDecimalPlaces(reducedForWeek.avgTaskCloseTime / convertInMinutes);
+        reducedForWeek.avgTaskWaitTime = (reducedForWeek.avgTaskWaitTime / convertInMinutes);
+        reducedForWeek.avgTaskCloseTime = (reducedForWeek.avgTaskCloseTime / convertInMinutes);
         reducedForWeek.avgCsatScores = roundTwoDecimalPlaces(reducedForWeek.avgCsatScores);
         downSampledStatsByWeek.push(reducedForWeek);
       });
@@ -188,8 +235,8 @@
       var downSampledStatsByMonth = [];
       _.map(statsGroupedByMonth, function (statsList) {
         var reducedForMonth = _.reduce(statsList, reduceOrgStatsByMonth, emptyOrgstats);
-        reducedForMonth.avgTaskWaitTime = roundTwoDecimalPlaces(reducedForMonth.avgTaskWaitTime / convertInMinutes);
-        reducedForMonth.avgTaskCloseTime = roundTwoDecimalPlaces(reducedForMonth.avgTaskCloseTime / convertInMinutes);
+        reducedForMonth.avgTaskWaitTime = (reducedForMonth.avgTaskWaitTime / convertInMinutes);
+        reducedForMonth.avgTaskCloseTime = (reducedForMonth.avgTaskCloseTime / convertInMinutes);
         reducedForMonth.avgCsatScores = roundTwoDecimalPlaces(reducedForMonth.avgCsatScores);
         downSampledStatsByMonth.push(reducedForMonth);
       });

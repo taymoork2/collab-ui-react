@@ -25,9 +25,9 @@ describe('Controller: DevicesCtrl', function () {
   function initSpies() {
     // TODO - eww this is wrong - Just make this init right now
     $httpBackend.whenGET(CsdmConfigService.getUrl() + '/organization/null/nonExistingDevices').respond(200);
-    $httpBackend.whenGET(CsdmConfigService.getUrl() + '/organization/null/devices?checkOnline=true&checkDisplayName=false').respond(200);
+    $httpBackend.whenGET(CsdmConfigService.getUrl() + '/organization/null/devices?checkDisplayName=false&checkOnline=false').respond(200);
     $httpBackend.whenGET(CsdmConfigService.getUrl() + '/organization/null/codes').respond(200);
-    $httpBackend.whenGET(CsdmConfigService.getUrl() + '/organization/null/devices?checkOnline=true').respond(200);
+    $httpBackend.whenGET(CsdmConfigService.getUrl() + '/organization/null/devices').respond(200);
     $httpBackend.whenGET('https://identity.webex.com/identity/scim/null/v1/Users/me').respond(200);
 
     spyOn(AccountOrgService, 'getAccount').and.returnValue({

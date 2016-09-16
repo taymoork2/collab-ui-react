@@ -36,7 +36,9 @@
 
     var authorizeUser = function () {
       $scope.loading = true;
-      Auth.authorize()
+      Auth.authorize({
+        reauthorize: $stateParams.reauthorize
+      })
         .then(function () {
           if (!Authinfo.isSetupDone() && Authinfo.isCustomerAdmin()) {
             $state.go('firsttimewizard');

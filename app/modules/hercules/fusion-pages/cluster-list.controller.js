@@ -6,39 +6,46 @@
     .controller('FusionClusterListController', FusionClusterListController);
 
   /* @ngInject */
-  function FusionClusterListController($filter, $modal, $state, $translate, hasF237FeatureToggle, hasF410FeatureToggle, hasMediaFeatureToggle, FusionClusterService, XhrNotificationService, WizardFactory) {
+  function FusionClusterListController($filter, $modal, $state, $translate, Authinfo, Config, hasF237FeatureToggle, hasF410FeatureToggle, hasMediaFeatureToggle, FusionClusterService, XhrNotificationService, WizardFactory) {
     if (!hasF410FeatureToggle) {
       // simulate a 404
       $state.go('login');
     }
 
     var vm = this;
-    var clustersCache = [];
-    // var groupsCache = {};
+    if (hasF237FeatureToggle) {
+      var groupsCache = {};
+      vm.displayedGroups = {
+        groups: [],
+        unassigned: []
+      };
+    } else {
+      var clustersCache = [];
+      vm.displayedClusters = [];
+    }
 
+    vm.showResourceGroups = hasF237FeatureToggle;
     vm.loading = true;
     vm.backState = 'services-overview';
-    vm.displayedClusters = [];
-    vm.displayedGroups = {
-      groups: [],
-      unassigned: []
-    };
+    vm.openAllGroups = false;
     vm.placeholder = {
       name: $translate.instant('hercules.fusion.list.all'),
       filterValue: 'all',
       count: 0
     };
-    vm.showResourceGroups = hasF237FeatureToggle;
 
-    vm.filters = [{
-      name: $translate.instant('hercules.fusion.list.expressway'),
-      filterValue: 'expressway',
-      count: 0
-    }];
-    if (hasMediaFeatureToggle) {
+    vm.filters = [];
+    if (Authinfo.isEntitled(Config.entitlements.fusion_mgmt)) {
+      vm.filters.push({
+        name: $translate.instant('hercules.fusion.list.expressway'),
+        filterValue: 'c_mgmt',
+        count: 0
+      });
+    }
+    if (hasMediaFeatureToggle && Authinfo.isEntitled(Config.entitlements.mediafusion)) {
       vm.filters.push({
         name: $translate.instant('hercules.fusion.list.mediafusion'),
-        filterValue: 'mediafusion',
+        filterValue: 'mf_mgmt',
         count: 0
       });
     }
@@ -47,14 +54,20 @@
     vm.searchData = searchData;
     vm.addResource = addResource;
     vm.addResourceGroup = addResourceGroup;
+    vm.refreshList = refreshList;
 
-    if (hasF237FeatureToggle) {
-      loadResourceGroups();
-    } else {
-      loadClusters();
+    refreshList();
+
+    function refreshList() {
+      if (hasF237FeatureToggle) {
+        loadResourceGroups();
+      } else {
+        loadClusters();
+      }
     }
 
     function loadClusters() {
+      vm.loading = true;
       FusionClusterService.getAll()
         .then(function removeHybridMediaClustersIfNecessary(clusters) {
           if (!hasMediaFeatureToggle) {
@@ -75,64 +88,123 @@
     }
 
     function loadResourceGroups() {
+      vm.loading = true;
       FusionClusterService.getResourceGroups()
-        .then(function removeHybridMediaClustersIfNecessary(response) {
-          if (!hasMediaFeatureToggle) {
-            var filterHMClusters = function (clusters) {
-              _.filter(clusters, function (cluster) {
-                return cluster.targetType !== 'mf_mgmt';
-              });
-            };
-            return {
-              // Hybrid Media should never be part of any resource group as of now
-              // but we never know…
-              groups: _.map(response.groups, function (group) {
-                group.clusters = filterHMClusters(group.clusters);
-                return group;
-              }),
-              unassigned: filterHMClusters(response.unassigned)
-            };
-          }
-          return response;
-        })
+        .then(removeHybridMediaClustersIfNecessary)
         .then(function (groups) {
-          // TODO: update cache
-          // TODO: updateFilters();
+          groupsCache = groups;
+          updateFilters();
           vm.displayedGroups = groups;
-        }, XhrNotificationService.notify)
+        })
+        .catch(XhrNotificationService.notify)
         .finally(function () {
           vm.loading = false;
         });
     }
 
+    function removeHybridMediaClustersIfNecessary(response) {
+      if (!hasMediaFeatureToggle) {
+        return {
+          // Hybrid Media should never be part of any resource group as of now
+          // but we never know so filter anyway…
+          groups: _.map(response.groups, function (group) {
+            var response = _.cloneDeep(group);
+            response.clusters = filterHMClusters(response.clusters);
+            return response;
+          }),
+          unassigned: filterHMClusters(response.unassigned)
+        };
+      }
+      return response;
+    }
+
+    function filterHMClusters(clusters) {
+      return _.filter(clusters, function (cluster) {
+        return cluster.targetType !== 'mf_mgmt';
+      });
+    }
+
     function updateFilters() {
-      var expresswayClusters = _.filter(clustersCache, 'targetType', 'c_mgmt');
-      var mediafusionClusters = _.filter(clustersCache, 'targetType', 'mf_mgmt');
-      vm.placeholder.count = clustersCache.length;
-      vm.filters[0].count = expresswayClusters.length;
-      if (hasMediaFeatureToggle) {
-        vm.filters[1].count = mediafusionClusters.length;
+      if (hasF237FeatureToggle) {
+        var assignedClustersCount = _.reduce(groupsCache.groups, function (acc, group) {
+          return acc + group.clusters.length;
+        }, 0);
+        var unassignedClustersCount = groupsCache.unassigned.length;
+        vm.placeholder.count = assignedClustersCount + unassignedClustersCount;
+
+        _.each(vm.filters, function (filter, index) {
+          var filteredAssignedClustersCount = _.reduce(groupsCache.groups, function (acc, group) {
+            return acc + _.filter(group.clusters, 'targetType', filter.filterValue).length;
+          }, 0);
+          var filteredUnassignedClustersCount = _.filter(groupsCache.unassigned, 'targetType', filter.filterValue).length;
+          vm.filters[index].count = filteredAssignedClustersCount + filteredUnassignedClustersCount;
+        });
+      } else {
+        vm.placeholder.count = clustersCache.length;
+        _.each(vm.filters, function (filter, index) {
+          var clustersCount = _.filter(clustersCache, 'targetType', filter.filterValue).length;
+          vm.filters[index].count = clustersCount;
+        });
       }
     }
 
     function setFilter(filter) {
-      if (filter.filterValue === 'expressway') {
-        vm.displayedClusters = _.filter(clustersCache, 'targetType', 'c_mgmt');
-      } else if (filter.filterValue === 'mediafusion') {
-        vm.displayedClusters = _.filter(clustersCache, 'targetType', 'mf_mgmt');
+      if (hasF237FeatureToggle) {
+        if (filter.filterValue === 'all') {
+          vm.displayedGroups = groupsCache;
+        } else {
+          vm.displayedGroups = {
+            groups: _.chain(groupsCache.groups)
+              .map(function (group) {
+                var response = _.cloneDeep(group);
+                response.clusters = _.filter(response.clusters, 'targetType', filter.filterValue);
+                return response;
+              })
+              .filter(function (group) {
+                return group.clusters.length > 0;
+              })
+              .value(),
+            unassigned: _.filter(groupsCache.unassigned, 'targetType', filter.filterValue),
+          };
+        }
       } else {
-        vm.displayedClusters = clustersCache;
+        if (filter.filterValue === 'all') {
+          vm.displayedClusters = clustersCache;
+        } else {
+          vm.displayedClusters = _.filter(clustersCache, 'targetType', filter.filterValue);
+        }
       }
     }
 
     function searchData(searchStr) {
-      if (searchStr === '') {
-        vm.displayedClusters = clustersCache;
+      vm.openAllGroups = searchStr !== '';
+      if (hasF237FeatureToggle) {
+        if (searchStr === '') {
+          vm.displayedGroups = groupsCache;
+        } else {
+          vm.displayedGroups = {
+            groups: _.chain(groupsCache.groups)
+              .map(function (group) {
+                var response = _.cloneDeep(group);
+                response.clusters = $filter('filter')(response.clusters, { name: searchStr });
+                return response;
+              })
+              .filter(function (group) {
+                return group.clusters.length > 0;
+              })
+              .value(),
+            unassigned: $filter('filter')(groupsCache.unassigned, { name: searchStr }),
+          };
+        }
       } else {
-        // Filter on the cluster name only
-        vm.displayedClusters = $filter('filter')(clustersCache, {
-          name: searchStr
-        });
+        if (searchStr === '') {
+          vm.displayedClusters = clustersCache;
+        } else {
+          // Filter on the cluster name only
+          vm.displayedClusters = $filter('filter')(clustersCache, {
+            name: searchStr
+          });
+        }
       }
     }
 
@@ -188,7 +260,8 @@
         controller: 'AddResourceGroupController',
         controllerAs: 'vm',
         templateUrl: 'modules/hercules/fusion-pages/add-resource-group/add-resource-group.html'
-      });
+      }).result
+      .then(refreshList);
     }
   }
 })();
