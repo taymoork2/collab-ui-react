@@ -69,11 +69,9 @@
     function loadClusters() {
       vm.loading = true;
       FusionClusterService.getAll()
-        .then(function removeHybridMediaClustersIfNecessary(clusters) {
+        .then(function (clusters) {
           if (!hasMediaFeatureToggle) {
-            return _.filter(clusters, function (cluster) {
-              return cluster.targetType !== 'mf_mgmt';
-            });
+            return filterHMClusters(clusters);
           }
           return clusters;
         })
