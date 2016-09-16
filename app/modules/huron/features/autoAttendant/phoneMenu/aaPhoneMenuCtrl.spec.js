@@ -3,7 +3,7 @@
 describe('Controller: AAPhoneMenuCtrl', function () {
   var controller;
   var FeatureToggleService;
-  var AAUiModelService, AutoAttendantCeMenuModelService;
+  var AAUiModelService, AutoAttendantCeMenuModelService, QueueHelperService;
   var $rootScope, $scope, $q;
   var aaUiModel = {
     openHours: {}
@@ -12,6 +12,12 @@ describe('Controller: AAPhoneMenuCtrl', function () {
   var index = '0';
   var menuId = 'menu1';
   var attempts = 4;
+  var queueName = 'Sunlight Queue 1';
+  var queues = [{
+    queueName: queueName,
+    queueUrl: '/c16a6027-caef-4429-b3af-9d61ddc7964b',
+
+  }];
 
   var data = getJSONFixture('huron/json/autoAttendant/aaPhoneMenuCtrl.json');
 
@@ -71,7 +77,7 @@ describe('Controller: AAPhoneMenuCtrl', function () {
   beforeEach(angular.mock.module('Huron'));
   beforeEach(angular.mock.module('Sunlight'));
 
-  beforeEach(inject(function ($controller, _$rootScope_, _$q_, _FeatureToggleService_, _AAUiModelService_, _AutoAttendantCeMenuModelService_) {
+  beforeEach(inject(function ($controller, _$rootScope_, _$q_, _FeatureToggleService_, _AAUiModelService_, _AutoAttendantCeMenuModelService_, _QueueHelperService_) {
     $rootScope = _$rootScope_;
     $scope = $rootScope;
     $q = _$q_;
@@ -79,15 +85,18 @@ describe('Controller: AAPhoneMenuCtrl', function () {
     FeatureToggleService = _FeatureToggleService_;
     AAUiModelService = _AAUiModelService_;
     AutoAttendantCeMenuModelService = _AutoAttendantCeMenuModelService_;
+    QueueHelperService = _QueueHelperService_;
 
     spyOn(AAUiModelService, 'getUiModel').and.returnValue(aaUiModel);
     spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
+    spyOn(QueueHelperService, 'listQueues').and.returnValue($q.when(queues));
 
     AutoAttendantCeMenuModelService.clearCeMenuMap();
     aaUiModel.openHours = AutoAttendantCeMenuModelService.newCeMenu();
     $scope.schedule = schedule;
     $scope.index = index;
     $scope.menuId = menuId;
+    $scope.queues = queues;
 
     var menu = AutoAttendantCeMenuModelService.newCeMenu();
     menu.type = 'MENU_OPTION';
