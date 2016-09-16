@@ -45,6 +45,46 @@
 
   </cs-sp-section>
 
+  <cs-sp-section ng-if="groupDetails.clusterDetail.releaseChannel != 'latest' && groupDetails.nodeList.length > 0">
+    <strong>
+      <div class="section-title-row section-name" translate="mediaFusion.upgradeClusters.sw-upgrade-title">
+      </div>
+    </strong>
+    <div ng-if="!groupDetails.showUpgradeProgress">
+      <p ng-if="!groupDetails.softwareUpgrade.isUpgradeAvailable" translate="mediaFusion.upgradeClusters.upToDate"></p>
+      <p ng-if="groupDetails.softwareUpgrade.isUpgradeAvailable" translate="mediaFusion.upgradeClusters.sw-upgrade-text"></p>
+      <button class="btn btn--primary"
+              ng-click="groupDetails.showUpgradeNowDialog()"
+              ng-disabled="!groupDetails.softwareUpgrade.isUpgradeAvailable"
+              translate="mediaFusion.upgradeClusters.upgradeNow">
+      </button>
+      <p ng-if="groupDetails.softwareUpgrade.showUpgradeWarning()"><i class="icon icon-warning no-data-warning hercules-update-warning-text"></i><span  class="hercules-update-warning-text" translate="mediaFusion.upgradeClusters.upgradeWarning"></span></p>
+    </div>
+    <div ng-if="groupDetails.showUpgradeProgress">
+      <div ng-if="groupDetails.fakeUpgrade">
+        <div class="progressbar-info">
+          <span class="progressbar-label" translate="mediaFusion.upgradeClusters.pending"></span>
+          <span class="progressbar-progress">0 / {{groupDetails.softwareUpgrade.numberOfHosts}}</span>
+        </div>
+        <progressbar animate="true" value="10" max="100"></progressbar>
+      </div>
+      <div ng-if="!groupDetails.fakeUpgrade">
+        <div class="progressbar-info">
+          <span ng-show="!groupDetails.upgradeJustFinished && groupDetails.upgradeDetails.upgradingHostname !== ''" class="progressbar-label" translate="mediaFusion.upgradeClusters.upgradingHost" translate-values="{host: groupDetails.upgradeDetails.upgradingHostname, version: groupDetails.softwareUpgrade.provisionedVersion}"></span>
+          <span ng-show="!groupDetails.upgradeJustFinished && groupDetails.upgradeDetails.upgradingHostname === ''" class="progressbar-label" translate="mediaFusion.upgradeClusters.upgradeProcessInitiating" translate-values="{version: groupDetails.softwareUpgrade.provisionedVersion}"></span>
+          <span ng-if="groupDetails.upgradeJustFinished" class="progressbar-label" translate="mediaFusion.upgradeClusters.upgradeDone"></span>
+          <span class="progressbar-progress">{{groupDetails.upgradeDetails.numberOfUpsmthngHosts}} / {{groupDetails.softwareUpgrade.numberOfHosts}}</span>
+        </div>
+        <progressbar ng-show="!groupDetails.upgradeJustFinished" animate="true" value="groupDetails.upgradeDetails.numberOfUpsmthngHosts" max="groupDetails.softwareUpgrade.numberOfHosts"></progressbar>
+        <progressbar ng-show="groupDetails.upgradeJustFinished" type="success" value="1" max="1"></progressbar>
+      </div>
+    </div>  
+
+
+
+
+  </cs-sp-section>
+
   <cs-sp-section>
     <strong>
       <div class="section-title-row section-name" translate="mediaFusion.connectors.nodes"></div>
