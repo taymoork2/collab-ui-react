@@ -22,7 +22,10 @@
     "title": "Cloud Collaboration Management",
     "login": "Sign In",
     "loading": "Loading",
-    "license": "By using Cisco Spark Services you accept the Terms of Service and Privacy Statement."
+    "license": "By using Cisco Spark Services you accept the Terms of Service and Privacy Statement.",
+    "tos": "Terms of Service",
+    "privacy": "Privacy Statement",
+    "copyright": "Cisco and/or affiliates. All rights reserved."
   },
   "usersPage": {
     "assignServices": "Assign Services",
@@ -2464,6 +2467,7 @@
     "internationalDialing": "International Dialing",
     "maxLines": "You reached the limit of 25 lines. Please remove a line from this user before provisioning additional lines.",
     "showMore": "Show more",
+    "showLess": "Show less",
     "localDialing": "Local Dialing"
   },
   "directoryNumberPanel": {

@@ -1,19 +1,39 @@
-<div class="messagebox login-box" ng-class="{loading: loading}">
-  <div class="messagebox-small" ng-class="checkForIeWorkaround">
-    <i class="icon icon-2x icon-cisco-logo messagebox-heading"></i>
-    <div class="h3" translate="loginPage.title"></div>
-    <div ng-show="result">
-      <div class="results alert alert-danger" ng-bind-html="result"></div>
-    </div>
-    <form novalidate name="loginForm" class="typeahead-group" autocomplete="off">
-      <input type="email" class="underline" name="email" ng-model="email" placeholder="Email Address" required focus-on ng-keypress="login($event.which)">
-    </form>
-    <button class="btn btn--primary btn--large btn--expand messagebox-btn" role="button" ng-click="login()" ng-disabled="loginForm.email.$invalid">
+<div class="messagebox-backdrop login-box" ng-class="{loading: loading}">
+  <div class="message-box" ng-class="checkForIeWorkaround">
+    <div class="message-box__content">
+      <img class="message-box__logo" src="images/spark-logo.svg">
+      <h2 class="message-box__title" translate="loginPage.title"></h2>
+      <div ng-show="result">
+        <div class="results alert alert-danger" ng-bind-html="result"></div>
+      </div>
+      <form novalidate name="loginForm" class="typeahead-group" autocomplete="off">
+        <div class="row">
+          <div class="cs-input-group small-12 columns">
+            <input
+              type="email"
+              class="cs-input"
+              name="email"
+              ng-model="email"
+              placeholder="Email Address"
+              required
+              focus-on
+              ng-keypress="login($event.which)">
+          </div>
+        </div>
+      </form>
+      <button class="btn btn--primary btn--large btn--expand message-box__btn" role="button" ng-click="login()" ng-disabled="loginForm.email.$invalid">
       <span translate="loginPage.login"></span>
-    </button>
-    <h6 translate="loginPage.license"></h6>
-    <div ng-show="loading">
-      <i class="icon icon-3x icon-spinner"></i>
+      </button>
+      <div class="message-box__footer" translate="loginPage.license"></div>
+      <div ng-show="loading" class="login-spinner">
+        <i class="icon icon-3x icon-spinner"></i>
+      </div>
+    </div>
+  </div>
+  <div class="messagebox-backdrop__footer">
+    <i class="icon icon-cisco-logo"></i>
+    <div class="body-smallest">
+      <a href="http://www.ciscospark.com/terms-of-service.html" target="_blank" translate="loginPage.tos"></a> | <a href="http://www.cisco.com/web/siteassets/legal/privacy.html" target="_blank" translate="loginPage.privacy"></a> &copy; 2016 <span translate="loginPage.copyright"></span>
     </div>
   </div>
 </div>

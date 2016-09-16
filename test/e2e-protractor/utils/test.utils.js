@@ -385,6 +385,33 @@ exports.clickAll = function (elems) {
   })
 };
 
+// Returns true if checkbox is checked
+exports.getCheckboxVal = function (elem) {
+  return this.wait(elem).then(function () {
+    var input = elem.element(by.xpath('..')).element(by.tagName('input'));
+    return input.getAttribute('ng-model').then(function (ngModel) {
+      return input.evaluate(ngModel).then(function (value) {
+        return value;
+      });
+    });
+  });
+};
+
+// Wait (timeout ms) for checkbox to be display, if it is, set it to val, if not return
+exports.setCheckboxIfDisplayed = function (elem, val, timeout) {
+  return this.wait(elem, timeout).then(function () {
+    return exports.getCheckboxVal(elem).then(function (curVal) {
+      if (curVal !== val) {
+        // checkbox value needs to be toggled
+        exports.click(elem);
+      }
+    });
+  }, function () {
+    // checkbox not present, move on
+    return true;
+  });
+};
+
 exports.isSelected = function (elem) {
   return this.wait(elem).then(function () {
     return elem.isSelected();
