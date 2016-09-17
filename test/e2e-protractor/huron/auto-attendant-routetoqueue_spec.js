@@ -38,28 +38,24 @@ describe('Huron Auto Attendant', function () {
       // enter AA name
       utils.sendKeys(autoattendant.newAAname, deleteUtils.testAAName);
       utils.sendKeys(autoattendant.newAAname, protractor.Key.ENTER);
+      // create the queue with the name Sunlight 1      
+      var flow = browser.controlFlow();
+      flow.execute(createUtils.createRouteToQueue);
 
       // assert we see the create successful message
       autoattendant.assertCreateSuccess(deleteUtils.testAAName);
 
       // we should see the AA edit page now
       utils.expectIsDisplayed(autoattendant.addAANumbers);
-      utils.scrollIntoView(autoattendant.sayMessage);
+      utils.scroll(autoattendant.sayMessage);
       utils.expectIsDisplayed(autoattendant.sayMessage);
 
     }, 60000);
     
-    it('should create the queue', function () {
-
-        // create the queue with the name Sunlight 1
-      var flow = browser.controlFlow();
-      flow.execute(createUtils.createRouteToQueue);
-        
-    });
 
     it('should add Phone Menu Say to the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
 
-      utils.scrollIntoView(autoattendant.phoneMenuSay);
+      utils.scroll(autoattendant.phoneMenuSay);
       //Add Phone Menu Say Message
       utils.click(autoattendant.phoneMenuSay);
       utils.click(autoattendant.phonesayMessageInput);
@@ -68,7 +64,7 @@ describe('Huron Auto Attendant', function () {
 
       // language and voice
       utils.click(autoattendant.phonesayMessageLanguage);
-      utils.scrollIntoView(autoattendant.phonelanguageDropDownOptions);
+      utils.scroll(autoattendant.phonelanguageDropDownOptions);
       utils.click(autoattendant.phonelanguageDropDownOptions);
       utils.click(autoattendant.phonesayMessageVoice);
       utils.click(autoattendant.phonesayMessageVoiceOptions);
@@ -79,14 +75,14 @@ describe('Huron Auto Attendant', function () {
 
       // Main menu key 0 - route to queue 
       utils.click(autoattendant.phoneMenuKeys.first());
-      utils.scrollIntoView(autoattendant.phoneMenuKeyOptions.first().all(by.tagName('li')).first());
+      utils.scroll(autoattendant.phoneMenuKeyOptions.first().all(by.tagName('li')).first());
       utils.click(autoattendant.phoneMenuKeyOptions.all(by.linkText(autoattendant.key0)).first());
 
       utils.click(autoattendant.phoneMenuAction.first());
       utils.click(autoattendant.phoneMenuActionOptions.all(by.linkText(autoattendant.routeToQueue)).first());
 
       // it is for selecting the queue for route to queue option
-      utils.scrollIntoView(autoattendant.phoneMenuKeyOptions.first().all(by.tagName('li')).first());
+      utils.scroll(autoattendant.phoneMenuKeyOptions.first().all(by.tagName('li')).first());
       utils.click(autoattendant.rqDropDownArrow);
       utils.click(autoattendant.rqDropDownOptionSunlight.first());  //// select by name
       
@@ -96,15 +92,15 @@ describe('Huron Auto Attendant', function () {
     it('should add another route to queue to the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
         
         // Main menu key 1 - route to queue
-      utils.scrollIntoView(autoattendant.repeatPlus);
+      utils.scroll(autoattendant.repeatPlus);
 
       utils.click(autoattendant.repeatPlus);
 
       utils.click(autoattendant.phoneMenuKeys.get(1));
-      utils.scrollIntoView(autoattendant.phoneMenu);
+      utils.scroll(autoattendant.phoneMenu);
       utils.click(autoattendant.phoneMenuKeyOptions.all(by.linkText(autoattendant.key1)).first());
 
-      utils.scrollIntoView(autoattendant.repeatPlus);
+      utils.scroll(autoattendant.repeatPlus);
       utils.click(autoattendant.phoneMenuAction.get(1));
         
         // it is for selecting the queue for route to queue option

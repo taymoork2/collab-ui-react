@@ -256,7 +256,8 @@ var AutoAttendantPage = function () {
   this.assertImportSuccess = assertImportSuccess;
   this.assertCalendarUpdateSuccess = assertCalendarUpdateSuccess;
   this.assertDeleteSuccess = assertDeleteSuccess;
-
+  this.scrollIntoView = scrollIntoView;
+  
   function assertUpdateSuccess(test) {
     notifications.assertSuccess(test + ' updated successfully');
   }
@@ -275,6 +276,12 @@ var AutoAttendantPage = function () {
 
   function assertDeleteSuccess(test) {
     notifications.assertSuccess(test + ' Auto Attendant has been deleted successfully');
+  }
+  function scrollIntoView(el) {
+    var webel = el.getWebElement();
+    browser.executeScript(function (e) {
+      e.scrollIntoView();
+    }, webel);
   }
 
 };
