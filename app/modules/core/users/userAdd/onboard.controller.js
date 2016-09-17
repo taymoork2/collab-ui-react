@@ -481,6 +481,7 @@
       userEnts = $scope.currentUser.entitlements;
       userLicenseIds = $scope.currentUser.licenseID;
       userInvites = $scope.currentUser.invitations;
+      $scope.hybridCallServiceAware = userEnts && userEnts.indexOf('squared-fusion-uc') > -1;
     }
 
     function checkMessageVisibility(licenses, selectedSubscription) {

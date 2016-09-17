@@ -10,19 +10,11 @@
       action-list="telephonyOverview.actionList"
       show-actions="!telephonyOverview.reachedMaxLines()">
     </section-title>
-    <div class="feature-list">
-      <ul>
-        <li class="feature" ng-repeat="directoryNumber in telephonyOverview.telephonyInfo.directoryNumbers track by directoryNumber.uuid">
-          <a id="{{directoryNumber.uuid}}" ui-sref="user-overview.communication.directorynumber({directoryNumber: directoryNumber})">
-            <span class="feature-name">{{directoryNumber.pattern}}
-            <span class="feature-name" ng-if="directoryNumber.altDnPattern !== '' && directoryNumber.altDnPattern !== null"> {{'common.or' | translate}} {{directoryNumber.altDnPattern}}</span>
-            </span>
-            <span class="feature-status">{{directoryNumber.dnSharedUsage}}</span>
-            <i class="feature-arrow"></i>
-          </a>
-        </li>
-      </ul>
-    </div>
+    <directory-number-list
+      directory-numbers="telephonyOverview.telephonyInfo.directoryNumbers"
+      directory-number-sref="user-overview.communication.directorynumber({directoryNumber: directoryNumber})"
+      line-threshold="5">
+    </directory-number-list>
   </cs-sp-section>
   <cs-sp-section>
     <div class="section-title-row">

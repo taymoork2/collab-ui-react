@@ -219,6 +219,7 @@
         if (nestedState) {
           details.shippingInfo.state = _.get(details, 'shippingInfo.state.abbr');
         }
+        details.shippingInfo.state = details.shippingInfo.state || 'N/A';
 
         // formly will nest the country inside of itself, I think this is because
         // the country list contains country as a key, as well as the device.service

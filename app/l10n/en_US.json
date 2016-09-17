@@ -22,7 +22,10 @@
     "title": "Cloud Collaboration Management",
     "login": "Sign In",
     "loading": "Loading",
-    "license": "By using Cisco Spark Services you accept the Terms of Service and Privacy Statement."
+    "license": "By using Cisco Spark Services you accept the Terms of Service and Privacy Statement.",
+    "tos": "Terms of Service",
+    "privacy": "Privacy Statement",
+    "copyright": "Cisco and/or affiliates. All rights reserved."
   },
   "usersPage": {
     "assignServices": "Assign Services",
@@ -536,7 +539,12 @@
     "audioCalls": "Audio Only Calls",
     "customer": "Customer",
     "customers": "Customers",
-    "customerSelect": "Select a customer"
+    "customerSelect": "Select a customer",
+    "usageReports": {
+      "usageReportTitle": "Usage Reports",
+      "peakHour": "Peak Hour",
+      "inUse": "In Use"
+    }
   },
   "careReportsPage": {
     "tasks": "Tasks",
@@ -582,6 +590,7 @@
   "activeUsers": {
     "active": "Active",
     "activeUsers": "Active Users",
+    "allUsers": "All Users",
     "overallActiveUserGraphError": "There was an error while loading detailed active user data.",
     "activeUserTableError": "There was an error while loading most active user data for the selected customer(s).",
     "mostActiveError": "There was an error while loading the data for Most Active Users.",
@@ -1073,7 +1082,7 @@
     "setUpCallConnectService": "Call Service Connect is available. Users can answer calls to their work phones on their Cisco Spark clients, and place calls to others' work phones from their Cisco Spark clients.",
     "setUpDevices": "Activate your devices when they arrive.",
     "setUpSharedDevices": "Activate your collaboration devices when they arrive.",
-    "setUpSparkBoardDevices": "Activate your Spark Board devices when they arrive.",
+    "setUpSeaGullDevices": "Activate your Seagull devices when they arrive.",
     "setUpHybridMediaService": "Hybrid Media Service is available. Extend cloud media to use premises-based resources for calls and meetings.",
     "getStarted": "Get Started"
   },
@@ -2459,6 +2468,7 @@
     "internationalDialing": "International Dialing",
     "maxLines": "You reached the limit of 25 lines. Please remove a line from this user before provisioning additional lines.",
     "showMore": "Show more",
+    "showLess": "Show less",
     "localDialing": "Local Dialing"
   },
   "directoryNumberPanel": {
@@ -3610,6 +3620,22 @@
       "beta": "BETA",
       "latest": "LATEST",
       "errorMsg": "Before you can delete this cluster, you must either move all nodes to another cluster or deregister all nodes."
+    },
+    "upgradeClusters": {
+      "title": "Software Upgrade",
+      "text1": "During upgrade, this Hybrid Media Node will enter maintenance mode. After 2 hours, this node will be upgraded and any new calls redirected to an available node or the cloud.",
+      "text2": "After 2 hours the node will be upgraded.",
+      "upgradeNow": "Upgrade Now",
+      "upToDate": "Software is up to date.",
+      "sw-upgrade-title": "Software Upgrade",
+      "sw-upgrade-text": "New software is available.",
+      "upgradeWarning": "This cluster has one or more offline nodes. It is recommended to bring all nodes online before initiating an upgrade.",
+      "pending": "Pending",
+      "upgradingHost": "Upgrading {{host}} to {{version}}",
+      "upgradeProcessInitiating": "Initiating the upgrade to version {{version}}…",
+      "upgradeDone": "Upgrade completed!",
+      "success": "The cluster will begin upgrading shortly.",
+      "error": "Error in upgrading cluster. Please try again later."
     },
     "reassign": {
       "reassignHost": "Reassign Host",
@@ -4985,7 +5011,7 @@
       "CMR": "WebEx Collaboration Meeting Rooms",
       "CO": "Spark Call",
       "SD": "Spark Shared Devices",
-      "SB": "Cisco Spark Board 55"
+      "SB": "Cisco Seagull"
     }
   },
   "onlineUpgradeModal": {
