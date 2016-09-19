@@ -188,17 +188,12 @@
     }
   }
 
-  &.modal-body .messagebox-backdrop {
-    background-image: none;
-    max-width: 60.25rem;
-    position: inherit;
-    flex: 1;
+  &.modal-body  {
 
-    .message-box {
-      width: 38rem;
-      min-height: 10rem;
-      padding-top: 0;
-      height: 45vh;
+    .splash-msg {
+      margin: 3rem auto 0;
+      width: 34rem;
+      text-align: center;
 
       .icon-check-mark-success {
         color: $color-cta-base;
@@ -216,6 +211,7 @@
         p {
           text-align: left;
           font-size: 1rem;
+          margin-bottom
 
           &:first-child {
             margin-top: 0;

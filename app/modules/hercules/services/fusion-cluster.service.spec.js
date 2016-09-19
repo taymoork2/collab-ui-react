@@ -113,7 +113,7 @@ describe('Service: FusionClusterService', function () {
         .expectPOST('http://elg.no/organizations/0FF1C3/clusters')
         .respond(201, response);
 
-      var newExpresswayPromise = FusionClusterService.preregisterCluster('man.united', 'GA');
+      var newExpresswayPromise = FusionClusterService.preregisterCluster('man.united', 'stable');
       newExpresswayPromise.then(function (data) {
         expect(data.id).toBe('3803ded5-70d9-4e7d-bdc4-fe3dbf319e59');
       });
@@ -387,13 +387,13 @@ describe('Service: FusionClusterService', function () {
 
     it('should return release notes', function () {
       $httpBackend
-        .when('GET', 'http://elg.no/organizations/0FF1C3/channels/GA/packages/c_cal?fields=@wide')
+        .when('GET', 'http://elg.no/organizations/0FF1C3/channels/stable/packages/c_cal?fields=@wide')
         .respond({
           releaseNotes: 'Example calendar connector release notes.'
         });
 
       var callback = sinon.stub();
-      FusionClusterService.getReleaseNotes('GA', 'c_cal').then(callback);
+      FusionClusterService.getReleaseNotes('stable', 'c_cal').then(callback);
       $httpBackend.flush();
 
       expect(callback.callCount).toBe(1);

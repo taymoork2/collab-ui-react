@@ -254,8 +254,8 @@
   .right-inner-addon i {
     position: absolute;
     right: 0rem;
-    @include vr-spacing(pv, 0.6);
-    @include vr-spacing(ph, 2);
+    @include vr-spacing(mv, 0.6);
+    @include vr-spacing(mh, 2);
   }
 
   .category-tokens {
@@ -308,7 +308,7 @@
   .ct-error-border {
     border-color: $color-alerts-base;
   }
-  .ct-add-contain::before {
+  .ct-add-contain {
     cursor: pointer;
   }
 }

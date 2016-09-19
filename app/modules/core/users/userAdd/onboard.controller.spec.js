@@ -633,6 +633,38 @@ describe('OnboardCtrl: Ctrl', function () {
     }
   });
 
+  describe('hybridCallServiceAware', function () {
+    describe('on user without squared-fusion-uc entitlement', function () {
+      beforeEach(initUserWithoutHybridCall);
+      beforeEach(initController);
+
+      it('should be false', function () {
+        expect(this.$scope.hybridCallServiceAware).toBe(false);
+      });
+    });
+
+    describe('on user with squared-fusion-uc entitlement', function () {
+      beforeEach(initUserWithHybridCall);
+      beforeEach(initController);
+
+      it('should be true', function () {
+        expect(this.$scope.hybridCallServiceAware).toBe(true);
+      });
+    });
+
+    function initUserWithoutHybridCall() {
+      this.$stateParams.currentUser = {
+        entitlements: []
+      };
+    }
+
+    function initUserWithHybridCall() {
+      this.$stateParams.currentUser = {
+        entitlements: ['squared-fusion-uc']
+      };
+    }
+  });
+
   describe('editServicesSave()', function () {
     describe('if adding call service', function () {
       beforeEach(initControllerAndEnableCall);

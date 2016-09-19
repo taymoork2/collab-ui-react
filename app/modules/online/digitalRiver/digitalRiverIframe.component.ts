@@ -2,11 +2,10 @@ import { DigitalRiverService } from './digitalRiver.service';
 
 class DigitalRiverIframe implements ng.IComponentController {
   public iframeLoading: boolean = true;
-  public logoutLoading: boolean = true;
-
   public iframeSrc: string;
-  public logoutUrl: string;
   public requestedUrl: string;
+
+  private logoutPromise: ng.IHttpPromise<any>;
 
   /* @ngInject */
   constructor(
@@ -14,14 +13,17 @@ class DigitalRiverIframe implements ng.IComponentController {
     private DigitalRiverService: DigitalRiverService
   ) {}
 
-  public $onInit(): void {
-    this.logoutUrl = this.$sce.trustAsResourceUrl(this.DigitalRiverService.getLogoutUrl());
-  }
-
   public $onChanges(changes: { [property: string]: ng.IChangesObject }): void {
     let iframeSrcChange = changes['iframeSrc'];
-    if (iframeSrcChange && iframeSrcChange.currentValue) {
-      this.requestedUrl = this.$sce.trustAsResourceUrl(iframeSrcChange.currentValue);
+    if (iframeSrcChange) {
+      if (iframeSrcChange.isFirstChange) {
+        this.logoutPromise = this.DigitalRiverService.logout();
+      }
+      if (iframeSrcChange.currentValue) {
+        this.logoutPromise.finally(() => {
+          this.requestedUrl = this.$sce.trustAsResourceUrl(iframeSrcChange.currentValue);
+        });
+      }
     }
   }
 }

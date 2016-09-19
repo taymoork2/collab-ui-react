@@ -37,6 +37,7 @@ describe('Component: myCompanyOrders', () => {
     spyOn(this.Notification, 'errorWithTrackingId');
 
     spyOn(this.DigitalRiverService, 'getOrderHistoryUrl').and.returnValue(this.getDigitalRiverOrderHistoryUrlDefer.promise);
+    spyOn(this.DigitalRiverService, 'logout').and.returnValue(this.$q.resolve());
 
     this.compileComponent('myCompanyOrders');
     spyOn(this.controller, 'downloadPdf');

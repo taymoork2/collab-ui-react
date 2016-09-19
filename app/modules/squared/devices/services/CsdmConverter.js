@@ -56,11 +56,7 @@
         "Cisco TelePresence MX700 Dual Speakertrack": "images/devices-hi/mx700dspeakertrack.png", // pic exist, but not endpoint?
         "Cisco TelePresence MX800": "images/devices-hi/mx800.png",
         "Cisco TelePresence MX800 Dual": "images/devices-hi/mx800dspeakertrack.png",
-        "Cisco TelePresence MX800 SpeakerTrack": "images/devices-hi/mx800speakertrack.png",
-        "Project Swedish Island": "images/devices-hi/swedish_island.png",
-        "Cisco Spark Board 55": "images/devices-hi/spark_board_55.png",
-        "Darling": "images/devices-hi/spark_board_55.png",
-        "Eve": "images/devices-hi/eve.png"
+        "Cisco TelePresence MX800 SpeakerTrack": "images/devices-hi/mx800speakertrack.png"
       };
 
       function HuronDevice(obj) {

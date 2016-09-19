@@ -9,13 +9,21 @@
           <span class="feature-name" ng-if="directoryNumber.external">
             <span translate="common.or"></span> <span ng-bind="directoryNumber.external"></span>
           </span>
+          <span ng-if="!directoryNumber.internal" ng-bind="directoryNumber.pattern"></span>
+          <span class="feature-name" ng-if="directoryNumber.altDnPattern">
+            <span translate="common.or"></span> <span ng-bind="directoryNumber.altDnPattern"></span>
+          </span>
         </span>
-        <span class="feature-status" ng-bind="$ctrl.setLineUseLabel(directoryNumber.primary)"></span>
+        <span class="feature-status" ng-if="directoryNumber.primary" ng-bind="$ctrl.setLineUseLabel(directoryNumber.primary)"></span>
+        <span class="feature-status" ng-if="directoryNumber.dnSharedUsage" ng-bind="directoryNumber.dnSharedUsage"></span>
         <i class="feature-arrow"></i>
       </a>
     </li>
   </ul>
-  <a class="line-show-more-text" ng-click="$ctrl.showMoreClicked()" ng-show="$ctrl.showMoreButton()">
+  <a class="line-show-more-less-text" ng-click="$ctrl.showMoreClicked()" ng-show="$ctrl.showMoreButton()">
     <span translate="telephonyPreview.showMore"></span>
+  </a>
+  <a class="line-show-more-less-text" ng-click="$ctrl.showLessClicked()" ng-show="$ctrl.showLessButton()">
+    <span translate="telephonyPreview.showLess"></span>
   </a>
 </div>
