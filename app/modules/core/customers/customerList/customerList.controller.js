@@ -354,7 +354,7 @@
       var result = _.map(groupedFields, function (group) {
         //or return the one with license OR the first
         return (_.find(group, function (field) {
-          return _.contains(licenses, field.offerCode);
+          return _.includes(licenses, field.offerCode);
         }) || group[0]);
       });
       return result;

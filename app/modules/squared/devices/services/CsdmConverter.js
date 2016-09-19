@@ -258,23 +258,23 @@
 
       function getSoftware(obj) {
         return _.chain(getEvents(obj))
-          .where({
+          .filter({
             type: 'software',
             level: 'INFO'
           })
-          .pluck('description')
-          .first()
+          .map('description')
+          .head()
           .value();
       }
 
       function getUpgradeChannel(obj) {
         var channel = _.chain(getEvents(obj))
-          .where({
+          .filter({
             type: 'upgradeChannel',
             level: 'INFO'
           })
-          .pluck('description')
-          .first()
+          .map('description')
+          .head()
           .value();
 
         var labelKey = 'CsdmStatus.upgradeChannels.' + channel;
@@ -290,12 +290,12 @@
 
       function getIp(obj) {
         return _.chain(getEvents(obj))
-          .where({
+          .filter({
             type: 'ip',
             level: 'INFO'
           })
-          .pluck('description')
-          .first()
+          .map('description')
+          .head()
           .value();
       }
 
@@ -437,11 +437,11 @@
         }
         try {
           var tags = JSON.parse(description);
-          return _.unique(tags);
+          return _.uniq(tags);
         } catch (e) {
           try {
             tags = JSON.parse("[\"" + description + "\"]");
-            return _.unique(tags);
+            return _.uniq(tags);
           } catch (e) {
             return [];
           }

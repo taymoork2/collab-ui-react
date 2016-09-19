@@ -121,9 +121,9 @@
     function addServicesStatuses(clusters) {
       return _.map(clusters, function (cluster) {
         if (cluster.targetType === 'c_mgmt') {
-          var mgmtConnectors = _.filter(cluster.connectors, 'connectorType', 'c_mgmt');
-          var ucmcConnectors = _.filter(cluster.connectors, 'connectorType', 'c_ucmc');
-          var calConnectors = _.filter(cluster.connectors, 'connectorType', 'c_cal');
+          var mgmtConnectors = _.filter(cluster.connectors, { connectorType: 'c_mgmt' });
+          var ucmcConnectors = _.filter(cluster.connectors, { connectorType: 'c_ucmc' });
+          var calConnectors = _.filter(cluster.connectors, { connectorType: 'c_cal' });
           cluster.servicesStatuses = [{
             serviceId: 'squared-fusion-mgmt',
             state: FusionClusterStatesService.getMergedStateSeverity(mgmtConnectors),
@@ -138,7 +138,7 @@
             total: calConnectors.length
           }];
         } else if (cluster.targetType === 'mf_mgmt') {
-          var mediaConnectors = _.filter(cluster.connectors, 'connectorType', 'mf_mgmt');
+          var mediaConnectors = _.filter(cluster.connectors, { connectorType: 'mf_mgmt' });
           cluster.servicesStatuses = [{
             serviceId: 'squared-fusion-media',
             state: FusionClusterStatesService.getMergedStateSeverity(mediaConnectors),
@@ -151,7 +151,7 @@
 
     function sort(clusters) {
       // Could be anything but at least make it consistent between 2 page refresh
-      return _.sortByAll(clusters, ['targetType', 'name']);
+      return _.sortBy(clusters, ['targetType', 'name']);
     }
 
     function preregisterCluster(name, releaseChannel, managementConnectorType) {
@@ -208,7 +208,7 @@
           connectors: []
         });
       });
-      sidepanelConnectorList.hosts = _.uniq(sidepanelConnectorList.hosts, function (host) {
+      sidepanelConnectorList.hosts = _.uniqBy(sidepanelConnectorList.hosts, function (host) {
         return host.hostname;
       });
 

@@ -97,7 +97,7 @@ describe('OnboardCtrl: Ctrl', function () {
         5001 + ii, '',
         'true', 'true', 'true', 'true'
       ];
-      if (_.contains(invalidUsers, csv.length + 1)) {
+      if (_.includes(invalidUsers, csv.length + 1)) {
         // create an error in the CSV data for user
         if (_.random() % 2) {
           user[3] = '';

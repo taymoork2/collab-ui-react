@@ -27,7 +27,7 @@
       return ServiceDescriptor.getServices()
         .then(function (services) {
           return _.chain(ServiceDescriptor.filterEnabledServices(services))
-            .pluck('id')
+            .map('id')
             .value();
         }).then(function (enabledExtensions) {
           return _(extensionIds)

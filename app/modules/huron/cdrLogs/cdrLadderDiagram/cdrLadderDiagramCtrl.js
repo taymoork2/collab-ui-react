@@ -217,7 +217,7 @@
           }
         });
 
-        if ((event.type === "SparkEvent") && (!_.contains(vm.sparkHostNames, event.localAlias))) {
+        if ((event.type === "SparkEvent") && (!_.includes(vm.sparkHostNames, event.localAlias))) {
           vm.sparkHostNames.push(event.localAlias);
         }
       }

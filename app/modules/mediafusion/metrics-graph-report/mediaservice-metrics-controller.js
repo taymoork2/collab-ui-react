@@ -105,7 +105,7 @@
     function getCluster() {
       MediaClusterServiceV2.getAll()
         .then(function (clusters) {
-          vm.clusters = _.filter(clusters, 'targetType', 'mf_mgmt');
+          vm.clusters = _.filter(clusters, { targetType: 'mf_mgmt' });
           _.each(clusters, function (cluster) {
             if (cluster.targetType === "mf_mgmt") {
               vm.clusterOptions.push(cluster.name);

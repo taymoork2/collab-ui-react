@@ -118,7 +118,7 @@
         .then(function (connectors) {
           // convert response to a more usable data structure
           var hostNames = _.chain(connectors)
-            .indexBy('id')
+            .keyBy('id')
             .mapValues('host_name')
             .value();
           // augment statuses with details about the connectors

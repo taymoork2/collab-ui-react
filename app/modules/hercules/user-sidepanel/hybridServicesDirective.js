@@ -36,7 +36,7 @@
     };
 
     function getMostSignificantStatus(statuses) {
-      return _.max(statuses, function (s) {
+      return _.maxBy(statuses, function (s) {
         if (s && s.status) {
           return getStatusSeverity(USSService.decorateWithStatus(s.status));
         }
