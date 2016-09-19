@@ -8,6 +8,13 @@
   function CommonGraphService($translate, $window, chartColors) {
     // Base variables for building grids and charts
     var baseVariables = [];
+    baseVariables['cursor'] = {
+      'cursorAlpha': 0,
+      'categoryBalloonEnabled': false,
+      'oneBalloonOnly': true,
+      'balloonPointerOrientation': 'vertical',
+      'showNextAvailable': true
+    };
     baseVariables['column'] = {
       'type': 'column',
       'fillAlphas': 1,

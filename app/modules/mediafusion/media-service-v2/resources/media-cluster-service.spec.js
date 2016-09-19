@@ -79,6 +79,14 @@ describe('Service: MediaClusterServiceV2', function () {
     expect(callback.callCount).toBe(1);
   });
 
+  it('should upgrade V2 Connector', function () {
+    $httpBackend.when('POST', /^\w+.*/).respond(204);
+    var callback = sinon.stub();
+    Service.upgradeCluster('connectorId').then(callback);
+    $httpBackend.flush();
+    expect(callback.callCount).toBe(1);
+  });
+
   it('should return the state and severuty for the state has_alarms', function () {
     var object = Service.getRunningStateSeverity('has_alarms');
     expect(object).toBeDefined();

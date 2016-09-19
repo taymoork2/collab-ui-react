@@ -13,7 +13,7 @@
     });
 
   /* @ngInject */
-  function ResourceGroupCardController($modal) {
+  function ResourceGroupCardController($modal, FusionUtils) {
     var ctrl = this;
 
     ctrl.showDetails = false;
@@ -21,6 +21,7 @@
     ctrl.toggleDetails = toggleDetails;
     ctrl.showWarningText = showWarningText;
     ctrl.$onChanges = $onChanges;
+    ctrl.getLocalizedReleaseChannel = FusionUtils.getLocalizedReleaseChannel;
 
     function toggleDetails() {
       ctrl.showDetails = !ctrl.showDetails;
@@ -50,6 +51,7 @@
     function showWarningText() {
       return ctrl.group.clusters.length === 0;
     }
+
   }
 
 })();

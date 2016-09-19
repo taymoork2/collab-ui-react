@@ -4,7 +4,7 @@ export default angular
   .module('huron.simultaneous-calls', [
     'atlas.templates',
     'cisco.ui',
-    'pascalprecht.translate'
+    'pascalprecht.translate',
   ])
   .component('ucSimultaneousCalls', new SimultaneousCallsComponent())
   .name;

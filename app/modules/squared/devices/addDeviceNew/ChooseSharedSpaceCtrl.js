@@ -133,9 +133,15 @@
       }
 
       if (vm.place) {
-        CsdmCodeService
-          .createCodeForExisting(vm.place.cisUuid)
-          .then(success, error);
+        if (vm.wizardData.deviceType === "cloudberry") {
+          CsdmCodeService
+            .createCodeForExisting(vm.place.cisUuid)
+            .then(success, error);
+        } else {
+          CsdmHuronPlaceService
+            .createOtp(vm.place.cisUuid)
+            .then(success, error);
+        }
       } else {
         if (vm.wizardData.deviceType === "cloudberry") {
           CsdmPlaceService.createCsdmPlace(vm.deviceName, vm.wizardData.deviceType).then(function (place) {

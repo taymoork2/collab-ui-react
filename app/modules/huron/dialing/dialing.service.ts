@@ -21,8 +21,8 @@ interface IDialingResource extends ng.resource.IResourceClass<ng.resource.IResou
 }
 
 export class DialingType {
-  static INTERNATIONAL = 'DIALINGCOSTAG_INTERNATIONAL';
-  static LOCAL = 'DIALINGCOSTAG_NATIONAL';
+  public static INTERNATIONAL = 'DIALINGCOSTAG_INTERNATIONAL';
+  public static LOCAL = 'DIALINGCOSTAG_NATIONAL';
 }
 
 export class DialingService {
@@ -35,7 +35,8 @@ export class DialingService {
   private cosRestriction: ICOSRestrictionResponse;
   private dialingUuids = {};
 
-  constructor(private $translate,
+  constructor(
+    private $translate,
     private $q: ng.IQService,
     private $resource: ng.resource.IResourceService,
     private HuronConfig,
@@ -46,21 +47,21 @@ export class DialingService {
       method: 'PUT',
     };
 
-    this.dialingService = <IDialingResource>$resource(HuronConfig.getCmiV2Url()+ '/customers/:customerId/:type/:typeId/features/restrictions/:restrictionId', {},
+    this.dialingService = <IDialingResource>$resource(HuronConfig.getCmiV2Url() + '/customers/:customerId/:type/:typeId/features/restrictions/:restrictionId', {},
       {
-        update: updateAction
+        update: updateAction,
       });
     this.cbUseGlobal = {
       label: $translate.instant('internationalDialingPanel.useGlobal'),
-      value: '-1'
+      value: '-1',
     };
     this.cbAlwaysAllow = {
       label: $translate.instant('internationalDialingPanel.alwaysAllow'),
-      value: '1'
+      value: '1',
     };
     this.cbNeverAllow = {
       label: $translate.instant('internationalDialingPanel.neverAllow'),
-      value: '0'
+      value: '0',
     };
   }
 
@@ -71,7 +72,7 @@ export class DialingService {
     return this.dialingService.get({
       customerId: this.Authinfo.getOrgId(),
       type: type,
-      typeId: typeId
+      typeId: typeId,
     }, (cosRestriction) => {
       this.cosRestriction = cosRestriction;
     }).$promise;
@@ -92,9 +93,9 @@ export class DialingService {
       custRestriction = true;
     });
 
-    if(overRide) {
+    if (overRide) {
       this.cosRestriction[type].filter((cos: ICOSRestriction) => cos.restriction === dialingType).map((cos: ICOSRestriction) => {
-        if(cos.blocked) {
+        if (cos.blocked) {
           response = this.cbNeverAllow.label;
         } else {
           response = this.cbAlwaysAllow.label;
@@ -103,13 +104,13 @@ export class DialingService {
     }
 
     let globalText;
-    if(custRestriction) {
+    if (custRestriction) {
       globalText = this.cbUseGlobal.label + ' ' + this.$translate.instant('internationalDialingPanel.off');
     } else {
       globalText = this.cbUseGlobal.label + ' ' + this.$translate.instant('internationalDialingPanel.on');
     }
 
-    if(!overRide) {
+    if (!overRide) {
       response = globalText;
     }
 
@@ -122,7 +123,7 @@ export class DialingService {
       blocked: false,
     };
 
-    if(item.value === '0') {
+    if (item.value === '0') {
       cosType.blocked = true;
     } else {
       cosType.blocked = false;
@@ -131,7 +132,7 @@ export class DialingService {
   }
 
   public updateDialing(item: IOption, type: string, typeId: string, cosType: ICOSRestriction, dialingType: string) {
-    if(this.dialingUuids[dialingType] && item.value === '-1') {
+    if (this.dialingUuids[dialingType] && item.value === '-1') {
       return this.dialingService.delete({
         customerId: this.Authinfo.getOrgId(),
         type: type,
@@ -139,7 +140,7 @@ export class DialingService {
         restrictionId: this.dialingUuids[dialingType],
       }).$promise;
     } else {
-      if(!this.dialingUuids[dialingType]) {
+      if (!this.dialingUuids[dialingType]) {
         return this.dialingService.save({
           customerId: this.Authinfo.getOrgId(),
           type: type,
@@ -158,7 +159,7 @@ export class DialingService {
   }
 
   public getSelected(value: number) {
-    switch(value) {
+    switch (value) {
       case 0: return this.cbNeverAllow;
       case 1: return this.cbAlwaysAllow;
       case -1:  return this.cbUseGlobal;
@@ -166,7 +167,7 @@ export class DialingService {
   }
 
   public getInternationalDialing(type: string) {
-    if(!this.internationalDialing) {
+    if (!this.internationalDialing) {
       this.internationalDialing = this.getDialing(type, DialingType.INTERNATIONAL);
     }
     return this.internationalDialing;
@@ -175,7 +176,7 @@ export class DialingService {
   public setInternationalDialing: (item: IOption, type: string, typeId: string) => ng.IPromise<any> = (item, type, typeId) => {
     let deferred = this.$q.defer();
     this.setDialing(item, type, typeId, DialingType.INTERNATIONAL).then((data) => {
-      this.$state.go(_.get<string>(this.$state,'$current.parent.name'));
+      this.$state.go(_.get<string>(this.$state, '$current.parent.name'));
       deferred.resolve(true);
     }, (response) => {
       deferred.reject(response);
@@ -184,7 +185,7 @@ export class DialingService {
   }
 
   public getLocalDialing(type: string) {
-    if(!this.localDialing) {
+    if (!this.localDialing) {
       this.localDialing = this.getDialing(type, DialingType.LOCAL);
     }
     return this.localDialing;
@@ -192,8 +193,8 @@ export class DialingService {
 
   public setLocalDialing: (item: IOption, type: string, typeId: string) => ng.IPromise<any> = (item, type, typeId) => {
     let deferred = this.$q.defer();
-    this.setDialing(item, type, typeId, DialingType.LOCAL).then((data)=> {
-      this.$state.go(_.get<string>(this.$state,'$current.parent.name'));
+    this.setDialing(item, type, typeId, DialingType.LOCAL).then((data) => {
+      this.$state.go(_.get<string>(this.$state, '$current.parent.name'));
       deferred.resolve(true);
     }, (response) => {
       deferred.reject(response);

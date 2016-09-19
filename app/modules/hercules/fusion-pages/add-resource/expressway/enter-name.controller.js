@@ -30,7 +30,7 @@
     function provisionCluster(data) {
       vm.provisioning = true;
       vm.clusterId = null;
-      return FusionClusterService.preregisterCluster(data.name, 'GA', 'c_mgmt')
+      return FusionClusterService.preregisterCluster(data.name, 'stable', 'c_mgmt')
         .then(function (cluster) {
           vm.clusterId = cluster.id;
           var promises = [];
