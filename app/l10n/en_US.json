@@ -1755,7 +1755,7 @@
         "settings": "Settings",
         "all": "All",
         "add-resource": "Add Resource",
-        "add-resource-group": "Create new resource group",
+        "add-resource-group": "Create new Resource Group",
         "expressway": "Expressway",
         "mediafusion": "Media",
         "no-services": "No services",
@@ -1817,7 +1817,7 @@
       "resourceGroupHeading": "Resource Group",
       "setDescription": "Select the Resource Group the user is assigned to for this service.",
       "noGroupSelected": "None",
-      "failedToSetGroup": "Failed to set the resource group"
+      "failedToSetGroup": "Failed to set the Resource Group"
     },
     "resourceGroupSettings": {
       "pageTitle": "{{groupName}} Settings",
@@ -1827,23 +1827,23 @@
       "clustersAssign" : "Assign Clusters",
       "clustersDescription" : "Add one or more existing clusters to this group",
       "renameGroup": "Rename",
-      "renameGroupDescription": "Rename the resource group",
+      "renameGroupDescription": "Rename the Resource Group",
       "removeGroup": "Remove",
-      "removeGroupDescription": "Remove the resource group from Cisco Collaboration Cloud",
+      "removeGroupDescription": "Remove the Resource Group from Cisco Collaboration Cloud",
       "groupNameCannotByEmpty": "Resource group name cannot be empty",
       "groupNameSaved": "Rename successful",
-      "duplicateName": "A resource group with that name already exists. Please choose another name.",
-      "loadFailed": "Unable to load the resource group details. Please try again later.",
+      "duplicateName": "A Resource Group with that name already exists. Please choose another name.",
+      "loadFailed": "Unable to load the Resource Group details. Please try again later.",
       "groupReleaseChannelSaved": "Release channel saved successfully",
-      "removeGroupReq": "To remove this resource group, all assigned clusters and user must be removed first",
+      "removeGroupReq": "To remove this Resource Group, all assigned clusters and user must be removed first",
       "deleteSuccess": "Resource group successfully deleted"
     },
     "assignClustersModal": {
       "title": "Assign Clusters to <q>{{groupName}}</q>",
       "subtitle": "Assign existing",
-      "description": "Assign existing clusters to the <q>{{groupName}}</q> resource group by clicking on an available cluster.",
+      "description": "Assign existing clusters to the <q>{{groupName}}</q> Resource Group by clicking on an available cluster.",
       "availableClusters": "Available Clusters",
-      "warning": "Possible service outage – Moving clusters to a resource group may cause a service outage while clusters and users are being moved.",
+      "warning": "Possible service outage – Moving clusters to a Resource Group may cause a service outage while clusters and users are being moved.",
       "noServices": "No services",
       "errorLoading": "Could not load the list of clusters."
     },
