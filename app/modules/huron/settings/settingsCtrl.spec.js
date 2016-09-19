@@ -109,7 +109,6 @@ describe('Controller: HuronSettingsCtrl', function () {
 
       site = sites[0];
       spyOn(ServiceSetup, 'getSite').and.returnValue($q.when(site));
-      spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
       voicemailCustomer = getJSONFixture('huron/json/settings/voicemailCustomer.json');
       didVoicemailCustomer = voicemailCustomer[0];
       spyOn(ServiceSetup, 'getVoicemailPilotNumber').and.returnValue($q.when(didVoicemailCustomer));
@@ -939,7 +938,6 @@ describe('Controller: HuronSettingsCtrl', function () {
 
       site = sites[0];
       spyOn(ServiceSetup, 'getSite').and.returnValue($q.when(site));
-      spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
       voicemailCustomer = getJSONFixture('huron/json/settings/voicemailCustomer.json');
       didVoicemailCustomer = voicemailCustomer[0];
       spyOn(ServiceSetup, 'getVoicemailPilotNumber').and.returnValue($q.when(didVoicemailCustomer));
@@ -975,48 +973,12 @@ describe('Controller: HuronSettingsCtrl', function () {
 
   });
 
-  describe('VoiceMail update when OptionalVmDid Featuretoggle is OFF', function () {
-    var controller;
-    beforeEach(inject(function ($controller) {
-      $scope = $rootScope;
-      sites = getJSONFixture('huron/json/settings/sites.json');
-
-      site = sites[2];
-      spyOn(ServiceSetup, 'getSite').and.returnValue($q.when(site));
-      spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(false));
-      voicemailCustomer = getJSONFixture('huron/json/settings/voicemailCustomer.json');
-      didVoicemailCustomer = voicemailCustomer[0];
-      spyOn(ServiceSetup, 'getVoicemailPilotNumber').and.returnValue($q.when(didVoicemailCustomer));
-
-      controller = $controller('HuronSettingsCtrl', {
-        $scope: $scope
-      });
-      $scope.$apply();
-      $httpBackend.flush();
-    }));
-
-    it('externalVoicemail and voicemailPilotNumberGenerated are false', function () {
-      controller.model.companyVoicemail.companyVoicemailEnabled = true;
-      $scope.$apply();
-      expect(controller.model.companyVoicemail.externalVoicemail).toEqual(false);
-      expect(controller.model.site.voicemailPilotNumberGenerated).toEqual("false");
-    });
-
-    it('feature toggle is off, on enabling voicemail toggle, externalVoicemail should be false', function () {
-      controller.model.companyVoicemail.companyVoicemailEnabled = true;
-      controller.loadSite();
-      $scope.$apply();
-      expect(controller.model.companyVoicemail.externalVoicemail).toEqual(false);
-      expect(controller.model.site.voicemailPilotNumberGenerated).toEqual('false');
-    });
-  });
   describe('Site Create/Update and voicemail update Tests', function () {
     var controller;
     beforeEach(inject(function ($controller) {
       $scope = $rootScope;
       site = sites[1];
       spyOn(ServiceSetup, 'getSite').and.returnValue($q.when(site));
-      spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
       voicemailCustomer = getJSONFixture('huron/json/settings/voicemailCustomer.json');
       didVoicemailCustomer = voicemailCustomer[1];
       spyOn(ServiceSetup, 'getVoicemailPilotNumber').and.returnValue($q.when(didVoicemailCustomer));
