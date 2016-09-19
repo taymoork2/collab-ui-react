@@ -22,6 +22,7 @@
       overwrite: 'overwrite',
     };
     vm.actionCopy = undefined;
+
     vm.upload = upload;
     vm.openModal = openModal;
 
