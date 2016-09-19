@@ -1337,9 +1337,7 @@
     "tryAgain": "Try another Search",
     "licenseWarningTitle": "License",
     "licenseWarningHeader": "There is a problem with the license for this service.",
-    "licenseSuspendedWarning": "Your collaboration device licenses are suspended.",
-    "retrieveDevicesFail": "Failed to load device information",
-    "retrieveKemFail": "Failed to retrieve key expansion module count."
+    "licenseSuspendedWarning": "Your collaboration device licenses are suspended."
   },
   "hercules": {
     "page_title": "Connector Management",
