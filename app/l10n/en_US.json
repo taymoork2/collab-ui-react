@@ -541,8 +541,8 @@
   "careReportsPage": {
     "tasks": "Contacts",
     "handled": "Addressed",
-    "assigned": "Waiting",
-    "in-queue": "In-Progress",
+    "assigned": "In-Progress",
+    "in-queue": "Waiting",
     "abandoned": "Abandoned",
     "queueTime": "Wait Time",
     "avgQueueTime": "Avg Wait Time",
@@ -559,22 +559,22 @@
     "threeMonthsCategoryAxis": "Months",
     "today": "Today",
     "today2": "for today",
-    "todayTaskStatus": "addressed, waiting, in-progress and abandoned",
+    "todayTaskStatus": "addressed, in-progress, waiting and abandoned",
     "todayInterval": "one hour time interval",
     "yesterday": "Yesterday",
     "yesterday2": "for yesterday",
     "yesterdayTaskStatus": "addressed and abandoned",
     "yesterdayInterval": "one hour time interval",
     "week": "Last Week",
-    "week2": "during the last week",
+    "week2": "for the last week",
     "weekTaskStatus": "addressed and abandoned",
     "weekInterval": "given day",
     "month": "Last Month",
-    "month2": "during the last month",
+    "month2": "for the last month",
     "monthTaskStatus": "addressed and abandoned",
     "monthInterval": "given week",
     "threeMonths": "Last Three Months",
-    "threeMonths2": "during the last three months",
+    "threeMonths2": "for the last three months",
     "threeMonthsTaskStatus": "addressed and abandoned",
     "threeMonthsInterval": "given month",
     "taskDataGetError": "There was an error while loading the data for {{dataType}}."
@@ -684,7 +684,7 @@
   },
   "taskAggregate": {
     "title": "Aggregated Contacts",
-    "description": "The graph depicts the number of waiting and in-progress customer contacts aggregated {{time}}. Hover over the area chart to view the count of waiting and in-progress contacts aggregated from the start of business hours."
+    "description": "The graph depicts the number of waiting and in-progress customer contacts aggregated for today. Hover over the area chart to view the count of waiting and in-progress contacts aggregated from the start of business hours."
   },
   "profilePage": {
     "userProfile": "User Profile",
