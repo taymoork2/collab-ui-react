@@ -4,7 +4,7 @@ describe('Controller: ServiceSetup', function () {
   var $scope, $state, $previousState, $q, $httpBackend, ServiceSetup, Notification, HuronConfig, HuronCustomer, DialPlanService;
   var Authinfo, VoicemailMessageAction;
   var model, customer, voicemail, externalNumberPool, usertemplate, form, timeZone, ExternalNumberService, ModalService, modalDefer, messageAction;
-  var $rootScope, FeatureToggleService, PstnSetupService;
+  var $rootScope, PstnSetupService;
   var dialPlanDetailsNorthAmerica = [{
     countryCode: "+1",
     extensionGenerated: "false",
@@ -17,7 +17,7 @@ describe('Controller: ServiceSetup', function () {
   beforeEach(angular.mock.module('Sunlight'));
 
   beforeEach(inject(function (_$rootScope_, _$previousState_, _$q_, _ServiceSetup_, _Notification_, _HuronConfig_, _$httpBackend_,
-    _HuronCustomer_, _DialPlanService_, _ExternalNumberService_, _ModalService_, _Authinfo_, _VoicemailMessageAction_, _FeatureToggleService_,
+    _HuronCustomer_, _DialPlanService_, _ExternalNumberService_, _ModalService_, _Authinfo_, _VoicemailMessageAction_,
     _PstnSetupService_) {
     $rootScope = _$rootScope_;
     $scope = $rootScope;
@@ -34,7 +34,6 @@ describe('Controller: ServiceSetup', function () {
     modalDefer = $q.defer();
     VoicemailMessageAction = _VoicemailMessageAction_;
     $previousState = _$previousState_;
-    FeatureToggleService = _FeatureToggleService_;
     PstnSetupService = _PstnSetupService_;
 
     customer = {
@@ -960,7 +959,7 @@ describe('Controller: ServiceSetup', function () {
   });
 
 
-  describe('VoiceMail with Generated VoiceMail Pilot with OptionalVmDidFeatureToggle ON Tests', function () {
+  describe('VoiceMail with Generated VoiceMail Pilot Tests', function () {
     var controller;
     beforeEach(inject(function ($controller) {
       $scope = $rootScope;
@@ -1054,7 +1053,7 @@ describe('Controller: ServiceSetup', function () {
       });
     });
   });
-  describe('VoiceMail with OptionalVmDidFeatureToggle ON updating Generated VoiceMail Pilot Tests', function () {
+  describe('VoiceMail with updating Generated VoiceMail Pilot Tests', function () {
     var controller;
     beforeEach(inject(function ($controller) {
       $scope = $rootScope;

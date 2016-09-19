@@ -7,14 +7,14 @@ describe('Controller: HuronSettingsCtrl', function () {
   var HuronCustomer, ServiceSetup, CallerId, HuronConfig, InternationalDialing, VoicemailMessageAction;
   var modalDefer, customer, timezones, timezone, voicemailCustomer, internalNumberRanges;
   var sites, site, companyNumbers, cosRestrictions, customerCarriers, messageAction;
-  var $rootScope, didVoicemailCustomer, FeatureToggleService;
+  var $rootScope, didVoicemailCustomer;
 
   beforeEach(angular.mock.module('Huron'));
   beforeEach(angular.mock.module('Sunlight'));
 
   beforeEach(inject(function (_$rootScope_, _$q_, _$httpBackend_, _ExternalNumberService_, _DialPlanService_,
     _PstnSetupService_, _ModalService_, _Notification_, _HuronCustomer_, _ServiceSetup_, _InternationalDialing_, _Authinfo_, _HuronConfig_,
-    _CallerId_, _VoicemailMessageAction_, _FeatureToggleService_) {
+    _CallerId_, _VoicemailMessageAction_) {
 
     $q = _$q_;
     $rootScope = _$rootScope_;
@@ -32,7 +32,6 @@ describe('Controller: HuronSettingsCtrl', function () {
     HuronConfig = _HuronConfig_;
     CallerId = _CallerId_;
     VoicemailMessageAction = _VoicemailMessageAction_;
-    FeatureToggleService = _FeatureToggleService_;
 
     modalDefer = $q.defer();
 
@@ -930,7 +929,7 @@ describe('Controller: HuronSettingsCtrl', function () {
     });
   });
 
-  describe('VoiceMail update when OptionalVmDid Featuretoggle is ON', function () {
+  describe('VoiceMail update with external Number', function () {
     var controller;
     beforeEach(inject(function ($controller) {
       $scope = $rootScope;
