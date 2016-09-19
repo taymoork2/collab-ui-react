@@ -8,7 +8,7 @@
   /* @ngInject */
   function UserCsvCtrl($interval, $modal, $q, $rootScope, $scope, $state, $timeout, $translate, $previousState, $stateParams,
                        Authinfo, Config, CsvDownloadService, FeatureToggleService, HuronCustomer, LogMetricsService, NAME_DELIMITER,
-                       Notification, Orgservice, TelephoneNumberService, UserCsvService, Userservice) {
+                       Notification, Orgservice, TelephoneNumberService, UserCsvService, Userservice, ResourceGroupService, USSService) {
     // variables
     var vm = this;
     vm.licenseUnavailable = false;
@@ -16,6 +16,8 @@
     vm.isExporting = false;
     vm.isCsvValid = false;
     vm.isOverExportThreshold = !!$stateParams.isOverExportThreshold;
+    vm.handleHybridServicesResourceGroups = false;
+    vm.hybridServicesUserProps = [];
 
     var maxUsers = UserCsvService.maxUsersInCSV;
     var csvUsersArray = [];
@@ -36,6 +38,9 @@
     FeatureToggleService.supportsDirSync().then(function (enabled) {
       vm.isDirSyncEnabled = enabled;
     });
+    FeatureToggleService.supports(FeatureToggleService.features.atlasF237ResourceGroups).then(function (enabled) {
+      vm.isAtlasF237ResourceGroupsEnabled = enabled;
+    });
 
     var csvPromiseChain = $q.when();
     var uniqueEmails = [];
@@ -43,13 +48,18 @@
     var headers;
     var idIndex;
     var isCalendarServiceEnabled = false;
+    var isCalendarOrCallServiceEntitled = false;
     Orgservice.getHybridServiceAcknowledged().then(function (response) {
       if (response.status === 200) {
         _.forEach(response.data.items, function (item) {
           if (item.id === Config.entitlements.fusion_cal) {
             isCalendarServiceEnabled = item.enabled;
+            isCalendarOrCallServiceEntitled = true;
+          } else if (item.id === Config.entitlements.fusion_uc) {
+            isCalendarOrCallServiceEntitled = true;
           }
         });
+        vm.handleHybridServicesResourceGroups = isCalendarOrCallServiceEntitled && vm.isAtlasF237ResourceGroupsEnabled;
       }
     });
     var bulkStartLog = null;
@@ -176,7 +186,7 @@
       if (Authinfo.isOnline()) {
         $modal.open({
           type: 'dialog',
-          templateUrl: "modules/core/users/userCsv/licenseUnavailabilityModal.tpl.html",
+          templateUrl: "modules/core/users/userCsv/licenseUnavailabilityModal.tpl.html"
         }).result.then(function () {
           $state.go('my-company.subscriptions');
         });
@@ -380,11 +390,14 @@
         if (_.isArray(response.data.userResponse)) {
           var addedUsersList = [];
           var onboardUser = null;
+          var onboardSuccessUsers = [];
 
           _.forEach(response.data.userResponse, function (user) {
             onboardUser = onboardedUserWithEmail(user.email);
 
             if (user.httpStatus === 200 || user.httpStatus === 201) {
+              onboardUser.uuid = user.uuid;
+              onboardSuccessUsers.push(onboardUser);
               if (user.message === '700000') {
                 vm.licenseUnavailable = true;
               }
@@ -425,6 +438,11 @@
               addUserErrorWithTrackingID(onboardUser.csvRow, user.email, UserCsvService.getBulkErrorResponse(user.httpStatus, user.message, user.email), response);
             }
           });
+
+          if (vm.handleHybridServicesResourceGroups) {
+            updateResourceGroupsInUss(onboardSuccessUsers);
+          }
+
         } else {
           // for some reason the userResponse is incorrect.  We need to error every user.
           _.forEach(onboardedUsers, function (user) {
@@ -436,7 +454,6 @@
       // Error in the call to Userservice.bulkOnboardUsers
       // if 429 or 503, we need to retry the whole set of users
       function errorCallback(response, onboardedUsers) {
-
         if ((response.status === 503 || response.status === 429) && vm.model.numRetriesToAttempt > 0) {
           // need to retry this set of users
           vm.model.retryAfter = response.headers('retry-after') || vm.model.retryAfterDefault;
@@ -460,6 +477,45 @@
             );
           });
         }
+      }
+
+      function updateResourceGroupsInUss(users) {
+        var updatedUserProps = [];
+        _.forEach(users, function (user) {
+          var currentProps = _.find(vm.hybridServicesUserProps, function (prop) {
+            return prop.userId === user.uuid;
+          });
+          if (!currentProps || !currentProps.resourceGroups) {
+            updatedUserProps.push({ userId: user.uuid, resourceGroups: user.resourceGroups });
+          } else {
+            var calResourceGroupChanged = currentProps.resourceGroups['squared-fusion-cal'] !== user.resourceGroups['squared-fusion-cal'];
+            var ucResourceGroupChanged = currentProps.resourceGroups['squared-fusion-uc'] !== user.resourceGroups['squared-fusion-uc'];
+            if (calResourceGroupChanged && !user.resourceGroups['squared-fusion-cal']) {
+              user.resourceGroups['squared-fusion-cal'] = ''; // Will clear the group in USS
+            }
+            if (ucResourceGroupChanged && !user.resourceGroups['squared-fusion-uc']) {
+              user.resourceGroups['squared-fusion-uc'] = ''; // Will clear the group in USS
+            }
+            if (calResourceGroupChanged || ucResourceGroupChanged) {
+              updatedUserProps.push({ userId: user.uuid, resourceGroups: user.resourceGroups });
+            }
+          }
+        });
+        if (updatedUserProps.length > 0) {
+          USSService.updateBulkUserProps(updatedUserProps).catch(function (response) {
+            _.forEach(users, function (user) {
+              var email = (user.email ? user.email : user.address);
+              addUserErrorWithTrackingID(user.csvRow, email, $translate.instant('firstTimeWizard.unableToUpdateResourceGroups'), response);
+            });
+          });
+        }
+      }
+
+      function getResourceGroup(name) {
+        return _.find(vm.resourceGroups, function (group) {
+          // Remove commas from the name as the CSV export will have stripped these
+          return group.name.replace(/,/g, '') === name;
+        });
       }
 
       /**
@@ -490,31 +546,60 @@
 
       function processCsvRow(userRow, csvRowIndex) {
         processingError = false;
-        var firstName = '',
-          lastName = '',
-          displayName = '',
-          id = '';
-        var directoryNumber = '',
-          directLine = '';
-        var idxDirectoryNumber = -1,
-          idxDirectLine = -1;
+        var firstName, lastName, displayName, id;
+        var directoryNumber = '', directLine = '';
         var licenseList = [];
         var entitleList = [];
         var numOfActiveMessageLicenses = 0;
         var isWrongLicenseFormat = false;
+        var calendarServiceResourceGroup = null;
+        var callServiceResourceGroup = null;
 
         // Basic data
         firstName = _.trim(userRow[findHeaderIndex('First Name')]);
         lastName = _.trim(userRow[findHeaderIndex('Last Name')]);
         displayName = _.trim(userRow[findHeaderIndex('Display Name')]);
         id = _.trim(userRow[idIndex]);
-        idxDirectoryNumber = findHeaderIndex('Directory Number');
-        if (idxDirectoryNumber !== -1) {
-          directoryNumber = _.trim(userRow[idxDirectoryNumber]);
+        var index = findHeaderIndex('Directory Number');
+        if (index !== -1) {
+          directoryNumber = _.trim(userRow[index]);
         }
-        idxDirectLine = findHeaderIndex('Direct Line');
-        if (idxDirectLine !== -1) {
-          directLine = _.trim(userRow[idxDirectLine]);
+        index = findHeaderIndex('Direct Line');
+        if (index !== -1) {
+          directLine = _.trim(userRow[index]);
+        }
+        if (vm.handleHybridServicesResourceGroups) {
+          index = findHeaderIndex('Hybrid Calendar Service Resource Group');
+          var resourceGroup;
+          if (index !== -1) {
+            calendarServiceResourceGroup = _.trim(userRow[index]);
+            if (calendarServiceResourceGroup) {
+              resourceGroup = getResourceGroup(calendarServiceResourceGroup);
+              if (!resourceGroup) {
+                processingError = true;
+                addUserError(csvRowIndex, id, $translate.instant("firstTimeWizard.invalidCalendarServiceResourceGroup", {
+                  group: calendarServiceResourceGroup
+                }));
+              } else {
+                calendarServiceResourceGroup = resourceGroup.id;
+              }
+            }
+          }
+          index = findHeaderIndex('Hybrid Call Service Resource Group');
+          if (index !== -1) {
+            callServiceResourceGroup = _.trim(userRow[index]);
+            if (callServiceResourceGroup) {
+              resourceGroup = getResourceGroup(callServiceResourceGroup);
+              if (!resourceGroup) {
+                processingError = true;
+                addUserError(csvRowIndex, id, $translate.instant("firstTimeWizard.invalidCallServiceResourceGroup", {
+                  group: callServiceResourceGroup
+                }));
+              } else {
+                callServiceResourceGroup = resourceGroup.id;
+              }
+            }
+          }
         }
         licenseList = [];
         entitleList = [];
@@ -587,7 +672,7 @@
           }
 
           if (!processingError) {
-            return {
+            var user = {
               'csvRow': csvRowIndex,
               'address': id,
               'name': firstName + NAME_DELIMITER + lastName,
@@ -597,6 +682,16 @@
               'licenses': licenseList,
               'entitlements': entitleList
             };
+            if (vm.handleHybridServicesResourceGroups) {
+              user.resourceGroups = {};
+              if (calendarServiceResourceGroup) {
+                user.resourceGroups['squared-fusion-cal'] = calendarServiceResourceGroup;
+              }
+              if (callServiceResourceGroup) {
+                user.resourceGroups['squared-fusion-uc'] = callServiceResourceGroup;
+              }
+            }
+            return user;
           } else {
             return null;
           }
@@ -728,7 +823,25 @@
       initBulkMetric();
       hasSparkCallVoicemailService().then(function () {
         vm.model.csvChunk = hasVoicemailService ? UserCsvService.chunkSizeWithSparkCall : UserCsvService.chunkSizeWithoutSparkCall; // Rate limit for Huron
-        processCsvRows();
+        if (vm.handleHybridServicesResourceGroups) {
+          USSService.getAllUserProps().then(function (userProps) {
+            vm.hybridServicesUserProps = userProps;
+            ResourceGroupService.getAll().then(function (resourceGroups) {
+              vm.resourceGroups = resourceGroups;
+            }).catch(function () {
+              vm.handleHybridServicesResourceGroups = false;
+              Notification.error('firstTimeWizard.fmsResourceGroupsLoadFailed');
+            }).finally(function () {
+              processCsvRows();
+            });
+          }).catch(function () {
+            vm.handleHybridServicesResourceGroups = false;
+            Notification.error('firstTimeWizard.ussUserPropsLoadFailed');
+            processCsvRows();
+          });
+        } else {
+          processCsvRows();
+        }
       });
 
       return saveDeferred.promise;

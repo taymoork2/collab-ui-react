@@ -1,7 +1,7 @@
 'use strict';
 
 describe('OnboardCtrl: Ctrl', function () {
-  var controller, $controller, $modal, $scope, $timeout, $q, $state, $previousState, modalDefer, $interval, Notification, Userservice, Orgservice, FeatureToggleService, Authinfo, CsvDownloadService, HuronCustomer, UserCsvService;
+  var controller, $controller, $modal, $scope, $timeout, $q, $state, $previousState, modalDefer, $interval, Notification, Userservice, Orgservice, FeatureToggleService, Authinfo, CsvDownloadService, HuronCustomer, UserCsvService, ResourceGroupService, USSService;
   var getUserMe, getMigrateUsers, getMyFeatureToggles;
   var fusionServices, headers;
   var customer;
@@ -11,7 +11,7 @@ describe('OnboardCtrl: Ctrl', function () {
   beforeEach(angular.mock.module('Sunlight'));
   beforeEach(angular.mock.module('Messenger'));
 
-  beforeEach(inject(function (_$controller_, _$interval_, _$modal_, _$q_, $rootScope, _$state_, _$previousState_, _$timeout_, _Authinfo_, _CsvDownloadService_, _FeatureToggleService_, _HuronCustomer_, _Notification_, _Orgservice_, _UserCsvService_, _Userservice_) {
+  beforeEach(inject(function (_$controller_, _$interval_, _$modal_, _$q_, $rootScope, _$state_, _$previousState_, _$timeout_, _Authinfo_, _CsvDownloadService_, _FeatureToggleService_, _HuronCustomer_, _Notification_, _Orgservice_, _UserCsvService_, _Userservice_, _ResourceGroupService_, _USSService_) {
     $scope = $rootScope.$new();
     $controller = _$controller_;
     $timeout = _$timeout_;
@@ -29,6 +29,8 @@ describe('OnboardCtrl: Ctrl', function () {
     CsvDownloadService = _CsvDownloadService_;
     HuronCustomer = _HuronCustomer_;
     UserCsvService = _UserCsvService_;
+    ResourceGroupService = _ResourceGroupService_;
+    USSService = _USSService_;
 
     spyOn($state, 'go').and.returnValue($q.when());
     spyOn(Authinfo, 'isOnline').and.returnValue(true);
@@ -52,12 +54,12 @@ describe('OnboardCtrl: Ctrl', function () {
         return $q.when({});
       }
     });
-
     spyOn(Notification, 'notify');
     spyOn(Notification, 'error');
     spyOn(Orgservice, 'getUnlicensedUsers');
     spyOn(FeatureToggleService, 'getFeaturesForUser').and.returnValue(getMyFeatureToggles);
     spyOn(FeatureToggleService, 'supportsDirSync').and.returnValue($q.when(false));
+    spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(false));
     spyOn(Userservice, 'onboardUsers');
     spyOn(Userservice, 'bulkOnboardUsers');
     spyOn(Userservice, 'getUser').and.returnValue(getUserMe);
