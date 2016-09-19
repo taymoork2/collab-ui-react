@@ -5,7 +5,7 @@
          ng-model="careChatSA.template.name"
          ng-change="careChatSA.isNamePageValid() && careChatSA.isTemplateNameValid()"
          focus-on>
-  <p ng-class="careChatSA.validateNameLength() ? 'ct-input-hint ct-input-valid-border' : 'ct-input-hint ct-input-invalid-border'"
+  <p ng-class="careChatSA.validateNameLength() && careChatSA.isTemplateNameValid() ? 'ct-input-hint ct-input-valid-border' : 'ct-input-hint ct-input-invalid-border'"
      translate="careChatTpl.nameHint"></p>
   <div class="ct-input-error-wrapper">
     <div class="small ct-input-error"
