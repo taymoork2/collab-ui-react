@@ -61,12 +61,6 @@
       var valueAxes = [CareReportsGraphService.getBaseVariable('axis')];
       valueAxes[0].title = $translate.instant('careReportsPage.tasks');
 
-      var pattern = {
-        "url": "line_pattern.png",
-        "width": 14,
-        "height": 14
-      };
-
       var abandonedGraph = {
         title: $translate.instant('careReportsPage.abandoned'),
         lineColor: chartColors.colorLightRed,
@@ -75,27 +69,14 @@
         showBalloon: true,
         balloonFunction: balloonTextForTaskVolume
       };
-      var inQueueGraph = {
-        title: $translate.instant('careReportsPage.in-queue'),
-        lineColor: chartColors.colorLightYellow,
-        valueField: 'numTasksQueuedState',
-        pattern: pattern,
-        fillAlphas: 1,
-        dashLength: 2
-      };
-      var assignedGraph = {
-        title: $translate.instant('careReportsPage.assigned'),
-        lineColor: chartColors.colorLightYellow,
-        fillColors: chartColors.colorLightYellowFill,
-        valueField: 'numTasksAssignedState'
-      };
+
       var handledGraph = {
         title: $translate.instant('careReportsPage.handled'),
         lineColor: chartColors.colorLightGreen,
         valueField: 'numTasksHandledState'
       };
 
-      var graphsPartial = (isToday) ? [handledGraph, assignedGraph, inQueueGraph, abandonedGraph] : [handledGraph, abandonedGraph];
+      var graphsPartial = [handledGraph, abandonedGraph];
       var graphs = _.map(graphsPartial, function (graph) {
         return _.defaults(graph, CareReportsGraphService.getBaseVariable('graph'));
       });
@@ -106,14 +87,9 @@
 
     function balloonTextForTaskVolume(graphDataItem, graph) {
       var numTasksAbandonedState = _.get(graphDataItem, 'dataContext.numTasksAbandonedState', 0);
-      var numTasksQueuedState = _.get(graphDataItem, 'dataContext.numTasksQueuedState', 0);
-      var numTasksAssignedState = _.get(graphDataItem, 'dataContext.numTasksAssignedState', 0);
       var numTasksHandledState = _.get(graphDataItem, 'dataContext.numTasksHandledState', 0);
       var categoryRange = setCategoryRange(graph.categoryAxis.title, graphDataItem.category);
-
-      var balloonTextToday = '<span class="care-graph-text">' + $translate.instant('careReportsPage.abandoned') + ' ' + numTasksAbandonedState + '</span><br><span class="care-graph-text">' + $translate.instant('careReportsPage.in-queue') + ' ' + numTasksQueuedState + '</span><br><span class="care-graph-text">' + $translate.instant('careReportsPage.assigned') + ' ' + numTasksAssignedState + '</span><br><span class="care-graph-text">' + $translate.instant('careReportsPage.handled') + ' ' + numTasksHandledState + '</span>';
-      var balloonTextPast = '<span class="care-graph-text">' + $translate.instant('careReportsPage.abandoned') + ' ' + numTasksAbandonedState + '</span><br><span class="care-graph-text">' + $translate.instant('careReportsPage.handled') + ' ' + numTasksHandledState + '</span>';
-      var balloonText = (today) ? balloonTextToday : balloonTextPast;
+      var balloonText = '<span class="care-graph-text">' + $translate.instant('careReportsPage.abandoned') + ' ' + numTasksAbandonedState + '</span><br><span class="care-graph-text">' + $translate.instant('careReportsPage.handled') + ' ' + numTasksHandledState + '</span>';
 
       return categoryRange + balloonText;
     }

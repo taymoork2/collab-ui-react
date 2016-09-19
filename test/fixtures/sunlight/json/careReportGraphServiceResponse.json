@@ -206,41 +206,6 @@
         "fillAlphas": 0.1
       },
       {
-        "title": "careReportsPage.assigned",
-        "lineColor": "#F5A623",
-        "fillColors": "#FFA200",
-        "valueField": "numTasksAssignedState",
-        "lineAlpha": 1,
-        "balloonColor": "#AEAEAF",
-        "lineThickness": 1,
-        "marginTop": 10,
-        "marginLeft": 0,
-        "plotAreaBorderAlpha": 0,
-        "legendValueText": " ",
-        "showBalloon": false,
-        "fillAlphas": 0.1
-      },
-      {
-        "title": "careReportsPage.in-queue",
-        "lineColor": "#F5A623",
-        "valueField": "numTasksQueuedState",
-        "pattern": {
-          "url": "line_pattern.png",
-          "width": 14,
-          "height": 14
-        },
-        "fillAlphas": 1,
-        "dashLength": 2,
-        "lineAlpha": 1,
-        "balloonColor": "#AEAEAF",
-        "lineThickness": 1,
-        "marginTop": 10,
-        "marginLeft": 0,
-        "plotAreaBorderAlpha": 0,
-        "legendValueText": " ",
-        "showBalloon": false
-      },
-      {
         "title": "careReportsPage.abandoned",
         "lineColor": "#F96452",
         "fillColors": "#FF0000",
