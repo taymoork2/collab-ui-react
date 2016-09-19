@@ -264,9 +264,8 @@ describe('Controller: AARouteToQueueCtrl', function () {
         var controller = $controller('AARouteToQueueCtrl', {
           $scope: $scope
         });
-
         expect(controller).toBeDefined();
-        var action = AutoAttendantCeMenuModelService.newCeActionEntry('routeToQueue', '');
+        var action = AutoAttendantCeMenuModelService.newCeActionEntry('routeToQueue', 'c16a6027-caef-4429-b3af-9d61ddc7964b');
         controller.menuEntry.actions = [];
         controller.menuEntry.actions[0] = action;
         controller.hideQueues = false;
@@ -274,7 +273,7 @@ describe('Controller: AARouteToQueueCtrl', function () {
         $scope.$apply();
         expect(controller.queueSelected.id).toEqual('c16a6027-caef-4429-b3af-9d61ddc7964b');
         expect(controller.menuEntry.actions[0].name).toEqual('routeToQueue');
-        expect(controller.menuEntry.actions[0].value).toEqual('');
+        expect(controller.menuEntry.actions[0].value).toEqual('c16a6027-caef-4429-b3af-9d61ddc7964b');
       });
 
       it('should be able to show the Queues when hideQueues is true', function () {
@@ -282,7 +281,7 @@ describe('Controller: AARouteToQueueCtrl', function () {
           $scope: $scope
         });
         expect(controller).toBeDefined();
-        var action = AutoAttendantCeMenuModelService.newCeActionEntry('routeToQueue', '');
+        var action = AutoAttendantCeMenuModelService.newCeActionEntry('routeToQueue', 'c16a6027-caef-4429-b3af-9d61ddc7964b');
         controller.menuEntry.actions = [];
         controller.menuEntry.actions[0] = action;
         controller.hideQueues = true;
@@ -290,7 +289,7 @@ describe('Controller: AARouteToQueueCtrl', function () {
         $scope.$apply();
         expect(controller.queueSelected.id).toEqual('c16a6027-caef-4429-b3af-9d61ddc7964b');
         expect(controller.menuEntry.actions[0].name).toEqual('routeToQueue');
-        expect(controller.menuEntry.actions[0].value).toEqual('');
+        expect(controller.menuEntry.actions[0].value).toEqual('c16a6027-caef-4429-b3af-9d61ddc7964b');
       });
     });
 
