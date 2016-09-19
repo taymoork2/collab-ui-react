@@ -34,7 +34,7 @@
           Auth.getCustomerAccount(Authinfo.getOrgId()).then(function (response) {
             var max = 0;
             var licenses = _.get(response, 'data.customers[0].licenses');
-            var licenseType = 'N/A';
+            var licenseType = '';
             if (licenses) {
               _.forEach(licenses, function (data) {
                 if (data.volume > max) {
