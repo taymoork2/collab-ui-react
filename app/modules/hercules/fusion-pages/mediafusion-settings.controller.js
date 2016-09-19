@@ -6,7 +6,7 @@
     .controller('MediafusionClusterSettingsController', MediafusionClusterSettingsController);
 
   /* @ngInject */
-  function MediafusionClusterSettingsController($stateParams, $translate, FusionClusterService, XhrNotificationService, MediaClusterServiceV2, $modal, FusionUtils, Notification) {
+  function MediafusionClusterSettingsController($stateParams, $translate, FusionClusterService, XhrNotificationService, MediaClusterServiceV2, $modal, FusionUtils, Notification, Orgservice, Config) {
     var vm = this;
     vm.backUrl = 'cluster-list';
     vm.upgradeSchedule = {
@@ -20,18 +20,40 @@
       title: 'mediaFusion.clusters.deletecluster',
       description: 'mediaFusion.clusters.deleteclusterDesc'
     };
+    vm.isTest = false;
+    vm.options = [];
+
+    vm.getOrg = function () {
+      Orgservice.getOrg(function (data) {
+        if (data.success) {
+          vm.isTest = data.isTestOrg;
+        }
+      });
+    };
+
+    vm.getOrg();
 
     //hardcoded now and will be changed in the future
-    vm.options = [{
-      value: 'stable',
-      label: $translate.instant('hercules.fusion.add-resource-group.release-channel.stable')
-    }, {
-      value: 'beta',
-      label: $translate.instant('hercules.fusion.add-resource-group.release-channel.beta')
-    }, {
-      value: 'latest',
-      label: $translate.instant('hercules.fusion.add-resource-group.release-channel.latest')
-    }];
+    if (Config.getEnv() === 'prod' && !vm.isTest) {
+      vm.options = [{
+        value: 'stable',
+        label: $translate.instant('hercules.fusion.add-resource-group.release-channel.stable')
+      }, {
+        value: 'beta',
+        label: $translate.instant('hercules.fusion.add-resource-group.release-channel.beta')
+      }];
+    } else {
+      vm.options = [{
+        value: 'stable',
+        label: $translate.instant('hercules.fusion.add-resource-group.release-channel.stable')
+      }, {
+        value: 'beta',
+        label: $translate.instant('hercules.fusion.add-resource-group.release-channel.beta')
+      }, {
+        value: 'latest',
+        label: $translate.instant('hercules.fusion.add-resource-group.release-channel.latest')
+      }];
+    }
 
     vm.selected = '';
 
