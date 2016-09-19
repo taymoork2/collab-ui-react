@@ -115,11 +115,6 @@
       var balloonTextPast = '<span class="care-graph-text">' + $translate.instant('careReportsPage.abandoned') + ' ' + numTasksAbandonedState + '</span><br><span class="care-graph-text">' + $translate.instant('careReportsPage.handled') + ' ' + numTasksHandledState + '</span>';
       var balloonText = (today) ? balloonTextToday : balloonTextPast;
 
-      if (!numTasksAbandonedState && !numTasksQueuedState && !numTasksAssignedState && !numTasksHandledState) {
-        categoryRange = "";
-        balloonText = "";
-      }
-
       return categoryRange + balloonText;
     }
 
