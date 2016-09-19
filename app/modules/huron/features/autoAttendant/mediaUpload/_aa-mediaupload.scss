@@ -1,18 +1,20 @@
 .aa-media-upload {
 
-  .drop-box {
+  .box-size {
     display: inline-block;
     @include vr-spacing(mb, 1);
     @include vr-spacing(pt, .75);
     @include vr-spacing(pb, .75);
     @include vr-spacing(pl, .75);
     @include vr-spacing(pr, .75);
-    width: 27rem;
-    height: 8rem;
     background-color: $brand-white;
     border: 1px solid $gray-light;
     border-radius: 3px;
     color: $gray-light;
+  }
+
+  .drop-box {
+    @extend .box-size;
 
     &:hover {
       cursor: pointer;
@@ -37,18 +39,7 @@
   }
 
   .box {
-    display: inline-block;
-    @include vr-spacing(mb, 1);
-    @include vr-spacing(pt, .75);
-    @include vr-spacing(pb, .75);
-    @include vr-spacing(pl, .75);
-    @include vr-spacing(pr, .75);
-    width: 27rem;
-    height: 8rem;
-    background-color: $brand-white;
-    border: 1px solid $gray-light;
-    border-radius: 3px;
-    color: $gray-light;
+    @extend .box-size;
 
     .cancel-media {
       margin-left: auto;
