@@ -1,19 +1,17 @@
 /// <reference path="securitySetting.controller.ts"/>
 namespace globalsettings {
 
-  describe('Controller: SecuritySettingController', ()=> {
+  describe('Controller: SecuritySettingController', () => {
 
-    let controller:SecuritySettingController;
+    let controller: SecuritySettingController;
     let $scope, $controller, $q;
     let AccountOrgService, Authinfo;
-
 
     beforeEach(angular.mock.module('Core'));
     beforeEach(angular.mock.module('Huron'));
 
     beforeEach(inject(dependencies));
     beforeEach(initSpies);
-
 
     function dependencies($rootScope, _$controller_, _$q_, _AccountOrgService_, _Authinfo_) {
       $scope = $rootScope.$new();
@@ -30,14 +28,14 @@ namespace globalsettings {
 
     function initController() {
       controller = $controller('SecuritySettingController', {
-        $scope: $scope
+        $scope: $scope,
       });
       $scope.$apply();
     }
 
-    describe('contructor()', ()=> {
+    describe('contructor()', () => {
 
-      describe('when getAppSecurity fail', ()=> {
+      describe('when getAppSecurity fail', () => {
         beforeEach(initGetAppSecReject());
         beforeEach(initController);
 
@@ -47,8 +45,8 @@ namespace globalsettings {
         });
       });
 
-      describe('when getAppSecurity return bad object', ()=> {
-        beforeEach(initGetAppSecWithResult({whatsthis: false}));
+      describe('when getAppSecurity return bad object', () => {
+        beforeEach(initGetAppSecWithResult({ whatsthis: false }));
         beforeEach(initController);
 
         it('should not set dataloaded and no value for isSparkClientSecurityEnabled', () => {
@@ -57,8 +55,8 @@ namespace globalsettings {
         });
       });
 
-      describe('when getAppSecurity return a bad data object', ()=> {
-        beforeEach(initGetAppSecWithResult({data: {whatsthis: false}}));
+      describe('when getAppSecurity return a bad data object', () => {
+        beforeEach(initGetAppSecWithResult({ data: { whatsthis: false } }));
         beforeEach(initController);
 
         it('should not set dataloaded and no value for isSparkClientSecurityEnabled', () => {
@@ -67,8 +65,8 @@ namespace globalsettings {
         });
       });
 
-      describe('when getAppSecurity return clientSecurityPolicy set to true', ()=> {
-        beforeEach(initGetAppSecWithResult({data: {clientSecurityPolicy: true}}));
+      describe('when getAppSecurity return clientSecurityPolicy set to true', () => {
+        beforeEach(initGetAppSecWithResult({ data: { clientSecurityPolicy: true } }));
         beforeEach(initController);
 
         it('should set dataloaded and true for isSparkClientSecurityEnabled', () => {
@@ -77,8 +75,8 @@ namespace globalsettings {
         });
       });
 
-      describe('when getAppSecurity return clientSecurityPolicy set to false', ()=> {
-        beforeEach(initGetAppSecWithResult({data: {clientSecurityPolicy: false}}));
+      describe('when getAppSecurity return clientSecurityPolicy set to false', () => {
+        beforeEach(initGetAppSecWithResult({ data: { clientSecurityPolicy: false } }));
         beforeEach(initController);
 
         it('should set dataloaded and true for isSparkClientSecurityEnabled', () => {
@@ -89,8 +87,8 @@ namespace globalsettings {
 
     });
 
-    describe('updateSparkClientSecuritySetting', ()=> {
-      beforeEach(initGetAppSecWithResult({data: {clientSecurityPolicy: false}}));
+    describe('updateSparkClientSecuritySetting', () => {
+      beforeEach(initGetAppSecWithResult({ data: { clientSecurityPolicy: false } }));
       beforeEach(initSetAppSec);
       beforeEach(initController);
 
@@ -117,16 +115,16 @@ namespace globalsettings {
       }
     });
 
-    function initGetAppSecWithResult(result:any) {
+    function initGetAppSecWithResult(result: any) {
       return () => {
         AccountOrgService.getAppSecurity.and.returnValue($q.when(result));
-      }
+      };
     }
 
     function initGetAppSecReject() {
       return () => {
         AccountOrgService.getAppSecurity.and.returnValue($q.reject({}));
-      }
+      };
     }
   });
 }

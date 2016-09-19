@@ -5,23 +5,32 @@
     .component('resourceGroupCard', {
       bindings: {
         group: '<resourceGroup',
-        onChange: '&'
+        onChange: '&',
+        forceOpen: '<',
       },
       templateUrl: 'modules/hercules/fusion-pages/components/resource-group-card.html',
-      controller: ResourceGroupCardController
+      controller: ResourceGroupCardController,
     });
 
   /* @ngInject */
-  function ResourceGroupCardController($modal) {
+  function ResourceGroupCardController($modal, FusionUtils) {
     var ctrl = this;
 
     ctrl.showDetails = false;
     ctrl.openAddClusterModal = openAddClusterModal;
     ctrl.toggleDetails = toggleDetails;
     ctrl.showWarningText = showWarningText;
+    ctrl.$onChanges = $onChanges;
+    ctrl.getLocalizedReleaseChannel = FusionUtils.getLocalizedReleaseChannel;
 
     function toggleDetails() {
       ctrl.showDetails = !ctrl.showDetails;
+    }
+
+    function $onChanges(changes) {
+      if (changes.forceOpen) {
+        ctrl.showDetails = changes.forceOpen.currentValue;
+      }
     }
 
     function openAddClusterModal() {
@@ -42,6 +51,7 @@
     function showWarningText() {
       return ctrl.group.clusters.length === 0;
     }
+
   }
 
 })();

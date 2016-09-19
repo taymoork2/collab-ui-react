@@ -188,6 +188,9 @@
         controllerAs: 'vm',
         templateUrl: 'modules/hercules/add-resource/add-resource-modal.html',
         type: 'small'
+      })
+      .result.catch(function () {
+        $state.go('services-overview');
       });
     }
 

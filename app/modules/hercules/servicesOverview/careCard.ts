@@ -1,22 +1,22 @@
-import { ServicesOverviewCard, CardButton } from './ServicesOverviewCard';
+import { ServicesOverviewCard, ICardButton } from './ServicesOverviewCard';
 
 export class ServicesOverviewCareCard extends ServicesOverviewCard {
 
-  getShowMoreButton():CardButton {
+  public getShowMoreButton(): ICardButton {
     return undefined;
   }
 
-  private _buttons:Array<CardButton> = [
-    {name: 'servicesOverview.cards.care.buttons.features', link: 'careDetails/features', buttonClass: 'btn-link'}];
+  private _buttons: Array<ICardButton> = [
+    { name: 'servicesOverview.cards.care.buttons.features', link: 'careDetails/features', buttonClass: 'btn-link' }];
 
-  getButtons():Array<CardButton> {
+  public getButtons(): Array<ICardButton> {
     if (this.active) {
       return _.take(this._buttons, 3);
     }
     return [];
   }
 
-  public careFeatureToggleEventHandler (hasFeature:boolean) {
+  public careFeatureToggleEventHandler (hasFeature: boolean) {
     this._display = hasFeature;
   }
 
@@ -26,7 +26,7 @@ export class ServicesOverviewCareCard extends ServicesOverviewCard {
       description: 'servicesOverview.cards.care.description',
       icon: 'icon-circle-contact-centre',
       active: Authinfo.isAllowedState('care'),
-      cardClass: 'care-bar'
+      cardClass: 'care-bar',
     });
     this._loading = false;
   }

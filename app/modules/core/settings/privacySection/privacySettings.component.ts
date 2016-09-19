@@ -2,7 +2,7 @@ import { SettingSection } from '../settingSection';
 
 export class PrivacySetting extends SettingSection {
 
-  constructor() {
+  public constructor() {
     super('privacy');
     this.subsectionLabel = '';
     this.subsectionDescription = '';
@@ -10,8 +10,8 @@ export class PrivacySetting extends SettingSection {
 }
 angular.module('Core').component('privacySetting', {
   bindings: {
-    hideUsagePart: '<'
+    hideUsagePart: '<',
   },
   controller: 'PrivacySettingController as vm',
-  templateUrl:'modules/core/settings/privacySection/privacySettings.tpl.html'
+  templateUrl: 'modules/core/settings/privacySection/privacySettings.tpl.html',
 });

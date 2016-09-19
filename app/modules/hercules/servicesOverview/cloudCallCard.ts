@@ -1,17 +1,17 @@
-import { ServicesOverviewCard, CardButton } from './ServicesOverviewCard';
+import { ServicesOverviewCard, ICardButton } from './ServicesOverviewCard';
 
 export class ServicesOverviewCallCard extends ServicesOverviewCard {
 
-  getShowMoreButton():CardButton {
+  public getShowMoreButton(): ICardButton {
     return undefined;
   }
 
-  private _buttons:Array<CardButton> = [
-    {name: 'servicesOverview.cards.call.buttons.numbers', link: 'hurondetails/lines', buttonClass: 'btn-link'},
-    {name: 'servicesOverview.cards.call.buttons.features', link: 'hurondetails/features', buttonClass: 'btn-link'},
-    {name: 'servicesOverview.cards.call.buttons.settings', link: 'hurondetails/settings', buttonClass: 'btn-link'}];
+  private _buttons: Array<ICardButton> = [
+    { name: 'servicesOverview.cards.call.buttons.numbers', link: 'hurondetails/lines', buttonClass: 'btn-link' },
+    { name: 'servicesOverview.cards.call.buttons.features', link: 'hurondetails/features', buttonClass: 'btn-link' },
+    { name: 'servicesOverview.cards.call.buttons.settings', link: 'hurondetails/settings', buttonClass: 'btn-link' }];
 
-  getButtons():Array<CardButton> {
+  public getButtons(): Array<ICardButton> {
     if (this.active) {
       return _.take(this._buttons, 3);
     }
@@ -24,7 +24,7 @@ export class ServicesOverviewCallCard extends ServicesOverviewCard {
       description: 'servicesOverview.cards.call.description',
       icon: 'icon-circle-call',
       active: Authinfo.isAllowedState('huronsettings'),
-      cardClass: 'cta-bar'
+      cardClass: 'cta-bar',
     });
     this._loading = false;
   }

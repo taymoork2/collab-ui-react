@@ -3,8 +3,8 @@
 
   /* @ngInject  */
   function CsdmDeviceService($http, Authinfo, CsdmConfigService, CsdmConverter, CsdmCacheFactory, Utils) {
-    var devicesUrl = CsdmConfigService.getUrl() + '/organization/' + Authinfo.getOrgId() + '/devices?checkOnline=true';
-    var devicesFastUrl = devicesUrl + "&checkDisplayName=false";
+    var devicesUrl = CsdmConfigService.getUrl() + '/organization/' + Authinfo.getOrgId() + '/devices';
+    var devicesFastUrl = devicesUrl + "?checkDisplayName=false&checkOnline=false";
 
     var initialDataPromise = $http.get(devicesFastUrl).then(function (res) {
       return CsdmConverter.convertCloudberryDevices(res.data);

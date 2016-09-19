@@ -28,7 +28,7 @@
     MediaClusterServiceV2.getAll()
       .then(function (clusters) {
         vm.clusters = _.filter(clusters, 'targetType', 'mf_mgmt');
-        _.each(clusters, function (clust) {
+        _.each(vm.clusters, function (clust) {
           if (cluster.id != clust.id) {
             vm.options.push(clust.name);
           }
