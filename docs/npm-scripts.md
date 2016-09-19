@@ -103,6 +103,10 @@ eg. `npm start -- --noopen` passes the `--noopen` argument to our `start` task
 
 * Runs test to verify `l10n` language json files used in the app
 
+### `npm run lint`
+
+* Run eslint and tslint on entire project
+
 ### `npm run protractor`
 
 * Updates webdriver and runs protractor
@@ -118,6 +122,10 @@ eg. `npm start -- --noopen` passes the `--noopen` argument to our `start` task
 ### `npm run ts-spec-delete`
 
 * Backwards-compatible utility to delete old compiled TypeScript spec files in the `app` directory
+
+### `npm run tslint`
+
+* Run tslint on entire project
 
 ### `npm run typings`
 

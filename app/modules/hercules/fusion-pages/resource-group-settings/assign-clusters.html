@@ -4,22 +4,61 @@
   </button>
   <h3 class="modal-title" translate="hercules.assignClustersModal.title" translate-values="{ groupName: vm.resourceGroup.name }"></h3>
 </div>
-<div class="modal-body hercules-fix-paragraphs">
-  <p translate="hercules.assignClustersModal.description"></p>
-  <div class="cs-checkbox-group">
-    <input
-      cs-input
-      type="checkbox"
-      ng-model="vm.assignments[checkbox.id]"
-      id="{{checkbox.id}}"
-      name="{{checkbox.name}}"
-      cs-input-label="{{checkbox.label}}"
-      ng-repeat="checkbox in vm.clusterCheckboxes">
+<div class="modal-body">
+  <h4 translate="hercules.assignClustersModal.subtitle"></h4>
+  <p translate="hercules.assignClustersModal.description" translate-values="{ groupName: vm.resourceGroup.name }"></p>
+  <div class="resource-columns">
+    <div class="resource-column">
+      <h5 translate="hercules.assignClustersModal.availableClusters"></h5>
+      <div class="resource-scrolling-list">
+        <div class="resource-container" ng-repeat="cluster in vm.newData.availableClusters | orderBy:'name'" ng-click="vm.assignCluster(cluster)">
+          <div class="resource-details">
+            <div class="resource-name">{{::cluster.name}}</div>
+            <div class="resource-services" ng-if="vm._helpers.hasServices(cluster)">
+              <div class="resource-service" ng-repeat="service in cluster.servicesStatuses | filter: {serviceId: '!squared-fusion-mgmt'}" ng-if="service.total > 0"><i class="icon icon-circle status-indicator" ng-class="vm._helpers.stateLabelToStatusClass(service.state.label)"></i> {{::'overview.cards.hybrid.services.' + service.serviceId | translate}}</div>
+            </div>
+            <div class="resource-services" ng-if="!vm._helpers.hasServices(cluster)">
+              <div class="resource-service" translate="hercules.assignClustersModal.noServices"></div>
+            </div>
+          </div>
+          <div class="resource-action-container">
+            <div class="resource-action resource-action-plus">
+              <i class="icon icon-plus"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="resource-column">
+      <h5>{{vm.resourceGroup.name}}</h5>
+      <div class="resource-scrolling-list">
+        <div class="resource-container" ng-repeat="cluster in vm.newData.clustersInResourceGroup | orderBy:'name'" ng-click="vm.unassignCluster(cluster)">
+          <div class="resource-details">
+            <div class="resource-name">{{::cluster.name}}</div>
+            <div class="resource-services" ng-if="vm._helpers.hasServices(cluster)">
+              <div class="resource-service" ng-repeat="service in cluster.servicesStatuses | filter: {serviceId: '!squared-fusion-mgmt'}" ng-if="service.total > 0"><i class="icon icon-circle status-indicator" ng-class="vm._helpers.stateLabelToStatusClass(service.state.label)"></i> {{::'overview.cards.hybrid.services.' + service.serviceId | translate}}</div>
+            </div>
+            <div class="resource-services" ng-if="!vm._helpers.hasServices(cluster)">
+              <div class="resource-service" translate="hercules.assignClustersModal.noServices"></div>
+            </div>
+          </div>
+          <div class="resource-action-container">
+            <div class="resource-action resource-action-minus">
+              <i class="icon icon-minus"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="warning-message" ng-if="vm.hasChanged()">
+    <i class="icon icon-warning"></i>
+    <div class="message" translate="hercules.assignClustersModal.warning"></div>
   </div>
 </div>
 <div class="modal-footer">
   <button class="btn btn-default" ng-click="$dismiss()" translate="common.cancel"></button>
-  <button cs-btn class="btn btn-primary" ng-click="vm.saveAssignments()">
+  <button cs-btn class="btn btn-primary" ng-click="vm.save()" ng-disabled="!vm.hasChanged()" loading="vm.savingState">
     <span translate="common.save"></span>
   </button>
 </div>

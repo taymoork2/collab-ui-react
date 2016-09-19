@@ -1,5 +1,5 @@
 export interface IDirectoryNumber {
-  pattern: string,
+  pattern: string;
 }
 
 export class DirectoryNumberOptionsService {

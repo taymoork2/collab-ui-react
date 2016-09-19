@@ -273,7 +273,7 @@
         return entitlements;
       },
 
-      // Remove when Microsoft fixes flexbox problem when min-height is defined (in messagebox-small).
+      // Remove when Microsoft fixes flexbox problem when min-height is defined (in message-box).
       isIe: function () {
         return ($window.navigator.userAgent.indexOf('MSIE') > 0 || $window.navigator.userAgent.indexOf('Trident') > 0);
       },
