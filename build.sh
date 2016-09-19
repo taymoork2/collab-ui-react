@@ -100,7 +100,7 @@ function do_webpack {
     local webpack_exit_code
     export npm_lifecycle_event="build"
     while true; do
-        time webpack --bail --progress --profile --nolint
+        time nice -10 webpack --bail --progress --profile --nolint
         webpack_exit_code=$?
         if [ "$webpack_exit_code" -ne 132 -a \
             "$webpack_exit_code" -ne 137 -a \
@@ -132,7 +132,7 @@ webpack_pid=$!
 npm run lint
 npm run json-verify
 npm run languages-verify
-npm run test
+nice -15 npm run test
 npm run combine-coverage
 set +e
 

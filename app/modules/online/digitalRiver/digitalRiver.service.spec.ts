@@ -35,7 +35,9 @@ describe('Service: DigitalRiverService', () => {
     this.$httpBackend.flush();
   });
 
-  it('should have a logout url', function () {
-    expect(this.DigitalRiverService.getLogoutUrl()).toEqual('https://buy.ciscospark.com/store/ciscoctg/en_US/Logout');
+  it('should logout', function () {
+    this.$httpBackend.expectJSONP('https://buy.ciscospark.com/store/ciscoctg/en_US/remoteLogout?callback=JSON_CALLBACK').respond(200);
+    this.DigitalRiverService.logout();
+    this.$httpBackend.flush();
   });
 });

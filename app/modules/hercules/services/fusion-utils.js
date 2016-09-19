@@ -6,12 +6,13 @@
     .service('FusionUtils', FusionUtils);
 
   /*@ngInject*/
-  function FusionUtils() {
+  function FusionUtils($translate) {
     var service = {
       connectorType2RouteName: connectorType2RouteName,
       connectorType2ServicesId: connectorType2ServicesId,
       serviceId2ConnectorType: serviceId2ConnectorType,
-      serviceId2Icon: serviceId2Icon
+      serviceId2Icon: serviceId2Icon,
+      getLocalizedReleaseChannel: getLocalizedReleaseChannel,
     };
 
     return service;
@@ -78,6 +79,10 @@
         default:
           return 'icon icon-circle-question';
       }
+    }
+
+    function getLocalizedReleaseChannel(channel) {
+      return $translate.instant('hercules.fusion.add-resource-group.release-channel.' + channel);
     }
 
   }
