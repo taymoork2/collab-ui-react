@@ -4652,7 +4652,8 @@
       "errorChar250": "Character length cannot be more than 250.",
       "errorChar50": "Character length cannot be more than 50.",
       "errorTypeDuplicate": "This ‘Type’ is associated with another field. Select a different one from the available types.",
-      "businessDaysSelection": "Select the business working days."
+      "businessDaysSelection": "Select the business working days.",
+      "invalidCharacters": "Characters <, > are not allowed."
     },
     "ctOverview": {
       "customerInformation": {

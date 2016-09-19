@@ -3,12 +3,18 @@
          class="form-control ct-input"
          placeholder="{{:: 'careChatTpl.namePlaceholder' | translate}}"
          ng-model="careChatSA.template.name"
-         ng-change="careChatSA.isNamePageValid()"
+         ng-change="careChatSA.isNamePageValid() && careChatSA.isTemplateNameValid()"
          focus-on>
   <p ng-class="careChatSA.validateNameLength() ? 'ct-input-hint ct-input-valid-border' : 'ct-input-hint ct-input-invalid-border'"
      translate="careChatTpl.nameHint"></p>
-  <div class="small ct-input-error"
-       ng-show="!careChatSA.validateNameLength()">
-    <i class="icon icon-error icon-lg"></i>
-    {{:: 'careChatTpl.ctValidation.errorChar250' | translate}}</div>
+  <div class="ct-input-error-wrapper">
+    <div class="small ct-input-error"
+         ng-show="!careChatSA.validateNameLength()">
+      <i class="icon icon-error icon-lg"></i>
+      {{:: 'careChatTpl.ctValidation.errorChar250' | translate}}</div>
+    <div class="small ct-input-error"
+         ng-show="!careChatSA.isTemplateNameValid()">
+      <i class="icon icon-error icon-lg"></i>
+      {{:: 'careChatTpl.ctValidation.invalidCharacters' | translate}}</div>
+  </div>
 </div>
