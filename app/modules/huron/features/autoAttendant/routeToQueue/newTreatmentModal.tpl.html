@@ -1,17 +1,15 @@
 <div class="modal-header">
-  <button type="button" class="close" ng-click="cancel()">
-    <span class="sr-only">Close</span>
-  </button>
-  <h3 class="modal-title">Queue Settings</h3>
+  <button type="button" class="close" ng-click="cancel()"></button>
+  <h3 class="modal-title" translate="autoAttendant.queueSettings"></h3>
 </div>
  <div class="modal-body">
     <div class="row">
     <div class="large-4 columns">
-        <label class="h5" translate="autoAttendant.fallbackLabel"></label>
+        <label class="h4" translate="autoAttendant.fallbackLabel"></label>
       </div> 
-    <p class=" large-6 large-offset-4">Max Wait Time</p> 
+    <p class=" large-6 large-offset-4" translate="autoAttendant.maxWaitTime"></p> 
       <div class="small-2 medium-offset-4">
-         <cs-select ng-model="minute" options="minutes" secondary-label="Minutes" placeholder="newTreatmentModalCtrl.selectPlaceholder" class="aa-pm-key-select" icon="icon-chevron-down" >
+         <cs-select ng-model="minute" options="minutes" secondary-label="Minutes" placeholder="newTreatmentModalCtrl.selectPlaceholder" icon="icon-chevron-down" >
           </cs-select> 
       </div>
   

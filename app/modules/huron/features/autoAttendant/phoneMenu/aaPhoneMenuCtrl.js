@@ -276,7 +276,6 @@
      */
     function toggleRouteToQueueFeature() {
       return FeatureToggleService.supports(FeatureToggleService.features.huronAACallQueue).then(function (result) {
-        result = true;
         if (result) {
           AACommonService.setRouteQueueToggle(true);
           /* will push route to queue in list */

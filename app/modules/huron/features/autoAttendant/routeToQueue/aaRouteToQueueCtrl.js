@@ -36,7 +36,7 @@
         templateUrl: 'modules/huron/features/autoAttendant/routeToQueue/newTreatmentModal.tpl.html',
         controller: 'NewTreatmentModalCtrl',
         controllerAs: 'newTreatmentModalCtrl',
-        size: 'lg'
+        type: 'full'
       });
     }
 
