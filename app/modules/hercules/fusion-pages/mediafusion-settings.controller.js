@@ -21,7 +21,13 @@
       description: 'mediaFusion.clusters.deleteclusterDesc'
     };
     vm.isTest = false;
-    vm.options = [];
+    vm.options = [{
+      value: 'stable',
+      label: $translate.instant('hercules.fusion.add-resource-group.release-channel.stable')
+    }, {
+      value: 'beta',
+      label: $translate.instant('hercules.fusion.add-resource-group.release-channel.beta')
+    }];
 
     vm.getOrg = function () {
       Orgservice.getOrg(function (data) {
@@ -34,25 +40,11 @@
     vm.getOrg();
 
     //hardcoded now and will be changed in the future
-    if (Config.getEnv() === 'prod' && !vm.isTest) {
-      vm.options = [{
-        value: 'stable',
-        label: $translate.instant('hercules.fusion.add-resource-group.release-channel.stable')
-      }, {
-        value: 'beta',
-        label: $translate.instant('hercules.fusion.add-resource-group.release-channel.beta')
-      }];
-    } else {
-      vm.options = [{
-        value: 'stable',
-        label: $translate.instant('hercules.fusion.add-resource-group.release-channel.stable')
-      }, {
-        value: 'beta',
-        label: $translate.instant('hercules.fusion.add-resource-group.release-channel.beta')
-      }, {
+    if (Config.getEnv() !== 'prod' || vm.isTest) {
+      vm.options.push({
         value: 'latest',
         label: $translate.instant('hercules.fusion.add-resource-group.release-channel.latest')
-      }];
+      });
     }
 
     vm.selected = '';
