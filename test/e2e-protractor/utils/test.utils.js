@@ -120,6 +120,10 @@ exports.scrollBottom = function (selector) {
   browser.executeScript('$("' + selector + '").first().scrollTop($("' + selector + '").first().scrollHeight);');
 };
 
+exports.scroll = function (el) {
+  browser.executeScript('arguments[0].scrollIntoView()', el.getWebElement());
+};
+
 exports.refresh = function () {
   return browser.refresh();
 };
@@ -403,7 +407,7 @@ exports.setCheckboxIfDisplayed = function (elem, val, timeout) {
     return exports.getCheckboxVal(elem).then(function (curVal) {
       if (curVal !== val) {
         // checkbox value needs to be toggled
-        exports.click(elem);
+        return exports.click(elem);
       }
     });
   }, function () {

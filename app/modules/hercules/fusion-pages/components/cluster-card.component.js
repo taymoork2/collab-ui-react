@@ -7,11 +7,11 @@
         cluster: '<'
       },
       templateUrl: 'modules/hercules/fusion-pages/components/cluster-card.html',
-      controller: ClusterCardController
+      controller: ClusterCardController,
     });
 
   /* @ngInject */
-  function ClusterCardController($state, FusionClusterService) {
+  function ClusterCardController($state, FusionClusterService, FeatureToggleService, FusionUtils) {
     var ctrl = this;
 
     ctrl.countHosts = countHosts;
@@ -20,6 +20,13 @@
     ctrl.openSettings = openSettings;
     ctrl.hasServices = hasServices;
     ctrl.formatTimeAndDate = FusionClusterService.formatTimeAndDate;
+    ctrl.hasF237FeatureToggle = false;
+    ctrl.getLocalizedReleaseChannel = FusionUtils.getLocalizedReleaseChannel;
+
+    FeatureToggleService.supports(FeatureToggleService.features.atlasF237ResourceGroups)
+      .then(function () {
+        ctrl.hasF237FeatureToggle = true;
+      });
 
     function getHostnames(cluster) {
       return _.chain(cluster.connectors)
@@ -70,6 +77,7 @@
         });
       }
     }
+
   }
 
 })();
