@@ -33,7 +33,7 @@
         function getUnassignedLicenses() {
           Auth.getCustomerAccount(Authinfo.getOrgId()).then(function (response) {
             var max = 0;
-            var licenses = response.data.customers[0].licenses;
+            var licenses = _.get(response, 'data.customers[0].licenses');
             var licenseType = 'N/A';
             if (licenses) {
               _.forEach(licenses, function (data) {
