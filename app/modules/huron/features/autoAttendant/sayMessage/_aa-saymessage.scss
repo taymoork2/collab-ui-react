@@ -16,7 +16,11 @@
     @include vr-spacing(mb, .75);
     .select-toggle {
       display: inline-block;
+<<<<<<< HEAD
       min-width: 13.28rem;
+=======
+      min-width: 10rem;
+>>>>>>> 40060a277c8cbd8510340f1f1dc079a6a44be31b
       @include vr-spacing(pr, 1.75);
     }
     .select-toggle > i {
