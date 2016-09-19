@@ -138,11 +138,11 @@
       }
     }
 
-    function getUser(userid, callback) {
+    function getUser(userid, callback, noCache) {
       var scimUrl = UrlConfig.getScimUrl(Authinfo.getOrgId()) + '/' + userid;
 
       return $http.get(scimUrl, {
-        cache: true
+        cache: !noCache
       })
         .success(function (data, status) {
           data = data || {};

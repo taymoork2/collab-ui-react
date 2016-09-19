@@ -353,7 +353,7 @@
             }
           }
         }
-      });
+      }, true);
     }
 
     function resendInvitation(userEmail, userName, uuid, userStatus, dirsyncEnabled, entitlements) {
