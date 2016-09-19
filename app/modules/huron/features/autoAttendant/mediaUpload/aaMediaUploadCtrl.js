@@ -17,20 +17,19 @@
     vm.state = vm.WAIT;
     vm.menuEntry = {};
     vm.wavFile = '';
-    vm.modalOpen = false;
-    vm.modalCanceled = false;
-    vm.modalDeleted = false;
     vm.dialogModalTypes = {
       cancel: 'cancel',
       overwrite: 'overwrite',
     };
     vm.actionCopy = undefined;
+    vm.upload = upload;
+    vm.openModal = openModal;
+
+    var modalOpen = false;
+    var modalCanceled = false;
     var saveOn = 'uploadingInProgress';
     var actionName = 'play';
     var uploadServProm = undefined;
-
-    vm.upload = upload;
-    vm.openModal = openModal;
 
     //////////////////////////////////////////////////////
 
@@ -68,7 +67,7 @@
         vm.uploadDuration = '(' + moment.utc(durationInSeconds * 1000).format('mm:ss') + ')';
         vm.state = vm.DOWNLOAD;
         vm.progress = 0;
-        vm.modalCanceled = false;
+        modalCanceled = false;
         uploadServProm = AAMediaUploadService.upload(file);
         uploadServProm.then(uploadSuccess, uploadError, uploadProgress).finally(cleanUp);
       }, function () {
@@ -77,7 +76,7 @@
     }
 
     function uploadSuccess(result) {
-      if (!vm.modalCanceled) {
+      if (!modalCanceled) {
         vm.state = vm.UPLOADED;
         var action = getPlayAction(vm.menuEntry);
         var fd = {};
@@ -92,7 +91,7 @@
 
     function uploadError() {
       rollBack();
-      if (!vm.modalCanceled) {
+      if (!modalCanceled) {
         AANotificationService.error('autoAttendant.uploadFailed');
       }
     }
@@ -137,7 +136,7 @@
           });
           break;
       }
-      vm.modalOpen = true;
+      modalOpen = true;
       return modalInstance;
     }
 
@@ -145,11 +144,11 @@
     //else the dismiss is called and no action taken
     function modalAction() {
       rollBack();
-      vm.modalCanceled = true;
+      modalCanceled = true;
     }
 
     function modalClosed() {
-      vm.modalOpen = false;
+      modalOpen = false;
     }
 
     //roll back, revert if history exists, else hard reset
@@ -198,7 +197,7 @@
 
     //if user cancels upload & previously uploaded media -> re-init/revert copy
     function setActionCopy() {
-      if (!vm.modalOpen) {
+      if (!modalOpen) {
         var playAction = getPlayAction(vm.menuEntry);
         if (angular.isDefined(playAction)) {
           if (!_.isEmpty(playAction.getValue())) {

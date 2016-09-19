@@ -146,24 +146,16 @@ describe('Controller: AAMediaUploadCtrl', function () {
         controller.openModal(controller.dialogModalTypes.cancel);
         $scope.$apply();
         expect(ModalService.open).toHaveBeenCalled();
-        expect(controller.modalOpen).toBeTruthy();
-        expect(controller.modalCanceled).toBeFalsy();
         modal.reject();
         $scope.$apply();
-        expect(controller.modalOpen).toBeFalsy();
-        expect(controller.modalCanceled).toBeFalsy();
       });
 
       it('should open and close a cancel modal', function () {
         controller.openModal(controller.dialogModalTypes.cancel);
         $scope.$apply();
         expect(ModalService.open).toHaveBeenCalled();
-        expect(controller.modalOpen).toBeTruthy();
-        expect(controller.modalCanceled).toBeFalsy();
         modal.resolve();
         $scope.$apply();
-        expect(controller.modalOpen).toBeFalsy();
-        expect(controller.modalCanceled).toBeTruthy();
       });
 
       describe('rollBack from openModal cancel type', function () {
@@ -245,7 +237,6 @@ describe('Controller: AAMediaUploadCtrl', function () {
           expect(ModalService.open).toHaveBeenCalled();
           modal.reject();
           $scope.$apply();
-          expect(controller.modalOpen).toBeFalsy();
           expect(AAMediaUploadService.upload.calls.count()).toEqual(1);
         });
 
@@ -255,7 +246,6 @@ describe('Controller: AAMediaUploadCtrl', function () {
           expect(ModalService.open).toHaveBeenCalled();
           modal.resolve();
           $scope.$apply();
-          expect(controller.modalOpen).toBeFalsy();
         });
       });
     });
@@ -294,7 +284,6 @@ describe('Controller: AAMediaUploadCtrl', function () {
           $scope.$apply();
           modal.reject();
           $scope.$apply();
-          expect(controller.modalCanceled).toBeFalsy();
           expect(controller.uploadFile).toEqual(validFile.name);
           expect(controller.uploadDate).toMatch("[0-1][0-9][/][0-3][0-9][/][2][0][1-4][0-9]");
           expect(controller.state).toEqual(controller.UPLOADED);
@@ -308,7 +297,6 @@ describe('Controller: AAMediaUploadCtrl', function () {
           $scope.$apply();
           modal.resolve();
           $scope.$apply();
-          expect(controller.modalCanceled).toBeTruthy();
           expect(controller.uploadFile).toBeFalsy();
           expect(controller.uploadDuration).toBeFalsy();
           expect(controller.uploadDate).toBeFalsy();
