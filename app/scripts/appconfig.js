@@ -1504,6 +1504,26 @@
               }
             }
           })
+          .state('place-overview.communication.speedDials', {
+            templateProvider: /* @ngInject */ function ($stateParams) {
+              var ownerId = _.get($stateParams.currentPlace, 'cisUuid');
+              return '<uc-speed-dial owner-type="place" owner-id="' + ownerId + '"></uc-speed-dial>';
+            },
+            params: {
+              watcher: null,
+              selected: null
+            },
+            data: {
+              displayName: 'Speed Dials'
+            },
+            resolve: {
+              lazy: /* @ngInject */ function lazyLoad($q, $ocLazyLoad) {
+                return $q(function resolveLogin(resolve) {
+                  require(['modules/huron/speedDials'], loadModuleAndResolve($ocLazyLoad, resolve));
+                });
+              }
+            }
+          })
           .state('place-overview.communication.internationalDialing', {
             templateProvider: /* @ngInject */ function ($stateParams) {
               var watcher = $stateParams.watcher;
