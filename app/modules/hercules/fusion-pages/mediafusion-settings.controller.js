@@ -21,6 +21,8 @@
       description: 'mediaFusion.clusters.deleteclusterDesc'
     };
     vm.isTest = false;
+
+    //hardcoded now and will be changed in the future
     vm.options = [{
       value: 'stable',
       label: $translate.instant('hercules.fusion.add-resource-group.release-channel.stable')
@@ -39,7 +41,6 @@
 
     vm.getOrg();
 
-    //hardcoded now and will be changed in the future
     if (Config.getEnv() !== 'prod' || vm.isTest) {
       vm.options.push({
         value: 'latest',
