@@ -27,11 +27,11 @@
 
     var rtQueue = 'routeToQueue';
     var fromRouteCall = false;
-    vm.openTreatmentModal = openTreatmentModal;
+    vm.openQueueTreatmentModal = openQueueTreatmentModal;
 
     vm.populateUiModel = populateUiModel;
     vm.saveUiModel = saveUiModel;
-    function openTreatmentModal() {
+    function openQueueTreatmentModal() {
       $modal.open({
         templateUrl: 'modules/huron/features/autoAttendant/routeToQueue/newTreatmentModal.tpl.html',
         controller: 'NewTreatmentModalCtrl',
