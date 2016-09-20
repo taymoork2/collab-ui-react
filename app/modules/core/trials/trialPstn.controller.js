@@ -13,6 +13,7 @@
     vm.customerId = Authinfo.getOrgId();
     var pstnTokenLimit = 10;
     vm.providerImplementation = 'SWIVEL';
+    vm.swivel = $translate.instant('pstnSetup.swivel');
 
     vm.getStateInventory = getStateInventory;
     vm.searchCarrierInventory = searchCarrierInventory;
