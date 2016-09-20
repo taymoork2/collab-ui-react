@@ -1,11 +1,11 @@
 import { PlaceCallOverviewComponent } from './placeCallOverview.component';
-import { default as serviceModule } from '../../../huron/lines/services';
-import { default as internationalDialing } from '../../../huron/internationalDialing'
+import serviceModule from '../../../huron/lines/services';
+import dialingModule from '../../../huron/dialing';
 
 export default angular
   .module('huron.place-call-overview', [
     serviceModule,
-    internationalDialing,
+    dialingModule,
   ])
   .component('placeCallOverview', new PlaceCallOverviewComponent())
   .name;

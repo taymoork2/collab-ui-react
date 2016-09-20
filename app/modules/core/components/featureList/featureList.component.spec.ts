@@ -3,26 +3,26 @@ import { IFeature } from './featureList.component';
 describe('Component: featureList', () => {
   let features: IFeature[] = [
    {
-      "name":"Message",
-      "icon":"Message",
-      "state":"user-overview.messaging",
-      "detail":"Message",
-      "actionsAvailable":false
+      name: 'Message',
+      icon: 'Message',
+      state: 'user-overview.messaging',
+      detail: 'Message',
+      actionsAvailable: false,
    },
    {
-      "name":"Meeting",
-      "icon":"Meeting",
-      "state":"user-overview.conferencing",
-      "detail":"Meeting 25 Party",
-      "actionsAvailable":false
+      name: 'Meeting',
+      icon: 'Meeting',
+      state: 'user-overview.conferencing',
+      detail: 'Meeting 25 Party',
+      actionsAvailable: false,
    },
    {
-      "name":"Call",
-      "icon":"Call",
-      "state":"user-overview.communication",
-      "detail":"Call",
-      "actionsAvailable":true
-   }
+      name: 'Call',
+      icon: 'Call',
+      state: 'user-overview.communication',
+      detail: 'Call',
+      actionsAvailable: true,
+   },
 ];
 
   beforeEach(function() {
@@ -30,7 +30,7 @@ describe('Component: featureList', () => {
     this.injectDependencies('$scope');
     this.$scope.features = features;
     this.$scope.onChangeFn = jasmine.createSpy('onChangeFn');
-    this.compileComponent('featureList', {'features': 'features', 'featureActions': 'onChangeFn(feature)'});
+    this.compileComponent('featureList', { features: 'features', featureActions: 'onChangeFn(feature)' });
   });
 
   it('should expose a `features` object', function() {

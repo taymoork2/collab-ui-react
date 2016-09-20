@@ -17,7 +17,7 @@ var Navigation = function () {
   this.callSettings = element(by.css('a[href="#/hurondetails/settings"]'));
   this.fusionTab = element(by.css('a[href="#fusion"]'));
   this.reportsTab = element(by.css('li.reportTab > a'));
-  this.careReportsTab = element(by.css('a[href="#/reports/care"]'));
+  this.careReportsTab = element(by.cssContainingText('.nav-link', 'Care'));
   this.supportTab = element(by.css('li.supportTab > a'));
   this.cdrTab = element(by.css('a[href="#cdrsupport"]'));
   this.logsTab = element(by.css('a[href="#support"]'));
@@ -140,7 +140,7 @@ var Navigation = function () {
 
   this.clickCareReports = function () {
     utils.click(this.careReportsTab);
-    this.expectCurrentUrl('/reports/care');
+    this.expectCurrentUrl('/reports');
   };
 
   this.clickSupport = function () {

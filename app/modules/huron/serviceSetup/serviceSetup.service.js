@@ -91,6 +91,13 @@
         }).$promise;
       },
 
+      updateVoicemailUserTemplate: function (payload, objectId) {
+        return VoicemailTimezoneService.update({
+          customerId: Authinfo.getOrgId(),
+          objectId: objectId
+        }, payload).$promise;
+      },
+
       getVoicemailPilotNumber: function () {
         return VoicemailService.get({
           customerId: Authinfo.getOrgId()

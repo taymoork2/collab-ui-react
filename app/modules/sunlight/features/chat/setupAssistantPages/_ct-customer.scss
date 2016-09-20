@@ -131,10 +131,7 @@
       pointer-events: none;
       position: absolute;
     }
-  }
-
-  .ct-left-cs-input:focus {
-    border-color: $gray-light-3 !important;
+    background-color: $white !important;
   }
 
   .ct-footer {
@@ -257,8 +254,8 @@
   .right-inner-addon i {
     position: absolute;
     right: 0rem;
-    @include vr-spacing(pv, 0.6);
-    @include vr-spacing(ph, 2);
+    @include vr-spacing(mv, 0.6);
+    @include vr-spacing(mh, 2);
   }
 
   .category-tokens {
@@ -310,6 +307,9 @@
   }
   .ct-error-border {
     border-color: $color-alerts-base;
+  }
+  .ct-add-contain {
+    cursor: pointer;
   }
 }
 

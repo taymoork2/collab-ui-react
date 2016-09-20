@@ -1,3 +1,9 @@
 <strong translate="hercules.notifications.add-call-service-connect.title"></strong>
-<p translate="hercules.notifications.add-call-service-connect.description" translate-value-onclick="notificationController.navigateToCallSettings()" translate-compile></p>
+<p ng-if="!notificationController.locatedinCallSettings()"
+   translate="hercules.notifications.add-call-service-connect.description"
+   translate-value-onclick="notificationController.navigateToCallSettings()"
+   translate-compile></p>
 
+<p ng-if="notificationController.locatedinCallSettings()"
+   translate="hercules.notifications.add-call-service-connect.description-already-in-settings-page">
+</p>

@@ -140,6 +140,12 @@
       integration: 'https://reporting.appstaging.ciscoccservice.com/reporting/v1',
       prod: 'https://reporting.produs1.ciscoccservice.com/reporting/v1'
     },
+    CcfsUrl: {
+      dev: 'https://ccfs.produs1.ciscoccservice.com/v1/authorize?delegation=true&appType=sunlightdev&callbackUrl=',
+      cfe: 'https://ccfs.produs1.ciscoccservice.com/v1/authorize?delegation=true&appType=sunlightstaging&callbackUrl=',
+      integration: 'https://ccfs.produs1.ciscoccservice.com/v1/authorize?delegation=true&appType=sunlightstaging&callbackUrl=',
+      prod: 'https://ccfs.produs1.ciscoccservice.com/v1/authorize?delegation=true&appType=sunlight&callbackUrl='
+    },
     CalliopeUrl: {
       dev: 'https://calliope-integration.wbx2.com/calliope/api/authorization/v1',
       cfe: 'https://calliope-e.wbx2.com/calliope/api/authorization/v1',

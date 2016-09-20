@@ -13,7 +13,7 @@
    *    - call scope.downloadCsv()
    * /
    /* @ngInject */
-  function csvDownload($rootScope, $window, $q, $translate, $timeout, $modal, $state, CsvDownloadService, Notification) {
+  function csvDownload($rootScope, $window, $q, $translate, $timeout, $modal, $state, Authinfo, CsvDownloadService, Notification, FeatureToggleService) {
     var directive = {
       restrict: 'E',
       templateUrl: 'modules/core/csvDownload/csvDownload.tpl.html',
@@ -36,6 +36,15 @@
       scope.type = scope.type || CsvDownloadService.typeAny;
       scope.downloadCsv = downloadCsv;
       scope.goToDownload = goToDownload;
+      scope.newUserExportToggle = false;
+      // Allow Cisco org to download the new user report API
+      if (Authinfo.isCisco()) {
+        scope.newUserExportToggle = true;
+      } else {
+        FeatureToggleService.atlasNewUserExportGetStatus().then(function (result) {
+          scope.newUserExportToggle = result;
+        });
+      }
 
       ////////////////////
 
@@ -54,11 +63,12 @@
 
         if (csvType === CsvDownloadService.typeTemplate || csvType === CsvDownloadService.typeUser || csvType === CsvDownloadService.typeError) {
           startDownload(csvType);
-          CsvDownloadService.getCsv(csvType, tooManyUsers, FILENAME).then(function (url) {
+          CsvDownloadService.getCsv(csvType, tooManyUsers, FILENAME, scope.newUserExportToggle).then(function (url) {
             finishDownload(csvType, url);
           }).catch(function (response) {
-            if (response.status !== -1) {
-              Notification.errorResponse(response, 'firstTimeWizard.downloadError');
+            if ((_.isString(response) && response !== 'canceled')
+              || (_.isNumber(response.status) && response.status !== -1)) {
+              Notification.errorWithTrackingId(response, 'csvDownload.error');
             }
             flagDownloading(false);
             changeAnchorAttrToOriginalState();

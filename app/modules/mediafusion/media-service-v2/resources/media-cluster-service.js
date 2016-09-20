@@ -147,6 +147,7 @@
         provisioning: provisioning,
         upgradeAvailable: upgradeAvailable,
         upgradePossible: upgradeAvailable && !_.any(cluster.connectors, 'state', 'not_configured'),
+        upgradeWarning: upgradeAvailable && !_.any(cluster.connectors, 'state', 'offline'),
         hosts: _.map(hosts, function (host) {
           // 1 host = 1 connector (for a given type)
           var connector = _.find(connectors, 'hostname', host);
@@ -281,12 +282,23 @@
       return clusters;
     }
 
+    function getCluster(id) {
+      return clusterCache['mf_mgmt'][id];
+    }
+
+    function upgradeCluster(id) {
+      var connectorType = 'mf_mgmt';
+      var url = UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '/clusters/' + id + '/provisioning/actions/update/invoke?connectorType=' + connectorType + '&forced=true';
+      return $http.post(url);
+    }
+
     var hub = CsdmHubFactory.create();
     CsdmPoller.create(fetch, hub);
 
     return {
       fetch: fetch,
       getClusters: getClusters,
+      getCluster: getCluster,
       subscribe: hub.on,
       getOrganization: getOrganization,
       getClustersV2: getClustersV2,
@@ -297,6 +309,7 @@
       deleteV2Cluster: deleteV2Cluster,
       updateV2Cluster: updateV2Cluster,
       defuseV2Connector: defuseV2Connector,
+      upgradeCluster: upgradeCluster,
       moveV2Host: moveV2Host,
       getClustersByConnectorType: getClustersByConnectorType,
       getRunningStateSeverity: getRunningStateSeverity,
