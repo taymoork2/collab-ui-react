@@ -2282,6 +2282,7 @@
     "uploadedFile": "Uploaded File",
     "uploadFailed": "File upload failed, unable to connect. Please try again.",
     "dragAndDropWav": "Drag and Drop .wav file here or click to browse",
+    "import": "Import",
     "sayAndError": "For Say Messages and Error Messages",
     "callAssociatedAAPreview": "Call number associated with this auto attendant to preview.",
     "cancelUpload": "Are you sure you want to cancel this upload?",
