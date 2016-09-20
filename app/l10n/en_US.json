@@ -5240,7 +5240,7 @@
       "national": "National",
       "local": "Local"
     },
-    "vmprefix": "Voice Mailbox Prefix",
+    "vmprefix": "Voicemail Access Prefix",
     "outbounddigit": "Outbound Dial Digit"
   },
   "activation": {
