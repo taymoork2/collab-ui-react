@@ -78,7 +78,7 @@
 						<i class="icon icon-chevron-right" ng-click="componentVisible=true" ng-hide="componentVisible"></i>
 						<i class="icon icon-chevron-down" ng-click="componentVisible=false" ng-show="componentVisible"></i>
 						<span class="componentName">{{componentGroup.componentName}}</span>
-						<span class="isOverridden setColor" ng-hide="componentGroup.isOverridden" ng-click="getOverriddenComponent(componentGroup)">Overrid this status</span>
+						<span class="isOverridden setColor" ng-hide="componentGroup.isOverridden" ng-click="getOverriddenComponent(componentGroup)">Override this status</span>
 						<span class="isOverridden setColor" ng-show="componentGroup.isOverridden" ng-click="componentGroup.isOverridden=false">Use derived status</span>
 
 						<cs-select class="componentSelect" ng-model="componentGroup.statusObj" options="componentStatuses" is-disabled="componentGroup.isOverridden" on-change-fn="setSelectedStatus(componentGroup)"></cs-select>
