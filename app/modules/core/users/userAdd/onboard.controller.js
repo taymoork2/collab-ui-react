@@ -576,7 +576,7 @@
                   $scope.radioStates.careRadio = true;
                 }
               }
-            });
+            }, true);
           },
         function () {
           $scope.radioStates.careRadio = false;
