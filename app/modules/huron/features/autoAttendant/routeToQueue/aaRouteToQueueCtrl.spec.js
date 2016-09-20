@@ -96,13 +96,13 @@ describe('Controller: AARouteToQueueCtrl', function () {
     spyOn(QueueHelperService, 'listQueues').and.returnValue($q.when(queues));
   }));
 
-  describe('openTreatmentModal', function () {
+  describe('openQueueTreatmentModal', function () {
     it('should open the Modal on Validation success', function () {
       spyOn($modal, 'open').and.returnValue(fakeModal);
       var controller = $controller('AARouteToQueueCtrl', {
         $scope: $scope
       });
-      controller.openTreatmentModal();
+      controller.openQueueTreatmentModal();
       $scope.$apply();
       expect($modal.open).toHaveBeenCalled();
     });
