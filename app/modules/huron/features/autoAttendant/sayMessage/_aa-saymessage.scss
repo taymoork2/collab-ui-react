@@ -1,6 +1,10 @@
 .aa-message-panel {
+  width: 100%;
   @include vr-spacing(mt, 1);
   @include vr-spacing(mb, 1);
+  @media all and (min-width: 25rem) {
+    width: 21.5rem;
+  }
 
   & .aa-message-textarea {
     @include vr-spacing(mb, 1);
@@ -15,8 +19,7 @@
   & .aa-message-select-list {
     @include vr-spacing(mb, .75);
     .select-toggle {
-      display: inline-block;
-      min-width: 13.28rem;
+      width: 100%;
       @include vr-spacing(pr, 1.75);
     }
     .select-toggle > i {
