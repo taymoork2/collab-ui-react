@@ -485,20 +485,20 @@
           var currentProps = _.find(vm.hybridServicesUserProps, function (prop) {
             return prop.userId === user.uuid;
           });
-          if (!currentProps || !currentProps.resourceGroups) {
+          var oldCalProps = currentProps ? currentProps.resourceGroups['squared-fusion-cal'] : undefined;
+          var newCalProps = user.resourceGroups['squared-fusion-cal'];
+          var calResourceGroupChanged = oldCalProps !== newCalProps;
+          if (calResourceGroupChanged && !newCalProps) {
+            user.resourceGroups['squared-fusion-cal'] = ''; // Will clear the group in USS
+          }
+          var oldUCProps = currentProps ? currentProps.resourceGroups['squared-fusion-uc'] : undefined;
+          var newUCProps = user.resourceGroups['squared-fusion-uc'];
+          var ucResourceGroupChanged = oldUCProps !== newUCProps;
+          if (ucResourceGroupChanged && !newUCProps) {
+            user.resourceGroups['squared-fusion-uc'] = ''; // Will clear the group in USS
+          }
+          if (calResourceGroupChanged || ucResourceGroupChanged) {
             updatedUserProps.push({ userId: user.uuid, resourceGroups: user.resourceGroups });
-          } else {
-            var calResourceGroupChanged = currentProps.resourceGroups['squared-fusion-cal'] !== user.resourceGroups['squared-fusion-cal'];
-            var ucResourceGroupChanged = currentProps.resourceGroups['squared-fusion-uc'] !== user.resourceGroups['squared-fusion-uc'];
-            if (calResourceGroupChanged && !user.resourceGroups['squared-fusion-cal']) {
-              user.resourceGroups['squared-fusion-cal'] = ''; // Will clear the group in USS
-            }
-            if (ucResourceGroupChanged && !user.resourceGroups['squared-fusion-uc']) {
-              user.resourceGroups['squared-fusion-uc'] = ''; // Will clear the group in USS
-            }
-            if (calResourceGroupChanged || ucResourceGroupChanged) {
-              updatedUserProps.push({ userId: user.uuid, resourceGroups: user.resourceGroups });
-            }
           }
         });
         if (updatedUserProps.length > 0) {
@@ -514,7 +514,7 @@
       function getResourceGroup(name) {
         return _.find(vm.resourceGroups, function (group) {
           // Remove commas from the name as the CSV export will have stripped these
-          return group.name.replace(/,/g, '') === name;
+          return group.name && group.name.replace(/,/g, '') === name;
         });
       }
 
