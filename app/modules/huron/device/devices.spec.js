@@ -146,7 +146,7 @@ describe('Controller: DevicesCtrlHuron', function () {
         controller.resetCode();
         $scope.$apply();
       });
-      it('on failure should not the wizarState with activation code from  OtpService ', function () {
+      it('on failure should not the wizardState with activation code from OtpService ', function () {
         expect($state.go.calls.count()).toEqual(0);
       });
     });
@@ -158,7 +158,7 @@ describe('Controller: DevicesCtrlHuron', function () {
         controller.resetCode();
         $scope.$apply();
       });
-      it('on success should set the wizarState with activation code from  OtpService ', function () {
+      it('on success should set the wizardState with activation code from OtpService ', function () {
         expect($state.go).toHaveBeenCalled();
         expect($state.go.calls.mostRecent().args[1].wizard.state().data.code.code).toEqual('code1');
       });
