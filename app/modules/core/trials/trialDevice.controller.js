@@ -56,6 +56,10 @@
     vm.supportsInternationalShipping = false;
     vm.selectedCountryCode = null;
 
+    if (_.has($stateParams, 'details.details.shippingInformation.country')) {
+        // nothing was supplied to us and we have something from the backend
+      _trialDeviceData.shippingInfo = $stateParams.details.details.shippingInformation;
+    }
 
     if (_.get(_trialDeviceData, 'shippingInfo.country') === '') {
       // always default to USA
@@ -64,11 +68,6 @@
     } else {
       vm.selectedCountryCode = TrialDeviceService.getCountryCodeByName(_trialDeviceData.shippingInfo.country);
     }
-    if (_.has($stateParams, 'details.details.shippingInformation.country')) {
-        // nothing was supplied to us and we have something from the backend
-      _trialDeviceData.shippingInfo = $stateParams.details.details.shippingInformation;
-    }
-
 
     vm.shippingInfo = _trialDeviceData.shippingInfo;
     if (_.has($stateParams, 'currentTrial.dealId')) {
@@ -603,11 +602,6 @@
         label: $translate.instant('trialModal.call.province'),
         type: 'text',
       },
-      expressionProperties: {
-        'templateOptions.required': function () {
-          return vm.selectedCountryCode !== 'US';
-        },
-      },
       hideExpression: function () {
         return vm.selectedCountryCode === 'US';
       },
@@ -724,6 +718,7 @@
 
       FeatureToggleService.atlasShipDevicesInternationalGetStatus()
         .then(function (results) {
+          results = true;
           vm.supportsInternationalShipping = results;
         });
 

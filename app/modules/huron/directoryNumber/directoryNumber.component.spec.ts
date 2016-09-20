@@ -10,12 +10,12 @@ describe('Component: directoryNumber', () => {
   let internalNumbers: string[] = [
     '12345',
     '67890',
-    '75023'
+    '75023',
   ];
 
   let externalNumbers: string[] = [
     '+12345',
-    '+67890'
+    '+67890',
   ];
 
   beforeEach(function () {
@@ -24,13 +24,7 @@ describe('Component: directoryNumber', () => {
       '$scope',
       '$timeout'
     );
-    this.$scope.esnPrefix;
-    this.$scope.internalNumbers;
-    this.$scope.internalOptions;
-    this.$scope.internalSelected;
     this.$scope.internalRefreshFn = jasmine.createSpy('internalRefreshFn');
-    this.$scope.externalNumbers;
-    this.$scope.externalOptions;
     this.$scope.externalRefreshFn = jasmine.createSpy('externalRefreshFn');
     this.$scope.onChangeFn = jasmine.createSpy('onChangeFn');
   });

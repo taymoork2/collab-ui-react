@@ -4,7 +4,7 @@
   angular.module('Core')
     .controller('SetupWizardCtrl', SetupWizardCtrl);
 
-  function SetupWizardCtrl($scope, $stateParams, Authinfo, Config, FeatureToggleService, Orgservice, Utils) {
+  function SetupWizardCtrl($http, $scope, $stateParams, Authinfo, Config, FeatureToggleService, Orgservice, UrlConfig, Utils) {
 
     $scope.tabs = [];
     var tabs = [{
@@ -134,6 +134,18 @@
         });
       }
 
+      if (Authinfo.isCare()) {
+        FeatureToggleService.atlasCareTrialsGetStatus().then(function (careToggle) {
+          if (careToggle) {
+            $http.get(UrlConfig.getAdminServiceUrl() + 'userauthinfo').then(function (authData) {
+              if (!isPartner(authData.data)) {
+                addCareStep();
+              }
+            });
+          }
+        });
+      }
+
       if (!Authinfo.isSetupDone()) {
         $scope.tabs.push({
           name: 'finish',
@@ -182,6 +194,39 @@
           $scope.tabs.splice(index, 1);
         }
       });
+    }
+
+    function addCareStep() {
+      var careTab = {
+        name: 'careSettings',
+        label: 'firstTimeWizard.careSettings',
+        description: 'firstTimeWizard.careSettingsSub',
+        icon: 'icon-circle-contact-centre',
+        title: 'firstTimeWizard.careSettings',
+        controller: 'CareSettingsCtrl as careSettings',
+        steps: [{
+          name: 'csonboard',
+          template: 'modules/core/setupWizard/careSettings/careSettings.tpl.html'
+        }]
+      };
+
+      var userOrFinishTabIndex = _.findIndex($scope.tabs, function (tab) {
+        return (tab.name === 'finish' || tab.name === 'addUsers');
+      });
+
+      if (userOrFinishTabIndex === -1) { // addUsers and finish tab not found
+        $scope.tabs.push(careTab);
+      } else {
+        $scope.tabs.splice(userOrFinishTabIndex, 0, careTab);
+      }
+    }
+
+    function isPartner(authData) {
+      var roles = authData.roles;
+      if (_.indexOf(roles, 'PARTNER_USER') > -1 || _.indexOf(roles, 'PARTNER_ADMIN') > -1) {
+        return true;
+      }
+      return false;
     }
 
     function filterTabs(tabs) {

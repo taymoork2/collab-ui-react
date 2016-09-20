@@ -1,17 +1,16 @@
-import { IDirectoryNumber } from '../../../huron/overview/directoryNumberList.component';
-import { LineService, LineConsumerType, Number } from '../../../huron/lines/services';
 import { DialingType } from '../../../huron/dialing/index';
-import { DialingService } from '../../../huron/dialing/dialing.service';
-import { ActionItem } from '../../../core/components/sectionTitle/sectionTitle.component';
+import { DialingService } from '../../../huron/dialing';
+import { LineService, LineConsumerType, Line, LINE_CHANGE } from '../../../huron/lines/services';
+import { IActionItem } from '../../../core/components/sectionTitle/sectionTitle.component';
 import { IFeature } from '../../../core/components/featureList/featureList.component';
 
-class PlaceCallOverview {
+class PlaceCallOverview implements ng.IComponentController {
 
   public currentPlace;
-  public actionList: ActionItem[];
+  public actionList: IActionItem[];
   public features: IFeature[];
 
-  public directoryNumbers: Number[];
+  public directoryNumbers: Line[];
 
   /* @ngInject */
   constructor(
@@ -25,9 +24,8 @@ class PlaceCallOverview {
     private Notification
   ) {
     this.currentPlace = $stateParams.currentPlace;
-    this.directoryNumbers = this.currentPlace.numbers;
     $scope.$on(DialingType.INTERNATIONAL, (e, data) => {
-      this.DialingService.setInternationalDialing(data, LineConsumerType.PLACES, this.currentPlace.cisUuid).then(()=> {
+      this.DialingService.setInternationalDialing(data, LineConsumerType.PLACES, this.currentPlace.cisUuid).then(() => {
         this.DialingService.initializeDialing(LineConsumerType.PLACES, this.currentPlace.cisUuid).then(() => {
           this.initFeatures();
         });
@@ -36,7 +34,7 @@ class PlaceCallOverview {
       });
     });
     $scope.$on(DialingType.LOCAL, (e, data) => {
-      this.DialingService.setLocalDialing(data, LineConsumerType.PLACES, this.currentPlace.cisUuid).then(()=> {
+      this.DialingService.setLocalDialing(data, LineConsumerType.PLACES, this.currentPlace.cisUuid).then(() => {
         this.DialingService.initializeDialing(LineConsumerType.PLACES, this.currentPlace.cisUuid).then(() => {
           this.initFeatures();
         });
@@ -44,13 +42,17 @@ class PlaceCallOverview {
         Notification.errorResponse(response, 'internationalDialingPanel.error');
       });
     });
+    $scope.$on(LINE_CHANGE, (data) => {
+      this.initNumbers();
+    });
   }
 
-  private $onInit(): void {
+  public $onInit(): void {
     this.initActions();
     this.DialingService.initializeDialing(LineConsumerType.PLACES, this.currentPlace.cisUuid).then(() => {
       this.initFeatures();
     });
+    this.initNumbers();
   }
 
   private initActions(): void {
@@ -62,7 +64,7 @@ class PlaceCallOverview {
     }];
   }
 
-  private initFeatures():void {
+  private initFeatures(): void {
     this.features = [];
     let service: IFeature = {
       name: this.$translate.instant('telephonyPreview.internationalDialing'),
@@ -82,15 +84,20 @@ class PlaceCallOverview {
     this.features.push(service);
   }
 
+  private initNumbers(): void {
+    this.LineService.getLineList(LineConsumerType.PLACES, this.currentPlace.cisUuid)
+      .then(lines => this.directoryNumbers = lines);
+  }
+
   public featureActions(feature) {
-    this.$state.go('place-overview.communication.'+ feature, {
-      watcher: feature === 'local' ? DialingType.LOCAL: DialingType.INTERNATIONAL,
-      selected: feature === 'local'? this.DialingService.getLocalDialing(LineConsumerType.PLACES): this.DialingService.getInternationalDialing(LineConsumerType.PLACES),
+    this.$state.go('place-overview.communication.' + feature, {
+      watcher: feature === 'local' ? DialingType.LOCAL : DialingType.INTERNATIONAL,
+      selected: feature === 'local' ? this.DialingService.getLocalDialing(LineConsumerType.PLACES) : this.DialingService.getInternationalDialing(LineConsumerType.PLACES),
     });
   }
 }
 
-export class PlaceCallOverviewComponent {
+export class PlaceCallOverviewComponent implements ng.IComponentOptions {
   public controller = PlaceCallOverview;
   public templateUrl = 'modules/squared/places/callOverview/placeCallOverview.html';
 }

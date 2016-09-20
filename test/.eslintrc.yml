@@ -41,6 +41,7 @@
     config: true
     customers: true
     deleteUtils: true
+    createUtils: true
     describe: true
     disyncwizard: true
     download: true

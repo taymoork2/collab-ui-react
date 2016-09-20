@@ -26,7 +26,6 @@ module.exports = csp({
     ],
     frameSrc: [
       'https://buy.ciscospark.com',
-      'http://buy.ciscospark.com',
     ],
     connectSrc: [
       '\'self\'',
@@ -69,7 +68,8 @@ module.exports = csp({
       'https://*.webex.com',
       'https://api.mixpanel.com',
       'https://cdn.mxpnl.com',
-      'http://assets.adobedtm.com'
+      'http://assets.adobedtm.com',
+      'https://buy.ciscospark.com'
     ],
     styleSrc: [
       '\'self\'',

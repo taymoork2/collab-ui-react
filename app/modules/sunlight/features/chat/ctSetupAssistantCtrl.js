@@ -387,7 +387,7 @@
     };
 
     vm.isNamePageValid = function () {
-      return (vm.template.name !== '' && vm.validateNameLength());
+      return (vm.template.name !== '' && vm.validateNameLength() && vm.isTemplateNameValid());
     };
 
     function isProfilePageValid() {
@@ -483,6 +483,14 @@
     function isCustomerInformationPageValid() {
       return areAllTypesUnique() && areAllFixedFieldsValid() && areAllDynamicFieldsValid();
     }
+
+    vm.isTemplateNameValid = function () {
+      var templateName = vm.template.name;
+      if (templateName.indexOf('>') > -1 || templateName.indexOf('<') > -1) {
+        return false;
+      }
+      return true;
+    };
 
     function nextButton() {
       switch (vm.currentState) {

@@ -132,7 +132,8 @@
         controller: 'AssignClustersController',
         controllerAs: 'vm',
         templateUrl: 'modules/hercules/fusion-pages/resource-group-settings/assign-clusters.html',
-        type: 'small'
+        type: 'full',
+        windowClass: 'assign-clusters-modal',
       });
     }
 
