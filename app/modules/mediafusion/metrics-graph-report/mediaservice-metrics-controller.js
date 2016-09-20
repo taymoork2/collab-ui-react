@@ -33,6 +33,9 @@
     vm.allClusters = $translate.instant('mediaFusion.metrics.allclusters');
     vm.noData = $translate.instant('mediaFusion.metrics.nodata');
     vm.percentage = $translate.instant('mediaFusion.metrics.percentage');
+    vm.average_util = $translate.instant('mediaFusion.metrics.average_util');
+    vm.utilization = $translate.instant('mediaFusion.metrics.utilization');
+    vm.average_utilzation = $translate.instant('mediaFusion.metrics.avgutilization');
     vm.clusterOptions = [vm.allClusters];
     vm.clusterSelected = vm.clusterOptions[0];
     vm.clusterId = vm.clusterOptions[0];
@@ -119,6 +122,32 @@
         }, XhrNotificationService.notify);
     }
 
+    function getClusterName(graphs) {
+      vm.tempData = [];
+      angular.forEach(graphs, function (value) {
+        var clusterName = _.findKey(vm.Map, function (val) {
+          return val === value.valueField;
+        });
+        if (angular.isDefined(clusterName)) {
+          value.title = clusterName;
+          if (vm.allClusters !== vm.clusterId && vm.clusterSelected !== value.title) {
+            value.lineAlpha = 0.2;
+          }
+          value.balloonText = '<span class="graph-text">' + value.title + ' ' + vm.utilization + ' <span class="graph-number">[[value]]</span></span>';
+          value.lineThickness = 3;
+          vm.tempData.push(value);
+        }
+        if (value.valueField === vm.average_util) {
+          value.title = vm.average_utilzation;
+          value.dashLength = 4;
+          value.balloonText = '<span class="graph-text">' + value.title + ' <span class="graph-number">[[value]]</span></span>';
+          value.lineThickness = 2;
+          vm.tempData.push(value);
+        }
+      });
+      return vm.tempData;
+    }
+
     function clusterUpdate() {
       displayDate();
       vm.callVolumeStatus = vm.REFRESH;
@@ -195,7 +224,7 @@
     function setDummyData() {
       setCallVolumeGraph(DummyMetricsReportService.dummyCallVolumeData(vm.timeSelected));
       setAvailabilityGraph(DummyMetricsReportService.dummyAvailabilityData(vm.timeSelected));
-      setUtilizationGraph(DummyMetricsReportService.dummyUtilizationData(vm.timeSelected));
+      setUtilizationGraph(DummyMetricsReportService.dummyUtilizationData(vm.timeSelected), DummyMetricsReportService.dummyUtilizationGraph());
       resizeCards();
     }
 
@@ -252,26 +281,50 @@
       });
     }
 
-    function setUtilizationGraph(data) {
-      var tempUtilizationChart = MetricsGraphService.setUtilizationGraph(data, vm.utilizationChart, vm.clusterSelected, vm.timeSelected.label);
+    function setUtilizationGraph(data, graphs) {
+      var tempUtilizationChart = MetricsGraphService.setUtilizationGraph(data, graphs, vm.utilizationChart, vm.clusterSelected, vm.timeSelected.label);
       if (tempUtilizationChart !== null && angular.isDefined(tempUtilizationChart)) {
         vm.UtilizationChart = tempUtilizationChart;
       }
     }
 
     function setUtilizationData() {
-      MetricsReportService.getUtilizationData(vm.timeSelected, vm.clusterId).then(function (response) {
-        if (response === vm.ABORT) {
-          return;
-        } else if (!angular.isDefined(response.graphData) || response.graphData.length === 0) {
-          vm.utilizationStatus = vm.EMPTY;
-        } else {
-          setUtilizationGraph(response.graphData);
-          vm.card = '';
-          vm.utilizationStatus = vm.SET;
-        }
-        resizeCards();
-      });
+      if (vm.clusterId === vm.allClusters) {
+        MetricsReportService.getUtilizationData(vm.timeSelected, vm.allClusters).then(function (response) {
+          if (response === vm.ABORT) {
+            return;
+          } else if (!angular.isDefined(response.graphData) || !angular.isDefined(response.graphs) || response.graphData.length === 0) {
+            vm.utilizationStatus = vm.EMPTY;
+          } else {
+            vm.utilizationClusterName = getClusterName(response.graphs);
+            setUtilizationGraph(response.graphData, vm.utilizationClusterName);
+            vm.card = '';
+            vm.utilizationStatus = vm.SET;
+          }
+          resizeCards();
+        });
+      } else {
+        MetricsReportService.getUtilizationData(vm.timeSelected, vm.allClusters).then(function (response) {
+          if (response === vm.ABORT) {
+            return;
+          } else if (!angular.isDefined(response.graphData) || !angular.isDefined(response.graphs) || response.graphData.length === 0) {
+            vm.utilizationStatus = vm.EMPTY;
+          } else {
+            for (var i = 0; i <= response.graphs.length; i++) {
+              if (response.graphs[i].valueField !== vm.clusterId) {
+                vm.utilizationStatus = vm.EMPTY;
+              } else {
+                vm.utilizationClusterName = getClusterName(response.graphs);
+                setUtilizationGraph(response.graphData, vm.utilizationClusterName);
+                vm.card = '';
+                vm.utilizationStatus = vm.SET;
+                break;
+              }
+            }
+          }
+          resizeCards();
+        });
+      }
     }
 
     function setTotalCallsData() {

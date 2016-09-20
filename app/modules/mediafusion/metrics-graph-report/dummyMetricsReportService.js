@@ -7,7 +7,8 @@
     return {
       dummyCallVolumeData: dummyCallVolumeData,
       dummyAvailabilityData: dummyAvailabilityData,
-      dummyUtilizationData: dummyUtilizationData
+      dummyUtilizationData: dummyUtilizationData,
+      dummyUtilizationGraph: dummyUtilizationGraph
     };
 
     function dummyAvailabilityData(filter) {
@@ -132,49 +133,49 @@
       if (filter.value === 0) {
         for (var i = 288; i >= 1; i--) {
           dummyGraphVal.push({
-            timestamp: moment().subtract(i * 5, 'minutes').format(timeFormat),
-            average_cpu: Math.floor((Math.random() * 1) + 1),
-            peak_cpu: Math.floor((Math.random() * 1) + 1),
-            balloon: false,
-            colorOne: chartColors.dummyGrayLight,
-            colorTwo: chartColors.dummyGray
+            time: moment().subtract(i * 5, 'minutes').format(timeFormat),
+            average_util: Math.floor((Math.random() * 10) + 1),
+            balloon: false
           });
         }
       } else if (filter.value === 1) {
         for (i = 168; i >= 1; i--) {
           dummyGraphVal.push({
-            timestamp: moment().subtract(i, 'hours').format(timeFormat),
-            average_cpu: Math.floor((Math.random() * 1) + 1),
-            peak_cpu: Math.floor((Math.random() * 1) + 1),
-            balloon: false,
-            colorOne: chartColors.dummyGrayLight,
-            colorTwo: chartColors.dummyGray
+            time: moment().subtract(i, 'hours').format(timeFormat),
+            average_util: Math.floor((Math.random() * 10) + 1),
+            balloon: false
           });
         }
       } else if (filter.value === 2) {
         for (i = 180; i >= 0; i--) {
           dummyGraphVal.push({
-            timestamp: moment().subtract(i * 3, 'hours').format(timeFormat),
-            average_cpu: Math.floor((Math.random() * 1) + 1),
-            peak_cpu: Math.floor((Math.random() * 1) + 1),
-            balloon: false,
-            colorOne: chartColors.dummyGrayLight,
-            colorTwo: chartColors.dummyGray
+            time: moment().subtract(i * 3, 'hours').format(timeFormat),
+            average_util: Math.floor((Math.random() * 10) + 1),
+            balloon: false
           });
         }
       } else {
         for (i = 270; i >= 0; i--) {
           dummyGraphVal.push({
-            timestamp: moment().subtract(i * 8, 'hours').format(timeFormat),
-            average_cpu: Math.floor((Math.random() * 1) + 1),
-            peak_cpu: Math.floor((Math.random() * 1) + 1),
-            balloon: false,
-            colorOne: chartColors.dummyGrayLight,
-            colorTwo: chartColors.dummyGray
+            time: moment().subtract(i * 8, 'hours').format(timeFormat),
+            average_util: Math.floor((Math.random() * 10) + 1),
+            balloon: false
           });
         }
       }
       return dummyGraphVal;
+    }
+
+    function dummyUtilizationGraph() {
+      var dummyGraph = [];
+      dummyGraph.push({
+        title: "Avg Utilization",
+        valueField: "Avg Utilization",
+        dashLength: 4,
+        lineColor: chartColors.dummyGray,
+        showBalloon: false
+      });
+      return dummyGraph;
     }
   }
 })();

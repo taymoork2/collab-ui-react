@@ -1,30 +1,156 @@
 {
   "utilization": [{
-    "orgId": "2c3c9f9e-73d9-4460-a668-047162ff1bac",
-    "application": "media_agent",
-    "metricName": "average_cpu ,peak_cpu",
-    "cpuUtilValues": [{
-      "timestamp": "2016-07-10T06:30:00Z",
-      "average_cpu": 0.19,
-      "peak_cpu": 0.76
-    }, {
-      "timestamp": "2016-07-10T06:40:00Z",
-      "average_cpu": 0.19,
-      "peak_cpu": 0.76
-    }, {
-      "timestamp": "2016-07-10T06:50:00Z",
-      "average_cpu": 0.19,
-      "peak_cpu": 0.76
-    }, {
-      "timestamp": "2016-07-10T11:30:00Z",
-      "average_cpu": 0.19,
-      "peak_cpu": 0.76
-    }, {
-      "timestamp": "2016-07-10T11:40:00Z",
-      "average_cpu": 0.19,
-      "peak_cpu": 0.76
-    }],
-    "startTime": "2016-07-10T06:28:22Z",
-    "endTime": "2016-07-11T06:28:22Z"
-  }]
+  "chartData": [
+    {
+      "time": "2016-09-19T08:10:00Z",
+      "3968ec71-8075-4ef9-b9e9-18f2eb8c1fef": 0.02,
+      "fc0a6cc1-98e6-42d8-b366-d6e82e426c17": 0.55,
+      "548d05ce-99ac-4d78-a926-3f18afd88064": 0.09,
+      "8909455b-3018-44c6-adfd-2840978bb5c1": 0.05,
+      "82d4ff8b-9de5-41c5-9cf8-cdb23140e83d": 0.09,
+      "539ac9e5-943e-4e96-bfc5-b12cac060bcc": 0.02,
+      "7b315667-1808-40c8-b263-a9c2f9782b16": 0.1,
+      "f9ab1f5c-ce9f-4453-8f34-e86ed3bf9678": 0.02,
+      "f0efaeb6-e06a-478d-9f76-56ba7f71ccb7": 0.02,
+      "615209ed-98a3-4ab3-a1aa-033e5a0c1dc3": 0.07,
+      "ca110bd3-4043-41af-9ec6-f67d6feba2bb": 0.02,
+      "average_util": "0.1"
+    },
+    {
+      "time": "2016-09-19T08:20:00Z",
+      "615209ed-98a3-4ab3-a1aa-033e5a0c1dc3": 0.07,
+      "ca110bd3-4043-41af-9ec6-f67d6feba2bb": 0.02,
+      "548d05ce-99ac-4d78-a926-3f18afd88064": 0.1,
+      "3968ec71-8075-4ef9-b9e9-18f2eb8c1fef": 0.02,
+      "fc0a6cc1-98e6-42d8-b366-d6e82e426c17": 0.55,
+      "f0efaeb6-e06a-478d-9f76-56ba7f71ccb7": 0.02,
+      "539ac9e5-943e-4e96-bfc5-b12cac060bcc": 0.02,
+      "8909455b-3018-44c6-adfd-2840978bb5c1": 0.04,
+      "82d4ff8b-9de5-41c5-9cf8-cdb23140e83d": 0.09,
+      "f9ab1f5c-ce9f-4453-8f34-e86ed3bf9678": 0.02,
+      "7b315667-1808-40c8-b263-a9c2f9782b16": 0.09,
+      "average_util": "0.09"
+    },
+    {
+      "time": "2016-09-19T08:30:00Z",
+      "f9ab1f5c-ce9f-4453-8f34-e86ed3bf9678": 0.02,
+      "7b315667-1808-40c8-b263-a9c2f9782b16": 0.09,
+      "548d05ce-99ac-4d78-a926-3f18afd88064": 0.1,
+      "615209ed-98a3-4ab3-a1aa-033e5a0c1dc3": 0.08,
+      "ca110bd3-4043-41af-9ec6-f67d6feba2bb": 0.02,
+      "82d4ff8b-9de5-41c5-9cf8-cdb23140e83d": 0.08,
+      "f0efaeb6-e06a-478d-9f76-56ba7f71ccb7": 0.02,
+      "3968ec71-8075-4ef9-b9e9-18f2eb8c1fef": 0.02,
+      "fc0a6cc1-98e6-42d8-b366-d6e82e426c17": 0.58,
+      "8909455b-3018-44c6-adfd-2840978bb5c1": 0.04,
+      "539ac9e5-943e-4e96-bfc5-b12cac060bcc": 0.02,
+      "average_util": "0.1"
+    },
+    {
+      "time": "2016-09-19T08:40:00Z",
+      "8909455b-3018-44c6-adfd-2840978bb5c1": 0.04,
+      "539ac9e5-943e-4e96-bfc5-b12cac060bcc": 0.02,
+      "548d05ce-99ac-4d78-a926-3f18afd88064": 0.09,
+      "f9ab1f5c-ce9f-4453-8f34-e86ed3bf9678": 0.01,
+      "7b315667-1808-40c8-b263-a9c2f9782b16": 0.09,
+      "fc0a6cc1-98e6-42d8-b366-d6e82e426c17": 0.56,
+      "82d4ff8b-9de5-41c5-9cf8-cdb23140e83d": 0.09,
+      "615209ed-98a3-4ab3-a1aa-033e5a0c1dc3": 0.07,
+      "ca110bd3-4043-41af-9ec6-f67d6feba2bb": 0.02,
+      "3968ec71-8075-4ef9-b9e9-18f2eb8c1fef": 0.02,
+      "f0efaeb6-e06a-478d-9f76-56ba7f71ccb7": 0.02,
+      "average_util": "0.09"
+    },
+    
+    {
+      "time": "2016-09-19T23:40:00Z",
+      "f9ab1f5c-ce9f-4453-8f34-e86ed3bf9678": 0.02,
+      "f0efaeb6-e06a-478d-9f76-56ba7f71ccb7": 0.02,
+      "548d05ce-99ac-4d78-a926-3f18afd88064": 0.11,
+      "615209ed-98a3-4ab3-a1aa-033e5a0c1dc3": 0.07,
+      "539ac9e5-943e-4e96-bfc5-b12cac060bcc": 0.02,
+      "ca110bd3-4043-41af-9ec6-f67d6feba2bb": 0.02,
+      "e93ded4f-7a3b-4a46-b517-3cc5b565f9cc": 0.02,
+      "fc0a6cc1-98e6-42d8-b366-d6e82e426c17": 0.59,
+      "3968ec71-8075-4ef9-b9e9-18f2eb8c1fef": 0.03,
+      "7b315667-1808-40c8-b263-a9c2f9782b16": 0.09,
+      "8909455b-3018-44c6-adfd-2840978bb5c1": 0.04,
+      "82d4ff8b-9de5-41c5-9cf8-cdb23140e83d": 0.08,
+      "average_util": "0.09"
+    },
+    {
+      "time": "2016-09-19T23:50:00Z",
+      "8909455b-3018-44c6-adfd-2840978bb5c1": 0.04,
+      "82d4ff8b-9de5-41c5-9cf8-cdb23140e83d": 0.15,
+      "615209ed-98a3-4ab3-a1aa-033e5a0c1dc3": 0.07,
+      "539ac9e5-943e-4e96-bfc5-b12cac060bcc": 0.02,
+      "e93ded4f-7a3b-4a46-b517-3cc5b565f9cc": 0.02,
+      "fc0a6cc1-98e6-42d8-b366-d6e82e426c17": 0.56,
+      "f9ab1f5c-ce9f-4453-8f34-e86ed3bf9678": 0.01,
+      "f0efaeb6-e06a-478d-9f76-56ba7f71ccb7": 0.02,
+      "ca110bd3-4043-41af-9ec6-f67d6feba2bb": 0.02,
+      "3968ec71-8075-4ef9-b9e9-18f2eb8c1fef": 0.02,
+      "548d05ce-99ac-4d78-a926-3f18afd88064": 0.09,
+      "7b315667-1808-40c8-b263-a9c2f9782b16": 0.09,
+      "average_util": "0.09"
+    }
+  ],
+  "graphs": [
+    {
+      "title": "7b315667-1808-40c8-b263-a9c2f9782b16",
+      "valueField": "7b315667-1808-40c8-b263-a9c2f9782b16"
+    },
+    {
+      "title": "3968ec71-8075-4ef9-b9e9-18f2eb8c1fef",
+      "valueField": "3968ec71-8075-4ef9-b9e9-18f2eb8c1fef"
+    },
+    {
+      "title": "8909455b-3018-44c6-adfd-2840978bb5c1",
+      "valueField": "8909455b-3018-44c6-adfd-2840978bb5c1"
+    },
+    {
+      "title": "f0efaeb6-e06a-478d-9f76-56ba7f71ccb7",
+      "valueField": "f0efaeb6-e06a-478d-9f76-56ba7f71ccb7"
+    },
+    {
+      "title": "e93ded4f-7a3b-4a46-b517-3cc5b565f9cc",
+      "valueField": "e93ded4f-7a3b-4a46-b517-3cc5b565f9cc"
+    },
+    {
+      "title": "615209ed-98a3-4ab3-a1aa-033e5a0c1dc3",
+      "valueField": "615209ed-98a3-4ab3-a1aa-033e5a0c1dc3"
+    },
+    {
+      "title": "548d05ce-99ac-4d78-a926-3f18afd88064",
+      "valueField": "548d05ce-99ac-4d78-a926-3f18afd88064"
+    },
+    {
+      "title": "ca110bd3-4043-41af-9ec6-f67d6feba2bb",
+      "valueField": "ca110bd3-4043-41af-9ec6-f67d6feba2bb"
+    },
+    {
+      "title": "fc0a6cc1-98e6-42d8-b366-d6e82e426c17",
+      "valueField": "fc0a6cc1-98e6-42d8-b366-d6e82e426c17"
+    },
+    {
+      "title": "82d4ff8b-9de5-41c5-9cf8-cdb23140e83d",
+      "valueField": "82d4ff8b-9de5-41c5-9cf8-cdb23140e83d"
+    },
+    {
+      "title": "f9ab1f5c-ce9f-4453-8f34-e86ed3bf9678",
+      "valueField": "f9ab1f5c-ce9f-4453-8f34-e86ed3bf9678"
+    },
+    {
+      "title": "539ac9e5-943e-4e96-bfc5-b12cac060bcc",
+      "valueField": "539ac9e5-943e-4e96-bfc5-b12cac060bcc"
+    },
+    {
+      "title": "average_util",
+      "valueField": "average_util"
+    }
+  ],
+  "startTime": "2016-09-19T08:05:51Z",
+  "endTime": "2016-09-20T08:05:51Z",
+  "orgId": "2c3c9f9e-73d9-4460-a668-047162ff1bac"
+}]
 }

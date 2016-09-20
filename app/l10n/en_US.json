@@ -3544,7 +3544,10 @@
       "redirectedcalls": "Redirected by this Cluster",
       "nodata": "Data Not Available",
       "allclusters": "All Clusters",
-      "percentage": "%"
+      "percentage": "%",
+      "average_util": "average_util",
+      "utilization": "Utilization",
+      "avgutilization": "Avg Utilization"
     },
     "serviceStatus": {
       "unknown": "Status unknown",
