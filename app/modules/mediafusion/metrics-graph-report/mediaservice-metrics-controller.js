@@ -33,7 +33,6 @@
     vm.allClusters = $translate.instant('mediaFusion.metrics.allclusters');
     vm.noData = $translate.instant('mediaFusion.metrics.nodata');
     vm.percentage = $translate.instant('mediaFusion.metrics.percentage');
-    vm.average_util = $translate.instant('mediaFusion.metrics.average_util');
     vm.utilization = $translate.instant('mediaFusion.metrics.utilization');
     vm.average_utilzation = $translate.instant('mediaFusion.metrics.avgutilization');
     vm.clusterOptions = [vm.allClusters];
@@ -135,15 +134,14 @@
           }
           value.balloonText = '<span class="graph-text">' + value.title + ' ' + vm.utilization + ' <span class="graph-number">[[value]]</span></span>';
           value.lineThickness = 3;
-          vm.tempData.push(value);
         }
-        if (value.valueField === vm.average_util) {
+        if (value.valueField === 'average_util') {
           value.title = vm.average_utilzation;
           value.dashLength = 4;
           value.balloonText = '<span class="graph-text">' + value.title + ' <span class="graph-number">[[value]]</span></span>';
           value.lineThickness = 2;
-          vm.tempData.push(value);
         }
+        vm.tempData.push(value);
       });
       return vm.tempData;
     }

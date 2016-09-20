@@ -2,7 +2,9 @@
   'use strict';
   angular.module('Mediafusion').service('DummyMetricsReportService', DummyMetricsReportService);
   /* @ngInject */
-  function DummyMetricsReportService(chartColors) {
+  function DummyMetricsReportService($translate, chartColors) {
+    var vm = this;
+    vm.average_utilzation = $translate.instant('mediaFusion.metrics.avgutilization');
     var timeFormat = "YYYY-MM-DDTHH:mm:ss";
     return {
       dummyCallVolumeData: dummyCallVolumeData,
@@ -169,8 +171,8 @@
     function dummyUtilizationGraph() {
       var dummyGraph = [];
       dummyGraph.push({
-        title: "Avg Utilization",
-        valueField: "Avg Utilization",
+        title: vm.average_utilzation,
+        valueField: vm.average_utilzation,
         dashLength: 4,
         lineColor: chartColors.dummyGray,
         showBalloon: false

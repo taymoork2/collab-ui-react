@@ -3545,7 +3545,6 @@
       "nodata": "Data Not Available",
       "allclusters": "All Clusters",
       "percentage": "%",
-      "average_util": "average_util",
       "utilization": "Utilization",
       "avgutilization": "Avg Utilization"
     },
