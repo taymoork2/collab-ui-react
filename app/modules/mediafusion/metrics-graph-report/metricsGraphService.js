@@ -7,7 +7,6 @@
     var COLUMN = 'column';
     var AXIS = 'axis';
     var NUMFORMAT = 'numFormat';
-    //var SMOOTHLINED = 'smoothedLine';
     var GUIDEAXIS = 'guideaxis';
     var LEGEND = 'legend';
     // variables for the call volume section
@@ -226,7 +225,6 @@
       var ExportFileName = 'MediaService_Utilization_' + cluster + '_' + daterange + '_' + new Date();
 
       var chartData = CommonMetricsGraphService.getBaseStackSerialGraph(data, startDuration, valueAxes, graphs, 'time', catAxis, getBaseExportForGraph(exportFields, ExportFileName, columnNames));
-      //chartData.numberFormatter = CommonMetricsGraphService.getBaseVariable(NUMFORMAT);
       chartData.legend = CommonMetricsGraphService.getBaseVariable(LEGEND);
       chartData.legend.labelText = '[[title]]';
       chartData.legend.useGraphSettings = true;

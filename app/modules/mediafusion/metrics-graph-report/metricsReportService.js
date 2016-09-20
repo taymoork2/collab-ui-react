@@ -2,7 +2,7 @@
   'use strict';
   angular.module('Mediafusion').service('MetricsReportService', MetricsReportService);
   /* @ngInject */
-  function MetricsReportService($http, $translate, $q, Authinfo, Notification, Log, chartColors, UrlConfig, $log) {
+  function MetricsReportService($http, $translate, $q, Authinfo, Notification, Log, chartColors, UrlConfig) {
     var urlBase = UrlConfig.getAthenaServiceUrl() + '/organizations/' + Authinfo.getOrgId();
     var utilizationUrl = '/utilization';
     var callVolumeUrl = '/call_volume';
@@ -201,7 +201,6 @@
       returnDataArray.push(endDate);
       returnData.graphData = returnDataArray;
       returnData.graphs = graphs;
-      $log.log("Graph" + JSON.stringify(returnData));
       return returnData;
     }
 
