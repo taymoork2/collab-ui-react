@@ -23,7 +23,7 @@
     </div>
     
     <!-- manual number entry -->
-    <div class="cs-form__section" ng-hide="pstnTrial.trialData.details.pstnProvider.apiImplementation! == swivel">
+    <div class="cs-form__section" ng-hide="pstnTrial.trialData.details.pstnProvider.apiImplementation!== 'SWIVEL'">
       <div class="section__info">
         <h4 class="section__title" translate="trialModal.pstn.phoneNumbers"></h4>
         <h6 class="section__description" translate="trialModal.pstn.pleaseAdd"></h6>
@@ -40,7 +40,7 @@
     </div>
     
     <!-- provider specific options -->
-    <div ng-show="pstnTrial.trialData.details.pstnProvider.apiImplementation! == swivel">
+    <div ng-show="pstnTrial.trialData.details.pstnProvider.apiImplementation!== 'SWIVEL'">
       
       <!-- legal info -->
       <div class="cs-form__section">
