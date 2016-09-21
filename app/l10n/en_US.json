@@ -1337,9 +1337,7 @@
     "tryAgain": "Try another Search",
     "licenseWarningTitle": "License",
     "licenseWarningHeader": "There is a problem with the license for this service.",
-    "licenseSuspendedWarning": "Your collaboration device licenses are suspended.",
-    "retrieveDevicesFail": "Failed to load device information",
-    "retrieveKemFail": "Failed to retrieve key expansion module count."
+    "licenseSuspendedWarning": "Your collaboration device licenses are suspended."
   },
   "hercules": {
     "page_title": "Connector Management",
@@ -2188,6 +2186,8 @@
     "modalDescription": "Auto attendants play customized prompts and provide callers with menu options for routing their calls through your system.",
     "namePlaceholder": "Enter Name",
     "repeatMenu": "Repeat",
+    "queueSettings": "Queue Settings",
+    "maxWaitTime": "Max Wait Time",
     "errorReadCe": "Failed to read {{name}}: {{statusText}} ({{status}}).",
     "successCreateCe": "{{name}} created successfully.",
     "successDeleteCe": "{{name}} deleted successfully.",
@@ -2288,6 +2288,18 @@
     "sayMessageVoice": "Voice",
     "sayMessageInvalidChar": "Invalid character. Character '{{char}}' is not allowed.",
     "messageType": "Message Type",
+    "destinationHelpMessage": "This is where the call is routed if not answered by the queue" ,
+    "destinationLabel": "Destination" ,
+    "destinations": {
+     "AutoAttendant": "Auto Attendant",
+      "HuntGroup":  "Hunt Group" ,
+      "Queue": "Queue",
+      "User": "User",
+      "Voicemail": "Voicemail",
+      "ExternalPhone": "External Phone",
+      "Disconnect": "Disconnect"
+  },
+    "fallbackLabel": "Fallback" ,
     "uploadedFile": "Uploaded File",
     "uploadFailed": "File upload failed, unable to connect. Please try again.",
     "dragAndDropWav": "Drag and Drop .wav file here",
@@ -3294,7 +3306,7 @@
   },
   "generateActivationCodeModal": {
     "title": "Activation Code",
-    "activateBody": "Plug in your new Cisco desk phone or TelePresence device and enter the activation code when you are prompted or use the device camera to scan the QR code.",
+    "activateBody": "Plug in the desk phone belonging to <b>{{belongsTo}}</b> and enter the activation code when prompted or use the device camera to scan the QR code, if possible. A new activation code can be created from the Users page after this code expires.",
     "emailCode": "Email",
     "copyToClipboard": "Copy",
     "print": "Print",
@@ -4339,6 +4351,7 @@
     "Unknown": "Unknown",
     "Inactive": "Inactive Account",
     "RequiresActivation": "Requires Activation",
+    "WithDevices": "With Devices",
     "upgradeChannels": {
       "Stable": "Stable",
       "Latest": "Latest",
@@ -4404,7 +4417,7 @@
       },
       "inactive": {
         "type": "Inactive Account",
-        "message": "There exists an account for a device, but no corresponding device or activation code. You can probably delete this account."
+        "message": "An account exists for a device, but there's no corresponding device or activation code. You can delete this account."
       },
       "unknown": {
         "type": "Unknown Error Occurred",
@@ -4479,7 +4492,7 @@
     "typeHeader": "Type",
     "deviceHeader": "No. of Devices",
     "actionHeader": "Actions",
-    "featuresHeader": "Features",
+    "servicesHeader": "Services",
     "placeAdd": "Add Place",
     "placeError": "Add Place failed.",
     "deletePlace": "Delete Place",
