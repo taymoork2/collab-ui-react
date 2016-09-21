@@ -43,7 +43,7 @@ describe('Partner Reports', function () {
       utils.expectIsDisplayed(reports.partnerActiveHeader);
       utils.expectIsDisplayed(reports.activePartnerDescription);
       utils.expectTextToBeSet(reports.activePartnerDescription, lowerTime[0]);
-      utils.expectIsDisplayed(reports.activeUsers);
+      utils.expectIsDisplayed(reports.activeUsersChart);
 
       // most active users
       utils.expectIsNotDisplayed(reports.partnermostActiveHeader);
@@ -91,7 +91,7 @@ describe('Partner Reports', function () {
       // engagement graphs
       utils.expectIsDisplayed(reports.partnerActiveHeader);
       utils.expectIsDisplayed(reports.activePartnerDescription);
-      utils.expectIsDisplayed(reports.activeUsers);
+      utils.expectIsDisplayed(reports.activeUsersChart);
 
       utils.expectIsDisplayed(reports.activePopulationHeader);
       utils.expectIsDisplayed(reports.activePopulationDescription);
@@ -110,7 +110,7 @@ describe('Partner Reports', function () {
       utils.click(reports.quality);
 
       // engagement graphs
-      utils.expectIsNotDisplayed(reports.activeUsers);
+      utils.expectIsNotDisplayed(reports.activeUsersChart);
       utils.expectIsNotDisplayed(reports.activePopulationGraph);
       utils.expectIsNotDisplayed(reports.registeredEndpointsTable);
 
@@ -131,7 +131,7 @@ describe('Partner Reports', function () {
       utils.expectIsDisplayed(reports.partnerActiveHeader);
       utils.expectIsDisplayed(reports.activePartnerDescription);
       utils.expectTextToBeSet(reports.activePartnerDescription, lowerTime[1]);
-      utils.expectIsDisplayed(reports.activeUsers);
+      utils.expectIsDisplayed(reports.activeUsersChart);
 
       // most active users
       utils.expectIsNotDisplayed(reports.partnermostActiveHeader);

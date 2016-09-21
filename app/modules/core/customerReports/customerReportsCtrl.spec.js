@@ -186,7 +186,7 @@ describe('Controller: Customer Reports Ctrl', function () {
           expect(DummyCustomerReportService.dummyMetricsData).toHaveBeenCalled();
           expect(DummyCustomerReportService.dummyDeviceData).toHaveBeenCalledWith(timeOptions[0]);
 
-          expect(CustomerReportService.getActiveUserData).toHaveBeenCalledWith(timeOptions[0]);
+          expect(CustomerReportService.getActiveUserData).toHaveBeenCalledWith(timeOptions[0], false);
           expect(CustomerReportService.getMostActiveUserData).toHaveBeenCalledWith(timeOptions[0]);
           expect(CustomerReportService.getAvgRoomData).toHaveBeenCalledWith(timeOptions[0]);
           expect(CustomerReportService.getFilesSharedData).toHaveBeenCalledWith(timeOptions[0]);
@@ -256,7 +256,7 @@ describe('Controller: Customer Reports Ctrl', function () {
         expect(DummyCustomerReportService.dummyMetricsData).toHaveBeenCalled();
         expect(DummyCustomerReportService.dummyDeviceData).toHaveBeenCalledWith(timeOptions[1]);
 
-        expect(CustomerReportService.getActiveUserData).toHaveBeenCalledWith(timeOptions[1]);
+        expect(CustomerReportService.getActiveUserData).toHaveBeenCalledWith(timeOptions[1], false);
         expect(CustomerReportService.getAvgRoomData).toHaveBeenCalledWith(timeOptions[1]);
         expect(CustomerReportService.getFilesSharedData).toHaveBeenCalledWith(timeOptions[1]);
         expect(CustomerReportService.getMediaQualityData).toHaveBeenCalledWith(timeOptions[1]);

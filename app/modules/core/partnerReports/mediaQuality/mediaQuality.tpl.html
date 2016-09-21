@@ -8,7 +8,7 @@
     </header>
   <section>
       <p translate="mediaQuality.description"></p>
-      <div id="mediaQualityDiv" class="barchart" ng-class="{'active-chart': !nav.isEmpty(nav.mediaQualityRefresh) && !nav.isRefresh(nav.mediaQualityRefresh)}"></div>
+      <div id="mediaQualityChart" class="barchart" ng-class="{'active-chart': !nav.isEmpty(nav.mediaQualityRefresh) && !nav.isRefresh(nav.mediaQualityRefresh)}"></div>
       <div id="mediaQualityRefreshDiv" class="spinner-position" ng-if="nav.isRefresh(nav.mediaQualityRefresh)">
         <i class='icon icon-spinner icon-2x'></i>
       </div>
