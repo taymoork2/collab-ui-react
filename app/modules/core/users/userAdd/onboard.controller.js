@@ -477,6 +477,20 @@
     $scope.careFeatures.push(new ServiceFeature($translate.instant('onboardModal.careFree'), 0, 'careRadio', new FakeLicense('freeCareService')));
     $scope.currentUser = $stateParams.currentUser;
 
+    $scope.currentUserDisplayName = function () {
+      if (_.isObject($scope.currentUser)) {
+        if (!_.isEmpty($scope.currentUser.displayName)) {
+          return _.trim($scope.currentUser.displayName);
+        } else if (_.isObject($scope.currentUser.name) && (!_.isEmpty($scope.currentUser.name.givenName) || !_.isEmpty($scope.currentUser.name.familyName))) {
+          return _.trim(($scope.currentUser.name.givenName || '') + ' ' + ($scope.currentUser.name.familyName || ''));
+        } else if (!_.isEmpty($scope.currentUser.userName)) {
+          return _.trim($scope.currentUser.userName);
+        }
+      }
+      // if all else fails, return Unknown
+      return _.trim($translate.instant('common.unknown'));
+    };
+
     if ($scope.currentUser) {
       userEnts = $scope.currentUser.entitlements;
       userLicenseIds = $scope.currentUser.licenseID;
