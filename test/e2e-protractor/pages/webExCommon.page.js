@@ -92,7 +92,7 @@ var WebExCommon = function () {
   //BTS 6 (configure)
   this.BTS6 = {
     siteUrl: 't31test-ee.webex.com',
-    testAdminUsername: 'provteam+t31ee@csgtrials.webex.com',
+    testAdminUsername: 'T31-EE-lhsieh@mailinator.com',
     testAdminPassword: 'Cisco!23'
   };
 
