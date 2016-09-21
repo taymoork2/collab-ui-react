@@ -4403,7 +4403,7 @@
       },
       "inactive": {
         "type": "Inactive Account",
-        "message": "There exists an account for a device, but no corresponding device or activation code. You can probably delete this account."
+        "message": "An account exists for a device, but there's no corresponding device or activation code. You can delete this account."
       },
       "unknown": {
         "type": "Unknown Error Occurred",
