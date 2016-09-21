@@ -27,7 +27,7 @@
     link: '/users'
   }, {
     tab: 'placeTab',
-    icon: 'icon-meeting-room',
+    icon: 'icon-location',
     title: 'tabs.placeTab',
     feature: 'csdm-places',
     state: 'places',
