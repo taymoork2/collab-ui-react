@@ -5174,7 +5174,8 @@
     "userStatuses": {
       "active": "Active",
       "inactive": "Inactive",
-      "pending": "Invite Pending",
+      "invite-pending": "Invite Pending",
+      "onboarding-pending": "Onboarding Pending",
       "transient": "Transient",
       "fraud": "Fraud",
       "compliance": "Compliance",
