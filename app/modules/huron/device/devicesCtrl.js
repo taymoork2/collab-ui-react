@@ -49,7 +49,7 @@
             function: 'showCode',
             title: 'addDeviceWizard.newDevice',
             deviceType: 'huron',
-            deviceName: vm.deviceName,
+            deviceName: vm.currentUser.displayName,
             activationCode: code.code,
             code: code,
             expiryTime: code.friendlyExpiresOn,
