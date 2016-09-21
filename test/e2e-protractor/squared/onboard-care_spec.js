@@ -2,7 +2,7 @@
 
 /* global LONG_TIMEOUT */
 
-describe('Onboard users with Care Service', function () {
+xdescribe('Onboard users with Care Service', function () {
   // TODO : test cases to be enabled once we have sunlight integration org
   var testUser = utils.randomTestGmailwithSalt('care');
   var LICENSE = users.paidCareCheckbox;
