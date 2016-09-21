@@ -951,6 +951,7 @@
     "assign": "Assign",
     "play": "Play",
     "done": "Done",
+    "reset": "Reset",
     "begin": "Begin",
     "back": "Back",
     "finish": "Finish",
@@ -1820,7 +1821,10 @@
       "resourceGroupHeading": "Resource Group",
       "setDescription": "Select the Resource Group the user is assigned to for this service.",
       "noGroupSelected": "None",
-      "failedToSetGroup": "Failed to set the Resource Group"
+      "failedToSetGroup": "Failed to set Resource Group.",
+      "resourceGroupSaved": "Resource Group saved.",
+      "groupHasBeenDeleted": "The user is assigned to a Resource Group that can no longer be found. Reset the user's Resource Group to restore service.",
+      "groupIsEmptyWarning": "Could not find cluster with {{ConnectorName}}. Select another Resource Group, or configure a new cluster with {{ConnectorName}}."
     },
     "resourceGroupSettings": {
       "pageTitle": "{{groupName}} Settings",

@@ -15,23 +15,33 @@
     $scope.currentUser = $stateParams.currentUser;
     $scope.isInvitePending = Userservice.isInvitePending($scope.currentUser);
     $scope.localizedServiceName = $translate.instant('hercules.serviceNames.' + $stateParams.extensionId);
+    $scope.localizedConnectorName = $translate.instant('hercules.connectorNames.' + $stateParams.extensionId);
     $scope.localizedOnboardingWarning = $translate.instant('hercules.userSidepanel.warningInvitePending', {
       ServiceName: $scope.localizedServiceName
     });
     $scope.resourceGroup = {
       show: false,
       saving: false,
+      cannotFindResouceGroup: false,
       init: function () {
         this.options = [{ label: $translate.instant('hercules.resourceGroups.noGroupSelected'), value: '' }];
         this.selected = this.current = this.options[0];
+        this.shouldWarn = false;
       },
       reset: function () {
         this.selected = this.current;
         this.saving = false;
+        this.hasRunningClusters();
       },
       hasChanged: function () {
         return this.selected !== this.current;
-      }
+      },
+      hasRunningClusters: function () {
+        ResourceGroupService.resourceGroupHasEligibleCluster($scope.resourceGroup.selected.value, 'c_cal')
+          .then(function (hasEligibleCluster) {
+            $scope.resourceGroup.shouldWarn = !hasEligibleCluster;
+          });
+      },
     };
     $scope.resourceGroup.init();
 
@@ -71,32 +81,36 @@
       var selectedGroup = _.find($scope.resourceGroup.options, function (group) {
         return group.value === resourceGroupId;
       });
-      // TODO: deal with the fact that a resourceGroupId is set on the user, but no longer exists?
       if (selectedGroup) {
         $scope.resourceGroup.selected = selectedGroup;
         $scope.resourceGroup.current = selectedGroup;
+        $scope.resourceGroup.hasRunningClusters();
+      } else {
+        $scope.resourceGroup.cannotFindResouceGroup = true;
       }
     };
 
     var readResourceGroups = function () {
-      if (!FeatureToggleService.supports(FeatureToggleService.features.atlasF237ResourceGroups)) {
-        return;
-      }
-      ResourceGroupService.getAllAsOptions().then(function (options) {
-        if (options.length > 0) {
-          $scope.resourceGroup.options = $scope.resourceGroup.options.concat(options);
-          if ($scope.extension.status && $scope.extension.status.resourceGroupId) {
-            setSelectedResourceGroup($scope.extension.status.resourceGroupId);
-          } else {
-            USSService.getUserProps($scope.currentUser.id).then(function (props) {
-              if (props.resourceGroups && props.resourceGroups[$scope.extension.id]) {
-                setSelectedResourceGroup(props.resourceGroups[$scope.extension.id]);
+      FeatureToggleService.supports(FeatureToggleService.features.atlasF237ResourceGroups)
+        .then(function () {
+          ResourceGroupService.getAllAsOptions().then(function (options) {
+            if (options.length > 0) {
+              $scope.resourceGroup.options = $scope.resourceGroup.options.concat(options);
+              if ($scope.extension.status && $scope.extension.status.resourceGroupId) {
+                setSelectedResourceGroup($scope.extension.status.resourceGroupId);
+              } else {
+                USSService.getUserProps($scope.currentUser.id).then(function (props) {
+                  if (props.resourceGroups && props.resourceGroups[$scope.extension.id]) {
+                    setSelectedResourceGroup(props.resourceGroups[$scope.extension.id]);
+                  } else {
+                    $scope.resourceGroup.hasRunningClusters();
+                  }
+                });
               }
-            });
-          }
-          $scope.resourceGroup.show = true;
-        }
-      });
+              $scope.resourceGroup.show = true;
+            }
+          });
+        });
     };
 
     var updateEntitlement = function (entitled) {
@@ -163,12 +177,14 @@
       });
     };
 
-    var setResourceGroupOnUser = function (resourceGroupId) {
+    $scope.setResourceGroupOnUser = function (resourceGroupId) {
       $scope.resourceGroup.saving = true;
       var props = { userId: $scope.currentUser.id, resourceGroups: { 'squared-fusion-cal': resourceGroupId } };
       USSService.updateUserProps(props).then(function () {
         $scope.resourceGroup.current = $scope.resourceGroup.selected;
         $scope.setShouldShowButtons();
+        $scope.resourceGroup.cannotFindResouceGroup = false;
+        Notification.success('hercules.resourceGroups.resourceGroupSaved');
       }).catch(function () {
         Notification.error('hercules.resourceGroups.failedToSetGroup');
       }).finally(function () {
@@ -188,7 +204,7 @@
         updateEntitlement($scope.extension.entitled);
       }
       if ($scope.resourceGroup.hasChanged()) {
-        setResourceGroupOnUser($scope.resourceGroup.selected.value);
+        $scope.setResourceGroupOnUser($scope.resourceGroup.selected.value);
       }
     };
 
@@ -207,7 +223,12 @@
     };
 
     $scope.setShouldShowButtons = function () {
-      $scope.showButtons = $scope.resourceGroup.hasChanged() || entitlementHasChanged();
+      $scope.resourceGroup.hasRunningClusters();
+      if ($scope.resourceGroup.hasChanged()) {
+        $scope.showButtons = true;
+        return;
+      }
+      $scope.showButtons = entitlementHasChanged();
     };
   }
 }());
