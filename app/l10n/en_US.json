@@ -1337,9 +1337,7 @@
     "tryAgain": "Try another Search",
     "licenseWarningTitle": "License",
     "licenseWarningHeader": "There is a problem with the license for this service.",
-    "licenseSuspendedWarning": "Your collaboration device licenses are suspended.",
-    "retrieveDevicesFail": "Failed to load device information",
-    "retrieveKemFail": "Failed to retrieve key expansion module count."
+    "licenseSuspendedWarning": "Your collaboration device licenses are suspended."
   },
   "hercules": {
     "page_title": "Connector Management",
@@ -3308,7 +3306,7 @@
   },
   "generateActivationCodeModal": {
     "title": "Activation Code",
-    "activateBody": "Plug in your new Cisco desk phone or TelePresence device and enter the activation code when you are prompted or use the device camera to scan the QR code.",
+    "activateBody": "Plug in the desk phone belonging to <b>{{belongsTo}}</b> and enter the activation code when prompted or use the device camera to scan the QR code, if possible. A new activation code can be created from the Users page after this code expires.",
     "emailCode": "Email",
     "copyToClipboard": "Copy",
     "print": "Print",
