@@ -4337,6 +4337,7 @@
     "Unknown": "Unknown",
     "Inactive": "Inactive Account",
     "RequiresActivation": "Requires Activation",
+    "WithDevices": "With Devices",
     "upgradeChannels": {
       "Stable": "Stable",
       "Latest": "Latest",
