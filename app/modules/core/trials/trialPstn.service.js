@@ -62,7 +62,7 @@
     }
 
     function createPstnEntity(customerOrgId) {
-      if (!_trialData.details.pstnProvider.apiExists) {
+      if (_trialData.details.pstnProvider.apiImplementation === "SWIVEL") {
         _trialData.details.pstnNumberInfo.numbers = _trialData.details.swivelNumbers;
       }
       return reserveNumbers()
@@ -72,7 +72,7 @@
     }
 
     function reserveNumbers() {
-      if (_trialData.details.pstnProvider.apiExists) {
+      if (_trialData.details.pstnProvider.apiImplementation !== "SWIVEL") {
         return PstnSetupService.reserveCarrierInventory(
           '',
           _trialData.details.pstnProvider.uuid,
@@ -115,7 +115,7 @@
     }
 
     function createCustomerSite(customerOrgId) {
-      if (_trialData.details.pstnProvider.apiExists) {
+      if (_trialData.details.pstnProvider.apiImplementation !== "SWIVEL") {
         var address = {
           streetAddress: _trialData.details.emergAddr.streetAddress,
           unit: _trialData.details.emergAddr.unit,

@@ -84,11 +84,11 @@
     }
 
     function setSwivelNumberTokens(tokens) {
-      angular.element('#' + vm.tokenfieldid).tokenfield('setTokens', tokens);
+      $('#' + vm.tokenfieldid).tokenfield('setTokens', tokens);
     }
 
     function getSwivelNumberTokens() {
-      return angular.element('#' + vm.tokenfieldid).tokenfield('getTokens');
+      return $('#' + vm.tokenfieldid).tokenfield('getTokens');
     }
 
     function validateSwivelNumbers() {

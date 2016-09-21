@@ -1,0 +1,40 @@
+<div class="sq-places-page-overview">
+  <div ui-view="header"></div>
+  <cs-sp-container>
+    <cs-sp-section ng-if="$ctrl.currentPlace.type === 'cloudberry'">
+      <div class="section-title-row">
+        <span class="section-name" translate="spacesPage.informationHeader"></span>
+      </div>
+      <div class="form-group" ng-show="$ctrl.currentPlace.sipUrl">
+        <label class="col-sm-4 control-label" translate="deviceOverviewPage.sipUrl"></label>
+        <div class="col-sm-8">
+          <p class="form-control-static">{{$ctrl.currentPlace.sipUrl}}</p>
+        </div>
+      </div>
+    </cs-sp-section>
+
+    <cs-sp-section>
+      <div class="section-title-row">
+        <span class="section-name" translate="placesPage.featuresHeader"></span>
+      </div>
+      <feature-list features="$ctrl.services" feature-actions="$ctrl.serviceActions(feature)"></feature-list>
+    </cs-sp-section>
+
+    <cs-sp-section>
+      <div class="section-title-row">
+        <span class="section-name">Devices</span>
+      </div>
+      <div class="feature-list">
+        <ul>
+          <li class="feature" ng-repeat="device in $ctrl.currentPlace.devices ">
+            <a ng-click="$ctrl.showDeviceDetails(device)">
+              <i class="icon icon-circle status-indicator" ng-class="device.cssColorClass"></i>
+              <span class="feature-name">{{device.product}}</span>
+              <i class="feature-arrow"></i>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </cs-sp-section>
+  </cs-sp-container>
+</div>

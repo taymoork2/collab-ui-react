@@ -52,14 +52,26 @@
         expect(ctrl.adminType).toBe(ctrl.adminTypes.ops);
       });
 
-      it('should initialize user with adminTypes.ops with Customer Admin', function () {
+      it('should initialize user with adminTypes.org with non-org-manager Customer Admin', function () {
         spyOn(Authinfo, 'isReadOnlyAdmin').and.returnValue(false);
         spyOn(Authinfo, 'isCustomerAdmin').and.returnValue(true);
         spyOn(CiService, 'hasRole').and.returnValue($q.when());
         spyOn(Authinfo, 'isWebexSquared').and.returnValue(true);
         spyOn(Authinfo, 'isWebexMessenger').and.returnValue(true);
+        spyOn(CiService, 'isOrgManager').and.returnValue($q.when(false));
         initController();
         expect(ctrl.adminType).toBe(ctrl.adminTypes.org);
+      });
+
+      it('should initialize user with adminTypes.ops with Customer Admin & Org Manager', function () {
+        spyOn(Authinfo, 'isReadOnlyAdmin').and.returnValue(false);
+        spyOn(Authinfo, 'isCustomerAdmin').and.returnValue(true);
+        spyOn(CiService, 'hasRole').and.returnValue($q.when());
+        spyOn(Authinfo, 'isWebexSquared').and.returnValue(true);
+        spyOn(Authinfo, 'isWebexMessenger').and.returnValue(true);
+        spyOn(CiService, 'isOrgManager').and.returnValue($q.when(true));
+        initController();
+        expect(ctrl.adminType).toBe(ctrl.adminTypes.ops);
       });
 
       it('should initialize with errorFailedCheckingCustSuccessRole error and user is adminTypes.unknown with Customer Admin',
@@ -141,4 +153,44 @@
 
     });
   });
+
+  describe('Unit testing msgr-text-status-on directive', function () {
+    var $compile, $rootScope;
+
+    beforeEach(angular.mock.module('Messenger'));
+
+    beforeEach(inject(function (_$compile_, _$rootScope_) {
+      $compile = _$compile_;
+      $rootScope = _$rootScope_;
+    }));
+
+    it('Replaces the element with the appropriate content', function () {
+      // Compile a piece of HTML containing the directive
+      var element = $compile("<div msgr-text-status-on></div>")($rootScope);
+      $rootScope.$digest();
+      // Check that the compiled element contains the templated content
+      expect(element.html()).toContain("common.status");
+      expect(element.html()).toContain("common.on");
+    });
+  });
+  describe('Unit testing msgr-text-status-off directive', function () {
+    var $compile, $rootScope;
+
+    beforeEach(angular.mock.module('Messenger'));
+
+    beforeEach(inject(function (_$compile_, _$rootScope_) {
+      $compile = _$compile_;
+      $rootScope = _$rootScope_;
+    }));
+
+    it('Replaces the element with the appropriate content', function () {
+      // Compile a piece of HTML containing the directive
+      var element = $compile("<div msgr-text-status-off></div>")($rootScope);
+      $rootScope.$digest();
+      // Check that the compiled element contains the templated content
+      expect(element.html()).toContain("common.status");
+      expect(element.html()).toContain("common.off");
+    });
+  });
+
 })();

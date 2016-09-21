@@ -2,9 +2,20 @@
   .report-sides {
     margin: 0 rem-calc(25);
   }
+  .activity-filter {
+    float: right;
+    margin-right: rem-calc(25);
+    position: relative;
+    top: rem-calc(-5);
+    z-index: 1000;
+    .select-options {
+      padding: 0;
+    }
+  }
   .barchart {
     position: relative;
     top: rem-calc(-35);
+    height: vr-adjust(350);
   }
   .active-search {
     margin-bottom: rem-calc(20);
@@ -23,11 +34,6 @@
   .active-users-table {
     margin-bottom: rem-calc(25);
     width: 95%
-  }
-  .empty-table {
-    width: 95%;
-    margin: rem-calc(20);
-    text-align: center;
   }
   .horizontal-center {
     text-align: center;

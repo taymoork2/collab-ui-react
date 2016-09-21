@@ -14,6 +14,7 @@
     var cacheValue = (parseInt(moment.utc().format('H'), 10) >= 8);
     // Promise Tracking
     var ABORT = 'ABORT';
+    var allClusters = $translate.instant('mediaFusion.metrics.allclusters');
     var activePromise = null;
     var activePromiseForAvailability = null;
     var activePromiseForUtilization = null;
@@ -126,6 +127,10 @@
     }
 
     function getTotalCallsData(time, cluster) {
+      if (cluster !== allClusters) {
+        cluster = cluster.replace(/\W/g, '');
+        cluster = cluster.toLowerCase();
+      }
       // cancel any currently running jobs
       if (activePromiseForTotalCalls !== null && angular.isDefined(activePromiseForTotalCalls)) {
         activePromiseForTotalCalls.resolve(ABORT);
@@ -217,7 +222,7 @@
       if (angular.isUndefined(cacheOption) || cacheOption === null) {
         cacheOption = cacheValue;
       }
-      if (cluster == "All Clusters") {
+      if (cluster == allClusters) {
         return link + formRelativeTime(time);
       } else {
         return '/cluster/' + cluster + link + formRelativeTime(time);

@@ -5,11 +5,10 @@ describe('Directive Controller: HybridServicesCtrl', function () {
 
   var vm, $rootScope, $controller, $timeout, $q, Authinfo, Config, USSService, ServiceDescriptor;
 
-  beforeEach(inject(function (_$rootScope_, _$controller_, _$timeout_, _Authinfo_, _Config_, _USSService_, _ServiceDescriptor_, _$q_) {
+  beforeEach(inject(function (_$rootScope_, _$controller_, _$timeout_, _Config_, _USSService_, _ServiceDescriptor_, _$q_) {
     $rootScope = _$rootScope_;
     $controller = _$controller_;
     $timeout = _$timeout_;
-    Authinfo = _Authinfo_;
     Config = _Config_;
     USSService = _USSService_;
     ServiceDescriptor = _ServiceDescriptor_;

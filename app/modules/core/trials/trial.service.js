@@ -81,7 +81,8 @@
             error: 'trialModal.errorServerDown'
           };
         } else {
-          if (obj.isExist === 'true') {
+          // we allow duplicate emails for the  the user who is a consumer
+          if (obj.isExist === 'true' && !(key === 'endCustomerEmail' && obj.isConsumer === 'true')) {
             return {
               error: 'trialModal.errorInUse'
             };
@@ -218,6 +219,7 @@
         if (nestedState) {
           details.shippingInfo.state = _.get(details, 'shippingInfo.state.abbr');
         }
+        details.shippingInfo.state = details.shippingInfo.state || 'N/A';
 
         // formly will nest the country inside of itself, I think this is because
         // the country list contains country as a key, as well as the device.service

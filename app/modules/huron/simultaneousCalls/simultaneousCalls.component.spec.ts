@@ -1,4 +1,4 @@
-import simultaneousCallsModule from './simultaneousCalls.component';
+import { default as simultaneousCallsModule } from './index';
 
 describe('Component: simultaneousCalls', () => {
   const TWO = 2;
@@ -13,7 +13,7 @@ describe('Component: simultaneousCalls', () => {
     );
     this.$scope.incomingCallMaximum = 2;
     this.$scope.onChangeFn = jasmine.createSpy('onChangeFn');
-  })
+  });
 
   function initComponent() {
     this.compileComponent('ucSimultaneousCalls', {

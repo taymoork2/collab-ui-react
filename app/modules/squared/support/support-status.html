@@ -9,7 +9,7 @@
             <div ng-repeat="health in healthMetrics">
               <a ng-href="{{statusPageUrl}}" target="_blank">
                 <div id="{{health.name}}">
-                  <i class="fa fa-circle" ng-class="{unknown:  'grey', error: 'error', major_outage: 'error', warning: 'warning', partial_outage: 'yellow', operational: 'ok', degraded_performance:'yellow'}[health.status]"></i>
+                   <i class="icon icon-circle status-indicator" ng-class="{unknown:  'disabled', error: 'danger', major_outage: 'danger', warning: 'warning', partial_outage: 'warning', operational: 'success', degraded_performance:'warning'}[health.status]"></i>
                   <span>{{health.name}}</span>
                 </div>
               </a>

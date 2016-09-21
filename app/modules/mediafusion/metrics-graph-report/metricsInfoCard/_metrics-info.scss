@@ -1,11 +1,11 @@
 .cs-card.header-bar.orange {
  header:after { 
- border-top: 5px solid #EF824F;
+ border-top: 5px solid #F0A378;
  }      
 } 
 .cs-card.header-bar.green {
   header:after { 
-	border-top: 5px solid #7BAF5D;
+	border-top: 5px solid #8DC98C;
   }      
 } 
 .cs-card.header-bar.grey {
@@ -15,7 +15,7 @@
 } 
 .cs-card.header-bar.blue {
   header:after { 
-  border-top: 5px solid #5390E0;
+  border-top: 5px solid #1BA0D7;
   }      
 }  
 
@@ -30,7 +30,7 @@
     -ms-flex-pack: center;
     justify-content: center;
     color: #343537;
-    font-size: 1.525rem;
+    font-size: 1.425rem;
     font-family: "CiscoSansTT Extra Light", "Helvetica Neue", Helvetica, Arial, sans-serif;
 
 }
@@ -53,7 +53,8 @@
 .metrics-info { 
   padding-left: .3rem;
   padding-bottom: .5rem;
-  font-size: 1rem; 
+  font-size: 1rem;
+  min-height: 120px; 
   color: #343537;
   text-align: center; 
   font-family: "CiscoSansTT Light", "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -61,50 +62,28 @@
 }
 
 .call-counts { 
-  font-size: 3rem; 
+  font-size: 3rem;
   font-family: "CiscoSansTT Thin", "Helvetica Neue", Helvetica, Arial, sans-serif; 
-  color: #5390E0; 
-  margin-bottom: .1rem; 
-}
-
-.percentage-count { 
-  font-size: 3rem; 
-  font-family: "CiscoSansTT Thin", "Helvetica Neue", Helvetica, Arial, sans-serif; 
-  color: #EF824F; 
-  margin-bottom: .1rem; 
-}
-
-.metrics-count { 
-  font-size: 3rem; 
-  font-family: "CiscoSansTT Thin", "Helvetica Neue", Helvetica, Arial, sans-serif; 
-  color: #7BAF5D; 
-  margin-bottom: .1rem; 
-}
-
-.utilization-count { 
-  font-size: 3rem; 
-  font-family: "CiscoSansTT Thin", "Helvetica Neue", Helvetica, Arial, sans-serif; 
-  color: #7BAF5D; 
+  color: #5CA4E5;
+  min-height: initial; 
   margin-bottom: .1rem;
-  padding-bottom: 18px; 
+  padding-bottom: 10px; 
 }
 
-.availability-count { 
-  font-size: 3rem; 
+.availability-counts { 
+  font-size: 3rem;
   font-family: "CiscoSansTT Thin", "Helvetica Neue", Helvetica, Arial, sans-serif; 
-  color: #7BAF5D; 
+  color: #06B0DE;
+  min-height: initial; 
   margin-bottom: .1rem;
-  padding-bottom: 18px;
+  padding-bottom: 10px; 
 }
 
-.last-counts { 
-  font-size: 0.675rem; 
-  color: #5390E0;
-  padding-bottom: .1px;
-}
-
-.last-text { 
-  font-size: 0.675rem; 
-  color: #343537;
-  padding-bottom: .1px;
+.no-data { 
+  font-size: 1.425rem; 
+  font-family: "CiscoSansTT ", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  margin-bottom: .1rem;
+  padding-bottom: 10px;
+  padding-top: 10px;
+  color: #808080;
 }

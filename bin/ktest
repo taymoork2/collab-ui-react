@@ -92,10 +92,8 @@ shim_tpl="${WX2_ADMIN_WEB_CLIENT_HOME}/karma/karma.shim.tpl.js"
 total_specs=$(wc -l "$flist" | awk '{print $1;}')
 
 # num cores is used to determine num spec files to include / shim file
-# - it also happens to determine:
-#   - how many shim files are generated
-#   - how many processes are spawned by 'parallel'
-num_cores=$(num_cpus)
+# - it can be overridden by 'KTEST__NUM_CORES' environment var
+num_cores=${KTEST__NUM_CORES:-$(num_cpus)}
 if [ "${no_parallel}" = "true" ]; then
     num_cores=1
 fi
@@ -134,10 +132,16 @@ set -x
 # shellcheck disable=SC2086
 if [ "${no_parallel}" = "true" ]; then
     karma start $shim_file_args $pass_through_opts
+    exit_status=$?
 else
-    parallel karma start $pass_through_opts ::: $shim_file_args
+    # number of concurrent jobs run by parallel can be overridden by 'KTEST__PARALLEL__NUM_JOBS' env var
+    parallel_num_jobs=${KTEST__PARALLEL__NUM_JOBS:-${num_cores}}
+    parallel_job_log=$(mktemp "$temp_dir/parallel_job_log.XXXXX")
+    parallel -j"${parallel_num_jobs}" --joblog $parallel_job_log karma start $pass_through_opts ::: $shim_file_args
+    exit_status=$?
+    echo "INFO: parallel job log for ktest:"
+    cat "$parallel_job_log" || :
 fi
-exit_status=$?
 set +x
 popd > /dev/null
 

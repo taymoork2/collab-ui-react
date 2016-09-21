@@ -4,7 +4,7 @@
   angular.module('Squared')
     .controller('AddLinesCtrl', AddLinesCtrl);
   /* @ngInject */
-  function AddLinesCtrl($stateParams, $state, $scope, Notification, $translate, $q, CommonLineService, Authinfo, CsdmPlaceService, CsdmCodeService, DialPlanService) {
+  function AddLinesCtrl($stateParams, $state, $scope, Notification, $translate, $q, CommonLineService, Authinfo, CsdmHuronPlaceService, DialPlanService) {
     var vm = this;
     vm.wizardData = $stateParams.wizard.state().data;
 
@@ -32,8 +32,8 @@
 
     vm.next = function () {
       vm.isLoading = true;
-
       function successCallback(code) {
+
         if (code && code.activationCode && code.activationCode.length > 0) {
           vm.isLoading = false;
           $stateParams.wizard.next({
@@ -65,20 +65,19 @@
             placeEntity.externalNumber = entity.externalNumber.pattern;
           }
 
-          CsdmPlaceService.createCmiPlace(entity.name, entity.assignedDn.pattern)
+          CsdmHuronPlaceService.createCmiPlace(entity.name, entity.assignedDn.pattern)
             .then(successcb)
             .catch(function (error) {
               Notification.errorResponse(error, 'placesPage.placeError');
             });
         });
       }
-      //This is temp code to be removed when CMI GDS code is ready
       function successcb(place) {
         vm.place = place;
-        CsdmCodeService
-          .createCodeForExisting(place.cisUuid)
-          .then(successCallback) //, XhrNotificationService.notify)
-          .catch(failCallback); //, XhrNotificationService.notify);
+        CsdmHuronPlaceService
+            .createOtp(place.cisUuid)
+            .then(successCallback)
+            .catch(failCallback);
       }
       addPlace();
     };

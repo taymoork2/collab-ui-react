@@ -10,7 +10,11 @@
       </cs-page-sub-header-left>
       <cs-page-sub-header-right>
         <div ng-if="exp.servicesId[0] !== 'squared-fusion-mgmt'">
-          <a href="" ng-click="exp.openUserStatusReportModal(exp.servicesId[0])" tooltip-placement="top" tooltip="{{'usersPage.csvBtnTitle' | translate}}" tooltip-animation="false" tooltip-append-to-body="true" translate="hercules.overview.report"></a>
+          <button class="btn btn--link"
+                  type="button"
+                  translate="hercules.overview.report"
+                  ng-click="exp.openUserStatusReportModal(exp.servicesId[0])">
+          </button>
         </div>
         <button class="btn btn--people add-resource-button" type="submit"
                 translate="hercules.overview.add-resource-button" ng-click="exp.openAddResourceModal()"></button>

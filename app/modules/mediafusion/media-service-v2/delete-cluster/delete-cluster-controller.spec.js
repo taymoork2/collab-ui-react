@@ -39,9 +39,8 @@ describe('Controller: DeleteClusterSettingControllerV2', function () {
     Notification = _Notification_;
     $q = _$q_;
     httpBackend = $httpBackend;
-    httpBackend
-      .when('GET', 'l10n/en_US.json')
-      .respond({});
+    httpBackend.when('GET', /^\w+.*/).respond({});
+    httpBackend.when('POST', /^\w+.*/).respond({});
 
     spyOn(MediaClusterServiceV2, 'get').and.returnValue({
       then: _.noop
@@ -92,9 +91,46 @@ describe('Controller: DeleteClusterSettingControllerV2', function () {
     spyOn(MediaClusterServiceV2, 'moveV2Host').and.callThrough();
     controller.continue();
     expect(controller.isMove).toBe(true);
+    httpBackend.flush();
+    httpBackend.verifyNoOutstandingExpectation();
+    httpBackend.verifyNoOutstandingRequest();
     expect(MediaClusterServiceV2.moveV2Host).toHaveBeenCalled();
     expect(MediaClusterServiceV2.moveV2Host.calls.count()).toEqual(2);
   });
+  it('check if the createClusterV2 of MediaClusterServiceV2 is invoked', function () {
+    controller.cluster = cluster;
+    controller.hosts = [{
+      "id": "mf_mgmt@ac43493e-3f11-4eaa-aec0-f16f2a69969a",
+      "hostname": "10.196.5.251",
+      "hostSerial": "ac43493e-3f11-4eaa-aec0-f16f2a69969a"
+    }, {
+      "id": "mf_mgmt@a41a0783-e695-461e-8f15-355f02f91075",
+      "hostname": "10.196.5.246",
+      "hostSerial": "a41a0783-e695-461e-8f15-355f02f91075"
+    }];
+
+    controller.selectPlaceholder = "Select a cluster";
+    controller.fillModel = {};
+    controller.selectModel = {
+      "10.196.5.251": "MFA_TEST3",
+      "10.196.5.246": "MFA_TEST4"
+    };
+    controller.clusters = [{
+      "id": "a050fcc7-9ade-4790-a06d-cca596910421",
+      "name": "MFA_TEST2"
+    }];
+
+    spyOn(MediaClusterServiceV2, 'createClusterV2').and.callThrough();
+    spyOn(MediaClusterServiceV2, 'moveV2Host').and.callThrough();
+    controller.continue();
+    expect(controller.isMove).toBe(true);
+    httpBackend.flush();
+    httpBackend.verifyNoOutstandingExpectation();
+    httpBackend.verifyNoOutstandingRequest();
+    expect(MediaClusterServiceV2.createClusterV2).toHaveBeenCalled();
+    expect(MediaClusterServiceV2.createClusterV2.calls.count()).toEqual(2);
+  });
+
   it('check if the defused of MediaClusterServiceV2 is invoked', function () {
     controller.cluster = cluster;
     controller.hosts = [{

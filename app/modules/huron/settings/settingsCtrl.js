@@ -7,11 +7,12 @@
   /* @ngInject */
   function HuronSettingsCtrl($scope, Authinfo, $q, $translate, Notification, ServiceSetup, PstnSetupService,
     CallerId, ExternalNumberService, HuronCustomer, ValidationService, TelephoneNumberService, DialPlanService,
-    ModalService, CeService, HuntGroupServiceV2, DirectoryNumberService, InternationalDialing, VoicemailMessageAction,
-    FeatureToggleService) {
-
+    ModalService, CeService, HuntGroupServiceV2, DirectoryNumberService, InternationalDialing, VoicemailMessageAction) {
     var vm = this;
     vm.loading = true;
+
+    vm.NATIONAL = 'national';
+    vm.LOCAL = 'local';
 
     var DEFAULT_SITE_INDEX = '000001';
     var DEFAULT_TZ = {
@@ -29,6 +30,7 @@
     var INTERNATIONAL_DIALING = 'DIALINGCOSTAG_INTERNATIONAL';
     var COMPANY_CALLER_ID_TYPE = 'Company Caller ID';
     var COMPANY_NUMBER_TYPE = 'Company Number';
+    var DEFAULT_DIAL_HABIT = vm.NATIONAL;
 
     var savedModel = null;
     var errors = [];
@@ -37,6 +39,7 @@
     vm.save = save;
     vm.resetSettings = resetSettings;
     vm.openSaveModal = openSaveModal;
+    vm.saveEmergencyCallBack = saveEmergencyCallBack;
 
     vm._voicemailNumberWatcher = _voicemailNumberWatcher;
     vm._voicemailEnabledWatcher = _voicemailEnabledWatcher;
@@ -64,7 +67,6 @@
     vm.availableExtensions = [
       '3', '4', '5'
     ];
-    vm.optionalVmDidFeatureToggle = false;
     vm.customerCountryCode = undefined;
     vm.generatedVoicemailNumber = undefined;
     vm.hideoptionalvmHelpText = false;
@@ -106,10 +108,17 @@
       serviceNumber: undefined,
       serviceNumberWarning: false,
       voicemailTimeZone: undefined,
-      disableExtensions: false
+      disableExtensions: false,
+      dialingHabit: DEFAULT_DIAL_HABIT,
+      regionCode: ''
     };
 
     vm.previousModel = _.cloneDeep(vm.model);
+    vm.isTerminusCustomer = false;
+
+    PstnSetupService.getCustomer(Authinfo.getOrgId()).then(function () {
+      vm.isTerminusCustomer = true;
+    });
 
     vm.validations = {
       greaterThan: function (viewValue, modelValue, scope) {
@@ -678,13 +687,6 @@
         className: 'medium-10 left',
         templateOptions: {
           label: $translate.instant('serviceSetupModal.vmAccessNumber'),
-        },
-        expressionProperties: {
-          'templateOptions.description': function () {
-            if (!vm.optionalVmDidFeatureToggle) {
-              return $translate.instant('serviceSetupModal.companyVoicemailDescription');
-            }
-          }
         }
       }, {
         model: vm.model.companyVoicemail,
@@ -702,8 +704,7 @@
       },
       hideExpression: function () {
 
-        return (!vm.optionalVmDidFeatureToggle) ||
-              (vm.optionalVmDidFeatureToggle && !vm.model.companyVoicemail.companyVoicemailEnabled);
+        return !vm.model.companyVoicemail.companyVoicemailEnabled;
       }
     }, {
       model: vm.model.companyVoicemail,
@@ -721,20 +722,17 @@
         isWarn: false
       },
       hideExpression: function () {
-        return vm.optionalVmDidFeatureToggle ? (!vm.model.companyVoicemail.externalVoicemail || !vm.model.companyVoicemail.companyVoicemailEnabled) : !vm.model.companyVoicemail.companyVoicemailEnabled;
+        return !vm.model.companyVoicemail.externalVoicemail || !vm.model.companyVoicemail.companyVoicemailEnabled;
       },
       expressionProperties: {
         'templateOptions.required': function () {
-          return vm.optionalVmDidFeatureToggle ? (vm.model.companyVoicemail.companyVoicemailEnabled && vm.model.companyVoicemail.externalVoicemail) :
-                                                     vm.model.companyVoicemail.companyVoicemailEnabled;
+          return (vm.model.companyVoicemail.companyVoicemailEnabled && vm.model.companyVoicemail.externalVoicemail);
         },
         'templateOptions.description': function () {
-          if (vm.optionalVmDidFeatureToggle) {
-            return $translate.instant('serviceSetupModal.externalNumberDescriptionText');
-          }
+          return $translate.instant('serviceSetupModal.externalNumberDescriptionText');
         },
         'templateOptions.helpText': function () {
-          if (vm.optionalVmDidFeatureToggle && !vm.hideoptionalvmHelpText) {
+          if (!vm.hideoptionalvmHelpText) {
             return $translate.instant('serviceSetupModal.voicemailPilotHelpText');
           }
         }
@@ -912,7 +910,7 @@
           pattern: vm.model.serviceNumber.pattern
         };
 
-        return ServiceSetup.updateSite(vm.model.uuid, site)
+        return ServiceSetup.updateSite(vm.model.site.uuid, site)
           .catch(function (response) {
             errors.push(Notification.processErrorResponse(response, 'settingsServiceNumber.saveError'));
             return $q.reject(response);
@@ -942,23 +940,17 @@
       if (vm.model.companyVoicemail.companyVoicemailEnabled) {
         // When the toggle is ON, update the site if the pilot number changed or wasn't set,
         // otherwise, don't update site since nothing changed.
-        if (vm.optionalVmDidFeatureToggle) {
-          if (!vm.model.companyVoicemail.externalVoicemail) {
-            if (_.get(vm, 'model.site.voicemailPilotNumber') !== vm.generatedVoicemailNumber) {
-              siteData.voicemailPilotNumber = vm.generatedVoicemailNumber;
-              siteData.voicemailPilotNumberGenerated = 'true';
-            }
-          } else {
-            if (_.get(vm, 'model.site.voicemailPilotNumber') !==
-              _.get(vm, 'model.companyVoicemail.companyVoicemailNumber.pattern')) {
-              siteData.voicemailPilotNumber = vm.model.companyVoicemail.companyVoicemailNumber.pattern;
-              siteData.voicemailPilotNumberGenerated = 'false';
-            }
+
+        if (!vm.model.companyVoicemail.externalVoicemail) {
+          if (_.get(vm, 'model.site.voicemailPilotNumber') !== vm.generatedVoicemailNumber) {
+            siteData.voicemailPilotNumber = vm.generatedVoicemailNumber;
+            siteData.voicemailPilotNumberGenerated = 'true';
           }
         } else {
           if (_.get(vm, 'model.site.voicemailPilotNumber') !==
             _.get(vm, 'model.companyVoicemail.companyVoicemailNumber.pattern')) {
             siteData.voicemailPilotNumber = vm.model.companyVoicemail.companyVoicemailNumber.pattern;
+            siteData.voicemailPilotNumberGenerated = 'false';
           }
         }
       } else {
@@ -1017,15 +1009,9 @@
       if (vm.model.companyVoicemail.companyVoicemailEnabled) {
         // When the toggle is ON, update the customer if the pilot number changed or wasn't set,
         // otherwise, don't update customer since nothing changed.
-        if (vm.optionalVmDidFeatureToggle) {
-          if (!vm.model.companyVoicemail.externalVoicemail) {
-            if (_.get(vm, 'model.site.voicemailPilotNumber') !== vm.generatedVoicemailNumber) {
-              return updateCustomerServicePackage(vm.generatedVoicemailNumber);
-            }
-          } else {
-            if (_.get(vm, 'model.companyVoicemail.companyVoicemailNumber.pattern') && (_.get(vm, 'model.site.voicemailPilotNumber') !== vm.model.companyVoicemail.companyVoicemailNumber.pattern)) {
-              return updateCustomerServicePackage(vm.model.companyVoicemail.companyVoicemailNumber.pattern);
-            }
+        if (!vm.model.companyVoicemail.externalVoicemail) {
+          if (_.get(vm, 'model.site.voicemailPilotNumber') !== vm.generatedVoicemailNumber) {
+            return updateCustomerServicePackage(vm.generatedVoicemailNumber);
           }
         } else {
           if (_.get(vm, 'model.companyVoicemail.companyVoicemailNumber.pattern') && (_.get(vm, 'model.site.voicemailPilotNumber') !== vm.model.companyVoicemail.companyVoicemailNumber.pattern)) {
@@ -1045,7 +1031,7 @@
     function loadServiceAddress() {
       return PstnSetupService.listCustomerCarriers(Authinfo.getOrgId())
         .then(function (carriers) {
-          if (_.get(carriers, '[0].apiExists') === true) {
+          if (_.get(carriers, '[0].apiImplementation') !== "SWIVEL") {
             showServiceAddress();
           }
         })
@@ -1113,8 +1099,7 @@
           vm.model.site.voicemailPilotNumber = voicemail.pilotNumber;
           vm.model.companyVoicemail.companyVoicemailEnabled = true;
 
-          if (!vm.optionalVmDidFeatureToggle ||
-            (vm.optionalVmDidFeatureToggle && voicemail.pilotNumber.length < 40)) {
+          if (voicemail.pilotNumber.length < 40) {
             vm.model.companyVoicemail.companyVoicemailNumber = {
               pattern: voicemail.pilotNumber,
               label: TelephoneNumberService.getDIDLabel(voicemail.pilotNumber)
@@ -1250,19 +1235,40 @@
     }
 
     function loadDialPlan() {
-      return DialPlanService.getCustomerDialPlanDetails(Authinfo.getOrgId()).then(function (response) {
-        if (response.extensionGenerated === 'true') {
+      return DialPlanService.getCustomerVoice(Authinfo.getOrgId()).then(function (response) {
+        if (response.dialPlan === null) {
+          // if customer's dialPlan attribute is defined but null, assume the customer is on the
+          // North American Dial Plan. Look up uuid for NANP and insert it into customer dialPlan.
+          response.dialPlanDetails = {
+            countryCode: "+1",
+            extensionGenerated: "false",
+            steeringDigitRequired: "true",
+            supportSiteCode: "true",
+            supportSiteSteeringDigit: "true"
+          };
+        }
+
+        vm.model.regionCode = vm.previousModel.regionCode = response.regionCode;
+
+        if (response.regionCode === '') {
+          vm.model.dialingHabit = vm.NATIONAL;
+        } else {
+          vm.model.dialingHabit = vm.LOCAL;
+        }
+
+        if (response.dialPlanDetails.extensionGenerated === 'true') {
           vm.hideFieldInternalNumberRange = true;
         } else {
           vm.hideFieldInternalNumberRange = false;
         }
-        if (response.steeringDigitRequired === 'true') {
+        if (response.dialPlanDetails.steeringDigitRequired === 'true') {
           vm.hideFieldSteeringDigit = false;
         } else {
           vm.hideFieldSteeringDigit = true;
         }
-        if (response.countryCode !== null) {
-          vm.customerCountryCode = response.countryCode;
+        if (response.dialPlanDetails.countryCode !== null) {
+          vm.customerCountryCode = response.dialPlanDetails.countryCode;
+          TelephoneNumberService.setCountryCode(response.dialPlanDetails.countryCode);
           vm.generatedVoicemailNumber = ServiceSetup.generateVoiceMailNumber(Authinfo.getOrgId(), vm.customerCountryCode);
         }
       }).catch(function (response) {
@@ -1332,7 +1338,8 @@
         .then(releaseCallerIdNumber)
         .then(saveVoicemailNumber)
         .then(saveCallerId)
-        .then(saveEmergencyCallBack);
+        .then(saveEmergencyCallBack)
+        .then(updateCustomerVoice);
     }
 
     function saveCompanyNumbers() {
@@ -1502,12 +1509,26 @@
         (vm.model.companyVoicemail.voicemailToEmail !== VoicemailMessageAction.isVoicemailToEmailEnabled(vm.voicemailMessageAction.voicemailAction));
     }
 
+    function updateCustomerVoice() {
+      if (vm.model.dialingHabit === vm.NATIONAL) {
+        vm.model.regionCode = '';
+      }
+      if (vm.model.regionCode !== vm.previousModel.regionCode) {
+        return DialPlanService.updateCustomerVoice(Authinfo.getOrgId(), {
+          regionCode: vm.model.regionCode
+        }).catch(function (error) {
+          errors.push(Notification.processErrorResponse(error, 'serviceSetupModal.error.updateCustomerVoice'));
+          return $q.reject(error);
+        });
+      }
+    }
+
     function init() {
       vm.loading = true;
       errors = [];
 
       var promises = [];
-      promises.push(enableOptionalVmDidToggle().then(loadCompanyInfo));
+      promises.push(loadCompanyInfo());
       promises.push(loadServiceAddress());
       promises.push(loadExternalNumbers());
       promises.push(enableExtensionLengthModifiable());
@@ -1693,8 +1714,7 @@
           return externalNumber.pattern === _.get(vm, 'model.serviceNumber.pattern') ||
             (externalNumber.label === vm.model.callerId.callerIdNumber);
         });
-        if ((!vm.optionalVmDidFeatureToggle) ||
-          ((vm.optionalVmDidFeatureToggle) && (vm.model.site.voicemailPilotNumber !== vm.generatedVoicemailNumber))) {
+        if (vm.model.site.voicemailPilotNumber !== vm.generatedVoicemailNumber) {
           // add the existing voicemailPilotNumber back into the list of options
           if (vm.model.site.voicemailPilotNumber && !_.find(localScope.to.options, function (externalNumber) {
             return externalNumber.pattern === vm.model.site.voicemailPilotNumber;
@@ -1878,19 +1898,8 @@
       return $q.all(promises);
     }
 
-    function enableOptionalVmDidToggle() {
-
-      return FeatureToggleService.supports(FeatureToggleService.features.optionalvmdid).then(function (result) {
-        if (result) {
-          vm.optionalVmDidFeatureToggle = result;
-        }
-      }).catch(function (response) {
-        Notification.errorResponse(response, 'serviceSetupModal.errorGettingOptionaVmDidToggle');
-      });
-    }
-
     function setExternalVoicemail() {
-      if (vm.optionalVmDidFeatureToggle && vm.model.companyVoicemail.companyVoicemailEnabled) {
+      if (vm.model.companyVoicemail.companyVoicemailEnabled) {
         if (vm.model.site.voicemailPilotNumberGenerated === 'false' &&
             (vm.model.companyVoicemail.companyVoicemailNumber.pattern.length < 40)) {
           vm.model.companyVoicemail.externalVoicemail = true;
@@ -1900,5 +1909,16 @@
       }
     }
 
+    $scope.$watchCollection(function () {
+      return [vm.model.regionCode, vm.model.dialingHabit];
+    }, function () {
+      if (vm.form && vm.model.dialingHabit === vm.LOCAL && vm.model.regionCode === '') {
+        vm.form.localDialingRadio.$setValidity('', false);
+      } else if (vm.form && vm.model.dialingHabit === vm.LOCAL) {
+        vm.form.localDialingRadio.$setValidity('', TelephoneNumberService.isPossibleAreaCode(vm.model.regionCode));
+      } else if (vm.form) {
+        vm.form.localDialingRadio.$setValidity('', true);
+      }
+    });
   }
 })();

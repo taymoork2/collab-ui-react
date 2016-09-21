@@ -1,6 +1,6 @@
 namespace globalsettings {
 
-  describe('Controller: PartnerProfileCtrl', ()=> {
+  describe('Controller: PartnerProfileCtrl', () => {
     let $scope, $controller, controller, $q;
     let Notification, Orgservice, UserListService, BrandService, FeatureToggleService, WebexClientVersion;
 
@@ -40,16 +40,65 @@ namespace globalsettings {
 
     function initController() {
       controller = $controller('SupportSettings', {
-        $scope: $scope
+        $scope: $scope,
       });
       $scope.$apply();
     }
 
-    describe('validation()', ()=> {
+    describe('validation()', () => {
 
-      describe('saving org settings data', ()=> {
+      describe('showCustomHelpSiteSaveButton', () => {
 
-        it('saves data via Orgservice', ()=> {
+        describe('checkBox enabled and url set', () => {
+          beforeEach(() => {
+            controller.customHelpSite.enable = true;
+            controller.customHelpSite.url = 'initialUrl';
+          });
+
+          it('should not show save button if it was enabled with the same url', () => {
+            controller.oldCustomHelpSite.enable = true;
+            controller.oldCustomHelpSite.url = 'initialUrl';
+            expect(controller.showCustomHelpSiteSaveButton).toBeFalsy();
+          });
+
+          it('should show save button if it was enabled with a different url', () => {
+            controller.oldCustomHelpSite.enable = true;
+            controller.oldCustomHelpSite.url = 'oldDifferentUrl';
+            expect(controller.showCustomHelpSiteSaveButton).toBeTruthy();
+          });
+
+          it('should show save button if it was disabled', () => {
+            controller.oldCustomHelpSite.enable = false;
+            expect(controller.showCustomHelpSiteSaveButton).toBeTruthy();
+          });
+
+          it('should show not save button if it was disabled but has no url now', () => {
+            controller.oldCustomHelpSite.enable = false;
+            controller.customHelpSite.url = '';
+            expect(controller.showCustomHelpSiteSaveButton).toBeFalsy();
+          });
+        });
+
+        describe('checkBox disabled', () => {
+
+          it('should not show save button if it was disabled', () => {
+            controller.customHelpSite.enable = false;
+            controller.oldCustomHelpSite.enable = false;
+
+            expect(controller.showCustomHelpSiteSaveButton).toBeFalsy();
+          });
+
+          it('should show save button if it was enabled', () => {
+            controller.customHelpSite.enable = false;
+            controller.oldCustomHelpSite.enable = true;
+            expect(controller.showCustomHelpSiteSaveButton).toBeTruthy();
+          });
+        });
+      });
+
+      describe('saving org settings data', () => {
+
+        it('saves data via Orgservice', () => {
           controller.useCustomSupportUrl = controller.problemSiteInfo.cisco;
           controller.useCustomHelpSite = controller.helpSiteInfo.cisco;
           controller.useCustomSupportUrl = controller.problemSiteInfo.ext;
@@ -85,22 +134,22 @@ namespace globalsettings {
 
       });
 
-      describe('should save successfully', ()=> {
-        afterEach(()=> {
+      describe('should save successfully', () => {
+        afterEach(() => {
           saveAndNotifySuccess();
         });
 
-        it('with default cisco options', ()=> {
+        it('with default cisco options', () => {
           controller.useCustomSupportUrl = controller.problemSiteInfo.cisco;
           controller.useCustomHelpSite = controller.helpSiteInfo.cisco;
         });
 
-        it('with custom problem site', ()=> {
+        it('with custom problem site', () => {
           controller.useCustomSupportUrl = controller.problemSiteInfo.ext;
           controller.supportUrl = 'supportUrl';
         });
 
-        it('with custom help site', ()=> {
+        it('with custom help site', () => {
           controller.useCustomHelpSite = controller.helpSiteInfo.ext;
           controller.helpUrl = 'helpUrl';
         });
@@ -115,7 +164,7 @@ namespace globalsettings {
         }
       });
 
-      describe('should notify error response', ()=> {
+      describe('should notify error response', () => {
         beforeEach(initSpyFailure);
 
         it('when update fails', saveAndNotifyErrorResponse);
@@ -134,15 +183,15 @@ namespace globalsettings {
         }
       });
 
-      describe('should notify validation error', ()=> {
+      describe('should notify validation error', () => {
         afterEach(saveAndNotifyError);
 
-        it('when picking a custom problem site without a value', ()=> {
+        it('when picking a custom problem site without a value', () => {
           controller.useCustomSupportUrl = controller.problemSiteInfo.ext;
           controller.customSupport.url = '';
         });
 
-        it('when picking a custom help site without a value', ()=> {
+        it('when picking a custom help site without a value', () => {
           controller.useCustomHelpSite = controller.helpSiteInfo.ext;
           controller.customHelpSite.url = '';
         });

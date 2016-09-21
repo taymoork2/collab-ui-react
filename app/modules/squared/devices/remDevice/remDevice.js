@@ -5,18 +5,24 @@
     .controller('RemDeviceController',
 
       /* @ngInject */
-      function ($modalInstance, CsdmCodeService, CsdmDeviceService, CsdmUnusedAccountsService, XhrNotificationService, deviceOrCode) {
+      function ($modalInstance, CsdmCodeService, CsdmDeviceService, CsdmHuronOrgDeviceService, CsdmUnusedAccountsService, XhrNotificationService, deviceOrCode) {
         var rdc = this;
 
+        rdc.deviceOrCode = deviceOrCode;
+
         rdc.deleteDeviceOrCode = function () {
-          if (deviceOrCode.needsActivation) {
-            return CsdmCodeService.deleteCode(deviceOrCode)
+          if (rdc.deviceOrCode.needsActivation) {
+            return CsdmCodeService.deleteCode(rdc.deviceOrCode)
               .then($modalInstance.close, XhrNotificationService.notify);
-          } else if (deviceOrCode.isUnused) {
-            return CsdmUnusedAccountsService.deleteAccount(deviceOrCode)
+          } else if (rdc.deviceOrCode.isUnused) {
+            return CsdmUnusedAccountsService.deleteAccount(rdc.deviceOrCode)
+              .then($modalInstance.close, XhrNotificationService.notify);
+          } else if (rdc.deviceOrCode.type === 'cloudberry') {
+            return CsdmDeviceService.deleteDevice(rdc.deviceOrCode.url)
               .then($modalInstance.close, XhrNotificationService.notify);
           } else {
-            return CsdmDeviceService.deleteDevice(deviceOrCode.url)
+            var CsdmHuronDeviceService = CsdmHuronOrgDeviceService.create();
+            return CsdmHuronDeviceService.deleteDevice(rdc.deviceOrCode.url)
               .then($modalInstance.close, XhrNotificationService.notify);
           }
         };

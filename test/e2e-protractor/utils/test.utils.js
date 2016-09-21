@@ -1,6 +1,6 @@
 'use strict';
 
-/*global TIMEOUT*/
+/*global TIMEOUT, isSauce*/
 
 var config = require('./test.config.js');
 var request = require('request');
@@ -68,6 +68,9 @@ exports.randomTestGmail = function () {
 };
 
 exports.randomTestGmailwithSalt = function (salt) {
+  if (!isSauce) {
+    salt = 'LOC_' + salt;
+  }
   return 'collabctg+' + salt + '_' + this.getDateTimeString() + '_' + this.randomId() + '@gmail.com';
 };
 
@@ -115,6 +118,10 @@ exports.scrollTop = function () {
 
 exports.scrollBottom = function (selector) {
   browser.executeScript('$("' + selector + '").first().scrollTop($("' + selector + '").first().scrollHeight);');
+};
+
+exports.scroll = function (el) {
+  browser.executeScript('arguments[0].scrollIntoView()', el.getWebElement());
 };
 
 exports.refresh = function () {
@@ -200,6 +207,19 @@ exports.waitForTextBoxValue = function (elem) {
       });
     }, TIMEOUT, 'Waiting text To be available: ' + elem.locator());
   });
+};
+
+exports.waitForSpinner = function () {
+  var spinner = element.all(by.css('.icon-spinner')).get(0);
+
+  function waitSpinner() {
+    exports.expectIsNotDisplayed(spinner);
+  }
+
+  for (var i = 0; i < 3; i++) {
+    // Spinner may bounce repeatedly
+    exports.wait(spinner, 500).then(waitSpinner, waitSpinner);
+  }
 };
 
 exports.expectIsDisplayed = function (elem) {
@@ -369,6 +389,33 @@ exports.clickAll = function (elems) {
   })
 };
 
+// Returns true if checkbox is checked
+exports.getCheckboxVal = function (elem) {
+  return this.wait(elem).then(function () {
+    var input = elem.element(by.xpath('..')).element(by.tagName('input'));
+    return input.getAttribute('ng-model').then(function (ngModel) {
+      return input.evaluate(ngModel).then(function (value) {
+        return value;
+      });
+    });
+  });
+};
+
+// Wait (timeout ms) for checkbox to be display, if it is, set it to val, if not return
+exports.setCheckboxIfDisplayed = function (elem, val, timeout) {
+  return this.wait(elem, timeout).then(function () {
+    return exports.getCheckboxVal(elem).then(function (curVal) {
+      if (curVal !== val) {
+        // checkbox value needs to be toggled
+        return exports.click(elem);
+      }
+    });
+  }, function () {
+    // checkbox not present, move on
+    return true;
+  });
+};
+
 exports.isSelected = function (elem) {
   return this.wait(elem).then(function () {
     return elem.isSelected();
@@ -533,7 +580,6 @@ exports.findDirectoryNumber = function (message, lineNumber) {
 
 // use _searchCount = -1 for unbounded search
 exports.search = function (query, _searchCount) {
-  var spinner = element.all(by.css('.icon-spinner')).get(0);
   var searchCount = _searchCount || 1;
 
   function logAndWait() {
@@ -544,19 +590,12 @@ exports.search = function (query, _searchCount) {
     });
   }
 
-  function waitSpinner() {
-    exports.expectIsNotDisplayed(spinner);
-  }
-
   exports.click(exports.searchbox);
   exports.clear(exports.searchField);
   if (query) {
     exports.sendKeys(exports.searchField, query + protractor.Key.ENTER);
     exports.expectValueToBeSet(exports.searchField, query, TIMEOUT);
-    for (var i = 0; i < 3; i++) {
-      // Spinner may bounce repeatedly
-      exports.wait(spinner, 500).then(waitSpinner, waitSpinner);
-    }
+    exports.waitForSpinner();
   }
 
   if (searchCount > -1) {
@@ -698,7 +737,7 @@ exports.deleteIfUserExists = function (name) {
   function waitUntilElemIsPresent(elem, timeout) {
     return exports.wait(elem, timeout).then(function () {
       return elem.isDisplayed();
-    })
+    });
   }
 };
 
@@ -713,6 +752,7 @@ exports.quickDeleteUser = function (bFirst, name) {
     exports.expectIsDisplayed(users.deleteUserModal);
     exports.click(users.deleteUserButton);
     notifications.assertSuccess(name, 'deleted successfully');
+    exports.waitForSpinner();
     return true;
   }, function () {
     log('user is not preset');

@@ -47,7 +47,6 @@ describe('Controller: AASayMessageCtrl', function () {
   beforeEach(inject(function (_$rootScope_, _AAUiModelService_, _AutoAttendantCeMenuModelService_) {
     $rootScope = _$rootScope_;
     $scope = $rootScope;
-
     AAUiModelService = _AAUiModelService_;
     AutoAttendantCeMenuModelService = _AutoAttendantCeMenuModelService_;
 
@@ -205,6 +204,7 @@ describe('Controller: AASayMessageCtrl', function () {
 
         expect(controller.actionEntry).toEqual(aaUiModel[schedule]['entries'][index]['headers'][0]['actions'][0]);
       });
+
     });
 
     describe('saveUiModel', function () {

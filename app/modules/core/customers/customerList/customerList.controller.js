@@ -47,7 +47,6 @@
     $scope.exportType = $rootScope.typeOfExport.CUSTOMER;
     $scope.filterList = _.debounce(filterAction, $scope.timeoutVal);
 
-
     $scope.customerListToggle = customerListToggle;
 
     // expecting this guy to be unset on init, and set every time after
@@ -58,17 +57,23 @@
       placeholder: $translate.instant('customerPage.filterSelectPlaceholder'),
       options: [{
         value: 'expired',
-        label: $translate.instant('customerPage.filterExpiredAccounts'),
+        label: $translate.instant('customerPage.expiredAccountsFilter', {
+          count: 0
+        }),
         isSelected: false,
         isAccountFilter: true
       }, {
         value: 'active',
-        label: $translate.instant('customerPage.filterPurchasedAccounts'),
+        label: $translate.instant('customerPage.activeAccountsFilter', {
+          count: 0
+        }),
         isSelected: false,
         isAccountFilter: true
       }, {
         value: 'trial',
-        label: $translate.instant('customerPage.filterTrialAccounts'),
+        label: $translate.instant('customerPage.trialAccountsFilter', {
+          count: 0
+        }),
         isSelected: false,
         isAccountFilter: true
       }, {
@@ -105,7 +110,6 @@
     };
     $scope.$watch('filter.selected', function () {
       if ($scope.gridApi) {
-        // This refreshes the grid, forcing it to recalculate the filters/sorts/etc.
         $scope.gridApi.grid.refresh();
       }
     }, true);
@@ -131,7 +135,9 @@
     var multiServiceTemplate = $templateCache.get('modules/core/customers/customerList/grid/multiServiceColumn.tpl.html');
     var oldNoteTemplate = $templateCache.get('modules/core/customers/customerList/grid/noteColumn.tpl.html');
     var actionTemplate = $templateCache.get('modules/core/customers/customerList/grid/actionColumn.tpl.html');
-    // new templates
+    // END SECTION TO BE DELETED
+
+    // new templates (These should be kept when feature toggle is removed)
     var licenseCountTemplate = $templateCache.get('modules/core/customers/customerList/grid/licenseCountColumn.tpl.html');
     var totalUsersTemplate = $templateCache.get('modules/core/customers/customerList/grid/totalUsersColumn.tpl.html');
     var compactServiceTemplate = $templateCache.get('modules/core/customers/customerList/grid/compactServiceColumn.tpl.html');
@@ -162,7 +168,6 @@
       cellTemplate: oldNoteTemplate,
       sortingAlgorithm: notesSort
     };
-    // This array is all the old services, but split into separate columns
     var splitServicesFields = [{
       field: 'messaging',
       displayName: $translate.instant('customerPage.message'),
@@ -265,12 +270,11 @@
           if ($scope.load) {
             $scope.currentDataPosition++;
             $scope.load = false;
-            // lol getTrialsList doesnt take any params...
             getTrialsList(($scope.currentDataPosition * Config.usersperpage) + 1);
             $scope.gridApi.infiniteScroll.dataLoaded();
           }
         });
-        gridApi.grid.registerRowsProcessor(rowFilter, 150); // This is run between column filtering (100) and sorting (200)
+        gridApi.grid.registerRowsProcessor(rowFilter, 150);
       },
       multiFields: {
         meeting: [{
@@ -586,9 +590,8 @@
             var managed = PartnerService.loadRetrievedDataToList(orgList, false,
               $scope.isCareEnabled);
             var isMyOrgInList = _.some(orgList, {
-              customerName: Authinfo.getOrgName()
+              customerOrgId: Authinfo.getOrgId()
             });
-
             if (!isMyOrgInList && results[1]) {
               // 4/11/2016 admolla
               // TODO: for some reason if I refactor this to not need an array, karma acts up....
@@ -599,6 +602,17 @@
 
             $scope.managedOrgsList = managed;
             $scope.totalOrgs = $scope.managedOrgsList.length;
+            var statusTypeCounts = _.countBy($scope.managedOrgsList, function (value) {
+              return $scope.getAccountStatus(value);
+            });
+            _.forEach(statusTypeCounts, function (count, type) {
+              var option = _.find($scope.filter.options, { value: type });
+              if (angular.isDefined(option)) {
+                option.label = $translate.instant('customerPage.' + type + 'AccountsFilter', {
+                  count: count
+                });
+              }
+            });
           } else {
             Log.debug('Failed to retrieve managed orgs information.');
             Notification.error('partnerHomePage.errGetOrgs');

@@ -111,6 +111,9 @@
                 template: '<login/>'
               }
             },
+            params: {
+              reauthorize: undefined
+            },
             authenticate: false
           })
           .state('activateUser', {
@@ -668,7 +671,13 @@
             templateUrl: 'modules/core/overview/overview.tpl.html',
             controller: 'OverviewCtrl',
             controllerAs: 'overview',
-            parent: 'main'
+            parent: 'main',
+            resolve: {
+              // TODO Need to be removed once Care is graduated on atlas.
+              hasCareFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasCareTrials);
+              }
+            }
           })
           .state('my-company', {
             templateUrl: 'modules/core/myCompany/myCompanyPage.tpl.html',
@@ -684,6 +693,9 @@
           })
           .state('my-company.subscriptions', {
             url: '/my-company/subscriptions',
+            onEnter: /* @ngInject */ function (OnlineAnalyticsService) {
+              OnlineAnalyticsService.track(OnlineAnalyticsService.MY_COMPANY_SUBSCRIPTIONS);
+            },
             views: {
               'tabContent': {
                 controllerAs: 'mcpSubscription',
@@ -699,6 +711,9 @@
           })
           .state('my-company.info', {
             url: '/my-company',
+            onEnter: /* @ngInject */ function (OnlineAnalyticsService) {
+              OnlineAnalyticsService.track(OnlineAnalyticsService.MY_COMPANY_INFO);
+            },
             views: {
               'tabContent': {
                 controllerAs: 'mcpInfo',
@@ -709,6 +724,9 @@
           })
           .state('my-company.orders', {
             url: '/my-company/orders',
+            onEnter: /* @ngInject */ function (OnlineAnalyticsService) {
+              OnlineAnalyticsService.track(OnlineAnalyticsService.MY_COMPANY_ORDER_HISTORY);
+            },
             views: {
               'tabContent': {
                 template: '<my-company-orders></my-company-orders>'
@@ -1307,6 +1325,21 @@
               siteUrl: null
             }
           })
+          .state('reports.usage', {
+            url: '/reports/usage',
+            templateUrl: 'modules/core/customerReports/usage/usageReports.tpl.html',
+            controller: 'UsageReportsCtrl',
+            controllerAs: 'usageReport',
+            parent: 'main',
+            params: {
+              deviceReportType: 'peakHour'
+            },
+            resolve: {
+              deviceUsageFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasDeviceUsageReport);
+              },
+            }
+          })
           .state('webex-reports', {
             url: '/reports/webex',
             templateUrl: 'modules/core/customerReports/customerReports.tpl.html',
@@ -1319,7 +1352,6 @@
             }
           })
           .state('reports.care', {
-            url: '/reports/care',
             templateUrl: 'modules/core/customerReports/customerReports.tpl.html',
             controller: 'CustomerReportsCtrl',
             controllerAs: 'nav',
@@ -1411,7 +1443,7 @@
                 template: '<place-overview></place-overview>'
               },
               'header@place-overview': {
-                templateUrl: 'modules/squared/places/overview/placeHeader.tpl.html'
+                templateUrl: 'modules/squared/places/overview/placeHeader.html'
               }
             },
             params: {
@@ -1449,30 +1481,62 @@
             },
             data: {
               displayName: 'Call'
-            }
-          })
-          .state('place-overview.communication.internationalDialing', {
-            template: '<international-dialing-comp owner-type="place" identifier="cisUuid"></international-dialing-comp>',
-            data: {
-              displayName: 'International Dialing'
             },
             resolve: {
               lazy: /* @ngInject */ function lazyLoad($q, $ocLazyLoad) {
                 return $q(function resolveLogin(resolve) {
-                  require(['modules/huron/internationalDialing/internationalDialing.component'], loadModuleAndResolve($ocLazyLoad, resolve));
+                  require(['modules/squared/places/callOverview'], loadModuleAndResolve($ocLazyLoad, resolve));
                 });
               }
             }
           })
+          .state('place-overview.communication.internationalDialing', {
+            templateProvider: /* @ngInject */ function ($stateParams) {
+              var watcher = $stateParams.watcher;
+              var selected = $stateParams.selected;
+              return '<uc-dialing watcher=' + watcher + ' selected="' + selected + '"></uc-dialing>';
+            },
+            params: {
+              watcher: null,
+              selected: null
+            },
+            data: {
+              displayName: 'International Dialing'
+            }
+          })
+          .state('place-overview.communication.local', {
+            templateProvider: /* @ngInject */ function ($stateParams) {
+              var watcher = $stateParams.watcher;
+              var selected = $stateParams.selected;
+              return '<uc-dialing  watcher=' + watcher + ' selected="' + selected + '"></uc-dialing>';
+            },
+            params: {
+              watcher: null,
+              selected: null
+            },
+            data: {
+              displayName: 'Local Dialing'
+            }
+          })
           .state('place-overview.communication.line-overview', {
-            template: '<line-overview owner-type="place"></line-overview>',
+            // TODO(jlowery): remove templateProvider once we can upgrade ui-router to a
+            // version that supports route to component natively
+            templateProvider: /* @ngInject */ function ($stateParams) {
+              var ownerId = _.get($stateParams.currentPlace, 'cisUuid');
+              var ownerName = _.get($stateParams.currentPlace, 'displayName');
+              var numberId = $stateParams.numberId;
+              return '<uc-line-overview owner-type="place" owner-name="' + ownerName + '" owner-id="' + ownerId + '" number-id="' + numberId + '"></line-overview>';
+            },
+            params: {
+              numberId: '',
+            },
             data: {
               displayName: 'Line Configuration'
             },
             resolve: {
               lazy: /* @ngInject */ function lazyLoad($q, $ocLazyLoad) {
                 return $q(function resolveLogin(resolve) {
-                  require(['modules/huron/lines/lineOverview/lineOverview.component'], loadModuleAndResolve($ocLazyLoad, resolve));
+                  require(['modules/huron/lines/lineOverview'], loadModuleAndResolve($ocLazyLoad, resolve));
                 });
               }
             }
@@ -1642,7 +1706,7 @@
             templateUrl: 'modules/core/customers/customerSubscriptions/CustomerSubscriptionsDetail.tpl.html',
             resolve: {
               data: /* @ngInject */ function ($state, $translate) {
-                $state.get('customer-overview.customerSubscriptions').data.displayName = $translate.instant('customerPage.subscriptions');
+                $state.get('customer-overview.customerSubscriptions').data.displayName = $translate.instant('customerPage.orderRequest');
               }
             }
           })
@@ -1667,6 +1731,18 @@
             resolve: {
               data: /* @ngInject */ function ($state, $translate) {
                 $state.get('customer-overview.meetingDetail').data.displayName = $translate.instant('customerPage.meetingLicenses');
+              }
+            },
+            data: {},
+            params: {
+              meetingLicenses: {}
+            }
+          })
+          .state('customer-overview.externalNumberDetail', {
+            templateUrl: 'modules/core/customers/customerOverview/externalNumberDetail.tpl.html',
+            resolve: {
+              data: /* @ngInject */ function ($state, $translate) {
+                $state.get('customer-overview.externalNumberDetail').data.displayName = $translate.instant('customerPage.call');
               }
             },
             data: {},
@@ -2257,7 +2333,12 @@
             templateUrl: 'modules/hercules/fusion-pages/expressway-settings.html',
             controller: 'ExpresswayClusterSettingsController',
             controllerAs: 'clusterSettings',
-            parent: 'main'
+            parent: 'main',
+            resolve: {
+              hasF237FeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasF237ResourceGroups);
+              }
+            }
           })
           .state('mediafusion-settings', {
             url: '/services/cluster/mediafusion/:id/settings',
@@ -2324,6 +2405,19 @@
                 controller: 'ExpresswayEnterNameController',
                 controllerAs: 'vm',
                 templateUrl: 'modules/hercules/fusion-pages/add-resource/expressway/enter-name.html'
+              }
+            },
+            params: {
+              wizard: null
+            }
+          })
+          .state('add-resource.expressway.resource-group', {
+            parent: 'modalSmall',
+            views: {
+              'modal@': {
+                controller: 'ExpresswaySelectResourceGroupController',
+                controllerAs: 'vm',
+                templateUrl: 'modules/hercules/fusion-pages/add-resource/expressway/select-resource-group.html'
               }
             },
             params: {
@@ -2506,6 +2600,9 @@
             resolve: {
               hasF410FeatureToggle: /* @ngInject */ function (FeatureToggleService) {
                 return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridServicesResourceList);
+              },
+              hasF237FeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasF237ResourceGroups);
               }
             }
           })
@@ -2544,12 +2641,24 @@
             controller: 'ExpresswayHostDetailsController',
             controllerAs: 'hostDetailsCtrl',
             data: {
-              displayName: 'Host'
+              displayName: 'Node'
             },
             params: {
               host: null,
               clusterId: null,
               connectorType: null
+            }
+          })
+          .state('resource-group-settings', {
+            url: '/services/resourceGroups/:id/settings',
+            templateUrl: 'modules/hercules/fusion-pages/resource-group-settings/resource-group-settings.html',
+            controller: 'ResourceGroupSettingsController',
+            controllerAs: 'rgsCtrl',
+            parent: 'main',
+            resolve: {
+              hasF237FeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasF237ResourceGroups);
+              }
             }
           });
 
@@ -2625,6 +2734,19 @@
               connector: null,
               hostLength: null,
               selectedCluster: null
+            }
+          })
+          .state('connector-details-v2.alarm-detailsForNode', {
+            parent: 'connector-details-v2.host-details',
+            templateUrl: 'modules/mediafusion/media-service-v2/side-panel/alarm-details.html',
+            controller: 'MediaAlarmControllerV2',
+            controllerAs: 'alarmCtrl',
+            data: {
+              displayName: 'Alarm Details'
+            },
+            params: {
+              alarm: null,
+              host: null
             }
           });
 

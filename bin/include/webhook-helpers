@@ -1,3 +1,13 @@
+if [ -z "${WX2_ADMIN_WEB_CLIENT_HOME}" ]; then
+    >&2 echo "Error: WX2_ADMIN_WEB_CLIENT_HOME is not set, please export this environment variable first."
+    return 1
+fi
+
+. "${WX2_ADMIN_WEB_CLIENT_HOME}/bin/include/markdown-helpers"
+
+# IMPORTANT: '.secrets' file must be populated at project root at build run-time
+. "${WX2_ADMIN_WEB_CLIENT_HOME}/bin/include/secrets-helpers"
+
 function concat_lines {
     # concat into a single line, and escape double-quotes with sed
     while read line; do
@@ -43,9 +53,9 @@ function tr_result_line_to_list_items {
         run_num="$(echo "$line" | awk -F'|' '{print $1;}' | cut -d':' -f1)"
         test_id_result=$(echo "$line" | awk -F'|' '{print $2;}' | xargs echo)
         spec_file=$(echo "$line" | awk -F'|' '{print $3;}' | xargs echo)
-        spec_file="${spec_file:-"(N/A)"}"
+        spec_file="${spec_file:-(N/A)}"
         url=$(echo "$line" | awk -F'|' '{print $4;}' | xargs echo)
-        url="${url:-"(N/A)"}"
+        url="${url:-(N/A)}"
         echo "-----"
         echo "- test: ${run_num}: $test_id_result"
         echo "- spec file: $spec_file"
@@ -63,15 +73,58 @@ function add_key_val_to_json {
     local key="$1"
     local val="$2"
     local current_json
-    local js_cmd
     current_json="$(cat)"
-    js_cmd="$(printf "var o = %s; o['%s'] = '%s'; console.log(JSON.stringify(o));" "$current_json" "$key" "$val")"
-    node -e "$js_cmd"
+    local python_cmd="import json; o = json.loads(r'%s'); o['%s'] = '%s'; print json.dumps(o)"
+    python_cmd="$(printf "$python_cmd" "$current_json" "$key" "$val")"
+    python -c "$python_cmd"
 }
 
-function markdown_file_to_json {
+function txt_file_to_json {
+    file_to_json "$1" "text"
+}
+
+function md_file_to_json {
+    file_to_json "$1" "markdown"
+}
+
+function file_to_json {
     local input_file="$1"
-    local markdown_stringified
-    markdown_stringified="$(concat_lines < "$input_file")"
-    print_key_val_to_json "markdown" "$markdown_stringified"
+    local payload_type="${2:-markdown}"
+    local str
+    str="$(concat_lines < "$input_file")"
+    print_key_val_to_json "$payload_type" "$str"
+}
+
+function post_json_payload_with_bearer_token_to_url {
+    local json_payload_file="$1"
+    local bot_access_token="$2"
+    local url="$3"
+    curl \
+        -H 'Content-type: application/json; charset=utf-8' \
+        -H "Authorization: Bearer $bot_access_token" \
+        --data @"${json_payload_file}" \
+        "$url"
+}
+
+function post_txt_file_as_message_to_room_id {
+    post_file_as_message_to_room_id "$1" "$2" "text"
+}
+
+function post_md_file_as_message_to_room_id {
+    post_file_as_message_to_room_id "$1" "$2" "markdown"
+}
+
+function post_file_as_message_to_room_id {
+    source_secrets || return 1
+    local input_file="$1"
+    local room_id="$2"
+    local payload_type="${3:-markdown}"
+    local tmp_file
+    tmp_file="$(mktemp "./payload-XXXXX.json")"
+    file_to_json "$input_file" "$payload_type" \
+        | add_key_val_to_json "roomId" "$room_id" \
+        > "$tmp_file"
+
+    post_json_payload_with_bearer_token_to_url "$tmp_file" "$SPARK__MSG_BOT_API_TOKEN" "https://api.ciscospark.com/v1/messages"
+    rm -f "$tmp_file"
 }

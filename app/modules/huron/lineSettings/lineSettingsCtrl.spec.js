@@ -20,6 +20,7 @@ describe('Controller: LineSettingsCtrl', function () {
       uuid: ''
     }
   };
+
   var errorResponse = {
     message: 'error',
     status: 500
@@ -253,6 +254,7 @@ describe('Controller: LineSettingsCtrl', function () {
     });
 
     it('should update Simultaneous Calling', function () {
+      controller.updateMultipleCalls();
       expect(LineSettings.updateSimultaneousCalls).toHaveBeenCalled();
     });
   });

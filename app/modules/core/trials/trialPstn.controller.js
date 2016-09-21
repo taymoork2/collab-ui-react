@@ -12,7 +12,7 @@
     vm.trialData = TrialPstnService.getData();
     vm.customerId = Authinfo.getOrgId();
     var pstnTokenLimit = 10;
-    vm.showOrdering = false;
+    vm.providerImplementation = 'SWIVEL';
 
     vm.getStateInventory = getStateInventory;
     vm.searchCarrierInventory = searchCarrierInventory;
@@ -68,7 +68,7 @@
         label: $translate.instant('trialModal.pstn.provider'),
         options: [],
         onChangeFn: function () {
-          vm.showOrdering = vm.trialData.details.pstnProvider.apiExists;
+          vm.providerImplementation = vm.trialData.details.pstnProvider.apiImplementation;
           resetNumbers();
         }
       },
@@ -149,6 +149,7 @@
       type: 'select',
       className: 'medium-4 inline-row left',
       templateOptions: {
+        required: true,
         label: $translate.instant('pstnSetup.areaCode'),
         labelfield: 'code',
         valuefield: 'code',
@@ -181,7 +182,7 @@
       }
 
       $timeout(function () {
-        if (vm.trialData.details.pstnProvider.apiExists) {
+        if (vm.trialData.details.pstnProvider.apiImplementation !== "SWIVEL") {
           $('#didAddField').tokenfield('setTokens', vm.trialData.details.pstnNumberInfo.numbers.toString());
         } else {
           reinitTokens();
@@ -198,6 +199,7 @@
 
     function getStateInventory() {
       vm.areaCodeOptions = [];
+      vm.trialData.details.pstnNumberInfo.areaCode.code = null;
       PstnSetupService.getCarrierInventory(vm.trialData.details.pstnProvider.uuid, vm.trialData.details.pstnNumberInfo.state.abbreviation)
         .then(function (response) {
           _.forEach(response.areaCodes, function (areaCode) {
@@ -205,7 +207,8 @@
               vm.areaCodeOptions.push(areaCode);
             }
           });
-        }).catch(function (response) {
+        })
+        .catch(function (response) {
           Notification.errorResponse(response, 'trialModal.pstn.error.areaCodes');
         });
     }
@@ -224,7 +227,8 @@
             vm.trialData.details.pstnNumberInfo.numbers.push(numberRanges[0][index]);
           }
           $('#didAddField').tokenfield('setTokens', vm.trialData.details.pstnNumberInfo.numbers.toString());
-        }).catch(function (response) {
+        })
+        .catch(function (response) {
           Notification.errorResponse(response, 'trialModal.pstn.error.numbers');
         });
     }
@@ -324,16 +328,22 @@
       });
       if (localScope.to.options.length === 1) {
         vm.trialData.details.pstnProvider = localScope.to.options[0];
-        vm.showOrdering = localScope.to.options[0].apiExists;
+        vm.providerImplementation = localScope.to.options[0].apiImplementation;
       }
     }
 
     function disableNextButton() {
-      if (!vm.showOrdering && vm.trialData.details.swivelNumbers.length === 0) {
+      if (!checkForInvalidTokens()) {
+        // there are invalid tokens
         return true;
-      } else if (!checkForInvalidTokens()) {
+      } else if (vm.providerImplementation === "SWIVEL" && _.size(vm.trialData.details.swivelNumbers) === 0) {
+        // no swivel numbers entered
+        return true;
+      } else if (vm.providerImplementation !== "SWIVEL" && _.size(vm.trialData.details.pstnNumberInfo.numbers) === 0) {
+        // no PSTN numbers
         return true;
       } else {
+        // have some valid numbers
         return false;
       }
     }

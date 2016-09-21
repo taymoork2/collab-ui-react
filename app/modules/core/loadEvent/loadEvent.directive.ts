@@ -1,13 +1,13 @@
-interface LoadEventScope extends ng.IScope {
+interface ILoadEventScope extends ng.IScope {
   loading: boolean;
 }
 
-class LoadEvent implements ng.IDirective {
+export class LoadEvent implements ng.IDirective {
   public restrict = 'A';
   public scope = {
     loading: '=',
   };
-  public link: ng.IDirectiveLinkFn = (scope: LoadEventScope, elem: JQuery) => {
+  public link: ng.IDirectiveLinkFn = (scope: ILoadEventScope, elem: JQuery) => {
     elem.bind('load', () => {
       scope.loading = false;
       scope.$apply();
@@ -17,6 +17,3 @@ class LoadEvent implements ng.IDirective {
     return new LoadEvent();
   }
 }
-
-angular.module('Core')
-  .directive('loadEvent', LoadEvent.directive);

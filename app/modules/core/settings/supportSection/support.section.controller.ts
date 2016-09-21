@@ -1,10 +1,10 @@
 export class SupportSettings {
 
-  private customSupport = {enable: false, url: null, text: null};
-  private oldCustomSupport = {enable: false, url: null, text: null};
+  private customSupport = { enable: false, url: null, text: null };
+  private oldCustomSupport = { enable: false, url: null, text: null };
 
-  private customHelpSite = {enable: false, url: null};
-  private oldCustomHelpSite = {enable: false, url: null};
+  private customHelpSite = { enable: false, url: null };
+  private oldCustomHelpSite = { enable: false, url: null };
 
   public placeHolder = {};
   private isCiscoSupport = false;
@@ -14,12 +14,12 @@ export class SupportSettings {
 
   private problemSiteInfo = {
     cisco: false,
-    ext: true
+    ext: true,
   };
 
   private helpSiteInfo = {
     cisco: false,
-    ext: true
+    ext: true,
   };
 
   public savingProgress = false;
@@ -35,22 +35,24 @@ export class SupportSettings {
     return this.customHelpSite.enable;
   }
 
-  set useCustomHelpSite(value:boolean) {
+  set useCustomHelpSite(value: boolean) {
     this.customHelpSite.enable = value;
     if (value === this.helpSiteInfo.cisco) {
       this.customHelpSite.url = '';
     }
   }
 
-  get useCustomHelpSiteDirty() {
-    return this.customHelpSite.enable != this.oldCustomHelpSite.enable || (this.customHelpSite.enable && this.customHelpSite.url != this.oldCustomHelpSite.url);
+  get showCustomHelpSiteSaveButton() {
+    return this.customHelpSite.enable !== this.oldCustomHelpSite.enable //Switched
+      && (!this.customHelpSite.enable || this.customHelpSite.url) //to disabled or has an url set
+      || (this.customHelpSite.enable && this.customHelpSite.url && this.customHelpSite.url !== this.oldCustomHelpSite.url); //or enabled with a new url set
   }
 
   get useCustomSupportUrl() {
     return this.customSupport.enable;
   }
 
-  set useCustomSupportUrl(value:boolean) {
+  set useCustomSupportUrl(value: boolean) {
     this.customSupport.enable = value;
     if (value === this.problemSiteInfo.cisco) {
       this.customSupport.url = '';
@@ -58,16 +60,17 @@ export class SupportSettings {
     }
   }
 
-  get useCustomSupportUrlDirty():boolean {
-    return this.customSupport.enable != this.oldCustomSupport.enable
-      || ( this.customSupport.enable && (this.customSupport.url != this.oldCustomSupport.url || this.oldCustomSupport.text != this.customSupport.text));
+  get showCustomSupportUrlSaveButton(): boolean {
+    return this.customSupport.enable !== this.oldCustomSupport.enable //Switched
+      && (!this.customSupport.enable || this.customSupport.url) //to disabled or has an url set
+      || ( this.customSupport.enable && this.customSupport.url && (this.customSupport.url !== this.oldCustomSupport.url || this.oldCustomSupport.text !== this.customSupport.text));
   }
 
-  get isPartner():boolean {
+  get isPartner(): boolean {
     return this.Authinfo.isPartner();
   }
 
-  public static get appType():string {
+  public static get appType(): string {
     return 'Squared';
   }
 
@@ -82,20 +85,20 @@ export class SupportSettings {
     this.placeHolder = {
       troubleUrl: $translate.instant('partnerProfile.troubleUrl'),
       troubleText: $translate.instant('partnerProfile.troubleText'),
-      helpUrlText: $translate.instant('partnerProfile.helpUrlText')
+      helpUrlText: $translate.instant('partnerProfile.helpUrlText'),
     };
   }
 
   private initOrgInfo() {
-    this.UserListService.listPartners(this.orgId, (data:{partners:Array<Partner>})=> {
+    this.UserListService.listPartners(this.orgId, (data: { partners: Array<Partner> }) => {
       if (_.isEmpty(data.partners)) {
         return;
       }
-      this.representatives = _.filter(data.partners, (rep)=> {
+      this.representatives = _.filter(data.partners, (rep) => {
         return _.endsWith(rep.userName, '@cisco.com');
       });
-      this.partners = _.filter(data.partners, (rep)=> {
-        return !_.endsWith(rep.userName, '@cisco.com')
+      this.partners = _.filter(data.partners, (rep) => {
+        return !_.endsWith(rep.userName, '@cisco.com');
       });
     });
 
@@ -143,7 +146,7 @@ export class SupportSettings {
     if (this.customSupportUrlIsValid()) {
       // let isCiscoHelp = this.isManaged ? this.isCiscoHelp : this.useCustomHelpSite === false;
       let isCiscoSupport = this.isManaged ? this.isCiscoSupport : this.useCustomSupportUrl === false;
-      var settings = {
+      let settings = {
         reportingSiteUrl: this.customSupport.url || null,
         reportingSiteDesc: this.customSupport.text || null,
         // helpUrl: this.helpUrl || null,
@@ -152,11 +155,10 @@ export class SupportSettings {
         // allowReadOnlyAccess: this.allowReadOnlyAccess,
         // allowCrashLogUpload: this.allowCrashLogUpload
       };
-      this.updateOrgSettings(this.orgId, settings, ()=> {
+      this.updateOrgSettings(this.orgId, settings, () => {
         this.resetCustomSupportUrlForm();
       });
-    }
-    else {
+    } else {
       this.Notification.error('partnerProfile.orgSettingsError');
     }
   }
@@ -181,7 +183,7 @@ export class SupportSettings {
         // allowCrashLogUpload: this.allowCrashLogUpload
       };
 
-      this.updateOrgSettings(this.orgId, settings, ()=> {
+      this.updateOrgSettings(this.orgId, settings, () => {
         this.resetCustomHelpSiteForm();
       });
     } else {
@@ -213,7 +215,7 @@ export class SupportSettings {
       .finally(this.stopLoading.bind(this));
   }
 
-  stopLoading() {
+  public stopLoading() {
     this.savingProgress = false;
   }
 
@@ -223,15 +225,15 @@ export class SupportSettings {
 
   private notifyError(response) {
     this.Notification.errorResponse(response, 'errors.statusError', {
-      status: response.status
+      status: response.status,
     });
   }
 }
 
 class Partner {
-  userName:string;
-  displayName:string;
-  name:{givenName:string,familyName:string}
+  public userName: string;
+  public displayName: string;
+  public name: { givenName: string, familyName: string };
 }
 angular
   .module('Core')

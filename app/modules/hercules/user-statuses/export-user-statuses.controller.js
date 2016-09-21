@@ -6,7 +6,7 @@
     .controller('ExportUserStatusesController', ExportUserStatusesController);
 
   /* @ngInject */
-  function ExportUserStatusesController($scope, $q, $translate, $modalInstance, userStatusSummary, Authinfo, UserDetails, USSService2, ClusterService, ExcelService) {
+  function ExportUserStatusesController($scope, $q, $translate, $modalInstance, userStatusSummary, Authinfo, UserDetails, USSService, ClusterService, ExcelService) {
     var vm = this;
     var numberOfUsersPrCiRequest = 50; // can probably go higher, depending on the CI backend...
     var numberOfUsersPrUssRequest = 500;
@@ -130,7 +130,7 @@
     }
 
     function getUserStatuses(service, type, offset, limit) {
-      return USSService2.getStatuses(service, type, offset, limit)
+      return USSService.getStatuses(service, type, offset, limit)
         .then(function (response) {
           if (offset + limit < response.paging.count) {
             return getUserStatuses(service, type, offset + limit, limit)

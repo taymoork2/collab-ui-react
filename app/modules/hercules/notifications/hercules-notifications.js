@@ -6,7 +6,7 @@
     .directive('herculesNotifications', herculesNotificationsDirective);
 
   /* @ngInject */
-  function HerculesNotificationsController(NotificationService, $state, $scope, $modal, ServiceDescriptor, ServiceStateChecker, USSService2) {
+  function HerculesNotificationsController(NotificationService, $state, $scope, $modal, ServiceDescriptor, ServiceStateChecker, USSService) {
     var vm = this;
     vm.notificationsLength = function () {
       return NotificationService.getNotificationLength();
@@ -46,6 +46,10 @@
       $state.go('call-service.settings');
     };
 
+    vm.locatedinCallSettings = function () {
+      return $state.is('call-service.settings');
+    };
+
     vm.navigateToCurrentServiceSettings = function () {
       vm.showNotifications = false;
       $state.go($state.current.name.split('.')[0] + '.settings');
@@ -62,7 +66,7 @@
             return servicesId;
           },
           userStatusSummary: function () {
-            return USSService2.extractSummaryForAService(servicesId);
+            return USSService.extractSummaryForAService(servicesId);
           }
         }
       });
@@ -71,15 +75,6 @@
     vm.dismissNewServiceNotification = function (notificationId, serviceId) {
       ServiceDescriptor.acknowledgeService(serviceId);
       NotificationService.removeNotification(notificationId);
-    };
-
-    vm.openAddResourceModal = function () {
-      $modal.open({
-        controller: 'RedirectTargetController',
-        controllerAs: 'redirectTarget',
-        templateUrl: 'modules/hercules/redirect-target/redirect-target-dialog.html',
-        type: 'small'
-      });
     };
 
     vm.showEnterpriseSettings = function () {

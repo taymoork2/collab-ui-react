@@ -11,6 +11,7 @@
     var AXIS = 'axis';
     var LEGEND = 'legend';
     var NUMFORMAT = 'numFormat';
+    var CURSOR = 'cursor';
 
     // variables for the active users section
     var activeUserDiv = 'activeUsersdiv';
@@ -76,7 +77,7 @@
         startDuration = 0;
       }
 
-      var chartData = CommonGraphService.getBaseSerialGraph(data, startDuration, valueAxes, activeUserGraphs(data), 'modifiedDate', catAxis);
+      var chartData = CommonGraphService.getBaseSerialGraph(data, startDuration, valueAxes, activeUserGraphs(data), 'date', catAxis);
       chartData.numberFormatter = CommonGraphService.getBaseVariable(NUMFORMAT);
       chartData.legend = CommonGraphService.getBaseVariable(LEGEND);
       chartData.legend.labelText = '[[title]]';
@@ -145,7 +146,7 @@
         startDuration = 0;
       }
 
-      var chartData = CommonGraphService.getBaseSerialGraph(data, startDuration, valueAxes, mediaQualityGraphs(data), 'modifiedDate', catAxis);
+      var chartData = CommonGraphService.getBaseSerialGraph(data, startDuration, valueAxes, mediaQualityGraphs(data), 'date', catAxis);
       chartData.numberFormatter = CommonGraphService.getBaseVariable(NUMFORMAT);
       chartData.legend = CommonGraphService.getBaseVariable(LEGEND);
       chartData.legend.reversedOrder = true;
@@ -242,13 +243,7 @@
 
       var chartData = CommonGraphService.getBaseSerialGraph(data, startDuration, valueAxes, populationGraphs(data), 'customerName', catAxis);
       chartData.marginBottom = 60;
-      chartData.chartCursor = {
-        "cursorAlpha": 0,
-        "categoryBalloonEnabled": false,
-        "oneBalloonOnly": true,
-        "balloonPointerOrientation": "vertical",
-        "showNextAvailable": true
-      };
+      chartData.chartCursor = CommonGraphService.getBaseVariable[CURSOR];
 
       return AmCharts.makeChart(activePopDiv, chartData);
     }

@@ -6,7 +6,7 @@
     var vm = this;
 
     vm.options = [];
-    vm.selectPlaceholder = 'Select a Cluster';
+    vm.selectPlaceholder = $translate.instant('mediaFusion.add-resource-dialog.cluster-placeholder');
     vm.selectedCluster = '';
     vm.groups = null;
     vm.groupResponse = null;
@@ -27,6 +27,12 @@
         displayName: cluster.name
       });
     vm.saving = false;
+    vm.canContinue = function () {
+      if (vm.selectedCluster == vm.selectPlaceholder || vm.selectedCluster == '') {
+        return false;
+      }
+      return true;
+    };
 
     vm.reassign = function () {
       vm.saving = true;
@@ -37,20 +43,33 @@
         }
       });
 
+      if (vm.clusterDetail == null) {
+        MediaClusterServiceV2.createClusterV2(vm.selectedCluster, 'stable').then(function (res) {
+          vm.clusterDetail = res.data;
+          moveHost(res);
+        }, function () {
+          vm.error = $translate.instant('mediaFusion.reassign.reassignErrorMessage', {
+            hostName: vm.selectedCluster
+          });
+          Notification.error(vm.error);
+
+        });
+      } else {
+        moveHost();
+      }
+    };
+    function moveHost() {
       MediaClusterServiceV2.moveV2Host(connector.id, cluster.id, vm.clusterDetail.id).then(function () {
         $modalInstance.close();
-        vm.saving = false;
         Notification.success('mediaFusion.moveHostSuccess');
       }, function (err) {
         vm.error = $translate.instant('mediaFusion.reassign.reassignErrorMessage', {
           hostName: vm.selectedCluster,
           errorMessage: XhrNotificationService.getMessages(err).join(', ')
         });
-        vm.saving = false;
       });
-      return false;
-    };
 
+    }
     vm.close = $modalInstance.close;
   }
 

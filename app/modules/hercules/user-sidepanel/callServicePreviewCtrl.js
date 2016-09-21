@@ -6,7 +6,7 @@
     .controller('CallServicePreviewCtrl', CallServicePreviewCtrl);
 
   /*@ngInject*/
-  function CallServicePreviewCtrl($scope, $state, $stateParams, Authinfo, Userservice, Notification, USSService2, ClusterService, $timeout, ServiceDescriptor, UriVerificationService, DomainManagementService, $translate, FeatureToggleService, ResourceGroupService) {
+  function CallServicePreviewCtrl($scope, $state, $stateParams, Authinfo, Userservice, Notification, USSService, ClusterService, $timeout, ServiceDescriptor, UriVerificationService, DomainManagementService, $translate, FeatureToggleService, ResourceGroupService) {
     $scope.saveLoading = false;
     $scope.currentUser = $stateParams.currentUser;
     var isEntitled = function (ent) {
@@ -79,7 +79,7 @@
     };
 
     var updateStatus = function () {
-      USSService2.getStatusesForUser($scope.currentUser.id).then(function (statuses) {
+      USSService.getStatusesForUser($scope.currentUser.id).then(function (statuses) {
         $scope.callServiceAware.status = _.find(statuses, function (status) {
           return $scope.callServiceAware.id === status.serviceId;
         });
@@ -114,18 +114,13 @@
       if (!FeatureToggleService.supports(FeatureToggleService.features.atlasF237ResourceGroups)) {
         return;
       }
-      ResourceGroupService.getAll().then(function (groups) {
-        if (groups && groups.length > 0) {
-          _.each(groups, function (group) {
-            $scope.resourceGroup.options.push({
-              label: group.name + (group.releaseChannel ? ' (' + group.releaseChannel + ')' : ''),
-              value: group.id
-            });
-          });
+      ResourceGroupService.getAllAsOptions().then(function (options) {
+        if (options.length > 0) {
+          $scope.resourceGroup.options = $scope.resourceGroup.options.concat(options);
           if ($scope.callServiceAware.status && $scope.callServiceAware.status.resourceGroupId) {
             setSelectedResourceGroup($scope.callServiceAware.status.resourceGroupId);
           } else {
-            USSService2.getUserProps($scope.currentUser.id).then(function (props) {
+            USSService.getUserProps($scope.currentUser.id).then(function (props) {
               if (props.resourceGroups && props.resourceGroups[$scope.callServiceAware.id]) {
                 setSelectedResourceGroup(props.resourceGroups[$scope.callServiceAware.id]);
               }
@@ -230,7 +225,7 @@
     var setResourceGroupOnUser = function (resourceGroupId) {
       $scope.resourceGroup.saving = true;
       var props = { userId: $scope.currentUser.id, resourceGroups: { 'squared-fusion-uc': resourceGroupId } };
-      USSService2.updateUserProps(props).then(function () {
+      USSService.updateUserProps(props).then(function () {
         $scope.resourceGroup.current = $scope.resourceGroup.selected;
         $scope.setShouldShowButtons();
       }).catch(function () {
@@ -265,7 +260,7 @@
     };
 
     $scope.getStatus = function (status) {
-      return USSService2.decorateWithStatus(status);
+      return USSService.decorateWithStatus(status);
     };
 
     $scope.domainVerificationError = false; // need to be to be backwards compatible.

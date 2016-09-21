@@ -10,29 +10,30 @@
   position: fixed;
   width: 40rem;
   max-height: 12rem;
+  height: 100%;
   left: 50%;
   @include vr-spacing(ml,20,0px,true);
   overflow: auto;
-  display: inline-flex;
+  display: flex;
   //align-content: center;
   flex-flow: row wrap;
-  flex: 1;
+  flex: 1 1 auto;
   justify-content: center;
   margin-right: auto;
 }
 
-.pilot-number-item {
-  display: inline-block;
-  width: rem-calc(200);
-  height: rem-calc(35);
-  background-color: $color-primary;
-  border-radius: rem-calc(4);
-  color: $color-white;
-  @include vr-spacing(p,0.5);
-  @include vr-spacing(m,0.25);
+.hunt-member-card.pilot-number-item {
 
-  & a, & a:hover {
+  width: 8rem !important;
+
+  & article header.open-panel {
+    border-radius : 0.25rem !important;
+    cursor: default;
+  }
+
+  & i, & i:hover {
     color: $color-white;
+    cursor: pointer;
   }
 
   & .pilot-number {

@@ -1,0 +1,16 @@
+<cs-sp-header>
+
+  <div class="header-image">
+    <div class="device-img">
+      <img src="images/devices-hi/space_avatar.png" />
+    </div>
+  </div>
+
+  <div class="header-info">
+    <div class="header-info-wrap">
+      <sq-editable-input ng-if="$ctrl.currentPlace.type !== 'cloudberry'" ng-model="$ctrl.currentPlace.displayName" sq-save="$ctrl.save(newText)"></sq-editable-input>
+      <span ng-if="$ctrl.currentPlace.type === 'cloudberry'">{{$ctrl.currentPlace.displayName}}</span>
+    </div>
+  </div>
+
+</cs-sp-header>

@@ -29,7 +29,7 @@
 
     function provisionCluster(data) {
       vm.provisioning = true;
-      return FusionClusterService.preregisterCluster(data.name, 'GA', 'mf_mgmt')
+      return FusionClusterService.preregisterCluster(data.name, 'stable', 'mf_mgmt')
         .then(function (cluster) {
           clusterId = cluster.id;
           return cluster;

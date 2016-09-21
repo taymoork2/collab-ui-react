@@ -6,7 +6,7 @@
     .controller('CustomerReportsCtrl', CustomerReportsCtrl);
 
   /* @ngInject */
-  function CustomerReportsCtrl($scope, $stateParams, $q, $timeout, $translate, Log, Authinfo, CustomerReportService, DummyCustomerReportService, CustomerGraphService, WebexReportService, Userservice, WebExApiGatewayService, Storage, FeatureToggleService, MediaServiceActivationV2) {
+  function CustomerReportsCtrl($state, $stateParams, $q, $timeout, $translate, Log, Authinfo, CustomerReportService, DummyCustomerReportService, CustomerGraphService, WebexReportService, Userservice, WebExApiGatewayService, Storage, FeatureToggleService, MediaServiceActivationV2) {
     var vm = this;
     var ABORT = 'ABORT';
     var REFRESH = 'refresh';
@@ -23,31 +23,42 @@
     vm.displayQuality = true;
 
     vm.tab = $stateParams.tab;
+    vm.headerTabs = [{
+      title: $translate.instant('reportsPage.sparkReports'),
+      state: 'reports'
+    }];
 
+    var activeUserData = [];
+    var isActiveUsers = false;
     var activeUsersSort = ['userName', 'numCalls', 'sparkMessages', 'totalActivity'];
     var activeUsersChart = null;
-    var previousSearch = "";
-    vm.activeUserDescription = "";
-    vm.mostActiveTitle = "";
+    var previousSearch = '';
+    var reportsUpdateToggle = FeatureToggleService.atlasReportsUpdateGetStatus();
     vm.activeUserStatus = REFRESH;
     vm.mostActiveUserStatus = REFRESH;
     vm.searchPlaceholder = $translate.instant('activeUsers.search');
-    vm.searchField = "";
+    vm.searchField = '';
     vm.mostActiveUsers = [];
     vm.showMostActiveUsers = false;
-    vm.displayMostActive = false;
     vm.activeUserReverse = true;
     vm.activeUsersTotalPages = 0;
     vm.activeUserCurrentPage = 0;
     vm.activeUserPredicate = activeUsersSort[3];
     vm.activeButton = [1, 2, 3];
+    vm.activeOptions = [{
+      value: 0,
+      label: $translate.instant('activeUsers.allUsers')
+    }, {
+      value: 1,
+      label: $translate.instant('activeUsers.activeUsers')
+    }];
+    vm.activeSelected = vm.activeOptions[0];
+    vm.displayActiveLineGraph = false;
 
     var avgRoomsChart = null;
-    vm.avgRoomsDescription = "";
     vm.avgRoomStatus = REFRESH;
 
     var filesSharedChart = null;
-    vm.filesSharedDescription = '';
     vm.filesSharedStatus = REFRESH;
 
     var mediaChart = null;
@@ -74,19 +85,12 @@
     };
     vm.deviceStatus = REFRESH;
     vm.isDevicesEmpty = true;
-    vm.deviceDescription = '';
     vm.deviceFilter = [angular.copy(defaultDeviceFilter)];
     vm.selectedDevice = vm.deviceFilter[0];
 
     var metricsChart = null;
-    vm.metricsDescription = '';
     vm.metricStatus = REFRESH;
     vm.metrics = {};
-
-    vm.headerTabs = [{
-      title: $translate.instant('reportsPage.sparkReports'),
-      state: 'reports'
-    }];
 
     var promises = {
       mf: FeatureToggleService.atlasMediaServiceMetricsGetStatus(),
@@ -126,9 +130,14 @@
 
     vm.timeUpdate = timeUpdate;
     vm.mediaUpdate = mediaUpdate;
+    vm.activityUpdate = activityUpdate;
+    vm.isActiveDisabled = isActiveDisabled;
     vm.resetCards = resetCards;
     vm.searchMostActive = searchMostActive;
     vm.deviceUpdate = deviceUpdate;
+    vm.getDescription = getDescription;
+    vm.getHeader = getHeader;
+    vm.goToUsersTab = goToUsersTab;
 
     // Graph data status checks
     vm.isRefresh = function (tab) {
@@ -185,13 +194,15 @@
     };
 
     function init() {
-      if (!vm.tab) {
-        setFilterBasedText();
-        $timeout(function () {
-          setDummyData();
-          setAllGraphs();
-        }, 30);
-      }
+      reportsUpdateToggle.then(function (response) {
+        vm.displayActiveLineGraph = response;
+        if (!vm.tab) {
+          $timeout(function () {
+            setDummyData();
+            setAllGraphs();
+          }, 30);
+        }
+      });
     }
 
     function timeUpdate() {
@@ -204,17 +215,22 @@
       vm.metricStatus = REFRESH;
       vm.metrics = {};
       vm.mediaSelected = vm.mediaOptions[0];
+      vm.activeSelected = vm.activeOptions[0];
 
-      setFilterBasedText();
       setDummyData();
       setAllGraphs();
     }
 
     function mediaUpdate() {
-      var tempMediaChart = CustomerGraphService.setMediaQualityGraph(mediaData, mediaChart, vm.mediaSelected);
-      if (tempMediaChart !== null && angular.isDefined(tempMediaChart)) {
-        mediaChart = tempMediaChart;
-      }
+      setMediaGraph(mediaData);
+    }
+
+    function activityUpdate() {
+      setActiveGraph(activeUserData);
+    }
+
+    function isActiveDisabled() {
+      return (vm.isEmpty(vm.activeUserStatus) || vm.isRefresh(vm.activeUserStatus) || !isActiveUsers);
     }
 
     function setAllGraphs() {
@@ -261,75 +277,69 @@
       }
     }
 
-    function setFilterBasedText() {
-      vm.activeUserDescription = $translate.instant('activeUsers.customerPortalDescription', {
-        time: vm.timeSelected.description
-      });
-
-      vm.mostActiveTitle = $translate.instant("activeUsers.mostActiveUsers", {
-        time: vm.timeSelected.label
-      });
-
-      vm.avgRoomsDescription = $translate.instant("avgRooms.avgRoomsDescription", {
-        time: vm.timeSelected.description
-      });
-
-      vm.filesSharedDescription = $translate.instant("filesShared.filesSharedDescription", {
-        time: vm.timeSelected.description
-      });
-
-      vm.metricsDescription = $translate.instant("callMetrics.customerDescription", {
-        time: vm.timeSelected.description
-      });
-
-      vm.videoDescription = $translate.instant("callMetrics.videoDescription", {
-        time: vm.timeSelected.description
-      });
-
-      vm.deviceDescription = $translate.instant("registeredEndpoints.customerDescription", {
+    function getDescription(text) {
+      return $translate.instant(text, {
         time: vm.timeSelected.description
       });
     }
 
+    function getHeader(text) {
+      return $translate.instant(text, {
+        time: vm.timeSelected.label
+      });
+    }
+
+    function goToUsersTab() {
+      $state.go('users.list');
+    }
+
     function setDummyData() {
-      setActiveGraph(DummyCustomerReportService.dummyActiveUserData(vm.timeSelected));
+      setActiveGraph(DummyCustomerReportService.dummyActiveUserData(vm.timeSelected, vm.displayActiveLineGraph));
       setAverageGraph(DummyCustomerReportService.dummyAvgRoomData(vm.timeSelected));
       setFilesGraph(DummyCustomerReportService.dummyFilesSharedData(vm.timeSelected));
       setMetricGraph(DummyCustomerReportService.dummyMetricsData());
       setDeviceGraph(DummyCustomerReportService.dummyDeviceData(vm.timeSelected));
-      setMediaGraph(DummyCustomerReportService.dummyMediaData(vm.timeSelected), {
-        value: 0
-      });
+      setMediaGraph(DummyCustomerReportService.dummyMediaData(vm.timeSelected));
 
       resizeCards();
     }
 
     function setActiveGraph(data) {
-      var tempActiveUserChart = CustomerGraphService.setActiveUsersGraph(data, activeUsersChart);
+      var tempActiveUserChart;
+      if (vm.displayActiveLineGraph) {
+        tempActiveUserChart = CustomerGraphService.setActiveLineGraph(data, activeUsersChart, vm.activeSelected);
+      } else {
+        tempActiveUserChart = CustomerGraphService.setActiveUsersGraph(data, activeUsersChart);
+      }
+
       if (tempActiveUserChart !== null && angular.isDefined(tempActiveUserChart)) {
         activeUsersChart = tempActiveUserChart;
       }
     }
 
     function setActiveUserData() {
+      // reset defaults
       vm.activeUsersTotalPages = 0;
       vm.activeUserCurrentPage = 0;
-      vm.searchField = "";
-      previousSearch = "";
+      vm.searchField = '';
+      previousSearch = '';
       vm.showMostActiveUsers = false;
-      vm.displayMostActive = false;
+      isActiveUsers = false;
+
       CustomerReportService.getActiveUserData(vm.timeSelected).then(function (response) {
         if (response === ABORT) {
           return;
-        } else if (response.graphData.length === 0) {
+        } else if (_.isArray(response.graphData) && response.graphData.length === 0) {
           vm.activeUserStatus = EMPTY;
         } else {
           setActiveGraph(response.graphData);
+          activeUserData = response.graphData;
+          isActiveUsers = response.isActiveUsers;
           vm.activeUserStatus = SET;
-          vm.displayMostActive = response.isActiveUsers;
         }
         resizeCards();
       });
+
       CustomerReportService.getMostActiveUserData(vm.timeSelected).then(function (response) {
         if (response === ABORT) {
           return;
@@ -404,8 +414,8 @@
       });
     }
 
-    function setMediaGraph(data, mediaFilter) {
-      var tempMediaChart = CustomerGraphService.setMediaQualityGraph(data, mediaChart, mediaFilter);
+    function setMediaGraph(data) {
+      var tempMediaChart = CustomerGraphService.setMediaQualityGraph(data, mediaChart, vm.mediaSelected);
       if (tempMediaChart !== null && angular.isDefined(tempMediaChart)) {
         mediaChart = tempMediaChart;
       }
@@ -420,7 +430,7 @@
           vm.mediaQualityStatus = EMPTY;
         } else {
           mediaData = response;
-          setMediaGraph(mediaData, vm.mediaSelected);
+          setMediaGraph(mediaData);
           vm.mediaQualityStatus = SET;
         }
       });
@@ -437,7 +447,7 @@
       CustomerReportService.getCallMetricsData(vm.timeSelected).then(function (response) {
         if (response === ABORT) {
           return;
-        } else if (response.dataProvider.length === 0) {
+        } else if (_.isArray(response.dataProvider) && response.dataProvider.length === 0) {
           vm.metricStatus = EMPTY;
         } else {
           setMetricGraph(response);
@@ -499,9 +509,10 @@
     }
 
     // WEBEX side of the page has been copied from the existing reports page
-    $scope.webexReportsObject = {};
-    $scope.webexOptions = [];
-    $scope.webexSelected = null;
+    vm.webexReportsObject = {};
+    vm.webexOptions = [];
+    vm.webexSelected = null;
+    vm.updateWebexReports = updateWebexReports;
 
     function onlyUnique(value, index, self) {
       return self.indexOf(value) === index;
@@ -530,7 +541,7 @@
             WebExApiGatewayService.siteFunctions(url).then(
               function getSiteSupportsIframeSuccess(result) {
                 if (result.isAdminReportEnabled && result.isIframeSupported) {
-                  $scope.webexOptions.push(result.siteUrl);
+                  vm.webexOptions.push(result.siteUrl);
 
                   if (!vm.showWebexTab) {
                     vm.headerTabs.push({
@@ -562,10 +573,10 @@
 
             // get the information needed for the webex reports index page
             var stateParamsSiteUrl = $stateParams.siteUrl;
-            var stateParamsSiteUrlIndex = $scope.webexOptions.indexOf(stateParamsSiteUrl);
+            var stateParamsSiteUrlIndex = vm.webexOptions.indexOf(stateParamsSiteUrl);
 
             var storageReportsSiteUrl = Storage.get('webexReportsSiteUrl');
-            var storageReportsSiteUrlIndex = $scope.webexOptions.indexOf(storageReportsSiteUrl);
+            var storageReportsSiteUrlIndex = vm.webexOptions.indexOf(storageReportsSiteUrl);
 
             // initialize the site that the webex reports index page will display
             var webexSelected = null;
@@ -574,7 +585,7 @@
             } else if (-1 !== storageReportsSiteUrlIndex) { // otherwise, if a valid siteUrl is in the local storage, the reports index page should reflect that site
               webexSelected = storageReportsSiteUrl;
             } else { // otherwise, the reports index page should reflect the 1st site that is in the dropdown list
-              webexSelected = $scope.webexOptions[0];
+              webexSelected = vm.webexOptions[0];
             }
 
             logMsg = funcName + ": " + "\n" +
@@ -585,8 +596,8 @@
               "webexSelected=" + webexSelected;
             Log.debug(logMsg);
 
-            $scope.webexSelected = webexSelected;
-            $scope.updateWebexReports();
+            vm.webexSelected = webexSelected;
+            updateWebexReports();
           }
         }
       );
@@ -608,22 +619,24 @@
       );
     }
 
-    $scope.updateWebexReports = function () {
-      var storageReportsSiteUrl = Storage.get('webexReportsSiteUrl');
-      var scopeWebexSelected = $scope.webexSelected;
+    function updateWebexReports() {
+      var funcName = "updateWebexReports()";
+      var logMsg = "";
 
-      var logMsg = "updateWebexReports(): " + "\n" +
-        "scopeWebexSelected=" + scopeWebexSelected + "\n" +
-        "storageReportsSiteUrl=" + storageReportsSiteUrl;
+      var storageReportsSiteUrl = Storage.get('webexReportsSiteUrl');
+      var webexSelected = vm.webexSelected;
+
+      logMsg = funcName + "\n" +
+        "storageReportsSiteUrl=" + storageReportsSiteUrl + "\n" +
+        "webexSelected=" + webexSelected;
       Log.debug(logMsg);
 
-      $scope.webexReportsObject = WebexReportService.initReportsObject(scopeWebexSelected);
-      $scope.infoCardObj = $scope.webexReportsObject.infoCardObj;
+      vm.webexReportsObject = WebexReportService.initReportsObject(webexSelected);
 
-      if (scopeWebexSelected !== storageReportsSiteUrl) {
-        Storage.put('webexReportsSiteUrl', scopeWebexSelected);
+      if (webexSelected !== storageReportsSiteUrl) {
+        Storage.put('webexReportsSiteUrl', webexSelected);
       }
-    };
+    }
 
     init();
   }

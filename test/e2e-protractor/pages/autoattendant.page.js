@@ -4,11 +4,19 @@ var AutoAttendantPage = function () {
   this.repeatMenu = 'Repeat this Menu';
   this.playSubmenu = 'Play Submenu';
   this.goBack = 'Go Back';
+  this.routeToQueue = 'Route to Queue';
   this.key0 = '0';
   this.key1 = '1';
   this.key2 = '2';
   this.firstTimeZone = 'Africa/Abidjan';
 
+  this.routeQueueDetail = element(by.id('route-queue-detail'));
+  this.rqDropDownArrow = element(by.linkText('Search or Select'));
+  this.rqDropDownOptions = element(by.id('route-queue-detail')).all(by.tagName('li'));
+  this.rqDropDownOptionSunlight = element.all(by.linkText('Sunlight 1'));
+  this.phoneMenu = element(by.css('div.aa-panel-body[name="Phone Menu"]'));
+
+  
   this.searchBox = element(by.id('searchFilter'));
   this.aaTitle = element(by.tagName('aa-builder-name-edit'));
   this.autoAttendantDevLink = element(by.css('a[href*="#/hurondetails/features"]'));
@@ -32,7 +40,7 @@ var AutoAttendantPage = function () {
   this.testImportCardDelete = this.testImportCardName.element(by.xpath('ancestor::article')).element(by.css('.icon-trash'));
   this.aaCard = element(by.css('.card-body'));
 
-  this.deleteModalConfirmText = element(by.css('.modal-body')).element(by.css('span'));
+  this.deleteModalConfirmText = element(by.css('.modal-body')).element(by.css('p'));
 
   this.deleteModalConfirmButton = element(by.id('deleteFeature'));
 
@@ -40,6 +48,11 @@ var AutoAttendantPage = function () {
 
   this.numberIconClose = element.all(by.css('.icon-close')).last();
   this.sayMessageBody = element(by.css('div.aa-panel-body[name="Say Message"]'));
+
+  this.messageOptions = element(by.css('div.aa-panel-body[name="Say Message"]')).element(by.css('select[name="messageSelect"] + div a.select-toggle'));
+  this.playMessageOption = element(by.css('div.aa-panel-body[name="Say Message"]')).element(by.css('select[name="messageSelect"] + div div.dropdown-menu')).all(by.tagName('li')).first();
+  this.mediaUploadSend = ('input[type="file"][ng-model="files"][name="mediaUploadSend"]');
+  this.mediaFileToUpload = '../data/sample-media-upload.wav';
 
   this.sayMessage = element(by.css('div.aa-panel-body[name="Say Message"]'));
   this.sayMessageInput = element(by.css('div.aa-panel-body[name="Say Message"]')).element(by.name('sayMessageInput'));
@@ -244,7 +257,7 @@ var AutoAttendantPage = function () {
   this.assertCalendarUpdateSuccess = assertCalendarUpdateSuccess;
   this.assertDeleteSuccess = assertDeleteSuccess;
   this.scrollIntoView = scrollIntoView;
-
+  
   function assertUpdateSuccess(test) {
     notifications.assertSuccess(test + ' updated successfully');
   }
@@ -264,7 +277,6 @@ var AutoAttendantPage = function () {
   function assertDeleteSuccess(test) {
     notifications.assertSuccess(test + ' Auto Attendant has been deleted successfully');
   }
-
   function scrollIntoView(el) {
     var webel = el.getWebElement();
     browser.executeScript(function (e) {

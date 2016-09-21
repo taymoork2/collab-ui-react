@@ -2,6 +2,8 @@
 
 describe('Controller: Dummy Customer Reports', function () {
   var DummyCustomerReportService;
+  var dayFormat = 'MMM DD';
+  var monthFormat = 'MMMM';
   var timeFilter = [{
     value: 0
   }, {
@@ -10,12 +12,8 @@ describe('Controller: Dummy Customer Reports', function () {
     value: 2
   }];
   var dummyData = getJSONFixture('core/json/partnerReports/dummyReportData.json');
-  var activeUser = angular.copy(dummyData.activeUser);
-  var avgRooms = angular.copy(dummyData.avgRooms);
-  var filesShared = angular.copy(dummyData.filesShared);
-  var mediaQuality = angular.copy(dummyData.mediaQuality);
   var devicesJson = getJSONFixture('core/json/customerReports/devices.json');
-  var devicesData = angular.copy(devicesJson.dummyData);
+  var activeData = getJSONFixture('core/json/customerReports/activeUser.json');
 
   var metricsData = {
     dataProvider: [{
@@ -32,40 +30,35 @@ describe('Controller: Dummy Customer Reports', function () {
     dummy: true
   };
 
-  var updateDates = function (data, filter) {
-    var dayFormat = "MMM DD";
-    var monthFormat = "MMMM";
-
+  var updateLineDates = function (data, filter) {
     if (filter.value === 0) {
-      for (var i = 6; i >= 0; i--) {
-        data[i].modifiedDate = moment().subtract(7 - i, 'day').format(dayFormat);
+      for (var i = 7; i >= 0; i--) {
+        data[i].date = moment().subtract(8 - i, 'day').format(dayFormat);
       }
     } else if (filter.value === 1) {
-      for (var x = 0; x <= 3; x++) {
-        data[x].modifiedDate = moment().startOf('week').subtract(1 + ((3 - x) * 7), 'day').format(dayFormat);
+      for (var x = 0; x <= 4; x++) {
+        data[x].date = moment().subtract((5 - x) * 7, 'day').format(dayFormat);
       }
     } else {
-      for (var y = 0; y <= 2; y++) {
-        data[y].modifiedDate = moment().subtract((2 - y), 'month').format(monthFormat);
+      for (var y = 0; y <= 13; y++) {
+        data[y].date = moment().subtract((14 - y) * 7, 'day').format(dayFormat);
       }
     }
     return data;
   };
 
-  var updateMediaDates = function (data, filter) {
-    var dayFormat = "MMM DD";
-    var monthFormat = "MMMM";
+  var updateDates = function (data, filter) {
     if (filter.value === 0) {
       for (var i = 6; i >= 0; i--) {
-        data[i].modifiedDate = moment().subtract(8 - i, 'day').format(dayFormat);
+        data[i].date = moment().subtract(7 - i, 'day').format(dayFormat);
       }
     } else if (filter.value === 1) {
       for (var x = 0; x <= 3; x++) {
-        data[x].modifiedDate = moment().startOf('week').subtract(1 + ((3 - x) * 7), 'day').format(dayFormat);
+        data[x].date = moment().startOf('week').subtract(1 + ((3 - x) * 7), 'day').format(dayFormat);
       }
     } else {
       for (var y = 0; y <= 2; y++) {
-        data[y].modifiedDate = moment().subtract((2 - y), 'month').format(monthFormat);
+        data[y].date = moment().subtract((2 - y), 'month').format(monthFormat);
       }
     }
     return data;
@@ -79,43 +72,31 @@ describe('Controller: Dummy Customer Reports', function () {
     }));
 
     it('dummyActiveUserData should return the expected responses', function () {
-      activeUser.one = updateDates(activeUser.one, timeFilter[0]);
-      activeUser.two = updateDates(activeUser.two, timeFilter[1]);
-      activeUser.three = updateDates(activeUser.three, timeFilter[2]);
+      expect(DummyCustomerReportService.dummyActiveUserData(timeFilter[0], false)).toEqual(updateDates(_.clone(dummyData.activeUser.one), timeFilter[0]));
+      expect(DummyCustomerReportService.dummyActiveUserData(timeFilter[1], false)).toEqual(updateDates(_.clone(dummyData.activeUser.two), timeFilter[1]));
+      expect(DummyCustomerReportService.dummyActiveUserData(timeFilter[2], false)).toEqual(updateDates(_.clone(dummyData.activeUser.three), timeFilter[2]));
 
-      expect(DummyCustomerReportService.dummyActiveUserData(timeFilter[0])).toEqual(activeUser.one);
-      expect(DummyCustomerReportService.dummyActiveUserData(timeFilter[1])).toEqual(activeUser.two);
-      expect(DummyCustomerReportService.dummyActiveUserData(timeFilter[2])).toEqual(activeUser.three);
+      expect(DummyCustomerReportService.dummyActiveUserData(timeFilter[0], true)).toEqual(updateLineDates(_.clone(activeData.dummyData.one), timeFilter[0]));
+      expect(DummyCustomerReportService.dummyActiveUserData(timeFilter[1], true)).toEqual(updateLineDates(_.clone(activeData.dummyData.two), timeFilter[1]));
+      expect(DummyCustomerReportService.dummyActiveUserData(timeFilter[2], true)).toEqual(updateLineDates(_.clone(activeData.dummyData.three), timeFilter[2]));
     });
 
     it('dummyAvgRoomData should return the expected responses', function () {
-      avgRooms.one = updateDates(avgRooms.one, timeFilter[0]);
-      avgRooms.two = updateDates(avgRooms.two, timeFilter[1]);
-      avgRooms.three = updateDates(avgRooms.three, timeFilter[2]);
-
-      expect(DummyCustomerReportService.dummyAvgRoomData(timeFilter[0])).toEqual(avgRooms.one);
-      expect(DummyCustomerReportService.dummyAvgRoomData(timeFilter[1])).toEqual(avgRooms.two);
-      expect(DummyCustomerReportService.dummyAvgRoomData(timeFilter[2])).toEqual(avgRooms.three);
+      expect(DummyCustomerReportService.dummyAvgRoomData(timeFilter[0])).toEqual(updateDates(_.clone(dummyData.avgRooms.one), timeFilter[0]));
+      expect(DummyCustomerReportService.dummyAvgRoomData(timeFilter[1])).toEqual(updateDates(_.clone(dummyData.avgRooms.two), timeFilter[1]));
+      expect(DummyCustomerReportService.dummyAvgRoomData(timeFilter[2])).toEqual(updateDates(_.clone(dummyData.avgRooms.three), timeFilter[2]));
     });
 
     it('dummyFilesSharedData should return the expected responses', function () {
-      filesShared.one = updateDates(filesShared.one, timeFilter[0]);
-      filesShared.two = updateDates(filesShared.two, timeFilter[1]);
-      filesShared.three = updateDates(filesShared.three, timeFilter[2]);
-
-      expect(DummyCustomerReportService.dummyFilesSharedData(timeFilter[0])).toEqual(filesShared.one);
-      expect(DummyCustomerReportService.dummyFilesSharedData(timeFilter[1])).toEqual(filesShared.two);
-      expect(DummyCustomerReportService.dummyFilesSharedData(timeFilter[2])).toEqual(filesShared.three);
+      expect(DummyCustomerReportService.dummyFilesSharedData(timeFilter[0])).toEqual(updateDates(_.clone(dummyData.filesShared.one), timeFilter[0]));
+      expect(DummyCustomerReportService.dummyFilesSharedData(timeFilter[1])).toEqual(updateDates(_.clone(dummyData.filesShared.two), timeFilter[1]));
+      expect(DummyCustomerReportService.dummyFilesSharedData(timeFilter[2])).toEqual(updateDates(_.clone(dummyData.filesShared.three), timeFilter[2]));
     });
 
     it('dummyMediaData should return the expected responses', function () {
-      mediaQuality.one = updateMediaDates(mediaQuality.one, timeFilter[0]);
-      mediaQuality.two = updateMediaDates(mediaQuality.two, timeFilter[1]);
-      mediaQuality.three = updateMediaDates(mediaQuality.three, timeFilter[2]);
-
-      expect(DummyCustomerReportService.dummyMediaData(timeFilter[0])).toEqual(mediaQuality.one);
-      expect(DummyCustomerReportService.dummyMediaData(timeFilter[1])).toEqual(mediaQuality.two);
-      expect(DummyCustomerReportService.dummyMediaData(timeFilter[2])).toEqual(mediaQuality.three);
+      expect(DummyCustomerReportService.dummyMediaData(timeFilter[0])).toEqual(updateDates(_.clone(dummyData.mediaQuality.one), timeFilter[0]));
+      expect(DummyCustomerReportService.dummyMediaData(timeFilter[1])).toEqual(updateDates(_.clone(dummyData.mediaQuality.two), timeFilter[1]));
+      expect(DummyCustomerReportService.dummyMediaData(timeFilter[2])).toEqual(updateDates(_.clone(dummyData.mediaQuality.three), timeFilter[2]));
     });
 
     it('dummyMetricsData should return the expected responses', function () {
@@ -123,6 +104,7 @@ describe('Controller: Dummy Customer Reports', function () {
     });
 
     it('dummyDeviceData should return the expected responses', function () {
+      var devicesData = _.clone(devicesJson.dummyData);
       devicesData.one[0].graph = updateDates(devicesData.one[0].graph, timeFilter[0]);
       devicesData.two[0].graph = updateDates(devicesData.two[0].graph, timeFilter[1], true);
       devicesData.three[0].graph = updateDates(devicesData.three[0].graph, timeFilter[2], true);

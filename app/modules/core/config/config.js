@@ -178,7 +178,7 @@
         EC: 'EC', // Event Center (WebEx)
         CO: 'CO', // Communication
         SD: 'SD', // Spark Room System
-        SB: 'SB', // Spark Board
+        SB: 'SB', // Seagull
         CMR: 'CMR', // Collaboration Meeting Room (WebEx)
         CDC: 'CDC' // Care Digital Channel
       },
@@ -354,6 +354,8 @@
         'management-connector-details',
         'management-service',
         'services-overview',
+        'resource-group-settings',
+        'cluster-list'
       ],
       'spark-room-system': [
         'addDeviceFlow',
@@ -389,6 +391,7 @@
         'metrics',
         'reports-metrics',
         'services-overview',
+        'cluster-list'
       ],
       'webex-messenger': [
         'messenger',

@@ -4,7 +4,7 @@ describe('Component: sectionTitle', () => {
     this.injectDependencies(
       '$scope'
     );
-  })
+  });
 
   describe('without an actionList', () => {
     beforeEach(function () {

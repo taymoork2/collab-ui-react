@@ -3,26 +3,8 @@ if [ -z "${WX2_ADMIN_WEB_CLIENT_HOME}" ]; then
     return 1
 fi
 
-function get_last_retry_dir {
-    find ${WX2_ADMIN_WEB_CLIENT_HOME}/test/e2e-protractor/reports -type d -iname run-\* | xargs ls -1trd | tail -1
-}
-
-function grep_for_failures {
-    grep \<testsuite\  $@
-}
-
-function filter_out_failures {
-    sed -E 's/.*(failures=".*").*/\1/'
-}
-
-function grep_out_zero_failures {
-    grep -v 'failures="0"'
-}
-
-function e2e_tests_succeeded {
-    failures_count="$(grep_for_failures `get_last_retry_dir`/junitresults-*.xml | filter_out_failures | grep_out_zero_failures | wc -l)"
-    [ $failures_count -eq 0 ] && return 0 || return 1
-}
+source "${WX2_ADMIN_WEB_CLIENT_HOME}/bin/include/markdown-helpers"
+source "${WX2_ADMIN_WEB_CLIENT_HOME}/bin/include/secrets-helpers"
 
 function print_last_triggered_job_url {
     # otherwise fall back to parsing out the results url from jenkins environment
@@ -31,4 +13,177 @@ function print_last_triggered_job_url {
     local results_build_number="`env | grep TRIGGERED_BUILD_NUMBER_ | grep ${LAST_TRIGGERED_JOB_NAME} | cut -d= -f2`"
 
     echo "${results_url}${results_job_name}/${results_build_number}/"
+}
+
+function get_build_info {
+    source_secrets || return 1
+    get_build_info_json_using_user_id_and_api_token "$1" "$JENKINS__USER_ID" "$JENKINS__USER_API_TOKEN"
+}
+
+# runs a curl command using the build url, CEC user id, and api token
+function get_build_info_json_using_user_id_and_api_token {
+    local build_url="$1"
+    local user_id="$2"
+    local api_token="$3"
+    local suffix="/api/json?depth=1&pretty=1"
+    curl --user "${user_id}:${api_token}" "${build_url}${suffix}"
+}
+
+function get_this_builds_upstream_build_url {
+    source_secrets || return 1
+    get_this_builds_upstream_build_url_using_user_id_and_api_token "$JENKINS__USER_ID" "$JENKINS__USER_API_TOKEN"
+}
+
+# fetches current build's info using JSON REST api, calculates, and prints the upstream url that
+# triggered this build
+function get_this_builds_upstream_build_url_using_user_id_and_api_token {
+    local tmp_file
+    tmp_file="$(mktemp "./build-info-XXXXX.json")"
+    local user_id="$1"
+    local api_token="$2"
+    local this_build_url="$BUILD_URL"
+    local upstream_build_id
+    local upstream_build_url
+    get_build_info_json_using_user_id_and_api_token "$this_build_url" "$user_id" "$api_token" > "$tmp_file"
+    upstream_url="$(jq_get_upstream_url < "$tmp_file")"
+    upstream_build_id="$(jq_get_upstream_build_id < "$tmp_file")"
+    if [ -n "$upstream_url" -a -n "$upstream_build_id" ]; then
+        echo "${JENKINS_URL}${upstream_url}${upstream_build_id}"
+    fi
+    rm -f "$tmp_file"
+}
+
+function jq_get_short_description {
+    local cmd_str="[.actions[].causes[0].shortDescription]"
+    cmd_str="$cmd_str | map(select(. != null))"          # filter only non-null elements
+    cmd_str="$cmd_str | .[0] // \"(Build cause: N/A)\""  # select first element, or if no elements matched, fallback to '(Build cause: N/A)'
+    jq_exec "$cmd_str" \
+        | sed -e 's/validated merge.*/validated merge/'  # truncate string after 'validated merge'
+}
+
+function jq_get_user_id_of_pusher {
+    local short_description
+    short_description="$(jq_get_short_description)"
+    if [[ "$short_description" != *"validated merge"* ]]; then
+        >&2 echo "Error: 'jq_get_user_id_of_pusher' can only be used on validated merge build causes"
+        return 1
+    fi
+    echo "$short_description" | awk '{print $3;}'
+}
+
+function jq_get_build_full_display_name {
+    jq_exec ".fullDisplayName"
+}
+
+function jq_get_build_duration {
+    jq_exec ".duration"
+}
+
+function jq_get_build_result {
+    jq_exec '.result // "N/A"'
+}
+
+function jq_get_culprit_full_name_for_user_id {
+    local user_id="$1"
+    if [ -z "$user_id" ]; then
+        >&2 echo "Error: no user_id provided"
+        return 1
+    fi
+    local cmd_str="[.culprits[].fullName]"
+    cmd_str="$cmd_str | map(select(test(\"${user_id}\")))" # filter elements matching regex user_id
+    cmd_str="$cmd_str | .[0] // \"\""                      # select first element, fallback to ""
+    jq_exec "$cmd_str"
+}
+
+function jq_get_upstream_build_id {
+    jq_exec ".actions[1].causes[0].upstreamBuild // \"\""
+}
+
+function jq_get_upstream_url {
+    jq_exec ".actions[1].causes[0].upstreamUrl // \"\""
+}
+
+# wraps 'jq' binary for normalized printing
+function jq_exec {
+    cmd_str="$1"
+    local jq_exec="${WX2_ADMIN_WEB_CLIENT_HOME}/jq"
+    local str
+    # - this file must be provided at build run-time
+    ! type "${WX2_ADMIN_WEB_CLIENT_HOME}/jq" 2>&1 >/dev/null && return 1
+    if [ -f "$jq_exec" -a -x "$jq_exec" ]; then
+        str="$("$jq_exec" "$cmd_str")"
+        str="${str%\"}"  # chop trailing double-quote
+        str="${str#\"}"  # chop leading double-quote
+        echo "$str"      # ...and print
+        return 0
+    fi
+    >&2 echo "Error: cannot execute jq: $jq_exec"
+    return 1
+}
+
+function print_build_header_from_build_info_file {
+    local build_info_file="$1"
+    local build_display_name
+    local build_result
+    local build_duration
+    build_display_name="$(jq_get_build_full_display_name < "$build_info_file")"
+    build_result="$(jq_get_build_result < "$build_info_file")"
+    build_duration="$(jq_get_build_duration < "$build_info_file")"
+    build_duration="$(to_human_readable_time "$build_duration")"
+    local str
+    str="$(printf "**%s: %s!**" "$build_display_name" "$build_result")"
+    if [ -n "$build_duration" ]; then
+        str="$(printf "%s (%s)" "$str" "$build_duration")"
+    fi
+
+    echo "$str"
+}
+
+function print_build_links {
+    local build_url="$1"
+    local str="$(printf "[Summary](%s) | [ConsoleFull](%s)" \
+        "$build_url" \
+        "${build_url%/}/consoleFull")"
+    echo "- $str"
+}
+
+function print_build_cause_from_build_info_file {
+    local build_info_file="$1"
+    local build_cause
+    local pusher_user_id
+    local pusher_full_name
+    build_cause="$(jq_get_short_description < "$build_info_file")"
+    if [[ "$build_cause" == *"validated merge"* ]]; then
+        pusher_user_id="$(jq_get_user_id_of_pusher < "$build_info_file")"
+        pusher_full_name="$(jq_get_culprit_full_name_for_user_id "$pusher_user_id" < "$build_info_file")"
+        pusher_full_name="$(tr_user_id_to_mention_by_email "$pusher_user_id" "$pusher_full_name")"
+        build_cause="$(echo "$build_cause" | sed -e "s/$pusher_user_id/$pusher_full_name/")"
+    fi
+    echo "- $build_cause"
+}
+
+function print_build_info {
+    local build_url="$1"
+    local tmp_file
+    tmp_file="$(mktemp "./build-info-XXXXX.json")"
+    get_build_info "$build_url" > "$tmp_file"
+
+    # - build header
+    print_build_header_from_build_info_file "$tmp_file"
+
+    # - build links
+    print_build_links "$build_url"
+
+    # - build cause ('Started by ...' message)
+    print_build_cause_from_build_info_file "$tmp_file"
+
+    rm -f "$tmp_file"
+}
+
+# convert ms to minutes and seconds
+function to_human_readable_time {
+    local duration="$1"
+    local min=$(( duration / 1000 / 60 ))
+    local sec=$(( duration / 1000 % 60 ))
+    printf "${min}m ${sec}s\n"
 }

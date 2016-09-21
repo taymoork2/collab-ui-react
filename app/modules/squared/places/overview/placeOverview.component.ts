@@ -1,13 +1,13 @@
 import { IFeature } from '../../../core/components/featureList/featureList.component';
 
-class PlaceOverviewCtrl {
+class PlaceOverview implements ng.IComponentController {
 
   private _currentPlace;
   private _csdmHuronUserDeviceService;
   private _services: IFeature[] = [];
 
   get currentPlace() {
-    return this._currentPlace
+    return this._currentPlace;
   }
 
   get services() {
@@ -19,6 +19,7 @@ class PlaceOverviewCtrl {
     private $state,
     private $stateParams,
     private CsdmPlaceService,
+    private CsdmHuronPlaceService,
     private CsdmHuronUserDeviceService,
     private $translate,
     private XhrNotificationService
@@ -27,21 +28,26 @@ class PlaceOverviewCtrl {
     this._csdmHuronUserDeviceService = CsdmHuronUserDeviceService.create(this._currentPlace.cisUuid);
   }
 
-  private $onInit(): void {
+  public $onInit(): void {
     if (this.hasEntitlement('ciscouc')) {
       let service: IFeature = {
         name: this.$translate.instant('onboardModal.call'),
         icon: this.$translate.instant('onboardModal.call'),
         state: 'communication',
         detail: this.$translate.instant('onboardModal.callFree'),
-        actionsAvailable: true
-      }
+        actionsAvailable: true,
+      };
       this._services.push(service);
     }
   }
 
   public save(newName: string) {
-    return this.CsdmPlaceService
+    if (this._currentPlace.type === 'cloudberry') {
+      return this.CsdmPlaceService
+        .updatePlaceName(this._currentPlace.url, newName)
+        .catch(this.XhrNotificationService.notify);
+    }
+    return this.CsdmHuronPlaceService
       .updatePlaceName(this._currentPlace.url, newName)
       .catch(this.XhrNotificationService.notify);
   }
@@ -49,7 +55,7 @@ class PlaceOverviewCtrl {
   public showDeviceDetails(device) {
     this.$state.go('place-overview.csdmDevice', {
       currentDevice: device,
-      huronDeviceService: this._csdmHuronUserDeviceService
+      huronDeviceService: this._csdmHuronUserDeviceService,
     });
   }
 
@@ -69,9 +75,12 @@ class PlaceOverviewCtrl {
     this.$state.go('place-overview.' + feature);
   }
 }
+
+class PlaceOverviewComponent implements ng.IComponentOptions {
+  public controller = PlaceOverview;
+  public templateUrl = 'modules/squared/places/overview/placeOverview.html';
+}
+
 angular
   .module('Squared')
-  .component('placeOverview', {
-    templateUrl: 'modules/squared/places/overview/placeOverview.tpl.html',
-    controller: PlaceOverviewCtrl
-  });
+  .component('placeOverview', new PlaceOverviewComponent());

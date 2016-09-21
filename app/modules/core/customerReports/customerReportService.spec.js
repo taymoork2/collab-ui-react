@@ -36,22 +36,22 @@ describe('Service: Customer Reports Service', function () {
   beforeEach(angular.mock.module('Core'));
 
   var cacheValue = (parseInt(moment.utc().format('H'), 10) >= 8);
-  var dayFormat = "MMM DD";
-  var timezone = "Etc/GMT";
+  var dayFormat = 'MMM DD';
+  var timezone = 'Etc/GMT';
   var timeFilter = {
     value: 0
   };
 
   var updateDates = function (data, filter, altDate) {
     for (var i = data.length - 1; i >= 0; i--) {
-      if (filter === null || angular.isUndefined(filter)) {
-        if (altDate === null || angular.isUndefined(altDate)) {
-          data[i].date = moment().tz(timezone).subtract(data.length - i, 'day').format();
-        } else {
-          data[i][altDate] = moment().tz(timezone).subtract(data.length - i, 'day').format();
-        }
+      if (filter) {
+        data[i].date = moment().tz(timezone).subtract(data.length - i, 'day').format(filter);
       } else {
-        data[i].modifiedDate = moment().tz(timezone).subtract(data.length - i, 'day').format(filter);
+        if (altDate) {
+          data[i][altDate] = moment().tz(timezone).subtract(data.length - i, 'day').format();
+        } else {
+          data[i].date = moment().tz(timezone).subtract(data.length - i, 'day').format();
+        }
       }
     }
     return data;
@@ -86,10 +86,10 @@ describe('Service: Customer Reports Service', function () {
     metricsUrl = baseUrl + 'detailed/callMetrics?&intervalCount=7&intervalType=day&spanCount=7&spanType=day&cache=' + cacheValue;
     activeUserDetailedUrl = baseUrl + 'detailed/activeUsers?&intervalCount=7&intervalType=day&spanCount=1&spanType=day&cache=' + cacheValue;
     mostActiveUrl = baseUrl + 'useractivity?type=weeklyUsage&cache=' + cacheValue;
-    devicesUrl = baseUrl + 'trend/registeredEndpointsByDeviceType?&intervalCount=7&intervalType=day&spanCount=1&spanType=day&cache=' + cacheValue;
+    devicesUrl = baseUrl + 'deviceType?type=weeklyUsage&cache=' + cacheValue;
 
     activeUserData.data[0].data = updateDates(activeUserData.data[0].data);
-    responseActiveData = updateDates(responseActiveData, dayFormat);
+    responseActiveData = updateDates(responseActiveData, dayFormat, null);
 
     groupRoomData.data = updateDates(groupRoomData.data);
     avgRoomData.data = updateDates(avgRoomData.data);
@@ -103,10 +103,10 @@ describe('Service: Customer Reports Service', function () {
     mediaContent.data[0].data = updateDates(mediaContent.data[0].data);
     mediaResponse = updateDates(mediaResponse, dayFormat);
 
-    angular.forEach(devicesData.data[0].data, function (item) {
+    _.forEach(devicesData, function (item) {
       item.details = updateDates(item.details, null, 'recordTime');
     });
-    angular.forEach(deviceResponse.graphData, function (item) {
+    _.forEach(deviceResponse.graphData, function (item) {
       item.graph = updateDates(item.graph, dayFormat);
     });
   }));
@@ -270,7 +270,9 @@ describe('Service: Customer Reports Service', function () {
 
   describe('Registered Endpoints Service', function () {
     it('should getDeviceData', function () {
-      $httpBackend.whenGET(devicesUrl).respond(devicesData);
+      $httpBackend.whenGET(devicesUrl).respond({
+        data: devicesData
+      });
 
       CustomerReportService.getDeviceData(timeFilter).then(function (response) {
         expect(response).toEqual(deviceResponse);

@@ -30,7 +30,7 @@
 
 .pstn-provider-logo {
   height: rem-calc(40px);
-  width: rem-calc(235px);
+  max-width: rem-calc(235px);
 }
 
 .pstn-provider-card {
