@@ -339,9 +339,7 @@
               deviceOverview.currentDevice.kem = data;
               Notification.success('deviceOverviewPage.kemUpdated');
             }
-          ).catch(function () {
-            Notification.error('spacesPage.retrieveKemFail');
-          });
+          ).catch();
         },
         function () {
           deviceOverview.kemNumber = KemService.getKemOption(previousKemNumber);
