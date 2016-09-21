@@ -67,6 +67,9 @@
     vm.authRedirectTooltip = $translate.instant(translatePrefix + 'authRedirectTooltip');
     vm.patchSyncButtonText = $translate.instant(translatePrefix + 'patchSyncButtonText');
     vm.orgAdminLinkTooltip = $translate.instant(translatePrefix + 'orgAdminLinkTooltip');
+    vm.pwdSyncTooltip = $translate.instant(translatePrefix + 'pwdSyncTooltip');
+    vm.sparkEntTooltip = $translate.instant(translatePrefix + 'sparkEntTooltip');
+    vm.usrDisTooltip = $translate.instant(translatePrefix + 'usrDisTooltip');
 
     vm.syncInfo = {
       messengerOrgName: 'Unknown',
@@ -74,7 +77,11 @@
       linkDate: 'Unknown',
       isAuthRedirect: false,
       isSyncEnabled: false,
-      isMessengerSyncRawMode: false
+      isMessengerSyncRawMode: false,
+      isNewDataFormat: false,
+      isPwdSync: true,
+      isSparkEnt: true,
+      isUsrDis: true
     };
 
     vm.fields = [{
@@ -163,6 +170,7 @@
       // All users must have CI Full Admin role except new ReadAdmin
       //
       // Also allow help desk user with customer org in its managed org list with id_full_admin role.
+      // add Full Admin Org Manager to allow list.
       //
       // Customer Success Admin     --> Ops Admin
       // Non-Customer Success Admin --> must have webex-squared AND webex-messenger CI entitlements
@@ -179,8 +187,17 @@
               if (!(Authinfo.isWebexSquared() && Authinfo.isWebexMessenger())) {
                 defer.reject($translate.instant(translatePrefix + 'errorLacksEntitlements') + requiredEntitlements);
               } else {
-                setOrgAdmin();
-                defer.resolve();
+                CiService.isOrgManager()
+                  .then(function (isOrgManager) {
+                    if (isOrgManager) {
+                      setOpsAdmin();
+                    } else {
+                      setOrgAdmin();
+                    }
+                    defer.resolve();
+                  }).catch(function (errorMsg) {
+                    defer.reject($translate.instant(translatePrefix + 'errorFailedCheckingOrgInManagedOrgs') + errorMsg);
+                  });
               }
             }
           }).catch(function (errorMsg) {
@@ -254,7 +271,7 @@
       // Double-check that they are ops for security
       if (vm.adminTypes.ops === vm.adminType) {
         // SyncService must turn the syncing boolean into the full mode
-        SyncService.patchSync(vm.syncInfo.isSyncEnabled, vm.syncInfo.isAuthRedirect)
+        SyncService.patchSync(vm.syncInfo)
           .then(function () {
             Notification.success(translatePrefix + 'patchSuccessful');
           }, function (errorObj) {

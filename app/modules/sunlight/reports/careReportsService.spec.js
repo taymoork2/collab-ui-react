@@ -110,8 +110,8 @@ describe('Service: Care Reports Service', function () {
 
     it('Average Csat Chart Config should return expected Report', function () {
       var averageCsatReport = CareReportsService.getAverageCsatGraphConfig('dummyData', 'dummyTitle', false);
-      var expectedConfig = responseData.taskIncomingReportToday;
-      expectedConfig.graphs = responseData.csatGraphs;
+      var expectedConfig = responseData.taskAverageCsat;
+      expectedConfig.graphs = responseData.taskAverageCsat.graphs;
       _.map(expectedConfig.valueAxes, function (axis) {
         axis.title = 'careReportsPage.csatRating';
       });

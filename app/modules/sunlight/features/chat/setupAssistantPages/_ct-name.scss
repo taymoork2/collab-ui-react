@@ -14,8 +14,13 @@
     border-top: solid 1px $color-negative-dark;
   }
 
+  .ct-input-error-wrapper {
+    float: left;
+  }
+
   .ct-input-error {
     color: $color-alerts-base;
+    padding: rem-calc(5px);
   }
 
   // Input control.

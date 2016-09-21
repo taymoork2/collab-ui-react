@@ -151,7 +151,7 @@
 
     function sort(clusters) {
       // Could be anything but at least make it consistent between 2 page refresh
-      return _.sortByAll(clusters, ['type', 'name']);
+      return _.sortByAll(clusters, ['targetType', 'name']);
     }
 
     function preregisterCluster(name, releaseChannel, managementConnectorType) {

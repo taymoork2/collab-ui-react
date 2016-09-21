@@ -37,6 +37,7 @@ describe('Component: myCompanyOrders', () => {
     spyOn(this.Notification, 'errorWithTrackingId');
 
     spyOn(this.DigitalRiverService, 'getOrderHistoryUrl').and.returnValue(this.getDigitalRiverOrderHistoryUrlDefer.promise);
+    spyOn(this.DigitalRiverService, 'logout').and.returnValue(this.$q.resolve());
 
     this.compileComponent('myCompanyOrders');
     spyOn(this.controller, 'downloadPdf');
@@ -109,8 +110,8 @@ describe('Component: myCompanyOrders', () => {
     });
 
     it('should concat descriptions into single column', function () {
-      expect(this.view.find('.ui-grid-row:first .ui-grid-cell-contents:nth(1)')).toHaveText('first description');
-      expect(this.view.find('.ui-grid-row:last .ui-grid-cell-contents:nth(1)')).toHaveText('fourth description, fifth description');
+      expect(this.view.find('.ui-grid-row: first .ui-grid-cell-contents: nth(1)')).toHaveText('first description');
+      expect(this.view.find('.ui-grid-row: last .ui-grid-cell-contents: nth(1)')).toHaveText('fourth description, fifth description');
     });
 
     // TODO investigate more on unit testing ui-grid sorting

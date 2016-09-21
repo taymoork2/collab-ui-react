@@ -1,26 +1,26 @@
 import { ServicesOverviewHybridCard } from './ServicesOverviewHybridCard';
-import { CardButton, CardType } from './ServicesOverviewCard';
+import { ICardButton, CardType } from './ServicesOverviewCard';
 
 export class ServicesOverviewHybridCallCard extends ServicesOverviewHybridCard {
-  getShowMoreButton():CardButton {
+  public getShowMoreButton(): ICardButton {
     return undefined;
   }
 
-  private _setupButton:CardButton = {
+  private _setupButton: ICardButton = {
     name: 'servicesOverview.genericButtons.setup',
     link: 'services/call',
-    buttonClass: 'btn'
+    buttonClass: 'btn',
   };
 
-  private _buttons:Array<CardButton> = [
-    {name: 'servicesOverview.cards.hybridCall.buttons.resources', link: 'services/call', buttonClass: 'btn-link'},
+  private _buttons: Array<ICardButton> = [
+    { name: 'servicesOverview.cards.hybridCall.buttons.resources', link: 'services/call', buttonClass: 'btn-link' },
     {
       name: 'servicesOverview.cards.hybridCall.buttons.settings',
       link: 'services/call/settings',
-      buttonClass: 'btn-link'
+      buttonClass: 'btn-link',
     }];
 
-  getButtons():Array<CardButton> {
+  public getButtons(): Array<ICardButton> {
     if (this.active) {
       return _.take(this._buttons, 3);
     }
@@ -34,7 +34,7 @@ export class ServicesOverviewHybridCallCard extends ServicesOverviewHybridCard {
       activeServices: ['squared-fusion-uc'],
       statusService: 'squared-fusion-uc',
       statusLink: 'services/call',
-      active: false, cardClass: 'call', cardType: CardType.hybrid
+      active: false, cardClass: 'call', cardType: CardType.hybrid,
     });
   }
 }

@@ -1,0 +1,10 @@
+{
+  "lastUpdatedTime": "2016-09-09T09:41:14.168Z",
+  "maxChatCount": 5,
+  "createdTime": "2016-09-06T12:24:29.403Z",
+  "csConnString": "FakeConnectionString",
+  "updatedBy": "a74afef2-1056-4cb0-9ddf-23469694e740",
+  "allowedOrigins": [
+    ".*"
+  ]
+}

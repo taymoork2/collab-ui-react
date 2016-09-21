@@ -130,12 +130,13 @@ describe('Controller: HelpdeskOrgController', function () {
 
       sinon.stub(HelpdeskHuronService, 'getOrgSiteInfo');
       var deferredSiteInfoResult = q.defer();
-      deferredSiteInfoResult.resolve([{
+      deferredSiteInfoResult.resolve({
         "steeringDigit": "7",
         "siteSteeringDigit": "4",
+        "siteCode": "100",
         "mediaTraversalMode": "TURNOnly",
         "uuid": "7b9ad03e-8c78-4ffa-8680-df50664bcce4"
-      }]);
+      });
       HelpdeskHuronService.getOrgSiteInfo.returns(deferredSiteInfoResult.promise);
 
       sinon.stub(HelpdeskHuronService, 'getTenantInfo');
@@ -160,7 +161,7 @@ describe('Controller: HelpdeskOrgController', function () {
       });
       $scope.$apply();
       expect(orgController.supportsLocalDialing).toBeTruthy();
-      expect(orgController.callCard.voiceMailPrefix).toBe("4");
+      expect(orgController.callCard.voiceMailPrefix).toBe("4100");
       expect(orgController.callCard.outboundDialDigit).toBe("7");
       expect(orgController.callCard.dialing).toBe("local");
     });
@@ -187,10 +188,11 @@ describe('Controller: HelpdeskOrgController', function () {
 
       sinon.stub(HelpdeskHuronService, 'getOrgSiteInfo');
       var deferredSiteInfoResult = q.defer();
-      deferredSiteInfoResult.resolve([{
+      deferredSiteInfoResult.resolve({
         "steeringDigit": "7",
-        "siteSteeringDigit": "4"
-      }]);
+        "siteSteeringDigit": "4",
+        "siteCode": "100"
+      });
       HelpdeskHuronService.getOrgSiteInfo.returns(deferredSiteInfoResult.promise);
 
       sinon.stub(HelpdeskHuronService, 'getTenantInfo');
@@ -214,7 +216,7 @@ describe('Controller: HelpdeskOrgController', function () {
       });
       $scope.$apply();
       expect(orgController.supportsLocalDialing).toBeTruthy();
-      expect(orgController.callCard.voiceMailPrefix).toBe("4");
+      expect(orgController.callCard.voiceMailPrefix).toBe("4100");
       expect(orgController.callCard.outboundDialDigit).toBe("7");
       expect(orgController.callCard.dialing).toBe("national");
     });

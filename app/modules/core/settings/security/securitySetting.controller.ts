@@ -1,16 +1,16 @@
 namespace globalsettings {
 
-  interface GetAppSecurityResponse {
-    data:{
-      clientSecurityPolicy:boolean
-    }
+  interface IGetAppSecurityResponse {
+    data: {
+      clientSecurityPolicy: boolean
+    };
   }
   export class SecuritySettingController {
 
-    private _isSparkClientSecurityEnabled:boolean = undefined;
-    isSparkClientSecurityLoaded:boolean = false;
+    private _isSparkClientSecurityEnabled: boolean = undefined;
+    public isSparkClientSecurityLoaded: boolean = false;
 
-    private orgId:string;
+    private orgId: string;
 
     /* @ngInject */
     constructor(private Notification, private AccountOrgService, Authinfo) {
@@ -23,24 +23,24 @@ namespace globalsettings {
         .then(this.appSecuritySettingLoaded.bind(this));
     }
 
-    private appSecuritySettingLoaded({data:{clientSecurityPolicy:clientSecurityPolicy}={clientSecurityPolicy: null}}:GetAppSecurityResponse) {
+    private appSecuritySettingLoaded({ data: { clientSecurityPolicy: clientSecurityPolicy } = { clientSecurityPolicy: null } }: IGetAppSecurityResponse) {
       if (clientSecurityPolicy != null) {
         this._isSparkClientSecurityEnabled = clientSecurityPolicy;
         this.isSparkClientSecurityLoaded = true;
       }
     }
 
-    get isSparkClientSecurityEnabled():boolean {
+    get isSparkClientSecurityEnabled(): boolean {
       return this._isSparkClientSecurityEnabled;
     }
 
-    set isSparkClientSecurityEnabled(value:boolean) {
+    set isSparkClientSecurityEnabled(value: boolean) {
       this._isSparkClientSecurityEnabled = value;
       this.updateSparkClientSecuritySetting();
     }
 
-    updateSparkClientSecuritySetting() {
-      if (this._isSparkClientSecurityEnabled != undefined) {
+    public updateSparkClientSecuritySetting() {
+      if (this._isSparkClientSecurityEnabled !== undefined) {
         // Calls AppSecuritySetting service to update device security enforcement
         this.AccountOrgService.setAppSecurity(this.orgId, this._isSparkClientSecurityEnabled)
           .then((response) => {

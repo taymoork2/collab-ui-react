@@ -3,6 +3,7 @@
 describe('Service: Common Graph Service', function () {
   var CommonGraphService;
   var responseData = getJSONFixture('core/json/partnerReports/commonCustomerServiceResponses.json');
+  var CURSOR = 'cursor';
   var COLUMN = 'column';
   var LINE = 'line';
   var AXIS = 'axis';
@@ -27,6 +28,7 @@ describe('Service: Common Graph Service', function () {
   describe('service responses:', function () {
     it('getBaseVariable should return expected responses based on the key', function () {
       // correct key responses
+      expect(CommonGraphService.getBaseVariable(CURSOR)).toEqual(responseData.baseVariables[CURSOR]);
       expect(CommonGraphService.getBaseVariable(COLUMN)).toEqual(responseData.baseVariables[COLUMN]);
       expect(CommonGraphService.getBaseVariable(LINE)).toEqual(responseData.baseVariables[LINE]);
       expect(CommonGraphService.getBaseVariable(AXIS)).toEqual(responseData.baseVariables[AXIS]);
