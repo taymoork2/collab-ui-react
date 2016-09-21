@@ -32,7 +32,7 @@ export class ServicesOverviewCtrl {
     });
 
     FeatureToggleService.atlasCareTrialsGetStatus().then(supports => {
-      var isCareEnabled = Authinfo.isCare() && supports
+      let isCareEnabled = Authinfo.isCare() && supports;
       this.forwardEvent('careFeatureToggleEventHandler', isCareEnabled);
     });
 
