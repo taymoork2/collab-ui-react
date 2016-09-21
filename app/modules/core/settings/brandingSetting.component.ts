@@ -2,7 +2,7 @@ import { SettingSection } from './settingSection';
 
 export class BrandingSetting extends SettingSection {
   /* @ngInject */
-  constructor() {
+  public constructor() {
     super('branding');
     this.subsectionLabel = '';
     this.subsectionDescription = ' ';
@@ -11,12 +11,12 @@ export class BrandingSetting extends SettingSection {
 
 angular.module('Core').component('brandingSettingOld', {
   controller: 'BrandingCtrl as bctrl',
-  templateUrl: 'modules/core/partnerProfile/branding/branding.tpl.html'
+  templateUrl: 'modules/core/partnerProfile/branding/branding.tpl.html',
 });
 angular.module('Core').component('brandingSettingNew', {
   controller: 'BrandingCtrl as bctrl',
-  templateUrl: 'modules/core/partnerProfile/branding/brandingWordingChange.tpl.html'
+  templateUrl: 'modules/core/partnerProfile/branding/brandingWordingChange.tpl.html',
 });
 angular.module('Core').component('brandingSetting', {
-  template: '<branding-setting-new cr-feature-toggle feature-show="atlas-branding-wording-change"></branding-setting-new><branding-setting-old cr-feature-toggle feature-hide="atlas-branding-wording-change"></branding-setting-old>'
+  template: '<branding-setting-new cr-feature-toggle feature-show="atlas-branding-wording-change"></branding-setting-new><branding-setting-old cr-feature-toggle feature-hide="atlas-branding-wording-change"></branding-setting-old>',
 });

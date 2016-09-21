@@ -89,7 +89,6 @@ describe('OnboardCtrl: Ctrl', function () {
 
     spyOn(this.Userservice, 'onboardUsers');
     spyOn(this.Userservice, 'bulkOnboardUsers');
-    spyOn(this.Userservice, 'getUser').and.returnValue(this.mock.getUserMe);
     spyOn(this.Userservice, 'migrateUsers').and.returnValue(this.mock.getMigrateUsers);
     spyOn(this.Userservice, 'updateUsers');
     spyOn(this.Orgservice, 'getLicensesUsage').and.returnValue(this.$q.when(this.mock.getLicensesUsage));
@@ -634,6 +633,38 @@ describe('OnboardCtrl: Ctrl', function () {
     }
   });
 
+  describe('hybridCallServiceAware', function () {
+    describe('on user without squared-fusion-uc entitlement', function () {
+      beforeEach(initUserWithoutHybridCall);
+      beforeEach(initController);
+
+      it('should be false', function () {
+        expect(this.$scope.hybridCallServiceAware).toBe(false);
+      });
+    });
+
+    describe('on user with squared-fusion-uc entitlement', function () {
+      beforeEach(initUserWithHybridCall);
+      beforeEach(initController);
+
+      it('should be true', function () {
+        expect(this.$scope.hybridCallServiceAware).toBe(true);
+      });
+    });
+
+    function initUserWithoutHybridCall() {
+      this.$stateParams.currentUser = {
+        entitlements: []
+      };
+    }
+
+    function initUserWithHybridCall() {
+      this.$stateParams.currentUser = {
+        entitlements: ['squared-fusion-uc']
+      };
+    }
+  });
+
   describe('editServicesSave()', function () {
     describe('if adding call service', function () {
       beforeEach(initControllerAndEnableCall);
@@ -765,6 +796,7 @@ describe('OnboardCtrl: Ctrl', function () {
         spyOn(this.Authinfo, 'hasAccount').and.returnValue(true);
         spyOn(this.Authinfo, 'getCareServices').and.returnValue(this.mock.getCareServices.careLicense);
         this.$httpBackend.expectGET(this.UrlConfig.getSunlightConfigServiceUrl() + '/user' + '/' + userId).respond(200);
+        this.$httpBackend.expectGET(this.UrlConfig.getScimUrl('null') + '/' + userId).respond(200, this.mock.getUserMe);
         this.$stateParams.currentUser = {
           licenseID: ['CDC_da652e7d-cd34-4545-8f23-936b74359afd'],
           entitlements: ['cloud-contact-center'],

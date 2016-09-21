@@ -25,7 +25,7 @@ module.exports = csp({
       'https://wbxbts.admin.ciscospark.com'
     ],
     frameSrc: [
-      'https://drhadmin-cte.digitalriver.com',
+      'https://buy.ciscospark.com',
     ],
     connectSrc: [
       '\'self\'',
@@ -67,7 +67,9 @@ module.exports = csp({
       'https://*.localytics.com',
       'https://*.webex.com',
       'https://api.mixpanel.com',
-      'https://cdn.mxpnl.com'
+      'https://cdn.mxpnl.com',
+      'http://assets.adobedtm.com',
+      'https://buy.ciscospark.com'
     ],
     styleSrc: [
       '\'self\'',

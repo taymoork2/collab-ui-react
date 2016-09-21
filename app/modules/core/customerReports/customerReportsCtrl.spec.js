@@ -80,10 +80,12 @@ describe('Controller: Customer Reports Ctrl', function () {
       CustomerGraphService = _CustomerGraphService_;
       FeatureToggleService = _FeatureToggleService_;
       MediaServiceActivationV2 = _MediaServiceActivationV2_;
+      $httpBackend = _$httpBackend_;
+
+      $httpBackend.whenGET('https://identity.webex.com/identity/scim/null/v1/Users/me').respond(200, {});
       spyOn(FeatureToggleService, 'atlasMediaServiceMetricsGetStatus').and.returnValue(
         $q.when(true)
       );
-
       spyOn(Authinfo, 'isCare').and.returnValue(true);
       spyOn(FeatureToggleService, 'atlasCareTrialsGetStatus').and.returnValue(
         $q.when(true)
@@ -152,7 +154,6 @@ describe('Controller: Customer Reports Ctrl', function () {
       controller = $controller('CustomerReportsCtrl', {
         $state: $state,
         $stateParams: $stateParams,
-        $scope: $scope,
         $q: $q,
         $translate: $translate,
         Log: Log,
@@ -166,14 +167,21 @@ describe('Controller: Customer Reports Ctrl', function () {
         FeatureToggleService: FeatureToggleService,
         MediaServiceActivationV2: MediaServiceActivationV2
       });
+
       $scope.$apply();
+      $httpBackend.flush();
     }));
+
+    afterEach(function () {
+      $httpBackend.verifyNoOutstandingExpectation();
+      $httpBackend.verifyNoOutstandingRequest();
+    });
 
     describe('Initializing Controller', function () {
       it('should be created successfully and all expected calls completed', function () {
         expect(controller).toBeDefined();
         $timeout(function () {
-          expect(DummyCustomerReportService.dummyActiveUserData).toHaveBeenCalledWith(timeOptions[0]);
+          expect(DummyCustomerReportService.dummyActiveUserData).toHaveBeenCalledWith(timeOptions[0], false);
           expect(DummyCustomerReportService.dummyAvgRoomData).toHaveBeenCalledWith(timeOptions[0]);
           expect(DummyCustomerReportService.dummyFilesSharedData).toHaveBeenCalledWith(timeOptions[0]);
           expect(DummyCustomerReportService.dummyMediaData).toHaveBeenCalledWith(timeOptions[0]);
@@ -243,7 +251,7 @@ describe('Controller: Customer Reports Ctrl', function () {
         controller.timeUpdate();
         expect(controller.timeSelected).toEqual(timeOptions[1]);
 
-        expect(DummyCustomerReportService.dummyActiveUserData).toHaveBeenCalledWith(timeOptions[1]);
+        expect(DummyCustomerReportService.dummyActiveUserData).toHaveBeenCalledWith(timeOptions[1], false);
         expect(DummyCustomerReportService.dummyAvgRoomData).toHaveBeenCalledWith(timeOptions[1]);
         expect(DummyCustomerReportService.dummyFilesSharedData).toHaveBeenCalledWith(timeOptions[1]);
         expect(DummyCustomerReportService.dummyMediaData).toHaveBeenCalledWith(timeOptions[1]);
@@ -426,7 +434,7 @@ describe('Controller: Customer Reports Ctrl', function () {
       });
 
       it('should not have anything in the dropdown for webex reports', function () {
-        expect($scope.webexOptions.length).toBe(0);
+        expect(controller.webexOptions.length).toBe(0);
       });
     });
   });

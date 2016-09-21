@@ -6,12 +6,13 @@
     <section>
       <div class="customer-active-user">
         <p class="report-description">{{nav.getDescription('activeUsers.customerPortalDescription')}}</p>
+        <cs-select ng-if="nav.displayActiveLineGraph" id="activityFilter" name="activityFilter" class='customer-report-filter activity-filter' ng-model="nav.activeSelected" options="nav.activeOptions" on-change-fn="nav.activityUpdate()" is-disabled="nav.isActiveDisabled()"></cs-select>
         <div id="activeUsersdiv" class="barchart" ng-class="{'active-chart': !nav.isEmpty(nav.activeUserStatus) && !nav.isRefresh(nav.activeUserStatus)}"></div>
         <div class="spinner-position" ng-if="nav.isRefresh(nav.activeUserStatus)">
           <i class='icon icon-spinner icon-2x'></i>
         </div>
         <div class="no-data-center" ng-if="nav.isEmpty(nav.activeUserStatus)">
-          <h3 class="no-data"> 
+          <h3 class="no-data">
             <i class='icon icon-warning no-data-warning'></i>
             <span translate='reportsPage.noCustomerData'></span>
           </h3>

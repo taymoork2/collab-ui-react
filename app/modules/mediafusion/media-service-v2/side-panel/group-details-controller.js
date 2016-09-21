@@ -5,13 +5,15 @@
     .controller('GroupDetailsControllerV2',
 
       /* @ngInject */
-      function ($stateParams, $modal, $state) {
+      function ($scope, MediaClusterServiceV2, $stateParams, $modal, $state, $timeout, FusionUtils) {
 
         var vm = this;
         vm.displayName = null;
         vm.nodeList = null;
         vm.clusterDetail = null;
         vm.openSettings = openSettings;
+        vm.fakeUpgrade = false;
+
 
         if (!angular.equals($stateParams.clusterName, {})) {
           vm.displayName = $stateParams.clusterName;
@@ -23,6 +25,9 @@
 
         if (!angular.equals($stateParams.cluster, {})) {
           vm.clusterDetail = $stateParams.cluster;
+          if ($stateParams.cluster) {
+            vm.releaseChannel = FusionUtils.getLocalizedReleaseChannel(vm.clusterDetail.releaseChannel);
+          }
         }
 
         function openSettings(type, id) {
@@ -49,19 +54,68 @@
           return _.toArray(alarms);
         };
 
-        vm.deleteGroup = function () {
+        // Changes for Upgrade now
+        var promise = null;
+        $scope.$watch(function () {
+          return MediaClusterServiceV2.getCluster(vm.clusterDetail.id);
+        }, function (newValue) {
+          vm.cluster = newValue;
+          var isUpgrading = vm.cluster.aggregates.upgradeState === 'upgrading';
+          vm.softwareUpgrade = {
+            provisionedVersion: vm.cluster.aggregates.provisioning.provisionedVersion,
+            availableVersion: vm.cluster.aggregates.provisioning.availableVersion,
+            isUpgradeAvailable: vm.cluster.aggregates.upgradeAvailable,
+            hasUpgradeWarning: vm.cluster.aggregates.upgradeWarning,
+            numberOfHosts: _.size(vm.cluster.aggregates.hosts),
+            showUpgradeWarning: function () {
+              return vm.softwareUpgrade.isUpgradeAvailable && !vm.softwareUpgrade.hasUpgradeWarning;
+            }
+          };
+
+          if (isUpgrading) {
+            vm.fakeUpgrade = false;
+            var pendingHosts = _.chain(vm.cluster.aggregates.hosts)
+              .filter('upgradeState', 'pending')
+              .value();
+            vm.upgradeDetails = {
+              numberOfUpsmthngHosts: _.size(vm.cluster.aggregates.hosts) - pendingHosts.length,
+              upgradingHostname: findUpgradingHostname(vm.cluster.aggregates.hosts)
+            };
+          }
+
+          // If the upgrade is finished, display the success status during 2s
+          vm.upgradeJustFinished = !isUpgrading && vm.fakeUpgrade;
+          if (vm.upgradeJustFinished) {
+            promise = $timeout(function () {
+              vm.showUpgradeProgress = false;
+            }, 2000);
+          }
+          vm.showUpgradeProgress = vm.fakeUpgrade || isUpgrading || vm.upgradeJustFinished;
+        }, true);
+
+        function findUpgradingHostname(hostnames) {
+          var upgrading = _.chain(hostnames)
+            .find('upgradeState', 'upgrading')
+            .value();
+          // could be undefined if we only have upgraded and pending connectors
+          return _.get(upgrading, 'hostname', 'some host');
+        }
+
+        vm.showUpgradeNowDialog = function () {
           $modal.open({
             resolve: {
-              groupName: function () {
-                return vm.displayName;
-              },
               clusterId: function () {
                 return vm.clusterDetail.id;
               }
             },
-            controller: 'DeleteClusterControllerV2',
-            controllerAs: "deleteClust",
-            templateUrl: 'modules/mediafusion/media-service-v2/side-panel/delete-cluster-dialog.html'
+            type: 'small',
+            controller: 'UpgradeNowControllerV2',
+            controllerAs: "upgradeClust",
+            templateUrl: 'modules/mediafusion/media-service-v2/side-panel/upgrade-now-cluster-dialog.html'
+          });
+
+          $scope.$on('$destroy', function () {
+            $timeout.cancel(promise);
           });
         };
 

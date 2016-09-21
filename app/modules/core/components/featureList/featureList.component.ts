@@ -1,16 +1,16 @@
 export interface IFeature {
-  name: string,
-  icon: string,
-  state: string,
-  detail: string,
-  actionsAvailable: boolean
+  name: string;
+  icon: string;
+  state: string;
+  detail: string;
+  actionsAvailable: boolean;
 }
 
-class FeatureListCtrl {
-  featureActions: Function;
-  action(feature) {
+class FeatureListCtrl implements ng.IComponentController {
+  public featureActions: Function;
+  public action(feature) {
     this.featureActions({
-      feature: feature.state
+      feature: feature.state,
     });
   }
 }
@@ -22,6 +22,6 @@ angular
     controller: FeatureListCtrl,
     bindings: {
       features: '<',
-      featureActions: '&'
-    }
-  })
+      featureActions: '&',
+    },
+  });

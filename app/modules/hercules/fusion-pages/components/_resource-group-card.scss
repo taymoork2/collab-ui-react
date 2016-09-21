@@ -10,8 +10,8 @@ resource-group-card {
   > .cs-card {
     > article > header {
       display: flex;
-      padding: 1.25rem 1rem 0.9375rem !important;
-      align-items: center;
+      padding: 0 !important;
+      align-items: stretch;
       border-bottom: 1px solid $gray-light-3;
 
       > button > h4 {
@@ -23,13 +23,14 @@ resource-group-card {
     }
 
     .resource-group-caret {
+      display: flex;
+      align-items: center;
+      flex: 1;
+      padding: 1.25rem 1rem 0.9375rem;
       background-color: transparent;
       color: inherit;
-      padding: 0;
       min-width: 0;
       font-size: 1.25rem;
-      margin-right: 1rem;
-      flex: 1;
       text-align: left;
 
       .fa {
@@ -39,15 +40,17 @@ resource-group-card {
     }
 
     .resource-group-release-channel {
+      font-size: 14px;
       margin-right: 1.25rem;
     }
 
     .resource-group-release-cluster-number {
-      margin-right: 1.25rem;
+      font-size: 14px;
     }
 
     .resource-group-settings-link {
       color: inherit;
+      padding: 1.65rem 1rem 0;
 
       .icon {
         display: block;
@@ -56,25 +59,18 @@ resource-group-card {
     }
 
     .resource-group-banner {
-      display: flex;
-      align-items: center;
-      border-bottom: 1px solid $gray-light-3;
-      font-size: 0.875rem;
-      padding: 0 1rem;
-      height: 1.75rem;
+      margin: 6px 1rem;
+      background-color: $color-attention-lighter;
+      padding: 0.75rem;
+      text-align: center;
     }
 
     .resource-group-banner-message {
-      margin-right: auto;
-    }
-
-    .resource-group-banner-link {
-      height: 100%;
-      padding: 0;
-      font-size: inherit;
-      line-height: inherit;
-      background-color: transparent;
-      color: $color-primary-base;
+      font-size: 14px;
+      a {
+        color: inherit;
+        text-decoration: underline;
+      }
     }
 
     .resource-group-empty {
