@@ -707,6 +707,9 @@
           })
           .state('my-company.subscriptions', {
             url: '/my-company/subscriptions',
+            onEnter: /* @ngInject */ function (OnlineAnalyticsService) {
+              OnlineAnalyticsService.track(OnlineAnalyticsService.MY_COMPANY_SUBSCRIPTIONS);
+            },
             views: {
               'tabContent': {
                 controllerAs: 'mcpSubscription',
@@ -722,6 +725,9 @@
           })
           .state('my-company.info', {
             url: '/my-company',
+            onEnter: /* @ngInject */ function (OnlineAnalyticsService) {
+              OnlineAnalyticsService.track(OnlineAnalyticsService.MY_COMPANY_INFO);
+            },
             views: {
               'tabContent': {
                 controllerAs: 'mcpInfo',
@@ -732,6 +738,9 @@
           })
           .state('my-company.orders', {
             url: '/my-company/orders',
+            onEnter: /* @ngInject */ function (OnlineAnalyticsService) {
+              OnlineAnalyticsService.track(OnlineAnalyticsService.MY_COMPANY_ORDER_HISTORY);
+            },
             views: {
               'tabContent': {
                 template: '<my-company-orders></my-company-orders>'
@@ -1330,6 +1339,21 @@
               siteUrl: null
             }
           })
+          .state('reports.usage', {
+            url: '/reports/usage',
+            templateUrl: 'modules/core/customerReports/usage/usageReports.tpl.html',
+            controller: 'UsageReportsCtrl',
+            controllerAs: 'usageReport',
+            parent: 'main',
+            params: {
+              deviceReportType: 'peakHour'
+            },
+            resolve: {
+              deviceUsageFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasDeviceUsageReport);
+              },
+            }
+          })
           .state('webex-reports', {
             url: '/reports/webex',
             templateUrl: 'modules/core/customerReports/customerReports.tpl.html',
@@ -1481,16 +1505,31 @@
             }
           })
           .state('place-overview.communication.internationalDialing', {
-            template: '<international-dialing-comp owner-type="place" identifier="cisUuid"></international-dialing-comp>',
+            templateProvider: /* @ngInject */ function ($stateParams) {
+              var watcher = $stateParams.watcher;
+              var selected = $stateParams.selected;
+              return '<uc-dialing watcher=' + watcher + ' selected="' + selected + '"></uc-dialing>';
+            },
+            params: {
+              watcher: null,
+              selected: null
+            },
             data: {
               displayName: 'International Dialing'
+            }
+          })
+          .state('place-overview.communication.local', {
+            templateProvider: /* @ngInject */ function ($stateParams) {
+              var watcher = $stateParams.watcher;
+              var selected = $stateParams.selected;
+              return '<uc-dialing  watcher=' + watcher + ' selected="' + selected + '"></uc-dialing>';
             },
-            resolve: {
-              lazy: /* @ngInject */ function lazyLoad($q, $ocLazyLoad) {
-                return $q(function resolveLogin(resolve) {
-                  require(['modules/huron/internationalDialing'], loadModuleAndResolve($ocLazyLoad, resolve));
-                });
-              }
+            params: {
+              watcher: null,
+              selected: null
+            },
+            data: {
+              displayName: 'Local Dialing'
             }
           })
           .state('place-overview.communication.line-overview', {
@@ -1498,8 +1537,9 @@
             // version that supports route to component natively
             templateProvider: /* @ngInject */ function ($stateParams) {
               var ownerId = _.get($stateParams.currentPlace, 'cisUuid');
+              var ownerName = _.get($stateParams.currentPlace, 'displayName');
               var numberId = $stateParams.numberId;
-              return '<line-overview owner-type="place" owner-id="' + ownerId + '" number-id="' + numberId + '"></line-overview>';
+              return '<uc-line-overview owner-type="place" owner-name="' + ownerName + '" owner-id="' + ownerId + '" number-id="' + numberId + '"></line-overview>';
             },
             params: {
               numberId: '',
@@ -1680,7 +1720,7 @@
             templateUrl: 'modules/core/customers/customerSubscriptions/CustomerSubscriptionsDetail.tpl.html',
             resolve: {
               data: /* @ngInject */ function ($state, $translate) {
-                $state.get('customer-overview.customerSubscriptions').data.displayName = $translate.instant('customerPage.subscriptions');
+                $state.get('customer-overview.customerSubscriptions').data.displayName = $translate.instant('customerPage.orderRequest');
               }
             }
           })
@@ -1705,6 +1745,18 @@
             resolve: {
               data: /* @ngInject */ function ($state, $translate) {
                 $state.get('customer-overview.meetingDetail').data.displayName = $translate.instant('customerPage.meetingLicenses');
+              }
+            },
+            data: {},
+            params: {
+              meetingLicenses: {}
+            }
+          })
+          .state('customer-overview.externalNumberDetail', {
+            templateUrl: 'modules/core/customers/customerOverview/externalNumberDetail.tpl.html',
+            resolve: {
+              data: /* @ngInject */ function ($state, $translate) {
+                $state.get('customer-overview.externalNumberDetail').data.displayName = $translate.instant('customerPage.call');
               }
             },
             data: {},
@@ -2562,6 +2614,9 @@
             resolve: {
               hasF410FeatureToggle: /* @ngInject */ function (FeatureToggleService) {
                 return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridServicesResourceList);
+              },
+              hasF237FeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasF237ResourceGroups);
               }
             }
           })

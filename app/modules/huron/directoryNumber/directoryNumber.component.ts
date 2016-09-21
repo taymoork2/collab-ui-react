@@ -1,9 +1,9 @@
 interface IDirectoryNumberOption {
-  value: string,
-  label: string,
+  value: string;
+  label: string;
 }
 
-class DirectoryNumber {
+class DirectoryNumber implements ng.IComponentController {
 
   public externalRefreshFn: Function;
   public externalSelected: IDirectoryNumberOption;
@@ -35,33 +35,37 @@ class DirectoryNumber {
     };
   }
 
-  private $onChanges(changes): void {
+  public $onChanges(changes: { [bindings: string]: ng.IChangesObject }): void {
     // populate internalOptions
-    if (changes.internalNumbers) {
-      if (changes.internalNumbers.currentValue && _.isArray(changes.internalNumbers.currentValue)) {
-        this.internalOptions = this.convertStringArrayToDirectoryNumberOptionsArray(changes.internalNumbers.currentValue);
+    let internalNumbersChange = changes['internalNumbers'];
+    if (internalNumbersChange) {
+      if (internalNumbersChange.currentValue && _.isArray(internalNumbersChange.currentValue)) {
+        this.internalOptions = this.convertStringArrayToDirectoryNumberOptionsArray(internalNumbersChange.currentValue);
       }
     }
 
     // populate externalOptions
-    if (changes.externalNumbers) {
-      if (changes.externalNumbers.currentValue && _.isArray(changes.externalNumbers.currentValue)) {
-        this.externalOptions = this.convertStringArrayToDirectoryNumberOptionsArray(changes.externalNumbers.currentValue);
+    let externalNumbersChange = changes['externalNumbers'];
+    if (externalNumbersChange) {
+      if (externalNumbersChange.currentValue && _.isArray(externalNumbersChange.currentValue)) {
+        this.externalOptions = this.convertStringArrayToDirectoryNumberOptionsArray(externalNumbersChange.currentValue);
         this.externalOptions.unshift(this.noneOption);
       }
     }
 
     // add internalSelected as an IDirectoryNumberOption object to internalOptions
-    if (changes.internalSelected) {
-      if (changes.internalSelected.currentValue) {
-        this.internalSelected = this.setCurrentOption(changes.internalSelected.currentValue, this.internalOptions);
+    let internalSelectedChange = changes['internalSelected'];
+    if (internalSelectedChange) {
+      if (internalSelectedChange.currentValue) {
+        this.internalSelected = this.setCurrentOption(internalSelectedChange.currentValue, this.internalOptions);
       }
     }
 
     // add externalSelected as an IDirectoryNumberOption object to externalOptions
-    if (changes.externalSelected) {
-      if (changes.externalSelected.currentValue) {
-        this.externalSelected = this.setCurrentOption(changes.externalSelected.currentValue, this.externalOptions);
+    let externalSelectedChange = changes['externalSelected'];
+    if (externalSelectedChange) {
+      if (externalSelectedChange.currentValue) {
+        this.externalSelected = this.setCurrentOption(externalSelectedChange.currentValue, this.externalOptions);
       } else {
         this.externalSelected = this.noneOption;
       }
@@ -101,7 +105,7 @@ class DirectoryNumber {
       let currentExternalNumberOption: IDirectoryNumberOption = {
         value: currentValue,
         label: currentValue,
-      }
+      };
       existingOptions.unshift(currentExternalNumberOption);
       return currentExternalNumberOption;
     } else {
@@ -139,7 +143,7 @@ class DirectoryNumber {
 export class DirectoryNumberComponent implements ng.IComponentOptions {
   public controller = DirectoryNumber;
   public templateUrl = 'modules/huron/directoryNumber/directoryNumber.html';
-  public bindings: {[binding: string]: string} = {
+  public bindings = <{ [binding: string]: string }>{
     showInternalExtensions: '<',
     internalSelected: '<',
     internalNumbers: '<',

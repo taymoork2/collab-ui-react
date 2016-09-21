@@ -200,6 +200,16 @@ describe('Care Chat Setup Assistant Ctrl', function () {
       controller.template.name = Array(252).join("a");
       checkStateOfNavigationButtons(NAME_PAGE_INDEX, 'hidden', false);
     });
+
+    it("next button should be disabled when name has any invalid character", function () {
+      controller.template.name = ">";
+      checkStateOfNavigationButtons(NAME_PAGE_INDEX, 'hidden', false);
+    });
+
+    it("next button should be disabled when name has invalid character and length exceeds 250 chars", function () {
+      controller.template.name = Array(251).join("a") + "<";
+      checkStateOfNavigationButtons(NAME_PAGE_INDEX, 'hidden', false);
+    });
   });
 
   describe('Feedback Page', function () {

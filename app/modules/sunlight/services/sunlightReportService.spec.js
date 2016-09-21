@@ -182,7 +182,11 @@ describe(' sunlightReportService', function () {
 
   it('should get ReportingData for org for time selected today for mediaType chat', function () {
     sunlightReportService.getReportingData('org_stats', 0, 'chat').then(function (response) {
-      expect(response.length).toBe(24);
+      var startTimeStamp = moment().startOf('day');
+      var endTimeStamp = moment();
+      var duration = moment.duration(endTimeStamp.diff(startTimeStamp));
+      var hours = Math.floor(duration.asHours());
+      expect(response.length).toBe(hours);
       _.each(response, function (reportData) {
         expect(moment(reportData.createdTime, 'HH:mm', true).isValid()).toBe(true);
       });
@@ -197,7 +201,11 @@ describe(' sunlightReportService', function () {
   it('should get snapshot ReportingData for org for time selected today for mediaType chat', function () {
 
     sunlightReportService.getReportingData('org_snapshot_stats', 0, 'chat').then(function (response) {
-      expect(response.length).toBe(24);
+      var startTimeStamp = moment().startOf('day');
+      var endTimeStamp = moment();
+      var duration = moment.duration(endTimeStamp.diff(startTimeStamp));
+      var hours = Math.floor(duration.asHours());
+      expect(response.length).toBe(hours);
       _.each(response, function (reportData) {
         expect(moment(reportData.createdTime, 'HH:mm', true).isValid()).toBe(true);
       });

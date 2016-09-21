@@ -23,7 +23,6 @@
         function init() {
           FusionClusterService.getAll()
             .then(function (clusterList) {
-              card.serviceList.push(FusionClusterService.getStatusForService('squared-fusion-mgmt', clusterList));
               card.serviceList.push(FusionClusterService.getStatusForService('squared-fusion-cal', clusterList));
               card.serviceList.push(FusionClusterService.getStatusForService('squared-fusion-uc', clusterList));
               card.serviceList.push(FusionClusterService.getStatusForService('squared-fusion-media', clusterList));

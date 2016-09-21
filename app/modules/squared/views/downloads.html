@@ -3,7 +3,7 @@
 </head>
 <div class="messagebox-backdrop">
   <div class="message-box">
-    <section>
+    <section class="message-box__content">
       <i class="message-box__icon icon-circle-check"></i>
       <h3 class="message-box__title message-box__title--success" translate="downloadPage.active"></h3>
       <h5 id="account" class="message-box__details">
@@ -20,8 +20,11 @@
       </span>
       <h5 class="message-box__details" id="sendStatus" mailStatus='{{sendStatus}}'></h5>
     </section>
-    <footer class="message-box__footer">
-      <i class="icon icon-cisco-logo icon-2x"></i>
-    </footer>
+  </div>
+  <div class="messagebox-backdrop__footer">
+    <i class="icon icon-cisco-logo"></i>
+    <div class="body-smallest">
+      <a href="http://www.ciscospark.com/terms-of-service.html" target="_blank" translate="loginPage.tos"></a> | <a href="http://www.cisco.com/web/siteassets/legal/privacy.html" target="_blank" translate="loginPage.privacy"></a> &copy; 2016 <span translate="loginPage.copyright"></span>
+    </div>
   </div>
 </div>

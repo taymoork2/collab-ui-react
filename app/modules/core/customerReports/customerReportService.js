@@ -5,7 +5,7 @@
     .service('CustomerReportService', CustomerReportService);
 
   /* @ngInject */
-  function CustomerReportService($http, $translate, $q, Authinfo, Notification, Log, chartColors, UrlConfig) {
+  function CustomerReportService($http, $translate, $q, Authinfo, Notification, chartColors, UrlConfig) {
     var urlBase = UrlConfig.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/reports/';
     var detailed = 'detailed';
     var timechart = 'timeCharts';
@@ -18,17 +18,17 @@
     var mediaQuality = '/callQuality';
     var callMetrics = '/callMetrics';
     var mostActiveUrl = 'useractivity';
-    var registeredEndpoints = 'trend/registeredEndpointsByDeviceType';
+    var registeredEndpoints = 'deviceType';
     var customerView = '&isCustomerView=true';
-    var dayFormat = "MMM DD";
-    var monthFormat = "MMMM";
-    var timezone = "Etc/GMT";
+    var dayFormat = 'MMM DD';
+    var monthFormat = 'MMMM';
+    var timezone = 'Etc/GMT';
     var cacheValue = (parseInt(moment.utc().format('H'), 10) >= 8);
     var options = ['weeklyUsage', 'monthlyUsage', 'threeMonthUsage'];
 
     // Promise Tracking
     var ABORT = 'ABORT';
-    var activePromse = null;
+    var activePromise = null;
     var mostActivePromise = null;
     var groupCancelPromise = null;
     var oneToOneCancelPromise = null;
@@ -49,52 +49,58 @@
       getDeviceData: getDeviceData
     };
 
+    function getPercentage(numberOne, numberTwo) {
+      return Math.round((numberOne / numberTwo) * 100);
+    }
+
     function getActiveUserData(filter) {
       // cancel any currently running jobs
-      if (activePromse !== null && angular.isDefined(activePromse)) {
-        activePromse.resolve(ABORT);
+      if (activePromise) {
+        activePromise.resolve(ABORT);
       }
-      activePromse = $q.defer();
+      activePromise = $q.defer();
 
       var returnData = {
         graphData: [],
         isActiveUsers: false
       };
 
-      return getService(urlBase + detailed + activeUserUrl + getQuery(filter), activePromse).then(function (response) {
-        if (angular.isDefined(response) && angular.isDefined(response.data) && angular.isDefined(response.data.data) && angular.isArray(response.data.data) && angular.isDefined(response.data.data[0].data)) {
-          return adjustActiveUserData(response.data.data[0].data, filter, returnData);
+      return getService(urlBase + detailed + activeUserUrl + getQuery(filter), activePromise).then(function (response) {
+        var data = _.get(response, 'data.data[0].data');
+        if (data) {
+          return adjustActiveUserData(data, filter, returnData);
         } else {
           return returnData;
         }
       }, function (response) {
-        return returnErrorCheck(response, 'Active user data not returned for customer.', 'activeUsers.overallActiveUserGraphError', returnData);
+        return returnErrorCheck(response, 'activeUsers.overallActiveUserGraphError', returnData);
       });
     }
 
     function getMostActiveUserData(filter) {
       // cancel any currently running jobs
-      if (mostActivePromise !== null && angular.isDefined(mostActivePromise)) {
+      if (mostActivePromise) {
         mostActivePromise.resolve(ABORT);
       }
       mostActivePromise = $q.defer();
 
       return getService(urlBase + mostActiveUrl + getReportTypeQuery(options[filter.value]), mostActivePromise).then(function (response) {
         var data = [];
-        if (angular.isDefined(response) && angular.isDefined(response.data) && angular.isDefined(response.data.data) && angular.isArray(response.data.data)) {
-          angular.forEach(response.data.data, function (item) {
+        var responseData = _.get(response, 'data.data');
+        if (responseData) {
+          _.forEach(responseData, function (item) {
             data.push({
-              'numCalls': parseInt(item.details.sparkCalls, 10) + parseInt(item.details.sparkUcCalls, 10),
-              'totalActivity': parseInt(item.details.totalActivity, 10),
-              'sparkMessages': parseInt(item.details.sparkMessages, 10),
-              'userId': item.details.userId,
-              'userName': item.details.userName
+              numCalls: parseInt(item.details.sparkCalls, 10) + parseInt(item.details.sparkUcCalls, 10),
+              totalActivity: parseInt(item.details.totalActivity, 10),
+              sparkMessages: parseInt(item.details.sparkMessages, 10),
+              userId: item.details.userId,
+              userName: item.details.userName
             });
           });
         }
         return data;
       }, function (response) {
-        return returnErrorCheck(response, 'Most active user data not returned for customer.', 'activeUsers.mostActiveError', []);
+        return returnErrorCheck(response, 'activeUsers.mostActiveError', []);
       });
     }
 
@@ -115,8 +121,7 @@
         dayOffset = -dayOffset;
       }
       var returnGraph = getReturnGraph(filter, dayOffset, graphItem);
-
-      angular.forEach(activeData, function (item, index, activeArray) {
+      _.forEach(activeData, function (item, index, activeArray) {
         var date = moment.tz(item.date, timezone).format(dayFormat);
         if (filter.value === 2) {
           date = moment.tz(item.date, timezone).format(monthFormat);
@@ -150,15 +155,14 @@
         }
 
         if (activeUsers > 0 || totalRegisteredUsers > 0) {
-          for (var i = 0; i < returnGraph.length; i++) {
-            if (returnGraph[i].date === date) {
-              returnGraph[i].totalRegisteredUsers = totalRegisteredUsers;
-              returnGraph[i].activeUsers = activeUsers;
-              returnGraph[i].percentage = Math.round((activeUsers / totalRegisteredUsers) * 100);
+          _.forEach(returnGraph, function (graphPoint) {
+            if (graphPoint.date === date) {
+              graphPoint.totalRegisteredUsers = totalRegisteredUsers;
+              graphPoint.activeUsers = activeUsers;
+              graphPoint.percentage = getPercentage(activeUsers, totalRegisteredUsers);
               emptyGraph = false;
-              break;
             }
-          }
+          });
         }
       });
 
@@ -170,13 +174,13 @@
 
     function getAvgRoomData(filter) {
       // cancel any currently running jobs
-      if (groupCancelPromise !== null && angular.isDefined(groupCancelPromise)) {
+      if (groupCancelPromise) {
         groupCancelPromise.resolve(ABORT);
       }
-      if (oneToOneCancelPromise !== null && angular.isDefined(oneToOneCancelPromise)) {
+      if (oneToOneCancelPromise) {
         oneToOneCancelPromise.resolve(ABORT);
       }
-      if (avgCancelPromise !== null && angular.isDefined(avgCancelPromise)) {
+      if (avgCancelPromise) {
         avgCancelPromise.resolve(ABORT);
       }
       groupCancelPromise = $q.defer();
@@ -191,7 +195,7 @@
         groupData = response.data;
         return;
       }).error(function (response, status) {
-        groupData = returnErrorCheck(status, 'Group rooms data not returned for customer.', 'avgRooms.groupError', []);
+        groupData = returnErrorCheck(status, 'avgRooms.groupError', []);
         return;
       });
       promises.push(groupPromise);
@@ -201,7 +205,7 @@
         oneToOneData = response.data;
         return;
       }).error(function (response, status) {
-        oneToOneData = returnErrorCheck(status, 'One to One rooms data not returned for customer.', 'avgRooms.oneToOneError', []);
+        oneToOneData = returnErrorCheck(status, 'avgRooms.oneToOneError', []);
         return;
       });
       promises.push(oneToOnePromise);
@@ -211,7 +215,7 @@
         avgData = response.data;
         return;
       }).error(function (response, status) {
-        avgData = returnErrorCheck(status, 'Average rooms data not returned for customer.', 'avgRooms.avgError', []);
+        avgData = returnErrorCheck(status, 'avgRooms.avgError', []);
         return;
       });
       promises.push(avgPromise);
@@ -264,15 +268,13 @@
       }
       var returnGraph = getReturnGraph(filter, dayOffset, graphItem);
 
-      angular.forEach(groupData, function (groupItem) {
+      _.forEach(groupData, function (groupItem) {
         var modDate = moment.tz(groupItem.date, timezone).format(dayFormat);
         if (filter.value === 2) {
           modDate = moment.tz(groupItem.date, timezone).format(monthFormat);
         }
 
-        for (var index = 0; index < returnGraph.length; index++) {
-          var returnItem = returnGraph[index];
-
+        _.forEach(returnGraph, function (returnItem) {
           if (returnItem.date === modDate) {
             returnItem.groupRooms = parseInt(groupItem.count, 10);
             returnItem.totalRooms += parseInt(groupItem.count, 10);
@@ -280,46 +282,39 @@
             if (returnItem.groupRooms !== 0) {
               emptyGraph = false;
             }
-            break;
           }
-        }
+        });
       });
 
-      angular.forEach(oneToOneData, function (oneToOneItem) {
+      _.forEach(oneToOneData, function (oneToOneItem) {
         var modDate = moment.tz(oneToOneItem.date, timezone).format(dayFormat);
         if (filter.value === 2) {
           modDate = moment.tz(oneToOneItem.date, timezone).format(monthFormat);
         }
 
-        for (var index = 0; index < returnGraph.length; index++) {
-          var returnItem = returnGraph[index];
-
+        _.forEach(returnGraph, function (returnItem) {
           if (returnItem.date === modDate) {
             returnItem.oneToOneRooms = parseInt(oneToOneItem.count, 10);
             returnItem.totalRooms += parseInt(oneToOneItem.count, 10);
             if (returnItem.oneToOneRooms !== 0) {
               emptyGraph = false;
             }
-            break;
           }
-        }
+        });
       });
 
       if (!emptyGraph) {
-        angular.forEach(avgData, function (avgItem) {
+        _.forEach(avgData, function (avgItem) {
           var modDate = moment.tz(avgItem.date, timezone).format(dayFormat);
           if (filter.value === 2) {
             modDate = moment.tz(avgItem.date, timezone).format(monthFormat);
           }
 
-          for (var index = 0; index < returnGraph.length; index++) {
-            var returnItem = returnGraph[index];
-
+          _.forEach(returnGraph, function (returnItem) {
             if (returnItem.date === modDate) {
               returnItem.avgRooms = parseFloat(avgItem.count).toFixed(2);
-              break;
             }
-          }
+          });
         });
 
         return returnGraph;
@@ -330,10 +325,10 @@
 
     function getFilesSharedData(filter) {
       // cancel any currently running jobs
-      if (contentSharedCancelPromise !== null && angular.isDefined(contentSharedCancelPromise)) {
+      if (contentSharedCancelPromise) {
         contentSharedCancelPromise.resolve(ABORT);
       }
-      if (contentShareSizesCancelPromise !== null && angular.isDefined(contentShareSizesCancelPromise)) {
+      if (contentShareSizesCancelPromise) {
         contentShareSizesCancelPromise.resolve(ABORT);
       }
       contentSharedCancelPromise = $q.defer();
@@ -347,7 +342,7 @@
         contentSharedData = response.data;
         return;
       }).error(function (response, status) {
-        contentSharedData = returnErrorCheck(status, 'Shared content data not returned for customer.', $translate.instant('filesShared.contentSharedError'), []);
+        contentSharedData = returnErrorCheck(status, $translate.instant('filesShared.contentSharedError'), []);
         return;
       });
       promises.push(contentSharedPromise);
@@ -357,7 +352,7 @@
         contentShareSizesData = response.data;
         return;
       }).error(function (response, status) {
-        contentShareSizesData = returnErrorCheck(status, 'Shared content data sizes not returned for customer.', 'filesShared.contentShareSizesDataError', []);
+        contentShareSizesData = returnErrorCheck(status, 'filesShared.contentShareSizesDataError', []);
         return;
       });
       promises.push(contentShareSizesPromise);
@@ -403,40 +398,34 @@
       }
       var returnGraph = getReturnGraph(filter, dayOffset, graphItem);
 
-      angular.forEach(contentSharedData, function (contentItem) {
+      _.forEach(contentSharedData, function (contentItem) {
         var modDate = moment.tz(contentItem.date, timezone).format(dayFormat);
         if (filter.value === 2) {
           modDate = moment.tz(contentItem.date, timezone).format(monthFormat);
         }
 
-        for (var index = 0; index < returnGraph.length; index++) {
-          var returnItem = returnGraph[index];
-
+        _.forEach(returnGraph, function (returnItem) {
           if (returnItem.date === modDate) {
             returnItem.contentShared = parseInt(contentItem.count, 10);
             if (returnItem.contentShared !== 0) {
               emptyGraph = false;
             }
-            break;
           }
-        }
+        });
       });
 
       if (!emptyGraph) {
-        angular.forEach(contentShareSizesData, function (shareItem) {
+        _.forEach(contentShareSizesData, function (shareItem) {
           var modDate = moment.tz(shareItem.date, timezone).format(dayFormat);
           if (filter.value === 2) {
             modDate = moment.tz(shareItem.date, timezone).format(monthFormat);
           }
 
-          for (var index = 0; index < returnGraph.length; index++) {
-            var returnItem = returnGraph[index];
-
+          _.forEach(returnGraph, function (returnItem) {
             if (returnItem.date === modDate) {
               returnItem.contentShareSizes = parseFloat(shareItem.count).toFixed(2);
-              break;
             }
-          }
+          });
         });
 
         return returnGraph;
@@ -447,7 +436,7 @@
 
     function getCallMetricsData(filter) {
       // cancel any currently running jobs
-      if (metricsCancelPromise !== null && angular.isDefined(metricsCancelPromise)) {
+      if (metricsCancelPromise) {
         metricsCancelPromise.resolve(ABORT);
       }
       metricsCancelPromise = $q.defer();
@@ -457,20 +446,24 @@
       };
 
       return getService(urlBase + detailed + callMetrics + getAltQuery(filter), metricsCancelPromise).then(function (response) {
-        if (response !== null && angular.isDefined(response) && angular.isArray(response.data.data) && angular.isArray(response.data.data[0].data)) {
-          var details = response.data.data[0].data[0].details;
+        var details = _.get(response, 'data.data[0].data[0].details');
+        if (details) {
           var totalCalls = parseInt(details.totalCalls, 10);
           if (totalCalls > 0) {
+            var audioCalls = parseInt(details.sparkUcAudioCalls, 10);
+            var successfulCalls = parseInt(details.totalSuccessfulCalls, 10);
+            var videoCalls = parseInt(details.sparkUcVideoCalls, 10) + parseInt(details.sparkVideoCalls, 10);
+
             returnArray.dataProvider = [{
-              "callCondition": $translate.instant('callMetrics.audioCalls'),
-              "numCalls": parseInt(details.sparkUcAudioCalls, 10),
-              "percentage": Math.round((parseInt(details.sparkUcAudioCalls, 10) / parseInt(details.totalSuccessfulCalls, 10)) * 100),
-              "color": chartColors.colorAttentionBase
+              callCondition: $translate.instant('callMetrics.audioCalls'),
+              numCalls: audioCalls,
+              percentage: getPercentage(audioCalls, successfulCalls),
+              color: chartColors.colorAttentionBase
             }, {
-              "callCondition": $translate.instant('callMetrics.videoCalls'),
-              "numCalls": parseInt(details.sparkUcVideoCalls, 10) + parseInt(details.sparkVideoCalls, 10),
-              "percentage": Math.round(((parseInt(details.sparkUcVideoCalls, 10) + parseInt(details.sparkVideoCalls, 10)) / parseInt(details.totalSuccessfulCalls, 10)) * 100, 10),
-              "color": chartColors.primaryColorBase
+              callCondition: $translate.instant('callMetrics.videoCalls'),
+              numCalls: videoCalls,
+              percentage: getPercentage(videoCalls, successfulCalls),
+              color: chartColors.primaryColorBase
             }];
 
             returnArray.displayData.totalCalls = totalCalls;
@@ -480,21 +473,21 @@
         }
         return returnArray;
       }, function (response) {
-        return returnErrorCheck(response, 'Call metrics data not returned for customer.', 'callMetrics.customerError', returnArray);
+        return returnErrorCheck(response, 'callMetrics.customerError', returnArray);
       });
     }
 
     function getMediaQualityData(filter) {
       // cancel any currently running jobs
-      if (mediaCancelPromise !== null && angular.isDefined(mediaCancelPromise)) {
+      if (mediaCancelPromise) {
         metricsCancelPromise.resolve(ABORT);
       }
       mediaCancelPromise = $q.defer();
 
       return getService(urlBase + detailed + mediaQuality + getQuery(filter), mediaCancelPromise).then(function (response) {
         var emptyGraph = true;
-        if (response !== null && angular.isDefined(response)) {
-          var data = response.data.data[0].data;
+        var data = _.get(response, 'data.data[0].data');
+        if (data) {
           var graphItem = {
             totalDurationSum: 0,
             goodQualityDurationSum: 0,
@@ -521,7 +514,7 @@
           }
           var graph = getReturnGraph(filter, dayOffset, graphItem);
 
-          angular.forEach(data, function (item) {
+          _.forEach(data, function (item) {
             var totalSum = parseInt(item.details.totalDurationSum, 10);
             var goodSum = parseInt(item.details.goodQualityDurationSum, 10);
             var fairSum = parseInt(item.details.fairQualityDurationSum, 10);
@@ -546,30 +539,29 @@
                 modifiedDate = moment.tz(item.date, timezone).format(dayFormat);
               }
 
-              for (var i = 0; i < graph.length; i++) {
-                if (graph[i].date === modifiedDate) {
-                  graph[i].totalDurationSum = totalSum;
-                  graph[i].goodQualityDurationSum = goodSum;
-                  graph[i].fairQualityDurationSum = fairSum;
-                  graph[i].poorQualityDurationSum = poorSum;
-                  graph[i].partialSum = partialSum;
+              _.forEach(graph, function (graphPoint) {
+                if (graphPoint.date === modifiedDate) {
+                  graphPoint.totalDurationSum = totalSum;
+                  graphPoint.goodQualityDurationSum = goodSum;
+                  graphPoint.fairQualityDurationSum = fairSum;
+                  graphPoint.poorQualityDurationSum = poorSum;
+                  graphPoint.partialSum = partialSum;
 
-                  graph[i].totalAudioDurationSum = totalAudioDurationSum;
-                  graph[i].goodAudioQualityDurationSum = goodAudioQualityDurationSum;
-                  graph[i].fairAudioQualityDurationSum = fairAudioQualityDurationSum;
-                  graph[i].poorAudioQualityDurationSum = poorAudioQualityDurationSum;
-                  graph[i].partialAudioSum = partialAudioSum;
+                  graphPoint.totalAudioDurationSum = totalAudioDurationSum;
+                  graphPoint.goodAudioQualityDurationSum = goodAudioQualityDurationSum;
+                  graphPoint.fairAudioQualityDurationSum = fairAudioQualityDurationSum;
+                  graphPoint.poorAudioQualityDurationSum = poorAudioQualityDurationSum;
+                  graphPoint.partialAudioSum = partialAudioSum;
 
-                  graph[i].totalVideoDurationSum = totalVideoDurationSum;
-                  graph[i].goodVideoQualityDurationSum = goodVideoQualityDurationSum;
-                  graph[i].fairVideoQualityDurationSum = fairVideoQualityDurationSum;
-                  graph[i].poorVideoQualityDurationSum = poorVideoQualityDurationSum;
-                  graph[i].partialVideoSum = partialVideoSum;
+                  graphPoint.totalVideoDurationSum = totalVideoDurationSum;
+                  graphPoint.goodVideoQualityDurationSum = goodVideoQualityDurationSum;
+                  graphPoint.fairVideoQualityDurationSum = fairVideoQualityDurationSum;
+                  graphPoint.poorVideoQualityDurationSum = poorVideoQualityDurationSum;
+                  graphPoint.partialVideoSum = partialVideoSum;
 
                   emptyGraph = false;
-                  break;
                 }
-              }
+              });
             }
           });
           if (emptyGraph) {
@@ -578,21 +570,21 @@
         }
         return graph;
       }, function (response) {
-        return returnErrorCheck(response, 'Call quality data not returned for customer.', 'mediaQuality.customerError', []);
+        return returnErrorCheck(response, 'mediaQuality.customerError', []);
       });
     }
 
     function getDeviceData(filter) {
       // cancel any currently running jobs
-      if (deviceCancelPromise !== null && angular.isDefined(deviceCancelPromise)) {
+      if (deviceCancelPromise) {
         deviceCancelPromise.resolve(ABORT);
       }
       deviceCancelPromise = $q.defer();
 
-      return getService(urlBase + registeredEndpoints + getQuery(filter, cacheValue), deviceCancelPromise).then(function (response) {
+      return getService(urlBase + registeredEndpoints + getReportTypeQuery(options[filter.value]), deviceCancelPromise).then(function (response) {
         return analyzeDeviceData(response, filter);
       }, function (response) {
-        return returnErrorCheck(response, 'Registered Endpoints data not returned for customer.', 'registeredEndpoints.customerError', {
+        return returnErrorCheck(response, 'registeredEndpoints.customerError', {
           graphData: [],
           filterArray: []
         });
@@ -604,16 +596,16 @@
         graphData: [],
         filterArray: []
       };
-      if (angular.isDefined(response) && angular.isDefined(response.data) && angular.isDefined(response.data.data) && angular.isArray(response.data.data) && angular.isDefined(response.data.data[0].data) && angular.isArray(response.data.data[0].data)) {
-        var data = response.data.data[0].data;
+      var data = _.get(response, 'data.data');
+      if (data) {
         var graphItem = {
           totalRegisteredDevices: 0
         };
         var dayOffset = 0;
         var responseLength = 0;
 
-        angular.forEach(data, function (item) {
-          if (responseLength < item.details.length) {
+        _.forEach(data, function (item) {
+          if (item.details && responseLength < item.details.length) {
             responseLength = item.details.length;
             dayOffset = parseInt(moment.tz(item.details[(item.details.length - 1)].recordTime, timezone).format('e'), 10);
           }
@@ -624,10 +616,9 @@
           dayOffset = -dayOffset;
         }
 
-        var baseGraph = getReturnGraph(filter, dayOffset, graphItem);
         deviceArray.graphData.push({
           deviceType: $translate.instant('registeredEndpoints.allDevices'),
-          graph: angular.copy(baseGraph),
+          graph: getReturnGraph(filter, dayOffset, graphItem),
           emptyGraph: true,
           balloon: true
         });
@@ -638,7 +629,7 @@
         });
         filterIndex++;
 
-        angular.forEach(data, function (item) {
+        _.forEach(data, function (item) {
           deviceArray.filterArray.push({
             value: filterIndex,
             label: item.deviceType
@@ -646,13 +637,14 @@
           filterIndex++;
           var tempGraph = {
             deviceType: item.deviceType,
-            graph: angular.copy(baseGraph),
+            graph: getReturnGraph(filter, dayOffset, graphItem),
             emptyGraph: true,
             balloon: true
           };
 
-          angular.forEach(item.details, function (detail) {
-            if (detail.totalRegisteredDevices > 0) {
+          _.forEach(item.details, function (detail) {
+            var registeredDevices = parseInt(detail.totalRegisteredDevices, 10);
+            if (registeredDevices > 0) {
               tempGraph.emptyGraph = false;
               deviceArray.graphData[0].emptyGraph = false;
               var modifiedDate = moment.tz(detail.recordTime, timezone).format(monthFormat);
@@ -660,13 +652,12 @@
                 modifiedDate = moment.tz(detail.recordTime, timezone).format(dayFormat);
               }
 
-              for (var i = 0; i < baseGraph.length; i++) {
-                if (baseGraph[i].date === modifiedDate) {
-                  tempGraph.graph[i].totalRegisteredDevices = parseInt(detail.totalRegisteredDevices, 10);
-                  deviceArray.graphData[0].graph[i].totalRegisteredDevices += parseInt(detail.totalRegisteredDevices, 10);
-                  break;
+              _.forEach(tempGraph.graph, function (graphPoint, index) {
+                if (graphPoint.date === modifiedDate) {
+                  graphPoint.totalRegisteredDevices = registeredDevices;
+                  deviceArray.graphData[0].graph[index].totalRegisteredDevices += registeredDevices;
                 }
-              }
+              });
             }
           });
           deviceArray.graphData.push(tempGraph);
@@ -677,14 +668,14 @@
     }
 
     function getReportTypeQuery(option, cacheOption) {
-      if (angular.isUndefined(cacheOption) || cacheOption === null) {
+      if (_.isUndefined(cacheOption) || _.isNull(cacheOption)) {
         cacheOption = cacheValue;
       }
-      return "?type=" + option + "&cache=" + cacheOption;
+      return '?type=' + option + '&cache=' + cacheOption;
     }
 
     function getQuery(filter, cacheOption) {
-      if (angular.isUndefined(cacheOption) || cacheOption === null) {
+      if (_.isUndefined(cacheOption) || _.isNull(cacheOption)) {
         cacheOption = cacheValue;
       }
       if (filter.value === 0) {
@@ -697,7 +688,7 @@
     }
 
     function getAltQuery(filter, cacheOption) {
-      if (angular.isUndefined(cacheOption) || cacheOption === null) {
+      if (_.isUndefined(cacheOption) || _.isNull(cacheOption)) {
         cacheOption = cacheValue;
       }
       if (filter.value === 0) {
@@ -714,13 +705,13 @@
 
       if (filter.value === 0) {
         for (var i = 6; i >= 0; i--) {
-          var tmpItem = angular.copy(graphItem);
+          var tmpItem = _.clone(graphItem);
           tmpItem.date = moment().tz(timezone).subtract(i + 1, 'day').format(dayFormat);
           returnGraph.push(tmpItem);
         }
       } else if (filter.value === 1) {
         for (var x = 3; x >= 0; x--) {
-          var temp = angular.copy(graphItem);
+          var temp = _.clone(graphItem);
           temp.date = moment().tz(timezone)
             .startOf('week')
             .subtract(dayOffset + (x * 7), 'day')
@@ -729,7 +720,7 @@
         }
       } else {
         for (var y = 2; y >= 0; y--) {
-          var item = angular.copy(graphItem);
+          var item = _.clone(graphItem);
           item.date = moment().tz(timezone)
             .subtract(y, 'month')
             .startOf('month')
@@ -742,26 +733,20 @@
     }
 
     function getService(url, canceler) {
-      if (canceler === null || angular.isUndefined(canceler)) {
-        return $http.get(url);
-      } else {
+      if (canceler) {
         return $http.get(url, {
           timeout: canceler.promise
         });
+      } else {
+        return $http.get(url);
       }
     }
 
-    function returnErrorCheck(error, debugMessage, message, returnItem) {
+    function returnErrorCheck(error, message, returnItem) {
       if (error.status === 401 || error.status === 403) {
-        Log.debug('User not authorized to access reports.  Status: ' + error.status);
         Notification.error('reportsPage.unauthorizedError');
         return returnItem;
       } else if ((error.status !== 0) || (error.config.timeout.$$state.status === 0)) {
-        if (error.status !== 0) {
-          Log.debug(debugMessage + '  Status: ' + error.status + ' Response: ' + error.message);
-        } else {
-          Log.debug(debugMessage + '  Status: ' + error.status);
-        }
         Notification.errorWithTrackingId(error, message);
         return returnItem;
       } else {

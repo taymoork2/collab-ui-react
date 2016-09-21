@@ -19,11 +19,9 @@
         entitled: LicenseService.orgIsEntitledTo(org, 'ciscouc'),
         aggregatedLicenses: LicenseService.aggregatedLicenses(licenses, Config.licenseTypes.COMMUNICATION)
       };
-      HelpdeskHuronService.getOrgSiteInfo(org.id).then(function (sites) {
-        if (sites[0]) {
-          callCard.voiceMailPrefix = sites[0].siteSteeringDigit;
-          callCard.outboundDialDigit = sites[0].steeringDigit;
-        }
+      HelpdeskHuronService.getOrgSiteInfo(org.id).then(function (site) {
+        callCard.voiceMailPrefix = site.siteSteeringDigit + site.siteCode;
+        callCard.outboundDialDigit = site.steeringDigit;
       });
       HelpdeskHuronService.getTenantInfo(org.id).then(function (tenant) {
         callCard.dialing = (_.isEmpty(tenant.regionCode)) ? "national" : "local";

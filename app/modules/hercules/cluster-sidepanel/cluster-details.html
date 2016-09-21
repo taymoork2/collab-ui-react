@@ -24,9 +24,9 @@
     </p>
   </cs-sp-section>
 
-  <cs-sp-section ng-if="!(clusterDetailsCtrl.cluster.releaseChannel === 'GA' || clusterDetailsCtrl.cluster.releaseChannel === 'stable')">
+  <cs-sp-section ng-if="clusterDetailsCtrl.hasF237FeatureToggle">
     <div class="section-title-row section-name" translate="hercules.expresswayClusterSettings.releasechannelHeader"></div>
-      <p class="hercules-capitalize">{{clusterDetailsCtrl.cluster.releaseChannel}}</p>
+      <p class="hercules-capitalize">{{clusterDetailsCtrl.releaseChannel}}</p>
   </cs-sp-section>
 
   <cs-sp-section>
@@ -51,7 +51,8 @@
       </div>
       <div ng-if="!clusterDetailsCtrl.fakeUpgrade">
         <div class="progressbar-info">
-          <span ng-show="!clusterDetailsCtrl.upgradeJustFinished" class="progressbar-label" translate="hercules.softwareUpgrade.upgradingHost" translate-values="{host: clusterDetailsCtrl.upgradeDetails.upgradingHostname, version: clusterDetailsCtrl.softwareUpgrade.provisionedVersion}"></span>
+          <span ng-show="!clusterDetailsCtrl.upgradeJustFinished && clusterDetailsCtrl.upgradeDetails.upgradingHostname !== ''" class="progressbar-label" translate="hercules.softwareUpgrade.upgradingHost" translate-values="{host: clusterDetailsCtrl.upgradeDetails.upgradingHostname, version: clusterDetailsCtrl.softwareUpgrade.provisionedVersion}"></span>
+          <span ng-show="!clusterDetailsCtrl.upgradeJustFinished && clusterDetailsCtrl.upgradeDetails.upgradingHostname === ''" class="progressbar-label" translate="hercules.softwareUpgrade.upgradeProcessInitiating" translate-values="{version: clusterDetailsCtrl.softwareUpgrade.provisionedVersion}"></span>
           <span ng-if="clusterDetailsCtrl.upgradeJustFinished" class="progressbar-label" translate="hercules.softwareUpgrade.upgradeDone"></span>
           <span class="progressbar-progress">{{clusterDetailsCtrl.upgradeDetails.numberOfUpsmthngHosts}} / {{clusterDetailsCtrl.softwareUpgrade.numberOfHosts}}</span>
         </div>

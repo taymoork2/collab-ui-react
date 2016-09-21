@@ -42,7 +42,8 @@
         // expiryTime: code.expiryTime,
         cisUuid: Authinfo.getUserId(),
         userName: Authinfo.getUserName(),
-        displayName: vm.wizardData.deviceType === "huron" ? Authinfo.getUserName() : vm.deviceName,
+        displayName: Authinfo.getUserName(),
+        email: Authinfo.getPrimaryEmail(),
         organizationId: Authinfo.getOrgId()
       }, nextOption);
     };

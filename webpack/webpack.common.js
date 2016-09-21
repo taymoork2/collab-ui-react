@@ -58,11 +58,17 @@ module.exports = (function makeWebpackConfig() {
   };
 
   if (!args.nolint) {
-    config.module.preLoaders.push(loaders.lint);
+    config.module.preLoaders.push(loaders.eslint);
+    config.module.preLoaders.push(loaders.tslint);
   }
 
   config.eslint = {
     failOnError: true,
+  };
+
+  config.tslint = {
+    emitErrors: true,
+    failOnHint: true,
   };
 
   config.postcss = [
