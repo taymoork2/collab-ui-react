@@ -382,7 +382,7 @@
     }
 
     function isOwnOrg(customer) {
-      return customer.customerName === Authinfo.getOrgName();
+      return customer.customerOrgId === Authinfo.getOrgId();
     }
 
     function serviceSort(a, b) {
