@@ -50,7 +50,7 @@
             } else if (SessionStorage.get(storedState)) {
               state = SessionStorage.pop(storedState);
               params = SessionStorage.popObject(storedParams);
-            } else if (Authinfo.isPartnerAdmin() || Authinfo.isPartnerSalesAdmin()) {
+            } else if ((Authinfo.isPartnerAdmin() || Authinfo.isPartnerSalesAdmin()) && !$stateParams.customerOrgId && !$stateParams.partnerOrgId) {
               Log.debug('Sending "partner logged in" metrics');
               LogMetricsService.logMetrics('Partner logged in', LogMetricsService.getEventType('partnerLogin'), LogMetricsService.getEventAction('buttonClick'), 200, moment(), 1, null);
               state = 'partneroverview';
