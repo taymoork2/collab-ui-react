@@ -4351,6 +4351,7 @@
     "Unknown": "Unknown",
     "Inactive": "Inactive Account",
     "RequiresActivation": "Requires Activation",
+    "WithDevices": "With Devices",
     "upgradeChannels": {
       "Stable": "Stable",
       "Latest": "Latest",
@@ -4416,7 +4417,7 @@
       },
       "inactive": {
         "type": "Inactive Account",
-        "message": "There exists an account for a device, but no corresponding device or activation code. You can probably delete this account."
+        "message": "An account exists for a device, but there's no corresponding device or activation code. You can delete this account."
       },
       "unknown": {
         "type": "Unknown Error Occurred",
@@ -4491,7 +4492,7 @@
     "typeHeader": "Type",
     "deviceHeader": "No. of Devices",
     "actionHeader": "Actions",
-    "featuresHeader": "Features",
+    "servicesHeader": "Services",
     "placeAdd": "Add Place",
     "placeError": "Add Place failed.",
     "deletePlace": "Delete Place",
