@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Controller: AARouteToQueueCtrl', function () {
-  var $controller;
+  var $controller, $modal;
   var AAUiModelService, AutoAttendantCeInfoModelService, AutoAttendantCeMenuModelService, AAModelService;
   var $rootScope, $scope;
 
@@ -13,6 +13,20 @@ describe('Controller: AARouteToQueueCtrl', function () {
     openHours: {},
     ceInfo: {
       name: 'AA2'
+    }
+  };
+  var fakeModal = {
+    result: {
+      then: function (okCallback, cancelCallback) {
+        this.okCallback = okCallback;
+        this.cancelCallback = cancelCallback;
+      }
+    },
+    close: function (item) {
+      this.result.okCallback(item);
+    },
+    dismiss: function (type) {
+      this.result.cancelCallback(type);
     }
   };
 
@@ -53,14 +67,17 @@ describe('Controller: AARouteToQueueCtrl', function () {
   beforeEach(angular.mock.module('Huron'));
   beforeEach(angular.mock.module('Sunlight'));
 
-  beforeEach(inject(function (_$controller_, _$rootScope_, _AAUiModelService_, _AutoAttendantCeInfoModelService_, _AutoAttendantCeMenuModelService_, _AAModelService_) {
+  beforeEach(inject(function (_$controller_, _$rootScope_, _$modal_, _AAUiModelService_, _AutoAttendantCeInfoModelService_, _AutoAttendantCeMenuModelService_, _AAModelService_) {
     $rootScope = _$rootScope_;
     $scope = $rootScope;
+    $modal = _$modal_;
+
     $controller = _$controller_;
     AAModelService = _AAModelService_;
     AAUiModelService = _AAUiModelService_;
     AutoAttendantCeInfoModelService = _AutoAttendantCeInfoModelService_;
     AutoAttendantCeMenuModelService = _AutoAttendantCeMenuModelService_;
+
 
     $scope.schedule = schedule;
     $scope.index = index;
@@ -75,7 +92,20 @@ describe('Controller: AARouteToQueueCtrl', function () {
     AutoAttendantCeMenuModelService.clearCeMenuMap();
     aaUiModel[schedule] = AutoAttendantCeMenuModelService.newCeMenu();
     aaUiModel[schedule].addEntryAt(index, AutoAttendantCeMenuModelService.newCeMenu());
+
   }));
+
+  describe('openQueueTreatmentModal', function () {
+    it('should open the Modal on Validation success', function () {
+      spyOn($modal, 'open').and.returnValue(fakeModal);
+      var controller = $controller('AARouteToQueueCtrl', {
+        $scope: $scope
+      });
+      controller.openQueueTreatmentModal();
+      $scope.$apply();
+      expect($modal.open).toHaveBeenCalled();
+    });
+  });
 
   describe('fromRouteCall overwrite', function () {
     beforeEach(function () {
@@ -119,6 +149,7 @@ describe('Controller: AARouteToQueueCtrl', function () {
 
     });
     it('should populate the ui from the menuEntry', function () {
+
       var controller = $controller('AARouteToQueueCtrl', {
         $scope: $scope
       });
@@ -128,6 +159,7 @@ describe('Controller: AARouteToQueueCtrl', function () {
       controller.menuEntry.actions[0] = action;
 
       controller.populateUiModel();
+
       $scope.$apply();
 
       expect(controller.queueSelected.id).toEqual('myId');
@@ -189,7 +221,8 @@ describe('Controller: AARouteToQueueCtrl', function () {
       });
       controller.queueSelected = {
         name: "Test Queue",
-        id: "c16a6027-caef-4429-b3af-9d61ddc7964b"
+        id: "c1
+        6a6027-caef-4429-b3af-9d61ddc7964b"
       };
 
       var action = AutoAttendantCeMenuModelService.newCeActionEntry('routeToQueue', '');
@@ -228,6 +261,7 @@ describe('Controller: AARouteToQueueCtrl', function () {
     });
 
     it('should initialize the options list', function () {
+
       var controller = $controller('AARouteToQueueCtrl', {
         $scope: $scope
       });
