@@ -5,7 +5,7 @@
     .controller('CustomerListCtrl', CustomerListCtrl);
 
   /* @ngInject */
-  function CustomerListCtrl($q, $rootScope, $scope, $state, $stateParams, $templateCache, $translate, $window, Analytics, Auth, Authinfo, Config, customerListToggle, ExternalNumberService, FeatureToggleService, Log, Notification, Orgservice, PartnerService, TrialService) {
+  function CustomerListCtrl($q, $rootScope, $scope, $state, $stateParams, $templateCache, $translate, $window, Analytics, Authinfo, Config, customerListToggle, ExternalNumberService, FeatureToggleService, Log, Notification, Orgservice, PartnerService, TrialService) {
     $scope.isCustomerPartner = !!Authinfo.isCustomerPartner;
     $scope.isPartnerAdmin = Authinfo.isPartnerAdmin();
     $scope.activeBadge = false;
@@ -16,7 +16,6 @@
 
     $scope.isOrgSetup = isOrgSetup;
     $scope.isPartnerAdminWithCall = isPartnerAdminWithCall;
-    $scope.uuid = '';
     $scope.isOwnOrg = isOwnOrg;
     $scope.setFilter = setFilter;
     $scope.getSubfields = getSubfields;
@@ -323,7 +322,6 @@
     function init() {
       setNotesTextOrder();
       initColumns();
-      getUserId();
       FeatureToggleService.atlasCareTrialsGetStatus().then(function (careStatus) {
         $scope.isCareEnabled = careStatus;
         // FIXME: Remove this if block once the customer list refactor goes live
@@ -383,14 +381,8 @@
       return !_.isUndefined(customer.communications.licenseType) && $scope.isPartnerAdmin;
     }
 
-    function getUserId() {
-      Auth.getAuthorizationUrlList().then(function (response) {
-        $scope.uuid = response.data.uuid;
-      });
-    }
-
     function isOwnOrg(customer) {
-      return (customer.customerOrgId === Authinfo.getOrgId()) && ($scope.uuid === Authinfo.getUserId());
+      return customer.customerOrgId === Authinfo.getOrgId();
     }
 
     function serviceSort(a, b) {
