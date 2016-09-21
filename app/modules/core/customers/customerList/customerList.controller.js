@@ -590,7 +590,7 @@
             var managed = PartnerService.loadRetrievedDataToList(orgList, false,
               $scope.isCareEnabled);
             var isMyOrgInList = _.some(orgList, {
-              customerOrgId: Authinfo.getOrgId()
+              customerName: Authinfo.getOrgName()
             });
             if (!isMyOrgInList && results[1]) {
               // 4/11/2016 admolla
