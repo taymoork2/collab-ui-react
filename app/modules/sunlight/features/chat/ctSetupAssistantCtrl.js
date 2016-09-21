@@ -9,7 +9,7 @@
 
   /* @ngInject */
 
-  function CareChatSetupAssistantCtrl($modal, $scope, $state, $timeout, $translate, $window, Authinfo, CTService, Notification, SunlightConfigService, $stateParams) {
+  function CareChatSetupAssistantCtrl($modal, $scope, $state, $timeout, $translate, $window, Authinfo, CTService, Notification, SunlightConfigService, $stateParams, LogMetricsService) {
     var vm = this;
     init();
 
@@ -663,6 +663,7 @@
       SunlightConfigService.createChatTemplate(vm.template)
         .then(function (response) {
           handleChatTemplateCreation(response);
+          LogMetricsService.logMetrics('Created template for Care', LogMetricsService.getEventType('careTemplateFinish'), LogMetricsService.getEventAction('buttonClick'), 200, moment(), 1, null);
         }, function () {
           handleChatTemplateError();
         });
@@ -672,6 +673,7 @@
       SunlightConfigService.editChatTemplate(vm.template, vm.template.templateId)
         .then(function (response) {
           handleChatTemplateEdit(response, vm.template.templateId);
+          LogMetricsService.logMetrics('Edited template for Care', LogMetricsService.getEventType('careTemplateFinish'), LogMetricsService.getEventAction('buttonClick'), 200, moment(), 1, null);
         }, function () {
           handleChatTemplateError();
         });
@@ -685,6 +687,7 @@
         featureName: vm.template.name
       });
       CTService.openEmbedCodeModal(responseTemplateId, vm.template.name);
+
     }
 
     function handleChatTemplateEdit(response, templateId) {
