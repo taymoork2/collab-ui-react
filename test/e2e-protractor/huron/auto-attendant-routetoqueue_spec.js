@@ -88,6 +88,15 @@ describe('Huron Auto Attendant', function () {
       
     });
 
+    it('should click queue setting hyperlink of route to queue to the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
+        // it is for selecting the queue for route to queue option
+      utils.scroll(autoattendant.repeatPlus);
+      utils.click(autoattendant.queueSetting);
+      utils.click(autoattendant.queueMin);
+      utils.click(autoattendant.queueMinOption.get(1));
+      // for now close the modal. when backend will come we will save the modal before closing. 
+      utils.click(autoattendant.scheduleCloseButton);
+    });
     
     it('should add another route to queue to the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
         
@@ -108,7 +117,17 @@ describe('Huron Auto Attendant', function () {
       utils.click(autoattendant.rqDropDownArrow);
       utils.click(autoattendant.rqDropDownOptionSunlight.get(1));
 
-    });    
+    });  
+
+    it('should click queue setting hyperlink of route to queue to the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
+        // it is for selecting the queue for route to queue option
+      utils.scroll(autoattendant.repeatPlus);
+      utils.click(autoattendant.queueSetting);
+      utils.click(autoattendant.queueMin);
+      utils.click(autoattendant.queueMinOption.get(3));
+   // for now close the modal. when backend will come we will save the modal before closing.
+      utils.click(autoattendant.scheduleCloseButton);
+    });  
      
     it('should save AA and return to landing page', function () {
       utils.click(autoattendant.saveButton);
