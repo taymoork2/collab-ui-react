@@ -4477,7 +4477,7 @@
     "typeHeader": "Type",
     "deviceHeader": "No. of Devices",
     "actionHeader": "Actions",
-    "featuresHeader": "Features",
+    "servicesHeader": "Services",
     "placeAdd": "Add Place",
     "placeError": "Add Place failed.",
     "deletePlace": "Delete Place",
