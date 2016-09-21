@@ -44,7 +44,7 @@
           success: true
         }, 200);
       });
-      Authinfo.isCare.and.returnValue(true);
+      spyOn(Authinfo, 'isCare').and.returnValue(true);
       spyOn(FeatureToggleService, 'atlasCareTrialsGetStatus').and.returnValue(
         $q.when(true)
       );

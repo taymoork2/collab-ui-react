@@ -5,14 +5,14 @@
     .controller('ExportCSVCtrl', ExportCSVCtrl);
 
   /* @ngInject */
-  function ExportCSVCtrl($scope, $rootScope, $q, FeatureToggleService, UserListService, PartnerService, Log, Notification) {
+  function ExportCSVCtrl($scope, $rootScope, $q, Authinfo, FeatureToggleService, UserListService, PartnerService, Log, Notification) {
 
     $scope.exporting = $rootScope.exporting;
     var promise = null;
 
     $scope.isCareEnabled = false;
-    FeatureToggleService.atlasCareTrialsGetStatus().then(function (careStatus) { // TODO
-      $scope.isCareEnabled = careStatus;
+    FeatureToggleService.atlasCareTrialsGetStatus().then(function (careStatus) {
+      $scope.isCareEnabled = careStatus && Authinfo.isCare();
     });
 
     $scope.exportCSV = function () {

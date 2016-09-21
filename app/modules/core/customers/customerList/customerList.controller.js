@@ -316,24 +316,23 @@
     function init() {
       setNotesTextOrder();
       initColumns();
-      if (Authinfo.isCare()) {
-        FeatureToggleService.atlasCareTrialsGetStatus().then(function (careStatus) {
-          $scope.isCareEnabled = careStatus;
-          // FIXME: Remove this if block once the customer list refactor goes live
-          // (This check is taken care of in the compactServiceColumn directive)
-          if (!careStatus) {
-            _.remove($scope.gridColumns, careField);
-          }
-        }, function () {
-          // FIXME: Remove this if block once the customer list refactor goes live
-          // if getting care feature status fails, fall back to the old behavior
+      FeatureToggleService.atlasCareTrialsGetStatus().then(function (careStatus) {
+        $scope.isCareEnabled = careStatus && Authinfo.isCare();
+        // FIXME: Remove this if block once the customer list refactor goes live
+        // (This check is taken care of in the compactServiceColumn directive)
+        if (!$scope.isCareEnabled) {
           _.remove($scope.gridColumns, careField);
-        }).finally(function () {
-          resetLists().then(function () {
-            setFilter($stateParams.filter);
-          });
+        }
+      }, function () {
+        // FIXME: Remove this if block once the customer list refactor goes live
+        // if getting care feature status fails, fall back to the old behavior
+        _.remove($scope.gridColumns, careField);
+      }).finally(function () {
+        resetLists().then(function () {
+          setFilter($stateParams.filter);
         });
-      }
+      });
+
       Orgservice.getOrg(function (data, status) {
         if (data.success) {
           $scope.isTestOrg = data.isTestOrg;

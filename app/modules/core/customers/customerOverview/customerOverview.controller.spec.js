@@ -47,6 +47,9 @@ describe('Controller: CustomerOverviewCtrl', function () {
       },
       getUserId: function () {
         return 'D4C3B2A1';
+      },
+      isCare: function () {
+        return true;
       }
     };
     BrandService = {
@@ -86,7 +89,6 @@ describe('Controller: CustomerOverviewCtrl', function () {
     spyOn(Orgservice, 'isSetupDone').and.returnValue($q.when(false));
     spyOn(PartnerService, 'modifyManagedOrgs').and.returnValue($q.when({}));
     spyOn($window, 'confirm').and.returnValue(true);
-    spyOn(Authinfo, 'isCare').and.returnValue(true);
     spyOn(FeatureToggleService, 'atlasCareTrialsGetStatus').and.returnValue(
       $q.when(true)
     );

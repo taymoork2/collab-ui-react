@@ -84,7 +84,7 @@ describe('Controller: Customer Reports Ctrl', function () {
         $q.when(true)
       );
 
-      Authinfo.isCare.and.returnValue(true);
+      spyOn(Authinfo, 'isCare').and.returnValue(true);
       spyOn(FeatureToggleService, 'atlasCareTrialsGetStatus').and.returnValue(
         $q.when(true)
       );
