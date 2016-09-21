@@ -9,9 +9,9 @@
     $log,
     $stateParams,
     $translate,
+    Auth,
     Authinfo,
     Notification,
-    Orgservice,
     WebExUtilsFact,
     WebExXmlApiFact,
     WebexUserSettingsSvc,
@@ -541,8 +541,9 @@
 
         var _self = this;
 
-        Orgservice.getValidLicenses().then(
-          function getOrgLicensesSuccess(orgLicenses) {
+        Auth.getCustomerAccount(Authinfo.getOrgId()).then(
+          function getValidLicensesSuccess(response) {
+            var orgLicenses = _.get(response, 'data.customers[0].licenses');
             // var funcName = "getOrgLicensesSuccess()";
             // var logMsg = "";
 

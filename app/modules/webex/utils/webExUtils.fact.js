@@ -10,8 +10,8 @@
     $q,
     $log,
     $rootScope,
+    Auth,
     Authinfo,
-    Orgservice,
     WebExXmlApiFact
   ) {
 
@@ -310,8 +310,9 @@
     obj.getAllSitesWebexLicenseInfo = function () {
       var deferredGetWebexLicenseInfo = $q.defer();
 
-      Orgservice.getValidLicenses().then(
-        function getValidLicensesSuccess(licenses) {
+      Auth.getCustomerAccount(Authinfo.getOrgId()).then(
+        function getValidLicensesSuccess(response) {
+          var licenses = _.get(response, 'data.customers[0].licenses');
           // var funcName = "getValidLicensesSuccess()";
           // var logMsg = "";
 
