@@ -3,14 +3,14 @@
 
   angular
     .module('uc.autoattendant')
-    .controller('NewTreatmentModalCtrl', NewTreatmentModalCtrl);
+    .controller('AANewTreatmentModalCtrl', AANewTreatmentModalCtrl);
 
   /* @ngInject */
-  function NewTreatmentModalCtrl($scope, $translate, $modalInstance) {
-    var vm = $scope;
+  function AANewTreatmentModalCtrl($translate, $modalInstance) {
+    var vm = this;
 
     vm.cancel = cancel;
-    vm.destination = '';
+    vm.destination = $translate.instant('autoAttendant.destinations.Disconnect');
     vm.minute = '15';
     vm.selectPlaceholder = $translate.instant('autoAttendant.destinations.Disconnect');
     vm.inputPlaceHolder = $translate.instant('autoAttendant.inputPlaceHolder');
@@ -32,7 +32,7 @@
 
 
     function cancel() {
-      $modalInstance.dismiss('cancel');
+      $modalInstance.close();
     }
 
     function activate() {

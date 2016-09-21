@@ -1,12 +1,12 @@
 'use strict';
 
-describe('Controller: NewTreatmentModalCtrl', function () {
+describe('Controller: AANewTreatmentModalCtrl', function () {
 
   beforeEach(angular.mock.module('uc.autoattendant'));
   beforeEach(angular.mock.module('Huron'));
   beforeEach(angular.mock.module('Sunlight'));
 
-  var $scope;
+  var $scope, controller;
   var modalFake = {
     close: jasmine.createSpy('modalInstance.close'),
     dismiss: jasmine.createSpy('modalInstance.dismiss')
@@ -17,22 +17,24 @@ describe('Controller: NewTreatmentModalCtrl', function () {
 
     spyOn($state, 'go');
 
-    $controller('NewTreatmentModalCtrl', {
+    controller = $controller('AANewTreatmentModalCtrl', {
       $scope: $scope,
       $modalInstance: modalFake
     });
+
   }));
 
   it("length of minutes should be 60.", function () {
-    expect($scope.minutes.length).toEqual(60);
+    expect(controller).toBeDefined();
+    expect(controller.minutes.length).toEqual(60);
   });
 
   it("default value of minute should be 15.", function () {
-    expect($scope.minute).toEqual('15');
+    expect(controller.minute).toEqual('15');
   });
 
-  it("cancel function call results in dismissing the Modal.", function () {
-    $scope.cancel();
-    expect(modalFake.dismiss).toHaveBeenCalledWith("cancel");
+  it("cancel function call results in closing the Modal.", function () {
+    controller.cancel();
+    expect(modalFake.close).toHaveBeenCalledWith();
   });
 });

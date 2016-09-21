@@ -31,11 +31,12 @@
 
     vm.populateUiModel = populateUiModel;
     vm.saveUiModel = saveUiModel;
+    /////////////////////
     function openQueueTreatmentModal() {
       $modal.open({
-        templateUrl: 'modules/huron/features/autoAttendant/routeToQueue/newTreatmentModal.tpl.html',
-        controller: 'NewTreatmentModalCtrl',
-        controllerAs: 'newTreatmentModalCtrl',
+        templateUrl: 'modules/huron/features/autoAttendant/routeToQueue/aaNewTreatmentModal.tpl.html',
+        controller: 'AANewTreatmentModalCtrl',
+        controllerAs: 'aaNewTreatmentModalCtrl',
         type: 'full'
       });
     }
