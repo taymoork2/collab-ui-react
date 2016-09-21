@@ -27,6 +27,7 @@
       value: ''
     };
     vm.menuEntry = {};
+    vm.queues = [];
 
     vm.addKeyAction = addKeyAction;
     vm.deleteKeyAction = deleteKeyAction;
@@ -242,6 +243,7 @@
           name: 'phoneMenuRouteQueue',
           action: 'routeToQueue'
         });
+        vm.queues = $scope.queues;
       }
     }
 
