@@ -14,7 +14,7 @@
         filterValue: 'all'
       }, {
         count: 0,
-        name: "with devices",
+        name: $translate.instant('CsdmStatus.WithDevices'),
         filterValue: 'devices'
       }];
 
