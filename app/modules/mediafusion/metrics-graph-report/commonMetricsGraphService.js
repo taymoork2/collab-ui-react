@@ -52,7 +52,7 @@
     baseVariables['legend'] = {
       'color': chartColors.grayDarkest,
       'autoMargins': false,
-      'align': 'right',
+      'align': 'center',
       'position': 'bottom',
       'switchable': false,
       'fontSize': 13,
@@ -183,6 +183,7 @@
         'columnWidth': 0.035,
         'valueAxis': valueAxis,
         'brightnessStep': 0,
+        'fontFamily': 'CiscoSansTT Extra Light',
         'graph': {
           'fillAlphas': 1,
           'balloonText': '<b>[[availability]]</b></br><b>[[nodes]]</b>'
