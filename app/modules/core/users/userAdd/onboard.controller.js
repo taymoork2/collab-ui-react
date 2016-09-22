@@ -89,7 +89,7 @@
 
     $scope.isCareEnabled = false;
     FeatureToggleService.atlasCareTrialsGetStatus().then(function (careStatus) {
-      $scope.isCareEnabled = careStatus;
+      $scope.isCareEnabled = careStatus && Authinfo.isCare();
     });
 
     initController();
