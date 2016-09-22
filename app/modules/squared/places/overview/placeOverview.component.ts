@@ -21,8 +21,8 @@ class PlaceOverview implements ng.IComponentController {
     private CsdmCodeService,
     private WizardFactory
   ) {
-    this.currentPlace = $stateParams.currentPlace;
-    this.csdmHuronUserDeviceService = CsdmHuronUserDeviceService.create(this.currentPlace.cisUuid);
+    this.currentPlace = this.$stateParams.currentPlace;
+    this.csdmHuronUserDeviceService = this.CsdmHuronUserDeviceService.create(this.currentPlace.cisUuid);
   }
 
   public $onInit(): void {

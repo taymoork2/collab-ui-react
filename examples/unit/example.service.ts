@@ -5,7 +5,7 @@ export class ExampleService {
   constructor(
     private $resource: ng.resource.IResourceService
   ) {
-    this.exampleResource = $resource('/example/:id');
+    this.exampleResource = this.$resource('/example/:id');
   }
 
   public getAndAddSomething(id): ng.IPromise<any> {
@@ -13,7 +13,7 @@ export class ExampleService {
       id: id,
     }).$promise
       .then(response => this.addSomething(response))
-      .catch(response => this.handleError(response));
+      .catch(() => this.handleError());
   }
 
   public addSomething(obj): any {
@@ -21,7 +21,7 @@ export class ExampleService {
     return obj;
   }
 
-  private handleError(response): any {
+  private handleError(): any {
     // Handle error
     return {};
   }

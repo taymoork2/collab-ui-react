@@ -1,10 +1,12 @@
 {
   "compilerOptions": {
-    "target": "ES5",
     "module": "commonjs",
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
     "preserveConstEnums": true,
     "removeComments": false,
-    "sourceMap": true
+    "sourceMap": true,
+    "target": "ES5"
   },
   "exclude": [
     "node_modules"

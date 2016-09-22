@@ -6,7 +6,7 @@ describe('Controller: MySubscriptionCtrl', function () {
   let trialUrl = 'https://atlas-integration.wbx2.com/admin/api/v1/commerce/online/subID';
   let trialUrlResponse = 'trialUrlResponse';
 
-  data.licensesFormatted.forEach(function (item, index){
+  data.licensesFormatted.forEach(function (item){
     item.subscriptions[0].siteUrl = undefined;
   });
   data.licensesFormatted[1].subscriptions[0].offers[0].siteUrl = undefined;

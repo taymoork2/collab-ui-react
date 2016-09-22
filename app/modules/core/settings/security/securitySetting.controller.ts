@@ -11,8 +11,12 @@ namespace globalsettings {
     private orgId: string;
 
     /* @ngInject */
-    constructor(private Notification, private AccountOrgService, Authinfo) {
-      this.orgId = Authinfo.getOrgId();
+    constructor(
+      private Notification,
+      private AccountOrgService,
+      private Authinfo,
+    ) {
+      this.orgId = this.Authinfo.getOrgId();
       this.loadSetting();
     }
 
@@ -41,11 +45,11 @@ namespace globalsettings {
       if (this._isSparkClientSecurityEnabled !== undefined) {
         // Calls AppSecuritySetting service to update device security enforcement
         this.AccountOrgService.setAppSecurity(this.orgId, this._isSparkClientSecurityEnabled)
-          .then((response) => {
+          .then(() => {
             this.Notification.success('firstTimeWizard.messengerAppSecuritySuccess');
           })
           .catch((response) => {
-            this.Notification.error('firstTimeWizard.messengerAppSecurityError');
+            this.Notification.errorWithTrackingId(response, 'firstTimeWizard.messengerAppSecurityError');
           });
       }
     }

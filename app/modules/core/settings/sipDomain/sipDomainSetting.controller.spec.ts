@@ -54,10 +54,11 @@ describe('Controller: EnterpriseSettingsCtrl', ()  => {
       }],
     }]));
 
-    spyOn(Orgservice, 'getOrg').and.callFake((callback, status) => {
+    spyOn(Orgservice, 'getOrg').and.callFake((callback) => {
       callback(orgServiceJSONFixture.getOrg, getOrgStatus);
     });
     spyOn(Notification, 'error');
+    spyOn(Notification, 'errorWithTrackingId');
   }));
 
   function initController() {
@@ -72,7 +73,7 @@ describe('Controller: EnterpriseSettingsCtrl', ()  => {
 
   describe('test Orgservice getOrg callback setting displayName', () => {
     beforeEach(() => {
-      Orgservice.getOrg.and.callFake((callback, status) => {
+      Orgservice.getOrg.and.callFake((callback) => {
         callback(orgServiceJSONFixture.getOrg, 201);
       });
       initController();
@@ -142,7 +143,7 @@ describe('Controller: EnterpriseSettingsCtrl', ()  => {
       controller.isConfirmed = true;
       controller.saveDomain();
       $scope.$apply();
-      expect(Notification.error).toHaveBeenCalled();
+      expect(Notification.errorWithTrackingId).toHaveBeenCalled();
     });
   });
 

@@ -23,11 +23,13 @@ class SpeedDialCtrl implements ng.IComponentController {
   private actionListCopy: IActionItem[] = [];
 
   /* @ngInject */
-  constructor(private $translate: ng.translate.ITranslateService,
-              private dragularService,
-              private Notification,
-              private SpeedDialService: SpeedDialService,
-              private $modal) {
+  constructor(
+    private $modal,
+    private $translate: ng.translate.ITranslateService,
+    private dragularService,
+    private Notification,
+    private SpeedDialService: SpeedDialService,
+  ) {
 
     SpeedDialService.getSpeedDials(this.ownerType, this.ownerId).then((data) => {
       this.speedDialList = data.speedDials;
@@ -35,22 +37,22 @@ class SpeedDialCtrl implements ng.IComponentController {
       this.Notification.error('speedDials.retrieveSpeedDialsFail');
     });
     this.labelMessages = {
-      required: $translate.instant('common.invalidRequired'),
-      pattern: $translate.instant('speedDials.labelIncorrectCharacter'),
+      required: this.$translate.instant('common.invalidRequired'),
+      pattern: this.$translate.instant('speedDials.labelIncorrectCharacter'),
     };
     this.numberMessages = {
-      required: $translate.instant('common.invalidRequired'),
-      pattern: $translate.instant('common.incorrectFormat'),
+      required: this.$translate.instant('common.invalidRequired'),
+      pattern: this.$translate.instant('common.incorrectFormat'),
     };
 
     if (!this.reachSpeedDialLimit()) {
       this.actionListCopy.push({
-        actionKey: $translate.instant('speedDials.addSpeedDial'),
+        actionKey: this.$translate.instant('speedDials.addSpeedDial'),
         actionFunction: this.add.bind(this),
       });
     }
     this.actionListCopy.push({
-        actionKey: $translate.instant('speedDials.reorder'),
+        actionKey: this.$translate.instant('speedDials.reorder'),
         actionFunction: this.setReorder.bind(this),
       });
     this.actionList = _.cloneDeep(this.actionListCopy);

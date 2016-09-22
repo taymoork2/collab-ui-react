@@ -6,11 +6,6 @@ import { LineOverviewService, LineOverviewData } from './index';
 import { DirectoryNumberOptionsService } from '../../directoryNumber';
 import { IActionItem } from '../../../core/components/sectionTitle/sectionTitle.component';
 
-interface IDirectoryNumber {
-  uuid: string;
-  pattern: string;
-}
-
 class LineOverview implements ng.IComponentController {
   private ownerType: string;
   private ownerId: string;
@@ -150,7 +145,7 @@ class LineOverview implements ng.IComponentController {
     }
   }
 
-  public getUserList(filter: string): User[] { ///TODO -- services
+  public getUserList(): User[] { ///TODO -- services
     let users: User[] = [];
     return users;
   }
@@ -259,11 +254,11 @@ class LineOverview implements ng.IComponentController {
     return isValidUser;
   }
 
-  public isSingleDevice(sharedLineEndpoints, uuid): Boolean {
+  public isSingleDevice(): Boolean {
     return true;
   }
 
-  public disassociateSharedLineUser(user, bulkDevice): void {
+  public disassociateSharedLineUser(): void {
 
   }
 

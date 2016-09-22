@@ -1,4 +1,4 @@
-import { IOrderDetail, MyCompanyOrdersService } from './myCompanyOrders.service';
+import { IOrderDetail } from './myCompanyOrders.service';
 import { DigitalRiverService } from '../../../online/digitalRiver/digitalRiver.service';
 
 class MyCompanyOrdersCtrl implements ng.IComponentController {
@@ -13,11 +13,8 @@ class MyCompanyOrdersCtrl implements ng.IComponentController {
 
   /* @ngInject */
   constructor(
-    private $templateCache: angular.ITemplateCacheService,
-    private $translate: angular.translate.ITranslateService,
     private DigitalRiverService: DigitalRiverService,
-    private MyCompanyOrdersService: MyCompanyOrdersService,
-    private Notification
+    private Notification,
   ) {}
 
   public $onInit(): void {

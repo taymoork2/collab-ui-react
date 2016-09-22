@@ -37,16 +37,14 @@ class MySubscriptionCtrl {
   /* @ngInject */
   constructor(
     private $http: ng.IHttpService,
-    private $q: ng.IQService,
     private $rootScope: ng.IRootScopeService,
-    private $timeout: ng.ITimeoutService,
     private $translate: ng.translate.ITranslateService,
     private Authinfo,
     private DigitalRiverService: DigitalRiverService,
     private Notification,
     private Orgservice,
     private ServiceDescriptor,
-    private UrlConfig
+    private UrlConfig,
   ) {
     // message subscriptions
     this.licenseCategory[0] = angular.copy(baseCategory);
