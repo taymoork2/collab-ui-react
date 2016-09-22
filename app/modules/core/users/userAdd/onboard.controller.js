@@ -567,7 +567,7 @@
     function setCareSevice() {
       SunlightConfigService.getUserInfo($scope.currentUser.id)
           .then(function () {
-            Userservice.getUser($scope.currentUser.id, function (data) {
+            Userservice.getUser($scope.currentUser.id, true, function (data) {
               if (data.success) {
                 var hasSyncKms = _.find(data.roles, function (r) {
                   return r === Config.backend_roles.spark_synckms;
