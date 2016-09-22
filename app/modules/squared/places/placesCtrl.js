@@ -107,7 +107,7 @@
             displayName: $translate.instant('placesPage.deviceHeader'),
             cellTemplate: getTemplate('_devicesTpl'),
             sortable: true,
-            sortingAlgorithm: sortStateFn
+            sortingAlgorithm: sortNoDevicesFn
           }, {
             field: 'action',
             displayName: $translate.instant('placesPage.actionHeader'),
@@ -172,8 +172,8 @@
           return 1;
         }
 
-        function sortStateFn(a, b) {
-          return a.priority - b.priority;
+        function sortNoDevicesFn(a, b) {
+          return _.size(a) - _.size(b);
         }
       }
     );

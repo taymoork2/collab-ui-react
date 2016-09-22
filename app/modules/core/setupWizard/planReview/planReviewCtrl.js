@@ -78,8 +78,9 @@
     function init() {
 
       FeatureToggleService.atlasCareTrialsGetStatus().then(function (careStatus) {
-        vm.isCareEnabled = careStatus;
+        vm.isCareEnabled = careStatus && Authinfo.isCare();
       });
+
 
       vm.messagingServices.services = Authinfo.getMessageServices() || [];
       angular.forEach(vm.messagingServices.services, function (service) {

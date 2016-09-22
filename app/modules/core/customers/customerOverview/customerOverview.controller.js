@@ -49,13 +49,13 @@
 
     FeatureToggleService.atlasCareTrialsGetStatus()
       .then(function (result) {
-        if (_.find(vm.currentCustomer.offers, {
-          id: Config.offerTypes.roomSystems
-        })) {
+        if (_.find(vm.currentCustomer.offers, { id: Config.offerTypes.roomSystems })) {
           vm.showRoomSystems = true;
         }
-        setOffers(result);
+        var isCareEnabled = result && Authinfo.isCare();
+        setOffers(isCareEnabled);
       });
+
 
     FeatureToggleService.atlasCustomerListUpdateGetStatus()
       .then(function (result) {
