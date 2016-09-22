@@ -221,8 +221,7 @@ describe('Controller: AARouteToQueueCtrl', function () {
       });
       controller.queueSelected = {
         name: "Test Queue",
-        id: "c1
-        6a6027-caef-4429-b3af-9d61ddc7964b"
+        id: "c16a6027-caef-4429-b3af-9d61ddc7964b"
       };
 
       var action = AutoAttendantCeMenuModelService.newCeActionEntry('routeToQueue', '');

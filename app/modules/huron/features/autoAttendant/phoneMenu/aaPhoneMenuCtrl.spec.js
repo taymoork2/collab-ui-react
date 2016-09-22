@@ -15,7 +15,7 @@ describe('Controller: AAPhoneMenuCtrl', function () {
   var queueName = 'Sunlight Queue 1';
   var queues = [{
     queueName: queueName,
-    queueUrl: '/c16a6027-caef-4429-b3af-9d61ddc7964b',
+    queueUrl: '/c16a6027-caef-4429-b3af-9d61ddc7964b'
 
   }];
 
