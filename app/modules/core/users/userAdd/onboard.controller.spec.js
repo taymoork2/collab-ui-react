@@ -114,6 +114,41 @@ describe('OnboardCtrl: Ctrl', function () {
 
   beforeEach(init);
 
+  describe('Current user name', function () {
+
+    beforeEach(initController);
+
+    it('should return correct string for currentUserDisplayName()', function () {
+      this.$scope.currentUser = {
+        displayName: 'Testy McTestUser',
+        name: {
+          givenName: 'Firsty',
+          familyName: 'Lasty'
+        },
+        userName: 'User McUsername'
+      };
+
+      expect(this.$scope.currentUserDisplayName()).toEqual('Testy McTestUser');
+
+      this.$scope.currentUser.displayName = '';
+      expect(this.$scope.currentUserDisplayName()).toEqual('Firsty Lasty');
+
+      this.$scope.currentUser.name.familyName = '';
+      expect(this.$scope.currentUserDisplayName()).toEqual('Firsty');
+
+      this.$scope.currentUser.name.givenName = null;
+      this.$scope.currentUser.name.familyName = 'Lasty';
+      expect(this.$scope.currentUserDisplayName()).toEqual('Lasty');
+
+      this.$scope.currentUser.name = null;
+      expect(this.$scope.currentUserDisplayName()).toEqual('User McUsername');
+
+      this.$scope.currentUser.userName = null;
+      expect(this.$scope.currentUserDisplayName()).toEqual('common.unknown');
+
+    });
+  });
+
   describe('Bulk Users DirSync', function () {
     beforeEach(initController);
     var validUserList = [{

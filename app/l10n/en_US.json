@@ -349,7 +349,7 @@
     "activationCodeTitle": "Activation Code",
     "expires": "Expires",
     "editServices": "Edit services",
-    "editServiceTitle": "Services Enabled for {{firstName}} {{lastName}}",
+    "editServiceTitle": "Services Enabled for {{name}}",
     "siteUris": "WebEx Sites",
     "webex": "Webex",
     "spark": "Spark",
