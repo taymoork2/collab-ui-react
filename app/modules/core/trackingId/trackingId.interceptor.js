@@ -45,11 +45,16 @@
       } else {
         whitelistSubdomainArray = [];
       }
-      var regex = "^http?s://(?:";
+      var regex = "^https://(?:";
       if (whitelistSubdomainArray.length) {
-        regex += "(?!" + whitelistSubdomainArray.join('|') + ")";
+        regex += "(?!" + _.map(whitelistSubdomain, function (subdomain) {
+          return subdomain.replace(".", "\\.") + "\\." + blacklistDomain.replace(".", "\\.");
+        }).join('|');
+        regex += ").*)";
+      } else {
+        regex += ".*)" + blacklistDomain.replace(".", "\\.");
       }
-      regex += ".*)" + blacklistDomain;
+
       return new RegExp(regex);
     }
 
