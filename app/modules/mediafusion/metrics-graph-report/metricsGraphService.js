@@ -25,6 +25,7 @@
     var availableTitle = $translate.instant('mediaFusion.metrics.availableTitle');
     var unavailableTitle = $translate.instant('mediaFusion.metrics.unavailableTitle');
     var partialTitle = $translate.instant('mediaFusion.metrics.partialTitle');
+    var average_utilzation = $translate.instant('mediaFusion.metrics.avgutilization');
     var availabilitydiv = 'availabilitydiv';
     var utilizationdiv = 'utilizationdiv';
     var baseVariables = [];
@@ -58,8 +59,45 @@
             'class': 'export-list',
             'menu': ['PNG', 'JPG']
           }, {
-            'label': $translate.instant('reportsPage.print'),
-            'title': $translate.instant('reportsPage.print'),
+            'label': $translate.instant('reportsPage.pdf'),
+            'title': $translate.instant('reportsPage.pdf'),
+            click: function () {
+              this.capture({}, function () {
+                this.toPDF({}, function (data) {
+                  $window.open(data, 'amCharts.pdf');
+                });
+              });
+            }
+          }, {
+            'class': 'export-list',
+            'label': $translate.instant('reportsPage.export'),
+            'title': $translate.instant('reportsPage.export'),
+            'menu': ['CSV', 'XLSX']
+          }]
+        }]
+      };
+      return baseVariables['export'];
+    }
+
+    function getBaseExportForUtilizationGraph(fileName, columnNames) {
+      baseVariables['export'] = {
+        'enabled': true,
+        'columnNames': columnNames,
+        'fileName': fileName,
+        'libs': {
+          'autoLoad': false
+        },
+        'menu': [{
+          'class': 'export-main',
+          'label': $translate.instant('reportsPage.downloadOptions'),
+          'menu': [{
+            'label': $translate.instant('reportsPage.saveAs'),
+            'title': $translate.instant('reportsPage.saveAs'),
+            'class': 'export-list',
+            'menu': ['PNG', 'JPG']
+          }, {
+            'label': $translate.instant('reportsPage.pdf'),
+            'title': $translate.instant('reportsPage.pdf'),
             click: function () {
               this.capture({}, function () {
                 this.toPDF({}, function (data) {
@@ -234,16 +272,22 @@
       if (!data[0].balloon) {
         startDuration = 0;
       }
-      var exportFields = ['time', 'average_util'];
+
       var columnNames = {
-        'average_util': 'Average Utilization',
         'time': 'Time'
       };
+      angular.forEach(graphs, function (value) {
+        if (value.title !== average_utilzation) {
+          columnNames[value.valueField] = value.title + ' ' + 'Utilization';
+        } else {
+          columnNames[value.valueField] = value.title;
+        }
+      });
       cluster = cluster.replace(/\s/g, "_");
       daterange = daterange.replace(/\s/g, "_");
       var ExportFileName = 'MediaService_Utilization_' + cluster + '_' + daterange + '_' + new Date();
 
-      var chartData = CommonMetricsGraphService.getBaseStackSerialGraph(data, startDuration, valueAxes, graphs, 'time', catAxis, getBaseExportForGraph(exportFields, ExportFileName, columnNames));
+      var chartData = CommonMetricsGraphService.getBaseStackSerialGraph(data, startDuration, valueAxes, graphs, 'time', catAxis, getBaseExportForUtilizationGraph(ExportFileName, columnNames));
       chartData.legend = CommonMetricsGraphService.getBaseVariable(LEGEND);
       chartData.legend.labelText = '[[title]]';
       chartData.legend.useGraphSettings = true;
