@@ -3597,7 +3597,7 @@
     "email": {
       "invalidEmail": "Please enter a list of comma-separated email addresses",
       "emailNotificationsSavingSuccess": "The email subscriber list was successfully saved.",
-      "emailNotificationsSavingError": "Your changes to the email subscriber list could not be saved. Try again later.",
+      "emailNotificationsSavingError": "Your changes to the email subscriber list could not be saved. Try again later."
     },
     "clusters": {
       "listing": {
