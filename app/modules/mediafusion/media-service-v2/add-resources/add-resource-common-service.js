@@ -19,7 +19,7 @@
       var deferred = $q.defer();
       MediaClusterServiceV2.getAll()
         .then(function (clusters) {
-          vm.clusters = _.filter(clusters, 'targetType', 'mf_mgmt');
+          vm.clusters = _.filter(clusters, { targetType: 'mf_mgmt' });
           _.each(clusters, function (cluster) {
             if (cluster.targetType === 'mf_mgmt') {
               vm.clusterList.push(cluster.name);

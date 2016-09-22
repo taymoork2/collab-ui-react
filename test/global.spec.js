@@ -20,11 +20,11 @@ beforeEach(function () {
 
   this.injectProviders = function () {
     var providers = _.toArray(arguments);
-    _.forEach(providers, function (provider) {
+    _.forEach(providers, _.bind(function (provider) {
       angular.mock.module([provider, function providerCallback(_provider) {
         this[provider] = _provider;
       }.bind(this)]);
-    }, this);
+    }, this));
   }
 
   /**
@@ -33,7 +33,7 @@ beforeEach(function () {
   this.injectDependencies = function () {
     var dependencies = _.toArray(arguments);
     return inject(function ($injector) {
-      _.forEach(dependencies, function (dependency) {
+      _.forEach(dependencies, _.bind(function (dependency) {
         // skip if we already have this dependency
         if (_.has(this, dependency)) {
           return;
@@ -44,7 +44,7 @@ beforeEach(function () {
         } else {
           this[dependency] = $injector.get(dependency);
         }
-      }, this);
+      }, this));
     });
   };
 

@@ -401,7 +401,7 @@
       isHelpDeskUserOnly: function () {
         var roles = this.getRoles();
         if (roles && this.isHelpDeskUser()) {
-          return _.all(roles, function (role) {
+          return _.every(roles, function (role) {
             return role == Config.roles.helpdesk || role == 'PARTNER_USER' || role == 'User';
           });
         }
@@ -410,7 +410,7 @@
       isComplianceUserOnly: function () {
         var roles = this.getRoles();
         if (roles && this.isComplianceUser()) {
-          return _.all(roles, function (role) {
+          return _.every(roles, function (role) {
             return role == Config.roles.compliance_user || role == 'PARTNER_USER' || role == 'User';
           });
         }
@@ -419,7 +419,7 @@
       isHelpDeskAndComplianceUserOnly: function () {
         var roles = this.getRoles();
         if (roles && this.isHelpDeskUser() && this.isComplianceUser()) {
-          return _.all(roles, function (role) {
+          return _.every(roles, function (role) {
             return role == Config.roles.helpdesk || role == Config.roles.compliance_user || role == 'PARTNER_USER' || role == 'User';
           });
         }

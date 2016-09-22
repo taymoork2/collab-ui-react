@@ -81,7 +81,7 @@
 
     function checkIfConnectorsConfigured(connectorType) {
       var clusters = ClusterService.getClustersByConnectorType(connectorType);
-      var areAllConnectorsConfigured = _.all(clusters, function (cluster) {
+      var areAllConnectorsConfigured = _.every(clusters, function (cluster) {
         return allConnectorsConfigured(cluster, connectorType);
       });
       if (!areAllConnectorsConfigured) {
@@ -247,7 +247,7 @@
         .filter(function (connector) {
           return connector.connectorType === connectorType;
         })
-        .all(function (connector) {
+        .every(function (connector) {
           return connector.state !== 'not_configured' && connector.state !== 'not_installed';
         })
         .value();
