@@ -224,7 +224,7 @@ describe('Partner Service -', function () {
 
   it('should verify that every org has a list of offers', function () {
     var returnList = PartnerService.loadRetrievedDataToList(testData.managedOrgsResponse.data.organizations, [], true);
-    var offers = _.pluck(returnList, 'offers');
+    var offers = _.map(returnList, 'offers');
 
     expect(offers.length).toBe(returnList.length);
 

@@ -49,8 +49,8 @@
     function determineIfRemoveAllowed() {
       FusionClusterService.getAll()
         .then(function (clusters) {
-          vm.allowRemove = !_.any(clusters, function (c) {
-            return c.resourceGroupId === $stateParams.id;
+          vm.allowRemove = _.every(clusters, function (c) {
+            return c.resourceGroupId !== $stateParams.id;
           });
         }, angular.noop);
     }
@@ -80,7 +80,7 @@
       ResourceGroupService.getAllowedChannels()
         .then(function (channels) {
           _.forEach(['beta', 'latest'], function (restrictedChannel) {
-            if (_.contains(channels, restrictedChannel)) {
+            if (_.includes(channels, restrictedChannel)) {
               vm.releaseChannelOptions.push({
                 label: $translate.instant('hercules.fusion.add-resource-group.release-channel.' + restrictedChannel),
                 value: restrictedChannel

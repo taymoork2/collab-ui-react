@@ -101,8 +101,8 @@
       return _.chain(tabs)
         .map('feature')
         .compact()
-        .invoke(String.prototype.replace, /^!/, '')
-        .unique()
+        .invokeMap(String.prototype.replace, /^!/, '')
+        .uniq()
         .map(function (feature) {
           return {
             feature: feature,

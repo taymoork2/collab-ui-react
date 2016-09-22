@@ -6,7 +6,7 @@
     .factory('ResourceGroupService', ResourceGroupService);
 
   /* @ngInject */
-  function ResourceGroupService($http, UrlConfig, Authinfo, Orgservice, $q, $translate) {
+  function ResourceGroupService($http, UrlConfig, Authinfo, Orgservice, $q, $translate, FusionClusterService) {
     return {
       getAll: getAll,
       get: get,
@@ -16,7 +16,8 @@
       setName: setName,
       setReleaseChannel: setReleaseChannel,
       assign: assign,
-      getAllAsOptions: getAllAsOptions
+      getAllAsOptions: getAllAsOptions,
+      resourceGroupHasEligibleCluster: resourceGroupHasEligibleCluster
     };
 
     function get(resourceGroupId, orgId) {
@@ -93,6 +94,29 @@
         }
         return options;
       });
+    }
+
+    function resourceGroupHasEligibleCluster(resourceGroupId, connectorType) {
+      return FusionClusterService.getAll()
+        .then(function (clusters) {
+          var clustersInGroup;
+          if (resourceGroupId !== '') {
+            clustersInGroup = FusionClusterService.getClustersForResourceGroup(resourceGroupId, clusters);
+          } else {
+            clustersInGroup = FusionClusterService.getUnassignedClusters(clusters);
+          }
+
+          // No clusters in group: obviously not going to work
+          if (clustersInGroup.length === 0) {
+            return false;
+          }
+
+          return _.some(clustersInGroup, function (cluster) {
+            return _.some(cluster.connectors, function (connector) {
+              return connector.connectorType === connectorType;
+            });
+          });
+        });
     }
 
     function extractDataFromResponse(res) {
