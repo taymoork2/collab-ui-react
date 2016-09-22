@@ -4187,8 +4187,8 @@
     "usePartnerLogo": "Use the same logo in use by {{partner}}",
     "supportInfo": "If you are providing support for your users, enter your support parameters below. These parameters will be displayed under Support Options in the Spark application.",
     "supportAccessTitle": "Support Access",
-    "supportAccessInfo": "This setting gives Cisco or Partner read-only access to your management application. It does not allow changes to be made to your organization's details.",
-    "supportAccessCheckbox": "Allow Cisco or Partner Support read-only access to your management application."
+    "supportAccessInfo": "This setting gives Cisco Support read-only access to your management application. It does not allow changes to be made to your organization's details.",
+    "supportAccessCheckbox": "Allow Cisco Support read-only access to your management application."
   },
   "branding": {
     "customTitle": "Custom Branding",
@@ -4976,8 +4976,8 @@
     "privacy": {
       "title": "Privacy",
       "supportAccessHeader": "Support Access",
-      "supportAccessDescription": "This setting gives Cisco or Partner Support read-only access to your organization. It does not allow changes to be made to your organization's details.",
-      "allowReadOnlyOrgAccess": "Allow Cisco or Partner Support read-only access to your organization",
+      "supportAccessDescription": "This setting gives Cisco Support read-only access to your organization. It does not allow changes to be made to your organization's details.",
+      "allowReadOnlyOrgAccess": "Allow Cisco Support read-only access to your organization",
       "crashReportTitle": "Automatic Crash Reporting",
       "crashReportText": "If an endpoint crashes, logs will be uploaded to Cisco to help improve the quality of the service.",
       "crashReportCheckboxLabel": "Enable Automatic Crash reporting",
@@ -5248,7 +5248,7 @@
     "deviceNotFound": "This device no longer exist. Maybe it's been deleted?",
     "customerPortalViewHeading": "Customer Portal View",
     "customerPortalViewDetails": "You will be able to view the customer's entire portal, you cannot make any changes.",
-    "customerDoesNotAllowReadOnlyAccess": "The customer does not allow Cisco or Partner Support read-only access to the management application.",
+    "customerDoesNotAllowReadOnlyAccess": "The customer does not allow Cisco Support read-only access to the management application.",
     "view": "View",
     "dialing": "Dialing",
     "dialingPlan": {
