@@ -50,7 +50,7 @@
     };
 
     this.getSiteRow = function (siteUrl) {
-      var siteRow = _.findWhere(_this.siteRows.gridData, {
+      var siteRow = _.find(_this.siteRows.gridData, {
         siteUrl: siteUrl
       });
       return siteRow;
@@ -293,7 +293,7 @@
 
               //Get the site's MC, EC, SC, TC, CMR license information
               //MC
-              var siteMC = _.where(allSitesLicenseInfo, {
+              var siteMC = _.filter(allSitesLicenseInfo, {
                 webexSite: siteUrl,
                 offerCode: "MC"
               });
@@ -328,7 +328,7 @@
               }
 
               //EE
-              var siteEE = _.where(allSitesLicenseInfo, {
+              var siteEE = _.filter(allSitesLicenseInfo, {
                 webexSite: siteUrl,
                 offerCode: "EE"
               });
@@ -363,7 +363,7 @@
               }
 
               //CMR
-              var siteCMR = _.where(allSitesLicenseInfo, {
+              var siteCMR = _.filter(allSitesLicenseInfo, {
                 webexSite: siteUrl,
                 offerCode: "CMR"
               });
@@ -398,7 +398,7 @@
               }
 
               //EC
-              var siteEC = _.where(allSitesLicenseInfo, {
+              var siteEC = _.filter(allSitesLicenseInfo, {
                 webexSite: siteUrl,
                 offerCode: "EC"
               });
@@ -433,7 +433,7 @@
               }
 
               //SC
-              var siteSC = _.where(allSitesLicenseInfo, {
+              var siteSC = _.filter(allSitesLicenseInfo, {
                 webexSite: siteUrl,
                 offerCode: "SC"
               });
@@ -468,7 +468,7 @@
               }
 
               //TC
-              var siteTC = _.where(allSitesLicenseInfo, {
+              var siteTC = _.filter(allSitesLicenseInfo, {
                 webexSite: siteUrl,
                 offerCode: "TC"
               });

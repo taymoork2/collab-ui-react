@@ -1,6 +1,8 @@
 (function () {
   'use strict';
 
+  /* eslint no-template-curly-in-string: 0 */
+
   angular.module('WebExApp').service('WebexClientVersion', WebexClientVersion);
 
   /* @ngInject */

@@ -370,7 +370,7 @@
       toggleShowExtensions();
 
       if (vm.telephonyInfo.voicemail === 'On') {
-        if (!_.contains(vm.validForwardOptions, 'Voicemail')) {
+        if (!_.includes(vm.validForwardOptions, 'Voicemail')) {
           vm.validForwardOptions.push('Voicemail');
         }
       }

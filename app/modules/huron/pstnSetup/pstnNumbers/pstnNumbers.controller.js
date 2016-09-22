@@ -569,7 +569,7 @@
       if (angular.isString(telephoneNumber)) {
         return TelephoneNumberService.getDIDLabel(telephoneNumber);
       } else {
-        var firstNumber = TelephoneNumberService.getDIDLabel(_.first(telephoneNumber));
+        var firstNumber = TelephoneNumberService.getDIDLabel(_.head(telephoneNumber));
         var lastNumber = TelephoneNumberService.getDIDLabel(_.last(telephoneNumber));
         if (isConsecutiveArray(telephoneNumber)) {
           return firstNumber + ' - ' + _.last(lastNumber.split('-'));
@@ -771,7 +771,7 @@
     }, function (searchResultsModel) {
       // set disabled in next digest because of cs-btn
       $timeout(function () {
-        vm.model.pstn.addDisabled = !_.contains(searchResultsModel, true);
+        vm.model.pstn.addDisabled = !_.includes(searchResultsModel, true);
       });
     });
 
@@ -780,7 +780,7 @@
     }, function (searchResultsModel) {
       // set disabled in next digest because of cs-btn
       $timeout(function () {
-        vm.model.tollFree.addDisabled = !_.contains(searchResultsModel, true);
+        vm.model.tollFree.addDisabled = !_.includes(searchResultsModel, true);
       });
     });
 

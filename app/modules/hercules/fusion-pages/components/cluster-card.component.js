@@ -47,7 +47,7 @@
     }
 
     function hasServices(cluster) {
-      return cluster.servicesStatuses.some(function (serviceStatus) {
+      return _.some(cluster.servicesStatuses, function (serviceStatus) {
         return serviceStatus.serviceId !== 'squared-fusion-mgmt' && serviceStatus.total > 0;
       });
     }

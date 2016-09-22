@@ -406,8 +406,8 @@ describe('OnboardCtrl: Ctrl', function () {
       expect(this.$scope.usrlist[1].didDnMapMsg).toEqual('usersPage.noExtMappingAvail');
 
     });
-    it('assignServicesNext', function () {
 
+    it('assignServicesNext', function () {
       expect(this.$scope.usrlist[0].externalNumber).not.toBeDefined();
       expect(this.$scope.usrlist[0].assignedDn).not.toBeDefined();
       expect(this.$scope.usrlist[1].externalNumber).not.toBeDefined();

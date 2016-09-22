@@ -102,20 +102,33 @@
   font-family: $brand-font-light;
 }
 
-.dv-error {
-  table {
-    td {
-      padding: 10px 10px 10px 0;
-    }
-    tbody {
-      tr {
-        border-top: transparent;
-      }
-    }
+form {
+  margin-top: 15px;
+}
+
+.warning-message {
+  position: relative;
+  margin-top: 1rem;
+
+  .icon {
+    position: absolute;
+    color: $color-attention-base;
   }
-  .extension-description{
-    a{
-      color: $color-primary-base;
-    }
+
+}
+
+.error-message {
+  position: relative;
+
+  .icon {
+    position: absolute;
+    color: $color-alerts-base;
   }
+
+}
+
+.message {
+  margin-left: 1.5rem;
+  font-size: 0.875rem;
+  max-width: 36rem;
 }

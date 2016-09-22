@@ -193,7 +193,7 @@ exports.config = {
         .get('specs[0]', '')
         .split(config.configDir)
         .takeRight()
-        .trimLeft('/')
+        .trimStart('/')
         .value();
       var jenkinsSubdir = processEnvUtil.isJenkins() ? process.env.BUILD_TAG : '';
 

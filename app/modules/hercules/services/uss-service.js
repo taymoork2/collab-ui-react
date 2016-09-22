@@ -52,6 +52,10 @@
       return res.data;
     }
 
+    function extractUserProps(res) {
+      return res.data.userProps;
+    }
+
     function decorateWithStatus(status) {
       if (!status) {
         return 'unknown';
@@ -126,6 +130,18 @@
         .then(extractData);
     }
 
+    function updateBulkUserProps(manyProps, orgId) {
+      return $http
+        .post(USSUrl + '/orgs/' + (orgId || Authinfo.getOrgId()) + '/userProps', { userProps: manyProps })
+        .then(extractData);
+    }
+
+    function getAllUserProps(orgId) {
+      return $http
+        .get(USSUrl + '/orgs/' + (orgId || Authinfo.getOrgId()) + '/userProps')
+        .then(extractUserProps);
+    }
+
     return {
       getStatusesForUser: getStatusesForUser,
       decorateWithStatus: decorateWithStatus,
@@ -137,7 +153,9 @@
       getStatusesForUserInOrg: getStatusesForUserInOrg,
       extractSummaryForAService: extractSummaryForAService,
       getUserProps: getUserProps,
-      updateUserProps: updateUserProps
+      updateUserProps: updateUserProps,
+      getAllUserProps: getAllUserProps,
+      updateBulkUserProps: updateBulkUserProps
     };
   }
 

@@ -77,6 +77,7 @@
     $scope.getUserLicenses = getUserLicenses;
     $scope.canShowUserDelete = canShowUserDelete;
     $scope.canShowResendInvite = canShowResendInvite;
+    $scope.canShowActionsMenu = canShowActionsMenu;
     $scope.handleDeleteUser = handleDeleteUser;
     $scope.getUserPhoto = Userservice.getUserPhoto;
     $scope.firstOfType = firstOfType;
@@ -329,7 +330,7 @@
       Orgservice.getOrg(function (data, status) {
         if (data.success) {
           $scope.org = data;
-          $scope.dirsyncEnabled = data.dirsyncEnabled;
+          $scope.dirsyncEnabled = !!data.dirsyncEnabled;
         } else {
           Log.debug('Get existing org failed. Status: ' + status);
         }
@@ -345,8 +346,17 @@
       return true;
     }
 
+    function canShowActionsMenu(user) {
+      return (user.userStatus === 'pending' || !$scope.dirsyncEnabled) &&
+        ($scope.canShowResendInvite(user) || $scope.canShowUserDelete(user));
+    }
+
     function canShowUserDelete(user) {
       if (!$scope.getUserLicenses(user)) {
+        return false;
+      }
+
+      if ($scope.dirsyncEnabled) {
         return false;
       }
 
@@ -426,7 +436,8 @@
       Userservice.resendInvitation(userEmail, userName, uuid, userStatus, dirsyncEnabled, entitlements)
         .then(function () {
           Notification.success('usersPage.emailSuccess');
-        }).catch(function (error) {
+        })
+        .catch(function (error) {
           Notification.errorResponse(error, 'usersPage.emailError');
         });
       angular.element('.open').removeClass('open');
@@ -453,17 +464,6 @@
       var photoCellTemplate = '<img ng-if="grid.appScope.isValidThumbnail(row.entity)" class="user-img" ng-src="{{grid.appScope.getUserPhoto(row.entity)}}"/>' +
         '<span ng-if="!grid.appScope.isValidThumbnail(row.entity)" class="user-img">' +
         '<i class="icon icon-user"></i>' +
-        '</span>';
-
-      var actionsTemplate = '<span cs-dropdown class="actions-menu" ng-if="row.entity.userStatus === \'pending\' || !org.dirsyncEnabled">' +
-        '<button cs-dropdown-toggle id="actionsButton" class="btn--none dropdown-toggle" ng-click="$event.stopPropagation()" ng-class="dropdown-toggle">' +
-        '<i class="icon icon-three-dots"></i>' +
-        '</button>' +
-        '<ul cs-dropdown-menu class="dropdown-menu dropdown-primary" role="menu" ng-class="{\'invite\': (row.entity.userStatus === \'pending\' || grid.appScope.isHuronUser(row.entity.entitlements)), \'delete\': (!org.dirsyncEnabled && (row.entity.displayName !== grid.appScope.userName || row.entity.displayName === grid.appScope.userName)), \'first\': grid.appScope.firstOfType(row)}">' +
-        '<li ng-if="grid.appScope.canShowResendInvite(row.entity)" id="resendInviteOption"><a ng-click="$event.stopPropagation(); grid.appScope.resendInvitation(row.entity.userName, row.entity.name.givenName, row.entity.id, row.entity.userStatus, org.dirsyncEnabled, row.entity.entitlements); "><span translate="usersPage.resend"></span></a></li>' +
-        '<li ng-if="!org.dirsyncEnabled && row.entity.displayName !== grid.appScope.userName && grid.appScope.canShowUserDelete(row.entity)" id="deleteUserOption"><a data-toggle="modal" ng-click="grid.appScope.handleDeleteUser($event, row.entity, (row.entity.displayName === grid.appScope.userName))"><span translate="usersPage.deleteUser"></span></a></li>' +
-        '<li ng-if="!org.dirsyncEnabled && row.entity.displayName === grid.appScope.userName && grid.appScope.canShowUserDelete(row.entity)" id="deleteUserOption"><a data-toggle="modal" ng-click="grid.appScope.handleDeleteUser($event, row.entity, (row.entity.displayName === grid.appScope.userName))"><span translate="usersPage.deleteUser"></span></a></li>' +
-        '</ul>' +
         '</span>';
 
       $scope.gridOptions = {
@@ -526,7 +526,7 @@
           field: 'action',
           displayName: $translate.instant('usersPage.actionHeader'),
           sortable: false,
-          cellTemplate: actionsTemplate
+          cellTemplate: getTemplate('actions.tpl')
         }]
       };
     }

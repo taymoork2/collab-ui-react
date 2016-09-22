@@ -424,7 +424,7 @@
       }
 
       var voiceLanguage = _.find(languages, function (language) {
-        return _.findWhere(language.voices, {
+        return _.find(language.voices, {
           voice: voice
         });
       });
@@ -470,7 +470,7 @@
       if (!languageOption || !languageOption.value || languageOption.value.length === 0) {
         languageOption = languageOptionDefault;
       }
-      var language = _.findWhere(languages, {
+      var language = _.find(languages, {
         code: languageOption.value
       });
 
@@ -492,7 +492,7 @@
       var voiceData = {};
 
       _.find(languages, function (language) {
-        voiceData = _.findWhere(language.voices, {
+        voiceData = _.find(language.voices, {
           voice: voice
         });
         return voiceData;
