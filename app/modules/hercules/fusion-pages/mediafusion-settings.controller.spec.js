@@ -28,7 +28,9 @@ describe('Controller: MediafusionClusterSettingsController', function () {
     spyOn(ResourceGroupService, 'getAllowedChannels').and.returnValue($q.when(['stable', 'beta', 'latest']));
 
     controller = $controller('MediafusionClusterSettingsController', {
-      $stateParams: {id: '1234-5678-90'},
+      $stateParams: {
+        id: '1234-5678-90'
+      },
       $translate: $translate,
       MediaClusterServiceV2: MediaClusterServiceV2,
       XhrNotificationService: XhrNotificationService,

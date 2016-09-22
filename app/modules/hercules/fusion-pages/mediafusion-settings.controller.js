@@ -26,7 +26,7 @@
       value: 'stable'
     }];
 
-    vm.populateChannels = function() {
+    vm.populateChannels = function () {
       ResourceGroupService.getAllowedChannels()
         .then(function (channels) {
           _.forEach(['beta', 'latest'], function (restrictedChannel) {
