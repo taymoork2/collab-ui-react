@@ -42,7 +42,7 @@
           label: i + 1
         });
       });
-      vm.minute = vm.minutes[15];
+      vm.minute = vm.minutes[14];
     }
     activate();
   }

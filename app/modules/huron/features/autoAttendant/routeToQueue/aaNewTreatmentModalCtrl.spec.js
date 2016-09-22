@@ -30,7 +30,7 @@ describe('Controller: AANewTreatmentModalCtrl', function () {
   });
 
   it("default value of minute should be 15.", function () {
-    expect(controller.minute).toEqual('15');
+    expect(controller.minute.index).toEqual(15);
   });
 
   it("cancel function call results in closing the Modal.", function () {

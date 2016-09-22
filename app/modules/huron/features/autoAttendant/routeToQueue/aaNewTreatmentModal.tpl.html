@@ -7,7 +7,7 @@
   <div class="columns medium-4"> <label class="h4" translate="autoAttendant.fallbackLabel"></label></div>
   <div class="columns medium-8"><p translate="autoAttendant.maxWaitTime"></p></div>
   <div class="row">
-  <div class="columns medium-2"><cs-select ng-model="aaNewTreatmentModalCtrl.minute" options="aaNewTreatmentModalCtrl.minutes" placeholder="aaNewTreatmentModalCtrl.selectPlaceholder" secondary-label="Minutes" id="queueMin" labelfield="label" valuefield="label" icon="icon-chevron-down">
+  <div class="columns medium-2"><cs-select id="queueMin" ng-model="aaNewTreatmentModalCtrl.minute" options="aaNewTreatmentModalCtrl.minutes" placeholder="aaNewTreatmentModalCtrl.selectPlaceholder" secondary-label="Minutes" labelfield="label" valuefield="label" icon="icon-chevron-down">
   </cs-select> </div>
   </div>
 </div>
@@ -19,7 +19,7 @@
 
 <div class="row">
 <div class="columns medium-6 medium-offset-4">
-         <cs-select ng-model="aaNewTreatmentModalCtrl.destination" name="destinationSelect" options="aaNewTreatmentModalCtrl.destinationOptions" labelfield="label" valuefield="label" icon="icon-chevron-down" placeholder="aaNewTreatmentModalCtrl.selectlaceholder">
+         <cs-select ng-model="aaNewTreatmentModalCtrl.destination" name="destinationSelect" options="aaNewTreatmentModalCtrl.destinationOptions" labelfield="label" valuefield="label" icon="icon-chevron-down" placeholder="aaNewTreatmentModalCtrl.selectPlaceholder">
         </cs-select> 
          <p class="cs-input__help-text" translate="autoAttendant.destinationHelpMessage"></p>
 </div>
