@@ -33,6 +33,8 @@
       labelForDay: labelForDay,
       getStatusForService: getStatusForService,
       getResourceGroups: getResourceGroups,
+      getClustersForResourceGroup: getClustersForResourceGroup,
+      getUnassignedClusters: getUnassignedClusters
     };
 
     return service;
