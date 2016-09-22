@@ -553,7 +553,8 @@
     $scope.radioStates = {
       commRadio: false,
       msgRadio: false,
-      careRadio: false
+      careRadio: false,
+      initialCareRadioState: false // For generating Metrics
     };
 
     if (userEnts) {
@@ -588,6 +589,7 @@
                 });
                 if (hasSyncKms) {
                   $scope.radioStates.careRadio = true;
+                  $scope.radioStates.initialCareRadioState = true;
                 }
               }
             });
@@ -1059,6 +1061,15 @@
           licenseId = _.get($scope, 'careFeatures[1].license.licenseId', null);
           if (licenseId) {
             licenseList.push(new LicenseFeature(licenseId, false));
+          }
+        }
+
+        // Metrics for care entitlement for users
+        if ($scope.radioStates.careRadio !== $scope.radioStates.initialCareRadioState) {
+          if ($scope.radioStates.careRadio) {
+            LogMetricsService.logMetrics('Enabling care for user', LogMetricsService.getEventType('careEnabled'), LogMetricsService.getEventAction('buttonClick'), 200, moment(), 1, null);
+          } else {
+            LogMetricsService.logMetrics('Disabling care for user', LogMetricsService.getEventType('careDisabled'), LogMetricsService.getEventAction('buttonClick'), 200, moment(), 1, null);
           }
         }
       }
