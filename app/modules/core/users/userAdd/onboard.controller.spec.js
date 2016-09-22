@@ -4,7 +4,7 @@ describe('OnboardCtrl: Ctrl', function () {
 
   function init() {
     this.initModules('Core', 'Hercules', 'Huron', 'Messenger', 'Sunlight', 'WebExApp');
-    this.injectDependencies('$httpBackend', '$modal', '$q', '$scope', '$state', '$stateParams', '$previousState', '$timeout', 'Authinfo', 'CsvDownloadService', 'DialPlanService', 'FeatureToggleService', 'Notification', 'Orgservice', 'SyncService', 'SunlightConfigService', 'TelephonyInfoService', 'Userservice', 'UrlConfig', 'WebExUtilsFact', 'ServiceSetup');
+    this.injectDependencies('$httpBackend', '$modal', '$q', '$scope', '$state', '$stateParams', '$previousState', '$timeout', 'Authinfo', 'CsvDownloadService', 'DialPlanService', 'FeatureToggleService', 'Notification', 'Orgservice', 'SyncService', 'SunlightConfigService', 'TelephonyInfoService', 'Userservice', 'UrlConfig', 'WebExUtilsFact', 'ServiceSetup', 'LogMetricsService');
     initDependencySpies.apply(this);
   }
 
@@ -826,10 +826,12 @@ describe('OnboardCtrl: Ctrl', function () {
 
     describe('Check if multiple licenses get assigned correctly', function () {
       var userId = 'dbca1001-ab12-cd34-de56-abcdef123454';
+
       beforeEach(function () {
         spyOn(this.Authinfo, 'isInitialized').and.returnValue(true);
         spyOn(this.Authinfo, 'hasAccount').and.returnValue(true);
         spyOn(this.Authinfo, 'getCareServices').and.returnValue(this.mock.getCareServices.careLicense);
+        spyOn(this.LogMetricsService, 'logMetrics').and.callFake(function () {});
         this.$httpBackend.expectGET(this.UrlConfig.getSunlightConfigServiceUrl() + '/user' + '/' + userId).respond(200);
         this.$httpBackend.expectGET(this.UrlConfig.getScimUrl('null') + '/' + userId).respond(200, this.mock.getUserMe);
         this.$stateParams.currentUser = {
@@ -840,13 +842,24 @@ describe('OnboardCtrl: Ctrl', function () {
       });
       beforeEach(initController);
 
+
       it('should call getAccountLicenses correctly', function () {
         this.$httpBackend.flush();
+        this.$scope.radioStates.initialCareRadioState = false;
         var licenseFeatures = this.$scope.getAccountLicenses();
         expect(licenseFeatures[0].id).toEqual('CDC_da652e7d-cd34-4545-8f23-936b74359afd');
         expect(licenseFeatures[0].idOperation).toEqual('ADD');
         expect(this.$scope.careFeatures[1].license.licenseType).toEqual('CARE');
         expect(this.$scope.radioStates.careRadio).toEqual(true);
+        expect(this.LogMetricsService.logMetrics.calls.argsFor(0)[1]).toEqual('CAREENABLED');
+      });
+
+      it('should call LogMetrics service when care checkbox is de selected', function () {
+        this.$httpBackend.flush();
+        this.$scope.radioStates.initialCareRadioState = true;
+        this.$scope.radioStates.careRadio = false;
+        this.$scope.getAccountLicenses();
+        expect(this.LogMetricsService.logMetrics.calls.argsFor(0)[1]).toEqual('CAREDISABLED');
       });
     });
   });

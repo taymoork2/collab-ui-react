@@ -10,10 +10,9 @@
     var vm = this;
 
     vm.cancel = cancel;
-    vm.destination = $translate.instant('autoAttendant.destinations.Disconnect');
-    vm.minute = '15';
-    vm.selectPlaceholder = $translate.instant('autoAttendant.destinations.Disconnect');
+    vm.selected = '';
     vm.inputPlaceHolder = $translate.instant('autoAttendant.inputPlaceHolder');
+    vm.selectPlaceholder = $translate.instant('autoAttendant.selectPlaceHolder');
     vm.destinationOptions = [{
       label: $translate.instant('autoAttendant.destinations.Disconnect')
     }, {
@@ -29,7 +28,7 @@
     }, {
       label: $translate.instant('autoAttendant.destinations.AutoAttendant')
     }];
-
+    vm.destination = vm.destinationOptions[0];
 
     function cancel() {
       $modalInstance.close();
@@ -40,10 +39,10 @@
       _.times(60, function (i) {
         vm.minutes.push({
           index: i,
-          number: i,
           label: i + 1
         });
       });
+      vm.minute = vm.minutes[14];
     }
     activate();
   }

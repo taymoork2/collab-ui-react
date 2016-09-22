@@ -247,7 +247,8 @@
       "retryUsers": "Retry",
       "retrying": "Retrying...",
       "retryingIn": "retrying in:",
-      "retryingUsers": "{users, plural, one{# User} other{# Users}}"
+      "retryingUsers": "{users, plural, one{# User} other{# Users}}",
+      "exportUserList": "Export user list."
     },
     "advanced": {
       "title": "Advanced",
@@ -2196,7 +2197,7 @@
     "namePlaceholder": "Enter Name",
     "repeatMenu": "Repeat",
     "queueSettings": "Queue Settings",
-    "maxWaitTime": "Max Wait Time",
+    "maxWaitTime": "Maximum Wait Time",
     "errorReadCe": "Failed to read {{name}}: {{statusText}} ({{status}}).",
     "successCreateCe": "{{name}} created successfully.",
     "successDeleteCe": "{{name}} deleted successfully.",
