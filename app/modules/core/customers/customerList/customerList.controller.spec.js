@@ -1,4 +1,5 @@
 'use strict';
+/* eslint-disable */
 
 describe('Controller: CustomerListCtrl', function () {
   var $httpBackend, $q, $scope, $state, Authinfo, Config, customerListToggle, HuronConfig, FeatureToggleService, Notification, Orgservice, PartnerService, TrialService;
@@ -8,7 +9,7 @@ describe('Controller: CustomerListCtrl', function () {
   var partnerService = getJSONFixture('core/json/partner/partner.service.json');
   var managedOrgsResponse = partnerService.managedOrgsResponse;
   var trialsResponse = partnerService.trialsResponse;
-  var orgId = '1';
+  var orgId = 'b93b10ad-ae24-4abf-9c21-76e8b86faf01';
   var orgName = 'testOrg';
   var testOrg = {
     customerOrgId: '1234-34534-afdagfg-425345-afaf',
@@ -68,7 +69,6 @@ describe('Controller: CustomerListCtrl', function () {
     spyOn(PartnerService, 'getManagedOrgsList').and.returnValue($q.when(managedOrgsResponse));
     spyOn(PartnerService, 'modifyManagedOrgs').and.returnValue($q.when({}));
 
-    spyOn(Authinfo, 'isCare').and.returnValue(true);
     spyOn(FeatureToggleService, 'atlasCareTrialsGetStatus').and.returnValue(
       $q.when(false)
     );
@@ -178,6 +178,10 @@ describe('Controller: CustomerListCtrl', function () {
 
   describe('myOrg appears first in orgList', function () {
     beforeEach(initController);
+
+    it('should check if it is its own org', function () {
+      expect($scope.isOwnOrg($scope.managedOrgsList[1])).toBe(true);
+    });
 
     it('if myOrg not in managedOrgsList, myOrg should be added to the top of managedOrgsList ', function () {
       expect($scope.managedOrgsList).toBeDefined();
