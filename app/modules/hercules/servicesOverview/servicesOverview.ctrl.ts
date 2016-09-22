@@ -32,8 +32,10 @@ export class ServicesOverviewCtrl {
     });
 
     FeatureToggleService.atlasCareTrialsGetStatus().then(supports => {
-      this.forwardEvent('careFeatureToggleEventHandler', supports);
+      let isCareEnabled = Authinfo.isCare() && supports;
+      this.forwardEvent('careFeatureToggleEventHandler', isCareEnabled);
     });
+
   }
 
   get hybridCards() {

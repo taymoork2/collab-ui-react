@@ -45,7 +45,6 @@ describe('Controller: PstnProvidersCtrl', function () {
 
       expect(controller.providers).toEqual([jasmine.objectContaining({
         name: PstnSetupService.INTELEPEER,
-        apiExists: true,
         vendor: PstnSetupService.INTELEPEER
       })]);
       expect($state.go).toHaveBeenCalledWith('pstnSetup.orderNumbers');
@@ -64,7 +63,6 @@ describe('Controller: PstnProvidersCtrl', function () {
 
       expect(controller.providers).toEqual([jasmine.objectContaining({
         name: 'INTELEPEER-SWIVEL',
-        apiExists: false,
         vendor: PstnSetupService.INTELEPEER
       })]);
       expect($state.go).toHaveBeenCalledWith('pstnSetup.swivelNumbers');
@@ -83,7 +81,6 @@ describe('Controller: PstnProvidersCtrl', function () {
 
       expect(controller.providers).toEqual([jasmine.objectContaining({
         name: PstnSetupService.INTELEPEER,
-        apiExists: true,
         vendor: PstnSetupService.INTELEPEER
       })]);
       expect($state.go).toHaveBeenCalledWith('pstnSetup.serviceAddress');
@@ -105,11 +102,9 @@ describe('Controller: PstnProvidersCtrl', function () {
 
       expect(controller.providers).toEqual([jasmine.objectContaining({
         name: PstnSetupService.INTELEPEER,
-        apiExists: true,
         vendor: PstnSetupService.INTELEPEER
       }), jasmine.objectContaining({
         name: PstnSetupService.TATA,
-        apiExists: false,
         vendor: PstnSetupService.TATA
       })]);
       expect($state.go).not.toHaveBeenCalled();
@@ -133,11 +128,9 @@ describe('Controller: PstnProvidersCtrl', function () {
 
       expect(controller.providers).toEqual([jasmine.objectContaining({
         name: PstnSetupService.INTELEPEER,
-        apiExists: true,
         vendor: PstnSetupService.INTELEPEER
       }), jasmine.objectContaining({
         name: PstnSetupService.TATA,
-        apiExists: false,
         vendor: PstnSetupService.TATA
       })]);
       expect($state.go).not.toHaveBeenCalled();
@@ -185,7 +178,6 @@ describe('Controller: PstnProvidersCtrl', function () {
 
       expect(controller.providers).toEqual([jasmine.objectContaining({
         name: PstnSetupService.INTELEPEER,
-        apiExists: true,
         vendor: PstnSetupService.INTELEPEER
       })]);
       expect(PstnSetup.setSingleCarrierReseller).toHaveBeenCalledWith(true);

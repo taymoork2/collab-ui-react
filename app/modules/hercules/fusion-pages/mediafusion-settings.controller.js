@@ -6,7 +6,7 @@
     .controller('MediafusionClusterSettingsController', MediafusionClusterSettingsController);
 
   /* @ngInject */
-  function MediafusionClusterSettingsController($stateParams, $translate, FusionClusterService, XhrNotificationService, MediaClusterServiceV2, $modal, FusionUtils, Notification) {
+  function MediafusionClusterSettingsController($stateParams, $translate, FusionClusterService, XhrNotificationService, MediaClusterServiceV2, $modal, FusionUtils, Notification, Orgservice, Config, $q) {
     var vm = this;
     vm.backUrl = 'cluster-list';
     vm.upgradeSchedule = {
@@ -20,6 +20,7 @@
       title: 'mediaFusion.clusters.deletecluster',
       description: 'mediaFusion.clusters.deleteclusterDesc'
     };
+    vm.isTest = false;
 
     //hardcoded now and will be changed in the future
     vm.options = [{
@@ -28,10 +29,27 @@
     }, {
       value: 'beta',
       label: $translate.instant('hercules.fusion.add-resource-group.release-channel.beta')
-    }, {
-      value: 'latest',
-      label: $translate.instant('hercules.fusion.add-resource-group.release-channel.latest')
     }];
+
+    var deferred = $q.defer();
+    vm.getOrg = function () {
+      Orgservice.getOrg(function (data) {
+        if (data.success) {
+          vm.isTest = data.isTestOrg;
+          deferred.resolve(data);
+        }
+      });
+    };
+
+    vm.getOrg();
+    deferred.promise.then(function () {
+      if (Config.getEnv() !== 'prod' || vm.isTest) {
+        vm.options.push({
+          value: 'latest',
+          label: $translate.instant('hercules.fusion.add-resource-group.release-channel.latest')
+        });
+      }
+    });
 
     vm.selected = '';
 

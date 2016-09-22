@@ -103,20 +103,18 @@
         return data.text;
       }).toString();
       if (emailSubscribers && !MailValidatorService.isValidEmailCsv(emailSubscribers)) {
-        Notification.error("hercules.errors.invalidEmail");
+        Notification.error('hercules.errors.invalidEmail');
       } else {
         vm.savingEmail = true;
-        ServiceDescriptor.setEmailSubscribers(vm.serviceId, emailSubscribers, function (err) {
-          vm.savingEmail = false;
-          if (err) {
-            return XhrNotificationService.notify(err);
+        ServiceDescriptor.setEmailSubscribers(vm.serviceId, emailSubscribers, function (statusCode) {
+          if (statusCode === 204) {
+            Notification.success('hercules.settings.emailNotificationsSavingSuccess');
+          } else {
+            Notification.error('hercules.settings.emailNotificationsSavingError');
           }
+          vm.savingEmail = false;
         });
       }
-    };
-
-    vm.invalidEmail = function (tag) {
-      Notification.error(tag.text + " is not a valid email");
     };
   }
 

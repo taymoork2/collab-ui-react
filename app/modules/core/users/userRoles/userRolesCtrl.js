@@ -44,8 +44,8 @@
       id: 'partialAdmin'
     };
 
-    FeatureToggleService.supports(FeatureToggleService.features.atlasReadOnlyAdmin).then(function (enabled) {
-      $scope.enableReadonlyAdminOption = !!enabled;
+    FeatureToggleService.supports(FeatureToggleService.features.atlasReadOnlyAdmin).then(function () {
+      $scope.enableReadonlyAdminOption = true;
     });
 
     FeatureToggleService.supports(FeatureToggleService.features.atlasComplianceRole).then(function (enabled) {
