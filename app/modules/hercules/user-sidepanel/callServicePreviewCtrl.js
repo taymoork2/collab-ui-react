@@ -48,12 +48,12 @@
       reset: function () {
         this.selected = this.current;
         this.saving = false;
-        this.hasRunningClusters();
+        this.displayWarningIfNecessary();
       },
       hasChanged: function () {
         return this.selected !== this.current;
       },
-      hasRunningClusters: function () {
+      displayWarningIfNecessary: function () {
         ResourceGroupService.resourceGroupHasEligibleCluster($scope.resourceGroup.selected.value, 'c_ucmc')
           .then(function (hasEligibleCluster) {
             $scope.resourceGroup.shouldWarn = !hasEligibleCluster;
@@ -115,7 +115,7 @@
       if (selectedGroup) {
         $scope.resourceGroup.selected = selectedGroup;
         $scope.resourceGroup.current = selectedGroup;
-        $scope.resourceGroup.hasRunningClusters();
+        $scope.resourceGroup.displayWarningIfNecessary();
       } else {
         $scope.resourceGroup.cannotFindResouceGroup = true;
       }
@@ -135,7 +135,7 @@
                     if (props.resourceGroups && props.resourceGroups[$scope.callServiceAware.id]) {
                       setSelectedResourceGroup(props.resourceGroups[$scope.callServiceAware.id]);
                     } else {
-                      $scope.resourceGroup.hasRunningClusters();
+                      $scope.resourceGroup.displayWarningIfNecessary();
                     }
                   });
                 }
@@ -303,7 +303,7 @@
     };
 
     $scope.setShouldShowButtons = function () {
-      $scope.resourceGroup.hasRunningClusters();
+      $scope.resourceGroup.displayWarningIfNecessary();
       if ($scope.resourceGroup.hasChanged()) {
         $scope.showButtons = true;
         return;
