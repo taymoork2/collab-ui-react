@@ -227,14 +227,14 @@
             if (_.has(menuEntry, 'actions')) {
               if (menuEntry.actions.length > 0 && menuEntry.type == "MENU_OPTION") {
                 if (angular.isDefined(menuEntry.actions[0].name) && menuEntry.actions[0].name.length > 0) {
-                  keyAction.action = _.find(vm.keyActions, function (keyAction) {
+                  keyAction.action = _.find(vm.keyActions, _.bind(function (keyAction) {
                     if (_.has(this, 'inputType')) {
                       return this.name === keyAction.action && this.inputType === keyAction.inputType;
                     } else if (!_.has(keyAction, 'inputType')) {
                       return this.name === keyAction.action;
                     }
                     return false;
-                  }, menuEntry.actions[0]);
+                  }, menuEntry.actions[0]));
                 } else {
                   keyAction.action = {};
                   keyAction.action.name = "";
