@@ -22,7 +22,7 @@ module.exports = csp({
       'https://*.webex.com',
       'https://*.webexconnect.com',
       'https://wbxdmz.admin.ciscospark.com',
-      'https://wbxbts.admin.ciscospark.com'
+      'https://wbxbts.admin.ciscospark.com',
     ],
     frameSrc: [
       'https://buy.ciscospark.com', // Digital River
@@ -85,7 +85,8 @@ module.exports = csp({
     ],
     mediaSrc: [
       '\'self\'',
-      'blob:'
+      'https://*.webex.com',
+      'blob:',
     ]
   }
 });
