@@ -6,7 +6,7 @@
     .controller('DevicesCtrlHuron', DevicesCtrlHuron);
 
   /* @ngInject */
-  function DevicesCtrlHuron($scope, $state, $stateParams, OtpService, Config, CsdmHuronUserDeviceService) {
+  function DevicesCtrlHuron($scope, $state, $stateParams, OtpService, Config, CsdmHuronUserDeviceService, WizardFactory, Notification) {
     var vm = this;
     vm.devices = {};
     vm.otps = [];
@@ -38,6 +38,39 @@
       $state.go('user-overview.csdmDevice', {
         currentDevice: device,
         huronDeviceService: vm.csdmHuronUserDeviceService
+      });
+    };
+
+    vm.resetCode = function () {
+      vm.resettingCode = true;
+      OtpService.generateOtp(vm.currentUser.userName).then(function (code) {
+        var wizardState = {
+          data: {
+            function: 'showCode',
+            title: 'addDeviceWizard.newDevice',
+            deviceType: 'huron',
+            deviceName: vm.currentUser.displayName,
+            activationCode: code.code,
+            code: code,
+            expiryTime: code.friendlyExpiresOn,
+            cisUuid: vm.currentUser.id,
+            email: vm.currentUser.userName,
+            displayName: vm.currentUser.displayName,
+            organizationId: vm.currentUser.meta.organizationID
+          },
+          history: [],
+          currentStateName: 'addDeviceFlow.showActivationCode',
+          wizardState: {
+            'addDeviceFlow.showActivationCode': {}
+          }
+        };
+        var wizard = WizardFactory.create(wizardState);
+        $state.go('addDeviceFlow.showActivationCode', {
+          wizard: wizard
+        });
+      }, function (err) {
+        vm.isLoading = false;
+        Notification.error(err.statusText);
       });
     };
 

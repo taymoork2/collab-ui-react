@@ -99,15 +99,10 @@
       if (snrInfo.remoteDest) {
         vm.snrInfo.remoteDest = snrInfo.remoteDest;
       } else if (snrInfo.destination && vm.customerLocalDialing) {
-        getCountryInfo(phoneUtils.getRegionCodeForNumber(vm.regionCode.toString() + snrInfo.destination.toString()))
-          .then(function (data) {
-            vm.snrInfo.remoteDest = {
-              name: data.name,
-              code: data.code,
-              number: data.number,
-              phoneNumber: snrInfo.destination
-            };
-          });
+        vm.snrInfo.remoteDest = {
+          number: snrInfo.destination,
+          phoneNumber: snrInfo.destination
+        };
       } else if (snrInfo.destination) {
         getCountryInfo(phoneUtils.getRegionCodeForNumber(snrInfo.destination))
           .then(function (data) {

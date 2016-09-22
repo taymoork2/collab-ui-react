@@ -209,9 +209,9 @@
     var sortIcons = ['sortIconEmailAddress', 'sortIconDate', 'sortIconLocusId', 'sortIconCallStart'];
     for (var sortIcon in sortIcons) {
       if (sortIcons[sortIcon] === 'sortIconDate') {
-        $scope[sortIcons[sortIcon]] = 'fa-sort-desc';
+        $scope[sortIcons[sortIcon]] = 'icon-chevron-down';
       } else {
-        $scope[sortIcons[sortIcon]] = 'fa-sort';
+        $scope[sortIcons[sortIcon]] = 'icon-sort';
       }
     }
 
@@ -241,14 +241,14 @@
     function changeSortIcon(logsSortBy, sortIcon) {
       $scope.logsSortBy = logsSortBy;
       if ($scope.reverseLogs === true) {
-        $scope[sortIcon] = 'fa-sort-desc';
+        $scope[sortIcon] = 'icon-chevron-down';
       } else {
-        $scope[sortIcon] = 'fa-sort-asc';
+        $scope[sortIcon] = 'icon-chevron-up';
       }
 
       for (var otherIcon in sortIcons) {
         if (sortIcons[otherIcon] !== sortIcon) {
-          $scope[sortIcons[otherIcon]] = 'fa-sort';
+          $scope[sortIcons[otherIcon]] = 'icon-sort';
         }
       }
     }

@@ -44,7 +44,7 @@ var WebExUserSettingsPage = function () {
   };
 
   this.t31TestUser = {
-    username: 'provteam+t31ee@csgtrials.webex.com',
+    username: 'T31-EE-lhsieh@mailinator.com',
     password: 'Cisco!23',
   };
 
