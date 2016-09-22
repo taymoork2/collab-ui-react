@@ -30,7 +30,7 @@
       ResourceGroupService.getAllowedChannels()
         .then(function (channels) {
           _.forEach(['beta', 'latest'], function (restrictedChannel) {
-            if (_.contains(channels, restrictedChannel)) {
+            if (_.includes(channels, restrictedChannel)) {
               vm.releaseChannelOptions.push({
                 label: $translate.instant('hercules.fusion.add-resource-group.release-channel.' + restrictedChannel),
                 value: restrictedChannel
