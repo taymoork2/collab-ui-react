@@ -1,5 +1,12 @@
 {
   "baseVariables": {
+    "cursor": {
+      "cursorAlpha": 0,
+      "categoryBalloonEnabled": false,
+      "oneBalloonOnly": true,
+      "balloonPointerOrientation": "vertical",
+      "showNextAvailable": true
+    },
     "column": {
       "type": "column",
       "fillAlphas": 1,

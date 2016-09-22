@@ -12,6 +12,7 @@ export default angular
     'cisco.ui',
     subscriptionUpgradeButtonModule,
     require('angular-resource'),
+    require('modules/core/auth/auth'),
     require('modules/core/config/urlConfig'),
     require('modules/core/notifications/notifications.module'),
     require('modules/core/scripts/services/authinfo'),

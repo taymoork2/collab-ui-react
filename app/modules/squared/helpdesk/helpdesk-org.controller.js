@@ -42,17 +42,12 @@
     vm.cardsAvailable = false;
     vm.adminUsersAvailable = false;
     vm.findServiceOrder = findServiceOrder;
-    vm.supportsSiteDialDigit = false;
     vm.supportsLocalDialing = false;
 
     HelpdeskService.getOrg(vm.orgId).then(initOrgView, XhrNotificationService.notify);
 
     FeatureToggleService.supports(FeatureToggleService.features.atlasHelpDeskExt).then(function (result) {
       vm.supportsExtendedInformation = result;
-    });
-
-    FeatureToggleService.getCustomerHuronToggle(vm.orgId, FeatureToggleService.features.huronSiteDialDigit).then(function (result) {
-      vm.supportsSiteDialDigit = result;
     });
 
     FeatureToggleService.getCustomerHuronToggle(vm.orgId, FeatureToggleService.features.huronLocalDialing).then(function (result) {
@@ -69,9 +64,7 @@
     }
 
     function setReadOnlyLaunchButtonVisibility(orgData) {
-      if (Authinfo.getOrgId() != "ce8d17f8-1734-4a54-8510-fae65acc505e" && Authinfo.getOrgId() != "d5235404-6637-4050-9978-e3d0f4338c36" && Authinfo.getOrgId() != "1eb65fdf-9643-417f-9974-ad72cae0e10f" && Authinfo.getOrgId() != "6f631c7b-04e5-4dfe-b359-47d5fa9f4837") {
-        vm.allowLaunchAtlas = false;
-      } else if (orgData.id == Authinfo.getOrgId()) {
+      if (orgData.id == Authinfo.getOrgId()) {
         vm.allowLaunchAtlas = false;
       } else if (!orgData.orgSettings) {
         vm.allowLaunchAtlas = true;

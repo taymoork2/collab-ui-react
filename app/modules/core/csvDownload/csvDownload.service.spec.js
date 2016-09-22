@@ -33,9 +33,7 @@ describe('Service: CsvDownloadService', function () {
 
     describe('getCsv(user)', function () {
       var userFile = {
-        data: {
-          "some": "user"
-        }
+        "some": "user"
       };
       beforeEach(function () {
         $httpBackend.expectGET(UrlConfig.getAdminServiceUrl() + 'csv/organizations/1/users/export').respond(userFile);
@@ -60,6 +58,25 @@ describe('Service: CsvDownloadService', function () {
 
       it('should get user export file for a large org', function () {
         CsvDownloadService.getCsv(typeUser, true).then(function (data) {
+          expect(data).toContain('blob');
+        });
+        $httpBackend.flush();
+      });
+    });
+
+    describe('getCsv(user, false, filename, true)', function () {
+      var userFile = {
+        "some": "user"
+      };
+      beforeEach(function () {
+        $httpBackend.expectPOST(UrlConfig.getAdminServiceUrl() + 'csv/organizations/1/users/report').respond(201, {
+          id: '1234'
+        });
+        $httpBackend.expectGET(UrlConfig.getAdminServiceUrl() + 'csv/organizations/1/users/report/1234').respond(userFile);
+      });
+
+      it('should get user export file using the report API', function () {
+        CsvDownloadService.getCsv(typeUser, false, 'filename', true).then(function (data) {
           expect(data).toContain('blob');
         });
         $httpBackend.flush();
@@ -91,13 +108,11 @@ describe('Service: CsvDownloadService', function () {
 
     describe('getCsv(headers)', function () {
       var headersObj = {
-        data: {
-          "columns": [{
-            "name": "First Name"
-          }, {
-            "name": "Last Name"
-          }]
-        }
+        "columns": [{
+          "name": "First Name"
+        }, {
+          "name": "Last Name"
+        }]
       };
       beforeEach(function () {
         $httpBackend.expectGET(UrlConfig.getAdminServiceUrl() + 'csv/organizations/1/users/headers').respond(headersObj);
@@ -105,9 +120,9 @@ describe('Service: CsvDownloadService', function () {
 
       it('should get headers object', function () {
         CsvDownloadService.getCsv('headers').then(function (response) {
-          expect(response.data.columns.length).toBe(2);
-          expect(response.data.columns[0].name).toBe("First Name");
-          expect(response.data.columns[1].name).toBe("Last Name");
+          expect(response.columns.length).toBe(2);
+          expect(response.columns[0].name).toBe("First Name");
+          expect(response.columns[1].name).toBe("Last Name");
         });
         $httpBackend.flush();
       });

@@ -160,6 +160,7 @@
     "one": [{
       "date": "Aug 01",
       "totalDurationSum": 45,
+      "partialSum": 20,
       "goodQualityDurationSum": 25,
       "fairQualityDurationSum": 15,
       "poorQualityDurationSum": 5,
@@ -170,6 +171,7 @@
     }, {
       "date": "Aug 02",
       "totalDurationSum": 75,
+      "partialSum": 35,
       "goodQualityDurationSum": 40,
       "fairQualityDurationSum": 25,
       "poorQualityDurationSum": 10,
@@ -180,6 +182,7 @@
     }, {
       "date": "Aug 03",
       "totalDurationSum": 105,
+      "partialSum": 50,
       "goodQualityDurationSum": 55,
       "fairQualityDurationSum": 35,
       "poorQualityDurationSum": 15,
@@ -190,6 +193,7 @@
     }, {
       "date": "Aug 04",
       "totalDurationSum": 135,
+      "partialSum": 65,
       "goodQualityDurationSum": 70,
       "fairQualityDurationSum": 45,
       "poorQualityDurationSum": 20,
@@ -200,6 +204,7 @@
     }, {
       "date": "Aug 05",
       "totalDurationSum": 165,
+      "partialSum": 80,
       "goodQualityDurationSum": 85,
       "fairQualityDurationSum": 55,
       "poorQualityDurationSum": 25,
@@ -210,6 +215,7 @@
     }, {
       "date": "Aug 06",
       "totalDurationSum": 195,
+      "partialSum": 95,
       "goodQualityDurationSum": 100,
       "fairQualityDurationSum": 65,
       "poorQualityDurationSum": 30,
@@ -220,6 +226,7 @@
     }, {
       "date": "Aug 07",
       "totalDurationSum": 225,
+      "partialSum": 110,
       "goodQualityDurationSum": 115,
       "fairQualityDurationSum": 75,
       "poorQualityDurationSum": 35,
@@ -231,6 +238,7 @@
     "two": [{
       "date": "Jul 12",
       "totalDurationSum": 45,
+      "partialSum": 20,
       "goodQualityDurationSum": 25,
       "fairQualityDurationSum": 15,
       "poorQualityDurationSum": 5,
@@ -241,6 +249,7 @@
     }, {
       "date": "Jul 19",
       "totalDurationSum": 75,
+      "partialSum": 35,
       "goodQualityDurationSum": 40,
       "fairQualityDurationSum": 25,
       "poorQualityDurationSum": 10,
@@ -251,6 +260,7 @@
     }, {
       "date": "Jul 26",
       "totalDurationSum": 105,
+      "partialSum": 50,
       "goodQualityDurationSum": 55,
       "fairQualityDurationSum": 35,
       "poorQualityDurationSum": 15,
@@ -261,6 +271,7 @@
     }, {
       "date": "Aug 02",
       "totalDurationSum": 135,
+      "partialSum": 65,
       "goodQualityDurationSum": 70,
       "fairQualityDurationSum": 45,
       "poorQualityDurationSum": 20,
@@ -272,6 +283,7 @@
     "three": [{
       "date": "June",
       "totalDurationSum": 45,
+      "partialSum": 20,
       "goodQualityDurationSum": 25,
       "fairQualityDurationSum": 15,
       "poorQualityDurationSum": 5,
@@ -282,6 +294,7 @@
     }, {
       "date": "July",
       "totalDurationSum": 75,
+      "partialSum": 35,
       "goodQualityDurationSum": 40,
       "fairQualityDurationSum": 25,
       "poorQualityDurationSum": 10,
@@ -292,6 +305,7 @@
     }, {
       "date": "August",
       "totalDurationSum": 105,
+      "partialSum": 50,
       "goodQualityDurationSum": 55,
       "fairQualityDurationSum": 35,
       "poorQualityDurationSum": 15,
@@ -472,44 +486,44 @@
     }],
     "two": [{
       "date": "Nov21",
-      "contentShared": 50,
+      "contentShared": 80,
       "contentShareSizes": 0,
       "color": "#ECECEC",
       "balloon": false
     }, {
       "date": "Nov28",
-      "contentShared": 40,
+      "contentShared": 70,
       "contentShareSizes": 0,
       "color": "#ECECEC",
       "balloon": false
     }, {
       "date": "Dec05",
-      "contentShared": 30,
+      "contentShared": 60,
       "contentShareSizes": 0,
       "color": "#ECECEC",
       "balloon": false
     }, {
       "date": "Dec12",
-      "contentShared": 20,
+      "contentShared": 50,
       "contentShareSizes": 0,
       "color": "#ECECEC",
       "balloon": false
     }],
     "three": [{
       "date": "October",
-      "contentShared": 40,
+      "contentShared": 80,
       "contentShareSizes": 0,
       "color": "#ECECEC",
       "balloon": false
     }, {
       "date": "November",
-      "contentShared": 30,
+      "contentShared": 70,
       "contentShareSizes": 0,
       "color": "#ECECEC",
       "balloon": false
     }, {
       "date": "December",
-      "contentShared": 20,
+      "contentShared": 60,
       "contentShareSizes": 0,
       "color": "#ECECEC",
       "balloon": false

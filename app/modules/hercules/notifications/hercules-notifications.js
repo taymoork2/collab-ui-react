@@ -46,6 +46,10 @@
       $state.go('call-service.settings');
     };
 
+    vm.locatedinCallSettings = function () {
+      return $state.is('call-service.settings');
+    };
+
     vm.navigateToCurrentServiceSettings = function () {
       vm.showNotifications = false;
       $state.go($state.current.name.split('.')[0] + '.settings');
@@ -71,15 +75,6 @@
     vm.dismissNewServiceNotification = function (notificationId, serviceId) {
       ServiceDescriptor.acknowledgeService(serviceId);
       NotificationService.removeNotification(notificationId);
-    };
-
-    vm.openAddResourceModal = function () {
-      $modal.open({
-        controller: 'RedirectTargetController',
-        controllerAs: 'redirectTarget',
-        templateUrl: 'modules/hercules/redirect-target/redirect-target-dialog.html',
-        type: 'small'
-      });
     };
 
     vm.showEnterpriseSettings = function () {

@@ -13,9 +13,9 @@
       </div>
     </cs-sp-section>
 
-    <cs-sp-section>
+    <cs-sp-section ng-if="$ctrl.currentPlace.type === 'huron'">
       <div class="section-title-row">
-        <span class="section-name" translate="placesPage.featuresHeader"></span>
+        <span class="section-name" translate="placesPage.servicesHeader"></span>
       </div>
       <feature-list features="$ctrl.services" feature-actions="$ctrl.serviceActions(feature)"></feature-list>
     </cs-sp-section>

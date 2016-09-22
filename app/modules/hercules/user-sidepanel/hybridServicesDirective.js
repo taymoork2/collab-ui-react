@@ -7,7 +7,7 @@
     .controller('HybridServicesCtrl', HybridServicesCtrl);
 
   /* @ngInject */
-  function HybridServicesCtrl($scope, $timeout, Authinfo, USSService, FusionUtils, ServiceDescriptor, Orgservice) {
+  function HybridServicesCtrl($scope, $timeout, Authinfo, USSService, FusionUtils, ServiceDescriptor, Orgservice, Notification) {
     if (!Authinfo.isFusion()) {
       return;
     }
@@ -86,6 +86,9 @@
         checkEntitlements({
           enforceLicenseCheck: false
         });
+      })
+      .catch(function (error) {
+        Notification.error('Error getting user information: ' + error);
       });
 
     function checkEntitlements(options) {

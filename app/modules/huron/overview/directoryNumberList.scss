@@ -1,0 +1,11 @@
+/*****  directoryNumberList  *****/
+
+directory-number-list {
+  .line-show-more-less-text {
+    color: $anchor-font-color;
+
+    .side-panel & {
+      transition: none;
+    }
+  }
+}

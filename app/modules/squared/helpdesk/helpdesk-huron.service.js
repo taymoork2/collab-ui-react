@@ -248,7 +248,10 @@
     function getOrgSiteInfo(orgId) {
       return $http
         .get(HuronConfig.getCmiUrl() + '/voice/customers/' + orgId + '/sites/')
-        .then(extractData);
+        .then(function (res) {
+          return $http.get(HuronConfig.getCmiUrl() + '/voice/customers/' + orgId + '/sites/' + res.data[0].uuid)
+            .then(extractData);
+        });
     }
 
     function getTenantInfo(orgId) {

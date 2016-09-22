@@ -1,0 +1,116 @@
+.assign-clusters-modal {
+  .resource-columns {
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    margin-top: 1.5rem;
+  }
+
+  .resource-column {
+    flex: 1;
+    overflow: hidden;
+
+    &:first-child {
+      margin-right: 1rem;
+    }
+  }
+
+  .resource-scrolling-list {
+    border: solid 1px $gray-light-3;
+    height: 300px; // TODO: make it smarter with a mix of calc() and percentages
+    overflow: auto;
+  }
+
+  .resource-container {
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    padding: 0.75rem;
+
+    &:hover {
+      background-color: $gray-light-4;
+      cursor: pointer;
+
+      .resource-action-plus {
+        background-color: $color-primary-base;
+      }
+    }
+  }
+
+  .resource-details {
+    flex: 1 0 auto;
+    // TODO: find something better than a magic number
+    max-width: 392px;
+  }
+
+  .resource-name {
+    font-size: 0.875rem;
+    @include text-overflow();
+    padding-right: 1rem;
+  }
+
+  .resource-services {
+    display: flex;
+    flex-direction: row;
+
+    .status-indicator {
+      padding-right: 0;
+    }
+  }
+
+  .resource-service {
+    font-size: 0.75rem;
+    margin-right: 1.5rem;
+  }
+
+  .resource-action-container {
+    display: flex;
+    flex: 0 0;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .resource-action {
+    width: 1.5rem;
+    height: 1.5rem;
+    background-color: $gray-light-1;
+    border-radius: 100%;
+    color: #fff;
+    text-align: center;
+
+    .icon {
+      display: block;
+      height: 100%;
+    }
+
+    .icon-plus {
+      font-size: 1.5rem;
+      line-height: 1;
+    }
+
+    .icon-minus {
+      font-size: 1.25rem;
+      line-height: 1.2;
+    }
+
+    &.resource-action-minus {
+      background-color: $color-alerts-base;
+    }
+  }
+
+  .warning-message {
+    position: relative;
+    margin-top: 1rem;
+
+    .icon {
+      position: absolute;
+      color: $color-attention-base;
+    }
+
+    .message {
+      margin-left: 1.5rem;
+      font-size: 0.875rem;
+      max-width: 36rem;
+    }
+  }
+}

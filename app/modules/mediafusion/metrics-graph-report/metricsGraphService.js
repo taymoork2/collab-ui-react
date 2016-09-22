@@ -7,8 +7,8 @@
     var COLUMN = 'column';
     var AXIS = 'axis';
     var NUMFORMAT = 'numFormat';
-    var SMOOTHLINED = 'smoothedLine';
     var GUIDEAXIS = 'guideaxis';
+    var LEGEND = 'legend';
     // variables for the call volume section
     var callVolumediv = 'callVolumediv';
     // var callVolumeBalloonText = '<span class="graph-text">' + $translate.instant('activeUsers.registeredUsers') + ' <span class="graph-number">[[totalRegisteredUsers]]</span></span><br><span class="graph-text">' + $translate.instant('activeUsers.active') + ' <span class="graph-number">[[percentage]]%</span></span>';
@@ -19,9 +19,6 @@
     //availablility variable
     var availabilitydiv = 'availabilitydiv';
     var utilizationdiv = 'utilizationdiv';
-    //variables for utilization graph
-    var peakUtilization = $translate.instant('mediaFusion.metrics.peakutilization');
-    var averageUtilization = $translate.instant('mediaFusion.metrics.averageutilization');
     var baseVariables = [];
     var titles = [];
 
@@ -187,7 +184,7 @@
       }
     }
 
-    function createutilizationGraph(data, cluster, daterange) {
+    function createutilizationGraph(data, graphs, cluster, daterange) {
       if (data === null || data === 'undefined' || data.length === 0) {
         return;
       }
@@ -218,48 +215,26 @@
       if (!data[0].balloon) {
         startDuration = 0;
       }
-      var exportFields = ['average_cpu', 'peak_cpu', 'timestamp'];
+      var exportFields = ['time', 'average_util'];
       var columnNames = {
-        'average_cpu': 'Average Utilization',
-        'peak_cpu': "Peak Utilization",
-        'timestamp': 'Timestamp'
+        'average_util': 'Average Utilization',
+        'time': 'Time'
       };
       cluster = cluster.replace(/\s/g, "_");
       daterange = daterange.replace(/\s/g, "_");
       var ExportFileName = 'MediaService_Utilization_' + cluster + '_' + daterange + '_' + new Date();
 
-      var chartData = CommonMetricsGraphService.getBaseStackSerialGraph(data, startDuration, valueAxes, utilizationGraphs(data), 'timestamp', catAxis, getBaseExportForGraph(exportFields, ExportFileName, columnNames));
-      chartData.numberFormatter = CommonMetricsGraphService.getBaseVariable(NUMFORMAT);
+      var chartData = CommonMetricsGraphService.getBaseStackSerialGraph(data, startDuration, valueAxes, graphs, 'time', catAxis, getBaseExportForGraph(exportFields, ExportFileName, columnNames));
+      chartData.legend = CommonMetricsGraphService.getBaseVariable(LEGEND);
+      chartData.legend.labelText = '[[title]]';
+      chartData.legend.useGraphSettings = true;
       var chart = AmCharts.makeChart(utilizationdiv, chartData);
       chart.addListener("rendered", zoomChart);
       zoomChart(chart);
       return chart;
     }
 
-    function utilizationGraphs(data) {
-      var secondaryColors = [data[0].colorOne, data[0].colorTwo];
-      var values = ['average_cpu', 'peak_cpu'];
-      var titles = [averageUtilization, peakUtilization];
-      var graphs = [];
-      for (var i = 0; i < values.length; i++) {
-        graphs.push(CommonMetricsGraphService.getBaseVariable(SMOOTHLINED));
-        graphs[i].title = titles[i];
-        graphs[i].lineColor = secondaryColors[i];
-        graphs[i].negativeLineColor = secondaryColors[i];
-        graphs[i].valueField = values[i];
-        graphs[i].showBalloon = data[0].balloon;
-        if (graphs[i].valueField === 'peak_cpu') {
-          graphs[i].dashLength = 4;
-          graphs[i].balloonText = '<span class="graph-text">' + $translate.instant(titles[i]) + ' <span class="graph-number">[[peak_cpu]]</span></span>';
-        } else {
-          graphs[i].balloonText = '<span class="graph-text">' + $translate.instant(titles[i]) + ' <span class="graph-number">[[average_cpu]]</span></span>';
-        }
-        graphs[i].clustered = false;
-      }
-      return graphs;
-    }
-
-    function setUtilizationGraph(data, utilizationChart, cluster, daterange) {
+    function setUtilizationGraph(data, graphs, utilizationChart, cluster, daterange) {
 
       var isDummy = false;
       if (data === null || data === 'undefined' || data.length === 0) {
@@ -272,9 +247,9 @@
         if (!data[0].balloon) {
           startDuration = 0;
         }
-        utilizationChart = createutilizationGraph(data, cluster, daterange);
+        utilizationChart = createutilizationGraph(data, graphs, cluster, daterange);
         utilizationChart.dataProvider = data;
-        utilizationChart.graphs = utilizationGraphs(data);
+        utilizationChart.graphs = graphs;
         utilizationChart.startDuration = startDuration;
         utilizationChart.balloon.enabled = true;
         utilizationChart.chartCursor.valueLineBalloonEnabled = true;
@@ -293,9 +268,9 @@
           isDummy = true;
         }
 
-        utilizationChart = createutilizationGraph(data, cluster, daterange);
+        utilizationChart = createutilizationGraph(data, graphs, cluster, daterange);
         utilizationChart.dataProvider = data;
-        utilizationChart.graphs = utilizationGraphs(data);
+        utilizationChart.graphs = graphs;
         utilizationChart.startDuration = startDuration;
         utilizationChart.balloon.enabled = true;
         utilizationChart.chartCursor.valueLineBalloonEnabled = true;

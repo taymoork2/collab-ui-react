@@ -138,11 +138,14 @@
       }
     }
 
-    function getUser(userid, callback) {
+    function getUser(userid, noCache, callback) {
       var scimUrl = UrlConfig.getScimUrl(Authinfo.getOrgId()) + '/' + userid;
-
+      // support the signature getUser(userid, noCache, callback) and getUser(userid, callback)
+      if (!_.isFunction(callback)) {
+        callback = noCache;
+      }
       return $http.get(scimUrl, {
-        cache: true
+        cache: !noCache
       })
         .success(function (data, status) {
           data = data || {};
@@ -464,14 +467,35 @@
           var userData = _helpers.createUserData();
           var userId = userResponseSuccess.uuid;
           SunlightConfigService.updateUserInfo(userData, userId)
-            .then(function (response) {
-              Log.debug("SunlightConfigService.updateUserInfo success response :" + JSON.stringify(response));
+            .then(function () {
+              checkAndPatchSyncKmsRole(userId);
             }, function () {
               Notification.error($translate.instant('usersPage.careAddUserError'));
             });
         }
       });
 
+    }
+
+    function checkAndPatchSyncKmsRole(userId) {
+      getUser(userId, function (data) {
+        if (data.success) {
+          var hasSyncKms = _.find(data.roles, function (r) {
+            return r === Config.backend_roles.spark_synckms;
+          });
+          if (!hasSyncKms) {
+            var userRoleData = {
+              schemas: Config.scimSchemas,
+              roles: [Config.backend_roles.spark_synckms]
+            };
+            updateUserProfile(userId, userRoleData, function (data) {
+              if (!data.success) {
+                Notification.error($translate.instant('usersPage.careAddUserRoleError'));
+              }
+            });
+          }
+        }
+      });
     }
 
     function createUserData() {

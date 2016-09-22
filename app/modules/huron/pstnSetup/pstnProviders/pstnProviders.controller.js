@@ -16,10 +16,10 @@
     ////////////////////////
 
     function goToNumbers() {
-      if (PstnSetup.getProvider().apiExists) {
-        goToOrderNumbers();
-      } else {
+      if (PstnSetup.getProvider().apiImplementation === "SWIVEL") {
         goToSwivelNumbers();
+      } else {
+        goToOrderNumbers();
       }
     }
 
@@ -134,7 +134,7 @@
       var carrierObj = {
         uuid: carrier.uuid,
         name: carrier.name,
-        apiExists: carrier.apiExists,
+        apiImplementation: carrier.apiImplementation,
         vendor: carrier.vendor,
         countryCode: carrier.countryCode,
         country: carrier.country,

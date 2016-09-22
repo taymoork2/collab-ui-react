@@ -6,7 +6,7 @@
     .controller('CustomerOverviewCtrl', CustomerOverviewCtrl);
 
   /* @ngInject */
-  function CustomerOverviewCtrl($q, $state, $stateParams, $translate, $window, $modal, Authinfo, BrandService, Config, FeatureToggleService, identityCustomer, Log, newCustomerViewToggle, Notification, Orgservice, PartnerService, TrialService) {
+  function CustomerOverviewCtrl($modal, $q, $state, $stateParams, $translate, $window, AccountOrgService, Authinfo, BrandService, Config, FeatureToggleService, identityCustomer, Log, newCustomerViewToggle, Notification, Orgservice, PartnerService, TrialService, Userservice) {
     var vm = this;
 
     vm.currentCustomer = $stateParams.currentCustomer;
@@ -23,6 +23,9 @@
     vm.isOwnOrg = isOwnOrg;
     vm.deleteTestOrg = deleteTestOrg;
     vm.isPartnerCreator = isPartnerCreator;
+    vm.hasSubviews = hasSubviews;
+    vm.hasSubview = hasSubview;
+    vm.goToSubview = goToSubview;
 
     vm.uuid = '';
     vm.logoOverride = false;
@@ -41,19 +44,18 @@
     vm.currentAdminId = Authinfo.getUserId();
 
     vm.freeOrPaidServices = null;
-    vm.hasMeeting = false;
 
     vm.newCustomerViewToggle = newCustomerViewToggle;
 
     FeatureToggleService.atlasCareTrialsGetStatus()
       .then(function (result) {
-        if (_.find(vm.currentCustomer.offers, {
-          id: Config.offerTypes.roomSystems
-        })) {
+        if (_.find(vm.currentCustomer.offers, { id: Config.offerTypes.roomSystems })) {
           vm.showRoomSystems = true;
         }
-        setOffers(result);
+        var isCareEnabled = result && Authinfo.isCare();
+        setOffers(isCareEnabled);
       });
+
 
     FeatureToggleService.atlasCustomerListUpdateGetStatus()
       .then(function (result) {
@@ -65,9 +67,6 @@
       vm.offer = vm.currentCustomer.offer = _.get(licAndOffers, 'offer');
       if (vm.newCustomerViewToggle) {
         vm.freeOrPaidServices = PartnerService.getFreeOrActiveServices(vm.currentCustomer, isCareEnabled);
-        vm.hasMeeting = _.some(vm.freeOrPaidServices, {
-          isMeeting: true
-        });
       }
     }
 
@@ -128,9 +127,69 @@
         });
     }
 
+    function LicenseFeature(name, bAdd) {
+      this['id'] = name.toString();
+      this['idOperation'] = bAdd ? 'ADD' : 'REMOVE';
+      this['properties'] = null;
+    }
+
+    function collectLicenseIdsForWebexSites(liclist) {
+      var licIds = [];
+      var i = 0;
+      if (_.isUndefined(liclist)) {
+        liclist = [];
+      }
+      for (i = 0; i < liclist.length; i++) {
+        var lic = liclist[i];
+        var licId = lic.licenseId;
+        var lictype = lic.licenseType;
+        var isConfType = lictype === "CONFERENCING";
+        if (isConfType) {
+          licIds.push(new LicenseFeature(licId, (_.isUndefined(lic.siteUrl) === false)));
+        }
+      }
+      return licIds;
+    } //collectLicenses
+
     function launchCustomerPortal() {
-      $q.resolve(vm.isPartnerAdmin && PartnerService.modifyManagedOrgs(vm.customerOrgId))
-      .then(openCustomerPortal)
+      // TODO: revisit this function
+      // - a simpler version was implemented in '649c251aeaefdedd57620e9fd3f4cd488b87b1f5'
+      //   ...however, it did not include the logic to make the appropriate call to
+      //   'Userservice.updateUsers()'
+      // - this call is required in order to patch the partner-admin user as appropriate such that
+      //   admin access to webex sites is enabled
+      var liclist = vm.currentCustomer.licenseList;
+      var licIds = collectLicenseIdsForWebexSites(liclist);
+      var partnerEmail = Authinfo.getPrimaryEmail();
+      var emailObj = {
+        'address': partnerEmail
+      };
+      var promise = $q.when();
+      if (vm.isPartnerAdmin) {
+        promise = PartnerService.modifyManagedOrgs(vm.customerOrgId);
+      }
+      promise.then(function () {
+        if (licIds.length > 0) {
+          Userservice.updateUsers([emailObj], licIds, null, 'updateUserLicense', _.noop);
+          openCustomerPortal();
+        } else {
+          AccountOrgService.getAccount(vm.customerOrgId).then(function (data) {
+            var accountsLength = _.get(data, 'accounts.length');
+            if (accountsLength) {
+              var updateUsersList = [];
+              for (var i = 0; i < accountsLength; i++) {
+                var account = data.accounts[i];
+                var lics = account.licenses;
+                var licIds = collectLicenseIdsForWebexSites(lics);
+                updateUsersList.push(Userservice.updateUsers([emailObj], licIds, null, 'updateUserLicense', _.noop));
+              }
+              $q.all(updateUsersList).then(openCustomerPortal);
+            } else {
+              openCustomerPortal();
+            }
+          });
+        }
+      })
       .catch(function (response) {
         Notification.errorWithTrackingId(response, 'customerPage.launchCustomerPortalError');
         return response;
@@ -189,6 +248,30 @@
           });
           return false;
         });
+    }
+
+    function hasSubviews(services) {
+      return _.some(services, function (service) {
+        return hasSubview(service);
+      });
+    }
+
+    function hasSubview(service) {
+      var hasWebexOrMultMeeting = (service.hasWebex === true || service.isMeeting);
+      var hasCallDetail = isSquaredUC() && (service.isCall === true);
+      if (!newCustomerViewToggle) {
+        return false;
+      } else {
+        return (hasCallDetail || hasWebexOrMultMeeting);
+      }
+    }
+
+    function goToSubview(service) {
+      if (service.hasWebex || service.isMeeting) {
+        $state.go('customer-overview.meetingDetail', { meetingLicenses: service.sub });
+      } else if (service.isCall) {
+        $state.go('customer-overview.externalNumberDetail', {});
+      }
     }
 
     function getIsSetupDone() {

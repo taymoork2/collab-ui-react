@@ -1,11 +1,10 @@
 import { CardType, ServicesOverviewCard } from './ServicesOverviewCard';
-import { ServicesOverviewCareCard } from './careCard';
 
 export class ServicesOverviewCtrl {
 
-  private cards:Array<ServicesOverviewCard>;
+  private cards: Array<ServicesOverviewCard>;
 
-  public showFilterDropDown:boolean = false;
+  public showFilterDropDown: boolean = false;
 
   /* @ngInject */
   constructor(Orgservice, private ServicesOverviewCardFactory, private $q, private Authinfo, FusionClusterService, FeatureToggleService) {
@@ -16,7 +15,7 @@ export class ServicesOverviewCtrl {
 
     FusionClusterService.getAll()
       .then((clusterList) => {
-        var services = [];
+        let services = [];
         services.push(FusionClusterService.getStatusForService('squared-fusion-mgmt', clusterList));
         services.push(FusionClusterService.getStatusForService('squared-fusion-cal', clusterList));
         services.push(FusionClusterService.getStatusForService('squared-fusion-uc', clusterList));
@@ -33,21 +32,23 @@ export class ServicesOverviewCtrl {
     });
 
     FeatureToggleService.atlasCareTrialsGetStatus().then(supports => {
-      this.forwardEvent('careFeatureToggleEventHandler', supports);
+      let isCareEnabled = Authinfo.isCare() && supports;
+      this.forwardEvent('careFeatureToggleEventHandler', isCareEnabled);
     });
+
   }
 
   get hybridCards() {
     return _.filter(this.cards, {
       cardType: CardType.hybrid,
-      display: true
+      display: true,
     });
   }
 
   get cloudCards() {
     return _.filter(this.cards, {
       cardType: CardType.cloud,
-      display: true
+      display: true,
     });
   }
 
@@ -55,7 +56,7 @@ export class ServicesOverviewCtrl {
     this.showFilterDropDown = !this.showFilterDropDown;
   }
 
-  private forwardEvent(handlerName, ...eventArgs:Array<any>) {
+  private forwardEvent(handlerName, ...eventArgs: Array<any>) {
     _.each(this.cards, function (card) {
       if (typeof (card[handlerName]) === 'function') {
         card[handlerName].apply(card, eventArgs);
