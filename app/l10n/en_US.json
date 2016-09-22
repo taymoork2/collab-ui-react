@@ -297,13 +297,13 @@
     "callFree": "Call Free",
     "careFree": "Care Free",
     "none": "None",
-    "freeContactCenter": "Free Chat, Email, Voice",
+    "freeContactCenter": "Free Chat",
     "paidMsg": "Message",
     "paidConf": "Meeting 25 Party",
     "paidConfWebEx": "WebEx Meetings",
     "paidComm": "Call",
     "paidCare": "Care Digital Channel",
-    "paidContactCenter": "Chat, Email, Voice",
+    "paidContactCenter": "Chat",
     "enterpriseEdition": "Enterprise Edition {{capacity}}",
     "meetingCenter": "Meeting Center {{capacity}}",
     "supportCenter": "Support Center {{capacity}}",
@@ -3096,7 +3096,8 @@
     "expiredAccountsFilter": "Expired Accounts ({{count}})",
     "orderRequest": "Order Request",
     "subscriptions": "Subscriptions",
-    "viewSubscriptionInfo": "View Subscription Info"
+    "viewSubscriptionInfo": "View Subscription Info",
+    "noAccountInfo": "No account information available for this organization. This is most likely due to accessing an Integration server based organization on a Production server.  Please verify that this organization exists on the server you are using."
   },
   "customerAdminPanel": {
     "addAdministrators": "Add Administrators",
@@ -3557,7 +3558,9 @@
       "redirectedcalls": "Redirected by this Cluster",
       "nodata": "Data Not Available",
       "allclusters": "All Clusters",
-      "percentage": "%"
+      "percentage": "%",
+      "utilization": "Utilization",
+      "avgutilization": "Avg Utilization"
     },
     "serviceStatus": {
       "unknown": "Status unknown",
@@ -3699,7 +3702,8 @@
       "titleV2": "Register Hybrid Media Node",
       "text1V2": "Create a new or select an existing Hybrid Media Cluster where you want to add the Hybrid Media Node.",
       "text2V2": "Enter the hostname or IP address of the Hybrid Media Node that you want to the Cisco Collaboration Cloud.",
-      "text3V2": "Enter the hostname or IP address of the Hybrid Media Node that you want to register with the Cisco Collaboration Cloud.",
+      "text3V1": "Enter the&nbsp;",
+      "text3V3": "or IP address of the Hybrid Media Node that you want to register with the Cisco Collaboration Cloud.",
       "serverOnline": "The media server that you are registering already exists and is online.",
       "serverOffline": "The media server that you are registering already exists and is offline. Deregister the existing server before you try again.",
       "firstStep": "Before you can register your Hybrid Media Node, you must install and configure the software on your new server.",
@@ -3720,7 +3724,10 @@
       "noDesc1": "For details on installation and configuration, visit ",
       "noDesc2": "Help Central.",
       "noDesc3": "After installation and configuration is complete, return to Cloud Collaboration Management and register your Hybrid Media Node.",
-      "yesInfo": "Assign your Hybrid Media Node to a cluster and enter the hostname or IP address."
+      "yesInfo1": "Assign your Hybrid Media Node to a cluster and enter the ",
+      "yesInfo2": "FQDN ",
+      "yesInfo3": "or IP address.",
+      "fqdn": "Fully Qualified Domain Name"
     },
     "mediaServiceActivationFailure": "Problems enabling the service",
     "mediaAgentOrgMappingFailure": "Problems enabling the Orpheus for MediaFusion",
@@ -4181,8 +4188,8 @@
     "usePartnerLogo": "Use the same logo in use by {{partner}}",
     "supportInfo": "If you are providing support for your users, enter your support parameters below. These parameters will be displayed under Support Options in the Spark application.",
     "supportAccessTitle": "Support Access",
-    "supportAccessInfo": "This setting gives Cisco or Partner read-only access to your management application. It does not allow changes to be made to your organization's details.",
-    "supportAccessCheckbox": "Allow Cisco or Partner Support read-only access to your management application."
+    "supportAccessInfo": "This setting gives Cisco Support read-only access to your management application. It does not allow changes to be made to your organization's details.",
+    "supportAccessCheckbox": "Allow Cisco Support read-only access to your management application."
   },
   "branding": {
     "customTitle": "Custom Branding",
@@ -4524,8 +4531,8 @@
     "pwdSyncTooltip": "If enabled, user password changes through Jabber client or through OrgAdmin will be synchronized over to their Spark accounts. If disabled, user password changes through Jabber client or through OrgAdmin remain in Messenger.",
     "sparkEntHeading": "Users can access Free Spark",
     "sparkEntTooltip": "If enabled, all users in your Messenger organization will be given access to Free Spark. If disabled, only Administrators will be given access to Free Spark.",
-    "usrDisHeading": "Replicate Users between Messenger & Spark",
-    "usrDisTooltip": "If enabled, users added in OrgAdmin will appear in Spark. If disabled, users in OrgAdmin will not appear in Spark.",
+    "usrDisHeading": "Add/Remove Messenger Users in Spark",
+    "usrDisTooltip": "If enabled, users added in OrgAdmin will appear in Spark. If disabled, users added in OrgAdmin will not appear in Spark.",
     "errorAuthFailed": "Authorization failed: ",
     "errorFailedCheckingCIEntitlements": "Failed checking user entitlements from Common Identity: ",
     "errorFailedCheckingCIRoles": "Failed checking Common Identity user roles: ",
@@ -4970,8 +4977,8 @@
     "privacy": {
       "title": "Privacy",
       "supportAccessHeader": "Support Access",
-      "supportAccessDescription": "This setting gives Cisco or Partner Support read-only access to your organization. It does not allow changes to be made to your organization's details.",
-      "allowReadOnlyOrgAccess": "Allow Cisco or Partner Support read-only access to your organization",
+      "supportAccessDescription": "This setting gives Cisco Support read-only access to your organization. It does not allow changes to be made to your organization's details.",
+      "allowReadOnlyOrgAccess": "Allow Cisco Support read-only access to your organization",
       "crashReportTitle": "Automatic Crash Reporting",
       "crashReportText": "If an endpoint crashes, logs will be uploaded to Cisco to help improve the quality of the service.",
       "crashReportCheckboxLabel": "Enable Automatic Crash reporting",
@@ -5242,7 +5249,7 @@
     "deviceNotFound": "This device no longer exist. Maybe it's been deleted?",
     "customerPortalViewHeading": "Customer Portal View",
     "customerPortalViewDetails": "You will be able to view the customer's entire portal, you cannot make any changes.",
-    "customerDoesNotAllowReadOnlyAccess": "The customer does not allow Cisco or Partner Support read-only access to the management application.",
+    "customerDoesNotAllowReadOnlyAccess": "The customer does not allow Cisco Support read-only access to the management application.",
     "view": "View",
     "dialing": "Dialing",
     "dialingPlan": {

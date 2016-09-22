@@ -1,3 +1,4 @@
+/* globals fdescribe fit */
 'use strict';
 
 describe('UserListCtrl: Ctrl', function () {
@@ -257,4 +258,127 @@ describe('UserListCtrl: Ctrl', function () {
       expect($scope.totalUsers).toEqual($scope.userExportThreshold + 1);
     });
   });
+
+  describe('canShowActionsMenu', function () {
+
+    beforeEach(function () {
+      initController();
+      spyOn($scope, 'canShowResendInvite').and.returnValue(true);
+      spyOn($scope, 'canShowUserDelete').and.returnValue(true);
+
+      this.user = {
+        userStatus: 'active'
+      };
+    });
+
+    it('should return false if dirSync is enabled and user not pending', function () {
+      $scope.dirsyncEnabled = true;
+      expect($scope.canShowActionsMenu(this.user)).toBeFalsy();
+    });
+
+    it('should return true if dirSync is enabled and user is pending', function () {
+      $scope.dirsyncEnabled = true;
+      this.user.userStatus = 'pending';
+      expect($scope.canShowActionsMenu(this.user)).toBeTruthy();
+    });
+
+    // test available actions
+    it('should return false if no available actions', function () {
+      $scope.canShowUserDelete.and.returnValue(false);
+      $scope.canShowResendInvite.and.returnValue(false);
+      expect($scope.canShowActionsMenu(this.user)).toBeFalsy();
+    });
+
+    it('should return true if only canShowResendInvite true', function () {
+      $scope.canShowUserDelete.and.returnValue(false);
+      expect($scope.canShowActionsMenu(this.user)).toBeTruthy();
+    });
+
+    it('should return true if only canShowUserDelete true', function () {
+      $scope.canShowResendInvite.and.returnValue(false);
+      expect($scope.canShowActionsMenu(this.user)).toBeTruthy();
+    });
+
+  });
+
+  describe('canShowUserDelete', function () {
+
+    beforeEach(function () {
+      initController();
+      spyOn($scope, 'getUserLicenses').and.returnValue(true);
+      spyOn($scope, 'isOnlyAdmin').and.returnValue(false);
+    });
+
+    it('should return false if no user licenses', function () {
+      $scope.getUserLicenses.and.returnValue(false);
+      expect($scope.canShowUserDelete(this.user)).toBeFalsy();
+    });
+
+    it('should return false if dirsync enabled', function () {
+      $scope.dirsyncEnabled = true;
+      expect($scope.canShowUserDelete(this.user)).toBeFalsy();
+    });
+
+    it('should return false if only admin is true', function () {
+      $scope.isOnlyAdmin.and.returnValue(true);
+      expect($scope.isOnlyAdmin(this.user)).toBeTruthy();
+      expect($scope.canShowUserDelete(this.user)).toBeFalsy();
+    });
+
+    it('should return true when all conditions met', function () {
+      expect($scope.canShowUserDelete(this.user)).toBeTruthy();
+    });
+
+  });
+
+  describe('canShowResendInvite', function () {
+
+    beforeEach(function () {
+      initController();
+      spyOn(Userservice, 'isHuronUser').and.returnValue(false);
+
+      this.user = {
+        userStatus: 'active'
+      };
+
+      $scope.isCSB = false;
+    });
+
+    it('should return false if isCSB is true', function () {
+      expect($scope.isCSB).toBeFalsy();
+      expect($scope.canShowResendInvite(this.user)).toBeFalsy();
+      Userservice.isHuronUser.and.returnValue(true);
+      expect($scope.canShowResendInvite(this.user)).toBeTruthy();
+
+      $scope.isCSB = true;
+      expect($scope.canShowResendInvite(this.user)).toBeFalsy();
+    });
+
+    it('should return true if isHuronUser', function () {
+      expect($scope.canShowResendInvite(this.user)).toBeFalsy();
+
+      Userservice.isHuronUser.and.returnValue(true);
+      expect($scope.canShowResendInvite(this.user)).toBeTruthy();
+    });
+
+    it('should return true if userStatus is pending', function () {
+      expect($scope.canShowResendInvite(this.user)).toBeFalsy();
+      this.user.userStatus = 'pending';
+      expect($scope.canShowResendInvite(this.user)).toBeTruthy();
+    });
+
+    it('should return true if userStatus is error', function () {
+      expect($scope.canShowResendInvite(this.user)).toBeFalsy();
+      this.user.userStatus = 'error';
+      expect($scope.canShowResendInvite(this.user)).toBeTruthy();
+    });
+
+    it('should return false if userStatus is neither pending nor error', function () {
+      expect($scope.canShowResendInvite(this.user)).toBeFalsy();
+      this.user.userStatus = 'batman';
+      expect($scope.canShowResendInvite(this.user)).toBeFalsy();
+    });
+
+  });
+
 });

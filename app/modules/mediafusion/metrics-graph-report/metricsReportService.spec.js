@@ -9,9 +9,10 @@ describe('Service: Metrics Reports Service', function () {
   var callVolumeGraphData = getJSONFixture('mediafusion/json/metrics-graph-report/callVolumeGraphData.json');
   var responsedata = callVolumeGraphData.graphData;
   var UtilizationData = getJSONFixture('mediafusion/json/metrics-graph-report/UtilizationData.json');
-  var utilizationdata = UtilizationData.utilization;
+  var utilizationdata = UtilizationData.utilization[0];
   var utilizationGraphData = getJSONFixture('mediafusion/json/metrics-graph-report/UtilizationGraphData.json');
   var utilizationresponse = utilizationGraphData.graphData;
+  var utilizationgraph = utilizationGraphData.graphs;
   var clusterAvailabilityData = getJSONFixture('mediafusion/json/metrics-graph-report/clusterAvailabilityData.json');
   var clusterAvailability = clusterAvailabilityData.clusteravailability;
   var clusterAvailabilityGraphData = getJSONFixture('mediafusion/json/metrics-graph-report/clusterAvailabilityGraphData.json');
@@ -51,7 +52,7 @@ describe('Service: Metrics Reports Service', function () {
 
     var baseUrl = UrlConfig.getAthenaServiceUrl() + '/organizations/' + Authinfo.getOrgId();
     callVolumeUrl = baseUrl + '/call_volume/?relativeTime=1d';
-    UtilizationUrl = baseUrl + '/cpu_utilization/?relativeTime=1d';
+    UtilizationUrl = baseUrl + '/utilization/?relativeTime=1d';
     clusterAvailabilityUrl = baseUrl + '/clusters_availability/?relativeTime=1d';
     totalCallsCard = baseUrl + '/total_calls/?relativeTime=1d';
     availabilityCard = baseUrl + '/agg_availability/?relativeTime=1d';
@@ -109,7 +110,8 @@ describe('Service: Metrics Reports Service', function () {
 
       MetricsReportService.getUtilizationData(timeFilter, allClusters).then(function (response) {
         expect(response).toEqual({
-          graphData: utilizationresponse
+          graphData: utilizationresponse,
+          graphs: utilizationgraph
         });
       });
 
@@ -121,7 +123,8 @@ describe('Service: Metrics Reports Service', function () {
 
       MetricsReportService.getUtilizationData(timeFilter, allClusters).then(function (response) {
         expect(response).toEqual({
-          graphData: []
+          graphData: [],
+          graphs: []
         });
         expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
       });
