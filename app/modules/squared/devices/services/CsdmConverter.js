@@ -56,11 +56,7 @@
         "Cisco TelePresence MX700 Dual Speakertrack": "images/devices-hi/mx700dspeakertrack.png", // pic exist, but not endpoint?
         "Cisco TelePresence MX800": "images/devices-hi/mx800.png",
         "Cisco TelePresence MX800 Dual": "images/devices-hi/mx800dspeakertrack.png",
-        "Cisco TelePresence MX800 SpeakerTrack": "images/devices-hi/mx800speakertrack.png",
-        "Project Swedish Island": "images/devices-hi/swedish_island.png",
-        "Cisco Spark Board 55": "images/devices-hi/spark_board_55.png",
-        "Darling": "images/devices-hi/spark_board_55.png",
-        "Eve": "images/devices-hi/eve.png"
+        "Cisco TelePresence MX800 SpeakerTrack": "images/devices-hi/mx800speakertrack.png"
       };
 
       function HuronDevice(obj) {
@@ -158,8 +154,7 @@
         this.image = "images/devices-hi/unknown.png";
         this.diagnosticsEvents = [{
           type: translateOrDefault('CsdmStatus.errorCodes.inactive.type', 'Account with no device'),
-          message: translateOrDefault('CsdmStatus.errorCodes.inactive.message', 'There exists an account for a ' +
-            'device, but no corresponding device or activation code. You can probably delete this account.')
+          message: translateOrDefault("CsdmStatus.errorCodes.inactive.message", "An account exists for a device, but there's no corresponding device or activation code. You can delete this account.")
         }];
       }
 
@@ -262,23 +257,23 @@
 
       function getSoftware(obj) {
         return _.chain(getEvents(obj))
-          .where({
+          .filter({
             type: 'software',
             level: 'INFO'
           })
-          .pluck('description')
-          .first()
+          .map('description')
+          .head()
           .value();
       }
 
       function getUpgradeChannel(obj) {
         var channel = _.chain(getEvents(obj))
-          .where({
+          .filter({
             type: 'upgradeChannel',
             level: 'INFO'
           })
-          .pluck('description')
-          .first()
+          .map('description')
+          .head()
           .value();
 
         var labelKey = 'CsdmStatus.upgradeChannels.' + channel;
@@ -294,12 +289,12 @@
 
       function getIp(obj) {
         return _.chain(getEvents(obj))
-          .where({
+          .filter({
             type: 'ip',
             level: 'INFO'
           })
-          .pluck('description')
-          .first()
+          .map('description')
+          .head()
           .value();
       }
 
@@ -441,11 +436,11 @@
         }
         try {
           var tags = JSON.parse(description);
-          return _.unique(tags);
+          return _.uniq(tags);
         } catch (e) {
           try {
             tags = JSON.parse("[\"" + description + "\"]");
-            return _.unique(tags);
+            return _.uniq(tags);
           } catch (e) {
             return [];
           }

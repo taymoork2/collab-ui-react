@@ -3,10 +3,13 @@
 var PartnerHomePage = function () {
 
   var randomNumber = utils.randomId();
+  var dateTime = utils.getDateTimeString();
+  var trialName = 'Atlas_Test_UI_' + dateTime + '_' + randomNumber;
 
   this.newTrial = {
-    customerName: 'Atlas_Test_UI_' + randomNumber,
-    customerEmail: 'collabctg+Atlas_Test_UI_' + randomNumber + '@gmail.com'
+    customerName: trialName,
+    customerEmail: 'collabctg+' + trialName + '@gmail.com',
+    webexSiteURL: trialName + '.webex.com'
   };
 
   this.editTrial = {
@@ -87,7 +90,6 @@ var PartnerHomePage = function () {
   this.customerInfo = element(by.id('customer-info'));
   this.trialInfo = element(by.id('trial-info'));
   this.actionsButton = element(by.id(this.newTrial.customerName + 'ActionsButton'));
-  this.launchCustomerButton = element(by.id(this.newTrial.customerName + 'LaunchCustomerButton')).element(by.tagName('a'));
   this.launchCustomerPanelButton = element(by.id('launchCustomer'));
   this.exitPreviewButton = element(by.css('.panel-close'));
   this.partnerFilter = element(by.id('partnerFilter'));
@@ -101,6 +103,7 @@ var PartnerHomePage = function () {
   this.squaredUCTrialCheckbox = element(by.css('label[for="callTrial"]'));
   this.roomSystemsTrialCheckbox = element(by.css('label[for="roomSystemsTrial"]'));
   this.careTrialCheckbox = element(by.css('label[for="careTrial"]'));
+  this.webexTrialCheckbox = element(by.css('label[for="webexTrial"]'));
   this.careLicenseCountTextbox = element(by.css('input[name="input_trialCareLicenseCount"]'));
   this.customerNameHeader = element(by.cssContainingText('.ngHeaderText ', 'Customer Name'));
   this.myOrganization = element(by.id('partner'));
@@ -108,6 +111,7 @@ var PartnerHomePage = function () {
   this.skipCustomerSetup = element(by.id('trialNotifyCustomer'));
   this.closeBtnOnModal = element(by.id('modal-close'));
   this.videoModal = element(by.id('videoId'));
+  this.webexSiteURL = element(by.id('siteUrl'));
 
   this.viewAllLink = element(by.id('viewAllLink'));
   this.customerList = element(by.id('customerListPanel'));

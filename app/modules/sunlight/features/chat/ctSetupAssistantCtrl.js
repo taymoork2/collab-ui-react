@@ -173,7 +173,7 @@
       var businessDays = config.pages.offHours.schedule.businessDays;
       vm.days = _.map(CTService.getDays(), function (day) {
         var selectedDay = day;
-        selectedDay.isSelected = _.contains(businessDays, day.label);
+        selectedDay.isSelected = _.includes(businessDays, day.label);
         return selectedDay;
       });
       vm.overlayTitle = $translate.instant('careChatTpl.editTitle');
@@ -387,7 +387,7 @@
     };
 
     vm.isNamePageValid = function () {
-      return (vm.template.name !== '' && vm.validateNameLength());
+      return (vm.template.name !== '' && vm.validateNameLength() && vm.isTemplateNameValid());
     };
 
     function isProfilePageValid() {
@@ -459,7 +459,7 @@
 
     function areAllTypesUnique() {
       var configuredTypes = getConfiguredTypes();
-      var uniqueConfiguredTypes = _.unique(configuredTypes);
+      var uniqueConfiguredTypes = _.uniq(configuredTypes);
 
       return (configuredTypes.length === uniqueConfiguredTypes.length);
     }
@@ -483,6 +483,14 @@
     function isCustomerInformationPageValid() {
       return areAllTypesUnique() && areAllFixedFieldsValid() && areAllDynamicFieldsValid();
     }
+
+    vm.isTemplateNameValid = function () {
+      var templateName = vm.template.name;
+      if (templateName.indexOf('>') > -1 || templateName.indexOf('<') > -1) {
+        return false;
+      }
+      return true;
+    };
 
     function nextButton() {
       switch (vm.currentState) {

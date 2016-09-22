@@ -138,7 +138,7 @@ var auth = {
     org: '52cd61a3-a950-47c3-8218-55429ff88eb7'
   },
   'wbx-t31BTSTestAdmin-UserSettings': {
-    user: 'provteam+t31ee@csgtrials.webex.com',
+    user: 'T31-EE-lhsieh@mailinator.com',
     pass: 'Cisco!23',
     org: 'b98940d4-2985-46ef-8c1a-ae8c1ef723ad'
   },

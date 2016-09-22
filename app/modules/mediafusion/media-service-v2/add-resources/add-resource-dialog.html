@@ -10,7 +10,9 @@
 <div class="modal-body">
   <div ng-show="redirectResource.yesProceed && !redirectResource.enableRedirectToTarget">
     <div>
-      <h4 translate="mediaFusion.add-resource-dialog.yesInfo"></h4>
+      <h4 class="addResourceInlineBlock" translate="mediaFusion.add-resource-dialog.yesInfo1"></h4>
+      <h4 class="addResourceFQDN" tooltip="{{'mediaFusion.add-resource-dialog.fqdn' | translate}}" translate="mediaFusion.add-resource-dialog.yesInfo2"></h4>
+      <h4 class="addResourceInlineBlock" translate="mediaFusion.add-resource-dialog.yesInfo3"></h4>
     </div>
     <form name="inputHostNameForm" class="inputHostNameForm">
       <div>
@@ -28,8 +30,9 @@
         <br>
         <div class="row showgrid">
           <div class="columns medium-5">
-            <p translate="mediaFusion.add-resource-dialog.text3V2">
-            </p>
+            <p class="addResourceInlineBlock" translate="mediaFusion.add-resource-dialog.text3V1"/>
+            <p class="addResourceFQDN" tooltip="{{'mediaFusion.add-resource-dialog.fqdn' | translate}}" translate="mediaFusion.add-resource-dialog.yesInfo2"/>
+            <p class="addResourceInlineBlock" translate="mediaFusion.add-resource-dialog.text3V3"/>
           </div>
           <div class="columns medium-6 inputHostNameForm">
             <input class="cs-input" ng-model="redirectResource.hostName" placeholder="{{'mediaFusion.add-resource-dialog.hostname-placeholder' | translate}} " type="text">

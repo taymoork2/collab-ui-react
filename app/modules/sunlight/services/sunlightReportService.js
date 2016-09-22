@@ -98,7 +98,7 @@
           .then(function (response) {
             var localTimeData = downSampleByHour(response.data.data, isSnapshot);
             return fillEmptyData(
-              (moment.range(startTimeStamp.add(1, 'hours').toDate(), endTimeStamp.add(1, 'days').startOf('day').toDate())),
+              (moment.range(startTimeStamp.add(1, 'hours').toDate(), endTimeStamp.toDate())),
               'h', localTimeData, hourFormat, false);
           });
           break;

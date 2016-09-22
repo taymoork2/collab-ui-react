@@ -120,8 +120,8 @@
       } catch (e) {
         //ignore
       }
-      return _.pick(fields, function (val, key) {
-        return !_.contains(ignoreFields, key);
+      return _.pickBy(fields, function (val, key) {
+        return !_.includes(ignoreFields, key);
       });
     };
 

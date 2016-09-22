@@ -207,8 +207,7 @@
             details.siteUrl = _.get(trial, 'details.siteUrl', '');
             details.timeZoneId = _.get(trial, 'details.timeZone.timeZoneId', '');
           }
-        })
-        .value();
+        });
 
       if (deviceDetails.skipDevices) {
         delete details.shippingInfo;
@@ -219,6 +218,7 @@
         if (nestedState) {
           details.shippingInfo.state = _.get(details, 'shippingInfo.state.abbr');
         }
+        details.shippingInfo.state = details.shippingInfo.state || 'N/A';
 
         // formly will nest the country inside of itself, I think this is because
         // the country list contains country as a key, as well as the device.service
@@ -258,7 +258,7 @@
             licenseCount: licenseCount,
           };
         })
-        .compact(data.trials)
+        .compact()
         .value();
     }
 

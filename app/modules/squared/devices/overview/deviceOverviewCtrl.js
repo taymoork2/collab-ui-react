@@ -207,7 +207,7 @@
 
     deviceOverview.addTag = function () {
       var tag = _.trim(deviceOverview.newTag);
-      if (tag && !_.contains(deviceOverview.currentDevice.tags, tag)) {
+      if (tag && !_.includes(deviceOverview.currentDevice.tags, tag)) {
         deviceOverview.newTag = undefined;
         var service;
         if (deviceOverview.currentDevice.needsActivation) {
@@ -326,7 +326,7 @@
         });
       } else {
         _.times(-diff, function (n) {
-          var module = _.findWhere(device.kem, {
+          var module = _.find(device.kem, {
             index: '' + (previousKemNumber - n)
           });
           promiseList.push(CmiKemService.deleteKEM(device.huronId, module.uuid));
@@ -339,9 +339,7 @@
               deviceOverview.currentDevice.kem = data;
               Notification.success('deviceOverviewPage.kemUpdated');
             }
-          ).catch(function () {
-            Notification.error('spacesPage.retrieveKemFail');
-          });
+          ).catch();
         },
         function () {
           deviceOverview.kemNumber = KemService.getKemOption(previousKemNumber);

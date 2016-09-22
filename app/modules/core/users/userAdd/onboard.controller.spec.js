@@ -406,8 +406,8 @@ describe('OnboardCtrl: Ctrl', function () {
       expect(this.$scope.usrlist[1].didDnMapMsg).toEqual('usersPage.noExtMappingAvail');
 
     });
-    it('assignServicesNext', function () {
 
+    it('assignServicesNext', function () {
       expect(this.$scope.usrlist[0].externalNumber).not.toBeDefined();
       expect(this.$scope.usrlist[0].assignedDn).not.toBeDefined();
       expect(this.$scope.usrlist[1].externalNumber).not.toBeDefined();
@@ -629,6 +629,38 @@ describe('OnboardCtrl: Ctrl', function () {
     function initUserWithCall() {
       this.$stateParams.currentUser = {
         entitlements: ['ciscouc']
+      };
+    }
+  });
+
+  describe('hybridCallServiceAware', function () {
+    describe('on user without squared-fusion-uc entitlement', function () {
+      beforeEach(initUserWithoutHybridCall);
+      beforeEach(initController);
+
+      it('should be false', function () {
+        expect(this.$scope.hybridCallServiceAware).toBe(false);
+      });
+    });
+
+    describe('on user with squared-fusion-uc entitlement', function () {
+      beforeEach(initUserWithHybridCall);
+      beforeEach(initController);
+
+      it('should be true', function () {
+        expect(this.$scope.hybridCallServiceAware).toBe(true);
+      });
+    });
+
+    function initUserWithoutHybridCall() {
+      this.$stateParams.currentUser = {
+        entitlements: []
+      };
+    }
+
+    function initUserWithHybridCall() {
+      this.$stateParams.currentUser = {
+        entitlements: ['squared-fusion-uc']
       };
     }
   });

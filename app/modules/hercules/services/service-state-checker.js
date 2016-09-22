@@ -6,7 +6,7 @@
     .service('ServiceStateChecker', ServiceStateChecker);
 
   /*@ngInject*/
-  function ServiceStateChecker($rootScope, NotificationService, ClusterService, USSService, ServiceDescriptor, Authinfo, ScheduleUpgradeService, FeatureToggleService, Orgservice, DomainManagementService) {
+  function ServiceStateChecker(NotificationService, ClusterService, USSService, ServiceDescriptor, Authinfo, FeatureToggleService, Orgservice, DomainManagementService) {
     var vm = this;
 
     vm.isSipUriAcknowledged = false;
@@ -18,9 +18,6 @@
           checkDomainVerified(serviceId);
           checkUserStatuses(serviceId);
           checkCallServiceConnect(serviceId);
-          if (checkIfSomeConnectorsOk(connectorType)) {
-            checkScheduleUpgradeAcknowledged(connectorType, serviceId);
-          }
         } else {
           // When connector state changes back to i.e. "not_configure", clean up the service notifications
           removeAllServiceAndUserNotifications();
@@ -84,7 +81,7 @@
 
     function checkIfConnectorsConfigured(connectorType) {
       var clusters = ClusterService.getClustersByConnectorType(connectorType);
-      var areAllConnectorsConfigured = _.all(clusters, function (cluster) {
+      var areAllConnectorsConfigured = _.every(clusters, function (cluster) {
         return allConnectorsConfigured(cluster, connectorType);
       });
       if (!areAllConnectorsConfigured) {
@@ -250,49 +247,11 @@
         .filter(function (connector) {
           return connector.connectorType === connectorType;
         })
-        .all(function (connector) {
+        .every(function (connector) {
           return connector.state !== 'not_configured' && connector.state !== 'not_installed';
         })
         .value();
     }
-
-    function checkIfSomeConnectorsOk(connectorType) {
-      var clusters = ClusterService.getClustersByConnectorType(connectorType);
-      return _.chain(clusters)
-        .some(function (cluster) {
-          return _.chain(cluster.connectors)
-            .filter(function (connector) {
-              return connector.connectorType === connectorType;
-            })
-            .some(function (connector) {
-              return ClusterService.getRunningStateSeverity(connector.state).label === 'ok';
-            })
-            .value();
-        })
-        .value();
-    }
-
-    function checkScheduleUpgradeAcknowledged(connectorType, serviceId) {
-      ScheduleUpgradeService.get(Authinfo.getOrgId(), connectorType)
-        .then(function (data) {
-          if (!data.isAdminAcknowledged) {
-            NotificationService.addNotification(
-              NotificationService.types.TODO,
-              'acknowledgeScheduleUpgrade',
-              2,
-              'modules/hercules/notifications/schedule-upgrade.html', [serviceId],
-              null
-            );
-          } else {
-            NotificationService.removeNotification('acknowledgeScheduleUpgrade');
-          }
-        });
-    }
-
-    // TODO: add an event listener to remove the schedule-upgrade notification
-    $rootScope.$on('ACK_SCHEDULE_UPGRADE', function () {
-      NotificationService.removeNotification('acknowledgeScheduleUpgrade');
-    });
 
     return {
       checkState: checkState,

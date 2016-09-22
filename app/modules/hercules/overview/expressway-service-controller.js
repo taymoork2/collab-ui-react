@@ -74,7 +74,7 @@
     if (vm.servicesId[0] === 'squared-fusion-mgmt') {
       ServiceDescriptor.services(function (error, services) {
         if (!error) {
-          vm.serviceEnabled = _.any(ServiceDescriptor.filterAllExceptManagement(services), {
+          vm.serviceEnabled = _.some(ServiceDescriptor.filterAllExceptManagement(services), {
             enabled: true
           });
         }
@@ -188,6 +188,9 @@
         controllerAs: 'vm',
         templateUrl: 'modules/hercules/add-resource/add-resource-modal.html',
         type: 'small'
+      })
+      .result.catch(function () {
+        $state.go('services-overview');
       });
     }
 

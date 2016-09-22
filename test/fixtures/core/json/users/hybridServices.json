@@ -1,0 +1,17 @@
+{
+  "status": 200,
+  "data": {
+    "items": [{
+      "id": "squared-fusion-cal",
+      "enabled": true,
+      "acknowledged": true,
+      "emailSubscribers": ""
+    },
+    {
+      "id": "squared-fusion-uc",
+      "enabled": true,
+      "acknowledged": true,
+      "emailSubscribers": ""
+    }]
+  }
+}

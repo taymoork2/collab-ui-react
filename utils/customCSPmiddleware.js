@@ -25,8 +25,7 @@ module.exports = csp({
       'https://wbxbts.admin.ciscospark.com'
     ],
     frameSrc: [
-      'https://buy.ciscospark.com',
-      'http://buy.ciscospark.com',
+      'https://buy.ciscospark.com', // Digital River
     ],
     connectSrc: [
       '\'self\'',
@@ -58,6 +57,7 @@ module.exports = csp({
       'https://*.clouddrive.com',
       'https://*.localytics.com',
       'https://*.rackcdn.com',
+      'http://webexglobal.112.2o7.net', // Adobe DTM Omniture
       // Webpack Dev
       'blob:',
     ],
@@ -67,9 +67,11 @@ module.exports = csp({
       '\'unsafe-eval\'',
       'https://*.localytics.com',
       'https://*.webex.com',
-      'https://api.mixpanel.com',
-      'https://cdn.mxpnl.com',
-      'http://assets.adobedtm.com'
+      'https://api.mixpanel.com', // Mixpanel
+      'https://cdn.mxpnl.com', // Mixpanel
+      'http://assets.adobedtm.com', // Adobe DTM Omniture
+      'http://dpm.demdex.net', // Adobe DTM Omniture
+      'https://buy.ciscospark.com', // Digital River
     ],
     styleSrc: [
       '\'self\'',

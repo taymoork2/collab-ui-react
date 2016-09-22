@@ -21,7 +21,7 @@
         .then(extractClustersFromResponse)
         .then(function (clusters) {
           // start modeling the response to match how the UI uses it
-          var onlyMfMgmt = _.filter(clusters, 'targetType', 'mf_mgmt');
+          var onlyMfMgmt = _.filter(clusters, { targetType: 'mf_mgmt' });
           return {
             mf_mgmt: onlyMfMgmt
           };
@@ -34,7 +34,7 @@
         })
         .then(function (clusters) {
           var result = {
-            mf_mgmt: _.indexBy(clusters.mf_mgmt, 'id')
+            mf_mgmt: _.keyBy(clusters.mf_mgmt, 'id')
           };
           return result;
         })
@@ -111,7 +111,7 @@
     }
 
     function getUpgradeState(connectors) {
-      var allAreUpgraded = _.every(connectors, 'upgradeState', 'upgraded');
+      var allAreUpgraded = _.every(connectors, { upgradeState: 'upgraded' });
       return allAreUpgraded ? 'upgraded' : 'upgrading';
     }
 
@@ -132,12 +132,12 @@
 
     function buildAggregates(type, cluster) {
       var connectors = cluster.connectors;
-      var provisioning = _.find(cluster.provisioning, 'connectorType', type);
+      var provisioning = _.find(cluster.provisioning, { connectorType: type });
       var upgradeAvailable = provisioning && _.some(cluster.connectors, function (connector) {
         return connector.runningVersion !== provisioning.availableVersion;
       });
       var hosts = _.chain(connectors)
-        .pluck('hostname')
+        .map('hostname')
         .uniq()
         .value();
       return {
@@ -146,10 +146,11 @@
         upgradeState: getUpgradeState(connectors),
         provisioning: provisioning,
         upgradeAvailable: upgradeAvailable,
-        upgradePossible: upgradeAvailable && !_.any(cluster.connectors, 'state', 'not_configured'),
+        upgradePossible: upgradeAvailable && !_.some(cluster.connectors, { state: 'not_configured' }),
+        upgradeWarning: upgradeAvailable && !_.some(cluster.connectors, { state: 'offline' }),
         hosts: _.map(hosts, function (host) {
           // 1 host = 1 connector (for a given type)
-          var connector = _.find(connectors, 'hostname', host);
+          var connector = _.find(connectors, { hostname: host });
           return {
             alarms: connector.alarms,
             hostname: host,
@@ -281,12 +282,23 @@
       return clusters;
     }
 
+    function getCluster(id) {
+      return clusterCache['mf_mgmt'][id];
+    }
+
+    function upgradeCluster(id) {
+      var connectorType = 'mf_mgmt';
+      var url = UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '/clusters/' + id + '/provisioning/actions/update/invoke?connectorType=' + connectorType + '&forced=true';
+      return $http.post(url);
+    }
+
     var hub = CsdmHubFactory.create();
     CsdmPoller.create(fetch, hub);
 
     return {
       fetch: fetch,
       getClusters: getClusters,
+      getCluster: getCluster,
       subscribe: hub.on,
       getOrganization: getOrganization,
       getClustersV2: getClustersV2,
@@ -297,6 +309,7 @@
       deleteV2Cluster: deleteV2Cluster,
       updateV2Cluster: updateV2Cluster,
       defuseV2Connector: defuseV2Connector,
+      upgradeCluster: upgradeCluster,
       moveV2Host: moveV2Host,
       getClustersByConnectorType: getClustersByConnectorType,
       getRunningStateSeverity: getRunningStateSeverity,

@@ -297,13 +297,13 @@
     "callFree": "Call Free",
     "careFree": "Care Free",
     "none": "None",
-    "freeContactCenter": "Free Chat, Email, Voice",
+    "freeContactCenter": "Free Chat",
     "paidMsg": "Message",
     "paidConf": "Meeting 25 Party",
     "paidConfWebEx": "WebEx Meetings",
     "paidComm": "Call",
     "paidCare": "Care Digital Channel",
-    "paidContactCenter": "Chat, Email, Voice",
+    "paidContactCenter": "Chat",
     "enterpriseEdition": "Enterprise Edition {{capacity}}",
     "meetingCenter": "Meeting Center {{capacity}}",
     "supportCenter": "Support Center {{capacity}}",
@@ -539,18 +539,23 @@
     "audioCalls": "Audio Only Calls",
     "customer": "Customer",
     "customers": "Customers",
-    "customerSelect": "Select a customer"
+    "customerSelect": "Select a customer",
+    "usageReports": {
+      "usageReportTitle": "Usage Reports",
+      "peakHour": "Peak Hour",
+      "inUse": "In Use"
+    }
   },
   "careReportsPage": {
-    "tasks": "Tasks",
-    "handled": "Handled",
-    "assigned": "Assigned",
-    "in-queue": "In-Queue",
+    "tasks": "Contacts",
+    "handled": "Addressed",
+    "assigned": "In-Progress",
+    "in-queue": "Waiting",
     "abandoned": "Abandoned",
-    "queueTime": "Queue Time",
-    "avgQueueTime": "Avg Queue Time",
-    "avgHandleTime": "Avg Handle Time",
-    "handleTime": "Handle Time",
+    "queueTime": "Wait Time",
+    "avgQueueTime": "Avg Wait Time",
+    "avgHandleTime": "Avg Completion Time",
+    "handleTime": "Completion Time",
     "taskTimeLabel": "Time in Minutes",
     "averageCsat": "Average CSAT",
     "avgCsat": "Avg CSAT",
@@ -562,29 +567,30 @@
     "threeMonthsCategoryAxis": "Months",
     "today": "Today",
     "today2": "for today",
-    "todayTaskStatus": "handled, assigned, in-queue and abandoned",
+    "todayTaskStatus": "addressed and abandoned",
     "todayInterval": "one hour time interval",
     "yesterday": "Yesterday",
     "yesterday2": "for yesterday",
-    "yesterdayTaskStatus": "handled and abandoned",
+    "yesterdayTaskStatus": "addressed and abandoned",
     "yesterdayInterval": "one hour time interval",
     "week": "Last Week",
-    "week2": "during the last week",
-    "weekTaskStatus": "handled and abandoned",
+    "week2": "for the last week",
+    "weekTaskStatus": "addressed and abandoned",
     "weekInterval": "given day",
     "month": "Last Month",
-    "month2": "during the last month",
-    "monthTaskStatus": "handled and abandoned",
+    "month2": "for the last month",
+    "monthTaskStatus": "addressed and abandoned",
     "monthInterval": "given week",
     "threeMonths": "Last Three Months",
-    "threeMonths2": "during the last three months",
-    "threeMonthsTaskStatus": "handled and abandoned",
+    "threeMonths2": "for the last three months",
+    "threeMonthsTaskStatus": "addressed and abandoned",
     "threeMonthsInterval": "given month",
     "taskDataGetError": "There was an error while loading the data for {{dataType}}."
   },
   "activeUsers": {
     "active": "Active",
     "activeUsers": "Active Users",
+    "allUsers": "All Users",
     "overallActiveUserGraphError": "There was an error while loading detailed active user data.",
     "activeUserTableError": "There was an error while loading most active user data for the selected customer(s).",
     "mostActiveError": "There was an error while loading the data for Most Active Users.",
@@ -674,20 +680,20 @@
     "loadingCustomer": "Sample Customer"
   },
   "taskIncoming": {
-    "title": "Tasks Incoming",
-    "description": "The graph depicts the total number of incoming tasks {{time}}. Hover over the area chart for a breakdown of total number of {{taskStatus}} tasks for a {{interval}}."
+    "title": "Total Completed Contacts",
+    "description": "The graph depicts the total number of customer contacts completed {{time}}. Hover over the area chart for a breakdown of {{taskStatus}} contacts during a {{interval}}."
   },
   "taskTime": {
-    "title": "Task Time",
-    "description": "A task time refers to the time duration of a task in its queued state or handled state. The graph depicts the task time {{time}}. Hover over the area chart for a breakdown of average queue time and average handle time of the tasks for a {{interval}}."
+    "title": "Contact Time Measure",
+    "description": "The graph depicts the average time spent by a customer waiting for an agent and in getting their enquiries completed {{time}}. Hover over the area chart for a breakdown of average waiting time and average time taken to complete a customer enquiry during a {{interval}}."
   },
   "averageCsat": {
-    "title": "Average CSAT",
-    "description": "The graph depicts the average CSAT {{time}}. Hover over the trend line to know the average CSAT rating for a {{interval}}."
+    "title": "Customer Satisfaction",
+    "description": "The graph depicts the customer satisfaction rating {{time}}. Hover over the trend line to know the average customer satisfaction rating during a {{interval}}.​​"
   },
   "taskAggregate": {
-    "title": "Task Aggregation",
-    "description": "The graph depicts the in-queue and assigned tasks aggregated for today. Hover over area chart to view the aggregated tasks from the start of business hours."
+    "title": "Aggregated Contacts",
+    "description": "The graph depicts the number of waiting and in-progress customer contacts aggregated for today. Hover over the area chart to view the count of waiting and in-progress contacts aggregated from the start of business hours."
   },
   "profilePage": {
     "userProfile": "User Profile",
@@ -945,6 +951,7 @@
     "assign": "Assign",
     "play": "Play",
     "done": "Done",
+    "reset": "Reset",
     "begin": "Begin",
     "back": "Back",
     "finish": "Finish",
@@ -1076,7 +1083,7 @@
     "setUpCallConnectService": "Call Service Connect is available. Users can answer calls to their work phones on their Cisco Spark clients, and place calls to others' work phones from their Cisco Spark clients.",
     "setUpDevices": "Activate your devices when they arrive.",
     "setUpSharedDevices": "Activate your collaboration devices when they arrive.",
-    "setUpSparkBoardDevices": "Activate your Spark Board devices when they arrive.",
+    "setUpSeaGullDevices": "Activate your Seagull devices when they arrive.",
     "setUpHybridMediaService": "Hybrid Media Service is available. Extend cloud media to use premises-based resources for calls and meetings.",
     "getStarted": "Get Started"
   },
@@ -1331,9 +1338,7 @@
     "tryAgain": "Try another Search",
     "licenseWarningTitle": "License",
     "licenseWarningHeader": "There is a problem with the license for this service.",
-    "licenseSuspendedWarning": "Your collaboration device licenses are suspended.",
-    "retrieveDevicesFail": "Failed to load device information",
-    "retrieveKemFail": "Failed to retrieve key expansion module count."
+    "licenseSuspendedWarning": "Your collaboration device licenses are suspended."
   },
   "hercules": {
     "page_title": "Connector Management",
@@ -1750,13 +1755,11 @@
         "settings": "Settings",
         "all": "All",
         "add-resource": "Add Resource",
-        "add-resource-group": "Create new resource group",
-        "add-clusters": "Add Clusters",
+        "add-resource-group": "Create new Resource Group",
         "expressway": "Expressway",
         "mediafusion": "Media",
         "no-services": "No services",
-        "complete-setup": "Complete Resource Group setup",
-        "empty-group-list": "This Resource Group is empty"
+        "missing-clusters": "<a ng-click=\"{{onclick}}\">Assign clusters</a> to complete this group"
       },
       "add-resource": {
         "title": "Add Resource",
@@ -1806,7 +1809,9 @@
           "betaHelpText": "If you want your users to test new features before they are released",
           "latest": "Latest",
           "latestHelpText": "For developers and early adopters",
-          "error": "Could not create the Resource Group"
+          "error": "Could not create the Resource Group",
+          "saveReleaseChannelSuccess": "Release Channel updated successfully.",
+          "saveReleaseChannelError": "Could Not save Release Channel. Try again later."
         }
       }
     },
@@ -1814,7 +1819,10 @@
       "resourceGroupHeading": "Resource Group",
       "setDescription": "Select the Resource Group the user is assigned to for this service.",
       "noGroupSelected": "None",
-      "failedToSetGroup": "Failed to set the resource group"
+      "failedToSetGroup": "Failed to set Resource Group.",
+      "resourceGroupSaved": "Resource Group saved.",
+      "groupHasBeenDeleted": "The user is assigned to a Resource Group that can no longer be found. Reset the user's Resource Group to restore service.",
+      "groupIsEmptyWarning": "Could not find cluster with {{ConnectorName}}. Select another Resource Group, or configure a new cluster with {{ConnectorName}}."
     },
     "resourceGroupSettings": {
       "pageTitle": "{{groupName}} Settings",
@@ -1824,22 +1832,25 @@
       "clustersAssign" : "Assign Clusters",
       "clustersDescription" : "Add one or more existing clusters to this group",
       "renameGroup": "Rename",
-      "renameGroupDescription": "Rename the resource group",
+      "renameGroupDescription": "Rename the Resource Group",
       "removeGroup": "Remove",
-      "removeGroupDescription": "Remove the resource group from Cisco Collaboration Cloud",
+      "removeGroupDescription": "Remove the Resource Group from Cisco Collaboration Cloud",
       "groupNameCannotByEmpty": "Resource group name cannot be empty",
       "groupNameSaved": "Rename successful",
-      "duplicateName": "A resource group with that name already exists. Please choose another name.",
-      "loadFailed": "Unable to load the resource group details. Please try again later.",
+      "duplicateName": "A Resource Group with that name already exists. Please choose another name.",
+      "loadFailed": "Unable to load the Resource Group details. Please try again later.",
       "groupReleaseChannelSaved": "Release channel saved successfully",
-      "removeGroupReq": "To remove this resource group, all assigned clusters and user must be removed first",
+      "removeGroupReq": "To remove this Resource Group, all assigned clusters and user must be removed first",
       "deleteSuccess": "Resource group successfully deleted"
     },
     "assignClustersModal": {
-      "title": "Assign Clusters to {{groupName}}",
-      "description": "Select the clusters you want to assign to the resource group.",
-      "assigned": "Cluster \"{{clusterName}}\" successfully assigned to \"{{groupName}}\"",
-      "removed": "Cluster \"{{clusterName}}\" successfully removed from \"{{groupName}}\""
+      "title": "Assign Clusters to <q>{{groupName}}</q>",
+      "subtitle": "Assign existing",
+      "description": "Assign existing clusters to the <q>{{groupName}}</q> Resource Group by clicking on an available cluster.",
+      "availableClusters": "Available Clusters",
+      "warning": "Possible service outage – Moving clusters to a Resource Group may cause a service outage while clusters and users are being moved.",
+      "noServices": "No services",
+      "errorLoading": "Could not load the list of clusters."
     },
     "confirmChangeReleaseChannelModal": {
       "title": "Change Release Channel",
@@ -2131,7 +2142,12 @@
     "mapDirectLineWithExtIfPossible": "Map phone number to extension, where possible",
     "reset": "Reset",
     "tosReadAndAgree": "I have read and agree to these",
-    "tosTermsAndConditions": "terms and conditions"
+    "tosTermsAndConditions": "terms and conditions",
+    "invalidCalendarServiceResourceGroup": "Hybrid Calendar Service Resource Group \"{{group}}\" not found",
+    "invalidCallServiceResourceGroup": "Hybrid Call Service Resource Group \"{{group}}\" not found",
+    "unableToUpdateResourceGroups": "Updating Hybrid Services Resource Groups failed",
+    "ussUserPropsLoadFailed": "Unable to load the current user Hybrid Services Resource Group assignments. Resource group assignments in the CSV file will not be processed.",
+    "fmsResourceGroupsLoadFailed": "Unable to load the Hybrid Services Resource Groups. Resource group assignments in the CSV file will not be processed."
   },
   "reports": {
     "title": "Reports",
@@ -2179,6 +2195,8 @@
     "modalDescription": "Auto attendants play customized prompts and provide callers with menu options for routing their calls through your system.",
     "namePlaceholder": "Enter Name",
     "repeatMenu": "Repeat",
+    "queueSettings": "Queue Settings",
+    "maxWaitTime": "Max Wait Time",
     "errorReadCe": "Failed to read {{name}}: {{statusText}} ({{status}}).",
     "successCreateCe": "{{name}} created successfully.",
     "successDeleteCe": "{{name}} deleted successfully.",
@@ -2279,6 +2297,18 @@
     "sayMessageVoice": "Voice",
     "sayMessageInvalidChar": "Invalid character. Character '{{char}}' is not allowed.",
     "messageType": "Message Type",
+    "destinationHelpMessage": "This is where the call is routed if not answered by the queue" ,
+    "destinationLabel": "Destination" ,
+    "destinations": {
+     "AutoAttendant": "Auto Attendant",
+      "HuntGroup":  "Hunt Group" ,
+      "Queue": "Queue",
+      "User": "User",
+      "Voicemail": "Voicemail",
+      "ExternalPhone": "External Phone",
+      "Disconnect": "Disconnect"
+  },
+    "fallbackLabel": "Fallback" ,
     "uploadedFile": "Uploaded File",
     "uploadFailed": "File upload failed, unable to connect. Please try again.",
     "dragAndDropWav": "Drag and Drop .wav file here or click to browse",
@@ -2465,6 +2495,7 @@
     "internationalDialing": "International Dialing",
     "maxLines": "You reached the limit of 25 lines. Please remove a line from this user before provisioning additional lines.",
     "showMore": "Show more",
+    "showLess": "Show less",
     "localDialing": "Local Dialing"
   },
   "directoryNumberPanel": {
@@ -3076,7 +3107,8 @@
     "expiredAccountsFilter": "Expired Accounts ({{count}})",
     "orderRequest": "Order Request",
     "subscriptions": "Subscriptions",
-    "viewSubscriptionInfo": "View Subscription Info"
+    "viewSubscriptionInfo": "View Subscription Info",
+    "noAccountInfo": "No account information available for this organization. This is most likely due to accessing an Integration server based organization on a Production server.  Please verify that this organization exists on the server you are using."
   },
   "customerAdminPanel": {
     "addAdministrators": "Add Administrators",
@@ -3287,7 +3319,7 @@
   },
   "generateActivationCodeModal": {
     "title": "Activation Code",
-    "activateBody": "Plug in your new Cisco desk phone or TelePresence device and enter the activation code when you are prompted or use the device camera to scan the QR code.",
+    "activateBody": "Plug in the desk phone belonging to <b>{{belongsTo}}</b> and enter the activation code when prompted or use the device camera to scan the QR code, if possible. A new activation code can be created from the Users page after this code expires.",
     "emailCode": "Email",
     "copyToClipboard": "Copy",
     "print": "Print",
@@ -3537,7 +3569,9 @@
       "redirectedcalls": "Redirected by this Cluster",
       "nodata": "Data Not Available",
       "allclusters": "All Clusters",
-      "percentage": "%"
+      "percentage": "%",
+      "utilization": "Utilization",
+      "avgutilization": "Avg Utilization"
     },
     "serviceStatus": {
       "unknown": "Status unknown",
@@ -3571,6 +3605,11 @@
       "errorMessage": "Unable delete {{groupName}}.",
       "keep": "Keep",
       "delete": "Delete"
+    },
+    "email": {
+      "invalidEmail": "Please enter a list of comma-separated email addresses",
+      "emailNotificationsSavingSuccess": "The email subscriber list was successfully saved.",
+      "emailNotificationsSavingError": "Your changes to the email subscriber list could not be saved. Try again later."
     },
     "clusters": {
       "listing": {
@@ -3616,6 +3655,22 @@
       "beta": "BETA",
       "latest": "LATEST",
       "errorMsg": "Before you can delete this cluster, you must either move all nodes to another cluster or deregister all nodes."
+    },
+    "upgradeClusters": {
+      "title": "Software Upgrade",
+      "text1": "During upgrade, this Hybrid Media Node will enter maintenance mode. After 2 hours, this node will be upgraded and any new calls will be redirected to an available node or the cloud.",
+      "text2": "After 2 hours the node will be upgraded.",
+      "upgradeNow": "Upgrade Now",
+      "upToDate": "Software is up to date.",
+      "sw-upgrade-title": "Software Upgrade",
+      "sw-upgrade-text": "New software is available.",
+      "upgradeWarning": "This cluster has one or more offline nodes. It is recommended to bring all nodes online before initiating an upgrade.",
+      "pending": "Pending",
+      "upgradingHost": "Upgrading {{host}} to {{version}}",
+      "upgradeProcessInitiating": "Initiating the upgrade to version {{version}}…",
+      "upgradeDone": "Upgrade completed!",
+      "success": "The cluster will begin upgrading shortly.",
+      "error": "Error in upgrading cluster. Please try again later."
     },
     "reassign": {
       "reassignHost": "Reassign Host",
@@ -3663,7 +3718,8 @@
       "titleV2": "Register Hybrid Media Node",
       "text1V2": "Create a new or select an existing Hybrid Media Cluster where you want to add the Hybrid Media Node.",
       "text2V2": "Enter the hostname or IP address of the Hybrid Media Node that you want to the Cisco Collaboration Cloud.",
-      "text3V2": "Enter the hostname or IP address of the Hybrid Media Node that you want to register with the Cisco Collaboration Cloud.",
+      "text3V1": "Enter the&nbsp;",
+      "text3V3": "or IP address of the Hybrid Media Node that you want to register with the Cisco Collaboration Cloud.",
       "serverOnline": "The media server that you are registering already exists and is online.",
       "serverOffline": "The media server that you are registering already exists and is offline. Deregister the existing server before you try again.",
       "firstStep": "Before you can register your Hybrid Media Node, you must install and configure the software on your new server.",
@@ -3684,7 +3740,10 @@
       "noDesc1": "For details on installation and configuration, visit ",
       "noDesc2": "Help Central.",
       "noDesc3": "After installation and configuration is complete, return to Cloud Collaboration Management and register your Hybrid Media Node.",
-      "yesInfo": "Assign your Hybrid Media Node to a cluster and enter the hostname or IP address."
+      "yesInfo1": "Assign your Hybrid Media Node to a cluster and enter the ",
+      "yesInfo2": "FQDN ",
+      "yesInfo3": "or IP address.",
+      "fqdn": "Fully Qualified Domain Name"
     },
     "mediaServiceActivationFailure": "Problems enabling the service",
     "mediaAgentOrgMappingFailure": "Problems enabling the Orpheus for MediaFusion",
@@ -4145,8 +4204,8 @@
     "usePartnerLogo": "Use the same logo in use by {{partner}}",
     "supportInfo": "If you are providing support for your users, enter your support parameters below. These parameters will be displayed under Support Options in the Spark application.",
     "supportAccessTitle": "Support Access",
-    "supportAccessInfo": "This setting gives Cisco or Partner read-only access to your management application. It does not allow changes to be made to your organization's details.",
-    "supportAccessCheckbox": "Allow Cisco or Partner Support read-only access to your management application."
+    "supportAccessInfo": "This setting gives Cisco Support read-only access to your management application. It does not allow changes to be made to your organization's details.",
+    "supportAccessCheckbox": "Allow Cisco Support read-only access to your management application."
   },
   "branding": {
     "customTitle": "Custom Branding",
@@ -4316,6 +4375,7 @@
     "Unknown": "Unknown",
     "Inactive": "Inactive Account",
     "RequiresActivation": "Requires Activation",
+    "WithDevices": "With Devices",
     "upgradeChannels": {
       "Stable": "Stable",
       "Latest": "Latest",
@@ -4381,7 +4441,7 @@
       },
       "inactive": {
         "type": "Inactive Account",
-        "message": "There exists an account for a device, but no corresponding device or activation code. You can probably delete this account."
+        "message": "An account exists for a device, but there's no corresponding device or activation code. You can delete this account."
       },
       "unknown": {
         "type": "Unknown Error Occurred",
@@ -4456,7 +4516,7 @@
     "typeHeader": "Type",
     "deviceHeader": "No. of Devices",
     "actionHeader": "Actions",
-    "featuresHeader": "Features",
+    "servicesHeader": "Services",
     "placeAdd": "Add Place",
     "placeError": "Add Place failed.",
     "deletePlace": "Delete Place",
@@ -4487,8 +4547,8 @@
     "pwdSyncTooltip": "If enabled, user password changes through Jabber client or through OrgAdmin will be synchronized over to their Spark accounts. If disabled, user password changes through Jabber client or through OrgAdmin remain in Messenger.",
     "sparkEntHeading": "Users can access Free Spark",
     "sparkEntTooltip": "If enabled, all users in your Messenger organization will be given access to Free Spark. If disabled, only Administrators will be given access to Free Spark.",
-    "usrDisHeading": "Replicate Users between Messenger & Spark",
-    "usrDisTooltip": "If enabled, users added in OrgAdmin will appear in Spark. If disabled, users in OrgAdmin will not appear in Spark.",
+    "usrDisHeading": "Add/Remove Messenger Users in Spark",
+    "usrDisTooltip": "If enabled, users added in OrgAdmin will appear in Spark. If disabled, users added in OrgAdmin will not appear in Spark.",
     "errorAuthFailed": "Authorization failed: ",
     "errorFailedCheckingCIEntitlements": "Failed checking user entitlements from Common Identity: ",
     "errorFailedCheckingCIRoles": "Failed checking Common Identity user roles: ",
@@ -4630,7 +4690,8 @@
       "errorChar250": "Character length cannot be more than 250.",
       "errorChar50": "Character length cannot be more than 50.",
       "errorTypeDuplicate": "This ‘Type’ is associated with another field. Select a different one from the available types.",
-      "businessDaysSelection": "Select the business working days."
+      "businessDaysSelection": "Select the business working days.",
+      "invalidCharacters": "Characters <, > are not allowed."
     },
     "ctOverview": {
       "customerInformation": {
@@ -4932,8 +4993,8 @@
     "privacy": {
       "title": "Privacy",
       "supportAccessHeader": "Support Access",
-      "supportAccessDescription": "This setting gives Cisco or Partner Support read-only access to your organization. It does not allow changes to be made to your organization's details.",
-      "allowReadOnlyOrgAccess": "Allow Cisco or Partner Support read-only access to your organization",
+      "supportAccessDescription": "This setting gives Cisco Support read-only access to your organization. It does not allow changes to be made to your organization's details.",
+      "allowReadOnlyOrgAccess": "Allow Cisco Support read-only access to your organization",
       "crashReportTitle": "Automatic Crash Reporting",
       "crashReportText": "If an endpoint crashes, logs will be uploaded to Cisco to help improve the quality of the service.",
       "crashReportCheckboxLabel": "Enable Automatic Crash reporting",
@@ -4991,7 +5052,7 @@
       "CMR": "WebEx Collaboration Meeting Rooms",
       "CO": "Spark Call",
       "SD": "Spark Shared Devices",
-      "SB": "Cisco Spark Board 55"
+      "SB": "Cisco Seagull"
     }
   },
   "onlineUpgradeModal": {
@@ -5204,14 +5265,14 @@
     "deviceNotFound": "This device no longer exist. Maybe it's been deleted?",
     "customerPortalViewHeading": "Customer Portal View",
     "customerPortalViewDetails": "You will be able to view the customer's entire portal, you cannot make any changes.",
-    "customerDoesNotAllowReadOnlyAccess": "The customer does not allow Cisco or Partner Support read-only access to the management application.",
+    "customerDoesNotAllowReadOnlyAccess": "The customer does not allow Cisco Support read-only access to the management application.",
     "view": "View",
     "dialing": "Dialing",
     "dialingPlan": {
       "national": "National",
       "local": "Local"
     },
-    "vmprefix": "Voice Mailbox Prefix",
+    "vmprefix": "Voicemail Access Prefix",
     "outbounddigit": "Outbound Dial Digit"
   },
   "activation": {
@@ -5324,7 +5385,7 @@
       },
       "care": {
         "title": "Care",
-        "description": "Cisco Spark Care configurations of media channels for your organization.",
+        "description": "Customer Care channel configurations for your organization.",
         "buttons": {
           "features": "Features"
         }
