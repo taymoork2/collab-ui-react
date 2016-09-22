@@ -25,7 +25,7 @@ module.exports = csp({
       'https://wbxbts.admin.ciscospark.com'
     ],
     frameSrc: [
-      'https://buy.ciscospark.com',
+      'https://buy.ciscospark.com', // Digital River
     ],
     connectSrc: [
       '\'self\'',
@@ -48,7 +48,9 @@ module.exports = csp({
       'ws://localhost:8000',
       // Local Atlas Backend:
       'http://127.0.0.1:8080',
-      'http://localhost:8080'
+      'http://localhost:8080',
+      'http://dpm.demdex.net', // Adobe DTM Omniture
+      'http://ciscowebex.d1.sc.omtrdc.net', // Adobe DTM Omniture
     ],
     imgSrc: [
       '\'self\'',
@@ -57,6 +59,8 @@ module.exports = csp({
       'https://*.clouddrive.com',
       'https://*.localytics.com',
       'https://*.rackcdn.com',
+      'http://webexglobal.112.2o7.net', // Adobe DTM Omniture
+      'http://*.d1.sc.omtrdc.net', // Adobe DTM Omniture
       // Webpack Dev
       'blob:',
     ],
@@ -66,10 +70,12 @@ module.exports = csp({
       '\'unsafe-eval\'',
       'https://*.localytics.com',
       'https://*.webex.com',
-      'https://api.mixpanel.com',
-      'https://cdn.mxpnl.com',
-      'http://assets.adobedtm.com',
-      'https://buy.ciscospark.com'
+      'https://api.mixpanel.com', // Mixpanel
+      'https://cdn.mxpnl.com', // Mixpanel
+      'http://assets.adobedtm.com', // Adobe DTM Omniture
+      'http://dpm.demdex.net', // Adobe DTM Omniture
+      'http://ciscowebex.d1.sc.omtrdc.net', // Adobe DTM Omniture
+      'https://buy.ciscospark.com', // Digital River
     ],
     styleSrc: [
       '\'self\'',

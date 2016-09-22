@@ -44,7 +44,7 @@
 
         card.licenseEventHandler = function (licenses) {
           card.allLicenses = licenses;
-          card.trial = _.any(filterLicenses(licenses), {
+          card.trial = _.some(filterLicenses(licenses), {
             'isTrial': true
           });
 

@@ -64,9 +64,7 @@
     }
 
     function setReadOnlyLaunchButtonVisibility(orgData) {
-      if (Authinfo.getOrgId() != "ce8d17f8-1734-4a54-8510-fae65acc505e" && Authinfo.getOrgId() != "d5235404-6637-4050-9978-e3d0f4338c36" && Authinfo.getOrgId() != "1eb65fdf-9643-417f-9974-ad72cae0e10f" && Authinfo.getOrgId() != "6f631c7b-04e5-4dfe-b359-47d5fa9f4837") {
-        vm.allowLaunchAtlas = false;
-      } else if (orgData.id == Authinfo.getOrgId()) {
+      if (orgData.id == Authinfo.getOrgId()) {
         vm.allowLaunchAtlas = false;
       } else if (!orgData.orgSettings) {
         vm.allowLaunchAtlas = true;

@@ -207,20 +207,25 @@ var Navigation = function () {
     });
   };
 
-  this.expectCurrentUrl = function (url) {
+  function doesCurrentUrlContainValues(urlArray) {
+    return function (currentUrl) {
+      log('Expecting ' + currentUrl + ' to contain ' + urlArray.join(' or '));
+      // See if currentUrl contains one of the urlArray values
+      return _.some(urlArray, _.partial(_.includes, currentUrl));
+    };
+  }
+
+  this.expectCurrentUrl = function () {
+    var urlArray = _.toArray(arguments);
     return browser.wait(function () {
-      return browser.getCurrentUrl().then(function (currentUrl) {
-        return currentUrl.indexOf(url) !== -1;
-      });
+      return browser.getCurrentUrl().then(doesCurrentUrlContainValues(urlArray));
     }, TIMEOUT);
   };
 
-  this.expectDriverCurrentUrl = function (url, url2) {
+  this.expectDriverCurrentUrl = function () {
+    var urlArray = _.toArray(arguments);
     return browser.wait(function () {
-      return browser.driver.getCurrentUrl().then(function (currentUrl) {
-        log('Expecting ' + currentUrl + ' to contain ' + url + ' or ' + url2);
-        return currentUrl.indexOf(url) !== -1 || currentUrl.indexOf(url2) !== -1;
-      });
+      return browser.driver.getCurrentUrl().then(doesCurrentUrlContainValues(urlArray));
     }, TIMEOUT);
   };
 

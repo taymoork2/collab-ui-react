@@ -279,10 +279,6 @@
     max-width: 580px;
   }
 
-  .scrollSpace {
-    height: 200px;
-  }
-
   .typeChoice {
     display: flex;
     @media screen and (max-width: 500px){
@@ -405,7 +401,6 @@
   flex-direction: column;
 
   .qrCodeSection {
-    margin-top: 16px;
     flex-grow: 1;
     display: flex;
     flex-direction: column;

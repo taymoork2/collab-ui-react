@@ -42,7 +42,7 @@
       // copy address for manipulation
       var address = angular.copy(_address);
       var streetAddressArray = _.get(address, 'streetAddress', '').split(/\s+/);
-      address.number = _.first(streetAddressArray);
+      address.number = _.head(streetAddressArray);
       address.street = _.tail(streetAddressArray).join(' ');
 
       // transform a return object based on our mapping structure
@@ -61,9 +61,9 @@
       // Remove empty values and convert to string
       parsedAddress.streetAddress = _.chain(parsedStreetAddress).reject(_.isEmpty).join(' ').value();
       // Filter the parsedAddress for properties that should exist in the addressMapping
-      var address = _.pick(parsedAddress, function (val, key) {
+      var address = _.pickBy(parsedAddress, function (val, key) {
         // parsed address key should exist in addressMapping value
-        return _.contains(addressMapping, key);
+        return _.includes(addressMapping, key);
       });
       return address;
     }
@@ -84,7 +84,7 @@
 
     function lookupAddress(address) {
       // format terminus payload and omit empty strings
-      var searchPayload = getTerminusAddress(_.omit(address, _.isEmpty));
+      var searchPayload = getTerminusAddress(_.omitBy(address, _.isEmpty));
       return TerminusLookupE911Service.save({}, searchPayload).$promise
         .then(function (response) {
           var address = _.get(response, 'addresses[0]');

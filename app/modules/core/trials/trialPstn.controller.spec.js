@@ -135,7 +135,6 @@ describe('Controller: TrialPstnCtrl', function () {
       var swivelCarrierDetails = [{
         "uuid": "4f5f5bf7-0034-4ade-8b1c-db63777f062c",
         "name": "INTELEPEER-SWIVEL",
-        "apiExists": false,
         "apiImplementation": "SWIVEL",
         "countryCode": "+1",
         "country": "US",
@@ -158,7 +157,6 @@ describe('Controller: TrialPstnCtrl', function () {
       var orderCarrierDetails = [{
         "uuid": "4f5f5bf7-0034-4ade-8b1c-db63777f062c",
         "name": "INTELEPEER",
-        "apiExists": true,
         "apiImplementation": "INTELEPEER",
         "countryCode": "+1",
         "country": "US",
@@ -182,7 +180,6 @@ describe('Controller: TrialPstnCtrl', function () {
       var swivelCarrierDetails = [{
         "uuid": "4f5f5bf7-0034-4ade-8b1c-db63777f062c",
         "name": "INTELEPEER-SWIVEL",
-        "apiExists": false,
         "apiImplementation": "SWIVEL",
         "countryCode": "+1",
         "country": "US",
@@ -224,7 +221,6 @@ describe('Controller: TrialPstnCtrl', function () {
       var swivelCarrierDetails = [{
         "uuid": "4f5f5bf7-0034-4ade-8b1c-db63777f062c",
         "name": "INTELEPEER-SWIVEL",
-        "apiExists": false,
         "apiImplementation": "SWIVEL",
         "countryCode": "+1",
         "country": "US",
@@ -267,7 +263,6 @@ describe('Controller: TrialPstnCtrl', function () {
       var orderCarrierDetails = [{
         "uuid": "4f5f5bf7-0034-4ade-8b1c-db63777f062c",
         "name": "INTELEPEER",
-        "apiExists": true,
         "apiImplementation": "INTELEPEER",
         "countryCode": "+1",
         "country": "US",

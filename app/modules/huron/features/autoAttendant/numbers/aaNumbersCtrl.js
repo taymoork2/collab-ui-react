@@ -237,7 +237,7 @@
 
         // but we don't change the first top-line number, which is also shown in the header, so
         // get a temp list without that first number
-        var tmp = _.rest(resources);
+        var tmp = _.tail(resources);
 
         // and sort it
         tmp.sort(function (a, b) {

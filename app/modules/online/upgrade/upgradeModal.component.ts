@@ -8,6 +8,7 @@ class OnlineUpgrade {
   /* @ngInject */
   constructor(
     private $state: ng.ui.IStateService,
+    private Auth,
     private Authinfo,
     private Notification,
     private OnlineUpgradeService: OnlineUpgradeService
@@ -34,6 +35,10 @@ class OnlineUpgrade {
       .finally(() => {
         this.cancelLoading = false;
       });
+  }
+
+  public logout(): void {
+    this.Auth.logout();
   }
 }
 
