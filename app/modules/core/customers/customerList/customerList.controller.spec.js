@@ -1,5 +1,4 @@
 'use strict';
-/* eslint-disable */
 
 describe('Controller: CustomerListCtrl', function () {
   var $httpBackend, $q, $scope, $state, Authinfo, Config, customerListToggle, HuronConfig, FeatureToggleService, Notification, Orgservice, PartnerService, TrialService;
