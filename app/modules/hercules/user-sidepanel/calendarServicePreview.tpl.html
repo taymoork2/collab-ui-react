@@ -30,14 +30,13 @@
         </span>
       </div>
 
-      <div
-        ng-show="extension.entitled && extension.status && extension.status.state === 'error' && extension.status.description"
-        class="error-message">
+      <div ng-show="extension.entitled && extension.status && extension.status.state === 'error' && extension.status.description"
+           class="error-message">
          <i class="icon icon-error"></i>
          <p class="message">
           {{extension.status.description.defaultMessage}}
          </p>
-    </div>
+      </div>
 
       <div
         ng-if="isInvitePending && extension.entitled"

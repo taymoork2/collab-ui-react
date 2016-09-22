@@ -123,25 +123,26 @@
 
     var readResourceGroups = function () {
       FeatureToggleService.supports(FeatureToggleService.features.atlasF237ResourceGroups)
-        .then(function () {
-          ResourceGroupService.getAllAsOptions().then(function (options) {
-            if (options.length > 0) {
-              $scope.resourceGroup.options = $scope.resourceGroup.options.concat(options);
-              if ($scope.callServiceAware.status && $scope.callServiceAware.status.resourceGroupId) {
-                setSelectedResourceGroup($scope.callServiceAware.status.resourceGroupId);
-              } else {
-                USSService.getUserProps($scope.currentUser.id).then(function (props) {
-                  if (props.resourceGroups && props.resourceGroups[$scope.callServiceAware.id]) {
-                    setSelectedResourceGroup(props.resourceGroups[$scope.callServiceAware.id]);
-                  } else {
-                    $scope.resourceGroup.hasRunningClusters();
-                  }
-                });
+        .then(function (supported) {
+          if (supported) {
+            ResourceGroupService.getAllAsOptions().then(function (options) {
+              if (options.length > 0) {
+                $scope.resourceGroup.options = $scope.resourceGroup.options.concat(options);
+                if ($scope.callServiceAware.status && $scope.callServiceAware.status.resourceGroupId) {
+                  setSelectedResourceGroup($scope.callServiceAware.status.resourceGroupId);
+                } else {
+                  USSService.getUserProps($scope.currentUser.id).then(function (props) {
+                    if (props.resourceGroups && props.resourceGroups[$scope.callServiceAware.id]) {
+                      setSelectedResourceGroup(props.resourceGroups[$scope.callServiceAware.id]);
+                    } else {
+                      $scope.resourceGroup.hasRunningClusters();
+                    }
+                  });
+                }
+                $scope.resourceGroup.show = true;
               }
-              $scope.resourceGroup.show = true;
-            }
-          });
-
+            });
+          }
         });
     };
 
