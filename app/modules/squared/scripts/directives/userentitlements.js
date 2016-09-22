@@ -22,7 +22,7 @@
       });
     }
 
-    $scope.entitlementsKeys = _.pluck(services, 'serviceId').sort().reverse();
+    $scope.entitlementsKeys = _.map(services, 'serviceId').sort().reverse();
 
     $scope.saveDisabled = true;
 

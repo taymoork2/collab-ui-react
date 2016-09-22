@@ -41,7 +41,7 @@
           var data = response.data;
           return _.map(statuses, function (status) {
             // Does the id exist in answer from CI?
-            var foundUser = _.find(data.Resources, 'id', status.userId);
+            var foundUser = _.find(data.Resources, { id: status.userId });
             var serviceName = status.serviceId === 'squared-fusion-uc' ? $translate.instant('hercules.serviceNames.squared-fusion-uc.full') : $translate.instant('hercules.serviceNames.' + status.serviceId);
             // Same shape as getCSVColumnHeaders!
             return [

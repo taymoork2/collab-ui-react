@@ -173,7 +173,7 @@
       var businessDays = config.pages.offHours.schedule.businessDays;
       vm.days = _.map(CTService.getDays(), function (day) {
         var selectedDay = day;
-        selectedDay.isSelected = _.contains(businessDays, day.label);
+        selectedDay.isSelected = _.includes(businessDays, day.label);
         return selectedDay;
       });
       vm.overlayTitle = $translate.instant('careChatTpl.editTitle');
@@ -459,7 +459,7 @@
 
     function areAllTypesUnique() {
       var configuredTypes = getConfiguredTypes();
-      var uniqueConfiguredTypes = _.unique(configuredTypes);
+      var uniqueConfiguredTypes = _.uniq(configuredTypes);
 
       return (configuredTypes.length === uniqueConfiguredTypes.length);
     }

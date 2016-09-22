@@ -41,7 +41,7 @@
 
     function orderByCardName(list) {
       return _.sortBy(list, function (item) {
-        //converting cardName to lower case as _.sortByAll by default does a case sensitive sorting
+        //converting cardName to lower case as _.sortBy by default does a case sensitive sorting
         return item.name.toLowerCase();
       });
     }

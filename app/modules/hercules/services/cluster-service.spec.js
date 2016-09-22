@@ -519,7 +519,7 @@ describe('ClusterService', function () {
   function cluster(connectors, options) {
     options = options || {};
     var typesUsed = _.chain(connectors)
-      .pluck('connectorType')
+      .map('connectorType')
       .uniq()
       .value();
     var provisioning = _.map(typesUsed, function (type) {
