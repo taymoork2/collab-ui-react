@@ -207,8 +207,7 @@
             details.siteUrl = _.get(trial, 'details.siteUrl', '');
             details.timeZoneId = _.get(trial, 'details.timeZone.timeZoneId', '');
           }
-        })
-        .value();
+        });
 
       if (deviceDetails.skipDevices) {
         delete details.shippingInfo;
@@ -259,7 +258,7 @@
             licenseCount: licenseCount,
           };
         })
-        .compact(data.trials)
+        .compact()
         .value();
     }
 

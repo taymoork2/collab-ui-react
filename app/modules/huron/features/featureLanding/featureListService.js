@@ -28,7 +28,7 @@
       var formattedList = [];
       _.forEach(data.ceInfos, function (aa) {
         formattedCard.cardName = aa.name;
-        formattedCard.numbers = _.pluck(aa.resources, 'number');
+        formattedCard.numbers = _.map(aa.resources, 'number');
         formattedCard.id = aa.ceUrl.substr(aa.ceUrl.lastIndexOf('/') + 1);
         formattedCard.featureName = 'huronFeatureDetails.aa';
         formattedCard.filterValue = 'AA';
@@ -96,7 +96,7 @@
       var formattedList = [];
       _.forEach(data, function (huntGroup) {
         formattedCard.cardName = huntGroup.name;
-        formattedCard.numbers = _.pluck(huntGroup.numbers, 'number');
+        formattedCard.numbers = _.map(huntGroup.numbers, 'number');
         formattedCard.memberCount = huntGroup.memberCount;
         formattedCard.id = huntGroup.uuid;
         formattedCard.featureName = 'huronFeatureDetails.hg';
@@ -154,7 +154,7 @@
 
     function orderByCardName(list) {
       return _.sortBy(list, function (item) {
-        //converting cardName to lower case as _.sortByAll by default does a case sensitive sorting
+        //converting cardName to lower case as _.sortBy by default does a case sensitive sorting
         return item.cardName.toLowerCase();
       });
     }

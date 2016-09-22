@@ -42,13 +42,13 @@
       var deferred = $q.defer();
 
       if (angular.isDefined($scope.options.addUsers) && angular.isDefined($scope.wizard) && angular.isFunction($scope.wizard.setSubTab)) {
-        var simpleSubTab = _.findWhere($scope.wizard.current.tab.subTabs, {
+        var simpleSubTab = _.find($scope.wizard.current.tab.subTabs, {
           name: 'simple'
         });
-        var csvSubTab = _.findWhere($scope.wizard.current.tab.subTabs, {
+        var csvSubTab = _.find($scope.wizard.current.tab.subTabs, {
           name: 'csv'
         });
-        var advancedSubTab = _.findWhere($scope.wizard.current.tab.subTabs, {
+        var advancedSubTab = _.find($scope.wizard.current.tab.subTabs, {
           name: 'advanced'
         });
         if ($scope.options.addUsers === 0) {

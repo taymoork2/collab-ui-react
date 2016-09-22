@@ -89,7 +89,7 @@
     }
 
     function getMergedUpgradeState(connectors) {
-      var allAreUpgraded = _.every(connectors, 'upgradeState', 'upgraded');
+      var allAreUpgraded = _.every(connectors, { upgradeState: 'upgraded' });
       return allAreUpgraded ? 'upgraded' : 'upgrading';
     }
 

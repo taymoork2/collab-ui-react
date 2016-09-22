@@ -82,7 +82,7 @@
     }
 
     function addUniqueHours(day, dayhour) {
-      if (!_.where(day.hours, dayhour).length) {
+      if (!_.filter(day.hours, dayhour).length) {
         day.hours.push(angular.copy(dayhour));
       }
     }
@@ -191,7 +191,7 @@
       var indexListed = [];
       _.forEach(vm.days, function (wday, index) {
         var hour1 = wday.hours;
-        var isIndexPresent = _.contains(indexListed, index);
+        var isIndexPresent = _.includes(indexListed, index);
         if (hour1.length && hour1[0].starttime && hour1[0].endtime && !isIndexPresent) {
           var range = {
             hours: [],
