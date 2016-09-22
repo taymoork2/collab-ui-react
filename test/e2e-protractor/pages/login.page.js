@@ -53,19 +53,20 @@ var LoginPage = function () {
     var bearer;
     var method = (opts && opts.navigateUsingIntegrationBackend) ? 'navigateUsingIntegrationBackend' : 'navigateTo';
     navigation[method](expectedUrl);
-    helper.getBearerToken(username)
-      .then(function (_bearer) {
-        bearer = _bearer;
-        expect(bearer).toBeDefined();
-        navigation.expectDriverCurrentUrl('/login').then(function () {
-          browser.executeScript("sessionStorage.accessToken='" + bearer + "'");
-          browser.refresh();
-          navigation.expectDriverCurrentUrl(typeof expectedUrl !== 'undefined' ? expectedUrl : '/overview');
-        });
-      });
     return browser.wait(function () {
+      return helper.getBearerToken(username)
+        .then(function (_bearer) {
+          bearer = _bearer;
+          expect(bearer).toBeDefined();
+          return navigation.expectDriverCurrentUrl('/login').then(function () {
+            browser.executeScript("sessionStorage.accessToken='" + bearer + "'");
+            browser.refresh();
+            return navigation.expectDriverCurrentUrl(typeof expectedUrl !== 'undefined' ? expectedUrl : '/overview');
+          });
+        });
+    }).then(function () {
       return bearer;
-    }, 10000, 'Could not retrieve bearer token to login');
+    });
   };
 
   this.loginUsingIntegrationBackend = function (username, expectedUrl) {

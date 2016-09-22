@@ -477,6 +477,20 @@
     $scope.careFeatures.push(new ServiceFeature($translate.instant('onboardModal.careFree'), 0, 'careRadio', new FakeLicense('freeCareService')));
     $scope.currentUser = $stateParams.currentUser;
 
+    $scope.currentUserDisplayName = function () {
+      if (_.isObject($scope.currentUser)) {
+        if (!_.isEmpty($scope.currentUser.displayName)) {
+          return _.trim($scope.currentUser.displayName);
+        } else if (_.isObject($scope.currentUser.name) && (!_.isEmpty($scope.currentUser.name.givenName) || !_.isEmpty($scope.currentUser.name.familyName))) {
+          return _.trim(($scope.currentUser.name.givenName || '') + ' ' + ($scope.currentUser.name.familyName || ''));
+        } else if (!_.isEmpty($scope.currentUser.userName)) {
+          return _.trim($scope.currentUser.userName);
+        }
+      }
+      // if all else fails, return Unknown
+      return _.trim($translate.instant('common.unknown'));
+    };
+
     if ($scope.currentUser) {
       userEnts = $scope.currentUser.entitlements;
       userLicenseIds = $scope.currentUser.licenseID;
@@ -539,7 +553,8 @@
     $scope.radioStates = {
       commRadio: false,
       msgRadio: false,
-      careRadio: false
+      careRadio: false,
+      initialCareRadioState: false // For generating Metrics
     };
 
     if (userEnts) {
@@ -574,6 +589,7 @@
                 });
                 if (hasSyncKms) {
                   $scope.radioStates.careRadio = true;
+                  $scope.radioStates.initialCareRadioState = true;
                 }
               }
             });
@@ -1045,6 +1061,15 @@
           licenseId = _.get($scope, 'careFeatures[1].license.licenseId', null);
           if (licenseId) {
             licenseList.push(new LicenseFeature(licenseId, false));
+          }
+        }
+
+        // Metrics for care entitlement for users
+        if ($scope.radioStates.careRadio !== $scope.radioStates.initialCareRadioState) {
+          if ($scope.radioStates.careRadio) {
+            LogMetricsService.logMetrics('Enabling care for user', LogMetricsService.getEventType('careEnabled'), LogMetricsService.getEventAction('buttonClick'), 200, moment(), 1, null);
+          } else {
+            LogMetricsService.logMetrics('Disabling care for user', LogMetricsService.getEventType('careDisabled'), LogMetricsService.getEventAction('buttonClick'), 200, moment(), 1, null);
           }
         }
       }
