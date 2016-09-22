@@ -1,4 +1,5 @@
 import { SpeedDialService, ISpeedDial } from './speedDial.service';
+import { IActionItem } from '../../core/components/sectionTitle/sectionTitle.component';
 
 interface IValidationMessages {
   required: string;
@@ -18,7 +19,10 @@ class SpeedDialCtrl implements ng.IComponentController {
   private newNumber: string;
   private labelMessages: IValidationMessages;
   private numberMessages: IValidationMessages;
+  private actionList: IActionItem[];
+  private actionListCopy: IActionItem[] = [];
 
+  /* @ngInject */
   constructor(private $translate: ng.translate.ITranslateService,
               private dragularService,
               private Notification,
@@ -27,7 +31,7 @@ class SpeedDialCtrl implements ng.IComponentController {
 
     SpeedDialService.getSpeedDials(this.ownerType, this.ownerId).then((data) => {
       this.speedDialList = data.speedDials;
-    }, () => {
+    }).catch(() => {
       this.Notification.error('speedDials.retrieveSpeedDialsFail');
     });
     this.labelMessages = {
@@ -38,6 +42,18 @@ class SpeedDialCtrl implements ng.IComponentController {
       required: $translate.instant('common.invalidRequired'),
       pattern: $translate.instant('common.incorrectFormat'),
     };
+
+    if (!this.reachSpeedDialLimit()) {
+      this.actionListCopy.push({
+        actionKey: $translate.instant('speedDials.addSpeedDial'),
+        actionFunction: this.add.bind(this),
+      });
+    }
+    this.actionListCopy.push({
+        actionKey: $translate.instant('speedDials.reorder'),
+        actionFunction: this.setReorder.bind(this),
+      });
+    this.actionList = _.cloneDeep(this.actionListCopy);
   }
   public reachSpeedDialLimit() {
     return this.speedDialList.length >= SPEED_DIAL_LIMIT;
@@ -70,17 +86,19 @@ class SpeedDialCtrl implements ng.IComponentController {
     this.SpeedDialService.updateSpeedDials(this.ownerType, this.ownerId, this.speedDialList).then(() => {
       this.reordering = false;
       this.editing = false;
+      this.actionList = _.cloneDeep(this.actionListCopy);
     }, () => {
       this.Notification.error('speedDials.speedDialChangesFailed');
       if (_.has(this, 'id')) {
         this.SpeedDialService.getSpeedDials(this.ownerType, this.ownerId).then((data) => {
           this.speedDialList = data.speedDials;
-        }, () => {
+        }).catch(() => {
           this.Notification.error('speedDials.retrieveSpeedDialsFail');
         });
       }
       this.reordering = false;
       this.editing = false;
+      this.actionList = _.cloneDeep(this.actionListCopy);
     });
   }
 
@@ -104,10 +122,12 @@ class SpeedDialCtrl implements ng.IComponentController {
     }
     this.editing = false;
     this.reordering = false;
+    this.actionList = _.cloneDeep(this.actionListCopy);
   }
 
   public setReorder(): void {
     this.reordering = true;
+    this.actionList = [];
     this.copyList = angular.copy(this.speedDialList);
     if (this.firstReordering) {
       this.firstReordering = false;
@@ -127,6 +147,7 @@ class SpeedDialCtrl implements ng.IComponentController {
     sd.edit = true;
     this.newLabel = sd.label;
     this.newNumber = sd.number;
+    this.actionList = [];
   }
 
   public delete(sd): void {
@@ -134,9 +155,9 @@ class SpeedDialCtrl implements ng.IComponentController {
         templateUrl: 'modules/huron/speedDials/deleteConfirmation.tpl.html',
         type: 'dialog',
       }).result.then(() => {
-        this.speedDialList.splice(sd.index - 1, 1);
+        _.pull(this.speedDialList, sd);
         this.updateIndex();
-        this.SpeedDialService.updateSpeedDials(this.ownerType, this.ownerId, this.speedDialList).then( () => undefined, () => {
+        this.SpeedDialService.updateSpeedDials(this.ownerType, this.ownerId, this.speedDialList).then( () => undefined).catch(() => {
           this.Notification.error('speedDials.speedDialChangesFailed');
         });
       });

@@ -1509,10 +1509,6 @@
               var ownerId = _.get($stateParams.currentPlace, 'cisUuid');
               return '<uc-speed-dial owner-type="place" owner-id="' + ownerId + '"></uc-speed-dial>';
             },
-            params: {
-              watcher: null,
-              selected: null
-            },
             data: {
               displayName: 'Speed Dials'
             },

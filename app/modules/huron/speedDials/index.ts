@@ -4,11 +4,12 @@ export { SpeedDialService, ISpeedDial } from './speedDial.service';
 
 export default angular
   .module('huron.speed-dial', [
-    'Huron',
+    'huron.telephoneNumber',
     'atlas.templates',
     'cisco.ui',
     'pascalprecht.translate',
     'dragularModule',
+    'Core',
     require('modules/core/notifications/notifications.module'),
   ])
   .component('ucSpeedDial', new SpeedDialComponent())

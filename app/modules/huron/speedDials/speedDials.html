@@ -11,21 +11,11 @@
       </div>
     </div>
     <cs-sp-section>
-      <div class="section-title-row"
-           ng-class="{'sd-title-with-warning': $ctrl.reachSpeedDialLimit() && !$ctrl.editing && !$ctrl.reordering}">
-        <span class="section-name" translate="speedDials.title"></span>
-        <span cs-dropdown class="actions-menu dropdown pull-right">
-        <button cs-dropdown-toggle class="actions-button btn--none dropdown-toggle"
-                ng-hide="$ctrl.editing || $ctrl.reordering">
-          <i class="icon icon-three-dots"></i>
-        </button>
-        <ul cs-dropdown-menu class="dropdown-menu dropdown-primary actions-services">
-          <li><a ng-hide="$ctrl.reachSpeedDialLimit()" translate="speedDials.addSpeedDial"
-                 ng-click="$ctrl.add()"></a></li>
-          <li><a translate="speedDials.reorder" ng-click="$ctrl.setReorder()"></a></li>
-        </ul>
-      </span>
-      </div>
+      <section-title
+        title-key="speedDials.title"
+        action-list="$ctrl.actionList"
+        ng-class="{'sd-title-with-warning': $ctrl.reachSpeedDialLimit() && !$ctrl.editing && !$ctrl.reordering}">
+      </section-title>
       <div>
         <form name="$ctrl.form" novalidate role="form">
           <div id="speedDialsContainer" class="sd-container">
