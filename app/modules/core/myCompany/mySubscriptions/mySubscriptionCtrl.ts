@@ -272,10 +272,10 @@ class MySubscriptionCtrl {
     this.ServiceDescriptor.servicesInOrg(this.Authinfo.getOrgId(), true)
       .then(services => {
         if (_.isArray(services)) {
-          let callServices = services.filter((service) => {
+          let callServices = _.filter<any>(services, (service) => {
             return service.id === fusionUC || service.id === fusionEC;
           });
-          let filteredServices = services.filter((service) => {
+          let filteredServices = _.filter<any>(services, (service) => {
             return service.id === fusionCAL || service.id === fusionMGT;
           });
 

@@ -1,9 +1,7 @@
 namespace globalsettings {
 
   interface IGetAppSecurityResponse {
-    data: {
-      clientSecurityPolicy: boolean
-    };
+    clientSecurityPolicy: boolean;
   }
   export class SecuritySettingController {
 
@@ -20,12 +18,12 @@ namespace globalsettings {
 
     private loadSetting() {
       this.AccountOrgService.getAppSecurity(this.orgId)
-        .then(this.appSecuritySettingLoaded.bind(this));
+        .then((response) => this.appSecuritySettingLoaded(response));
     }
 
-    private appSecuritySettingLoaded({ data: { clientSecurityPolicy: clientSecurityPolicy } = { clientSecurityPolicy: null } }: IGetAppSecurityResponse) {
-      if (clientSecurityPolicy != null) {
-        this._isSparkClientSecurityEnabled = clientSecurityPolicy;
+    private appSecuritySettingLoaded(response: ng.IHttpPromiseCallbackArg<IGetAppSecurityResponse>) {
+      if (_.has(response, 'data.clientSecurityPolicy')) {
+        this._isSparkClientSecurityEnabled = response.data.clientSecurityPolicy;
         this.isSparkClientSecurityLoaded = true;
       }
     }
