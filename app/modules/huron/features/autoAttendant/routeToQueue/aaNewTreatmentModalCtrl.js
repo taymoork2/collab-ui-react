@@ -12,8 +12,8 @@
     vm.cancel = cancel;
     vm.destination = $translate.instant('autoAttendant.destinations.Disconnect');
     vm.minute = '15';
-    vm.selectPlaceholder = $translate.instant('autoAttendant.destinations.Disconnect');
-    vm.inputPlaceHolder = $translate.instant('autoAttendant.inputPlaceHolder');
+    vm.selected = '';
+    vm.selectPlaceholder = $translate.instant('autoAttendant.selectPlaceHolder');
     vm.destinationOptions = [{
       label: $translate.instant('autoAttendant.destinations.Disconnect')
     }, {
@@ -40,7 +40,6 @@
       _.times(60, function (i) {
         vm.minutes.push({
           index: i,
-          number: i,
           label: i + 1
         });
       });

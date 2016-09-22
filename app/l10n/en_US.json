@@ -2187,7 +2187,7 @@
     "namePlaceholder": "Enter Name",
     "repeatMenu": "Repeat",
     "queueSettings": "Queue Settings",
-    "maxWaitTime": "Max Wait Time",
+    "maxWaitTime": "Maximum Wait Time",
     "errorReadCe": "Failed to read {{name}}: {{statusText}} ({{status}}).",
     "successCreateCe": "{{name}} created successfully.",
     "successDeleteCe": "{{name}} deleted successfully.",
