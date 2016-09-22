@@ -54,9 +54,17 @@
     function printElement(elem) {
       // clones the element you want to print
       var domClone = elem.cloneNode(true);
+
+      var margin = domClone.getAttribute('print-element-margin');
+
+      if (margin) {
+        domClone.style.margin = margin;
+      }
+
       printSection.appendChild(domClone);
       $window.print();
     }
+
     return {
       link: link,
       restrict: 'A'
