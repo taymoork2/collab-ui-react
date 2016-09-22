@@ -247,7 +247,8 @@
       "retryUsers": "Retry",
       "retrying": "Retrying...",
       "retryingIn": "retrying in:",
-      "retryingUsers": "{users, plural, one{# User} other{# Users}}"
+      "retryingUsers": "{users, plural, one{# User} other{# Users}}",
+      "exportUserList": "Export user list."
     },
     "advanced": {
       "title": "Advanced",
