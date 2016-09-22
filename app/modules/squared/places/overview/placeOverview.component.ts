@@ -16,6 +16,7 @@ class PlaceOverview implements ng.IComponentController {
     private CsdmPlaceService,
     private CsdmHuronPlaceService,
     private CsdmHuronUserDeviceService,
+    private Authinfo,
     private XhrNotificationService,
     private CsdmCodeService,
     private WizardFactory
@@ -43,11 +44,7 @@ class PlaceOverview implements ng.IComponentController {
   }
 
   private initDeviceList(): void {
-    if (this.currentPlace.type === 'cloudberry') {
-      this.deviceList = this.currentPlace.devices;
-    } else {
-      this.deviceList = this.csdmHuronUserDeviceService.getDeviceList();
-    }
+    this.deviceList = this.currentPlace.devices;
   }
 
   public save(newName: string) {
@@ -88,9 +85,15 @@ class PlaceOverview implements ng.IComponentController {
     let wizardState = {
       data: {
         function: 'showCode',
+        accountType: 'shared',
+        showPlaces: true,
         code: code,
         deviceType: this.currentPlace.type,
         deviceName: this.currentPlace.displayName,
+        cisUuid: this.Authinfo.getUserId(),
+        email:  this.Authinfo.getPrimaryEmail(),
+        displayName:  this.Authinfo.displayName,
+        organizationId:  this.Authinfo.getOrgId(),
         title: 'addDeviceWizard.newCode',
       },
       history: [],
