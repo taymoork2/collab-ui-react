@@ -1,8 +1,5 @@
 import callForwardModule from './index';
-import {
-  CallForwardAll,
-  CallForwardBusy,
-} from './callForward';
+import { CallForward } from './callForward';
 
 describe('Component: callForward', () => {
   const CALL_FWD_NONE_RADIO = 'input#callForwardNone';
@@ -21,17 +18,15 @@ describe('Component: callForward', () => {
       '$scope'
     );
     this.$scope.voicemailEnabled = true;
-    this.$scope.callForwardAll = new CallForwardAll();
-    this.$scope.callForwardBusy = new CallForwardBusy();
+    this.$scope.callForward = new CallForward();
     this.$scope.onChangeFn = jasmine.createSpy('onChangeFn');
   });
 
   function initComponent() {
     this.compileComponent('ucCallForward', {
-      callForwardAll: 'callForwardAll',
-      callForwardBusy: 'callForwardBusy',
+      callForward: 'callForward',
       voicemailEnabled: 'voicemailEnabled',
-      onChangeFn: 'onChangeFn(callForwardAll, callForwardBusy)',
+      onChangeFn: 'onChangeFn(callForward)',
     });
   }
 
@@ -82,14 +77,11 @@ describe('Component: callForward', () => {
     });
 
     it('should invoke `onChangeFn` when Voicemail option is selected', function() {
-      let callForwardAll = new CallForwardAll();
-      callForwardAll.voicemailEnabled = true;
+      let callForward = new CallForward();
+      callForward.callForwardAll.voicemailEnabled = true;
 
       this.view.find(CALL_FWD_ALL_SELECT).find(DROPDOWN_OPTIONS).get(0).click();
-      expect(this.$scope.onChangeFn).toHaveBeenCalledWith(
-        callForwardAll,
-        this.$scope.callForwardBusy
-      );
+      expect(this.$scope.onChangeFn).toHaveBeenCalledWith(callForward);
       expect(this.$scope.onChangeFn).toHaveBeenCalled();
     });
   });
@@ -113,14 +105,10 @@ describe('Component: callForward', () => {
     });
 
     it('should invoke `onChangeFn` when Voicemail option is selected', function() {
-      let callForwardBusy = new CallForwardBusy();
-      callForwardBusy.intVoiceMailEnabled = true;
-
+      let callForward = new CallForward();
+      callForward.callForwardBusy.internalVoicemailEnabled = true;
       this.view.find(CALL_FWD_BUSY_SELECT).find(DROPDOWN_OPTIONS).get(0).click();
-      expect(this.$scope.onChangeFn).toHaveBeenCalledWith(
-        this.$scope.callForwardAll,
-        callForwardBusy
-      );
+      expect(this.$scope.onChangeFn).toHaveBeenCalledWith(callForward);
       expect(this.$scope.onChangeFn).toHaveBeenCalled();
     });
   });
@@ -147,15 +135,12 @@ describe('Component: callForward', () => {
     });
 
     it('should invoke `onChangeFn` when Voicemail option is selected', function() {
-      let callForwardBusy = new CallForwardBusy();
-      callForwardBusy.voicemailEnabled = true;
-
+      let callForward = new CallForward();
+      callForward.callForwardBusy.internalDestination = '';
+      callForward.callForwardBusy.externalVoicemailEnabled = true;
       this.view.find(CALL_FWD_BUSY_EXT_CHECK).click();
       this.view.find(CALL_FWD_BUSY_EXT_SELECT).find(DROPDOWN_OPTIONS).get(0).click();
-      expect(this.$scope.onChangeFn).toHaveBeenCalledWith(
-        this.$scope.callForwardAll,
-        callForwardBusy
-      );
+      expect(this.$scope.onChangeFn).toHaveBeenCalledWith(callForward);
       expect(this.$scope.onChangeFn).toHaveBeenCalled();
     });
   });
@@ -175,14 +160,11 @@ describe('Component: callForward', () => {
     });
 
     it('should invoke `onChangeFn` when value is typed in call forward all combo box', function() {
-      let callForwardAll = new CallForwardAll();
-      callForwardAll.destination = '9725551212';
+      let callForward = new CallForward();
+      callForward.callForwardAll.destination = '9725551212';
 
       this.view.find(CALL_FWD_ALL_SELECT).find(COMBO_INPUT).val('9725551212').change().blur();
-      expect(this.$scope.onChangeFn).toHaveBeenCalledWith(
-        callForwardAll,
-        this.$scope.callForwardBusy
-      );
+      expect(this.$scope.onChangeFn).toHaveBeenCalledWith(callForward);
       expect(this.$scope.onChangeFn).toHaveBeenCalled();
     });
   });
@@ -208,27 +190,20 @@ describe('Component: callForward', () => {
     });
 
     it('should invoke `onChangeFn` when value is typed in call forward busy combo box', function() {
-      let callForwardBusy = new CallForwardBusy();
-      callForwardBusy.intDestination = '9725551212';
-
+      let callForward = new CallForward();
+      callForward.callForwardBusy.internalDestination = '9725551212';
       this.view.find(CALL_FWD_BUSY_SELECT).find(COMBO_INPUT).val('9725551212').change().blur();
-      expect(this.$scope.onChangeFn).toHaveBeenCalledWith(
-        this.$scope.callForwardAll,
-        callForwardBusy
-      );
+      expect(this.$scope.onChangeFn).toHaveBeenCalledWith(callForward);
       expect(this.$scope.onChangeFn).toHaveBeenCalled();
     });
 
     it('should invoke `onChangeFn` when value is typed in call forward busy external combo box', function() {
-      let callForwardBusy = new CallForwardBusy();
-      callForwardBusy.destination = '9725551212';
-
+      let callForward = new CallForward();
+      callForward.callForwardBusy.internalDestination = '';
+      callForward.callForwardBusy.externalDestination = '9725551212';
       this.view.find(CALL_FWD_BUSY_EXT_CHECK).click();
       this.view.find(CALL_FWD_BUSY_EXT_SELECT).find(COMBO_INPUT).val('9725551212').change().blur();
-      expect(this.$scope.onChangeFn).toHaveBeenCalledWith(
-        this.$scope.callForwardAll,
-        callForwardBusy
-      );
+      expect(this.$scope.onChangeFn).toHaveBeenCalledWith(callForward);
       expect(this.$scope.onChangeFn).toHaveBeenCalled();
     });
   });

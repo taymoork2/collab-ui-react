@@ -1,6 +1,7 @@
 import { LineService } from './line.service';
 
 export * from './line.service';
+export * from './line';
 
 export default angular
   .module('huron.line-services', [
