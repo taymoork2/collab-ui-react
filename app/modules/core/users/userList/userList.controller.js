@@ -63,7 +63,6 @@
     $scope.exportType = $rootScope.typeOfExport.USER;
     $scope.userExportThreshold = CsvDownloadService.userExportThreshold;
     $scope.totalUsers = 0;
-    $scope.isCsvEnhancementToggled = false;
     $scope.obtainedTotalUserCount = false;
     $scope.isEmailStatusToggled = false;
 
@@ -90,7 +89,6 @@
     $scope.getUserPhoto = Userservice.getUserPhoto;
     $scope.firstOfType = firstOfType;
     $scope.isValidThumbnail = Userservice.isValidThumbnail;
-    $scope.startExportUserList = startExportUserList;
     $scope.isNotDirSyncOrException = false;
 
     $scope.getUserList = getUserList;
@@ -104,14 +102,12 @@
     function onInit() {
 
       var promises = {
-        csvEnhancement: FeatureToggleService.atlasCsvEnhancementGetStatus(),
         atlasEmailStatus: FeatureToggleService.atlasEmailStatusGetStatus(),
         configureGrid: vm.configureGrid(),
         isOnlineOrg: Auth.isOnlineOrg()
       };
 
       $q.all(promises).then(function (results) {
-        $scope.isCsvEnhancementToggled = results.csvEnhancement;
         $scope.isEmailStatusToggled = results.atlasEmailStatus;
         isOnlineOrg = results.isOnlineOrg;
 
@@ -658,14 +654,6 @@
           $scope.allowLoadMoreData = false;
         });
       }
-    }
-
-    function startExportUserList() {
-      var options = {
-        csvType: CsvDownloadService.typeUser,
-        tooManyUsers: ($scope.totalUsers > $scope.userExportThreshold)
-      };
-      $scope.$emit('csv-download-request', options);
     }
 
     function onManageUsers() {
