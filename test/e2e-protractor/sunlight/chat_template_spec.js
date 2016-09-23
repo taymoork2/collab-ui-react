@@ -169,12 +169,12 @@ describe('Care admin should be able to', function () {
     utils.expectIsDisplayed(careChatTemplateSetupPage.customerInfo_attCard_textField1);
     utils.expectIsDisplayed(careChatTemplateSetupPage.customerInfo_attCard_textField2);
     utils.expectIsDisplayed(careChatTemplateSetupPage.customerInfo_attCard_textField3);
-    utils.expectIsDisplayed(careChatTemplateSetupPage.customerInfo_attCard_textField4);
+   // utils.expectIsDisplayed(careChatTemplateSetupPage.customerInfo_attCard_textField4);
 
-    utils.sendKeys(careChatTemplateSetupPage.customerInfo_attCard_textField2, "Custom Label");
+    utils.sendKeys(careChatTemplateSetupPage.customerInfo_attCard_textField1, "Custom Label");
     utils.expectTextToBeSet(careChatTemplateSetupPage.customerInfo_screen_field1Label, "Custom Label");
 
-    utils.sendKeys(careChatTemplateSetupPage.customerInfo_attCard_textField3, "Custom HintText");
+    utils.sendKeys(careChatTemplateSetupPage.customerInfo_attCard_textField2, "Custom HintText");
 
     utils.expectIsNotDisplayed(careChatTemplateSetupPage.customerInfo_screen_optional1);
     utils.click(careChatTemplateSetupPage.customerInfo_attCard_redioOptional);
@@ -187,12 +187,12 @@ describe('Care admin should be able to', function () {
     utils.expectIsDisplayed(careChatTemplateSetupPage.customerInfo_attCard_textField1);
     utils.expectIsDisplayed(careChatTemplateSetupPage.customerInfo_attCard_textField2);
     utils.expectIsDisplayed(careChatTemplateSetupPage.customerInfo_attCard_textField3);
-    utils.expectIsDisplayed(careChatTemplateSetupPage.customerInfo_attCard_textField4);
+    // utils.expectIsDisplayed(careChatTemplateSetupPage.customerInfo_attCard_textField4);
 
-    utils.sendKeys(careChatTemplateSetupPage.customerInfo_attCard_textField2, "Custom Label");
+    utils.sendKeys(careChatTemplateSetupPage.customerInfo_attCard_textField1, "Custom Label");
     utils.expectTextToBeSet(careChatTemplateSetupPage.customerInfo_screen_field1Label, "Custom Label");
 
-    utils.sendKeys(careChatTemplateSetupPage.customerInfo_attCard_textField3, "Custom HintText");
+    utils.sendKeys(careChatTemplateSetupPage.customerInfo_attCard_textField2, "Custom HintText");
 
     utils.expectIsNotDisplayed(careChatTemplateSetupPage.customerInfo_screen_optional2);
     utils.click(careChatTemplateSetupPage.customerInfo_attCard_redioOptional);
