@@ -590,17 +590,18 @@
             var orgList = _.get(results, '[0].data.organizations', []);
             var managed = PartnerService.loadRetrievedDataToList(orgList, false,
               $scope.isCareEnabled);
-            var isMyOrgInList = _.some(orgList, {
-              customerName: Authinfo.getOrgName()
+            var indexMyOwnOrg = _.findIndex(managed, {
+              customerOrgId: Authinfo.getOrgId()
             });
-            if (!isMyOrgInList && results[1]) {
-              // 4/11/2016 admolla
-              // TODO: for some reason if I refactor this to not need an array, karma acts up....
-              if (_.isArray(results[1])) {
-                managed.unshift(results[1][0]);
+            // 4/11/2016 admolla
+            // TODO: for some reason if I refactor this to not need an array, karma acts up....
+            if (results[1] && _.isArray(results[1])) {
+              if (indexMyOwnOrg == -1) {
+                amanaged.unshift(results[1][0]);
+              } else {
+                managed[indexMyOwnOrg] = results[1][0];
               }
             }
-
             $scope.managedOrgsList = managed;
             $scope.totalOrgs = $scope.managedOrgsList.length;
             var statusTypeCounts = _.countBy($scope.managedOrgsList, function (value) {
