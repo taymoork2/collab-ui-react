@@ -344,10 +344,11 @@
       if (serviceId === 'squared-fusion-media') {
         return _.some(clusterList, { targetType: 'mf_mgmt' });
       } else {
-        var installedConnectors = _.map(clusterList, 'connectors');
-        return _.some(installedConnectors, function (cluster) {
-          return _.some(cluster, { connectorType: target_connector });
-        });
+        return _.chain(clusterList)
+          .map('connectors')
+          .flatten()
+          .some({ connectorType: target_connector })
+          .value();
       }
     }
 
