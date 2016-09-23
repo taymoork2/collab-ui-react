@@ -20,7 +20,7 @@
             return $http.get(cmiPlacesUrl + '?wide=true')
               .then(function (res) {
                 _.forEach(res.data.places, function (item) {
-                  item.phones = !item.phones ? [] : item.phones;
+                  item.phones = !item.phones ? [] : CsdmConverter.convertHuronDevices(item.phones);
                   item.type = 'huron';
                   item.entitlements = ['ciscouc'];
                   item = CsdmConverter.convertPlace(item);
