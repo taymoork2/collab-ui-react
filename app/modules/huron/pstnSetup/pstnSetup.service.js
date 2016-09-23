@@ -284,7 +284,7 @@
     function isCarrierSwivel(customerId) {
       return listCustomerCarriers(customerId).then(function (carriers) {
         if (angular.isArray(carriers)) {
-          var carrier = _.findWhere(carriers, {
+          var carrier = _.find(carriers, {
             name: TATA
           });
           if (carrier) {

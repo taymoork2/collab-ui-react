@@ -75,7 +75,7 @@
 
     function getTimeOptions() {
       var values = _.range(0, 24).map(function (time) {
-        return _.padLeft(time, 2, '0') + ':00';
+        return _.padStart(time, 2, '0') + ':00';
       });
       return _.map(values, function (value) {
         return {

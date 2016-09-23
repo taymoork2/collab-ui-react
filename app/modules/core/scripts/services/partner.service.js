@@ -461,7 +461,7 @@
 
     function _calculateTotalLicenses(customerData, isCareEnabled) {
       if (customerData.purchased || customerData.isPartner) {
-        return _.sum(customerData.licenseList, function (license) {
+        return _.sumBy(customerData.licenseList, function (license) {
           if (license.licenseType === Config.licenseTypes.STORAGE) {
             return 0;
           } else {

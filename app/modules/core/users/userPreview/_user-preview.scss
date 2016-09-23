@@ -223,3 +223,10 @@
 .user-license {
   margin: 5px;
 }
+
+[ui-view=editServices] .modal-title {
+  height: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

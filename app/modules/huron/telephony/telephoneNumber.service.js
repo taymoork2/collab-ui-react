@@ -36,13 +36,13 @@
     return service;
 
     function setCountryCode(value) {
-      value = _.trimLeft(value, '+'); // remove the '+' sign if it exists
+      value = _.trimStart(value, '+'); // remove the '+' sign if it exists
       if (value === '1' || value === 1) {
         // Default to US due to shared codes
         setRegionCode('us');
       } else {
         countryCode = value;
-        regionCode = _.result(_.findWhere(CountryCodes, {
+        regionCode = _.result(_.find(CountryCodes, {
           number: countryCode
         }), 'code');
       }
@@ -54,7 +54,7 @@
 
     function setRegionCode(region) {
       regionCode = angular.isString(region) ? region.toLowerCase() : '';
-      countryCode = _.result(_.findWhere(CountryCodes, {
+      countryCode = _.result(_.find(CountryCodes, {
         code: regionCode
       }), 'number');
     }

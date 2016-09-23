@@ -59,15 +59,7 @@
     vm.timeSelected = vm.timeOptions[0];
     vm.displayDate = displayDate;
 
-    init();
     displayDate();
-
-    function init() {
-      $timeout(function () {
-        setDummyData();
-        setAllGraphs();
-      }, 30);
-    }
 
     function displayDate() {
       var date1 = new Date();
@@ -107,7 +99,7 @@
     function getCluster() {
       MediaClusterServiceV2.getAll()
         .then(function (clusters) {
-          vm.clusters = _.filter(clusters, 'targetType', 'mf_mgmt');
+          vm.clusters = _.filter(clusters, { targetType: 'mf_mgmt' });
           _.each(clusters, function (cluster) {
             if (cluster.targetType === "mf_mgmt") {
               vm.clusterOptions.push(cluster.name);

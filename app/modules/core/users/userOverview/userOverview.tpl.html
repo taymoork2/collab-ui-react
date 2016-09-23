@@ -12,17 +12,6 @@
   </cs-sp-section>
   <hercules-cloud-extensions user="userOverview.currentUser"></hercules-cloud-extensions>
   <cs-sp-section ng-if="userOverview.isSquaredUC">
-    <div class="section-title-row">
-      <span class="section-name" translate="usersPreview.devicesPreview"></span>
-      <span cs-dropdown class="actions-menu dropdown pull-right" ng-if="userOverview.dropDownItems.length > 0">
-        <button cs-dropdown-toggle class="actions-button btn--none dropdown-toggle">
-          <i class="icon icon-three-dots"></i>
-        </button>
-        <ul cs-dropdown-menu class="dropdown-menu dropdown-primary actions-services">
-          <li ng-repeat="item in userOverview.dropDownItems"><a ui-sref="{{item.state}}">{{item.text}}</a></li>
-        </ul>
-      </span>
-    </div>
     <uc-devices></uc-devices>
   </cs-sp-section>
 </cs-sp-container>

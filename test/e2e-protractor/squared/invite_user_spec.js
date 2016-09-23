@@ -68,7 +68,7 @@ describe('Squared Add User Flow', function () {
 
   });
 
-  describe('Add users through wizard', function () {
+  xdescribe('Add users through wizard', function () {
 
     it('should open the Add Users wizard', function () {
       navigation.clickAddUsers();
@@ -117,10 +117,10 @@ describe('Squared Add User Flow', function () {
       utils.expectText(users.userListStatus, 'Invite Pending');
     });
 
-    afterAll(function () {
-      deleteUtils.deleteUser(inviteEmail, token);
-      deleteUtils.deleteUser(inviteEmail2, token);
-    });
+    // afterAll(function () {
+    //   deleteUtils.deleteUser(inviteEmail, token);
+    //   deleteUtils.deleteUser(inviteEmail2, token);
+    // });
 
   });
 });

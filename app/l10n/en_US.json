@@ -247,7 +247,8 @@
       "retryUsers": "Retry",
       "retrying": "Retrying...",
       "retryingIn": "retrying in:",
-      "retryingUsers": "{users, plural, one{# User} other{# Users}}"
+      "retryingUsers": "{users, plural, one{# User} other{# Users}}",
+      "exportUserList": "Export user list."
     },
     "advanced": {
       "title": "Advanced",
@@ -350,7 +351,7 @@
     "activationCodeTitle": "Activation Code",
     "expires": "Expires",
     "editServices": "Edit services",
-    "editServiceTitle": "Services Enabled for {{firstName}} {{lastName}}",
+    "editServiceTitle": "Services Enabled for {{name}}",
     "siteUris": "WebEx Sites",
     "webex": "Webex",
     "spark": "Spark",
@@ -549,14 +550,14 @@
   },
   "careReportsPage": {
     "tasks": "Contacts",
-    "handled": "Addressed",
+    "handled": "Handled",
     "assigned": "In-Progress",
     "in-queue": "Waiting",
     "abandoned": "Abandoned",
     "queueTime": "Wait Time",
     "avgQueueTime": "Avg Wait Time",
-    "avgHandleTime": "Avg Completion Time",
-    "handleTime": "Completion Time",
+    "avgHandleTime": "Avg Handle Time",
+    "handleTime": "Handle Time",
     "taskTimeLabel": "Time in Minutes",
     "averageCsat": "Average CSAT",
     "avgCsat": "Avg CSAT",
@@ -568,23 +569,23 @@
     "threeMonthsCategoryAxis": "Months",
     "today": "Today",
     "today2": "for today",
-    "todayTaskStatus": "addressed and abandoned",
+    "todayTaskStatus": "handled and abandoned",
     "todayInterval": "one hour time interval",
     "yesterday": "Yesterday",
     "yesterday2": "for yesterday",
-    "yesterdayTaskStatus": "addressed and abandoned",
+    "yesterdayTaskStatus": "handled and abandoned",
     "yesterdayInterval": "one hour time interval",
     "week": "Last Week",
     "week2": "for the last week",
-    "weekTaskStatus": "addressed and abandoned",
+    "weekTaskStatus": "handled and abandoned",
     "weekInterval": "given day",
     "month": "Last Month",
     "month2": "for the last month",
-    "monthTaskStatus": "addressed and abandoned",
+    "monthTaskStatus": "handled and abandoned",
     "monthInterval": "given week",
     "threeMonths": "Last Three Months",
     "threeMonths2": "for the last three months",
-    "threeMonthsTaskStatus": "addressed and abandoned",
+    "threeMonthsTaskStatus": "handled and abandoned",
     "threeMonthsInterval": "given month",
     "taskDataGetError": "There was an error while loading the data for {{dataType}}."
   },
@@ -686,7 +687,7 @@
   },
   "taskTime": {
     "title": "Contact Time Measure",
-    "description": "The graph depicts the average time spent by a customer waiting for an agent and in getting their enquiries completed {{time}}. Hover over the area chart for a breakdown of average waiting time and average time taken to complete a customer enquiry during a {{interval}}."
+    "description": "The graph depicts the average time spent by a customer waiting for an agent and in getting their enquiries handled {{time}}. Hover over the area chart for a breakdown of average waiting time and average time taken to handle a customer enquiry during a {{interval}}."
   },
   "averageCsat": {
     "title": "Customer Satisfaction",
@@ -952,6 +953,7 @@
     "assign": "Assign",
     "play": "Play",
     "done": "Done",
+    "reset": "Reset",
     "begin": "Begin",
     "back": "Back",
     "finish": "Finish",
@@ -1204,7 +1206,7 @@
     "errorGettingOptionaVmDidToggle": "There was a problem getting the optionalVmDid toggle.",
     "externalNumberDescriptionText": "Select a number that users can call to check their voicemail from outside the company network.",
     "voicemailPrefixTitle": "Voicemail Access Prefix",
-    "voicemailPrefixDesc": "Select a prefix to reserve for dialing mailboxes other than your own personal phone. This number also makes up the user’s external voicemail access code. We do not recommend using numbers between {{number}}{{extensionLength0}} and {{number}}{{extensionLength9}}",
+    "voicemailPrefixDesc": "Select a prefix to reserve for dialing mailboxes from a device. Extensions between {{number}}{{extensionLength0}} and {{number}}{{extensionLength9}} are not recommended for assignment.",
     "dialing": "Dialing",
     "nationalDialingTitle": "National Dialing",
     "nationalDialingDesc": "Require the user to dial the full phone number for each PSTN call.",
@@ -1819,7 +1821,10 @@
       "resourceGroupHeading": "Resource Group",
       "setDescription": "Select the Resource Group the user is assigned to for this service.",
       "noGroupSelected": "None",
-      "failedToSetGroup": "Failed to set the Resource Group"
+      "failedToSetGroup": "Failed to set Resource Group.",
+      "resourceGroupSaved": "Resource Group saved.",
+      "groupHasBeenDeleted": "The user is assigned to a Resource Group that can no longer be found. Reset the user's Resource Group to restore service.",
+      "groupIsEmptyWarning": "Could not find cluster with {{ConnectorName}}. Select another Resource Group, or configure a new cluster with {{ConnectorName}}."
     },
     "resourceGroupSettings": {
       "pageTitle": "{{groupName}} Settings",
@@ -2139,7 +2144,12 @@
     "mapDirectLineWithExtIfPossible": "Map phone number to extension, where possible",
     "reset": "Reset",
     "tosReadAndAgree": "I have read and agree to these",
-    "tosTermsAndConditions": "terms and conditions"
+    "tosTermsAndConditions": "terms and conditions",
+    "invalidCalendarServiceResourceGroup": "Hybrid Calendar Service Resource Group \"{{group}}\" not found",
+    "invalidCallServiceResourceGroup": "Hybrid Call Service Resource Group \"{{group}}\" not found",
+    "unableToUpdateResourceGroups": "Updating Hybrid Services Resource Groups failed",
+    "ussUserPropsLoadFailed": "Unable to load the current user Hybrid Services Resource Group assignments. Resource group assignments in the CSV file will not be processed.",
+    "fmsResourceGroupsLoadFailed": "Unable to load the Hybrid Services Resource Groups. Resource group assignments in the CSV file will not be processed."
   },
   "reports": {
     "title": "Reports",
@@ -2188,7 +2198,7 @@
     "namePlaceholder": "Enter Name",
     "repeatMenu": "Repeat",
     "queueSettings": "Queue Settings",
-    "maxWaitTime": "Max Wait Time",
+    "maxWaitTime": "Maximum Wait Time",
     "errorReadCe": "Failed to read {{name}}: {{statusText}} ({{status}}).",
     "successCreateCe": "{{name}} created successfully.",
     "successDeleteCe": "{{name}} deleted successfully.",
@@ -3529,13 +3539,15 @@
       "callsRedirected": "Calls Redirected",
       "availabilityOfCluster": "Cluster Availability",
       "availabilityOfHost": "Node Availability",
+      "legendcallLocal": "Hosted On Premises",
+      "legendcallReject": "Overflowed to Cloud",
+      "legendcallLocalCluster": "Hosted On This Cluster",
+      "legendcallRedirectedCluster": "Redirected to Another Cluster or Cloud",
       "availabilityOfClusterDescription": "Availability of Hybrid Media Clusters to host calls.",
       "availabilityOfHostDescription": "Availability of nodes in this Hybrid Media Cluster to host calls.",
-      "clusterAvailableTitle": "Available",
-      "clusterUnavailableTitle": "Unavailable",
-      "clusterPartialTitle": "Partially Available",
-      "hostAvailableTitle": "Available",
-      "hostUnavailableTitle": "Unavailable",
+      "availableTitle": "Available",
+      "unavailableTitle": "Unavailable",
+      "partialTitle": "Partially Available",
       "utilizationTitle": "Percentage Utilization",
       "utilizationDescription": "Percentage utilization of all Hybrid Media Clusters including peak utilization over time.",
       "peakutilization": "Peak Utilization",
@@ -3595,6 +3607,11 @@
       "keep": "Keep",
       "delete": "Delete"
     },
+    "email": {
+      "invalidEmail": "Please enter a list of comma-separated email addresses",
+      "emailNotificationsSavingSuccess": "The email subscriber list was successfully saved.",
+      "emailNotificationsSavingError": "Your changes to the email subscriber list could not be saved. Try again later."
+    },
     "clusters": {
       "listing": {
         "no_clusters_heading": "No Media Service clusters registered",
@@ -3642,7 +3659,7 @@
     },
     "upgradeClusters": {
       "title": "Software Upgrade",
-      "text1": "During upgrade, this Hybrid Media Node will enter maintenance mode. After 2 hours, this node will be upgraded and any new calls redirected to an available node or the cloud.",
+      "text1": "During upgrade, this Hybrid Media Node will enter maintenance mode. After 2 hours, this node will be upgraded and any new calls will be redirected to an available node or the cloud.",
       "text2": "After 2 hours the node will be upgraded.",
       "upgradeNow": "Upgrade Now",
       "upToDate": "Software is up to date.",
