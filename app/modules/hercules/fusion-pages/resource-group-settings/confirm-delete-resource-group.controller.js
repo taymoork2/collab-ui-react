@@ -11,11 +11,10 @@
     vm.confirmRemove = confirmRemove;
 
     function confirmRemove() {
-      ResourceGroupService.remove(vm.resourceGroup.id)
-        .then(function () {
+      ResourceGroupService.remove(vm.resourceGroup.id).then(function () {
           Notification.success('hercules.resourceGroupSettings.deleteSuccess');
           $modalInstance.close();
-        }, function () {
+        }).catch(function () {
           Notification.error('hercules.genericFailure');
         });
     }
