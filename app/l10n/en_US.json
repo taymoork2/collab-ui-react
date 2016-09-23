@@ -496,7 +496,8 @@
     "allowBetaChannels": "Allow Beta Release Channel",
     "allowLatestChannels": "Allow Latest Release Channel",
     "releaseChannelToggleSuccess": "Allow Release Channel update successful",
-    "releaseChannelToggleFailure": "Allow Release Channel update failed. Please try again later."
+    "releaseChannelToggleFailure": "Allow Release Channel update failed. Please try again later.",
+    "orgReadFailed": "Unable to read organization details"
   },
   "templatesPage": {
     "title": "MANAGE TEMPLATES"

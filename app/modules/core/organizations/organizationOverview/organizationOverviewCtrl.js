@@ -14,27 +14,47 @@
     $scope.currentOrganization.isEFT = false;
     $scope.currentEftSetting = false;
     $scope.toggleReleaseChannelAllowed = toggleReleaseChannelAllowed;
-    $scope.showHybridServices = _.includes($scope.currentOrganization.services, 'squared-fusion-mgmt');
+    $scope.showHybridServices = false;
 
-    if ($scope.showHybridServices) {
-      var ReleaseChannel = function (name, allowed) {
-        this.name = name;
-        this.newAllow = this.oldAllow = allowed;
-        this.reset = function () {
-          this.newAllow = this.oldAllow;
-        };
-        this.updated = function () {
-          this.oldAllow = this.newAllow;
-        };
-        this.hasChanged = function () {
-          return this.newAllow !== this.oldAllow;
-        };
-      };
-      $scope.betaChannel = new ReleaseChannel('beta', _.includes($scope.currentOrganization.services, 'squared-fusion-mgmt-channel-beta'));
-      $scope.latestChannel = new ReleaseChannel('latest', _.includes($scope.currentOrganization.services, 'squared-fusion-mgmt-channel-latest'));
+    init();
+
+    function init() {
+      initReleaseChannels();
+      getOrgInfo();
+      updateEftToggle();
     }
 
-    updateEftToggle();
+    function getOrgInfo() {
+      Orgservice.getAdminOrg(function (data) {
+        if (data.success) {
+          $scope.currentOrganization = data;
+          initReleaseChannels();
+        } else {
+          Notification.error('organizationsPage.orgReadFailed');
+        }
+      }, $scope.currentOrganization.id, true);
+    }
+
+    function initReleaseChannels() {
+      $scope.showHybridServices = _.includes($scope.currentOrganization.services, 'squared-fusion-mgmt');
+      if ($scope.showHybridServices) {
+        var ReleaseChannel = function (name, allowed) {
+          this.name = name;
+          this.newAllow = this.oldAllow = allowed;
+          this.reset = function () {
+            this.newAllow = this.oldAllow;
+          };
+          this.updated = function () {
+            this.oldAllow = this.newAllow;
+          };
+          this.hasChanged = function () {
+            return this.newAllow !== this.oldAllow;
+          };
+        };
+        $scope.betaChannel = new ReleaseChannel('beta', _.includes($scope.currentOrganization.services, 'squared-fusion-mgmt-channel-beta'));
+        $scope.latestChannel = new ReleaseChannel('latest', _.includes($scope.currentOrganization.services, 'squared-fusion-mgmt-channel-latest'));
+      }
+    }
 
     function updateEftToggle() {
       return Orgservice.getEftSetting(currentOrgId)
@@ -69,7 +89,7 @@
       if (!channel.hasChanged()) {
         return;
       }
-      Orgservice.setHybridServiceReleaseChannelEntitlement(channel.name, channel.newAllow).then(function () {
+      Orgservice.setHybridServiceReleaseChannelEntitlement(currentOrgId, channel.name, channel.newAllow).then(function () {
         Notification.success('organizationsPage.releaseChannelToggleSuccess');
         channel.updated();
       }).catch(function () {

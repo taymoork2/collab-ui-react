@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Controller: organizationOverviewCtrl', function () {
-  var controller, $scope, Orgservice, $q, $controller, Notification;
+  var controller, $scope, Orgservice, $q, $controller, Notification, currentOrganization;
   var authInfo = {
     getOrgId: sinon.stub()
   };
@@ -18,32 +18,30 @@ describe('Controller: organizationOverviewCtrl', function () {
     $controller = _$controller_;
     Notification = _Notification_;
     $q = _$q_;
+    currentOrganization = getJSONFixture('core/json/organizations/adminServices.json').getAdminOrg;
 
-    Orgservice.getEftSetting = jasmine.createSpy().and.returnValue($q.when({
+    spyOn(Orgservice, 'getEftSetting').and.returnValue($q.when({
       data: {
         eft: true
       }
     }));
-
-    Orgservice.setEftSetting = jasmine.createSpy().and.returnValue($q.when({}));
-
-    Orgservice.setHybridServiceReleaseChannelEntitlement = jasmine.createSpy().and.returnValue($q.when({}));
-
+    spyOn(Orgservice, 'setEftSetting').and.returnValue($q.when({}));
+    spyOn(Orgservice, 'setHybridServiceReleaseChannelEntitlement').and.returnValue($q.when({}));
+    spyOn(Orgservice, 'getAdminOrg').and.callFake(function (callback) {
+      callback(currentOrganization, 200);
+    });
     spyOn(Notification, 'error');
   }));
 
   function initController(services) {
+    currentOrganization.services = services;
     controller = $controller('OrganizationOverviewCtrl', {
       $scope: $scope,
       Authinfo: authInfo,
       $stateParams: {
-        currentOrganization: {
-          id: 1,
-          services: services
-        }
+        currentOrganization: currentOrganization
       }
     });
-
     $scope.$apply();
   }
 
@@ -54,6 +52,10 @@ describe('Controller: organizationOverviewCtrl', function () {
 
     it('should initialize the OrganizationOverviewCtrl controller', function () {
       expect(controller).toBeDefined();
+    });
+
+    it('should load the the org on init', function () {
+      expect(Orgservice.getAdminOrg.calls.count()).toEqual(1);
     });
   });
 
@@ -161,7 +163,7 @@ describe('Controller: organizationOverviewCtrl', function () {
       initController(['squared-fusion-mgmt']);
       var channelSentToBackend = null;
       var allowSentToBackend = null;
-      Orgservice.setHybridServiceReleaseChannelEntitlement.and.callFake(function (channel, allow) {
+      Orgservice.setHybridServiceReleaseChannelEntitlement.and.callFake(function (orgId, channel, allow) {
         channelSentToBackend = channel;
         allowSentToBackend = allow;
         return $q.when({});
@@ -179,7 +181,7 @@ describe('Controller: organizationOverviewCtrl', function () {
       initController(['squared-fusion-mgmt']);
       var channelSentToBackend = null;
       var allowSentToBackend = null;
-      Orgservice.setHybridServiceReleaseChannelEntitlement.and.callFake(function (channel, allow) {
+      Orgservice.setHybridServiceReleaseChannelEntitlement.and.callFake(function (orgId, channel, allow) {
         channelSentToBackend = channel;
         allowSentToBackend = allow;
         return $q.when({});
@@ -197,7 +199,7 @@ describe('Controller: organizationOverviewCtrl', function () {
       initController(['squared-fusion-mgmt', 'squared-fusion-mgmt-channel-beta']);
       var channelSentToBackend = null;
       var allowSentToBackend = null;
-      Orgservice.setHybridServiceReleaseChannelEntitlement.and.callFake(function (channel, allow) {
+      Orgservice.setHybridServiceReleaseChannelEntitlement.and.callFake(function (orgId, channel, allow) {
         channelSentToBackend = channel;
         allowSentToBackend = allow;
         return $q.when({});
@@ -215,7 +217,7 @@ describe('Controller: organizationOverviewCtrl', function () {
       initController(['squared-fusion-mgmt', 'squared-fusion-mgmt-channel-latest']);
       var channelSentToBackend = null;
       var allowSentToBackend = null;
-      Orgservice.setHybridServiceReleaseChannelEntitlement.and.callFake(function (channel, allow) {
+      Orgservice.setHybridServiceReleaseChannelEntitlement.and.callFake(function (orgId, channel, allow) {
         channelSentToBackend = channel;
         allowSentToBackend = allow;
         return $q.when({});
@@ -240,6 +242,7 @@ describe('Controller: organizationOverviewCtrl', function () {
       expect(Orgservice.setHybridServiceReleaseChannelEntitlement.calls.count()).toEqual(1);
       expect($scope.latestChannel.newAllow).toBeFalsy();
       expect($scope.latestChannel.oldAllow).toBeFalsy();
+      expect(Notification.error.calls.count()).toEqual(1);
     });
   });
 });

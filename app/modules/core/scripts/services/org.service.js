@@ -402,9 +402,9 @@
         });
     }
 
-    function setHybridServiceReleaseChannelEntitlement(channel, entitled) {
+    function setHybridServiceReleaseChannelEntitlement(orgId, channel, entitled) {
       return $http
-        .post(UrlConfig.getAdminServiceUrl() + '/hybridservices/organizations/' + Authinfo.getOrgId() + '/releaseChannels', {
+        .post(UrlConfig.getAdminServiceUrl() + '/hybridservices/organizations/' + orgId + '/releaseChannels', {
           channel: channel,
           entitled: entitled
         });
