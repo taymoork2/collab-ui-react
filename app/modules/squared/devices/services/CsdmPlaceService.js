@@ -4,15 +4,13 @@
   /* @ngInject  */
   function CsdmPlaceService($window, $http, Authinfo, CsdmConfigService, CsdmConverter, FeatureToggleService, $q) {
 
-    var csdmPlacesUrl = CsdmConfigService.getUrl() + '/organization/' + Authinfo.getOrgId() + '/places';
+    var csdmPlacesUrl = CsdmConfigService.getUrl() + '/organization/' + Authinfo.getOrgId() + '/places/';
     var placesCache = {};
-    var placesDeferred = $q.defer();
-
-    function init() {
-      fetchCsdmPlaces();
-    }
+    var placesDeferred;
 
     function fetchCsdmPlaces() {
+      placesDeferred = $q.defer();
+
       return placesFeatureIsEnabled()
         .then(function (res) {
           if (res) {
@@ -29,9 +27,15 @@
         });
     }
 
-    init();
+    function getPlacesUrl() {
+      return csdmPlacesUrl;
+    }
 
     function getPlacesList() {
+      if (!placesDeferred) {
+        fetchCsdmPlaces();
+      }
+
       return placesDeferred.promise;
     }
 
@@ -73,9 +77,11 @@
     return {
       placesFeatureIsEnabled: placesFeatureIsEnabled,
       deletePlace: deletePlace,
+      deleteItem: deletePlace,
       createCsdmPlace: createCsdmPlace,
       getPlacesList: getPlacesList,
-      updatePlaceName: updatePlaceName
+      updatePlaceName: updatePlaceName,
+      getPlacesUrl: getPlacesUrl
     };
   }
 

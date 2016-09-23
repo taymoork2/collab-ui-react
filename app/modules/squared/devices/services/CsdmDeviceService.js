@@ -2,73 +2,44 @@
   'use strict';
 
   /* @ngInject  */
-  function CsdmDeviceService($http, Authinfo, CsdmConfigService, CsdmConverter, CsdmCacheFactory, Utils) {
+  function CsdmDeviceService($http, Authinfo, CsdmConfigService, CsdmConverter, Utils) {
     var devicesUrl = CsdmConfigService.getUrl() + '/organization/' + Authinfo.getOrgId() + '/devices';
-    var devicesFastUrl = devicesUrl + "?checkDisplayName=false&checkOnline=false";
+    var devicesFastUrlPostFix = "?checkDisplayName=false&checkOnline=false";
 
-    var initialDataPromise = $http.get(devicesFastUrl).then(function (res) {
-      return CsdmConverter.convertCloudberryDevices(res.data);
-    });
-
-    var deviceCache = CsdmCacheFactory.create({
-      remove: function (url) {
-        return $http.delete(url);
-      },
-      update: function (url, obj) {
-        return $http.patch(url, obj).then(function () {
-          // return CsdmConverter.convertDevice(res.data);
-          // todo: hackorama - API is fubar
-          var device = _.clone(deviceCache.list()[url]);
-          if (obj.description) {
-            try {
-              device.tags = JSON.parse(obj.description);
-            } catch (e) {
-              device.tags = [];
-            }
-          }
-          if (obj.name) {
-            device.displayName = obj.name;
-          }
-          return device;
-        });
-      },
-      get: function (url) {
-        return $http.get(url).then(function (res) {
-          return CsdmConverter.convertCloudberryDevice(res.data);
-        });
-      },
-      fetch: function () {
-        return $http.get(devicesUrl).then(function (res) {
-          return CsdmConverter.convertCloudberryDevices(res.data);
-        });
-      },
-      initializeData: initialDataPromise
-    });
-
-    function getDeviceList() {
-      return deviceCache.list();
-    }
-
-    function getDevice(deviceUrl) {
-      return deviceCache.get(deviceUrl);
-    }
-
-    function updateDeviceName(deviceUrl, newName) {
-      return deviceCache.update(deviceUrl, {
-        name: newName
+    function fetchDevices(requestFullData) {
+      var url = devicesUrl;
+      if (!requestFullData) {
+        url += devicesFastUrlPostFix;
+      }
+      return $http.get(url).then(function (res) {
+        return CsdmConverter.convertCloudberryDevices(res.data);
       });
     }
 
-    function updateTags(url, tags) {
-      deviceCache.list()[url].tags = tags; // update ui asap
-      deviceCache.list()[url].tagString = tags.join(', '); // update ui asap
-      return deviceCache.update(url, {
-        description: JSON.stringify(tags || [])
+    function fetchDevice(url) {
+      return $http.get(url).then(function (res) {
+        return CsdmConverter.convertCloudberryDevice(res.data);
       });
     }
 
     function deleteDevice(deviceUrl) {
-      return deviceCache.remove(deviceUrl);
+      return $http.delete(deviceUrl);
+    }
+
+    function deleteItem(device) {
+      return $http.delete(device.url);
+    }
+
+    function updateItemName(device, newName) {
+      return $http.patch(device.url, {
+        name: newName
+      });
+    }
+
+    function updateTags(deviceUrl, tags) {
+      return $http.patch(deviceUrl, {
+        description: JSON.stringify(tags || [])
+      });
     }
 
     function notifyDevice(deviceUrl, message) {
@@ -95,13 +66,18 @@
     }
 
     return {
-      on: deviceCache.on,
-      getDevice: getDevice,
-      uploadLogs: uploadLogs,
+      fetchDevices: fetchDevices,
+      deleteItem: deleteItem,
+      updateItemName: updateItemName,
       updateTags: updateTags,
+      fetchDevice: fetchDevice,
+
+//Grey list:
+      //on: deviceCache.on,
+      //getDevice: getDevice,
+      uploadLogs: uploadLogs,
       deleteDevice: deleteDevice,
-      getDeviceList: getDeviceList,
-      updateDeviceName: updateDeviceName,
+
       renewRsuKey: renewRsuKey
     };
   }

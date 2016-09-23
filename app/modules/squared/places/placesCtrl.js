@@ -5,13 +5,15 @@
     .controller('PlacesCtrl',
 
       /* @ngInject */
-      function ($scope, $state, $templateCache, $translate, CsdmPlaceService, CsdmHuronPlaceService, PlaceFilter, Authinfo, WizardFactory, RemPlaceModal) {
+      function ($scope, $state, $templateCache, $translate, CsdmDataModelService, CsdmHuronPlaceService, PlaceFilter, Authinfo, WizardFactory, RemPlaceModal) {
         var vm = this;
 
         vm.data = [];
         vm.csdmLoaded = false;
         vm.huronLoaded = false;
         vm.placeFilter = PlaceFilter;
+        vm.placeFilter.setCurrentSearch('');
+        vm.placeFilter.setCurrentFilter('');
         var csdmPlacesList;
         var huronPlacesList;
 
@@ -20,7 +22,7 @@
         }
 
         function loadLists() {
-          CsdmPlaceService.getPlacesList().then(function (list) {
+          CsdmDataModelService.getPlacesMap().then(function (list) {
             csdmPlacesList = list;
             vm.csdmLoaded = true;
           });
