@@ -15,6 +15,17 @@ describe('Controller: ReassignClusterControllerV2', function () {
       },
       assigned_property_sets: '606599c8-8e72-491f-9212-153a0877eb84' // or whatever you prefer
     };
+
+    clusterList = [{
+      id: 'a',
+      name: 'name1',
+      targetType: 'mf_mgmt'
+    }, {
+      id: 'a',
+      name: 'name1',
+      targetType: 'c_cal'
+    }];
+
     redirectTargetPromise = {
       then: sinon.stub()
     };
@@ -57,5 +68,11 @@ describe('Controller: ReassignClusterControllerV2', function () {
     controller.reassign();
     expect(controller.saving).toBe(true);
     expect(MediaClusterServiceV2.createClusterV2).toHaveBeenCalled();
+  });
+  it('check if mf_mgmt is filtered into options', function () {
+    spyOn(MediaClusterServiceV2, 'moveV2Host').and.returnValue(getAll);
+    controller.getCluster();
+    expect(controller.options.length).tobe(1);
+
   });
 });
