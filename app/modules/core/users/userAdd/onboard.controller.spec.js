@@ -4,7 +4,7 @@ describe('OnboardCtrl: Ctrl', function () {
 
   function init() {
     this.initModules('Core', 'Hercules', 'Huron', 'Messenger', 'Sunlight', 'WebExApp');
-    this.injectDependencies('$httpBackend', '$modal', '$q', '$scope', '$state', '$stateParams', '$previousState', '$timeout', 'Authinfo', 'CsvDownloadService', 'DialPlanService', 'FeatureToggleService', 'Notification', 'Orgservice', 'SyncService', 'SunlightConfigService', 'TelephonyInfoService', 'Userservice', 'UrlConfig', 'WebExUtilsFact', 'ServiceSetup');
+    this.injectDependencies('$httpBackend', '$modal', '$q', '$scope', '$state', '$stateParams', '$previousState', '$timeout', 'Authinfo', 'CsvDownloadService', 'DialPlanService', 'FeatureToggleService', 'Notification', 'Orgservice', 'SyncService', 'SunlightConfigService', 'TelephonyInfoService', 'Userservice', 'UrlConfig', 'WebExUtilsFact', 'ServiceSetup', 'LogMetricsService');
     initDependencySpies.apply(this);
   }
 
@@ -113,6 +113,41 @@ describe('OnboardCtrl: Ctrl', function () {
   }
 
   beforeEach(init);
+
+  describe('Current user name', function () {
+
+    beforeEach(initController);
+
+    it('should return correct string for currentUserDisplayName()', function () {
+      this.$scope.currentUser = {
+        displayName: 'Testy McTestUser',
+        name: {
+          givenName: 'Firsty',
+          familyName: 'Lasty'
+        },
+        userName: 'User McUsername'
+      };
+
+      expect(this.$scope.currentUserDisplayName()).toEqual('Testy McTestUser');
+
+      this.$scope.currentUser.displayName = '';
+      expect(this.$scope.currentUserDisplayName()).toEqual('Firsty Lasty');
+
+      this.$scope.currentUser.name.familyName = '';
+      expect(this.$scope.currentUserDisplayName()).toEqual('Firsty');
+
+      this.$scope.currentUser.name.givenName = null;
+      this.$scope.currentUser.name.familyName = 'Lasty';
+      expect(this.$scope.currentUserDisplayName()).toEqual('Lasty');
+
+      this.$scope.currentUser.name = null;
+      expect(this.$scope.currentUserDisplayName()).toEqual('User McUsername');
+
+      this.$scope.currentUser.userName = null;
+      expect(this.$scope.currentUserDisplayName()).toEqual('common.unknown');
+
+    });
+  });
 
   describe('Bulk Users DirSync', function () {
     beforeEach(initController);
@@ -406,8 +441,8 @@ describe('OnboardCtrl: Ctrl', function () {
       expect(this.$scope.usrlist[1].didDnMapMsg).toEqual('usersPage.noExtMappingAvail');
 
     });
-    it('assignServicesNext', function () {
 
+    it('assignServicesNext', function () {
       expect(this.$scope.usrlist[0].externalNumber).not.toBeDefined();
       expect(this.$scope.usrlist[0].assignedDn).not.toBeDefined();
       expect(this.$scope.usrlist[1].externalNumber).not.toBeDefined();
@@ -633,6 +668,38 @@ describe('OnboardCtrl: Ctrl', function () {
     }
   });
 
+  describe('hybridCallServiceAware', function () {
+    describe('on user without squared-fusion-uc entitlement', function () {
+      beforeEach(initUserWithoutHybridCall);
+      beforeEach(initController);
+
+      it('should be false', function () {
+        expect(this.$scope.hybridCallServiceAware).toBe(false);
+      });
+    });
+
+    describe('on user with squared-fusion-uc entitlement', function () {
+      beforeEach(initUserWithHybridCall);
+      beforeEach(initController);
+
+      it('should be true', function () {
+        expect(this.$scope.hybridCallServiceAware).toBe(true);
+      });
+    });
+
+    function initUserWithoutHybridCall() {
+      this.$stateParams.currentUser = {
+        entitlements: []
+      };
+    }
+
+    function initUserWithHybridCall() {
+      this.$stateParams.currentUser = {
+        entitlements: ['squared-fusion-uc']
+      };
+    }
+  });
+
   describe('editServicesSave()', function () {
     describe('if adding call service', function () {
       beforeEach(initControllerAndEnableCall);
@@ -759,10 +826,12 @@ describe('OnboardCtrl: Ctrl', function () {
 
     describe('Check if multiple licenses get assigned correctly', function () {
       var userId = 'dbca1001-ab12-cd34-de56-abcdef123454';
+
       beforeEach(function () {
         spyOn(this.Authinfo, 'isInitialized').and.returnValue(true);
         spyOn(this.Authinfo, 'hasAccount').and.returnValue(true);
         spyOn(this.Authinfo, 'getCareServices').and.returnValue(this.mock.getCareServices.careLicense);
+        spyOn(this.LogMetricsService, 'logMetrics').and.callFake(function () {});
         this.$httpBackend.expectGET(this.UrlConfig.getSunlightConfigServiceUrl() + '/user' + '/' + userId).respond(200);
         this.$httpBackend.expectGET(this.UrlConfig.getScimUrl('null') + '/' + userId).respond(200, this.mock.getUserMe);
         this.$stateParams.currentUser = {
@@ -773,13 +842,24 @@ describe('OnboardCtrl: Ctrl', function () {
       });
       beforeEach(initController);
 
+
       it('should call getAccountLicenses correctly', function () {
         this.$httpBackend.flush();
+        this.$scope.radioStates.initialCareRadioState = false;
         var licenseFeatures = this.$scope.getAccountLicenses();
         expect(licenseFeatures[0].id).toEqual('CDC_da652e7d-cd34-4545-8f23-936b74359afd');
         expect(licenseFeatures[0].idOperation).toEqual('ADD');
         expect(this.$scope.careFeatures[1].license.licenseType).toEqual('CARE');
         expect(this.$scope.radioStates.careRadio).toEqual(true);
+        expect(this.LogMetricsService.logMetrics.calls.argsFor(0)[1]).toEqual('CAREENABLED');
+      });
+
+      it('should call LogMetrics service when care checkbox is de selected', function () {
+        this.$httpBackend.flush();
+        this.$scope.radioStates.initialCareRadioState = true;
+        this.$scope.radioStates.careRadio = false;
+        this.$scope.getAccountLicenses();
+        expect(this.LogMetricsService.logMetrics.calls.argsFor(0)[1]).toEqual('CAREDISABLED');
       });
     });
   });

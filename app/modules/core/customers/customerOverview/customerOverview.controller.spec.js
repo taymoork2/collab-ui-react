@@ -47,6 +47,9 @@ describe('Controller: CustomerOverviewCtrl', function () {
       },
       getUserId: function () {
         return 'D4C3B2A1';
+      },
+      isCare: function () {
+        return true;
       }
     };
     BrandService = {

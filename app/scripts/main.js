@@ -66,6 +66,7 @@
     'uc.hurondetails',
     'uc.cdrlogsupport',
     'ngIcal',
+    'huron.telephoneNumber',
     require('modules/huron/telephony/telephonyConfig'),
   ]);
 

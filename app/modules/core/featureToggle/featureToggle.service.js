@@ -32,6 +32,7 @@
       atlasNewUserExport: 'atlas-new-user-export',
       atlasNurturingEmails: 'atlas-nurturing-emails',
       atlasPinSettings: 'atlas-pin-settings',
+      atlasPMRonM2: 'atlas-pmr-on-m2',
       atlasPstnTfn: 'atlas-pstn-tfn',
       atlasReadOnlyAdmin: 'atlas-read-only-admin',
       atlasReportsUpdate: 'atlas-reports-update',
@@ -151,7 +152,6 @@
       webexCSV: 'webex-CSV',
       enableCrashLogs: 'csdm-enable-crash-logs',
       csdmPlaces: 'csdm-places',
-      optionalvmdid: 'optional-vm-did',
       globalStatus: 'global-status',
       atlasF237ResourceGroups: 'atlas-f237-resource-group',
       huronLocalDialing: 'huron-local-dialing'

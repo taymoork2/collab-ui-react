@@ -6,7 +6,7 @@
     .controller('MediafusionClusterSettingsController', MediafusionClusterSettingsController);
 
   /* @ngInject */
-  function MediafusionClusterSettingsController($stateParams, $translate, FusionClusterService, XhrNotificationService, MediaClusterServiceV2, $modal) {
+  function MediafusionClusterSettingsController($stateParams, $translate, FusionClusterService, XhrNotificationService, MediaClusterServiceV2, $modal, FusionUtils, Notification, ResourceGroupService) {
     var vm = this;
     vm.backUrl = 'cluster-list';
     vm.upgradeSchedule = {
@@ -21,23 +21,36 @@
       description: 'mediaFusion.clusters.deleteclusterDesc'
     };
 
-    //hardcoded now and will be changed in the future
-    vm.options = [{
-      value: 0,
-      label: $translate.instant('mediaFusion.clusters.stable')
-    }, {
-      value: 1,
-      label: $translate.instant('mediaFusion.clusters.beta')
-    }, {
-      value: 2,
-      label: $translate.instant('mediaFusion.clusters.latest')
+    vm.releaseChannelOptions = [{
+      label: $translate.instant('hercules.fusion.add-resource-group.release-channel.stable'),
+      value: 'stable'
     }];
+
+    vm.populateChannels = function () {
+      ResourceGroupService.getAllowedChannels()
+        .then(function (channels) {
+          _.forEach(['beta', 'latest'], function (restrictedChannel) {
+            if (_.includes(channels, restrictedChannel)) {
+              vm.releaseChannelOptions.push({
+                label: $translate.instant('hercules.fusion.add-resource-group.release-channel.' + restrictedChannel),
+                value: restrictedChannel
+              });
+            }
+          });
+        }, XhrNotificationService.notify);
+    };
+    vm.populateChannels();
 
     vm.selected = '';
 
-    vm.changeReleaseChanel = function () {
-      if (vm.selected.label != vm.cluster.releaseChannel.toLocaleUpperCase()) {
-        MediaClusterServiceV2.updateV2Cluster(vm.cluster.id, vm.displayName, vm.selected.label.toLocaleLowerCase());
+    vm.changeReleaseChannel = function () {
+      if (vm.selected.label != vm.cluster.releaseChannel) {
+        MediaClusterServiceV2.updateV2Cluster(vm.cluster.id, vm.displayName, vm.selected.value)
+          .then(function () {
+            Notification.success('hercules.fusion.add-resource-group.release-channel.saveReleaseChannelSuccess');
+          }, function () {
+            Notification.error('hercules.fusion.add-resource-group.release-channel.saveReleaseChannelError');
+          });
       }
     };
 
@@ -64,10 +77,12 @@
           });
           vm.cluster = cluster;
           vm.clusters = clusters;
-          vm.selectPlaceholder = vm.cluster.releaseChannel.toLocaleUpperCase();
-          vm.localizedTitle = $translate.instant('hercules.expresswayClusterSettings.pageTitle', {
-            clusterName: cluster.name
-          });
+          if (vm.cluster) {
+            vm.selectPlaceholder = FusionUtils.getLocalizedReleaseChannel(vm.cluster.releaseChannel);
+            vm.localizedTitle = $translate.instant('hercules.expresswayClusterSettings.pageTitle', {
+              clusterName: cluster.name
+            });
+          }
         }, XhrNotificationService.notify);
     }
   }

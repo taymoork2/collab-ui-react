@@ -120,6 +120,10 @@ exports.scrollBottom = function (selector) {
   browser.executeScript('$("' + selector + '").first().scrollTop($("' + selector + '").first().scrollHeight);');
 };
 
+exports.scroll = function (el) {
+  browser.executeScript('arguments[0].scrollIntoView()', el.getWebElement());
+};
+
 exports.refresh = function () {
   return browser.refresh();
 };
@@ -145,7 +149,7 @@ exports.wait = function (elem, timeout) {
       // handle a possible stale element
       log('Possible stale element: ' + elem.locator());
       return false;
-    });;
+    });
   }
   return browser.wait(logAndWait, timeout || TIMEOUT, 'Waiting for element to be visible: ' + elem.locator());
 };
@@ -157,7 +161,7 @@ exports.waitForPresence = function (elem, timeout) {
       // handle a possible stale element
       return false;
 
-    });;
+    });
   }
   return browser.wait(logAndWait, timeout || TIMEOUT, 'Waiting for element to be present: ' + elem.locator());
 };
@@ -348,20 +352,18 @@ exports.click = function (elem, maxRetry) {
   return this.wait(elem).then(function () {
     return browser.wait(logAndWait, TIMEOUT, 'Waiting for element to be clickable: ' + elem.locator());
   }).then(function () {
-    var deferred = protractor.promise.defer();
     if (typeof maxRetry === 'undefined') {
       maxRetry = 10;
     }
     log('Click element: ' + elem.locator());
     if (maxRetry === 0) {
-      return elem.click().then(deferred.fulfill, deferred.reject);
+      return elem.click();
     } else {
-      return elem.click().then(deferred.fulfill, function (e) {
+      return elem.click().then(_.noop, function (e) {
         log('Failed to click element: ' + elem.locator() + ' Error: ' + ((e && e.message) || e));
         return exports.click(elem, --maxRetry);
       });
     }
-    return deferred.promise;
   });
 };
 
@@ -403,7 +405,7 @@ exports.setCheckboxIfDisplayed = function (elem, val, timeout) {
     return exports.getCheckboxVal(elem).then(function (curVal) {
       if (curVal !== val) {
         // checkbox value needs to be toggled
-        exports.click(elem);
+        return exports.click(elem);
       }
     });
   }, function () {

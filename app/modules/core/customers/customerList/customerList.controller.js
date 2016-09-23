@@ -323,10 +323,10 @@
       setNotesTextOrder();
       initColumns();
       FeatureToggleService.atlasCareTrialsGetStatus().then(function (careStatus) {
-        $scope.isCareEnabled = careStatus;
+        $scope.isCareEnabled = careStatus && Authinfo.isCare();
         // FIXME: Remove this if block once the customer list refactor goes live
         // (This check is taken care of in the compactServiceColumn directive)
-        if (!careStatus) {
+        if (!$scope.isCareEnabled) {
           _.remove($scope.gridColumns, careField);
         }
       }, function () {
@@ -338,6 +338,7 @@
           setFilter($stateParams.filter);
         });
       });
+
       Orgservice.getOrg(function (data, status) {
         if (data.success) {
           $scope.isTestOrg = data.isTestOrg;
@@ -354,7 +355,7 @@
       var result = _.map(groupedFields, function (group) {
         //or return the one with license OR the first
         return (_.find(group, function (field) {
-          return _.contains(licenses, field.offerCode);
+          return _.includes(licenses, field.offerCode);
         }) || group[0]);
       });
       return result;
@@ -382,7 +383,7 @@
     }
 
     function isOwnOrg(customer) {
-      return customer.customerName === Authinfo.getOrgName();
+      return customer.customerOrgId === Authinfo.getOrgId();
     }
 
     function serviceSort(a, b) {
@@ -590,7 +591,7 @@
             var managed = PartnerService.loadRetrievedDataToList(orgList, false,
               $scope.isCareEnabled);
             var isMyOrgInList = _.some(orgList, {
-              customerOrgId: Authinfo.getOrgId()
+              customerName: Authinfo.getOrgName()
             });
             if (!isMyOrgInList && results[1]) {
               // 4/11/2016 admolla

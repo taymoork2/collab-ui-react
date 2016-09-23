@@ -5,7 +5,7 @@ class DirectoryNumberListCtrl implements ng.IComponentController {
   public directoryNumbers: Array<Line>;
   private primaryLabel: string;
   private lineThreshold: number;
-  public numberOfLines: number = this.lineThreshold;
+  public numberOfLines: number | undefined = this.lineThreshold;
 
   constructor(
     private $translate: ng.translate.ITranslateService
@@ -26,11 +26,19 @@ class DirectoryNumberListCtrl implements ng.IComponentController {
   }
 
   public showMoreButton(): boolean {
-    return (this.directoryNumbers.length > this.lineThreshold && this.numberOfLines === this.lineThreshold);
+    if (this.directoryNumbers) {
+      return (this.directoryNumbers.length > this.lineThreshold && this.numberOfLines === this.lineThreshold);
+    } else {
+      return false;
+    }
   }
 
   public showLessButton(): boolean {
-    return (this.directoryNumbers.length > this.lineThreshold && this.numberOfLines === undefined);
+    if (this.directoryNumbers) {
+      return (this.directoryNumbers.length > this.lineThreshold && this.numberOfLines === undefined);
+    } else {
+      return false;
+    }
   }
 }
 

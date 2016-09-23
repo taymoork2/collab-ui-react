@@ -9,7 +9,7 @@
 
   /* @ngInject */
 
-  function CareChatSetupAssistantCtrl($modal, $scope, $state, $timeout, $translate, $window, Authinfo, CTService, Notification, SunlightConfigService, $stateParams) {
+  function CareChatSetupAssistantCtrl($modal, $scope, $state, $timeout, $translate, $window, Authinfo, CTService, Notification, SunlightConfigService, $stateParams, LogMetricsService) {
     var vm = this;
     init();
 
@@ -173,7 +173,7 @@
       var businessDays = config.pages.offHours.schedule.businessDays;
       vm.days = _.map(CTService.getDays(), function (day) {
         var selectedDay = day;
-        selectedDay.isSelected = _.contains(businessDays, day.label);
+        selectedDay.isSelected = _.includes(businessDays, day.label);
         return selectedDay;
       });
       vm.overlayTitle = $translate.instant('careChatTpl.editTitle');
@@ -387,7 +387,7 @@
     };
 
     vm.isNamePageValid = function () {
-      return (vm.template.name !== '' && vm.validateNameLength());
+      return (vm.template.name !== '' && vm.validateNameLength() && vm.isTemplateNameValid());
     };
 
     function isProfilePageValid() {
@@ -459,7 +459,7 @@
 
     function areAllTypesUnique() {
       var configuredTypes = getConfiguredTypes();
-      var uniqueConfiguredTypes = _.unique(configuredTypes);
+      var uniqueConfiguredTypes = _.uniq(configuredTypes);
 
       return (configuredTypes.length === uniqueConfiguredTypes.length);
     }
@@ -483,6 +483,14 @@
     function isCustomerInformationPageValid() {
       return areAllTypesUnique() && areAllFixedFieldsValid() && areAllDynamicFieldsValid();
     }
+
+    vm.isTemplateNameValid = function () {
+      var templateName = vm.template.name;
+      if (templateName.indexOf('>') > -1 || templateName.indexOf('<') > -1) {
+        return false;
+      }
+      return true;
+    };
 
     function nextButton() {
       switch (vm.currentState) {
@@ -655,6 +663,7 @@
       SunlightConfigService.createChatTemplate(vm.template)
         .then(function (response) {
           handleChatTemplateCreation(response);
+          LogMetricsService.logMetrics('Created template for Care', LogMetricsService.getEventType('careTemplateFinish'), LogMetricsService.getEventAction('buttonClick'), 200, moment(), 1, null);
         }, function () {
           handleChatTemplateError();
         });
@@ -664,6 +673,7 @@
       SunlightConfigService.editChatTemplate(vm.template, vm.template.templateId)
         .then(function (response) {
           handleChatTemplateEdit(response, vm.template.templateId);
+          LogMetricsService.logMetrics('Edited template for Care', LogMetricsService.getEventType('careTemplateFinish'), LogMetricsService.getEventAction('buttonClick'), 200, moment(), 1, null);
         }, function () {
           handleChatTemplateError();
         });
@@ -677,6 +687,7 @@
         featureName: vm.template.name
       });
       CTService.openEmbedCodeModal(responseTemplateId, vm.template.name);
+
     }
 
     function handleChatTemplateEdit(response, templateId) {

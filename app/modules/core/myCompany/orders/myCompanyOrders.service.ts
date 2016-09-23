@@ -19,7 +19,7 @@ export class MyCompanyOrdersService {
     private Authinfo,
     private UrlConfig
   ) {
-    this.ordersService = $resource(UrlConfig.getAdminServiceUrl() + 'commerce/purchaseorders/customer/:customerId');
+    this.ordersService = this.$resource(this.UrlConfig.getAdminServiceUrl() + 'commerce/purchaseorders/customer/:customerId');
   }
 
   public getOrderDetails(): ng.IPromise<IOrderDetail[]> {

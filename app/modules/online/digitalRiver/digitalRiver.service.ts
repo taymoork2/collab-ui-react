@@ -20,8 +20,8 @@ export class DigitalRiverService {
     return this.getDigitalRiverUrl(SUBSCRIPTIONS_PATH);
   }
 
-  public getLogoutUrl(): string {
-    return DIGITAL_RIVER_URL + 'Logout';
+  public logout(): ng.IHttpPromise<any> {
+    return this.$http.jsonp(DIGITAL_RIVER_URL + 'remoteLogout?callback=JSON_CALLBACK');
   }
 
   private getDigitalRiverUrl(path: string): ng.IPromise<string> {

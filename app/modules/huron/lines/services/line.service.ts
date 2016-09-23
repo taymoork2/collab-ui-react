@@ -39,7 +39,7 @@ export class LineService {
       },
     };
 
-    this.lineService = <ILineResource>$resource(HuronConfig.getCmiV2Url() + '/customers/:customerId/:type/:typeId/numbers/:numberId', {},
+    this.lineService = <ILineResource>this.$resource(this.HuronConfig.getCmiV2Url() + '/customers/:customerId/:type/:typeId/numbers/:numberId', {},
       {
         update: updateAction,
         save: saveAction,
@@ -76,7 +76,7 @@ export class LineService {
       internal: data.internal,
       external: data.external,
       incomingCallMaximum: data.incomingCallMaximum,
-    }, (response, headers) => {
+    }, (_response, headers) => {
       location = headers('Location');
     }).$promise
     .then( () => location);

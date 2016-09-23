@@ -113,7 +113,7 @@ describe('Service: FusionClusterService', function () {
         .expectPOST('http://elg.no/organizations/0FF1C3/clusters')
         .respond(201, response);
 
-      var newExpresswayPromise = FusionClusterService.preregisterCluster('man.united', 'GA');
+      var newExpresswayPromise = FusionClusterService.preregisterCluster('man.united', 'stable');
       newExpresswayPromise.then(function (data) {
         expect(data.id).toBe('3803ded5-70d9-4e7d-bdc4-fe3dbf319e59');
       });
@@ -387,13 +387,13 @@ describe('Service: FusionClusterService', function () {
 
     it('should return release notes', function () {
       $httpBackend
-        .when('GET', 'http://elg.no/organizations/0FF1C3/channels/GA/packages/c_cal?fields=@wide')
+        .when('GET', 'http://elg.no/organizations/0FF1C3/channels/stable/packages/c_cal?fields=@wide')
         .respond({
           releaseNotes: 'Example calendar connector release notes.'
         });
 
       var callback = sinon.stub();
-      FusionClusterService.getReleaseNotes('GA', 'c_cal').then(callback);
+      FusionClusterService.getReleaseNotes('stable', 'c_cal').then(callback);
       $httpBackend.flush();
 
       expect(callback.callCount).toBe(1);
@@ -536,7 +536,7 @@ describe('Service: FusionClusterService', function () {
         expect(FusionClusterService.processClustersToSeeIfServiceIsSetup('squared-fusion-invalid-service', baseClusters)).toBe(false);
       });
 
-      it('should find that Media is *not* enabled in the base cluster list', function () {
+      it('should find that Media is *not* enabled', function () {
         expect(FusionClusterService.processClustersToSeeIfServiceIsSetup('squared-fusion-media', baseClusters)).toBe(false);
       });
     });
@@ -560,6 +560,29 @@ describe('Service: FusionClusterService', function () {
 
       it('should find that Calendar is enabled in the Discotheque org', function () {
         expect(FusionClusterService.processClustersToSeeIfServiceIsSetup('squared-fusion-cal', discothequeClusters)).toBe(true);
+      });
+
+    });
+
+    describe('Empty Clusters Corp', function () {
+
+      // Test clusters: Empty Hybrid Media Corp org
+      var clusters;
+      beforeEach(function () {
+        jasmine.getJSONFixtures().clearCache(); // See https://github.com/velesin/jasmine-jquery/issues/239
+        clusters = getJSONFixture('hercules/empty-clusters-corp-cluster-list.json');
+      });
+
+      it('should find that Media is enabled', function () {
+        expect(FusionClusterService.processClustersToSeeIfServiceIsSetup('squared-fusion-media', clusters)).toBe(true);
+      });
+
+      it('should find that Call is **not** enabled', function () {
+        expect(FusionClusterService.processClustersToSeeIfServiceIsSetup('squared-fusion-uc', clusters)).toBe(false);
+      });
+
+      it('should find that Calendar is **not** enabled', function () {
+        expect(FusionClusterService.processClustersToSeeIfServiceIsSetup('squared-fusion-cal', clusters)).toBe(false);
       });
 
     });

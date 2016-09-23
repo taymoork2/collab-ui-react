@@ -33,18 +33,20 @@
         function getUnassignedLicenses() {
           Auth.getCustomerAccount(Authinfo.getOrgId()).then(function (response) {
             var max = 0;
-            var licenses = response.data.customers[0].licenses;
-            var licenseType;
-            _.forEach(licenses, function (data) {
-              if (data.volume > max) {
-                max = data.volume;
-                licenseType = data.licenseType;
-              } else if (data.volume === max && data.licenseType === Config.licenseTypes.MESSAGING) {
-                licenseType = Config.licenseTypes.MESSAGING;
-              }
-              card.licenseNumber = max;
-              card.licenseType = licenseType;
-            });
+            var licenses = _.get(response, 'data.customers[0].licenses');
+            var licenseType = '';
+            if (licenses) {
+              _.forEach(licenses, function (data) {
+                if (data.volume > max) {
+                  max = data.volume;
+                  licenseType = data.licenseType;
+                } else if (data.volume === max && data.licenseType === Config.licenseTypes.MESSAGING) {
+                  licenseType = Config.licenseTypes.MESSAGING;
+                }
+              });
+            }
+            card.licenseNumber = max;
+            card.licenseType = licenseType;
           });
         }
 

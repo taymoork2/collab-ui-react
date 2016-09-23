@@ -2,7 +2,7 @@
 
 describe('Care Chat Setup Assistant Ctrl', function () {
 
-  var controller, $scope, $modal, $q, CTService, getLogoDeferred, getLogoUrlDeferred, SunlightConfigService, $state, $stateParams;
+  var controller, $scope, $modal, $q, CTService, getLogoDeferred, getLogoUrlDeferred, SunlightConfigService, $state, $stateParams, LogMetricsService;
   var Notification, $translate;
 
   var escapeKey = 27;
@@ -105,7 +105,7 @@ describe('Care Chat Setup Assistant Ctrl', function () {
   }));
 
   var intializeCtrl = function (_$rootScope_, $controller, _$modal_, _$q_, _$translate_,
-    _$window_, _Authinfo_, _CTService_, _SunlightConfigService_, _$state_, _Notification_, _$stateParams_) {
+    _$window_, _Authinfo_, _CTService_, _SunlightConfigService_, _$state_, _Notification_, _$stateParams_, _LogMetricsService_) {
     $scope = _$rootScope_.$new();
     $modal = _$modal_;
     $q = _$q_;
@@ -115,6 +115,7 @@ describe('Care Chat Setup Assistant Ctrl', function () {
     $state = _$state_;
     Notification = _Notification_;
     $stateParams = _$stateParams_;
+    LogMetricsService = _LogMetricsService_;
 
     // set language to en_US to show AM and PM for startTime and endTime
     $translate.use(businessHours.userLang);
@@ -125,6 +126,7 @@ describe('Care Chat Setup Assistant Ctrl', function () {
     spyOn(CTService, 'getLogo').and.returnValue(getLogoDeferred.promise);
     spyOn(CTService, 'getLogoUrl').and.returnValue(getLogoUrlDeferred.promise);
     spyOn(Notification, 'success');
+    spyOn(LogMetricsService, 'logMetrics').and.callFake(function () {});
     $stateParams = {
       template: undefined,
       isEditFeature: false
@@ -198,6 +200,16 @@ describe('Care Chat Setup Assistant Ctrl', function () {
 
     it("next button should be disabled when name is more than 250 chars long", function () {
       controller.template.name = Array(252).join("a");
+      checkStateOfNavigationButtons(NAME_PAGE_INDEX, 'hidden', false);
+    });
+
+    it("next button should be disabled when name has any invalid character", function () {
+      controller.template.name = ">";
+      checkStateOfNavigationButtons(NAME_PAGE_INDEX, 'hidden', false);
+    });
+
+    it("next button should be disabled when name has invalid character and length exceeds 250 chars", function () {
+      controller.template.name = Array(251).join("a") + "<";
       checkStateOfNavigationButtons(NAME_PAGE_INDEX, 'hidden', false);
     });
   });
@@ -587,6 +599,7 @@ describe('Care Chat Setup Assistant Ctrl', function () {
       $scope.$apply();
 
       expect(controller.saveCTErrorOccurred).toBeTruthy();
+      expect(LogMetricsService.logMetrics).not.toHaveBeenCalled();
     });
 
     it("should submit chat template successfully", function () {
@@ -621,6 +634,7 @@ describe('Care Chat Setup Assistant Ctrl', function () {
       });
       expect(controller.saveCTErrorOccurred).toBeFalsy();
       expect($state.go).toHaveBeenCalled();
+      expect(LogMetricsService.logMetrics.calls.argsFor(0)[1]).toEqual('CARETEMPLATEFINISH');
     });
 
     it("should submit chat template successfully for Edit", function () {
@@ -655,6 +669,7 @@ describe('Care Chat Setup Assistant Ctrl', function () {
       });
       expect(controller.saveCTErrorOccurred).toBeFalsy();
       expect($state.go).toHaveBeenCalled();
+      expect(LogMetricsService.logMetrics.calls.argsFor(0)[1]).toEqual('CARETEMPLATEFINISH');
     });
 
   });

@@ -98,7 +98,7 @@
           .then(function (response) {
             var localTimeData = downSampleByHour(response.data.data, isSnapshot);
             return fillEmptyData(
-              (moment.range(startTimeStamp.add(1, 'hours').toDate(), endTimeStamp.add(1, 'days').startOf('day').toDate())),
+              (moment.range(startTimeStamp.add(1, 'hours').toDate(), endTimeStamp.toDate())),
               'h', localTimeData, hourFormat, false);
           });
           break;
@@ -186,6 +186,12 @@
         var reducedForHour = {};
         if (isSnapshot) {
           reducedForHour = _.reduce(statsList, reduceOrgSnapshotStatsByHour, emptyOrgstats);
+          if (reducedForHour.numWorkingTasks < 0) {
+            reducedForHour.numWorkingTasks = 0;
+          }
+          if (reducedForHour.numPendingTasks < 0) {
+            reducedForHour.numPendingTasks = 0;
+          }
         } else {
           reducedForHour = _.reduce(statsList, reduceOrgStatsByHour, emptyOrgstats);
           reducedForHour.avgTaskWaitTime = (reducedForHour.avgTaskWaitTime / convertInMinutes);

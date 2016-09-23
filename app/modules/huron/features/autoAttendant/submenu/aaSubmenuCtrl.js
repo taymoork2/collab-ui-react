@@ -27,6 +27,7 @@
       value: ''
     };
     vm.menuEntry = {};
+    vm.queues = [];
 
     vm.addKeyAction = addKeyAction;
     vm.deleteKeyAction = deleteKeyAction;
@@ -191,13 +192,13 @@
               var keyAction = new KeyAction();
               keyAction.key = menuEntry.key;
               if (angular.isDefined(menuEntry.actions[0].name) && menuEntry.actions[0].name.length > 0) {
-                keyAction.action = _.find(vm.keyActions, function (keyAction) {
+                keyAction.action = _.find(vm.keyActions, _.bind(function (keyAction) {
                   if (this.name === 'repeatActionsOnInput') {
                     return (this.name === keyAction.action && this.level === keyAction.level);
                   } else {
                     return this.name === keyAction.action;
                   }
-                }, menuEntry.actions[0]);
+                }, menuEntry.actions[0]));
               } else {
                 keyAction.action = {};
                 keyAction.action.name = "";
@@ -242,6 +243,7 @@
           name: 'phoneMenuRouteQueue',
           action: 'routeToQueue'
         });
+        vm.queues = $scope.queues;
       }
     }
 

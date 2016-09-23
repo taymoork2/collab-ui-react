@@ -5,8 +5,8 @@ export interface ICardButton {
 }
 
 export interface ICardStatus {
-  status: String;
-  text: String;
+  status: String | undefined;
+  text: String | undefined;
   link: String;
 }
 
@@ -85,7 +85,7 @@ export abstract class ServicesOverviewCard {
 
   public abstract getButtons(): Array<ICardButton>;
 
-  public abstract getShowMoreButton(): ICardButton;
+  public abstract getShowMoreButton(): ICardButton | undefined;
 
   public constructor({
     template: _template = 'modules/hercules/servicesOverview/serviceCard.tpl.html',

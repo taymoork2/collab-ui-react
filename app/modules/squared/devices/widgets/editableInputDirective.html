@@ -9,14 +9,14 @@
         required
         maxlength="127"
         ng-model="newText"
-        ng-show="editorEnabled" 
+        ng-show="editorEnabled"
         focus-on="editorEnabled"
         select-text="editorEnabled"
         ng-disabled="saveInProgress"
         ng-keydown="keyPressed($event)" />
       <i
         ng-hide="saveInProgress"
-        ng-click="saveClicked()" 
+        ng-click="saveClicked()"
         class="save-button icon icon-check" />
       <i
         ng-hide="saveInProgress"

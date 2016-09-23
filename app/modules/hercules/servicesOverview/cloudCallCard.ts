@@ -2,7 +2,7 @@ import { ServicesOverviewCard, ICardButton } from './ServicesOverviewCard';
 
 export class ServicesOverviewCallCard extends ServicesOverviewCard {
 
-  public getShowMoreButton(): ICardButton {
+  public getShowMoreButton(): ICardButton | undefined {
     return undefined;
   }
 

@@ -89,7 +89,7 @@
 
     $scope.isCareEnabled = false;
     FeatureToggleService.atlasCareTrialsGetStatus().then(function (careStatus) {
-      $scope.isCareEnabled = careStatus;
+      $scope.isCareEnabled = careStatus && Authinfo.isCare();
     });
 
     initController();
@@ -477,10 +477,25 @@
     $scope.careFeatures.push(new ServiceFeature($translate.instant('onboardModal.careFree'), 0, 'careRadio', new FakeLicense('freeCareService')));
     $scope.currentUser = $stateParams.currentUser;
 
+    $scope.currentUserDisplayName = function () {
+      if (_.isObject($scope.currentUser)) {
+        if (!_.isEmpty($scope.currentUser.displayName)) {
+          return _.trim($scope.currentUser.displayName);
+        } else if (_.isObject($scope.currentUser.name) && (!_.isEmpty($scope.currentUser.name.givenName) || !_.isEmpty($scope.currentUser.name.familyName))) {
+          return _.trim(($scope.currentUser.name.givenName || '') + ' ' + ($scope.currentUser.name.familyName || ''));
+        } else if (!_.isEmpty($scope.currentUser.userName)) {
+          return _.trim($scope.currentUser.userName);
+        }
+      }
+      // if all else fails, return Unknown
+      return _.trim($translate.instant('common.unknown'));
+    };
+
     if ($scope.currentUser) {
       userEnts = $scope.currentUser.entitlements;
       userLicenseIds = $scope.currentUser.licenseID;
       userInvites = $scope.currentUser.invitations;
+      $scope.hybridCallServiceAware = userEnts && userEnts.indexOf('squared-fusion-uc') > -1;
     }
 
     function checkMessageVisibility(licenses, selectedSubscription) {
@@ -538,7 +553,8 @@
     $scope.radioStates = {
       commRadio: false,
       msgRadio: false,
-      careRadio: false
+      careRadio: false,
+      initialCareRadioState: false // For generating Metrics
     };
 
     if (userEnts) {
@@ -566,13 +582,14 @@
     function setCareSevice() {
       SunlightConfigService.getUserInfo($scope.currentUser.id)
           .then(function () {
-            Userservice.getUser($scope.currentUser.id, function (data) {
+            Userservice.getUser($scope.currentUser.id, true, function (data) {
               if (data.success) {
                 var hasSyncKms = _.find(data.roles, function (r) {
                   return r === Config.backend_roles.spark_synckms;
                 });
                 if (hasSyncKms) {
                   $scope.radioStates.careRadio = true;
+                  $scope.radioStates.initialCareRadioState = true;
                 }
               }
             });
@@ -627,7 +644,7 @@
         var isCISiteFlag = WebExUtilsFact.isCIEnabledSite(site);
         return {
           site: site,
-          billing: _.uniq(_.pluck(cmrMatches, 'billing').concat(_.pluck(confMatches, 'billing'))),
+          billing: _.uniq(_.map(cmrMatches, 'billing').concat(_.map(confMatches, 'billing'))),
           confLic: confMatches,
           cmrLic: cmrMatches,
           isCISite: isCISiteFlag,
@@ -719,7 +736,7 @@
           var copy = angular.copy(service);
           copy.licenses = [copy.license];
           delete copy.license;
-          _.merge(result, copy, function (left, right) {
+          _.mergeWith(result, copy, function (left, right) {
             if (_.isArray(left)) return left.concat(right);
           });
         });
@@ -949,7 +966,7 @@
           .filter({
             confModel: state
           })
-          .pluck('licenseId')
+          .map('licenseId')
           .remove(undefined)
           .value()
         );
@@ -958,7 +975,7 @@
           .filter({
             cmrModel: state
           })
-          .pluck('licenseId')
+          .map('licenseId')
           .remove(undefined)
           .value()
         );
@@ -1044,6 +1061,15 @@
           licenseId = _.get($scope, 'careFeatures[1].license.licenseId', null);
           if (licenseId) {
             licenseList.push(new LicenseFeature(licenseId, false));
+          }
+        }
+
+        // Metrics for care entitlement for users
+        if ($scope.radioStates.careRadio !== $scope.radioStates.initialCareRadioState) {
+          if ($scope.radioStates.careRadio) {
+            LogMetricsService.logMetrics('Enabling care for user', LogMetricsService.getEventType('careEnabled'), LogMetricsService.getEventAction('buttonClick'), 200, moment(), 1, null);
+          } else {
+            LogMetricsService.logMetrics('Disabling care for user', LogMetricsService.getEventType('careDisabled'), LogMetricsService.getEventAction('buttonClick'), 200, moment(), 1, null);
           }
         }
       }
@@ -2395,7 +2421,7 @@
         // If we haven't met the chunk size, process the next user
         if (tempUserArray.length < csvChunk) {
           // Validate content in the row
-          if (_.contains(uniqueEmails, userEmail)) {
+          if (_.includes(uniqueEmails, userEmail)) {
             // Report a duplicate email
             processingError = true;
             addUserError(j + 1, $translate.instant('firstTimeWizard.csvDuplicateEmail'));

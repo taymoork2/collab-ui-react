@@ -52,10 +52,10 @@ describe('Controller: AddResourceController', function () {
           hostSerial: '03C36F68',
           alarms: [],
           runningVersion: '8.7-1.0.2966',
-          packageUrl: 'https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/channels/GA/packages/c_cal'
+          packageUrl: 'https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/channels/stable/packages/c_cal'
         }],
         state: 'fused',
-        releaseChannel: 'GA',
+        releaseChannel: 'stable',
         provisioning: [{
           connectorType: 'c_mgmt'
         }, {
@@ -84,10 +84,10 @@ describe('Controller: AddResourceController', function () {
           hostSerial: '0C379CB8',
           alarms: [],
           runningVersion: '8.7-1.0.2966',
-          packageUrl: 'https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/channels/GA/packages/c_cal'
+          packageUrl: 'https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/channels/stable/packages/c_cal'
         }],
         state: 'fused',
-        releaseChannel: 'GA',
+        releaseChannel: 'stable',
         provisioning: [{
           connectorType: 'c_cal'
         }, {
@@ -123,10 +123,10 @@ describe('Controller: AddResourceController', function () {
           hostSerial: '55379CB8',
           alarms: [],
           runningVersion: '8.7-1.0.2966',
-          packageUrl: 'https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/channels/GA/packages/c_cal'
+          packageUrl: 'https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/channels/stable/packages/c_cal'
         }],
         state: 'fused',
-        releaseChannel: 'GA',
+        releaseChannel: 'stable',
         provisioning: [{
           connectorType: 'c_mgmt'
         }, {

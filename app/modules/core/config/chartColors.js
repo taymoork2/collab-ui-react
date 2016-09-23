@@ -57,7 +57,8 @@
     metricLightGreen: '#7BAF5D',
     metricDarkGreen: '#417505',
     metricBlue: '#049FD9',
-    metricYellow: '#F5A623'
+    metricYellow: '#F5A623',
+    metricsRed: '#D03D35'
   };
 
   angular

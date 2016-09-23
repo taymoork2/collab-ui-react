@@ -49,11 +49,11 @@
     }
 
     function setVoiceOption() {
-      if (vm.voiceBackup && _.findWhere(vm.voiceOptions, {
+      if (vm.voiceBackup && _.find(vm.voiceOptions, {
         "value": vm.voiceBackup.value
       })) {
         vm.voiceOption = vm.voiceBackup;
-      } else if (_.findWhere(vm.voiceOptions, AALanguageService.getVoiceOption())) {
+      } else if (_.find(vm.voiceOptions, AALanguageService.getVoiceOption())) {
         vm.voiceOption = AALanguageService.getVoiceOption();
       } else {
         vm.voiceOption = vm.voiceOptions[0];

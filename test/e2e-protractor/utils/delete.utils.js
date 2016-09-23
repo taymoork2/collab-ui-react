@@ -21,15 +21,9 @@ exports.deleteUser = function (email, token) {
       };
 
       return utils.sendRequest(options)
-        .then(function () {
-          return 200;
-        })
-        .catch(function (response) {
-          // Ignore 404 errors, otherwise reject with error
-          if (_.get(response, 'statusCode') !== 404) {
-            return Promise.reject(response);
-          }
-        });
+        // This is primarily used for jasmine cleanup
+        // We don't want rejected promises to blowup the promise control flow
+        .catch(_.noop);
     });
 };
 
@@ -154,6 +148,38 @@ exports.deleteTestAAs = function (bearer, data) {
   return Promise.all(AAsToDelete);
 
 };
+
+//deleteRouteToQueue - delete queues created while testing
+//
+//Used to cleanup queues created in the test
+// ignore 404 error if queue has been deleted already
+
+exports.deleteRouteToQueue = function () {
+  helper.getBearerToken('aa-admin')
+   .then(function (bearer) {
+     var options = {
+       method: 'delete',
+       url: config.getAutoAttendantQueueUrl(helper.auth['aa-admin'].org),
+       headers: {
+         'Content-Type': 'application/json',
+         'Authorization': 'Bearer ' + bearer
+       }
+     };
+
+     return utils.sendRequest(options)
+     .then(function () {
+       return 200;
+     })
+        .catch(function (response) {
+     // Ignore 404 errors, otherwise reject with error
+          if (_.get(response, 'statusCode') !== 404) {
+            return Promise.reject(response);
+          }
+        });
+
+   });
+};
+
 
 //
 // findAndDeleteTestAA - Find the Test AA and call delete

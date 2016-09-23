@@ -65,8 +65,8 @@
     }
 
     function hasCallDevicesAvailable(details) {
-      var staticPhones = _.pluck(getData().details.phones, 'model');
-      var devices = _.pluck(_.get(details, 'devices', []), 'model');
+      var staticPhones = _.map(getData().details.phones, 'model');
+      var devices = _.map(_.get(details, 'devices', []), 'model');
 
       return _.difference(staticPhones, devices).length === getData().details.phones.length;
     }
