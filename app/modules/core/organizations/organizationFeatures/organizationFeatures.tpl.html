@@ -1,18 +1,12 @@
 <cs-sp-container>
   <cs-sp-section>
-    <div>
-      <div class="form-group profile-text-input">
-        <label for="services" class="minor-heading" translate="organizationsPage.betaFeatures"></label>
-        <div class="profile-input org-overview-list">
-          <div class="row" ng-repeat="svc in features.toggles | orderBy:'name'">
-            <div class="small-10 columns">
-              <label for="{{svc.name}}">{{svc.name}}</label>
-            </div>
-            <div class="small-2 columns">
-              <cs-toggle-switch ng-model="svc.model" toggle-id="{{svc.toggleId}}" name="{{svc.name}}" size="small" ng-click="features.handleClick()"></cs-toggle-switch>
-            </div>
-          </div>
-        </div>
+    <div class="section-title-row section-name" translate="organizationsPage.betaFeatures"></div>
+    <div class="row" ng-repeat="svc in features.toggles | orderBy:'name'">
+      <div class="small-10 columns">
+        <span>{{svc.name}}</span>
+      </div>
+      <div class="small-2 columns">
+        <cs-toggle-switch ng-model="svc.model" toggle-id="{{svc.toggleId}}" name="{{svc.name}}" size="small" ng-click="features.handleClick()"></cs-toggle-switch>
       </div>
     </div>
   </cs-sp-section>

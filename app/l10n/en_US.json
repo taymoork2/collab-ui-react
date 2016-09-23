@@ -491,7 +491,11 @@
     "errorSettingToggle": "There was a problem setting a toggle",
     "toggleModSuccess": "All modified toggles were updated",
     "startSearching": "To begin, search for an organization",
-    "noSearchResults": "Search yielded no results"
+    "noSearchResults": "Search yielded no results",
+    "allowBetaChannels": "Allow Beta Release Channel",
+    "allowLatestChannels": "Allow Latest Release Channel",
+    "releaseChannelToggleSuccess": "Allow Release Channel update successful",
+    "releaseChannelToggleFailure": "Allow Release Channel update failed. Please try again later."
   },
   "templatesPage": {
     "title": "MANAGE TEMPLATES"

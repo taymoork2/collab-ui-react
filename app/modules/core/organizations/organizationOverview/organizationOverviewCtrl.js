@@ -5,35 +5,36 @@
     .controller('OrganizationOverviewCtrl', OrganizationOverviewCtrl);
 
   /* @ngInject */
-  function OrganizationOverviewCtrl($stateParams, $rootScope, $scope, $state, Log, $filter, Orgservice, Notification) {
+  function OrganizationOverviewCtrl($stateParams, $rootScope, $scope, $state, $filter, Orgservice, Notification) {
     var currentOrgId = $stateParams.currentOrganization.id;
-
     $scope.currentOrganization = $stateParams.currentOrganization;
     $scope.setEftToggle = setEftToggle;
     $scope.eftToggleLoading = true;
     $scope.updateEftToggle = updateEftToggle;
     $scope.currentOrganization.isEFT = false;
     $scope.currentEftSetting = false;
+    $scope.toggleReleaseChannelAllowed = toggleReleaseChannelAllowed;
+    $scope.showHybridServices = _.includes($scope.currentOrganization.services, 'squared-fusion-mgmt');
 
-    init();
-
-    function init() {
-      getOrgInfo();
-      updateEftToggle();
+    if ($scope.showHybridServices) {
+      var ReleaseChannel = function (name, allowed) {
+        this.name = name;
+        this.newAllow = this.oldAllow = allowed;
+        this.reset = function () {
+          this.newAllow = this.oldAllow;
+        };
+        this.updated = function () {
+          this.oldAllow = this.newAllow;
+        };
+        this.hasChanged = function () {
+          return this.newAllow !== this.oldAllow;
+        };
+      };
+      $scope.betaChannel = new ReleaseChannel('beta', _.includes($scope.currentOrganization.services, 'squared-fusion-mgmt-channel-beta'));
+      $scope.latestChannel = new ReleaseChannel('latest', _.includes($scope.currentOrganization.services, 'squared-fusion-mgmt-channel-latest'));
     }
 
-    function getOrgInfo() {
-      Orgservice.getAdminOrg(function (data, status) {
-        if (data.success) {
-          $scope.org = data;
-          if (data.services) {
-            $scope.svcs = data.services;
-          }
-        } else {
-          Log.debug('Get existing org failed. Status: ' + status);
-        }
-      }, $scope.currentOrganization.id, true);
-    }
+    updateEftToggle();
 
     function updateEftToggle() {
       return Orgservice.getEftSetting(currentOrgId)
@@ -63,6 +64,20 @@
           });
       }
     }
+
+    function toggleReleaseChannelAllowed(channel) {
+      if (!channel.hasChanged()) {
+        return;
+      }
+      Orgservice.setHybridServiceReleaseChannelEntitlement(channel.name, channel.newAllow).then(function () {
+        Notification.success('organizationsPage.releaseChannelToggleSuccess');
+        channel.updated();
+      }).catch(function () {
+        Notification.error('organizationsPage.releaseChannelToggleFailure');
+        channel.reset();
+      });
+    }
+
     //Making sure the search field is cleared
     $('#search-input').val('');
 
@@ -79,10 +94,6 @@
       $scope.exportBtn.disabled = true;
       $('#btncover').show();
     }
-
-    $scope.$on('AuthinfoUpdated', function () {
-      getOrgInfo();
-    });
 
     $scope.manageFeatures = function () {
       $state.go('organization-overview.features');
