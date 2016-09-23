@@ -1,5 +1,5 @@
 interface IDirectoryNumberOption {
-  value: string;
+  value: string | undefined;
   label: string;
 }
 
@@ -30,7 +30,7 @@ class DirectoryNumber implements ng.IComponentController {
     this.placeholder = this.$translate.instant('directoryNumberPanel.chooseNumber');
     this.nonePlaceholder = this.$translate.instant('directoryNumberPanel.none');
     this.noneOption = {
-      value: null,
+      value: undefined,
       label: this.nonePlaceholder,
     };
   }

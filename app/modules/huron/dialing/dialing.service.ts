@@ -29,8 +29,8 @@ export class DialingService {
   public cbUseGlobal: IOption;
   public cbAlwaysAllow: IOption;
   public cbNeverAllow: IOption;
-  private internationalDialing: string;
-  private localDialing: string;
+  private internationalDialing: string | undefined;
+  private localDialing: string | undefined;
   private dialingService: IDialingResource;
   private cosRestriction: ICOSRestrictionResponse;
   private dialingUuids = {};
@@ -80,8 +80,8 @@ export class DialingService {
 
   public getDialing(type: string, dialingType: string) {
     let response;
-    let overRide = null;
-    let custRestriction = null;
+    let overRide = false;
+    let custRestriction = false;
     type = type.slice(0, -1);
 
     this.cosRestriction[type].filter((cos: ICOSRestriction) => cos.restriction === dialingType).map((cos: ICOSRestriction) => {

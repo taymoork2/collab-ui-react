@@ -40,7 +40,7 @@ export abstract class ServicesOverviewHybridCard extends ServicesOverviewCard {
     unknown: 'servicesOverview.cardStatus.unknown',
   };
 
-  protected filterAndGetCssStatus(services: Array<{ serviceId: string, status: string, setup: boolean }>, serviceId: string): string {
+  protected filterAndGetCssStatus(services: Array<{ serviceId: string, status: string, setup: boolean }>, serviceId: string): string | undefined {
     let service = _.find(services, (service) => service.serviceId === serviceId);
     if (service) {
       return this.serviceStatusToCss[service.status] || this.serviceStatusToCss['unknown'];
@@ -48,7 +48,7 @@ export abstract class ServicesOverviewHybridCard extends ServicesOverviewCard {
     return undefined;
   }
 
-  protected filterAndGetTxtStatus(services: Array<{ serviceId: string, status: string, setup: boolean }>, serviceId: string): string {
+  protected filterAndGetTxtStatus(services: Array<{ serviceId: string, status: string, setup: boolean }>, serviceId: string): string | undefined {
     let service = _.find(services, (service) => service.serviceId === serviceId);
     if (service) {
       return this.serviceStatusToTxt[service.status] || this.serviceStatusToTxt['unknown'];

@@ -6,7 +6,7 @@ export class SipDomainSettingController {
   public isDisabled = false;
   public isButtonDisabled = false;
   public isLoading = false;
-  public isConfirmed: boolean = null;
+  public isConfirmed: boolean = false;
 
   public isRoomLicensed = false;
   public isSSAReserved = false;
@@ -43,7 +43,7 @@ export class SipDomainSettingController {
   }
 
   get isUrlAvailable(): boolean {
-    return this._inputValue && (this._inputValue === this._validatedValue);
+    return !!this._inputValue && (this._inputValue === this._validatedValue);
   }
 
   get inputValue(): string {

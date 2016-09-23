@@ -6,6 +6,7 @@
     "preserveConstEnums": true,
     "removeComments": false,
     "sourceMap": true,
+    "strictNullChecks": true,
     "target": "ES5"
   },
   "exclude": [

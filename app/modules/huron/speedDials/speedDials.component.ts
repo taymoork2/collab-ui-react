@@ -14,7 +14,7 @@ class SpeedDialCtrl implements ng.IComponentController {
   private editing: boolean;
   private reordering: boolean;
   private speedDialList: ISpeedDial[] = [];
-  private copyList: ISpeedDial[];
+  private copyList: ISpeedDial[] | undefined;
   private newLabel: string;
   private newNumber: string;
   private labelMessages: IValidationMessages;

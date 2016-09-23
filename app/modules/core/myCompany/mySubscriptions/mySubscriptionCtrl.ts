@@ -25,9 +25,9 @@ const callClass = 'icon-calls';
 const licenseTypes = ['MS', 'CF', 'MC', 'TC', 'EC', 'EE', 'CMR', 'CO', 'SD', 'SB'];
 
 class MySubscriptionCtrl {
-  public hybridServices = [];
-  public licenseCategory = [];
-  public subscriptionDetails = [];
+  public hybridServices: any[] = [];
+  public licenseCategory: any[] = [];
+  public subscriptionDetails: any[] = [];
   public visibleSubscriptions = false;
   public isOnline = false;
   public trialUrlFailed = false;
@@ -132,7 +132,7 @@ class MySubscriptionCtrl {
 
   // combines licenses for the license view
   private addSubscription(index, item, existingSite) {
-    let subscriptions = undefined;
+    let subscriptions;
     let exists = false;
 
     if (existingSite >= 0) {
@@ -160,7 +160,7 @@ class MySubscriptionCtrl {
         let newSubscription = {
           subscriptionId: undefined,
           internalSubscriptionId: undefined,
-          licenses: [],
+          licenses: [] as any[],
           isTrial: false,
           viewAll: false,
           upgradeTrialUrl: undefined,
@@ -183,7 +183,7 @@ class MySubscriptionCtrl {
               siteUrl: license.siteUrl,
               id: 'donutId' + subIndex + licenseIndex,
               tooltip: this.generateTooltip(license.offerName, license.usage, license.volume),
-              class: undefined,
+              class: '',
             };
 
             _.forEach(licenseTypes, (type: any, index: number) => {

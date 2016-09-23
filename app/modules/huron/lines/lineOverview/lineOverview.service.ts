@@ -53,6 +53,8 @@ export class LineOverviewService {
         return this.HuronSiteService.getSite(sites[0].uuid).then(site => {
           return site.siteSteeringDigit + site.siteCode;
         });
+      } else {
+        return '';
       }
     });
   }

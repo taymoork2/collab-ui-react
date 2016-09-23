@@ -19,7 +19,7 @@ export class ServicesOverviewCtrl {
 
     this.FusionClusterService.getAll()
       .then((clusterList) => {
-        let services = [];
+        let services: any[] = [];
         services.push(this.FusionClusterService.getStatusForService('squared-fusion-mgmt', clusterList));
         services.push(this.FusionClusterService.getStatusForService('squared-fusion-cal', clusterList));
         services.push(this.FusionClusterService.getStatusForService('squared-fusion-uc', clusterList));
