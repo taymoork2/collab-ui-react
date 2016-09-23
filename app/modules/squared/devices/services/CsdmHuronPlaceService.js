@@ -28,7 +28,7 @@
                 });
               });
           } else {
-            throw new Error('feature not enabled');
+            placesDeferred.reject('feature not enabled');
           }
         })
         .finally(function () {

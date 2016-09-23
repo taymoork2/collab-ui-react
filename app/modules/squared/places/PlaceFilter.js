@@ -78,7 +78,13 @@
       function termMatchesAnyFieldOfItem(term, item) {
         return ['displayName'].some(function (field) {
           return item && (item[field] || '').toLowerCase().indexOf(term || '') != -1;
-        });
+        })
+          || ['readableType'].some(function (field) {
+            return item && (item[field] || '').toLowerCase().indexOf(term || '') != -1;
+          })
+          || ['sipUrl'].some(function (field) {
+            return item && (item[field] || '').toLowerCase().indexOf(term || '') != -1;
+          });
       }
 
       function matchesFilter(item) {
