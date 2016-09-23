@@ -16,7 +16,7 @@
   }
 
   /* @ngInject */
-  function AAPhoneMenuCtrl($scope, $translate, AAUiModelService, AutoAttendantCeMenuModelService, AACommonService, AAScrollBar, FeatureToggleService) {
+  function AAPhoneMenuCtrl($scope, $translate, AAUiModelService, AutoAttendantCeMenuModelService, AACommonService, AAScrollBar, FeatureToggleService, QueueHelperService) {
     var vm = this;
     vm.selectPlaceholder = $translate.instant('autoAttendant.selectPlaceholder');
     vm.actionPlaceholder = $translate.instant('autoAttendant.actionPlaceholder');
@@ -28,6 +28,7 @@
     };
     vm.menuEntry = {};
 
+    vm.queues = [];
     vm.addKeyAction = addKeyAction;
     vm.deleteKeyAction = deleteKeyAction;
     vm.keyChanged = keyChanged;
@@ -270,7 +271,29 @@
     function setPhonemenuFormDirty() {
       AACommonService.setPhoneMenuStatus(true);
     }
-
+    /**
+     * This push the Route To Queue option in Phone Menu List and push get all the queues
+    */
+    function getQueues() {
+      if (AACommonService.isRouteQueueToggle) {
+        return QueueHelperService.listQueues().then(function (aaQueueList) {
+          if (aaQueueList.length > 0) {
+            vm.keyActions.push({
+              label: $translate.instant('autoAttendant.phoneMenuRouteQueue'),
+              name: 'phoneMenuRouteQueue',
+              action: 'routeToQueue'
+            });
+            _.each(aaQueueList, function (aaQueue) {
+              var idPos = aaQueue.queueUrl.lastIndexOf("/");
+              vm.queues.push({
+                description: aaQueue.queueName,
+                id: aaQueue.queueUrl.substr(idPos + 1)
+              });
+            });
+          }
+        });
+      }
+    }
     /**
      * This include the list of feature which are not production ready yet
      */
@@ -278,12 +301,6 @@
       return FeatureToggleService.supports(FeatureToggleService.features.huronAACallQueue).then(function (result) {
         if (result) {
           AACommonService.setRouteQueueToggle(true);
-          /* will push route to queue in list */
-          vm.keyActions.push({
-            label: $translate.instant('autoAttendant.phoneMenuRouteQueue'),
-            name: 'phoneMenuRouteQueue',
-            action: 'routeToQueue'
-          });
         } else {
           AACommonService.setRouteQueueToggle(false);
         }
@@ -319,7 +336,7 @@
       vm.menuEntry = vm.entries[$scope.index];
       vm.menuId = vm.menuEntry.id;
       AACommonService.setRouteQueueToggle(false);
-      toggleRouteToQueueFeature().finally(activate);
+      toggleRouteToQueueFeature().finally(getQueues().finally(activate));
     }
 
     init();

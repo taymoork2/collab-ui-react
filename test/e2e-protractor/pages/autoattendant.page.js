@@ -4,16 +4,14 @@ var AutoAttendantPage = function () {
   this.repeatMenu = 'Repeat this Menu';
   this.playSubmenu = 'Play Submenu';
   this.goBack = 'Go Back';
-  this.routeToQueue = 'Route to Queue';
+  this.routeToQueue = 'Queue Call';
   this.key0 = '0';
   this.key1 = '1';
   this.key2 = '2';
   this.firstTimeZone = 'Africa/Abidjan';
 
   this.routeQueueDetail = element(by.id('route-queue-detail'));
-  this.rqDropDownArrow = element(by.linkText('Search or Select'));
   this.rqDropDownOptions = element(by.id('route-queue-detail')).all(by.tagName('li'));
-  this.rqDropDownOptionSunlight = element.all(by.linkText('Sunlight 1'));
   this.phoneMenu = element(by.css('div.aa-panel-body[name="Phone Menu"]'));
   this.queueSetting = element(by.id('queueSetting'));
   this.queueMin = element(by.linkText('15'));

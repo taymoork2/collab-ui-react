@@ -67,6 +67,14 @@ class PlaceCallOverview implements ng.IComponentController {
   private initFeatures(): void {
     this.features = [];
     let service: IFeature = {
+      name: this.$translate.instant('telephonyPreview.speedDials'),
+      icon: 'NO-ICON',
+      state: 'speedDials',
+      detail: undefined,
+      actionsAvailable: true,
+    };
+    this.features.push(service);
+    service = {
       name: this.$translate.instant('telephonyPreview.internationalDialing'),
       icon: 'NO-ICON',
       state: 'internationalDialing',
@@ -93,6 +101,7 @@ class PlaceCallOverview implements ng.IComponentController {
     this.$state.go('place-overview.communication.' + feature, {
       watcher: feature === 'local' ? DialingType.LOCAL : DialingType.INTERNATIONAL,
       selected: feature === 'local' ? this.DialingService.getLocalDialing(LineConsumerType.PLACES) : this.DialingService.getInternationalDialing(LineConsumerType.PLACES),
+      currentPlace: this.currentPlace,
     });
   }
 }

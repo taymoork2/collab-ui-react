@@ -12,7 +12,8 @@
         schedule: '@aaSchedule',
         menuId: '@aaMenuId',
         index: '=aaIndex',
-        keyIndex: '@aaKeyIndex'
+        keyIndex: '@aaKeyIndex',
+        queues: "@aaQueues"
       },
       controller: 'AASubmenuCtrl',
       controllerAs: 'aaSubmenu',
