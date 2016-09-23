@@ -12,11 +12,11 @@
 
     function confirmRemove() {
       ResourceGroupService.remove(vm.resourceGroup.id).then(function () {
-          Notification.success('hercules.resourceGroupSettings.deleteSuccess');
-          $modalInstance.close();
-        }).catch(function () {
-          Notification.error('hercules.genericFailure');
-        });
+        Notification.success('hercules.resourceGroupSettings.deleteSuccess');
+        $modalInstance.close();
+      }).catch(function () {
+        Notification.error('hercules.genericFailure');
+      });
     }
   }
 })();
