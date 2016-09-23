@@ -14,7 +14,7 @@ var AutoAttendantPage = function () {
   this.rqDropDownOptions = element(by.id('route-queue-detail')).all(by.tagName('li'));
   this.phoneMenu = element(by.css('div.aa-panel-body[name="Phone Menu"]'));
   this.queueSetting = element(by.id('queueSetting'));
-  this.queueMin = element(by.id('queueMin'));
+  this.queueMin = element(by.linkText('15'));
   this.queueMinOption = element(by.id('queueMin')).all(by.tagName('li'));
   
   this.searchBox = element(by.id('searchFilter'));

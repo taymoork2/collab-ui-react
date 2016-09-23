@@ -26,6 +26,20 @@
     }
   }
 
+  .csv-export-link {
+    @include vr-spacing(pl, 2);
+    @include vr-spacing(pv, .5);
+
+    .cancel {
+      display: inline-flex;
+
+      .icon-spinner {
+        @include vr-spacing(ml, .25);
+        @include vr-spacing(mr, .5)
+      }
+    }
+  }
+
   .row {
     flex: 1 1 auto;
   }
@@ -99,19 +113,18 @@
 
   li {
     list-style-type: none;
-    padding-bottom: 1rem;
+    @include vr-spacing(pb, 1);
 
     .cs-input-radio.cs-input-group {
-      @include vr-spacing(mb, .25);
+      @include vr-spacing(mb, 0);
 
       p {
         @extend .cs-radio-help;
-        @include vr-spacing(mt, .25);
+        @include vr-spacing(pl, 0);
       }
     }
 
     label {
-      @include vr-spacing(mb, 0);
     }
 
   }
