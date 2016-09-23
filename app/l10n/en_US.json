@@ -1846,8 +1846,8 @@
       "duplicateName": "A Resource Group with that name already exists. Please choose another name.",
       "loadFailed": "Unable to load the Resource Group details. Please try again later.",
       "groupReleaseChannelSaved": "Release channel saved successfully",
-      "removeGroupReq": "To remove this Resource Group, all assigned clusters and user must be removed first",
-      "deleteSuccess": "Resource group successfully deleted"
+      "removeGroupReq": "To remove this Resource Group, all assigned clusters must be removed first",
+      "deleteSuccess": "Resource group successfully removed"
     },
     "assignClustersModal": {
       "title": "Assign Clusters to <q>{{groupName}}</q>",
@@ -1862,6 +1862,12 @@
       "title": "Change Release Channel",
       "description": "Are you sure you want to change the release channel for \"{{groupName}}\" to {{channelName}}?",
       "change": "Change"
+    },
+    "confirmDeleteResourceGroupModal": {
+      "title": "Remove Resource Group",
+      "description": "Are you sure you want to remove \"{{groupName}}\"?",
+      "userClearNote": "Note that any user assignments to this resource group will be cleared.",
+      "remove": "Remove"
     },
     "genericFailure": "An unexpected error occurred. Please try again later."
   },
