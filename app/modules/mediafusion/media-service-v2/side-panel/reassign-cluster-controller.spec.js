@@ -23,7 +23,7 @@ describe('Controller: ReassignClusterControllerV2', function () {
     }, {
       id: 'a',
       name: 'name1',
-      targetType: 'c_cal'
+      targetType: 'c_mgmt'
     }];
 
     redirectTargetPromise = {

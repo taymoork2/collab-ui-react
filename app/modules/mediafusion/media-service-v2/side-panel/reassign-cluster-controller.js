@@ -16,9 +16,7 @@
       MediaClusterServiceV2.getAll()
         .then(function (clusters) {
           vm.clusters = _.filter(clusters, { targetType: 'mf_mgmt' });
-          _.each(vm.clusters, function (clust) {
-            vm.options.push(clust.name);
-          });
+          vm.options = _.map(vm.clusters, 'name');
           vm.options.sort();
         }, XhrNotificationService.notify);
     };
