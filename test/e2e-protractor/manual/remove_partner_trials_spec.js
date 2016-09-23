@@ -22,7 +22,7 @@ describe('Remove partner trials from partner org page', function () {
         utils.sendKeys(partner.searchFilter, query + protractor.Key.ENTER);
         utils.expectValueToBeSet(partner.searchFilter, query, TIMEOUT);
         utils.waitForSpinner();
-        utils.click(partner.allFilter).then(function () {
+        utils.click(partner.trialFilter).then(function () {
           console.log('Removing all trials starting with "' + query + '"');
         });
       });

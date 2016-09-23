@@ -1,0 +1,25 @@
+{
+  "columns": [{
+    "name": "First Name"
+  }, {
+    "name": "Last Name"
+  }, {
+    "name": "Display Name"
+  }, {
+    "name": "User ID/Email (Required)"
+  }, {
+    "name": "Hybrid Calendar Service Resource Group"
+  }, {
+    "name": "Hybrid Call Service Resource Group"
+  }, {
+    "name": "Calendar Service",
+    "entitlements": [
+      "squaredFusionCal"
+    ]
+  }, {
+    "name": "Call Service Aware",
+    "entitlements": [
+      "squaredFusionUC"
+    ]
+  }]
+}

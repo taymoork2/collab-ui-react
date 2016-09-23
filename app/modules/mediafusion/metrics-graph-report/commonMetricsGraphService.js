@@ -51,15 +51,14 @@
     };
     baseVariables['legend'] = {
       'color': chartColors.grayDarkest,
-      'align': 'center',
       'autoMargins': false,
+      'align': 'center',
+      'position': 'bottom',
       'switchable': false,
       'fontSize': 13,
       'markerLabelGap': 10,
       'markerType': 'square',
       'markerSize': 10,
-      'position': 'absolute',
-      'left': 350,
       'equalWidths': false,
       'horizontalGap': 5,
       'valueAlign': 'left',
@@ -132,7 +131,6 @@
         'backgroundColor': chartColors.brandWhite,
         'backgroundAlpha': 1,
         'balloon': baseVariables['balloon'],
-        //'autoMargins': true,
         "autoMarginOffset": 25,
         'marginLeft': 60,
         'marginTop': 60,
@@ -145,7 +143,6 @@
         'valueAxes': valueAxes,
         'graphs': graphs,
         'gridAboveGraphs': true,
-        //'dataDateFormat': 'YYYY-MM-DDTJJ:NN:SSZ',
         'categoryField': categoryField,
         'categoryAxis': catAxis,
         'mouseWheelZoomEnabled': false,
@@ -161,7 +158,6 @@
           "valueZoomable": false
         },
         'chartScrollbar': {
-          //'oppositeAxis': false,
           'offset': 30,
           'scrollbarHeight': 20,
           'backgroundAlpha': 0,
@@ -187,6 +183,7 @@
         'columnWidth': 0.035,
         'valueAxis': valueAxis,
         'brightnessStep': 0,
+        'fontFamily': 'CiscoSansTT Extra Light',
         'graph': {
           'fillAlphas': 1,
           'balloonText': '<b>[[availability]]</b></br><b>[[nodes]]</b>'

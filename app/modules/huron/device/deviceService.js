@@ -31,11 +31,11 @@
     function getTags(description) {
       try {
         var tags = JSON.parse(description);
-        return _.unique(tags);
+        return _.uniq(tags);
       } catch (e) {
         try {
           tags = JSON.parse("[\"" + description + "\"]");
-          return _.unique(tags);
+          return _.uniq(tags);
         } catch (e) {
           return [];
         }

@@ -52,15 +52,14 @@
     },
     "legend": {
       "color": "#444",
-      "align": "center",
       "autoMargins": false,
+      "align": "center",
+      "position": "bottom",
       "switchable": false,
       "fontSize": 13,
       "markerLabelGap": 10,
       "markerType": "square",
       "markerSize": 10,
-      "position": "absolute",
-      "left": 350,
       "equalWidths": false,
       "horizontalGap": 5,
       "valueAlign": "left",
@@ -166,6 +165,7 @@
     "columnWidth": 0.035,
     "valueAxis": "dummyData",
     "brightnessStep": 0,
+    "fontFamily": "CiscoSansTT Extra Light",
     "graph": {
       "fillAlphas": 1,
       "balloonText": "<b>[[availability]]</b></br><b>[[nodes]]</b>"

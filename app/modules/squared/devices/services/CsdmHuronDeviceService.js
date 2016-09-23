@@ -74,7 +74,6 @@
           _.extend(deviceList, CsdmConverter.convertHuronDevices(res.data));
         }, function () {
           loadedData = true;
-          Notification.error('spacesPage.retrieveDevicesFail');
         });
       });
     }
