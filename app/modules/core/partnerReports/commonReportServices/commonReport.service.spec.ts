@@ -120,7 +120,7 @@ describe('Service: Common Report Service', () => {
     };
 
     let buildResponse = (responseType: any): Array<any> => {
-      let returnGraph = [];
+      let returnGraph: Array<any> = [];
 
       if (responseType === 0) {
         for (let i = 7; i > 0; i--) {
@@ -166,7 +166,7 @@ describe('Service: Common Report Service', () => {
     });
 
     let buildAltResponse = (responseType: any): Array<any> => {
-      let returnGraph = [];
+      let returnGraph: Array<any> = [];
 
       if (responseType === 0) {
         for (let i = 8; i > 0; i--) {

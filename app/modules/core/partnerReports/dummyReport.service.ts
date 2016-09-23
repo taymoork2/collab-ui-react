@@ -44,7 +44,7 @@ export class DummyReportService {
   }
 
   public dummyActiveUserData (filter: ITimespan): Array<IActiveUserData> {
-    let dummyGraph = [];
+    let dummyGraph: Array<IActiveUserData> = [];
 
     if (filter.value === 0) {
       for (let i = this.days; i >= 1; i--) {
@@ -79,10 +79,10 @@ export class DummyReportService {
 
   public dummyActivePopulationData(customers: Array<IReportsCustomer>): Array<IPopulationData> {
     if (customers && customers.length > 0) {
-      let returnArray = [];
-      _.forEach(customers, (item, index) => {
+      let returnArray: Array<IPopulationData> = [];
+      for (let index = 0; index < customers.length; index ++) {
         returnArray.push(this.getActivePopulationDatapoint(this.loadingCustomer, index));
-      });
+      }
       return returnArray;
     } else {
       return [this.getActivePopulationDatapoint(this.loadingCustomer, 0)];
@@ -101,7 +101,7 @@ export class DummyReportService {
   }
 
   public dummyMediaQualityData(filter: ITimespan): Array<IMediaQualityData> {
-    let dummyGraph = [];
+    let dummyGraph: Array<IMediaQualityData> = [];
 
     if (filter.value === 0) {
       for (let i = this.days; i >= 1; i--) {

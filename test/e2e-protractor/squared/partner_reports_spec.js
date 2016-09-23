@@ -3,8 +3,8 @@
 describe('Partner Reports', function () {
   var customer = 'Spark UC Report Test Partner';
   var e2eCustomer = 'Spark UC Reports E2E Tests';
-  var time = ['Last Week', 'Last Month', 'Last Three Months'];
-  var lowerTime = ['last week', 'last month', 'last three months'];
+  var time = ['Last 7 Days', 'Last 4 Weeks', 'Last 3 Months'];
+  var lowerTime = ['last seven days', 'last four weeks', 'last three months'];
 
   describe('Log In', function () {
     it('should login to partner reports page', function () {

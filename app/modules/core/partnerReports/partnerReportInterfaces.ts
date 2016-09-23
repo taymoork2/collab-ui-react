@@ -34,7 +34,7 @@ export interface IReportSortOption {
 export interface IEndpointData {
   class: string;
   output: Array<string>;
-  splitClasses: string;
+  splitClasses: string | void;
 }
 
 // Call Metrics Interfaces
@@ -58,12 +58,12 @@ export interface ICallMetricsDataProvider {
 
 // Media Quality Interface
 export interface IMediaQualityData {
-  date: string;
-  totalDurationSum;
-  partialSum;
-  goodQualityDurationSum;
-  fairQualityDurationSum;
-  poorQualityDurationSum;
+  date: string | void;
+  totalDurationSum: number;
+  partialSum: number;
+  goodQualityDurationSum: number;
+  fairQualityDurationSum: number;
+  poorQualityDurationSum: number;
   balloon: boolean;
 }
 
@@ -77,9 +77,9 @@ export interface IActiveUserCustomerData {
 
 export interface IActiveUserData {
   date: string;
-  totalRegisteredUsers;
-  activeUsers;
-  percentage;
+  totalRegisteredUsers: number;
+  activeUsers: number;
+  percentage: number;
   balloon: boolean;
 }
 
@@ -92,10 +92,10 @@ export interface IActiveTableData {
 }
 
 export interface IPopulationData {
-  customerName: string;
-  percentage;
-  overallPopulation;
-  color: string;
+  customerName: string | void;
+  percentage: number | void;
+  overallPopulation: number;
+  color: string | void;
   balloon: boolean;
   labelColorField: string;
 }

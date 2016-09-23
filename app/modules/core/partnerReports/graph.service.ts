@@ -91,7 +91,7 @@ export class GraphService {
     if (!data[0].balloon) {
       colors = [this.chartColors.grayLightFour, this.chartColors.grayLightThree];
     }
-    let graphs = [];
+    let graphs: Array<any> = [];
 
     _.forEach(values, (value, index) => {
       graphs.push(this.CommonGraphService.getBaseVariable(this.COLUMN));
@@ -156,7 +156,7 @@ export class GraphService {
     if (!data[0].balloon) {
       colors = [this.chartColors.grayLightFour, this.chartColors.grayLightThree, this.chartColors.grayLightTwo];
     }
-    let graphs = [];
+    let graphs: Array<any> = [];
 
     for (let i = 0; i < values.length; i++) {
       let title = this.$translate.instant(titles[i]);
@@ -236,7 +236,7 @@ export class GraphService {
       color = this.chartColors.grayLightThree;
     }
 
-    let graph = this.CommonGraphService.getBaseVariable(this.COLUMN);
+    let graph: any = this.CommonGraphService.getBaseVariable(this.COLUMN);
     graph.fillColors = 'color';
     graph.colorField = 'color';
     graph.fontSize = 26;
@@ -245,7 +245,7 @@ export class GraphService {
     graph.balloonText = this.popBalloonTextOne;
     graph.showBalloon = data[0].balloon;
 
-    let graphs = [graph, {
+    let graphs: Array<any> = [graph, {
       type: 'step',
       valueField: 'overallPopulation',
       lineThickness: 2,

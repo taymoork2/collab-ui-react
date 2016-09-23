@@ -15,9 +15,13 @@ describe('Service: Report Service', () => {
     status: 500,
   };
 
-  let updateDates = (data: any, format: string) => {
+  let updateDates = (data: any, format: boolean) => {
     for (let i = data.length - 1; i >= 0; i--) {
-      data[i].date = moment().subtract(data.length - i, defaults.DAY).format(format);
+      if (format) {
+        data[i].date = moment().subtract(data.length - i, defaults.DAY).format(defaults.dayFormat);
+      } else {
+        data[i].date = moment().subtract(data.length - i, defaults.DAY).format();
+      }
     }
     return data;
   };
@@ -27,6 +31,8 @@ describe('Service: Report Service', () => {
     this.injectDependencies('$httpBackend', '$q', 'CommonReportService', 'ReportService');
 
     spyOn(this.CommonReportService, 'returnErrorCheck').and.callFake((error, message, response) => {
+      expect(error).toEqual(rejectError);
+      expect(message).not.toBe(undefined);
       return response;
     });
   });
@@ -44,8 +50,8 @@ describe('Service: Report Service', () => {
   describe('Active User Services', function () {
     beforeEach(function () {
       let activeUserDetailedAPI = _.clone(activeUserData.detailedAPI);
-      activeUserDetailedAPI.data[0].data = updateDates(activeUserDetailedAPI.data[0].data, undefined);
-      activeUserDetailedAPI.data[1].data = updateDates(activeUserDetailedAPI.data[1].data, undefined);
+      activeUserDetailedAPI.data[0].data = updateDates(activeUserDetailedAPI.data[0].data, false);
+      activeUserDetailedAPI.data[1].data = updateDates(activeUserDetailedAPI.data[1].data, false);
 
       spyOn(this.CommonReportService, 'getPartnerReport').and.returnValue(this.$q.when({
         data: activeUserDetailedAPI,
@@ -66,7 +72,7 @@ describe('Service: Report Service', () => {
 
       this.ReportService.getActiveUserData(customerData.customerOptions, timeFilter).then(function (response) {
         expect(response).toEqual({
-          graphData: updateDates(_.clone(activeUserData.detailedResponse), defaults.dayFormat),
+          graphData: updateDates(_.clone(activeUserData.detailedResponse), true),
           popData: popData,
           isActiveUsers: true,
         });
@@ -120,7 +126,7 @@ describe('Service: Report Service', () => {
       let mediaAPI = _.clone(mediaQualityData.mediaQualityAPI);
       mediaAPI.data[0].data[0].date = moment().subtract(1, 'day').format();
       mediaAPI.data[2].data[0].date = moment().subtract(3, 'day').format();
-      let mediaQualityResponse = updateDates(_.clone(mediaQualityData.mediaQualityResponse), defaults.dayFormat);
+      let mediaQualityResponse = updateDates(_.clone(mediaQualityData.mediaQualityResponse), true);
 
       spyOn(this.CommonReportService, 'getPartnerReport').and.returnValue(this.$q.when({
         data: mediaAPI,

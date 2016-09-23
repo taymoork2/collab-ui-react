@@ -26,7 +26,6 @@ export class CommonReportService {
   private usageOptions: Array<string> = ['weeklyUsage', 'monthlyUsage', 'threeMonthUsage'];
   private altUsageOptions: Array<string> = ['dailyUsage', 'monthlyUsage', 'threeMonthUsage'];
   private cacheValue: boolean = (parseInt(moment.utc().format('H'), 10) >= 8);
-  private urlBase: string;
 
   /* @ngInject */
   constructor(
@@ -34,9 +33,9 @@ export class CommonReportService {
     private Authinfo,
     private Notification,
     private UrlConfig
-  ) {
-    this.urlBase = UrlConfig.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/reports/';
-  }
+  ) {}
+
+  private urlBase = this.UrlConfig.getAdminServiceUrl() + 'organization/' + this.Authinfo.getOrgId() + '/reports/';
 
   private getService(url: string, cancelPromise: ng.IDeferred<any>): ng.IHttpPromise<any> {
     if (cancelPromise) {
@@ -104,24 +103,24 @@ export class CommonReportService {
     }
   }
 
-  public getReturnGraph(filter: ITimespan, date: string, graphItem: any): any {
-    let returnGraph = [];
+  public getReturnGraph(filter: ITimespan, date: string, graphItem: any): Array<any> {
+    let returnGraph: Array<any> = [];
 
     if (filter.value === 0) {
       for (let i = 7; i > 0; i--) {
-        let tmpItem = _.clone(graphItem);
+        let tmpItem: any = _.clone(graphItem);
         tmpItem.date = moment().tz(this.TIMEZONE)
           .subtract(i, this.DAY)
           .format(this.DAY_FORMAT);
         returnGraph.push(tmpItem);
       }
     } else if (filter.value === 1) {
-      if (_.isUndefined(date) || _.isNull(date)) {
+      if (date === '') {
         date = moment().subtract(1, this.DAY).format(this.DAY_FORMAT);
       }
-      let dayOffset = this.getOffset(parseInt(moment.tz(date, this.TIMEZONE).format('e'), 10));
+      let dayOffset: number = this.getOffset(parseInt(moment.tz(date, this.TIMEZONE).format('e'), 10));
       for (let x = 3; x >= 0; x--) {
-        let temp = _.clone(graphItem);
+        let temp: any = _.clone(graphItem);
         temp.date = moment().tz(this.TIMEZONE)
           .startOf(this.WEEK)
           .subtract(dayOffset + (x * 7), this.DAY)
@@ -130,7 +129,7 @@ export class CommonReportService {
       }
     } else {
       for (let y = 2; y >= 0; y--) {
-        let item = _.clone(graphItem);
+        let item: any = _.clone(graphItem);
         item.date = moment().tz(this.TIMEZONE)
           .subtract(y, this.MONTH)
           .startOf(this.MONTH)
@@ -142,12 +141,12 @@ export class CommonReportService {
     return returnGraph;
   }
 
-  public getReturnLineGraph(filter: ITimespan, graphItem: any): any {
-    let returnGraph = [];
+  public getReturnLineGraph(filter: ITimespan, graphItem: any): Array<any> {
+    let returnGraph: Array<any> = [];
 
     if (filter.value === 0) {
       for (let i = 8; i > 0; i--) {
-        let tmpItem = _.clone(graphItem);
+        let tmpItem: any = _.clone(graphItem);
         tmpItem.date = moment().tz(this.TIMEZONE)
           .subtract(i, this.DAY)
           .format(this.DAY_FORMAT);
@@ -155,7 +154,7 @@ export class CommonReportService {
       }
     } else if (filter.value === 1) {
       for (let x = 4; x >= 0; x--) {
-        let temp = _.clone(graphItem);
+        let temp: any = _.clone(graphItem);
         temp.date = moment().day(-1)
           .subtract(x, this.WEEK)
           .format(this.DAY_FORMAT);
@@ -163,7 +162,7 @@ export class CommonReportService {
       }
     } else {
       for (let y = 12; y >= 0; y--) {
-        let item = _.clone(graphItem);
+        let item: any = _.clone(graphItem);
         item.date = moment().day(-1)
           .subtract(y, this.WEEK)
           .format(this.DAY_FORMAT);

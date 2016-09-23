@@ -21,7 +21,7 @@ class ReportService {
   private topn: string = 'topn';
   private POSITIVE = 'positive';
   private NEGATIVE = 'negative';
-  private timeFilter: number;
+  private timeFilter: number | void;
 
   // promise tracking
   private ABORT: string = 'ABORT';
@@ -85,7 +85,7 @@ class ReportService {
       return;
     }).catch((error: any) => {
       if (error.status && (error.status !== 0 || error.config.timeout.$$state.status === 0)) {
-        this.timeFilter = null;
+        this.timeFilter = undefined;
       }
       return this.CommonReportService.returnErrorCheck(error, 'activeUsers.overallActiveUserGraphError', this.TIMEOUT);
     });
@@ -188,13 +188,13 @@ class ReportService {
   }
 
   private getActiveGraphData(customers: Array<IReportsCustomer>, filter: ITimespan): IActiveUserReturnData {
-    let returnData = {
+    let returnData: IActiveUserReturnData = {
       graphData: [],
       popData: [],
       isActiveUsers: false,
     };
-    let date = undefined;
-    let activeDataSet = [];
+    let date: string = '';
+    let activeDataSet: Array<Array<IActiveUserData>> = [];
 
     _.forEach(customers, (org: IReportsCustomer) => {
       // placeholder for the combined population graph
@@ -212,7 +212,8 @@ class ReportService {
         // gather active user data for combining below
         let orgActive = orgData.graphData;
         activeDataSet.push(orgActive);
-        if (orgActive && (orgActive.length > 0) && (_.isUndefined(date) || orgActive[(orgActive.length - 1)].date > date)) {
+
+        if (orgActive && (orgActive.length > 0) && (date === '' || orgActive[(orgActive.length - 1)].date > date)) {
           date = orgActive[(orgActive.length - 1)].date;
         }
 
@@ -272,7 +273,7 @@ class ReportService {
     return graphData;
   }
 
-  public getActiveTableData(customers: Array<IReportsCustomer>, filter: ITimespan): ng.IHttpPromise<IActiveTableData> {
+  public getActiveTableData(customers: Array<IReportsCustomer>, filter: ITimespan): ng.IHttpPromise<Array<IActiveTableData>> {
     if (this.activeTableCancelPromise) {
       this.activeTableCancelPromise.resolve(this.ABORT);
     }
@@ -293,7 +294,7 @@ class ReportService {
       let reportOptions: IReportTypeQuery = this.CommonReportService.getReportTypeOptions(filter, this.activeUsers, this.topn);
 
       return this.CommonReportService.getPartnerReportByReportType(reportOptions, extraOptions, customerArray, this.activeTableCancelPromise).then((response) => {
-        let tableData = [];
+        let tableData: Array<IActiveTableData> = [];
         _.forEach(_.get(response, 'data.data'), (org) => {
           _.forEach(_.get(org, 'data'), (item) => {
             tableData.push({
@@ -320,7 +321,7 @@ class ReportService {
 
     let reportOptions = this.CommonReportService.getOptions(filter, 'callQuality', this.detailed);
     return this.CommonReportService.getPartnerReport(reportOptions, customers, this.qualityCancelPromise).then((response) => {
-      let data = _.get(response, 'data.data');
+      let data: any = _.get(response, 'data.data');
       if (data) {
         let graphItem: IMediaQualityData = {
           date: undefined,
@@ -332,17 +333,19 @@ class ReportService {
           balloon: true,
         };
 
-        let date: string = undefined;
-        _.forEach(data, (offset) => {
-          let offsetData: any = _.get(offset, 'data');
-          if (_.isArray(offsetData) && (_.isUndefined(date) || offsetData[offsetData.length - 1].date > date)) {
-            date = offsetData[offsetData.length - 1].date;
+        let date: string = '';
+        _.forEach(data, (org: any) => {
+          if (_.isArray(org.data)) {
+            let orgDate: string = org.data[org.data.length - 1].date;
+            if (orgDate && (date === '' || orgDate > date)) {
+              date = orgDate;
+            }
           }
         });
 
         let baseGraph = this.CommonReportService.getReturnGraph(filter, date, graphItem);
         let graphUpdated = false;
-        _.forEach(data, (org) => {
+        _.forEach(data, (org: any) => {
           let orgData = _.get(org, 'data');
           if (_.isArray(orgData)) {
             let graph = this.parseMediaQualityData(orgData, filter);
@@ -362,7 +365,7 @@ class ReportService {
     });
   }
 
-  private parseMediaQualityData(orgData, filter: ITimespan): Array<IMediaQualityData> {
+  private parseMediaQualityData(orgData: Array<any>, filter: ITimespan): Array<IMediaQualityData> {
     let graph: Array<IMediaQualityData> = [];
     _.forEach(orgData, (item) => {
       let details: any = _.get(item, 'details');
