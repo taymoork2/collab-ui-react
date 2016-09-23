@@ -6,7 +6,7 @@
     .factory('ResourceGroupService', ResourceGroupService);
 
   /* @ngInject */
-  function ResourceGroupService($http, UrlConfig, Authinfo, Orgservice, $q, $translate, FusionClusterService) {
+  function ResourceGroupService($http, UrlConfig, Authinfo, $translate, FusionClusterService) {
     return {
       getAll: getAll,
       get: get,
@@ -62,18 +62,18 @@
     }
 
     function getAllowedChannels() {
-      var deferred = $q.defer();
-      Orgservice.getOrgCacheOption(function (data, status) {
-        if (data && data.success) {
-          // TODO: look at the sub entitlements and only allow entitled channels
-          deferred.resolve(['stable', 'beta', 'latest']);
-        } else {
-          deferred.reject(status);
-        }
-      }, null, {
-        cache: true
-      });
-      return deferred.promise;
+      return $http
+        .get(UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '/releaseChannels')
+        .then(extractDataFromResponse)
+        .then(function (data) {
+          var allowedChannels = [];
+          _.forEach(data.releaseChannels, function (channel) {
+            if (channel.entitled === true) {
+              allowedChannels.push(channel.channel);
+            }
+          });
+          return allowedChannels;
+        });
     }
 
     function assign(clusterId, resourceGroupId) {
