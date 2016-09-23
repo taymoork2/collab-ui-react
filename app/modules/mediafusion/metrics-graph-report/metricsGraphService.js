@@ -387,15 +387,15 @@
       var columnNames = {};
       if (cluster === 'All Clusters') {
         columnNames = {
-          'availability': 'Availability',
+          'availability': 'Availability Status',
           'startTime': 'Start Time',
           'endTime': 'End Time',
           'category': 'Cluster',
-          'nodes': 'Nodes'
+          'nodes': 'Node(s)'
         };
       } else {
         columnNames = {
-          'task': 'Availability',
+          'task': 'Availability Status',
           'startTime': 'Start Time',
           'endTime': 'End Time',
           'category': 'Node'

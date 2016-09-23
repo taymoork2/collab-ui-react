@@ -2,7 +2,7 @@
   'use strict';
   angular.module('Mediafusion').controller('MediaServiceMetricsContoller', MediaServiceMetricsContoller);
   /* @ngInject */
-  function MediaServiceMetricsContoller($timeout, $translate, MediaClusterServiceV2, XhrNotificationService, MetricsReportService, MetricsGraphService, DummyMetricsReportService, $interval, $scope) {
+  function MediaServiceMetricsContoller($timeout, $translate, MediaClusterServiceV2, $q, MetricsReportService, MetricsGraphService, DummyMetricsReportService, $interval, $scope) {
     var vm = this;
     vm.ABORT = 'ABORT';
     vm.REFRESH = 'refresh';
@@ -97,6 +97,7 @@
     }
 
     function getCluster() {
+      var deferred = $q.defer();
       MediaClusterServiceV2.getAll()
         .then(function (clusters) {
           vm.clusters = _.filter(clusters, { targetType: 'mf_mgmt' });
@@ -107,10 +108,14 @@
 
             }
           });
+          deferred.resolve(vm.Map);
           vm.clusterId = vm.clusterOptions[0];
           vm.clusterSelected = vm.clusterOptions[0];
 
-        }, XhrNotificationService.notify);
+        }).catch(function () {
+          deferred.reject();
+        });
+      return deferred.promise;
     }
 
     function getClusterName(graphs) {
@@ -129,11 +134,14 @@
         }
         if (value.valueField === 'average_util') {
           value.title = vm.average_utilzation;
+          value.lineColor = '#4E5051';
           value.dashLength = 4;
           value.balloonText = '<span class="graph-text">' + value.title + ' <span class="graph-number">[[value]]</span></span>';
           value.lineThickness = 2;
         }
-        vm.tempData.push(value);
+        if (value.title !== value.valueField) {
+          vm.tempData.push(value);
+        }
       });
       return vm.tempData;
     }
@@ -162,8 +170,14 @@
     }
 
     function loadDatas() {
-      getCluster();
-      clusterUpdate();
+      var promise = getCluster();
+      promise.then(function (response) {
+        if (angular.isDefined(response)) {
+          clusterUpdate();
+        }
+      }).catch(function () {
+        setDummyData();
+      });
     }
 
     loadDatas();
@@ -241,15 +255,18 @@
 
     function setAvailabilityGraph(data) {
       var tempData = angular.copy(data);
+      var availabilityData = [];
       if (vm.clusterId === vm.allClusters) {
-        angular.forEach(data.data[0].clusterCategories, function (clusterCategory, index) {
+        angular.forEach(data.data[0].clusterCategories, function (clusterCategory) {
           var clusterName = _.findKey(vm.Map, function (val) {
             return val === clusterCategory.category;
           });
           if (angular.isDefined(clusterName)) {
-            tempData.data[0].clusterCategories[index].category = clusterName;
+            clusterCategory.category = clusterName;
+            availabilityData.push(clusterCategory);
           }
         });
+        tempData.data[0].clusterCategories = availabilityData;
       }
       var tempAvailabilityChart = MetricsGraphService.setAvailabilityGraph(tempData, vm.availabilityChart, vm.clusterId, vm.clusterSelected, vm.timeSelected.label);
       if (tempAvailabilityChart !== null && angular.isDefined(tempAvailabilityChart)) {
