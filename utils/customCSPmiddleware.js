@@ -23,6 +23,7 @@ module.exports = csp({
       'https://*.webexconnect.com',
       'https://wbxdmz.admin.ciscospark.com',
       'https://wbxbts.admin.ciscospark.com',
+      'blob:'
     ],
     frameSrc: [
       'https://buy.ciscospark.com', // Digital River
@@ -81,11 +82,6 @@ module.exports = csp({
       '\'self\'',
       '\'unsafe-inline\'',
       // Webpack Dev
-      'blob:',
-    ],
-    mediaSrc: [
-      '\'self\'',
-      'https://*.webex.com',
       'blob:',
     ]
   }
