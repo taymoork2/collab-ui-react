@@ -103,7 +103,7 @@
     }
 
     function getUpgradeState(connectors) {
-      var allAreUpgraded = _.every(connectors, 'upgradeState', 'upgraded');
+      var allAreUpgraded = _.every(connectors, { upgradeState: 'upgraded' });
       return allAreUpgraded ? 'upgraded' : 'upgrading';
     }
 
@@ -119,12 +119,12 @@
 
     function buildAggregates(type, cluster) {
       var connectors = cluster.connectors;
-      var provisioning = _.find(cluster.provisioning, 'connectorType', type);
+      var provisioning = _.find(cluster.provisioning, { connectorType: type });
       var upgradeAvailable = provisioning && _.some(cluster.connectors, function (connector) {
         return provisioning.availableVersion && connector.runningVersion !== provisioning.availableVersion;
       });
       var hosts = _.chain(connectors)
-        .pluck('hostname')
+        .map('hostname')
         .uniq()
         .value();
       return {
@@ -133,10 +133,10 @@
         upgradeState: getUpgradeState(connectors),
         provisioning: provisioning,
         upgradeAvailable: upgradeAvailable,
-        upgradeWarning: upgradeAvailable && !_.any(cluster.connectors, 'state', 'offline'),
+        upgradeWarning: upgradeAvailable && !_.some(cluster.connectors, { state: 'offline' }),
         hosts: _.map(hosts, function (host) {
           // 1 host = 1 connector (for a given type)
-          var connector = _.find(connectors, 'hostname', host);
+          var connector = _.find(connectors, { hostname: host });
           return {
             alarms: connector.alarms,
             hostname: host,
@@ -159,7 +159,7 @@
       return _.chain(clusters)
         .map(function (cluster) {
           cluster = angular.copy(cluster);
-          cluster.connectors = _.filter(cluster.connectors, 'connectorType', type);
+          cluster.connectors = _.filter(cluster.connectors, { connectorType: type });
           return cluster;
         })
         .filter(function (cluster) {
@@ -196,9 +196,9 @@
         })
         .then(function (clusters) {
           var result = {
-            c_mgmt: _.indexBy(clusters.c_mgmt, 'id'),
-            c_ucmc: _.indexBy(clusters.c_ucmc, 'id'),
-            c_cal: _.indexBy(clusters.c_cal, 'id')
+            c_mgmt: _.keyBy(clusters.c_mgmt, 'id'),
+            c_ucmc: _.keyBy(clusters.c_ucmc, 'id'),
+            c_cal: _.keyBy(clusters.c_cal, 'id')
           };
           return result;
         })
@@ -216,7 +216,7 @@
         .then(extractDataFromResponse)
         .then(function (data) {
           // only keep fused clusters
-          return _.filter(data.clusters, 'state', 'fused');
+          return _.filter(data.clusters, { state: 'fused' });
         });
     }
 

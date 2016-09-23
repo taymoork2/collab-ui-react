@@ -105,7 +105,7 @@
 
     function initCurrent() {
       if ($stateParams.currentTab) {
-        vm.current.tab = _.findWhere(getTabs(), {
+        vm.current.tab = _.find(getTabs(), {
           name: $stateParams.currentTab
         });
       } else {
@@ -113,7 +113,7 @@
       }
 
       if ($stateParams.currentSubTab) {
-        vm.current.subTab = _.findWhere(getTab().subTabs, {
+        vm.current.subTab = _.find(getTab().subTabs, {
           name: $stateParams.currentSubTab
         });
       }

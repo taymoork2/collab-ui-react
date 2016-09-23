@@ -252,7 +252,7 @@
     }
 
     function setupAddUserSubTabs() {
-      var userTab = _.findWhere($scope.tabs, {
+      var userTab = _.find($scope.tabs, {
         name: 'addUsers'
       });
       var simpleSubTab = {
@@ -289,7 +289,7 @@
       }];
 
       if ($scope.isDirSyncEnabled) {
-        var advancedSubTab = _.findWhere(userTab.subTabs, {
+        var advancedSubTab = _.find(userTab.subTabs, {
           name: 'advanced'
         });
         advancedSubTab.steps = advancedSubTab.steps.concat(advancedSubTabSteps);

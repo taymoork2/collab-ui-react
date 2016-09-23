@@ -609,7 +609,7 @@
           // Report required field is missing
           processingError = true;
           addUserError(csvRowIndex, id, $translate.instant('firstTimeWizard.csvRequiredEmail'));
-        } else if (_.contains(uniqueEmails, id)) {
+        } else if (_.includes(uniqueEmails, id)) {
           // Report a duplicate email
           processingError = true;
           addUserError(csvRowIndex, id, $translate.instant('firstTimeWizard.csvDuplicateEmail'));

@@ -3,7 +3,7 @@
 /* global inviteusers */
 /* global LONG_TIMEOUT */
 
-describe('Onboard users through Manual Invite', function () {
+xdescribe('Onboard users through Manual Invite', function () {
   var token;
   var userList = [utils.randomTestGmailwithSalt('manual'), utils.randomTestGmailwithSalt('manual')];
 
@@ -11,6 +11,7 @@ describe('Onboard users through Manual Invite', function () {
     login.login('account-admin', '#/users')
       .then(function (_token) {
         token = _token;
+        expect(token).toBeTruthy();
       });
   });
 
@@ -52,9 +53,9 @@ describe('Onboard users through Manual Invite', function () {
     });
   });
 
-  afterAll(function () {
-    _.each(userList, function (user) {
-      deleteUtils.deleteUser(user, token);
-    });
-  });
+  // afterAll(function () {
+    // _.each(userList, function (user) {
+    //   deleteUtils.deleteUser(user, token);
+    // });
+  // });
 });

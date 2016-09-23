@@ -46,7 +46,7 @@
         var prefix = 'helpdesk.userStatuses.';
         for (var i = 0; i < vm.user.statuses.length; i++) {
           var status = vm.user.statuses[i];
-          if (_.contains(prefix + 'rejected', status)) {
+          if (_.includes(prefix + 'rejected', status)) {
             vm.user.statuses[i] = prefix + 'resent';
           }
         }
@@ -89,7 +89,7 @@
             var statusToReplace = [prefix + 'active', prefix + 'inactive', prefix + 'pending', prefix + 'resent'];
             for (var i = 0; i < vm.user.statuses.length; i++) {
               var status = vm.user.statuses[i];
-              if (_.contains(statusToReplace, status)) {
+              if (_.includes(statusToReplace, status)) {
                 vm.user.statuses[i] = prefix + 'rejected';
               }
             }

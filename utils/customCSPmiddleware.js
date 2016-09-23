@@ -48,7 +48,9 @@ module.exports = csp({
       'ws://localhost:8000',
       // Local Atlas Backend:
       'http://127.0.0.1:8080',
-      'http://localhost:8080'
+      'http://localhost:8080',
+      'http://dpm.demdex.net', // Adobe DTM Omniture
+      'http://ciscowebex.d1.sc.omtrdc.net', // Adobe DTM Omniture
     ],
     imgSrc: [
       '\'self\'',
@@ -58,6 +60,7 @@ module.exports = csp({
       'https://*.localytics.com',
       'https://*.rackcdn.com',
       'http://webexglobal.112.2o7.net', // Adobe DTM Omniture
+      'http://*.d1.sc.omtrdc.net', // Adobe DTM Omniture
       // Webpack Dev
       'blob:',
     ],
@@ -71,6 +74,7 @@ module.exports = csp({
       'https://cdn.mxpnl.com', // Mixpanel
       'http://assets.adobedtm.com', // Adobe DTM Omniture
       'http://dpm.demdex.net', // Adobe DTM Omniture
+      'http://ciscowebex.d1.sc.omtrdc.net', // Adobe DTM Omniture
       'https://buy.ciscospark.com', // Digital River
     ],
     styleSrc: [

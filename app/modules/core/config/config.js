@@ -293,7 +293,7 @@
         'users',
         'status'
       ],
-      Support: ['status', 'support', 'reports', 'billing', 'cdrsupport', 'cdr-overview', 'cdrladderdiagram'],
+      Support: ['status', 'support', 'reports', 'billing', 'cdrsupport', 'cdr-overview', 'cdrladderdiagram', 'reports-metrics'],
       WX2_User: ['status', 'overview', 'support', 'activateProduct'],
       WX2_Support: ['status', 'overview', 'reports', 'support'],
       WX2_SquaredInviter: [],
