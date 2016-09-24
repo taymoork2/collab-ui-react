@@ -2,6 +2,9 @@
   width: 100%;
   @include vr-spacing(mt, 1);
   @include vr-spacing(mb, 1);
+  @media all and (min-width: 25rem) {
+    width: 21.5rem;
+  }
 
   & .aa-message-textarea {
     @include vr-spacing(mb, 1);

@@ -5,10 +5,13 @@ class SubscriptionHeaderCtrl {
   public upgradeTrialUrl: string;
 
   /* @ngInject */
-  constructor($scope, $timeout, $translate, Authinfo, UrlConfig) {
-    this.isOnline = Authinfo.isOnline();
+  constructor(
+    private $scope: ng.IScope,
+    private Authinfo,
+  ) {
+    this.isOnline = this.Authinfo.isOnline();
 
-    $scope.$on('SUBSCRIPTION::upgradeData', (event, response) => {
+    this.$scope.$on('SUBSCRIPTION::upgradeData', (_event, response) => {
       this.isTrial = response.isTrial;
       this.subId = response.subId;
       this.upgradeTrialUrl = response.upgradeTrialUrl;

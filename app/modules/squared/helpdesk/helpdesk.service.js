@@ -3,7 +3,7 @@
 
   /* @ngInject */
 
-  function HelpdeskService($http, $location, $q, $translate, $window, CacheFactory, Config, CsdmConfigService, CsdmConverter, FeatureToggleService, HelpdeskHttpRequestCanceller, HelpdeskMockData, ServiceDescriptor, UrlConfig, USSService) {
+  function HelpdeskService($http, $location, $q, $translate, $window, CacheFactory, Config, CsdmConfigService, CsdmConverter, FeatureToggleService, HelpdeskHttpRequestCanceller, HelpdeskMockData, ServiceDescriptor, SessionStorage, UrlConfig, USSService) {
     var urlBase = UrlConfig.getAdminServiceUrl();
     var orgCache = CacheFactory.get('helpdeskOrgCache');
     if (!orgCache) {
@@ -88,6 +88,19 @@
         }
       });
       return users;
+    }
+
+    function isSparkOnlineUser(user) {
+      // TODO:
+      // - update this once backend API is implemented (property name might change, expected
+      //   value might change, etc.)
+      // - to force this value to true, in browser devtools console, run:
+      //   ```
+      //   sessionStorage.setItem('dev.helpdesk.isSparkOnlineUser', 1);
+      //   ```
+      var value = !!_.get(user, 'onlineOrderIds') || JSON.parse(SessionStorage.get('dev.helpdesk.isSparkOnlineUser'));
+
+      return value;
     }
 
     function getCorrectedDisplayName(user) {
@@ -258,6 +271,7 @@
     function extractAndMassageUser(res) {
       var user = res.data || res;
       user.displayName = getCorrectedDisplayName(user);
+      user.isSparkOnlineUser = isSparkOnlineUser();
       user.isConsumerUser = user.orgId === Config.consumerOrgId;
       user.organization = {
         id: user.orgId
@@ -271,6 +285,15 @@
         }
       } else {
         user.statuses = _.map(user.accountStatus, function (status) {
+          // notes:
+          // - 'pending' => CI status (see: https://wiki.cisco.com/display/PLATFORM/CI3.0+SCIM+API+-+Get+User )
+          // - by default, 'pending' alone means a normal user that was invited to Spark by their
+          //   admin but not yet accepted
+          // - if user is a Spark Online user (ie. they purchased Spark through Digital River), then
+          //   the user is the original purchaser, but has not registered yet
+          if (status === 'pending') {
+            status = (user.isSparkOnlineUser) ? 'onboarding-pending' : 'invite-pending';
+          }
           return 'helpdesk.userStatuses.' + status;
         });
       }

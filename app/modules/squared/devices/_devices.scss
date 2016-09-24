@@ -240,7 +240,7 @@
     display: flex;
     align-items: center;
   }
-  i, input, span {
+  i, input {
     font-size: 22px;
   }
   i {
@@ -255,7 +255,6 @@
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
-    font-family: "CiscoSansTT Extra Light", "Helvetica Neue", Helvetica, Arial, sans-serif;
   }
   input {
     width: 320px;

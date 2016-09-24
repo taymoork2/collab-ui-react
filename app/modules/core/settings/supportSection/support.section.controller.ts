@@ -1,10 +1,10 @@
 export class SupportSettings {
 
-  private customSupport = { enable: false, url: null, text: null };
-  private oldCustomSupport = { enable: false, url: null, text: null };
+  private customSupport = { enable: false, url: '', text: '' };
+  private oldCustomSupport = { enable: false, url: '', text: '' };
 
-  private customHelpSite = { enable: false, url: null };
-  private oldCustomHelpSite = { enable: false, url: null };
+  private customHelpSite = { enable: false, url: '' };
+  private oldCustomHelpSite = { enable: false, url: '' };
 
   public placeHolder = {};
   private isCiscoSupport = false;
@@ -62,8 +62,8 @@ export class SupportSettings {
 
   get showCustomSupportUrlSaveButton(): boolean {
     return this.customSupport.enable !== this.oldCustomSupport.enable //Switched
-      && (!this.customSupport.enable || this.customSupport.url) //to disabled or has an url set
-      || ( this.customSupport.enable && this.customSupport.url && (this.customSupport.url !== this.oldCustomSupport.url || this.oldCustomSupport.text !== this.customSupport.text));
+      && (!this.customSupport.enable || !!this.customSupport.url) //to disabled or has an url set
+      || ( this.customSupport.enable && !!this.customSupport.url && (this.customSupport.url !== this.oldCustomSupport.url || this.oldCustomSupport.text !== this.customSupport.text));
   }
 
   get isPartner(): boolean {

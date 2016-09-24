@@ -2,7 +2,7 @@
 (function () {
   'use strict';
 
-  angular.module('Huron')
+  angular.module('huron.telephoneNumber')
     .factory('TelephoneNumberService', TelephoneNumberService);
 
   /* @ngInject */

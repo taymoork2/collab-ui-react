@@ -12,14 +12,15 @@
     vm.groupResponse = null;
     vm.clusterDetail = null;
 
-    MediaClusterServiceV2.getAll()
-      .then(function (clusters) {
-        vm.clusters = _.filter(clusters, { targetType: 'mf_mgmt' });
-        _.each(clusters, function (clust) {
-          vm.options.push(clust.name);
-        });
-        vm.options.sort();
-      }, XhrNotificationService.notify);
+    vm.getCluster = function () {
+      MediaClusterServiceV2.getAll()
+        .then(function (clusters) {
+          vm.clusters = _.filter(clusters, { targetType: 'mf_mgmt' });
+          vm.options = _.map(vm.clusters, 'name');
+          vm.options.sort();
+        }, XhrNotificationService.notify);
+    };
+    vm.getCluster();
 
     vm.reassignText = $translate.instant(
       'mediaFusion.reassign.reassignTextV2', {

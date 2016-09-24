@@ -9,11 +9,9 @@ class OnlineUpgrade {
   constructor(
     private $state: ng.ui.IStateService,
     private Auth,
-    private Authinfo,
     private Notification,
-    private OnlineUpgradeService: OnlineUpgradeService
-  ) {
-  }
+    private OnlineUpgradeService: OnlineUpgradeService,
+  ) {}
 
   public $onInit(): void {
     this.subscriptionId = this.OnlineUpgradeService.getSubscriptionId();

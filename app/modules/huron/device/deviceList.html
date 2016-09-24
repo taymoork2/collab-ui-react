@@ -1,0 +1,27 @@
+<section-title
+  title-key="usersPreview.devicesPreview"
+  action-list="$ctrl.actionList"
+  show-actions="$ctrl.showActions">
+</section-title>
+<div ng-if="$ctrl.showGenerateButton">
+  <div class="section-content">
+    <div class="generate-activation-code">{{::$ctrl.generateCodeText}}</div>
+    <div class="generate-activation-code" translate="usersPreview.generateActivationCodeDesc"></div>
+    <button
+      class="btn btn--people btn-center"
+      ng-click="$ctrl.onGenerateCode()"
+      translate="usersPreview.generateActivationCode">
+    </button>
+  </div>
+</div>
+<div class="feature-list">
+  <ul>
+    <li class="feature" ng-repeat="device in $ctrl.deviceList ">
+      <a ng-click="$ctrl.onShowDeviceDetail(device)">
+        <i class="icon icon-circle status-indicator" ng-class="device.cssColorClass"></i>
+        <span class="feature-name">{{device.product}}</span> <span class="feature-status" ng-if="device.addOnModuleCount > 0">{{ :: 'deviceOverviewPage.kemAbbreviation' | translate }}: {{device.addOnModuleCount}}</span>
+        <i class="feature-arrow"></i>
+      </a>
+    </li>
+  </ul>
+</div>
