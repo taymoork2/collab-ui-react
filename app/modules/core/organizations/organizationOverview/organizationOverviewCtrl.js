@@ -40,7 +40,8 @@
       if ($scope.showHybridServices) {
         var ReleaseChannel = function (name, allowed) {
           this.name = name;
-          this.newAllow = this.oldAllow = allowed;
+          this.newAllow = allowed;
+          this.oldAllow = allowed;
           this.reset = function () {
             this.newAllow = this.oldAllow;
           };

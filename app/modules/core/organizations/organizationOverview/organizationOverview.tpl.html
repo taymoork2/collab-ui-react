@@ -31,14 +31,12 @@
   </cs-sp-section>
   <cs-sp-section>
     <div class="section-title-row section-name" translate="organizationsPage.services"></div>
-    <div class="org-overview-list">
-      <div class="row" ng-repeat="svc in currentOrganization.services">
-        <div class="small-12 columns">
-          <span>{{svc}}</span>
-        </div>
+    <div class="row" ng-repeat="svc in currentOrganization.services">
+      <div class="small-12 columns">
+        <span>{{svc}}</span>
       </div>
     </div>
-    <button class="btn btn--primary" ng-click="manageFeatures()">
+    <button class="btn btn--primary manage-beta-features-button" ng-click="manageFeatures()">
       <span translate="organizationsPage.manageBetaFeatures"></span>
     </button>
   </cs-sp-section>
