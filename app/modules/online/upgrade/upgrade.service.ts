@@ -19,18 +19,17 @@ export class OnlineUpgradeService {
 
   /* @ngInject */
   constructor(
-    private $http: ng.IHttpService,
     private $modal: IToolkitModalService,
     private $resource: ng.resource.IResourceService,
     private $q: ng.IQService,
     private Authinfo,
     private Notification,
-    private UrlConfig
+    private UrlConfig,
   ) {
     let patchAction: ng.resource.IActionDescriptor = {
       method: 'PATCH',
     };
-    this.subscriptionResource = <ISubscriptionResource>$resource(UrlConfig.getAdminServiceUrl() + 'commerce/online/subscriptions/:subscriptionId', {}, {
+    this.subscriptionResource = <ISubscriptionResource>this.$resource(this.UrlConfig.getAdminServiceUrl() + 'commerce/online/subscriptions/:subscriptionId', {}, {
       patch: patchAction,
     });
   }

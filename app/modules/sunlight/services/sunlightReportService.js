@@ -186,6 +186,12 @@
         var reducedForHour = {};
         if (isSnapshot) {
           reducedForHour = _.reduce(statsList, reduceOrgSnapshotStatsByHour, emptyOrgstats);
+          if (reducedForHour.numWorkingTasks < 0) {
+            reducedForHour.numWorkingTasks = 0;
+          }
+          if (reducedForHour.numPendingTasks < 0) {
+            reducedForHour.numPendingTasks = 0;
+          }
         } else {
           reducedForHour = _.reduce(statsList, reduceOrgStatsByHour, emptyOrgstats);
           reducedForHour.avgTaskWaitTime = (reducedForHour.avgTaskWaitTime / convertInMinutes);

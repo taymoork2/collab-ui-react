@@ -2,10 +2,8 @@
 
 describe('Controller: AARouteToQueueCtrl', function () {
   var $controller, $modal;
-  var AAUiModelService, AutoAttendantCeInfoModelService, AutoAttendantCeMenuModelService, AAModelService, QueueHelperService;
+  var AAUiModelService, AutoAttendantCeInfoModelService, AutoAttendantCeMenuModelService, AAModelService;
   var $rootScope, $scope;
-
-  var $q;
 
   var aaModel = {
 
@@ -34,6 +32,7 @@ describe('Controller: AARouteToQueueCtrl', function () {
 
   var queueName = 'Chandan Test Queue';
   var queues = [{
+    id: 'c16a6027-caef-4429-b3af-9d61ddc7964b',
     queueName: queueName,
     queueUrl: '/c16a6027-caef-4429-b3af-9d61ddc7964b',
 
@@ -68,23 +67,23 @@ describe('Controller: AARouteToQueueCtrl', function () {
   beforeEach(angular.mock.module('Huron'));
   beforeEach(angular.mock.module('Sunlight'));
 
-  beforeEach(inject(function (_$controller_, _$q_, _$rootScope_, _$modal_, _AAUiModelService_, _AutoAttendantCeInfoModelService_, _AutoAttendantCeMenuModelService_, _AAModelService_, _QueueHelperService_) {
+  beforeEach(inject(function (_$controller_, _$rootScope_, _$modal_, _AAUiModelService_, _AutoAttendantCeInfoModelService_, _AutoAttendantCeMenuModelService_, _AAModelService_) {
     $rootScope = _$rootScope_;
     $scope = $rootScope;
     $modal = _$modal_;
-    $q = _$q_;
 
     $controller = _$controller_;
     AAModelService = _AAModelService_;
     AAUiModelService = _AAUiModelService_;
     AutoAttendantCeInfoModelService = _AutoAttendantCeInfoModelService_;
     AutoAttendantCeMenuModelService = _AutoAttendantCeMenuModelService_;
-    QueueHelperService = _QueueHelperService_;
+
 
     $scope.schedule = schedule;
     $scope.index = index;
     $scope.keyIndex = keyIndex;
     $scope.menuId = 'menu1';
+    $scope.queues = JSON.stringify(queues);
 
     spyOn(AAModelService, 'getAAModel').and.returnValue(aaModel);
     aaModel.ceInfos = raw2CeInfos(rawCeInfos);
@@ -93,7 +92,7 @@ describe('Controller: AARouteToQueueCtrl', function () {
     AutoAttendantCeMenuModelService.clearCeMenuMap();
     aaUiModel[schedule] = AutoAttendantCeMenuModelService.newCeMenu();
     aaUiModel[schedule].addEntryAt(index, AutoAttendantCeMenuModelService.newCeMenu());
-    spyOn(QueueHelperService, 'listQueues').and.returnValue($q.when(queues));
+
   }));
 
   describe('openQueueTreatmentModal', function () {
@@ -127,7 +126,13 @@ describe('Controller: AARouteToQueueCtrl', function () {
       });
 
       expect(controller).toBeDefined();
-
+      var action = AutoAttendantCeMenuModelService.newCeActionEntry('routeToQueue', '');
+      controller.menuEntry.actions = [];
+      controller.menuEntry.actions[0] = action;
+      controller.hideQueues = false;
+      controller.populateUiModel();
+      $scope.$apply();
+      expect(controller.queueSelected.id).toEqual('');
       expect(controller.menuEntry.actions[0].name).toEqual('routeToQueue');
       expect(controller.menuEntry.actions[0].value).toEqual('');
 
@@ -148,12 +153,7 @@ describe('Controller: AARouteToQueueCtrl', function () {
       var controller = $controller('AARouteToQueueCtrl', {
         $scope: $scope
       });
-
-      controller.queueSelected = {
-        name: "Oleg's Call Experience 1",
-        id: "c16a6027-caef-4429-b3af-9d61ddc7964b"
-      };
-
+      controller.hideQueues = false;
       var action = AutoAttendantCeMenuModelService.newCeActionEntry('routeToQueue', 'myId');
       controller.menuEntry.actions = [];
       controller.menuEntry.actions[0] = action;
@@ -165,22 +165,57 @@ describe('Controller: AARouteToQueueCtrl', function () {
       expect(controller.queueSelected.id).toEqual('myId');
 
     });
+    it('should be able to show the already selected queue', function () {
+      var controller = $controller('AARouteToQueueCtrl', {
+        $scope: $scope
+      });
+      controller.hideQueues = true;
+      controller.populateUiModel();
 
-    it('should be able to create new HG entry from Route Call', function () {
+      $scope.$apply();
+      expect(controller.queueSelected.id).toEqual('c16a6027-caef-4429-b3af-9d61ddc7964b');
+
+      expect(controller.menuEntry.actions[0].name).toEqual('routeToQueue');
+      expect(controller.menuEntry.actions[0].value).toEqual('c16a6027-caef-4429-b3af-9d61ddc7964b');
+    });
+
+    it('should be able to create new AA entry from Route Call', function () {
 
       var controller = $controller('AARouteToQueueCtrl', {
         $scope: $scope
       });
 
       expect(controller).toBeDefined();
-
+      var action = AutoAttendantCeMenuModelService.newCeActionEntry('routeToQueue', '');
+      controller.menuEntry.actions = [];
+      controller.menuEntry.actions[0] = action;
+      controller.hideQueues = false;
+      controller.populateUiModel();
+      $scope.$apply();
+      expect(controller.queueSelected.id).toEqual('');
       expect(controller.menuEntry.actions[0].name).toEqual('routeToQueue');
       expect(controller.menuEntry.actions[0].value).toEqual('');
 
     });
 
-    it('should be able to change update via saveUIModel', function () {
+    it('should be able to create new AA entry from Route Call', function () {
+      var controller = $controller('AARouteToQueueCtrl', {
+        $scope: $scope
+      });
+      expect(controller).toBeDefined();
+      var action = AutoAttendantCeMenuModelService.newCeActionEntry('routeToQueue', '');
+      controller.menuEntry.actions = [];
+      controller.menuEntry.actions[0] = action;
+      controller.hideQueues = true;
+      controller.populateUiModel();
+      $scope.$apply();
+      expect(controller.queueSelected.id).toEqual('c16a6027-caef-4429-b3af-9d61ddc7964b');
+      expect(controller.menuEntry.actions[0].name).toEqual('routeToQueue');
+      expect(controller.menuEntry.actions[0].value).toEqual('c16a6027-caef-4429-b3af-9d61ddc7964b');
 
+    });
+
+    it('should be able to change update via saveUIModel', function () {
       var controller = $controller('AARouteToQueueCtrl', {
         $scope: $scope
       });
@@ -204,15 +239,23 @@ describe('Controller: AARouteToQueueCtrl', function () {
 
   describe('AARouteToQueue', function () {
 
-    it('should be able to create new HG entry', function () {
+    it('should be able to create new AA entry', function () {
 
       var controller = $controller('AARouteToQueueCtrl', {
         $scope: $scope
       });
 
       expect(controller).toBeDefined();
+      var action = AutoAttendantCeMenuModelService.newCeActionEntry('routeToQueue', '');
+      controller.menuKeyEntry.actions = [];
+      controller.menuKeyEntry.actions[0] = action;
+      controller.hideQueues = false;
+      controller.populateUiModel();
+      $scope.$apply();
+      expect(controller.queueSelected.id).toEqual('');
       expect(controller.menuKeyEntry.actions[0].name).toEqual('routeToQueue');
       expect(controller.menuKeyEntry.actions[0].value).toEqual('');
+
 
     });
 
@@ -239,6 +282,47 @@ describe('Controller: AARouteToQueueCtrl', function () {
         });
         $scope.$apply();
         expect(controller.queueSelected.id).toEqual('c16a6027-caef-4429-b3af-9d61ddc7964b');
+      });
+    });
+    describe('fromRouteCall is false', function () {
+      beforeEach(function () {
+        $scope.fromRouteCall = false;
+
+        aaUiModel[schedule].addEntryAt(index, AutoAttendantCeMenuModelService.newCeMenuEntry());
+
+        aaUiModel[schedule].entries[0].actions = [];
+
+      });
+      it('should be able to create new AA while hideQueues is false', function () {
+        var controller = $controller('AARouteToQueueCtrl', {
+          $scope: $scope
+        });
+        expect(controller).toBeDefined();
+        var action = AutoAttendantCeMenuModelService.newCeActionEntry('routeToQueue', 'c16a6027-caef-4429-b3af-9d61ddc7964b');
+        controller.menuEntry.actions = [];
+        controller.menuEntry.actions[0] = action;
+        controller.hideQueues = false;
+        controller.populateUiModel();
+        $scope.$apply();
+        expect(controller.queueSelected.id).toEqual('c16a6027-caef-4429-b3af-9d61ddc7964b');
+        expect(controller.menuEntry.actions[0].name).toEqual('routeToQueue');
+        expect(controller.menuEntry.actions[0].value).toEqual('c16a6027-caef-4429-b3af-9d61ddc7964b');
+      });
+
+      it('should be able to show the Queues when hideQueues is true', function () {
+        var controller = $controller('AARouteToQueueCtrl', {
+          $scope: $scope
+        });
+        expect(controller).toBeDefined();
+        var action = AutoAttendantCeMenuModelService.newCeActionEntry('routeToQueue', 'c16a6027-caef-4429-b3af-9d61ddc7964b');
+        controller.menuEntry.actions = [];
+        controller.menuEntry.actions[0] = action;
+        controller.hideQueues = true;
+        controller.populateUiModel();
+        $scope.$apply();
+        expect(controller.queueSelected.id).toEqual('c16a6027-caef-4429-b3af-9d61ddc7964b');
+        expect(controller.menuEntry.actions[0].name).toEqual('routeToQueue');
+        expect(controller.menuEntry.actions[0].value).toEqual('c16a6027-caef-4429-b3af-9d61ddc7964b');
       });
     });
 

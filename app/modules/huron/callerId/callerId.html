@@ -1,31 +1,37 @@
-<h4 translate="callerIdPanel.title"></h4>
-<cs-select
-  name="callerIdSelection"
-  ng-model="$ctrl.callerIdSelected"
-  options="$ctrl.callerIdOptions"
-  on-change-fn="$ctrl.onChange()">
-</cs-select>
-<div ng-if="$ctrl.showCustom()">
-  <div class="row">
-    <input
-      name="callerIdName"
-      class="form-control"
-      type="text"
-      ng-model="$ctrl.customCallerIdName"
-      cs-input cs-input-label="{{'callerIdPanel.customName' | translate}}"
-      ng-change="$ctrl.onChange()">
+<div ng-form="callerIdForm" class="cs-form">
+  <div class="cs-form__section">
+    <div class="section__info">
+      <h4 class="section__title" translate="callerIdPanel.title"></h4>
+    </div>
+    <div class="section__content">
+      <div class="cs-input-group">
+        <cs-select
+          name="callerIdSelection"
+          ng-model="$ctrl.callerIdSelected"
+          options="$ctrl.callerIdOptions"
+          on-change-fn="$ctrl.onChange()">
+        </cs-select>
+      </div>
+      <div ng-if="$ctrl.showCustom()">
+        <input
+          cs-input
+          type="text"
+          name="callerIdName"
+          ng-model="$ctrl.customCallerIdName"
+          cs-input-label="{{'callerIdPanel.customName' | translate}}"
+          ng-change="$ctrl.onChange()">
+        <input
+          cs-input
+          type="text"
+          name="callerIdNumber"
+          ng-model="$ctrl.customCallerIdNumber"
+          cs-input-label="{{'callerIdPanel.customNumber' | translate}}"
+          ng-change="$ctrl.onChange()">
+      </div>
+      <div class="cs-input-group" ng-if="$ctrl.callerIdSelected.value.name || $ctrl.callerIdSelected.value.pattern">
+        <p class="cs-input__help-text">{{$ctrl.callerIdSelected.value.name}}</p>
+        <p class="cs-input__help-text">{{$ctrl.callerIdSelected.value.pattern}}</p>
+      </div>
+    </div>
   </div>
-  <div class="row">
-    <input
-      name="callerIdNumber"
-      class="form-control"
-      type="text"
-      ng-model="$ctrl.customCallerIdNumber"
-      cs-input cs-input-label="{{'callerIdPanel.customNumber' | translate}}"
-      ng-change="$ctrl.onChange()">
-  </div>
-</div>
-<div class="caller-id-description">
-  <p>{{$ctrl.callerIdSelected.value.name}}</p>
-  <p>{{$ctrl.callerIdSelected.value.pattern}}</p>
 </div>

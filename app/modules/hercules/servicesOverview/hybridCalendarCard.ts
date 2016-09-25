@@ -2,7 +2,7 @@ import { ICardButton, CardType } from './ServicesOverviewCard';
 import { ServicesOverviewHybridCard } from './ServicesOverviewHybridCard';
 
 export class ServicesOverviewHybridCalendarCard extends ServicesOverviewHybridCard {
-  public getShowMoreButton(): ICardButton {
+  public getShowMoreButton(): ICardButton | undefined {
     return undefined;
   }
 

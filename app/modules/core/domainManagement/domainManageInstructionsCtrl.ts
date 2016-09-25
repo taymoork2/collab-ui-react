@@ -7,9 +7,14 @@ namespace domainManagement {
     private _loadTime;
 
     /* @ngInject */
-    constructor($stateParams, private $previousState, private DomainManagementService, private LogMetricsService) {
-      this._domain = $stateParams.domain;
-      this._loggedOnUser = $stateParams.loggedOnUser;
+    constructor(
+      private $stateParams,
+      private $previousState,
+      private DomainManagementService,
+      private LogMetricsService,
+    ) {
+      this._domain = this.$stateParams.domain;
+      this._loggedOnUser = this.$stateParams.loggedOnUser;
       this._email = this._loggedOnUser.email;
       this._loadTime = moment();
       this.recordMetrics({
@@ -19,7 +24,7 @@ namespace domainManagement {
       });
 
       if (this._domain && this._domain.text && !this._domain.token) {
-        DomainManagementService.getToken(this._domain.text).then((res) => {
+        this.DomainManagementService.getToken(this._domain.text).then((res) => {
           this._domain.token = res;
         });
       }

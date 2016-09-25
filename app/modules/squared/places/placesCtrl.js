@@ -98,9 +98,8 @@
             },
             sortCellFiltered: true
           }, {
-            field: 'type',
+            field: 'readableType',
             displayName: $translate.instant('placesPage.typeHeader'),
-            cellTemplate: getTemplate('_typeTpl'),
             sortable: true
           }, {
             field: 'devices',
