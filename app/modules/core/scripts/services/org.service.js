@@ -404,7 +404,7 @@
 
     function setHybridServiceReleaseChannelEntitlement(orgId, channel, entitled) {
       return $http
-        .post(UrlConfig.getAdminServiceUrl() + '/hybridservices/organizations/' + orgId + '/releaseChannels', {
+        .post(UrlConfig.getAdminServiceUrl() + 'hybridservices/organizations/' + orgId + '/releaseChannels', {
           channel: channel,
           entitled: entitled
         });

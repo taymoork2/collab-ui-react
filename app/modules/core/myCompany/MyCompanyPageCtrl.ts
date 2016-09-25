@@ -15,20 +15,20 @@ namespace myCompanyPage {
     /* @ngInject */
     constructor(
       private $translate: ng.translate.ITranslateService,
-      private Authinfo
+      private Authinfo,
     ) {
       this._tabs = [{
-        title: $translate.instant('my-company.subscription'),
+        title: this.$translate.instant('my-company.subscription'),
         state: 'my-company.subscriptions',
       }, {
-        title: $translate.instant('my-company.info'),
+        title: this.$translate.instant('my-company.info'),
         state: 'my-company.info',
       }];
 
-      this._title = $translate.instant('my-company.pageTitle');
-      if (Authinfo.isOnline()) {
+      this._title = this.$translate.instant('my-company.pageTitle');
+      if (this.Authinfo.isOnline()) {
         this._tabs.push({
-          title: $translate.instant('my-company.order'),
+          title: this.$translate.instant('my-company.order'),
           state: 'my-company.orders',
         });
       }

@@ -45,9 +45,11 @@
           <span>{{'helpdesk.status' | translate}}:</span>
         </div>
         <div class="large-7 columns details-value">
-          <span ng-repeat="status in helpdeskUserCtrl.user.statuses" style="margin-right: 1rem;" >{{status | translate}}{{$last ? '' : ', '}}</span>
+          <span style="margin-right: 1rem;">{{helpdeskUserCtrl.userStatusesAsString}}</span>
           <span>
-            <a ng-click="helpdeskUserCtrl.resendInviteEmail()" ng-if="helpdeskUserCtrl.resendInviteEnabled">{{'helpdesk.resend' | translate}}</a>
+            <a ng-if="helpdeskUserCtrl.resendInviteEnabled"
+              ng-click="helpdeskUserCtrl.resendInviteEmail()"
+              translate="helpdesk.resend"></a>
           </span>
         </div>
       </div>

@@ -25,11 +25,9 @@
 }
 
 .esn-number-field {
-  margin-top: 10px;
   &.steeringDigitOverlap, &.warningMargin {
     margin-top: 26px;
   }
-  color: $gray-dark;
   .esn-extension {
     color: $text-color;
   }
