@@ -26,7 +26,8 @@
       '/elevatereadonlyadmin/invoke',
       '/WBXService/XMLService',
       '/meetingsapi/v1/users/',
-      '/meetingsapi/v1/files/'
+      '/meetingsapi/v1/files/',
+      '/releaseChannels'
     ];
 
     return {
