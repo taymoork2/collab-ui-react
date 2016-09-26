@@ -575,19 +575,19 @@
 
     function getManagedOrgsList(searchText) {
       $scope.showManagedOrgsRefresh = true;
-      var promiselist = [PartnerService.getManagedOrgsList(searchText)];
+      var promiselist = { managedOrgs: PartnerService.getManagedOrgsList(searchText) };
 
       if (Authinfo.isPartnerAdmin() || Authinfo.isPartnerReadOnlyAdmin()) {
         // This attaches myOrg details to the managed orgs list
         if (searchText === '' || Authinfo.getOrgName().indexOf(searchText) !== -1) {
-          promiselist.push(getMyOrgDetails());
+          promiselist.myOrgDetails = getMyOrgDetails();
         }
       }
 
       return $q.all(promiselist)
         .then(function (results) {
           if (results) {
-            var orgList = _.get(results, '[0].data.organizations', []);
+            var orgList = _.get(results, 'managedOrgs.data.organizations', []);
             var managed = PartnerService.loadRetrievedDataToList(orgList, false,
               $scope.isCareEnabled);
             var indexMyOwnOrg = _.findIndex(managed, {
@@ -595,11 +595,11 @@
             });
             // 4/11/2016 admolla
             // TODO: for some reason if I refactor this to not need an array, karma acts up....
-            if (results[1] && _.isArray(results[1])) {
-              if (indexMyOwnOrg == -1) {
-                amanaged.unshift(results[1][0]);
+            if (results.myOrgDetails && _.isArray(results.myOrgDetails)) {
+              if (indexMyOwnOrg === -1) {
+                managed.unshift(results.myOrgDetails[0]);
               } else {
-                managed[indexMyOwnOrg] = results[1][0];
+                managed[indexMyOwnOrg] = results.myOrgDetails[0];
               }
             }
             $scope.managedOrgsList = managed;
