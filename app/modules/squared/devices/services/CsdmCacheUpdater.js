@@ -28,7 +28,7 @@
 
       var removeDeleted = function (current, updated, keepFunction) {
         _.each(_.difference(_.keys(current), _.keys(updated)), function (deletedUrl) {
-          if (!keepFunction || !keepFunction(current[deletedUrl])){
+          if (!keepFunction || !keepFunction(current[deletedUrl])) {
             delete current[deletedUrl];
           }
         });

@@ -48,7 +48,7 @@
 
     function updateDeviceMap(deviceMap) {
 
-      CsdmCacheUpdater.update(theDeviceMap, deviceMap, function (existing) { return existing.isCode;});
+      CsdmCacheUpdater.update(theDeviceMap, deviceMap, function (existing) { return existing.isCode; });
 
       _.each(_.values(deviceMap), function (d) {
         addOrUpdatePlaceInDataModel(d.cisUuid, d.type, d.displayName);
@@ -67,7 +67,7 @@
       codesFetchedDeferred = $q.defer();
       CsdmCodeService.fetchCodes()
         .then(function (codesMap) {
-          CsdmCacheUpdater.update(theDeviceMap, codesMap, function (existing) { return !(existing.isCode);});
+          CsdmCacheUpdater.update(theDeviceMap, codesMap, function (existing) { return !(existing.isCode); });
           _.each(_.values(codesMap), function (d) {
             addOrUpdatePlaceInDataModel(d.cisUuid, d.type, d.displayName);
           });
@@ -169,7 +169,8 @@
 
       return service.updateItemName(objectToUpdate, newName)
         .then(function () {
-
+          var placeUrl = placesUrl + objectToUpdate.cisUuid;
+          placesDataModel[placeUrl].displayName = newName;
           var device = theDeviceMap[objectToUpdate.url];
           device.displayName = newName;
           return device;

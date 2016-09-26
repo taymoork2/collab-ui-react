@@ -48,7 +48,7 @@ describe('Service: CsdmDataModelService', function () {
   function executeGetCallsAndInitPromises() {
     var initialDeviceMapPromise = CsdmDataModelService.getDevicesMap();
 
-    CsdmDataModelService.getPlacesMap().then( function () {
+    CsdmDataModelService.getPlacesMap().then(function () {
       initialDeviceMapPromise.then(function (deviceMap) {
         initialDeviceMap = deviceMap;
         initialDevice1Reference = initialDeviceMap[device1Url];
@@ -270,6 +270,7 @@ describe('Service: CsdmDataModelService', function () {
             expect(updatedDevice.displayName).toEqual(newDeviceName);
             expect(devices[deviceUrlToUpdate].displayName).toEqual(newDeviceName);
             expect(places[pWithDeviceUrl].devices[1].displayName).toEqual(newDeviceName);
+            expect(places[pWithDeviceUrl].displayName).toEqual(newDeviceName);
 
             promiseExecuted = "YES";
           });
