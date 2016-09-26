@@ -83,9 +83,7 @@ describe('Huron Auto Attendant', function () {
 
       // it is for selecting the queue for route to queue option
       utils.scroll(autoattendant.phoneMenuKeyOptions.first().all(by.tagName('li')).first());
-      utils.click(autoattendant.rqDropDownArrow);
-      utils.click(autoattendant.rqDropDownOptionSunlight.first());  //// select by name
-      
+
     });
 
     it('should click queue setting hyperlink of route to queue to the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
@@ -111,13 +109,11 @@ describe('Huron Auto Attendant', function () {
 
       utils.scroll(autoattendant.repeatPlus);
       utils.click(autoattendant.phoneMenuAction.get(1));
-        
-        // it is for selecting the queue for route to queue option
-      utils.click(autoattendant.phoneMenuActionOptions.all(by.linkText(autoattendant.routeToQueue)).first());
-      utils.click(autoattendant.rqDropDownArrow);
-      utils.click(autoattendant.rqDropDownOptionSunlight.get(1));
 
-    });  
+      // it is for selecting the queue for route to queue option
+      utils.click(autoattendant.phoneMenuActionOptions.all(by.linkText(autoattendant.routeToQueue)).first());
+
+    });
 
     it('should click queue setting hyperlink of route to queue to the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
         // it is for selecting the queue for route to queue option

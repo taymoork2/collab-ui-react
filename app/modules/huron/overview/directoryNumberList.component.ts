@@ -5,7 +5,7 @@ class DirectoryNumberListCtrl implements ng.IComponentController {
   public directoryNumbers: Array<Line>;
   private primaryLabel: string;
   private lineThreshold: number;
-  public numberOfLines: number = this.lineThreshold;
+  public numberOfLines: number | undefined = this.lineThreshold;
 
   constructor(
     private $translate: ng.translate.ITranslateService

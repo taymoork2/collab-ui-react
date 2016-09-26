@@ -1,5 +1,5 @@
 interface IDirectoryNumberOption {
-  value: string;
+  value: string | undefined;
   label: string;
 }
 
@@ -30,7 +30,7 @@ class DirectoryNumber implements ng.IComponentController {
     this.placeholder = this.$translate.instant('directoryNumberPanel.chooseNumber');
     this.nonePlaceholder = this.$translate.instant('directoryNumberPanel.none');
     this.noneOption = {
-      value: null,
+      value: undefined,
       label: this.nonePlaceholder,
     };
   }
@@ -40,7 +40,7 @@ class DirectoryNumber implements ng.IComponentController {
     let internalNumbersChange = changes['internalNumbers'];
     if (internalNumbersChange) {
       if (internalNumbersChange.currentValue && _.isArray(internalNumbersChange.currentValue)) {
-        this.internalOptions = this.convertStringArrayToDirectoryNumberOptionsArray(internalNumbersChange.currentValue);
+        this.internalOptions = this.convertStringArrayToDirectoryNumberOptionsArray(internalNumbersChange.currentValue as string[]);
       }
     }
 
@@ -48,7 +48,7 @@ class DirectoryNumber implements ng.IComponentController {
     let externalNumbersChange = changes['externalNumbers'];
     if (externalNumbersChange) {
       if (externalNumbersChange.currentValue && _.isArray(externalNumbersChange.currentValue)) {
-        this.externalOptions = this.convertStringArrayToDirectoryNumberOptionsArray(externalNumbersChange.currentValue);
+        this.externalOptions = this.convertStringArrayToDirectoryNumberOptionsArray(externalNumbersChange.currentValue as string[]);
         this.externalOptions.unshift(this.noneOption);
       }
     }

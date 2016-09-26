@@ -25,7 +25,7 @@
     vm.allowRemove = false;
     vm.setGroupName = setGroupName;
     vm.releaseChannelChanged = releaseChannelChanged;
-    vm.deleteGroup = deleteGroup;
+    vm.openDeleteGroupModal = openDeleteGroupModal;
     vm.openAssignClustersModal = openAssignClustersModal;
     vm.handleKeypress = handleKeypress;
 
@@ -112,14 +112,20 @@
       });
     }
 
-    function deleteGroup() {
-      ResourceGroupService.remove(vm.group.id)
-        .then(function () {
-          Notification.success('hercules.resourceGroupSettings.deleteSuccess');
-          $state.go('cluster-list');
-        }, function () {
-          Notification.error('hercules.genericFailure');
-        });
+    function openDeleteGroupModal() {
+      $modal.open({
+        resolve: {
+          resourceGroup: function () {
+            return vm.group;
+          }
+        },
+        controller: 'ConfirmDeleteResourceGroupController',
+        controllerAs: 'vm',
+        templateUrl: 'modules/hercules/fusion-pages/resource-group-settings/confirm-delete-resource-group.html',
+        type: 'dialog'
+      }).result.then(function () {
+        $state.go('cluster-list');
+      });
     }
 
     function openAssignClustersModal() {

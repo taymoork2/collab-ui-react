@@ -5,7 +5,7 @@ import {
 } from './sharedLine';
 
 class SharedLineCtrl implements ng.IComponentController {
-  public selectedUser: SharedLineUser;
+  public selectedUser: SharedLineUser | undefined;
   public sharedLineUsers: SharedLineUser[];
   public sharedLineEndpoints: SharedLineDevice[];
   public oneAtATime: boolean = true;

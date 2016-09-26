@@ -6,11 +6,11 @@
     .factory('AAMediaUploadService', AAMediaUploadService);
 
   /* @ngInject */
-  function AAMediaUploadService($window, $http, Authinfo, Upload) {
+  function AAMediaUploadService($window, Authinfo, Upload) {
     var service = {
       upload: upload,
+      uploadByUpload: uploadByUpload,
       uploadByUploadService: uploadByUploadService,
-      uploadByAngular: uploadByAngular,
       validateFile: validateFile,
     };
 
@@ -23,7 +23,7 @@
     return service;
 
     function upload(file, event) {
-      return uploadByAngular(file, event);
+      return uploadByUpload(file, event);
     }
 
     function getUploadUrl() {
@@ -32,6 +32,20 @@
       } else {
         return uploadBaseUrl;
       }
+    }
+
+    function uploadByUpload(file) {
+      var uploadUrl = getUploadUrl();
+      var fd = new $window.FormData();
+      fd.append('file', file);
+      return Upload.http({
+        url: uploadUrl,
+        transformRequest: angular.identity,
+        headers: {
+          'Content-Type': undefined,
+        },
+        data: fd
+      });
     }
 
 
@@ -57,32 +71,14 @@
 
     }
 
-
-    function uploadByAngular(file, event) {
-
-      // this is to stop the complaint about event being unused
-      var uploadUrl = event;
-
-      uploadUrl = getUploadUrl();
-
-      var fd = new $window.FormData();
-      fd.append('file', file);
-      return $http.post(uploadUrl, fd, {
-        transformRequest: angular.identity,
-        headers: {
-          'Content-Type': undefined
-        }
-      });
+    function validateFile(fileName) {
+      if (_.endsWith(fileName, '.wav')) {
+        return true;
+      } else {
+        return false;
+      }
     }
 
-  }
-
-  function validateFile(fileName) {
-    if (_.endsWith(fileName, '.wav')) {
-      return true;
-    } else {
-      return false;
-    }
   }
 
 })();

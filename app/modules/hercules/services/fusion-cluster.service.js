@@ -343,12 +343,15 @@
         return false; // Cannot recognize service, default to *not* enabled
       }
 
-      var installedConnectors = _.map(clusterList, 'connectors');
-      return _.some(installedConnectors, function (cluster) {
-        return _.some(cluster, function (connector) {
-          return connector.connectorType === target_connector;
-        });
-      });
+      if (serviceId === 'squared-fusion-media') {
+        return _.some(clusterList, { targetType: 'mf_mgmt' });
+      } else {
+        return _.chain(clusterList)
+          .map('connectors')
+          .flatten()
+          .some({ connectorType: target_connector })
+          .value();
+      }
     }
 
     function formatTimeAndDate(upgradeSchedule) {
