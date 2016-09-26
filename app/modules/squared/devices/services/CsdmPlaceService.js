@@ -44,7 +44,7 @@
     }
 
     function updatePlaceName(placeUrl, name) {
-      return $http.put(placeUrl, {
+      return $http.patch(placeUrl, {
         name: name
       }).then(function (res) {
         var place = CsdmConverter.convertPlace(res.data);
