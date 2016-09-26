@@ -3302,14 +3302,14 @@
       "newPlaceOnlyInstructions": "What would you like to call the place that this collaboration device will be assigned to? A place can be a meeting room, a reception area or even a whole department.",
       "deviceInstalled": "Where will this device be installed?",
       "deviceInstalledInstructions": "It is recommended that you use the name of your conference room or shared space as it is shown in your company directory. The video address for this device will use this name. It will also be the easiest way to search for and find the device in the system later.",
-      "insertRoomName": "Insert name of room or shared space",
+      "insertRoomName": "Insert name of device location, e.g. 'Reception' or 'Boardroom'",
       "noExistingPlaces": "There is no Cisco Spark Call place in your organization. Create a new place instead."
     },
     "newSharedSpace": {
       "title": "Add Place",
       "newPlace": "Name of Place",
       "newPlaceInstructions": "A place can be a meeting room, a reception area or even a whole department. A place can either contain one collaboration device or several desk phones. All devices associated with one place will share the same calling configuration. For example, desk phones will share the same lines.",
-      "insertRoomName": "Insert name of room or shared space"
+      "insertRoomName": "Insert name of device location, e.g. 'Reception' or 'Boardroom'"
     },
     "assignPhoneNumber": {
       "assignPhoneNumber": "Assign a phone number",
@@ -3678,6 +3678,7 @@
       "text2": "After 2 hours the node will be upgraded.",
       "upgradeNow": "Upgrade Now",
       "upToDate": "Software is up to date.",
+      "installing": "Software is installing.",
       "sw-upgrade-title": "Software Upgrade",
       "sw-upgrade-text": "New software is available.",
       "upgradeWarning": "This cluster has one or more offline nodes. It is recommended to bring all nodes online before initiating an upgrade.",

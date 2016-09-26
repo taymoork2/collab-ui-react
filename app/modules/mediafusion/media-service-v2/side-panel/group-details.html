@@ -51,11 +51,12 @@
       </div>
     </strong>
     <div ng-if="!groupDetails.showUpgradeProgress">
-      <p ng-if="!groupDetails.softwareUpgrade.isUpgradeAvailable" translate="mediaFusion.upgradeClusters.upToDate"></p>
+      <p ng-if="!groupDetails.softwareUpgrade.isUpgradeAvailable && groupDetails.softwareUpgrade.clusterStatus !== 'installing'" translate="mediaFusion.upgradeClusters.upToDate"></p>
+      <p ng-if="!groupDetails.softwareUpgrade.isUpgradeAvailable && groupDetails.softwareUpgrade.clusterStatus === 'installing'" translate="mediaFusion.upgradeClusters.installing"></p>
       <p ng-if="groupDetails.softwareUpgrade.isUpgradeAvailable" translate="mediaFusion.upgradeClusters.sw-upgrade-text"></p>
       <button class="btn btn--primary"
               ng-click="groupDetails.showUpgradeNowDialog()"
-              ng-disabled="!groupDetails.softwareUpgrade.isUpgradeAvailable"
+              ng-disabled="!groupDetails.softwareUpgrade.isUpgradeAvailable || groupDetails.softwareUpgrade.clusterStatus === 'installing'"
               translate="mediaFusion.upgradeClusters.upgradeNow">
       </button>
       <p ng-if="groupDetails.softwareUpgrade.showUpgradeWarning()"><i class="icon icon-warning no-data-warning hercules-update-warning-text"></i><span  class="hercules-update-warning-text" translate="mediaFusion.upgradeClusters.upgradeWarning"></span></p>
