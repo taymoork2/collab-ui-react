@@ -10,14 +10,21 @@ module.exports = function (config) {
   };
 
   // 'shimFile' from CLI, so set it up separately from main config
-  _config.preprocessors[shimFile] = ['webpack', 'sourcemap'];
+  _config.preprocessors[shimFile] = [
+    'webpack',
+    'sourcemap',
+  ];
 
   // main config
   _.extend(_config, {
 
     basePath: '',
 
-    frameworks: ['jasmine', 'sinon'],
+    frameworks: [
+      'jasmine',
+      'sinon',
+      'source-map-support',
+    ],
 
     files: [
       {
@@ -46,12 +53,7 @@ module.exports = function (config) {
         type: 'json',
         subdir: 'json',
         file: shimFileName + '.json'
-      }, {
-        type: 'text-summary'
-      }, {
-        type: 'html'
-      }
-      ]
+      }],
     },
 
     htmlReporter: {
