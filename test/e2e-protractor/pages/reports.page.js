@@ -23,6 +23,7 @@ var ReportsPage = function () {
   this.activeCustomerDescription = element(by.css('.customer-active-user')).element(by.css('.report-description'));
   this.activePartnerDescription = element(by.id('activeUser')).element(by.css('article section p'));
   this.activeUsers = element(by.id('activeUsersdiv'));
+  this.activeUsersChart = element(by.id('activeUserChart'));
 
   // most active users
   this.activeUsersTable = element(by.css('.active-users-table'));
@@ -45,7 +46,7 @@ var ReportsPage = function () {
   // active user population
   this.activePopulationHeader = element(by.id('userPopulation')).element(by.cssContainingText('article header h4', 'Active User Population by Company'));
   this.activePopulationDescription = element(by.id('activeUserPopulationDiv')).element(by.css('p'));
-  this.activePopulationGraph = element(by.id('activeUserPopulationChart'));
+  this.activePopulationGraph = element(by.id('userPopulationChart'));
 
   // registered endpoints graph
   this.endpointsHeader = element(by.cssContainingText('.report-section-header', 'Registered Endpoints'));
@@ -64,7 +65,7 @@ var ReportsPage = function () {
   this.metricsGraphDiv = element(by.id('metricsGraphDiv'));
   this.metricsData = element.all(by.css('.metrics-display'));
   this.partnerMetricsHeader = element(by.id('callMetrics')).element(by.cssContainingText('article header h4', 'Call Metrics'));
-  this.callMetricsGraph = element(by.id('callMetricsDiv'));
+  this.callMetricsGraph = element(by.id('callMetricsChart'));
   this.partnerMetricsDescription = element(by.id('callMetrics')).element(by.css('article section p'));
 
   // media quality
@@ -73,7 +74,7 @@ var ReportsPage = function () {
   this.mediaFilter = element(by.id('mediaFilter'));
   this.mediaQualityDiv = element(by.id('mediaQualityDiv'));
   this.partnerMediaHeader = element(by.id('mediaQuality')).element(by.cssContainingText('.report-section-header', 'Device Media Quality'));
-  this.mediaQualityGraph = element(by.id('mediaQualityDiv'));
+  this.mediaQualityGraph = element(by.id('mediaQualityChart'));
   this.mediaDescription = element(by.id('mediaQuality')).element(by.css('article section p'));
 
   // Task Incoming

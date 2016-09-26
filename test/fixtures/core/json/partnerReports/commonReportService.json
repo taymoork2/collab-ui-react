@@ -1,0 +1,95 @@
+{
+  "ABORT": "ABORT",
+  "DAY": "day",
+  "WEEK": "week",
+  "MONTH": "month",
+  "format": "MMM DD YYYY",
+  "dayFormat": "MMM DD",
+  "monthFormat": "MMMM",
+  "timezone": "Etc/GMT",
+  "unauthorized": "reportsPage.unauthorizedError",
+  "dummyUrls": [
+    "https://atlas-integration.wbx2.com/admin/api/v1/organization/null/reports/action/managedOrgs/type?&intervalCount=7&intervalType=day&spanCount=1&spanType=day&cache=true&orgId=a7cba512-7b62-4f0a-a869-725b413680e4&orgId=1896f9dc-c5a4-4041-8257-b3adfe3cf9a4&orgId=b7e25333-6750-4b17-841c-ce5124f8ddbb&orgId=1",
+    "https://atlas-integration.wbx2.com/admin/api/v1/organization/null/reports/action/managedOrgs/type?type=reportType&intervalCount=7&intervalType=day&spanCount=1&spanType=day&cache=true&orgId=a7cba512-7b62-4f0a-a869-725b413680e4&orgId=1896f9dc-c5a4-4041-8257-b3adfe3cf9a4&orgId=b7e25333-6750-4b17-841c-ce5124f8ddbb&orgId=1",
+    "https://atlas-integration.wbx2.com/admin/api/v1/organization/null/reports/action/type?&intervalCount=7&intervalType=day&spanCount=1&spanType=day&cache=true&isCustomerView=true",
+    "https://atlas-integration.wbx2.com/admin/api/v1/organization/null/reports/name?type=type&cache=true",
+    "https://atlas-integration.wbx2.com/admin/api/v1/organization/null/reports/name/type?&cache=true"
+  ],
+  "timeFilter": [{
+    "value": 0,
+    "label": "reportsPage.week",
+    "description": "reportsPage.week2"
+  }, {
+    "value": 1,
+    "label": "reportsPage.month",
+    "description": "reportsPage.month2"
+  }, {
+    "value": 2,
+    "label": "reportsPage.threeMonths",
+    "description": "reportsPage.threeMonths2"
+  }],
+  "intervalQuery": {
+    "action": "action",
+    "type": "type",
+    "intervalCount": 7,
+    "intervalType": "day",
+    "spanCount": 1,
+    "spanType": "day",
+    "cache": false
+  },
+  "reportTypeQuery": {
+    "action": "action",
+    "type": "type",
+    "reportType": "reportType",
+    "cache": false
+  },
+  "customerIntervalQuery": {
+    "action": "action",
+    "type": "type",
+    "intervalCount": 7,
+    "intervalType": "day",
+    "spanCount": 1,
+    "spanType": "day",
+    "cache": false,
+    "customerView": true
+  },
+  "typeQuery": {
+    "name": "name",
+    "type": "type",
+    "cache": false
+  },
+  "FourZeroOne": {
+    "status": 401 
+  },
+  "FourZeroThree": {
+    "status": 401 
+  },
+  "nonZeroError": {
+    "status": 500
+  },
+  "timeoutError": {
+    "config": {
+      "timeout": {
+        "$$state": {
+          "status": 0
+        }
+      }
+    },
+    "status": 0
+  },
+  "zeroError": {
+    "config": {
+      "timeout": {
+        "$$state": {
+          "status": 1
+        }
+      }
+    },
+    "status": 0
+  },
+  "graphItem": {
+    "date": ""
+  },
+  "usageOptions": ["weeklyUsage", "monthlyUsage", "threeMonthUsage"],
+  "altUsageOptions": ["dailyUsage", "monthlyUsage", "threeMonthUsage"]
+}
