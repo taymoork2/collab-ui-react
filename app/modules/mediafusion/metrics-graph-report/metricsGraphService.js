@@ -167,7 +167,6 @@
       chartData.numberFormatter = CommonMetricsGraphService.getBaseVariable(NUMFORMAT);
       chartData.legend = CommonMetricsGraphService.getBaseVariable(LEGEND);
       chartData.legend.labelText = '[[title]]';
-
       var chart = AmCharts.makeChart(callVolumediv, chartData);
       chart.addListener("rendered", zoomChart);
       zoomChart(chart);
