@@ -6,8 +6,6 @@
 
     var placesUrl = CsdmPlaceService.getPlacesUrl();
 
-    var accountCache = {};
-
     var theDeviceMap = {};
     var placesDataModel = {};
 
@@ -84,13 +82,12 @@
       accountsFetchedDeferred = $q.defer();
       CsdmPlaceService.getPlacesList()
         .then(function (accounts) {
-          CsdmCacheUpdater.update(accountCache, accounts);
           _.each(_.values(accounts), function (d) {
             addOrUpdatePlaceInDataModel(d.cisUuid, d.type, d.displayName);
           });
         })
         .finally(function () {
-          accountsFetchedDeferred.resolve(accountCache);
+          accountsFetchedDeferred.resolve(placesDataModel);
         });
 
       return accountsFetchedDeferred.promise;
@@ -144,9 +141,11 @@
     }
 
     function createCsdmPlace(name, type) {
+
       return CsdmPlaceService.createCsdmPlace(name, type)
         .then(function (place) {
-          accountCache[place.url] = place;
+
+          placesDataModel[place.url] = place;
           addOrUpdatePlaceInDataModel(place.cisUuid, "cloudberry", place.displayName);
           return place;
         });
