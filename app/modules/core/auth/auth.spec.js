@@ -513,6 +513,43 @@ describe('Auth Service', function () {
       expect(result.services[1].ciName).toBe('webex-messenger');
     });
 
+    it('will not add some webex stuff given some condition && when Full_Admin && inactive wapi org', function (done) {
+      Authinfo.initialize = sinon.stub();
+      UrlConfig.getMessengerServiceUrl = sinon.stub().returns('msn');
+
+      $httpBackend
+        .expectGET('path/userauthinfo')
+        .respond(200, {
+          orgId: 1337,
+          roles: ['Full_Admin'],
+          services: []
+        });
+
+      $httpBackend
+        .expectGET('path/organizations/1337/services')
+        .respond(200, {
+          entitlements: ['foo']
+        });
+
+      $httpBackend
+        .expectGET('msn/orgs/1337/cisync/')
+        .respond(200, {
+          orgID: 'foo',
+          orgName: 'bar',
+          wapiOrgStatus: 'inactive'
+        });
+
+      Auth.authorize().then(function () {
+        _.defer(done);
+      });
+      $httpBackend.flush();
+
+      expect(Authinfo.initialize.callCount).toBe(1);
+
+      var result = Authinfo.initialize.getCall(0).args[0];
+      expect(result.services.length).toBe(1);
+    });
+
     it('will not add some webex stuff given some condition && when PARTNER_ADMIN', function (done) {
       Authinfo.initialize = sinon.stub();
       UrlConfig.getMessengerServiceUrl = sinon.stub().returns('msn');
