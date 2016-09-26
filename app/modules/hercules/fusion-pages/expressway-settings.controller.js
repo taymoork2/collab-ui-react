@@ -254,7 +254,6 @@
       ResourceGroupService.getAllowedChannels()
         .then(function (channels) {
           vm.allowedChannels = channels;
-          vm.allowedChannels = ['stable', 'kuk'];
         });
     }
     getAvailableReleaseChannels();
