@@ -12,6 +12,7 @@
       getSeverityLabel: getSeverityLabel,
       getMergedUpgradeState: getMergedUpgradeState,
       getMergedStateSeverity: getMergedStateSeverity,
+      getStatusIndicatorCSSClass: getStatusIndicatorCSSClass,
     };
 
     return service;
@@ -114,6 +115,23 @@
         severity: getStateSeverity(mostSevereConnector),
         label: getSeverityLabel(getStateSeverity(mostSevereConnector))
       };
+    }
+
+    function getStatusIndicatorCSSClass(status) {
+      var cssClass;
+      switch (status) {
+        case 'operational':
+          cssClass = 'success';
+          break;
+        case 'outage':
+          cssClass = 'danger';
+          break;
+        case 'impaired':
+        case 'unknown':
+        default:
+          cssClass = 'warning';
+      }
+      return cssClass;
     }
   }
 })();

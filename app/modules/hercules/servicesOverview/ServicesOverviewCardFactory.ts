@@ -10,7 +10,7 @@ import { ServicesOverviewHybridCallCard } from './hybridCallCard';
 import { ServicesOverviewHybridMediaCard } from './hybridMediaCard';
 
 /* @ngInject */
-function ServicesOverviewCardFactory(Authinfo) {
+function ServicesOverviewCardFactory(Authinfo, FusionClusterStatesService) {
 
   return {
     createCards: function (): Array<ServicesOverviewCard> {
@@ -20,11 +20,11 @@ function ServicesOverviewCardFactory(Authinfo) {
         new ServicesOverviewMeetingCard(Authinfo),
         new ServicesOverviewCallCard(Authinfo),
         new ServicesOverviewCareCard(Authinfo),
-        new ServicesOverviewHybridManagementCard(),
+        new ServicesOverviewHybridManagementCard(FusionClusterStatesService),
         new ServicesOverviewHybridManagementF410Card(),
-        new ServicesOverviewHybridCalendarCard(),
-        new ServicesOverviewHybridCallCard(),
-        new ServicesOverviewHybridMediaCard(),
+        new ServicesOverviewHybridCalendarCard(FusionClusterStatesService),
+        new ServicesOverviewHybridCallCard(FusionClusterStatesService),
+        new ServicesOverviewHybridMediaCard(FusionClusterStatesService),
       ];
     },
   };

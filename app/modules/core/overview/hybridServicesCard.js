@@ -6,7 +6,7 @@
     .factory('OverviewHybridServicesCard', OverviewHybridServicesCard);
 
   /* @ngInject */
-  function OverviewHybridServicesCard(FusionClusterService) {
+  function OverviewHybridServicesCard(FusionClusterService, FusionClusterStatesService) {
     return {
       createCard: function createCard() {
         var card = {};
@@ -31,19 +31,24 @@
               });
               if (card.enabled) {
                 _.each(card.serviceList, function (service) {
-                  service.healthStatus = card.serviceStatusToCss[service.status] || card.serviceStatusToCss['unknown'];
+                  service.UIstateLink = getUIStateLink(service.serviceId);
+                  service.healthStatus = FusionClusterStatesService.getStatusIndicatorCSSClass(service.status);
                 });
               }
             });
         }
         init();
 
-        card.serviceStatusToCss = {
-          operational: 'success',
-          impaired: 'warning',
-          outage: 'danger',
-          unknown: 'warning'
-        };
+        function getUIStateLink(serviceId) {
+          if (serviceId === 'squared-fusion-uc') {
+            return 'call-service.list';
+          } else if (serviceId === 'squared-fusion-cal') {
+            return 'calendar-service.list';
+          } else if (serviceId === 'squared-fusion-media') {
+            return 'media-service-v2.list';
+          }
+        }
+
         return card;
       }
     };

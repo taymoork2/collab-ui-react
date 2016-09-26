@@ -6,11 +6,13 @@
 </header>
 <section ng-if="card.enabled">
   <div class="overview-info">
-    <div>{{'overview.cards.hybrid.serviceHeader' | translate }}</div>
+    <div translate="overview.cards.hybrid.serviceHeader"></div>
     <ul class="hybrid-ul">
       <li ng-repeat="service in card.serviceList | filter: {setup: true} ">
-        <i class="icon icon-circle status-indicator" ng-class="service.healthStatus || 'error'"></i>
-        <span>{{ 'overview.cards.hybrid.services.'+ service.serviceId | translate}}</span>
+        <a ui-sref="{{service.UIstateLink}}">
+          <i class="icon icon-circle status-indicator" ng-class="service.healthStatus"></i>
+          <span>{{::'overview.cards.hybrid.services.'+ service.serviceId | translate}}</span>
+        </a>
       </li>
     </ul>
   </div>
@@ -24,16 +26,11 @@
 </footer>
 
 <section ng-if="!card.enabled" class="disabled-section">
-  <span>{{(card.notEnabledText || 'overview.notEnabledText') | translate}}</span>
+  <span>{{::card.notEnabledText | translate}}</span>
 </section>
 <footer ng-if="!card.enabled" class="disabled-footer hybrid-disabled-footer">
-  <div ng-if="!card.isCSB">
-    <p>{{card.notEnabledFooter| translate}}</p>
-  </div>
-  <div ng-if="!card.isCSB">
-    <p>
-      <a ng-href="{{card.notEnabledAction}}" ng-if="card.notEnabledAction" target="_blank">{{card.notEnabledActionText |
-    translate}}</a>
-    </p>
-  </div>
+  <p>
+    <a ng-href="{{card.notEnabledAction}}" ng-if="card.notEnabledAction" target="_blank">{{::card.notEnabledActionText |
+  translate}}</a>
+  </p>
 </footer>
