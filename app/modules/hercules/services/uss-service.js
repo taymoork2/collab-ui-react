@@ -142,9 +142,9 @@
         .then(extractUserProps);
     }
 
-    function removeAllUsersFromResourceGroup(resourceGroupId, orgId) {
+    function removeAllUsersFromResourceGroup(resourceGroupId) {
       return $http
-        .post(USSUrl + '/orgs/' + (orgId || Authinfo.getOrgId()) + '/actions/removeAllUsersFromResourceGroup/invoke?resourceGroupId=' + resourceGroupId)
+        .post(USSUrl + '/orgs/' + Authinfo.getOrgId() + '/actions/removeAllUsersFromResourceGroup/invoke?resourceGroupId=' + resourceGroupId)
         .then(extractData);
     }
 
