@@ -8,7 +8,6 @@
   /* @ngInject */
   function RedirectDelComponentCtrl(ComponentsService, $stateParams, $state) {
     var vm = this;
-    vm.delComponentBtnClicked = delComponentBtnClicked;
     vm.componentName = $stateParams.component.componentName;
     vm.delText = "";
 
@@ -16,7 +15,7 @@
       return vm.delText === 'DELETE';
     };
 
-    function delComponentBtnClicked() {
+    vm.delComponentBtnClicked = function () {
       if (!vm.validation()) {
         return;
       }
@@ -25,6 +24,6 @@
         .then(function () {
           $state.go('^');
         });
-    }
+    };
   }
 })();

@@ -4,8 +4,8 @@
 (function () {
   'use strict';
   angular.module('Status')
-    .factory('DincidentListService', DashboardService);
-  function DashboardService($resource) {
+    .factory('DincidentListService', DincidentListService);
+  function DincidentListService($resource) {
     return $resource('https://dataservicesbts.webex.com/status/services/:siteId/incidents/:incidentId');
   }
 

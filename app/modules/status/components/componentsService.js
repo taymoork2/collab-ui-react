@@ -4,7 +4,7 @@
   /* @ngInject */
   function ComponentsService($log, UrlConfig, $http) {
 
-    var componentsUrl = _.template(UrlConfig.getStatusUrl() + '/services/${ serviceId }/components');
+    var componentsUrl = _.template('https://dataservicesbts.webex.com/status' + '/services/${ serviceId }/components');
     var groupCompnentsUrl = _.template(UrlConfig.getStatusUrl() + '/services/${ serviceId }/components/groups');
     var delComponentUrl = _.template(UrlConfig.getStatusUrl() + '/components/${ componentId }');
     var modifyComponentUrl = _.template(UrlConfig.getStatusUrl() + '/components/${ componentId }');

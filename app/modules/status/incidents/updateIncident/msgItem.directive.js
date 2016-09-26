@@ -21,8 +21,10 @@
               + pad(d.getUTCMinutes()) + ':'
               + pad(d.getUTCSeconds()) + 'Z';
         }
+
         var originMsg = {};
         angular.copy($scope.msg, originMsg);
+        //$log.log(originMsg.postAt);
         $scope.componentSection = false;
         $scope.showMsgInfo = true;
         $scope.showOrHideComponent = "Show Affected Components";
@@ -30,6 +32,7 @@
         $scope.timeVal = $filter('date')($scope.msg.postAt, 'HH:mm');
         $scope.modifyMsg = function () {
           MessageService.modifyMsg({ messageId: $scope.msg.messageId }, { postAt: ISODateString(new Date($scope.dateVal + " " + $scope.timeVal)), email: "chaoluo@ciscoc.com", message: $scope.msg.message }).$promise.then(function () {
+            $log.log($scope.msg.postAt);
             $window.alert("Successfully modify message");
             $scope.msg.postAt = ISODateString(new Date($scope.dateVal + " " + $scope.timeVal));
             $scope.showMsgInfo = true;
@@ -43,6 +46,7 @@
         };
         $log.log(ISODateString(new Date($scope.dateVal + " " + $scope.timeVal)));
         $scope.showOrHideComponentFUN = function (messageId) {
+          $log.log(messageId);
           MessageService.query({ messageId: messageId }).$promise.then(function (data) {
             $scope.affectedComponents = data;
           });

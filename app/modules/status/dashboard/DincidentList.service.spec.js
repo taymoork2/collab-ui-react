@@ -1,12 +1,12 @@
 /**
- * Created by pso on 16-8-23.
+ * Created by snzheng on 16/9/23.
  */
 
 'use strict';
 
-describe('IncidentsWithSite service', function () {
+describe('DincidentListService service', function () {
   var $httpBackend;
-  var IncidentsWithSiteService;
+  var DincidentListService;
 
   var getSiteURL = 'https://dataservicesbts.webex.com/status/services/1/incidents';
   var mockData = [{
@@ -87,20 +87,20 @@ describe('IncidentsWithSite service', function () {
       "email": "chaoluo@cisco.com",
       "lastModifiedTime": "2016-09-12T10:59:04Z"
     }];
-  function dependencies(_$httpBackend_, _IncidentsWithSiteService_) {
+  function dependencies(_$httpBackend_, _DincidentListService_) {
     $httpBackend = _$httpBackend_;
-    IncidentsWithSiteService = _IncidentsWithSiteService_;
+    DincidentListService = _DincidentListService_;
   }
-  beforeEach(angular.mock.module('Status.incidents'));
+  beforeEach(angular.mock.module('Status'));
   beforeEach(inject(dependencies));
 
   it('should exist', function () {
-    expect(IncidentsWithSiteService).toBeDefined();
+    expect(DincidentListService).toBeDefined();
   });
 
   it('Should get getActiveHostsURL', function () {
     $httpBackend.whenGET(getSiteURL).respond(mockData);
-    IncidentsWithSiteService.query({
+    DincidentListService.query({
       "siteId": 1
     }).$promise.then(function (data) {
       expect(data.toString()).toEqual(mockData.toString());

@@ -8,6 +8,7 @@
   /* @ngInject */
   function ComponentsCtrl($translate, $state, $scope, $log, ComponentsService, statusService, $modal) {
     var vm = this;
+    vm.updateComponent = updateComponent;
     vm.statusService = statusService;
     //watch service changes
     $scope.$watch(
@@ -21,6 +22,7 @@
         ComponentsService
           .getComponents(newServiceId)
           .then(function (components) {
+            $log.log(newServiceId);
             vm.components = components;
           });
       });
@@ -43,7 +45,7 @@
           });
       });
     };
-    vm.updateComponent = function updateComponent(component, groupComponent) {
+    function updateComponent(component, groupComponent) {
       var updateComponentModal = $modal.open({
         resolve: {
           component: component,
@@ -62,8 +64,8 @@
             vm.components = components;
           });
       });
-    };
-    vm.delComponent = function (component) {
+    }
+    vm.delComponent = function delComponent(component) {
       $log.debug('delete component', component);
       $state.go('status.components.deleteComponent', {
         component: component

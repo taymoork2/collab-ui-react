@@ -8,18 +8,22 @@ describe('controller:IncidentListController', function () {
   var IncidentsWithSiteService;
   var $controller;
   var $scope;
+  var statusService;
+  var $state;
   beforeEach(angular.mock.module('Status.incidents'));
+  beforeEach(angular.mock.module('Status'));
   beforeEach(inject(dependencies));
 
-  function dependencies(_$rootScope_, _$controller_, _IncidentsWithSiteService_) {
+  function dependencies(_$rootScope_, _$controller_, _IncidentsWithSiteService_, _statusService_, _$state_) {
     $scope = _$rootScope_.$new();
     $controller = _$controller_;
-
-   IncidentsWithSiteService = _IncidentsWithSiteService_;
-
-    controller=$controller('IncidentListController', {
+    statusService = _statusService_;
+    IncidentsWithSiteService = _IncidentsWithSiteService_;
+    $state = _$state_;
+    controller = $controller('IncidentListController', {
       $scope: $scope,
       IncidentsWithSiteService: IncidentsWithSiteService,
+      statusService: statusService,
     });
   }
 
@@ -31,15 +35,12 @@ describe('controller:IncidentListController', function () {
     expect(controller).toBeDefined();
   });
   it('service should return valid data', function () {
-    if($scope.showList == true)
-    expect($scope.incidentList).not.toBeEmpty();
-    else
-      expect($scope.incidentList).toBeEmpty();
-  })
-
+    if ($scope.showList == true) expect($scope.incidentList).not.toBeEmpty();
+    else if ($scope.showList != true) expect($scope.incidentList).toBeEmpty();
+  });
   it('button should be active', function () {
-    expect($scope.toCreatePage).toBeDefined();
-  })
+    spyOn($state, 'go');
+    $scope.toCreatePage();
+    expect($state.go).toHaveBeenCalled();
+  });
 });
-
-

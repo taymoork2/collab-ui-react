@@ -7,6 +7,7 @@
     $scope.incidentName = $stateParams.incidentName;
     var vm = this;
     vm.deleteIncidentBtn = deleteIncidentBtn;
+
     function deleteIncidentBtn() {
       if ($scope.deleteCommand == 'DELETE') {
         IncidentsWithoutSiteService.delete({ incidentId: $stateParams.incidentId }).$promise.then(function () {

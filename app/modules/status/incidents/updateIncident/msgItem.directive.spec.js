@@ -4,16 +4,19 @@
 'use strict';
 
 describe('UI: msgItemDirective', function () {
-  var $compile, $rootScope;
+  var $compile, $rootScope, $scope;
+  var element;
   beforeEach(angular.mock.module('Status.incidents'));
   beforeEach(inject(dependencies));
-  function dependencies(_$compile_, _$rootScope_, _$q_) {
+  function dependencies(_$compile_, _$rootScope_) {
     $compile = _$compile_;
     $rootScope = _$rootScope_;
+    $scope = $rootScope.$new();
   }
   it('should replace the element', function () {
-    var element = $compile("<msg-item info='msg'></msg-item>")($rootScope);
-    $rootScope.$digest();
-    expect(element.html()).toContain("itemRow2");
+    element = angular.element("<msg-item info='msg'></msg-item>");
+    $compile(element)($scope);
+    $scope.$digest();
+    expect(element.html()).toContain("editMsg");
   });
 });

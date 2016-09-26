@@ -14,6 +14,8 @@ describe('ComponentService service', function () {
     ComponentService = _ComponentService_;
   }
   beforeEach(angular.mock.module('Status.incidents'));
+  beforeEach(angular.mock.module('Status'));
+  beforeEach(angular.mock.module('ui.router'));
   beforeEach(inject(dependencies));
 
   it('should exist', function () {

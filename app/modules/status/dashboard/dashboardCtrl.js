@@ -144,7 +144,7 @@
       $log.log(scope);
       var newComponent = {
         "componentId": scope.componentId,
-        "status": scope.statusObj.value
+        "status": scope.status
       };
       DcomponentService.modifyComponent(
         newComponent

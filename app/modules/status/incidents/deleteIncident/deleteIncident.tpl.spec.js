@@ -5,23 +5,25 @@
 'use strict';
 
 describe('incidents:createIncidents', function () {
-  var $compile, $scope, $controller, controller, $templateCache;
+  var $compile, $scope, $controller, controller, $templateCache, statusService;
   var view;
   var DELETE_BUTTON = '.btn--cta';
   beforeEach(angular.mock.module('Status.incidents'));
+  beforeEach(angular.mock.module('Status'));
   beforeEach(inject(dependencies));
   beforeEach(compileView);
-  function dependencies(_$rootScope_, _$controller_, _$compile_, _$templateCache_) {
+  function dependencies(_$rootScope_, _$controller_, _$compile_, _$templateCache_, _statusService_) {
     $scope = _$rootScope_.$new();
     $controller = _$controller_;
     $compile = _$compile_;
     $templateCache = _$templateCache_;
-
+    statusService = _statusService_;
   }
 
   function compileView() {
     controller = $controller('DeleteIncidentController', {
-      $scope: $scope
+      $scope: $scope,
+      statusService: statusService
     });
     $scope.dic = controller;
     spyOn(controller, 'deleteIncidentBtn');

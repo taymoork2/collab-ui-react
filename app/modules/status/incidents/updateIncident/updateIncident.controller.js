@@ -19,6 +19,15 @@
     var originIncidentName, originImpact;
     $scope.impactStatuses = [{ label: 'Override impact to None', value: 'none' }, { label: 'Override impact to Minor', value: 'minor' }, { label: 'Override impact to Major', value: 'major' }, { label: 'Override impact to Critical', value: 'critical' }, { label: 'Override impact to Maintenance', value: 'maintenance' }];
     $scope.componentStatuses = [{ label: 'Operational', value: 'operational' }, { label: 'Degraded Performance', value: 'degraded_performance' }, { label: 'Partial Outage', value: 'partial_outage' }, { label: 'Major Outage', value: 'major_outage' }, { label: 'Under Maintenance', value: 'under_maintenance' }];
+    var vm = this;
+    vm.getComponentStatusObj = getComponentStatusObj;
+    vm.getImpactStatusObj = getImpactStatusObj;
+    vm.incidentMsg = incidentMsg;
+    vm.getComponentsTree = getComponentsTree;
+    vm.modifyIncident = modifyIncident;
+    vm.cancleModifyIncident = cancleModifyIncident;
+    vm.toOperationalFUN = toOperationalFUN;
+    vm.addIncidentMsg = addIncidentMsg;
     function getComponentStatusObj(status) {
       switch (status) {
         case "operational":
@@ -93,12 +102,12 @@
     $scope.setSelectedStatus = function (scope) {
       scope.status = scope.statusObj.value;
     };
-    $scope.cancleModifyIncident = function () {
+    function cancleModifyIncident() {
       $scope.showIncidentName = true;
       $scope.selectedImpactStatus = getImpactStatusObj(originImpact);
       $scope.incidentWithMsg.incidentName = originIncidentName;
-    };
-    $scope.modifyIncident = function () {
+    }
+    function modifyIncident() {
       IncidentsWithoutSiteService.modifyIncident({ incidentId: $scope.incidentWithMsg.incidentId }, { incidentName: $scope.incidentWithMsg.incidentName, impact: $scope.selectedImpactStatus.value }).$promise.then(function (data) {
         $scope.incidentWithMsg.impact = data.impact;
         $scope.incidentWithMsg.incidentName = data.incidentName;
@@ -107,8 +116,8 @@
         originIncidentName = data.incidentName;
         originImpact = data.impact;
       });
-    };
-    $scope.toOperationalFUN = function () {
+    }
+    function toOperationalFUN() {
       for (var i = 0; i < ($scope.componentsTree).length; i++) {
         ($scope.componentsTree)[i].status = "operational";
         ($scope.componentsTree)[i].statusObj = getComponentStatusObj("operational");
@@ -118,7 +127,7 @@
         }
       }
       $scope.showOperational = false;
-    };
+    }
     $scope.getChildStatus = function (scope, parent) {
       scope.status = scope.statusObj.value;
       if (!(parent.isOverridden)) {
@@ -207,7 +216,7 @@
         }
       }
     };
-    $scope.addIncidentMsg = function () {
+    function addIncidentMsg() {
       var affectComponents = [];
       var tempObj;
       for (var i = 0; i < originComponentsTree.length; i++) {
@@ -249,7 +258,7 @@
       }, function () {
 
       });
-    };
+    }
     incidentMsg();
   }
 })();
