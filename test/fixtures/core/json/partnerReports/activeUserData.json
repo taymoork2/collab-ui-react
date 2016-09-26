@@ -273,56 +273,42 @@
     "totalRegisteredUsers": 9,
     "activeUsers": 3,
     "percentage": 33,
-    "colorOne": "#99cf78",
-    "colorTwo": "#6ab140",
     "balloon": true,
     "date": "Feb 25"
   }, {
     "totalRegisteredUsers": 9,
     "activeUsers": 3,
     "percentage": 33,
-    "colorOne": "#99cf78",
-    "colorTwo": "#6ab140",
     "balloon": true,
     "date": "Feb 26"
   }, {
     "totalRegisteredUsers": 9,
     "activeUsers": 3,
     "percentage": 33,
-    "colorOne": "#99cf78",
-    "colorTwo": "#6ab140",
     "balloon": true,
     "date": "Feb 27"
   }, {
     "totalRegisteredUsers": 9,
     "activeUsers": 3,
     "percentage": 33,
-    "colorOne": "#99cf78",
-    "colorTwo": "#6ab140",
     "balloon": true,
     "date": "Feb 28"
   }, {
     "totalRegisteredUsers": 9,
     "activeUsers": 3,
     "percentage": 33,
-    "colorOne": "#99cf78",
-    "colorTwo": "#6ab140",
     "balloon": true,
     "date": "Feb 29"
   }, {
     "totalRegisteredUsers": 9,
     "activeUsers": 3,
     "percentage": 33,
-    "colorOne": "#99cf78",
-    "colorTwo": "#6ab140",
     "balloon": true,
     "date": "Mar 01"
   }, {
     "totalRegisteredUsers": 9,
     "activeUsers": 3,
     "percentage": 33,
-    "colorOne": "#99cf78",
-    "colorTwo": "#6ab140",
     "balloon": true,
     "date": "Mar 02"
   }],
@@ -424,27 +410,27 @@
     "userName": "Renaldo Williams (renawill)"
   }],
   "activePopResponse": [{
-    "customerId": "a7cba512-7b62-4f0a-a869-725b413680e4",
+    "customerName": "Test Org One",
     "percentage": 60,
-    "balloon": true,
-    "labelColorField": "#444",
-    "customerName": "Test Org One"
-  }, {
-    "customerName": "Test Org Three",
-    "customerId": "1896f9dc-c5a4-4041-8257-b3adfe3cf9a4",
-    "percentage": 0,
+    "overallPopulation": 33,
     "balloon": true,
     "labelColorField": "#444"
   }, {
-    "customerId": "b7e25333-6750-4b17-841c-ce5124f8ddbb",
+    "customerName": "Test Org Three",
     "percentage": 0,
+    "overallPopulation": 33,
     "balloon": true,
-    "labelColorField": "#444",
-    "customerName": "Test Org Two"
+    "labelColorField": "#444"
+  }, {
+    "customerName": "Test Org Two",
+    "percentage": 0,
+    "overallPopulation": 33,
+    "balloon": true,
+    "labelColorField": "#444"
   }, {
     "customerName": "Test Partner",
-    "customerId": "1",
     "percentage": 0,
+    "overallPopulation": 33,
     "balloon": true,
     "labelColorField": "#444"
   }]
