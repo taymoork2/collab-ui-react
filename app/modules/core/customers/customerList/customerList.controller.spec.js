@@ -179,10 +179,12 @@ describe('Controller: CustomerListCtrl', function () {
     beforeEach(initController);
 
     it('should check if it is its own org', function () {
-      expect($scope.isOwnOrg($scope.managedOrgsList[1])).toBe(true);
+      expect($scope.isOwnOrg($scope.managedOrgsList[0])).toBe(true);
     });
 
     it('if myOrg not in managedOrgsList, myOrg should be added to the top of managedOrgsList ', function () {
+      Authinfo.getOrgId.and.returnValue('wqeqwe21');
+      initController();
       expect($scope.managedOrgsList).toBeDefined();
       expect($scope.managedOrgsList[0].customerName).toBe('testOrg');
       expect($scope.managedOrgsList.length).toEqual(6);
@@ -191,27 +193,11 @@ describe('Controller: CustomerListCtrl', function () {
     });
 
     it('if myOrg is in managedOrgsList, myOrg should not be added to the list', function () {
-      var testOrgList = {
-        "data": {
-          "organizations": [{
-            customerOrgId: '1234-34534-afdagfg-425345-afaf',
-            customerName: 'ControllerTestOrg',
-            customerEmail: 'customer@cisco.com',
-            communications: {
-              isTrial: true
-            }
-          }, {
-            customerOrgId: '1',
-            customerName: 'testOrg'
-          }]
-        }
-      };
 
-      PartnerService.getManagedOrgsList.and.returnValue(testOrgList);
       initController();
       expect($scope.managedOrgsList).toBeDefined();
-      expect($scope.managedOrgsList.length).toEqual(2);
-      expect($scope.totalOrgs).toBe(2);
+      expect($scope.managedOrgsList.length).toEqual(5);
+      expect($scope.totalOrgs).toBe(5);
     });
   });
 
