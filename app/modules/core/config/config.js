@@ -220,9 +220,33 @@
 
       batchSize: 10,
 
+      isDevHostName: function (hostName) {
+        var whitelistDevHosts = [
+          '0.0.0.0',
+          '127.0.0.1',
+          'localhost',
+          'server',
+          'dev-admin.ciscospark.com'
+        ];
+        return _.includes(whitelistDevHosts, hostName);
+      },
+
+      canUseAbsUrlForDevLogin: function (absUrl) {
+        var whitelistAbsUrls = [
+          'http://127.0.0.1:8000',
+          'http://dev-admin.ciscospark.com:8000'
+        ];
+        return _.includes(whitelistAbsUrls, absUrl);
+      },
+
+      getAbsUrlAtRootContext: function () {
+        var portSuffix = ($location.port()) ? ':' + $location.port() : '';
+        return $location.protocol() + '://' + $location.host() + portSuffix;
+      },
+
       isDev: function () {
         var currentHostname = getCurrentHostname();
-        return !config.forceProdForE2E() && (currentHostname === '127.0.0.1' || currentHostname === '0.0.0.0' || currentHostname === 'localhost' || currentHostname === 'server');
+        return !config.forceProdForE2E() && config.isDevHostName(currentHostname);
       },
 
       isIntegration: function () {
