@@ -44,17 +44,16 @@
 
     <setting-section setting="clusterSettings.deactivateServices">
       <div ng-if="clusterSettings.enabledServices.length > 1">
-        <div ng-repeat="service in clusterSettings.enabledServices" class="sub-section">
-          <div ng-if="service === 'c_cal'">
-            <h5 class="sub-section__label" translate="hercules.expresswayClusterSettings.deactivateServicesCalendarHeader"></h5>
-            <p class="sub-section__description" translate="hercules.expresswayClusterSettings.deactivateServicesParagraph" translate-values="{ ServiceName: clusterSettings.localizedCalendarServiceName }"></p>
-            <button type="button" class="btn" id="deactivateCalendar" ng-click="clusterSettings.deactivateService('c_cal', clusterSettings.cluster);" translate="hercules.settings.deactivate"></button>
+        <div class="sub-section" ng-repeat="service in clusterSettings.enabledServices | filter: clusterSettings.filterServices | orderBy: service ">
+          <div>
+            <h5 class="sub-section__label"
+                translate="hercules.expresswayClusterSettings.deactivateServicesSubHeader"
+                translate-values="{service: clusterSettings.getLocalizedServiceName(service)}"></h5>
+            <p class="sub-section__description"
+               translate="hercules.expresswayClusterSettings.deactivateServicesParagraph"
+               translate-values="{ ServiceName: clusterSettings.getLocalizedServiceName(service) }"></p>
           </div>
-          <div ng-if="service === 'c_ucmc'" class="sub-section">
-            <h5 class="sub-section__label" translate="hercules.expresswayClusterSettings.deactivateServicesCallHeader"></h5>
-            <p class="sub-section__description" translate="hercules.expresswayClusterSettings.deactivateServicesParagraph" translate-values="{ ServiceName: clusterSettings.localizedCallServiceName }"></p>
-            <button type="button" class="btn" ng-click="clusterSettings.deactivateService('c_ucmc', clusterSettings.cluster);" translate="hercules.settings.deactivate"></button>
-          </div>
+            <button type="button" class="btn" id="deactivateCalendar" ng-click="clusterSettings.deactivateService(service, clusterSettings.cluster);" translate="hercules.settings.deactivate"></button>
         </div>
       </div>
       <div ng-if="clusterSettings.enabledServices.length < 2">
