@@ -1848,7 +1848,8 @@
       "loadFailed": "Unable to load the Resource Group details. Please try again later.",
       "groupReleaseChannelSaved": "Release channel saved successfully",
       "removeGroupReq": "To remove this Resource Group, all assigned clusters must be removed first",
-      "deleteSuccess": "Resource group successfully removed"
+      "deleteSuccess": "Resource group successfully removed",
+      "failedToRemoveUsersFromGroup": "Remove group failed, unable to clear the existing user assignments"
     },
     "assignClustersModal": {
       "title": "Assign Clusters to <q>{{groupName}}</q>",
