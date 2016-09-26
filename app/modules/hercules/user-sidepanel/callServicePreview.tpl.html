@@ -38,32 +38,34 @@
         <span class="cloud-extension-label">{{'cloudExtensions.sipUri' | translate}}:</span>
         <span class="cloud-extension-label status-notActivated">{{callServiceAware.sipUri}}</span>
       </div>
-      <div ng-if="domainVerificationError" class="dv-error">
-        <table>
-          <tr>
-            <td><span class="icon icon-error" style="color:red;"></span></td>
-            <td><span class="extension-description" style="color:red"
-                      translate="hercules.domain-verification.domain-not-verified"/>
-              <span class="extension-description" style="color:red"
-                    translate="hercules.domain-verification.navigateToCallSettings"
-                    translate-value-onclick="navigateToCallSettings()" translate-compile></span></td>
-          </tr>
-        </table>
+        <div ng-if="domainVerificationError" class="error-message">
+          <i class="icon icon-error"></i>
+          <p class="message">
+            <span translate="hercules.domain-verification.domain-not-verified"/>
+            <span translate="hercules.domain-verification.navigateToCallSettings"
+                  translate-value-onclick="navigateToCallSettings()" translate-compile></span>
+          </p>
       </div>
-      <span
-        ng-if="callServiceAware.entitled
+
+      <div ng-if="callServiceAware.entitled
         && callServiceAware.status
         && callServiceAware.status.state === 'error'
         && callServiceAware.status.description"
-        class="cloud-extension-label status-error">
-      {{callServiceAware.status.description.defaultMessage}}
-    </span>
+        class="error-message">
+        <i class="icon icon-error"></i>
+        <p class="message">
+          {{callServiceAware.status.description.defaultMessage}}
+        </p>
+      </div>
 
-      <p
-        ng-show="isInvitePending && callServiceAware.entitled"
-        class="info-description cloud-extension-label status-warning">
-        {{localizedOnboardingWarning}}
-      </p>
+      <div
+        ng-if="isInvitePending && callServiceAware.entitled"
+        class="warning-message">
+        <i class="icon icon-warning"></i>
+        <p class="message">
+          {{localizedOnboardingWarning}}
+        </p>
+      </div>
 
     </div>
 
@@ -88,25 +90,45 @@
               translate="common.{{callServiceConnect.entitled ? 'on' : 'off'}}"></span>
     </div>
 
-    <span
+    <div
       ng-if="callServiceConnect.entitled
       && callServiceConnect.status.state === 'error'"
-      class="cloud-extension-label status-error">
-      {{callServiceConnect.status.description.defaultMessage}}
-    </span>
+      class="error-message">
+      <i class="icon icon-error"></i>
+      <p class="message">
+        {{callServiceConnect.status.description.defaultMessage}}
+      </p>
+    </div>
 
   </cs-sp-section>
   <cs-sp-section class="cloud-extensions" ng-if="resourceGroup.show">
     <div class="section-title-row">
       <span class="section-name" translate="hercules.resourceGroups.resourceGroupHeading"></span>
     </div>
-    <div>
+    <div ng-if="!resourceGroup.cannotFindResouceGroup">
       <p class="extension-description" translate="hercules.resourceGroups.setDescription"></p>
       <cs-select
         ng-model="resourceGroup.selected"
         options="resourceGroup.options"
         on-change-fn="setShouldShowButtons()">
       </cs-select>
+      <div class="warning-message" ng-if="resourceGroup.shouldWarn">
+        <i class="icon icon-warning"></i>
+        <p class="message"
+           translate="hercules.resourceGroups.groupIsEmptyWarning"
+           translate-values="{ConnectorName: localizedConnectorName}">
+        </p>
+      </div>
+    </div>
+    <div ng-if="resourceGroup.cannotFindResouceGroup" class="error-message">
+      <i class="icon icon-error"></i>
+      <p class="message"
+         translate="hercules.resourceGroups.groupHasBeenDeleted"></p>
+      <form>
+        <button class="btn btn--primary" type="submit" ng-click="setResourceGroupOnUser('')">
+          <span translate="common.reset"></span>
+        </button>
+      </form>
     </div>
   </cs-sp-section>
 </cs-sp-container>

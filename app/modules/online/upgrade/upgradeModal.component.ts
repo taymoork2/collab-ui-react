@@ -8,11 +8,10 @@ class OnlineUpgrade {
   /* @ngInject */
   constructor(
     private $state: ng.ui.IStateService,
-    private Authinfo,
+    private Auth,
     private Notification,
-    private OnlineUpgradeService: OnlineUpgradeService
-  ) {
-  }
+    private OnlineUpgradeService: OnlineUpgradeService,
+  ) {}
 
   public $onInit(): void {
     this.subscriptionId = this.OnlineUpgradeService.getSubscriptionId();
@@ -34,6 +33,10 @@ class OnlineUpgrade {
       .finally(() => {
         this.cancelLoading = false;
       });
+  }
+
+  public logout(): void {
+    this.Auth.logout();
   }
 }
 

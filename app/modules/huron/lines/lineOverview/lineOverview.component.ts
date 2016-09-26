@@ -6,11 +6,6 @@ import { LineOverviewService, LineOverviewData } from './index';
 import { DirectoryNumberOptionsService } from '../../directoryNumber';
 import { IActionItem } from '../../../core/components/sectionTitle/sectionTitle.component';
 
-interface IDirectoryNumber {
-  uuid: string;
-  pattern: string;
-}
-
 class LineOverview implements ng.IComponentController {
   private ownerType: string;
   private ownerId: string;
@@ -50,7 +45,7 @@ class LineOverview implements ng.IComponentController {
   public custom_label: string;
 
   //SharedLine Properties
-  public selectedUser: SharedLineUser;
+  public selectedUser: SharedLineUser | undefined;
   public sharedLineEndpoints: SharedLineDevice[];
   public devices: string[];
   public sharedLineUsers: SharedLineUser[];
@@ -150,7 +145,7 @@ class LineOverview implements ng.IComponentController {
     }
   }
 
-  public getUserList(filter: string): User[] { ///TODO -- services
+  public getUserList(): User[] { ///TODO -- services
     let users: User[] = [];
     return users;
   }
@@ -259,11 +254,11 @@ class LineOverview implements ng.IComponentController {
     return isValidUser;
   }
 
-  public isSingleDevice(sharedLineEndpoints, uuid): Boolean {
+  public isSingleDevice(): Boolean {
     return true;
   }
 
-  public disassociateSharedLineUser(user, bulkDevice): void {
+  public disassociateSharedLineUser(): void {
 
   }
 
@@ -273,8 +268,8 @@ class LineOverview implements ng.IComponentController {
   }
 
   private initCallerId(): void {
-    this.callerIdOptions.push(new CallerIdOption(this.custom_label, new CallerIdConfig(null, '',  null, CUSTOM_COMPANY_TYPE)));
-    this.callerIdOptions.push(new CallerIdOption(this.blockedCallerId_label, new CallerIdConfig(null, this.$translate.instant('callerIdPanel.blockedCallerIdDescription'), null, BLOCK_CALLERID_TYPE)));
+    this.callerIdOptions.push(new CallerIdOption(this.custom_label, new CallerIdConfig('', '',  '', CUSTOM_COMPANY_TYPE)));
+    this.callerIdOptions.push(new CallerIdOption(this.blockedCallerId_label, new CallerIdConfig('', this.$translate.instant('callerIdPanel.blockedCallerIdDescription'), '', BLOCK_CALLERID_TYPE)));
   }
 
   private cloneLineOverviewData(lineOverviewData: LineOverviewData): LineOverviewData {
@@ -282,7 +277,7 @@ class LineOverview implements ng.IComponentController {
   }
 
   private setShowActionsFlag(line: Line): boolean {
-    return (line.uuid && !line.primary);
+    return (!!line.uuid && !line.primary);
   }
 
   private initConsumerType(): void {

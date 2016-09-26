@@ -1504,6 +1504,22 @@
               }
             }
           })
+          .state('place-overview.communication.speedDials', {
+            templateProvider: /* @ngInject */ function ($stateParams) {
+              var ownerId = _.get($stateParams.currentPlace, 'cisUuid');
+              return '<uc-speed-dial owner-type="place" owner-id="' + ownerId + '"></uc-speed-dial>';
+            },
+            data: {
+              displayName: 'Speed Dials'
+            },
+            resolve: {
+              lazy: /* @ngInject */ function lazyLoad($q, $ocLazyLoad) {
+                return $q(function resolveLogin(resolve) {
+                  require(['modules/huron/speedDials'], loadModuleAndResolve($ocLazyLoad, resolve));
+                });
+              }
+            }
+          })
           .state('place-overview.communication.internationalDialing', {
             templateProvider: /* @ngInject */ function ($stateParams) {
               var watcher = $stateParams.watcher;
@@ -1717,7 +1733,7 @@
           .state('customer-overview.customerSubscriptions', {
             controller: 'CustomerSubscriptionsDetailCtrl',
             controllerAs: 'customerSubscriptions',
-            templateUrl: 'modules/core/customers/customerSubscriptions/CustomerSubscriptionsDetail.tpl.html',
+            templateUrl: 'modules/core/customers/customerSubscriptions/customerSubscriptionsDetail.tpl.html',
             resolve: {
               data: /* @ngInject */ function ($state, $translate) {
                 $state.get('customer-overview.customerSubscriptions').data.displayName = $translate.instant('customerPage.orderRequest');

@@ -134,6 +134,7 @@
         reports: 'atlas-portal.reports',
         sales: 'atlas-portal.partner.salesadmin',
         helpdesk: 'atlas-portal.partner.helpdesk',
+        orderadmin: 'atlas-portal.partner.orderadmin',
         spark_synckms: 'spark.synckms',
         readonly_admin: 'id_readonly_admin'
       },
@@ -147,6 +148,7 @@
         reports: 'Reports',
         sales: 'Sales_Admin',
         helpdesk: 'Help_Desk',
+        orderadmin: 'Order_Admin',
         spark_synckms: 'Spark_SyncKms',
         readonly_admin: 'Readonly_Admin',
         compliance_user: 'Compliance_User'
@@ -293,7 +295,7 @@
         'users',
         'status'
       ],
-      Support: ['status', 'support', 'reports', 'billing', 'cdrsupport', 'cdr-overview', 'cdrladderdiagram'],
+      Support: ['status', 'support', 'reports', 'billing', 'cdrsupport', 'cdr-overview', 'cdrladderdiagram', 'reports-metrics'],
       WX2_User: ['status', 'overview', 'support', 'activateProduct'],
       WX2_Support: ['status', 'overview', 'reports', 'support'],
       WX2_SquaredInviter: [],

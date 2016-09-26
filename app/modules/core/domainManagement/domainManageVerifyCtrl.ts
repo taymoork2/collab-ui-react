@@ -7,9 +7,14 @@ namespace domainManagement {
     private _loadTime;
 
     /* @ngInject */
-    constructor(private $state, private $previousState, private DomainManagementService, private LogMetricsService) {
-      this._domain = $state.params.domain;
-      this._loggedOnUser = $state.params.loggedOnUser;
+    constructor(
+      private $previousState,
+      private $state,
+      private DomainManagementService,
+      private LogMetricsService,
+    ) {
+      this._domain = this.$state.params.domain;
+      this._loggedOnUser = this.$state.params.loggedOnUser;
       this._loadTime = moment();
 
       if (this._domain && this._domain.text && !this._domain.token) {
@@ -49,7 +54,7 @@ namespace domainManagement {
 
     public verify() {
       let start = moment();
-      this.DomainManagementService.verifyDomain(this._domain.text).then(res => {
+      this.DomainManagementService.verifyDomain(this._domain.text).then(() => {
         this.recordMetrics({
           msg: 'ok',
           startLog: start,

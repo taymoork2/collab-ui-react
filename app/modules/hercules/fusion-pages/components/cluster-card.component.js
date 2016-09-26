@@ -24,8 +24,10 @@
     ctrl.getLocalizedReleaseChannel = FusionUtils.getLocalizedReleaseChannel;
 
     FeatureToggleService.supports(FeatureToggleService.features.atlasF237ResourceGroups)
-      .then(function () {
-        ctrl.hasF237FeatureToggle = true;
+      .then(function (supported) {
+        if (supported) {
+          ctrl.hasF237FeatureToggle = true;
+        }
       });
 
     function getHostnames(cluster) {
@@ -47,7 +49,7 @@
     }
 
     function hasServices(cluster) {
-      return cluster.servicesStatuses.some(function (serviceStatus) {
+      return _.some(cluster.servicesStatuses, function (serviceStatus) {
         return serviceStatus.serviceId !== 'squared-fusion-mgmt' && serviceStatus.total > 0;
       });
     }

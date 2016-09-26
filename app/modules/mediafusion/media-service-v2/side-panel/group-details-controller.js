@@ -75,7 +75,7 @@
           if (isUpgrading) {
             vm.fakeUpgrade = false;
             var pendingHosts = _.chain(vm.cluster.aggregates.hosts)
-              .filter('upgradeState', 'pending')
+              .filter({ upgradeState: 'pending' })
               .value();
             vm.upgradeDetails = {
               numberOfUpsmthngHosts: _.size(vm.cluster.aggregates.hosts) - pendingHosts.length,
@@ -95,7 +95,7 @@
 
         function findUpgradingHostname(hostnames) {
           var upgrading = _.chain(hostnames)
-            .find('upgradeState', 'upgrading')
+            .find({ upgradeState: 'upgrading' })
             .value();
           // could be undefined if we only have upgraded and pending connectors
           return _.get(upgrading, 'hostname', 'some host');

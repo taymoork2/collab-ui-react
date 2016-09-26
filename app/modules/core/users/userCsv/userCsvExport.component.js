@@ -8,7 +8,8 @@
       bindings: {
         onStatusChange: '&',
         isOverExportThreshold: '<',
-        useCsvDownloadDirective: '<'
+        useCsvDownloadDirective: '<',
+        asLink: '@'
       }
     });
 
@@ -22,7 +23,7 @@
     vm.exportCsv = exportCsv;
     vm.downloadTemplate = downloadTemplate;
     vm.cancelDownload = cancelDownload;
-    vm.isDownloading = false;
+    vm.displayAsLink = !_.isEmpty(vm.asLink);
 
     ////////////////
     var exportFilename;
@@ -31,7 +32,7 @@
     var useIEBlobSave;
 
     function onInit() {
-      vm.isDownloading = false;
+      vm.isDownloading = CsvDownloadService.downloadInProgress;
       vm.isOverExportThreshold = !!(vm.isOverExportThreshold);
       vm.useCsvDownloadDirective = !!(vm.useCsvDownloadDirective);
 

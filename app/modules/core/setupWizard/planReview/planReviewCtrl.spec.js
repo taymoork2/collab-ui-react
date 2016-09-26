@@ -16,7 +16,8 @@ describe('Controller: PlanReviewCtrl', function () {
     getConferenceServices: sinon.stub().returns(getJSONFixture('core/json/authInfo/confServices.json')),
     getCareServices: sinon.stub().returns(getJSONFixture('core/json/authInfo/careServices.json').careLicense),
     getCmrServices: sinon.stub().returns(getJSONFixture('core/json/authInfo/cmrServices.json')),
-    getLicenses: sinon.stub().returns(getJSONFixture('core/json/authInfo/licenseServices.json'))
+    getLicenses: sinon.stub().returns(getJSONFixture('core/json/authInfo/licenseServices.json')),
+    isCare: sinon.stub().returns(true)
   };
 
   beforeEach(angular.mock.module(function ($provide) {

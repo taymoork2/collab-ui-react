@@ -7,9 +7,15 @@ namespace domainManagement {
     private _moreThanOneVerifiedDomainLeft;
 
     /* @ngInject */
-    constructor($stateParams, $translate, private $state, private $previousState, private DomainManagementService, private LogMetricsService) {
-      this._loggedOnUser = $stateParams.loggedOnUser;
-      this._domainToDelete = $stateParams.domain;
+    constructor(
+      private $stateParams,
+      private $translate: ng.translate.ITranslateService,
+      private $previousState,
+      private DomainManagementService,
+      private LogMetricsService,
+    ) {
+      this._loggedOnUser = this.$stateParams.loggedOnUser;
+      this._domainToDelete = this.$stateParams.domain;
       this._moreThanOneVerifiedDomainLeft = DomainManagementService.domainList && (_.filter(DomainManagementService.domainList, (d: any) => { return (d.status === DomainManagementService.states.verified || d.status === DomainManagementService.states.claimed); }).length > 1);
 
       if (!this._loggedOnUser.isPartner //Partners do not get lockout warnings
@@ -21,7 +27,7 @@ namespace domainManagement {
         && this._loggedOnUser.domain === this._domainToDelete.text
           //Not last verified/claimed domain (which is ok to delete, as doing so will reset the enforceUsersInVerifiedAndClaimedDomains flag in CI:
         && this._moreThanOneVerifiedDomainLeft)) {
-          this._error = $translate.instant('domainManagement.delete.preventLockoutError');
+          this._error = this.$translate.instant('domainManagement.delete.preventLockoutError');
       }
     }
 

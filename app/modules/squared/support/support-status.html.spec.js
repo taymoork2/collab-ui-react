@@ -35,7 +35,7 @@ describe('Controller: SupportCtrl', function () {
     it('shows tools card if user has helpdesk role', function () {
       Authinfo.isHelpDeskUser = sinon.stub().returns(true);
       $scope.$digest();
-      var hasToolsCard = _.contains(view.html(), "supportPageToolsCard");
+      var hasToolsCard = _.includes(view.html(), "supportPageToolsCard");
       expect(hasToolsCard).toBeTruthy();
     });
 
@@ -54,7 +54,7 @@ describe('Controller: SupportCtrl', function () {
       });
 
       $scope.$digest();
-      var hasToolsCard = _.contains(view.html(), "supportPageToolsCard");
+      var hasToolsCard = _.includes(view.html(), "supportPageToolsCard");
       expect(hasToolsCard).toBeTruthy();
     });
 
@@ -65,7 +65,7 @@ describe('Controller: SupportCtrl', function () {
         roles: ['noDevRole']
       });
       $scope.$digest();
-      var hasToolsCard = _.contains(view.html(), "supportPageToolsCard");
+      var hasToolsCard = _.includes(view.html(), "supportPageToolsCard");
       expect(hasToolsCard).toBeFalsy();
     });
 

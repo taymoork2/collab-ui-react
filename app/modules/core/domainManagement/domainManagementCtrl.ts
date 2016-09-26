@@ -3,8 +3,8 @@ namespace domainManagement {
   class DomainManagementCtrl {
 
     private _loggedOnUser = {
-      domain: null,
-      email: null,
+      domain: '',
+      email: '',
       isLoaded: false,
       isPartner: false,
     };
