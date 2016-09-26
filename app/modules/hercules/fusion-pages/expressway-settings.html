@@ -27,7 +27,7 @@
       </div>
     </setting-section>
 
-    <setting-section setting="clusterSettings.releasechannel" ng-if="clusterSettings.showResourceGroups">
+    <setting-section setting="clusterSettings.releasechannel" ng-if="clusterSettings.showResourceGroups && clusterSettings.allowedChannels.length > 1">
 
       <h5 class="sub-section__label" translate="hercules.expresswayClusterSettings.releasechannelSubHeader" id="RC-section-test"></h5>
       <p class="sub-section__description" translate="hercules.expresswayClusterSettings.releasechannelParagraph"></p>
