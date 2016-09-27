@@ -20,29 +20,28 @@ class PlaceCallOverview implements ng.IComponentController {
     private $translate: ng.translate.ITranslateService,
     private LineService: LineService,
     private DialingService: DialingService,
-    private $q: ng.IQService,
-    private Notification
+    private Notification,
   ) {
-    this.currentPlace = $stateParams.currentPlace;
-    $scope.$on(DialingType.INTERNATIONAL, (e, data) => {
+    this.currentPlace = this.$stateParams.currentPlace;
+    this.$scope.$on(DialingType.INTERNATIONAL, (_e, data) => {
       this.DialingService.setInternationalDialing(data, LineConsumerType.PLACES, this.currentPlace.cisUuid).then(() => {
         this.DialingService.initializeDialing(LineConsumerType.PLACES, this.currentPlace.cisUuid).then(() => {
           this.initFeatures();
         });
       }, (response) => {
-        Notification.errorResponse(response, 'internationalDialingPanel.error');
+        this.Notification.errorResponse(response, 'internationalDialingPanel.error');
       });
     });
-    $scope.$on(DialingType.LOCAL, (e, data) => {
+    this.$scope.$on(DialingType.LOCAL, (_e, data) => {
       this.DialingService.setLocalDialing(data, LineConsumerType.PLACES, this.currentPlace.cisUuid).then(() => {
         this.DialingService.initializeDialing(LineConsumerType.PLACES, this.currentPlace.cisUuid).then(() => {
           this.initFeatures();
         });
       }, (response) => {
-        Notification.errorResponse(response, 'internationalDialingPanel.error');
+        this.Notification.errorResponse(response, 'internationalDialingPanel.error');
       });
     });
-    $scope.$on(LINE_CHANGE, (data) => {
+    this.$scope.$on(LINE_CHANGE, () => {
       this.initNumbers();
     });
   }

@@ -1,5 +1,4 @@
 import { LineService, LineConsumerType, Line } from '../services';
-import { DirectoryNumberOptionsService } from '../../directoryNumber';
 import { HuronSiteService } from '../../sites';
 
 export class LineOverviewData {
@@ -13,9 +12,8 @@ export class LineOverviewService {
   /* @ngInject */
   constructor(
     private LineService: LineService,
-    private DirectoryNumberOptionsService: DirectoryNumberOptionsService,
     private HuronSiteService: HuronSiteService,
-    private $q: ng.IQService
+    private $q: ng.IQService,
   ) {}
 
   public getLineOverviewData(consumerType: LineConsumerType, ownerId: string, numberId: string): ng.IPromise<LineOverviewData> {
@@ -55,6 +53,8 @@ export class LineOverviewService {
         return this.HuronSiteService.getSite(sites[0].uuid).then(site => {
           return site.siteSteeringDigit + site.siteCode;
         });
+      } else {
+        return '';
       }
     });
   }

@@ -32,7 +32,7 @@ namespace globalsettings {
     }
 
     function initController(orgData) {
-      spyOn(Orgservice, 'getOrg').and.callFake((callback, orgid, cache) => {
+      spyOn(Orgservice, 'getOrg').and.callFake((callback) => {
         callback(orgData, 200);
       });
 

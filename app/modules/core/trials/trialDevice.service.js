@@ -14,6 +14,10 @@
         code: 'US'
       },
       {
+        country: 'Argentina',
+        code: 'AR'
+      },
+      {
         country: 'Australia',
         code: 'AU'
       },
@@ -28,6 +32,18 @@
       {
         country: 'Canada',
         code: 'CA'
+      },
+      {
+        country: 'Chile',
+        code: 'CL'
+      },
+      {
+        country: 'Colombia',
+        code: 'CO'
+      },
+      {
+        country: 'Costa Rica',
+        code: 'CR'
       },
       {
         country: 'Czech Republic',
@@ -70,6 +86,10 @@
         code: 'NO'
       },
       {
+        country: 'Peru',
+        code: 'PE'
+      },
+      {
         country: 'Poland',
         code: 'PL'
       },
@@ -100,8 +120,8 @@
     ];
     var _countries = {
       US: ['United States'],
-      ROLLOUT1: ['United States', 'Australia', 'Austria', 'Belgium', 'Canada', 'Czech Republic',
-      'Denmark', 'Finland', 'France', 'Germany', 'Ireland', 'Italy', 'Luxembourg', 'Netherlands', 'Norway', 'Poland',
+      ROLLOUT1: ['United States', 'Argentina', 'Australia', 'Austria', 'Belgium', 'Canada', 'Chile', 'Colombia', 'Costa Rica', 'Czech Republic',
+      'Denmark', 'Finland', 'France', 'Germany', 'Ireland', 'Italy', 'Luxembourg', 'Netherlands', 'Norway', 'Peru', 'Poland',
       'Portugal', 'Slovakia', 'Spain', 'Sweden', 'Switzerland', 'United Kingdom']
 
     };

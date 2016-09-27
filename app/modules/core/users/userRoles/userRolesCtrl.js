@@ -11,11 +11,14 @@
     $scope.isPartner = SessionStorage.get('partnerOrgId');
     $scope.helpDeskFeatureAllowed = Authinfo.isCisco() || _.includes(['fe5acf7a-6246-484f-8f43-3e8c910fc50d'], Authinfo.getOrgId());
     $scope.showHelpDeskRole = $scope.isPartner || $scope.helpDeskFeatureAllowed;
+    $scope.showOrderAdminRole = Authinfo.isCisco() || _.includes(['d30a6828-dc35-4753-bab4-f9b468828688'], Authinfo.getOrgId());
     $scope.showComplianceRole = false;
     $scope.updateRoles = updateRoles;
     $scope.clearCheckboxes = clearCheckboxes;
     $scope.supportCheckboxes = supportCheckboxes;
     $scope.partialCheckboxes = partialCheckboxes;
+    $scope.orderadminOnCheckedHandler = orderadminOnCheckedHandler;
+    $scope.helpdeskOnCheckedHandler = helpdeskOnCheckedHandler;
     $scope.resetRoles = resetRoles;
     $scope.enableReadonlyAdminOption = false;
     $scope.rolesObj = {};
@@ -103,6 +106,7 @@
       $scope.rolesObj.billingAdminValue = hasRole(Config.backend_roles.billing);
       $scope.rolesObj.supportAdminValue = hasRole(Config.backend_roles.support);
       $scope.rolesObj.helpdeskValue = hasRole(Config.backend_roles.helpdesk);
+      $scope.rolesObj.orderAdminValue = hasRole(Config.backend_roles.orderadmin);
       $scope.rolesObj.complianceValue = $scope.currentUser && _.includes($scope.currentUser.entitlements, 'compliance');
     }
 
@@ -164,7 +168,10 @@
       switch ($scope.rolesObj.adminRadioValue) {
         case 0: // No admin
           for (var roleName in Config.roles) {
-            if (Config.roles[roleName] !== Config.roles.helpdesk && Config.roles[roleName] !== Config.roles.spark_synckms && Config.roles[roleName] !== Config.roles.compliance_user) {
+            if (Config.roles[roleName] !== Config.roles.helpdesk &&
+              Config.roles[roleName] !== Config.roles.orderadmin &&
+              Config.roles[roleName] !== Config.roles.spark_synckms &&
+              Config.roles[roleName] !== Config.roles.compliance_user) {
               roles.push({
                 'roleName': Config.roles[roleName],
                 'roleState': Config.roleState.inactive
@@ -257,6 +264,12 @@
       roles.push({
         'roleName': Config.roles.helpdesk,
         'roleState': ($scope.rolesObj.helpdeskValue ? Config.roleState.active : Config.roleState.inactive)
+      });
+
+      // Order Admin
+      roles.push({
+        'roleName': Config.roles.orderadmin,
+        'roleState': ($scope.rolesObj.orderAdminValue ? Config.roleState.active : Config.roleState.inactive)
       });
 
       roles.push({
@@ -359,6 +372,20 @@
 
     function isEntitledToCompliance() {
       return $scope.currentUser && _.includes($scope.currentUser.entitlements, 'compliance');
+    }
+
+    function orderadminOnCheckedHandler() {
+      if ($scope.rolesObj.orderAdminValue) {
+        $scope.rolesObj.helpdeskValue = true;
+        $scope.rolesEdit.form.$dirty = true;
+      }
+    }
+
+    function helpdeskOnCheckedHandler() {
+      if ($scope.rolesObj.helpdeskValue === false) {
+        $scope.rolesObj.orderAdminValue = false;
+        $scope.rolesEdit.form.$dirty = true;
+      }
     }
   }
 })();

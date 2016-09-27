@@ -1,45 +1,62 @@
 <div ui-view="header"></div>
 <cs-sp-container>
   <cs-sp-section>
-  <div class="row">
-    <div class="small-6 columns" translate="organizationsPage.dirSync"></div>
-    <div class="small-6 columns">
-      <label for="{{svc}}">{{currentOrganization.dirsyncEnabled}}</label>
+    <div class="row">
+      <div class="small-10 columns">
+        <span translate="organizationsPage.dirSync"></span>
+      </div>
+      <div class="small-2 columns">
+        <span>{{currentOrganization.dirsyncEnabled}}</span>
+      </div>
     </div>
-  </div>
-  <div class="row">
-    <div class="small-6 columns" translate="organizationsPage.sso"></div>
-    <div class="small-6 columns">
-      <label for="{{svc}}">{{currentOrganization.ssoEnabled}}</label>
+    <div class="row">
+      <div class="small-10 columns">
+        <span translate="organizationsPage.sso"></span>
+      </div>
+      <div class="small-2 columns">
+        <span>{{currentOrganization.ssoEnabled}}</span>
+      </div>
     </div>
-  </div>
-  <div class="row">
-    <div class="small-6 columns" translate="organizationsPage.isEFT"></div>
-    <div class="small-6 columns">
-      <span ng-if="eftToggleLoading">
-        <i class="icon icon-spinner"></i>
-      </span>
-      <cs-toggle-switch ng-if="!eftToggleLoading" ng-model="currentOrganization.isEFT" toggle-id="eftToggle" size="small" ng-click="setEftToggle(currentOrganization.isEFT)"></cs-toggle-switch>
+    <div class="row">
+      <div class="small-10 columns" >
+        <span translate="organizationsPage.isEFT"></span>
+      </div>
+      <div class="small-2 columns">
+        <span ng-if="eftToggleLoading">
+          <i class="icon icon-spinner"></i>
+        </span>
+        <cs-toggle-switch ng-if="!eftToggleLoading" ng-model="currentOrganization.isEFT" toggle-id="eftToggle" size="small" ng-click="setEftToggle(currentOrganization.isEFT)"></cs-toggle-switch>
+      </div>
     </div>
-  </div>
   </cs-sp-section>
   <cs-sp-section>
-    <form role="form">
-      <div>
-        <div class="form-group profile-text-input">
-          <label for="services" style="width: 150px; vertical-align: top" translate="organizationsPage.services"></label>
-          <div class="profile-input org-overview-list">
-            <ul ng-repeat="svc in currentOrganization.services">
-              <li>{{svc}}</li>
-            </ul>
-          </div>
-        </div>
+    <div class="section-title-row section-name" translate="organizationsPage.services"></div>
+    <div class="row" ng-repeat="svc in currentOrganization.services">
+      <div class="small-12 columns">
+        <span>{{svc}}</span>
       </div>
-    </form>
-    <div>
-      <button id="btnReset" class="btn btn--primary centered" ng-click="manageFeatures()">
-        <span translate="organizationsPage.manageBetaFeatures"></span>
-      </button>
+    </div>
+    <button class="btn btn--primary manage-beta-features-button" ng-click="manageFeatures()">
+      <span translate="organizationsPage.manageBetaFeatures"></span>
+    </button>
+  </cs-sp-section>
+  <cs-sp-section ng-if="showHybridServices">
+    <div class="section-title-row section-name" translate="cloudExtensions.cloudExtensions"></div>
+    <div class="row">
+      <div class="small-10 columns" >
+        <span translate="organizationsPage.allowBetaChannels"></span>
+      </div>
+      <div class="small-2 columns">
+        <cs-toggle-switch ng-model="betaChannel.newAllow" toggle-id="allowBetaReleaseChannelToggle" size="small" ng-click="toggleReleaseChannelAllowed(betaChannel)"></cs-toggle-switch>
+      </div>
+    </div>
+    <div class="row">
+      <div class="small-10 columns" >
+        <span translate="organizationsPage.allowLatestChannels"></span>
+      </div>
+      <div class="small-2 columns">
+        <cs-toggle-switch ng-model="latestChannel.newAllow" toggle-id="allowLatestReleaseChannelChannelsToggle" size="small" ng-click="toggleReleaseChannelAllowed(latestChannel)"></cs-toggle-switch>
+      </div>
     </div>
   </cs-sp-section>
 </cs-sp-container>

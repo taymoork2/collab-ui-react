@@ -193,6 +193,7 @@
         this.url = obj.url;
         this.isPlace = true;
         this.type = obj.type || 'cloudberry';
+        this.readableType = getLocalizedType(obj.type);
         this.entitlements = obj.entitlements;
         this.cisUuid = obj.cisUuid || obj.uuid;
         this.displayName = obj.displayName;
@@ -428,6 +429,13 @@
                 return 'danger';
             }
         }
+      }
+
+      function getLocalizedType(type) {
+        if (type === 'huron') {
+          return t('addDeviceWizard.chooseDeviceType.deskPhone');
+        }
+        return t('addDeviceWizard.chooseDeviceType.roomSystem');
       }
 
       function t(key) {

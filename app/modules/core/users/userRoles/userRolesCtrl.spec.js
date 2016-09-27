@@ -147,6 +147,10 @@ describe('Controller: UserRolesCtrl', function () {
           roleState: 'INACTIVE'
         }),
         Object({
+          roleName: 'Order_Admin',
+          roleState: 'INACTIVE'
+        }),
+        Object({
           roleName: 'Spark_SyncKms',
           roleState: 'ACTIVE'
         })
@@ -194,6 +198,71 @@ describe('Controller: UserRolesCtrl', function () {
         Object({
           roleName: 'Help_Desk',
           roleState: 'INACTIVE'
+        }),
+        Object({
+          roleName: 'Order_Admin',
+          roleState: 'INACTIVE'
+        }),
+        Object({
+          roleName: 'Spark_SyncKms',
+          roleState: 'INACTIVE'
+        })
+      ];
+
+      var mockUser = spyOn(Userservice, 'patchUserRoles');
+      $scope.updateRoles();
+      expect(mockUser.calls.argsFor(0)[2]).toEqual(roles);
+    });
+  });
+
+  describe('Updating roles for Care user', function () {
+    beforeEach(function () {
+      $stateParams.currentUser = careUserJSONFixture.fakeUser3;
+      initController();
+    });
+
+    it('should have orderadmin and helpdesk role when already present', function () {
+
+      var roles = [
+        Object({
+          roleName: 'Full_Admin',
+          roleState: 'INACTIVE'
+        }),
+        Object({
+          roleName: 'All',
+          roleState: 'INACTIVE'
+        }),
+        Object({
+          roleName: 'Billing',
+          roleState: 'INACTIVE'
+        }),
+        Object({
+          roleName: 'Support',
+          roleState: 'INACTIVE'
+        }),
+        Object({
+          roleName: 'Application',
+          roleState: 'INACTIVE'
+        }),
+        Object({
+          roleName: 'Reports',
+          roleState: 'INACTIVE'
+        }),
+        Object({
+          roleName: 'Sales_Admin',
+          roleState: 'INACTIVE'
+        }),
+        Object({
+          roleName: 'Readonly_Admin',
+          roleState: 'INACTIVE'
+        }),
+        Object({
+          roleName: 'Help_Desk',
+          roleState: 'ACTIVE'
+        }),
+        Object({
+          roleName: 'Order_Admin',
+          roleState: 'ACTIVE'
         }),
         Object({
           roleName: 'Spark_SyncKms',

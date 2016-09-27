@@ -1,7 +1,7 @@
 import { ICardButton, CardType, ServicesOverviewCard } from './ServicesOverviewCard';
 
 export class ServicesOverviewHybridManagementF410Card extends ServicesOverviewCard {
-  public getShowMoreButton(): ICardButton {
+  public getShowMoreButton(): ICardButton | undefined {
     return undefined;
   }
 

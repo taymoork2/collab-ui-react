@@ -536,7 +536,7 @@ describe('Service: FusionClusterService', function () {
         expect(FusionClusterService.processClustersToSeeIfServiceIsSetup('squared-fusion-invalid-service', baseClusters)).toBe(false);
       });
 
-      it('should find that Media is *not* enabled in the base cluster list', function () {
+      it('should find that Media is *not* enabled', function () {
         expect(FusionClusterService.processClustersToSeeIfServiceIsSetup('squared-fusion-media', baseClusters)).toBe(false);
       });
     });
@@ -560,6 +560,29 @@ describe('Service: FusionClusterService', function () {
 
       it('should find that Calendar is enabled in the Discotheque org', function () {
         expect(FusionClusterService.processClustersToSeeIfServiceIsSetup('squared-fusion-cal', discothequeClusters)).toBe(true);
+      });
+
+    });
+
+    describe('Empty Clusters Corp', function () {
+
+      // Test clusters: Empty Hybrid Media Corp org
+      var clusters;
+      beforeEach(function () {
+        jasmine.getJSONFixtures().clearCache(); // See https://github.com/velesin/jasmine-jquery/issues/239
+        clusters = getJSONFixture('hercules/empty-clusters-corp-cluster-list.json');
+      });
+
+      it('should find that Media is enabled', function () {
+        expect(FusionClusterService.processClustersToSeeIfServiceIsSetup('squared-fusion-media', clusters)).toBe(true);
+      });
+
+      it('should find that Call is **not** enabled', function () {
+        expect(FusionClusterService.processClustersToSeeIfServiceIsSetup('squared-fusion-uc', clusters)).toBe(false);
+      });
+
+      it('should find that Calendar is **not** enabled', function () {
+        expect(FusionClusterService.processClustersToSeeIfServiceIsSetup('squared-fusion-cal', clusters)).toBe(false);
       });
 
     });

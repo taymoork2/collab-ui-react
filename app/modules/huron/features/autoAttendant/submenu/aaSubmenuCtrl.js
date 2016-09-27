@@ -237,13 +237,15 @@
     function toggleRouteToQueueFeature() {
 
       if (AACommonService.isRouteQueueToggle()) {
+        vm.queues = JSON.parse($scope.queues);
         /* will push route to queue in list */
-        vm.keyActions.push({
-          label: $translate.instant('autoAttendant.phoneMenuRouteQueue'),
-          name: 'phoneMenuRouteQueue',
-          action: 'routeToQueue'
-        });
-        vm.queues = $scope.queues;
+        if (vm.queues.length > 0) {
+          vm.keyActions.push({
+            label: $translate.instant('autoAttendant.phoneMenuRouteQueue'),
+            name: 'phoneMenuRouteQueue',
+            action: 'routeToQueue'
+          });
+        }
       }
     }
 

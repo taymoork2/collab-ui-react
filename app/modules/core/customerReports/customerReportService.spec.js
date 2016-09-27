@@ -1,113 +1,43 @@
 'use strict';
 
 describe('Service: Customer Reports Service', function () {
-  var $httpBackend, CustomerReportService, Notification;
-  var avgRoomsUrl, groupRoomsUrl, oneToOneRoomsUrl, contentUrl, contentSizeUrl, mediaUrl, metricsUrl, activeUserDetailedUrl, mostActiveUrl, devicesUrl;
+  var $httpBackend, $q, CommonReportService, CustomerReportService;
 
   var activeData = getJSONFixture('core/json/customerReports/activeUser.json');
-  var activeUserData = activeData.activeDetailed;
-  var responseActiveData = activeData.activeResponse;
-  var mostActiveData = activeData.mostActive;
-  var responseMostActiveData = activeData.mostActiveResponse;
-
-  var roomData = getJSONFixture('core/json/customerReports/roomData.json');
-  var groupRoomData = roomData.groupRooms;
-  var avgRoomData = roomData.avgRooms;
-  var oneToOneRoomData = roomData.oneTwoOneRooms;
-  var responseRoomData = roomData.response;
-
-  var fileData = getJSONFixture('core/json/customerReports/fileData.json');
-  var contentData = fileData.content;
-  var contentSizeData = fileData.contentSize;
-  var responseFileData = fileData.response;
-
-  var mediaData = getJSONFixture('core/json/customerReports/mediaQuality.json');
-  var mediaContent = mediaData.callQuality;
-  var mediaResponse = mediaData.response;
-
-  var metricsData = getJSONFixture('core/json/customerReports/callMetrics.json');
-  var metricsContent = metricsData.data;
-  var metricsResponse = metricsData.response;
-
+  var defaults = getJSONFixture('core/json/partnerReports/commonReportService.json');
   var devicesJson = getJSONFixture('core/json/customerReports/devices.json');
-  var devicesData = devicesJson.deviceData;
-  var deviceResponse = devicesJson.response;
-
-  beforeEach(angular.mock.module('Core'));
-
-  var cacheValue = (parseInt(moment.utc().format('H'), 10) >= 8);
-  var dayFormat = 'MMM DD';
-  var timezone = 'Etc/GMT';
-  var timeFilter = {
-    value: 0
+  var fileData = getJSONFixture('core/json/customerReports/fileData.json');
+  var mediaData = getJSONFixture('core/json/customerReports/mediaQuality.json');
+  var metricsData = getJSONFixture('core/json/customerReports/callMetrics.json');
+  var roomData = getJSONFixture('core/json/customerReports/roomData.json');
+  var rejectError = {
+    status: 500,
   };
 
   var updateDates = function (data, filter, altDate) {
     for (var i = data.length - 1; i >= 0; i--) {
       if (filter) {
-        data[i].date = moment().tz(timezone).subtract(data.length - i, 'day').format(filter);
+        data[i].date = moment().tz(defaults.timezone).subtract(data.length - i, defaults.DAY).format(filter);
       } else {
         if (altDate) {
-          data[i][altDate] = moment().tz(timezone).subtract(data.length - i, 'day').format();
+          data[i][altDate] = moment().tz(defaults.timezone).subtract(data.length - i, defaults.DAY).format();
         } else {
-          data[i].date = moment().tz(timezone).subtract(data.length - i, 'day').format();
+          data[i].date = moment().tz(defaults.timezone).subtract(data.length - i, defaults.DAY).format();
         }
       }
     }
     return data;
   };
 
-  var Authinfo = {
-    getOrgId: jasmine.createSpy('getOrgId').and.returnValue('1')
-  };
-  var error = {
-    message: 'error'
-  };
-
-  beforeEach(angular.mock.module(function ($provide) {
-    $provide.value("Authinfo", Authinfo);
-  }));
-
-  beforeEach(inject(function (_$httpBackend_, _CustomerReportService_, _Notification_, UrlConfig) {
+  beforeEach(angular.mock.module('Core'));
+  beforeEach(inject(function (_$httpBackend_, _$q_, _CommonReportService_, _CustomerReportService_) {
     $httpBackend = _$httpBackend_;
+    $q = _$q_;
+    CommonReportService = _CommonReportService_;
     CustomerReportService = _CustomerReportService_;
-    Notification = _Notification_;
 
-    spyOn(Notification, 'errorWithTrackingId');
-
-    var baseUrl = UrlConfig.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/reports/';
-    var customerView = '&isCustomerView=true';
-    groupRoomsUrl = baseUrl + 'timeCharts/conversations?&intervalCount=7&intervalType=day&spanCount=1&spanType=day&cache=' + cacheValue + customerView;
-    avgRoomsUrl = baseUrl + 'timeCharts/avgConversations?&intervalCount=7&intervalType=day&spanCount=1&spanType=day&cache=' + cacheValue + customerView;
-    oneToOneRoomsUrl = baseUrl + 'timeCharts/convOneOnOne?&intervalCount=7&intervalType=day&spanCount=1&spanType=day&cache=' + cacheValue + customerView;
-    contentUrl = baseUrl + 'timeCharts/contentShared?&intervalCount=7&intervalType=day&spanCount=1&spanType=day&cache=' + cacheValue + customerView;
-    contentSizeUrl = baseUrl + 'timeCharts/contentShareSizes?&intervalCount=7&intervalType=day&spanCount=1&spanType=day&cache=' + cacheValue + customerView;
-    mediaUrl = baseUrl + 'detailed/callQuality?&intervalCount=7&intervalType=day&spanCount=1&spanType=day&cache=' + cacheValue;
-    metricsUrl = baseUrl + 'detailed/callMetrics?&intervalCount=7&intervalType=day&spanCount=7&spanType=day&cache=' + cacheValue;
-    activeUserDetailedUrl = baseUrl + 'detailed/activeUsers?&intervalCount=7&intervalType=day&spanCount=1&spanType=day&cache=' + cacheValue;
-    mostActiveUrl = baseUrl + 'useractivity?type=weeklyUsage&cache=' + cacheValue;
-    devicesUrl = baseUrl + 'deviceType?type=weeklyUsage&cache=' + cacheValue;
-
-    activeUserData.data[0].data = updateDates(activeUserData.data[0].data);
-    responseActiveData = updateDates(responseActiveData, dayFormat, null);
-
-    groupRoomData.data = updateDates(groupRoomData.data);
-    avgRoomData.data = updateDates(avgRoomData.data);
-    oneToOneRoomData.data = updateDates(oneToOneRoomData.data);
-    responseRoomData = updateDates(responseRoomData, dayFormat);
-
-    contentData.data = updateDates(contentData.data);
-    contentSizeData.data = updateDates(contentSizeData.data);
-    responseFileData = updateDates(responseFileData, dayFormat);
-
-    mediaContent.data[0].data = updateDates(mediaContent.data[0].data);
-    mediaResponse = updateDates(mediaResponse, dayFormat);
-
-    _.forEach(devicesData, function (item) {
-      item.details = updateDates(item.details, null, 'recordTime');
-    });
-    _.forEach(deviceResponse.graphData, function (item) {
-      item.graph = updateDates(item.graph, dayFormat);
+    spyOn(CommonReportService, 'returnErrorCheck').and.callFake(function (error, message, response) {
+      return response;
     });
   }));
 
@@ -116,183 +46,214 @@ describe('Service: Customer Reports Service', function () {
     $httpBackend.verifyNoOutstandingRequest();
   });
 
-  it('should exist', function () {
-    expect(CustomerReportService).toBeDefined();
-  });
-
   describe('Active User Services', function () {
-    it('should getActiveUserData', function () {
-      $httpBackend.whenGET(activeUserDetailedUrl).respond(activeUserData);
+    it('should return column data getActiveUserData where lineGraph is false', function () {
+      spyOn(CommonReportService, 'getCustomerReport').and.returnValue($q.when({
+        data: {
+          data: [{
+            data: updateDates(_.clone(activeData.activeDetailed))
+          }]
+        }
+      }));
 
-      CustomerReportService.getActiveUserData(timeFilter).then(function (response) {
+      CustomerReportService.getActiveUserData(defaults.timeFilter[0], false).then(function (response) {
         expect(response).toEqual({
-          graphData: responseActiveData,
+          graphData: updateDates(_.clone(activeData.activeResponse), defaults.dayFormat, null),
           isActiveUsers: true
         });
       });
-
-      $httpBackend.flush();
     });
 
-    it('should notify an error for getActiveUserData', function () {
-      $httpBackend.whenGET(activeUserDetailedUrl).respond(500, error);
+    it('should return line data getActiveUserData where lineGraph is true', function () {
+      spyOn(CommonReportService, 'getCustomerAltReportByType').and.returnValue($q.when({
+        data: {
+          data: updateDates(_.clone(activeData.activeLineData))
+        }
+      }));
 
-      CustomerReportService.getActiveUserData(timeFilter).then(function (response) {
+      CustomerReportService.getActiveUserData(defaults.timeFilter[0], true).then(function (response) {
+        expect(response).toEqual({
+          graphData: updateDates(_.clone(activeData.activeLineResponse), defaults.dayFormat, null),
+          isActiveUsers: true
+        });
+      });
+    });
+
+    it('should notify an error for getActiveUserData where lineGraph is false', function () {
+      spyOn(CommonReportService, 'getCustomerReport').and.returnValue($q.reject(rejectError));
+
+      CustomerReportService.getActiveUserData(defaults.timeFilter[0], false).then(function (response) {
         expect(response).toEqual({
           graphData: [],
           isActiveUsers: false
         });
-        expect(Notification.errorWithTrackingId).toHaveBeenCalled();
       });
+    });
 
-      $httpBackend.flush();
+    it('should notify an error for getActiveUserData where lineGraph is true', function () {
+      spyOn(CommonReportService, 'getCustomerAltReportByType').and.returnValue($q.reject(rejectError));
+
+      CustomerReportService.getActiveUserData(defaults.timeFilter[0], true).then(function (response) {
+        expect(response).toEqual({
+          graphData: [],
+          isActiveUsers: false
+        });
+      });
     });
 
     it('should getMostActiveUserData', function () {
-      $httpBackend.whenGET(mostActiveUrl).respond(mostActiveData);
+      spyOn(CommonReportService, 'getCustomerReportByType').and.returnValue($q.when({
+        data: _.clone(activeData.mostActive),
+      }));
 
-      CustomerReportService.getMostActiveUserData(timeFilter).then(function (response) {
-        expect(response).toEqual(responseMostActiveData);
+      CustomerReportService.getMostActiveUserData(defaults.timeFilter[0]).then(function (response) {
+        expect(response).toEqual(_.clone(activeData.mostActiveResponse));
       });
-
-      $httpBackend.flush();
     });
 
     it('should notify an error for getMostActiveUserData', function () {
-      $httpBackend.whenGET(mostActiveUrl).respond(500, error);
+      spyOn(CommonReportService, 'getCustomerReportByType').and.returnValue($q.reject(rejectError));
 
-      CustomerReportService.getMostActiveUserData(timeFilter).then(function (response) {
+      CustomerReportService.getMostActiveUserData(defaults.timeFilter[0]).then(function (response) {
         expect(response).toEqual([]);
-        expect(Notification.errorWithTrackingId).toHaveBeenCalled();
       });
-
-      $httpBackend.flush();
     });
   });
 
   describe('Rooms Service', function () {
     it('should getAvgRoomData', function () {
-      $httpBackend.whenGET(groupRoomsUrl).respond(groupRoomData);
-      $httpBackend.whenGET(avgRoomsUrl).respond(avgRoomData);
-      $httpBackend.whenGET(oneToOneRoomsUrl).respond(oneToOneRoomData);
-
-      CustomerReportService.getAvgRoomData(timeFilter).then(function (response) {
-        expect(response).toEqual(responseRoomData);
+      spyOn(CommonReportService, 'getCustomerReport').and.callFake(function (options) {
+        var data = updateDates(_.clone(roomData.groupRooms.data));
+        if (options.type === 'convOneOnOne') {
+          data = updateDates(_.clone(roomData.oneTwoOneRooms.data));
+        } else if (options.type === 'avgConversations') {
+          data = updateDates(_.clone(roomData.avgRooms.data));
+        }
+        return $q.when({
+          data: {
+            data: data
+          },
+        });
       });
 
-      $httpBackend.flush();
+      CustomerReportService.getAvgRoomData(defaults.timeFilter[0]).then(function (response) {
+        expect(response).toEqual(updateDates(_.clone(roomData.response), defaults.dayFormat));
+      });
     });
 
     it('should notify an error for getAvgRoomData', function () {
-      $httpBackend.whenGET(groupRoomsUrl).respond(500, error);
-      $httpBackend.whenGET(avgRoomsUrl).respond(500, error);
-      $httpBackend.whenGET(oneToOneRoomsUrl).respond(500, error);
+      spyOn(CommonReportService, 'getCustomerReport').and.returnValue($q.reject(rejectError));
 
-      CustomerReportService.getAvgRoomData(timeFilter).then(function (response) {
+      CustomerReportService.getAvgRoomData(defaults.timeFilter[0]).then(function (response) {
         expect(response).toEqual([]);
-        expect(Notification.errorWithTrackingId).toHaveBeenCalled();
       });
-
-      $httpBackend.flush();
     });
   });
 
   describe('File Service', function () {
     it('should getFilesSharedData', function () {
-      $httpBackend.whenGET(contentUrl).respond(contentData);
-      $httpBackend.whenGET(contentSizeUrl).respond(contentSizeData);
-
-      CustomerReportService.getFilesSharedData(timeFilter).then(function (response) {
-        expect(response).toEqual(responseFileData);
+      spyOn(CommonReportService, 'getCustomerReport').and.callFake(function (options) {
+        var data = updateDates(_.clone(fileData.content.data));
+        if (options.type === 'contentShareSizes') {
+          data = updateDates(_.clone(fileData.contentSize.data));
+        }
+        return $q.when({
+          data: {
+            data: data
+          },
+        });
       });
 
-      $httpBackend.flush();
+      CustomerReportService.getFilesSharedData(defaults.timeFilter[0]).then(function (response) {
+        expect(response).toEqual(updateDates(_.clone(fileData.response), defaults.dayFormat));
+      });
     });
 
     it('should notify an error for getFilesSharedData', function () {
-      $httpBackend.whenGET(contentUrl).respond(500, error);
-      $httpBackend.whenGET(contentSizeUrl).respond(500, error);
+      spyOn(CommonReportService, 'getCustomerReport').and.returnValue($q.reject(rejectError));
 
-      CustomerReportService.getFilesSharedData(timeFilter).then(function (response) {
+      CustomerReportService.getFilesSharedData(defaults.timeFilter[0]).then(function (response) {
         expect(response).toEqual([]);
-        expect(Notification.errorWithTrackingId).toHaveBeenCalled();
       });
-
-      $httpBackend.flush();
     });
   });
 
   describe('Media Service', function () {
     it('should getMediaQualityData', function () {
-      $httpBackend.whenGET(mediaUrl).respond(mediaContent);
+      spyOn(CommonReportService, 'getCustomerReport').and.returnValue($q.when({
+        data: {
+          data: [{
+            data: updateDates(_.clone(mediaData.callQuality.data[0].data))
+          }]
+        },
+      }));
 
-      CustomerReportService.getMediaQualityData(timeFilter).then(function (response) {
-        expect(response).toEqual(mediaResponse);
+      CustomerReportService.getMediaQualityData(defaults.timeFilter[0]).then(function (response) {
+        expect(response).toEqual(updateDates(_.clone(mediaData.response), defaults.dayFormat));
       });
-
-      $httpBackend.flush();
     });
 
     it('should notify an error for getMediaQualityData', function () {
-      $httpBackend.whenGET(mediaUrl).respond(500, error);
+      spyOn(CommonReportService, 'getCustomerReport').and.returnValue($q.reject(rejectError));
 
-      CustomerReportService.getMediaQualityData(timeFilter).then(function (response) {
+      CustomerReportService.getMediaQualityData(defaults.timeFilter[0]).then(function (response) {
         expect(response).toEqual([]);
-        expect(Notification.errorWithTrackingId).toHaveBeenCalled();
       });
-
-      $httpBackend.flush();
     });
   });
 
   describe('Call Metrics Service', function () {
     it('should getCallMetricsData', function () {
-      $httpBackend.whenGET(metricsUrl).respond(metricsContent);
+      spyOn(CommonReportService, 'getCustomerReport').and.returnValue($q.when({
+        data: _.clone(metricsData.data),
+      }));
 
-      CustomerReportService.getCallMetricsData(timeFilter).then(function (response) {
-        expect(response).toEqual(metricsResponse);
+      CustomerReportService.getCallMetricsData(defaults.timeFilter[0]).then(function (response) {
+        expect(response).toEqual(_.clone(metricsData.response));
       });
-
-      $httpBackend.flush();
     });
 
     it('should notify an error for getCallMetricsData', function () {
-      $httpBackend.whenGET(metricsUrl).respond(500, error);
+      spyOn(CommonReportService, 'getCustomerReport').and.returnValue($q.reject(rejectError));
 
-      CustomerReportService.getCallMetricsData(timeFilter).then(function (response) {
+      CustomerReportService.getCallMetricsData(defaults.timeFilter[0]).then(function (response) {
         expect(response.dataProvider).toEqual([]);
-        expect(Notification.errorWithTrackingId).toHaveBeenCalled();
       });
-
-      $httpBackend.flush();
     });
   });
 
   describe('Registered Endpoints Service', function () {
-    it('should getDeviceData', function () {
-      $httpBackend.whenGET(devicesUrl).respond({
-        data: devicesData
-      });
+    var devicesData = _.clone(devicesJson.deviceData);
+    _.forEach(devicesData, function (item) {
+      item.details = updateDates(item.details, null, 'recordTime');
+    });
 
-      CustomerReportService.getDeviceData(timeFilter).then(function (response) {
+    var deviceResponse = _.clone(devicesJson.response);
+    _.forEach(deviceResponse.graphData, function (item) {
+      item.graph = updateDates(item.graph, defaults.dayFormat);
+    });
+
+    it('should getDeviceData', function () {
+      spyOn(CommonReportService, 'getCustomerReportByType').and.returnValue($q.when({
+        data: {
+          data: devicesData
+        },
+      }));
+
+      CustomerReportService.getDeviceData(defaults.timeFilter[0]).then(function (response) {
         expect(response).toEqual(deviceResponse);
       });
-
-      $httpBackend.flush();
     });
 
     it('should notify an error for getDeviceData', function () {
-      $httpBackend.whenGET(devicesUrl).respond(500, error);
+      spyOn(CommonReportService, 'getCustomerReportByType').and.returnValue($q.reject(rejectError));
 
-      CustomerReportService.getDeviceData(timeFilter).then(function (response) {
+      CustomerReportService.getDeviceData(defaults.timeFilter[0]).then(function (response) {
         expect(response).toEqual({
           graphData: [],
           filterArray: []
         });
-        expect(Notification.errorWithTrackingId).toHaveBeenCalled();
       });
-
-      $httpBackend.flush();
     });
   });
 });

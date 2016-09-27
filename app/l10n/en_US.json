@@ -493,7 +493,12 @@
     "errorSettingToggle": "There was a problem setting a toggle",
     "toggleModSuccess": "All modified toggles were updated",
     "startSearching": "To begin, search for an organization",
-    "noSearchResults": "Search yielded no results"
+    "noSearchResults": "Search yielded no results",
+    "allowBetaChannels": "Allow Beta Release Channel",
+    "allowLatestChannels": "Allow Latest Release Channel",
+    "releaseChannelToggleSuccess": "Allow Release Channel update successful",
+    "releaseChannelToggleFailure": "Allow Release Channel update failed. Please try again later.",
+    "orgReadFailed": "Unable to read organization details"
   },
   "templatesPage": {
     "title": "MANAGE TEMPLATES"
@@ -514,12 +519,14 @@
     "today2": "today",
     "yesterday": "Yesterday",
     "yesterday2": "yesterday",
-    "week": "Last Week",
-    "week2": "last week",
-    "month": "Last Month",
-    "month2": "last month",
-    "threeMonths": "Last Three Months",
+    "week": "Last 7 Days",
+    "week2": "last seven days",
+    "month": "Last 4 Weeks",
+    "month2": "last four weeks",
+    "threeMonths": "Last 3 Months",
     "threeMonths2": "last three months",
+    "twelveMonths": "Last 12 Months",
+    "twelveMonths2": "last twelve months",
     "mostEngaged": "5 Most Engaged",
     "leastEngaged": "5 Least Engaged",
     "highQuality": "5 Highest Quality",
@@ -1619,8 +1626,7 @@
       "releasechannelParagraph": "The release channel for this cluster is defined by the Resource Group it belongs to.",
       "deactivateServicesHeader": "Deactivate Services",
       "deactivateServicesParagraph": "Deactivate {{ServiceName}} to remove any service-related functionality from this cluster.",
-      "deactivateServicesCalendarHeader": "Deactivate Calendar",
-      "deactivateServicesCallHeader": "Deactivate Call",
+      "deactivateServicesSubHeader": "Deactivate {{service}}",
       "noHybridServicesProvisioned": "No Hybrid Services are enabled on this Expressway. To enable a Hybrid Service, go to the relevant service page.",
       "deregisterClusterParagraph": "There are still services active on “{{ClusterName}}”.",
       "deregisterClusterExplanation": "Remove this cluster from Cisco Collaboration Cloud. All services must be deactivated on a cluster before it can be removed.",
@@ -1842,8 +1848,9 @@
       "duplicateName": "A Resource Group with that name already exists. Please choose another name.",
       "loadFailed": "Unable to load the Resource Group details. Please try again later.",
       "groupReleaseChannelSaved": "Release channel saved successfully",
-      "removeGroupReq": "To remove this Resource Group, all assigned clusters and user must be removed first",
-      "deleteSuccess": "Resource group successfully deleted"
+      "removeGroupReq": "To remove this Resource Group, all assigned clusters must be removed first",
+      "deleteSuccess": "Resource group successfully removed",
+      "failedToRemoveUsersFromGroup": "Remove group failed, unable to clear the existing user assignments"
     },
     "assignClustersModal": {
       "title": "Assign Clusters to <q>{{groupName}}</q>",
@@ -1858,6 +1865,12 @@
       "title": "Change Release Channel",
       "description": "Are you sure you want to change the release channel for \"{{groupName}}\" to {{channelName}}?",
       "change": "Change"
+    },
+    "confirmDeleteResourceGroupModal": {
+      "title": "Remove Resource Group",
+      "description": "Are you sure you want to remove \"{{groupName}}\"?",
+      "userClearNote": "Note that any user assignments to this resource group will be cleared.",
+      "remove": "Remove"
     },
     "genericFailure": "An unexpected error occurred. Please try again later."
   },
@@ -2313,10 +2326,13 @@
     "fallbackLabel": "Fallback" ,
     "uploadedFile": "Uploaded File",
     "uploadFailed": "File upload failed, unable to connect. Please try again.",
-    "dragAndDropWav": "Drag and Drop .wav file here",
-    "orClickToBrowse": "or click to browse",
+    "dragAndDropWav": "Drag and Drop .wav file here or click to browse",
+    "import": "Import",
     "sayAndError": "For Say Messages and Error Messages",
     "callAssociatedAAPreview": "Call number associated with this auto attendant to preview.",
+    "cancelUpload": "Are you sure you want to cancel this upload?",
+    "overwriteUpload": "Are you sure you want to overwrite the current file?",
+    "overwrite": "Overwrite",
     "scheduleAddAdditionalHolidays": "Add Holidays",
     "scheduleModalHelp": "Schedules let you handle calls differently when you are open, closed, or observing a holiday. You may enter multiple open hour blocks and holidays.",
     "scheduleModalHelpTimeZone": "The time zone is changed for this Auto Attendant only, overriding basic call settings.  When copying schedules, the time zone is not copied.",
@@ -2892,7 +2908,7 @@
       "state": "State",
       "zip": "Zip/ Postal Code",
       "province": "State/ Province/ Region",
-      "dealId": "Deal ID",
+      "dealId": "Deal ID (United States Only)",
       "usOnly": "Currently U.S. only",
       "trialDeviceShipmentLocations": "Device shipment  is supported in selected locations.  <a href='https://help.webex.com/docs/DOC-8229' target='_blank' ng-click='{{click}}'>Learn more</a>",
       "invalidDealId": "Invalid Deal ID number"
@@ -3288,14 +3304,14 @@
       "newPlaceOnlyInstructions": "What would you like to call the place that this collaboration device will be assigned to? A place can be a meeting room, a reception area or even a whole department.",
       "deviceInstalled": "Where will this device be installed?",
       "deviceInstalledInstructions": "It is recommended that you use the name of your conference room or shared space as it is shown in your company directory. The video address for this device will use this name. It will also be the easiest way to search for and find the device in the system later.",
-      "insertRoomName": "Insert name of room or shared space",
+      "insertRoomName": "Insert name of device location, e.g. 'Reception' or 'Boardroom'",
       "noExistingPlaces": "There is no Cisco Spark Call place in your organization. Create a new place instead."
     },
     "newSharedSpace": {
       "title": "Add Place",
       "newPlace": "Name of Place",
       "newPlaceInstructions": "A place can be a meeting room, a reception area or even a whole department. A place can either contain one collaboration device or several desk phones. All devices associated with one place will share the same calling configuration. For example, desk phones will share the same lines.",
-      "insertRoomName": "Insert name of room or shared space"
+      "insertRoomName": "Insert name of device location, e.g. 'Reception' or 'Boardroom'"
     },
     "assignPhoneNumber": {
       "assignPhoneNumber": "Assign a phone number",
@@ -3360,6 +3376,7 @@
     "save": "Save",
     "roles": "Roles",
     "helpdesk": "Help Desk",
+    "orderadmin": "Order Admin",
     "compliance": "Compliance"
   },
   "mohManagement": {
@@ -3663,6 +3680,7 @@
       "text2": "After 2 hours the node will be upgraded.",
       "upgradeNow": "Upgrade Now",
       "upToDate": "Software is up to date.",
+      "installing": "Software is installing.",
       "sw-upgrade-title": "Software Upgrade",
       "sw-upgrade-text": "New software is available.",
       "upgradeWarning": "This cluster has one or more offline nodes. It is recommended to bring all nodes online before initiating an upgrade.",
@@ -4732,7 +4750,8 @@
     "embedCodeWarnMsg": "It is important to verify all domains where you want to use chat bubble. You will not be able to embed chat bubble on unverified domains.",
     "embedCodeWarnMsgContd": "to verify your domains.",
     "clickHere": "Click here",
-    "embedCodeFor": "Embed Code for "
+    "embedCodeFor": "Embed Code for ",
+    "configureOrgLogoMsg": "Go to Settings page to modify your organization logo"
   },
   "huronHuntGroup": {
     "modalTitle": "Hunt Group",
@@ -5078,6 +5097,7 @@
     "atlas-portal.reports": "Reports",
     "atlas-portal.billing": "Billing",
     "atlas-portal.partner.helpdesk": "Help Desk Support",
+    "atlas-portal.partner.orderadmin": "Order Admin Support",
     "atlas-portal.application": "Application",
     "atlas-portal.partner.salesadmin": "Sales Admin",
     "id_full_admin": "Full Admin",
@@ -5171,7 +5191,8 @@
     "userStatuses": {
       "active": "Active",
       "inactive": "Inactive",
-      "pending": "Invite Pending",
+      "invite-pending": "Invite Pending",
+      "onboarding-pending": "Onboarding Pending",
       "transient": "Transient",
       "fraud": "Fraud",
       "compliance": "Compliance",

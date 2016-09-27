@@ -7,33 +7,36 @@ export class ServicesOverviewCtrl {
   public showFilterDropDown: boolean = false;
 
   /* @ngInject */
-  constructor(Orgservice, private ServicesOverviewCardFactory, private $q, private Authinfo, FusionClusterService, FeatureToggleService) {
-
-    this.cards = ServicesOverviewCardFactory.createCards();
+  constructor(
+    private ServicesOverviewCardFactory,
+    private Authinfo,
+    private FusionClusterService,
+    private FeatureToggleService,
+  ) {
+    this.cards = this.ServicesOverviewCardFactory.createCards();
 
     this.loadWebexSiteList();
 
-    FusionClusterService.getAll()
+    this.FusionClusterService.getAll()
       .then((clusterList) => {
-        let services = [];
-        services.push(FusionClusterService.getStatusForService('squared-fusion-mgmt', clusterList));
-        services.push(FusionClusterService.getStatusForService('squared-fusion-cal', clusterList));
-        services.push(FusionClusterService.getStatusForService('squared-fusion-uc', clusterList));
-        services.push(FusionClusterService.getStatusForService('squared-fusion-media', clusterList));
+        let services: any[] = [];
+        services.push(this.FusionClusterService.getStatusForService('squared-fusion-mgmt', clusterList));
+        services.push(this.FusionClusterService.getStatusForService('squared-fusion-cal', clusterList));
+        services.push(this.FusionClusterService.getStatusForService('squared-fusion-uc', clusterList));
+        services.push(this.FusionClusterService.getStatusForService('squared-fusion-media', clusterList));
         this.forwardEvent('hybridStatusEventHandler', services);
       });
 
-    FeatureToggleService.supports(FeatureToggleService.features.atlasHybridServicesResourceList).then(supports => {
+    this.FeatureToggleService.supports(this.FeatureToggleService.features.atlasHybridServicesResourceList).then(supports => {
       this.forwardEvent('f410FeatureEventHandler', supports);
     });
 
-    FeatureToggleService.supports(FeatureToggleService.features.atlasMediaServiceOnboarding).then(supports => {
+    this.FeatureToggleService.supports(this.FeatureToggleService.features.atlasMediaServiceOnboarding).then(supports => {
       this.forwardEvent('hybridMediaFeatureToggleEventHandler', supports);
     });
 
     FeatureToggleService.atlasCareTrialsGetStatus().then(supports => {
-      let isCareEnabled = Authinfo.isCare() && supports;
-      this.forwardEvent('careFeatureToggleEventHandler', isCareEnabled);
+      this.forwardEvent('careFeatureToggleEventHandler', supports);
     });
 
   }
