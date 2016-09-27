@@ -25,8 +25,12 @@
         <!-- Most Active User Table -->
         <div class="active-table" ng-if="nav.showMostActiveUsers">
           <h4 class="report-section-header report-sides">{{nav.getHeader('activeUsers.mostActiveUsers', nav.timeSelected.label)}}</h4>
-          <p ng-if="!nav.isEmpty(nav.mostActiveUserStatus)" class="report-description">{{nav.getDescription('activeUsers.customerMostActiveDescription')}}</p>
+          <p ng-if="!nav.isEmpty(nav.mostActiveUserStatus) && !nav.isError(nav.mostActiveUserStatus)" class="report-description">{{nav.getDescription('activeUsers.customerMostActiveDescription')}}</p>
           <p ng-if="nav.isEmpty(nav.mostActiveUserStatus)">{{nav.getDescription('activeUsers.noActiveUsers')}}<a ng-click="nav.goToUsersTab()" translate='activeUsers.usersTab'></a></p>
+          <p ng-if="nav.isError(nav.mostActiveUserStatus)">
+            <i class='icon icon-warning no-data-warning'></i>
+            <span translate='activeUsers.errorActiveUsers'></span>
+          </p>
           <div class="active-search" ng-show="!nav.isRefresh(nav.mostActiveUserStatus) && !nav.isEmpty(nav.mostActiveUserStatus)">
             <i class="icon icon-search"></i>
             <input type="text" placeholder="{{nav.searchPlaceholder}}" ng-model="nav.searchField"></input>
