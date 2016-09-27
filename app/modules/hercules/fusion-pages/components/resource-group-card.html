@@ -3,6 +3,7 @@
     <header>
       <button class="resource-group-caret" ng-click="$ctrl.toggleDetails()">
         <i class="icon icon-arrow-down" ng-class="{'icon-arrow-down-rotated': !$ctrl.showDetails}"></i>
+        <i class="icon icon-circle status-indicator" ng-class="$ctrl.getStatusCssClass()"></i>
         <h4>{{::$ctrl.group.name}}</h4>
         <div class="resource-group-release-channel"><span translate="hercules.fusion.list.release-channel"></span>:&nbsp;{{$ctrl.getLocalizedReleaseChannel($ctrl.group.releaseChannel)}}</div>
         <div class="resource-group-release-cluster-number"><span translate="hercules.fusion.list.clusters"></span>:&nbsp;{{::$ctrl.group.clusters.length}}</div>
