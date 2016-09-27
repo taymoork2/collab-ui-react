@@ -3589,7 +3589,8 @@
       "allclusters": "All Clusters",
       "percentage": "%",
       "utilization": "Utilization",
-      "avgutilization": "Avg Utilization"
+      "avgutilization": "Avg Utilization",
+      "errordata": "Error in Retrieving Data"
     },
     "serviceStatus": {
       "unknown": "Status unknown",

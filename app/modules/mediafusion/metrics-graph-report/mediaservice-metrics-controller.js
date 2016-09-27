@@ -2,7 +2,7 @@
   'use strict';
   angular.module('Mediafusion').controller('MediaServiceMetricsContoller', MediaServiceMetricsContoller);
   /* @ngInject */
-  function MediaServiceMetricsContoller($timeout, $translate, MediaClusterServiceV2, XhrNotificationService, MetricsReportService, MetricsGraphService, DummyMetricsReportService, $interval, $scope) {
+  function MediaServiceMetricsContoller($timeout, $translate, MediaClusterServiceV2, $q, MetricsReportService, XhrNotificationService, MetricsGraphService, DummyMetricsReportService, $interval, $scope) {
     var vm = this;
     vm.ABORT = 'ABORT';
     vm.REFRESH = 'refresh';
@@ -35,10 +35,12 @@
     vm.percentage = $translate.instant('mediaFusion.metrics.percentage');
     vm.utilization = $translate.instant('mediaFusion.metrics.utilization');
     vm.average_utilzation = $translate.instant('mediaFusion.metrics.avgutilization');
+    vm.errorData = $translate.instant('mediaFusion.metrics.errordata');
     vm.clusterOptions = [vm.allClusters];
     vm.clusterSelected = vm.clusterOptions[0];
     vm.clusterId = vm.clusterOptions[0];
     vm.Map = {};
+    var deferred = $q.defer();
     vm.timeOptions = [{
       value: 0,
       label: $translate.instant('mediaFusion.metrics.today'),
@@ -104,18 +106,21 @@
             if (cluster.targetType === "mf_mgmt") {
               vm.clusterOptions.push(cluster.name);
               vm.Map[cluster.name] = cluster.id;
-
             }
           });
+          deferred.resolve(vm.Map);
           vm.clusterId = vm.clusterOptions[0];
           vm.clusterSelected = vm.clusterOptions[0];
 
-        }, XhrNotificationService.notify);
+        }).catch(function () {
+          XhrNotificationService.notify(vm.errorData);
+        });
+      return deferred.promise;
     }
 
     function getClusterName(graphs) {
       vm.tempData = [];
-      angular.forEach(graphs, function (value) {
+      _.forEach(graphs, function (value) {
         var clusterName = _.findKey(vm.Map, function (val) {
           return val === value.valueField;
         });
@@ -129,11 +134,14 @@
         }
         if (value.valueField === 'average_util') {
           value.title = vm.average_utilzation;
+          value.lineColor = '#4E5051';
           value.dashLength = 4;
           value.balloonText = '<span class="graph-text">' + value.title + ' <span class="graph-number">[[value]]</span></span>';
           value.lineThickness = 2;
         }
-        vm.tempData.push(value);
+        if (value.title !== value.valueField) {
+          vm.tempData.push(value);
+        }
       });
       return vm.tempData;
     }
@@ -185,11 +193,11 @@
 
     function setAllGraphs() {
       setTotalCallsData();
-      setCPUUtilizationData();
-      setClusterAvailability();
       setUtilizationData();
-      setCallVolumeData();
       setAvailabilityData();
+      setCallVolumeData();
+      setClusterAvailability();
+      setCPUUtilizationData();
     }
 
     function resizeCards() {
@@ -236,25 +244,36 @@
           vm.callVolumeStatus = vm.SET;
         }
         resizeCards();
+      }).catch(function () {
+        XhrNotificationService.notify(vm.errorData);
       });
     }
 
     function setAvailabilityGraph(data) {
       var tempData = angular.copy(data);
-      if (vm.clusterId === vm.allClusters) {
-        angular.forEach(data.data[0].clusterCategories, function (clusterCategory, index) {
-          var clusterName = _.findKey(vm.Map, function (val) {
-            return val === clusterCategory.category;
+      if (!angular.isDefined(data.data[0].isDummy)) {
+        var availabilityData = [];
+        if (vm.clusterId === vm.allClusters) {
+          _.forEach(data.data[0].clusterCategories, function (clusterCategory) {
+            var clusterName = _.findKey(vm.Map, function (val) {
+              return val === clusterCategory.category;
+            });
+            if (angular.isDefined(clusterName)) {
+              clusterCategory.category = clusterName;
+              availabilityData.push(clusterCategory);
+            }
           });
-          if (angular.isDefined(clusterName)) {
-            tempData.data[0].clusterCategories[index].category = clusterName;
+          if (availabilityData.length === 0) {
+            return false;
           }
-        });
+          tempData.data[0].clusterCategories = availabilityData;
+        }
       }
       var tempAvailabilityChart = MetricsGraphService.setAvailabilityGraph(tempData, vm.availabilityChart, vm.clusterId, vm.clusterSelected, vm.timeSelected.label);
       if (tempAvailabilityChart !== null && angular.isDefined(tempAvailabilityChart)) {
         vm.availabilityChart = tempAvailabilityChart;
       }
+      return true;
     }
 
     function setAvailabilityData() {
@@ -264,10 +283,22 @@
         } else if (!angular.isDefined(response.data) || !angular.isArray(response.data) || response.data.length === 0 || !angular.isDefined(response.data[0].clusterCategories) || response.data[0].clusterCategories.length === 0) {
           vm.availabilityStatus = vm.EMPTY;
         } else {
-          setAvailabilityGraph(response);
-          vm.availabilityStatus = vm.SET;
+          deferred.promise.then(function () {
+            if (!setAvailabilityGraph(response)) {
+              vm.availabilityStatus = vm.EMPTY;
+              setAvailabilityGraph(DummyMetricsReportService.dummyAvailabilityData(vm.timeSelected));
+            } else {
+              vm.availabilityStatus = vm.SET;
+            }
+          }, //when promise of clusterid to name is a reject this gets executed
+            function () {
+              setAvailabilityGraph(DummyMetricsReportService.dummyAvailabilityData(vm.timeSelected));
+              vm.availabilityStatus = vm.EMPTY;
+            });
         }
         resizeCards();
+      }).catch(function () {
+        XhrNotificationService.notify(vm.errorData);
       });
     }
 
@@ -286,12 +317,20 @@
           } else if (!angular.isDefined(response.graphData) || !angular.isDefined(response.graphs) || response.graphData.length === 0) {
             vm.utilizationStatus = vm.EMPTY;
           } else {
-            vm.utilizationClusterName = getClusterName(response.graphs);
-            setUtilizationGraph(response.graphData, vm.utilizationClusterName);
-            vm.card = '';
-            vm.utilizationStatus = vm.SET;
+            deferred.promise.then(function () {
+              vm.utilizationClusterName = getClusterName(response.graphs);
+              setUtilizationGraph(response.graphData, vm.utilizationClusterName);
+              vm.card = '';
+              vm.utilizationStatus = vm.SET;
+            },  //when promise of clusterid to name is a reject this gets executed
+            function () {
+              setUtilizationGraph(DummyMetricsReportService.dummyUtilizationData(vm.timeSelected), DummyMetricsReportService.dummyUtilizationGraph());
+              vm.utilizationStatus = vm.EMPTY;
+            });
           }
           resizeCards();
+        }).catch(function () {
+          XhrNotificationService.notify(vm.errorData);
         });
       } else {
         MetricsReportService.getUtilizationData(vm.timeSelected, vm.allClusters).then(function (response) {
@@ -313,6 +352,8 @@
             }
           }
           resizeCards();
+        }).catch(function () {
+          XhrNotificationService.notify(vm.errorData);
         });
       }
     }
@@ -371,6 +412,8 @@
           }
         }
         resizeCards();
+      }).catch(function () {
+        XhrNotificationService.notify(vm.errorData);
       });
 
     }
@@ -389,6 +432,8 @@
           vm.peakUtilization = response.data.peakCpu + vm.percentage;
         }
         resizeCards();
+      }).catch(function () {
+        XhrNotificationService.notify(vm.errorData);
       });
     }
 
@@ -403,6 +448,8 @@
           vm.clusterAvailability = response.data.availabilityPercent + vm.percentage;
         }
         resizeCards();
+      }).catch(function () {
+        XhrNotificationService.notify(vm.errorData);
       });
     }
 
