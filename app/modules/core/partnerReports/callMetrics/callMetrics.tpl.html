@@ -4,8 +4,8 @@
       <h4 translate="callMetrics.callMetrics"></h4>
    </header>
   <section>
-    <p>{{nav.callMetricsDescription}}</p>
-    <div id="callMetricsDiv" class="timechartDiv"></div>
+    <p>{{nav.getDescription('callMetrics.callMetricsDesc')}}</p>
+    <div id="callMetricsChart" class="timechartDiv"></div>
     <div id="callMetricsRefreshDiv" class="spinner-position" ng-show="nav.isRefresh(nav.callMetricsRefresh)">
       <i class='icon icon-spinner icon-2x'></i>
     </div>

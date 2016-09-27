@@ -190,8 +190,10 @@
     }
 
     function activeUserGraphs(data) {
-      var colors = ['colorOne', 'colorTwo'];
-      var secondaryColors = [data[0].colorOne, data[0].colorTwo];
+      var colors = [chartColors.brandSuccessLight, chartColors.brandSuccessDark];
+      if (!data[0].balloon) {
+        colors = [chartColors.dummyGrayLight, chartColors.dummyGray];
+      }
       var values = ['totalRegisteredUsers', 'activeUsers'];
       var titles = [usersTitle, activeUsersTitle];
       var graphs = [];
@@ -200,8 +202,7 @@
         graphs.push(CommonGraphService.getBaseVariable(COLUMN));
         graphs[i].title = titles[i];
         graphs[i].fillColors = colors[i];
-        graphs[i].colorField = colors[i];
-        graphs[i].legendColor = secondaryColors[i];
+        graphs[i].legendColor = colors[i];
         graphs[i].valueField = values[i];
         graphs[i].balloonText = activeUsersBalloonText;
         graphs[i].showBalloon = data[0].balloon;
@@ -281,7 +282,6 @@
         graphs.push(CommonGraphService.getBaseVariable(COLUMN));
         graphs[i].title = $translate.instant(titles[i]);
         graphs[i].fillColors = colors[i];
-        graphs[i].colorField = colors[i];
         graphs[i].valueField = values[i];
         graphs[i].legendColor = colors[i];
         graphs[i].showBalloon = data[0].balloon;
@@ -398,8 +398,8 @@
 
       var titles = ['mediaQuality.good', 'mediaQuality.fair', 'mediaQuality.poor'];
       var colors = [chartColors.blue, chartColors.brandWarning, chartColors.brandDanger];
-      if (data[0].colorOne !== undefined && data[0].colorOne !== null) {
-        colors = [data[0].colorThree, data[0].colorTwo, data[0].colorOne];
+      if (!data[0].balloon) {
+        colors = [chartColors.dummyGrayLighter, chartColors.dummyGrayLight, chartColors.dummyGray];
       }
       var graphs = [];
 
