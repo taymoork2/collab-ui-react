@@ -169,7 +169,6 @@ describe('Care admin should be able to', function () {
     utils.expectIsDisplayed(careChatTemplateSetupPage.customerInfo_attCard_textField1);
     utils.expectIsDisplayed(careChatTemplateSetupPage.customerInfo_attCard_textField2);
     utils.expectIsDisplayed(careChatTemplateSetupPage.customerInfo_attCard_textField3);
-   // utils.expectIsDisplayed(careChatTemplateSetupPage.customerInfo_attCard_textField4);
 
     utils.sendKeys(careChatTemplateSetupPage.customerInfo_attCard_textField1, "Custom Label");
     utils.expectTextToBeSet(careChatTemplateSetupPage.customerInfo_screen_field1Label, "Custom Label");
@@ -187,7 +186,6 @@ describe('Care admin should be able to', function () {
     utils.expectIsDisplayed(careChatTemplateSetupPage.customerInfo_attCard_textField1);
     utils.expectIsDisplayed(careChatTemplateSetupPage.customerInfo_attCard_textField2);
     utils.expectIsDisplayed(careChatTemplateSetupPage.customerInfo_attCard_textField3);
-    // utils.expectIsDisplayed(careChatTemplateSetupPage.customerInfo_attCard_textField4);
 
     utils.sendKeys(careChatTemplateSetupPage.customerInfo_attCard_textField1, "Custom Label");
     utils.expectTextToBeSet(careChatTemplateSetupPage.customerInfo_screen_field1Label, "Custom Label");
