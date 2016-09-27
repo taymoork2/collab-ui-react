@@ -21,11 +21,10 @@
     };
 
     var selectPlaceholder = $translate.instant('autoAttendant.selectPlaceholder');
-
     vm.aaModel = {};
     vm.menuEntry = {};
     vm.messageInput = '';
-
+    vm.messageInputPlaceholder = $translate.instant('autoAttendant.sayMessagePlaceholder');
     vm.languageOption = languageOption;
     vm.languagePlaceholder = selectPlaceholder;
     vm.languageOptions = [];
