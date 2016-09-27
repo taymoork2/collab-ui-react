@@ -36,6 +36,7 @@ export class ServicesOverviewHybridManagementCard extends ServicesOverviewHybrid
     this._display = !hasFeature;
   }
 
+  /* @ngInject */
   public constructor(FusionClusterStatesService) {
     super({
       name: 'servicesOverview.cards.hybridManagement.title',

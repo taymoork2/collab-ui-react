@@ -35,6 +35,7 @@ export class ServicesOverviewHybridMediaCard extends ServicesOverviewHybridCard 
     this._display = hasFeature;
   }
 
+  /* @ngInject */
   public constructor(FusionClusterStatesService) {
     super({
       name: 'servicesOverview.cards.hybridMedia.title',

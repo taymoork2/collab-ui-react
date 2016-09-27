@@ -20,7 +20,7 @@ exports.tslint = {
 
 exports.ts = {
   test: /\.ts$/,
-  loader: 'ts',
+  loaders: ['ng-annotate', 'ts'],
   exclude: [/node_modules/],
 };
 

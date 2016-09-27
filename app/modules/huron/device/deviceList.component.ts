@@ -11,6 +11,7 @@ class DeviceList implements ng.IComponentController {
   public showGenerateButton: boolean = false;
   public generateCodeText: string;
 
+  /* @ngInject */
   constructor(
     private $translate: ng.translate.ITranslateService
   ) {}

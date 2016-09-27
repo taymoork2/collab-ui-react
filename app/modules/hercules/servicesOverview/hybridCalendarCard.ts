@@ -27,6 +27,7 @@ export class ServicesOverviewHybridCalendarCard extends ServicesOverviewHybridCa
     return [this._setupButton];
   }
 
+  /* @ngInject */
   public constructor(FusionClusterStatesService) {
     super({
       name: 'servicesOverview.cards.calendar.title',

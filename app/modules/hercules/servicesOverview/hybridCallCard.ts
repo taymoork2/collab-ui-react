@@ -27,6 +27,7 @@ export class ServicesOverviewHybridCallCard extends ServicesOverviewHybridCard {
     return [this._setupButton];
   }
 
+  /* @ngInject */
   public constructor(FusionClusterStatesService) {
     super({
       name: 'servicesOverview.cards.hybridCall.title',

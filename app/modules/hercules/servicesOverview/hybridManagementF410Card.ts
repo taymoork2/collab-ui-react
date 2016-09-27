@@ -22,6 +22,7 @@ export class ServicesOverviewHybridManagementF410Card extends ServicesOverviewCa
     this._display = hasFeature;
   }
 
+  /* @ngInject */
   public constructor() {
     super({
       name: 'servicesOverview.cards.clusterList.title',
