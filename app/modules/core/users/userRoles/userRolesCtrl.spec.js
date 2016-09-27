@@ -147,10 +147,6 @@ describe('Controller: UserRolesCtrl', function () {
           roleState: 'INACTIVE'
         }),
         Object({
-          roleName: 'Order_Admin',
-          roleState: 'INACTIVE'
-        }),
-        Object({
           roleName: 'Spark_SyncKms',
           roleState: 'ACTIVE'
         })
@@ -197,10 +193,6 @@ describe('Controller: UserRolesCtrl', function () {
         }),
         Object({
           roleName: 'Help_Desk',
-          roleState: 'INACTIVE'
-        }),
-        Object({
-          roleName: 'Order_Admin',
           roleState: 'INACTIVE'
         }),
         Object({
@@ -270,6 +262,7 @@ describe('Controller: UserRolesCtrl', function () {
         })
       ];
 
+      $scope.showOrderAdminRole = true;
       var mockUser = spyOn(Userservice, 'patchUserRoles');
       $scope.updateRoles();
       expect(mockUser.calls.argsFor(0)[2]).toEqual(roles);

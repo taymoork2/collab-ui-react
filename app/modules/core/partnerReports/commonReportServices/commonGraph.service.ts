@@ -41,6 +41,7 @@ export class CommonGraphService {
     },
     export: {
       enabled: true,
+      position: 'top-left',
       libs: {
         autoLoad: false,
       },
@@ -107,6 +108,9 @@ export class CommonGraphService {
       number: 1e+12,
       prefix: 'T',
     }],
+    scroll: {
+      autoGridCount: true,
+    },
   };
 
   public getBaseVariable(key: string): any {

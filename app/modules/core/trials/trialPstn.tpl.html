@@ -23,7 +23,7 @@
     </div>
     
     <!-- manual number entry -->
-    <div class="cs-form__section" ng-hide="pstnTrial.trialData.details.pstnProvider.apiImplementation!== 'SWIVEL'">
+    <div class="cs-form__section" ng-show="pstnTrial.providerImplementation === pstnTrial.SWIVEL || pstnTrial.trialData.details.pstnProvider.apiImplementation === pstnTrial.SWIVEL">
       <div class="section__info">
         <h4 class="section__title" translate="trialModal.pstn.phoneNumbers"></h4>
         <h6 class="section__description" translate="trialModal.pstn.pleaseAdd"></h6>
@@ -38,38 +38,33 @@
         </div>
       </div>
     </div>
+
+    <!-- legal info -->
+    <div class="cs-form__section" ng-hide="pstnTrial.providerImplementation === pstnTrial.SWIVEL || pstnTrial.trialData.details.pstnProvider.apiImplementation === pstnTrial.SWIVEL">
+      <div class="section__info">
+          <h4 class="section__title" translate="trialModal.pstn.contract"></h4>
+          <h6 class="section__description" translate="trialModal.pstn.popover"></h6>
+      </div>
+      <div class="section__content">
+        <formly-form class="collapse-both" model="pstnTrial.contractInfo" fields="pstnTrial.contractInfoFields" class="columns indent">
+          </formly-form>
+      </div>
+    </div>
     
-    <!-- provider specific options -->
-    <div ng-show="pstnTrial.trialData.details.pstnProvider.apiImplementation!== 'SWIVEL'">
-      
-      <!-- legal info -->
-      <div class="cs-form__section">
-        <div class="section__info">
-            <h4 class="section__title" translate="trialModal.pstn.contract"></h4>
-            <h6 class="section__description" translate="trialModal.pstn.popover"></h6>
-        </div>
-        <div class="section__content">
-          <formly-form class="collapse-both" model="pstnTrial.contractInfo" fields="pstnTrial.contractInfoFields" class="columns indent">
-            </formly-form>
+    <!-- provider numbers -->
+    <div class="cs-form__section" ng-hide="pstnTrial.providerImplementation === pstnTrial.SWIVEL || pstnTrial.trialData.details.pstnProvider.apiImplementation === pstnTrial.SWIVEL">
+      <div class="section__info">
+        <h4 translate="trialModal.pstn.phoneNumbers"></h4>
+        <h6 class="section__description" translate="trialModal.pstn.pleaseAdd10"></h6>
+      </div>
+      <div class="section__content">
+        <formly-form model="pstnTrial.numberSearchInfo" fields="pstnTrial.pstnStateAreaFields">
+          </formly-form>
+        <h6 translate="trialModal.pstn.numbers"></h6>
+        <div class="did-input">
+          <cs-token-field tokens="pstnTrial.unsavedTokens" tokenfieldid="pstnTrial.tokenFieldId" tokenoptions="pstnTrial.tokenOptions" tokenmethods="pstnTrial.tokenMethods"></cs-token-field>
         </div>
       </div>
-      
-      <!-- provider numbers -->
-      <div class="cs-form__section">
-        <div class="section__info">
-          <h4 translate="trialModal.pstn.phoneNumbers"></h4>
-          <h6 class="section__description" translate="trialModal.pstn.pleaseAdd10"></h6>
-        </div>
-        <div class="section__content">
-          <formly-form model="pstnTrial.numberSearchInfo" fields="pstnTrial.pstnStateAreaFields">
-            </formly-form>
-          <h6 translate="trialModal.pstn.numbers"></h6>
-          <div class="did-input">
-            <cs-token-field tokens="pstnTrial.unsavedTokens" tokenfieldid="pstnTrial.tokenFieldId" tokenoptions="pstnTrial.tokenOptions" tokenmethods="pstnTrial.tokenMethods"></cs-token-field>
-          </div>
-        </div>
-      </div>
-      
     </div>
   </form>
 </div>
@@ -87,7 +82,7 @@
   </button>
   <button id="startTrialButton" class="btn btn--primary" type="button" cs-btn loading="trial.loading"
     ng-click="trialForm.$setPristine(true); trial.nextStep()"
-    ng-disabled="(trialForm.$invalid && pstnTrial.providerImplementation) || pstnTrial.disableNextButton()">
+    ng-disabled="(trialForm.$invalid && pstnTrial.providerImplementation !== pstnTrial.SWIVEL) || pstnTrial.disableNextButton()">
     <span ng-if="!trial.hasNextStep()" translate="partnerHomePage.startTrial"></span>
     <span ng-if="trial.hasNextStep()" translate="common.next"></span>
   </button>
