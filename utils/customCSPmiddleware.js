@@ -58,6 +58,7 @@ module.exports = csp({
       'http://ciscowebex.d1.sc.omtrdc.net', // Adobe DTM Omniture
     ],
     fontSrc: [
+      '\'self\'',
       'http://dev-admin.ciscospark.com:8000', // manual DNS entry for local dev
     ],
     imgSrc: [
