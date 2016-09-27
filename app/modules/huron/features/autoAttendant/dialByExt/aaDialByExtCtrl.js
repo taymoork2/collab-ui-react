@@ -11,7 +11,6 @@
 
     var runActionName = 'runActionsOnInput';
 
-    var messageInput = '';
     var languageOption = {
       label: '',
       value: ''
@@ -25,8 +24,7 @@
 
     vm.aaModel = {};
     vm.menuEntry = {};
-    vm.messageInput = messageInput;
-    vm.messageInputPlaceholder = $translate.instant('autoAttendant.sayMessagePlaceholder');
+    vm.messageInput = '';
 
     vm.languageOption = languageOption;
     vm.languagePlaceholder = selectPlaceholder;
@@ -42,7 +40,14 @@
 
     vm.saveUiModel = saveUiModel;
 
+    vm.isMediaUploadToggle = isMediaUploadToggle;
+
     /////////////////////
+
+    function isMediaUploadToggle() {
+      return AACommonService.isMediaUploadToggle();
+    }
+
     function setVoiceOptions() {
       vm.voiceOptions = _.sortBy(AALanguageService.getVoiceOptions(vm.languageOption), 'label');
       setVoiceOption();
@@ -66,11 +71,20 @@
 
     function populateUiModel() {
       var action = vm.menuEntry.actions[0];
+      // isMediaUpload not in use? No messageType directive used. Save here.
 
-      vm.messageInput = action.getValue();
+      if (!isMediaUploadToggle()) {
 
-      if (vm.isTextOnly) {
-        return;
+        vm.messageInput = action.getValue();
+
+        if (vm.isTextOnly) {
+          return;
+        }
+
+      }
+
+      if (isMediaUploadToggle() && vm.isTextOnly) {
+        vm.messageInput = action.getValue();
       }
       vm.languageOptions = _.sortBy(AALanguageService.getLanguageOptions(), 'label');
 
@@ -83,7 +97,10 @@
 
     function saveUiModel() {
 
-      vm.menuEntry.actions[0].setValue(vm.messageInput);
+      // if mediaUpload toggled messageInput is handled in the directive..
+      if (!isMediaUploadToggle() || vm.isTextOnly) {
+        vm.menuEntry.actions[0].setValue(vm.messageInput);
+      }
 
       if (!vm.isTextOnly) {
         vm.menuEntry.actions[0].voice = vm.voiceOption.value;

@@ -63,7 +63,7 @@ describe('Huron Auto Attendant', function () {
       utils.expectIsDisplayed(autoattendant.sayMessage);
 
     }, 60000);
-
+ 
     it('should add a single phone number to the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
 
       autoattendant.scrollIntoView(autoattendant.lanesWrapper);
@@ -141,19 +141,23 @@ describe('Huron Auto Attendant', function () {
       // media upload
       utils.click(autoattendant.messageOptions);
       utils.click(autoattendant.playMessageOption);
+
       $(autoattendant.mediaUploadSend).sendKeys(absolutePath);
 
       // and save
       utils.wait(autoattendant.saveButton, 12000);
 
+
       utils.expectIsEnabled(autoattendant.saveButton);
       utils.click(autoattendant.saveButton);
+
       autoattendant.assertUpdateSuccess(deleteUtils.testAAName);
 
-      utils.expectIsDisabled(autoattendant.saveButton);
+      // don't leave the play mode on the screen, effects later tests
+      utils.click(autoattendant.messageOptions);
+      utils.click(autoattendant.sayMessageOption);
 
     }, 60000);
-//
 
     it('should add Phone Menu Say to the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
 
@@ -353,6 +357,7 @@ describe('Huron Auto Attendant', function () {
 
     });
 
+
     it('should add Dial By Extension via New Step action selection to the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
 
       // We are depending on menu order for this test, so if the Add New Step menu gets new steps or gets
@@ -366,6 +371,8 @@ describe('Huron Auto Attendant', function () {
       utils.click(autoattendant.newStepMenu);
       // 3rd menu option is Dial By Extension
       utils.click(autoattendant.newStepSelectDialByExt);
+
+      autoattendant.scrollIntoView(autoattendant.dialByExtension);
 
       utils.expectIsDisplayed(autoattendant.dialByExtension);
 
@@ -389,6 +396,27 @@ describe('Huron Auto Attendant', function () {
       utils.expectIsDisabled(autoattendant.saveButton);
 
     }, 120000);
+
+    it('should add a Dial By Extension Play Message to the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
+      var absolutePath = utils.resolvePath(autoattendant.mediaFileToUpload);
+      autoattendant.scrollIntoView(autoattendant.dialByExtension);
+
+      // media upload
+      utils.click(autoattendant.dialByMessageOptions);
+      utils.click(autoattendant.dialByPlayMessageOption);
+      $(autoattendant.mediaUploadSend).sendKeys(absolutePath);
+
+      // and save
+      utils.wait(autoattendant.saveButton, 12000);
+
+      utils.expectIsEnabled(autoattendant.saveButton);
+      utils.click(autoattendant.saveButton);
+      autoattendant.assertUpdateSuccess(deleteUtils.testAAName);
+
+      utils.expectIsDisabled(autoattendant.saveButton);
+
+    }, 60000);
+
 
     it('should add a Schedule to AA', function () {
       autoattendant.scrollIntoView(autoattendant.schedule);
@@ -513,6 +541,8 @@ describe('Huron Auto Attendant', function () {
       utils.wait(autoattendant.addAANumbers, 20000);
 
       utils.expectIsDisplayed(autoattendant.addAANumbers);
+      autoattendant.scrollIntoView(autoattendant.sayMessageAll.first());
+
       // Verify we have 3 Say Messages (2 sayMessage and PhoneMenu's) already:
       utils.expectCount(autoattendant.sayMessageAll, 4);
 

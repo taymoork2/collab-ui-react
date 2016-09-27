@@ -73,6 +73,44 @@
         expect(AACommonService.isFormDirty()).toBeFalsy();
       });
 
+      it('setActionStatus should be true', function () {
+        AACommonService.setActionStatus(true);
+        expect(AACommonService.isFormDirty()).toBeTruthy();
+      });
+      it('setActionStatus should be false', function () {
+        AACommonService.setActionStatus(false);
+        expect(AACommonService.isFormDirty()).toBeFalsy();
+      });
+      it('setCENumberStatus should be true', function () {
+        AACommonService.setCENumberStatus(true);
+        expect(AACommonService.isFormDirty()).toBeTruthy();
+      });
+      it('setCENumberStatus should be false', function () {
+        AACommonService.setCENumberStatus(false);
+        expect(AACommonService.isFormDirty()).toBeFalsy();
+      });
+      it('setDialByExtensionStatus should be false', function () {
+        AACommonService.setDialByExtensionStatus(false);
+        expect(AACommonService.isFormDirty()).toBeFalsy();
+      });
+      it('setDialByExtensionStatus should be true', function () {
+        AACommonService.setDialByExtensionStatus(true);
+        expect(AACommonService.isFormDirty()).toBeTruthy();
+      });
+      it('setMediaUploadStatus should be false', function () {
+        AACommonService.setMediaUploadStatus(false);
+        expect(AACommonService.isFormDirty()).toBeFalsy();
+      });
+      it('setMediaUploadStatus should be true', function () {
+        AACommonService.setMediaUploadStatus(true);
+        expect(AACommonService.isFormDirty()).toBeTruthy();
+      });
+      it('getUniqueId should be incremented', function () {
+        AACommonService.getUniqueId();
+        var id2 = AACommonService.getUniqueId();
+        expect(id2).toEqual(2);
+      });
+      
       it('all is valid by default', function () {
         expect(AACommonService.isValid()).toBeTruthy();
       });
@@ -80,9 +118,12 @@
       it('is valid or invalid as set with one item', function () {
         AACommonService.setIsValid("1", false);
         expect(AACommonService.isValid()).toBeFalsy();
+        expect(AACommonService.getInvalid("1")).toBeFalsy();
 
         AACommonService.setIsValid("1", true);
         expect(AACommonService.isValid()).toBeTruthy();
+        expect(AACommonService.getInvalid("1")).not.toBeDefined();
+
       });
 
       it('is making properly formatted key', function () {

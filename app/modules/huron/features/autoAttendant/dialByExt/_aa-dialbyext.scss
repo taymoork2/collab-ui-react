@@ -2,6 +2,9 @@
   width: 100%;
   @include vr-spacing(mt, 1);
   @include vr-spacing(mb, 0);
+  @media all and (min-width: 25rem) {
+    width: 21.5rem;
+  }
 
   & .aa-dial-by-message-textarea {
     @include vr-spacing(mb, 1);
@@ -54,5 +57,18 @@
     .aa-pm-timeout {
       @include vr-spacing(pb, 1);
     }
+  }
+
+  & .aa-message-line-break {
+    border-bottom: 2px solid $gray-light-1;
+    @include vr-spacing(mb, .5);
+    width: 97%;
+    margin-left: 1.5%;
+  }
+
+  & .aa-message-subtext {
+    color: $gray-light-1;
+    @include vr-spacing(mb, .75);
+    font-style: italic;
   }
 }
