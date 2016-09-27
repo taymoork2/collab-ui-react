@@ -8,7 +8,7 @@ describe('Controller: RemDeviceController', function () {
 
   var cisUidOfPlace = 'a19b308a-PlaceWithDevice-71898e423bec';
   var device1Url = 'https://csdm-integration.wbx2.com/csdm/api/v1/organization/584cf4cd-eea7-4c8c-83ee-67d88fc6eab5/devices/c528e32d-ed35-4e00-a20d-d4d3519efb4f';
-  var code2Url = 'https://csdm-integration.wbx2.com/csdm/api/v1/organization/584cf4cd-eea7-4c8c-83ee-67d88fc6eab5/codes/ad233bb2-45d6-4780-9cca-93da278b3a0c';
+  var code2Url = 'https://csdm-integration.wbx2.com/csdm/api/v1/organization/584cf4cd-eea7-4c8c-83ee-67d88fc6eab5/codes/ad233bb2-code2-for-place-with-dev-93da278b3a0c';
 
   beforeEach(angular.mock.module('Squared'));
   beforeEach(angular.mock.module('Huron'));

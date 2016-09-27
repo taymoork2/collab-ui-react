@@ -19,7 +19,8 @@
                 return CsdmConverter.convertPlaces(res.data);
               });
           } else {
-            placesDeferred.reject('feature not enabled');
+            console.log('failure');
+            return $q.reject('feature not enabled');
           }
         });
     }
