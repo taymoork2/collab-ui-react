@@ -261,10 +261,8 @@
   .category-tokens {
     .tokenfield.form-control,
     .tokenfield.form-control-static {
-      @include vr-spacing(mt, 1);
-      @include vr-spacing(mb, 1);
       @include vr-spacing(mh, 1);
-      height:rem-calc(96px);
+      height:4rem;
       overflow-y:auto;
       overflow-x: hidden;
       input.token-input {
@@ -310,6 +308,9 @@
   }
   .ct-add-contain {
     cursor: pointer;
+  }
+  .cs-input-group {
+    @include vr-spacing(mb, 0.5);
   }
 }
 
