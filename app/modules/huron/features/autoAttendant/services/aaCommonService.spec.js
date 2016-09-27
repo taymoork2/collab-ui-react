@@ -110,7 +110,6 @@
         var id2 = AACommonService.getUniqueId();
         expect(id2).toEqual(2);
       });
-      
       it('all is valid by default', function () {
         expect(AACommonService.isValid()).toBeTruthy();
       });
