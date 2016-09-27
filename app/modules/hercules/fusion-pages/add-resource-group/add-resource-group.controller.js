@@ -37,6 +37,7 @@
       title: 'Resource Group Details',
       description: 'Resource group are a set of clusters you may assign users to.'
     };
+    vm.allowedChannels = [];
 
     ///////////////
 
@@ -67,5 +68,18 @@
         createResourceGroup();
       }
     }
+
+    function getAvailableReleaseChannels() {
+      ResourceGroupService.getAllowedChannels()
+        .then(function (channels) {
+          vm.allowedChannels = channels;
+        });
+    }
+    getAvailableReleaseChannels();
+
+    vm.showChannelOption = function (channel) {
+      return _.includes(vm.allowedChannels, channel);
+    };
+
   }
 })();
