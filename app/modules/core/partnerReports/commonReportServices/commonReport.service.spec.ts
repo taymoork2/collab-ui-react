@@ -7,7 +7,7 @@ import {
   ITypeQuery,
 } from '../partnerReportInterfaces';
 
-describe('Service: Common Report Service', () => {
+xdescribe('Service: Common Report Service', () => {
   const customerData = getJSONFixture('core/json/partnerReports/customerResponse.json');
   const defaults = getJSONFixture('core/json/partnerReports/commonReportService.json');
   const cacheValue: boolean = (parseInt(moment.utc().format('H'), 10) >= 8);
