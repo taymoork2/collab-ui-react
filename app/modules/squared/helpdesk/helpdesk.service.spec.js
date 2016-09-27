@@ -2,9 +2,10 @@
 describe('HelpdeskService', function () {
   beforeEach(angular.mock.module('Squared'));
 
-  var $timeout, $httpBackend, Service, urlBase, ServiceDescriptor, $scope, q, HelpdeskMockData, CsdmConverter, HelpdeskHttpRequestCanceller;
+  var $timeout, $httpBackend, Service, urlBase, ServiceDescriptor, $scope, q, HelpdeskMockData,
+    CsdmConverter, HelpdeskHttpRequestCanceller, FeatureToggleService;
 
-  beforeEach(inject(function (_$timeout_, UrlConfig, _$rootScope_, _$httpBackend_, _HelpdeskService_, _ServiceDescriptor_, _$q_, _HelpdeskMockData_, _CsdmConverter_, _HelpdeskHttpRequestCanceller_) {
+  beforeEach(inject(function (_$timeout_, UrlConfig, _$rootScope_, _$httpBackend_, _HelpdeskService_, _ServiceDescriptor_, _$q_, _HelpdeskMockData_, _CsdmConverter_, _HelpdeskHttpRequestCanceller_, _FeatureToggleService_) {
     Service = _HelpdeskService_;
     ServiceDescriptor = _ServiceDescriptor_;
     HelpdeskHttpRequestCanceller = _HelpdeskHttpRequestCanceller_;
@@ -14,6 +15,7 @@ describe('HelpdeskService', function () {
     urlBase = UrlConfig.getAdminServiceUrl();
     HelpdeskMockData = _HelpdeskMockData_;
     CsdmConverter = _CsdmConverter_;
+    FeatureToggleService = _FeatureToggleService_;
 
     $httpBackend = _$httpBackend_;
   }));
@@ -274,5 +276,94 @@ describe('HelpdeskService', function () {
     expect(result.length).toBe(1);
     expect(result[0].id).toEqual('94b3e13c-b1dd-5e2a-9b64-e3ca02de51d3');
     expect(result[0].displayName).toEqual('Testing DR');
+  });
+
+  it('isSparkOnlineUser: detects when userData reflects that the user is a Spark Online user', function () {
+    var result = Service.isSparkOnlineUser({});
+    expect(result).toBe(false);
+
+    result = Service.isSparkOnlineUser({ onlineOrderIds: null });
+    expect(result).toBe(false);
+
+    result = Service.isSparkOnlineUser({ onlineOrderIds: [] });
+    expect(result).toBe(false);
+
+    result = Service.isSparkOnlineUser({ onlineOrderIds: ['fake-onlineOrderId-0'] });
+    expect(result).toBe(true);
+  });
+
+  it('getInviteResendUrl: returns an appropriate url depending on the userData provided', function () {
+    var result = Service.getInviteResendUrl({ onlineOrderIds: ['fake-onlineOrderId-0'] });
+    expect(result).toContain('helpdesk/actions/resendonlineorderactivation/invoke');
+
+    result = Service.getInviteResendUrl();
+    expect(result).toContain('helpdesk/actions/resendinvitation/invoke');
+  });
+
+  it('getInviteResendPayload: returns an appropriate object depending on the userData provided', function () {
+    var result = Service.getInviteResendPayload({
+      displayName: 'fake-displayName',
+      email: 'fake-email'
+    });
+    expect(result).toEqual({
+      inviteList: [{
+        displayName: 'fake-displayName',
+        email: 'fake-email'
+      }]
+    });
+
+    result = Service.getInviteResendPayload({
+      displayName: 'fake-displayName',
+      email: 'fake-email',
+      onlineOrderIds: ['fake-onlineOrderId-0']
+    });
+    expect(result).toEqual({
+      onlineOrderIds: ['fake-onlineOrderId-0']
+    });
+  });
+
+  it('invokeInviteEmail: invokes helper methods to determine where and what to POST', function () {
+    var fakeUserData = {
+      displayName: 'fake-displayName',
+      email: 'fake-email',
+      onlineOrderIds: ['fake-onlineOrderId-0']
+    };
+
+    spyOn(Service, 'getInviteResendUrl').and.callThrough();
+    spyOn(Service, 'getInviteResendPayload').and.callThrough();
+    $httpBackend
+      .expectPOST(/helpdesk\/actions\/resend.*\/invoke/).respond(200);
+
+    Service.invokeInviteEmail(fakeUserData);
+    $httpBackend.flush();
+
+    expect(Service.getInviteResendUrl.calls.count()).toBe(1);
+    expect(Service.getInviteResendUrl).toHaveBeenCalledWith(fakeUserData);
+    expect(Service.getInviteResendPayload.calls.count()).toBe(1);
+    expect(Service.getInviteResendPayload).toHaveBeenCalledWith(fakeUserData);
+
+    $httpBackend.verifyNoOutstandingExpectation();
+    $httpBackend.verifyNoOutstandingRequest();
+  });
+
+  it('resendInviteEmail: checks a feature toggle and calls invokeInviteEmail', function () {
+    var fakeUserData = {
+      displayName: 'fake-displayName',
+      email: 'fake-email',
+      onlineOrderIds: ['fake-onlineOrderId-0']
+    };
+
+    spyOn(Service, 'invokeInviteEmail').and.callThrough();
+
+    // TODO: fix this, currently app code is mis-using 'FeatureToggleService.supports()'
+    // - for now, stub it like it behaves synchronously
+    spyOn(FeatureToggleService, 'supports').and.returnValue(false);
+
+    Service.resendInviteEmail(fakeUserData);
+
+    expect(FeatureToggleService.supports.calls.count()).toBe(1);
+    expect(FeatureToggleService.supports).toHaveBeenCalledWith(FeatureToggleService.features.atlasEmailStatus);
+    expect(Service.invokeInviteEmail.calls.count()).toBe(1);
+    expect(Service.invokeInviteEmail).toHaveBeenCalledWith(fakeUserData);
   });
 });

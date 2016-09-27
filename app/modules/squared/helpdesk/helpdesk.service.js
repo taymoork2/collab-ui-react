@@ -6,6 +6,35 @@
   function HelpdeskService($http, $location, $q, $translate, $window, CacheFactory, Config, CsdmConfigService, CsdmConverter, FeatureToggleService, HelpdeskHttpRequestCanceller, HelpdeskMockData, ServiceDescriptor, UrlConfig, USSService) {
     var urlBase = UrlConfig.getAdminServiceUrl();
     var orgCache = CacheFactory.get('helpdeskOrgCache');
+    var service = {
+      usersWithRole: usersWithRole,
+      searchUsers: searchUsers,
+      searchOrgs: searchOrgs,
+      getUser: getUser,
+      getOrg: getOrg,
+      isEmailBlocked: isEmailBlocked,
+      searchCloudberryDevices: searchCloudberryDevices,
+      getHybridServices: getHybridServices,
+      resendInviteEmail: resendInviteEmail,
+      getWebExSites: getWebExSites,
+      getServiceOrder: getServiceOrder,
+      getCloudberryDevice: getCloudberryDevice,
+      getOrgDisplayName: getOrgDisplayName,
+      findAndResolveOrgsForUserResults: findAndResolveOrgsForUserResults,
+      checkIfMobile: checkIfMobile,
+      sendVerificationCode: sendVerificationCode,
+      filterDevices: filterDevices,
+      getHybridStatusesForUser: getHybridStatusesForUser,
+      cancelAllRequests: cancelAllRequests,
+      noOutstandingRequests: noOutstandingRequests,
+      useMock: useMock,
+      elevateToReadonlyAdmin: elevateToReadonlyAdmin,
+      isSparkOnlineUser: isSparkOnlineUser,
+      getInviteResendUrl: getInviteResendUrl,
+      getInviteResendPayload: getInviteResendPayload,
+      invokeInviteEmail: invokeInviteEmail,
+    };
+
     if (!orgCache) {
       orgCache = new CacheFactory('helpdeskOrgCache', {
         maxAge: 120 * 1000,
@@ -92,7 +121,7 @@
 
     function isSparkOnlineUser(user) {
       var value = _.get(user, 'onlineOrderIds', []);
-      return !!value.length;
+      return (value) ? !!value.length : false;
     }
 
     function getCorrectedDisplayName(user) {
@@ -328,17 +357,19 @@
 
     function resendInviteEmail(trimmedUserData) {
       var email = trimmedUserData.email;
+      // TODO: fix this, 'FeatureToggleService.supports()' returns a promise, and is therefore
+      //   always truthy and very likely not the real intent of this code
       if (FeatureToggleService.supports(FeatureToggleService.features.atlasEmailStatus)) {
         return isEmailBlocked(email).then(function () {
           $http.delete(urlBase + 'email/bounces?email=' + email)
             .then(function () {
-              return invokeInviteEmail(trimmedUserData);
+              return service.invokeInviteEmail(trimmedUserData);
             });
         }).catch(function () {
-          return invokeInviteEmail(trimmedUserData);
+          return service.invokeInviteEmail(trimmedUserData);
         });
       } else {
-        return invokeInviteEmail(trimmedUserData);
+        return service.invokeInviteEmail(trimmedUserData);
       }
     }
 
@@ -366,8 +397,8 @@
     }
 
     function invokeInviteEmail(trimmedUserData) {
-      var url = getInviteResendUrl(trimmedUserData);
-      var payload = getInviteResendPayload(trimmedUserData);
+      var url = service.getInviteResendUrl(trimmedUserData);
+      var payload = service.getInviteResendPayload(trimmedUserData);
       return $http.post(url, payload)
         .then(function (res) {
           return extractData(res);
@@ -428,30 +459,7 @@
       return HelpdeskHttpRequestCanceller.empty();
     }
 
-    return {
-      usersWithRole: usersWithRole,
-      searchUsers: searchUsers,
-      searchOrgs: searchOrgs,
-      getUser: getUser,
-      getOrg: getOrg,
-      isEmailBlocked: isEmailBlocked,
-      searchCloudberryDevices: searchCloudberryDevices,
-      getHybridServices: getHybridServices,
-      resendInviteEmail: resendInviteEmail,
-      getWebExSites: getWebExSites,
-      getServiceOrder: getServiceOrder,
-      getCloudberryDevice: getCloudberryDevice,
-      getOrgDisplayName: getOrgDisplayName,
-      findAndResolveOrgsForUserResults: findAndResolveOrgsForUserResults,
-      checkIfMobile: checkIfMobile,
-      sendVerificationCode: sendVerificationCode,
-      filterDevices: filterDevices,
-      getHybridStatusesForUser: getHybridStatusesForUser,
-      cancelAllRequests: cancelAllRequests,
-      noOutstandingRequests: noOutstandingRequests,
-      useMock: useMock,
-      elevateToReadonlyAdmin: elevateToReadonlyAdmin
-    };
+    return service;
   }
 
   angular.module('Squared')
