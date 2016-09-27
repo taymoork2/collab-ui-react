@@ -34,6 +34,7 @@
     vm.setClusterName = setClusterName;
     vm.deactivateService = deactivateService;
     vm.deregisterCluster = deregisterCluster;
+    vm.allowedChannels = [];
 
     FusionClusterService.getAllProvisionedConnectorTypes($stateParams.id)
       .then(function (allConnectorTypes) {
@@ -248,6 +249,14 @@
           Notification.error('hercules.expresswayClusterSettings.clusterNameCannotBeSaved');
         });
     }
+
+    function getAvailableReleaseChannels() {
+      ResourceGroupService.getAllowedChannels()
+        .then(function (channels) {
+          vm.allowedChannels = channels;
+        });
+    }
+    getAvailableReleaseChannels();
 
     vm.filterServices = function (connector) {
       return connector === 'c_cal' || connector === 'c_ucmc';

@@ -2,7 +2,7 @@
 
 describe('Controller:MediaServiceMetricsContoller', function () {
   beforeEach(angular.mock.module('Mediafusion'));
-  var controller, $scope, $stateParams, $q, $translate, $timeout, Log, Config, MediaClusterServiceV2, XhrNotificationService, DummyMetricsReportService, MetricsReportService, MetricsGraphService, redirectTargetPromise;
+  var controller, $scope, $stateParams, $q, $translate, $timeout, $interval, Log, Config, MediaClusterServiceV2, DummyMetricsReportService, MetricsReportService, XhrNotificationService, MetricsGraphService;
 
   var dummydata = '';
 
@@ -30,24 +30,20 @@ describe('Controller:MediaServiceMetricsContoller', function () {
   var allClusters = 'mediaFusion.metrics.allclusters';
   var nodata = 'mediaFusion.metrics.nodata';
 
-  beforeEach(inject(function ($rootScope, $controller, _$stateParams_, _$q_, _$translate_, _$timeout_, _Log_, _Config_, _XhrNotificationService_, _MetricsReportService_, _DummyMetricsReportService_, _MetricsGraphService_) {
+  beforeEach(inject(function ($rootScope, $controller, _$stateParams_, _$timeout_, _$translate_, _MediaClusterServiceV2_, _$q_, _MetricsReportService_, _XhrNotificationService_, _MetricsGraphService_, _DummyMetricsReportService_, _$interval_, _Log_, _Config_) {
     $scope = $rootScope.$new();
     $stateParams = _$stateParams_;
-    $q = _$q_;
-    $translate = _$translate_;
     $timeout = _$timeout_;
+    $translate = _$translate_;
+    MediaClusterServiceV2 = _MediaClusterServiceV2_;
+    $q = _$q_;
+    MetricsReportService = _MetricsReportService_;
+    XhrNotificationService = _XhrNotificationService_;
+    MetricsGraphService = _MetricsGraphService_;
+    DummyMetricsReportService = _DummyMetricsReportService_;
+    $interval = _$interval_;
     Log = _Log_;
     Config = _Config_;
-    redirectTargetPromise = {
-      then: sinon.stub()
-    };
-    MediaClusterServiceV2 = {
-      getAll: sinon.stub().returns(redirectTargetPromise)
-    };
-    XhrNotificationService = _XhrNotificationService_;
-    MetricsReportService = _MetricsReportService_;
-    DummyMetricsReportService = _DummyMetricsReportService_;
-    MetricsGraphService = _MetricsGraphService_;
 
     spyOn(MetricsGraphService, 'setCallVolumeGraph').and.returnValue({
       'dataProvider': callVolumeData
@@ -62,20 +58,21 @@ describe('Controller:MediaServiceMetricsContoller', function () {
     spyOn(MetricsReportService, 'getCallVolumeData').and.returnValue($q.when(callVolumeData));
     spyOn(MetricsReportService, 'getAvailabilityData').and.returnValue($q.when(clusteravailabilityData));
     spyOn(MetricsReportService, 'getUtilizationData').and.returnValue($q.when(dummydata));
-    spyOn(XhrNotificationService, 'notify');
 
     controller = $controller('MediaServiceMetricsContoller', {
-      $stateParams: $stateParams,
       $scope: $scope,
-      $q: $q,
+      $stateParams: $stateParams,
+      $timeout: $timeout,
       $translate: $translate,
-      Log: Log,
-      Config: Config,
       MediaClusterServiceV2: MediaClusterServiceV2,
-      XhrNotificationService: XhrNotificationService,
+      $q: $q,
       MetricsReportService: MetricsReportService,
+      XhrNotificationService: XhrNotificationService,
+      MetricsGraphService: MetricsGraphService,
       DummyMetricsReportService: DummyMetricsReportService,
-      MetricsGraphService: MetricsGraphService
+      $interval: $interval,
+      Log: Log,
+      Config: Config
     });
     //$scope.$apply();
   }));

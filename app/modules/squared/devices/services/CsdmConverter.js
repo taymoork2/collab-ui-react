@@ -8,6 +8,7 @@
 
       function CloudberryDevice(obj) {
         this.url = obj.url;
+        this.isCloudberryDevice = true;
         this.type = 'cloudberry';
         this.mac = obj.mac;
         this.ip = getIp(obj);
@@ -160,6 +161,7 @@
 
       function Code(obj) {
         obj.state = obj.status;
+        this.isCode = true;
 
         this.url = obj.url;
         this.type = 'cloudberry';
@@ -189,6 +191,7 @@
 
       function Place(obj) {
         this.url = obj.url;
+        this.isPlace = true;
         this.type = obj.type || 'cloudberry';
         this.readableType = getLocalizedType(obj.type);
         this.entitlements = obj.entitlements;
@@ -196,6 +199,7 @@
         this.displayName = obj.displayName;
         this.sipUrl = obj.sipUrl;
         this.devices = obj.type === 'huron' ? obj.phones : convertCloudberryDevices(obj.devices);
+        this.codes = obj.type === 'huron' ? null : convertCodes(obj.codes);
         this.numbers = obj.numbers;
         this.isUnused = obj.devices || false;
         this.canDelete = true;

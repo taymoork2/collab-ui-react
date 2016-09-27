@@ -82,10 +82,10 @@ exports.dependencies = [{
 }];
 
 exports.instrument = {
-  test: /\.js$/,
+  test: /\.(js|ts)$/,
   exclude: [
     /node_modules/,
-    /spec\.js$/,
+    /spec\.(js|ts)$/,
   ],
   loader: 'istanbul-instrumenter',
 };

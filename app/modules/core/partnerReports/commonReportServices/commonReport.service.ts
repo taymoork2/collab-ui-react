@@ -24,7 +24,7 @@ export class CommonReportService {
   private TIMEZONE: string = 'Etc/GMT';
 
   private usageOptions: Array<string> = ['weeklyUsage', 'monthlyUsage', 'threeMonthUsage'];
-  private altUsageOptions: Array<string> = ['dailyUsage', 'monthlyUsage', 'threeMonthUsage'];
+  private altUsageOptions: Array<string> = ['dailyUsage', 'monthlyUsage', 'threeMonthUsage', 'yearlyUsage'];
   private cacheValue: boolean = (parseInt(moment.utc().format('H'), 10) >= 8);
 
   /* @ngInject */
@@ -160,11 +160,19 @@ export class CommonReportService {
           .format(this.DAY_FORMAT);
         returnGraph.push(temp);
       }
-    } else {
+    } else if (filter.value === 2) {
       for (let y = 12; y >= 0; y--) {
         let item: any = _.clone(graphItem);
         item.date = moment().day(-1)
           .subtract(y, this.WEEK)
+          .format(this.DAY_FORMAT);
+        returnGraph.push(item);
+      }
+    } else {
+      for (let z = 52; z >= 0; z--) {
+        let item = _.clone(graphItem);
+        item.date = moment().day(-1)
+          .subtract(z, this.WEEK)
           .format(this.DAY_FORMAT);
         returnGraph.push(item);
       }

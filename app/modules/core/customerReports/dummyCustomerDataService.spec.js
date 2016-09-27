@@ -31,9 +31,13 @@ describe('Controller: Dummy Customer Reports', function () {
       for (var x = 0; x <= 4; x++) {
         data[x].date = moment().day(-1).subtract(4 - x, defaults.WEEK).format(defaults.dayFormat);
       }
+    } else if (filter.value === 2) {
+      for (var y = 0; y <= 12; y++) {
+        data[y].date = moment().day(-1).subtract(12 - y, defaults.WEEK).format(defaults.dayFormat);
+      }
     } else {
-      for (var y = 0; y <= 13; y++) {
-        data[y].date = moment().day(-1).subtract(13 - y, defaults.WEEK).format(defaults.dayFormat);
+      for (var z = 0; z <= 52; z++) {
+        data[z].date = moment().day(-1).subtract(52 - z, defaults.WEEK).format(defaults.dayFormat);
       }
     }
     return data;
@@ -68,9 +72,10 @@ describe('Controller: Dummy Customer Reports', function () {
       expect(DummyCustomerReportService.dummyActiveUserData(defaults.timeFilter[1], false)).toEqual(updateDates(_.clone(dummyData.activeUser.two), defaults.timeFilter[1]));
       expect(DummyCustomerReportService.dummyActiveUserData(defaults.timeFilter[2], false)).toEqual(updateDates(_.clone(dummyData.activeUser.three), defaults.timeFilter[2]));
 
-      expect(DummyCustomerReportService.dummyActiveUserData(defaults.timeFilter[0], true)).toEqual(updateLineDates(_.clone(activeData.dummyData.one), defaults.timeFilter[0]));
-      expect(DummyCustomerReportService.dummyActiveUserData(defaults.timeFilter[1], true)).toEqual(updateLineDates(_.clone(activeData.dummyData.two), defaults.timeFilter[1]));
-      expect(DummyCustomerReportService.dummyActiveUserData(defaults.timeFilter[2], true)).toEqual(updateLineDates(_.clone(activeData.dummyData.three), defaults.timeFilter[2]));
+      expect(DummyCustomerReportService.dummyActiveUserData(defaults.altTimeFilter[0], true)).toEqual(updateLineDates(_.clone(activeData.dummyData.one), defaults.altTimeFilter[0]));
+      expect(DummyCustomerReportService.dummyActiveUserData(defaults.altTimeFilter[1], true)).toEqual(updateLineDates(_.clone(activeData.dummyData.two), defaults.altTimeFilter[1]));
+      expect(DummyCustomerReportService.dummyActiveUserData(defaults.altTimeFilter[2], true)).toEqual(updateLineDates(_.clone(activeData.dummyData.three), defaults.altTimeFilter[2]));
+      expect(DummyCustomerReportService.dummyActiveUserData(defaults.altTimeFilter[3], true)).toEqual(updateLineDates(_.clone(activeData.dummyData.four), defaults.altTimeFilter[3]));
     });
 
     it('dummyAvgRoomData should return the expected responses', function () {

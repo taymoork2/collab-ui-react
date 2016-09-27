@@ -41,7 +41,7 @@ describe('Service: Common Report Service', () => {
     let customers: Array<IReportsCustomer> = customerData.customerOptions;
 
     it('getPartnerReport should fetch report data', function () {
-      this.$httpBackend.whenGET(defaults.dummyUrls[0]).respond(dummyResponse);
+      this.$httpBackend.whenGET(defaults.dummyUrls[0].replace('{{cache}}', cacheValue)).respond(dummyResponse);
       this.CommonReportService.getPartnerReport(queryOne, customers, undefined).then(function (response) {
         expect(response.data).toEqual(dummyResponse);
       });
@@ -49,7 +49,7 @@ describe('Service: Common Report Service', () => {
     });
 
     it('getPartnerReportByReportType should fetch report data', function () {
-      this.$httpBackend.whenGET(defaults.dummyUrls[1]).respond(dummyResponse);
+      this.$httpBackend.whenGET(defaults.dummyUrls[1].replace('{{cache}}', cacheValue)).respond(dummyResponse);
       this.CommonReportService.getPartnerReportByReportType(queryTwo, queryOne, customers, undefined).then(function (response) {
         expect(response.data).toEqual(dummyResponse);
       });
@@ -57,7 +57,7 @@ describe('Service: Common Report Service', () => {
     });
 
     it('getCustomerReport should fetch report data', function () {
-      this.$httpBackend.whenGET(defaults.dummyUrls[2]).respond(dummyResponse);
+      this.$httpBackend.whenGET(defaults.dummyUrls[2].replace('{{cache}}', cacheValue)).respond(dummyResponse);
       this.CommonReportService.getCustomerReport(queryThree, undefined).then(function (response) {
         expect(response.data).toEqual(dummyResponse);
       });
@@ -65,7 +65,7 @@ describe('Service: Common Report Service', () => {
     });
 
     it('getCustomerReportByType should fetch report data', function () {
-      this.$httpBackend.whenGET(defaults.dummyUrls[3]).respond(dummyResponse);
+      this.$httpBackend.whenGET(defaults.dummyUrls[3].replace('{{cache}}', cacheValue)).respond(dummyResponse);
       this.CommonReportService.getCustomerReportByType(queryFour, undefined).then(function (response) {
         expect(response.data).toEqual(dummyResponse);
       });
@@ -73,7 +73,7 @@ describe('Service: Common Report Service', () => {
     });
 
     it('getCustomerAltReportByType should fetch report data', function () {
-      this.$httpBackend.whenGET(defaults.dummyUrls[4]).respond(dummyResponse);
+      this.$httpBackend.whenGET(defaults.dummyUrls[4].replace('{{cache}}', cacheValue)).respond(dummyResponse);
       this.CommonReportService.getCustomerAltReportByType(queryFour, undefined).then(function (response) {
         expect(response.data).toEqual(dummyResponse);
       });

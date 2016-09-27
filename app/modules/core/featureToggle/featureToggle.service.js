@@ -8,12 +8,11 @@
     require('modules/huron/telephony/telephonyConfig'),
   ])
     .factory('HuronCustomerFeatureToggleService', HuronCustomerFeatureToggleService)
-    .factory('HuronUserFeatureToggleService', HuronUserFeatureToggleService)
     .service('FeatureToggleService', FeatureToggleService)
     .name;
 
   /* @ngInject */
-  function FeatureToggleService($http, $q, $resource, $state, Authinfo, HuronCustomerFeatureToggleService, HuronUserFeatureToggleService, UrlConfig, Orgservice) {
+  function FeatureToggleService($http, $q, $resource, $state, Authinfo, HuronCustomerFeatureToggleService, UrlConfig, Orgservice) {
     var features = {
       dirSync: 'atlas-dir-sync',
       atlasBrandingWordingChange: 'atlas-branding-wording-change',
@@ -154,7 +153,8 @@
       csdmPlaces: 'csdm-places',
       globalStatus: 'global-status',
       atlasF237ResourceGroups: 'atlas-f237-resource-group',
-      huronLocalDialing: 'huron-local-dialing'
+      huronLocalDialing: 'huron-local-dialing',
+      huronDeviceE911: 'huron-device-e911-address'
     };
 
     var toggles = {};
@@ -264,19 +264,7 @@
 
     function getHuronToggle(isUser, id, feature) {
       if (Authinfo.isSquaredUC()) {
-        if (isUser) {
-          return HuronUserFeatureToggleService.get({
-            userId: id,
-            featureName: feature
-          }).$promise.then(function (data) {
-            toggles[feature] = data.val;
-            return data.val;
-          }).catch(function () {
-            return false;
-          });
-        } else {
-          return getCustomerHuronToggle(id, feature);
-        }
+        return getCustomerHuronToggle(id, feature);
       } else {
         return $q.when(false);
       }
@@ -426,19 +414,6 @@
         feature.val = false;
       }
     }
-  }
-
-  /* @ngInject */
-  function HuronUserFeatureToggleService($resource, HuronConfig) {
-    return $resource(HuronConfig.getMinervaUrl() + '/features/users/:userId/developer/:featureName', {
-      userId: '@userId',
-      featureName: '@featureName'
-    }, {
-      get: {
-        method: 'GET',
-        cache: true
-      }
-    });
   }
 
   /* @ngInject */
