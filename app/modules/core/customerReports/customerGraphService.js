@@ -13,6 +13,7 @@
     var LINE = 'line';
     var NUMFORMAT = 'numFormat';
     var CURSOR = 'cursor';
+    var SCROLL = 'scroll';
 
     // reusable html for creating AmBalloon text
     var graphTextSpan = '<span class="graph-text">';
@@ -25,6 +26,7 @@
     var usersTitle = $translate.instant('activeUsers.users');
     var activeUsersTitle = $translate.instant('activeUsers.activeUsers');
     var filterValue = 0;
+    var timeFilterValue = 0;
 
     // variables for the average rooms section
     var avgRoomsdiv = 'avgRoomsdiv';
@@ -48,6 +50,7 @@
 
     return {
       setActiveLineGraph: setActiveLineGraph,
+      showHideActiveLineGraph: showHideActiveLineGraph,
       setActiveUsersGraph: setActiveUsersGraph,
       setAvgRoomsGraph: setAvgRoomsGraph,
       setFilesSharedGraph: setFilesSharedGraph,
@@ -56,30 +59,45 @@
       setMetricsGraph: setMetricsGraph
     };
 
-    function setActiveLineGraph(data, chart, filter) {
-      filterValue = filter.value;
+    function setActiveLineGraph(data, chart, timeFilter) {
+      timeFilterValue = timeFilter.value;
       if (_.isArray(data) && data.length > 0 && chart) {
-        if (data[0].balloon) {
-          chart.chartCursor.valueLineEnabled = true;
-          chart.categoryAxis.gridColor = chartColors.grayLightTwo;
-        } else {
+        chart.chartCursor.valueLineEnabled = true;
+        chart.categoryAxis.gridColor = chartColors.grayLightTwo;
+        if (!data[0].balloon) {
           chart.chartCursor.valueLineEnabled = false;
           chart.categoryAxis.gridColor = chartColors.grayLightThree;
         }
 
-        chart.graphs = getActiveLineGraphs(data, filter);
+        chart.chartScrollbar = undefined;
+        chart.mouseWheelZoomEnabled = false;
+        if (timeFilter.value === 3) {
+          chart.chartScrollbar = CommonGraphService.getBaseVariable(SCROLL);
+          chart.mouseWheelZoomEnabled = true;
+        }
+
+        chart.graphs = getActiveLineGraphs(data);
         chart.dataProvider = data;
         chart.validateData();
+        chart.validateNow();
       } else if (_.isArray(data) && data.length > 0) {
-        chart = createActiveLineGraph(data, filter);
+        chart = createActiveLineGraph(data);
+        chart.addListener("rendered", zoomActiveUserChart);
       }
       return chart;
     }
 
-    function createActiveLineGraph(data, filter) {
+    function zoomActiveUserChart(event) {
+      var chart = _.get(event, 'chart');
+      var chartData = _.get(event, 'chart.dataProvider');
+      if (chart && chartData && timeFilterValue === 3) {
+        chart.zoomToIndexes(chartData.length - 13, chartData.length - 1);
+      }
+    }
+
+    function createActiveLineGraph(data) {
       var valueAxes = [CommonGraphService.getBaseVariable(AXIS)];
       valueAxes[0].integersOnly = true;
-      valueAxes[0].minimum = 0;
 
       var catAxis = CommonGraphService.getBaseVariable(AXIS);
       catAxis.startOnAxis = true;
@@ -99,12 +117,17 @@
         catAxis.gridColor = chartColors.grayLightThree;
       }
 
-      var chartData = CommonGraphService.getBaseSerialGraph(data, 0, valueAxes, getActiveLineGraphs(data, filter), 'date', catAxis);
+      var chartData = CommonGraphService.getBaseSerialGraph(data, 0, valueAxes, getActiveLineGraphs(data), 'date', catAxis);
       chartData.numberFormatter = CommonGraphService.getBaseVariable(NUMFORMAT);
       chartData.legend = CommonGraphService.getBaseVariable(LEGEND);
       chartData.chartCursor = chartCursor;
       chartData.legend.labelText = '[[title]]';
       chartData.autoMargins = true;
+      chartData.mouseWheelZoomEnabled = false;
+      if (timeFilterValue === 3) {
+        chartData.mouseWheelZoomEnabled = true;
+        chartData.chartScrollbar = CommonGraphService.getBaseVariable(SCROLL);
+      }
 
       return AmCharts.makeChart(activeUserDiv, chartData);
     }
@@ -128,23 +151,20 @@
       return balloonText;
     }
 
-    function getActiveLineGraphs(data, filter) {
+    function getActiveLineGraphs(data) {
       var colors = [chartColors.colorPeopleLighter, chartColors.colorPeopleLight];
       var balloons = [true, true];
       var colorsTwo = _.clone(colors);
       var fillAlphas = [0.5, 0.5];
+      var values = ['totalRegisteredUsers', 'activeUsers'];
+      var titles = [usersTitle, activeUsersTitle];
+      var graphs = [];
+
       if (!data[0].balloon) {
         colors = [chartColors.dummyGrayLight, chartColors.dummyGray];
         colorsTwo = _.clone(colors);
         balloons = [false, false];
-      } else if (filter.value > 0) {
-        colorsTwo = [chartColors.brandWhite, chartColors.colorPeopleLight];
-        balloons = [false, true];
-        fillAlphas = [0, 0.5];
       }
-      var values = ['totalRegisteredUsers', 'activeUsers'];
-      var titles = [usersTitle, activeUsersTitle];
-      var graphs = [];
 
       _.forEach(values, function (value, index) {
         graphs.push(CommonGraphService.getBaseVariable(LINE));
@@ -161,6 +181,16 @@
       });
 
       return graphs;
+    }
+
+    function showHideActiveLineGraph(chart, filter) {
+      filterValue = filter.value;
+      if (filter.value === 0) {
+        chart.showGraph(chart.graphs[0]);
+      } else {
+        chart.hideGraph(chart.graphs[0]);
+      }
+      chart.validateNow();
     }
 
     function createActiveUsersGraph(data) {
