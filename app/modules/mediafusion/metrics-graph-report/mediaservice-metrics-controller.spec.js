@@ -2,7 +2,7 @@
 
 describe('Controller:MediaServiceMetricsContoller', function () {
   beforeEach(angular.mock.module('Mediafusion'));
-  var controller, $scope, $stateParams, $q, $translate, $timeout, $interval, Log, Config, MediaClusterServiceV2, DummyMetricsReportService, MetricsReportService, MetricsGraphService;
+  var controller, $scope, $stateParams, $q, $translate, $timeout, $interval, Log, Config, MediaClusterServiceV2, DummyMetricsReportService, MetricsReportService, XhrNotificationService, MetricsGraphService;
 
   var dummydata = '';
 
@@ -30,7 +30,7 @@ describe('Controller:MediaServiceMetricsContoller', function () {
   var allClusters = 'mediaFusion.metrics.allclusters';
   var nodata = 'mediaFusion.metrics.nodata';
 
-  beforeEach(inject(function ($rootScope, $controller, _$stateParams_, _$timeout_, _$translate_, _MediaClusterServiceV2_, _$q_, _MetricsReportService_, _MetricsGraphService_, _DummyMetricsReportService_, _$interval_, _Log_, _Config_) {
+  beforeEach(inject(function ($rootScope, $controller, _$stateParams_, _$timeout_, _$translate_, _MediaClusterServiceV2_, _$q_, _MetricsReportService_, _XhrNotificationService_, _MetricsGraphService_, _DummyMetricsReportService_, _$interval_, _Log_, _Config_) {
     $scope = $rootScope.$new();
     $stateParams = _$stateParams_;
     $timeout = _$timeout_;
@@ -38,6 +38,7 @@ describe('Controller:MediaServiceMetricsContoller', function () {
     MediaClusterServiceV2 = _MediaClusterServiceV2_;
     $q = _$q_;
     MetricsReportService = _MetricsReportService_;
+    XhrNotificationService = _XhrNotificationService_;
     MetricsGraphService = _MetricsGraphService_;
     DummyMetricsReportService = _DummyMetricsReportService_;
     $interval = _$interval_;
@@ -66,6 +67,7 @@ describe('Controller:MediaServiceMetricsContoller', function () {
       MediaClusterServiceV2: MediaClusterServiceV2,
       $q: $q,
       MetricsReportService: MetricsReportService,
+      XhrNotificationService: XhrNotificationService,
       MetricsGraphService: MetricsGraphService,
       DummyMetricsReportService: DummyMetricsReportService,
       $interval: $interval,

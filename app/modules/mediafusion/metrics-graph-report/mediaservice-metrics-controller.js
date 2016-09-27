@@ -2,7 +2,7 @@
   'use strict';
   angular.module('Mediafusion').controller('MediaServiceMetricsContoller', MediaServiceMetricsContoller);
   /* @ngInject */
-  function MediaServiceMetricsContoller($timeout, $translate, MediaClusterServiceV2, $q, MetricsReportService, MetricsGraphService, DummyMetricsReportService, $interval, $scope) {
+  function MediaServiceMetricsContoller($timeout, $translate, MediaClusterServiceV2, $q, MetricsReportService, XhrNotificationService, MetricsGraphService, DummyMetricsReportService, $interval, $scope) {
     var vm = this;
     vm.ABORT = 'ABORT';
     vm.REFRESH = 'refresh';
@@ -35,6 +35,7 @@
     vm.percentage = $translate.instant('mediaFusion.metrics.percentage');
     vm.utilization = $translate.instant('mediaFusion.metrics.utilization');
     vm.average_utilzation = $translate.instant('mediaFusion.metrics.avgutilization');
+    vm.errorData = $translate.instant('mediaFusion.metrics.errordata');
     vm.clusterOptions = [vm.allClusters];
     vm.clusterSelected = vm.clusterOptions[0];
     vm.clusterId = vm.clusterOptions[0];
@@ -112,14 +113,14 @@
           vm.clusterSelected = vm.clusterOptions[0];
 
         }).catch(function () {
-          deferred.reject();
+          XhrNotificationService.notify(vm.errorData);
         });
       return deferred.promise;
     }
 
     function getClusterName(graphs) {
       vm.tempData = [];
-      angular.forEach(graphs, function (value) {
+      _.forEach(graphs, function (value) {
         var clusterName = _.findKey(vm.Map, function (val) {
           return val === value.valueField;
         });
@@ -243,6 +244,8 @@
           vm.callVolumeStatus = vm.SET;
         }
         resizeCards();
+      }).catch(function () {
+        XhrNotificationService.notify(vm.errorData);
       });
     }
 
@@ -251,7 +254,7 @@
       if (!angular.isDefined(data.data[0].isDummy)) {
         var availabilityData = [];
         if (vm.clusterId === vm.allClusters) {
-          angular.forEach(data.data[0].clusterCategories, function (clusterCategory) {
+          _.forEach(data.data[0].clusterCategories, function (clusterCategory) {
             var clusterName = _.findKey(vm.Map, function (val) {
               return val === clusterCategory.category;
             });
@@ -287,13 +290,15 @@
             } else {
               vm.availabilityStatus = vm.SET;
             }
-          },
+          }, //when promise of clusterid to name is a reject this gets executed
             function () {
               setAvailabilityGraph(DummyMetricsReportService.dummyAvailabilityData(vm.timeSelected));
               vm.availabilityStatus = vm.EMPTY;
             });
         }
         resizeCards();
+      }).catch(function () {
+        XhrNotificationService.notify(vm.errorData);
       });
     }
 
@@ -317,13 +322,15 @@
               setUtilizationGraph(response.graphData, vm.utilizationClusterName);
               vm.card = '';
               vm.utilizationStatus = vm.SET;
-            },
+            },  //when promise of clusterid to name is a reject this gets executed
             function () {
               setUtilizationGraph(DummyMetricsReportService.dummyUtilizationData(vm.timeSelected), DummyMetricsReportService.dummyUtilizationGraph());
               vm.utilizationStatus = vm.EMPTY;
             });
           }
           resizeCards();
+        }).catch(function () {
+          XhrNotificationService.notify(vm.errorData);
         });
       } else {
         MetricsReportService.getUtilizationData(vm.timeSelected, vm.allClusters).then(function (response) {
@@ -345,6 +352,8 @@
             }
           }
           resizeCards();
+        }).catch(function () {
+          XhrNotificationService.notify(vm.errorData);
         });
       }
     }
@@ -403,6 +412,8 @@
           }
         }
         resizeCards();
+      }).catch(function () {
+        XhrNotificationService.notify(vm.errorData);
       });
 
     }
@@ -421,6 +432,8 @@
           vm.peakUtilization = response.data.peakCpu + vm.percentage;
         }
         resizeCards();
+      }).catch(function () {
+        XhrNotificationService.notify(vm.errorData);
       });
     }
 
@@ -435,6 +448,8 @@
           vm.clusterAvailability = response.data.availabilityPercent + vm.percentage;
         }
         resizeCards();
+      }).catch(function () {
+        XhrNotificationService.notify(vm.errorData);
       });
     }
 
