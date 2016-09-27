@@ -28,6 +28,7 @@
     vm.openDeleteGroupModal = openDeleteGroupModal;
     vm.openAssignClustersModal = openAssignClustersModal;
     vm.handleKeypress = handleKeypress;
+    vm.showResetSection = false;
 
     loadResourceGroup($stateParams.id);
     determineIfRemoveAllowed();
@@ -147,7 +148,25 @@
       vm.releaseChannelSelected = _.find(vm.releaseChannelOptions, function (option) {
         return option.value === vm.group.releaseChannel.toLowerCase();
       });
+      if (!vm.releaseChannelSelected) {
+        vm.showResetSection = true;
+        vm.localizedCurrentChannelName = $translate.instant('hercules.fusion.add-resource-group.release-channel.' + vm.group.releaseChannel);
+        vm.localizedStableChannelName = $translate.instant('hercules.fusion.add-resource-group.release-channel.stable');
+      }
     }
+
+    vm.resetReleaseChannel = function () {
+      ResourceGroupService.setReleaseChannel(vm.group.id, 'stable')
+        .then(function () {
+          vm.releaseChannelSelected = vm.releaseChannelOptions[0];
+          vm.showResetSection = false;
+          vm.channelHasBeenReset = true;
+          Notification.success('hercules.resourceGroupSettings.groupReleaseChannelSaved');
+        })
+        .catch(function () {
+          Notification.error('hercules.genericFailure');
+        });
+    };
 
     function handleKeypress(event) {
       if (event.keyCode === 13) {

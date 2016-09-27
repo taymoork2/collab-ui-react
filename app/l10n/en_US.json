@@ -1828,7 +1828,7 @@
       "noGroupSelected": "None",
       "failedToSetGroup": "Failed to set Resource Group.",
       "resourceGroupSaved": "Resource Group saved.",
-      "groupHasBeenDeleted": "The user is assigned to a Resource Group that can no longer be found. Reset the user's Resource Group to restore service.",
+      "groupHasBeenDeleted": "The user is assigned to a Resource Group that could not be found. Remove the assignment from the Resource Group to restore service.",
       "groupIsEmptyWarning": "Could not find cluster with {{ConnectorName}}. Select another Resource Group, or configure a new cluster with {{ConnectorName}}."
     },
     "resourceGroupSettings": {
@@ -1848,7 +1848,9 @@
       "loadFailed": "Unable to load the Resource Group details. Please try again later.",
       "groupReleaseChannelSaved": "Release channel saved successfully",
       "removeGroupReq": "To remove this Resource Group, all assigned clusters must be removed first",
-      "deleteSuccess": "Resource group successfully removed"
+      "deleteSuccess": "Resource group successfully removed",
+      "orgHasNoAccessToChannel": "This organization does not have access to the “{{currentReleaseChannel}}” release channel. Set the release channel to “{{stableReleaseChannel}}” to restore service.",
+      "setToStable": "Set to {{stableReleaseChannel}}"
     },
     "assignClustersModal": {
       "title": "Assign Clusters to <q>{{groupName}}</q>",
