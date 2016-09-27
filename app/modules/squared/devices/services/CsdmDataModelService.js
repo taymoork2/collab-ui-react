@@ -130,6 +130,9 @@
             _.each(item.devices, function (dev) {
               delete theDeviceMap[dev.url];
             });
+            _.each(item.codes, function (code) {
+              delete theDeviceMap[code.url];
+            });
           } else {
             var device = theDeviceMap[item.url];
             delete theDeviceMap[item.url];

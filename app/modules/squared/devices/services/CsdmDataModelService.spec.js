@@ -617,6 +617,34 @@ describe('Service: CsdmDataModelService', function () {
       expect(expectCall).toBe(true);
     });
 
+    it('delete place with codes should remove place from place list and codes from codes list', function () {
+
+      var expectCall;
+      var placeToRemoveUrl = pWithDeviceUrl;
+      $httpBackend.expectDELETE(placeToRemoveUrl).respond(200);
+      CsdmDataModelService.getPlacesMap().then(function (places) {
+        expect(Object.keys(places).length).toBe(2);
+
+        var placeToRemove = places[placeToRemoveUrl];
+        var code0Url = placeToRemove.codes[0].url;
+        var code1Url = placeToRemove.codes[1].url;
+
+        expect(initialDeviceMap[code0Url]).toBe(placeToRemove.codes[0]);
+        expect(initialDeviceMap[code1Url]).toBe(placeToRemove.codes[1]);
+
+        CsdmDataModelService.deleteItem(placeToRemove).then(function () {
+          expect(places[placeToRemove.url]).toBeUndefined();
+          expect(Object.keys(places).length).toBe(1);
+
+          expect(initialDeviceMap[code0Url]).toBeUndefined();
+          expect(initialDeviceMap[code1Url]).toBeUndefined();
+
+          expectCall = true;
+        });
+      });
+      $httpBackend.flush();
+      expect(expectCall).toBe(true);
+    });
   });
 
   describe('polling', function () {

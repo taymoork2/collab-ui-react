@@ -1,6 +1,6 @@
 {
-  "https://csdm-integration.wbx2.com/csdm/api/v1/organization/584cf4cd-eea7-4c8c-83ee-67d88fc6eab5/codes/e954703f-f47e-48cf-8984-f4546649292f": {
-    "url": "https://csdm-integration.wbx2.com/csdm/api/v1/organization/584cf4cd-eea7-4c8c-83ee-67d88fc6eab5/codes/e954703f-f47e-48cf-8984-f4536649292f",
+  "https://csdm-integration.wbx2.com/csdm/api/v1/organization/584cf4cd-eea7-4c8c-83ee-67d88fc6eab5/codes/e954703f-code1-for-place-with-dev-f4546649292f": {
+    "url": "https://csdm-integration.wbx2.com/csdm/api/v1/organization/584cf4cd-eea7-4c8c-83ee-67d88fc6eab5/codes/e954703f-code1-for-place-with-dev-f4546649292f",
     "id": "a19b308a-PlaceWithDevice-71898e423bec",
     "displayName": "8e34ac84-8713-45f7-a1e0-ce25c9f4bf10",
     "accountName": "8e34ac84-8713-45f7-a1e0-ce25c9f4bf10",
@@ -10,8 +10,8 @@
     "sipUrl": "8e34ac84-8713-45f7-a1e0-ce25c9f4bf10@webex.room.ciscospark.com",
     "expiryTime": "2016-09-21T22:27:23.878Z"
   },
-  "https://csdm-integration.wbx2.com/csdm/api/v1/organization/584cf4cd-eea7-4c8c-83ee-67d88fc6eab5/codes/ad233bb2-45d6-4780-9cca-93da278b3a0c": {
-    "url": "https://csdm-integration.wbx2.com/csdm/api/v1/organization/584cf4cd-eea7-4c8c-83ee-67d88fc6eab5/codes/ad233bb2-45d6-4780-9cca-93da278b3a0c",
+  "https://csdm-integration.wbx2.com/csdm/api/v1/organization/584cf4cd-eea7-4c8c-83ee-67d88fc6eab5/codes/ad233bb2-code2-for-place-with-dev-93da278b3a0c": {
+    "url": "https://csdm-integration.wbx2.com/csdm/api/v1/organization/584cf4cd-eea7-4c8c-83ee-67d88fc6eab5/codes/ad233bb2-code2-for-place-with-dev-93da278b3a0c",
     "id": "a19b308a-PlaceWithDevice-71898e423bec",
     "displayName": "25dee6bd-5bac-49cb-9338-5a6849b6ad8a",
     "accountName": "25dee6bd-5bac-49cb-9338-5a6849b6ad8a",
