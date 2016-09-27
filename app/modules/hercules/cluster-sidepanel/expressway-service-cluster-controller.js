@@ -24,6 +24,9 @@
     vm.hasConnectorAlarm = hasConnectorAlarm;
 
     var promise = null;
+    if (!vm.connectorType || !vm.clusterId) {
+      return;
+    }
     $scope.$watch(function () {
       return ClusterService.getCluster(vm.connectorType, vm.clusterId);
     }, function (newValue) {
@@ -44,7 +47,9 @@
       if (isUpgrading) {
         vm.fakeUpgrade = false;
         var pendingHosts = _.chain(vm.cluster.aggregates.hosts)
-          .filter({ upgradeState: 'pending' })
+          .filter({
+            upgradeState: 'pending'
+          })
           .value();
         vm.upgradeDetails = {
           numberOfUpsmthngHosts: _.size(vm.cluster.aggregates.hosts) - pendingHosts.length,
