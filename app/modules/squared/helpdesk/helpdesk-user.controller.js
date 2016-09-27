@@ -6,7 +6,7 @@
     .controller('HelpdeskUserController', HelpdeskUserController);
 
   /* @ngInject */
-  function HelpdeskUserController($modal, $stateParams, $translate, $window, Authinfo, Config, FeatureToggleService, HelpdeskCardsUserService, HelpdeskHuronService, HelpdeskLogService, HelpdeskService, LicenseService, USSService, WindowLocation, XhrNotificationService) {
+  function HelpdeskUserController($modal, $stateParams, $translate, $window, Authinfo, Config, FeatureToggleService, HelpdeskCardsUserService, HelpdeskHuronService, HelpdeskLogService, HelpdeskService, LicenseService, Notification, USSService, WindowLocation, XhrNotificationService) {
     $('body').css('background', 'white');
     var vm = this;
     if ($stateParams.user) {
@@ -48,15 +48,20 @@
         email: vm.user.userName,
         onlineOrderIds: _.get(vm.user, 'onlineOrderIds', [])
       };
-      HelpdeskService.resendInviteEmail(trimmedUserData).then(function () {
-        var prefix = 'helpdesk.userStatuses.';
-        for (var i = 0; i < vm.user.statuses.length; i++) {
-          var status = vm.user.statuses[i];
-          if (_.includes(prefix + 'rejected', status)) {
-            vm.user.statuses[i] = prefix + 'resent';
+      HelpdeskService.resendInviteEmail(trimmedUserData)
+        .then(function () {
+          Notification.success('helpdesk.resendSuccess');
+        })
+        .then(function () {
+          var prefix = 'helpdesk.userStatuses.';
+          for (var i = 0; i < vm.user.statuses.length; i++) {
+            var status = vm.user.statuses[i];
+            if (_.includes(prefix + 'rejected', status)) {
+              vm.user.statuses[i] = prefix + 'resent';
+            }
           }
-        }
-      }, XhrNotificationService.notify);
+        })
+        .catch(XhrNotificationService.notify);
     }
 
     function sendCode() {
