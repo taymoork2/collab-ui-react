@@ -13,7 +13,7 @@
     };
     return titleCaseFilter;
   }
-  function UpdateIncidentController($scope, $stateParams, UpdateIncidentService, IncidentsWithoutSiteService, ComponentService, $state, statusService, $window, $log) {
+  function UpdateIncidentController($scope, $stateParams, UpdateIncidentService, IncidentsWithoutSiteService, ComponentService, $state, statusService, $log) {
     $scope.showOperational = true;
     var originComponentsTree = [];
     var originIncidentName, originImpact;
@@ -106,7 +106,6 @@
         $scope.showIncidentName = true;
         originIncidentName = data.incidentName;
         originImpact = data.impact;
-        $window.alert("Successfully modify incident");
       });
     };
     $scope.toOperationalFUN = function () {
@@ -247,7 +246,6 @@
         } else {
           incidentMsg();
         }
-        $window.alert("Successfully update incident");
       }, function () {
 
       });

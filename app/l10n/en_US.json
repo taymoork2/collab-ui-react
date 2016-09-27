@@ -16,7 +16,7 @@
         "noComponentText": "Click the ADD botton to get started."
       },
       "addComponent": {
-        "title": "Add A Component",
+        "title": "ADD A COMPONENT",
         "componentName": "Component Name",
         "componentDesc": "Description (optional)",
         "componentDesc-placeholder": "Frontend application and API servers",

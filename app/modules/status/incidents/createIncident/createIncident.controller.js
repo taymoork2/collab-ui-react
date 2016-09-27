@@ -4,7 +4,7 @@
     .module('Status.incidents')
     .controller('CreateIncidentController', CreateIncidentController);
 
-  function CreateIncidentController($scope, $state, $window, IncidentsWithSiteService, statusService) {
+  function CreateIncidentController($scope, $state, IncidentsWithSiteService, statusService) {
     $scope.newIncident = {
       status: 'investigating',
       msg: '',
@@ -32,7 +32,6 @@
         "email": "chaoluo@cisco.com"
       }).$promise.then(function () {
         $state.go("^");
-        $window.alert("Incident successfully created!");
       }, function () {
       });
     }

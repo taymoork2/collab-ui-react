@@ -13,7 +13,7 @@
     vm.delText = "";
 
     vm.validation = function () {
-      return vm.delText.toLocaleLowerCase() === 'delete';
+      return vm.delText === 'DELETE';
     };
 
     function delComponentBtnClicked() {
