@@ -32,10 +32,10 @@
     };
 
     function getUtilizationData(time, cluster) {
-      if (activePromise !== null && angular.isDefined(activePromise)) {
-        activePromise.resolve(ABORT);
+      if (activePromiseForUtilization !== null && angular.isDefined(activePromiseForUtilization)) {
+        activePromiseForUtilization.resolve(ABORT);
       }
-      activePromise = $q.defer();
+      activePromiseForUtilization = $q.defer();
       var returnData = {
         graphData: [],
         graphs: []

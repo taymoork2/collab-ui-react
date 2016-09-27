@@ -326,7 +326,7 @@
       vm.showMostActiveUsers = false;
       isActiveUsers = false;
 
-      CustomerReportService.getActiveUserData(vm.timeSelected).then(function (response) {
+      CustomerReportService.getActiveUserData(vm.timeSelected, vm.displayActiveLineGraph).then(function (response) {
         if (response === ABORT) {
           return;
         } else if (_.isArray(response.graphData) && response.graphData.length === 0) {
@@ -476,7 +476,11 @@
           vm.deviceStatus = EMPTY;
         } else {
           vm.deviceFilter = response.filterArray.sort(function (a, b) {
-            return a.label.localeCompare(b.label);
+            if (a.label) {
+              return a.label.localeCompare(b.label);
+            } else {
+              return a > b;
+            }
           });
           vm.selectedDevice = vm.deviceFilter[0];
           currentDeviceGraphs = response.graphData;

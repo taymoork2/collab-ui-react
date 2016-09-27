@@ -5,7 +5,7 @@
     .controller('RemPlaceController',
 
       /* @ngInject */
-      function ($modalInstance, CsdmPlaceService, CsdmHuronPlaceService, XhrNotificationService, place, $rootScope, $timeout) {
+      function ($modalInstance, CsdmDataModelService, CsdmHuronPlaceService, XhrNotificationService, place, $rootScope, $timeout) {
         var rdc = this;
         rdc.place = place;
 
@@ -14,8 +14,8 @@
         };
 
         rdc.deletePlace = function () {
-          var deleteFunction = place.type === 'cloudberry' ? CsdmPlaceService.deletePlace : CsdmHuronPlaceService.deletePlace;
-          return deleteFunction(place)
+          var deleteFunction = rdc.place.type === 'cloudberry' ? CsdmDataModelService.deleteItem : CsdmHuronPlaceService.deletePlace;
+          return deleteFunction(rdc.place)
             .then(function () {
               $modalInstance.close();
               $timeout(rdc.refreshPlaceList, 500);

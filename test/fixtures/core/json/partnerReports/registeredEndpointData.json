@@ -28,45 +28,70 @@
     "intervalCount": 1,
     "intervalType": "month"
   },
-  "registeredEndpointResponse": [{
-    "orgId": "a7cba512-7b62-4f0a-a869-725b413680e4",
-    "deviceRegistrationCountTrend": "4",
-    "yesterdaysDeviceRegistrationCount": "2",
-    "registeredDevicesTrend": "+5%",
-    "yesterdaysRegisteredDevices": "2",
-    "maxRegisteredDevices": "3",
-    "minRegisteredDevices": "2",
-    "customer": "Test Org One",
-    "direction": "positive"
+  "registeredEndpointResponse": [[{
+    "class": "vertical-center customer-data",
+    "output": ["Test Org One"]
   }, {
-    "orgId": "b7e25333-6750-4b17-841c-ce5124f8ddbb",
-    "deviceRegistrationCountTrend": "-4",
-    "yesterdaysDeviceRegistrationCount": "2",
-    "registeredDevicesTrend": "-5%",
-    "yesterdaysRegisteredDevices": "2",
-    "maxRegisteredDevices": "3",
-    "minRegisteredDevices": "2",
-    "customer": "Test Org Two",
-    "direction": "negative"
+    "class": "table-data",
+    "output": ["2", "3"],
+    "splitClasses": "table-half vertical-center horizontal-center"
   }, {
-    "orgId": "1896f9dc-c5a4-4041-8257-b3adfe3cf9a4",
-    "deviceRegistrationCountTrend": "-",
-    "yesterdaysDeviceRegistrationCount": "-",
-    "registeredDevicesTrend": "-",
-    "yesterdaysRegisteredDevices": "-",
-    "maxRegisteredDevices": "-",
-    "minRegisteredDevices": "-",
-    "customer": "Test Org Three",
-    "direction": ""
+    "class": "vertical-center horizontal-center positive",
+    "output": ["+5%"]
   }, {
-    "orgId": "1",
-    "deviceRegistrationCountTrend": "-",
-    "yesterdaysDeviceRegistrationCount": "-",
-    "registeredDevicesTrend": "-",
-    "yesterdaysRegisteredDevices": "-",
-    "maxRegisteredDevices": "-",
-    "minRegisteredDevices": "-",
-    "customer": "Test Partner",
-    "direction": ""
+    "class": "vertical-center horizontal-center",
+    "output": ["2"]
+  }], [{
+    "class": "vertical-center customer-data",
+    "output": ["Test Org Two"]
+  }, {
+    "class": "table-data",
+    "output": ["2", "3"],
+    "splitClasses": "table-half vertical-center horizontal-center"
+  }, {
+    "class": "vertical-center horizontal-center negative",
+    "output": ["-5%"]
+  }, {
+    "class": "vertical-center horizontal-center",
+    "output": ["2"]
+  }], [{
+    "class": "vertical-center customer-data",
+    "output": ["Test Org Three"]
+  }, {
+    "class": "table-data",
+    "output": ["-", "-"],
+    "splitClasses": "table-half vertical-center horizontal-center"
+  }, {
+    "class": "vertical-center horizontal-center ",
+    "output": ["-"]
+  }, {
+    "class": "vertical-center horizontal-center",
+    "output": ["-"]
+  }], [{
+    "class": "vertical-center customer-data",
+    "output": ["Test Partner"]
+  }, {
+    "class": "table-data",
+    "output": ["-", "-"],
+    "splitClasses": "table-half vertical-center horizontal-center"
+  }, {
+    "class": "vertical-center horizontal-center ",
+    "output": ["-"]
+  }, {
+    "class": "vertical-center horizontal-center",
+    "output": ["-"]
+  }]],
+  "headers": [{
+    "title": "registeredEndpoints.company",
+    "class": "customer-data col-md-4"
+  }, {
+    "title": "registeredEndpoints.maxRegisteredDevices",
+    "class": "horizontal-center col-md-2"
+  }, {
+    "title": "registeredEndpoints.trend",
+    "class": "horizontal-center col-md-2"
+  }, {
+    "title": "registeredEndpoints.totalRegistered",
+    "class": "horizontal-center col-md-2"
   }]
 }

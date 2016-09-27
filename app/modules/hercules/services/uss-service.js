@@ -142,6 +142,12 @@
         .then(extractUserProps);
     }
 
+    function removeAllUsersFromResourceGroup(resourceGroupId) {
+      return $http
+        .post(USSUrl + '/orgs/' + Authinfo.getOrgId() + '/actions/removeAllUsersFromResourceGroup/invoke?resourceGroupId=' + resourceGroupId)
+        .then(extractData);
+    }
+
     return {
       getStatusesForUser: getStatusesForUser,
       decorateWithStatus: decorateWithStatus,
@@ -155,7 +161,8 @@
       getUserProps: getUserProps,
       updateUserProps: updateUserProps,
       getAllUserProps: getAllUserProps,
-      updateBulkUserProps: updateBulkUserProps
+      updateBulkUserProps: updateBulkUserProps,
+      removeAllUsersFromResourceGroup: removeAllUsersFromResourceGroup
     };
   }
 

@@ -4,7 +4,7 @@
   angular.module('Core')
     .controller('ShowActivationCodeCtrl', ShowActivationCodeCtrl);
   /* @ngInject */
-  function ShowActivationCodeCtrl($q, UserListService, OtpService, CsdmPlaceService, CsdmCodeService, $stateParams, XhrNotificationService, ActivationCodeEmailService, $translate, Notification, CsdmEmailService, UrlConfig) {
+  function ShowActivationCodeCtrl($q, UserListService, OtpService, CsdmDataModelService, $stateParams, XhrNotificationService, ActivationCodeEmailService, $translate, Notification, CsdmEmailService, UrlConfig) {
     var vm = this;
     vm.wizardData = $stateParams.wizard.state().data;
     vm.hideBackButton = vm.wizardData.function == "showCode";
@@ -60,15 +60,15 @@
           vm.isLoading = false;
         };
       if (vm.place) {
-        CsdmCodeService
+        CsdmDataModelService
           .createCodeForExisting(vm.place.cisUuid)
           .then(success, error);
       } else {
         if (vm.wizardData.deviceType === "cloudberry") {
           vm.isLoading = true;
-          CsdmPlaceService.createCsdmPlace(vm.wizardData.deviceName, vm.wizardData.deviceType).then(function (place) {
+          CsdmDataModelService.createCsdmPlace(vm.wizardData.deviceName, vm.wizardData.deviceType).then(function (place) {
             vm.place = place;
-            CsdmCodeService
+            CsdmDataModelService
               .createCodeForExisting(place.cisUuid)
               .then(success, error);
           }, error);

@@ -519,12 +519,14 @@
     "today2": "today",
     "yesterday": "Yesterday",
     "yesterday2": "yesterday",
-    "week": "Last Week",
-    "week2": "last week",
-    "month": "Last Month",
-    "month2": "last month",
-    "threeMonths": "Last Three Months",
+    "week": "Last 7 Days",
+    "week2": "last seven days",
+    "month": "Last 4 Weeks",
+    "month2": "last four weeks",
+    "threeMonths": "Last 3 Months",
     "threeMonths2": "last three months",
+    "twelveMonths": "Last 12 Months",
+    "twelveMonths2": "last twelve months",
     "mostEngaged": "5 Most Engaged",
     "leastEngaged": "5 Least Engaged",
     "highQuality": "5 Highest Quality",
@@ -1624,8 +1626,7 @@
       "releasechannelParagraph": "The release channel for this cluster is defined by the Resource Group it belongs to.",
       "deactivateServicesHeader": "Deactivate Services",
       "deactivateServicesParagraph": "Deactivate {{ServiceName}} to remove any service-related functionality from this cluster.",
-      "deactivateServicesCalendarHeader": "Deactivate Calendar",
-      "deactivateServicesCallHeader": "Deactivate Call",
+      "deactivateServicesSubHeader": "Deactivate {{service}}",
       "noHybridServicesProvisioned": "No Hybrid Services are enabled on this Expressway. To enable a Hybrid Service, go to the relevant service page.",
       "deregisterClusterParagraph": "There are still services active on “{{ClusterName}}”.",
       "deregisterClusterExplanation": "Remove this cluster from Cisco Collaboration Cloud. All services must be deactivated on a cluster before it can be removed.",
@@ -1850,7 +1851,8 @@
       "removeGroupReq": "To remove this Resource Group, all assigned clusters must be removed first",
       "deleteSuccess": "Resource group successfully removed",
       "orgHasNoAccessToChannel": "This organization does not have access to the “{{currentReleaseChannel}}” release channel. Set the release channel to “{{stableReleaseChannel}}” to restore service.",
-      "setToStable": "Set to {{stableReleaseChannel}}"
+      "setToStable": "Set to {{stableReleaseChannel}}",
+      "failedToRemoveUsersFromGroup": "Remove group failed, unable to clear the existing user assignments"
     },
     "assignClustersModal": {
       "title": "Assign Clusters to <q>{{groupName}}</q>",
@@ -3589,7 +3591,8 @@
       "allclusters": "All Clusters",
       "percentage": "%",
       "utilization": "Utilization",
-      "avgutilization": "Avg Utilization"
+      "avgutilization": "Avg Utilization",
+      "errordata": "Error in Retrieving Data"
     },
     "serviceStatus": {
       "unknown": "Status unknown",
@@ -4750,7 +4753,8 @@
     "embedCodeWarnMsg": "It is important to verify all domains where you want to use chat bubble. You will not be able to embed chat bubble on unverified domains.",
     "embedCodeWarnMsgContd": "to verify your domains.",
     "clickHere": "Click here",
-    "embedCodeFor": "Embed Code for "
+    "embedCodeFor": "Embed Code for ",
+    "configureOrgLogoMsg": "Go to Settings page to modify your organization logo"
   },
   "huronHuntGroup": {
     "modalTitle": "Hunt Group",

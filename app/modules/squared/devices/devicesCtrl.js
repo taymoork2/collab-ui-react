@@ -5,7 +5,7 @@
     .controller('DevicesCtrl',
 
       /* @ngInject */
-      function ($scope, $state, $translate, $templateCache, DeviceFilter, CsdmCodeService, CsdmUnusedAccountsService, CsdmHuronOrgDeviceService, CsdmDeviceService, Authinfo, AccountOrgService, WizardFactory, CsdmPlaceService) {
+      function ($scope, $state, $translate, $templateCache, DeviceFilter, CsdmUnusedAccountsService, CsdmHuronOrgDeviceService, CsdmDataModelService, Authinfo, AccountOrgService, WizardFactory, CsdmPlaceService) {
         var vm = this;
 
         AccountOrgService.getAccount(Authinfo.getOrgId()).success(function (data) {
@@ -23,11 +23,11 @@
         vm.deviceFilter.setCurrentSearch('');
         vm.deviceFilter.setCurrentFilter('');
 
-        vm.codesListSubscription = CsdmCodeService.on('data', angular.noop, {
-          scope: $scope
+        CsdmDataModelService.getDevicesMap().then(function (devicesMap) {
+          vm.devicesMap = devicesMap;
         });
 
-        vm.deviceListSubscription = CsdmDeviceService.on('data', angular.noop, {
+        CsdmDataModelService.devicePollerOn('data', angular.noop, {
           scope: $scope
         });
 
@@ -40,14 +40,12 @@
 
         vm.existsDevices = function () {
           return (vm.shouldShowList() && (
-            Object.keys(CsdmCodeService.getCodeList()).length > 0 ||
-            Object.keys(CsdmDeviceService.getDeviceList()).length > 0 ||
+            CsdmDataModelService.hasDevices() ||
             Object.keys(csdmHuronOrgDeviceService.getDeviceList()).length > 0));
         };
 
         vm.shouldShowList = function () {
-          return vm.codesListSubscription.eventCount !== 0 &&
-            (vm.deviceListSubscription.eventCount !== 0 || CsdmDeviceService.getDeviceList().length > 0) &&
+          return CsdmDataModelService.hasLoadedAnyData() &&
             (csdmHuronOrgDeviceService.dataLoaded() || csdmHuronOrgDeviceService.getDeviceList().length > 0);
         };
 
@@ -64,14 +62,15 @@
         };
 
         vm.updateListAndFilter = function () {
-          var filtered = _.chain({})
-            .extend(CsdmDeviceService.getDeviceList())
+
+          var allDevices = _.chain({})
+            .extend(vm.devicesMap)
             .extend(csdmHuronOrgDeviceService.getDeviceList())
-            .extend(CsdmCodeService.getCodeList())
             .extend(CsdmUnusedAccountsService.getAccountList())
             .values()
             .value();
-          return vm.deviceFilter.getFilteredList(filtered);
+
+          return vm.deviceFilter.getFilteredList(allDevices);
         };
 
         vm.showDeviceDetails = function (device) {
