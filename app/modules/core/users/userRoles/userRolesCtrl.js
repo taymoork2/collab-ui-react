@@ -266,11 +266,13 @@
         'roleState': ($scope.rolesObj.helpdeskValue ? Config.roleState.active : Config.roleState.inactive)
       });
 
-      // Order Admin
-      roles.push({
-        'roleName': Config.roles.orderadmin,
-        'roleState': ($scope.rolesObj.orderAdminValue ? Config.roleState.active : Config.roleState.inactive)
-      });
+      // Order Admin role for applicable users
+      if ($scope.showOrderAdminRole) {
+        roles.push({
+          'roleName': Config.roles.orderadmin,
+          'roleState': ($scope.rolesObj.orderAdminValue ? Config.roleState.active : Config.roleState.inactive)
+        });
+      }
 
       roles.push({
         'roleName': Config.roles.spark_synckms,
