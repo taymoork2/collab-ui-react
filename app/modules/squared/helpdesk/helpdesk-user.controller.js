@@ -43,7 +43,12 @@
     HelpdeskService.getUser(vm.orgId, vm.userId).then(initUserView, XhrNotificationService.notify);
 
     function resendInviteEmail() {
-      HelpdeskService.resendInviteEmail(vm.user.displayName, vm.user.userName).then(function () {
+      var trimmedUserData = {
+        displayName: vm.user.displayName,
+        email: vm.user.userName,
+        onlineOrderIds: _.get(vm.user, 'onlineOrderIds', [])
+      };
+      HelpdeskService.resendInviteEmail(trimmedUserData).then(function () {
         var prefix = 'helpdesk.userStatuses.';
         for (var i = 0; i < vm.user.statuses.length; i++) {
           var status = vm.user.statuses[i];

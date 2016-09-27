@@ -3,7 +3,7 @@
 
   /* @ngInject */
 
-  function HelpdeskService($http, $location, $q, $translate, $window, CacheFactory, Config, CsdmConfigService, CsdmConverter, FeatureToggleService, HelpdeskHttpRequestCanceller, HelpdeskMockData, ServiceDescriptor, SessionStorage, UrlConfig, USSService) {
+  function HelpdeskService($http, $location, $q, $translate, $window, CacheFactory, Config, CsdmConfigService, CsdmConverter, FeatureToggleService, HelpdeskHttpRequestCanceller, HelpdeskMockData, ServiceDescriptor, UrlConfig, USSService) {
     var urlBase = UrlConfig.getAdminServiceUrl();
     var orgCache = CacheFactory.get('helpdeskOrgCache');
     if (!orgCache) {
@@ -91,16 +91,8 @@
     }
 
     function isSparkOnlineUser(user) {
-      // TODO:
-      // - update this once backend API is implemented (property name might change, expected
-      //   value might change, etc.)
-      // - to force this value to true, in browser devtools console, run:
-      //   ```
-      //   sessionStorage.setItem('dev.helpdesk.isSparkOnlineUser', 1);
-      //   ```
-      var value = !!_.get(user, 'onlineOrderIds') || JSON.parse(SessionStorage.get('dev.helpdesk.isSparkOnlineUser'));
-
-      return value;
+      var value = _.get(user, 'onlineOrderIds', []);
+      return !!value.length;
     }
 
     function getCorrectedDisplayName(user) {
@@ -271,7 +263,6 @@
     function extractAndMassageUser(res) {
       var user = res.data || res;
       user.displayName = getCorrectedDisplayName(user);
-      user.isSparkOnlineUser = isSparkOnlineUser();
       user.isConsumerUser = user.orgId === Config.consumerOrgId;
       user.organization = {
         id: user.orgId
@@ -292,7 +283,7 @@
           // - if user is a Spark Online user (ie. they purchased Spark through Digital River), then
           //   the user is the original purchaser, but has not registered yet
           if (status === 'pending') {
-            status = (user.isSparkOnlineUser) ? 'onboarding-pending' : 'invite-pending';
+            status = (isSparkOnlineUser(user)) ? 'onboarding-pending' : 'invite-pending';
           }
           return 'helpdesk.userStatuses.' + status;
         });
@@ -335,29 +326,52 @@
       return $http.get(urlBase + 'email/bounces?email=' + encodeURIComponent(email));
     }
 
-    function resendInviteEmail(displayName, email) {
+    function resendInviteEmail(trimmedUserData) {
+      var email = trimmedUserData.email;
       if (FeatureToggleService.supports(FeatureToggleService.features.atlasEmailStatus)) {
         return isEmailBlocked(email).then(function () {
           $http.delete(urlBase + 'email/bounces?email=' + email)
             .then(function () {
-              return invokeInviteEmail(displayName, email);
+              return invokeInviteEmail(trimmedUserData);
             });
         }).catch(function () {
-          return invokeInviteEmail(displayName, email);
+          return invokeInviteEmail(trimmedUserData);
         });
       } else {
-        return invokeInviteEmail(displayName, email);
+        return invokeInviteEmail(trimmedUserData);
       }
     }
 
-    function invokeInviteEmail(displayName, email) {
-      return $http.post(urlBase + 'helpdesk/actions/resendinvitation/invoke', {
+    function getInviteResendUrl(trimmedUserData) {
+      var controllerAction = isSparkOnlineUser(trimmedUserData) ? 'resendonlineorderactivation' : 'resendinvitation';
+      return urlBase + 'helpdesk/actions/' + controllerAction + '/invoke';
+    }
+
+    function getInviteResendPayload(trimmedUserData) {
+      var displayName = trimmedUserData.displayName;
+      var email = trimmedUserData.email;
+      var onlineOrderIds = trimmedUserData.onlineOrderIds;
+      var payload = {
         inviteList: [{
           displayName: displayName,
           email: email
         }]
-      })
-        .then(extractData);
+      };
+      if (isSparkOnlineUser(trimmedUserData)) {
+        payload = {
+          onlineOrderIds: onlineOrderIds
+        };
+      }
+      return payload;
+    }
+
+    function invokeInviteEmail(trimmedUserData) {
+      var url = getInviteResendUrl(trimmedUserData);
+      var payload = getInviteResendPayload(trimmedUserData);
+      return $http.post(url, payload)
+        .then(function (res) {
+          return extractData(res);
+        });
     }
 
     function sendVerificationCode(displayName, email) {
