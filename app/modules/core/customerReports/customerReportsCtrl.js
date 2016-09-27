@@ -12,6 +12,7 @@
     var REFRESH = 'refresh';
     var SET = 'set';
     var EMPTY = 'empty';
+    var ERROR = 'error';
 
     vm.pageTitle = $translate.instant('reportsPage.pageTitle');
     vm.allReports = 'all';
@@ -147,6 +148,10 @@
 
     vm.isEmpty = function (tab) {
       return tab === EMPTY;
+    };
+
+    vm.isError = function (tab) {
+      return tab === ERROR;
     };
 
     // Controls for Most Active Users Table
@@ -355,11 +360,15 @@
         CustomerReportService.getMostActiveUserData(vm.timeSelected, vm.displayActiveLineGraph).then(function (response) {
           if (response === ABORT) {
             return;
-          } else if (response.length === 0) {
+          } else if (response.error) {
+            vm.mostActiveUserStatus = ERROR;
+            vm.mostActiveUsers = response.tableData;
+          } else if (response.tableData.length === 0) {
             vm.mostActiveUserStatus = EMPTY;
+            vm.mostActiveUsers = response.tableData;
           } else {
             vm.activeUserPredicate = activeUsersSort[3];
-            vm.mostActiveUsers = response;
+            vm.mostActiveUsers = response.tableData;
             vm.activeUserCurrentPage = 1;
             vm.activeButton = [1, 2, 3];
             vm.mostActiveUserStatus = SET;

@@ -47,6 +47,15 @@ describe('Service: Customer Reports Service', function () {
   });
 
   describe('Active User Services', function () {
+    var mostActiveResponseObject = {
+      tableData: _.clone(activeData.mostActiveResponse),
+      error: false
+    };
+    var mostActiveResponseError = {
+      tableData: [],
+      error: true
+    };
+
     it('should return column data getActiveUserData where lineGraph is false', function () {
       spyOn(CommonReportService, 'getCustomerReport').and.returnValue($q.when({
         data: {
@@ -101,21 +110,39 @@ describe('Service: Customer Reports Service', function () {
       });
     });
 
-    it('should getMostActiveUserData', function () {
+    it('should getMostActiveUserData when lineGraph is false', function () {
       spyOn(CommonReportService, 'getCustomerReportByType').and.returnValue($q.when({
         data: _.clone(activeData.mostActive),
       }));
 
-      CustomerReportService.getMostActiveUserData(defaults.timeFilter[0]).then(function (response) {
-        expect(response).toEqual(_.clone(activeData.mostActiveResponse));
+      CustomerReportService.getMostActiveUserData(defaults.timeFilter[0], false).then(function (response) {
+        expect(response).toEqual(mostActiveResponseObject);
+      });
+    });
+
+    it('should notify an error for getMostActiveUserData when lineGraph is false', function () {
+      spyOn(CommonReportService, 'getCustomerReportByType').and.returnValue($q.reject(rejectError));
+
+      CustomerReportService.getMostActiveUserData(defaults.timeFilter[0], false).then(function (response) {
+        expect(response).toEqual(mostActiveResponseError);
+      });
+    });
+
+    it('should getMostActiveUserData', function () {
+      spyOn(CommonReportService, 'getCustomerAltReportByType').and.returnValue($q.when({
+        data: _.clone(activeData.mostActive),
+      }));
+
+      CustomerReportService.getMostActiveUserData(defaults.timeFilter[0], true).then(function (response) {
+        expect(response).toEqual(mostActiveResponseObject);
       });
     });
 
     it('should notify an error for getMostActiveUserData', function () {
-      spyOn(CommonReportService, 'getCustomerReportByType').and.returnValue($q.reject(rejectError));
+      spyOn(CommonReportService, 'getCustomerAltReportByType').and.returnValue($q.reject(rejectError));
 
-      CustomerReportService.getMostActiveUserData(defaults.timeFilter[0]).then(function (response) {
-        expect(response).toEqual([]);
+      CustomerReportService.getMostActiveUserData(defaults.timeFilter[0], true).then(function (response) {
+        expect(response).toEqual(mostActiveResponseError);
       });
     });
   });
