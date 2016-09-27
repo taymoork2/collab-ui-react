@@ -6,7 +6,7 @@
     .controller('CdrLadderDiagramCtrl', CdrLadderDiagramCtrl);
 
   /* @ngInject */
-  function CdrLadderDiagramCtrl($scope, $rootScope, $filter, $q, $state, $translate, $stateParams, CdrLadderDiagramService, $sce, Log, $window) {
+  function CdrLadderDiagramCtrl($filter, $q, $rootScope, $sce, $scope, $state, $stateParams, $translate, $window, CdrLadderDiagramService, Config, Log) {
     var vm = this;
 
     vm.downLoadLabel = $translate.instant('cdrLadderDiagram.downLoadEvents');
@@ -194,8 +194,8 @@
     }
 
     function addEventData(event) {
-      if (((event.sourceIp !== null) && (event.sourceIp.indexOf("127.0.0.1") === -1)) &&
-        ((event.destinationIp !== null) && (event.destinationIp.indexOf("127.0.0.1") === -1))) {
+      if ((event.sourceIp !== null && !Config.isDevHostName(event.sourceIp)) &&
+        (event.destinationIp !== null && !Config.isDevHostName(event.destinationIp))) {
         vm.events.push({
           "type": event.type,
           "@timestamp": event.localAlias,
