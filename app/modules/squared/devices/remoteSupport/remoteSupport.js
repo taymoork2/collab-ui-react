@@ -5,7 +5,7 @@
     .controller('RemoteSupportController',
 
       /* @ngInject */
-      function ($q, $timeout, Utils, Authinfo, CsdmDeviceService, currentDevice) {
+      function ($q, $timeout, Utils, Authinfo, CsdmDeviceService, CsdmDataModelService, currentDevice) {
         var rs = this;
 
         rs.currentDevice = currentDevice;
@@ -33,7 +33,7 @@
         }
 
         function pollDeviceForNewRsuKey(endTime, deferred) {
-          CsdmDeviceService.getDevice(rs.currentDevice.url).then(function (device) {
+          CsdmDataModelService.reloadDevice(rs.currentDevice).then(function (device) {
             if (device.rsuKey != rs.oldRsuKey) {
               rs.resetDone = true;
               return deferred.resolve();
