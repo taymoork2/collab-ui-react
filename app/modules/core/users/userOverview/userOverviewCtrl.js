@@ -340,7 +340,7 @@
     }
 
     function setCareCheck(setCCInvitationReqd) {
-      Userservice.getUser(vm.currentUser.id, function (data) {
+      Userservice.getUser(vm.currentUser.id, true, function (data) {
         if (data.success) {
           var hasSyncKms = _.find(data.roles, function (r) {
             return r === Config.backend_roles.spark_synckms;

@@ -4,26 +4,21 @@
     <h4 translate="registeredEndpoints.registeredEndpoints"></h4>
   </header>
   <section>
-    <p >{{nav.endpointDescription}}</p>
+    <p >{{nav.getDescription('registeredEndpoints.description')}}</p>
     <div class="card-section-content ">
-    <table class="table table-bordered" ng-class="{'dummyTable': nav.dummyTable}">
+    <table class="table table-bordered" ng-class="{'dummyTable': nav.endpointTable.dummy}">
       <thead>
-        <tr>
-          <th class="vertical-center col-md-4 bold customer-data" translate="registeredEndpoints.company"></th>
-          <th class="vertical-center horizontal-center col-md-2 bold">{{nav.devices}}</th>
-          <th class="vertical-center horizontal-center col-md-2 bold">{{nav.trend}}</th>
-          <th class="vertical-center horizontal-center col-md-2 bold" translate="registeredEndpoints.totalRegistered"></th>
-        </tr>
+        <th ng-repeat="header in nav.endpointTable.headers" class="bold vertical-center {{header.class}}">{{nav.getHeader(header.title)}}</th>
       </thead>
       <tbody>
-        <tr ng-repeat="customer in nav.registeredEndpoints | orderBy:'customer'">
-          <td class="vertical-center customer-data">{{customer.customer}}</td>
-          <td class="table-data">
-            <div class="table-half vertical-center horizontal-center">{{customer.minRegisteredDevices}}</div>
-            <div class="table-half vertical-center horizontal-center">{{customer.maxRegisteredDevices}}</div>
+        <tr ng-repeat="customer in nav.endpointTable.data | orderBy:'customer'">
+          <td ng-repeat="data in customer" class="{{data.class}}">
+            <div ng-if="data.output.length > 1">
+              <div class="{{data.splitClasses}}">{{data.output[0]}}</div>
+              <div class="{{data.splitClasses}}">{{data.output[1]}}</div>
+            </div>
+            <span ng-if="data.output.length === 1">{{data.output[0]}}</span>
           </td>
-          <td class="vertical-center horizontal-center {{customer.direction}}">{{customer.registeredDevicesTrend}}</td>
-          <td class="vertical-center horizontal-center">{{customer.yesterdaysRegisteredDevices}}</td>
         </tr>
       </tbody>
     </table>

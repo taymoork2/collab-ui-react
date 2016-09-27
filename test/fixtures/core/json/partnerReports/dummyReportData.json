@@ -130,25 +130,29 @@
       "balloon": false
     }]
   },
-  "endpoints": {
-    "customer": "activeUserPopulation.loadingCustomer",
-    "deviceRegistrationCountTrend": "0",
-    "yesterdaysDeviceRegistrationCount": "0",
-    "registeredDevicesTrend": "0",
-    "yesterdaysRegisteredDevices": "0",
-    "maxRegisteredDevices": "0",
-    "minRegisteredDevices": "0",
-    "direction": "positive"
-  },
+  "endpoints": [[{
+    "class": "vertical-center customer-data",
+    "output": ["activeUserPopulation.loadingCustomer"]
+  }, {
+    "class": "table-data",
+    "output": ["0", "0"],
+    "splitClasses": "table-half vertical-center horizontal-center"
+  }, {
+    "class": "vertical-center horizontal-center",
+    "output": ["0"]
+  }, {
+    "class": "vertical-center horizontal-center",
+    "output": ["0"]
+  }]],
   "callMetrics": {
     "dataProvider": [{
       "label": "callMetrics.callConditionFail",
       "value": "200",
-      "color": "#ECECEC"
+      "color": "#EBEBEC"
     }, {
       "label": "callMetrics.callConditionSuccessful",
       "value": "800",
-      "color": "#F3F3F3"
+      "color": "#F5F5F6"
     }],
     "labelData": {
       "numTotalCalls": 1000,
@@ -164,9 +168,6 @@
       "goodQualityDurationSum": 25,
       "fairQualityDurationSum": 15,
       "poorQualityDurationSum": 5,
-      "colorOne": "#ECECEC",
-      "colorTwo": "#F3F3F3",
-      "colorThree": "#FAFAFA",
       "balloon": false
     }, {
       "date": "Aug 02",
@@ -175,9 +176,6 @@
       "goodQualityDurationSum": 40,
       "fairQualityDurationSum": 25,
       "poorQualityDurationSum": 10,
-      "colorOne": "#ECECEC",
-      "colorTwo": "#F3F3F3",
-      "colorThree": "#FAFAFA",
       "balloon": false
     }, {
       "date": "Aug 03",
@@ -186,9 +184,6 @@
       "goodQualityDurationSum": 55,
       "fairQualityDurationSum": 35,
       "poorQualityDurationSum": 15,
-      "colorOne": "#ECECEC",
-      "colorTwo": "#F3F3F3",
-      "colorThree": "#FAFAFA",
       "balloon": false
     }, {
       "date": "Aug 04",
@@ -197,9 +192,6 @@
       "goodQualityDurationSum": 70,
       "fairQualityDurationSum": 45,
       "poorQualityDurationSum": 20,
-      "colorOne": "#ECECEC",
-      "colorTwo": "#F3F3F3",
-      "colorThree": "#FAFAFA",
       "balloon": false
     }, {
       "date": "Aug 05",
@@ -208,9 +200,6 @@
       "goodQualityDurationSum": 85,
       "fairQualityDurationSum": 55,
       "poorQualityDurationSum": 25,
-      "colorOne": "#ECECEC",
-      "colorTwo": "#F3F3F3",
-      "colorThree": "#FAFAFA",
       "balloon": false
     }, {
       "date": "Aug 06",
@@ -219,9 +208,6 @@
       "goodQualityDurationSum": 100,
       "fairQualityDurationSum": 65,
       "poorQualityDurationSum": 30,
-      "colorOne": "#ECECEC",
-      "colorTwo": "#F3F3F3",
-      "colorThree": "#FAFAFA",
       "balloon": false
     }, {
       "date": "Aug 07",
@@ -230,9 +216,6 @@
       "goodQualityDurationSum": 115,
       "fairQualityDurationSum": 75,
       "poorQualityDurationSum": 35,
-      "colorOne": "#ECECEC",
-      "colorTwo": "#F3F3F3",
-      "colorThree": "#FAFAFA",
       "balloon": false
     }],
     "two": [{
@@ -242,9 +225,6 @@
       "goodQualityDurationSum": 25,
       "fairQualityDurationSum": 15,
       "poorQualityDurationSum": 5,
-      "colorOne": "#ECECEC",
-      "colorTwo": "#F3F3F3",
-      "colorThree": "#FAFAFA",
       "balloon": false
     }, {
       "date": "Jul 19",
@@ -253,9 +233,6 @@
       "goodQualityDurationSum": 40,
       "fairQualityDurationSum": 25,
       "poorQualityDurationSum": 10,
-      "colorOne": "#ECECEC",
-      "colorTwo": "#F3F3F3",
-      "colorThree": "#FAFAFA",
       "balloon": false
     }, {
       "date": "Jul 26",
@@ -264,9 +241,6 @@
       "goodQualityDurationSum": 55,
       "fairQualityDurationSum": 35,
       "poorQualityDurationSum": 15,
-      "colorOne": "#ECECEC",
-      "colorTwo": "#F3F3F3",
-      "colorThree": "#FAFAFA",
       "balloon": false
     }, {
       "date": "Aug 02",
@@ -275,9 +249,6 @@
       "goodQualityDurationSum": 70,
       "fairQualityDurationSum": 45,
       "poorQualityDurationSum": 20,
-      "colorOne": "#ECECEC",
-      "colorTwo": "#F3F3F3",
-      "colorThree": "#FAFAFA",
       "balloon": false
     }],
     "three": [{
@@ -287,9 +258,6 @@
       "goodQualityDurationSum": 25,
       "fairQualityDurationSum": 15,
       "poorQualityDurationSum": 5,
-      "colorOne": "#ECECEC",
-      "colorTwo": "#F3F3F3",
-      "colorThree": "#FAFAFA",
       "balloon": false
     }, {
       "date": "July",
@@ -298,9 +266,6 @@
       "goodQualityDurationSum": 40,
       "fairQualityDurationSum": 25,
       "poorQualityDurationSum": 10,
-      "colorOne": "#ECECEC",
-      "colorTwo": "#F3F3F3",
-      "colorThree": "#FAFAFA",
       "balloon": false
     }, {
       "date": "August",
@@ -309,17 +274,14 @@
       "goodQualityDurationSum": 55,
       "fairQualityDurationSum": 35,
       "poorQualityDurationSum": 15,
-      "colorOne": "#ECECEC",
-      "colorTwo": "#F3F3F3",
-      "colorThree": "#FAFAFA",
       "balloon": false
     }]
   },
   "activeUserPopulation": [{
     "customerName": "activeUserPopulation.loadingCustomer",
     "percentage": 85,
-    "colorOne": "#F3F3F3",
-    "colorTwo": "#ECECEC",
+    "overallPopulation": 50, 
+    "color": "#F5F5F6",
     "balloon": false,
     "labelColorField": "#ccc"
   }],
@@ -329,56 +291,42 @@
       "totalRegisteredUsers": 25,
       "activeUsers": 0,
       "percentage": 0,
-      "colorOne": "#F3F3F3",
-      "colorTwo": "#ECECEC",
       "balloon": false
     }, {
       "date": "Aug 02",
       "totalRegisteredUsers": 50,
       "activeUsers": 25,
       "percentage": 50,
-      "colorOne": "#F3F3F3",
-      "colorTwo": "#ECECEC",
       "balloon": false
     }, {
       "date": "Aug 03",
       "totalRegisteredUsers": 75,
       "activeUsers": 50,
       "percentage": 67,
-      "colorOne": "#F3F3F3",
-      "colorTwo": "#ECECEC",
       "balloon": false
     }, {
       "date": "Aug 04",
       "totalRegisteredUsers": 100,
       "activeUsers": 75,
       "percentage": 75,
-      "colorOne": "#F3F3F3",
-      "colorTwo": "#ECECEC",
       "balloon": false
     }, {
       "date": "Aug 05",
       "totalRegisteredUsers": 125,
       "activeUsers": 100,
       "percentage": 80,
-      "colorOne": "#F3F3F3",
-      "colorTwo": "#ECECEC",
       "balloon": false
     }, {
       "date": "Aug 06",
       "totalRegisteredUsers": 150,
       "activeUsers": 125,
       "percentage": 83,
-      "colorOne": "#F3F3F3",
-      "colorTwo": "#ECECEC",
       "balloon": false
     }, {
       "date": "Aug 07",
       "totalRegisteredUsers": 175,
       "activeUsers": 150,
       "percentage": 86,
-      "colorOne": "#F3F3F3",
-      "colorTwo": "#ECECEC",
       "balloon": false
     }],
     "two": [{
@@ -386,32 +334,24 @@
       "totalRegisteredUsers": 25,
       "activeUsers": 0,
       "percentage": 0,
-      "colorOne": "#F3F3F3",
-      "colorTwo": "#ECECEC",
       "balloon": false
     }, {
       "date": "Jul 19",
       "totalRegisteredUsers": 50,
       "activeUsers": 25,
       "percentage": 50,
-      "colorOne": "#F3F3F3",
-      "colorTwo": "#ECECEC",
       "balloon": false
     }, {
       "date": "Jul 26",
       "totalRegisteredUsers": 75,
       "activeUsers": 50,
       "percentage": 67,
-      "colorOne": "#F3F3F3",
-      "colorTwo": "#ECECEC",
       "balloon": false
     }, {
       "date": "Aug 02",
       "totalRegisteredUsers": 100,
       "activeUsers": 75,
       "percentage": 75,
-      "colorOne": "#F3F3F3",
-      "colorTwo": "#ECECEC",
       "balloon": false
     }],
     "three": [{
@@ -419,24 +359,18 @@
       "totalRegisteredUsers": 25,
       "activeUsers": 0,
       "percentage": 0,
-      "colorOne": "#F3F3F3",
-      "colorTwo": "#ECECEC",
       "balloon": false
     }, {
       "date": "July",
       "totalRegisteredUsers": 50,
       "activeUsers": 25,
       "percentage": 50,
-      "colorOne": "#F3F3F3",
-      "colorTwo": "#ECECEC",
       "balloon": false
     }, {
       "date": "August",
       "totalRegisteredUsers": 75,
       "activeUsers": 50,
       "percentage": 67,
-      "colorOne": "#F3F3F3",
-      "colorTwo": "#ECECEC",
       "balloon": false
     }]
   },

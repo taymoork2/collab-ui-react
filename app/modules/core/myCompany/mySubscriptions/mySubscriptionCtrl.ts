@@ -25,9 +25,9 @@ const callClass = 'icon-calls';
 const licenseTypes = ['MS', 'CF', 'MC', 'TC', 'EC', 'EE', 'CMR', 'CO', 'SD', 'SB'];
 
 class MySubscriptionCtrl {
-  public hybridServices = [];
-  public licenseCategory = [];
-  public subscriptionDetails = [];
+  public hybridServices: any[] = [];
+  public licenseCategory: any[] = [];
+  public subscriptionDetails: any[] = [];
   public visibleSubscriptions = false;
   public isOnline = false;
   public trialUrlFailed = false;
@@ -37,16 +37,14 @@ class MySubscriptionCtrl {
   /* @ngInject */
   constructor(
     private $http: ng.IHttpService,
-    private $q: ng.IQService,
     private $rootScope: ng.IRootScopeService,
-    private $timeout: ng.ITimeoutService,
     private $translate: ng.translate.ITranslateService,
     private Authinfo,
     private DigitalRiverService: DigitalRiverService,
     private Notification,
     private Orgservice,
     private ServiceDescriptor,
-    private UrlConfig
+    private UrlConfig,
   ) {
     // message subscriptions
     this.licenseCategory[0] = angular.copy(baseCategory);
@@ -134,7 +132,7 @@ class MySubscriptionCtrl {
 
   // combines licenses for the license view
   private addSubscription(index, item, existingSite) {
-    let subscriptions = undefined;
+    let subscriptions;
     let exists = false;
 
     if (existingSite >= 0) {
@@ -162,7 +160,7 @@ class MySubscriptionCtrl {
         let newSubscription = {
           subscriptionId: undefined,
           internalSubscriptionId: undefined,
-          licenses: [],
+          licenses: [] as any[],
           isTrial: false,
           viewAll: false,
           upgradeTrialUrl: undefined,
@@ -185,7 +183,7 @@ class MySubscriptionCtrl {
               siteUrl: license.siteUrl,
               id: 'donutId' + subIndex + licenseIndex,
               tooltip: this.generateTooltip(license.offerName, license.usage, license.volume),
-              class: undefined,
+              class: '',
             };
 
             _.forEach(licenseTypes, (type: any, index: number) => {
@@ -272,10 +270,10 @@ class MySubscriptionCtrl {
     this.ServiceDescriptor.servicesInOrg(this.Authinfo.getOrgId(), true)
       .then(services => {
         if (_.isArray(services)) {
-          let callServices = services.filter((service) => {
+          let callServices = _.filter<any>(services, (service) => {
             return service.id === fusionUC || service.id === fusionEC;
           });
-          let filteredServices = services.filter((service) => {
+          let filteredServices = _.filter<any>(services, (service) => {
             return service.id === fusionCAL || service.id === fusionMGT;
           });
 

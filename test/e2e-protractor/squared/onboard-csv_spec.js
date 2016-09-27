@@ -3,7 +3,7 @@
 /* global inviteusers */
 /* global LONG_TIMEOUT */
 
-describe('Onboard Users using CSV File', function () {
+xdescribe('Onboard Users using CSV File', function () {
   var token;
   var CSV_FILE_PATH = utils.resolvePath('./../data/DELETE_DO_NOT_CHECKIN_onboard_csv_test_file.csv');
   var userList = users.createCsvAndReturnUsers(CSV_FILE_PATH);
@@ -27,6 +27,7 @@ describe('Onboard Users using CSV File', function () {
     login.login('account-admin', '#/users')
       .then(function (_token) {
         token = _token;
+        expect(token).toBeTruthy();
       });
   });
 
@@ -73,13 +74,13 @@ describe('Onboard Users using CSV File', function () {
 
   afterAll(function () {
     utils.deleteFile(CSV_FILE_PATH);
-    _.each(userList, function (user, ind) {
-      deleteUtils.deleteUser(user, token).then(function () {
-        console.log('Deleting user #' + ind + ' (' + user + ')');
-        if (ind == (userList.length - 1)) {
-          console.log('All users deleted.');
-        }
-      });
-    });
+  //   _.each(userList, function (user, ind) {
+  //     deleteUtils.deleteUser(user, token).then(function () {
+  //       console.log('Deleting user #' + ind + ' (' + user + ')');
+  //       if (ind == (userList.length - 1)) {
+  //         console.log('All users deleted.');
+  //       }
+  //     });
+  //   });
   }, 60000 * 4);
 });

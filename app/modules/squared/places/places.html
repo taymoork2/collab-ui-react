@@ -1,5 +1,5 @@
 <div class="sq-places-page">
-  <cs-page-header title="Places"></cs-page-header>
+  <cs-page-header title="{{::'tabs.placeTab' | translate}}"></cs-page-header>
   <cs-page-sub-header ng-show="sc.existsDevices()">
     <cs-page-sub-header-left>
       <cs-searchfilter filters="sc.placeFilter.getFilters()" search-item-fn="sc.placeFilter.setCurrentSearch(searchStr)" set-filter-fn="sc.placeFilter.setCurrentFilter(filter.filterValue)">{}

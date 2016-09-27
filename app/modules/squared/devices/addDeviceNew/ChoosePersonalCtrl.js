@@ -68,7 +68,7 @@
     };
 
     function selectUser($item) {
-      if (!_.contains($item.entitlements, 'ciscouc')) {
+      if (!_.includes($item.entitlements, 'ciscouc')) {
         vm.userError = true;
       }
       vm.cisUuid = $item.id;

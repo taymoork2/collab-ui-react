@@ -29,13 +29,12 @@
     vm.renameClusterSection = {
       title: 'hercules.expresswayClusterSettings.clusterMainSectionHeader'
     };
-    vm.localizedCallServiceName = $translate.instant('hercules.serviceNameFromConnectorType.c_ucmc');
-    vm.localizedCalendarServiceName = $translate.instant('hercules.serviceNameFromConnectorType.c_cal');
     vm.localizedClusterNameWatermark = $translate.instant('hercules.expresswayClusterSettings.clusterNameWatermark');
     vm.showResourceGroups = hasF237FeatureToggle;
     vm.setClusterName = setClusterName;
     vm.deactivateService = deactivateService;
     vm.deregisterCluster = deregisterCluster;
+    vm.allowedChannels = [];
 
     FusionClusterService.getAllProvisionedConnectorTypes($stateParams.id)
       .then(function (allConnectorTypes) {
@@ -242,11 +241,30 @@
       FusionClusterService.setClusterName(vm.cluster.id, newClusterName)
         .then(function () {
           vm.cluster.name = newClusterName;
+          vm.localizedTitle = $translate.instant('hercules.expresswayClusterSettings.pageTitle', {
+            clusterName: vm.cluster.name
+          });
           Notification.success('hercules.expresswayClusterSettings.clusterNameSaved');
         }, function () {
           Notification.error('hercules.expresswayClusterSettings.clusterNameCannotBeSaved');
         });
     }
+
+    function getAvailableReleaseChannels() {
+      ResourceGroupService.getAllowedChannels()
+        .then(function (channels) {
+          vm.allowedChannels = channels;
+        });
+    }
+    getAvailableReleaseChannels();
+
+    vm.filterServices = function (connector) {
+      return connector === 'c_cal' || connector === 'c_ucmc';
+    };
+
+    vm.getLocalizedServiceName = function (connector) {
+      return $translate.instant('hercules.serviceNameFromConnectorType.' + connector);
+    };
 
   }
 })();

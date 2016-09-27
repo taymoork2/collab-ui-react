@@ -14,6 +14,12 @@ const testConfig = merge.smart(commonWebpack, {
       loaders.instrument,
     ],
   },
+  ts: {
+    compilerOptions: {
+      sourceMap: false,
+      inlineSourceMap: true,
+    },
+  },
   output: {},
 });
 

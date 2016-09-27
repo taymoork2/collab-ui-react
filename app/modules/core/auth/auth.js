@@ -5,6 +5,7 @@
     .module('core.auth', [
       'pascalprecht.translate',
       'ui.router',
+      require('angular-sanitize'),
       require('modules/core/auth/token.service'),
       require('modules/core/config/config'),
       require('modules/core/config/oauthConfig'),

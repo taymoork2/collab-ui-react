@@ -13,7 +13,8 @@
         menuId: '@aaMenuId',
         index: '=aaIndex',
         keyIndex: '@aaKeyIndex',
-        fromRouteCall: '@aaFromRouteCall'
+        fromRouteCall: '@aaFromRouteCall',
+        queues: "@aaQueues"
       },
       controller: 'AARouteToQueueCtrl',
       controllerAs: 'aaRouteToQueue',

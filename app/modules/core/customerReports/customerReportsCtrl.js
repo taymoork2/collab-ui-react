@@ -28,12 +28,13 @@
       state: 'reports'
     }];
 
-    var activeUserData = [];
     var isActiveUsers = false;
     var activeUsersSort = ['userName', 'numCalls', 'sparkMessages', 'totalActivity'];
     var activeUsersChart = null;
     var previousSearch = '';
     var reportsUpdateToggle = FeatureToggleService.atlasReportsUpdateGetStatus();
+    vm.threeMonthTooltip = $translate.instant('activeUsers.threeMonthsMessage');
+    vm.twelveMonthTooltip = $translate.instant('activeUsers.twelveMonthsMessage');
     vm.activeUserStatus = REFRESH;
     vm.mostActiveUserStatus = REFRESH;
     vm.searchPlaceholder = $translate.instant('activeUsers.search');
@@ -105,7 +106,7 @@
           state: 'reports-metrics'
         });
       }
-      if (features.care) {
+      if (Authinfo.isCare() && features.care) {
         vm.headerTabs.push({
           title: $translate.instant('reportsPage.careTab'),
           state: 'reports.care'
@@ -196,6 +197,14 @@
     function init() {
       reportsUpdateToggle.then(function (response) {
         vm.displayActiveLineGraph = response;
+        if (vm.displayActiveLineGraph) {
+          vm.timeOptions.push({
+            value: 3,
+            label: $translate.instant('reportsPage.twelveMonths'),
+            description: $translate.instant('reportsPage.twelveMonths2')
+          });
+        }
+
         if (!vm.tab) {
           $timeout(function () {
             setDummyData();
@@ -226,7 +235,7 @@
     }
 
     function activityUpdate() {
-      setActiveGraph(activeUserData);
+      CustomerGraphService.showHideActiveLineGraph(activeUsersChart, vm.activeSelected);
     }
 
     function isActiveDisabled() {
@@ -307,13 +316,16 @@
     function setActiveGraph(data) {
       var tempActiveUserChart;
       if (vm.displayActiveLineGraph) {
-        tempActiveUserChart = CustomerGraphService.setActiveLineGraph(data, activeUsersChart, vm.activeSelected);
+        tempActiveUserChart = CustomerGraphService.setActiveLineGraph(data, activeUsersChart, vm.timeSelected);
       } else {
         tempActiveUserChart = CustomerGraphService.setActiveUsersGraph(data, activeUsersChart);
       }
 
       if (tempActiveUserChart !== null && angular.isDefined(tempActiveUserChart)) {
         activeUsersChart = tempActiveUserChart;
+        if (vm.displayActiveLineGraph) {
+          CustomerGraphService.showHideActiveLineGraph(activeUsersChart, vm.activeSelected);
+        }
       }
     }
 
@@ -326,34 +338,35 @@
       vm.showMostActiveUsers = false;
       isActiveUsers = false;
 
-      CustomerReportService.getActiveUserData(vm.timeSelected).then(function (response) {
+      CustomerReportService.getActiveUserData(vm.timeSelected, vm.displayActiveLineGraph).then(function (response) {
         if (response === ABORT) {
           return;
         } else if (_.isArray(response.graphData) && response.graphData.length === 0) {
           vm.activeUserStatus = EMPTY;
         } else {
           setActiveGraph(response.graphData);
-          activeUserData = response.graphData;
           isActiveUsers = response.isActiveUsers;
           vm.activeUserStatus = SET;
         }
         resizeCards();
       });
 
-      CustomerReportService.getMostActiveUserData(vm.timeSelected).then(function (response) {
-        if (response === ABORT) {
-          return;
-        } else if (response.length === 0) {
-          vm.mostActiveUserStatus = EMPTY;
-        } else {
-          vm.activeUserPredicate = activeUsersSort[3];
-          vm.mostActiveUsers = response;
-          vm.activeUserCurrentPage = 1;
-          vm.activeButton = [1, 2, 3];
-          vm.mostActiveUserStatus = SET;
-        }
-        resizeCards();
-      });
+      if (vm.timeSelected.value !== 3) {
+        CustomerReportService.getMostActiveUserData(vm.timeSelected, vm.displayActiveLineGraph).then(function (response) {
+          if (response === ABORT) {
+            return;
+          } else if (response.length === 0) {
+            vm.mostActiveUserStatus = EMPTY;
+          } else {
+            vm.activeUserPredicate = activeUsersSort[3];
+            vm.mostActiveUsers = response;
+            vm.activeUserCurrentPage = 1;
+            vm.activeButton = [1, 2, 3];
+            vm.mostActiveUserStatus = SET;
+          }
+          resizeCards();
+        });
+      }
     }
 
     function searchMostActive() {
@@ -382,16 +395,20 @@
     }
 
     function setAvgRoomData() {
-      CustomerReportService.getAvgRoomData(vm.timeSelected).then(function (response) {
-        if (response === ABORT) {
-          return;
-        } else if (response.length === 0) {
-          vm.avgRoomStatus = EMPTY;
-        } else {
-          setAverageGraph(response);
-          vm.avgRoomStatus = SET;
-        }
-      });
+      if (vm.timeSelected.value === 3) {
+        vm.avgRoomStatus = EMPTY;
+      } else {
+        CustomerReportService.getAvgRoomData(vm.timeSelected).then(function (response) {
+          if (response === ABORT) {
+            return;
+          } else if (response.length === 0) {
+            vm.avgRoomStatus = EMPTY;
+          } else {
+            setAverageGraph(response);
+            vm.avgRoomStatus = SET;
+          }
+        });
+      }
     }
 
     function setFilesGraph(data) {
@@ -402,16 +419,20 @@
     }
 
     function setFilesSharedData() {
-      CustomerReportService.getFilesSharedData(vm.timeSelected).then(function (response) {
-        if (response === ABORT) {
-          return;
-        } else if (response.length === 0) {
-          vm.filesSharedStatus = EMPTY;
-        } else {
-          setFilesGraph(response);
-          vm.filesSharedStatus = SET;
-        }
-      });
+      if (vm.timeSelected.value === 3) {
+        vm.filesSharedStatus = EMPTY;
+      } else {
+        CustomerReportService.getFilesSharedData(vm.timeSelected).then(function (response) {
+          if (response === ABORT) {
+            return;
+          } else if (response.length === 0) {
+            vm.filesSharedStatus = EMPTY;
+          } else {
+            setFilesGraph(response);
+            vm.filesSharedStatus = SET;
+          }
+        });
+      }
     }
 
     function setMediaGraph(data) {
@@ -423,17 +444,21 @@
 
     function setMediaData() {
       mediaData = [];
-      CustomerReportService.getMediaQualityData(vm.timeSelected).then(function (response) {
-        if (response === ABORT) {
-          return;
-        } else if (response.length === 0) {
-          vm.mediaQualityStatus = EMPTY;
-        } else {
-          mediaData = response;
-          setMediaGraph(mediaData);
-          vm.mediaQualityStatus = SET;
-        }
-      });
+      if (vm.timeSelected.value === 3) {
+        vm.mediaQualityStatus = EMPTY;
+      } else {
+        CustomerReportService.getMediaQualityData(vm.timeSelected).then(function (response) {
+          if (response === ABORT) {
+            return;
+          } else if (response.length === 0) {
+            vm.mediaQualityStatus = EMPTY;
+          } else {
+            mediaData = response;
+            setMediaGraph(mediaData);
+            vm.mediaQualityStatus = SET;
+          }
+        });
+      }
     }
 
     function setMetricGraph(data) {
@@ -444,17 +469,21 @@
     }
 
     function setCallMetricsData() {
-      CustomerReportService.getCallMetricsData(vm.timeSelected).then(function (response) {
-        if (response === ABORT) {
-          return;
-        } else if (_.isArray(response.dataProvider) && response.dataProvider.length === 0) {
-          vm.metricStatus = EMPTY;
-        } else {
-          setMetricGraph(response);
-          vm.metrics = response.displayData;
-          vm.metricStatus = SET;
-        }
-      });
+      if (vm.timeSelected.value === 3) {
+        vm.metricStatus = EMPTY;
+      } else {
+        CustomerReportService.getCallMetricsData(vm.timeSelected).then(function (response) {
+          if (response === ABORT) {
+            return;
+          } else if (_.isArray(response.dataProvider) && response.dataProvider.length === 0) {
+            vm.metricStatus = EMPTY;
+          } else {
+            setMetricGraph(response);
+            vm.metrics = response.displayData;
+            vm.metricStatus = SET;
+          }
+        });
+      }
     }
 
     function setDeviceGraph(data, deviceFilter) {
@@ -469,27 +498,35 @@
       vm.selectedDevice = vm.deviceFilter[0];
       currentDeviceGraphs = [];
       vm.isDevicesEmpty = true;
-      CustomerReportService.getDeviceData(vm.timeSelected).then(function (response) {
-        if (response === ABORT) {
-          return;
-        } else if (response.filterArray.length === 0) {
-          vm.deviceStatus = EMPTY;
-        } else {
-          vm.deviceFilter = response.filterArray.sort(function (a, b) {
-            return a.label.localeCompare(b.label);
-          });
-          vm.selectedDevice = vm.deviceFilter[0];
-          currentDeviceGraphs = response.graphData;
-
-          if (!currentDeviceGraphs[vm.selectedDevice.value].emptyGraph) {
-            setDeviceGraph(currentDeviceGraphs, vm.selectedDevice);
-            vm.deviceStatus = SET;
-            vm.isDevicesEmpty = false;
-          } else {
+      if (vm.timeSelected.value === 3) {
+        vm.deviceStatus = EMPTY;
+      } else {
+        CustomerReportService.getDeviceData(vm.timeSelected).then(function (response) {
+          if (response === ABORT) {
+            return;
+          } else if (response.filterArray.length === 0) {
             vm.deviceStatus = EMPTY;
+          } else {
+            vm.deviceFilter = response.filterArray.sort(function (a, b) {
+              if (a.label) {
+                return a.label.localeCompare(b.label);
+              } else {
+                return a > b;
+              }
+            });
+            vm.selectedDevice = vm.deviceFilter[0];
+            currentDeviceGraphs = response.graphData;
+
+            if (!currentDeviceGraphs[vm.selectedDevice.value].emptyGraph) {
+              setDeviceGraph(currentDeviceGraphs, vm.selectedDevice);
+              vm.deviceStatus = SET;
+              vm.isDevicesEmpty = false;
+            } else {
+              vm.deviceStatus = EMPTY;
+            }
           }
-        }
-      });
+        });
+      }
     }
 
     function deviceUpdate() {

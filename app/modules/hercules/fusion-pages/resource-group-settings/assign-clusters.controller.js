@@ -29,7 +29,7 @@
     function loadData() {
       return FusionClusterService.getResourceGroups()
         .then(function (response) {
-          var group = _.find(response.groups, 'id', resourceGroup.id);
+          var group = _.find(response.groups, { 'id': resourceGroup.id });
           vm.originalData.availableClusters = filterHMClusters(response.unassigned);
           vm.originalData.clustersInResourceGroup = filterHMClusters(group.clusters);
           vm.newData = angular.copy(vm.originalData);
@@ -90,13 +90,13 @@
       vm.savingState = true;
       var promises = [];
       _.forEach(vm.newData.clustersInResourceGroup, function (cluster) {
-        if (!_.find(vm.originalData.clustersInResourceGroup, 'id', cluster.id)) {
+        if (!_.find(vm.originalData.clustersInResourceGroup, { 'id': cluster.id })) {
           // assign
           promises.push(ResourceGroupService.assign(cluster.id, vm.resourceGroup.id));
         }
       });
       _.forEach(vm.newData.availableClusters, function (cluster) {
-        if (!_.find(vm.originalData.availableClusters, 'id', cluster.id)) {
+        if (!_.find(vm.originalData.availableClusters, { 'id': cluster.id })) {
           // unassign
           promises.push(ResourceGroupService.assign(cluster.id, ''));
         }

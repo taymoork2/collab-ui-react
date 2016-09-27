@@ -1,8 +1,8 @@
 'use strict';
 
 describe('Directive: aaRouteToQueue', function () {
-  var $compile, $rootScope, $scope, $q;
-  var AAUiModelService, AutoAttendantCeMenuModelService, QueueHelperService;
+  var $compile, $rootScope, $scope;
+  var AAUiModelService, AutoAttendantCeMenuModelService;
 
   var aaUiModel = {
     openHours: {},
@@ -15,7 +15,6 @@ describe('Directive: aaRouteToQueue', function () {
     queueName: 'Test Queue',
     queueUrl: ''
   }];
-
   var schedule = 'openHours';
   var index = '0';
   var keyIndex = '0';
@@ -23,23 +22,20 @@ describe('Directive: aaRouteToQueue', function () {
 
   beforeEach(angular.mock.module('Huron'));
 
-  beforeEach(inject(function (_$compile_, _$rootScope_, _$q_, _QueueHelperService_, _AAUiModelService_, _AutoAttendantCeMenuModelService_) {
+  beforeEach(inject(function (_$compile_, _$rootScope_, _AAUiModelService_, _AutoAttendantCeMenuModelService_) {
     $compile = _$compile_;
     $rootScope = _$rootScope_;
     $scope = _$rootScope_;
-    $q = _$q_;
 
     AAUiModelService = _AAUiModelService_;
     AutoAttendantCeMenuModelService = _AutoAttendantCeMenuModelService_;
 
-    QueueHelperService = _QueueHelperService_;
 
     $scope.schedule = schedule;
     $scope.index = index;
     $scope.aaKey = keyIndex;
     $scope.menuId = menuId;
-
-    spyOn(QueueHelperService, 'listQueues').and.returnValue($q.when(queue));
+    $scope.queues = JSON.stringify(queue);
 
     spyOn(AAUiModelService, 'getUiModel').and.returnValue(aaUiModel);
     AutoAttendantCeMenuModelService.clearCeMenuMap();
@@ -49,7 +45,7 @@ describe('Directive: aaRouteToQueue', function () {
   }));
 
   it('replaces the element with the appropriate content', function () {
-    var element = $compile("<aa-route-to-queue aa-schedule='openHours' aa-menu-id='menu1' aa-index='0' aa-key-index='0'></aa-route-to-queue>")($rootScope);
+    var element = $compile("<aa-route-to-queue aa-schedule='openHours' aa-menu-id='menu1' aa-index='0' aa-key-index='0' aa-queues='" + $scope.queues + "'></aa-route-to-queue>")($rootScope);
     $rootScope.$digest();
     expect(element.html()).toContain("aaRouteToQueue");
   });

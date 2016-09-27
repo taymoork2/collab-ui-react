@@ -26,16 +26,18 @@
         });
       };
 
-      var removeDeleted = function (current, updated) {
+      var removeDeleted = function (current, updated, keepFunction) {
         _.each(_.difference(_.keys(current), _.keys(updated)), function (deletedUrl) {
-          delete current[deletedUrl];
+          if (!keepFunction || !keepFunction(current[deletedUrl])) {
+            delete current[deletedUrl];
+          }
         });
       };
 
       return {
-        update: function (current, updated) {
+        update: function (current, updated, keepFunction) {
           addAndUpdate(current, updated);
-          removeDeleted(current, updated);
+          removeDeleted(current, updated, keepFunction);
           return current;
         },
         updateOne: updateOne

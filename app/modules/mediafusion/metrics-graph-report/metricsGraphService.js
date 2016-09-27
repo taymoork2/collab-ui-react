@@ -7,8 +7,8 @@
     var COLUMN = 'column';
     var AXIS = 'axis';
     var NUMFORMAT = 'numFormat';
-    var SMOOTHLINED = 'smoothedLine';
     var GUIDEAXIS = 'guideaxis';
+    var LEGEND = 'legend';
     // variables for the call volume section
     var callVolumediv = 'callVolumediv';
     // var callVolumeBalloonText = '<span class="graph-text">' + $translate.instant('activeUsers.registeredUsers') + ' <span class="graph-number">[[totalRegisteredUsers]]</span></span><br><span class="graph-text">' + $translate.instant('activeUsers.active') + ' <span class="graph-number">[[percentage]]%</span></span>';
@@ -16,14 +16,24 @@
     var callRejectTitle = $translate.instant('mediaFusion.metrics.callReject');
     var callLocalClusterTitle = $translate.instant('mediaFusion.metrics.callLocalCluster');
     var callRedirectedClusterTitle = $translate.instant('mediaFusion.metrics.callRedirectedCluster');
+    //legendtexts
+    var legendcallLocalTitle = $translate.instant('mediaFusion.metrics.legendcallLocal');
+    var legendcallRejectTitle = $translate.instant('mediaFusion.metrics.legendcallReject');
+    var legendcallLocalClusterTitle = $translate.instant('mediaFusion.metrics.legendcallLocalCluster');
+    var legendcallRedirectedClusterTitle = $translate.instant('mediaFusion.metrics.legendcallRedirectedCluster');
     //availablility variable
+    var availableTitle = $translate.instant('mediaFusion.metrics.availableTitle');
+    var unavailableTitle = $translate.instant('mediaFusion.metrics.unavailableTitle');
+    var partialTitle = $translate.instant('mediaFusion.metrics.partialTitle');
+    var average_utilzation = $translate.instant('mediaFusion.metrics.avgutilization');
     var availabilitydiv = 'availabilitydiv';
     var utilizationdiv = 'utilizationdiv';
-    //variables for utilization graph
-    var peakUtilization = $translate.instant('mediaFusion.metrics.peakutilization');
-    var averageUtilization = $translate.instant('mediaFusion.metrics.averageutilization');
     var baseVariables = [];
+    var baloontitles = [];
     var titles = [];
+    var allClusters = $translate.instant('mediaFusion.metrics.allclusters');
+    var availabilityLegendCluster = [{ 'title': availableTitle, 'color': chartColors.metricDarkGreen }, { 'title': unavailableTitle, 'color': chartColors.metricsRed }];
+    var availabilityLegendAllcluster = [{ 'title': availableTitle, 'color': chartColors.metricDarkGreen }, { 'title': unavailableTitle, 'color': chartColors.metricsRed }, { 'title': partialTitle, 'color': chartColors.metricYellow }];
 
     return {
       setUtilizationGraph: setUtilizationGraph,
@@ -49,8 +59,45 @@
             'class': 'export-list',
             'menu': ['PNG', 'JPG']
           }, {
-            'label': $translate.instant('reportsPage.print'),
-            'title': $translate.instant('reportsPage.print'),
+            'label': $translate.instant('reportsPage.pdf'),
+            'title': $translate.instant('reportsPage.pdf'),
+            click: function () {
+              this.capture({}, function () {
+                this.toPDF({}, function (data) {
+                  $window.open(data, 'amCharts.pdf');
+                });
+              });
+            }
+          }, {
+            'class': 'export-list',
+            'label': $translate.instant('reportsPage.export'),
+            'title': $translate.instant('reportsPage.export'),
+            'menu': ['CSV', 'XLSX']
+          }]
+        }]
+      };
+      return baseVariables['export'];
+    }
+
+    function getBaseExportForUtilizationGraph(fileName, columnNames) {
+      baseVariables['export'] = {
+        'enabled': true,
+        'columnNames': columnNames,
+        'fileName': fileName,
+        'libs': {
+          'autoLoad': false
+        },
+        'menu': [{
+          'class': 'export-main',
+          'label': $translate.instant('reportsPage.downloadOptions'),
+          'menu': [{
+            'label': $translate.instant('reportsPage.saveAs'),
+            'title': $translate.instant('reportsPage.saveAs'),
+            'class': 'export-list',
+            'menu': ['PNG', 'JPG']
+          }, {
+            'label': $translate.instant('reportsPage.pdf'),
+            'title': $translate.instant('reportsPage.pdf'),
             click: function () {
               this.capture({}, function () {
                 this.toPDF({}, function (data) {
@@ -118,6 +165,8 @@
       var ExportFileName = 'MediaService_TotalCalls_' + cluster + '_' + daterange + '_' + new Date();
       var chartData = CommonMetricsGraphService.getBaseStackSerialGraph(data, startDuration, valueAxes, callVolumeGraphs(data, cluster), 'timestamp', catAxis, getBaseExportForGraph(exportFields, ExportFileName, columnNames));
       chartData.numberFormatter = CommonMetricsGraphService.getBaseVariable(NUMFORMAT);
+      chartData.legend = CommonMetricsGraphService.getBaseVariable(LEGEND);
+      chartData.legend.labelText = '[[title]]';
       var chart = AmCharts.makeChart(callVolumediv, chartData);
       chart.addListener("rendered", zoomChart);
       zoomChart(chart);
@@ -131,10 +180,13 @@
     function callVolumeGraphs(data, cluster) {
       var colors = ['colorOne', 'colorTwo'];
       var values = ['active_calls', 'call_reject'];
+      var secondaryColors = [data[0].colorOne, data[0].colorTwo];
       if (cluster === 'All Clusters') {
-        titles = [callLocalTitle, callRejectTitle];
+        baloontitles = [callLocalTitle, callRejectTitle];
+        titles = [legendcallLocalTitle, legendcallRejectTitle];
       } else {
-        titles = [callLocalClusterTitle, callRedirectedClusterTitle];
+        baloontitles = [callLocalClusterTitle, callRedirectedClusterTitle];
+        titles = [legendcallLocalClusterTitle, legendcallRedirectedClusterTitle];
       }
       var graphs = [];
       for (var i = 0; i < values.length; i++) {
@@ -143,19 +195,20 @@
         graphs[i].fillColors = colors[i];
         graphs[i].colorField = colors[i];
         graphs[i].valueField = values[i];
+        graphs[i].legendColor = secondaryColors[i];
         //graphs[i].showBalloon = data[0].balloon;
         graphs[i].showBalloon = data[0].balloon;
         if (cluster === 'All Clusters') {
           if (graphs[i].valueField === 'active_calls') {
-            graphs[i].balloonText = '<span class="graph-text">' + $translate.instant(titles[i]) + ' <span class="graph-number">[[active_calls]]</span></span>';
+            graphs[i].balloonText = '<span class="graph-text">' + $translate.instant(baloontitles[i]) + ' <span class="graph-number">[[active_calls]]</span></span>';
           } else {
-            graphs[i].balloonText = '<span class="graph-text">' + $translate.instant(titles[i]) + ' <span class="graph-number">[[call_reject]]</span></span>';
+            graphs[i].balloonText = '<span class="graph-text">' + $translate.instant(baloontitles[i]) + ' <span class="graph-number">[[call_reject]]</span></span>';
           }
         } else {
           if (graphs[i].valueField === 'active_calls') {
-            graphs[i].balloonText = '<span class="graph-text">' + $translate.instant(titles[i]) + '\n' + cluster + ':' + ' <span class="graph-number">[[active_calls]]</span></span>';
+            graphs[i].balloonText = '<span class="graph-text">' + $translate.instant(baloontitles[i]) + '\n' + cluster + ':' + ' <span class="graph-number">[[active_calls]]</span></span>';
           } else {
-            graphs[i].balloonText = '<span class="graph-text">' + $translate.instant(titles[i]) + '\n' + cluster + ':' + ' <span class="graph-number">[[call_reject]]</span></span>';
+            graphs[i].balloonText = '<span class="graph-text">' + $translate.instant(baloontitles[i]) + '\n' + cluster + ':' + ' <span class="graph-number">[[call_reject]]</span></span>';
           }
         }
         graphs[i].clustered = false;
@@ -187,7 +240,7 @@
       }
     }
 
-    function createutilizationGraph(data, cluster, daterange) {
+    function createutilizationGraph(data, graphs, cluster, daterange) {
       if (data === null || data === 'undefined' || data.length === 0) {
         return;
       }
@@ -218,48 +271,32 @@
       if (!data[0].balloon) {
         startDuration = 0;
       }
-      var exportFields = ['average_cpu', 'peak_cpu', 'timestamp'];
+
       var columnNames = {
-        'average_cpu': 'Average Utilization',
-        'peak_cpu': "Peak Utilization",
-        'timestamp': 'Timestamp'
+        'time': 'Time'
       };
+      angular.forEach(graphs, function (value) {
+        if (value.title !== average_utilzation) {
+          columnNames[value.valueField] = value.title + ' ' + 'Utilization';
+        } else {
+          columnNames[value.valueField] = value.title;
+        }
+      });
       cluster = cluster.replace(/\s/g, "_");
       daterange = daterange.replace(/\s/g, "_");
       var ExportFileName = 'MediaService_Utilization_' + cluster + '_' + daterange + '_' + new Date();
 
-      var chartData = CommonMetricsGraphService.getBaseStackSerialGraph(data, startDuration, valueAxes, utilizationGraphs(data), 'timestamp', catAxis, getBaseExportForGraph(exportFields, ExportFileName, columnNames));
-      chartData.numberFormatter = CommonMetricsGraphService.getBaseVariable(NUMFORMAT);
+      var chartData = CommonMetricsGraphService.getBaseStackSerialGraph(data, startDuration, valueAxes, graphs, 'time', catAxis, getBaseExportForUtilizationGraph(ExportFileName, columnNames));
+      chartData.legend = CommonMetricsGraphService.getBaseVariable(LEGEND);
+      chartData.legend.labelText = '[[title]]';
+      chartData.legend.useGraphSettings = true;
       var chart = AmCharts.makeChart(utilizationdiv, chartData);
       chart.addListener("rendered", zoomChart);
       zoomChart(chart);
       return chart;
     }
 
-    function utilizationGraphs(data) {
-      var secondaryColors = [data[0].colorOne, data[0].colorTwo];
-      var values = ['average_cpu', 'peak_cpu'];
-      var titles = [averageUtilization, peakUtilization];
-      var graphs = [];
-      for (var i = 0; i < values.length; i++) {
-        graphs.push(CommonMetricsGraphService.getBaseVariable(SMOOTHLINED));
-        graphs[i].title = titles[i];
-        graphs[i].lineColor = secondaryColors[i];
-        graphs[i].negativeLineColor = secondaryColors[i];
-        graphs[i].valueField = values[i];
-        graphs[i].showBalloon = data[0].balloon;
-        if (graphs[i].valueField === 'peak_cpu') {
-          graphs[i].dashLength = 4;
-          graphs[i].balloonText = '<span class="graph-text">' + $translate.instant(titles[i]) + ' <span class="graph-number">[[peak_cpu]]</span></span>';
-        } else {
-          graphs[i].balloonText = '<span class="graph-text">' + $translate.instant(titles[i]) + ' <span class="graph-number">[[average_cpu]]</span></span>';
-        }
-        graphs[i].clustered = false;
-      }
-      return graphs;
-    }
-
-    function setUtilizationGraph(data, utilizationChart, cluster, daterange) {
+    function setUtilizationGraph(data, graphs, utilizationChart, cluster, daterange) {
 
       var isDummy = false;
       if (data === null || data === 'undefined' || data.length === 0) {
@@ -272,9 +309,9 @@
         if (!data[0].balloon) {
           startDuration = 0;
         }
-        utilizationChart = createutilizationGraph(data, cluster, daterange);
+        utilizationChart = createutilizationGraph(data, graphs, cluster, daterange);
         utilizationChart.dataProvider = data;
-        utilizationChart.graphs = utilizationGraphs(data);
+        utilizationChart.graphs = graphs;
         utilizationChart.startDuration = startDuration;
         utilizationChart.balloon.enabled = true;
         utilizationChart.chartCursor.valueLineBalloonEnabled = true;
@@ -293,9 +330,9 @@
           isDummy = true;
         }
 
-        utilizationChart = createutilizationGraph(data, cluster, daterange);
+        utilizationChart = createutilizationGraph(data, graphs, cluster, daterange);
         utilizationChart.dataProvider = data;
-        utilizationChart.graphs = utilizationGraphs(data);
+        utilizationChart.graphs = graphs;
         utilizationChart.startDuration = startDuration;
         utilizationChart.balloon.enabled = true;
         utilizationChart.chartCursor.valueLineBalloonEnabled = true;
@@ -333,20 +370,31 @@
       if (data === null || data === 'undefined' || data.length === 0) {
         return;
       }
+      var legend;
+      if (selectedCluster === allClusters) {
+        legend = angular.copy(availabilityLegendAllcluster);
+      } else {
+        legend = angular.copy(availabilityLegendCluster);
+      }
+      if (angular.isDefined(data.data[0].isDummy) && data.data[0].isDummy) {
+        angular.forEach(legend, function (value, key) {
+          legend[key].color = '#AAB3B3';
+        });
+      }
       var valueAxis = createValueAxis(data);
       var exportFields = ['availability', 'nodes', 'startTime', 'endTime', 'category', 'task'];
       var columnNames = {};
       if (cluster === 'All Clusters') {
         columnNames = {
-          'availability': 'Availability',
+          'availability': 'Availability Status',
           'startTime': 'Start Time',
           'endTime': 'End Time',
           'category': 'Cluster',
-          'nodes': 'Nodes'
+          'nodes': 'Node(s)'
         };
       } else {
         columnNames = {
-          'task': 'Availability',
+          'task': 'Availability Status',
           'startTime': 'Start Time',
           'endTime': 'End Time',
           'category': 'Node'
@@ -356,6 +404,9 @@
       daterange = daterange.replace(/\s/g, "_");
       var ExportFileName = 'MediaService_Availability_' + cluster + '_' + daterange + '_' + new Date();
       var chartData = CommonMetricsGraphService.getGanttGraph(data.data[0].clusterCategories, valueAxis, getBaseExportForGraph(exportFields, ExportFileName, columnNames));
+      chartData.legend = CommonMetricsGraphService.getBaseVariable(LEGEND);
+      chartData.legend.labelText = '[[title]]';
+      chartData.legend.data = legend;
       var chart = AmCharts.makeChart(availabilitydiv, chartData);
       return chart;
     }

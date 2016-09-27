@@ -53,11 +53,6 @@
                       ng-if="attribute.name === 'header'"
                       class="cs-input__label ct-attribute-field-label  h4 large-11" translate="careChatTpl.windowTitleLabel">
               </label>
-
-              <label
-                      ng-if="attribute.name === 'category'"
-                      class="cs-input__label ct-attribute-field-label  h4 large-11" translate="careChatTpl.categoryLabel">
-              </label>
               <label
                       ng-if="attribute.name === 'label'"
                       class="cs-input__label ct-attribute-field-label  h4 large-11" translate="careChatTpl.label">
@@ -95,26 +90,6 @@
                   value="{{option.id}}"
                   cs-input-label="{{option.text}}"
                 />
-              </div>
-
-              <div ng-if="attribute.name === 'category'">
-                <cs-select
-                  ng-model="attribute.value"
-                  options="careChatSA.categoryTypeOptions"
-                  labelfield="text"
-                  valuefield="id"
-                  class="ct-attribute-field-textbox"
-                  placeholder="attribute.defaultValue">
-                </cs-select>
-                <label
-                  class="cs-input__label ct-attribute-field-helptext large-11">
-                  <em ng-if="attribute.value.id === 'customerInfo'"
-                          translate="careChatTpl.ciHelpText">
-                  </em>
-                  <em ng-if="attribute.value.id === 'requestInfo'"
-                      translate="careChatTpl.riHelpText">
-                  </em>
-                </label>
               </div>
 
               <div ng-if="attribute.name === 'type'">

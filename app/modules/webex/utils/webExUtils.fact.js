@@ -41,7 +41,7 @@
       var licenses = Authinfo.getLicenses();
       var result = true;
 
-      var confLicenses = _.where(licenses, {
+      var confLicenses = _.filter(licenses, {
         siteUrl: siteUrl,
         licenseType: 'CONFERENCING',
         isCIUnifiedSite: false
@@ -61,7 +61,7 @@
       }
 
       if (result) {
-        var cmrLicenses = _.where(licenses, {
+        var cmrLicenses = _.filter(licenses, {
           siteUrl: siteUrl,
           licenseType: 'CMR',
           isCIUnifiedSite: false

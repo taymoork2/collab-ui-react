@@ -338,6 +338,7 @@ function get_last_run_from_log_file {
     grep "Protractor: max: " "$input_file" | \
         grep "end" | \
         tail -1 | \
+        sed -e 's/^.*####/####/' | \
         cut -d':' -f5 | \
         awk '{print $1;}'
 }

@@ -1,12 +1,8 @@
 'use strict';
 
 describe('Service: AAMediaUploadService', function () {
-  var $rootScope;
-  var $scope;
   var Upload;
   var AAMediaUploadService;
-  var $http;
-  var $httpBackend;
   var $window;
 
   var validFileByName = 'validFile.wav';
@@ -23,13 +19,9 @@ describe('Service: AAMediaUploadService', function () {
   beforeEach(angular.mock.module('uc.autoattendant'));
   beforeEach(angular.mock.module('Huron'));
 
-  beforeEach(inject(function (_$rootScope_, _Upload_, _AAMediaUploadService_, _$http_, _$window_, _$httpBackend_) {
-    $rootScope = _$rootScope_;
-    $scope = $rootScope;
+  beforeEach(inject(function (_Upload_, _AAMediaUploadService_, _$window_) {
     Upload = _Upload_;
     AAMediaUploadService = _AAMediaUploadService_;
-    $http = _$http_;
-    $httpBackend = _$httpBackend_;
     $window = _$window_;
   }));
 
@@ -37,29 +29,24 @@ describe('Service: AAMediaUploadService', function () {
 
   });
 
-  describe('uploadByAngular', function () {
+  describe('uploadByUpload', function () {
     beforeEach(function () {
-      spyOn($http, 'post');
+      spyOn(Upload, 'http');
       fd = new $window.FormData();
       fd.append('file', fileToUpload);
       postParams = {
+        url: uploadUrl,
         transFormRequest: angular.identity,
         headers: {
           'Content-Type': undefined
         },
+        data: fd,
       };
     });
 
-    afterEach(function () {
-      $httpBackend.verifyNoOutstandingExpectation();
-      $httpBackend.verifyNoOutstandingRequest();
-    });
-
-    it('should upload by angular and send the data', function () {
-      $httpBackend.whenPOST(uploadUrl).respond(200, true);
-      AAMediaUploadService.upload(fileToUpload, '');
-      $scope.$apply();
-      expect($http.post).toHaveBeenCalled();
+    it('should upload by upload http and send the data', function () {
+      AAMediaUploadService.uploadByUpload(fileToUpload);
+      expect(Upload.http).toHaveBeenCalled();
     });
   });
 
@@ -75,7 +62,7 @@ describe('Service: AAMediaUploadService', function () {
         headers: {
           'Content-Type': undefined
         },
-        data: blob
+        data: blob,
       };
     });
 

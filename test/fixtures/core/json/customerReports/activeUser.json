@@ -1,113 +1,87 @@
 {
-  "activeDetailed": {
-    "data": [{
-      "orgId": "1eb65fdf-9643-417f-9974-ad72cae0e10f",
-      "orgName": "Cisco Systems, Inc.",
-      "data": [{
-        "date": "2016-01-15T00:00:00.000Z",
-        "details": {
-          "activeUsers": "11703",
-          "totalRegisteredUsers": "0"
-        }
-      }, {
-        "date": "2016-01-16T00:00:00.000Z",
-        "details": {
-          "activeUsers": "4437",
-          "totalRegisteredUsers": "0"
-        }
-      }, {
-        "date": "2016-01-17T00:00:00.000Z",
-        "details": {
-          "activeUsers": "3321",
-          "totalRegisteredUsers": "0"
-        }
-      }, {
-        "date": "2016-01-18T00:00:00.000Z",
-        "details": {
-          "activeUsers": "8268",
-          "totalRegisteredUsers": "0"
-        }
-      }, {
-        "date": "2016-01-19T00:00:00.000Z",
-        "details": {
-          "activeUsers": "12335",
-          "totalRegisteredUsers": "0"
-        }
-      }, {
-        "date": "2016-01-20T00:00:00.000Z",
-        "details": {
-          "activeUsers": "13055",
-          "totalRegisteredUsers": "0"
-        }
-      }, {
-        "date": "2016-01-21T00:00:00.000Z",
-        "details": {
-          "activeUsers": "12917",
-          "totalRegisteredUsers": "0"
-        }
-      }]
-    }],
-    "type": "activeUsers",
-    "date": "2016-01-22T16:58:30.231Z",
-    "spanCount": 1,
-    "spanType": "day",
-    "intervalCount": 7,
-    "intervalType": "day"
-  },
+  "activeDetailed": [{
+    "date": "2016-01-15T00:00:00.000Z",
+    "details": {
+      "activeUsers": "11703",
+      "totalRegisteredUsers": "0"
+    }
+  }, {
+    "date": "2016-01-16T00:00:00.000Z",
+    "details": {
+      "activeUsers": "4437",
+      "totalRegisteredUsers": "0"
+    }
+  }, {
+    "date": "2016-01-17T00:00:00.000Z",
+    "details": {
+      "activeUsers": "3321",
+      "totalRegisteredUsers": "0"
+    }
+  }, {
+    "date": "2016-01-18T00:00:00.000Z",
+    "details": {
+      "activeUsers": "8268",
+      "totalRegisteredUsers": "0"
+    }
+  }, {
+    "date": "2016-01-19T00:00:00.000Z",
+    "details": {
+      "activeUsers": "12335",
+      "totalRegisteredUsers": "0"
+    }
+  }, {
+    "date": "2016-01-20T00:00:00.000Z",
+    "details": {
+      "activeUsers": "13055",
+      "totalRegisteredUsers": "0"
+    }
+  }, {
+    "date": "2016-01-21T00:00:00.000Z",
+    "details": {
+      "activeUsers": "12917",
+      "totalRegisteredUsers": "0"
+    }
+  }],
   "activeResponse": [{
     "totalRegisteredUsers": 11703,
     "activeUsers": 11703,
     "percentage": 100,
-    "colorOne": "#99cf78",
-    "colorTwo": "#6ab140",
     "balloon": true,
     "date": "Jan15"
   }, {
     "totalRegisteredUsers": 4437,
     "activeUsers": 4437,
     "percentage": 100,
-    "colorOne": "#99cf78",
-    "colorTwo": "#6ab140",
     "balloon": true,
     "date": "Jan16"
   }, {
     "totalRegisteredUsers": 3321,
     "activeUsers": 3321,
     "percentage": 100,
-    "colorOne": "#99cf78",
-    "colorTwo": "#6ab140",
     "balloon": true,
     "date": "Jan17"
   }, {
     "totalRegisteredUsers": 8268,
     "activeUsers": 8268,
     "percentage": 100,
-    "colorOne": "#99cf78",
-    "colorTwo": "#6ab140",
     "balloon": true,
     "date": "Jan18"
   }, {
     "totalRegisteredUsers": 12335,
     "activeUsers": 12335,
     "percentage": 100,
-    "colorOne": "#99cf78",
-    "colorTwo": "#6ab140",
     "balloon": true,
     "date": "Jan19"
   }, {
     "totalRegisteredUsers": 13055,
     "activeUsers": 13055,
     "percentage": 100,
-    "colorOne": "#99cf78",
-    "colorTwo": "#6ab140",
     "balloon": true,
     "date": "Jan20"
   }, {
     "totalRegisteredUsers": 12917,
     "activeUsers": 12917,
     "percentage": 100,
-    "colorOne": "#99cf78",
-    "colorTwo": "#6ab140",
     "balloon": true,
     "date": "Jan21"
   }],
@@ -363,64 +337,48 @@
       "totalRegisteredUsers": 25,
       "activeUsers": 0,
       "percentage": 0,
-      "colorOne": "#F3F3F3",
-      "colorTwo": "#ECECEC",
       "balloon": false
     }, {
       "date": "Sep 08",
       "totalRegisteredUsers": 50,
       "activeUsers": 25,
       "percentage": 50,
-      "colorOne": "#F3F3F3",
-      "colorTwo": "#ECECEC",
       "balloon": false
     }, {
       "date": "Sep 09",
       "totalRegisteredUsers": 75,
       "activeUsers": 50,
       "percentage": 67,
-      "colorOne": "#F3F3F3",
-      "colorTwo": "#ECECEC",
       "balloon": false
     }, {
       "date": "Sep 10",
       "totalRegisteredUsers": 100,
       "activeUsers": 75,
       "percentage": 75,
-      "colorOne": "#F3F3F3",
-      "colorTwo": "#ECECEC",
       "balloon": false
     }, {
       "date": "Sep 11",
       "totalRegisteredUsers": 125,
       "activeUsers": 100,
       "percentage": 80,
-      "colorOne": "#F3F3F3",
-      "colorTwo": "#ECECEC",
       "balloon": false
     }, {
       "date": "Sep 12",
       "totalRegisteredUsers": 150,
       "activeUsers": 125,
       "percentage": 83,
-      "colorOne": "#F3F3F3",
-      "colorTwo": "#ECECEC",
       "balloon": false
     }, {
       "date": "Sep 13",
       "totalRegisteredUsers": 175,
       "activeUsers": 150,
       "percentage": 86,
-      "colorOne": "#F3F3F3",
-      "colorTwo": "#ECECEC",
       "balloon": false
     }, {
       "date": "Sep 14",
       "totalRegisteredUsers": 200,
       "activeUsers": 175,
       "percentage": 88,
-      "colorOne": "#F3F3F3",
-      "colorTwo": "#ECECEC",
       "balloon": false
     }],
     "two": [{
@@ -428,40 +386,30 @@
       "totalRegisteredUsers": 25,
       "activeUsers": 0,
       "percentage": 0,
-      "colorOne": "#F3F3F3",
-      "colorTwo": "#ECECEC",
       "balloon": false
     }, {
       "date": "Aug 18",
       "totalRegisteredUsers": 50,
       "activeUsers": 25,
       "percentage": 50,
-      "colorOne": "#F3F3F3",
-      "colorTwo": "#ECECEC",
       "balloon": false
     }, {
       "date": "Aug 25",
       "totalRegisteredUsers": 75,
       "activeUsers": 50,
       "percentage": 67,
-      "colorOne": "#F3F3F3",
-      "colorTwo": "#ECECEC",
       "balloon": false
     }, {
       "date": "Sep 01",
       "totalRegisteredUsers": 100,
       "activeUsers": 75,
       "percentage": 75,
-      "colorOne": "#F3F3F3",
-      "colorTwo": "#ECECEC",
       "balloon": false
     }, {
       "date": "Sep 08",
       "totalRegisteredUsers": 125,
       "activeUsers": 100,
       "percentage": 80,
-      "colorOne": "#F3F3F3",
-      "colorTwo": "#ECECEC",
       "balloon": false
     }],
     "three": [{
@@ -469,113 +417,555 @@
       "totalRegisteredUsers": 25,
       "activeUsers": 0,
       "percentage": 0,
-      "colorOne": "#F3F3F3",
-      "colorTwo": "#ECECEC",
       "balloon": false
     }, {
       "date": "Jun 16",
       "totalRegisteredUsers": 50,
       "activeUsers": 25,
       "percentage": 50,
-      "colorOne": "#F3F3F3",
-      "colorTwo": "#ECECEC",
       "balloon": false
     }, {
       "date": "Jun 23",
       "totalRegisteredUsers": 75,
       "activeUsers": 50,
       "percentage": 67,
-      "colorOne": "#F3F3F3",
-      "colorTwo": "#ECECEC",
       "balloon": false
     }, {
       "date": "Jun 30",
       "totalRegisteredUsers": 100,
       "activeUsers": 75,
       "percentage": 75,
-      "colorOne": "#F3F3F3",
-      "colorTwo": "#ECECEC",
       "balloon": false
     }, {
       "date": "Jul 07",
       "totalRegisteredUsers": 125,
       "activeUsers": 100,
       "percentage": 80,
-      "colorOne": "#F3F3F3",
-      "colorTwo": "#ECECEC",
       "balloon": false
     }, {
       "date": "Jul 14",
       "totalRegisteredUsers": 150,
       "activeUsers": 125,
       "percentage": 83,
-      "colorOne": "#F3F3F3",
-      "colorTwo": "#ECECEC",
       "balloon": false
     }, {
       "date": "Jul 21",
       "totalRegisteredUsers": 175,
       "activeUsers": 150,
       "percentage": 86,
-      "colorOne": "#F3F3F3",
-      "colorTwo": "#ECECEC",
       "balloon": false
     }, {
       "date": "Jul 28",
       "totalRegisteredUsers": 200,
       "activeUsers": 175,
       "percentage": 88,
-      "colorOne": "#F3F3F3",
-      "colorTwo": "#ECECEC",
       "balloon": false
     }, {
       "date": "Aug 04",
       "totalRegisteredUsers": 225,
       "activeUsers": 200,
       "percentage": 89,
-      "colorOne": "#F3F3F3",
-      "colorTwo": "#ECECEC",
       "balloon": false
     }, {
       "date": "Aug 11",
       "totalRegisteredUsers": 250,
       "activeUsers": 225,
       "percentage": 90,
-      "colorOne": "#F3F3F3",
-      "colorTwo": "#ECECEC",
       "balloon": false
     }, {
       "date": "Aug 18",
       "totalRegisteredUsers": 275,
       "activeUsers": 250,
       "percentage": 91,
-      "colorOne": "#F3F3F3",
-      "colorTwo": "#ECECEC",
       "balloon": false
     }, {
       "date": "Aug 25",
       "totalRegisteredUsers": 300,
       "activeUsers": 275,
       "percentage": 92,
-      "colorOne": "#F3F3F3",
-      "colorTwo": "#ECECEC",
       "balloon": false
     }, {
       "date": "Sep 01",
       "totalRegisteredUsers": 325,
       "activeUsers": 300,
       "percentage": 92,
-      "colorOne": "#F3F3F3",
-      "colorTwo": "#ECECEC",
       "balloon": false
-    }, {
-      "date": "Sep 08",
+    }],
+    "four": [{
+      "date": "Sep 19",
+      "totalRegisteredUsers": 25,
+      "activeUsers": 0,
+      "percentage": 0,
+      "balloon": false
+    },
+    {
+      "date": "Sep 26",
+      "totalRegisteredUsers": 50,
+      "activeUsers": 25,
+      "percentage": 50,
+      "balloon": false
+    },
+    {
+      "date": "Oct 03",
+      "totalRegisteredUsers": 75,
+      "activeUsers": 50,
+      "percentage": 67,
+      "balloon": false
+    },
+    {
+      "date": "Oct 10",
+      "totalRegisteredUsers": 100,
+      "activeUsers": 75,
+      "percentage": 75,
+      "balloon": false
+    },
+    {
+      "date": "Oct 17",
+      "totalRegisteredUsers": 125,
+      "activeUsers": 100,
+      "percentage": 80,
+      "balloon": false
+    },
+    {
+      "date": "Oct 24",
+      "totalRegisteredUsers": 150,
+      "activeUsers": 125,
+      "percentage": 83,
+      "balloon": false
+    },
+    {
+      "date": "Oct 31",
+      "totalRegisteredUsers": 175,
+      "activeUsers": 150,
+      "percentage": 86,
+      "balloon": false
+    },
+    {
+      "date": "Nov 07",
+      "totalRegisteredUsers": 200,
+      "activeUsers": 175,
+      "percentage": 88,
+      "balloon": false
+    },
+    {
+      "date": "Nov 14",
+      "totalRegisteredUsers": 225,
+      "activeUsers": 200,
+      "percentage": 89,
+      "balloon": false
+    },
+    {
+      "date": "Nov 21",
+      "totalRegisteredUsers": 250,
+      "activeUsers": 225,
+      "percentage": 90,
+      "balloon": false
+    },
+    {
+      "date": "Nov 28",
+      "totalRegisteredUsers": 275,
+      "activeUsers": 250,
+      "percentage": 91,
+      "balloon": false
+    },
+    {
+      "date": "Dec 05",
+      "totalRegisteredUsers": 300,
+      "activeUsers": 275,
+      "percentage": 92,
+      "balloon": false
+    },
+    {
+      "date": "Dec 12",
+      "totalRegisteredUsers": 325,
+      "activeUsers": 300,
+      "percentage": 92,
+      "balloon": false
+    },
+    {
+      "date": "Dec 19",
       "totalRegisteredUsers": 350,
       "activeUsers": 325,
       "percentage": 93,
-      "colorOne": "#F3F3F3",
-      "colorTwo": "#ECECEC",
+      "balloon": false
+    },
+    {
+      "date": "Dec 26",
+      "totalRegisteredUsers": 375,
+      "activeUsers": 350,
+      "percentage": 93,
+      "balloon": false
+    },
+    {
+      "date": "Jan 02",
+      "totalRegisteredUsers": 400,
+      "activeUsers": 375,
+      "percentage": 94,
+      "balloon": false
+    },
+    {
+      "date": "Jan 09",
+      "totalRegisteredUsers": 425,
+      "activeUsers": 400,
+      "percentage": 94,
+      "balloon": false
+    },
+    {
+      "date": "Jan 16",
+      "totalRegisteredUsers": 450,
+      "activeUsers": 425,
+      "percentage": 94,
+      "balloon": false
+    },
+    {
+      "date": "Jan 23",
+      "totalRegisteredUsers": 475,
+      "activeUsers": 450,
+      "percentage": 95,
+      "balloon": false
+    },
+    {
+      "date": "Jan 30",
+      "totalRegisteredUsers": 500,
+      "activeUsers": 475,
+      "percentage": 95,
+      "balloon": false
+    },
+    {
+      "date": "Feb 06",
+      "totalRegisteredUsers": 525,
+      "activeUsers": 500,
+      "percentage": 95,
+      "balloon": false
+    },
+    {
+      "date": "Feb 13",
+      "totalRegisteredUsers": 550,
+      "activeUsers": 525,
+      "percentage": 95,
+      "balloon": false
+    },
+    {
+      "date": "Feb 20",
+      "totalRegisteredUsers": 575,
+      "activeUsers": 550,
+      "percentage": 96,
+      "balloon": false
+    },
+    {
+      "date": "Feb 27",
+      "totalRegisteredUsers": 600,
+      "activeUsers": 575,
+      "percentage": 96,
+      "balloon": false
+    },
+    {
+      "date": "Mar 05",
+      "totalRegisteredUsers": 625,
+      "activeUsers": 600,
+      "percentage": 96,
+      "balloon": false
+    },
+    {
+      "date": "Mar 12",
+      "totalRegisteredUsers": 650,
+      "activeUsers": 625,
+      "percentage": 96,
+      "balloon": false
+    },
+    {
+      "date": "Mar 19",
+      "totalRegisteredUsers": 675,
+      "activeUsers": 650,
+      "percentage": 96,
+      "balloon": false
+    },
+    {
+      "date": "Mar 26",
+      "totalRegisteredUsers": 700,
+      "activeUsers": 675,
+      "percentage": 96,
+      "balloon": false
+    },
+    {
+      "date": "Apr 02",
+      "totalRegisteredUsers": 725,
+      "activeUsers": 700,
+      "percentage": 97,
+      "balloon": false
+    },
+    {
+      "date": "Apr 09",
+      "totalRegisteredUsers": 750,
+      "activeUsers": 725,
+      "percentage": 97,
+      "balloon": false
+    },
+    {
+      "date": "Apr 16",
+      "totalRegisteredUsers": 775,
+      "activeUsers": 750,
+      "percentage": 97,
+      "balloon": false
+    },
+    {
+      "date": "Apr 23",
+      "totalRegisteredUsers": 800,
+      "activeUsers": 775,
+      "percentage": 97,
+      "balloon": false
+    },
+    {
+      "date": "Apr 30",
+      "totalRegisteredUsers": 825,
+      "activeUsers": 800,
+      "percentage": 97,
+      "balloon": false
+    },
+    {
+      "date": "May 07",
+      "totalRegisteredUsers": 850,
+      "activeUsers": 825,
+      "percentage": 97,
+      "balloon": false
+    },
+    {
+      "date": "May 14",
+      "totalRegisteredUsers": 875,
+      "activeUsers": 850,
+      "percentage": 97,
+      "balloon": false
+    },
+    {
+      "date": "May 21",
+      "totalRegisteredUsers": 900,
+      "activeUsers": 875,
+      "percentage": 97,
+      "balloon": false
+    },
+    {
+      "date": "May 28",
+      "totalRegisteredUsers": 925,
+      "activeUsers": 900,
+      "percentage": 97,
+      "balloon": false
+    },
+    {
+      "date": "Jun 04",
+      "totalRegisteredUsers": 950,
+      "activeUsers": 925,
+      "percentage": 97,
+      "balloon": false
+    },
+    {
+      "date": "Jun 11",
+      "totalRegisteredUsers": 975,
+      "activeUsers": 950,
+      "percentage": 97,
+      "balloon": false
+    },
+    {
+      "date": "Jun 18",
+      "totalRegisteredUsers": 1000,
+      "activeUsers": 975,
+      "percentage": 98,
+      "balloon": false
+    },
+    {
+      "date": "Jun 25",
+      "totalRegisteredUsers": 1025,
+      "activeUsers": 1000,
+      "percentage": 98,
+      "balloon": false
+    },
+    {
+      "date": "Jul 02",
+      "totalRegisteredUsers": 1050,
+      "activeUsers": 1025,
+      "percentage": 98,
+      "balloon": false
+    },
+    {
+      "date": "Jul 09",
+      "totalRegisteredUsers": 1075,
+      "activeUsers": 1050,
+      "percentage": 98,
+      "balloon": false
+    },
+    {
+      "date": "Jul 16",
+      "totalRegisteredUsers": 1100,
+      "activeUsers": 1075,
+      "percentage": 98,
+      "balloon": false
+    },
+    {
+      "date": "Jul 23",
+      "totalRegisteredUsers": 1125,
+      "activeUsers": 1100,
+      "percentage": 98,
+      "balloon": false
+    },
+    {
+      "date": "Jul 30",
+      "totalRegisteredUsers": 1150,
+      "activeUsers": 1125,
+      "percentage": 98,
+      "balloon": false
+    },
+    {
+      "date": "Aug 06",
+      "totalRegisteredUsers": 1175,
+      "activeUsers": 1150,
+      "percentage": 98,
+      "balloon": false
+    },
+    {
+      "date": "Aug 13",
+      "totalRegisteredUsers": 1200,
+      "activeUsers": 1175,
+      "percentage": 98,
+      "balloon": false
+    },
+    {
+      "date": "Aug 20",
+      "totalRegisteredUsers": 1225,
+      "activeUsers": 1200,
+      "percentage": 98,
+      "balloon": false
+    },
+    {
+      "date": "Aug 27",
+      "totalRegisteredUsers": 1250,
+      "activeUsers": 1225,
+      "percentage": 98,
+      "balloon": false
+    },
+    {
+      "date": "Sep 03",
+      "totalRegisteredUsers": 1275,
+      "activeUsers": 1250,
+      "percentage": 98,
+      "balloon": false
+    },
+    {
+      "date": "Sep 10",
+      "totalRegisteredUsers": 1300,
+      "activeUsers": 1275,
+      "percentage": 98,
+      "balloon": false
+    },
+    {
+      "date": "Sep 17",
+      "totalRegisteredUsers": 1325,
+      "activeUsers": 1300,
+      "percentage": 98,
       "balloon": false
     }]
-  }
+  },
+  "activeLineData": [{
+    "date": "2016-09-15T00:00:00.000Z",
+    "details": [{
+      "combinedActiveUsers": "10",
+      "totalSparkEntitled": "120"
+    }]
+  }, {
+    "date": "2016-09-10T00:00:00.000Z",
+    "details": [{
+      "combinedActiveUsers": "21",
+      "totalSparkEntitled": "77"
+    }]
+  }, {
+    "date": "2016-09-11T00:00:00.000Z",
+    "details": [{
+      "combinedActiveUsers": "21",
+      "totalSparkEntitled": "77"
+    }]
+  }, {
+    "date": "2016-09-13T00:00:00.000Z",
+    "details": [{
+      "combinedActiveUsers": "22",
+      "totalSparkEntitled": "55"
+    }]
+  }, {
+    "date": "2016-09-12T00:00:00.000Z",
+    "details": [{
+      "combinedActiveUsers": "3",
+      "totalSparkEntitled": "55"
+    }]
+  }, {
+    "date": "2016-09-16T00:00:00.000Z",
+    "details": [{
+      "combinedActiveUsers": "31",
+      "totalSparkEntitled": "53"
+    }]
+  }, {
+    "date": "2016-09-17T00:00:00.000Z",
+    "details": [{
+      "combinedActiveUsers": "7",
+      "totalSparkEntitled": "53"
+    }]
+  }, {
+    "date": "2016-09-14T00:00:00.000Z",
+    "details": [{
+      "combinedActiveUsers": "11",
+      "totalSparkEntitled": "22"
+    }]
+  }],
+  "activeLineResponse": [{
+    "totalRegisteredUsers": 120,
+    "activeUsers": 10,
+    "percentage": 8,
+    "balloon": true,
+    "date": "Sep 13"
+  },
+  {
+    "totalRegisteredUsers": 77,
+    "activeUsers": 21,
+    "percentage": 27,
+    "balloon": true,
+    "date": "Sep 14"
+  },
+  {
+    "totalRegisteredUsers": 77,
+    "activeUsers": 21,
+    "percentage": 27,
+    "balloon": true,
+    "date": "Sep 15"
+  },
+  {
+    "totalRegisteredUsers": 55,
+    "activeUsers": 22,
+    "percentage": 40,
+    "balloon": true,
+    "date": "Sep 16"
+  },
+  {
+    "totalRegisteredUsers": 55,
+    "activeUsers": 3,
+    "percentage": 5,
+    "balloon": true,
+    "date": "Sep 17"
+  },
+  {
+    "totalRegisteredUsers": 53,
+    "activeUsers": 31,
+    "percentage": 58,
+    "balloon": true,
+    "date": "Sep 18"
+  },
+  {
+    "totalRegisteredUsers": 53,
+    "activeUsers": 7,
+    "percentage": 13,
+    "balloon": true,
+    "date": "Sep 19"
+  },
+  {
+    "totalRegisteredUsers": 22,
+    "activeUsers": 11,
+    "percentage": 50,
+    "balloon": true,
+    "date": "Sep 20"
+  }]
 }

@@ -133,7 +133,6 @@ npm run lint
 npm run json-verify
 npm run languages-verify
 nice -15 npm run test
-npm run combine-coverage
 set +e
 
 

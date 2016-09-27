@@ -4,7 +4,7 @@
   /* @ngInject */
   function MetricsReportService($http, $translate, $q, Authinfo, Notification, Log, chartColors, UrlConfig) {
     var urlBase = UrlConfig.getAthenaServiceUrl() + '/organizations/' + Authinfo.getOrgId();
-    var utilizationUrl = '/cpu_utilization';
+    var utilizationUrl = '/utilization';
     var callVolumeUrl = '/call_volume';
     var clusterAvailability = '/clusters_availability';
     var agg_availability = '/agg_availability';
@@ -32,17 +32,18 @@
     };
 
     function getUtilizationData(time, cluster) {
-      if (activePromise !== null && angular.isDefined(activePromise)) {
-        activePromise.resolve(ABORT);
+      if (activePromiseForUtilization !== null && angular.isDefined(activePromiseForUtilization)) {
+        activePromiseForUtilization.resolve(ABORT);
       }
-      activePromise = $q.defer();
+      activePromiseForUtilization = $q.defer();
       var returnData = {
-        graphData: []
+        graphData: [],
+        graphs: []
       };
       return getService(urlBase + getQuerys(utilizationUrl, cluster, time), activePromiseForUtilization).then(function (response) {
-        if (angular.isDefined(response) && angular.isDefined(response.data[0]) && angular.isDefined(response.data[0].cpuUtilValues) && angular.isArray(response.data[0].cpuUtilValues) && angular.isDefined(response.data[0])) {
-          returnData.graphData.push(response.data[0].cpuUtilValues);
-          return adjustUtilizationData(response.data[0].cpuUtilValues, returnData, response.data[0].startTime, response.data[0].endTime);
+        if (angular.isDefined(response) && angular.isDefined(response.data) && angular.isDefined(response.data.chartData) && angular.isArray(response.data.chartData) && angular.isDefined(response.data)) {
+          returnData.graphData.push(response.data.chartData);
+          return adjustUtilizationData(response.data.chartData, returnData, response.data.startTime, response.data.endTime, response.data.graphs);
         } else {
           return returnData;
         }
@@ -183,38 +184,23 @@
       return returnData;
     }
 
-    function adjustUtilizationData(activeData, returnData, startTime, endTime) {
+    function adjustUtilizationData(activeData, returnData, startTime, endTime, graphs) {
       var returnDataArray = [];
-      var graphItem = {
-        colorOne: chartColors.metricDarkGreen,
-        colorTwo: chartColors.metricLightGreen,
-        balloon: true,
-        average_cpu: 0.0,
-        peak_cpu: 0.0,
-        timestamp: null
-      };
       var startDate = {
-        colorOne: chartColors.metricDarkGreen,
-        colorTwo: chartColors.metricLightGreen,
-        average_cpu: 0.0,
-        peak_cpu: 0.0,
-        timestamp: startTime
+        time: startTime
       };
       activeData.unshift(startDate);
       for (var i = 0; i < activeData.length; i++) {
-        var tmpItem = angular.copy(graphItem);
-        tmpItem.average_cpu = activeData[i].average_cpu;
-        tmpItem.peak_cpu = activeData[i].peak_cpu;
-        tmpItem.timestamp = activeData[i].timestamp;
+        var tmpItem = {};
+        tmpItem = activeData[i];
         returnDataArray.push(tmpItem);
       }
       var endDate = {
-        colorOne: chartColors.metricDarkGreen,
-        colorTwo: chartColors.metricLightGreen,
-        timestamp: endTime
+        time: endTime
       };
       returnDataArray.push(endDate);
       returnData.graphData = returnDataArray;
+      returnData.graphs = graphs;
       return returnData;
     }
 

@@ -8,7 +8,7 @@ describe('Controller: CustomerListCtrl', function () {
   var partnerService = getJSONFixture('core/json/partner/partner.service.json');
   var managedOrgsResponse = partnerService.managedOrgsResponse;
   var trialsResponse = partnerService.trialsResponse;
-  var orgId = '1';
+  var orgId = 'b93b10ad-ae24-4abf-9c21-76e8b86faf01';
   var orgName = 'testOrg';
   var testOrg = {
     customerOrgId: '1234-34534-afdagfg-425345-afaf',
@@ -178,7 +178,13 @@ describe('Controller: CustomerListCtrl', function () {
   describe('myOrg appears first in orgList', function () {
     beforeEach(initController);
 
+    it('should check if it is its own org', function () {
+      expect($scope.isOwnOrg($scope.managedOrgsList[0])).toBe(true);
+    });
+
     it('if myOrg not in managedOrgsList, myOrg should be added to the top of managedOrgsList ', function () {
+      Authinfo.getOrgId.and.returnValue('wqeqwe21');
+      initController();
       expect($scope.managedOrgsList).toBeDefined();
       expect($scope.managedOrgsList[0].customerName).toBe('testOrg');
       expect($scope.managedOrgsList.length).toEqual(6);
@@ -187,27 +193,11 @@ describe('Controller: CustomerListCtrl', function () {
     });
 
     it('if myOrg is in managedOrgsList, myOrg should not be added to the list', function () {
-      var testOrgList = {
-        "data": {
-          "organizations": [{
-            customerOrgId: '1234-34534-afdagfg-425345-afaf',
-            customerName: 'ControllerTestOrg',
-            customerEmail: 'customer@cisco.com',
-            communications: {
-              isTrial: true
-            }
-          }, {
-            customerOrgId: '1',
-            customerName: 'testOrg'
-          }]
-        }
-      };
 
-      PartnerService.getManagedOrgsList.and.returnValue(testOrgList);
       initController();
       expect($scope.managedOrgsList).toBeDefined();
-      expect($scope.managedOrgsList.length).toEqual(2);
-      expect($scope.totalOrgs).toBe(2);
+      expect($scope.managedOrgsList.length).toEqual(5);
+      expect($scope.totalOrgs).toBe(5);
     });
   });
 

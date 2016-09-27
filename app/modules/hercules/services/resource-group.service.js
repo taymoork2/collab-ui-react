@@ -6,7 +6,7 @@
     .factory('ResourceGroupService', ResourceGroupService);
 
   /* @ngInject */
-  function ResourceGroupService($http, UrlConfig, Authinfo, Orgservice, $q, $translate) {
+  function ResourceGroupService($http, UrlConfig, Authinfo, $translate, FusionClusterService) {
     return {
       getAll: getAll,
       get: get,
@@ -16,7 +16,8 @@
       setName: setName,
       setReleaseChannel: setReleaseChannel,
       assign: assign,
-      getAllAsOptions: getAllAsOptions
+      getAllAsOptions: getAllAsOptions,
+      resourceGroupHasEligibleCluster: resourceGroupHasEligibleCluster
     };
 
     function get(resourceGroupId, orgId) {
@@ -61,18 +62,18 @@
     }
 
     function getAllowedChannels() {
-      var deferred = $q.defer();
-      Orgservice.getOrgCacheOption(function (data, status) {
-        if (data && data.success) {
-          // TODO: look at the sub entitlements and only allow entitled channels
-          deferred.resolve(['stable', 'beta', 'latest']);
-        } else {
-          deferred.reject(status);
-        }
-      }, null, {
-        cache: true
-      });
-      return deferred.promise;
+      return $http
+        .get(UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '/releaseChannels')
+        .then(extractDataFromResponse)
+        .then(function (data) {
+          var allowedChannels = [];
+          _.forEach(data.releaseChannels, function (channel) {
+            if (channel.entitled === true) {
+              allowedChannels.push(channel.channel);
+            }
+          });
+          return allowedChannels;
+        });
     }
 
     function assign(clusterId, resourceGroupId) {
@@ -93,6 +94,29 @@
         }
         return options;
       });
+    }
+
+    function resourceGroupHasEligibleCluster(resourceGroupId, connectorType) {
+      return FusionClusterService.getAll()
+        .then(function (clusters) {
+          var clustersInGroup;
+          if (resourceGroupId !== '') {
+            clustersInGroup = FusionClusterService.getClustersForResourceGroup(resourceGroupId, clusters);
+          } else {
+            clustersInGroup = FusionClusterService.getUnassignedClusters(clusters);
+          }
+
+          // No clusters in group: obviously not going to work
+          if (clustersInGroup.length === 0) {
+            return false;
+          }
+
+          return _.some(clustersInGroup, function (cluster) {
+            return _.some(cluster.connectors, function (connector) {
+              return connector.connectorType === connectorType;
+            });
+          });
+        });
     }
 
     function extractDataFromResponse(res) {

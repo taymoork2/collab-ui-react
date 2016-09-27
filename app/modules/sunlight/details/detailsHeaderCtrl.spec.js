@@ -6,9 +6,8 @@ describe('Care details ctrl', function () {
   }));
 
   it('should define header tabs', function () {
-    expect(detailsCtrl.tabs.length).toEqual(2);
+    expect(detailsCtrl.tabs.length).toEqual(1);
     expect(detailsCtrl.back).toBeFalsy();
     expect(detailsCtrl.tabs[0].title).toEqual('sunlightDetails.featuresTitle');
-    expect(detailsCtrl.tabs[1].title).toEqual('sunlightDetails.settingsTitle');
   });
 });
