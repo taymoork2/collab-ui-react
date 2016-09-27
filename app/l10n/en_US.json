@@ -1500,7 +1500,10 @@
       "warningInvitePending": "This user has not yet accepted the invitation to join Cisco Spark. You can still enable {{ServiceName}}, but activation will not succeed until the user has been onboarded.",
       "entitlements-dont-exist": "Entitlements for {{userName}} do not exist.",
       "previously-updated": "Could not save entitlements, as they have already been updated somewhere else.",
-      "not-updated": "Entitlements could not be updated for {{userName}}."
+      "not-updated": "Entitlements could not be updated for {{userName}}.",
+      "readUserStatusFailed": "Unable to read the current user status. Please try again later.",
+      "refreshUserFailed": "Unable to refresh the user status. Please try again later.",
+      "refreshUserDidNoGood": "Unable to get the user status. Please contact support if the problem persists."
     },
     "setup": {
       "label": "Connector Management",
@@ -1511,7 +1514,9 @@
       "not_entitled": "Off",
       "pending_activation": "Pending Activation",
       "activated": "Activated",
-      "error": "Error"
+      "error": "Error",
+      "unknown": "Unknown",
+      "notFound": "Status not found"
     },
     "serviceNames": {
       "squared-fusion-uc": "Call Service",

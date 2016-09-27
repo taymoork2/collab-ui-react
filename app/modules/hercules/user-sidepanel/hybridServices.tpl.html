@@ -3,7 +3,6 @@
     <span class="section-name" translate="cloudExtensions.cloudExtensions"></span>
   </div>
   <div class="feature-list cloud-extensions">
-
     <ul>
       <li class="feature" ng-repeat="extension in hybridServicesCtrl.extensions | filter: hybridServicesCtrl.allExceptUcFilter">
         <a id="link_{{extension.id}}"
@@ -13,8 +12,9 @@
           <span class="feature-status" ng-class="extension.status ? 'status-' + extension.status.state : ''"
                 ng-show="extension.status && extension.entitled"
                 translate="hercules.activationStatus.{{hybridServicesCtrl.getStatus(extension.status)}}"></span>
-          <span class="feature-status" ng-hide="extension.status && extension.entitled"
-                id="{{extension.id}}-status" translate="common.{{extension.entitled ? 'on' : 'off'}}"></span>
+          <span class="feature-status" ng-if="!extension.entitled" translate="common.off"></span>
+          <span class="feature-status" ng-if="!extension.status && extension.entitled && hybridServicesCtrl.userStatusLoaded" translate="hercules.activationStatus.notFound"></span>
+          <span cs-loader class="feature-list-loader" ng-if="!extension.status && extension.entitled && !hybridServicesCtrl.userStatusLoaded"></span>
           <i class="feature-arrow"></i>
         </a>
       </li>

@@ -6,7 +6,7 @@
     .controller('CalendarServicePreviewCtrl', CalendarServicePreviewCtrl);
 
   /*@ngInject*/
-  function CalendarServicePreviewCtrl($scope, $state, $stateParams, Userservice, Notification, USSService, ClusterService, $timeout, $translate, ResourceGroupService, FeatureToggleService) {
+  function CalendarServicePreviewCtrl($scope, $state, $stateParams, Userservice, Notification, USSService, ClusterService, $translate, ResourceGroupService, FeatureToggleService) {
     $scope.entitlementNames = {
       'squared-fusion-cal': 'squaredFusionCal',
       'squared-fusion-uc': 'squaredFusionUC'
@@ -64,7 +64,7 @@
       return $scope.extension.entitled !== isEntitled();
     };
 
-    var updateStatus = function () {
+    var updateStatus = function (userIsRefreshed) {
       USSService.getStatusesForUser($scope.currentUser.id).then(function (statuses) {
         $scope.extension.status = _.find(statuses, function (status) {
           return $scope.extension.id === status.serviceId;
@@ -74,6 +74,25 @@
             $scope.extension.homedConnector = connector;
           });
         }
+        // If we find no status in USS and the service is entitled, we try to refresh the user in USS and reload the statuses
+        // This can happen if USS has not been notified by CI in a reasonable time after entitled
+        if (!$scope.extension.status && isEntitled()) {
+          if (userIsRefreshed) {
+            // This means we've done a refresh and it didn't help so we give up with a cryptic error message
+            $scope.extension.status = { state: 'unknown', entitled: true };
+            Notification.error('hercules.userSidepanel.refreshUserDidNoGood');
+          } else {
+            refreshUserInUss();
+          }
+        }
+      });
+    };
+
+    var refreshUserInUss = function () {
+      USSService.refreshEntitlementsForUser($scope.currentUser.id).catch(function (response) {
+        Notification.errorWithTrackingId(response, 'hercules.userSidepanel.refreshUserFailed');
+      }).finally(function () {
+        updateStatus(true);
       });
     };
 
@@ -133,6 +152,10 @@
         if (data.success) {
           var userStatus = data.userResponse[0].status;
           if (userStatus === 200) {
+            if (isEntitled()) {
+              // Reset the status which will give the status loader icon
+              $scope.extension.status = null;
+            }
             if (!$stateParams.currentUser.entitlements) {
               $stateParams.currentUser.entitlements = [];
             }
@@ -144,9 +167,7 @@
               });
             }
             $scope.setShouldShowButtons();
-            $timeout(function () {
-              updateStatus();
-            }, 2000);
+            refreshUserInUss();
           } else if (userStatus === 404) {
             entitleResult.msg = $translate.instant('hercules.userSidepanel.entitlements-dont-exist', {
               userName: $scope.currentUser.userName
@@ -224,11 +245,17 @@
       return USSService.decorateWithStatus(status);
     };
 
-    $scope.setShouldShowButtons = function () {
+    $scope.selectedResourceGroupChanged = function () {
       $scope.resourceGroup.displayWarningIfNecessary();
-      if ($scope.resourceGroup.hasChanged()) {
-        $scope.showButtons = true;
-        return;
+      $scope.setShouldShowButtons();
+    };
+
+    $scope.setShouldShowButtons = function () {
+      if ($scope.resourceGroup.show) {
+        if ($scope.resourceGroup.hasChanged()) {
+          $scope.showButtons = true;
+          return;
+        }
       }
       $scope.showButtons = entitlementHasChanged();
     };
