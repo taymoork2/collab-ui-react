@@ -1829,7 +1829,7 @@
       "noGroupSelected": "None",
       "failedToSetGroup": "Failed to set Resource Group.",
       "resourceGroupSaved": "Resource Group saved.",
-      "groupHasBeenDeleted": "The user is assigned to a Resource Group that could not be found. Remove the assignment from the Resource Group to restore service.",
+      "groupHasBeenDeleted": "The user is assigned to a resource group that could not be found. Remove the assignment from the resource group to restore service.",
       "groupIsEmptyWarning": "Could not find cluster with {{ConnectorName}}. Select another Resource Group, or configure a new cluster with {{ConnectorName}}."
     },
     "resourceGroupSettings": {

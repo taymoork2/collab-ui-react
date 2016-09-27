@@ -164,7 +164,7 @@
           Notification.success('hercules.resourceGroupSettings.groupReleaseChannelSaved');
         })
         .catch(function () {
-          Notification.error('hercules.genericFailure');
+          Notification.errorWithTrackingId('hercules.genericFailure');
         });
     };
 
