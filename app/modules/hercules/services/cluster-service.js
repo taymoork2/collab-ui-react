@@ -47,15 +47,17 @@
       // we give a severity and a weight to all possible states
       // this has to be synced with the server generating the API consumed
       // by the general overview page (state of Call connectors, etc.)
-      var label, value;
+      var label, value, cssClass;
       switch (state) {
         case 'running':
           label = 'ok';
           value = 0;
+          cssClass = 'success';
           break;
         case 'not_installed':
           label = 'neutral';
           value = 1;
+          cssClass = 'disabled';
           break;
         case 'disabled':
         case 'downloading':
@@ -66,6 +68,7 @@
         case 'initializing':
           label = 'warning';
           value = 2;
+          cssClass = 'warning';
           break;
         case 'has_alarms':
         case 'offline':
@@ -75,11 +78,13 @@
         default:
           label = 'error';
           value = 3;
+          cssClass = 'danger';
       }
 
       return {
         label: label,
-        value: value
+        value: value,
+        cssClass: cssClass,
       };
     }
 
