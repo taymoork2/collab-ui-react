@@ -1850,7 +1850,7 @@
       "groupReleaseChannelSaved": "Release channel saved successfully",
       "removeGroupReq": "To remove this Resource Group, all assigned clusters must be removed first",
       "deleteSuccess": "Resource group successfully removed",
-      "orgHasNoAccessToChannel": "This organization does not have access to the “{{currentReleaseChannel}}” release channel. Set the release channel to “{{stableReleaseChannel}}” to restore service.",
+      "orgHasNoAccessToChannel": "The resource group is configured with the “{{currentReleaseChannel}}” release channel, which is no longer available to your organization. Set the release channel to “{{stableReleaseChannel}}” to restore service.",
       "setToStable": "Set to {{stableReleaseChannel}}",
       "failedToRemoveUsersFromGroup": "Remove group failed, unable to clear the existing user assignments"
     },
