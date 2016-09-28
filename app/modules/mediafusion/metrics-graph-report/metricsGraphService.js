@@ -136,7 +136,7 @@
       //catAxis.equalSpacing = true;
       catAxis.axisAlpha = 0.5;
       catAxis.axisColor = '#1C1C1C';
-      catAxis.gridAlpha = 0.1;
+      catAxis.gridAlpha = 0.3;
       catAxis.minorGridAlpha = 0.1;
       catAxis.minorGridEnabled = false;
       catAxis.minPeriod = "mm";
@@ -382,19 +382,19 @@
         });
       }
       var valueAxis = createValueAxis(data);
-      var exportFields = ['availability', 'nodes', 'startTime', 'endTime', 'category', 'task'];
+      var exportFields = ['startTime', 'endTime', 'nodes', 'availability', 'category'];
       var columnNames = {};
       if (cluster === 'All Clusters') {
         columnNames = {
-          'availability': 'Availability Status',
           'startTime': 'Start Time',
           'endTime': 'End Time',
+          'nodes': 'Node(s)',
+          'availability': 'Availability Status',
           'category': 'Cluster',
-          'nodes': 'Node(s)'
         };
       } else {
         columnNames = {
-          'task': 'Availability Status',
+          'availability': 'Node Availability',
           'startTime': 'Start Time',
           'endTime': 'End Time',
           'category': 'Node'
