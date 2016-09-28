@@ -76,32 +76,59 @@
       }
     }
 
-    function getMostActiveUserData(filter) {
+    function getMostActiveUserData(filter, linegraph) {
       // cancel any currently running jobs
       if (mostActivePromise) {
         mostActivePromise.resolve(ABORT);
       }
       mostActivePromise = $q.defer();
+      var returnObject = {
+        tableData: [],
+        error: false
+      };
 
-      var options = CommonReportService.getTypeOptions(filter, 'useractivity');
-      return CommonReportService.getCustomerReportByType(options, mostActivePromise).then(function (response) {
-        var data = [];
-        var responseData = _.get(response, 'data.data');
-        if (responseData) {
-          _.forEach(responseData, function (item) {
-            data.push({
-              numCalls: parseInt(item.details.sparkCalls, 10) + parseInt(item.details.sparkUcCalls, 10),
-              totalActivity: parseInt(item.details.totalActivity, 10),
-              sparkMessages: parseInt(item.details.sparkMessages, 10),
-              userId: item.details.userId,
-              userName: item.details.userName
+      if (linegraph) {
+        var lineOptions = CommonReportService.getTypeOptions(filter, 'mostActive');
+        return CommonReportService.getCustomerAltReportByType(lineOptions, mostActivePromise).then(function (response) {
+          var responseData = _.get(response, 'data.data');
+          if (responseData) {
+            _.forEach(responseData, function (item) {
+              var details = _.get(item, 'details');
+              if (details) {
+                returnObject.tableData.push({
+                  numCalls: parseInt(details.sparkCalls, 10) + parseInt(item.details.sparkUcCalls, 10),
+                  totalActivity: parseInt(details.totalActivity, 10),
+                  sparkMessages: parseInt(details.sparkMessages, 10),
+                  userName: details.userName
+                });
+              }
             });
-          });
-        }
-        return data;
-      }).catch(function (error) {
-        return CommonReportService.returnErrorCheck(error, 'activeUsers.mostActiveError', []);
-      });
+          }
+          return returnObject;
+        }).catch(function (error) {
+          returnObject.error = true;
+          return CommonReportService.returnErrorCheck(error, 'activeUsers.mostActiveError', returnObject);
+        });
+      } else {
+        var options = CommonReportService.getTypeOptions(filter, 'useractivity');
+        return CommonReportService.getCustomerReportByType(options, mostActivePromise).then(function (response) {
+          var responseData = _.get(response, 'data.data');
+          if (responseData) {
+            _.forEach(responseData, function (item) {
+              returnObject.tableData.push({
+                numCalls: parseInt(item.details.sparkCalls, 10) + parseInt(item.details.sparkUcCalls, 10),
+                totalActivity: parseInt(item.details.totalActivity, 10),
+                sparkMessages: parseInt(item.details.sparkMessages, 10),
+                userName: item.details.userName
+              });
+            });
+          }
+          return returnObject;
+        }, function (error) {
+          returnObject.error = true;
+          return CommonReportService.returnErrorCheck(error, 'activeUsers.mostActiveError', returnObject);
+        });
+      }
     }
 
     function adjustActiveLineData(activeData, filter, returnData) {

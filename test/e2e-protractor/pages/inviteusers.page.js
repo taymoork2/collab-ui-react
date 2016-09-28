@@ -10,6 +10,10 @@ var InviteUsers = function () {
   this.fileElem = element(by.css('#upload'));
   this.progress = element(by.css('.progressbar-progress'));
   this.upload_finished = element(by.css('.icon-check-mark-success'));
+  this.addUsersTitle = element(by.css('.wizard-main-title span:first'));
+  this.checkSIPAvailability = element(by.id('checkAvailabilityBtn'));
+  this.confirmSaveCheckBox = element(by.css('label[for="confirmSaveCheckBox"]'));
+  this.sipSubDomainInput = element(by.css('input.sip-domain-input'));
 };
 
 module.exports = InviteUsers;

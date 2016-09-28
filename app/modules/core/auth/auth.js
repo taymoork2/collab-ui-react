@@ -211,6 +211,9 @@
       return httpGET(url)
         .then(function (res) {
           var isMessengerOrg = _.has(res, 'data.orgName') && _.has(res, 'data.orgID');
+          if (isMessengerOrg && res.data.wapiOrgStatus == 'inactive') {
+            isMessengerOrg = false;
+          }
           var isAdminForMsgr = _.intersection(['Full_Admin', 'Readonly_Admin'], authData.roles).length;
           var isPartnerAdmin = _.intersection(['PARTNER_ADMIN', 'PARTNER_READ_ONLY_ADMIN', 'PARTNER_USER'], authData.roles).length;
           if (isMessengerOrg && (isAdminForMsgr || !isPartnerAdmin)) {

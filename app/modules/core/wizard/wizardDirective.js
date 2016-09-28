@@ -386,7 +386,7 @@
       }
 
       // enable/disable skip tab button
-      vm.showSkipTabBtn = (isFirstTime() && vm.current.tab.name === 'addUsers');
+      vm.showSkipTabBtn = (vm.isFirstTime() && vm.current.tab.name === 'addUsers' && vm.isFirstStep());
     }
 
     $scope.$on('wizardNextButtonDisable', function (event, status) {

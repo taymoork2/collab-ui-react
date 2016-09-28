@@ -895,8 +895,13 @@
           $scope.$emit('wizardNextText', 'finish');
         }
       } else if (angular.isDefined($scope.wizard) && $scope.wizard.current.step.name === 'assignDnAndDirectLines') {
-        $scope.isResetEnabled = false;
-        $scope.validateDnForUser();
+        if (!shouldAddCallService()) {
+          // we don't have call service, so skip to previous step
+          $scope.wizard.previousStep();
+        } else {
+          $scope.isResetEnabled = false;
+          $scope.validateDnForUser();
+        }
       }
     });
 

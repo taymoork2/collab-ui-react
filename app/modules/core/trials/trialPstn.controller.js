@@ -12,7 +12,8 @@
     vm.trialData = TrialPstnService.getData();
     vm.customerId = Authinfo.getOrgId();
     var pstnTokenLimit = 10;
-    vm.providerImplementation = 'SWIVEL';
+    vm.SWIVEL = 'SWIVEL';
+    vm.providerImplementation = vm.SWIVEL;
 
     vm.getStateInventory = getStateInventory;
     vm.searchCarrierInventory = searchCarrierInventory;
@@ -182,7 +183,7 @@
       }
 
       $timeout(function () {
-        if (vm.trialData.details.pstnProvider.apiImplementation !== "SWIVEL") {
+        if (vm.trialData.details.pstnProvider.apiImplementation !== vm.SWIVEL) {
           $('#didAddField').tokenfield('setTokens', vm.trialData.details.pstnNumberInfo.numbers.toString());
         } else {
           reinitTokens();
@@ -336,10 +337,10 @@
       if (!checkForInvalidTokens()) {
         // there are invalid tokens
         return true;
-      } else if (vm.providerImplementation === "SWIVEL" && _.size(vm.trialData.details.swivelNumbers) === 0) {
+      } else if (vm.providerImplementation === vm.SWIVEL && _.size(vm.trialData.details.swivelNumbers) === 0) {
         // no swivel numbers entered
         return true;
-      } else if (vm.providerImplementation !== "SWIVEL" && _.size(vm.trialData.details.pstnNumberInfo.numbers) === 0) {
+      } else if (vm.providerImplementation !== vm.SWIVEL && _.size(vm.trialData.details.pstnNumberInfo.numbers) === 0) {
         // no PSTN numbers
         return true;
       } else {
