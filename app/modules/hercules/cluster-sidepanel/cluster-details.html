@@ -62,31 +62,10 @@
     </div>
   </cs-sp-section>
 
-  <cs-sp-section ng-hide="clusterDetailsCtrl.hasF410FeatureToggle">
+  <cs-sp-section>
     <div class="section-title-row section-name" translate="hercules.connectors.hosts"></div>
     <div class="feature-list">
-      <ul>
-        <li class="feature" ng-repeat="host in clusterDetailsCtrl.cluster.aggregates.hosts | orderBy:'host.hostname'"
-            ng-class="{'list-item': !$first}">
-          <a
-            ui-sref="cluster-details.host-details({host: host.hostname, clusterId: clusterDetailsCtrl.clusterId, connectorType: clusterDetailsCtrl.connectorType})">
-            <i class="icon icon-circle status-indicator" ng-class="clusterDetailsCtrl.getSeverity(host.state).cssClass"></i>
-            <span class="feature-name">{{host.hostname}}</span>
-            <span class="feature-status">
-              <span translate="{{'hercules.status.' + host.state }}"></span>
-              <span ng-if="host.upgradeState === 'upgrading'"> | <span translate="hercules.status.upgrading"></span></span>
-            </span>
-            <i class="feature-arrow"></i>
-          </a>
-        </li>
-      </ul>
-    </div>
-  </cs-sp-section>
-
-  <cs-sp-section ng-hide="!clusterDetailsCtrl.hasF410FeatureToggle">
-    <div class="section-title-row section-name" translate="hercules.connectors.hosts"></div>
-    <div class="feature-list">
-      <div ng-repeat="host in clusterDetailsCtrl.F410cluster.hosts | orderBy: 'hostname'">
+      <div ng-repeat="host in clusterDetailsCtrl.v2cluster.hosts | orderBy: 'hostname'">
         <h6 class="feature">{{host.hostname}}</h6>
         <ul>
           <li class="feature" ng-repeat="connector in host.connectors | orderBy: clusterDetailsCtrl.sortConnectors ">
@@ -121,15 +100,4 @@
     </div>
   </cs-sp-section>
 
-  <cs-sp-section ng-hide="clusterDetailsCtrl.hasF410FeatureToggle">
-    <div class="section-title-row section-name" translate="hercules.clusters.deregisterSectionHeader"></div>
-    <span translate="hercules.clusters.deregisterSectionBody"></span>
-    <div>
-      <button class="btn btn--negative hercules-btn-deregister"
-              ng-disabled="saving"
-              ng-click="clusterDetailsCtrl.showDeregisterDialog();"
-              translate="hercules.clusters.deregister">
-      </button>
-    </div>
-  </cs-sp-section>
 </cs-sp-container>

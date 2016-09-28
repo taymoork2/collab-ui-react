@@ -6,7 +6,7 @@
     .controller('ExpresswayServiceClusterController', ExpresswayServiceClusterController);
 
   /* @ngInject */
-  function ExpresswayServiceClusterController($scope, $state, $modal, $stateParams, $translate, ClusterService, FusionUtils, $timeout, hasF410FeatureToggle, hasF237FeatureToggle, FusionClusterService) {
+  function ExpresswayServiceClusterController($scope, $state, $modal, $stateParams, $translate, ClusterService, FusionUtils, $timeout, hasF237FeatureToggle, FusionClusterService) {
     var vm = this;
     vm.state = $state;
     vm.clusterId = $stateParams.clusterId;
@@ -16,10 +16,8 @@
     vm.connectorName = $translate.instant('hercules.connectorNames.' + vm.servicesId[0]);
     vm.getSeverity = ClusterService.getRunningStateSeverity;
     vm.route = FusionUtils.connectorType2RouteName(vm.connectorType);
-    vm.showDeregisterDialog = showDeregisterDialog;
     vm.showUpgradeDialog = showUpgradeDialog;
     vm.fakeUpgrade = false;
-    vm.hasF410FeatureToggle = hasF410FeatureToggle;
     vm.hasF237FeatureToggle = hasF237FeatureToggle;
     vm.hasConnectorAlarm = hasConnectorAlarm;
 
@@ -67,24 +65,6 @@
       vm.showUpgradeProgress = vm.fakeUpgrade || isUpgrading || vm.upgradeJustFinished;
     }, true);
 
-    function showDeregisterDialog() {
-      $modal.open({
-        resolve: {
-          cluster: function () {
-            return vm.cluster;
-          },
-          isF410enabled: false
-        },
-        controller: 'ClusterDeregisterController',
-        controllerAs: 'clusterDeregister',
-        templateUrl: 'modules/hercules/cluster-deregister/deregister-dialog.html',
-        type: 'small'
-      })
-        .result.then(function () {
-          $state.sidepanel.close();
-        });
-    }
-
     function showUpgradeDialog() {
       $modal.open({
         templateUrl: 'modules/hercules/software-upgrade/software-upgrade-dialog.html',
@@ -122,17 +102,18 @@
       return _.get(upgrading, 'hostname', '');
     }
 
-    if (hasF410FeatureToggle) {
+    function buildCluster() {
       vm.schedule = {};
       FusionClusterService.get(vm.clusterId)
         .then(function (cluster) {
-          vm.F410cluster = FusionClusterService.buildSidepanelConnectorList(cluster, vm.connectorType);
+          vm.v2cluster = FusionClusterService.buildSidepanelConnectorList(cluster, vm.connectorType);
           vm.schedule.dateTime = FusionClusterService.formatTimeAndDate(cluster.upgradeSchedule);
           vm.schedule.timeZone = cluster.upgradeSchedule.scheduleTimeZone;
         });
       vm.localizedConnectorName = $translate.instant('hercules.connectorNameFromConnectorType.' + vm.connectorType);
       vm.localizedManagementConnectorName = $translate.instant('hercules.connectorNameFromConnectorType.c_mgmt');
     }
+    buildCluster();
 
     function hasConnectorAlarm(connector) {
       if (connector.alarms.length > 0) {

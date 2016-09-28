@@ -6,7 +6,7 @@
     .controller('ExpresswayServiceController', ExpresswayServiceController);
 
   /* @ngInject */
-  function ExpresswayServiceController($state, $modal, $scope, $stateParams, $translate, XhrNotificationService, ServiceStateChecker, ServiceDescriptor, ClusterService, USSService, FusionUtils, FeatureToggleService) {
+  function ExpresswayServiceController($state, $modal, $scope, $stateParams, $translate, XhrNotificationService, ServiceStateChecker, ServiceDescriptor, ClusterService, USSService, FusionUtils) {
     ClusterService.subscribe('data', clustersUpdated, {
       scope: $scope
     });
@@ -38,7 +38,6 @@
     vm.openAddResourceModal = openAddResourceModal;
     vm.showClusterSidepanel = showClusterSidepanel;
     vm.enableService = enableService;
-    vm.featureToggled = false;
 
     vm.clusterListGridOptions = {
       data: 'exp.clusters',
@@ -133,43 +132,26 @@
     }
 
     function openAddResourceModal() {
-      if (vm.featureToggled) {
-        $modal.open({
-          resolve: {
-            connectorType: function () {
-              return vm.connectorType;
-            },
-            servicesId: function () {
-              return vm.servicesId;
-            },
-            firstTimeSetup: false
+      $modal.open({
+        resolve: {
+          connectorType: function () {
+            return vm.connectorType;
           },
-          controller: 'AddResourceController',
-          controllerAs: 'vm',
-          templateUrl: 'modules/hercules/add-resource/add-resource-modal.html',
-          type: 'small'
-        });
-      } else {
-        $modal.open({
-          controller: 'RedirectTargetController',
-          controllerAs: 'redirectTarget',
-          templateUrl: 'modules/hercules/redirect-target/redirect-target-dialog.html',
-          type: 'small'
-        });
-      }
+          servicesId: function () {
+            return vm.servicesId;
+          },
+          firstTimeSetup: false
+        },
+        controller: 'AddResourceController',
+        controllerAs: 'vm',
+        templateUrl: 'modules/hercules/add-resource/add-resource-modal.html',
+        type: 'small'
+      });
     }
 
-    function isFeatureToggled() {
-      return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridServicesResourceList);
-    }
-    isFeatureToggled().then(function (reply) {
-      vm.featureToggled = reply;
-      if (vm.featureToggled) {
-        ServiceDescriptor.isServiceEnabled(vm.servicesId[0], function (error, enabled) {
-          if (!enabled) {
-            firstTimeSetup();
-          }
-        });
+    ServiceDescriptor.isServiceEnabled(vm.servicesId[0], function (error, enabled) {
+      if (!enabled) {
+        firstTimeSetup();
       }
     });
 
