@@ -37,11 +37,13 @@
         return this.selected !== this.current;
       },
       displayWarningIfNecessary: function () {
-        ResourceGroupService.resourceGroupHasEligibleCluster($scope.resourceGroup.selected.value, 'c_cal')
-          .then(function (hasEligibleCluster) {
-            $scope.resourceGroup.shouldWarn = !hasEligibleCluster;
-          });
-      },
+        if (this.show && _.size(this.options) > 1) {
+          ResourceGroupService.resourceGroupHasEligibleCluster($scope.resourceGroup.selected.value, 'c_cal')
+            .then(function (hasEligibleCluster) {
+              $scope.resourceGroup.shouldWarn = !hasEligibleCluster;
+            });
+        }
+      }
     };
     $scope.resourceGroup.init();
 
@@ -55,7 +57,7 @@
     };
 
     $scope.$watch('extension.entitled', function (newVal, oldVal) {
-      if (newVal != oldVal) {
+      if (newVal !== oldVal) {
         $scope.setShouldShowButtons();
       }
     });

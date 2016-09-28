@@ -54,6 +54,7 @@
         return this.selected !== this.current;
       },
       displayWarningIfNecessary: function () {
+        if (this.show && _.size(this.options) > 1)
         ResourceGroupService.resourceGroupHasEligibleCluster($scope.resourceGroup.selected.value, 'c_ucmc')
           .then(function (hasEligibleCluster) {
             $scope.resourceGroup.shouldWarn = !hasEligibleCluster;
