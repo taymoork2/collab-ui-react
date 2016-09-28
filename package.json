@@ -52,7 +52,7 @@
     "angular-translate": "~2.11.0",
     "angular-translate-interpolation-messageformat": "~2.11.0",
     "angular-translate-loader-static-files": "~2.11.0",
-    "angular-ui-router": "=0.2.15",
+    "angular-ui-router": "^0.3.1",
     "angularjs-toaster": "~1.2.0",
     "bmmp": "=0.0.1",
     "bootstrap-sass": "3.3.5",
@@ -86,7 +86,7 @@
     "punycode": "^1.4.0",
     "query-command-supported": "~1.0.0",
     "typeahead.js": "~0.10.2",
-    "ui-router-extras": "=0.1.0",
+    "ui-router-extras": "^0.1.2",
     "x2js": "git+https://github.com/abdmob/x2js.git#v1.2.0"
   },
   "devDependencies": {

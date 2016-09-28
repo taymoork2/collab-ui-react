@@ -13,7 +13,10 @@ describe('Controller: customerSubscriptionsDetailCtrl', function () {
   }));
   function initController() {
     controller = $controller('CustomerSubscriptionsDetailCtrl', {
-      $scope: $scope
+      $scope: $scope,
+      $stateParams: {
+        currentCustomer: {}
+      }
     });
     $scope.$apply();
   }

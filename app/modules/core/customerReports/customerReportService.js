@@ -82,17 +82,20 @@
         mostActivePromise.resolve(ABORT);
       }
       mostActivePromise = $q.defer();
+      var returnObject = {
+        tableData: [],
+        error: false
+      };
 
       if (linegraph) {
         var lineOptions = CommonReportService.getTypeOptions(filter, 'mostActive');
         return CommonReportService.getCustomerAltReportByType(lineOptions, mostActivePromise).then(function (response) {
-          var data = [];
           var responseData = _.get(response, 'data.data');
           if (responseData) {
             _.forEach(responseData, function (item) {
               var details = _.get(item, 'details');
               if (details) {
-                data.push({
+                returnObject.tableData.push({
                   numCalls: parseInt(details.sparkCalls, 10) + parseInt(item.details.sparkUcCalls, 10),
                   totalActivity: parseInt(details.totalActivity, 10),
                   sparkMessages: parseInt(details.sparkMessages, 10),
@@ -101,29 +104,29 @@
               }
             });
           }
-          return data;
+          return returnObject;
         }).catch(function (error) {
-          return CommonReportService.returnErrorCheck(error, 'activeUsers.mostActiveError', []);
+          returnObject.error = true;
+          return CommonReportService.returnErrorCheck(error, 'activeUsers.mostActiveError', returnObject);
         });
       } else {
         var options = CommonReportService.getTypeOptions(filter, 'useractivity');
         return CommonReportService.getCustomerReportByType(options, mostActivePromise).then(function (response) {
-          var data = [];
           var responseData = _.get(response, 'data.data');
           if (responseData) {
             _.forEach(responseData, function (item) {
-              data.push({
+              returnObject.tableData.push({
                 numCalls: parseInt(item.details.sparkCalls, 10) + parseInt(item.details.sparkUcCalls, 10),
                 totalActivity: parseInt(item.details.totalActivity, 10),
                 sparkMessages: parseInt(item.details.sparkMessages, 10),
-                userId: item.details.userId,
                 userName: item.details.userName
               });
             });
           }
-          return data;
+          return returnObject;
         }, function (error) {
-          return CommonReportService.returnErrorCheck(error, 'activeUsers.mostActiveError', []);
+          returnObject.error = true;
+          return CommonReportService.returnErrorCheck(error, 'activeUsers.mostActiveError', returnObject);
         });
       }
     }
