@@ -13,7 +13,7 @@
     });
 
   /* @ngInject */
-  function ResourceGroupCardController($state, FusionUtils) {
+  function ResourceGroupCardController($state, FusionClusterStatesService, FusionUtils) {
     var ctrl = this;
 
     ctrl.showDetails = false;
@@ -22,6 +22,7 @@
     ctrl.showWarningText = showWarningText;
     ctrl.$onChanges = $onChanges;
     ctrl.getLocalizedReleaseChannel = FusionUtils.getLocalizedReleaseChannel;
+    ctrl.getStatusCssClass = getStatusCssClass;
 
     function toggleDetails() {
       ctrl.showDetails = !ctrl.showDetails;
@@ -41,6 +42,13 @@
       return ctrl.group.clusters.length === 0;
     }
 
+    function getStatusCssClass() {
+      var connectors = _.chain(ctrl.group.clusters)
+        .map('connectors')
+        .flatten()
+        .value();
+      return FusionClusterStatesService.getMergedStateSeverity(connectors).cssClass;
+    }
   }
 
 })();

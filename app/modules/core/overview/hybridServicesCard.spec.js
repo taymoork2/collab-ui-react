@@ -1,20 +1,23 @@
 describe('OverviewHybridServicesCard', function () {
-
-  var OverviewHybridServicesCard, $rootScope, FusionClusterService, $q;
+  var OverviewHybridServicesCard, $rootScope, Authinfo, FeatureToggleService, FusionClusterService, $q;
 
   beforeEach(angular.mock.module('Hercules'));
   beforeEach(angular.mock.module('Squared'));
   beforeEach(angular.mock.module('Core'));
 
-  function dependencies(_OverviewHybridServicesCard_, _$rootScope_, _FusionClusterService_, _$q_) {
+  function dependencies(_Authinfo_, _FeatureToggleService_, _OverviewHybridServicesCard_, _$rootScope_, _FusionClusterService_, _$q_) {
     OverviewHybridServicesCard = _OverviewHybridServicesCard_;
-    $rootScope = _$rootScope_;
-    FusionClusterService = _FusionClusterService_;
     $q = _$q_;
+    $rootScope = _$rootScope_;
+    Authinfo = _Authinfo_;
+    FeatureToggleService = _FeatureToggleService_;
+    FusionClusterService = _FusionClusterService_;
   }
 
   function initSpies() {
     spyOn(FusionClusterService, 'getAll');
+    spyOn(Authinfo, 'isEntitled').and.returnValue(true);
+    spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve(true));
   }
 
   beforeEach(inject(dependencies));
@@ -74,5 +77,4 @@ describe('OverviewHybridServicesCard', function () {
     expect(card.serviceList[0].setup).toBe(true);
     expect(card.serviceList[1].setup).toBe(false);
   });
-
 });

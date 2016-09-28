@@ -6,7 +6,7 @@
     .controller('ExpresswayServiceController', ExpresswayServiceController);
 
   /* @ngInject */
-  function ExpresswayServiceController($state, $modal, $scope, $translate, XhrNotificationService, ServiceStateChecker, ServiceDescriptor, ClusterService, USSService, FusionUtils, FeatureToggleService, $stateParams) {
+  function ExpresswayServiceController($state, $modal, $scope, $stateParams, $translate, XhrNotificationService, ServiceStateChecker, ServiceDescriptor, ClusterService, USSService, FusionUtils, FeatureToggleService) {
     ClusterService.subscribe('data', clustersUpdated, {
       scope: $scope
     });
@@ -193,6 +193,5 @@
         $state.go('services-overview');
       });
     }
-
   }
 }());
