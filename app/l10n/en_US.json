@@ -552,7 +552,9 @@
     "usageReports": {
       "usageReportTitle": "Usage Reports",
       "peakHour": "Peak Hour",
-      "inUse": "In Use"
+      "distribution": "Distribution",
+      "timeline": "Timeline",
+      "overview": "Overview"
     }
   },
   "careReportsPage": {

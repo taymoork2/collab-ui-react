@@ -7,7 +7,7 @@ describe('Template: editServices', function () {
 
   function init() {
     this.initModules('Core', 'Hercules', 'Huron', 'Messenger', 'Sunlight', 'WebExApp');
-    this.injectDependencies('$httpBackend', '$q', '$previousState', 'CsvDownloadService', 'FeatureToggleService', 'Orgservice', 'UrlConfig', 'WebExUtilsFact');
+    this.injectDependencies('$httpBackend', '$q', '$previousState', 'CsvDownloadService', 'FeatureToggleService', 'Orgservice', 'UrlConfig');
     initDependencySpies.apply(this);
     this.compileView('OnboardCtrl', 'modules/core/users/userPreview/editServices.tpl.html');
   }
@@ -20,24 +20,23 @@ describe('Template: editServices', function () {
 
     spyOn(this.CsvDownloadService, 'getCsv').and.callFake(function (type) {
       if (type === 'headers') {
-        return this.$q.when(this.mock.headers);
+        return this.$q.resolve(this.mock.headers);
       } else {
-        return this.$q.when({});
+        return this.$q.resolve({});
       }
     }.bind(this));
-    spyOn(this.FeatureToggleService, 'supportsDirSync').and.returnValue(this.$q.when(false));
-    spyOn(this.FeatureToggleService, 'atlasCareTrialsGetStatus').and.returnValue(this.$q.when(true));
-    spyOn(this.FeatureToggleService, 'supports').and.returnValue(this.$q.when(true));
-    spyOn(this.Orgservice, 'getHybridServiceAcknowledged').and.returnValue(this.$q.when(this.mock.fusionServices));
-    spyOn(this.Orgservice, 'getLicensesUsage').and.returnValue(this.$q.when(this.mock.getLicensesUsage));
+    spyOn(this.FeatureToggleService, 'supportsDirSync').and.returnValue(this.$q.resolve(false));
+    spyOn(this.FeatureToggleService, 'atlasCareTrialsGetStatus').and.returnValue(this.$q.resolve(true));
+    spyOn(this.FeatureToggleService, 'supports').and.returnValue(this.$q.resolve(true));
+    spyOn(this.Orgservice, 'getHybridServiceAcknowledged').and.returnValue(this.$q.resolve(this.mock.fusionServices));
+    spyOn(this.Orgservice, 'getLicensesUsage').and.returnValue(this.$q.resolve(this.mock.getLicensesUsage));
     spyOn(this.Orgservice, 'getUnlicensedUsers');
     spyOn(this.$previousState, 'get').and.returnValue({
       state: {
         name: 'test.state'
       }
     });
-    this.$httpBackend.expectGET(this.UrlConfig.getSunlightConfigServiceUrl() + '/user' + '/' + userId).respond(200);
-    this.$httpBackend.expectGET(this.UrlConfig.getScimUrl('null') + '/' + userId).respond(200);
+    this.$httpBackend.expectGET(this.UrlConfig.getSunlightConfigServiceUrl() + '/user/' + userId).respond(200);
     this.$httpBackend
       .whenGET('https://cmi.huron-int.com/api/v1/voice/customers/sites')
       .respond([{
@@ -61,7 +60,6 @@ describe('Template: editServices', function () {
   describe('Save button', function () {
     it('should call editServicesSave() on click', function () {
       this.view.find(SAVE_BUTTON).click();
-      this.$httpBackend.flush();
       expect(this.$scope.editServicesSave).toHaveBeenCalled();
     });
   });
