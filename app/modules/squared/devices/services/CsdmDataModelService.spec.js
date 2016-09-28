@@ -525,8 +525,8 @@ describe('Service: CsdmDataModelService', function () {
     it('should return a list of places including those containing devices and codes', function () {
       var expectExecuted;
       CsdmDataModelService.getPlacesMap().then(function (places) {
-        expect(Object.keys(places).length).toBe(2);
-        expect(_.values(places).length).toBe(2);
+        expect(Object.keys(places).length).toBe(3);
+        expect(_.values(places).length).toBe(3);
 
         expect(places[pWithDeviceUrl].devices.length).toBe(3);
         expect(places[pWithDeviceUrl].codes.length).toBe(2);
@@ -536,13 +536,30 @@ describe('Service: CsdmDataModelService', function () {
       expect(expectExecuted).toBe(true);
     });
 
+    it('should return a list of places where places generated from a device should contain all place fields', function () {
+      var expectExecuted;
+      CsdmDataModelService.getPlacesMap().then(function (places) {
+
+        expect(places[pWithDeviceUrl].devices.length).toBe(3);
+        expect(places[pWithDeviceUrl].codes.length).toBe(2);
+        expectExecuted = true;
+      });
+      $rootScope.$digest();
+      expect(expectExecuted).toBe(true);
+    });
+
+    it('should return a list of places where places generated from a code should contain all place fields', function () {
+
+    });
+
+
     it('should return a list of places including those not containing devices or codes', function () {
 
       var expectCall;
       CsdmDataModelService.getPlacesMap().then(function (places) {
 
-        expect(Object.keys(places).length).toBe(2);
-        expect(_.values(places).length).toBe(2);
+        expect(Object.keys(places).length).toBe(3);
+        expect(_.values(places).length).toBe(3);
 
         expect(Object.keys(places[pWithoutDeviceUrl].devices).length).toBe(0);
         expect(Object.keys(places[pWithoutDeviceUrl].codes).length).toBe(0);
@@ -559,12 +576,12 @@ describe('Service: CsdmDataModelService', function () {
       var placeToRemoveUrl = pWithoutDeviceUrl;
       $httpBackend.expectDELETE(placeToRemoveUrl).respond(200);
       CsdmDataModelService.getPlacesMap().then(function (places) {
-        expect(Object.keys(places).length).toBe(2);
+        expect(Object.keys(places).length).toBe(3);
         var placeToRemove = places[placeToRemoveUrl];
 
         CsdmDataModelService.deleteItem(placeToRemove).then(function () {
           expect(places[placeToRemove.url]).toBeUndefined();
-          expect(Object.keys(places).length).toBe(1);
+          expect(Object.keys(places).length).toBe(2);
           expectCall = true;
         });
       });
@@ -578,11 +595,11 @@ describe('Service: CsdmDataModelService', function () {
       var placeToRemoveUrl = pWithoutDeviceUrl;
       $httpBackend.expectDELETE(placeToRemoveUrl).respond(403);
       CsdmDataModelService.getPlacesMap().then(function (places) {
-        expect(Object.keys(places).length).toBe(2);
+        expect(Object.keys(places).length).toBe(3);
         var placeToRemove = places[placeToRemoveUrl];
 
         CsdmDataModelService.deleteItem(placeToRemove).catch(function () {
-          expect(Object.keys(places).length).toBe(2);
+          expect(Object.keys(places).length).toBe(3);
           expect(places[placeToRemove.url]).toBe(placeToRemove);
           expectCall = true;
         });
@@ -597,7 +614,7 @@ describe('Service: CsdmDataModelService', function () {
       var placeToRemoveUrl = pWithDeviceUrl;
       $httpBackend.expectDELETE(placeToRemoveUrl).respond(200);
       CsdmDataModelService.getPlacesMap().then(function (places) {
-        expect(Object.keys(places).length).toBe(2);
+        expect(Object.keys(places).length).toBe(3);
 
         var placeToRemove = places[placeToRemoveUrl];
         var device0Url = placeToRemove.devices[0].url;
@@ -606,7 +623,7 @@ describe('Service: CsdmDataModelService', function () {
 
         CsdmDataModelService.deleteItem(placeToRemove).then(function () {
           expect(places[placeToRemove.url]).toBeUndefined();
-          expect(Object.keys(places).length).toBe(1);
+          expect(Object.keys(places).length).toBe(2);
 
           expect(initialDeviceMap[device0Url]).toBeUndefined();
 
@@ -623,7 +640,7 @@ describe('Service: CsdmDataModelService', function () {
       var placeToRemoveUrl = pWithDeviceUrl;
       $httpBackend.expectDELETE(placeToRemoveUrl).respond(200);
       CsdmDataModelService.getPlacesMap().then(function (places) {
-        expect(Object.keys(places).length).toBe(2);
+        expect(Object.keys(places).length).toBe(3);
 
         var placeToRemove = places[placeToRemoveUrl];
         var code0Url = placeToRemove.codes[0].url;
@@ -634,7 +651,7 @@ describe('Service: CsdmDataModelService', function () {
 
         CsdmDataModelService.deleteItem(placeToRemove).then(function () {
           expect(places[placeToRemove.url]).toBeUndefined();
-          expect(Object.keys(places).length).toBe(1);
+          expect(Object.keys(places).length).toBe(2);
 
           expect(initialDeviceMap[code0Url]).toBeUndefined();
           expect(initialDeviceMap[code1Url]).toBeUndefined();
