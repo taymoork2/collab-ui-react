@@ -67,8 +67,9 @@
       });
 
     function setOffers(isCareEnabled) {
-      var licAndOffers = PartnerService.parseLicensesAndOffers(vm.currentCustomer, isCareEnabled);
-      vm.currentCustomer.offer = _.get(licAndOffers, 'offer');
+      var licAndOffers = PartnerService.parseLicensesAndOffers(vm.currentCustomer, { isCareEnabled: isCareEnabled,
+        isTrial: true });
+      vm.offer = vm.currentCustomer.offer = _.get(licAndOffers, 'offer');
       vm.trialServices = _.chain(vm.currentCustomer.offer)
         .get('trialServices')
         .map(function (trialService) {
@@ -79,7 +80,8 @@
         })
         .value();
       if (vm.newCustomerViewToggle) {
-        vm.freeOrPaidServices = _.map(PartnerService.getFreeOrActiveServices(vm.currentCustomer, isCareEnabled), function (service) {
+        vm.freeOrPaidServices = _.map(PartnerService.getFreeOrActiveServices(vm.currentCustomer, { isCareEnabled: isCareEnabled,
+          isTrial: false }), function (service) {
           return _.assign({}, service, {
             detail: service.free ? FREE : service.qty + ' ' + QTY,
             actionAvailable: hasSubview(service)
@@ -292,9 +294,10 @@
       }
     }
 
-    function goToSubview(service) {
+    function goToSubview(service, isTrial) {
       if (service.hasWebex || service.isMeeting) {
-        $state.go('customer-overview.meetingDetail', { meetingLicenses: service.sub });
+        var services = isTrial ? PartnerService.getTrialMeetingServices(vm.currentCustomer.licenseList) : service.sub;
+        $state.go('customer-overview.meetingDetail', { meetingLicenses: services });
       } else if (service.isCall) {
         $state.go('customer-overview.externalNumberDetail', {});
       }

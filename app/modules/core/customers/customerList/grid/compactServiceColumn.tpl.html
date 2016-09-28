@@ -5,7 +5,7 @@
     <cr-service-column-icon row="row.entity" type="communications"></cr-service-column-icon>
     <cr-service-column-icon row="row.entity" type="webex"></cr-service-column-icon>
     <cr-service-column-icon row="row.entity" type="roomSystems"></cr-service-column-icon>
-    <cr-service-column-icon row="row.entity" type="care"></cr-service-column-icon>
+    <cr-service-column-icon ng-hide="!grid.appScope.isCareEnabled" row="row.entity" type="care"></cr-service-column-icon>
   </div>
   <span ng-if="grid.appScope.isPastGracePeriod(row.entity)" translate="common.notAvailable"></span>
 </div>

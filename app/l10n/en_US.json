@@ -3029,6 +3029,7 @@
   },
   "customerPage": {
     "all": "All",
+    "allCustomers": "All Customers",
     "trial": "Trial",
     "title": "Customers",
     "customerNameHeader": "Customer Name",
