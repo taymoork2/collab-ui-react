@@ -18,7 +18,7 @@
       <p class="extension-description">{{'hercules.cloudExtensions.serviceDescriptions.squared-fusion-uc' |
         translate}}</p>
 
-      <div>
+      <div ng-if="!isInvitePending">
         <span class="cloud-extension-label">{{'cloudExtensions.status' | translate}}:</span>
         <span class="cloud-extension-label" ng-if="callServiceAware.entitled && callServiceAware.status"
               ng-class="callServiceAware.entitled && callServiceAware.status ? 'status-' + callServiceAware.status.state : 'disabled'"
@@ -88,7 +88,7 @@
     </div>
     <p class="extension-description">{{'hercules.cloudExtensions.serviceDescriptions.squared-fusion-ec' |
       translate}}</p>
-    <div>
+    <div ng-if="!isInvitePending">
       <span class="cloud-extension-label">{{'cloudExtensions.status' | translate}}:</span>
       <span class="cloud-extension-label" ng-if="callServiceConnect.entitled && callServiceConnect.status"
             ng-class="callServiceConnect.entitled && callServiceConnect.status ? 'status-' + callServiceConnect.status.state : 'disabled'"

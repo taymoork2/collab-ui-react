@@ -12,7 +12,7 @@
     <div>
       <p class="extension-description">{{'hercules.cloudExtensions.serviceDescriptions.' + extension.id |
         translate}}</p>
-      <div>
+      <div ng-if="!isInvitePending">
         <span class="cloud-extension-label">{{'cloudExtensions.status' | translate}}:</span>
         <span class="cloud-extension-label" ng-if="extension.entitled && extension.status"
               ng-class="extension.entitled && extension.status ? 'status-' + extension.status.state : 'disabled'"

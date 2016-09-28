@@ -10,12 +10,13 @@
           <i class="feature-icon-extension" ng-class="hybridServicesCtrl.extensionIcon(extension.id)"></i>
           <span class="feature-name" translate="hercules.serviceNames.{{extension.id}}"></span>
           <span class="feature-status" ng-class="extension.status ? 'status-' + extension.status.state : ''"
-                ng-show="extension.status && extension.entitled"
+                ng-show="extension.status && extension.entitled && !hybridServicesCtrl.isInvitePending"
                 id="{{extension.id}}-status"
                 translate="hercules.activationStatus.{{hybridServicesCtrl.getStatus(extension.status)}}"></span>
           <span class="feature-status" ng-if="!extension.entitled" translate="common.off"></span>
-          <span class="feature-status" ng-if="!extension.status && extension.entitled && hybridServicesCtrl.userStatusLoaded" translate="hercules.activationStatus.notFound"></span>
-          <span cs-loader class="feature-list-loader" ng-if="!extension.status && extension.entitled && !hybridServicesCtrl.userStatusLoaded"></span>
+          <span class="feature-status" ng-if="hybridServicesCtrl.isInvitePending && extension.entitled" translate="usersPage.invitePending"></span>
+          <span class="feature-status" ng-if="!extension.status && extension.entitled && hybridServicesCtrl.userStatusLoaded && !hybridServicesCtrl.isInvitePending" translate="hercules.activationStatus.notFound"></span>
+          <span cs-loader class="feature-list-loader" ng-if="!hybridServicesCtrl.isInvitePending && !extension.status && extension.entitled && !hybridServicesCtrl.userStatusLoaded"></span>
           <i class="feature-arrow"></i>
         </a>
       </li>

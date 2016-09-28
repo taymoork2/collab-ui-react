@@ -7,7 +7,7 @@
     .controller('HybridServicesCtrl', HybridServicesCtrl);
 
   /* @ngInject */
-  function HybridServicesCtrl($scope, $rootScope, $timeout, Authinfo, USSService, FusionUtils, ServiceDescriptor, Orgservice, Notification) {
+  function HybridServicesCtrl($scope, $rootScope, $timeout, Authinfo, USSService, FusionUtils, ServiceDescriptor, Orgservice, Notification, Userservice) {
     if (!Authinfo.isFusion()) {
       return;
     }
@@ -19,6 +19,7 @@
     vm.extensions = getExtensions();
     vm.isEnabled = false;
     vm.userStatusLoaded = false;
+    vm.isInvitePending = vm.user ? Userservice.isInvitePending(vm.user) : false;
 
     vm.allExceptUcFilter = function (item) {
       return item && item.enabled === true && item.id !== 'squared-fusion-ec';
