@@ -32,6 +32,14 @@
     var baloontitles = [];
     var titles = [];
     var allClusters = $translate.instant('mediaFusion.metrics.allclusters');
+    var timeStamp = $translate.instant('mediaFusion.metrics.timeStamp');
+    var startTime = $translate.instant('mediaFusion.metrics.startTime');
+    var endTime = $translate.instant('mediaFusion.metrics.endTime');
+    var nodes = $translate.instant('mediaFusion.metrics.nodes');
+    var node = $translate.instant('mediaFusion.metrics.node');
+    var availabilityStatus = $translate.instant('mediaFusion.metrics.availabilityStatus');
+    var availabilityOfHost = $translate.instant('mediaFusion.metrics.availabilityOfHost');
+    var clusterTitle = $translate.instant('mediaFusion.metrics.clusterTitle');
     var availabilityLegendCluster = [{ 'title': availableTitle, 'color': chartColors.metricDarkGreen }, { 'title': unavailableTitle, 'color': chartColors.metricsRed }];
     var availabilityLegendAllcluster = [{ 'title': availableTitle, 'color': chartColors.metricDarkGreen }, { 'title': unavailableTitle, 'color': chartColors.metricsRed }, { 'title': partialTitle, 'color': chartColors.metricYellow }];
 
@@ -147,17 +155,17 @@
       }
       var exportFields = ['active_calls', 'call_reject', 'timestamp'];
       var columnNames = {};
-      if (cluster === 'All Clusters') {
+      if (cluster === allClusters) {
         columnNames = {
-          'active_calls': 'Calls on premise',
-          'call_reject': 'Calls overflowed to the cloud',
-          'timestamp': 'Timestamp',
+          'active_calls': callLocalTitle,
+          'call_reject': callRejectTitle,
+          'timestamp': timeStamp,
         };
       } else {
         columnNames = {
-          'active_calls': 'Calls on premise',
-          'call_reject': 'Calls redirected to cloud',
-          'timestamp': 'Timestamp',
+          'active_calls': callLocalTitle,
+          'call_reject': callRedirectedClusterTitle,
+          'timestamp': timeStamp,
         };
       }
       cluster = cluster.replace(/\s/g, "_");
@@ -198,7 +206,7 @@
         graphs[i].legendColor = secondaryColors[i];
         //graphs[i].showBalloon = data[0].balloon;
         graphs[i].showBalloon = data[0].balloon;
-        if (cluster === 'All Clusters') {
+        if (cluster === allClusters) {
           if (graphs[i].valueField === 'active_calls') {
             graphs[i].balloonText = '<span class="graph-text">' + $translate.instant(baloontitles[i]) + ' <span class="graph-number">[[active_calls]]</span></span>';
           } else {
@@ -273,7 +281,7 @@
       }
 
       var columnNames = {
-        'time': 'Time'
+        'time': timeStamp
       };
       angular.forEach(graphs, function (value) {
         if (value.title !== average_utilzation) {
@@ -384,20 +392,20 @@
       var valueAxis = createValueAxis(data);
       var exportFields = ['startTime', 'endTime', 'nodes', 'availability', 'category'];
       var columnNames = {};
-      if (cluster === 'All Clusters') {
+      if (cluster === allClusters) {
         columnNames = {
-          'startTime': 'Start Time',
-          'endTime': 'End Time',
-          'nodes': 'Node(s)',
-          'availability': 'Availability Status',
-          'category': 'Cluster',
+          'startTime': startTime,
+          'endTime': endTime,
+          'nodes': nodes,
+          'availability': availabilityStatus,
+          'category': clusterTitle,
         };
       } else {
         columnNames = {
-          'availability': 'Node Availability',
-          'startTime': 'Start Time',
-          'endTime': 'End Time',
-          'category': 'Node'
+          'availability': availabilityOfHost,
+          'startTime': startTime,
+          'endTime': endTime,
+          'category': node,
         };
       }
       cluster = cluster.replace(/\s/g, "_");
