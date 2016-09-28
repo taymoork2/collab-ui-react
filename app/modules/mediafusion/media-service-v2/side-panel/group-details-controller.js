@@ -60,6 +60,7 @@
           return MediaClusterServiceV2.getCluster(vm.clusterDetail.id);
         }, function (newValue) {
           vm.cluster = newValue;
+          vm.nodeList = vm.cluster.connectors;
           var isUpgrading = vm.cluster.aggregates.upgradeState === 'upgrading';
           vm.softwareUpgrade = {
             provisionedVersion: vm.cluster.aggregates.provisioning.provisionedVersion,
