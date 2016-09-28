@@ -37,7 +37,7 @@
         return this.selected !== this.current;
       },
       displayWarningIfNecessary: function () {
-        if (this.show && _.size(this.options) > 1) {
+        if (_.size(this.options) > 1) {
           ResourceGroupService.resourceGroupHasEligibleCluster($scope.resourceGroup.selected.value, 'c_cal')
             .then(function (hasEligibleCluster) {
               $scope.resourceGroup.shouldWarn = !hasEligibleCluster;
