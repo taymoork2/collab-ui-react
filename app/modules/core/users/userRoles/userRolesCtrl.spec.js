@@ -252,17 +252,17 @@ describe('Controller: UserRolesCtrl', function () {
           roleName: 'Help_Desk',
           roleState: 'ACTIVE'
         }),
-        Object({
-          roleName: 'Order_Admin',
-          roleState: 'ACTIVE'
-        }),
+        //Object({
+        //  roleName: 'Order_Admin',
+        //  roleState: 'ACTIVE'
+        //}),
         Object({
           roleName: 'Spark_SyncKms',
           roleState: 'INACTIVE'
         })
       ];
 
-      $scope.showOrderAdminRole = true;
+      //Uncomment when OrderAdmin role validation is in Prod $scope.showOrderAdminRole = true;
       var mockUser = spyOn(Userservice, 'patchUserRoles');
       $scope.updateRoles();
       expect(mockUser.calls.argsFor(0)[2]).toEqual(roles);
