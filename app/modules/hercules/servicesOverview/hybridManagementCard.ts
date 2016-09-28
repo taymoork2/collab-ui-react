@@ -36,14 +36,15 @@ export class ServicesOverviewHybridManagementCard extends ServicesOverviewHybrid
     this._display = !hasFeature;
   }
 
-  public constructor() {
+  public constructor(FusionClusterStatesService) {
     super({
       name: 'servicesOverview.cards.hybridManagement.title',
       description: 'servicesOverview.cards.hybridManagement.description',
       activeServices: ['squared-fusion-cal', 'squared-fusion-uc', 'squared-fusion-media'],
       statusService: 'squared-fusion-mgmt',
       statusLink: 'services/expressway-management',
-      cardClass: '', cardType: CardType.hybrid,
-    });
+      cardClass: '',
+      cardType: CardType.hybrid,
+    }, FusionClusterStatesService);
   }
 }

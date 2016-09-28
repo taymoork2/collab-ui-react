@@ -1339,14 +1339,14 @@
               siteUrl: null
             }
           })
-          .state('reports.usage', {
-            url: '/reports/usage',
-            templateUrl: 'modules/core/customerReports/usage/usageReports.tpl.html',
-            controller: 'UsageReportsCtrl',
-            controllerAs: 'usageReport',
+
+          .state('reports.device-usage', {
+            url: '/reports/device/usage',
+            templateUrl: 'modules/core/customerReports/deviceUsage/header.tpl.html',
+            controller: 'DeviceUsageHeaderCtrl',
+            controllerAs: 'deviceUsage',
             parent: 'main',
             params: {
-              deviceReportType: 'peakHour'
             },
             resolve: {
               deviceUsageFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
@@ -1354,6 +1354,46 @@
               },
             }
           })
+          .state('reports.device-usage.overview', {
+            url: '/overview',
+            templateUrl: 'modules/core/customerReports/deviceUsage/overview.tpl.html',
+            controller: 'DeviceUsageOverviewCtrl',
+            controllerAs: 'deviceUsage',
+            params: {
+            },
+            resolve: {
+              deviceUsageFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasDeviceUsageReport);
+              },
+            }
+          })
+          .state('reports.device-usage.distribution', {
+            url: '/distribution',
+            templateUrl: 'modules/core/customerReports/deviceUsage/distribution.tpl.html',
+            controller: 'DeviceUsageDistributionCtrl',
+            controllerAs: 'deviceUsage',
+            params: {
+            },
+            resolve: {
+              deviceUsageFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasDeviceUsageReport);
+              },
+            }
+          })
+          .state('reports.device-usage.timeline', {
+            url: '/timeline',
+            templateUrl: 'modules/core/customerReports/deviceUsage/timeline.tpl.html',
+            controller: 'DeviceUsageTimelineCtrl',
+            controllerAs: 'deviceUsage',
+            params: {
+            },
+            resolve: {
+              deviceUsageFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasDeviceUsageReport);
+              },
+            }
+          })
+
           .state('webex-reports', {
             url: '/reports/webex',
             templateUrl: 'modules/core/customerReports/customerReports.tpl.html',
