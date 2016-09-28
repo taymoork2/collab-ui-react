@@ -9,12 +9,14 @@ import { ServicesOverviewHybridCalendarCard } from './hybridCalendarCard';
 import { ServicesOverviewHybridCallCard } from './hybridCallCard';
 import { ServicesOverviewHybridMediaCard } from './hybridMediaCard';
 
+angular
+  .module('Hercules')
+  .factory('ServicesOverviewCardFactory', ServicesOverviewCardFactory);
+
 /* @ngInject */
 function ServicesOverviewCardFactory(Authinfo, FusionClusterStatesService) {
-
   return {
     createCards: function (): Array<ServicesOverviewCard> {
-
       return [
         new ServicesOverviewMessageCard(Authinfo),
         new ServicesOverviewMeetingCard(Authinfo),
@@ -29,7 +31,3 @@ function ServicesOverviewCardFactory(Authinfo, FusionClusterStatesService) {
     },
   };
 }
-
-angular
-  .module('Hercules')
-  .factory('ServicesOverviewCardFactory', ServicesOverviewCardFactory);

@@ -6,7 +6,7 @@
     .factory('OverviewHybridServicesCard', OverviewHybridServicesCard);
 
   /* @ngInject */
-  function OverviewHybridServicesCard(FusionClusterService, FusionClusterStatesService) {
+  function OverviewHybridServicesCard($q, Authinfo, Config, FeatureToggleService, FusionClusterService, FusionClusterStatesService) {
     return {
       createCard: function createCard() {
         var card = {};
@@ -21,11 +21,20 @@
         card.serviceList = [];
 
         function init() {
-          FusionClusterService.getAll()
-            .then(function (clusterList) {
-              card.serviceList.push(FusionClusterService.getStatusForService('squared-fusion-cal', clusterList));
-              card.serviceList.push(FusionClusterService.getStatusForService('squared-fusion-uc', clusterList));
-              card.serviceList.push(FusionClusterService.getStatusForService('squared-fusion-media', clusterList));
+          $q.all({
+            clusterList: FusionClusterService.getAll(),
+            hasMediaFeatureToggle: FeatureToggleService.supports(FeatureToggleService.features.atlasMediaServiceOnboarding),
+          })
+            .then(function (response) {
+              if (Authinfo.isEntitled(Config.entitlements.fusion_cal)) {
+                card.serviceList.push(FusionClusterService.getStatusForService('squared-fusion-cal', response.clusterList));
+              }
+              if (Authinfo.isEntitled(Config.entitlements.fusion_uc)) {
+                card.serviceList.push(FusionClusterService.getStatusForService('squared-fusion-uc', response.clusterList));
+              }
+              if (response.hasMediaFeatureToggle && Authinfo.isEntitled(Config.entitlements.mediafusion)) {
+                card.serviceList.push(FusionClusterService.getStatusForService('squared-fusion-media', response.clusterList));
+              }
               card.enabled = _.some(card.serviceList, function (service) {
                 return service.setup;
               });
