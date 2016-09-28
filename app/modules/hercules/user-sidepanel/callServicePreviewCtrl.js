@@ -99,6 +99,9 @@
     };
 
     var updateStatus = function (userIsRefreshed) {
+      if ($scope.isInvitePending) {
+        return;
+      }
       $scope.updatingStatus = true;
       USSService.getStatusesForUser($scope.currentUser.id).then(function (statuses) {
         $scope.callServiceAware.status = _.find(statuses, function (status) {
@@ -127,6 +130,9 @@
     };
 
     var refreshUserInUss = function () {
+      if ($scope.isInvitePending) {
+        return;
+      }
       USSService.refreshEntitlementsForUser($scope.currentUser.id).catch(function (response) {
         Notification.errorWithTrackingId(response, 'hercules.userSidepanel.refreshUserFailed');
       }).finally(function () {

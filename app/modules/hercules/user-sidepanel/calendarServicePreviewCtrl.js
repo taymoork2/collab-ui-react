@@ -67,6 +67,9 @@
     };
 
     var updateStatus = function (userIsRefreshed) {
+      if ($scope.isInvitePending) {
+        return;
+      }
       USSService.getStatusesForUser($scope.currentUser.id).then(function (statuses) {
         $scope.extension.status = _.find(statuses, function (status) {
           return $scope.extension.id === status.serviceId;
