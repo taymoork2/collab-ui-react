@@ -1,7 +1,7 @@
 [
   {
     "orderStatus": "PROVISIONED",
-    "serviceProvisioningId": "SPID-Atlas_Test_int_hungle001",
+    "serviceProvisioningId": "SPID-Atlas_Test_int_order001",
     "orderingTool": "CCW",
     "externalOrderId": "67891234",
     "productProvisionStatus": {
@@ -18,7 +18,7 @@
     "accountId": "4895afc9-83e9-44cb-b78a-05e541d41661",
     "orderContent": {
       "common": {
-        "serviceProvisioningId": "SPID-Atlas_Test_int_hungle001",
+        "serviceProvisioningId": "SPID-Atlas_Test_int_order001",
         "SBPOrderId": "67891234",
         "isTrial": false,
         "action": "New",
@@ -80,7 +80,7 @@
   },
   {
     "orderStatus": "REJECTED",
-    "serviceProvisioningId": "SPID-Atlas_Test_int_hungle001",
+    "serviceProvisioningId": "SPID-Atlas_Test_int_order001",
     "orderingTool": "CCW",
     "externalOrderId": "67891234",
     "productProvisionStatus": {
@@ -103,7 +103,7 @@
     "serviceId": "Sub1234-5678",
     "orderContent": {
       "common": {
-        "serviceProvisioningId": "SPID-Atlas_Test_int_hungle001",
+        "serviceProvisioningId": "SPID-Atlas_Test_int_order001",
         "SBPOrderId": "67891234",
         "isTrial": false,
         "action": "New",

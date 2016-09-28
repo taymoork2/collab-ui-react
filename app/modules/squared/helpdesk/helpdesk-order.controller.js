@@ -6,7 +6,7 @@
     .controller('HelpdeskOrderController', HelpdeskOrderController);
 
   /* @ngInject */
-  function HelpdeskOrderController($log, $stateParams, HelpdeskService, XhrNotificationService) {
+  function HelpdeskOrderController($stateParams, HelpdeskService, XhrNotificationService) {
     $('body').css('background', 'white');
     var vm = this;
     if ($stateParams.order) {
@@ -18,33 +18,34 @@
     HelpdeskService.searchOrder(vm.orderId).then(initOrderView, XhrNotificationService.notify);
 
     function initOrderView(order) {
-      $log.log("step 1");
       vm.order = order;
-      HelpdeskService.getAccount(order[0].accountId).then(function (account) {
-        vm.account = account;
-        vm.partnerInfo = order[0].orderContent.common.customerInfo.partnerInfo;
-        if (account.accountOrgId) {
-          HelpdeskService.getOrg(account.accountOrgId).then(function (org) {
-            vm.account.accountActivate = org.meta.created;
-          });
-        } else {
-          vm.account.accountActivate = "No";
-        }
-        HelpdeskService.getEmailStatus(account.customerAdminEmail).then(function (response) {
-          if (response.items) {
-            var timestamp = response.items[0].timestamp;
-            vm.customerEmailSent = getUTCtime(timestamp);
+      if (order && order[0].accountId) {
+        HelpdeskService.getAccount(order[0].accountId).then(function (account) {
+          vm.account = account;
+          vm.partnerInfo = order[0].orderContent.common.customerInfo.partnerInfo;
+          if (account.accountOrgId) {
+            HelpdeskService.getOrg(account.accountOrgId).then(function (org) {
+              vm.account.accountActivate = org.meta.created;
+            });
+          } else {
+            vm.account.accountActivate = "No";
           }
-        });
-        if (vm.partnerInfo) {
-          HelpdeskService.getEmailStatus(vm.partnerInfo.adminDetails.emailId).then(function (response) {
-            if (response.items) {
+          HelpdeskService.getEmailStatus(account.customerAdminEmail).then(function (response) {
+            if (response.items && response.items.length > 0) {
               var timestamp = response.items[0].timestamp;
-              vm.partnerEmailSent = getUTCtime(timestamp);
+              vm.customerEmailSent = getUTCtime(timestamp);
             }
           });
-        }
-      });
+          if (vm.partnerInfo) {
+            HelpdeskService.getEmailStatus(vm.partnerInfo.adminDetails.emailId).then(function (response) {
+              if (response.items && response.items.length > 0) {
+                var timestamp = response.items[0].timestamp;
+                vm.partnerEmailSent = getUTCtime(timestamp);
+              }
+            });
+          }
+        });
+      }
     }
 
     function getUTCtime(timestamp) {
