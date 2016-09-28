@@ -11,6 +11,7 @@
           <span class="feature-name" translate="hercules.serviceNames.{{extension.id}}"></span>
           <span class="feature-status" ng-class="extension.status ? 'status-' + extension.status.state : ''"
                 ng-show="extension.status && extension.entitled"
+                id="{{extension.id}}-status"
                 translate="hercules.activationStatus.{{hybridServicesCtrl.getStatus(extension.status)}}"></span>
           <span class="feature-status" ng-if="!extension.entitled" translate="common.off"></span>
           <span class="feature-status" ng-if="!extension.status && extension.entitled && hybridServicesCtrl.userStatusLoaded" translate="hercules.activationStatus.notFound"></span>
