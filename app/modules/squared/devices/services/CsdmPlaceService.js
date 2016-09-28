@@ -33,7 +33,7 @@
     }
 
     function updatePlaceName(placeUrl, name) {
-      return $http.put(placeUrl, {
+      return $http.patch(placeUrl, {
         name: name
       }).then(function (res) {
         return CsdmConverter.convertPlace(res.data);
