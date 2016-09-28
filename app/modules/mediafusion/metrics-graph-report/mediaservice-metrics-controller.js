@@ -21,7 +21,6 @@
     vm.setCallVolumeData = setCallVolumeData;
     vm.setAvailabilityData = setAvailabilityData;
     vm.setUtilizationData = setUtilizationData;
-    vm.setCPUUtilizationData = setCPUUtilizationData;
     vm.setTotalCallsData = setTotalCallsData;
     vm.setClusterAvailability = setClusterAvailability;
     vm.resizeCards = resizeCards;
@@ -192,12 +191,11 @@
     }
 
     function setAllGraphs() {
-      setTotalCallsData();
       setUtilizationData();
       setAvailabilityData();
       setCallVolumeData();
+      setTotalCallsData();
       setClusterAvailability();
-      setCPUUtilizationData();
     }
 
     function resizeCards() {
@@ -342,12 +340,13 @@
             for (var i = 0; i <= response.graphs.length; i++) {
               if (response.graphs[i].valueField !== vm.clusterId) {
                 vm.utilizationStatus = vm.EMPTY;
+                return;
               } else {
                 vm.utilizationClusterName = getClusterName(response.graphs);
                 setUtilizationGraph(response.graphData, vm.utilizationClusterName);
                 vm.card = '';
                 vm.utilizationStatus = vm.SET;
-                break;
+                return;
               }
             }
           }
@@ -416,25 +415,6 @@
         XhrNotificationService.notify(vm.errorData);
       });
 
-    }
-
-    function setCPUUtilizationData() {
-      MetricsReportService.getCPUUtilizationData(vm.timeSelected, vm.clusterId).then(function (response) {
-        if (response === vm.ABORT) {
-          return;
-        } else if (!angular.isDefined(response.data) || response.data.length === 0 || !angular.isDefined(response.data.avgCpu) || !angular.isDefined(response.data.peakCpu)) {
-          vm.averageUtilization = vm.EMPTY;
-          vm.peakUtilization = vm.EMPTY;
-          vm.averageUtilization = vm.noData;
-          vm.peakUtilization = vm.noData;
-        } else {
-          vm.averageUtilization = response.data.avgCpu + vm.percentage;
-          vm.peakUtilization = response.data.peakCpu + vm.percentage;
-        }
-        resizeCards();
-      }).catch(function () {
-        XhrNotificationService.notify(vm.errorData);
-      });
     }
 
     function setClusterAvailability() {

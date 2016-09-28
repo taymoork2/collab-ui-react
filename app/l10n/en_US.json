@@ -3602,7 +3602,14 @@
       "percentage": "%",
       "utilization": "Utilization",
       "avgutilization": "Avg Utilization",
-      "errordata": "Error in Retrieving Data"
+      "errordata": "Error in Retrieving Data",
+      "timeStamp": "Timestamp",
+      "startTime": "Start Time",
+      "endTime": "End Time",
+      "nodes": "Node(s)",
+      "node": "Node",
+      "availabilityStatus": "Availability Status",
+      "clusterTitle": "Cluster"
     },
     "serviceStatus": {
       "unknown": "Status unknown",

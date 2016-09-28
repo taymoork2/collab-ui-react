@@ -2,7 +2,7 @@
 
 describe('Service: Metrics Reports Service', function () {
   var $httpBackend, MetricsReportService, Notification;
-  var callVolumeUrl, UtilizationUrl, clusterAvailabilityUrl, totalCallsCard, availabilityCard, utilizationCard;
+  var callVolumeUrl, UtilizationUrl, clusterAvailabilityUrl, totalCallsCard, availabilityCard;
 
   var callVolumeData = getJSONFixture('mediafusion/json/metrics-graph-report/callVolumeData.json');
   var callVolume = callVolumeData.callvolume;
@@ -21,8 +21,6 @@ describe('Service: Metrics Reports Service', function () {
   var totalcallsdata = totalCallsCardData.totolcalls;
   var availabilityCardData = getJSONFixture('mediafusion/json/metrics-graph-report/availabilityCardData.json');
   var availabilitydata = availabilityCardData.availability;
-  var utilizationCardData = getJSONFixture('mediafusion/json/metrics-graph-report/utilizationCardData.json');
-  var utilizationcarddata = utilizationCardData.utilization;
 
   var allClusters = 'mediaFusion.metrics.allclusters';
 
@@ -56,7 +54,6 @@ describe('Service: Metrics Reports Service', function () {
     clusterAvailabilityUrl = baseUrl + '/clusters_availability/?relativeTime=1d';
     totalCallsCard = baseUrl + '/total_calls/?relativeTime=1d';
     availabilityCard = baseUrl + '/agg_availability/?relativeTime=1d';
-    utilizationCard = baseUrl + '/agg_cpu_utilization/?relativeTime=1d';
 
   }));
 
@@ -194,29 +191,6 @@ describe('Service: Metrics Reports Service', function () {
       $httpBackend.whenGET(availabilityCard).respond(500, error);
 
       MetricsReportService.getClusterAvailabilityData(timeFilter, allClusters).then(function (response) {
-        expect(response).toEqual([]);
-        expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
-      });
-
-      $httpBackend.flush();
-    });
-  });
-
-  describe('Aggregated Utilization Data', function () {
-    it('should get Average and Peak Utilization data', function () {
-      $httpBackend.whenGET(utilizationCard).respond(utilizationcarddata);
-
-      MetricsReportService.getCPUUtilizationData(timeFilter, allClusters).then(function (response) {
-        expect(response.data).toEqual(utilizationcarddata);
-      });
-
-      $httpBackend.flush();
-    });
-
-    it('should notify an error for Utilization data failure', function () {
-      $httpBackend.whenGET(utilizationCard).respond(500, error);
-
-      MetricsReportService.getCPUUtilizationData(timeFilter, allClusters).then(function (response) {
         expect(response).toEqual([]);
         expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
       });
