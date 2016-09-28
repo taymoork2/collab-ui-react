@@ -13,6 +13,11 @@
         ng-click="rgsCtrl.openAssignClustersModal()"></button>
     </setting-section>
 
+    <setting-section setting="rgsCtrl.users">
+      <h5 class="sub-section__label" translate="hercules.resourceGroupSettings.usersAssign"></h5>
+      <p class="sub-section__description" translate="hercules.resourceGroupSettings.usersDescription"></p>
+    </setting-section>
+
     <setting-section setting="rgsCtrl.releaseChannel" ng-if="rgsCtrl.releaseChannelOptions.length > 1 || rgsCtrl.showResetSection || rgsCtrl.channelHasBeenReset">
       <h5 class="sub-section__label" translate="hercules.resourceGroupSettings.releaseChannelHeader"></h5>
       <p class="sub-section__description" translate="hercules.resourceGroupSettings.releaseChannelDescription"></p>

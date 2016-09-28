@@ -10,6 +10,7 @@ describe('Component: resourceGroupCard', function () {
       clusters: [],
       id: '1',
       name: 'Bøler',
+      numberOfUsers: 0,
       releaseChannel: 'stable'
     };
 
@@ -26,9 +27,15 @@ describe('Component: resourceGroupCard', function () {
       expect(controller.group.id).toEqual(mockGroup.id);
     });
 
-    describe('showWarningText()', function () {
+    describe('hasZeroClusters()', function () {
       it('should be true if there are 0 clusters', function () {
-        expect(controller.showWarningText()).toEqual(true);
+        expect(controller.hasZeroClusters()).toEqual(true);
+      });
+    });
+
+    describe('hasZeroUsers()', function () {
+      it('should be true if there are 0 users', function () {
+        expect(controller.hasZeroUsers()).toEqual(true);
       });
     });
   });

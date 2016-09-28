@@ -19,6 +19,9 @@
     vm.clusters = {
       title: 'hercules.resourceGroupSettings.clustersHeader'
     };
+    vm.users = {
+      title: 'hercules.resourceGroupSettings.usersHeader'
+    };
     vm.resourceGroup = {
       title: 'hercules.resourceGroups.resourceGroupHeading'
     };
