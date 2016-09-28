@@ -35,7 +35,7 @@ export class ServicesOverviewHybridMediaCard extends ServicesOverviewHybridCard 
     this._display = hasFeature;
   }
 
-  public constructor() {
+  public constructor(FusionClusterStatesService) {
     super({
       name: 'servicesOverview.cards.hybridMedia.title',
       description: 'servicesOverview.cards.hybridMedia.description',
@@ -46,7 +46,7 @@ export class ServicesOverviewHybridMediaCard extends ServicesOverviewHybridCard 
       display : false,
       cardClass: 'media',
       cardType: CardType.hybrid,
-    });
+    }, FusionClusterStatesService);
     this._loading = false;
   }
 }

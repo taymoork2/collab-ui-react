@@ -7,8 +7,10 @@
       <tbody>
       <tr>
         <td translate="hercules.alarms.severity"></td>
-        <td><span ng-class="alarmCtrl.alarm.severity == 'warning' ? 'hercules-state-warning' : 'hercules-state-error'"
-                  translate="{{'hercules.alarms.' + alarmCtrl.alarm.severity}}"></span></td>
+        <td>
+          <i class="icon icon-circle status-indicator" ng-class="alarmCtrl.alarm.severity == 'warning' ? 'warning' : 'danger'"></i>
+          <span translate="{{'hercules.alarms.' + alarmCtrl.alarm.severity}}"></span>
+        </td>
       </tr>
       <tr>
         <td translate="hercules.alarms.firstReported"></td>

@@ -60,7 +60,7 @@
 </section>
 <section ng-if="!card.enabled" class="disabled-section">
   <span>{{(card.notEnabledText || 'overview.notEnabledText') | translate}}</span>
-  <a ng-href="{{card.notEnabledAction}}" ng-if="card.notEnabledAction" target="_blank">{{card.notEnabledActionText |
+  <a ng-href="{{card.notEnabledAction}}" ng-if="card.notEnabledAction" target="_blank">{{::card.notEnabledActionText |
     translate}}</a>
 </section>
 <footer ng-if="!card.enabled && card.notEnabledFooter" class="disabled-footer">
