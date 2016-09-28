@@ -20,9 +20,10 @@
         $log.debug('set serviceId to ', _serviceId);
         serviceId = _serviceId;
       },
-      addService: function (serviceName) {
+      addService: function (serviceName, description) {
         return $http.post(url, {
-          serviceName: serviceName
+          serviceName: serviceName,
+          description: description
         });
       }
     };

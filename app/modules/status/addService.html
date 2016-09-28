@@ -13,10 +13,20 @@
       <div class="columns medium-3">
         <span>service name</span>
       </div>
-      <div class="columns medium-7">
+      <div class="columns medium-9">
         <input class="cs-input" ng-model="add.serviceName" type="text">
       </div>
-      <div class="columns medium-2">
+    </div>
+    <div class="row">
+      <div class="columns medium-3">
+        <span>service description</span>
+      </div>
+      <div class="columns medium-9">
+        <textarea ng-model="add.description"></textarea>
+      </div>
+    </div>
+    <div class="row">
+      <div class="columns medium-12">
         <button class="btn activate-button btn--primary" ng-class="{disabled:!add.validation()}"
                 ng-click="add.addService()">
           <span>add</span>
