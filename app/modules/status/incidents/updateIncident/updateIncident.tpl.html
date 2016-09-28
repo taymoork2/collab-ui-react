@@ -56,7 +56,7 @@
 			</div>
 			<div ng-model="toOperational" ng-init="toOperational=false" ng-show="toOperational">
 				<p ng-if="showOperational">
-					<span class="setColor">You can also </span><a ng-click="toOperationalFUN()">set your components to operational.</a>
+					<span class="setColor">You can also </span><a ng-click="uic.toOperationalFUN()">set your components to operational.</a>
 				</p>
 				<p ng-if="!showOperational">
 					<span class="setColor">Components will be set to operational upon submission of this incident update.</span>
@@ -71,7 +71,7 @@
 
 		<div class="componentStatuses">
 			<span class="labelTitle">Component Statuses</span>
-			<p ng-show="!showComponent"><span class="setColor">You can also </span><a class="UpcomponentStatus" ng-click="uic.toOperationalFUN()">update a component's status.</a></p>
+			<p ng-show="!showComponent"><span class="setColor">You can also </span><a class="UpcomponentStatus" ng-click="showComponentFUN()">update a component's status.</a></p>
 			<div ng-show="showComponent">
 				<div ng-repeat="componentGroup in componentsTree">
 					<div class="groupComponent" ng-init="componentVisible=false">
