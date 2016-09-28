@@ -1,4 +1,4 @@
-<cs-sp-buttons ng-show="showButtons">
+<cs-sp-buttons ng-if="showButtons">
   <button id="btn-save" class="btn--primary btn-save" cs-btn loading="saving" ng-click="save()"><span
     translate="common.save"></span></button>
   <button id="btn-cancel" ng-disabled="saving" translate="common.cancel" ng-click="reset()"></button>
@@ -14,23 +14,21 @@
         translate}}</p>
       <div>
         <span class="cloud-extension-label">{{'cloudExtensions.status' | translate}}:</span>
-        <span ng-show="extension.entitled && extension.status"
-              class="cloud-extension-label"
+        <span class="cloud-extension-label" ng-if="extension.entitled && extension.status"
               ng-class="extension.entitled && extension.status ? 'status-' + extension.status.state : 'disabled'"
               translate="hercules.activationStatus.{{getStatus(extension.status)}}"></span>
-        <span ng-hide="extension.status && extension.entitled"
-              ng-class="extension.entitled && extension.status ? 'status-' + extension.status.state : 'disabled'"
-              class="cloud-extension-label"
-              translate="common.{{extension.entitled ? 'on' : 'off'}}"></span>
+        <span class="cloud-extension-label status-off" ng-if="!extension.entitled" translate="common.off"></span>
+        <span cs-loader ng-if="!extension.status && extension.entitled"></span>
+
       </div>
-      <div ng-show="extension.entitled && extension.homedConnector">
+      <div ng-if="extension.entitled && extension.homedConnector">
         <span class="cloud-extension-label">{{'cloudExtensions.host' | translate}}:</span>
-        <span ng-show="extension.entitled && extension.homedConnector" class="cloud-extension-label">
+        <span ng-if="extension.entitled && extension.homedConnector" class="cloud-extension-label">
           <a href="https://{{extension.homedConnector.host_name}}" target="_blank" style="color: #3ca8e8">{{extension.homedConnector.host_name}}</a>
         </span>
       </div>
 
-      <div ng-show="extension.entitled && extension.status && extension.status.state === 'error' && extension.status.description"
+      <div ng-if="extension.entitled && extension.status && extension.status.state === 'error' && extension.status.description"
            class="error-message">
          <i class="icon icon-error"></i>
          <p class="message">
@@ -59,7 +57,7 @@
       <cs-select
         ng-model="resourceGroup.selected"
         options="resourceGroup.options"
-        on-change-fn="setShouldShowButtons()">
+        on-change-fn="selectedResourceGroupChanged()">
       </cs-select>
       <div class="warning-message" ng-if="resourceGroup.shouldWarn">
         <i class="icon icon-warning"></i>

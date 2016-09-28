@@ -148,6 +148,12 @@
         .then(extractData);
     }
 
+    function refreshEntitlementsForUser(userId, orgId) {
+      return $http
+        .post(USSUrl + '/userStatuses/actions/refreshEntitlementsForUser/invoke?orgId=' + (orgId || Authinfo.getOrgId()) + '&userId=' + userId)
+        .then(extractData);
+    }
+
     return {
       getStatusesForUser: getStatusesForUser,
       decorateWithStatus: decorateWithStatus,
@@ -162,7 +168,8 @@
       updateUserProps: updateUserProps,
       getAllUserProps: getAllUserProps,
       updateBulkUserProps: updateBulkUserProps,
-      removeAllUsersFromResourceGroup: removeAllUsersFromResourceGroup
+      removeAllUsersFromResourceGroup: removeAllUsersFromResourceGroup,
+      refreshEntitlementsForUser: refreshEntitlementsForUser
     };
   }
 
