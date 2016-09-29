@@ -46,13 +46,15 @@
       OtpService.generateOtp(vm.currentUser.userName).then(function (code) {
         var wizardState = {
           data: {
-            function: "showCode",
-            deviceName: vm.deviceName,
+            function: 'showCode',
+            title: 'addDeviceWizard.newDevice',
+            deviceType: 'huron',
+            deviceName: vm.currentUser.displayName,
             activationCode: code.code,
             code: code,
             expiryTime: code.friendlyExpiresOn,
             cisUuid: vm.currentUser.id,
-            email: vm.currentUser.email,
+            email: vm.currentUser.userName,
             displayName: vm.currentUser.displayName,
             organizationId: vm.currentUser.meta.organizationID
           },

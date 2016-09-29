@@ -149,9 +149,15 @@
       return Utils.sprintf(config.oauthUrl.ciRedirectUrl, params);
     }
 
+    function getAbsUrlForDev() {
+      var urlAtRootContext = Config.getAbsUrlAtRootContext();
+      var isOkayForRedir = Config.canUseAbsUrlForDevLogin(urlAtRootContext);
+      return (isOkayForRedir) ? urlAtRootContext : 'http://127.0.0.1:8000';
+    }
+
     function getAdminPortalUrl() {
       var adminPortalUrl = {
-        dev: 'http://127.0.0.1:8000',
+        dev: getAbsUrlForDev(),
         cfe: 'https://cfe-admin.ciscospark.com',
         integration: 'https://int-admin.ciscospark.com/',
         prod: 'https://admin.ciscospark.com/'

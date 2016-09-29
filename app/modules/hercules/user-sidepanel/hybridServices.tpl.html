@@ -3,7 +3,6 @@
     <span class="section-name" translate="cloudExtensions.cloudExtensions"></span>
   </div>
   <div class="feature-list cloud-extensions">
-
     <ul>
       <li class="feature" ng-repeat="extension in hybridServicesCtrl.extensions | filter: hybridServicesCtrl.allExceptUcFilter">
         <a id="link_{{extension.id}}"
@@ -11,10 +10,13 @@
           <i class="feature-icon-extension" ng-class="hybridServicesCtrl.extensionIcon(extension.id)"></i>
           <span class="feature-name" translate="hercules.serviceNames.{{extension.id}}"></span>
           <span class="feature-status" ng-class="extension.status ? 'status-' + extension.status.state : ''"
-                ng-show="extension.status && extension.entitled"
+                ng-show="extension.status && extension.entitled && !hybridServicesCtrl.isInvitePending"
+                id="{{extension.id}}-status"
                 translate="hercules.activationStatus.{{hybridServicesCtrl.getStatus(extension.status)}}"></span>
-          <span class="feature-status" ng-hide="extension.status && extension.entitled"
-                id="{{extension.id}}-status" translate="common.{{extension.entitled ? 'on' : 'off'}}"></span>
+          <span class="feature-status" ng-if="!extension.entitled" translate="common.off"></span>
+          <span class="feature-status" ng-if="hybridServicesCtrl.isInvitePending && extension.entitled" translate="usersPage.invitePending"></span>
+          <span class="feature-status" ng-if="!extension.status && extension.entitled && hybridServicesCtrl.userStatusLoaded && !hybridServicesCtrl.isInvitePending" translate="hercules.activationStatus.notFound"></span>
+          <span cs-loader class="feature-list-loader" ng-if="!hybridServicesCtrl.isInvitePending && !extension.status && extension.entitled && !hybridServicesCtrl.userStatusLoaded"></span>
           <i class="feature-arrow"></i>
         </a>
       </li>

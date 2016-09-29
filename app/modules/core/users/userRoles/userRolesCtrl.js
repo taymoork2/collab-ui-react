@@ -11,11 +11,15 @@
     $scope.isPartner = SessionStorage.get('partnerOrgId');
     $scope.helpDeskFeatureAllowed = Authinfo.isCisco() || _.includes(['fe5acf7a-6246-484f-8f43-3e8c910fc50d'], Authinfo.getOrgId());
     $scope.showHelpDeskRole = $scope.isPartner || $scope.helpDeskFeatureAllowed;
+    // Assign showOrderAdminRole  = Authinfo.isCisco() || Authinfo.isCiscoMock() when OrderAdmin role validation in backend is in Prod
+    $scope.showOrderAdminRole = false;
     $scope.showComplianceRole = false;
     $scope.updateRoles = updateRoles;
     $scope.clearCheckboxes = clearCheckboxes;
     $scope.supportCheckboxes = supportCheckboxes;
     $scope.partialCheckboxes = partialCheckboxes;
+    $scope.orderadminOnCheckedHandler = orderadminOnCheckedHandler;
+    $scope.helpdeskOnCheckedHandler = helpdeskOnCheckedHandler;
     $scope.resetRoles = resetRoles;
     $scope.enableReadonlyAdminOption = false;
     $scope.rolesObj = {};
@@ -44,8 +48,8 @@
       id: 'partialAdmin'
     };
 
-    FeatureToggleService.supports(FeatureToggleService.features.atlasReadOnlyAdmin).then(function (enabled) {
-      $scope.enableReadonlyAdminOption = !!enabled;
+    FeatureToggleService.supports(FeatureToggleService.features.atlasReadOnlyAdmin).then(function () {
+      $scope.enableReadonlyAdminOption = true;
     });
 
     FeatureToggleService.supports(FeatureToggleService.features.atlasComplianceRole).then(function (enabled) {
@@ -103,6 +107,7 @@
       $scope.rolesObj.billingAdminValue = hasRole(Config.backend_roles.billing);
       $scope.rolesObj.supportAdminValue = hasRole(Config.backend_roles.support);
       $scope.rolesObj.helpdeskValue = hasRole(Config.backend_roles.helpdesk);
+      $scope.rolesObj.orderAdminValue = hasRole(Config.backend_roles.orderadmin);
       $scope.rolesObj.complianceValue = $scope.currentUser && _.includes($scope.currentUser.entitlements, 'compliance');
     }
 
@@ -164,7 +169,10 @@
       switch ($scope.rolesObj.adminRadioValue) {
         case 0: // No admin
           for (var roleName in Config.roles) {
-            if (Config.roles[roleName] !== Config.roles.helpdesk && Config.roles[roleName] !== Config.roles.spark_synckms && Config.roles[roleName] !== Config.roles.compliance_user) {
+            if (Config.roles[roleName] !== Config.roles.helpdesk &&
+              Config.roles[roleName] !== Config.roles.orderadmin &&
+              Config.roles[roleName] !== Config.roles.spark_synckms &&
+              Config.roles[roleName] !== Config.roles.compliance_user) {
               roles.push({
                 'roleName': Config.roles[roleName],
                 'roleState': Config.roleState.inactive
@@ -258,6 +266,14 @@
         'roleName': Config.roles.helpdesk,
         'roleState': ($scope.rolesObj.helpdeskValue ? Config.roleState.active : Config.roleState.inactive)
       });
+
+      // Order Admin role for applicable users
+      if ($scope.showOrderAdminRole) {
+        roles.push({
+          'roleName': Config.roles.orderadmin,
+          'roleState': ($scope.rolesObj.orderAdminValue ? Config.roleState.active : Config.roleState.inactive)
+        });
+      }
 
       roles.push({
         'roleName': Config.roles.spark_synckms,
@@ -359,6 +375,20 @@
 
     function isEntitledToCompliance() {
       return $scope.currentUser && _.includes($scope.currentUser.entitlements, 'compliance');
+    }
+
+    function orderadminOnCheckedHandler() {
+      if ($scope.rolesObj.orderAdminValue) {
+        $scope.rolesObj.helpdeskValue = true;
+        $scope.rolesEdit.form.$dirty = true;
+      }
+    }
+
+    function helpdeskOnCheckedHandler() {
+      if ($scope.rolesObj.helpdeskValue === false) {
+        $scope.rolesObj.orderAdminValue = false;
+        $scope.rolesEdit.form.$dirty = true;
+      }
     }
   }
 })();

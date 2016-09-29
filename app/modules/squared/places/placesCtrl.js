@@ -5,13 +5,15 @@
     .controller('PlacesCtrl',
 
       /* @ngInject */
-      function ($scope, $state, $templateCache, $translate, CsdmPlaceService, CsdmHuronPlaceService, PlaceFilter, Authinfo, WizardFactory, RemPlaceModal) {
+      function ($scope, $state, $templateCache, $translate, CsdmDataModelService, CsdmHuronPlaceService, PlaceFilter, Authinfo, WizardFactory, RemPlaceModal) {
         var vm = this;
 
         vm.data = [];
         vm.csdmLoaded = false;
         vm.huronLoaded = false;
         vm.placeFilter = PlaceFilter;
+        vm.placeFilter.setCurrentSearch('');
+        vm.placeFilter.setCurrentFilter('');
         var csdmPlacesList;
         var huronPlacesList;
 
@@ -20,7 +22,7 @@
         }
 
         function loadLists() {
-          CsdmPlaceService.getPlacesList().then(function (list) {
+          CsdmDataModelService.getPlacesMap().then(function (list) {
             csdmPlacesList = list;
             vm.csdmLoaded = true;
           });
@@ -98,16 +100,15 @@
             },
             sortCellFiltered: true
           }, {
-            field: 'type',
+            field: 'readableType',
             displayName: $translate.instant('placesPage.typeHeader'),
-            cellTemplate: getTemplate('_typeTpl'),
             sortable: true
           }, {
             field: 'devices',
             displayName: $translate.instant('placesPage.deviceHeader'),
             cellTemplate: getTemplate('_devicesTpl'),
             sortable: true,
-            sortingAlgorithm: sortStateFn
+            sortingAlgorithm: sortNoDevicesFn
           }, {
             field: 'action',
             displayName: $translate.instant('placesPage.actionHeader'),
@@ -172,8 +173,8 @@
           return 1;
         }
 
-        function sortStateFn(a, b) {
-          return a.priority - b.priority;
+        function sortNoDevicesFn(a, b) {
+          return _.size(a) - _.size(b);
         }
       }
     );

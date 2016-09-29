@@ -6,7 +6,7 @@
     .controller('HelpdeskUserController', HelpdeskUserController);
 
   /* @ngInject */
-  function HelpdeskUserController($stateParams, HelpdeskService, XhrNotificationService, USSService, HelpdeskCardsUserService, Config, LicenseService, HelpdeskHuronService, HelpdeskLogService, Authinfo, $window, $modal, WindowLocation, FeatureToggleService) {
+  function HelpdeskUserController($modal, $stateParams, $translate, $window, Authinfo, Config, FeatureToggleService, HelpdeskCardsUserService, HelpdeskHuronService, HelpdeskLogService, HelpdeskService, LicenseService, Notification, USSService, WindowLocation, XhrNotificationService) {
     $('body').css('background', 'white');
     var vm = this;
     if ($stateParams.user) {
@@ -22,6 +22,7 @@
     }
     vm.resendInviteEmail = resendInviteEmail;
     vm.user = $stateParams.user;
+    vm.userStatusesAsString = '';
     vm.resendInviteEnabled = false;
     vm.messageCard = {};
     vm.meetingCard = {};
@@ -42,15 +43,25 @@
     HelpdeskService.getUser(vm.orgId, vm.userId).then(initUserView, XhrNotificationService.notify);
 
     function resendInviteEmail() {
-      HelpdeskService.resendInviteEmail(vm.user.displayName, vm.user.userName).then(function () {
-        var prefix = 'helpdesk.userStatuses.';
-        for (var i = 0; i < vm.user.statuses.length; i++) {
-          var status = vm.user.statuses[i];
-          if (_.contains(prefix + 'rejected', status)) {
-            vm.user.statuses[i] = prefix + 'resent';
+      var trimmedUserData = {
+        displayName: vm.user.displayName,
+        email: vm.user.userName,
+        onlineOrderIds: _.get(vm.user, 'onlineOrderIds', [])
+      };
+      HelpdeskService.resendInviteEmail(trimmedUserData)
+        .then(function () {
+          Notification.success('helpdesk.resendSuccess');
+        })
+        .then(function () {
+          var prefix = 'helpdesk.userStatuses.';
+          for (var i = 0; i < vm.user.statuses.length; i++) {
+            var status = vm.user.statuses[i];
+            if (_.includes(prefix + 'rejected', status)) {
+              vm.user.statuses[i] = prefix + 'resent';
+            }
           }
-        }
-      }, XhrNotificationService.notify);
+        })
+        .catch(XhrNotificationService.notify);
     }
 
     function sendCode() {
@@ -80,21 +91,26 @@
 
     function initUserView(user) {
       vm.user = user;
-      vm.resendInviteEnabled = _.includes(user.statuses, 'helpdesk.userStatuses.pending');
+      vm.resendInviteEnabled = _.some(user.statuses, function (_status) {
+        return /helpdesk.userStatuses..*-pending$/.test(_status);
+      });
       if (FeatureToggleService.supports(FeatureToggleService.features.atlasEmailStatus)) {
         HelpdeskService.isEmailBlocked(user.userName)
           .then(function () {
             vm.resendInviteEnabled = true;
             var prefix = 'helpdesk.userStatuses.';
-            var statusToReplace = [prefix + 'active', prefix + 'inactive', prefix + 'pending', prefix + 'resent'];
+            var statusToReplace = [prefix + 'active', prefix + 'inactive', prefix + 'invite-pending', prefix + 'resent'];
             for (var i = 0; i < vm.user.statuses.length; i++) {
               var status = vm.user.statuses[i];
-              if (_.contains(statusToReplace, status)) {
+              if (_.includes(statusToReplace, status)) {
                 vm.user.statuses[i] = prefix + 'rejected';
               }
             }
           });
       }
+
+      vm.userStatusesAsString = getUserStatusesAsString(vm);
+
       vm.messageCard = HelpdeskCardsUserService.getMessageCardForUser(user);
       vm.meetingCard = HelpdeskCardsUserService.getMeetingCardForUser(user);
       vm.callCard = HelpdeskCardsUserService.getCallCardForUser(user);
@@ -143,6 +159,13 @@
 
       vm.cardsAvailable = true;
       angular.element(".helpdesk-details").focus();
+    }
+
+    function getUserStatusesAsString(vm) {
+      var statuses = _.map(vm.user.statuses, function (_status) {
+        return $translate.instant(_status);
+      });
+      return statuses.join(',');
     }
 
     function isAuthorizedForLog() {

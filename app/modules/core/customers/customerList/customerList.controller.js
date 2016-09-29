@@ -323,10 +323,10 @@
       setNotesTextOrder();
       initColumns();
       FeatureToggleService.atlasCareTrialsGetStatus().then(function (careStatus) {
-        $scope.isCareEnabled = careStatus;
+        $scope.isCareEnabled = careStatus && Authinfo.isCare();
         // FIXME: Remove this if block once the customer list refactor goes live
         // (This check is taken care of in the compactServiceColumn directive)
-        if (!careStatus) {
+        if (!$scope.isCareEnabled) {
           _.remove($scope.gridColumns, careField);
         }
       }, function () {
@@ -338,6 +338,7 @@
           setFilter($stateParams.filter);
         });
       });
+
       Orgservice.getOrg(function (data, status) {
         if (data.success) {
           $scope.isTestOrg = data.isTestOrg;
@@ -354,7 +355,7 @@
       var result = _.map(groupedFields, function (group) {
         //or return the one with license OR the first
         return (_.find(group, function (field) {
-          return _.contains(licenses, field.offerCode);
+          return _.includes(licenses, field.offerCode);
         }) || group[0]);
       });
       return result;
@@ -382,7 +383,7 @@
     }
 
     function isOwnOrg(customer) {
-      return customer.customerName === Authinfo.getOrgName();
+      return customer.customerOrgId === Authinfo.getOrgId();
     }
 
     function serviceSort(a, b) {
@@ -574,32 +575,33 @@
 
     function getManagedOrgsList(searchText) {
       $scope.showManagedOrgsRefresh = true;
-      var promiselist = [PartnerService.getManagedOrgsList(searchText)];
+      var promiselist = { managedOrgs: PartnerService.getManagedOrgsList(searchText) };
 
       if (Authinfo.isPartnerAdmin() || Authinfo.isPartnerReadOnlyAdmin()) {
         // This attaches myOrg details to the managed orgs list
         if (searchText === '' || Authinfo.getOrgName().indexOf(searchText) !== -1) {
-          promiselist.push(getMyOrgDetails());
+          promiselist.myOrgDetails = getMyOrgDetails();
         }
       }
 
       return $q.all(promiselist)
         .then(function (results) {
           if (results) {
-            var orgList = _.get(results, '[0].data.organizations', []);
+            var orgList = _.get(results, 'managedOrgs.data.organizations', []);
             var managed = PartnerService.loadRetrievedDataToList(orgList, false,
               $scope.isCareEnabled);
-            var isMyOrgInList = _.some(orgList, {
+            var indexMyOwnOrg = _.findIndex(managed, {
               customerOrgId: Authinfo.getOrgId()
             });
-            if (!isMyOrgInList && results[1]) {
-              // 4/11/2016 admolla
-              // TODO: for some reason if I refactor this to not need an array, karma acts up....
-              if (_.isArray(results[1])) {
-                managed.unshift(results[1][0]);
+            // 4/11/2016 admolla
+            // TODO: for some reason if I refactor this to not need an array, karma acts up....
+            if (results.myOrgDetails && _.isArray(results.myOrgDetails)) {
+              if (indexMyOwnOrg === -1) {
+                managed.unshift(results.myOrgDetails[0]);
+              } else {
+                managed[indexMyOwnOrg] = results.myOrgDetails[0];
               }
             }
-
             $scope.managedOrgsList = managed;
             $scope.totalOrgs = $scope.managedOrgsList.length;
             var statusTypeCounts = _.countBy($scope.managedOrgsList, function (value) {

@@ -1,14 +1,13 @@
 'use strict';
 
 describe('Controller: Customer Reports Ctrl', function () {
-  var controller, $httpBackend, $scope, $state, $stateParams, $q, $translate, $timeout, Log, Config, CustomerReportService, DummyCustomerReportService, CustomerGraphService, WebexReportService, WebExApiGatewayService, Userservice, FeatureToggleService, MediaServiceActivationV2;
+  var controller, $httpBackend, $scope, $state, $stateParams, $q, $translate, $timeout, Authinfo, Log, Config, CustomerReportService, DummyCustomerReportService, CustomerGraphService, WebexReportService, WebExApiGatewayService, Userservice, FeatureToggleService, MediaServiceActivationV2;
   var activeUsersSort = ['userName', 'numCalls', 'sparkMessages', 'totalActivity'];
   var REFRESH = 'refresh';
 
   var dummyData = getJSONFixture('core/json/partnerReports/dummyReportData.json');
   var activeData = getJSONFixture('core/json/customerReports/activeUser.json');
   var responseActiveData = activeData.activeResponse;
-  var responseMostActiveData = activeData.mostActiveResponse;
   var roomData = getJSONFixture('core/json/customerReports/roomData.json');
   var fileData = getJSONFixture('core/json/customerReports/fileData.json');
   var mediaData = getJSONFixture('core/json/customerReports/mediaQuality.json');
@@ -65,13 +64,14 @@ describe('Controller: Customer Reports Ctrl', function () {
   beforeEach(angular.mock.module('Mediafusion'));
 
   describe('CustomerReportsCtrl - Expected Responses', function () {
-    beforeEach(inject(function ($rootScope, $controller, _$httpBackend_, _$state_, _$stateParams_, _$q_, _$translate_, _$timeout_, _Log_, _Config_, _CustomerReportService_, _DummyCustomerReportService_, _CustomerGraphService_, _FeatureToggleService_, _MediaServiceActivationV2_) {
+    beforeEach(inject(function ($rootScope, $controller, _$httpBackend_, _$state_, _$stateParams_, _$q_, _$translate_, _$timeout_, _Authinfo_, _Log_, _Config_, _CustomerReportService_, _DummyCustomerReportService_, _CustomerGraphService_, _FeatureToggleService_, _MediaServiceActivationV2_) {
       $scope = $rootScope.$new();
       $state = _$state_;
       $stateParams = _$stateParams_;
       $q = _$q_;
       $translate = _$translate_;
       $timeout = _$timeout_;
+      Authinfo = _Authinfo_;
       Log = _Log_;
       Config = _Config_;
       CustomerReportService = _CustomerReportService_;
@@ -85,6 +85,7 @@ describe('Controller: Customer Reports Ctrl', function () {
       spyOn(FeatureToggleService, 'atlasMediaServiceMetricsGetStatus').and.returnValue(
         $q.when(true)
       );
+      spyOn(Authinfo, 'isCare').and.returnValue(true);
       spyOn(FeatureToggleService, 'atlasCareTrialsGetStatus').and.returnValue(
         $q.when(true)
       );
@@ -119,7 +120,10 @@ describe('Controller: Customer Reports Ctrl', function () {
       spyOn(DummyCustomerReportService, 'dummyDeviceData').and.returnValue(dummyDevices);
 
       spyOn(CustomerReportService, 'getActiveUserData').and.returnValue($q.when(responseActiveData));
-      spyOn(CustomerReportService, 'getMostActiveUserData').and.returnValue($q.when(responseMostActiveData));
+      spyOn(CustomerReportService, 'getMostActiveUserData').and.returnValue($q.when({
+        tableData: _.clone(activeData.mostActiveResponse),
+        error: false
+      }));
       spyOn(CustomerReportService, 'getAvgRoomData').and.returnValue($q.when(roomData.response));
       spyOn(CustomerReportService, 'getFilesSharedData').and.returnValue($q.when(fileData.response));
       spyOn(CustomerReportService, 'getMediaQualityData').and.returnValue($q.when(mediaData.response));
@@ -186,7 +190,7 @@ describe('Controller: Customer Reports Ctrl', function () {
           expect(DummyCustomerReportService.dummyMetricsData).toHaveBeenCalled();
           expect(DummyCustomerReportService.dummyDeviceData).toHaveBeenCalledWith(timeOptions[0]);
 
-          expect(CustomerReportService.getActiveUserData).toHaveBeenCalledWith(timeOptions[0]);
+          expect(CustomerReportService.getActiveUserData).toHaveBeenCalledWith(timeOptions[0], false);
           expect(CustomerReportService.getMostActiveUserData).toHaveBeenCalledWith(timeOptions[0]);
           expect(CustomerReportService.getAvgRoomData).toHaveBeenCalledWith(timeOptions[0]);
           expect(CustomerReportService.getFilesSharedData).toHaveBeenCalledWith(timeOptions[0]);
@@ -256,7 +260,7 @@ describe('Controller: Customer Reports Ctrl', function () {
         expect(DummyCustomerReportService.dummyMetricsData).toHaveBeenCalled();
         expect(DummyCustomerReportService.dummyDeviceData).toHaveBeenCalledWith(timeOptions[1]);
 
-        expect(CustomerReportService.getActiveUserData).toHaveBeenCalledWith(timeOptions[1]);
+        expect(CustomerReportService.getActiveUserData).toHaveBeenCalledWith(timeOptions[1], false);
         expect(CustomerReportService.getAvgRoomData).toHaveBeenCalledWith(timeOptions[1]);
         expect(CustomerReportService.getFilesSharedData).toHaveBeenCalledWith(timeOptions[1]);
         expect(CustomerReportService.getMediaQualityData).toHaveBeenCalledWith(timeOptions[1]);
@@ -323,11 +327,11 @@ describe('Controller: Customer Reports Ctrl', function () {
       it('searchMostActive should return a list of users based on mostActiveUsers and the searchField', function () {
         expect(controller.searchMostActive()).toEqual([]);
 
-        controller.mostActiveUsers = responseMostActiveData;
-        expect(controller.searchMostActive()).toEqual(responseMostActiveData);
+        controller.mostActiveUsers = _.clone(activeData.mostActiveResponse);
+        expect(controller.searchMostActive()).toEqual(_.clone(activeData.mostActiveResponse));
 
         controller.searchField = 'le';
-        expect(controller.searchMostActive()).toEqual([responseMostActiveData[0], responseMostActiveData[11]]);
+        expect(controller.searchMostActive()).toEqual([_.clone(activeData.mostActiveResponse)[0], _.clone(activeData.mostActiveResponse)[11]]);
       });
 
       it('mostActiveUserSwitch should toggle the state for showMostActiveUsers', function () {
@@ -356,18 +360,30 @@ describe('Controller: Customer Reports Ctrl', function () {
         expect(controller.isRefresh('refresh')).toBeTruthy();
       });
 
-      it('isRefresh should return false when sent "set" or "empty"', function () {
+      it('isRefresh should return false when sent "set", "error", or "empty"', function () {
         expect(controller.isRefresh('set')).toBeFalsy();
         expect(controller.isRefresh('empty')).toBeFalsy();
+        expect(controller.isRefresh('error')).toBeFalsy();
       });
 
       it('isEmpty should return true when sent "empty"', function () {
         expect(controller.isEmpty('empty')).toBeTruthy();
       });
 
-      it('isEmpty should return false when sent "set" or "refresh"', function () {
+      it('isEmpty should return false when sent "set", "error", or "refresh"', function () {
         expect(controller.isEmpty('set')).toBeFalsy();
         expect(controller.isEmpty('refresh')).toBeFalsy();
+        expect(controller.isEmpty('error')).toBeFalsy();
+      });
+
+      it('isError should return true when sent "error"', function () {
+        expect(controller.isError('error')).toBeTruthy();
+      });
+
+      it('isError should return false when sent "set", "empty", or "refresh"', function () {
+        expect(controller.isError('set')).toBeFalsy();
+        expect(controller.isError('refresh')).toBeFalsy();
+        expect(controller.isError('empty')).toBeFalsy();
       });
 
       it('mostActiveSort should sort by userName', function () {

@@ -2,7 +2,7 @@
 
 /* global LONG_TIMEOUT */
 
-describe('First Time Wizard', function () {
+xdescribe('First Time Wizard', function () {
 
   it('should login as an admin user', function () {
     login.login('pbr-admin');

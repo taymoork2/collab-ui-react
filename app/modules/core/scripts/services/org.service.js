@@ -33,7 +33,8 @@
       getHybridServiceAcknowledged: getHybridServiceAcknowledged,
       setHybridServiceAcknowledged: setHybridServiceAcknowledged,
       getEftSetting: getEftSetting,
-      setEftSetting: setEftSetting
+      setEftSetting: setEftSetting,
+      setHybridServiceReleaseChannelEntitlement: setHybridServiceReleaseChannelEntitlement
     };
 
     var savedOrgSettingsCache = [];
@@ -127,35 +128,36 @@
     }
 
     function getLicensesUsage() {
-      return getAdminOrgUsage().then(function (response) {
+      return getAdminOrgUsage()
+        .then(function (response) {
+          var usageLicenses = response.data || [];
+          var statusLicenses = Authinfo.getLicenses();
+          var trial = '';
 
-        var usageLicenses = response.data || [];
-        var statusLicenses = Authinfo.getLicenses();
-        var trial = '';
-
-        var result = [];
-        _.forEach(usageLicenses, function (usageLicense) {
-          var licenses = _.filter(usageLicense.licenses, function (license) {
-            var match = _.find(statusLicenses, {
-              'licenseId': license.licenseId
+          var result = [];
+          _.forEach(usageLicenses, function (usageLicense) {
+            var licenses = _.filter(usageLicense.licenses, function (license) {
+              var match = _.find(statusLicenses, {
+                'licenseId': license.licenseId
+              });
+              trial = license.isTrial ? 'Trial' : 'unknown';
+              return !(_.isUndefined(match) || match.status === 'CANCELLED' || match.status === 'SUSPENDED');
             });
-            trial = license.isTrial ? 'Trial' : 'unknown';
-            return !(_.isUndefined(match) || match.status === 'CANCELLED' || match.status === 'SUSPENDED');
-          });
 
-          var subscription = {
-            "subscriptionId": usageLicense.subscriptionId ? usageLicense.subscriptionId : trial,
-            "internalSubscriptionId": usageLicense.internalSubscriptionId ?
-                                      usageLicense.internalSubscriptionId : trial,
-            "licenses": licenses
-          };
-          result.push(subscription);
+            var subscription = {
+              "subscriptionId": usageLicense.subscriptionId ? usageLicense.subscriptionId : trial,
+              "internalSubscriptionId": usageLicense.internalSubscriptionId ?
+                usageLicense.internalSubscriptionId : trial,
+              "licenses": licenses
+            };
+            result.push(subscription);
+          });
+          return result;
+        })
+        .catch(function (err) {
+          Log.debug('Get existing admin org failed. Status: ' + JSON.stringify(_.pick(err, 'status', 'statusText')));
+          return $q.reject(err);
         });
-        return result;
-      }).catch(function (err) {
-        Log.debug('Get existing admin org failed. Status: ' + err);
-        throw err;
-      });
     }
 
     function getValidLicenses() {
@@ -397,6 +399,14 @@
       return $http.get(Auth.getAuthorizationUrl(orgId))
         .then(function (data) {
           return data.data.setupDone;
+        });
+    }
+
+    function setHybridServiceReleaseChannelEntitlement(orgId, channel, entitled) {
+      return $http
+        .post(UrlConfig.getAdminServiceUrl() + 'hybridservices/organizations/' + orgId + '/releaseChannels', {
+          channel: channel,
+          entitled: entitled
         });
     }
   }

@@ -71,7 +71,7 @@ describe('Onboard users with Hybrid Services', function () {
       activate.setup(null, testUser);
     });
 
-    it('should confirm user added and entitled', function () {
+    xit('should confirm user added and entitled', function () {
       utils.searchAndClick(testUser);
       utils.expectIsDisplayed(users.servicesPanel);
 
@@ -82,7 +82,7 @@ describe('Onboard users with Hybrid Services', function () {
       utils.click(users.closeSidePanel);
     });
 
-    it('should re-onboard with more entitlements to confirm the additive case', function () {
+    xit('should re-onboard with more entitlements to confirm the additive case', function () {
       users.createUser(testUser);
 
       // Select hybrid services
@@ -120,7 +120,7 @@ describe('Onboard users with Hybrid Services', function () {
       activate.setup(null, testUser);
     });
 
-    it('should confirm user added and entitled', function () {
+    xit('should confirm user added and entitled', function () {
       utils.searchAndClick(testUser);
       utils.expectIsDisplayed(users.servicesPanel);
 
@@ -149,7 +149,7 @@ describe('Onboard users with Hybrid Services', function () {
       activate.setup(null, testUser);
     });
 
-    it('should confirm user added and entitled', function () {
+    xit('should confirm user added and entitled', function () {
       utils.searchAndClick(testUser);
       utils.expectIsDisplayed(users.servicesPanel);
 

@@ -1,17 +1,19 @@
 'use strict';
 
 describe('OnboardCtrl: Ctrl', function () {
-  var controller, $controller, $modal, $scope, $timeout, $q, $state, $previousState, modalDefer, $interval, Notification, Userservice, Orgservice, FeatureToggleService, Authinfo, CsvDownloadService, HuronCustomer, UserCsvService;
+  var controller, $controller, $modal, $scope, $timeout, $q, $state, $previousState, modalDefer, $interval, Notification, Userservice, Orgservice, FeatureToggleService, Authinfo, CsvDownloadService, HuronCustomer, UserCsvService, ResourceGroupService, USSService;
   var getUserMe, getMigrateUsers, getMyFeatureToggles;
   var fusionServices, headers;
   var customer;
+  var resourceGroups;
+
   beforeEach(angular.mock.module('Core'));
   beforeEach(angular.mock.module('Hercules'));
   beforeEach(angular.mock.module('Huron'));
   beforeEach(angular.mock.module('Sunlight'));
   beforeEach(angular.mock.module('Messenger'));
 
-  beforeEach(inject(function (_$controller_, _$interval_, _$modal_, _$q_, $rootScope, _$state_, _$previousState_, _$timeout_, _Authinfo_, _CsvDownloadService_, _FeatureToggleService_, _HuronCustomer_, _Notification_, _Orgservice_, _UserCsvService_, _Userservice_) {
+  beforeEach(inject(function (_$controller_, _$interval_, _$modal_, _$q_, $rootScope, _$state_, _$previousState_, _$timeout_, _Authinfo_, _CsvDownloadService_, _FeatureToggleService_, _HuronCustomer_, _Notification_, _Orgservice_, _UserCsvService_, _Userservice_, _ResourceGroupService_, _USSService_) {
     $scope = $rootScope.$new();
     $controller = _$controller_;
     $timeout = _$timeout_;
@@ -29,6 +31,8 @@ describe('OnboardCtrl: Ctrl', function () {
     CsvDownloadService = _CsvDownloadService_;
     HuronCustomer = _HuronCustomer_;
     UserCsvService = _UserCsvService_;
+    ResourceGroupService = _ResourceGroupService_;
+    USSService = _USSService_;
 
     spyOn($state, 'go').and.returnValue($q.when());
     spyOn(Authinfo, 'isOnline').and.returnValue(true);
@@ -43,6 +47,7 @@ describe('OnboardCtrl: Ctrl', function () {
     fusionServices = getJSONFixture('core/json/authInfo/fusionServices.json');
     headers = getJSONFixture('core/json/users/headers.json');
     customer = getJSONFixture('huron/json/settings/customer.json');
+    resourceGroups = getJSONFixture('core/json/users/resource_groups.json');
 
     spyOn(Orgservice, 'getHybridServiceAcknowledged').and.returnValue($q.when(fusionServices));
     spyOn(CsvDownloadService, 'getCsv').and.callFake(function (type) {
@@ -52,12 +57,12 @@ describe('OnboardCtrl: Ctrl', function () {
         return $q.when({});
       }
     });
-
     spyOn(Notification, 'notify');
     spyOn(Notification, 'error');
     spyOn(Orgservice, 'getUnlicensedUsers');
     spyOn(FeatureToggleService, 'getFeaturesForUser').and.returnValue(getMyFeatureToggles);
     spyOn(FeatureToggleService, 'supportsDirSync').and.returnValue($q.when(false));
+    spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(false));
     spyOn(Userservice, 'onboardUsers');
     spyOn(Userservice, 'bulkOnboardUsers');
     spyOn(Userservice, 'getUser').and.returnValue(getUserMe);
@@ -65,6 +70,9 @@ describe('OnboardCtrl: Ctrl', function () {
     spyOn(Userservice, 'updateUsers');
     spyOn($scope, '$broadcast').and.callThrough();
     spyOn(HuronCustomer, 'get').and.returnValue($q.when(customer));
+    spyOn(ResourceGroupService, 'getAll').and.returnValue($q.when(resourceGroups.items));
+    spyOn(USSService, 'getAllUserProps').and.returnValue($q.when([]));
+    spyOn(USSService, 'updateBulkUserProps').and.returnValue($q.when());
 
     spyOn($previousState, 'get').and.returnValue({
       state: {
@@ -97,7 +105,7 @@ describe('OnboardCtrl: Ctrl', function () {
         5001 + ii, '',
         'true', 'true', 'true', 'true'
       ];
-      if (_.contains(invalidUsers, csv.length + 1)) {
+      if (_.includes(invalidUsers, csv.length + 1)) {
         // create an error in the CSV data for user
         if (_.random() % 2) {
           user[3] = '';
@@ -146,7 +154,8 @@ describe('OnboardCtrl: Ctrl', function () {
       response.data.userResponse.push({
         status: status,
         httpStatus: status,
-        email: user.address
+        email: user.address,
+        uuid: 'b345abe1-5b9d-43b2-9a89-1e4e64ad478c'
       });
     });
     return $q.resolve(response);
@@ -585,6 +594,181 @@ describe('OnboardCtrl: Ctrl', function () {
         expect(controller.model.numExistingUsers).toEqual(3);
         expect(controller.model.userErrorArray.length).toEqual(0);
       });
+    });
+  });
+
+  describe('Process CSV with Hybrid Service Resource Groups', function () {
+
+    beforeEach(function () {
+      FeatureToggleService.supports.and.returnValue($q.when(true));
+      fusionServices = getJSONFixture('core/json/users/hybridServices.json');
+      Orgservice.getHybridServiceAcknowledged.and.returnValue($q.when(fusionServices));
+      headers = getJSONFixture('core/json/users/headersForHybridServices.json');
+      initController();
+    });
+
+    function setCsv(users) {
+      var header = ['First Name', 'Last Name', 'Display Name', 'User ID/Email (Required)', 'Hybrid Calendar Service Resource Group', 'Hybrid Call Service Resource Group', 'Calendar Service', 'Call Service Aware'];
+      var csv = [header];
+      csv.push(users);
+      controller.model.file = $.csv.fromArrays(csv);
+      $scope.$apply();
+      $timeout.flush();
+    }
+
+    function initAndCaptureUpdatedUserProps(users) {
+      setCsv(users);
+      Userservice.bulkOnboardUsers.and.callFake(bulkOnboardUsersResponseMock(201));
+      var updatedUserProps = [];
+      USSService.updateBulkUserProps.and.callFake(function (props) {
+        updatedUserProps = props;
+        return $q.when({});
+      });
+      controller.startUpload();
+      $scope.$apply();
+      $timeout.flush();
+      return updatedUserProps;
+    }
+
+    it('should not update USS when no resource group changes', function () {
+      setCsv(['Tom', 'Vasset', 'Tom Vasset', 'tvasset@cisco.com', '', '', 'true', 'true']);
+      Userservice.bulkOnboardUsers.and.callFake(bulkOnboardUsersResponseMock(201));
+      controller.startUpload();
+      $scope.$apply();
+      $timeout.flush();
+      expect(controller.isAtlasF237ResourceGroupsEnabled).toBeTruthy();
+      expect(controller.handleHybridServicesResourceGroups).toBeTruthy();
+      expect(controller.model.numTotalUsers).toEqual(1);
+      expect(controller.model.userErrorArray.length).toEqual(0);
+      expect(ResourceGroupService.getAll.calls.count()).toEqual(1);
+      expect(USSService.getAllUserProps.calls.count()).toEqual(1);
+      expect(USSService.updateBulkUserProps.calls.count()).toEqual(0);
+    });
+
+    it('should add an error if the calendar resource group does not exist in FMS', function () {
+      setCsv(['Tom', 'Vasset', 'Tom Vasset', 'tvasset@cisco.com', 'DoesNotExist', '', 'true', 'true']);
+      controller.startUpload();
+      $scope.$apply();
+      $timeout.flush();
+      expect(controller.model.numTotalUsers).toEqual(1);
+      expect(controller.model.userErrorArray.length).toEqual(1);
+      expect(controller.model.userErrorArray[0].email).toEqual('tvasset@cisco.com');
+      expect(controller.model.userErrorArray[0].error).toEqual('firstTimeWizard.invalidCalendarServiceResourceGroup');
+      expect(ResourceGroupService.getAll.calls.count()).toEqual(1);
+      expect(USSService.getAllUserProps.calls.count()).toEqual(1);
+      expect(USSService.updateBulkUserProps.calls.count()).toEqual(0);
+      expect(Userservice.bulkOnboardUsers.calls.count()).toEqual(0);
+    });
+
+    it('should add an error if the call resource group does not exist in FMS', function () {
+      setCsv(['Tom', 'Vasset', 'Tom Vasset', 'tvasset@cisco.com', '', 'DoesNotExist', 'true', 'true']);
+      controller.startUpload();
+      $scope.$apply();
+      $timeout.flush();
+      expect(controller.model.numTotalUsers).toEqual(1);
+      expect(controller.model.userErrorArray.length).toEqual(1);
+      expect(controller.model.userErrorArray[0].email).toEqual('tvasset@cisco.com');
+      expect(controller.model.userErrorArray[0].error).toEqual('firstTimeWizard.invalidCallServiceResourceGroup');
+      expect(ResourceGroupService.getAll.calls.count()).toEqual(1);
+      expect(USSService.getAllUserProps.calls.count()).toEqual(1);
+      expect(USSService.updateBulkUserProps.calls.count()).toEqual(0);
+      expect(Userservice.bulkOnboardUsers.calls.count()).toEqual(0);
+    });
+
+    it('should update USS with a new calendar resource group assignment', function () {
+      var updatedUserProps = initAndCaptureUpdatedUserProps(['Tom', 'Vasset', 'Tom Vasset', 'tvasset@cisco.com', 'Resource Group A', '', 'true', 'true']);
+      expect(updatedUserProps.length).toEqual(1);
+      expect(updatedUserProps[0].userId).toEqual('b345abe1-5b9d-43b2-9a89-1e4e64ad478c');
+      expect(updatedUserProps[0].resourceGroups).toBeDefined();
+      expect(updatedUserProps[0].resourceGroups['squared-fusion-cal']).toEqual('445a3f8e-06a3-476b-b6f1-215a7db09083');
+      expect(updatedUserProps[0].resourceGroups['squared-fusion-uc']).toBeUndefined();
+    });
+
+    it('should update USS with a new call resource group assignment', function () {
+      var updatedUserProps = initAndCaptureUpdatedUserProps(['Tom', 'Vasset', 'Tom Vasset', 'tvasset@cisco.com', '', 'Resource Group B', 'true', 'true']);
+      expect(updatedUserProps.length).toEqual(1);
+      expect(updatedUserProps[0].userId).toEqual('b345abe1-5b9d-43b2-9a89-1e4e64ad478c');
+      expect(updatedUserProps[0].resourceGroups).toBeDefined();
+      expect(updatedUserProps[0].resourceGroups['squared-fusion-uc']).toEqual('be46e71f-c8ea-470b-ba13-2342d310a202');
+      expect(updatedUserProps[0].resourceGroups['squared-fusion-cal']).toBeUndefined();
+    });
+
+    it('should not update USS when the current resource groups are the same', function () {
+      USSService.getAllUserProps.and.returnValue($q.when([
+        { userId: 'b345abe1-5b9d-43b2-9a89-1e4e64ad478c',
+          resourceGroups: {
+            'squared-fusion-cal': 'be46e71f-c8ea-470b-ba13-2342d310a202',
+            'squared-fusion-uc': 'be46e71f-c8ea-470b-ba13-2342d310a202'
+          }
+        }
+      ]));
+      var updatedUserProps = initAndCaptureUpdatedUserProps(['Tom', 'Vasset', 'Tom Vasset', 'tvasset@cisco.com', 'Resource Group B', 'Resource Group B', 'true', 'true']);
+      expect(updatedUserProps.length).toEqual(0);
+      expect(USSService.updateBulkUserProps.calls.count()).toEqual(0);
+    });
+
+    it('should update USS when the current resource groups are different', function () {
+      USSService.getAllUserProps.and.returnValue($q.when([
+        { userId: 'b345abe1-5b9d-43b2-9a89-1e4e64ad478c',
+          resourceGroups: {
+            'squared-fusion-cal': 'be46e71f-c8ea-470b-ba13-2342d310a202',
+            'squared-fusion-uc': '445a3f8e-06a3-476b-b6f1-215a7db09083'
+          }
+        }
+      ]));
+      var updatedUserProps = initAndCaptureUpdatedUserProps(['Tom', 'Vasset', 'Tom Vasset', 'tvasset@cisco.com', 'Resource Group A', 'Resource Group B', 'true', 'true']);
+      expect(updatedUserProps.length).toEqual(1);
+      expect(updatedUserProps[0].userId).toEqual('b345abe1-5b9d-43b2-9a89-1e4e64ad478c');
+      expect(updatedUserProps[0].resourceGroups).toBeDefined();
+      expect(updatedUserProps[0].resourceGroups['squared-fusion-uc']).toEqual('be46e71f-c8ea-470b-ba13-2342d310a202');
+      expect(updatedUserProps[0].resourceGroups['squared-fusion-cal']).toEqual('445a3f8e-06a3-476b-b6f1-215a7db09083');
+    });
+
+    it('should update USS with empty resource groups when no longer in the CSV', function () {
+      USSService.getAllUserProps.and.returnValue($q.when([
+        { userId: 'b345abe1-5b9d-43b2-9a89-1e4e64ad478c',
+          resourceGroups: {
+            'squared-fusion-cal': 'be46e71f-c8ea-470b-ba13-2342d310a202',
+            'squared-fusion-uc': '445a3f8e-06a3-476b-b6f1-215a7db09083'
+          }
+        }
+      ]));
+      var updatedUserProps = initAndCaptureUpdatedUserProps(['Tom', 'Vasset', 'Tom Vasset', 'tvasset@cisco.com', '', '', 'true', 'true']);
+      expect(updatedUserProps.length).toEqual(1);
+      expect(updatedUserProps[0].userId).toEqual('b345abe1-5b9d-43b2-9a89-1e4e64ad478c');
+      expect(updatedUserProps[0].resourceGroups).toBeDefined();
+      expect(updatedUserProps[0].resourceGroups['squared-fusion-uc']).toEqual('');
+      expect(updatedUserProps[0].resourceGroups['squared-fusion-cal']).toEqual('');
+    });
+
+    it('should add an error of the USS update fails', function () {
+      setCsv(['Tom', 'Vasset', 'Tom Vasset', 'tvasset@cisco.com', 'Resource Group A', '', 'true', 'true']);
+      Userservice.bulkOnboardUsers.and.callFake(bulkOnboardUsersResponseMock(201));
+      USSService.updateBulkUserProps.and.callFake(function () {
+        return $q.reject();
+      });
+      controller.startUpload();
+      $scope.$apply();
+      $timeout.flush();
+      expect(controller.model.userErrorArray.length).toEqual(1);
+      expect(controller.model.userErrorArray[0].email).toEqual('tvasset@cisco.com');
+      expect(controller.model.userErrorArray[0].error).toEqual('firstTimeWizard.unableToUpdateResourceGroups');
+    });
+
+    it('should ignore resource group changes if unable to read groups from FMS', function () {
+      ResourceGroupService.getAll.and.returnValue($q.reject());
+      var updatedUserProps = initAndCaptureUpdatedUserProps(['Tom', 'Vasset', 'Tom Vasset', 'tvasset@cisco.com', '', 'Resource Group B', 'true', 'true']);
+      expect(updatedUserProps.length).toEqual(0);
+      expect(USSService.updateBulkUserProps.calls.count()).toEqual(0);
+      expect(controller.handleHybridServicesResourceGroups).toBeFalsy();
+    });
+
+    it('should ignore resource group changes if unable to read current props from USS', function () {
+      USSService.getAllUserProps.and.returnValue($q.reject());
+      var updatedUserProps = initAndCaptureUpdatedUserProps(['Tom', 'Vasset', 'Tom Vasset', 'tvasset@cisco.com', '', 'Resource Group B', 'true', 'true']);
+      expect(updatedUserProps.length).toEqual(0);
+      expect(USSService.updateBulkUserProps.calls.count()).toEqual(0);
+      expect(controller.handleHybridServicesResourceGroups).toBeFalsy();
     });
   });
 });

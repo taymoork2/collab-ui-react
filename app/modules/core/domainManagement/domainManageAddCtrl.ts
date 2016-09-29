@@ -117,7 +117,7 @@ namespace domainManagement {
     }
 
     //gui valid
-    public validate() {
+    public validate(): any {
       let domain = this.domainToAdd;
 
       if (domain.length < 3) {

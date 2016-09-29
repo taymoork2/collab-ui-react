@@ -23,6 +23,7 @@ var ReportsPage = function () {
   this.activeCustomerDescription = element(by.css('.customer-active-user')).element(by.css('.report-description'));
   this.activePartnerDescription = element(by.id('activeUser')).element(by.css('article section p'));
   this.activeUsers = element(by.id('activeUsersdiv'));
+  this.activeUsersChart = element(by.id('activeUserChart'));
 
   // most active users
   this.activeUsersTable = element(by.css('.active-users-table'));
@@ -45,7 +46,7 @@ var ReportsPage = function () {
   // active user population
   this.activePopulationHeader = element(by.id('userPopulation')).element(by.cssContainingText('article header h4', 'Active User Population by Company'));
   this.activePopulationDescription = element(by.id('activeUserPopulationDiv')).element(by.css('p'));
-  this.activePopulationGraph = element(by.id('activeUserPopulationChart'));
+  this.activePopulationGraph = element(by.id('userPopulationChart'));
 
   // registered endpoints graph
   this.endpointsHeader = element(by.cssContainingText('.report-section-header', 'Registered Endpoints'));
@@ -64,7 +65,7 @@ var ReportsPage = function () {
   this.metricsGraphDiv = element(by.id('metricsGraphDiv'));
   this.metricsData = element.all(by.css('.metrics-display'));
   this.partnerMetricsHeader = element(by.id('callMetrics')).element(by.cssContainingText('article header h4', 'Call Metrics'));
-  this.callMetricsGraph = element(by.id('callMetricsDiv'));
+  this.callMetricsGraph = element(by.id('callMetricsChart'));
   this.partnerMetricsDescription = element(by.id('callMetrics')).element(by.css('article section p'));
 
   // media quality
@@ -73,27 +74,27 @@ var ReportsPage = function () {
   this.mediaFilter = element(by.id('mediaFilter'));
   this.mediaQualityDiv = element(by.id('mediaQualityDiv'));
   this.partnerMediaHeader = element(by.id('mediaQuality')).element(by.cssContainingText('.report-section-header', 'Device Media Quality'));
-  this.mediaQualityGraph = element(by.id('mediaQualityDiv'));
+  this.mediaQualityGraph = element(by.id('mediaQualityChart'));
   this.mediaDescription = element(by.id('mediaQuality')).element(by.css('article section p'));
 
   // Task Incoming
-  this.taskIncomingHeader = element(by.cssContainingText('.report-section-header', 'Tasks Incoming'));
-  this.taskIncomingDescription = element(by.cssContainingText('.report-description', 'incoming tasks'));
+  this.taskIncomingHeader = element(by.cssContainingText('.report-section-header', 'Total Completed Contacts'));
+  this.taskIncomingDescription = element(by.cssContainingText('.report-description', 'The graph depicts the total number of customer contacts completed for today. Hover over the area chart for a breakdown of handled and abandoned contacts during a one hour time interval.'));
   this.taskIncomingGraph = element(by.id('taskIncomingdiv'));
 
   // Task Time
-  this.taskTimeHeader = element(by.cssContainingText('.report-section-header', 'Task Time'));
-  this.taskTimeDescription = element(by.cssContainingText('.report-description', 'time duration'));
+  this.taskTimeHeader = element(by.cssContainingText('.report-section-header', 'Contact Time Measure'));
+  this.taskTimeDescription = element(by.cssContainingText('.report-description', 'The graph depicts the average time spent by a customer waiting for an agent and in getting their enquiries handled for yesterday. Hover over the area chart for a breakdown of average waiting time and average time taken to handle a customer enquiry during a one hour time interval.'));
   this.taskTimeGraph = element(by.id('taskTimeDiv'));
 
   // Task Aggregate
-  this.taskAggregateHeader = element(by.cssContainingText('.report-section-header', 'Task Aggregation'));
-  this.taskAggregateDescription = element(by.cssContainingText('.report-description', 'tasks aggregated'));
+  this.taskAggregateHeader = element(by.cssContainingText('.report-section-header', 'Aggregated Contacts'));
+  this.taskAggregateDescription = element(by.cssContainingText('.report-description', 'The graph depicts the number of waiting and in-progress customer contacts aggregated for today. Hover over the area chart to view the count of waiting and in-progress contacts aggregated from the start of business hours.'));
   this.taskAggregateGraph = element(by.id('taskAggregateDiv'));
 
   // Average CSAT
-  this.averageCsatHeader = element(by.cssContainingText('.report-section-header', 'Average CSAT'));
-  this.averageCsatDescription = element(by.cssContainingText('.report-description', 'average CSAT'));
+  this.averageCsatHeader = element(by.cssContainingText('.report-section-header', 'Customer Satisfaction'));
+  this.averageCsatDescription = element(by.cssContainingText('.report-description', 'The graph depicts the customer satisfaction rating for today. Hover over the trend line to know the average customer satisfaction rating during a one hour time interval.​​'));
   this.averageCsatGraph = element(by.id('averageCsatDiv'));
 
   this.showHideActiveVisibility = function (show, hide, partner) {

@@ -1,7 +1,7 @@
 import { ICardButton, ServicesOverviewCard } from './ServicesOverviewCard';
 
 export class ServicesOverviewMessageCard extends ServicesOverviewCard {
-  public getShowMoreButton(): ICardButton {
+  public getShowMoreButton(): ICardButton | undefined {
     return undefined;
   }
 
@@ -11,6 +11,7 @@ export class ServicesOverviewMessageCard extends ServicesOverviewCard {
     return this._buttons;
   }
 
+  /* @ngInject */
   public constructor(Authinfo) {
     super({
       name: 'servicesOverview.cards.message.title',

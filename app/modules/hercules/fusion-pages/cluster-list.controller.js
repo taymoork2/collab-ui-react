@@ -69,11 +69,9 @@
     function loadClusters() {
       vm.loading = true;
       FusionClusterService.getAll()
-        .then(function removeHybridMediaClustersIfNecessary(clusters) {
+        .then(function (clusters) {
           if (!hasMediaFeatureToggle) {
-            return _.filter(clusters, function (cluster) {
-              return cluster.targetType !== 'mf_mgmt';
-            });
+            return filterHMClusters(clusters);
           }
           return clusters;
         })
@@ -134,15 +132,15 @@
 
         _.each(vm.filters, function (filter, index) {
           var filteredAssignedClustersCount = _.reduce(groupsCache.groups, function (acc, group) {
-            return acc + _.filter(group.clusters, 'targetType', filter.filterValue).length;
+            return acc + _.filter(group.clusters, { targetType: filter.filterValue }).length;
           }, 0);
-          var filteredUnassignedClustersCount = _.filter(groupsCache.unassigned, 'targetType', filter.filterValue).length;
+          var filteredUnassignedClustersCount = _.filter(groupsCache.unassigned, { targetType: filter.filterValue }).length;
           vm.filters[index].count = filteredAssignedClustersCount + filteredUnassignedClustersCount;
         });
       } else {
         vm.placeholder.count = clustersCache.length;
         _.each(vm.filters, function (filter, index) {
-          var clustersCount = _.filter(clustersCache, 'targetType', filter.filterValue).length;
+          var clustersCount = _.filter(clustersCache, { targetType: filter.filterValue }).length;
           vm.filters[index].count = clustersCount;
         });
       }
@@ -157,21 +155,21 @@
             groups: _.chain(groupsCache.groups)
               .map(function (group) {
                 var response = _.cloneDeep(group);
-                response.clusters = _.filter(response.clusters, 'targetType', filter.filterValue);
+                response.clusters = _.filter(response.clusters, { targetType: filter.filterValue });
                 return response;
               })
               .filter(function (group) {
                 return group.clusters.length > 0;
               })
               .value(),
-            unassigned: _.filter(groupsCache.unassigned, 'targetType', filter.filterValue),
+            unassigned: _.filter(groupsCache.unassigned, { targetType: filter.filterValue }),
           };
         }
       } else {
         if (filter.filterValue === 'all') {
           vm.displayedClusters = clustersCache;
         } else {
-          vm.displayedClusters = _.filter(clustersCache, 'targetType', filter.filterValue);
+          vm.displayedClusters = _.filter(clustersCache, { targetType: filter.filterValue });
         }
       }
     }

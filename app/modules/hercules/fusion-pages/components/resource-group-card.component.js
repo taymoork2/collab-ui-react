@@ -13,15 +13,16 @@
     });
 
   /* @ngInject */
-  function ResourceGroupCardController($modal, FusionUtils) {
+  function ResourceGroupCardController($state, FusionClusterStatesService, FusionUtils) {
     var ctrl = this;
 
     ctrl.showDetails = false;
-    ctrl.openAddClusterModal = openAddClusterModal;
+    ctrl.openResourceGroupSettings = openResourceGroupSettings;
     ctrl.toggleDetails = toggleDetails;
     ctrl.showWarningText = showWarningText;
     ctrl.$onChanges = $onChanges;
     ctrl.getLocalizedReleaseChannel = FusionUtils.getLocalizedReleaseChannel;
+    ctrl.getStatusCssClass = getStatusCssClass;
 
     function toggleDetails() {
       ctrl.showDetails = !ctrl.showDetails;
@@ -33,25 +34,21 @@
       }
     }
 
-    function openAddClusterModal() {
-      $modal.open({
-        resolve: {
-          resourceGroup: function () {
-            return ctrl.group;
-          }
-        },
-        controller: 'AssignClustersController',
-        controllerAs: 'vm',
-        templateUrl: 'modules/hercules/fusion-pages/resource-group-settings/assign-clusters.html',
-        type: 'small'
-      }).result
-      .then(ctrl.onChange);
+    function openResourceGroupSettings() {
+      $state.go('resource-group-settings', { id: ctrl.group.id });
     }
 
     function showWarningText() {
       return ctrl.group.clusters.length === 0;
     }
 
+    function getStatusCssClass() {
+      var connectors = _.chain(ctrl.group.clusters)
+        .map('connectors')
+        .flatten()
+        .value();
+      return FusionClusterStatesService.getMergedStateSeverity(connectors).cssClass;
+    }
   }
 
 })();

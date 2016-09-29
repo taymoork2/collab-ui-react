@@ -12,6 +12,7 @@
       getSeverityLabel: getSeverityLabel,
       getMergedUpgradeState: getMergedUpgradeState,
       getMergedStateSeverity: getMergedStateSeverity,
+      getStatusIndicatorCSSClass: getStatusIndicatorCSSClass,
     };
 
     return service;
@@ -88,19 +89,41 @@
       return label;
     }
 
+    function getSeverityCssClass(value) {
+      var cssClass = '';
+      switch (value) {
+        case 0:
+          cssClass = 'success';
+          break;
+        case 1:
+          cssClass = 'disabled';
+          break;
+        case 2:
+          cssClass = 'warning';
+          break;
+        case 3:
+          cssClass = 'danger';
+          break;
+      }
+      return cssClass;
+    }
+
     function getMergedUpgradeState(connectors) {
-      var allAreUpgraded = _.every(connectors, 'upgradeState', 'upgraded');
+      var allAreUpgraded = _.every(connectors, { upgradeState: 'upgraded' });
       return allAreUpgraded ? 'upgraded' : 'upgrading';
     }
 
     // Special function, returning a FULL state with a name, a severity and
     // a severity label
     function getMergedStateSeverity(connectors) {
+      var stateSeverity;
       if (connectors.length === 0) {
+        stateSeverity = getStateSeverity('not_installed');
         return {
           name: 'not_installed',
-          severity: getStateSeverity('not_installed'),
-          label: getSeverityLabel(getStateSeverity('not_installed'))
+          severity: stateSeverity,
+          label: getSeverityLabel(stateSeverity),
+          cssClass: getSeverityCssClass(stateSeverity),
         };
       }
       var mostSevereConnector = _.chain(connectors)
@@ -109,11 +132,30 @@
         })
         .last()
         .value();
+      stateSeverity = getStateSeverity(mostSevereConnector);
       return {
         name: connectorHasAlarms(mostSevereConnector) && mapStateToSeverity(mostSevereConnector.state) < 3 ? 'has_alarms' : mostSevereConnector.state,
-        severity: getStateSeverity(mostSevereConnector),
-        label: getSeverityLabel(getStateSeverity(mostSevereConnector))
+        severity: stateSeverity,
+        label: getSeverityLabel(stateSeverity),
+        cssClass: getSeverityCssClass(stateSeverity),
       };
+    }
+
+    function getStatusIndicatorCSSClass(status) {
+      var cssClass;
+      switch (status) {
+        case 'operational':
+          cssClass = 'success';
+          break;
+        case 'outage':
+          cssClass = 'danger';
+          break;
+        case 'impaired':
+        case 'unknown':
+        default:
+          cssClass = 'warning';
+      }
+      return cssClass;
     }
   }
 })();

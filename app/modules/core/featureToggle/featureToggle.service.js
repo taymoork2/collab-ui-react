@@ -8,12 +8,11 @@
     require('modules/huron/telephony/telephonyConfig'),
   ])
     .factory('HuronCustomerFeatureToggleService', HuronCustomerFeatureToggleService)
-    .factory('HuronUserFeatureToggleService', HuronUserFeatureToggleService)
     .service('FeatureToggleService', FeatureToggleService)
     .name;
 
   /* @ngInject */
-  function FeatureToggleService($http, $q, $resource, $state, Authinfo, HuronCustomerFeatureToggleService, HuronUserFeatureToggleService, UrlConfig, Orgservice) {
+  function FeatureToggleService($http, $q, $resource, $state, Authinfo, HuronCustomerFeatureToggleService, UrlConfig, Orgservice) {
     var features = {
       dirSync: 'atlas-dir-sync',
       atlasBrandingWordingChange: 'atlas-branding-wording-change',
@@ -32,6 +31,7 @@
       atlasNewUserExport: 'atlas-new-user-export',
       atlasNurturingEmails: 'atlas-nurturing-emails',
       atlasPinSettings: 'atlas-pin-settings',
+      atlasPMRonM2: 'atlas-pmr-on-m2',
       atlasPstnTfn: 'atlas-pstn-tfn',
       atlasReadOnlyAdmin: 'atlas-read-only-admin',
       atlasReportsUpdate: 'atlas-reports-update',
@@ -151,10 +151,10 @@
       webexCSV: 'webex-CSV',
       enableCrashLogs: 'csdm-enable-crash-logs',
       csdmPlaces: 'csdm-places',
-      optionalvmdid: 'optional-vm-did',
       globalStatus: 'global-status',
       atlasF237ResourceGroups: 'atlas-f237-resource-group',
-      huronLocalDialing: 'huron-local-dialing'
+      huronLocalDialing: 'huron-local-dialing',
+      huronDeviceE911: 'huron-device-e911-address'
     };
 
     var toggles = {};
@@ -172,7 +172,7 @@
       }
     });
 
-    var userResource = $resource(UrlConfig.getFeatureToggleUrl() + '/locus/api/v1/features/users/:id', {
+    var userResource = $resource(UrlConfig.getWdmUrl() + '/features/users/:id', {
       id: '@id'
     }, {
       get: {
@@ -264,19 +264,7 @@
 
     function getHuronToggle(isUser, id, feature) {
       if (Authinfo.isSquaredUC()) {
-        if (isUser) {
-          return HuronUserFeatureToggleService.get({
-            userId: id,
-            featureName: feature
-          }).$promise.then(function (data) {
-            toggles[feature] = data.val;
-            return data.val;
-          }).catch(function () {
-            return false;
-          });
-        } else {
-          return getCustomerHuronToggle(id, feature);
-        }
+        return getCustomerHuronToggle(id, feature);
       } else {
         return $q.when(false);
       }
@@ -426,19 +414,6 @@
         feature.val = false;
       }
     }
-  }
-
-  /* @ngInject */
-  function HuronUserFeatureToggleService($resource, HuronConfig) {
-    return $resource(HuronConfig.getMinervaUrl() + '/features/users/:userId/developer/:featureName', {
-      userId: '@userId',
-      featureName: '@featureName'
-    }, {
-      get: {
-        method: 'GET',
-        cache: true
-      }
-    });
   }
 
   /* @ngInject */

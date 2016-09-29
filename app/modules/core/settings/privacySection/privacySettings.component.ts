@@ -2,6 +2,7 @@ import { SettingSection } from '../settingSection';
 
 export class PrivacySetting extends SettingSection {
 
+  /* @ngInject */
   public constructor() {
     super('privacy');
     this.subsectionLabel = '';

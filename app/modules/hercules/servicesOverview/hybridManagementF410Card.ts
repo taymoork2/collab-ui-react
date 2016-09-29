@@ -1,7 +1,7 @@
 import { ICardButton, CardType, ServicesOverviewCard } from './ServicesOverviewCard';
 
 export class ServicesOverviewHybridManagementF410Card extends ServicesOverviewCard {
-  public getShowMoreButton(): ICardButton {
+  public getShowMoreButton(): ICardButton | undefined {
     return undefined;
   }
 
@@ -22,6 +22,7 @@ export class ServicesOverviewHybridManagementF410Card extends ServicesOverviewCa
     this._display = hasFeature;
   }
 
+  /* @ngInject */
   public constructor() {
     super({
       name: 'servicesOverview.cards.clusterList.title',

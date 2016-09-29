@@ -2,7 +2,7 @@ export interface IFeature {
   name: string;
   icon: string;
   state: string;
-  detail: string;
+  detail: string | undefined;
   actionsAvailable: boolean;
 }
 

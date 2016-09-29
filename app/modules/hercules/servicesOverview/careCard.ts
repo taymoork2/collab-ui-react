@@ -2,7 +2,7 @@ import { ServicesOverviewCard, ICardButton } from './ServicesOverviewCard';
 
 export class ServicesOverviewCareCard extends ServicesOverviewCard {
 
-  public getShowMoreButton(): ICardButton {
+  public getShowMoreButton(): ICardButton | undefined {
     return undefined;
   }
 
@@ -20,6 +20,7 @@ export class ServicesOverviewCareCard extends ServicesOverviewCard {
     this._display = hasFeature;
   }
 
+  /* @ngInject */
   public constructor(Authinfo) {
     super({
       name: 'servicesOverview.cards.care.title',

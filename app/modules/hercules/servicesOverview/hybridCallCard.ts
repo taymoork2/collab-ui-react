@@ -2,7 +2,7 @@ import { ServicesOverviewHybridCard } from './ServicesOverviewHybridCard';
 import { ICardButton, CardType } from './ServicesOverviewCard';
 
 export class ServicesOverviewHybridCallCard extends ServicesOverviewHybridCard {
-  public getShowMoreButton(): ICardButton {
+  public getShowMoreButton(): ICardButton | undefined {
     return undefined;
   }
 
@@ -27,7 +27,8 @@ export class ServicesOverviewHybridCallCard extends ServicesOverviewHybridCard {
     return [this._setupButton];
   }
 
-  public constructor() {
+  /* @ngInject */
+  public constructor(FusionClusterStatesService) {
     super({
       name: 'servicesOverview.cards.hybridCall.title',
       description: 'servicesOverview.cards.hybridCall.description',
@@ -35,6 +36,6 @@ export class ServicesOverviewHybridCallCard extends ServicesOverviewHybridCard {
       statusService: 'squared-fusion-uc',
       statusLink: 'services/call',
       active: false, cardClass: 'call', cardType: CardType.hybrid,
-    });
+    }, FusionClusterStatesService);
   }
 }

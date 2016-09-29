@@ -83,11 +83,18 @@ describe('Huron Auto Attendant', function () {
 
       // it is for selecting the queue for route to queue option
       utils.scroll(autoattendant.phoneMenuKeyOptions.first().all(by.tagName('li')).first());
-      utils.click(autoattendant.rqDropDownArrow);
-      utils.click(autoattendant.rqDropDownOptionSunlight.first());  //// select by name
-      
+
     });
 
+    it('should click queue setting hyperlink of route to queue to the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
+        // it is for selecting the queue for route to queue option
+      utils.scroll(autoattendant.repeatPlus);
+      utils.click(autoattendant.queueSetting);
+      utils.click(autoattendant.queueMin);
+      utils.click(autoattendant.queueMinOption.get(1));
+      // for now close the modal. when backend will come we will save the modal before closing. 
+      utils.click(autoattendant.scheduleCloseButton);
+    });
     
     it('should add another route to queue to the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
         
@@ -102,13 +109,21 @@ describe('Huron Auto Attendant', function () {
 
       utils.scroll(autoattendant.repeatPlus);
       utils.click(autoattendant.phoneMenuAction.get(1));
-        
-        // it is for selecting the queue for route to queue option
-      utils.click(autoattendant.phoneMenuActionOptions.all(by.linkText(autoattendant.routeToQueue)).first());
-      utils.click(autoattendant.rqDropDownArrow);
-      utils.click(autoattendant.rqDropDownOptionSunlight.get(1));
 
-    });    
+      // it is for selecting the queue for route to queue option
+      utils.click(autoattendant.phoneMenuActionOptions.all(by.linkText(autoattendant.routeToQueue)).first());
+
+    });
+
+    it('should click queue setting hyperlink of route to queue to the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
+        // it is for selecting the queue for route to queue option
+      utils.scroll(autoattendant.repeatPlus);
+      utils.click(autoattendant.queueSetting);
+      utils.click(autoattendant.queueMin);
+      utils.click(autoattendant.queueMinOption.get(3));
+   // for now close the modal. when backend will come we will save the modal before closing.
+      utils.click(autoattendant.scheduleCloseButton);
+    });  
      
     it('should save AA and return to landing page', function () {
       utils.click(autoattendant.saveButton);

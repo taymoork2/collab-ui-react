@@ -6,7 +6,7 @@ export class SipDomainSettingController {
   public isDisabled = false;
   public isButtonDisabled = false;
   public isLoading = false;
-  public isConfirmed: boolean = null;
+  public isConfirmed: boolean = false;
 
   public isRoomLicensed = false;
   public isSSAReserved = false;
@@ -15,8 +15,18 @@ export class SipDomainSettingController {
   public errorMsg = '';
 
   /* @ngInject */
-  constructor(private $scope, private $rootScope, private Notification, private Config,
-              private Orgservice, private SparkDomainManagementService, private Log, private $translate, private $window, private UrlConfig) {
+  constructor(
+    private $scope,
+    private $rootScope,
+    private Notification,
+    private Config,
+    private Orgservice,
+    private SparkDomainManagementService,
+    private Log,
+    private $translate,
+    private $window,
+    private UrlConfig,
+  ) {
 
     $scope.$emit('wizardNextButtonDisable', true);
     this.domainSuffix = UrlConfig.getSparkDomainCheckUrl();
@@ -33,7 +43,7 @@ export class SipDomainSettingController {
   }
 
   get isUrlAvailable(): boolean {
-    return this._inputValue && (this._inputValue === this._validatedValue);
+    return !!this._inputValue && (this._inputValue === this._validatedValue);
   }
 
   get inputValue(): string {
@@ -82,7 +92,7 @@ export class SipDomainSettingController {
           }
         })
         .catch((response) => {
-          this.Notification.error('firstTimeWizard.sparkDomainManagementServiceErrorMessage');
+          this.Notification.errorWithTrackingId(response, 'firstTimeWizard.sparkDomainManagementServiceErrorMessage');
         });
     }
   }

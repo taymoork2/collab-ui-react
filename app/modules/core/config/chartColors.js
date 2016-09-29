@@ -10,14 +10,19 @@
     brandSuccess: "#7cc153",
     brandSuccessLight: '#99cf78',
     brandWhite: '#fff',
+    grayDarkFour: '#292929',
+    grayDarkThree: '#343537',
+    grayDarkTwo: '#4F5051',
     grayDarkOne: '#6a6b6c',
     grayDarkest: '#444',
     grayDarker: '#666',
     grayDark: '#999',
+    grayBase: '#858688',
     gray: '#aaa',
     grayLightOne: '#AEAEAF',
     grayLightTwo: '#D7D7D8',
     grayLightThree: '#EBEBEC',
+    grayLightFour: '#F5F5F6',
     grayLight: '#ccc',
     grayLighter: '#ddd',
     brandInfo: '#00c1aa',
@@ -52,7 +57,8 @@
     metricLightGreen: '#7BAF5D',
     metricDarkGreen: '#417505',
     metricBlue: '#049FD9',
-    metricYellow: '#F5A623'
+    metricYellow: '#F5A623',
+    metricsRed: '#D03D35'
   };
 
   angular

@@ -4,7 +4,7 @@ describe('Controller: ServiceSetup', function () {
   var $scope, $state, $previousState, $q, $httpBackend, ServiceSetup, Notification, HuronConfig, HuronCustomer, DialPlanService;
   var Authinfo, VoicemailMessageAction;
   var model, customer, voicemail, externalNumberPool, usertemplate, form, timeZone, ExternalNumberService, ModalService, modalDefer, messageAction;
-  var $rootScope, FeatureToggleService, PstnSetupService;
+  var $rootScope, PstnSetupService;
   var dialPlanDetailsNorthAmerica = [{
     countryCode: "+1",
     extensionGenerated: "false",
@@ -17,7 +17,7 @@ describe('Controller: ServiceSetup', function () {
   beforeEach(angular.mock.module('Sunlight'));
 
   beforeEach(inject(function (_$rootScope_, _$previousState_, _$q_, _ServiceSetup_, _Notification_, _HuronConfig_, _$httpBackend_,
-    _HuronCustomer_, _DialPlanService_, _ExternalNumberService_, _ModalService_, _Authinfo_, _VoicemailMessageAction_, _FeatureToggleService_,
+    _HuronCustomer_, _DialPlanService_, _ExternalNumberService_, _ModalService_, _Authinfo_, _VoicemailMessageAction_,
     _PstnSetupService_) {
     $rootScope = _$rootScope_;
     $scope = $rootScope;
@@ -34,7 +34,6 @@ describe('Controller: ServiceSetup', function () {
     modalDefer = $q.defer();
     VoicemailMessageAction = _VoicemailMessageAction_;
     $previousState = _$previousState_;
-    FeatureToggleService = _FeatureToggleService_;
     PstnSetupService = _PstnSetupService_;
 
     customer = {
@@ -181,7 +180,6 @@ describe('Controller: ServiceSetup', function () {
       };
       spyOn(ServiceSetup, 'getSite').and.returnValue($q.when(model.site));
       spyOn(ServiceSetup, 'getVoicemailPilotNumber').and.returnValue($q.when(voicemail));
-      spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
 
       controller = $controller('ServiceSetupCtrl', {
         $scope: $scope,
@@ -960,107 +958,8 @@ describe('Controller: ServiceSetup', function () {
     });
   });
 
-  describe('VoiceMail with OptionalVmDidFeatureToggle OFF Tests', function () {
-    var controller;
-    beforeEach(inject(function ($controller) {
-      $scope = $rootScope;
-      model = {
-        site: {
-          uuid: '777-888-666',
-          steeringDigit: '5',
-          siteSteeringDigit: '6',
-          siteCode: '200',
-          voicemailPilotNumber: "+16506679080",
-          timeZone: {
-            id: 'America/Los_Angeles',
-            label: 'America/Los_Angeles'
-          },
-          voicemailPilotNumberGenerated: 'false'
-        },
-        numberRanges: [{
-          beginNumber: '5000',
-          endNumber: '5999',
-          uuid: '555-666-777'
-        }, {
-          beginNumber: '6000',
-          endNumber: '6999'
-        }, {
-          beginNumber: '4000',
-          endNumber: '4000'
-        }]
-      };
-      voicemail = {
-        name: "Simon",
-        pilotNumber: "+16506679080",
-        label: "(650) 667-9080"
-      };
-      spyOn(ServiceSetup, 'getSite').and.returnValue($q.when(model.site));
-      spyOn(ServiceSetup, 'getVoicemailPilotNumber').and.returnValue($q.when(voicemail));
-      spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(false));
-      controller = $controller('ServiceSetupCtrl', {
-        $scope: $scope,
-        $state: $state,
-        ServiceSetup: ServiceSetup
-      });
 
-      controller.form = form;
-      $scope.$apply();
-      $httpBackend.flush();
-
-      controller.firstTimeSetup = true;
-    }));
-    describe('Site is created and voicemail is set with DID featuretoggle OFF', function () {
-      it('voicemailPilotNumberGenerated is false', function () {
-        expect(controller.model.site.voicemailPilotNumberGenerated).toEqual('false');
-      });
-
-      it('site is created with voicemail with featuretoggle OFF', function () {
-        var selectedPilotNumber = {
-          pattern: '+19728965000',
-          label: '(972) 896-5000'
-        };
-        controller.model.site.timeZone = {
-          id: 'bogus'
-        };
-        controller.hasSites = false;
-        controller.model.ftswCompanyVoicemail.ftswCompanyVoicemailEnabled = true;
-        controller.model.ftswCompanyVoicemail.ftswCompanyVoicemailNumber = selectedPilotNumber;
-        controller.hasVoicemailService = true;
-        controller.initNext();
-        $scope.$apply();
-        expect(ServiceSetup.createSite).toHaveBeenCalled();
-        expect(ServiceSetup.updateCustomer).toHaveBeenCalled();
-        expect(ModalService.open).not.toHaveBeenCalled();
-      });
-
-    });
-
-    describe('Site and voicemail are updated with new DID pilotnumber featuretoggle OFF', function () {
-      it('site is created with voicemail with featuretoggle OFF', function () {
-        var selectedPilotNumber = {
-          pattern: '+19728965001',
-          label: '(972) 896-5001'
-        };
-        controller.model.site.timeZone = {
-          id: 'bogus'
-        };
-        controller.hasSites = true;
-        controller.model.ftswCompanyVoicemail.ftswCompanyVoicemailEnabled = true;
-        controller.model.ftswCompanyVoicemail.ftswCompanyVoicemailNumber = selectedPilotNumber;
-        controller.model.ftswCompanyVoicemail.ftswExternalVoicemail = true;
-        controller.hasVoicemailService = true;
-        controller.initNext();
-        $scope.$apply();
-
-        expect(ServiceSetup.updateSite).toHaveBeenCalled();
-        expect(ServiceSetup.updateCustomer).toHaveBeenCalled();
-        expect(ModalService.open).not.toHaveBeenCalled();
-      });
-
-    });
-
-  });
-  describe('VoiceMail with Generated VoiceMail Pilot with OptionalVmDidFeatureToggle ON Tests', function () {
+  describe('VoiceMail with Generated VoiceMail Pilot Tests', function () {
     var controller;
     beforeEach(inject(function ($controller) {
       $scope = $rootScope;
@@ -1096,7 +995,6 @@ describe('Controller: ServiceSetup', function () {
       };
       spyOn(ServiceSetup, 'getSite').and.returnValue($q.when(model.site));
       spyOn(ServiceSetup, 'getVoicemailPilotNumber').and.returnValue($q.when(voicemail));
-      spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
       spyOn(ServiceSetup, 'generateVoiceMailNumber').and.returnValue('+911234123412341234123412341234123412341234');
       controller = $controller('ServiceSetupCtrl', {
         $scope: $scope,
@@ -1155,7 +1053,7 @@ describe('Controller: ServiceSetup', function () {
       });
     });
   });
-  describe('VoiceMail with OptionalVmDidFeatureToggle ON updating Generated VoiceMail Pilot Tests', function () {
+  describe('VoiceMail with updating Generated VoiceMail Pilot Tests', function () {
     var controller;
     beforeEach(inject(function ($controller) {
       $scope = $rootScope;
@@ -1191,7 +1089,6 @@ describe('Controller: ServiceSetup', function () {
       };
       spyOn(ServiceSetup, 'getSite').and.returnValue($q.when(model.site));
       spyOn(ServiceSetup, 'getVoicemailPilotNumber').and.returnValue($q.when(voicemail));
-      spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
       spyOn(ServiceSetup, 'generateVoiceMailNumber').and.returnValue('+911234123412341234123412341234123412341234');
       controller = $controller('ServiceSetupCtrl', {
         $scope: $scope,

@@ -11,6 +11,11 @@ describe('Controller: AASubmenuCtrl', function () {
   var index = '0';
   var keyIndex = '1';
   var menuId = 'menu1';
+  var queueName = 'Sunlight Queue 1';
+  var queues = [{
+    queueName: queueName,
+    queueUrl: '/c16a6027-caef-4429-b3af-9d61ddc7964b'
+  }];
 
   var data = getJSONFixture('huron/json/autoAttendant/aaPhoneMenuCtrl.json');
   var submenuData = getJSONFixture('huron/json/autoAttendant/combinedMenu.json');
@@ -84,6 +89,7 @@ describe('Controller: AASubmenuCtrl', function () {
     $scope.index = index;
     $scope.keyIndex = keyIndex;
     $scope.menuId = menuId;
+    $scope.queues = JSON.stringify(queues);
 
     spyOn(AACommonService, 'isRouteQueueToggle').and.returnValue(true);
 

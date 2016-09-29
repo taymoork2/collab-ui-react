@@ -50,13 +50,13 @@ eg. `npm start -- --noopen` passes the `--noopen` argument to our `start` task
 
 * Clean npm cache, `node_modules` directories, and reinstall `node_modules`
 
-### `npm run combine-coverage`
-
-* Combines the unit test istanbul coverage results
-
 ### `npm run commit`
 
 * Starts a wizard to write a proper [git commit message](https://github.com/angular/angular.js/blob/master/CONTRIBUTING.md#commit)
+
+### `npm run coverage-report`
+
+* Generates html/cobertura coverage report from the combined unit test instanbul results
 
 ### `npm run e2e`
 

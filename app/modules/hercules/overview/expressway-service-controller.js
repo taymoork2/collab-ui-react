@@ -6,7 +6,7 @@
     .controller('ExpresswayServiceController', ExpresswayServiceController);
 
   /* @ngInject */
-  function ExpresswayServiceController($state, $modal, $scope, $translate, XhrNotificationService, ServiceStateChecker, ServiceDescriptor, ClusterService, USSService, FusionUtils, FeatureToggleService, $stateParams) {
+  function ExpresswayServiceController($state, $modal, $scope, $stateParams, $translate, XhrNotificationService, ServiceStateChecker, ServiceDescriptor, ClusterService, USSService, FusionUtils, FeatureToggleService) {
     ClusterService.subscribe('data', clustersUpdated, {
       scope: $scope
     });
@@ -74,7 +74,7 @@
     if (vm.servicesId[0] === 'squared-fusion-mgmt') {
       ServiceDescriptor.services(function (error, services) {
         if (!error) {
-          vm.serviceEnabled = _.any(ServiceDescriptor.filterAllExceptManagement(services), {
+          vm.serviceEnabled = _.some(ServiceDescriptor.filterAllExceptManagement(services), {
             enabled: true
           });
         }
@@ -193,6 +193,5 @@
         $state.go('services-overview');
       });
     }
-
   }
 }());

@@ -4,8 +4,8 @@
     <h4 translate="activeUsers.activeUsers"></h4>
   </header>
   <section>
-    <p >{{nav.activeUserDescription}}</p>
-    <div id="activeUsersdiv" class="barchart" ng-class="{'active-chart': !nav.isEmpty(nav.activeUsersRefresh) && !nav.isRefresh(nav.activeUsersRefresh)}"></div>
+    <p >{{nav.getDescription('activeUsers.description')}}</p>
+    <div id="activeUserChart" class="barchart" ng-class="{'active-chart': !nav.isEmpty(nav.activeUsersRefresh) && !nav.isRefresh(nav.activeUsersRefresh)}"></div>
     <div class="spinner-position" ng-if="nav.isRefresh(nav.activeUsersRefresh)">
       <i class='icon icon-spinner icon-2x'></i>
     </div>
@@ -17,8 +17,8 @@
     </div>
   <div ng-show="!nav.isRefresh(nav.activeUsersRefresh) && !nav.isEmpty(nav.activeUsersRefresh) && nav.displayMostActive">
     <div ng-show="nav.showMostActiveUsers">
-      <h4 class="box-match">{{nav.mostActiveTitle}}</h4>
-      <p>{{nav.mostActiveDescription}}</p>
+      <h4 class="box-match">{{nav.getHeader('activeUsers.mostActiveUsers')}}</h4>
+      <p>{{nav.getDescription('activeUsers.mostActiveDescription')}}</p>
       <table class="table table-bordered active-users-table" ng-show="!nav.isRefresh(nav.mostActiveRefresh) && !nav.isEmpty(nav.mostActiveRefresh)">
         <thead>
           <tr>

@@ -55,9 +55,9 @@
       </div>
     </div>
     <div class="row">
-      <div ng-switch="aaSay.messageOption.value" class="large-12 small-12 columns">
+      <div ng-switch="aaSay.messageOption.value" class="small-12 columns">
         <aa-media-upload ng-switch-when="uploadFile" aa-uploaded-fdate="{{ aaSay.uploadedDate }}" aa-uploaded-fname="{{ aaSay.uploadedFile }}" id="mediaUploadInput{{ schedule + index + menuKeyIndex }}" name="mediaUploadInput" aa-index="index" aa-schedule="{{schedule}}"></aa-media-upload>
-        <textarea ng-switch-when="sayMessage" class="aa-message-textarea" aa-keypress ng-change="aaSay.saveUiModel()" ng-model="aaSay.messageInput" type="text" id="sayMessageInput{{ schedule + index + menuKeyIndex }}" name="sayMessageInput" placeholder="{{ :: aaSay.messageInputPlaceholder }}" cols="5" rows="5" maxlength="2000"></textarea>
+        <textarea ng-switch-when="sayMessage" class="aa-message-textarea" aa-keypress ng-change="aaSay.saveUiModel()" ng-model="aaSay.messageInput" type="text" id="sayMessageInput{{ schedule + index + menuKeyIndex }}" name="sayMessageInput" placeholder="{{ :: aaSay.messageInputPlaceholder }}" cols="50" rows="5" maxlength="2000"></textarea>
       </div>
     </div>
     <div class="row">

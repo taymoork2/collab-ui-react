@@ -3,7 +3,7 @@ import { ICardButton, ServicesOverviewCard } from './ServicesOverviewCard';
 export class ServicesOverviewMeetingCard extends ServicesOverviewCard {
   private moreButton: ICardButton = { name: 'servicesOverview.showMore', link: 'site-list', buttonClass: 'btn-link' };
 
-  public getShowMoreButton(): ICardButton {
+  public getShowMoreButton(): ICardButton | undefined {
     if (this.active) {
       return this.moreButton;
     }
@@ -19,6 +19,7 @@ export class ServicesOverviewMeetingCard extends ServicesOverviewCard {
     return [];
   }
 
+  /* @ngInject */
   public constructor(Authinfo) {
     super({
       name: 'servicesOverview.cards.meeting.title',
