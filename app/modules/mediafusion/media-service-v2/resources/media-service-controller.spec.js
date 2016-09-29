@@ -4,7 +4,7 @@ describe('Controller: MediaServiceControllerV2', function () {
   beforeEach(angular.mock.module('Mediafusion'));
   beforeEach(angular.mock.module('Huron'));
   var controller, $scope, httpMock, $q, $modal, $translate;
-  var MediaServiceActivationV2, MediaClusterServiceV2, Notification, XhrNotificationService, redirectTargetPromise, FeatureToggleService;
+  var MediaServiceActivationV2, MediaClusterServiceV2, Notification, XhrNotificationService, redirectTargetPromise;
   var mediaAgentOrgIds = ['mediafusion'];
   var serviceId = "squared-fusion-media";
   var authInfo = {
@@ -13,7 +13,7 @@ describe('Controller: MediaServiceControllerV2', function () {
   beforeEach(angular.mock.module(function ($provide) {
     $provide.value("Authinfo", authInfo);
   }));
-  beforeEach(inject(function ($rootScope, $state, $controller, _$httpBackend_, _$q_, _$modal_, _$translate_, _MediaServiceActivationV2_, _MediaClusterServiceV2_, _XhrNotificationService_, _Notification_, _FeatureToggleService_) {
+  beforeEach(inject(function ($rootScope, $state, $controller, _$httpBackend_, _$q_, _$modal_, _$translate_, _MediaServiceActivationV2_, _MediaClusterServiceV2_, _XhrNotificationService_, _Notification_) {
     $scope = $rootScope.$new();
     httpMock = _$httpBackend_;
     $q = _$q_;
@@ -23,13 +23,6 @@ describe('Controller: MediaServiceControllerV2', function () {
     MediaServiceActivationV2 = _MediaServiceActivationV2_;
     XhrNotificationService = _XhrNotificationService_;
     Notification = _Notification_;
-    FeatureToggleService = _FeatureToggleService_;
-
-    FeatureToggleService.features = {
-      atlasHybridServicesResourceList: 'atlas-hybrid-services-resource-list'
-    };
-
-    spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(false));
 
     //$httpBackend.when('GET', 'l10n/en_US.json').respond({});
     //spyOn(Notification, 'errorResponse');
