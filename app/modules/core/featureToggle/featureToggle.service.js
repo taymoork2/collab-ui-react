@@ -172,7 +172,7 @@
       }
     });
 
-    var userResource = $resource(UrlConfig.getFeatureToggleUrl() + '/locus/api/v1/features/users/:id', {
+    var userResource = $resource(UrlConfig.getWdmUrl() + '/features/users/:id', {
       id: '@id'
     }, {
       get: {
