@@ -189,6 +189,45 @@
         };
       }
 
+      function updatePlaceFromItem(place, item) {
+        if (item.isPlace) {
+          updatePlaceFromPlace(place, item);
+        } else if (item.isCode) {
+          updatePlaceFromCode(place, item);
+        } else {
+          updatePlaceFromDevice(place, item);
+        }
+      }
+
+      function updatePlaceFromDevice(place, device) {
+        var updatedPlace = place;
+        updatedPlace.type = device.type || updatedPlace.type;
+        updatedPlace.cisUuid = device.cisUuid || device.uuid;
+        updatedPlace.displayName = device.displayName;
+        updatedPlace.sipUrl = device.sipUrl;
+        Place.bind(updatedPlace)(updatedPlace);
+      }
+
+      function updatePlaceFromCode(place, code) {
+        var updatedPlace = place;
+        updatedPlace.type = code.type || 'cloudberry';
+        updatedPlace.cisUuid = code.cisUuid || code.uuid;
+        updatedPlace.displayName = code.displayName;
+        Place.bind(updatedPlace)(updatedPlace);
+      }
+
+      function updatePlaceFromPlace(place, placeToUpdateFrom) {
+        if (_.isEmpty(placeToUpdateFrom.devices)) {
+          placeToUpdateFrom = _.merge(placeToUpdateFrom, _.pick(place, ['devices']));
+        }
+        if (_.isEmpty(placeToUpdateFrom.codes)) {
+          placeToUpdateFrom = _.merge(placeToUpdateFrom, _.pick(place, ['codes']));
+        }
+        Place.bind(place)(placeToUpdateFrom);
+        place.devices = placeToUpdateFrom.devices;
+        place.codes = placeToUpdateFrom.codes;
+      }
+
       function Place(obj) {
         this.url = obj.url;
         this.isPlace = true;
@@ -465,6 +504,7 @@
       }
 
       return {
+        updatePlaceFromItem: updatePlaceFromItem,
         convertPlace: convertPlace,
         convertPlaces: convertPlaces,
         convertCode: convertCode,

@@ -109,7 +109,9 @@ describe('Service: CsdmDataModelService', function () {
               expect(reloadedDevice.displayName).toEqual(newDispName);
               expect(originalDevice.displayName).toEqual(newDispName);
               expect(devices[deviceToReloadUrl].displayName).toEqual(newDispName);
-              expect(places[pWithDeviceUrl].devices[1].displayName).toEqual(newDispName);
+              _.forEach(places[pWithDeviceUrl].devices, function (value) {
+              });
+              expect(places[pWithDeviceUrl].devices[deviceToReloadUrl].displayName).toEqual(newDispName);
 
               expect(originalDevice).toBe(devices[deviceToReloadUrl]);
               promiseExecuted = "YES";
@@ -139,7 +141,7 @@ describe('Service: CsdmDataModelService', function () {
           CsdmDataModelService.createCsdmPlace("newPlace", "cloudberry").then(function (place) {
             CsdmDataModelService.createCodeForExisting(place.cisUuid).then(function (createdCode) {
               expect(devicesMap[codeToAddUrl]).toBe(createdCode);
-              expect(places[place.url].codes.length).toBe(1);
+              expect(Object.keys(places[place.url].codes).length).toBe(1);
               promiseExecuted = "YES";
             });
           });
@@ -161,12 +163,12 @@ describe('Service: CsdmDataModelService', function () {
       CsdmDataModelService.getDevicesMap().then(function (deviceMap) {
         CsdmDataModelService.getPlacesMap().then(function (places) {
 
-          expect(places[pWithoutDeviceUrl].devices.length).toBe(0);//superfluous
+          expect(Object.keys(places[pWithoutDeviceUrl].devices).length).toBe(0);//superfluous
 
           CsdmDataModelService.createCodeForExisting("codetobeadded").then(function (createdCode) {
             expect(deviceMap[codeToAddUrl]).toBe(createdCode);
-            expect(places[pWithoutDeviceUrl].devices.length).toBe(0);
-            expect(places[pWithoutDeviceUrl].codes.length).toBe(1);
+            expect(Object.keys(places[pWithoutDeviceUrl].devices).length).toBe(0);
+            expect(Object.keys(places[pWithoutDeviceUrl].codes).length).toBe(1);
             promiseExecuted = "YES";
           });
 
@@ -192,14 +194,14 @@ describe('Service: CsdmDataModelService', function () {
 
         CsdmDataModelService.getPlacesMap().then(function (places) {
 
-          expect(places[pWithDeviceUrl].devices.length).toBe(3);
+          expect(Object.keys(places[pWithDeviceUrl].devices).length).toBe(3);
 
           var deviceToDelete = devices[deviceToDeleteUrl];
 
           CsdmDataModelService.deleteItem(deviceToDelete).catch(function () {
 
             expect(devices[deviceToDeleteUrl]).toBe(deviceToDelete);
-            expect(places[pWithDeviceUrl].devices.length).toBe(3);
+            expect(Object.keys(places[pWithDeviceUrl].devices).length).toBe(3);
             promiseExecuted = "YES";
           });
 
@@ -226,7 +228,7 @@ describe('Service: CsdmDataModelService', function () {
           var deviceToDelete = devices[deviceUrlToDelete];
 
           var place = places[pWithDeviceUrl];
-          var devicesInPlace = place.devices.slice(0);
+          var devicesInPlace = _.values(place.devices);
           expect(devicesInPlace).toHaveLength(3);
           expect(devicesInPlace).toContain(deviceToDelete);
 
@@ -263,13 +265,13 @@ describe('Service: CsdmDataModelService', function () {
 
         CsdmDataModelService.getPlacesMap().then(function (places) {
 
-          expect(places[pWithDeviceUrl].devices[1].displayName).toBe(originalName);
+          expect(places[pWithDeviceUrl].devices[deviceUrlToUpdate].displayName).toBe(originalName);
 
           CsdmDataModelService.updateItemName(devices[deviceUrlToUpdate], newDeviceName).then(function (updatedDevice) {
 
             expect(updatedDevice.displayName).toEqual(newDeviceName);
             expect(devices[deviceUrlToUpdate].displayName).toEqual(newDeviceName);
-            expect(places[pWithDeviceUrl].devices[1].displayName).toEqual(newDeviceName);
+            expect(places[pWithDeviceUrl].devices[deviceUrlToUpdate].displayName).toEqual(newDeviceName);
             expect(places[pWithDeviceUrl].displayName).toEqual(newDeviceName);
 
             promiseExecuted = "YES";
@@ -295,12 +297,12 @@ describe('Service: CsdmDataModelService', function () {
 
         CsdmDataModelService.getPlacesMap().then(function (places) {
 
-          expect(places[pWithDeviceUrl].devices[1].displayName).toBe(originalName);
+          expect(places[pWithDeviceUrl].devices[deviceUrlToUpdate].displayName).toBe(originalName);
 
           CsdmDataModelService.updateItemName(devices[deviceUrlToUpdate], newDeviceName).catch(function () {
 
             expect(devices[deviceUrlToUpdate].displayName).toEqual(originalName);
-            expect(places[pWithDeviceUrl].devices[1].displayName).toEqual(originalName);
+            expect(places[pWithDeviceUrl].devices[deviceUrlToUpdate].displayName).toEqual(originalName);
             promiseExecuted = "YES";
           });
         });
@@ -325,7 +327,7 @@ describe('Service: CsdmDataModelService', function () {
 
         CsdmDataModelService.getPlacesMap().then(function (places) {
 
-          expect(places[pWithDeviceUrl].devices[1].tags).toHaveLength(originalTagsCount);
+          expect(places[pWithDeviceUrl].devices[deviceUrlToUpdate].tags).toHaveLength(originalTagsCount);
 
           CsdmDataModelService.updateTags(deviceToUpdate, newTags).then(function (updatedDevice) {
 
@@ -333,8 +335,8 @@ describe('Service: CsdmDataModelService', function () {
             expect(updatedDevice.tags).toContain(newTag);
             expect(devices[deviceUrlToUpdate].tags).toHaveLength(originalTagsCount + 1);
             expect(devices[deviceUrlToUpdate].tags).toContain(newTag);
-            expect(places[pWithDeviceUrl].devices[1].tags).toHaveLength(originalTagsCount + 1);
-            expect(places[pWithDeviceUrl].devices[1].tags).toContain(newTag);
+            expect(places[pWithDeviceUrl].devices[deviceUrlToUpdate].tags).toHaveLength(originalTagsCount + 1);
+            expect(places[pWithDeviceUrl].devices[deviceUrlToUpdate].tags).toContain(newTag);
 
             promiseExecuted = "YES";
           });
@@ -360,7 +362,7 @@ describe('Service: CsdmDataModelService', function () {
 
         CsdmDataModelService.getPlacesMap().then(function (places) {
 
-          expect(places[pWithDeviceUrl].devices[1].tags).toHaveLength(originalTagsCount);
+          expect(places[pWithDeviceUrl].devices[deviceUrlToUpdate].tags).toHaveLength(originalTagsCount);
 
           var deviceToUpdateClone = JSON.parse(JSON.stringify(deviceToUpdate));
 
@@ -372,8 +374,8 @@ describe('Service: CsdmDataModelService', function () {
             expect(updatedDevice.tags).toContain(newTag);
             expect(devices[deviceUrlToUpdate].tags).toHaveLength(originalTagsCount + 1);
             expect(devices[deviceUrlToUpdate].tags).toContain(newTag);
-            expect(places[pWithDeviceUrl].devices[1].tags).toHaveLength(originalTagsCount + 1);
-            expect(places[pWithDeviceUrl].devices[1].tags).toContain(newTag);
+            expect(places[pWithDeviceUrl].devices[deviceUrlToUpdate].tags).toHaveLength(originalTagsCount + 1);
+            expect(places[pWithDeviceUrl].devices[deviceUrlToUpdate].tags).toContain(newTag);
 
             promiseExecuted = "YES";
           });
@@ -399,14 +401,14 @@ describe('Service: CsdmDataModelService', function () {
 
         CsdmDataModelService.getPlacesMap().then(function (places) {
 
-          expect(places[pWithDeviceUrl].devices[1].tags).toHaveLength(originalTagsCount);
+          expect(places[pWithDeviceUrl].devices[deviceUrlToUpdate].tags).toHaveLength(originalTagsCount);
 
           CsdmDataModelService.updateTags(deviceToUpdate, newTags).catch(function () {
 
             expect(devices[deviceUrlToUpdate].tags).toHaveLength(originalTagsCount);
             expect(devices[deviceUrlToUpdate].tags).not.toContain(newTag);
-            expect(places[pWithDeviceUrl].devices[1].tags).toHaveLength(originalTagsCount);
-            expect(places[pWithDeviceUrl].devices[1].tags).not.toContain(newTag);
+            expect(places[pWithDeviceUrl].devices[deviceUrlToUpdate].tags).toHaveLength(originalTagsCount);
+            expect(places[pWithDeviceUrl].devices[deviceUrlToUpdate].tags).not.toContain(newTag);
 
             promiseExecuted = "YES";
           });
@@ -432,7 +434,7 @@ describe('Service: CsdmDataModelService', function () {
 
         CsdmDataModelService.getPlacesMap().then(function (places) {
 
-          expect(places[pWithDeviceUrl].devices[1].tags).toHaveLength(originalTagsCount);
+          expect(places[pWithDeviceUrl].devices[deviceUrlToUpdate].tags).toHaveLength(originalTagsCount);
 
           CsdmDataModelService.updateTags(deviceToUpdate, newTags).then(function (updatedDevice) {
 
@@ -440,8 +442,8 @@ describe('Service: CsdmDataModelService', function () {
             expect(updatedDevice.tags).not.toContain(removedTag);
             expect(devices[deviceUrlToUpdate].tags).toHaveLength(originalTagsCount - 1);
             expect(devices[deviceUrlToUpdate].tags).not.toContain(removedTag);
-            expect(places[pWithDeviceUrl].devices[1].tags).toHaveLength(originalTagsCount - 1);
-            expect(places[pWithDeviceUrl].devices[1].tags).not.toContain(removedTag);
+            expect(places[pWithDeviceUrl].devices[deviceUrlToUpdate].tags).toHaveLength(originalTagsCount - 1);
+            expect(places[pWithDeviceUrl].devices[deviceUrlToUpdate].tags).not.toContain(removedTag);
 
             promiseExecuted = "YES";
           });
@@ -467,14 +469,14 @@ describe('Service: CsdmDataModelService', function () {
 
         CsdmDataModelService.getPlacesMap().then(function (places) {
 
-          expect(places[pWithDeviceUrl].devices[1].tags).toHaveLength(originalTagsCount);
+          expect(places[pWithDeviceUrl].devices[deviceUrlToUpdate].tags).toHaveLength(originalTagsCount);
 
           CsdmDataModelService.updateTags(deviceToUpdate, newTags).catch(function () {
 
             expect(devices[deviceUrlToUpdate].tags).toHaveLength(originalTagsCount);
             expect(devices[deviceUrlToUpdate].tags).toContain(removedTag);
-            expect(places[pWithDeviceUrl].devices[1].tags).toHaveLength(originalTagsCount);
-            expect(places[pWithDeviceUrl].devices[1].tags).toContain(removedTag);
+            expect(places[pWithDeviceUrl].devices[deviceUrlToUpdate].tags).toHaveLength(originalTagsCount);
+            expect(places[pWithDeviceUrl].devices[deviceUrlToUpdate].tags).toContain(removedTag);
 
             promiseExecuted = "YES";
           });
@@ -528,8 +530,8 @@ describe('Service: CsdmDataModelService', function () {
         expect(Object.keys(places).length).toBe(3);
         expect(_.values(places).length).toBe(3);
 
-        expect(places[pWithDeviceUrl].devices.length).toBe(3);
-        expect(places[pWithDeviceUrl].codes.length).toBe(2);
+        expect(Object.keys(places[pWithDeviceUrl].devices).length).toBe(3);
+        expect(Object.keys(places[pWithDeviceUrl].codes).length).toBe(2);
         expectExecuted = true;
       });
       $rootScope.$digest();
@@ -540,8 +542,32 @@ describe('Service: CsdmDataModelService', function () {
       var expectExecuted;
       CsdmDataModelService.getPlacesMap().then(function (places) {
 
-        expect(places[pWithDeviceUrl].devices.length).toBe(3);
-        expect(places[pWithDeviceUrl].codes.length).toBe(2);
+        expect(Object.keys(places[pWithDeviceUrl].devices).length).toBe(3);
+        expect(Object.keys(places[pWithDeviceUrl].codes).length).toBe(2);
+
+        expect(places[pWithDeviceUrl].displayName).toBe('PlaceWithDevice');
+        expect(places[pWithDeviceUrl].type).toBe('cloudberry');
+        expect(places[pWithDeviceUrl].readableType).toBe('addDeviceWizard.chooseDeviceType.roomSystem');
+        expect(places[pWithDeviceUrl].sipUrl).toBe('foodelete1@trialorg.room.ciscospark.com');
+        expect(places[pWithDeviceUrl].cisUuid).toBe('a19b308a-PlaceWithDevice-71898e423bec');
+        expectExecuted = true;
+      });
+      $rootScope.$digest();
+      expect(expectExecuted).toBe(true);
+    });
+
+    it('should return a list of places where places generated from a account should contain all place fields', function () {
+      var expectExecuted;
+      CsdmDataModelService.getPlacesMap().then(function (places) {
+
+        expect(Object.keys(places[pWithoutDeviceUrl].devices).length).toBe(0);
+        expect(Object.keys(places[pWithoutDeviceUrl].codes).length).toBe(0);
+
+        expect(places[pWithoutDeviceUrl].displayName).toBe('PlaceWithoutMissingNonExistingDevice');
+        expect(places[pWithoutDeviceUrl].type).toBe('cloudberry');
+        expect(places[pWithoutDeviceUrl].readableType).toBe('addDeviceWizard.chooseDeviceType.roomSystem');
+        expect(places[pWithoutDeviceUrl].sipUrl).toBe('foodelete2@trialorg.room.ciscospark.com');
+        expect(places[pWithoutDeviceUrl].cisUuid).toBe('938d9c32-placeWithoutDevice-88d7c1a7f63e');
         expectExecuted = true;
       });
       $rootScope.$digest();
@@ -549,7 +575,22 @@ describe('Service: CsdmDataModelService', function () {
     });
 
     it('should return a list of places where places generated from a code should contain all place fields', function () {
+      var expectExecuted;
+      var placeWithOneCodeUrl = 'https://csdm-integration.wbx2.com/csdm/api/v1/organization/null/places/a19b308a-PlaceWithOnlyCode-71898e423bec';
+      CsdmDataModelService.getPlacesMap().then(function (places) {
 
+        expect(Object.keys(places[placeWithOneCodeUrl].devices).length).toBe(0);
+        expect(Object.keys(places[placeWithOneCodeUrl].codes).length).toBe(1);
+
+        expect(places[placeWithOneCodeUrl].displayName).toBe('8A64E0C8576F667801576F66CF320002');
+        expect(places[placeWithOneCodeUrl].type).toBe('cloudberry');
+        expect(places[placeWithOneCodeUrl].readableType).toBe('addDeviceWizard.chooseDeviceType.roomSystem');
+        expect(places[placeWithOneCodeUrl].sipUrl).toBeUndefined();
+        expect(places[placeWithOneCodeUrl].cisUuid).toBe('a19b308a-PlaceWithOnlyCode-71898e423bec');
+        expectExecuted = true;
+      });
+      $rootScope.$digest();
+      expect(expectExecuted).toBe(true);
     });
 
 
@@ -617,9 +658,9 @@ describe('Service: CsdmDataModelService', function () {
         expect(Object.keys(places).length).toBe(3);
 
         var placeToRemove = places[placeToRemoveUrl];
-        var device0Url = placeToRemove.devices[0].url;
+        var device0Url = _.values(placeToRemove.devices)[0].url;
 
-        expect(initialDeviceMap[device0Url]).toBe(placeToRemove.devices[0]);
+        expect(initialDeviceMap[device0Url]).toBe(_.values(placeToRemove.devices)[0]);
 
         CsdmDataModelService.deleteItem(placeToRemove).then(function () {
           expect(places[placeToRemove.url]).toBeUndefined();
@@ -643,11 +684,11 @@ describe('Service: CsdmDataModelService', function () {
         expect(Object.keys(places).length).toBe(3);
 
         var placeToRemove = places[placeToRemoveUrl];
-        var code0Url = placeToRemove.codes[0].url;
-        var code1Url = placeToRemove.codes[1].url;
+        var code0Url = _.values(placeToRemove.codes)[0].url;
+        var code1Url = _.values(placeToRemove.codes)[1].url;
 
-        expect(initialDeviceMap[code0Url]).toBe(placeToRemove.codes[0]);
-        expect(initialDeviceMap[code1Url]).toBe(placeToRemove.codes[1]);
+        expect(initialDeviceMap[code0Url]).toBe(_.values(placeToRemove.codes)[0]);
+        expect(initialDeviceMap[code1Url]).toBe(_.values(placeToRemove.codes)[1]);
 
         CsdmDataModelService.deleteItem(placeToRemove).then(function () {
           expect(places[placeToRemove.url]).toBeUndefined();
