@@ -31,7 +31,11 @@
         $scope.dateVal = $filter('date')($scope.msg.postAt, 'yyyy-MM-dd');
         $scope.timeVal = $filter('date')($scope.msg.postAt, 'HH:mm');
         $scope.modifyMsg = function () {
-          MessageService.modifyMsg({ messageId: $scope.msg.messageId }, { postAt: ISODateString(new Date($scope.dateVal + " " + $scope.timeVal)), email: "chaoluo@ciscoc.com", message: $scope.msg.message }).$promise.then(function () {
+          if ($scope.timeVal == "Invalid date") {
+            $scope.timeVal = "00:00";
+          }
+          var postDT = new Date($scope.dateVal.replace(/-/g, '/') + " " + $scope.timeVal);
+          MessageService.modifyMsg({ messageId: $scope.msg.messageId }, { postAt: ISODateString(postDT), email: "chaoluo@ciscoc.com", message: $scope.msg.message }).$promise.then(function () {
             $log.log($scope.msg.postAt);
             $window.alert("Successfully modify message");
             $scope.msg.postAt = ISODateString(new Date($scope.dateVal + " " + $scope.timeVal));
@@ -44,7 +48,7 @@
           $scope.dateVal = $filter('date')($scope.msg.postAt, 'yyyy-MM-dd');
           $scope.timeVal = $filter('date')($scope.msg.postAt, 'HH:mm');
         };
-        $log.log(ISODateString(new Date($scope.dateVal + " " + $scope.timeVal)));
+        //$log.log(ISODateString(new Date($scope.dateVal + " " + $scope.timeVal)));
         $scope.showOrHideComponentFUN = function (messageId) {
           $log.log(messageId);
           MessageService.query({ messageId: messageId }).$promise.then(function (data) {

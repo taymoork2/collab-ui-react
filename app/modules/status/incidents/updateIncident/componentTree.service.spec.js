@@ -7,7 +7,7 @@
 describe('ComponentService service', function () {
   var $httpBackend;
   var ComponentService;
-  var getActiveHostsURL = 'https://dataservicesbts.webex.com/status/services/:siteId/components';
+  var getActiveHostsURL = 'https://statusbts.webex.com/status/services/:siteId/components';
   var activeHosts = [{ id: 1, name: 'Bob' }];
   function dependencies(_$httpBackend_, _ComponentService_) {
     $httpBackend = _$httpBackend_;

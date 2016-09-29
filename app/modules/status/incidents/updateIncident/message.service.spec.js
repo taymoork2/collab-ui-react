@@ -10,7 +10,7 @@
 describe('Message service', function () {
   //var $httpBackend;
   var MessageService;
-  //var getNoSiteURL = 'https://dataservicesbts.webex.com/status/services/101/incidents';
+  //var getNoSiteURL = 'https://statusbts.webex.com/status/services/101/incidents';
   // var mockData = [{}];
   function dependencies(_MessageService_) {
     //  $httpBackend = _$httpBackend_;

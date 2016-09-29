@@ -2,7 +2,8 @@
   'use strict';
   angular.module('Status.incidents')
          .factory('UpdateIncidentService', UpdateIncidentService);
-  function UpdateIncidentService($resource) {
-    return $resource('https://dataservicesbts.webex.com/status/incidents/:incidentId/messages');
+  function UpdateIncidentService($resource, UrlConfig) {
+    var url = UrlConfig.getStatusUrl() + '/incidents/:incidentId/messages';
+    return $resource(url);
   }
 })();

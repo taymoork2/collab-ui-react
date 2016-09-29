@@ -7,7 +7,7 @@
 describe('updateIncident service', function () {
   var $httpBackend;
   var UpdateIncidentService;
-  var getActiveHostsURL = 'https://dataservicesbts.webex.com/status/incidents/:incidentId/messages';
+  var getActiveHostsURL = 'https://statusbts.webex.com/status/incidents/:incidentId/messages';
   var activeHosts = [{ id: 1, name: 'Bob' }];
   function dependencies(_$httpBackend_, _UpdateIncidentService_) {
     $httpBackend = _$httpBackend_;
