@@ -129,7 +129,7 @@
             value.lineAlpha = 0.2;
           }
           value.balloonText = '<span class="graph-text">' + value.title + ' ' + vm.utilization + ' <span class="graph-number">[[value]]</span></span>';
-          value.lineThickness = 3;
+          value.lineThickness = 2;
         }
         if (value.valueField === 'average_util') {
           value.title = vm.average_utilzation;
@@ -242,8 +242,6 @@
           vm.callVolumeStatus = vm.SET;
         }
         resizeCards();
-      }).catch(function () {
-        XhrNotificationService.notify(vm.errorData);
       });
     }
 
@@ -295,8 +293,6 @@
             });
         }
         resizeCards();
-      }).catch(function () {
-        XhrNotificationService.notify(vm.errorData);
       });
     }
 
@@ -327,8 +323,6 @@
             });
           }
           resizeCards();
-        }).catch(function () {
-          XhrNotificationService.notify(vm.errorData);
         });
       } else {
         MetricsReportService.getUtilizationData(vm.timeSelected, vm.allClusters).then(function (response) {
@@ -340,7 +334,7 @@
             for (var i = 0; i <= response.graphs.length; i++) {
               if (response.graphs[i].valueField !== vm.clusterId) {
                 vm.utilizationStatus = vm.EMPTY;
-                return;
+
               } else {
                 vm.utilizationClusterName = getClusterName(response.graphs);
                 setUtilizationGraph(response.graphData, vm.utilizationClusterName);
@@ -351,8 +345,6 @@
             }
           }
           resizeCards();
-        }).catch(function () {
-          XhrNotificationService.notify(vm.errorData);
         });
       }
     }
@@ -411,8 +403,6 @@
           }
         }
         resizeCards();
-      }).catch(function () {
-        XhrNotificationService.notify(vm.errorData);
       });
 
     }
@@ -428,8 +418,6 @@
           vm.clusterAvailability = response.data.availabilityPercent + vm.percentage;
         }
         resizeCards();
-      }).catch(function () {
-        XhrNotificationService.notify(vm.errorData);
       });
     }
 
