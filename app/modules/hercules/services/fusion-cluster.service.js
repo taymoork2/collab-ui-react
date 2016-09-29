@@ -392,6 +392,9 @@
     }
 
     function addUserCount(response) {
+      if (response.groups.length === 0) {
+        return response;
+      }
       var promises = _.map(response.groups, function (group) {
         return USSService.getUserCountFromResourceGroup(group.id)
           .catch(function () {

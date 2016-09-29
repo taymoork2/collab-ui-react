@@ -20,7 +20,7 @@
     ctrl.openResourceGroupSettings = openResourceGroupSettings;
     ctrl.toggleDetails = toggleDetails;
     ctrl.hasZeroClusters = hasZeroClusters;
-    ctrl.hasZeroUsers = hasZeroUsers;
+    ctrl.hasUsers = hasUsers;
     ctrl.$onChanges = $onChanges;
     ctrl.getLocalizedReleaseChannel = FusionUtils.getLocalizedReleaseChannel;
     ctrl.getStatusCssClass = getStatusCssClass;
@@ -43,8 +43,8 @@
       return ctrl.group.clusters.length === 0;
     }
 
-    function hasZeroUsers() {
-      return ctrl.group.numberOfUsers === 0;
+    function hasUsers() {
+      return ctrl.group.numberOfUsers > 0;
     }
 
     function getStatusCssClass() {

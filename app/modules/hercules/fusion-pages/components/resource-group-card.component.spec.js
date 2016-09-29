@@ -33,9 +33,9 @@ describe('Component: resourceGroupCard', function () {
       });
     });
 
-    describe('hasZeroUsers()', function () {
-      it('should be true if there are 0 users', function () {
-        expect(controller.hasZeroUsers()).toEqual(true);
+    describe('hasUsers()', function () {
+      it('should be false if there are 0 users', function () {
+        expect(controller.hasUsers()).toEqual(false);
       });
     });
   });

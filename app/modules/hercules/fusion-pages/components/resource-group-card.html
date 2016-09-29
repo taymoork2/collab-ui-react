@@ -15,15 +15,15 @@
       <a ui-sref="resource-group-settings({id: $ctrl.group.id})" class="resource-group-settings-link"><i class="icon icon-settings"></i></a>
     </header>
     <section ng-show="$ctrl.showDetails">
-      <div ng-if="$ctrl.hasZeroClusters() && $ctrl.hasZeroUsers()" class="resource-group-banner">
+      <div ng-if="$ctrl.hasZeroClusters() && $ctrl.hasUsers()" class="resource-group-banner">
         <div class="resource-group-banner-message" translate="hercules.fusion.list.missing-clusters" translate-value-onclick="$ctrl.openResourceGroupSettings()" translate-compile>
         </div>
       </div>
-      <div ng-if="!$ctrl.hasZeroClusters() && $ctrl.hasZeroUsers()" class="resource-group-banner resource-group-banner">
+      <div ng-if="!$ctrl.hasZeroClusters() && !$ctrl.hasUsers()" class="resource-group-banner resource-group-banner">
         <div class="resource-group-banner-message" translate="hercules.fusion.list.missing-users" translate-value-onclick="$ctrl.openResourceGroupSettings()" translate-compile>
         </div>
       </div>
-      <div ng-if="$ctrl.hasZeroClusters() && !$ctrl.hasZeroUsers()" class="resource-group-banner resource-group-banner-error">
+      <div ng-if="$ctrl.hasZeroClusters() && $ctrl.hasUsers()" class="resource-group-banner resource-group-banner-error">
         <div class="resource-group-banner-message" translate="hercules.fusion.list.users-in-limbo" translate-value-onclick="$ctrl.openResourceGroupSettings()" translate-compile>
         </div>
       </div>

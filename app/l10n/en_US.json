@@ -1853,7 +1853,7 @@
       "clustersDescription" : "Add one or more existing clusters to this group",
       "usersHeader": "Users",
       "usersAssign": "Assign Users",
-      "usersDescription": "To assign users to this resource group you can pick the resource group in the Hybrid service section of the user panel in the users page or assign them in bulk using CSV. Refer to documentation to assign users with CSV upload.",
+      "usersDescription": "To assign users to this Resource Group you can pick the Resource Group in the Hybrid Services section of the Overview panel in the Users page or assign them in bulk using CSV. Refer to documentation to assign users with CSV upload.",
       "renameGroup": "Rename",
       "renameGroupDescription": "Rename the Resource Group",
       "removeGroup": "Remove",
