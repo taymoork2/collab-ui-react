@@ -5,7 +5,7 @@
     .controller('CustomerListCtrl', CustomerListCtrl);
 
   /* @ngInject */
-  function CustomerListCtrl($q, $rootScope, $scope, $state, $stateParams, $templateCache, $translate, $window, Analytics, Authinfo, Config, customerListToggle, ExternalNumberService, FeatureToggleService, Log, Notification, Orgservice, PartnerService, TrialService) {
+  function CustomerListCtrl($q, $rootScope, $scope, $state, $stateParams, $templateCache, $translate, $window, Analytics, Authinfo, Config, customerListToggle, ExternalNumberService, FeatureToggleService, Log, Notification, Orgservice, PartnerService, TrialService, CsdmPlaceService) {
     $scope.isCustomerPartner = !!Authinfo.isCustomerPartner;
     $scope.isPartnerAdmin = Authinfo.isPartnerAdmin();
     $scope.activeBadge = false;
@@ -13,9 +13,9 @@
     $scope.searchStr = '';
     $scope.timeoutVal = 1000;
     $scope.isCareEnabled = false;
-
+    $scope.placesEnabled = false;
     $scope.isOrgSetup = isOrgSetup;
-    $scope.isPartnerAdminWithCall = isPartnerAdminWithCall;
+    $scope.isPartnerAdminWithCallOrRooms = isPartnerAdminWithCallOrRooms;
     $scope.isOwnOrg = isOwnOrg;
     $scope.setFilter = setFilter;
     $scope.getSubfields = getSubfields;
@@ -41,6 +41,7 @@
     $scope.isLicenseTypeAny = isLicenseTypeAny;
     $scope.getUserCountColumnText = getUserCountColumnText;
     $scope.isPastGracePeriod = isPastGracePeriod;
+    $scope.isPstnSetup = isPstnSetup;
 
     $scope.convertStatusToInt = convertStatusToInt;
 
@@ -352,6 +353,11 @@
           }
         });
       });
+
+      CsdmPlaceService.placesFeatureIsEnabled().then(function (result) {
+        $scope.placesEnabled = result;
+      });
+
       Orgservice.getOrg(function (data, status) {
         if (data.success) {
           $scope.isTestOrg = data.isTestOrg;
@@ -393,8 +399,12 @@
       });
     }
 
-    function isPartnerAdminWithCall(customer) {
-      return !_.isUndefined(customer.communications.licenseType) && $scope.isPartnerAdmin;
+    function isPartnerAdminWithCallOrRooms(customer) {
+      return (!_.isUndefined(customer.communications.licenseType) || (!_.isUndefined(customer.roomSystems.licenseType) && $scope.placesEnabled)) && $scope.isPartnerAdmin;
+    }
+
+    function isPstnSetup(row) {
+      return (row.entity.isAllowedToManage && isOrgSetup(row.entity) && (row.entity.isSquaredUcOffer || (row.entity.isRoomSystems && $scope.placesEnabled))) || isPartnerAdminWithCallOrRooms(row.entity);
     }
 
     function isOwnOrg(customer) {

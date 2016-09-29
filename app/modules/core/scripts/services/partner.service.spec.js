@@ -512,6 +512,7 @@ describe('Partner Service -', function () {
             id: Config.offerTypes.roomSystems
           }]
         }, true);
+        expect(data.isRoomSystems).toBe(true);
         expect(_.map(data.offer.trialServices, function (o) { return o.name; })).toContain($translate.instant('trials.roomSystem'));
       });
     });
