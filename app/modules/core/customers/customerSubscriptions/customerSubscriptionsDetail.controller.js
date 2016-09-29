@@ -34,17 +34,18 @@
           var offerName = _.get(customerLicenses, 'offerName', '');
           var customerSubscription = {};
           if (siteUrl !== '' && offerName !== '') {
-            customerSubscription = {
-              siteUrl: siteUrl,
-              subscriptionId: subscriptionId,
-              offerName: offerName
-            };
-            vm.subscriptions.push(customerSubscription);
-            _.forEach(vm.subscriptions, function (sub) {
-              vm.customerInfo += ['', sub.offerName, sub.subscriptionId, sub.siteUrl].join('%0D%0A');
-              vm.customerInfoClipboard += ['', sub.offerName, sub.subscriptionId, sub.siteUrl].join('\n');
-            });
+            if (!_.find(vm.subscriptions, { siteUrl: siteUrl, subscriptionId: subscriptionId })) {
+              customerSubscription = {
+                siteUrl: siteUrl,
+                subscriptionId: subscriptionId,
+              };
+              vm.subscriptions.push(customerSubscription);
+            }
           }
+        });
+        _.forEach(vm.subscriptions, function (sub) {
+          vm.customerInfo += ['', sub.subscriptionId, sub.siteUrl, ''].join('%0D%0A');
+          vm.customerInfoClipboard += ['', sub.subscriptionId, sub.siteUrl, ''].join('\n');
         });
       });
     }
