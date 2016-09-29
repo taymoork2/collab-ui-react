@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject */
-  function MediaServiceControllerV2(MediaServiceActivationV2, $state, $modal, $scope, $translate, Authinfo, MediaClusterServiceV2, Notification, FeatureToggleService) {
+  function MediaServiceControllerV2(MediaServiceActivationV2, $state, $modal, $scope, $translate, Authinfo, MediaClusterServiceV2, Notification) {
 
     MediaClusterServiceV2.subscribe('data', clustersUpdated, {
       scope: $scope
@@ -187,19 +187,13 @@
         });
     };
 
-    function isFeatureToggled() {
-      return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridServicesResourceList);
-    }
-    isFeatureToggled().then(function (reply) {
-      vm.featureToggled = reply;
-      if (vm.featureToggled) {
-        MediaServiceActivationV2.isServiceEnabled(vm.currentServiceId, function (error, enabled) {
-          if (!enabled) {
-            firstTimeSetup();
-          }
-        });
+
+    MediaServiceActivationV2.isServiceEnabled(vm.currentServiceId, function (error, enabled) {
+      if (!enabled) {
+        firstTimeSetup();
       }
     });
+
 
     function firstTimeSetup() {
       $modal.open({
