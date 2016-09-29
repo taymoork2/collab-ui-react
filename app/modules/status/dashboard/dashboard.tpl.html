@@ -47,7 +47,7 @@
         <input class="btn btn--primary" type="button" value="+ NEW INCIDENT" ng-click="toCreatePage()">
       </div>
 
-      <div ng-if="showList" class="DincidentItem" ng-repeat="incident in incidentList">
+      <div ng-if="showList" class="DincidentItem" ng-repeat="incident in incidentList | orderBy:'-incident.lastModifiedTime':true">
         <div ng-if="incident.status!='resolved'" class="incidentInfo">
           <div ng-if="incident.status!='resolved'" class="DincidentName clearFloat">
             <span>{{incident.incidentName}}</span>
