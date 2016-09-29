@@ -14,6 +14,9 @@
     <section-title
       title-key="telephonyPreview.features">
     </section-title>
-    <feature-list features="$ctrl.features" feature-actions="$ctrl.featureActions(feature)"></feature-list>
+    <feature-list
+      features="$ctrl.features"
+      on-feature-click="$ctrl.clickFeature(feature)">
+    </feature-list>
   </cs-sp-section>
 </cs-sp-container>

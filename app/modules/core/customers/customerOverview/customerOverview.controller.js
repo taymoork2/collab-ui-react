@@ -43,9 +43,13 @@
     vm.isPartnerAdmin = Authinfo.isPartnerAdmin();
     vm.currentAdminId = Authinfo.getUserId();
 
-    vm.freeOrPaidServices = null;
+    vm.freeOrPaidServices = [];
+    vm.trialActions = [];
 
     vm.newCustomerViewToggle = newCustomerViewToggle;
+
+    var QTY = _.toUpper($translate.instant('common.quantity'));
+    var FREE = _.toUpper($translate.instant('customerPage.free'));
 
     FeatureToggleService.atlasCareTrialsGetStatus()
       .then(function (result) {
@@ -64,9 +68,23 @@
 
     function setOffers(isCareEnabled) {
       var licAndOffers = PartnerService.parseLicensesAndOffers(vm.currentCustomer, isCareEnabled);
-      vm.offer = vm.currentCustomer.offer = _.get(licAndOffers, 'offer');
+      vm.currentCustomer.offer = _.get(licAndOffers, 'offer');
+      vm.trialServices = _.chain(vm.currentCustomer.offer)
+        .get('trialServices')
+        .map(function (trialService) {
+          return _.assign({}, trialService, {
+            detail: trialService.qty + ' ' + QTY,
+            actionAvailable: hasSubview(trialService)
+          });
+        })
+        .value();
       if (vm.newCustomerViewToggle) {
-        vm.freeOrPaidServices = PartnerService.getFreeOrActiveServices(vm.currentCustomer, isCareEnabled);
+        vm.freeOrPaidServices = _.map(PartnerService.getFreeOrActiveServices(vm.currentCustomer, isCareEnabled), function (service) {
+          return _.assign({}, service, {
+            detail: service.free ? FREE : service.qty + ' ' + QTY,
+            actionAvailable: hasSubview(service)
+          });
+        });
       }
     }
 
@@ -85,9 +103,17 @@
 
     function init() {
       initCustomer();
+      initTrialActions();
       getLogoSettings();
       getIsTestOrg();
       getIsSetupDone();
+    }
+
+    function initTrialActions() {
+      vm.trialActions.push({
+        actionKey: 'customerPage.edit',
+        actionFunction: openEditTrialModal
+      });
     }
 
     function resetForm() {
