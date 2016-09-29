@@ -29,5 +29,9 @@ describe('Controller: customerSubscriptionsDetailCtrl', function () {
       expect(controller.subscriptions[0].siteUrl).toEqual('AtlasTestRitwchau05.webex.com');
       expect(controller.subscriptions[0].subscriptionId).toEqual('Test-Sub-08072016a');
     });
+    it('must only put unique siteUrl/subscriptionID combinations array', function () {
+      expect(controller.subscriptions.length).toEqual(2);
+      expect(controller.subscriptions[1].subscriptionId).toEqual('Test-Sub-08072016b');
+    });
   });
 });

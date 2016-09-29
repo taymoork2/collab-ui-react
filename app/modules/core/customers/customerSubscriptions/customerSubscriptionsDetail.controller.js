@@ -31,9 +31,8 @@
         _.forEach(resources, function (customerLicenses) {
           var subscriptionId = _.get(customerLicenses, 'billingServiceId', 'Trial');
           var siteUrl = _.get(customerLicenses, 'siteUrl', '');
-          var offerName = _.get(customerLicenses, 'offerName', '');
           var customerSubscription = {};
-          if (siteUrl !== '' && offerName !== '') {
+          if (siteUrl !== '') {
             if (!_.find(vm.subscriptions, { siteUrl: siteUrl, subscriptionId: subscriptionId })) {
               customerSubscription = {
                 siteUrl: siteUrl,
