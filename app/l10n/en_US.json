@@ -1347,7 +1347,6 @@
     "nothingHere": "No devices yet.",
     "nothingHerePlaces": "No places yet.",
     "noDevices": "Let's enable devices",
-    "noPlaces": "Let's create places for your shared devices",
     "noneFound": "No Devices Found",
     "tryAgain": "Try another Search",
     "licenseWarningTitle": "License",
@@ -4559,6 +4558,8 @@
     "servicesHeader": "Services",
     "placeAdd": "Add Place",
     "placeError": "Add Place failed.",
+    "placesDefinition": "A place represents a physical location containing a shared device, such as a meeting room, a reception area or a factory floor.",
+    "placesUses": "You'll be able to view your places here - and the devices and configurations that belong to them.",
     "deletePlace": "Delete Place",
     "deletePlaceConfText": "Are you sure you want to delete {{ placeName }}?"
   },
