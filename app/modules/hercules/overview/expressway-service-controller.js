@@ -6,7 +6,7 @@
     .controller('ExpresswayServiceController', ExpresswayServiceController);
 
   /* @ngInject */
-  function ExpresswayServiceController($state, $modal, $scope, $stateParams, $translate, XhrNotificationService, ServiceStateChecker, ServiceDescriptor, ClusterService, USSService, FusionUtils) {
+  function ExpresswayServiceController($state, $modal, $scope, $stateParams, $translate, ServiceStateChecker, ServiceDescriptor, ClusterService, USSService, FusionUtils) {
     ClusterService.subscribe('data', clustersUpdated, {
       scope: $scope
     });
@@ -17,7 +17,6 @@
     var vm = this;
     vm.connectorType = $state.current.data.connectorType;
     vm.servicesId = FusionUtils.connectorType2ServicesId(vm.connectorType);
-    vm.serviceEnabled = null; // when we don't know yet, otherwise the value is true or false
     vm.route = FusionUtils.connectorType2RouteName(vm.connectorType); // kill?
     vm.loadingClusters = true;
 
@@ -37,7 +36,6 @@
     vm.openUserStatusReportModal = openUserStatusReportModal;
     vm.openAddResourceModal = openAddResourceModal;
     vm.showClusterSidepanel = showClusterSidepanel;
-    vm.enableService = enableService;
 
     vm.clusterListGridOptions = {
       data: 'exp.clusters',
@@ -69,23 +67,6 @@
       }]
     };
 
-    // TODO: use the new getClusters API for that
-    if (vm.servicesId[0] === 'squared-fusion-mgmt') {
-      ServiceDescriptor.services(function (error, services) {
-        if (!error) {
-          vm.serviceEnabled = _.some(ServiceDescriptor.filterAllExceptManagement(services), {
-            enabled: true
-          });
-        }
-      });
-    } else {
-      ServiceDescriptor.isServiceEnabled(vm.servicesId[0], function (error, enabled) {
-        if (!error) {
-          vm.serviceEnabled = enabled;
-        }
-      });
-    }
-
     function clustersUpdated() {
       ServiceStateChecker.checkState(vm.connectorType, vm.servicesId[0]);
       vm.clusters = ClusterService.getClustersByConnectorType(vm.connectorType);
@@ -110,17 +91,6 @@
             return vm.userStatusSummary;
           }
         }
-      });
-    }
-
-    function enableService(serviceId) {
-      vm.waitForEnabled = true;
-      ServiceDescriptor.setServiceEnabled(serviceId, true, function (error) {
-        if (error !== null) {
-          XhrNotificationService.notify('Problems enabling the service');
-        }
-        vm.serviceEnabled = true;
-        vm.waitForEnabled = false;
       });
     }
 
