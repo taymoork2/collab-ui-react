@@ -2,8 +2,7 @@
   'use strict';
 
   /* @ngInject  */
-  function CsdmDataModelService($q, CsdmCacheUpdater, CsdmDeviceService, CsdmCodeService, CsdmPlaceService, CsdmPoller, CsdmHubFactory) {
-
+  function CsdmDataModelService($q, CsdmCacheUpdater, CsdmDeviceService, CsdmCodeService, CsdmPlaceService, CsdmPoller, CsdmConverter, CsdmHubFactory) {
     var placesUrl = CsdmPlaceService.getPlacesUrl();
 
     var theDeviceMap = {};
@@ -46,10 +45,12 @@
 
     function updateDeviceMap(deviceMap) {
 
-      CsdmCacheUpdater.update(theDeviceMap, deviceMap, function (existing) { return existing.isCode; });
+      CsdmCacheUpdater.update(theDeviceMap, deviceMap, function (existing) {
+        return existing.isCode;
+      });
 
       _.each(_.values(deviceMap), function (d) {
-        addOrUpdatePlaceInDataModel(d.cisUuid, d.type, d.displayName);
+        addOrUpdatePlaceInDataModel(d);
       });
     }
 
@@ -65,9 +66,11 @@
       codesFetchedDeferred = $q.defer();
       CsdmCodeService.fetchCodes()
         .then(function (codesMap) {
-          CsdmCacheUpdater.update(theDeviceMap, codesMap, function (existing) { return !(existing.isCode); });
-          _.each(_.values(codesMap), function (d) {
-            addOrUpdatePlaceInDataModel(d.cisUuid, d.type, d.displayName);
+          CsdmCacheUpdater.update(theDeviceMap, codesMap, function (existing) {
+            return !(existing.isCode);
+          });
+          _.each(_.values(codesMap), function (c) {
+            addOrUpdatePlaceInDataModel(c);
           });
         })
         .finally(function () {
@@ -82,8 +85,8 @@
       accountsFetchedDeferred = $q.defer();
       CsdmPlaceService.getPlacesList()
         .then(function (accounts) {
-          _.each(_.values(accounts), function (d) {
-            addOrUpdatePlaceInDataModel(d.cisUuid, d.type, d.displayName);
+          _.each(_.values(accounts), function (a) {
+            addOrUpdatePlaceInDataModel(a);
           });
         })
         .finally(function () {
@@ -149,7 +152,7 @@
         .then(function (place) {
 
           placesDataModel[place.url] = place;
-          addOrUpdatePlaceInDataModel(place.cisUuid, "cloudberry", place.displayName);
+          addOrUpdatePlaceInDataModel(place);
           return place;
         });
     }
@@ -232,30 +235,27 @@
       return devicesLoaded;
     }
 
-    function addOrUpdatePlaceInDataModel(cisUuid, fromDeviceType, displayName) {
+    function addOrUpdatePlaceInDataModel(item) {
 
-      var newPlaceUrl = placesUrl + cisUuid;
+      var newPlaceUrl = placesUrl + item.cisUuid;
       var existingPlace = placesDataModel[newPlaceUrl];
-
       if (!existingPlace) {
-        existingPlace = { url: newPlaceUrl, isPlace: true, devices: [], codes: [] };
+        existingPlace = CsdmConverter.convertPlace({ url: newPlaceUrl, isPlace: true, devices: {}, codes: {} });
         placesDataModel[newPlaceUrl] = existingPlace;
       }
 
-      existingPlace.type = fromDeviceType || existingPlace.type;
-      existingPlace.cisUuid = cisUuid;
-      existingPlace.displayName = displayName;
+      CsdmConverter.updatePlaceFromItem(existingPlace, item);
     }
 
     function updatePlacesCache(deviceMap) {
 
       _.mapValues(placesDataModel, function (p) {
 
-        p.devices = _.filter(deviceMap, function (d) {
+        p.devices = _.pickBy(deviceMap, function (d) {
           return (!(d.isCode)) && d.cisUuid == p.cisUuid;
         });
 
-        p.codes = _.filter(deviceMap, function (d) {
+        p.codes = _.pickBy(deviceMap, function (d) {
           return d.isCode && d.cisUuid == p.cisUuid;
         });
         return p;
