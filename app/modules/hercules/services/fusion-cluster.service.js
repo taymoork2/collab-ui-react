@@ -199,9 +199,6 @@
     function buildSidepanelConnectorList(cluster, connectorTypeToKeep) {
       var sidepanelConnectorList = {};
       sidepanelConnectorList.hosts = [];
-      sidepanelConnectorList.servicesStatuses = cluster.servicesStatuses;
-      sidepanelConnectorList.name = cluster.name;
-      sidepanelConnectorList.id = cluster.id;
 
       /* Find and populate hostnames only, and make sure that they are only there once */
       _.forEach(cluster.connectors, function (connector) {
@@ -226,7 +223,7 @@
           }
         }
       });
-      return sidepanelConnectorList;
+      return sidepanelConnectorList.hosts;
     }
 
     function setClusterName(clusterId, newClusterName) {

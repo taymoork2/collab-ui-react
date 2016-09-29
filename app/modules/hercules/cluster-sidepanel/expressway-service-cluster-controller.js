@@ -106,7 +106,7 @@
       vm.schedule = {};
       FusionClusterService.get(vm.clusterId)
         .then(function (cluster) {
-          vm.v2cluster = FusionClusterService.buildSidepanelConnectorList(cluster, vm.connectorType);
+          vm.hosts = FusionClusterService.buildSidepanelConnectorList(cluster, vm.connectorType);
           vm.schedule.dateTime = FusionClusterService.formatTimeAndDate(cluster.upgradeSchedule);
           vm.schedule.timeZone = cluster.upgradeSchedule.scheduleTimeZone;
         });

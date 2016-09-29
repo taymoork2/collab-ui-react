@@ -65,7 +65,7 @@
   <cs-sp-section>
     <div class="section-title-row section-name" translate="hercules.connectors.hosts"></div>
     <div class="feature-list">
-      <div ng-repeat="host in clusterDetailsCtrl.v2cluster.hosts | orderBy: 'hostname'">
+      <div ng-repeat="host in clusterDetailsCtrl.hosts | orderBy: 'hostname'">
         <h6 class="feature">{{host.hostname}}</h6>
         <ul>
           <li class="feature" ng-repeat="connector in host.connectors | orderBy: clusterDetailsCtrl.sortConnectors ">
