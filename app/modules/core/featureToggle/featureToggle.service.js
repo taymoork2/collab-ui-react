@@ -73,8 +73,6 @@
       huronAAMediaUpload: 'huron-aa-mediaupload',
       huronClassOfService: 'COS',
       huronInternationalDialingTrialOverride: 'huronInternationalDialingTrialOverride',
-      huronKEM: 'huronKEM',
-      huronSpeedDial: 'huronSpeedDial',
       huronPagingGroup: 'huronPagingGroup',
       iosActionBar: 'ios-action-bar',
       iosAecType: 'ios-aec-type',

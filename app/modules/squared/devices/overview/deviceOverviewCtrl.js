@@ -6,7 +6,7 @@
     .controller('DeviceOverviewCtrl', DeviceOverviewCtrl);
 
   /* @ngInject */
-  function DeviceOverviewCtrl($q, $state, $scope, $interval, XhrNotificationService, Notification, $stateParams, $translate, $timeout, Authinfo, FeedbackService, CsdmDeviceService, CsdmDataModelService, CsdmUpgradeChannelService, Utils, $window, RemDeviceModal, ResetDeviceModal, WizardFactory, channels, RemoteSupportModal, ServiceSetup, KemService, CmiKemService, FeatureToggleService) {
+  function DeviceOverviewCtrl($q, $state, $scope, $interval, XhrNotificationService, Notification, $stateParams, $translate, $timeout, Authinfo, FeedbackService, CsdmDeviceService, CsdmDataModelService, CsdmUpgradeChannelService, Utils, $window, RemDeviceModal, ResetDeviceModal, WizardFactory, channels, RemoteSupportModal, ServiceSetup, KemService, CmiKemService) {
     var deviceOverview = this;
     deviceOverview.currentDevice = $stateParams.currentDevice;
     var huronDeviceService = $stateParams.huronDeviceService;
@@ -15,24 +15,20 @@
     deviceOverview.tzIsLoaded = false;
     deviceOverview.isError = false;
     deviceOverview.isKEMAvailable = false;
-    FeatureToggleService.supports(FeatureToggleService.features.huronKEM).then(function (result) {
-      if (result) {
-        deviceOverview.isKEMAvailable = KemService.isKEMAvailable(deviceOverview.currentDevice.product);
-        if (deviceOverview.isKEMAvailable) {
-          CmiKemService.getKEM(deviceOverview.currentDevice.huronId).then(
-            function (data) {
-              deviceOverview.currentDevice.kem = data;
+    deviceOverview.isKEMAvailable = KemService.isKEMAvailable(deviceOverview.currentDevice.product);
+    if (deviceOverview.isKEMAvailable) {
+      CmiKemService.getKEM(deviceOverview.currentDevice.huronId).then(
+        function (data) {
+          deviceOverview.currentDevice.kem = data;
 
-              deviceOverview.kemNumber = KemService.getKemOption(deviceOverview.currentDevice.kem.length);
-              deviceOverview.kemOptions = KemService.getOptionList(deviceOverview.currentDevice.product);
-            }
-          ).catch(function () {
-            deviceOverview.currentDevice.kem = [];
-            deviceOverview.isError = true;
-          });
+          deviceOverview.kemNumber = KemService.getKemOption(deviceOverview.currentDevice.kem.length);
+          deviceOverview.kemOptions = KemService.getOptionList(deviceOverview.currentDevice.product);
         }
-      }
-    });
+      ).catch(function () {
+        deviceOverview.currentDevice.kem = [];
+        deviceOverview.isError = true;
+      });
+    }
 
     if (deviceOverview.currentDevice.isHuronDevice) {
       initTimeZoneOptions().then(function () {
