@@ -33,11 +33,13 @@
         function getUnassignedLicenses() {
           Auth.getCustomerAccount(Authinfo.getOrgId()).then(function (response) {
             var max = 0;
-            var licenses = _.get(response, 'data.customers[0].licenses');
-            var subscription = _.get(response, 'data.customers[0].subscriptions[0].licenses');
             var licenseType = '';
-            if (licenses || subscription) {
-              _.forEach(licenses || subscription, function (data) {
+            var licenses = _.get(response, 'data.customers[0].licenses');  
+            if (_.isUndefined(licenses)) {
+              licenses = _.get(response, 'data.customers[0].subscriptions[0].licenses');
+            }
+            if (licenses) {
+              _.forEach(licenses, function (data) {
                 if (data.volume > max) {
                   max = data.volume;
                   licenseType = data.licenseType;
