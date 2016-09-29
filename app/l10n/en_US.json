@@ -1318,6 +1318,10 @@
     "tryAgainButton": "Try Again",
     "signInButton": "Sign In Again"
   },
+  "serverMaintenancePage": {
+    "title": "Server Maintenance",
+    "text": "We are currently undergoing routine maintenance. Please check back later."
+  },
   "errors": {
     "status401": "Authorization failed. Server unable to process authorization token. You will automatically be logged out in a few seconds.",
     "status403": "Authorization failed. You do not have administrator priviledges. You will automatically be logged out in a few seconds.",

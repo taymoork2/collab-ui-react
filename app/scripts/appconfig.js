@@ -188,6 +188,14 @@
             },
             authenticate: false
           })
+          .state('server-maintenance', {
+            views: {
+              'main@': {
+                templateUrl: 'modules/core/stateRedirect/serverMaintenance.tpl.html',
+              }
+            },
+            authenticate: false
+          })
           .state('404', {
             parent: 'stateRedirectLazyLoad',
             url: '/404',
