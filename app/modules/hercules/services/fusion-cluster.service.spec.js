@@ -370,15 +370,13 @@ describe('Service: FusionClusterService', function () {
           "total": 4
         }]
       };
-      var result = FusionClusterService.buildSidepanelConnectorList(incomingCluster, 'c_cal');
-      expect(result.name).toBe('fms-quadruple.rd.cisco.com');
-      expect(result.id).toBe('1107700c-2eeb-11e6-8ebd-005056b10bf7');
-      expect(result.hosts.length).toBe(4);
-      expect(result.hosts[0].connectors[0].connectorType).not.toBe('c_ucmc');
-      expect(result.hosts[0].connectors.length).toBe(2);
-      expect(result.hosts[1].connectors.length).toBe(2);
-      expect(result.hosts[0].connectors[0].state).toBe('running');
-      expect(result.hosts[0].connectors[0].hostSerial).toBe(result.hosts[0].connectors[1].hostSerial);
+      var hosts = FusionClusterService.buildSidepanelConnectorList(incomingCluster, 'c_cal');
+      expect(hosts.length).toBe(4);
+      expect(hosts[0].connectors[0].connectorType).not.toBe('c_ucmc');
+      expect(hosts[0].connectors.length).toBe(2);
+      expect(hosts[1].connectors.length).toBe(2);
+      expect(hosts[0].connectors[0].state).toBe('running');
+      expect(hosts[0].connectors[0].hostSerial).toBe(hosts[0].connectors[1].hostSerial);
     });
 
   });
