@@ -109,8 +109,6 @@ describe('Service: CsdmDataModelService', function () {
               expect(reloadedDevice.displayName).toEqual(newDispName);
               expect(originalDevice.displayName).toEqual(newDispName);
               expect(devices[deviceToReloadUrl].displayName).toEqual(newDispName);
-              _.forEach(places[pWithDeviceUrl].devices, function (value) {
-              });
               expect(places[pWithDeviceUrl].devices[deviceToReloadUrl].displayName).toEqual(newDispName);
 
               expect(originalDevice).toBe(devices[deviceToReloadUrl]);
