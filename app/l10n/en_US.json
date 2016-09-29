@@ -3271,7 +3271,6 @@
       "deviceType": "What kind of device do you want to set up?",
       "deviceTypeInstructions": "A new device requires a unique activation code to be input during setup. What kind of device do you want to activate?",
       "deviceTypeNewPlace": "What kind of device do you want to set up in this place?",
-      "deviceTypeInstructionsNewPlace": "A place containing desk phones will be assigned a Spark Call license. A place containing a collaboration device will be assigned a Spark Collaboration Device license. Proceeding acknowledges that a license will be assigned.",
       "deskPhone": "Desk Phone",
       "newDeskPhone": "New desk phone for existing user",
       "deskPhoneExamples": "e.g. 8845, 8865 or 8800",
@@ -3283,7 +3282,7 @@
     },
     "chooseAccountType": {
       "assignToUserOrPlace": "Assign to a user or a place?",
-      "userOrPlaceInstructions": "A place can be a meeting room, a reception area or even a whole department. All devices under a single user or place will share the same calling configuration. For example, desk phones will share the same lines.",
+      "userOrPlaceInstructions": "Devices for personal usage should be assigned to a specific user.",
       "personalUsage": "Personal Usage",
       "place": "Place",
       "user": "Existing User",
@@ -3292,7 +3291,7 @@
     "choosePersonal": {
       "existingOrNewUser": "Assign to an existing user or a new user?",
       "existingOrNewUserInstructions": "Creating a user with a desk phone requires a Cisco Spark Call license. Proceeding acknowledges that a Cisco Spark Call license will be assigned to this user, if they do not have one already.",
-      "existingUser": "Existing User",
+      "whichUser": "Which user will this device belong to?",
       "existingUserInstructions": "If the user you are searching for isn’t listed, it is because they don’t have Cisco Spark Call service assigned to them. To assign Spark Call to a user, first find them in the Users page and then select Edit Services.",
       "searchForUser": "Search for a user",
       "newUser": "New User",
@@ -3301,18 +3300,19 @@
       "lastNameExample": "e.g. Smith",
       "emailExample": "e.g. johnsmith@example.com",
       "invalidEmailAddress": "Invalid Email Address",
-      "noUserFound": "no users found",
+      "noUserFound": "No users found with Cisco Spark Call service",
       "userMissesUcEntitlement": "User is missing a Cisco Spark Call license."
     },
     "chooseSharedSpace": {
       "existingOrNewPlace": "Assign to an existing place or a new place?",
-      "existingOrNewPlaceInstructions": "Creating a place with a desk phone requires a Cisco Spark Call license. Proceeding acknowledges that a Cisco Spark Call license will be assigned to this place, if it does not have one already.",
+      "existingOrNewPlaceInstructions": "Select existing place if the previous code for this place has been lost or has expired. You can also add multiple desk phones to the same place - all phones in that place will then share the same calling configuration. For example, desk phones will share the same lines.",
       "existingPlace": "Existing Place",
       "existingPlaceInstructions": "Select from the below Cisco Spark Call places. Only Cisco Spark Call places are shown since desk phones and collaboration devices cannot share the same place.",
       "selectPlace": "Select a place",
       "newPlace": "New Place",
-      "newPlaceInstructions": "What would you like to call this place? A place can be a meeting room, a reception area or even a whole department.",
-      "newPlaceOnlyInstructions": "What would you like to call the place that this collaboration device will be assigned to? A place can be a meeting room, a reception area or even a whole department.",
+      "placeLocation": "Where will this device be located?",
+      "newPlaceInstructions": "What would you like to call the place that this device will be assigned to?",
+      "newPlaceOnlyInstructions": "What would you like to call the place that this collaboration device will be assigned to? A place represents a physical location such as a meeting room, a lobby or a factory floor.",
       "deviceInstalled": "Where will this device be installed?",
       "deviceInstalledInstructions": "It is recommended that you use the name of your conference room or shared space as it is shown in your company directory. The video address for this device will use this name. It will also be the easiest way to search for and find the device in the system later.",
       "insertRoomName": "Insert name of device location, e.g. 'Reception' or 'Boardroom'",
@@ -3320,8 +3320,7 @@
     },
     "newSharedSpace": {
       "title": "Add Place",
-      "newPlace": "Name of Place",
-      "newPlaceInstructions": "A place can be a meeting room, a reception area or even a whole department. A place can either contain one collaboration device or several desk phones. All devices associated with one place will share the same calling configuration. For example, desk phones will share the same lines.",
+      "newPlace": "What will this place be called?",
       "insertRoomName": "Insert name of device location, e.g. 'Reception' or 'Boardroom'"
     },
     "assignPhoneNumber": {
@@ -3334,11 +3333,11 @@
     },
     "showActivationCode": {
       "activationCode": "Activation Code",
-      "plugInDeskPhone": "Plug in the desk phone belonging to <b>{{belongsTo}}</b> and enter the activation code when prompted or use the device camera to scan the QR code.",
-      "plugInRoomSystem": "Plug in the collaboration device belonging to <b>{{belongsTo}}</b> and enter the activation code when prompted.",
-      "newCodeInUsersPage": "A new activation code can be created from the Users page after this code expires.",
-      "newCodeInPlacesPage": "A new activation code can be created from the Places page after this code expires.",
-      "newCodeInDevicesPace": "A new activation code can be created from the Devices page after this code expires.",
+      "plugInDeskPhone": "Share this code with the person setting up the desk phone belonging to <b>{{belongsTo}}</b>, or enter or scan it yourself when prompted by the device.",
+      "plugInRoomSystem": "Share this code with the person setting up the collaboration device belonging to <b>{{belongsTo}}</b>, or enter or scan it yourself when prompted by the device.",
+      "onceActivePersonalDevice": "Once the device has been successfully activated, you will be able to find and configure it in Users or Devices.",
+      "onceActiveSharedDevice": "Once the device has been successfully activated, you will be able to find and configure it in Places or Devices.",
+      "onceActiveSharedDeviceNoPlaces": "Once the device has been successfully activated, you will be able to find and configure it in Devices.",
       "expires": "Expires {{expiryDate}}",
       "searchAnotherUser": "Or search for another user"
     }
@@ -4558,7 +4557,7 @@
     "servicesHeader": "Services",
     "placeAdd": "Add Place",
     "placeError": "Add Place failed.",
-    "placesDefinition": "A place represents a physical location containing a shared device, such as a meeting room, a reception area or a factory floor.",
+    "placesDefinition": "A place represents a physical location containing a device not owned by a specific user, such as a meeting room with a collaboration device or a reception with shared phones.",
     "placesUses": "You'll be able to view your places here - and the devices and configurations that belong to them.",
     "deletePlace": "Delete Place",
     "deletePlaceConfText": "Are you sure you want to delete {{ placeName }}?"
