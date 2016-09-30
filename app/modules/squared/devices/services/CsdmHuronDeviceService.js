@@ -9,9 +9,11 @@
   function CsdmHuronUserDeviceService($injector, Authinfo, CsdmConfigService) {
     function create(userId) {
       var devicesUrl = CsdmConfigService.getUrl() + '/organization/' + Authinfo.getOrgId() + '/users/' + userId + '/huronDevices';
-      return $injector.instantiate(CsdmHuronDeviceService, {
+      var service = $injector.instantiate(CsdmHuronDeviceService, {
         devicesUrl: devicesUrl
       });
+      service.fetch();
+      return service;
     }
 
     return {
@@ -78,7 +80,11 @@
       });
     }
 
-    fetch();
+    function fetchDevices() {
+      return $http.get(devicesUrl).then(function (res) {
+        return CsdmConverter.convertHuronDevices(res.data);
+      });
+    }
 
     function dataLoaded() {
       return !Authinfo.isSquaredUC() || loadedData;
@@ -179,7 +185,10 @@
       setTimezoneForDevice: setTimezoneForDevice,
       resetDevice: resetDevice,
       uploadLogs: uploadLogs,
-      updateTags: updateTags
+      updateTags: updateTags,
+      fetchDevices: fetchDevices,
+
+      fetch: fetch,
     };
   }
 })();

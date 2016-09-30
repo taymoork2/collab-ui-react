@@ -2,13 +2,18 @@
   'use strict';
 
   /* @ngInject  */
-  function CsdmDataModelService($q, CsdmCacheUpdater, CsdmDeviceService, CsdmCodeService, CsdmPlaceService, CsdmPoller, CsdmConverter, CsdmHubFactory) {
+  function CsdmDataModelService($q, CsdmCacheUpdater, CsdmDeviceService, CsdmCodeService, CsdmPlaceService, CsdmHuronOrgDeviceService, CsdmPoller, CsdmConverter, CsdmHubFactory, Authinfo) {
+
     var placesUrl = CsdmPlaceService.getPlacesUrl();
+
+    var csdmHuronOrgDeviceService = CsdmHuronOrgDeviceService.create(Authinfo.getOrgId());
 
     var theDeviceMap = {};
     var placesDataModel = {};
 
-    var devicesLoaded = false;
+    var cloudBerryDevicesLoaded = false;
+    var codesLoaded = false;
+    var huronDevicesLoaded = false;
 
     var devicesFetchedDeferred;
     var devicesFastFetchedDeferred;
@@ -24,58 +29,72 @@
       }
       slowResolved = false;
       if (!devicesFastFetchedDeferred) {
+
+        //kick off get huron devices:
+        csdmHuronOrgDeviceService.fetchDevices().then(function (huronDeviceMap) {
+          updateDeviceMap(huronDeviceMap, function (existing) {
+            return !existing.isHuronDevice;
+          });
+        })
+          .finally(function () {
+            //TODO: Update places? reuse updatePlaceMapFromDeviceMapAndSetLoaded
+            huronDevicesLoaded = true;
+          });
+
         devicesFastFetchedDeferred = CsdmDeviceService.fetchDevices() //fast
           .then(function (deviceMap) {
             if (!slowResolved) {
-              updateDeviceMap(deviceMap);
+              updateDeviceMap(deviceMap, function (existing) {
+                return !existing.isCloudberryDevice;
+              });
             }
           })
-          .finally(updatePlaceMapFromDeviceMapAndSetLoaded);
+          .finally(setCloudBerryDevicesLoaded);
       }
 
       CsdmDeviceService.fetchDevices(true) //slow
         .then(function (deviceMapSlow) {
           slowResolved = true;
-          updateDeviceMap(deviceMapSlow);
+          updateDeviceMap(deviceMapSlow, function (existing) {
+            return !existing.isCloudberryDevice;
+          });
         })
-        .finally(updatePlaceMapFromDeviceMapAndSetLoaded);
+        .finally(setCloudBerryDevicesLoaded);
 
       return devicesFetchedDeferred.promise;
     }
 
-    function updateDeviceMap(deviceMap) {
+    function updateDeviceMap(deviceMap, keepFunction) {
 
-      CsdmCacheUpdater.update(theDeviceMap, deviceMap, function (existing) {
-        return existing.isCode;
-      });
+      CsdmCacheUpdater.update(theDeviceMap, deviceMap, keepFunction);
 
       _.each(_.values(deviceMap), function (d) {
         addOrUpdatePlaceInDataModel(d);
       });
+
+      updatePlacesCache();
     }
 
-    function updatePlaceMapFromDeviceMapAndSetLoaded() {
-      if (!devicesLoaded) {
+    function setCloudBerryDevicesLoaded() {
+      if (!cloudBerryDevicesLoaded) {
+        cloudBerryDevicesLoaded = true;
         devicesFetchedDeferred.resolve(theDeviceMap);
       }
-      devicesLoaded = true;
-      updatePlacesCache(theDeviceMap);
     }
 
     function fetchCodes() {
       codesFetchedDeferred = $q.defer();
       CsdmCodeService.fetchCodes()
         .then(function (codesMap) {
-          CsdmCacheUpdater.update(theDeviceMap, codesMap, function (existing) {
+
+          updateDeviceMap(codesMap, function (existing) {
             return !(existing.isCode);
           });
-          _.each(_.values(codesMap), function (c) {
-            addOrUpdatePlaceInDataModel(c);
-          });
+
         })
         .finally(function () {
+          codesLoaded = true;
           codesFetchedDeferred.resolve(theDeviceMap);
-          updatePlacesCache(theDeviceMap);
         });
 
       return codesFetchedDeferred.promise;
@@ -121,6 +140,7 @@
     }
 
     function deleteItem(item) {
+
       var service = getServiceForDevice(item);
       if (!service) {
         return $q.reject();
@@ -150,7 +170,6 @@
 
       return CsdmPlaceService.createCsdmPlace(name, type)
         .then(function (place) {
-
           placesDataModel[place.url] = place;
           addOrUpdatePlaceInDataModel(place);
           return place;
@@ -161,7 +180,7 @@
       return CsdmCodeService.createCodeForExisting(cisUuid)
         .then(function (newCode) {
           theDeviceMap[newCode.url] = newCode;
-          updatePlacesCache(theDeviceMap);
+          updatePlacesCache();
           return newCode;
         });
     }
@@ -189,10 +208,9 @@
         return CsdmCodeService;
       } else if (unknownDevice.isPlace) {
         return CsdmPlaceService;
+      } else if (unknownDevice.isHuronDevice) {
+        return csdmHuronOrgDeviceService;
       }
-      /*else if (unknownDevice.isHuronDevice) {
-       return huronDeviceService;
-       }*/
     }
 
     function updateTags(objectToUpdate, newTags) {
@@ -231,8 +249,8 @@
       return theDeviceMap && Object.keys(theDeviceMap).length > 0;
     }
 
-    function hasLoadedAnyData() {
-      return devicesLoaded;
+    function hasLoadedAllDeviceSources() {
+      return cloudBerryDevicesLoaded && codesLoaded && huronDevicesLoaded;
     }
 
     function addOrUpdatePlaceInDataModel(item) {
@@ -247,15 +265,15 @@
       CsdmConverter.updatePlaceFromItem(existingPlace, item);
     }
 
-    function updatePlacesCache(deviceMap) {
+    function updatePlacesCache() {
 
       _.mapValues(placesDataModel, function (p) {
 
-        p.devices = _.pickBy(deviceMap, function (d) {
+        p.devices = _.pickBy(theDeviceMap, function (d) {
           return (!(d.isCode)) && d.cisUuid == p.cisUuid;
         });
 
-        p.codes = _.pickBy(deviceMap, function (d) {
+        p.codes = _.pickBy(theDeviceMap, function (d) {
           return d.isCode && d.cisUuid == p.cisUuid;
         });
         return p;
@@ -274,6 +292,8 @@
 
       getDevicesPromise.then(function () {
         getCodePromise.then(function () {
+
+          updatePlacesCache();
 
           placesMapReadyDeferred.resolve(placesDataModel);
         });
@@ -302,9 +322,10 @@
       updateTags: updateTags,
       reloadDevice: reloadDevice,
       hasDevices: hasDevices,
-      hasLoadedAnyData: hasLoadedAnyData,
+      hasLoadedAllDeviceSources: hasLoadedAllDeviceSources,
       createCodeForExisting: createCodeForExisting,
-      createCsdmPlace: createCsdmPlace
+      createCsdmPlace: createCsdmPlace,
+
     };
   }
 

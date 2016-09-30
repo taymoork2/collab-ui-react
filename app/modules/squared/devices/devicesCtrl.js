@@ -39,14 +39,11 @@
         });
 
         vm.existsDevices = function () {
-          return (vm.shouldShowList() && (
-            CsdmDataModelService.hasDevices() ||
-            Object.keys(csdmHuronOrgDeviceService.getDeviceList()).length > 0));
+          return (vm.shouldShowList() && CsdmDataModelService.hasDevices());
         };
 
         vm.shouldShowList = function () {
-          return CsdmDataModelService.hasLoadedAnyData() &&
-            (csdmHuronOrgDeviceService.dataLoaded() || csdmHuronOrgDeviceService.getDeviceList().length > 0);
+          return CsdmDataModelService.hasLoadedAllDeviceSources();
         };
 
         vm.isEntitledToRoomSystem = function () {
@@ -65,7 +62,6 @@
 
           var allDevices = _.chain({})
             .extend(vm.devicesMap)
-            .extend(csdmHuronOrgDeviceService.getDeviceList())
             .extend(CsdmUnusedAccountsService.getAccountList())
             .values()
             .value();

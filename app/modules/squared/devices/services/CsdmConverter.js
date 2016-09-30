@@ -190,6 +190,7 @@
       }
 
       function updatePlaceFromItem(place, item) {
+
         if (item.isPlace) {
           updatePlaceFromPlace(place, item);
         } else if (item.isCode) {
@@ -217,6 +218,7 @@
       }
 
       function updatePlaceFromPlace(place, placeToUpdateFrom) {
+
         if (_.isEmpty(placeToUpdateFrom.devices)) {
           placeToUpdateFrom = _.merge(placeToUpdateFrom, _.pick(place, ['devices']));
         }
