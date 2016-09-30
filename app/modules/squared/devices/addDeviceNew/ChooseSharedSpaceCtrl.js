@@ -32,10 +32,7 @@
       if (!vm.wizardData.showPlaces) {
         return $translate.instant('addDeviceWizard.chooseSharedSpace.deviceInstalledInstructions');
       }
-      if (vm.onlyNew()) {
-        return $translate.instant('addDeviceWizard.chooseSharedSpace.newPlaceOnlyInstructions');
-      }
-      return $translate.instant('addDeviceWizard.chooseSharedSpace.newPlaceInstructions');
+      return $translate.instant('placesPage.placesDefinition');
     };
 
     function fetchDisplayNameForLoggedInUser() {

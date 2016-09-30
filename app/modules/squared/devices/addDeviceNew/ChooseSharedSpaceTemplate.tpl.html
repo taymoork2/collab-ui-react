@@ -64,7 +64,7 @@
 
   <div class="createNewPlace" ng-hide="choosePlace.isNewCollapsed">
     <form name="placeForm" class="createNewPlaceForm" onsubmit="$('#next-button').click()">
-      <h4 ng-show="choosePlace.wizardData.showPlaces" translate="addDeviceWizard.chooseSharedSpace.newPlace"></h4>
+      <h4 ng-show="choosePlace.wizardData.showPlaces" translate="addDeviceWizard.chooseSharedSpace.placeLocation"></h4>
       <h4 ng-hide="choosePlace.wizardData.showPlaces" translate="addDeviceWizard.chooseSharedSpace.deviceInstalled"></h4>
       <p>{{ choosePlace.localizedCreateInstructions() }}</p>
       <div class="newPlaceSpacing" ng-show="choosePlace.onlyNew()"></div>
