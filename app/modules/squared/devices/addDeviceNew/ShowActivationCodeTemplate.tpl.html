@@ -48,14 +48,13 @@
           </a>
 
           <a
-            class="qrCodeRightButton"
             ng-disabled="genAuthCode.showEmail"
             ng-hide="showActivationCode.wizardData.deviceType==='huron' && showActivationCode.wizardData.accountType==='shared'"
             ng-click="showActivationCode.activateEmail()"
             translate="generateActivationCodeModal.emailCode">
           </a>
 
-          <a class="qrCodeRightButton" cr-print print-element-id="printActivationCode">
+          <a cr-print print-element-id="printActivationCode">
             <span translate="generateActivationCodeModal.print"></span>
           </a>
         </div>
