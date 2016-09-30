@@ -17,6 +17,7 @@
         'deviceId': deviceUUID,
         'pairedCount': _.random(0, 10),
         'sharedCount': _.random(0, 10),
+        'wbCount': _.random(0, 10),
         'totalDuration': _.random(1, 24) * 60 * 60 // 1 to 24 hours returned in seconds
       };
     }
