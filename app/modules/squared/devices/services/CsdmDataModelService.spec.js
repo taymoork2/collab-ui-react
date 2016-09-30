@@ -14,6 +14,9 @@ describe('Service: CsdmDataModelService', function () {
   var device1Url = 'https://csdm-integration.wbx2.com/csdm/api/v1/organization/584cf4cd-eea7-4c8c-83ee-67d88fc6eab5/devices/c528e32d-ed35-4e00-a20d-d4d3519efb4f';
   var devicesUrl = 'https://csdm-integration.wbx2.com/csdm/api/v1/organization/testOrg/devices';
 
+
+  var pWithOnlyCodeUrl = 'https://csdm-integration.wbx2.com/csdm/api/v1/organization/testOrg/places/a19b308a-PlaceWithOnlyCode-71898e423bec';
+  var pWithHuronDevice2Url = 'https://csdm-integration.wbx2.com/csdm/api/v1/organization/testOrg/places/68351854-Place2WithHuronDevice-c9c844421ec2';
   var huronDevice2Url = 'https://cmi.huron-int.com/api/v1/voice/customers/3a6ff373-unittest-a27460e0ac5c/sipendpoints/2c586b22-hurondev_inplace2-ace151f631fa';
   var huronDevicesUrl = 'https://csdm-integration.wbx2.com/csdm/api/v1/organization/testOrg/huronDevices';
 
@@ -233,11 +236,10 @@ describe('Service: CsdmDataModelService', function () {
 
     });
 
-    it('delete device is reflected in device list (all devices under same place) and place list', function () {
+    function testDeleteDeviceIsReflectedInDevAndPlaceList(deviceUrlToDelete, placeUrl) {
       executeGetCallsAndInitPromises();
-      var deviceUrlToDelete = "https://csdm-integration.wbx2.com/csdm/api/v1/organization/584cf4cd-eea7-4c8c-83ee-67d88fc6eab5/devices/b528e32d-ed35-4e00-a20d-d4d3519efb4f";
-      var promiseExecuted;
 
+      var promiseExecuted;
       $httpBackend.expectDELETE(deviceUrlToDelete).respond(204);
 
       CsdmDataModelService.getDevicesMap().then(function (devices) {
@@ -246,21 +248,31 @@ describe('Service: CsdmDataModelService', function () {
 
           var deviceToDelete = devices[deviceUrlToDelete];
 
-          var place = places[pWithDeviceUrl];
-          var devicesInPlace = _.values(place.devices);
-          expect(devicesInPlace).toHaveLength(3);
+          var place = places[placeUrl];
+          var devicesInPlace;
+
+          if (deviceToDelete.isCode) {
+            devicesInPlace = _.values(place.codes);
+          } else {
+            devicesInPlace = _.values(place.devices);
+          }
+
+          var initalDeviceCountForPlace = devicesInPlace.length;
+
           expect(devicesInPlace).toContain(deviceToDelete);
 
           CsdmDataModelService.deleteItem(deviceToDelete).then(function () {
 
             expect(devices[deviceUrlToDelete]).toBeUndefined();
-            expect(places[pWithDeviceUrl]).toBeUndefined();
+            expect(places[placeUrl]).toBeUndefined();
 
-            expect(devicesInPlace).toHaveLength(3);
+            if (deviceToDelete.isCode) {
+              devicesInPlace = _.values(place.codes);
+            } else {
+              devicesInPlace = _.values(place.devices);
+            }
 
-            _.each(devicesInPlace, function (devUrl) {
-              expect(devices[devUrl]).toBeUndefined();
-            });
+            expect(devicesInPlace).toHaveLength(initalDeviceCountForPlace - 1);
 
             promiseExecuted = "YES";
           });
@@ -269,6 +281,22 @@ describe('Service: CsdmDataModelService', function () {
 
       $httpBackend.flush();
       expect(promiseExecuted).toBeTruthy();
+    }
+
+    it('delete cloudberry device is reflected in device list (all devices under same place) and place list', function () {
+
+      var deviceUrlToDelete = 'https://csdm-integration.wbx2.com/csdm/api/v1/organization/584cf4cd-eea7-4c8c-83ee-67d88fc6eab5/devices/b528e32d-ed35-4e00-a20d-d4d3519efb4f';
+      testDeleteDeviceIsReflectedInDevAndPlaceList(deviceUrlToDelete, pWithDeviceUrl);
+    });
+
+    it('delete code is reflected in device list (all devices under same place) and place list', function () {
+
+      var deviceUrlToDelete = 'https://csdm-integration.wbx2.com/csdm/api/v1/organization/584cf4cd-eea7-4c8c-83ee-67d88fc6eab5/codes/ad233bb2-code1-for-place-with-one-code-9333278b3a0c';
+      testDeleteDeviceIsReflectedInDevAndPlaceList(deviceUrlToDelete, pWithOnlyCodeUrl);
+    });
+
+    it('delete huron device is reflected in device list (all devices under same place) and place list', function () {
+      testDeleteDeviceIsReflectedInDevAndPlaceList(huronDevice2Url, pWithHuronDevice2Url);
     });
 
     it('change device name is reflected in device list and place list', function () {
@@ -304,7 +332,7 @@ describe('Service: CsdmDataModelService', function () {
 
     it('failing to change device name is not reflected in device list and place list', function () {
       executeGetCallsAndInitPromises();
-      var deviceUrlToUpdate = "https://csdm-integration.wbx2.com/csdm/api/v1/organization/584cf4cd-eea7-4c8c-83ee-67d88fc6eab5/devices/b528e32d-ed35-4e00-a20d-d4d3519efb4f";
+      var deviceUrlToUpdate = 'https://csdm-integration.wbx2.com/csdm/api/v1/organization/584cf4cd-eea7-4c8c-83ee-67d88fc6eab5/devices/b528e32d-ed35-4e00-a20d-d4d3519efb4f';
 
       var originalName = "test device 2";
       var newDeviceName = "This Could have been The New name !!";
@@ -504,33 +532,6 @@ describe('Service: CsdmDataModelService', function () {
 
       $httpBackend.flush();
       expect(promiseExecuted).toBeTruthy();
-    });
-
-    it('delete code is reflected in device list returned by earlier getDevicesMap', function () {
-
-      // var deviceToDelete = "https://csdm-integration.wbx2.com/csdm/api/v1/organization/584cf4cd-eea7-4c8c-83ee-67d88fc6eab5/codes/b528e32d-ed35-4e00-a20d-d4d3519efb4f";
-      //
-      // $httpBackend.expectDELETE(deviceToDelete).respond(200);
-      //
-      // CsdmDataModelService.getDevicesMap().then(function (devices) {
-      //
-      //   CsdmDataModelService.getPlacesMap().then(function (places) {
-      //
-      //     expect(places[pWithDeviceUrl].devices.length).toBe(3);
-      //
-      //     CsdmDataModelService.deleteCode(deviceToDelete).then(function () {
-      //
-      //       expect(devices[deviceToDelete]).toBeUndefined();
-      //
-      //       expect(places[pWithDeviceUrl].devices.length).toBe(2);
-      //
-      //     });
-      //
-      //   });
-      // });
-      //
-      // $httpBackend.flush();
-
     });
 
     it('codes should be presented as non-activated devices', function () {

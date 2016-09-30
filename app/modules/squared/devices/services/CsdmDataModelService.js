@@ -160,7 +160,11 @@
             var device = theDeviceMap[item.url];
             delete theDeviceMap[item.url];
             if (placesDataModel[placesUrl + device.cisUuid]) { // we currently delete the place when delete device
+
+              delete placesDataModel[placesUrl + device.cisUuid].devices[item.url];  //delete all devices and codes in the place
+              delete placesDataModel[placesUrl + device.cisUuid].codes[item.url];
               delete placesDataModel[placesUrl + device.cisUuid];
+
             }
           }
         });

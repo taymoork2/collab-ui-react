@@ -25,6 +25,8 @@
                   item.entitlements = ['ciscouc'];
                   item = CsdmConverter.convertPlace(item);
                   placesCache[item.url] = item;
+
+                  item.displayName = 'old:' + item.displayName;
                 });
               });
           } else {

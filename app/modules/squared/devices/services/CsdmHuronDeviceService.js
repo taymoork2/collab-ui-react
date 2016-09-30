@@ -108,6 +108,10 @@
       });
     }
 
+    function deleteItem(device) {
+      return $http.delete(device.url);
+    }
+
     function deleteDevice(deviceUrl) {
       return $http.delete(deviceUrl);
     }
@@ -177,6 +181,11 @@
     }
 
     return {
+
+      fetchDevices: fetchDevices,
+      deleteItem: deleteItem,
+
+      //Below the line:
       dataLoaded: dataLoaded,
       getDeviceList: getDeviceList,
       deleteDevice: deleteDevice,
@@ -186,7 +195,6 @@
       resetDevice: resetDevice,
       uploadLogs: uploadLogs,
       updateTags: updateTags,
-      fetchDevices: fetchDevices,
 
       fetch: fetch,
     };
