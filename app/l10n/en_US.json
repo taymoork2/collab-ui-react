@@ -3368,6 +3368,12 @@
     "generateErrorNotFound": "Please unlicense and relicense this Spark Call user. Contact support if the problem persists.",
     "generateError": "Unable to generate activation code. Please try again."
   },
+  "devicesClipboard":{
+    "successTitle":"Copied to clipboard",
+    "success":"The code has been copied to the clipboard.",
+    "errorTitle": "Not copied to clipboard",
+    "error": "Failed to copy the code to the clipboard."
+  },
   "rolesPanel": {
     "editUser": "Edit User",
     "firstName": "First Name",

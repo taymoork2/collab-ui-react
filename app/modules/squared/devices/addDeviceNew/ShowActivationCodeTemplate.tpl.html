@@ -43,9 +43,7 @@
     <div class="device-wizard view-activation-code">
       <div class="qrCodeSection">
         <div class="qrCodeButtons">
-          <a ngclipboard ngclipboard-success="showActivationCode.onCopySuccess(e)"
-             ngclipboard-error="showActivationCode.onCopyError(e)"
-             data-clipboard-text="{{::showActivationCode.friendlyActivationCode}}">
+          <a sq-clipboard="showActivationCode.friendlyActivationCode">
             <span translate="generateActivationCodeModal.copyToClipboard"></span>
           </a>
 
