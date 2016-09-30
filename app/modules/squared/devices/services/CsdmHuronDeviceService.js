@@ -41,11 +41,6 @@
       return $q.when(Authinfo.isSquaredUC());
     }
 
-    function decodeHuronTags(description) {
-      var tagString = (description || "").replace(/\['/g, '["').replace(/']/g, '"]').replace(/',/g, '",').replace(/,'/g, ',"');
-      return tagString;
-    }
-
     function getCmiUploadLogsUrl(userId, deviceId) {
       return HuronConfig.getCmiV2Url() + '/customers/' + Authinfo.getOrgId() + '/users/' + userId + '/phones/' + deviceId + '/commands/logs';
     }
@@ -92,20 +87,6 @@
 
     function getDeviceList() {
       return deviceList;
-    }
-
-    function update(url, obj) {
-      return $http.put(url, obj).then(function () {
-        var device = _.clone(deviceList[url]);
-        if (obj.description) {
-          try {
-            device.tags = JSON.parse(decodeHuronTags(obj.description));
-          } catch (e) {
-            device.tags = [];
-          }
-        }
-        return device;
-      });
     }
 
     function deleteItem(device) {
@@ -167,11 +148,15 @@
       if (jsonTags.length >= 128) {
         return $q.reject("List of tags is longer than supported.");
       }
-      deviceList[url].tags = tags; // update ui asap
-      deviceList[url].tagString = tags.join(', '); // update ui asap
-      return update(url, {
+
+      return $http.put(url, {
         description: jsonTags
       });
+
+      // function decodeHuronTags(description) {
+      //   var tagString = (description || "").replace(/\['/g, '["').replace(/']/g, '"]').replace(/',/g, '",').replace(/,'/g, ',"');
+      //   return tagString;
+      // }
     }
 
     function uploadLogs(device, feedbackId) {
@@ -184,6 +169,8 @@
 
       fetchDevices: fetchDevices,
       deleteItem: deleteItem,
+      updateTags: updateTags,
+      // updateItemName(objectToUpdate, newName)?
 
       //Below the line:
       dataLoaded: dataLoaded,
@@ -194,7 +181,6 @@
       setTimezoneForDevice: setTimezoneForDevice,
       resetDevice: resetDevice,
       uploadLogs: uploadLogs,
-      updateTags: updateTags,
 
       fetch: fetch,
     };

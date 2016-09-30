@@ -14,6 +14,7 @@ describe('Service: CsdmDataModelService', function () {
   var device1Url = 'https://csdm-integration.wbx2.com/csdm/api/v1/organization/584cf4cd-eea7-4c8c-83ee-67d88fc6eab5/devices/c528e32d-ed35-4e00-a20d-d4d3519efb4f';
   var devicesUrl = 'https://csdm-integration.wbx2.com/csdm/api/v1/organization/testOrg/devices';
 
+  var codeUrl = 'https://csdm-integration.wbx2.com/csdm/api/v1/organization/584cf4cd-eea7-4c8c-83ee-67d88fc6eab5/codes/ad233bb2-code1-for-place-with-one-code-9333278b3a0c';
 
   var pWithOnlyCodeUrl = 'https://csdm-integration.wbx2.com/csdm/api/v1/organization/testOrg/places/a19b308a-PlaceWithOnlyCode-71898e423bec';
   var pWithHuronDevice2Url = 'https://csdm-integration.wbx2.com/csdm/api/v1/organization/testOrg/places/68351854-Place2WithHuronDevice-c9c844421ec2';
@@ -284,15 +285,12 @@ describe('Service: CsdmDataModelService', function () {
     }
 
     it('delete cloudberry device is reflected in device list (all devices under same place) and place list', function () {
-
       var deviceUrlToDelete = 'https://csdm-integration.wbx2.com/csdm/api/v1/organization/584cf4cd-eea7-4c8c-83ee-67d88fc6eab5/devices/b528e32d-ed35-4e00-a20d-d4d3519efb4f';
       testDeleteDeviceIsReflectedInDevAndPlaceList(deviceUrlToDelete, pWithDeviceUrl);
     });
 
     it('delete code is reflected in device list (all devices under same place) and place list', function () {
-
-      var deviceUrlToDelete = 'https://csdm-integration.wbx2.com/csdm/api/v1/organization/584cf4cd-eea7-4c8c-83ee-67d88fc6eab5/codes/ad233bb2-code1-for-place-with-one-code-9333278b3a0c';
-      testDeleteDeviceIsReflectedInDevAndPlaceList(deviceUrlToDelete, pWithOnlyCodeUrl);
+      testDeleteDeviceIsReflectedInDevAndPlaceList(codeUrl, pWithOnlyCodeUrl);
     });
 
     it('delete huron device is reflected in device list (all devices under same place) and place list', function () {
@@ -359,11 +357,14 @@ describe('Service: CsdmDataModelService', function () {
       expect(promiseExecuted).toBeTruthy();
     });
 
-    it('add a device tag is reflected in device list and place list', function () {
-      var deviceUrlToUpdate = "https://csdm-integration.wbx2.com/csdm/api/v1/organization/584cf4cd-eea7-4c8c-83ee-67d88fc6eab5/devices/b528e32d-ed35-4e00-a20d-d4d3519efb4f";
+    function testAddTagIsReflectedInDevAndPlaceList(deviceUrlToUpdate, placeUrl) {
       var promiseExecuted;
 
-      $httpBackend.expectPATCH(deviceUrlToUpdate).respond(204);
+      if (deviceUrlToUpdate.indexOf('huron') > -1) {
+        $httpBackend.expectPUT(deviceUrlToUpdate).respond(204);
+      } else {
+        $httpBackend.expectPATCH(deviceUrlToUpdate).respond(204);
+      }
 
       CsdmDataModelService.getDevicesMap().then(function (devices) {
 
@@ -374,7 +375,14 @@ describe('Service: CsdmDataModelService', function () {
 
         CsdmDataModelService.getPlacesMap().then(function (places) {
 
-          expect(places[pWithDeviceUrl].devices[deviceUrlToUpdate].tags).toHaveLength(originalTagsCount);
+          var arrayWithDevice;
+          if (deviceToUpdate.isCode) {
+            arrayWithDevice = places[placeUrl].codes;
+          } else {
+            arrayWithDevice = places[placeUrl].devices;
+          }
+
+          expect(arrayWithDevice[deviceUrlToUpdate].tags).toHaveLength(originalTagsCount);
 
           CsdmDataModelService.updateTags(deviceToUpdate, newTags).then(function (updatedDevice) {
 
@@ -382,8 +390,8 @@ describe('Service: CsdmDataModelService', function () {
             expect(updatedDevice.tags).toContain(newTag);
             expect(devices[deviceUrlToUpdate].tags).toHaveLength(originalTagsCount + 1);
             expect(devices[deviceUrlToUpdate].tags).toContain(newTag);
-            expect(places[pWithDeviceUrl].devices[deviceUrlToUpdate].tags).toHaveLength(originalTagsCount + 1);
-            expect(places[pWithDeviceUrl].devices[deviceUrlToUpdate].tags).toContain(newTag);
+            expect(arrayWithDevice[deviceUrlToUpdate].tags).toHaveLength(originalTagsCount + 1);
+            expect(arrayWithDevice[deviceUrlToUpdate].tags).toContain(newTag);
 
             promiseExecuted = "YES";
           });
@@ -392,6 +400,19 @@ describe('Service: CsdmDataModelService', function () {
 
       $httpBackend.flush();
       expect(promiseExecuted).toBeTruthy();
+    }
+
+    it('add a cloudberry device tag is reflected in device list and place list', function () {
+      var deviceUrlToUpdate = "https://csdm-integration.wbx2.com/csdm/api/v1/organization/584cf4cd-eea7-4c8c-83ee-67d88fc6eab5/devices/b528e32d-ed35-4e00-a20d-d4d3519efb4f";
+      testAddTagIsReflectedInDevAndPlaceList(deviceUrlToUpdate, pWithDeviceUrl);
+    });
+
+    // it('add a code tag is reflected in device list and place list', function () {
+    //   testAddTagIsReflectedInDevAndPlaceList(codeUrl, pWithOnlyCodeUrl);
+    // });
+
+    it('add a huron device tag is reflected in device list and place list', function () {
+      testAddTagIsReflectedInDevAndPlaceList(huronDevice2Url, pWithHuronDevice2Url);
     });
 
     it('add a device tag and sending in a cloned object is reflected in device list and place list', function () {
