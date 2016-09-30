@@ -109,7 +109,10 @@ describe('Service: Report Service', () => {
         data: _.clone(activeUserData.mostActiveAPI),
       }));
       this.ReportService.getActiveTableData(customerData.customerOptions, timeFilter).then(function (response) {
-        expect(response).toEqual(_.clone(activeUserData.mostActiveResponse));
+        expect(response.length).toEqual(activeUserData.mostActiveResponse.length);
+        _.forEach(activeUserData.mostActiveResponse, (item) => {
+          expect(response).toContain(item);
+        });
       });
     });
 

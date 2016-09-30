@@ -323,13 +323,13 @@
     "numCalls": 0,
     "totalActivity": 16,
     "sparkMessages": 16,
-    "userName": "Lydia Wilkins (lywilkin)"
+    "userName": "Stephanie DOAN (stedoan)"
   }, {
     "orgName": "Test Org One",
     "numCalls": 0,
     "totalActivity": 16,
     "sparkMessages": 16,
-    "userName": "Stephanie DOAN (stedoan)"
+    "userName": "Lydia Wilkins (lywilkin)"
   }, {
     "orgName": "Test Org One",
     "numCalls": 0,
@@ -347,12 +347,6 @@
     "numCalls": 0,
     "totalActivity": 15,
     "sparkMessages": 15,
-    "userName": "Geraldine Cusiac -X (gcusiac - INNOVATIA INC at Cisco)"
-  }, {
-    "orgName": "Test Org Three",
-    "numCalls": 0,
-    "totalActivity": 15,
-    "sparkMessages": 15,
     "userName": "Shane Gannon (shgannon)"
   }, {
     "orgName": "Test Org Three",
@@ -361,17 +355,11 @@
     "sparkMessages": 15,
     "userName": "Robert Headon (rheadon)"
   }, {
-    "orgName": "Test Org Two",
+    "orgName": "Test Org Three",
     "numCalls": 0,
     "totalActivity": 15,
     "sparkMessages": 15,
-    "userName": "Joe Skehill (jskehill)"
-  }, {
-    "orgName": "Test Org Two",
-    "numCalls": 0,
-    "totalActivity": 15,
-    "sparkMessages": 15,
-    "userName": "Tony Espejo (tespejo)"
+    "userName": "Geraldine Cusiac -X (gcusiac - INNOVATIA INC at Cisco)"
   }, {
     "orgName": "Test Org Two",
     "numCalls": 0,
@@ -385,17 +373,23 @@
     "sparkMessages": 15,
     "userName": "Vigleik Norheim (vnorheim)"
   }, {
-    "orgName": "Test Partner",
+    "orgName": "Test Org Two",
     "numCalls": 0,
     "totalActivity": 15,
     "sparkMessages": 15,
-    "userName": "Damon Martin (dammarti)"
+    "userName": "Tony Espejo (tespejo)"
+  }, {
+    "orgName": "Test Org Two",
+    "numCalls": 0,
+    "totalActivity": 15,
+    "sparkMessages": 15,
+    "userName": "Joe Skehill (jskehill)"
   }, {
     "orgName": "Test Partner",
     "numCalls": 0,
     "totalActivity": 15,
     "sparkMessages": 15,
-    "userName": "Colm Mcnelis (cmcnelis)"
+    "userName": "Renaldo Williams (renawill)"
   }, {
     "orgName": "Test Partner",
     "numCalls": 0,
@@ -407,7 +401,13 @@
     "numCalls": 0,
     "totalActivity": 15,
     "sparkMessages": 15,
-    "userName": "Renaldo Williams (renawill)"
+    "userName": "Damon Martin (dammarti)"
+  }, {
+    "orgName": "Test Partner",
+    "numCalls": 0,
+    "totalActivity": 15,
+    "sparkMessages": 15,
+    "userName": "Colm Mcnelis (cmcnelis)"
   }],
   "activePopResponse": [{
     "customerName": "Test Org One",

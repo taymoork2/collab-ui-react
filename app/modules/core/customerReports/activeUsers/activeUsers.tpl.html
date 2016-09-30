@@ -54,9 +54,9 @@
             <i class='icon icon-spinner icon-2x'></i>
           </div>
         </div>
-        <a class="report-sides" ng-click="nav.mostActiveUserSwitch()">
-          <span ng-if="!nav.showMostActiveUsers" translate="activeUsers.showActiveUsers"></span>
-          <span ng-if="nav.showMostActiveUsers" translate="activeUsers.hideActiveUsers"></span>
+        <a class="report-sides" ng-click="nav.mostActiveUserSwitch()" ng-if="nav.timeSelected.value !== 3">
+          <span ng-if="!nav.showMostActiveUsers" translate="activeUsers.show"></span>
+          <span ng-if="nav.showMostActiveUsers" translate="activeUsers.hide"></span>
         </a>
         <div id="activeCarousel" class="pull-right active-carousel" ng-show="nav.showMostActiveUsers && (nav.activeUsersTotalPages > 1)">
           <button type="button" class="carousel-control" ng-click="nav.pageBackward()" ng-show="nav.activeUsersTotalPages > 3" ng-disabled="nav.activeUserCurrentPage <= 1">
