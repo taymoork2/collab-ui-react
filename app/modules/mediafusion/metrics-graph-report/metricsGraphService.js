@@ -273,7 +273,18 @@
       catAxis.gridAlpha = 0.1;
       catAxis.minorGridAlpha = 0.1;
       catAxis.minorGridEnabled = false;
-      catAxis.minPeriod = "mm";
+      var dateLabel = daterange.label;
+      var dateValue = daterange.value;
+
+      if (dateValue === 0) {
+        catAxis.minPeriod = "10mm";
+      } else if (dateValue === 1) {
+        catAxis.minPeriod = "hh";
+      } else if (dateValue === 2) {
+        catAxis.minPeriod = "3hh";
+      } else {
+        catAxis.minPeriod = "8hh";
+      }
 
       var startDuration = 1;
       if (!data[0].balloon) {
@@ -291,8 +302,8 @@
         }
       });
       cluster = cluster.replace(/\s/g, "_");
-      daterange = daterange.replace(/\s/g, "_");
-      var ExportFileName = 'MediaService_Utilization_' + cluster + '_' + daterange + '_' + new Date();
+      dateLabel = dateLabel.replace(/\s/g, "_");
+      var ExportFileName = 'MediaService_Utilization_' + cluster + '_' + dateLabel + '_' + new Date();
 
       var chartData = CommonMetricsGraphService.getBaseStackSerialGraph(data, startDuration, valueAxes, graphs, 'time', catAxis, getBaseExportForUtilizationGraph(ExportFileName, columnNames));
       chartData.legend = CommonMetricsGraphService.getBaseVariable(LEGEND);
