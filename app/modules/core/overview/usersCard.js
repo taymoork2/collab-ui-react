@@ -34,7 +34,7 @@
           Auth.getCustomerAccount(Authinfo.getOrgId()).then(function (response) {
             var max = 0;
             var licenseType = '';
-            var licenses = _.get(response, 'data.customers[0].licenses');  
+            var licenses = _.get(response, 'data.customers[0].licenses');
             if (_.isUndefined(licenses)) {
               licenses = _.get(response, 'data.customers[0].subscriptions[0].licenses');
             }
