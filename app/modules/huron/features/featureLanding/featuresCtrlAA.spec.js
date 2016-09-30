@@ -5,7 +5,7 @@
 
 describe('Features Controller', function () {
 
-  var featureCtrl, $rootScope, $scope, $modal, $q, $state, $filter, $timeout, Authinfo, Log, Notification, getDeferred, AutoAttendantCeInfoModelService, HuntGroupService, CallParkService, FeatureToggleService;
+  var featureCtrl, $rootScope, $scope, $modal, $q, $state, $filter, $timeout, Authinfo, Log, Notification, getDeferred, AutoAttendantCeInfoModelService, HuntGroupService, CallParkService, PagingGroupService, FeatureToggleService;
   var listOfAAs = getJSONFixture('huron/json/autoAttendant/aaList.json');
   var emptyListOfAAs = [];
   var emptyListOfCPs = {
@@ -39,7 +39,7 @@ describe('Features Controller', function () {
   beforeEach(angular.mock.module('Huron'));
   beforeEach(angular.mock.module('Sunlight'));
 
-  beforeEach(inject(function (_$rootScope_, $controller, _$q_, _$modal_, _$state_, _$filter_, _$timeout_, _Authinfo_, _AutoAttendantCeInfoModelService_, _Log_, _Notification_, _HuntGroupService_, _CallParkService_, _FeatureToggleService_) {
+  beforeEach(inject(function (_$rootScope_, $controller, _$q_, _$modal_, _$state_, _$filter_, _$timeout_, _Authinfo_, _AutoAttendantCeInfoModelService_, _Log_, _Notification_, _HuntGroupService_, _CallParkService_, _PagingGroupService_, _FeatureToggleService_) {
     $rootScope = _$rootScope_;
     $scope = _$rootScope_.$new();
     $modal = _$modal_;
@@ -51,6 +51,7 @@ describe('Features Controller', function () {
     AutoAttendantCeInfoModelService = _AutoAttendantCeInfoModelService_;
     HuntGroupService = _HuntGroupService_;
     CallParkService = _CallParkService_;
+    PagingGroupService = _PagingGroupService_;
     FeatureToggleService = _FeatureToggleService_;
 
     Log = _Log_;
@@ -62,6 +63,7 @@ describe('Features Controller', function () {
     spyOn(AutoAttendantCeInfoModelService, 'getCeInfosList').and.returnValue(getDeferred.promise);
     spyOn(HuntGroupService, 'getListOfHuntGroups').and.returnValue($q.when());
     spyOn(CallParkService, 'getListOfCallParks').and.returnValue($q.when(emptyListOfCPs));
+    spyOn(PagingGroupService, 'getListOfPagingGroups').and.returnValue($q.when());
     spyOn(Notification, 'error');
     spyOn(FeatureToggleService, 'supports').and.returnValue($q.when());
 

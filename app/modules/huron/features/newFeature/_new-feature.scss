@@ -23,6 +23,10 @@
     &:hover {
       background-color: $gray-light;
     }
+    &:first-child:nth-last-child(4),
+    &:first-child:nth-last-child(4) ~ button {
+      flex: 1 1 48%;
+    }
   }
 }
 
@@ -120,6 +124,10 @@
 
 .feature-icon-color-CP {
   color: $color-cta;
+}
+
+.feature-icon-color-PG {
+  color: $gray-base;
 }
 
 .feature-label-container {

@@ -2517,7 +2517,23 @@
     "saveLabel": "Do you want to save your changes?",
     "memberFetchFailure": "Unable to get members."
   },
-  "telephonyPreview": {
+  "pagingGroup": {
+    "title": "Paging Group",
+    "code": "PG",
+    "modalDescription": "Paging groups allows a one-way voice path to the phones in the group without waiting for an answer. These phones must all be in the same Multicast group.",
+    "createTitle": "Create Paging Group",
+    "namePlaceholder": "Name the Paging Group",
+    "nameHint": "Give this paging group an alpha numeric name not including < or >.",
+    "numberPlaceholder": "Select Paging Group Number",
+    "numberHint": "When this number is called, the Paging Group will be called.",
+    "cancelHeader": "Cancel Paging Group Creation",
+    "cancelDialog": "Are you sure you wish to cancel paging group creation? This paging group will not be saved.",
+    "confirmButton": "Cancel Creation",
+    "continueButton": "Continue Creation",
+    "createHelpText": "Create",
+    "numberFetchFailure": "Unable to get numbers."
+  },
+"telephonyPreview": {
     "lines": "Lines",
     "features": "Features",
     "voicemail": "Voicemail",
@@ -4543,6 +4559,7 @@
     "hg": "HG",
     "aa": "AA",
     "cp": "CP",
+    "pg": "PG",
     "editAction": "Edit",
     "deleteAction": "Delete",
     "aaDependsTitle": "Auto Attendant Dependents",
@@ -4556,6 +4573,7 @@
     "failedToLoad": "Unable to load {{ featureType }}(s) information",
     "aaName": "auto attendant",
     "hgName": "hunt group",
+    "pgName": "paging group",
     "sorryMessage": "Sorry, something went wrong ",
     "reloadMessage": "Please try reloading the page"
   },

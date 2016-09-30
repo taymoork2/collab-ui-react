@@ -11,6 +11,7 @@
       autoAttendants: autoAttendants,
       callParks: callParks,
       huntGroups: huntGroups,
+      pagingGroups: pagingGroups,
       filterCards: filterCards,
       orderByFilter: orderByFilter
     };
@@ -101,6 +102,21 @@
         formattedCard.id = huntGroup.uuid;
         formattedCard.featureName = 'huronFeatureDetails.hg';
         formattedCard.filterValue = 'HG';
+        formattedList.push(formattedCard);
+        formattedCard = {};
+      });
+      return orderByCardName(formattedList);
+    }
+
+    function pagingGroups(data) {
+      var formattedList = [];
+      _.forEach(data, function (pagingGroup) {
+        formattedCard.cardName = pagingGroup.name;
+        formattedCard.pgNumber = pagingGroup.number.number;
+        formattedCard.memberCount = pagingGroup.memberCount;
+        formattedCard.id = pagingGroup.uuid;
+        formattedCard.featureName = 'huronFeatureDetails.pg';
+        formattedCard.filterValue = 'PG';
         formattedList.push(formattedCard);
         formattedCard = {};
       });

@@ -39,6 +39,9 @@ $overlay-panel-height: 93px;
     &:focus ~ .input-hint {
       border-top: solid rem(1px) $brand-primary;
     }
+    &.error ~ .input-hint {
+      border-top: solid rem(1px) $color-negative-base;
+    }
   }
 }
 .cs-setupassistant {
