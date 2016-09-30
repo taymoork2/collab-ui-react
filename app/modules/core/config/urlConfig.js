@@ -165,10 +165,10 @@
       prod: 'https://bmmp.ciscospark.com/api/v1'
     },
     StatusUrl: {
-      dev: 'https://dataservicesbts.webex.com/status',
-      cfe: 'https://dataservicesbts.webex.com/status',
-      integration: 'https://dataservicesbts.webex.com/status',
-      prod: 'https://dataservices.webex.com/status'
+      dev: 'https://statusbts.webex.com/status',
+      cfe: 'https://statusbts.webex.com/status',
+      integration: 'https://statusbts.webex.com/status',
+      prod: 'https://statusbts.webex.com/status'
     },
     // urls same for all environments
 

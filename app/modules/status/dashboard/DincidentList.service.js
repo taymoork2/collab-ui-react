@@ -5,8 +5,9 @@
   'use strict';
   angular.module('Status')
     .factory('DincidentListService', DincidentListService);
-  function DincidentListService($resource) {
-    return $resource('https://dataservicesbts.webex.com/status/services/:siteId/incidents/:incidentId');
+  function DincidentListService($resource, UrlConfig) {
+    var url = UrlConfig.getStatusUrl() + '/services/:siteId/incidents/:incidentId';
+    return $resource(url);
   }
 
 })();

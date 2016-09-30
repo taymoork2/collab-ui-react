@@ -8,7 +8,7 @@ describe('DincidentListService service', function () {
   var $httpBackend;
   var DincidentListService;
 
-  var getSiteURL = 'https://dataservicesbts.webex.com/status/services/1/incidents';
+  var getSiteURL = 'https://statusbts.webex.com/status/services/1/incidents';
   var mockData = [{
     "incidentId": 267,
     "incidentName": "TEST",
