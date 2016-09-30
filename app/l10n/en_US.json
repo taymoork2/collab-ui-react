@@ -1767,6 +1767,7 @@
         "empty": "No clusters found.",
         "upgrade-schedule": "Upgrade Schedule",
         "clusters": "Clusters",
+        "users": "Users",
         "release-channel": "Release Channel",
         "nodes": "{count, plural, one{# Node} other{# Nodes}}",
         "settings": "Settings",
@@ -1776,7 +1777,9 @@
         "expressway": "Expressway",
         "mediafusion": "Media",
         "no-services": "No services",
-        "missing-clusters": "<a ng-click=\"{{onclick}}\">Assign clusters</a> to complete this group"
+        "missing-clusters": "<a ng-click=\"{{onclick}}\">Assign clusters</a> to complete this group",
+        "missing-users": "<a ng-click=\"{{onclick}}\">Assign users</a> to complete this group",
+        "users-in-limbo": "<a ng-click=\"{{onclick}}\">Remove</a> this group to unassign remaining users"
       },
       "add-resource": {
         "title": "Add Resource",
@@ -1848,6 +1851,9 @@
       "clustersHeader" : "Clusters",
       "clustersAssign" : "Assign Clusters",
       "clustersDescription" : "Add one or more existing clusters to this group",
+      "usersHeader": "Users",
+      "usersAssign": "Assign Users",
+      "usersDescription": "To assign users to this Resource Group you can pick the Resource Group in the Hybrid Services section of the Overview panel in the Users page or assign them in bulk using CSV. Refer to documentation to assign users with CSV upload.",
       "renameGroup": "Rename",
       "renameGroupDescription": "Rename the Resource Group",
       "removeGroup": "Remove",
