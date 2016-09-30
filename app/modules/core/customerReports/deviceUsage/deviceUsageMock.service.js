@@ -8,25 +8,29 @@
   /* @ngInject */
   function DeviceUsageMockService($q) {
 
-    function randVal() {
-      return _.random(0, 50);
-    }
+    var cachedData;
 
-    function sample(time, deviceUUID) {
+    function deviceDaySample(time, deviceUUID) {
       return {
-        'count': randVal(),
+        'count': _.random(1, 20),
         'date': time,
         'deviceId': deviceUUID,
-        'pairedCount': randVal(),
-        'sharedCount': randVal(),
-        'totalDuration': randVal() * 10
+        'pairedCount': _.random(0, 10),
+        'sharedCount': _.random(0, 10),
+        'totalDuration': _.random(1, 24) * 60 * 60 // 1 to 24 hours returned in seconds
       };
     }
 
-    var minNoOfCallsPrDay = 0;
-    var maxNoOfCallsPrDay = 10;
+    var existingUniqueDeviceIds = createSetOfUniqueDeviceIds(1000);
 
-    var existingUniqueDeviceIds = createSetOfUniqueDeviceIds(10);
+    function getCachedData(startDate, endDate) {
+      if (_.isEmpty(cachedData)) {
+        return getData(startDate, endDate);
+      } else {
+        return $q.when(_.cloneDeep(cachedData));
+      }
+    }
+
 
     function getData(startDate, endDate) {
       var data = [];
@@ -34,13 +38,14 @@
       var end = moment(endDate);
       while (start.isBefore(end)) {
         var time = start.format('YYYYMMDD');
-        var noOfCallsToday = _.random(minNoOfCallsPrDay, maxNoOfCallsPrDay);
-        for (var i = 0; i < noOfCallsToday; i++) {
+        var noOfActiveDevicesToday = _.random(0, existingUniqueDeviceIds.length - 1);
+        for (var i = 0; i < noOfActiveDevicesToday; i++) {
           var deviceUUID = existingUniqueDeviceIds[i];
-          data.push(sample(time, deviceUUID));
+          data.push(deviceDaySample(time, deviceUUID));
         }
         start.add(1, "days");
       }
+      cachedData = data;
       return $q.when(data);
     }
 
@@ -54,6 +59,7 @@
 
     return {
       getData: getData,
+      getCachedData: getCachedData
     };
   }
 }());
