@@ -18,3 +18,12 @@ div.status{
     overflow-y: scroll;
   }
 }
+.modal-content.small.status-add-service,.modal-content.small.status-edit-service,.modal-content.small.status-delete-service{
+  height: 235px;
+  div.marginInput{
+  	margin: 10px 0px;
+  }
+}
+.reveal-modal.full .modal-content.status-add-service,.reveal-modal.full .modal-content.status-edit-service,.reveal-modal.full .modal-content.status-delete-service{
+  top: 200px;
+}

@@ -25,6 +25,12 @@
           serviceName: serviceName,
           description: description
         });
+      },
+      deleteService: function (serviceId) {
+        var deleteUrl = url + "/" + serviceId;
+        return $http.delete(deleteUrl).then(function (response) {
+          return response.data;
+        });
       }
     };
   }
