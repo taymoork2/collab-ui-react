@@ -9,7 +9,7 @@
     vm.wizardData = $stateParams.wizard.state().data;
 
     vm.onlyNew = function () {
-      return vm.wizardData.function == 'addPlace' || vm.wizardData.deviceType == 'cloudberry';
+      return vm.wizardData.function == 'addPlace';
     };
 
     vm.isNewCollapsed = !vm.onlyNew();
@@ -32,7 +32,10 @@
       if (!vm.wizardData.showPlaces) {
         return $translate.instant('addDeviceWizard.chooseSharedSpace.deviceInstalledInstructions');
       }
-      return $translate.instant('placesPage.placesDefinition');
+      if (vm.wizardData.deviceType === 'huron') {
+        return $translate.instant('placesPage.placesDefinition');
+      }
+      return $translate.instant('addDeviceWizard.chooseSharedSpace.newPlaceInstructions');
     };
 
     function fetchDisplayNameForLoggedInUser() {

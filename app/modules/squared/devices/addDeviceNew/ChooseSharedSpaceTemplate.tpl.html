@@ -6,7 +6,11 @@
 <div class="modal-body device-wizard choose-shared">
   <div ng-hide="choosePlace.onlyNew()">
     <h4 translate="addDeviceWizard.chooseSharedSpace.existingOrNewPlace"></h4>
-    <p class="wizardDescription" translate="addDeviceWizard.chooseSharedSpace.existingOrNewPlaceInstructions"></p>
+    <p class="wizardDescription" ng-show="choosePlace.wizardData.deviceType === 'huron'" translate="addDeviceWizard.chooseSharedSpace.existingOrNewPlaceDeskPhoneInstructions"></p>
+    <p class="wizardDescription" ng-hide="choosePlace.wizardData.deviceType === 'huron'">
+      <span translate="placesPage.placesDefinition"></span>
+      <span translate="addDeviceWizard.chooseSharedSpace.existingOrNewPlaceCollaborationDeviceInstructions"></span>
+    </p>
     <div class="typeChoice">
       <div class="typeButtonWrapper typeButtonWrapperLeft">
           <div class="typeButton typeButtonLeft"
@@ -42,8 +46,9 @@
 
   <div class="chooseExistingPlace" ng-hide="choosePlace.isExistingCollapsed || !choosePlace.hasRooms || !choosePlace.placesLoaded">
     <form class="chooseExistingPlaceForm" onsubmit="$('#next-button').click()">
-      <h4 translate="addDeviceWizard.chooseSharedSpace.existingPlace"></h4>
-      <p translate="addDeviceWizard.chooseSharedSpace.existingPlaceInstructions"></p>
+      <h4 translate="addDeviceWizard.chooseSharedSpace.whichPlace"></h4>
+      <p ng-show="choosePlace.wizardData.deviceType === 'huron'" translate="addDeviceWizard.chooseSharedSpace.existingDeskPhonePlaceInstructions"></p>
+      <p ng-hide="choosePlace.wizardData.deviceType === 'huron'" translate="addDeviceWizard.chooseSharedSpace.existingCollaborationDevicePlaceInstructions"></p>
       <div>
         <input type="text"
                ng-model="choosePlace.selected"
