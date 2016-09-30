@@ -8,12 +8,13 @@
 @import '../incidents/updateIncident/_update-incident';
 @import "../components/_component.scss";
 @import '../dashboard/_dash-board.scss';
+@import '../serviceManagement/_service-list.scss';
 
 div.status-page-wraper{
   background:#fff;
 }
 div.status{
   ul.select-options{
-    overflow-y: scroll; 
+    overflow-y: scroll;
   }
 }

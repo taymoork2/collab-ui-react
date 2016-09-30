@@ -2935,6 +2935,16 @@
                 controllerAs: 'uic'
               }
             }
+          })
+          .state('status.serviceList', {
+            url: '/serviceList',
+            views: {
+              '@status': {
+                templateUrl: 'modules/status/serviceManagement/serviceList.tpl.html',
+                controller: 'ServiceManagementCtrl',
+                controllerAs: 'smc'
+              }
+            }
           });
       }
     ]);

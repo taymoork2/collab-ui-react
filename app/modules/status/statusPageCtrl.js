@@ -18,6 +18,10 @@
         state: '.components'
       },
       {
+        title: $translate.instant('statusPage.serviceManagement'),
+        state: '.serviceList'
+      },
+      {
         title: $translate.instant('statusPage.incidents'),
         state: '.incidents'
       },

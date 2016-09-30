@@ -1,6 +1,7 @@
 {
   "statusPage": {
     "pageTitle": "Status Management",
+    "serviceManagement": "Service Management",
     "dashboard": "Dashboard",
     "incidents": "Incidents",
     "components": "Components",
