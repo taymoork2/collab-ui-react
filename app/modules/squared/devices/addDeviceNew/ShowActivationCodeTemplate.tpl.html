@@ -44,21 +44,18 @@
     <div class="device-wizard view-activation-code">
       <div class="qrCodeSection">
         <div class="qrCodeButtons">
-          <a ngclipboard ngclipboard-success="showActivationCode.onCopySuccess(e)"
-             ngclipboard-error="showActivationCode.onCopyError(e)"
-             data-clipboard-text="{{::showActivationCode.friendlyActivationCode}}">
+          <a sq-clipboard="showActivationCode.friendlyActivationCode">
             <span translate="generateActivationCodeModal.copyToClipboard"></span>
           </a>
 
           <a
-            class="qrCodeRightButton"
             ng-disabled="genAuthCode.showEmail"
             ng-hide="showActivationCode.wizardData.deviceType==='huron' && showActivationCode.wizardData.accountType==='shared'"
             ng-click="showActivationCode.activateEmail()"
             translate="generateActivationCodeModal.emailCode">
           </a>
 
-          <a class="qrCodeRightButton" cr-print print-element-id="printActivationCode">
+          <a cr-print print-element-id="printActivationCode">
             <span translate="generateActivationCodeModal.print"></span>
           </a>
         </div>

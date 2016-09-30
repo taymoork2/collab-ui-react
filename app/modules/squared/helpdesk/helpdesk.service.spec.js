@@ -2,7 +2,7 @@
 describe('HelpdeskService', function () {
   beforeEach(angular.mock.module('Squared'));
 
-  var $timeout, $httpBackend, Service, urlBase, ServiceDescriptor, $scope, q, HelpdeskMockData,
+  var $timeout, $httpBackend, Service, urlBase, ServiceDescriptor, $scope, $q, HelpdeskMockData,
     CsdmConverter, HelpdeskHttpRequestCanceller, FeatureToggleService;
 
   beforeEach(inject(function (_$timeout_, UrlConfig, _$rootScope_, _$httpBackend_, _HelpdeskService_, _ServiceDescriptor_, _$q_, _HelpdeskMockData_, _CsdmConverter_, _HelpdeskHttpRequestCanceller_, _FeatureToggleService_) {
@@ -10,7 +10,7 @@ describe('HelpdeskService', function () {
     ServiceDescriptor = _ServiceDescriptor_;
     HelpdeskHttpRequestCanceller = _HelpdeskHttpRequestCanceller_;
     $scope = _$rootScope_.$new();
-    q = _$q_;
+    $q = _$q_;
     $timeout = _$timeout_;
     urlBase = UrlConfig.getAdminServiceUrl();
     HelpdeskMockData = _HelpdeskMockData_;
@@ -199,7 +199,7 @@ describe('HelpdeskService', function () {
     }];
 
     sinon.stub(ServiceDescriptor, 'servicesInOrg');
-    var deferred = q.defer();
+    var deferred = $q.defer();
     deferred.resolve(serviceDescriptionsMock);
     ServiceDescriptor.servicesInOrg.returns(deferred.promise);
 
@@ -346,24 +346,51 @@ describe('HelpdeskService', function () {
     $httpBackend.verifyNoOutstandingRequest();
   });
 
-  it('resendInviteEmail: checks a feature toggle and calls invokeInviteEmail', function () {
+  describe('resendInviteEmail:', function () {
     var fakeUserData = {
       displayName: 'fake-displayName',
       email: 'fake-email',
       onlineOrderIds: ['fake-onlineOrderId-0']
     };
 
-    spyOn(Service, 'invokeInviteEmail').and.callThrough();
+    beforeEach(function () {
+      spyOn(Service, 'invokeInviteEmail');
+    });
 
-    // TODO: fix this, currently app code is mis-using 'FeatureToggleService.supports()'
-    // - for now, stub it like it behaves synchronously
-    spyOn(FeatureToggleService, 'supports').and.returnValue(false);
+    it('always checks the feature-toggle FeatureToggleService.features.atlasEmailStatus', function () {
+      spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(false));
 
-    Service.resendInviteEmail(fakeUserData);
+      Service.resendInviteEmail(fakeUserData);
+      $scope.$apply();
 
-    expect(FeatureToggleService.supports.calls.count()).toBe(1);
-    expect(FeatureToggleService.supports).toHaveBeenCalledWith(FeatureToggleService.features.atlasEmailStatus);
-    expect(Service.invokeInviteEmail.calls.count()).toBe(1);
-    expect(Service.invokeInviteEmail).toHaveBeenCalledWith(fakeUserData);
+      expect(FeatureToggleService.supports.calls.count()).toBe(1);
+      expect(FeatureToggleService.supports).toHaveBeenCalledWith(FeatureToggleService.features.atlasEmailStatus);
+    });
+
+    it('when feature-toggle disabled: simply calls invokeInviteEmail', function () {
+      spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(false));
+
+      Service.resendInviteEmail(fakeUserData);
+      $scope.$apply();
+
+      expect(Service.invokeInviteEmail.calls.count()).toBe(1);
+      expect(Service.invokeInviteEmail).toHaveBeenCalledWith(fakeUserData);
+    });
+
+    it('when feature-toggle enabled: checks isEmailBlocked and does a delete before calling invokeInviteEmail', function () {
+      spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
+      spyOn(Service, 'isEmailBlocked').and.returnValue($q.when());
+
+      $httpBackend
+        .expectDELETE(/email\/bounces\?email=/).respond(200);
+
+      Service.resendInviteEmail(fakeUserData);
+      $httpBackend.flush();
+
+      expect(Service.isEmailBlocked.calls.count()).toBe(1);
+      expect(Service.isEmailBlocked).toHaveBeenCalledWith(fakeUserData.email);
+      expect(Service.invokeInviteEmail.calls.count()).toBe(1);
+      expect(Service.invokeInviteEmail).toHaveBeenCalledWith(fakeUserData);
+    });
   });
 });

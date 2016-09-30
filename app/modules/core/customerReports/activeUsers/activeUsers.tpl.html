@@ -3,8 +3,7 @@
     <header>
       <span class='report-section-header'>
         <span class='report-section-header' translate='activeUsers.activeUsers'></span>
-        <i ng-if="nav.timeSelected.value === 2" class='icon icon-information' tooltip="{{::nav.threeMonthTooltip}}" tooltip-trigger="mouseenter" tooltip-placement="right" tooltip-animation="true" tooltip-append-to-body="true"></i>
-        <i ng-if="nav.timeSelected.value === 3" class='icon icon-information' tooltip="{{::nav.twelveMonthTooltip}}" tooltip-trigger="mouseenter" tooltip-placement="right" tooltip-animation="true" tooltip-append-to-body="true"></i>
+        <i ng-if="nav.timeSelected.value === 2 && nav.displayActiveLineGraph" class='icon icon-information' tooltip="{{::nav.threeMonthTooltip}}" tooltip-trigger="mouseenter" tooltip-placement="right" tooltip-animation="true" tooltip-append-to-body="true"></i>
       </span>
     </header>
     <section>
@@ -55,7 +54,7 @@
             <i class='icon icon-spinner icon-2x'></i>
           </div>
         </div>
-        <a class="report-sides" ng-click="nav.mostActiveUserSwitch()" ng-if="nav.timeSelected.value !== 3">
+        <a class="report-sides" ng-click="nav.mostActiveUserSwitch()">
           <span ng-if="!nav.showMostActiveUsers" translate="activeUsers.showActiveUsers"></span>
           <span ng-if="nav.showMostActiveUsers" translate="activeUsers.hideActiveUsers"></span>
         </a>

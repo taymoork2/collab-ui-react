@@ -14,7 +14,6 @@
     var weeks = 3;
     var lineWeeks = 4;
     var months = 2;
-    var thirteenWeeks = 12;
     var year = 52;
 
     return {
@@ -63,13 +62,11 @@
         if (lineGraph) {
           timespan = lineWeeks;
         }
-      } else if (filter.value === 2) {
+      } else {
         timespan = months;
         if (lineGraph) {
-          timespan = thirteenWeeks;
+          timespan = year;
         }
-      } else {
-        timespan = year;
       }
       for (var i = timespan; i >= 0; i--) {
         dummyGraph.push(getActiveUserDataPoint(filter, i, lineGraph, timespan - i));

@@ -71,9 +71,12 @@
 
         chart.chartScrollbar = undefined;
         chart.mouseWheelZoomEnabled = false;
-        if (timeFilter.value === 3) {
+        if (timeFilter.value === 2) {
           chart.chartScrollbar = CommonGraphService.getBaseVariable(SCROLL);
           chart.mouseWheelZoomEnabled = true;
+          if (!data[0].balloon) {
+            chart.chartScrollbar.selectedBackgroundColor = chartColors.grayLightOne;
+          }
         }
 
         chart.graphs = getActiveLineGraphs(data);
@@ -90,7 +93,7 @@
     function zoomActiveUserChart(event) {
       var chart = _.get(event, 'chart');
       var chartData = _.get(event, 'chart.dataProvider');
-      if (chart && chartData && timeFilterValue === 3) {
+      if (chart && chartData && timeFilterValue === 2) {
         chart.zoomToIndexes(chartData.length - 13, chartData.length - 1);
       }
     }
@@ -124,9 +127,13 @@
       chartData.legend.labelText = '[[title]]';
       chartData.autoMargins = true;
       chartData.mouseWheelZoomEnabled = false;
-      if (timeFilterValue === 3) {
+
+      if (timeFilterValue === 2) {
         chartData.mouseWheelZoomEnabled = true;
         chartData.chartScrollbar = CommonGraphService.getBaseVariable(SCROLL);
+        if (!data[0].balloon) {
+          chartData.chartScrollbar.selectedBackgroundColor = chartColors.grayLightOne;
+        }
       }
 
       return AmCharts.makeChart(activeUserDiv, chartData);
