@@ -1,26 +1,31 @@
 'use strict';
 
 describe('Service: FusionClusterService', function () {
-  var FusionClusterService, $httpBackend;
+  var $httpBackend, $q, FusionClusterService, USSService;
 
   beforeEach(angular.mock.module('Hercules'));
+  // beforeEach(angular.mock.module('core.urlconfig'));
   beforeEach(angular.mock.module(mockDependencies));
   beforeEach(inject(dependencies));
 
-  function dependencies(_$httpBackend_, _FusionClusterService_) {
+  function dependencies(_$httpBackend_, _$q_, _FusionClusterService_, _USSService_) {
     $httpBackend = _$httpBackend_;
+    $q = _$q_;
     FusionClusterService = _FusionClusterService_;
+    USSService = _USSService_;
+    spyOn(USSService, 'getUserCountFromResourceGroup').and.returnValue($q.resolve({ numberOfUsers: 0 }));
   }
 
   function mockDependencies($provide) {
     var Authinfo = {
       getOrgId: sinon.stub().returns('0FF1C3'),
-      isEntitled: sinon.stub().returns(true)
+      isEntitled: sinon.stub().returns(true),
     };
     $provide.value('Authinfo', Authinfo);
     var UrlConfig = {
       getHerculesUrlV2: sinon.stub().returns('http://elg.no'),
-      getHerculesUrl: sinon.stub().returns('http://ulv.no')
+      getHerculesUrl: sinon.stub().returns('http://ulv.no'),
+      getUssUrl: sinon.stub().returns('http://whatever.no/'),
     };
     $provide.value('UrlConfig', UrlConfig);
   }

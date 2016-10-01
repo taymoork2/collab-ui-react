@@ -357,20 +357,22 @@
 
     function resendInviteEmail(trimmedUserData) {
       var email = trimmedUserData.email;
-      // TODO: fix this, 'FeatureToggleService.supports()' returns a promise, and is therefore
-      //   always truthy and very likely not the real intent of this code
-      if (FeatureToggleService.supports(FeatureToggleService.features.atlasEmailStatus)) {
-        return isEmailBlocked(email).then(function () {
-          $http.delete(urlBase + 'email/bounces?email=' + email)
+      return FeatureToggleService.supports(FeatureToggleService.features.atlasEmailStatus)
+        .then(function (isSupported) {
+          if (!isSupported) {
+            return $q.reject();
+          }
+          return service.isEmailBlocked(email)
+            .then(function () {
+              return $http.delete(urlBase + 'email/bounces?email=' + email);
+            })
             .then(function () {
               return service.invokeInviteEmail(trimmedUserData);
             });
-        }).catch(function () {
+        })
+        .catch(function () {
           return service.invokeInviteEmail(trimmedUserData);
         });
-      } else {
-        return service.invokeInviteEmail(trimmedUserData);
-      }
     }
 
     function getInviteResendUrl(trimmedUserData) {

@@ -184,7 +184,7 @@ describe('Service: Common Report Service', () => {
           returnGraph.push(temp);
         }
       } else {
-        for (let y = 12; y >= 0; y--) {
+        for (let y = 52; y >= 0; y--) {
           let item = _.clone(defaults.graphItem);
           item.date = moment().day(-1)
             .subtract(y, defaults.WEEK)
