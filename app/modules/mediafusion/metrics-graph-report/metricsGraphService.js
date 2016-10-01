@@ -11,7 +11,6 @@
     var LEGEND = 'legend';
     // variables for the call volume section
     var callVolumediv = 'callVolumediv';
-    // var callVolumeBalloonText = '<span class="graph-text">' + $translate.instant('activeUsers.registeredUsers') + ' <span class="graph-number">[[totalRegisteredUsers]]</span></span><br><span class="graph-text">' + $translate.instant('activeUsers.active') + ' <span class="graph-number">[[percentage]]%</span></span>';
     var callLocalTitle = $translate.instant('mediaFusion.metrics.callLocal');
     var callRejectTitle = $translate.instant('mediaFusion.metrics.callReject');
     var callLocalClusterTitle = $translate.instant('mediaFusion.metrics.callLocalCluster');
@@ -147,7 +146,7 @@
       catAxis.gridAlpha = 0.3;
       catAxis.minorGridAlpha = 0.1;
       catAxis.minorGridEnabled = false;
-      catAxis.minPeriod = "mm";
+      catAxis.minPeriod = 'mm';
       //catAxis.twoLineMode = true;
       var startDuration = 1;
       if (!data[0].balloon) {
@@ -168,15 +167,15 @@
           'timestamp': timeStamp,
         };
       }
-      cluster = cluster.replace(/\s/g, "_");
-      daterange = daterange.replace(/\s/g, "_");
+      cluster = cluster.replace(/\s/g, '_');
+      daterange = daterange.replace(/\s/g, '_');
       var ExportFileName = 'MediaService_TotalCalls_' + cluster + '_' + daterange + '_' + new Date();
       var chartData = CommonMetricsGraphService.getBaseStackSerialGraph(data, startDuration, valueAxes, callVolumeGraphs(data, cluster), 'timestamp', catAxis, getBaseExportForGraph(exportFields, ExportFileName, columnNames));
       chartData.numberFormatter = CommonMetricsGraphService.getBaseVariable(NUMFORMAT);
       chartData.legend = CommonMetricsGraphService.getBaseVariable(LEGEND);
       chartData.legend.labelText = '[[title]]';
       var chart = AmCharts.makeChart(callVolumediv, chartData);
-      chart.addListener("rendered", zoomChart);
+      chart.addListener('rendered', zoomChart);
       zoomChart(chart);
       return chart;
     }
@@ -277,13 +276,13 @@
       var dateValue = daterange.value;
 
       if (dateValue === 0) {
-        catAxis.minPeriod = "10mm";
+        catAxis.minPeriod = '10mm';
       } else if (dateValue === 1) {
-        catAxis.minPeriod = "hh";
+        catAxis.minPeriod = 'hh';
       } else if (dateValue === 2) {
-        catAxis.minPeriod = "3hh";
+        catAxis.minPeriod = '3hh';
       } else {
-        catAxis.minPeriod = "8hh";
+        catAxis.minPeriod = '8hh';
       }
 
       var startDuration = 1;
@@ -301,8 +300,8 @@
           columnNames[value.valueField] = value.title;
         }
       });
-      cluster = cluster.replace(/\s/g, "_");
-      dateLabel = dateLabel.replace(/\s/g, "_");
+      cluster = cluster.replace(/\s/g, '_');
+      dateLabel = dateLabel.replace(/\s/g, '_');
       var ExportFileName = 'MediaService_Utilization_' + cluster + '_' + dateLabel + '_' + new Date();
 
       var chartData = CommonMetricsGraphService.getBaseStackSerialGraph(data, startDuration, valueAxes, graphs, 'time', catAxis, getBaseExportForUtilizationGraph(ExportFileName, columnNames));
@@ -310,7 +309,7 @@
       chartData.legend.labelText = '[[title]]';
       chartData.legend.useGraphSettings = true;
       var chart = AmCharts.makeChart(utilizationdiv, chartData);
-      chart.addListener("rendered", zoomChart);
+      chart.addListener('rendered', zoomChart);
       zoomChart(chart);
       return chart;
     }
@@ -419,8 +418,8 @@
           'category': node,
         };
       }
-      cluster = cluster.replace(/\s/g, "_");
-      daterange = daterange.replace(/\s/g, "_");
+      cluster = cluster.replace(/\s/g, '_');
+      daterange = daterange.replace(/\s/g, '_');
       var ExportFileName = 'MediaService_Availability_' + cluster + '_' + daterange + '_' + new Date();
       var chartData = CommonMetricsGraphService.getGanttGraph(data.data[0].clusterCategories, valueAxis, getBaseExportForGraph(exportFields, ExportFileName, columnNames));
       chartData.legend = CommonMetricsGraphService.getBaseVariable(LEGEND);
