@@ -220,8 +220,7 @@
         resolve: {
           cluster: function () {
             return cluster;
-          },
-          isF410enabled: true
+          }
         },
         controller: 'ClusterDeregisterController',
         controllerAs: 'clusterDeregister',

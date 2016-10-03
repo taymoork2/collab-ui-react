@@ -2,21 +2,13 @@
   'use strict';
 
   /* @ngInject */
-  function MediaServiceSettingsControllerV2($state, $modal, MediaServiceActivationV2, Authinfo, $stateParams, ServiceDescriptor, MailValidatorService, XhrNotificationService, Notification, FeatureToggleService) {
+  function MediaServiceSettingsControllerV2($state, $modal, MediaServiceActivationV2, Authinfo, $stateParams, ServiceDescriptor, MailValidatorService, XhrNotificationService, Notification) {
     var vm = this;
     vm.config = "";
     vm.wx2users = "";
     vm.serviceType = "mf_mgmt";
     vm.serviceId = "squared-fusion-media";
     vm.cluster = $stateParams.cluster;
-    vm.featureToggled = false;
-
-    function isFeatureToggled() {
-      return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridServicesResourceList);
-    }
-    isFeatureToggled().then(function (reply) {
-      vm.featureToggled = reply;
-    });
 
     vm.disableMediaService = function () {
       MediaServiceActivationV2.setServiceEnabled(vm.serviceId, false).then(
@@ -24,15 +16,7 @@
           MediaServiceActivationV2.setisMediaServiceEnabled(false);
           MediaServiceActivationV2.setServiceAcknowledged(vm.serviceId, false);
           vm.disableOrpheusForMediaFusion();
-          if (vm.featureToggled) {
-            $state.go('services-overview');
-          } else {
-            $state.go("media-service.list", {
-              serviceType: "mf_mgmt"
-            }, {
-              reload: true
-            });
-          }
+          $state.go('services-overview');
         },
         function error() {
           XhrNotificationService.notify(error);

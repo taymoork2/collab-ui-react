@@ -41,42 +41,57 @@ describe('WebExUserSettingsFact multi-center licenses tests', function () {
     "site": "t30citestprov13.webex.com"
   }; // fakeStateParams
 
-  var fakeOrgLicenses = [{
-    "licenseId": "MS_3e3cd067-4cee-4a89-9941-0c4ae920ebe6",
-    "licenseType": "MESSAGING",
-    "volume": 10,
-    "usage": 0
-  }, {
-    "licenseId": "ST_9d89488a-6017-4d21-945f-111df325585e_5",
-    "licenseType": "STORAGE",
-    "volume": 0,
-    "capacity": 5,
-    "usage": 0
-  }, {
-    "licenseId": "CMR_d5736761-df83-42e5-bbf3-e8d6dab71e36_10_t30citestprov13.webex.com",
-    "licenseType": "CMR",
-    "volume": 10,
-    "capacity": 10,
-    "usage": 3
-  }, {
-    "licenseId": "EC_4c6e5366-2e44-4886-9b91-f2d2c90ebcff_200_t30citestprov13.webex.com",
-    "licenseType": "CONFERENCING",
-    "volume": 200,
-    "capacity": 200,
-    "usage": 6
-  }, {
-    "licenseId": "MC_61d4e4eb-ecbc-4bac-8f6b-b8030128e1b7_200_t30citestprov13.webex.com",
-    "licenseType": "CONFERENCING",
-    "volume": 200,
-    "capacity": 200,
-    "usage": 5
-  }, {
-    "licenseId": "CF_437a6b1d-f049-4583-aa16-acab6a0583c8_10",
-    "licenseType": "CONFERENCING",
-    "volume": 5,
-    "capacity": 10,
-    "usage": 0
-  }]; // fakeOrgLicenses
+  var fakeOrgLicenses = {
+    "data": {
+      "customers": [{
+        "customerId": "71394d6c-37bf-4156-ac85-c87f89b908db",
+        "customerName": "Atlas_Test_wx_testSiteTool_20160608114559",
+        "customerOrgId": "b98940d4-2985-46ef-8c1a-ae8c1ef723ad",
+        "customerAdminEmail": "provteam+t31ee@csgtrials.webex.com",
+        "licenses": [{
+          "licenseId": "MS_3e3cd067-4cee-4a89-9941-0c4ae920ebe6",
+          "licenseType": "MESSAGING",
+          "volume": 10,
+          "usage": 0
+        }, {
+          "licenseId": "ST_9d89488a-6017-4d21-945f-111df325585e_5",
+          "licenseType": "STORAGE",
+          "volume": 0,
+          "capacity": 5,
+          "usage": 0
+        }, {
+          "licenseId": "CMR_d5736761-df83-42e5-bbf3-e8d6dab71e36_10_t30citestprov13.webex.com",
+          "licenseType": "CMR",
+          "volume": 10,
+          "capacity": 10,
+          "usage": 3
+        }, {
+          "licenseId": "EC_4c6e5366-2e44-4886-9b91-f2d2c90ebcff_200_t30citestprov13.webex.com",
+          "licenseType": "CONFERENCING",
+          "volume": 200,
+          "capacity": 200,
+          "usage": 6
+        }, {
+          "licenseId": "MC_61d4e4eb-ecbc-4bac-8f6b-b8030128e1b7_200_t30citestprov13.webex.com",
+          "licenseType": "CONFERENCING",
+          "volume": 200,
+          "capacity": 200,
+          "usage": 5
+        }, {
+          "licenseId": "CF_437a6b1d-f049-4583-aa16-acab6a0583c8_10",
+          "licenseType": "CONFERENCING",
+          "volume": 5,
+          "capacity": 10,
+          "usage": 0
+        }],
+        "commerceRelation": "Direct",
+        "licenseEnforcement": {
+          "licenseExceedAction": "NOTHING",
+          "licenseExceedThreshold": "NA"
+        }
+      }]
+    }
+  }; // fakeOrgLicenses
 
   var fakeWebExSessionTicket = "fakeWebExSessionTicket";
   var fakeWebExSiteVersionXml = '<?xml version="1.0" encoding="UTF-8"?><serv:message xmlns:serv="http://www.webex.com/schemas/2002/06/service" xmlns:com="http://www.webex.com/schemas/2002/06/common" xmlns:ep="http://www.webex.com/schemas/2002/06/service/ep" xmlns:meet="http://www.webex.com/schemas/2002/06/service/meeting"><serv:header><serv:response><serv:result>SUCCESS</serv:result><serv:gsbStatus>PRIMARY</serv:gsbStatus></serv:response></serv:header><serv:body><serv:bodyContentxsi:type="ep:getAPIVersionResponse" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><ep:apiVersion>WebEx XML API V10.0.0</ep:apiVersion><ep:release>EP1</ep:release><ep:trainReleaseVersion>T31L</ep:trainReleaseVersion><ep:trainReleaseOrder>400</ep:trainReleaseOrder></serv:bodyContent></serv:body></serv:message>';
@@ -93,7 +108,8 @@ describe('WebExUserSettingsFact multi-center licenses tests', function () {
   beforeEach(inject(function (
     $q,
     _$rootScope_,
-    Orgservice,
+    Auth,
+    Authinfo,
     WebExXmlApiFact
   ) {
 
@@ -106,7 +122,8 @@ describe('WebExUserSettingsFact multi-center licenses tests', function () {
     deferredWebExSiteInfoXml = $q.defer();
     deferredWebExMeetingTypeInfoXml = $q.defer();
 
-    spyOn(Orgservice, "getValidLicenses").and.returnValue(deferredOrgLicenses.promise);
+    spyOn(Authinfo, "getOrgId").and.returnValue('someOrgId');
+    spyOn(Auth, "getCustomerAccount").and.returnValue(deferredOrgLicenses.promise);
     spyOn(WebExXmlApiFact, "getSessionTicket").and.returnValue(deferredWebExSessionTicket.promise);
     spyOn(WebExXmlApiFact, "getSiteVersion").and.returnValue(deferredWebExSiteVersionXml.promise);
     spyOn(WebExXmlApiFact, "getUserInfo").and.returnValue(deferredWebExUserInfoXml.promise);

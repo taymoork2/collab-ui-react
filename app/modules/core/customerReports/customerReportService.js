@@ -322,24 +322,26 @@
         totalRooms: 0,
         avgRooms: 0
       };
-      var date;
-      var groupDate = _.get(groupData, '[groupData.length - 1].date');
-      var oneToOneDate = _.get(oneToOneData, '[oneToOneData.length - 1].date');
-      var avgDate = _.get(avgData, '[avgData.length - 1].date');
-      if (groupData.length > 0) {
-        date = groupDate;
-        if ((oneToOneData.length > 0) && (groupDate < oneToOneDate)) {
+      var date = '';
+      if (groupData[0] && oneToOneData[0] && avgData[0]) {
+        var groupDate = groupData[0].date;
+        var oneToOneDate = oneToOneData[0].date;
+        var avgDate = avgData[0].date;
+        if (groupData.length > 0) {
+          date = groupDate;
+          if ((oneToOneData.length > 0) && (groupDate < oneToOneDate)) {
+            date = oneToOneDate;
+          } else if ((avgData.length > 0) && (groupDate < avgDate)) {
+            date = avgDate;
+          }
+        } else if (oneToOneData.length > 0) {
           date = oneToOneDate;
-        } else if ((avgData.length > 0) && (groupDate < avgDate)) {
+          if ((avgData.length > 0) && (oneToOneDate < avgDate)) {
+            date = avgDate;
+          }
+        } else if (avgData.length > 0) {
           date = avgDate;
         }
-      } else if (oneToOneData.length > 0) {
-        date = oneToOneDate;
-        if ((avgData.length > 0) && (oneToOneDate < avgDate)) {
-          date = avgDate;
-        }
-      } else if (avgData.length > 0) {
-        date = avgDate;
       }
 
       var returnGraph = CommonReportService.getReturnGraph(filter, date, graphItem);
@@ -447,16 +449,18 @@
         color: chartColors.brandSuccess
       };
 
-      var date;
-      var contentSharedDate = _.get(contentSharedData, '[contentSharedData.length - 1].date');
-      var contentShareSizesDate = _.get(contentShareSizesData, '[contentShareSizesData.length - 1].date');
-      if (contentSharedData.length > 0) {
-        date = contentSharedDate;
-        if ((contentShareSizesData.length > 0) && (contentSharedDate < contentShareSizesDate)) {
+      var date = '';
+      if (contentSharedData[0] && contentShareSizesData[0]) {
+        var contentSharedDate = contentSharedData[0].date;
+        var contentShareSizesDate = contentShareSizesData[0].date;
+        if (contentSharedData.length > 0) {
+          date = contentSharedDate;
+          if ((contentShareSizesData.length > 0) && (contentSharedDate < contentShareSizesDate)) {
+            date = contentShareSizesDate;
+          }
+        } else if (contentShareSizesData.length > 0) {
           date = contentShareSizesDate;
         }
-      } else if (contentShareSizesData.length > 0) {
-        date = contentShareSizesDate;
       }
       var returnGraph = CommonReportService.getReturnGraph(filter, date, graphItem);
 
@@ -564,7 +568,7 @@
             partialVideoSum: 0,
             balloon: true
           };
-          var graph = CommonReportService.getReturnGraph(filter, _.get(data, '[data.length - 1].date'), graphItem);
+          var graph = CommonReportService.getReturnGraph(filter, data[data.length - 1].date, graphItem);
 
           _.forEach(data, function (item) {
             var totalSum = parseInt(item.details.totalDurationSum, 10);
@@ -655,10 +659,10 @@
         var responseLength = 0;
 
         _.forEach(data, function (item) {
-          var details = _.get(item.details);
+          var details = _.get(item, 'details');
           if (details && responseLength < details.length) {
             responseLength = details.length;
-            date = _.get(details, '[details.length - 1].recordTime');
+            date = details[responseLength - 1].recordTime;
           }
         });
 

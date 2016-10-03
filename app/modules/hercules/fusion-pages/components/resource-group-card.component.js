@@ -19,7 +19,8 @@
     ctrl.showDetails = false;
     ctrl.openResourceGroupSettings = openResourceGroupSettings;
     ctrl.toggleDetails = toggleDetails;
-    ctrl.showWarningText = showWarningText;
+    ctrl.hasZeroClusters = hasZeroClusters;
+    ctrl.hasUsers = hasUsers;
     ctrl.$onChanges = $onChanges;
     ctrl.getLocalizedReleaseChannel = FusionUtils.getLocalizedReleaseChannel;
     ctrl.getStatusCssClass = getStatusCssClass;
@@ -38,8 +39,12 @@
       $state.go('resource-group-settings', { id: ctrl.group.id });
     }
 
-    function showWarningText() {
+    function hasZeroClusters() {
       return ctrl.group.clusters.length === 0;
+    }
+
+    function hasUsers() {
+      return ctrl.group.numberOfUsers > 0;
     }
 
     function getStatusCssClass() {
@@ -50,5 +55,4 @@
       return FusionClusterStatesService.getMergedStateSeverity(connectors).cssClass;
     }
   }
-
 })();

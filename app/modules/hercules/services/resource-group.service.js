@@ -6,8 +6,8 @@
     .factory('ResourceGroupService', ResourceGroupService);
 
   /* @ngInject */
-  function ResourceGroupService($http, UrlConfig, Authinfo, $translate, FusionClusterService) {
-    return {
+  function ResourceGroupService($http, $translate, Authinfo, FusionClusterService, UrlConfig) {
+    var service = {
       getAll: getAll,
       get: get,
       create: create,
@@ -19,6 +19,8 @@
       getAllAsOptions: getAllAsOptions,
       resourceGroupHasEligibleCluster: resourceGroupHasEligibleCluster
     };
+
+    return service;
 
     function get(resourceGroupId, orgId) {
       return $http

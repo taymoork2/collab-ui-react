@@ -7,7 +7,7 @@ describe('Controller: MediaServiceSettingsControllerV2', function () {
 
   var controller, $q, $modal, redirectTargetPromise;
   var $rootScope;
-  var ServiceDescriptor, MailValidatorService, Notification, XhrNotificationService, MediaServiceActivationV2, FeatureToggleService;
+  var ServiceDescriptor, MailValidatorService, Notification, XhrNotificationService, MediaServiceActivationV2;
   var serviceId = "squared-fusion-media";
 
   var authInfo = {
@@ -20,7 +20,7 @@ describe('Controller: MediaServiceSettingsControllerV2', function () {
   }));
 
   //expect(XhrNotificationService.notify).toHaveBeenCalled();
-  beforeEach(inject(function (_$rootScope_, $state, $controller, $stateParams, _$q_, _$modal_, $translate, _MediaServiceActivationV2_, _MailValidatorService_, _XhrNotificationService_, _Notification_, _ServiceDescriptor_, _FeatureToggleService_) {
+  beforeEach(inject(function (_$rootScope_, $state, $controller, $stateParams, _$q_, _$modal_, $translate, _MediaServiceActivationV2_, _MailValidatorService_, _XhrNotificationService_, _Notification_, _ServiceDescriptor_) {
     $rootScope = _$rootScope_;
     $q = _$q_;
     $modal = _$modal_;
@@ -28,16 +28,11 @@ describe('Controller: MediaServiceSettingsControllerV2', function () {
     MediaServiceActivationV2 = _MediaServiceActivationV2_;
     MailValidatorService = _MailValidatorService_;
     XhrNotificationService = _XhrNotificationService_;
-    FeatureToggleService = _FeatureToggleService_;
     Notification = _Notification_;
     ServiceDescriptor = _ServiceDescriptor_;
     redirectTargetPromise = {
       then: sinon.stub()
     };
-    FeatureToggleService.features = {
-      atlasHybridServicesResourceList: 'atlas-hybrid-services-resource-list'
-    };
-    spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(false));
     sinon.stub(ServiceDescriptor, 'getEmailSubscribers');
     ServiceDescriptor.getEmailSubscribers.returns(redirectTargetPromise);
     sinon.stub($state, 'go');
