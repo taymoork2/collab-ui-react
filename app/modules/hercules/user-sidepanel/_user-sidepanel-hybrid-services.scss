@@ -34,16 +34,6 @@
     padding-right: 0.5rem;
   }
 
-  .feature-icon-extension {
-    @extend .icon;
-    font-size: rem-calc(25);
-    margin-right: 13px;
-    line-height: $feature-line-height;
-    &:before {
-      line-height: $feature-line-height;
-    }
-  }
-
   .section-title-row {
     align-items: center;
     display: flex;

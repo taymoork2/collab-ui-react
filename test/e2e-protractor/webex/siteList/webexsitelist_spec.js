@@ -5,32 +5,33 @@
 /* global webExCommon */
 
 // Start of site list tests
-describe('WebEx Sitelist: ' + webExCommon.BTS2.siteUrl + ": ", function () {
+// TODO temporarily disable while CI BTS is offline
+xdescribe('WebEx Sitelist: ' + webExCommon.BTS2.siteUrl + ": ", function () {
   var setup = false;
 
-  beforeAll(function () {
-    var promise = webEx.setup(
-      1,
-      'wbx-t30BTSTestAdmin-SingleLicense',
-      webExCommon.BTS2.testAdminUsername,
-      webExCommon.BTS2.testAdminPassword,
-      webExCommon.BTS2.siteUrl
-    );
+  // beforeAll(function () {
+  //   var promise = webEx.setup(
+  //     1,
+  //     'wbx-t30BTSTestAdmin-SingleLicense',
+  //     webExCommon.BTS2.testAdminUsername,
+  //     webExCommon.BTS2.testAdminPassword,
+  //     webExCommon.BTS2.siteUrl
+  //   );
 
-    promise.then(
-      function success(ticket) {
-        setup = (null !== ticket);
-      },
+  //   promise.then(
+  //     function success(ticket) {
+  //       setup = (null !== ticket);
+  //     },
 
-      function error() {
-        setup = false;
-      }
-    );
-  }); // beforeAll()
+  //     function error() {
+  //       setup = false;
+  //     }
+  //   );
+  // }); // beforeAll()
 
-  afterAll(function () {
-    navigation.logout();
-  }); //afterAll
+  // afterAll(function () {
+  //   navigation.logout();
+  // }); //afterAll
 
   it('should allow login as ' + webExCommon.BTS2.testAdminUsername + ' and navigate to webex site list page', function () {
     if (setup) {
@@ -64,32 +65,33 @@ describe('WebEx Sitelist: ' + webExCommon.BTS2.siteUrl + ": ", function () {
 
 });
 
-describe('WebEx Sitelist: ' + webExCommon.BTS1.siteUrl + ": ", function () {
+// TODO temporarily disable while CI BTS is offline
+xdescribe('WebEx Sitelist: ' + webExCommon.BTS1.siteUrl + ": ", function () {
   var setup = false;
 
-  beforeAll(function () {
-    var promise = webEx.setup(
-      1,
-      'wbx-t30BTSTestAdmin-MultiLicense',
-      webExCommon.BTS1.testAdminUsername,
-      webExCommon.BTS1.testAdminPassword,
-      webExCommon.BTS1.siteUrl
-    );
+  // beforeAll(function () {
+  //   var promise = webEx.setup(
+  //     1,
+  //     'wbx-t30BTSTestAdmin-MultiLicense',
+  //     webExCommon.BTS1.testAdminUsername,
+  //     webExCommon.BTS1.testAdminPassword,
+  //     webExCommon.BTS1.siteUrl
+  //   );
 
-    promise.then(
-      function success(ticket) {
-        setup = (null !== ticket);
-      },
+  //   promise.then(
+  //     function success(ticket) {
+  //       setup = (null !== ticket);
+  //     },
 
-      function error() {
-        setup = false;
-      }
-    );
-  }); // beforeAll()
+  //     function error() {
+  //       setup = false;
+  //     }
+  //   );
+  // }); // beforeAll()
 
-  afterAll(function () {
-    navigation.logout();
-  }); //afterAll
+  // afterAll(function () {
+  //   navigation.logout();
+  // }); //afterAll
 
   it('should allow login as ' + webExCommon.BTS1.testAdminUsername + ' and navigate to webex site list page', function () {
     if (setup) {
@@ -123,30 +125,30 @@ describe('WebEx Sitelist: ' + webExCommon.BTS1.siteUrl + ": ", function () {
 xdescribe('WebEx Sitelist: ' + webExCommon.devDmzInfo.siteUrl + ": ", function () {
   var setup = false;
 
-  beforeAll(function () {
-    var promise = webEx.setup(
-      1,
-      'wbx-siteCsvTestAdmin',
-      webExCommon.devDmzInfo.testAdminUsername,
-      webExCommon.devDmzInfo.testAdminPassword,
-      webExCommon.devDmzInfo.siteUrl
-    );
+  // beforeAll(function () {
+  //   var promise = webEx.setup(
+  //     1,
+  //     'wbx-siteCsvTestAdmin',
+  //     webExCommon.devDmzInfo.testAdminUsername,
+  //     webExCommon.devDmzInfo.testAdminPassword,
+  //     webExCommon.devDmzInfo.siteUrl
+  //   );
 
-    promise.then(
-      function success(ticket) {
-        setup = (null !== ticket);
-        //If this doesn't happen, then login is not successful.
-      },
+  //   promise.then(
+  //     function success(ticket) {
+  //       setup = (null !== ticket);
+  //       //If this doesn't happen, then login is not successful.
+  //     },
 
-      function error() {
-        setup = false;
-      }
-    );
-  }); // beforeAll()
+  //     function error() {
+  //       setup = false;
+  //     }
+  //   );
+  // }); // beforeAll()
 
-  afterAll(function () {
-    navigation.logout();
-  }); //afterAll
+  // afterAll(function () {
+  //   navigation.logout();
+  // }); //afterAll
 
   it('should detect checking services spinner and then WebEx CSV operation icon', function () {
     if (setup) {

@@ -27,7 +27,7 @@
     vm.disableAuthCodeLink = disableAuthCodeLink;
     vm.getUserPhoto = Userservice.getUserPhoto;
     vm.isValidThumbnail = Userservice.isValidThumbnail;
-    vm.serviceActions = serviceActions;
+    vm.clickService = clickService;
     vm.actionList = [];
 
     if (vm.currentUser.trainSiteNames) {
@@ -42,31 +42,31 @@
 
     var msgState = {
       name: $translate.instant('onboardModal.message'),
-      icon: $translate.instant('onboardModal.message'),
+      icon: 'icon-circle-message',
       state: 'messaging',
       detail: $translate.instant('onboardModal.msgFree'),
-      actionsAvailable: getDisplayableServices('MESSAGING')
+      actionAvailable: getDisplayableServices('MESSAGING')
     };
     var commState = {
       name: $translate.instant('onboardModal.call'),
-      icon: $translate.instant('onboardModal.call'),
+      icon: 'icon-circle-call',
       state: 'communication',
       detail: $translate.instant('onboardModal.callFree'),
-      actionsAvailable: true
+      actionAvailable: true
     };
     var confState = {
       name: $translate.instant('onboardModal.meeting'),
-      icon: $translate.instant('onboardModal.meeting'),
+      icon: 'icon-circle-group',
       state: 'conferencing',
       detail: $translate.instant('onboardModal.mtgFree'),
-      actionsAvailable: getDisplayableServices('CONFERENCING') || angular.isArray(vm.currentUser.trainSiteNames)
+      actionAvailable: getDisplayableServices('CONFERENCING') || angular.isArray(vm.currentUser.trainSiteNames)
     };
     var contactCenterState = {
       name: $translate.instant('onboardModal.contactCenter'),
-      icon: 'ContactCenter',
+      icon: 'icon-circle-contact-centre',
       state: 'contactCenter',
       detail: $translate.instant('onboardModal.freeContactCenter'),
-      actionsAvailable: true
+      actionAvailable: true
     };
     var invitationResource = $resource(UrlConfig.getAdminServiceUrl() + 'organization/:customerId/invitations/:userId', {
       customerId: '@customerId',
@@ -366,8 +366,8 @@
       angular.element('.open').removeClass('open');
     }
 
-    function serviceActions(feature) {
-      $state.go('user-overview.' + feature);
+    function clickService(feature) {
+      $state.go('user-overview.' + feature.state);
     }
   }
 })();

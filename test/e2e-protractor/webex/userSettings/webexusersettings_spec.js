@@ -18,49 +18,50 @@ while (1 >= webExCommon.testInfo.describeCount) {
       webExCommon.testInfo.describeText = 'WebEx user settings tests for ' + webExCommon.testInfo.testType + ' site ' + webExCommon.BTS6.siteUrl;
   }
 
-  describe(webExCommon.testInfo.describeText, function () {
+  // TODO temporarily disable while CI BTS is offline
+  xdescribe(webExCommon.testInfo.describeText, function () {
     var setup = false;
 
     if (webExCommon.testInfo.testType == "T31") {
-      beforeAll(function () {
-        var promise = webEx.setup(
-          1,
-          'wbx-t31BTSTestAdmin-UserSettings',
-          webExCommon.BTS6.testAdminUsername,
-          webExCommon.BTS6.testAdminPassword,
-          webExCommon.BTS6.siteUrl
-        );
+      // beforeAll(function () {
+      //   var promise = webEx.setup(
+      //     1,
+      //     'wbx-t31BTSTestAdmin-UserSettings',
+      //     webExCommon.BTS6.testAdminUsername,
+      //     webExCommon.BTS6.testAdminPassword,
+      //     webExCommon.BTS6.siteUrl
+      //   );
 
-        promise.then(
-          function success(ticket) {
-            setup = (null !== ticket);
-          },
+      //   promise.then(
+      //     function success(ticket) {
+      //       setup = (null !== ticket);
+      //     },
 
-          function error() {
-            setup = false;
-          }
-        );
-      }); // beforeAll()
+      //     function error() {
+      //       setup = false;
+      //     }
+      //   );
+      // }); // beforeAll()
     } else {
-      beforeAll(function () {
-        var promise = webEx.setup(
-          1,
-          'wbx-t30BTSTestAdmin-UserSettings',
-          webExCommon.BTS3.testAdminUsername,
-          webExCommon.BTS3.testAdminPassword,
-          webExCommon.BTS3.siteUrl
-        );
+      // beforeAll(function () {
+      //   var promise = webEx.setup(
+      //     1,
+      //     'wbx-t30BTSTestAdmin-UserSettings',
+      //     webExCommon.BTS3.testAdminUsername,
+      //     webExCommon.BTS3.testAdminPassword,
+      //     webExCommon.BTS3.siteUrl
+      //   );
 
-        promise.then(
-          function success(ticket) {
-            setup = (null !== ticket);
-          },
+      //   promise.then(
+      //     function success(ticket) {
+      //       setup = (null !== ticket);
+      //     },
 
-          function error() {
-            setup = false;
-          }
-        );
-      }); // beforeAll()
+      //     function error() {
+      //       setup = false;
+      //     }
+      //   );
+      // }); // beforeAll()
     }
 
     if (webExCommon.testInfo.testType == "T31") {
