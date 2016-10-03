@@ -21,4 +21,12 @@
     "consecutive": false
   },
   "type": "BLOCK_ORDER"
+}, {
+  "data": {
+    "areaCode": 123,
+    "nxx": 555,
+    "length": 10,
+    "consecutive": true
+  },
+  "type": "BLOCK_ORDER"
 }]
