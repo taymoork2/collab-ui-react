@@ -69,7 +69,9 @@
       CsdmCacheUpdater.update(theDeviceMap, deviceMap, keepFunction);
 
       _.each(_.values(deviceMap), function (d) {
-        addOrUpdatePlaceInDataModel(d);
+        if (d.accountType != 'PERSON') {
+          addOrUpdatePlaceInDataModel(d);
+        }
       });
 
       updatePlacesCache();

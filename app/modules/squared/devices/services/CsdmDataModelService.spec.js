@@ -22,6 +22,8 @@ describe('Service: CsdmDataModelService', function () {
   var huronPlacesUrl = 'https://cmi.huron-int.com/api/v2/customers/testOrg/places/';
   var pWithHuronDevice2Url = huronPlacesUrl + '68351854-Place2WithHuronDevice-c9c844421ec2';
   var huronDevice2Url = 'https://cmi.huron-int.com/api/v1/voice/customers/3a6ff373-unittest-a27460e0ac5c/sipendpoints/2c586b22-hurondev_inplace2-ace151f631fa';
+  var huronPersonalDeviceUrl = 'https://cmi.huron-int.com/api/v1/voice/customers/3a6ff373-unittest-a27460e0ac5c/sipendpoints/2c586b22-hurondev_inplace2-PERSON-ace151f631fa';
+  var nonExistentPlaceBasedOnPersonalUserUrl = huronPlacesUrl + '68351854-PERSON-c9c844421ec2';
   var huronPlaceWithoutDeviceUrl = huronPlacesUrl + '938d9c32-huronPlaceWithoutDevice-88d7c1a7f63ev';
 
   var initialDeviceMap;
@@ -102,6 +104,12 @@ describe('Service: CsdmDataModelService', function () {
       executeGetCallsAndInitPromises();
 
       expect(initialDeviceMap[huronDevice2Url].tags).toEqual(['hey', 'ho', 'letsgo']);
+    });
+
+    it('should contain huron personal endpoints', function () {
+      executeGetCallsAndInitPromises();
+
+      expect(initialDeviceMap[huronPersonalDeviceUrl].tags).toEqual(['sheena', 'was', 'a punkrocker']);
     });
 
     it('get devices should call both fast and slow url', function () {
@@ -637,6 +645,16 @@ describe('Service: CsdmDataModelService', function () {
         expect(places[huronPlaceWithoutDeviceUrl].type).toBe('huron');
         expect(places[huronPlaceWithoutDeviceUrl].readableType).toBe('addDeviceWizard.chooseDeviceType.deskPhone');
         expect(places[huronPlaceWithoutDeviceUrl].cisUuid).toBe('938d9c32-huronPlaceWithoutDevice-88d7c1a7f63ev');
+        expectExecuted = true;
+      });
+      $rootScope.$digest();
+      expect(expectExecuted).toBe(true);
+    });
+
+    it('should not generate a place for a personal huron device', function () {
+      var expectExecuted;
+      CsdmDataModelService.getPlacesMap().then(function (places) {
+        expect(places[nonExistentPlaceBasedOnPersonalUserUrl]).toBeUndefined();
         expectExecuted = true;
       });
       $rootScope.$digest();
