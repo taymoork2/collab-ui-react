@@ -1,3 +1,15 @@
-<div id="device-usage-timeline-chart" style="height: 400px; width: 90%; margin: 0 auto; margin-top: 2rem">
+<div class="row">
+  <div class="columns full">
+    <div id="device-usage-timeline-chart" style="height: 400px; margin: 0 auto; margin-top: 1rem">
+    </div>
+  </div>
+  <div class="columns full">
+    <div class="center" ng-show="deviceUsage.additionalInfo" style="margin: 0 auto;">
+        <span>Video count: {{deviceUsage.dayData.videCount}} | </span>
+        <span>Whiteboard count: {{deviceUsage.dayData.wbCount}} | </span>
+        <span>Shared count: {{deviceUsage.dayData.sharedCount}} | </span>
+        <span>Paired count: {{deviceUsage.dayData.pairedCount}} | </span>
+        <span>Device count: {{deviceUsage.dayData.devices.length}}</span>
+    </div>
+  </div>
 </div>
-
