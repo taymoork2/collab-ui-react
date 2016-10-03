@@ -108,5 +108,5 @@
     "date": ""
   },
   "usageOptions": ["weeklyUsage", "monthlyUsage", "threeMonthUsage"],
-  "altUsageOptions": ["dailyUsage", "monthlyUsage", "threeMonthUsage", "yearlyUsage"]
+  "altUsageOptions": ["dailyUsage", "monthlyUsage", "yearlyUsage"]
 }

@@ -2,6 +2,10 @@ resource-group-card {
   display: block;
   width: 100%;
 
+  .icon-warning.danger {
+    color: $color-negative-base;
+  }
+
   .cs-card-layout {
     padding-bottom: 0 !important;
     margin: 0 !important;
@@ -39,12 +43,13 @@ resource-group-card {
       }
     }
 
-    .resource-group-release-channel {
+    .resource-group-release-channel,
+    .resource-group-release-cluster-number {
       font-size: 14px;
       margin-right: 1.25rem;
     }
 
-    .resource-group-release-cluster-number {
+    .resource-group-release-cluster-users {
       font-size: 14px;
     }
 
@@ -63,6 +68,10 @@ resource-group-card {
       background-color: $color-attention-lighter;
       padding: 0.75rem;
       text-align: center;
+    }
+
+    .resource-group-banner-error {
+      background-color: $color-negative-lighter;
     }
 
     .resource-group-banner-message {

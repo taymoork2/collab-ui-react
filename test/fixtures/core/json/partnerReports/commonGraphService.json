@@ -63,7 +63,7 @@
     },
     "export": {
       "enabled": true,
-      "position": "top-left",
+      "position": "bottom-right",
       "libs": {
         "autoLoad": false
       },
@@ -95,7 +95,11 @@
       "prefix": "T"
     }],
     "scroll": {
-      "autoGridCount": true
+      "autoGridCount": true, "scrollbarHeight": 2,
+      "backgroundAlpha": 1,
+      "backgroundColor": "#EBEBEC",
+      "selectedBackgroundColor": "#049FD9",
+      "selectedBackgroundAlpha": 1
     }
   },
   "getBaseSerialGraph": {

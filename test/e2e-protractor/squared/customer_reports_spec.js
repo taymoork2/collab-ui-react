@@ -40,7 +40,6 @@ describe('Customer Reports', function () {
       // Active Users
       utils.expectIsDisplayed(reports.activeHeader);
       utils.expectIsDisplayed(reports.activeCustomerDescription);
-      utils.expectTextToBeSet(reports.activeCustomerDescription, lowerTime[0]);
       utils.expectIsDisplayed(reports.activeUsers);
 
       // Most Active Users
@@ -139,7 +138,6 @@ describe('Customer Reports', function () {
       // Active Users
       utils.expectIsDisplayed(reports.activeHeader);
       utils.expectIsDisplayed(reports.activeCustomerDescription);
-      utils.expectTextToBeSet(reports.activeCustomerDescription, lowerTime[1]);
       utils.expectIsDisplayed(reports.activeUsers);
 
       // Most Active Users
