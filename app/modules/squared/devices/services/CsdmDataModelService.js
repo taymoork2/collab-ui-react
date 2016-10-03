@@ -2,9 +2,10 @@
   'use strict';
 
   /* @ngInject  */
-  function CsdmDataModelService($q, CsdmCacheUpdater, CsdmDeviceService, CsdmCodeService, CsdmPlaceService, CsdmHuronOrgDeviceService, CsdmPoller, CsdmConverter, CsdmHubFactory, Authinfo) {
+  function CsdmDataModelService($q, CsdmCacheUpdater, CsdmDeviceService, CsdmCodeService, CsdmPlaceService, CsdmHuronOrgDeviceService, CsdmHuronPlaceService, CsdmPoller, CsdmConverter, CsdmHubFactory, Authinfo) {
 
     var placesUrl = CsdmPlaceService.getPlacesUrl();
+    var huronPlacesUrl = CsdmHuronPlaceService.getPlacesUrl();
 
     var csdmHuronOrgDeviceService = CsdmHuronOrgDeviceService.create(Authinfo.getOrgId());
 
@@ -37,7 +38,6 @@
           });
         })
           .finally(function () {
-            //TODO: Update places? reuse updatePlaceMapFromDeviceMapAndSetLoaded
             huronDevicesLoaded = true;
           });
 
@@ -112,6 +112,18 @@
           accountsFetchedDeferred.resolve(placesDataModel);
         });
 
+
+      CsdmHuronPlaceService.getPlacesList()
+        .then(function (huronPlaces) {
+          _.each(_.values(huronPlaces), function (a) {
+            addOrUpdatePlaceInDataModel(a);
+          });
+        })
+        .finally(function () {
+          //        accountsFetchedDeferred.resolve(placesDataModel);
+        });
+
+
       return accountsFetchedDeferred.promise;
     }
 
@@ -157,17 +169,27 @@
               delete theDeviceMap[code.url];
             });
           } else {
-            var device = theDeviceMap[item.url];
-            delete theDeviceMap[item.url];
-            if (placesDataModel[placesUrl + device.cisUuid]) { // we currently delete the place when delete device
 
-              delete placesDataModel[placesUrl + device.cisUuid].devices[item.url];  //delete all devices and codes in the place
-              delete placesDataModel[placesUrl + device.cisUuid].codes[item.url];
-              delete placesDataModel[placesUrl + device.cisUuid];
+            delete theDeviceMap[item.url];
+
+            var placeUrl = getPlaceUrl(item);
+            if (placesDataModel[placeUrl]) { // we currently delete the place when delete device
+
+              delete placesDataModel[placeUrl].devices[item.url];  //delete all devices and codes in the place
+              delete placesDataModel[placeUrl].codes[item.url];
+              delete placesDataModel[placeUrl];
 
             }
           }
         });
+    }
+
+    function getPlaceUrl(item) {
+      if (item.type == 'huron') {
+        return huronPlacesUrl + item.cisUuid;
+      } else {
+        return placesUrl + item.cisUuid;
+      }
     }
 
     function createCsdmPlace(name, type) {
@@ -197,7 +219,7 @@
 
       return service.updateItemName(objectToUpdate, newName)
         .then(function () {
-          var placeUrl = placesUrl + objectToUpdate.cisUuid;
+          var placeUrl = getPlaceUrl(objectToUpdate);
           placesDataModel[placeUrl].displayName = newName;
           var device = theDeviceMap[objectToUpdate.url];
           device.displayName = newName;
@@ -259,7 +281,8 @@
 
     function addOrUpdatePlaceInDataModel(item) {
 
-      var newPlaceUrl = placesUrl + item.cisUuid;
+      var newPlaceUrl = getPlaceUrl(item);
+
       var existingPlace = placesDataModel[newPlaceUrl];
       if (!existingPlace) {
         existingPlace = CsdmConverter.convertPlace({ url: newPlaceUrl, isPlace: true, devices: {}, codes: {} });

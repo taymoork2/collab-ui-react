@@ -8,24 +8,29 @@ describe('Service: CsdmDataModelService', function () {
   var $rootScope;
   var $timeout;
 
+  var placesUrl = 'https://csdm-integration.wbx2.com/csdm/api/v1/organization/testOrg/places/';
   var pWithoutDeviceUuid = '938d9c32-placeWithoutDevice-88d7c1a7f63e';
-  var pWithoutDeviceUrl = 'https://csdm-integration.wbx2.com/csdm/api/v1/organization/testOrg/places/938d9c32-placeWithoutDevice-88d7c1a7f63e';
-  var pWithDeviceUrl = 'https://csdm-integration.wbx2.com/csdm/api/v1/organization/testOrg/places/a19b308a-PlaceWithDevice-71898e423bec';
+  var pWithoutDeviceUrl = placesUrl + '938d9c32-placeWithoutDevice-88d7c1a7f63e';
+  var pWithDeviceUrl = placesUrl + 'a19b308a-PlaceWithDevice-71898e423bec';
   var device1Url = 'https://csdm-integration.wbx2.com/csdm/api/v1/organization/584cf4cd-eea7-4c8c-83ee-67d88fc6eab5/devices/c528e32d-ed35-4e00-a20d-d4d3519efb4f';
   var devicesUrl = 'https://csdm-integration.wbx2.com/csdm/api/v1/organization/testOrg/devices';
 
   var codeUrl = 'https://csdm-integration.wbx2.com/csdm/api/v1/organization/584cf4cd-eea7-4c8c-83ee-67d88fc6eab5/codes/ad233bb2-code1-for-place-with-one-code-9333278b3a0c';
+  var pWithOnlyCodeUrl = placesUrl + 'a19b308a-PlaceWithOnlyCode-71898e423bec';
 
-  var pWithOnlyCodeUrl = 'https://csdm-integration.wbx2.com/csdm/api/v1/organization/testOrg/places/a19b308a-PlaceWithOnlyCode-71898e423bec';
-  var pWithHuronDevice2Url = 'https://csdm-integration.wbx2.com/csdm/api/v1/organization/testOrg/places/68351854-Place2WithHuronDevice-c9c844421ec2';
-  var huronDevice2Url = 'https://cmi.huron-int.com/api/v1/voice/customers/3a6ff373-unittest-a27460e0ac5c/sipendpoints/2c586b22-hurondev_inplace2-ace151f631fa';
   var huronDevicesUrl = 'https://csdm-integration.wbx2.com/csdm/api/v1/organization/testOrg/huronDevices';
+  var huronPlacesUrl = 'https://cmi.huron-int.com/api/v2/customers/testOrg/places/';
+  var pWithHuronDevice2Url = huronPlacesUrl + '68351854-Place2WithHuronDevice-c9c844421ec2';
+  var huronDevice2Url = 'https://cmi.huron-int.com/api/v1/voice/customers/3a6ff373-unittest-a27460e0ac5c/sipendpoints/2c586b22-hurondev_inplace2-ace151f631fa';
+  var huronPlaceWithoutDeviceUrl = huronPlacesUrl + '938d9c32-huronPlaceWithoutDevice-88d7c1a7f63ev';
 
   var initialDeviceMap;
   var initialDevice1Reference;
   var initialDeviceCount;
+  var initialPlaceMap;
   var initialPlaceCount;
 
+  var initialHuronPlaces = getJSONFixture('squared/json/huronPlaces.json');
   var initialHuronDevices = getJSONFixture('squared/json/huronDevices.json');
   var initialHttpDevices = getJSONFixture('squared/json/devices.json');
   var codes = getJSONFixture('squared/json/activationCodes.json');
@@ -45,6 +50,7 @@ describe('Service: CsdmDataModelService', function () {
     $httpBackend.whenGET(devicesUrl + '?checkDisplayName=false&checkOnline=false').respond(initialHttpDevices);
     $httpBackend.whenGET(devicesUrl).respond(initialHttpDevices);
     $httpBackend.whenGET(huronDevicesUrl).respond(initialHuronDevices);
+    $httpBackend.whenGET(huronPlacesUrl + '?wide=true').respond(initialHuronPlaces);
     $httpBackend.whenGET('https://csdm-integration.wbx2.com/csdm/api/v1/organization/testOrg/codes').respond(codes);
     $httpBackend.whenGET('https://csdm-integration.wbx2.com/csdm/api/v1/organization/testOrg/places/').respond(accounts);
     $httpBackend.whenGET('https://identity.webex.com/identity/scim/testOrg/v1/Users/me').respond({});
@@ -59,17 +65,20 @@ describe('Service: CsdmDataModelService', function () {
   function executeGetCallsAndInitPromises() {
     var initialDeviceMapPromise = CsdmDataModelService.getDevicesMap();
 
-    CsdmDataModelService.getPlacesMap().then(function () {
+    CsdmDataModelService.getPlacesMap().then(function (placesMap) {
+      initialPlaceMap = placesMap;
       initialDeviceMapPromise.then(function (deviceMap) {
         initialDeviceMap = deviceMap;
         initialDevice1Reference = initialDeviceMap[device1Url];
         initialDeviceCount = Object.keys(initialDeviceMap).length;
-        initialPlaceCount = 5;//Object.keys(initialPlaceMap).length;
       });
     });
 
     $httpBackend.flush();
     $rootScope.$apply();
+
+    //Not inside the getPlacesMap promise, but will be run by http flush:
+    initialPlaceCount = Object.keys(initialPlaceMap).length;
   }
 
   describe('devices', function () {
@@ -186,9 +195,11 @@ describe('Service: CsdmDataModelService', function () {
       CsdmDataModelService.getDevicesMap().then(function (deviceMap) {
         CsdmDataModelService.getPlacesMap().then(function (places) {
 
-          expect(Object.keys(places[pWithoutDeviceUrl].devices).length).toBe(0);//superfluous
+          expect(Object.keys(places[pWithoutDeviceUrl].devices).length).toBe(0);
+          expect(Object.keys(places[pWithoutDeviceUrl].codes).length).toBe(0);
 
-          CsdmDataModelService.createCodeForExisting("codetobeadded").then(function (createdCode) {
+          CsdmDataModelService.createCodeForExisting(pWithoutDeviceUuid).then(function (createdCode) {
+
             expect(deviceMap[codeToAddUrl]).toBe(createdCode);
             expect(Object.keys(places[pWithoutDeviceUrl].devices).length).toBe(0);
             expect(Object.keys(places[pWithoutDeviceUrl].codes).length).toBe(1);
@@ -522,6 +533,7 @@ describe('Service: CsdmDataModelService', function () {
       expect(promiseExecuted).toBeTruthy();
     });
 
+
     it('failing to remove a device tag is not reflected in device list and place list', function () {
       var deviceUrlToUpdate = "https://csdm-integration.wbx2.com/csdm/api/v1/organization/584cf4cd-eea7-4c8c-83ee-67d88fc6eab5/devices/b528e32d-ed35-4e00-a20d-d4d3519efb4f";
       var promiseExecuted;
@@ -572,6 +584,59 @@ describe('Service: CsdmDataModelService', function () {
         expect(_.values(places).length).toBe(initialPlaceCount);
         expect(Object.keys(places[pWithDeviceUrl].devices).length).toBe(3);
         expect(Object.keys(places[pWithDeviceUrl].codes).length).toBe(2);
+        expectExecuted = true;
+      });
+      $rootScope.$digest();
+      expect(expectExecuted).toBe(true);
+    });
+
+    it('should return a list of places where places generated from a device should contain all place fields', function () {
+      var expectExecuted;
+      CsdmDataModelService.getPlacesMap().then(function (places) {
+
+        expect(Object.keys(places[pWithDeviceUrl].devices).length).toBe(3);
+        expect(Object.keys(places[pWithDeviceUrl].codes).length).toBe(2);
+
+        expect(places[pWithDeviceUrl].displayName).toBe('PlaceWithDevice');
+        expect(places[pWithDeviceUrl].type).toBe('cloudberry');
+        expect(places[pWithDeviceUrl].readableType).toBe('addDeviceWizard.chooseDeviceType.roomSystem');
+        expect(places[pWithDeviceUrl].sipUrl).toBe('foodelete1@trialorg.room.ciscospark.com');
+        expect(places[pWithDeviceUrl].cisUuid).toBe('a19b308a-PlaceWithDevice-71898e423bec');
+        expectExecuted = true;
+      });
+      $rootScope.$digest();
+      expect(expectExecuted).toBe(true);
+    });
+
+    it('should return a list of places where places generated from a account should contain all place fields', function () {
+      var expectExecuted;
+      CsdmDataModelService.getPlacesMap().then(function (places) {
+
+        expect(Object.keys(places[pWithoutDeviceUrl].devices).length).toBe(0);
+        expect(Object.keys(places[pWithoutDeviceUrl].codes).length).toBe(0);
+
+        expect(places[pWithoutDeviceUrl].displayName).toBe('PlaceWithoutMissingNonExistingDevice');
+        expect(places[pWithoutDeviceUrl].type).toBe('cloudberry');
+        expect(places[pWithoutDeviceUrl].readableType).toBe('addDeviceWizard.chooseDeviceType.roomSystem');
+        expect(places[pWithoutDeviceUrl].sipUrl).toBe('foodelete2@trialorg.room.ciscospark.com');
+        expect(places[pWithoutDeviceUrl].cisUuid).toBe('938d9c32-placeWithoutDevice-88d7c1a7f63e');
+        expectExecuted = true;
+      });
+      $rootScope.$digest();
+      expect(expectExecuted).toBe(true);
+    });
+
+    it('should return a list of places where places generated from a huron account should contain all place fields', function () {
+      var expectExecuted;
+      CsdmDataModelService.getPlacesMap().then(function (places) {
+
+        expect(Object.keys(places[huronPlaceWithoutDeviceUrl].devices).length).toBe(0);
+        expect(Object.keys(places[huronPlaceWithoutDeviceUrl].codes).length).toBe(0);
+
+        expect(places[huronPlaceWithoutDeviceUrl].displayName).toBe('HuronPlaceWithoutDevices');
+        expect(places[huronPlaceWithoutDeviceUrl].type).toBe('huron');
+        expect(places[huronPlaceWithoutDeviceUrl].readableType).toBe('addDeviceWizard.chooseDeviceType.deskPhone');
+        expect(places[huronPlaceWithoutDeviceUrl].cisUuid).toBe('938d9c32-huronPlaceWithoutDevice-88d7c1a7f63ev');
         expectExecuted = true;
       });
       $rootScope.$digest();

@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Controller: RemDeviceController', function () {
-  var controller, $q, $rootScope, $httpBackend, CsdmCodeService, CsdmDeviceService, CsdmHuronOrgDeviceService, CsdmHuronDeviceService, CsdmUnusedAccountsService, deviceOrCode;
+  var controller, $q, $rootScope, $httpBackend, CsdmCodeService, CsdmDeviceService, CsdmHuronDeviceService, CsdmUnusedAccountsService, deviceOrCode;
   var fakeModal = {
     close: sinon.stub()
   };
@@ -17,12 +17,6 @@ describe('Controller: RemDeviceController', function () {
   beforeEach(angular.mock.module('Sunlight'));
   beforeEach(inject(function (FeatureToggleService, $q, CsdmHuronOrgDeviceService) {
 
-    // CsdmHuronDeviceService = {
-    //   deleteItem: function () {
-    //     return null;
-    //   }
-    // };
-
     CsdmHuronDeviceService = CsdmHuronOrgDeviceService.create();
 
     spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
@@ -31,18 +25,19 @@ describe('Controller: RemDeviceController', function () {
   }));
 
   describe('Expected Responses', function () {
-    beforeEach(inject(function (_$rootScope_, $controller, _$q_, _$httpBackend_, _CsdmCodeService_, _CsdmDeviceService_, _CsdmHuronOrgDeviceService_, _CsdmUnusedAccountsService_, CsdmDataModelService) {
+    beforeEach(inject(function (_$rootScope_, $controller, _$q_, _$httpBackend_, _CsdmCodeService_, _CsdmDeviceService_, _CsdmUnusedAccountsService_, CsdmDataModelService) {
       var initialDevices = getJSONFixture('squared/json/devices.json');
       var codes = getJSONFixture('squared/json/activationCodes.json');
       var accounts = getJSONFixture('squared/json/accounts.json');
       var initialHuronDevices = getJSONFixture('squared/json/huronDevices.json');
+      var initialHuronPlaces = getJSONFixture('squared/json/huronPlaces.json');
+      var huronPlacesUrl = 'https://cmi.huron-int.com/api/v2/customers/null/places/';
 
       $q = _$q_;
       $rootScope = _$rootScope_;
       $httpBackend = _$httpBackend_;
       CsdmCodeService = _CsdmCodeService_;
       CsdmDeviceService = _CsdmDeviceService_;
-      CsdmHuronOrgDeviceService = _CsdmHuronOrgDeviceService_;
       CsdmUnusedAccountsService = _CsdmUnusedAccountsService_;
 
       $httpBackend.whenGET('https://identity.webex.com/identity/scim/null/v1/Users/me').respond({});
@@ -52,7 +47,7 @@ describe('Controller: RemDeviceController', function () {
       $httpBackend.whenGET('https://csdm-integration.wbx2.com/csdm/api/v1/organization/null/nonExistingDevices').respond([]);
       $httpBackend.whenGET('https://csdm-integration.wbx2.com/csdm/api/v1/organization/null/codes').respond(codes);
       $httpBackend.whenGET('https://csdm-integration.wbx2.com/csdm/api/v1/organization/null/places/').respond(accounts);
-
+      $httpBackend.whenGET(huronPlacesUrl + '?wide=true').respond(initialHuronPlaces);
 
       spyOn(CsdmCodeService, 'deleteItem').and.returnValue($q.when());
       spyOn(CsdmDeviceService, 'deleteItem').and.returnValue($q.when());
