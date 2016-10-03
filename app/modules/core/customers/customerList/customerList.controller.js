@@ -339,7 +339,7 @@
         // (This check is taken care of in the compactServiceColumn directive)
         if (!$scope.isCareEnabled) {
           _.remove($scope.gridColumns, careField);
-          _.remove($scope.filter, { value: 'care' });
+          _.remove($scope.filter.options, { value: 'care' });
         }
       }, function () {
         // FIXME: Remove this if block once the customer list refactor goes live
