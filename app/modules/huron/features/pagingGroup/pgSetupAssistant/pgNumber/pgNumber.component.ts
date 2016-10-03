@@ -27,7 +27,7 @@ class PagingNumberCtrl implements ng.IComponentController {
       if (promise) {
         promise.then(
           (data: any) => {
-            this.availableNumbers = data.numbers;
+            this.availableNumbers = data;
             this.errorNumberInput = (this.availableNumbers && this.availableNumbers.length === 0);
             this.onUpdate({
               number: {

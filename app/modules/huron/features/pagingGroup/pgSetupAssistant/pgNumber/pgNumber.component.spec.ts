@@ -26,8 +26,6 @@ describe('Component: pgNumber setup', () => {
     spyOn(this.Authinfo, 'getOrgId').and.returnValue('12345');
   });
 
-  beforeEach(installPromiseMatchers);
-
   afterEach(function () {
     this.$httpBackend.verifyNoOutstandingExpectation();
     this.$httpBackend.verifyNoOutstandingRequest();

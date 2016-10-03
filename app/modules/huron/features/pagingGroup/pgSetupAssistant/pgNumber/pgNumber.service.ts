@@ -17,7 +17,7 @@ export class PagingNumberService {
       customerId: this.Authinfo.getOrgId(),
       number: hint,
       assigned: false,
-    }).$promise;
+    }).$promise.then((response) => response.numbers);
   }
 
 }

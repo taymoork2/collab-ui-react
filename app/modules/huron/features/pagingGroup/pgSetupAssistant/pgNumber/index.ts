@@ -7,7 +7,6 @@ export default angular
   .module('huron.paging-group.number', [
     'atlas.templates',
     'cisco.ui',
-    'huron.config',
     require('angular-resource'),
     require('modules/huron/telephony/cmiServices'),
     require('modules/huron/telephony/telephonyConfig'),
