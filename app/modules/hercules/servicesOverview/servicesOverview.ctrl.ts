@@ -27,10 +27,6 @@ export class ServicesOverviewCtrl {
         this.forwardEvent('hybridStatusEventHandler', services);
       });
 
-    this.FeatureToggleService.supports(this.FeatureToggleService.features.atlasHybridServicesResourceList).then(supports => {
-      this.forwardEvent('f410FeatureEventHandler', supports);
-    });
-
     this.FeatureToggleService.supports(this.FeatureToggleService.features.atlasMediaServiceOnboarding).then(supports => {
       this.forwardEvent('hybridMediaFeatureToggleEventHandler', supports);
     });
