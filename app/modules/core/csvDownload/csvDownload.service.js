@@ -68,7 +68,7 @@
       if (newUserExportToggle) {
         url = Utils.sprintf(userExportUrl, [typeReport]);
         return generateUserReport(url).then(function (response) {
-          if (response.status === 201 && response.data.id) {
+          if ((response.status === 201 || response.status === 202) && response.data.id) {
             url = url + '/' + response.data.id;
             return getUserReport(url).then(function (csvData) {
               return createObjectUrl(csvData.data, typeUser, fileName);
