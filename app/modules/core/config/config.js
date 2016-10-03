@@ -364,6 +364,7 @@
         'hurondetails',
         'huronfeatures',
         'huronHuntGroup',
+        'huronPagingGroup',
         'huronlines',
         'huronnewfeature',
         'huronsettings',

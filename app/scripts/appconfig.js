@@ -2369,6 +2369,21 @@
             params: {
               feature: null
             }
+          })
+          .state('huronPagingGroup', {
+            url: '/huronPagingGroup',
+            views: {
+              'main@': {
+                template: '<pg-setup-assistant></pg-setup-assistant>',
+              }
+            },
+            resolve: {
+              lazy: /* @ngInject */ function lazyLoad($q, $ocLazyLoad) {
+                return $q(function resolveLogin(resolve) {
+                  require(['modules/huron/features/pagingGroup/pgSetupAssistant'], loadModuleAndResolve($ocLazyLoad, resolve));
+                });
+              }
+            }
           });
 
         $stateProvider
