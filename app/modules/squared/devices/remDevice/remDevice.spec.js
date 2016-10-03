@@ -47,7 +47,7 @@ describe('Controller: RemDeviceController', function () {
       $httpBackend.whenGET('https://csdm-integration.wbx2.com/csdm/api/v1/organization/null/nonExistingDevices').respond([]);
       $httpBackend.whenGET('https://csdm-integration.wbx2.com/csdm/api/v1/organization/null/codes').respond(codes);
       $httpBackend.whenGET('https://csdm-integration.wbx2.com/csdm/api/v1/organization/null/places/').respond(accounts);
-      $httpBackend.whenGET(huronPlacesUrl + '?wide=true').respond(initialHuronPlaces);
+      $httpBackend.whenGET(huronPlacesUrl).respond(initialHuronPlaces);
 
       spyOn(CsdmCodeService, 'deleteItem').and.returnValue($q.when());
       spyOn(CsdmDeviceService, 'deleteItem').and.returnValue($q.when());

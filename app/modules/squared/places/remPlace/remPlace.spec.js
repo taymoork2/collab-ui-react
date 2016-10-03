@@ -43,7 +43,7 @@ describe('Controller: RemPlaceController', function () {
       $httpBackend.whenGET('https://csdm-integration.wbx2.com/csdm/api/v1/organization/testOrg/codes').respond(codes);
       $httpBackend.whenGET('https://csdm-integration.wbx2.com/csdm/api/v1/organization/testOrg/places/').respond(accounts);
       $httpBackend.whenGET('https://csdm-integration.wbx2.com/csdm/api/v1/organization/testOrg/huronDevices').respond([]);
-      $httpBackend.whenGET(huronPlacesUrl + '?wide=true').respond(initialHuronPlaces);
+      $httpBackend.whenGET(huronPlacesUrl).respond(initialHuronPlaces);
 
       spyOn(CsdmPlaceService, 'deleteItem').and.returnValue($q.when());
       spyOn(CsdmHuronPlaceService, 'deletePlace').and.returnValue($q.when());

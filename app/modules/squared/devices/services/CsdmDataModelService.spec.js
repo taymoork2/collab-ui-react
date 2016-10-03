@@ -52,7 +52,7 @@ describe('Service: CsdmDataModelService', function () {
     $httpBackend.whenGET(devicesUrl + '?checkDisplayName=false&checkOnline=false').respond(initialHttpDevices);
     $httpBackend.whenGET(devicesUrl).respond(initialHttpDevices);
     $httpBackend.whenGET(huronDevicesUrl).respond(initialHuronDevices);
-    $httpBackend.whenGET(huronPlacesUrl + '?wide=true').respond(initialHuronPlaces);
+    $httpBackend.whenGET(huronPlacesUrl).respond(initialHuronPlaces);
     $httpBackend.whenGET('https://csdm-integration.wbx2.com/csdm/api/v1/organization/testOrg/codes').respond(codes);
     $httpBackend.whenGET('https://csdm-integration.wbx2.com/csdm/api/v1/organization/testOrg/places/').respond(accounts);
     $httpBackend.whenGET('https://identity.webex.com/identity/scim/testOrg/v1/Users/me').respond({});
