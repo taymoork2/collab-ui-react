@@ -1,9 +1,6 @@
-import {
-  CallForwardAll,
-  CallForwardBusy,
-} from './callForward';
+import { CallForward, CallForwardAll, CallForwardBusy } from './callForward';
 
-class CallForward implements ng.IComponentController {
+class CallForwardCtrl implements ng.IComponentController {
   public static ALL: string = 'all';
   public static BUSY: string = 'busy';
   public static NONE: string = 'none';
@@ -17,102 +14,126 @@ class CallForward implements ng.IComponentController {
   public forwardOptions: string[] = [];
 
   public voicemailEnabled: boolean;
-  public callForwardAll: CallForwardAll;
-  public callForwardBusy: CallForwardBusy;
+  public callForward: CallForward;
   public onChangeFn: Function;
 
-  public $onInit(): void {
-    this.initForwardOptions();
-    this.initCallForward();
-  }
+  public $onChanges(changes: { [bindings: string]: ng.IChangesObject }): void {
+    let callForwardChanges = changes['callForward'];
+    let voicemailEnabledChanges = changes['voicemailEnabled'];
 
-  private initForwardOptions(): void {
-    if (this.voicemailEnabled) {
+    if (voicemailEnabledChanges && voicemailEnabledChanges.currentValue) {
       this.forwardOptions.push('Voicemail');
     }
 
-    if (this.callForwardAll.destination) {
-      this.forwardOptions.push(this.callForwardAll.destination);
-    }
-
-    if (this.callForwardBusy.intDestination) {
-      this.forwardOptions.push(this.callForwardBusy.intDestination);
-    }
-
-    if (this.callForwardBusy.destination) {
-      this.forwardOptions.push(this.callForwardBusy.destination);
+    if (callForwardChanges && callForwardChanges.currentValue) {
+      this.processForwardOptionsChange(callForwardChanges);
+      this.processCallForwardChanges(callForwardChanges);
     }
   }
 
-  private initCallForward(): void {
-    if (this.callForwardAll.destination || this.callForwardAll.voicemailEnabled) {
-      this.forwardState = CallForward.ALL;
-      this.forwardAllCalls = this.callForwardAll.voicemailEnabled ? _.capitalize(CallForward.VOICEMAIL) : this.callForwardAll.destination;
-    } else if (this.callForwardBusy.intDestination ||
-                this.callForwardBusy.intVoiceMailEnabled ||
-                this.callForwardBusy.destination ||
-                this.callForwardBusy.voicemailEnabled) {
-      this.forwardState = CallForward.BUSY;
-      this.forwardNABCalls = this.callForwardBusy.intVoiceMailEnabled ? _.capitalize(CallForward.VOICEMAIL) : this.callForwardBusy.intDestination;
-      if (this.callForwardBusy.destination ||
-          this.callForwardBusy.voicemailEnabled) {
+  private processForwardOptionsChange(callForwardChanges: ng.IChangesObject) {
+    if (callForwardChanges.currentValue.callForwardAll.destination) {
+      this.addForwardOption(callForwardChanges.currentValue.callForwardAll.destination);
+    }
+
+    if (callForwardChanges.currentValue.callForwardBusy.internalDestination) {
+      this.addForwardOption(callForwardChanges.currentValue.callForwardBusy.internalDestination);
+    }
+
+    if (callForwardChanges.currentValue.callForwardBusy.externalDestination) {
+      this.addForwardOption(callForwardChanges.currentValue.callForwardBusy.externalDestination);
+    }
+  }
+
+  private processCallForwardChanges(callForwardChanges: ng.IChangesObject) {
+    if (callForwardChanges.currentValue.callForwardAll.destination || callForwardChanges.currentValue.callForwardAll.voicemailEnabled) {
+      this.forwardState = CallForwardCtrl.ALL;
+      this.forwardAllCalls = callForwardChanges.currentValue.callForwardAll.voicemailEnabled ? _.capitalize(CallForwardCtrl.VOICEMAIL) : callForwardChanges.currentValue.callForwardAll.destination;
+    } else if (callForwardChanges.currentValue.callForwardBusy.internalDestination ||
+                callForwardChanges.currentValue.callForwardBusy.internalVoicemailEnabled ||
+                callForwardChanges.currentValue.callForwardBusy.externalDestination ||
+                callForwardChanges.currentValue.callForwardBusy.externalVoicemailEnabled) {
+      this.forwardState = CallForwardCtrl.BUSY;
+      this.forwardNABCalls = callForwardChanges.currentValue.callForwardBusy.internalVoicemailEnabled ? _.capitalize(CallForwardCtrl.VOICEMAIL) : callForwardChanges.currentValue.callForwardBusy.internalDestination;
+      if (callForwardChanges.currentValue.callForwardBusy.externalDestination ||
+          callForwardChanges.currentValue.callForwardBusy.externalVoicemailEnabled) {
         this.forwardExternalCalls = true;
-        this.forwardExternalNABCalls = this.callForwardBusy.voicemailEnabled ? _.capitalize(CallForward.VOICEMAIL) : this.callForwardBusy.destination;
+        this.forwardExternalNABCalls = callForwardChanges.currentValue.callForwardBusy.externalVoicemailEnabled ? _.capitalize(CallForwardCtrl.VOICEMAIL) : callForwardChanges.currentValue.callForwardBusy.externalDestination;
       }
     } else {
-      this.forwardState = CallForward.NONE;
+      this.forwardState = CallForwardCtrl.NONE;
+    }
+  }
+
+  private addForwardOption(value: string): void {
+    if (!_.includes(this.forwardOptions, value)) {
+      this.forwardOptions.push(value);
     }
   }
 
   public onCallFwdNoneChange(): void {
-    this.change(new CallForwardAll(), new CallForwardBusy());
+    this.change(new CallForward());
   }
 
   public onCallFwdAllChange(destination: string): void {
     let callForwardAll: CallForwardAll = new CallForwardAll();
-    if (this.forwardAllCalls.toLowerCase() === CallForward.VOICEMAIL) {
+    if (this.forwardAllCalls.toLowerCase() === CallForwardCtrl.VOICEMAIL) {
       callForwardAll.voicemailEnabled = true;
+      callForwardAll.destination = null;
     } else {
-      callForwardAll.destination = destination;
+      callForwardAll.destination = (destination) ? destination : this.forwardAllCalls;
     }
-    this.change(callForwardAll , new CallForwardBusy());
+    this.callForward.callForwardAll = callForwardAll;
+    this.callForward.callForwardBusy = new CallForwardBusy();
+
+    this.change(this.callForward);
   }
 
   public onCallFwdBusyChange(destination: string): void {
     let callForwardBusy: CallForwardBusy = new CallForwardBusy();
-    if (this.forwardNABCalls.toLowerCase() === CallForward.VOICEMAIL) {
-      callForwardBusy.intVoiceMailEnabled = true;
+    if (this.forwardNABCalls.toLowerCase() === CallForwardCtrl.VOICEMAIL) {
+      callForwardBusy.internalVoicemailEnabled = true;
+      callForwardBusy.internalDestination = null;
     } else {
-      callForwardBusy.intDestination = destination;
+      callForwardBusy.internalDestination = (destination) ? destination : this.forwardNABCalls;
     }
-    this.change(new CallForwardAll(), callForwardBusy);
+    this.callForward.callForwardAll = new CallForwardAll();
+    this.callForward.callForwardBusy = callForwardBusy;
+    this.change(this.callForward);
   }
 
   public onCallFwdBusyExternal(destination: string): void {
-    let callForwardBusy: CallForwardBusy = new CallForwardBusy();
-    if (this.forwardExternalNABCalls.toLowerCase() === CallForward.VOICEMAIL) {
-      callForwardBusy.voicemailEnabled = true;
+    let callForwardBusy: CallForwardBusy = _.cloneDeep(this.callForward.callForwardBusy);
+    if (this.forwardExternalCalls) {
+      if (this.forwardExternalNABCalls.toLowerCase() === CallForwardCtrl.VOICEMAIL) {
+        callForwardBusy.externalVoicemailEnabled = true;
+        callForwardBusy.externalDestination = null;
+      } else {
+        callForwardBusy.externalVoicemailEnabled = false;
+        callForwardBusy.externalDestination = (destination) ? destination : this.forwardExternalNABCalls;
+      }
     } else {
-      callForwardBusy.destination = destination;
+      callForwardBusy.externalVoicemailEnabled = false;
+      callForwardBusy.externalDestination = null;
     }
-    this.change(new CallForwardAll(), callForwardBusy);
+    this.callForward.callForwardBusy = callForwardBusy;
+    this.callForward.callForwardAll = new CallForwardAll();
+    this.change(this.callForward);
   }
 
-  private change(callForwardAll: CallForwardAll, callForwardBusy: CallForwardBusy): void {
+  private change(callForward: CallForward): void {
     this.onChangeFn({
-      callForwardAll: callForwardAll,
-      callForwardBusy: callForwardBusy,
+      callForward: callForward,
     });
   }
 }
 
 export class CallForwardComponent implements ng.IComponentOptions {
-  public controller = CallForward;
+  public controller = CallForwardCtrl;
   public templateUrl = 'modules/huron/callForward/callForward.html';
-  public bindings = <{ [binding: string]: string }>{
+  public bindings = {
     voicemailEnabled: '<',
-    callForwardAll: '<',
-    callForwardBusy: '<',
+    callForward: '<',
     onChangeFn: '&',
   };
 }

@@ -1,4 +1,4 @@
-import { CallForwardAll, CallForwardBusy } from '../../callForward/callForward';
+import { CallForward } from '../../callForward';
 import { BLOCK_CALLERID_TYPE, CUSTOM_COMPANY_TYPE, CallerIdConfig, CallerIdOption } from '../../callerId';
 import { SharedLineUser, User, SharedLineDevice } from '../../sharedLine';
 import { LineService, LineConsumerType, LINE_CHANGE, Line } from '../services';
@@ -29,8 +29,6 @@ class LineOverview implements ng.IComponentController {
 
   // Call Forward properties
   public voicemailEnabled: boolean;
-  public callForwardAll: CallForwardAll;
-  public callForwardBusy: CallForwardBusy;
 
   // Simultaneous Calls properties
   public incomingCallMaximum: number;
@@ -53,7 +51,6 @@ class LineOverview implements ng.IComponentController {
 
   // Data from services
   public lineOverviewData: LineOverviewData;
-  public lineOverviewDataCopy: LineOverviewData;
 
   /* @ngInject */
   constructor(
@@ -75,8 +72,7 @@ class LineOverview implements ng.IComponentController {
   public $onInit(): void {
     this.initActions();
     this.initConsumerType();
-    this.initDirectoryNumber();
-    this.initCallForward();
+    this.initLineOverviewData();
     this.initCallerId();
   }
 
@@ -89,15 +85,14 @@ class LineOverview implements ng.IComponentController {
     }];
   }
 
-  private initDirectoryNumber(): void {
+  private initLineOverviewData(): void {
     this.showExtensions = true;
     this.DirectoryNumberOptionsService.getInternalNumberOptions()
       .then(numbers => {
         this.internalNumbers = numbers;
-        this.LineOverviewService.getLineOverviewData(this.consumerType, this.ownerId, this.numberId)
+        this.LineOverviewService.get(this.consumerType, this.ownerId, this.numberId)
           .then(lineOverviewData => {
             this.lineOverviewData = lineOverviewData;
-            this.lineOverviewDataCopy = this.cloneLineOverviewData(lineOverviewData);
             this.showActions = this.setShowActionsFlag(this.lineOverviewData.line);
             if (!this.lineOverviewData.line.uuid) { // new line, grab first available internal number
               this.lineOverviewData.line.internal = this.internalNumbers[0];
@@ -110,37 +105,42 @@ class LineOverview implements ng.IComponentController {
     this.DirectoryNumberOptionsService.getExternalNumberOptions().then(numbers => this.externalNumbers = numbers);
   }
 
-  private initCallForward(): void {
-    this.voicemailEnabled = true;
-    this.callForwardAll = new CallForwardAll();
-    this.callForwardBusy = new CallForwardBusy();
-  }
-
   public setDirectoryNumbers(internalNumber: string, externalNumber: string): void {
     this.lineOverviewData.line.internal = internalNumber;
     this.lineOverviewData.line.external = externalNumber;
+    if (this.LineOverviewService.matchesOriginalConfig(this.lineOverviewData)) {
+      this.resetForm();
+    }
   }
 
-  public setCallForward(callForwardAll: CallForwardAll, callForwardBusy: CallForwardBusy): void {
-    this.callForwardAll = callForwardAll;
-    this.callForwardBusy = callForwardBusy;
+  public setCallForward(callForward: CallForward): void {
+    this.lineOverviewData.callForward = callForward;
+    if (this.LineOverviewService.matchesOriginalConfig(this.lineOverviewData)) {
+      this.resetForm();
+    }
   }
 
   public setSimultaneousCalls(incomingCallMaximum: number): void {
     this.lineOverviewData.line.incomingCallMaximum = incomingCallMaximum;
+    if (this.LineOverviewService.matchesOriginalConfig(this.lineOverviewData)) {
+      this.resetForm();
+    }
   }
 
   public setCallerId(callerIdSelected, callerIdName, callerIdNumber): void {
     this.customCallerIdName = callerIdName;
     this.customCallerIdNumber = callerIdNumber;
     this.callerIdSelected = callerIdSelected;
+    if (this.LineOverviewService.matchesOriginalConfig(this.lineOverviewData)) {
+      this.resetForm();
+    }
   }
 
   public onCancel(): void {
     if (!this.lineOverviewData.line.uuid) {
       this.$state.go(this.$state.$current.parent.name);
     } else {
-      this.lineOverviewData = this.cloneLineOverviewData(this.lineOverviewDataCopy);
+      this.lineOverviewData = this.LineOverviewService.getOriginalConfig();
       this.resetForm();
     }
   }
@@ -161,34 +161,18 @@ class LineOverview implements ng.IComponentController {
 
   public saveLine() {
     this.saveInProcess = true;
-    // TODO (jlowery): Figure out what exactly has changed and only update those things
-    if (this.lineOverviewData.line.uuid) {
-      this.LineOverviewService.updateLine(this.consumerType, this.ownerId, this.lineOverviewData.line.uuid, this.lineOverviewData.line)
-        .then( () => {
-          this.$scope.$emit(LINE_CHANGE);
-          this.lineOverviewDataCopy = this.cloneLineOverviewData(this.lineOverviewData);
-          this.Notification.success('directoryNumberPanel.success');
-        })
-        .catch( (response) => this.Notification.errorResponse(response, 'directoryNumberPanel.error'))
-        .finally( () => {
-          this.saveInProcess = false;
-          this.resetForm();
-        });
-    } else {
-      this.LineOverviewService.createLine(this.consumerType, this.ownerId, this.lineOverviewData.line)
-        .then( (line) => {
-          this.$scope.$emit(LINE_CHANGE);
-          this.lineOverviewData.line = line;
-          this.lineOverviewDataCopy = this.cloneLineOverviewData(this.lineOverviewData);
-          this.showActions = this.setShowActionsFlag(line);
-          this.Notification.success('directoryNumberPanel.success');
-        })
-        .catch( (response) => this.Notification.errorResponse(response, 'directoryNumberPanel.error'))
-        .finally( () => {
-          this.saveInProcess = false;
-          this.resetForm();
-        });
-    }
+    this.LineOverviewService.save(this.consumerType, this.ownerId, this.lineOverviewData.line.uuid, this.lineOverviewData)
+      .then( (lineOverviewData) => {
+        this.$scope.$emit(LINE_CHANGE);
+        this.lineOverviewData = lineOverviewData;
+        this.showActions = this.setShowActionsFlag(lineOverviewData.line);
+        this.Notification.success('directoryNumberPanel.success');
+      })
+      .catch( (response) => this.Notification.errorResponse(response, 'directoryNumberPanel.error'))
+      .finally( () => {
+        this.saveInProcess = false;
+        this.resetForm();
+      });
   }
 
   public deleteLine() {
@@ -272,10 +256,6 @@ class LineOverview implements ng.IComponentController {
     this.callerIdOptions.push(new CallerIdOption(this.blockedCallerId_label, new CallerIdConfig('', this.$translate.instant('callerIdPanel.blockedCallerIdDescription'), '', BLOCK_CALLERID_TYPE)));
   }
 
-  private cloneLineOverviewData(lineOverviewData: LineOverviewData): LineOverviewData {
-    return _.cloneDeep(lineOverviewData);
-  }
-
   private setShowActionsFlag(line: Line): boolean {
     return (!!line.uuid && !line.primary);
   }
@@ -296,10 +276,11 @@ class LineOverview implements ng.IComponentController {
 export class LineOverviewComponent implements ng.IComponentOptions {
   public controller = LineOverview;
   public templateUrl = 'modules/huron/lines/lineOverview/lineOverview.html';
-  public bindings = <{ [binding: string]: string }>{
+  public bindings = {
     ownerType: '@',
     ownerId: '@',
     ownerName: '@',
     numberId: '@',
+    voicemailEnabled: '<',
   };
 }
