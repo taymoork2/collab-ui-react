@@ -27,6 +27,30 @@ describe('Service: Trial Device Service:', function () {
       });
     });
 
+    it('should have a longer list for  CISCO_DX80 and contain for example "Germany"', function () {
+      var countries = TrialDeviceService.getCountries(['CISCO_DX80']);
+      expect(countries.length).toBeGreaterThan(1);
+      expect(countries).toContain({
+        country: 'Germany',
+      });
+    });
+
+    it('should have a longer list for CISCO_SX10 and CISCO_DX80 which contain for example "Germany"', function () {
+      var countries = TrialDeviceService.getCountries(['CISCO_SX10', 'CISCO_DX80']);
+      expect(countries.length).toBeGreaterThan(1);
+      expect(countries).toContain({
+        country: 'Germany',
+      });
+    });
+
+    it('should contain only US for MX300', function () {
+      var countries = TrialDeviceService.getCountries(['CISCO_MX300']);
+      expect(countries.length).toBe(1);
+      expect(countries).toContain({
+        country: 'United States',
+      });
+    });
+
     it('should contain only US if unknown device is present', function () {
       var countries = TrialDeviceService.getCountries(['CISCO_SX10', 'SOME_OTHER']);
       expect(countries.length).toBe(1);
