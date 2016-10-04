@@ -86,43 +86,6 @@
       return baseVariables['export'];
     }
 
-    function getBaseExportForUtilizationGraph(fileName, columnNames) {
-      baseVariables['export'] = {
-        'enabled': true,
-        'columnNames': columnNames,
-        'fileName': fileName,
-        'libs': {
-          'autoLoad': false
-        },
-        'menu': [{
-          'class': 'export-main',
-          'label': $translate.instant('reportsPage.downloadOptions'),
-          'menu': [{
-            'label': $translate.instant('reportsPage.saveAs'),
-            'title': $translate.instant('reportsPage.saveAs'),
-            'class': 'export-list',
-            'menu': ['PNG', 'JPG']
-          }, {
-            'label': $translate.instant('reportsPage.pdf'),
-            'title': $translate.instant('reportsPage.pdf'),
-            click: function () {
-              this.capture({}, function () {
-                this.toPDF({}, function (data) {
-                  $window.open(data, 'amCharts.pdf');
-                });
-              });
-            }
-          }, {
-            'class': 'export-list',
-            'label': $translate.instant('reportsPage.export'),
-            'title': $translate.instant('reportsPage.export'),
-            'menu': ['CSV', 'XLSX']
-          }]
-        }]
-      };
-      return baseVariables['export'];
-    }
-
     function createCallVolumeGraph(data, cluster, daterange) {
       // if there are no active users for this user
       if (data === null || data === 'undefined' || data.length === 0) {
@@ -293,6 +256,7 @@
       var columnNames = {
         'time': timeStamp
       };
+      var exportFields = [];
       angular.forEach(graphs, function (value) {
         if (value.title !== average_utilzation) {
           columnNames[value.valueField] = value.title + ' ' + 'Utilization';
@@ -300,11 +264,14 @@
           columnNames[value.valueField] = value.title;
         }
       });
+      for (var key in columnNames) {
+        exportFields.push(key);
+      }
       cluster = cluster.replace(/\s/g, '_');
       dateLabel = dateLabel.replace(/\s/g, '_');
       var ExportFileName = 'MediaService_Utilization_' + cluster + '_' + dateLabel + '_' + new Date();
 
-      var chartData = CommonMetricsGraphService.getBaseStackSerialGraph(data, startDuration, valueAxes, graphs, 'time', catAxis, getBaseExportForUtilizationGraph(ExportFileName, columnNames));
+      var chartData = CommonMetricsGraphService.getBaseStackSerialGraph(data, startDuration, valueAxes, graphs, 'time', catAxis, getBaseExportForGraph(exportFields, ExportFileName, columnNames));
       chartData.legend = CommonMetricsGraphService.getBaseVariable(LEGEND);
       chartData.legend.labelText = '[[title]]';
       chartData.legend.useGraphSettings = true;
