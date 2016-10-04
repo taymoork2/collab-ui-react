@@ -5,42 +5,35 @@
     .controller('PlacesCtrl',
 
       /* @ngInject */
-      function ($scope, $state, $templateCache, $translate, CsdmDataModelService, CsdmHuronPlaceService, PlaceFilter, Authinfo, WizardFactory, RemPlaceModal) {
+      function ($scope, $state, $templateCache, $translate, CsdmDataModelService, PlaceFilter, Authinfo, WizardFactory, RemPlaceModal) {
         var vm = this;
 
         vm.data = [];
-        vm.csdmLoaded = false;
-        vm.huronLoaded = false;
+        vm.placesLoaded = false;
         vm.placeFilter = PlaceFilter;
         vm.placeFilter.setCurrentSearch('');
         vm.placeFilter.setCurrentFilter('');
-        var csdmPlacesList;
-        var huronPlacesList;
+        var placesList;
 
         function init() {
-          loadLists();
+          loadList();
         }
 
-        function loadLists() {
+        function loadList() {
           CsdmDataModelService.getPlacesMap().then(function (list) {
-            csdmPlacesList = list;
-            vm.csdmLoaded = true;
-          });
-          CsdmHuronPlaceService.getPlacesList().then(function (list) {
-            huronPlacesList = list;
-            vm.huronLoaded = true;
+            placesList = list;
+            vm.placesLoaded = true;
           });
         }
 
         init();
 
         vm.existsDevices = function () {
-          return (vm.shouldShowList()
-          && (Object.keys(csdmPlacesList).length > 0 || Object.keys(huronPlacesList).length > 0));
+          return (vm.shouldShowList() && (Object.keys(placesList).length > 0));
         };
 
         vm.shouldShowList = function () {
-          return vm.csdmLoaded && vm.huronLoaded;
+          return vm.placesLoaded;
         };
 
         vm.isEntitledToRoomSystem = function () {
@@ -52,12 +45,7 @@
         };
 
         vm.updateListAndFilter = function () {
-          var filtered = _.chain({})
-            .extend(csdmPlacesList)
-            .extend(huronPlacesList)
-            .values()
-            .value();
-          return PlaceFilter.getFilteredList(filtered);
+          return PlaceFilter.getFilteredList(_.values(placesList));
         };
 
         vm.numDevices = function (place) {

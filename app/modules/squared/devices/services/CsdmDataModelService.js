@@ -31,15 +31,15 @@
       slowResolved = false;
       if (!devicesFastFetchedDeferred) {
 
-        //kick off get huron devices:
-        csdmHuronOrgDeviceService.fetchDevices().then(function (huronDeviceMap) {
-          updateDeviceMap(huronDeviceMap, function (existing) {
-            return !existing.isHuronDevice;
-          });
-        })
-          .finally(function () {
-            huronDevicesLoaded = true;
-          });
+        //First time: kick off get huron devices:
+
+        csdmHuronOrgDeviceService.fetchDevices()
+          .then(function (huronDeviceMap) {
+            updateDeviceMap(huronDeviceMap, function (existing) {
+              return !existing.isHuronDevice;
+            });
+          })
+          .finally(setHuronDevicesLoaded);
 
         devicesFastFetchedDeferred = CsdmDeviceService.fetchDevices() //fast
           .then(function (deviceMap) {
@@ -80,7 +80,20 @@
     function setCloudBerryDevicesLoaded() {
       if (!cloudBerryDevicesLoaded) {
         cloudBerryDevicesLoaded = true;
-        devicesFetchedDeferred.resolve(theDeviceMap);
+
+        if (huronDevicesLoaded) {
+          devicesFetchedDeferred.resolve(theDeviceMap);
+        }
+      }
+    }
+
+    function setHuronDevicesLoaded() {
+      if (!huronDevicesLoaded) {
+        huronDevicesLoaded = true;
+
+        if (cloudBerryDevicesLoaded) {
+          devicesFetchedDeferred.resolve(theDeviceMap);
+        }
       }
     }
 
@@ -114,7 +127,6 @@
           accountsFetchedDeferred.resolve(placesDataModel);
         });
 
-
       CsdmHuronPlaceService.getPlacesList()
         .then(function (huronPlaces) {
           _.each(_.values(huronPlaces), function (a) {
@@ -124,7 +136,6 @@
         .finally(function () {
           //        accountsFetchedDeferred.resolve(placesDataModel);
         });
-
 
       return accountsFetchedDeferred.promise;
     }
@@ -147,6 +158,7 @@
     }
 
     function getAccountsMap() {
+
       if (!accountsFetchedDeferred) {
         fetchAccounts();
       }
