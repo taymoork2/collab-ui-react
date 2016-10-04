@@ -58,7 +58,7 @@ var AutoAttendantPage = function () {
 
   this.mediaUploadSend = 'input[type="file"][name="mediaUploadSend"]';
 
-  this.mediaFileToUpload = '../data/sample-media-upload.wav';
+  this.mediaFileToUpload = './../data/sample-media-upload.wav';
 
   this.sayMessage = element(by.css('div.aa-panel-body[name="Say Message"]'));
   this.sayMessageInput = element(by.css('div.aa-panel-body[name="Say Message"]')).element(by.name('messageInput'));

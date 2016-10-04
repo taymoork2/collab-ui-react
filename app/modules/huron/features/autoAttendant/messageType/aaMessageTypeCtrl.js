@@ -25,7 +25,6 @@
     var holdActionDesc;
     var holdActionValue;
 
-
     vm.menuEntry = {};
     vm.actionEntry = {};
 
@@ -39,10 +38,12 @@
 
     vm.messageOptions = [{
       "label": $translate.instant('autoAttendant.uploadedFile'),
-      "value": "uploadFile"
+      "value": "uploadFile",
+      "action": "play"
     }, {
       "label": $translate.instant('autoAttendant.actionSayMessage'),
-      "value": "sayMessage"
+      "value": "sayMessage",
+      "action": "say"
     }];
 
 
@@ -78,22 +79,22 @@
       // name could be say, play or runActionsOnInput
       // make sure it is say or play but don't touch runActions
 
-      if (vm.messageOption.value === 'sayMessage') {
+      if (vm.messageOption.value === vm.messageOptions[actionType.SAY].value) {
         action.description = '';
-        if (action.name === 'play') {
-          action.name = 'say';
+        if (action.name === vm.messageOptions[actionType.PLAY].action) {
+          action.name = vm.messageOptions[actionType.SAY].action;
         }
       }
 
-      if (vm.messageOption.value === 'uploadFile') {
-        if (action.name === 'say') {
-          action.name = 'play';
+      if (vm.messageOption.value === vm.messageOptions[actionType.PLAY].value) {
+        if (action.name === vm.messageOptions[actionType.SAY].action) {
+          action.name = vm.messageOptions[actionType.PLAY].action;
         }
       }
     }
 
     function saveUiModel() {
-      if (vm.messageOption.value === 'uploadFile') {
+      if (vm.messageOption.value === vm.messageOptions[actionType.PLAY].value) {
         return;
       }
 
@@ -126,7 +127,7 @@
       } else {
         if (_.has(vm, 'actionEntry.name')) {
           vm.messageOption = vm.messageOptions[_.get(actionType, vm.actionEntry.name.toUpperCase())];
-          if (vm.actionEntry.name.toUpperCase() === 'SAY') {
+          if (vm.actionEntry.name.toLowerCase() === vm.messageOptions[actionType.SAY].action) {
             vm.messageInput = vm.actionEntry.value;
           }
         }

@@ -2,10 +2,13 @@
 /*eslint-disable */
 
 describe('Huron Auto Attendant', function () {
+  var remote = require('selenium-webdriver/remote');
 
   var initialIgnoreSync = true;
 
   beforeAll(function () {
+
+    browser.setFileDetector(new remote.FileDetector());
 
     initialIgnoreSync = browser.ignoreSynchronization;
 
@@ -63,7 +66,7 @@ describe('Huron Auto Attendant', function () {
       utils.expectIsDisplayed(autoattendant.sayMessage);
 
     }, 60000);
- 
+/* 
     it('should add a single phone number to the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
 
       autoattendant.scrollIntoView(autoattendant.lanesWrapper);
@@ -136,6 +139,8 @@ describe('Huron Auto Attendant', function () {
 
     it('should add Play Message, select Language and Voice to the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
       var absolutePath = utils.resolvePath(autoattendant.mediaFileToUpload);
+ 
+
       autoattendant.scrollIntoView(autoattendant.sayMessage);
 
       // media upload
@@ -416,8 +421,7 @@ describe('Huron Auto Attendant', function () {
       utils.expectIsDisabled(autoattendant.saveButton);
 
     }, 60000);
-
-
+*/
     it('should add a Schedule to AA', function () {
       autoattendant.scrollIntoView(autoattendant.schedule);
       utils.click(autoattendant.schedule);
