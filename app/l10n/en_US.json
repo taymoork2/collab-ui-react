@@ -2600,7 +2600,16 @@
     "userError": "User {{user}} was not correctly provisioned.",
     "maxLines": "{{user}} has exceeded the maximum number of lines. Please remove a line from this user before provisioning additional lines.",
     "confirm": "There are unsaved changes on the page. Do you wish to continue?",
-    "unassignedNumberError": "Could not retrieve an unassigned number."
+    "unassignedNumberError": "Could not retrieve an unassigned number.",
+    "getSharedLinesError": "Could not retrieve shared lines for this line.",
+    "getCallForwardError": "Could not retrieve call forward information for this line.",
+    "updateCallForwardError": "Could not update call forward information for this line.",
+    "getLineError": "Could not retrieve details for this line.",
+    "createLineError": "Could not create line.",
+    "updateLineError": "Could not update details for this line.",
+    "createSharedLinesError": "Could not create shared line.",
+    "deleteSharedLineError": "Could not delete shared line member.",
+    "updateSharedLinePhoneError": "Could not update shared line phone list."
   },
   "callForwardPanel": {
     "title": "Call Forwarding",
@@ -2641,7 +2650,7 @@
   "sharedLinePanel": {
     "title": "Shared Line",
     "description": "Simultaneously ring other users' lines when this line is called.",
-    "remove": "Remove member",
+    "remove": "Remove Member",
     "invalidUser": "{{user}} does not have Call service",
     "member": "Shared Line Members",
     "disassociateUser": "Removing this user from the shared line members will immediately remove this line from all of their devices. Are you sure you want to proceed?",
