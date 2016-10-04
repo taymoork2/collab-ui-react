@@ -55,9 +55,6 @@
     vm.errorMsg = '';
     vm.isDirSync = false;
     vm.status = vm.statusOptions.on;
-    vm.ciAdmins = [];
-    vm.ciUsers = [];
-    vm.ciData = CiService.getCiOrgInfo();
     vm.orgAdminUrl = 'https://wapi.webexconnect.com/wbxconnect/acs/widgetserver/mashkit/apps/standalone.html?app=WBX.base.orgadmin';
 
     // Translated text
@@ -140,9 +137,6 @@
       checkUserType()
         .then(function () {
           if (authorized()) {
-            vm.ciData = CiService.getCiOrgInfo();
-            CiService.getCiAdmins(vm.ciAdmins);
-            CiService.getCiNonAdmins(vm.ciUsers);
             getSyncStatus();
           }
         }).catch(function (errorMsg) {
