@@ -22,17 +22,6 @@
       error: 3
     });
 
-    vm.statusOptions = Object.freeze({
-      on: {
-        badgeClass: 'badge-primary',
-        label: 'On'
-      },
-      off: {
-        badgeClass: 'badge-default',
-        label: 'Off'
-      }
-    });
-
     // the label is only a stake holder right now
     vm.adminTypes = Object.freeze({
       org: {
@@ -54,7 +43,6 @@
     vm.dataStatus = vm.dataStates.loading;
     vm.errorMsg = '';
     vm.isDirSync = false;
-    vm.status = vm.statusOptions.on;
     vm.orgAdminUrl = 'https://wapi.webexconnect.com/wbxconnect/acs/widgetserver/mashkit/apps/standalone.html?app=WBX.base.orgadmin';
 
     // Translated text
