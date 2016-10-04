@@ -58,43 +58,6 @@
     }
   }
 
-  .services-list, .trials-list {
-    ul.has-subviews {
-      padding-right: 20px;
-      .feature.feature-with-subview {
-        .feature-details {
-          padding-right: 10px;
-        }
-        .feature-arrow {
-          margin-right: -23px;
-        }
-        .feature-icon.icon-circle-group:before {
-          content: "\E068";
-        }
-        .feature-icon.icon-circle-message:before {
-          content: "\E070";
-        }
-        .feature-icon.icon-circle-call:before {
-          content: "\E057";
-        }
-        .feature-icon.icon-circle-telepresence:before {
-          content: "\E078";
-        }
-        .feature-icon.icon-circle-contact-centre:before {
-          content: "\E062";
-        }
-
-
-      }
-    }
-    i.feature-icon {
-      display: inline-block;
-      vertical-align: middle;
-      margin-right: 7px;
-      font-size: 1.25rem;
-    }
-  }
-
   .external-number-detail {
     .external-number-overview {
       .section-title-row {

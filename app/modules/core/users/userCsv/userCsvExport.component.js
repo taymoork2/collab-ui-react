@@ -20,6 +20,7 @@
 
     vm.$onInit = onInit;
     vm.$postLink = postLink;
+    vm.$onDestroy = onDestroy;
     vm.exportCsv = exportCsv;
     vm.downloadTemplate = downloadTemplate;
     vm.cancelDownload = cancelDownload;
@@ -30,6 +31,7 @@
     var blobAnchor;
     var wasCanceled;
     var useIEBlobSave;
+    var eventListeners = [];
 
     function onInit() {
       vm.isDownloading = CsvDownloadService.downloadInProgress;
@@ -40,10 +42,18 @@
       wasCanceled = false;
       useIEBlobSave = !_.isUndefined($window.navigator.msSaveOrOpenBlob);
 
+      eventListeners.push($rootScope.$on('csv-download-request-started', onCsvDownloadRequestStarted));
+      eventListeners.push($rootScope.$on('csv-download-request-completed', onCsvDownloadRequestCompleted));
     }
 
     function postLink() {
       blobAnchor = $element.find('.download-anchor');
+    }
+
+    function onDestroy() {
+      while (!_.isEmpty(eventListeners)) {
+        _.attempt(eventListeners.pop());
+      }
     }
 
     function beginUserCsvDownload() {
@@ -98,20 +108,20 @@
       }
     }
 
-    $rootScope.$on('csv-download-request-started', function () {
+    function onCsvDownloadRequestStarted() {
       vm.isDownloading = true;
       vm.onStatusChange({
         isExporting: true
       });
-    });
+    }
 
-    $rootScope.$on('csv-download-request-completed', function (dataUrl) {
+    function onCsvDownloadRequestCompleted(dataUrl) {
       vm.isDownloading = false;
       vm.onStatusChange({
         isExporting: false,
         dataUrl: dataUrl
       });
-    });
+    }
 
     function startDownload(csvType, filename) {
       vm.isDownloading = true;

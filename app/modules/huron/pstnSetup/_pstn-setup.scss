@@ -82,10 +82,36 @@
   }
 }
 
+.reveal-modal.full{
+  .pstn-numbers {
+    .modal-body {
+      padding: 0 ;
+    }
+  }
+}
+
+
 .pstn-numbers {
   .badge {
     background-color: $gray;
     transform: translateY(-2px);
+  }
+
+  .block {
+    margin-top: 1rem;
+  }
+
+  .block-child {
+    padding-left: 2rem;
+
+    .checkbox {
+      margin-top: 1rem;
+    }
+
+    p {
+      color: $color-negative-base;
+      font-size: 10px;
+    }
   }
 
   .warning-message {
@@ -102,8 +128,20 @@
       font-size: medium;
       flex: 0 1 auto;
     }
+
     p {
       flex: 1 1 auto;
+    }
+  }
+
+  .search-options{
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+
+    .icon-info {
+      margin-left: 1rem;
+      margin-right: 1.5rem;
     }
   }
 
@@ -166,7 +204,7 @@
   }
 
   .search-button {
-    margin-top: calc(#{$form-label-line-height}em + 10px - (50px - #{$input-height-base}) / 2);
+    margin-top: 1.5rem;
   }
 
   .tooltip {

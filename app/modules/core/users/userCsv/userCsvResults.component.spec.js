@@ -79,22 +79,22 @@ describe('crUserCsvResults Component', function () {
   }
 
   function initComponent() {
-    this.element = angular.element('<cr-user-csv-results on-cancel-import="vm.onCancelImport()" csv-data="fakeCsvTestData"></cr-user-csv-results>');
+    this.element = angular.element('<cr-user-csv-results on-cancel-import="$ctrl.onCancelImport()" csv-data="fakeCsvTestData"></cr-user-csv-results>');
     this.element = this.$compile(this.element)(this.$scope);
     this.$scope.fakeCsvTestData = angular.copy(fakeCsv);
     this.$scope.$digest();
     this.$timeout.flush();
-    this.vm = this.element.isolateScope().vm;
-    this.vm.onCancelImport = angular.noop;
+    this.$ctrl = this.element.isolateScope().$ctrl;
+    this.$ctrl.onCancelImport = angular.noop;
   }
 
   function initController() {
-    this.vm = this.$componentController('crUserCsvResults', {
+    this.$ctrl = this.$componentController('crUserCsvResults', {
       $scope: this.$scope,
       $element: angular.element('')
     }, this.bindings);
     this.$scope.$apply();
-    this.vm.$onInit();
+    this.$ctrl.$onInit();
   }
 
   beforeEach(init);
@@ -106,17 +106,17 @@ describe('crUserCsvResults Component', function () {
     beforeEach(function () {
       initComponent.apply(this);
 
-      spyOn(this.vm, 'onCancelImport');
+      spyOn(this.$ctrl, 'onCancelImport');
     });
 
     it('should have required HTML for non-DirSync org', function () {
 
       // ensure we have our initial settings
-      expect(this.vm.csvData.isDirSyncEnabled).toBeFalsy();
-      expect(this.vm.csvData.model.isProcessing).toBeTruthy();
-      expect(this.vm.csvData.model.isRetrying).toBeFalsy();
-      expect(this.vm.csvData.model.usersToRetry).toHaveLength(0);
-      expect(this.vm.csvData.model.userErrorArray).toHaveLength(0);
+      expect(this.$ctrl.csvData.isDirSyncEnabled).toBeFalsy();
+      expect(this.$ctrl.csvData.model.isProcessing).toBeTruthy();
+      expect(this.$ctrl.csvData.model.isRetrying).toBeFalsy();
+      expect(this.$ctrl.csvData.model.usersToRetry).toHaveLength(0);
+      expect(this.$ctrl.csvData.model.userErrorArray).toHaveLength(0);
 
       // make sure the required elements exist in the DOM
       expect(this.element.find('.progress-striped')).toHaveLength(1);
@@ -131,15 +131,15 @@ describe('crUserCsvResults Component', function () {
 
     it('should have required HTML for DirSync org', function () {
 
-      this.vm.csvData.isDirSyncEnabled = true;
+      this.$ctrl.csvData.isDirSyncEnabled = true;
       this.$scope.$apply();
 
       // ensure we have our initial settings
-      expect(this.vm.csvData.isDirSyncEnabled).toBeTruthy();
-      expect(this.vm.csvData.model.isProcessing).toBeTruthy();
-      expect(this.vm.csvData.model.isRetrying).toBeFalsy();
-      expect(this.vm.csvData.model.usersToRetry).toHaveLength(0);
-      expect(this.vm.csvData.model.userErrorArray).toHaveLength(0);
+      expect(this.$ctrl.csvData.isDirSyncEnabled).toBeTruthy();
+      expect(this.$ctrl.csvData.model.isProcessing).toBeTruthy();
+      expect(this.$ctrl.csvData.model.isRetrying).toBeFalsy();
+      expect(this.$ctrl.csvData.model.usersToRetry).toHaveLength(0);
+      expect(this.$ctrl.csvData.model.userErrorArray).toHaveLength(0);
 
       // make sure the required elements exist in the DOM
       expect(this.element.find('.progress-striped')).toHaveLength(1);
@@ -153,38 +153,43 @@ describe('crUserCsvResults Component', function () {
     });
 
     it('should show new users count when there are new users', function () {
-      this.vm.csvData.isDirSyncEnabled = false;
-      this.vm.csvData.model.numNewUsers = 0;
+      this.$ctrl.csvData.isDirSyncEnabled = false;
+      this.$ctrl.csvData.model.numNewUsers = 0;
       this.$scope.$apply();
       expect(this.element.find('.stat.new-users')).toHaveClass('disabled');
       expect(this.element.find('.stat.new-users .total').text()).toEqual('0');
 
-      this.vm.csvData.model.numNewUsers = 9;
+      this.$ctrl.csvData.model.numNewUsers = 9;
       this.$scope.$apply();
       expect(this.element.find('.stat.new-users')).not.toHaveClass('disabled');
       expect(this.element.find('.stat.new-users .total').text()).toEqual('9');
     });
 
     it('should show updated users count when there are updated users', function () {
-      this.vm.csvData.model.numExistingUsers = 0;
+      this.$ctrl.csvData.model.numExistingUsers = 0;
       this.$scope.$apply();
       expect(this.element.find('.stat.updated-users')).toHaveClass('disabled');
       expect(this.element.find('.stat.updated-users .total').text()).toEqual('0');
 
-      this.vm.csvData.model.numExistingUsers = 7;
+      this.$ctrl.csvData.model.numExistingUsers = 7;
       this.$scope.$apply();
       expect(this.element.find('.stat.updated-users')).not.toHaveClass('disabled');
       expect(this.element.find('.stat.updated-users .total').text()).toEqual('7');
     });
 
     it('should show error users count when there are users with errors', function () {
-      this.vm.csvData.model.userErrorArray = [];
+      this.$ctrl.csvData.model.userErrorArray = [];
       this.$scope.$apply();
       expect(this.element.find('.stat.error-users')).toHaveClass('disabled');
       expect(this.element.find('.stat.error-users .total').text()).toEqual('0');
       expect(this.element.find('.upload-errors')).toHaveLength(0);
 
-      this.vm.csvData.model.userErrorArray = ['a', 'b', 'c', 'd'];
+      this.$ctrl.csvData.model.userErrorArray = [
+        { row: 1, error: 'line 1' },
+        { row: 2, error: 'line 2' },
+        { row: 3, error: 'line 3' },
+        { row: 4, error: 'line 4' }
+      ];
       this.$scope.$apply();
       expect(this.element.find('.stat.error-users')).not.toHaveClass('disabled');
       expect(this.element.find('.stat.error-users .total').text()).toEqual('4');
@@ -199,7 +204,7 @@ describe('crUserCsvResults Component', function () {
       expect(closeBtn).toHaveLength(1);
       closeBtn.click();
       this.$scope.$apply();
-      expect(this.vm.onCancelImport).toHaveBeenCalled();
+      expect(this.$ctrl.onCancelImport).toHaveBeenCalled();
 
     });
 
@@ -219,8 +224,8 @@ describe('crUserCsvResults Component', function () {
     });
 
     it('should set csv data in scope to supplied', function () {
-      expect(this.vm.csvData).toBe(fakeCsv);
-      expect(this.vm.onCancelImport).toBe(this.bindings.onCancelImport);
+      expect(this.$ctrl.csvData).toBe(fakeCsv);
+      expect(this.$ctrl.onCancelImport).toBe(this.bindings.onCancelImport);
     });
 
   });

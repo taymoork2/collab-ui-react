@@ -31,9 +31,23 @@
       toggle: 'huronCallPark'
     };
 
+    var pagingGroupService = {
+      id: 'PG',
+      code: 'pagingGroup.code',
+      label: 'pagingGroup.title',
+      description: 'pagingGroup.modalDescription',
+      toggle: 'huronPagingGroup'
+    };
+
     FeatureToggleService.supports(FeatureToggleService.features.callParkService).then(function (result) {
       if (result) {
         vm.features.push(callParkService);
+      }
+    });
+
+    FeatureToggleService.supports(FeatureToggleService.features.huronPagingGroup).then(function (result) {
+      if (result) {
+        vm.features.push(pagingGroupService);
       }
       init();
     });
@@ -57,6 +71,8 @@
           controller: 'AATypeSelectCtrl',
           size: 'lg'
         });
+      } else if (featureId === 'PG') {
+        $state.go('huronPagingGroup');
       }
       $modalInstance.close(featureId);
     }

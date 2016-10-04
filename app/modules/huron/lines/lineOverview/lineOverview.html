@@ -26,10 +26,9 @@
         on-change-fn="$ctrl.setDirectoryNumbers(internalNumber, externalNumber)">
       </uc-directory-number>
       <uc-call-forward
-        call-forward-all="$ctrl.callForwardAll"
-        call-forward-busy="$ctrl.callForwardBusy"
+        call-forward="$ctrl.lineOverviewData.callForward"
         voicemail-enabled="$ctrl.voicemailEnabled"
-        on-change-fn="$ctrl.setCallForward(callForwardAll, callForwardBusy)">
+        on-change-fn="$ctrl.setCallForward(callForward)">
       </uc-call-forward>
       <uc-simultaneous-calls
         incoming-call-maximum="$ctrl.lineOverviewData.line.incomingCallMaximum"

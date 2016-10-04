@@ -2,7 +2,7 @@
 
 describe('Features Controller', function () {
 
-  var featureCtrl, $rootScope, $scope, $modal, $q, $state, $filter, $timeout, Authinfo, HuntGroupService, TelephoneNumberService, Log, Notification, getDeferred, AutoAttendantCeInfoModelService, AAModelService, FeatureToggleService, CallParkService;
+  var featureCtrl, $rootScope, $scope, $modal, $q, $state, $filter, $timeout, Authinfo, HuntGroupService, TelephoneNumberService, Log, Notification, getDeferred, AutoAttendantCeInfoModelService, AAModelService, FeatureToggleService, CallParkService, PagingGroupService;
   var listOfCPs = getJSONFixture('huron/json/features/callPark/cpList.json');
   var emptyListOfCPs = {
     callparks: []
@@ -49,7 +49,7 @@ describe('Features Controller', function () {
   beforeEach(angular.mock.module('Huron'));
   beforeEach(angular.mock.module('Sunlight'));
 
-  beforeEach(inject(function (_$rootScope_, $controller, _$q_, _$modal_, _$state_, _$filter_, _$timeout_, _Authinfo_, _HuntGroupService_, _TelephoneNumberService_, _AutoAttendantCeInfoModelService_, _AAModelService_, _Log_, _Notification_, _FeatureToggleService_, _CallParkService_) {
+  beforeEach(inject(function (_$rootScope_, $controller, _$q_, _$modal_, _$state_, _$filter_, _$timeout_, _Authinfo_, _HuntGroupService_, _PagingGroupService_, _TelephoneNumberService_, _AutoAttendantCeInfoModelService_, _AAModelService_, _Log_, _Notification_, _FeatureToggleService_, _CallParkService_) {
     $rootScope = _$rootScope_;
     $scope = _$rootScope_.$new();
     $modal = _$modal_;
@@ -59,6 +59,7 @@ describe('Features Controller', function () {
     $q = _$q_;
     Authinfo = _Authinfo_;
     HuntGroupService = _HuntGroupService_;
+    PagingGroupService = _PagingGroupService_;
     CallParkService = _CallParkService_;
     TelephoneNumberService = _TelephoneNumberService_;
     AutoAttendantCeInfoModelService = _AutoAttendantCeInfoModelService_;
@@ -74,6 +75,7 @@ describe('Features Controller', function () {
     spyOn(HuntGroupService, 'getListOfHuntGroups').and.returnValue($q.when([]));
     spyOn(CallParkService, 'getListOfCallParks').and.returnValue(getDeferred.promise);
     spyOn(AutoAttendantCeInfoModelService, 'getCeInfosList').and.returnValue($q.when([]));
+    spyOn(PagingGroupService, 'getListOfPagingGroups').and.returnValue($q.when());
     spyOn(AAModelService, 'newAAModel').and.returnValue(getDeferred.promise);
     spyOn(FeatureToggleService, 'supports').and.returnValue(getDeferred.promise);
     spyOn($state, 'go');
