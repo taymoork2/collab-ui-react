@@ -6,17 +6,21 @@
     .controller('UserListCtrl', UserListCtrl);
 
   /* @ngInject */
-  function UserListCtrl($q, $rootScope, $scope, $state, $templateCache, $timeout, $translate, Authinfo, Config, FeatureToggleService, Log, LogMetricsService, Notification, Orgservice, Userservice, UserListService, Utils, CsvDownloadService) {
-    // variables to prevent userlist 'bounce' after all users/admins have been loaded
-    var endOfAdminList = false;
-    var endOfUserList = false;
+  function UserListCtrl($q, $rootScope, $scope, $state, $templateCache, $timeout, $translate, Authinfo, Config, FeatureToggleService,
+    Log, LogMetricsService, Notification, Orgservice, Userservice, UserListService, Utils, CsvDownloadService) {
+
+    var vm = this;
+
+    vm.$onInit = onInit;
+    vm.configureGrid = configureGrid;
+
+    $scope.$on('$destroy', onDestroy);
 
     //Initialize data variables
     $scope.pageTitle = $translate.instant('usersPage.pageTitle');
-    $scope.load = true;
+    $scope.allowLoadMoreData = false;
     $scope.page = 1;
     $scope.status = null;
-    $scope.currentDataPosition = 0;
     $scope.queryuserslist = [];
     $scope.gridRefresh = true;
     $scope.searchStr = '';
@@ -64,6 +68,11 @@
     $scope.isEmailStatusToggled = false;
     $scope.isUserPendingStatusToggled = false;
 
+    $scope.totalUsersExpected = Number.MAX_VALUE;
+    $scope.totalAdminUsersExpected = Number.MAX_VALUE;
+    $scope.obtainedPartners = false;
+    $scope.obtainedOrgs = false;
+
     // Functions
     $scope.setFilter = setFilter;
     $scope.filterList = filterList;
@@ -89,26 +98,34 @@
     $scope.onManageUsers = onManageUsers;
     $scope.sortDirection = sortDirection;
 
-    var promises = {
-      csvEnhancement: FeatureToggleService.atlasCsvEnhancementGetStatus(),
-      atlasEmailStatus: FeatureToggleService.atlasEmailStatusGetStatus(),
-      atlasUserPendingStatus: FeatureToggleService.atlasUserPendingStatusGetStatus()
-    };
-
-    $q.all(promises).then(function (results) {
-      $scope.isCsvEnhancementToggled = results.csvEnhancement;
-      $scope.isEmailStatusToggled = results.atlasEmailStatus;
-      $scope.isUserPendingStatusToggled = results.atlasUserPendingStatus;
-    }).finally(init);
-
-    configureGrid();
-
     ////////////////
+    var eventListeners = [];
 
-    function init() {
-      checkOrg();
-      bind();
-      getUserList();
+    function onInit() {
+
+      var promises = {
+        csvEnhancement: FeatureToggleService.atlasCsvEnhancementGetStatus(),
+        atlasEmailStatus: FeatureToggleService.atlasEmailStatusGetStatus(),
+        atlasUserPendingStatus: FeatureToggleService.atlasUserPendingStatusGetStatus(),
+        configureGrid: vm.configureGrid()
+      };
+
+      $q.all(promises).then(function (results) {
+        $scope.isCsvEnhancementToggled = results.csvEnhancement;
+        $scope.isEmailStatusToggled = results.atlasEmailStatus;
+        $scope.isUserPendingStatusToggled = results.atlasUserPendingStatus;
+
+        checkOrg();
+        bind();
+        getUserList();
+      });
+
+    }
+
+    function onDestroy() {
+      while (!_.isEmpty(eventListeners)) {
+        _.attempt(eventListeners.pop());
+      }
     }
 
     function checkOrg() {
@@ -131,26 +148,32 @@
       }, 0);
 
       // if the side panel is closing unselect the user
-      $rootScope.$on('$stateChangeSuccess', function () {
+      eventListeners.push($rootScope.$on('$stateChangeSuccess', function () {
         if ($state.includes('users.list')) {
           $scope.currentUser = null;
           if ($scope.gridApi && $scope.gridApi.selection) {
             $scope.gridApi.selection.clearSelectedRows();
           }
         }
-      });
+      }));
 
-      //list users when we have authinfo data back, or new users have been added/activated
+      // list users when we have authinfo data back, or new users have been added/activated
       $scope.$on('AuthinfoUpdated', function () {
         getUserList();
       });
 
-      //list is updated by adding or entitling a user
+      // list is updated by adding or entitling a user
       $scope.$on('USER_LIST_UPDATED', function () {
-        $scope.currentDataPosition = 0;
-        $scope.gridApi.infiniteScroll.resetScroll();
         getUserList();
       });
+
+      // if the search string changes, then reget users based on that search string
+      $scope.$watch('searchStr', function (newValue, oldValue) {
+        if (newValue !== oldValue) {
+          getUserList();
+        }
+      });
+
     }
 
     function getTemplate(name) {
@@ -160,181 +183,228 @@
     function getUserList(startAt) {
       var startIndex = startAt || 0;
 
-      // when the startIndex is 0, assume that not all users have been loaded
       if (startIndex === 0) {
-        endOfAdminList = false;
-        endOfUserList = false;
+        // clear out any old user list data since we are regetting from the start
+        $scope.allowLoadMoreData = false;
+        $scope.userList.allUsers.length = 0;
+        $scope.userList.adminUsers.length = 0;
+        $scope.totalUsersExpected = Number.MAX_VALUE;
+        $scope.totalAdminUsersExpected = Number.MAX_VALUE;
+        $scope.gridApi.infiniteScroll.resetScroll();
+      } else if (!isMoreDataToLoad()) {
+        // no more data to load, so don't waste time
+        return $q.when();
       }
 
-      // should not try to load more users once all users have already been loaded
-      if (!endOfAdminList && !endOfUserList) {
-        // show spinning icon
-        $scope.gridRefresh = true;
-        // clear currentUser if a new search begins
-        $scope.currentUser = null;
+      $scope.gridRefresh = true; // show spinning icon
+      $scope.currentUser = null;
+      $scope.gridApi.infiniteScroll.saveScrollPercentage();
 
-        getAdmins(startIndex);
-        getUsers(startIndex);
-        getPartners();
-        getOrg();
-      }
+      var promises = {
+        getAdmins: getAdmins(startIndex),
+        getUsers: getUsers(startIndex),
+        getPartners: getPartners(),
+        getOrg: getOrg()
+      };
+
+      return $q.all(promises).then(function () {
+        $scope.gridRefresh = false;
+        $scope.gridApi.infiniteScroll.dataLoaded();
+        $scope.allowLoadMoreData = isMoreDataToLoad();
+      });
+    }
+
+    function loadedAllAdmins() {
+      return _.size($scope.userList.adminUsers) >= $scope.totalAdminUsersExpected;
+    }
+
+    function loadedAllUsers() {
+      return _.size($scope.userList.allUsers) >= $scope.totalUsersExpected;
+    }
+
+    // returns true if there is any more data to load from the server
+    function isMoreDataToLoad() {
+      return (!loadedAllUsers() || !loadedAllAdmins() || !$scope.obtainedPartners || !$scope.obtainedOrgs);
     }
 
     function getAdmins(startIndex) {
       //get the admin users
-      UserListService.listUsers(startIndex, Config.usersperpage, $scope.sort.by, $scope.sort.order, function (data, status) {
-        if (data.success) {
-          $timeout(function () {
-            $scope.load = true;
-          });
-          Log.debug('Returned data.', data.Resources);
-          var adminUsers = _.get(data, 'Resources', []);
-          $scope.filters[0].count = _.get(data, 'totalResults', 0);
-          if (startIndex === 0) {
-            $scope.userList.adminUsers = adminUsers;
-          } else if (adminUsers.length > 0) {
-            $scope.userList.adminUsers = $scope.userList.adminUsers.concat(adminUsers);
+      var deferred = $q.defer();
+      if (loadedAllAdmins()) {
+        // already loaded all of the users in this search
+        deferred.resolve();
+      } else {
+        UserListService.listUsers(startIndex, Config.usersperpage, $scope.sort.by, $scope.sort.order, function (data, status) {
+          if (data.success) {
+            Log.debug('Returned data.', data.Resources);
+            var adminUsers = _.get(data, 'Resources', []);
+            var totalAdminUsers = _.toNumber(_.get(data, 'totalResults', 0));
+            $scope.filters[0].count = totalAdminUsers;
+            if (startIndex === 0) {
+              $scope.userList.adminUsers = adminUsers;
+              $scope.totalAdminUsersExpected = totalAdminUsers;
+            } else if (adminUsers.length > 0) {
+              $scope.userList.adminUsers = $scope.userList.adminUsers.concat(adminUsers);
+            }
+            $scope.setFilter($scope.activeFilter);
+            deferred.resolve();
           } else {
-            endOfAdminList = true;
+            Log.debug('Query existing users failed. Status: ' + status);
+            deferred.reject(data);
           }
-          $scope.setFilter($scope.activeFilter);
-        } else {
-          Log.debug('Query existing users failed. Status: ' + status);
-        }
-      }, $scope.searchStr, true);
+        }, $scope.searchStr, true);
+      }
+      return deferred.promise;
     }
 
     function getUsers(startIndex) {
-      //get the users I am searching for
-      UserListService.listUsers(startIndex, Config.usersperpage, $scope.sort.by, $scope.sort.order,
-        function (data, status, searchStr) {
-          $scope.gridRefresh = false;
-          $scope.tooManyUsers = false;
-          if (data.success) {
-            $timeout(function () {
-              $scope.load = true;
-            });
-            if ($scope.searchStr === searchStr) {
-              Log.debug('Returning results from search=: ' + searchStr + '  current search=' + $scope.searchStr);
-              Log.debug('Returned data.', data.Resources);
+      var deferred = $q.defer();
+      if (loadedAllUsers()) {
+        // already loaded all of the users in this search
+        deferred.resolve();
+      } else {
+        //get the users I am searching for
+        UserListService.listUsers(startIndex, Config.usersperpage, $scope.sort.by, $scope.sort.order,
+          function (data, status, searchStr) {
+            $scope.tooManyUsers = false;
+            if (data.success) {
+              if ($scope.searchStr === searchStr) {
+                Log.debug('Returning results from search=: ' + searchStr + '  current search=' + $scope.searchStr);
+                Log.debug('Returned data.', data.Resources);
 
-              var allUsers = _.get(data, 'Resources', []);
-              var allUsersCount = _.get(data, 'totalResults', 0);
-              $scope.placeholder.count = allUsersCount;
-              if ($scope.searchStr === '') {
-                $scope.totalUsers = allUsersCount;
-                $scope.obtainedTotalUserCount = true;
-              }
-              if (startIndex === 0) {
-                $scope.userList.allUsers = allUsers;
-              } else if (allUsers.length > 0) {
-                $scope.userList.allUsers = $scope.userList.allUsers.concat(allUsers);
-              } else {
-                endOfUserList = true;
-              }
+                var allUsers = _.get(data, 'Resources', []);
+                $scope.totalUsersExpected = _.toNumber(_.get(data, 'totalResults', 0));
+                $scope.placeholder.count = $scope.totalUsersExpected;
 
-              // get email status and user status here
-              _.forEach($scope.userList.allUsers, function (user) {
-                // user status
-                if ($scope.isUserPendingStatusToggled) {
-                  var hasBeenActivated = false;
-                  if (user.userSettings) {
-                    hasBeenActivated = _.some(user.userSettings, function (userSetting) {
-                      return userSetting.indexOf('sparkAdmin.licensedDate') > 0 || userSetting.indexOf('spark.signUpDate') > 0;
+                if (startIndex === 0) {
+                  $scope.userList.allUsers = allUsers;
+                } else if (allUsers.length > 0) {
+                  $scope.userList.allUsers = $scope.userList.allUsers.concat(allUsers);
+                }
+
+                // get email status and user status here
+
+                // todo - why are we looping through ALL users here, and not just the new ones?
+                _.forEach($scope.userList.allUsers, function (user) {
+                  // user status
+                  if ($scope.isUserPendingStatusToggled) {
+                    var hasBeenActivated = false;
+                    if (user.userSettings) {
+                      hasBeenActivated = _.some(user.userSettings, function (userSetting) {
+                        return userSetting.indexOf('sparkAdmin.licensedDate') > 0 || userSetting.indexOf('spark.signUpDate') > 0;
+                      });
+                    }
+                    user.userStatus = (_.isEmpty(user.licenseID) || !hasBeenActivated) ? 'pending' : 'active';
+                  } else {
+                    user.userStatus = (_.indexOf(user.accountStatus, 'pending') >= 0) ? 'pending' : 'active';
+                  }
+
+                  // email status
+                  if (!user.active && $scope.isEmailStatusToggled) {
+                    Userservice.getUsersEmailStatus(Authinfo.getOrgId(), user.id).then(function (response) {
+                      var eventStatus = response.data.items[0].event;
+                      if (eventStatus === 'rejected' || eventStatus === 'failed') {
+                        user.userStatus = 'error';
+                      }
                     });
                   }
-                  user.userStatus = (_.isEmpty(user.licenseID) || !hasBeenActivated) ? 'pending' : 'active';
-                } else {
-                  user.userStatus = (_.indexOf(user.accountStatus, 'pending') >= 0) ? 'pending' : 'active';
-                }
+                });
+                $scope.setFilter($scope.activeFilter);
 
-                // email status
-                if (!user.active && $scope.isEmailStatusToggled) {
-                  Userservice.getUsersEmailStatus(Authinfo.getOrgId(), user.id).then(function (response) {
-                    var eventStatus = response.data.items[0].event;
-                    if (eventStatus === 'rejected' || eventStatus === 'failed') {
-                      user.userStatus = 'error';
-                    }
-                  });
-                }
-              });
-              $scope.setFilter($scope.activeFilter);
-
+              } else {
+                Log.debug('Ignorning result from search=: ' + searchStr + '  current search=' + $scope.searchStr);
+              }
+              deferred.resolve();
             } else {
-              Log.debug('Ignorning result from search=: ' + searchStr + '  current search=' + $scope.searchStr);
-            }
-          } else {
-            var tooManyUsers, tooManyResults;
-            if (data.status === 403) {
-              var errors = data.Errors;
-              tooManyUsers = !!errors && _.some(errors, {
-                'errorCode': '100106'
-              });
-              tooManyResults = !!errors && _.some(errors, {
-                'errorCode': '200045'
-              });
+              var tooManyUsers, tooManyResults;
+              if (data.status === 403) {
+                var errors = data.Errors;
+                tooManyUsers = !!errors && _.some(errors, {
+                  'errorCode': '100106'
+                });
+                tooManyResults = !!errors && _.some(errors, {
+                  'errorCode': '200045'
+                });
+              }
+
+              if (tooManyUsers) {
+                // clear out the current grid results
+                $scope.placeholder.count = 0;
+                $scope.userList.allUsers = [];
+                $scope.setFilter($scope.activeFilter);
+                // display search message
+                $scope.tooManyUsers = tooManyUsers;
+              } else if (tooManyResults) {
+                Log.debug('Query existing users yielded too many search results. Status: ' + status);
+                Notification.error('usersPage.tooManyResultsError');
+              } else {
+                Log.debug('Query existing users failed. Status: ' + status);
+                Notification.error('usersPage.userListError');
+              }
             }
 
-            if (tooManyUsers) {
-              // clear out the current grid results
-              $scope.placeholder.count = 0;
-              $scope.userList.allUsers = [];
-              $scope.setFilter($scope.activeFilter);
-              // display search message
-              $scope.tooManyUsers = tooManyUsers;
-            } else if (tooManyResults) {
-              Log.debug('Query existing users yielded too many search results. Status: ' + status);
-              Notification.error('usersPage.tooManyResultsError');
-            } else {
-              Log.debug('Query existing users failed. Status: ' + status);
-              Notification.error('usersPage.userListError');
-            }
-          }
-
-          if (!$scope.obtainedTotalUserCount) {
-            if (Authinfo.isCisco()) { // allow Cisco org (even > 10K) to export new CSV format
-              $scope.totalUsers = $scope.userExportThreshold;
-              $scope.obtainedTotalUserCount = true;
-            } else {
-              UserListService.getUserCount().then(function (count) {
-                if (_.isNull(count) || _.isNaN(count) || count === -1) {
-                  count = $scope.userExportThreshold + 1;
-                }
-                $scope.totalUsers = count;
+            if (!$scope.obtainedTotalUserCount) {
+              if (Authinfo.isCisco()) { // allow Cisco org (even > 10K) to export new CSV format
+                $scope.totalUsers = $scope.userExportThreshold;
                 $scope.obtainedTotalUserCount = true;
-              });
+              } else {
+                UserListService.getUserCount().then(function (count) {
+                  if (_.isNull(count) || _.isNaN(count) || count === -1) {
+                    count = $scope.userExportThreshold + 1;
+                  }
+                  $scope.totalUsers = count;
+                  $scope.obtainedTotalUserCount = true;
+                });
+              }
             }
-          }
-        }, $scope.searchStr);
+            deferred.reject(data);
+          }, $scope.searchStr);
+      }
+      return deferred.promise;
     }
 
     function getPartners() {
-      UserListService.listPartners(Authinfo.getOrgId(), function (data, status) {
-        if (data.success) {
-          $timeout(function () {
-            $scope.load = true;
-          });
-          Log.debug('Returned data.', data.partners);
-          var partnerUsers = _.get(data, 'partners', []);
-          $scope.filters[1].count = partnerUsers.length;
-          // partner list does not have pagination or startIndex
-          $scope.userList.partnerUsers = partnerUsers;
-          $scope.setFilter($scope.activeFilter);
-        } else {
-          Log.debug('Query existing users failed. Status: ' + status);
-        }
-      });
+      var deferred = $q.defer();
+      if ($scope.obtainedPartners) {
+        deferred.resolve();
+      } else {
+        UserListService.listPartners(Authinfo.getOrgId(), function (data, status) {
+          if (data.success) {
+            Log.debug('Returned data.', data.partners);
+            var partnerUsers = _.get(data, 'partners', []);
+            $scope.filters[1].count = partnerUsers.length;
+            // partner list does not have pagination or startIndex
+            $scope.userList.partnerUsers = partnerUsers;
+            $scope.setFilter($scope.activeFilter);
+            $scope.obtainedPartners = true;
+            deferred.resolve();
+          } else {
+            Log.debug('Query existing users failed. Status: ' + status);
+            deferred.reject(data);
+          }
+        });
+      }
+      return deferred.promise;
     }
 
     function getOrg() {
-      Orgservice.getOrg(function (data, status) {
-        if (data.success) {
-          $scope.org = data;
-          $scope.dirsyncEnabled = !!data.dirsyncEnabled;
-        } else {
-          Log.debug('Get existing org failed. Status: ' + status);
-        }
-      });
+      var deferred = $q.defer();
+      if ($scope.obtainedOrgs) {
+        deferred.resolve();
+      } else {
+        Orgservice.getOrg(function (data, status) {
+          if (data.success) {
+            $scope.org = data;
+            $scope.dirsyncEnabled = !!data.dirsyncEnabled;
+            $scope.obtainedOrgs = true;
+            deferred.resolve();
+          } else {
+            Log.debug('Get existing org failed. Status: ' + status);
+            deferred.reject(data);
+          }
+        });
+      }
+      return deferred.promise;
     }
 
     function getUserLicenses(user) {
@@ -394,7 +464,6 @@
         //CI requires search strings to be at least three characters
         if (str.length >= 3 || str === '') {
           $scope.searchStr = str;
-          getUserList();
         }
       }, $scope.timeoutVal);
     }
@@ -461,35 +530,15 @@
 
     function configureGrid() {
 
+      var deferred = $q.defer();
+
       var photoCellTemplate = '<img ng-if="grid.appScope.isValidThumbnail(row.entity)" class="user-img" ng-src="{{grid.appScope.getUserPhoto(row.entity)}}"/>' +
         '<span ng-if="!grid.appScope.isValidThumbnail(row.entity)" class="user-img">' +
         '<i class="icon icon-user"></i>' +
         '</span>';
 
-      $scope.gridOptions = {
-        data: 'gridData',
-        multiSelect: false,
-        rowHeight: 45,
-        enableRowHeaderSelection: false,
-        enableColumnResize: true,
-        enableColumnMenus: false,
-        enableHorizontalScrollbar: 0,
-        onRegisterApi: function (gridApi) {
-          $scope.gridApi = gridApi;
-          gridApi.selection.on.rowSelectionChanged($scope, function (row) {
-            $scope.showUserDetails(row.entity);
-          });
-          gridApi.infiniteScroll.on.needLoadMoreData($scope, function () {
-            if ($scope.load) {
-              $scope.currentDataPosition++;
-              $scope.load = false;
-              getUserList(($scope.currentDataPosition * Config.usersperpage) + 1);
-              $scope.gridApi.infiniteScroll.dataLoaded();
-            }
-          });
-          gridApi.core.on.sortChanged($scope, sortDirection);
-        },
-        columnDefs: [{
+      var columnDefs = [
+        {
           field: 'photos',
           displayName: '',
           sortable: false,
@@ -527,8 +576,43 @@
           displayName: $translate.instant('usersPage.actionHeader'),
           sortable: false,
           cellTemplate: getTemplate('actions.tpl')
-        }]
+        }
+      ];
+
+      function onRegisterApi(gridApi) {
+        $scope.gridApi = gridApi;
+
+        gridApi.selection.on.rowSelectionChanged($scope, function (row) {
+          $scope.showUserDetails(row.entity);
+        });
+
+        gridApi.infiniteScroll.on.needLoadMoreData($scope, function () {
+          // only load more data if we are allowed to
+          if ($scope.allowLoadMoreData) {
+            getUserList(_.size($scope.userList.allUsers) + 1);
+          } else {
+            $scope.allowLoadMoreData = isMoreDataToLoad();
+          }
+        });
+
+        gridApi.core.on.sortChanged($scope, sortDirection);
+        deferred.resolve();
+      }
+
+      $scope.gridOptions = {
+        data: 'gridData',
+        multiSelect: false,
+        rowHeight: 45,
+        enableRowHeaderSelection: false,
+        enableColumnResize: true,
+        enableColumnMenus: false,
+        enableHorizontalScrollbar: 0,
+        infiniteScrollDown: true,
+        onRegisterApi: onRegisterApi,
+        columnDefs: columnDefs
       };
+
+      return deferred.promise;
     }
 
     function showUserDetails(user) {
@@ -550,18 +634,22 @@
 
     function sortDirection(scope, sortColumns) {
       if (_.isUndefined(_.get(sortColumns, '[0]'))) {
+        // not a sortable column
         return;
       }
 
-      if ($scope.load) {
-        $scope.load = false;
+      if (isMoreDataToLoad()) {
+        // don't have all the data loaded, so request sorted data from server
         var sortBy = sortColumns[0].colDef.id;
         var sortOrder = sortColumns[0].sort.direction === 'asc' ? 'ascending' : 'descending';
         if ($scope.sort.by !== sortBy || $scope.sort.order !== sortOrder) {
           $scope.sort.by = sortBy;
           $scope.sort.order = sortOrder.toLowerCase();
         }
-        getUserList();
+        getUserList().then(function () {
+          // prevent grid from loading all of the data
+          $scope.allowLoadMoreData = false;
+        });
       }
     }
 
