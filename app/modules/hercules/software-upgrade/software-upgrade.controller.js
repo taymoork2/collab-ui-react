@@ -6,10 +6,10 @@
     .controller('SoftwareUpgradeController', SoftwareUpgradeController);
 
   /* @ngInject */
-  function SoftwareUpgradeController($translate, $modalInstance, servicesId, connectorType, softwareUpgrade, cluster, ClusterService, FusionClusterService, XhrNotificationService) {
+  function SoftwareUpgradeController($translate, $modalInstance, servicesId, connectorType, availableVersion, cluster, ClusterService, FusionClusterService, XhrNotificationService) {
     var vm = this;
     vm.upgrading = false;
-    vm.availableVersion = softwareUpgrade.availableVersion;
+    vm.availableVersion = availableVersion;
     vm.serviceName = $translate.instant('hercules.serviceNames.' + servicesId[0]);
     vm.clusterName = cluster.name;
     vm.connectorName = $translate.instant('hercules.connectorNames.' + servicesId[0]);
