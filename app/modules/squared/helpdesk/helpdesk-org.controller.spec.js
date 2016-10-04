@@ -161,7 +161,6 @@ describe('Controller: HelpdeskOrgController', function () {
         Authinfo: Authinfo
       });
       $scope.$apply();
-      expect(orgController.supportsLocalDialing).toBeTruthy();
       expect(orgController.callCard.voiceMailPrefix).toBe("4100");
       expect(orgController.callCard.outboundDialDigit).toBe("7");
       expect(orgController.callCard.dialing).toBe("local");
@@ -216,7 +215,6 @@ describe('Controller: HelpdeskOrgController', function () {
         Authinfo: Authinfo
       });
       $scope.$apply();
-      expect(orgController.supportsLocalDialing).toBeTruthy();
       expect(orgController.callCard.voiceMailPrefix).toBe("4100");
       expect(orgController.callCard.outboundDialDigit).toBe("7");
       expect(orgController.callCard.dialing).toBe("national");

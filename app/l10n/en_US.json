@@ -5366,7 +5366,8 @@
       "local": "Local"
     },
     "vmprefix": "Voicemail Access Prefix",
-    "outbounddigit": "Outbound Dial Digit"
+    "outbounddigit": "Outbound Dial Digit",
+    "areacode": "Area Code"
   },
   "activation": {
     "verificationComplete": "Verification Complete",

@@ -138,6 +138,7 @@ describe('HelpdeskCardsService', function () {
       expect(card.voiceMailPrefix).toBe("4100");
       expect(card.outboundDialDigit).toBe("7");
       expect(card.dialing).toBe("local");
+      expect(card.areaCode).toBe("940");
     });
 
     it('should return correct room systems card for org', function () {

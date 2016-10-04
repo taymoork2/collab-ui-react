@@ -24,7 +24,12 @@
         callCard.outboundDialDigit = site.steeringDigit;
       });
       HelpdeskHuronService.getTenantInfo(org.id).then(function (tenant) {
-        callCard.dialing = (_.isEmpty(tenant.regionCode)) ? "national" : "local";
+        if (_.isEmpty(tenant.regionCode)) {
+          callCard.dialing = "national";
+        } else {
+          callCard.dialing = "local";
+          callCard.areaCode = tenant.regionCode;
+        }
       });
       return callCard;
     }
