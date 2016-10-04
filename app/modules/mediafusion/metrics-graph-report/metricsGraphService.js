@@ -1,5 +1,6 @@
 (function () {
   'use strict';
+
   angular.module('Mediafusion').service('MetricsGraphService', MetricsGraphService);
   /* @ngInject */
   function MetricsGraphService($translate, CommonMetricsGraphService, chartColors, $window) {

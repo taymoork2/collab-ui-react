@@ -1,4 +1,5 @@
 /* globals $httpBackend, $q, $rootScope, Config, Authinfo, LogMetricsService, TrialCallService, TrialCareService, TrialDeviceService,TrialMeetingService,TrialWebexService, TrialMessageService, TrialResource, TrialRoomSystemService, TrialService, UrlConfig*/
+
 'use strict';
 
 describe('Service: Trial Service:', function () {

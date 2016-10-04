@@ -1,4 +1,5 @@
 'use strict';
+
 describe('Controller: Dummy Metrics Reports', function () {
   var DummyMetricsReportService;
   var chartColors;

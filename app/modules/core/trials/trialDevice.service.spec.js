@@ -1,4 +1,5 @@
 /* globals TrialCallService, TrialDeviceService, TrialRoomSystemService*/
+
 'use strict';
 
 describe('Service: Trial Device Service:', function () {

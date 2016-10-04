@@ -1,4 +1,5 @@
 /* globals LONG_TIMEOUT, manageUsersPage */
+
 'use strict';
 
 describe('Squared Add User Flow', function () {
