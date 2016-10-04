@@ -216,6 +216,16 @@
         });
     }
 
+    function createCmiPlace(name, directoryNumber) {
+
+      return CsdmHuronPlaceService.createCmiPlace(name, directoryNumber)
+        .then(function (place) {
+          placesDataModel[place.url] = place;
+          addOrUpdatePlaceInDataModel(place);
+          return place;
+        });
+    }
+
     function createCodeForExisting(cisUuid) {
       return CsdmCodeService.createCodeForExisting(cisUuid)
         .then(function (newCode) {
@@ -366,7 +376,7 @@
       hasLoadedAllDeviceSources: hasLoadedAllDeviceSources,
       createCodeForExisting: createCodeForExisting,
       createCsdmPlace: createCsdmPlace,
-
+      createCmiPlace: createCmiPlace
     };
   }
 
