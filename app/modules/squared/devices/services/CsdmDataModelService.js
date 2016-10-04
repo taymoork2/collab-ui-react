@@ -66,8 +66,7 @@
 
     function updateDeviceMap(deviceMap, keepFunction) {
 
-      CsdmCacheUpdater.update(theDeviceMap, deviceMap, keepFunction);
-
+      CsdmCacheUpdater.update(theDeviceMap, deviceMap, keepFunction, updateCodesToUsed);
       _.each(_.values(deviceMap), function (d) {
         if (d.accountType != 'PERSON') {
           addOrUpdatePlaceInDataModel(d);
@@ -75,6 +74,16 @@
       });
 
       updatePlacesCache();
+    }
+
+    function updateCodesToUsed(addedDevice) {
+      if (addedDevice.type == 'cloudberry' && !addedDevice.isCode) {
+        _.each(_.values(theDeviceMap), function (d) {
+          if (d.isCode && d.cisUuid == addedDevice.cisUuid) {
+            d.isUsed = true;
+          }
+        });
+      }
     }
 
     function setCloudBerryDevicesLoaded() {

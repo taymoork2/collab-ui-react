@@ -944,6 +944,36 @@ describe('Service: CsdmDataModelService', function () {
         expect(initialDeviceMap[moddedDevUrl].displayName).toEqual(newDisplayName);
         expect(initialDeviceMap[moddedDevUrl]).toBe(moddedDeviceRef);
       });
+
+      it('will mark a code as usedif a new device is activated for the same uuid', function () {
+
+        var addedDevUrl = "https://csdm-integration.wbx2.com/csdm/api/v1/organization/584cf4cd-eea7-4c8c-83ee-67d88fc6eab5/devices/aaaaaa-ed35-4e00-a20d-d4d3519efb4f";
+
+        var existingCodeUrl = "https://csdm-integration.wbx2.com/csdm/api/v1/organization/584cf4cd-eea7-4c8c-83ee-67d88fc6eab5/codes/ad233bb2-code1-for-place-with-one-code-9333278b3a0c";
+        var devicesWithOneAdded = JSON.parse(JSON.stringify(initialHttpDevices));
+
+        devicesWithOneAdded[addedDevUrl] = {
+          "displayName": "addedDevice",
+          "cisUuid": "a19b308a-PlaceWithOnlyCode-71898e423bec",
+          "accountType": "MACHINE",
+          "url": "https://csdm-integration.wbx2.com/csdm/api/v1/organization/584cf4cd-eea7-4c8c-83ee-67d88fc6eab5/devices/aaaaaa-ed35-4e00-a20d-d4d3519efb4f",
+          "createTime": "2016-09-15T01:12:01.105Z",
+          "description": "[\"one\", \"two\", \"three\"]",
+          "product": "SX10",
+          "state": "CLAIMED"
+        };
+
+        $httpBackend.expectGET(devicesUrl).respond(devicesWithOneAdded);
+
+        $timeout.flush(31000);
+
+        $httpBackend.flush();
+
+        expect(Object.keys(initialDeviceMap).length).toBe(initialDeviceCount + 1);
+        expect(initialDeviceMap[addedDevUrl].cisUuid).toEqual('a19b308a-PlaceWithOnlyCode-71898e423bec');
+        expect(initialDeviceMap[existingCodeUrl].isUsed).toBeTruthy();
+
+      });
     });
   });
 });

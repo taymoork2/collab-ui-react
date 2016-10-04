@@ -4,6 +4,7 @@
   <h3 class="modal-title" translate="{{showActivationCode.wizardData.title}}"></h3>
 </div>
 <div class="modal-body">
+  <span class="badge success" ng-show="showActivationCode.wizardData.code.isUsed" translate="addDeviceWizard.showActivationCode.codeIsUsed"></span>
   <div>
     <div class="device-wizard view-activation-code" id="printActivationCode" print-element-margin="3rem 3rem">
       <h4 translate="addDeviceWizard.showActivationCode.activationCode"></h4>

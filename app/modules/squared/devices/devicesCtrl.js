@@ -227,6 +227,9 @@
         }
 
         function sortStateFn(a, b) {
+          if (!a) {
+            return b.priority;
+          }
           return a.priority - b.priority;
         }
       }

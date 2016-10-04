@@ -69,9 +69,8 @@
       };
 
       function isActivationCode(item) {
-        return item.needsActivation;
+        return item.needsActivation && !item.isUsed;
       }
-
       function hasIssues(item) {
         return item.hasIssues && item.isOnline && !item.isUnused;
       }
@@ -145,6 +144,9 @@
       }
 
       function matchesFilter(item) {
+        if (item.isCode && item.isUsed) {
+          return false;
+        }
         switch (currentFilter) {
           case 'all':
             return true;
