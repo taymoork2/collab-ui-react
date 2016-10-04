@@ -12,20 +12,22 @@
     </div>
   </cs-sp-header>
   <cs-sp-container>
-    <cs-sp-buttons ng-show="customerOverview.form.$dirty || CustomerOverview.saved">
-      <button class="btn btn--primary" ng-click="customerOverview.saveLogoSettings()" type="submit" translate="common.save"></button>
-      <button ng-click="customerOverview.reset()" translate="common.cancel"></button>
-    </cs-sp-buttons>
-    <button id="launchCustomer" ng-if="!customerOverview.isOwnOrg()" class="btn btn--people"
-      ng-disabled="!customerOverview.currentCustomer.isAllowedToManage && !customerOverview.isPartnerAdmin"
-      ng-click="customerOverview.launchCustomerPortal()">
-      <span ng-if="customerOverview.isOrgSetup" translate="customerPage.launchButton"></span>
-      <span ng-if="!customerOverview.isOrgSetup" translate="customerPage.setupButton"></span>
-    </button>
-    <a ng-if="customerOverview.isOwnOrg()" ui-sref="launch_partner_org({partnerOrgId: customerOverview.partnerOrgId, partnerOrgName: customerOverview.partnerOrgName, launchPartner: true})" target="_blank">
-      <button id="launchPartner" class="btn btn--people" translate="customerPage.myOrgButton">
+   <cs-sp-section>
+      <cs-sp-buttons ng-show="customerOverview.form.$dirty || CustomerOverview.saved">
+        <button class="btn btn--primary" ng-click="customerOverview.saveLogoSettings()" type="submit" translate="common.save"></button>
+        <button ng-click="customerOverview.reset()" translate="common.cancel"></button>
+      </cs-sp-buttons>
+      <button id="launchCustomer" ng-if="!customerOverview.isOwnOrg()" class="btn btn--people"
+        ng-disabled="!customerOverview.currentCustomer.isAllowedToManage && !customerOverview.isPartnerAdmin"
+        ng-click="customerOverview.launchCustomerPortal()">
+        <span ng-if="customerOverview.isOrgSetup" translate="customerPage.launchButton"></span>
+        <span ng-if="!customerOverview.isOrgSetup" translate="customerPage.setupButton"></span>
       </button>
-    </a>
+      <a ng-if="customerOverview.isOwnOrg()" ui-sref="launch_partner_org({partnerOrgId: customerOverview.partnerOrgId, partnerOrgName: customerOverview.partnerOrgName, launchPartner: true})" target="_blank">
+        <button id="launchPartner" class="btn btn--people" translate="customerPage.myOrgButton">
+        </button>
+      </a>
+    </cs-sp-section>
     <cs-sp-section ng-if="customerOverview.currentCustomer.trialId">
       <section-title
         title-key="customerPage.trial"
@@ -47,7 +49,7 @@
       </div>
       <feature-list
         features="customerOverview.trialServices"
-        on-feature-click="customerOverview.goToSubview(feature)">
+        on-feature-click="customerOverview.goToSubview(feature, { isTrial: true })">
       </feature-list>
     </cs-sp-section>
     <cs-sp-section ng-if="customerOverview.newCustomerViewToggle && customerOverview.freeOrPaidServices.length">
