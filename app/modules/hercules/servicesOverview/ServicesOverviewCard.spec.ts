@@ -1,8 +1,7 @@
-import { ServicesOverviewHybridCard } from './ServicesOverviewHybridCard.ts';
-import { ServicesOverviewHybridCallCard } from './hybridCallCard.ts';
-import { ServicesOverviewHybridManagementCard } from './hybridManagementCard.ts';
-import { ServicesOverviewHybridCalendarCard } from './hybridCalendarCard.ts';
-import { ServicesOverviewHybridMediaCard } from './hybridMediaCard.ts';
+import { ServicesOverviewHybridCard } from './ServicesOverviewHybridCard';
+import { ServicesOverviewHybridCallCard } from './hybridCallCard';
+import { ServicesOverviewHybridCalendarCard } from './hybridCalendarCard';
+import { ServicesOverviewHybridMediaCard } from './hybridMediaCard';
 
 describe('ServiceOverviewCard', () => {
 
@@ -22,14 +21,7 @@ describe('ServiceOverviewCard', () => {
         card: new ServicesOverviewHybridCallCard(FusionClusterStatesService),
         services: ['squared-fusion-uc'],
       },
-      // management card depends on state on multiple services:
       {
-        card: new ServicesOverviewHybridManagementCard(FusionClusterStatesService),
-        services: ['squared-fusion-mgmt', 'squared-fusion-cal'],
-      }, {
-        card: new ServicesOverviewHybridManagementCard(FusionClusterStatesService),
-        services: ['squared-fusion-mgmt', 'squared-fusion-uc'],
-      }, {
         card: new ServicesOverviewHybridCalendarCard(FusionClusterStatesService),
         services: ['squared-fusion-cal'],
       }, {
