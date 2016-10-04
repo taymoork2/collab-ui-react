@@ -41,7 +41,14 @@ describe('Service: PstnSetupService', function () {
 
   var blockOrderPayload = {
     "npa": "555",
-    "quantity": "20"
+    "quantity": "20",
+  };
+
+  var blockOrderPayloadWithNxx = {
+    "npa": "555",
+    "quantity": "20",
+    "sequential": true,
+    "nxx": "777"
   };
 
   var orderPayload = {
@@ -153,6 +160,12 @@ describe('Service: PstnSetupService', function () {
   it('should make a block order', function () {
     $httpBackend.expectPOST(HuronConfig.getTerminusUrl() + '/customers/' + customerId + '/carriers/' + carrierId + '/did/block', blockOrderPayload).respond(201);
     PstnSetupService.orderBlock(customerId, carrierId, blockOrderPayload.npa, blockOrderPayload.quantity);
+    $httpBackend.flush();
+  });
+
+  it('should make a block order with nxx', function () {
+    $httpBackend.expectPOST(HuronConfig.getTerminusUrl() + '/customers/' + customerId + '/carriers/' + carrierId + '/did/block', blockOrderPayloadWithNxx).respond(201);
+    PstnSetupService.orderBlock(customerId, carrierId, blockOrderPayloadWithNxx.npa, blockOrderPayloadWithNxx.quantity, blockOrderPayloadWithNxx.sequential, blockOrderPayloadWithNxx.nxx);
     $httpBackend.flush();
   });
 

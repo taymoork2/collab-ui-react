@@ -1,0 +1,11 @@
+<div class = "name-detail">
+  <div class="typeahead-large">
+    <input id = "nameInput" class="form-control"
+         ng-class="{'error': $ctrl.errorNameInput}"
+         placeholder="{{:: 'pagingGroup.namePlaceholder' | translate}}"
+         ng-model="$ctrl.pagingGroupName"
+         ng-change="$ctrl.onChange()"
+         focus-on>
+    <p class="input-hint" translate="pagingGroup.nameHint"></p>
+  </div>
+</div>

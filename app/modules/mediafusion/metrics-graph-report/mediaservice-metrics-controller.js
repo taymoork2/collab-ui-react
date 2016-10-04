@@ -139,6 +139,7 @@
           value.lineThickness = 2;
         }
         if (value.title !== value.valueField) {
+          value.connect = false;
           vm.tempData.push(value);
         }
       });
@@ -297,7 +298,7 @@
     }
 
     function setUtilizationGraph(data, graphs) {
-      var tempUtilizationChart = MetricsGraphService.setUtilizationGraph(data, graphs, vm.utilizationChart, vm.clusterSelected, vm.timeSelected.label);
+      var tempUtilizationChart = MetricsGraphService.setUtilizationGraph(data, graphs, vm.utilizationChart, vm.clusterSelected, vm.timeSelected);
       if (tempUtilizationChart !== null && angular.isDefined(tempUtilizationChart)) {
         vm.UtilizationChart = tempUtilizationChart;
       }

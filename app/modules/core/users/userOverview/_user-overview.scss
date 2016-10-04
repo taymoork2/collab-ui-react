@@ -1,25 +1,3 @@
-.feature-icon {
-  #Message & {
-    @extend .icon-circle-message;
-  }
-  #Call & {
-    @extend .icon-circle-call;
-  }
-  #Meeting & {
-    @extend .icon-circle-group;
-  }
-  #ContactCenter & {
-    /* This icon is used temporarily, will be changed later */
-   @extend .icon-circle-contact-centre;
-  }
-}
-.side-panel .no-services {
-  cursor: default;
-  .feature-arrow-match {
-    padding-right: rem-calc(23);
-  }
-}
-
 .pendingStatus {
   background-color: $color-attention-light;
   color: $white;
@@ -41,4 +19,8 @@
       font-size: rem(14);
     }
   }
+}
+
+.user-header-title {
+  max-width: 90%;
 }

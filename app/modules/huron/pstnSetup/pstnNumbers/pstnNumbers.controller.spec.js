@@ -48,6 +48,15 @@ describe('Controller: PstnNumbersCtrl', function () {
     },
     type: "BLOCK_ORDER"
   };
+  var advancedNxxOrder = {
+    data: {
+      areaCode: 321,
+      length: 2,
+      nxx: 201,
+      consecutive: false
+    },
+    type: "BLOCK_ORDER"
+  };
   var advancedTollFreeOrder = {
     data: {
       areaCode: 800,
@@ -129,7 +138,7 @@ describe('Controller: PstnNumbersCtrl', function () {
     });
 
     it('should have 1 quantity', function () {
-      expect(controller.model.pstn.quantity).toEqual(1);
+      expect(controller.model.pstn.quantity).toEqual(null);
       expect(controller.model.tollFree.quantity).toEqual(1);
     });
 
@@ -157,7 +166,7 @@ describe('Controller: PstnNumbersCtrl', function () {
     it('should update with new numbers', function () {
       controller.orderCart = orderCart;
       $scope.$apply();
-      expect(controller.orderNumbersTotal).toEqual(3);
+      expect(controller.orderNumbersTotal).toEqual(4);
       controller.goToReview();
       expect($state.go).toHaveBeenCalledWith('pstnSetup.review');
     });
@@ -204,6 +213,10 @@ describe('Controller: PstnNumbersCtrl', function () {
 
     it('should format an advanced order', function () {
       expect(controller.formatTelephoneNumber(advancedOrder)).toEqual('(' + advancedOrder.data.areaCode + ') XXX-XXXX');
+    });
+
+    it('should format an advanced order with nxx', function () {
+      expect(controller.formatTelephoneNumber(advancedNxxOrder)).toEqual('(' + advancedNxxOrder.data.areaCode + ') ' + advancedNxxOrder.data.nxx + '-XXXX');
     });
   });
 

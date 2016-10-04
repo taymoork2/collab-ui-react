@@ -66,8 +66,10 @@
     'uc.hurondetails',
     'uc.cdrlogsupport',
     'ngIcal',
+    'huron.paging-group',
     'huron.telephoneNumber',
     require('modules/huron/telephony/telephonyConfig'),
+    require('modules/huron/telephony/cmiServices'),
   ]);
 
   angular.module('Hercules', ['Core', 'Squared', 'core.onboard', 'ngTagsInput']);

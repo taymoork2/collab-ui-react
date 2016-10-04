@@ -67,26 +67,23 @@ class PlaceCallOverview implements ng.IComponentController {
     this.features = [];
     let service: IFeature = {
       name: this.$translate.instant('telephonyPreview.speedDials'),
-      icon: 'NO-ICON',
       state: 'speedDials',
       detail: undefined,
-      actionsAvailable: true,
+      actionAvailable: true,
     };
     this.features.push(service);
     service = {
       name: this.$translate.instant('telephonyPreview.internationalDialing'),
-      icon: 'NO-ICON',
       state: 'internationalDialing',
       detail: this.DialingService.getInternationalDialing(LineConsumerType.PLACES),
-      actionsAvailable: true,
+      actionAvailable: true,
     };
     this.features.push(service);
     service = {
       name: this.$translate.instant('telephonyPreview.localDialing'),
-      icon: 'NO-ICON',
       state: 'local',
       detail: this.DialingService.getLocalDialing(LineConsumerType.PLACES),
-      actionsAvailable: true,
+      actionAvailable: true,
     };
     this.features.push(service);
   }
@@ -96,10 +93,10 @@ class PlaceCallOverview implements ng.IComponentController {
       .then(lines => this.directoryNumbers = lines);
   }
 
-  public featureActions(feature) {
-    this.$state.go('place-overview.communication.' + feature, {
-      watcher: feature === 'local' ? DialingType.LOCAL : DialingType.INTERNATIONAL,
-      selected: feature === 'local' ? this.DialingService.getLocalDialing(LineConsumerType.PLACES) : this.DialingService.getInternationalDialing(LineConsumerType.PLACES),
+  public clickFeature(feature: IFeature) {
+    this.$state.go('place-overview.communication.' + feature.state, {
+      watcher: feature.state === 'local' ? DialingType.LOCAL : DialingType.INTERNATIONAL,
+      selected: feature.state === 'local' ? this.DialingService.getLocalDialing(LineConsumerType.PLACES) : this.DialingService.getInternationalDialing(LineConsumerType.PLACES),
       currentPlace: this.currentPlace,
     });
   }

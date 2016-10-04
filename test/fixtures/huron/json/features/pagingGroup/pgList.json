@@ -1,0 +1,19 @@
+[
+  {
+    "uuid": "bbcd1234-abcd-abcd-abcddef123456",
+    "name": "Test1",
+    "number": { "number" : "5010" },
+    "memberCount": 2,
+    "featureName": "huronFeatureDetails.pg",
+    "filterValue": "PG"
+  },
+  {
+    "uuid": "abcd1234-abcd-abcd-abcddef123456",
+    "name": "Test2",
+    "number": { "number": "5011" },
+    "memberCount": 3,
+    "featureName": "huronFeatureDetails.pg",
+    "filterValue": "PG"
+  }
+]
+

@@ -1,0 +1,19 @@
+<script type="text/ng-template" id="numberTemplate.html">
+  <a>
+    <span ng-bind-html="(match.label.number | telephoneNumber) | typeaheadHighlight:query"></span>
+  </a>
+</script>
+<div class="pilot-number-details">
+  <div class="typeahead-large">
+    <input id="numberInput" ng-model="$ctrl.pagingGroupNumber"
+           ng-class="{'error': $ctrl.errorNumberInput}"
+           ng-change="$ctrl.fetchNumbers()"
+           typeahead="num for num in $ctrl.availableNumbers | limitTo:10"
+           typeahead-on-select="$ctrl.selectNumber($item)"
+           typeahead-template-url="numberTemplate.html"
+           placeholder="{{:: 'pagingGroup.numberPlaceholder' | translate}}"
+           ng-keypress="$ctrl.enterNextPage($event.keyCode)"
+           typeahead-min-length="3" typeahead-wait-ms="500" focus-on/>
+    <p class="input-description" translate="pagingGroup.numberHint"></p>
+  </div>
+</div>
