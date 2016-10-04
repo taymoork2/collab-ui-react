@@ -6,28 +6,75 @@
     .service('DeviceUsageTimelineService', DeviceUsageTimelineService);
 
   /* @ngInject */
-  function DeviceUsageTimelineService($http, $log, chartColors, DeviceUsageMockService) {
+  function DeviceUsageTimelineService($http, chartColors, DeviceUsageMockService, UrlConfig, Authinfo) {
 
-    var urlBase = 'http://localhost:8080/atlas-server/admin/api/v1/organization/';
+    var localUrlBase = 'http://localhost:8080/atlas-server/admin/api/v1/organization';
+    var urlBase = UrlConfig.getAdminServiceUrl() + 'organizations';
 
-    function getData(period, count, granularity) {
-      return loadCallData(period, count, granularity, true);
+    function getDataForLastWeek(api) {
+      return getDataForPeriod('week', 1, 'day', api);
     }
 
-    function loadCallData(period, count, granularity, mock) {
+    function getDataForLastMonth(api) {
+      return getDataForPeriod('month', 1, 'day', api);
+    }
+
+    function getDataForLastMonths(count, granularity, api) {
+      return getDataForPeriod('month', count, granularity, api);
+    }
+
+    function getDataForPeriod(period, count, granularity, api) {
+      return loadPeriodCallData(period, count, granularity, api);
+    }
+
+    function getDataForRange(start, end, granularity, api) {
+      var startDate = moment(start);
+      var endDate = moment(end);
+      var now = moment();
+
+      if (startDate.isValid() && endDate.isValid() && startDate.isBefore(endDate) && endDate.isBefore(now)) {
+        if (api === 'mock') {
+          return DeviceUsageMockService.getData(start, end).then(function (data) {
+            return reduceAllData(data);
+          });
+        } else if (api === 'local') {
+          var url = localUrlBase + '/1eb65fdf-9643-417f-9974-ad72cae0e10f/reports/device/call?';
+          url = url + 'intervalType=' + granularity;
+          url = url + '&rangeStart=' + start + '&rangeEnd=' + end;
+          return $http.get(url).then(function (response) {
+            return reduceAllData(response.data.items);
+          });
+        } else {
+          url = urlBase + '/' + Authinfo.getOrgId() + '/reports/device/call?';
+          url = url + 'intervalType=' + granularity;
+          url = url + '&rangeStart=' + startDate.format('YYYY-MM-DD') + '&rangeEnd=' + endDate.format('YYYY-MM-DD');
+          return $http.get(url).then(function (response) {
+            return reduceAllData(response.data.items);
+          });
+        }
+      }
+
+    }
+
+    function loadPeriodCallData(period, count, granularity, api) {
       var start = moment().startOf(period).subtract(count, period + 's').format('YYYY-MM-DD');
       var end = moment().startOf(period).format('YYYY-MM-DD');
-      $log.info(start + ' - ' + end);
-      if (mock) {
+      if (api === 'mock') {
         return DeviceUsageMockService.getData(start, end).then(function (data) {
           return reduceAllData(data);
         });
-      } else {
-        var url = urlBase + '/1eb65fdf-9643-417f-9974-ad72cae0e10f/reports/device/call?';
+      } else if (api === 'local') {
+        var url = localUrlBase + '/1eb65fdf-9643-417f-9974-ad72cae0e10f/reports/device/call?';
         url = url + 'intervalType=' + granularity;
         url = url + '&rangeStart=' + start + '&rangeEnd=' + end;
         return $http.get(url).then(function (response) {
-          $log.info('response', response);
+          return reduceAllData(response.data.items);
+        });
+      } else {
+        url = urlBase + '/' + Authinfo.getOrgId() + '/reports/device/call?';
+        url = url + 'intervalType=' + granularity;
+        url = url + '&rangeStart=' + start + '&rangeEnd=' + end;
+        return $http.get(url).then(function (response) {
           return reduceAllData(response.data.items);
         });
       }
@@ -35,7 +82,6 @@
 
 
     function reduceAllData(items) {
-      $log.info('items', items);
       return _.chain(items).reduce(function (result, item) {
         if (typeof result[item.date] === 'undefined') {
           result[item.date] = {
@@ -140,7 +186,11 @@
     }
 
     return {
-      getData: getData,
+      getDataForPeriod: getDataForPeriod,
+      getDataForLastWeek: getDataForLastWeek,
+      getDataForLastMonth: getDataForLastMonth,
+      getDataForLastMonths: getDataForLastMonths,
+      getDataForRange: getDataForRange,
       getLineChart: getLineChart
     };
   }
