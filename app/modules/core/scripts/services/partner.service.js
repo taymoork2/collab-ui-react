@@ -6,7 +6,7 @@
     .factory('ScimPatchService', ScimPatchService);
 
   /* @ngInject */
-  function PartnerService($http, $rootScope, $q, $translate, Analytics, Authinfo, Auth, Config, TrialService, UrlConfig) {
+  function PartnerService($http, $rootScope, $q, $translate, Analytics, Authinfo, Auth, Config, TrialService, UrlConfig, UserRoleService) {
     var managedOrgsUrl = UrlConfig.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId() + '/managedOrgs';
     var siteListUrl = UrlConfig.getAdminServiceUrl() + 'organizations/%s/sitesProvOrderStatus';
 
@@ -34,13 +34,11 @@
       calculatePurchaseStatus: _calculatePurchaseStatus,
       calculateTotalLicenses: _calculateTotalLicenses,
       countUniqueServices: _countUniqueServices
-
     };
 
     var factory = {
       customerStatus: customerStatus,
       getManagedOrgsList: getManagedOrgsList,
-      patchManagedOrgs: patchManagedOrgs,
       modifyManagedOrgs: modifyManagedOrgs,
       isLicenseATrial: isLicenseATrial,
       isLicenseActive: isLicenseActive,
@@ -223,31 +221,11 @@
       });
     }
 
-    function patchManagedOrgs(uuid, customerOrgId) {
-      var authUrl = UrlConfig.getScimUrl(Authinfo.getOrgId()) + '/' + uuid;
-
-      var payload = {
-        'schemas': [
-          'urn:scim:schemas:core:1.0',
-          'urn:scim:schemas:extension:cisco:commonidentity:1.0'
-        ],
-        'managedOrgs': [{
-          'orgId': customerOrgId,
-          'role': 'ID_Full_Admin'
-        }]
-      };
-
-      return $http({
-        method: 'PATCH',
-        url: authUrl,
-        data: payload
-      });
-    }
-
     function modifyManagedOrgs(customerOrgId) {
       return Auth.getAuthorizationUrlList().then(function (response) {
         if (response.status === 200 && (_.indexOf(response.data.managedOrgs, customerOrgId) < 0)) {
-          patchManagedOrgs(response.data.uuid, customerOrgId);
+          var userName = Authinfo.getUserName();
+          UserRoleService.enableFullAdmin(userName, customerOrgId);
           Analytics.trackUserPatch(response.data.orgId, response.data.uuid);
         }
       });
