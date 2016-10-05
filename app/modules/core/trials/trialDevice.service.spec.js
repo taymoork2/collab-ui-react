@@ -51,6 +51,14 @@ describe('Service: Trial Device Service:', function () {
       });
     });
 
+    it('should contain only US for CISCO_SX10, CISCO_DX80, and MX300 since MX300 is only US"', function () {
+      var countries = TrialDeviceService.getCountries(['CISCO_SX10', 'CISCO_DX80', 'MX300']);
+      expect(countries.length).toBe(1);
+      expect(countries).toContain({
+        country: 'United States',
+      });
+    });
+
     it('should contain only US if unknown device is present', function () {
       var countries = TrialDeviceService.getCountries(['CISCO_SX10', 'SOME_OTHER']);
       expect(countries.length).toBe(1);
