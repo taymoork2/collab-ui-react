@@ -39,7 +39,7 @@ fi
 #   - 1 => tests failed (sauce link available)
 #   - 100 => protractor terminated abnormally (no sauce link available)
 # - write exit status to temp file (used later to determine whether to set the build 'UNSTABLE')
-node ./protractor/e2e --production-backend --sauce "$test_suite"
+node ./protractor/e2e --production-backend "$test_suite" --sauce
 e2e_exit_code=$?
 echo "$e2e_exit_code" > "${WX2_ADMIN_WEB_CLIENT_HOME}/.cache/${E2E_EXIT_CODE_FILE}"
 
