@@ -12,7 +12,7 @@ describe('Controller: Partner Reports', function () {
   var endpointsData = getJSONFixture('core/json/partnerReports/registeredEndpointData.json');
   var mediaQualityData = getJSONFixture('core/json/partnerReports/mediaQualityData.json');
 
-  var timeOptions = _.clone(defaults.timeFilter);
+  var timeOptions = _.cloneDeep(defaults.timeFilter);
   var Authinfo = {
     getOrgId: jasmine.createSpy('getOrgId').and.returnValue(customerData.customerOptions[3].value),
     getOrgName: jasmine.createSpy('getOrgName').and.returnValue(customerData.customerOptions[3].label)
@@ -31,35 +31,35 @@ describe('Controller: Partner Reports', function () {
       spyOn(this, '$timeout').and.callThrough();
       spyOn(this.ReportService, 'getOverallActiveUserData').and.returnValue(this.$q.when({}));
       spyOn(this.ReportService, 'getActiveUserData').and.returnValue(this.$q.when({
-        graphData: _.clone(activeUserData.detailedResponse),
+        graphData: _.cloneDeep(activeUserData.detailedResponse),
         isActiveUsers: true,
-        popData: _.clone(activeUserData.activePopResponse),
+        popData: _.cloneDeep(activeUserData.activePopResponse),
         overallPopulation: 33
       }));
-      spyOn(this.ReportService, 'getActiveTableData').and.returnValue(this.$q.when(_.clone(activeUserData.mostActiveResponse)));
-      spyOn(this.ReportService, 'getCustomerList').and.returnValue(this.$q.when(_.clone(customerData.customerResponse)));
-      spyOn(this.ReportService, 'getMediaQualityMetrics').and.returnValue(this.$q.when(_.clone(mediaQualityData.mediaQualityResponse)));
-      spyOn(this.ReportService, 'getCallMetricsData').and.returnValue(this.$q.when(_.clone(callMetricsData.callMetricsResponse)));
-      spyOn(this.ReportService, 'getRegisteredEndpoints').and.returnValue(this.$q.when(_.clone(endpointsData.registeredEndpointResponse)));
+      spyOn(this.ReportService, 'getActiveTableData').and.returnValue(this.$q.when(_.cloneDeep(activeUserData.mostActiveResponse)));
+      spyOn(this.ReportService, 'getCustomerList').and.returnValue(this.$q.when(_.cloneDeep(customerData.customerResponse)));
+      spyOn(this.ReportService, 'getMediaQualityMetrics').and.returnValue(this.$q.when(_.cloneDeep(mediaQualityData.mediaQualityResponse)));
+      spyOn(this.ReportService, 'getCallMetricsData').and.returnValue(this.$q.when(_.cloneDeep(callMetricsData.callMetricsResponse)));
+      spyOn(this.ReportService, 'getRegisteredEndpoints').and.returnValue(this.$q.when(_.cloneDeep(endpointsData.registeredEndpointResponse)));
 
       spyOn(this.GraphService, 'getActiveUsersGraph').and.returnValue({
-        dataProvider: _.clone(activeUserData.detailedResponse)
+        dataProvider: _.cloneDeep(activeUserData.detailedResponse)
       });
       spyOn(this.GraphService, 'getMediaQualityGraph').and.returnValue({
-        dataProvider: _.clone(mediaQualityData.mediaQualityResponse)
+        dataProvider: _.cloneDeep(mediaQualityData.mediaQualityResponse)
       });
       spyOn(this.GraphService, 'getActiveUserPopulationGraph').and.returnValue({
-        dataProvider: _.clone(activeUserData.activePopResponse)
+        dataProvider: _.cloneDeep(activeUserData.activePopResponse)
       });
       spyOn(this.GraphService, 'getCallMetricsDonutChart').and.returnValue({
-        dataProvider: _.clone(callMetricsData.callMetricsResponse)
+        dataProvider: _.cloneDeep(callMetricsData.callMetricsResponse)
       });
 
-      spyOn(this.DummyReportService, 'dummyActiveUserData').and.returnValue(_.clone(dummyData.activeUser.one));
-      spyOn(this.DummyReportService, 'dummyActivePopulationData').and.returnValue(_.clone(dummyData.activeUserPopulation));
-      spyOn(this.DummyReportService, 'dummyMediaQualityData').and.returnValue(_.clone(dummyData.mediaQuality.one));
-      spyOn(this.DummyReportService, 'dummyCallMetricsData').and.returnValue(_.clone(dummyData.callMetrics));
-      spyOn(this.DummyReportService, 'dummyEndpointData').and.returnValue(_.clone(dummyData.endpoints));
+      spyOn(this.DummyReportService, 'dummyActiveUserData').and.returnValue(_.cloneDeep(dummyData.activeUser.one));
+      spyOn(this.DummyReportService, 'dummyActivePopulationData').and.returnValue(_.cloneDeep(dummyData.activeUserPopulation));
+      spyOn(this.DummyReportService, 'dummyMediaQualityData').and.returnValue(_.cloneDeep(dummyData.mediaQuality.one));
+      spyOn(this.DummyReportService, 'dummyCallMetricsData').and.returnValue(_.cloneDeep(dummyData.callMetrics));
+      spyOn(this.DummyReportService, 'dummyEndpointData').and.returnValue(_.cloneDeep(dummyData.endpoints));
 
       controller = this.$controller('PartnerReportCtrl', {
         $scope: $scope,
@@ -98,17 +98,17 @@ describe('Controller: Partner Reports', function () {
     });
 
     it('should set all page variables', function () {
-      var activeUserOptions = _.clone(ctrlData.activeUserOptions);
-      var activeUserSecondaryOptions = _.clone(ctrlData.activeUserSecondaryOptions);
-      var populationOptions = _.clone(ctrlData.populationOptions);
-      var mediaOptions = _.clone(ctrlData.mediaOptions);
-      var endpointOptions = _.clone(ctrlData.endpointOptions);
-      var callOptions = _.clone(ctrlData.callOptions);
+      var activeUserOptions = _.cloneDeep(ctrlData.activeUserOptions);
+      var activeUserSecondaryOptions = _.cloneDeep(ctrlData.activeUserSecondaryOptions);
+      var populationOptions = _.cloneDeep(ctrlData.populationOptions);
+      var mediaOptions = _.cloneDeep(ctrlData.mediaOptions);
+      var endpointOptions = _.cloneDeep(ctrlData.endpointOptions);
+      var callOptions = _.cloneDeep(ctrlData.callOptions);
       activeUserOptions.table = undefined;
-      activeUserSecondaryOptions.table.data = _.clone(activeUserData.mostActiveResponse);
+      activeUserSecondaryOptions.table.data = _.cloneDeep(activeUserData.mostActiveResponse);
       populationOptions.table = undefined;
       mediaOptions.table = undefined;
-      endpointOptions.table.data = _.clone(endpointsData.registeredEndpointResponse);
+      endpointOptions.table.data = _.cloneDeep(endpointsData.registeredEndpointResponse);
       callOptions.table = undefined;
 
       expect(controller.showEngagement).toEqual(true);
@@ -145,10 +145,10 @@ describe('Controller: Partner Reports', function () {
       controller.updateReports();
       $scope.$apply();
 
-      expect(this.GraphService.getActiveUsersGraph.calls.mostRecent().args[0]).toEqual(_.clone(activeUserData.detailedResponse));
-      expect(this.GraphService.getMediaQualityGraph.calls.mostRecent().args[0]).toEqual(_.clone(mediaQualityData.mediaQualityResponse));
-      expect(this.GraphService.getActiveUserPopulationGraph.calls.mostRecent().args[0]).toEqual(_.clone(activeUserData.activePopResponse));
-      expect(this.GraphService.getCallMetricsDonutChart.calls.mostRecent().args[0]).toEqual(_.clone(callMetricsData.callMetricsResponse));
+      expect(this.GraphService.getActiveUsersGraph.calls.mostRecent().args[0]).toEqual(_.cloneDeep(activeUserData.detailedResponse));
+      expect(this.GraphService.getMediaQualityGraph.calls.mostRecent().args[0]).toEqual(_.cloneDeep(mediaQualityData.mediaQualityResponse));
+      expect(this.GraphService.getActiveUserPopulationGraph.calls.mostRecent().args[0]).toEqual(_.cloneDeep(activeUserData.activePopResponse));
+      expect(this.GraphService.getCallMetricsDonutChart.calls.mostRecent().args[0]).toEqual(_.cloneDeep(callMetricsData.callMetricsResponse));
     });
 
     it('should change visible cards when showHideCards is used', function () {
@@ -189,23 +189,23 @@ describe('Controller: Partner Reports', function () {
       spyOn(this.ReportService, 'getRegisteredEndpoints').and.returnValue(this.$q.when([]));
 
       spyOn(this.GraphService, 'getActiveUsersGraph').and.returnValue({
-        dataProvider: _.clone(dummyData.activeUser.one)
+        dataProvider: _.cloneDeep(dummyData.activeUser.one)
       });
       spyOn(this.GraphService, 'getMediaQualityGraph').and.returnValue({
-        dataProvider: _.clone(dummyData.mediaQuality.one)
+        dataProvider: _.cloneDeep(dummyData.mediaQuality.one)
       });
       spyOn(this.GraphService, 'getActiveUserPopulationGraph').and.returnValue({
-        dataProvider: _.clone(dummyData.activeUserPopulation)
+        dataProvider: _.cloneDeep(dummyData.activeUserPopulation)
       });
       spyOn(this.GraphService, 'getCallMetricsDonutChart').and.returnValue({
-        dataProvider: _.clone(dummyData.callMetrics)
+        dataProvider: _.cloneDeep(dummyData.callMetrics)
       });
 
-      spyOn(this.DummyReportService, 'dummyActiveUserData').and.returnValue(_.clone(dummyData.activeUser.one));
-      spyOn(this.DummyReportService, 'dummyActivePopulationData').and.returnValue(_.clone(dummyData.activeUserPopulation));
-      spyOn(this.DummyReportService, 'dummyMediaQualityData').and.returnValue(_.clone(dummyData.mediaQuality.one));
-      spyOn(this.DummyReportService, 'dummyCallMetricsData').and.returnValue(_.clone(dummyData.callMetrics));
-      spyOn(this.DummyReportService, 'dummyEndpointData').and.returnValue(_.clone(dummyData.endpoints));
+      spyOn(this.DummyReportService, 'dummyActiveUserData').and.returnValue(_.cloneDeep(dummyData.activeUser.one));
+      spyOn(this.DummyReportService, 'dummyActivePopulationData').and.returnValue(_.cloneDeep(dummyData.activeUserPopulation));
+      spyOn(this.DummyReportService, 'dummyMediaQualityData').and.returnValue(_.cloneDeep(dummyData.mediaQuality.one));
+      spyOn(this.DummyReportService, 'dummyCallMetricsData').and.returnValue(_.cloneDeep(dummyData.callMetrics));
+      spyOn(this.DummyReportService, 'dummyEndpointData').and.returnValue(_.cloneDeep(dummyData.endpoints));
 
       controller = this.$controller('PartnerReportCtrl', {
         $scope: $scope,
@@ -242,12 +242,12 @@ describe('Controller: Partner Reports', function () {
     });
 
     it('should set all page variables', function () {
-      var activeUserOptions = _.clone(ctrlData.activeUserOptions);
-      var activeUserSecondaryOptions = _.clone(ctrlData.activeUserSecondaryOptions);
-      var populationOptions = _.clone(ctrlData.populationOptions);
-      var mediaOptions = _.clone(ctrlData.mediaOptions);
-      var endpointOptions = _.clone(ctrlData.endpointOptions);
-      var callOptions = _.clone(ctrlData.callOptions);
+      var activeUserOptions = _.cloneDeep(ctrlData.activeUserOptions);
+      var activeUserSecondaryOptions = _.cloneDeep(ctrlData.activeUserSecondaryOptions);
+      var populationOptions = _.cloneDeep(ctrlData.populationOptions);
+      var mediaOptions = _.cloneDeep(ctrlData.mediaOptions);
+      var endpointOptions = _.cloneDeep(ctrlData.endpointOptions);
+      var callOptions = _.cloneDeep(ctrlData.callOptions);
       activeUserOptions.state = ctrlData.EMPTY;
       activeUserOptions.table = undefined;
       activeUserSecondaryOptions.display = false;
@@ -258,7 +258,7 @@ describe('Controller: Partner Reports', function () {
       mediaOptions.state = ctrlData.EMPTY;
       mediaOptions.table = undefined;
       endpointOptions.state = ctrlData.EMPTY;
-      endpointOptions.table.data = _.clone(dummyData.endpoints);
+      endpointOptions.table.data = _.cloneDeep(dummyData.endpoints);
       endpointOptions.table.dummy = true;
       callOptions.state = ctrlData.EMPTY;
       callOptions.table = undefined;

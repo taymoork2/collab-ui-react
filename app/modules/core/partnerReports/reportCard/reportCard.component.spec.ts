@@ -10,7 +10,7 @@ describe('Component: reportCard', () => {
   let ctrlData = getJSONFixture('core/json/partnerReports/ctrl.json');
   let defaults = getJSONFixture('core/json/partnerReports/commonReportService.json');
   let endpointsData = getJSONFixture('core/json/partnerReports/registeredEndpointData.json');
-  let timeFilter: ITimespan = _.clone(defaults.timeFilter[0]);
+  let timeFilter: ITimespan = _.cloneDeep(defaults.timeFilter[0]);
 
   // html selectors
   const headerTitle: string = 'span.report-section-header';
@@ -31,9 +31,9 @@ describe('Component: reportCard', () => {
   });
 
   describe('barchart and secondary table combination:', function () {
-    let options: IReportCard = _.clone(ctrlData.activeUserOptions);
-    let secondaryOptions: ISecondaryReport = _.clone(ctrlData.activeUserSecondaryOptions);
-    let sortedArray: ISecondaryReport = _.clone(activeUserData.mostActiveResponse).sort(function (itemOne, itemTwo) {
+    let options: IReportCard = _.cloneDeep(ctrlData.activeUserOptions);
+    let secondaryOptions: ISecondaryReport = _.cloneDeep(ctrlData.activeUserSecondaryOptions);
+    let sortedArray: ISecondaryReport = _.cloneDeep(activeUserData.mostActiveResponse).sort(function (itemOne, itemTwo) {
       if (itemOne.totalActivity < itemTwo.totalActivity) {
         return 1;
       } else if (itemOne.totalActivity > itemTwo.totalActivity) {
@@ -50,7 +50,7 @@ describe('Component: reportCard', () => {
       }
     });
     options.table = undefined;
-    secondaryOptions.table.data =  _.clone(activeUserData.mostActiveResponse);
+    secondaryOptions.table.data =  _.cloneDeep(activeUserData.mostActiveResponse);
 
     let checkTableEntries = (view: any, start: number, length: number) => {
       // the selected items from start to end should be visible
@@ -154,7 +154,7 @@ describe('Component: reportCard', () => {
   });
 
   describe('donut chart only:', function () {
-    let options: IReportCard = _.clone(ctrlData.callOptions);
+    let options: IReportCard = _.cloneDeep(ctrlData.callOptions);
     options.table = undefined;
 
     beforeEach(function () {
@@ -188,8 +188,8 @@ describe('Component: reportCard', () => {
   });
 
   describe('main report with table only:', function () {
-    let options: IReportCard = _.clone(ctrlData.endpointOptions);
-    let tableData: IReportsTable = _.clone(endpointsData.registeredEndpointResponse);
+    let options: IReportCard = _.cloneDeep(ctrlData.endpointOptions);
+    let tableData: IReportsTable = _.cloneDeep(endpointsData.registeredEndpointResponse);
     options.table.data = tableData;
 
     beforeEach(function () {
