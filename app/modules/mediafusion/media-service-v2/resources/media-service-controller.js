@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject */
-  function MediaServiceControllerV2(MediaServiceActivationV2, $state, $modal, $scope, $translate, Authinfo, MediaClusterServiceV2, Notification) {
+  function MediaServiceControllerV2($state, $modal, $scope, $translate, MediaClusterServiceV2, FusionClusterService) {
 
     MediaClusterServiceV2.subscribe('data', clustersUpdated, {
       scope: $scope
@@ -76,9 +76,11 @@
     };
 
     if (vm.currentServiceId == "squared-fusion-media") {
-      MediaServiceActivationV2.isServiceEnabled(vm.currentServiceId, function (error, enabled) {
-        if (!error) {
+      FusionClusterService.serviceIsSetUp(vm.currentServiceId).then(function (enabled) {
+        if (enabled) {
           vm.serviceEnabled = enabled;
+        } else {
+          firstTimeSetup();
         }
       });
     }
@@ -129,73 +131,8 @@
       });
     }
 
-    vm.enableMediaService = function (serviceId) {
-      //function enableMediaService(serviceId) {
-      vm.waitForEnabled = true;
-      MediaServiceActivationV2.setServiceEnabled(serviceId, true).then(
-        function success() {
-          vm.enableOrpheusForMediaFusion();
-        },
-        function error() {
-          Notification.error('mediaFusion.mediaServiceActivationFailure');
-        });
-      //$scope.enableOrpheusForMediaFusion();
-      vm.serviceEnabled = true;
-      vm.waitForEnabled = false;
-    };
-
-    vm.enableOrpheusForMediaFusion = function () {
-      MediaServiceActivationV2.getUserIdentityOrgToMediaAgentOrgMapping().then(
-        function success(response) {
-          var mediaAgentOrgIdsArray = [];
-          var orgId = Authinfo.getOrgId();
-          var updateMediaAgentOrgId = false;
-          mediaAgentOrgIdsArray = response.data.mediaAgentOrgIds;
-
-          // See if org id is already mapped to user org id
-          if (mediaAgentOrgIdsArray.indexOf(orgId) == -1) {
-            mediaAgentOrgIdsArray.push(orgId);
-            updateMediaAgentOrgId = true;
-          }
-          // See if "squared" org id is already mapped to user org id
-          if (mediaAgentOrgIdsArray.indexOf("squared") == -1) {
-            mediaAgentOrgIdsArray.push("squared");
-            updateMediaAgentOrgId = true;
-          }
-
-          if (updateMediaAgentOrgId) {
-            vm.addUserIdentityToMediaAgentOrgMapping(mediaAgentOrgIdsArray);
-          }
-        },
-
-        function error() {
-          // Unable to find identityOrgId, add identityOrgId -> mediaAgentOrgId mapping
-          var mediaAgentOrgIdsArray = [];
-          mediaAgentOrgIdsArray.push(Authinfo.getOrgId());
-          mediaAgentOrgIdsArray.push("squared");
-          vm.addUserIdentityToMediaAgentOrgMapping(mediaAgentOrgIdsArray);
-        });
-    };
-
-    vm.addUserIdentityToMediaAgentOrgMapping = function (mediaAgentOrgIdsArray) {
-      MediaServiceActivationV2.setUserIdentityOrgToMediaAgentOrgMapping(mediaAgentOrgIdsArray).then(
-        function success() {},
-        function error(errorResponse) {
-          Notification.error('mediaFusion.mediaAgentOrgMappingFailure', {
-            failureMessage: errorResponse.message
-          });
-        });
-    };
-
-
-    MediaServiceActivationV2.isServiceEnabled(vm.currentServiceId, function (error, enabled) {
-      if (!enabled) {
-        firstTimeSetup();
-      }
-    });
-
-
     function firstTimeSetup() {
+      vm.serviceEnabled = true;
       $modal.open({
         resolve: {
           firstTimeSetup: true,

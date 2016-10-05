@@ -5,19 +5,45 @@
 </div>
 
 <div class="modal-body mediafusion-fix-paragraphs">
-  <p>
-    {{'mediaFusion.settings.deactivateBody_1' | translate}}
-  </p>
-  <p>
-    <b>{{'mediaFusion.page_title' | translate}}</b>
-  </p>
-  <p>
-    {{'mediaFusion.settings.deactivateBody_2' | translate}}
-  </p>
+  <span ng-if="disableServiceDialog.step === '1'">
+    <p>
+      <span translate="{{'mediaFusion.deactivate.deregister'}}"/>
+      <ul>
+        <div ng-repeat="ecp in disableServiceDialog.clusterNames">
+          <li>{{ecp}}</li>
+        </div>
+      </ul>
+    </p>
+    <p>  
+      <div class="form-group">
+        <div class="cs-checkbox-group">
+          <div class="cs-input-group cs-input-checkbox">
+            <input type="checkbox" id="individualcheckbox" ng-model="disableServiceDialog.checkboxModel">
+            <label for="individualcheckbox">
+              <span translate="{{'mediaFusion.deactivate.ready'}}"/>
+            </label>
+          </div>
+        </div>
+      </div>
+    </p>
+  </span>
+
+  <span ng-if="disableServiceDialog.step === '2'">
+    <p>
+      <span translate="{{'mediaFusion.deactivate.areYou'}}"/><br>
+      <span translate="{{'mediaFusion.deactivate.future'}}"/>
+    </p>
+    <p>
+      <span translate="{{'mediaFusion.deactivate.complete'}}"/>
+    </p>
+  </span>  
+
 </div>
 
 <div class="modal-footer">
-  <button ng-click="disableConfirmDialog.cancel()" class="btn">{{'mediaFusion.settings.cancel' | translate}}</button>
-  <button ng-click="disableConfirmDialog.ok()" class="btn toast-error icon-inverse fix-alert-margins">{{'mediaFusion.settings.deactivate' | translate}}</button>
+  <span class="pull-left">Step {{disableServiceDialog.step}} of 2</span>
+  <button ng-click="disableServiceDialog.cancel()" class="btn ">{{'mediaFusion.settings.cancel' | translate}}</button>
+  <button ng-click="disableServiceDialog.continue()" ng-show="disableServiceDialog.step === '1'" ng-disabled="!disableServiceDialog.checkboxModel" class="btn btn--primary pull-right">{{'common.continue' | translate}}</button>
+  <button ng-click="disableServiceDialog.deactivate()" ng-show="disableServiceDialog.step === '2'"  class="btn btn--primary pull-right">{{'mediaFusion.deactivate.button-deactivate' | translate}}</button>
 </div>
 
