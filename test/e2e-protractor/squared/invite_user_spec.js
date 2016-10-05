@@ -1,4 +1,5 @@
 /* globals LONG_TIMEOUT, manageUsersPage */
+
 'use strict';
 
 describe('Squared Add User Flow', function () {
@@ -89,7 +90,7 @@ describe('Squared Add User Flow', function () {
     });
 
     it('should display correct navigation colors', function () {
-      utils.expectClass(navigation.body, 'inverse');
+      utils.waitClass(navigation.body, 'inverse');
     });
 
     it('should create a new trial', function () {

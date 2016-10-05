@@ -1,6 +1,7 @@
 /**
  * Created by zamamoha on 10/20/15.
  */
+
 'use strict';
 
 describe('Hunt Group EditCtrl Controller', function () {

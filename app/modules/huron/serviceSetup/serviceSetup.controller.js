@@ -9,7 +9,7 @@
   function ServiceSetupCtrl($q, $state, $scope, ServiceSetup, Notification, Authinfo, $translate, HuronCustomer,
     ValidationService, DialPlanService, TelephoneNumberService, ExternalNumberService,
     CeService, HuntGroupServiceV2, ModalService, DirectoryNumberService, VoicemailMessageAction,
-    PstnSetupService) {
+    PstnSetupService, Orgservice) {
     var vm = this;
 
     vm.NATIONAL = 'national';
@@ -30,6 +30,13 @@
 
     var VOICE_ONLY = 'VOICE_ONLY';
     var DEMO_STANDARD = 'DEMO_STANDARD';
+
+    vm.addInternalNumberRange = addInternalNumberRange;
+    vm.deleteInternalNumberRange = deleteInternalNumberRange;
+    vm.loadExternalNumberPool = loadExternalNumberPool;
+    vm.initServiceSetup = initServiceSetup;
+    vm.initNext = initNext;
+    vm.checkIfTestOrg = checkIfTestOrg;
 
     vm.processing = true;
     vm.externalNumberPool = [];
@@ -675,12 +682,6 @@
       }
     }];
 
-    vm.addInternalNumberRange = addInternalNumberRange;
-    vm.deleteInternalNumberRange = deleteInternalNumberRange;
-    vm.loadExternalNumberPool = loadExternalNumberPool;
-    vm.initServiceSetup = initServiceSetup;
-    vm.initNext = initNext;
-
     function initServiceSetup() {
       var errors = [];
       return HuronCustomer.get().then(function (customer) {
@@ -765,6 +766,13 @@
           }).catch(function (response) {
             Notification.errorResponse(response, 'serviceSetupModal.voicemailGetError');
           });
+        } else if (!Authinfo.isSetupDone()) {
+          // set voicemail toggle to enabled when non-test customer runs FTSW for the very first time
+          if (checkIfTestOrg()) {
+            vm.model.ftswCompanyVoicemail.ftswCompanyVoicemailEnabled = false;
+          } else {
+            vm.model.ftswCompanyVoicemail.ftswCompanyVoicemailEnabled = true;
+          }
         }
       })
       .then(function () {
@@ -776,6 +784,15 @@
       var length = parseInt(vm.model.site.extensionLength, 10);
 
       return (length < range.length) ? range.slice(0, length) : _.padEnd(range, length, char);
+    }
+
+    function checkIfTestOrg() {
+      var isTestOrg = $q(function (resolve) {
+        Orgservice.getOrg(function (response) {
+          resolve(response.isTestOrg);
+        });
+      });
+      return isTestOrg;
     }
 
     function loadExternalNumberPool() {

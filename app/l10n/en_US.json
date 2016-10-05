@@ -5483,14 +5483,6 @@
           "features": "Features"
         }
       },
-      "hybridManagement": {
-        "title": "Hybrid Management",
-        "description": "Connector management for Hybrid Call and Calendar Services.",
-        "buttons": {
-          "resources": "Resources",
-          "settings": "Settings"
-        }
-      },
       "clusterList": {
         "title": "Clusters",
         "description": "On-premises clusters and configuration for your organization.",

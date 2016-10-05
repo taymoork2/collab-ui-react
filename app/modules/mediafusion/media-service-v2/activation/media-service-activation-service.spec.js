@@ -3,9 +3,10 @@
 describe('MediaServiceActivationV2', function () {
   // load the service's module
   beforeEach(angular.mock.module('Mediafusion'));
+  beforeEach(angular.mock.module('Hercules'));
 
   // instantiate service
-  var Service, $httpBackend, authinfo, $q;
+  var Service, $httpBackend, authinfo, FusionClusterService, $q;
   var extensionEntitlements = ['squared-fusion-media'];
   //var serviceId = "squared-fusion-media";
   var mediaAgentOrgIds = ['mediafusion'];
@@ -20,8 +21,9 @@ describe('MediaServiceActivationV2', function () {
     });
   });
 
-  beforeEach(inject(function ($injector, _MediaServiceActivationV2_, _$q_) {
+  beforeEach(inject(function ($injector, _MediaServiceActivationV2_, _FusionClusterService_, _$q_) {
     Service = _MediaServiceActivationV2_;
+    FusionClusterService = _FusionClusterService_;
     $q = _$q_;
     $httpBackend = $injector.get('$httpBackend');
   }));
@@ -97,21 +99,21 @@ describe('MediaServiceActivationV2', function () {
   });
 
   it('MediaServiceActivationV2 isServiceEnabled should be called for getMediaServiceState', function () {
-    spyOn(Service, 'isServiceEnabled').and.callThrough();
+    spyOn(FusionClusterService, 'serviceIsSetUp').and.callThrough();
     Service.getMediaServiceState();
-    expect(Service.isServiceEnabled).toHaveBeenCalled();
+    expect(FusionClusterService.serviceIsSetUp).toHaveBeenCalled();
   });
   it('MediaServiceActivationV2 isServiceEnabled should not be called for getMediaServiceState when isMediaServiceEnabled is set to true', function () {
     Service.setisMediaServiceEnabled(true);
-    spyOn(Service, 'isServiceEnabled').and.callThrough();
+    spyOn(FusionClusterService, 'serviceIsSetUp').and.callThrough();
     Service.getMediaServiceState();
-    expect(Service.isServiceEnabled).not.toHaveBeenCalled();
+    expect(FusionClusterService.serviceIsSetUp).not.toHaveBeenCalled();
   });
   it('MediaServiceActivationV2 isServiceEnabled should not be called for getMediaServiceState when isMediaServiceEnabled is set to false', function () {
     Service.setisMediaServiceEnabled(false);
-    spyOn(Service, 'isServiceEnabled').and.callThrough();
+    spyOn(FusionClusterService, 'serviceIsSetUp').and.callThrough();
     Service.getMediaServiceState();
-    expect(Service.isServiceEnabled).not.toHaveBeenCalled();
+    expect(FusionClusterService.serviceIsSetUp).not.toHaveBeenCalled();
   });
 
   it('should disable orpheus for mediafusion org', function () {

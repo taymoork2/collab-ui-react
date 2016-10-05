@@ -6,10 +6,14 @@ var PartnerHomePage = function () {
   var dateTime = utils.getDateTimeString();
   var trialName = 'Atlas_Test_UI_' + dateTime + '_' + randomNumber;
 
+  this.pendingCount = 0;
+  this.timeStart = 0;
+
   this.newTrial = {
     customerName: trialName,
     customerEmail: 'collabctg+' + trialName + '@gmail.com',
-    webexSiteURL: trialName + '.webex.com'
+    webexSiteURL: trialName.replace(/_/g, '-') + '.webex.com',
+    sipDomain: dateTime.replace(/_/g, '-')
   };
 
   this.editTrial = {
@@ -89,7 +93,7 @@ var PartnerHomePage = function () {
   this.previewPanel = element(by.css('.customer-overview'));
   this.customerInfo = element(by.id('customer-info'));
   this.trialInfo = element(by.id('trial-info'));
-  this.actionsButton = element(by.id(this.newTrial.customerName + 'ActionsButton'));
+  this.trialPending = element(by.css('.trial-pending'));
   this.launchCustomerPanelButton = element(by.id('launchCustomer'));
   this.exitPreviewButton = element(by.css('.panel-close'));
   this.partnerFilter = element(by.id('partnerFilter'));
@@ -140,6 +144,8 @@ var PartnerHomePage = function () {
   this.deleteCustomerButton = element(by.id('deleteCustomer'));
   this.deleteCustomerOrgConfirm = element(by.css('.btn--alert'));
 
+  this.pageHeaderTitle = element(by.css('.page-header__title'));
+
   this.assertResultsLength = function () {
     element.all(by.binding('row.entity')).then(function (rows) {
       expect(rows.length).toBeGreaterThan(1);
@@ -150,6 +156,51 @@ var PartnerHomePage = function () {
     return trialRow.evaluate('row.entity.customerOrgId').then(function (orgId) {
       expect(orgId).not.toBeNull();
       return orgId;
+    });
+  };
+
+  this.expectTrialNotPending = function (isRecursion) {
+    // Helper function to refresh page and drill down to trial sidepanel
+    function refreshPageAndCheckIsPending() {
+      var timeNow = new Date();
+      console.log('Trial still pending, refreshing page ' + partner.pendingCount + ' time elapsed: ' + ((timeNow - partner.timeStart) / 60000) + ' minutes');
+      partner.pendingCount++;
+
+      browser.refresh();
+      utils.click(partner.trialFilter);
+      utils.search(partner.newTrial.customerName, -1);
+      utils.waitIsDisplayed(partner.newTrialRow);
+
+      utils.click(partner.newTrialRow);
+      utils.waitIsDisplayed(partner.previewPanel);
+      return utils.waitIsDisplayed(partner.trialPending, 55000).then(function () {
+        return true;
+      }, function () {
+        return false;
+      });
+    }
+
+    // If this is the first time through, reset the recursion count
+    if (!isRecursion || false) {
+      partner.pendingCount = 0;
+      partner.timeStart = new Date();
+    }
+
+    // Loop until status is no longer pending, or we timeout
+    return utils.waitIsNotDisplayed(partner.trialPending, 2 * 60000).then(function () {
+      return true;
+    }, function () {
+      // Long timeout
+      if (partner.pendingCount >= 15) {
+        return false;
+      }
+      // Refresh page and check again
+      return refreshPageAndCheckIsPending().then(function (result) {
+        if (result) {
+          return partner.expectTrialNotPending(true);
+        }
+        return true;
+      });
     });
   };
 
@@ -181,6 +232,13 @@ var PartnerHomePage = function () {
     }, 5000, 'Waiting for video to load');
   };
 
+  this.getMeetingLink = function (name) {
+    return element(by.cssContainingText('.btn-link', name));
+  };
+
+  this.getTrialConfigBtn = function (name) {
+    return element(by.id(name + '_webex-site-settings'));
+  };
 };
 
 module.exports = PartnerHomePage;

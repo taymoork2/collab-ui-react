@@ -1,6 +1,7 @@
 /**
  *
  */
+
 'use strict';
 
 describe('WebExUtilsFact: isCIEnabledSite() test', function () {

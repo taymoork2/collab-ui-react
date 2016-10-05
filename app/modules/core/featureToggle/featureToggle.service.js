@@ -24,7 +24,7 @@
       atlasDataRetentionSettings: 'atlas-data-retention-settings',
       atlasEmailStatus: 'atlas-email-status',
       atlasHelpDeskExt: 'atlas-helpdesk-extended-information',
-      atlasHybridServicesResourceList: 'atlas-hybrid-services-resource-list',
+      atlasHelpDeskOrderSearch: 'atlas-helpdesk-order-search',
       atlasMediaServiceMetrics: 'atlas-media-service-metrics',
       atlasMediaServiceOnboarding: 'atlas-media-service-onboarding',
       atlasNewRoomSystems: 'atlas-new-roomSystems',

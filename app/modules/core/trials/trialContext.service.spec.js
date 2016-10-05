@@ -1,4 +1,5 @@
 /* globals $q, $httpBackend, TrialContextService, LogMetricsService */
+
 'use strict';
 
 describe('Service: Trial Context Service', function () {

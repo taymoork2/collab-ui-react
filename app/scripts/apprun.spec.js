@@ -1,5 +1,6 @@
 (function () {
   'use strict';
+
   describe('App Run', function () {
     var $rootScope, $httpBackend, TrackingId;
     var STATE_CHANGE_SUCCESS = '$stateChangeSuccess';
