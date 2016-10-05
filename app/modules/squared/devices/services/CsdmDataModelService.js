@@ -210,16 +210,14 @@
               delete theDeviceMap[code.url];
             });
           } else {
-
             delete theDeviceMap[item.url];
-
             var placeUrl = getPlaceUrl(item);
-            if (!item.isHuronDevice && placesDataModel[placeUrl]) { // we currently delete the place when delete cloudberry device
-
-              delete placesDataModel[placeUrl].devices[item.url];  //delete all devices and codes in the place
+            if (placesDataModel[placeUrl]) {
+              delete placesDataModel[placeUrl].devices[item.url]; //delete device or code from the place
               delete placesDataModel[placeUrl].codes[item.url];
-              delete placesDataModel[placeUrl];
-
+              if (!item.isHuronDevice) {
+                delete placesDataModel[placeUrl]; //we currently delete the place when delete cloudberry device
+              }
             }
           }
         });

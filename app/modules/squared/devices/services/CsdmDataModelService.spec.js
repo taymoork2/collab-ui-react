@@ -284,8 +284,9 @@ describe('Service: CsdmDataModelService', function () {
           CsdmDataModelService.deleteItem(deviceToDelete).then(function () {
 
             expect(devices[deviceUrlToDelete]).toBeUndefined();
-            expect(places[placeUrl]).toBeUndefined();
-
+            if (!deviceToDelete.isHuronDevice) {
+              expect(places[placeUrl]).toBeUndefined();
+            }
             if (deviceToDelete.isCode) {
               devicesInPlace = _.values(place.codes);
             } else {

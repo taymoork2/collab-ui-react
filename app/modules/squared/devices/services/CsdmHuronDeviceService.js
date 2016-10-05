@@ -12,7 +12,6 @@
       var service = $injector.instantiate(CsdmHuronDeviceService, {
         devicesUrl: devicesUrl
       });
-      service.fetch();
       return service;
     }
 
