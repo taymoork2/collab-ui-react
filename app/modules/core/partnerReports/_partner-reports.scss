@@ -1,8 +1,4 @@
-@import 'activeUsers/_active-users';
-@import 'mediaQuality/_media-quality';
-@import 'callMetrics/_call-metrics';
-@import 'registeredEndpoints/_registered-endpoints';
-@import 'activeUserPopulation/_active-user-population';
+@import 'reportCard/_report-card';
 
 @keyframes graphAxisFade {
   0%   { opacity: 0; }

@@ -14,6 +14,28 @@ export interface IReportsCustomer {
 }
 
 // Table information used by the report-card
+export interface IReportCard {
+  // Top Report Variables
+  animate: boolean;
+  description: string;
+  headerTitle: string;
+  id: string;
+  reportType: string;
+  state: string;
+  table: IReportsTable | void;
+  titlePopover: string;
+}
+
+export interface ISecondaryReport {
+  broadcast: string;
+  description: string;
+  display: boolean;
+  state: string;
+  sortOptions: Array<IReportSortOption>;
+  table: IReportsTable | void;
+  title: string;
+}
+
 export interface IReportsTable {
   headers: Array<IReportsHeader>;
   data: any;
