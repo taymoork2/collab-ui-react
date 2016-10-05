@@ -4,16 +4,15 @@
   </div>
 </div>
 
-<div class="modal-body mediafusion-fix-paragraphs">
+<div class="modal-body media-modal-text">
   <span ng-if="disableServiceDialog.step === '1'">
     <p>
       <span translate="{{'mediaFusion.deactivate.deregister'}}"/>
-      <ul>
-        <div ng-repeat="ecp in disableServiceDialog.clusterNames">
-          <li>{{ecp}}</li>
-        </div>
-      </ul>
+      <div class="media-cluster-list" ng-repeat="ecp in disableServiceDialog.clusterNames">
+        {{ecp}}</br>
+      </div>
     </p>
+    <br>
     <p>  
       <div class="form-group">
         <div class="cs-checkbox-group">
@@ -33,6 +32,7 @@
       <span translate="{{'mediaFusion.deactivate.areYou'}}"/><br>
       <span translate="{{'mediaFusion.deactivate.future'}}"/>
     </p>
+    <br>
     <p>
       <span translate="{{'mediaFusion.deactivate.complete'}}"/>
     </p>
@@ -41,7 +41,9 @@
 </div>
 
 <div class="modal-footer">
-  <span class="pull-left">Step {{disableServiceDialog.step}} of 2</span>
+  <div class="footer-padding">
+    <span class="pull-left">{{'mediaFusion.deactivate.step' | translate}} {{disableServiceDialog.step}} {{'mediaFusion.deactivate.of' | translate}}</span>
+  </div>
   <button ng-click="disableServiceDialog.cancel()" class="btn ">{{'mediaFusion.settings.cancel' | translate}}</button>
   <button ng-click="disableServiceDialog.continue()" ng-show="disableServiceDialog.step === '1'" ng-disabled="!disableServiceDialog.checkboxModel" class="btn btn--primary pull-right">{{'common.continue' | translate}}</button>
   <button ng-click="disableServiceDialog.deactivate()" ng-show="disableServiceDialog.step === '2'"  class="btn btn--primary pull-right">{{'mediaFusion.deactivate.button-deactivate' | translate}}</button>
