@@ -1,4 +1,5 @@
 'use strict';
+
 describe('cell-template-action', function () {
   beforeEach(angular.mock.module('Ediscovery'));
   var $templateCache, $scope, $compile, view, html;

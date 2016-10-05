@@ -1,4 +1,5 @@
 'use strict';
+
 describe('Controller: HelpdeskController', function () {
   beforeEach(angular.mock.module('Squared'));
 

@@ -6,32 +6,106 @@
     .service('DeviceUsageTimelineService', DeviceUsageTimelineService);
 
   /* @ngInject */
-  function DeviceUsageTimelineService($q, $log, chartColors) {
+  function DeviceUsageTimelineService($http, chartColors, DeviceUsageMockService, UrlConfig, Authinfo) {
 
-    function randVal() {
-      return _.random(0, 50);
+    var localUrlBase = 'http://localhost:8080/atlas-server/admin/api/v1/organization';
+    var urlBase = UrlConfig.getAdminServiceUrl() + 'organizations';
+
+    function getDataForLastWeek(api) {
+      return getDataForPeriod('week', 1, 'day', api);
     }
 
-    function sample(time) {
-      return {
-        'video': randVal(),
-        'whiteboarding': randVal(),
-        'time': time
-      };
+    function getDataForLastMonth(api) {
+      return getDataForPeriod('month', 1, 'day', api);
     }
 
-    function getData(period, count, granularity) {
-      var data = [];
-      var start = moment().startOf(period).subtract(count, period + 's');
-      var end = moment().startOf(period);
-      while (start.isBefore(end)) {
-        var time = start.format('YYYY-MM-DD');
-        data.push(sample(time));
-        start.add(1, granularity + 's');
+    function getDataForLastMonths(count, granularity, api) {
+      return getDataForPeriod('month', count, granularity, api);
+    }
+
+    function getDataForPeriod(period, count, granularity, api) {
+      return loadPeriodCallData(period, count, granularity, api);
+    }
+
+    function getDataForRange(start, end, granularity, api) {
+      var startDate = moment(start);
+      var endDate = moment(end);
+      var now = moment();
+
+      if (startDate.isValid() && endDate.isValid() && startDate.isBefore(endDate) && endDate.isBefore(now)) {
+        if (api === 'mock') {
+          return DeviceUsageMockService.getData(start, end).then(function (data) {
+            return reduceAllData(data);
+          });
+        } else if (api === 'local') {
+          var url = localUrlBase + '/1eb65fdf-9643-417f-9974-ad72cae0e10f/reports/device/call?';
+          url = url + 'intervalType=' + granularity;
+          url = url + '&rangeStart=' + start + '&rangeEnd=' + end;
+          return $http.get(url).then(function (response) {
+            return reduceAllData(response.data.items);
+          });
+        } else {
+          url = urlBase + '/' + Authinfo.getOrgId() + '/reports/device/call?';
+          url = url + 'intervalType=' + granularity;
+          url = url + '&rangeStart=' + startDate.format('YYYY-MM-DD') + '&rangeEnd=' + endDate.format('YYYY-MM-DD');
+          return $http.get(url).then(function (response) {
+            return reduceAllData(response.data.items);
+          });
+        }
       }
-      $log.info('data', data);
-      return $q.when(data);
+
     }
+
+    function loadPeriodCallData(period, count, granularity, api) {
+      var start = moment().startOf(period).subtract(count, period + 's').format('YYYY-MM-DD');
+      var end = moment().startOf(period).format('YYYY-MM-DD');
+      if (api === 'mock') {
+        return DeviceUsageMockService.getData(start, end).then(function (data) {
+          return reduceAllData(data);
+        });
+      } else if (api === 'local') {
+        var url = localUrlBase + '/1eb65fdf-9643-417f-9974-ad72cae0e10f/reports/device/call?';
+        url = url + 'intervalType=' + granularity;
+        url = url + '&rangeStart=' + start + '&rangeEnd=' + end;
+        return $http.get(url).then(function (response) {
+          return reduceAllData(response.data.items);
+        });
+      } else {
+        url = urlBase + '/' + Authinfo.getOrgId() + '/reports/device/call?';
+        url = url + 'intervalType=' + granularity;
+        url = url + '&rangeStart=' + start + '&rangeEnd=' + end;
+        return $http.get(url).then(function (response) {
+          return reduceAllData(response.data.items);
+        });
+      }
+    }
+
+
+    function reduceAllData(items) {
+      return _.chain(items).reduce(function (result, item) {
+        if (typeof result[item.date] === 'undefined') {
+          result[item.date] = {
+            videCount: 0,
+            video: 0,
+            wbCount: 0,
+            pairedCount: 0,
+            sharedCount: 0,
+            devices: []
+          };
+        }
+        result[item.date].videCount += item.count;
+        result[item.date].video += item.totalDuration;
+        result[item.date].wbCount += item.wbCount;
+        result[item.date].pairedCount += item.pairedCount;
+        result[item.date].sharedCount += item.sharedCount;
+        result[item.date].devices.push(item.deviceId);
+        return result;
+      }, {}).map(function (value, key) {
+        value.time = key.substr(0, 4) + '-' + key.substr(4, 2) + '-' + key.substr(6, 2);
+        return value;
+      }).value();
+    }
+
 
     function getLineChart() {
       return {
@@ -69,7 +143,7 @@
             'title': 'Video',
             'valueField': 'video',
             'lineThickness': 2,
-            'bulletSize': 8,
+            'bulletSize': 10,
             'lineColor': chartColors.primaryColorDarker
           },
           {
@@ -88,7 +162,7 @@
         'valueAxes': [
           {
             'id': 'ValueAxis-1',
-            'title': 'Activity Minutes'
+            'title': 'Activity Seconds'
           }
         ],
         'allLabels': [
@@ -112,7 +186,11 @@
     }
 
     return {
-      getData: getData,
+      getDataForPeriod: getDataForPeriod,
+      getDataForLastWeek: getDataForLastWeek,
+      getDataForLastMonth: getDataForLastMonth,
+      getDataForLastMonths: getDataForLastMonths,
+      getDataForRange: getDataForRange,
       getLineChart: getLineChart
     };
   }

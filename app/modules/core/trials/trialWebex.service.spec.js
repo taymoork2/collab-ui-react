@@ -1,4 +1,5 @@
 /* globals $httpBackend, $q, Authinfo, Config, Notification, WebexOrderStatusResource, TrialWebexService, UrlConfig */
+
 'use strict';
 
 describe('Service: Webex Trial Service', function () {

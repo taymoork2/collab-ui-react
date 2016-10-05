@@ -1,4 +1,5 @@
 'use strict';
+
 describe('Service: MediaClusterServiceV2', function () {
   beforeEach(angular.mock.module('Mediafusion'));
   var $httpBackend, Service, Authinfo;

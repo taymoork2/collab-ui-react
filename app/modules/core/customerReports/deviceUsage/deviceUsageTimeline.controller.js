@@ -6,21 +6,49 @@
     .controller('DeviceUsageTimelineCtrl', DeviceUsageTimelineCtrl);
 
   /* @ngInject */
-  function DeviceUsageTimelineCtrl($log, $state, DeviceUsageTimelineService, deviceUsageFeatureToggle) {
+  function DeviceUsageTimelineCtrl($state, $scope, DeviceUsageTimelineService, deviceUsageFeatureToggle) {
+    var vm = this;
 
     if (!deviceUsageFeatureToggle) {
       // simulate a 404
-      $log.warn("State not allowed.");
       $state.go('login');
     }
 
-    //$scope.chartData = UsageByModeChartService.dataProviderTrend('week', 1, 'day');
-    DeviceUsageTimelineService.getData('week', 1, 'day').then(function (data) {
+    vm.additionalInfo = false;
+
+    DeviceUsageTimelineService.getDataForLastWeek('mock').then(function (data) {
       var chart = DeviceUsageTimelineService.getLineChart();
+      chart.listeners = [
+      { event: 'rollOverGraphItem', method: rollOverGraphItem },
+      { event: 'rollOutGraphItem', method: rollOutGraphItem },
+      { event: 'clickGraphItem', method: clickGraphItem }
+      ];
       chart.dataProvider = data;
-      AmCharts.makeChart('device-usage-timeline-chart', chart);
+      var amChart = AmCharts.makeChart('device-usage-timeline-chart', chart);
+      _.each(amChart.graphs, function (graph) {
+        graph.balloonFunction = renderBalloon;
+      });
 
     });
+
+    function rollOverGraphItem(event) {
+      vm.additionalInfo = true;
+      vm.dayData = event.item.dataContext;
+      $scope.$apply();
+    }
+
+    function rollOutGraphItem() {
+      vm.additionalInfo = false;
+      $scope.$apply();
+    }
+
+    function clickGraphItem() {
+    }
+
+    function renderBalloon(graphDataItem) {
+      var text = '<div><h5>Video Duration: ' + graphDataItem.dataContext.video + '</h5></div>';
+      return text;
+    }
 
   }
 

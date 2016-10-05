@@ -1,4 +1,5 @@
 'use strict';
+
 describe('Controller: MediaServiceControllerV2', function () {
   // load the service's module
   beforeEach(angular.mock.module('Mediafusion'));

@@ -1,6 +1,7 @@
 /**
  * Created by sjalipar on 10/9/15.
  */
+
 'use strict';
 
 describe('Features Controller', function () {

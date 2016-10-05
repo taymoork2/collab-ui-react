@@ -59,7 +59,7 @@ describe('Spark Care Partner flow', function () {
         utils.waitForModal().then(function () {
           utils.expectIsDisplayed(partner.editTrialForm);
 
-          utils.expectClass(partner.careTrialCheckbox, 'enabled');
+          utils.waitClass(partner.careTrialCheckbox, 'enabled');
           utils.expectCheckbox(partner.careTrialCheckbox, true);
 
           var licInput = partner.careLicenseCountTextbox;

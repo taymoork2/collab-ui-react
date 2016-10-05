@@ -1,7 +1,9 @@
 /**
  * Created by sjalipar on 11/2/15.
  */
+
 'use strict';
+
 var HuronFeaturesPage = function () {
 
   this.featuresList = element.all(by.css('.cs-card'));

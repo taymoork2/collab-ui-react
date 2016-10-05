@@ -92,7 +92,8 @@
           finishDownload(csvType, url);
         }).catch(function (response) {
           if ((_.isString(response) && response !== 'canceled')
-            || (_.isNumber(response.status) && response.status !== -1)) {
+            || (_.isNumber(response.status)
+              && (response.status !== -1 || (csvType === CsvDownloadService.typeUser && !CsvDownloadService.isReportCanceled())))) {
             Notification.errorWithTrackingId(response, 'csvDownload.error');
           }
           flagDownloading(false);

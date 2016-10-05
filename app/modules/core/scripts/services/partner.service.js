@@ -679,6 +679,7 @@
           case Config.offerTypes.roomSystems:
             trialService = userServiceMapping[Config.licenseTypes.SHARED_DEVICES];
             partial.deviceLicenses = offerInfo.licenseCount;
+            partial.isRoomSystems = true;
             break;
           case Config.offerTypes.care:
             if (isCareEnabled) {

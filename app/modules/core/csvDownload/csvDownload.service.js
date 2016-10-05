@@ -20,6 +20,7 @@
     var isTooManyUsers = false;
     var canceler, timeoutCanceler, objectBlob, templateBlob;
     var userExportThreshold = 10000;
+    var reportCanceled = false;
 
     var service = {
       typeTemplate: typeTemplate,
@@ -36,7 +37,8 @@
       getObjectUrlTemplate: getObjectUrlTemplate,
       setObjectUrlTemplate: setObjectUrlTemplate,
       downloadInProgress: downloadInProgress,
-      cancelDownload: cancelDownload
+      cancelDownload: cancelDownload,
+      isReportCanceled: isReportCanceled
     };
 
     return service;
@@ -54,6 +56,7 @@
         return canceler;
       } else {
         if (csvType === typeUser) {
+          reportCanceled = false;
           return exportUserCsv(fileName, newUserExportToggle);
         } else if (csvType === typeError) {
           return exportErrorCsv(fileName);
@@ -146,6 +149,9 @@
     }
 
     function cancelDownload() {
+      if (!reportCanceled) {
+        reportCanceled = true;
+      }
       if (!isTooManyUsers) {
         if (canceler) {
           canceler.resolve();
@@ -207,6 +213,10 @@
 
     function setObjectUrlTemplate(oUrl) {
       objectUrlTemplate = oUrl;
+    }
+
+    function isReportCanceled() {
+      return reportCanceled;
     }
   }
 
