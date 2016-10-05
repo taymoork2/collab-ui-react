@@ -12,6 +12,19 @@ describe('Component: reportCard', () => {
   let endpointsData = getJSONFixture('core/json/partnerReports/registeredEndpointData.json');
   let timeFilter: ITimespan = _.clone(defaults.timeFilter[0]);
 
+  // html selectors
+  const headerTitle: string = 'span.report-section-header';
+  const reportType: string = '{{reportType}}';
+  const cardDescription: string = 'section.report-' + reportType + ' p';
+  const table: string = 'section table';
+  const id: string = '{{id}}';
+  const chart: string = '#' + id + 'Chart';
+  const reportTable: string = '.report-table';
+  const showHideLink: string = 'div.box-match a span';
+  const carouselNumberButtons: string = 'div.box-match div.pull-right button.btn';
+  const carouselLeft: string = 'div.box-match div.pull-right button.carousel-control i.icon.icon-chevron-left';
+  const carouselRight: string = 'div.box-match div.pull-right button.carousel-control i.icon.icon-chevron-right';
+
   beforeEach(function () {
     this.initModules('Core');
     this.injectDependencies('$scope', '$timeout');
@@ -67,27 +80,27 @@ describe('Component: reportCard', () => {
     it('should instantiate with expected titles and secondary report not visible', function () {
       // check for header, description, and chart
       expect(this.view).toContainElement('#' + options.id);
-      expect(this.view.find('span.report-section-header')).toHaveText(options.headerTitle);
-      expect(this.view.find('section.report-barchart p')).toHaveText(options.description);
-      expect(this.view).toContainElement('#' + options.id + 'Chart');
+      expect(this.view.find(headerTitle)).toHaveText(options.headerTitle);
+      expect(this.view.find(cardDescription.replace(reportType, options.reportType))).toHaveText(options.description);
+      expect(this.view).toContainElement(chart.replace(id, options.id));
 
       // table for the first report section should not be present
-      expect(this.view).not.toContainElement('section table');
+      expect(this.view).not.toContainElement(table);
 
       // verify secondary report is not visible, but link to open it is present
-      expect(this.view).not.toContainElement('.report-table');
-      expect(this.view.find('div.box-match a span')).toHaveText(options.id + '.show');
-      expect(this.view).not.toContainElement('div.box-match div.pull-right button.carousel-control i.icon.icon-chevron-left');
-      expect(this.view.find('div.box-match div.pull-right button.btn').length).toEqual(0);
-      expect(this.view).not.toContainElement('div.box-match div.pull-right button.carousel-control i.icon.icon-chevron-right');
+      expect(this.view).not.toContainElement(reportTable);
+      expect(this.view.find(showHideLink)).toHaveText(options.id + '.show');
+      expect(this.view).not.toContainElement(carouselLeft);
+      expect(this.view.find(carouselNumberButtons).length).toEqual(0);
+      expect(this.view).not.toContainElement(carouselRight);
     });
 
     it('should open the secondary report on click and manipulate the secondary report table', function () {
       // open secondary report
       this.$timeout.flush();
-      this.view.find('div.box-match a span').click();
-      expect(this.view.find('div.box-match a span')).toHaveText(options.id + '.hide');
-      expect(this.view).toContainElement('.report-table');
+      this.view.find(showHideLink).click();
+      expect(this.view.find(showHideLink)).toHaveText(options.id + '.hide');
+      expect(this.view).toContainElement(reportTable);
       expect(this.$scope.resize).toHaveBeenCalledTimes(1);
 
       // Verify table headers are populated
@@ -99,44 +112,44 @@ describe('Component: reportCard', () => {
       checkTableEntries(this.view, 0, 5);
 
       // verify table buttons are present
-      expect(this.view).toContainElement('div.box-match div.pull-right button.carousel-control i.icon.icon-chevron-left');
-      expect(this.view.find('div.box-match div.pull-right button.btn').length).toEqual(3);
-      expect(this.view.find('div.box-match div.pull-right button.btn')[0]).toContainText('1');
-      expect(this.view.find('div.box-match div.pull-right button.btn')[1]).toContainText('2');
-      expect(this.view.find('div.box-match div.pull-right button.btn')[2]).toContainText('3');
-      expect(this.view).toContainElement('div.box-match div.pull-right button.carousel-control i.icon.icon-chevron-right');
+      expect(this.view).toContainElement(carouselLeft);
+      expect(this.view.find(carouselNumberButtons).length).toEqual(3);
+      expect(this.view.find(carouselNumberButtons)[0]).toContainText('1');
+      expect(this.view.find(carouselNumberButtons)[1]).toContainText('2');
+      expect(this.view.find(carouselNumberButtons)[2]).toContainText('3');
+      expect(this.view).toContainElement(carouselRight);
 
       // verify table buttons manipulate the table
-      this.view.find('div.box-match div.pull-right button.btn')[1].click();
+      this.view.find(carouselNumberButtons)[1].click();
       expect(this.$scope.resize).toHaveBeenCalledTimes(2);
       checkTableEntries(this.view, 5, 5);
 
       // clicking all the way to the left should cause the table to stop moving and the buttons to stop changing on further left arrow clicks
-      this.view.find('div.box-match div.pull-right button.carousel-control i.icon.icon-chevron-left').click();
+      this.view.find(carouselLeft).click();
       expect(this.$scope.resize).toHaveBeenCalledTimes(3);
       checkTableEntries(this.view, 0, 5);
-      this.view.find('div.box-match div.pull-right button.carousel-control i.icon.icon-chevron-left').click();
+      this.view.find(carouselLeft).click();
       expect(this.$scope.resize).toHaveBeenCalledTimes(3);
       checkTableEntries(this.view, 0, 5);
 
       // button numbers should change on move to 'page 3'
-      this.view.find('div.box-match div.pull-right button.btn')[2].click();
+      this.view.find(carouselNumberButtons)[2].click();
       expect(this.$scope.resize).toHaveBeenCalledTimes(4);
       checkTableEntries(this.view, 10, 5);
-      expect(this.view.find('div.box-match div.pull-right button.btn')[0]).toContainText('2');
-      expect(this.view.find('div.box-match div.pull-right button.btn')[1]).toContainText('3');
-      expect(this.view.find('div.box-match div.pull-right button.btn')[2]).toContainText('4');
+      expect(this.view.find(carouselNumberButtons)[0]).toContainText('2');
+      expect(this.view.find(carouselNumberButtons)[1]).toContainText('3');
+      expect(this.view.find(carouselNumberButtons)[2]).toContainText('4');
 
       // clicking all the way to the right should cause the table to stop moving and the buttons to stop changing on further right arrow clicks
-      this.view.find('div.box-match div.pull-right button.carousel-control i.icon.icon-chevron-right').click();
+      this.view.find(carouselRight).click();
       expect(this.$scope.resize).toHaveBeenCalledTimes(5);
       checkTableEntries(this.view, 15, 1);
-      this.view.find('div.box-match div.pull-right button.carousel-control i.icon.icon-chevron-right').click();
+      this.view.find(carouselRight).click();
       expect(this.$scope.resize).toHaveBeenCalledTimes(5);
       checkTableEntries(this.view, 15, 1);
-      expect(this.view.find('div.box-match div.pull-right button.btn')[0]).toContainText('2');
-      expect(this.view.find('div.box-match div.pull-right button.btn')[1]).toContainText('3');
-      expect(this.view.find('div.box-match div.pull-right button.btn')[2]).toContainText('4');
+      expect(this.view.find(carouselNumberButtons)[0]).toContainText('2');
+      expect(this.view.find(carouselNumberButtons)[1]).toContainText('3');
+      expect(this.view.find(carouselNumberButtons)[2]).toContainText('4');
     });
   });
 
@@ -158,19 +171,19 @@ describe('Component: reportCard', () => {
     it('should instantiate with expected titles and secondary report not present', function () {
       // check for header, description, and chart
       expect(this.view).toContainElement('#' + options.id);
-      expect(this.view.find('span.report-section-header')).toHaveText(options.headerTitle);
-      expect(this.view.find('section.report-donut p')).toHaveText(options.description);
-      expect(this.view).toContainElement('#' + options.id + 'Chart');
+      expect(this.view.find(headerTitle)).toHaveText(options.headerTitle);
+      expect(this.view.find(cardDescription.replace(reportType, options.reportType))).toHaveText(options.description);
+      expect(this.view).toContainElement(chart.replace(id, options.id));
 
       // table for the first report section should not be present
-      expect(this.view).not.toContainElement('section table');
+      expect(this.view).not.toContainElement(table);
 
       // verify secondary report is not visible and link to open it is not present
-      expect(this.view).not.toContainElement('.report-table');
-      expect(this.view).not.toContainElement('div.box-match a span');
-      expect(this.view).not.toContainElement('div.box-match div.pull-right button.carousel-control i.icon.icon-chevron-left');
-      expect(this.view.find('div.box-match div.pull-right button.btn').length).toEqual(0);
-      expect(this.view).not.toContainElement('div.box-match div.pull-right button.carousel-control i.icon.icon-chevron-right');
+      expect(this.view).not.toContainElement(reportTable);
+      expect(this.view).not.toContainElement(showHideLink);
+      expect(this.view).not.toContainElement(carouselLeft);
+      expect(this.view.find(carouselNumberButtons).length).toEqual(0);
+      expect(this.view).not.toContainElement(carouselRight);
     });
   });
 
@@ -193,9 +206,9 @@ describe('Component: reportCard', () => {
     it('should instantiate with expected titles and secondary report not present', function () {
       // check for header, description, and table
       expect(this.view).toContainElement('#' + options.id);
-      expect(this.view.find('span.report-section-header')).toHaveText(options.headerTitle);
-      expect(this.view.find('section.report-table p')).toHaveText(options.description);
-      expect(this.view).toContainElement('section table');
+      expect(this.view.find(headerTitle)).toHaveText(options.headerTitle);
+      expect(this.view.find(cardDescription.replace(reportType, options.reportType))).toHaveText(options.description);
+      expect(this.view).toContainElement(table);
 
       // verify table headers
       let headers = this.view.find('thead th.bold.vertical-center');
@@ -216,13 +229,13 @@ describe('Component: reportCard', () => {
       });
 
       // chart for the first report section should not be present
-      expect(this.view).not.toContainElement('#' + options.id + 'Chart');
+      expect(this.view).not.toContainElement(chart.replace(id, options.id));
 
       // verify secondary report is not visible and link to open it is not present
-      expect(this.view).not.toContainElement('div.box-match a span');
-      expect(this.view).not.toContainElement('div.box-match div.pull-right button.carousel-control i.icon.icon-chevron-left');
-      expect(this.view.find('div.box-match div.pull-right button.btn').length).toEqual(0);
-      expect(this.view).not.toContainElement('div.box-match div.pull-right button.carousel-control i.icon.icon-chevron-right');
+      expect(this.view).not.toContainElement(showHideLink);
+      expect(this.view).not.toContainElement(carouselLeft);
+      expect(this.view.find(carouselNumberButtons).length).toEqual(0);
+      expect(this.view).not.toContainElement(carouselRight);
     });
   });
 });

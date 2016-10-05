@@ -6,12 +6,12 @@ import {
 } from '../partnerReportInterfaces';
 
 class ReportCardCtrl {
-  private DONUT: string = 'donut';
-  private EMPTY: string = 'empty';
-  private REFRESH: string = 'refresh';
-  private SET: string = 'set';
-  private TABLE: string = 'table';
-  private UNDEF: string = 'undefined';
+  private static readonly DONUT: string = 'donut';
+  private static readonly EMPTY: string = 'empty';
+  private static readonly REFRESH: string = 'refresh';
+  private static readonly SET: string = 'set';
+  private static readonly TABLE: string = 'table';
+  private static readonly UNDEF: string = 'undefined';
 
   // overall Report Variables
   public options: IReportCard;
@@ -30,9 +30,10 @@ class ReportCardCtrl {
 
   private reverse: boolean = false;
 
+  /* @ngInject */
   constructor(
     private $translate: ng.translate.ITranslateService,
-    private $scope
+    private $scope: ng.IScope
   ) {
     this.setTotalPages();
     this.setSortOptions();
@@ -66,28 +67,28 @@ class ReportCardCtrl {
     }
   }
 
-  public isDonut(): Boolean {
-    return this.options.reportType === this.DONUT;
+  public isDonut(): boolean {
+    return this.options.reportType === ReportCardCtrl.DONUT;
   }
 
-  public isEmpty(): Boolean {
-    return this.options.state === this.EMPTY;
+  public isEmpty(): boolean {
+    return this.options.state === ReportCardCtrl.EMPTY;
   }
 
   public isPopover(): boolean {
-    return this.options.titlePopover !== this.UNDEF;
+    return this.options.titlePopover !== ReportCardCtrl.UNDEF;
   }
 
-  public isRefresh(): Boolean {
-    return this.options.state === this.REFRESH;
+  public isRefresh(): boolean {
+    return this.options.state === ReportCardCtrl.REFRESH;
   }
 
-  public isSet(): Boolean {
-    return this.options.state === this.SET;
+  public isSet(): boolean {
+    return this.options.state === ReportCardCtrl.SET;
   }
 
-  public isTable(): Boolean {
-    return this.options.reportType === this.TABLE;
+  public isTable(): boolean {
+    return this.options.reportType === ReportCardCtrl.TABLE;
   }
 
   // Secondary Report Controls
@@ -144,15 +145,15 @@ class ReportCardCtrl {
     return this.predicate.option;
   }
 
-  public getSortDirection(): Boolean {
+  public getSortDirection(): boolean {
     return this.reverse;
   }
 
-  public isActivePage(selected): Boolean {
+  public isActivePage(selected): boolean {
     return this.currentPage === Math.ceil((selected + 1) / 5);
   }
 
-  public isCurrentPage(selected): Boolean {
+  public isCurrentPage(selected): boolean {
     return this.pagingButtons[selected] === this.currentPage;
   }
 
@@ -161,16 +162,16 @@ class ReportCardCtrl {
     this.resize();
   }
 
-  public secondaryIsEmpty(): Boolean {
-    return this.secondaryOptions.state === this.EMPTY;
+  public secondaryIsEmpty(): boolean {
+    return this.secondaryOptions.state === ReportCardCtrl.EMPTY;
   }
 
-  public secondaryIsRefresh(): Boolean {
-    return this.secondaryOptions.state === this.REFRESH;
+  public secondaryIsRefresh(): boolean {
+    return this.secondaryOptions.state === ReportCardCtrl.REFRESH;
   }
 
-  public secondaryIsSet(): Boolean {
-    return this.secondaryOptions.state === this.SET;
+  public secondaryIsSet(): boolean {
+    return this.secondaryOptions.state === ReportCardCtrl.SET;
   }
 
   public secondaryReportSort(selected) {
