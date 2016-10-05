@@ -49,6 +49,12 @@ function runE2E(runCounter) {
       delete args[argName];
     }
   });
+
+  // Once we are retrying tests, start logging verbose on tests
+  if (runCounter === 1) {
+    args.verbose = true;
+  }
+
   console.log('#### Protractor: max: ' + runCounterMax + ': run: ' + runCounter + ': start');
   var child = cp.fork('./protractor/protractor', unparse(args));
   child.on('exit', function (exitCode) {
