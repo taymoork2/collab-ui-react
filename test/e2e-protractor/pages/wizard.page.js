@@ -34,6 +34,9 @@ var Wizard = function () {
   this.toInstallConnectorBtn = element.all(by.css('[ng-click="changeStep(\'installConnector\')"]'));
   this.toSyncStatusBtn = element.all(by.css('[ng-click="changeStep(\'syncStatus\')"]'));
   this.finishTab = element(by.id('wizard-finish-link'));
+  this.sipDomain = element(by.css('.sip-domain-input'));
+  this.sipURLExample = element(by.css('.url-examples-style'));
+  this.saveCheckbox = element(by.css('label[for="confirmSaveCheckBox"]'));
 
   this.clickPlanReview = function () {
     utils.click(this.reviewTab);

@@ -66,9 +66,14 @@
       #external-number-add {
         display: block;
         text-align: center;
-        padding-bottom: 0.875rem;
+        padding-top: 0.175rem;
+        padding-bottom: 1.7rem;
         border-bottom: 1px solid $gray-light-2;
         color: $gray-dark-1;
+      }
+
+      .feature-list {
+        padding-bottom: .875rem;
       }
     }
   }

@@ -1,4 +1,5 @@
 'use strict';
+
 describe('HelpdeskHuronService', function () {
   beforeEach(angular.mock.module('Hercules'));
 

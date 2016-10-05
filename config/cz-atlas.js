@@ -86,7 +86,7 @@ module.exports = {
     }, {
       type: 'input',
       name: 'footer',
-      message: 'List any issues, JIRA, Rally, etc. related to change (optional). E.g.: Fixes #31, F410:\n'
+      message: 'List any issues, JIRA, Rally, etc. related to change (optional). E.g.: Fixes #31, F90:\n'
     }, {
       type: 'expand',
       name: 'confirmCommit',

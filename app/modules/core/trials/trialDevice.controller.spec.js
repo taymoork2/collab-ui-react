@@ -1,4 +1,5 @@
 /* globals $controller, $httpBackend, $q, $rootScope, FeatureToggleService, Notification, TrialDeviceController, TrialCallService, TrialDeviceService, TrialRoomSystemService*/
+
 'use strict';
 
 describe('Controller: TrialDeviceController', function () {

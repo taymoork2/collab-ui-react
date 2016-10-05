@@ -1,4 +1,5 @@
 'use strict';
+
 describe('DeviceUsageTimelineService', function () {
 
   beforeEach(angular.mock.module('Core'));

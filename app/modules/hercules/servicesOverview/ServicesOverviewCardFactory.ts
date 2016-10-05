@@ -3,8 +3,7 @@ import { ServicesOverviewMessageCard } from './messageCard';
 import { ServicesOverviewMeetingCard } from './meetingCard';
 import { ServicesOverviewCallCard } from './cloudCallCard';
 import { ServicesOverviewCareCard } from './careCard';
-import { ServicesOverviewHybridManagementCard } from './hybridManagementCard';
-import { ServicesOverviewHybridManagementF410Card } from './hybridManagementF410Card';
+import { ServicesOverviewHybridServicesCard } from './hybridServicesCard';
 import { ServicesOverviewHybridCalendarCard } from './hybridCalendarCard';
 import { ServicesOverviewHybridCallCard } from './hybridCallCard';
 import { ServicesOverviewHybridMediaCard } from './hybridMediaCard';
@@ -22,8 +21,7 @@ function ServicesOverviewCardFactory(Authinfo, FusionClusterStatesService) {
         new ServicesOverviewMeetingCard(Authinfo),
         new ServicesOverviewCallCard(Authinfo),
         new ServicesOverviewCareCard(Authinfo),
-        new ServicesOverviewHybridManagementCard(FusionClusterStatesService),
-        new ServicesOverviewHybridManagementF410Card(),
+        new ServicesOverviewHybridServicesCard(),
         new ServicesOverviewHybridCalendarCard(FusionClusterStatesService),
         new ServicesOverviewHybridCallCard(FusionClusterStatesService),
         new ServicesOverviewHybridMediaCard(FusionClusterStatesService),

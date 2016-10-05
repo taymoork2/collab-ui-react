@@ -6,7 +6,7 @@
     .service('HuronFeaturesListService', HuronFeaturesListService);
 
   /* @ngInject */
-  function HuronFeaturesListService($filter) {
+  function HuronFeaturesListService() {
     var service = {
       autoAttendants: autoAttendants,
       callParks: callParks,
@@ -128,44 +128,29 @@
      Card can be filtered by the specifying the filterValue (ex: AA, HG, CP)
      */
     function filterCards(list, filterValue, filterText) {
-      var filter = (filterValue === 'all') ? '' : filterValue;
-
-      var cardsFilteredByName = $filter('filter')(list, {
-        cardName: filterText,
-        filterValue: filter
+      var filterStringProperties = [
+        'cardName',
+        'startRange',
+        'endRange',
+        'pgNumber',
+        'memberCount'
+      ];
+      var filteredList = _.filter(list, function (feature) {
+        if (feature.filterValue !== filterValue && filterValue !== 'all') {
+          return false;
+        }
+        if (_.isEmpty(filterText)) {
+          return true;
+        }
+        var matchedStringProperty = _.some(filterStringProperties, function (stringProperty) {
+          return _.includes(_.get(feature, stringProperty), filterText);
+        });
+        var matchedNumbers = _.some(feature.numbers, function (number) {
+          return _.includes(number, filterText);
+        });
+        return matchedStringProperty || matchedNumbers;
       });
-
-      var cardsFilteredByNumber = $filter('filter')(list, {
-        cardName: "!" + filterText,
-        numbers: filterText,
-        filterValue: filter
-      });
-
-      var cardsFilteredByStartRange = $filter('filter')(list, {
-        cardName: "!" + filterText,
-        numbers: "!" + filterText,
-        startRange: filterText,
-        filterValue: filter
-      });
-
-      var cardsFilteredByEndRange = $filter('filter')(list, {
-        cardName: "!" + filterText,
-        numbers: "!" + filterText,
-        startRange: "!" + filterText,
-        endRange: filterText,
-        filterValue: filter
-      });
-
-      var cardsFilteredByMemberCount = $filter('filter')(list, {
-        cardName: "!" + filterText,
-        numbers: "!" + filterText,
-        startRange: "!" + filterText,
-        endRange: "!" + filterText,
-        memberCount: filterText,
-        filterValue: filter
-      });
-
-      return orderByFilter(cardsFilteredByName.concat(cardsFilteredByNumber, cardsFilteredByStartRange, cardsFilteredByEndRange, cardsFilteredByMemberCount));
+      return orderByFilter(filteredList);
     }
 
     function orderByCardName(list) {

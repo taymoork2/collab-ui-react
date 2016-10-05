@@ -2,7 +2,7 @@
 
 describe('Controller: ServiceSetup', function () {
   var $scope, $state, $previousState, $q, $httpBackend, ServiceSetup, Notification, HuronConfig, HuronCustomer, DialPlanService;
-  var Authinfo, VoicemailMessageAction;
+  var Authinfo, VoicemailMessageAction, Orgservice;
   var model, customer, voicemail, externalNumberPool, usertemplate, form, timeZone, ExternalNumberService, ModalService, modalDefer, messageAction;
   var $rootScope, PstnSetupService;
   var dialPlanDetailsNorthAmerica = [{
@@ -18,7 +18,7 @@ describe('Controller: ServiceSetup', function () {
 
   beforeEach(inject(function (_$rootScope_, _$previousState_, _$q_, _ServiceSetup_, _Notification_, _HuronConfig_, _$httpBackend_,
     _HuronCustomer_, _DialPlanService_, _ExternalNumberService_, _ModalService_, _Authinfo_, _VoicemailMessageAction_,
-    _PstnSetupService_) {
+    _PstnSetupService_, _Orgservice_) {
     $rootScope = _$rootScope_;
     $scope = $rootScope;
     $q = _$q_;
@@ -35,6 +35,7 @@ describe('Controller: ServiceSetup', function () {
     VoicemailMessageAction = _VoicemailMessageAction_;
     $previousState = _$previousState_;
     PstnSetupService = _PstnSetupService_;
+    Orgservice = _Orgservice_;
 
     customer = {
       "uuid": "84562afa-2f35-474f-ba0f-2def42864e12",
@@ -954,6 +955,35 @@ describe('Controller: ServiceSetup', function () {
         controller.initNext();
         $scope.$apply();
         expect(DialPlanService.updateCustomerVoice).toHaveBeenCalled();
+      });
+    });
+    describe('checkIfTestOrg', function () {
+      it('should return true if customer orgs isTestOrg value is true', function () {
+        spyOn(Orgservice, 'getOrg').and.callFake(function (callback) {
+          callback({
+            success: true,
+            isTestOrg: true
+          }, 200);
+        });
+        var results;
+        controller.checkIfTestOrg().then(function (data) {
+          results = data;
+        });
+        $scope.$apply();
+        expect(Orgservice.getOrg).toHaveBeenCalled();
+        expect(results).toBe(true);
+      });
+      it('should return false if customer orgs isTestOrg value is false', function () {
+        spyOn(Orgservice, 'getOrg').and.callFake(function (callback) {
+          callback({ isTestOrg: false }, 200);
+        });
+        var results;
+        controller.checkIfTestOrg().then(function (data) {
+          results = data;
+        });
+        $scope.$apply();
+        expect(Orgservice.getOrg).toHaveBeenCalled();
+        expect(results).toBe(false);
       });
     });
   });

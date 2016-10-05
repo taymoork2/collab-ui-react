@@ -1,5 +1,6 @@
 (function () {
   'use strict';
+
   /* @ngInject */
   function AddResourceCommonServiceV2(XhrNotificationService, $translate, $q, MediaClusterServiceV2, $window, MediaServiceActivationV2) {
     var vm = this;

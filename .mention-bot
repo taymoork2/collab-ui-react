@@ -13,6 +13,6 @@
     "files": ["app/modules/squared/devices/**/*.js"]
   }],
   "fileBlacklist": ["app/l10n/*.json"],
-  "userBlacklist": ["admolla", "mikecan", "stimurbe", "zzatking"],
+  "userBlacklist": ["admolla", "cidylle", "mikecan", "stimurbe", "zzatking"],
   "assignToReviewer": true
 }

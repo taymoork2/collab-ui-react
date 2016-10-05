@@ -13,7 +13,7 @@ describe('Partner flow', function () {
     });
 
     it('should display correct navigation colors', function () {
-      utils.expectClass(navigation.body, 'inverse');
+      utils.waitClass(navigation.body, 'inverse');
     });
 
     it('should display correct tabs for user based on role', function () {
@@ -100,7 +100,7 @@ describe('Partner flow', function () {
 
       utils.waitForModal().then(function () {
         utils.expectIsDisplayed(partner.editTrialForm);
-        utils.expectClass(partner.messageTrialCheckbox, 'disabled');
+        utils.waitClass(partner.messageTrialCheckbox, 'disabled');
 
         utils.expectIsDisabled(partner.saveUpdateButton);
         utils.clear(partner.licenseCountInput);

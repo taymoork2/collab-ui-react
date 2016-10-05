@@ -1,4 +1,5 @@
 /* globals $controller, $q, $rootScope, TrialWebexCtrl, TrialWebexService, TrialTimeZoneService*/
+
 'use strict';
 
 describe('Controller: Trial Webex', function () {
