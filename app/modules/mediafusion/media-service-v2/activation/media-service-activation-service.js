@@ -75,7 +75,7 @@
     }
 
     var enableOrpheusForMediaFusion = function () {
-      getUserIdentityOrgToMediaAgentOrgMapping().then(
+      this.getUserIdentityOrgToMediaAgentOrgMapping().then(
         function success(response) {
           var mediaAgentOrgIdsArray = [];
           var orgId = Authinfo.getOrgId();
@@ -137,6 +137,39 @@
       vm.isMediaServiceEnabled = value;
     };
 
+    var disableOrpheusForMediaFusion = function () {
+      this.getUserIdentityOrgToMediaAgentOrgMapping().then(
+        function success(response) {
+          var mediaAgentOrgIdsArray = [];
+          var orgId = Authinfo.getOrgId();
+          mediaAgentOrgIdsArray = response.data.mediaAgentOrgIds;
+
+          var index = mediaAgentOrgIdsArray.indexOf(orgId);
+          mediaAgentOrgIdsArray.splice(index, 1);
+
+          index = mediaAgentOrgIdsArray.indexOf("squared");
+          mediaAgentOrgIdsArray.splice(index, 1);
+
+          if (mediaAgentOrgIdsArray.length > 0) {
+            this.setUserIdentityOrgToMediaAgentOrgMapping(mediaAgentOrgIdsArray).then(
+              function success() {},
+              function error(errorResponse) {
+                Notification.error('mediaFusion.mediaAgentOrgMappingFailure', {
+                  failureMessage: errorResponse.message
+                });
+              });
+          } else {
+            this.deleteUserIdentityOrgToMediaAgentOrgMapping(mediaAgentOrgIdsArray).then(
+              function success() {},
+              function error(errorResponse) {
+                Notification.error('mediaFusion.mediaAgentOrgMappingFailure', {
+                  failureMessage: errorResponse.message
+                });
+              });
+          }
+        });
+    };
+
     return {
       setisMediaServiceEnabled: setisMediaServiceEnabled,
       getMediaServiceState: getMediaServiceState,
@@ -146,7 +179,8 @@
       getUserIdentityOrgToMediaAgentOrgMapping: getUserIdentityOrgToMediaAgentOrgMapping,
       setUserIdentityOrgToMediaAgentOrgMapping: setUserIdentityOrgToMediaAgentOrgMapping,
       deleteUserIdentityOrgToMediaAgentOrgMapping: deleteUserIdentityOrgToMediaAgentOrgMapping,
-      enableMediaService: enableMediaService
+      enableMediaService: enableMediaService,
+      disableOrpheusForMediaFusion: disableOrpheusForMediaFusion
     };
   }
 })();

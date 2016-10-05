@@ -3771,6 +3771,18 @@
       "nodesImpact": "Nodes Impacted",
       "raised": "Raised"
     },
+    "deactivate": {
+      "areYou": "Are you sure you want to deactivate your Hybrid Media Service?",
+      "future": "All future meetings will be hosted in the cloud.",
+      "complete": "When completed there is no way to undo this action. You will have to activate Hybrid Media Service again.",
+      "deregister": "To deactivate this service it is necessary to deregister the following clusters:",
+      "ready": "I'm ready to deregister these clusters.",
+      "button-deactivate": "Deactivate Service",
+      "success": "Your Hybrid Media Service was successfully deactivated.",
+      "error": "Error in deregistering clusters. Please try again after sometime.",
+      "step": "Step ",
+      "of": " of 2"
+    },
     "add-resource-dialog": {
       "title": "Register a New media server",
       "text1": "Create a new or choose an existing Media Cluster to assign the new media server to:",
