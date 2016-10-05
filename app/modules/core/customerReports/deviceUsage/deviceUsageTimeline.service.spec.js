@@ -23,8 +23,6 @@ describe('DeviceUsageTimelineService', function () {
           count: s,
           totalDuration: s * 100,
           deviceId: 'device_' + s,
-          wbCount: s,
-          sharedCount: s,
           pairedCount: s
         });
       });
@@ -60,8 +58,6 @@ describe('DeviceUsageTimelineService', function () {
       expect(data.length).toEqual(7);
       _.each(data, function (item) {
         expect(item.video).toEqual(300);
-        expect(item.wbCount).toEqual(3);
-        expect(item.sharedCount).toEqual(3);
         expect(item.pairedCount).toEqual(3);
       });
     });
@@ -81,8 +77,6 @@ describe('DeviceUsageTimelineService', function () {
       expect(data.length).toEqual(30);
       _.each(data, function (item) {
         expect(item.video).toEqual(300);
-        expect(item.wbCount).toEqual(3);
-        expect(item.sharedCount).toEqual(3);
         expect(item.pairedCount).toEqual(3);
       });
     });
