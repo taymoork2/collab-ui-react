@@ -152,11 +152,6 @@
       return $http.put(url, {
         description: jsonTags
       });
-
-      // function decodeHuronTags(description) {
-      //   var tagString = (description || "").replace(/\['/g, '["').replace(/']/g, '"]').replace(/',/g, '",').replace(/,'/g, ',"');
-      //   return tagString;
-      // }
     }
 
     function uploadLogs(device, feedbackId) {
@@ -170,9 +165,6 @@
       fetchDevices: fetchDevices,
       deleteItem: deleteItem,
       updateTags: updateTags,
-      // updateItemName(objectToUpdate, newName)?
-
-      //Below the line:
       dataLoaded: dataLoaded,
       getDeviceList: getDeviceList,
       deleteDevice: deleteDevice,

@@ -214,7 +214,7 @@
             delete theDeviceMap[item.url];
 
             var placeUrl = getPlaceUrl(item);
-            if (placesDataModel[placeUrl]) { // we currently delete the place when delete device
+            if (!item.isHuronDevice && placesDataModel[placeUrl]) { // we currently delete the place when delete cloudberry device
 
               delete placesDataModel[placeUrl].devices[item.url];  //delete all devices and codes in the place
               delete placesDataModel[placeUrl].codes[item.url];
