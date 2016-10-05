@@ -11,8 +11,14 @@
       width: 35px;
     }
   }
-}
+  .emptyList{
+    text-align: center;
+    width: 60%;
+    margin-left: auto;
+    margin-right: auto;
 
-#NO-ICON .feature-icon {
-  display: none;
+    @media screen and (max-width: 640px){
+      width: 90%;
+    }
+  }
 }

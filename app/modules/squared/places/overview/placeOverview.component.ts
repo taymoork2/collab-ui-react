@@ -37,7 +37,7 @@ class PlaceOverview implements ng.IComponentController {
         icon: this.$translate.instant('onboardModal.call'),
         state: 'communication',
         detail: this.$translate.instant('onboardModal.callFree'),
-        actionsAvailable: true,
+        actionAvailable: true,
       };
       this.services.push(service);
     }
@@ -77,8 +77,8 @@ class PlaceOverview implements ng.IComponentController {
     return hasEntitlement;
   }
 
-  public serviceActions(feature): void {
-    this.$state.go('place-overview.' + feature);
+  public clickService(feature: IFeature): void {
+    this.$state.go('place-overview.' + feature.state);
   }
 
   private success(code): void {

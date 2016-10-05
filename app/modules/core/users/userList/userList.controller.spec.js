@@ -1,4 +1,5 @@
 /* globals fdescribe fit */
+
 'use strict';
 
 describe('UserListCtrl: Ctrl', function () {
@@ -76,7 +77,8 @@ describe('UserListCtrl: Ctrl', function () {
   }));
 
   function initController() {
-    $controller('UserListCtrl', {
+
+    var ctrl = $controller('UserListCtrl', {
       $scope: $scope,
       $state: $state,
       Userservice: Userservice,
@@ -85,6 +87,19 @@ describe('UserListCtrl: Ctrl', function () {
       Config: Config
     });
 
+    spyOn(ctrl, 'configureGrid').and.callFake(function () {
+      // mock gridApi
+      $scope.gridApi = {
+        infiniteScroll: {
+          saveScrollPercentage: jasmine.createSpy().and.returnValue(),
+          resetScroll: jasmine.createSpy().and.returnValue(),
+          dataLoaded: jasmine.createSpy().and.returnValue()
+        }
+      };
+      return $q.when();
+    });
+
+    ctrl.$onInit();
     $scope.$apply();
   }
 
@@ -121,9 +136,12 @@ describe('UserListCtrl: Ctrl', function () {
       expect($scope.userList.partnerUsers).toEqual(listPartners.partners);
     });
 
-    it('should append list with users and admins, but not partners when querying from scrolling index', function () {
+    it('should return additional pages of data when they exist', function () {
+
       var scrollingListUsers = listUsers.Resources.concat(listUsersMore.Resources);
+      listUsers.totalResults = _.size(scrollingListUsers);
       var scrollingListAdmins = listAdmins.Resources.concat(listAdminsMore.Resources);
+      listAdmins.totalResults = _.size(scrollingListAdmins);
 
       $scope.getUserList(100); // >0 index
       expect($scope.userList.allUsers).toEqual(scrollingListUsers);

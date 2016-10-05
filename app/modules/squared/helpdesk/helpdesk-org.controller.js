@@ -42,16 +42,11 @@
     vm.cardsAvailable = false;
     vm.adminUsersAvailable = false;
     vm.findServiceOrder = findServiceOrder;
-    vm.supportsLocalDialing = false;
 
     HelpdeskService.getOrg(vm.orgId).then(initOrgView, XhrNotificationService.notify);
 
     FeatureToggleService.supports(FeatureToggleService.features.atlasHelpDeskExt).then(function (result) {
       vm.supportsExtendedInformation = result;
-    });
-
-    FeatureToggleService.getCustomerHuronToggle(vm.orgId, FeatureToggleService.features.huronLocalDialing).then(function (result) {
-      vm.supportsLocalDialing = result;
     });
 
     scrollToTop();
@@ -156,11 +151,12 @@
     function findServiceOrder(orgId) {
       HelpdeskService.getServiceOrder(orgId).then(function (order) {
         var orderingSystemTypes = {
-          'CCW': 'CCW',
-          'APP_DIRECT': 'Telstra AppDirect Marketplace(TAM)',
-          'DIGITAL_RIVER': 'Digital River',
-          'ATLAS_TRIALS': 'Spark Trial',
-          'default': order.orderingTool
+          APP_DIRECT: 'Telstra AppDirect Marketplace(TAM)',
+          ATLAS_TRIALS: 'Spark Trial',
+          CCW: 'CCW',
+          CISCO_ONLINE_OPC: 'Spark Online Trial',
+          DIGITAL_RIVER: 'Digital River',
+          default: order.orderingTool
         };
         vm.orderSystem = orderingSystemTypes[order.orderingTool] || orderingSystemTypes['default'];
       }, XhrNotificationService.notify);

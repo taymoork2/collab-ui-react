@@ -15,6 +15,10 @@ describe('Directive: aaSubmenu', function () {
   var keyIndex = '0';
   var menuId = 'menu1';
   var submenu;
+  var queues = [{
+    queueName: 'Test Queue',
+    queueUrl: ''
+  }];
 
   beforeEach(angular.mock.module('Huron'));
   beforeEach(angular.mock.module('Sunlight'));
@@ -32,6 +36,7 @@ describe('Directive: aaSubmenu', function () {
     $scope.index = index;
     $scope.aaKey = keyIndex;
     $scope.menuId = menuId;
+    $scope.queues = JSON.stringify(queues);
 
     spyOn(AAUiModelService, 'getUiModel').and.returnValue(aaUiModel);
     spyOn(AACommonService, 'isRouteQueueToggle').and.returnValue(true);
@@ -53,7 +58,7 @@ describe('Directive: aaSubmenu', function () {
   }));
 
   it('replaces the element with the appropriate content', function () {
-    var element = $compile("<aa-submenu aa-schedule='openHours' aa-menu-id='menu1' aa-index='0' aa-key-index='0'></aa-submenu>")($rootScope);
+    var element = $compile("<aa-submenu aa-schedule='openHours' aa-menu-id='menu1' aa-index='0' aa-key-index='0' aa-queues='" + $scope.queues + "'></aa-submenu>")($rootScope);
     $rootScope.$digest();
 
     // aa-say-message name="aa-submenu-say-message" aa-schedule="openHours" aa-menu-id="menu2" aa-index="index" aa-header="false"
@@ -70,7 +75,7 @@ describe('Directive: aaSubmenu', function () {
     submenu.entries[0].type = 'MENU_OPTION';
     submenu.entries[0].addAction(AutoAttendantCeMenuModelService.newCeActionEntry('say', ''));
 
-    var element = $compile("<aa-submenu aa-schedule='openHours' aa-menu-id='menu1' aa-index='0' aa-key-index='0'></aa-submenu>")($rootScope);
+    var element = $compile("<aa-submenu aa-schedule='openHours' aa-menu-id='menu1' aa-index='0' aa-key-index='0' aa-queues='" + $scope.queues + "'></aa-submenu>")($rootScope);
     $rootScope.$digest();
 
     // aa-say-message name="aa-submenu-say-message" aa-schedule="openHours" aa-menu-id="menu2" aa-index="index" aa-header="false"

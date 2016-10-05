@@ -27,7 +27,8 @@ export class ServicesOverviewHybridCalendarCard extends ServicesOverviewHybridCa
     return [this._setupButton];
   }
 
-  public constructor() {
+  /* @ngInject */
+  public constructor(FusionClusterStatesService) {
     super({
       name: 'servicesOverview.cards.calendar.title',
       description: 'servicesOverview.cards.calendar.description',
@@ -36,6 +37,6 @@ export class ServicesOverviewHybridCalendarCard extends ServicesOverviewHybridCa
       statusLink: 'services/calendar',
       cardClass: 'calendar',
       cardType: CardType.hybrid,
-    });
+    }, FusionClusterStatesService);
   }
 }

@@ -8,6 +8,7 @@
 
       function CloudberryDevice(obj) {
         this.url = obj.url;
+        this.isCloudberryDevice = true;
         this.type = 'cloudberry';
         this.mac = obj.mac;
         this.ip = getIp(obj);
@@ -160,6 +161,7 @@
 
       function Code(obj) {
         obj.state = obj.status;
+        this.isCode = true;
 
         this.url = obj.url;
         this.type = 'cloudberry';
@@ -187,8 +189,48 @@
         };
       }
 
+      function updatePlaceFromItem(place, item) {
+        if (item.isPlace) {
+          updatePlaceFromPlace(place, item);
+        } else if (item.isCode) {
+          updatePlaceFromCode(place, item);
+        } else {
+          updatePlaceFromDevice(place, item);
+        }
+      }
+
+      function updatePlaceFromDevice(place, device) {
+        var updatedPlace = place;
+        updatedPlace.type = device.type || updatedPlace.type;
+        updatedPlace.cisUuid = device.cisUuid || device.uuid;
+        updatedPlace.displayName = device.displayName;
+        updatedPlace.sipUrl = device.sipUrl;
+        Place.bind(updatedPlace)(updatedPlace);
+      }
+
+      function updatePlaceFromCode(place, code) {
+        var updatedPlace = place;
+        updatedPlace.type = code.type || 'cloudberry';
+        updatedPlace.cisUuid = code.cisUuid || code.uuid;
+        updatedPlace.displayName = code.displayName;
+        Place.bind(updatedPlace)(updatedPlace);
+      }
+
+      function updatePlaceFromPlace(place, placeToUpdateFrom) {
+        if (_.isEmpty(placeToUpdateFrom.devices)) {
+          placeToUpdateFrom = _.merge(placeToUpdateFrom, _.pick(place, ['devices']));
+        }
+        if (_.isEmpty(placeToUpdateFrom.codes)) {
+          placeToUpdateFrom = _.merge(placeToUpdateFrom, _.pick(place, ['codes']));
+        }
+        Place.bind(place)(placeToUpdateFrom);
+        place.devices = placeToUpdateFrom.devices;
+        place.codes = placeToUpdateFrom.codes;
+      }
+
       function Place(obj) {
         this.url = obj.url;
+        this.isPlace = true;
         this.type = obj.type || 'cloudberry';
         this.readableType = getLocalizedType(obj.type);
         this.entitlements = obj.entitlements;
@@ -196,6 +238,7 @@
         this.displayName = obj.displayName;
         this.sipUrl = obj.sipUrl;
         this.devices = obj.type === 'huron' ? obj.phones : convertCloudberryDevices(obj.devices);
+        this.codes = obj.type === 'huron' ? null : convertCodes(obj.codes);
         this.numbers = obj.numbers;
         this.isUnused = obj.devices || false;
         this.canDelete = true;
@@ -461,6 +504,7 @@
       }
 
       return {
+        updatePlaceFromItem: updatePlaceFromItem,
         convertPlace: convertPlace,
         convertPlaces: convertPlaces,
         convertCode: convertCode,

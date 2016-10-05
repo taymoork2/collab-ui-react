@@ -1,4 +1,5 @@
 'use strict';
+
 describe('Controller: EdiscoverySearchController', function () {
   beforeEach(angular.mock.module('Ediscovery'));
 

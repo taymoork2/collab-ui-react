@@ -18,6 +18,7 @@ export class ServicesOverviewCallCard extends ServicesOverviewCard {
     return [];
   }
 
+  /* @ngInject */
   public constructor(Authinfo) {
     super({
       name: 'servicesOverview.cards.call.title',

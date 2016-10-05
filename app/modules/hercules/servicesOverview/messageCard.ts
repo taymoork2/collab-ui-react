@@ -11,6 +11,7 @@ export class ServicesOverviewMessageCard extends ServicesOverviewCard {
     return this._buttons;
   }
 
+  /* @ngInject */
   public constructor(Authinfo) {
     super({
       name: 'servicesOverview.cards.message.title',

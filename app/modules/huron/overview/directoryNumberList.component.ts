@@ -7,6 +7,7 @@ class DirectoryNumberListCtrl implements ng.IComponentController {
   private lineThreshold: number;
   public numberOfLines: number | undefined = this.lineThreshold;
 
+  /* @ngInject */
   constructor(
     private $translate: ng.translate.ITranslateService
   ) {
@@ -51,5 +52,6 @@ angular
       directoryNumbers: '<',
       directoryNumberSref: '@',
       lineThreshold: '@',
+      voicemailEnabled: '<',
     },
   });

@@ -32,7 +32,6 @@ var ChatTemplateCreation = function () {
   this.customerInfo_attCard_textField1 = element.all(by.css('.ct-attribute-field-textbox')).get(0);
   this.customerInfo_attCard_textField2 = element.all(by.css('.ct-attribute-field-textbox')).get(1);
   this.customerInfo_attCard_textField3 = element.all(by.css('.ct-attribute-field-textbox')).get(2);
-  this.customerInfo_attCard_textField4 = element.all(by.css('.ct-attribute-field-textbox')).get(3);
   this.customerInfo_screen_div1 = element.all(by.css('.ct-left-row')).get(0);
   this.customerInfo_screen_field1Label = element.all(by.css('.labelText')).get(0);
   this.customerInfo_screen_div2 = element.all(by.css('.ct-left-row')).get(1);

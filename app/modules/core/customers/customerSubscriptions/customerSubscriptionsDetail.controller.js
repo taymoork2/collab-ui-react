@@ -31,20 +31,20 @@
         _.forEach(resources, function (customerLicenses) {
           var subscriptionId = _.get(customerLicenses, 'billingServiceId', 'Trial');
           var siteUrl = _.get(customerLicenses, 'siteUrl', '');
-          var offerName = _.get(customerLicenses, 'offerName', '');
           var customerSubscription = {};
-          if (siteUrl !== '' && offerName !== '') {
-            customerSubscription = {
-              siteUrl: siteUrl,
-              subscriptionId: subscriptionId,
-              offerName: offerName
-            };
-            vm.subscriptions.push(customerSubscription);
-            _.forEach(vm.subscriptions, function (sub) {
-              vm.customerInfo += ['', sub.offerName, sub.subscriptionId, sub.siteUrl].join('%0D%0A');
-              vm.customerInfoClipboard += ['', sub.offerName, sub.subscriptionId, sub.siteUrl].join('\n');
-            });
+          if (siteUrl !== '') {
+            if (!_.find(vm.subscriptions, { siteUrl: siteUrl, subscriptionId: subscriptionId })) {
+              customerSubscription = {
+                siteUrl: siteUrl,
+                subscriptionId: subscriptionId,
+              };
+              vm.subscriptions.push(customerSubscription);
+            }
           }
+        });
+        _.forEach(vm.subscriptions, function (sub) {
+          vm.customerInfo += ['', sub.subscriptionId, sub.siteUrl, ''].join('%0D%0A');
+          vm.customerInfoClipboard += ['', sub.subscriptionId, sub.siteUrl, ''].join('\n');
         });
       });
     }

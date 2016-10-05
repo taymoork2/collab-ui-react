@@ -22,6 +22,7 @@ class DomainManagementService {
   private _invokeVerifyDomainUrl;
   private _claimDomainUrl;
 
+  /* @ngInject */
   constructor(
     private $http: ng.IHttpService,
     private $q: ng.IQService,

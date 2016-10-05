@@ -27,17 +27,12 @@ export class ServicesOverviewCtrl {
         this.forwardEvent('hybridStatusEventHandler', services);
       });
 
-    this.FeatureToggleService.supports(this.FeatureToggleService.features.atlasHybridServicesResourceList).then(supports => {
-      this.forwardEvent('f410FeatureEventHandler', supports);
-    });
-
     this.FeatureToggleService.supports(this.FeatureToggleService.features.atlasMediaServiceOnboarding).then(supports => {
       this.forwardEvent('hybridMediaFeatureToggleEventHandler', supports);
     });
 
-    this.FeatureToggleService.atlasCareTrialsGetStatus().then(supports => {
-      let isCareEnabled = Authinfo.isCare() && supports;
-      this.forwardEvent('careFeatureToggleEventHandler', isCareEnabled);
+    FeatureToggleService.atlasCareTrialsGetStatus().then(supports => {
+      this.forwardEvent('careFeatureToggleEventHandler', supports);
     });
 
   }

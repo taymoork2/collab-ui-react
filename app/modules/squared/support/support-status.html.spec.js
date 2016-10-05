@@ -1,4 +1,5 @@
 'use strict';
+
 describe('Controller: SupportCtrl', function () {
   beforeEach(angular.mock.module('Squared'));
 

@@ -8,7 +8,7 @@
     .factory('FusionClusterService', FusionClusterService);
 
   /* @ngInject */
-  function FusionClusterService($http, UrlConfig, Authinfo, FusionClusterStatesService, FusionUtils, $translate) {
+  function FusionClusterService($http, $q, $translate, Authinfo, FusionClusterStatesService, FusionUtils, UrlConfig, USSService) {
     var service = {
       preregisterCluster: preregisterCluster,
       addPreregisteredClusterToAllowList: addPreregisteredClusterToAllowList,
@@ -76,7 +76,8 @@
             }),
             unassigned: sort(getUnassignedClusters(org.clusters))
           };
-        });
+        })
+        .then(addUserCount);
     }
 
     function getClustersForResourceGroup(id, clusters) {
@@ -199,9 +200,6 @@
     function buildSidepanelConnectorList(cluster, connectorTypeToKeep) {
       var sidepanelConnectorList = {};
       sidepanelConnectorList.hosts = [];
-      sidepanelConnectorList.servicesStatuses = cluster.servicesStatuses;
-      sidepanelConnectorList.name = cluster.name;
-      sidepanelConnectorList.id = cluster.id;
 
       /* Find and populate hostnames only, and make sure that they are only there once */
       _.forEach(cluster.connectors, function (connector) {
@@ -226,7 +224,7 @@
           }
         }
       });
-      return sidepanelConnectorList;
+      return sidepanelConnectorList.hosts;
     }
 
     function setClusterName(clusterId, newClusterName) {
@@ -388,6 +386,31 @@
         setup: processClustersToSeeIfServiceIsSetup(serviceId, clusterList),
         status: processClustersToAggregateStatusForService(serviceId, clusterList)
       };
+    }
+
+    function addUserCount(response) {
+      if (response.groups.length === 0) {
+        return response;
+      }
+      var promises = _.map(response.groups, function (group) {
+        return USSService.getUserCountFromResourceGroup(group.id)
+          .catch(function () {
+            // recover from failure, we won't know the number for this group
+            return {
+              numberOfUsers: '?'
+            };
+          });
+      });
+      return $q.all(promises)
+        .then(function (userCounts) {
+          return {
+            groups: _.map(response.groups, function (group, i) {
+              group.numberOfUsers = userCounts[i].numberOfUsers;
+              return group;
+            }),
+            unassigned: response.unassigned,
+          };
+        });
     }
   }
 })();

@@ -1,5 +1,6 @@
 (function () {
   'use strict';
+
   angular.module('Sunlight').controller('CareReportsController', CareReportsController);
   /* @ngInject */
   function CareReportsController($timeout, $translate, CareReportsService, DummyCareReportService, Notification, SunlightReportService) {

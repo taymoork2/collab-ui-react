@@ -6,7 +6,7 @@
     .controller('CallServicePreviewCtrl', CallServicePreviewCtrl);
 
   /*@ngInject*/
-  function CallServicePreviewCtrl($scope, $state, $stateParams, Authinfo, Userservice, Notification, USSService, ClusterService, $timeout, ServiceDescriptor, UriVerificationService, DomainManagementService, $translate, FeatureToggleService, ResourceGroupService) {
+  function CallServicePreviewCtrl($scope, $state, $stateParams, Authinfo, Userservice, Notification, USSService, ClusterService, ServiceDescriptor, UriVerificationService, DomainManagementService, $translate, FeatureToggleService, ResourceGroupService) {
     $scope.saveLoading = false;
     $scope.currentUser = $stateParams.currentUser;
     var isEntitled = function (ent) {
@@ -54,11 +54,13 @@
         return this.selected !== this.current;
       },
       displayWarningIfNecessary: function () {
-        ResourceGroupService.resourceGroupHasEligibleCluster($scope.resourceGroup.selected.value, 'c_ucmc')
+        if (_.size(this.options) > 1) {
+          ResourceGroupService.resourceGroupHasEligibleCluster($scope.resourceGroup.selected.value, 'c_ucmc')
           .then(function (hasEligibleCluster) {
             $scope.resourceGroup.shouldWarn = !hasEligibleCluster;
           });
-      },
+        }
+      }
     };
     $scope.resourceGroup.init();
 
@@ -72,13 +74,13 @@
     }
 
     $scope.$watch('callServiceAware.entitled', function (newVal, oldVal) {
-      if (newVal != oldVal) {
+      if (newVal !== oldVal) {
         $scope.setShouldShowButtons();
       }
     });
 
     $scope.$watch('callServiceConnect.entitled', function (newVal, oldVal) {
-      if (newVal != oldVal) {
+      if (newVal !== oldVal) {
         $scope.setShouldShowButtons();
       }
     });
@@ -87,14 +89,29 @@
       return $scope.callServiceConnect.entitled !== isEntitled($scope.callServiceConnect.id) || $scope.callServiceAware.entitled !== isEntitled($scope.callServiceAware.id);
     };
 
-    var updateStatus = function () {
+    var resetStatusesIfEntitlementChanged = function () {
+      if ($scope.callServiceConnect.entitled !== isEntitled($scope.callServiceConnect.id)) {
+        $scope.callServiceConnect.status = null;
+      }
+      if ($scope.callServiceAware.entitled !== isEntitled($scope.callServiceAware.id)) {
+        $scope.callServiceAware.status = null;
+      }
+    };
+
+    var updateStatus = function (userIsRefreshed) {
+      if ($scope.isInvitePending) {
+        return;
+      }
+      $scope.updatingStatus = true;
       USSService.getStatusesForUser($scope.currentUser.id).then(function (statuses) {
         $scope.callServiceAware.status = _.find(statuses, function (status) {
           return $scope.callServiceAware.id === status.serviceId;
         });
+        refreshUserInUssIfServiceEntitledButNoStatus($scope.callServiceAware, userIsRefreshed);
         $scope.callServiceConnect.status = _.find(statuses, function (status) {
           return $scope.callServiceConnect.id === status.serviceId;
         });
+        refreshUserInUssIfServiceEntitledButNoStatus($scope.callServiceConnect, userIsRefreshed);
         if ($scope.callServiceAware.status && $scope.callServiceAware.status.connectorId) {
           ClusterService.getConnector($scope.callServiceAware.status.connectorId).then(function (connector) {
             $scope.callServiceAware.homedConnector = connector;
@@ -105,7 +122,36 @@
             $scope.callServiceConnect.homedConnector = connector;
           });
         }
+      }).catch(function (response) {
+        Notification.errorWithTrackingId(response, 'hercules.userSidepanel.readUserStatusFailed');
+      }).finally(function () {
+        $scope.updatingStatus = false;
       });
+    };
+
+    var refreshUserInUss = function () {
+      if ($scope.isInvitePending) {
+        return;
+      }
+      USSService.refreshEntitlementsForUser($scope.currentUser.id).catch(function (response) {
+        Notification.errorWithTrackingId(response, 'hercules.userSidepanel.refreshUserFailed');
+      }).finally(function () {
+        updateStatus(true);
+      });
+    };
+
+    var refreshUserInUssIfServiceEntitledButNoStatus = function (service, secondPass) {
+      // If we find no status in USS and the service is entitled, we try to refresh the user in USS and reload the statuses
+      // This can happen if USS has not been notified by CI in a reasonable time after entitled
+      if (!service.status && isEntitled(service.id)) {
+        if (secondPass) {
+          // This means we've done a refresh and it didn't help so we give up with a cryptic error message
+          service.status = { state: 'unknown', entitled: true };
+          Notification.error('hercules.userSidepanel.refreshUserDidNoGood');
+        } else {
+          refreshUserInUss();
+        }
+      }
     };
 
     var setSelectedResourceGroup = function (resourceGroupId) {
@@ -185,6 +231,7 @@
         if (data.success) {
           var userStatus = data.userResponse[0].status;
           if (userStatus === 200) {
+            resetStatusesIfEntitlementChanged();
             if (!$stateParams.currentUser.entitlements) {
               $stateParams.currentUser.entitlements = [];
             }
@@ -202,9 +249,7 @@
               }
             }
             $scope.setShouldShowButtons();
-            $timeout(function () {
-              updateStatus();
-            }, 2000);
+            refreshUserInUss();
           } else if (userStatus === 404) {
             entitleResult.msg = $translate.instant('hercules.userSidepanel.entitlements-dont-exist', {
               userName: $scope.currentUser.userName
@@ -302,11 +347,17 @@
       $state.go('call-service.settings');
     };
 
-    $scope.setShouldShowButtons = function () {
+    $scope.selectedResourceGroupChanged = function () {
       $scope.resourceGroup.displayWarningIfNecessary();
-      if ($scope.resourceGroup.hasChanged()) {
-        $scope.showButtons = true;
-        return;
+      $scope.setShouldShowButtons();
+    };
+
+    $scope.setShouldShowButtons = function () {
+      if ($scope.resourceGroup.show) {
+        if ($scope.resourceGroup.hasChanged()) {
+          $scope.showButtons = true;
+          return;
+        }
       }
       $scope.showButtons = entitlementHasChanged();
     };

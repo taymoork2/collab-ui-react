@@ -51,27 +51,32 @@
         if (type === WEBEX_TYPE) {
           return getWebexTooltip(rowData, type);
         } else {
-          var tooltip = scope.TOOLTIP_TEMPLATE.clone();
-          var serviceStatus = getServiceStatus(rowData, type);
-          var tooltipDataObj = {
-            statusClass: serviceStatus
-          };
-          if (TYPE_TO_TRANSLATION_CONVERSIONS[type]) {
-            tooltipDataObj.serviceName = $translate.instant('customerPage.' + TYPE_TO_TRANSLATION_CONVERSIONS[type]);
-          } else {
-            tooltipDataObj.serviceName = $translate.instant('customerPage.' + type);
-          }
-          if (serviceStatus !== POSSIBLE_SERVICE_STATUSES.free && rowData[type].volume) {
-            tooltipDataObj.qty = $translate.instant('customerPage.quantityWithValue', {
-              quantity: rowData[type].volume
-            });
-          }
-          tooltipDataObj.status = $translate.instant('customerPage.' + serviceStatus);
-          // Note that the tooltip displays raw html, which can contain unsecure code!
-          // In this case all input is put through $translate, sanitized, or changed to a constant
-          return $interpolate(tooltip[0].outerHTML)(tooltipDataObj);
+          return getNonWebexTooltip(rowData, type);
         }
+
       }
+
+      function getNonWebexTooltip(rowData, type) {
+        var tooltip = scope.TOOLTIP_TEMPLATE.clone();
+        var serviceStatus = getServiceStatus(rowData, type);
+        var tooltipDataObj = {
+          statusClass: serviceStatus
+        };
+        if (TYPE_TO_TRANSLATION_CONVERSIONS[type]) {
+          tooltipDataObj.serviceName = $translate.instant('customerPage.' + TYPE_TO_TRANSLATION_CONVERSIONS[type]);
+        } else {
+          tooltipDataObj.serviceName = $translate.instant('customerPage.' + type);
+        }
+        if (serviceStatus !== POSSIBLE_SERVICE_STATUSES.free && rowData[type].volume) {
+          tooltipDataObj.qty = $translate.instant('customerPage.quantityWithValue', {
+            quantity: rowData[type].volume });
+        }
+        tooltipDataObj.status = $translate.instant('customerPage.' + serviceStatus);
+        // Note that the tooltip displays raw html, which can contain unsecure code!
+        // In this case all input is put through $translate, sanitized, or changed to a constant
+        return $interpolate(tooltip[0].outerHTML)(tooltipDataObj);
+      }
+
 
       function getWebexTooltip(rowData) {
         var tooltip = scope.TOOLTIP_TEMPLATE.clone();
@@ -80,7 +85,8 @@
         tooltip.find('.service-status').remove();
         var webexServicesCounted = 0;
         var sitesFound = [];
-        _.forEach(Config.webexTypes, function (licenseType) {
+        var webexTypes = _.without(Config.webexTypes, 'webexCMR');
+        _.forEach(webexTypes, function (licenseType) {
           var licenseData = rowData[licenseType];
           var isLicenseAny = PartnerService.isLicenseTypeAny(rowData, licenseType);
           var hasLicenseId = angular.isDefined(licenseData.licenseId);

@@ -12,6 +12,7 @@
     var REFRESH = 'refresh';
     var SET = 'set';
     var EMPTY = 'empty';
+    var ERROR = 'error';
 
     vm.pageTitle = $translate.instant('reportsPage.pageTitle');
     vm.allReports = 'all';
@@ -28,12 +29,12 @@
       state: 'reports'
     }];
 
-    var activeUserData = [];
     var isActiveUsers = false;
     var activeUsersSort = ['userName', 'numCalls', 'sparkMessages', 'totalActivity'];
     var activeUsersChart = null;
     var previousSearch = '';
     var reportsUpdateToggle = FeatureToggleService.atlasReportsUpdateGetStatus();
+    vm.threeMonthTooltip = $translate.instant('activeUsers.threeMonthsMessage');
     vm.activeUserStatus = REFRESH;
     vm.mostActiveUserStatus = REFRESH;
     vm.searchPlaceholder = $translate.instant('activeUsers.search');
@@ -148,6 +149,10 @@
       return tab === EMPTY;
     };
 
+    vm.isError = function (tab) {
+      return tab === ERROR;
+    };
+
     // Controls for Most Active Users Table
     vm.mostActiveUserSwitch = function () {
       vm.showMostActiveUsers = !vm.showMostActiveUsers;
@@ -196,6 +201,10 @@
     function init() {
       reportsUpdateToggle.then(function (response) {
         vm.displayActiveLineGraph = response;
+        if (vm.displayActiveLineGraph) {
+          vm.timeOptions[2].label = $translate.instant('reportsPage.threePlusMonths');
+        }
+
         if (!vm.tab) {
           $timeout(function () {
             setDummyData();
@@ -226,7 +235,7 @@
     }
 
     function activityUpdate() {
-      setActiveGraph(activeUserData);
+      CustomerGraphService.showHideActiveLineGraph(activeUsersChart, vm.activeSelected);
     }
 
     function isActiveDisabled() {
@@ -307,13 +316,16 @@
     function setActiveGraph(data) {
       var tempActiveUserChart;
       if (vm.displayActiveLineGraph) {
-        tempActiveUserChart = CustomerGraphService.setActiveLineGraph(data, activeUsersChart, vm.activeSelected);
+        tempActiveUserChart = CustomerGraphService.setActiveLineGraph(data, activeUsersChart, vm.timeSelected);
       } else {
         tempActiveUserChart = CustomerGraphService.setActiveUsersGraph(data, activeUsersChart);
       }
 
       if (tempActiveUserChart !== null && angular.isDefined(tempActiveUserChart)) {
         activeUsersChart = tempActiveUserChart;
+        if (vm.displayActiveLineGraph) {
+          CustomerGraphService.showHideActiveLineGraph(activeUsersChart, vm.activeSelected);
+        }
       }
     }
 
@@ -326,28 +338,31 @@
       vm.showMostActiveUsers = false;
       isActiveUsers = false;
 
-      CustomerReportService.getActiveUserData(vm.timeSelected).then(function (response) {
+      CustomerReportService.getActiveUserData(vm.timeSelected, vm.displayActiveLineGraph).then(function (response) {
         if (response === ABORT) {
           return;
         } else if (_.isArray(response.graphData) && response.graphData.length === 0) {
           vm.activeUserStatus = EMPTY;
         } else {
           setActiveGraph(response.graphData);
-          activeUserData = response.graphData;
           isActiveUsers = response.isActiveUsers;
           vm.activeUserStatus = SET;
         }
         resizeCards();
       });
 
-      CustomerReportService.getMostActiveUserData(vm.timeSelected).then(function (response) {
+      CustomerReportService.getMostActiveUserData(vm.timeSelected, vm.displayActiveLineGraph).then(function (response) {
         if (response === ABORT) {
           return;
-        } else if (response.length === 0) {
+        } else if (response.error) {
+          vm.mostActiveUserStatus = ERROR;
+          vm.mostActiveUsers = response.tableData;
+        } else if (response.tableData.length === 0) {
           vm.mostActiveUserStatus = EMPTY;
+          vm.mostActiveUsers = response.tableData;
         } else {
           vm.activeUserPredicate = activeUsersSort[3];
-          vm.mostActiveUsers = response;
+          vm.mostActiveUsers = response.tableData;
           vm.activeUserCurrentPage = 1;
           vm.activeButton = [1, 2, 3];
           vm.mostActiveUserStatus = SET;
@@ -469,6 +484,7 @@
       vm.selectedDevice = vm.deviceFilter[0];
       currentDeviceGraphs = [];
       vm.isDevicesEmpty = true;
+
       CustomerReportService.getDeviceData(vm.timeSelected).then(function (response) {
         if (response === ABORT) {
           return;
@@ -476,7 +492,11 @@
           vm.deviceStatus = EMPTY;
         } else {
           vm.deviceFilter = response.filterArray.sort(function (a, b) {
-            return a.label.localeCompare(b.label);
+            if (a.label) {
+              return a.label.localeCompare(b.label);
+            } else {
+              return a > b;
+            }
           });
           vm.selectedDevice = vm.deviceFilter[0];
           currentDeviceGraphs = response.graphData;

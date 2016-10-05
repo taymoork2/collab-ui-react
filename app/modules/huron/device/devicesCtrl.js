@@ -48,6 +48,7 @@
           data: {
             function: 'showCode',
             title: 'addDeviceWizard.newDevice',
+            accountType: 'personal',
             deviceType: 'huron',
             deviceName: vm.currentUser.displayName,
             activationCode: code.code,

@@ -18,15 +18,14 @@
       <p class="extension-description">{{'hercules.cloudExtensions.serviceDescriptions.squared-fusion-uc' |
         translate}}</p>
 
-      <div>
+      <div ng-if="!isInvitePending">
         <span class="cloud-extension-label">{{'cloudExtensions.status' | translate}}:</span>
         <span class="cloud-extension-label" ng-if="callServiceAware.entitled && callServiceAware.status"
               ng-class="callServiceAware.entitled && callServiceAware.status ? 'status-' + callServiceAware.status.state : 'disabled'"
-              translate="hercules.activationStatus.{{getStatus(callServiceAware.status)}}"></span>
-        <span class="cloud-extension-label" ng-hide="callServiceAware.status && callServiceAware.entitled"
-              ng-class="callServiceAware.entitled && callServiceAware.status ? 'status-' + callServiceAware.status.state : 'disabled'"
               id="callServiceAwareStatus"
-              translate="common.{{callServiceAware.entitled ? 'on' : 'off'}}"></span>
+              translate="hercules.activationStatus.{{getStatus(callServiceAware.status)}}"></span>
+        <span class="cloud-extension-label status-off" ng-if="!callServiceAware.entitled" translate="common.off"></span>
+        <span cs-loader ng-if="!callServiceAware.status && callServiceAware.entitled"></span>
       </div>
       <div ng-if="callServiceAware.entitled && callServiceAware.homedConnector">
         <span class="cloud-extension-label">{{'cloudExtensions.host' | translate}}:</span>
@@ -51,16 +50,26 @@
         && callServiceAware.status
         && callServiceAware.status.state === 'error'
         && callServiceAware.status.description"
-        class="error-message">
+           class="error-message">
         <i class="icon icon-error"></i>
         <p class="message">
           {{callServiceAware.status.description.defaultMessage}}
         </p>
       </div>
 
-      <div
-        ng-if="isInvitePending && callServiceAware.entitled"
-        class="warning-message">
+      <div ng-if="callServiceAware.entitled
+        && callServiceAware.status
+        && callServiceAware.status.state === 'notActivated'
+        && callServiceAware.status.description"
+           class="info-message">
+        <i class="icon icon-info"></i>
+        <p class="message">
+          {{callServiceAware.status.description.defaultMessage}}
+        </p>
+      </div>
+
+      <div ng-if="isInvitePending && callServiceAware.entitled"
+           class="warning-message">
         <i class="icon icon-warning"></i>
         <p class="message">
           {{localizedOnboardingWarning}}
@@ -79,22 +88,30 @@
     </div>
     <p class="extension-description">{{'hercules.cloudExtensions.serviceDescriptions.squared-fusion-ec' |
       translate}}</p>
-    <div>
+    <div ng-if="!isInvitePending">
       <span class="cloud-extension-label">{{'cloudExtensions.status' | translate}}:</span>
-        <span class="cloud-extension-label" ng-if="callServiceConnect.entitled && callServiceConnect.status"
-              ng-class="callServiceConnect.entitled && callServiceConnect.status ? 'status-' + callServiceConnect.status.state : 'disabled'"
-              translate="hercules.activationStatus.{{getStatus(callServiceConnect.status)}}"></span>
-        <span class="cloud-extension-label" ng-hide="callServiceConnect.status && callServiceConnect.entitled"
-              ng-class="callServiceConnect.entitled && callServiceConnect.status ? 'status-' + callServiceConnect.status.state : 'disabled'"
-              id="callServiceConnectStatus"
-              translate="common.{{callServiceConnect.entitled ? 'on' : 'off'}}"></span>
+      <span class="cloud-extension-label" ng-if="callServiceConnect.entitled && callServiceConnect.status"
+            ng-class="callServiceConnect.entitled && callServiceConnect.status ? 'status-' + callServiceConnect.status.state : 'disabled'"
+            id="callServiceConnectStatus"
+            translate="hercules.activationStatus.{{getStatus(callServiceConnect.status)}}"></span>
+      <span class="cloud-extension-label status-off" ng-if="!callServiceConnect.entitled" translate="common.off"></span>
+      <span cs-loader ng-if="!callServiceConnect.status && callServiceConnect.entitled"></span>
     </div>
 
-    <div
-      ng-if="callServiceConnect.entitled
-      && callServiceConnect.status.state === 'error'"
-      class="error-message">
+    <div ng-if="callServiceConnect.entitled && callServiceConnect.status.state === 'error'"
+         class="error-message">
       <i class="icon icon-error"></i>
+      <p class="message">
+        {{callServiceConnect.status.description.defaultMessage}}
+      </p>
+    </div>
+
+    <div ng-if="callServiceConnect.entitled
+      && callServiceConnect.status
+      && callServiceConnect.status.state === 'notActivated'
+      && callServiceConnect.status.description"
+         class="info-message">
+      <i class="icon icon-info"></i>
       <p class="message">
         {{callServiceConnect.status.description.defaultMessage}}
       </p>
@@ -110,7 +127,7 @@
       <cs-select
         ng-model="resourceGroup.selected"
         options="resourceGroup.options"
-        on-change-fn="setShouldShowButtons()">
+        on-change-fn="selectedResourceGroupChanged()">
       </cs-select>
       <div class="warning-message" ng-if="resourceGroup.shouldWarn">
         <i class="icon icon-warning"></i>
@@ -125,8 +142,8 @@
       <p class="message"
          translate="hercules.resourceGroups.groupHasBeenDeleted"></p>
       <form>
-        <button class="btn btn--primary" type="submit" ng-click="setResourceGroupOnUser('')">
-          <span translate="common.reset"></span>
+        <button class="btn" type="submit" ng-click="setResourceGroupOnUser('')">
+          <span translate="common.remove"></span>
         </button>
       </form>
     </div>

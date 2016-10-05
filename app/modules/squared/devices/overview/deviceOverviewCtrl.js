@@ -6,7 +6,7 @@
     .controller('DeviceOverviewCtrl', DeviceOverviewCtrl);
 
   /* @ngInject */
-  function DeviceOverviewCtrl($q, $state, $scope, $interval, XhrNotificationService, Notification, $stateParams, $translate, $timeout, Authinfo, FeedbackService, CsdmCodeService, CsdmDeviceService, CsdmUpgradeChannelService, Utils, $window, RemDeviceModal, ResetDeviceModal, WizardFactory, channels, RemoteSupportModal, ServiceSetup, KemService, CmiKemService, FeatureToggleService) {
+  function DeviceOverviewCtrl($q, $state, $scope, $interval, XhrNotificationService, Notification, $stateParams, $translate, $timeout, Authinfo, FeedbackService, CsdmDeviceService, CsdmDataModelService, CsdmUpgradeChannelService, Utils, $window, RemDeviceModal, ResetDeviceModal, WizardFactory, channels, RemoteSupportModal, ServiceSetup, KemService, CmiKemService) {
     var deviceOverview = this;
     deviceOverview.currentDevice = $stateParams.currentDevice;
     var huronDeviceService = $stateParams.huronDeviceService;
@@ -15,24 +15,20 @@
     deviceOverview.tzIsLoaded = false;
     deviceOverview.isError = false;
     deviceOverview.isKEMAvailable = false;
-    FeatureToggleService.supports(FeatureToggleService.features.huronKEM).then(function (result) {
-      if (result) {
-        deviceOverview.isKEMAvailable = KemService.isKEMAvailable(deviceOverview.currentDevice.product);
-        if (deviceOverview.isKEMAvailable) {
-          CmiKemService.getKEM(deviceOverview.currentDevice.huronId).then(
-            function (data) {
-              deviceOverview.currentDevice.kem = data;
+    deviceOverview.isKEMAvailable = KemService.isKEMAvailable(deviceOverview.currentDevice.product);
+    if (deviceOverview.isKEMAvailable) {
+      CmiKemService.getKEM(deviceOverview.currentDevice.huronId).then(
+        function (data) {
+          deviceOverview.currentDevice.kem = data;
 
-              deviceOverview.kemNumber = KemService.getKemOption(deviceOverview.currentDevice.kem.length);
-              deviceOverview.kemOptions = KemService.getOptionList(deviceOverview.currentDevice.product);
-            }
-          ).catch(function () {
-            deviceOverview.currentDevice.kem = [];
-            deviceOverview.isError = true;
-          });
+          deviceOverview.kemNumber = KemService.getKemOption(deviceOverview.currentDevice.kem.length);
+          deviceOverview.kemOptions = KemService.getOptionList(deviceOverview.currentDevice.product);
         }
-      }
-    });
+      ).catch(function () {
+        deviceOverview.currentDevice.kem = [];
+        deviceOverview.isError = true;
+      });
+    }
 
     if (deviceOverview.currentDevice.isHuronDevice) {
       initTimeZoneOptions().then(function () {
@@ -74,15 +70,9 @@
     }
 
     deviceOverview.save = function (newName) {
-      if (deviceOverview.currentDevice.needsActivation) {
-        return CsdmCodeService
-          .updateCodeName(deviceOverview.currentDevice.url, newName)
-          .catch(XhrNotificationService.notify);
-      } else {
-        return CsdmDeviceService
-          .updateDeviceName(deviceOverview.currentDevice.url, newName)
-          .catch(XhrNotificationService.notify);
-      }
+      return CsdmDataModelService
+        .updateItemName(deviceOverview.currentDevice, newName)
+        .catch(XhrNotificationService.notify);
     };
 
     function setTimeZone(timezone) {
@@ -168,7 +158,7 @@
     deviceOverview.resetCode = function () {
       deviceOverview.resettingCode = true;
       var displayName = deviceOverview.currentDevice.displayName;
-      CsdmCodeService.deleteCode(deviceOverview.currentDevice)
+      CsdmDataModelService.deleteItem(deviceOverview.currentDevice)
         .then(function () {
           var wizardState = {
             data: {
@@ -209,17 +199,17 @@
       var tag = _.trim(deviceOverview.newTag);
       if (tag && !_.includes(deviceOverview.currentDevice.tags, tag)) {
         deviceOverview.newTag = undefined;
-        var service;
         if (deviceOverview.currentDevice.needsActivation) {
-          service = CsdmCodeService;
+          return CsdmDataModelService.updateTags(deviceOverview.currentDevice, deviceOverview.currentDevice.tags.concat(tag))
+            .catch(XhrNotificationService.notify);
         } else if (deviceOverview.currentDevice.isHuronDevice) {
-          service = huronDeviceService;
+          huronDeviceService.updateTags(deviceOverview.currentDevice.url, deviceOverview.currentDevice.tags.concat(tag))
+            .catch(XhrNotificationService.notify);
         } else {
-          service = CsdmDeviceService;
+          return CsdmDataModelService
+            .updateTags(deviceOverview.currentDevice, deviceOverview.currentDevice.tags.concat(tag))
+            .catch(XhrNotificationService.notify);
         }
-        return service
-          .updateTags(deviceOverview.currentDevice.url, deviceOverview.currentDevice.tags.concat(tag))
-          .catch(XhrNotificationService.notify);
       } else {
         deviceOverview.isAddingTag = false;
         deviceOverview.newTag = undefined;
@@ -234,17 +224,16 @@
 
     deviceOverview.removeTag = function (tag) {
       var tags = _.without(deviceOverview.currentDevice.tags, tag);
-      var service;
       if (deviceOverview.currentDevice.needsActivation) {
-        service = CsdmCodeService;
+        return CsdmDataModelService.updateTags(deviceOverview.currentDevice, tags)
+          .catch(XhrNotificationService.notify);
       } else if (deviceOverview.currentDevice.isHuronDevice) {
-        service = huronDeviceService;
+        return huronDeviceService.updateTags(deviceOverview.currentDevice.url, tags)
+          .catch(XhrNotificationService.notify);
       } else {
-        service = CsdmDeviceService;
+        return CsdmDataModelService.updateTags(deviceOverview.currentDevice, tags)
+          .catch(XhrNotificationService.notify);
       }
-      return service
-        .updateTags(deviceOverview.currentDevice.url, tags)
-        .catch(XhrNotificationService.notify);
     };
 
     deviceOverview.deviceHasInformation = deviceOverview.currentDevice.ip || deviceOverview.currentDevice.mac || deviceOverview.currentDevice.serial || deviceOverview.currentDevice.software || deviceOverview.currentDevice.hasRemoteSupport || deviceOverview.currentDevice.needsActivation;
@@ -300,7 +289,7 @@
     }
 
     function pollDeviceForNewChannel(newValue, endTime, deferred) {
-      CsdmDeviceService.getDevice(deviceOverview.currentDevice.url).then(function (device) {
+      CsdmDataModelService.reloadDevice(deviceOverview.currentDevice).then(function (device) {
         if (device.upgradeChannel.value == newValue) {
           Notification.success('deviceOverviewPage.channelUpdated');
           return deferred.resolve();

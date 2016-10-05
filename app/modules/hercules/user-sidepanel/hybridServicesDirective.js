@@ -7,7 +7,7 @@
     .controller('HybridServicesCtrl', HybridServicesCtrl);
 
   /* @ngInject */
-  function HybridServicesCtrl($scope, $timeout, Authinfo, USSService, FusionUtils, ServiceDescriptor, Orgservice, Notification) {
+  function HybridServicesCtrl($scope, $rootScope, $timeout, Authinfo, USSService, FusionUtils, ServiceDescriptor, Orgservice, Notification, Userservice) {
     if (!Authinfo.isFusion()) {
       return;
     }
@@ -18,6 +18,8 @@
     var delayedUpdateTimer = null;
     vm.extensions = getExtensions();
     vm.isEnabled = false;
+    vm.userStatusLoaded = false;
+    vm.isInvitePending = vm.user ? Userservice.isInvitePending(vm.user) : false;
 
     vm.allExceptUcFilter = function (item) {
       return item && item.enabled === true && item.id !== 'squared-fusion-ec';
@@ -129,6 +131,10 @@
               });
             });
             delayedUpdateStatusForUser();
+          }).catch(function (response) {
+            Notification.errorWithTrackingId(response, 'hercules.userSidepanel.readUserStatusFailed');
+          }).finally(function () {
+            vm.userStatusLoaded = true;
           });
       }
     }
@@ -139,7 +145,7 @@
       }
       delayedUpdateTimer = $timeout(function () {
         updateStatusForUser();
-      }, 5000);
+      }, 10000);
     }
 
     function hasEntitlement(entitlement) {
@@ -184,7 +190,15 @@
       return vm.user.entitlements.indexOf('ciscouc') > -1;
     };
 
+    var cancelStateChangeListener = $rootScope.$on('$stateChangeSuccess', function () {
+      stopDelayedUpdates = true;
+      if (delayedUpdateTimer) {
+        $timeout.cancel(delayedUpdateTimer);
+      }
+    });
+
     $scope.$on('$destroy', function () {
+      cancelStateChangeListener();
       stopDelayedUpdates = true;
       if (delayedUpdateTimer) {
         $timeout.cancel(delayedUpdateTimer);

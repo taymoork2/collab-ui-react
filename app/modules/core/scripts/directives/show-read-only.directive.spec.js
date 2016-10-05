@@ -1,4 +1,5 @@
 'use strict';
+
 describe('Directive: ShowReadOnly', function () {
 
   var compile, scope, directiveElem, Authinfo, translate;

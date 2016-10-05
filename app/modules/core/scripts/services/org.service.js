@@ -33,7 +33,8 @@
       getHybridServiceAcknowledged: getHybridServiceAcknowledged,
       setHybridServiceAcknowledged: setHybridServiceAcknowledged,
       getEftSetting: getEftSetting,
-      setEftSetting: setEftSetting
+      setEftSetting: setEftSetting,
+      setHybridServiceReleaseChannelEntitlement: setHybridServiceReleaseChannelEntitlement
     };
 
     var savedOrgSettingsCache = [];
@@ -398,6 +399,14 @@
       return $http.get(Auth.getAuthorizationUrl(orgId))
         .then(function (data) {
           return data.data.setupDone;
+        });
+    }
+
+    function setHybridServiceReleaseChannelEntitlement(orgId, channel, entitled) {
+      return $http
+        .post(UrlConfig.getAdminServiceUrl() + 'hybridservices/organizations/' + orgId + '/releaseChannels', {
+          channel: channel,
+          entitled: entitled
         });
     }
   }

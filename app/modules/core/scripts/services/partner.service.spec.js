@@ -265,6 +265,39 @@ describe('Partner Service -', function () {
   });
 
   describe('helper functions -', function () {
+    describe('getTrialMeetingServices', function () {
+      var licenses;
+      beforeEach(function () {
+        licenses = _.cloneDeep(testData.licenses);
+      });
+
+      it('should return a list of meeting and webex for services for trials', function () {
+        licenses.push({
+          licenseId: 'EE_abdd0d28-a886-452a-b2b0-97861baa2a54',
+          offerName: 'EE',
+          licenseType: 'CONFERENCING',
+          volume: 100,
+          isTrial: true,
+        });
+        var list = PartnerService.getTrialMeetingServices(licenses);
+        expect(list.length).toBe(2);
+      });
+
+      it('should return a list of meeting and webex for services ONLY for trials', function () {
+        licenses.push({
+          "licenseId": "EE_abdd0d28-a886-452a-b2b0-97861baa2a54",
+          "offerName": "EE",
+          "licenseType": "CONFERENCING",
+          "volume": 100,
+          "isTrial": false,
+        });
+
+        var list = PartnerService.getTrialMeetingServices(licenses);
+        expect(list.length).toBe(1);
+      });
+
+    });
+
     describe('parseLicensesAndOffers -', function () {
       it('should return a default object if "offers" property is an empty list', function () {
         var data = PartnerService.parseLicensesAndOffers();
@@ -479,6 +512,7 @@ describe('Partner Service -', function () {
             id: Config.offerTypes.roomSystems
           }]
         }, true);
+        expect(data.isRoomSystems).toBe(true);
         expect(_.map(data.offer.trialServices, function (o) { return o.name; })).toContain($translate.instant('trials.roomSystem'));
       });
     });
@@ -504,38 +538,52 @@ describe('Partner Service -', function () {
 
       });
 
-      it('should return false from isDisplayablePaidService for trial license', function () {
+      it('should return TRUE from isDisplayableService for trial license if looking for trials', function () {
         var licenseInfo = {
           licenseType: Config.licenseTypes.MESSAGING,
           volume: 10,
           isTrial: true
         };
-        expect(PartnerService.helpers.isDisplayablePaidService(licenseInfo, true)).toBe(false);
+        var isTrial = true;
+        expect(PartnerService.helpers.isDisplayableService(licenseInfo, true, isTrial)).toBe(true);
       });
 
-      it('should return false from isDisplayablePaidService for storage license', function () {
+      it('should return FALSE from isDisplayableService for trial license if NOT looking for trials', function () {
+        var licenseInfo = {
+          licenseType: Config.licenseTypes.MESSAGING,
+          volume: 10,
+          isTrial: true
+        };
+        var isTrial = false;
+        expect(PartnerService.helpers.isDisplayableService(licenseInfo, true, isTrial)).toBe(false);
+      });
+
+      it('should return FALSE from isDisplayableService for storage license', function () {
         var licenseInfo = {
           licenseType: Config.licenseTypes.STORAGE,
           volume: 10
         };
-        expect(PartnerService.helpers.isDisplayablePaidService(licenseInfo, true)).toBe(false);
+        var isTrial = false;
+        expect(PartnerService.helpers.isDisplayableService(licenseInfo, true, isTrial)).toBe(false);
       });
 
-      it('should return the value of the toggle  from isDisplayablePaidService for care license', function () {
+      it('should return the value of the toggle  from isDisplayableService for care license', function () {
         var licenseInfo = {
           licenseType: Config.licenseTypes.CARE,
           volume: 10
         };
-        expect(PartnerService.helpers.isDisplayablePaidService(licenseInfo, false)).toBe(false);
-        expect(PartnerService.helpers.isDisplayablePaidService(licenseInfo, true)).toBe(true);
+        var isTrial = false;
+        expect(PartnerService.helpers.isDisplayableService(licenseInfo, false, isTrial)).toBe(false);
+        expect(PartnerService.helpers.isDisplayableService(licenseInfo, true, isTrial)).toBe(true);
       });
 
-      it('should return true from isDisplayablePaidService for care license for paid conference license ', function () {
+      it('should return TRUE from isDisplayableService for care license for paid conference license ', function () {
         var licenseInfo = {
           licenseType: Config.licenseTypes.CONFERENCING,
           volume: 10
         };
-        expect(PartnerService.helpers.isDisplayablePaidService(licenseInfo, true)).toBe(true);
+        var isTrial = false;
+        expect(PartnerService.helpers.isDisplayableService(licenseInfo, true, isTrial)).toBe(true);
       });
 
       it('should build a meeting service given conferencing mapping', function () {
@@ -543,7 +591,7 @@ describe('Partner Service -', function () {
         var licenseInfo = {
           volume: 20
         };
-        var result = PartnerService.helpers.buildService(licenseInfo, mapping);
+        var result = new PartnerService.helpers.LicensedService(licenseInfo, mapping);
         expect(result.icon).toBe('icon-circle-group');
         expect(result.qty).toBe(20);
 
@@ -554,7 +602,7 @@ describe('Partner Service -', function () {
           licenseType: 'MESSAGING',
           volume: 10
         };
-        var result = PartnerService.helpers.buildService(licenseInfo, mapping);
+        var result = new PartnerService.helpers.LicensedService(licenseInfo, mapping);
         expect(result.licenseType).toBe(Config.licenseTypes.MESSAGING);
         expect(result.qty).toBe(10);
 
@@ -616,13 +664,15 @@ describe('Partner Service -', function () {
 
       it('should return  an array of free/paid services if present ', function () {
         customer.licenseList[3].isTrial = false;
-        var result = PartnerService.getFreeOrActiveServices(customer, true);
+        var options = { isCareEnabled: true };
+        var result = PartnerService.getFreeOrActiveServices(customer, options);
         expect(result).toBeDefined();
         expect(result.length).toBe(2);
       });
 
       it('should return an array containing an object with  array of meeting services and total license quantity when multiple conf. services are active ', function () {
-        var result = PartnerService.getFreeOrActiveServices(customer, true);
+        var options = { isCareEnabled: true };
+        var result = PartnerService.getFreeOrActiveServices(customer, options);
         var meeting = _.find(result, {
           isMeeting: true
         });
@@ -632,12 +682,12 @@ describe('Partner Service -', function () {
       });
 
       it('should return an array with a meeting and no meeting subarray when only 1 conferencing service', function () {
+        var options = { isCareEnabled: true };
         _.each(customer.licenseList, function (license) {
           license.isTrial = true;
         });
         customer.licenseList[2].isTrial = false;
-        var result = PartnerService.getFreeOrActiveServices(customer, true);
-        // expect(result.meetingPaidServices).not.toBeDefined();
+        var result = PartnerService.getFreeOrActiveServices(customer, options);
         expect(result).toBeDefined();
         expect(result[0].licenseType).toBe(Config.licenseTypes.CONFERENCING);
         expect(result[0].sub).not.toBeDefined();

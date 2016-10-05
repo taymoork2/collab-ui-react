@@ -51,10 +51,15 @@
     "labelData": {
       "numTotalCalls": 58,
       "numTotalMinutes": 156
-    }
+    },
+    "dummy": false
   },
   "emptyArray": {
     "dataProvider": [],
-    "displayData": {}
+    "labelData": {
+      "numTotalCalls": 0,
+      "numTotalMinutes": 0
+    },
+    "dummy": false
   }
 }

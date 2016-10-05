@@ -35,6 +35,7 @@ export class DialingService {
   private cosRestriction: ICOSRestrictionResponse;
   private dialingUuids = {};
 
+  /* @ngInject */
   constructor(
     private $translate,
     private $q: ng.IQService,

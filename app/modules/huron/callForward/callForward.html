@@ -21,6 +21,7 @@
         name="callForwardRadio"
         ng-model="$ctrl.forwardState"
         ng-value="'all'"
+        ng-change="$ctrl.onCallFwdAllChange()"
         cs-input-label="{{::'callForwardPanel.forwardAllCalls'|translate}}">
 
       <div class="cs-input-group cs-input--nested-1" ng-if="$ctrl.forwardState === 'all'">
@@ -43,6 +44,7 @@
         name="callForwardRadio"
         ng-model="$ctrl.forwardState"
         ng-value="'busy'"
+        ng-change="$ctrl.onCallFwdBusyChange()"
         cs-input-label="{{::'callForwardPanel.forwardBusyNoAnswer'|translate}}">
 
       <div ng-if="$ctrl.forwardState === 'busy'">
@@ -66,7 +68,8 @@
             id="ckForwardExternalCalls"
             name="ckForwardExternalCalls"
             ng-model="$ctrl.forwardExternalCalls"
-            cs-input-label="{{::'callForwardPanel.forwardExternal'|translate}}">
+            cs-input-label="{{::'callForwardPanel.forwardExternal'|translate}}"
+            ng-click="$ctrl.onCallFwdBusyExternal()">
         </div>
         <div class="cs-input-group cs-input--nested-1" ng-if="$ctrl.forwardExternalCalls">
           <cs-select

@@ -20,6 +20,7 @@ export class ServicesOverviewCareCard extends ServicesOverviewCard {
     this._display = hasFeature;
   }
 
+  /* @ngInject */
   public constructor(Authinfo) {
     super({
       name: 'servicesOverview.cards.care.title',

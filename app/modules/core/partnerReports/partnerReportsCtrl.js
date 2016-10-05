@@ -6,17 +6,20 @@
     .controller('PartnerReportCtrl', PartnerReportCtrl);
 
   /* @ngInject */
-  function PartnerReportCtrl($timeout, $translate, $q, PartnerReportService, GraphService, DummyReportService, Authinfo) {
+  function PartnerReportCtrl($rootScope, $timeout, $translate, $q, ReportService, GraphService, DummyReportService, Authinfo) {
     var vm = this;
 
     var ABORT = 'ABORT';
     var REFRESH = 'refresh';
     var SET = 'set';
     var EMPTY = 'empty';
+    var BARCHART = 'barchart';
+    var DONUT = 'donut';
+    var TABLE = 'table';
+    var UNDEF = 'undefined';
     var initialized = false;
 
     // variables for the active users section
-    var activeUsersSort = ['userName', 'orgName', 'numCalls', 'sparkMessages', 'totalActivity'];
     var activeUsersChart = null;
     var mediaQualityChart = null;
     var callMetricsDonutChart = null;
@@ -29,6 +32,7 @@
     vm.quality = 'quality';
     var currentFilter = vm.allReports;
 
+    // customer filter variables
     vm.customerPlaceholder = $translate.instant('reportsPage.customerSelect');
     vm.customerSingular = $translate.instant('reportsPage.customer');
     vm.customerPlural = $translate.instant('reportsPage.customers');
@@ -36,33 +40,118 @@
     vm.customerOptions = [];
     vm.customerSelected = [];
 
-    vm.activeUsersRefresh = REFRESH;
-    vm.mostActiveRefresh = REFRESH;
-    vm.activeUserPopulationRefresh = REFRESH;
-    vm.activeUserReverse = true;
-    vm.activeUsersTotalPages = 0;
-    vm.activeUserCurrentPage = 0;
-    vm.activeUserPredicate = activeUsersSort[4];
-    vm.activeButton = [1, 2, 3];
-    vm.mostActiveUsers = [];
-    vm.mostActiveTitle = "";
-    vm.displayMostActive = false;
-    vm.showMostActiveUsers = false;
-    vm.activeUserDescription = "";
-    vm.mostActiveDescription = "";
+    // Active User Options
+    vm.activeUserReportOptions = {
+      animate: false,
+      description: 'activeUsers.description',
+      headerTitle: 'activeUsers.activeUsers',
+      id: 'activeUsers',
+      reportType: BARCHART,
+      state: REFRESH,
+      table: undefined,
+      titlePopover: UNDEF
+    };
 
-    vm.mediaQualityPopover = $translate.instant('mediaQuality.packetLossDefinition');
-    vm.mediaQualityRefresh = REFRESH;
+    vm.activeUserSecondaryReportOptions = {
+      broadcast: 'ReportCard::UpdateSecondaryReport',
+      description: 'activeUsers.mostActiveDescription',
+      display: false,
+      state: REFRESH,
+      sortOptions: [{
+        option: 'userName',
+        direction: false
+      }, {
+        option: 'orgName',
+        direction: false
+      }, {
+        option: 'numCalls',
+        direction: false
+      }, {
+        option: 'sparkMessages',
+        direction: true
+      }, {
+        option: 'totalActivity',
+        direction: true
+      }],
+      table: {
+        headers: [{
+          title: 'activeUsers.user',
+          class: 'col-md-4 pointer'
+        }, {
+          title: 'activeUsers.customer',
+          class: 'col-md-4 pointer'
+        }, {
+          title: 'activeUsers.calls',
+          class: 'horizontal-center col-md-2 pointer'
+        }, {
+          title: 'activeUsers.sparkMessages',
+          class: 'horizontal-center col-md-2 pointer'
+        }],
+        data: [],
+        dummy: false
+      },
+      title: 'activeUsers.mostActiveUsers'
+    };
 
-    vm.callMetricsRefresh = REFRESH;
-    vm.callMetricsDescription = "";
+    vm.populationReportOptions = {
+      animate: false,
+      description: 'activeUserPopulation.description',
+      headerTitle: 'activeUserPopulation.titleByCompany',
+      id: 'userPopulation',
+      reportType: BARCHART,
+      state: REFRESH,
+      table: undefined,
+      titlePopover: UNDEF
+    };
 
-    vm.endpointRefresh = REFRESH;
-    vm.registeredEndpoints = [];
-    vm.dummyTable = true;
-    vm.endpointDescription = "";
-    vm.trend = "";
-    vm.devices = "";
+    vm.mediaReportOptions = {
+      animate: true,
+      description: 'mediaQuality.description',
+      headerTitle: 'mediaQuality.mediaQuality',
+      id: 'mediaQuality',
+      reportType: BARCHART,
+      state: REFRESH,
+      table: undefined,
+      titlePopover: 'mediaQuality.packetLossDefinition'
+    };
+
+    vm.endpointReportOptions = {
+      animate: true,
+      description: 'registeredEndpoints.description',
+      headerTitle: 'registeredEndpoints.registeredEndpoints',
+      id: 'reg-endpoints',
+      reportType: TABLE,
+      state: REFRESH,
+      table: {
+        headers: [{
+          title: 'registeredEndpoints.company',
+          class: 'customer-data col-md-4'
+        }, {
+          title: 'registeredEndpoints.maxRegisteredDevices',
+          class: 'horizontal-center col-md-2'
+        }, {
+          title: 'registeredEndpoints.trend',
+          class: 'horizontal-center col-md-2'
+        }, {
+          title: 'registeredEndpoints.totalRegistered',
+          class: 'horizontal-center col-md-2'
+        }],
+        data: [],
+        dummy: true
+      },
+      titlePopover: UNDEF
+    };
+
+    vm.callMetricsReportOptions = {
+      animate: false,
+      description: 'callMetrics.callMetricsDesc',
+      headerTitle: 'callMetrics.callMetrics',
+      id: 'callMetrics',
+      reportType: DONUT,
+      state: REFRESH,
+      table: undefined,
+      titlePopover: UNDEF
+    };
 
     vm.timeOptions = [{
       value: 0,
@@ -80,59 +169,10 @@
     vm.timeSelected = vm.timeOptions[0];
     vm.showHideCards = showHideCards;
 
-    // Graph data status checks
-    vm.isRefresh = function (tab) {
-      return tab === REFRESH;
-    };
-
-    vm.isEmpty = function (tab) {
-      return tab === EMPTY;
-    };
-
-    // Controls for Most Active Users Table
-    vm.openCloseMostActive = function () {
-      vm.showMostActiveUsers = !vm.showMostActiveUsers;
+    // resizing for Most Active Users Table
+    vm.resizeMostActive = function () {
       resizeCards();
       delayedResize();
-    };
-
-    vm.activePage = function (num) {
-      return vm.activeUserCurrentPage === Math.ceil((num + 1) / 5);
-    };
-
-    vm.mostActiveSort = function (num) {
-      if (vm.activeUserPredicate === activeUsersSort[num]) {
-        vm.activeUserReverse = !vm.activeUserReverse;
-      } else {
-        if (num >= 2) {
-          vm.activeUserReverse = true;
-        } else {
-          vm.activeUserReverse = false;
-        }
-        vm.activeUserPredicate = activeUsersSort[num];
-      }
-    };
-
-    vm.changePage = function (num) {
-      if ((num > 1) && (num < vm.activeUsersTotalPages)) {
-        vm.activeButton[0] = (num - 1);
-        vm.activeButton[1] = num;
-        vm.activeButton[2] = (num + 1);
-      }
-      vm.activeUserCurrentPage = num;
-      resizeCards();
-    };
-
-    vm.pageForward = function () {
-      if (vm.activeUserCurrentPage < vm.activeUsersTotalPages) {
-        vm.changePage(vm.activeUserCurrentPage + 1);
-      }
-    };
-
-    vm.pageBackward = function () {
-      if (vm.activeUserCurrentPage > 1) {
-        vm.changePage(vm.activeUserCurrentPage - 1);
-      }
     };
 
     vm.updateReports = function () {
@@ -141,22 +181,19 @@
       }
 
       setAllDummyData();
-      setTimeBasedText();
-
       if (vm.customerSelected.length > 0) {
-        vm.activeUsersRefresh = REFRESH;
-        vm.mostActiveRefresh = REFRESH;
-        vm.activeUserPopulationRefresh = REFRESH;
-        vm.mostActiveDescription = "";
+        vm.activeUserReportOptions.state = REFRESH;
+        vm.activeUserSecondaryReportOptions.state = REFRESH;
+        vm.populationReportOptions.state = REFRESH;
         getActiveUserReports();
 
-        vm.callMetricsRefresh = REFRESH;
+        vm.callMetricsReportOptions.state = REFRESH;
         getCallMetricsReports();
 
-        vm.mediaQualityRefresh = REFRESH;
+        vm.mediaReportOptions.state = REFRESH;
         getMediaQualityReports();
 
-        vm.endpointRefresh = REFRESH;
+        vm.endpointReportOptions.state = REFRESH;
         getRegisteredEndpoints();
       } else {
         setAllNoData();
@@ -167,9 +204,8 @@
     init();
 
     function init() {
-      setTimeBasedText();
-      PartnerReportService.getOverallActiveUserData(vm.timeSelected);
-      PartnerReportService.getCustomerList().then(function (response) {
+      ReportService.getOverallActiveUserData(vm.timeSelected);
+      ReportService.getCustomerList().then(function (response) {
         setAllDummyData();
         updateCustomerFilter(response);
         if (vm.customerSelected.length > 0) {
@@ -187,12 +223,12 @@
     }
 
     function setAllNoData() {
-      vm.activeUserPopulationRefresh = EMPTY;
-      vm.activeUsersRefresh = EMPTY;
-      vm.mostActiveRefresh = EMPTY;
-      vm.mediaQualityRefresh = EMPTY;
-      vm.callMetricsRefresh = EMPTY;
-      vm.endpointRefresh = EMPTY;
+      vm.populationReportOptions.state = EMPTY;
+      vm.activeUserReportOptions.state = EMPTY;
+      vm.activeUserSecondaryReportOptions.state = EMPTY;
+      vm.mediaReportOptions.state = EMPTY;
+      vm.callMetricsReportOptions.state = EMPTY;
+      vm.endpointReportOptions.state = EMPTY;
     }
 
     function resizeCards() {
@@ -232,27 +268,35 @@
 
     function updateCustomerFilter(orgsData) {
       var customers = [];
+      var partnerId = Authinfo.getOrgId();
+      var partnerAdded = false;
       // add all customer names to the customerOptions list
-      customers.push({
-        value: Authinfo.getOrgId(),
-        label: Authinfo.getOrgName(),
-        isAllowedToManage: true,
-        isSelected: false
-      });
-      angular.forEach(orgsData, function (org) {
+      // compensates for when partner's own org is returned by managedOrgs API
+      _.forEach(orgsData, function (org) {
         customers.push({
           value: org.customerOrgId,
           label: org.customerName,
           isAllowedToManage: org.isAllowedToManage,
           isSelected: false
         });
+        if (partnerId === org.customerOrgId) {
+          partnerAdded = true;
+        }
       });
+      if (!partnerAdded) {
+        customers.push({
+          value: partnerId,
+          label: Authinfo.getOrgName(),
+          isAllowedToManage: true,
+          isSelected: false
+        });
+      }
 
       customers = customers.sort(function (a, b) {
         return a.label.localeCompare(b.label);
       });
 
-      angular.forEach(customers, function (item, index) {
+      _.forEach(customers, function (item, index) {
         if (index < vm.customerMax) {
           item.isSelected = true;
           vm.customerSelected.push(item);
@@ -268,9 +312,9 @@
       setMediaQualityGraph(DummyReportService.dummyMediaQualityData(vm.timeSelected));
       setCallMetricsGraph(DummyReportService.dummyCallMetricsData());
 
-      vm.dummyTable = true;
-      setActivePopulationGraph(DummyReportService.dummyActivePopulationData(vm.customerSelected), 50);
-      vm.registeredEndpoints = DummyReportService.dummyEndpointData();
+      setActivePopulationGraph(DummyReportService.dummyActivePopulationData(vm.customerSelected));
+      vm.endpointReportOptions.table.dummy = true;
+      vm.endpointReportOptions.table.data = DummyReportService.dummyEndpointData();
     }
 
     function setActiveUserGraph(data) {
@@ -281,8 +325,8 @@
       }
     }
 
-    function setActivePopulationGraph(data, overallPopulation) {
-      var tempActivePopChart = GraphService.getActiveUserPopulationGraph(data, activeUserPopulationChart, overallPopulation);
+    function setActivePopulationGraph(data) {
+      var tempActivePopChart = GraphService.getActiveUserPopulationGraph(data, activeUserPopulationChart);
       if (angular.isDefined(tempActivePopChart) && tempActivePopChart) {
         activeUserPopulationChart = tempActivePopChart;
         resizeCards();
@@ -291,27 +335,24 @@
 
     function getActiveUserReports() {
       // reset defaults
-      vm.mostActiveUsers = [];
-      vm.displayMostActive = false;
-      vm.activeUsersTotalPages = 0;
-      vm.activeUserCurrentPage = 1;
-      vm.activeButton = [1, 2, 3];
-      vm.activeUserPredicate = activeUsersSort[4];
+      vm.activeUserSecondaryReportOptions.table.data = [];
+      vm.activeUserSecondaryReportOptions.display = false;
+      $rootScope.$broadcast(vm.activeUserSecondaryReportOptions.broadcast);
 
       var promises = [];
-      var activePromise = PartnerReportService.getActiveUserData(vm.customerSelected, vm.timeSelected).then(function (response) {
+      var activePromise = ReportService.getActiveUserData(vm.customerSelected, vm.timeSelected).then(function (response) {
         if (response.popData !== ABORT && response.graphData !== ABORT) {
-          vm.activeUsersRefresh = EMPTY;
-          vm.activeUserPopulationRefresh = EMPTY;
+          vm.activeUserReportOptions.state = EMPTY;
+          vm.populationReportOptions.state = EMPTY;
           if (angular.isArray(response.graphData) && response.graphData.length > 0) {
-            vm.activeUsersRefresh = SET;
+            vm.activeUserReportOptions.state = SET;
             setActiveUserGraph(response.graphData);
-            vm.displayMostActive = response.isActiveUsers;
+            vm.activeUserSecondaryReportOptions.display = response.isActiveUsers;
 
             // only display population graph if there is data in the active user graph
-            if (angular.isArray(response.popData) && response.popData.length > 0) {
-              setActivePopulationGraph(response.popData, response.overallPopulation);
-              vm.activeUserPopulationRefresh = SET;
+            if (angular.isArray(response.popData) && response.popData.length > 0 && response.isActiveUsers) {
+              setActivePopulationGraph(response.popData);
+              vm.populationReportOptions.state = SET;
             }
           }
         }
@@ -320,13 +361,12 @@
       });
       promises.push(activePromise);
 
-      var tablePromise = PartnerReportService.getActiveTableData(vm.customerSelected, vm.timeSelected).then(function (response) {
-        vm.mostActiveRefresh = EMPTY;
+      var tablePromise = ReportService.getActiveTableData(vm.customerSelected, vm.timeSelected).then(function (response) {
+        vm.activeUserSecondaryReportOptions.state = EMPTY;
         if (angular.isArray(response) && (response.length > 0)) {
-          vm.mostActiveUsers = response;
-          var totalUsers = response.length;
-          vm.activeUsersTotalPages = Math.ceil(totalUsers / 5);
-          vm.mostActiveRefresh = SET;
+          vm.activeUserSecondaryReportOptions.table.data = response;
+          vm.activeUserSecondaryReportOptions.state = SET;
+          $rootScope.$broadcast(vm.activeUserSecondaryReportOptions.broadcast);
         }
         resizeCards();
         return;
@@ -345,13 +385,13 @@
     }
 
     function getMediaQualityReports() {
-      return PartnerReportService.getMediaQualityMetrics(vm.customerSelected, vm.timeSelected).then(function (response) {
+      return ReportService.getMediaQualityMetrics(vm.customerSelected, vm.timeSelected).then(function (response) {
         if (response !== ABORT) {
           setMediaQualityGraph(response);
 
-          vm.mediaQualityRefresh = EMPTY;
+          vm.mediaReportOptions.state = EMPTY;
           if (response.length > 0) {
-            vm.mediaQualityRefresh = SET;
+            vm.mediaReportOptions.state = SET;
           }
         }
         return;
@@ -367,12 +407,12 @@
     }
 
     function getCallMetricsReports() {
-      return PartnerReportService.getCallMetricsData(vm.customerSelected, vm.timeSelected).then(function (response) {
+      return ReportService.getCallMetricsData(vm.customerSelected, vm.timeSelected).then(function (response) {
         if (response !== ABORT) {
-          vm.callMetricsRefresh = EMPTY;
+          vm.callMetricsReportOptions.state = EMPTY;
           if (angular.isArray(response.dataProvider) && response.dataProvider.length > 0) {
             setCallMetricsGraph(response);
-            vm.callMetricsRefresh = SET;
+            vm.callMetricsReportOptions.state = SET;
           }
           resizeCards();
         }
@@ -380,42 +420,18 @@
     }
 
     function getRegisteredEndpoints() {
-      PartnerReportService.getRegisteredEndpoints(vm.customerSelected, vm.timeSelected).then(function (response) {
+      ReportService.getRegisteredEndpoints(vm.customerSelected, vm.timeSelected).then(function (response) {
         if (response !== ABORT) {
           if (!angular.isArray(response) || response.length === 0) {
-            vm.endpointRefresh = EMPTY;
+            vm.endpointReportOptions.state = EMPTY;
           } else {
-            vm.registeredEndpoints = response;
-            vm.endpointRefresh = SET;
-            vm.dummyTable = false;
+            vm.endpointReportOptions.table.dummy = false;
+            vm.endpointReportOptions.table.data = response;
+            vm.endpointReportOptions.state = SET;
             resizeCards();
             delayedResize();
           }
         }
-      });
-    }
-
-    function setTimeBasedText() {
-      vm.endpointDescription = $translate.instant('registeredEndpoints.description', {
-        time: vm.timeSelected.description
-      });
-      vm.trend = $translate.instant('registeredEndpoints.trend', {
-        time: vm.timeSelected.label
-      });
-      vm.devices = $translate.instant('registeredEndpoints.maxRegisteredDevices', {
-        time: vm.timeSelected.label
-      });
-      vm.activeUserDescription = $translate.instant('activeUsers.description', {
-        time: vm.timeSelected.description
-      });
-      vm.callMetricsDescription = $translate.instant("callMetrics.callMetricsDesc", {
-        time: vm.timeSelected.description
-      });
-      vm.mostActiveTitle = $translate.instant("activeUsers.mostActiveUsers", {
-        time: vm.timeSelected.label
-      });
-      vm.mostActiveDescription = $translate.instant('activeUsers.mostActiveDescription', {
-        time: vm.timeSelected.description
       });
     }
   }

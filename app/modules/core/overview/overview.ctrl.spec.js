@@ -163,10 +163,6 @@ describe('Controller: OverviewCtrl', function () {
     spyOn(SunlightReportService, 'getOverviewData');
     SunlightReportService.getOverviewData.and.returnValue({});
 
-    FeatureToggleService.features = {
-      atlasHybridServicesResourceList: 'atlas-media-service-onboarding'
-    };
-
     spyOn(FusionClusterService, 'getAll');
     FusionClusterService.getAll.and.returnValue($q.resolve());
 

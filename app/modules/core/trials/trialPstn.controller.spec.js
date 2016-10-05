@@ -1,4 +1,5 @@
 'use strict';
+
 /* globals fit */
 
 describe('Controller: TrialPstnCtrl', function () {

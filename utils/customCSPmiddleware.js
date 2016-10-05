@@ -44,14 +44,22 @@ module.exports = csp({
       'https://api.mixpanel.com',
       'https://cdn.mxpnl.com',
       'http://54.183.25.170:8001',
+      // manual DNS entry for local dev:
+      'http://dev-admin.ciscospark.com:8000',
+      'ws://dev-admin.ciscospark.com:8000',
       // Browser Sync:
       'ws://127.0.0.1:8000',
       'ws://localhost:8000',
       // Local Atlas Backend:
       'http://127.0.0.1:8080',
       'http://localhost:8080',
+      'http://dev-admin.ciscospark.com:8080',
       'http://dpm.demdex.net', // Adobe DTM Omniture
       'http://ciscowebex.d1.sc.omtrdc.net', // Adobe DTM Omniture
+    ],
+    fontSrc: [
+      '\'self\'',
+      'http://dev-admin.ciscospark.com:8000', // manual DNS entry for local dev
     ],
     imgSrc: [
       '\'self\'',
@@ -62,6 +70,7 @@ module.exports = csp({
       'https://*.rackcdn.com',
       'http://webexglobal.112.2o7.net', // Adobe DTM Omniture
       'http://*.d1.sc.omtrdc.net', // Adobe DTM Omniture
+      'http://dev-admin.ciscospark.com:8000', // manual DNS entry for local dev
       // Webpack Dev
       'blob:',
     ],
@@ -77,10 +86,12 @@ module.exports = csp({
       'http://dpm.demdex.net', // Adobe DTM Omniture
       'http://ciscowebex.d1.sc.omtrdc.net', // Adobe DTM Omniture
       'https://buy.ciscospark.com', // Digital River
+      'http://dev-admin.ciscospark.com:8000', // manual DNS entry for local dev
     ],
     styleSrc: [
       '\'self\'',
       '\'unsafe-inline\'',
+      'http://dev-admin.ciscospark.com:8000', // manual DNS entry for local dev
       // Webpack Dev
       'blob:',
     ]
