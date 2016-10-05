@@ -15,6 +15,8 @@
     var cloudBerryDevicesLoaded = false;
     var codesLoaded = false;
     var huronDevicesLoaded = false;
+    var cloudBerryPlacesLoaded = false;
+    var huronPlacesLoaded = false;
 
     var devicesFetchedDeferred;
     var devicesFastFetchedDeferred;
@@ -106,6 +108,22 @@
       }
     }
 
+    function setCloudBerryPlacesLoaded() {
+      cloudBerryPlacesLoaded = true;
+      if (huronPlacesLoaded) {
+        accountsFetchedDeferred.resolve(placesDataModel);
+        updatePlacesCache();
+      }
+    }
+
+    function setHuronPlacesLoaded() {
+      huronPlacesLoaded = true;
+      if (cloudBerryPlacesLoaded) {
+        accountsFetchedDeferred.resolve(placesDataModel);
+        updatePlacesCache();
+      }
+    }
+
     function fetchCodes() {
       codesFetchedDeferred = $q.defer();
       CsdmCodeService.fetchCodes()
@@ -133,7 +151,7 @@
           });
         })
         .finally(function () {
-          accountsFetchedDeferred.resolve(placesDataModel);
+          setCloudBerryPlacesLoaded();
         });
 
       CsdmHuronPlaceService.getPlacesList()
@@ -143,7 +161,7 @@
           });
         })
         .finally(function () {
-          //        accountsFetchedDeferred.resolve(placesDataModel);
+          setHuronPlacesLoaded();
         });
 
       return accountsFetchedDeferred.promise;
@@ -315,29 +333,26 @@
     function addOrUpdatePlaceInDataModel(item) {
 
       var newPlaceUrl = getPlaceUrl(item);
-
       var existingPlace = placesDataModel[newPlaceUrl];
       if (!existingPlace) {
         existingPlace = CsdmConverter.convertPlace({ url: newPlaceUrl, isPlace: true, devices: {}, codes: {} });
         placesDataModel[newPlaceUrl] = existingPlace;
       }
-
       CsdmConverter.updatePlaceFromItem(existingPlace, item);
     }
 
     function updatePlacesCache() {
-
-      _.mapValues(placesDataModel, function (p) {
-
-        p.devices = _.pickBy(theDeviceMap, function (d) {
-          return (!(d.isCode)) && d.cisUuid == p.cisUuid;
+      if (huronDevicesLoaded && cloudBerryDevicesLoaded && cloudBerryPlacesLoaded && huronPlacesLoaded) {
+        _.mapValues(placesDataModel, function (p) {
+          p.devices = _.pickBy(theDeviceMap, function (d) {
+            return (!(d.isCode)) && d.cisUuid == p.cisUuid;
+          });
+          p.codes = _.pickBy(theDeviceMap, function (d) {
+            return d.isCode && d.cisUuid == p.cisUuid;
+          });
+          return p;
         });
-
-        p.codes = _.pickBy(theDeviceMap, function (d) {
-          return d.isCode && d.cisUuid == p.cisUuid;
-        });
-        return p;
-      });
+      }
     }
 
     function generatePlacesFromDevicesAndCodes() {
@@ -348,14 +363,12 @@
       var getDevicesPromise = getDevicesMap();
       var getCodePromise = getCodesMap();
 
-      getAccountsMap();
-
-      getDevicesPromise.then(function () {
-        getCodePromise.then(function () {
-
-          updatePlacesCache();
-
-          placesMapReadyDeferred.resolve(placesDataModel);
+      getAccountsMap().then(function () {
+        getDevicesPromise.then(function () {
+          getCodePromise.then(function () {
+            updatePlacesCache();
+            placesMapReadyDeferred.resolve(placesDataModel);
+          });
         });
       });
     }
