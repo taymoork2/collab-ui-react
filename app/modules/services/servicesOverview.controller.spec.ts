@@ -1,4 +1,4 @@
-import { ServicesOverviewCtrl } from './servicesOverview.ctrl';
+import { ServicesOverviewCtrl } from './servicesOverview.controller';
 
 describe('ServiceOverviewCtrl', () => {
 

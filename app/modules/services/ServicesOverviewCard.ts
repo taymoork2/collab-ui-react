@@ -1,13 +1,13 @@
 export interface ICardButton {
   name: String;
   buttonClass?: String;
-  link: String;
+  routerState: String;
 }
 
 export interface ICardStatus {
   status: String | undefined;
   text: String | undefined;
-  link: String;
+  routerState: String;
 }
 
 export enum CardType {
@@ -88,7 +88,7 @@ export abstract class ServicesOverviewCard {
   public abstract getShowMoreButton(): ICardButton | undefined;
 
   public constructor({
-    template: _template = 'modules/hercules/servicesOverview/serviceCard.tpl.html',
+    template: _template = 'modules/services/card.tpl.html',
     name: _name,
     description: _description,
     icon: _icon = '',

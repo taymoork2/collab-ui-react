@@ -8,7 +8,7 @@ export class ServicesOverviewHybridServicesCard extends ServicesOverviewCard {
   private _buttons: Array<ICardButton> = [
     {
       name: 'servicesOverview.cards.clusterList.buttons.all',
-      link: 'services/clusters',
+      routerState: 'cluster-list',
       buttonClass: 'btn-link',
     },
   ];

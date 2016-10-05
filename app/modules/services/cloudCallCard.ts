@@ -7,9 +7,22 @@ export class ServicesOverviewCallCard extends ServicesOverviewCard {
   }
 
   private _buttons: Array<ICardButton> = [
-    { name: 'servicesOverview.cards.call.buttons.numbers', link: 'hurondetails/lines', buttonClass: 'btn-link' },
-    { name: 'servicesOverview.cards.call.buttons.features', link: 'hurondetails/features', buttonClass: 'btn-link' },
-    { name: 'servicesOverview.cards.call.buttons.settings', link: 'hurondetails/settings', buttonClass: 'btn-link' }];
+    {
+      name: 'servicesOverview.cards.call.buttons.numbers',
+      routerState: 'huronlines',
+      buttonClass: 'btn-link',
+    },
+    {
+      name: 'servicesOverview.cards.call.buttons.features',
+      routerState: 'huronfeatures',
+      buttonClass: 'btn-link',
+    },
+    {
+      name: 'servicesOverview.cards.call.buttons.settings',
+      routerState: 'huronsettings',
+      buttonClass: 'btn-link',
+    },
+  ];
 
   public getButtons(): Array<ICardButton> {
     if (this.active) {
