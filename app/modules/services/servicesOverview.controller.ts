@@ -23,6 +23,7 @@ export class ServicesOverviewCtrl {
         services.push(this.FusionClusterService.getStatusForService('squared-fusion-uc', clusterList));
         services.push(this.FusionClusterService.getStatusForService('squared-fusion-media', clusterList));
         this.forwardEvent('hybridStatusEventHandler', services);
+        this.forwardEvent('hybridClustersEventHandler', clusterList);
       });
 
     this.FeatureToggleService.supports(this.FeatureToggleService.features.atlasMediaServiceOnboarding).then(supports => {

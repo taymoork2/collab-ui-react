@@ -1,7 +1,7 @@
 export interface ICardButton {
   name: String;
   buttonClass?: String;
-  routerState: String;
+  routerState?: String;
 }
 
 export interface ICardStatus {
