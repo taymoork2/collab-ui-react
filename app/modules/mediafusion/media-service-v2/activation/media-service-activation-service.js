@@ -75,7 +75,7 @@
     }
 
     var enableOrpheusForMediaFusion = function () {
-      getUserIdentityOrgToMediaAgentOrgMapping().then(
+      this.getUserIdentityOrgToMediaAgentOrgMapping().then(
         function success(response) {
           var mediaAgentOrgIdsArray = [];
           var orgId = Authinfo.getOrgId();
@@ -138,7 +138,7 @@
     };
 
     var disableOrpheusForMediaFusion = function () {
-      getUserIdentityOrgToMediaAgentOrgMapping().then(
+      this.getUserIdentityOrgToMediaAgentOrgMapping().then(
         function success(response) {
           var mediaAgentOrgIdsArray = [];
           var orgId = Authinfo.getOrgId();
@@ -151,7 +151,7 @@
           mediaAgentOrgIdsArray.splice(index, 1);
 
           if (mediaAgentOrgIdsArray.length > 0) {
-            setUserIdentityOrgToMediaAgentOrgMapping(mediaAgentOrgIdsArray).then(
+            this.setUserIdentityOrgToMediaAgentOrgMapping(mediaAgentOrgIdsArray).then(
               function success() {},
               function error(errorResponse) {
                 Notification.error('mediaFusion.mediaAgentOrgMappingFailure', {
@@ -159,7 +159,7 @@
                 });
               });
           } else {
-            deleteUserIdentityOrgToMediaAgentOrgMapping(mediaAgentOrgIdsArray).then(
+            this.deleteUserIdentityOrgToMediaAgentOrgMapping(mediaAgentOrgIdsArray).then(
               function success() {},
               function error(errorResponse) {
                 Notification.error('mediaFusion.mediaAgentOrgMappingFailure', {

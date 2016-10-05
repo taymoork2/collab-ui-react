@@ -5,9 +5,9 @@ describe('MediaServiceActivationV2', function () {
   beforeEach(angular.mock.module('Mediafusion'));
 
   // instantiate service
-  var Service, $httpBackend, authinfo, $q, redirectTargetPromise, $rootScope;
+  var Service, $httpBackend, authinfo, $q;
   var extensionEntitlements = ['squared-fusion-media'];
-  var serviceId = "squared-fusion-media";
+  //var serviceId = "squared-fusion-media";
   var mediaAgentOrgIds = ['mediafusion'];
 
   beforeEach(function () {
@@ -20,13 +20,9 @@ describe('MediaServiceActivationV2', function () {
     });
   });
 
-  beforeEach(inject(function ($injector, _MediaServiceActivationV2_, _$q_, _$rootScope_) {
+  beforeEach(inject(function ($injector, _MediaServiceActivationV2_, _$q_) {
     Service = _MediaServiceActivationV2_;
     $q = _$q_;
-    $rootScope = _$rootScope_;
-    redirectTargetPromise = {
-      then: sinon.stub()
-    };
     $httpBackend = $injector.get('$httpBackend');
   }));
 
@@ -117,6 +113,7 @@ describe('MediaServiceActivationV2', function () {
     Service.getMediaServiceState();
     expect(Service.isServiceEnabled).not.toHaveBeenCalled();
   });
+
   it('should disable orpheus for mediafusion org', function () {
     spyOn(Service, 'getUserIdentityOrgToMediaAgentOrgMapping').and.returnValue($q.when(
       [{
@@ -125,26 +122,9 @@ describe('MediaServiceActivationV2', function () {
         mediaAgentOrgIds: ["5632f806-ad09-4a26-a0c0-a49a13f38873", "squared"]
       }]
     ));
-    spyOn(Service, 'deleteUserIdentityOrgToMediaAgentOrgMapping').and.returnValue($q.when());
+    spyOn(Service, 'setUserIdentityOrgToMediaAgentOrgMapping').and.returnValue($q.when());
     Service.disableOrpheusForMediaFusion();
-
     expect(Service.getUserIdentityOrgToMediaAgentOrgMapping).toHaveBeenCalled();
   });
 
-  it('should disable media service success call', function () {
-    var getResponse = {
-      data: 'this is a mocked response'
-    };
-    var setServiceEnabledDeferred = $q.defer();
-    spyOn(Service, 'setServiceEnabled').and.returnValue(setServiceEnabledDeferred.promise);
-    setServiceEnabledDeferred.resolve(getResponse);
-
-    sinon.stub(Service, 'disableOrpheusForMediaFusion');
-    Service.disableOrpheusForMediaFusion(redirectTargetPromise);
-
-    $rootScope.$apply();
-    Service.disableMediaService(serviceId);
-    expect(Service.setServiceEnabled).toHaveBeenCalled();
-    expect(Service.disableOrpheusForMediaFusion).toHaveBeenCalled();
-  });
 });
