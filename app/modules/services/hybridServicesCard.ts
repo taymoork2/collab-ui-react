@@ -19,7 +19,7 @@ export class ServicesOverviewHybridServicesCard extends ServicesOverviewCard {
   ];
 
   public hybridClustersEventHandler(clusterList: Array<any>): void {
-    this._active = false && clusterList.length > 0;
+    this._active = clusterList.length > 0;
   }
 
   public getButtons(): Array<ICardButton> {
