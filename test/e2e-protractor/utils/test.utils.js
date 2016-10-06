@@ -120,7 +120,7 @@ exports.scrollBottom = function (selector) {
   browser.executeScript('$("' + selector + '").first().scrollTop($("' + selector + '").first().scrollHeight);');
 };
 
-exports.scroll = function (el) {
+exports.scrollIntoView = function (el) {
   browser.executeScript('arguments[0].scrollIntoView()', el.getWebElement());
 };
 
