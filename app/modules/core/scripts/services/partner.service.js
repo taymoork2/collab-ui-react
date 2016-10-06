@@ -202,12 +202,18 @@
       });
     }
 
-    function _isDisplayableService(service, isCareEnabled, isTrial) {
+    function _isDisplayableService(service, options) {
+      var isTrial = options.isTrial;
+      var isShowCMR = options.isShowCMR;
+      var isCareEnabled = options.isCareEnabled;
 
       var serviceNotCareOrCareIsShown = (service.licenseType !== Config.licenseTypes.CARE) || isCareEnabled;
-      var serviceNotHiddenWebex = service.licenseType !== Config.licenseTypes.STORAGE;
+      var serviceNotHiddenWebex = ((service.licenseType !== Config.licenseTypes.STORAGE) && (isShowCMR || service.licenseType !== Config.licenseTypes.CMR));
       //if 'isTrial' it has to be true. Otherwise any falso value is fine
-      var correctServiceStatus = (isTrial) ? (service.isTrial === true) : !service.isTrial;
+      var correctServiceStatus = true;
+      if (isTrial !== undefined) {
+        correctServiceStatus = (isTrial) ? (service.isTrial === true) : !service.isTrial;
+      }
       return (serviceNotHiddenWebex && serviceNotCareOrCareIsShown && correctServiceStatus);
     }
 
@@ -404,7 +410,7 @@
         isTrialData: isTrialData
       };
 
-      var licensesAndOffersData = parseLicensesAndOffers(customer, isCareEnabled);
+      var licensesAndOffersData = parseLicensesAndOffers(customer, { isCareEnabled: isCareEnabled });
       angular.extend(dataObj, licensesAndOffersData);
 
       dataObj.isAllowedToManage = isTrialData || customer.isAllowedToManage;
@@ -452,7 +458,7 @@
 
       dataObj.purchased = _calculatePurchaseStatus(dataObj);
 
-      dataObj.totalLicenses = _calculateTotalLicenses(dataObj, isCareEnabled);
+      dataObj.totalLicenses = _calculateTotalLicenses(dataObj, isCareEnabled, customerListToggle);
       dataObj.uniqueServiceCount = _countUniqueServices(dataObj);
 
 
@@ -461,18 +467,18 @@
     }
 
     function _calculatePurchaseStatus(customerData) {
-      if (customerData.state === Config.licenseStatus.ACTIVE) {
-        return !_.some(customerData.licenseList, 'isTrial');
+      if (customerData.state === Config.licenseStatus.ACTIVE && customerData.licenseList) {
+        return !(customerData.licenseList.length === 0 || _.some(customerData.licenseList, 'isTrial'));
       } else {
         return false;
       }
     }
 
 
-    function _calculateTotalLicenses(customerData, isCareEnabled) {
-      if (customerData.purchased || customerData.isPartner) {
+    function _calculateTotalLicenses(customerData, isCareEnabled, customerListToggle) {
+      if (customerData.purchased || customerData.isPartner || customerListToggle) {
         return _.sumBy(customerData.licenseList, function (license) {
-          if (license.licenseType === Config.licenseTypes.STORAGE) {
+          if (!helpers.isDisplayableService(license, { isTrial: undefined, isShowCMR: false, isCareEnabled: isCareEnabled })) {
             return 0;
           } else {
             return license.volume;
@@ -613,7 +619,7 @@
       return meetingServices;
     }
 
-    function parseLicensesAndOffers(customer, isCareEnabled) {
+    function parseLicensesAndOffers(customer, options) {
       var partial = {
         licenses: 0,
         deviceLicenses: 0,
@@ -621,7 +627,7 @@
         usage: 0,
         offer: {}
       };
-
+      var isCareEnabled = _.get(options, 'isCareEnabled', true);
       var userServiceMapping = helpers.createLicenseMapping();
       var conferenceServices = [];
       var trialService;
@@ -737,7 +743,7 @@
         if (licenseInfo) {
           helpers.removeFromFreeServices(freeServices, licenseInfo);
           //from paid or free services
-          if (helpers.isDisplayableService(licenseInfo, isCareEnabled, isTrial)) { //if conference
+          if (helpers.isDisplayableService(licenseInfo, { isTrial: isTrial, isShowCMR: true, isCareEnabled: isCareEnabled })) { //if conference
             if (licenseInfo.licenseType === Config.licenseTypes.CONFERENCING || licenseInfo.licenseType === Config.licenseTypes.CMR) {
               service = new helpers.LicensedService(licenseInfo, conferenceMapping);
               helpers.addService(meetingServices, service);
@@ -758,8 +764,11 @@
       //if there is more than one
       if (meetingServices.length >= 1) {
         var totalQ = _.reduce(meetingServices, function (prev, curr) {
-          return {
+
+          return (curr.licenseType !== Config.licenseTypes.CMR) ? {
             qty: prev.qty + curr.qty
+          } : {
+            qty: prev.qty + 0
           };
         });
 
