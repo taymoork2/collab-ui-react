@@ -65,10 +65,12 @@
       return $q(function (resolve) {
         if (_.isNil(onlineOrg)) {
           getCustomerAccount(Authinfo.getOrgId()).then(function (res) {
-            onlineOrg = _.isNil(res.data.customers[0].customerType)
-                        ? false
-                        : res.data.customers[0].customerType === 'Online';
-            resolve(onlineOrg);
+            if (res.data.customers && !_.isEmpty(res.data.customers) && res.data.customers[0].customerType) {
+              onlineOrg = res.data.customers[0].customerType === 'Online';
+              resolve(onlineOrg);
+            } else {
+              resolve(false);
+            }
           });
         } else {
           resolve(onlineOrg);
