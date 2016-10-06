@@ -15,4 +15,9 @@ export class PagingGroupService {
   public savePagingGroup(pg: IPagingGroup) {
     this.pagingGroups.push(pg);
   }
+
+  public deletePagingGroup(pgId: string) {
+    let index = _.findIndex(this.pagingGroups, { uuid: pgId });
+    this.pagingGroups.splice(index, 1);
+  }
 }
