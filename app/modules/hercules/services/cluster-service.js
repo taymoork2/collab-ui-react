@@ -19,7 +19,6 @@
       deleteHost: deleteHost,
       fetch: fetch,
       getCluster: getCluster,
-      getClusterWithManagement: getClusterWithManagement,
       getClustersByConnectorType: getClustersByConnectorType,
       getAll: getAll,
       getConnector: getConnector,
@@ -228,10 +227,6 @@
 
     function getCluster(type, id) {
       return clusterCache[type][id];
-    }
-
-    function getClusterWithManagement(type, id) {
-      return [clusterCache[type][id], clusterCache['c_mgmt'][id]];
     }
 
     function getClustersByConnectorType(type) {

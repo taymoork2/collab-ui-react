@@ -31,10 +31,14 @@
     }
 
     $scope.$watch(function () {
-      return ClusterService.getClusterWithManagement(vm.connectorType, vm.clusterId);
+      return [
+        ClusterService.getCluster(vm.connectorType, vm.clusterId),
+        ClusterService.getCluster('c_mgmt', vm.clusterId)
+      ];
     }, function (newValue) {
       vm.cluster = newValue[0];
       vm.managementCluster = newValue[1];
+
       vm.releaseChannel = $translate.instant('hercules.fusion.add-resource-group.release-channel.' + vm.cluster.releaseChannel);
       var isUpgrading = vm.cluster.aggregates.upgradeState === 'upgrading';
       var isUpgradingManagement = vm.managementCluster.aggregates.upgradeState === 'upgrading';

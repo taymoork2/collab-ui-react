@@ -20,15 +20,17 @@ describe('Controller: ExpresswayServiceClusterController', function () {
   function initController() {
 
     jasmine.getJSONFixtures().clearCache(); // See https://github.com/velesin/jasmine-jquery/issues/239
-    var twoClusters = getJSONFixture('hercules/expressway-clusters-with-calendar-and-management.json');
-    var twoClustersDuringUpgrade = getJSONFixture('hercules/expressway-clusters-with-calendar-and-management-during-upgrade.json');
+    var calendarCluster = getJSONFixture('hercules/expressway-cluster-with-calendar.json');
+    var managementCluster = getJSONFixture('hercules/expressway-clusters-with-management-upgrade.json');
 
     var changing = sinon.stub();
-    changing.onCall(0).returns(twoClusters);
-    changing.returns(twoClustersDuringUpgrade);
+    changing.onCall(0).returns(calendarCluster);
+    changing.onCall(1).returns(managementCluster);
+    changing.onCall(2).returns(calendarCluster);
+    changing.returns(managementCluster);
 
     clusterServiceMock = {
-      getClusterWithManagement: changing
+      getCluster: changing
     };
 
     fusionClusterServiceMock = {
