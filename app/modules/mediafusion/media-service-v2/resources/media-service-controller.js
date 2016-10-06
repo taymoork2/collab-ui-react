@@ -22,6 +22,7 @@
     vm.currentServiceType = "mf_mgmt";
     vm.currentServiceId = "squared-fusion-media";
     vm.featureToggled = false;
+    vm.backState = 'services-overview';
 
     // Added for cs-page-header
     vm.pageTitle = $translate.instant('mediaFusion.page_title');
