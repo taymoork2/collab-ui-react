@@ -8,19 +8,19 @@ export class ServicesOverviewHybridMediaCard extends ServicesOverviewHybridCard 
 
   private _setupButton: ICardButton = {
     name: 'servicesOverview.genericButtons.setup',
-    link: 'mediaserviceV2',
+    routerState: 'media-service-v2.list',
     buttonClass: 'btn',
   };
 
   private _buttons: Array<ICardButton> = [
     {
       name: 'servicesOverview.cards.hybridMedia.buttons.resources',
-      link: 'mediaserviceV2',
+      routerState: 'media-service-v2.list',
       buttonClass: 'btn-link',
     },
     {
       name: 'servicesOverview.cards.hybridMedia.buttons.settings',
-      link: 'mediaserviceV2/settings',
+      routerState: 'media-service-v2.settings',
       buttonClass: 'btn-link',
     }];
 
@@ -42,7 +42,7 @@ export class ServicesOverviewHybridMediaCard extends ServicesOverviewHybridCard 
       description: 'servicesOverview.cards.hybridMedia.description',
       activeServices: ['squared-fusion-media'],
       statusService: 'squared-fusion-media',
-      statusLink: 'mediaserviceV2',
+      routerState: 'media-service-v2.list',
       active: false,
       display : false,
       cardClass: 'media',

@@ -5,16 +5,29 @@ export class ServicesOverviewHybridServicesCard extends ServicesOverviewCard {
     return undefined;
   }
 
+  private _disabledButton: ICardButton = {
+    name: 'servicesOverview.cards.clusterList.buttons.none',
+    buttonClass: 'btn-link',
+  };
+
   private _buttons: Array<ICardButton> = [
     {
       name: 'servicesOverview.cards.clusterList.buttons.all',
-      link: 'services/clusters',
+      routerState: 'cluster-list',
       buttonClass: 'btn-link',
     },
   ];
 
+  public hybridClustersEventHandler(clusterList: Array<any>): void {
+    this._active = clusterList.length > 0;
+  }
+
   public getButtons(): Array<ICardButton> {
-    return this._buttons;
+    if (this._active) {
+      return this._buttons;
+    } else {
+      return [this._disabledButton];
+    }
   }
 
   /* @ngInject */

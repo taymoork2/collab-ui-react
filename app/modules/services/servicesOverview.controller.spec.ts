@@ -1,4 +1,4 @@
-import { ServicesOverviewCtrl } from './servicesOverview.ctrl';
+import { ServicesOverviewCtrl } from './servicesOverview.controller';
 
 describe('ServiceOverviewCtrl', () => {
 
@@ -69,7 +69,8 @@ describe('ServiceOverviewCtrl', () => {
 
   it('should show the right cards when the hybrid media feature toggle is NOT active', () => {
     initController({ MEDIA: false });
-    expect(_.find(ctrl.hybridCards, { name: 'servicesOverview.cards.hybridMedia.title' })).toBe(undefined);
+    const mediaCard = _.find(ctrl.hybridCards, { name: 'servicesOverview.cards.hybridMedia.title' });
+    expect(mediaCard.display).toBe(false);
   });
 
   it('should show the right cards when the hybrid media feature toggle is active', () => {

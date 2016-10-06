@@ -37,7 +37,7 @@
     icon: 'icon-cloud',
     title: 'tabs.servicesTab',
     state: 'services-overview',
-    link: 'services/overview'
+    link: 'services'
   }, {
     tab: 'deviceTab',
     icon: 'icon-devices',

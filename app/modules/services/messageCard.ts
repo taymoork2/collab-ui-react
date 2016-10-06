@@ -20,7 +20,11 @@ export class ServicesOverviewMessageCard extends ServicesOverviewCard {
     });
 
     this._buttons = Authinfo.isAllowedState('messenger')
-      ? [{ name: 'servicesOverview.cards.message.buttons.webexMessenger', link: 'messenger', buttonClass: 'btn-link' }]
+      ? [{
+        name: 'servicesOverview.cards.message.buttons.webexMessenger',
+        routerState: 'messenger',
+        buttonClass: 'btn-link',
+      }]
       : [];
 
     this._loading = false;

@@ -7,7 +7,12 @@ export class ServicesOverviewCareCard extends ServicesOverviewCard {
   }
 
   private _buttons: Array<ICardButton> = [
-    { name: 'servicesOverview.cards.care.buttons.features', link: 'careDetails/features', buttonClass: 'btn-link' }];
+    {
+      name: 'servicesOverview.cards.care.buttons.features',
+      routerState: 'care.Features',
+      buttonClass: 'btn-link',
+    },
+  ];
 
   public getButtons(): Array<ICardButton> {
     if (this.active) {
@@ -28,6 +33,7 @@ export class ServicesOverviewCareCard extends ServicesOverviewCard {
       icon: 'icon-circle-contact-centre',
       active: Authinfo.isAllowedState('care'),
       cardClass: 'care-bar',
+      display: false,
     });
     this._loading = false;
   }

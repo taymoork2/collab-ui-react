@@ -3,7 +3,7 @@
 describe('Care admin should be able to', function () {
 
   beforeAll(function () {
-    login.login('contactcenter-admin', '#/services/overview');
+    login.login('contactcenter-admin', '#/services');
   });
 
   it('see the services page and care card with 2 links', function () {

@@ -1,7 +1,11 @@
 import { ICardButton, ServicesOverviewCard } from './ServicesOverviewCard';
 
 export class ServicesOverviewMeetingCard extends ServicesOverviewCard {
-  private moreButton: ICardButton = { name: 'servicesOverview.showMore', link: 'site-list', buttonClass: 'btn-link' };
+  private moreButton: ICardButton = {
+    name: 'servicesOverview.showMore',
+    routerState: 'site-list',
+    buttonClass: 'btn-link',
+  };
 
   public getShowMoreButton(): ICardButton | undefined {
     if (this.active) {
@@ -39,12 +43,16 @@ export class ServicesOverviewMeetingCard extends ServicesOverviewCard {
     this._buttons =
       _.chain(data)
         .map(serviceFeature => {
-          return serviceFeature && serviceFeature.license && serviceFeature.license.siteUrl;
+          return _.get(serviceFeature, 'license.siteUrl', '');
         })
         .compact()
         .uniq()
         .map((url) => {
-          return { name: url, link: 'site-list', buttonClass: 'btn-link' };
+          return {
+            name: url,
+            routerState: 'site-list',
+            buttonClass: 'btn-link',
+          };
         })
         .value();
     this._loading = false;
