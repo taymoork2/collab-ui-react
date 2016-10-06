@@ -115,11 +115,7 @@ describe('WebEx Trial Creation', function () {
   });
 
   it('should click the Delete Customer button', function () {
-    var webElement = partner.deleteCustomerButton.getWebElement();
-    browser.executeScript(function (e) {
-      e.scrollIntoView()
-    }, webElement);
-
+    utils.scrollIntoView(partner.deleteCustomerButton);
     utils.click(partner.deleteCustomerButton);
     utils.waitForModal().then(function () {
       utils.click(partner.deleteCustomerOrgConfirm).then(function () {
