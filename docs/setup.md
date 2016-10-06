@@ -1,5 +1,6 @@
 ## Setup the environment
 
+* On macOS: install Xcode toolchain: `xcode-select --install`
 * Project requires node v4 and npm v2.
 * Use [nvm](https://github.com/creationix/nvm) to manage your node versions
   * `nvm install 4` to install node v4 with npm v2
