@@ -2,6 +2,7 @@
 
 describe('Service: Metrics Graph Service', function () {
   var MetricsGraphService;
+  var chartColors;
   // var callVolumeChart, availabilityChart;
   var validateService = {
     validate: function () {}
@@ -14,8 +15,9 @@ describe('Service: Metrics Graph Service', function () {
 
   beforeEach(angular.mock.module('Mediafusion'));
 
-  beforeEach(inject(function (_MetricsGraphService_) {
+  beforeEach(inject(function (_MetricsGraphService_, _chartColors_) {
     MetricsGraphService = _MetricsGraphService_;
+    chartColors = _chartColors_;
 
     spyOn(validateService, 'validate');
   }));
@@ -32,6 +34,118 @@ describe('Service: Metrics Graph Service', function () {
     expect(MetricsGraphService.setAvailabilityGraph).toBeDefined();
   });
 
+  it('setAvailabilityGraph should return an amchart object successfully', function () {
+    var data = {
+      data: [
+        {
+          period: "mm",
+          clusterCategories: [
+            {
+              category: "Seong_Cluster",
+              segments: []
+            }
+          ],
+          startTime: "2016-09-20T10:20:14Z",
+          endTime: "2016-09-21T10:20:14Z"
+        }
+      ]
+    };
+    var availabilityChart = {
+      period: "",
+      startDate: ""
+    };
+    var selectedCluster = "All Clusters";
+    var cluster = "All Clusters";
+    var daterange = "Last 24 Hours";
+    var setAvailabilityGraphResponse = MetricsGraphService.setAvailabilityGraph(data, availabilityChart, selectedCluster, cluster, daterange);
+    expect(setAvailabilityGraphResponse.dataProvider).toEqual(
+      [
+        {
+          "category": "Seong_Cluster",
+          "segments": []
+        }
+      ]);
+  });
+
+  it('setCallVolumeGraph should return an amchart object successfully', function () {
+    var data = [{
+      baloon: "true",
+      colorTwo: chartColors.dummyGray
+    }];
+    var callVolumeChart = {
+      dataProvider: [],
+      graphs: [],
+      startDuration: ""
+    };
+    var cluster = "All Clusters";
+    var daterange = "Last 24 Hours";
+    var setCallVolumeGraphResponse = MetricsGraphService.setCallVolumeGraph(data, callVolumeChart, cluster, daterange);
+    expect(setCallVolumeGraphResponse.dataProvider).toEqual(
+      [{
+        baloon: "true",
+        colorTwo: chartColors.dummyGray
+      }]);
+  });
+  it('setCallVolumeGraph should return an amchart object successfully when callVolumeChart is unavailable', function () {
+    var data = [{
+      baloon: "true"
+    }];
+    var callVolumeChart = null;
+    var cluster = "All Clusters";
+    var daterange = "Last 24 Hours";
+    var setCallVolumeGraphResponse = MetricsGraphService.setCallVolumeGraph(data, callVolumeChart, cluster, daterange);
+    expect(setCallVolumeGraphResponse.dataProvider).toEqual(
+      [{
+        baloon: "true"
+      }]);
+  });
+  // it('setUtilizationGraph should return an amchart object successfully', function () {
+  //   var data = [{
+  //     baloon: "false",
+  //     colorTwo: chartColors.dummyGray
+  //   }];
+  //   var graphs = [];
+  //   var utilizationChart = {
+  //     dataProvider: [],
+  //     graphs: [],
+  //     startDuration: "",
+  //     balloon: {
+  //       enabled: false
+  //     },
+  //     chartCursor: {
+  //       valueLineBalloonEnabled: false,
+  //       valueLineEnabled: false,
+  //       categoryBalloonEnabled: false
+  //     },
+  //     validateData: function () {
+  //       return true;
+  //     }
+  //   };
+  //   var cluster = "All Clusters";
+  //   var daterange = "Last 24 Hours";
+  //   var setUtilizationGraphResponse = MetricsGraphService.setUtilizationGraph(data, graphs, utilizationChart, cluster, daterange);
+  //   expect(setUtilizationGraphResponse.dataProvider).toEqual(
+  //     [{
+  //       baloon: "false",
+  //       colorTwo: chartColors.dummyGray
+  //     }]);
+  // });
+  // it('setUtilizationGraph should return an amchart object successfully when utilizationChart is unavailable', function () {
+  //   var data = [{
+  //     baloon: "false",
+  //     colorTwo: chartColors.dummyGray
+  //   }];
+  //   var graphs = [];
+  //   var utilizationChart = null;
+  //   var cluster = "All Clusters";
+  //   var daterange = "Last 24 Hours";
+  //   var setUtilizationGraphResponse = MetricsGraphService.setUtilizationGraph(data, graphs, utilizationChart, cluster, daterange);
+  //   expect(setUtilizationGraphResponse.dataProvider).toEqual(
+  //     [{
+  //       baloon: "false",
+  //       colorTwo: chartColors.dummyGray
+  //     }]);
+  // });
   /*describe('Active Users graph services', function () {
     beforeEach(function () {
       spyOn(AmCharts, 'makeChart').and.returnValue({

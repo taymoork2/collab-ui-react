@@ -5,7 +5,21 @@ describe('Controller: HostDetailsControllerV2', function () {
   beforeEach(angular.mock.module('Mediafusion'));
 
   var $selectedRole, $clusterId, httpBackend, $rootScope, $modal, controller, $stateParams, $state, MediaClusterServiceV2, XhrNotificationService;
-
+  var actualOptions;
+  var fakeModal = {
+    result: {
+      then: function (confirmCallback, cancelCallback) {
+        this.confirmCallBack = confirmCallback;
+        this.cancelCallback = cancelCallback;
+      }
+    },
+    close: function (item) {
+      this.result.confirmCallBack(item);
+    },
+    dismiss: function (type) {
+      this.result.cancelCallback(type);
+    }
+  };
   beforeEach(inject(function ($httpBackend, _$rootScope_, $controller, _MediaClusterServiceV2_, _XhrNotificationService_, $translate) {
     $rootScope = _$rootScope_;
     $stateParams = {
@@ -182,23 +196,38 @@ describe('Controller: HostDetailsControllerV2', function () {
   });
 
   it('should open modal for reassignCluster call', function () {
+    spyOn($modal, 'open').and.callFake(function (options) {
+      actualOptions = options;
+      return fakeModal;
+    });
     controller.reassignCluster({
       preventDefault: function () {}
     });
     $rootScope.$digest();
-    expect($modal.open.calledOnce).toBe(true);
+    expect(actualOptions.resolve.cluster()).toEqual(controller.cluster);
+    expect(actualOptions.resolve.connector()).toEqual(controller.connector);
+    expect($modal.open).toHaveBeenCalled();
 
   });
 
   it('showDeregisterHostDialog should open modal', function () {
+    spyOn($modal, 'open').and.callFake(function (options) {
+      actualOptions = options;
+      return fakeModal;
+    });
     controller.hostcount = 1;
+    controller.organization = {
+      displayName: "fakeName"
+    };
 
     controller.showDeregisterHostDialog({
       preventDefault: function () {}
     });
     $rootScope.$digest();
-    expect($modal.open.calledOnce).toBe(true);
-
+    expect(actualOptions.resolve.cluster()).toEqual(controller.cluster);
+    expect(actualOptions.resolve.orgName()).toEqual(controller.organization.displayName);
+    expect(actualOptions.resolve.connector()).toEqual(controller.connector);
+    expect($modal.open).toHaveBeenCalled();
   });
 
   it('showDeregisterHostDialog should open modal when hostcount not equal to 1', function () {

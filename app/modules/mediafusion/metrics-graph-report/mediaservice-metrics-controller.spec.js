@@ -2,9 +2,10 @@
 
 describe('Controller:MediaServiceMetricsContoller', function () {
   beforeEach(angular.mock.module('Mediafusion'));
-  var controller, $scope, $stateParams, $q, $translate, $timeout, $interval, Log, Config, MediaClusterServiceV2, DummyMetricsReportService, MetricsReportService, XhrNotificationService, MetricsGraphService;
 
-  var dummydata = '';
+  var controller, $scope, httpMock, $stateParams, $q, $translate, $timeout, $interval, Log, Config, MediaClusterServiceV2, XhrNotificationService, DummyMetricsReportService, MetricsReportService, MetricsGraphService;
+
+  var dummydata = getJSONFixture('mediafusion/json/metrics-graph-report/UtilizationGraphData.json');
 
   var callVolumeData = getJSONFixture('mediafusion/json/metrics-graph-report/callVolumeData.json');
   var clusteravailabilityData = getJSONFixture('mediafusion/json/metrics-graph-report/clusterAvailabilityData.json');
@@ -27,16 +28,21 @@ describe('Controller:MediaServiceMetricsContoller', function () {
     description: 'mediaFusion.metrics.threeMonths2'
   }];
 
-  var allClusters = 'mediaFusion.metrics.allclusters';
-  var nodata = 'mediaFusion.metrics.nodata';
+  //var allClusters = 'mediaFusion.metrics.allclusters';
+  //var nodata = 'mediaFusion.metrics.nodata';
 
-  beforeEach(inject(function ($rootScope, $controller, _$stateParams_, _$timeout_, _$translate_, _MediaClusterServiceV2_, _$q_, _MetricsReportService_, _XhrNotificationService_, _MetricsGraphService_, _DummyMetricsReportService_, _$interval_, _Log_, _Config_) {
+  beforeEach(inject(function ($rootScope, $controller, _$httpBackend_, _$stateParams_, _$timeout_, _$translate_, _MediaClusterServiceV2_, _$q_, _MetricsReportService_, _XhrNotificationService_, _MetricsGraphService_, _DummyMetricsReportService_, _$interval_, _Log_, _Config_) {
     $scope = $rootScope.$new();
+
     $stateParams = _$stateParams_;
     $timeout = _$timeout_;
     $translate = _$translate_;
     MediaClusterServiceV2 = _MediaClusterServiceV2_;
     $q = _$q_;
+    httpMock = _$httpBackend_;
+    Log = _Log_;
+    Config = _Config_;
+
     MetricsReportService = _MetricsReportService_;
     XhrNotificationService = _XhrNotificationService_;
     MetricsGraphService = _MetricsGraphService_;
@@ -54,7 +60,7 @@ describe('Controller:MediaServiceMetricsContoller', function () {
     spyOn(MetricsGraphService, 'setUtilizationGraph').and.returnValue({
       'dataProvider': dummydata
     });
-
+    httpMock.when('GET', /^\w+.*/).respond({});
     spyOn(MetricsReportService, 'getCallVolumeData').and.returnValue($q.when(callVolumeData));
     spyOn(MetricsReportService, 'getAvailabilityData').and.returnValue($q.when(clusteravailabilityData));
     spyOn(MetricsReportService, 'getUtilizationData').and.returnValue($q.when(dummydata));
@@ -64,6 +70,7 @@ describe('Controller:MediaServiceMetricsContoller', function () {
       $stateParams: $stateParams,
       $timeout: $timeout,
       $translate: $translate,
+      httpMock: httpMock,
       MediaClusterServiceV2: MediaClusterServiceV2,
       $q: $q,
       MetricsReportService: MetricsReportService,
@@ -109,17 +116,16 @@ describe('Controller:MediaServiceMetricsContoller', function () {
       controller.clusterUpdate();
       controller.timeUpdate();
       expect(controller.timeSelected).toEqual(timeOptions[1]);
-      expect(MetricsReportService.getCallVolumeData).toHaveBeenCalledWith(timeOptions[1], allClusters);
-      expect(MetricsReportService.getAvailabilityData).toHaveBeenCalledWith(timeOptions[1], allClusters);
-      expect(MetricsReportService.getUtilizationData).toHaveBeenCalledWith(timeOptions[1], allClusters);
+      expect(MetricsReportService.getCallVolumeData).toHaveBeenCalledWith(timeOptions[1], 'mediaFusion.metrics.allclusters');
+      expect(MetricsReportService.getAvailabilityData).toHaveBeenCalledWith(timeOptions[1], 'mediaFusion.metrics.allclusters');
+      expect(MetricsReportService.getUtilizationData).toHaveBeenCalledWith(timeOptions[1], 'mediaFusion.metrics.allclusters');
       //expect(MetricsReportService.getTotalCallsData).toHaveBeenCalledWith(timeOptions[1], 'All');
 
     });
 
     it('All graphs should update on cluster filter changes', function () {
-      controller.clusterSelected = allClusters;
+      controller.clusterSelected = 'mediaFusion.metrics.allclusters';
       controller.clusterUpdate();
-
       expect(MetricsReportService.getCallVolumeData).toHaveBeenCalledWith(timeOptions[0], controller.clusterSelected);
       expect(MetricsReportService.getAvailabilityData).toHaveBeenCalledWith(timeOptions[0], controller.clusterSelected);
       expect(MetricsReportService.getUtilizationData).toHaveBeenCalledWith(timeOptions[0], controller.clusterSelected);
@@ -130,9 +136,9 @@ describe('Controller:MediaServiceMetricsContoller', function () {
 
   xdescribe('Evaluating Total calls Card', function () {
     it('should return total calls count when both onprem and cloud values are there', function () {
-      controller.clusterSelected = allClusters;
+      controller.clusterSelected = 'mediaFusion.metrics.allclusters';
       controller.timeSelected = timeOptions[0];
-      controller.clusterId = allClusters;
+      controller.clusterId = 'mediaFusion.metrics.allclusters';
       var response = {
         "data": {
           "orgId": "1eb65fdf-9643-417f-9974-ad72cae0e10f",
@@ -144,19 +150,18 @@ describe('Controller:MediaServiceMetricsContoller', function () {
       spyOn(MetricsReportService, 'getTotalCallsData').and.returnValue($q.when(response));
 
       controller.setTotalCallsData();
-      //$scope.$apply();
       expect(controller.onprem).toBe(8);
       expect(controller.cloud).toBe(4);
       expect(controller.total).toBe(12);
 
-      expect(MetricsReportService.getTotalCallsData).toHaveBeenCalledWith(timeOptions[0], allClusters);
+      expect(MetricsReportService.getTotalCallsData).toHaveBeenCalledWith(timeOptions[0], 'mediaFusion.metrics.allclusters');
 
     });
 
     it('should return total calls count when  onprem value only is there', function () {
-      controller.clusterSelected = allClusters;
+      controller.clusterSelected = 'All Clusters';
       controller.timeSelected = timeOptions[0];
-      controller.clusterId = allClusters;
+      controller.clusterId = 'All Clusters';
       var response = {
         "data": {
           "orgId": "1eb65fdf-9643-417f-9974-ad72cae0e10f",
@@ -167,17 +172,16 @@ describe('Controller:MediaServiceMetricsContoller', function () {
       spyOn(MetricsReportService, 'getTotalCallsData').and.returnValue($q.when(response));
 
       controller.setTotalCallsData();
-      //$scope.$apply();
       expect(controller.onprem).toBe(23);
-      expect(controller.cloud).toBe(nodata);
+      expect(controller.cloud).toBe('N/A');
       expect(controller.total).toBe(23);
 
     });
 
     it('should return total calls count when  cloud value only is there', function () {
-      controller.clusterSelected = allClusters;
+      controller.clusterSelected = 'All Clusters';
       controller.timeSelected = timeOptions[0];
-      controller.clusterId = allClusters;
+      controller.clusterId = 'All Clusters';
       var response = {
         "data": {
           "orgId": "1eb65fdf-9643-417f-9974-ad72cae0e10f",
@@ -188,17 +192,16 @@ describe('Controller:MediaServiceMetricsContoller', function () {
       spyOn(MetricsReportService, 'getTotalCallsData').and.returnValue($q.when(response));
 
       controller.setTotalCallsData();
-      $scope.$apply();
-      expect(controller.onprem).toBe(nodata);
+      expect(controller.onprem).toBe('N/A');
       expect(controller.cloud).toBe(14);
       expect(controller.total).toBe(14);
 
     });
 
     it('should return total calls as 0 when zero values are present', function () {
-      controller.clusterSelected = allClusters;
+      controller.clusterSelected = 'All Clusters';
       controller.timeSelected = timeOptions[0];
-      controller.clusterId = allClusters;
+      controller.clusterId = 'All Clusters';
       var response = {
         "data": {
           "orgId": "1eb65fdf-9643-417f-9974-ad72cae0e10f",
@@ -210,12 +213,11 @@ describe('Controller:MediaServiceMetricsContoller', function () {
       spyOn(MetricsReportService, 'getTotalCallsData').and.returnValue($q.when(response));
 
       controller.setTotalCallsData();
-      $scope.$apply();
       expect(controller.onprem).toBe(0);
       expect(controller.cloud).toBe(0);
       expect(controller.total).toBe(0);
 
-      expect(MetricsReportService.getTotalCallsData).toHaveBeenCalledWith(timeOptions[0], allClusters);
+      expect(MetricsReportService.getTotalCallsData).toHaveBeenCalledWith(timeOptions[0], 'All Clusters');
 
     });
 
@@ -234,8 +236,7 @@ describe('Controller:MediaServiceMetricsContoller', function () {
       spyOn(MetricsReportService, 'getTotalCallsData').and.returnValue($q.when(response));
 
       controller.setTotalCallsData();
-      $scope.$apply();
-      expect(controller.onprem).toBe(nodata);
+      expect(controller.onprem).toBe('N/A');
       expect(controller.cloud).toBe(14);
       expect(controller.total).toBe(14);
 
@@ -255,10 +256,9 @@ describe('Controller:MediaServiceMetricsContoller', function () {
       spyOn(MetricsReportService, 'getTotalCallsData').and.returnValue($q.when(response));
 
       controller.setTotalCallsData();
-      $scope.$apply();
-      expect(controller.onprem).toBe(nodata);
-      expect(controller.cloud).toBe(nodata);
-      expect(controller.total).toBe(nodata);
+      expect(controller.onprem).toBe('N/A');
+      expect(controller.cloud).toBe('N/A');
+      expect(controller.total).toBe('N/A');
 
     });
   });
@@ -283,5 +283,31 @@ describe('Controller:MediaServiceMetricsContoller', function () {
       expect(controller.isEmpty('set')).toBeFalsy();
       expect(controller.isEmpty('refresh')).toBeFalsy();
     });
+  });
+  it('getClusterAvailabilityData should be called for setClusterAvailability', function () {
+    controller.timeSelected = timeOptions[2];
+    controller.clusterId = 'mediaFusion.metrics.allclusters';
+    controller.setClusterAvailability();
+    expect(MetricsReportService.getAvailabilityData).toHaveBeenCalled();
+  });
+  xit('getUtilizationData should be called for setUtilizationData', function () {
+    controller.timeSelected = timeOptions[3];
+    controller.allClusters = 'mediaFusion.metrics.allclusters';
+    controller.clusterId = 'mediaFusion.metrics.allclusters';
+    controller.setUtilizationData();
+    httpMock.verifyNoOutstandingExpectation();
+    httpMock.verifyNoOutstandingRequest();
+    httpMock.flush();
+    expect(MetricsReportService.getUtilizationData).toHaveBeenCalled();
+  });
+  xit('getUtilizationData should be called for setUtilizationData when clusterId is not allClusters', function () {
+    controller.timeSelected = timeOptions[3];
+    controller.allClusters = 'mediaFusion.metrics.allclusters';
+    controller.clusterId = 'mediaFusion.metrics.samplecluster';
+    controller.setUtilizationData();
+    httpMock.verifyNoOutstandingExpectation();
+    httpMock.verifyNoOutstandingRequest();
+    httpMock.flush();
+    expect(MetricsReportService.getUtilizationData).toHaveBeenCalled();
   });
 });

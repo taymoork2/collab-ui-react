@@ -6,10 +6,11 @@ describe('MediaServiceActivationV2', function () {
   beforeEach(angular.mock.module('Hercules'));
 
   // instantiate service
-  var Service, $httpBackend, authinfo, FusionClusterService, $q;
+  var Service, $q, $httpBackend, authinfo, Notification, FusionClusterService;
   var extensionEntitlements = ['squared-fusion-media'];
   //var serviceId = "squared-fusion-media";
   var mediaAgentOrgIds = ['mediafusion'];
+  var serviceId = "squared-fusion-media";
 
   beforeEach(function () {
     angular.mock.module(function ($provide) {
@@ -21,16 +22,14 @@ describe('MediaServiceActivationV2', function () {
     });
   });
 
-  beforeEach(inject(function ($injector, _MediaServiceActivationV2_, _FusionClusterService_, _$q_) {
+  beforeEach(inject(function (_$q_, _Notification_, $injector, _MediaServiceActivationV2_, _FusionClusterService_) {
+    //$rootScope = _$rootScope_;
     Service = _MediaServiceActivationV2_;
     FusionClusterService = _FusionClusterService_;
     $q = _$q_;
     $httpBackend = $injector.get('$httpBackend');
+    Notification = _Notification_;
   }));
-
-  afterEach(function () {
-    $httpBackend.verifyNoOutstandingRequest();
-  });
 
   it('should return the service enabled status', function (done) {
     $httpBackend
@@ -93,8 +92,28 @@ describe('MediaServiceActivationV2', function () {
   });
 
   xit('MediaServiceActivationV2 setServiceEnabled should be called for enableMediaService', function () {
+    $httpBackend.when('GET', 'https://calliope-integration.wbx2.com/calliope/api/authorization/v1/identity2agent/12345').respond({
+      statusCode: 0,
+      identityOrgId: "5632f806-ad09-4a26-a0c0-a49a13f38873",
+      mediaAgentOrgIds: ["5632f806-ad09-4a26-a0c0-a49a13f38873", "mocked"]
+    });
+    $httpBackend.when('PATCH', /^\w+.*/).respond({});
+    $httpBackend.when('PUT', /^\w+.*/).respond({});
     spyOn(Service, 'setServiceEnabled').and.callThrough();
-    Service.enableMediaService();
+    Service.enableMediaService(serviceId);
+    $httpBackend.verifyNoOutstandingExpectation();
+    $httpBackend.flush();
+    expect(Service.setServiceEnabled).toHaveBeenCalled();
+  });
+  xit('enableOrpheusForMediaFusion should handle the error when getUserIdentityOrgToMediaAgentOrgMapping promise fails', function () {
+    $httpBackend.when('GET', /^\w+.*/).respond(500, null);
+    $httpBackend.when('PUT', /^\w+.*/).respond(500, null);
+    $httpBackend.when('PATCH', /^\w+.*/).respond({});
+    spyOn(Service, 'setServiceEnabled').and.callThrough();
+    spyOn(Service, 'getUserIdentityOrgToMediaAgentOrgMapping').and.returnValue($q.reject({}));
+    Service.enableMediaService(serviceId);
+    $httpBackend.verifyNoOutstandingExpectation();
+    $httpBackend.flush();
     expect(Service.setServiceEnabled).toHaveBeenCalled();
   });
 
@@ -115,18 +134,49 @@ describe('MediaServiceActivationV2', function () {
     Service.getMediaServiceState();
     expect(FusionClusterService.serviceIsSetUp).not.toHaveBeenCalled();
   });
-
+  it('MediaServiceActivationV2 deleteUserIdentityOrgToMediaAgentOrgMapping should successfully delete the OrgMapping', function () {
+    $httpBackend.when('DELETE', 'https://calliope-integration.wbx2.com/calliope/api/authorization/v1/identity2agent').respond(204);
+    Service.deleteUserIdentityOrgToMediaAgentOrgMapping();
+  });
+  it('Should notify about activation failure when enableMediaService fails', function () {
+    $httpBackend.when('PATCH', /^\w+.*/).respond(500, null);
+    spyOn(Service, 'setServiceEnabled').and.callThrough();
+    spyOn(Notification, 'error');
+    Service.enableMediaService(serviceId);
+    $httpBackend.verifyNoOutstandingExpectation();
+    $httpBackend.flush();
+    expect(Notification.error).toHaveBeenCalled();
+  });
   xit('should disable orpheus for mediafusion org', function () {
     spyOn(Service, 'getUserIdentityOrgToMediaAgentOrgMapping').and.returnValue($q.when(
-      [{
-        statusCode: 0,
-        identityOrgId: "5632f806-ad09-4a26-a0c0-a49a13f38873",
-        mediaAgentOrgIds: ["5632f806-ad09-4a26-a0c0-a49a13f38873", "squared"]
-      }]
+      {
+        data: {
+          statusCode: 0,
+          identityOrgId: "5632f806-ad09-4a26-a0c0-a49a13f38873",
+          mediaAgentOrgIds: ["5632f806-ad09-4a26-a0c0-a49a13f38873", "squared"]
+        }
+      }
+    ));
+    spyOn(Service, 'deleteUserIdentityOrgToMediaAgentOrgMapping').and.returnValue($q.when());
+    Service.disableOrpheusForMediaFusion();
+    $httpBackend.verifyNoOutstandingExpectation();
+    $httpBackend.flush();
+    expect(Service.getUserIdentityOrgToMediaAgentOrgMapping).toHaveBeenCalled();
+  });
+  xit('setUserIdentityOrgToMediaAgentOrgMapping should be called for disableOrpheusForMediaFusion', function () {
+    spyOn(Service, 'getUserIdentityOrgToMediaAgentOrgMapping').and.returnValue($q.when(
+      {
+        data: {
+          statusCode: 0,
+          identityOrgId: "5632f806-ad09-4a26-a0c0-a49a13f38873",
+          mediaAgentOrgIds: ["5632f806-ad09-4a26-a0c0-a49a13f38873", "mocked", "fusion"]
+        }
+      }
     ));
     spyOn(Service, 'setUserIdentityOrgToMediaAgentOrgMapping').and.returnValue($q.when());
     Service.disableOrpheusForMediaFusion();
+    $httpBackend.verifyNoOutstandingExpectation();
     expect(Service.getUserIdentityOrgToMediaAgentOrgMapping).toHaveBeenCalled();
+    expect(Service.setUserIdentityOrgToMediaAgentOrgMapping).toHaveBeenCalled();
   });
-
 });

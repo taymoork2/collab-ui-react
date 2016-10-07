@@ -2,9 +2,10 @@
 
 describe('Service: MediaClusterServiceV2', function () {
   beforeEach(angular.mock.module('Mediafusion'));
-  var $httpBackend, Service, Authinfo;
+  var $httpBackend, Service, Authinfo, $rootScope;
 
-  beforeEach(inject(function ($injector, _MediaClusterServiceV2_, _Authinfo_) {
+  beforeEach(inject(function (_$rootScope_, $injector, _MediaClusterServiceV2_, _Authinfo_) {
+    $rootScope = _$rootScope_;
     Authinfo = _Authinfo_;
     Authinfo.getOrgId = sinon.stub().returns("orgId");
     Service = _MediaClusterServiceV2_;
@@ -124,6 +125,24 @@ describe('Service: MediaClusterServiceV2', function () {
     expect(object.value).toBe(3);
   });
 
+  it('should return the state and severuty for the state has_alarms', function () {
+    var object = Service.getRunningStateSeverity('not_installed');
+    expect(object).toBeDefined();
+    expect(object.label).toBeDefined();
+    expect(object.value).toBeDefined();
+    expect(object.label).toBe('neutral');
+    expect(object.value).toBe(1);
+  });
+
+  it('should return the state and severuty for the state has_alarms', function () {
+    var object = Service.getRunningStateSeverity('disabled');
+    expect(object).toBeDefined();
+    expect(object.label).toBeDefined();
+    expect(object.value).toBeDefined();
+    expect(object.label).toBe('warning');
+    expect(object.value).toBe(2);
+  });
+
   it('should merge the alarms', function () {
     var connectors = [{
       "url": "https://hercules-integration.wbx2.com/hercules/api/v2/organizations/2c3c9f9…-9062-069343e8241d/connectors/mf_mgmt@d2ed6f11-5a53-4011-9062-069343e8241d",
@@ -241,5 +260,26 @@ describe('Service: MediaClusterServiceV2', function () {
     expect(object.upgradeState).toBeDefined();
     expect(object.upgradeState).toBe('upgraded');
 
+  });
+  it('MediaClusterServiceV2 getOrganization should be called successfully', function () {
+    $httpBackend.when('GET', /^\w+.*/).respond({});
+    var done = function () {};
+    Service.getOrganization(done);
+    $rootScope.$apply();
+    $httpBackend.flush();
+  });
+
+  it('should return clusterCache when calling getCluster passing a id', function () {
+    var Id = "8aadca1c-805a-422f-8081-300f75281a70";
+    Service.getCluster(Id);
+    //expect(Service.getCluster(Id)).toBe();
+  });
+
+  it('MediaClusterServiceV2 getClustersV2 successfully should return the data', function () {
+    $httpBackend.when('GET', /^\w+.*/).respond({});
+    Service.getClustersV2();
+    $httpBackend.flush();
+    $httpBackend.verifyNoOutstandingExpectation();
+    $httpBackend.verifyNoOutstandingRequest();
   });
 });
