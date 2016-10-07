@@ -81,8 +81,9 @@
               <div class="onboarded">
                 <div id="entitlementTitle"><span translate="partnerHomePage.entitlementsTitle"></span> <span class="total">{{entCount}}</span></div>
                 <div id="entitlementsdiv" class="report"></div>
-                <div class="report-status-partner" id="entitlements-refresh" ng-if="entitlementStatus === 'refresh'">
-                  <i class='icon icon-spinner icon-2x'></i>
+                <div class="report-status-partner" id="entitlements-refresh" ng-if="entitlementStatus !== 'ready'">
+                  <i class="icon icon-spinner icon-2x" ng-if="entitlementStatus === 'refresh'"></i>
+                  <h3 class="dummy-data-message" translate="reportsPage.noData" ng-if="entitlementStatus === 'no-data'"></h3>
                 </div>
               </div>
             </section>
