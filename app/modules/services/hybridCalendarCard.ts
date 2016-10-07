@@ -8,17 +8,22 @@ export class ServicesOverviewHybridCalendarCard extends ServicesOverviewHybridCa
 
   private _setupButton: ICardButton = {
     name: 'servicesOverview.genericButtons.setup',
-    link: 'services/calendar',
+    routerState: 'calendar-service.list',
     buttonClass: 'btn',
   };
 
   private _buttons: Array<ICardButton> = [
-    { name: 'servicesOverview.cards.calendar.buttons.resources', link: 'services/calendar', buttonClass: 'btn-link' },
+    {
+      name: 'servicesOverview.cards.calendar.buttons.resources',
+      routerState: 'calendar-service.list',
+      buttonClass: 'btn-link',
+    },
     {
       name: 'servicesOverview.cards.calendar.buttons.settings',
-      link: 'services/calendar/settings',
+      routerState: 'calendar-service.settings',
       buttonClass: 'btn-link',
-    }];
+    },
+  ];
 
   public getButtons(): Array<ICardButton> {
     if (this.active) {
@@ -34,7 +39,7 @@ export class ServicesOverviewHybridCalendarCard extends ServicesOverviewHybridCa
       description: 'servicesOverview.cards.calendar.description',
       activeServices: ['squared-fusion-cal'],
       statusService: 'squared-fusion-cal',
-      statusLink: 'services/calendar',
+      routerState: 'calendar-service.list',
       cardClass: 'calendar',
       cardType: CardType.hybrid,
     }, FusionClusterStatesService);

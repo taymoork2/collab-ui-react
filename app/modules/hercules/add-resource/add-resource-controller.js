@@ -223,7 +223,7 @@
 
     vm.completeEnterHostnameScreen = function () {
       vm.chooseClusterName = true;
-      vm.clustername = vm.hostname;
+      vm.clustername = '';
     };
 
     vm.inClusterNameSelectionScreen = function () {

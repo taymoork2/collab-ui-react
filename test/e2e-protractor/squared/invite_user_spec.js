@@ -172,10 +172,7 @@ describe('Squared Add User Flow', function () {
       utils.search(partner.newTrial.customerName, -1);
       utils.click(partner.newTrialRow);
       utils.expectIsDisplayed(partner.previewPanel);
-      var webElement = partner.deleteCustomerButton.getWebElement();
-      browser.executeScript(function (e) {
-        e.scrollIntoView()
-      }, webElement);
+      utils.scrollIntoView(partner.deleteCustomerButton);
 
       utils.click(partner.deleteCustomerButton);
       utils.waitForModal().then(function () {

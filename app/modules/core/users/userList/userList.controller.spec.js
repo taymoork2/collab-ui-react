@@ -3,7 +3,7 @@
 'use strict';
 
 describe('UserListCtrl: Ctrl', function () {
-  var $controller, $scope, $state, $q, Userservice, UserListService, Orgservice, Authinfo, Config, Notification, FeatureToggleService;
+  var $controller, $scope, $state, $q, Userservice, UserListService, Orgservice, Authinfo, Auth, Config, Notification, FeatureToggleService;
   var photoUsers, currentUser, listUsers, listUsersMore, listAdmins, listAdminsMore, listPartners, getOrgJson;
   var userEmail, userName, uuid, userStatus, dirsyncEnabled, entitlements, telstraUser, failedData;
   photoUsers = getJSONFixture('core/json/users/userlist.controller.json');
@@ -18,7 +18,7 @@ describe('UserListCtrl: Ctrl', function () {
   beforeEach(angular.mock.module('Huron'));
   beforeEach(angular.mock.module('Sunlight'));
 
-  beforeEach(inject(function ($rootScope, _$state_, _$controller_, _$q_, _Userservice_, _UserListService_, _Orgservice_, _Authinfo_, _Config_, _Notification_, _FeatureToggleService_) {
+  beforeEach(inject(function ($rootScope, _$state_, _$controller_, _$q_, _Userservice_, _UserListService_, _Orgservice_, _Authinfo_, _Auth_, _Config_, _Notification_, _FeatureToggleService_) {
     $scope = $rootScope.$new();
     $state = _$state_;
     $controller = _$controller_;
@@ -27,6 +27,7 @@ describe('UserListCtrl: Ctrl', function () {
     Userservice = _Userservice_;
     Orgservice = _Orgservice_;
     Authinfo = _Authinfo_;
+    Auth = _Auth_;
     Config = _Config_;
     Notification = _Notification_;
     FeatureToggleService = _FeatureToggleService_;
@@ -68,8 +69,9 @@ describe('UserListCtrl: Ctrl', function () {
     });
     spyOn(Authinfo, 'isCSB').and.returnValue(true);
     spyOn(Authinfo, 'getOrgId').and.returnValue(currentUser.meta.organizationID);
-
     spyOn(Authinfo, 'isCisco').and.returnValue(false);
+    spyOn(Auth, 'isOnlineOrg').and.returnValue($q.when(false));
+
     spyOn(FeatureToggleService, 'supportsDirSync').and.returnValue($q.when(false));
     spyOn(FeatureToggleService, 'atlasCsvEnhancementGetStatus').and.returnValue($q.when(false));
     spyOn(FeatureToggleService, 'atlasEmailStatusGetStatus').and.returnValue($q.when(false));

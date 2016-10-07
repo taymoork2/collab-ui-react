@@ -110,30 +110,12 @@ describe('Service: Customer Reports Service', function () {
       });
     });
 
-    it('should getMostActiveUserData when lineGraph is false', function () {
-      spyOn(CommonReportService, 'getCustomerReportByType').and.returnValue($q.when({
-        data: _.clone(activeData.mostActive),
-      }));
-
-      CustomerReportService.getMostActiveUserData(defaults.timeFilter[0], false).then(function (response) {
-        expect(response).toEqual(mostActiveResponseObject);
-      });
-    });
-
-    it('should notify an error for getMostActiveUserData when lineGraph is false', function () {
-      spyOn(CommonReportService, 'getCustomerReportByType').and.returnValue($q.reject(rejectError));
-
-      CustomerReportService.getMostActiveUserData(defaults.timeFilter[0], false).then(function (response) {
-        expect(response).toEqual(mostActiveResponseError);
-      });
-    });
-
     it('should getMostActiveUserData', function () {
       spyOn(CommonReportService, 'getCustomerAltReportByType').and.returnValue($q.when({
         data: _.clone(activeData.mostActive),
       }));
 
-      CustomerReportService.getMostActiveUserData(defaults.timeFilter[0], true).then(function (response) {
+      CustomerReportService.getMostActiveUserData(defaults.timeFilter[0]).then(function (response) {
         expect(response).toEqual(mostActiveResponseObject);
       });
     });
@@ -141,7 +123,7 @@ describe('Service: Customer Reports Service', function () {
     it('should notify an error for getMostActiveUserData', function () {
       spyOn(CommonReportService, 'getCustomerAltReportByType').and.returnValue($q.reject(rejectError));
 
-      CustomerReportService.getMostActiveUserData(defaults.timeFilter[0], true).then(function (response) {
+      CustomerReportService.getMostActiveUserData(defaults.timeFilter[0]).then(function (response) {
         expect(response).toEqual(mostActiveResponseError);
       });
     });

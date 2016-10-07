@@ -6,7 +6,7 @@
     .controller('UserListCtrl', UserListCtrl);
 
   /* @ngInject */
-  function UserListCtrl($q, $rootScope, $scope, $state, $templateCache, $timeout, $translate, Authinfo, Config, FeatureToggleService,
+  function UserListCtrl($q, $rootScope, $scope, $state, $templateCache, $timeout, $translate, Authinfo, Auth, Config, FeatureToggleService,
     Log, LogMetricsService, Notification, Orgservice, Userservice, UserListService, Utils, CsvDownloadService) {
 
     var vm = this;
@@ -66,7 +66,6 @@
     $scope.isCsvEnhancementToggled = false;
     $scope.obtainedTotalUserCount = false;
     $scope.isEmailStatusToggled = false;
-    $scope.isUserPendingStatusToggled = false;
 
     $scope.totalUsersExpected = Number.MAX_VALUE;
     $scope.totalAdminUsersExpected = Number.MAX_VALUE;
@@ -100,6 +99,8 @@
 
     ////////////////
     var eventListeners = [];
+    var isUserPendingStatusToggled;
+    var isOnlineOrg;
 
     function onInit() {
 
@@ -107,13 +108,15 @@
         csvEnhancement: FeatureToggleService.atlasCsvEnhancementGetStatus(),
         atlasEmailStatus: FeatureToggleService.atlasEmailStatusGetStatus(),
         atlasUserPendingStatus: FeatureToggleService.atlasUserPendingStatusGetStatus(),
-        configureGrid: vm.configureGrid()
+        configureGrid: vm.configureGrid(),
+        isOnlineOrg: Auth.isOnlineOrg()
       };
 
       $q.all(promises).then(function (results) {
         $scope.isCsvEnhancementToggled = results.csvEnhancement;
         $scope.isEmailStatusToggled = results.atlasEmailStatus;
-        $scope.isUserPendingStatusToggled = results.atlasUserPendingStatus;
+        isUserPendingStatusToggled = results.atlasUserPendingStatus;
+        isOnlineOrg = results.isOnlineOrg;
 
         checkOrg();
         bind();
@@ -287,14 +290,17 @@
                 // todo - why are we looping through ALL users here, and not just the new ones?
                 _.forEach($scope.userList.allUsers, function (user) {
                   // user status
-                  if ($scope.isUserPendingStatusToggled) {
-                    var hasBeenActivated = false;
-                    if (user.userSettings) {
-                      hasBeenActivated = _.some(user.userSettings, function (userSetting) {
-                        return userSetting.indexOf('sparkAdmin.licensedDate') > 0 || userSetting.indexOf('spark.signUpDate') > 0;
-                      });
-                    }
-                    user.userStatus = (_.isEmpty(user.licenseID) || !hasBeenActivated) ? 'pending' : 'active';
+                  if (isUserPendingStatusToggled) {
+                    var userHasSignedUp = _.some(user.userSettings, function (userSetting) {
+                      return userSetting.indexOf('spark.signUpDate') > 0;
+                    });
+                    var index = _.findIndex(user.entitlements, function (ent) {
+                      return ent === 'ciscouc';
+                    });
+                    var hasCiscoUC = index > -1;
+                    var isActiveUser = !_.isEmpty(user.entitlements) &&
+                                      (userHasSignedUp || isOnlineOrg || hasCiscoUC);
+                    user.userStatus = isActiveUser ? 'active' : 'pending';
                   } else {
                     user.userStatus = (_.indexOf(user.accountStatus, 'pending') >= 0) ? 'pending' : 'active';
                   }

@@ -51,14 +51,6 @@
         display: block;
         height: auto;
         position: relative;
-        .cardLink {
-          position: absolute;
-          top: 0;
-          left: 0;
-          display: block;
-          width: 100%;
-          height: 100%;
-        }
         article {
           min-height: 370px;
         }
@@ -78,32 +70,27 @@
         }
         section {
           position: relative;
-        }
-        button {
-          width: 100%;
-          margin-left: 0;
-          text-overflow: ellipsis;
-          a {
+          .btn-link {
+            width: 100%;
+            margin-left: 0;
+            text-overflow: ellipsis;
             white-space: nowrap;
             overflow: hidden;
             display: block;
             text-overflow: ellipsis;
             padding-top: 1px;
             padding-bottom: 1px;
+
+            margin-top: 1rem;
+            width: auto !important;
+            padding-left: 1rem;
+            padding-right: 1rem;
+
+            &.disabled {
+              color: $gray-dark-1;
+              cursor: default;
+            }
           }
-        }
-        .btn {
-          margin-top: 1rem;
-          width: auto !important;
-          padding-left: 1rem;
-          padding-right: 1rem;
-        }
-        button.btn-link {
-          color: $color-primary-base;
-          background-color: transparent;
-          overflow: hidden;
-          text-overflow: ellipsis;
-          white-space: nowrap;
         }
         footer {
           border-top: 1px solid $gray-light-4;
@@ -113,7 +100,7 @@
             justify-content: flex-start;
             padding-top: rem(12);
           }
-          .status {    
+          .status {
             &:focus {
               box-shadow: none;
             }
@@ -121,7 +108,7 @@
               color: $gray-base;
             }
           }
-         
+
         }
       }
       .cs-card.header-bar.cta-bar header:after {

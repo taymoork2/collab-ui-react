@@ -8,17 +8,22 @@ export class ServicesOverviewHybridCallCard extends ServicesOverviewHybridCard {
 
   private _setupButton: ICardButton = {
     name: 'servicesOverview.genericButtons.setup',
-    link: 'services/call',
+    routerState: 'call-service.list',
     buttonClass: 'btn',
   };
 
   private _buttons: Array<ICardButton> = [
-    { name: 'servicesOverview.cards.hybridCall.buttons.resources', link: 'services/call', buttonClass: 'btn-link' },
+    {
+      name: 'servicesOverview.cards.hybridCall.buttons.resources',
+      routerState: 'call-service.list',
+      buttonClass: 'btn-link',
+    },
     {
       name: 'servicesOverview.cards.hybridCall.buttons.settings',
-      link: 'services/call/settings',
+      routerState: 'call-service.settings',
       buttonClass: 'btn-link',
-    }];
+    },
+  ];
 
   public getButtons(): Array<ICardButton> {
     if (this.active) {
@@ -34,7 +39,7 @@ export class ServicesOverviewHybridCallCard extends ServicesOverviewHybridCard {
       description: 'servicesOverview.cards.hybridCall.description',
       activeServices: ['squared-fusion-uc'],
       statusService: 'squared-fusion-uc',
-      statusLink: 'services/call',
+      routerState: 'call-service.list',
       active: false, cardClass: 'call', cardType: CardType.hybrid,
     }, FusionClusterStatesService);
   }

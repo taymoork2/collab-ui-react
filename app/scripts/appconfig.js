@@ -2388,8 +2388,8 @@
 
         $stateProvider
           .state('services-overview', {
-            url: '/services/overview',
-            templateUrl: 'modules/hercules/servicesOverview/servicesOverview.html',
+            url: '/services',
+            templateUrl: 'modules/services/overview.html',
             controller: 'ServicesOverviewCtrl',
             controllerAs: 'servicesOverviewCtrl',
             parent: 'main'

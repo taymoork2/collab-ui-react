@@ -4,8 +4,6 @@ export class ServicesOverviewCtrl {
 
   private cards: Array<ServicesOverviewCard>;
 
-  public showFilterDropDown: boolean = false;
-
   /* @ngInject */
   constructor(
     private ServicesOverviewCardFactory,
@@ -25,6 +23,7 @@ export class ServicesOverviewCtrl {
         services.push(this.FusionClusterService.getStatusForService('squared-fusion-uc', clusterList));
         services.push(this.FusionClusterService.getStatusForService('squared-fusion-media', clusterList));
         this.forwardEvent('hybridStatusEventHandler', services);
+        this.forwardEvent('hybridClustersEventHandler', clusterList);
       });
 
     this.FeatureToggleService.supports(this.FeatureToggleService.features.atlasMediaServiceOnboarding).then(supports => {
@@ -34,25 +33,18 @@ export class ServicesOverviewCtrl {
     FeatureToggleService.atlasCareTrialsGetStatus().then(supports => {
       this.forwardEvent('careFeatureToggleEventHandler', supports);
     });
-
   }
 
   get hybridCards() {
     return _.filter(this.cards, {
       cardType: CardType.hybrid,
-      display: true,
     });
   }
 
   get cloudCards() {
     return _.filter(this.cards, {
       cardType: CardType.cloud,
-      display: true,
     });
-  }
-
-  public toggleDropdown() {
-    this.showFilterDropDown = !this.showFilterDropDown;
   }
 
   private forwardEvent(handlerName, ...eventArgs: Array<any>) {
@@ -68,6 +60,7 @@ export class ServicesOverviewCtrl {
     this.forwardEvent('updateWebexSiteList', siteList);
   }
 }
+
 angular
   .module('Hercules')
   .controller('ServicesOverviewCtrl', ServicesOverviewCtrl);

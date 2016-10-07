@@ -153,7 +153,7 @@ describe('Controller: CustomerListCtrl', function () {
       expect($scope.isPastGracePeriod(testTrialData)).toBe(false);
     });
 
-    it('should display N/A when trial is past grace period', function () {
+    xit('should display N/A when trial is past grace period', function () {
       setTestDataExpired();
       testTrialData.daysLeft = -99;
       expect($scope.getLicenseCountColumnText(testTrialData)).toBe('common.notAvailable');
