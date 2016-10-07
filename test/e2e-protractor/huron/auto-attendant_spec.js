@@ -67,7 +67,7 @@ describe('Huron Auto Attendant', function () {
       utils.expectIsDisplayed(autoattendant.sayMessage);
 
     }, 60000);
-/* 
+  
     it('should add a single phone number to the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
 
       autoattendant.scrollIntoView(autoattendant.lanesWrapper);
@@ -140,19 +140,20 @@ describe('Huron Auto Attendant', function () {
 
     it('should add Play Message, select Language and Voice to the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
       var absolutePath = utils.resolvePath(autoattendant.mediaFileToUpload);
- 
 
       autoattendant.scrollIntoView(autoattendant.sayMessage);
 
       // media upload
+
       utils.click(autoattendant.messageOptions);
+
       utils.click(autoattendant.playMessageOption);
+      utils.wait(autoattendant.sayMediaUploadInput, 12000);
 
       $(autoattendant.mediaUploadSend).sendKeys(absolutePath);
 
       // and save
       utils.wait(autoattendant.saveButton, 12000);
-
 
       utils.expectIsEnabled(autoattendant.saveButton);
       utils.click(autoattendant.saveButton);
@@ -161,6 +162,7 @@ describe('Huron Auto Attendant', function () {
 
       // don't leave the play mode on the screen, effects later tests
       utils.click(autoattendant.messageOptions);
+
       utils.click(autoattendant.sayMessageOption);
 
     }, 60000);
@@ -168,6 +170,8 @@ describe('Huron Auto Attendant', function () {
     it('should add Phone Menu Say to the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
 
       autoattendant.scrollIntoView(autoattendant.phoneMenuSay);
+
+      utils.wait(autoattendant.phoneMenuSay, 12000);
 
       //Add Phone Menu Say Message
       utils.click(autoattendant.phoneMenuSay);
@@ -188,6 +192,7 @@ describe('Huron Auto Attendant', function () {
 
       //Add first Phone repeat Menu
       utils.click(autoattendant.phoneMenuKeys.first());
+
       autoattendant.scrollIntoView(autoattendant.phoneMenuKeyOptions.first().all(by.tagName('li')).first());
       utils.click(autoattendant.phoneMenuKeyOptions.first().all(by.tagName('li')).first());
       utils.click(autoattendant.phoneMenuAction.first());
@@ -206,7 +211,12 @@ describe('Huron Auto Attendant', function () {
       utils.click(autoattendant.phoneMenuKeyOptions.last().all(by.tagName('li')).last());
       utils.click(autoattendant.phoneMenuAction.last());
       utils.click(autoattendant.phoneMenuActionOptions.last().element(by.linkText('Say Message')));
+      utils.wait(autoattendant.phoneMenuActionTargets.last().element(by.tagName('textarea')), 12000);
+
       autoattendant.scrollIntoView(autoattendant.phoneMenuActionTargets.last().element(by.tagName('textarea')));
+
+      utils.wait(autoattendant.phoneMenuActionTargets.last().element(by.tagName('textarea')), 12000);
+
       utils.click(autoattendant.phoneMenuActionTargets.last().element(by.tagName('textarea')));
       utils.sendKeys(autoattendant.phoneMenuActionTargets.last().element(by.tagName('textarea')), "This is a phone menu say");
 
@@ -363,7 +373,6 @@ describe('Huron Auto Attendant', function () {
 
     });
 
-
     it('should add Dial By Extension via New Step action selection to the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
 
       // We are depending on menu order for this test, so if the Add New Step menu gets new steps or gets
@@ -377,6 +386,8 @@ describe('Huron Auto Attendant', function () {
       utils.click(autoattendant.newStepMenu);
       // 3rd menu option is Dial By Extension
       utils.click(autoattendant.newStepSelectDialByExt);
+
+      utils.wait(autoattendant.dialByExtension, 12000);
 
       autoattendant.scrollIntoView(autoattendant.dialByExtension);
 
@@ -408,8 +419,13 @@ describe('Huron Auto Attendant', function () {
       autoattendant.scrollIntoView(autoattendant.dialByExtension);
 
       // media upload
+
       utils.click(autoattendant.dialByMessageOptions);
+
       utils.click(autoattendant.dialByPlayMessageOption);
+
+      utils.wait(autoattendant.dialByMediaUploadInput, 12000);
+
       $(autoattendant.mediaUploadSend).sendKeys(absolutePath);
 
       // and save
@@ -422,9 +438,10 @@ describe('Huron Auto Attendant', function () {
       utils.expectIsDisabled(autoattendant.saveButton);
 
     }, 60000);
-*/
+
     it('should add a Schedule to AA', function () {
       autoattendant.scrollIntoView(autoattendant.schedule);
+
       utils.click(autoattendant.schedule);
 
       utils.wait(autoattendant.addschedule, 12000);

@@ -56,6 +56,10 @@ var AutoAttendantPage = function () {
   this.dialByMessageOptions = element(by.css('div.aa-panel-body[name="Dial by Extension"]')).element(by.css('select[name="messageSelect"] + div a.select-toggle'));
   this.dialByPlayMessageOption = element(by.css('div.aa-panel-body[name="Dial by Extension"]')).element(by.css('select[name="messageSelect"] + div div.dropdown-menu')).all(by.tagName('li')).first();
 
+  this.sayMediaUploadInput = element(by.css('div.aa-panel-body[name="Say Message"]')).element(by.name('mediaUploadInput'));
+
+  this.dialByMediaUploadInput = element(by.css('div.aa-panel-body[name="Dial by Extension"]')).element(by.name('mediaUploadInput'));
+
   this.mediaUploadSend = 'input[type="file"][name="mediaUploadSend"]';
 
   this.mediaFileToUpload = './../data/sample-media-upload.wav';

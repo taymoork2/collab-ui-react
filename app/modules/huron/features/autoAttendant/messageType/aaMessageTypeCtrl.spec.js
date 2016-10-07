@@ -158,7 +158,7 @@ describe('Controller: AAMessageTypeCtrl', function () {
           $scope: $scope
         });
 
-        c.messageOption.value = 'uploadFile';
+        c.messageOption = c.messageOptions[0];
 
         c.actionEntry = menuEntry.actions[0];
         c.setMessageOptions();
@@ -182,7 +182,7 @@ describe('Controller: AAMessageTypeCtrl', function () {
           $scope: $scope
         });
 
-        c.messageOption.value = 'sayMessage';
+        c.messageOption = c.messageOptions[1];
 
         c.actionEntry = menuEntry.actions[0];
         c.setMessageOptions();
@@ -207,7 +207,7 @@ describe('Controller: AAMessageTypeCtrl', function () {
 
         c.actionEntry = menuEntry.actions[0];
 
-        c.messageOption.value = 'uploadFile';
+        c.messageOption = c.messageOptions[0];
 
         c.setMessageOptions();
 
@@ -217,9 +217,9 @@ describe('Controller: AAMessageTypeCtrl', function () {
 
         c.actionEntry.value = 'Play URL here';
 
-        // bake to Play message
+        // back to SAY message
 
-        c.messageOption.value = 'sayMessage';
+        c.messageOption = c.messageOptions[1];
 
         c.setMessageOptions();
 
@@ -229,7 +229,7 @@ describe('Controller: AAMessageTypeCtrl', function () {
         $rootScope.$broadcast('CE Saved');
 
         // move back to play
-        c.messageOption.value = 'uploadFile';
+        c.messageOption = c.messageOptions[0];
 
         c.setMessageOptions();
 
@@ -253,7 +253,7 @@ describe('Controller: AAMessageTypeCtrl', function () {
 
         c.actionEntry = menuEntry.actions[0];
 
-        c.messageOption.value = 'sayMessage';
+        c.messageOption = c.messageOptions[1];
 
         c.setMessageOptions();
 
@@ -263,9 +263,9 @@ describe('Controller: AAMessageTypeCtrl', function () {
 
         c.actionEntry.value = 'My old Say Message';
 
-        // bake to Play message
+        // back to Play message
 
-        c.messageOption.value = 'uploadFile';
+        c.messageOption = c.messageOptions[0];
 
         c.setMessageOptions();
 
@@ -275,7 +275,7 @@ describe('Controller: AAMessageTypeCtrl', function () {
         $rootScope.$broadcast('CE Saved');
 
         // move back to Say
-        c.messageOption.value = 'sayMessage';
+        c.messageOption = c.messageOptions[1];
 
         c.setMessageOptions();
 
