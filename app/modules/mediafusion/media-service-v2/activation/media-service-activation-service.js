@@ -64,7 +64,7 @@
 
 
     function enableMediaService(serviceId) {
-      this.setServiceEnabled(serviceId, true).then(
+      setServiceEnabled(serviceId, true).then(
         function success() {
           setisMediaServiceEnabled(true);
           enableOrpheusForMediaFusion();
@@ -137,6 +137,39 @@
       vm.isMediaServiceEnabled = value;
     };
 
+    var disableOrpheusForMediaFusion = function () {
+      getUserIdentityOrgToMediaAgentOrgMapping().then(
+        function success(response) {
+          var mediaAgentOrgIdsArray = [];
+          var orgId = Authinfo.getOrgId();
+          mediaAgentOrgIdsArray = response.data.mediaAgentOrgIds;
+
+          var index = mediaAgentOrgIdsArray.indexOf(orgId);
+          mediaAgentOrgIdsArray.splice(index, 1);
+
+          index = mediaAgentOrgIdsArray.indexOf("squared");
+          mediaAgentOrgIdsArray.splice(index, 1);
+
+          if (mediaAgentOrgIdsArray.length > 0) {
+            setUserIdentityOrgToMediaAgentOrgMapping(mediaAgentOrgIdsArray).then(
+              function success() {},
+              function error(errorResponse) {
+                Notification.error('mediaFusion.mediaAgentOrgMappingFailure', {
+                  failureMessage: errorResponse.message
+                });
+              });
+          } else {
+            deleteUserIdentityOrgToMediaAgentOrgMapping(mediaAgentOrgIdsArray).then(
+              function success() {},
+              function error(errorResponse) {
+                Notification.error('mediaFusion.mediaAgentOrgMappingFailure', {
+                  failureMessage: errorResponse.message
+                });
+              });
+          }
+        });
+    };
+
     return {
       setisMediaServiceEnabled: setisMediaServiceEnabled,
       getMediaServiceState: getMediaServiceState,
@@ -146,7 +179,8 @@
       getUserIdentityOrgToMediaAgentOrgMapping: getUserIdentityOrgToMediaAgentOrgMapping,
       setUserIdentityOrgToMediaAgentOrgMapping: setUserIdentityOrgToMediaAgentOrgMapping,
       deleteUserIdentityOrgToMediaAgentOrgMapping: deleteUserIdentityOrgToMediaAgentOrgMapping,
-      enableMediaService: enableMediaService
+      enableMediaService: enableMediaService,
+      disableOrpheusForMediaFusion: disableOrpheusForMediaFusion
     };
   }
 })();

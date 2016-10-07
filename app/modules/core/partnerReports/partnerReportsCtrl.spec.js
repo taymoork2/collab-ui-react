@@ -1,18 +1,18 @@
 'use strict';
 
 describe('Controller: Partner Reports', function () {
-  var controller, $scope, $q, $translate, ReportService, GraphService, DummyReportService;
-  var activeUsersSort = ['userName', 'orgName', 'numCalls', 'sparkMessages', 'totalActivity'];
+  var controller, $scope;
 
-  var dummyData = getJSONFixture('core/json/partnerReports/dummyReportData.json');
-  var customerData = getJSONFixture('core/json/partnerReports/customerResponse.json');
   var activeUserData = getJSONFixture('core/json/partnerReports/activeUserData.json');
   var callMetricsData = getJSONFixture('core/json/partnerReports/callMetricsData.json');
-  var mediaQualityData = getJSONFixture('core/json/partnerReports/mediaQualityData.json');
-  var endpointsData = getJSONFixture('core/json/partnerReports/registeredEndpointData.json');
+  var ctrlData = getJSONFixture('core/json/partnerReports/ctrl.json');
+  var customerData = getJSONFixture('core/json/partnerReports/customerResponse.json');
   var defaults = getJSONFixture('core/json/partnerReports/commonReportService.json');
-  var timeOptions = _.clone(defaults.timeFilter);
+  var dummyData = getJSONFixture('core/json/partnerReports/dummyReportData.json');
+  var endpointsData = getJSONFixture('core/json/partnerReports/registeredEndpointData.json');
+  var mediaQualityData = getJSONFixture('core/json/partnerReports/mediaQualityData.json');
 
+  var timeOptions = _.cloneDeep(defaults.timeFilter);
   var Authinfo = {
     getOrgId: jasmine.createSpy('getOrgId').and.returnValue(customerData.customerOptions[3].value),
     getOrgName: jasmine.createSpy('getOrgName').and.returnValue(customerData.customerOptions[3].label)
@@ -22,366 +22,254 @@ describe('Controller: Partner Reports', function () {
   beforeEach(angular.mock.module('Huron'));
 
   describe('PartnerReportCtrl - Expected Responses', function () {
-    var endpointTable = {
-      headers: endpointsData.headers,
-      data: endpointsData.registeredEndpointResponse,
-      dummy: false
-    };
+    beforeEach(function () {
+      this.initModules('Core', 'Huron');
+      this.injectDependencies('$rootScope', '$controller', '$q', '$timeout', 'ReportService', 'GraphService', 'DummyReportService');
+      $scope = this.$rootScope.$new();
 
-    beforeEach(inject(function ($rootScope, $controller, _$q_, _$translate_, _ReportService_, _GraphService_, _DummyReportService_) {
-      $scope = $rootScope.$new();
-      $q = _$q_;
-      $translate = _$translate_;
-      ReportService = _ReportService_;
-      GraphService = _GraphService_;
-      DummyReportService = _DummyReportService_;
-
-      spyOn($translate, 'instant').and.callThrough();
-      spyOn(ReportService, 'getOverallActiveUserData').and.returnValue($q.when({}));
-      spyOn(ReportService, 'getActiveUserData').and.returnValue($q.when({
-        graphData: activeUserData.detailedResponse,
+      spyOn(this.$rootScope, '$broadcast').and.returnValue({});
+      spyOn(this, '$timeout').and.callThrough();
+      spyOn(this.ReportService, 'getOverallActiveUserData').and.returnValue(this.$q.when({}));
+      spyOn(this.ReportService, 'getActiveUserData').and.returnValue(this.$q.when({
+        graphData: _.cloneDeep(activeUserData.detailedResponse),
         isActiveUsers: true,
-        popData: activeUserData.activePopResponse,
+        popData: _.cloneDeep(activeUserData.activePopResponse),
         overallPopulation: 33
       }));
-      spyOn(ReportService, 'getActiveTableData').and.returnValue($q.when(activeUserData.mostActiveResponse));
-      spyOn(ReportService, 'getCustomerList').and.returnValue($q.when(customerData.customerResponse));
-      spyOn(ReportService, 'getMediaQualityMetrics').and.returnValue($q.when(mediaQualityData.mediaQualityResponse));
-      spyOn(ReportService, 'getCallMetricsData').and.returnValue($q.when(callMetricsData.callMetricsResponse));
-      spyOn(ReportService, 'getRegisteredEndpoints').and.returnValue($q.when(endpointsData.registeredEndpointResponse));
+      spyOn(this.ReportService, 'getActiveTableData').and.returnValue(this.$q.when(_.cloneDeep(activeUserData.mostActiveResponse)));
+      spyOn(this.ReportService, 'getCustomerList').and.returnValue(this.$q.when(_.cloneDeep(customerData.customerResponse)));
+      spyOn(this.ReportService, 'getMediaQualityMetrics').and.returnValue(this.$q.when(_.cloneDeep(mediaQualityData.mediaQualityResponse)));
+      spyOn(this.ReportService, 'getCallMetricsData').and.returnValue(this.$q.when(_.cloneDeep(callMetricsData.callMetricsResponse)));
+      spyOn(this.ReportService, 'getRegisteredEndpoints').and.returnValue(this.$q.when(_.cloneDeep(endpointsData.registeredEndpointResponse)));
 
-      spyOn(GraphService, 'getActiveUsersGraph').and.returnValue({
-        dataProvider: activeUserData.detailedResponse
+      spyOn(this.GraphService, 'getActiveUsersGraph').and.returnValue({
+        dataProvider: _.cloneDeep(activeUserData.detailedResponse)
+      });
+      spyOn(this.GraphService, 'getMediaQualityGraph').and.returnValue({
+        dataProvider: _.cloneDeep(mediaQualityData.mediaQualityResponse)
+      });
+      spyOn(this.GraphService, 'getActiveUserPopulationGraph').and.returnValue({
+        dataProvider: _.cloneDeep(activeUserData.activePopResponse)
+      });
+      spyOn(this.GraphService, 'getCallMetricsDonutChart').and.returnValue({
+        dataProvider: _.cloneDeep(callMetricsData.callMetricsResponse)
       });
 
-      spyOn(GraphService, 'getMediaQualityGraph').and.returnValue({
-        dataProvider: mediaQualityData.mediaQualityResponse
-      });
+      spyOn(this.DummyReportService, 'dummyActiveUserData').and.returnValue(_.cloneDeep(dummyData.activeUser.one));
+      spyOn(this.DummyReportService, 'dummyActivePopulationData').and.returnValue(_.cloneDeep(dummyData.activeUserPopulation));
+      spyOn(this.DummyReportService, 'dummyMediaQualityData').and.returnValue(_.cloneDeep(dummyData.mediaQuality.one));
+      spyOn(this.DummyReportService, 'dummyCallMetricsData').and.returnValue(_.cloneDeep(dummyData.callMetrics));
+      spyOn(this.DummyReportService, 'dummyEndpointData').and.returnValue(_.cloneDeep(dummyData.endpoints));
 
-      spyOn(GraphService, 'getActiveUserPopulationGraph').and.returnValue({
-        dataProvider: activeUserData.activePopResponse
-      });
-
-      spyOn(GraphService, 'getCallMetricsDonutChart').and.returnValue({
-        dataProvider: callMetricsData.callMetricsResponse
-      });
-
-      spyOn(DummyReportService, 'dummyActiveUserData').and.returnValue(dummyData.activeUser.one);
-      spyOn(DummyReportService, 'dummyActivePopulationData').and.returnValue(dummyData.activeUserPopulation);
-      spyOn(DummyReportService, 'dummyMediaQualityData').and.returnValue(dummyData.mediaQuality.one);
-      spyOn(DummyReportService, 'dummyCallMetricsData').and.returnValue(dummyData.callMetrics);
-      spyOn(DummyReportService, 'dummyEndpointData').and.returnValue(dummyData.endpoints);
-
-      controller = $controller('PartnerReportCtrl', {
+      controller = this.$controller('PartnerReportCtrl', {
         $scope: $scope,
-        $translate: $translate,
-        $q: $q,
-        ReportService: ReportService,
-        GraphService: GraphService,
-        DummyReportService: DummyReportService,
+        $timeout: this.$timeout,
+        $q: this.$q,
+        ReportService: this.ReportService,
+        GraphService: this.GraphService,
+        DummyReportService: this.DummyReportService,
         Authinfo: Authinfo
       });
       $scope.$apply();
-    }));
-
-    describe('Initializing Controller', function () {
-      it('should be created successfully and all expected calls completed', function () {
-        expect(controller).toBeDefined();
-
-        expect(DummyReportService.dummyActiveUserData).toHaveBeenCalled();
-        expect(DummyReportService.dummyActivePopulationData).toHaveBeenCalled();
-        expect(DummyReportService.dummyMediaQualityData).toHaveBeenCalled();
-        expect(DummyReportService.dummyCallMetricsData).toHaveBeenCalled();
-        expect(DummyReportService.dummyEndpointData).toHaveBeenCalled();
-
-        expect(ReportService.getOverallActiveUserData).toHaveBeenCalled();
-        expect(ReportService.getActiveUserData).toHaveBeenCalled();
-        expect(ReportService.getActiveTableData).toHaveBeenCalled();
-        expect(ReportService.getCustomerList).toHaveBeenCalled();
-        expect(ReportService.getMediaQualityMetrics).toHaveBeenCalled();
-        expect(ReportService.getRegisteredEndpoints).toHaveBeenCalled();
-
-        expect(GraphService.getActiveUsersGraph).toHaveBeenCalled();
-        expect(GraphService.getMediaQualityGraph).toHaveBeenCalled();
-        expect(GraphService.getActiveUserPopulationGraph).toHaveBeenCalled();
-        expect(GraphService.getCallMetricsDonutChart).toHaveBeenCalled();
-      });
-
-      it('should set all page variables', function () {
-        expect(controller.showEngagement).toEqual(true);
-        expect(controller.showQuality).toEqual(true);
-
-        expect(controller.customerPlaceholder).toEqual('reportsPage.customerSelect');
-        expect(controller.customerSingular).toEqual('reportsPage.customer');
-        expect(controller.customerPlural).toEqual('reportsPage.customers');
-        expect(controller.customerMax).toEqual(5);
-        expect(controller.customerOptions).toEqual(customerData.customerOptions);
-        expect(controller.customerSelected).toEqual(customerData.customerOptions);
-
-        expect(controller.activeUsersRefresh).toEqual('set');
-        expect(controller.mostActiveRefresh).toEqual('set');
-        expect(controller.activeUserPopulationRefresh).toEqual('set');
-        expect(controller.showMostActiveUsers).toBeFalsy();
-        expect(controller.activeUserReverse).toBeTruthy();
-        expect(controller.activeUsersTotalPages).toEqual(4);
-        expect(controller.activeUserCurrentPage).toEqual(1);
-        expect(controller.activeUserPredicate).toEqual(activeUsersSort[4]);
-        expect(controller.activeButton).toEqual([1, 2, 3]);
-        expect(controller.mostActiveUsers).toEqual(activeUserData.mostActiveResponse);
-        expect(controller.displayMostActive).toBeTruthy();
-        expect(controller.showMostActiveUsers).toBeFalsy();
-
-        expect(controller.mediaQualityPopover).toEqual('mediaQuality.packetLossDefinition');
-        expect(controller.mediaQualityRefresh).toEqual('set');
-
-        expect(controller.callMetricsRefresh).toEqual('set');
-
-        expect(controller.endpointRefresh).toEqual('set');
-        expect(controller.endpointTable).toEqual(endpointTable);
-
-        expect(controller.timeOptions).toEqual(timeOptions);
-        expect(controller.timeSelected).toEqual(timeOptions[0]);
-      });
     });
 
-    describe('translate functions:', function () {
-      it('getHeader should translate with timeSelected.label', function () {
-        expect(controller.getHeader('header')).toEqual('header');
-        expect($translate.instant).toHaveBeenCalledWith('header', {
-          time: controller.timeSelected.label
-        });
-      });
+    it('should be created successfully and all expected calls completed', function () {
+      expect(controller).toBeDefined();
 
-      it('getDescription should translate with timeSelected.description', function () {
-        expect(controller.getDescription('description')).toEqual('description');
-        expect($translate.instant).toHaveBeenCalledWith('description', {
-          time: controller.timeSelected.description
-        });
-      });
+      expect(this.DummyReportService.dummyActiveUserData).toHaveBeenCalled();
+      expect(this.DummyReportService.dummyActivePopulationData).toHaveBeenCalled();
+      expect(this.DummyReportService.dummyMediaQualityData).toHaveBeenCalled();
+      expect(this.DummyReportService.dummyCallMetricsData).toHaveBeenCalled();
+      expect(this.DummyReportService.dummyEndpointData).toHaveBeenCalled();
+
+      expect(this.ReportService.getOverallActiveUserData).toHaveBeenCalled();
+      expect(this.ReportService.getActiveUserData).toHaveBeenCalled();
+      expect(this.ReportService.getActiveTableData).toHaveBeenCalled();
+      expect(this.ReportService.getCustomerList).toHaveBeenCalled();
+      expect(this.ReportService.getMediaQualityMetrics).toHaveBeenCalled();
+      expect(this.ReportService.getRegisteredEndpoints).toHaveBeenCalled();
+
+      expect(this.GraphService.getActiveUsersGraph).toHaveBeenCalled();
+      expect(this.GraphService.getMediaQualityGraph).toHaveBeenCalled();
+      expect(this.GraphService.getActiveUserPopulationGraph).toHaveBeenCalled();
+      expect(this.GraphService.getCallMetricsDonutChart).toHaveBeenCalled();
+
+      expect(this.$rootScope.$broadcast).toHaveBeenCalledWith(ctrlData.activeUserSecondaryOptions.broadcast);
     });
 
-    describe('activePage', function () {
-      it('should return true when called with the same value as activeUserCurrentPage', function () {
-        expect(controller.activePage(1)).toBeTruthy();
-      });
+    it('should set all page variables', function () {
+      var activeUserOptions = _.cloneDeep(ctrlData.activeUserOptions);
+      var activeUserSecondaryOptions = _.cloneDeep(ctrlData.activeUserSecondaryOptions);
+      var populationOptions = _.cloneDeep(ctrlData.populationOptions);
+      var mediaOptions = _.cloneDeep(ctrlData.mediaOptions);
+      var endpointOptions = _.cloneDeep(ctrlData.endpointOptions);
+      var callOptions = _.cloneDeep(ctrlData.callOptions);
+      activeUserOptions.table = undefined;
+      activeUserSecondaryOptions.table.data = _.cloneDeep(activeUserData.mostActiveResponse);
+      populationOptions.table = undefined;
+      mediaOptions.table = undefined;
+      endpointOptions.table.data = _.cloneDeep(endpointsData.registeredEndpointResponse);
+      callOptions.table = undefined;
 
-      it('should return false when called with a different value as activeUserCurrentPage', function () {
-        expect(controller.activePage(3)).toBeTruthy();
-      });
+      expect(controller.showEngagement).toEqual(true);
+      expect(controller.showQuality).toEqual(true);
+      expect(controller.allReports).toEqual(ctrlData.ALL);
+      expect(controller.engagement).toEqual(ctrlData.ENGAGEMENT);
+      expect(controller.quality).toEqual(ctrlData.QUALITY);
+
+      expect(controller.customerPlaceholder).toEqual('reportsPage.customerSelect');
+      expect(controller.customerSingular).toEqual('reportsPage.customer');
+      expect(controller.customerPlural).toEqual('reportsPage.customers');
+      expect(controller.customerMax).toEqual(5);
+      expect(controller.customerOptions).toEqual(customerData.customerOptions);
+      expect(controller.customerSelected).toEqual(customerData.customerOptions);
+
+      expect(controller.activeUserReportOptions).toEqual(activeUserOptions);
+      expect(controller.activeUserSecondaryReportOptions).toEqual(activeUserSecondaryOptions);
+      expect(controller.populationReportOptions).toEqual(populationOptions);
+      expect(controller.mediaReportOptions).toEqual(mediaOptions);
+      expect(controller.endpointReportOptions).toEqual(endpointOptions);
+      expect(controller.callMetricsReportOptions).toEqual(callOptions);
+
+      expect(controller.timeOptions).toEqual(timeOptions);
+      expect(controller.timeSelected).toEqual(timeOptions[0]);
     });
 
-    describe('changePage', function () {
-      it('should change the value of activeUserCurrentPage', function () {
-        controller.changePage(3);
-        expect(controller.activeUserCurrentPage).toEqual(3);
-      });
+    it('should resize page when resizeMostActive is called', function () {
+      expect(this.$timeout.calls.count()).toBe(15);
+      controller.resizeMostActive();
+      expect(this.$timeout.calls.count()).toBe(17);
     });
 
-    describe('isRefresh', function () {
-      it('should return true when sent "refresh"', function () {
-        expect(controller.isRefresh('refresh')).toBeTruthy();
-      });
+    it('should update all graphs when updateReports is called', function () {
+      controller.updateReports();
+      $scope.$apply();
 
-      it('should return false when sent "set" or "empty"', function () {
-        expect(controller.isRefresh('set')).toBeFalsy();
-        expect(controller.isRefresh('empty')).toBeFalsy();
-      });
+      expect(this.GraphService.getActiveUsersGraph.calls.mostRecent().args[0]).toEqual(_.cloneDeep(activeUserData.detailedResponse));
+      expect(this.GraphService.getMediaQualityGraph.calls.mostRecent().args[0]).toEqual(_.cloneDeep(mediaQualityData.mediaQualityResponse));
+      expect(this.GraphService.getActiveUserPopulationGraph.calls.mostRecent().args[0]).toEqual(_.cloneDeep(activeUserData.activePopResponse));
+      expect(this.GraphService.getCallMetricsDonutChart.calls.mostRecent().args[0]).toEqual(_.cloneDeep(callMetricsData.callMetricsResponse));
     });
 
-    describe('isEmpty', function () {
-      it('should return true when sent "empty"', function () {
-        expect(controller.isEmpty('empty')).toBeTruthy();
-      });
+    it('should change visible cards when showHideCards is used', function () {
+      controller.showHideCards(ctrlData.ENGAGEMENT);
+      expect(controller.showEngagement).toEqual(true);
+      expect(controller.showQuality).toEqual(false);
 
-      it('should return false when sent "set" or "refresh"', function () {
-        expect(controller.isEmpty('set')).toBeFalsy();
-        expect(controller.isEmpty('refresh')).toBeFalsy();
-      });
-    });
+      controller.showHideCards(ctrlData.QUALITY);
+      expect(controller.showEngagement).toEqual(false);
+      expect(controller.showQuality).toEqual(true);
 
-    describe('mostActiveSort', function () {
-      it('should sort by userName', function () {
-        controller.mostActiveSort(0);
-        expect(controller.activeUserPredicate).toBe(activeUsersSort[0]);
-        expect(controller.activeUserReverse).toBeFalsy();
-      });
-
-      it('should sort by orgName', function () {
-        controller.mostActiveSort(1);
-        expect(controller.activeUserPredicate).toBe(activeUsersSort[1]);
-        expect(controller.activeUserReverse).toBeFalsy();
-      });
-
-      it('should sort by calls', function () {
-        controller.mostActiveSort(2);
-        expect(controller.activeUserPredicate).toBe(activeUsersSort[2]);
-        expect(controller.activeUserReverse).toBeTruthy();
-      });
-
-      it('should sort by messages', function () {
-        controller.mostActiveSort(3);
-        expect(controller.activeUserPredicate).toBe(activeUsersSort[3]);
-        expect(controller.activeUserReverse).toBeTruthy();
-      });
-    });
-
-    describe('Most Active Paging', function () {
-      it('pageForward should change carousel button numbers', function () {
-        controller.activeUsersTotalPages = 4;
-        controller.activeUserCurrentPage = 1;
-
-        controller.pageForward();
-        expect(controller.activeButton[0]).toBe(1);
-        expect(controller.activeButton[1]).toBe(2);
-        expect(controller.activeButton[2]).toBe(3);
-        expect(controller.activeUserCurrentPage).toBe(2);
-
-        controller.pageForward();
-        expect(controller.activeButton[0]).toBe(2);
-        expect(controller.activeButton[1]).toBe(3);
-        expect(controller.activeButton[2]).toBe(4);
-        expect(controller.activeUserCurrentPage).toBe(3);
-      });
-
-      it('pageBackward should change carousel button numbers', function () {
-        controller.activeUsersTotalPages = 4;
-        controller.activeButton[0] = 2;
-        controller.activeButton[1] = 3;
-        controller.activeButton[2] = 4;
-        controller.activeUserCurrentPage = 3;
-
-        controller.pageBackward();
-        expect(controller.activeButton[0]).toBe(1);
-        expect(controller.activeButton[1]).toBe(2);
-        expect(controller.activeButton[2]).toBe(3);
-        expect(controller.activeUserCurrentPage).toBe(2);
-
-        controller.pageBackward();
-        expect(controller.activeButton[0]).toBe(1);
-        expect(controller.activeButton[1]).toBe(2);
-        expect(controller.activeButton[2]).toBe(3);
-        expect(controller.activeUserCurrentPage).toBe(1);
-      });
-    });
-
-    describe('updateReports', function () {
-      it('should update all graphs when updateReports is called', function () {
-        controller.updateReports();
-        $scope.$apply();
-
-        expect(GraphService.getActiveUsersGraph).toHaveBeenCalled();
-        expect(GraphService.getMediaQualityGraph).toHaveBeenCalled();
-        expect(GraphService.getActiveUserPopulationGraph).toHaveBeenCalled();
-        expect(GraphService.getCallMetricsDonutChart).toHaveBeenCalled();
-      });
+      controller.showHideCards(ctrlData.ALL);
+      expect(controller.showEngagement).toEqual(true);
+      expect(controller.showQuality).toEqual(true);
     });
   });
 
   describe('PartnerReportCtrl - Expected Empty Responses', function () {
-    var dummyEndpointTable = {
-      headers: endpointsData.headers,
-      data: dummyData.endpoints,
-      dummy: true
-    };
+    beforeEach(function () {
+      this.initModules('Core', 'Huron');
+      this.injectDependencies('$rootScope', '$controller', '$q', '$timeout', 'ReportService', 'GraphService', 'DummyReportService');
+      $scope = this.$rootScope.$new();
 
-    beforeEach(inject(function ($rootScope, $controller, _$q_, _$translate_, _ReportService_, _GraphService_, _DummyReportService_) {
-      $scope = $rootScope.$new();
-      $q = _$q_;
-      $translate = _$translate_;
-      ReportService = _ReportService_;
-      GraphService = _GraphService_;
-      DummyReportService = _DummyReportService_;
-
-      spyOn(ReportService, 'getOverallActiveUserData').and.returnValue($q.when({}));
-      spyOn(ReportService, 'getActiveUserData').and.returnValue($q.when({
+      spyOn(this.ReportService, 'getOverallActiveUserData').and.returnValue(this.$q.when({}));
+      spyOn(this.ReportService, 'getActiveUserData').and.returnValue(this.$q.when({
         graphData: [],
         isActiveUsers: false,
         popData: [],
         overallPopulation: 0
       }));
-      spyOn(ReportService, 'getActiveTableData').and.returnValue($q.when([]));
-      spyOn(ReportService, 'getCustomerList').and.returnValue($q.when([]));
-      spyOn(ReportService, 'getMediaQualityMetrics').and.returnValue($q.when([]));
-      spyOn(ReportService, 'getCallMetricsData').and.returnValue($q.when({
+      spyOn(this.ReportService, 'getActiveTableData').and.returnValue(this.$q.when([]));
+      spyOn(this.ReportService, 'getCustomerList').and.returnValue(this.$q.when([]));
+      spyOn(this.ReportService, 'getMediaQualityMetrics').and.returnValue(this.$q.when([]));
+      spyOn(this.ReportService, 'getCallMetricsData').and.returnValue(this.$q.when({
         dataProvider: [],
         displayData: {}
       }));
-      spyOn(ReportService, 'getRegisteredEndpoints').and.returnValue($q.when([]));
+      spyOn(this.ReportService, 'getRegisteredEndpoints').and.returnValue(this.$q.when([]));
 
-      spyOn(GraphService, 'getActiveUsersGraph').and.returnValue({
-        dataProvider: dummyData.activeUser.one
+      spyOn(this.GraphService, 'getActiveUsersGraph').and.returnValue({
+        dataProvider: _.cloneDeep(dummyData.activeUser.one)
+      });
+      spyOn(this.GraphService, 'getMediaQualityGraph').and.returnValue({
+        dataProvider: _.cloneDeep(dummyData.mediaQuality.one)
+      });
+      spyOn(this.GraphService, 'getActiveUserPopulationGraph').and.returnValue({
+        dataProvider: _.cloneDeep(dummyData.activeUserPopulation)
+      });
+      spyOn(this.GraphService, 'getCallMetricsDonutChart').and.returnValue({
+        dataProvider: _.cloneDeep(dummyData.callMetrics)
       });
 
-      spyOn(GraphService, 'getMediaQualityGraph').and.returnValue({
-        dataProvider: dummyData.mediaQuality.one
-      });
+      spyOn(this.DummyReportService, 'dummyActiveUserData').and.returnValue(_.cloneDeep(dummyData.activeUser.one));
+      spyOn(this.DummyReportService, 'dummyActivePopulationData').and.returnValue(_.cloneDeep(dummyData.activeUserPopulation));
+      spyOn(this.DummyReportService, 'dummyMediaQualityData').and.returnValue(_.cloneDeep(dummyData.mediaQuality.one));
+      spyOn(this.DummyReportService, 'dummyCallMetricsData').and.returnValue(_.cloneDeep(dummyData.callMetrics));
+      spyOn(this.DummyReportService, 'dummyEndpointData').and.returnValue(_.cloneDeep(dummyData.endpoints));
 
-      spyOn(GraphService, 'getActiveUserPopulationGraph').and.returnValue({
-        dataProvider: dummyData.activeUserPopulation
-      });
-
-      spyOn(GraphService, 'getCallMetricsDonutChart').and.returnValue({
-        dataProvider: dummyData.callMetrics
-      });
-
-      spyOn(DummyReportService, 'dummyActiveUserData').and.returnValue(dummyData.activeUser.one);
-      spyOn(DummyReportService, 'dummyActivePopulationData').and.returnValue(dummyData.activeUserPopulation);
-      spyOn(DummyReportService, 'dummyMediaQualityData').and.returnValue(dummyData.mediaQuality.one);
-      spyOn(DummyReportService, 'dummyCallMetricsData').and.returnValue(dummyData.callMetrics);
-      spyOn(DummyReportService, 'dummyEndpointData').and.returnValue(dummyData.endpoints);
-
-      controller = $controller('PartnerReportCtrl', {
+      controller = this.$controller('PartnerReportCtrl', {
         $scope: $scope,
-        $translate: $translate,
-        $q: $q,
-        ReportService: ReportService,
-        GraphService: GraphService,
-        DummyReportService: DummyReportService,
+        $timeout: this.$timeout,
+        $q: this.$q,
+        ReportService: this.ReportService,
+        GraphService: this.GraphService,
+        DummyReportService: this.DummyReportService,
         Authinfo: Authinfo
       });
       $scope.$apply();
-    }));
+    });
 
-    describe('Initializing Controller', function () {
-      it('should be created successfully and all expected calls completed', function () {
-        expect(controller).toBeDefined();
+    it('should be created successfully and all expected calls completed', function () {
+      expect(controller).toBeDefined();
 
-        expect(DummyReportService.dummyActiveUserData).toHaveBeenCalled();
-        expect(DummyReportService.dummyActivePopulationData).toHaveBeenCalled();
-        expect(DummyReportService.dummyMediaQualityData).toHaveBeenCalled();
-        expect(DummyReportService.dummyCallMetricsData).toHaveBeenCalled();
-        expect(DummyReportService.dummyEndpointData).toHaveBeenCalled();
+      expect(this.DummyReportService.dummyActiveUserData).toHaveBeenCalled();
+      expect(this.DummyReportService.dummyActivePopulationData).toHaveBeenCalled();
+      expect(this.DummyReportService.dummyMediaQualityData).toHaveBeenCalled();
+      expect(this.DummyReportService.dummyCallMetricsData).toHaveBeenCalled();
+      expect(this.DummyReportService.dummyEndpointData).toHaveBeenCalled();
 
-        expect(ReportService.getOverallActiveUserData).toHaveBeenCalled();
-        expect(ReportService.getActiveUserData).toHaveBeenCalled();
-        expect(ReportService.getActiveTableData).toHaveBeenCalled();
-        expect(ReportService.getCustomerList).toHaveBeenCalled();
-        expect(ReportService.getMediaQualityMetrics).toHaveBeenCalled();
-        expect(ReportService.getRegisteredEndpoints).toHaveBeenCalled();
+      expect(this.ReportService.getOverallActiveUserData).toHaveBeenCalled();
+      expect(this.ReportService.getActiveUserData).toHaveBeenCalled();
+      expect(this.ReportService.getActiveTableData).toHaveBeenCalled();
+      expect(this.ReportService.getCustomerList).toHaveBeenCalled();
+      expect(this.ReportService.getMediaQualityMetrics).toHaveBeenCalled();
+      expect(this.ReportService.getRegisteredEndpoints).toHaveBeenCalled();
 
-        expect(GraphService.getActiveUsersGraph).toHaveBeenCalled();
-        expect(GraphService.getMediaQualityGraph).toHaveBeenCalled();
-        expect(GraphService.getActiveUserPopulationGraph).toHaveBeenCalled();
-        expect(GraphService.getCallMetricsDonutChart).toHaveBeenCalled();
-      });
+      expect(this.GraphService.getActiveUsersGraph).toHaveBeenCalled();
+      expect(this.GraphService.getMediaQualityGraph).toHaveBeenCalled();
+      expect(this.GraphService.getActiveUserPopulationGraph).toHaveBeenCalled();
+      expect(this.GraphService.getCallMetricsDonutChart).toHaveBeenCalled();
+    });
 
-      it('should set all page variables', function () {
-        expect(controller.customerOptions).toEqual([customerData.customerOptions[3]]);
-        expect(controller.customerSelected).toEqual([customerData.customerOptions[3]]);
+    it('should set all page variables', function () {
+      var activeUserOptions = _.cloneDeep(ctrlData.activeUserOptions);
+      var activeUserSecondaryOptions = _.cloneDeep(ctrlData.activeUserSecondaryOptions);
+      var populationOptions = _.cloneDeep(ctrlData.populationOptions);
+      var mediaOptions = _.cloneDeep(ctrlData.mediaOptions);
+      var endpointOptions = _.cloneDeep(ctrlData.endpointOptions);
+      var callOptions = _.cloneDeep(ctrlData.callOptions);
+      activeUserOptions.state = ctrlData.EMPTY;
+      activeUserOptions.table = undefined;
+      activeUserSecondaryOptions.display = false;
+      activeUserSecondaryOptions.state = ctrlData.EMPTY;
+      activeUserSecondaryOptions.table.data = [];
+      populationOptions.state = ctrlData.EMPTY;
+      populationOptions.table = undefined;
+      mediaOptions.state = ctrlData.EMPTY;
+      mediaOptions.table = undefined;
+      endpointOptions.state = ctrlData.EMPTY;
+      endpointOptions.table.data = _.cloneDeep(dummyData.endpoints);
+      endpointOptions.table.dummy = true;
+      callOptions.state = ctrlData.EMPTY;
+      callOptions.table = undefined;
+      $scope.$apply();
 
-        expect(controller.activeUsersRefresh).toEqual('empty');
-        expect(controller.mostActiveRefresh).toEqual('empty');
-        expect(controller.activeUserPopulationRefresh).toEqual('empty');
-        expect(controller.activeUserReverse).toBeTruthy();
-        expect(controller.activeUsersTotalPages).toEqual(0);
-        expect(controller.mostActiveUsers).toEqual([]);
-        expect(controller.displayMostActive).toBeFalsy();
-
-        expect(controller.mediaQualityRefresh).toEqual('empty');
-        expect(controller.callMetricsRefresh).toEqual('empty');
-        expect(controller.endpointRefresh).toEqual('empty');
-        expect(controller.endpointTable).toEqual(dummyEndpointTable);
-      });
+      expect(controller.activeUserReportOptions).toEqual(activeUserOptions);
+      expect(controller.activeUserSecondaryReportOptions).toEqual(activeUserSecondaryOptions);
+      expect(controller.populationReportOptions).toEqual(populationOptions);
+      expect(controller.mediaReportOptions).toEqual(mediaOptions);
+      expect(controller.endpointReportOptions).toEqual(endpointOptions);
+      expect(controller.callMetricsReportOptions).toEqual(callOptions);
     });
   });
 });

@@ -1,15 +1,18 @@
-<div class="row">
+<div class="row timeline-report">
   <div class="columns full">
-    <div id="device-usage-timeline-chart" style="height: 400px; margin: 0 auto; margin-top: 1rem">
+    <div class="range-wrapper">
+      <input cs-input type="radio" ng-change="deviceUsage.rangeChange()" ng-model="deviceUsage.dateRange" id="{{range.id}}" name="" ng-value="::range.value" cs-input-label="{{::range.label}}" ng-repeat="range in deviceUsage.dateRanges">
+    </div>
+  </div>
+  <div class="columns full">
+    <div id="device-usage-timeline-chart" class="device-usage-timeline-chart">
     </div>
   </div>
   <div class="columns full">
     <div class="center" ng-show="deviceUsage.additionalInfo" style="margin: 0 auto;">
-        <span>Video count: {{deviceUsage.dayData.videCount}} | </span>
-        <span>Whiteboard count: {{deviceUsage.dayData.wbCount}} | </span>
-        <span>Shared count: {{deviceUsage.dayData.sharedCount}} | </span>
-        <span>Paired count: {{deviceUsage.dayData.pairedCount}} | </span>
-        <span>Device count: {{deviceUsage.dayData.devices.length}}</span>
+      <span>Video count: {{deviceUsage.dayData.videCount}} | </span>
+      <span>Paired count: {{deviceUsage.dayData.pairedCount}} | </span>
+      <span>Device count: {{deviceUsage.dayData.devices.length}}</span>
     </div>
   </div>
 </div>

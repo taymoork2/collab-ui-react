@@ -95,9 +95,7 @@
         }
         result[item.date].videCount += item.count;
         result[item.date].video += item.totalDuration;
-        result[item.date].wbCount += item.wbCount;
         result[item.date].pairedCount += item.pairedCount;
-        result[item.date].sharedCount += item.sharedCount;
         result[item.date].devices.push(item.deviceId);
         return result;
       }, {}).map(function (value, key) {
@@ -146,6 +144,7 @@
             'bulletSize': 10,
             'lineColor': chartColors.primaryColorDarker
           },
+          /*
           {
             'bullet': 'diamond',
             'id': 'whiteboarding',
@@ -155,6 +154,7 @@
             'bulletSize': 6,
             'lineColor': chartColors.primaryColorLight
           }
+          */
         ],
         'guides': [
 

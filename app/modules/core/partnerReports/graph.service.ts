@@ -18,7 +18,7 @@ export class GraphService {
   private START: string = 'start';
 
   // Chart locators
-  private ACTIVE_USERS_DIV: string = 'activeUserChart';
+  private ACTIVE_USERS_DIV: string = 'activeUsersChart';
   private MEDIA_QUALITY_DIV: string = 'mediaQualityChart';
   private ACTIVE_POP_DIV: string = 'userPopulationChart';
   private CALL_METRICS_DIV: string = 'callMetricsChart';
