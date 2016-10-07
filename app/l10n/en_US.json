@@ -1030,7 +1030,8 @@
     "error": "Error",
     "turnOff": "Turn Off",
     "overview": "Overview",
-    "notAvailable": "N/A"
+    "notAvailable": "N/A",
+    "ciscoCollaborationCloud": "Cisco Collaboration Cloud"
   },
   "notifications": {
     "success": "Success notifications",
@@ -1612,7 +1613,7 @@
       "upgradeDone": "Upgrade completed!",
       "upToDate": "{{connectorType}} is up to date on this cluster.",
       "upgradePossible": "A new version is available for {{connectorType}}: {{availableVersion}}.",
-      "upgradeWarning": "This cluster has one or more offline nodes. It is recommended to bring all nodes online before initiating an upgrade."
+      "upgradeWarning": "This cluster has one or more nodes where {{ManagementConnector}} is not sending updates to {{CiscoCollaborationCloud}}. It is recommended to bring {{ManagementConnector}} online before initiating an upgrade."
     },
     "expresswayClusterSettings": {
       "pageTitle": "{{clusterName}} settings",
