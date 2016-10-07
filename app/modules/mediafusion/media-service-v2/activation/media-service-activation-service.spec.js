@@ -92,7 +92,7 @@ describe('MediaServiceActivationV2', function () {
     $httpBackend.flush();
   });
 
-  it('MediaServiceActivationV2 setServiceEnabled should be called for enableMediaService', function () {
+  xit('MediaServiceActivationV2 setServiceEnabled should be called for enableMediaService', function () {
     spyOn(Service, 'setServiceEnabled').and.callThrough();
     Service.enableMediaService();
     expect(Service.setServiceEnabled).toHaveBeenCalled();
@@ -116,7 +116,7 @@ describe('MediaServiceActivationV2', function () {
     expect(FusionClusterService.serviceIsSetUp).not.toHaveBeenCalled();
   });
 
-  it('should disable orpheus for mediafusion org', function () {
+  xit('should disable orpheus for mediafusion org', function () {
     spyOn(Service, 'getUserIdentityOrgToMediaAgentOrgMapping').and.returnValue($q.when(
       [{
         statusCode: 0,

@@ -64,7 +64,7 @@
 
 
     function enableMediaService(serviceId) {
-      this.setServiceEnabled(serviceId, true).then(
+      setServiceEnabled(serviceId, true).then(
         function success() {
           setisMediaServiceEnabled(true);
           enableOrpheusForMediaFusion();
@@ -75,7 +75,7 @@
     }
 
     var enableOrpheusForMediaFusion = function () {
-      this.getUserIdentityOrgToMediaAgentOrgMapping().then(
+      getUserIdentityOrgToMediaAgentOrgMapping().then(
         function success(response) {
           var mediaAgentOrgIdsArray = [];
           var orgId = Authinfo.getOrgId();
@@ -138,7 +138,7 @@
     };
 
     var disableOrpheusForMediaFusion = function () {
-      this.getUserIdentityOrgToMediaAgentOrgMapping().then(
+      getUserIdentityOrgToMediaAgentOrgMapping().then(
         function success(response) {
           var mediaAgentOrgIdsArray = [];
           var orgId = Authinfo.getOrgId();
@@ -151,7 +151,7 @@
           mediaAgentOrgIdsArray.splice(index, 1);
 
           if (mediaAgentOrgIdsArray.length > 0) {
-            this.setUserIdentityOrgToMediaAgentOrgMapping(mediaAgentOrgIdsArray).then(
+            setUserIdentityOrgToMediaAgentOrgMapping(mediaAgentOrgIdsArray).then(
               function success() {},
               function error(errorResponse) {
                 Notification.error('mediaFusion.mediaAgentOrgMappingFailure', {
@@ -159,7 +159,7 @@
                 });
               });
           } else {
-            this.deleteUserIdentityOrgToMediaAgentOrgMapping(mediaAgentOrgIdsArray).then(
+            deleteUserIdentityOrgToMediaAgentOrgMapping(mediaAgentOrgIdsArray).then(
               function success() {},
               function error(errorResponse) {
                 Notification.error('mediaFusion.mediaAgentOrgMappingFailure', {
