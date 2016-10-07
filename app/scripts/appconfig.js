@@ -1547,7 +1547,7 @@
           .state('place-overview.communication.speedDials', {
             templateProvider: /* @ngInject */ function ($stateParams) {
               var ownerId = _.get($stateParams.currentPlace, 'cisUuid');
-              return '<uc-speed-dial owner-type="place" owner-id="' + ownerId + '"></uc-speed-dial>';
+              return '<uc-speed-dial owner-type="places" owner-id="' + ownerId + '"></uc-speed-dial>';
             },
             data: {
               displayName: 'Speed Dials'
