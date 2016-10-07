@@ -137,7 +137,9 @@
     vm.searchMostActive = searchMostActive;
     vm.deviceUpdate = deviceUpdate;
     vm.getDescription = getDescription;
+    vm.getAltDescription = getAltDescription;
     vm.getHeader = getHeader;
+    vm.getAltHeader = getAltHeader;
     vm.goToUsersTab = goToUsersTab;
 
     // Graph data status checks
@@ -156,7 +158,7 @@
     // Controls for Most Active Users Table
     vm.mostActiveUserSwitch = function () {
       vm.showMostActiveUsers = !vm.showMostActiveUsers;
-      resizeCards();
+      resize(0);
     };
 
     vm.activePage = function (num) {
@@ -183,7 +185,7 @@
         vm.activeButton[2] = (num + 1);
       }
       vm.activeUserCurrentPage = num;
-      resizeCards();
+      resize(0);
     };
 
     vm.pageForward = function () {
@@ -251,23 +253,10 @@
       setDeviceData();
     }
 
-    function resizeCards() {
-      $timeout(function () {
-        $('.cs-card-layout').masonry('destroy');
-        $('.cs-card-layout').masonry({
-          itemSelector: '.cs-card',
-          columnWidth: '.cs-card',
-          isResizable: true,
-          percentPosition: true
-        });
-      }, 0);
-    }
-
-    function delayedResize() {
-      // delayed resize necessary to fix any overlapping cards on smaller screens
+    function resize(delay) {
       $timeout(function () {
         $('.cs-card-layout').masonry('layout');
-      }, 500);
+      }, delay);
     }
 
     function resetCards(filter) {
@@ -280,8 +269,7 @@
         if (filter === vm.allReports || filter === vm.quality) {
           vm.displayQuality = true;
         }
-        resizeCards();
-        delayedResize();
+        resize(500);
         vm.currentFilter = filter;
       }
     }
@@ -292,10 +280,30 @@
       });
     }
 
+    function getAltDescription(text) {
+      if (vm.timeSelected.value === vm.timeOptions[2].value && vm.displayActiveLineGraph) {
+        return $translate.instant(text, {
+          time: $translate.instant('reportsPage.lastTwelveWeeks2')
+        });
+      } else {
+        return getDescription(text);
+      }
+    }
+
     function getHeader(text) {
       return $translate.instant(text, {
         time: vm.timeSelected.label
       });
+    }
+
+    function getAltHeader(text) {
+      if (vm.timeSelected.value === vm.timeOptions[2].value && vm.displayActiveLineGraph) {
+        return $translate.instant(text, {
+          time: $translate.instant('reportsPage.lastTwelveWeeks')
+        });
+      } else {
+        return getHeader(text);
+      }
     }
 
     function goToUsersTab() {
@@ -310,7 +318,7 @@
       setDeviceGraph(DummyCustomerReportService.dummyDeviceData(vm.timeSelected));
       setMediaGraph(DummyCustomerReportService.dummyMediaData(vm.timeSelected));
 
-      resizeCards();
+      resize(0);
     }
 
     function setActiveGraph(data) {
@@ -348,10 +356,10 @@
           isActiveUsers = response.isActiveUsers;
           vm.activeUserStatus = SET;
         }
-        resizeCards();
+        resize(0);
       });
 
-      CustomerReportService.getMostActiveUserData(vm.timeSelected, vm.displayActiveLineGraph).then(function (response) {
+      CustomerReportService.getMostActiveUserData(vm.timeSelected).then(function (response) {
         if (response === ABORT) {
           return;
         } else if (response.error) {
@@ -367,7 +375,7 @@
           vm.activeButton = [1, 2, 3];
           vm.mostActiveUserStatus = SET;
         }
-        resizeCards();
+        resize(0);
       });
     }
 
@@ -384,7 +392,7 @@
         vm.activeButton = [1, 2, 3];
         vm.activeUsersTotalPages = Math.ceil(returnArray.length / 5);
         previousSearch = vm.searchField;
-        resizeCards();
+        resize(0);
       }
       return returnArray;
     }
