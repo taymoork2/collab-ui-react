@@ -6,7 +6,7 @@
     .controller('EditServiceCtrl', EditServiceCtrl);
 
   /* @ngInject */
-  function EditServiceCtrl($modalInstance, serviceObj) {
+  function EditServiceCtrl($modalInstance, serviceObj, statusService) {
     var vm = this;
     vm.closeAddModal = function () {
       $modalInstance.close();
@@ -17,7 +17,9 @@
     };
     vm.editService = function () {
       if (vm.validation()) {
-        $modalInstance.close();
+        statusService.modifyService(vm.service.serviceId, vm.service.serviceName, vm.service.description).then(function () {
+          $modalInstance.close();
+        });
       }
     };
   }

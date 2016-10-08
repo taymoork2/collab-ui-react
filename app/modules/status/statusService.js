@@ -31,6 +31,15 @@
         return $http.delete(deleteUrl).then(function (response) {
           return response.data;
         });
+      },
+      modifyService: function (serviceId, serviceName, description) {
+        var modifyUrl = url + "/" + serviceId;
+        return $http.put(modifyUrl, {
+          serviceName: serviceName,
+          description: description
+        }).then(function (response) {
+          return response.data;
+        });
       }
     };
   }
