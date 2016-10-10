@@ -104,8 +104,8 @@ describe('Service: Common Report Service', () => {
       expect(this.Notification.errorWithTrackingId).toHaveBeenCalledWith(defaults.timeoutError, message);
     });
 
-    it('should return abort message', function () {
-      expect(this.CommonReportService.returnErrorCheck(defaults.zeroError, message, dummyResponse)).toEqual(defaults.ABORT);
+    it('should not notify in cases where the API call is aborted', function () {
+      expect(this.CommonReportService.returnErrorCheck(defaults.zeroError, message, dummyResponse)).toEqual(dummyResponse);
       expect(this.Notification.errorWithTrackingId).not.toHaveBeenCalled();
     });
   });
