@@ -251,6 +251,7 @@ describe('Component: pgSetupAssistant', () => {
       let pg: IPagingGroup = <IPagingGroup>{
         name: name,
         number: number,
+        uuid: name, //TODO will hookup with real uuid when backend is ready
       };
       this.controller.name = name;
       this.controller.number = number;

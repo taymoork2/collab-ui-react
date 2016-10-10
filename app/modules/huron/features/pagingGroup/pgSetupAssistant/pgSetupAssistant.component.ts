@@ -143,6 +143,7 @@ class PgSetupAssistantCtrl implements ng.IComponentController {
     let pg: IPagingGroup = <IPagingGroup>{
       name: this.name,
       number: this.number,
+      uuid: this.name, //TODO: will hook up with real uuid
     };
     this.PagingGroupService.savePagingGroup(pg);
     this.$state.go('huronfeatures');

@@ -32,6 +32,7 @@ describe('Service: PagingGroupService', () => {
         type: 'internal',
         uuid: '1234',
       },
+      uuid: 'PG 1',
     };
     this.PagingGroupService.savePagingGroup(pg);
     expect(this.PagingGroupService.pagingGroups.length).toEqual(1);
@@ -41,6 +42,19 @@ describe('Service: PagingGroupService', () => {
     });
     this.$scope.$digest();
     pagingGroups.push(pg);
+    expect(pagingGroupsActual).toEqual(pagingGroups);
+  });
+
+  it('deletePagingGroup: should delete a paging group from the list', function () {
+    this.PagingGroupService.deletePagingGroup('PG 1');
+    expect(this.PagingGroupService.pagingGroups.length).toEqual(0);
+    let pagingGroupsActual = undefined;
+    this.PagingGroupService.getListOfPagingGroups().then(function(response) {
+      pagingGroupsActual = response;
+    });
+    this.$scope.$digest();
+    let index = _.findIndex(pagingGroups, { uuid: 'PG 1' });
+    pagingGroups.splice(index, 1);
     expect(pagingGroupsActual).toEqual(pagingGroups);
   });
 
