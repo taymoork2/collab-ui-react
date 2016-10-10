@@ -2336,6 +2336,9 @@
               detailsDependsList: null
             }
           })
+          .state('huronCallPickup', {
+            url: '/huronCallPickup',
+          })
           .state('huronCallPark', {
             url: '/huronCallPark',
             parent: 'hurondetails',
