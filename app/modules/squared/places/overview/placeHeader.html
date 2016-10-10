@@ -8,8 +8,9 @@
 
   <div class="header-info">
     <div class="header-info-wrap">
-      <sq-editable-input ng-if="$ctrl.currentPlace.type !== 'cloudberry'" ng-model="$ctrl.currentPlace.displayName" sq-save="$ctrl.save(newText)"></sq-editable-input>
-      <span ng-if="$ctrl.currentPlace.type === 'cloudberry'">{{$ctrl.currentPlace.displayName}}</span>
+      <div class="header-title">
+        <sq-editable-input ng-model="$ctrl.currentPlace.displayName" sq-save="$ctrl.save(newText)"></sq-editable-input>
+      </div>
     </div>
   </div>
 

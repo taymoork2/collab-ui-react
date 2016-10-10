@@ -26,6 +26,9 @@
       subscribe: hub.on,
       upgradeSoftware: upgradeSoftware,
       mergeRunningState: mergeRunningState,
+
+      // Internal functions exposed for easier testing.
+      _mergeAllAlarms: mergeAllAlarms,
     };
 
     return service;
@@ -47,15 +50,17 @@
       // we give a severity and a weight to all possible states
       // this has to be synced with the server generating the API consumed
       // by the general overview page (state of Call connectors, etc.)
-      var label, value;
+      var label, value, cssClass;
       switch (state) {
         case 'running':
           label = 'ok';
           value = 0;
+          cssClass = 'success';
           break;
         case 'not_installed':
           label = 'neutral';
           value = 1;
+          cssClass = 'disabled';
           break;
         case 'disabled':
         case 'downloading':
@@ -66,6 +71,7 @@
         case 'initializing':
           label = 'warning';
           value = 2;
+          cssClass = 'warning';
           break;
         case 'has_alarms':
         case 'offline':
@@ -75,11 +81,13 @@
         default:
           label = 'error';
           value = 3;
+          cssClass = 'danger';
       }
 
       return {
         label: label,
-        value: value
+        value: value,
+        cssClass: cssClass,
       };
     }
 
@@ -97,9 +105,32 @@
     }
 
     function mergeAllAlarms(connectors) {
-      return _.reduce(connectors, function (acc, connector) {
-        return acc.concat(connector.alarms);
-      }, []);
+      return _.chain(connectors)
+        .reduce(function (acc, connector) {
+          return acc.concat(connector.alarms);
+        }, [])
+        // This sort must happen before the uniqWith so that we keep the oldest alarm when
+        // finding duplicates (the order is preserved when running uniqWith, that is, the
+        // first entry of a set of duplicates is kept).
+        .sortBy(function (e) {
+          return e.firstReported;
+        })
+        .uniqWith(function (e1, e2) {
+          return e1.id === e2.id
+            && e1.title === e2.title
+            && e1.description === e2.description
+            && e1.severity === e2.severity
+            && e1.solution === e2.solution
+            && _.isEqual(e1.solutionReplacementValues, e2.solutionReplacementValues);
+        })
+        // We only sort by ID once we have pruned the duplicates, to save a few cycles.
+        // This sort makes sure refreshing the page will always keep things ordered the
+        // same way, even if a new alarm (with a 'younger' firstReportedBy) replaces an
+        // older alarm of the same ID.
+        .sortBy(function (e) {
+          return e.id;
+        })
+        .value();
     }
 
     function getUpgradeState(connectors) {

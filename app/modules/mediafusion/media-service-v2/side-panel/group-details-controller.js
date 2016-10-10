@@ -60,6 +60,7 @@
           return MediaClusterServiceV2.getCluster(vm.clusterDetail.id);
         }, function (newValue) {
           vm.cluster = newValue;
+          vm.nodeList = vm.cluster.connectors;
           var isUpgrading = vm.cluster.aggregates.upgradeState === 'upgrading';
           vm.softwareUpgrade = {
             provisionedVersion: vm.cluster.aggregates.provisioning.provisionedVersion,
@@ -67,6 +68,7 @@
             isUpgradeAvailable: vm.cluster.aggregates.upgradeAvailable,
             hasUpgradeWarning: vm.cluster.aggregates.upgradeWarning,
             numberOfHosts: _.size(vm.cluster.aggregates.hosts),
+            clusterStatus: vm.cluster.aggregates.state,
             showUpgradeWarning: function () {
               return vm.softwareUpgrade.isUpgradeAvailable && !vm.softwareUpgrade.hasUpgradeWarning;
             }

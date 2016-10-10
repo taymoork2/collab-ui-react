@@ -1,4 +1,5 @@
 /* globals $httpBackend, $rootScope, Authinfo, Config, Userservice, UrlConfig */
+
 'use strict';
 
 describe('User Service', function () {

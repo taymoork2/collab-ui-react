@@ -8,14 +8,14 @@
       <tr>
         <td translate="mediaFusion.alarms.severity"></td>
         <td>
-          <span ng-if="alarmCtrl.alarm.alarm.severity == 'warning' " class="yellow">
-            <i class="icon icon-circle status-indicator warning" />
+          <span ng-if="alarmCtrl.alarm.alarm.severity == 'warning'" class="yellow">
+            <i class="icon icon-circle status-indicator warning"></i>
           </span>
           <span ng-if="alarmCtrl.alarm.alarm.severity == 'critical'" class="red">
-            <i class="icon icon-circle status-indicator danger" />
+            <i class="icon icon-circle status-indicator danger"></i>
           </span>
           <span
-          ng-class="alarmCtrl.alarm.alarm.severity == 'warning' ? 'hercules-state-disabled' : 'hercules-state-alarm'">{{'mediaFusion.alarms.' + alarmCtrl.alarm.alarm.severity | translate}}
+          ng-class="alarmCtrl.alarm.alarm.severity == 'warning' ? 'disabled' : 'danger'">{{'mediaFusion.alarms.' + alarmCtrl.alarm.alarm.severity | translate}}
           </span>
         </td>
       </tr>
@@ -46,14 +46,14 @@
       <tr>
         <td translate="mediaFusion.alarms.severity"></td>
         <td>
-          <span ng-if="alarmCtrl.alarm.severity == 'warning' " class="yellow">
+          <span ng-if="alarmCtrl.alarm.severity == 'warning'" class="yellow">
             <i class="icon icon-circle status-indicator warning" />
           </span>
           <span ng-if="alarmCtrl.alarm.severity == 'critical'" class="red">
             <i class="icon icon-circle status-indicator danger" />
           </span>
           <span
-          ng-class="alarmCtrl.alarm.severity == 'warning' ? 'hercules-state-disabled' : 'hercules-state-alarm'">{{'mediaFusion.alarms.' + alarmCtrl.alarm.severity | translate}}
+          ng-class="alarmCtrl.alarm.severity == 'warning' ? 'disabled' : 'danger'">{{'mediaFusion.alarms.' + alarmCtrl.alarm.severity | translate}}
           </span>
         </td>
       </tr>

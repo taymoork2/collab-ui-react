@@ -13,15 +13,17 @@
     });
 
   /* @ngInject */
-  function ResourceGroupCardController($state, FusionUtils) {
+  function ResourceGroupCardController($state, FusionClusterStatesService, FusionUtils) {
     var ctrl = this;
 
     ctrl.showDetails = false;
     ctrl.openResourceGroupSettings = openResourceGroupSettings;
     ctrl.toggleDetails = toggleDetails;
-    ctrl.showWarningText = showWarningText;
+    ctrl.hasZeroClusters = hasZeroClusters;
+    ctrl.hasUsers = hasUsers;
     ctrl.$onChanges = $onChanges;
     ctrl.getLocalizedReleaseChannel = FusionUtils.getLocalizedReleaseChannel;
+    ctrl.getStatusCssClass = getStatusCssClass;
 
     function toggleDetails() {
       ctrl.showDetails = !ctrl.showDetails;
@@ -37,10 +39,20 @@
       $state.go('resource-group-settings', { id: ctrl.group.id });
     }
 
-    function showWarningText() {
+    function hasZeroClusters() {
       return ctrl.group.clusters.length === 0;
     }
 
-  }
+    function hasUsers() {
+      return ctrl.group.numberOfUsers > 0;
+    }
 
+    function getStatusCssClass() {
+      var connectors = _.chain(ctrl.group.clusters)
+        .map('connectors')
+        .flatten()
+        .value();
+      return FusionClusterStatesService.getMergedStateSeverity(connectors).cssClass;
+    }
+  }
 })();

@@ -113,11 +113,11 @@ describe('DomainManagementService', () => {
     let url = UrlConfig.getDomainManagementUrl('mockOrgId') + 'actions/DomainVerification/GetToken/invoke';
     let domain = 'super.example.com';
     let token = 'mock-token';
-    $httpBackend.expectPOST(url, data => {
+    $httpBackend.expectPOST(url, () => {
       return true;
     }).respond({ token: token });
 
-    DomainManagementService.addDomain(domain).then(res => {
+    DomainManagementService.addDomain(domain).then(() => {
       let list = DomainManagementService.domainList;
       let addedDomain: any = _.find(list, { text: domain });
       expect(addedDomain).not.toBeNull();
@@ -144,7 +144,7 @@ describe('DomainManagementService', () => {
       return true;
     }).respond({});
 
-    DomainManagementService.verifyDomain(domain).then(res => {
+    DomainManagementService.verifyDomain(domain).then(() => {
       let list = DomainManagementService.domainList;
       let addedDomain: any = _.find(list, { text: domain });
       expect(addedDomain).not.toBeNull();
@@ -162,7 +162,7 @@ describe('DomainManagementService', () => {
     //noinspection TypeScriptUnresolvedVariable
     DomainManagementService._domainList.push({ text: domain, status: 'pending', token: token });
 
-    DomainManagementService.verifyDomain(domain).then(res => {
+    DomainManagementService.verifyDomain(domain).then(() => {
       fail();
     }, err => {
       expect(err).toBeUndefined();
@@ -184,7 +184,7 @@ describe('DomainManagementService', () => {
       return true;
     }).respond(500, 'error-in-request', null, 'error');
 
-    DomainManagementService.verifyDomain(domain).then(res => {
+    DomainManagementService.verifyDomain(domain).then(() => {
       fail();
     }, err => {
       expect(err).toBeDefined();
@@ -216,7 +216,7 @@ describe('DomainManagementService', () => {
     DomainManagementService._domainList.push({ text: domain, status: 'pending' });
     DomainManagementService.unverifyDomain(domain).then(res => {
       expect(res).toBeUndefined();
-    }, err => {
+    }, () => {
       fail();
     });
     $httpBackend.flush();
@@ -230,7 +230,7 @@ describe('DomainManagementService', () => {
     let domain = false;
     //noinspection TypeScriptUnresolvedVariable
     DomainManagementService._domainList.push({ text: false, status: 'pending' });
-    DomainManagementService.unverifyDomain(domain).then(res => {
+    DomainManagementService.unverifyDomain(domain).then(() => {
       fail();
     }, err => {
       expect(err).toBeUndefined();
@@ -259,7 +259,7 @@ describe('DomainManagementService', () => {
 
     //noinspection TypeScriptUnresolvedVariable
     DomainManagementService._domainList.push({ text: domain, status: 'pending' });
-    DomainManagementService.unverifyDomain(domain).then(res => {
+    DomainManagementService.unverifyDomain(domain).then(() => {
       fail();
 
     }, err => {
@@ -294,7 +294,7 @@ describe('DomainManagementService', () => {
 
     DomainManagementService.unverifyDomain(domain).then(res => {
       expect(res).toBeUndefined();
-    }, err => {
+    }, () => {
       fail();
     });
     $httpBackend.flush();

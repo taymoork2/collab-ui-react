@@ -11,7 +11,37 @@
 
     var USSUrl = UrlConfig.getUssUrl() + 'uss/api/v1';
 
-    var fetchStatusesSummary = function () {
+    var hub = CsdmHubFactory.create();
+
+    var service = {
+      getStatusesForUser: getStatusesForUser,
+      decorateWithStatus: decorateWithStatus,
+      getOrg: getOrg,
+      updateOrg: updateOrg,
+      getStatusesSummary: getStatusesSummary,
+      getStatuses: getStatuses,
+      subscribeStatusesSummary: hub.on,
+      getStatusesForUserInOrg: getStatusesForUserInOrg,
+      extractSummaryForAService: extractSummaryForAService,
+      getUserProps: getUserProps,
+      updateUserProps: updateUserProps,
+      getAllUserProps: getAllUserProps,
+      updateBulkUserProps: updateBulkUserProps,
+      removeAllUsersFromResourceGroup: removeAllUsersFromResourceGroup,
+      refreshEntitlementsForUser: refreshEntitlementsForUser,
+      getUserCountFromResourceGroup: getUserCountFromResourceGroup,
+    };
+
+    CsdmPoller.create(fetchStatusesSummary, hub);
+
+    return service;
+
+    function statusesParameterRequestString(serviceId, state, offset, limit) {
+      var statefilter = state ? "&state=" + state : "";
+      return 'serviceId=' + serviceId + statefilter + '&offset=' + offset + '&limit=' + limit + '&entitled=true';
+    }
+
+    function fetchStatusesSummary() {
       return $http
         .get(USSUrl + '/orgs/' + Authinfo.getOrgId() + '/userStatuses/summary')
         .then(function (res) {
@@ -38,15 +68,7 @@
           });
           cachedUserStatusSummary = summary;
         });
-    };
-
-    var hub = CsdmHubFactory.create();
-    CsdmPoller.create(fetchStatusesSummary, hub);
-
-    var statusesParameterRequestString = function (serviceId, state, offset, limit) {
-      var statefilter = state ? "&state=" + state : "";
-      return 'serviceId=' + serviceId + statefilter + '&offset=' + offset + '&limit=' + limit + '&entitled=true';
-    };
+    }
 
     function extractData(res) {
       return res.data;
@@ -142,21 +164,22 @@
         .then(extractUserProps);
     }
 
-    return {
-      getStatusesForUser: getStatusesForUser,
-      decorateWithStatus: decorateWithStatus,
-      getOrg: getOrg,
-      updateOrg: updateOrg,
-      getStatusesSummary: getStatusesSummary,
-      getStatuses: getStatuses,
-      subscribeStatusesSummary: hub.on,
-      getStatusesForUserInOrg: getStatusesForUserInOrg,
-      extractSummaryForAService: extractSummaryForAService,
-      getUserProps: getUserProps,
-      updateUserProps: updateUserProps,
-      getAllUserProps: getAllUserProps,
-      updateBulkUserProps: updateBulkUserProps
-    };
-  }
+    function removeAllUsersFromResourceGroup(resourceGroupId) {
+      return $http
+        .post(USSUrl + '/orgs/' + Authinfo.getOrgId() + '/actions/removeAllUsersFromResourceGroup/invoke?resourceGroupId=' + resourceGroupId)
+        .then(extractData);
+    }
 
+    function refreshEntitlementsForUser(userId, orgId) {
+      return $http
+        .post(USSUrl + '/userStatuses/actions/refreshEntitlementsForUser/invoke?orgId=' + (orgId || Authinfo.getOrgId()) + '&userId=' + userId)
+        .then(extractData);
+    }
+
+    function getUserCountFromResourceGroup(resourceGroupId, orgId) {
+      return $http
+        .get(USSUrl + '/orgs/' + (orgId || Authinfo.getOrgId()) + '/userProps/count?containingResourceGroupId=' + resourceGroupId)
+        .then(extractData);
+    }
+  }
 }());

@@ -1,6 +1,6 @@
 namespace globalsettings {
   export class PrivacySettingController {
-    private _allowReadOnlyAccess: boolean = undefined;
+    private _allowReadOnlyAccess: boolean;
     public disableAllowReadOnlyAccessCheckbox: boolean = true;
     private orgId;
     private _allowCrashLogUpload = false;
@@ -14,21 +14,21 @@ namespace globalsettings {
       }, this.orgId, false);
     }
 
-    public orgDataLoaded({ success: success = false, orgSettings: settings = undefined } = {
+    public orgDataLoaded({ success = false, orgSettings = undefined }: { success: boolean; orgSettings: any } = {
       success: false,
       orgSettings: undefined,
     }) {
       if (success) {
         this.disableAllowReadOnlyAccessCheckbox = false;
 
-        if (!_.isUndefined(settings.allowReadOnlyAccess)) {
-          this._allowReadOnlyAccess = settings.allowReadOnlyAccess;
+        if (!_.isUndefined(orgSettings.allowReadOnlyAccess)) {
+          this._allowReadOnlyAccess = orgSettings.allowReadOnlyAccess;
         } else {
           this._allowReadOnlyAccess = true;
         }
 
-        if (!_.isUndefined(settings.allowCrashLogUpload)) {
-          this._allowCrashLogUpload = settings.allowCrashLogUpload;
+        if (!_.isUndefined(orgSettings.allowCrashLogUpload)) {
+          this._allowCrashLogUpload = orgSettings.allowCrashLogUpload;
         } else {
           this._allowCrashLogUpload = false;
         }

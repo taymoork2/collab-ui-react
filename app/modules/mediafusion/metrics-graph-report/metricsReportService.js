@@ -1,5 +1,6 @@
 (function () {
   'use strict';
+
   angular.module('Mediafusion').service('MetricsReportService', MetricsReportService);
   /* @ngInject */
   function MetricsReportService($http, $translate, $q, Authinfo, Notification, Log, chartColors, UrlConfig) {
@@ -8,7 +9,6 @@
     var callVolumeUrl = '/call_volume';
     var clusterAvailability = '/clusters_availability';
     var agg_availability = '/agg_availability';
-    var agg_cpu_utilization = '/agg_cpu_utilization';
     var total_calls = '/total_calls';
 
     var cacheValue = (parseInt(moment.utc().format('H'), 10) >= 8);
@@ -19,7 +19,6 @@
     var activePromiseForAvailability = null;
     var activePromiseForUtilization = null;
     var activePromiseForClusterAvailability = null;
-    var activePromiseForCPUUtilization = null;
     var activePromiseForTotalCalls = null;
 
     return {
@@ -27,15 +26,14 @@
       getCallVolumeData: getCallVolumeData,
       getAvailabilityData: getAvailabilityData,
       getClusterAvailabilityData: getClusterAvailabilityData,
-      getCPUUtilizationData: getCPUUtilizationData,
       getTotalCallsData: getTotalCallsData
     };
 
     function getUtilizationData(time, cluster) {
-      if (activePromise !== null && angular.isDefined(activePromise)) {
-        activePromise.resolve(ABORT);
+      if (activePromiseForUtilization !== null && angular.isDefined(activePromiseForUtilization)) {
+        activePromiseForUtilization.resolve(ABORT);
       }
-      activePromise = $q.defer();
+      activePromiseForUtilization = $q.defer();
       var returnData = {
         graphData: [],
         graphs: []
@@ -106,24 +104,6 @@
         }
       }, function (response) {
         return returnErrorCheck(response, 'Aggeregated Cluster Availability data not returned for customer.', $translate.instant('mediaFusion.metrics.overallClusterAvailabilityGraphError'), returnData);
-      });
-    }
-
-    function getCPUUtilizationData(time, cluster) {
-      // cancel any currently running jobs
-      if (activePromiseForCPUUtilization !== null && angular.isDefined(activePromiseForCPUUtilization)) {
-        activePromiseForCPUUtilization.resolve(ABORT);
-      }
-      activePromiseForCPUUtilization = $q.defer();
-      var returnData = [];
-      return getService(urlBase + getQuerys(agg_cpu_utilization, cluster, time), activePromiseForCPUUtilization).then(function (response) {
-        if (angular.isDefined(response) && angular.isDefined(response.data)) {
-          return response;
-        } else {
-          return returnData;
-        }
-      }, function (response) {
-        return returnErrorCheck(response, 'Aggeregated CPU Utilization data not returned for customer.', $translate.instant('mediaFusion.metrics.overallAverageUtilizationGraphError'), returnData);
       });
     }
 

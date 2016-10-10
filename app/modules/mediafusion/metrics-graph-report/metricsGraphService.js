@@ -1,5 +1,6 @@
 (function () {
   'use strict';
+
   angular.module('Mediafusion').service('MetricsGraphService', MetricsGraphService);
   /* @ngInject */
   function MetricsGraphService($translate, CommonMetricsGraphService, chartColors, $window) {
@@ -11,7 +12,6 @@
     var LEGEND = 'legend';
     // variables for the call volume section
     var callVolumediv = 'callVolumediv';
-    // var callVolumeBalloonText = '<span class="graph-text">' + $translate.instant('activeUsers.registeredUsers') + ' <span class="graph-number">[[totalRegisteredUsers]]</span></span><br><span class="graph-text">' + $translate.instant('activeUsers.active') + ' <span class="graph-number">[[percentage]]%</span></span>';
     var callLocalTitle = $translate.instant('mediaFusion.metrics.callLocal');
     var callRejectTitle = $translate.instant('mediaFusion.metrics.callReject');
     var callLocalClusterTitle = $translate.instant('mediaFusion.metrics.callLocalCluster');
@@ -32,6 +32,14 @@
     var baloontitles = [];
     var titles = [];
     var allClusters = $translate.instant('mediaFusion.metrics.allclusters');
+    var timeStamp = $translate.instant('mediaFusion.metrics.timeStamp');
+    var startTime = $translate.instant('mediaFusion.metrics.startTime');
+    var endTime = $translate.instant('mediaFusion.metrics.endTime');
+    var nodes = $translate.instant('mediaFusion.metrics.nodes');
+    var node = $translate.instant('mediaFusion.metrics.node');
+    var availabilityStatus = $translate.instant('mediaFusion.metrics.availabilityStatus');
+    var availabilityOfHost = $translate.instant('mediaFusion.metrics.availabilityOfHost');
+    var clusterTitle = $translate.instant('mediaFusion.metrics.clusterTitle');
     var availabilityLegendCluster = [{ 'title': availableTitle, 'color': chartColors.metricDarkGreen }, { 'title': unavailableTitle, 'color': chartColors.metricsRed }];
     var availabilityLegendAllcluster = [{ 'title': availableTitle, 'color': chartColors.metricDarkGreen }, { 'title': unavailableTitle, 'color': chartColors.metricsRed }, { 'title': partialTitle, 'color': chartColors.metricYellow }];
 
@@ -45,43 +53,6 @@
       baseVariables['export'] = {
         'enabled': true,
         'exportFields': fields,
-        'columnNames': columnNames,
-        'fileName': fileName,
-        'libs': {
-          'autoLoad': false
-        },
-        'menu': [{
-          'class': 'export-main',
-          'label': $translate.instant('reportsPage.downloadOptions'),
-          'menu': [{
-            'label': $translate.instant('reportsPage.saveAs'),
-            'title': $translate.instant('reportsPage.saveAs'),
-            'class': 'export-list',
-            'menu': ['PNG', 'JPG']
-          }, {
-            'label': $translate.instant('reportsPage.pdf'),
-            'title': $translate.instant('reportsPage.pdf'),
-            click: function () {
-              this.capture({}, function () {
-                this.toPDF({}, function (data) {
-                  $window.open(data, 'amCharts.pdf');
-                });
-              });
-            }
-          }, {
-            'class': 'export-list',
-            'label': $translate.instant('reportsPage.export'),
-            'title': $translate.instant('reportsPage.export'),
-            'menu': ['CSV', 'XLSX']
-          }]
-        }]
-      };
-      return baseVariables['export'];
-    }
-
-    function getBaseExportForUtilizationGraph(fileName, columnNames) {
-      baseVariables['export'] = {
-        'enabled': true,
         'columnNames': columnNames,
         'fileName': fileName,
         'libs': {
@@ -136,10 +107,10 @@
       //catAxis.equalSpacing = true;
       catAxis.axisAlpha = 0.5;
       catAxis.axisColor = '#1C1C1C';
-      catAxis.gridAlpha = 0.1;
+      catAxis.gridAlpha = 0.3;
       catAxis.minorGridAlpha = 0.1;
       catAxis.minorGridEnabled = false;
-      catAxis.minPeriod = "mm";
+      catAxis.minPeriod = 'mm';
       //catAxis.twoLineMode = true;
       var startDuration = 1;
       if (!data[0].balloon) {
@@ -147,29 +118,28 @@
       }
       var exportFields = ['active_calls', 'call_reject', 'timestamp'];
       var columnNames = {};
-      if (cluster === 'All Clusters') {
+      if (cluster === allClusters) {
         columnNames = {
-          'active_calls': 'Calls on premise',
-          'call_reject': 'Calls overflowed to the cloud',
-          'timestamp': 'Timestamp',
+          'active_calls': callLocalTitle,
+          'call_reject': callRejectTitle,
+          'timestamp': timeStamp,
         };
       } else {
         columnNames = {
-          'active_calls': 'Calls on premise',
-          'call_reject': 'Calls redirected to cloud',
-          'timestamp': 'Timestamp',
+          'active_calls': callLocalTitle,
+          'call_reject': callRedirectedClusterTitle,
+          'timestamp': timeStamp,
         };
       }
-      cluster = cluster.replace(/\s/g, "_");
-      daterange = daterange.replace(/\s/g, "_");
+      cluster = cluster.replace(/\s/g, '_');
+      daterange = daterange.replace(/\s/g, '_');
       var ExportFileName = 'MediaService_TotalCalls_' + cluster + '_' + daterange + '_' + new Date();
       var chartData = CommonMetricsGraphService.getBaseStackSerialGraph(data, startDuration, valueAxes, callVolumeGraphs(data, cluster), 'timestamp', catAxis, getBaseExportForGraph(exportFields, ExportFileName, columnNames));
       chartData.numberFormatter = CommonMetricsGraphService.getBaseVariable(NUMFORMAT);
       chartData.legend = CommonMetricsGraphService.getBaseVariable(LEGEND);
       chartData.legend.labelText = '[[title]]';
-
       var chart = AmCharts.makeChart(callVolumediv, chartData);
-      chart.addListener("rendered", zoomChart);
+      chart.addListener('rendered', zoomChart);
       zoomChart(chart);
       return chart;
     }
@@ -199,7 +169,7 @@
         graphs[i].legendColor = secondaryColors[i];
         //graphs[i].showBalloon = data[0].balloon;
         graphs[i].showBalloon = data[0].balloon;
-        if (cluster === 'All Clusters') {
+        if (cluster === allClusters) {
           if (graphs[i].valueField === 'active_calls') {
             graphs[i].balloonText = '<span class="graph-text">' + $translate.instant(baloontitles[i]) + ' <span class="graph-number">[[active_calls]]</span></span>';
           } else {
@@ -266,7 +236,18 @@
       catAxis.gridAlpha = 0.1;
       catAxis.minorGridAlpha = 0.1;
       catAxis.minorGridEnabled = false;
-      catAxis.minPeriod = "mm";
+      var dateLabel = daterange.label;
+      var dateValue = daterange.value;
+
+      if (dateValue === 0) {
+        catAxis.minPeriod = '10mm';
+      } else if (dateValue === 1) {
+        catAxis.minPeriod = 'hh';
+      } else if (dateValue === 2) {
+        catAxis.minPeriod = '3hh';
+      } else {
+        catAxis.minPeriod = '8hh';
+      }
 
       var startDuration = 1;
       if (!data[0].balloon) {
@@ -274,8 +255,9 @@
       }
 
       var columnNames = {
-        'time': 'Time'
+        'time': timeStamp
       };
+      var exportFields = [];
       angular.forEach(graphs, function (value) {
         if (value.title !== average_utilzation) {
           columnNames[value.valueField] = value.title + ' ' + 'Utilization';
@@ -283,16 +265,19 @@
           columnNames[value.valueField] = value.title;
         }
       });
-      cluster = cluster.replace(/\s/g, "_");
-      daterange = daterange.replace(/\s/g, "_");
-      var ExportFileName = 'MediaService_Utilization_' + cluster + '_' + daterange + '_' + new Date();
+      for (var key in columnNames) {
+        exportFields.push(key);
+      }
+      cluster = cluster.replace(/\s/g, '_');
+      dateLabel = dateLabel.replace(/\s/g, '_');
+      var ExportFileName = 'MediaService_Utilization_' + cluster + '_' + dateLabel + '_' + new Date();
 
-      var chartData = CommonMetricsGraphService.getBaseStackSerialGraph(data, startDuration, valueAxes, graphs, 'time', catAxis, getBaseExportForUtilizationGraph(ExportFileName, columnNames));
+      var chartData = CommonMetricsGraphService.getBaseStackSerialGraph(data, startDuration, valueAxes, graphs, 'time', catAxis, getBaseExportForGraph(exportFields, ExportFileName, columnNames));
       chartData.legend = CommonMetricsGraphService.getBaseVariable(LEGEND);
       chartData.legend.labelText = '[[title]]';
       chartData.legend.useGraphSettings = true;
       var chart = AmCharts.makeChart(utilizationdiv, chartData);
-      chart.addListener("rendered", zoomChart);
+      chart.addListener('rendered', zoomChart);
       zoomChart(chart);
       return chart;
     }
@@ -383,26 +368,26 @@
         });
       }
       var valueAxis = createValueAxis(data);
-      var exportFields = ['availability', 'nodes', 'startTime', 'endTime', 'category', 'task'];
+      var exportFields = ['startTime', 'endTime', 'nodes', 'availability', 'category'];
       var columnNames = {};
-      if (cluster === 'All Clusters') {
+      if (cluster === allClusters) {
         columnNames = {
-          'availability': 'Availability',
-          'startTime': 'Start Time',
-          'endTime': 'End Time',
-          'category': 'Cluster',
-          'nodes': 'Nodes'
+          'startTime': startTime,
+          'endTime': endTime,
+          'nodes': nodes,
+          'availability': availabilityStatus,
+          'category': clusterTitle,
         };
       } else {
         columnNames = {
-          'task': 'Availability',
-          'startTime': 'Start Time',
-          'endTime': 'End Time',
-          'category': 'Node'
+          'availability': availabilityOfHost,
+          'startTime': startTime,
+          'endTime': endTime,
+          'category': node,
         };
       }
-      cluster = cluster.replace(/\s/g, "_");
-      daterange = daterange.replace(/\s/g, "_");
+      cluster = cluster.replace(/\s/g, '_');
+      daterange = daterange.replace(/\s/g, '_');
       var ExportFileName = 'MediaService_Availability_' + cluster + '_' + daterange + '_' + new Date();
       var chartData = CommonMetricsGraphService.getGanttGraph(data.data[0].clusterCategories, valueAxis, getBaseExportForGraph(exportFields, ExportFileName, columnNames));
       chartData.legend = CommonMetricsGraphService.getBaseVariable(LEGEND);

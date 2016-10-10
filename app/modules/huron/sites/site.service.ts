@@ -47,7 +47,7 @@ export class HuronSiteService {
     private Authinfo,
     private HuronConfig
   ) {
-    this.huronSiteService = <ISiteResource>$resource(HuronConfig.getCmiUrl() + '/voice/customers/:customerId/sites/:siteId');
+    this.huronSiteService = <ISiteResource>this.$resource(this.HuronConfig.getCmiUrl() + '/voice/customers/:customerId/sites/:siteId');
   }
 
   public getSite(siteId: string): ng.IPromise<Site> {

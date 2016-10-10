@@ -1,5 +1,6 @@
 (function () {
   'use strict';
+
   angular
     .module('Sunlight')
     .factory('ConfigTemplateService', ConfigTemplateService)

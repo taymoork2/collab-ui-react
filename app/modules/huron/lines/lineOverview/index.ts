@@ -1,6 +1,6 @@
 import { LineOverviewComponent } from './lineOverview.component';
 import { LineOverviewService } from './lineOverview.service';
-import lineServiceModule from '../services';
+import lineService from '../services';
 import directoryNumber from '../../directoryNumber';
 import callForward from '../../callForward';
 import simultaneousCalls from '../../simultaneousCalls';
@@ -18,7 +18,7 @@ export default angular
     directoryNumber,
     callForward,
     simultaneousCalls,
-    lineServiceModule,
+    lineService,
     callerId,
     sharedLine,
     require('modules/core/config/config'),

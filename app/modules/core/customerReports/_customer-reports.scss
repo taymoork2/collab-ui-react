@@ -73,6 +73,11 @@
       font-family: $brand-font-cisco-TT-Light;
       font-size: rem-calc(22);
       text-align: left;
+      .icon-information {
+        position: relative;
+        top: rem-calc(3);
+        color: $gray-light-1;
+      }
     }
     .report-description {
       position: relative;
@@ -102,18 +107,6 @@
       margin-left: auto;
       margin-right: auto;
       z-index: 50;
-    }
-    .amExportButton {
-      left: calc(95% + .1rem);
-      ul, .export-main, .export-list {
-        overflow: visible;
-      }
-      .export-main {
-        padding-bottom: rem-calc(5);
-        ul {
-          padding: 0;
-        }
-      }
     }
     .graph-text {
       font-family: $brand-font-cisco-TT-Regular;
@@ -165,6 +158,16 @@
     .active-chart .amcharts-value-axis .amcharts-axis-label {
       opacity: 0;
       animation: graphAxisFade 2s ease-in-out 1 forwards;
+    }
+  }
+
+  .amcharts-export-menu .export-main {
+    overflow: visible;
+    ul {
+      padding: 0;
+      .export-list {
+        overflow: visible;
+      }
     }
   }
 }

@@ -243,6 +243,22 @@ describe('crUserCsvExport Component', function () {
       initController.apply(this);
     });
 
+    it('should register/unregister event handlers over lifecycle', function () {
+
+      var listeners = this.$rootScope.$$listeners;
+
+      // event handlers should be registered on rootScope
+      expect(_.isFunction(listeners['csv-download-request-started'][0])).toBeTruthy();
+      expect(_.isFunction(listeners['csv-download-request-completed'][0])).toBeTruthy();
+
+      this.vm.$onDestroy();
+
+      // event handlers should no longer be registered on root scope
+      expect(_.isFunction(listeners['csv-download-request-started'][0])).toBeFalsy();
+      expect(_.isFunction(listeners['csv-download-request-completed'][0])).toBeFalsy();
+
+    });
+
     it('should support downloadTemplate()', function () {
 
       expect(this.vm.isDownloading).toBeFalsy();

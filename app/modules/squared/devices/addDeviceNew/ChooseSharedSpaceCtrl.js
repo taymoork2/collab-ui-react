@@ -4,12 +4,12 @@
   angular.module('Core')
     .controller('ChooseSharedSpaceCtrl', ChooseSharedSpaceCtrl);
   /* @ngInject */
-  function ChooseSharedSpaceCtrl(Userservice, CsdmCodeService, CsdmPlaceService, CsdmHuronPlaceService, XhrNotificationService, $stateParams, $translate, Authinfo) {
+  function ChooseSharedSpaceCtrl(Userservice, CsdmDataModelService, CsdmHuronPlaceService, XhrNotificationService, $stateParams, $translate, Authinfo) {
     var vm = this;
     vm.wizardData = $stateParams.wizard.state().data;
 
     vm.onlyNew = function () {
-      return vm.wizardData.function == 'addPlace' || vm.wizardData.deviceType == 'cloudberry';
+      return vm.wizardData.function == 'addPlace';
     };
 
     vm.isNewCollapsed = !vm.onlyNew();
@@ -32,8 +32,8 @@
       if (!vm.wizardData.showPlaces) {
         return $translate.instant('addDeviceWizard.chooseSharedSpace.deviceInstalledInstructions');
       }
-      if (vm.onlyNew()) {
-        return $translate.instant('addDeviceWizard.chooseSharedSpace.newPlaceOnlyInstructions');
+      if (vm.wizardData.deviceType === 'huron') {
+        return $translate.instant('placesPage.placesDefinition');
       }
       return $translate.instant('addDeviceWizard.chooseSharedSpace.newPlaceInstructions');
     };
@@ -49,7 +49,7 @@
     function loadList() {
       if (vm.wizardData.showPlaces) {
         if (vm.wizardData.deviceType == 'cloudberry') {
-          CsdmPlaceService.getPlacesList().then(function (placesList) {
+          CsdmDataModelService.getPlacesMap().then(function (placesList) {
             vm.rooms = _(placesList).filter(function (place) {
               return _.isEmpty(place.devices);
             }).sortBy('displayName').value();
@@ -134,7 +134,7 @@
 
       if (vm.place) {
         if (vm.wizardData.deviceType === "cloudberry") {
-          CsdmCodeService
+          CsdmDataModelService
             .createCodeForExisting(vm.place.cisUuid)
             .then(success, error);
         } else {
@@ -144,9 +144,9 @@
         }
       } else {
         if (vm.wizardData.deviceType === "cloudberry") {
-          CsdmPlaceService.createCsdmPlace(vm.deviceName, vm.wizardData.deviceType).then(function (place) {
+          CsdmDataModelService.createCsdmPlace(vm.deviceName, vm.wizardData.deviceType).then(function (place) {
             vm.place = place;
-            CsdmCodeService
+            CsdmDataModelService
               .createCodeForExisting(place.cisUuid)
               .then(success, error);
           }, error);

@@ -1,4 +1,5 @@
 'use strict';
+
 describe('HelpdeskCardsService', function () {
   beforeEach(angular.mock.module('Squared'));
 
@@ -136,7 +137,8 @@ describe('HelpdeskCardsService', function () {
       expect(license.usage).toEqual(100);
       expect(card.voiceMailPrefix).toBe("4100");
       expect(card.outboundDialDigit).toBe("7");
-      expect(card.dialing).toBe("local");
+      expect(card.dialing).toEqual("helpdesk.dialingPlan.local");
+      expect(card.areaCode).toBe("940");
     });
 
     it('should return correct room systems card for org', function () {

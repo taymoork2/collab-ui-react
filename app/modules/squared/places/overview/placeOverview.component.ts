@@ -2,67 +2,73 @@ import { IFeature } from '../../../core/components/featureList/featureList.compo
 
 class PlaceOverview implements ng.IComponentController {
 
-  private _currentPlace;
-  private _csdmHuronUserDeviceService;
-  private _services: IFeature[] = [];
+  public services: IFeature[] = [];
+  public deviceList: Object = {};
 
-  get currentPlace() {
-    return this._currentPlace;
-  }
-
-  get services() {
-    return this._services;
-  }
+  private currentPlace;
+  private csdmHuronUserDeviceService;
 
   /* @ngInject */
   constructor(
-    private $state,
+    private $state: ng.ui.IStateService,
     private $stateParams,
+    private $translate: ng.translate.ITranslateService,
     private CsdmPlaceService,
     private CsdmHuronPlaceService,
     private CsdmHuronUserDeviceService,
-    private $translate,
-    private XhrNotificationService
+    private Authinfo,
+    private XhrNotificationService,
+    private CsdmCodeService,
+    private WizardFactory
   ) {
-    this._currentPlace = $stateParams.currentPlace;
-    this._csdmHuronUserDeviceService = CsdmHuronUserDeviceService.create(this._currentPlace.cisUuid);
+    this.currentPlace = this.$stateParams.currentPlace;
+    this.csdmHuronUserDeviceService = this.CsdmHuronUserDeviceService.create(this.currentPlace.cisUuid);
   }
 
   public $onInit(): void {
+    this.initDeviceList();
+    this.initServices();
+  }
+
+  private initServices(): void {
     if (this.hasEntitlement('ciscouc')) {
       let service: IFeature = {
         name: this.$translate.instant('onboardModal.call'),
         icon: this.$translate.instant('onboardModal.call'),
         state: 'communication',
         detail: this.$translate.instant('onboardModal.callFree'),
-        actionsAvailable: true,
+        actionAvailable: true,
       };
-      this._services.push(service);
+      this.services.push(service);
     }
+  }
+
+  private initDeviceList(): void {
+    this.deviceList = this.currentPlace.devices;
   }
 
   public save(newName: string) {
-    if (this._currentPlace.type === 'cloudberry') {
+    if (this.currentPlace.type === 'cloudberry') {
       return this.CsdmPlaceService
-        .updatePlaceName(this._currentPlace.url, newName)
+        .updatePlaceName(this.currentPlace.url, newName)
         .catch(this.XhrNotificationService.notify);
     }
     return this.CsdmHuronPlaceService
-      .updatePlaceName(this._currentPlace.url, newName)
+      .updatePlaceName(this.currentPlace.url, newName)
       .catch(this.XhrNotificationService.notify);
   }
 
-  public showDeviceDetails(device) {
+  public showDeviceDetails(device): void {
     this.$state.go('place-overview.csdmDevice', {
       currentDevice: device,
-      huronDeviceService: this._csdmHuronUserDeviceService,
+      huronDeviceService: this.csdmHuronUserDeviceService,
     });
   }
 
   private hasEntitlement(entitlement: string): boolean {
     let hasEntitlement = false;
-    if (this._currentPlace.entitlements) {
-      this._currentPlace.entitlements.forEach(element => {
+    if (this.currentPlace.entitlements) {
+      this.currentPlace.entitlements.forEach(element => {
         if (element === entitlement) {
           hasEntitlement = true;
         }
@@ -71,16 +77,61 @@ class PlaceOverview implements ng.IComponentController {
     return hasEntitlement;
   }
 
-  public serviceActions(feature) {
-    this.$state.go('place-overview.' + feature);
+  public clickService(feature: IFeature): void {
+    this.$state.go('place-overview.' + feature.state);
+  }
+
+  private success(code): void {
+    let wizardState = {
+      data: {
+        function: 'showCode',
+        accountType: 'shared',
+        showPlaces: true,
+        code: code,
+        deviceType: this.currentPlace.type,
+        deviceName: this.currentPlace.displayName,
+        cisUuid: this.Authinfo.getUserId(),
+        email:  this.Authinfo.getPrimaryEmail(),
+        displayName:  this.Authinfo.displayName,
+        organizationId:  this.Authinfo.getOrgId(),
+        title: 'addDeviceWizard.newCode',
+      },
+      history: [],
+      currentStateName: 'addDeviceFlow.showActivationCode',
+      wizardState: {
+        'addDeviceFlow.showActivationCode': {},
+      },
+    };
+    let wizard = this.WizardFactory.create(wizardState);
+    this.$state.go('addDeviceFlow.showActivationCode', {
+      wizard: wizard,
+    });
+  }
+
+  private error(err): void {
+    this.XhrNotificationService.notify(err);
+  }
+
+  public onGenerateOtpFn(): void {
+    if (this.currentPlace.type === 'cloudberry') {
+      this.CsdmCodeService.createCodeForExisting(this.currentPlace.cisUuid)
+      .then( (code) => {
+        this.success(code);
+      }, (err) => {
+        this.error(err);
+      });
+    } else {
+      this.CsdmHuronPlaceService.createOtp(this.currentPlace.cisUuid)
+      .then( (code) => {
+        this.success(code);
+      }, (err) => {
+        this.error(err);
+      });
+    }
   }
 }
 
-class PlaceOverviewComponent implements ng.IComponentOptions {
+export class PlaceOverviewComponent implements ng.IComponentOptions {
   public controller = PlaceOverview;
   public templateUrl = 'modules/squared/places/overview/placeOverview.html';
 }
-
-angular
-  .module('Squared')
-  .component('placeOverview', new PlaceOverviewComponent());

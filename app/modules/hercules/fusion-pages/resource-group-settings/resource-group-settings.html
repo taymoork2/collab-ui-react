@@ -3,7 +3,6 @@
   <cs-page-header title="{{rgsCtrl.localizedTitle}}" back="true" back-url="rgsCtrl.backUrl"></cs-page-header>
 
   <div class="cs-form" ng-if="rgsCtrl.group">
-
     <setting-section setting="rgsCtrl.clusters">
       <h5 class="sub-section__label" translate="hercules.resourceGroupSettings.clustersAssign"></h5>
       <p class="sub-section__description" translate="hercules.resourceGroupSettings.clustersDescription"></p>
@@ -14,18 +13,36 @@
         ng-click="rgsCtrl.openAssignClustersModal()"></button>
     </setting-section>
 
-    <setting-section setting="rgsCtrl.releaseChannel">
+    <setting-section setting="rgsCtrl.users">
+      <h5 class="sub-section__label" translate="hercules.resourceGroupSettings.usersAssign"></h5>
+      <p class="sub-section__description" translate="hercules.resourceGroupSettings.usersDescription"></p>
+    </setting-section>
+
+    <setting-section setting="rgsCtrl.releaseChannel" ng-if="rgsCtrl.releaseChannelOptions.length > 1 || rgsCtrl.showResetSection || rgsCtrl.channelHasBeenReset">
       <h5 class="sub-section__label" translate="hercules.resourceGroupSettings.releaseChannelHeader"></h5>
       <p class="sub-section__description" translate="hercules.resourceGroupSettings.releaseChannelDescription"></p>
-      <div class="row">
+      <div class="row" ng-hide="rgsCtrl.showResetSection">
         <div class="medium-8 columns" style="padding: 0">
           <cs-select
             ng-model="rgsCtrl.releaseChannelSelected"
             options="rgsCtrl.releaseChannelOptions"
             placeholder="rgsCtrl.releaseChannelPlaceholder"
-            on-change-fn="rgsCtrl.releaseChannelChanged()">
+            on-change-fn="rgsCtrl.releaseChannelChanged()"
+            is-disabled="rgsCtrl.releaseChannelOptions.length < 2">
           </cs-select>
         </div>
+      </div>
+      <div ng-show="rgsCtrl.showResetSection" class="error-message">
+        <i class="icon icon-error"></i>
+        <p class="message"
+           translate="hercules.resourceGroupSettings.orgHasNoAccessToChannel"
+           translate-values="{currentReleaseChannel: rgsCtrl.localizedCurrentChannelName, stableReleaseChannel: rgsCtrl.localizedStableChannelName}"></p>
+        <form>
+          <button class="btn" type="submit" ng-click="rgsCtrl.resetReleaseChannel()">
+            <span translate="hercules.resourceGroupSettings.setToStable"
+                  translate-values="{stableReleaseChannel: rgsCtrl.localizedStableChannelName}"></span>
+          </button>
+        </form>
       </div>
     </setting-section>
 
@@ -53,7 +70,7 @@
         <p class="cap-long-names remove-warning" translate="hercules.resourceGroupSettings.removeGroupReq"></p>
       </div>
       <div ng-if="rgsCtrl.allowRemove">
-        <button type="button" class="btn" ng-click="rgsCtrl.deleteGroup()" translate="common.remove"></button>
+        <button type="button" class="btn" ng-click="rgsCtrl.openDeleteGroupModal()" translate="common.remove"></button>
       </div>
     </setting-section>
 

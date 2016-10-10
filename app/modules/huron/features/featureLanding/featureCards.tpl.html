@@ -11,7 +11,7 @@
           </div>
         </header>
         <section class="card-body" ng-click="huronFeaturesCtrl.editHuronFeature((huronFeature))">
-          <div class="card-section" ng-if="huronFeature.filterValue !== 'CP'">
+          <div class="card-section" ng-if="(huronFeature.filterValue !== 'CP' && huronFeature.filterValue !== 'PG')">
             <span class="card-section-num" ng-if="(huronFeature.numbers.length <= 2)" ng-repeat="number in huronFeature.numbers">{{number | telephoneNumber}}</span>
             <span class="card-section-num" ng-if="(huronFeature.numbers.length > 2)">{{:: huronFeature.numbers.length + ' '+ ('huronHuntGroup.numbers' | translate)}}</span>
           </div>
@@ -20,13 +20,18 @@
               <span>{{ ::huronFeature.startRange }}</span><span ng-if="huronFeature.endRange !== huronFeature.startRange"> - {{ ::huronFeature.endRange }}</span>
             </span>
           </div>
+          <div class="card-section" ng-if="huronFeature.filterValue === 'PG'">
+            <span class="card-section-num">
+              <span>{{ ::huronFeature.pgNumber }}</span>
+            </span>
+          </div>
         </section>
         <footer class="card-footer ">
           <div ><span ng-if="(huronFeature.filterValue === 'HG' || huronFeature.filterValue === 'CP')" class="card-members left">
                 {{:: huronFeature.memberCount + ('huronFeatureDetails.members' | translate)}}</span></div>
           <div class="card-icons">
             <a class="icon icon-link" ng-if="(huronFeature.filterValue === 'AA' && huronFeature.hasDepends)" ng-click="huronFeaturesCtrl.detailsHuronFeature((huronFeature))"><span class="sr-only" translate="huronFeatureDetails.viewDepend"></span></a>
-            <a class="icon icon-edit" ng-click="huronFeaturesCtrl.editHuronFeature((huronFeature))"><span class="sr-only" translate="huronHuntGroup.editAction"></span></a>
+            <a class="icon icon-edit" ng-if="!(huronFeature.filterValue === 'PG')" ng-click="huronFeaturesCtrl.editHuronFeature((huronFeature))"><span class="sr-only" translate="huronHuntGroup.editAction"></span></a>
             <a class="icon icon-trash" ng-click="huronFeaturesCtrl.deleteHuronFeature((huronFeature))"><span class="sr-only" translate="huronHuntGroup.deleteAction"></span></a>
           </div>
         </footer>

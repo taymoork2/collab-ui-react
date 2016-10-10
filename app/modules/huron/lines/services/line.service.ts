@@ -1,13 +1,6 @@
-export const LINE_CHANGE = 'LINE_CHANGE';
+import { Line } from './line';
 
-export class Line {
-  public uuid: string;
-  public primary: boolean = false;
-  public internal: string;
-  public external: string;
-  public siteToSite: string;
-  public incomingCallMaximum: number = 2;
-}
+export const LINE_CHANGE = 'LINE_CHANGE';
 
 interface ILineResource extends ng.resource.IResourceClass<ng.resource.IResource<Line>> {
   update: ng.resource.IResourceMethod<ng.resource.IResource<Line>>;
@@ -39,7 +32,7 @@ export class LineService {
       },
     };
 
-    this.lineService = <ILineResource>$resource(HuronConfig.getCmiV2Url() + '/customers/:customerId/:type/:typeId/numbers/:numberId', {},
+    this.lineService = <ILineResource>this.$resource(this.HuronConfig.getCmiV2Url() + '/customers/:customerId/:type/:typeId/numbers/:numberId', {},
       {
         update: updateAction,
         save: saveAction,
@@ -76,13 +69,13 @@ export class LineService {
       internal: data.internal,
       external: data.external,
       incomingCallMaximum: data.incomingCallMaximum,
-    }, (response, headers) => {
+    }, (_response, headers) => {
       location = headers('Location');
     }).$promise
     .then( () => location);
   }
 
-  public updateLine(type: LineConsumerType, typeId: string, numberId: string, data: Line): ng.IPromise<Line> {
+  public updateLine(type: LineConsumerType, typeId: string, numberId: string | undefined, data: Line): ng.IPromise<Line> {
     return this.lineService.update({
       customerId: this.Authinfo.getOrgId(),
       type: type,
@@ -90,12 +83,12 @@ export class LineService {
       numberId: numberId,
     }, {
       internal: data.internal,
-      external: data.external,
+      external: _.isUndefined(data.external) ? null : data.external,
       incomingCallMaximum: data.incomingCallMaximum,
     }).$promise;
   }
 
-  public deleteLine(type: LineConsumerType, typeId: string, numberId: string): ng.IPromise<any> {
+  public deleteLine(type: LineConsumerType, typeId: string, numberId: string | undefined): ng.IPromise<any> {
     return this.lineService.remove({
       customerId: this.Authinfo.getOrgId(),
       type: type,

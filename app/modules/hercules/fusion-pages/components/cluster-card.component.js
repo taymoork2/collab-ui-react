@@ -24,8 +24,10 @@
     ctrl.getLocalizedReleaseChannel = FusionUtils.getLocalizedReleaseChannel;
 
     FeatureToggleService.supports(FeatureToggleService.features.atlasF237ResourceGroups)
-      .then(function () {
-        ctrl.hasF237FeatureToggle = true;
+      .then(function (supported) {
+        if (supported) {
+          ctrl.hasF237FeatureToggle = true;
+        }
       });
 
     function getHostnames(cluster) {

@@ -22,8 +22,7 @@
       <tr>
         <td translate="common.status"></td>
         <td>
-          <i class="icon icon-circle status-indicator"
-             ng-class="'hercules-state-' + hostDetailsCtrl.getSeverity(hostDetailsCtrl.host.state).label"></i>
+          <i class="icon icon-circle status-indicator" ng-class="hostDetailsCtrl.getSeverity(hostDetailsCtrl.host.state).cssClass"></i>
           <span translate="{{'hercules.status.' + hostDetailsCtrl.host.state }}"></span><span ng-if="hostDetailsCtrl.host.upgradeState === 'upgrading'"> | <span translate="hercules.status.upgrading"></span></span>
         </td>
       </tr>

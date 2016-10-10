@@ -6,7 +6,7 @@
     .controller('UserOverviewCtrl', UserOverviewCtrl);
 
   /* @ngInject */
-  function UserOverviewCtrl($http, $scope, $state, $stateParams, $translate, $resource, $window, Authinfo, Config, FeatureToggleService, Notification, SunlightConfigService, UrlConfig, Userservice, Utils, WebExUtilsFact) {
+  function UserOverviewCtrl($http, $scope, $state, $stateParams, $translate, $resource, $window, $q, Auth, Authinfo, Config, FeatureToggleService, Notification, SunlightConfigService, UrlConfig, Userservice, Utils, WebExUtilsFact) {
     var vm = this;
     vm.currentUser = $stateParams.currentUser;
     vm.entitlements = $stateParams.entitlements;
@@ -27,7 +27,7 @@
     vm.disableAuthCodeLink = disableAuthCodeLink;
     vm.getUserPhoto = Userservice.getUserPhoto;
     vm.isValidThumbnail = Userservice.isValidThumbnail;
-    vm.serviceActions = serviceActions;
+    vm.clickService = clickService;
     vm.actionList = [];
 
     if (vm.currentUser.trainSiteNames) {
@@ -42,31 +42,31 @@
 
     var msgState = {
       name: $translate.instant('onboardModal.message'),
-      icon: $translate.instant('onboardModal.message'),
+      icon: 'icon-circle-message',
       state: 'messaging',
       detail: $translate.instant('onboardModal.msgFree'),
-      actionsAvailable: getDisplayableServices('MESSAGING')
+      actionAvailable: getDisplayableServices('MESSAGING')
     };
     var commState = {
       name: $translate.instant('onboardModal.call'),
-      icon: $translate.instant('onboardModal.call'),
+      icon: 'icon-circle-call',
       state: 'communication',
       detail: $translate.instant('onboardModal.callFree'),
-      actionsAvailable: true
+      actionAvailable: true
     };
     var confState = {
       name: $translate.instant('onboardModal.meeting'),
-      icon: $translate.instant('onboardModal.meeting'),
+      icon: 'icon-circle-group',
       state: 'conferencing',
       detail: $translate.instant('onboardModal.mtgFree'),
-      actionsAvailable: getDisplayableServices('CONFERENCING') || angular.isArray(vm.currentUser.trainSiteNames)
+      actionAvailable: getDisplayableServices('CONFERENCING') || angular.isArray(vm.currentUser.trainSiteNames)
     };
     var contactCenterState = {
       name: $translate.instant('onboardModal.contactCenter'),
-      icon: 'ContactCenter',
+      icon: 'icon-circle-contact-centre',
       state: 'contactCenter',
       detail: $translate.instant('onboardModal.freeContactCenter'),
-      actionsAvailable: true
+      actionAvailable: true
     };
     var invitationResource = $resource(UrlConfig.getAdminServiceUrl() + 'organization/:customerId/invitations/:userId', {
       customerId: '@customerId',
@@ -159,16 +159,10 @@
     }
 
     function hasEntitlement(entitlement) {
-      var userEntitlements = vm.currentUser.entitlements;
-      if (userEntitlements) {
-        for (var n = 0; n < userEntitlements.length; n++) {
-          var ent = userEntitlements[n];
-          if (ent === entitlement) {
-            return true;
-          }
-        }
-      }
-      return false;
+      var index = _.findIndex(vm.currentUser.entitlements, function (ent) {
+        return ent === entitlement;
+      });
+      return index > -1;
     }
 
     function getServiceDetails(license) {
@@ -290,13 +284,19 @@
 
     function getAccountStatus() {
       // user status
-      FeatureToggleService.atlasUserPendingStatusGetStatus().then(function (pendingToggle) {
-        if (pendingToggle) {
+      var promises = {
+        isPendingToggled: FeatureToggleService.atlasUserPendingStatusGetStatus(),
+        isOnlineOrg: Auth.isOnlineOrg()
+      };
+      $q.all(promises).then(function (result) {
+        if (result.isPendingToggled) {
           vm.currentUser.pendingStatus = false;
-          var hasBeenActivated = _.some(vm.currentUser.userSettings, function (userSetting) {
-            return userSetting.indexOf('sparkAdmin.licensedDate') > 0 || userSetting.indexOf('spark.signUpDate') > 0;
+          var userHasSignedUp = _.some(vm.currentUser.userSettings, function (userSetting) {
+            return userSetting.indexOf('spark.signUpDate') > 0;
           });
-          vm.pendingStatus = _.isEmpty(vm.currentUser.licenseID) || !hasBeenActivated;
+          var isActiveUser = !_.isEmpty(vm.currentUser.entitlements) &&
+                            (userHasSignedUp || result.isOnlineOrg || hasEntitlement('ciscouc'));
+          vm.pendingStatus = !isActiveUser;
           vm.currentUser.pendingStatus = vm.pendingStatus;
         } else {
           vm.pendingStatus = _.indexOf(vm.currentUser.accountStatus, 'pending') >= 0;
@@ -366,8 +366,8 @@
       angular.element('.open').removeClass('open');
     }
 
-    function serviceActions(feature) {
-      $state.go('user-overview.' + feature);
+    function clickService(feature) {
+      $state.go('user-overview.' + feature.state);
     }
   }
 })();

@@ -272,6 +272,11 @@
       return $http.post(url);
     }
 
+    function deleteClusterWithConnector(clusterId) {
+      var url = UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '/actions/deregisterCluster/invoke?clusterId=' + clusterId;
+      return $http.post(url);
+    }
+
     function getClustersByConnectorType(type) {
       var clusters = _.chain(clusterCache[type])
         .values() // turn them to an array
@@ -309,6 +314,7 @@
       deleteV2Cluster: deleteV2Cluster,
       updateV2Cluster: updateV2Cluster,
       defuseV2Connector: defuseV2Connector,
+      deleteClusterWithConnector: deleteClusterWithConnector,
       upgradeCluster: upgradeCluster,
       moveV2Host: moveV2Host,
       getClustersByConnectorType: getClustersByConnectorType,

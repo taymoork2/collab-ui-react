@@ -25,10 +25,18 @@
           }
         });
         clipBoard.on('success', function () {
-          Notification.success('clipboard.success');
+          Notification.success(
+            'devicesClipboard.success',
+            undefined,
+            'devicesClipboard.successTitle'
+          );
         });
         clipBoard.on('error', function () {
-          Notification.error('clipboard.error');
+          Notification.success(
+            'devicesClipboard.error',
+            undefined,
+            'devicesClipboard.errorTitle'
+          );
         });
         scope.$on('$destroy', function () {
           clipBoard.destroy();

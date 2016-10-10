@@ -12,6 +12,8 @@
 * End to end testing is based on the JS Selenium framework: Protractor
 * App is built and run with [Webpack](webpack.md)
 
-## TypeScript & ES6(ES2015)
+## TypeScript 2.0 & ES6(ES2015)
 
-* Writing Angular 1.x code in TypeScript and/or ES6 will allow for easier migration to Angular 2
+* Keep up-to-date with [What's New in TypeScript](https://github.com/Microsoft/TypeScript/wiki/What's-new-in-TypeScript)
+* If you're using a TypeScript supported IDE, make sure it is configured to compile the the project's version of TypeScript (`./node_modules/typescript/lib/`)
+* Writing Angular 1.x code in TypeScript and ES6 will allow for easier migration to Angular 2

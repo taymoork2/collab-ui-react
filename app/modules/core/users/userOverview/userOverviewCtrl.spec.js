@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Controller: UserOverviewCtrl', function () {
-  var controller, $scope, $httpBackend, $rootScope, Config, Authinfo, Userservice, FeatureToggleService, Notification, WebExUtilsFact;
+  var controller, $scope, $httpBackend, $rootScope, Config, Authinfo, Auth, Userservice, FeatureToggleService, Notification, WebExUtilsFact;
 
   var $stateParams, currentUser, updatedUser, getUserFeatures, UrlConfig;
   var userEmail, userName, uuid, userStatus, dirsyncEnabled, entitlements, invitations;
@@ -11,12 +11,13 @@ describe('Controller: UserOverviewCtrl', function () {
   beforeEach(angular.mock.module('Sunlight'));
   beforeEach(angular.mock.module('WebExApp'));
 
-  beforeEach(inject(function ($controller, _$httpBackend_, $q, _$rootScope_, _Config_, _Authinfo_, _Userservice_, _FeatureToggleService_, _UrlConfig_, _Notification_, _WebExUtilsFact_) {
+  beforeEach(inject(function ($controller, _$httpBackend_, $q, _$rootScope_, _Config_, _Authinfo_, _Auth_, _Userservice_, _FeatureToggleService_, _UrlConfig_, _Notification_, _WebExUtilsFact_) {
     $scope = _$rootScope_.$new();
     $httpBackend = _$httpBackend_;
     $rootScope = _$rootScope_;
     Config = _Config_;
     Authinfo = _Authinfo_;
+    Auth = _Auth_;
     UrlConfig = _UrlConfig_;
     Userservice = _Userservice_;
     FeatureToggleService = _FeatureToggleService_;
@@ -48,6 +49,7 @@ describe('Controller: UserOverviewCtrl', function () {
     spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
     spyOn(FeatureToggleService, 'atlasUserPendingStatusGetStatus').and.returnValue($q.when(true));
     spyOn(Authinfo, 'isCSB').and.returnValue(false);
+    spyOn(Auth, 'isOnlineOrg').and.returnValue($q.when(false));
     spyOn(Notification, 'success');
     spyOn(WebExUtilsFact, 'isCIEnabledSite').and.returnValue(true);
 

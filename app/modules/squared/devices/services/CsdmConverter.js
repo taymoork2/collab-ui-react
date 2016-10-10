@@ -8,6 +8,7 @@
 
       function CloudberryDevice(obj) {
         this.url = obj.url;
+        this.isCloudberryDevice = true;
         this.type = 'cloudberry';
         this.mac = obj.mac;
         this.ip = getIp(obj);
@@ -21,7 +22,6 @@
         this.isOnline = getIsOnline(obj);
         this.lastConnectionTime = getLastConnectionTime(obj);
         this.tags = getTags(obj.description);
-        this.tagString = getTagString(obj.description);
         this.displayName = obj.displayName;
         this.accountType = obj.accountType || 'MACHINE';
         this.photos = _.isEmpty(obj.photos) ? null : obj.photos;
@@ -73,7 +73,6 @@
         this.accountType = obj.accountType || 'PERSON';
         this.displayName = obj.displayName;
         this.tags = getTags(decodeHuronTags(obj.description));
-        this.tagString = getTagString(decodeHuronTags(obj.description));
         this.cssColorClass = getCssColorClass(obj);
         this.state = getState(obj);
         this.photos = _.isEmpty(obj.photos) ? null : obj.photos;
@@ -160,6 +159,7 @@
 
       function Code(obj) {
         obj.state = obj.status;
+        this.isCode = true;
 
         this.url = obj.url;
         this.type = 'cloudberry';
@@ -170,7 +170,6 @@
         this.friendlyExpiryTime = convertExpiryTime(obj.expiryTime);
         this.product = t('spacesPage.unactivatedDevice');
         this.tags = getTags(obj.description);
-        this.tagString = getTagString(obj.description);
         this.displayName = obj.displayName;
         this.activationCode = obj.activationCode;
         this.state = getState(obj);
@@ -187,14 +186,58 @@
         };
       }
 
+      function updatePlaceFromItem(place, item) {
+
+        if (item.isPlace) {
+          updatePlaceFromPlace(place, item);
+        } else if (item.isCode) {
+          updatePlaceFromCode(place, item);
+        } else {
+          updatePlaceFromDevice(place, item);
+        }
+      }
+
+      function updatePlaceFromDevice(place, device) {
+        var updatedPlace = place;
+        updatedPlace.type = device.type || updatedPlace.type;
+        updatedPlace.cisUuid = device.cisUuid || device.uuid;
+        updatedPlace.displayName = device.displayName;
+        updatedPlace.sipUrl = device.sipUrl;
+        Place.bind(updatedPlace)(updatedPlace);
+      }
+
+      function updatePlaceFromCode(place, code) {
+        var updatedPlace = place;
+        updatedPlace.type = code.type || 'cloudberry';
+        updatedPlace.cisUuid = code.cisUuid || code.uuid;
+        updatedPlace.displayName = code.displayName;
+        Place.bind(updatedPlace)(updatedPlace);
+      }
+
+      function updatePlaceFromPlace(place, placeToUpdateFrom) {
+
+        if (_.isEmpty(placeToUpdateFrom.devices)) {
+          placeToUpdateFrom = _.merge(placeToUpdateFrom, _.pick(place, ['devices']));
+        }
+        if (_.isEmpty(placeToUpdateFrom.codes)) {
+          placeToUpdateFrom = _.merge(placeToUpdateFrom, _.pick(place, ['codes']));
+        }
+        Place.bind(place)(placeToUpdateFrom);
+        place.devices = placeToUpdateFrom.devices;
+        place.codes = placeToUpdateFrom.codes;
+      }
+
       function Place(obj) {
         this.url = obj.url;
+        this.isPlace = true;
         this.type = obj.type || 'cloudberry';
+        this.readableType = getLocalizedType(obj.type);
         this.entitlements = obj.entitlements;
         this.cisUuid = obj.cisUuid || obj.uuid;
         this.displayName = obj.displayName;
         this.sipUrl = obj.sipUrl;
         this.devices = obj.type === 'huron' ? obj.phones : convertCloudberryDevices(obj.devices);
+        this.codes = obj.type === 'huron' ? null : convertCodes(obj.codes);
         this.numbers = obj.numbers;
         this.isUnused = obj.devices || false;
         this.canDelete = true;
@@ -426,6 +469,13 @@
         }
       }
 
+      function getLocalizedType(type) {
+        if (type === 'huron') {
+          return t('addDeviceWizard.chooseDeviceType.deskPhone');
+        }
+        return t('addDeviceWizard.chooseDeviceType.roomSystem');
+      }
+
       function t(key) {
         return $translate.instant(key);
       }
@@ -447,12 +497,8 @@
         }
       }
 
-      function getTagString(description) {
-        var tags = getTags(description);
-        return tags.join(', ');
-      }
-
       return {
+        updatePlaceFromItem: updatePlaceFromItem,
         convertPlace: convertPlace,
         convertPlaces: convertPlaces,
         convertCode: convertCode,
