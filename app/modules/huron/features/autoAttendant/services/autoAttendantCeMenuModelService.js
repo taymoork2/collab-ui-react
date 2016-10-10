@@ -479,8 +479,10 @@
 
         menuEntry.addAction(action);
       } else if (angular.isDefined(inAction.routeToQueue)) {
+        //this occurs on the way in from the db
         action = new Action('routeToQueue', inAction.routeToQueue.id);
         setDescription(action, inAction.routeToQueue);
+        cesTempMoh(action);
         menuEntry.addAction(action);
       } else {
         // insert an empty action
@@ -490,6 +492,33 @@
         }
         menuEntry.addAction(action);
       }
+    }
+
+    /*
+    * temporary solution to write to db until ces ready
+    */
+    function cesTempMoh(action) {
+      if (angular.isDefined(action.description)) {
+        try {
+          action.description = JSON.parse(action.description);
+          action.queueSettings = {};
+          action.queueSettings.musicOnHold = constructCesTodoMoh(action.description);
+        } catch (exception) {
+          action.queueSettings = {};
+        }
+      }
+    }
+
+    /*
+    * temporary solution to write to db until ces ready
+    */
+    function constructCesTodoMoh(parsedDescription) {
+      var musicOnHold = parsedDescription.musicOnHold.actions[0];
+      var playAction = new Action('play', musicOnHold.value);
+      playAction.setDescription(musicOnHold.description);
+      musicOnHold = new CeMenuEntry();
+      musicOnHold.addAction(playAction);
+      return musicOnHold;
     }
 
     function parseActions(menuEntry, actions) {
@@ -904,7 +933,8 @@
             } else if (actionName === 'routeToHuntGroup') {
               newActionArray[i][actionName].id = menuEntry.actions[0].getValue();
             } else if (actionName === 'routeToQueue') {
-              newActionArray[i][actionName].id = menuEntry.actions[0].getValue();
+              newActionArray[i][actionName] = populateRouteToQueue(menuEntry.actions[0]);
+              //newActionArray[i][actionName].id = menuEntry.actions[0].getValue();
             } else if (actionName === 'runActionsOnInput') {
               if (menuEntry.actions[0].inputType === 2) {
                 newActionArray[i][actionName] = populateRunActionsOnInput(menuEntry.actions[0]);
@@ -962,7 +992,8 @@
         } else if (actionName === 'goto') {
           newActionArray[i][actionName].ceid = val;
         } else if (actionName === 'routeToQueue') {
-          newActionArray[i][actionName].id = val;
+          newActionArray[i][actionName] = populateRouteToQueue(actions[i]);
+          //newActionArray[i][actionName].id = val;
         } else if (actionName === 'disconnect') {
           if (val && val !== 'none') {
             newActionArray[i][actionName].treatment = val;
@@ -979,7 +1010,17 @@
       }
       return newActionArray;
     }
-
+    /*
+    * Temp method for route to queue prior to CES def
+    */
+    function populateRouteToQueue(action) {
+      var newAction = {};
+      if (angular.isDefined(action.description)) {
+        newAction.id = action.value;
+        newAction.description = JSON.stringify(action.description);
+      }
+      return newAction;
+    }
     /*
      * Set the defaults for Dial by Extension
      */

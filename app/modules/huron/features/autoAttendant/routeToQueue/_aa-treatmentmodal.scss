@@ -1,3 +1,10 @@
-.aa-treatment-modal {
-     margin-top: 10px;
+.aa-queue-settings-modal {
+  & .aa-treatment-modal {
+    margin-top: 10px;
+  }
+
+  & .aa-inset-modal {
+    padding-right: 10%;
+    padding-left: 10%;
+  }
 }

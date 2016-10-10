@@ -8,13 +8,19 @@
   function aaMediaUpload() {
     return {
       restrict: 'AE',
-      scope: {
-        schedule: '@aaSchedule',
-        index: '=aaIndex',
-      },
       controller: 'AAMediaUploadCtrl',
       controllerAs: 'aaMediaUpload',
-      templateUrl: 'modules/huron/features/autoAttendant/mediaUpload/aaMedia.tpl.html'
+      templateUrl: 'modules/huron/features/autoAttendant/mediaUpload/aaMedia.tpl.html',
+      require: '^ngModel',
+      scope: {
+        schedule: '@aaSchedule',
+        menuId: '@aaMenuId',
+        index: '=aaIndex',
+        keyIndex: '@aaKeyIndex',
+        type: '@aaMediaType',
+        ngModel: "=",
+        ngChange: "&",
+      },
     };
   }
 })();

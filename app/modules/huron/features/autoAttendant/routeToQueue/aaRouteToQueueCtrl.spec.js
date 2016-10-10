@@ -4,6 +4,7 @@ describe('Controller: AARouteToQueueCtrl', function () {
   var $controller, $modal;
   var AAUiModelService, AutoAttendantCeInfoModelService, AutoAttendantCeMenuModelService, AAModelService;
   var $rootScope, $scope;
+  var $q;
 
   var aaModel = {
 
@@ -15,27 +16,12 @@ describe('Controller: AARouteToQueueCtrl', function () {
       name: 'AA2'
     }
   };
-  var fakeModal = {
-    result: {
-      then: function (okCallback, cancelCallback) {
-        this.okCallback = okCallback;
-        this.cancelCallback = cancelCallback;
-      }
-    },
-    close: function (item) {
-      this.result.okCallback(item);
-    },
-    dismiss: function (type) {
-      this.result.cancelCallback(type);
-    }
-  };
-
+  var modal;
   var queueName = 'Chandan Test Queue';
   var queues = [{
     id: 'c16a6027-caef-4429-b3af-9d61ddc7964b',
     queueName: queueName,
     queueUrl: '/c16a6027-caef-4429-b3af-9d61ddc7964b',
-
   }];
 
   var schedule = 'openHours';
@@ -67,10 +53,11 @@ describe('Controller: AARouteToQueueCtrl', function () {
   beforeEach(angular.mock.module('Huron'));
   beforeEach(angular.mock.module('Sunlight'));
 
-  beforeEach(inject(function (_$controller_, _$rootScope_, _$modal_, _AAUiModelService_, _AutoAttendantCeInfoModelService_, _AutoAttendantCeMenuModelService_, _AAModelService_) {
+  beforeEach(inject(function (_$controller_, _$rootScope_, _$modal_, _$q_, _AAUiModelService_, _AutoAttendantCeInfoModelService_, _AutoAttendantCeMenuModelService_, _AAModelService_) {
     $rootScope = _$rootScope_;
     $scope = $rootScope;
     $modal = _$modal_;
+    $q = _$q_;
 
     $controller = _$controller_;
     AAModelService = _AAModelService_;
@@ -78,7 +65,7 @@ describe('Controller: AARouteToQueueCtrl', function () {
     AutoAttendantCeInfoModelService = _AutoAttendantCeInfoModelService_;
     AutoAttendantCeMenuModelService = _AutoAttendantCeMenuModelService_;
 
-
+    modal = $q.defer();
     $scope.schedule = schedule;
     $scope.index = index;
     $scope.keyIndex = keyIndex;
@@ -96,14 +83,81 @@ describe('Controller: AARouteToQueueCtrl', function () {
   }));
 
   describe('openQueueTreatmentModal', function () {
-    it('should open the Modal on Validation success', function () {
-      spyOn($modal, 'open').and.returnValue(fakeModal);
-      var controller = $controller('AARouteToQueueCtrl', {
+    var saved = {};
+    var controller;
+    beforeEach(function () {
+      saved.musicOnHold = AutoAttendantCeMenuModelService.newCeMenuEntry();
+      var moh = AutoAttendantCeMenuModelService.newCeActionEntry('play', '');
+      saved.musicOnHold.addAction(moh);
+      spyOn($modal, 'open').and.returnValue({
+        result: modal.promise
+      });
+      controller = $controller('AARouteToQueueCtrl', {
         $scope: $scope
       });
+    });
+
+    it('should open the Modal on Validation success', function () {
       controller.openQueueTreatmentModal();
       $scope.$apply();
       expect($modal.open).toHaveBeenCalled();
+    });
+
+    describe('fromRouteCall', function () {
+      beforeEach(function () {
+        AutoAttendantCeMenuModelService.clearCeMenuMap();
+        aaUiModel[schedule] = AutoAttendantCeMenuModelService.newCeMenu();
+        aaUiModel[schedule].addEntryAt(index, AutoAttendantCeMenuModelService.newCeMenuEntry());
+        var action = AutoAttendantCeMenuModelService.newCeActionEntry('dummy', '');
+        action.queueSettings = {};
+        aaUiModel[schedule].entries[index].actions[0] = action;
+        $scope.fromRouteCall = true;
+        controller = $controller('AARouteToQueueCtrl', {
+          $scope: $scope
+        });
+        $scope.$apply();
+      });
+
+      it('should maintain a master copy of the model if not "saved"', function () {
+        controller.openQueueTreatmentModal();
+        $scope.$apply();
+        expect(controller.menuEntry.actions[0].description).toEqual('');
+        controller.menuEntry.actions[0].description = "Added text";
+        modal.reject();
+        $scope.$apply();
+        expect(controller.menuEntry.actions[0].description).toEqual({});
+      });
+    });
+
+    describe('from phone menu', function () {
+      beforeEach(function () {
+        $scope.menuKeyIndex = keyIndex;
+        $scope.menuId = 'menu0';
+        AutoAttendantCeMenuModelService.clearCeMenuMap();
+        aaUiModel[schedule] = AutoAttendantCeMenuModelService.newCeMenu();
+        aaUiModel[schedule].addEntryAt(index, AutoAttendantCeMenuModelService.newCeMenuEntry());
+        var action = AutoAttendantCeMenuModelService.newCeActionEntry('routeToQueue', '');
+        action.queueSettings = {};
+        aaUiModel[schedule].entries[keyIndex].actions[0] = action;
+        controller = $controller('AARouteToQueueCtrl', {
+          $scope: $scope
+        });
+        $scope.$apply();
+        controller.menuKeyEntry.actions = [];
+        controller.menuKeyEntry.actions[0] = action;
+        controller.hideQueues = false;
+        $scope.$apply();
+      });
+
+      it('should maintain a master copy of the model if not "saved"', function () {
+        controller.openQueueTreatmentModal();
+        $scope.$apply();
+        expect(controller.menuKeyEntry.actions[0].description).toEqual('');
+        controller.menuKeyEntry.actions[0].description = "Added text";
+        modal.reject();
+        $scope.$apply();
+        expect(controller.menuKeyEntry.actions[0].description).toEqual(saved);
+      });
     });
   });
 

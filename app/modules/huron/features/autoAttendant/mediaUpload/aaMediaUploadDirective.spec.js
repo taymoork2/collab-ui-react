@@ -11,6 +11,9 @@ describe('Directive: aaMediaUpload', function () {
   var menuEntry = {};
   var schedule = 'openHours';
   var index = '0';
+  var elementHtml = "<aa-media-upload aa-schedule='openHours' aa-index='0' name='mediaUploadInput' ng-model='fileModel'></aa-media-upload>";
+  var attributeHtml = "<div aa-media-upload aa-schedule='openHours' aa-index='0' name='mediaUploadInput' ng-model='fileModel'></div>";
+  var ngModel;
 
   beforeEach(angular.mock.module('Huron'));
 
@@ -34,15 +37,31 @@ describe('Directive: aaMediaUpload', function () {
     uiMenu.addEntryAt(index, menuEntry);
   }));
 
-  it('creates the appropriate content as element', function () {
-    var element = $compile("<aa-media-upload aa-schedule='openHours' aa-index='0' name='mediaUploadInput'></aa-media-upload>")($rootScope);
-    $rootScope.$digest();
-    expect(element.html()).toContain("mediaUpload");
+  describe('when the directive is an element', function () {
+    var element;
+    beforeEach(function () {
+      element = $compile(elementHtml)($rootScope);
+      $rootScope.$digest();
+      ngModel = element.controller('ngModel');
+    });
+
+    it('creates the appropriate content as element', function () {
+      expect(element.html()).toContain("mediaUpload");
+      expect(ngModel).toBeTruthy();
+    });
   });
 
-  it('creates the appropriate content as attribute', function () {
-    var element = $compile("<div aa-media-upload aa-schedule='openHours' aa-index='0' name='mediaUploadInput'></div>")($rootScope);
-    $rootScope.$digest();
-    expect(element.html()).toContain("mediaUpload");
+  describe('when the directive is an attribute', function () {
+    var element;
+    beforeEach(function () {
+      element = $compile(attributeHtml)($rootScope);
+      $rootScope.$digest();
+      ngModel = element.controller('ngModel');
+    });
+
+    it('creates the appropriate content as attribute', function () {
+      expect(element.html()).toContain("mediaUpload");
+      expect(ngModel).toBeTruthy();
+    });
   });
 });
