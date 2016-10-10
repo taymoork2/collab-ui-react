@@ -35,11 +35,11 @@
   </cs-page-sub-header>
   <div class="content-container">
     <cs-card-layout>
-      <uc-active-user></uc-active-user>
-      <uc-registered-endpoints></uc-registered-endpoints>
-      <uc-active-user-population></uc-active-user-population>
-      <uc-call-metrics></uc-call-metrics>
-      <uc-media-quality></uc-media-quality>
+      <report-card options="nav.activeUserReportOptions" secondary-options="nav.activeUserSecondaryReportOptions" show="nav.showEngagement" time="nav.timeSelected" resize-page="nav.resizeMostActive()"></report-card>
+      <report-card options="nav.endpointReportOptions" show="nav.showEngagement" time="nav.timeSelected"></report-card>
+      <report-card options="nav.populationReportOptions" show="nav.showEngagement"></report-card>
+      <report-card options="nav.callMetricsReportOptions" show="nav.showQuality" time="nav.timeSelected"></report-card>
+      <report-card options="nav.mediaReportOptions" show="nav.showQuality"></report-card>
     </cs-card-layout>
     </div>
   </div>

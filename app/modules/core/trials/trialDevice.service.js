@@ -129,6 +129,8 @@
     var countryListTypes = {
       US_ONLY: 'US',
       CISCO_SX10: 'ROLLOUT1',
+      CISCO_DX80: 'ROLLOUT1',
+      CISCO_MX300: 'US',
       CISCO_8865: 'US',
       CISCO_8845: 'US',
       CISCO_8841: 'US',

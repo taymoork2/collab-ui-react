@@ -6,8 +6,9 @@ describe('MediaServiceActivationV2', function () {
   beforeEach(angular.mock.module('Hercules'));
 
   // instantiate service
-  var Service, $httpBackend, authinfo, FusionClusterService;
+  var Service, $httpBackend, authinfo, FusionClusterService, $q;
   var extensionEntitlements = ['squared-fusion-media'];
+  //var serviceId = "squared-fusion-media";
   var mediaAgentOrgIds = ['mediafusion'];
 
   beforeEach(function () {
@@ -20,9 +21,10 @@ describe('MediaServiceActivationV2', function () {
     });
   });
 
-  beforeEach(inject(function ($injector, _MediaServiceActivationV2_, _FusionClusterService_) {
+  beforeEach(inject(function ($injector, _MediaServiceActivationV2_, _FusionClusterService_, _$q_) {
     Service = _MediaServiceActivationV2_;
     FusionClusterService = _FusionClusterService_;
+    $q = _$q_;
     $httpBackend = $injector.get('$httpBackend');
   }));
 
@@ -90,7 +92,7 @@ describe('MediaServiceActivationV2', function () {
     $httpBackend.flush();
   });
 
-  it('MediaServiceActivationV2 setServiceEnabled should be called for enableMediaService', function () {
+  xit('MediaServiceActivationV2 setServiceEnabled should be called for enableMediaService', function () {
     spyOn(Service, 'setServiceEnabled').and.callThrough();
     Service.enableMediaService();
     expect(Service.setServiceEnabled).toHaveBeenCalled();
@@ -113,4 +115,18 @@ describe('MediaServiceActivationV2', function () {
     Service.getMediaServiceState();
     expect(FusionClusterService.serviceIsSetUp).not.toHaveBeenCalled();
   });
+
+  xit('should disable orpheus for mediafusion org', function () {
+    spyOn(Service, 'getUserIdentityOrgToMediaAgentOrgMapping').and.returnValue($q.when(
+      [{
+        statusCode: 0,
+        identityOrgId: "5632f806-ad09-4a26-a0c0-a49a13f38873",
+        mediaAgentOrgIds: ["5632f806-ad09-4a26-a0c0-a49a13f38873", "squared"]
+      }]
+    ));
+    spyOn(Service, 'setUserIdentityOrgToMediaAgentOrgMapping').and.returnValue($q.when());
+    Service.disableOrpheusForMediaFusion();
+    expect(Service.getUserIdentityOrgToMediaAgentOrgMapping).toHaveBeenCalled();
+  });
+
 });

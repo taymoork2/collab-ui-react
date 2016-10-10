@@ -6,7 +6,7 @@
     .controller('AABuilderMainCtrl', AABuilderMainCtrl); /* was AutoAttendantMainCtrl */
 
   /* @ngInject */
-  function AABuilderMainCtrl($scope, $translate, $state, $stateParams, $q, AAUiModelService,
+  function AABuilderMainCtrl($rootScope, $scope, $translate, $state, $stateParams, $q, AAUiModelService,
     AAModelService, AutoAttendantCeInfoModelService, AutoAttendantCeMenuModelService, AutoAttendantCeService,
     AAValidationService, AANumberAssignmentService, AANotificationService, Authinfo, AACommonService, AAUiScheduleService, AACalendarService,
     AATrackChangeService, AADependencyService, ServiceSetup, Analytics, AAMetricNameService, FeatureToggleService) {
@@ -267,6 +267,8 @@
           AANotificationService.success('autoAttendant.successUpdateCe', {
             name: aaRecord.callExperienceName
           });
+
+          $rootScope.$broadcast('CE Saved');
 
         },
         function (response) {

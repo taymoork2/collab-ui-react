@@ -300,9 +300,11 @@ describe('Controller: Customer Reports Ctrl', function () {
     });
 
     describe('helper functions', function () {
-      it('getDescription and getHeader should return translated strings', function () {
+      it('getDescription, getAltDescription, getAltHeader, and getHeader should return translated strings', function () {
         expect(controller.getDescription('text')).toEqual('text');
+        expect(controller.getAltDescription('text')).toEqual('text');
         expect(controller.getHeader('text')).toEqual('text');
+        expect(controller.getAltHeader('text')).toEqual('text');
       });
 
       it('goToUsersTab should send the customer to the users tab', function () {

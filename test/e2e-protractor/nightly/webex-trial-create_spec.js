@@ -56,7 +56,11 @@ describe('WebEx Trial Creation', function () {
   }, WEBEX_SITE_ACTIVATION_TIMEOUT);
 
   describe('Partner launches customer portal', function () {
+    var appWindow;
+
     it('should launch customer portal via preview panel and display first time wizard', function () {
+      appWindow = browser.getWindowHandle();
+
       utils.expectIsEnabled(partner.launchCustomerPanelButton);
       utils.click(partner.launchCustomerPanelButton);
       utils.switchToNewWindow().then(function () {
@@ -94,14 +98,29 @@ describe('WebEx Trial Creation', function () {
       navigation.expectDriverCurrentUrl('overview');
       utils.waitIsDisplayed(navigation.tabs);
     }, LONG_TIMEOUT);
+
+    it('should open trial via services tab', function () {
+      navigation.clickServicesTab();
+      utils.click(partner.getMeetingLink(partner.newTrial.sipDomain));
+      utils.expectTextToBeSet(partner.pageHeaderTitle, 'WebEx Sites');
+
+      utils.click(partner.getTrialConfigBtn(partner.newTrial.webexSiteURL));
+      utils.expectTextToBeSet(partner.pageHeaderTitle, 'Configure WebEx Site');
+    });
+
+    it('should close browser window', function () {
+      browser.close();
+      browser.switchTo().window(appWindow);
+    });
   });
 
-  it('should open trial via services tab', function () {
-    navigation.clickServicesTab();
-    utils.click(partner.getMeetingLink(partner.newTrial.sipDomain));
-    utils.expectTextToBeSet(partner.pageHeaderTitle, 'WebEx Sites');
-
-    utils.click(partner.getTrialConfigBtn(partner.newTrial.webexSiteURL));
-    utils.expectTextToBeSet(partner.pageHeaderTitle, 'Configure WebEx Site');
+  it('should click the Delete Customer button', function () {
+    utils.scrollIntoView(partner.deleteCustomerButton);
+    utils.click(partner.deleteCustomerButton);
+    utils.waitForModal().then(function () {
+      utils.click(partner.deleteCustomerOrgConfirm).then(function () {
+        notifications.assertSuccess(partner.newTrial.customerName, 'successfully deleted');
+      });
+    });
   });
 });

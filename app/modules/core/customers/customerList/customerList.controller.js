@@ -798,7 +798,7 @@
     }
 
     function getLicenseCountColumnText(rowData) {
-      if (isPastGracePeriod(rowData)) {
+      if (!isLicenseInfoAvailable(rowData.licenseList)) {
         return $translate.instant('common.notAvailable');
       }
       return rowData.totalLicenses;

@@ -216,6 +216,20 @@
         hybridServicesComboError: '400094',
       },
 
+      webexSiteStatus: {
+        RECEIVED: 'RECEIVED',
+        PENDING_PARM: 'PENDING_PARM',
+        PROV_READY: 'PROV_READY',
+        PROVISIONING: 'PROVISIONING',
+        PROVISIONED: 'PROVISIONED',
+        REJECTED: 'REJECTED',
+        ERROR: 'ERROR',
+        PARTIAL: 'PARTIAL',
+        ABORTED: 'ABORTED',
+        TIMEOUT: 'TIMEOUT',
+        NA: 'NA'
+      },
+
       defaultEntitlements: ['webex-squared', 'squared-call-initiation'],
 
       batchSize: 10,

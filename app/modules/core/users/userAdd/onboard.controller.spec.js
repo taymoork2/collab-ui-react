@@ -759,6 +759,46 @@ describe('OnboardCtrl: Ctrl', function () {
       });
     });
 
+    describe('with spark call line assignment', function () {
+      beforeEach(initCustomUsrList);
+
+      it('should use assignedDn and externalNumber for onboarded user', function () {
+        _.assign(this.$scope.usrlist[0], {
+          assignedDn: {
+            uuid: '111',
+            pattern: '123',
+          },
+          externalNumber: {
+            uuid: '444',
+            pattern: '+456',
+          },
+        });
+        updateUserLicense.apply(this);
+        expect(this.Userservice.onboardUsers).toHaveBeenCalled();
+        var onboardedUser = this.Userservice.onboardUsers.calls.mostRecent().args[0][0];
+        expect(onboardedUser.internalExtension).toBe('123');
+        expect(onboardedUser.directLine).toBe('+456');
+      });
+
+      it('should ignore "none" externalNumber for onboarded user', function () {
+        _.assign(this.$scope.usrlist[0], {
+          assignedDn: {
+            uuid: '111',
+            pattern: '123',
+          },
+          externalNumber: {
+            uuid: 'none',
+            pattern: 'TranslatedNone',
+          },
+        });
+        updateUserLicense.apply(this);
+        expect(this.Userservice.onboardUsers).toHaveBeenCalled();
+        var onboardedUser = this.Userservice.onboardUsers.calls.mostRecent().args[0][0];
+        expect(onboardedUser.internalExtension).toBe('123');
+        expect(onboardedUser.directLine).toBeUndefined();
+      });
+    });
+
     function initCustomUsrList() {
       this.usrlist = [{
         address: 'customTestUser'

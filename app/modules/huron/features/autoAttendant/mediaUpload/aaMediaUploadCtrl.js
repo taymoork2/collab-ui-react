@@ -5,7 +5,7 @@
     .controller('AAMediaUploadCtrl', AAMediaUploadCtrl);
 
   /* @ngInject */
-  function AAMediaUploadCtrl($scope, $translate, Upload, ModalService, AANotificationService, AACommonService, AAMediaUploadService, AAUiModelService) {
+  function AAMediaUploadCtrl($scope, $translate, Upload, ModalService, AANotificationService, AACommonService, AAMediaUploadService, AAUiModelService, AutoAttendantCeMenuModelService) {
     var vm = this;
 
     vm.uploadFile = '';
@@ -21,15 +21,18 @@
       cancel: 'cancel',
       overwrite: 'overwrite',
     };
-    vm.actionCopy = undefined;
+
 
     vm.upload = upload;
     vm.openModal = openModal;
+    vm.progress = 0;
+    vm.actionCopy = undefined;
 
+    var myActions = ["play", "runActionsOnInput"];
+
+    var uniqueCtrlIdentifer = 'mediaUploadCtrl';
     var modalOpen = false;
     var modalCanceled = false;
-    var saveOn = 'uploadingInProgress';
-    var actionName = 'play';
     var uploadServProm = undefined;
 
     //////////////////////////////////////////////////////
@@ -62,7 +65,8 @@
     //upload set up ui model and state info
     function continueUpload(file) {
       Upload.mediaDuration(file).then(function (durationInSeconds) {
-        AACommonService.setIsValid(saveOn, false);
+        uniqueCtrlIdentifer += AACommonService.getUniqueId();
+        AACommonService.setIsValid(uniqueCtrlIdentifer, false);
         vm.uploadFile = file.name;
         vm.uploadDate = moment().format("MM/DD/YYYY");
         vm.uploadDuration = '(' + moment.utc(durationInSeconds * 1000).format('mm:ss') + ')';
@@ -104,7 +108,7 @@
     //global media upload for save
     function cleanUp() {
       uploadServProm = undefined;
-      AACommonService.setIsValid(saveOn, true);
+      AACommonService.setIsValid(uniqueCtrlIdentifer, true);
       AACommonService.setMediaUploadStatus(true);
     }
 
@@ -211,13 +215,38 @@
       }
     }
 
+    function createPlayAction() {
+      return AutoAttendantCeMenuModelService.newCeActionEntry('play', '');
+    }
+
+
     function getPlayAction(menuEntry) {
       var playAction;
       if (menuEntry && menuEntry.actions && menuEntry.actions.length > 0) {
         playAction = _.find(menuEntry.actions, function (action) {
-          return action.getName() === actionName;
+          return _.indexOf(myActions, action.getName()) >= 0;
         });
         return playAction;
+      }
+    }
+    function setUpEntry(action) {
+      if (_.startsWith(action.value.toLowerCase(), 'http')) {
+        vm.state = vm.UPLOADED;
+        vm.progress = 0;
+
+        // description holds the file name plus the date
+        try {
+          var desc = JSON.parse(action.getDescription());
+          vm.uploadFile = desc.uploadFile;
+          vm.uploadDate = desc.uploadDate;
+          vm.uploadDuration = desc.uploadDuration;
+        } catch (exception) {
+          //if somehow a bad format came through
+          //catch and keep disallowed
+          vm.uploadFile = '';
+          vm.uploadDate = '';
+          vm.uploadDuration = '';
+        }
       }
     }
 
@@ -227,19 +256,10 @@
       vm.menuEntry = uiMenu.entries[$scope.index];
       var playAction = getPlayAction(vm.menuEntry);
       if (angular.isDefined(playAction)) {
-        if (!_.isEmpty(playAction.getValue())) {
-          try {
-            var desc = JSON.parse(playAction.getDescription());
-            vm.uploadFile = desc.uploadFile;
-            vm.uploadDate = desc.uploadDate;
-            vm.uploadDuration = desc.uploadDuration;
-            vm.state = vm.UPLOADED;
-            vm.progress = 0;
-          } catch (exception) {
-            playAction.setValue('');
-            playAction.setDescription('');
-          }
-        }
+        setUpEntry(playAction);
+      } else {
+        // should not happen, created earlier but ..
+        vm.menuEntry.addAction(createPlayAction());
       }
     }
 

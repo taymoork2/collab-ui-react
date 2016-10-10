@@ -11,14 +11,14 @@ describe('Service: Common Report Service', () => {
   const customerData = getJSONFixture('core/json/partnerReports/customerResponse.json');
   const defaults = getJSONFixture('core/json/partnerReports/commonReportService.json');
   const cacheValue: boolean = (parseInt(moment.utc().format('H'), 10) >= 8);
-  const filter: Array<ITimespan> = _.clone(defaults.timeFilter);
+  const filter: Array<ITimespan> = _.cloneDeep(defaults.timeFilter);
   const today: string = moment().format(defaults.format);
   const dummyResponse = {};
 
-  let queryOne: IIntervalQuery = _.clone(defaults.intervalQuery);
-  let queryTwo: IReportTypeQuery = _.clone(defaults.reportTypeQuery);
-  let queryThree: ICustomerIntervalQuery = _.clone(defaults.customerIntervalQuery);
-  let queryFour: ITypeQuery = _.clone(defaults.typeQuery);
+  let queryOne: IIntervalQuery = _.cloneDeep(defaults.intervalQuery);
+  let queryTwo: IReportTypeQuery = _.cloneDeep(defaults.reportTypeQuery);
+  let queryThree: ICustomerIntervalQuery = _.cloneDeep(defaults.customerIntervalQuery);
+  let queryFour: ITypeQuery = _.cloneDeep(defaults.typeQuery);
   queryOne.cache = cacheValue;
   queryTwo.cache = cacheValue;
   queryThree.cache = cacheValue;
@@ -124,7 +124,7 @@ describe('Service: Common Report Service', () => {
 
       if (responseType === 0) {
         for (let i = 7; i > 0; i--) {
-          let tmpItem = _.clone(defaults.graphItem);
+          let tmpItem = _.cloneDeep(defaults.graphItem);
           tmpItem.date = moment().tz(defaults.timezone)
             .subtract(i, defaults.DAY)
             .format(defaults.dayFormat);
@@ -133,7 +133,7 @@ describe('Service: Common Report Service', () => {
       } else if (responseType === 1) {
         let dayOffset = getOffset(parseInt(moment().format('e'), 10));
         for (let x = 3; x >= 0; x--) {
-          let temp = _.clone(defaults.graphItem);
+          let temp = _.cloneDeep(defaults.graphItem);
           temp.date = moment().tz(defaults.timezone)
             .startOf(defaults.WEEK)
             .subtract(dayOffset + (x * 7), defaults.DAY)
@@ -142,7 +142,7 @@ describe('Service: Common Report Service', () => {
         }
       } else {
         for (let y = 2; y >= 0; y--) {
-          let item = _.clone(defaults.graphItem);
+          let item = _.cloneDeep(defaults.graphItem);
           item.date = moment().tz(defaults.timezone)
             .subtract(y, defaults.MONTH)
             .startOf(defaults.MONTH)
@@ -170,14 +170,14 @@ describe('Service: Common Report Service', () => {
 
       if (responseType === 0) {
         for (let i = 8; i > 0; i--) {
-          let tmpItem = _.clone(defaults.graphItem);
+          let tmpItem = _.cloneDeep(defaults.graphItem);
           tmpItem.date = moment().subtract(i, defaults.DAY)
             .format(defaults.dayFormat);
           returnGraph.push(tmpItem);
         }
       } else if (responseType === 1) {
         for (let x = 4; x >= 0; x--) {
-          let temp = _.clone(defaults.graphItem);
+          let temp = _.cloneDeep(defaults.graphItem);
           temp.date = moment().day(-1)
             .subtract(x, defaults.WEEK)
             .format(defaults.dayFormat);
@@ -185,7 +185,7 @@ describe('Service: Common Report Service', () => {
         }
       } else {
         for (let y = 52; y >= 0; y--) {
-          let item = _.clone(defaults.graphItem);
+          let item = _.cloneDeep(defaults.graphItem);
           item.date = moment().day(-1)
             .subtract(y, defaults.WEEK)
             .format(defaults.dayFormat);
@@ -214,7 +214,7 @@ describe('Service: Common Report Service', () => {
       expect(options).toEqual(queryOne);
 
       options = this.CommonReportService.getOptions(filter[1], 'type', 'action');
-      let updatedQuery = _.clone(queryOne);
+      let updatedQuery = _.cloneDeep(queryOne);
       updatedQuery.intervalCount = 31;
       updatedQuery.spanCount = 7;
       expect(options).toEqual(updatedQuery);
@@ -229,7 +229,7 @@ describe('Service: Common Report Service', () => {
 
     it('getOptionsOverPeriod should return partner options', function () {
       let options: IIntervalQuery = this.CommonReportService.getOptionsOverPeriod(filter[0], 'type', 'action');
-      let updatedQuery = _.clone(queryOne);
+      let updatedQuery = _.cloneDeep(queryOne);
       updatedQuery.spanCount = 7;
       expect(options).toEqual(updatedQuery);
 
@@ -249,7 +249,7 @@ describe('Service: Common Report Service', () => {
       expect(options).toEqual(queryOne);
 
       options = this.CommonReportService.getTrendOptions(filter[1], 'type', 'action');
-      let updatedQuery = _.clone(queryOne);
+      let updatedQuery = _.cloneDeep(queryOne);
       updatedQuery.intervalCount = 31;
       expect(options).toEqual(updatedQuery);
 
@@ -260,7 +260,7 @@ describe('Service: Common Report Service', () => {
 
     it('getReportTypeOptions should return partner reportType options', function () {
       let options: IReportTypeQuery = this.CommonReportService.getReportTypeOptions(filter[0], 'type', 'action');
-      let updatedQuery = _.clone(queryTwo);
+      let updatedQuery = _.cloneDeep(queryTwo);
       updatedQuery.reportType = defaults.usageOptions[0];
       expect(options).toEqual(updatedQuery);
 
@@ -275,7 +275,7 @@ describe('Service: Common Report Service', () => {
 
     it('getTypeOptions should return customer type options', function () {
       let options: ITypeQuery = this.CommonReportService.getTypeOptions(filter[0], 'name');
-      let updatedQuery = _.clone(queryFour);
+      let updatedQuery = _.cloneDeep(queryFour);
       updatedQuery.type = defaults.usageOptions[0];
       expect(options).toEqual(updatedQuery);
 
@@ -290,7 +290,7 @@ describe('Service: Common Report Service', () => {
 
     it('getLineTypeOptions should return customer type options', function () {
       let options: ITypeQuery = this.CommonReportService.getLineTypeOptions(filter[0], 'name');
-      let updatedQuery = _.clone(queryFour);
+      let updatedQuery = _.cloneDeep(queryFour);
       updatedQuery.type = defaults.altUsageOptions[0];
       expect(options).toEqual(updatedQuery);
 
@@ -308,7 +308,7 @@ describe('Service: Common Report Service', () => {
       expect(options).toEqual(queryThree);
 
       options = this.CommonReportService.getCustomerOptions(filter[1], 'type', 'action', true);
-      let updatedQuery = _.clone(queryThree);
+      let updatedQuery = _.cloneDeep(queryThree);
       updatedQuery.intervalCount = 31;
       updatedQuery.spanCount = 7;
       expect(options).toEqual(updatedQuery);
@@ -323,7 +323,7 @@ describe('Service: Common Report Service', () => {
 
     it('getAltCustomerOptions should return customer options', function () {
       let options: ICustomerIntervalQuery = this.CommonReportService.getAltCustomerOptions(filter[0], 'type', 'action', true);
-      let updatedQuery = _.clone(queryThree);
+      let updatedQuery = _.cloneDeep(queryThree);
       updatedQuery.spanCount = 7;
       expect(options).toEqual(updatedQuery);
 

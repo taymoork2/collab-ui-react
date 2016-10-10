@@ -32,6 +32,15 @@ describe('Service: MediaClusterServiceV2', function () {
     $httpBackend.verifyNoOutstandingExpectation();
     $httpBackend.verifyNoOutstandingRequest();
   });
+  it('should delete v2 cluster with connectors', function () {
+    $httpBackend.when('POST', /^\w+.*/).respond(204);
+    var callback = sinon.stub();
+    Service.deleteClusterWithConnector('clusterId').then(callback);
+    $httpBackend.flush();
+    expect(callback.callCount).toBe(1);
+    $httpBackend.verifyNoOutstandingExpectation();
+    $httpBackend.verifyNoOutstandingRequest();
+  });
 
   it('should update v2 cluster', function () {
     $httpBackend.when('PATCH', /^\w+.*/).respond(204);

@@ -526,7 +526,8 @@
     "threeMonths": "Last 3 Months",
     "threeMonths2": "last three months",
     "threePlusMonths": "Last 3+ Months",
-    "lastTwelveMonths": "last twelve months",
+    "lastTwelveWeeks": "Last 12 Weeks",
+    "lastTwelveWeeks2": "last twelve weeks",
     "mostEngaged": "5 Most Engaged",
     "leastEngaged": "5 Least Engaged",
     "highQuality": "5 Highest Quality",
@@ -607,10 +608,10 @@
     "mostActiveError": "There was an error while loading the data for Most Active Users.",
     "calls": "Calls",
     "customer": "Customer",
-    "hideActiveUsers": "Hide most active users",
+    "show": "Show most active users",
+    "hide": "Hide most active users",
     "mostActiveUsers": "Most Active Users in the {{time}}",
     "registeredUsers": "Registered Users",
-    "showActiveUsers": "Show most active users",
     "squaredActivity": "Total Activity",
     "sparkMessages": "Spark Messages",
     "user": "User",
@@ -1030,7 +1031,8 @@
     "error": "Error",
     "turnOff": "Turn Off",
     "overview": "Overview",
-    "notAvailable": "N/A"
+    "notAvailable": "N/A",
+    "ciscoCollaborationCloud": "Cisco Collaboration Cloud"
   },
   "notifications": {
     "success": "Success notifications",
@@ -1420,7 +1422,7 @@
       "selectExisting": "Select an existing Expressway clusters",
       "selectClusterPlaceholder": "Select an Expressway cluster…",
       "selectClusterPlaceholderNoneFound": "No eligible clusters found",
-      "enterDisplayName": "Enter a name for the Expressway:",
+      "enterDisplayName": "Enter a name for the Expressway cluster:",
       "clusternameWatermark": "Enter cluster name…",
       "cannotCreateCluster": "Could not create cluster. Try again later, or contact your Cisco technical support representative if the problem persists.",
       "cannotProvisionConnector": "Could not provision {{ConnectorName}}. Try again later, or contact your Cisco technical support representative if the problem persists.",
@@ -1501,10 +1503,10 @@
       "not_operational": "Not Operational"
     },
     "userSidepanel": {
-      "warningInvitePending": "This user has not yet accepted the invitation to join Cisco Spark. You can still enable {{ServiceName}}, but activation will not succeed until the user has been onboarded.",
-      "entitlements-dont-exist": "Entitlements for {{userName}} do not exist.",
-      "previously-updated": "Could not save entitlements, as they have already been updated somewhere else.",
-      "not-updated": "Entitlements could not be updated for {{userName}}.",
+      "warningInvitePending": "This user has not yet accepted the invitation to join Cisco Spark. You can still enable {{ServiceName}}, but activation will not succeed until the user signs in.",
+      "entitlements-dont-exist": "Service licenses for {{userName}} do not exist.",
+      "previously-updated": "Could not save licenses. They are allocated somewhere else.",
+      "not-updated": "Licenses could not be updated for {{userName}}.",
       "readUserStatusFailed": "Unable to read the current user status. Please try again later.",
       "refreshUserFailed": "Unable to refresh the user status. Please try again later.",
       "refreshUserDidNoGood": "Unable to get the user status. Please contact support if the problem persists."
@@ -1612,7 +1614,7 @@
       "upgradeDone": "Upgrade completed!",
       "upToDate": "{{connectorType}} is up to date on this cluster.",
       "upgradePossible": "A new version is available for {{connectorType}}: {{availableVersion}}.",
-      "upgradeWarning": "This cluster has one or more offline nodes. It is recommended to bring all nodes online before initiating an upgrade."
+      "upgradeWarning": "This cluster has one or more nodes where {{ManagementConnector}} is not sending updates to {{CiscoCollaborationCloud}}. It is recommended to bring {{ManagementConnector}} online before initiating an upgrade."
     },
     "expresswayClusterSettings": {
       "pageTitle": "{{clusterName}} settings",
@@ -3772,6 +3774,18 @@
       "nodesImpact": "Nodes Impacted",
       "raised": "Raised"
     },
+    "deactivate": {
+      "areYou": "Are you sure you want to deactivate your Hybrid Media Service?",
+      "future": "All future meetings will be hosted in the cloud.",
+      "complete": "When completed there is no way to undo this action. You will have to activate Hybrid Media Service again.",
+      "deregister": "To deactivate this service it is necessary to deregister the following clusters:",
+      "ready": "I'm ready to deregister these clusters.",
+      "button-deactivate": "Deactivate Service",
+      "success": "Your Hybrid Media Service was successfully deactivated.",
+      "error": "Error in deregistering clusters. Please try again after sometime.",
+      "step": "Step ",
+      "of": " of 2"
+    },
     "add-resource-dialog": {
       "title": "Register a New media server",
       "text1": "Create a new or choose an existing Media Cluster to assign the new media server to:",
@@ -5355,7 +5369,8 @@
       "local": "Local"
     },
     "vmprefix": "Voicemail Access Prefix",
-    "outbounddigit": "Outbound Dial Digit"
+    "outboundDigit": "Outbound Dial Digit",
+    "areaCode": "Area Code"
   },
   "activation": {
     "verificationComplete": "Verification Complete",
@@ -5476,6 +5491,7 @@
         "title": "Clusters",
         "description": "On-premises clusters and configuration for your organization.",
         "buttons": {
+          "none": "0 Clusters",
           "all": "All Clusters",
           "expressway": "Expressway",
           "mediafusion": "Media Fusion",
