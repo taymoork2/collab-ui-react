@@ -142,6 +142,7 @@
 
     vm.modifyComponentStatus = function (scope) {
       $log.log(scope);
+      scope.status = scope.statusObj.value;
       var newComponent = {
         "componentId": scope.componentId,
         "status": scope.status
@@ -149,6 +150,7 @@
       DcomponentService.modifyComponent(
         newComponent
       ).then(function () {
+        $window.alert('status of ' + scope.componentName + ' has been changed to ' + scope.status);
       });
     };
   }
