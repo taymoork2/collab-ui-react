@@ -1,5 +1,6 @@
 (function () {
   'use strict';
+
   var DEFAULT_LANGUAGE = 'en_US';
 
   var languages = [{

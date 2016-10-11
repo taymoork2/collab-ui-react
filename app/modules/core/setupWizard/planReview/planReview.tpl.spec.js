@@ -16,7 +16,8 @@ describe('Template: planReview', function () {
     getConferenceServices: sinon.stub().returns(getJSONFixture('core/json/authInfo/confServices.json')),
     getCareServices: sinon.stub().returns(getJSONFixture('core/json/authInfo/careServices.json').careLicense),
     getCmrServices: sinon.stub().returns(getJSONFixture('core/json/authInfo/cmrServices.json')),
-    getLicenses: sinon.stub().returns(getJSONFixture('core/json/authInfo/licenseServices.json'))
+    getLicenses: sinon.stub().returns(getJSONFixture('core/json/authInfo/licenseServices.json')),
+    isCare: sinon.stub().returns(true)
   };
 
   beforeEach(angular.mock.module(function ($provide) {
@@ -81,7 +82,6 @@ describe('Template: planReview', function () {
       expect(view.find('#paidCare').length).toBe(1);
       expect(controller.careServices.isNewTrial).toEqual(false);
       expect(view.find('#careStartTrial').length).toBe(0);
-      expect(view.find('[translate="firstTimeWizard.care"]').length).toBe(2);
       expect(view.find('[translate="firstTimeWizard.care"]').length).toBe(2);
       expect(controller.careServices.services).toBeDefined();
       var careService = controller.careServices.services;

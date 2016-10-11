@@ -8,7 +8,7 @@
   function ExpresswayEnterNameController($q, $stateParams, $translate, FusionClusterService, XhrNotificationService) {
     var vm = this;
     var wizardData = $stateParams.wizard.state().data;
-    vm.name = wizardData.expressway.hostname;
+    vm.name = '';
     vm.next = next;
     vm.canGoNext = canGoNext;
     vm.handleKeypress = handleKeypress;

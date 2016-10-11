@@ -22,6 +22,7 @@ const prodWebpack = merge.smart(commonWebpack, {
     new HtmlWebpackPlugin({
       template: 'index.html',
       inject: 'body',
+      ngStrictDi: '',
     }),
     new ExtractTextPlugin('styles/[name].[hash].css'),
     new webpack.NoErrorsPlugin(),

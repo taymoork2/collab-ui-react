@@ -85,6 +85,7 @@ describe('Service: FusionClusterStatesService', function () {
         name: 'stopped',
         severity: 3,
         label: 'error',
+        cssClass: 'danger',
       });
     });
 
@@ -95,6 +96,7 @@ describe('Service: FusionClusterStatesService', function () {
         name: 'not_installed',
         severity: 1,
         label: 'unknown',
+        cssClass: 'disabled',
       });
     });
   });

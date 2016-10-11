@@ -6,9 +6,13 @@ namespace domainManagement {
     private _error;
 
     /* @ngInject */
-    constructor(private $state, private $previousState, private DomainManagementService) {
-      this._domain = $state.params.domain;
-      this._loggedOnUser = $state.params.loggedOnUser;
+    constructor(
+      private $previousState,
+      private $state,
+      private DomainManagementService,
+    ) {
+      this._domain = this.$state.params.domain;
+      this._loggedOnUser = this.$state.params.loggedOnUser;
     }
 
     get domainName() {
@@ -29,7 +33,7 @@ namespace domainManagement {
     }
 
     public claim() {
-      this.DomainManagementService.claimDomain(this._domain.text).then(res => {
+      this.DomainManagementService.claimDomain(this._domain.text).then(() => {
           this.$previousState.go();
         },
         err => {

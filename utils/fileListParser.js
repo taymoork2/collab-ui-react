@@ -1,6 +1,7 @@
 /**
  * File list parsing utility
  */
+
 'use strict';
 
 var fs = require('fs');

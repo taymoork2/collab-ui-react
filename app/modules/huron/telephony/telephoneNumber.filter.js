@@ -1,7 +1,7 @@
 (function () {
   'use strict';
 
-  angular.module('Huron')
+  angular.module('huron.telephoneNumber', [])
     .filter('telephoneNumber', telephoneNumber);
 
   /* @ngInject */

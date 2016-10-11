@@ -7,8 +7,8 @@ describe('Customer Reports', function () {
   });
 
   describe('Reports Page', function () {
-    var time = ['Last Week', 'Last Month', 'Last Three Months'];
-    var lowerTime = ['last week', 'last month', 'last three months'];
+    var time = ['Last 7 Days', 'Last 4 Weeks', 'Last 3 Months'];
+    var lowerTime = ['last seven days', 'last four weeks', 'last three months'];
 
     it('should navigate to customer reports page', function () {
       navigation.clickReports();
@@ -40,7 +40,6 @@ describe('Customer Reports', function () {
       // Active Users
       utils.expectIsDisplayed(reports.activeHeader);
       utils.expectIsDisplayed(reports.activeCustomerDescription);
-      utils.expectTextToBeSet(reports.activeCustomerDescription, lowerTime[0]);
       utils.expectIsDisplayed(reports.activeUsers);
 
       // Most Active Users
@@ -139,7 +138,6 @@ describe('Customer Reports', function () {
       // Active Users
       utils.expectIsDisplayed(reports.activeHeader);
       utils.expectIsDisplayed(reports.activeCustomerDescription);
-      utils.expectTextToBeSet(reports.activeCustomerDescription, lowerTime[1]);
       utils.expectIsDisplayed(reports.activeUsers);
 
       // Most Active Users

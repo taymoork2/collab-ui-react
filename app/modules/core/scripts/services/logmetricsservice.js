@@ -12,7 +12,7 @@
     .name;
 
   /* @ngInject */
-  function LogMetricsService($http, Authinfo, Config, Log, UrlConfig) {
+  function LogMetricsService($http, Authinfo, Log, Config, UrlConfig) {
 
     function LogMetricEvent(eventAction, eventType, status, elapsedTime, units, data) {
       this.logStatus = status;
@@ -64,7 +64,12 @@
         domainManageVerify: 'DOMAINVER',
         domainManageInstructions: 'DOMAININST',
         helpdeskSearch: 'HELPDESKSEARCH',
-        helpdeskOperation: 'HELPDESKOPERATION'
+        helpdeskOperation: 'HELPDESKOPERATION',
+        careTemplateInit: 'CARETEMPLATEINIT',
+        careTemplateFinish: 'CARETEMPLATEFINISH',
+        careReports: 'CAREREPORTS',
+        careEnabled: 'CAREENABLED',
+        careDisabled: 'CAREDISABLED'
       },
 
       getEventAction: function (eAction) {
@@ -146,6 +151,14 @@
           case 'users.add':
             msg = "In invite users page";
             eType = this.getEventType('customerInviteUsersPage');
+            break;
+          case 'reports.care':
+            msg = 'In Care reports';
+            eType = this.getEventType('careReports');
+            break;
+          case 'care.ChatSA':
+            msg = 'In Care Template setup assistant';
+            eType = this.getEventType('careTemplateInit');
             break;
           default:
             stateFound = false;

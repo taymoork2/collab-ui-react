@@ -46,7 +46,8 @@
         var helper = getServiceHelper();
         helper.setService(UserSearchServiceV2);
         helper.setApiArgs({
-          name: hint
+          name: hint,
+          wide: true,
         });
         helper.setExtractData(function (data) {
           return data.users;

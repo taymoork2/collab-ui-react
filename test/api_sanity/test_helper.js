@@ -118,9 +118,9 @@ var auth = {
     org: 'd30a6828-dc35-4753-bab4-f9b468828688'
   },
   'contactcenter-admin': {
-    user: 'sunlight-integ-test-admn@outlook.com',
+    user: 'sunlight-atlas-test-admn@outlook.com',
     pass: 'C1sco123=',
-    org: '676a82cd-64e9-4ebd-933c-4dce087a02bd'
+    org: '36de4632-ccb9-4edf-8124-b74ce6943285'
   },
   'aa-admin': {
     user: 'indigoAA02+1@gmail.com',
@@ -138,7 +138,7 @@ var auth = {
     org: '52cd61a3-a950-47c3-8218-55429ff88eb7'
   },
   'wbx-t31BTSTestAdmin-UserSettings': {
-    user: 'provteam+t31ee@csgtrials.webex.com',
+    user: 'T31-EE-lhsieh@mailinator.com',
     pass: 'Cisco!23',
     org: 'b98940d4-2985-46ef-8c1a-ae8c1ef723ad'
   },

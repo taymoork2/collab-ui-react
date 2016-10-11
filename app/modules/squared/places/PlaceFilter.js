@@ -14,7 +14,7 @@
         filterValue: 'all'
       }, {
         count: 0,
-        name: "with devices",
+        name: $translate.instant('CsdmStatus.WithDevices'),
         filterValue: 'devices'
       }];
 
@@ -78,7 +78,13 @@
       function termMatchesAnyFieldOfItem(term, item) {
         return ['displayName'].some(function (field) {
           return item && (item[field] || '').toLowerCase().indexOf(term || '') != -1;
-        });
+        })
+          || ['readableType'].some(function (field) {
+            return item && (item[field] || '').toLowerCase().indexOf(term || '') != -1;
+          })
+          || ['sipUrl'].some(function (field) {
+            return item && (item[field] || '').toLowerCase().indexOf(term || '') != -1;
+          });
       }
 
       function matchesFilter(item) {

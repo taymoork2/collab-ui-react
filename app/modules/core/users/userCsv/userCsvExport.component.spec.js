@@ -51,8 +51,8 @@ describe('crUserCsvExport Component', function () {
 
   }
 
-  function initComponent() {
-    this.element = angular.element('<cr-user-csv-export is-over-export-threshold="testIsOverExportThreshold" on-status-change="onTestExportDownloadStatus(isExporting, dataUrl)"></cr-user-csv-export>');
+  function initComponent(html) {
+    this.element = angular.element(html);
     this.element = this.$compile(this.element)(this.$scope);
     this.$scope.$digest();
     this.$timeout.flush();
@@ -76,10 +76,12 @@ describe('crUserCsvExport Component', function () {
 
     beforeEach(function () {
       this.$scope.testIsOverExportThreshold = false;
-      this.$scope.onTestExportDownloadStatus = function () {};
+      this.$scope.onTestExportDownloadStatus = function () {
+      };
       spyOn(this.$scope, 'onTestExportDownloadStatus');
 
-      initComponent.apply(this);
+      var html = '<cr-user-csv-export is-over-export-threshold="testIsOverExportThreshold" on-status-change="onTestExportDownloadStatus(isExporting, dataUrl)"></cr-user-csv-export>';
+      initComponent.apply(this, [html]);
     });
 
     it('should have required HTML', function () {
@@ -190,6 +192,44 @@ describe('crUserCsvExport Component', function () {
 
   });
 
+  describe('Component as a link', function () {
+
+    beforeEach(function () {
+      this.$scope.testIsOverExportThreshold = false;
+      this.$scope.onTestExportDownloadStatus = function () {
+      };
+      spyOn(this.$scope, 'onTestExportDownloadStatus');
+
+      var html = '<cr-user-csv-export as-link="Click to Export" is-over-export-threshold="testIsOverExportThreshold" on-status-change="onTestExportDownloadStatus(isExporting, dataUrl)"></cr-user-csv-export>';
+      initComponent.apply(this, [html]);
+
+    });
+
+    it('should have required HTML', function () {
+
+      expect(this.vm.onStatusChange).toBeDefined();
+      expect(this.vm.isOverExportThreshold).toBeFalsy();
+      expect(this.$scope.onTestExportDownloadStatus).not.toHaveBeenCalled();
+
+      expect(this.vm.isDownloading).toBeFalsy();
+      expect(this.element.find('[ng-click="$ctrl.downloadTemplate()"]')).toHaveLength(0);
+      var exportElement = this.element.find('a[ng-click="$ctrl.exportCsv()"]');
+      expect(exportElement).toBeDefined();
+
+
+      this.vm.isDownloading = true;
+      this.$scope.$apply();
+
+      expect(this.vm.isDownloading).toBeTruthy();
+      expect(this.element.find('[ng-click]')).toHaveLength(1);
+      expect(this.element.find('[ng-click="$ctrl.cancelDownload()"]')).toHaveLength(1);
+      expect(this.element.find('.icon.icon-spinner')).toHaveLength(1);
+      expect(this.element.find('.download-anchor')).toHaveLength(1);
+    });
+
+
+  });
+
   /////////////
 
   describe('Controller', function () {
@@ -201,6 +241,22 @@ describe('crUserCsvExport Component', function () {
         useCsvDownloadDirective: false
       };
       initController.apply(this);
+    });
+
+    it('should register/unregister event handlers over lifecycle', function () {
+
+      var listeners = this.$rootScope.$$listeners;
+
+      // event handlers should be registered on rootScope
+      expect(_.isFunction(listeners['csv-download-request-started'][0])).toBeTruthy();
+      expect(_.isFunction(listeners['csv-download-request-completed'][0])).toBeTruthy();
+
+      this.vm.$onDestroy();
+
+      // event handlers should no longer be registered on root scope
+      expect(_.isFunction(listeners['csv-download-request-started'][0])).toBeFalsy();
+      expect(_.isFunction(listeners['csv-download-request-completed'][0])).toBeFalsy();
+
     });
 
     it('should support downloadTemplate()', function () {

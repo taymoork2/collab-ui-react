@@ -167,7 +167,7 @@
     }
 
     function isTerminusCustomer(customerId) {
-      if (_.find(terminusDetails, 'customerId', customerId)) {
+      if (_.find(terminusDetails, { customerId: customerId })) {
         return $q.resolve(true);
       }
       return PstnSetupService.getCustomer(customerId)
@@ -196,7 +196,7 @@
     }
 
     function getPendingOrderQuantity() {
-      return _.sum(getPendingOrders(), 'quantity');
+      return _.sumBy(getPendingOrders(), 'quantity');
     }
 
     function getQuantity(type) {

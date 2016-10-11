@@ -14,7 +14,7 @@
     var weeks = 3;
     var lineWeeks = 4;
     var months = 2;
-    var thirteenWeeks = 13;
+    var year = 52;
 
     return {
       dummyActiveUserData: dummyActiveUserData,
@@ -65,15 +65,11 @@
       } else {
         timespan = months;
         if (lineGraph) {
-          timespan = thirteenWeeks;
+          timespan = year;
         }
       }
       for (var i = timespan; i >= 0; i--) {
-        if (lineGraph) {
-          dummyGraph.push(getActiveUserDataPoint(filter, i + 1, lineGraph, timespan - i));
-        } else {
-          dummyGraph.push(getActiveUserDataPoint(filter, i, lineGraph, timespan - i));
-        }
+        dummyGraph.push(getActiveUserDataPoint(filter, i, lineGraph, timespan - i));
       }
 
       return dummyGraph;
@@ -84,16 +80,15 @@
 
       if (lineGraph) {
         if (filter.value === 0) {
-          date = moment().subtract(index, 'day').format(dayFormat);
-        } else if (filter.value === 1 || filter.value === 2) {
-          date = moment().subtract(index * days, 'day').format(dayFormat);
+          date = moment().subtract(index + 1, 'day').format(dayFormat);
+        } else {
+          date = moment().day(-1).subtract(index, 'week').format(dayFormat);
         }
       } else {
         if (filter.value === 0) {
           index++;
         }
         var commonData = getCommonData(filter, index);
-        count = commonData.count;
         date = commonData.date;
       }
 
@@ -105,8 +100,6 @@
         totalRegisteredUsers: totalRegisteredUsers,
         activeUsers: activeUsers,
         percentage: getPercentage(activeUsers, totalRegisteredUsers),
-        colorOne: chartColors.dummyGrayLight,
-        colorTwo: chartColors.dummyGray,
         balloon: false
       };
     }
@@ -211,9 +204,6 @@
         goodQualityDurationSum: goodQualityDurationSum,
         fairQualityDurationSum: fairQualityDurationSum,
         poorQualityDurationSum: poorQualityDurationSum,
-        colorOne: chartColors.dummyGray,
-        colorTwo: chartColors.dummyGrayLight,
-        colorThree: chartColors.dummyGrayLighter,
         balloon: false
       };
     }

@@ -13,6 +13,7 @@ const devWebpack = merge.smart(commonWebpack, {
     new HtmlWebpackPlugin({
       template: 'index.html',
       inject: 'body',
+      ngStrictDi: 'ng-strict-di',
     }),
     new webpack.optimize.OccurenceOrderPlugin(),
     new webpack.HotModuleReplacementPlugin(),

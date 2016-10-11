@@ -1,0 +1,51 @@
+[{
+  "id": "cfbb1949-b2bc-4524-8bba-cc09b97af862",
+  "name": "Empty Hybrid Media",
+  "connectors": [],
+  "releaseChannel": "Stable",
+  "provisioning": [],
+  "registered": true,
+  "targetType": "mf_mgmt",
+  "upgradeSchedule": {
+    "scheduleDays": ["sunday", "saturday", "tuesday", "wednesday", "thursday", "friday", "monday"],
+    "scheduleTime": "03:00",
+    "scheduleTimeZone": "America/Los_Angeles",
+    "moratoria": [],
+    "nextUpgradeWindow": {
+      "startTime": "2016-08-03T10:00:31.770Z",
+      "endTime": "2016-08-03T11:00:31.770Z"
+    }
+  }
+}, {
+  "id": "cfbb1949-b2bc-4524-8bba-cc09b97af862",
+  "name": "Empty Expressway",
+  "connectors": [{
+    "id": "c_mgmt@04425696",
+    "connectorType": "c_mgmt",
+    "upgradeState": "upgraded",
+    "state": "running",
+    "hostname": "vcs-amz42-sjc.discotheque.com",
+    "hostSerial": "04425696",
+    "alarms": [],
+    "runningVersion": "1.0",
+    "registered": true
+  }],
+  "releaseChannel": "Stable",
+  "provisioning": [{
+    "connectorType": "c_mgmt",
+    "provisionedVersion": "1.0",
+    "availableVersion": "1.0"
+  }],
+  "registered": true,
+  "targetType": "c_mgmt",
+  "upgradeSchedule": {
+    "scheduleDays": ["sunday"],
+    "scheduleTime": "03:00",
+    "scheduleTimeZone": "America/Los_Angeles",
+    "moratoria": [],
+    "nextUpgradeWindow": {
+      "startTime": "2016-08-03T10:00:31.770Z",
+      "endTime": "2016-08-03T11:00:31.770Z"
+    }
+  }
+}]

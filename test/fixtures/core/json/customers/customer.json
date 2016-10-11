@@ -37,6 +37,13 @@
     "daysLeft": "NaN",
     "volume": 50
   }, {
+    "name": "webexEE",
+    "isTrial": false,
+    "siteUrl": "testurl.webex.com",
+    "licenseId": 12346,
+    "daysLeft": "NaN",
+    "volume": 50
+  }, {
     "name": "communications",
     "isTrial": true,
     "licenseId": 12345,
@@ -62,7 +69,13 @@
     "volume": 50,
     "siteUrl": "example.webex.com"
   }],
-  "webexEEConferencing": {},
+  "webexEEConferencing": {
+    "isTrial": true,
+    "licenseId": 12346,
+    "daysLeft": 15,
+    "volume": 50,
+    "siteUrl": "example.webex.com"
+  },
   "webexEventCenter": {},
   "webexMeetingCenter": {},
   "webexTrainingCenter": {},

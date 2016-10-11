@@ -35,7 +35,7 @@
     link: '/users'
   }, {
     tab: 'placeTab',
-    icon: 'icon-meeting-room',
+    icon: 'icon-location',
     title: 'tabs.placeTab',
     feature: 'csdm-places',
     state: 'places',
@@ -45,7 +45,7 @@
     icon: 'icon-cloud',
     title: 'tabs.servicesTab',
     state: 'services-overview',
-    link: 'services/overview'
+    link: 'services'
   }, {
     tab: 'deviceTab',
     icon: 'icon-devices',
@@ -112,6 +112,14 @@
       state: 'media-service-v2',
       link: '#mediaserviceV2'
     }]
+  }, {
+    tab: 'statusTab',
+    icon: 'icon-bell',
+    title: 'tabs.statusTab',
+    desc: 'tabs.statusTabDesc',
+    feature: 'global-status',
+    state: 'status',
+    link: '/status'
   }];
 
   module.exports = angular

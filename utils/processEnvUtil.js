@@ -1,6 +1,7 @@
 /**
  * Process environment helper functions
  */
+
 'use strict';
 
 module.exports = function () {

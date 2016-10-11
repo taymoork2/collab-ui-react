@@ -7,14 +7,15 @@ class DialingCtrl implements ng.IComponentController {
   public options: IOption[] = [];
   public form: ng.IFormController;
 
+  /* @ngInject */
   public constructor(
-    private $translate,
     private DialingService: DialingService,
-    private $scope: ng.IScope) {
+    private $scope: ng.IScope,
+  ) {
     this.initialSelection = _.cloneDeep(this.selected);
-    this.options.push(DialingService.cbUseGlobal);
-    this.options.push(DialingService.cbAlwaysAllow);
-    this.options.push(DialingService.cbNeverAllow);
+    this.options.push(this.DialingService.cbUseGlobal);
+    this.options.push(this.DialingService.cbAlwaysAllow);
+    this.options.push(this.DialingService.cbNeverAllow);
   }
 
   public save() {

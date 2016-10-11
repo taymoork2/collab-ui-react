@@ -1,7 +1,9 @@
+/* globals fdescribe fit */
+
 'use strict';
 
 describe('UserListCtrl: Ctrl', function () {
-  var $controller, $scope, $state, $q, Userservice, UserListService, Orgservice, Authinfo, Config, Notification, FeatureToggleService;
+  var $controller, $scope, $state, $q, Userservice, UserListService, Orgservice, Authinfo, Auth, Config, Notification, FeatureToggleService;
   var photoUsers, currentUser, listUsers, listUsersMore, listAdmins, listAdminsMore, listPartners, getOrgJson;
   var userEmail, userName, uuid, userStatus, dirsyncEnabled, entitlements, telstraUser, failedData;
   photoUsers = getJSONFixture('core/json/users/userlist.controller.json');
@@ -16,7 +18,7 @@ describe('UserListCtrl: Ctrl', function () {
   beforeEach(angular.mock.module('Huron'));
   beforeEach(angular.mock.module('Sunlight'));
 
-  beforeEach(inject(function ($rootScope, _$state_, _$controller_, _$q_, _Userservice_, _UserListService_, _Orgservice_, _Authinfo_, _Config_, _Notification_, _FeatureToggleService_) {
+  beforeEach(inject(function ($rootScope, _$state_, _$controller_, _$q_, _Userservice_, _UserListService_, _Orgservice_, _Authinfo_, _Auth_, _Config_, _Notification_, _FeatureToggleService_) {
     $scope = $rootScope.$new();
     $state = _$state_;
     $controller = _$controller_;
@@ -25,6 +27,7 @@ describe('UserListCtrl: Ctrl', function () {
     Userservice = _Userservice_;
     Orgservice = _Orgservice_;
     Authinfo = _Authinfo_;
+    Auth = _Auth_;
     Config = _Config_;
     Notification = _Notification_;
     FeatureToggleService = _FeatureToggleService_;
@@ -66,8 +69,9 @@ describe('UserListCtrl: Ctrl', function () {
     });
     spyOn(Authinfo, 'isCSB').and.returnValue(true);
     spyOn(Authinfo, 'getOrgId').and.returnValue(currentUser.meta.organizationID);
-
     spyOn(Authinfo, 'isCisco').and.returnValue(false);
+    spyOn(Auth, 'isOnlineOrg').and.returnValue($q.when(false));
+
     spyOn(FeatureToggleService, 'supportsDirSync').and.returnValue($q.when(false));
     spyOn(FeatureToggleService, 'atlasCsvEnhancementGetStatus').and.returnValue($q.when(false));
     spyOn(FeatureToggleService, 'atlasEmailStatusGetStatus').and.returnValue($q.when(false));
@@ -75,7 +79,8 @@ describe('UserListCtrl: Ctrl', function () {
   }));
 
   function initController() {
-    $controller('UserListCtrl', {
+
+    var ctrl = $controller('UserListCtrl', {
       $scope: $scope,
       $state: $state,
       Userservice: Userservice,
@@ -84,6 +89,19 @@ describe('UserListCtrl: Ctrl', function () {
       Config: Config
     });
 
+    spyOn(ctrl, 'configureGrid').and.callFake(function () {
+      // mock gridApi
+      $scope.gridApi = {
+        infiniteScroll: {
+          saveScrollPercentage: jasmine.createSpy().and.returnValue(),
+          resetScroll: jasmine.createSpy().and.returnValue(),
+          dataLoaded: jasmine.createSpy().and.returnValue()
+        }
+      };
+      return $q.when();
+    });
+
+    ctrl.$onInit();
     $scope.$apply();
   }
 
@@ -120,9 +138,12 @@ describe('UserListCtrl: Ctrl', function () {
       expect($scope.userList.partnerUsers).toEqual(listPartners.partners);
     });
 
-    it('should append list with users and admins, but not partners when querying from scrolling index', function () {
+    it('should return additional pages of data when they exist', function () {
+
       var scrollingListUsers = listUsers.Resources.concat(listUsersMore.Resources);
+      listUsers.totalResults = _.size(scrollingListUsers);
       var scrollingListAdmins = listAdmins.Resources.concat(listAdminsMore.Resources);
+      listAdmins.totalResults = _.size(scrollingListAdmins);
 
       $scope.getUserList(100); // >0 index
       expect($scope.userList.allUsers).toEqual(scrollingListUsers);
@@ -257,4 +278,127 @@ describe('UserListCtrl: Ctrl', function () {
       expect($scope.totalUsers).toEqual($scope.userExportThreshold + 1);
     });
   });
+
+  describe('canShowActionsMenu', function () {
+
+    beforeEach(function () {
+      initController();
+      spyOn($scope, 'canShowResendInvite').and.returnValue(true);
+      spyOn($scope, 'canShowUserDelete').and.returnValue(true);
+
+      this.user = {
+        userStatus: 'active'
+      };
+    });
+
+    it('should return false if dirSync is enabled and user not pending', function () {
+      $scope.dirsyncEnabled = true;
+      expect($scope.canShowActionsMenu(this.user)).toBeFalsy();
+    });
+
+    it('should return true if dirSync is enabled and user is pending', function () {
+      $scope.dirsyncEnabled = true;
+      this.user.userStatus = 'pending';
+      expect($scope.canShowActionsMenu(this.user)).toBeTruthy();
+    });
+
+    // test available actions
+    it('should return false if no available actions', function () {
+      $scope.canShowUserDelete.and.returnValue(false);
+      $scope.canShowResendInvite.and.returnValue(false);
+      expect($scope.canShowActionsMenu(this.user)).toBeFalsy();
+    });
+
+    it('should return true if only canShowResendInvite true', function () {
+      $scope.canShowUserDelete.and.returnValue(false);
+      expect($scope.canShowActionsMenu(this.user)).toBeTruthy();
+    });
+
+    it('should return true if only canShowUserDelete true', function () {
+      $scope.canShowResendInvite.and.returnValue(false);
+      expect($scope.canShowActionsMenu(this.user)).toBeTruthy();
+    });
+
+  });
+
+  describe('canShowUserDelete', function () {
+
+    beforeEach(function () {
+      initController();
+      spyOn($scope, 'getUserLicenses').and.returnValue(true);
+      spyOn($scope, 'isOnlyAdmin').and.returnValue(false);
+    });
+
+    it('should return false if no user licenses', function () {
+      $scope.getUserLicenses.and.returnValue(false);
+      expect($scope.canShowUserDelete(this.user)).toBeFalsy();
+    });
+
+    it('should return false if dirsync enabled', function () {
+      $scope.dirsyncEnabled = true;
+      expect($scope.canShowUserDelete(this.user)).toBeFalsy();
+    });
+
+    it('should return false if only admin is true', function () {
+      $scope.isOnlyAdmin.and.returnValue(true);
+      expect($scope.isOnlyAdmin(this.user)).toBeTruthy();
+      expect($scope.canShowUserDelete(this.user)).toBeFalsy();
+    });
+
+    it('should return true when all conditions met', function () {
+      expect($scope.canShowUserDelete(this.user)).toBeTruthy();
+    });
+
+  });
+
+  describe('canShowResendInvite', function () {
+
+    beforeEach(function () {
+      initController();
+      spyOn(Userservice, 'isHuronUser').and.returnValue(false);
+
+      this.user = {
+        userStatus: 'active'
+      };
+
+      $scope.isCSB = false;
+    });
+
+    it('should return false if isCSB is true', function () {
+      expect($scope.isCSB).toBeFalsy();
+      expect($scope.canShowResendInvite(this.user)).toBeFalsy();
+      Userservice.isHuronUser.and.returnValue(true);
+      expect($scope.canShowResendInvite(this.user)).toBeTruthy();
+
+      $scope.isCSB = true;
+      expect($scope.canShowResendInvite(this.user)).toBeFalsy();
+    });
+
+    it('should return true if isHuronUser', function () {
+      expect($scope.canShowResendInvite(this.user)).toBeFalsy();
+
+      Userservice.isHuronUser.and.returnValue(true);
+      expect($scope.canShowResendInvite(this.user)).toBeTruthy();
+    });
+
+    it('should return true if userStatus is pending', function () {
+      expect($scope.canShowResendInvite(this.user)).toBeFalsy();
+      this.user.userStatus = 'pending';
+      expect($scope.canShowResendInvite(this.user)).toBeTruthy();
+    });
+
+    it('should return true if userStatus is error', function () {
+      expect($scope.canShowResendInvite(this.user)).toBeFalsy();
+      this.user.userStatus = 'error';
+      expect($scope.canShowResendInvite(this.user)).toBeTruthy();
+    });
+
+    it('should return false if userStatus is neither pending nor error', function () {
+      expect($scope.canShowResendInvite(this.user)).toBeFalsy();
+      this.user.userStatus = 'batman';
+      expect($scope.canShowResendInvite(this.user)).toBeFalsy();
+    });
+
+  });
+
 });

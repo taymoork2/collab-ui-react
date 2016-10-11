@@ -1,4 +1,5 @@
   'use strict';
+
   describe('AddResourceControllerClusterViewV2', function () {
     beforeEach(angular.mock.module('Mediafusion'));
     var redirectTargetPromise, $q, httpBackend, controller, $state, $stateParams, AddResourceCommonServiceV2, XhrNotificationService, $translate;

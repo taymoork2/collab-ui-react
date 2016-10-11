@@ -1,0 +1,45 @@
+<div class="modal-header">
+  <button type="button" class="close" ng-click="aaNewTreatmentModalCtrl.cancel()"></button>
+  <h3 class="modal-title" translate="autoAttendant.queueSettings"></h3>
+</div>
+
+<div class="modal-body">
+	<div class="row">
+		<div class="columns medium-4"> 
+		  <label class="h4 ng-scope" translate="autoAttendant.fallbackLabel"></label>
+		</div>
+		<div class="columns medium-8">
+			<div class="row">
+				<div class="column">
+				  <p translate="autoAttendant.maxWaitTime"></p>
+				</div>
+			</div>
+			<div class="row">
+				<div class="columns large-4 medium-5 small-6"><cs-select id="queueMin" ng-model="aaNewTreatmentModalCtrl.minute" options="aaNewTreatmentModalCtrl.minutes"   placeholder="aaNewTreatmentModalCtrl.selectPlaceholder" secondary-label="Minutes" labelfield="label" valuefield="label" icon="icon-chevron-down"></cs-select></div>
+			</div>
+			<div class="row"> 
+				<div class="column">
+					<div class="aa-treatment-modal">
+					  <p translate="autoAttendant.destinationLabel"></p>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="column large-8 medium-8"><cs-select ng-model="aaNewTreatmentModalCtrl.destination" name="destinationSelect" options="aaNewTreatmentModalCtrl.destinationOptions"   labelfield="label" valuefield="label" icon="icon-chevron-down" placeholder="aaNewTreatmentModalCtrl.selectPlaceholder">
+				</cs-select> </div>
+			</div>
+			<div class="row">
+				<div class="column large-8 medium-8">
+				 <p class="cs-input__help-text" translate="autoAttendant.destinationHelpMessage"></p> 
+				 </div>
+			</div>
+		</div>
+	</div>
+</div>
+  
+<div class="modal-footer">
+	<button id="cancelTreatmentFeature" class="btn" ng-click="aaNewTreatmentModalCtrl.cancel();" translate="common.cancel"></button>
+	<button id="saveTreatmentBtn"  class="btn btn-primary" ng-click="aaNewTreatmentModalCtrl.cancel();">
+	<span translate="common.save"></span></button>
+</div>
+

@@ -134,7 +134,6 @@
       var carrierObj = {
         uuid: carrier.uuid,
         name: carrier.name,
-        apiExists: carrier.apiExists,
         apiImplementation: carrier.apiImplementation,
         vendor: carrier.vendor,
         countryCode: carrier.countryCode,

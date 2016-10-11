@@ -459,6 +459,8 @@
             if (sayList.length > 0 && angular.isDefined(sayList[0].value)) {
               action.value = decodeUtf8(inAction.runActionsOnInput.prompts.sayList[0].value);
               action.voice = inAction.runActionsOnInput.voice;
+              action.description = inAction.runActionsOnInput.description;
+
               action.maxNumberOfCharacters = inAction.runActionsOnInput.maxNumberOfCharacters;
               action.minNumberOfCharacters = inAction.runActionsOnInput.minNumberOfCharacters;
               menuEntry.voice = inAction.runActionsOnInput.voice;
@@ -989,6 +991,7 @@
           var prompts = {};
           var sayListArr = [];
           var sayList = {};
+          newAction.description = action.description;
           sayList.value = encodeUtf8(action.value);
           sayListArr[0] = sayList;
           prompts.sayList = sayListArr;

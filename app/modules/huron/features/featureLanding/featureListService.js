@@ -6,11 +6,12 @@
     .service('HuronFeaturesListService', HuronFeaturesListService);
 
   /* @ngInject */
-  function HuronFeaturesListService($filter) {
+  function HuronFeaturesListService() {
     var service = {
       autoAttendants: autoAttendants,
       callParks: callParks,
       huntGroups: huntGroups,
+      pagingGroups: pagingGroups,
       filterCards: filterCards,
       orderByFilter: orderByFilter
     };
@@ -28,7 +29,7 @@
       var formattedList = [];
       _.forEach(data.ceInfos, function (aa) {
         formattedCard.cardName = aa.name;
-        formattedCard.numbers = _.pluck(aa.resources, 'number');
+        formattedCard.numbers = _.map(aa.resources, 'number');
         formattedCard.id = aa.ceUrl.substr(aa.ceUrl.lastIndexOf('/') + 1);
         formattedCard.featureName = 'huronFeatureDetails.aa';
         formattedCard.filterValue = 'AA';
@@ -96,11 +97,26 @@
       var formattedList = [];
       _.forEach(data, function (huntGroup) {
         formattedCard.cardName = huntGroup.name;
-        formattedCard.numbers = _.pluck(huntGroup.numbers, 'number');
+        formattedCard.numbers = _.map(huntGroup.numbers, 'number');
         formattedCard.memberCount = huntGroup.memberCount;
         formattedCard.id = huntGroup.uuid;
         formattedCard.featureName = 'huronFeatureDetails.hg';
         formattedCard.filterValue = 'HG';
+        formattedList.push(formattedCard);
+        formattedCard = {};
+      });
+      return orderByCardName(formattedList);
+    }
+
+    function pagingGroups(data) {
+      var formattedList = [];
+      _.forEach(data, function (pagingGroup) {
+        formattedCard.cardName = pagingGroup.name;
+        formattedCard.pgNumber = pagingGroup.number.number;
+        formattedCard.memberCount = pagingGroup.memberCount;
+        formattedCard.id = pagingGroup.uuid;
+        formattedCard.featureName = 'huronFeatureDetails.pg';
+        formattedCard.filterValue = 'PG';
         formattedList.push(formattedCard);
         formattedCard = {};
       });
@@ -112,49 +128,34 @@
      Card can be filtered by the specifying the filterValue (ex: AA, HG, CP)
      */
     function filterCards(list, filterValue, filterText) {
-      var filter = (filterValue === 'all') ? '' : filterValue;
-
-      var cardsFilteredByName = $filter('filter')(list, {
-        cardName: filterText,
-        filterValue: filter
+      var filterStringProperties = [
+        'cardName',
+        'startRange',
+        'endRange',
+        'pgNumber',
+        'memberCount'
+      ];
+      var filteredList = _.filter(list, function (feature) {
+        if (feature.filterValue !== filterValue && filterValue !== 'all') {
+          return false;
+        }
+        if (_.isEmpty(filterText)) {
+          return true;
+        }
+        var matchedStringProperty = _.some(filterStringProperties, function (stringProperty) {
+          return _.includes(_.get(feature, stringProperty), filterText);
+        });
+        var matchedNumbers = _.some(feature.numbers, function (number) {
+          return _.includes(number, filterText);
+        });
+        return matchedStringProperty || matchedNumbers;
       });
-
-      var cardsFilteredByNumber = $filter('filter')(list, {
-        cardName: "!" + filterText,
-        numbers: filterText,
-        filterValue: filter
-      });
-
-      var cardsFilteredByStartRange = $filter('filter')(list, {
-        cardName: "!" + filterText,
-        numbers: "!" + filterText,
-        startRange: filterText,
-        filterValue: filter
-      });
-
-      var cardsFilteredByEndRange = $filter('filter')(list, {
-        cardName: "!" + filterText,
-        numbers: "!" + filterText,
-        startRange: "!" + filterText,
-        endRange: filterText,
-        filterValue: filter
-      });
-
-      var cardsFilteredByMemberCount = $filter('filter')(list, {
-        cardName: "!" + filterText,
-        numbers: "!" + filterText,
-        startRange: "!" + filterText,
-        endRange: "!" + filterText,
-        memberCount: filterText,
-        filterValue: filter
-      });
-
-      return orderByFilter(cardsFilteredByName.concat(cardsFilteredByNumber, cardsFilteredByStartRange, cardsFilteredByEndRange, cardsFilteredByMemberCount));
+      return orderByFilter(filteredList);
     }
 
     function orderByCardName(list) {
       return _.sortBy(list, function (item) {
-        //converting cardName to lower case as _.sortByAll by default does a case sensitive sorting
+        //converting cardName to lower case as _.sortBy by default does a case sensitive sorting
         return item.cardName.toLowerCase();
       });
     }

@@ -6,7 +6,7 @@
     .controller('ExpresswayServiceController', ExpresswayServiceController);
 
   /* @ngInject */
-  function ExpresswayServiceController($state, $modal, $scope, $translate, XhrNotificationService, ServiceStateChecker, ServiceDescriptor, ClusterService, USSService, FusionUtils, FeatureToggleService, $stateParams) {
+  function ExpresswayServiceController($state, $modal, $scope, $stateParams, $translate, ServiceStateChecker, ServiceDescriptor, ClusterService, USSService, FusionUtils) {
     ClusterService.subscribe('data', clustersUpdated, {
       scope: $scope
     });
@@ -17,7 +17,6 @@
     var vm = this;
     vm.connectorType = $state.current.data.connectorType;
     vm.servicesId = FusionUtils.connectorType2ServicesId(vm.connectorType);
-    vm.serviceEnabled = null; // when we don't know yet, otherwise the value is true or false
     vm.route = FusionUtils.connectorType2RouteName(vm.connectorType); // kill?
     vm.loadingClusters = true;
 
@@ -37,8 +36,6 @@
     vm.openUserStatusReportModal = openUserStatusReportModal;
     vm.openAddResourceModal = openAddResourceModal;
     vm.showClusterSidepanel = showClusterSidepanel;
-    vm.enableService = enableService;
-    vm.featureToggled = false;
 
     vm.clusterListGridOptions = {
       data: 'exp.clusters',
@@ -70,23 +67,6 @@
       }]
     };
 
-    // TODO: use the new getClusters API for that
-    if (vm.servicesId[0] === 'squared-fusion-mgmt') {
-      ServiceDescriptor.services(function (error, services) {
-        if (!error) {
-          vm.serviceEnabled = _.any(ServiceDescriptor.filterAllExceptManagement(services), {
-            enabled: true
-          });
-        }
-      });
-    } else {
-      ServiceDescriptor.isServiceEnabled(vm.servicesId[0], function (error, enabled) {
-        if (!error) {
-          vm.serviceEnabled = enabled;
-        }
-      });
-    }
-
     function clustersUpdated() {
       ServiceStateChecker.checkState(vm.connectorType, vm.servicesId[0]);
       vm.clusters = ClusterService.getClustersByConnectorType(vm.connectorType);
@@ -114,17 +94,6 @@
       });
     }
 
-    function enableService(serviceId) {
-      vm.waitForEnabled = true;
-      ServiceDescriptor.setServiceEnabled(serviceId, true, function (error) {
-        if (error !== null) {
-          XhrNotificationService.notify('Problems enabling the service');
-        }
-        vm.serviceEnabled = true;
-        vm.waitForEnabled = false;
-      });
-    }
-
     function showClusterSidepanel(cluster) {
       $state.go('cluster-details', {
         clusterId: cluster.id,
@@ -133,43 +102,26 @@
     }
 
     function openAddResourceModal() {
-      if (vm.featureToggled) {
-        $modal.open({
-          resolve: {
-            connectorType: function () {
-              return vm.connectorType;
-            },
-            servicesId: function () {
-              return vm.servicesId;
-            },
-            firstTimeSetup: false
+      $modal.open({
+        resolve: {
+          connectorType: function () {
+            return vm.connectorType;
           },
-          controller: 'AddResourceController',
-          controllerAs: 'vm',
-          templateUrl: 'modules/hercules/add-resource/add-resource-modal.html',
-          type: 'small'
-        });
-      } else {
-        $modal.open({
-          controller: 'RedirectTargetController',
-          controllerAs: 'redirectTarget',
-          templateUrl: 'modules/hercules/redirect-target/redirect-target-dialog.html',
-          type: 'small'
-        });
-      }
+          servicesId: function () {
+            return vm.servicesId;
+          },
+          firstTimeSetup: false
+        },
+        controller: 'AddResourceController',
+        controllerAs: 'vm',
+        templateUrl: 'modules/hercules/add-resource/add-resource-modal.html',
+        type: 'small'
+      });
     }
 
-    function isFeatureToggled() {
-      return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridServicesResourceList);
-    }
-    isFeatureToggled().then(function (reply) {
-      vm.featureToggled = reply;
-      if (vm.featureToggled) {
-        ServiceDescriptor.isServiceEnabled(vm.servicesId[0], function (error, enabled) {
-          if (!enabled) {
-            firstTimeSetup();
-          }
-        });
+    ServiceDescriptor.isServiceEnabled(vm.servicesId[0], function (error, enabled) {
+      if (!enabled) {
+        firstTimeSetup();
       }
     });
 
@@ -193,6 +145,5 @@
         $state.go('services-overview');
       });
     }
-
   }
 }());

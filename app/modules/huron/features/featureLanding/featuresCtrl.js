@@ -6,7 +6,7 @@
     .controller('HuronFeaturesCtrl', HuronFeaturesCtrl);
 
   /* @ngInject */
-  function HuronFeaturesCtrl($scope, $state, $filter, $timeout, $modal, $q, $translate, Authinfo, HuronFeaturesListService, HuntGroupService, CallParkService, AutoAttendantCeInfoModelService, Notification, Log, FeatureToggleService) {
+  function HuronFeaturesCtrl($scope, $state, $filter, $timeout, $modal, $q, $translate, Authinfo, HuronFeaturesListService, HuntGroupService, CallParkService, PagingGroupService, AutoAttendantCeInfoModelService, Notification, Log, FeatureToggleService) {
 
     var vm = this;
     vm.searchData = searchData;
@@ -47,6 +47,17 @@
         vm.filters.push(cp);
       }
     });
+
+    FeatureToggleService.supports(FeatureToggleService.features.huronPagingGroup).then(function (result) {
+      if (result) {
+        var pg = {
+          name: $translate.instant('pagingGroup.title'),
+          filterValue: 'PG'
+        };
+        vm.filters.push(pg);
+      }
+    });
+
     /* LIST OF FEATURES
      *
      *  To add a New Feature
@@ -76,6 +87,15 @@
       isEmpty: false,
       i18n: 'huronFeatureDetails.cpName',
       color: 'cta'
+    }, {
+      name: 'PG',
+      getFeature: function () {
+        return PagingGroupService.getListOfPagingGroups();
+      },
+      formatter: HuronFeaturesListService.pagingGroups,
+      isEmpty: false,
+      i18n: 'huronFeatureDetails.pgName',
+      color: 'gray'
     }];
 
     init();
@@ -279,7 +299,7 @@
       });
 
       /* Goto the corresponding Set up Assistant controller
-      based on the feature selected */
+       based on the feature selected */
       modalInstance.result.then(function (selectedFeature) {
         vm.feature = selectedFeature;
       }, function () {

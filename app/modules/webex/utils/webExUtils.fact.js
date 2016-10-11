@@ -10,8 +10,8 @@
     $q,
     $log,
     $rootScope,
+    Auth,
     Authinfo,
-    Orgservice,
     WebExXmlApiFact
   ) {
 
@@ -41,7 +41,7 @@
       var licenses = Authinfo.getLicenses();
       var result = true;
 
-      var confLicenses = _.where(licenses, {
+      var confLicenses = _.filter(licenses, {
         siteUrl: siteUrl,
         licenseType: 'CONFERENCING',
         isCIUnifiedSite: false
@@ -61,7 +61,7 @@
       }
 
       if (result) {
-        var cmrLicenses = _.where(licenses, {
+        var cmrLicenses = _.filter(licenses, {
           siteUrl: siteUrl,
           licenseType: 'CMR',
           isCIUnifiedSite: false
@@ -310,8 +310,9 @@
     obj.getAllSitesWebexLicenseInfo = function () {
       var deferredGetWebexLicenseInfo = $q.defer();
 
-      Orgservice.getValidLicenses().then(
-        function getValidLicensesSuccess(licenses) {
+      Auth.getCustomerAccount(Authinfo.getOrgId()).then(
+        function getValidLicensesSuccess(response) {
+          var licenses = _.get(response, 'data.customers[0].licenses');
           // var funcName = "getValidLicensesSuccess()";
           // var logMsg = "";
 

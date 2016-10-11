@@ -42,7 +42,7 @@ describe('Controller: Overview Reports', function () {
 
       spyOn(Notification, 'notify');
       spyOn(validateService, 'validate');
-      spyOn($scope, '$on');
+      spyOn($scope, '$on').and.callThrough();
       spyOn(AmCharts, 'makeChart').and.callFake(function (div, data) {
         return {
           'dataProvider': data,
@@ -62,7 +62,6 @@ describe('Controller: Overview Reports', function () {
 
       ReportsService = {
         getPartnerMetrics: jasmine.createSpy('getPartnerMetrics').and.callFake(emptyFunction),
-        getTotalPartnerCounts: jasmine.createSpy('getTotalPartnerCounts').and.callFake(emptyFunction)
       };
 
       $controller('OverviewReportsCtrl', {
@@ -80,7 +79,7 @@ describe('Controller: Overview Reports', function () {
       expect($scope.entitlementStatus).toEqual(REFRESH);
       expect($scope.totalOrgsData).toEqual(customerList);
       expect($scope.currentSelection).toEqual(allCustomers);
-      expect($scope.$on.calls.count()).toEqual(2);
+      expect($scope.$on.calls.count()).toEqual(1);
     });
 
     it('getCustomerReports should set all reports status to refresh', function () {
@@ -88,6 +87,19 @@ describe('Controller: Overview Reports', function () {
       expect($scope.entitlementStatus).toEqual(READY);
       $scope.getCustomerReports();
       expect($scope.entitlementStatus).toEqual(REFRESH);
+    });
+
+    it('should get entitlements count for all customers', function () {
+      $rootScope.$broadcast('entitlementsLoaded', getJSONFixture('core/json/partnerReports/entitlementsManagedOrgs.json'));
+      expect($scope.entCount).toBe(30);
+    });
+
+    it('should get entitlements count for a single customer', function () {
+      $scope.currentSelection = {
+        value: '111-222-333',
+      };
+      $rootScope.$broadcast('entitlementsLoaded', getJSONFixture('core/json/partnerReports/entitlements.json'));
+      expect($scope.entCount).toBe(15);
     });
   });
 });

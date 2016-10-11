@@ -1,5 +1,5 @@
 <div class="sq-places-page">
-  <cs-page-header title="Places"></cs-page-header>
+  <cs-page-header title="{{::'tabs.placeTab' | translate}}"></cs-page-header>
   <cs-page-sub-header ng-show="sc.existsDevices()">
     <cs-page-sub-header-left>
       <cs-searchfilter filters="sc.placeFilter.getFilters()" search-item-fn="sc.placeFilter.setCurrentSearch(searchStr)" set-filter-fn="sc.placeFilter.setCurrentFilter(filter.filterValue)">{}
@@ -29,14 +29,18 @@
         <div class="none_found">
           <i class="icon icon-circle-comp-negative" />
           <span class="h5" translate="spacesPage.tryAgain"></span>
-          <span class="h1" translate="spacesPage.noneFound"></span>
+          <span class="h1" translate="placesPage.noneFound"></span>
         </div>
       </div>
       <div ng-if="!sc.existsDevices()">
         <div class="none_found">
-          <i class="icon icon-circle-telepresence" />
+          <i class="icon icon-circle-location" />
           <span class="h5" translate="spacesPage.nothingHerePlaces"></span>
-          <span class="h1" translate="spacesPage.noPlaces"></span>
+          <br>
+          <p class="emptyList">
+            <span translate="placesPage.placesDefinition"></span>
+            <span translate="placesPage.placesUses"></span>
+          </p>
           <button class="btn btn--people btn--large add-button" ng-click="sc.startAddPlaceFlow()">
             <span translate="spacesPage.addPlaceBtn"></span>
           </button>

@@ -1,4 +1,5 @@
 'use strict';
+
 describe('HelpdeskHttpRequestCancellerSpec', function () {
   beforeEach(angular.mock.module('Squared'));
 

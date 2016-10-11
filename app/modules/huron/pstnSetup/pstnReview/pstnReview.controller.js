@@ -144,7 +144,7 @@
       }
       _.forEach(vm.advancedOrders, function (order) {
         if (_.get(order, 'type') === PstnSetupService.BLOCK_ORDER) {
-          promise = PstnSetupService.orderBlock(PstnSetup.getCustomerId(), PstnSetup.getProviderId(), order.data.areaCode, order.data.length, order.data.consecutive)
+          promise = PstnSetupService.orderBlock(PstnSetup.getCustomerId(), PstnSetup.getProviderId(), order.data.areaCode, order.data.length, order.data.consecutive, order.data.nxx)
             .catch(pushErrorArray);
         } else if (_.get(order, 'type') === PstnSetupService.TOLLFREE_BLOCK_ORDER) {
           promise = PstnSetupService.orderTollFreeBlock(PstnSetup.getCustomerId(), PstnSetup.getProviderId(), order.data.areaCode, order.data.length, order.data.consecutive)

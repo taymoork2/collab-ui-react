@@ -24,7 +24,7 @@ function retry(runCounter, exitCode) {
   if (_runCounter < runCounterMax && fs.existsSync(config.e2eFailRetry)) {
     // mv default retry file to more specific name correlating to its run
     // ex. './.e2e-fail-retry' -> './cache/e2e-fail-retry-run-0'
-    retrySpecList = config.cache + '/' + _.trimLeft(config.e2eFailRetry, '.') + '-run-' + runCounter;
+    retrySpecList = config.cache + '/' + _.trimStart(config.e2eFailRetry, '.') + '-run-' + runCounter;
     fs.renameSync(config.e2eFailRetry, retrySpecList);
 
     // update the source of specs for the next run
@@ -49,6 +49,12 @@ function runE2E(runCounter) {
       delete args[argName];
     }
   });
+
+  // Once we are retrying tests, start logging verbose on tests
+  if (runCounter === 1) {
+    args.verbose = true;
+  }
+
   console.log('#### Protractor: max: ' + runCounterMax + ': run: ' + runCounter + ': start');
   var child = cp.fork('./protractor/protractor', unparse(args));
   child.on('exit', function (exitCode) {

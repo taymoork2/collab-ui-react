@@ -6,10 +6,10 @@
     .controller('AARouteToQueueCtrl', AARouteToQueueCtrl);
 
   /* @ngInject */
-  function AARouteToQueueCtrl($scope, $translate, QueueHelperService, AAUiModelService, AutoAttendantCeMenuModelService, AACommonService) {
+  function AARouteToQueueCtrl($scope, $translate, $modal, AAUiModelService, AutoAttendantCeMenuModelService, AACommonService) {
 
     var vm = this;
-
+    vm.hideQueues = true;
     vm.queueSelected = {
       description: '',
       id: ''
@@ -27,10 +27,19 @@
 
     var rtQueue = 'routeToQueue';
     var fromRouteCall = false;
+    vm.openQueueTreatmentModal = openQueueTreatmentModal;
 
     vm.populateUiModel = populateUiModel;
     vm.saveUiModel = saveUiModel;
     /////////////////////
+    function openQueueTreatmentModal() {
+      $modal.open({
+        templateUrl: 'modules/huron/features/autoAttendant/routeToQueue/aaNewTreatmentModal.tpl.html',
+        controller: 'AANewTreatmentModalCtrl',
+        controllerAs: 'aaNewTreatmentModalCtrl',
+        type: 'full'
+      });
+    }
 
     function populateUiModel() {
 
@@ -38,6 +47,11 @@
         vm.queueSelected.id = vm.menuEntry.actions[0].getValue();
       } else {
         vm.queueSelected.id = vm.menuKeyEntry.actions[0].getValue();
+      }
+      vm.queues = JSON.parse($scope.queues);
+      if (vm.queueSelected.id == '' && vm.hideQueues && vm.queues.length > 0) {
+        vm.queueSelected = vm.queues[0];
+        saveUiModel();
       }
       vm.queueSelected.description = _.result(_.find(vm.queues, {
         'id': vm.queueSelected.id
@@ -51,20 +65,6 @@
         vm.menuKeyEntry.actions[0].setValue(vm.queueSelected.id);
       }
       AACommonService.setPhoneMenuStatus(true);
-    }
-
-    function getQueues() {
-
-      return QueueHelperService.listQueues().then(function (aaQueueList) {
-        _.each(aaQueueList, function (aaQueue) {
-          var idPos = aaQueue.queueUrl.lastIndexOf("/");
-          vm.queues.push({
-            description: aaQueue.queueName,
-            id: aaQueue.queueUrl.substr(idPos + 1)
-          });
-        });
-      });
-
     }
 
     function activate() {
@@ -96,10 +96,7 @@
         }
 
       }
-      getQueues().then(function () {
-        populateUiModel();
-      });
-
+      populateUiModel();
     }
     activate();
   }

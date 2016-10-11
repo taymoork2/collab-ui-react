@@ -1,11 +1,5 @@
 namespace globalsettings {
 
-  interface IRetentionResponse {
-    data: {
-      sparkDataRetentionDays: string
-    };
-  }
-
   export class RetentionSettingController {
 
     public dataLoaded = false;
@@ -42,7 +36,13 @@ namespace globalsettings {
     }];
 
     /* @ngInject */
-    constructor(private $modal, private $translate, private Authinfo, private Notification, private RetentionService) {
+    constructor(
+      private $modal,
+      private $translate: ng.translate.ITranslateService,
+      private Authinfo,
+      private Notification,
+      private RetentionService,
+    ) {
       this.orgId = this.Authinfo.getOrgId();
 
       this.RetentionService.getRetention(this.orgId)
@@ -67,26 +67,26 @@ namespace globalsettings {
             controllerAs: 'ctrl',
           }).result.then(() => {
             this.RetentionService.setRetention(this.orgId, this.selectedRetention.value)
-              .then((response) => {
+              .then(() => {
                 this.initialRetention = this.selectedRetention; // now initial is selected
                 this.Notification.success('globalSettings.retention.notificationSuccess');
               })
               .catch((response) => {
                 this.selectedRetention = this.initialRetention; // revert the changes
-                this.Notification.error('globalSettings.retention.notificationFailure');
+                this.Notification.errorWithTrackingId(response, 'globalSettings.retention.notificationFailure');
               });
           }).catch(() => {
             this.selectedRetention = this.initialRetention; // revert changes if they close the modal
           });
         } else {
           this.RetentionService.setRetention(this.orgId, this.selectedRetention.value)
-            .then((response) => {
+            .then(() => {
               this.initialRetention = this.selectedRetention; // now initial is selected
               this.Notification.success('globalSettings.retention.notificationSuccess');
             })
             .catch((response) => {
               this.selectedRetention = this.initialRetention; // revert the changes
-              this.Notification.error('globalSettings.retention.notificationFailure');
+              this.Notification.errorWithTrackingId(response, 'globalSettings.retention.notificationFailure');
             });
         }
       }

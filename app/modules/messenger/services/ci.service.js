@@ -15,7 +15,6 @@
     var ciService = {
       getCiAdmins: getCiAdmins,
       getCiNonAdmins: getCiNonAdmins,
-      getCiOrgInfo: getCiOrgInfo,
       getEntitlements: getEntitlements,
       getRoles: getRoles,
       getUser: getUser,
@@ -32,55 +31,6 @@
     ////////////////////////////////////////////////////////////////////////////
 
     // Implementation ----------------------------------------------------------
-
-    function getCiOrgInfo() {
-      return [{
-        key: 'Org Name',
-        value: Authinfo.getOrgName()
-      }, {
-        key: 'Org ID',
-        value: Authinfo.getOrgId()
-      }, {
-        key: 'Email',
-        value: Authinfo.getEmails()
-      }, {
-        key: 'User ID',
-        value: Authinfo.getUserId()
-      }, {
-        key: 'Primary Email',
-        value: Authinfo.getPrimaryEmail()
-      }, {
-        key: 'Is Cisco?',
-        value: Authinfo.isCisco()
-      }, {
-        key: 'Roles',
-        value: Authinfo.getRoles()
-      }, {
-        key: 'Services',
-        value: Authinfo.getServices()
-      }, {
-        key: 'CMR Services',
-        value: Authinfo.getCmrServices()
-      }, {
-        key: 'Communication Services',
-        value: Authinfo.getCommunicationServices()
-      }, {
-        key: 'Conference Services',
-        value: Authinfo.getConferenceServices()
-      }, {
-        key: 'Managed Orgs',
-        value: Authinfo.getManagedOrgs()
-      }, {
-        key: 'Message Services',
-        value: Authinfo.getMessageServices()
-      }, {
-        key: 'User Entitlements',
-        value: Authinfo.getUserEntitlements()
-      }, {
-        key: 'User Name',
-        value: Authinfo.getUserName()
-      }];
-    }
 
     function getCiAdmins(admins) {
       getUsers(true, admins);

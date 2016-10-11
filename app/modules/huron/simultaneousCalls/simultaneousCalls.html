@@ -1,23 +1,31 @@
-<h4 translate="multipleCalls.title"></h4>
-<label translate="multipleCalls.multipleCallsDescription" class="caller-id-description"></label>
-<div class="inline-radio">
-  <input
-    cs-input
-    type="radio"
-    id="simultaneousTwo"
-    name="simultaneousCalls"
-    ng-model="$ctrl.incomingCallMaximum"
-    ng-value="2"
-    ng-change="$ctrl.onSimultaneousCallsChange(2)"
-    cs-input-label="{{::'multipleCalls.two'|translate}}">
+<div ng-form="simultaneousCallsForm" class="cs-form">
+  <div class="cs-form__section">
+    <div class="section__info">
+      <h4 class="section__title" translate="multipleCalls.title"></h4>
+      <p class="section__description" translate="multipleCalls.multipleCallsDescription"></p>
+    </div>
+    <div class="section__content">
+      <div class="cs-radio-group">
+        <input
+          cs-input
+          type="radio"
+          id="simultaneousTwo"
+          name="simultaneousCalls"
+          ng-model="$ctrl.incomingCallMaximum"
+          ng-value="2"
+          ng-change="$ctrl.onSimultaneousCallsChange(2)"
+          cs-input-label="{{::'multipleCalls.two'|translate}}">
 
-  <input
-    cs-input
-    type="radio"
-    id="simultaneousEight"
-    name="simultaneousCalls"
-    ng-model="$ctrl.incomingCallMaximum"
-    ng-value="8"
-    ng-change="$ctrl.onSimultaneousCallsChange(8)"
-    cs-input-label="{{::'multipleCalls.eight'|translate}}">
+        <input
+          cs-input
+          type="radio"
+          id="simultaneousEight"
+          name="simultaneousCalls"
+          ng-model="$ctrl.incomingCallMaximum"
+          ng-value="8"
+          ng-change="$ctrl.onSimultaneousCallsChange(8)"
+          cs-input-label="{{::'multipleCalls.eight'|translate}}">
+      </div>
+    </div>
+  </div>
 </div>

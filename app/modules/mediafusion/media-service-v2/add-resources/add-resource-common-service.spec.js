@@ -1,4 +1,5 @@
   'use strict';
+
   describe('AddResourceCommonServiceV2', function () {
     beforeEach(angular.mock.module('Mediafusion'));
     var redirectTargetPromise, httpBackend, AddResourceCommonServiceV2, MediaClusterServiceV2, MediaServiceActivationV2, authinfo;
