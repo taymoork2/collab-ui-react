@@ -4566,7 +4566,7 @@
     "newFeatureButtonText": "New",
     "featuresNotYetConfiguredPage": {
       "createCT": "Create a Chat Template",
-      "createCTDesc": "A chat template is what your customer will see when chatting with an agent.",
+      "createCTDesc": "A chat template is what your customer sees when chatting with an agent.",
       "new": "New"
     }
   },
@@ -4688,7 +4688,7 @@
     "failedToLoad": "Unable to load {{ featureText }}(s) information",
     "chatTemplate": "chat template",
     "namePlaceholder": "Name the Chat Template",
-    "nameHint": "This name is for you to uniquely identify this chat template.",
+    "nameHint": "Enter a name for you to identify this chat template",
     "createTitle": "Create Chat Template",
     "editTitle": "Edit Chat Template",
     "profile": "Chat Template Profile",
@@ -4700,8 +4700,8 @@
     "chatStatusMessages": "Chat Status Messages",
     "embedCode": "Embed Code",
     "profileDesc": "Configure how you want the organization and user profile to be represented for your company",
-    "overviewDesc": "These are the screens customers will see when they use chat to contact customer care",
-    "customerInfoDesc": "This is the screen a customer fills out before they chat with an agent",
+    "overviewDesc": "Toggle cards to customize what screens you want your customer to see on contacting Care",
+    "customerInfoDesc": "This is the screen a customer fills in to start chat with an agent",
     "feedbackDesc": "This screen is used to collect feedback from a customer after the chat ends",
     "agentUnavailableDesc": "This screen is shown to a customer when no agent is available to assist",
     "offHoursDesc": "This screen is shown to a customer during business off-hours",
@@ -4734,7 +4734,7 @@
     "defaultOrgText": "Cumulus Customer Care",
     "defaultNameText": "Name",
     "defaultNameHint": "",
-    "defaultEmailText": "Your email or customer ID",
+    "defaultEmailText": "Email",
     "defaultEmail": "e.g. abc@xyz.com",
     "defaultQuestionText": "How may I assist you?",
     "optionalText": "(Optional)",
@@ -4751,7 +4751,7 @@
     "label": "Label",
     "hintText": "Hint Text",
     "type": "Type",
-    "defaultRightCardText": "Select a field on the left to change it's attribute.",
+    "defaultRightCardText": "Select a field in the Preview to change its attributes",
     "profileSelector": "Profile",
     "attributes": "Attributes",
     "org": "Organization",
@@ -4789,7 +4789,7 @@
     "ctOverview": {
       "customerInformation": {
         "title": "Customer Info",
-        "desc": "This is the screen a customer fills out before chatting with an agent"
+        "desc": "This is the screen a customer fills in to start chat with an agent"
       },
       "agentUnavailable": {
         "title": "Agent Unavailable",
@@ -4797,11 +4797,11 @@
       },
       "offHours": {
         "title": "Off-Hours",
-        "desc": "This screen is shown during business off-hours"
+        "desc": "This screen is shown to a customer during business off-hours"
       },
       "feedback": {
         "title": "Feedback",
-        "desc": "This screen is used to collect feedback from the customer after chat ends"
+        "desc": "This screen is used to collect feedback from a customer after the chat ends"
       }
     },
     "summary": "Summary",
