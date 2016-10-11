@@ -8,7 +8,7 @@
         <div class="resource-group-release-channel"><span translate="hercules.fusion.list.release-channel"></span>:&nbsp;{{$ctrl.getLocalizedReleaseChannel($ctrl.group.releaseChannel)}}</div>
         <div class="resource-group-release-cluster-number"><span translate="hercules.fusion.list.clusters"></span>:&nbsp;{{::$ctrl.group.clusters.length}}</div>
         <div class="resource-group-release-cluster-users">
-          <span ng-if="$ctrl.hasZeroClusters() && !$ctrl.hasUsers()" class="icon icon-warning danger"></span>
+          <span ng-if="$ctrl.hasZeroClusters() && $ctrl.hasUsers()" class="icon icon-warning danger"></span>
           <span translate="hercules.fusion.list.users"></span>:&nbsp;{{::$ctrl.group.numberOfUsers}}
         </div>
       </button>

@@ -1534,6 +1534,7 @@
       "squared-fusion-mgmt": "Expressway Management Service  "
     },
     "hybridServiceNames": {
+      "squared-fusion-mgmt": "Hybrid Management Service",
       "squared-fusion-uc": "Hybrid Call Service",
       "squared-fusion-cal": "Hybrid Calendar Service"
     },
