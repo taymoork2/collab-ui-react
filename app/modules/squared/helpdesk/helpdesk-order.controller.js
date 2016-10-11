@@ -6,7 +6,7 @@
     .controller('HelpdeskOrderController', HelpdeskOrderController);
 
   /* @ngInject */
-  function HelpdeskOrderController($stateParams, HelpdeskService, XhrNotificationService) {
+  function HelpdeskOrderController($log, $stateParams, HelpdeskService, XhrNotificationService) {
     $('body').css('background', 'white');
     var vm = this;
     if ($stateParams.order) {
@@ -18,6 +18,7 @@
     HelpdeskService.searchOrder(vm.orderId).then(initOrderView, XhrNotificationService.notify);
 
     function initOrderView(order) {
+      $log.log("step 1");
       vm.order = order;
       HelpdeskService.getAccount(order[0].accountId).then(function (account) {
         vm.account = account;
