@@ -53,7 +53,6 @@
     vm.getCountriesForSelectedDevices = getCountriesForSelectedDevices;
     // TODO - Remove vm.showNewRoomSystems when DX80 and MX300 are officially supported
     vm.showNewRoomSystems = false;
-    vm.supportsInternationalShipping = false;
     vm.selectedCountryCode = null;
 
     if (_.has($stateParams, 'details.details.shippingInformation.country')) {
@@ -690,16 +689,13 @@
 
     ////////////////
     function getCountriesForSelectedDevices() {
-      var selectedDevices = null;
-      if (vm.supportsInternationalShipping) {
-        selectedDevices = _.chain(_.union(vm.roomSystemFields, vm.deskPhoneFields))
-        .filter(function (e) {
-          return e.model.quantity > 0 && e.model.enabled === true && e.key === 'quantity';
-        })
-        .map(function (o) {
-          return o.model.model;
-        }).value();
-      }
+      var selectedDevices = _.chain(_.union(vm.roomSystemFields, vm.deskPhoneFields))
+      .filter(function (device) {
+        return device.model.quantity > 0 && device.model.enabled === true && device.key === 'quantity';
+      })
+      .map(function (device) {
+        return device.model.model;
+      }).value();
       return TrialDeviceService.getCountries(selectedDevices);
     }
 
@@ -711,15 +707,6 @@
       FeatureToggleService.supports(FeatureToggleService.features.atlasNewRoomSystems)
         .then(function (results) {
           vm.showNewRoomSystems = results;
-        });
-
-      // TODO: - remove toggle when shipping to additional countries is officially supported
-      // Hides options for international shipping
-
-      FeatureToggleService.atlasShipDevicesInternationalGetStatus()
-        .then(function (results) {
-          results = true;
-          vm.supportsInternationalShipping = results;
         });
 
       vm.canAddMoreDevices = vm.isEditing && vm.hasExistingDevices();
