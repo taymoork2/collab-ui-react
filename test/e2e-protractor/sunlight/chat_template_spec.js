@@ -35,7 +35,7 @@ describe('Care admin should be able to', function () {
     utils.expectIsDisplayed(careLandingPage.creatCTButton);
     utils.click(careLandingPage.creatCTButton);
     utils.expectIsDisplayed(careChatTemplateSetupPage.typeAheadInput);
-    utils.expectTextToBeSet(careChatTemplateSetupPage.nameHint, "This name is for you to uniquely identify this chat template.");
+    utils.expectTextToBeSet(careChatTemplateSetupPage.nameHint, "Enter a name for you to identify this chat template");
     utils.expectIsNotDisplayed(careChatTemplateSetupPage.setUpLeftBtn);
     utils.sendKeys(careChatTemplateSetupPage.typeAheadInput, careChatTemplateSetupPage.randomChatTemplateName);
     fillTemplateValues(true);
@@ -48,7 +48,7 @@ describe('Care admin should be able to', function () {
     utils.expectTextToBeSet(careChatTemplateSetupPage.chatTemplateName, careChatTemplateSetupPage.randomChatTemplateName);
     utils.click(careChatTemplateSetupPage.editChatTemplateBtnOnCard);
     utils.expectIsDisplayed(careChatTemplateSetupPage.typeAheadInput);
-    utils.expectTextToBeSet(careChatTemplateSetupPage.nameHint, "This name is for you to uniquely identify this chat template.");
+    utils.expectTextToBeSet(careChatTemplateSetupPage.nameHint, "Enter a name for you to identify this chat template");
     utils.expectIsNotDisplayed(careChatTemplateSetupPage.setUpLeftBtn);
     utils.sendKeys(careChatTemplateSetupPage.typeAheadInput, templateNameSuffix);
     fillTemplateValues(false);
@@ -105,6 +105,15 @@ describe('Care admin should be able to', function () {
     utils.expectTextToBeSet(careChatTemplateSetupPage.setUpDesc, expectedDesc);
   }
 
+  function validateOverviewTitleAndDesc(expectedTitle, expectedDesc) {
+    utils.expectTextToBeSet(careChatTemplateSetupPage.overviewCardTitle, expectedTitle);
+    validateOverviewDesc(expectedDesc)
+  }
+
+  function validateOverviewDesc(expectedDesc) {
+    utils.expectTextToBeSet(careChatTemplateSetupPage.overviewCardDesc, expectedDesc);
+  }
+
 
   function validateContentsOfProfilePage() {
     // TODO:Refactor the tile and icon html part in other pages
@@ -125,7 +134,7 @@ describe('Care admin should be able to', function () {
 
   function validateContentsOfOverviewPage() {
     var OVERVIEW_CARD_COUNT = 4;
-    validateTitleAndDesc('Chat Template Overview', 'These are the screens customers will see when they use chat to contact customer care');
+    validateOverviewTitleAndDesc('Chat Template Overview', 'Toggle cards to customize what screens you want your customer to see on contacting Care');
     utils.expectIsDisplayed(careChatTemplateSetupPage.customerInfoEnabledCard);
     utils.click(careChatTemplateSetupPage.customerInfoToggle);
     utils.expectIsDisplayed(careChatTemplateSetupPage.customerInfoDisabledCard);
@@ -135,7 +144,7 @@ describe('Care admin should be able to', function () {
   }
 
   function validateContentsOfCustomerInfoPage() {
-    validateTitleAndDesc('Customer Info Screen', 'This is the screen a customer fills out before they chat with an agent');
+    validateTitleAndDesc('Customer Info Screen', 'This is the screen a customer fills in to start chat with an agent');
     validateCustomerInfoDefaultPage();
     validateHeaderChange();
     validateField1Change();

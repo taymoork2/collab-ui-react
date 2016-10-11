@@ -3,8 +3,10 @@
 var ChatTemplateCreation = function () {
   this.randomChatTemplateName = 'e2e-careChatTemplate-' + utils.randomId();
   this.testOrgName = 'e2e-test-org-name';
-  this.setUpTitle = element(by.css('.ct-title .h2'));
-  this.setUpDesc = element(by.css('.h4.ct-title-desc'));
+  this.setUpTitle = element(by.css('.ct-title .h3'));
+  this.setUpDesc = element(by.css('.h5.ct-title-desc'));
+  this.overviewCardTitle = element(by.css('.ct-title .h2'));
+  this.overviewCardDesc = element(by.css('.h4.ct-title-desc'));
   this.summaryDesc = element(by.css('.ct-summary .description'));
   this.setUpLeftBtn = element(by.css('.btn--primary.btn--left'));
   this.setUpRightBtn = element(by.css('.btn--primary.btn--right'));
