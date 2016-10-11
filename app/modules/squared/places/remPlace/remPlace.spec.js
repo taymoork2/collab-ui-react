@@ -92,7 +92,7 @@ describe('Controller: RemPlaceController', function () {
       expect(CsdmPlaceService.deleteItem).toHaveBeenCalledWith(controller.place);
     });
 
-    it('should call CsdmHuronDeviceService to delete a Huron place', function () {
+    it('should call CsdmDeviceService to delete a Huron place', function () {
       controller.place = {
         needsActivation: false,
         isUnused: false,
@@ -105,7 +105,7 @@ describe('Controller: RemPlaceController', function () {
       $rootScope.$digest();
 
       expect(fakeModal.close).toHaveBeenCalled();
-      expect(CsdmHuronPlaceService.deletePlace).toHaveBeenCalled();
+      expect(CsdmPlaceService.deleteItem).toHaveBeenCalled();
     });
   });
 });
