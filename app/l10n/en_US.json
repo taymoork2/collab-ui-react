@@ -1034,7 +1034,8 @@
     "turnOff": "Turn Off",
     "overview": "Overview",
     "notAvailable": "N/A",
-    "ciscoCollaborationCloud": "Cisco Collaboration Cloud"
+    "ciscoCollaborationCloud": "Cisco Collaboration Cloud",
+    "trackingId": "Tracking Id: {{trackingId}}."
   },
   "notifications": {
     "success": "Success notifications",
@@ -4300,7 +4301,9 @@
     "webexVersionUseLatestUpdateFailed": "Could not update",
     "selectAWbxClientVersion": "Select a Webex client version",
     "WbxClientVersionOnlyOnNewSites": "This setting only applies to sites that are setup from now on. Existing sites are not impacted.",
-    "webexClientVersion": "Cisco WebEx Application Version"
+    "webexClientVersion": "Cisco WebEx Application Version",
+    "imageUploadFailedSecurity": "Your image upload has failed.",
+    "imageUploadFailed": "Your image upload has failed.  Please select a .png file under 10MB."
   },
   "customerProfile": {
     "supportContacts": "Support Contacts",
