@@ -5,7 +5,7 @@
     .controller('UserDeleteCtrl', UserDeleteCtrl);
 
   /* @ngInject */
-  function UserDeleteCtrl($scope, $rootScope, $stateParams, $q, $timeout, Userservice, Notification, Config, $translate, HuronUser) {
+  function UserDeleteCtrl($scope, $rootScope, $stateParams, $q, $timeout, Userservice, Notification, Config, $translate, HuronUser, SunlightConfigService) {
     var vm = this;
 
     vm.deleteUserOrgId = $stateParams.deleteUserOrgId;
@@ -66,6 +66,8 @@
       var userData = {
         email: vm.deleteUsername
       };
+      SunlightConfigService.deleteUserConfig.then(function () {
+      });
       return Userservice.deactivateUser(userData);
     }
 

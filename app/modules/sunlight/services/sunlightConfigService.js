@@ -19,7 +19,8 @@
       createChatTemplate: createChatTemplate,
       editChatTemplate: editChatTemplate,
       createUserInfo: createUserInfo,
-      getChatConfig: getChatConfig
+      getChatConfig: getChatConfig,
+      deleteUserConfig: deleteUserConfig
     };
 
     return service;
@@ -47,6 +48,10 @@
     function getChatConfig() {
       var sunlightChatConfigUrl = sunlightChatConfigBase + '/' + Authinfo.getOrgId() + '/chat';
       return $http.get(sunlightChatConfigUrl);
+    }
+
+    function deleteUserConfig(userId) {
+      return $http.delete(sunlightUserConfigUrl + '/' + userId);
     }
   }
 })();

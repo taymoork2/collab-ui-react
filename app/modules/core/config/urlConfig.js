@@ -123,7 +123,7 @@
       prod: 'https://wdm-a.wbx2.com/wdm/api/v1',
     },
     SunlightConfigServiceUrl: {
-      dev: 'https://config.dev.ciscoccservice.com/config/v1',
+      dev: 'https://config.produs1.ciscoccservice.com/config/v1',
       cfe: 'https://config.appstaging.ciscoccservice.com/config/v1',
       integration: 'https://config.appstaging.ciscoccservice.com/config/v1',
       prod: 'https://config.produs1.ciscoccservice.com/config/v1'
