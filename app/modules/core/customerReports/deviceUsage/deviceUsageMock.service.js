@@ -10,14 +10,12 @@
 
     var cachedData;
 
-    function deviceDaySample(time, deviceUUID) {
+    function deviceDaySample(time, accountId) {
       return {
         'count': _.random(1, 20),
         'date': time,
-        'deviceId': deviceUUID,
+        'accountId': accountId,
         'pairedCount': _.random(0, 10),
-        'sharedCount': _.random(0, 10),
-        'wbCount': _.random(0, 10),
         'totalDuration': _.random(1, 24) * 60 * 60 // 1 to 24 hours returned in seconds
       };
     }
@@ -41,8 +39,8 @@
         var time = start.format('YYYYMMDD');
         var noOfActiveDevicesToday = _.random(0, existingUniqueDeviceIds.length - 1);
         for (var i = 0; i < noOfActiveDevicesToday; i++) {
-          var deviceUUID = existingUniqueDeviceIds[i];
-          data.push(deviceDaySample(time, deviceUUID));
+          var accountId = existingUniqueDeviceIds[i];
+          data.push(deviceDaySample(time, accountId));
         }
         start.add(1, "days");
       }
