@@ -8,7 +8,7 @@
       scope: {
         msg: '=info'
       },
-      controller: function ($scope, MessageService, $window, $filter, $log) {
+      controller: function ($scope, MessageService, $filter, $log, Authinfo) {
         /* use a function for the exact format desired... */
         function ISODateString(d) {
           function pad(n) {
@@ -23,6 +23,7 @@
         }
 
         var originMsg = {};
+        var useremail = (Authinfo.getEmails())[0].value;
         angular.copy($scope.msg, originMsg);
         //$log.log(originMsg.postAt);
         $scope.componentSection = false;
@@ -35,9 +36,8 @@
             $scope.timeVal = "00:00";
           }
           var postDT = new Date($scope.dateVal.replace(/-/g, '/') + " " + $scope.timeVal);
-          MessageService.modifyMsg({ messageId: $scope.msg.messageId }, { postAt: ISODateString(postDT), email: "chaoluo@ciscoc.com", message: $scope.msg.message }).$promise.then(function () {
+          MessageService.modifyMsg({ messageId: $scope.msg.messageId }, { postAt: ISODateString(postDT), email: useremail, message: $scope.msg.message }).$promise.then(function () {
             $log.log($scope.msg.postAt);
-            $window.alert("Successfully modify message");
             $scope.msg.postAt = ISODateString(new Date($scope.dateVal + " " + $scope.timeVal));
             $scope.showMsgInfo = true;
           });

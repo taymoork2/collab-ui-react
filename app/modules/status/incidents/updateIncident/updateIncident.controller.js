@@ -13,7 +13,8 @@
     };
     return titleCaseFilter;
   }
-  function UpdateIncidentController($scope, $stateParams, UpdateIncidentService, IncidentsWithoutSiteService, ComponentService, $state, statusService, $log) {
+  function UpdateIncidentController($scope, $stateParams, UpdateIncidentService, IncidentsWithoutSiteService, ComponentService, $state, statusService, $log, Authinfo) {
+    var useremail = (Authinfo.getEmails())[0].value;
     $scope.showOperational = true;
     var originComponentsTree = [];
     var originIncidentName, originImpact;
@@ -247,7 +248,7 @@
       }, {
         status: $scope.incidentWithMsg.status,
         message: $scope.msg,
-        email: 'chaoluo@cisco.com',
+        email: useremail,
         affectComponents: affectComponents
       }).$promise.then(function () {
         if (angular.equals($scope.incidentWithMsg.status, "resolved")) {
