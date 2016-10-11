@@ -2507,7 +2507,13 @@
             resolve: {
               hasF237FeatureToggle: /* @ngInject */ function (FeatureToggleService) {
                 return FeatureToggleService.supports(FeatureToggleService.features.atlasF237ResourceGroups);
-              }
+              },
+              hasEUFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasHerculesEmergencyUpgrade)
+                  .then(function (support) {
+                    return support;
+                  });
+              },
             }
           })
           .state('hds-settings', {
@@ -2527,7 +2533,12 @@
             templateUrl: 'modules/hercules/fusion-pages/mediafusion-settings.html',
             controller: 'MediafusionClusterSettingsController',
             controllerAs: 'clusterSettings',
-            parent: 'main'
+            parent: 'main',
+            resolve: {
+              hasEUFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasHerculesEmergencyUpgrade);
+              },
+            }
           })
           // Add Resource modal
           .state('add-resource', {

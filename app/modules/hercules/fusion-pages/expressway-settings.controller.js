@@ -6,7 +6,7 @@
     .controller('ExpresswayClusterSettingsController', ExpresswayClusterSettingsController);
 
   /* @ngInject */
-  function ExpresswayClusterSettingsController($stateParams, FusionClusterService, Notification, $modal, $state, $translate, ResourceGroupService, hasF237FeatureToggle) {
+  function ExpresswayClusterSettingsController($stateParams, FusionClusterService, Notification, $modal, $state, $translate, ResourceGroupService, hasF237FeatureToggle, hasEUFeatureToggle) {
     var vm = this;
     vm.backUrl = 'cluster-list';
     vm.enabledServices = [];
@@ -31,6 +31,7 @@
     };
     vm.localizedClusterNameWatermark = $translate.instant('hercules.expresswayClusterSettings.clusterNameWatermark');
     vm.showResourceGroups = hasF237FeatureToggle;
+    vm.showEmergencyUpgrade = hasEUFeatureToggle;
     vm.setClusterName = setClusterName;
     vm.deactivateService = deactivateService;
     vm.deregisterCluster = deregisterCluster;

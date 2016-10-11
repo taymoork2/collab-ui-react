@@ -1711,6 +1711,17 @@
         "postponeAction": "Postpone",
         "postponeModalTitle": "Postpone Upgrade",
         "postponeModalText": "Are you sure you want to postpone the scheduled upgrade to begin:"
+      },
+      "emergencyUpgrade": {
+        "expressway": {
+          "title": "Urgent upgrade schedule",
+          "description": "Select the urgent upgrade schedule for this cluster. When an upgrade is available, the connectors automatically upgrade during time that you select.",
+          "when": "Daily, on {{timezone}}"
+        },
+        "mediafusion": {
+          "title": "Urgent upgrade schedule",
+          "description": "Urgent upgrades for this cluster are applied as soon as they are available."
+        }
       }
     },
     "notifications": {
