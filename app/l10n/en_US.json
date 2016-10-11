@@ -3370,7 +3370,8 @@
       "onceActiveSharedDevice": "Once the device has been successfully activated, you will be able to find and configure it in Places or Devices.",
       "onceActiveSharedDeviceNoPlaces": "Once the device has been successfully activated, you will be able to find and configure it in Devices.",
       "expires": "Expires {{expiryDate}}",
-      "searchAnotherUser": "Or search for another user"
+      "searchAnotherUser": "Or search for another user",
+      "codeIsUsed": "This code has now been used"
     }
   },
   "generateActivationCodeModal": {

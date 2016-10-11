@@ -22,7 +22,6 @@
         this.isOnline = getIsOnline(obj);
         this.lastConnectionTime = getLastConnectionTime(obj);
         this.tags = getTags(obj.description);
-        this.tagString = getTagString(obj.description);
         this.displayName = obj.displayName;
         this.accountType = obj.accountType || 'MACHINE';
         this.photos = _.isEmpty(obj.photos) ? null : obj.photos;
@@ -74,7 +73,6 @@
         this.accountType = obj.accountType || 'PERSON';
         this.displayName = obj.displayName;
         this.tags = getTags(decodeHuronTags(obj.description));
-        this.tagString = getTagString(decodeHuronTags(obj.description));
         this.cssColorClass = getCssColorClass(obj);
         this.state = getState(obj);
         this.photos = _.isEmpty(obj.photos) ? null : obj.photos;
@@ -172,7 +170,6 @@
         this.friendlyExpiryTime = convertExpiryTime(obj.expiryTime);
         this.product = t('spacesPage.unactivatedDevice');
         this.tags = getTags(obj.description);
-        this.tagString = getTagString(obj.description);
         this.displayName = obj.displayName;
         this.activationCode = obj.activationCode;
         this.state = getState(obj);
@@ -190,6 +187,7 @@
       }
 
       function updatePlaceFromItem(place, item) {
+
         if (item.isPlace) {
           updatePlaceFromPlace(place, item);
         } else if (item.isCode) {
@@ -217,6 +215,7 @@
       }
 
       function updatePlaceFromPlace(place, placeToUpdateFrom) {
+
         if (_.isEmpty(placeToUpdateFrom.devices)) {
           placeToUpdateFrom = _.merge(placeToUpdateFrom, _.pick(place, ['devices']));
         }
@@ -496,11 +495,6 @@
             return [];
           }
         }
-      }
-
-      function getTagString(description) {
-        var tags = getTags(description);
-        return tags.join(', ');
       }
 
       return {
