@@ -325,9 +325,9 @@
       _.forEach(carriers, function (carrier) {
         carrier.displayName = (carrier.displayName || carrier.name);
         if (carrier.offers.length > 0) {
-          carrier.name = carrier.offers[0] + ' ' + carrier.displayName;
+          carrier.name = carrier.offers[0] + '-' + carrier.displayName;
         } else if (carrier.offers.length === 0) {
-          carrier.name = carrier.vendor + ' ' + carrier.displayName;
+          carrier.name = carrier.vendor + '-' + carrier.displayName;
         }
         localScope.to.options.push(carrier);
       });
