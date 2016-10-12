@@ -26,7 +26,6 @@
               card.name = 'overview.cards.licenses.title';
               card.showLicenseCard = true;
               getUnassignedLicenses();
-              getActiveUsers();
             }
           }
         };
@@ -49,14 +48,14 @@
                 }
               });
             }
-            card.licenseNumber = max;
+            UserListService.getUserCount().then(function (response) {
+              if (_.isUndefined(response)) {
+                card.licenseNumber = max;
+              } else {
+                card.licenseNumber = max - response;
+              }
+            });
             card.licenseType = licenseType;
-          });
-        }
-
-        function getActiveUsers() {
-          UserListService.getUserCount().then(function (response) {
-            card.unassignedLicenses = card.licenseNumber - response;
           });
         }
 
