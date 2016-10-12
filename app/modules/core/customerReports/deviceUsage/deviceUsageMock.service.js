@@ -9,13 +9,15 @@
   function DeviceUsageMockService($q) {
 
     var cachedData;
+    var deviceCategory = "ce";
 
     function deviceDaySample(time, accountId) {
       return {
-        'count': _.random(1, 20),
+        'callCount': _.random(1, 20),
         'date': time,
         'accountId': accountId,
         'pairedCount': _.random(0, 10),
+        'deviceCategory': deviceCategory,
         'totalDuration': _.random(1, 24) * 60 * 60 // 1 to 24 hours returned in seconds
       };
     }
