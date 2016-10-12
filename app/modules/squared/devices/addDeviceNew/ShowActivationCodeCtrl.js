@@ -4,7 +4,7 @@
   angular.module('Core')
     .controller('ShowActivationCodeCtrl', ShowActivationCodeCtrl);
   /* @ngInject */
-  function ShowActivationCodeCtrl($q, UserListService, OtpService, CsdmDataModelService, $stateParams, XhrNotificationService, ActivationCodeEmailService, $translate, Notification, CsdmEmailService, UrlConfig) {
+  function ShowActivationCodeCtrl($q, UserListService, OtpService, CsdmDataModelService, $stateParams, XhrNotificationService, ActivationCodeEmailService, $translate, Notification, CsdmEmailService) {
     var vm = this;
     vm.wizardData = $stateParams.wizard.state().data;
     vm.hideBackButton = vm.wizardData.function == "showCode";
@@ -156,7 +156,7 @@
     };
 
     vm.sendActivationCodeEmail = function sendActivationCodeEmail() {
-      if (vm.wizardData.deviceType === 'huron') {
+      if (vm.wizardData.deviceType === 'huron' && vm.wizardData.accountType === 'personal') {
         var emailInfo = {
           email: vm.email.to,
           firstName: vm.email.to,
@@ -184,17 +184,23 @@
             $translate.instant('generateActivationCodeModal.emailErrorTitle')
           );
         });
-      } else if (vm.wizardData.deviceType === 'cloudberry') {
-        var url = UrlConfig.getAdminServiceUrl() + 'organization/' + vm.wizardData.organizationId + '/deviceActivation/emailActivationCode';
+      } else {
         var cbEmailInfo = {
+          toCustomerId: vm.wizardData.organizationId,
           toUserId: vm.email.id,
+          machineAccountCustomerId: vm.wizardData.organizationId,
           machineAccountId: vm.wizardData.code.cisUuid,
           activationCode: vm.activationCode,
           expiryTime: vm.getExpiresOn()
         };
+        var mailFunction;
+        if (vm.wizardData.deviceType === 'cloudberry') {
+          mailFunction = CsdmEmailService.sendCloudberryEmail;
+        } else {
+          mailFunction = CsdmEmailService.sendHuronEmail;
+        }
 
-        CsdmEmailService
-          .sendCloudberryEmail(url, cbEmailInfo)
+        mailFunction(cbEmailInfo)
           .then(function () {
             Notification.notify(
               [$translate.instant('generateActivationCodeModal.emailSuccess', {
