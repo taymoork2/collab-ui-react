@@ -24,7 +24,7 @@ describe('Service: SpeedDialService', () => {
   });
 
   it('getSpeedDial', function() {
-    this.$httpBackend.expectGET(this.HuronConfig.getCmiV2Url() + '/customers/' + this.Authinfo.getOrgId() + '/places/100000/speeddials')
+    this.$httpBackend.expectGET(this.HuronConfig.getCmiV2Url() + '/customers/' + this.Authinfo.getOrgId() + '/places/100000/features/speeddials')
       .respond(200, this.getSpeedDialResponseEmpty);
     this.SpeedDialService.getSpeedDials('places', '100000').then(function(data) {
       expect(data.speedDials.length).toBe(0);
@@ -33,7 +33,7 @@ describe('Service: SpeedDialService', () => {
   });
 
   it('updateSpeedDial', function() {
-    this.$httpBackend.expectPUT(this.HuronConfig.getCmiV2Url() + '/customers/' + this.Authinfo.getOrgId() + '/places/100000/bulk/speeddials')
+    this.$httpBackend.expectPUT(this.HuronConfig.getCmiV2Url() + '/customers/' + this.Authinfo.getOrgId() + '/places/100000/features/bulk/speeddials')
       .respond(200, { response: true });
     this.SpeedDialService.updateSpeedDials('places', '100000', []).then(function(data) {
       expect(data.response).toBe(true);
