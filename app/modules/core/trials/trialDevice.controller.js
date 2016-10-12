@@ -6,7 +6,7 @@
     .controller('TrialDeviceController', TrialDeviceController);
 
   /* @ngInject */
-  // TODO - check for removal of $q and FeatureToggleService when DX80 and MX300 are officially supported
+  // TODO - check for removal of $q and FeatureToggleService when MX300 are officially supported
   function TrialDeviceController($stateParams, $translate, FeatureToggleService, Notification, TrialCallService, TrialDeviceService, TrialRoomSystemService, ValidationService) {
     var vm = this;
 
@@ -51,7 +51,7 @@
     vm.areAdditionalDevicesAllowed = areAdditionalDevicesAllowed;
     vm.areTemplateOptionsDisabled = _areTemplateOptionsDisabled;
     vm.getCountriesForSelectedDevices = getCountriesForSelectedDevices;
-    // TODO - Remove vm.showNewRoomSystems when DX80 and MX300 are officially supported
+    // TODO - Remove vm.showNewRoomSystems when MX300 are officially supported
     vm.showNewRoomSystems = false;
     vm.supportsInternationalShipping = false;
     vm.selectedCountryCode = null;
@@ -171,10 +171,6 @@
           return !vm.canAddRoomSystemDevice;
         }
       },
-      // TODO - remove hideExpression when DX80 and MX300 are officially supported
-      hideExpression: function () {
-        return !vm.showNewRoomSystems;
-      },
       validators: _checkValidators()
     }, {
       model: vm.dx80,
@@ -209,10 +205,6 @@
           return vm.getQuantityInputDefault(vm.dx80, minRoomSystems);
         }
       },
-      // TODO - remove hideExpression when DX80 and MX300 are officially supported
-      hideExpression: function () {
-        return !vm.showNewRoomSystems;
-      },
       watcher: _addWatcher(),
       validators: _addRoomSystemValidators()
     }, {
@@ -230,7 +222,7 @@
           return !vm.canAddRoomSystemDevice;
         }
       },
-      // TODO - remove hideExpression when DX80 and MX300 are officially supported
+      // TODO - remove hideExpression when MX300 are officially supported
       hideExpression: function () {
         return !vm.showNewRoomSystems;
       },
@@ -267,7 +259,7 @@
           return vm.getQuantityInputDefault(vm.mx300, minRoomSystems);
         }
       },
-      // TODO - remove hideExpression when DX80 and MX300 are officially supported
+      // TODO - remove hideExpression when MX300 are officially supported
       hideExpression: function () {
         return !vm.showNewRoomSystems;
       },
@@ -706,8 +698,8 @@
     function init() {
       var limitsPromise = TrialDeviceService.getLimitsPromise();
 
-      // TODO - remove feature toggle when DX80 and MX300 are officially supported
-      // Hides the DX80 and MX300 under a feature toggle
+      // TODO - remove feature toggle when MX300 are officially supported
+      // Hides the MX300 under a feature toggle
       FeatureToggleService.supports(FeatureToggleService.features.atlasNewRoomSystems)
         .then(function (results) {
           vm.showNewRoomSystems = results;
