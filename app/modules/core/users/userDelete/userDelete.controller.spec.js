@@ -2,10 +2,10 @@
 
 describe('Controller: UserDeleteCtrl', function () {
   var $rootScope, $scope, $q, $controller, $timeout, $translate, controller;
-  var Userservice, HuronUser, Notification;
+  var Userservice, HuronUser, Notification, SunlightConfigService;
   var stateParams = {
     deleteUserOrgId: '123',
-    deleteUserUuiD: '456',
+    deleteUserUuId: '456',
     deleteUsername: 'myUser'
   };
 
@@ -17,7 +17,7 @@ describe('Controller: UserDeleteCtrl', function () {
   beforeEach(initSpies);
   beforeEach(initController);
 
-  function dependencies(_$rootScope_, _$q_, _$controller_, _$timeout_, _$translate_, _Userservice_, _HuronUser_, _Notification_) {
+  function dependencies(_$rootScope_, _$q_, _$controller_, _$timeout_, _$translate_, _Userservice_, _HuronUser_, _Notification_, _SunlightConfigService_) {
     $rootScope = _$rootScope_;
     $scope = $rootScope.$new();
     $q = _$q_;
@@ -27,6 +27,7 @@ describe('Controller: UserDeleteCtrl', function () {
     Userservice = _Userservice_;
     HuronUser = _HuronUser_;
     Notification = _Notification_;
+    SunlightConfigService = _SunlightConfigService_;
   }
 
   function initSpies() {
@@ -38,6 +39,7 @@ describe('Controller: UserDeleteCtrl', function () {
     spyOn(Notification, 'errorResponse');
     spyOn($rootScope, '$broadcast').and.callThrough();
     spyOn($translate, 'instant').and.returnValue('YES');
+    spyOn(SunlightConfigService, 'deleteUserConfig');
   }
 
   function initController() {
@@ -95,6 +97,11 @@ describe('Controller: UserDeleteCtrl', function () {
       it('should not call huron delete', function () {
         expect(HuronUser.delete).not.toHaveBeenCalled();
       });
+      it('should call SunlightConfigService.deleteUserConfig', function () {
+        expect(SunlightConfigService.deleteUserConfig).toHaveBeenCalledWith({
+          id: stateParams.deleteUserUuId
+        });
+      });
       it('should call Userservice.deactivateUser', function () {
         expect(Userservice.deactivateUser).toHaveBeenCalledWith({
           email: stateParams.deleteUsername
@@ -120,6 +127,11 @@ describe('Controller: UserDeleteCtrl', function () {
 
       it('should not call huron delete', function () {
         expect(HuronUser.delete).not.toHaveBeenCalled();
+      });
+      it('should call SunlightConfigService.deleteUserConfig', function () {
+        expect(SunlightConfigService.deleteUserConfig).toHaveBeenCalledWith({
+          id: stateParams.deleteUserUuId
+        });
       });
       it('should call Userservice.deactivateUser', function () {
         expect(Userservice.deactivateUser).toHaveBeenCalledWith({
@@ -149,6 +161,11 @@ describe('Controller: UserDeleteCtrl', function () {
       it('should call huron delete', function () {
         expect(HuronUser.delete).toHaveBeenCalled();
       });
+      it('should call SunlightConfigService.deleteUserConfig', function () {
+        expect(SunlightConfigService.deleteUserConfig).toHaveBeenCalledWith({
+          id: stateParams.deleteUserUuId
+        });
+      });
       it('should call Userservice.deactivateUser', function () {
         expect(Userservice.deactivateUser).toHaveBeenCalledWith({
           email: stateParams.deleteUsername
@@ -174,6 +191,9 @@ describe('Controller: UserDeleteCtrl', function () {
 
       it('should call huron delete', function () {
         expect(HuronUser.delete).toHaveBeenCalled();
+      });
+      it('should not call SunlightConfigService.deleteUserConfig', function () {
+        expect(SunlightConfigService.deleteUserConfig).not.toHaveBeenCalled();
       });
       it('should not call Userservice.deactivateUser', function () {
         expect(Userservice.deactivateUser).not.toHaveBeenCalled();
