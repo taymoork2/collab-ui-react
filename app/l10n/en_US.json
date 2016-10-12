@@ -348,7 +348,7 @@
     "generateActivationCode": "Generate Activation Code",
     "generateActivationCodeText": "Generate an activation code to enable a new device for this user.",
     "generateActivationCodeTextPlace": "Generate an activation code to enable a new device for this place.",
-    "generateActivationCodeDesc": "If you have lost your code, please generate a new activation code or contact customer support. ",
+    "generateActivationCodeDesc": "If you have lost your code, please generate a new activation code. ",
     "activationCodeTitle": "Activation Code",
     "expires": "Expires",
     "editServices": "Edit services",
