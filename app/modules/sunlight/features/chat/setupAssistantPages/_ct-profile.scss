@@ -39,7 +39,7 @@
         text-overflow: ellipsis;
         white-space: nowrap;
         overflow: hidden;
-
+        color: $color-primary-base;
         .agent {
           opacity: 0.5;
         }
@@ -62,12 +62,13 @@
           height: 3rem;
           width: 3rem;
           border-radius: 50%;
-          border: 1px solid $gray-light-1;
-          background: $white;
+          border: 1px solid $color-primary-base;
+          background: $color-primary-base;
           >i {
-            top: 0.4rem;
-            left: 0.4rem;
-            color: $gray-light-1;
+            top: 0.6rem;
+            left: 0.7rem;
+            color: $white;
+            font-size: 1.7rem;
           }
         }
       }
@@ -202,12 +203,12 @@
         height: 7rem;
       }
       .agent-img {
-        background: $white;
-        border: 1px solid $gray-light-1;
-        .icon-user {
-          font-size: 5rem;
-          top: 1rem;
-          color: $gray-light-1;
+        background: $color-primary-base;
+        border: 1px solid $color-primary-base;
+        .icon-user-chat {
+          font-size: 4rem;
+          top: 1.5rem;
+          color: $white;
         }
       }
     }
