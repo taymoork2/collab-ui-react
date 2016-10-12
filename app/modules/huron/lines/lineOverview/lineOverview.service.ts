@@ -3,11 +3,13 @@ import { HuronSiteService } from '../../sites';
 import { CallForward, CallForwardAll, CallForwardBusy, CallForwardService } from '../../callForward';
 import { SharedLine, SharedLineService, SharedLinePhone, SharedLinePhoneListItem } from '../../sharedLine';
 import { Member } from '../../members';
+import { CallerIDService, CallerIdConfig, CallerIdOption, COMPANY_CALLERID_TYPE, COMPANY_NUMBER_TYPE, CUSTOM_COMPANY_TYPE, DIRECT_LINE_TYPE, BLOCK_CALLERID_TYPE } from '../../callerId';
 
 export class LineOverviewData {
   public line: Line;
   public callForward: CallForward;
   public sharedLines: SharedLine[];
+  public callerId: any;
 }
 
 export class LineOverviewService {
@@ -25,7 +27,12 @@ export class LineOverviewService {
     private CallForwardService: CallForwardService,
     private SharedLineService: SharedLineService,
     private Notification,
-    private $q: ng.IQService
+    private $q: ng.IQService,
+    private CallerIDService: CallerIDService,
+
+    private CompanyNumberService,
+    private Authinfo,
+    private $translate
   ) {}
 
   public get(consumerType: LineConsumerType, ownerId: string, numberId: string = ''): ng.IPromise<LineOverviewData> {
@@ -35,6 +42,7 @@ export class LineOverviewService {
     promises.push(this.getLine(consumerType, ownerId, numberId));
     promises.push(this.getCallForward(consumerType, ownerId, numberId));
     promises.push(this.getSharedLines(consumerType, ownerId, numberId));
+    promises.push(this.getCallerId(consumerType, ownerId, numberId));
     return this.$q.all(promises).then( (data) => {
       if (this.errors.length > 0) {
         this.Notification.notify(this.errors, 'error');
@@ -43,6 +51,7 @@ export class LineOverviewService {
       lineOverviewData.line = data[0];
       lineOverviewData.callForward = data[1];
       lineOverviewData.sharedLines = data[2];
+      lineOverviewData.callerId = data[3];
       this.lineOverviewDataCopy = this.cloneLineOverviewData(lineOverviewData);
       return lineOverviewData;
     });
@@ -133,6 +142,9 @@ export class LineOverviewService {
             promises.push(this.updateSharedLinePhoneList(consumerType, ownerId, numberId, sharedLine.uuid, updatedPhoneList));
           }
         });
+      }
+      if (!_.isEqual(data.callerId, this.lineOverviewDataCopy.callerId)) {
+        promises.push(this.updateCallerId(consumerType, ownerId, numberId, data.callerId));
       }
 
       return this.$q.all(promises).then( () => {
@@ -227,6 +239,16 @@ export class LineOverviewService {
         });
     }
   }
+  private getCallerId(consumerType: LineConsumerType, ownerId: string, numberId: string): ng.IPromise<any> {
+    if (!numberId) {
+      return this.$q.resolve(new CallForward());
+    } else {
+      return this.CallerIDService.getCallerId(consumerType, ownerId, numberId)
+        .then(callerIdRes => {
+          return callerIdRes;
+        });
+    }
+  }
 
   private createSharedLine(consumerType: LineConsumerType, ownerId: string, numberId: string = '', data: Member) {
     return this.SharedLineService.createSharedLine(consumerType, ownerId, numberId, data).then( () => {
@@ -246,6 +268,70 @@ export class LineOverviewService {
     .catch(error => {
         this.errors.push(this.Notification.processErrorResponse(error, 'directoryNumberPanel.updateSharedLinePhoneError'));
     });
+  }
+  public initCallerId(options, selected): ng.IPromise<any> {
+    let _companyNumber;
+    return this.listCompanyNumbers()
+      .then((companyNumbers) => {
+        // Company Number
+        companyNumbers.filter((companyNumber) => {
+          return companyNumber.externalCallerIdType === COMPANY_NUMBER_TYPE.name;
+        }).map((companyNumber) => {
+          options.push(new CallerIdOption(COMPANY_NUMBER_TYPE.name, new CallerIdConfig(companyNumber.uuid, companyNumber.name, companyNumber.pattern, COMPANY_NUMBER_TYPE.key)));
+          _companyNumber = companyNumber;
+        });
+        // Company Caller ID
+        companyNumbers.filter((companyNumber) => {
+          return companyNumber.externalCallerIdType === COMPANY_CALLERID_TYPE.name;
+        }).map((companyNumber) => {
+          options.push(new CallerIdOption(COMPANY_CALLERID_TYPE.name, new CallerIdConfig(companyNumber.uuid, companyNumber.name, companyNumber.pattern, COMPANY_CALLERID_TYPE.key)));
+          _companyNumber = companyNumber;
+        });
+        // Custom
+        options.push(new CallerIdOption(CUSTOM_COMPANY_TYPE.name, new CallerIdConfig('', '',  '', CUSTOM_COMPANY_TYPE.key)));
+        // Block Caller ID
+        options.push(new CallerIdOption(BLOCK_CALLERID_TYPE.name, new CallerIdConfig('', this.$translate.instant('callerIdPanel.blockedCallerIdDescription'), '', BLOCK_CALLERID_TYPE.key)));
+        // Direct Line
+        if (this.lineOverviewDataCopy.line.external) {
+          options.push(new CallerIdOption(DIRECT_LINE_TYPE.name, new CallerIdConfig('', DIRECT_LINE_TYPE.name, this.lineOverviewDataCopy.line.external, DIRECT_LINE_TYPE.key)));
+        }
+        switch (this.lineOverviewDataCopy.callerId.externalCallerIdType) {
+          case COMPANY_NUMBER_TYPE.key: {
+            selected = new CallerIdOption(COMPANY_NUMBER_TYPE.name, new CallerIdConfig(_companyNumber.uuid, _companyNumber.name, _companyNumber.pattern, COMPANY_NUMBER_TYPE.key));
+            break;
+          }
+          case COMPANY_CALLERID_TYPE.key: {
+            selected = new CallerIdOption(COMPANY_CALLERID_TYPE.name, new CallerIdConfig(_companyNumber.uuid, _companyNumber.name, _companyNumber.pattern, COMPANY_CALLERID_TYPE.key));
+            break;
+          }
+          case DIRECT_LINE_TYPE.key: {
+            selected = new CallerIdOption(DIRECT_LINE_TYPE.name, new CallerIdConfig('', DIRECT_LINE_TYPE.name, this.lineOverviewDataCopy.line.external, DIRECT_LINE_TYPE.key));
+            break;
+          }
+          case CUSTOM_COMPANY_TYPE.key: {
+            selected = new CallerIdOption(CUSTOM_COMPANY_TYPE.name, new CallerIdConfig('', '',  '', CUSTOM_COMPANY_TYPE.key));
+            break;
+          }
+          case BLOCK_CALLERID_TYPE.key: {
+            selected = new CallerIdOption(BLOCK_CALLERID_TYPE.name, new CallerIdConfig('', this.$translate.instant('callerIdPanel.blockedCallerIdDescription'), '', BLOCK_CALLERID_TYPE.key));
+            break;
+          }
+        }
+        return {
+          selected: selected,
+          options: options,
+        };
+      });
+  }
+
+   private listCompanyNumbers() {
+      return this.CompanyNumberService.query({
+        customerId: this.Authinfo.getOrgId(),
+      }).$promise;
+    }
+
+  private updateCallerId(consumerType: LineConsumerType, ownerId: string, numberId: string | undefined, data: any) {
+    return this.CallerIDService.updateCallerId(consumerType, ownerId, numberId, data);
   }
 
   private cloneLineOverviewData(lineOverviewData: LineOverviewData): LineOverviewData {

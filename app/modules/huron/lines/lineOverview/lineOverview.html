@@ -36,8 +36,8 @@
       </uc-simultaneous-calls>
       <uc-caller-id
         caller-id-options="$ctrl.callerIdOptions"
-        custom-caller-id-name="$ctrl.customCallerIdName"
-        custom-caller-id-number="$ctrl.customCallerIdNumber"
+        custom-caller-id-name="$ctrl.lineOverviewData.callerId.customCallerIdName"
+        custom-caller-id-number="$ctrl.lineOverviewData.callerId.customCallerIdNumber"
         caller-id-selected="$ctrl.callerIdSelected"
         on-change-fn="$ctrl.setCallerId(callerIdSelected, customCallerIdName, customCallerIdNumber);">
       </uc-caller-id>

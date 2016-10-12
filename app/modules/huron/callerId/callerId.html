@@ -19,14 +19,16 @@
           name="callerIdName"
           ng-model="$ctrl.customCallerIdName"
           cs-input-label="{{'callerIdPanel.customName' | translate}}"
-          ng-change="$ctrl.onChange()">
+          ng-change="$ctrl.onChange()"
+          required>
         <input
           cs-input
           type="text"
           name="callerIdNumber"
           ng-model="$ctrl.customCallerIdNumber"
           cs-input-label="{{'callerIdPanel.customNumber' | translate}}"
-          ng-change="$ctrl.onChange()">
+          ng-change="$ctrl.onChange()"
+          required>
       </div>
       <div class="cs-input-group" ng-if="$ctrl.callerIdSelected.value.name || $ctrl.callerIdSelected.value.pattern">
         <p class="cs-input__help-text">{{$ctrl.callerIdSelected.value.name}}</p>

@@ -118,6 +118,12 @@ describe('Service: LineOverviewService', () => {
     this.getSharedLinePhonesDefer = this.$q.defer();
     spyOn(this.SharedLineService, 'getSharedLinePhoneList').and.returnValue(this.getSharedLinePhonesDefer.promise);
 
+    this.getCallerIdDefer = this.$q.defer();
+    spyOn(this.CallerIDService, 'getCallerId').and.returnValue(this.getCallerIdDefer.promise);
+
+    this.updateCallerIdDefer = this.$q.defer();
+    spyOn(this.CallerIDService, 'updateCallerId').and.returnValue(this.updateCallerIdDefer.promise);
+
     spyOn(this.LineOverviewService, 'cloneLineOverviewData').and.callThrough();
   });
 
@@ -136,6 +142,7 @@ describe('Service: LineOverviewService', () => {
       expect(this.LineService.getLine).toHaveBeenCalled();
       expect(this.CallForwardService.getCallForward).toHaveBeenCalled();
       expect(this.SharedLineService.getSharedLineList).toHaveBeenCalled();
+      expect(this.CallerIDService.getCallerId).toHaveBeenCalled();
       expect(this.LineOverviewService.cloneLineOverviewData).toHaveBeenCalled();
     });
 
@@ -173,6 +180,7 @@ describe('Service: LineOverviewService', () => {
       this.LineOverviewService.save(LineConsumerType.PLACES, '12345', '0000001',  this.lineOverview, []);
       expect(this.LineService.updateLine).toHaveBeenCalled();
       expect(this.CallForwardService.updateCallForward).not.toHaveBeenCalled();
+      expect(this.CallForwardService.updateCallerId).not.toHaveBeenCalled();
     });
 
     it('should only update callForward when only callForward is changed', function () {
@@ -182,6 +190,7 @@ describe('Service: LineOverviewService', () => {
       this.LineOverviewService.save(LineConsumerType.PLACES, '12345', '0000001',  this.lineOverview, []);
       expect(this.LineService.updateLine).not.toHaveBeenCalled();
       expect(this.CallForwardService.updateCallForward).toHaveBeenCalled();
+      expect(this.CallForwardService.updateCallerId).not.toHaveBeenCalled();
     });
   });
 

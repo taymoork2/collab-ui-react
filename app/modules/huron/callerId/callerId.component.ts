@@ -24,10 +24,10 @@ class CallerId implements ng.IComponentController {
 export class CallerIdConfig {
   public uuid: string;
   public name: string;
-  public pattern: string;
+  public pattern: string | null | undefined;
   public externalCallerIdType: string;
 
-  constructor(uuid: string, name: string, pattern: string, externalCallerIdType: string) {
+  constructor(uuid: string, name: string, pattern: string | null | undefined, externalCallerIdType: string) {
     this.uuid = uuid;
     this.name = name;
     this.pattern = pattern;

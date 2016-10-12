@@ -1,5 +1,5 @@
 import { CallForward } from '../../callForward';
-import { BLOCK_CALLERID_TYPE, CUSTOM_COMPANY_TYPE, CallerIdConfig, CallerIdOption } from '../../callerId';
+import { BLOCK_CALLERID_TYPE, CallerIdConfig, CallerIdOption, DIRECT_LINE_TYPE } from '../../callerId';
 import { LineService, LineConsumerType, LINE_CHANGE, Line } from '../services';
 import { LineOverviewService, LineOverviewData } from './index';
 import { DirectoryNumberOptionsService } from '../../directoryNumber';
@@ -14,7 +14,6 @@ class LineOverview implements ng.IComponentController {
   private ownerName: string;
   private numberId: string;
   private consumerType: LineConsumerType;
-
   public form: ng.IFormController;
   public saveInProcess: boolean = false;
   public actionList: Array<IActionItem>;
@@ -37,13 +36,8 @@ class LineOverview implements ng.IComponentController {
   public incomingCallMaximum: number;
 
   // Caller Id Component Properties
-  public callerIdOptions: Array<Object> = [];
-  public callerIdSelected: Object;
-  public customCallerIdName: string;
-  public customCallerIdNumber: string;
-  public blockedCallerId_label: string;
-  public companyCallerId_label: string;
-  public custom_label: string;
+  public callerIdOptions: Array<{label: any, value: any}>;
+  public callerIdSelected: {label: any, value: any} = { label: '', value: '' };
 
   //SharedLine Properties
   public newSharedLineMembers: Array<Member> = [];
@@ -63,17 +57,13 @@ class LineOverview implements ng.IComponentController {
     private MemberService: MemberService,
     private Notification: Notification,
     private SharedLineService: SharedLineService,
-  ) {
-    this.blockedCallerId_label = $translate.instant('callerIdPanel.blockedCallerId');
-    this.companyCallerId_label = $translate.instant('callerIdPanel.companyCallerId');
-    this.custom_label = 'Custom';
-  }
+  ) { }
+
 
   public $onInit(): void {
     this.initActions();
     this.initConsumerType();
     this.initLineOverviewData();
-    this.initCallerId();
   }
 
   private initActions(): void {
@@ -93,6 +83,7 @@ class LineOverview implements ng.IComponentController {
         this.LineOverviewService.get(this.consumerType, this.ownerId, this.numberId)
           .then(lineOverviewData => {
             this.lineOverviewData = lineOverviewData;
+            this.initCallerId();
             this.showActions = this.setShowActionsFlag(this.lineOverviewData.line);
             if (!this.lineOverviewData.line.uuid) { // new line, grab first available internal number
               this.lineOverviewData.line.internal = this.internalNumbers[0];
@@ -106,6 +97,7 @@ class LineOverview implements ng.IComponentController {
   }
 
   public setDirectoryNumbers(internalNumber: string, externalNumber: string): void {
+    this.checkCallerId(externalNumber);
     this.lineOverviewData.line.internal = internalNumber;
     this.lineOverviewData.line.external = externalNumber;
     this.checkForChanges();
@@ -124,8 +116,9 @@ class LineOverview implements ng.IComponentController {
   }
 
   public setCallerId(callerIdSelected, callerIdName, callerIdNumber): void {
-    this.customCallerIdName = callerIdName;
-    this.customCallerIdNumber = callerIdNumber;
+    this.lineOverviewData.callerId.customCallerIdName = callerIdName;
+    this.lineOverviewData.callerId.customCallerIdNumber = callerIdNumber;
+    this.lineOverviewData.callerId.externalCallerIdType = callerIdSelected.value.externalCallerIdType;
     this.callerIdSelected = callerIdSelected;
     this.checkForChanges();
   }
@@ -162,6 +155,23 @@ class LineOverview implements ng.IComponentController {
       .catch( (response) => this.Notification.errorResponse(response, 'directoryNumberPanel.error'));
     });
   }
+  private checkCallerId(number) {
+    if (number && number !== this.lineOverviewData.line.external) {
+      if (_.last(this.callerIdOptions).label === DIRECT_LINE_TYPE.name) {
+        this.callerIdOptions.pop();
+      }
+      this.callerIdOptions.push(new CallerIdOption(DIRECT_LINE_TYPE.name, new CallerIdConfig('', DIRECT_LINE_TYPE.name, number, DIRECT_LINE_TYPE.key)));
+      if (this.lineOverviewData.callerId.externalCallerIdType === DIRECT_LINE_TYPE.key) {
+        this.lineOverviewData.callerId.callerIdSelected = new CallerIdOption(DIRECT_LINE_TYPE.name, new CallerIdConfig('', DIRECT_LINE_TYPE.name, number, DIRECT_LINE_TYPE.key));
+      }
+    } else if (_.last(this.callerIdOptions).label === DIRECT_LINE_TYPE.name && number !== this.lineOverviewData.line.external) {
+      this.callerIdOptions.pop();
+      if (this.lineOverviewData.callerId.externalCallerIdType === DIRECT_LINE_TYPE.key) {
+        this.lineOverviewData.callerId.callerIdSelected = new CallerIdOption(BLOCK_CALLERID_TYPE.name, new CallerIdConfig('', this.$translate.instant('callerIdPanel.blockedCallerIdDescription'), '', BLOCK_CALLERID_TYPE.key));
+        this.lineOverviewData.callerId.externalCallerIdType = BLOCK_CALLERID_TYPE.key;
+      }
+    }
+  }
 
   public onCancel(): void {
     if (!this.lineOverviewData.line.uuid) {
@@ -169,6 +179,7 @@ class LineOverview implements ng.IComponentController {
     } else {
       this.lineOverviewData = this.LineOverviewService.getOriginalConfig();
       this.newSharedLineMembers = [];
+      this.initCallerId();
       this.resetForm();
     }
   }
@@ -234,8 +245,11 @@ class LineOverview implements ng.IComponentController {
   }
 
   private initCallerId(): void {
-    this.callerIdOptions.push(new CallerIdOption(this.custom_label, new CallerIdConfig('', '',  '', CUSTOM_COMPANY_TYPE)));
-    this.callerIdOptions.push(new CallerIdOption(this.blockedCallerId_label, new CallerIdConfig('', this.$translate.instant('callerIdPanel.blockedCallerIdDescription'), '', BLOCK_CALLERID_TYPE)));
+    this.callerIdOptions = [];
+    this.LineOverviewService.initCallerId(this.callerIdOptions, this.callerIdSelected).then((data) => {
+      this.callerIdSelected = data.selected;
+      this.callerIdOptions = data.options;
+    });
   }
 
   private setShowActionsFlag(line: Line): boolean {
