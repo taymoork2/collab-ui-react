@@ -6,7 +6,7 @@
     .factory('OverviewUsersCard', OverviewUsersCard);
 
   /* @ngInject */
-  function OverviewUsersCard($rootScope, $state, Auth, Authinfo, Config) {
+  function OverviewUsersCard($rootScope, $state, Auth, Authinfo, Config, UserListService) {
     return {
       createCard: function createCard() {
         var card = {};
@@ -26,6 +26,7 @@
               card.name = 'overview.cards.licenses.title';
               card.showLicenseCard = true;
               getUnassignedLicenses();
+              getActiveUsers();
             }
           }
         };
@@ -50,6 +51,12 @@
             }
             card.licenseNumber = max;
             card.licenseType = licenseType;
+          });
+        }
+
+        function getActiveUsers() {
+          UserListService.getUserCount().then(function (response) {
+            card.unassignedLicenses = card.licenseNumber - response;
           });
         }
 
