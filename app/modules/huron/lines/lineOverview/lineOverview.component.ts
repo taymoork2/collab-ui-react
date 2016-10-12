@@ -6,6 +6,7 @@ import { DirectoryNumberOptionsService } from '../../directoryNumber';
 import { IActionItem } from '../../../core/components/sectionTitle/sectionTitle.component';
 import { Member, MemberService } from '../../members';
 import { SharedLine, SharedLineService } from '../../sharedLine';
+import { Notification } from 'modules/core/notifications';
 
 class LineOverview implements ng.IComponentController {
   private ownerType: string;
@@ -59,8 +60,8 @@ class LineOverview implements ng.IComponentController {
     private $scope: ng.IScope,
     private $state,
     private $modal,
-    private Notification,
     private MemberService: MemberService,
+    private Notification: Notification,
     private SharedLineService: SharedLineService,
   ) {
     this.blockedCallerId_label = $translate.instant('callerIdPanel.blockedCallerId');

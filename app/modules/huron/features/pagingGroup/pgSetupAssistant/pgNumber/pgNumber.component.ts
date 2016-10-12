@@ -1,4 +1,5 @@
 import { PagingNumberService, INumber } from '../../pgNumber.service';
+import { Notification } from 'modules/core/notifications';
 
 class PagingNumberCtrl implements ng.IComponentController {
   public pagingGroupNumber: string;
@@ -7,9 +8,10 @@ class PagingNumberCtrl implements ng.IComponentController {
   private onUpdate: Function;
 
   /* @ngInject */
-  constructor(private PagingNumberService: PagingNumberService,
-              private Notification) {
-  }
+  constructor(
+    private PagingNumberService: PagingNumberService,
+    private Notification: Notification,
+  ) {}
 
   public selectNumber(number: INumber): void {
     if (number) {
