@@ -1712,14 +1712,14 @@
       if (data.success) {
         Log.info('User successfully updated', data);
 
-        for (var i = 0; i < data.userResponse.length; i++) {
-
+        var userResponseArray = _.get(data, 'userResponse');
+        _.forEach(userResponseArray, function (userResponseItem) {
           var userResult = {
-            email: data.userResponse[i].email,
+            email: userResponseItem.email,
             alertType: null
           };
 
-          var httpStatus = data.userResponse[i].status;
+          var httpStatus = userResponseItem.status;
 
           switch (httpStatus) {
             case 200:
@@ -1746,10 +1746,14 @@
               break;
             }
             default: {
-              if (data.userResponse[i].message === Config.messageErrors.hybridServicesComboError) {
+              if (userResponseItem.message === Config.messageErrors.hybridServicesComboError) {
                 userResult.message = $translate.instant('onboardModal.result.400094', {
                   status: httpStatus
                 });
+                userResult.alertType = 'danger';
+                isComplete = false;
+              } else if (_.includes(userResponseItem.message, 'DN_IS_FALLBACK')) {
+                userResult.message = $translate.instant('onboardModal.result.deleteUserDnFallbackError');
                 userResult.alertType = 'danger';
                 isComplete = false;
               } else {
@@ -1767,7 +1771,8 @@
           if (method !== 'convertUser') {
             $scope.$dismiss();
           }
-        }
+        });
+
 
         for (var idx in $scope.results.resultList) {
           if ($scope.results.resultList[idx].alertType !== 'success') {

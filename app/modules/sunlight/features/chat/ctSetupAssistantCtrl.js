@@ -343,16 +343,19 @@
     function cancelModal() {
       var modelText = $stateParams.isEditFeature ? {
         bodyMessage: $translate.instant('careChatTpl.ctEditBody'),
+        trailingMessage: $translate.instant('careChatTpl.ctEditMessage'),
         process: $translate.instant('careChatTpl.ctEditing')
       } : {
         bodyMessage: $translate.instant('careChatTpl.ctCreationBody'),
+        trailingMessage: $translate.instant('careChatTpl.ctCreationMessage'),
         process: $translate.instant('careChatTpl.ctCreation')
       };
 
       vm.cancelModalText = {
         cancelHeader: $translate.instant('careChatTpl.cancelHeader'),
         cancelDialog: $translate.instant('careChatTpl.cancelDialog', {
-          bodyMessage: modelText.bodyMessage
+          bodyMessage: modelText.bodyMessage,
+          trailingMessage: modelText.trailingMessage
         }),
         continueButton: $translate.instant('careChatTpl.continueButton', {
           confirmProcess: modelText.process
