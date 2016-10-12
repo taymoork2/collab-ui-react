@@ -50,8 +50,8 @@
       return $http.get(sunlightChatConfigUrl);
     }
 
-    function deleteUserConfig(userData) {
-      return $http.delete(sunlightUserConfigUrl + '/' + userData.id);
+    function deleteUserConfig(userId) {
+      return $http.delete(sunlightUserConfigUrl + '/' + userId);
     }
   }
 })();

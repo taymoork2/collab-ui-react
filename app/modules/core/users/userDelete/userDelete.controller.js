@@ -66,9 +66,8 @@
       var userData = {
         email: vm.deleteUsername
       };
-      var userUuid = {
-        id: vm.deleteUserUuId
-      };
+      var userUuid = vm.deleteUserUuId;
+
       SunlightConfigService.deleteUserConfig(userUuid);
       return Userservice.deactivateUser(userData);
     }
