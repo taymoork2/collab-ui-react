@@ -8,6 +8,7 @@
 
       function CloudberryDevice(obj) {
         this.url = obj.url;
+        this.isCloudberryDevice = true;
         this.type = 'cloudberry';
         this.mac = obj.mac;
         this.ip = getIp(obj);
@@ -21,7 +22,6 @@
         this.isOnline = getIsOnline(obj);
         this.lastConnectionTime = getLastConnectionTime(obj);
         this.tags = getTags(obj.description);
-        this.tagString = getTagString(obj.description);
         this.displayName = obj.displayName;
         this.accountType = obj.accountType || 'MACHINE';
         this.photos = _.isEmpty(obj.photos) ? null : obj.photos;
@@ -39,25 +39,8 @@
         this.update = function (updated) {
           this.displayName = updated.displayName;
         };
-        this.image = obj.product in cloudberry_model_map ? cloudberry_model_map[obj.product] : "images/devices-hi/unknown.png";
+        this.image = "images/devices-hi/" + (obj.imageFilename || 'unknown.png');
       }
-
-      var cloudberry_model_map = {
-        "Cisco TelePresence DX80": "images/devices-hi/dx80.png",
-        "Cisco TelePresence DX70": "images/devices-hi/dx70.png",
-        "Cisco TelePresence SX10": "images/devices-hi/sx10.png",
-        "Cisco TelePresence SX20": "images/devices-hi/sx20.png",
-        "Cisco TelePresence SX80": "images/devices-hi/sx80.png",
-        "Cisco TelePresence MX200 G2": "images/devices-hi/mx200g2.png",
-        "Cisco TelePresence MX300 G2": "images/devices-hi/mx300g2.png",
-        "Cisco TelePresence MX700": "images/devices-hi/mx700d.png", // incorrect, should be "images/devices-hi/mx700.png" but missing
-        "Cisco TelePresence MX700 SpeakerTrack": "images/devices-hi/mx700dspeakertrack.png", // incorrect, should be "images/devices-hi/mx700speakertrack.png" but missing
-        "Cisco TelePresence MX700 Dual": "images/devices-hi/mx700d.png", // pic exist, but not endpoint?
-        "Cisco TelePresence MX700 Dual Speakertrack": "images/devices-hi/mx700dspeakertrack.png", // pic exist, but not endpoint?
-        "Cisco TelePresence MX800": "images/devices-hi/mx800.png",
-        "Cisco TelePresence MX800 Dual": "images/devices-hi/mx800dspeakertrack.png",
-        "Cisco TelePresence MX800 SpeakerTrack": "images/devices-hi/mx800speakertrack.png"
-      };
 
       function HuronDevice(obj) {
         this.url = obj.url;
@@ -73,65 +56,52 @@
         this.accountType = obj.accountType || 'PERSON';
         this.displayName = obj.displayName;
         this.tags = getTags(decodeHuronTags(obj.description));
-        this.tagString = getTagString(decodeHuronTags(obj.description));
         this.cssColorClass = getCssColorClass(obj);
         this.state = getState(obj);
         this.photos = _.isEmpty(obj.photos) ? null : obj.photos;
         this.isHuronDevice = true;
         this.product = obj.product in huron_model_map ? huron_model_map[obj.product].displayName : getProduct(obj);
-        this.image = obj.product in huron_model_map ? huron_model_map[obj.product].image : "images/devices-hi/unknown.png";
+        this.image = "images/devices-hi/" + (obj.imageFilename || 'unknown.png');
         this.huronId = getHuronId(obj);
         this.addOnModuleCount = obj.addOnModuleCount;
       }
 
       var huron_model_map = {
         "MODEL_CISCO_7811": {
-          displayName: "Cisco 7811",
-          image: "images/devices-hi/cisco_7811.png"
+          displayName: "Cisco 7811"
         },
         "MODEL_CISCO_7821": {
-          displayName: "Cisco 7821",
-          image: "images/devices-hi/cisco_7821.png"
+          displayName: "Cisco 7821"
         },
         "MODEL_CISCO_7841": {
-          displayName: "Cisco 7841",
-          image: "images/devices-hi/cisco_7841.png"
+          displayName: "Cisco 7841"
         },
         "MODEL_CISCO_7861": {
-          displayName: "Cisco 7861",
-          image: "images/devices-hi/cisco_7861.png"
+          displayName: "Cisco 7861"
         },
         "MODEL_CISCO_8811": {
-          displayName: "Cisco 8811",
-          image: "images/devices-hi/cisco_8811.png"
+          displayName: "Cisco 8811"
         },
         "MODEL_CISCO_8831": {
-          displayName: "Cisco 8831",
-          image: "images/devices-hi/cisco_8831.png"
+          displayName: "Cisco 8831"
         },
         "MODEL_CISCO_8841": {
-          displayName: "Cisco 8841",
-          image: "images/devices-hi/cisco_8841.png"
+          displayName: "Cisco 8841"
         },
         "MODEL_CISCO_8845": {
-          displayName: "Cisco 8845",
-          image: "images/devices-hi/cisco_8845.png"
+          displayName: "Cisco 8845"
         },
         "MODEL_CISCO_8851": {
-          displayName: "Cisco 8851",
-          image: "images/devices-hi/cisco_8851.png"
+          displayName: "Cisco 8851"
         },
         "MODEL_CISCO_8851NR": {
-          displayName: "Cisco 8851NR",
-          image: "images/devices-hi/cisco_8851.png"
+          displayName: "Cisco 8851NR"
         },
         "MODEL_CISCO_8861": {
-          displayName: "Cisco 8861",
-          image: "images/devices-hi/cisco_8861.png"
+          displayName: "Cisco 8861"
         },
         "MODEL_CISCO_8865": {
-          displayName: "Cisco 8865",
-          image: "images/devices-hi/cisco_8865.png"
+          displayName: "Cisco 8865"
         }
       };
 
@@ -154,13 +124,13 @@
         this.image = "images/devices-hi/unknown.png";
         this.diagnosticsEvents = [{
           type: translateOrDefault('CsdmStatus.errorCodes.inactive.type', 'Account with no device'),
-          message: translateOrDefault('CsdmStatus.errorCodes.inactive.message', 'There exists an account for a ' +
-            'device, but no corresponding device or activation code. You can probably delete this account.')
+          message: translateOrDefault("CsdmStatus.errorCodes.inactive.message", "An account exists for a device, but there's no corresponding device or activation code. You can delete this account.")
         }];
       }
 
       function Code(obj) {
         obj.state = obj.status;
+        this.isCode = true;
 
         this.url = obj.url;
         this.type = 'cloudberry';
@@ -171,7 +141,6 @@
         this.friendlyExpiryTime = convertExpiryTime(obj.expiryTime);
         this.product = t('spacesPage.unactivatedDevice');
         this.tags = getTags(obj.description);
-        this.tagString = getTagString(obj.description);
         this.displayName = obj.displayName;
         this.activationCode = obj.activationCode;
         this.state = getState(obj);
@@ -188,14 +157,58 @@
         };
       }
 
+      function updatePlaceFromItem(place, item) {
+
+        if (item.isPlace) {
+          updatePlaceFromPlace(place, item);
+        } else if (item.isCode) {
+          updatePlaceFromCode(place, item);
+        } else {
+          updatePlaceFromDevice(place, item);
+        }
+      }
+
+      function updatePlaceFromDevice(place, device) {
+        var updatedPlace = place;
+        updatedPlace.type = device.type || updatedPlace.type;
+        updatedPlace.cisUuid = device.cisUuid || device.uuid;
+        updatedPlace.displayName = device.displayName;
+        updatedPlace.sipUrl = device.sipUrl;
+        Place.bind(updatedPlace)(updatedPlace);
+      }
+
+      function updatePlaceFromCode(place, code) {
+        var updatedPlace = place;
+        updatedPlace.type = code.type || 'cloudberry';
+        updatedPlace.cisUuid = code.cisUuid || code.uuid;
+        updatedPlace.displayName = code.displayName;
+        Place.bind(updatedPlace)(updatedPlace);
+      }
+
+      function updatePlaceFromPlace(place, placeToUpdateFrom) {
+
+        if (_.isEmpty(placeToUpdateFrom.devices)) {
+          placeToUpdateFrom = _.merge(placeToUpdateFrom, _.pick(place, ['devices']));
+        }
+        if (_.isEmpty(placeToUpdateFrom.codes)) {
+          placeToUpdateFrom = _.merge(placeToUpdateFrom, _.pick(place, ['codes']));
+        }
+        Place.bind(place)(placeToUpdateFrom);
+        place.devices = placeToUpdateFrom.devices;
+        place.codes = placeToUpdateFrom.codes;
+      }
+
       function Place(obj) {
         this.url = obj.url;
+        this.isPlace = true;
         this.type = obj.type || 'cloudberry';
+        this.readableType = getLocalizedType(obj.type);
         this.entitlements = obj.entitlements;
         this.cisUuid = obj.cisUuid || obj.uuid;
         this.displayName = obj.displayName;
         this.sipUrl = obj.sipUrl;
         this.devices = obj.type === 'huron' ? obj.phones : convertCloudberryDevices(obj.devices);
+        this.codes = obj.type === 'huron' ? null : convertCodes(obj.codes);
         this.numbers = obj.numbers;
         this.isUnused = obj.devices || false;
         this.canDelete = true;
@@ -258,23 +271,23 @@
 
       function getSoftware(obj) {
         return _.chain(getEvents(obj))
-          .where({
+          .filter({
             type: 'software',
             level: 'INFO'
           })
-          .pluck('description')
-          .first()
+          .map('description')
+          .head()
           .value();
       }
 
       function getUpgradeChannel(obj) {
         var channel = _.chain(getEvents(obj))
-          .where({
+          .filter({
             type: 'upgradeChannel',
             level: 'INFO'
           })
-          .pluck('description')
-          .first()
+          .map('description')
+          .head()
           .value();
 
         var labelKey = 'CsdmStatus.upgradeChannels.' + channel;
@@ -290,12 +303,12 @@
 
       function getIp(obj) {
         return _.chain(getEvents(obj))
-          .where({
+          .filter({
             type: 'ip',
             level: 'INFO'
           })
-          .pluck('description')
-          .first()
+          .map('description')
+          .head()
           .value();
       }
 
@@ -427,6 +440,13 @@
         }
       }
 
+      function getLocalizedType(type) {
+        if (type === 'huron') {
+          return t('addDeviceWizard.chooseDeviceType.deskPhone');
+        }
+        return t('addDeviceWizard.chooseDeviceType.roomSystem');
+      }
+
       function t(key) {
         return $translate.instant(key);
       }
@@ -437,23 +457,19 @@
         }
         try {
           var tags = JSON.parse(description);
-          return _.unique(tags);
+          return _.uniq(tags);
         } catch (e) {
           try {
             tags = JSON.parse("[\"" + description + "\"]");
-            return _.unique(tags);
+            return _.uniq(tags);
           } catch (e) {
             return [];
           }
         }
       }
 
-      function getTagString(description) {
-        var tags = getTags(description);
-        return tags.join(', ');
-      }
-
       return {
+        updatePlaceFromItem: updatePlaceFromItem,
         convertPlace: convertPlace,
         convertPlaces: convertPlaces,
         convertCode: convertCode,

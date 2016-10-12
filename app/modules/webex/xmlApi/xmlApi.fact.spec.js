@@ -1,6 +1,7 @@
 /**
  *
  */
+
 'use strict';
 
 describe('WebExXmlApiFact', function () {
@@ -24,7 +25,7 @@ describe('WebExXmlApiFact', function () {
     };
     var env = jasmine.getEnv();
     env.addReporter(new MyReporter());
-	**/
+  **/
 
   beforeEach(angular.mock.module('WebExApp'));
 

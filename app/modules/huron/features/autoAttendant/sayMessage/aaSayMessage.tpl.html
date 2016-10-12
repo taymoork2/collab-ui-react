@@ -47,19 +47,7 @@
       <span class="small-12 columns aa-message-subtext" translate="autoAttendant.sayAndError"></span>
       <hr class="aa-message-line-break"></hr>
     </div>
-    <div class="row">
-      <div class="large-6 small-6 columns aa-message-select-list">
-        <label for="messageSelect{{ schedule + index + menuKeyIndex }}" translate="autoAttendant.messageType"></label>
-        <cs-select id="messageSelect{{ schedule + index + menuKeyIndex }}" name="messageSelect" options="aaSay.messageOptions" icon="icon-chevron-down" labelfield="label" valuefield="value" ng-model="aaSay.messageOption" ng-change="aaSay.setMessageOptions()">
-        </cs-select>
-      </div>
-    </div>
-    <div class="row">
-      <div ng-switch="aaSay.messageOption.value" class="large-12 small-12 columns">
-        <aa-media-upload ng-switch-when="uploadFile" aa-uploaded-fdate="{{ aaSay.uploadedDate }}" aa-uploaded-fname="{{ aaSay.uploadedFile }}" id="mediaUploadInput{{ schedule + index + menuKeyIndex }}" name="mediaUploadInput" aa-index="index" aa-schedule="{{schedule}}"></aa-media-upload>
-        <textarea ng-switch-when="sayMessage" class="aa-message-textarea" aa-keypress ng-change="aaSay.saveUiModel()" ng-model="aaSay.messageInput" type="text" id="sayMessageInput{{ schedule + index + menuKeyIndex }}" name="sayMessageInput" placeholder="{{ :: aaSay.messageInputPlaceholder }}" cols="5" rows="5" maxlength="2000"></textarea>
-      </div>
-    </div>
+    <div aa-message-type aa-index="index" aa-schedule="{{schedule}}"></div>
     <div class="row">
       <div class="small-12 columns">
         <p class="body-small aa-message-footer" translate="{{ :: aaSay.getFooter() }}"></p>

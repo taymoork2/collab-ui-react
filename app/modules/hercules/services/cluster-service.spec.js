@@ -42,6 +42,136 @@ describe('ClusterService', function () {
     expect(CsdmPoller.create.called).toBe(true);
   });
 
+  describe('.mergeAllAlarms', function () {
+    var templateAlarm = {
+      id: 1,
+      title: 't',
+      firstReported: '1475651563',
+      lastReported: '1475753923',
+      description: 'd',
+      severity: 's',
+      solution: 'so',
+      solutionReplacementValues: [
+        {
+          text: 't',
+          link: 'l'
+        }
+      ]
+    };
+
+    it('should return an empty list when no alarms are present', function () {
+      var connectors = [
+        { alarms: [] },
+        { alarms: [] },
+      ];
+      var result = ClusterService._mergeAllAlarms(connectors);
+      expect(result.length).toBe(0);
+    });
+
+    it('should not return duplicate alarms', function () {
+      var connectors = [
+        { alarms: [templateAlarm] },
+        { alarms: [templateAlarm] },
+      ];
+      var result = ClusterService._mergeAllAlarms(connectors);
+      expect(result.length).toBe(1);
+      expect(result[0].id).toBe(1);
+      expect(result[0].title).toBe(templateAlarm.title);
+    });
+
+    it('should not return duplicate alarms, even when they have different firstReported values', function () {
+      var connectors = [
+        { alarms: [_.merge({}, templateAlarm, { firstReported: 'somethingelse' })] },
+        { alarms: [templateAlarm] },
+      ];
+      var result = ClusterService._mergeAllAlarms(connectors);
+      expect(result.length).toBe(1);
+    });
+
+    it('should return the oldest alarm and eliminate younger alarms as duplicates', function () {
+      var connectors = [
+        { alarms: [_.merge({}, templateAlarm, { firstReported: '3' })] },
+        { alarms: [_.merge({}, templateAlarm, { firstReported: '1' })] },
+        { alarms: [_.merge({}, templateAlarm, { firstReported: '2' })] },
+      ];
+      var result = ClusterService._mergeAllAlarms(connectors);
+      expect(result.length).toBe(1);
+      expect(result[0].firstReported).toBe('1');
+    });
+
+    it('should not return duplicate alarms, even when they have different lastReported values', function () {
+      var connectors = [
+        { alarms: [_.merge({}, templateAlarm, { lastReported: 'somethingelse' })] },
+        { alarms: [templateAlarm] },
+      ];
+      var result = ClusterService._mergeAllAlarms(connectors);
+      expect(result.length).toBe(1);
+    });
+
+    it('should not consider an alarm a duplicate of another alarm if their IDs are different', function () {
+      var connectors = [
+        { alarms: [_.merge({}, templateAlarm, { id: 'somethingelse' })] },
+        { alarms: [templateAlarm] },
+      ];
+      var result = ClusterService._mergeAllAlarms(connectors);
+      expect(result.length).toBe(2);
+    });
+
+    it('should not consider an alarm a duplicate of another alarm if their titles are different', function () {
+      var connectors = [
+        { alarms: [_.merge({}, templateAlarm, { title: 'somethingelse' })] },
+        { alarms: [templateAlarm] },
+      ];
+      var result = ClusterService._mergeAllAlarms(connectors);
+      expect(result.length).toBe(2);
+    });
+
+    it('should not consider an alarm a duplicate of another alarm if their descriptions are different', function () {
+      var connectors = [
+        { alarms: [_.merge({}, templateAlarm, { description: 'somethingelse' })] },
+        { alarms: [templateAlarm] },
+      ];
+      var result = ClusterService._mergeAllAlarms(connectors);
+      expect(result.length).toBe(2);
+    });
+
+    it('should not consider an alarm a duplicate of another alarm if their severities are different', function () {
+      var connectors = [
+        { alarms: [_.merge({}, templateAlarm, { severity: 'somethingelse' })] },
+        { alarms: [templateAlarm] },
+      ];
+      var result = ClusterService._mergeAllAlarms(connectors);
+      expect(result.length).toBe(2);
+    });
+
+    it('should not consider an alarm a duplicate of another alarm if their solutions are different', function () {
+      var connectors = [
+        { alarms: [_.merge({}, templateAlarm, { solution: 'somethingelse' })] },
+        { alarms: [templateAlarm] },
+      ];
+      var result = ClusterService._mergeAllAlarms(connectors);
+      expect(result.length).toBe(2);
+    });
+
+    it('should not consider an alarm a duplicate of another alarm if their solution replacement text values are different', function () {
+      var connectors = [
+        { alarms: [_.merge({}, templateAlarm, { solutionReplacementValues: [{ text: 'somethingelse', link: templateAlarm.solutionReplacementValues.link }] })] },
+        { alarms: [templateAlarm] },
+      ];
+      var result = ClusterService._mergeAllAlarms(connectors);
+      expect(result.length).toBe(2);
+    });
+
+    it('should not consider an alarm a duplicate of another alarm if their solution replacement link values are different', function () {
+      var connectors = [
+        { alarms: [_.merge({}, templateAlarm, { solutionReplacementValues: [{ text: templateAlarm.solutionReplacementValues.text, link: 'somethingelse' }] })] },
+        { alarms: [templateAlarm] },
+      ];
+      var result = ClusterService._mergeAllAlarms(connectors);
+      expect(result.length).toBe(2);
+    });
+  });
+
   describe('.fetch', function () {
     it('should contact the correct backend', function () {
       $httpBackend
@@ -519,7 +649,7 @@ describe('ClusterService', function () {
   function cluster(connectors, options) {
     options = options || {};
     var typesUsed = _.chain(connectors)
-      .pluck('connectorType')
+      .map('connectorType')
       .uniq()
       .value();
     var provisioning = _.map(typesUsed, function (type) {

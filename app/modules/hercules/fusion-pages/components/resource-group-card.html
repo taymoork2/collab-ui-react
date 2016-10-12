@@ -2,17 +2,29 @@
   <article>
     <header>
       <button class="resource-group-caret" ng-click="$ctrl.toggleDetails()">
-        <i ng-show="!$ctrl.showDetails" class="fa fa-caret-right"></i>
-        <i ng-show="$ctrl.showDetails" class="fa fa-caret-down"></i>
+        <i class="icon icon-arrow-down" ng-class="{'icon-arrow-down-rotated': !$ctrl.showDetails}"></i>
+        <i class="icon icon-circle status-indicator" ng-class="$ctrl.getStatusCssClass()"></i>
         <h4>{{::$ctrl.group.name}}</h4>
         <div class="resource-group-release-channel"><span translate="hercules.fusion.list.release-channel"></span>:&nbsp;{{$ctrl.getLocalizedReleaseChannel($ctrl.group.releaseChannel)}}</div>
         <div class="resource-group-release-cluster-number"><span translate="hercules.fusion.list.clusters"></span>:&nbsp;{{::$ctrl.group.clusters.length}}</div>
+        <div class="resource-group-release-cluster-users">
+          <span ng-if="$ctrl.hasZeroClusters() && $ctrl.hasUsers()" class="icon icon-warning danger"></span>
+          <span translate="hercules.fusion.list.users"></span>:&nbsp;{{::$ctrl.group.numberOfUsers}}
+        </div>
       </button>
       <a ui-sref="resource-group-settings({id: $ctrl.group.id})" class="resource-group-settings-link"><i class="icon icon-settings"></i></a>
     </header>
     <section ng-show="$ctrl.showDetails">
-      <div class="resource-group-banner" ng-if="$ctrl.showWarningText()">
+      <div ng-if="$ctrl.hasZeroClusters() && !$ctrl.hasUsers()" class="resource-group-banner">
         <div class="resource-group-banner-message" translate="hercules.fusion.list.missing-clusters" translate-value-onclick="$ctrl.openResourceGroupSettings()" translate-compile>
+        </div>
+      </div>
+      <div ng-if="!$ctrl.hasZeroClusters() && !$ctrl.hasUsers()" class="resource-group-banner resource-group-banner">
+        <div class="resource-group-banner-message" translate="hercules.fusion.list.missing-users" translate-value-onclick="$ctrl.openResourceGroupSettings()" translate-compile>
+        </div>
+      </div>
+      <div ng-if="$ctrl.hasZeroClusters() && $ctrl.hasUsers()" class="resource-group-banner resource-group-banner-error">
+        <div class="resource-group-banner-message" translate="hercules.fusion.list.users-in-limbo" translate-value-onclick="$ctrl.openResourceGroupSettings()" translate-compile>
         </div>
       </div>
       <div class="resource-group-empty" ng-if="$ctrl.group.clusters.length === 0"></div>

@@ -6,11 +6,7 @@
     .controller('FusionClusterListController', FusionClusterListController);
 
   /* @ngInject */
-  function FusionClusterListController($filter, $modal, $state, $translate, Authinfo, Config, hasF237FeatureToggle, hasF410FeatureToggle, hasMediaFeatureToggle, FusionClusterService, XhrNotificationService, WizardFactory) {
-    if (!hasF410FeatureToggle) {
-      // simulate a 404
-      $state.go('login');
-    }
+  function FusionClusterListController($filter, $modal, $state, $translate, Authinfo, Config, hasF237FeatureToggle, hasMediaFeatureToggle, FusionClusterService, XhrNotificationService, WizardFactory) {
 
     var vm = this;
     if (hasF237FeatureToggle) {
@@ -132,15 +128,15 @@
 
         _.each(vm.filters, function (filter, index) {
           var filteredAssignedClustersCount = _.reduce(groupsCache.groups, function (acc, group) {
-            return acc + _.filter(group.clusters, 'targetType', filter.filterValue).length;
+            return acc + _.filter(group.clusters, { targetType: filter.filterValue }).length;
           }, 0);
-          var filteredUnassignedClustersCount = _.filter(groupsCache.unassigned, 'targetType', filter.filterValue).length;
+          var filteredUnassignedClustersCount = _.filter(groupsCache.unassigned, { targetType: filter.filterValue }).length;
           vm.filters[index].count = filteredAssignedClustersCount + filteredUnassignedClustersCount;
         });
       } else {
         vm.placeholder.count = clustersCache.length;
         _.each(vm.filters, function (filter, index) {
-          var clustersCount = _.filter(clustersCache, 'targetType', filter.filterValue).length;
+          var clustersCount = _.filter(clustersCache, { targetType: filter.filterValue }).length;
           vm.filters[index].count = clustersCount;
         });
       }
@@ -155,21 +151,21 @@
             groups: _.chain(groupsCache.groups)
               .map(function (group) {
                 var response = _.cloneDeep(group);
-                response.clusters = _.filter(response.clusters, 'targetType', filter.filterValue);
+                response.clusters = _.filter(response.clusters, { targetType: filter.filterValue });
                 return response;
               })
               .filter(function (group) {
                 return group.clusters.length > 0;
               })
               .value(),
-            unassigned: _.filter(groupsCache.unassigned, 'targetType', filter.filterValue),
+            unassigned: _.filter(groupsCache.unassigned, { targetType: filter.filterValue }),
           };
         }
       } else {
         if (filter.filterValue === 'all') {
           vm.displayedClusters = clustersCache;
         } else {
-          vm.displayedClusters = _.filter(clustersCache, 'targetType', filter.filterValue);
+          vm.displayedClusters = _.filter(clustersCache, { targetType: filter.filterValue });
         }
       }
     }

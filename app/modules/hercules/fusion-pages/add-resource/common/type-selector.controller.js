@@ -19,7 +19,7 @@
     vm._translation = {};
 
     var servicesEntitledTo = _.chain(vm.isEntitledTo)
-      .omit(function (value) {
+      .omitBy(function (value) {
         return !value;
       })
       .keys()

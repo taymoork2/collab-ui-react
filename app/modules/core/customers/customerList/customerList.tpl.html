@@ -4,7 +4,7 @@
     <cs-page-sub-header-left>
       <cs-searchfilter filters="filters" search-item-fn="filterList(searchStr)">
       </cs-searchfilter>
-      <div cs-dropdown class="table-filter" ng-if="!isCustomerPartner">
+      <div cs-dropdown class="table-filter" ng-if="!isCustomerPartner && !customerListToggle">
         <div cs-dropdown-toggle class="dropdown-toggle filter" ng-if="breakpoint === 'screen-xs' || breakpoint === 'screen-sm' || breakpoint === 'screen-md'">
           <span class="name" ng-if="activeFilter === 'all'" translate="customerPage.all"></span>
           <span class="name" ng-if="activeFilter === 'trials'" translate="customerPage.trial"></span>
@@ -12,6 +12,9 @@
         </div>
         <div ng-include="'modules/core/customers/customerList/customerFilters.tpl.html'" cs-dropdown-menu ng-if="breakpoint === 'screen-xs' || breakpoint === 'screen-sm' || breakpoint === 'screen-md'"></div>
         <div ng-include="'modules/core/customers/customerList/customerFilters.tpl.html'" ng-if="breakpoint === 'screen-lg'"></div>
+      </div>
+      <div ng-if="customerListToggle">
+        <span translate="customerPage.allCustomers"/> <span class="count">{{totalOrgs}}</span>
       </div>
     </cs-page-sub-header-left>
     <cs-page-sub-header-right>

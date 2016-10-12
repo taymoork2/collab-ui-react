@@ -17,6 +17,7 @@ describe('Controller: DeviceOverviewCtrl', function () {
     $controller = _$controller_;
     $httpBackend = _$httpBackend_;
     $q = _$q_;
+
     CsdmConfigService = _CsdmConfigService_;
     CsdmDeviceService = _CsdmDeviceService_;
     CsdmCodeService = _CsdmCodeService_;
@@ -142,6 +143,7 @@ describe('Controller: DeviceOverviewCtrl', function () {
     it('should post new tags to CsdmCodeDeviceService for activation codes', function () {
       controller.newTag = 'new tag';
       controller.currentDevice = {
+        isCode: true,
         tags: [],
         url: 'testUrl',
         needsActivation: true
@@ -156,6 +158,7 @@ describe('Controller: DeviceOverviewCtrl', function () {
     it('should post new tags to CsdmDeviceService for cloudberry devices', function () {
       controller.newTag = 'new tag';
       controller.currentDevice = {
+        isCloudberryDevice: true,
         tags: [],
         url: 'testUrl'
       };
@@ -169,6 +172,7 @@ describe('Controller: DeviceOverviewCtrl', function () {
     it('should append new tags to existing tags', function () {
       controller.newTag = 'new tag';
       controller.currentDevice = {
+        isCloudberryDevice: true,
         tags: ['old tag'],
         url: 'testUrl'
       };
@@ -179,9 +183,23 @@ describe('Controller: DeviceOverviewCtrl', function () {
       expect(CsdmDeviceService.updateTags).toHaveBeenCalledWith('testUrl', ['old tag', 'new tag']);
     });
 
+    it('should remove deleted tag from existing tags', function () {
+      controller.currentDevice = {
+        isCloudberryDevice: true,
+        tags: ['old tag', 'old tag2'],
+        url: 'testUrl'
+      };
+      spyOn(CsdmDeviceService, 'updateTags').and.returnValue($q.resolve());
+      controller.removeTag('old tag');
+      $scope.$apply();
+      expect(CsdmDeviceService.updateTags).toHaveBeenCalled();
+      expect(CsdmDeviceService.updateTags).toHaveBeenCalledWith('testUrl', ['old tag2']);
+    });
+
     it('should leave out leading and trailing whitespace when posting new tags to CsdmDeviceService', function () {
       controller.newTag = ' new tag ';
       controller.currentDevice = {
+        isCloudberryDevice: true,
         tags: [],
         url: 'testUrl'
       };
@@ -217,7 +235,6 @@ describe('Huron Device', function () {
   var $scope, $controller, controller, $httpBackend;
   var $q, CsdmConfigService;
   var $stateParams, ServiceSetup, timeZone, newTimeZone;
-  var FeatureToggleService;
   var HuronConfig;
 
   beforeEach(angular.mock.module('Hercules'));
@@ -228,15 +245,13 @@ describe('Huron Device', function () {
   beforeEach(initSpies);
 
 
-  function dependencies(_$q_, $rootScope, _$controller_, _$httpBackend_, _CsdmConfigService_, _$stateParams_, _ServiceSetup_, _FeatureToggleService_, _HuronConfig_) {
+  function dependencies(_$q_, $rootScope, _$controller_, _$httpBackend_, _CsdmConfigService_, _ServiceSetup_, _HuronConfig_) {
     $scope = $rootScope.$new();
     $controller = _$controller_;
     $httpBackend = _$httpBackend_;
     $q = _$q_;
     CsdmConfigService = _CsdmConfigService_;
     ServiceSetup = _ServiceSetup_;
-    $stateParams = _$stateParams_;
-    FeatureToggleService = _FeatureToggleService_;
     HuronConfig = _HuronConfig_;
     $stateParams = {
       currentDevice: {
@@ -312,7 +327,6 @@ describe('Huron Device', function () {
   describe('kem support', function () {
     beforeEach(function () {
       $stateParams.currentDevice.product = 'Cisco 8865';
-      spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve(true));
       $httpBackend.whenGET(HuronConfig.getCmiUrl() + '/voice/customers/sipendpoints/addonmodules').respond(200, [{
         customerId: 'fake-customer-id',
         sipEndpointId: 'fake-huron-id',

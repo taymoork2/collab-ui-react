@@ -1,5 +1,6 @@
 (function () {
   'use strict';
+
   angular
     .module('uc.autoattendant')
     .controller('AASubmenuCtrl', AASubmenuCtrl);
@@ -27,6 +28,7 @@
       value: ''
     };
     vm.menuEntry = {};
+    vm.queues = [];
 
     vm.addKeyAction = addKeyAction;
     vm.deleteKeyAction = deleteKeyAction;
@@ -191,13 +193,13 @@
               var keyAction = new KeyAction();
               keyAction.key = menuEntry.key;
               if (angular.isDefined(menuEntry.actions[0].name) && menuEntry.actions[0].name.length > 0) {
-                keyAction.action = _.find(vm.keyActions, function (keyAction) {
+                keyAction.action = _.find(vm.keyActions, _.bind(function (keyAction) {
                   if (this.name === 'repeatActionsOnInput') {
                     return (this.name === keyAction.action && this.level === keyAction.level);
                   } else {
                     return this.name === keyAction.action;
                   }
-                }, menuEntry.actions[0]);
+                }, menuEntry.actions[0]));
               } else {
                 keyAction.action = {};
                 keyAction.action.name = "";
@@ -236,12 +238,15 @@
     function toggleRouteToQueueFeature() {
 
       if (AACommonService.isRouteQueueToggle()) {
+        vm.queues = JSON.parse($scope.queues);
         /* will push route to queue in list */
-        vm.keyActions.push({
-          label: $translate.instant('autoAttendant.phoneMenuRouteQueue'),
-          name: 'phoneMenuRouteQueue',
-          action: 'routeToQueue'
-        });
+        if (vm.queues.length > 0) {
+          vm.keyActions.push({
+            label: $translate.instant('autoAttendant.phoneMenuRouteQueue'),
+            name: 'phoneMenuRouteQueue',
+            action: 'routeToQueue'
+          });
+        }
       }
     }
 

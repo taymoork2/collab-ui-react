@@ -5,7 +5,7 @@
     .controller('CustomerListCtrl', CustomerListCtrl);
 
   /* @ngInject */
-  function CustomerListCtrl($q, $rootScope, $scope, $state, $stateParams, $templateCache, $translate, $window, Analytics, Authinfo, Config, customerListToggle, ExternalNumberService, FeatureToggleService, Log, Notification, Orgservice, PartnerService, TrialService) {
+  function CustomerListCtrl($q, $rootScope, $scope, $state, $stateParams, $templateCache, $translate, $window, Analytics, Authinfo, Config, customerListToggle, ExternalNumberService, FeatureToggleService, Log, Notification, Orgservice, PartnerService, TrialService, CsdmPlaceService) {
     $scope.isCustomerPartner = !!Authinfo.isCustomerPartner;
     $scope.isPartnerAdmin = Authinfo.isPartnerAdmin();
     $scope.activeBadge = false;
@@ -13,9 +13,9 @@
     $scope.searchStr = '';
     $scope.timeoutVal = 1000;
     $scope.isCareEnabled = false;
-
+    $scope.placesEnabled = false;
     $scope.isOrgSetup = isOrgSetup;
-    $scope.isPartnerAdminWithCall = isPartnerAdminWithCall;
+    $scope.isPartnerAdminWithCallOrRooms = isPartnerAdminWithCallOrRooms;
     $scope.isOwnOrg = isOwnOrg;
     $scope.setFilter = setFilter;
     $scope.getSubfields = getSubfields;
@@ -41,6 +41,7 @@
     $scope.isLicenseTypeAny = isLicenseTypeAny;
     $scope.getUserCountColumnText = getUserCountColumnText;
     $scope.isPastGracePeriod = isPastGracePeriod;
+    $scope.isPstnSetup = isPstnSetup;
 
     $scope.convertStatusToInt = convertStatusToInt;
 
@@ -56,44 +57,8 @@
       selected: [],
       placeholder: $translate.instant('customerPage.filterSelectPlaceholder'),
       options: [{
-        value: 'expired',
-        label: $translate.instant('customerPage.expiredAccountsFilter', {
-          count: 0
-        }),
-        isSelected: false,
-        isAccountFilter: true
-      }, {
-        value: 'active',
-        label: $translate.instant('customerPage.activeAccountsFilter', {
-          count: 0
-        }),
-        isSelected: false,
-        isAccountFilter: true
-      }, {
-        value: 'trial',
-        label: $translate.instant('customerPage.trialAccountsFilter', {
-          count: 0
-        }),
-        isSelected: false,
-        isAccountFilter: true
-      }, {
-        value: 'care',
-        label: $translate.instant('customerPage.care'),
-        isSelected: false,
-        isAccountFilter: false // a non-account filter filters on services instead
-      }, {
-        value: 'roomSystems',
-        label: $translate.instant('customerPage.roomSystems'),
-        isSelected: false,
-        isAccountFilter: false
-      }, {
-        value: 'communications',
-        label: $translate.instant('customerPage.call'),
-        isSelected: false,
-        isAccountFilter: false
-      }, {
-        value: 'webex',
-        label: $translate.instant('customerPage.webexOverview'),
+        value: 'messaging',
+        label: $translate.instant('customerPage.message'),
         isSelected: false,
         isAccountFilter: false
       }, {
@@ -102,10 +67,49 @@
         isSelected: false,
         isAccountFilter: false
       }, {
-        value: 'messaging',
-        label: $translate.instant('customerPage.message'),
+        value: 'webex',
+        label: $translate.instant('customerPage.webexOverview'),
         isSelected: false,
         isAccountFilter: false
+      }, {
+        value: 'communications',
+        label: $translate.instant('customerPage.call'),
+        isSelected: false,
+        isAccountFilter: false
+      }, {
+        value: 'roomSystems',
+        label: $translate.instant('customerPage.roomSystems'),
+        isSelected: false,
+        isAccountFilter: false
+      }, {
+        value: 'care',
+        label: $translate.instant('customerPage.care'),
+        isSelected: false,
+        isAccountFilter: false // a non-account filter filters on services instead
+      }, {
+        value: 'trial',
+        label: $translate.instant('customerPage.trialAccountsFilter', {
+          count: 0
+        }),
+        count: 0,
+        isSelected: false,
+        isAccountFilter: true
+      }, {
+        value: 'active',
+        label: $translate.instant('customerPage.activeAccountsFilter', {
+          count: 0
+        }),
+        count: 0,
+        isSelected: false,
+        isAccountFilter: true
+      }, {
+        value: 'expired',
+        label: $translate.instant('customerPage.expiredAccountsFilter', {
+          count: 0
+        }),
+        count: 0,
+        isSelected: false,
+        isAccountFilter: true
       }]
     };
     $scope.$watch('filter.selected', function () {
@@ -122,9 +126,12 @@
       partnerAtTopSort: partnerAtTopSort,
       setNotesTextOrder: setNotesTextOrder,
       notesSort: notesSort,
+      rowFilter: rowFilter,
       resetLists: resetLists,
       launchCustomerPortal: launchCustomerPortal,
       getLicenseObj: getLicenseObj,
+      updateResultCount: updateResultCount,
+      updateServiceForOrg: updateServiceForOrg
     };
 
     // common between new + old
@@ -139,13 +146,14 @@
 
     // new templates (These should be kept when feature toggle is removed)
     var licenseCountTemplate = $templateCache.get('modules/core/customers/customerList/grid/licenseCountColumn.tpl.html');
-    var totalUsersTemplate = $templateCache.get('modules/core/customers/customerList/grid/totalUsersColumn.tpl.html');
+    /*AG TODO:  temporarily hidden until we have data:
+    var totalUsersTemplate = $templateCache.get('modules/core/customers/customerList/grid/totalUsersColumn.tpl.html');*/
     var compactServiceTemplate = $templateCache.get('modules/core/customers/customerList/grid/compactServiceColumn.tpl.html');
     var accountStatusTemplate = $templateCache.get('modules/core/customers/customerList/grid/accountStatusColumn.tpl.html');
     var newNoteTemplate = $templateCache.get('modules/core/customers/customerList/grid/newNoteColumn.tpl.html');
 
     // old grid column defs. These should be deleted once the customer list redesign rolls out publiclly
-    // FIXME: Delete when customerList redesign is published
+    //AG TODO:  Delete when customerList redesign is published
     var careField = {
       field: 'care',
       displayName: $translate.instant('customerPage.care'),
@@ -215,14 +223,14 @@
     var allServicesField = {
       field: 'uniqueServiceCount',
       displayName: $translate.instant('customerPage.services'),
-      width: '16%',
+      width: '25%',
       cellTemplate: compactServiceTemplate,
       headerCellClass: 'align-center'
     };
     var accountStatusField = {
       field: 'accountStatus',
       displayName: $translate.instant('customerPage.accountStatus'),
-      width: '12%',
+      width: '16.5%',
       cellTemplate: accountStatusTemplate,
       headerCellClass: 'align-center',
       sortingAlgorithm: accountStatusSort
@@ -230,18 +238,19 @@
     var licenseQuantityField = {
       field: 'totalLicenses',
       displayName: $translate.instant('customerPage.totalLicenses'),
-      width: '12%',
+      width: '16.5%',
       cellTemplate: licenseCountTemplate,
       headerCellClass: 'align-center'
     };
-    var totalUsersField = {
+  /* AG TODO:  once we have data for total users -- add back
+      var totalUsersField = {
       field: 'totalUsers',
       displayName: $translate.instant('customerPage.active') + ' / ' + $translate.instant('customerPage.totalUsers'),
       width: '16%',
       cellTemplate: totalUsersTemplate,
       headerCellClass: 'align-center',
       sortingAlgorithm: userSort
-    };
+    };*/
     var notesField = {
       field: 'notes',
       displayName: $translate.instant('customerPage.notes'),
@@ -270,7 +279,9 @@
           if ($scope.load) {
             $scope.currentDataPosition++;
             $scope.load = false;
-            getTrialsList(($scope.currentDataPosition * Config.usersperpage) + 1);
+            if (!$scope.customerListToggle) {
+              getTrialsList(($scope.currentDataPosition * Config.usersperpage) + 1);
+            }
             $scope.gridApi.infiniteScroll.dataLoaded();
           }
         });
@@ -323,21 +334,30 @@
       setNotesTextOrder();
       initColumns();
       FeatureToggleService.atlasCareTrialsGetStatus().then(function (careStatus) {
-        $scope.isCareEnabled = careStatus;
+        $scope.isCareEnabled = careStatus && Authinfo.isCare();
         // FIXME: Remove this if block once the customer list refactor goes live
         // (This check is taken care of in the compactServiceColumn directive)
-        if (!careStatus) {
+        if (!$scope.isCareEnabled) {
           _.remove($scope.gridColumns, careField);
+          _.remove($scope.filter.options, { value: 'care' });
         }
       }, function () {
         // FIXME: Remove this if block once the customer list refactor goes live
         // if getting care feature status fails, fall back to the old behavior
         _.remove($scope.gridColumns, careField);
+        _.remove($scope.filter.options, { value: 'care' });
       }).finally(function () {
         resetLists().then(function () {
-          setFilter($stateParams.filter);
+          if (!$scope.customerListToggle) {
+            setFilter($stateParams.filter);
+          }
         });
       });
+
+      CsdmPlaceService.placesFeatureIsEnabled().then(function (result) {
+        $scope.placesEnabled = result;
+      });
+
       Orgservice.getOrg(function (data, status) {
         if (data.success) {
           $scope.isTestOrg = data.isTestOrg;
@@ -354,7 +374,7 @@
       var result = _.map(groupedFields, function (group) {
         //or return the one with license OR the first
         return (_.find(group, function (field) {
-          return _.contains(licenses, field.offerCode);
+          return _.includes(licenses, field.offerCode);
         }) || group[0]);
       });
       return result;
@@ -363,7 +383,9 @@
     function initColumns() {
       var columns = [customerNameField];
       if ($scope.customerListToggle) {
-        columns = columns.concat(allServicesField, accountStatusField, licenseQuantityField, totalUsersField, notesField);
+        /* AG TODO: Once we have total users info -- user this line
+        columns = columns.concat(allServicesField, accountStatusField, licenseQuantityField, totalUsersField, notesField); */
+        columns = columns.concat(allServicesField, accountStatusField, licenseQuantityField, notesField);
       } else {
         columns = columns.concat(splitServicesFields, oldNotesField, actionField);
       }
@@ -377,12 +399,16 @@
       });
     }
 
-    function isPartnerAdminWithCall(customer) {
-      return !_.isUndefined(customer.communications.licenseType) && $scope.isPartnerAdmin;
+    function isPartnerAdminWithCallOrRooms(customer) {
+      return (!_.isUndefined(customer.communications.licenseType) || (!_.isUndefined(customer.roomSystems.licenseType) && $scope.placesEnabled)) && $scope.isPartnerAdmin;
+    }
+
+    function isPstnSetup(row) {
+      return (row.entity.isAllowedToManage && isOrgSetup(row.entity) && (row.entity.isSquaredUcOffer || (row.entity.isRoomSystems && $scope.placesEnabled))) || isPartnerAdminWithCallOrRooms(row.entity);
     }
 
     function isOwnOrg(customer) {
-      return customer.customerName === Authinfo.getOrgName();
+      return customer.customerOrgId === Authinfo.getOrgId();
     }
 
     function serviceSort(a, b) {
@@ -445,6 +471,7 @@
       return index;
     }
 
+    /* AG TODO:  once we have data for total users -- add back
     function userSort(a, b, rowA, rowB) {
       var noUsersA = rowA.entity.numUsers === 0;
       var noUsersB = rowB.entity.numUsers === 0;
@@ -458,7 +485,7 @@
       var aPercent = rowA.entity.activeUsers / rowA.entity.numUsers;
       var bPercent = rowB.entity.activeUsers / rowB.entity.numUsers;
       return aPercent - bPercent;
-    }
+    }*/
 
     function setNotesTextOrder() {
       var textSuspended = $translate.instant('customerPage.suspended'),
@@ -496,24 +523,38 @@
       }
     }
 
+
     // this function is called every time the grid needs to refresh after column filtering and before sorting
     // No changes to the length of rows can be made here, only visibility
+
     function rowFilter(rows) {
       if (!customerListToggle) {
         // never want to filter with old design
         return rows;
       }
+      var selectedFilters = {
+        account: _.filter($scope.filter.selected, { isAccountFilter: true }),
+        license: _.filter($scope.filter.selected, { isAccountFilter: false })
+      };
+
       _.forEach(rows, function (row) {
-        _.forEach($scope.filter.selected, function (filterToApply) {
-          var rowVisible = true;
-          if (filterToApply.isAccountFilter) {
-            rowVisible = $scope.getAccountStatus(row.entity) === filterToApply.value;
-          } else {
-            rowVisible = $scope.isLicenseTypeAny(row.entity, filterToApply.value);
-          }
-          row.visible = rowVisible;
-        });
+        var isVisibleFlags = {
+          byAccountFilter: (!selectedFilters.account.length) ||
+            _.some(selectedFilters.account, function (filter) {
+              return ($scope.getAccountStatus(row.entity) === filter.value);
+            }),
+          byLicenseFilter: (!selectedFilters.license.length) ||
+            _.some(selectedFilters.license, function (filter) {
+              return $scope.isLicenseTypeAny(row.entity, filter.value);
+            })
+        };
+
+        row.visible = _.every(isVisibleFlags);
+
       });
+      var visibleRowsData = _.chain(rows).filter({ visible: true }).map(function (row) { return row.entity; }).value();
+
+      $scope._helpers.updateResultCount(visibleRowsData);
       return rows;
     }
 
@@ -533,6 +574,17 @@
       });
     }
 
+    function updateServiceForOrg(service, licenses, equalityObject) {
+      var licensesGotten = _.filter(licenses, equalityObject);
+      service = _.merge(service, _.get(licensesGotten, '[0]', null));
+      if (licensesGotten.length > 1) {
+        service.volume = _.reduce(licensesGotten, function (volume, license) {
+          return volume + license.volume;
+        }, 0);
+      }
+      return service;
+    }
+
     function getMyOrgDetails() {
       return $q(function (resolve, reject) {
         var accountId = Authinfo.getOrgId();
@@ -540,28 +592,30 @@
         var licenses = Authinfo.getLicenses();
         Orgservice.getAdminOrg(function (data, status) {
           if (status === 200) {
-            var myOrg = PartnerService.loadRetrievedDataToList([data], false, $scope.isCareEnabled);
+            var myOrg = PartnerService.loadRetrievedDataToList([data], false, $scope.isCareEnabled, $scope.customerListToggle);
             // Not sure why this is set again, afaik it is the same as myOrg
+            //AG 9/27 getAdminOrg returns licenses without offerCodes so services are not populated therefore this is needed
             myOrg[0].customerName = custName;
             myOrg[0].customerOrgId = accountId;
 
-            myOrg[0].messaging = _.merge(myOrg[0].messaging, _.find(licenses, {
+            myOrg[0].messaging = $scope._helpers.updateServiceForOrg(myOrg[0].messaging, licenses, {
               licenseType: 'MESSAGING'
-            }));
-            myOrg[0].communications = _.merge(myOrg[0].communications, _.find(licenses, {
+            });
+            myOrg[0].communications = $scope._helpers.updateServiceForOrg(myOrg[0].communications, licenses, {
               licenseType: 'COMMUNICATION'
-            }));
-            myOrg[0].roomSystems = _.merge(myOrg[0].roomSystems, _.find(licenses, {
+            });
+            myOrg[0].roomSystems = $scope._helpers.updateServiceForOrg(myOrg[0].roomSystems, licenses, {
               licenseType: 'SHARED_DEVICES'
-            }));
-            myOrg[0].conferencing = _.merge(myOrg[0].conferencing, _.find(licenses, {
+            });
+            myOrg[0].conferencing = $scope._helpers.updateServiceForOrg(myOrg[0].conferencing, licenses, {
               licenseType: 'CONFERENCING',
               offerName: 'CF'
-            }));
-            myOrg[0].webexEEConferencing = _.merge(myOrg[0].webexEEConferencing, _.find(licenses, {
+            });
+            myOrg[0].webexEEConferencing = $scope._helpers.updateServiceForOrg(myOrg[0].webexEEConferencing, licenses, {
               licenseType: 'CONFERENCING',
               offerName: 'EE'
-            }));
+            });
+
             myOrgDetails = myOrg;
             resolve(myOrgDetails);
           } else {
@@ -574,50 +628,39 @@
 
     function getManagedOrgsList(searchText) {
       $scope.showManagedOrgsRefresh = true;
-      var promiselist = [PartnerService.getManagedOrgsList(searchText)];
+      var promiselist = { managedOrgs: PartnerService.getManagedOrgsList(searchText) };
 
       if (Authinfo.isPartnerAdmin() || Authinfo.isPartnerReadOnlyAdmin()) {
         // This attaches myOrg details to the managed orgs list
         if (searchText === '' || Authinfo.getOrgName().indexOf(searchText) !== -1) {
-          promiselist.push(getMyOrgDetails());
+          promiselist.myOrgDetails = getMyOrgDetails();
         }
       }
 
       return $q.all(promiselist)
         .then(function (results) {
           if (results) {
-            var orgList = _.get(results, '[0].data.organizations', []);
+            var orgList = _.get(results, 'managedOrgs.data.organizations', []);
             var managed = PartnerService.loadRetrievedDataToList(orgList, false,
-              $scope.isCareEnabled);
-            var isMyOrgInList = _.some(orgList, {
+              $scope.isCareEnabled, $scope.customerListToggle);
+            var indexMyOwnOrg = _.findIndex(managed, {
               customerOrgId: Authinfo.getOrgId()
             });
-            if (!isMyOrgInList && results[1]) {
-              // 4/11/2016 admolla
-              // TODO: for some reason if I refactor this to not need an array, karma acts up....
-              if (_.isArray(results[1])) {
-                managed.unshift(results[1][0]);
+            // 4/11/2016 admolla
+            // TODO: for some reason if I refactor this to not need an array, karma acts up....
+            if (results.myOrgDetails && _.isArray(results.myOrgDetails)) {
+              if (indexMyOwnOrg === -1) {
+                managed.unshift(results.myOrgDetails[0]);
+              } else {
+                managed[indexMyOwnOrg] = results.myOrgDetails[0];
               }
             }
-
             $scope.managedOrgsList = managed;
             $scope.totalOrgs = $scope.managedOrgsList.length;
-            var statusTypeCounts = _.countBy($scope.managedOrgsList, function (value) {
-              return $scope.getAccountStatus(value);
-            });
-            _.forEach(statusTypeCounts, function (count, type) {
-              var option = _.find($scope.filter.options, { value: type });
-              if (angular.isDefined(option)) {
-                option.label = $translate.instant('customerPage.' + type + 'AccountsFilter', {
-                  count: count
-                });
-              }
-            });
           } else {
             Log.debug('Failed to retrieve managed orgs information.');
             Notification.error('partnerHomePage.errGetOrgs');
           }
-
           // dont use a .finally(..) since this $q.all is returned
           // (if you .finally(..), the next `then` doesnt get called)
           $scope.showManagedOrgsRefresh = false;
@@ -632,13 +675,28 @@
         });
     }
 
+    function updateResultCount(visibleRowsData) {
+      $scope.totalOrgs = visibleRowsData.length;
+      var statusTypeCounts = _.countBy(visibleRowsData, function (dataRow) {
+        return $scope.getAccountStatus(dataRow);
+      });
+      var accountFilters = _.filter($scope.filter.options, { isAccountFilter: true });
+      _.forEach(accountFilters, function (filter) {
+        filter.count = statusTypeCounts[filter.value] || 0;
+        filter.label = $translate.instant('customerPage.' + filter.value + 'AccountsFilter', {
+          count: filter.count });
+      });
+    }
+
+
     function modifyManagedOrgs(customerOrgId) {
       PartnerService.modifyManagedOrgs(customerOrgId);
     }
 
-    // WARNING: not sure if this is needed, getManagedOrgsList contains a superset of this list
+     // WARNING: not sure if this is needed, getManagedOrgsList contains a superset of this list
     // can be filtered by `createdBy` and `license.isTrial` but we have a second endpoint that
     // may at one point in the future return something other than the subset
+    // AG : this will go away in refactor. We are getting rid of trials endpoint call
     function getTrialsList(searchText) {
       return TrialService.getTrialsList(searchText)
         .catch(function (err) {
@@ -675,7 +733,14 @@
     }
 
     function resetLists() {
-      return $q.all([getTrialsList($scope.searchStr), getManagedOrgsList($scope.searchStr)]);
+      if (!$scope.customerListToggle) {
+        return $q.all([getTrialsList($scope.searchStr), getManagedOrgsList($scope.searchStr)]);
+      } else {
+        return getManagedOrgsList($scope.searchStr).then(function () {
+          $scope.gridData = $scope.managedOrgsList;
+          $scope.totalOrgs = $scope.managedOrgsList.length;
+        });
+      }
     }
 
     function launchCustomerPortal(trial) {
@@ -733,7 +798,7 @@
     }
 
     function getLicenseCountColumnText(rowData) {
-      if (isPastGracePeriod(rowData)) {
+      if (!isLicenseInfoAvailable(rowData.licenseList)) {
         return $translate.instant('common.notAvailable');
       }
       return rowData.totalLicenses;

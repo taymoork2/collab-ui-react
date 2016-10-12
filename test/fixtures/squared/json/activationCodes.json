@@ -1,0 +1,33 @@
+{
+  "https://csdm-integration.wbx2.com/csdm/api/v1/organization/584cf4cd-eea7-4c8c-83ee-67d88fc6eab5/codes/e954703f-code1-for-place-with-dev-f4546649292f": {
+    "url": "https://csdm-integration.wbx2.com/csdm/api/v1/organization/584cf4cd-eea7-4c8c-83ee-67d88fc6eab5/codes/e954703f-code1-for-place-with-dev-f4546649292f",
+    "id": "a19b308a-PlaceWithDevice-71898e423bec",
+    "displayName": "8e34ac84-8713-45f7-a1e0-ce25c9f4bf10",
+    "accountName": "8e34ac84-8713-45f7-a1e0-ce25c9f4bf10",
+    "organizationId": "584cf4cd-eea7-4c8c-83ee-67d88fc6eab5",
+    "status": "UNCLAIMED",
+    "createTime": "2016-09-14T22:27:24.845Z",
+    "sipUrl": "8e34ac84-8713-45f7-a1e0-ce25c9f4bf10@webex.room.ciscospark.com",
+    "expiryTime": "2016-09-21T22:27:23.878Z"
+  },
+  "https://csdm-integration.wbx2.com/csdm/api/v1/organization/584cf4cd-eea7-4c8c-83ee-67d88fc6eab5/codes/ad233bb2-code2-for-place-with-dev-93da278b3a0c": {
+    "url": "https://csdm-integration.wbx2.com/csdm/api/v1/organization/584cf4cd-eea7-4c8c-83ee-67d88fc6eab5/codes/ad233bb2-code2-for-place-with-dev-93da278b3a0c",
+    "id": "a19b308a-PlaceWithDevice-71898e423bec",
+    "displayName": "25dee6bd-5bac-49cb-9338-5a6849b6ad8a",
+    "accountName": "25dee6bd-5bac-49cb-9338-5a6849b6ad8a",
+    "organizationId": "584cf4cd-eea7-4c8c-83ee-67d88fc6eab5",
+    "status": "UNCLAIMED",
+    "createTime": "2016-09-15T07:38:16.855Z",
+    "expiryTime": "2016-09-22T07:38:15.878Z"
+  },
+  "https://csdm-integration.wbx2.com/csdm/api/v1/organization/584cf4cd-eea7-4c8c-83ee-67d88fc6eab5/codes/ad233bb2-code1-for-place-with-one-code-9333278b3a0c": {
+    "url": "https://csdm-integration.wbx2.com/csdm/api/v1/organization/584cf4cd-eea7-4c8c-83ee-67d88fc6eab5/codes/ad233bb2-code1-for-place-with-one-code-9333278b3a0c",
+    "id": "a19b308a-PlaceWithOnlyCode-71898e423bec",
+    "displayName": "8A64E0C8576F667801576F66CF320002",
+    "accountName": "8A64E0C8576F667801576F66F0720003",
+    "organizationId": "584cf4cd-eea7-4c8c-83ee-67d88fc6eab5",
+    "status": "UNCLAIMED",
+    "createTime": "2016-09-15T07:38:16.855Z",
+    "expiryTime": "2016-09-22T07:38:15.878Z"
+  }
+}

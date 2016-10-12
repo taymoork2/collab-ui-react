@@ -134,8 +134,10 @@
         reports: 'atlas-portal.reports',
         sales: 'atlas-portal.partner.salesadmin',
         helpdesk: 'atlas-portal.partner.helpdesk',
+        orderadmin: 'atlas-portal.partner.orderadmin',
         spark_synckms: 'spark.synckms',
-        readonly_admin: 'id_readonly_admin'
+        readonly_admin: 'id_readonly_admin',
+        techsupport: 'atlas-portal.cisco.techsupport'
       },
 
       roles: {
@@ -147,9 +149,11 @@
         reports: 'Reports',
         sales: 'Sales_Admin',
         helpdesk: 'Help_Desk',
+        orderadmin: 'Order_Admin',
         spark_synckms: 'Spark_SyncKms',
         readonly_admin: 'Readonly_Admin',
-        compliance_user: 'Compliance_User'
+        compliance_user: 'Compliance_User',
+        techsupport: 'Techsupport'
       },
 
       roleState: {
@@ -214,13 +218,51 @@
         hybridServicesComboError: '400094',
       },
 
+      webexSiteStatus: {
+        RECEIVED: 'RECEIVED',
+        PENDING_PARM: 'PENDING_PARM',
+        PROV_READY: 'PROV_READY',
+        PROVISIONING: 'PROVISIONING',
+        PROVISIONED: 'PROVISIONED',
+        REJECTED: 'REJECTED',
+        ERROR: 'ERROR',
+        PARTIAL: 'PARTIAL',
+        ABORTED: 'ABORTED',
+        TIMEOUT: 'TIMEOUT',
+        NA: 'NA'
+      },
+
       defaultEntitlements: ['webex-squared', 'squared-call-initiation'],
 
       batchSize: 10,
 
+      isDevHostName: function (hostName) {
+        var whitelistDevHosts = [
+          '0.0.0.0',
+          '127.0.0.1',
+          'localhost',
+          'server',
+          'dev-admin.ciscospark.com'
+        ];
+        return _.includes(whitelistDevHosts, hostName);
+      },
+
+      canUseAbsUrlForDevLogin: function (absUrl) {
+        var whitelistAbsUrls = [
+          'http://127.0.0.1:8000',
+          'http://dev-admin.ciscospark.com:8000'
+        ];
+        return _.includes(whitelistAbsUrls, absUrl);
+      },
+
+      getAbsUrlAtRootContext: function () {
+        var portSuffix = ($location.port()) ? ':' + $location.port() : '';
+        return $location.protocol() + '://' + $location.host() + portSuffix;
+      },
+
       isDev: function () {
         var currentHostname = getCurrentHostname();
-        return !config.forceProdForE2E() && (currentHostname === '127.0.0.1' || currentHostname === '0.0.0.0' || currentHostname === 'localhost' || currentHostname === 'server');
+        return !config.forceProdForE2E() && config.isDevHostName(currentHostname);
       },
 
       isIntegration: function () {
@@ -293,15 +335,16 @@
         'users',
         'status'
       ],
-      Support: ['status', 'support', 'reports', 'billing', 'cdrsupport', 'cdr-overview', 'cdrladderdiagram'],
-      WX2_User: ['status', 'overview', 'support', 'activateProduct'],
+      Support: ['status', 'support', 'reports', 'billing', 'cdrsupport', 'cdr-overview', 'cdrladderdiagram', 'reports-metrics'],
+      WX2_User: ['overview', 'support', 'activateProduct'],
       WX2_Support: ['status', 'overview', 'reports', 'support'],
       WX2_SquaredInviter: [],
-      PARTNER_ADMIN: ['status', 'partneroverview', 'partnercustomers', 'customer-overview', 'partnerreports', 'trialAdd', 'trialEdit', 'profile', 'pstnSetup', 'video', 'settings'],
-      PARTNER_SALES_ADMIN: ['status', 'overview', 'partneroverview', 'customer-overview', 'partnercustomers', 'partnerreports', 'trialAdd', 'trialEdit', 'pstnSetup', 'video', 'settings'],
-      CUSTOMER_PARTNER: ['status', 'overview', 'partnercustomers', 'customer-overview'],
+      TechSupport: ['status', 'overview', 'reports', 'support'],
+      PARTNER_ADMIN: ['partneroverview', 'partnercustomers', 'customer-overview', 'partnerreports', 'trialAdd', 'trialEdit', 'profile', 'pstnSetup', 'video', 'settings'],
+      PARTNER_SALES_ADMIN: ['overview', 'partneroverview', 'customer-overview', 'partnercustomers', 'partnerreports', 'trialAdd', 'trialEdit', 'pstnSetup', 'video', 'settings'],
+      CUSTOMER_PARTNER: ['overview', 'partnercustomers', 'customer-overview'],
       //TODO User role is used by Online Ordering UI. The dr* states will be removed once the Online UI is separated from Atlas.
-      User: ['status', 'drLoginReturn', 'drOnboard', 'drConfirmAdminOrg', 'drOnboardQuestion', 'drOnboardEnterAdminEmail', 'drOrgName', 'drAdminChoices'],
+      User: ['drLoginReturn', 'drOnboard', 'drConfirmAdminOrg', 'drOnboardQuestion', 'drOnboardEnterAdminEmail', 'drOrgName', 'drAdminChoices'],
       Site_Admin: [
         'site-list',
         'site-csv-import',
@@ -338,6 +381,7 @@
         'hurondetails',
         'huronfeatures',
         'huronHuntGroup',
+        'huronPagingGroup',
         'huronlines',
         'huronnewfeature',
         'huronsettings',

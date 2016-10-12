@@ -43,19 +43,23 @@
     vm.isPartnerAdmin = Authinfo.isPartnerAdmin();
     vm.currentAdminId = Authinfo.getUserId();
 
-    vm.freeOrPaidServices = null;
+    vm.freeOrPaidServices = [];
+    vm.trialActions = [];
 
     vm.newCustomerViewToggle = newCustomerViewToggle;
 
+    var QTY = _.toUpper($translate.instant('common.quantity'));
+    var FREE = _.toUpper($translate.instant('customerPage.free'));
+
     FeatureToggleService.atlasCareTrialsGetStatus()
       .then(function (result) {
-        if (_.find(vm.currentCustomer.offers, {
-          id: Config.offerTypes.roomSystems
-        })) {
+        if (_.find(vm.currentCustomer.offers, { id: Config.offerTypes.roomSystems })) {
           vm.showRoomSystems = true;
         }
-        setOffers(result);
+        var isCareEnabled = result && Authinfo.isCare();
+        setOffers(isCareEnabled);
       });
+
 
     FeatureToggleService.atlasCustomerListUpdateGetStatus()
       .then(function (result) {
@@ -63,10 +67,26 @@
       });
 
     function setOffers(isCareEnabled) {
-      var licAndOffers = PartnerService.parseLicensesAndOffers(vm.currentCustomer, isCareEnabled);
+      var licAndOffers = PartnerService.parseLicensesAndOffers(vm.currentCustomer, { isCareEnabled: isCareEnabled,
+        isTrial: true });
       vm.offer = vm.currentCustomer.offer = _.get(licAndOffers, 'offer');
+      vm.trialServices = _.chain(vm.currentCustomer.offer)
+        .get('trialServices')
+        .map(function (trialService) {
+          return _.assign({}, trialService, {
+            detail: trialService.qty + ' ' + QTY,
+            actionAvailable: hasSubview(trialService)
+          });
+        })
+        .value();
       if (vm.newCustomerViewToggle) {
-        vm.freeOrPaidServices = PartnerService.getFreeOrActiveServices(vm.currentCustomer, isCareEnabled);
+        vm.freeOrPaidServices = _.map(PartnerService.getFreeOrActiveServices(vm.currentCustomer, { isCareEnabled: isCareEnabled,
+          isTrial: false }), function (service) {
+          return _.assign({}, service, {
+            detail: service.free ? FREE : service.qty + ' ' + QTY,
+            actionAvailable: hasSubview(service)
+          });
+        });
       }
     }
 
@@ -85,9 +105,17 @@
 
     function init() {
       initCustomer();
+      initTrialActions();
       getLogoSettings();
       getIsTestOrg();
       getIsSetupDone();
+    }
+
+    function initTrialActions() {
+      vm.trialActions.push({
+        actionKey: 'customerPage.edit',
+        actionFunction: openEditTrialModal
+      });
     }
 
     function resetForm() {
@@ -231,7 +259,7 @@
 
     function isSquaredUC() {
       if (angular.isArray(identityCustomer.services)) {
-        return _.contains(identityCustomer.services, Config.entitlements.huron);
+        return _.includes(identityCustomer.services, Config.entitlements.huron);
       }
       return false;
     }
@@ -266,9 +294,11 @@
       }
     }
 
-    function goToSubview(service) {
+    function goToSubview(service, options) {
       if (service.hasWebex || service.isMeeting) {
-        $state.go('customer-overview.meetingDetail', { meetingLicenses: service.sub });
+        var isTrial = _.get(options, 'isTrial', false);
+        var services = isTrial ? PartnerService.getTrialMeetingServices(vm.currentCustomer.licenseList) : service.sub;
+        $state.go('customer-overview.meetingDetail', { meetingLicenses: services });
       } else if (service.isCall) {
         $state.go('customer-overview.externalNumberDetail', {});
       }

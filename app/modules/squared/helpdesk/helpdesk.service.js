@@ -6,6 +6,35 @@
   function HelpdeskService($http, $location, $q, $translate, $window, CacheFactory, Config, CsdmConfigService, CsdmConverter, FeatureToggleService, HelpdeskHttpRequestCanceller, HelpdeskMockData, ServiceDescriptor, UrlConfig, USSService) {
     var urlBase = UrlConfig.getAdminServiceUrl();
     var orgCache = CacheFactory.get('helpdeskOrgCache');
+    var service = {
+      usersWithRole: usersWithRole,
+      searchUsers: searchUsers,
+      searchOrgs: searchOrgs,
+      getUser: getUser,
+      getOrg: getOrg,
+      isEmailBlocked: isEmailBlocked,
+      searchCloudberryDevices: searchCloudberryDevices,
+      getHybridServices: getHybridServices,
+      resendInviteEmail: resendInviteEmail,
+      getWebExSites: getWebExSites,
+      getServiceOrder: getServiceOrder,
+      getCloudberryDevice: getCloudberryDevice,
+      getOrgDisplayName: getOrgDisplayName,
+      findAndResolveOrgsForUserResults: findAndResolveOrgsForUserResults,
+      checkIfMobile: checkIfMobile,
+      sendVerificationCode: sendVerificationCode,
+      filterDevices: filterDevices,
+      getHybridStatusesForUser: getHybridStatusesForUser,
+      cancelAllRequests: cancelAllRequests,
+      noOutstandingRequests: noOutstandingRequests,
+      useMock: useMock,
+      elevateToReadonlyAdmin: elevateToReadonlyAdmin,
+      isSparkOnlineUser: isSparkOnlineUser,
+      getInviteResendUrl: getInviteResendUrl,
+      getInviteResendPayload: getInviteResendPayload,
+      invokeInviteEmail: invokeInviteEmail,
+    };
+
     if (!orgCache) {
       orgCache = new CacheFactory('helpdeskOrgCache', {
         maxAge: 120 * 1000,
@@ -88,6 +117,11 @@
         }
       });
       return users;
+    }
+
+    function isSparkOnlineUser(user) {
+      var value = _.get(user, 'onlineOrderIds', []);
+      return (value) ? !!value.length : false;
     }
 
     function getCorrectedDisplayName(user) {
@@ -271,6 +305,15 @@
         }
       } else {
         user.statuses = _.map(user.accountStatus, function (status) {
+          // notes:
+          // - 'pending' => CI status (see: https://wiki.cisco.com/display/PLATFORM/CI3.0+SCIM+API+-+Get+User )
+          // - by default, 'pending' alone means a normal user that was invited to Spark by their
+          //   admin but not yet accepted
+          // - if user is a Spark Online user (ie. they purchased Spark through Digital River), then
+          //   the user is the original purchaser, but has not registered yet
+          if (status === 'pending') {
+            status = (isSparkOnlineUser(user)) ? 'onboarding-pending' : 'invite-pending';
+          }
           return 'helpdesk.userStatuses.' + status;
         });
       }
@@ -312,29 +355,56 @@
       return $http.get(urlBase + 'email/bounces?email=' + encodeURIComponent(email));
     }
 
-    function resendInviteEmail(displayName, email) {
-      if (FeatureToggleService.supports(FeatureToggleService.features.atlasEmailStatus)) {
-        return isEmailBlocked(email).then(function () {
-          $http.delete(urlBase + 'email/bounces?email=' + email)
+    function resendInviteEmail(trimmedUserData) {
+      var email = trimmedUserData.email;
+      return FeatureToggleService.supports(FeatureToggleService.features.atlasEmailStatus)
+        .then(function (isSupported) {
+          if (!isSupported) {
+            return $q.reject();
+          }
+          return service.isEmailBlocked(email)
             .then(function () {
-              return invokeInviteEmail(displayName, email);
+              return $http.delete(urlBase + 'email/bounces?email=' + email);
+            })
+            .then(function () {
+              return service.invokeInviteEmail(trimmedUserData);
             });
-        }).catch(function () {
-          return invokeInviteEmail(displayName, email);
+        })
+        .catch(function () {
+          return service.invokeInviteEmail(trimmedUserData);
         });
-      } else {
-        return invokeInviteEmail(displayName, email);
-      }
     }
 
-    function invokeInviteEmail(displayName, email) {
-      return $http.post(urlBase + 'helpdesk/actions/resendinvitation/invoke', {
+    function getInviteResendUrl(trimmedUserData) {
+      var controllerAction = isSparkOnlineUser(trimmedUserData) ? 'resendonlineorderactivation' : 'resendinvitation';
+      return urlBase + 'helpdesk/actions/' + controllerAction + '/invoke';
+    }
+
+    function getInviteResendPayload(trimmedUserData) {
+      var displayName = trimmedUserData.displayName;
+      var email = trimmedUserData.email;
+      var onlineOrderIds = trimmedUserData.onlineOrderIds;
+      var payload = {
         inviteList: [{
           displayName: displayName,
           email: email
         }]
-      })
-        .then(extractData);
+      };
+      if (isSparkOnlineUser(trimmedUserData)) {
+        payload = {
+          onlineOrderIds: onlineOrderIds
+        };
+      }
+      return payload;
+    }
+
+    function invokeInviteEmail(trimmedUserData) {
+      var url = service.getInviteResendUrl(trimmedUserData);
+      var payload = service.getInviteResendPayload(trimmedUserData);
+      return $http.post(url, payload)
+        .then(function (res) {
+          return extractData(res);
+        });
     }
 
     function sendVerificationCode(displayName, email) {
@@ -391,30 +461,7 @@
       return HelpdeskHttpRequestCanceller.empty();
     }
 
-    return {
-      usersWithRole: usersWithRole,
-      searchUsers: searchUsers,
-      searchOrgs: searchOrgs,
-      getUser: getUser,
-      getOrg: getOrg,
-      isEmailBlocked: isEmailBlocked,
-      searchCloudberryDevices: searchCloudberryDevices,
-      getHybridServices: getHybridServices,
-      resendInviteEmail: resendInviteEmail,
-      getWebExSites: getWebExSites,
-      getServiceOrder: getServiceOrder,
-      getCloudberryDevice: getCloudberryDevice,
-      getOrgDisplayName: getOrgDisplayName,
-      findAndResolveOrgsForUserResults: findAndResolveOrgsForUserResults,
-      checkIfMobile: checkIfMobile,
-      sendVerificationCode: sendVerificationCode,
-      filterDevices: filterDevices,
-      getHybridStatusesForUser: getHybridStatusesForUser,
-      cancelAllRequests: cancelAllRequests,
-      noOutstandingRequests: noOutstandingRequests,
-      useMock: useMock,
-      elevateToReadonlyAdmin: elevateToReadonlyAdmin
-    };
+    return service;
   }
 
   angular.module('Squared')

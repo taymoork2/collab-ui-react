@@ -5,6 +5,7 @@
     .module('core.auth', [
       'pascalprecht.translate',
       'ui.router',
+      require('angular-sanitize'),
       require('modules/core/auth/token.service'),
       require('modules/core/config/config'),
       require('modules/core/config/oauthConfig'),
@@ -35,7 +36,8 @@
       refreshAccessTokenAndResendRequest: refreshAccessTokenAndResendRequest,
       verifyOauthState: verifyOauthState,
       getAuthorizationUrl: getAuthorizationUrl,
-      getAuthorizationUrlList: getAuthorizationUrlList
+      getAuthorizationUrlList: getAuthorizationUrlList,
+      isOnlineOrg: isOnlineOrg
     };
 
     return service;
@@ -55,6 +57,25 @@
         .catch(handleErrorAndResetAuthinfo);
 
       return deferred;
+    }
+
+    var onlineOrg;
+
+    function isOnlineOrg() {
+      return $q(function (resolve) {
+        if (_.isNil(onlineOrg)) {
+          getCustomerAccount(Authinfo.getOrgId()).then(function (res) {
+            if (res.data.customers && !_.isEmpty(res.data.customers) && res.data.customers[0].customerType) {
+              onlineOrg = res.data.customers[0].customerType === 'Online';
+              resolve(onlineOrg);
+            } else {
+              resolve(false);
+            }
+          });
+        } else {
+          resolve(onlineOrg);
+        }
+      });
     }
 
     function getCustomerAccount(orgId) {
@@ -210,6 +231,9 @@
       return httpGET(url)
         .then(function (res) {
           var isMessengerOrg = _.has(res, 'data.orgName') && _.has(res, 'data.orgID');
+          if (isMessengerOrg && res.data.wapiOrgStatus === 'inactive') {
+            isMessengerOrg = false;
+          }
           var isAdminForMsgr = _.intersection(['Full_Admin', 'Readonly_Admin'], authData.roles).length;
           var isPartnerAdmin = _.intersection(['PARTNER_ADMIN', 'PARTNER_READ_ONLY_ADMIN', 'PARTNER_USER'], authData.roles).length;
           if (isMessengerOrg && (isAdminForMsgr || !isPartnerAdmin)) {
@@ -274,10 +298,10 @@
 
     function handleErrorAndResetAuthinfo(res) {
       Authinfo.clear();
-      if (res && res.status == 401) {
+      if (res && res.status === 401) {
         return $q.reject($translate.instant('errors.status401'));
       }
-      if (res && res.status == 403) {
+      if (res && res.status === 403) {
         return $q.reject($translate.instant('errors.status403'));
       }
       return $q.reject($translate.instant('errors.serverDown'));

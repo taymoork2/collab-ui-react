@@ -51,6 +51,9 @@
     //misc
     var PSTN = "PSTN";
     var TYPE_PORT = "PORT";
+    var GROUP_BY = "groupBy";
+    var NPA = 'npa';
+    var NXX = 'nxx';
 
     var service = {
       createCustomer: createCustomer,
@@ -160,11 +163,18 @@
       return $q.all(promises);
     }
 
-    function getCarrierInventory(carrierId, state) {
-      return TerminusCarrierInventoryCount.get({
+    function getCarrierInventory(carrierId, state, npa) {
+      var config = {
         carrierId: carrierId,
         state: state
-      }).$promise;
+      };
+      if (_.isString(npa)) {
+        if (npa.length > 0) {
+          config[NPA] = npa;
+          config[GROUP_BY] = NXX;
+        }
+      }
+      return TerminusCarrierInventoryCount.get(config).$promise;
     }
 
     function getCarrierTollFreeInventory(carrierId) {
@@ -284,7 +294,7 @@
     function isCarrierSwivel(customerId) {
       return listCustomerCarriers(customerId).then(function (carriers) {
         if (angular.isArray(carriers)) {
-          var carrier = _.findWhere(carriers, {
+          var carrier = _.find(carriers, {
             name: TATA
           });
           if (carrier) {
@@ -295,12 +305,15 @@
       });
     }
 
-    function orderBlock(customerId, carrierId, npa, quantity, isSequential) {
+    function orderBlock(customerId, carrierId, npa, quantity, isSequential, nxx) {
       var payload = {
         npa: npa,
         quantity: quantity,
         sequential: isSequential
       };
+      if (_.isString(nxx)) {
+        payload['nxx'] = nxx;
+      }
 
       return TerminusCustomerCarrierDidService.save({
         customerId: customerId,

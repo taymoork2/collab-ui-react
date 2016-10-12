@@ -59,8 +59,8 @@
     }
 
     function hasRoomSystemDeviceAvailable(details) {
-      var staticRoomSystems = _.pluck(getData().details.roomSystems, 'model');
-      var devices = _.pluck(_.get(details, 'devices', []), 'model');
+      var staticRoomSystems = _.map(getData().details.roomSystems, 'model');
+      var devices = _.map(_.get(details, 'devices', []), 'model');
 
       return _.difference(staticRoomSystems, devices).length === getData().details.roomSystems.length;
     }

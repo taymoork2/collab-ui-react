@@ -6,8 +6,9 @@
     .controller('DashboardCtrl', DashboardCtrl);
 
   /* @ngInject */
-  function DashboardCtrl($log, $scope, $window, $state, $stateParams, $translate, DincidentListService, DcomponentService, statusService) {
+  function DashboardCtrl($log, $scope, $window, $state, $stateParams, $translate, DincidentListService, DcomponentService, statusService, Authinfo) {
     var vm = this;
+    var useremail = (Authinfo.getEmails())[0].value;
     vm.pageTitle = $translate.instant('statusPage.pageTitle');
 
     vm.tab = $stateParams.tab;
@@ -74,7 +75,7 @@
         "incidentName": $scope.newIncident.name,
         "status": $scope.newIncident.status,
         "message": $scope.newIncident.msg,
-        "email": "chaoluo@cisco.com"
+        "email": useremail
       }).$promise.then(function () {
         $window.location.reload();
         $window.alert("Incident successfully created!");

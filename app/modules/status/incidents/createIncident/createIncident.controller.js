@@ -4,13 +4,14 @@
     .module('Status.incidents')
     .controller('CreateIncidentController', CreateIncidentController);
 
-  function CreateIncidentController($scope, $state, IncidentsWithSiteService, statusService) {
+  function CreateIncidentController($scope, $state, IncidentsWithSiteService, statusService, Authinfo) {
     $scope.newIncident = {
       status: 'investigating',
       msg: '',
       name: ''
     };
     var vm = this;
+    var useremail = (Authinfo.getEmails())[0].value;
     vm.CreateIncident = CreateIncident;
     $scope.$watch(
       function () {
@@ -29,7 +30,7 @@
         "incidentName": $scope.newIncident.name,
         "status": $scope.newIncident.status,
         "message": $scope.newIncident.msg,
-        "email": "chaoluo@cisco.com"
+        "email": useremail
       }).$promise.then(function () {
         $state.go("^");
       }, function () {

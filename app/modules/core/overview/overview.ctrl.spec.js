@@ -21,14 +21,14 @@ describe('Controller: OverviewCtrl', function () {
       var cardnames = _.map(controller.cards, function (card) {
         return card.name;
       });
-      expect(_.contains(cardnames, 'overview.cards.message.title')).toBeTruthy();
-      expect(_.contains(cardnames, 'overview.cards.meeting.title')).toBeTruthy();
-      expect(_.contains(cardnames, 'overview.cards.roomSystem.title')).toBeTruthy();
-      expect(_.contains(cardnames, 'overview.cards.call.title')).toBeTruthy();
-      expect(_.contains(cardnames, 'overview.cards.care.title')).toBeTruthy();
-      expect(_.contains(cardnames, 'overview.cards.hybrid.title')).toBeTruthy();
-      expect(_.contains(cardnames, 'overview.cards.users.title')).toBeTruthy();
-      expect(_.contains(cardnames, 'overview.cards.undefined.title')).toBeFalsy();
+      expect(_.includes(cardnames, 'overview.cards.message.title')).toBeTruthy();
+      expect(_.includes(cardnames, 'overview.cards.meeting.title')).toBeTruthy();
+      expect(_.includes(cardnames, 'overview.cards.roomSystem.title')).toBeTruthy();
+      expect(_.includes(cardnames, 'overview.cards.call.title')).toBeTruthy();
+      expect(_.includes(cardnames, 'overview.cards.care.title')).toBeTruthy();
+      expect(_.includes(cardnames, 'overview.cards.hybrid.title')).toBeTruthy();
+      expect(_.includes(cardnames, 'overview.cards.users.title')).toBeTruthy();
+      expect(_.includes(cardnames, 'overview.cards.undefined.title')).toBeFalsy();
     });
 
     // TODO Need to be removed once Care is graduated on atlas.
@@ -38,14 +38,14 @@ describe('Controller: OverviewCtrl', function () {
       var cardnames = _.map(controllerCareFeatureDisabled.cards, function (card) {
         return card.name;
       });
-      expect(_.contains(cardnames, 'overview.cards.message.title')).toBeTruthy();
-      expect(_.contains(cardnames, 'overview.cards.meeting.title')).toBeTruthy();
-      expect(_.contains(cardnames, 'overview.cards.roomSystem.title')).toBeTruthy();
-      expect(_.contains(cardnames, 'overview.cards.call.title')).toBeTruthy();
-      expect(_.contains(cardnames, 'overview.cards.care.title')).toBeFalsy();
-      expect(_.contains(cardnames, 'overview.cards.hybrid.title')).toBeTruthy();
-      expect(_.contains(cardnames, 'overview.cards.users.title')).toBeTruthy();
-      expect(_.contains(cardnames, 'overview.cards.undefined.title')).toBeFalsy();
+      expect(_.includes(cardnames, 'overview.cards.message.title')).toBeTruthy();
+      expect(_.includes(cardnames, 'overview.cards.meeting.title')).toBeTruthy();
+      expect(_.includes(cardnames, 'overview.cards.roomSystem.title')).toBeTruthy();
+      expect(_.includes(cardnames, 'overview.cards.call.title')).toBeTruthy();
+      expect(_.includes(cardnames, 'overview.cards.care.title')).toBeFalsy();
+      expect(_.includes(cardnames, 'overview.cards.hybrid.title')).toBeTruthy();
+      expect(_.includes(cardnames, 'overview.cards.users.title')).toBeTruthy();
+      expect(_.includes(cardnames, 'overview.cards.undefined.title')).toBeFalsy();
     });
 
     it('should have properly set trialDaysLeft', function () {
@@ -142,7 +142,7 @@ describe('Controller: OverviewCtrl', function () {
   function getCard(filter) {
     return _(controller.cards).filter(function (card) {
       return card.name == filter;
-    }).first();
+    }).head();
   }
 
   function defaultWireUpFunc(_$rootScope_, $controller, _$state_, _$stateParams_, _$q_, _$translate_, _Authinfo_, _Config_, _FeatureToggleService_, _Log_, _Orgservice_, _OverviewNotificationFactory_, _TrialService_, _FusionClusterService_, _SunlightReportService_) {
@@ -162,10 +162,6 @@ describe('Controller: OverviewCtrl', function () {
 
     spyOn(SunlightReportService, 'getOverviewData');
     SunlightReportService.getOverviewData.and.returnValue({});
-
-    FeatureToggleService.features = {
-      atlasHybridServicesResourceList: 'atlas-media-service-onboarding'
-    };
 
     spyOn(FusionClusterService, 'getAll');
     FusionClusterService.getAll.and.returnValue($q.resolve());

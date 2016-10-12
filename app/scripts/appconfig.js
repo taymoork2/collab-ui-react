@@ -1325,14 +1325,14 @@
               siteUrl: null
             }
           })
-          .state('reports.usage', {
-            url: '/reports/usage',
-            templateUrl: 'modules/core/customerReports/usage/usageReports.tpl.html',
-            controller: 'UsageReportsCtrl',
-            controllerAs: 'usageReport',
+
+          .state('reports.device-usage', {
+            url: '/reports/device/usage',
+            templateUrl: 'modules/core/customerReports/deviceUsage/header.tpl.html',
+            controller: 'DeviceUsageHeaderCtrl',
+            controllerAs: 'deviceUsage',
             parent: 'main',
             params: {
-              deviceReportType: 'peakHour'
             },
             resolve: {
               deviceUsageFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
@@ -1340,6 +1340,46 @@
               },
             }
           })
+          .state('reports.device-usage.overview', {
+            url: '/overview',
+            templateUrl: 'modules/core/customerReports/deviceUsage/overview.tpl.html',
+            controller: 'DeviceUsageOverviewCtrl',
+            controllerAs: 'deviceUsage',
+            params: {
+            },
+            resolve: {
+              deviceUsageFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasDeviceUsageReport);
+              },
+            }
+          })
+          .state('reports.device-usage.distribution', {
+            url: '/distribution',
+            templateUrl: 'modules/core/customerReports/deviceUsage/distribution.tpl.html',
+            controller: 'DeviceUsageDistributionCtrl',
+            controllerAs: 'deviceUsage',
+            params: {
+            },
+            resolve: {
+              deviceUsageFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasDeviceUsageReport);
+              },
+            }
+          })
+          .state('reports.device-usage.timeline', {
+            url: '/timeline',
+            templateUrl: 'modules/core/customerReports/deviceUsage/timeline.tpl.html',
+            controller: 'DeviceUsageTimelineCtrl',
+            controllerAs: 'deviceUsage',
+            params: {
+            },
+            resolve: {
+              deviceUsageFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasDeviceUsageReport);
+              },
+            }
+          })
+
           .state('webex-reports', {
             url: '/reports/webex',
             templateUrl: 'modules/core/customerReports/customerReports.tpl.html',
@@ -1486,6 +1526,22 @@
               lazy: /* @ngInject */ function lazyLoad($q, $ocLazyLoad) {
                 return $q(function resolveLogin(resolve) {
                   require(['modules/squared/places/callOverview'], loadModuleAndResolve($ocLazyLoad, resolve));
+                });
+              }
+            }
+          })
+          .state('place-overview.communication.speedDials', {
+            templateProvider: /* @ngInject */ function ($stateParams) {
+              var ownerId = _.get($stateParams.currentPlace, 'cisUuid');
+              return '<uc-speed-dial owner-type="places" owner-id="' + ownerId + '"></uc-speed-dial>';
+            },
+            data: {
+              displayName: 'Speed Dials'
+            },
+            resolve: {
+              lazy: /* @ngInject */ function lazyLoad($q, $ocLazyLoad) {
+                return $q(function resolveLogin(resolve) {
+                  require(['modules/huron/speedDials'], loadModuleAndResolve($ocLazyLoad, resolve));
                 });
               }
             }
@@ -1703,7 +1759,7 @@
           .state('customer-overview.customerSubscriptions', {
             controller: 'CustomerSubscriptionsDetailCtrl',
             controllerAs: 'customerSubscriptions',
-            templateUrl: 'modules/core/customers/customerSubscriptions/CustomerSubscriptionsDetail.tpl.html',
+            templateUrl: 'modules/core/customers/customerSubscriptions/customerSubscriptionsDetail.tpl.html',
             resolve: {
               data: /* @ngInject */ function ($state, $translate) {
                 $state.get('customer-overview.customerSubscriptions').data.displayName = $translate.instant('customerPage.orderRequest');
@@ -2299,12 +2355,27 @@
             params: {
               feature: null
             }
+          })
+          .state('huronPagingGroup', {
+            url: '/huronPagingGroup',
+            views: {
+              'main@': {
+                template: '<pg-setup-assistant></pg-setup-assistant>',
+              }
+            },
+            resolve: {
+              lazy: /* @ngInject */ function lazyLoad($q, $ocLazyLoad) {
+                return $q(function resolveLogin(resolve) {
+                  require(['modules/huron/features/pagingGroup/pgSetupAssistant'], loadModuleAndResolve($ocLazyLoad, resolve));
+                });
+              }
+            }
           });
 
         $stateProvider
           .state('services-overview', {
-            url: '/services/overview',
-            templateUrl: 'modules/hercules/servicesOverview/servicesOverview.html',
+            url: '/services',
+            templateUrl: 'modules/services/overview.html',
             controller: 'ServicesOverviewCtrl',
             controllerAs: 'servicesOverviewCtrl',
             parent: 'main'
@@ -2318,9 +2389,6 @@
             resolve: {
               hasF237FeatureToggle: /* @ngInject */ function (FeatureToggleService) {
                 return FeatureToggleService.supports(FeatureToggleService.features.atlasF237ResourceGroups);
-              },
-              hasF410FeatureToggle: /* @ngInject */ function (FeatureToggleService) {
-                return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridServicesResourceList);
               },
               hasMediaFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
                 return FeatureToggleService.supports(FeatureToggleService.features.atlasMediaServiceOnboarding);
@@ -2598,9 +2666,6 @@
               connectorType: null
             },
             resolve: {
-              hasF410FeatureToggle: /* @ngInject */ function (FeatureToggleService) {
-                return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridServicesResourceList);
-              },
               hasF237FeatureToggle: /* @ngInject */ function (FeatureToggleService) {
                 return FeatureToggleService.supports(FeatureToggleService.features.atlasF237ResourceGroups);
               }

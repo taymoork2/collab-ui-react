@@ -1,4 +1,4 @@
-<form novalidate name="$ctrl.form" role="form">
+<form novalidate name="$ctrl.form" role="form" class="cs-form">
   <cs-sp-buttons ng-if="$ctrl.form.$dirty" ng-init="$ctrl.initNewForm()">
     <button cs-btn loading="$ctrl.saveInProcess" class="btn btn--primary" ng-click="$ctrl.saveLine()" ng-disabled="$ctrl.form.$invalid || $ctrl.saveDisabled() || $ctrl.saveInProcess" type="submit">
       <span translate="common.save"></span>
@@ -25,22 +25,15 @@
         external-numbers="$ctrl.externalNumbers"
         on-change-fn="$ctrl.setDirectoryNumbers(internalNumber, externalNumber)">
       </uc-directory-number>
-    </cs-sp-section>
-    <cs-sp-section>
       <uc-call-forward
-        call-forward-all="$ctrl.callForwardAll"
-        call-forward-busy="$ctrl.callForwardBusy"
+        call-forward="$ctrl.lineOverviewData.callForward"
         voicemail-enabled="$ctrl.voicemailEnabled"
-        on-change-fn="$ctrl.setCallForward(callForwardAll, callForwardBusy)">
+        on-change-fn="$ctrl.setCallForward(callForward)">
       </uc-call-forward>
-    </cs-sp-section>
-    <cs-sp-section >
       <uc-simultaneous-calls
         incoming-call-maximum="$ctrl.lineOverviewData.line.incomingCallMaximum"
         on-change-fn="$ctrl.setSimultaneousCalls(incomingCallMaximum)">
       </uc-simultaneous-calls>
-    </cs-sp-section>
-    <cs-sp-section>
       <uc-caller-id
         caller-id-options="$ctrl.callerIdOptions"
         custom-caller-id-name="$ctrl.customCallerIdName"
@@ -48,8 +41,6 @@
         caller-id-selected="$ctrl.callerIdSelected"
         on-change-fn="$ctrl.setCallerId(callerIdSelected, customCallerIdName, customCallerIdNumber);">
       </uc-caller-id>
-    </cs-sp-section>
-    <cs-sp-section>
       <uc-shared-line
         selected-user="$ctrl.selectedUser"
         shared-line-users="$ctrl.sharedLineUsers"

@@ -1,4 +1,5 @@
 /* globals $controller, $httpBackend, $q, $rootScope, FeatureToggleService, Notification, TrialDeviceController, TrialCallService, TrialDeviceService, TrialRoomSystemService*/
+
 'use strict';
 
 describe('Controller: TrialDeviceController', function () {
@@ -7,17 +8,17 @@ describe('Controller: TrialDeviceController', function () {
 
   beforeEach(angular.mock.module('core.trial'));
   beforeEach(angular.mock.module('Core'));
-  // TODO - check for removal of Huron and Sunlight when DX80 and MX300 are officially supported
+  // TODO - check for removal of Huron and Sunlight when MX300 are officially supported
   beforeEach(angular.mock.module('Huron'));
   beforeEach(angular.mock.module('Sunlight'));
 
   beforeEach(function () {
-    // TODO - check for removal of $httpBackend and FeatureToggleService when DX80 and MX300 are officially supported
+    // TODO - check for removal of $httpBackend and FeatureToggleService when MX300 are officially supported
     bard.inject(this, '$controller', '$httpBackend', '$q', '$rootScope', 'FeatureToggleService', 'Notification', 'TrialCallService', 'TrialDeviceService', 'TrialRoomSystemService');
   });
 
   beforeEach(function () {
-    // TODO - remove $httpBackend when DX80 and MX300 are officially supported
+    // TODO - remove $httpBackend when MX300 are officially supported
     $httpBackend
       .when('GET', 'https://identity.webex.com/identity/scim/null/v1/Users/me')
       .respond({});
@@ -51,9 +52,9 @@ describe('Controller: TrialDeviceController', function () {
       expect(shippingInfo).toBeUndefined();
     });
 
-    // TODO: remove when DX80 and MX300 support is official
+    // TODO: remove when MX300 support is official
     describe('feature toggle for displaying new room systems', function () {
-      it('should show DX80 and MX300 when feature toggle is true', function () {
+      it('should show MX300 when feature toggle is true', function () {
         spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
         initController();
 
@@ -61,7 +62,7 @@ describe('Controller: TrialDeviceController', function () {
         expect(FeatureToggleService.supports).toHaveBeenCalled();
       });
 
-      it('should NOT show DX80 and MX300 when feature toggle is false', function () {
+      it('should NOT show MX300 when feature toggle is false', function () {
         spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(false));
         initController();
 

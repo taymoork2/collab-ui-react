@@ -15,6 +15,7 @@
     var aaMediaUploadStatus = false;
     var routeQueueToggle = false;
     var mediaUploadToggle = false;
+    var uniqueId = 0;
 
     var invalidList = {};
     var service = {
@@ -25,13 +26,14 @@
       setDialByExtensionStatus: setDialByExtensionStatus,
       setCENumberStatus: setCENumberStatus,
       setMediaUploadStatus: setMediaUploadStatus,
+      setMediaUploadToggle: setMediaUploadToggle,
       setRouteQueueToggle: setRouteQueueToggle,
       isRouteQueueToggle: isRouteQueueToggle,
-      setMediaUploadToggle: setMediaUploadToggle,
       isMediaUploadToggle: isMediaUploadToggle,
       isValid: isValid,
       setIsValid: setIsValid,
       getInvalid: getInvalid,
+      getUniqueId: getUniqueId,
       makeKey: makeKey,
       resetFormStatus: resetFormStatus,
       saveUiModel: saveUiModel,
@@ -61,6 +63,10 @@
       return schedule + '-' + tag;
     }
 
+    function getUniqueId() {
+      return ++uniqueId;
+    }
+
     function setIsValid(element, validity) {
       if (!validity) {
         invalidList[element] = validity;
@@ -68,7 +74,9 @@
         delete invalidList[element];
       }
     }
-
+    function setMediaUploadStatus(status) {
+      aaMediaUploadStatus = status;
+    }
     function resetFormStatus() {
       aaSayMessageForm = false;
       aaPhoneMenuOptions = false;
@@ -78,10 +86,6 @@
       aaCENumberStatus = false;
       routeQueueToggle = false;
       invalidList = {};
-    }
-
-    function setMediaUploadStatus(status) {
-      aaMediaUploadStatus = status;
     }
 
     function setSayMessageStatus(status) {

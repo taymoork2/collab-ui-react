@@ -1,4 +1,5 @@
 'use strict';
+
 describe('HelpdeskCardsService', function () {
   beforeEach(angular.mock.module('Squared'));
 
@@ -57,11 +58,11 @@ describe('HelpdeskCardsService', function () {
       expect(LicenseService.orgIsEntitledTo).toHaveBeenCalled();
       expect(card.entitled).toBeTruthy();
       expect(card.aggregatedLicenses.length).toEqual(1);
-      var aggregatedLicense = _.first(card.aggregatedLicenses);
+      var aggregatedLicense = _.head(card.aggregatedLicenses);
       expect(aggregatedLicense.totalVolume).toEqual(100);
       expect(aggregatedLicense.totalUsage).toEqual(50);
       expect(aggregatedLicense.displayName).toEqual('helpdesk.licenseDisplayNames.MS');
-      var license = _.first(aggregatedLicense.licenses);
+      var license = _.head(aggregatedLicense.licenses);
       expect(license.type).toEqual('MESSAGING');
       expect(license.volume).toEqual(100);
       expect(license.usage).toEqual(50);
@@ -71,11 +72,11 @@ describe('HelpdeskCardsService', function () {
       var card = HelpdeskCardsOrgService.getMeetingCardForOrg(org, licenses);
       expect(card.entitled).toBeTruthy();
       expect(card.aggregatedLicenses.length).toEqual(1);
-      var aggregatedLicense = _.first(card.aggregatedLicenses);
+      var aggregatedLicense = _.head(card.aggregatedLicenses);
       expect(aggregatedLicense.totalVolume).toEqual(100);
       expect(aggregatedLicense.totalUsage).toEqual(50);
       expect(aggregatedLicense.displayName).toEqual('helpdesk.licenseDisplayNames.CF');
-      var license = _.first(aggregatedLicense.licenses);
+      var license = _.head(aggregatedLicense.licenses);
       expect(license.type).toEqual('CONFERENCING');
       expect(license.volume).toEqual(100);
       expect(license.usage).toEqual(50);
@@ -86,11 +87,11 @@ describe('HelpdeskCardsService', function () {
       expect(LicenseService.orgIsEntitledTo).toHaveBeenCalled();
       expect(card.entitled).toBeTruthy();
       expect(card.aggregatedLicenses.length).toEqual(1);
-      var aggregatedLicense = _.first(card.aggregatedLicenses);
+      var aggregatedLicense = _.head(card.aggregatedLicenses);
       expect(aggregatedLicense.totalVolume).toEqual(200);
       expect(aggregatedLicense.totalUsage).toEqual(100);
       expect(aggregatedLicense.displayName).toEqual('helpdesk.licenseDisplayNames.CO');
-      var license = _.first(aggregatedLicense.licenses);
+      var license = _.head(aggregatedLicense.licenses);
       expect(license.type).toEqual('COMMUNICATION');
       expect(license.volume).toEqual(200);
       expect(license.usage).toEqual(100);
@@ -126,17 +127,18 @@ describe('HelpdeskCardsService', function () {
       expect(LicenseService.orgIsEntitledTo).toHaveBeenCalled();
       expect(card.entitled).toBeTruthy();
       expect(card.aggregatedLicenses.length).toEqual(1);
-      var aggregatedLicense = _.first(card.aggregatedLicenses);
+      var aggregatedLicense = _.head(card.aggregatedLicenses);
       expect(aggregatedLicense.totalVolume).toEqual(200);
       expect(aggregatedLicense.totalUsage).toEqual(100);
       expect(aggregatedLicense.displayName).toEqual('helpdesk.licenseDisplayNames.CO');
-      var license = _.first(aggregatedLicense.licenses);
+      var license = _.head(aggregatedLicense.licenses);
       expect(license.type).toEqual('COMMUNICATION');
       expect(license.volume).toEqual(200);
       expect(license.usage).toEqual(100);
       expect(card.voiceMailPrefix).toBe("4100");
       expect(card.outboundDialDigit).toBe("7");
-      expect(card.dialing).toBe("local");
+      expect(card.dialing).toEqual("helpdesk.dialingPlan.local");
+      expect(card.areaCode).toBe("940");
     });
 
     it('should return correct room systems card for org', function () {
@@ -144,11 +146,11 @@ describe('HelpdeskCardsService', function () {
       expect(LicenseService.orgIsEntitledTo).toHaveBeenCalled();
       expect(card.entitled).toBeTruthy();
       expect(card.aggregatedLicenses.length).toEqual(1);
-      var aggregatedLicense = _.first(card.aggregatedLicenses);
+      var aggregatedLicense = _.head(card.aggregatedLicenses);
       expect(aggregatedLicense.totalVolume).toEqual(100);
       expect(aggregatedLicense.totalUsage).toEqual(50);
       expect(aggregatedLicense.displayName).toEqual('helpdesk.licenseDisplayNames.SD');
-      var license = _.first(aggregatedLicense.licenses);
+      var license = _.head(aggregatedLicense.licenses);
       expect(license.type).toEqual('SHARED_DEVICES');
       expect(license.volume).toEqual(100);
       expect(license.usage).toEqual(50);

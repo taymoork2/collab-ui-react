@@ -120,7 +120,7 @@ exports.scrollBottom = function (selector) {
   browser.executeScript('$("' + selector + '").first().scrollTop($("' + selector + '").first().scrollHeight);');
 };
 
-exports.scroll = function (el) {
+exports.scrollIntoView = function (el) {
   browser.executeScript('arguments[0].scrollIntoView()', el.getWebElement());
 };
 
@@ -149,7 +149,7 @@ exports.wait = function (elem, timeout) {
       // handle a possible stale element
       log('Possible stale element: ' + elem.locator());
       return false;
-    });;
+    });
   }
   return browser.wait(logAndWait, timeout || TIMEOUT, 'Waiting for element to be visible: ' + elem.locator());
 };
@@ -161,7 +161,7 @@ exports.waitForPresence = function (elem, timeout) {
       // handle a possible stale element
       return false;
 
-    });;
+    });
   }
   return browser.wait(logAndWait, timeout || TIMEOUT, 'Waiting for element to be present: ' + elem.locator());
 };
@@ -222,9 +222,9 @@ exports.waitForSpinner = function () {
   }
 };
 
-exports.expectIsDisplayed = function (elem) {
-  this.wait(elem).then(function () {
-    expect(elem.isDisplayed()).toBeTruthy();
+exports.expectIsDisplayed = function (elem, timeout) {
+  return this.wait(elem, timeout || TIMEOUT).then(function () {
+    return expect(elem.isDisplayed()).toBeTruthy();
   });
 };
 
@@ -241,8 +241,6 @@ exports.expectAllDisplayed = function (elems) {
     });
   });
 };
-
-exports.expectAllNotDisplayed = this.expectIsNotDisplayed;
 
 exports.expectIsDisabled = function (elem) {
   this.wait(elem).then(function () {
@@ -286,8 +284,13 @@ exports.expectIsNotDisplayed = function (elem, timeout) {
       return EC.stalenessOf(elem)();
     });
   }
-  browser.wait(logAndWait, TIMEOUT, 'Waiting for element not to be visible: ' + elem.locator());
+
+  return browser.wait(logAndWait, timeout || TIMEOUT, 'Waiting for element not to be visible: ' + elem.locator());
 };
+
+exports.expectAllNotDisplayed = this.expectIsNotDisplayed;
+exports.waitIsNotDisplayed = this.expectIsNotDisplayed;
+exports.waitIsDisplayed = this.expectIsDisplayed;
 
 exports.expectTextToBeSet = function (elem, text, timeout) {
   browser.wait(function () {
@@ -352,20 +355,18 @@ exports.click = function (elem, maxRetry) {
   return this.wait(elem).then(function () {
     return browser.wait(logAndWait, TIMEOUT, 'Waiting for element to be clickable: ' + elem.locator());
   }).then(function () {
-    var deferred = protractor.promise.defer();
     if (typeof maxRetry === 'undefined') {
       maxRetry = 10;
     }
     log('Click element: ' + elem.locator());
     if (maxRetry === 0) {
-      return elem.click().then(deferred.fulfill, deferred.reject);
+      return elem.click();
     } else {
-      return elem.click().then(deferred.fulfill, function (e) {
+      return elem.click().then(_.noop, function (e) {
         log('Failed to click element: ' + elem.locator() + ' Error: ' + ((e && e.message) || e));
         return exports.click(elem, --maxRetry);
       });
     }
-    return deferred.promise;
   });
 };
 
@@ -496,12 +497,15 @@ exports.expectTruthy = function (elem) {
   expect(elem).toBeTruthy();
 };
 
-exports.expectClass = function (elem, cls) {
-  return this.wait(elem).then(function () {
-    return elem.getAttribute('class').then(function (classes) {
-      log('Expect element to have class: ' + elem.locator() + ' ' + cls);
-      return classes.split(' ').indexOf(cls) !== -1;
-    });
+exports.waitClass = function (elem, cls, timeout) {
+  return this.wait(elem, timeout || TIMEOUT).then(function () {
+    browser.wait(function () {
+      return elem.getAttribute('class').then(function (classes) {
+        return classes !== undefined && classes !== null && classes.split(' ').indexOf(cls) !== -1;
+      }, function () {
+        return false;
+      });
+    }, timeout || TIMEOUT, 'Waiting for elem(' + elem.locator() + ') to contain class ' + cls);
   });
 };
 

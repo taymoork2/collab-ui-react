@@ -8,7 +8,7 @@ describe('Controller: CustomerListCtrl', function () {
   var partnerService = getJSONFixture('core/json/partner/partner.service.json');
   var managedOrgsResponse = partnerService.managedOrgsResponse;
   var trialsResponse = partnerService.trialsResponse;
-  var orgId = '1';
+  var orgId = 'b93b10ad-ae24-4abf-9c21-76e8b86faf01';
   var orgName = 'testOrg';
   var testOrg = {
     customerOrgId: '1234-34534-afdagfg-425345-afaf',
@@ -153,7 +153,7 @@ describe('Controller: CustomerListCtrl', function () {
       expect($scope.isPastGracePeriod(testTrialData)).toBe(false);
     });
 
-    it('should display N/A when trial is past grace period', function () {
+    xit('should display N/A when trial is past grace period', function () {
       setTestDataExpired();
       testTrialData.daysLeft = -99;
       expect($scope.getLicenseCountColumnText(testTrialData)).toBe('common.notAvailable');
@@ -178,7 +178,13 @@ describe('Controller: CustomerListCtrl', function () {
   describe('myOrg appears first in orgList', function () {
     beforeEach(initController);
 
+    it('should check if it is its own org', function () {
+      expect($scope.isOwnOrg($scope.managedOrgsList[0])).toBe(true);
+    });
+
     it('if myOrg not in managedOrgsList, myOrg should be added to the top of managedOrgsList ', function () {
+      Authinfo.getOrgId.and.returnValue('wqeqwe21');
+      initController();
       expect($scope.managedOrgsList).toBeDefined();
       expect($scope.managedOrgsList[0].customerName).toBe('testOrg');
       expect($scope.managedOrgsList.length).toEqual(6);
@@ -187,27 +193,11 @@ describe('Controller: CustomerListCtrl', function () {
     });
 
     it('if myOrg is in managedOrgsList, myOrg should not be added to the list', function () {
-      var testOrgList = {
-        "data": {
-          "organizations": [{
-            customerOrgId: '1234-34534-afdagfg-425345-afaf',
-            customerName: 'ControllerTestOrg',
-            customerEmail: 'customer@cisco.com',
-            communications: {
-              isTrial: true
-            }
-          }, {
-            customerOrgId: '1',
-            customerName: 'testOrg'
-          }]
-        }
-      };
 
-      PartnerService.getManagedOrgsList.and.returnValue(testOrgList);
       initController();
       expect($scope.managedOrgsList).toBeDefined();
-      expect($scope.managedOrgsList.length).toEqual(2);
-      expect($scope.totalOrgs).toBe(2);
+      expect($scope.managedOrgsList.length).toEqual(5);
+      expect($scope.totalOrgs).toBe(5);
     });
   });
 
@@ -253,7 +243,7 @@ describe('Controller: CustomerListCtrl', function () {
   describe('filterAction', function () {
     beforeEach(initController);
 
-    it('a proper query wshould call out to partnerService and trialservice', function () {
+    it('a proper query should call out to partnerService and trialservice', function () {
       $scope.filterAction('1234');
       expect($scope.searchStr).toBe('1234');
       //this tests that getManagedOrgsList is  called , it is called once at init , so the count is expected to be 2 here
@@ -263,6 +253,64 @@ describe('Controller: CustomerListCtrl', function () {
       expect(TrialService.getTrialsList).toHaveBeenCalledWith('1234');
     });
 
+  });
+
+  describe('updateResultCount function', function () {
+    beforeEach(initController);
+
+    it('should update the count on the filters based on the number of rows that met the criteria', function () {
+
+      $scope.filter.options = [{
+        value: 'trial',
+        label: '',
+        isSelected: false,
+        isAccountFilter: true,
+        count: 0
+      }];
+
+      //$scope.$apply();
+
+      $scope._helpers.updateResultCount($scope.gridData);
+      var activeFilter = _.find($scope.filter.options, { value: 'trial' });
+      expect(activeFilter.count).toBe(2);
+    });
+  });
+
+  describe('updateOrgService function', function () {
+    var compareObject, src, licenses;
+    beforeEach(function () {
+      initController();
+      compareObject = {
+        licenseType: 'MESSAGING'
+      };
+      src = {
+        status: undefined,
+        customerName: '47ciscocomCmiPartnerOrg',
+        sortOrder: 0
+      };
+      licenses = _.cloneDeep(managedOrgsResponse.data.organizations[0].licenses);
+    });
+
+    it('should enhance the source object with additional license data', function () {
+      var result = $scope._helpers.updateServiceForOrg(src, licenses, compareObject);
+      expect(result.trialId).toBe('7db0f7c1-a961-41dd-995e-ef4eb204cc72');
+      expect(result.licenseId).toBe('MS_8171ee27-424e-4ac2-ae98-4508f12ae8d4');
+      expect(result.volume).toBe(100);
+    });
+
+    it('should sum the quantities if several services of the given type are present', function () {
+      var additionalLicense = {
+        licenseId: "MS_8171ee27-424e-4ac2-ae98-4508f12ae8d5",
+        offerName: "MS",
+        licenseType: "MESSAGING",
+        volume: 200,
+        isTrial: true,
+      };
+      licenses.push(additionalLicense);
+
+      var result = $scope._helpers.updateServiceForOrg(src, licenses, compareObject);
+      expect(result.volume).toBe(300);
+    });
   });
 
   describe('getSubfields', function () {

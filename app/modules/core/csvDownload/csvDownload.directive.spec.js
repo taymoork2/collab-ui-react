@@ -1,22 +1,56 @@
 'use strict';
 
 describe('Directive: csvDownload', function () {
-  var $compile, $rootScope, $scope, $timeout, $httpBackend, CsvDownloadService, FeatureToggleService, $q;
+  var $compile, $rootScope, $scope, $timeout, $httpBackend, CsvDownloadService, FeatureToggleService, $q, $window;
 
   beforeEach(angular.mock.module('Core'));
-  beforeEach(inject(function (_FeatureToggleService_, _$q_) {
+  beforeEach(inject(function (_FeatureToggleService_, _$q_, _$compile_, _$rootScope_, _$timeout_, _$window_) {
     FeatureToggleService = _FeatureToggleService_;
+    $compile = _$compile_;
+    $timeout = _$timeout_;
+    $rootScope = _$rootScope_;
     $q = _$q_;
+    $window = _$window_;
+    $scope = $rootScope.$new();
     spyOn(FeatureToggleService, 'atlasNewUserExportGetStatus').and.returnValue($q.when(true));
   }));
 
+  describe("Controller", function () {
+
+    this.element = null;
+
+    it('should register for event handlers on creation', function () {
+
+      var listeners = $rootScope.$$listeners;
+
+      // initially, these event listeners don't exist
+      expect(_.has(listeners, 'csv-download-begin')).toBeFalsy();
+      expect(_.has(listeners, 'csv-download-end')).toBeFalsy();
+      expect(_.has(listeners, 'csv-download-request')).toBeFalsy();
+
+      var pscope = $scope.$new();
+      this.element = $compile('<csv-download type="any"></csv-download>')(pscope);
+      $scope.$digest();
+      this.elemScope = this.element.isolateScope();
+
+      // make sure we have event handlers registered
+      expect(_.isFunction(listeners['csv-download-begin'][0])).toBeTruthy();
+      expect(_.isFunction(listeners['csv-download-end'][0])).toBeTruthy();
+      expect(_.isFunction(listeners['csv-download-request'][0])).toBeTruthy();
+
+      $scope.$destroy();
+
+      // the event handlers that were registered are now null, but the entries in the listeners array is still there
+      expect(_.isFunction(listeners['csv-download-begin'][0])).toBeFalsy();
+      expect(_.isFunction(listeners['csv-download-end'][0])).toBeFalsy();
+      expect(_.isFunction(listeners['csv-download-request'][0])).toBeFalsy();
+    });
+
+  });
+
   describe("Browser: Firefox, Chrome, and cross-browser tests", function () {
 
-    beforeEach(inject(function (_$compile_, _$rootScope_, _$timeout_, _$httpBackend_, $window) {
-      $compile = _$compile_;
-      $rootScope = _$rootScope_;
-      $scope = $rootScope.$new();
-      $timeout = _$timeout_;
+    beforeEach(inject(function (_$httpBackend_) {
       $httpBackend = _$httpBackend_;
       $httpBackend.when('GET', 'https://atlas-integration.wbx2.com/admin/api/v1/csv/organizations/null/users/template').respond({});
       $window.navigator.msSaveOrOpenBlob = undefined;
@@ -83,17 +117,13 @@ describe('Directive: csvDownload', function () {
   });
 
   describe('Browser: IE only behavior', function () {
-    beforeEach(inject(function (_$compile_, _$rootScope_, _$timeout_, $q, $window, _CsvDownloadService_) {
-      $compile = _$compile_;
-      $timeout = _$timeout_;
-      $rootScope = _$rootScope_;
-      $scope = $rootScope.$new();
+    beforeEach(inject(function (_CsvDownloadService_) {
       CsvDownloadService = _CsvDownloadService_;
-      $window.navigator.msSaveOrOpenBlob = jasmine.createSpy('msSaveOrOpenBlob').and.callFake(function () {});
+      $window.navigator.msSaveOrOpenBlob = jasmine.createSpy('msSaveOrOpenBlob').and.callFake(function () { });
 
       spyOn(CsvDownloadService, 'getCsv').and.returnValue($q.when('blob'));
-      spyOn(CsvDownloadService, 'openInIE').and.callFake(function () {});
-      spyOn(CsvDownloadService, 'revokeObjectUrl').and.callFake(function () {});
+      spyOn(CsvDownloadService, 'openInIE').and.callFake(function () { });
+      spyOn(CsvDownloadService, 'revokeObjectUrl').and.callFake(function () { });
     }));
 
     it('should download template by clicking the anchor', function () {

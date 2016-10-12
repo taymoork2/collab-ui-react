@@ -1,4 +1,5 @@
 'use strict';
+
 describe('LicenseService', function () {
   beforeEach(angular.mock.module('Squared'));
 

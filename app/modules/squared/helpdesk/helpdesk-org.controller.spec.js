@@ -1,4 +1,5 @@
 'use strict';
+
 describe('Controller: HelpdeskOrgController', function () {
   beforeEach(angular.mock.module('Squared'));
 
@@ -160,10 +161,9 @@ describe('Controller: HelpdeskOrgController', function () {
         Authinfo: Authinfo
       });
       $scope.$apply();
-      expect(orgController.supportsLocalDialing).toBeTruthy();
       expect(orgController.callCard.voiceMailPrefix).toBe("4100");
       expect(orgController.callCard.outboundDialDigit).toBe("7");
-      expect(orgController.callCard.dialing).toBe("local");
+      expect(orgController.callCard.dialing).toEqual("helpdesk.dialingPlan.local");
     });
 
     it('call card elements should be equal to data from Site and Tenant API calls', function () {
@@ -215,10 +215,9 @@ describe('Controller: HelpdeskOrgController', function () {
         Authinfo: Authinfo
       });
       $scope.$apply();
-      expect(orgController.supportsLocalDialing).toBeTruthy();
       expect(orgController.callCard.voiceMailPrefix).toBe("4100");
       expect(orgController.callCard.outboundDialDigit).toBe("7");
-      expect(orgController.callCard.dialing).toBe("national");
+      expect(orgController.callCard.dialing).toEqual("helpdesk.dialingPlan.national");
     });
 
     it('extended information feature toggle is default false', function () {

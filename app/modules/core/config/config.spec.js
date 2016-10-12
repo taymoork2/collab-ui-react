@@ -71,6 +71,20 @@ describe('Config', function () {
 
     $location.host.and.returnValue('10.12.32.12');
     expect(Config.isDev()).toBe(false);
+
+    expect(Config.isDevHostName('0.0.0.0')).toBe(true);
+    expect(Config.isDevHostName('127.0.0.1')).toBe(true);
+    expect(Config.isDevHostName('localhost')).toBe(true);
+    expect(Config.isDevHostName('server')).toBe(true);
+    expect(Config.isDevHostName('dev-admin.ciscospark.com')).toBe(true);
+
+    expect(Config.canUseAbsUrlForDevLogin('http://127.0.0.1:8000')).toBe(true);
+    expect(Config.canUseAbsUrlForDevLogin('https://127.0.0.1:8000')).toBe(false);
+    expect(Config.canUseAbsUrlForDevLogin('https://127.0.0.1')).toBe(false);
+
+    expect(Config.canUseAbsUrlForDevLogin('http://dev-admin.ciscospark.com:8000')).toBe(true);
+    expect(Config.canUseAbsUrlForDevLogin('https://dev-admin.ciscospark.com:8000')).toBe(false);
+    expect(Config.canUseAbsUrlForDevLogin('http://dev-admin.ciscospark.com')).toBe(false);
   });
 
   it('should detect load test environment', function () {
@@ -142,5 +156,4 @@ describe('Config', function () {
       expect(Config.forceProdForE2E()).toBe(false);
     });
   });
-
 });

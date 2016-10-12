@@ -8,7 +8,7 @@
     .factory('FusionClusterService', FusionClusterService);
 
   /* @ngInject */
-  function FusionClusterService($http, UrlConfig, Authinfo, FusionClusterStatesService, FusionUtils, $translate) {
+  function FusionClusterService($http, $q, $translate, Authinfo, FusionClusterStatesService, FusionUtils, UrlConfig, USSService) {
     var service = {
       preregisterCluster: preregisterCluster,
       addPreregisteredClusterToAllowList: addPreregisteredClusterToAllowList,
@@ -33,6 +33,8 @@
       labelForDay: labelForDay,
       getStatusForService: getStatusForService,
       getResourceGroups: getResourceGroups,
+      getClustersForResourceGroup: getClustersForResourceGroup,
+      getUnassignedClusters: getUnassignedClusters
     };
 
     return service;
@@ -74,7 +76,8 @@
             }),
             unassigned: sort(getUnassignedClusters(org.clusters))
           };
-        });
+        })
+        .then(addUserCount);
     }
 
     function getClustersForResourceGroup(id, clusters) {
@@ -121,9 +124,9 @@
     function addServicesStatuses(clusters) {
       return _.map(clusters, function (cluster) {
         if (cluster.targetType === 'c_mgmt') {
-          var mgmtConnectors = _.filter(cluster.connectors, 'connectorType', 'c_mgmt');
-          var ucmcConnectors = _.filter(cluster.connectors, 'connectorType', 'c_ucmc');
-          var calConnectors = _.filter(cluster.connectors, 'connectorType', 'c_cal');
+          var mgmtConnectors = _.filter(cluster.connectors, { connectorType: 'c_mgmt' });
+          var ucmcConnectors = _.filter(cluster.connectors, { connectorType: 'c_ucmc' });
+          var calConnectors = _.filter(cluster.connectors, { connectorType: 'c_cal' });
           cluster.servicesStatuses = [{
             serviceId: 'squared-fusion-mgmt',
             state: FusionClusterStatesService.getMergedStateSeverity(mgmtConnectors),
@@ -138,7 +141,7 @@
             total: calConnectors.length
           }];
         } else if (cluster.targetType === 'mf_mgmt') {
-          var mediaConnectors = _.filter(cluster.connectors, 'connectorType', 'mf_mgmt');
+          var mediaConnectors = _.filter(cluster.connectors, { connectorType: 'mf_mgmt' });
           cluster.servicesStatuses = [{
             serviceId: 'squared-fusion-media',
             state: FusionClusterStatesService.getMergedStateSeverity(mediaConnectors),
@@ -151,7 +154,7 @@
 
     function sort(clusters) {
       // Could be anything but at least make it consistent between 2 page refresh
-      return _.sortByAll(clusters, ['targetType', 'name']);
+      return _.sortBy(clusters, ['targetType', 'name']);
     }
 
     function preregisterCluster(name, releaseChannel, managementConnectorType) {
@@ -197,9 +200,6 @@
     function buildSidepanelConnectorList(cluster, connectorTypeToKeep) {
       var sidepanelConnectorList = {};
       sidepanelConnectorList.hosts = [];
-      sidepanelConnectorList.servicesStatuses = cluster.servicesStatuses;
-      sidepanelConnectorList.name = cluster.name;
-      sidepanelConnectorList.id = cluster.id;
 
       /* Find and populate hostnames only, and make sure that they are only there once */
       _.forEach(cluster.connectors, function (connector) {
@@ -208,7 +208,7 @@
           connectors: []
         });
       });
-      sidepanelConnectorList.hosts = _.uniq(sidepanelConnectorList.hosts, function (host) {
+      sidepanelConnectorList.hosts = _.uniqBy(sidepanelConnectorList.hosts, function (host) {
         return host.hostname;
       });
 
@@ -224,7 +224,7 @@
           }
         }
       });
-      return sidepanelConnectorList;
+      return sidepanelConnectorList.hosts;
     }
 
     function setClusterName(clusterId, newClusterName) {
@@ -341,12 +341,15 @@
         return false; // Cannot recognize service, default to *not* enabled
       }
 
-      var installedConnectors = _.map(clusterList, 'connectors');
-      return _.some(installedConnectors, function (cluster) {
-        return _.some(cluster, function (connector) {
-          return connector.connectorType === target_connector;
-        });
-      });
+      if (serviceId === 'squared-fusion-media') {
+        return _.some(clusterList, { targetType: 'mf_mgmt' });
+      } else {
+        return _.chain(clusterList)
+          .map('connectors')
+          .flatten()
+          .some({ connectorType: target_connector })
+          .value();
+      }
     }
 
     function formatTimeAndDate(upgradeSchedule) {
@@ -383,6 +386,31 @@
         setup: processClustersToSeeIfServiceIsSetup(serviceId, clusterList),
         status: processClustersToAggregateStatusForService(serviceId, clusterList)
       };
+    }
+
+    function addUserCount(response) {
+      if (response.groups.length === 0) {
+        return response;
+      }
+      var promises = _.map(response.groups, function (group) {
+        return USSService.getUserCountFromResourceGroup(group.id)
+          .catch(function () {
+            // recover from failure, we won't know the number for this group
+            return {
+              numberOfUsers: '?'
+            };
+          });
+      });
+      return $q.all(promises)
+        .then(function (userCounts) {
+          return {
+            groups: _.map(response.groups, function (group, i) {
+              group.numberOfUsers = userCounts[i].numberOfUsers;
+              return group;
+            }),
+            unassigned: response.unassigned,
+          };
+        });
     }
   }
 })();

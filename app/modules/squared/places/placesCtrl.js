@@ -5,40 +5,35 @@
     .controller('PlacesCtrl',
 
       /* @ngInject */
-      function ($scope, $state, $templateCache, $translate, CsdmPlaceService, CsdmHuronPlaceService, PlaceFilter, Authinfo, WizardFactory, RemPlaceModal) {
+      function ($scope, $state, $templateCache, $translate, CsdmDataModelService, PlaceFilter, Authinfo, WizardFactory, RemPlaceModal) {
         var vm = this;
 
         vm.data = [];
-        vm.csdmLoaded = false;
-        vm.huronLoaded = false;
+        vm.placesLoaded = false;
         vm.placeFilter = PlaceFilter;
-        var csdmPlacesList;
-        var huronPlacesList;
+        vm.placeFilter.setCurrentSearch('');
+        vm.placeFilter.setCurrentFilter('');
+        var placesList;
 
         function init() {
-          loadLists();
+          loadList();
         }
 
-        function loadLists() {
-          CsdmPlaceService.getPlacesList().then(function (list) {
-            csdmPlacesList = list;
-            vm.csdmLoaded = true;
-          });
-          CsdmHuronPlaceService.getPlacesList().then(function (list) {
-            huronPlacesList = list;
-            vm.huronLoaded = true;
+        function loadList() {
+          CsdmDataModelService.getPlacesMap().then(function (list) {
+            placesList = list;
+            vm.placesLoaded = true;
           });
         }
 
         init();
 
         vm.existsDevices = function () {
-          return (vm.shouldShowList()
-          && (Object.keys(csdmPlacesList).length > 0 || Object.keys(huronPlacesList).length > 0));
+          return (vm.shouldShowList() && (Object.keys(placesList).length > 0));
         };
 
         vm.shouldShowList = function () {
-          return vm.csdmLoaded && vm.huronLoaded;
+          return vm.placesLoaded;
         };
 
         vm.isEntitledToRoomSystem = function () {
@@ -50,12 +45,7 @@
         };
 
         vm.updateListAndFilter = function () {
-          var filtered = _.chain({})
-            .extend(csdmPlacesList)
-            .extend(huronPlacesList)
-            .values()
-            .value();
-          return PlaceFilter.getFilteredList(filtered);
+          return PlaceFilter.getFilteredList(_.values(placesList));
         };
 
         vm.numDevices = function (place) {
@@ -98,16 +88,15 @@
             },
             sortCellFiltered: true
           }, {
-            field: 'type',
+            field: 'readableType',
             displayName: $translate.instant('placesPage.typeHeader'),
-            cellTemplate: getTemplate('_typeTpl'),
             sortable: true
           }, {
             field: 'devices',
             displayName: $translate.instant('placesPage.deviceHeader'),
             cellTemplate: getTemplate('_devicesTpl'),
             sortable: true,
-            sortingAlgorithm: sortStateFn
+            sortingAlgorithm: sortNoDevicesFn
           }, {
             field: 'action',
             displayName: $translate.instant('placesPage.actionHeader'),
@@ -172,8 +161,8 @@
           return 1;
         }
 
-        function sortStateFn(a, b) {
-          return a.priority - b.priority;
+        function sortNoDevicesFn(a, b) {
+          return _.size(a) - _.size(b);
         }
       }
     );

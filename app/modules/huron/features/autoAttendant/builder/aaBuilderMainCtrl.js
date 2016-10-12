@@ -6,7 +6,7 @@
     .controller('AABuilderMainCtrl', AABuilderMainCtrl); /* was AutoAttendantMainCtrl */
 
   /* @ngInject */
-  function AABuilderMainCtrl($scope, $translate, $state, $stateParams, $q, AAUiModelService,
+  function AABuilderMainCtrl($rootScope, $scope, $translate, $state, $stateParams, $q, AAUiModelService,
     AAModelService, AutoAttendantCeInfoModelService, AutoAttendantCeMenuModelService, AutoAttendantCeService,
     AAValidationService, AANumberAssignmentService, AANotificationService, Authinfo, AACommonService, AAUiScheduleService, AACalendarService,
     AATrackChangeService, AADependencyService, ServiceSetup, Analytics, AAMetricNameService, FeatureToggleService) {
@@ -104,8 +104,8 @@
         return true;
       } else {
         // otherwise, filter on the passed-in field and compare
-        var a1 = _.pluck(aa1, tag);
-        var a2 = _.pluck(aa2, tag);
+        var a1 = _.map(aa1, tag);
+        var a2 = _.map(aa2, tag);
         return (_.difference(a1, a2).length > 0 || _.difference(a2, a1).length > 0);
       }
 
@@ -226,7 +226,7 @@
           function (response) {
             if (_.get(response, 'failedResources.length', false)) {
               AANotificationService.errorResponse(response, 'autoAttendant.errorFailedToAssignNumbers', {
-                phoneNumbers: _.pluck(response.failedResources, 'id')
+                phoneNumbers: _.map(response.failedResources, 'id')
               });
             }
             return response;
@@ -267,6 +267,8 @@
           AANotificationService.success('autoAttendant.successUpdateCe', {
             name: aaRecord.callExperienceName
           });
+
+          $rootScope.$broadcast('CE Saved');
 
         },
         function (response) {

@@ -1,6 +1,7 @@
 /**
  *
  */
+
 'use strict';
 
 describe('WebExApiGatewayService.csvConstructHttpsObj() test', function () {

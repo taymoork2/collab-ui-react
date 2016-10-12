@@ -2,7 +2,6 @@
   .ct-profile-body {
     .card-info {
       text-align: center;
-      @include vr-spacing(pb, 0.5)
     }
   }
 
@@ -14,6 +13,10 @@
   .cs-card {
     @include vr-spacing(mt, 0);
     @include vr-spacing(ml, 3);
+
+    section {
+      overflow: hidden;
+    }
   }
 
   .cs-card article.profile-preview {
@@ -182,36 +185,45 @@
 
     .profile-image {
       .img-common {
-        width: 9rem;
-        height: 9rem;
+        width: 7.5rem;
+        height: 7.5rem;
         border-radius: 50%;
         position: relative;
         text-align: center;
         @include vr-spacing(ml, 5.5);
       }
       .preview-org-img {
-        font-size:9rem;
+        font-size:7rem;
       }
       .uploaded-org-img {
         border-radius: 70%;
         border: 1px solid $gray-light-1;
-        width: 9.5rem;
-        height: 9rem;
+        width: 7rem;
+        height: 7rem;
       }
       .agent-img {
         background: $white;
         border: 1px solid $gray-light-1;
         .icon-user {
-          font-size: 6rem;
+          font-size: 5rem;
           top: 1rem;
           color: $gray-light-1;
         }
       }
     }
 
+    .ct-org-logo-text{
+      @include vr-spacing(pb, 1);
+      text-align: center;
+      color: $color-cta-dark;
+      font-size: 12px;
+      width: 100%;
+    }
+
     .ct-display-txt {
       @include vr-spacing(pb, 0.5);
       padding-top: 0;
     }
+
   }
 }

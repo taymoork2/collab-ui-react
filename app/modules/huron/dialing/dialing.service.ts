@@ -29,12 +29,13 @@ export class DialingService {
   public cbUseGlobal: IOption;
   public cbAlwaysAllow: IOption;
   public cbNeverAllow: IOption;
-  private internationalDialing: string;
-  private localDialing: string;
+  private internationalDialing: string | undefined;
+  private localDialing: string | undefined;
   private dialingService: IDialingResource;
   private cosRestriction: ICOSRestrictionResponse;
   private dialingUuids = {};
 
+  /* @ngInject */
   constructor(
     private $translate,
     private $q: ng.IQService,
@@ -47,7 +48,7 @@ export class DialingService {
       method: 'PUT',
     };
 
-    this.dialingService = <IDialingResource>$resource(HuronConfig.getCmiV2Url() + '/customers/:customerId/:type/:typeId/features/restrictions/:restrictionId', {},
+    this.dialingService = <IDialingResource>this.$resource(this.HuronConfig.getCmiV2Url() + '/customers/:customerId/:type/:typeId/features/restrictions/:restrictionId', {},
       {
         update: updateAction,
       });
@@ -80,8 +81,8 @@ export class DialingService {
 
   public getDialing(type: string, dialingType: string) {
     let response;
-    let overRide = null;
-    let custRestriction = null;
+    let overRide = false;
+    let custRestriction = false;
     type = type.slice(0, -1);
 
     this.cosRestriction[type].filter((cos: ICOSRestriction) => cos.restriction === dialingType).map((cos: ICOSRestriction) => {
@@ -89,7 +90,7 @@ export class DialingService {
       this.dialingUuids[dialingType] = cos.uuid;
     });
 
-    this.cosRestriction.customer.filter((cos: ICOSRestriction) => cos.restriction === dialingType).map((cos: ICOSRestriction) => {
+    this.cosRestriction.customer.filter((cos: ICOSRestriction) => cos.restriction === dialingType).map(() => {
       custRestriction = true;
     });
 
@@ -175,7 +176,7 @@ export class DialingService {
 
   public setInternationalDialing: (item: IOption, type: string, typeId: string) => ng.IPromise<any> = (item, type, typeId) => {
     let deferred = this.$q.defer();
-    this.setDialing(item, type, typeId, DialingType.INTERNATIONAL).then((data) => {
+    this.setDialing(item, type, typeId, DialingType.INTERNATIONAL).then(() => {
       this.$state.go(_.get<string>(this.$state, '$current.parent.name'));
       deferred.resolve(true);
     }, (response) => {
@@ -193,7 +194,7 @@ export class DialingService {
 
   public setLocalDialing: (item: IOption, type: string, typeId: string) => ng.IPromise<any> = (item, type, typeId) => {
     let deferred = this.$q.defer();
-    this.setDialing(item, type, typeId, DialingType.LOCAL).then((data) => {
+    this.setDialing(item, type, typeId, DialingType.LOCAL).then(() => {
       this.$state.go(_.get<string>(this.$state, '$current.parent.name'));
       deferred.resolve(true);
     }, (response) => {

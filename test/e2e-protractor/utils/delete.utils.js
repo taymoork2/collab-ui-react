@@ -21,15 +21,9 @@ exports.deleteUser = function (email, token) {
       };
 
       return utils.sendRequest(options)
-        .then(function () {
-          return 200;
-        })
-        .catch(function (response) {
-          // Ignore 404 errors, otherwise reject with error
-          if (_.get(response, 'statusCode') !== 404) {
-            return Promise.reject(response);
-          }
-        });
+        // This is primarily used for jasmine cleanup
+        // We don't want rejected promises to blowup the promise control flow
+        .catch(_.noop);
     });
 };
 
@@ -171,7 +165,7 @@ exports.deleteRouteToQueue = function () {
          'Authorization': 'Bearer ' + bearer
        }
      };
-     
+
      return utils.sendRequest(options)
      .then(function () {
        return 200;

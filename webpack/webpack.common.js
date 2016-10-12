@@ -15,6 +15,9 @@ const path = require('path');
 const loaders = require('./loaders');
 const autoprefixer = require('autoprefixer');
 
+const host = args.host || '127.0.0.1';
+const port = args.port || '8000';
+
 /**
  * TODO remove when math-expression-evaluator fixes their release version in 1.2.12
  * https://github.com/redhivesoftware/math-expression-evaluator/pull/2
@@ -23,7 +26,6 @@ Array.indexOf = _.indexOf;
 
 module.exports = (function makeWebpackConfig() {
   const config = {};
-
   config.context = path.resolve('./app');
 
   config.entry = {
@@ -34,7 +36,7 @@ module.exports = (function makeWebpackConfig() {
 
   config.output = {
     path: path.resolve('./dist'),
-    publicPath: 'http://127.0.0.1:8000/',
+    publicPath: `http://${host}:${port}/`,
     filename: 'js/[name].js',
     chunkFilename: 'js/[name].js',
   };

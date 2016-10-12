@@ -1,4 +1,5 @@
 'use strict';
+
 describe('Service: HelpdeskLogService', function () {
   beforeEach(angular.mock.module('Squared'));
 

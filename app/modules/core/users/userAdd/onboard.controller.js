@@ -89,7 +89,7 @@
 
     $scope.isCareEnabled = false;
     FeatureToggleService.atlasCareTrialsGetStatus().then(function (careStatus) {
-      $scope.isCareEnabled = careStatus;
+      $scope.isCareEnabled = careStatus && Authinfo.isCare();
     });
 
     initController();
@@ -304,10 +304,10 @@
       };
       for (var i = 0; i < $scope.usrlist.length - 1; i++) {
         for (var j = i + 1; j < $scope.usrlist.length; j++) {
-          if (angular.isDefined($scope.usrlist[i].assignedDn) && angular.isDefined($scope.usrlist[j].assignedDn) && ($scope.usrlist[i].assignedDn.pattern !== "None") && ($scope.usrlist[i].assignedDn.pattern === $scope.usrlist[j].assignedDn.pattern)) {
+          if (angular.isDefined($scope.usrlist[i].assignedDn) && angular.isDefined($scope.usrlist[j].assignedDn) && ($scope.usrlist[i].assignedDn.uuid !== 'none') && ($scope.usrlist[i].assignedDn.pattern === $scope.usrlist[j].assignedDn.pattern)) {
             didDnDupe.dnDupe = true;
           }
-          if (angular.isDefined($scope.usrlist[i].externalNumber) && angular.isDefined($scope.usrlist[j].externalNumber) && ($scope.usrlist[i].externalNumber.pattern !== "None") && ($scope.usrlist[i].externalNumber.pattern === $scope.usrlist[j].externalNumber.pattern)) {
+          if (angular.isDefined($scope.usrlist[i].externalNumber) && angular.isDefined($scope.usrlist[j].externalNumber) && ($scope.usrlist[i].externalNumber.uuid !== 'none') && ($scope.usrlist[i].externalNumber.pattern === $scope.usrlist[j].externalNumber.pattern)) {
             didDnDupe.didDupe = true;
           }
           if (didDnDupe.dnDupe && didDnDupe.didDupe) {
@@ -477,6 +477,20 @@
     $scope.careFeatures.push(new ServiceFeature($translate.instant('onboardModal.careFree'), 0, 'careRadio', new FakeLicense('freeCareService')));
     $scope.currentUser = $stateParams.currentUser;
 
+    $scope.currentUserDisplayName = function () {
+      if (_.isObject($scope.currentUser)) {
+        if (!_.isEmpty($scope.currentUser.displayName)) {
+          return _.trim($scope.currentUser.displayName);
+        } else if (_.isObject($scope.currentUser.name) && (!_.isEmpty($scope.currentUser.name.givenName) || !_.isEmpty($scope.currentUser.name.familyName))) {
+          return _.trim(($scope.currentUser.name.givenName || '') + ' ' + ($scope.currentUser.name.familyName || ''));
+        } else if (!_.isEmpty($scope.currentUser.userName)) {
+          return _.trim($scope.currentUser.userName);
+        }
+      }
+      // if all else fails, return Unknown
+      return _.trim($translate.instant('common.unknown'));
+    };
+
     if ($scope.currentUser) {
       userEnts = $scope.currentUser.entitlements;
       userLicenseIds = $scope.currentUser.licenseID;
@@ -539,7 +553,8 @@
     $scope.radioStates = {
       commRadio: false,
       msgRadio: false,
-      careRadio: false
+      careRadio: false,
+      initialCareRadioState: false // For generating Metrics
     };
 
     if (userEnts) {
@@ -567,13 +582,14 @@
     function setCareSevice() {
       SunlightConfigService.getUserInfo($scope.currentUser.id)
           .then(function () {
-            Userservice.getUser($scope.currentUser.id, function (data) {
+            Userservice.getUser($scope.currentUser.id, true, function (data) {
               if (data.success) {
                 var hasSyncKms = _.find(data.roles, function (r) {
                   return r === Config.backend_roles.spark_synckms;
                 });
                 if (hasSyncKms) {
                   $scope.radioStates.careRadio = true;
+                  $scope.radioStates.initialCareRadioState = true;
                 }
               }
             });
@@ -628,7 +644,7 @@
         var isCISiteFlag = WebExUtilsFact.isCIEnabledSite(site);
         return {
           site: site,
-          billing: _.uniq(_.pluck(cmrMatches, 'billing').concat(_.pluck(confMatches, 'billing'))),
+          billing: _.uniq(_.map(cmrMatches, 'billing').concat(_.map(confMatches, 'billing'))),
           confLic: confMatches,
           cmrLic: cmrMatches,
           isCISite: isCISiteFlag,
@@ -720,7 +736,7 @@
           var copy = angular.copy(service);
           copy.licenses = [copy.license];
           delete copy.license;
-          _.merge(result, copy, function (left, right) {
+          _.mergeWith(result, copy, function (left, right) {
             if (_.isArray(left)) return left.concat(right);
           });
         });
@@ -879,8 +895,13 @@
           $scope.$emit('wizardNextText', 'finish');
         }
       } else if (angular.isDefined($scope.wizard) && $scope.wizard.current.step.name === 'assignDnAndDirectLines') {
-        $scope.isResetEnabled = false;
-        $scope.validateDnForUser();
+        if (!shouldAddCallService()) {
+          // we don't have call service, so skip to previous step
+          $scope.wizard.previousStep();
+        } else {
+          $scope.isResetEnabled = false;
+          $scope.validateDnForUser();
+        }
       }
     });
 
@@ -950,7 +971,7 @@
           .filter({
             confModel: state
           })
-          .pluck('licenseId')
+          .map('licenseId')
           .remove(undefined)
           .value()
         );
@@ -959,7 +980,7 @@
           .filter({
             cmrModel: state
           })
-          .pluck('licenseId')
+          .map('licenseId')
           .remove(undefined)
           .value()
         );
@@ -1047,6 +1068,15 @@
             licenseList.push(new LicenseFeature(licenseId, false));
           }
         }
+
+        // Metrics for care entitlement for users
+        if ($scope.radioStates.careRadio !== $scope.radioStates.initialCareRadioState) {
+          if ($scope.radioStates.careRadio) {
+            LogMetricsService.logMetrics('Enabling care for user', LogMetricsService.getEventType('careEnabled'), LogMetricsService.getEventAction('buttonClick'), 200, moment(), 1, null);
+          } else {
+            LogMetricsService.logMetrics('Disabling care for user', LogMetricsService.getEventType('careDisabled'), LogMetricsService.getEventAction('buttonClick'), 200, moment(), 1, null);
+          }
+        }
       }
 
       return licenseList.length === 0 ? null : licenseList;
@@ -1096,7 +1126,7 @@
       // make sure we have any internal extension and direct line set up for the users
       _.forEach(users, function (user) {
         user.internalExtension = _.get(user, 'assignedDn.pattern');
-        if (user.externalNumber && user.externalNumber.pattern !== 'None') {
+        if (user.externalNumber && user.externalNumber.uuid && user.externalNumber.uuid !== 'none') {
           user.directLine = user.externalNumber.pattern;
         }
       });
@@ -1627,7 +1657,7 @@
           if (userAndDnObj[0].assignedDn && userAndDnObj[0].assignedDn.pattern.length > 0) {
             userItem.internalExtension = userAndDnObj[0].assignedDn.pattern;
           }
-          if (userAndDnObj[0].externalNumber && userAndDnObj[0].externalNumber.pattern !== "None") {
+          if (userAndDnObj[0].externalNumber && userAndDnObj[0].externalNumber.uuid !== 'none') {
             userItem.directLine = userAndDnObj[0].externalNumber.pattern;
           }
         });
@@ -1682,14 +1712,14 @@
       if (data.success) {
         Log.info('User successfully updated', data);
 
-        for (var i = 0; i < data.userResponse.length; i++) {
-
+        var userResponseArray = _.get(data, 'userResponse');
+        _.forEach(userResponseArray, function (userResponseItem) {
           var userResult = {
-            email: data.userResponse[i].email,
+            email: userResponseItem.email,
             alertType: null
           };
 
-          var httpStatus = data.userResponse[i].status;
+          var httpStatus = userResponseItem.status;
 
           switch (httpStatus) {
             case 200:
@@ -1716,10 +1746,14 @@
               break;
             }
             default: {
-              if (data.userResponse[i].message === Config.messageErrors.hybridServicesComboError) {
+              if (userResponseItem.message === Config.messageErrors.hybridServicesComboError) {
                 userResult.message = $translate.instant('onboardModal.result.400094', {
                   status: httpStatus
                 });
+                userResult.alertType = 'danger';
+                isComplete = false;
+              } else if (_.includes(userResponseItem.message, 'DN_IS_FALLBACK')) {
+                userResult.message = $translate.instant('onboardModal.result.deleteUserDnFallbackError');
                 userResult.alertType = 'danger';
                 isComplete = false;
               } else {
@@ -1737,7 +1771,8 @@
           if (method !== 'convertUser') {
             $scope.$dismiss();
           }
-        }
+        });
+
 
         for (var idx in $scope.results.resultList) {
           if ($scope.results.resultList[idx].alertType !== 'success') {
@@ -2396,7 +2431,7 @@
         // If we haven't met the chunk size, process the next user
         if (tempUserArray.length < csvChunk) {
           // Validate content in the row
-          if (_.contains(uniqueEmails, userEmail)) {
+          if (_.includes(uniqueEmails, userEmail)) {
             // Report a duplicate email
             processingError = true;
             addUserError(j + 1, $translate.instant('firstTimeWizard.csvDuplicateEmail'));

@@ -6,9 +6,12 @@
     /* @ngInject  */
     function () {
 
-      var updateOne = function (current, url, updatedObj) {
+      var updateOne = function (current, url, updatedObj, addedFunction) {
         if (!current[url]) {
           current[url] = updatedObj;
+          if (addedFunction) {
+            addedFunction(updatedObj);
+          }
         } else {
           var currentObj = current[url];
           _.each(currentObj, function (value, key) {
@@ -20,22 +23,24 @@
         }
       };
 
-      var addAndUpdate = function (current, updated) {
+      var addAndUpdate = function (current, updated, addedFunction) {
         _.each(updated, function (updatedObj, url) {
-          updateOne(current, url, updatedObj);
+          updateOne(current, url, updatedObj, addedFunction);
         });
       };
 
-      var removeDeleted = function (current, updated) {
+      var removeDeleted = function (current, updated, keepFunction) {
         _.each(_.difference(_.keys(current), _.keys(updated)), function (deletedUrl) {
-          delete current[deletedUrl];
+          if (!keepFunction || !keepFunction(current[deletedUrl])) {
+            delete current[deletedUrl];
+          }
         });
       };
 
       return {
-        update: function (current, updated) {
-          addAndUpdate(current, updated);
-          removeDeleted(current, updated);
+        update: function (current, updated, keepFunction, addedFunction) {
+          addAndUpdate(current, updated, addedFunction);
+          removeDeleted(current, updated, keepFunction);
           return current;
         },
         updateOne: updateOne

@@ -2,6 +2,10 @@ resource-group-card {
   display: block;
   width: 100%;
 
+  .icon-warning.danger {
+    color: $color-negative-base;
+  }
+
   .cs-card-layout {
     padding-bottom: 0 !important;
     margin: 0 !important;
@@ -37,15 +41,27 @@ resource-group-card {
         width: 1rem;
         margin-top: -2px;
       }
+
+      &:focus {
+        box-shadow: none;
+      }
     }
 
-    .resource-group-release-channel {
+    .resource-group-release-channel,
+    .resource-group-release-cluster-number {
       font-size: 14px;
       margin-right: 1.25rem;
     }
 
-    .resource-group-release-cluster-number {
+    .resource-group-release-cluster-users {
+      display: flex;
+      align-items: center;
       font-size: 14px;
+
+      .icon-warning {
+        margin-top: -4px;
+        margin-right: 3px;
+      }
     }
 
     .resource-group-settings-link {
@@ -56,6 +72,10 @@ resource-group-card {
         display: block;
         margin-top: -2px;
       }
+
+      &:focus {
+        box-shadow: none;
+      }
     }
 
     .resource-group-banner {
@@ -63,6 +83,10 @@ resource-group-card {
       background-color: $color-attention-lighter;
       padding: 0.75rem;
       text-align: center;
+    }
+
+    .resource-group-banner-error {
+      background-color: $color-negative-lighter;
     }
 
     .resource-group-banner-message {
@@ -129,5 +153,9 @@ resource-group-card {
         border-top: 0;
       }
     }
+  }
+
+  .icon-arrow-down-rotated {
+    transform: rotate(-90deg);
   }
 }
