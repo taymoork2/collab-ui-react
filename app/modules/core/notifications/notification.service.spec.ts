@@ -1,17 +1,17 @@
 describe('Service: Notification', function () {
   beforeEach(angular.mock.module('Core'));
 
-  var Notification, toaster, Authinfo, Config, $timeout, Log;
+  let Notification, toaster, Authinfo, Config, $timeout, Log;
 
   function MakePopResponse(title, type, message, timeout) {
     return {
       title: title,
       type: type,
-      body: 'bind-unsafe-html',
+      body: 'cr-bind-unsafe-html',
       bodyOutputType: 'directive',
       directiveData: { data: [message] },
       timeout: timeout,
-      closeHtml: jasmine.any(String)
+      closeHtml: jasmine.any(String),
     };
   }
 
@@ -23,35 +23,35 @@ describe('Service: Notification', function () {
     $timeout = _$timeout_;
     Log = _Log_;
 
-    spyOn(Config, "isE2E").and.returnValue(false);
+    spyOn(Config, 'isE2E').and.returnValue(false);
   }));
 
   describe('success notifications', function () {
 
     it('creates toaster with given message type and text', function () {
-      spyOn(toaster, "pop");
+      spyOn(toaster, 'pop');
 
-      var message = "operation was successful";
-      var notifications = [message];
-      Notification.notify(notifications, "success");
+      let message = 'operation was successful';
+      let notifications = [message];
+      Notification.notify(notifications, 'success');
       expect(toaster.pop).toHaveBeenCalledWith(MakePopResponse(undefined, 'success', message, 3000));
       expect(toaster.pop.calls.count()).toEqual(1);
     });
 
     it('creates success toaster with given message type and text', function () {
-      spyOn(toaster, "pop");
+      spyOn(toaster, 'pop');
 
-      var message = "operation was successful";
+      let message = 'operation was successful';
       Notification.success(message);
       expect(toaster.pop).toHaveBeenCalledWith(MakePopResponse(undefined, 'success', message, 3000));
       expect(toaster.pop.calls.count()).toEqual(1);
     });
 
     it('creates success toaster with given message type, title and text', function () {
-      spyOn(toaster, "pop");
+      spyOn(toaster, 'pop');
 
-      var message = "operation was successful";
-      var title = "title";
+      let message = 'operation was successful';
+      let title = 'title';
       Notification.success(message, undefined, title);
       expect(toaster.pop).toHaveBeenCalledWith(MakePopResponse(title, 'success', message, 3000));
       expect(toaster.pop.calls.count()).toEqual(1);
@@ -61,25 +61,25 @@ describe('Service: Notification', function () {
   describe('error and warning notifications', function () {
 
     it('creates toaster with given message type and text', function () {
-      spyOn(toaster, "pop");
-      spyOn(Authinfo, "isReadOnlyAdmin").and.returnValue(false);
+      spyOn(toaster, 'pop');
+      spyOn(Authinfo, 'isReadOnlyAdmin').and.returnValue(false);
 
-      var error_message = "this is an error message";
-      var notifications = [error_message];
-      Notification.notify(notifications, "warning");
+      let error_message = 'this is an error message';
+      let notifications = [error_message];
+      Notification.notify(notifications, 'warning');
       expect(toaster.pop).toHaveBeenCalledWith(MakePopResponse(undefined, 'warning', error_message, 0));
       expect(toaster.pop.calls.count()).toEqual(1);
 
     });
 
     it('creates toaster with given message type, title and text', function () {
-      spyOn(toaster, "pop");
-      spyOn(Authinfo, "isReadOnlyAdmin").and.returnValue(false);
+      spyOn(toaster, 'pop');
+      spyOn(Authinfo, 'isReadOnlyAdmin').and.returnValue(false);
 
-      var error_message = "this is an error message";
-      var notifications = [error_message];
-      var title = "title";
-      Notification.notify(notifications, "warning", title);
+      let error_message = 'this is an error message';
+      let notifications = [error_message];
+      let title = 'title';
+      Notification.notify(notifications, 'warning', title);
       expect(toaster.pop).toHaveBeenCalledWith(MakePopResponse(title, 'warning', error_message, 0));
       expect(toaster.pop.calls.count()).toEqual(1);
 
@@ -88,8 +88,8 @@ describe('Service: Notification', function () {
     describe('read only mode toaster', function () {
 
       it('has a predefined warning message', function () {
-        spyOn(toaster, "pop");
-        spyOn(Authinfo, "isReadOnlyAdmin").and.returnValue(true);
+        spyOn(toaster, 'pop');
+        spyOn(Authinfo, 'isReadOnlyAdmin').and.returnValue(true);
 
         Notification.notifyReadOnly();
         expect(toaster.pop).toHaveBeenCalledWith(MakePopResponse(undefined, 'warning', 'readOnlyMessages.notAllowed', 0));
@@ -97,10 +97,10 @@ describe('Service: Notification', function () {
 
       });
 
-      it("prevents other toasters but logs a warning if prevent-timer hasn't expired", function () {
-        spyOn(toaster, "pop");
-        spyOn(Log, "warn");
-        spyOn(Authinfo, "isReadOnlyAdmin").and.returnValue(true);
+      it('prevents other toasters but logs a warning if prevent-timer hasn\'t expired', function () {
+        spyOn(toaster, 'pop');
+        spyOn(Log, 'warn');
+        spyOn(Authinfo, 'isReadOnlyAdmin').and.returnValue(true);
 
         Notification.notifyReadOnly();
         expect(toaster.pop.calls.count()).toEqual(1);
@@ -108,16 +108,16 @@ describe('Service: Notification', function () {
         toaster.pop.calls.reset();
         Log.warn.calls.reset();
 
-        Notification.notify(["an error message"], "warning");
+        Notification.notify(['an error message'], 'warning');
         expect(toaster.pop.calls.count()).toEqual(0);
         expect(Log.warn.calls.count()).toEqual(1);
 
-        Notification.notify(["yet an error message"], "warning");
+        Notification.notify(['yet an error message'], 'warning');
         expect(toaster.pop.calls.count()).toEqual(0);
         expect(Log.warn.calls.count()).toEqual(2);
 
         $timeout.flush();
-        Notification.notify(["another error message"], "warning");
+        Notification.notify(['another error message'], 'warning');
         expect(toaster.pop.calls.count()).toEqual(1);
         expect(Log.warn.calls.count()).toEqual(2);
 
@@ -128,15 +128,15 @@ describe('Service: Notification', function () {
   describe('Yes/No Confirmation Notifications', function () {
 
     it('creates toaster with yes/no confirmation', function () {
-      spyOn(toaster, "pop");
+      spyOn(toaster, 'pop');
 
-      var message = "confirmation was successful";
+      let message = 'confirmation was successful';
       Notification.confirmation(message);
       expect(toaster.pop).toHaveBeenCalledWith({
         type: 'warning',
-        body: 'cs-confirmation',
+        body: 'cr-confirmation',
         bodyOutputType: 'directive',
-        showCloseButton: false
+        showCloseButton: false,
       });
       expect(toaster.pop.calls.count()).toEqual(1);
     });
@@ -146,19 +146,19 @@ describe('Service: Notification', function () {
   describe('helper functions:', function () {
     describe('stringify():', function () {
       it('should JSON-stringify an object or array', function () {
-        expect(Notification._helpers.stringify({
+        expect(Notification.stringify({
           a: 1,
           b: null,
-          c: 'foo'
+          c: 'foo',
         })).toBe('{"a":1,"b":null,"c":"foo"}');
 
-        expect(Notification._helpers.stringify([
-          1, 'a', null, undefined
+        expect(Notification.stringify([
+          1, 'a', null, undefined,
         ])).toBe('[1,"a",null,null]');
       });
 
       it('should return strings as-is', function () {
-        expect(Notification._helpers.stringify('foo')).toBe('foo');
+        expect(Notification.stringify('foo')).toBe('foo');
       });
     });
   });

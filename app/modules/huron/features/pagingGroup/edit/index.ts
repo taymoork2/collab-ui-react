@@ -7,7 +7,7 @@ export default angular
     'atlas.templates',
     'cisco.ui',
     'pascalprecht.translate',
-    require('modules/core/notifications/notifications.module'),
+    require('modules/core/notifications').default,
     pagingGroupService,
   ])
   .component('pgEdit', new PgEditComponent())
