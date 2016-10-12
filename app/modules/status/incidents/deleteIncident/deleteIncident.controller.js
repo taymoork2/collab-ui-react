@@ -1,5 +1,6 @@
 (function () {
   'use strict';
+
   angular
     .module('Status.incidents')
     .controller('DeleteIncidentController', DeleteIncidentController);

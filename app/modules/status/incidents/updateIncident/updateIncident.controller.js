@@ -1,8 +1,9 @@
 (function () {
   'use strict';
+
   angular.module('Status.incidents')
-		.controller('UpdateIncidentController', UpdateIncidentController)
-    .filter('titleCase', titleCase);
+  .controller('UpdateIncidentController', UpdateIncidentController)
+  .filter('titleCase', titleCase);
   function titleCase() {
     var titleCaseFilter = function (input) {
       var words = input.split(' ');

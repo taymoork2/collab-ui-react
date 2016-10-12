@@ -3,6 +3,7 @@
  */
 (function () {
   'use strict';
+
   angular.module('Status')
     .factory('DincidentListService', DincidentListService);
   function DincidentListService($resource, UrlConfig) {

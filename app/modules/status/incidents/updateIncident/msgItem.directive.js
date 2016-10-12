@@ -1,5 +1,6 @@
 (function () {
   'use strict';
+
   angular.module('Status.incidents')
     .directive('msgItem', msgItem);
   function msgItem() {

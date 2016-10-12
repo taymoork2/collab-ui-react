@@ -1,5 +1,6 @@
 (function () {
   'use strict';
+
   angular.module('Status.incidents')
     .factory('MessageService', MessageService);
   function MessageService($resource, UrlConfig) {

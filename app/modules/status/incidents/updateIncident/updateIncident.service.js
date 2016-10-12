@@ -1,5 +1,6 @@
 (function () {
   'use strict';
+
   angular.module('Status.incidents')
          .factory('UpdateIncidentService', UpdateIncidentService);
   function UpdateIncidentService($resource, UrlConfig) {
