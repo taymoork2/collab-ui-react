@@ -48,14 +48,14 @@
                 }
               });
             }
+            card.licenseNumber = max;
+            card.licenseType = licenseType;
             UserListService.getUserCount().then(function (response) {
-              if (_.isUndefined(response)) {
-                card.licenseNumber = max;
-              } else {
-                card.licenseNumber = max - response;
+              if (!_.isUndefined(response)) {
+                var sum = max - response;
+                card.licenseNumber = sum < 0 ? 0 : sum;
               }
             });
-            card.licenseType = licenseType;
           });
         }
 
