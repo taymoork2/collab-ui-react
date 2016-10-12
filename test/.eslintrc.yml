@@ -91,3 +91,7 @@
     wizard: true
     xdescribe: true
     xit: true
+    incidentPage: true
+    componentPage: true
+    dashboardPage: true
+    serviceListPage: true
