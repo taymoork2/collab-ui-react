@@ -21,13 +21,7 @@
           <section class="monitoring-panel small-3 medium-12 column" ng-if="overview.notifications.length > 0">
             <div class="notification-style" ng-repeat="notification in overview.notifications">
               <span class="badge {{notification.badgeType}}" translate="{{notification.badgeText}}"></span>
-              <div ng-if="notification.canDismiss" class="notification-spacing">
-                <span translate="{{notification.text}}"></span>
-                <div>
-                  <a ng-if="notification.linkText.length > 0" ng-click="notification.link()" translate="{{notification.linkText}}"></a>
-                </div>
-              </div>
-              <span ng-if="!notification.canDismiss" class="notification-spacing">
+              <span class="notification-spacing">
                 <span translate="{{notification.text}}"></span>
                 <div>
                   <a ng-if="notification.linkText.length > 0" ng-click="notification.link()" translate="{{notification.linkText}}"></a>
