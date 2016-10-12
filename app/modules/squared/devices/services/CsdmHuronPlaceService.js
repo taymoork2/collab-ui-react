@@ -73,7 +73,8 @@
       }).then(function (res) {
         var activationCode = {
           activationCode: res.data.password,
-          expiryTime: res.data.expiresOn
+          expiryTime: res.data.expiresOn,
+          cisUuid: machineUuid
         };
         return activationCode;
       });
