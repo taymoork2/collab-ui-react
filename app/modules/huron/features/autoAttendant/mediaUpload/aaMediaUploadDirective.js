@@ -9,8 +9,6 @@
     return {
       restrict: 'AE',
       scope: {
-        aaUploadedFname: '@',
-        aaUploadedFdate: '@',
         schedule: '@aaSchedule',
         index: '=aaIndex',
       },

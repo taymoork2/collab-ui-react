@@ -123,7 +123,8 @@ describe('Controller: AAMediaUploadCtrl', function () {
         playAction = AutoAttendantCeMenuModelService.newCeActionEntry('play', '');
         playAction.setValue(uploadUrl);
         playAction.setDescription(JSON.stringify(fileDescription));
-        menuEntry.addAction(playAction);
+        // menuEntry.addAction(playAction);
+        menuEntry.actions[0] = playAction;
         controller = $controller('AAMediaUploadCtrl', {
           $scope: $scope,
         });
@@ -163,7 +164,7 @@ describe('Controller: AAMediaUploadCtrl', function () {
           playAction = AutoAttendantCeMenuModelService.newCeActionEntry('play', '');
           playAction.setValue(uploadUrl);
           playAction.setDescription(JSON.stringify(fileDescription2));
-          menuEntry.addAction(playAction);
+          menuEntry.actions[0] = playAction;
           controller.uploadFile = fileDescription2.uploadFile;
           controller.uploadDate = fileDescription2.uploadDate;
           controller.uploadDuration = fileDescription2.uploadDuration;
@@ -209,7 +210,7 @@ describe('Controller: AAMediaUploadCtrl', function () {
         playAction = AutoAttendantCeMenuModelService.newCeActionEntry('play', '');
         playAction.setValue(uploadUrl);
         playAction.setDescription(JSON.stringify(fileDescription));
-        menuEntry.addAction(playAction);
+        menuEntry.actions[0] = playAction;
         $httpBackend.whenPOST(uploadUrl).respond(200, true);
         controller.upload(validFile);
         deferred.resolve();
@@ -254,7 +255,7 @@ describe('Controller: AAMediaUploadCtrl', function () {
       beforeEach(function () {
         spyOn(AAMediaUploadService, 'upload').and.callThrough();
         playAction = AutoAttendantCeMenuModelService.newCeActionEntry('play', '');
-        menuEntry.addAction(playAction);
+        menuEntry.actions[0] = playAction;
         $httpBackend.whenPOST(uploadUrl).respond(200, true);
       });
 
@@ -313,7 +314,7 @@ describe('Controller: AAMediaUploadCtrl', function () {
 
       it('should receive an error from media duration and not upload', function () {
         playAction = AutoAttendantCeMenuModelService.newCeActionEntry('play', '');
-        menuEntry.addAction(playAction);
+        menuEntry.actions[0] = playAction;
         $httpBackend.whenPOST(uploadUrl).respond(200, true);
         controller.upload(validFile);
         deferred.reject();
@@ -325,7 +326,7 @@ describe('Controller: AAMediaUploadCtrl', function () {
 
       it('should upload and set variables given a valid file name on upload call', function () {
         playAction = AutoAttendantCeMenuModelService.newCeActionEntry('play', '');
-        menuEntry.addAction(playAction);
+        menuEntry.actions[0] = playAction;
         $httpBackend.whenPOST(uploadUrl).respond(200, true);
         controller.upload(validFile);
         deferred.resolve();
@@ -352,7 +353,7 @@ describe('Controller: AAMediaUploadCtrl', function () {
 
       it('should upload and set variables given a valid file', function () {
         playAction = AutoAttendantCeMenuModelService.newCeActionEntry('play', '');
-        menuEntry.addAction(playAction);
+        menuEntry.actions[0] = playAction;
         $httpBackend.whenPOST(uploadUrl).respond(200, true);
         controller.upload(validFile);
         deferred.resolve();

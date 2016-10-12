@@ -235,6 +235,7 @@
                         }]
                       },
                       "attempts": 3,
+                      "description": "",
                       "minNumberOfCharacters": 4,
                       "maxNumberOfCharacters": 4,
                       "inputs": [
@@ -416,6 +417,7 @@
                         }]
                       },
                       "attempts": 3,
+                      "description":"",
                       "minNumberOfCharacters": 4,
                       "maxNumberOfCharacters": 4,
                       "rawInputActions": [{

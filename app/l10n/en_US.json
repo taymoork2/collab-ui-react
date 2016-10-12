@@ -327,6 +327,7 @@
       "404": "does not exist",
       "409": "entitlement previously updated",
       "400094": "already has Call Service under Hybrid Services enabled; having both Call Service and Spark Call enabled for a user is unsupported. To enable Spark Call, disable Call Service for this user and try again.",
+      "deleteUserDnFallbackError": "entitlement update failed. The user's directory number is used as the fallback destination for Hunt Group(s).",
       "other": "not entitled, status: {{status}}"
     }
   },
@@ -347,7 +348,7 @@
     "generateActivationCode": "Generate Activation Code",
     "generateActivationCodeText": "Generate an activation code to enable a new device for this user.",
     "generateActivationCodeTextPlace": "Generate an activation code to enable a new device for this place.",
-    "generateActivationCodeDesc": "If you have lost your code, please generate a new activation code or contact customer support. ",
+    "generateActivationCodeDesc": "If you have lost your code, please generate a new activation code. ",
     "activationCodeTitle": "Activation Code",
     "expires": "Expires",
     "editServices": "Edit services",
@@ -526,7 +527,8 @@
     "threeMonths": "Last 3 Months",
     "threeMonths2": "last three months",
     "threePlusMonths": "Last 3+ Months",
-    "lastTwelveMonths": "last twelve months",
+    "lastTwelveWeeks": "Last 12 Weeks",
+    "lastTwelveWeeks2": "last twelve weeks",
     "mostEngaged": "5 Most Engaged",
     "leastEngaged": "5 Least Engaged",
     "highQuality": "5 Highest Quality",
@@ -1030,7 +1032,8 @@
     "error": "Error",
     "turnOff": "Turn Off",
     "overview": "Overview",
-    "notAvailable": "N/A"
+    "notAvailable": "N/A",
+    "ciscoCollaborationCloud": "Cisco Collaboration Cloud"
   },
   "notifications": {
     "success": "Success notifications",
@@ -1420,7 +1423,7 @@
       "selectExisting": "Select an existing Expressway clusters",
       "selectClusterPlaceholder": "Select an Expressway cluster…",
       "selectClusterPlaceholderNoneFound": "No eligible clusters found",
-      "enterDisplayName": "Enter a name for the Expressway:",
+      "enterDisplayName": "Enter a name for the Expressway cluster:",
       "clusternameWatermark": "Enter cluster name…",
       "cannotCreateCluster": "Could not create cluster. Try again later, or contact your Cisco technical support representative if the problem persists.",
       "cannotProvisionConnector": "Could not provision {{ConnectorName}}. Try again later, or contact your Cisco technical support representative if the problem persists.",
@@ -1532,6 +1535,7 @@
       "squared-fusion-mgmt": "Expressway Management Service  "
     },
     "hybridServiceNames": {
+      "squared-fusion-mgmt": "Hybrid Management Service",
       "squared-fusion-uc": "Hybrid Call Service",
       "squared-fusion-cal": "Hybrid Calendar Service"
     },
@@ -1612,7 +1616,7 @@
       "upgradeDone": "Upgrade completed!",
       "upToDate": "{{connectorType}} is up to date on this cluster.",
       "upgradePossible": "A new version is available for {{connectorType}}: {{availableVersion}}.",
-      "upgradeWarning": "This cluster has one or more offline nodes. It is recommended to bring all nodes online before initiating an upgrade."
+      "upgradeWarning": "This cluster has one or more nodes where {{ManagementConnector}} is not sending updates to {{CiscoCollaborationCloud}}. It is recommended to bring {{ManagementConnector}} online before initiating an upgrade."
     },
     "expresswayClusterSettings": {
       "pageTitle": "{{clusterName}} settings",
@@ -3368,7 +3372,8 @@
       "onceActiveSharedDevice": "Once the device has been successfully activated, you will be able to find and configure it in Places or Devices.",
       "onceActiveSharedDeviceNoPlaces": "Once the device has been successfully activated, you will be able to find and configure it in Devices.",
       "expires": "Expires {{expiryDate}}",
-      "searchAnotherUser": "Or search for another user"
+      "searchAnotherUser": "Or search for another user",
+      "codeIsUsed": "This code has now been used"
     }
   },
   "generateActivationCodeModal": {
@@ -4563,7 +4568,7 @@
     "newFeatureButtonText": "New",
     "featuresNotYetConfiguredPage": {
       "createCT": "Create a Chat Template",
-      "createCTDesc": "A chat template is what your customer will see when chatting with an agent.",
+      "createCTDesc": "A chat template is what your customer sees when chatting with an agent.",
       "new": "New"
     }
   },
@@ -4676,17 +4681,16 @@
   "careChatTpl": {
     "editAction": "Edit",
     "deleteAction": "Delete",
-    "deleteFeature": "Delete {{ featureText }}",
-    "deleteFeatureTextConfirmation": "Are you sure you want to delete the {{ featureName }} {{featureText}} ?",
-    "createSuccessText": "{{ featureName }} Chat Template has been created successfully",
-    "editSuccessText": "{{ featureName }} Chat Template has been updated successfully",
+    "deleteFeatureTextConfirmation": "Are you sure you want to delete the {{ featureName }} {{featureText}}?",
+    "createSuccessText": "{{ featureName }} chat template has been created successfully",
+    "editSuccessText": "{{ featureName }} chat template has been updated successfully",
     "deleteSuccessText": "{{ featureName }} {{ featureText }} has been deleted successfully",
     "deleteFailedText": "Failed to delete {{ featureName }} {{ featureText }}.",
     "messageError": "Message {{ message }}",
     "failedToLoad": "Unable to load {{ featureText }}(s) information",
-    "chatTemplate": "Chat Template",
+    "chatTemplate": "chat template",
     "namePlaceholder": "Name the Chat Template",
-    "nameHint": "This name is for you to uniquely identify this chat template.",
+    "nameHint": "Enter a name for you to identify this chat template",
     "createTitle": "Create Chat Template",
     "editTitle": "Edit Chat Template",
     "profile": "Chat Template Profile",
@@ -4697,14 +4701,14 @@
     "offHours": "Off-Hours",
     "chatStatusMessages": "Chat Status Messages",
     "embedCode": "Embed Code",
-    "profileDesc": "Select how your company will be represented",
-    "overviewDesc": "These are the screens customers will see when they use chat to contact customer care",
-    "customerInfoDesc": "This is the screen a customer fills out before they chat with an agent",
-    "feedbackDesc": "This screen is used to collect feedback from the customer after the chat ends",
+    "profileDesc": "Configure how you want the organization and user profile to be represented for your company",
+    "overviewDesc": "Toggle cards to customize what screens you want your customer to see on contacting Care",
+    "customerInfoDesc": "This is the screen a customer fills in to start chat with an agent",
+    "feedbackDesc": "This screen is used to collect feedback from a customer after the chat ends",
     "agentUnavailableDesc": "This screen is shown to a customer when no agent is available to assist",
     "offHoursDesc": "This screen is shown to a customer during business off-hours",
     "offHoursMessage": "Message",
-    "offHoursDefaultMessage": "We are currently offline, please try during our business hours.",
+    "offHoursDefaultMessage": "We are currently offline. Please try again during our business hours.",
     "businessHours": "Business Hours",
     "open24Hours": "Open 24 hours",
     "offHoursStartTime": "Start Time",
@@ -4717,9 +4721,11 @@
     "cancelHeader": "Cancel",
     "ctCreation": "Creation",
     "ctEditing": "Editing",
-    "ctCreationBody": "chat template creation ",
-    "ctEditBody": "editing of chat template ",
-    "cancelDialog": "Are you sure you want to cancel {{bodyMessage}} ? This chat template will not be saved.",
+    "ctCreationBody": "chat template creation",
+    "ctEditBody": "editing of the chat template",
+    "ctCreationMessage": "This chat template will not be saved.",
+    "ctEditMessage": "Changes will not be saved.",
+    "cancelDialog": "Are you sure you want to cancel {{bodyMessage}}? {{trailingMessage}}",
     "confirmButton": "Cancel {{cancelProcess}}",
     "continueButton": "Continue {{confirmProcess}}",
     "preview": "Preview",
@@ -4730,7 +4736,7 @@
     "defaultOrgText": "Cumulus Customer Care",
     "defaultNameText": "Name",
     "defaultNameHint": "",
-    "defaultEmailText": "Your email or customer ID",
+    "defaultEmailText": "Email",
     "defaultEmail": "e.g. abc@xyz.com",
     "defaultQuestionText": "How may I assist you?",
     "optionalText": "(Optional)",
@@ -4747,22 +4753,22 @@
     "label": "Label",
     "hintText": "Hint Text",
     "type": "Type",
-    "defaultRightCardText": "Select a field on the left to change it's attribute.",
+    "defaultRightCardText": "Select a field in the Preview to change its attributes",
     "profileSelector": "Profile",
     "attributes": "Attributes",
     "org": "Organization",
     "agent": "Agent",
     "agentAlias": "Allow agent to use alias",
-    "agentRealName": "Use agent real name",
-    "agentNamePreview": "Agent Name",
-    "agentAliasPreview": "Agent Alias",
+    "agentRealName": "Use agent’s real name",
+    "agentNamePreview": "Agent",
+    "agentAliasPreview": "Alias",
     "image": "Image",
     "displayText": "Display Text",
     "agentMsg": "Hi, I need help with the MFI key.",
     "agentMsgTime": "10:10 AM",
     "customerMsg": "Sure, I will help you with that.",
     "customerMsgTime": "10:11 AM",
-    "agentEnteredStatus": "Agent has entered chat room",
+    "agentEnteredStatus": "Agent has entered the chat room",
     "typeNewMsg": "Type your message and press enter.",
     "feedbackQuery": "Please rate your chat experience",
     "ratingHintText": "Hint Text",
@@ -4785,7 +4791,7 @@
     "ctOverview": {
       "customerInformation": {
         "title": "Customer Info",
-        "desc": "This is the screen a customer fills out before chatting with an agent"
+        "desc": "This is the screen a customer fills in to start chat with an agent"
       },
       "agentUnavailable": {
         "title": "Agent Unavailable",
@@ -4793,11 +4799,11 @@
       },
       "offHours": {
         "title": "Off-Hours",
-        "desc": "This screen is shown during business off-hours"
+        "desc": "This screen is shown to a customer during business off-hours"
       },
       "feedback": {
         "title": "Feedback",
-        "desc": "This screen is used to collect feedback from the customer after chat ends"
+        "desc": "This screen is used to collect feedback from a customer after the chat ends"
       }
     },
     "summary": "Summary",
@@ -4815,11 +4821,9 @@
     "leaveRoom": "Left the Room",
     "leaveRoomMessage": "Agent has left the chat room",
     "chatting": "Chatting",
-    "chattingMessage": "You are chatting with our agent",
+    "chattingMessage": "You are chatting with our Agent",
     "downloadEmbedCode": "Download Embed Code",
     "embedCodeWarnMsg": "It is important to verify all domains where you want to use chat bubble. You will not be able to embed chat bubble on unverified domains.",
-    "embedCodeWarnMsgContd": "to verify your domains.",
-    "clickHere": "Click here",
     "embedCodeFor": "Embed Code for ",
     "configureOrgLogoMsg": "Go to Settings page to modify your organization logo"
   },

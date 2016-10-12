@@ -10,7 +10,6 @@
 
     var vm = this;
 
-
     var properties = {
       NAME: ["play", "say"],
       REPEAT_NAME: "repeatActionsOnInput",
@@ -42,8 +41,6 @@
       SAY: 1,
     };
 
-    var saveAction = {};
-
     var selectPlaceholder = $translate.instant('autoAttendant.selectPlaceholder');
     vm.menuEntry = {};
     vm.actionEntry = {};
@@ -68,23 +65,6 @@
     vm.isMessageInputOnly = isMessageInputOnly;
     vm.updateVoiceOption = updateVoiceOption;
 
-    vm.messageOption = {
-      label: '',
-      value: ''
-    };
-
-    vm.messageOptions = [{
-      "label": $translate.instant('autoAttendant.uploadedFile'),
-      "value": "uploadFile"
-    }, {
-      "label": $translate.instant('autoAttendant.actionSayMessage'),
-      "value": "sayMessage"
-    }];
-
-    vm.uploadedFile = undefined;
-    vm.uploadedDate = undefined;
-    vm.setMessageOptions = setMessageOptions;
-
     vm.isMediaUploadToggle = isMediaUploadToggle;
 
     /////////////////////
@@ -99,22 +79,6 @@
       }
 
       return mediaUploadOn;
-    }
-
-    function setMessageOptions() {
-
-      var action = vm.actionEntry;
-
-      angular.copy(action, saveAction[action.name]);
-
-      if (vm.messageOption.value === 'sayMessage') {
-
-        angular.copy(saveAction['say'], action);
-
-        vm.messageInput = action.getValue();
-      } else {
-        angular.copy(saveAction['play'], action);
-      }
     }
 
     function setVoiceOptions() {
@@ -162,14 +126,14 @@
     }
 
     function populateUiModel() {
-      vm.messageInput = vm.actionEntry.getValue();
+      if (!isMediaUploadToggle()) {
+        vm.messageInput = vm.actionEntry.getValue();
+      }
 
       vm.languageOptions = _.sortBy(AALanguageService.getLanguageOptions(), properties.LABEL);
 
       vm.voiceOption = AALanguageService.getVoiceOption(vm.actionEntry.getVoice());
       vm.languageOption = AALanguageService.getLanguageOption(vm.actionEntry.getVoice());
-
-      vm.messageOption = vm.messageOptions[_.get(actionType, vm.actionEntry.name.toUpperCase())];
 
       vm.voiceBackup = vm.voiceOption;
       setVoiceOptions();
@@ -204,11 +168,10 @@
     }
 
     function saveUiModel() {
-      if (vm.messageOption.value === 'uploadFile') {
-        return;
+      if (!isMediaUploadToggle()) {
+        vm.actionEntry.setValue(vm.messageInput);
       }
 
-      vm.actionEntry.setValue(vm.messageInput);
       AACommonService.setSayMessageStatus(true);
 
       if (vm.sayMessageType === sayMessageType.SUBMENU_HEADER) {
@@ -216,7 +179,6 @@
       }
 
       vm.actionEntry.setVoice(vm.voiceOption.value);
-      saveAction['say'].setVoice(vm.voiceOption.value);
 
       switch (vm.sayMessageType) {
         case sayMessageType.MENUHEADER:
@@ -352,7 +314,6 @@
               vm.menuEntry.addAction(sayAction);
             }
             vm.actionEntry = sayAction;
-            angular.copy(sayAction, saveAction[sayAction.name]);
 
             return;
           }
@@ -368,8 +329,6 @@
         vm.sayMessageType = sayMessageType.MENUKEY;
       }
 
-      saveAction['say'] = createSayAction(actionType.SAY);
-      saveAction['play'] = createSayAction(actionType.PLAY);
       setActionEntry();
       populateUiModel();
     }

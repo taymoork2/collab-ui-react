@@ -166,16 +166,18 @@ describe('CsdmConverterSpec', function () {
   describe('image', function () {
     it('should convert sx10 to correct image', function () {
       var arr = [{
-        product: "Cisco TelePresence SX10"
+        product: "Cisco TelePresence SX10",
+        imageFilename: "tralala.png"
       }];
-      expect(converter.convertCloudberryDevices(arr)[0].image).toBe('images/devices-hi/sx10.png');
+      expect(converter.convertCloudberryDevices(arr)[0].image).toBe('images/devices-hi/tralala.png');
     });
 
     it('should convert MODEL_CISCO_7811 to correct image', function () {
       var arr = [{
-        product: "MODEL_CISCO_7811"
+        product: "MODEL_CISCO_7811",
+        imageFilename: "nfdsøafnkdløf.png"
       }];
-      expect(converter.convertHuronDevices(arr)[0].image).toBe('images/devices-hi/cisco_7811.png');
+      expect(converter.convertHuronDevices(arr)[0].image).toBe('images/devices-hi/nfdsøafnkdløf.png');
     });
   });
 

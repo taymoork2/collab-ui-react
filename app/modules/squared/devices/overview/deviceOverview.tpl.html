@@ -46,7 +46,7 @@
         </div>
       </div>
       <div ng-show="deviceOverview.currentDevice.supportsCustomTags">
-        <div class="tag-container" ng-show="deviceOverview.currentDevice.tagString">
+        <div class="tag-container" ng-show="deviceOverview.currentDevice.tags && deviceOverview.currentDevice.tags.length > 0">
         <span class="tag" ng-repeat="tag in deviceOverview.currentDevice.tags">
           <span ng-bind-html="tag"></span>
           <i class="icon icon-close" ng-click="deviceOverview.removeTag(tag)"></i>

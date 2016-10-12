@@ -133,7 +133,7 @@
             <span ng-if="license.isTrial && license.trialExpiresInDays == 0"
                   class="red">{{'helpdesk.licenseStatus.expired' |  translate}}</span>
           </div>
-          <div>
+          <div ng-if="helpdeskOrgCtrl.supportsLocalDialing">
             <h5 translate="helpdesk.dialing"></h5>
             <span>{{helpdeskOrgCtrl.callCard.dialing}}</span>
             <div ng-if="helpdeskOrgCtrl.callCard.areaCode">

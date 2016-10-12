@@ -5,19 +5,16 @@
   function CsdmHuronPlaceService($window, $http, Authinfo, CsdmConverter, FeatureToggleService, $q, HuronConfig) {
 
     var cmiOtpUri = HuronConfig.getCmiUrl() + '/identity/machines/otp';
-    var cmiPlacesUrl = HuronConfig.getCmiV2Url() + '/customers/' + Authinfo.getOrgId() + '/places';
-    var placesCache = {};
-    var placesDeferred = $q.defer();
+    var cmiPlacesUrl = HuronConfig.getCmiV2Url() + '/customers/' + Authinfo.getOrgId() + '/places/';
 
-    function init() {
-      fetchCmiPlaces();
-    }
+    var placesDeferred;
 
     function fetchCmiPlaces() {
+      var placesCache = {};
       return placesFeatureIsEnabled()
         .then(function (res) {
           if (res) {
-            return $http.get(cmiPlacesUrl + '?wide=true')
+            return $http.get(cmiPlacesUrl)
               .then(function (res) {
                 _.forEach(res.data.places, function (item) {
                   item.phones = !item.phones ? [] : CsdmConverter.convertHuronDevices(item.phones);
@@ -25,6 +22,8 @@
                   item.entitlements = ['ciscouc'];
                   item = CsdmConverter.convertPlace(item);
                   placesCache[item.url] = item;
+
+                  item.displayName = item.displayName;
                 });
               });
           } else {
@@ -36,9 +35,17 @@
         });
     }
 
-    init();
+    function getPlacesUrl() {
+      return cmiPlacesUrl;
+    }
 
     function getPlacesList() {
+
+      if (!placesDeferred) {
+        placesDeferred = $q.defer();
+        fetchCmiPlaces();
+      }
+
       return placesDeferred.promise;
     }
 
@@ -51,19 +58,13 @@
     }
 
     function updatePlaceName(placeUrl, name) {
-      var place = placeUrl;
-      var place_name = name;
       return $http.put(placeUrl, {
         displayName: name
-      }).then(function () {
-        placesCache[place].displayName = place_name;
       });
     }
 
     function deletePlace(place) {
-      return $http.delete(place.url).then(function () {
-        delete placesCache[place.url];
-      });
+      return $http.delete(place.url);
     }
 
     function createOtp(machineUuid) {
@@ -72,7 +73,8 @@
       }).then(function (res) {
         var activationCode = {
           activationCode: res.data.password,
-          expiryTime: res.data.expiresOn
+          expiryTime: res.data.expiresOn,
+          cisUuid: machineUuid
         };
         return activationCode;
       });
@@ -92,20 +94,20 @@
           res.data.phones = !res.data.phones ? [] : res.data.phones;
           res.data.type = 'huron';
           res.data.entitlements = ['ciscouc'];
-          var place = CsdmConverter.convertPlace(res.data);
-          placesCache[place.url] = place;
-          return place;
+          return CsdmConverter.convertPlace(res.data);
         });
       });
     }
 
     return {
       placesFeatureIsEnabled: placesFeatureIsEnabled,
+      deleteItem: deletePlace,
       deletePlace: deletePlace,
       createCmiPlace: createCmiPlace,
       getPlacesList: getPlacesList,
       updatePlaceName: updatePlaceName,
-      createOtp: createOtp
+      createOtp: createOtp,
+      getPlacesUrl: getPlacesUrl
     };
   }
 

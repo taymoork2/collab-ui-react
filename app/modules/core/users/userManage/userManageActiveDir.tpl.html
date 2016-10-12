@@ -38,12 +38,12 @@
               <li>
                 <input cs-input type="radio" ng-model="umadc.manageType" id="ad-manual" ng-value="'manual'"
                        cs-input-label="{{::'userManage.ad.manualLabel'|translate}}"
-                       cs-input-help-text="{{'userManage.ad.manualDetails'|translate:umadc}}">
+                       cs-input-help-text="{{'userManage.ad.manualDetails'|translate: {maxUsersInManual: umadc.maxUsersInManual} }}">
               </li>
               <li>
                 <input cs-input type="radio" ng-model="umadc.manageType" id="ad-bulk" ng-value="'bulk'"
                        cs-input-label="{{::'userManage.ad.bulkLabel'|translate}}"
-                       cs-input-help-text="{{'userManage.ad.bulkDetails'|translate:umadc}}">
+                       cs-input-help-text="{{'userManage.ad.bulkDetails'|translate: {maxUsersInCSV: umadc.maxUsersInCSV} }}">
                 <p class="csv-export-link">
                   <cr-user-csv-export is-over-export-threshold="csv.isOverExportThreshold"
                                       as-link="{{::'userManage.bulk.exportUserList'|translate}}"
@@ -55,7 +55,7 @@
               <li>
                 <input cs-input type="radio" ng-model="umadc.manageType" id="ad-advanced" ng-value="'advanced'"
                        cs-input-label="{{::'userManage.ad.advancedLabel'|translate}}"
-                       cs-input-help-text="{{::'userManage.ad.advancedDetails'|translate:umadc}}">
+                       cs-input-help-text="{{::'userManage.ad.advancedDetails'|translate}}">
               </li>
             </ul>
           </div>

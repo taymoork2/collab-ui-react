@@ -72,6 +72,7 @@
   & .aa-progress-supplementary {
     @include vr-spacing(mv, .5);
     @include vr-spacing(mr, .5);
+    @include vr-spacing(mt, 0);
     color: $gray-dark-4;
   }
 

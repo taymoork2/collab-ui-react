@@ -31,7 +31,7 @@ class SpeedDialCtrl implements ng.IComponentController {
     private SpeedDialService: SpeedDialService,
   ) {
 
-    SpeedDialService.getSpeedDials(this.ownerType, this.ownerId).then((data) => {
+    this.SpeedDialService.getSpeedDials(this.ownerType, this.ownerId).then((data) => {
       this.speedDialList = data.speedDials;
     }).catch(() => {
       this.Notification.error('speedDials.retrieveSpeedDialsFail');

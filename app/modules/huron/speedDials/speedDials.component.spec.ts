@@ -9,10 +9,14 @@ describe('component: speedDial', () => {
   const REORDER = '.sd-reorder';
   beforeEach(function() {
     this.initModules('huron.speed-dial');
-    this.injectDependencies('$scope', '$timeout');
+    this.injectDependencies('$scope', '$timeout', 'SpeedDialService', '$q');
     this.$scope.onChangeFn = jasmine.createSpy('onChangeFn');
+    spyOn(this.SpeedDialService, 'updateSpeedDials').and.returnValue(this.$q.when(true));
+    spyOn(this.SpeedDialService, 'getSpeedDials').and.returnValue(this.$q.when({
+      speedDials: [],
+    }));
     this.compileComponent('ucSpeedDial', {
-      ownerName: 'place',
+      ownerName: 'places',
       ownerId: '12345',
     });
   });

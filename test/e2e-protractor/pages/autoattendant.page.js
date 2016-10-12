@@ -16,7 +16,7 @@ var AutoAttendantPage = function () {
   this.queueSetting = element(by.id('queueSetting'));
   this.queueMin = element(by.linkText('15'));
   this.queueMinOption = element(by.id('queueMin')).all(by.tagName('li'));
-  
+
   this.searchBox = element(by.id('searchFilter'));
   this.aaTitle = element(by.tagName('aa-builder-name-edit'));
   this.autoAttendantDevLink = element(by.css('a[href*="#/hurondetails/features"]'));
@@ -48,14 +48,24 @@ var AutoAttendantPage = function () {
 
   this.numberIconClose = element.all(by.css('.icon-close')).last();
   this.sayMessageBody = element(by.css('div.aa-panel-body[name="Say Message"]'));
-
   this.messageOptions = element(by.css('div.aa-panel-body[name="Say Message"]')).element(by.css('select[name="messageSelect"] + div a.select-toggle'));
   this.playMessageOption = element(by.css('div.aa-panel-body[name="Say Message"]')).element(by.css('select[name="messageSelect"] + div div.dropdown-menu')).all(by.tagName('li')).first();
-  this.mediaUploadSend = ('input[type="file"][name="mediaUploadSend"]');
-  this.mediaFileToUpload = '../data/sample-media-upload.wav';
+
+  this.sayMessageOption = element(by.css('div.aa-panel-body[name="Say Message"]')).element(by.css('select[name="messageSelect"] + div div.dropdown-menu')).all(by.tagName('li')).last();
+
+  this.dialByMessageOptions = element(by.css('div.aa-panel-body[name="Dial by Extension"]')).element(by.css('select[name="messageSelect"] + div a.select-toggle'));
+  this.dialByPlayMessageOption = element(by.css('div.aa-panel-body[name="Dial by Extension"]')).element(by.css('select[name="messageSelect"] + div div.dropdown-menu')).all(by.tagName('li')).first();
+
+  this.sayMediaUploadInput = element(by.css('div.aa-panel-body[name="Say Message"]')).element(by.name('mediaUploadInput'));
+
+  this.dialByMediaUploadInput = element(by.css('div.aa-panel-body[name="Dial by Extension"]')).element(by.name('mediaUploadInput'));
+
+  this.mediaUploadSend = 'input[type="file"][name="mediaUploadSend"]';
+
+  this.mediaFileToUpload = './../data/sample-media-upload.wav';
 
   this.sayMessage = element(by.css('div.aa-panel-body[name="Say Message"]'));
-  this.sayMessageInput = element(by.css('div.aa-panel-body[name="Say Message"]')).element(by.name('sayMessageInput'));
+  this.sayMessageInput = element(by.css('div.aa-panel-body[name="Say Message"]')).element(by.name('messageInput'));
   this.sayMessageLanguage = element(by.css('div.aa-panel-body[name="Say Message"]')).element(by.css('select[name="languageSelect"] + div a.select-toggle'));
   this.languageDropDownOptions = element(by.css('div.aa-panel-body[name="Say Message"]')).element(by.css('select[name="languageSelect"] + div div.dropdown-menu')).all(by.tagName('li')).first();
   this.sayMessageVoice = element(by.css('div.aa-panel-body[name="Say Message"]')).element(by.css('select[name="voiceSelect"] + div a.select-toggle'));
@@ -66,9 +76,9 @@ var AutoAttendantPage = function () {
   this.phonesayMessageInput = element(by.css('div.aa-panel-body[name="Phone Menu"] aa-say-message [name="sayMessageInput"]'));
   this.phonesayMessageLanguage = element(by.css('div.aa-panel-body[name="Phone Menu"] aa-say-message select[name="languageSelect"] + div a.select-toggle'));
   this.phonelanguageDropDownOptions = element(by.css('div.aa-panel-body[name="Phone Menu"] aa-say-message select[name="languageSelect"] + div div.dropdown-menu')).all(by.tagName('li')).first();
+  this.phonelanguageDropDownOptions = element(by.css('div.aa-panel-body[name="Phone Menu"]')).element(by.css('select[name="languageSelect"] + div div.dropdown-menu')).all(by.tagName('li')).last();
   this.phonesayMessageVoice = this.phoneMenuSay.element(by.css('select[name="voiceSelect"] + div a.select-toggle'));
   this.phonesayMessageVoiceOptions = this.phoneMenuSay.element(by.css('select[name="voiceSelect"] + div div.dropdown-menu')).all(by.tagName('li')).first();
-
   this.addPlus = element(by.css('.aa-add-step-icon'));
   this.repeatPlus = element(by.name('aa-phone-menu-add-action'));
   this.phoneMenuKeys = element.all(by.css('div.aa-pm-key-select .icon-chevron-down'));
@@ -190,7 +200,7 @@ var AutoAttendantPage = function () {
 
   this.dialByExtension = element(by.css('div.aa-panel-body[name="Dial by Extension"]'));
 
-  this.dialByMessageInput = element(by.css('div.aa-panel-body[name="Dial by Extension"]')).element(by.name('dialByMessageInput'));
+  this.dialByMessageInput = element(by.css('div.aa-panel-body[name="Dial by Extension"] aa-message-type [name="messageInput"]'));
   this.dialByMessageLanguage = element(by.css('div.aa-panel-body[name="Dial by Extension"]')).element(by.css('select[name="languageSelect"] + div a.select-toggle'));
   this.dialBylanguageDropDownOptions = element(by.css('div.aa-panel-body[name="Dial by Extension"]')).element(by.css('select[name="languageSelect"] + div div.dropdown-menu')).all(by.tagName('li')).first();
   this.dialByMessageVoice = element(by.css('div.aa-panel-body[name="Dial by Extension"]')).element(by.css('select[name="voiceSelect"] + div a.select-toggle'));
@@ -257,7 +267,7 @@ var AutoAttendantPage = function () {
   this.assertCalendarUpdateSuccess = assertCalendarUpdateSuccess;
   this.assertDeleteSuccess = assertDeleteSuccess;
   this.scrollIntoView = scrollIntoView;
-  
+
   function assertUpdateSuccess(test) {
     notifications.assertSuccess(test + ' updated successfully');
   }
@@ -277,6 +287,7 @@ var AutoAttendantPage = function () {
   function assertDeleteSuccess(test) {
     notifications.assertSuccess(test + ' Auto Attendant has been deleted successfully');
   }
+
   function scrollIntoView(el) {
     var webel = el.getWebElement();
     browser.executeScript(function (e) {
