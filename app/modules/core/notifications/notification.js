@@ -118,14 +118,19 @@
     }
 
     function addTrackingId(errorMsg, response) {
-      if (_.isFunction(_.get(response, 'headers'))) {
-        var trackingId = response.headers('TrackingID') || _.get(response, 'data.trackingId');
-        if (trackingId) {
-          if (errorMsg.length > 0 && !_.endsWith(errorMsg, '.')) {
-            errorMsg += '.';
-          }
-          errorMsg += ' TrackingID: ' + trackingId;
+      // use value from 'TrackingID' header if available
+      var trackingId = _.isFunction(_.get(response, 'headers')) && response.headers('TrackingID');
+
+      // fallback if no value available
+      if (!trackingId) {
+        trackingId = _.get(response, 'data.trackingId');
+      }
+
+      if (trackingId) {
+        if (errorMsg.length > 0 && !_.endsWith(errorMsg, '.')) {
+          errorMsg += '.';
         }
+        errorMsg += ' TrackingID: ' + trackingId;
       }
       return errorMsg;
     }
