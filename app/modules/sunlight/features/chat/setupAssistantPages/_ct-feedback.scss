@@ -203,4 +203,8 @@
     text-align: center;
     width: 18.75rem;
   }
+
+  .no-click {
+    pointer-events: none;
+  }
 }

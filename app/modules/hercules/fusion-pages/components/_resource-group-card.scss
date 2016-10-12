@@ -41,6 +41,10 @@ resource-group-card {
         width: 1rem;
         margin-top: -2px;
       }
+
+      &:focus {
+        box-shadow: none;
+      }
     }
 
     .resource-group-release-channel,
@@ -50,7 +54,14 @@ resource-group-card {
     }
 
     .resource-group-release-cluster-users {
+      display: flex;
+      align-items: center;
       font-size: 14px;
+
+      .icon-warning {
+        margin-top: -4px;
+        margin-right: 3px;
+      }
     }
 
     .resource-group-settings-link {
@@ -60,6 +71,10 @@ resource-group-card {
       .icon {
         display: block;
         margin-top: -2px;
+      }
+
+      &:focus {
+        box-shadow: none;
       }
     }
 

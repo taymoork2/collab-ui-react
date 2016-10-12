@@ -69,7 +69,7 @@
 
     .unavailable-msg {
       height: 12rem;
-      width: 17rem;
+      width: rem-calc(300px);
       overflow: hidden;
       @include vr-spacing(mb, 1);
       @include vr-spacing(pv, 1);
@@ -85,7 +85,7 @@
     @include vr-spacing(pl, 1);
     .message-area {
       height: 5rem;
-      width: 90%;
+      width: 95%;
       resize: none;
       color: $gray-dark-1;
       font-size: $h6-font-size;
@@ -96,5 +96,9 @@
 
   .unavailable-attributes-label{
     font-family: $brand-font-cisco-TT-Regular;
+  }
+
+  .no-click {
+    pointer-events: none;
   }
 }

@@ -1,4 +1,22 @@
 export class CommonGraphService {
+  public readonly AXIS: string = 'axis';
+  public readonly COLOR: string = 'color';
+  public readonly COLUMN: string = 'column';
+  public readonly CURSOR: string = 'cursor';
+  public readonly DATE: string = 'date';
+  public readonly LEGEND: string = 'legend';
+  public readonly LINE: string = 'line';
+  public readonly NUMFORMAT: string = 'numFormat';
+  public readonly SCROLL: string = 'scroll';
+  public readonly START: string = 'start';
+  public readonly TITLE: string = 'title';
+
+  // Balloon Object Types
+  public  readonly BRACKET_TYPE: string = 'bracket';
+  public readonly SPAN_TYPE: string = 'span';
+  public readonly TEXT_TYPE: string = 'text';
+  public readonly TRANSLATE_TYPE: string = 'translate';
+
   /* @ngInject */
   constructor(
     private chartColors,

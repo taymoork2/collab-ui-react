@@ -20,7 +20,7 @@ export class SpeedDialService {
     let updateAction: ng.resource.IActionDescriptor = {
       method: 'PUT',
     };
-    this.dialService = <IDialResource>this.$resource(this.HuronConfig.getCmiV2Url() + '/customers/:customerId/:type/:userId/:bulk/speeddials', {},
+    this.dialService = <IDialResource>this.$resource(this.HuronConfig.getCmiV2Url() + '/customers/:customerId/:type/:userId/features/:bulk/speeddials', {},
     {
       update: updateAction,
     });
@@ -38,7 +38,13 @@ export class SpeedDialService {
     let data: { speedDials: ISpeedDial[] } = {
       speedDials: [],
     };
-    data.speedDials = _.cloneDeep(_list);
+    _.each(_list, function (sd) {
+        data.speedDials.push({
+          index: sd.index,
+          number: sd.number,
+          label: sd.label,
+        });
+      });
     return this.dialService.update({
       type: _type,
       customerId: this.Authinfo.getOrgId(),

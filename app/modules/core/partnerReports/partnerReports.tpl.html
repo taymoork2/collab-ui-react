@@ -10,17 +10,17 @@
           <i class="icon icon-chevron-down"></i>
         </div>
         <ul ng-class="{'dropdown-menu dropdown-primary' : breakpoint === 'screen-xs' || breakpoint === 'screen-sm' }" >
-          <li class="filter" ng-class="{'active' : nav.showEngagement && nav.showQuality}" ng-click="nav.showHideCards(nav.allReports);">
+          <li class="filter" ng-class="{'active' : nav.showEngagement && nav.showQuality}" ng-click="nav.showHideCards(nav.ALL);">
            <a id="allReports">
               <span class="name" translate="reportsPage.all"></span>
             </a>
           </li>
-          <li class="filter" ng-class="{'active' : nav.showEngagement && !nav.showQuality}" ng-click="nav.showHideCards(nav.engagement);">
+          <li class="filter" ng-class="{'active' : nav.showEngagement && !nav.showQuality}" ng-click="nav.showHideCards(nav.ENGAGEMENT);">
              <a id="engagementReports">
               <span class="name" translate="reportsPage.engagement"></span>
             </a>
           </li>
-          <li class="filter" ng-class="{'active' : !nav.showEngagement && nav.showQuality}" ng-click="nav.showHideCards(nav.quality);">
+          <li class="filter" ng-class="{'active' : !nav.showEngagement && nav.showQuality}" ng-click="nav.showHideCards(nav.QUALITY);">
             <a id="qualityReports">
               <span class="name" translate="reportsPage.quality"></span>
             </a>
