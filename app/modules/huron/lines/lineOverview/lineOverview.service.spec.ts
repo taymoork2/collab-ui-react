@@ -124,6 +124,13 @@ describe('Service: LineOverviewService', () => {
     this.updateCallerIdDefer = this.$q.defer();
     spyOn(this.CallerIDService, 'updateCallerId').and.returnValue(this.updateCallerIdDefer.promise);
 
+    spyOn(this.LineOverviewService, 'listCompanyNumbers').and.returnValue(this.$q.when([{
+      externalCallerIdType: 'Company Caller ID',
+      name: 'Huron Device',
+      pattern: '8000000000',
+      uuid: '1111',
+    }]));
+
     spyOn(this.LineOverviewService, 'cloneLineOverviewData').and.callThrough();
   });
 
@@ -191,6 +198,16 @@ describe('Service: LineOverviewService', () => {
       expect(this.LineService.updateLine).not.toHaveBeenCalled();
       expect(this.CallForwardService.updateCallForward).toHaveBeenCalled();
       expect(this.CallForwardService.updateCallerId).not.toHaveBeenCalled();
+    });
+
+    it('should only update callerId when only callerId is changed', function () {
+      this.LineOverviewService.get(LineConsumerType.PLACES, '12345', '0000001');
+      this.$rootScope.$digest();
+      this.lineOverview.callerId.externalCallerIdType = 'EXT_CALLER_ID_CUSTOM';
+      this.LineOverviewService.save(LineConsumerType.PLACES, '12345', '0000001',  this.lineOverview);
+      expect(this.LineService.updateLine).not.toHaveBeenCalled();
+      expect(this.CallForwardService.updateCallForward).not.toHaveBeenCalled();
+      expect(this.CallForwardService.updateCallerId).toHaveBeenCalled();
     });
   });
 

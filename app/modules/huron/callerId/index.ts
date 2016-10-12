@@ -1,5 +1,6 @@
 import { CallerIdComponent, CallerIdConfig, CallerIdOption } from './callerId.component';
 import { CallerIDService } from './callerId.service';
+import { ICallerID } from './callerId';
 
 export const BLOCK_CALLERID_TYPE = {
   name: 'Blocked Outbound Caller ID',
@@ -22,6 +23,7 @@ export const CUSTOM_COMPANY_TYPE = {
   key: 'EXT_CALLER_ID_CUSTOM',
 };
 export { CallerIdConfig, CallerIdOption };
+export { ICallerID };
 export * from './callerId.service';
 
 export default angular
