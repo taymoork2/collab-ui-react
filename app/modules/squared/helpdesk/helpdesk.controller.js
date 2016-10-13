@@ -334,15 +334,18 @@
           vm.searchingForOrders = false;
           vm.currentSearch.orderSearchResults = null;
           vm.currentSearch.orderSearchFailure = null;
-          if (err.cancelled === true || err.timedout === true) {
-            vm.currentSearch.orderSearchFailure = $translate.instant('helpdesk.cancelled');
-          } else {
+          if (err.status === 404) {
             var message = _.get(err.data, "message");
+            // TODO - Add an error code in backend, and check for it here instead of comparing message strings.
             if (message && message.indexOf("No orders found" != -1)) {
               vm.currentSearch.orderSearchFailure = $translate.instant('helpdesk.noSearchHits');
             } else {
-              vm.currentSearch.orderSearchFailure = $translate.instant('helpdesk.unexpectedError');
+              vm.currentSearch.orderSearchFailure = $translate.instant('helpdesk.badOrderSearchInput');
             }
+          } else if (err.cancelled === true || err.timedout === true) {
+            vm.currentSearch.orderSearchFailure = $translate.instant('helpdesk.cancelled');
+          } else {
+            vm.currentSearch.orderSearchFailure = $translate.instant('helpdesk.unexpectedError');
           }
         }).finally(function () {
           searchDone.resolve(stats(HelpdeskSplunkReporterService.ORDER_SEARCH, vm.currentSearch.orderSearchFailure || vm.currentSearch.orderSearchResults));
