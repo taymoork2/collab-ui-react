@@ -51,13 +51,15 @@
             card.licenseNumber = max;
             card.licenseType = licenseType;
             Orgservice.getLicensesUsage().then(function (response) {
-              var licenseUsage = _.get(response[0], 'licenses', 0);
-              _.forEach(licenseUsage, function (usages) {
-                if (card.licenseType === usages.licenseType && !_.isUndefined(usages)) {
-                  var sum = card.licenseNumber - usages.usage;
-                  card.licenseNumber = sum < 0 ? 0 : sum;
-                }
-              });
+              var licenseUsage = _.get(response[0], 'licenses');
+              if (licenseUsage) {
+                _.forEach(licenseUsage, function (usages) {
+                  if (!_.isUndefined(usages) && (card.licenseType === usages.licenseType)) {
+                    var remainder = card.licenseNumber - usages.usage;
+                    card.licenseNumber = remainder < 0 ? 0 : remainder;
+                  }
+                });
+              }
             });
           });
         }
