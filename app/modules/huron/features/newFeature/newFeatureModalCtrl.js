@@ -39,6 +39,14 @@
       toggle: 'huronPagingGroup'
     };
 
+    var callPickupService = {
+      id: 'PI',
+      code: 'callPickup.code',
+      label: 'callPickup.title',
+      description: 'callPickup.modalDescription',
+      toggle: 'huronCallPickup'
+    };
+
     FeatureToggleService.supports(FeatureToggleService.features.callParkService).then(function (result) {
       if (result) {
         vm.features.push(callParkService);
@@ -51,6 +59,17 @@
       }
       init();
     });
+
+    FeatureToggleService.supports(FeatureToggleService.features.huronCallPickup).then(function (result) {
+      if (result) {
+        vm.features.push(callPickupService);
+      }
+    });
+
+    vm.futureFeature = {
+      label: 'futureFeature.title',
+      description: 'futureFeature.modalDescription',
+    };
 
     vm.ok = ok;
     vm.cancel = cancel;
@@ -65,6 +84,8 @@
         $state.go('huronHuntGroup');
       } else if (featureId === 'CP') {
         $state.go('huronCallPark');
+      } else if (featureId === 'PI') {
+        $state.go('huronCallPickup');
       } else if (featureId === 'AA') {
         $modal.open({
           templateUrl: 'modules/huron/features/newFeature/aatype-select-modal.html',

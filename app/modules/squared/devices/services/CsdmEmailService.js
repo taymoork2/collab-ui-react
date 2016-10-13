@@ -2,14 +2,20 @@
   'use strict';
 
   /* @ngInject  */
-  function CsdmEmailService($http) {
+  function CsdmEmailService($http, HuronConfig) {
+    var url = HuronConfig.getEmailUrl() + '/email/placeactivationcode/';
 
-    function sendCloudberryEmail(url, cbEmailInfo) {
-      return $http.post(url, cbEmailInfo);
+    function sendCloudberryEmail(cbEmailInfo) {
+      return $http.post(url + 'collaborationdevice', cbEmailInfo);
+    }
+
+    function sendHuronEmail(cbEmailInfo) {
+      return $http.post(url + 'deskphone', cbEmailInfo);
     }
 
     return {
-      sendCloudberryEmail: sendCloudberryEmail
+      sendCloudberryEmail: sendCloudberryEmail,
+      sendHuronEmail: sendHuronEmail
     };
   }
 

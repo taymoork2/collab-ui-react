@@ -6,7 +6,7 @@
     .factory('OverviewUsersCard', OverviewUsersCard);
 
   /* @ngInject */
-  function OverviewUsersCard($rootScope, $state, Auth, Authinfo, Config) {
+  function OverviewUsersCard($rootScope, $state, Auth, Authinfo, Config, UserListService) {
     return {
       createCard: function createCard() {
         var card = {};
@@ -50,6 +50,12 @@
             }
             card.licenseNumber = max;
             card.licenseType = licenseType;
+            UserListService.getUserCount().then(function (response) {
+              if (!_.isUndefined(response)) {
+                var sum = max - response;
+                card.licenseNumber = sum < 0 ? 0 : sum;
+              }
+            });
           });
         }
 

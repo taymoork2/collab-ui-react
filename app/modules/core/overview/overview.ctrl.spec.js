@@ -84,11 +84,19 @@ describe('Controller: OverviewCtrl', function () {
   });
 
   describe('Notifications', function () {
-    var TOTAL_NOTIFICATIONS = 6;
+    var TOTAL_NOTIFICATIONS = 7;
     beforeEach(inject(defaultWireUpFunc));
 
     it('should all be shown', function () {
       expect(controller.notifications.length).toEqual(TOTAL_NOTIFICATIONS);
+    });
+
+    it('should dismiss the PMR notification', function () {
+      expect(controller.notifications.length).toEqual(TOTAL_NOTIFICATIONS);
+
+      var notification = OverviewNotificationFactory.createPMRNotification();
+      controller.dismissNotification(notification);
+      expect(controller.notifications.length).toEqual(TOTAL_NOTIFICATIONS - 1);
     });
 
     it('should dismiss the Devices notification', function () {
@@ -236,6 +244,7 @@ describe('Controller: OverviewCtrl', function () {
     spyOn(Authinfo, 'isSetupDone').and.returnValue(false);
     spyOn(Authinfo, 'isCustomerAdmin').and.returnValue(true);
     spyOn(FeatureToggleService, 'atlasDarlingGetStatus').and.returnValue($q.when(true));
+    spyOn(FeatureToggleService, 'atlasPMRonM2GetStatus').and.returnValue($q.when(true));
     spyOn(TrialService, 'getDaysLeftForCurrentUser').and.returnValue($q.when(1));
     spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(false));
 

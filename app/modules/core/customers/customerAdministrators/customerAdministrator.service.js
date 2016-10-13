@@ -9,7 +9,7 @@
   function CustomerAdministratorService($http, $q, Authinfo, UrlConfig) {
     var partnerOrgId = Authinfo.getOrgId();
     var partnerScimUrl = UrlConfig.getScimUrl(partnerOrgId);
-    var partnerAdminServiceUrl = UrlConfig.getAdminServiceUrl(partnerOrgId);
+    var partnerAdminServiceUrl = UrlConfig.getAdminServiceUrl();
 
     var service = {
       getAssignedSalesAdministrators: getAssignedSalesAdministrators,
