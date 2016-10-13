@@ -4,19 +4,18 @@ describe('DeviceUsageMockService', function () {
 
   beforeEach(angular.mock.module('Core'));
 
-  var $timeout, DeviceUsageMockService, DeviceUsageMockData, $q;
+  var $timeout, DeviceUsageMockService, DeviceUsageMockData;
 
   var day1 = "20161001";
   var day2 = "20161002";
 
-  beforeEach(inject(function (_$timeout_, _$q_, _DeviceUsageMockService_, _DeviceUsageMockData_) {
+  beforeEach(inject(function (_$timeout_, _DeviceUsageMockService_, _DeviceUsageMockData_) {
     DeviceUsageMockService = _DeviceUsageMockService_;
     DeviceUsageMockData = _DeviceUsageMockData_;
     $timeout = _$timeout_;
-    $q = _$q_;
   }));
 
-  describe('fetching summed devices usage', function() {
+  describe('fetching summed devices usage', function () {
     it('returns one data row with the sum of all devices for a day', function (done) {
       var rawData = [
         {
@@ -161,7 +160,7 @@ describe('DeviceUsageMockService', function () {
     });
   });
 
-  describe('fetching devices individual usage', function() {
+  describe('fetching devices individual usage', function () {
     it('returns individual data for each accountId and deviceCategory for each day', function (done) {
 
       var rawData = [
