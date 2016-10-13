@@ -5,7 +5,6 @@ describe('Controller: DeleteClusterSettingControllerV2', function () {
   beforeEach(angular.mock.module('Mediafusion'));
 
   var $q, httpBackend, controller, cluster, $modalInstance, $filter, MediaClusterServiceV2, $state, $translate, XhrNotificationService, Notification;
-
   beforeEach(inject(function ($httpBackend, _MediaClusterServiceV2_, $controller, _$filter_, _$state_, _$translate_, _XhrNotificationService_, _Notification_, _$q_) {
     cluster = {
       "id": "a050fcc7-9ade-4790-a06d-cca596910421",
@@ -92,8 +91,6 @@ describe('Controller: DeleteClusterSettingControllerV2', function () {
     controller.continue();
     expect(controller.isMove).toBe(true);
     httpBackend.flush();
-    httpBackend.verifyNoOutstandingExpectation();
-    httpBackend.verifyNoOutstandingRequest();
     expect(MediaClusterServiceV2.moveV2Host).toHaveBeenCalled();
     expect(MediaClusterServiceV2.moveV2Host.calls.count()).toEqual(2);
   });
@@ -125,8 +122,6 @@ describe('Controller: DeleteClusterSettingControllerV2', function () {
     controller.continue();
     expect(controller.isMove).toBe(true);
     httpBackend.flush();
-    httpBackend.verifyNoOutstandingExpectation();
-    httpBackend.verifyNoOutstandingRequest();
     expect(MediaClusterServiceV2.createClusterV2).toHaveBeenCalled();
     expect(MediaClusterServiceV2.createClusterV2.calls.count()).toEqual(2);
   });
@@ -155,7 +150,9 @@ describe('Controller: DeleteClusterSettingControllerV2', function () {
     }];
 
     spyOn(MediaClusterServiceV2, 'defuseV2Connector').and.callThrough();
+    spyOn(MediaClusterServiceV2, 'deleteV2Cluster').and.callThrough();
     controller.deleteCluster();
+    httpBackend.flush();
     expect(controller.isMove).toBe(true);
     expect(MediaClusterServiceV2.defuseV2Connector).toHaveBeenCalled();
     expect(MediaClusterServiceV2.defuseV2Connector.calls.count()).toEqual(2);
@@ -186,12 +183,14 @@ describe('Controller: DeleteClusterSettingControllerV2', function () {
 
     spyOn(MediaClusterServiceV2, 'moveV2Host').and.callThrough();
     controller.continue();
+    httpBackend.verifyNoOutstandingExpectation();
     expect(controller.isMove).toBe(true);
     expect(MediaClusterServiceV2.moveV2Host).not.toHaveBeenCalled();
     expect(MediaClusterServiceV2.moveV2Host.calls.count()).toEqual(0);
   });
 
   it('check if the deleteV2Cluster of MediaClusterServiceV2 is invoked for empty cluster', function () {
+    httpBackend.when('DELETE', /^\w+.*/).respond({});
     controller.cluster = cluster;
     controller.hosts = [];
     controller.selectPlaceholder = "Select a cluster";
@@ -204,12 +203,40 @@ describe('Controller: DeleteClusterSettingControllerV2', function () {
     controller.successCount = 0;
     controller.errorCount = 0;
     controller.noOfHost = 0;
-
+    spyOn($state, 'go');
     spyOn(MediaClusterServiceV2, 'deleteV2Cluster').and.callThrough();
     controller.continue();
+    httpBackend.flush();
     expect(controller.isMove).toBe(true);
     expect(MediaClusterServiceV2.deleteV2Cluster).toHaveBeenCalled();
     expect(MediaClusterServiceV2.deleteV2Cluster.calls.count()).toEqual(1);
+  });
+
+  it('check if the deleteV2Cluster of MediaClusterServiceV2 is invoked when errorCount is present', function () {
+    httpBackend.when('DELETE', /^\w+.*/).respond({});
+    controller.cluster = cluster;
+    controller.hosts = [];
+    controller.failedToDelete = false;
+    controller.ngDisable = false;
+    controller.selectPlaceholder = "Select a cluster";
+    controller.fillModel = {};
+    controller.selectModel = {};
+    controller.failedHostMove = {};
+    controller.unableToMoveNodes = {};
+    controller.clusters = [{
+      "id": "a050fcc7-9ade-4790-a06d-cca596910421",
+      "name": "MFA_TEST2"
+    }];
+    controller.successCount = 5;
+    controller.errorCount = 5;
+    controller.noOfHost = 10;
+    spyOn($state, 'go');
+    spyOn(MediaClusterServiceV2, 'deleteV2Cluster').and.callThrough();
+    controller.continue();
+    httpBackend.verifyNoOutstandingExpectation();
+    expect(controller.isMove).toBe(true);
+    expect(MediaClusterServiceV2.deleteV2Cluster).not.toHaveBeenCalled();
+    expect(controller.failedToDelete).toBe(true);
   });
 
   it('check if the defuseV2Connector of MediaClusterServiceV2 is invoked', function () {
@@ -237,9 +264,23 @@ describe('Controller: DeleteClusterSettingControllerV2', function () {
 
     spyOn(MediaClusterServiceV2, 'defuseV2Connector').and.callThrough();
     controller.deleteCluster();
+    httpBackend.verifyNoOutstandingExpectation();
     expect(controller.isMove).toBe(true);
     expect(MediaClusterServiceV2.defuseV2Connector).toHaveBeenCalled();
     expect(MediaClusterServiceV2.defuseV2Connector.calls.count()).toEqual(2);
+  });
+  it('DeleteClusterSettingControllerV2 canContinue should enable continue button when the feild is filled', function () {
+    controller.hosts = [{
+      "id": "mf_mgmt@ac43493e-3f11-4eaa-aec0-f16f2a69969a",
+      "hostname": "10.196.5.251",
+      "hostSerial": "ac43493e-3f11-4eaa-aec0-f16f2a69969a"
+    }, {
+      "id": "mf_mgmt@a41a0783-e695-461e-8f15-355f02f91075",
+      "hostname": "10.196.5.246",
+      "hostSerial": "a41a0783-e695-461e-8f15-355f02f91075"
+    }];
+    controller.canContinue();
+    expect(controller.canContinue()).toBeTruthy();
   });
 
 });
