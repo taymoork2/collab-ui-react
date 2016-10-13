@@ -14,8 +14,15 @@
     };
     return titleCaseFilter;
   }
-  function UpdateIncidentController($scope, $stateParams, UpdateIncidentService, IncidentsWithoutSiteService, ComponentService, $state, statusService, $log, Authinfo) {
-    var useremail = (Authinfo.getEmails())[0].value;
+  function UpdateIncidentController($scope, $stateParams, UpdateIncidentService, IncidentsWithoutSiteService, ComponentService, $state, statusService, $log, Authinfo, SessionStorage) {
+    var useremail = "";
+    var emails = Authinfo.getEmails();
+    if (!emails) {
+      useremail = SessionStorage.get("useremail");
+    } else {
+      useremail = emails[0].value;
+      SessionStorage.put("useremail", useremail);
+    }
     $scope.showOperational = true;
     var originComponentsTree = [];
     var originIncidentName, originImpact;

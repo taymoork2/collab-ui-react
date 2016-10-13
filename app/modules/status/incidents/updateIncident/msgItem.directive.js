@@ -9,7 +9,7 @@
       scope: {
         msg: '=info'
       },
-      controller: function ($scope, MessageService, $filter, $log, Authinfo) {
+      controller: function ($scope, MessageService, $filter, $log, Authinfo, SessionStorage) {
         /* use a function for the exact format desired... */
         function ISODateString(d) {
           function pad(n) {
@@ -24,7 +24,14 @@
         }
 
         var originMsg = {};
-        var useremail = (Authinfo.getEmails())[0].value;
+        var useremail = "";
+        var emails = Authinfo.getEmails();
+        if (!emails) {
+          useremail = SessionStorage.get("useremail");
+        } else {
+          useremail = emails[0].value;
+          SessionStorage.put("useremail", useremail);
+        }
         angular.copy($scope.msg, originMsg);
         //$log.log(originMsg.postAt);
         $scope.componentSection = false;

@@ -6,9 +6,17 @@
     .controller('DashboardCtrl', DashboardCtrl);
 
   /* @ngInject */
-  function DashboardCtrl($log, $scope, $window, $state, $stateParams, $translate, DincidentListService, DcomponentService, statusService, Authinfo) {
+  function DashboardCtrl($log, $scope, $window, $state, $stateParams, $translate, DincidentListService, DcomponentService, statusService, Authinfo, SessionStorage) {
     var vm = this;
-    var useremail = (Authinfo.getEmails())[0].value;
+
+    var useremail = "";
+    var emails = Authinfo.getEmails();
+    if (!emails) {
+      useremail = SessionStorage.get("useremail");
+    } else {
+      useremail = emails[0].value;
+      SessionStorage.put("useremail", useremail);
+    }
     vm.pageTitle = $translate.instant('statusPage.pageTitle');
 
     vm.tab = $stateParams.tab;
