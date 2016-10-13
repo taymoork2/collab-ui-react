@@ -14,18 +14,23 @@ describe('DeviceUsageTimelineService', function () {
 
   var DeviceUsageTimelineService, $httpBackend, urlBase;
 
-  function createDayMockData(startDate, dayCount, samplesPerDay) {
+  function createDayMockData(startDate, dayCount) {
     var items = [];
     var start = moment(startDate);
     _.times(dayCount, function () {
-      _.times(samplesPerDay, function (s) {
-        items.push({
-          date: start.format('YYYYMMDD'),
-          count: s,
-          totalDuration: s * 100,
-          deviceId: 'device_' + s,
-          pairedCount: s
-        });
+      items.push({
+        date: start.format('YYYYMMDD'),
+        callCount: 1,
+        totalDuration: 100,
+        pairedCount: 1,
+        deviceCategory: 'ce'
+      });
+      items.push({
+        date: start.format('YYYYMMDD'),
+        callCount: 2,
+        totalDuration: 200,
+        pairedCount: 2,
+        deviceCategory: 'darling'
       });
       start = start.add(1, 'days');
     });
@@ -48,17 +53,18 @@ describe('DeviceUsageTimelineService', function () {
 
   it('provides chart data for last week', function () {
     var start = moment().startOf('week').subtract(1, 'weeks');
-    var mockData = createDayMockData(start.format('YYYY-MM-DD'), 7, 3);
+    var mockData = createDayMockData(start.format('YYYY-MM-DD'), 7);
     var end = moment().startOf('week').format('YYYY-MM-DD');
     var path = 'organizations/123/reports/device/call?intervalType=day&';
     var range = 'rangeStart=' + start.format('YYYY-MM-DD') + '&rangeEnd=' + end;
+    var deviceCategories = '&deviceCategories=ce,darling';
     $httpBackend
-      .when('GET', urlBase + path + range)
+      .when('GET', urlBase + path + range + deviceCategories)
       .respond(mockData);
     DeviceUsageTimelineService.getDataForLastWeek('backend').then(function (data) {
       expect(data.length).toEqual(7);
       _.each(data, function (item) {
-        expect(item.video).toEqual(300);
+        expect(item.totalDuration).toEqual('5.00');
         expect(item.pairedCount).toEqual(3);
       });
     });
@@ -67,17 +73,18 @@ describe('DeviceUsageTimelineService', function () {
 
   it('provides chart data for last month', function () {
     var start = moment().startOf('month').subtract(1, 'months');
-    var mockData = createDayMockData(start.format('YYYY-MM-DD'), 30, 3);
+    var mockData = createDayMockData(start.format('YYYY-MM-DD'), 30);
     var end = moment().startOf('month').format('YYYY-MM-DD');
     var path = 'organizations/123/reports/device/call?intervalType=day&';
     var range = 'rangeStart=' + start.format('YYYY-MM-DD') + '&rangeEnd=' + end;
+    var deviceCategories = '&deviceCategories=ce,darling';
     $httpBackend
-      .when('GET', urlBase + path + range)
+      .when('GET', urlBase + path + range + deviceCategories)
       .respond(mockData);
     DeviceUsageTimelineService.getDataForLastMonth('backend').then(function (data) {
       expect(data.length).toEqual(30);
       _.each(data, function (item) {
-        expect(item.video).toEqual(300);
+        expect(item.totalDuration).toEqual('5.00');
         expect(item.pairedCount).toEqual(3);
       });
     });
