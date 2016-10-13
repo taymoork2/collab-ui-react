@@ -273,6 +273,7 @@
 
     function uploadError(result) {
       var errorMsg;
+      brand.logoFile = null;
       if (brand.uploadModal) {
         brand.uploadModal.close();
       }

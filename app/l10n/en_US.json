@@ -4303,7 +4303,7 @@
     "WbxClientVersionOnlyOnNewSites": "This setting only applies to sites that are setup from now on. Existing sites are not impacted.",
     "webexClientVersion": "Cisco WebEx Application Version",
     "imageUploadFailedSecurity": "Your image upload has failed.",
-    "imageUploadFailed": "Your image upload has failed.  Please select a .png file under 10MB."
+    "imageUploadFailed": "Your image upload has failed.  Please select a .png file under 1MB."
   },
   "customerProfile": {
     "supportContacts": "Support Contacts",
