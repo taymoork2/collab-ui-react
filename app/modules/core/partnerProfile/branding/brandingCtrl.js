@@ -258,15 +258,15 @@
         }
       }, 3000);
       // Automatically start using the custom logo
-      BrandService.resetCdnLogo(orgId).success(function () {
-        BrandService.getLogoUrl(orgId).success(function (logoUrl) {
+      BrandService.resetCdnLogo(orgId).then(function () {
+        BrandService.getLogoUrl(orgId).then(function (logoUrl) {
           brand.tempLogoUrl = logoUrl;
           brand.usePartnerLogo = false;
           brand.toggleLogo(false);
-        }).error(function (result) {
+        }).catch(function (result) {
           uploadError(result);
         });
-      }).error(function (result) {
+      }).catch(function (result) {
         uploadError(result);
       });
     }
