@@ -2,46 +2,52 @@
   'use strict';
 
   /* @ngInject */
-  function ComponentsService($log, UrlConfig, $http) {
+  function ComponentsService($log, UrlConfig, $resource) {
 
-    var componentsUrl = _.template(UrlConfig.getStatusUrl() + '/services/${ serviceId }/components');
-    var groupCompnentsUrl = _.template(UrlConfig.getStatusUrl() + '/services/${ serviceId }/components/groups');
-    var delComponentUrl = _.template(UrlConfig.getStatusUrl() + '/components/${ componentId }');
-    var modifyComponentUrl = _.template(UrlConfig.getStatusUrl() + '/components/${ componentId }');
+    var componentsUrl = UrlConfig.getStatusUrl() + '/services/:serviceId/components';
+    var groupCompnentsUrl = UrlConfig.getStatusUrl() + '/services/:serviceId/components/groups';
+    var delComponentUrl = UrlConfig.getStatusUrl() + '/components/:componentId';
+    var modifyComponentUrl = UrlConfig.getStatusUrl() + '/components/:componentId';
     function getComponents(serviceId) {
-      return $http.get(componentsUrl({
+      return $resource(componentsUrl).query({
         serviceId: serviceId
-      })).then(function (response) {
-        return response.data;
+      }).$promise.then(function (response) {
+        return response;
       });
     }
 
     function getGroupComponents(serviceId) {
-      return $http.get(groupCompnentsUrl({
+      return $resource(groupCompnentsUrl).query({
         serviceId: serviceId
-      })).then(function (response) {
-        $log.debug(response.data);
-        return response.data;
+      }).$promise.then(function (response) {
+        $log.debug(response);
+        return response;
       });
     }
 
     function addComponent(serviceId, component) {
       $log.debug('serviceId ' + serviceId, ' component ', component);
-      return $http.post(componentsUrl({
+      return $resource(componentsUrl).save({
         serviceId: serviceId
-      }), component);
+      }, component).$promise.then(function (response) {
+        return response;
+      });
     }
 
     function delComponent(component) {
-      return $http.delete(delComponentUrl({
+      return $resource(delComponentUrl).delete({
         componentId: component.componentId
-      }));
+      }).$promise.then(function (response) {
+        return response;
+      });
     }
 
     function modifyComponent(component) {
-      return $http.put(modifyComponentUrl({
+      return $resource(modifyComponentUrl, {}, { 'put': { method: 'PUT' } }).put({
         componentId: component.componentId
-      }), component);
+      }, component).$promise.then(function (response) {
+        return response;
+      });
     }
 
     return {

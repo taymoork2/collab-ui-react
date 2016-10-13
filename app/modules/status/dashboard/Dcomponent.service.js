@@ -2,22 +2,24 @@
   'use strict';
 
   /* @ngInject */
-  function DcomponentService(UrlConfig, $http) {
+  function DcomponentService(UrlConfig, $resource) {
 
-    var componentsUrl = _.template(UrlConfig.getStatusUrl() + '/services/${ serviceId }/components');
-    var modifyComponentUrl = _.template(UrlConfig.getStatusUrl() + '/components/${ componentId }');
+    var componentsUrl = UrlConfig.getStatusUrl() + '/services/:serviceId/components';
+    var modifyComponentUrl = UrlConfig.getStatusUrl() + '/components/:componentId';
     function getComponents(serviceId) {
-      return $http.get(componentsUrl({
+      return $resource(componentsUrl).query({
         serviceId: serviceId
-      })).then(function (response) {
-        return response.data;
+      }).$promise.then(function (response) {
+        return response;
       });
     }
 
     function modifyComponent(component) {
-      return $http.put(modifyComponentUrl({
+      return $resource(modifyComponentUrl, {}, { 'put': { method: 'PUT' } }).put({
         componentId: component.componentId
-      }), component);
+      }, component).$promise.then(function (response) {
+        return response;
+      });
     }
 
     return {
