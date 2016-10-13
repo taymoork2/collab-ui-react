@@ -1,6 +1,5 @@
-import { IPagingGroup } from '../pagingGroup';
-import { INumber } from '../pgNumber.service';
-import { PagingGroupService } from '../pagingGroup.service';
+import { IPagingGroup } from 'modules/huron/features/pagingGroup/pagingGroup';
+import { PagingGroupService } from 'modules/huron/features/pagingGroup/pagingGroup.service';
 
 interface IToolkitModalSettings extends ng.ui.bootstrap.IModalSettings {
   type: string;
@@ -17,7 +16,7 @@ class PgSetupAssistantCtrl implements ng.IComponentController {
   private isNameValid: boolean = false;
 
   //Paging group number
-  public number: INumber;
+  public number: string;
   private isNumberValid: boolean = false;
 
   public animation: string = 'slide-left';
@@ -30,7 +29,8 @@ class PgSetupAssistantCtrl implements ng.IComponentController {
               private $element: ng.IRootElementService,
               private $state: ng.ui.IStateService,
               private $translate: ng.translate.ITranslateService,
-              private PagingGroupService: PagingGroupService) {
+              private PagingGroupService: PagingGroupService,
+              private Notification) {
     this.createLabel = this.$translate.instant('pagingGroup.createHelpText');
   }
 
@@ -54,7 +54,7 @@ class PgSetupAssistantCtrl implements ng.IComponentController {
       case 0:
         return this.name !== '' && this.isNameValid;
       case 1:
-        let numberDefined: boolean = !(this.number === undefined) && this.isNumberValid;
+        let numberDefined: boolean = this.number !== '' && this.isNumberValid;
         let helpText = this.$element.find('div.btn-helptext.helptext-btn--right');
         if (numberDefined) {
           //Show helpText
@@ -98,6 +98,7 @@ class PgSetupAssistantCtrl implements ng.IComponentController {
       }
       if (this.index === this.lastIndex + 1) {
         this.savePagingGroup();
+        this.index--;
       }
     });
   }
@@ -107,6 +108,7 @@ class PgSetupAssistantCtrl implements ng.IComponentController {
   }
 
   public evalKeyPress(keyCode: number): void {
+    const ENTER_KEY = 13;
     const ESCAPE_KEY = 27;
     const LEFT_ARROW = 37;
     const RIGHT_ARROW = 39;
@@ -115,6 +117,11 @@ class PgSetupAssistantCtrl implements ng.IComponentController {
         this.cancelModal();
         break;
       case RIGHT_ARROW:
+        if (this.nextButton() === true) {
+          this.nextPage();
+        }
+        break;
+      case ENTER_KEY:
         if (this.nextButton() === true) {
           this.nextPage();
         }
@@ -134,7 +141,7 @@ class PgSetupAssistantCtrl implements ng.IComponentController {
     this.isNameValid = isValid;
   }
 
-  public onUpdateNumber(number: INumber, isValid: boolean): void {
+  public onUpdateNumber(number: string, isValid: boolean): void {
     this.number = number;
     this.isNumberValid = isValid;
   }
@@ -142,11 +149,25 @@ class PgSetupAssistantCtrl implements ng.IComponentController {
   public savePagingGroup(): void {
     let pg: IPagingGroup = <IPagingGroup>{
       name: this.name,
-      number: this.number,
-      uuid: this.name, //TODO: will hook up with real uuid
+      extension: this.number,
     };
-    this.PagingGroupService.savePagingGroup(pg);
-    this.$state.go('huronfeatures');
+    this.PagingGroupService.savePagingGroup(pg).then(
+      (data) => {
+        this.Notification.success('pagingGroup.successSave', { pagingGroupName: data.name });
+        this.$state.go('huronfeatures');
+      },
+      (error) => {
+        let message = '';
+        if (error && _.has(error, 'data')
+          && _.has(error.data, 'error')
+          && _.has(error.data.error, 'message')
+          && _.has(error.data.error.message, 'length')
+          && error.data.error.message.length > 0
+          && _.has(error.data.error.message[0], 'description')) {
+          message = error.data.error.message[0].description;
+        }
+        this.Notification.error('pagingGroup.errorSave', { message: message });
+      });
   }
 
   public cancelModal(): void {

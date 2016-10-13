@@ -28,6 +28,12 @@
         prod: 'https://ces.huron-dev.com/api/v1'
       },
 
+      pgUrl: {
+        dev: 'https://paging.huron-int.com/api/v1',
+        integration: 'https://paging.huron-int.com/api/v1',
+        prod: 'https://paging.huron-dev.com/api/v1'
+      },
+
       emailUrl: {
         dev: 'https://hermes.huron-int.com/api/v1',
         integration: 'https://hermes.huron-int.com/api/v1',
@@ -85,6 +91,16 @@
           return this.cesUrl.integration;
         } else {
           return this.cesUrl.prod;
+        }
+      },
+
+      getPgUrl: function () {
+        if (Config.isDev()) {
+          return this.pgUrl.dev;
+        } else if (Config.isIntegration()) {
+          return this.pgUrl.integration;
+        } else {
+          return this.pgUrl.prod;
         }
       },
 
