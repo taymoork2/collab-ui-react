@@ -2,7 +2,7 @@
 
 describe('Controller: UserDeleteCtrl', function () {
   var $rootScope, $scope, $q, $controller, $timeout, $translate, controller;
-  var Userservice, Notification, SunlightConfigService;
+  var Userservice, Notification, SunlightConfigService, FeatureToggleService;
   var stateParams = {
     deleteUserOrgId: '123',
     deleteUserUuId: '456',
@@ -17,7 +17,7 @@ describe('Controller: UserDeleteCtrl', function () {
   beforeEach(initSpies);
   beforeEach(initController);
 
-  function dependencies(_$rootScope_, _$q_, _$controller_, _$timeout_, _$translate_, _Userservice_, _Notification_, _SunlightConfigService_) {
+  function dependencies(_$rootScope_, _$q_, _$controller_, _$timeout_, _$translate_, _Userservice_, _Notification_, _SunlightConfigService_, _FeatureToggleService_) {
     $rootScope = _$rootScope_;
     $scope = $rootScope.$new();
     $q = _$q_;
@@ -27,6 +27,7 @@ describe('Controller: UserDeleteCtrl', function () {
     Userservice = _Userservice_;
     Notification = _Notification_;
     SunlightConfigService = _SunlightConfigService_;
+    FeatureToggleService = _FeatureToggleService_;
   }
 
   function initSpies() {
@@ -38,6 +39,9 @@ describe('Controller: UserDeleteCtrl', function () {
     spyOn($rootScope, '$broadcast').and.callThrough();
     spyOn($translate, 'instant').and.returnValue('YES');
     spyOn(SunlightConfigService, 'deleteUserConfig');
+    spyOn(FeatureToggleService, 'atlasCareTrialsGetStatus').and.returnValue(
+      $q.when(false)
+    );
   }
 
   function initController() {
