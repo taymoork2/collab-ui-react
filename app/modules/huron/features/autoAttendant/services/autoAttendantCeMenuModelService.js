@@ -934,6 +934,9 @@
               newActionArray[i][actionName].id = menuEntry.actions[0].getValue();
             } else if (actionName === 'routeToQueue') {
               newActionArray[i][actionName] = populateRouteToQueue(menuEntry.actions[0]);
+              /*
+              *this code commented out may come back later, waiting on backend to be complete
+              */
               //newActionArray[i][actionName].id = menuEntry.actions[0].getValue();
             } else if (actionName === 'runActionsOnInput') {
               if (menuEntry.actions[0].inputType === 2) {
@@ -993,6 +996,9 @@
           newActionArray[i][actionName].ceid = val;
         } else if (actionName === 'routeToQueue') {
           newActionArray[i][actionName] = populateRouteToQueue(actions[i]);
+          /*
+          *this code commented out may come back later, waiting on backend to be complete
+          */
           //newActionArray[i][actionName].id = val;
         } else if (actionName === 'disconnect') {
           if (val && val !== 'none') {

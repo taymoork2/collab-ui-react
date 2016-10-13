@@ -1,6 +1,6 @@
 .aa-queue-settings-modal {
   & .aa-treatment-modal {
-    margin-top: 10px;
+    @include vr-spacing(mt, .625);
   }
 
   & .aa-inset-modal {
