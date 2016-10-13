@@ -28,20 +28,21 @@ describe('OverviewUsersCard', function () {
     });
 
     it('should create user card', function () {
-      expect(card.showLicenseCard).toBe(false);
+      expect(card.showLicenseCard).toEqual(false);
       expect(card.name).toEqual('overview.cards.users.title');
     });
 
     it('should stay on convert user card', function () {
       card.unlicensedUsersHandler(convertUserData);
-      expect(card.usersToConvert).toBe(10);
-      expect(card.showLicenseCard).toBe(false);
+      expect(card.usersToConvert).toEqual(10);
+      expect(card.showLicenseCard).toEqual(false);
     });
 
     it('should create license card if convert users is 0', function () {
       card.unlicensedUsersHandler(userData);
-      expect(card.usersToConvert).toBe(0);
-      expect(card.showLicenseCard).toBe(true);
+      expect(card.usersToConvert).toEqual(0);
+      expect(card.showLicenseCard).toEqual(true);
+      expect(card.name).toEqual('overview.cards.licenses.title');
     });
   });
 });
