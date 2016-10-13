@@ -251,24 +251,41 @@
     }
 
     function uploadSuccess() {
+      var orgId = Authinfo.getOrgId();
       $timeout(function () {
         if (brand.uploadModal) {
           brand.uploadModal.close();
         }
       }, 3000);
       // Automatically start using the custom logo
-      BrandService.resetCdnLogo(Authinfo.getOrgId());
-      // load logo url after upload success
-      BrandService.getLogoUrl(Authinfo.getOrgId()).then(function (logoUrl) {
-        brand.tempLogoUrl = logoUrl;
+      BrandService.resetCdnLogo(orgId).success(function () {
+        BrandService.getLogoUrl(orgId).success(function (logoUrl) {
+          brand.tempLogoUrl = logoUrl;
+          brand.usePartnerLogo = false;
+          brand.toggleLogo(false);
+        }).error(function (result) {
+          uploadError(result);
+        });
+      }).error(function (result) {
+        uploadError(result);
       });
-
-      brand.usePartnerLogo = false;
-      brand.toggleLogo(false);
     }
 
-    function uploadError() {
-      brand.logoError = 'unknown';
+    function uploadError(result) {
+      var errorMsg;
+      if (brand.uploadModal) {
+        brand.uploadModal.close();
+      }
+      var resultData = result.data || result;
+      if (resultData.name === 'SecurityError') {
+        errorMsg = $translate.instant('partnerProfile.imageUploadFailedSecurity');
+      } else {
+        errorMsg = $translate.instant('partnerProfile.imageUploadFailed');
+      }
+      if (resultData.trackingId) {
+        errorMsg += "  " + $translate.instant('common.trackingId', { trackingId: resultData.trackingId });
+      }
+      Notification.error(errorMsg);
     }
 
     function uploadProgress(evt) {
