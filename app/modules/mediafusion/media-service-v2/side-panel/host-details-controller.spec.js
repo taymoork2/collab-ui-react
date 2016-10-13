@@ -4,7 +4,7 @@ describe('Controller: HostDetailsControllerV2', function () {
 
   beforeEach(angular.mock.module('Mediafusion'));
 
-  var $selectedRole, $clusterId, httpBackend, $rootScope, $modal, controller, $stateParams, $state, MediaClusterServiceV2, XhrNotificationService;
+  var $selectedRole, $q, $clusterId, httpBackend, $rootScope, $modal, controller, $stateParams, $state, MediaClusterServiceV2, XhrNotificationService;
   var actualOptions;
   var fakeModal = {
     result: {
@@ -20,8 +20,9 @@ describe('Controller: HostDetailsControllerV2', function () {
       this.result.cancelCallback(type);
     }
   };
-  beforeEach(inject(function ($httpBackend, _$rootScope_, $controller, _MediaClusterServiceV2_, _XhrNotificationService_, $translate) {
+  beforeEach(inject(function ($httpBackend, _$rootScope_, _$q_, $controller, _MediaClusterServiceV2_, _XhrNotificationService_, $translate) {
     $rootScope = _$rootScope_;
+    $q = _$q_;
     $stateParams = {
       "groupName": "Bangalore - Site 1",
       "selectedClusters": [{
@@ -176,9 +177,9 @@ describe('Controller: HostDetailsControllerV2', function () {
     };
     httpBackend = $httpBackend;
     httpBackend.when('GET', /^\w+.*/).respond({});
-
     controller = $controller('HostDetailsControllerV2', {
       $modal: $modal,
+      $q: $q,
       $scope: $rootScope.$new(),
       $stateParams: $stateParams,
       $state: $state,
@@ -215,6 +216,12 @@ describe('Controller: HostDetailsControllerV2', function () {
       actualOptions = options;
       return fakeModal;
     });
+    spyOn(MediaClusterServiceV2, 'getOrganization').and.returnValue($q.when({
+      data: {
+        success: true,
+        displayName: "fakeDisplayName"
+      }
+    }));
     controller.hostcount = 1;
     controller.organization = {
       displayName: "fakeName"
@@ -223,6 +230,7 @@ describe('Controller: HostDetailsControllerV2', function () {
     controller.showDeregisterHostDialog({
       preventDefault: function () {}
     });
+    httpBackend.flush();
     $rootScope.$digest();
     expect(actualOptions.resolve.cluster()).toEqual(controller.cluster);
     expect(actualOptions.resolve.orgName()).toEqual(controller.organization.displayName);

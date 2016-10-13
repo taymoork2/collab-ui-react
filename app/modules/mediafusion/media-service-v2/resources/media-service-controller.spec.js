@@ -89,10 +89,14 @@ describe('Controller: MediaServiceControllerV2', function () {
       "targetType": "mf_mgmt"
     }];
     spyOn(MediaClusterServiceV2, 'getClustersByConnectorType').and.returnValue(clusters);
-    httpMock.flush();
     controller.clustersUpdated();
+    httpMock.flush();
     expect(MediaClusterServiceV2.getClustersByConnectorType).toHaveBeenCalled();
-    httpMock.verifyNoOutstandingExpectation();
+  });
+  it('addResourceButtonClicked should open the respective modal', function () {
+    spyOn($modal, 'open');
+    controller.addResourceButtonClicked();
+    expect($modal.open).toHaveBeenCalled();
   });
 });
 

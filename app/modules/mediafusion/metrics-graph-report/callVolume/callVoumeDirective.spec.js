@@ -10,7 +10,9 @@ describe('Directive: ucCallVolumeMetrics', function () {
   }));
 
   it('Replaces the element with the appropriate content', function () {
-    $compile("<uc-call-volume-metrics></uc-call-volume-metrics>")($rootScope);
+    var element = $compile("<uc-call-volume-metrics></uc-call-volume-metrics>")($rootScope);
     $rootScope.$digest();
+    expect(element.html()).toContain("call-volume-card");
+    expect(element.html()).toContain("metrics-call-volume");
   });
 });

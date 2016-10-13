@@ -2,10 +2,9 @@
 
 describe('Service: MediaClusterServiceV2', function () {
   beforeEach(angular.mock.module('Mediafusion'));
-  var $httpBackend, Service, Authinfo, $rootScope;
+  var $httpBackend, Service, Authinfo;
 
-  beforeEach(inject(function (_$rootScope_, $injector, _MediaClusterServiceV2_, _Authinfo_) {
-    $rootScope = _$rootScope_;
+  beforeEach(inject(function ($injector, _MediaClusterServiceV2_, _Authinfo_) {
     Authinfo = _Authinfo_;
     Authinfo.getOrgId = sinon.stub().returns("orgId");
     Service = _MediaClusterServiceV2_;
@@ -21,8 +20,6 @@ describe('Service: MediaClusterServiceV2', function () {
     Service.fetch().then(null, callback);
     $httpBackend.flush();
     expect(callback.callCount).toBe(1);
-    $httpBackend.verifyNoOutstandingExpectation();
-    $httpBackend.verifyNoOutstandingRequest();
   });
   it('should delete v2 cluster', function () {
     $httpBackend.when('DELETE', /^\w+.*/).respond(204);
@@ -30,8 +27,6 @@ describe('Service: MediaClusterServiceV2', function () {
     Service.deleteV2Cluster('connectorId').then(callback);
     $httpBackend.flush();
     expect(callback.callCount).toBe(1);
-    $httpBackend.verifyNoOutstandingExpectation();
-    $httpBackend.verifyNoOutstandingRequest();
   });
   it('should delete v2 cluster with connectors', function () {
     $httpBackend.when('POST', /^\w+.*/).respond(204);
@@ -39,8 +34,6 @@ describe('Service: MediaClusterServiceV2', function () {
     Service.deleteClusterWithConnector('clusterId').then(callback);
     $httpBackend.flush();
     expect(callback.callCount).toBe(1);
-    $httpBackend.verifyNoOutstandingExpectation();
-    $httpBackend.verifyNoOutstandingRequest();
   });
 
   it('should update v2 cluster', function () {
@@ -49,8 +42,6 @@ describe('Service: MediaClusterServiceV2', function () {
     Service.updateV2Cluster('clusterId', 'clusterName', 'releaseChannel').then(callback);
     $httpBackend.flush();
     expect(callback.callCount).toBe(1);
-    $httpBackend.verifyNoOutstandingExpectation();
-    $httpBackend.verifyNoOutstandingRequest();
   });
 
   it('should move v2 host', function () {
@@ -59,8 +50,6 @@ describe('Service: MediaClusterServiceV2', function () {
     Service.moveV2Host('connectorId', 'fromCluster', 'toCluster').then(callback);
     $httpBackend.flush();
     expect(callback.callCount).toBe(1);
-    $httpBackend.verifyNoOutstandingExpectation();
-    $httpBackend.verifyNoOutstandingRequest();
   });
 
   it('should get a given cluster', function () {
@@ -69,8 +58,6 @@ describe('Service: MediaClusterServiceV2', function () {
     Service.get('clusterid').then(callback);
     $httpBackend.flush();
     expect(callback.callCount).toBe(1);
-    $httpBackend.verifyNoOutstandingExpectation();
-    $httpBackend.verifyNoOutstandingRequest();
   });
   it('should getall a given cluster', function () {
     $httpBackend.when('GET', /^\w+.*/).respond({});
@@ -78,8 +65,6 @@ describe('Service: MediaClusterServiceV2', function () {
     Service.getAll().then(callback);
     $httpBackend.flush();
     expect(callback.callCount).toBe(1);
-    $httpBackend.verifyNoOutstandingExpectation();
-    $httpBackend.verifyNoOutstandingRequest();
   });
 
   it('should defuse V2 Connector', function () {
@@ -265,21 +250,11 @@ describe('Service: MediaClusterServiceV2', function () {
     $httpBackend.when('GET', /^\w+.*/).respond({});
     var done = function () {};
     Service.getOrganization(done);
-    $rootScope.$apply();
-    $httpBackend.flush();
+    expect($httpBackend.flush).not.toThrow();
   });
-
-  it('should return clusterCache when calling getCluster passing a id', function () {
-    var Id = "8aadca1c-805a-422f-8081-300f75281a70";
-    Service.getCluster(Id);
-    //expect(Service.getCluster(Id)).toBe();
-  });
-
   it('MediaClusterServiceV2 getClustersV2 successfully should return the data', function () {
     $httpBackend.when('GET', /^\w+.*/).respond({});
     Service.getClustersV2();
-    $httpBackend.flush();
-    $httpBackend.verifyNoOutstandingExpectation();
-    $httpBackend.verifyNoOutstandingRequest();
+    expect($httpBackend.flush).not.toThrow();
   });
 });

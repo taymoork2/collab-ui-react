@@ -9,6 +9,7 @@ describe('Controller:MediaServiceMetricsContoller', function () {
 
   var callVolumeData = getJSONFixture('mediafusion/json/metrics-graph-report/callVolumeData.json');
   var clusteravailabilityData = getJSONFixture('mediafusion/json/metrics-graph-report/clusterAvailabilityData.json');
+  var callVolumeGraphData = getJSONFixture('mediafusion/json/metrics-graph-report/callVolumeGraphData.json');
 
   var timeOptions = [{
     value: 0,
@@ -28,8 +29,8 @@ describe('Controller:MediaServiceMetricsContoller', function () {
     description: 'mediaFusion.metrics.threeMonths2'
   }];
 
-  //var allClusters = 'mediaFusion.metrics.allclusters';
-  //var nodata = 'mediaFusion.metrics.nodata';
+  var allClusters = 'mediaFusion.metrics.allclusters';
+  var sampleClusters = 'mediaFusion.metrics.samplecluster';
 
   beforeEach(inject(function ($rootScope, $controller, _$httpBackend_, _$stateParams_, _$timeout_, _$translate_, _MediaClusterServiceV2_, _$q_, _MetricsReportService_, _XhrNotificationService_, _MetricsGraphService_, _DummyMetricsReportService_, _$interval_, _Log_, _Config_) {
     $scope = $rootScope.$new();
@@ -61,9 +62,11 @@ describe('Controller:MediaServiceMetricsContoller', function () {
       'dataProvider': dummydata
     });
     httpMock.when('GET', /^\w+.*/).respond({});
-    spyOn(MetricsReportService, 'getCallVolumeData').and.returnValue($q.when(callVolumeData));
+    spyOn(MetricsReportService, 'getCallVolumeData').and.returnValue($q.when(callVolumeGraphData));
     spyOn(MetricsReportService, 'getAvailabilityData').and.returnValue($q.when(clusteravailabilityData));
     spyOn(MetricsReportService, 'getUtilizationData').and.returnValue($q.when(dummydata));
+    spyOn(MetricsReportService, 'getClusterAvailabilityData').and.returnValue($q.when(clusteravailabilityData));
+    spyOn(MediaClusterServiceV2, 'getAll').and.callThrough();
 
     controller = $controller('MediaServiceMetricsContoller', {
       $scope: $scope,
@@ -112,19 +115,20 @@ describe('Controller:MediaServiceMetricsContoller', function () {
     });
 
     it('All graphs should update on time filter changes', function () {
-      controller.timeSelected = timeOptions[1];
+      controller.timeSelected = timeOptions[3];
       controller.clusterUpdate();
       controller.timeUpdate();
-      expect(controller.timeSelected).toEqual(timeOptions[1]);
-      expect(MetricsReportService.getCallVolumeData).toHaveBeenCalledWith(timeOptions[1], 'mediaFusion.metrics.allclusters');
-      expect(MetricsReportService.getAvailabilityData).toHaveBeenCalledWith(timeOptions[1], 'mediaFusion.metrics.allclusters');
-      expect(MetricsReportService.getUtilizationData).toHaveBeenCalledWith(timeOptions[1], 'mediaFusion.metrics.allclusters');
+      httpMock.flush();
+      expect(controller.timeSelected).toEqual(timeOptions[3]);
+      expect(MetricsReportService.getCallVolumeData).toHaveBeenCalledWith(timeOptions[3], allClusters);
+      expect(MetricsReportService.getAvailabilityData).toHaveBeenCalledWith(timeOptions[3], allClusters);
+      expect(MetricsReportService.getUtilizationData).toHaveBeenCalledWith(timeOptions[3], allClusters);
       //expect(MetricsReportService.getTotalCallsData).toHaveBeenCalledWith(timeOptions[1], 'All');
 
     });
 
     it('All graphs should update on cluster filter changes', function () {
-      controller.clusterSelected = 'mediaFusion.metrics.allclusters';
+      controller.clusterSelected = allClusters;
       controller.clusterUpdate();
       expect(MetricsReportService.getCallVolumeData).toHaveBeenCalledWith(timeOptions[0], controller.clusterSelected);
       expect(MetricsReportService.getAvailabilityData).toHaveBeenCalledWith(timeOptions[0], controller.clusterSelected);
@@ -132,13 +136,21 @@ describe('Controller:MediaServiceMetricsContoller', function () {
       //expect(MetricsReportService.getUtilizationData).toHaveBeenCalledWith(timeOptions[0], controller.clusterSelected);
 
     });
+    it('should call getClusterAvailabilityData on time filter changes', function () {
+      controller.timeSelected = timeOptions[2];
+      controller.clusterUpdate();
+      controller.timeUpdate();
+      httpMock.flush();
+      expect(controller.timeSelected).toEqual(timeOptions[2]);
+      expect(MetricsReportService.getClusterAvailabilityData).toHaveBeenCalledWith(timeOptions[2], allClusters);
+    });
   });
 
   xdescribe('Evaluating Total calls Card', function () {
     it('should return total calls count when both onprem and cloud values are there', function () {
-      controller.clusterSelected = 'mediaFusion.metrics.allclusters';
+      controller.clusterSelected = allClusters;
       controller.timeSelected = timeOptions[0];
-      controller.clusterId = 'mediaFusion.metrics.allclusters';
+      controller.clusterId = allClusters;
       var response = {
         "data": {
           "orgId": "1eb65fdf-9643-417f-9974-ad72cae0e10f",
@@ -154,7 +166,7 @@ describe('Controller:MediaServiceMetricsContoller', function () {
       expect(controller.cloud).toBe(4);
       expect(controller.total).toBe(12);
 
-      expect(MetricsReportService.getTotalCallsData).toHaveBeenCalledWith(timeOptions[0], 'mediaFusion.metrics.allclusters');
+      expect(MetricsReportService.getTotalCallsData).toHaveBeenCalledWith(timeOptions[0], allClusters);
 
     });
 
@@ -286,27 +298,23 @@ describe('Controller:MediaServiceMetricsContoller', function () {
   });
   it('getClusterAvailabilityData should be called for setClusterAvailability', function () {
     controller.timeSelected = timeOptions[2];
-    controller.clusterId = 'mediaFusion.metrics.allclusters';
+    controller.clusterId = allClusters;
     controller.setClusterAvailability();
     expect(MetricsReportService.getAvailabilityData).toHaveBeenCalled();
   });
-  xit('getUtilizationData should be called for setUtilizationData', function () {
-    controller.timeSelected = timeOptions[3];
-    controller.allClusters = 'mediaFusion.metrics.allclusters';
-    controller.clusterId = 'mediaFusion.metrics.allclusters';
+  it('getUtilizationData should be called for setUtilizationData', function () {
+    controller.timeSelected = timeOptions[2];
+    controller.allClusters = allClusters;
+    controller.clusterId = allClusters;
     controller.setUtilizationData();
-    httpMock.verifyNoOutstandingExpectation();
-    httpMock.verifyNoOutstandingRequest();
     httpMock.flush();
     expect(MetricsReportService.getUtilizationData).toHaveBeenCalled();
   });
   xit('getUtilizationData should be called for setUtilizationData when clusterId is not allClusters', function () {
     controller.timeSelected = timeOptions[3];
-    controller.allClusters = 'mediaFusion.metrics.allclusters';
-    controller.clusterId = 'mediaFusion.metrics.samplecluster';
+    controller.allClusters = allClusters;
+    controller.clusterId = sampleClusters;
     controller.setUtilizationData();
-    httpMock.verifyNoOutstandingExpectation();
-    httpMock.verifyNoOutstandingRequest();
     httpMock.flush();
     expect(MetricsReportService.getUtilizationData).toHaveBeenCalled();
   });

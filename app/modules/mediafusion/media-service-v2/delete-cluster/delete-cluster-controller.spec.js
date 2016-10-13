@@ -91,8 +91,6 @@ describe('Controller: DeleteClusterSettingControllerV2', function () {
     controller.continue();
     expect(controller.isMove).toBe(true);
     httpBackend.flush();
-    httpBackend.verifyNoOutstandingExpectation();
-    httpBackend.verifyNoOutstandingRequest();
     expect(MediaClusterServiceV2.moveV2Host).toHaveBeenCalled();
     expect(MediaClusterServiceV2.moveV2Host.calls.count()).toEqual(2);
   });
@@ -124,8 +122,6 @@ describe('Controller: DeleteClusterSettingControllerV2', function () {
     controller.continue();
     expect(controller.isMove).toBe(true);
     httpBackend.flush();
-    httpBackend.verifyNoOutstandingExpectation();
-    httpBackend.verifyNoOutstandingRequest();
     expect(MediaClusterServiceV2.createClusterV2).toHaveBeenCalled();
     expect(MediaClusterServiceV2.createClusterV2.calls.count()).toEqual(2);
   });
@@ -156,7 +152,6 @@ describe('Controller: DeleteClusterSettingControllerV2', function () {
     spyOn(MediaClusterServiceV2, 'defuseV2Connector').and.callThrough();
     spyOn(MediaClusterServiceV2, 'deleteV2Cluster').and.callThrough();
     controller.deleteCluster();
-    httpBackend.verifyNoOutstandingExpectation();
     httpBackend.flush();
     expect(controller.isMove).toBe(true);
     expect(MediaClusterServiceV2.defuseV2Connector).toHaveBeenCalled();
@@ -211,7 +206,6 @@ describe('Controller: DeleteClusterSettingControllerV2', function () {
     spyOn($state, 'go');
     spyOn(MediaClusterServiceV2, 'deleteV2Cluster').and.callThrough();
     controller.continue();
-    httpBackend.verifyNoOutstandingExpectation();
     httpBackend.flush();
     expect(controller.isMove).toBe(true);
     expect(MediaClusterServiceV2.deleteV2Cluster).toHaveBeenCalled();

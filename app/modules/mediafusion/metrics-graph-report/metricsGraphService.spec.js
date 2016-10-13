@@ -3,15 +3,15 @@
 describe('Service: Metrics Graph Service', function () {
   var MetricsGraphService;
   var chartColors;
-  // var callVolumeChart, availabilityChart;
+  var callVolumeChart, availabilityChart;
   var validateService = {
     validate: function () {}
   };
 
-  // var callVolumeData = getJSONFixture('mediafusion/json/metrics-graph-report/callVolumeGraphData.json');
-  // var callVolumeData = angular.copy(callVolumeData.graphData);
-  // var clusteravailabilityData = getJSONFixture('mediafusion/json/metrics-graph-report/clusterAvailabilityGraphData.json');
-  // var clusteravailabilityData = angular.copy(clusteravailabilityData.data);
+  var callVolumeData = getJSONFixture('mediafusion/json/metrics-graph-report/callVolumeGraphData.json');
+  //var callVolumeData = angular.copy(callVolumeData.graphData);
+  var clusteravailabilityData = getJSONFixture('mediafusion/json/metrics-graph-report/clusterAvailabilityGraphData.json');
+  //var clusteravailabilityData = angular.copy(clusteravailabilityData.data);
 
   beforeEach(angular.mock.module('Mediafusion'));
 
@@ -99,54 +99,66 @@ describe('Service: Metrics Graph Service', function () {
         baloon: "true"
       }]);
   });
-  // it('setUtilizationGraph should return an amchart object successfully', function () {
-  //   var data = [{
-  //     baloon: "false",
-  //     colorTwo: chartColors.dummyGray
-  //   }];
-  //   var graphs = [];
-  //   var utilizationChart = {
-  //     dataProvider: [],
-  //     graphs: [],
-  //     startDuration: "",
-  //     balloon: {
-  //       enabled: false
-  //     },
-  //     chartCursor: {
-  //       valueLineBalloonEnabled: false,
-  //       valueLineEnabled: false,
-  //       categoryBalloonEnabled: false
-  //     },
-  //     validateData: function () {
-  //       return true;
-  //     }
-  //   };
-  //   var cluster = "All Clusters";
-  //   var daterange = "Last 24 Hours";
-  //   var setUtilizationGraphResponse = MetricsGraphService.setUtilizationGraph(data, graphs, utilizationChart, cluster, daterange);
-  //   expect(setUtilizationGraphResponse.dataProvider).toEqual(
-  //     [{
-  //       baloon: "false",
-  //       colorTwo: chartColors.dummyGray
-  //     }]);
-  // });
-  // it('setUtilizationGraph should return an amchart object successfully when utilizationChart is unavailable', function () {
-  //   var data = [{
-  //     baloon: "false",
-  //     colorTwo: chartColors.dummyGray
-  //   }];
-  //   var graphs = [];
-  //   var utilizationChart = null;
-  //   var cluster = "All Clusters";
-  //   var daterange = "Last 24 Hours";
-  //   var setUtilizationGraphResponse = MetricsGraphService.setUtilizationGraph(data, graphs, utilizationChart, cluster, daterange);
-  //   expect(setUtilizationGraphResponse.dataProvider).toEqual(
-  //     [{
-  //       baloon: "false",
-  //       colorTwo: chartColors.dummyGray
-  //     }]);
-  // });
-  /*describe('Active Users graph services', function () {
+  it('setUtilizationGraph should return an amchart object successfully', function () {
+    var data = [{
+      baloon: "false",
+      colorTwo: chartColors.dummyGray
+    }];
+    var graphs = [{
+      title: "graphTitle",
+      valueField: "graphValue"
+    }];
+    var utilizationChart = {
+      dataProvider: [],
+      graphs: [],
+      startDuration: "",
+      balloon: {
+        enabled: false
+      },
+      chartCursor: {
+        valueLineBalloonEnabled: false,
+        valueLineEnabled: false,
+        categoryBalloonEnabled: false
+      },
+      validateData: function () {
+        return true;
+      }
+    };
+    var cluster = "All Clusters";
+    var daterange = {
+      label: "Last 24 Hours",
+      value: "0"
+    };
+    var setUtilizationGraphResponse = MetricsGraphService.setUtilizationGraph(data, graphs, utilizationChart, cluster, daterange);
+    expect(setUtilizationGraphResponse.dataProvider).toEqual(
+      [{
+        baloon: "false",
+        colorTwo: chartColors.dummyGray
+      }]);
+  });
+  it('setUtilizationGraph should return an amchart object successfully when utilizationChart is unavailable', function () {
+    var data = [{
+      baloon: "false",
+      colorTwo: chartColors.dummyGray
+    }];
+    var graphs = [{
+      title: "graphTitle",
+      valueField: "graphValue"
+    }];
+    var utilizationChart = null;
+    var cluster = "All Clusters";
+    var daterange = {
+      label: "Last 24 Hours",
+      value: "0"
+    };
+    var setUtilizationGraphResponse = MetricsGraphService.setUtilizationGraph(data, graphs, utilizationChart, cluster, daterange);
+    expect(setUtilizationGraphResponse.dataProvider).toEqual(
+      [{
+        baloon: "false",
+        colorTwo: chartColors.dummyGray
+      }]);
+  });
+  xdescribe('Active Users graph services', function () {
     beforeEach(function () {
       spyOn(AmCharts, 'makeChart').and.returnValue({
         'dataProvider': callVolumeData,
@@ -165,28 +177,27 @@ describe('Service: Metrics Graph Service', function () {
       MetricsGraphService.setCallVolumeGraph(callVolumeData, callVolumeChart);
       expect(validateService.validate).toHaveBeenCalled();
     });
-  });*/
-
-  /* describe('Active Users graph services', function () {
-     beforeEach(function () {
-       spyOn(AmCharts, 'makeChart').and.returnValue({
-         'dataProvider': clusteravailabilityData
+  });
+  xdescribe('Active Users graph services', function () {
+    beforeEach(function () {
+      spyOn(AmCharts, 'makeChart').and.returnValue({
+        'dataProvider': clusteravailabilityData
            //validateData: validateService.validate
-       });
-       availabilityChart = null;
-       availabilityChart = MetricsGraphService.setAvailabilityGraph(clusteravailabilityData, availabilityChart, 'All');
-     });
+      });
+      availabilityChart = null;
+      availabilityChart = MetricsGraphService.setAvailabilityGraph(clusteravailabilityData, availabilityChart, 'All');
+    });
 
-     it('should have created a graph when setActiveUsersGraph is called the first time', function () {
-       expect(AmCharts.makeChart).toHaveBeenCalled();
-       expect(MetricsGraphService.createAvailabilityGraph).toHaveBeenCalled();
+    it('should have created a graph when setActiveUsersGraph is called the first time', function () {
+      expect(AmCharts.makeChart).toHaveBeenCalled();
+      expect(MetricsGraphService.createAvailabilityGraph).toHaveBeenCalled();
        //expect(validateService.validate).not.toHaveBeenCalled();
-     });
+    });
 
-     it('should update graph when setActiveUsersGraph is called a second time', function () {
-       MetricsGraphService.setCallVolumeGraph(clusteravailabilityData, availabilityChart);
+    it('should update graph when setActiveUsersGraph is called a second time', function () {
+      MetricsGraphService.setCallVolumeGraph(clusteravailabilityData, availabilityChart);
        //expect(validateService.validate).toHaveBeenCalled();
-     });
-   });*/
+    });
+  });
 
 });

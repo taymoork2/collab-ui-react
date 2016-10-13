@@ -6,7 +6,7 @@ describe('Controller: MediaServiceSettingsControllerV2', function () {
   beforeEach(angular.mock.module('Mediafusion'));
 
   var controller, httpMock, $q, $modal, redirectTargetPromise;
-  var ServiceDescriptor, MailValidatorService, Notification, XhrNotificationService, MediaServiceActivationV2;
+  var ServiceDescriptor, MailValidatorService, Notification;
 
   var authInfo = {
     getOrgId: sinon.stub().returns('5632f806-ad09-4a26-a0c0-a49a13f38873')
@@ -14,14 +14,12 @@ describe('Controller: MediaServiceSettingsControllerV2', function () {
   beforeEach(angular.mock.module(function ($provide) {
     $provide.value("Authinfo", authInfo);
   }));
-  beforeEach(inject(function ($state, _$httpBackend_, $controller, $stateParams, _$q_, _$modal_, $translate, _MediaServiceActivationV2_, _MailValidatorService_, _XhrNotificationService_, _Notification_, _ServiceDescriptor_) {
+  beforeEach(inject(function ($state, _$httpBackend_, $controller, $stateParams, _$q_, _$modal_, $translate, _MailValidatorService_, _Notification_, _ServiceDescriptor_) {
     $q = _$q_;
     $modal = _$modal_;
     httpMock = _$httpBackend_;
 
     MailValidatorService = _MailValidatorService_;
-    XhrNotificationService = _XhrNotificationService_;
-    MediaServiceActivationV2 = _MediaServiceActivationV2_;
     Notification = _Notification_;
     ServiceDescriptor = _ServiceDescriptor_;
     redirectTargetPromise = {
@@ -41,25 +39,41 @@ describe('Controller: MediaServiceSettingsControllerV2', function () {
 
       MailValidatorService: MailValidatorService,
       Notification: Notification,
-      ServiceDescriptor: ServiceDescriptor,
-      XhrNotificationService: XhrNotificationService,
-      MediaServiceActivationV2: MediaServiceActivationV2
+      ServiceDescriptor: ServiceDescriptor
     });
 
   }));
   it('controller should be defined', function () {
     expect(controller).toBeDefined();
   });
-  it('MediaServiceSettingsControllerV2 writeConfig valid emailSubscribers', function () {
-    httpMock.when('PATCH', /^\w+.*/).respond({});
-    var emails = ["abc@cisco.com"];
+  it('writeConfig should notify success for valid emailSubscribers', function () {
+    httpMock.when('PATCH', /^\w+.*/).respond(204, null);
+    var emails = [{
+      "text": "abc@cisco.com"
+    }];
+    controller.serviceId = "squared-fusion-media";
     controller.emailSubscribers = emails;
+    spyOn(Notification, 'success');
     spyOn(ServiceDescriptor, 'setEmailSubscribers').and.callThrough();
-    spyOn(MailValidatorService, 'isValidEmailCsv').and.returnValue(true);
     controller.writeConfig();
-    httpMock.verifyNoOutstandingExpectation();
     httpMock.flush();
+    expect(Notification.success).toHaveBeenCalled();
     expect(controller.savingEmail).toBeFalsy();
     expect(ServiceDescriptor.setEmailSubscribers).toHaveBeenCalled();
+  });
+  it('writeConfig should notify error for invalid emailSubscribers', function () {
+    var emails = [{
+      "text": "abc"
+    }];
+    spyOn(Notification, 'error');
+    controller.serviceId = "squared-fusion-media";
+    controller.emailSubscribers = emails;
+    controller.writeConfig();
+    expect(Notification.error).toHaveBeenCalled();
+  });
+  it('confirmDisable should open the respective modal', function () {
+    spyOn($modal, 'open');
+    controller.confirmDisable();
+    expect($modal.open).toHaveBeenCalled();
   });
 });

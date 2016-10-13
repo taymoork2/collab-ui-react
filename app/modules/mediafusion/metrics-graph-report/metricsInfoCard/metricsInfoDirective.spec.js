@@ -10,7 +10,9 @@ describe('Directive: ucMetricsInfoCard', function () {
   }));
 
   it('Replaces the element with the appropriate content', function () {
-    $compile("<uc-metrics-info-card></uc-metrics-info-card>")($rootScope);
+    var element = $compile("<uc-metrics-info-card></uc-metrics-info-card>")($rootScope);
     $rootScope.$digest();
+    expect(element.html()).toContain("metrics-info");
+    expect(element.html()).toContain("metrics-header");
   });
 });

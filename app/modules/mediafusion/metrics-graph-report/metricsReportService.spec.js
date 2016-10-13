@@ -23,7 +23,7 @@ describe('Service: Metrics Reports Service', function () {
   var availabilitydata = availabilityCardData.availability;
 
   var allClusters = 'mediaFusion.metrics.allclusters';
-  //var sampleClusters = 'mediaFusion.metrics.sampleclusters';
+  var sampleClusters = 'mediaFusion.metrics.sampleclusters';
 
   beforeEach(angular.mock.module('Mediafusion'));
 
@@ -35,7 +35,10 @@ describe('Service: Metrics Reports Service', function () {
     getOrgId: jasmine.createSpy('getOrgId').and.returnValue('1')
   };
   var error = {
-    message: 'error'
+    message: 'error',
+    data: {
+      trackingId: "id"
+    }
   };
 
   beforeEach(angular.mock.module(function ($provide) {
@@ -103,7 +106,7 @@ describe('Service: Metrics Reports Service', function () {
   });
 
   describe('Percentage of CPU utilization', function () {
-    it('should get percentage utilization data', function () {
+    xit('should get percentage utilization data', function () {
       $httpBackend.whenGET(UtilizationUrl).respond(utilizationdata);
 
       MetricsReportService.getUtilizationData(timeFilter, allClusters).then(function (response) {
@@ -165,16 +168,16 @@ describe('Service: Metrics Reports Service', function () {
       $httpBackend.flush();
     });
 
-    // it('should notify an error for total number of calls failure', function () {
-    //   $httpBackend.whenGET(totalCallsCard).respond(500, error);
+    it('should notify an error for total number of calls failure', function () {
+      $httpBackend.when('GET', /^\w+.*/).respond(500, error);
 
-    //   MetricsReportService.getTotalCallsData(timeFilter, sampleClusters).then(function (response) {
-    //     expect(response).toEqual([]);
-    //     expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
-    //   });
+      MetricsReportService.getTotalCallsData(timeFilter, sampleClusters).then(function (response) {
+        expect(response).toEqual([]);
+        expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
+      });
 
-    //   $httpBackend.flush();
-    // });
+      $httpBackend.flush();
+    });
   });
 
   describe('Cluster Availability Data on the Card', function () {

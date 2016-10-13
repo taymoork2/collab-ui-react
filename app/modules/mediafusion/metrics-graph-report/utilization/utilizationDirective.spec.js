@@ -10,7 +10,9 @@ describe('Directive: ucUtilizationMetrics', function () {
   }));
 
   it('Replaces the element with the appropriate content', function () {
-    $compile("<uc-utilization-metrics></uc-utilization-metrics>")($rootScope);
+    var element = $compile("<uc-utilization-metrics></uc-utilization-metrics>")($rootScope);
     $rootScope.$digest();
+    expect(element.html()).toContain("utilization-card");
+    expect(element.html()).toContain("metrics-utilization");
   });
 });
