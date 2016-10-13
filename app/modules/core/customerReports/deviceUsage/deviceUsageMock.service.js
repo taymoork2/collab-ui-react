@@ -6,7 +6,7 @@
     .service('DeviceUsageMockService', DeviceUsageMockService);
 
   /* @ngInject */
-  function DeviceUsageMockService($log, $q, DeviceUsageMockData) {
+  function DeviceUsageMockService($q, DeviceUsageMockData) {
 
     var service = {
       getData: getData,
@@ -38,7 +38,6 @@
           calculatedList.push(d);
         }
       });
-      $log.warn("After summing raw data returning only combination of date and type:", calculatedList);
       return calculatedList;
     }
   }
