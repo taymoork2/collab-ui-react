@@ -7,22 +7,29 @@ export class Notification {
   private static readonly TYPES = [Notification.SUCCESS, Notification.WARNING, Notification.ERROR];
   private static readonly NO_TIMEOUT = 0;
   private static readonly DEFAULT_TIMEOUT = 3000;
+  private static readonly HTTP_STATUS = {
+    NOT_FOUND: 404,
+    REJECTED: -1,
+    UNKNOWN: 0,
+  };
   private failureTimeout: number;
   private successTimeout: number;
   private preventToasters = false;
+  private isNetworkOffline = false;
 
   /* @ngInject */
   constructor(
+    private $log: ng.ILogService,
     private $q: ng.IQService,
     private $timeout: ng.ITimeoutService,
     private $translate: ng.translate.ITranslateService,
+    private $window: ng.IWindowService,
     private AlertService: AlertService,
     private Config,
-    private Log,
     private toaster,
   ) {
-    this.failureTimeout = Notification.NO_TIMEOUT;
-    this.successTimeout = this.Config.isE2E() ? Notification.NO_TIMEOUT : Notification.DEFAULT_TIMEOUT;
+    this.initTimeouts();
+    this.initOfflineListeners();
   }
 
   public success(messageKey: string, messageParams?: Object, titleKey?: string): void {
@@ -39,25 +46,29 @@ export class Notification {
 
   public errorWithTrackingId(response: ng.IHttpPromiseCallbackArg<any>, errorKey?: string, errorParams?: Object): void {
     let errorMsg = this.getErrorMessage(errorKey, errorParams);
-    errorMsg = this.addTrackingId(errorMsg, response);
-    this.notify(_.trim(errorMsg), Notification.ERROR);
-  }
-
-  public errorResponse(response: ng.IHttpPromiseCallbackArg<any>, errorKey?: string, errorParams?: Object): void {
-    let errorMsg = this.processErrorResponse(response, errorKey, errorParams);
-    this.notify(errorMsg, Notification.ERROR);
+    errorMsg = this.buildResponseMessage(errorMsg, response, false);
+    this.notifyErrorResponse(errorMsg, response);
   }
 
   public processErrorResponse(response: ng.IHttpPromiseCallbackArg<any>, errorKey?: string, errorParams?: Object): string {
     let errorMsg = this.getErrorMessage(errorKey, errorParams);
-    errorMsg = this.addResponseMessage(errorMsg, response);
-    errorMsg = this.addTrackingId(errorMsg, response);
-    return _.trim(errorMsg);
+    return this.buildResponseMessage(errorMsg, response, true);
+  }
+
+  public errorResponse(response: ng.IHttpPromiseCallbackArg<any>, errorKey?: string, errorParams?: Object): void {
+    let errorMsg = this.processErrorResponse(response, errorKey, errorParams);
+    this.notifyErrorResponse(errorMsg, response);
+  }
+
+  private notifyErrorResponse(errorMsg: string, response: ng.IHttpPromiseCallbackArg<any>): void {
+    if (!this.isCancelledResponse(response)) {
+      this.notify(errorMsg, Notification.ERROR);
+    }
   }
 
   public notify(notifications: string[] | string, type: string = Notification.ERROR, title?: string): void {
     if (this.preventToasters) {
-      this.Log.warn('Deliberately prevented a notification:', notifications);
+      this.$log.warn('Deliberately prevented a notification:', notifications);
       return;
     }
     if (!notifications) {
@@ -82,6 +93,7 @@ export class Notification {
     });
   }
 
+  // TODO should this usage be replaced with a dialog modal?
   public confirmation(message: string): ng.IPromise<any> {
     let deferred = this.$q.defer();
 
@@ -115,6 +127,44 @@ export class Notification {
     this.$timeout(() => this.preventToasters = false, 1000);
   }
 
+  private buildResponseMessage(errorMsg: string, response: ng.IHttpPromiseCallbackArg<any>, useResponseData: boolean = false): string {
+    let status = _.get<number>(response, 'status');
+    if (this.isCancelledResponse(response)) {
+      errorMsg += ' ' + this.$translate.instant('errors.statusCancelled');
+    } else if (this.isOfflineStatus(status)) {
+      errorMsg += ' ' + this.$translate.instant('errors.statusOffline');
+    } else if (this.isRejectedStatus(status)) {
+      errorMsg += ' ' + this.$translate.instant('errors.statusRejected');
+    } else if (this.isNotFoundStatus(status)) {
+      errorMsg += ' ' + this.$translate.instant('errors.status404');
+    } else if (this.isUnknownStatus(status)) {
+      errorMsg += ' ' + this.$translate.instant('errors.statusUnknown');
+    } else if (useResponseData) {
+      errorMsg = this.addResponseMessage(errorMsg, response);
+    }
+    errorMsg = this.addTrackingId(errorMsg, response);
+    return _.trim(errorMsg);
+  }
+
+  private isCancelledResponse(response: ng.IHttpPromiseCallbackArg<any>): boolean {
+    return this.isRejectedStatus(_.get<number>(response, 'status')) && _.get(response, 'config.timeout.$$state.status') > 0;
+  }
+  private isOfflineStatus(status: number): boolean {
+    return this.isNetworkOffline && this.isRejectedStatus(status);
+  }
+
+  private isRejectedStatus(status: number): boolean {
+    return status === Notification.HTTP_STATUS.REJECTED;
+  }
+
+  private isNotFoundStatus(status: number): boolean {
+    return status === Notification.HTTP_STATUS.NOT_FOUND;
+  }
+
+  private isUnknownStatus(status: number): boolean {
+    return status === Notification.HTTP_STATUS.UNKNOWN;
+  }
+
   private addResponseMessage(errorMsg: string, response: ng.IHttpPromiseCallbackArg<any>): string {
     if (_.get(response, 'data.errorMessage')) {
       // TODO: rip out 'stringify()' usage once ATLAS-1338 is resolved
@@ -122,10 +172,10 @@ export class Notification {
     } else if (_.get(response, 'data.error')) {
       // TODO: rip out 'stringify()' usage once ATLAS-1338 is resolved
       errorMsg += ' ' + this.stringify(response.data.error);
-    } else if (_.get(response, 'status') === 404) {
-      errorMsg += ' ' + this.$translate.instant('errors.status404');
     } else if (_.isString(response)) {
       errorMsg += ' ' + response;
+    } else {
+      this.$log.warn('Unable to notify an error response', response);
     }
     return errorMsg;
   }
@@ -156,5 +206,15 @@ export class Notification {
   // TODO: rip this out once ATLAS-1338 is resolved
   private stringify(jsonifiableVal) {
     return (_.isObjectLike(jsonifiableVal)) ? JSON.stringify(jsonifiableVal) : jsonifiableVal;
+  }
+
+  private initTimeouts(): void {
+    this.failureTimeout = Notification.NO_TIMEOUT;
+    this.successTimeout = this.Config.isE2E() ? Notification.NO_TIMEOUT : Notification.DEFAULT_TIMEOUT;
+  }
+
+  private initOfflineListeners(): void {
+    this.$window.addEventListener('offline', () => this.isNetworkOffline = true);
+    this.$window.addEventListener('online', () => this.isNetworkOffline = false);
   }
 }
