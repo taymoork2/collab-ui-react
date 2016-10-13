@@ -37,7 +37,22 @@
         templateUrl: 'modules/huron/features/autoAttendant/routeToQueue/aaNewTreatmentModal.tpl.html',
         controller: 'AANewTreatmentModalCtrl',
         controllerAs: 'aaNewTreatmentModalCtrl',
-        type: 'full'
+        type: 'full',
+        resolve: {
+          aa_schedule: function () {
+            return $scope.schedule;
+          },
+          aa_menu_id: function () {
+            return $scope.menuId;
+          },
+          aa_index: function () {
+            return $scope.index;
+          },
+          aa_key_index: function () {
+            return $scope.keyIndex;
+          },
+        },
+        modalClass: 'aa-queue-settings-modal'
       });
     }
 

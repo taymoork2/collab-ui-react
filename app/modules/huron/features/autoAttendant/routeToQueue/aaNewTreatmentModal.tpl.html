@@ -4,6 +4,20 @@
 </div>
 
 <div class="modal-body">
+   <div class="row">
+    <div class="large-4 medium-12 small-12 columns"> 
+      <label class="h4" translate="autoAttendant.initialAnnouncement"></label>
+    </div>
+    <div class="columns large-8 medium-8">
+     <div class="row">
+      <aa-message-type aa-index="index" aa-schedule="{{schedule}}" aa-menu-id="{{menuId}}" aa-key-index="{{keyIndex}}"></aa-message-type>
+     </div>
+     <div class="row">
+      <span class="small-12 columns cs-input__help-text" translate="autoAttendant.initialHelpText"></span>
+     </div>
+    </div>
+   </div>
+<hr/>
 	<div class="row">
 		<div class="columns medium-4"> 
 		  <label class="h4 ng-scope" translate="autoAttendant.fallbackLabel"></label>
