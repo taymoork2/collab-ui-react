@@ -172,11 +172,6 @@
       setActionEntry();
 
       populateUiModel();
-      //vm.schedule = $scope.schedule;
-      //vm.index = $scope.index;
-      //vm.menuId = $scope.menuId;
-      //vm.keyIndex = $scope.keyIndex;
-
     }
 
     activate();
