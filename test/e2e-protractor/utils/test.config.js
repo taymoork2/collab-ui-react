@@ -7,6 +7,7 @@ var scopes = [
   'Identity:SCIM',
   'Identity:Config',
   'Identity:Organization',
+  'Identity:OAuthToken',
   'cloudMeetings:login',
   'webex-messenger:get_webextoken',
   'cloud-contact-center:admin',
