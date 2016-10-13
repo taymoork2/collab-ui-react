@@ -10,6 +10,7 @@
       usersWithRole: usersWithRole,
       searchUsers: searchUsers,
       searchOrgs: searchOrgs,
+      searchOrders: searchOrders,
       getUser: getUser,
       getOrg: getOrg,
       isEmailBlocked: isEmailBlocked,
@@ -180,6 +181,15 @@
 
       return cancelableHttpGET(urlBase + 'helpdesk/search/organizations?phrase=' + encodeURIComponent(searchString) + '&limit=' + limit)
         .then(extractItems);
+    }
+
+    function searchOrders(searchString) {
+      // TODO - if (useMock()) {
+      //  return deferredResolve(HelpdeskMockData.orders);
+      //}
+
+      return cancelableHttpGET(urlBase + 'commerce/orders/search?webOrderId=' + encodeURIComponent(searchString))
+        .then(extractData);
     }
 
     function getUser(orgId, userId) {

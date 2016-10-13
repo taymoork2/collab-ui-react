@@ -1941,6 +1941,15 @@
               id: null
             }
           })
+          .state('helpdesk.order', {
+            url: '/order/:id',
+            templateUrl: 'modules/squared/helpdesk/helpdesk-order.html',
+            controller: 'HelpdeskOrderController',
+            controllerAs: 'helpdeskOrderCtrl',
+            params: {
+              order: null
+            }
+          })
           .state('helpdesk.cloudberry-device', {
             url: '/cloudberryDevice/:orgId/:id',
             templateUrl: 'modules/squared/helpdesk/helpdesk-cloudberry-device.html',

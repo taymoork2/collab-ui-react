@@ -407,6 +407,9 @@
         }
         return false;
       },
+      isOrderAdminUser: function () {
+        return this.hasRole(Config.roles.orderadmin);
+      },
       isComplianceUserOnly: function () {
         var roles = this.getRoles();
         if (roles && this.isComplianceUser()) {
