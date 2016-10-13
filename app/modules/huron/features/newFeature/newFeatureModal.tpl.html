@@ -12,7 +12,6 @@
             {{feature.code | translate}}
         </label>
       </div>
-
       <h4 class="feature-label-container">
         <strong>{{feature.label | translate}}</strong>
       </h4>
@@ -24,8 +23,18 @@
     <div ng-if="features.length === 0">
       <h4 translate="huronHuntGroup.noFeatures"></h4>
     </div>
+    <button class="future-feature">
+      <i class="icon icon-cal icon-5x feature-icon-month"></i>
+      <h4 class="feature-label-container">
+        <strong>{{futureFeature.label | translate}}</strong>
+      </h4>
+
+      <p class="feature-description-container text-left">
+        {{futureFeature.description | translate}}
+      </p>
+    </button>
   </div>
-  <div class="feature-modal-loading" ng-if="loading">
-    <i class="icon icon-spinner"></i>
-  </div>
+</div>
+<div class="feature-modal-loading" ng-if="loading">
+  <i class="icon icon-spinner"></i>
 </div>

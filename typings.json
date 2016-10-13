@@ -21,6 +21,7 @@
     "karma-jasmine": "github:DefinitelyTyped/DefinitelyTyped/karma-jasmine/karma-jasmine.d.ts#46719185c564694c5583c4b7ad94dbb786ecad46",
     "lodash": "github:DefinitelyTyped/DefinitelyTyped/lodash/lodash.d.ts#bb5916e6451594dbc565c8877dfcbfebde1c8976",
     "log4js": "github:DefinitelyTyped/DefinitelyTyped/log4js/log4js.d.ts#46719185c564694c5583c4b7ad94dbb786ecad46",
+    "masonry-layout": "github:DefinitelyTyped/DefinitelyTyped/masonry-layout/masonry-layout.d.ts#4c530f28d1e4bea629efe6232072889e3c6c93ac",
     "mime": "github:DefinitelyTyped/DefinitelyTyped/mime/mime.d.ts#46719185c564694c5583c4b7ad94dbb786ecad46",
     "moment": "github:DefinitelyTyped/DefinitelyTyped/moment/moment.d.ts#1a5b2a729d35b1d41e2d15818db013a3644c6ba4",
     "moment-node": "github:DefinitelyTyped/DefinitelyTyped/moment/moment-node.d.ts#1a5b2a729d35b1d41e2d15818db013a3644c6ba4",

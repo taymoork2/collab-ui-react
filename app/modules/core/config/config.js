@@ -375,6 +375,7 @@
         'generateauthcode',
         'huntgroups',
         'huronCallPark',
+        'huronCallPickup',
         'hurondetails',
         'huronfeatures',
         'huronHuntGroup',

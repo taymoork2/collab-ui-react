@@ -56,6 +56,7 @@
       callMultiDevice: 'call-multi-device',
       calliopeDiscovery: 'calliope-discovery',
       callParkService: 'call-park-service',
+      huronCallPickup: 'huronCallPickup',
       calsvcDetectCmrLoc: 'calsvc_detect_cmr_loc',
       clientRingbackV2: 'client-ringback-v2',
       console: 'console',
