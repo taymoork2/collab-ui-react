@@ -34,6 +34,7 @@ export default angular
     require('angular-resource'),
     require('modules/core/scripts/services/authinfo'),
     require('modules/huron/telephony/telephonyConfig'),
+    require('modules/huron/telephony/cmiServices'),
   ])
   .component('ucCallerId', new CallerIdComponent())
   .service('CallerIDService', CallerIDService)

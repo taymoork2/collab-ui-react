@@ -1,5 +1,5 @@
 import { CallForward } from '../../callForward';
-import { BLOCK_CALLERID_TYPE, CallerIdConfig, CallerIdOption, DIRECT_LINE_TYPE } from '../../callerId';
+import { CallerIdOption } from '../../callerId';
 import { LineService, LineConsumerType, LINE_CHANGE, Line } from '../services';
 import { LineOverviewService, LineOverviewData } from './index';
 import { DirectoryNumberOptionsService } from '../../directoryNumber';
@@ -7,7 +7,6 @@ import { IActionItem } from '../../../core/components/sectionTitle/sectionTitle.
 import { Member, MemberService } from '../../members';
 import { SharedLine, SharedLineService } from '../../sharedLine';
 import { Notification } from 'modules/core/notifications';
-import { CallerIDService } from './../../callerId/callerId.service';
 
 class LineOverview implements ng.IComponentController {
   private ownerType: string;
@@ -58,7 +57,6 @@ class LineOverview implements ng.IComponentController {
     private MemberService: MemberService,
     private Notification: Notification,
     private SharedLineService: SharedLineService,
-    private CallerIDService: CallerIDService,
   ) { }
 
 
@@ -85,7 +83,6 @@ class LineOverview implements ng.IComponentController {
         this.LineOverviewService.get(this.consumerType, this.ownerId, this.numberId)
           .then(lineOverviewData => {
             this.lineOverviewData = lineOverviewData;
-            this.initCallerId();
             this.showActions = this.setShowActionsFlag(this.lineOverviewData.line);
             if (!this.lineOverviewData.line.uuid) { // new line, grab first available internal number
               this.lineOverviewData.line.internal = this.internalNumbers[0];
@@ -99,7 +96,6 @@ class LineOverview implements ng.IComponentController {
   }
 
   public setDirectoryNumbers(internalNumber: string, externalNumber: string): void {
-    this.checkCallerId(externalNumber);
     this.lineOverviewData.line.internal = internalNumber;
     this.lineOverviewData.line.external = externalNumber;
     this.checkForChanges();
@@ -156,23 +152,6 @@ class LineOverview implements ng.IComponentController {
       .catch( (response) => this.Notification.errorResponse(response, 'directoryNumberPanel.error'));
     });
   }
-  private checkCallerId(number) {
-    if (number && number !== this.lineOverviewData.line.external) {
-      if (_.last(this.callerIdOptions).label === DIRECT_LINE_TYPE.name) {
-        this.callerIdOptions.pop();
-      }
-      this.callerIdOptions.push(new CallerIdOption(DIRECT_LINE_TYPE.name, new CallerIdConfig('', DIRECT_LINE_TYPE.name, number, DIRECT_LINE_TYPE.key)));
-      if (this.lineOverviewData.callerId.externalCallerIdType === DIRECT_LINE_TYPE.key) {
-        this.callerIdSelected = new CallerIdOption(DIRECT_LINE_TYPE.name, new CallerIdConfig('', DIRECT_LINE_TYPE.name, number, DIRECT_LINE_TYPE.key));
-      }
-    } else if (_.last(this.callerIdOptions).label === DIRECT_LINE_TYPE.name && number !== this.lineOverviewData.line.external) {
-      this.callerIdOptions.pop();
-      if (this.lineOverviewData.callerId.externalCallerIdType === DIRECT_LINE_TYPE.key) {
-        this.callerIdSelected = new CallerIdOption(BLOCK_CALLERID_TYPE.name, new CallerIdConfig('', this.$translate.instant('callerIdPanel.blockedCallerIdDescription'), '', BLOCK_CALLERID_TYPE.key));
-        this.lineOverviewData.callerId.externalCallerIdType = BLOCK_CALLERID_TYPE.key;
-      }
-    }
-  }
 
   public onCancel(): void {
     if (!this.lineOverviewData.line.uuid) {
@@ -180,7 +159,6 @@ class LineOverview implements ng.IComponentController {
     } else {
       this.lineOverviewData = this.LineOverviewService.getOriginalConfig();
       this.newSharedLineMembers = [];
-      this.initCallerId();
       this.resetForm();
     }
   }
@@ -243,14 +221,6 @@ class LineOverview implements ng.IComponentController {
   private resetForm(): void {
     this.form.$setPristine();
     this.form.$setUntouched();
-  }
-
-  private initCallerId(): void {
-    this.callerIdOptions = [];
-    this.CallerIDService.initCallerId(this.callerIdOptions, this.callerIdSelected, this.lineOverviewData).then((data) => {
-      this.callerIdSelected = data.selected;
-      this.callerIdOptions = data.options;
-    });
   }
 
   private setShowActionsFlag(line: Line): boolean {

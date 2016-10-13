@@ -1,10 +1,38 @@
-import { ICallerID } from './callerId';
-import { CallerIdOption, CallerIdConfig, COMPANY_NUMBER_TYPE, COMPANY_CALLERID_TYPE, CUSTOM_COMPANY_TYPE, BLOCK_CALLERID_TYPE, DIRECT_LINE_TYPE } from './index';
+import { ICallerID } from './index';
+import { CallerIdOption, CallerIdConfig } from './callerId.component';
+import { LineConsumerType } from './../lines/services';
+
 interface ICallerIDResource extends ng.resource.IResourceClass<ng.resource.IResource<ICallerID>> {
   update: ng.resource.IResourceMethod<ng.resource.IResource<ICallerID>>;
 }
 export class CallerIDService {
   private callerIDService: ICallerIDResource;
+  private callerIDOptions: CallerIdOption[] = [];
+  private companyNumberOption: CallerIdOption;
+  private companyCallerIdOption: CallerIdOption;
+  private customOption: CallerIdOption;
+  private directLineOption: CallerIdOption;
+  private blockOption: CallerIdOption;
+  private static readonly BLOCK_CALLERID_TYPE = {
+    name: 'Blocked Outbound Caller ID',
+    key: 'EXT_CALLER_ID_BLOCKED_CALLER_ID',
+  };
+  private static readonly DIRECT_LINE_TYPE = {
+    name: 'Direct Line',
+    key: 'EXT_CALLER_ID_DIRECT_LINE',
+  };
+  private static readonly COMPANY_CALLERID_TYPE = {
+    name: 'Company Caller ID',
+    key: 'EXT_CALLER_ID_COMPANY_CALLER_ID',
+  };
+  private static readonly COMPANY_NUMBER_TYPE = {
+    name: 'Company Number',
+    key: 'EXT_CALLER_ID_COMPANY_NUMBER',
+  };
+  private static readonly CUSTOM_COMPANY_TYPE = {
+    name: 'Custom',
+    key: 'EXT_CALLER_ID_CUSTOM',
+  };
 
   /* @ngInject */
   constructor(
@@ -24,7 +52,7 @@ export class CallerIDService {
       });
   }
 
-  public getCallerId(_type, _typeId, _numberId): ng.IPromise<ICallerID> {
+  public getCallerId(_type: LineConsumerType, _typeId: string, _numberId: string): ng.IPromise<ICallerID> {
     return this.callerIDService.get({
       customerId: this.Authinfo.getOrgId(),
       type: _type,
@@ -33,8 +61,8 @@ export class CallerIDService {
     }).$promise;
   }
 
-  public updateCallerId(_type, _typeId, _numberId, data) {
-    let result = _.cloneDeep(data);
+  public updateCallerId(_type: LineConsumerType, _typeId: string, _numberId: string | undefined, data: CallerIdOption) {
+    let result: any = _.cloneDeep(data);
     delete result.url;
     delete result.callerIdSelected;
     return this.callerIDService.update({
@@ -44,70 +72,90 @@ export class CallerIDService {
       numberId: _numberId,
     }, result).$promise;
   }
+  public changeDirectLine(directLine: string, selected: CallerIdOption) {
+    if (_.last(this.callerIDOptions) && _.last(this.callerIDOptions).label === CallerIDService.DIRECT_LINE_TYPE.name) {
+      this.callerIDOptions.pop();
+    }
+    if (directLine) {
+      this.directLineOption = new CallerIdOption(CallerIDService.DIRECT_LINE_TYPE.name, new CallerIdConfig('', CallerIDService.DIRECT_LINE_TYPE.name, directLine, CallerIDService.DIRECT_LINE_TYPE.key));
+      this.callerIDOptions.push(this.directLineOption);
+      if (selected.label === CallerIDService.DIRECT_LINE_TYPE.name) {
+        selected = this.directLineOption;
+      }
+    } else {
+      selected = this.blockOption;
+    }
+    return {
+      options: this.callerIDOptions,
+      selected: selected,
+    };
+  }
 
-  public initCallerId(options, selected, data): ng.IPromise<{selected: CallerIdOption, options: CallerIdOption[]}> {
+  public initCallerId(external: string): ng.IPromise<CallerIdOption[]> {
+    this.callerIDOptions = [];
     let _companyNumber;
-    let companyNumberOption, companyCallerIdOption, customOption, directLineOption, blockOption;
     return this.listCompanyNumbers()
       .then((companyNumbers) => {
         // Company Number
         companyNumbers.filter((companyNumber) => {
-          return companyNumber.externalCallerIdType === COMPANY_NUMBER_TYPE.name;
+          return companyNumber.externalCallerIdType === CallerIDService.COMPANY_NUMBER_TYPE.name;
         }).map((companyNumber) => {
-          companyNumberOption = new CallerIdOption(COMPANY_NUMBER_TYPE.name, new CallerIdConfig(companyNumber.uuid, companyNumber.name, companyNumber.pattern, COMPANY_NUMBER_TYPE.key));
-          options.push(companyNumberOption);
+          this.companyNumberOption = new CallerIdOption(CallerIDService.COMPANY_NUMBER_TYPE.name, new CallerIdConfig(companyNumber.uuid, companyNumber.name, companyNumber.pattern, CallerIDService.COMPANY_NUMBER_TYPE.key));
+          this.callerIDOptions.push(this.companyNumberOption);
           _companyNumber = companyNumber;
         });
         // Company Caller ID
         companyNumbers.filter((companyNumber) => {
-          return companyNumber.externalCallerIdType === COMPANY_CALLERID_TYPE.name;
+          return companyNumber.externalCallerIdType === CallerIDService.COMPANY_CALLERID_TYPE.name;
         }).map((companyNumber) => {
-          companyCallerIdOption = new CallerIdOption(COMPANY_CALLERID_TYPE.name, new CallerIdConfig(companyNumber.uuid, companyNumber.name, companyNumber.pattern, COMPANY_CALLERID_TYPE.key));
-          options.push(companyCallerIdOption);
+          this.companyCallerIdOption = new CallerIdOption(CallerIDService.COMPANY_CALLERID_TYPE.name, new CallerIdConfig(companyNumber.uuid, companyNumber.name, companyNumber.pattern, CallerIDService.COMPANY_CALLERID_TYPE.key));
+          this.callerIDOptions.push(this.companyCallerIdOption);
           _companyNumber = companyNumber;
         });
         // Custom
-        customOption = new CallerIdOption(CUSTOM_COMPANY_TYPE.name, new CallerIdConfig('', '',  '', CUSTOM_COMPANY_TYPE.key));
-        options.push(customOption);
+        this.customOption = new CallerIdOption(CallerIDService.CUSTOM_COMPANY_TYPE.name, new CallerIdConfig('', '',  '', CallerIDService.CUSTOM_COMPANY_TYPE.key));
+        this.callerIDOptions.push(this.customOption);
         // Block Caller ID
-        blockOption = new CallerIdOption(BLOCK_CALLERID_TYPE.name, new CallerIdConfig('', this.$translate.instant('callerIdPanel.blockedCallerIdDescription'), '', BLOCK_CALLERID_TYPE.key));
-        options.push(blockOption);
+        this.blockOption = new CallerIdOption(CallerIDService.BLOCK_CALLERID_TYPE.name, new CallerIdConfig('', this.$translate.instant('callerIdPanel.blockedCallerIdDescription'), '', CallerIDService.BLOCK_CALLERID_TYPE.key));
+        this.callerIDOptions.push(this.blockOption);
         // Direct Line
-        if (data.line.external) {
-          directLineOption = new CallerIdOption(DIRECT_LINE_TYPE.name, new CallerIdConfig('', DIRECT_LINE_TYPE.name, data.line.external, DIRECT_LINE_TYPE.key));
-          options.push(directLineOption);
+        if (external) {
+          this.directLineOption = new CallerIdOption(CallerIDService.DIRECT_LINE_TYPE.name, new CallerIdConfig('', CallerIDService.DIRECT_LINE_TYPE.name, external, CallerIDService.DIRECT_LINE_TYPE.key));
+          this.callerIDOptions.push(this.directLineOption);
         }
-        switch (data.callerId.externalCallerIdType) {
-          case COMPANY_NUMBER_TYPE.key: {
-            selected = companyNumberOption;
-            break;
-          }
-          case COMPANY_CALLERID_TYPE.key: {
-            selected = companyCallerIdOption;
-            break;
-          }
-          case DIRECT_LINE_TYPE.key: {
-            selected = directLineOption;
-            break;
-          }
-          case CUSTOM_COMPANY_TYPE.key: {
-            selected = customOption;
-            break;
-          }
-          case BLOCK_CALLERID_TYPE.key: {
-            selected = blockOption;
-            break;
-          }
-        }
-        return {
-          selected: selected,
-          options: options,
-        };
+
+        return this.callerIDOptions;
       });
+  }
+
+  public selectType(type: string) {
+    let selected;
+    switch (type) {
+      case CallerIDService.COMPANY_NUMBER_TYPE.key:
+        selected = this.companyNumberOption;
+        break;
+      case CallerIDService.COMPANY_CALLERID_TYPE.key:
+        selected = this.companyCallerIdOption;
+        break;
+      case CallerIDService.DIRECT_LINE_TYPE.key:
+        selected = this.directLineOption;
+        break;
+      case CallerIDService.CUSTOM_COMPANY_TYPE.key:
+        selected = this.customOption;
+        break;
+      case CallerIDService.BLOCK_CALLERID_TYPE.key:
+        selected = this.blockOption;
+        break;
+    }
+    return selected;
   }
   private listCompanyNumbers() {
     return this.CompanyNumberService.query({
       customerId: this.Authinfo.getOrgId(),
     }).$promise;
+  }
+
+  public isCustom(selected: CallerIdOption) {
+    return selected && selected.label === CallerIDService.CUSTOM_COMPANY_TYPE.name;
   }
 }

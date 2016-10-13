@@ -1,11 +1,30 @@
+import { CallerIDService } from './callerId.service';
 class CallerId implements ng.IComponentController {
   private onChangeFn: Function;
   private customCallerIdName: string;
   private customCallerIdNumber: string;
-  private callerIdSelected: { label: string, value: Object };
+  private callerIdSelected: CallerIdOption;
+  private callerIdOptions: CallerIdOption[];
+  private directLine;
+
+  /* @ngInject */
+  constructor(private CallerIDService: CallerIDService) {}
 
   public $onInit(): void {
+    this.CallerIDService.initCallerId(this.directLine).then((data) => {
+      this.callerIdOptions = data;
+    });
+  }
 
+  public $onChanges(changes) {
+    if (changes.directLine && changes.directLine.currentValue !== null) {
+      let data = this.CallerIDService.changeDirectLine(changes.directLine.currentValue, this.callerIdSelected);
+      this.callerIdOptions = data.options;
+      this.callerIdSelected = data.selected;
+    }
+    if (changes.externalType) {
+      this.callerIdSelected = this.CallerIDService.selectType(changes.externalType.currentValue);
+    }
   }
 
   public onChange(): void {
@@ -17,7 +36,7 @@ class CallerId implements ng.IComponentController {
   }
 
   public showCustom(): boolean {
-    return this.callerIdSelected && this.callerIdSelected.label === 'Custom';
+    return this.CallerIDService.isCustom(this.callerIdSelected);
   }
 }
 
@@ -53,6 +72,8 @@ export class CallerIdComponent implements ng.IComponentOptions {
     callerIdSelected: '<',
     customCallerIdName: '<',
     customCallerIdNumber: '<',
+    directLine: '<',
+    externalType: '<',
     onChangeFn: '&',
   };
 }
