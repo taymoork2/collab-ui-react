@@ -6,7 +6,7 @@
     .factory('OverviewUsersCard', OverviewUsersCard);
 
   /* @ngInject */
-  function OverviewUsersCard($rootScope, $state, Auth, Authinfo, Config, Orgservice) {
+  function OverviewUsersCard($rootScope, $state, Config, Orgservice) {
     return {
       createCard: function createCard() {
         var card = {};
@@ -31,36 +31,25 @@
         };
 
         function getUnassignedLicenses() {
-          Auth.getCustomerAccount(Authinfo.getOrgId()).then(function (response) {
+          Orgservice.getLicensesUsage().then(function (response) {
             var max = 0;
+            var licenseUsage = 0;
             var licenseType = '';
-            var licenses = _.get(response, 'data.customers[0].licenses');
-            if (_.isUndefined(licenses)) {
-              licenses = _.get(response, 'data.customers[0].subscriptions[0].licenses');
-            }
+            var licenses = _.get(response[0], 'licenses');
             if (licenses) {
               _.forEach(licenses, function (data) {
-                if (data.volume > max) {
+                if ((data.volume > max) && (data.licenseType !== Config.licenseTypes.STORAGE)) {
                   max = data.volume;
+                  licenseUsage = data.usage;
                   licenseType = data.licenseType;
                 } else if (data.volume === max && data.licenseType === Config.licenseTypes.MESSAGING) {
                   licenseType = Config.licenseTypes.MESSAGING;
                 }
+                var remainder = max - licenseUsage;
+                card.licenseNumber = remainder < 0 ? 0 : remainder;
+                card.licenseType = licenseType;
               });
             }
-            card.licenseNumber = max;
-            card.licenseType = licenseType;
-            Orgservice.getLicensesUsage().then(function (response) {
-              var licenseUsage = _.get(response[0], 'licenses');
-              if (licenseUsage) {
-                _.forEach(licenseUsage, function (usages) {
-                  if (!_.isUndefined(usages) && (card.licenseType === usages.licenseType)) {
-                    var remainder = card.licenseNumber - usages.usage;
-                    card.licenseNumber = remainder < 0 ? 0 : remainder;
-                  }
-                });
-              }
-            });
           });
         }
 

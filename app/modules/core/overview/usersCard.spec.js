@@ -1,0 +1,47 @@
+describe('OverviewUsersCard', function () {
+
+  var $rootScope, OverviewUsersCard, card;
+
+  var convertUserData = {
+    success: true,
+    totalResults: 10
+  };
+
+  var userData = {
+    success: true,
+    totalResults: 0
+  };
+
+  beforeEach(angular.mock.module('Core'));
+
+  function dependencies(_OverviewUsersCard_, _$rootScope_) {
+    $rootScope = _$rootScope_;
+    OverviewUsersCard = _OverviewUsersCard_;
+  }
+
+  beforeEach(inject(dependencies));
+
+  describe('overviewuserscard', function () {
+    beforeEach(function () {
+      card = OverviewUsersCard.createCard();
+      $rootScope.$apply();
+    });
+
+    it('should create user card', function () {
+      expect(card.showLicenseCard).toBe(false);
+      expect(card.name).toEqual('overview.cards.users.title');
+    });
+
+    it('should stay on convert user card', function () {
+      card.unlicensedUsersHandler(convertUserData);
+      expect(card.usersToConvert).toBe(10);
+      expect(card.showLicenseCard).toBe(false);
+    });
+
+    it('should create license card if convert users is 0', function () {
+      card.unlicensedUsersHandler(userData);
+      expect(card.usersToConvert).toBe(0);
+      expect(card.showLicenseCard).toBe(true);
+    });
+  });
+});
