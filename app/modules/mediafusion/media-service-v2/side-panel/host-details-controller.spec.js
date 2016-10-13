@@ -4,10 +4,25 @@ describe('Controller: HostDetailsControllerV2', function () {
 
   beforeEach(angular.mock.module('Mediafusion'));
 
-  var $selectedRole, $clusterId, httpBackend, $rootScope, $modal, controller, $stateParams, $state, MediaClusterServiceV2, XhrNotificationService;
-
-  beforeEach(inject(function ($httpBackend, _$rootScope_, $controller, _MediaClusterServiceV2_, _XhrNotificationService_, $translate) {
+  var $selectedRole, $q, $clusterId, httpBackend, $rootScope, $modal, controller, $stateParams, $state, MediaClusterServiceV2, XhrNotificationService;
+  var actualOptions;
+  var fakeModal = {
+    result: {
+      then: function (confirmCallback, cancelCallback) {
+        this.confirmCallBack = confirmCallback;
+        this.cancelCallback = cancelCallback;
+      }
+    },
+    close: function (item) {
+      this.result.confirmCallBack(item);
+    },
+    dismiss: function (type) {
+      this.result.cancelCallback(type);
+    }
+  };
+  beforeEach(inject(function ($httpBackend, _$rootScope_, _$q_, $controller, _MediaClusterServiceV2_, _XhrNotificationService_, $translate) {
     $rootScope = _$rootScope_;
+    $q = _$q_;
     $stateParams = {
       "groupName": "Bangalore - Site 1",
       "selectedClusters": [{
@@ -162,9 +177,9 @@ describe('Controller: HostDetailsControllerV2', function () {
     };
     httpBackend = $httpBackend;
     httpBackend.when('GET', /^\w+.*/).respond({});
-
     controller = $controller('HostDetailsControllerV2', {
       $modal: $modal,
+      $q: $q,
       $scope: $rootScope.$new(),
       $stateParams: $stateParams,
       $state: $state,
@@ -182,23 +197,45 @@ describe('Controller: HostDetailsControllerV2', function () {
   });
 
   it('should open modal for reassignCluster call', function () {
+    spyOn($modal, 'open').and.callFake(function (options) {
+      actualOptions = options;
+      return fakeModal;
+    });
     controller.reassignCluster({
       preventDefault: function () {}
     });
     $rootScope.$digest();
-    expect($modal.open.calledOnce).toBe(true);
+    expect(actualOptions.resolve.cluster()).toEqual(controller.cluster);
+    expect(actualOptions.resolve.connector()).toEqual(controller.connector);
+    expect($modal.open).toHaveBeenCalled();
 
   });
 
   it('showDeregisterHostDialog should open modal', function () {
+    spyOn($modal, 'open').and.callFake(function (options) {
+      actualOptions = options;
+      return fakeModal;
+    });
+    spyOn(MediaClusterServiceV2, 'getOrganization').and.returnValue($q.when({
+      data: {
+        success: true,
+        displayName: "fakeDisplayName"
+      }
+    }));
     controller.hostcount = 1;
+    controller.organization = {
+      displayName: "fakeName"
+    };
 
     controller.showDeregisterHostDialog({
       preventDefault: function () {}
     });
+    httpBackend.flush();
     $rootScope.$digest();
-    expect($modal.open.calledOnce).toBe(true);
-
+    expect(actualOptions.resolve.cluster()).toEqual(controller.cluster);
+    expect(actualOptions.resolve.orgName()).toEqual(controller.organization.displayName);
+    expect(actualOptions.resolve.connector()).toEqual(controller.connector);
+    expect($modal.open).toHaveBeenCalled();
   });
 
   it('showDeregisterHostDialog should open modal when hostcount not equal to 1', function () {
