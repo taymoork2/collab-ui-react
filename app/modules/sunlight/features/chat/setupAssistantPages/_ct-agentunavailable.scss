@@ -30,6 +30,9 @@
     }
   }
 
+  .ct-card-layout {
+    left: rem-calc(208px);
+  }
   .ct-article {
     box-shadow: none;
     border: 1px solid $gray-light-1;

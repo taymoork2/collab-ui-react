@@ -29,6 +29,10 @@
     @include vr-spacing(pl, 1);
   }
 
+  .ct-card-layout {
+    left: rem-calc(208px);
+  }
+
   .offhours-icon {
     .icon-clock {
       font-size: 3rem;

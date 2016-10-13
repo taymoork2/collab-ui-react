@@ -4,8 +4,13 @@
 .ct-card-border-disabled {
   border: 1px solid $gray-light-1
 }
+
+.ct-card-layout {
+  left: rem-calc(25);
+}
 .ct-card-overview {
   height: rem-calc(220);
+  width: rem-calc(350) !important;
   box-shadow: 0px 0px 0px 0px !important;
   .icon.ct-card-img {
     font-size: 4rem;

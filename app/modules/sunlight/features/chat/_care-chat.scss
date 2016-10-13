@@ -5,7 +5,6 @@
   @extend %content-header;
   .cs-setupassistant {
     margin: 0 auto;
-    max-width: 1080px;
   }
   .cs-setupassistant--content {
     height: calc(100vh - #{$top-bar-height + $overlay-panel-height});
