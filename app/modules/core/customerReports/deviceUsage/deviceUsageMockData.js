@@ -8,7 +8,7 @@
   /* @ngInject */
   function DeviceUsageMockData() {
 
-    var cachedRawData;
+    //var cachedRawData;
 
     var maxCallsPrDay = 20;
     var maxPairedCallsPrDay = 10;
@@ -36,10 +36,10 @@
     }
 
     function getRawData(startDate, endDate) {
-      if (_.isEmpty(cachedRawData)) {
-        cachedRawData = assembleRawData(startDate, endDate);
-      }
-      return _.cloneDeep(cachedRawData);
+//      if (_.isEmpty(cachedRawData)) {
+//        cachedRawData = assembleRawData(startDate, endDate);
+//      }
+      return _.cloneDeep(assembleRawData(startDate, endDate));
     }
 
     function assembleRawData(startDate, endDate) {

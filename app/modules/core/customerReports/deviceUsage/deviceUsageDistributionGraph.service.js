@@ -85,10 +85,10 @@
       return usageChart;
     }
 
-    function getUsageFromDeviceInfo(devices) {
+    function extractHours(rawDeviceData) {
       var usageData = [];
-      _.each(devices, function (deviceData) {
-        usageData.push(deviceData.hours);
+      _.each(rawDeviceData, function (deviceData) {
+        usageData.push(deviceData.totalDuration);
       });
       return usageData;
     }
@@ -101,15 +101,8 @@
       return distributionLimits;
     }
 
-    function getUsageDistributionData(devices) {
-      var result;
-      var usageData = getUsageFromDeviceInfo(devices);
-      var hoursPrWeek = 168;
-      distributionLimits = calculateDistributionLimits(4, hoursPrWeek);
-      $log.warn("Distribution limits", distributionLimits);
-
+    function groupUsageDataByDistributionLimits(usageData) {
       var usageGroups = [];
-
       usageGroups[0] = usageData.filter(function (x) {
         return x === 0;
       });
@@ -123,6 +116,18 @@
           }
         }));
       });
+      return usageGroups;
+    }
+
+    function getUsageDistributionData(rawDeviceData) {
+      var result;
+      var usageData = extractHours(rawDeviceData);
+      var hoursPrWeek = 168;
+      distributionLimits = calculateDistributionLimits(4, hoursPrWeek);
+      $log.warn("Distribution limits", distributionLimits);
+
+      var usageGroups = groupUsageDataByDistributionLimits(usageData);
+      //TODO: Make sure identical devices are collected into one entry with sum of usages.
 
       $log.warn("Usage groups", usageGroups);
 
