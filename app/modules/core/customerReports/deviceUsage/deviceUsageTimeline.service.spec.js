@@ -51,7 +51,7 @@ describe('DeviceUsageTimelineService', function () {
     expect(chart.export.enabled).toBeTruthy();
   });
 
-  it('provides chart data for last week', function () {
+  it('provides chart data for last week', function (done) {
     var start = moment().startOf('week').subtract(1, 'weeks');
     var mockData = createDayMockData(start.format('YYYY-MM-DD'), 7);
     var end = moment().startOf('week').format('YYYY-MM-DD');
@@ -67,11 +67,12 @@ describe('DeviceUsageTimelineService', function () {
         expect(item.totalDuration).toEqual('5.00');
         expect(item.pairedCount).toEqual(3);
       });
+      done();
     });
     $httpBackend.flush();
   });
 
-  it('provides chart data for last month', function () {
+  it('provides chart data for last month', function (done) {
     var start = moment().startOf('month').subtract(1, 'months');
     var mockData = createDayMockData(start.format('YYYY-MM-DD'), 30);
     var end = moment().startOf('month').format('YYYY-MM-DD');
@@ -87,6 +88,7 @@ describe('DeviceUsageTimelineService', function () {
         expect(item.totalDuration).toEqual('5.00');
         expect(item.pairedCount).toEqual(3);
       });
+      done();
     });
     $httpBackend.flush();
   });
