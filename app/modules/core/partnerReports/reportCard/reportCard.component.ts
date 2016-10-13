@@ -6,13 +6,6 @@ import {
 } from '../partnerReportInterfaces';
 
 class ReportCardCtrl {
-  private static readonly DONUT: string = 'donut';
-  private static readonly EMPTY: string = 'empty';
-  private static readonly REFRESH: string = 'refresh';
-  private static readonly SET: string = 'set';
-  private static readonly TABLE: string = 'table';
-  private static readonly UNDEF: string = 'undefined';
-
   // overall Report Variables
   public options: IReportCard;
   public show: boolean = true;
@@ -33,7 +26,8 @@ class ReportCardCtrl {
   /* @ngInject */
   constructor(
     private $translate: ng.translate.ITranslateService,
-    private $scope: ng.IScope
+    private $scope: ng.IScope,
+    private ReportConstants
   ) {
     this.setTotalPages();
     this.setSortOptions();
@@ -68,27 +62,27 @@ class ReportCardCtrl {
   }
 
   public isDonut(): boolean {
-    return this.options.reportType === ReportCardCtrl.DONUT;
+    return this.options.reportType === this.ReportConstants.DONUT;
   }
 
   public isEmpty(): boolean {
-    return this.options.state === ReportCardCtrl.EMPTY;
+    return this.options.state === this.ReportConstants.EMPTY;
   }
 
   public isPopover(): boolean {
-    return this.options.titlePopover !== ReportCardCtrl.UNDEF;
+    return this.options.titlePopover !== this.ReportConstants.UNDEF;
   }
 
   public isRefresh(): boolean {
-    return this.options.state === ReportCardCtrl.REFRESH;
+    return this.options.state === this.ReportConstants.REFRESH;
   }
 
   public isSet(): boolean {
-    return this.options.state === ReportCardCtrl.SET;
+    return this.options.state === this.ReportConstants.SET;
   }
 
   public isTable(): boolean {
-    return this.options.reportType === ReportCardCtrl.TABLE;
+    return this.options.reportType === this.ReportConstants.TABLE;
   }
 
   // Secondary Report Controls
@@ -163,15 +157,15 @@ class ReportCardCtrl {
   }
 
   public secondaryIsEmpty(): boolean {
-    return this.secondaryOptions.state === ReportCardCtrl.EMPTY;
+    return this.secondaryOptions.state === this.ReportConstants.EMPTY;
   }
 
   public secondaryIsRefresh(): boolean {
-    return this.secondaryOptions.state === ReportCardCtrl.REFRESH;
+    return this.secondaryOptions.state === this.ReportConstants.REFRESH;
   }
 
   public secondaryIsSet(): boolean {
-    return this.secondaryOptions.state === ReportCardCtrl.SET;
+    return this.secondaryOptions.state === this.ReportConstants.SET;
   }
 
   public secondaryReportSort(selected) {
