@@ -153,13 +153,12 @@
     }
   }
 
-  #activeUsersdiv{
-    margin-top: 16px;
-    position: relative;
-    overflow: visible !important;
-    top: -25px;
-    .amcharts-chart-div svg {
-      position: relative !important;
+
+  #avgRoomsChart {
+    .room-number {
+      font-size: rem-calc(18);
+      color: $color-primary-base;
+      text-align: left;
     }
   }
   #mediaQualityChart {
