@@ -1,29 +1,25 @@
 import { CallerIDService } from './callerId.service';
+import { IOption } from './../dialing/dialing.service';
 class CallerId implements ng.IComponentController {
   private onChangeFn: Function;
-  private customCallerIdName: string;
-  private customCallerIdNumber: string;
-  private callerIdSelected: CallerIdOption;
-  private callerIdOptions: CallerIdOption[];
-  private directLine;
+  private customCallerIdName: string | null;
+  private customCallerIdNumber: string | null;
+  private callerIdSelected: IOption;
+  private callerIdOptions: IOption[];
 
   /* @ngInject */
   constructor(private CallerIDService: CallerIDService) {}
 
   public $onInit(): void {
-    this.CallerIDService.initCallerId(this.directLine).then((data) => {
-      this.callerIdOptions = data;
-    });
+
   }
 
   public $onChanges(changes) {
-    if (changes.directLine && changes.directLine.currentValue !== null) {
-      let data = this.CallerIDService.changeDirectLine(changes.directLine.currentValue, this.callerIdSelected);
+    if (changes.directLine && (typeof changes.directLine.previousValue !== 'object' || changes.directLine.previousValue === null)) {
+      let data = this.CallerIDService.changeDirectLine(<string>_.get(changes, 'directLine.currentValue'), this.callerIdSelected);
       this.callerIdOptions = data.options;
       this.callerIdSelected = data.selected;
-    }
-    if (changes.externalType) {
-      this.callerIdSelected = this.CallerIDService.selectType(changes.externalType.currentValue);
+      this.onChange();
     }
   }
 
@@ -37,6 +33,10 @@ class CallerId implements ng.IComponentController {
 
   public showCustom(): boolean {
     return this.CallerIDService.isCustom(this.callerIdSelected);
+  }
+
+  public getSelected(selected) {
+    return this.CallerIDService.getSelected(selected);
   }
 }
 
@@ -73,7 +73,6 @@ export class CallerIdComponent implements ng.IComponentOptions {
     customCallerIdName: '<',
     customCallerIdNumber: '<',
     directLine: '<',
-    externalType: '<',
     onChangeFn: '&',
   };
 }

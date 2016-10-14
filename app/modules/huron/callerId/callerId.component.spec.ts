@@ -6,21 +6,25 @@ describe('component: callerId', () => {
 
   beforeEach(function() {
     this.initModules('huron.caller-id');
-    this.injectDependencies('$scope', '$timeout');
+    this.injectDependencies('$scope', '$timeout', '$q', 'CallerIDService');
     this.$scope.onChangeFn = jasmine.createSpy('onChangeFn');
+    this.$scope.myForm = {
+      $dirty: true,
+    };
     this.$scope.callerIdOptions = [{
       label: 'Custom',
       value: {
         name: '',
-        externalCallerIdType: 'Custom',
+        externalCallerIdType: 'EXT_CALLER_ID_CUSTOM',
       },
     }, {
       label: 'Blocked Outbound Caller ID',
       value: {
         name: 'Caller will not see any caller ID or number',
-        externalCallerIdType: 'Blocked Outbound Caller ID',
+        externalCallerIdType: 'EXT_CALLER_ID_BLOCKED_CALLER_ID',
       },
     }];
+    spyOn(this.CallerIDService, 'initCallerId').and.returnValue(this.$q.when(this.$scope.callerIdOptions));
     this.compileComponent('ucCallerId', {
       callerIdOptions: 'callerIdOptions',
       callerIdSelected: 'callerIdSelected',

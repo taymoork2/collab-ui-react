@@ -38,7 +38,6 @@ export class LineOverviewService {
     promises.push(this.getLine(consumerType, ownerId, numberId));
     promises.push(this.getCallForward(consumerType, ownerId, numberId));
     promises.push(this.getSharedLines(consumerType, ownerId, numberId));
-    promises.push(this.getCallerId(consumerType, ownerId, numberId));
     return this.$q.all(promises).then( (data) => {
       if (this.errors.length > 0) {
         this.Notification.notify(this.errors, 'error');
@@ -47,9 +46,14 @@ export class LineOverviewService {
       lineOverviewData.line = data[0];
       lineOverviewData.callForward = data[1];
       lineOverviewData.sharedLines = data[2];
-      lineOverviewData.callerId = data[3];
-      this.lineOverviewDataCopy = this.cloneLineOverviewData(lineOverviewData);
-      return lineOverviewData;
+      return this.getCallerId(consumerType, ownerId, numberId, data[0].external).then(callerId => {
+        lineOverviewData.callerId = callerId;
+        this.lineOverviewDataCopy = this.cloneLineOverviewData(lineOverviewData);
+        return lineOverviewData;
+      }).catch( (error) => {
+        this.Notification.notify(error, 'error');
+        return this.$q.reject();
+      });
     });
   }
 
@@ -235,11 +239,11 @@ export class LineOverviewService {
         });
     }
   }
-  private getCallerId(consumerType: LineConsumerType, ownerId: string, numberId: string): ng.IPromise<ICallerID> {
+  private getCallerId(consumerType: LineConsumerType, ownerId: string, numberId: string, external: string): ng.IPromise<ICallerID> {
     if (!numberId) {
       return this.$q.resolve({});
     } else {
-      return this.CallerIDService.getCallerId(consumerType, ownerId, numberId)
+      return this.CallerIDService.getCallerId(consumerType, ownerId, numberId, external)
         .then(callerIdRes => {
           return callerIdRes;
         });

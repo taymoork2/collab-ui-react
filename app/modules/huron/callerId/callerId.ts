@@ -1,5 +1,6 @@
+import { IOption } from './../dialing/dialing.service';
 export interface ICallerID {
-  externalCallerIdType: string;
+  externalCallerIdType: IOption;
   customCallerIdName: string;
   customCallerIdNumber: string;
 }
