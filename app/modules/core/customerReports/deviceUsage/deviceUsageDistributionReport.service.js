@@ -31,7 +31,7 @@
     }
 
     function getDeviceUsageReportData(min, max) {
-      return DeviceUsageMockService.getData("2016-09-01", "2016-09-08", true)
+      return DeviceUsageMockService.getData("2016-10-01", "2016-10-08", true)
         .then(convertUsageSecondsToHours)
         .then(sumUsageDataFromSameDevice)
         .then(function (data) {
