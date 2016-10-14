@@ -59,6 +59,7 @@ describe('Controller: aaBuilderNameCtrl', function () {
     spyOn(AAModelService, 'getAAModel').and.returnValue(aaModel);
 
     spyOn(AutoAttendantCeService, 'listCes').and.returnValue($q.when(angular.copy(ces)));
+    spyOn($rootScope, '$broadcast').and.callThrough();
 
     controller = $controller('aaBuilderNameCtrl', {
       $scope: $scope
@@ -100,6 +101,16 @@ describe('Controller: aaBuilderNameCtrl', function () {
       expect(controller.ui.ceInfo.name).toEqual(testGroupName);
     });
 
+    it('should set flag false and broadcast AANameCreated Event when record is saved ', function () {
+      controller.name = testGroupName;
+      expect(controller.flag).toEqual(true);
+      controller.saveAARecord();
+      expect(controller.flag).toEqual(false);
+      expect($rootScope.$broadcast).toHaveBeenCalledWith('AANameCreated');
+      $rootScope.$broadcast.calls.reset();
+      controller.saveAARecord();
+      expect($rootScope.$broadcast).not.toHaveBeenCalledWith('AANameCreated');
+    });
     /*  Commented out as code references AutoAttendant.saveAARecords()
      *
      *
@@ -160,5 +171,4 @@ describe('Controller: aaBuilderNameCtrl', function () {
     controller.name = testGroupName;
     expect(controller.previousButton()).toEqual("hidden");
   });
-
 });

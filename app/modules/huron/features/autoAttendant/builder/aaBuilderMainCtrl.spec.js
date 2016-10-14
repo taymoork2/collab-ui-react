@@ -1028,5 +1028,13 @@ describe('Controller: AABuilderMainCtrl', function () {
       expect(controller.delete8To5Schedule).toHaveBeenCalled();
     });
 
+    it('should not set isAANameDefined if records failed to save.', function () {
+      $scope.vm.ui.aaTemplate = '';
+      saveAARecordDefer.reject();
+
+      $rootScope.$apply();
+      expect($scope.vm.isAANameDefined).toEqual(false);
+    });
+
   });
 });

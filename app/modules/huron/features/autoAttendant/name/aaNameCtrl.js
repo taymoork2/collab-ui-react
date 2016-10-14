@@ -6,7 +6,7 @@
     .controller('aaBuilderNameCtrl', AutoAttendantNameBuilderCtrl);
 
   /* @ngInject */
-  function AutoAttendantNameBuilderCtrl($rootScope, AAUiModelService, AAValidationService) {
+  function AutoAttendantNameBuilderCtrl($scope, $rootScope, AAUiModelService, AAValidationService) {
 
     var vm = this;
 
@@ -21,6 +21,7 @@
     vm.nextPage = nextPage;
     vm.evalKeyPress = evalKeyPress;
     vm.name = '';
+    vm.flag = true;
 
     /////////////////////
 
@@ -30,10 +31,16 @@
         return;
       }
 
-      saveUiModel();
-
-      $rootScope.$broadcast('AANameCreated');
+      if (vm.flag) {
+        saveUiModel();
+        vm.flag = false;
+        $rootScope.$broadcast('AANameCreated');
+      }
     }
+
+    $scope.$on('AACreationFailed', function () {
+      vm.flag = true;
+    });
 
     function saveUiModel() {
       vm.ui.builder.ceInfo_name = vm.name;
@@ -51,7 +58,7 @@
     }
 
     function nextButton() {
-      if (vm.name === '') {
+      if (vm.name === '' || vm.flag === false) {
         return false;
       } else {
         return true;
