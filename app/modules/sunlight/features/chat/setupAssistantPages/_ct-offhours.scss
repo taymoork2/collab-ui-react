@@ -1,13 +1,18 @@
 .ct-offhours {
 
   .cs-card {
-    @include vr-spacing(mt, 0);
-    @include vr-spacing(ml, 3);
-  }
-
-  .card-info {
-    text-align: center;
-    color: $gray-dark-1;
+    @include vr-spacing(ml, 2);
+    width: rem-calc(366px);
+    height: rem-calc(458px);
+    display: flex;
+    flex-flow: column;
+    .card-info {
+      text-align: center;
+      color: $gray-dark-1;
+    }
+    .articleHeight {
+      height: 100%;
+    }
   }
 
   .ct-article {
@@ -29,6 +34,10 @@
     @include vr-spacing(pl, 1);
   }
 
+  .ct-card-layout {
+    left: rem-calc(208px);
+  }
+
   .offhours-icon {
     .icon-clock {
       font-size: 3rem;
@@ -41,8 +50,10 @@
   .offhours-preview-message {
     height: 7rem;
     overflow: hidden;
+    width: rem-calc(300px);
+    text-align: center;
     @include vr-spacing(pt, 1);
-    @include vr-spacing(mh, 4);
+    @include vr-spacing(mh, 1.4);
   }
 
   .business-hours {

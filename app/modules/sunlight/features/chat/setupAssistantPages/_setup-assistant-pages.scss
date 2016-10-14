@@ -18,6 +18,7 @@ $ct-desc-height: 32px;
   flex-wrap: nowrap;
   justify-content: center;
   align-items: center;
+  color: $gray-dark-2;
 }
 .ct-title-overview {
   font-family: $brand-font-thin
@@ -29,7 +30,7 @@ $ct-desc-height: 32px;
 
 .ct-title-desc {
   text-align: center;
-  color: $gray-dark-2;
+  color: $gray-base;
 }
 
 .ct-sa-content{

@@ -5,7 +5,6 @@
   @extend %content-header;
   .cs-setupassistant {
     margin: 0 auto;
-    max-width: 1080px;
   }
   .cs-setupassistant--content {
     height: calc(100vh - #{$top-bar-height + $overlay-panel-height});
@@ -42,6 +41,8 @@
     float: left;
   }
   .ct-confirmation-message {
+    font-size: $h6-font-size;
+    font-family: $brand-font-light;
     @include vr-spacing(mt, 0.75);
   }
 }

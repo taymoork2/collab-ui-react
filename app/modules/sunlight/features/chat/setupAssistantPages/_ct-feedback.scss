@@ -15,18 +15,13 @@
     }
   }
 
-  .ct-article {
-    box-shadow: none;
-    border: 1px solid $gray-light-1;
-  }
-
   .cs-card {
     @include vr-spacing(ml, 2);
     width: rem-calc(366px);
     height: rem-calc(458px);
     display: flex;
     flex-flow: column;
-    .cardHeader1 {
+    .card-info {
       text-align: center;
       color: $gray-dark-1;
     }
@@ -35,8 +30,13 @@
     }
   }
 
-  .ct-feedback-rating {
-    width: 100%;
+  .ct-article {
+    box-shadow: none;
+    border: 1px solid $gray-light-1;
+    }
+
+  .ct-card-layout {
+    left: rem-calc(208px);
   }
 
   .ct-left-row {
@@ -119,7 +119,7 @@
     flex-flow: column;
     background-color: $color-white;
     .ct-default-msg {
-      max-width: 60%;
+      max-width: 80%;
       text-align: center;
       flex: 0;
       color: $gray-dark-1;
@@ -132,13 +132,13 @@
 
   .feedback-question-text {
     @include vr-spacing(mt, 4.5);
-    font-size: $h6-font-size;
+    font-size: $h5-font-size;
     font-family: CiscoSansTT Light;
     color: $gray-dark-2;
     align-self: center;
     height: 4rem;
     overflow: hidden;
-    width: 18rem;
+    width: rem-calc(300px);
     text-align: center;
     @include vr-spacing(pr, 1);
     @include vr-spacing(pl, 1);
