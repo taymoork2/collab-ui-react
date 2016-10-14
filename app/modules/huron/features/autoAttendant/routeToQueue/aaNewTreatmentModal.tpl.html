@@ -31,7 +31,7 @@
         </form>
       </div>
       <div class="large-8 large-offset-4 medium-12 small-12 columns">
-        <aa-media-upload id="mediaUploadInput{{ schedule + index + keyIndex }}" name="mediaUploadInput" aa-index="index" aa-schedule="{{ schedule }}" aa-menu-id="{{ menuId }}" aa-key-index="{{ keyIndex }}" aa-media-type="musicOnHold" ng-model="aaNewTreatmentModalCtrl.mohPlayAction.description" ng-change="aaNewTreatmentModalCtrl.uploadMohTrigger();"></aa-media-upload>
+        <aa-media-upload id="mediaUploadInput{{ schedule + index + keyIndex }}" name="mediaUploadInput" aa-index="index" aa-schedule="{{ schedule }}" aa-menu-id="{{ menuId }}" aa-key-index="{{ keyIndex }}" aa-media-type="musicOnHold" aa-change="aaNewTreatmentModalCtrl.uploadMohTrigger();"></aa-media-upload>
         <p class="cs-input__help-text" translate="autoAttendant.musicOnHoldHelp"></p>
       </div>
     </div>

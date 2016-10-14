@@ -93,8 +93,7 @@
         action.setDescription(JSON.stringify(fd));
         action.setValue('http://' + result.data.PlaybackUri);
         setActionCopy();
-        $scope.ngModel = action.description;
-        $scope.ngChange();
+        $scope.change();
       }
     }
 
@@ -106,7 +105,12 @@
     }
 
     function uploadProgress(evt) {
-      vm.progress = parseInt((100.0 * ((evt.loaded - 1) / evt.total)), 10);
+      //dont divide by zero for progress calculation
+      if (angular.isDefined(evt) && !_.isEqual(evt.total, 0)) {
+        vm.progress = parseInt((100.0 * ((evt.loaded - 1) / evt.total)), 10);
+      } else {
+        vm.progress = 0;
+      }
     }
 
     //global media upload for save

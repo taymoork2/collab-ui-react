@@ -5,7 +5,7 @@
 </div>
 <div class="row">
   <div ng-switch="aaMessageType.messageOption.value" class="large-12 small-12 columns">
-    <aa-media-upload ng-switch-when="uploadFile" id="mediaUploadInput{{ schedule + index + menuKeyIndex }}" name="mediaUploadInput" ng-model="aaMessageType.actionEntry" aa-index="index" aa-schedule="{{schedule}}"></aa-media-upload>
-    <textarea ng-switch-when="sayMessage" class="aa-message-type-textarea" aa-keypress ng-change="aaMessageType.saveUiModel()" ng-model="aaMessageType.messageInput" type="text" id="messageType{{ schedule + index + menuKeyIndex }}" name="messageInput" placeholder="{{ :: aaMessageType.messageInputPlaceholder }}" rows="4" cols="50" maxlength="2000"></textarea>
+    <aa-media-upload ng-switch-when="uploadFile" id="mediaUploadInput{{ schedule + index + menuKeyIndex }}" name="mediaUploadInput" aa-index="index" aa-schedule="{{schedule}}"></aa-media-upload>
+    <textarea ng-switch-when="sayMessage" class="aa-message-type-textarea" aa-keypress ng-change="aaMessageType.saveUiModel()" type="text" id="messageType{{ schedule + index + menuKeyIndex }}" name="messageInput" placeholder="{{ :: aaMessageType.messageInputPlaceholder }}" rows="4" cols="50" maxlength="2000"></textarea>
   </div>
 </div>

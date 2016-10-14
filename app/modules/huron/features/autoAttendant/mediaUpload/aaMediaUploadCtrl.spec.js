@@ -84,7 +84,7 @@ describe('Controller: AAMediaUploadCtrl', function () {
     AAMediaUploadService = _AAMediaUploadService_;
     modal = $q.defer();
     deferred = $q.defer();
-    $scope.ngChange = function () {
+    $scope.change = function () {
       return true;
     };
 

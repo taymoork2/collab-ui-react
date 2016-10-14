@@ -11,9 +11,8 @@ describe('Directive: aaMediaUpload', function () {
   var menuEntry = {};
   var schedule = 'openHours';
   var index = '0';
-  var elementHtml = "<aa-media-upload aa-schedule='openHours' aa-index='0' name='mediaUploadInput' ng-model='fileModel'></aa-media-upload>";
-  var attributeHtml = "<div aa-media-upload aa-schedule='openHours' aa-index='0' name='mediaUploadInput' ng-model='fileModel'></div>";
-  var ngModel;
+  var elementHtml = "<aa-media-upload aa-schedule='openHours' aa-index='0' name='mediaUploadInput'></aa-media-upload>";
+  var attributeHtml = "<div aa-media-upload aa-schedule='openHours' aa-index='0' name='mediaUploadInput'></div>";
 
   beforeEach(angular.mock.module('Huron'));
 
@@ -42,12 +41,10 @@ describe('Directive: aaMediaUpload', function () {
     beforeEach(function () {
       element = $compile(elementHtml)($rootScope);
       $rootScope.$digest();
-      ngModel = element.controller('ngModel');
     });
 
     it('creates the appropriate content as element', function () {
       expect(element.html()).toContain("mediaUpload");
-      expect(ngModel).toBeTruthy();
     });
   });
 
@@ -56,12 +53,10 @@ describe('Directive: aaMediaUpload', function () {
     beforeEach(function () {
       element = $compile(attributeHtml)($rootScope);
       $rootScope.$digest();
-      ngModel = element.controller('ngModel');
     });
 
     it('creates the appropriate content as attribute', function () {
       expect(element.html()).toContain("mediaUpload");
-      expect(ngModel).toBeTruthy();
     });
   });
 });
