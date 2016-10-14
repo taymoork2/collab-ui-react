@@ -5,21 +5,14 @@
     .module('Status.incidents')
     .controller('CreateIncidentController', CreateIncidentController);
 
-  function CreateIncidentController($scope, $state, IncidentsWithSiteService, statusService, Authinfo, SessionStorage) {
+  function CreateIncidentController($scope, $state, IncidentsWithSiteService, statusService, Authinfo) {
     $scope.newIncident = {
       status: 'investigating',
       msg: '',
       name: ''
     };
     var vm = this;
-    var useremail = "";
-    var emails = Authinfo.getEmails();
-    if (!emails) {
-      useremail = SessionStorage.get("useremail");
-    } else {
-      useremail = emails[0].value;
-      SessionStorage.put("useremail", useremail);
-    }
+    var useremail = Authinfo.getUserName();
     vm.CreateIncident = CreateIncident;
     $scope.$watch(
       function () {
