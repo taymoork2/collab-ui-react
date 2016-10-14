@@ -1034,7 +1034,8 @@
     "turnOff": "Turn Off",
     "overview": "Overview",
     "notAvailable": "N/A",
-    "ciscoCollaborationCloud": "Cisco Collaboration Cloud"
+    "ciscoCollaborationCloud": "Cisco Collaboration Cloud",
+    "trackingId": "Tracking Id: {{trackingId}}."
   },
   "notifications": {
     "success": "Success notifications",
@@ -4300,7 +4301,9 @@
     "webexVersionUseLatestUpdateFailed": "Could not update",
     "selectAWbxClientVersion": "Select a Webex client version",
     "WbxClientVersionOnlyOnNewSites": "This setting only applies to sites that are setup from now on. Existing sites are not impacted.",
-    "webexClientVersion": "Cisco WebEx Application Version"
+    "webexClientVersion": "Cisco WebEx Application Version",
+    "imageUploadFailedSecurity": "Your image upload has failed.",
+    "imageUploadFailed": "Your image upload has failed.  Please select a .png file under 1MB."
   },
   "customerProfile": {
     "supportContacts": "Support Contacts",
@@ -5227,6 +5230,8 @@
     "customers": "Customers",
     "customerDetails": "Customer Details",
     "userDetails": "User Details",
+    "orders": "Orders",
+    "orderDetails": "Orders Details",
     "badUserSearchInput": "Enter at least three characters per word. To search by name or email, enter two words, for example John Doe or john.doe.",
     "tooManySearchResults": "Search returned too many results. Please narrow your search criteria.",
     "unexpectedError": "An unexpected error occurred",
@@ -5300,6 +5305,7 @@
     "deviceId": "Device ID",
     "placeId": "Place ID",
     "badOrgSearchInput": "Enter at least three characters.",
+    "badOrderSearchInput": "Enter an exact order number. It must start with at least 8 digits or a 'ssw' prefix.",
     "unknown": "Unknown",
     "showMore": "Show more results",
     "delegatedAdministration": "manages {{numManages}} organizations",
@@ -5344,7 +5350,8 @@
       "search-criterias-note": "Note: To search for any Spark system or device, you must first select a customer.",
       "narrow-title": "Select a Customer",
       "narrow-info": "To filter a search to one customer only, start at the main search tool page and search for the customer by display name. Then click <i class='icon icon-search'></i> in the customer's search result card.",
-      "referTo": "Refer to"
+      "referTo": "Refer to",
+      "search-criterias-orders": "<strong>Orders</strong>: Order number must start with at least 8 digits or a 'ssw' prefix. An exact match will be searched."
     },
     "history": {
       "clear": "Clear History",
