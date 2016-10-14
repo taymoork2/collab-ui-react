@@ -6,10 +6,16 @@
     .controller('ServiceManagementCtrl', ServiceManagementCtrl);
 
   /* @ngInject */
-  function ServiceManagementCtrl(statusService, $modal) {
+  function ServiceManagementCtrl(statusService, $modal, $scope) {
     var vm = this;
-    statusService.getServices().then(function (data) {
-      vm.services = data;
+    function getServicesFun() {
+      statusService.getServices().then(function (data) {
+        vm.services = data;
+      });
+    }
+    getServicesFun();
+    $scope.$on('optionsChange', function () {
+      getServicesFun();
     });
     vm.editServiceModal = function (service) {
       var modal = $modal.open({
@@ -46,6 +52,13 @@
       modal.result.then(function () {
         statusService.getServices().then(function (data) {
           vm.services = data;
+          var sList = _.map(vm.services, function (service) {
+            return {
+              label: service.serviceName,
+              value: service.serviceId
+            };
+          });
+          $scope.$parent.status.options = [].concat(sList, [$scope.$parent.status.options.pop()]);
         });
       });
     };

@@ -79,6 +79,7 @@
               'value': 'addService'
             }
           ]);
+          $scope.$broadcast('optionsChange', vm.options);
           vm.selected = vm.lastSelected;
           return sList;
         });
