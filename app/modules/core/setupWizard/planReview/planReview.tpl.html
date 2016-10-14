@@ -108,7 +108,12 @@
                 <span>{{service.license.volume}}</span>
               </div>
               <div ng-if="service.license.isCI === false">
-              <a href= "{{service.license.siteAdminUrl}}" id="{{service.license.siteUrl}}_siteAdminUrl">{{::'onboardModal.siteAdminUrl' | translate}}</a>
+                <a target="_blank"
+                   href= "{{service.license.siteAdminUrl}}"
+                   id="{{service.license.siteUrl}}_siteAdminUrl">
+                
+                  {{::'onboardModal.siteAdminUrl' | translate}}
+                </a>
               </div>
             </div>
           </div>

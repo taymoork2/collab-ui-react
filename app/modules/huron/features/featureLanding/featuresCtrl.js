@@ -199,6 +199,10 @@
         $state.go('callparkedit', {
           feature: feature
         });
+      } else if (feature.filterValue === 'PG') {
+        $state.go('huronPagingGroupEdit', {
+          feature: feature
+        });
       }
     };
 

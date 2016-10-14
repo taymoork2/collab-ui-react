@@ -7,16 +7,12 @@ describe('Controller: Customer Reports Ctrl', function () {
 
   var dummyData = getJSONFixture('core/json/partnerReports/dummyReportData.json');
   var activeData = getJSONFixture('core/json/customerReports/activeUser.json');
-  var responseActiveData = activeData.activeResponse;
+  var ctrlData = getJSONFixture('core/json/partnerReports/ctrl.json');
   var roomData = getJSONFixture('core/json/customerReports/roomData.json');
   var fileData = getJSONFixture('core/json/customerReports/fileData.json');
   var mediaData = getJSONFixture('core/json/customerReports/mediaQuality.json');
   var metricsData = getJSONFixture('core/json/customerReports/callMetrics.json');
-  var dummyMetrics = angular.copy(metricsData);
-  dummyMetrics.dummy = true;
   var devicesJson = getJSONFixture('core/json/customerReports/devices.json');
-  var deviceResponse = angular.copy(devicesJson.response);
-  var dummyDevices = angular.copy(devicesJson.dummyData);
 
   var mediaOptions = [{
     value: 0,
@@ -109,26 +105,29 @@ describe('Controller: Customer Reports Ctrl', function () {
         'dataProvider': metricsData.dataProvider
       });
       spyOn(CustomerGraphService, 'setDeviceGraph').and.returnValue({
-        'dataProvider': deviceResponse.graphData
+        'dataProvider': _.cloneDeep(devicesJson.response.graphData)
       });
+
+      var dummyMetrics = _.cloneDeep(metricsData);
+      dummyMetrics.dummy = true;
 
       spyOn(DummyCustomerReportService, 'dummyActiveUserData').and.returnValue(dummyData.activeUser.one);
       spyOn(DummyCustomerReportService, 'dummyAvgRoomData').and.returnValue(dummyData.avgRooms.one);
       spyOn(DummyCustomerReportService, 'dummyFilesSharedData').and.returnValue(dummyData.filesShared.one);
       spyOn(DummyCustomerReportService, 'dummyMediaData').and.returnValue(dummyData.mediaQuality.one);
       spyOn(DummyCustomerReportService, 'dummyMetricsData').and.returnValue(dummyMetrics);
-      spyOn(DummyCustomerReportService, 'dummyDeviceData').and.returnValue(dummyDevices);
+      spyOn(DummyCustomerReportService, 'dummyDeviceData').and.returnValue(_.cloneDeep(devicesJson.dummyData));
 
-      spyOn(CustomerReportService, 'getActiveUserData').and.returnValue($q.when(responseActiveData));
+      spyOn(CustomerReportService, 'getActiveUserData').and.returnValue($q.when(_.cloneDeep(activeData.activeResponse)));
       spyOn(CustomerReportService, 'getMostActiveUserData').and.returnValue($q.when({
-        tableData: _.clone(activeData.mostActiveResponse),
+        tableData: _.cloneDeep(activeData.mostActiveResponse),
         error: false
       }));
       spyOn(CustomerReportService, 'getAvgRoomData').and.returnValue($q.when(roomData.response));
       spyOn(CustomerReportService, 'getFilesSharedData').and.returnValue($q.when(fileData.response));
       spyOn(CustomerReportService, 'getMediaQualityData').and.returnValue($q.when(mediaData.response));
       spyOn(CustomerReportService, 'getCallMetricsData').and.returnValue($q.when(metricsData));
-      spyOn(CustomerReportService, 'getDeviceData').and.returnValue($q.when(deviceResponse));
+      spyOn(CustomerReportService, 'getDeviceData').and.returnValue($q.when(_.cloneDeep(devicesJson.response)));
 
       spyOn($state, 'go');
 
@@ -182,38 +181,45 @@ describe('Controller: Customer Reports Ctrl', function () {
     describe('Initializing Controller', function () {
       it('should be created successfully and all expected calls completed', function () {
         expect(controller).toBeDefined();
-        $timeout(function () {
-          expect(DummyCustomerReportService.dummyActiveUserData).toHaveBeenCalledWith(timeOptions[0], false);
-          expect(DummyCustomerReportService.dummyAvgRoomData).toHaveBeenCalledWith(timeOptions[0]);
-          expect(DummyCustomerReportService.dummyFilesSharedData).toHaveBeenCalledWith(timeOptions[0]);
-          expect(DummyCustomerReportService.dummyMediaData).toHaveBeenCalledWith(timeOptions[0]);
-          expect(DummyCustomerReportService.dummyMetricsData).toHaveBeenCalled();
-          expect(DummyCustomerReportService.dummyDeviceData).toHaveBeenCalledWith(timeOptions[0]);
+        $timeout.flush();
 
-          expect(CustomerReportService.getActiveUserData).toHaveBeenCalledWith(timeOptions[0], false);
-          expect(CustomerReportService.getMostActiveUserData).toHaveBeenCalledWith(timeOptions[0]);
-          expect(CustomerReportService.getAvgRoomData).toHaveBeenCalledWith(timeOptions[0]);
-          expect(CustomerReportService.getFilesSharedData).toHaveBeenCalledWith(timeOptions[0]);
-          expect(CustomerReportService.getMediaQualityData).toHaveBeenCalledWith(timeOptions[0]);
-          expect(CustomerReportService.getCallMetricsData).toHaveBeenCalledWith(timeOptions[0]);
-          expect(CustomerReportService.getDeviceData).toHaveBeenCalledWith(timeOptions[0]);
+        expect(DummyCustomerReportService.dummyActiveUserData).toHaveBeenCalledWith(timeOptions[0], false);
+        expect(DummyCustomerReportService.dummyAvgRoomData).toHaveBeenCalledWith(timeOptions[0]);
+        expect(DummyCustomerReportService.dummyFilesSharedData).toHaveBeenCalledWith(timeOptions[0]);
+        expect(DummyCustomerReportService.dummyMediaData).toHaveBeenCalledWith(timeOptions[0]);
+        expect(DummyCustomerReportService.dummyMetricsData).toHaveBeenCalled();
+        expect(DummyCustomerReportService.dummyDeviceData).toHaveBeenCalledWith(timeOptions[0]);
 
-          expect(CustomerGraphService.setActiveUsersGraph).toHaveBeenCalled();
-          expect(CustomerGraphService.setAvgRoomsGraph).toHaveBeenCalled();
-          expect(CustomerGraphService.setFilesSharedGraph).toHaveBeenCalled();
-          expect(CustomerGraphService.setMediaQualityGraph).toHaveBeenCalled();
-          expect(CustomerGraphService.setMetricsGraph).toHaveBeenCalled();
-          expect(CustomerGraphService.setDeviceGraph).toHaveBeenCalled();
-        }, 30);
+        expect(CustomerReportService.getActiveUserData).toHaveBeenCalledWith(timeOptions[0], false);
+        expect(CustomerReportService.getMostActiveUserData).toHaveBeenCalledWith(timeOptions[0]);
+        expect(CustomerReportService.getAvgRoomData).toHaveBeenCalledWith(timeOptions[0]);
+        expect(CustomerReportService.getFilesSharedData).toHaveBeenCalledWith(timeOptions[0]);
+        expect(CustomerReportService.getMediaQualityData).toHaveBeenCalledWith(timeOptions[0]);
+        expect(CustomerReportService.getCallMetricsData).toHaveBeenCalledWith(timeOptions[0]);
+        expect(CustomerReportService.getDeviceData).toHaveBeenCalledWith(timeOptions[0]);
+
+        expect(CustomerGraphService.setActiveUsersGraph).toHaveBeenCalled();
+        expect(CustomerGraphService.setAvgRoomsGraph).toHaveBeenCalled();
+        expect(CustomerGraphService.setFilesSharedGraph).toHaveBeenCalled();
+        expect(CustomerGraphService.setMediaQualityGraph).toHaveBeenCalled();
+        expect(CustomerGraphService.setMetricsGraph).toHaveBeenCalled();
+        expect(CustomerGraphService.setDeviceGraph).toHaveBeenCalled();
+
+        var reportFilter = _.cloneDeep(ctrlData.reportFilter);
+        _.forEach(controller.filterArray, function (filter, index) {
+          expect(filter.label).toEqual(reportFilter[index].label);
+          expect(filter.id).toEqual(reportFilter[index].id);
+          expect(filter.selected).toEqual(reportFilter[index].selected);
+        });
       });
 
       it('should set all page variables', function () {
         expect(controller.showWebexTab).toBeFalsy();
 
         expect(controller.pageTitle).toEqual('reportsPage.pageTitle');
-        expect(controller.allReports).toEqual('all');
-        expect(controller.engagement).toEqual('engagement');
-        expect(controller.quality).toEqual('quality');
+        expect(controller.ALL).toEqual(ctrlData.ALL);
+        expect(controller.ENGAGEMENT).toEqual(ctrlData.ENGAGEMENT);
+        expect(controller.QUALITY).toEqual(ctrlData.QUALITY);
         expect(controller.displayEngagement).toBeTruthy();
         expect(controller.displayQuality).toBeTruthy();
 
@@ -312,16 +318,16 @@ describe('Controller: Customer Reports Ctrl', function () {
         expect($state.go).toHaveBeenCalled();
       });
 
-      it('resetCards should alter the visible reports based on filters', function () {
-        controller.resetCards(controller.engagement);
+      it('resetCards should alter the visible filterArray[x].toggle based on filters', function () {
+        controller.filterArray[1].toggle(controller.engagement);
         expect(controller.displayEngagement).toBeTruthy();
         expect(controller.displayQuality).toBeFalsy();
 
-        controller.resetCards(controller.quality);
+        controller.filterArray[2].toggle(controller.quality);
         expect(controller.displayEngagement).toBeFalsy();
         expect(controller.displayQuality).toBeTruthy();
 
-        controller.resetCards(controller.allReports);
+        controller.filterArray[0].toggle(controller.allReports);
         expect(controller.displayEngagement).toBeTruthy();
         expect(controller.displayQuality).toBeTruthy();
       });
@@ -329,11 +335,11 @@ describe('Controller: Customer Reports Ctrl', function () {
       it('searchMostActive should return a list of users based on mostActiveUsers and the searchField', function () {
         expect(controller.searchMostActive()).toEqual([]);
 
-        controller.mostActiveUsers = _.clone(activeData.mostActiveResponse);
-        expect(controller.searchMostActive()).toEqual(_.clone(activeData.mostActiveResponse));
+        controller.mostActiveUsers = _.cloneDeep(activeData.mostActiveResponse);
+        expect(controller.searchMostActive()).toEqual(_.cloneDeep(activeData.mostActiveResponse));
 
         controller.searchField = 'le';
-        expect(controller.searchMostActive()).toEqual([_.clone(activeData.mostActiveResponse)[0], _.clone(activeData.mostActiveResponse)[11]]);
+        expect(controller.searchMostActive()).toEqual([_.cloneDeep(activeData.mostActiveResponse)[0], _.cloneDeep(activeData.mostActiveResponse)[11]]);
       });
 
       it('mostActiveUserSwitch should toggle the state for showMostActiveUsers', function () {

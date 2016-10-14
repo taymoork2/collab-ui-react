@@ -39,25 +39,8 @@
         this.update = function (updated) {
           this.displayName = updated.displayName;
         };
-        this.image = obj.product in cloudberry_model_map ? cloudberry_model_map[obj.product] : "images/devices-hi/unknown.png";
+        this.image = "images/devices-hi/" + (obj.imageFilename || 'unknown.png');
       }
-
-      var cloudberry_model_map = {
-        "Cisco TelePresence DX80": "images/devices-hi/dx80.png",
-        "Cisco TelePresence DX70": "images/devices-hi/dx70.png",
-        "Cisco TelePresence SX10": "images/devices-hi/sx10.png",
-        "Cisco TelePresence SX20": "images/devices-hi/sx20.png",
-        "Cisco TelePresence SX80": "images/devices-hi/sx80.png",
-        "Cisco TelePresence MX200 G2": "images/devices-hi/mx200g2.png",
-        "Cisco TelePresence MX300 G2": "images/devices-hi/mx300g2.png",
-        "Cisco TelePresence MX700": "images/devices-hi/mx700d.png", // incorrect, should be "images/devices-hi/mx700.png" but missing
-        "Cisco TelePresence MX700 SpeakerTrack": "images/devices-hi/mx700dspeakertrack.png", // incorrect, should be "images/devices-hi/mx700speakertrack.png" but missing
-        "Cisco TelePresence MX700 Dual": "images/devices-hi/mx700d.png", // pic exist, but not endpoint?
-        "Cisco TelePresence MX700 Dual Speakertrack": "images/devices-hi/mx700dspeakertrack.png", // pic exist, but not endpoint?
-        "Cisco TelePresence MX800": "images/devices-hi/mx800.png",
-        "Cisco TelePresence MX800 Dual": "images/devices-hi/mx800dspeakertrack.png",
-        "Cisco TelePresence MX800 SpeakerTrack": "images/devices-hi/mx800speakertrack.png"
-      };
 
       function HuronDevice(obj) {
         this.url = obj.url;
@@ -78,59 +61,47 @@
         this.photos = _.isEmpty(obj.photos) ? null : obj.photos;
         this.isHuronDevice = true;
         this.product = obj.product in huron_model_map ? huron_model_map[obj.product].displayName : getProduct(obj);
-        this.image = obj.product in huron_model_map ? huron_model_map[obj.product].image : "images/devices-hi/unknown.png";
+        this.image = "images/devices-hi/" + (obj.imageFilename || 'unknown.png');
         this.huronId = getHuronId(obj);
         this.addOnModuleCount = obj.addOnModuleCount;
       }
 
       var huron_model_map = {
         "MODEL_CISCO_7811": {
-          displayName: "Cisco 7811",
-          image: "images/devices-hi/cisco_7811.png"
+          displayName: "Cisco 7811"
         },
         "MODEL_CISCO_7821": {
-          displayName: "Cisco 7821",
-          image: "images/devices-hi/cisco_7821.png"
+          displayName: "Cisco 7821"
         },
         "MODEL_CISCO_7841": {
-          displayName: "Cisco 7841",
-          image: "images/devices-hi/cisco_7841.png"
+          displayName: "Cisco 7841"
         },
         "MODEL_CISCO_7861": {
-          displayName: "Cisco 7861",
-          image: "images/devices-hi/cisco_7861.png"
+          displayName: "Cisco 7861"
         },
         "MODEL_CISCO_8811": {
-          displayName: "Cisco 8811",
-          image: "images/devices-hi/cisco_8811.png"
+          displayName: "Cisco 8811"
         },
         "MODEL_CISCO_8831": {
-          displayName: "Cisco 8831",
-          image: "images/devices-hi/cisco_8831.png"
+          displayName: "Cisco 8831"
         },
         "MODEL_CISCO_8841": {
-          displayName: "Cisco 8841",
-          image: "images/devices-hi/cisco_8841.png"
+          displayName: "Cisco 8841"
         },
         "MODEL_CISCO_8845": {
-          displayName: "Cisco 8845",
-          image: "images/devices-hi/cisco_8845.png"
+          displayName: "Cisco 8845"
         },
         "MODEL_CISCO_8851": {
-          displayName: "Cisco 8851",
-          image: "images/devices-hi/cisco_8851.png"
+          displayName: "Cisco 8851"
         },
         "MODEL_CISCO_8851NR": {
-          displayName: "Cisco 8851NR",
-          image: "images/devices-hi/cisco_8851.png"
+          displayName: "Cisco 8851NR"
         },
         "MODEL_CISCO_8861": {
-          displayName: "Cisco 8861",
-          image: "images/devices-hi/cisco_8861.png"
+          displayName: "Cisco 8861"
         },
         "MODEL_CISCO_8865": {
-          displayName: "Cisco 8865",
-          image: "images/devices-hi/cisco_8865.png"
+          displayName: "Cisco 8865"
         }
       };
 

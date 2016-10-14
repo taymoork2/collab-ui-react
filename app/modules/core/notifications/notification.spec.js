@@ -141,4 +141,25 @@ describe('Service: Notification', function () {
       expect(toaster.pop.calls.count()).toEqual(1);
     });
   });
+
+  // TODO: rip out 'stringify()' usage once ATLAS-1338 is resolved
+  describe('helper functions:', function () {
+    describe('stringify():', function () {
+      it('should JSON-stringify an object or array', function () {
+        expect(Notification._helpers.stringify({
+          a: 1,
+          b: null,
+          c: 'foo'
+        })).toBe('{"a":1,"b":null,"c":"foo"}');
+
+        expect(Notification._helpers.stringify([
+          1, 'a', null, undefined
+        ])).toBe('[1,"a",null,null]');
+      });
+
+      it('should return strings as-is', function () {
+        expect(Notification._helpers.stringify('foo')).toBe('foo');
+      });
+    });
+  });
 });

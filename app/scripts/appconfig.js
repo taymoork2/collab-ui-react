@@ -1547,7 +1547,7 @@
           .state('place-overview.communication.speedDials', {
             templateProvider: /* @ngInject */ function ($stateParams) {
               var ownerId = _.get($stateParams.currentPlace, 'cisUuid');
-              return '<uc-speed-dial owner-type="place" owner-id="' + ownerId + '"></uc-speed-dial>';
+              return '<uc-speed-dial owner-type="places" owner-id="' + ownerId + '"></uc-speed-dial>';
             },
             data: {
               displayName: 'Speed Dials'
@@ -1939,6 +1939,15 @@
             params: {
               org: null,
               id: null
+            }
+          })
+          .state('helpdesk.order', {
+            url: '/order/:id',
+            templateUrl: 'modules/squared/helpdesk/helpdesk-order.html',
+            controller: 'HelpdeskOrderController',
+            controllerAs: 'helpdeskOrderCtrl',
+            params: {
+              order: null
             }
           })
           .state('helpdesk.cloudberry-device', {
@@ -2336,6 +2345,9 @@
               detailsDependsList: null
             }
           })
+          .state('huronCallPickup', {
+            url: '/huronCallPickup',
+          })
           .state('huronCallPark', {
             url: '/huronCallPark',
             parent: 'hurondetails',
@@ -2383,6 +2395,25 @@
                   require(['modules/huron/features/pagingGroup/pgSetupAssistant'], loadModuleAndResolve($ocLazyLoad, resolve));
                 });
               }
+            }
+          })
+          .state('huronPagingGroupEdit', {
+            url: '/huronPagingGroupEdit',
+            parent: 'main',
+            template: '<pg-edit pg-id="$resolve.pgId"></pg-edit>',
+            resolve: {
+              lazy: /* @ngInject */ function lazyLoad($q, $ocLazyLoad) {
+                return $q(function resolveLogin(resolve) {
+                  require(['modules/huron/features/pagingGroup/edit'], loadModuleAndResolve($ocLazyLoad, resolve));
+                });
+              },
+              pgId: /* @ngInject */ function pgId($stateParams) {
+                var id = _.get($stateParams.feature, 'id');
+                return id;
+              }
+            },
+            params: {
+              feature: null
             }
           });
 

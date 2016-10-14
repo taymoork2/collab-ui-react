@@ -72,7 +72,6 @@
     vm.getAreaNxx = getAreaNxx;
     vm.searchCarrierInventory = searchCarrierInventory;
     vm.onBlockClick = onBlockClick;
-    vm.showNXXSearch = false;
 
     vm.formatTelephoneNumber = formatTelephoneNumber;
     vm.showOrderQuantity = showOrderQuantity;
@@ -119,7 +118,6 @@
     init();
 
     function init() {
-      toggleNXXSearchFeature();
       TerminusStateService.query().$promise.then(function (states) {
         vm.model.pstn.quantity = null;
         vm.model.pstn.states = states;
@@ -229,12 +227,6 @@
     }];
 
     ////////////////////////
-
-    function toggleNXXSearchFeature() {
-      FeatureToggleService.supports(FeatureToggleService.features.huronNxxSearch).then(function (result) {
-        vm.showNXXSearch = result;
-      });
-    }
 
     function getStateInventory() {
       PstnSetupService.getCarrierInventory(PstnSetup.getProviderId(), vm.model.pstn.state.abbreviation)

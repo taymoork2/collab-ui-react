@@ -74,4 +74,17 @@ describe('Controller: DisableMediaServiceController', function () {
     expect(Notification.success).toHaveBeenCalled();
     expect(modalInstance.close).toHaveBeenCalled();
   });
+  it('should notify error when deactivate call fails', function () {
+    spyOn(MediaClusterServiceV2, 'deleteClusterWithConnector').and.returnValue($q.when({
+      'status': 500
+    }));
+    spyOn(Notification, 'error');
+    spyOn(modalInstance, 'close');
+    controller.clusterIds = ['cluster1', 'cluster2'];
+    controller.deactivate();
+    httpMock.verifyNoOutstandingExpectation();
+    expect(MediaClusterServiceV2.deleteClusterWithConnector).toHaveBeenCalled();
+    expect(Notification.error).toHaveBeenCalled();
+    expect(modalInstance.close).toHaveBeenCalled();
+  });
 });

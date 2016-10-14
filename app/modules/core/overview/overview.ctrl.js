@@ -116,6 +116,13 @@
             });
         }
       });
+
+      FeatureToggleService.atlasPMRonM2GetStatus().then(function (toggle) {
+        if (toggle) {
+          vm.notifications.push(OverviewNotificationFactory.createPMRNotification());
+        }
+      });
+
       TrialService.getDaysLeftForCurrentUser().then(function (daysLeft) {
         vm.trialDaysLeft = daysLeft;
       });

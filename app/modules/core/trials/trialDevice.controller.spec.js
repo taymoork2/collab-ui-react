@@ -8,17 +8,17 @@ describe('Controller: TrialDeviceController', function () {
 
   beforeEach(angular.mock.module('core.trial'));
   beforeEach(angular.mock.module('Core'));
-  // TODO - check for removal of Huron and Sunlight when DX80 and MX300 are officially supported
+  // TODO - check for removal of Huron and Sunlight when MX300 are officially supported
   beforeEach(angular.mock.module('Huron'));
   beforeEach(angular.mock.module('Sunlight'));
 
   beforeEach(function () {
-    // TODO - check for removal of $httpBackend and FeatureToggleService when DX80 and MX300 are officially supported
+    // TODO - check for removal of $httpBackend and FeatureToggleService when MX300 are officially supported
     bard.inject(this, '$controller', '$httpBackend', '$q', '$rootScope', 'FeatureToggleService', 'Notification', 'TrialCallService', 'TrialDeviceService', 'TrialRoomSystemService');
   });
 
   beforeEach(function () {
-    // TODO - remove $httpBackend when DX80 and MX300 are officially supported
+    // TODO - remove $httpBackend when MX300 are officially supported
     $httpBackend
       .when('GET', 'https://identity.webex.com/identity/scim/null/v1/Users/me')
       .respond({});
@@ -52,9 +52,9 @@ describe('Controller: TrialDeviceController', function () {
       expect(shippingInfo).toBeUndefined();
     });
 
-    // TODO: remove when DX80 and MX300 support is official
+    // TODO: remove when MX300 support is official
     describe('feature toggle for displaying new room systems', function () {
-      it('should show DX80 and MX300 when feature toggle is true', function () {
+      it('should show MX300 when feature toggle is true', function () {
         spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
         initController();
 
@@ -62,7 +62,7 @@ describe('Controller: TrialDeviceController', function () {
         expect(FeatureToggleService.supports).toHaveBeenCalled();
       });
 
-      it('should NOT show DX80 and MX300 when feature toggle is false', function () {
+      it('should NOT show MX300 when feature toggle is false', function () {
         spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(false));
         initController();
 
@@ -638,44 +638,15 @@ describe('Controller: TrialDeviceController', function () {
     });
   });
 
-  describe('feature toggle for international shipping', function () {
-    it('should set supportsInternationalShipping value based on feature toggle value', function () {
-      spyOn(FeatureToggleService, 'atlasShipDevicesInternationalGetStatus').and.returnValue($q.when(true));
-      initController();
-
-      expect(controller.supportsInternationalShipping).toBe(true);
-      expect(FeatureToggleService.atlasShipDevicesInternationalGetStatus).toHaveBeenCalled();
-    });
-
-    xit('should only show US when  only dx10 is  selected and toggle is false', function () {
-      spyOn(FeatureToggleService, 'atlasShipDevicesInternationalGetStatus').and.returnValue($q.when(false));
-      initController();
-      expect(controller.supportsInternationalShipping).toBe(false);
-      expect(FeatureToggleService.atlasShipDevicesInternationalGetStatus).toHaveBeenCalled();
-    });
-  });
-
   describe('Shipping to additional countries ', function () {
-    it('should show a larger list of countries when only CISCO_SX10 is selected and toggle is true', function () {
-      spyOn(FeatureToggleService, 'atlasShipDevicesInternationalGetStatus').and.returnValue($q.when(true));
+    it('should show a larger list of countries when only CISCO_SX10 is selected', function () {
       initController();
       controller.sx10.enabled = true;
       controller.sx10.quantity = 1;
       var countryList = controller.getCountriesForSelectedDevices();
       expect(countryList.length).toBeGreaterThan(1);
     });
-    xit('should have a list of countries to be US only when CISCO_SX10 is selected and toggle is false', function () {
-      spyOn(FeatureToggleService, 'atlasShipDevicesInternationalGetStatus').and.returnValue($q.when(false));
-      initController();
-      controller.sx10.enabled = true;
-      controller.sx10.quantity = 1;
-      var countryList = controller.getCountriesForSelectedDevices();
-      expect(countryList.length).toBe(1);
-      expect(countryList).toContain({ country: 'United States' });
-
-    });
-    it('should have a list of countries to be US only when CISCO_SX10 and phone is selected and toggle is true', function () {
-      spyOn(FeatureToggleService, 'atlasShipDevicesInternationalGetStatus').and.returnValue($q.when(true));
+    it('should have a list of countries to be US only when CISCO_SX10 and phone is selected', function () {
       initController();
       controller.sx10.enabled = true;
       controller.sx10.quantity = 1;

@@ -41,6 +41,7 @@
           var url = localUrlBase + '/1eb65fdf-9643-417f-9974-ad72cae0e10f/reports/device/call?';
           url = url + 'intervalType=' + granularity;
           url = url + '&rangeStart=' + start + '&rangeEnd=' + end;
+          url = url + '&deviceCategories=ce,darling';
           return $http.get(url).then(function (response) {
             return reduceAllData(response.data.items);
           });
@@ -48,6 +49,7 @@
           url = urlBase + '/' + Authinfo.getOrgId() + '/reports/device/call?';
           url = url + 'intervalType=' + granularity;
           url = url + '&rangeStart=' + startDate.format('YYYY-MM-DD') + '&rangeEnd=' + endDate.format('YYYY-MM-DD');
+          url = url + '&deviceCategories=ce,darling';
           return $http.get(url).then(function (response) {
             return reduceAllData(response.data.items);
           });
@@ -67,6 +69,7 @@
         var url = localUrlBase + '/1eb65fdf-9643-417f-9974-ad72cae0e10f/reports/device/call?';
         url = url + 'intervalType=' + granularity;
         url = url + '&rangeStart=' + start + '&rangeEnd=' + end;
+        url = url + '&deviceCategories=ce,darling';
         return $http.get(url).then(function (response) {
           return reduceAllData(response.data.items);
         });
@@ -74,6 +77,7 @@
         url = urlBase + '/' + Authinfo.getOrgId() + '/reports/device/call?';
         url = url + 'intervalType=' + granularity;
         url = url + '&rangeStart=' + start + '&rangeEnd=' + end;
+        url = url + '&deviceCategories=ce,darling';
         return $http.get(url).then(function (response) {
           return reduceAllData(response.data.items);
         });
@@ -85,20 +89,30 @@
       return _.chain(items).reduce(function (result, item) {
         if (typeof result[item.date] === 'undefined') {
           result[item.date] = {
-            videCount: 0,
-            video: 0,
-            wbCount: 0,
+            callCount: 0,
+            totalDuration: 0,
             pairedCount: 0,
-            sharedCount: 0,
-            devices: []
+            deviceCategories: []
           };
         }
-        result[item.date].videCount += item.count;
-        result[item.date].video += item.totalDuration;
+        result[item.date].callCount += item.callCount;
+        result[item.date].totalDuration += item.totalDuration;
         result[item.date].pairedCount += item.pairedCount;
-        result[item.date].devices.push(item.deviceId);
+        if (!result[item.date].deviceCategories[item.deviceCategory]) {
+          result[item.date].deviceCategories.push({
+            deviceCategory: item.deviceCategory,
+            totalDuration: item.totalDuration,
+            callCount: item.callCount,
+            pairedCount: item.pairedCount
+          });
+        } else {
+          result[item.date].deviceCategories[item.deviceCategory].totalDuration += item.totalDuration;
+          result[item.date].deviceCategories[item.deviceCategory].callCount += item.callCount;
+          result[item.date].deviceCategories[item.deviceCategory].pairedCount += item.pairedCount;
+        }
         return result;
       }, {}).map(function (value, key) {
+        value.totalDuration = (value.totalDuration / 60).toFixed(2);
         value.time = key.substr(0, 4) + '-' + key.substr(4, 2) + '-' + key.substr(6, 2);
         return value;
       }).value();
@@ -121,7 +135,12 @@
         },
         'chartCursor': {
           'enabled': true,
-          'categoryBalloonDateFormat': 'YYYY-MM-DD'
+          'categoryBalloonDateFormat': 'YYYY-MM-DD',
+          'valueLineEnabled': true,
+          'valueLineBalloonEnabled': true,
+          'cursorColor': chartColors.primaryColorDarker,
+          'cursorAlpha': 0.5,
+          'valueLineAlpha': 0.5
         },
         'chartScrollbar': {
           'scrollbarHeight': 2,
@@ -138,12 +157,15 @@
           {
             'bullet': 'round',
             'id': 'video',
-            'title': 'Video',
-            'valueField': 'video',
+            'title': 'Call Duration',
+            'valueField': 'totalDuration',
             'lineThickness': 2,
             'bulletSize': 10,
-            'lineColor': chartColors.primaryColorDarker
-          },
+            'lineColor': chartColors.primaryColorDarker,
+            'bulletColor': '#ffffff',
+            'bulletBorderAlpha': 1,
+            'useLineColorForBulletBorder': true
+          }
           /*
           {
             'bullet': 'diamond',
@@ -162,18 +184,19 @@
         'valueAxes': [
           {
             'id': 'ValueAxis-1',
-            'title': 'Activity Seconds'
+            'title': 'Call Minutes'
           }
         ],
         'allLabels': [
 
         ],
         'balloon': {
-
+          'cornerRadius': 4
         },
         'legend': {
           'enabled': true,
-          'useGraphSettings': true
+          'useGraphSettings': true,
+          'valueWidth': 100
         },
         'titles': [
           {
