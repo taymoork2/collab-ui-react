@@ -14,7 +14,7 @@ describe('DeviceUsageDistributionReportService', function () {
   }));
 
   it('add up total usage for a accountId for several day entries', function (done) {
-    sinon.stub(DeviceUsageMockService, 'getCachedData');
+    sinon.stub(DeviceUsageMockService, 'getData');
 
     var rawData = [
       {
@@ -34,7 +34,7 @@ describe('DeviceUsageDistributionReportService', function () {
       }
     ];
 
-    DeviceUsageMockService.getCachedData.withArgs(sinon.match.any, sinon.match.any).returns($q.when(rawData));
+    DeviceUsageMockService.getData.withArgs(sinon.match.any, sinon.match.any, true).returns($q.when(rawData));
 
     DeviceUsageDistributionReportService.getDeviceUsageReportData().then(function (data) {
       expect(data.length).toEqual(2);

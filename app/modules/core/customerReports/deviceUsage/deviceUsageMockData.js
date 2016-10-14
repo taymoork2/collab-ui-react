@@ -47,7 +47,7 @@
 
     function getRawData(startDate, endDate) {
       if (_.isEmpty(cachedRawData)) {
-        cachedRawData = createSamples(12, "months");
+        cachedRawData = createSamples(6, "months");
         $log.warn("cachedData", cachedRawData);
       }
 
