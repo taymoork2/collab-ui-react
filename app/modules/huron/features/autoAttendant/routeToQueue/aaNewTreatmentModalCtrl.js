@@ -10,7 +10,6 @@
     var vm = this;
 
     vm.cancel = cancel;
-    vm.selectPlaceholder = $translate.instant('autoAttendant.destinations.Disconnect');
     vm.inputPlaceHolder = $translate.instant('autoAttendant.inputPlaceHolder');
     vm.selectPlaceholder = $translate.instant('autoAttendant.selectPlaceHolder');
     vm.destinationOptions = [{
