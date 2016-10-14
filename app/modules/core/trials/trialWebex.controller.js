@@ -6,7 +6,7 @@
     .controller('TrialWebexCtrl', TrialWebexCtrl);
 
   /* @ngInject */
-  function TrialWebexCtrl($q, $translate, TrialWebexService, TrialTimeZoneService) {
+  function TrialWebexCtrl($q, $scope, $translate, Analytics, TrialService, TrialWebexService, TrialTimeZoneService) {
     var vm = this;
 
     var _trialData = TrialWebexService.getData();
@@ -15,6 +15,7 @@
     vm.siteUrl = _trialData.details.siteUrl;
     vm.validatingUrl = false;
     vm.validateSiteUrl = validateSiteUrl;
+    vm.parentTrialData = $scope.trialData;
 
     vm.siteUrlFields = [{
       model: vm.details,
@@ -82,6 +83,8 @@
 
     ////////////////
 
+    TrialService.sendToAnalytics(Analytics.eventNames.ENTER_SCREEN, vm.parentTrialData);
+
     function validateSiteUrl($viewValue, $modelValue) {
       var siteUrl = $modelValue || $viewValue;
       if (!siteUrl) {
@@ -94,6 +97,7 @@
           if (site.isValid) {
             resolve();
           } else {
+            TrialService.sendToAnalytics(Analytics.eventNames.VALIDATION_ERROR, vm.parentTrialData, { 'value': site, 'error': site.errorCode });
             reject();
           }
         })
