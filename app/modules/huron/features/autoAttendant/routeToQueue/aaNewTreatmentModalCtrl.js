@@ -40,7 +40,7 @@
       action: 'route'
     }];
     vm.destination = vm.destinationOptions[0];
-    vm.minute = '15';
+    vm.maxWaitTime = '15';
     vm.menuEntry = undefined;
     vm.isSaveEnabled = isSaveEnabled;
 
@@ -63,7 +63,7 @@
           label: i + 1
         });
       });
-      vm.minute = vm.minutes[14];
+      vm.maxWaitTime = vm.minutes[14];
     }
 
     //get queueSettings menuEntry -> inner menu entry type (moh, initial, periodic...)

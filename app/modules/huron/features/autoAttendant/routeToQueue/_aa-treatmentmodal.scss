@@ -5,7 +5,7 @@
 
     & .say-box {
       height: 7.75rem;
-      margin-bottom: 15px;
+      @include vr-spacing(mb, 1);
     }
     & .aa-selectmin-modal {
      width: 9.4rem;
