@@ -48,6 +48,5 @@ export class ServicesOverviewHybridMediaCard extends ServicesOverviewHybridCard 
       cardClass: 'media',
       cardType: CardType.hybrid,
     }, FusionClusterStatesService);
-    this._loading = false;
   }
 }

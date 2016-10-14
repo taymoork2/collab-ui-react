@@ -40,7 +40,8 @@ export class ServicesOverviewHybridCallCard extends ServicesOverviewHybridCard {
       activeServices: ['squared-fusion-uc'],
       statusService: 'squared-fusion-uc',
       routerState: 'call-service.list',
-      active: false, cardClass: 'call', cardType: CardType.hybrid,
+      cardClass: 'call',
+      cardType: CardType.hybrid,
     }, FusionClusterStatesService);
   }
 }
