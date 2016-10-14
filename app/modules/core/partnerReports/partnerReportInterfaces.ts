@@ -13,6 +13,14 @@ export interface IReportsCustomer {
   isSelected: boolean;
 }
 
+// used by the Reports Filter
+export interface IFilterObject {
+  id: string;
+  label: string;
+  selected: boolean;
+  toggle: Function | void;
+}
+
 // Table information used by the report-card
 export interface IReportCard {
   // Top Report Variables

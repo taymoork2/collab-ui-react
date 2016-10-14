@@ -1,4 +1,5 @@
 import {
+  IFilterObject,
   IReportCard,
   ITimespan,
   ISecondaryReport,
@@ -29,6 +30,7 @@ describe('Controller: Partner Reports', () => {
     let mediaOptions: IReportCard = _.cloneDeep(ctrlData.mediaOptions);
     let endpointOptions: IReportCard = _.cloneDeep(ctrlData.endpointOptions);
     let callOptions: IReportCard = _.cloneDeep(ctrlData.callOptions);
+    let reportFilter: Array<IFilterObject> = _.cloneDeep(ctrlData.reportFilter);
     activeUserOptions.table = undefined;
     activeUserSecondaryOptions.table.data = _.cloneDeep(activeUserData.mostActiveResponse);
     populationOptions.table = undefined;
@@ -132,6 +134,12 @@ describe('Controller: Partner Reports', () => {
 
       expect(controller.timeOptions).toEqual(timeOptions);
       expect(controller.timeSelected).toEqual(timeOptions[0]);
+
+      _.forEach(controller.filterArray, function (filter: IFilterObject, index: number): void {
+        expect(filter.label).toEqual(reportFilter[index].label);
+        expect(filter.id).toEqual(reportFilter[index].id);
+        expect(filter.selected).toEqual(reportFilter[index].selected);
+      });
     });
 
     it('should resize page when resizeMostActive is called', function () {
@@ -150,16 +158,16 @@ describe('Controller: Partner Reports', () => {
       expect(this.GraphService.getCallMetricsDonutChart.calls.mostRecent().args[0]).toEqual(_.cloneDeep(callMetricsData.callMetricsResponse));
     });
 
-    it('should change visible cards when showHideCards is used', function () {
-      controller.showHideCards(ctrlData.ENGAGEMENT);
+    it('should change visible cards when filterArray[x].toggle is used', function () {
+      controller.filterArray[1].toggle();
       expect(controller.showEngagement).toEqual(true);
       expect(controller.showQuality).toEqual(false);
 
-      controller.showHideCards(ctrlData.QUALITY);
+      controller.filterArray[2].toggle();
       expect(controller.showEngagement).toEqual(false);
       expect(controller.showQuality).toEqual(true);
 
-      controller.showHideCards(ctrlData.ALL);
+      controller.filterArray[0].toggle();
       expect(controller.showEngagement).toEqual(true);
       expect(controller.showQuality).toEqual(true);
     });
