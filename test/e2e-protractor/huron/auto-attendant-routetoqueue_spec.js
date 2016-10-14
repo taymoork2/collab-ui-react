@@ -116,6 +116,10 @@ describe('Huron Auto Attendant', function () {
 
       // and save
       utils.click(autoattendant.scheduleCloseButton);
+      // save AA
+      utils.click(autoattendant.saveButton);
+      autoattendant.assertUpdateSuccess(deleteUtils.testAAName);
+      utils.expectIsDisabled(autoattendant.saveButton);
     }, 120000);
 
 
