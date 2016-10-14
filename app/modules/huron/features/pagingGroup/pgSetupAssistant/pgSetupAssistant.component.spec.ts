@@ -1,4 +1,4 @@
-import { INumber } from './pgNumber/pgNumber.service';
+import { INumber } from '../pgNumber.service';
 import { IPagingGroup } from '../pagingGroup';
 
 describe('Component: pgSetupAssistant', () => {
@@ -224,10 +224,8 @@ describe('Component: pgSetupAssistant', () => {
 
     it('should change name and isNameValid', function () {
       let number: INumber = <INumber> {
-        number: '5000',
-        type: 'internal',
-        directoryNumber: undefined,
         uuid: '1',
+        number: '5000',
       };
       this.controller.onUpdateNumber(number, true);
       expect(this.controller.number).toEqual(number);
@@ -243,10 +241,8 @@ describe('Component: pgSetupAssistant', () => {
       spyOn(this.$state, 'go');
       let name: string = 'name';
       let number: INumber = <INumber> {
-        number: '5000',
-        type: 'internal',
-        directoryNumber: undefined,
         uuid: '1',
+        number: '5000',
       };
       let pg: IPagingGroup = <IPagingGroup>{
         name: name,

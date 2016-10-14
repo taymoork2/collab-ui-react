@@ -2396,6 +2396,25 @@
                 });
               }
             }
+          })
+          .state('huronPagingGroupEdit', {
+            url: '/huronPagingGroupEdit',
+            parent: 'main',
+            template: '<pg-edit pg-id="$resolve.pgId"></pg-edit>',
+            resolve: {
+              lazy: /* @ngInject */ function lazyLoad($q, $ocLazyLoad) {
+                return $q(function resolveLogin(resolve) {
+                  require(['modules/huron/features/pagingGroup/edit'], loadModuleAndResolve($ocLazyLoad, resolve));
+                });
+              },
+              pgId: /* @ngInject */ function pgId($stateParams) {
+                var id = _.get($stateParams.feature, 'id');
+                return id;
+              }
+            },
+            params: {
+              feature: null
+            }
           });
 
         $stateProvider

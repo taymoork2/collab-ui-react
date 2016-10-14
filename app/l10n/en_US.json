@@ -2545,7 +2545,7 @@
     "modalDescription": "Paging groups allows a one-way voice path to the phones in the group without waiting for an answer. These phones must all be in the same Multicast group.",
     "createTitle": "Create Paging Group",
     "namePlaceholder": "Name the Paging Group",
-    "nameHint": "Give this paging group an alpha numeric name not including < or >.",
+    "nameHint": "Paging group names may only contain alphanumeric characters (letters, numbers, underscores, hyphens, and spaces).",
     "numberPlaceholder": "Select Paging Group Number",
     "numberHint": "When this number is called, the Paging Group will be called.",
     "cancelHeader": "Cancel Paging Group Creation",
@@ -2553,7 +2553,11 @@
     "confirmButton": "Cancel Creation",
     "continueButton": "Continue Creation",
     "createHelpText": "Create",
-    "numberFetchFailure": "Unable to get numbers."
+    "numberFetchFailure": "Unable to get numbers.",
+    "pagingGroupName": "Paging Group Name",
+    "pagingGroupNumber": "Paging Group Number",
+    "saveLabel": "Do you want to save your changes?",
+    "successUpdate": "'{{pagingGroupName}}' paging group has been updated successfully"
   },
 "telephonyPreview": {
     "lines": "Lines",
