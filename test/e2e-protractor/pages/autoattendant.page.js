@@ -5,6 +5,7 @@ var AutoAttendantPage = function () {
   this.playSubmenu = 'Play Submenu';
   this.goBack = 'Go Back';
   this.routeToQueue = 'Queue Call';
+
   this.key0 = '0';
   this.key1 = '1';
   this.key2 = '2';
@@ -16,6 +17,13 @@ var AutoAttendantPage = function () {
   this.queueSetting = element(by.id('queueSetting'));
   this.queueMin = element(by.linkText('15'));
   this.queueMinOption = element(by.id('queueMin')).all(by.tagName('li'));
+
+  this.queueDestDisconnect = element(by.linkText('Disconnect'));
+  this.queueDest = element(by.id('destinationSelect'));
+  this.queueDestOption = element(by.id('destinationSelect')).all(by.tagName('li'));
+  this.queueDestAction = element(by.linkText('Search or Select'));
+  this.queueDestActionOption = element(by.css('div.dropdown-menu.visible')).all(by.tagName('li'));
+  this.queueDestRouteToPhoneNumber = element(by.name('phoneNumberInput'));
 
   this.searchBox = element(by.id('searchFilter'));
   this.aaTitle = element(by.tagName('aa-builder-name-edit'));

@@ -4,6 +4,7 @@ describe('Controller: AARouteToQueueCtrl', function () {
   var $controller, $modal;
   var AAUiModelService, AutoAttendantCeInfoModelService, AutoAttendantCeMenuModelService, AAModelService;
   var $rootScope, $scope;
+  var $q;
 
   var aaModel = {
 
@@ -15,27 +16,13 @@ describe('Controller: AARouteToQueueCtrl', function () {
       name: 'AA2'
     }
   };
-  var fakeModal = {
-    result: {
-      then: function (okCallback, cancelCallback) {
-        this.okCallback = okCallback;
-        this.cancelCallback = cancelCallback;
-      }
-    },
-    close: function (item) {
-      this.result.okCallback(item);
-    },
-    dismiss: function (type) {
-      this.result.cancelCallback(type);
-    }
-  };
 
+  var modal;
   var queueName = 'Chandan Test Queue';
   var queues = [{
     id: 'c16a6027-caef-4429-b3af-9d61ddc7964b',
     queueName: queueName,
     queueUrl: '/c16a6027-caef-4429-b3af-9d61ddc7964b',
-
   }];
 
   var schedule = 'openHours';
@@ -67,10 +54,11 @@ describe('Controller: AARouteToQueueCtrl', function () {
   beforeEach(angular.mock.module('Huron'));
   beforeEach(angular.mock.module('Sunlight'));
 
-  beforeEach(inject(function (_$controller_, _$rootScope_, _$modal_, _AAUiModelService_, _AutoAttendantCeInfoModelService_, _AutoAttendantCeMenuModelService_, _AAModelService_) {
+  beforeEach(inject(function (_$controller_, _$rootScope_, _$modal_, _$q_, _AAUiModelService_, _AutoAttendantCeInfoModelService_, _AutoAttendantCeMenuModelService_, _AAModelService_) {
     $rootScope = _$rootScope_;
     $scope = $rootScope;
     $modal = _$modal_;
+    $q = _$q_;
 
     $controller = _$controller_;
     AAModelService = _AAModelService_;
@@ -78,7 +66,7 @@ describe('Controller: AARouteToQueueCtrl', function () {
     AutoAttendantCeInfoModelService = _AutoAttendantCeInfoModelService_;
     AutoAttendantCeMenuModelService = _AutoAttendantCeMenuModelService_;
 
-
+    modal = $q.defer();
     $scope.schedule = schedule;
     $scope.index = index;
     $scope.keyIndex = keyIndex;
@@ -96,11 +84,17 @@ describe('Controller: AARouteToQueueCtrl', function () {
   }));
 
   describe('openQueueTreatmentModal', function () {
-    it('should open the Modal on Validation success', function () {
-      spyOn($modal, 'open').and.returnValue(fakeModal);
-      var controller = $controller('AARouteToQueueCtrl', {
+    var controller;
+    beforeEach(function () {
+      spyOn($modal, 'open').and.returnValue({
+        result: modal.promise
+      });
+      controller = $controller('AARouteToQueueCtrl', {
         $scope: $scope
       });
+    });
+
+    it('should open the Modal on Validation success', function () {
       controller.openQueueTreatmentModal();
       $scope.$apply();
       expect($modal.open).toHaveBeenCalled();

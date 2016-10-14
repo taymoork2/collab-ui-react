@@ -1,40 +1,121 @@
 'use strict';
 
 describe('Controller: AANewTreatmentModalCtrl', function () {
+  var $scope;
+  var $state;
+  var $controller, controller;
+  var AutoAttendantCeMenuModelService, AACommonService;
 
-  beforeEach(angular.mock.module('uc.autoattendant'));
-  beforeEach(angular.mock.module('Huron'));
-  beforeEach(angular.mock.module('Sunlight'));
-
-  var $scope, controller;
   var modalFake = {
     close: jasmine.createSpy('modalInstance.close'),
     dismiss: jasmine.createSpy('modalInstance.dismiss')
   };
 
-  beforeEach(inject(function ($rootScope, $controller, $state) {
+
+  var ui = {
+    openHours: {}
+  };
+  var uiMenu = {};
+  var menuEntry = {};
+  var schedule = 'openHours';
+  var index = '0';
+  var menuId = 'menu0';
+  var keyIndex = '0';
+  var sortedOptions = [{
+    "label": 'autoAttendant.destinations.Disconnect',
+  }, {
+    "label": 'autoAttendant.phoneMenuRouteAA',
+  }, {
+    "label": 'autoAttendant.phoneMenuRouteHunt',
+  }, {
+    "label": 'autoAttendant.phoneMenuRouteToExtNum',
+  }, {
+    "label": 'autoAttendant.phoneMenuRouteUser',
+  }, {
+    "label": 'autoAttendant.phoneMenuRouteVM'
+  }];
+
+  beforeEach(angular.mock.module('uc.autoattendant'));
+  beforeEach(angular.mock.module('Huron'));
+  beforeEach(angular.mock.module('Sunlight'));
+
+  beforeEach(inject(function ($rootScope, _$controller_, _$state_, _AutoAttendantCeMenuModelService_, _AACommonService_) {
     $scope = $rootScope.$new();
+    $state = _$state_;
+    $controller = _$controller_;
+    AutoAttendantCeMenuModelService = _AutoAttendantCeMenuModelService_;
+    AACommonService = _AACommonService_;
+    $scope.schedule = schedule;
+    $scope.index = index;
+    $scope.menuId = menuId;
+    $scope.keyIndex = keyIndex;
+
+    uiMenu = AutoAttendantCeMenuModelService.newCeMenu();
+    ui[schedule] = uiMenu;
+    menuEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
+    uiMenu.addEntryAt(index, menuEntry);
 
     spyOn($state, 'go');
 
     controller = $controller('AANewTreatmentModalCtrl', {
       $scope: $scope,
-      $modalInstance: modalFake
+      $modalInstance: modalFake,
+      aa_schedule: schedule,
+      aa_menu_id: menuId,
+      aa_index: index,
+      aa_key_index: keyIndex,
     });
-
   }));
 
-  it("length of minutes should be 60.", function () {
-    expect(controller).toBeDefined();
-    expect(controller.minutes.length).toEqual(60);
+  afterEach(function () {
+
   });
 
-  it("default value of minute should be 15.", function () {
-    expect(controller.minute.index).toEqual(14);
-  });
+  describe('activate', function () {
+    it('should be defined', function () {
+      expect(controller).toBeDefined();
+    });
+    it("length of minutes should be 60.", function () {
+      expect(controller).toBeDefined();
+      expect(controller.minutes.length).toEqual(60);
+    });
+    it("default value of minute should be 15.", function () {
+      expect(controller.minute.index).toEqual(14);
+    });
+    it("cancel function call results in closing the Modal.", function () {
+      controller.cancel();
+      expect(modalFake.close).toHaveBeenCalledWith();
+    });
 
-  it("cancel function call results in closing the Modal.", function () {
-    controller.cancel();
-    expect(modalFake.close).toHaveBeenCalledWith();
+    describe('FallBack', function () {
+      it('test for default option as Disconnect', function () {
+        expect(controller.destinationOptions[0].name).toEqual('Disconnect');
+      });
+
+      it('test for sorted order options in dropdown', function () {
+        for (var i = 1; i < sortedOptions.length; i++) {
+          expect(controller.destinationOptions[i].label).toEqual(sortedOptions[i].label);
+        }
+      });
+
+      it("length of FallBack drop down options should be 6", function () {
+        expect(controller.destinationOptions.length).toEqual(6);
+      });
+
+    });
+
+    describe('isSaveEnabled', function () {
+      it('should return true', function () {
+        spyOn(AACommonService, 'isValid').and.returnValue(true);
+        var save = controller.isSaveEnabled();
+        expect(save).toEqual(true);
+      });
+
+      it('should return false', function () {
+        spyOn(AACommonService, 'isValid').and.returnValue(false);
+        var save = controller.isSaveEnabled();
+        expect(save).toEqual(false);
+      });
+    });
   });
 });
