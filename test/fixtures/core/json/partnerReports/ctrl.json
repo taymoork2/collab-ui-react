@@ -3,6 +3,19 @@
   "ENGAGEMENT": "engagement",
   "QUALITY": "quality",
   "EMPTY": "empty",
+  "reportFilter": [{
+    "id": "allReports",
+    "label": "reportsPage.all",
+    "selected": true
+  }, {
+    "id": "engagementReports",
+    "label": "reportsPage.engagement",
+    "selected": false
+  }, {
+    "id": "qualityReports",
+    "label": "reportsPage.quality",
+    "selected": false
+  }],
   "activeUserOptions": {
     "animate": false,
     "description": "activeUsers.description",

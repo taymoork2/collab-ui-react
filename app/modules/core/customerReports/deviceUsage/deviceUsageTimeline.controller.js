@@ -9,6 +9,7 @@
   function DeviceUsageTimelineCtrl($state, $scope, DeviceUsageTimelineService, deviceUsageFeatureToggle) {
     var vm = this;
     var amChart;
+    var apiToUse = 'mock';
 
     if (!deviceUsageFeatureToggle) {
       // simulate a 404
@@ -34,7 +35,8 @@
 
     vm.dateRange = 'last_week';
 
-    vm.additionalInfo = false;
+    //vm.showDevices = false;
+    //var lastDataPointIndex = null;
 
     vm.rangeChange = function () {
       switch (vm.dateRange) {
@@ -55,12 +57,12 @@
     init();
 
     function init() {
-      DeviceUsageTimelineService.getDataForLastWeek('mock').then(function (data) {
+      DeviceUsageTimelineService.getDataForLastWeek(apiToUse).then(function (data) {
         var chart = DeviceUsageTimelineService.getLineChart();
         chart.listeners = [
         { event: 'rollOverGraphItem', method: rollOverGraphItem },
         { event: 'rollOutGraphItem', method: rollOutGraphItem },
-        { event: 'clickGraphItem', method: clickGraphItem }
+        //{ event: 'clickGraphItem', method: clickGraphItem }
         ];
         chart.dataProvider = data;
         amChart = AmCharts.makeChart('device-usage-timeline-chart', chart);
@@ -72,23 +74,26 @@
     }
 
     function loadLastWeek() {
-      DeviceUsageTimelineService.getDataForLastWeek('mock').then(function (data) {
+      DeviceUsageTimelineService.getDataForLastWeek(apiToUse).then(function (data) {
         amChart.dataProvider = data;
         amChart.validateData();
+        vm.showDevices = false;
       });
     }
 
     function loadLastMonth() {
-      DeviceUsageTimelineService.getDataForLastMonth('mock').then(function (data) {
+      DeviceUsageTimelineService.getDataForLastMonth(apiToUse).then(function (data) {
         amChart.dataProvider = data;
         amChart.validateData();
+        vm.showDevices = false;
       });
     }
 
     function loadLast3Months() {
-      DeviceUsageTimelineService.getDataForLastMonths(3, 'week', 'mock').then(function (data) {
+      DeviceUsageTimelineService.getDataForLastMonths(3, 'day', apiToUse).then(function (data) {
         amChart.dataProvider = data;
         amChart.validateData();
+        vm.showDevices = false;
       });
     }
 
@@ -103,11 +108,23 @@
       $scope.$apply();
     }
 
-    function clickGraphItem() {
-    }
+    // function clickGraphItem(event) {
+    //   if (lastDataPointIndex === event.index) {
+    //     vm.showDevices = !vm.showDevices;
+    //   } else {
+    //     lastDataPointIndex = event.index;
+    //     vm.devices = event.item.dataContext.devices;
+    //     vm.dateForDevices = event.item.dataContext.time;
+    //     vm.showDevices = true;
+    //   }
+    //   $scope.$apply();
+    // }
 
     function renderBalloon(graphDataItem) {
-      var text = '<div><h5>Video Duration: ' + graphDataItem.dataContext.video + '</h5></div>';
+      var text = '<div><h5>Call Duration: ' + graphDataItem.dataContext.totalDuration + '</h5>';
+      text = text + 'Call Count:  ' + graphDataItem.dataContext.callCount + ' <br/> ';
+      text = text + 'Paired Count: ' + graphDataItem.dataContext.pairedCount + '<br/>';
+      //text = text + 'Devices: ' + graphDataItem.dataContext.devices.length + '</div>';
       return text;
     }
 

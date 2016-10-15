@@ -4,7 +4,7 @@
       <span class="sr-only">Close</span>
     </button>
     <p class="h3 modal-title"
-       translate="careChatTpl.deleteFeature"
+       translate="careChatTpl.deleteAction"
        translate-values="{featureText : careFeaturesDeleteCtrl.featureText}"></p>
   </div>
   <div class="modal-body">
@@ -14,7 +14,7 @@
   <div class="modal-footer">
     <button id="cancelDeleteFeature" class="btn" ng-click="$dismiss();" translate="common.cancel" ng-disabled="careFeaturesDeleteCtrl.deleteBtnDisabled"></button>
     <button id="deleteFeature" class="btn btn--negative" loading="careFeaturesDeleteCtrl.deleteBtnDisabled" cs-btn type="button" ng-click="careFeaturesDeleteCtrl.deleteFeature();">
-      <span translate="careChatTpl.deleteFeature"
+      <span translate="careChatTpl.deleteAction"
             translate-values="{featureText : careFeaturesDeleteCtrl.featureText}"></span>
     </button>
   </div>

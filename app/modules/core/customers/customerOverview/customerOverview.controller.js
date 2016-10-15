@@ -155,12 +155,14 @@
         });
     }
 
+    // TODO: understand why this is needed
     function LicenseFeature(name, bAdd) {
       this['id'] = name.toString();
       this['idOperation'] = bAdd ? 'ADD' : 'REMOVE';
       this['properties'] = null;
     }
 
+    // TODO: understand why this is needed and possibly move this somewhere more appropriate
     function collectLicenseIdsForWebexSites(liclist) {
       var licIds = [];
       var i = 0;

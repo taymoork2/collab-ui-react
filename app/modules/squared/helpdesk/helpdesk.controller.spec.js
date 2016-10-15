@@ -3,7 +3,8 @@
 describe('Controller: HelpdeskController', function () {
   beforeEach(angular.mock.module('Squared'));
 
-  var HelpdeskService, HelpdeskHuronService, LicenseService, $controller, q, $translate, $scope, httpBackend, controller, HelpdeskSearchHistoryService, Config, Authinfo;
+  var HelpdeskService, HelpdeskHuronService, LicenseService, $controller, q, $translate, $scope, httpBackend, controller,
+    HelpdeskSearchHistoryService, Config, Authinfo, FeatureToggleService;
 
   var createUserMockData = function (name, orgId) {
     return {
@@ -35,8 +36,9 @@ describe('Controller: HelpdeskController', function () {
   var validSearchString = "bill gates";
   var lessThanThreeCharacterSearchString = "bi";
 
-  beforeEach(inject(function (_$translate_, $httpBackend, _$rootScope_, _HelpdeskService_, _HelpdeskSearchHistoryService_, _$controller_, _$q_, _HelpdeskHuronService_, _LicenseService_, _Config_, _Authinfo_) {
+  beforeEach(inject(function (_$translate_, $httpBackend, _$rootScope_, _HelpdeskService_, _HelpdeskSearchHistoryService_, _$controller_, _$q_, _HelpdeskHuronService_, _LicenseService_, _Config_, _Authinfo_, _FeatureToggleService_) {
     HelpdeskService = _HelpdeskService_;
+    FeatureToggleService = _FeatureToggleService_;
     HelpdeskSearchHistoryService = _HelpdeskSearchHistoryService_;
     q = _$q_;
     $scope = _$rootScope_.$new();
@@ -136,9 +138,34 @@ describe('Controller: HelpdeskController', function () {
       }
     }];
 
+    var orderSearchResult = [{
+      "accountId": "4895afc9-83e9-44cb-b78a-05e541d41661",
+      "externalOrderId": "67891234",
+      "lastModified": "2016-09-27T22:56:51.839Z",
+      "orderReceived": "2016-09-27T22:56:30.051Z",
+      "orderStatus": "PROVISIONED",
+      "orderUuid": "3e54548d-12ff-43f4-9aff-10c2fcc64130",
+      "orderingTool": "CCW",
+      "serviceId": "Sub1234-5678",
+      "serviceProvisioningId": "SPID-Atlas_Test_int_001"
+    }];
+
+    var orderSearchResult2 = [{
+      "accountId": "4895afc9-83e9-44cb-b78a-05e541d41661",
+      "externalOrderId": "67891234",
+      "lastModified": "2016-09-27T22:56:51.839Z",
+      "orderReceived": "2016-09-27T22:56:30.051Z",
+      "orderStatus": "REJECTED",
+      "orderUuid": "3e54548d-12ff-43f4-9aff-10c2fcc64130",
+      "orderingTool": "CCW",
+      "serviceId": "Sub1234-5678",
+      "serviceProvisioningId": "SPID-Atlas_Test_int_001"
+    }];
+
     beforeEach(function () {
       sinon.stub(HelpdeskService, 'searchUsers');
       sinon.stub(HelpdeskService, 'searchOrgs');
+      sinon.stub(HelpdeskService, 'searchOrders');
       sinon.stub(HelpdeskService, 'searchCloudberryDevices');
       sinon.stub(HelpdeskService, 'findAndResolveOrgsForUserResults');
       sinon.stub(HelpdeskService, 'getOrg');
@@ -147,6 +174,7 @@ describe('Controller: HelpdeskController', function () {
       sinon.stub(Authinfo, 'isInDelegatedAdministrationOrg');
       sinon.stub(Authinfo, 'getOrgId');
       sinon.stub(Authinfo, 'getOrgName');
+      sinon.stub(FeatureToggleService, 'atlasHelpDeskOrderSearchGetStatus').returns(q.resolve(true));
 
       var deferredUserResult = q.defer();
       deferredUserResult.resolve(userSearchResult);
@@ -335,6 +363,64 @@ describe('Controller: HelpdeskController', function () {
       expect(controller.searchingForUsers).toBeTruthy();
       expect(controller.searchingForOrgs).toBeFalsy();
     });
+
+    it('simple search with single hit shows search result for order', function () {
+      controller.isOrderSearchEnabled = true;
+      var deferredOrdersResult = q.defer();
+      deferredOrdersResult.resolve(orderSearchResult);
+      HelpdeskService.searchOrders.returns(deferredOrdersResult.promise);
+
+      expect(controller.showOrdersResultPane()).toBeFalsy();
+      expect(controller.searchingForOrders).toBeFalsy();
+      controller.searchString = "67891234";
+      controller.search();
+      $scope.$apply();
+      expect(controller.searchingForOrders).toBeFalsy();
+      expect(controller.currentSearch.orderSearchResults[0].externalOrderId).toEqual("67891234");
+    });
+
+    it('simple search with Rejected order', function () {
+      controller.isOrderSearchEnabled = true;
+      var deferredOrdersResult = q.defer();
+      deferredOrdersResult.resolve(orderSearchResult2);
+      HelpdeskService.searchOrders.returns(deferredOrdersResult.promise);
+
+      expect(controller.showOrdersResultPane()).toBeFalsy();
+      expect(controller.searchingForOrders).toBeFalsy();
+      controller.searchString = "67891234";
+      controller.search();
+      $scope.$apply();
+      expect(controller.searchingForOrders).toBeFalsy();
+
+      expect(controller.currentSearch.orderSearchFailure).toEqual("helpdesk.noSearchHits");
+    });
+
+    it('simple search with less than eight characters shows search failure directly', function () {
+      controller.isOrderSearchEnabled = true;
+      // Search string is 7 numeric string, and should fail the lower limit of 8 digits.
+      controller.searchString = "6789123";
+      controller.search();
+      expect(controller.searchingForOrders).toBeFalsy();
+      $scope.$apply();
+      expect(controller.showUsersResultPane()).toBeTruthy();
+      expect(controller.showOrgsResultPane()).toBeTruthy();
+      expect(controller.showOrdersResultPane()).toBeTruthy();
+      expect(controller.showDeviceResultPane()).toBeFalsy();
+      expect(controller.currentSearch.orderSearchFailure).toEqual("helpdesk.badOrderSearchInput");
+    });
+
+    it('simple search with prefix different from "ssw" shows search failure directly', function () {
+      controller.isOrderSearchEnabled = true;
+      controller.searchString = "ssx67891234";
+      controller.search();
+      expect(controller.searchingForOrders).toBeFalsy();
+      $scope.$apply();
+      expect(controller.showUsersResultPane()).toBeTruthy();
+      expect(controller.showOrgsResultPane()).toBeTruthy();
+      expect(controller.showOrdersResultPane()).toBeTruthy();
+      expect(controller.showDeviceResultPane()).toBeFalsy();
+      expect(controller.currentSearch.orderSearchFailure).toEqual("helpdesk.badOrderSearchInput");
+    });
   });
 
   describe("backend http error", function () {
@@ -343,6 +429,7 @@ describe('Controller: HelpdeskController', function () {
       sinon.stub(HelpdeskService, 'searchUsers');
       sinon.stub(HelpdeskService, 'searchOrgs');
       sinon.stub(Authinfo, 'isInDelegatedAdministrationOrg');
+      sinon.stub(FeatureToggleService, 'atlasHelpDeskOrderSearchGetStatus').returns(q.resolve(true));
 
       Authinfo.isInDelegatedAdministrationOrg.returns(true);
 

@@ -7,16 +7,6 @@ import {
 } from './partnerReportInterfaces';
 
 export class GraphService {
-  // Keys for base variables in CommonGraphService
-  private AXIS: string = 'axis';
-  private COLUMN: string = 'column';
-  private CURSOR: string = 'cursor';
-  private LEGEND: string = 'legend';
-  private NUMFORMAT: string = 'numFormat';
-
-  // AmChart variables
-  private START: string = 'start';
-
   // Chart locators
   private ACTIVE_USERS_DIV: string = 'activeUsersChart';
   private MEDIA_QUALITY_DIV: string = 'mediaQualityChart';
@@ -64,22 +54,22 @@ export class GraphService {
   }
 
   private createActiveUsersGraph(data: Array<IActiveUserData>) {
-    let valueAxes = [this.CommonGraphService.getBaseVariable(this.AXIS)];
+    let valueAxes = [this.CommonGraphService.getBaseVariable(this.CommonGraphService.AXIS)];
     valueAxes[0].integersOnly = true;
     valueAxes[0].minimum = 0;
 
-    let catAxis = this.CommonGraphService.getBaseVariable(this.AXIS);
-    catAxis.gridPosition = this.START;
+    let catAxis = this.CommonGraphService.getBaseVariable(this.CommonGraphService.AXIS);
+    catAxis.gridPosition = this.CommonGraphService.START;
 
     let startDuration = 1;
     if (!data[0].balloon) {
       startDuration = 0;
     }
 
-    let chartData = this.CommonGraphService.getBaseSerialGraph(data, startDuration, valueAxes, this.activeUserGraphs(data), 'date', catAxis);
-    chartData.numberFormatter = this.CommonGraphService.getBaseVariable(this.NUMFORMAT);
-    chartData.legend = this.CommonGraphService.getBaseVariable(this.LEGEND);
-    chartData.legend.labelText = '[[title]]';
+    let chartData = this.CommonGraphService.getBaseSerialGraph(data, startDuration, valueAxes, this.activeUserGraphs(data), this.CommonGraphService.DATE, catAxis);
+    chartData.numberFormatter = this.CommonGraphService.getBaseVariable(this.CommonGraphService.NUMFORMAT);
+    chartData.legend = this.CommonGraphService.getBaseVariable(this.CommonGraphService.LEGEND);
+    chartData.legend.labelText = '[[' + this.CommonGraphService.TITLE + ']]';
 
     return AmCharts.makeChart(this.ACTIVE_USERS_DIV, chartData);
   }
@@ -94,7 +84,7 @@ export class GraphService {
     let graphs: Array<any> = [];
 
     _.forEach(values, (value, index) => {
-      graphs.push(this.CommonGraphService.getBaseVariable(this.COLUMN));
+      graphs.push(this.CommonGraphService.getBaseVariable(this.CommonGraphService.COLUMN));
       graphs[index].title = titles[index];
       graphs[index].fillColors = colors[index];
       graphs[index].colorField = colors[index];
@@ -126,10 +116,10 @@ export class GraphService {
   }
 
   private createMediaQualityGraph(data: Array<IMediaQualityData>) {
-    let catAxis = this.CommonGraphService.getBaseVariable(this.AXIS);
-    catAxis.gridPosition = this.START;
+    let catAxis = this.CommonGraphService.getBaseVariable(this.CommonGraphService.AXIS);
+    catAxis.gridPosition = this.CommonGraphService.START;
 
-    let valueAxes = [this.CommonGraphService.getBaseVariable(this.AXIS)];
+    let valueAxes = [this.CommonGraphService.getBaseVariable(this.CommonGraphService.AXIS)];
     valueAxes[0].totalColor = this.chartColors.brandWhite;
     valueAxes[0].integersOnly = true;
     valueAxes[0].minimum = 0;
@@ -140,9 +130,9 @@ export class GraphService {
       startDuration = 0;
     }
 
-    let chartData = this.CommonGraphService.getBaseSerialGraph(data, startDuration, valueAxes, this.mediaQualityGraphs(data), 'date', catAxis);
-    chartData.numberFormatter = this.CommonGraphService.getBaseVariable(this.NUMFORMAT);
-    chartData.legend = this.CommonGraphService.getBaseVariable(this.LEGEND);
+    let chartData = this.CommonGraphService.getBaseSerialGraph(data, startDuration, valueAxes, this.mediaQualityGraphs(data), this.CommonGraphService.DATE, catAxis);
+    chartData.numberFormatter = this.CommonGraphService.getBaseVariable(this.CommonGraphService.NUMFORMAT);
+    chartData.legend = this.CommonGraphService.getBaseVariable(this.CommonGraphService.LEGEND);
     chartData.legend.reversedOrder = true;
 
     return AmCharts.makeChart(this.MEDIA_QUALITY_DIV, chartData);
@@ -161,7 +151,7 @@ export class GraphService {
     for (let i = 0; i < values.length; i++) {
       let title = this.$translate.instant(titles[i]);
 
-      graphs.push(this.CommonGraphService.getBaseVariable(this.COLUMN));
+      graphs.push(this.CommonGraphService.getBaseVariable(this.CommonGraphService.COLUMN));
       graphs[i].title = this.$translate.instant(titles[i]);
       graphs[i].fillColors = colors[i];
       graphs[i].colorField = colors[i];
@@ -201,13 +191,13 @@ export class GraphService {
 
   private createActiveUserPopulationGraph(data: Array<IPopulationData>) {
     data = this.modifyPopulation(data);
-    let catAxis = this.CommonGraphService.getBaseVariable(this.AXIS);
+    let catAxis = this.CommonGraphService.getBaseVariable(this.CommonGraphService.AXIS);
     catAxis.axisAlpha = 0;
     catAxis.fontSize = 15;
     catAxis.autoWrap = true;
     catAxis.labelColorField = 'labelColorField';
 
-    let valueAxes = [this.CommonGraphService.getBaseVariable(this.AXIS)];
+    let valueAxes = [this.CommonGraphService.getBaseVariable(this.CommonGraphService.AXIS)];
     valueAxes[0].autoGridCount = false;
     valueAxes[0].minimum = 0;
     valueAxes[0].maximum = 100;
@@ -225,7 +215,7 @@ export class GraphService {
 
     let chartData = this.CommonGraphService.getBaseSerialGraph(data, startDuration, valueAxes, this.populationGraphs(data), 'customerName', catAxis);
     chartData.marginBottom = 60;
-    chartData.chartCursor = this.CommonGraphService.getBaseVariable(this.CURSOR);
+    chartData.chartCursor = this.CommonGraphService.getBaseVariable(this.CommonGraphService.CURSOR);
 
     return AmCharts.makeChart(this.ACTIVE_POP_DIV, chartData);
   }
@@ -236,9 +226,9 @@ export class GraphService {
       color = this.chartColors.grayLightThree;
     }
 
-    let graph: any = this.CommonGraphService.getBaseVariable(this.COLUMN);
-    graph.fillColors = 'color';
-    graph.colorField = 'color';
+    let graph: any = this.CommonGraphService.getBaseVariable(this.CommonGraphService.COLUMN);
+    graph.fillColors = this.CommonGraphService.COLOR;
+    graph.colorField = this.CommonGraphService.COLOR;
     graph.fontSize = 26;
     graph.valueField = 'percentage';
     graph.columnWidth = 0.8;
@@ -316,7 +306,7 @@ export class GraphService {
       textColor = this.chartColors.brandWhite;
     }
 
-    let chartData = this.CommonGraphService.getBasePieChart(data.dataProvider, balloonText, '75%', '30%', '[[percents]]%<br>[[label]]', true, 'label', 'value', 'color', textColor);
+    let chartData = this.CommonGraphService.getBasePieChart(data.dataProvider, balloonText, '75%', '30%', '[[percents]]%<br>[[label]]', true, 'label', 'value', this.CommonGraphService.COLOR, textColor);
     chartData.color = textColor;
     chartData.labelColorField = textColor;
     chartData.allLabels = this.getCallMetricsLabels(data.labelData, data.dummy);

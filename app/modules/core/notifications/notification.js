@@ -20,6 +20,11 @@
     var SUCCESS_TIMEOUT = Config.isE2E() ? NO_TIMEOUT : 3000;
     var preventToasters = false;
 
+    // TODO: rip out 'stringify()' usage once ATLAS-1338 is resolved
+    var _helpers = {
+      stringify: stringify
+    };
+
     return {
       success: success,
       warning: warning,
@@ -29,7 +34,8 @@
       errorWithTrackingId: errorWithTrackingId,
       processErrorResponse: processErrorResponse,
       confirmation: confirmation,
-      notifyReadOnly: notifyReadOnly
+      notifyReadOnly: notifyReadOnly,
+      _helpers: _helpers
     };
 
     function success(messageKey, messageParams, titleKey) {
@@ -104,11 +110,18 @@
       return key ? $translate.instant(key, params) : '';
     }
 
+    // TODO: rip this out once ATLAS-1338 is resolved
+    function stringify(jsonifiableVal) {
+      return (_.isObjectLike(jsonifiableVal)) ? JSON.stringify(jsonifiableVal) : jsonifiableVal;
+    }
+
     function addResponseMessage(errorMsg, response) {
       if (_.get(response, 'data.errorMessage')) {
-        errorMsg += ' ' + response.data.errorMessage;
+        // TODO: rip out 'stringify()' usage once ATLAS-1338 is resolved
+        errorMsg += ' ' + stringify(response.data.errorMessage);
       } else if (_.get(response, 'data.error')) {
-        errorMsg += ' ' + response.data.error;
+        // TODO: rip out 'stringify()' usage once ATLAS-1338 is resolved
+        errorMsg += ' ' + stringify(response.data.error);
       } else if (_.get(response, 'status') === 404) {
         errorMsg += ' ' + $translate.instant('errors.status404');
       } else if (_.isString(response)) {
@@ -118,14 +131,19 @@
     }
 
     function addTrackingId(errorMsg, response) {
-      if (_.isFunction(_.get(response, 'headers'))) {
-        var trackingId = response.headers('TrackingID') || _.get(response, 'data.trackingId');
-        if (trackingId) {
-          if (errorMsg.length > 0 && !_.endsWith(errorMsg, '.')) {
-            errorMsg += '.';
-          }
-          errorMsg += ' TrackingID: ' + trackingId;
+      // use value from 'TrackingID' header if available
+      var trackingId = _.isFunction(_.get(response, 'headers')) && response.headers('TrackingID');
+
+      // fallback if no value available
+      if (!trackingId) {
+        trackingId = _.get(response, 'data.trackingId');
+      }
+
+      if (trackingId) {
+        if (errorMsg.length > 0 && !_.endsWith(errorMsg, '.')) {
+          errorMsg += '.';
         }
+        errorMsg += ' TrackingID: ' + trackingId;
       }
       return errorMsg;
     }

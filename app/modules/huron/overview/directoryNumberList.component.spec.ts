@@ -12,6 +12,7 @@ describe('Component: directoryNumberList', () => {
         siteToSite: '71002329',
         incomingCallMaximum: 2,
         primary: true,
+        shared: false,
       },
       {
         uuid: '35fb962b-824c-44f3-9e13-2ed171e69249',
@@ -20,6 +21,7 @@ describe('Component: directoryNumberList', () => {
         siteToSite: '71005015',
         incomingCallMaximum: 8,
         primary: false,
+        shared: false,
       },
     ];
 
@@ -66,6 +68,7 @@ describe('Component: directoryNumberList', () => {
         siteToSite: '71002329',
         incomingCallMaximum: 2,
         primary: true,
+        shared: false,
       },
       {
         uuid: '35fb962b-824c-44f3-9e13-2ed171e69249',
@@ -74,6 +77,7 @@ describe('Component: directoryNumberList', () => {
         siteToSite: '71005015',
         incomingCallMaximum: 8,
         primary: false,
+        shared: false,
       },
       {
         uuid: '35fb962b-824c-44f3-9e13-2ed171e69248',
@@ -82,6 +86,7 @@ describe('Component: directoryNumberList', () => {
         siteToSite: '71005016',
         incomingCallMaximum: 8,
         primary: false,
+        shared: false,
       },
       {
         uuid: '35fb962b-824c-44f3-9e13-2ed171e69247',
@@ -90,6 +95,7 @@ describe('Component: directoryNumberList', () => {
         siteToSite: '71005017',
         incomingCallMaximum: 8,
         primary: false,
+        shared: false,
       },
       {
         uuid: '35fb962b-824c-44f3-9e13-2ed171e69246',
@@ -98,6 +104,7 @@ describe('Component: directoryNumberList', () => {
         siteToSite: '71005018',
         incomingCallMaximum: 8,
         primary: false,
+        shared: false,
       },
       {
         uuid: '35fb962b-824c-44f3-9e13-2ed171e69245',
@@ -106,6 +113,7 @@ describe('Component: directoryNumberList', () => {
         siteToSite: '71005019',
         incomingCallMaximum: 8,
         primary: false,
+        shared: false,
       },
     ];
 

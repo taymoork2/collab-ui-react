@@ -85,10 +85,10 @@
       return usageChart;
     }
 
-    function getUsageFromDeviceInfo(devices) {
+    function extractHours(rawDeviceData) {
       var usageData = [];
-      _.each(devices, function (deviceData) {
-        usageData.push(deviceData.hours);
+      _.each(rawDeviceData, function (deviceData) {
+        usageData.push(deviceData.totalDuration);
       });
       return usageData;
     }
@@ -101,15 +101,8 @@
       return distributionLimits;
     }
 
-    function getUsageDistributionData(devices) {
-      var result;
-      var usageData = getUsageFromDeviceInfo(devices);
-      var hoursPrWeek = 168;
-      distributionLimits = calculateDistributionLimits(4, hoursPrWeek);
-      $log.warn("Distribution limits", distributionLimits);
-
+    function groupUsageDataByDistributionLimits(usageData) {
       var usageGroups = [];
-
       usageGroups[0] = usageData.filter(function (x) {
         return x === 0;
       });
@@ -123,6 +116,18 @@
           }
         }));
       });
+      return usageGroups;
+    }
+
+    function getUsageDistributionData(rawDeviceData) {
+      var result;
+      var usageData = extractHours(rawDeviceData);
+      var hoursPrWeek = 168;
+      distributionLimits = calculateDistributionLimits(4, hoursPrWeek);
+      $log.warn("Distribution limits", distributionLimits);
+
+      var usageGroups = groupUsageDataByDistributionLimits(usageData);
+      //TODO: Make sure identical devices are collected into one entry with sum of usages.
 
       $log.warn("Usage groups", usageGroups);
 
@@ -131,7 +136,7 @@
       result.push({ "alpha": 1.0, "video": devicesWithNoUsage.length, "balloon": true, "whiteboard": devicesWithNoUsage.length * 2, "sharing": Math.round(devicesWithNoUsage.length / 1.5, 1), "usageHours": "No use", "labelColor": chartColors.brandDanger, "description": "have not been used" });
       for (var i = 1; i < usageGroups.length - 1; i++) {
         var percentageSteps = 100 / (distributionLimits.length - 1);
-        result.push({ "alpha": 1.0, "mean": distributionLimits[i] / 2, "video": usageGroups[i].length, "balloon": true, "whiteboard": Math.round(usageGroups[i].length / 2, 1), "sharing": Math.round(usageGroups[i].length / 1.5, 1), "usageHours": distributionLimits[i - 1] + 1 + "-" + distributionLimits[i] + " <br>(" + (percentageSteps * (i - 1)) + "-" + (percentageSteps * i) + "%)", "description": "have between<br>" + ((i - 1) * 20) + " to " + (i * 20) + "% utilization" });
+        result.push({ "alpha": 1.0, "video": usageGroups[i].length, "balloon": true, "whiteboard": Math.round(usageGroups[i].length / 2, 1), "sharing": Math.round(usageGroups[i].length / 1.5, 1), "usageHours": distributionLimits[i - 1] + 1 + "-" + distributionLimits[i] + " <br>(" + (percentageSteps * (i - 1)) + "-" + (percentageSteps * i) + "%)", "description": "have between<br>" + ((i - 1) * 20) + " to " + (i * 20) + "% utilization" });
       }
       var devicesWithMaxUsage = usageGroups[usageGroups.length - 1];
       result.push({ "alpha": 1.0, "video": devicesWithMaxUsage.length, "balloon": true, "whiteboard": 0, "sharing": Math.round(devicesWithMaxUsage.length / 1.5, 1), "usageHours": "168<br>(100%)", "labelColor": chartColors.brandDanger, "description": "have 100% utilization" });
