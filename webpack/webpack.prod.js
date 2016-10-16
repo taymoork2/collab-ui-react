@@ -3,6 +3,7 @@ const merge = require('webpack-merge');
 const commonWebpack = require('./webpack.common');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const StyleLintPlugin = require('stylelint-webpack-plugin');
 const loaders = require('./loaders');
 const _ = require('lodash');
 
@@ -19,6 +20,10 @@ const prodWebpack = merge.smart(commonWebpack, {
     chunkFilename: 'js/[name].[hash].js',
   },
   plugins: [
+    new StyleLintPlugin({
+      configFile: '.stylelintrc.js',
+      failOnError: false,
+    }),
     new HtmlWebpackPlugin({
       template: 'index.html',
       inject: 'body',
