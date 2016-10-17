@@ -125,7 +125,7 @@ describe('Controller: AARouteToQueueCtrl', function () {
         controller.menuEntry.actions[0].description = "Added text";
         modal.reject();
         $scope.$apply();
-        expect(controller.menuEntry.actions[0].description).toEqual({});
+        expect(controller.menuEntry.actions[0].description).toEqual('');
       });
     });
 
@@ -156,7 +156,7 @@ describe('Controller: AARouteToQueueCtrl', function () {
         controller.menuKeyEntry.actions[0].description = "Added text";
         modal.reject();
         $scope.$apply();
-        expect(controller.menuKeyEntry.actions[0].description).toEqual(saved);
+        expect(controller.menuKeyEntry.actions[0].description).toEqual('');
       });
     });
   });

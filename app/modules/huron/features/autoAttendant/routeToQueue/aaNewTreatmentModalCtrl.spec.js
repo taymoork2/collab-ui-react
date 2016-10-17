@@ -23,7 +23,9 @@ describe('Controller: AANewTreatmentModalCtrl', function () {
   var routeToQueue = {};
   var queueSettings = {};
   var musicOnHold = 'musicOnHold';
+  var initialAnnouncement = 'initialAnnouncement';
   var playAction = {};
+  var iaAction = {};
   var schedule = 'openHours';
   var index = '0';
   var menuId = 'menu2';
@@ -50,10 +52,14 @@ describe('Controller: AANewTreatmentModalCtrl', function () {
     ui[schedule] = uiMenu;
     menuEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
     musicOnHold = AutoAttendantCeMenuModelService.newCeMenuEntry();
+    initialAnnouncement = AutoAttendantCeMenuModelService.newCeMenuEntry();
     playAction = AutoAttendantCeMenuModelService.newCeActionEntry(play, '');
+    iaAction = AutoAttendantCeMenuModelService.newCeActionEntry(play, '');
     routeToQueue = AutoAttendantCeMenuModelService.newCeActionEntry(rtQ, '');
     musicOnHold.addAction(playAction);
+    initialAnnouncement.addAction(iaAction);
     queueSettings.musicOnHold = musicOnHold;
+    queueSettings.initialAnnouncement = initialAnnouncement;
     routeToQueue.queueSettings = queueSettings;
     menuEntry.addAction(routeToQueue);
     uiMenu.addEntryAt(index, menuEntry);
