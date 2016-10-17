@@ -70,7 +70,7 @@
     require('modules/core/config/config'),
     require('modules/core/featureToggle/featureToggle.service'),
     require('modules/core/l10n/languages'),
-    require('modules/core/notifications/notifications.module'),
+    require('modules/core/notifications').default,
     require('modules/core/scripts/services/authinfo'),
     require('modules/core/scripts/services/storage'),
     require('modules/core/scripts/services/localize'),

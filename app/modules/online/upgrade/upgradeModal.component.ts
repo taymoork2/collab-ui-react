@@ -1,4 +1,5 @@
 import { OnlineUpgradeService } from './upgrade.service';
+import { Notification } from 'modules/core/notifications';
 
 class OnlineUpgrade {
   public subscriptionId: string;
@@ -9,7 +10,7 @@ class OnlineUpgrade {
   constructor(
     private $state: ng.ui.IStateService,
     private Auth,
-    private Notification,
+    private Notification: Notification,
     private OnlineUpgradeService: OnlineUpgradeService,
   ) {}
 
