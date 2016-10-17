@@ -4,7 +4,7 @@
 
 'use strict';
 
-describe('UI: msgItemDirective', function () {
+xdescribe('UI: msgItemDirective', function () {
   var $compile, $rootScope, $scope;
   beforeEach(angular.mock.module('Status.incidents'));
   beforeEach(angular.mock.module('Status'));

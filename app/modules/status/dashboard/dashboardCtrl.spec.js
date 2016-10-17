@@ -1,7 +1,7 @@
 
 'use strict';
 
-describe('controller:DashboardCtrl', function () {
+xdescribe('controller:DashboardCtrl', function () {
   var $controller;
   var $scope;
   var controller;

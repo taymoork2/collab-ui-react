@@ -143,6 +143,10 @@ describe('Controller: UserRolesCtrl', function () {
           roleState: 'INACTIVE'
         }),
         Object({
+          roleName: 'Tech_Support',
+          roleState: 'INACTIVE'
+        }),
+        Object({
           roleName: 'Help_Desk',
           roleState: 'INACTIVE'
         }),
@@ -189,6 +193,10 @@ describe('Controller: UserRolesCtrl', function () {
         }),
         Object({
           roleName: 'Reports',
+          roleState: 'INACTIVE'
+        }),
+        Object({
+          roleName: 'Tech_Support',
           roleState: 'INACTIVE'
         }),
         Object({
@@ -246,6 +254,10 @@ describe('Controller: UserRolesCtrl', function () {
         }),
         Object({
           roleName: 'Readonly_Admin',
+          roleState: 'INACTIVE'
+        }),
+        Object({
+          roleName: 'Tech_Support',
           roleState: 'INACTIVE'
         }),
         Object({
