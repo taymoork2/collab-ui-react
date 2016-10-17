@@ -4,8 +4,13 @@
 .ct-card-border-disabled {
   border: 1px solid $gray-light-1
 }
+
+.overview-card-layout {
+  left: rem-calc(15);
+}
 .ct-card-overview {
   height: rem-calc(220);
+  width: rem-calc(350) !important;
   box-shadow: 0px 0px 0px 0px !important;
   .icon.ct-card-img {
     font-size: 4rem;
@@ -24,6 +29,8 @@
     color: $gray-dark-1;
     text-align: center;
     width: 100%;
+    padding-left: rem-calc(10);
+    padding-right: rem-calc(10);
   }
   .ct-toggle-position{
     margin-top: auto;
