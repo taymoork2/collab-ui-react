@@ -352,6 +352,63 @@ describe('Partner Service -', function () {
         expect(data.deviceLicenses).toBe(10);
       });
 
+      it('should return an object with "deviceLicenses" copied from the input\'s "offers" last element\'s "licenseCount" property, if the offers "id" property matches `Config.offerTypes.sparkBoard`', function () {
+        var data = PartnerService.parseLicensesAndOffers({
+          offers: [{
+            id: Config.offerTypes.sparkBoard,
+            licenseCount: 10,
+          }]
+        }, { isCareEnabled: true });
+        expect(data.deviceLicenses).toBe(10);
+      });
+
+      it('should return an object with "deviceLicenses" set to zero if no device licenses present in the offers', function () {
+        var data = PartnerService.parseLicensesAndOffers({
+          offers: [{
+            id: Config.offerTypes.call,
+            licenseCount: 10,
+          }]
+        }, { isCareEnabled: true });
+        expect(data.deviceLicenses).toBe(0);
+      });
+
+      it('should return an object with "deviceLicenses" being the sum of both SD and SB copied from the input\'s "offers" last element\'s of both offer type "licenseCount" property, if the offers "id" property matches `Config.offerTypes.roomSystems`', function () {
+        var data = PartnerService.parseLicensesAndOffers({
+          offers: [{
+            id: Config.offerTypes.roomSystems,
+            licenseCount: 10,
+          }, {
+            id: Config.offerTypes.sparkBoard,
+            licenseCount: 15,
+          }]
+        }, { isCareEnabled: true });
+        expect(data.deviceLicenses).toBe(25);
+      });
+
+
+      it('should return an object with "deviceLicenses" being the sum of the last SD and the last SB offer type elements', function () {
+        var data = PartnerService.parseLicensesAndOffers({
+          offers: [{
+            id: Config.offerTypes.roomSystems,
+//TODO the bug in the backend returns as example; three equal elements of the same offer type (same license count). this test with difference in count is to highlighth that it is the last element we are picking.
+            licenseCount: 8,
+          }, {
+            id: Config.offerTypes.roomSystems,
+            licenseCount: 9,
+          }, {
+            id: Config.offerTypes.roomSystems,
+            licenseCount: 10,
+          }, {
+            id: Config.offerTypes.sparkBoard,
+            licenseCount: 14,
+          }, {
+            id: Config.offerTypes.sparkBoard,
+            licenseCount: 15,
+          }]
+        }, { isCareEnabled: true });
+        expect(data.deviceLicenses).toBe(25);
+      });
+
       it('should return an object with its "offer.trialServices" array containing object with the name translated "trials.message" l10n key, if the offers "id" property matches `Config.offerTypes.spark1` or `Config.offerTypes.message`', function () {
         var data = PartnerService.parseLicensesAndOffers({
           offers: [{

@@ -291,7 +291,7 @@
       if (!newCustomerViewToggle) {
         return false;
       } else {
-        return hasWebexOrMultMeeting;
+        return hasWebexOrMultMeeting || service.isRoom;
       }
     }
 
@@ -300,6 +300,8 @@
         var isTrial = _.get(options, 'isTrial', false);
         var services = isTrial ? PartnerService.getTrialMeetingServices(vm.currentCustomer.licenseList) : service.sub;
         $state.go('customer-overview.meetingDetail', { meetingLicenses: services });
+      } else if (service.isRoom) {
+        $state.go('customer-overview.sharedDeviceDetail', { sharedDeviceLicenses: service.sub });
       }
     }
 

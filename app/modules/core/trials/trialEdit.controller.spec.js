@@ -52,6 +52,7 @@ describe('Controller: TrialEditCtrl:', function () {
         return $q.when(true);
       }
     });
+    spyOn(FeatureToggleService, 'atlasDarlingGetStatus').and.returnValue($q.when(true));
     spyOn(Orgservice, 'getAdminOrgAsPromise').and.returnValue($q.when({
       data: {
         success: true,
@@ -293,6 +294,35 @@ describe('Controller: TrialEditCtrl:', function () {
       });
     });
 
+    describe('hasEnabledSparkBoardTrial', function () {
+      it('should expect an object with a boolean property named "enabled" as its first arg, and an object with a boolean property named "roomSystems" as its second arg', function () {
+        var hasEnabledSparkBoardTrial = helpers.hasEnabledSparkBoardTrial;
+        expect(hasEnabledSparkBoardTrial({
+          enabled: true
+        }, {
+          sparkBoard: false
+        })).toBe(true);
+
+        expect(hasEnabledSparkBoardTrial({
+          enabled: true
+        }, {
+          sparkBoard: true
+        })).toBe(false);
+
+        expect(hasEnabledSparkBoardTrial({
+          enabled: false
+        }, {
+          sparkBoard: false
+        })).toBe(false);
+
+        expect(hasEnabledSparkBoardTrial({
+          enabled: false
+        }, {
+          sparkBoard: true
+        })).toBe(false);
+      });
+    });
+
     describe('hasEnabledCareTrial', function () {
       it('should expect an object with a boolean property named "enabled" as its first arg,' +
         'and an object with a boolean property named "care" as its second arg',
@@ -345,6 +375,9 @@ describe('Controller: TrialEditCtrl:', function () {
               roomSystemTrial: {
                 enabled: false
               },
+              sparkBoardTrial: {
+                enabled: false
+              },
               careTrial: {
                 enabled: false
               }
@@ -391,6 +424,15 @@ describe('Controller: TrialEditCtrl:', function () {
               var hasEnabledAnyTrial = helpers.hasEnabledAnyTrial;
               _vm.roomSystemTrial.enabled = true;
               _preset.roomSystems = false;
+              expect(hasEnabledAnyTrial(_vm, _preset)).toBe(true);
+            });
+
+          it('should return true if the "sparkBoardTrial.enabled" sub-property on the first arg is true, ' +
+            'and the "roomSystems" property on the second arg is false',
+            function () {
+              var hasEnabledAnyTrial = helpers.hasEnabledAnyTrial;
+              _vm.sparkBoardTrial.enabled = true;
+              _preset.sparkBoard = false;
               expect(hasEnabledAnyTrial(_vm, _preset)).toBe(true);
             });
 

@@ -1852,6 +1852,20 @@
               meetingLicenses: {}
             }
           })
+          .state('customer-overview.sharedDeviceDetail', {
+            controller: 'SharedDeviceDetailCtrl',
+            controllerAs: 'sharedDeviceDetail',
+            templateUrl: 'modules/core/customers/customerOverview/sharedDeviceDetail.tpl.html',
+            resolve: {
+              data: /* @ngInject */ function ($state, $translate) {
+                $state.get('customer-overview.sharedDeviceDetail').data.displayName = $translate.instant('customerPage.sharedDeviceLicenses');
+              }
+            },
+            data: {},
+            params: {
+              sharedDeviceLicenses: {}
+            }
+          })
           .state('customer-overview.externalNumbers', {
             controller: 'ExternalNumberDetailCtrl',
             controllerAs: 'externalNumbers',

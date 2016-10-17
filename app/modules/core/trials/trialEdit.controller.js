@@ -29,6 +29,7 @@
     vm.webexTrial = vm.trialData.trials.webexTrial;
     vm.callTrial = vm.trialData.trials.callTrial;
     vm.roomSystemTrial = vm.trialData.trials.roomSystemTrial;
+    vm.sparkBoardTrial = vm.trialData.trials.sparkBoardTrial;
     vm.pstnTrial = vm.trialData.trials.pstnTrial;
     vm.contextTrial = vm.trialData.trials.contextTrial;
     vm.careTrial = vm.trialData.trials.careTrial;
@@ -42,6 +43,8 @@
       call: hasOfferType(Config.trials.call) || hasOfferType(Config.offerTypes.call),
       roomSystems: hasOfferType(Config.offerTypes.roomSystems),
       roomSystemsValue: _.get(findOffer(Config.offerTypes.roomSystems), 'licenseCount', 0),
+      sparkBoard: hasOfferType(Config.offerTypes.sparkBoard),
+      sparkBoardValue: _.get(findOffer(Config.offerTypes.sparkBoard), 'licenseCount', 0),
       licenseDuration: _.get(vm, 'currentTrial.duration', 0),
       care: hasOfferType(Config.offerTypes.care),
       careLicenseValue: _.get(findOffer(Config.offerTypes.care), 'licenseCount', 0),
@@ -51,6 +54,7 @@
     vm.details.licenseCount = vm.preset.licenseCount;
     vm.details.licenseDuration = vm.preset.licenseDuration;
     vm.roomSystemTrial.details.quantity = vm.preset.roomSystemsValue;
+    vm.sparkBoardTrial.details.quantity = vm.preset.sparkBoardValue;
     vm.careTrial.details.quantity = vm.preset.careLicenseValue;
     vm.canSeeDevicePage = true;
 
@@ -337,6 +341,53 @@
       }
     }];
 
+    vm.sparkBoardFields = [{
+      model: vm.sparkBoardTrial,
+      key: 'enabled',
+      type: 'checkbox',
+      className: '',
+      templateOptions: {
+        id: 'sparkBoardTrial',
+        label: $translate.instant('trials.sparkBoardSystem')
+      },
+      watcher: {
+        listener: function (field, newValue, oldValue) {
+          if (newValue !== oldValue) {
+            field.model.details.quantity = newValue ? 5 : 0;
+          }
+        }
+      }
+    }, {
+      model: vm.sparkBoardTrial.details,
+      key: 'quantity',
+      type: 'input',
+      className: '',
+      templateOptions: {
+        id: 'trialSparkBoardAmount',
+        inputClass: 'medium-5 small-offset-1',
+        secondaryLabel: $translate.instant('trials.licenses'),
+        type: 'number'
+      },
+      expressionProperties: {
+        'templateOptions.required': function () {
+          return vm.sparkBoardTrial.enabled;
+        },
+        'templateOptions.disabled': function () {
+          return !vm.sparkBoardTrial.enabled;
+        },
+      },
+      validators: {
+        quantity: {
+          expression: function ($viewValue, $modelValue) {
+            return !vm.sparkBoardTrial.enabled || ValidationService.trialRoomSystemQuantity($viewValue, $modelValue);
+          },
+          message: function () {
+            return $translate.instant('partnerHomePage.invalidTrialSparkBoardQuantity');
+          }
+        }
+      }
+    }];
+
     vm.hasCallEntitlement = Authinfo.isSquaredUC();
     vm.hasNextStep = hasNextStep;
     vm.previousStep = previousStep;
@@ -356,6 +407,7 @@
       hasEnabledWebexTrial: hasEnabledWebexTrial,
       hasEnabledCallTrial: hasEnabledCallTrial,
       hasEnabledRoomSystemTrial: hasEnabledRoomSystemTrial,
+      hasEnabledSparkBoardTrial: hasEnabledSparkBoardTrial,
       hasEnabledCareTrial: hasEnabledCareTrial,
       hasEnabledAnyTrial: hasEnabledAnyTrial,
 
@@ -378,17 +430,19 @@
         ftContextServ: FeatureToggleService.supports(FeatureToggleService.features.atlasContextServiceTrials),
         tcHasService: TrialContextService.trialHasService(vm.currentTrial.customerOrgId),
         ftCareTrials: FeatureToggleService.supports(FeatureToggleService.features.atlasCareTrials),
-        ftShipDevices: FeatureToggleService.supports('atlasTrialsShipDevices'),
+        ftShipDevices: FeatureToggleService.supports('atlasTrialsShipDevices'),  //TODO add true for shipping testing.
         adminOrg: Orgservice.getAdminOrgAsPromise().catch(function (err) {
           getAdminOrgError = true;
           return err;
-        })
+        }),
+        sbTrial: FeatureToggleService.atlasDarlingGetStatus()
       };
 
       $q.all(promises)
         .then(function (results) {
           vm.showRoomSystems = true;
           vm.roomSystemTrial.enabled = vm.preset.roomSystems;
+          vm.sparkBoardTrial.enabled = vm.preset.sparkBoard;
           vm.webexTrial.enabled = results.ftWebex && vm.preset.webex;
           vm.meetingTrial.enabled = vm.preset.meeting;
           vm.showWebex = results.ftWebex;
@@ -400,6 +454,7 @@
           vm.preset.context = results.tcHasService;
           vm.showCare = results.ftCareTrials;
           vm.careTrial.enabled = vm.preset.care;
+          vm.sbTrial = results.sbTrial;
 
           if (vm.showWebex) {
             updateTrialService(_messageTemplateOptionId);
@@ -428,6 +483,7 @@
           }
 
           vm.roomSystemFields[1].model.quantity = (vm.roomSystemTrial.enabled && vm.preset.roomSystems) ? vm.preset.roomSystemsValue : 0;
+          vm.sparkBoardFields[1].model.quantity = (vm.sparkBoardTrial.enabled && vm.preset.sparkBoard) ? vm.preset.sparkBoardValue : 0;
 
           toggleTrial();
         });
@@ -655,6 +711,7 @@
         hasEnabledAnyTrial(vm, vm.preset),
         vm.preset.context !== vm.contextTrial.enabled,
         vm.preset.roomSystems && (vm.preset.roomSystemsValue !== vm.roomSystemTrial.details.quantity),
+        vm.preset.sparkBoard && (vm.preset.sparkBoardValue !== vm.sparkBoardTrial.details.quantity),
         vm.preset.care && (vm.preset.careLicenseValue !== vm.careTrial.details.quantity),
         vm.preset.licenseCount !== vm.details.licenseCount,
         vm.licenseCountChanged,
@@ -704,6 +761,12 @@
       return hasEnabled(trial.enabled, preset.roomSystems);
     }
 
+    function hasEnabledSparkBoardTrial(vmSparkBoardTrial, vmPreset) {
+      var trial = vmSparkBoardTrial || vm.roomSystemTrial;
+      var preset = vmPreset || vm.preset;
+      return hasEnabled(trial.enabled, preset.sparkBoard);
+    }
+
     function hasEnabledCareTrial(vmCareTrial, vmPreset) {
       var trial = vmCareTrial || vm.careTrial;
       var preset = vmPreset || vm.preset;
@@ -717,6 +780,7 @@
         hasEnabledWebexTrial(vm.webexTrial, vmPreset) ||
         hasEnabledCallTrial(vm.callTrial, vmPreset) ||
         hasEnabledRoomSystemTrial(vm.roomSystemTrial, vmPreset) ||
+        hasEnabledSparkBoardTrial(vm.sparkBoardTrial, vmPreset) ||
         hasEnabledCareTrial(vm.careTrial, vmPreset);
     }
 
@@ -761,6 +825,7 @@
     function canAddDevice() {
       var stateDetails = vm.stateDetails.details;
       var roomSystemTrialEnabled = vm.roomSystemTrial.enabled;
+      //TODO: add spark board
       var callTrialEnabled = vm.callTrial.enabled;
       var canSeeDevicePage = vm.canSeeDevicePage;
 

@@ -57,6 +57,8 @@
           <h5 class="sub-section__label" translate="subscriptions.room"></h5>
           <formly-form model="trial.roomSystemTrial" fields="trial.roomSystemFields" hide-directive="ng-show">
           </formly-form>
+          <formly-form model="trial.sparkBoardTrial" fields="trial.sparkBoardFields" hide-directive="ng-show" ng-if="trial.sbTrial">
+          </formly-form>
         </div>
       </div>
     </div>

@@ -14,7 +14,7 @@
   }
 
   /* @ngInject */
-  function TrialService($http, $q, $state, Analytics, Authinfo, Config, LogMetricsService, TrialCallService, TrialCareService, TrialContextService, TrialDeviceService, TrialMeetingService, TrialMessageService, TrialPstnService, TrialResource, TrialRoomSystemService, TrialWebexService, UrlConfig) {
+  function TrialService($http, $q, $state, Analytics, Authinfo, Config, LogMetricsService, TrialCallService, TrialCareService, TrialContextService, TrialDeviceService, TrialMeetingService, TrialMessageService, TrialPstnService, TrialResource, TrialRoomSystemService, TrialSparkBoardService, TrialWebexService, UrlConfig) {
     var _trialData;
     var trialsUrl = UrlConfig.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/trials';
 
@@ -252,7 +252,7 @@
             return undefined;
           }
           var licenseCount =
-            (trial.type === Config.trials.roomSystems || trial.type === Config.offerTypes.care) ?
+            (trial.type === Config.trials.roomSystems || trial.type === Config.offerTypes.care || trial.type === Config.offerTypes.sparkBoard) ?
             trial.details.quantity : data.details.licenseCount;
           return {
             id: trial.type,
@@ -270,6 +270,7 @@
       TrialCallService.reset();
       TrialCareService.reset();
       TrialRoomSystemService.reset();
+      TrialSparkBoardService.reset();
       TrialDeviceService.reset();
       TrialPstnService.reset();
       TrialContextService.reset();
@@ -291,6 +292,7 @@
           callTrial: TrialCallService.getData(),
           careTrial: TrialCareService.getData(),
           roomSystemTrial: TrialRoomSystemService.getData(),
+          sparkBoardTrial: TrialSparkBoardService.getData(),
           deviceTrial: TrialDeviceService.getData(),
           pstnTrial: TrialPstnService.getData(),
           contextTrial: TrialContextService.getData()

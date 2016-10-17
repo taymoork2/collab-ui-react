@@ -15,6 +15,7 @@
     var webexTemplateOptionId = 'webexTrial';
     var callTemplateOptionId = 'callTrial';
     var roomSystemsTemplateOptionId = 'roomSystemsTrial';
+    var sparkBoardTemplateOptionId = 'sparkBoardTrial';
     var debounceTimeout = 2000;
 
     vm.trialData = TrialService.getData();
@@ -33,6 +34,7 @@
     vm.callTrial = vm.trialData.trials.callTrial;
     vm.careTrial = vm.trialData.trials.careTrial;
     vm.roomSystemTrial = vm.trialData.trials.roomSystemTrial;
+    vm.sparkBoardTrial = vm.trialData.trials.sparkBoardTrial;
     vm.pstnTrial = vm.trialData.trials.pstnTrial;
     vm.contextTrial = vm.trialData.trials.contextTrial;
     _licenseCountDefaultQuantity = vm.trialData.details.licenseCount;
@@ -286,6 +288,53 @@
       }
     }];
 
+    vm.sparkBoardFields = [{
+      model: vm.sparkBoardTrial,
+      key: 'enabled',
+      type: 'checkbox',
+      className: '',
+      templateOptions: {
+        id: sparkBoardTemplateOptionId,
+        label: $translate.instant('trials.sparkBoardSystem')
+      },
+      watcher: {
+        listener: function (field, newValue, oldValue) {
+          if (newValue !== oldValue) {
+            field.model.details.quantity = newValue ? _roomSystemDefaultQuantity : 0;
+          }
+        }
+      }
+    }, {
+      model: vm.sparkBoardTrial.details,
+      key: 'quantity',
+      type: 'input',
+      className: '',
+      templateOptions: {
+        id: 'trialSparkBoardAmount',
+        inputClass: 'medium-5 small-offset-1',
+        secondaryLabel: $translate.instant('trials.licenses'),
+        type: 'number'
+      },
+      expressionProperties: {
+        'templateOptions.required': function () {
+          return vm.sparkBoardTrial.enabled;
+        },
+        'templateOptions.disabled': function () {
+          return !vm.sparkBoardTrial.enabled;
+        },
+      },
+      validators: {
+        quantity: {
+          expression: function ($viewValue, $modelValue) {
+            return !vm.sparkBoardTrial.enabled || ValidationService.trialRoomSystemQuantity($viewValue, $modelValue);
+          },
+          message: function () {
+            return $translate.instant('partnerHomePage.invalidTrialSparkBoardQuantity');
+          }
+        }
+      }
+    }];
+
     // Care Trial
     vm.careFields = [{
       model: vm.careTrial,
@@ -425,10 +474,12 @@
       $q.all([
         FeatureToggleService.supports(FeatureToggleService.features.atlasWebexTrials),
         FeatureToggleService.supports(FeatureToggleService.features.atlasCareTrials),
-        FeatureToggleService.supports(FeatureToggleService.features.atlasContextServiceTrials)
+        FeatureToggleService.supports(FeatureToggleService.features.atlasContextServiceTrials),
+        FeatureToggleService.atlasDarlingGetStatus()
       ]).then(function (results) {
         vm.showRoomSystems = true;
         vm.roomSystemTrial.enabled = true;
+        vm.sparkBoardTrial.enabled = true;
         vm.webexTrial.enabled = results[0];
         vm.callTrial.enabled = vm.hasCallEntitlement;
         vm.pstnTrial.enabled = vm.hasCallEntitlement;
@@ -443,6 +494,7 @@
 
         vm.showCare = results[1];
         vm.careTrial.enabled = results[1];
+        vm.sbTrial = results[3];
 
         // TODO: US12063 overrides using this var but requests code to be left in for now
         //var devicesModal = _.find(vm.trialStates, {
@@ -478,8 +530,10 @@
           });
         }
 
+        //room system licence quantity
         vm.roomSystemFields[1].model.quantity = vm.roomSystemTrial.enabled ? _roomSystemDefaultQuantity : 0;
-
+        //spark board licence quantity
+        vm.sparkBoardFields[1].model.quantity = vm.sparkBoardTrial.enabled ? _roomSystemDefaultQuantity : 0;
         toggleTrial();
       });
       CsdmPlaceService.placesFeatureIsEnabled().then(function (result) {

@@ -76,6 +76,7 @@
         meeting: 'MEETING',
         call: 'CALL',
         roomSystems: 'ROOMSYSTEMS',
+        sparkBoard: 'SPARKBOARDS',
         pstn: 'PSTN',
         care: 'CARE',
         context: 'CONTEXT'
