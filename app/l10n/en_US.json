@@ -2544,10 +2544,6 @@
     "code": "PI",
     "modalDescription": "Call Pickup feature allows users to pick up incoming calls within a group of users."
   },
-  "futureFeature":{
-    "title": "Future Feature",
-    "modalDescription": "Amazing new Spark Call feature coming soon"
-  },
   "pagingGroup": {
     "title": "Paging Group",
     "code": "PG",
