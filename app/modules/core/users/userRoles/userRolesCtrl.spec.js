@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Controller: UserRolesCtrl', function () {
+xdescribe('Controller: UserRolesCtrl', function () {
   var controller, $scope, $stateParams, Authinfo, Orgservice, $controller, Userservice, FeatureToggleService;
   var fakeUserJSONFixture = getJSONFixture('core/json/sipTestFakeUser.json');
   var careUserJSONFixture = getJSONFixture('core/json/users/careTestFakeUser.json');
