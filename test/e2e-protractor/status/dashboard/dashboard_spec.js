@@ -50,8 +50,8 @@ describe('update4 Incident', function () {
       utils.click(dashboardPage.selectedStatus);
       utils.isSelected(element(by.css('.content-area2 a.select-toggle')));
       utils.waitForPresence(element(by.id('error')), 3000).then(function () {
-       },function () {
-        });
+      }, function () {
+     });
     });
   });
 });
