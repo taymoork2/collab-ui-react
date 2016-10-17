@@ -17,6 +17,11 @@ var AutoAttendantPage = function () {
   this.queueMin = element(by.linkText('15'));
   this.queueMinOption = element(by.id('queueMin')).all(by.tagName('li'));
 
+  this.initialMessage = element(by.id('initialAnnouncement')).element(by.css('aa-message-type [name="messageInput"]'));
+  this.initialMessageOptions = element(by.id('initialAnnouncement')).element(by.css('select[name="messageSelect"] + div a.select-toggle'));
+  this.initialPlayMessageOption = element(by.id('initialAnnouncement')).element(by.css('select[name="messageSelect"] + div div.dropdown-menu')).all(by.tagName('li')).first();
+  this.initialMediaUploadInput = element(by.id('initialAnnouncement')).element(by.name('mediaUploadInput'));
+
   this.searchBox = element(by.id('searchFilter'));
   this.aaTitle = element(by.tagName('aa-builder-name-edit'));
   this.autoAttendantDevLink = element(by.css('a[href*="#/hurondetails/features"]'));

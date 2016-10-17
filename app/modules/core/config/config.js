@@ -383,6 +383,7 @@
         'huronfeatures',
         'huronHuntGroup',
         'huronPagingGroup',
+        'huronPagingGroupEdit',
         'huronlines',
         'huronnewfeature',
         'huronsettings',

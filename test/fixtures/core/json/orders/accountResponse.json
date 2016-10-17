@@ -1,0 +1,108 @@
+{
+  "accountId": "4895afc9-83e9-44cb-b78a-05e541d41661",
+  "accountName": "Atlas_Test_int_suneng2",
+  "customerAdminEmail": "snzhuoatlas+inttest_sn30@gmail.com",
+  "partnerId": "bff8dcbb-add8-4e12-9fc8-a4e0703ab536",
+  "partnerOrgId": "453e0f7f-9117-4fd9-8369-71d86cdfeb25",
+  "licenses": [
+    {
+      "licenseId": "MS_761a66cc-a85b-47b9-981f-a33c47082879",
+      "offerName": "MS",
+      "licenseType": "MESSAGING",
+      "billingServiceId": "svc-Atlas_Test_int_suneng30",
+      "features": [
+        "squared-room-moderation"
+      ],
+      "volume": 45,
+      "isTrial": false,
+      "status": "PENDING",
+      "partnerEmail": "boulder.steamboat@gmail.com"
+    },
+    {
+      "licenseId": "MS_5a154ae9-3f91-4820-9752-f9253a251fd4",
+      "offerName": "MS",
+      "licenseType": "MESSAGING",
+      "billingServiceId": "Sub1234-5678",
+      "features": [
+        "squared-room-moderation"
+      ],
+      "volume": 45,
+      "isTrial": false,
+      "status": "PENDING",
+      "partnerEmail": "boulder.steamboat@gmail.com"
+    },
+    {
+      "licenseId": "MS_e56212d8-ec79-403a-8e16-292f77023c2c",
+      "offerName": "MS",
+      "licenseType": "MESSAGING",
+      "billingServiceId": "Sub5678-1234",
+      "features": [
+        "squared-room-moderation"
+      ],
+      "volume": 45,
+      "isTrial": false,
+      "status": "PENDING",
+      "partnerEmail": "boulder.steamboat@gmail.com"
+    },
+    {
+      "licenseId": "MS_1fce86f5-6496-4971-a612-757400e96829",
+      "offerName": "MS",
+      "licenseType": "MESSAGING",
+      "billingServiceId": "Sub67891234",
+      "features": [
+        "squared-room-moderation"
+      ],
+      "volume": 45,
+      "isTrial": false,
+      "status": "PENDING",
+      "partnerEmail": "boulder.steamboat@gmail.com"
+    },
+    {
+      "licenseId": "MS_541e133e-0c0f-4670-bb85-4aa328022d23",
+      "offerName": "MS",
+      "licenseType": "MESSAGING",
+      "billingServiceId": "Sub67891234M1ssw",
+      "features": [
+        "squared-room-moderation"
+      ],
+      "volume": 45,
+      "isTrial": false,
+      "status": "PENDING",
+      "partnerEmail": "boulder.steamboat@gmail.com"
+    },
+    {
+      "licenseId": "MS_1467aab1-7174-4987-bc2f-634d9b23a23e",
+      "offerName": "MS",
+      "licenseType": "MESSAGING",
+      "billingServiceId": "Sub67891234M1",
+      "features": [
+        "squared-room-moderation"
+      ],
+      "volume": 45,
+      "isTrial": false,
+      "status": "PENDING",
+      "partnerEmail": "boulder.steamboat@gmail.com"
+    },
+    {
+      "licenseId": "MS_1cbda6cf-7506-4609-809c-d2ed8c97e38b",
+      "offerName": "MS",
+      "licenseType": "MESSAGING",
+      "billingServiceId": "Sub17205626",
+      "features": [
+        "squared-room-moderation"
+      ],
+      "volume": 45,
+      "isTrial": false,
+      "status": "PENDING",
+      "partnerEmail": "boulder.steamboat@gmail.com"
+    }
+  ],
+  "isTestAccount": true,
+  "customerType": "Enterprise",
+  "customerId": "CUID-Atlas_Test_int_suneng2",
+  "commerceRelation": "Partner",
+  "licenseEnforcement": {
+    "licenseExceedAction": "NOTHING",
+    "licenseExceedThreshold": "NA"
+  }
+}

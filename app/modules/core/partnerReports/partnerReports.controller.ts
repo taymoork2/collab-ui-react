@@ -4,6 +4,7 @@ import {
   IActiveTableData,
   ICallMetricsData,
   IEndpointData,
+  IFilterObject,
   IMediaQualityData,
   IPopulationData,
   IReportCard,
@@ -22,6 +23,15 @@ class PartnerReportCtrl {
   private mediaQualityChart: any = null;
   private popChart: any = null;
 
+  // reports filter
+  public filterArray: Array<IFilterObject>;
+  public readonly ALL: string;
+  public readonly ENGAGEMENT: string;
+  public readonly QUALITY: string;
+  public showEngagement: boolean = true;
+  public showQuality: boolean = true;
+  private currentFilter: string;
+
   /* @ngInject */
   constructor(
     private $q: ng.IQService,
@@ -34,8 +44,24 @@ class PartnerReportCtrl {
     private GraphService,
     private ReportService
   ) {
+    this.ALL = this.ReportConstants.ALL;
+    this.ENGAGEMENT = this.ReportConstants.ENGAGEMENT;
+    this.QUALITY = this.ReportConstants.QUALITY;
+    this.currentFilter = this.ALL;
+
+    this.filterArray = _.cloneDeep(this.ReportConstants.filterArray);
+    this.filterArray[0].toggle = (): void => {
+      this.showHideCards(this.ALL);
+    };
+    this.filterArray[1].toggle = (): void => {
+      this.showHideCards(this.ENGAGEMENT);
+    };
+    this.filterArray[2].toggle = (): void => {
+      this.showHideCards(this.QUALITY);
+    };
+
     this.ReportService.getOverallActiveUserData(this.timeSelected);
-    this.ReportService.getCustomerList().then((response: Array<any>) => {
+    this.ReportService.getCustomerList().then((response: Array<any>): void => {
       this.setAllDummyData();
       this.updateCustomerFilter(response);
       if (this.customerSelected.length > 0) {
@@ -50,14 +76,6 @@ class PartnerReportCtrl {
       this.initialized = true;
     });
   }
-
-  // filter controls for which reports show up on screen
-  public showEngagement: boolean = true;
-  public showQuality: boolean = true;
-  public readonly ALL: string = this.ReportConstants.ALL;
-  public readonly ENGAGEMENT: string = this.ReportConstants.ENGAGEMENT;
-  public readonly QUALITY: string = this.ReportConstants.QUALITY;
-  private currentFilter: string = this.ALL;
 
   // Active User Options
   public activeUserReportOptions: IReportCard = {
@@ -179,7 +197,7 @@ class PartnerReportCtrl {
   public customerPlaceholder = this.$translate.instant('reportsPage.customerSelect');
   public customerSingular = this.$translate.instant('reportsPage.customer');
   public customerPlural = this.$translate.instant('reportsPage.customers');
-  public customerMax = 5;
+  public customerMax: number = 5;
   public customerOptions: Array<IReportsCustomer> = [];
   public customerSelected: Array<IReportsCustomer> = [];
 
@@ -189,7 +207,7 @@ class PartnerReportCtrl {
 
   // private functions
   // active user controls
-  public getActiveUserReports() {
+  public getActiveUserReports(): ng.IPromise<any[]> {
     // reset defaults
     this.activeUserSecondaryReportOptions.table.data = [];
     this.activeUserSecondaryReportOptions.display = false;
@@ -376,14 +394,8 @@ class PartnerReportCtrl {
     }, delay);
   }
 
-  // public functions
-  // resizing for Most Active Users Table
-  public resizeMostActive() {
-    this.resize(0);
-  }
-
   // toggle for the all/engagement/quality filter
-  public showHideCards(filter: string) {
+  private showHideCards(filter: string) {
     if (this.currentFilter !== filter) {
       this.showEngagement = false;
       this.showQuality = false;
@@ -396,6 +408,12 @@ class PartnerReportCtrl {
       this.resize(500);
       this.currentFilter = filter;
     }
+  }
+
+  // public functions
+  // resizing for Most Active Users Table
+  public resizeMostActive() {
+    this.resize(0);
   }
 
   // reset for the reports after a global filter changes
