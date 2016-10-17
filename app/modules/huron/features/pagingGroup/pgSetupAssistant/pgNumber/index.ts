@@ -4,7 +4,7 @@ import notifications from 'modules/core/notifications';
 export default angular
   .module('huron.paging-group.number', [
     'atlas.templates',
-    'cisco.ui',
+    'collab.ui',
     'huron.paging-group',
     require('angular-resource'),
     require('modules/huron/telephony/cmiServices'),

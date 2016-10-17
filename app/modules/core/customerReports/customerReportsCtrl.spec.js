@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Controller: Customer Reports Ctrl', function () {
-  var controller, $scope, WebexReportService, WebExApiGatewayService, Userservice;
+  var controller, $scope, WebexReportService, WebExApiGatewayService, Userservice, $document;
 
   var dummyData = getJSONFixture('core/json/partnerReports/dummyReportData.json');
   var activeData = getJSONFixture('core/json/customerReports/activeUser.json');
@@ -112,6 +112,9 @@ describe('Controller: Customer Reports Ctrl', function () {
                             'FeatureToggleService',
                             'MediaServiceActivationV2');
     $scope = this.$rootScope.$new();
+    /* global document */
+    $document = angular.element(document);
+    $document.find('body').append('<div class="cs-card-layout"></div>');
 
     this.$httpBackend.whenGET('https://identity.webex.com/identity/scim/null/v1/Users/me').respond(200, {});
     spyOn(this.$rootScope, '$broadcast').and.callThrough();

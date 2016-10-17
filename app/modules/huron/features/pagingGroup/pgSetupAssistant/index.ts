@@ -7,7 +7,7 @@ import pgNumber from './pgNumber';
 export default angular
   .module('huron.paging-group.setup-assistant', [
     'atlas.templates',
-    'cisco.ui',
+    'collab.ui',
     'pascalprecht.translate',
     pgName,
     pgNumber,

@@ -1,6 +1,8 @@
 (function () {
   'use strict';
 
+  var Masonry = require('masonry-layout');
+
   angular.module('Mediafusion').controller('MediaServiceMetricsContoller', MediaServiceMetricsContoller);
   /* @ngInject */
   function MediaServiceMetricsContoller($timeout, $translate, MediaClusterServiceV2, $q, MetricsReportService, XhrNotificationService, MetricsGraphService, DummyMetricsReportService, $interval, $scope) {
@@ -202,20 +204,26 @@
 
     function resizeCards() {
       $timeout(function () {
-        $('.cs-card-layout').masonry('destroy');
-        $('.cs-card-layout').masonry({
+        var $cardlayout = new Masonry('.cs-card-layout', {
           itemSelector: '.cs-card',
           columnWidth: '.cs-card',
-          isResizable: true,
-          percentPosition: true
+          resize: true,
+          percentPosition: true,
         });
+        $cardlayout.layout();
       }, 0);
     }
 
     function delayedResize() {
       // delayed resize necessary to fix any overlapping cards on smaller screens
       $timeout(function () {
-        $('.cs-card-layout').masonry('layout');
+        var $cardlayout = new Masonry('.cs-card-layout', {
+          itemSelector: '.cs-card',
+          columnWidth: '.cs-card',
+          resize: true,
+          percentPosition: true,
+        });
+        $cardlayout.layout();
       }, 500);
     }
 

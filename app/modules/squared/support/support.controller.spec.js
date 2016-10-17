@@ -6,8 +6,14 @@ describe('Controller: SupportCtrl', function () {
   beforeEach(angular.mock.module('Sunlight'));
   beforeEach(angular.mock.module('Squared'));
 
-  var controller, Authinfo, Userservice, currentUser, Config, $scope;
+  var controller, Authinfo, Userservice, currentUser, Config, $scope, $document;
   var roles = ["ciscouc.devsupport", "atlas-portal.support"];
+
+  beforeEach(function () {
+    /* global document */
+    $document = angular.element(document);
+    $document.find('body').append('<div class="cs-card-layout"></div>');
+  });
 
   beforeEach(inject(function ($rootScope, $controller, _Userservice_, _Authinfo_, _Config_) {
     Userservice = _Userservice_;
@@ -24,7 +30,6 @@ describe('Controller: SupportCtrl', function () {
     });
     spyOn(Authinfo, 'isCiscoMock').and.returnValue(true);
     spyOn(Config, 'isProd').and.returnValue(false);
-
     $scope = $rootScope.$new();
     controller = $controller('SupportCtrl', {
       $scope: $scope,
