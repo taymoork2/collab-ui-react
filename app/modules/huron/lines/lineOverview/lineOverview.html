@@ -40,7 +40,8 @@
         custom-caller-id-number="$ctrl.lineOverviewData.callerId.customCallerIdNumber"
         caller-id-selected="$ctrl.lineOverviewData.callerId.externalCallerIdType"
         direct-line="$ctrl.lineOverviewData.line.external"
-        on-change-fn="$ctrl.setCallerId(callerIdSelected, customCallerIdName, customCallerIdNumber);">
+        on-change-fn="$ctrl.setCallerId(callerIdSelected, customCallerIdName, customCallerIdNumber, companyNumber);"
+        company-numbers="$ctrl.lineOverviewData.companyNumbers">
       </uc-caller-id>
       <uc-shared-line
         shared-lines="$ctrl.lineOverviewData.sharedLines"

@@ -10,6 +10,7 @@ export class LineOverviewData {
   public callForward: CallForward;
   public sharedLines: SharedLine[];
   public callerId: ICallerID;
+  public companyNumbers: any;
 }
 
 export class LineOverviewService {
@@ -38,6 +39,8 @@ export class LineOverviewService {
     promises.push(this.getLine(consumerType, ownerId, numberId));
     promises.push(this.getCallForward(consumerType, ownerId, numberId));
     promises.push(this.getSharedLines(consumerType, ownerId, numberId));
+    promises.push(this.getCallerId(consumerType, ownerId, numberId));
+    promises.push(this.listCompanyNumbers());
     return this.$q.all(promises).then( (data) => {
       if (this.errors.length > 0) {
         this.Notification.notify(this.errors, 'error');
@@ -46,14 +49,10 @@ export class LineOverviewService {
       lineOverviewData.line = data[0];
       lineOverviewData.callForward = data[1];
       lineOverviewData.sharedLines = data[2];
-      return this.getCallerId(consumerType, ownerId, numberId, data[0].external).then(callerId => {
-        lineOverviewData.callerId = callerId;
-        this.lineOverviewDataCopy = this.cloneLineOverviewData(lineOverviewData);
-        return lineOverviewData;
-      }).catch( (error) => {
-        this.Notification.notify(error, 'error');
-        return this.$q.reject();
-      });
+      lineOverviewData.callerId = data[3];
+      lineOverviewData.companyNumbers = data[4];
+      this.lineOverviewDataCopy = this.cloneLineOverviewData(lineOverviewData);
+      return lineOverviewData;
     });
   }
 
@@ -143,16 +142,19 @@ export class LineOverviewService {
           }
         });
       }
-      if (!_.isEqual(data.callerId, this.lineOverviewDataCopy.callerId)) {
-        promises.push(this.updateCallerId(consumerType, ownerId, numberId, data.callerId));
-      }
 
       return this.$q.all(promises).then( () => {
         if (this.errors.length > 0) {
           this.Notification.notify(this.errors, 'error');
           return this.$q.reject();
         }
-        return this.get(consumerType, ownerId, this.lineOverviewDataCopy.line.uuid);
+        if (!_.isEqual(data.callerId, this.lineOverviewDataCopy.callerId)) {
+          return this.updateCallerId(consumerType, ownerId, numberId, data.callerId).then(() => {
+            return this.get(consumerType, ownerId, this.lineOverviewDataCopy.line.uuid);
+          });
+        } else {
+          return this.get(consumerType, ownerId, this.lineOverviewDataCopy.line.uuid);
+        }
       });
     }
   }
@@ -239,15 +241,19 @@ export class LineOverviewService {
         });
     }
   }
-  private getCallerId(consumerType: LineConsumerType, ownerId: string, numberId: string, external: string): ng.IPromise<ICallerID> {
+  private getCallerId(consumerType: LineConsumerType, ownerId: string, numberId: string): ng.IPromise<ICallerID> {
     if (!numberId) {
       return this.$q.resolve({});
     } else {
-      return this.CallerIDService.getCallerId(consumerType, ownerId, numberId, external)
+      return this.CallerIDService.getCallerId(consumerType, ownerId, numberId)
         .then(callerIdRes => {
           return callerIdRes;
         });
     }
+  }
+
+  private listCompanyNumbers() {
+    return this.CallerIDService.listCompanyNumbers();
   }
 
   private createSharedLine(consumerType: LineConsumerType, ownerId: string, numberId: string = '', data: Member) {

@@ -1,5 +1,4 @@
 import { CallForward } from '../../callForward';
-import { CallerIdOption, CallerIDService } from '../../callerId';
 import { LineService, LineConsumerType, LINE_CHANGE, Line } from '../services';
 import { LineOverviewService, LineOverviewData } from './index';
 import { DirectoryNumberOptionsService } from '../../directoryNumber';
@@ -7,7 +6,6 @@ import { IActionItem } from '../../../core/components/sectionTitle/sectionTitle.
 import { Member, MemberService } from '../../members';
 import { SharedLine, SharedLineService } from '../../sharedLine';
 import { Notification } from 'modules/core/notifications';
-import { IOption } from './../../dialing/dialing.service';
 
 class LineOverview implements ng.IComponentController {
   private ownerType: string;
@@ -24,21 +22,9 @@ class LineOverview implements ng.IComponentController {
 
   // Directory Number properties
   public esnPrefix: string;
-  public internalIsWarn: boolean;
   public internalNumbers: Array<string>;
-  public internalWarnMsg: string;
   public externalNumbers: Array<string>;
   public showExtensions: boolean;
-
-  // Call Forward properties
-  public voicemailEnabled: boolean;
-
-  // Simultaneous Calls properties
-  public incomingCallMaximum: number;
-
-  // Caller Id Component Properties
-  public callerIdOptions: IOption[] = [];
-  public callerIdSelected: CallerIdOption;
 
   //SharedLine Properties
   public newSharedLineMembers: Array<Member> = [];
@@ -58,7 +44,6 @@ class LineOverview implements ng.IComponentController {
     private MemberService: MemberService,
     private Notification: Notification,
     private SharedLineService: SharedLineService,
-    private CallerIDService: CallerIDService,
   ) { }
 
   public $onInit(): void {
@@ -84,7 +69,6 @@ class LineOverview implements ng.IComponentController {
         this.LineOverviewService.get(this.consumerType, this.ownerId, this.numberId)
           .then(lineOverviewData => {
             this.lineOverviewData = lineOverviewData;
-            this.callerIdOptions = this.CallerIDService.getOptions();
             this.showActions = this.setShowActionsFlag(this.lineOverviewData.line);
             if (!this.lineOverviewData.line.uuid) { // new line, grab first available internal number
               this.lineOverviewData.line.internal = this.internalNumbers[0];
@@ -115,10 +99,11 @@ class LineOverview implements ng.IComponentController {
     }
   }
 
-  public setCallerId(callerIdSelected, callerIdName, callerIdNumber): void {
+  public setCallerId(callerIdSelected, callerIdName, callerIdNumber, companyNumber): void {
     _.set(this.lineOverviewData, 'callerId.customCallerIdName', callerIdName);
     _.set(this.lineOverviewData, 'callerId.customCallerIdNumber', callerIdNumber);
-    _.set(this.lineOverviewData, 'callerId.externalCallerIdType', callerIdSelected);
+    _.set(this.lineOverviewData, 'callerId.externalCallerIdType', _.get(callerIdSelected, 'value'));
+    _.set(this.lineOverviewData, 'callerId.companyNumber', companyNumber);
     this.checkForChanges();
   }
 

@@ -13,24 +13,20 @@ describe('component: callerId', () => {
     };
     this.$scope.callerIdOptions = [{
       label: 'Custom',
-      value: {
-        name: '',
-        externalCallerIdType: 'EXT_CALLER_ID_CUSTOM',
-      },
+      value: 'EXT_CALLER_ID_CUSTOM',
     }, {
       label: 'Blocked Outbound Caller ID',
-      value: {
-        name: 'Caller will not see any caller ID or number',
-        externalCallerIdType: 'EXT_CALLER_ID_BLOCKED_CALLER_ID',
-      },
+      value: 'EXT_CALLER_ID_BLOCKED_CALLER_ID',
     }];
-    spyOn(this.CallerIDService, 'initCallerId').and.returnValue(this.$q.when(this.$scope.callerIdOptions));
+    this.$scope.companyNumbers = [];
+    this.$scope.callerIdSelected = 'EXT_CALLER_ID_BLOCKED_CALLER_ID';
     this.compileComponent('ucCallerId', {
       callerIdOptions: 'callerIdOptions',
       callerIdSelected: 'callerIdSelected',
       customCallerIdName: 'customCallerIdName',
       customCallerIdNumber: 'customCallerIdNumber',
       onChangeFn: 'onChangeFn(callerIdSelected, customCallerIdName, customCallerIdNumber)',
+      companyNumbers: 'companyNumbers',
     });
   });
 
@@ -61,5 +57,16 @@ describe('component: callerId', () => {
       'Field',
       '8179325799'
     );
+  });
+
+  it('showCustom returns whether its a custom or not', function() {
+    this.controller.callerIdSelected = {
+      label: 'Custom',
+    };
+    expect(this.controller.showCustom()).toBe(true);
+    this.controller.callerIdSelected = {
+      label: 'Blocked Outbound Caller ID',
+    };
+    expect(this.controller.showCustom()).toBe(false);
   });
 });

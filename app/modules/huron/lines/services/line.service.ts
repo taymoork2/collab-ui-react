@@ -13,6 +13,7 @@ export class LineConsumerType {
 
 export class LineService {
   private lineService: ILineResource;
+
   /* @ngInject */
   constructor(
     private $resource: ng.resource.IResourceService,
