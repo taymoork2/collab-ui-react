@@ -1,12 +1,10 @@
 import { PgNumberComponent } from './pgNumber.component';
-import { PagingNumberService } from './pgNumber.service';
-
-export * from './pgNumber.service';
 
 export default angular
   .module('huron.paging-group.number', [
     'atlas.templates',
     'cisco.ui',
+    'huron.paging-group',
     require('angular-resource'),
     require('modules/huron/telephony/cmiServices'),
     require('modules/huron/telephony/telephonyConfig'),
@@ -14,5 +12,4 @@ export default angular
     require('modules/core/notifications/notifications.module'),
   ])
   .component('pgNumber', new PgNumberComponent())
-  .service('PagingNumberService', PagingNumberService)
   .name;

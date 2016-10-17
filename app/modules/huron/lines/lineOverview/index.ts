@@ -7,6 +7,7 @@ import simultaneousCalls from '../../simultaneousCalls';
 import callerId from '../../callerId';
 import sharedLine from '../../sharedLine';
 import siteService from '../../sites';
+import memberService from '../../members';
 
 export * from './lineOverview.service';
 
@@ -24,6 +25,7 @@ export default angular
     require('modules/core/config/config'),
     require('modules/core/notifications/notifications.module'),
     siteService,
+    memberService,
   ])
   .component('ucLineOverview', new LineOverviewComponent())
   .service('LineOverviewService', LineOverviewService)

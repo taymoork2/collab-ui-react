@@ -1,23 +1,4 @@
 .ct-profile {
-  .ct-profile-body {
-    .card-info {
-      text-align: center;
-    }
-  }
-
-  .ct-article {
-    box-shadow: none;
-    border: 1px solid $gray-light-1;
-  }
-
-  .cs-card {
-    @include vr-spacing(mt, 0);
-    @include vr-spacing(ml, 3);
-
-    section {
-      overflow: hidden;
-    }
-  }
 
   .cs-card article.profile-preview {
     height: 26.5rem;

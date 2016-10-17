@@ -2,7 +2,7 @@ import { CallForward, CallForwardAll, CallForwardBusy } from './callForward';
 import { LineConsumerType } from '../lines/services';
 
 interface ICallForwardResource extends ng.resource.IResourceClass<ng.resource.IResource<CallForward>> {
-  update: ng.resource.IResourceMethod<ng.resource.IResource<CallForward>>;
+  update: ng.resource.IResourceMethod<ng.resource.IResource<void>>;
 }
 
 export class CallForwardService {
@@ -33,7 +33,7 @@ export class CallForwardService {
     }).$promise;
   }
 
-  public updateCallForward(type: LineConsumerType, typeId: string, numberId: string | undefined, data: CallForward): ng.IPromise<CallForward> {
+  public updateCallForward(type: LineConsumerType, typeId: string, numberId: string | undefined, data: CallForward): ng.IPromise<void> {
     let callForwardBusy = new CallForwardBusy({
       internalVoicemailEnabled: data.callForwardBusy.internalVoicemailEnabled,
       internalDestination: data.callForwardBusy.internalDestination,

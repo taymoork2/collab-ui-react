@@ -251,9 +251,15 @@
     }
 
     function populateUiModel() {
-      var ui = AAUiModelService.getUiModel();
-      var uiMenu = ui[$scope.schedule];
-      vm.menuEntry = uiMenu.entries[$scope.index];
+      if ($scope.keyIndex && $scope.menuId) { //came from a phone menu
+        var phMenu = AutoAttendantCeMenuModelService.getCeMenu($scope.menuId);
+        vm.menuEntry = phMenu.entries[$scope.keyIndex];
+      } else { //came from a route call
+        var ui = AAUiModelService.getUiModel();
+        var rcMenu = ui[$scope.schedule];
+        vm.menuEntry = rcMenu.entries[$scope.index];
+      }
+
       var playAction = getPlayAction(vm.menuEntry);
       if (angular.isDefined(playAction)) {
         setUpEntry(playAction);

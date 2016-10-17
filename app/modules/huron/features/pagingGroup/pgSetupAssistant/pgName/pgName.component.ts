@@ -4,7 +4,8 @@ class PagingGroupNameCtrl implements ng.IComponentController {
   private onUpdate: Function;
 
   public onChange(): void {
-    this.errorNameInput = this.pagingGroupName.indexOf('<') !== -1 || this.pagingGroupName.indexOf('>') !== -1;
+    let reg = /^[A-Za-z\-\_\d\s]+$/;
+    this.errorNameInput = !reg.test(this.pagingGroupName);
     this.onUpdate({
       name: this.pagingGroupName,
       isValid: !this.errorNameInput,

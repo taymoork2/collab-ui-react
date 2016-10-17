@@ -10,6 +10,7 @@
       usersWithRole: usersWithRole,
       searchUsers: searchUsers,
       searchOrgs: searchOrgs,
+      searchOrders: searchOrders,
       getUser: getUser,
       getOrg: getOrg,
       isEmailBlocked: isEmailBlocked,
@@ -33,6 +34,10 @@
       getInviteResendUrl: getInviteResendUrl,
       getInviteResendPayload: getInviteResendPayload,
       invokeInviteEmail: invokeInviteEmail,
+      searchOrder: searchOrder,
+      getAccount: getAccount,
+      getOrder: getOrder,
+      getEmailStatus: getEmailStatus
     };
 
     if (!orgCache) {
@@ -180,6 +185,15 @@
 
       return cancelableHttpGET(urlBase + 'helpdesk/search/organizations?phrase=' + encodeURIComponent(searchString) + '&limit=' + limit)
         .then(extractItems);
+    }
+
+    function searchOrders(searchString) {
+      // TODO - if (useMock()) {
+      //  return deferredResolve(HelpdeskMockData.orders);
+      //}
+
+      return cancelableHttpGET(urlBase + 'commerce/orders/search?webOrderId=' + encodeURIComponent(searchString))
+        .then(extractData);
     }
 
     function getUser(orgId, userId) {
@@ -459,6 +473,30 @@
 
     function noOutstandingRequests() {
       return HelpdeskHttpRequestCanceller.empty();
+    }
+
+    function searchOrder(orderId) {
+      return $http
+        .get(urlBase + 'commerce/orders/search?webOrderId=' + orderId)
+        .then(extractData);
+    }
+
+    function getAccount(accountId) {
+      return $http
+        .get(urlBase + 'accounts/' + accountId)
+        .then(extractData);
+    }
+
+    function getOrder(orderId) {
+      return $http
+        .get(urlBase + 'orders/' + orderId)
+        .then(extractData);
+    }
+
+    function getEmailStatus(email) {
+      return $http
+        .get(urlBase + "email?email=" + email)
+        .then(extractData);
     }
 
     return service;
