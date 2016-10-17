@@ -54,13 +54,6 @@
       );
 
     //$scope.showList = false;
-    $scope.activities = [
-      "Degraded Performance",
-      "Operational",
-      "Under Maintenance",
-      "Partial Outage",
-      "Major Outage"
-    ];
 
     $scope.newIncident = {
       status: '',
@@ -141,7 +134,7 @@
       });
     $scope.selectPlaceholder = { label: 'Under Maintenance', value: 'critical' };
 
-    vm.modifyComponentStatus = function (scope) {
+    function modifyComponentStatus(scope) {
       $log.log(scope);
       scope.status = scope.statusObj.value;
       var newComponent = {
@@ -153,6 +146,108 @@
       ).then(function () {
         $window.alert('status of ' + scope.componentName + ' has been changed to ' + scope.status);
       });
+    }
+
+    function changeStatusWithChild(scope, child, num) {
+      scope.status = child.status;
+      scope.statusObj = ($scope.statuses)[num];
+      var newComponent = {
+        "componentId": scope.componentId,
+        "status": scope.status
+      };
+      DcomponentService.modifyComponent(
+        newComponent
+      ).then(function () {
+      //  $window.alert('status of ' + scope.componentName + ' has been changed to ' + scope.status);
+      });
+      return;
+    }
+
+    vm.getOverriddenComponent = function (scope) {
+      scope.isOverridden = true;
+      var components = scope.components;
+      $log.log(components);
+      /*
+       component status relation:
+       operational<degraded_performance<partical_outage<major_outage<under_maintenance
+       */
+      var index;
+      for (index = 0; index < components.length; index++) {
+        if (angular.equals("under_maintenance", components[index].status)) {
+          changeStatusWithChild(scope, components[index], 4);
+        }
+      }
+      for (index = 0; index < components.length; index++) {
+        if (angular.equals("major_outage", components[index].status)) {
+          changeStatusWithChild(scope, components[index], 3);
+        }
+      }
+      for (index = 0; index < components.length; index++) {
+        if (angular.equals("partical_outage", components[index].status)) {
+          changeStatusWithChild(scope, components[index], 2);
+        }
+      }
+      for (index = 0; index < components.length; index++) {
+        if (angular.equals("degraded_performance", components[index].status)) {
+          changeStatusWithChild(scope, components[index], 1);
+        }
+      }
+      for (index = 0; index < components.length; index++) {
+        if (angular.equals("operational", components[index].status)) {
+          changeStatusWithChild(scope, components[index], 0);
+        }
+      }
+      $window.alert('status of ' + scope.componentName + ' has been changed to ' + scope.status);
+    };
+
+    vm.getChildStatus = function (scope, parent) {
+      scope.status = scope.statusObj.value;
+      modifyComponentStatus(scope);
+      if (!(parent.isOverridden)) {
+        return;
+      }
+      switch (parent.status) {
+        case "under_maintenance":
+          break;
+        case "major_outage":
+          switch (scope.status) {
+            case "under_maintenance":
+              parent.status = scope.status;
+              parent.statusObj = ($scope.statuses)[4];
+              break;
+            default:
+              break;
+          }
+          break;
+        case "partical_outage":
+          switch (scope.status) {
+            case "under_maintenance":
+              parent.status = scope.status;
+              parent.statusObj = ($scope.statuses)[4];
+              break;
+            case "major_outage":
+              parent.status = scope.status;
+              parent.statusObj = ($scope.statuses)[3];
+              break;
+            default:
+              break;
+          }
+          break;
+        case "degraded_performance":
+          switch (scope.status) {
+            case "operational":
+              break;
+            default:
+              parent.status = scope.status;
+              parent.statusObj = scope.statusObj;
+              break;
+          }
+          break;
+        default:
+          parent.status = scope.status;
+          parent.statusObj = scope.statusObj;
+          break;
+      }
     };
   }
 })();

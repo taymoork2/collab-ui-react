@@ -76,18 +76,20 @@
     <div class="content-area2">
 
       <div  ng-if="dbc.components.length">
-        <div ng-repeat="component in dbc.components | orderBy: 'position'" ng-init="hide = false">
-          <div class="table-row">
+        <div class="componentData" ng-repeat="component in dbc.components | orderBy: 'position'" >
+          <div class="table-row" ng-init="hide = false">
           <span class="Component-Name" ng-click="hide = !hide">{{component.componentName}}</span>
-          <cs-select class="testDropdown" ng-model="component.statusObj" options="statuses" on-change-fn="dbc.modifyComponentStatus(component)">
+          <span class="isOverridden setColor" ng-hide="component.isOverridden" ng-click="dbc.getOverriddenComponent(component)">Override this status</span>
+          <span class="isOverridden setColor" ng-show="component.isOverridden" ng-click="component.isOverridden=false">Use derived status</span>
+          <cs-select class="testDropdown" ng-model="component.statusObj" options="statuses" is-disabled="component.isOverridden" on-change-fn="dbc.modifyComponentStatus(component)">
           </cs-select>
           </div>
-          <ul class="UL" ng-hide="hide">
-            <li class="subRow" ng-repeat="subComponent in component.components">
+          <div class="UL" ng-show="hide">
+            <div class="subRow" ng-repeat="subComponent in component.components">
               <span class="component-name">{{subComponent.componentName}}</span>
-              <cs-select class="testDropdown" ng-model="subComponent.statusObj" options="statuses" on-change-fn="dbc.modifyComponentStatus(subComponent)"></cs-select>
-            </li>
-          </ul>
+              <cs-select class="testDropdown" ng-model="subComponent.statusObj" options="statuses" on-change-fn="dbc.getChildStatus(subComponent, component)"></cs-select>
+            </div>
+          </div>
         </div>
       </div>
 

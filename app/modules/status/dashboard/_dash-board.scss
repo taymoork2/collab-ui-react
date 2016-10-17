@@ -139,12 +139,11 @@ div.tab-content{
   margin-right:auto;
 }
 .table-row{
-  padding:0px;
+  padding-top: 15px;
   margin:0px;
   height:50px;
-
+  margin-bottom: 20px;
 }
-
 .component-name{
   vertical-align: middle;
   overflow: hidden;
@@ -163,7 +162,7 @@ div.tab-content{
   white-space: nowrap;
   text-overflow: ellipsis;
   float: left;
-  margin-top: 9px;
+  //margin-top: 15px;
   font-weight: 900;
   width: 40%;
   padding: 0px;
@@ -195,10 +194,11 @@ div.tab-content{
   float:right;
   padding:0px;
   margin:0px;
+ // margin-top: 15px;
 }
 a {
 
-  font: normal normal normal 14px/1 FontAwesome;
+  font: normal normal normal 14px/1;
 
   font-size: inherit;
   text-rendering: auto;
@@ -227,21 +227,7 @@ a {
 .status-components-list span.icon{
   margin: auto 10px;
 }
-.componentStatus-operational{
-  color: #43a942;
-}
-.componentStatus-degraded_performance{
-  color: #f5a623;
-}
-.componentStatus-under_maintenance{
-  color: #049fd9;
-}
-.componentStatus-partial_outage{
-  color: #e9691e;
-}
-.componentStatus-major_outage{
-  color: #f96452;
-}
+
 .select-options .select-selected > a {
   color: black !important;
 }
@@ -255,19 +241,24 @@ a {
   margin:0px;
 }
 .subRow{
-  margin-top:30px;
-  padding-top:20px;
-  padding-bottom:20px;
-  margin:0px;
-  height:75px;
+  padding-left:6px;
+  height:50px;
   backgroud-color:white;
 }
 .UL{
-  margin-top:30px;
+  margin-top:10px;
   list-style:none;
 }
 .GroupCompo{
   margin-bottom:30px;
 }
+.componentData:first-child{
+  margin-bottom: 20px;
+  border-top:none !important;
+}
+  .componentData{
+    margin-bottom: 20px;
+    border-top:1px solid #DDDDDD;
+  }
 
 }

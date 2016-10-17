@@ -142,6 +142,7 @@
           switch (scope.status) {
             case "under_maintenance":
               parent.status = scope.status;
+              parent.statusObj = ($scope.componentStatuses)[4];
               break;
             default:
               break;
@@ -151,9 +152,11 @@
           switch (scope.status) {
             case "under_maintenance":
               parent.status = scope.status;
+              parent.statusObj = ($scope.componentStatuses)[4];
               break;
             case "major_outage":
               parent.status = scope.status;
+              parent.statusObj = ($scope.componentStatuses)[3];
               break;
             default:
               break;
@@ -165,11 +168,13 @@
               break;
             default:
               parent.status = scope.status;
+              parent.statusObj = scope.statusObj;
               break;
           }
           break;
         default:
           parent.status = scope.status;
+          parent.statusObj = scope.statusObj;
           break;
       }
     };
