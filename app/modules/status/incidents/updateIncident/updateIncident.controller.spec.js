@@ -1,6 +1,7 @@
 /**
  * Created by pso on 16-8-25.
  */
+
 'use strict';
 
 describe('controller:IncidentListController', function () {

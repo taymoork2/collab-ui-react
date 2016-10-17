@@ -1,6 +1,7 @@
 /**
  * Created by snzheng on 16/9/21.
  */
+
 'use strict';
 
 describe('Message service', function () {
@@ -47,15 +48,15 @@ describe('Message service', function () {
   });
   it('addComponent should call post function', function () {
     var addResult = ComponentsService.addComponent(141, newComponent);
-    expect(addResult).toBe(true);
+    expect(addResult).not.toBe(null);
   });
   it('delComponent should call delete function', function () {
     var deleteResult = ComponentsService.delComponent(newComponent);
-    expect(deleteResult).toBe(true);
+    expect(deleteResult).not.toBe(null);
   });
   it('modifyComponent should call modify function', function () {
     var modifyResult = ComponentsService.modifyComponent(newComponent);
-    expect(modifyResult).toBe(true);
+    expect(modifyResult).not.toBe(null);
   });
 
 });

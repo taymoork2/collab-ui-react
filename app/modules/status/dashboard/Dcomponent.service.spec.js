@@ -1,6 +1,7 @@
 /**
  * Created by snzheng on 16/9/23.
  */
+
 'use strict';
 
 describe('Message service', function () {
@@ -34,7 +35,7 @@ describe('Message service', function () {
 
   it('modifyComponent should call modify function', function () {
     var modifyResult = DcomponentService.modifyComponent(newComponent);
-    expect(modifyResult).toBe(true);
+    expect(modifyResult).not.toBe(null);
   });
 
 });

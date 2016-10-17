@@ -1,6 +1,7 @@
 /**
  * Created by snzheng on 16/9/21.
  */
+
 'use strict';
 
 describe('components:showComponents', function () {

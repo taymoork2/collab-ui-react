@@ -1,10 +1,11 @@
 /**
  * Created by snzheng on 16/9/30.
  */
+
 'use strict';
 
 var dashboardPage = function () {
- this.incidentBlock = element(by.css('.status-dashboard')).element(by.css('.first-block'));
+  this.incidentBlock = element(by.css('.status-dashboard')).element(by.css('.first-block'));
   this.incidentTitle = element(by.css('.incidentListPageHeader h2'));
   this.componentBlock = element(by.css('.status-dashboard')).element(by.css('.second-block'));
   this.componentTitle = element(by.id('title2'));

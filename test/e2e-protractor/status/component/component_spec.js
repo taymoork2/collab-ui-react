@@ -1,7 +1,9 @@
 /**
  * Created by snzheng on 16/9/30.
  */
+
 'use strict';
+
 describe('update4 Incident', function () {
 
   describe('Log In', function () {
@@ -38,7 +40,7 @@ describe('update4 Incident', function () {
       //utils.sendKeys(componentPage.upCompName, 'logins');
       utils.click(componentPage.updateComponentBtn);
       navigation.navigateTo('#/status/components');
-    });
+     });
     it('delete component should be success', function () {
      navigation.navigateTo('#/status/components');
       browser.sleep(3500);

@@ -1,3 +1,4 @@
+
 'use strict';
 
 describe('controller:DashboardCtrl', function () {
@@ -8,8 +9,8 @@ describe('controller:DashboardCtrl', function () {
   var DcomponentService;
   var $q;
   var $state;
-  var component = { "componentId": 463, "serviceId": 141, "componentName": "Chat", "status": "operational", "description": "" };
-  beforeEach(angular.mock.module('Status.incidents'));
+  var groupComponent = { "componentId": 501, "serviceId": 141, "componentName": "meeting", "status": "partial_outage", "description": "", "position": 2, "components": [{ "componentId": 503, "serviceId": 141, "componentName": "login", "status": "operational", "description": "" }], "isOverridden": false };
+  var component = { "componentId": 463, "serviceId": 141, "componentName": "Chat", "status": "operational", "description": "", "statusObj": { label: 'Operational', value: 'operational' } };
   beforeEach(angular.mock.module('Status'));
   beforeEach(inject(dependencies));
   function dependencies(_$rootScope_, _$controller_, _statusService_, _DcomponentService_, _$q_, _$state_) {
@@ -19,9 +20,13 @@ describe('controller:DashboardCtrl', function () {
     DcomponentService = _DcomponentService_;
     $q = _$q_;
     $state = _$state_;
+    //$window = _$window_;
     $scope.statuses = [{ label: 'Operational', value: 'operational' }, { label: 'Degraded Performance', value: 'degraded_performance' }, { label: 'Partial Outage', value: 'partial_outage' }, { label: 'Major Outage', value: 'major_outage' }, { label: 'Under Maintenance', value: 'under_maintenance' }];
 
     spyOn(DcomponentService, 'modifyComponent').and.returnValue(
+      $q.when({})
+    );
+    spyOn(controller, 'changeStatusWithChild').and.returnValue(
       $q.when({})
     );
     controller = $controller('DashboardCtrl', {
@@ -44,7 +49,7 @@ describe('controller:DashboardCtrl', function () {
   });
   it('modifyComponentStatus should be active', function () {
     //controller.validation = true;
-    controller.modifyComponentStatus(component);
+    controller.changeStatusWithChild(groupComponent, component, 1);
     expect(DcomponentService.modifyComponent).toHaveBeenCalled();
   });
   it('toCreatePage should be active', function () {
@@ -95,5 +100,11 @@ describe('controller:DashboardCtrl', function () {
           }
         }
       });
+  });
+
+  it('getOverriddenComponent should be active', function () {
+    controller.getOverriddenComponent(groupComponent);
+    expect(controller.changeStatusWithChild).toHaveBeenCalled();
+    //expect($window);
   });
 });

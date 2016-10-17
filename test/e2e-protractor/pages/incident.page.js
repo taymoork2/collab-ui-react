@@ -1,16 +1,17 @@
 /**
  * Created by snzheng on 16/9/27.
  */
+
 'use strict';
 
 var incidentPage = function () {
-   this.newIncident = element(by.css('.btn--primary'));
-   this.createIncident = element(by.id('createIncidentPage'));
-   this.incidentList = element(by.css('.incidentItem'));
-   this.newIncidentName = element(by.css('.incidentName input'));
-   this.updateIt = element(by.css('.operationHref div a'));
-   this.updateIncident = element(by.id('incidentInfo'));
-   this.createIncidentBtn = element(by.css('#createIncidentPage .btn--primary'));
+  this.newIncident = element(by.css('.btn--primary'));
+  this.createIncident = element(by.id('createIncidentPage'));
+  this.incidentList = element(by.css('.incidentItem'));
+  this.newIncidentName = element(by.css('.incidentName input'));
+  this.updateIt = element(by.css('.operationHref div a'));
+  this.updateIncident = element(by.id('incidentInfo'));
+  this.createIncidentBtn = element(by.css('#createIncidentPage .btn--primary'));
  //  this.incidentListPage = element(by.css('.incidentListPage'));
   this.edit = element(by.css('.editButton'));
   this.editIncidentName = element(by.css('.editIncidentName'));

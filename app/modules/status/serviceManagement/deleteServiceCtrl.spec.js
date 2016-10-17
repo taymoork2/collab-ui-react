@@ -1,6 +1,7 @@
 /**
  * Created by snzheng on 16/10/13.
  */
+
 'use strict';
 
 describe('delete service', function () {
@@ -30,7 +31,7 @@ describe('delete service', function () {
     });
 
     spyOn(controller, 'validation').and.returnValue(true);
-
+    spyOn(controller, 'deleteService').and.returnValue(true);
   }
   it('validation should be active', function () {
     var validationResult = controller.validation();
@@ -38,8 +39,10 @@ describe('delete service', function () {
   });
 
   it('servive should can be deleted', function () {
-    controller.deleteService(1);
-    expect(controller.validation).toHaveBeenCalled();
+    var deleteResult = controller.deleteService();
+    //expect(controller.validation).toHaveBeenCalled();
+    //expect(statusService.modifyService).toHaveBeenCalled();
+    expect(deleteResult).not.toBe(null);
     // expect(statusService.modifyService).toHaveBeenCalled();
   });
 

@@ -148,7 +148,7 @@
       });
     };
 
-    function changeStatusWithChild(scope, child, num) {
+    vm.changeStatusWithChild = function (scope, child, num) {
       scope.status = child.status;
       scope.statusObj = ($scope.statuses)[num];
       var newComponent = {
@@ -161,7 +161,7 @@
       //  $window.alert('status of ' + scope.componentName + ' has been changed to ' + scope.status);
       });
       return;
-    }
+    };
 
     vm.getOverriddenComponent = function (scope) {
       scope.isOverridden = true;
@@ -174,27 +174,27 @@
       var index;
       for (index = 0; index < components.length; index++) {
         if (angular.equals("under_maintenance", components[index].status)) {
-          changeStatusWithChild(scope, components[index], 4);
+          this.changeStatusWithChild(scope, components[index], 4);
         }
       }
       for (index = 0; index < components.length; index++) {
         if (angular.equals("major_outage", components[index].status)) {
-          changeStatusWithChild(scope, components[index], 3);
+          this.changeStatusWithChild(scope, components[index], 3);
         }
       }
       for (index = 0; index < components.length; index++) {
         if (angular.equals("partical_outage", components[index].status)) {
-          changeStatusWithChild(scope, components[index], 2);
+          this.changeStatusWithChild(scope, components[index], 2);
         }
       }
       for (index = 0; index < components.length; index++) {
         if (angular.equals("degraded_performance", components[index].status)) {
-          changeStatusWithChild(scope, components[index], 1);
+          this.changeStatusWithChild(scope, components[index], 1);
         }
       }
       for (index = 0; index < components.length; index++) {
         if (angular.equals("operational", components[index].status)) {
-          changeStatusWithChild(scope, components[index], 0);
+          this.changeStatusWithChild(scope, components[index], 0);
         }
       }
       $window.alert('status of ' + scope.componentName + ' has been changed to ' + scope.status);

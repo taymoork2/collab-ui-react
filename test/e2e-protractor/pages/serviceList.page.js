@@ -1,6 +1,7 @@
 /**
  * Created by snzheng on 16/10/12.
  */
+
 'use strict';
 
 var ServiceListPage = function () {

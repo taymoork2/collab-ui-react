@@ -1,6 +1,7 @@
 /**
  * Created by snzheng on 16/9/25.
  */
+
 'use strict';
 
 describe('controller:statusPageCtrl', function () {
@@ -41,10 +42,11 @@ describe('controller:statusPageCtrl', function () {
   });
 
   it('getService should be success', function () {
-    var services = statusService.getServices();
-    expect(services).not.toBeNull();
-    expect(controller.selected).not.toBeNull();
-    expect($state.go).toHaveBeenCalled();
+    statusService.getServices().then(function (services) {
+      expect(services).not.toBeNull();
+      expect(controller.selected).not.toBeNull();
+      expect($state.go).toHaveBeenCalled();
+    });
   });
 
   it('addService should be success', function () {

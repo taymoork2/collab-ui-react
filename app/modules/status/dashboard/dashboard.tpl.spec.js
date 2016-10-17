@@ -1,6 +1,7 @@
 /**
  * Created by snzheng on 16/9/23.
  */
+
 'use strict';
 
 describe('incidents:createIncidents', function () {

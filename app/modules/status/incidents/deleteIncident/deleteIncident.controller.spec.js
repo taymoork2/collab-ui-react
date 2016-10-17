@@ -1,6 +1,7 @@
 /**
  * Created by pso on 16-8-22.
  */
+
 'use strict';
 
 describe('controller:DeleteIncidentController', function () {

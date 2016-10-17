@@ -2,8 +2,8 @@
  * Created by snzheng on 16/10/12.
  */
 
-
 'use strict';
+
 describe('update4 Incident', function () {
   it('should login to dashboard page', function () {
     login.login('sjsite14-test', '#/status/serviceList');

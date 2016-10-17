@@ -1,6 +1,7 @@
 /**
  * Created by snzheng on 16/9/25.
  */
+
 'use strict';
 
 describe('controller:addServiceCtrl', function () {

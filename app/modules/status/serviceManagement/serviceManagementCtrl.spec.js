@@ -1,6 +1,7 @@
 /**
  * Created by snzheng on 16/10/12.
  */
+
 'use strict';
 
 describe('service manage controller', function () {

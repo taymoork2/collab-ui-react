@@ -1,6 +1,7 @@
 /**
  * Created by pso on 16-8-26.
  */
+
 'use strict';
 
 describe('incidents:createIncidents', function () {
