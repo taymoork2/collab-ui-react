@@ -6,13 +6,13 @@
     .service('DeviceUsageMockData', DeviceUsageMockData);
 
   /* @ngInject */
-  function DeviceUsageMockData() {
+  function DeviceUsageMockData($log) {
 
     var cachedRawData;
 
-    var maxCallsPrDay = 20;
-    var maxPairedCallsPrDay = 10;
-    var existingUniqueDeviceIds = createSetOfUniqueDeviceIds(1000);
+    var maxCallsPrDay = 10;
+    var maxPairedCallsPrDay = 5;
+    var existingUniqueDeviceIds = createSetOfUniqueDeviceIds(100);
 
     var service = {
       getRawData: getRawData
@@ -35,11 +35,32 @@
       };
     }
 
+    function createSamples(no, unit) {
+      var now = moment();
+      var start = moment(now).subtract(no, unit);
+      var allSamples = assembleRawData(start, now);
+      $log.warn("Created ", allSamples.length, " device usage mock samples.");
+      $log.warn("start date:", start);
+      $log.warn("end date:", now);
+      return allSamples;
+    }
+
     function getRawData(startDate, endDate) {
       if (_.isEmpty(cachedRawData)) {
-        cachedRawData = assembleRawData(startDate, endDate);
+        cachedRawData = createSamples(6, "months");
+        $log.warn("cachedData", cachedRawData);
       }
-      return _.cloneDeep(cachedRawData);
+
+      startDate = moment(startDate, "YYYYMMDD");
+      endDate = moment(endDate, "YYYYMMDD");
+
+      var rawDataWithinRange = _.filter(cachedRawData, function (sample) {
+        var registeredDate = moment(sample.date, "YYYYMMDD");
+        return ((registeredDate.isBefore(endDate) && registeredDate.isAfter(startDate)) || registeredDate.isSame(endDate) || registeredDate.isSame(startDate));
+      });
+      $log.warn("After range filtering", rawDataWithinRange);
+
+      return _.cloneDeep(rawDataWithinRange);
     }
 
     function assembleRawData(startDate, endDate) {

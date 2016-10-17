@@ -34,6 +34,10 @@
       getInviteResendUrl: getInviteResendUrl,
       getInviteResendPayload: getInviteResendPayload,
       invokeInviteEmail: invokeInviteEmail,
+      searchOrder: searchOrder,
+      getAccount: getAccount,
+      getOrder: getOrder,
+      getEmailStatus: getEmailStatus
     };
 
     if (!orgCache) {
@@ -469,6 +473,30 @@
 
     function noOutstandingRequests() {
       return HelpdeskHttpRequestCanceller.empty();
+    }
+
+    function searchOrder(orderId) {
+      return $http
+        .get(urlBase + 'commerce/orders/search?webOrderId=' + orderId)
+        .then(extractData);
+    }
+
+    function getAccount(accountId) {
+      return $http
+        .get(urlBase + 'accounts/' + accountId)
+        .then(extractData);
+    }
+
+    function getOrder(orderId) {
+      return $http
+        .get(urlBase + 'orders/' + orderId)
+        .then(extractData);
+    }
+
+    function getEmailStatus(email) {
+      return $http
+        .get(urlBase + "email?email=" + email)
+        .then(extractData);
     }
 
     return service;

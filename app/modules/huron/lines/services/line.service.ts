@@ -3,7 +3,7 @@ import { Line } from './line';
 export const LINE_CHANGE = 'LINE_CHANGE';
 
 interface ILineResource extends ng.resource.IResourceClass<ng.resource.IResource<Line>> {
-  update: ng.resource.IResourceMethod<ng.resource.IResource<Line>>;
+  update: ng.resource.IResourceMethod<ng.resource.IResource<void>>;
 }
 
 export class LineConsumerType {
@@ -75,7 +75,7 @@ export class LineService {
     .then( () => location);
   }
 
-  public updateLine(type: LineConsumerType, typeId: string, numberId: string | undefined, data: Line): ng.IPromise<Line> {
+  public updateLine(type: LineConsumerType, typeId: string, numberId: string, data: Line): ng.IPromise<void> {
     return this.lineService.update({
       customerId: this.Authinfo.getOrgId(),
       type: type,

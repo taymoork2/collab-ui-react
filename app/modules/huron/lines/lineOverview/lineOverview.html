@@ -42,13 +42,12 @@
         on-change-fn="$ctrl.setCallerId(callerIdSelected, customCallerIdName, customCallerIdNumber);">
       </uc-caller-id>
       <uc-shared-line
-        selected-user="$ctrl.selectedUser"
-        shared-line-users="$ctrl.sharedLineUsers"
-        shared-line-endpoints="$ctrl.sharedLineEndpoints"
-        select-shared-line-user-fn="$ctrl.selectSharedLineUser(user)"
+        shared-lines="$ctrl.lineOverviewData.sharedLines"
+        new-shared-line-members="$ctrl.newSharedLineMembers"
+        select-shared-line-user-fn="$ctrl.setNewSharedLineMembers(members)"
         get-user-list-fn="$ctrl.getUserList(filter)"
-        is-single-device-fn="$ctrl.isSingleDevice(sharedLineEndpoints, uuid)"
-        disassociate-shared-line-user-fn="$ctrl.disassociateSharedLineUser(user, bulkDevice)">
+        on-shared-line-change-fn="$ctrl.setSharedLines(sharedLines)"
+        on-delete-shared-line-member-fn="$ctrl.deleteSharedLineMember(sharedLineMember)">
       </uc-shared-line>
     </cs-sp-section>
   </cs-sp-container>

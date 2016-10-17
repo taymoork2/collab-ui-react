@@ -9,11 +9,27 @@
   function CustomerReportsCtrl($state, $stateParams, $q, $timeout, $translate, Log, Authinfo, CustomerReportService, ReportConstants, DummyCustomerReportService, CustomerGraphService, WebexReportService, Userservice, WebExApiGatewayService, Storage, FeatureToggleService, MediaServiceActivationV2) {
     var vm = this;
     var ABORT = 'ABORT';
+
+    // Feature Toggles
+    var reportsUpdateToggle = FeatureToggleService.atlasReportsUpdateGetStatus();
+    var deviceUsageToggle = FeatureToggleService.atlasDeviceUsageReportGetStatus();
+
     vm.pageTitle = $translate.instant('reportsPage.pageTitle');
-    vm.allReports = ReportConstants.ALL;
-    vm.engagement = ReportConstants.ENGAGEMENT;
-    vm.quality = ReportConstants.QUALITY;
-    vm.currentFilter = vm.allReports;
+    vm.ALL = ReportConstants.ALL;
+    vm.ENGAGEMENT = ReportConstants.ENGAGEMENT;
+    vm.QUALITY = ReportConstants.QUALITY;
+    vm.currentFilter = vm.ALL;
+
+    vm.filterArray = _.cloneDeep(ReportConstants.filterArray);
+    vm.filterArray[0].toggle = function () {
+      resetCards(vm.ALL);
+    };
+    vm.filterArray[1].toggle = function () {
+      resetCards(vm.ENGAGEMENT);
+    };
+    vm.filterArray[2].toggle = function () {
+      resetCards(vm.QUALITY);
+    };
 
     vm.displayEngagement = true;
     vm.displayQuality = true;
@@ -28,7 +44,6 @@
     var activeUsersSort = ['userName', 'numCalls', 'sparkMessages', 'totalActivity'];
     var activeUsersChart = null;
     var previousSearch = '';
-    var reportsUpdateToggle = FeatureToggleService.atlasReportsUpdateGetStatus();
     vm.threeMonthTooltip = $translate.instant('activeUsers.threeMonthsMessage');
     vm.activeUserStatus = ReportConstants.REFRESH;
     vm.mostActiveUserStatus = ReportConstants.REFRESH;
@@ -116,7 +131,6 @@
     vm.mediaUpdate = mediaUpdate;
     vm.activityUpdate = activityUpdate;
     vm.isActiveDisabled = isActiveDisabled;
-    vm.resetCards = resetCards;
     vm.searchMostActive = searchMostActive;
     vm.deviceUpdate = deviceUpdate;
     vm.getDescription = getDescription;
@@ -184,6 +198,15 @@
     };
 
     function init() {
+      deviceUsageToggle.then(function (response) {
+        if (response) {
+          vm.headerTabs.push({
+            title: $translate.instant('reportsPage.usageReports.usageReportTitle'),
+            state: 'reports.device-usage.overview'
+          });
+        }
+      });
+
       reportsUpdateToggle.then(function (response) {
         vm.displayActiveLineGraph = response;
         if (vm.displayActiveLineGraph) {
@@ -246,10 +269,10 @@
       if (vm.currentFilter !== filter) {
         vm.displayEngagement = false;
         vm.displayQuality = false;
-        if (filter === vm.allReports || filter === vm.engagement) {
+        if (filter === vm.ALL || filter === vm.ENGAGEMENT) {
           vm.displayEngagement = true;
         }
-        if (filter === vm.allReports || filter === vm.quality) {
+        if (filter === vm.ALL || filter === vm.QUALITY) {
           vm.displayQuality = true;
         }
         resize(500);

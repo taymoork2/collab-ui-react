@@ -1,5 +1,5 @@
 import { IPagingGroup } from '../pagingGroup';
-import { INumber } from './pgNumber/pgNumber.service';
+import { INumber } from '../pgNumber.service';
 import { PagingGroupService } from '../pagingGroup.service';
 
 interface IToolkitModalSettings extends ng.ui.bootstrap.IModalSettings {
