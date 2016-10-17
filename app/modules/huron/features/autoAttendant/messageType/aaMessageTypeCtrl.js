@@ -146,10 +146,20 @@
       holdActionDesc = "";
       holdActionValue = "";
 
-      ui = AAUiModelService.getUiModel();
-      uiMenu = ui[$scope.schedule];
+      if ($scope.type) {
+        var sourceMenu = AutoAttendantCeMenuModelService.getCeMenu($scope.menuId);
+        var sourceQueue = sourceMenu.entries[$scope.keyIndex];
+        var queueAction = sourceQueue.actions[0];
+        vm.menuEntry = queueAction.queueSettings[$scope.type];
+      } else if ($scope.keyIndex && $scope.menuId) { //came from a phone menu
+        var phMenu = AutoAttendantCeMenuModelService.getCeMenu($scope.menuId);
+        vm.menuEntry = phMenu.entries[$scope.keyIndex];
+      } else { //came from a route call
+        ui = AAUiModelService.getUiModel();
+        uiMenu = ui[$scope.schedule];
+        vm.menuEntry = uiMenu.entries[$scope.index];
+      }
 
-      vm.menuEntry = uiMenu.entries[$scope.index];
       sayAction = getAction(vm.menuEntry);
 
       if (!sayAction) {
@@ -167,7 +177,6 @@
       setActionEntry();
 
       populateUiModel();
-
     }
 
     activate();

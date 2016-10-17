@@ -2352,6 +2352,8 @@
       "ExternalPhone": "External Phone",
       "Disconnect": "Disconnect"
   },
+    "initialAnnouncement" : "Initial Announcement",
+    "initialHelpText" : "This message will play for the caller upon entry into the queue.",
     "fallbackLabel": "Fallback" ,
     "uploadedFile": "Upload File",
     "uploadFailed": "File upload failed, unable to connect. Please try again.",
@@ -5410,7 +5412,18 @@
     },
     "vmprefix": "Voicemail Access Prefix",
     "outboundDigit": "Outbound Dial Digit",
-    "areaCode": "Area Code"
+    "areaCode": "Area Code",
+    "customerInfo": "Customer Information",
+    "webOrderId": "Web Order Number",
+    "orderProvision": "Order Provisioned",
+    "accountActivate": "Account Activated",
+    "companyName": "Company Name",
+    "companyId": "Company ID",
+    "adminEmail": "Admin Email",
+    "emailSent": "Last Email Sent",
+    "partnerInfo": "Partner Information",
+    "managedBy": "Managed By",
+    "partnerEmail": "Partner Email"
   },
   "activation": {
     "verificationComplete": "Verification Complete",

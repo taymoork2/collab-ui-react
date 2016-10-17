@@ -107,6 +107,30 @@ describe('Huron Auto Attendant', function () {
       utils.click(autoattendant.okQueueTreatment);
     });
 
+    it('should open queue treatment modal and set the values of IA to the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
+      utils.scrollIntoView(autoattendant.repeatPlus);
+
+      utils.click(autoattendant.queueSetting);
+
+      //for say message
+      utils.click(autoattendant.initialMessage);
+      utils.sendKeys(autoattendant.initialMessage, "Enter the IA message");
+
+      //for media upload
+      var absolutePath = utils.resolvePath(autoattendant.mediaFileToUpload);
+      utils.click(autoattendant.initialMessageOptions);
+      utils.click(autoattendant.initialPlayMessageOption);
+      utils.wait(autoattendant.initialMediaUploadInput, 12000);
+      $(autoattendant.mediaUploadSend).sendKeys(absolutePath);
+
+      // and save
+      utils.click(autoattendant.scheduleCloseButton);
+      // save AA
+      utils.click(autoattendant.saveButton);
+      autoattendant.assertUpdateSuccess(deleteUtils.testAAName);
+      utils.expectIsDisabled(autoattendant.saveButton);
+    }, 120000);
+
     it('should add another route to queue to the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
 
         // Main menu key 1 - route to queue

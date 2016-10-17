@@ -1,0 +1,166 @@
+[
+  {
+    "orderStatus": "PROVISIONED",
+    "serviceProvisioningId": "SPID-Atlas_Test_int_order001",
+    "orderingTool": "CCW",
+    "externalOrderId": "67891234",
+    "productProvisionStatus": {
+      "serviceStatus": [
+        {
+          "orderItemUuid": "f1bc4675-3eb3-47a2-bda3-e2a6eafd3e81",
+          "status": "PROVISIONED",
+          "offercode": "MS"
+        }
+      ]
+    },
+    "orderReceived": "2016-09-27T22:56:30.051Z",
+    "serviceId": "Sub1234-5678",
+    "accountId": "4895afc9-83e9-44cb-b78a-05e541d41661",
+    "orderContent": {
+      "common": {
+        "serviceProvisioningId": "SPID-Atlas_Test_int_order001",
+        "SBPOrderId": "67891234",
+        "isTrial": false,
+        "action": "New",
+        "offerName": "Description -- Collaboration 25",
+        "orderingTool": "CCW",
+        "rtm": "internal",
+        "customerInfo": {
+          "endCustomerInfo": {
+            "id": "CUID-Atlas_Test_int_suneng2",
+            "name": "Atlas_Test_int_suneng5",
+            "address": {
+              "addressLine1": "address-line-1",
+              "addressLine2": "address-line-2",
+              "cityName": "street-name",
+              "stateName": "CA",
+              "countryCode": "USA",
+              "postalCode": "95035-1021"
+            },
+            "adminDetails": {
+              "emailId": "steamboatcsco.hung123+test123@gmail.com"
+            }
+          },
+          "partnerInfo": {
+            "id": "453e0f7f-9117-4fd9-8369-71d86cdfeb25",
+            "name": "Atlas_Test_Boulder_Steamboat",
+            "address": {
+              "addressLine1": "address-line-1",
+              "addressLine2": "address-line-2",
+              "cityName": "Boulder",
+              "stateName": "CO",
+              "countryCode": "USA",
+              "postalCode": "80301"
+            },
+            "adminDetails": {
+              "emailId": "boulder.steamboat@gmail.com"
+            },
+            "isManager": true
+          }
+        }
+      },
+      "collabServiceInfoCommon": {
+        "orgName": "Atlas_Test_int_suneng2",
+        "serviceId": "Sub1234-5678"
+      },
+      "serviceItems": {
+        "messaging": [
+          {
+            "productName": "SQ",
+            "serviceName": "MS",
+            "action": "New",
+            "licenseVolume": "45",
+            "licenseOverage": "True"
+          }
+        ]
+      }
+    },
+    "lastModified": "2016-09-27T22:56:51.839Z",
+    "orderUuid": "3e54548d-12ff-43f4-9aff-10c2fcc64130"
+  },
+  {
+    "orderStatus": "REJECTED",
+    "serviceProvisioningId": "SPID-Atlas_Test_int_order001",
+    "orderingTool": "CCW",
+    "externalOrderId": "67891234",
+    "productProvisionStatus": {
+      "serviceStatus": [
+        {
+          "status": "NA",
+          "errorInfo": {
+            "errorCode": 400042,
+            "description": "emailId in endCustomerInfo belongs to a different organization and cannot be used. Please provide a different email address."
+          }
+        },
+        {
+          "orderItemUuid": "29aa7ec3-8f01-4f51-acef-19bf7c8ae4ab",
+          "status": "RECEIVED",
+          "offercode": "MS"
+        }
+      ]
+    },
+    "orderReceived": "2016-09-27T22:55:46.614Z",
+    "serviceId": "Sub1234-5678",
+    "orderContent": {
+      "common": {
+        "serviceProvisioningId": "SPID-Atlas_Test_int_order001",
+        "SBPOrderId": "67891234",
+        "isTrial": false,
+        "action": "New",
+        "offerName": "Description -- Collaboration 25",
+        "orderingTool": "CCW",
+        "rtm": "internal",
+        "customerInfo": {
+          "endCustomerInfo": {
+            "id": "CUID-Atlas_Test_int_suneng2",
+            "name": "Atlas_Test_int_suneng5",
+            "address": {
+              "addressLine1": "address-line-1",
+              "addressLine2": "address-line-2",
+              "cityName": "street-name",
+              "stateName": "CA",
+              "countryCode": "USA",
+              "postalCode": "95035-1021"
+            },
+            "adminDetails": {
+              "emailId": "steamboatcsco.hung123@gmail.com"
+            }
+          },
+          "partnerInfo": {
+            "id": "453e0f7f-9117-4fd9-8369-71d86cdfeb25",
+            "name": "Atlas_Test_Boulder_Steamboat",
+            "address": {
+              "addressLine1": "address-line-1",
+              "addressLine2": "address-line-2",
+              "cityName": "Boulder",
+              "stateName": "CO",
+              "countryCode": "USA",
+              "postalCode": "80301"
+            },
+            "adminDetails": {
+              "emailId": "boulder.steamboat@gmail.com"
+            },
+            "isManager": true
+          }
+        }
+      },
+      "collabServiceInfoCommon": {
+        "orgName": "Atlas_Test_int_suneng2",
+        "serviceId": "Sub1234-5678"
+      },
+      "serviceItems": {
+        "messaging": [
+          {
+            "productName": "SQ",
+            "serviceName": "MS",
+            "action": "New",
+            "licenseVolume": "45",
+            "licenseOverage": "True"
+          }
+        ]
+      }
+    },
+    "lastModified": "2016-09-27T22:55:47.160Z",
+    "orderUuid": "fa772458-5357-4f2e-8f55-c8c9a2b94c00"
+  }
+]

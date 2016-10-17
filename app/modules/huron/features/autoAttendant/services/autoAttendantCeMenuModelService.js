@@ -483,6 +483,7 @@
         action = new Action('routeToQueue', inAction.routeToQueue.id);
         setDescription(action, inAction.routeToQueue);
         cesTempMoh(action);
+        cesTempIa(action);
         menuEntry.addAction(action);
       } else {
         // insert an empty action
@@ -500,9 +501,28 @@
     function cesTempMoh(action) {
       if (angular.isDefined(action.description)) {
         try {
-          action.description = JSON.parse(action.description);
-          action.queueSettings = {};
+          if (angular.isUndefined(action.queueSettings)) {
+            action.description = JSON.parse(action.description);
+            action.queueSettings = {};
+          }
           action.queueSettings.musicOnHold = constructCesTodoMoh(action.description);
+        } catch (exception) {
+          action.queueSettings = {};
+        }
+      }
+    }
+
+    /*
+    * temporary solution to write to db until ces ready
+    */
+    function cesTempIa(action) {
+      if (angular.isDefined(action.description)) {
+        try {
+          if (angular.isUndefined(action.queueSettings)) {
+            action.description = JSON.parse(action.description);
+            action.queueSettings = {};
+          }
+          action.queueSettings.initialAnnouncement = constructCesTodoIa(action.description);
         } catch (exception) {
           action.queueSettings = {};
         }
@@ -519,6 +539,18 @@
       musicOnHold = new CeMenuEntry();
       musicOnHold.addAction(playAction);
       return musicOnHold;
+    }
+
+    /*
+    * temporary solution to write to db until ces ready
+    */
+    function constructCesTodoIa(parsedDescription) {
+      var initialAnnouncement = parsedDescription.initialAnnouncement.actions[0];
+      var action = new Action(initialAnnouncement.name, initialAnnouncement.value);
+      action.setDescription(initialAnnouncement.description);
+      initialAnnouncement = new CeMenuEntry();
+      initialAnnouncement.addAction(action);
+      return initialAnnouncement;
     }
 
     function parseActions(menuEntry, actions) {

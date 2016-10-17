@@ -10,7 +10,6 @@ describe('Controller: AANewTreatmentModalCtrl', function () {
     close: jasmine.createSpy('modalInstance.close'),
     dismiss: jasmine.createSpy('modalInstance.dismiss')
   };
-
   var VALUE = "value";
   var DEFAULT_MOH = 'musicOnHoldDefault';
   var CUSTOM_MOH = 'musicOnHoldUpload';

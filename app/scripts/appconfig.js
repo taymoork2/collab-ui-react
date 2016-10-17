@@ -1931,6 +1931,15 @@
               orgId: null
             }
           })
+          .state('helpdesk.order', {
+            url: '/order/:orderId/:id',
+            templateUrl: 'modules/squared/helpdesk/helpdesk-order.html',
+            controller: 'HelpdeskOrderController',
+            controllerAs: 'helpdeskOrderCtrl',
+            params: {
+              order: null
+            }
+          })
           .state('helpdesk.org', {
             url: '/org/:id',
             templateUrl: 'modules/squared/helpdesk/helpdesk-org.html',
@@ -1939,15 +1948,6 @@
             params: {
               org: null,
               id: null
-            }
-          })
-          .state('helpdesk.order', {
-            url: '/order/:id',
-            templateUrl: 'modules/squared/helpdesk/helpdesk-order.html',
-            controller: 'HelpdeskOrderController',
-            controllerAs: 'helpdeskOrderCtrl',
-            params: {
-              order: null
             }
           })
           .state('helpdesk.cloudberry-device', {

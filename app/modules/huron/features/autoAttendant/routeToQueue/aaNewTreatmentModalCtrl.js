@@ -9,7 +9,6 @@
   function AANewTreatmentModalCtrl($modalInstance, $translate, $scope, AACommonService, AutoAttendantCeMenuModelService, AAUiModelService, aa_schedule, aa_menu_id, aa_index, aa_key_index) {
     var vm = this;
 
-    vm.selectPlaceholder = $translate.instant('autoAttendant.destinations.Disconnect');
     vm.inputPlaceHolder = $translate.instant('autoAttendant.inputPlaceHolder');
     vm.selectPlaceholder = $translate.instant('autoAttendant.selectPlaceHolder');
     vm.destinationOptions = [{
@@ -33,6 +32,7 @@
     vm.musicOnHold = '';
     vm.menuEntry = undefined;
     vm.mohPlayAction = undefined;
+    vm.iaAction = undefined;
 
     vm.ok = ok;
     vm.isSaveEnabled = isSaveEnabled;
@@ -102,6 +102,7 @@
         vm.menuEntry = rcMenu.entries[$scope.index];
       }
       vm.mohPlayAction = vm.menuEntry.actions[0].queueSettings.musicOnHold.actions[0];
+      vm.iaAction = vm.menuEntry.actions[0].queueSettings.initialAnnouncement.actions[0];
     }
 
     function populateScope() {
