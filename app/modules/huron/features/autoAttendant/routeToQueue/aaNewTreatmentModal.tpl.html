@@ -38,9 +38,9 @@
           </div>
         </div>
       </div>
-      <div class="row" class="aa-destination-action">
-        <div class="columns large-8 medium-10 small-10">
-          <cs-select id="destinationSelect" ng-model="aaNewTreatmentModalCtrl.destination" name="destinationSelect" options="aaNewTreatmentModalCtrl.destinationOptions" labelfield="label" valuefield="label" icon="icon-chevron-down" placeholder="aaNewTreatmentModalCtrl.selectPlaceholder">
+      <div class="row">
+        <div class="columns large-8 medium-10 small-10 aa-destination-menu">
+          <cs-select class="aa-destination-action" id="destinationSelect" ng-model="aaNewTreatmentModalCtrl.destination" name="destinationSelect" options="aaNewTreatmentModalCtrl.destinationOptions" labelfield="label" valuefield="label" icon="icon-chevron-down" placeholder="aaNewTreatmentModalCtrl.selectPlaceholder">
           </cs-select>
           <div ng-switch="aaNewTreatmentModalCtrl.destination.name">
             <aa-route-to-aa id="destinationMenuRouteAA" ng-switch-when="destinationMenuRouteAA" aa-menu-id="{{menuId}}" aa-index="index" aa-key-index="{{keyIndex}}"></aa-route-to-aa>
@@ -53,7 +53,7 @@
       </div>
       <div class="row">
         <div class="columns large-8 medium-8">
-          <p class="cs-input__help-text aa-help-text" translate="autoAttendant.destinationHelpMessage"></p> 
+          <p class="cs-input__help-text" translate="autoAttendant.destinationHelpMessage"></p> 
         </div>
       </div>
     </div>

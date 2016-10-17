@@ -12,6 +12,9 @@
 & .aa-selectmessage-modal {
      width: 150px;
 }
+& .aa-destination-menu {
+     padding-bottom: 0.5rem;
+}
 & .aa-destination-action {
      @include vr-spacing(pb, 1);
 }
