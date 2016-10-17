@@ -28,7 +28,9 @@
   .ct-card-desc {
     color: $gray-dark-1;
     text-align: center;
-    width: 80%;
+    width: 100%;
+    padding-left: rem-calc(10);
+    padding-right: rem-calc(10);
   }
   .ct-toggle-position{
     margin-top: auto;
