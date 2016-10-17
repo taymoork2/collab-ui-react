@@ -1,27 +1,4 @@
 .ct-profile {
-  .ct-article {
-    box-shadow: none;
-    border: 1px solid $gray-light-1;
-  }
-
-  .cs-card {
-    @include vr-spacing(ml, 2);
-    width: rem-calc(366px);
-    height: rem-calc(458px);
-    display: flex;
-    flex-flow: column;
-    .card-info {
-      text-align: center;
-      color: $gray-dark-1;
-    }
-    .articleHeight {
-      height: 100%;
-    }
-  }
-
-  .ct-card-layout {
-    left: rem-calc(208px);
-  }
 
   .cs-card article.profile-preview {
     height: 26.5rem;

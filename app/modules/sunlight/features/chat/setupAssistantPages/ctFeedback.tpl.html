@@ -6,9 +6,9 @@
 
     <div class="cs-card-container ct-feedback ct-sa-content">
         <cs-card-layout class="cardScroll ct-card-layout">
-            <cs-card>
-              <div class="h4 card-info" translate="careChatTpl.preview"></div>
-              <article class="articleHeight ct-article">
+            <cs-card class="ct-card">
+              <div class="h4 ct-card-info" translate="careChatTpl.preview"></div>
+              <article class="ct-article articleHeight">
                 <section class="ct-attribute-left-section ct-flex-topleft">
                   <span title=" {{careChatSA.getAttributeValue('displayText', 'feedbackQuery', 'feedback')}}"
                       class="feedback-question-text"
@@ -28,8 +28,8 @@
               </article>
             </cs-card>
 
-            <cs-card>
-              <div class="h4 card-info" translate="careChatTpl.attributes"></div>
+            <cs-card class="ct-card">
+              <div class="h4 ct-card-info" translate="careChatTpl.attributes"></div>
               <article class="ct-article attributes articleHeight">
                 <section class="ct-attribute-right-section ct-flex-topleft">
                   <div class="feedback-right-container">
