@@ -1,4 +1,5 @@
 .ct-customer {
+  align-items: center;
   @mixin placeholder {
     ::-webkit-input-placeholder {
       @content
@@ -35,9 +36,6 @@
     }
   }
 
-  .customer-card-layout {
-    left: rem-calc(145px);
-  }
   .customer-preview-article {
     height: rem-calc(500);
   }
