@@ -12,11 +12,10 @@
 & .aa-selectmessage-modal {
      width: 150px;
 }
-    }
-    & .aa-destination-action {
-     padding-top: 1rem;
-    }
-    .columns + .columns:last-child.aa-selectsec-modal {
+& .aa-destination-action {
+     @include vr-spacing(pb, 1);
+}
+.columns + .columns:last-child.aa-selectsec-modal {
      float: left;
-    }
+}
 }

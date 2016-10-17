@@ -84,51 +84,25 @@ describe('Controller: AANewTreatmentModalCtrl', function () {
     it('should be defined', function () {
       expect(controller).toBeDefined();
     });
-
-    describe('drop downs', function () {
-      it("length of minutes should be 60.", function () {
-        expect(controller.minutes.length).toEqual(60);
-      });
-
-  describe('activate', function () {
-    it('should be defined', function () {
-      expect(controller).toBeDefined();
-    });
     it("default value of minute should be 15.", function () {
       expect(controller.maxWaitTime.index).toEqual(14);
-    });
     });
     it("cancel function call results in closing the Modal.", function () {
       controller.cancel();
       expect(modalFake.close).toHaveBeenCalledWith();
     });
+  });
 
     describe('FallBack', function () {
       it('test for default option as Disconnect', function () {
         expect(controller.destinationOptions[0].name).toEqual('Disconnect');
       });
-
       it('test for sorted order options in dropdown', function () {
         for (var i = 1; i < sortedOptions.length; i++) {
           expect(controller.destinationOptions[i].label).toEqual(sortedOptions[i].label);
         }
       });
     });
-
-    describe('isSaveEnabled', function () {
-      it('should return true', function () {
-        spyOn(AACommonService, 'isValid').and.returnValue(true);
-        var save = controller.isSaveEnabled();
-        expect(save).toEqual(true);
-      });
-
-      it('should return false', function () {
-        spyOn(AACommonService, 'isValid').and.returnValue(false);
-        var save = controller.isSaveEnabled();
-        expect(save).toEqual(false);
-      });
-    });
-  });
 
   describe('isSaveEnabled', function () {
     it('should return true', function () {

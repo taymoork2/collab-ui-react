@@ -9,16 +9,17 @@
       <label class="h4" translate="autoAttendant.initialAnnouncement"></label>
     </div>
     <div class="columns large-8 medium-8">
-     <div class="row">
-      <aa-message-type aa-index="index" aa-schedule="{{schedule}}" aa-menu-id="{{menuId}}" aa-key-index="{{keyIndex}}" id="initialAnnouncement"></aa-message-type>
-     </div>
-     <div class="row">
-      <span class="small-12 columns cs-input__help-text" translate="autoAttendant.initialHelpText"></span>
-     </div>
+      <div class="row">
+        <aa-message-type aa-index="index" aa-schedule="{{schedule}}" aa-menu-id="{{menuId}}" aa-key-index="{{keyIndex}}" id="initialAnnouncement"></aa-message-type>
+      </div>
+      <div class="row">
+       <span class="small-12 columns cs-input__help-text" translate="autoAttendant.initialHelpText"></span>
+      </div>
     </div>
-   </div>
+  </div>
 <hr/>
-	<div class="row">
+  <div class="row">
+    <div class="columns large-4 medium-4">
       <label class="h4 ng-scope" translate="autoAttendant.fallbackLabel"></label>
     </div>
     <div class="columns large-8 medium-8">
@@ -37,11 +38,11 @@
           </div>
         </div>
       </div>
-      <div class="row">
-        <div class="column large-8 medium-10 small-10">
+      <div class="row" class="aa-destination-action">
+        <div class="columns large-8 medium-10 small-10">
           <cs-select id="destinationSelect" ng-model="aaNewTreatmentModalCtrl.destination" name="destinationSelect" options="aaNewTreatmentModalCtrl.destinationOptions" labelfield="label" valuefield="label" icon="icon-chevron-down" placeholder="aaNewTreatmentModalCtrl.selectPlaceholder">
           </cs-select>
-          <div ng-switch="aaNewTreatmentModalCtrl.destination.name" class="aa-destination-action">
+          <div ng-switch="aaNewTreatmentModalCtrl.destination.name">
             <aa-route-to-aa id="destinationMenuRouteAA" ng-switch-when="destinationMenuRouteAA" aa-menu-id="{{menuId}}" aa-index="index" aa-key-index="{{keyIndex}}"></aa-route-to-aa>
             <aa-route-to-hg id="destinationMenuRouteHunt" ng-switch-when="destinationMenuRouteHunt"  aa-menu-id="{{menuId}}" aa-index="index" aa-key-index="{{keyIndex}}"></aa-route-to-hg>
             <aa-route-to-user id="destinationMenuRouteMailbox" ng-switch-when="destinationMenuRouteMailbox" voicemail=true  aa-menu-id="{{menuId}}" aa-index="index" aa-key-index="{{keyIndex}}"></aa-route-to-user>
@@ -51,8 +52,8 @@
         </div>
       </div>
       <div class="row">
-        <div class="column large-8 medium-8">
-         <p class="cs-input__help-text" translate="autoAttendant.destinationHelpMessage"></p> 
+        <div class="columns large-8 medium-8">
+          <p class="cs-input__help-text aa-help-text" translate="autoAttendant.destinationHelpMessage"></p> 
         </div>
       </div>
     </div>
