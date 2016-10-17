@@ -16,6 +16,7 @@
 
   .ct-customer-card {
     width: rem-calc(414px);
+    @include vr-spacing(ml, 2);
     display: flex;
     flex-flow: column;
     .cardHeader1 {
@@ -34,6 +35,9 @@
     }
   }
 
+  .customer-card-layout {
+    left: rem-calc(145px);
+  }
   .customer-preview-article {
     height: rem-calc(500);
   }
@@ -129,7 +133,7 @@
       color: $gray-base;
       line-height: inherit;
       pointer-events: none;
-      position: absolute;
+      position: relative;
     }
     background-color: $white !important;
   }
