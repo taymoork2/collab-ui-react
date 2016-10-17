@@ -5,7 +5,7 @@
 
 'use strict';
 
-describe('incidents:createIncidents', function () {
+xdescribe('incidents:createIncidents', function () {
   var $compile, $scope, $controller, controller, $templateCache, statusService;
   var view;
   var DELETE_BUTTON = '.btn--cta';

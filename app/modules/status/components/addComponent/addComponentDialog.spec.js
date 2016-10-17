@@ -4,7 +4,7 @@
 
 'use strict';
 
-describe('components:addComponents', function () {
+xdescribe('components:addComponents', function () {
   var $compile, $scope, $controller, controller, ComponentsService, statusService, $templateCache, $modalInstance;
   var view;
   var $q;

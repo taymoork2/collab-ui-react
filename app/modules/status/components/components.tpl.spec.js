@@ -4,7 +4,7 @@
 
 'use strict';
 
-describe('components:showComponents', function () {
+xdescribe('components:showComponents', function () {
   var $compile, $scope, $controller, controller, ComponentsService, statusService, $templateCache;
   var view;
   var hasData = 'status-components-list';
