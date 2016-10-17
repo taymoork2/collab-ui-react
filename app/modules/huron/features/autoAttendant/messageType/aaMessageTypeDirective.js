@@ -10,7 +10,9 @@
       restrict: 'AE',
       scope: {
         schedule: '@aaSchedule',
+        menuId: '@aaMenuId',
         index: '=aaIndex',
+        keyIndex: '@aaKeyIndex'
       },
       controller: 'AAMessageTypeCtrl',
       controllerAs: 'aaMessageType',

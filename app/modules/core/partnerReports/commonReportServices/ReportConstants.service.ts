@@ -1,4 +1,5 @@
 import {
+  IFilterObject,
   ITimespan,
 } from '../partnerReportInterfaces';
 
@@ -40,6 +41,24 @@ export class ReportConstants {
   public readonly ALL: string = 'all';
   public readonly ENGAGEMENT: string = 'engagement';
   public readonly QUALITY: string = 'quality';
+
+  // Report Filtering All/Engagement/quality
+  public readonly filterArray: Array<IFilterObject> = [{
+    id: 'allReports',
+    label: 'reportsPage.all',
+    selected: true,
+    toggle: undefined,
+  }, {
+    id: 'engagementReports',
+    label: 'reportsPage.engagement',
+    selected: false,
+    toggle: undefined,
+  }, {
+    id: 'qualityReports',
+    label: 'reportsPage.quality',
+    selected: false,
+    toggle: undefined,
+  }];
 
   /* @ngInject */
   constructor(

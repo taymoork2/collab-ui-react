@@ -2352,6 +2352,8 @@
       "ExternalPhone": "External Phone",
       "Disconnect": "Disconnect"
   },
+    "initialAnnouncement" : "Initial Announcement",
+    "initialHelpText" : "This message will play for the caller upon entry into the queue.",
     "fallbackLabel": "Fallback" ,
     "uploadedFile": "Uploaded File",
     "uploadFailed": "File upload failed, unable to connect. Please try again.",
@@ -2545,7 +2547,7 @@
     "modalDescription": "Paging groups allows a one-way voice path to the phones in the group without waiting for an answer. These phones must all be in the same Multicast group.",
     "createTitle": "Create Paging Group",
     "namePlaceholder": "Name the Paging Group",
-    "nameHint": "Give this paging group an alpha numeric name not including < or >.",
+    "nameHint": "Paging group names may only contain alphanumeric characters (letters, numbers, underscores, hyphens, and spaces).",
     "numberPlaceholder": "Select Paging Group Number",
     "numberHint": "When this number is called, the Paging Group will be called.",
     "cancelHeader": "Cancel Paging Group Creation",
@@ -2553,7 +2555,11 @@
     "confirmButton": "Cancel Creation",
     "continueButton": "Continue Creation",
     "createHelpText": "Create",
-    "numberFetchFailure": "Unable to get numbers."
+    "numberFetchFailure": "Unable to get numbers.",
+    "pagingGroupName": "Paging Group Name",
+    "pagingGroupNumber": "Paging Group Number",
+    "saveLabel": "Do you want to save your changes?",
+    "successUpdate": "'{{pagingGroupName}}' paging group has been updated successfully"
   },
 "telephonyPreview": {
     "lines": "Lines",
@@ -2596,7 +2602,16 @@
     "userError": "User {{user}} was not correctly provisioned.",
     "maxLines": "{{user}} has exceeded the maximum number of lines. Please remove a line from this user before provisioning additional lines.",
     "confirm": "There are unsaved changes on the page. Do you wish to continue?",
-    "unassignedNumberError": "Could not retrieve an unassigned number."
+    "unassignedNumberError": "Could not retrieve an unassigned number.",
+    "getSharedLinesError": "Could not retrieve shared lines for this line.",
+    "getCallForwardError": "Could not retrieve call forward information for this line.",
+    "updateCallForwardError": "Could not update call forward information for this line.",
+    "getLineError": "Could not retrieve details for this line.",
+    "createLineError": "Could not create line.",
+    "updateLineError": "Could not update details for this line.",
+    "createSharedLinesError": "Could not create shared line.",
+    "deleteSharedLineError": "Could not delete shared line member.",
+    "updateSharedLinePhoneError": "Could not update shared line phone list."
   },
   "callForwardPanel": {
     "title": "Call Forwarding",
@@ -2637,7 +2652,7 @@
   "sharedLinePanel": {
     "title": "Shared Line",
     "description": "Simultaneously ring other users' lines when this line is called.",
-    "remove": "Remove member",
+    "remove": "Remove Member",
     "invalidUser": "{{user}} does not have Call service",
     "member": "Shared Line Members",
     "disassociateUser": "Removing this user from the shared line members will immediately remove this line from all of their devices. Are you sure you want to proceed?",
@@ -5394,7 +5409,18 @@
     },
     "vmprefix": "Voicemail Access Prefix",
     "outboundDigit": "Outbound Dial Digit",
-    "areaCode": "Area Code"
+    "areaCode": "Area Code",
+    "customerInfo": "Customer Information",
+    "webOrderId": "Web Order Number",
+    "orderProvision": "Order Provisioned",
+    "accountActivate": "Account Activated",
+    "companyName": "Company Name",
+    "companyId": "Company ID",
+    "adminEmail": "Admin Email",
+    "emailSent": "Last Email Sent",
+    "partnerInfo": "Partner Information",
+    "managedBy": "Managed By",
+    "partnerEmail": "Partner Email"
   },
   "activation": {
     "verificationComplete": "Verification Complete",

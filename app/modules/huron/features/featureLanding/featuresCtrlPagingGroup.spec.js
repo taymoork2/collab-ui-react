@@ -138,4 +138,10 @@ describe('Features Controller', function () {
     featureCtrl.searchData(pagingGroups.paginggroups[0].cardName);
     expect(featureCtrl.listOfFeatures).toEqual([pagingGroups.paginggroups[0]]);
   });
+  it('should be able to edit an PagingGroup ', function () {
+    featureCtrl.editHuronFeature(pagingGroups.paginggroups[0]);
+    expect($state.go).toHaveBeenCalledWith('huronPagingGroupEdit', {
+      feature: pagingGroups.paginggroups[0]
+    });
+  });
 });

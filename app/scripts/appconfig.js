@@ -1931,6 +1931,15 @@
               orgId: null
             }
           })
+          .state('helpdesk.order', {
+            url: '/order/:orderId/:id',
+            templateUrl: 'modules/squared/helpdesk/helpdesk-order.html',
+            controller: 'HelpdeskOrderController',
+            controllerAs: 'helpdeskOrderCtrl',
+            params: {
+              order: null
+            }
+          })
           .state('helpdesk.org', {
             url: '/org/:id',
             templateUrl: 'modules/squared/helpdesk/helpdesk-org.html',
@@ -1939,15 +1948,6 @@
             params: {
               org: null,
               id: null
-            }
-          })
-          .state('helpdesk.order', {
-            url: '/order/:id',
-            templateUrl: 'modules/squared/helpdesk/helpdesk-order.html',
-            controller: 'HelpdeskOrderController',
-            controllerAs: 'helpdeskOrderCtrl',
-            params: {
-              order: null
             }
           })
           .state('helpdesk.cloudberry-device', {
@@ -2395,6 +2395,25 @@
                   require(['modules/huron/features/pagingGroup/pgSetupAssistant'], loadModuleAndResolve($ocLazyLoad, resolve));
                 });
               }
+            }
+          })
+          .state('huronPagingGroupEdit', {
+            url: '/huronPagingGroupEdit',
+            parent: 'main',
+            template: '<pg-edit pg-id="$resolve.pgId"></pg-edit>',
+            resolve: {
+              lazy: /* @ngInject */ function lazyLoad($q, $ocLazyLoad) {
+                return $q(function resolveLogin(resolve) {
+                  require(['modules/huron/features/pagingGroup/edit'], loadModuleAndResolve($ocLazyLoad, resolve));
+                });
+              },
+              pgId: /* @ngInject */ function pgId($stateParams) {
+                var id = _.get($stateParams.feature, 'id');
+                return id;
+              }
+            },
+            params: {
+              feature: null
             }
           });
 

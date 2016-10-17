@@ -12,6 +12,7 @@ describe('Component: lineOverview', () => {
     siteToSite: '71001234',
     incomingCallMaximum: 8,
     primary: true,
+    shared: false,
   };
 
   let existingLineNonPrimary: Line = {
@@ -21,6 +22,7 @@ describe('Component: lineOverview', () => {
     siteToSite: '71006789',
     incomingCallMaximum: 2,
     primary: false,
+    shared: false,
   };
 
   let esnPrefix: string = '7100';
@@ -142,7 +144,7 @@ describe('Component: lineOverview', () => {
     it('should create new line when save button is clicked', function () {
       this.view.find(BUTTON_SAVE).click();
       this.saveDefer.resolve();
-      expect(this.LineOverviewService.save).toHaveBeenCalledWith(LineConsumerType.PLACES, '007', undefined, this.lineOverview);
+      expect(this.LineOverviewService.save).toHaveBeenCalledWith(LineConsumerType.PLACES, '007', undefined, this.lineOverview, []);
     });
 
   });

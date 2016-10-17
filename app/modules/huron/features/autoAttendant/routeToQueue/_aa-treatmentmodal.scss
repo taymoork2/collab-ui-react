@@ -1,20 +1,17 @@
 .aa-queue-settings-modal {
-    & .aa-treatment-modal {
-        @include vr-spacing(mt, .5);
-      }
 
-    & .say-box {
-      height: 7.75rem;
-      @include vr-spacing(mb, 1);
-    }
-    & .aa-selectmin-modal {
+& .aa-treatment-modal {
+     @include vr-spacing(mt, .5);
+}
+& .aa-selectmin-modal {
      width: 9.4rem;
-    }
-    & .aa-selectsec-modal {
+}
+& .aa-selectsec-modal {
      width: 9.84rem;
-    }
-    & .aa-selectmessage-modal {
+}
+& .aa-selectmessage-modal {
      width: 150px;
+}
     }
     & .aa-destination-action {
      padding-top: 1rem;
