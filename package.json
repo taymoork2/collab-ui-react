@@ -32,7 +32,7 @@
     "serve-dist": "./bin/start-lite-server.sh dist",
     "start": "npm run serve --",
     "stats": "webpack --progress --profile --json > stats.json",
-    "stylelint": "stylelint app/**/*.scss",
+    "stylelint": "stylelint './app/**/**/*.scss'",
     "test": "npm run ktest-all",
     "ts-spec-delete": "node ./utils/ts-spec-delete.js",
     "tslint": "tslint --project ./tsconfig.json",
