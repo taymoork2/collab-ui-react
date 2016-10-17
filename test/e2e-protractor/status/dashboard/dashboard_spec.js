@@ -41,12 +41,13 @@ describe('update4 Incident', function () {
     });
 
     it('component status should can be changed', function () {
+        browser.sleep(4000);
         navigation.navigateUsingIntegrationBackend('#/status/dashboard');
         utils.click(dashboardPage.componentStatuses);
         utils.waitForPresence(dashboardPage.selectedStatus, 6000);
         utils.click(dashboardPage.selectedStatus);
         utils.isSelected(element(by.css('.content-area2 a.select-toggle')));
-        utils.waitForPresence(element(by.id('error')), 2000).then(function () {
+        utils.waitForPresence(element(by.id('error')), 3000).then(function () {
         },function (){
         });
     });

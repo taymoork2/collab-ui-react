@@ -134,7 +134,7 @@
       });
     $scope.selectPlaceholder = { label: 'Under Maintenance', value: 'critical' };
 
-    function modifyComponentStatus(scope) {
+    vm.modifyComponentStatus = function (scope) {
       $log.log(scope);
       scope.status = scope.statusObj.value;
       var newComponent = {
@@ -146,7 +146,7 @@
       ).then(function () {
         $window.alert('status of ' + scope.componentName + ' has been changed to ' + scope.status);
       });
-    }
+    };
 
     function changeStatusWithChild(scope, child, num) {
       scope.status = child.status;
@@ -202,7 +202,7 @@
 
     vm.getChildStatus = function (scope, parent) {
       scope.status = scope.statusObj.value;
-      modifyComponentStatus(scope);
+      this.modifyComponentStatus(scope);
       if (!(parent.isOverridden)) {
         return;
       }

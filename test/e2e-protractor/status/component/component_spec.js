@@ -41,7 +41,7 @@ describe('update4 Incident', function () {
     });
     it('delete component should be success', function () {
      navigation.navigateTo('#/status/components');
-      browser.sleep(3000);
+      browser.sleep(3500);
       utils.click(element(by.css('.status a.select-toggle')));
       browser.sleep(3000);
       utils.click(element(by.cssContainingText('.status .select-options li a', 'WebEx Meetings')));

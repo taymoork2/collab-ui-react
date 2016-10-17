@@ -14,8 +14,8 @@ var dashboardPage = function () {
   this.updateIncidentBtn = element(by.css('.incidentInfo a'));
   this.updateIncidentPage = element(by.id('incidentInfo'));
 
-  this.componentStatuses = element.all(by.css('.content-area2 a.select-toggle')).last();
-  this.selectedStatus = element.all(by.css('.content-area2 .select-options li a')).last();
+  this.componentStatuses = element.all(by.css('.testDropdown a.select-toggle')).first();
+  this.selectedStatus = element.all(by.css('.testDropdown .select-options li a')).first();
 };
 
 module.exports = dashboardPage;
