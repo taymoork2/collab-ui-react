@@ -41,7 +41,7 @@
         </div>
         <div class="row">
           <div class="small-11 columns">
-            <div>{{ aaMediaUpload.uploadFile | limitTo: 12 }}{{ aaMediaUpload.uploadFile.length > 15 ? '...' : '' }}</div>
+            <div>{{ aaMediaUpload.uploadFile | limitTo: aaMediaUpload.fileLengthLowerLimit }}{{ aaMediaUpload.uploadFile.length > aaMediaUpload.fileLengthUpperLimit ? '...' : '' }}</div>
           </div>
         </div>
       </div>
@@ -58,7 +58,7 @@
       <div class="row">
         <div class="small-11 columns">
           <div class="aa-top-bottom-push">
-            <span>{{ aaMediaUpload.uploadFile | limitTo: 12 }}{{ aaMediaUpload.uploadFile.length > 15 ? '...' : '' }}</span>
+            <span>{{ aaMediaUpload.uploadFile | limitTo: aaMediaUpload.fileLengthLowerLimit }}{{ aaMediaUpload.uploadFile.length > aaMediaUpload.fileLengthUpperLimit ? '...' : '' }}</span>
             <span>{{ aaMediaUpload.uploadDuration }}</span>
             <span>{{ aaMediaUpload.uploadDate }}</span>
           </div>

@@ -11,6 +11,8 @@
     vm.uploadFile = '';
     vm.uploadDate = '';
     vm.uploadDuration = '';
+    vm.fileLengthLowerLimit = 12;
+    vm.fileLengthUpperLimit = 15;
     vm.WAIT = "WAIT";
     vm.DOWNLOAD = "DOWNLOAD";
     vm.UPLOADED = "UPLOADED";
