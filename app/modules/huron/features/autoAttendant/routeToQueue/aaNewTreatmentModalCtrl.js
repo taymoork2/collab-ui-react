@@ -39,7 +39,6 @@
       action: 'route'
     }];
     vm.destination = vm.destinationOptions[0];
-    vm.maxWaitTime = '15';
     vm.menuEntry = undefined;
     vm.isSaveEnabled = isSaveEnabled;
 
@@ -62,7 +61,13 @@
           label: i + 1
         });
       });
+      //setting maxWaitTime's default value
       vm.maxWaitTime = vm.minutes[14];
+    }
+
+    //populating fallback drop down in sorted order
+    function populateDropDown() {
+      vm.destinationOptions.sort(AACommonService.sortByProperty('label'));
     }
 
     //get queueSettings menuEntry -> inner menu entry type (moh, initial, periodic...)
@@ -86,6 +91,7 @@
 
     function initializeView() {
       populateMaxTime();
+      populateDropDown();
     }
 
     function populateUiModel() {
@@ -96,7 +102,6 @@
 
     function activate() {
       populateUiModel();
-      vm.destinationOptions.sort(AACommonService.sortByProperty('label'));
     }
     activate();
   }

@@ -75,12 +75,8 @@ describe('Controller: AANewTreatmentModalCtrl', function () {
     it('should be defined', function () {
       expect(controller).toBeDefined();
     });
-    it("length of minutes should be 60.", function () {
-      expect(controller).toBeDefined();
-      expect(controller.minutes.length).toEqual(60);
-    });
     it("default value of minute should be 15.", function () {
-      expect(controller.minute.index).toEqual(14);
+      expect(controller.maxWaitTime.index).toEqual(14);
     });
     it("cancel function call results in closing the Modal.", function () {
       controller.cancel();
@@ -97,11 +93,6 @@ describe('Controller: AANewTreatmentModalCtrl', function () {
           expect(controller.destinationOptions[i].label).toEqual(sortedOptions[i].label);
         }
       });
-
-      it("length of FallBack drop down options should be 6", function () {
-        expect(controller.destinationOptions.length).toEqual(6);
-      });
-
     });
 
     describe('isSaveEnabled', function () {
