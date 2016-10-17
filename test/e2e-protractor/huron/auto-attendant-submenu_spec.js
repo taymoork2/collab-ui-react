@@ -262,24 +262,24 @@ describe('Huron Auto Attendant', function () {
     it('should contain two submenus previously created in AA "' + deleteUtils.testAAName, function () {
       expect(autoattendant.phoneMenuAction.count()).toBe(3);
       expect(autoattendant.phoneMenuKeyOptions.count()).toBe(3);
-      expect(autoattendant.phoneMenuKeysContent.get(0).getInnerHtml()).toContain(autoattendant.key0);
-      expect(autoattendant.phoneMenuActionContent.get(0).getInnerHtml()).toContain(autoattendant.repeatMenu);
-      expect(autoattendant.phoneMenuKeysContent.get(1).getInnerHtml()).toContain(autoattendant.key1);
-      expect(autoattendant.phoneMenuActionContent.get(1).getInnerHtml()).toContain(autoattendant.playSubmenu);
-      expect(autoattendant.phoneMenuKeysContent.get(2).getInnerHtml()).toContain(autoattendant.key2);
-      expect(autoattendant.phoneMenuActionContent.get(2).getInnerHtml()).toContain(autoattendant.playSubmenu);
+      expect(autoattendant.phoneMenuKeysContent.get(0).getAttribute('innerHTML')).toContain(autoattendant.key0);
+      expect(autoattendant.phoneMenuActionContent.get(0).getAttribute('innerHTML')).toContain(autoattendant.repeatMenu);
+      expect(autoattendant.phoneMenuKeysContent.get(1).getAttribute('innerHTML')).toContain(autoattendant.key1);
+      expect(autoattendant.phoneMenuActionContent.get(1).getAttribute('innerHTML')).toContain(autoattendant.playSubmenu);
+      expect(autoattendant.phoneMenuKeysContent.get(2).getAttribute('innerHTML')).toContain(autoattendant.key2);
+      expect(autoattendant.phoneMenuActionContent.get(2).getAttribute('innerHTML')).toContain(autoattendant.playSubmenu);
 
       var submenuI = 0;
-      expect(autoattendant.submenuKeysContent(submenuI).get(0).getInnerHtml()).toContain(autoattendant.key0);
-      expect(autoattendant.submenuActionContent(submenuI).get(0).getInnerHtml()).toContain(autoattendant.repeatMenu);
-      expect(autoattendant.submenuKeysContent(submenuI).get(1).getInnerHtml()).toContain(autoattendant.key1);
-      expect(autoattendant.submenuActionContent(submenuI).get(1).getInnerHtml()).toContain(autoattendant.goBack);
+      expect(autoattendant.submenuKeysContent(submenuI).get(0).getAttribute('innerHTML')).toContain(autoattendant.key0);
+      expect(autoattendant.submenuActionContent(submenuI).get(0).getAttribute('innerHTML')).toContain(autoattendant.repeatMenu);
+      expect(autoattendant.submenuKeysContent(submenuI).get(1).getAttribute('innerHTML')).toContain(autoattendant.key1);
+      expect(autoattendant.submenuActionContent(submenuI).get(1).getAttribute('innerHTML')).toContain(autoattendant.goBack);
 
       submenuI = 1;
-      expect(autoattendant.submenuKeysContent(submenuI).get(0).getInnerHtml()).toContain(autoattendant.key0);
-      expect(autoattendant.submenuActionContent(submenuI).get(0).getInnerHtml()).toContain(autoattendant.repeatMenu);
-      expect(autoattendant.submenuKeysContent(submenuI).get(1).getInnerHtml()).toContain(autoattendant.key1);
-      expect(autoattendant.submenuActionContent(submenuI).get(1).getInnerHtml()).toContain(autoattendant.goBack);
+      expect(autoattendant.submenuKeysContent(submenuI).get(0).getAttribute('innerHTML')).toContain(autoattendant.key0);
+      expect(autoattendant.submenuActionContent(submenuI).get(0).getAttribute('innerHTML')).toContain(autoattendant.repeatMenu);
+      expect(autoattendant.submenuKeysContent(submenuI).get(1).getAttribute('innerHTML')).toContain(autoattendant.key1);
+      expect(autoattendant.submenuActionContent(submenuI).get(1).getAttribute('innerHTML')).toContain(autoattendant.goBack);
 
     });
 

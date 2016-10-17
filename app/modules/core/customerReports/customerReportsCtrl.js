@@ -67,10 +67,28 @@
     vm.displayActiveLineGraph = false;
 
     var avgRoomsChart = null;
-    vm.avgRoomStatus = ReportConstants.REFRESH;
+    vm.avgRoomOptions = {
+      animate: false,
+      description: 'avgRooms.avgRoomsDescription',
+      headerTitle: 'avgRooms.avgRooms',
+      id: 'avgRooms',
+      reportType: ReportConstants.BARCHART,
+      state: ReportConstants.REFRESH,
+      table: undefined,
+      titlePopover: ReportConstants.UNDEF,
+    };
 
     var filesSharedChart = null;
-    vm.filesSharedStatus = ReportConstants.REFRESH;
+    vm.filesSharedOptions = {
+      animate: false,
+      description: 'filesShared.filesSharedDescription',
+      headerTitle: 'filesShared.filesShared',
+      id: 'filesShared',
+      reportType: ReportConstants.BARCHART,
+      state: ReportConstants.REFRESH,
+      table: undefined,
+      titlePopover: ReportConstants.UNDEF,
+    };
 
     var mediaChart = null;
     var mediaData = [];
@@ -225,8 +243,8 @@
     function timeUpdate() {
       vm.activeUserStatus = ReportConstants.REFRESH;
       vm.mostActiveUserStatus = ReportConstants.REFRESH;
-      vm.avgRoomStatus = ReportConstants.REFRESH;
-      vm.filesSharedStatus = ReportConstants.REFRESH;
+      vm.avgRoomOptions.state = ReportConstants.REFRESH;
+      vm.filesSharedOptions.state = ReportConstants.REFRESH;
       vm.mediaQualityStatus = ReportConstants.REFRESH;
       vm.deviceStatus = ReportConstants.REFRESH;
       vm.metricStatus = ReportConstants.REFRESH;
@@ -415,10 +433,10 @@
         if (response === ABORT) {
           return;
         } else if (response.length === 0) {
-          vm.avgRoomStatus = ReportConstants.EMPTY;
+          vm.avgRoomOptions.state = ReportConstants.EMPTY;
         } else {
           setAverageGraph(response);
-          vm.avgRoomStatus = ReportConstants.SET;
+          vm.avgRoomOptions.state = ReportConstants.SET;
         }
       });
     }
@@ -435,10 +453,10 @@
         if (response === ABORT) {
           return;
         } else if (response.length === 0) {
-          vm.filesSharedStatus = ReportConstants.EMPTY;
+          vm.filesSharedOptions.state = ReportConstants.EMPTY;
         } else {
           setFilesGraph(response);
-          vm.filesSharedStatus = ReportConstants.SET;
+          vm.filesSharedOptions.state = ReportConstants.SET;
         }
       });
     }
@@ -494,7 +512,7 @@
     }
 
     function setDeviceData() {
-      vm.deviceFilter = [angular.copy(defaultDeviceFilter)];
+      vm.deviceFilter = [_.cloneDeep(defaultDeviceFilter)];
       vm.selectedDevice = vm.deviceFilter[0];
       currentDeviceGraphs = [];
       vm.isDevicesEmpty = true;
@@ -502,7 +520,7 @@
       CustomerReportService.getDeviceData(vm.timeSelected).then(function (response) {
         if (response === ABORT) {
           return;
-        } else if (response.filterArray.length === 0) {
+        } else if (response.emptyGraph) {
           vm.deviceStatus = ReportConstants.EMPTY;
         } else {
           vm.deviceFilter = response.filterArray.sort(function (a, b) {
@@ -527,18 +545,18 @@
     }
 
     function deviceUpdate() {
-      if (currentDeviceGraphs.length > 0 && !currentDeviceGraphs[vm.selectedDevice.value].emptyGraph) {
-        var tempDevicesChart = CustomerGraphService.setDeviceGraph(currentDeviceGraphs, deviceChart, vm.selectedDevice);
-        if (tempDevicesChart !== null && angular.isDefined(tempDevicesChart)) {
-          deviceChart = tempDevicesChart;
-        }
-        vm.deviceStatus = ReportConstants.SET;
-      } else {
+      if (currentDeviceGraphs[vm.selectedDevice.value].emptyGraph) {
         var tempDeviceChart = CustomerGraphService.setDeviceGraph(DummyCustomerReportService.dummyDeviceData(vm.timeSelected), deviceChart);
         if (tempDeviceChart !== null && angular.isDefined(tempDeviceChart)) {
           deviceChart = tempDeviceChart;
         }
         vm.deviceStatus = ReportConstants.EMPTY;
+      } else {
+        var tempDevicesChart = CustomerGraphService.setDeviceGraph(currentDeviceGraphs, deviceChart, vm.selectedDevice);
+        if (tempDevicesChart !== null && angular.isDefined(tempDevicesChart)) {
+          deviceChart = tempDevicesChart;
+        }
+        vm.deviceStatus = ReportConstants.SET;
       }
     }
 

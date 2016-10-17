@@ -189,10 +189,10 @@ describe('Huron Auto Attendant', function () {
     it('should contain two route to queues previously created in AA "' + deleteUtils.testAAName, function () {
       expect(autoattendant.phoneMenuAction.count()).toBe(2);
       expect(autoattendant.phoneMenuKeyOptions.count()).toBe(2);
-      expect(autoattendant.phoneMenuKeysContent.get(0).getInnerHtml()).toContain(autoattendant.key0);
-      expect(autoattendant.phoneMenuActionContent.get(0).getInnerHtml()).toContain(autoattendant.routeToQueue);
-      expect(autoattendant.phoneMenuKeysContent.get(1).getInnerHtml()).toContain(autoattendant.key1);
-      expect(autoattendant.phoneMenuActionContent.get(1).getInnerHtml()).toContain(autoattendant.routeToQueue);
+      expect(autoattendant.phoneMenuKeysContent.get(0).getAttribute('innerHTML')).toContain(autoattendant.key0);
+      expect(autoattendant.phoneMenuActionContent.get(0).getAttribute('innerHTML')).toContain(autoattendant.routeToQueue);
+      expect(autoattendant.phoneMenuKeysContent.get(1).getAttribute('innerHTML')).toContain(autoattendant.key1);
+      expect(autoattendant.phoneMenuActionContent.get(1).getAttribute('innerHTML')).toContain(autoattendant.routeToQueue);
     });
 
     it('should close AA edit and return to landing page', function () {
