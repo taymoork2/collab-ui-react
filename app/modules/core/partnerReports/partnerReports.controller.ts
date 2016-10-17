@@ -12,6 +12,7 @@ import {
   ITimespan,
   ISecondaryReport,
 } from './partnerReportInterfaces';
+let Masonry = require('masonry-layout');
 
 class PartnerReportCtrl {
   // tracking when initialization has completed
@@ -394,7 +395,13 @@ class PartnerReportCtrl {
   private resize(delay: number): void {
     // delayed resize necessary to fix any overlapping cards on smaller screens
     this.$timeout((): void => {
-      $('.cs-card-layout').masonry('layout');
+      const $cardlayout = new Masonry('.cs-card-layout', {
+        itemSelector: '.cs-card',
+        columnWidth: '.cs-card',
+        resize: true,
+        percentPosition: true,
+      });
+      $cardlayout.layout();
     }, delay);
   }
 

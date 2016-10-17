@@ -2,7 +2,7 @@
 
 describe('Care Feature Delete Ctrl', function () {
 
-  var controller, $rootScope, $q, $scope, $stateParams, $timeout, $translate, CareFeatureList, Log, Notification;
+  var controller, $rootScope, $q, $scope, $stateParams, $timeout, $translate, CareFeatureList, Log, Notification, $document;
   var deferred;
 
   var spiedAuthinfo = {
@@ -22,6 +22,12 @@ describe('Care Feature Delete Ctrl', function () {
   beforeEach(angular.mock.module(function ($provide) {
     $provide.value("Authinfo", spiedAuthinfo);
   }));
+
+  beforeEach(function () {
+    /* global document */
+    $document = angular.element(document);
+    $document.find('body').append('<div class="cs-card-layout"></div>');
+  });
 
   beforeEach(inject(function (_$rootScope_, $controller, _$stateParams_, _$timeout_, _$translate_, _$q_, Authinfo, _CareFeatureList_, _Notification_, _Log_) {
     $rootScope = _$rootScope_;

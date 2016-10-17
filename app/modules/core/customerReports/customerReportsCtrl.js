@@ -1,6 +1,8 @@
 (function () {
   'use strict';
 
+  var Masonry = require('masonry-layout');
+
   angular
     .module('Core')
     .controller('CustomerReportsCtrl', CustomerReportsCtrl);
@@ -321,7 +323,14 @@
 
     function resize(delay) {
       $timeout(function () {
-        $('.cs-card-layout').masonry('layout');
+        // $('.cs-card-layout').masonry('layout');
+        var $cardlayout = new Masonry('.cs-card-layout', {
+          itemSelector: '.cs-card',
+          columnWidth: '.cs-card',
+          resize: true,
+          percentPosition: true,
+        });
+        $cardlayout.layout();
       }, delay);
     }
 

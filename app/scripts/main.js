@@ -6,7 +6,7 @@
   angular.module('Core', [
     'angular-cache',
     'atlas.templates',
-    'cisco.ui',
+    'collab.ui',
     'cisco.formly',
     'core.auth',
     'core.body',
