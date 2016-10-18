@@ -3,8 +3,8 @@
     <span class="h2 ct-title-overview" translate="careChatTpl.overview"></span>
   </div>
   <div class="h4 ct-title-desc" translate="careChatTpl.overviewDesc"></div>
-  <div class="ct-sa-content">
-    <cs-card-layout class="overview-card-layout">
+  <div class="ct-sa-content overview-card-layout">
+    <cs-card-layout block-view="true">
       <cs-card ng-repeat="(page, status) in careChatSA.template.configuration.pages" class="medium">
         <article ng-class="{'ct-card-border-enabled': status.enabled ,'ct-card-border-disabled': !status.enabled}" class="ct-card-overview">
           <i ng-class="['icon', 'icon-' + careChatSA.overview.{{page}},'icon-4x','ct-card-img']"></i>
