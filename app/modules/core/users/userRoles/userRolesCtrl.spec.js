@@ -196,10 +196,6 @@ xdescribe('Controller: UserRolesCtrl', function () {
           roleState: 'INACTIVE'
         }),
         Object({
-          roleName: 'Tech_Support',
-          roleState: 'INACTIVE'
-        }),
-        Object({
           roleName: 'Help_Desk',
           roleState: 'INACTIVE'
         }),
