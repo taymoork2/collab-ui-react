@@ -7,6 +7,12 @@
   <div class="columns full">
     <div id="device-usage-timeline-chart" class="device-usage-timeline-chart">
     </div>
+    <div ng-show="deviceUsage.loading" class="loading-indicator">
+      <div class="loading-text">
+        Collecting data
+        <div cs-loader class="loader-example--small"></div>
+      </div>
+    </div>
   </div>
   <div ng-show="deviceUsage.showDevices" class="columns full">
     <div class="table-container">
