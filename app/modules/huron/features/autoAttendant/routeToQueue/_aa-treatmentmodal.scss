@@ -1,18 +1,21 @@
 .aa-queue-settings-modal {
+  & .aa-treatment-modal {
+    @include vr-spacing(mt, .5);
+  }
 
-& .aa-treatment-modal {
-     @include vr-spacing(mt, .5);
-}
-& .aa-selectmin-modal {
-     width: 9.4rem;
-}
-& .aa-selectsec-modal {
-     width: 9.84rem;
-}
-& .aa-selectmessage-modal {
-     width: 150px;
-}
-.columns + .columns:last-child.aa-selectsec-modal {
-     float: left;
-}
+  & .aa-selectmin-modal {
+       width: 9.4rem;
+  }
+
+  & .aa-selectsec-modal {
+       width: 9.84rem;
+  }
+
+  & .aa-selectmessage-modal {
+       width: 150px;
+  }
+
+  .columns + .columns:last-child.aa-selectsec-modal {
+       float: left;
+  }
 }

@@ -1,4 +1,4 @@
-<div class="fusion-cluster-settings">
+<div class="fusion-resource-group-settings">
 
   <cs-page-header title="{{rgsCtrl.localizedTitle}}" back="true" back-url="rgsCtrl.backUrl"></cs-page-header>
 
@@ -15,7 +15,14 @@
 
     <setting-section setting="rgsCtrl.users">
       <h5 class="sub-section__label" translate="hercules.resourceGroupSettings.usersAssign"></h5>
-      <p class="sub-section__description" translate="hercules.resourceGroupSettings.usersDescription"></p>
+      <div class="group-settings-users-description">
+        <p class="sub-section__description" translate="hercules.resourceGroupSettings.usersDescription1"></p>
+        <ul>
+          <li class="sub-section__description" translate="hercules.resourceGroupSettings.usersDescription2" translate-compile></li>
+          <li class="sub-section__description" translate="hercules.resourceGroupSettings.usersDescription3" translate-compile></li>
+        </ul>
+        <p class="sub-section__description" translate="hercules.resourceGroupSettings.usersDescription4"></p>
+      </div>
     </setting-section>
 
     <setting-section setting="rgsCtrl.releaseChannel" ng-if="rgsCtrl.releaseChannelOptions.length > 1 || rgsCtrl.showResetSection || rgsCtrl.channelHasBeenReset">
