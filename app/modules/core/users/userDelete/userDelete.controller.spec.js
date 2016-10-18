@@ -2,7 +2,7 @@
 
 describe('Controller: UserDeleteCtrl', function () {
   var $rootScope, $scope, $q, $controller, $timeout, $translate, controller;
-  var Userservice, HuronUser, Notification;
+  var Userservice, HuronUser, SyncService, Notification;
   var stateParams = {
     deleteUserOrgId: '123',
     deleteUserUuiD: '456',
@@ -12,12 +12,13 @@ describe('Controller: UserDeleteCtrl', function () {
   beforeEach(angular.mock.module('Core'));
   beforeEach(angular.mock.module('Huron'));
   beforeEach(angular.mock.module('Sunlight'));
+  beforeEach(angular.mock.module('Messenger'));
 
   beforeEach(inject(dependencies));
   beforeEach(initSpies);
   beforeEach(initController);
 
-  function dependencies(_$rootScope_, _$q_, _$controller_, _$timeout_, _$translate_, _Userservice_, _HuronUser_, _Notification_) {
+  function dependencies(_$rootScope_, _$q_, _$controller_, _$timeout_, _$translate_, _Userservice_, _HuronUser_, _SyncService_, _Notification_) {
     $rootScope = _$rootScope_;
     $scope = $rootScope.$new();
     $q = _$q_;
@@ -26,6 +27,7 @@ describe('Controller: UserDeleteCtrl', function () {
     $translate = _$translate_;
     Userservice = _Userservice_;
     HuronUser = _HuronUser_;
+    SyncService = _SyncService_;
     Notification = _Notification_;
   }
 
@@ -36,6 +38,7 @@ describe('Controller: UserDeleteCtrl', function () {
     $scope.$close = jasmine.createSpy('$close');
     spyOn(Notification, 'success');
     spyOn(Notification, 'errorResponse');
+    spyOn(SyncService, 'isMessengerSyncEnabled').and.returnValue($q.when(false));
     spyOn($rootScope, '$broadcast').and.callThrough();
     spyOn($translate, 'instant').and.returnValue('YES');
   }
