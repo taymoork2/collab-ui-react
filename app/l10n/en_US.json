@@ -1545,7 +1545,8 @@
     "hybridServiceNames": {
       "squared-fusion-mgmt": "Hybrid Management Service",
       "squared-fusion-uc": "Hybrid Call Service",
-      "squared-fusion-cal": "Hybrid Calendar Service"
+      "squared-fusion-cal": "Hybrid Calendar Service",
+      "hybrid-data-security": "Hybrid Data Security"
     },
     "connectorNames": {
       "squared-fusion-uc": "Call Connector",
@@ -1902,6 +1903,14 @@
       "remove": "Remove"
     },
     "genericFailure": "An unexpected error occurred. Please try again later."
+  },
+  "hds" : {
+    "settings" : {
+      "deactivateService" : "Deactivate Service",
+      "deactivateServiceHeader" : "Deactivate Hybrid Data Security",
+      "deactivateServiceDesc" : "Deactivating Service...",
+      "deactivateServiceButton" : "Deactivate"
+    }
   },
   "ediscovery": {
     "browserTabHeaderTitle": "Spark Activity Reports",
