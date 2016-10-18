@@ -325,6 +325,11 @@
     function _showCarriers(carriers, localScope) {
       _.forEach(carriers, function (carrier) {
         carrier.displayName = (carrier.displayName || carrier.name);
+        if (_.get(carrier, 'offers', []).length > 0) {
+          carrier.name = carrier.offers[0] + '-' + carrier.displayName;
+        } else if (_.get(carrier, 'offers', []).length === 0) {
+          carrier.name = carrier.vendor + '-' + carrier.displayName;
+        }
         localScope.to.options.push(carrier);
       });
       if (localScope.to.options.length === 1) {

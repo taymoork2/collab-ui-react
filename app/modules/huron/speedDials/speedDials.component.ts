@@ -1,5 +1,6 @@
 import { SpeedDialService, ISpeedDial } from './speedDial.service';
-import { IActionItem } from '../../core/components/sectionTitle/sectionTitle.component';
+import { IActionItem } from 'modules/core/components/sectionTitle/sectionTitle.component';
+import { Notification } from 'modules/core/notifications';
 
 interface IValidationMessages {
   required: string;
@@ -27,11 +28,11 @@ class SpeedDialCtrl implements ng.IComponentController {
     private $modal,
     private $translate: ng.translate.ITranslateService,
     private dragularService,
-    private Notification,
+    private Notification: Notification,
     private SpeedDialService: SpeedDialService,
   ) {
 
-    SpeedDialService.getSpeedDials(this.ownerType, this.ownerId).then((data) => {
+    this.SpeedDialService.getSpeedDials(this.ownerType, this.ownerId).then((data) => {
       this.speedDialList = data.speedDials;
     }).catch(() => {
       this.Notification.error('speedDials.retrieveSpeedDialsFail');

@@ -1,10 +1,12 @@
 import { CallForward } from '../../callForward';
 import { BLOCK_CALLERID_TYPE, CUSTOM_COMPANY_TYPE, CallerIdConfig, CallerIdOption } from '../../callerId';
-import { SharedLineUser, User, SharedLineDevice } from '../../sharedLine';
 import { LineService, LineConsumerType, LINE_CHANGE, Line } from '../services';
 import { LineOverviewService, LineOverviewData } from './index';
 import { DirectoryNumberOptionsService } from '../../directoryNumber';
 import { IActionItem } from '../../../core/components/sectionTitle/sectionTitle.component';
+import { Member, MemberService } from '../../members';
+import { SharedLine, SharedLineService } from '../../sharedLine';
+import { Notification } from 'modules/core/notifications';
 
 class LineOverview implements ng.IComponentController {
   private ownerType: string;
@@ -15,16 +17,17 @@ class LineOverview implements ng.IComponentController {
 
   public form: ng.IFormController;
   public saveInProcess: boolean = false;
-  public actionList: IActionItem[];
+  public actionList: Array<IActionItem>;
   public showActions: boolean = false;
   public deleteConfirmation: string;
+  public deleteSharedLineMessage: string;
 
   // Directory Number properties
   public esnPrefix: string;
   public internalIsWarn: boolean;
-  public internalNumbers: string[];
+  public internalNumbers: Array<string>;
   public internalWarnMsg: string;
-  public externalNumbers: string[];
+  public externalNumbers: Array<string>;
   public showExtensions: boolean;
 
   // Call Forward properties
@@ -43,11 +46,7 @@ class LineOverview implements ng.IComponentController {
   public custom_label: string;
 
   //SharedLine Properties
-  public selectedUser: SharedLineUser | undefined;
-  public sharedLineEndpoints: SharedLineDevice[];
-  public devices: string[];
-  public sharedLineUsers: SharedLineUser[];
-  public selectedUsers: SharedLineUser[];
+  public newSharedLineMembers: Array<Member> = [];
 
   // Data from services
   public lineOverviewData: LineOverviewData;
@@ -61,8 +60,9 @@ class LineOverview implements ng.IComponentController {
     private $scope: ng.IScope,
     private $state,
     private $modal,
-    private Notification,
-    private Config
+    private MemberService: MemberService,
+    private Notification: Notification,
+    private SharedLineService: SharedLineService,
   ) {
     this.blockedCallerId_label = $translate.instant('callerIdPanel.blockedCallerId');
     this.companyCallerId_label = $translate.instant('callerIdPanel.companyCallerId');
@@ -108,16 +108,12 @@ class LineOverview implements ng.IComponentController {
   public setDirectoryNumbers(internalNumber: string, externalNumber: string): void {
     this.lineOverviewData.line.internal = internalNumber;
     this.lineOverviewData.line.external = externalNumber;
-    if (this.LineOverviewService.matchesOriginalConfig(this.lineOverviewData)) {
-      this.resetForm();
-    }
+    this.checkForChanges();
   }
 
   public setCallForward(callForward: CallForward): void {
     this.lineOverviewData.callForward = callForward;
-    if (this.LineOverviewService.matchesOriginalConfig(this.lineOverviewData)) {
-      this.resetForm();
-    }
+    this.checkForChanges();
   }
 
   public setSimultaneousCalls(incomingCallMaximum: number): void {
@@ -131,9 +127,40 @@ class LineOverview implements ng.IComponentController {
     this.customCallerIdName = callerIdName;
     this.customCallerIdNumber = callerIdNumber;
     this.callerIdSelected = callerIdSelected;
+    this.checkForChanges();
+  }
+
+  public setNewSharedLineMembers(members): void {
+    this.newSharedLineMembers = members;
+  }
+
+  public setSharedLines(sharedLines): void {
+    this.lineOverviewData.sharedLines = sharedLines;
     if (this.LineOverviewService.matchesOriginalConfig(this.lineOverviewData)) {
       this.resetForm();
+    } else {
+      this.form.$setDirty();
     }
+  }
+
+  public deleteSharedLineMember(sharedLine: SharedLine): void {
+    this.deleteSharedLineMessage = this.$translate.instant('sharedLinePanel.disassociateUser', {
+        line: this.lineOverviewData.line.internal,
+        user: this.ownerName,
+      });
+    this.$modal.open({
+      templateUrl: 'modules/huron/sharedLine/removeSharedLineMember.html',
+      scope: this.$scope,
+      type: 'dialog',
+    }).result.then( () => {
+      return this.SharedLineService.deleteSharedLine(this.consumerType, this.ownerId, this.lineOverviewData.line.uuid, sharedLine.uuid)
+      .then( () => {
+        this.$scope.$emit(LINE_CHANGE);
+        this.initLineOverviewData();
+        this.Notification.success('directoryNumberPanel.disassociationSuccess');
+      })
+      .catch( (response) => this.Notification.errorResponse(response, 'directoryNumberPanel.error'));
+    });
   }
 
   public onCancel(): void {
@@ -141,34 +168,32 @@ class LineOverview implements ng.IComponentController {
       this.$state.go(this.$state.$current.parent.name);
     } else {
       this.lineOverviewData = this.LineOverviewService.getOriginalConfig();
+      this.newSharedLineMembers = [];
       this.resetForm();
     }
   }
 
-  public getUserList(): User[] { ///TODO -- services
-    let users: User[] = [];
-    return users;
-  }
-
-  public selectSharedLineUser(userInfo: SharedLineUser): void {
-    this.selectedUser = undefined;
-
-    if (this.isValidSharedLineUser(userInfo)) {
-      this.selectedUsers.push(userInfo);
-      this.sharedLineUsers.push(userInfo);
-    }
+  public getUserList(name: string): ng.IPromise<Member[]> {
+    return this.MemberService.getMemberList(name)
+      .then(memberList => {
+        return _.reject(memberList, member => {
+          return _.get(member, 'uuid') === this.ownerId ||
+            _.find(this.newSharedLineMembers, { uuid: _.get(member, 'uuid') }) ||
+            _.find(this.lineOverviewData.sharedLines, { uuid: _.get(member, 'uuid') });
+        });
+      });
   }
 
   public saveLine() {
     this.saveInProcess = true;
-    this.LineOverviewService.save(this.consumerType, this.ownerId, this.lineOverviewData.line.uuid, this.lineOverviewData)
+    this.LineOverviewService.save(this.consumerType, this.ownerId, this.lineOverviewData.line.uuid, this.lineOverviewData, this.newSharedLineMembers)
       .then( (lineOverviewData) => {
         this.$scope.$emit(LINE_CHANGE);
         this.lineOverviewData = lineOverviewData;
+        this.newSharedLineMembers = [];
         this.showActions = this.setShowActionsFlag(lineOverviewData.line);
         this.Notification.success('directoryNumberPanel.success');
       })
-      .catch( (response) => this.Notification.errorResponse(response, 'directoryNumberPanel.error'))
       .finally( () => {
         this.saveInProcess = false;
         this.resetForm();
@@ -197,53 +222,10 @@ class LineOverview implements ng.IComponentController {
     });
   }
 
-  private isValidSharedLineUser(userInfo: SharedLineUser): boolean {
-    let isVoiceUser = false;
-    let isValidUser = true;
-
-    _.forEach(userInfo.entitlements, e => {
-
-      if (e === this.Config.entitlements.huron) {
-        isVoiceUser = true;
-      }
-    });
-
-    if (!isVoiceUser || userInfo.uuid === this.$state.currentUser.id) {
-      // Exclude users without Voice service to be shared line User
-      // Exclude current user
-      if (!isVoiceUser) {
-        this.Notification.error('sharedLinePanel.invalidUser', {
-          user: userInfo.name,
-        });
-      }
-      isValidUser = false;
+  private checkForChanges(): void {
+    if (this.LineOverviewService.matchesOriginalConfig(this.lineOverviewData)) {
+      this.resetForm();
     }
-
-    if (isValidUser) {
-      // Exclude selection of already selected users
-      _.forEach(this.selectedUsers, function (user) {
-        if (user.uuid === userInfo.uuid) {
-          isValidUser = false;
-        }
-      });
-      if (isValidUser) {
-        //Exclude current sharedLine users
-        _.forEach(this.sharedLineUsers, function (user) {
-          if (user.uuid === userInfo.uuid) {
-            isValidUser = false;
-          }
-        });
-      }
-    }
-    return isValidUser;
-  }
-
-  public isSingleDevice(): Boolean {
-    return true;
-  }
-
-  public disassociateSharedLineUser(): void {
-
   }
 
   private resetForm(): void {

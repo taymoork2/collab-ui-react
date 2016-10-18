@@ -80,6 +80,7 @@
     servicesetup: true
     sinon: true
     spyOn: true
+    ssowizard: true
     support: true
     telephony: true
     trialextinterest: true

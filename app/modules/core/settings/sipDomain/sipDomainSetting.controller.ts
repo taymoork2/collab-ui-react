@@ -1,3 +1,5 @@
+import { Notification } from 'modules/core/notifications';
+
 export class SipDomainSettingController {
 
   public isError = false;
@@ -18,7 +20,7 @@ export class SipDomainSettingController {
   constructor(
     private $scope,
     private $rootScope,
-    private Notification,
+    private Notification: Notification,
     private Config,
     private Orgservice,
     private SparkDomainManagementService,

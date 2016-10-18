@@ -193,7 +193,6 @@
     }
 
     function deleteItem(item) {
-
       var service = getServiceForDevice(item);
       if (!service) {
         return $q.reject();

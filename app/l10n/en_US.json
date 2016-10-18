@@ -329,6 +329,7 @@
       "404": "does not exist",
       "409": "entitlement previously updated",
       "400094": "already has Call Service under Hybrid Services enabled; having both Call Service and Spark Call enabled for a user is unsupported. To enable Spark Call, disable Call Service for this user and try again.",
+      "deleteUserDnFallbackError": "entitlement update failed. The user's directory number is used as the fallback destination for Hunt Group(s).",
       "other": "not entitled, status: {{status}}"
     }
   },
@@ -349,12 +350,13 @@
     "generateActivationCode": "Generate Activation Code",
     "generateActivationCodeText": "Generate an activation code to enable a new device for this user.",
     "generateActivationCodeTextPlace": "Generate an activation code to enable a new device for this place.",
-    "generateActivationCodeDesc": "If you have lost your code, please generate a new activation code or contact customer support. ",
+    "generateActivationCodeDesc": "If you have lost your code, please generate a new activation code. ",
     "activationCodeTitle": "Activation Code",
     "expires": "Expires",
     "editServices": "Edit services",
     "editServiceTitle": "Services Enabled for {{name}}",
     "siteUris": "WebEx Sites",
+    "pmrTitle": "Personal Meeting Room",
     "webex": "Webex",
     "spark": "Spark",
     "calling": "Calling",
@@ -1034,7 +1036,8 @@
     "turnOff": "Turn Off",
     "overview": "Overview",
     "notAvailable": "N/A",
-    "ciscoCollaborationCloud": "Cisco Collaboration Cloud"
+    "ciscoCollaborationCloud": "Cisco Collaboration Cloud",
+    "trackingId": "Tracking Id: {{trackingId}}."
   },
   "notifications": {
     "success": "Success notifications",
@@ -1102,6 +1105,8 @@
     "setUpDevices": "Activate your devices when they arrive.",
     "setUpSharedDevices": "Activate your collaboration devices when they arrive.",
     "setUpSeaGullDevices": "Activate your Seagull devices when they arrive.",
+    "setUpPMRDescription": "The Personal Meeting Rooms feature has been added to your subscription.",
+    "setUpPMRUrl": "Set Up PMR Now",
     "setUpHybridMediaService": "Hybrid Media Service is available. Extend cloud media to use premises-based resources for calls and meetings.",
     "getStarted": "Get Started"
   },
@@ -1311,12 +1316,16 @@
     "signInButton": "Sign In Again"
   },
   "errors": {
-    "status403": "Authorization failed. You do not have administrator priviledges. You will automatically be logged out in a few seconds.",
     "status401": "Authorization failed. Server unable to process authorization token. You will automatically be logged out in a few seconds.",
+    "status403": "Authorization failed. You do not have administrator priviledges. You will automatically be logged out in a few seconds.",
+    "status404": "Requested resource not found.",
+    "statusCancelled": "The request was cancelled.",
+    "statusOffline": "Your network is currently offline. Please try again.",
+    "statusRejected": "The request was unable to be made. Please try again.",
+    "statusUnknown": "An unknown error has occurred.",
     "serverDown": "Authorization failed. Server may be down, please contact system administrator. You will automatically be logged out in a few seconds.",
     "expired": "Your session is expired or unauthorized. You will automatically be logged out in a few seconds. Please login again to continue using the service.",
     "unsupported": "You are using an <strong>outdated</strong> version of Internet Explorer. Please <a href='http://windows.microsoft.com/en-us/internet-explorer/download-ie' target='_blank'>upgrade your browser</a> to version 11 or higher.",
-    "status404": "Requested resource not found.",
     "statusError": "Request failed with status: {{status}}.",
     "csvError": "Export failed.",
     "videoError": "There is a problem with the video you are trying to play."
@@ -1536,6 +1545,7 @@
       "squared-fusion-mgmt": "Expressway Management Service  "
     },
     "hybridServiceNames": {
+      "squared-fusion-mgmt": "Hybrid Management Service",
       "squared-fusion-uc": "Hybrid Call Service",
       "squared-fusion-cal": "Hybrid Calendar Service"
     },
@@ -2063,6 +2073,10 @@
     "freeCall": "Call Free",
     "freeCare": "None",
     "communicationsSub": "Setup calling service",
+    "setPMRSSetupTitle": "PMR Site Name Set Up",
+    "setPMRSiteURL": "Site URL",
+    "setPMRSiteUrlPlaceholder": "For e.g.: Jane Smith",
+    "pmrSiteURLDomain": ".webex.com",
     "setSipDomainDescription": "Select a subdomain that identifies your company and that will be used to create Spark SIP Addresses.",
     "setSipDomainLink": "What is a Spark SIP Address?",
     "setSipDomainMsg": "Enter a subdomain",
@@ -2344,6 +2358,8 @@
       "ExternalPhone": "External Phone",
       "Disconnect": "Disconnect"
   },
+    "initialAnnouncement" : "Initial Announcement",
+    "initialHelpText" : "This message will play for the caller upon entry into the queue.",
     "fallbackLabel": "Fallback" ,
     "uploadedFile": "Uploaded File",
     "uploadFailed": "File upload failed, unable to connect. Please try again.",
@@ -2522,13 +2538,18 @@
     "saveLabel": "Do you want to save your changes?",
     "memberFetchFailure": "Unable to get members."
   },
+  "callPickup": {
+    "title": "Call Pickup",
+    "code": "PI",
+    "modalDescription": "Call Pickup feature allows users to pick up incoming calls within a group of users."
+  },
   "pagingGroup": {
     "title": "Paging Group",
     "code": "PG",
     "modalDescription": "Paging groups allows a one-way voice path to the phones in the group without waiting for an answer. These phones must all be in the same Multicast group.",
     "createTitle": "Create Paging Group",
     "namePlaceholder": "Name the Paging Group",
-    "nameHint": "Give this paging group an alpha numeric name not including < or >.",
+    "nameHint": "Paging group names may only contain alphanumeric characters (letters, numbers, underscores, hyphens, and spaces).",
     "numberPlaceholder": "Select Paging Group Number",
     "numberHint": "When this number is called, the Paging Group will be called.",
     "cancelHeader": "Cancel Paging Group Creation",
@@ -2536,7 +2557,11 @@
     "confirmButton": "Cancel Creation",
     "continueButton": "Continue Creation",
     "createHelpText": "Create",
-    "numberFetchFailure": "Unable to get numbers."
+    "numberFetchFailure": "Unable to get numbers.",
+    "pagingGroupName": "Paging Group Name",
+    "pagingGroupNumber": "Paging Group Number",
+    "saveLabel": "Do you want to save your changes?",
+    "successUpdate": "'{{pagingGroupName}}' paging group has been updated successfully"
   },
 "telephonyPreview": {
     "lines": "Lines",
@@ -2579,7 +2604,16 @@
     "userError": "User {{user}} was not correctly provisioned.",
     "maxLines": "{{user}} has exceeded the maximum number of lines. Please remove a line from this user before provisioning additional lines.",
     "confirm": "There are unsaved changes on the page. Do you wish to continue?",
-    "unassignedNumberError": "Could not retrieve an unassigned number."
+    "unassignedNumberError": "Could not retrieve an unassigned number.",
+    "getSharedLinesError": "Could not retrieve shared lines for this line.",
+    "getCallForwardError": "Could not retrieve call forward information for this line.",
+    "updateCallForwardError": "Could not update call forward information for this line.",
+    "getLineError": "Could not retrieve details for this line.",
+    "createLineError": "Could not create line.",
+    "updateLineError": "Could not update details for this line.",
+    "createSharedLinesError": "Could not create shared line.",
+    "deleteSharedLineError": "Could not delete shared line member.",
+    "updateSharedLinePhoneError": "Could not update shared line phone list."
   },
   "callForwardPanel": {
     "title": "Call Forwarding",
@@ -2620,7 +2654,7 @@
   "sharedLinePanel": {
     "title": "Shared Line",
     "description": "Simultaneously ring other users' lines when this line is called.",
-    "remove": "Remove member",
+    "remove": "Remove Member",
     "invalidUser": "{{user}} does not have Call service",
     "member": "Shared Line Members",
     "disassociateUser": "Removing this user from the shared line members will immediately remove this line from all of their devices. Are you sure you want to proceed?",
@@ -4284,7 +4318,9 @@
     "webexVersionUseLatestUpdateFailed": "Could not update",
     "selectAWbxClientVersion": "Select a Webex client version",
     "WbxClientVersionOnlyOnNewSites": "This setting only applies to sites that are setup from now on. Existing sites are not impacted.",
-    "webexClientVersion": "Cisco WebEx Application Version"
+    "webexClientVersion": "Cisco WebEx Application Version",
+    "imageUploadFailedSecurity": "Your image upload has failed.",
+    "imageUploadFailed": "Your image upload has failed.  Please select a .png file under 1MB."
   },
   "customerProfile": {
     "supportContacts": "Support Contacts",
@@ -4568,7 +4604,7 @@
     "newFeatureButtonText": "New",
     "featuresNotYetConfiguredPage": {
       "createCT": "Create a Chat Template",
-      "createCTDesc": "A chat template is what your customer will see when chatting with an agent.",
+      "createCTDesc": "A chat template is what your customer sees when chatting with an agent.",
       "new": "New"
     }
   },
@@ -4681,17 +4717,16 @@
   "careChatTpl": {
     "editAction": "Edit",
     "deleteAction": "Delete",
-    "deleteFeature": "Delete {{ featureText }}",
-    "deleteFeatureTextConfirmation": "Are you sure you want to delete the {{ featureName }} {{featureText}} ?",
-    "createSuccessText": "{{ featureName }} Chat Template has been created successfully",
-    "editSuccessText": "{{ featureName }} Chat Template has been updated successfully",
+    "deleteFeatureTextConfirmation": "Are you sure you want to delete the {{ featureName }} {{featureText}}?",
+    "createSuccessText": "{{ featureName }} chat template has been created successfully",
+    "editSuccessText": "{{ featureName }} chat template has been updated successfully",
     "deleteSuccessText": "{{ featureName }} {{ featureText }} has been deleted successfully",
     "deleteFailedText": "Failed to delete {{ featureName }} {{ featureText }}.",
     "messageError": "Message {{ message }}",
     "failedToLoad": "Unable to load {{ featureText }}(s) information",
-    "chatTemplate": "Chat Template",
+    "chatTemplate": "chat template",
     "namePlaceholder": "Name the Chat Template",
-    "nameHint": "This name is for you to uniquely identify this chat template.",
+    "nameHint": "Enter a name for you to identify this chat template",
     "createTitle": "Create Chat Template",
     "editTitle": "Edit Chat Template",
     "profile": "Chat Template Profile",
@@ -4702,14 +4737,14 @@
     "offHours": "Off-Hours",
     "chatStatusMessages": "Chat Status Messages",
     "embedCode": "Embed Code",
-    "profileDesc": "Select how your company will be represented",
-    "overviewDesc": "These are the screens customers will see when they use chat to contact customer care",
-    "customerInfoDesc": "This is the screen a customer fills out before they chat with an agent",
-    "feedbackDesc": "This screen is used to collect feedback from the customer after the chat ends",
+    "profileDesc": "Configure how you want the organization and user profile to be represented for your company",
+    "overviewDesc": "Toggle cards to customize what screens you want your customer to see on contacting Care",
+    "customerInfoDesc": "This is the screen a customer fills in to start chat with an agent",
+    "feedbackDesc": "This screen is used to collect feedback from a customer after the chat ends",
     "agentUnavailableDesc": "This screen is shown to a customer when no agent is available to assist",
     "offHoursDesc": "This screen is shown to a customer during business off-hours",
     "offHoursMessage": "Message",
-    "offHoursDefaultMessage": "We are currently offline, please try during our business hours.",
+    "offHoursDefaultMessage": "We are currently offline. Please try again during our business hours.",
     "businessHours": "Business Hours",
     "open24Hours": "Open 24 hours",
     "offHoursStartTime": "Start Time",
@@ -4722,9 +4757,11 @@
     "cancelHeader": "Cancel",
     "ctCreation": "Creation",
     "ctEditing": "Editing",
-    "ctCreationBody": "chat template creation ",
-    "ctEditBody": "editing of chat template ",
-    "cancelDialog": "Are you sure you want to cancel {{bodyMessage}} ? This chat template will not be saved.",
+    "ctCreationBody": "chat template creation",
+    "ctEditBody": "editing of the chat template",
+    "ctCreationMessage": "This chat template will not be saved.",
+    "ctEditMessage": "Changes will not be saved.",
+    "cancelDialog": "Are you sure you want to cancel {{bodyMessage}}? {{trailingMessage}}",
     "confirmButton": "Cancel {{cancelProcess}}",
     "continueButton": "Continue {{confirmProcess}}",
     "preview": "Preview",
@@ -4735,7 +4772,7 @@
     "defaultOrgText": "Cumulus Customer Care",
     "defaultNameText": "Name",
     "defaultNameHint": "",
-    "defaultEmailText": "Your email or customer ID",
+    "defaultEmailText": "Email",
     "defaultEmail": "e.g. abc@xyz.com",
     "defaultQuestionText": "How may I assist you?",
     "optionalText": "(Optional)",
@@ -4752,22 +4789,22 @@
     "label": "Label",
     "hintText": "Hint Text",
     "type": "Type",
-    "defaultRightCardText": "Select a field on the left to change it's attribute.",
+    "defaultRightCardText": "Select a field in the Preview to change its attributes",
     "profileSelector": "Profile",
     "attributes": "Attributes",
     "org": "Organization",
     "agent": "Agent",
     "agentAlias": "Allow agent to use alias",
-    "agentRealName": "Use agent real name",
-    "agentNamePreview": "Agent Name",
-    "agentAliasPreview": "Agent Alias",
+    "agentRealName": "Use agent’s real name",
+    "agentNamePreview": "Agent",
+    "agentAliasPreview": "Alias",
     "image": "Image",
     "displayText": "Display Text",
     "agentMsg": "Hi, I need help with the MFI key.",
     "agentMsgTime": "10:10 AM",
     "customerMsg": "Sure, I will help you with that.",
     "customerMsgTime": "10:11 AM",
-    "agentEnteredStatus": "Agent has entered chat room",
+    "agentEnteredStatus": "Agent has entered the chat room",
     "typeNewMsg": "Type your message and press enter.",
     "feedbackQuery": "Please rate your chat experience",
     "ratingHintText": "Hint Text",
@@ -4790,7 +4827,7 @@
     "ctOverview": {
       "customerInformation": {
         "title": "Customer Info",
-        "desc": "This is the screen a customer fills out before chatting with an agent"
+        "desc": "This is the screen a customer fills in to start chat with an agent"
       },
       "agentUnavailable": {
         "title": "Agent Unavailable",
@@ -4798,11 +4835,11 @@
       },
       "offHours": {
         "title": "Off-Hours",
-        "desc": "This screen is shown during business off-hours"
+        "desc": "This screen is shown to a customer during business off-hours"
       },
       "feedback": {
         "title": "Feedback",
-        "desc": "This screen is used to collect feedback from the customer after chat ends"
+        "desc": "This screen is used to collect feedback from a customer after the chat ends"
       }
     },
     "summary": "Summary",
@@ -4820,11 +4857,9 @@
     "leaveRoom": "Left the Room",
     "leaveRoomMessage": "Agent has left the chat room",
     "chatting": "Chatting",
-    "chattingMessage": "You are chatting with our agent",
+    "chattingMessage": "You are chatting with our Agent",
     "downloadEmbedCode": "Download Embed Code",
     "embedCodeWarnMsg": "It is important to verify all domains where you want to use chat bubble. You will not be able to embed chat bubble on unverified domains.",
-    "embedCodeWarnMsgContd": "to verify your domains.",
-    "clickHere": "Click here",
     "embedCodeFor": "Embed Code for ",
     "configureOrgLogoMsg": "Go to Settings page to modify your organization logo"
   },
@@ -5212,6 +5247,8 @@
     "customers": "Customers",
     "customerDetails": "Customer Details",
     "userDetails": "User Details",
+    "orders": "Orders",
+    "orderDetails": "Orders Details",
     "badUserSearchInput": "Enter at least three characters per word. To search by name or email, enter two words, for example John Doe or john.doe.",
     "tooManySearchResults": "Search returned too many results. Please narrow your search criteria.",
     "unexpectedError": "An unexpected error occurred",
@@ -5285,6 +5322,7 @@
     "deviceId": "Device ID",
     "placeId": "Place ID",
     "badOrgSearchInput": "Enter at least three characters.",
+    "badOrderSearchInput": "Enter an exact order number. It must start with at least 8 digits or a 'ssw' prefix.",
     "unknown": "Unknown",
     "showMore": "Show more results",
     "delegatedAdministration": "manages {{numManages}} organizations",
@@ -5329,7 +5367,8 @@
       "search-criterias-note": "Note: To search for any Spark system or device, you must first select a customer.",
       "narrow-title": "Select a Customer",
       "narrow-info": "To filter a search to one customer only, start at the main search tool page and search for the customer by display name. Then click <i class='icon icon-search'></i> in the customer's search result card.",
-      "referTo": "Refer to"
+      "referTo": "Refer to",
+      "search-criterias-orders": "<strong>Orders</strong>: Order number must start with at least 8 digits or a 'ssw' prefix. An exact match will be searched."
     },
     "history": {
       "clear": "Clear History",
@@ -5372,7 +5411,18 @@
     },
     "vmprefix": "Voicemail Access Prefix",
     "outboundDigit": "Outbound Dial Digit",
-    "areaCode": "Area Code"
+    "areaCode": "Area Code",
+    "customerInfo": "Customer Information",
+    "webOrderId": "Web Order Number",
+    "orderProvision": "Order Provisioned",
+    "accountActivate": "Account Activated",
+    "companyName": "Company Name",
+    "companyId": "Company ID",
+    "adminEmail": "Admin Email",
+    "emailSent": "Last Email Sent",
+    "partnerInfo": "Partner Information",
+    "managedBy": "Managed By",
+    "partnerEmail": "Partner Email"
   },
   "activation": {
     "verificationComplete": "Verification Complete",

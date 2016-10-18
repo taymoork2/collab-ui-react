@@ -5,7 +5,7 @@
     .controller('UserDeleteCtrl', UserDeleteCtrl);
 
   /* @ngInject */
-  function UserDeleteCtrl($scope, $rootScope, $stateParams, $q, $timeout, Userservice, Notification, Config, $translate, HuronUser, SyncService) {
+  function UserDeleteCtrl($scope, $rootScope, $stateParams, $timeout, Userservice, Notification, $translate, SyncService) {
     var vm = this;
 
     vm.deleteUserOrgId = $stateParams.deleteUserOrgId;
@@ -44,10 +44,7 @@
 
     function deactivateUser() {
       startLoading();
-      // Delete Huron first
-      deleteHuron()
-        .catch(catchNotFound) // If no huron user, delete like normal
-        .then(deleteUser)
+      deleteUser()
         .then(deleteSuccess)
         .then(closeModal)
         .catch(deleteError)
@@ -56,26 +53,6 @@
 
     function startLoading() {
       vm.loading = true;
-    }
-
-    function deleteHuron() {
-      return $q(function (resolve, reject) {
-        Userservice.getUser(vm.deleteUserUuId, function (user) {
-          if (_.includes(user.entitlements, Config.entitlements.huron)) {
-            HuronUser.delete(vm.deleteUserUuId)
-              .then(resolve)
-              .catch(reject);
-          } else {
-            resolve();
-          }
-        });
-      });
-    }
-
-    function catchNotFound(response) {
-      if (_.get(response, 'status') !== 404) {
-        return $q.reject(response);
-      }
     }
 
     function deleteUser() {
@@ -105,8 +82,8 @@
 
     function deleteError(response) {
       var messageKey = 'usersPage.deleteUserError';
-      var errorCode = _.get(response, 'data.details[0].productErrorCode');
-      if (!_.isUndefined(errorCode) && errorCode === 'DN_IS_FALLBACK') {
+      var message = _.get(response, 'data.message');
+      if (_.includes(message, 'DN_IS_FALLBACK')) {
         messageKey = 'usersPage.deleteUserDnFallbackError';
       }
       Notification.errorResponse(response, messageKey);

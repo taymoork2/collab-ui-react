@@ -12,15 +12,16 @@ import {
   IIntervalQuery,
   IReportTypeQuery,
 } from './partnerReportInterfaces';
+import { Notification } from 'modules/core/notifications';
 
 class ReportService {
+  private readonly POSITIVE: string = 'positive';
+  private readonly NEGATIVE: string = 'negative';
+  private readonly ACTIVE_USERS: string = 'activeUsers';
+  private readonly TOPN: string = 'topn';
+
   private activeUserCustomerGraphs = {};
   private overallPopulation: number = 0;
-  private detailed: string = 'detailed';
-  private activeUsers: string = 'activeUsers';
-  private topn: string = 'topn';
-  private POSITIVE = 'positive';
-  private NEGATIVE = 'negative';
   private timeFilter: number | void;
 
   // promise tracking
@@ -38,10 +39,15 @@ class ReportService {
     private $translate: ng.translate.ITranslateService,
     private $q: ng.IQService,
     private CommonReportService,
+    private ReportConstants,
     private chartColors,
-    private Notification,
+    private Notification: Notification,
     private PartnerService
   ) {}
+
+  private getPercentage(numberOne: number, numberTwo: number): number {
+    return Math.round((numberOne / numberTwo) * this.ReportConstants.PERCENTAGE_MULTIPLIER);
+  }
 
   public getCustomerList(): ng.IHttpPromise<any> {
     return this.PartnerService.getManagedOrgsList()
@@ -65,7 +71,7 @@ class ReportService {
     }
     this.activeUserCancelPromise = this.$q.defer();
 
-    let reportOptions: IIntervalQuery = this.CommonReportService.getOptions(filter, this.activeUsers, this.detailed);
+    let reportOptions: IIntervalQuery = this.CommonReportService.getOptions(filter, this.ACTIVE_USERS, this.CommonReportService.DETAILED);
     this.activeUserDetailedPromise = this.CommonReportService.getPartnerReport(reportOptions, null, this.activeUserCancelPromise).then((response) => {
       let data = _.get(response, 'data.data');
       if (data) {
@@ -80,7 +86,7 @@ class ReportService {
         });
 
         // compute overall population percentage for all customers with active users
-        this.overallPopulation = Math.round((overallActive / overallRegistered) * 100);
+        this.overallPopulation = this.getPercentage(overallActive, overallRegistered);
       }
       return;
     }).catch((error: any) => {
@@ -110,18 +116,18 @@ class ReportService {
       let date = _.get(item, 'date');
       let details: any = _.get(item, 'details');
       if (details && date) {
-        let activeUsers = parseInt(details.activeUsers, 10);
-        let totalRegisteredUsers = parseInt(details.totalRegisteredUsers, 10);
+        let activeUsers = parseInt(details.activeUsers, this.ReportConstants.INTEGER_BASE);
+        let totalRegisteredUsers = parseInt(details.totalRegisteredUsers, this.ReportConstants.INTEGER_BASE);
 
         // fix for when totalRegisteredUsers equals 0 due to errors recording the number
         if (totalRegisteredUsers <= 0) {
           let previousTotal = 0;
           let nextTotal = 0;
           if (index !== 0) {
-            previousTotal = parseInt(array[index - 1].details.totalRegisteredUsers, 10);
+            previousTotal = parseInt(array[index - 1].details.totalRegisteredUsers, this.ReportConstants.INTEGER_BASE);
           }
           if (index < (array.length - 1)) {
-            nextTotal = parseInt(array[index + 1].details.totalRegisteredUsers, 10);
+            nextTotal = parseInt(array[index + 1].details.totalRegisteredUsers, this.ReportConstants.INTEGER_BASE);
           }
           if (previousTotal < activeUsers && nextTotal < activeUsers) {
             totalRegisteredUsers = activeUsers;
@@ -136,7 +142,7 @@ class ReportService {
           graphData.push({
             activeUsers: activeUsers,
             totalRegisteredUsers: totalRegisteredUsers,
-            percentage: Math.round((activeUsers / totalRegisteredUsers) * 100),
+            percentage: this.getPercentage(activeUsers, totalRegisteredUsers),
             date: this.CommonReportService.getModifiedDate(date, filter),
             balloon: true,
           });
@@ -147,8 +153,9 @@ class ReportService {
       }
     });
 
-    if (!isNaN(Math.round((totalActive / totalRegistered) * 100)) && Math.round((totalActive / totalRegistered) * 100) >= 0) {
-      populationData.percentage = Math.round((totalActive / totalRegistered) * 100);
+    let percentage: number = this.getPercentage(totalActive, totalRegistered);
+    if (!isNaN(percentage) && percentage >= 0) {
+      populationData.percentage = percentage;
     }
 
     return {
@@ -264,7 +271,7 @@ class ReportService {
           if (graphpoint.date === datapoint.date) {
             graphpoint.totalRegisteredUsers += datapoint.totalRegisteredUsers;
             graphpoint.activeUsers += datapoint.activeUsers;
-            graphpoint.percentage = Math.round((graphpoint.activeUsers / graphpoint.totalRegisteredUsers) * 100);
+            graphpoint.percentage = this.getPercentage(graphpoint.activeUsers, graphpoint.totalRegisteredUsers);
           }
         });
       });
@@ -290,8 +297,8 @@ class ReportService {
       return this.$q.when([]);
     } else {
       // TODO: Remove IIntervalQuery once API is fixed; currently necessary to avoid exceptions from API
-      let extraOptions: IIntervalQuery = this.CommonReportService.getOptions(filter, this.activeUsers, this.topn);
-      let reportOptions: IReportTypeQuery = this.CommonReportService.getReportTypeOptions(filter, this.activeUsers, this.topn);
+      let extraOptions: IIntervalQuery = this.CommonReportService.getOptions(filter, this.ACTIVE_USERS, this.TOPN);
+      let reportOptions: IReportTypeQuery = this.CommonReportService.getReportTypeOptions(filter, this.ACTIVE_USERS, this.TOPN);
 
       return this.CommonReportService.getPartnerReportByReportType(reportOptions, extraOptions, customerArray, this.activeTableCancelPromise).then((response) => {
         let tableData: Array<IActiveTableData> = [];
@@ -299,9 +306,9 @@ class ReportService {
           _.forEach(_.get(org, 'data'), (item) => {
             tableData.push({
               orgName: org.orgName,
-              numCalls: parseInt(item.details.sparkCalls, 10) + parseInt(item.details.sparkUcCalls, 10),
-              totalActivity: parseInt(item.details.totalActivity, 10),
-              sparkMessages: parseInt(item.details.sparkMessages, 10),
+              numCalls: parseInt(item.details.sparkCalls, this.ReportConstants.INTEGER_BASE) + parseInt(item.details.sparkUcCalls, this.ReportConstants.INTEGER_BASE),
+              totalActivity: parseInt(item.details.totalActivity, this.ReportConstants.INTEGER_BASE),
+              sparkMessages: parseInt(item.details.sparkMessages, this.ReportConstants.INTEGER_BASE),
               userName: item.details.userName,
             });
           });
@@ -319,7 +326,7 @@ class ReportService {
     }
     this.qualityCancelPromise = this.$q.defer();
 
-    let reportOptions = this.CommonReportService.getOptions(filter, 'callQuality', this.detailed);
+    let reportOptions = this.CommonReportService.getOptions(filter, 'callQuality', this.CommonReportService.DETAILED);
     return this.CommonReportService.getPartnerReport(reportOptions, customers, this.qualityCancelPromise).then((response) => {
       let data: any = _.get(response, 'data.data');
       if (data) {
@@ -370,10 +377,10 @@ class ReportService {
     _.forEach(orgData, (item) => {
       let details: any = _.get(item, 'details');
       if (details) {
-        let totalSum = parseInt(details.totalDurationSum, 10);
-        let goodSum = parseInt(details.goodQualityDurationSum, 10);
-        let fairSum = parseInt(details.fairQualityDurationSum, 10);
-        let poorSum = parseInt(details.poorQualityDurationSum, 10);
+        let totalSum = parseInt(details.totalDurationSum, this.ReportConstants.INTEGER_BASE);
+        let goodSum = parseInt(details.goodQualityDurationSum, this.ReportConstants.INTEGER_BASE);
+        let fairSum = parseInt(details.fairQualityDurationSum, this.ReportConstants.INTEGER_BASE);
+        let poorSum = parseInt(details.poorQualityDurationSum, this.ReportConstants.INTEGER_BASE);
         let partialSum = fairSum + poorSum;
         let date = _.get(item, 'date');
 
@@ -422,7 +429,7 @@ class ReportService {
       dummy: false,
     };
 
-    let reportOptions = this.CommonReportService.getOptionsOverPeriod(filter, 'callMetrics', this.detailed);
+    let reportOptions = this.CommonReportService.getOptionsOverPeriod(filter, 'callMetrics', this.CommonReportService.DETAILED);
     return this.CommonReportService.getPartnerReport(reportOptions, customers, this.callMetricsCancelPromise).then((response) => {
       let data = _.get(response, 'data.data');
       if (data) {
@@ -447,13 +454,13 @@ class ReportService {
         _.forEach(data, (item) => {
           let details: any = _.get(item, 'data[0].details');
           if (details) {
-            let totalCalls = parseInt(details.totalCalls, 10);
+            let totalCalls = parseInt(details.totalCalls, this.ReportConstants.INTEGER_BASE);
 
             if (totalCalls > 0) {
               transformData.labelData.numTotalCalls += totalCalls;
               transformData.labelData.numTotalMinutes += Math.round(parseFloat(details.totalAudioDuration));
-              transformData.dataProvider[0].value += parseInt(details.totalFailedCalls, 10);
-              transformData.dataProvider[1].value += parseInt(details.totalSuccessfulCalls, 10);
+              transformData.dataProvider[0].value += parseInt(details.totalFailedCalls, this.ReportConstants.INTEGER_BASE);
+              transformData.dataProvider[1].value += parseInt(details.totalSuccessfulCalls, this.ReportConstants.INTEGER_BASE);
               transformDataSet = true;
             }
           }

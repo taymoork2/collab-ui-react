@@ -21,7 +21,7 @@ describe('Controller: HelpdeskOrgController', function () {
   }));
 
   describe('Org controller', function () {
-    // Missing alot of tests here !!!
+    // Missing a lot of tests here !!!
   });
 
   describe('Org controller trials', function () {

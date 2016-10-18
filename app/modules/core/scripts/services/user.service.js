@@ -13,6 +13,7 @@
       updateUsers: updateUsers,
       addUsers: addUsers,
       getUser: getUser,
+      getUserAsPromise: getUserAsPromise,
       updateUserProfile: updateUserProfile,
       inviteUsers: inviteUsers,
       sendEmail: sendEmail,
@@ -27,7 +28,9 @@
       resendInvitation: resendInvitation,
       sendSparkWelcomeEmail: sendSparkWelcomeEmail,
       getUserPhoto: getUserPhoto,
-      isValidThumbnail: isValidThumbnail
+      isValidThumbnail: isValidThumbnail,
+      getFullNameFromUser: getFullNameFromUser,
+      getPrimaryEmailFromUser: getPrimaryEmailFromUser
     };
 
     var _helpers = {
@@ -138,6 +141,11 @@
       }
     }
 
+    // DEPRECATED
+    // - update all callers of this method to use 'getUserAsPromise()' instead, before removing
+    //   this implementataion
+    // - 'getUserAsPromise()' can then assume this name after all callers use promise-style
+    //   chaining
     function getUser(userid, noCache, callback) {
       var scimUrl = UrlConfig.getScimUrl(Authinfo.getOrgId()) + '/' + userid;
       // support the signature getUser(userid, noCache, callback) and getUser(userid, callback)
@@ -158,6 +166,12 @@
           data.status = status;
           callback(data, status);
         });
+    }
+
+    function getUserAsPromise(userId, httpConfig) {
+      var scimUrl = UrlConfig.getScimUrl(Authinfo.getOrgId()) + '/' + userId;
+      var _httpConfig = _.extend({}, httpConfig);
+      return $http.get(scimUrl, _httpConfig);
     }
 
     function updateUserProfile(userid, userData, callback) {
@@ -594,6 +608,28 @@
       return !(_.startsWith(userPhotoValue, 'file:') || _.isEmpty(userPhotoValue));
     }
 
+    function getFullNameFromUser(user) {
+      var givenName = _.get(user, 'name.givenName', '');
+      var familyName = _.get(user, 'name.familyName', '');
+      if (givenName && familyName) {
+        return givenName + ' ' + familyName;
+      }
+      return (user.displayName) ? user.displayName : user.userName;
+    }
+
+    function getPrimaryEmailFromUser(user) {
+      var primaryEmail = _.chain(user)
+        .get('emails')
+        .find({ primary: true })
+        .get('value')
+        .value();
+
+      if (!primaryEmail) {
+        primaryEmail = _.get(user, 'userName');
+      }
+
+      return primaryEmail;
+    }
   }
 
 })();

@@ -1,5 +1,5 @@
 interface IDirectoryNumberOption {
-  value: string | undefined;
+  value: string | null;
   label: string;
 }
 
@@ -30,7 +30,7 @@ class DirectoryNumber implements ng.IComponentController {
     this.placeholder = this.$translate.instant('directoryNumberPanel.chooseNumber');
     this.nonePlaceholder = this.$translate.instant('directoryNumberPanel.none');
     this.noneOption = {
-      value: undefined,
+      value: null,
       label: this.nonePlaceholder,
     };
   }
@@ -122,8 +122,11 @@ class DirectoryNumber implements ng.IComponentController {
 
   private setMatchingExternalNumber(): void {
     let matchingExternalNumber = _.find(this.externalOptions, (externalOption) => {
-      return _.endsWith(externalOption.value, this.internalSelected.value);
+      if (_.isString(externalOption.value) && _.isString(this.internalSelected.value)) {
+        return _.endsWith(externalOption.value, this.internalSelected.value);
+      }
     });
+
     if (matchingExternalNumber) {
       this.externalSelected = matchingExternalNumber;
     }

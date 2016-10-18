@@ -130,6 +130,10 @@
   color: $gray-base;
 }
 
+.feature-icon-color-PI{
+  color: $color-attention-base
+}
+
 .feature-label-container {
   @include vr-spacing(pt, 2);
   color: $color-people-light;

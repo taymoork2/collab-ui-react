@@ -4,10 +4,9 @@ describe('Controller: MediaServiceControllerV2', function () {
   // load the service's module
   beforeEach(angular.mock.module('Mediafusion'));
   beforeEach(angular.mock.module('Huron'));
-  var controller, $scope, httpMock, $q, $modal, $translate;
-  var MediaClusterServiceV2, FusionClusterService;
-  //var serviceId = "squared-fusion-media";
-  beforeEach(inject(function ($rootScope, $state, $controller, _$httpBackend_, _$q_, _$modal_, _$translate_, _FusionClusterService_, _MediaClusterServiceV2_) {
+  var controller, $scope, httpMock, $q, $modal, $translate, Notification;
+  var MediaClusterServiceV2, FusionClusterService, MediaServiceActivationV2;
+  beforeEach(inject(function ($rootScope, $state, $controller, _$httpBackend_, _$q_, _$modal_, _$translate_, _FusionClusterService_, _MediaClusterServiceV2_, _MediaServiceActivationV2_, _Notification_) {
     $scope = $rootScope.$new();
     httpMock = _$httpBackend_;
     $q = _$q_;
@@ -15,9 +14,8 @@ describe('Controller: MediaServiceControllerV2', function () {
     $translate = _$translate_;
     MediaClusterServiceV2 = _MediaClusterServiceV2_;
     FusionClusterService = _FusionClusterService_;
-
-    //$httpBackend.when('GET', 'l10n/en_US.json').respond({});
-    //spyOn(Notification, 'errorResponse');
+    MediaServiceActivationV2 = _MediaServiceActivationV2_;
+    Notification = _Notification_;
     httpMock.when('GET', /^\w+.*/).respond({});
 
     controller = $controller('MediaServiceControllerV2', {
@@ -28,12 +26,11 @@ describe('Controller: MediaServiceControllerV2', function () {
       $modal: $modal,
       $translate: $translate,
       FusionClusterService: FusionClusterService,
-      MediaClusterServiceV2: MediaClusterServiceV2
+      MediaClusterServiceV2: MediaClusterServiceV2,
+      MediaServiceActivationV2: MediaServiceActivationV2,
+      Notification: Notification
     });
   }));
-  afterEach(function () {
-    httpMock.verifyNoOutstandingRequest();
-  });
   it('controller should be defined', function () {
     expect(controller).toBeDefined();
   });
@@ -92,9 +89,62 @@ describe('Controller: MediaServiceControllerV2', function () {
       "targetType": "mf_mgmt"
     }];
     spyOn(MediaClusterServiceV2, 'getClustersByConnectorType').and.returnValue(clusters);
-    httpMock.flush();
     controller.clustersUpdated();
+    httpMock.flush();
     expect(MediaClusterServiceV2.getClustersByConnectorType).toHaveBeenCalled();
-    httpMock.verifyNoOutstandingExpectation();
+  });
+  it('addResourceButtonClicked should open the respective modal', function () {
+    spyOn($modal, 'open');
+    controller.addResourceButtonClicked();
+    expect($modal.open).toHaveBeenCalled();
+  });
+});
+
+describe('Controller: MediaClusterSettingsControllerV2', function () {
+
+  beforeEach(angular.mock.module('Mediafusion'));
+
+  var controller, $modal;
+  var fakeModal = {
+    result: {
+      then: function (okCallback, cancelCallback) {
+        this.okCallback = okCallback;
+        this.cancelCallback = cancelCallback;
+      }
+    },
+    close: function (item) {
+      this.result.okCallback(item);
+    },
+    dismiss: function (type) {
+      this.result.cancelCallback(type);
+    }
+  };
+  beforeEach(inject(function ($controller, _$modal_) {
+    $modal = _$modal_;
+
+    controller = $controller('MediaClusterSettingsControllerV2', {
+      $modal: $modal
+    });
+
+  }));
+  it('controller should be defined', function () {
+    expect(controller).toBeDefined();
+  });
+  it('MediaClusterSettingsControllerV2 showDeregisterDialog should open the respective modal', function () {
+    spyOn($modal, 'open').and.returnValue(fakeModal);
+    controller.showDeregisterDialog();
+    expect($modal.open).toHaveBeenCalled();
+  });
+});
+describe('Controller: MediaAlarmControllerV2', function () {
+
+  beforeEach(angular.mock.module('Mediafusion'));
+
+  var controller;
+  beforeEach(inject(function ($controller) {
+    controller = $controller('MediaAlarmControllerV2', {});
+  }));
+  it('controller should be defined', function () {
+    expect(controller).toBeDefined();
   });
 });
