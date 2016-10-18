@@ -1,4 +1,14 @@
-<div id="device-usage-distribution-chart" style="height: 400px; width: 90%; margin: 0 auto; margin-top: 2rem">
+<!-- TODO: Remove inline styles when final UX has been designed -->
+
+<div>
+  <div id="device-usage-distribution-chart" style="height: 400px; width: 90%; margin: 0 auto; margin-top: 2rem">
+  </div>
+  <div ng-show="deviceUsage.loading" class="loading-indicator">
+    <div class="loading-text">
+      Collecting data
+      <div cs-loader class="loader-example--small"></div>
+    </div>
+  </div>
 </div>
 
 <div style="background:white; width: 90%; margin: 0 auto">
