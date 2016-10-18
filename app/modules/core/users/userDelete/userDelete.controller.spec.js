@@ -88,9 +88,6 @@ describe('Controller: UserDeleteCtrl', function () {
     describe('successful delete', function () {
       beforeEach(deactivateUser);
 
-      it('should call SunlightConfigService.deleteUserConfig', function () {
-        expect(SunlightConfigService.deleteUserConfig).toHaveBeenCalledWith('456');
-      });
       it('should call Userservice.deactivateUser', function () {
         expect(Userservice.deactivateUser).toHaveBeenCalledWith({
           email: stateParams.deleteUsername
@@ -102,21 +99,22 @@ describe('Controller: UserDeleteCtrl', function () {
         });
         expect(Notification.errorResponse).not.toHaveBeenCalled();
       });
+      it('should call SunlightConfigService.deleteUserConfig', function () {
+        expect(SunlightConfigService.deleteUserConfig).toHaveBeenCalledWith('456');
+      });
       it('should refresh the user list', function () {
         expect($rootScope.$broadcast.calls.mostRecent().args).toEqual(['USER_LIST_UPDATED']);
       });
       it('should have closed the modal', function () {
         expect($scope.$close).toHaveBeenCalled();
       });
+
     });
 
     describe('error delete', function () {
       beforeEach(setupDeleteError);
       beforeEach(deactivateUser);
 
-      it('should call SunlightConfigService.deleteUserConfig', function () {
-        expect(SunlightConfigService.deleteUserConfig).toHaveBeenCalledWith('456');
-      });
       it('should call Userservice.deactivateUser', function () {
         expect(Userservice.deactivateUser).toHaveBeenCalledWith({
           email: stateParams.deleteUsername
@@ -125,6 +123,9 @@ describe('Controller: UserDeleteCtrl', function () {
       it('should have notified error', function () {
         expect(Notification.success).not.toHaveBeenCalled();
         expect(Notification.errorResponse).toHaveBeenCalled();
+      });
+      it('should not call SunlightConfigService.deleteUserConfig', function () {
+        expect(SunlightConfigService.deleteUserConfig).not.toHaveBeenCalled();
       });
       it('should not refresh the user list', function () {
         expect($rootScope.$broadcast.calls.mostRecent().args).not.toEqual(['USER_LIST_UPDATED']);

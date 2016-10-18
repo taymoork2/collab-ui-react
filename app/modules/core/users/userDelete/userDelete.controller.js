@@ -43,11 +43,6 @@
       var userData = {
         email: vm.deleteUsername
       };
-      var userId = vm.deleteUserUuId;
-
-      FeatureToggleService.atlasCareTrialsGetStatus().then(function () {
-        SunlightConfigService.deleteUserConfig(userId);
-      });
 
       return Userservice.deactivateUser(userData);
     }
@@ -57,7 +52,20 @@
         email: vm.deleteUsername
       });
 
+      var userId = vm.deleteUserUuId;
+      FeatureToggleService.atlasCareTrialsGetStatus().then(function () {
+        SunlightConfigService.deleteUserConfig(userId);
+      })
+      .then(deleteFromConfigSuccess)
+      .catch(deleteError);
+
       $timeout(refreshUserList, 500);
+    }
+
+    function deleteFromConfigSuccess() {
+      Notification.success('usersPage.deleteUserSuccess', {
+        email: vm.deleteUsername
+      });
     }
 
     function refreshUserList() {
