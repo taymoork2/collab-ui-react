@@ -66,11 +66,6 @@
       }
     });
 
-    vm.futureFeature = {
-      label: 'futureFeature.title',
-      description: 'futureFeature.modalDescription',
-    };
-
     vm.ok = ok;
     vm.cancel = cancel;
     vm.loading = true;

@@ -28,16 +28,6 @@
       flex: 1 1 48%;
     }
   }
-
-  .future-feature{
-    pointer-events: none;
-    background-color: $white;
-    .feature-icon-month {
-      @include vr-spacing(pt, 2.5);
-      margin: 0 auto;
-      color: $gray-light-2;
-    }
-  }
 }
 
 @mixin flex-wrap-fix($flex-basis, $max-viewport-width: 532px) {

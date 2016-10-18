@@ -6,6 +6,7 @@ import {
   IReportTypeQuery,
   ITypeQuery,
 } from '../partnerReportInterfaces';
+import { Notification } from 'modules/core/notifications';
 
 export class CommonReportService {
   // public API helpers
@@ -25,9 +26,9 @@ export class CommonReportService {
   constructor(
     private $http: ng.IHttpService,
     private Authinfo,
+    private Notification: Notification,
     private ReportConstants,
-    private Notification,
-    private UrlConfig
+    private UrlConfig,
   ) {}
 
   private readonly usageOptions: Array<string> = ['weeklyUsage', 'monthlyUsage', 'threeMonthUsage'];

@@ -692,18 +692,16 @@
 
           _.forEach(item.details, function (detail) {
             var registeredDevices = parseInt(detail.totalRegisteredDevices, ReportConstants.INTEGER_BASE);
-            if (registeredDevices > 0) {
-              tempGraph.emptyGraph = false;
-              deviceArray.graphData[0].emptyGraph = false;
-              var modifiedDate = CommonReportService.getModifiedDate(detail.recordTime, filter);
+            var modifiedDate = CommonReportService.getModifiedDate(detail.recordTime, filter);
 
-              _.forEach(tempGraph.graph, function (graphPoint, index) {
-                if (graphPoint.date === modifiedDate) {
-                  graphPoint.totalRegisteredDevices = registeredDevices;
-                  deviceArray.graphData[0].graph[index].totalRegisteredDevices += registeredDevices;
-                }
-              });
-            }
+            _.forEach(tempGraph.graph, function (graphPoint, index) {
+              if (graphPoint.date === modifiedDate && (registeredDevices > 0)) {
+                graphPoint.totalRegisteredDevices = registeredDevices;
+                deviceArray.graphData[0].graph[index].totalRegisteredDevices += registeredDevices;
+                tempGraph.emptyGraph = false;
+                deviceArray.graphData[0].emptyGraph = false;
+              }
+            });
           });
           deviceArray.graphData.push(tempGraph);
         });

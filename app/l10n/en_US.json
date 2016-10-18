@@ -1314,12 +1314,16 @@
     "signInButton": "Sign In Again"
   },
   "errors": {
-    "status403": "Authorization failed. You do not have administrator priviledges. You will automatically be logged out in a few seconds.",
     "status401": "Authorization failed. Server unable to process authorization token. You will automatically be logged out in a few seconds.",
+    "status403": "Authorization failed. You do not have administrator priviledges. You will automatically be logged out in a few seconds.",
+    "status404": "Requested resource not found.",
+    "statusCancelled": "The request was cancelled.",
+    "statusOffline": "Your network is currently offline. Please try again.",
+    "statusRejected": "The request was unable to be made. Please try again.",
+    "statusUnknown": "An unknown error has occurred.",
     "serverDown": "Authorization failed. Server may be down, please contact system administrator. You will automatically be logged out in a few seconds.",
     "expired": "Your session is expired or unauthorized. You will automatically be logged out in a few seconds. Please login again to continue using the service.",
     "unsupported": "You are using an <strong>outdated</strong> version of Internet Explorer. Please <a href='http://windows.microsoft.com/en-us/internet-explorer/download-ie' target='_blank'>upgrade your browser</a> to version 11 or higher.",
-    "status404": "Requested resource not found.",
     "statusError": "Request failed with status: {{status}}.",
     "csvError": "Export failed.",
     "videoError": "There is a problem with the video you are trying to play."
@@ -2536,10 +2540,6 @@
     "title": "Call Pickup",
     "code": "PI",
     "modalDescription": "Call Pickup feature allows users to pick up incoming calls within a group of users."
-  },
-  "futureFeature":{
-    "title": "Future Feature",
-    "modalDescription": "Amazing new Spark Call feature coming soon"
   },
   "pagingGroup": {
     "title": "Paging Group",
