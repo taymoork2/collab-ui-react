@@ -2459,6 +2459,11 @@
             controllerAs: 'hdsSettings',
             url: '/services/hds/settings',
             parent: 'main',
+            resolve: {
+              hasHDSFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridDataSecurity);
+              }
+            }
           })
           .state('mediafusion-settings', {
             url: '/services/cluster/mediafusion/:id/settings',

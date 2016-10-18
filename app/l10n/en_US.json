@@ -1909,7 +1909,8 @@
       "deactivateService" : "Deactivate Service",
       "deactivateServiceHeader" : "Deactivate Hybrid Data Security",
       "deactivateServiceDesc" : "Deactivating Service...",
-      "deactivateServiceButton" : "Deactivate"
+      "deactivateServiceButton" : "Deactivate",
+      "deactivateServiceConfirmation" : "Confirm Deactivation"
     }
   },
   "ediscovery": {
