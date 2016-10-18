@@ -14,16 +14,26 @@
       $state.go('login');
     }
 
-    vm.tabs = [{
-      title: $translate.instant('reportsPage.usageReports.overview'),
-      state: "reports.device-usage.overview"
+    vm.headerTabs = [{
+      title: $translate.instant('reportsPage.sparkReports'),
+      state: 'reports'
     }, {
-      title: $translate.instant('reportsPage.usageReports.timeline'),
-      state: "reports.device-usage.timeline"
-    }, {
-      title: $translate.instant('reportsPage.usageReports.distribution'),
-      state: "reports.device-usage.distribution"
+      title: $translate.instant('reportsPage.usageReports.usageReportTitle'),
+      state: 'reports.device-usage.timeline'
     }];
+
+    vm.tabs = [
+      // {
+      // title: $translate.instant('reportsPage.usageReports.overview'),
+      // state: "reports.device-usage.overview"
+      // },
+      {
+        title: $translate.instant('reportsPage.usageReports.timeline'),
+        state: "reports.device-usage.timeline"
+      }, {
+        title: $translate.instant('reportsPage.usageReports.distribution'),
+        state: "reports.device-usage.distribution"
+      }];
 
     vm.pageTitle = $translate.instant('reportsPage.usageReports.usageReportTitle');
 
