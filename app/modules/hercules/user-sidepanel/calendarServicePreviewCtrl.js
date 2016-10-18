@@ -6,7 +6,7 @@
     .controller('CalendarServicePreviewCtrl', CalendarServicePreviewCtrl);
 
   /*@ngInject*/
-  function CalendarServicePreviewCtrl($scope, $state, $stateParams, Userservice, Notification, USSService, ClusterService, $translate, ResourceGroupService, FeatureToggleService) {
+  function CalendarServicePreviewCtrl($scope, $state, $stateParams, Authinfo, Userservice, Orgservice, Notification, USSService, ClusterService, $translate, ResourceGroupService, FeatureToggleService) {
     $scope.entitlementNames = {
       'squared-fusion-cal': 'squaredFusionCal',
       'squared-fusion-uc': 'squaredFusionUC'
@@ -53,8 +53,34 @@
 
     $scope.extension = {
       id: $stateParams.extensionId,
-      entitled: isEntitled()
+      entitled: isEntitled(),
+      defaultWebExSiteName: $translate.instant('hercules.cloudExtensions.defaultWebExSiteNotSet')
     };
+
+    function initDefaultWebExSiteName() {
+      var defaultWebExSiteName;
+      if (!_.isEmpty($scope.currentUser.userPreferences)) {
+        defaultWebExSiteName = _.find($scope.currentUser.userPreferences, function (userPreference) {
+          return userPreference.indexOf("calSvcPreferredWebexSite") > 0;
+        });
+        if (defaultWebExSiteName !== undefined) {
+          defaultWebExSiteName = defaultWebExSiteName.substring(defaultWebExSiteName.indexOf(":") + 1).replace(/"/g, '');
+          $scope.extension.defaultWebExSiteName = defaultWebExSiteName;
+        }
+      }
+
+      if (defaultWebExSiteName === undefined) {
+        Orgservice.getOrg(_.noop, Authinfo.getOrgId(), true)
+          .then(function (response) {
+            if (_.get(response, 'data.orgSettings.calSvcDefaultWebExSite')) {
+              defaultWebExSiteName = response.data.orgSettings.calSvcDefaultWebExSite;
+              $scope.extension.defaultWebExSiteName = defaultWebExSiteName;
+            }
+          });
+      }
+    }
+
+    initDefaultWebExSiteName();
 
     $scope.$watch('extension.entitled', function (newVal, oldVal) {
       if (newVal !== oldVal) {
