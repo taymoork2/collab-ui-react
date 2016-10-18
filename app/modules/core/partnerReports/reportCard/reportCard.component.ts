@@ -1,6 +1,7 @@
 import {
   ITimespan,
   IReportCard,
+  IReportDropdown,
   IReportSortOption,
   ISecondaryReport,
 } from '../partnerReportInterfaces';
@@ -8,6 +9,7 @@ import {
 class ReportCardCtrl {
   // overall Report Variables
   public options: IReportCard;
+  public dropdown: IReportDropdown;
   public show: boolean = true;
   public time: ITimespan;
 
@@ -198,6 +200,7 @@ angular.module('Core')
     templateUrl: 'modules/core/partnerReports/reportCard/reportCard.tpl.html',
     controller: ReportCardCtrl,
     bindings: {
+      dropdown: '<',
       options: '<',
       secondaryOptions: '<',
       resizePage: '&',

@@ -28,7 +28,7 @@
     var filesBalloon = graphTextSpan + $translate.instant('filesShared.filesShared') + ' <span class="graph-number">[[contentShared]]</span><br>' + $translate.instant('filesShared.fileSizes') + ' <span class="graph-number">[[contentShareSizes]] ' + $translate.instant('filesShared.gb ') + '</span></span>';
 
     // variables for media Quality
-    var mediaQualityDiv = 'mediaQualityDiv';
+    var mediaQualityDiv = 'mediaQualityChart';
 
     // variables for Call Metrics
     var metricsGraphDiv = 'metricsGraphDiv';
@@ -36,7 +36,7 @@
     var metricsLabelText = '[[percents]]%<br>[[callCondition]]';
 
     // variables for device registration
-    var devicesDiv = 'devicesDiv';
+    var devicesDiv = 'devicesChart';
     var deviceBalloonText = graphTextSpan + $translate.instant('registeredEndpoints.registeredEndpoints') + ' <span class="device-number">[[totalRegisteredDevices]]</span></span>';
 
     return {
@@ -360,7 +360,7 @@
     function setMediaQualityGraph(data, chart, filter) {
       if (_.isArray(data) && data.length > 0 && chart) {
         chart.startDuration = 1;
-        if (data[0].colorOne !== undefined && data[0].colorOne !== null) {
+        if (!data[0].balloon) {
           chart.startDuration = 0;
         }
 
@@ -383,7 +383,7 @@
       valueAxes[0].title = $translate.instant('mediaQuality.minutes');
 
       var startDuration = 1;
-      if (data[0].colorOne !== undefined && data[0].colorOne !== null) {
+      if (!data[0].balloon) {
         startDuration = 0;
       }
 
