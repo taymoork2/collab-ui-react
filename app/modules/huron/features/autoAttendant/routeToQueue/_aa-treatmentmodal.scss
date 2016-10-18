@@ -3,11 +3,6 @@
     @include vr-spacing(mt, .5);
   }
 
-  & .aa-inset-modal {
-    padding-right: 10%;
-    padding-left: 10%;
-  }
-
   & .aa-selectmin-modal {
        width: 9.4rem;
   }
@@ -15,7 +10,7 @@
   & .aa-selectsec-modal {
        width: 9.84rem;
   }
-  
+
   & .aa-selectmessage-modal {
        width: 150px;
   }
