@@ -12,11 +12,19 @@
 & .aa-selectmessage-modal {
      width: 150px;
 }
-& .aa-destination-menu {
-     padding-bottom: 0.5rem;
-}
-& .aa-destination-action {
-     @include vr-spacing(pb, 1);
+& .aa-destination-container {
+     width: 100%;
+     & .csSelect-container {
+       @include vr-spacing(pt, 1);
+     }
+
+     & form {
+       @include vr-spacing(mb, 0);
+
+       & .form-group {
+         @include vr-spacing(mb, .25);
+       }
+     }
 }
 .columns + .columns:last-child.aa-selectsec-modal {
      float: left;

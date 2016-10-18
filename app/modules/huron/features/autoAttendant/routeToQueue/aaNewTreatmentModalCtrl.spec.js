@@ -93,16 +93,16 @@ describe('Controller: AANewTreatmentModalCtrl', function () {
     });
   });
 
-    describe('FallBack', function () {
-      it('test for default option as Disconnect', function () {
-        expect(controller.destinationOptions[0].name).toEqual('Disconnect');
-      });
-      it('test for sorted order options in dropdown', function () {
-        for (var i = 1; i < sortedOptions.length; i++) {
-          expect(controller.destinationOptions[i].label).toEqual(sortedOptions[i].label);
-        }
-      });
+  describe('FallBack', function () {
+    it('test for default option as Disconnect', function () {
+      expect(controller.destinationOptions[0].name).toEqual('Disconnect');
     });
+    it('test for sorted order options in dropdown', function () {
+      for (var i = 1; i < sortedOptions.length; i++) {
+        expect(controller.destinationOptions[i].label).toEqual(sortedOptions[i].label);
+      }
+    });
+  });
 
   describe('isSaveEnabled', function () {
     it('should return true', function () {
