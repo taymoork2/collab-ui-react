@@ -7,7 +7,7 @@
 
   /* @ngInject */
   function HDSDeactivateController($log) {
-    var vm = this;
+    //var vm = this;
     $log.info('Started dialog');
   }
 }());
