@@ -20,7 +20,7 @@
       editChatTemplate: editChatTemplate,
       createUserInfo: createUserInfo,
       getChatConfig: getChatConfig,
-      deleteUserConfig: deleteUserConfig
+      deleteUser: deleteUser
     };
 
     return service;
@@ -50,7 +50,7 @@
       return $http.get(sunlightChatConfigUrl);
     }
 
-    function deleteUserConfig(userId) {
+    function deleteUser(userId) {
       return $http.delete(sunlightUserConfigUrl + '/' + userId);
     }
   }

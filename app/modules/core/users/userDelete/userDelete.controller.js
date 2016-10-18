@@ -5,7 +5,7 @@
     .controller('UserDeleteCtrl', UserDeleteCtrl);
 
   /* @ngInject */
-  function UserDeleteCtrl($scope, $rootScope, $stateParams, $timeout, Userservice, Notification, $translate, SunlightConfigService, FeatureToggleService) {
+  function UserDeleteCtrl($scope, $rootScope, $stateParams, $timeout, Authinfo, Userservice, Notification, $translate, SunlightConfigService, FeatureToggleService) {
     var vm = this;
 
     vm.deleteUserOrgId = $stateParams.deleteUserOrgId;
@@ -53,17 +53,27 @@
       });
 
       var userId = vm.deleteUserUuId;
-      FeatureToggleService.atlasCareTrialsGetStatus().then(function () {
-        SunlightConfigService.deleteUserConfig(userId);
-      })
-      .then(deleteFromConfigSuccess)
-      .catch(deleteError);
 
+      FeatureToggleService.atlasCareTrialsGetStatus()
+      .then(function (careStatus) {
+        var isCareEnabled = Authinfo.isCare() && careStatus;
+        if (isCareEnabled) {
+          SunlightConfigService.deleteUser(userId)
+          .then(deleteFromCareSuccess)
+          .catch(deleteFromCareFailure);
+        }
+      });
       $timeout(refreshUserList, 500);
     }
 
-    function deleteFromConfigSuccess() {
-      Notification.success('usersPage.deleteUserSuccess', {
+    function deleteFromCareSuccess() {
+      Notification.success('usersPage.deleteCareUserSuccess', {
+        email: vm.deleteUsername
+      });
+    }
+
+    function deleteFromCareFailure() {
+      Notification.error('usersPage.deleteCareUserFailure', {
         email: vm.deleteUsername
       });
     }
