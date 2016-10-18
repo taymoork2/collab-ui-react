@@ -19,7 +19,7 @@
       state: 'reports'
     }, {
       title: $translate.instant('reportsPage.usageReports.usageReportTitle'),
-      state: 'reports.device-usage.timeline'
+      state: 'reports.device-usage'
     }];
 
     vm.tabs = [
