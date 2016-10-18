@@ -121,20 +121,22 @@ class LineOverview implements ng.IComponentController {
   }
 
   public deleteSharedLineMember(sharedLine: SharedLine): void {
-    this.deleteSharedLineMessage = this.$translate.instant('sharedLinePanel.disassociateUser', {
-        line: this.lineOverviewData.line.internal,
-        user: this.ownerName,
-      });
+    this.deleteSharedLineMessage = this.$translate.instant('sharedLinePanel.disassociateUser');
     this.$modal.open({
       templateUrl: 'modules/huron/sharedLine/removeSharedLineMember.html',
       scope: this.$scope,
       type: 'dialog',
     }).result.then( () => {
+      let redirect: boolean = _.isEqual(this.ownerId, _.get(sharedLine, 'place.uuid')) || _.isEqual(this.ownerId, _.get(sharedLine, 'user.uuid'));
       return this.SharedLineService.deleteSharedLine(this.consumerType, this.ownerId, this.lineOverviewData.line.uuid, sharedLine.uuid)
       .then( () => {
         this.$scope.$emit(LINE_CHANGE);
-        this.initLineOverviewData();
         this.Notification.success('directoryNumberPanel.disassociationSuccess');
+        if (redirect) {
+          this.$state.go(this.$state.$current.parent.name);
+        } else {
+          this.initLineOverviewData();
+        }
       })
       .catch( (response) => this.Notification.errorResponse(response, 'directoryNumberPanel.error'));
     });
