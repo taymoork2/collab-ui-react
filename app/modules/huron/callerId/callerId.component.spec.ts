@@ -6,27 +6,27 @@ describe('component: callerId', () => {
 
   beforeEach(function() {
     this.initModules('huron.caller-id');
-    this.injectDependencies('$scope', '$timeout');
+    this.injectDependencies('$scope', '$timeout', '$q', 'CallerIDService');
     this.$scope.onChangeFn = jasmine.createSpy('onChangeFn');
+    this.$scope.myForm = {
+      $dirty: true,
+    };
     this.$scope.callerIdOptions = [{
       label: 'Custom',
-      value: {
-        name: '',
-        externalCallerIdType: 'Custom',
-      },
+      value: 'EXT_CALLER_ID_CUSTOM',
     }, {
       label: 'Blocked Outbound Caller ID',
-      value: {
-        name: 'Caller will not see any caller ID or number',
-        externalCallerIdType: 'Blocked Outbound Caller ID',
-      },
+      value: 'EXT_CALLER_ID_BLOCKED_CALLER_ID',
     }];
+    this.$scope.companyNumbers = [];
+    this.$scope.callerIdSelected = 'EXT_CALLER_ID_BLOCKED_CALLER_ID';
     this.compileComponent('ucCallerId', {
       callerIdOptions: 'callerIdOptions',
       callerIdSelected: 'callerIdSelected',
       customCallerIdName: 'customCallerIdName',
       customCallerIdNumber: 'customCallerIdNumber',
       onChangeFn: 'onChangeFn(callerIdSelected, customCallerIdName, customCallerIdNumber)',
+      companyNumbers: 'companyNumbers',
     });
   });
 
@@ -57,5 +57,16 @@ describe('component: callerId', () => {
       'Field',
       '8179325799'
     );
+  });
+
+  it('showCustom returns whether its a custom or not', function() {
+    this.controller.callerIdSelected = {
+      label: 'Custom',
+    };
+    expect(this.controller.showCustom()).toBe(true);
+    this.controller.callerIdSelected = {
+      label: 'Blocked Outbound Caller ID',
+    };
+    expect(this.controller.showCustom()).toBe(false);
   });
 });

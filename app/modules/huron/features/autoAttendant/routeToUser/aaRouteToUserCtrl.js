@@ -6,7 +6,7 @@
     .controller('AARouteToUserCtrl', AARouteToUserCtrl);
 
   /* @ngInject */
-  function AARouteToUserCtrl($scope, $translate, AAUiModelService, AutoAttendantCeMenuModelService, $q, Authinfo, Userservice, UserListService, UserServiceVoice, AACommonService, LineService) {
+  function AARouteToUserCtrl($scope, $translate, AAUiModelService, AutoAttendantCeMenuModelService, $q, Authinfo, Userservice, UserListService, UserServiceVoice, AACommonService, LineResource) {
 
     var vm = this;
 
@@ -143,7 +143,7 @@
 
     // get extension's voicemail profile
     function getVoicemailProfile(pattern) {
-      return LineService.query({
+      return LineResource.query({
         customerId: Authinfo.getOrgId(),
         pattern: pattern
       }).$promise.then(
