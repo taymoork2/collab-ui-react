@@ -18,7 +18,7 @@
     icon: 'icon-bell',
     title: 'tabs.statusTab',
     desc: 'tabs.statusTabDesc',
-    feature: 'global-status',
+    feature: 'atlas-global-status',
     state: 'status',
     link: '/status'
   }, {

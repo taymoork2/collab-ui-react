@@ -151,7 +151,7 @@
       webexCSV: 'webex-CSV',
       enableCrashLogs: 'csdm-enable-crash-logs',
       csdmPlaces: 'csdm-places',
-      globalStatus: 'global-status',
+      globalStatus: 'atlas-global-status',
       atlasF237ResourceGroups: 'atlas-f237-resource-group',
       huronLocalDialing: 'huron-local-dialing',
       huronDeviceE911: 'huron-device-e911-address'
