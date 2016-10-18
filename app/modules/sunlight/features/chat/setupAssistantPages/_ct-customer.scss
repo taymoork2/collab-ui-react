@@ -314,5 +314,8 @@
   .cs-input-group {
     @include vr-spacing(mb, 0.5);
   }
+  .customer-card-layout {
+    display: inline;
+  }
 }
 
