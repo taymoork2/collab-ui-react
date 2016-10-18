@@ -101,15 +101,22 @@ describe('Controller: aaBuilderNameCtrl', function () {
       expect(controller.ui.ceInfo.name).toEqual(testGroupName);
     });
 
-    it('should set flag false and broadcast AANameCreated Event when record is saved ', function () {
+    it('should set canCreateAA false and broadcast AANameCreated Event when record is saved ', function () {
       controller.name = testGroupName;
-      expect(controller.flag).toEqual(true);
+      expect(controller.canCreateAA).toEqual(true);
       controller.saveAARecord();
-      expect(controller.flag).toEqual(false);
+      expect(controller.canCreateAA).toEqual(false);
       expect($rootScope.$broadcast).toHaveBeenCalledWith('AANameCreated');
       $rootScope.$broadcast.calls.reset();
       controller.saveAARecord();
       expect($rootScope.$broadcast).not.toHaveBeenCalledWith('AANameCreated');
+    });
+
+    it('should set canCreateAA to true when record is not saved ', function () {
+      controller.name = testGroupName;
+      controller.canCreateAA = false;
+      $rootScope.$broadcast('AACreationFailed');
+      expect(controller.canCreateAA).toEqual(true);
     });
     /*  Commented out as code references AutoAttendant.saveAARecords()
      *

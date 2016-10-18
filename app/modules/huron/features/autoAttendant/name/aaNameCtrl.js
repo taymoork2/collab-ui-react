@@ -21,7 +21,7 @@
     vm.nextPage = nextPage;
     vm.evalKeyPress = evalKeyPress;
     vm.name = '';
-    vm.flag = true;
+    vm.canCreateAA = true;
 
     /////////////////////
 
@@ -31,15 +31,15 @@
         return;
       }
 
-      if (vm.flag) {
+      if (vm.canCreateAA) {
         saveUiModel();
-        vm.flag = false;
+        vm.canCreateAA = false;
         $rootScope.$broadcast('AANameCreated');
       }
     }
 
     $scope.$on('AACreationFailed', function () {
-      vm.flag = true;
+      vm.canCreateAA = true;
     });
 
     function saveUiModel() {
@@ -58,7 +58,7 @@
     }
 
     function nextButton() {
-      if (vm.name === '' || vm.flag === false) {
+      if (vm.name === '' || vm.canCreateAA === false) {
         return false;
       } else {
         return true;
