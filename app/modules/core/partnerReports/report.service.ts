@@ -12,6 +12,7 @@ import {
   IIntervalQuery,
   IReportTypeQuery,
 } from './partnerReportInterfaces';
+import { Notification } from 'modules/core/notifications';
 
 class ReportService {
   private readonly POSITIVE: string = 'positive';
@@ -40,7 +41,7 @@ class ReportService {
     private CommonReportService,
     private ReportConstants,
     private chartColors,
-    private Notification,
+    private Notification: Notification,
     private PartnerService
   ) {}
 

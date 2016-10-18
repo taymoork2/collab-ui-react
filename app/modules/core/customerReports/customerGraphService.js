@@ -20,11 +20,11 @@
     var timeFilterValue = 0;
 
     // variables for the average rooms section
-    var avgRoomsdiv = 'avgRoomsdiv';
+    var avgRoomsdiv = 'avgRoomsChart';
     var avgRoomsBalloon = graphTextSpan + $translate.instant('avgRooms.group') + ' <span class="room-number">[[groupRooms]]</span><br>' + $translate.instant('avgRooms.oneToOne') + ' <span class="room-number">[[oneToOneRooms]]</span><br>' + $translate.instant('avgRooms.avgTotal') + ' <span class="room-number">[[avgRooms]]</span></span>';
 
     // variables for the files shared section
-    var filesSharedDiv = 'filesSharedDiv';
+    var filesSharedDiv = 'filesSharedChart';
     var filesBalloon = graphTextSpan + $translate.instant('filesShared.filesShared') + ' <span class="graph-number">[[contentShared]]</span><br>' + $translate.instant('filesShared.fileSizes') + ' <span class="graph-number">[[contentShareSizes]] ' + $translate.instant('filesShared.gb ') + '</span></span>';
 
     // variables for media Quality

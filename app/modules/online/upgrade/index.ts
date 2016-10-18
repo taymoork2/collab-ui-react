@@ -1,6 +1,7 @@
 import { OnlineUpgradeComponent } from './upgradeModal.component';
 import { OnlineUpgradeService } from './upgrade.service';
-import subscriptionUpgradeButtonModule from '../../bmmp/subscriptionUpgradeButton';
+import subscriptionUpgradeButtonModule from 'modules/bmmp/subscriptionUpgradeButton';
+import notifications from 'modules/core/notifications';
 
 require('./upgradeModal.scss');
 
@@ -14,7 +15,7 @@ export default angular
     require('angular-resource'),
     require('modules/core/auth/auth'),
     require('modules/core/config/urlConfig'),
-    require('modules/core/notifications/notifications.module'),
+    notifications,
     require('modules/core/scripts/services/authinfo'),
   ])
   .component('onlineUpgradeModal', new OnlineUpgradeComponent())
