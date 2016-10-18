@@ -1,4 +1,5 @@
-.timeline-report {
+.device-usage-report-pages {
+  .timeline-report {
     .range-wrapper {
         text-align: center;
         width: 100%;
@@ -61,5 +62,32 @@
       }
 
     }
+  }
+  .device-usage-distribution-report {
+    height: 400px;
+    width: 90%;
+    margin: 0 auto;
+    margin-top: 2rem;
+  }
+  .device-details {
+    background:white;
+    width: 90%;
+    margin: 0 auto;
+    .device-list {
+      height:300px;
+      border:1px solid DarkGray;
+    }
+  }
+  .loading-indicator {
+    position: absolute;
+    top: 150px;
+    left: 40%;
 
+    .loading-text {
+      width: 200%;
+      background-color: white;
+      border: 1px solid gray;
+      text-align: center;
+    }
+  }
 }

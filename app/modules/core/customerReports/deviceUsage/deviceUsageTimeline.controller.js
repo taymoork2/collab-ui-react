@@ -11,6 +11,8 @@
     var amChart;
     var apiToUse = 'mock';
 
+    vm.loading = true;
+
     if (!deviceUsageFeatureToggle) {
       // simulate a 404
       $state.go('login');
@@ -62,6 +64,7 @@
         chart.listeners = [
         { event: 'rollOverGraphItem', method: rollOverGraphItem },
         { event: 'rollOutGraphItem', method: rollOutGraphItem },
+        { event: 'dataUpdated', method: graphRendered }
         //{ event: 'clickGraphItem', method: clickGraphItem }
         ];
         chart.dataProvider = data;
@@ -73,7 +76,12 @@
       });
     }
 
+    function graphRendered() {
+      vm.loading = false;
+    }
+
     function loadLastWeek() {
+      vm.loading = true;
       DeviceUsageTimelineService.getDataForLastWeek(apiToUse).then(function (data) {
         amChart.dataProvider = data;
         amChart.validateData();
@@ -82,6 +90,7 @@
     }
 
     function loadLastMonth() {
+      vm.loading = true;
       DeviceUsageTimelineService.getDataForLastMonth(apiToUse).then(function (data) {
         amChart.dataProvider = data;
         amChart.validateData();
@@ -90,6 +99,7 @@
     }
 
     function loadLast3Months() {
+      vm.loading = true;
       DeviceUsageTimelineService.getDataForLastMonths(3, 'day', apiToUse).then(function (data) {
         amChart.dataProvider = data;
         amChart.validateData();

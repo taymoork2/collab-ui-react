@@ -1545,7 +1545,8 @@
     "hybridServiceNames": {
       "squared-fusion-mgmt": "Hybrid Management Service",
       "squared-fusion-uc": "Hybrid Call Service",
-      "squared-fusion-cal": "Hybrid Calendar Service"
+      "squared-fusion-cal": "Hybrid Calendar Service",
+      "hybrid-data-security": "Hybrid Data Security"
     },
     "connectorNames": {
       "squared-fusion-uc": "Call Connector",
@@ -1595,7 +1596,9 @@
         "squared-fusion-uc": "Users can share content from the Cisco Spark app during a call from their work phones and view their call history in the app.",
         "squared-fusion-cal": "Add @spark to an invitation to create a Cisco Spark room for your meeting. Add @webex to attach your WebEx Personal Room.",
         "squared-fusion-ec": "Users' incoming calls will ring their work phones and the Cisco Spark app. Users can call their colleagues from either their phones or the app, too."
-      }
+      },
+      "defaultWebExSite": "Default WebEx Site:",
+      "defaultWebExSiteNotSet": "Not set"
     },
     "alarms": {
       "alarms": "Alarms",
@@ -1905,6 +1908,15 @@
       "remove": "Remove"
     },
     "genericFailure": "An unexpected error occurred. Please try again later."
+  },
+  "hds" : {
+    "settings" : {
+      "deactivateService" : "Deactivate Service",
+      "deactivateServiceHeader" : "Deactivate Hybrid Data Security",
+      "deactivateServiceDesc" : "Deactivating Service...",
+      "deactivateServiceButton" : "Deactivate",
+      "deactivateServiceConfirmation" : "Confirm Deactivation"
+    }
   },
   "ediscovery": {
     "browserTabHeaderTitle": "Spark Activity Reports",

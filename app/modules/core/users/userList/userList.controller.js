@@ -436,7 +436,7 @@
         return false;
       }
 
-      return !$scope.isOnlyAdmin(user);
+      return !$scope.isOnlyAdmin(user) && !_.includes($scope.userList.partnerUsers, user);
     }
 
     function handleDeleteUser($event, user, isSelf) {
