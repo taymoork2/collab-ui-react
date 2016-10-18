@@ -2577,7 +2577,15 @@
   "callPickup": {
     "title": "Call Pickup",
     "code": "PI",
-    "modalDescription": "Call Pickup feature allows users to pick up incoming calls within a group of users."
+    "modalDescription": "Call Pickup feature allows users to pick up incoming calls within a group of users.",
+    "createTitle": "Create Call Pickup",
+    "cancelHeader": "Cancel Call Pickup Creation",
+    "confirmButton": "Cancel Creation",
+    "continueButton": "Continue Creation",
+    "cancelDialog": "Are you sure you wish to cancel call pickup creation? This call pickup will not be saved.",
+    "createHelpText": "Create",
+    "nameHint": "This name is not visible to callers.",
+    "namePlaceholder": "Name the Call Pickup"
   },
   "pagingGroup": {
     "title": "Paging Group",
