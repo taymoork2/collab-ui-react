@@ -1,7 +1,7 @@
 
 'use strict';
 
-xdescribe('controller:DashboardCtrl', function () {
+describe('controller:DashboardCtrl', function () {
   var $controller;
   var $scope;
   var controller;
@@ -26,9 +26,7 @@ xdescribe('controller:DashboardCtrl', function () {
     spyOn(DcomponentService, 'modifyComponent').and.returnValue(
       $q.when({})
     );
-    spyOn(controller, 'changeStatusWithChild').and.returnValue(
-      $q.when({})
-    );
+
     controller = $controller('DashboardCtrl', {
       $scope: $scope,
       statusService: statusService,
@@ -48,6 +46,11 @@ xdescribe('controller:DashboardCtrl', function () {
     expect(controller.CreateIncident).toBeDefined();
   });
   it('modifyComponentStatus should be active', function () {
+    //controller.validation = true;
+    controller.modifyComponentStatus(component);
+    expect(DcomponentService.modifyComponent).toHaveBeenCalled();
+  });
+  it('changeStatusWithChild should be active', function () {
     //controller.validation = true;
     controller.changeStatusWithChild(groupComponent, component, 1);
     expect(DcomponentService.modifyComponent).toHaveBeenCalled();
@@ -103,8 +106,14 @@ xdescribe('controller:DashboardCtrl', function () {
   });
 
   it('getOverriddenComponent should be active', function () {
-    controller.getOverriddenComponent(groupComponent);
-    expect(controller.changeStatusWithChild).toHaveBeenCalled();
+    var result = controller.getOverriddenComponent(groupComponent);
+    expect(result).not.toBe(null);
     //expect($window);
   });
+  it('getChildStatus should be active', function () {
+    var result = controller.getChildStatus(component, groupComponent);
+    expect(result).not.toBe(null);
+    //expect($window);
+  });
+
 });
