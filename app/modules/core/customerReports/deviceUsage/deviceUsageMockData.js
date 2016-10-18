@@ -29,7 +29,7 @@
     function deviceDaySample(date, accountId, deviceCategory) {
       return {
         'callCount': _.random(1, maxCallsPrDay),
-        'date': Number(date.format(apiDataFormat)),
+        'date': Number(date),
         'accountId': accountId,
         'pairedCount': _.random(0, maxPairedCallsPrDay),
         'deviceCategory': deviceCategory,
