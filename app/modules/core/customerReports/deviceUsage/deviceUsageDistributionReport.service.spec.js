@@ -19,17 +19,17 @@ describe('DeviceUsageDistributionReportService', function () {
     var rawData = [
       {
         "accountId": "1111",
-        "date": "20161001",
+        "date": 20161001,
         "totalDuration": 10 * 3600  // seconds
       },
       {
         "accountId": "1111",
-        "date": "20161002",
+        "date": 20161002,
         "totalDuration": 10 * 3600  // seconds
       },
       {
         "accountId": "2222",
-        "date": "20161001",
+        "date": 20161001,
         "totalDuration": 10 * 3600  // seconds
       }
     ];
