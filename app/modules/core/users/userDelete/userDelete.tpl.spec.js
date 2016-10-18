@@ -30,6 +30,7 @@ describe('Template: userDelete', function () {
 
     spyOn(controller, 'deactivateUser');
     controller.isMsgrUser = false;
+    controller.msgrloaded = true;
 
     var template = $templateCache.get('modules/core/users/userDelete/userDelete.tpl.html');
     view = $compile(angular.element(template))($scope);

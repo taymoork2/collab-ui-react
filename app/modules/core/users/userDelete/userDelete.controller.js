@@ -12,6 +12,7 @@
     vm.deleteUserUuId = $stateParams.deleteUserUuId;
     vm.deleteUsername = $stateParams.deleteUsername;
     vm.isMsgrUser = false;
+    vm.msgrloaded = false;
 
     vm.confirmation = '';
     var confirmationMatch = $translate.instant('usersPage.yes');
@@ -24,6 +25,7 @@
 
     function init() {
       vm.isMsgrUser = false;
+      vm.msgrloaded = false;
       SyncService.isMessengerSyncEnabled()
         .then(function (isEnabled) {
           if (isEnabled) {
@@ -31,7 +33,10 @@
               if (_.includes(user.entitlements, Config.entitlements.messenger)) {
                 vm.isMsgrUser = true;
               }
+              vm.msgrloaded = true;
             });
+          } else {
+            vm.msgrloaded = true;
           }
         }, function error() {
           vm.isMsgrUser = false;
