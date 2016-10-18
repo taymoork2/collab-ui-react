@@ -38,7 +38,7 @@ describe('Template: userDelete', function () {
 
   it('should be enabled by default', function () {
     expect(view.find(DELETE_BUTTON).attr(DISABLED)).toBeUndefined();
-    expect(view.find(OK_BUTTON).hasClass('ng-hide')).toBe(true);
+    expect(view.find(OK_BUTTON).length).toEqual(1);
   });
 
   it('deactivateUser should not be called without button click', function () {

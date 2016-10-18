@@ -46,7 +46,7 @@ describe('Template: userDeleteSelf', function () {
 
   it('should be disabled by default', function () {
     expect(view.find(DELETE_BUTTON).attr(DISABLED)).toEqual(DISABLED);
-    expect(view.find(OK_BUTTON).hasClass('ng-hide')).toBe(true);
+    expect(view.find(OK_BUTTON).length).toEqual(1);
   });
 
   it('typing confirmation should enable delete button', function () {

@@ -19,11 +19,11 @@
   </div>
 </div>
 <div class="modal-footer">
-  <button id="cancelButton" class="btn" ng-click="$dismiss();" ng-show="!userDelete.isMsgrUser">
-    <span translate="common.cancel"></span>
+  <button id="okButton" class="btn" ng-click="$dismiss();">
+    <span translate="common.cancel" ng-show="!userDelete.isMsgrUser"></span>
+    <span translate="common.ok" ng-show="userDelete.isMsgrUser"></span>
   </button>
   <button id="deleteUserButton" cs-btn loading="userDelete.loading" class="btn btn--alert" ng-disabled="userDelete.deleteCheck()" ng-click="userDelete.deactivateUser();" ng-show="!userDelete.isMsgrUser">
     <span translate="usersPage.deleteUser"></span>
   </button> 
-  <button id="okButton" class="btn" ng-click="$dismiss();" translate="common.ok" ng-show="userDelete.isMsgrUser"></button>
 </div>
