@@ -2,14 +2,18 @@
   @extend %grid-subheader;
   @extend %page-background-white;
 
-  .ngCell.col0 .ngVerticalBar, .ngHeaderCell.col0 .ngVerticalBar {
+  .ngCell.col0 .ngVerticalBar,
+  .ngHeaderCell.col0 .ngVerticalBar {
     display: none;
   }
+
   .ngHeaderText.colt5 {
     text-align: left;
   }
+
   .ngCell.colt5 {
     overflow: visible;
+
     .dropdown-menu {
       right: 25px;
       left: auto;

@@ -1,52 +1,67 @@
 .cdr-overview {
   .side-panel-header > .header-image {
     margin-top: rem-calc(15);
+
     .big-icon {
       font-size: 2em;
     }
   }
+
   .side-panel-section {
     margin-top: rem-calc(15);
   }
+
   .side-panel-wrapper {
     min-height: vr-adjust(600);
   }
+
   .breadcrumb-container {
     display: none;
   }
+
   .cdr-overview-controls {
     display: inline-flex;
     width: auto;
+
     .cdr-overview-button {
       margin: 0 rem-calc(10);
       color: $white;
     }
+
     .cdr-overview-button:last-of-type {
       margin: 0 0 0 rem-calc(10);
     }
   }
+
   .cdrTable {
     max-height: vr-adjust(520);
+
     .table-bordered {
       table-layout: fixed;
       margin-bottom: 0;
-      thead > tr > th, tbody > tr > td {
+
+      thead > tr > th,
+      tbody > tr > td {
         border-right: 1px solid $gray-dark;
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
       }
-      thead > tr > th:last-of-type, tbody > tr > td:last-of-type {
+
+      thead > tr > th:last-of-type,
+      tbody > tr > td:last-of-type {
         border-right: none;
       }
     }
   }
+
   .table-body {
     position: relative;
     top: rem-calc(-1);
     border-bottom: rem-calc(1) solid $gray-dark;
     margin-bottom: rem-calc(20);
     overflow: auto;
+
     .table-bordered {
       border-bottom: none;
     }
