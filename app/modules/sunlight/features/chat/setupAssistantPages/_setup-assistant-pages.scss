@@ -34,9 +34,7 @@ $ct-desc-height: 32px;
 }
 
 .ct-sa-content{
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
+  display: block;
   height: calc(100vh - #{($top-bar-height + $page-header-height + $ct-title-height + $ct-desc-height)});
   overflow: auto;
 
@@ -47,6 +45,7 @@ $ct-desc-height: 32px;
 
 .ct-card {
   @include vr-spacing(ml, 2);
+  @include vr-spacing(mt, 5);
   width: rem-calc(366px);
   height: rem-calc(458px);
   display: flex;
@@ -62,6 +61,12 @@ $ct-desc-height: 32px;
   .articleHeight {
     height: 100%;
   }
+}
+.ct-card-center {
+  justify-content: center;
+}
+.ct-card-start {
+  justify-content: flex-start;
 }
 
 
