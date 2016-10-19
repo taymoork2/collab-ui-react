@@ -36,11 +36,6 @@
     vm.deregisterCluster = deregisterCluster;
     vm.allowedChannels = [];
 
-    FusionClusterService.getAllProvisionedConnectorTypes($stateParams.id)
-      .then(function (allConnectorTypes) {
-        vm.enabledServices = allConnectorTypes;
-      });
-
     loadCluster($stateParams.id);
 
     function loadCluster(clusterid) {
@@ -54,6 +49,7 @@
             clusterName: cluster.name
           });
           vm.newClusterName = vm.cluster.name;
+          vm.enabledServices = _.map(cluster.provisioning, 'connectorType');
 
           if (vm.showResourceGroups) {
             ResourceGroupService.getAll()
