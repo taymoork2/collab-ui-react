@@ -14,7 +14,7 @@
             <span translate="common.or"></span> <span ng-bind="directoryNumber.altDnPattern"></span>
           </span>
         </span>
-        <span class="feature-status" ng-if="directoryNumber.primary" ng-bind="$ctrl.setLineUseLabel(directoryNumber.primary)"></span>
+        <span class="feature-status" ng-if="directoryNumber.primary || directoryNumber.shared" ng-bind="$ctrl.setLineUseLabel(directoryNumber.primary, directoryNumber.shared)"></span>
         <span class="feature-status" ng-if="directoryNumber.dnSharedUsage" ng-bind="directoryNumber.dnSharedUsage"></span>
         <i class="feature-arrow"></i>
       </a>

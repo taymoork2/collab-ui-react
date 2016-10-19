@@ -9,11 +9,27 @@
   function CustomerReportsCtrl($state, $stateParams, $q, $timeout, $translate, Log, Authinfo, CustomerReportService, ReportConstants, DummyCustomerReportService, CustomerGraphService, WebexReportService, Userservice, WebExApiGatewayService, Storage, FeatureToggleService, MediaServiceActivationV2) {
     var vm = this;
     var ABORT = 'ABORT';
+
+    // Feature Toggles
+    var reportsUpdateToggle = FeatureToggleService.atlasReportsUpdateGetStatus();
+    var deviceUsageToggle = FeatureToggleService.atlasDeviceUsageReportGetStatus();
+
     vm.pageTitle = $translate.instant('reportsPage.pageTitle');
-    vm.allReports = ReportConstants.ALL;
-    vm.engagement = ReportConstants.ENGAGEMENT;
-    vm.quality = ReportConstants.QUALITY;
-    vm.currentFilter = vm.allReports;
+    vm.ALL = ReportConstants.ALL;
+    vm.ENGAGEMENT = ReportConstants.ENGAGEMENT;
+    vm.QUALITY = ReportConstants.QUALITY;
+    vm.currentFilter = vm.ALL;
+
+    vm.filterArray = _.cloneDeep(ReportConstants.filterArray);
+    vm.filterArray[0].toggle = function () {
+      resetCards(vm.ALL);
+    };
+    vm.filterArray[1].toggle = function () {
+      resetCards(vm.ENGAGEMENT);
+    };
+    vm.filterArray[2].toggle = function () {
+      resetCards(vm.QUALITY);
+    };
 
     vm.displayEngagement = true;
     vm.displayQuality = true;
@@ -28,7 +44,6 @@
     var activeUsersSort = ['userName', 'numCalls', 'sparkMessages', 'totalActivity'];
     var activeUsersChart = null;
     var previousSearch = '';
-    var reportsUpdateToggle = FeatureToggleService.atlasReportsUpdateGetStatus();
     vm.threeMonthTooltip = $translate.instant('activeUsers.threeMonthsMessage');
     vm.activeUserStatus = ReportConstants.REFRESH;
     vm.mostActiveUserStatus = ReportConstants.REFRESH;
@@ -52,10 +67,28 @@
     vm.displayActiveLineGraph = false;
 
     var avgRoomsChart = null;
-    vm.avgRoomStatus = ReportConstants.REFRESH;
+    vm.avgRoomOptions = {
+      animate: false,
+      description: 'avgRooms.avgRoomsDescription',
+      headerTitle: 'avgRooms.avgRooms',
+      id: 'avgRooms',
+      reportType: ReportConstants.BARCHART,
+      state: ReportConstants.REFRESH,
+      table: undefined,
+      titlePopover: ReportConstants.UNDEF,
+    };
 
     var filesSharedChart = null;
-    vm.filesSharedStatus = ReportConstants.REFRESH;
+    vm.filesSharedOptions = {
+      animate: false,
+      description: 'filesShared.filesSharedDescription',
+      headerTitle: 'filesShared.filesShared',
+      id: 'filesShared',
+      reportType: ReportConstants.BARCHART,
+      state: ReportConstants.REFRESH,
+      table: undefined,
+      titlePopover: ReportConstants.UNDEF,
+    };
 
     var mediaChart = null;
     var mediaData = [];
@@ -116,7 +149,6 @@
     vm.mediaUpdate = mediaUpdate;
     vm.activityUpdate = activityUpdate;
     vm.isActiveDisabled = isActiveDisabled;
-    vm.resetCards = resetCards;
     vm.searchMostActive = searchMostActive;
     vm.deviceUpdate = deviceUpdate;
     vm.getDescription = getDescription;
@@ -184,6 +216,15 @@
     };
 
     function init() {
+      deviceUsageToggle.then(function (response) {
+        if (response) {
+          vm.headerTabs.push({
+            title: $translate.instant('reportsPage.usageReports.usageReportTitle'),
+            state: 'reports.device-usage.timeline'
+          });
+        }
+      });
+
       reportsUpdateToggle.then(function (response) {
         vm.displayActiveLineGraph = response;
         if (vm.displayActiveLineGraph) {
@@ -202,8 +243,8 @@
     function timeUpdate() {
       vm.activeUserStatus = ReportConstants.REFRESH;
       vm.mostActiveUserStatus = ReportConstants.REFRESH;
-      vm.avgRoomStatus = ReportConstants.REFRESH;
-      vm.filesSharedStatus = ReportConstants.REFRESH;
+      vm.avgRoomOptions.state = ReportConstants.REFRESH;
+      vm.filesSharedOptions.state = ReportConstants.REFRESH;
       vm.mediaQualityStatus = ReportConstants.REFRESH;
       vm.deviceStatus = ReportConstants.REFRESH;
       vm.metricStatus = ReportConstants.REFRESH;
@@ -246,10 +287,10 @@
       if (vm.currentFilter !== filter) {
         vm.displayEngagement = false;
         vm.displayQuality = false;
-        if (filter === vm.allReports || filter === vm.engagement) {
+        if (filter === vm.ALL || filter === vm.ENGAGEMENT) {
           vm.displayEngagement = true;
         }
-        if (filter === vm.allReports || filter === vm.quality) {
+        if (filter === vm.ALL || filter === vm.QUALITY) {
           vm.displayQuality = true;
         }
         resize(500);
@@ -392,10 +433,10 @@
         if (response === ABORT) {
           return;
         } else if (response.length === 0) {
-          vm.avgRoomStatus = ReportConstants.EMPTY;
+          vm.avgRoomOptions.state = ReportConstants.EMPTY;
         } else {
           setAverageGraph(response);
-          vm.avgRoomStatus = ReportConstants.SET;
+          vm.avgRoomOptions.state = ReportConstants.SET;
         }
       });
     }
@@ -412,10 +453,10 @@
         if (response === ABORT) {
           return;
         } else if (response.length === 0) {
-          vm.filesSharedStatus = ReportConstants.EMPTY;
+          vm.filesSharedOptions.state = ReportConstants.EMPTY;
         } else {
           setFilesGraph(response);
-          vm.filesSharedStatus = ReportConstants.SET;
+          vm.filesSharedOptions.state = ReportConstants.SET;
         }
       });
     }
@@ -471,7 +512,7 @@
     }
 
     function setDeviceData() {
-      vm.deviceFilter = [angular.copy(defaultDeviceFilter)];
+      vm.deviceFilter = [_.cloneDeep(defaultDeviceFilter)];
       vm.selectedDevice = vm.deviceFilter[0];
       currentDeviceGraphs = [];
       vm.isDevicesEmpty = true;
@@ -479,7 +520,7 @@
       CustomerReportService.getDeviceData(vm.timeSelected).then(function (response) {
         if (response === ABORT) {
           return;
-        } else if (response.filterArray.length === 0) {
+        } else if (response.emptyGraph) {
           vm.deviceStatus = ReportConstants.EMPTY;
         } else {
           vm.deviceFilter = response.filterArray.sort(function (a, b) {
@@ -504,18 +545,18 @@
     }
 
     function deviceUpdate() {
-      if (currentDeviceGraphs.length > 0 && !currentDeviceGraphs[vm.selectedDevice.value].emptyGraph) {
-        var tempDevicesChart = CustomerGraphService.setDeviceGraph(currentDeviceGraphs, deviceChart, vm.selectedDevice);
-        if (tempDevicesChart !== null && angular.isDefined(tempDevicesChart)) {
-          deviceChart = tempDevicesChart;
-        }
-        vm.deviceStatus = ReportConstants.SET;
-      } else {
+      if (currentDeviceGraphs[vm.selectedDevice.value].emptyGraph) {
         var tempDeviceChart = CustomerGraphService.setDeviceGraph(DummyCustomerReportService.dummyDeviceData(vm.timeSelected), deviceChart);
         if (tempDeviceChart !== null && angular.isDefined(tempDeviceChart)) {
           deviceChart = tempDeviceChart;
         }
         vm.deviceStatus = ReportConstants.EMPTY;
+      } else {
+        var tempDevicesChart = CustomerGraphService.setDeviceGraph(currentDeviceGraphs, deviceChart, vm.selectedDevice);
+        if (tempDevicesChart !== null && angular.isDefined(tempDevicesChart)) {
+          deviceChart = tempDevicesChart;
+        }
+        vm.deviceStatus = ReportConstants.SET;
       }
     }
 

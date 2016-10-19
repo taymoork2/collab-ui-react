@@ -115,7 +115,6 @@
       licenseMapping[Config.licenseTypes.COMMUNICATION] = {
         name: $translate.instant('trials.call'),
         icon: 'icon-circle-call',
-        isCall: true,
         order: 3
       };
 
@@ -158,7 +157,6 @@
         code: Config.offerCodes.CO,
         qty: 0,
         free: true,
-        isCall: true,
         order: 22
       }];
       return freeServices;
@@ -665,7 +663,6 @@
           case Config.offerTypes.squaredUC:
             partial.isSquaredUcOffer = true;
             trialService = userServiceMapping[Config.licenseTypes.COMMUNICATION];
-            trialService.isCall = true;
             break;
           case Config.offerTypes.webex:
           case Config.offerTypes.meetings:

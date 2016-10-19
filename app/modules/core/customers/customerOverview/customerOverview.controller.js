@@ -288,11 +288,10 @@
 
     function hasSubview(service) {
       var hasWebexOrMultMeeting = (service.hasWebex === true || service.isMeeting);
-      var hasCallDetail = isSquaredUC() && (service.isCall === true);
       if (!newCustomerViewToggle) {
         return false;
       } else {
-        return (hasCallDetail || hasWebexOrMultMeeting);
+        return hasWebexOrMultMeeting;
       }
     }
 
@@ -301,8 +300,6 @@
         var isTrial = _.get(options, 'isTrial', false);
         var services = isTrial ? PartnerService.getTrialMeetingServices(vm.currentCustomer.licenseList) : service.sub;
         $state.go('customer-overview.meetingDetail', { meetingLicenses: services });
-      } else if (service.isCall) {
-        $state.go('customer-overview.externalNumberDetail', {});
       }
     }
 

@@ -2,9 +2,8 @@
 
   .aa-box {
     display: inline-block;
-    @include vr-spacing(mb, 1);
+    @include vr-spacing(mb, .3);
     @include vr-spacing(pt, .75);
-    @include vr-spacing(pb, .75);
     @include vr-spacing(pl, .75);
     @include vr-spacing(pr, .75);
     background-color: $brand-white;
@@ -12,6 +11,10 @@
     height: 7.75rem;
     border-radius: 3px;
     color: $gray-light;
+  }
+  .aa-tall-box {
+    @extend .aa-box;
+    height: 9.25rem;
   }
 
   .aa-drop-box {
@@ -28,23 +31,10 @@
       font-size: 2.5rem;
       color: $color-primary-base;
     }
-
-    .aa-squish {
-      font-size: .75rem;
-      max-width: 18.75rem;
-      margin-left: 20%;
-      width: 60%;
-    }
   }
 
   .aa-dl-box {
     .cancel-media {
-      margin-left: auto;
-      float: right;
-      clear: right;
-      margin-top: -2.25rem;
-      margin-right: -1rem;
-      width: 10%;
       .cancel-media-icon {
         @extend .icon;
 
@@ -64,25 +54,27 @@
       color: $color-cta-base;
     }
 
-    .aa-progress-left {
-      width: 90%;
+    .aa-progress {
+      margin-top: .4rem;
     }
   }
 
   & .aa-progress-supplementary {
     @include vr-spacing(mv, .5);
     @include vr-spacing(mr, .5);
+    @include vr-spacing(ml, .5);
     @include vr-spacing(mt, 0);
     color: $gray-dark-4;
   }
 
   & .aa-top-bottom-push {
-    @include vr-spacing(mv, .75);
+    @include vr-spacing(mv, .625);
+    color: $gray-dark-4;
   }
 
   & .spread-light {
     color: $gray-light-1;
-    line-height: 1.5rem;
+    line-height: 1rem;
   }
 
   & .aa-center-small {

@@ -1,3 +1,5 @@
+import { Notification } from 'modules/core/notifications';
+
 interface ISubscriptionResource extends ng.resource.IResourceClass<ng.resource.IResource<any>> {
   patch: ng.resource.IResourceMethod<any>;
 }
@@ -23,7 +25,7 @@ export class OnlineUpgradeService {
     private $resource: ng.resource.IResourceService,
     private $q: ng.IQService,
     private Authinfo,
-    private Notification,
+    private Notification: Notification,
     private UrlConfig,
   ) {
     let patchAction: ng.resource.IActionDescriptor = {

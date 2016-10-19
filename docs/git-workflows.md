@@ -1,6 +1,6 @@
 ## Contribute
 
-We use pull requests, and consequentially the forking model.  To make a contribution, you will need to fork this repository, make some changes, and then create a pull request with your changes.
+We use pull requests, and consequentially the forking model. To make a contribution, you will need to fork this repository, make some changes, and then create a pull request with your changes.
 
 1. From this web page, click **Fork** at the upper-right hand corner of the page
 2. Select your username (e.g. @zzatking)

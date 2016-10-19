@@ -36,19 +36,20 @@
       </uc-simultaneous-calls>
       <uc-caller-id
         caller-id-options="$ctrl.callerIdOptions"
-        custom-caller-id-name="$ctrl.customCallerIdName"
-        custom-caller-id-number="$ctrl.customCallerIdNumber"
-        caller-id-selected="$ctrl.callerIdSelected"
-        on-change-fn="$ctrl.setCallerId(callerIdSelected, customCallerIdName, customCallerIdNumber);">
+        custom-caller-id-name="$ctrl.lineOverviewData.callerId.customCallerIdName"
+        custom-caller-id-number="$ctrl.lineOverviewData.callerId.customCallerIdNumber"
+        caller-id-selected="$ctrl.lineOverviewData.callerId.externalCallerIdType"
+        direct-line="$ctrl.lineOverviewData.line.external"
+        on-change-fn="$ctrl.setCallerId(callerIdSelected, customCallerIdName, customCallerIdNumber, companyNumber);"
+        company-numbers="$ctrl.lineOverviewData.companyNumbers">
       </uc-caller-id>
       <uc-shared-line
-        selected-user="$ctrl.selectedUser"
-        shared-line-users="$ctrl.sharedLineUsers"
-        shared-line-endpoints="$ctrl.sharedLineEndpoints"
-        select-shared-line-user-fn="$ctrl.selectSharedLineUser(user)"
+        shared-lines="$ctrl.lineOverviewData.sharedLines"
+        new-shared-line-members="$ctrl.newSharedLineMembers"
+        select-shared-line-user-fn="$ctrl.setNewSharedLineMembers(members)"
         get-user-list-fn="$ctrl.getUserList(filter)"
-        is-single-device-fn="$ctrl.isSingleDevice(sharedLineEndpoints, uuid)"
-        disassociate-shared-line-user-fn="$ctrl.disassociateSharedLineUser(user, bulkDevice)">
+        on-shared-line-change-fn="$ctrl.setSharedLines(sharedLines)"
+        on-delete-shared-line-member-fn="$ctrl.deleteSharedLineMember(sharedLineMember)">
       </uc-shared-line>
     </cs-sp-section>
   </cs-sp-container>

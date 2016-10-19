@@ -19,18 +19,24 @@
           name="callerIdName"
           ng-model="$ctrl.customCallerIdName"
           cs-input-label="{{'callerIdPanel.customName' | translate}}"
-          ng-change="$ctrl.onChange()">
+          ng-change="$ctrl.onChange()"
+          maxlength="30"
+          required>
         <input
           cs-input
           type="text"
           name="callerIdNumber"
           ng-model="$ctrl.customCallerIdNumber"
           cs-input-label="{{'callerIdPanel.customNumber' | translate}}"
-          ng-change="$ctrl.onChange()">
+          ng-change="$ctrl.onChange()"
+          ng-pattern="/^(\+?)?[\d]{10,11}$/"
+          minlength="10"
+          maxlength="12"
+          required>
       </div>
-      <div class="cs-input-group" ng-if="$ctrl.callerIdSelected.value.name || $ctrl.callerIdSelected.value.pattern">
-        <p class="cs-input__help-text">{{$ctrl.callerIdSelected.value.name}}</p>
-        <p class="cs-input__help-text">{{$ctrl.callerIdSelected.value.pattern}}</p>
+      <div class="cs-input-group" ng-if="$ctrl.getSelected($ctrl.callerIdSelected.value).name || $ctrl.getSelected($ctrl.callerIdSelected.value).pattern">
+        <p class="cs-input__help-text">{{$ctrl.getSelected($ctrl.callerIdSelected.value).name}}</p>
+        <p class="cs-input__help-text">{{$ctrl.getSelected($ctrl.callerIdSelected.value).pattern}}</p>
       </div>
     </div>
   </div>

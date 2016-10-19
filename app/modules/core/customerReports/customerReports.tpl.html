@@ -15,7 +15,7 @@
       <!-- Sub Header -->
       <cs-page-sub-header>
         <cs-page-sub-header-left>
-          <reports-filter></reports-filter>
+          <report-filter filter-array="nav.filterArray"></report-filter>
         </cs-page-sub-header-left>
         <cs-page-sub-header-right>
           <cs-select id="timeFilter" name="timeFilter" class='customer-report-filter' ng-model="nav.timeSelected" options="nav.timeOptions" on-change-fn="nav.timeUpdate()"></cs-select>
@@ -39,9 +39,9 @@
         <div ng-switch-default class="content-container">
           <div class="row">
             <cs-card-layout>
-              <uc-avg-rooms></uc-avg-rooms>
+              <report-card options="nav.avgRoomOptions" show="nav.displayEngagement" time="nav.timeSelected"></report-card>
               <uc-active-user-customer></uc-active-user-customer>
-              <uc-files-shared></uc-files-shared>
+              <report-card options="nav.filesSharedOptions" show="nav.displayEngagement" time="nav.timeSelected"></report-card>
               <uc-devices-customer></uc-devices-customer>
               <uc-media-quality-customer></uc-media-quality-customer>
               <uc-call-metrics-customer></uc-call-metrics-customer>

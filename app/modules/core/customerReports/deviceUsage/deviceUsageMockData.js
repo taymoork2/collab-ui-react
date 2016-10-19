@@ -6,13 +6,15 @@
     .service('DeviceUsageMockData', DeviceUsageMockData);
 
   /* @ngInject */
-  function DeviceUsageMockData() {
+  function DeviceUsageMockData($log) {
+
+    var apiDataFormat = "YYYYMMDD";
 
     var cachedRawData;
 
-    var maxCallsPrDay = 20;
-    var maxPairedCallsPrDay = 10;
-    var existingUniqueDeviceIds = createSetOfUniqueDeviceIds(1000);
+    var maxCallsPrDay = 10;
+    var maxPairedCallsPrDay = 5;
+    var existingUniqueDeviceIds = createSetOfUniqueDeviceIds(100);
 
     var service = {
       getRawData: getRawData
@@ -27,7 +29,7 @@
     function deviceDaySample(date, accountId, deviceCategory) {
       return {
         'callCount': _.random(1, maxCallsPrDay),
-        'date': date,
+        'date': Number(date),
         'accountId': accountId,
         'pairedCount': _.random(0, maxPairedCallsPrDay),
         'deviceCategory': deviceCategory,
@@ -35,11 +37,32 @@
       };
     }
 
+    function createSamples(no, unit) {
+      var now = moment();
+      var start = moment(now).subtract(no, unit);
+      var allSamples = assembleRawData(start, now);
+      $log.info("Created ", allSamples.length, " device usage mock samples.");
+      $log.info("start date:", start);
+      $log.info("end date:", now);
+      return allSamples;
+    }
+
     function getRawData(startDate, endDate) {
       if (_.isEmpty(cachedRawData)) {
-        cachedRawData = assembleRawData(startDate, endDate);
+        cachedRawData = createSamples(6, "months");
+        $log.info("cachedData", cachedRawData);
       }
-      return _.cloneDeep(cachedRawData);
+
+      startDate = moment(startDate, apiDataFormat);
+      endDate = moment(endDate, apiDataFormat);
+
+      var rawDataWithinRange = _.filter(cachedRawData, function (sample) {
+        var registeredDate = moment(sample.date, apiDataFormat);
+        return ((registeredDate.isBefore(endDate) && registeredDate.isAfter(startDate)) || registeredDate.isSame(endDate) || registeredDate.isSame(startDate));
+      });
+      $log.info("After range filtering", rawDataWithinRange);
+
+      return _.cloneDeep(rawDataWithinRange);
     }
 
     function assembleRawData(startDate, endDate) {
@@ -47,7 +70,7 @@
       var start = moment(startDate);
       var end = moment(endDate);
       while (start.isBefore(end)) {
-        var time = start.format('YYYYMMDD');
+        var time = start.format(apiDataFormat);
         var noOfActiveDevicesToday = _.random(0, existingUniqueDeviceIds.length - 1);
         for (var i = 0; i < noOfActiveDevicesToday; i++) {
           var accountId = existingUniqueDeviceIds[i];

@@ -1748,17 +1748,6 @@
             },
             data: {}
           })
-          .state('customer-overview.externalNumbers', {
-            controller: 'ExternalNumberDetailCtrl',
-            controllerAs: 'externalNumbers',
-            templateUrl: 'modules/huron/externalNumbers/externalNumberDetail.tpl.html',
-            resolve: {
-              data: /* @ngInject */ function ($state, $translate) {
-                $state.get('customer-overview.externalNumbers').data.displayName = $translate.instant('customerPage.phoneNumbers');
-              }
-            },
-            data: {}
-          })
           .state('customer-overview.customerAdministrators', {
             controller: 'CustomerAdministratorDetailCtrl',
             controllerAs: 'customerAdmin',
@@ -1931,6 +1920,15 @@
               orgId: null
             }
           })
+          .state('helpdesk.order', {
+            url: '/order/:orderId/:id',
+            templateUrl: 'modules/squared/helpdesk/helpdesk-order.html',
+            controller: 'HelpdeskOrderController',
+            controllerAs: 'helpdeskOrderCtrl',
+            params: {
+              order: null
+            }
+          })
           .state('helpdesk.org', {
             url: '/org/:id',
             templateUrl: 'modules/squared/helpdesk/helpdesk-org.html',
@@ -1939,15 +1937,6 @@
             params: {
               org: null,
               id: null
-            }
-          })
-          .state('helpdesk.order', {
-            url: '/order/:id',
-            templateUrl: 'modules/squared/helpdesk/helpdesk-order.html',
-            controller: 'HelpdeskOrderController',
-            controllerAs: 'helpdeskOrderCtrl',
-            params: {
-              order: null
             }
           })
           .state('helpdesk.cloudberry-device', {
@@ -2396,6 +2385,25 @@
                 });
               }
             }
+          })
+          .state('huronPagingGroupEdit', {
+            url: '/huronPagingGroupEdit',
+            parent: 'main',
+            template: '<pg-edit pg-id="$resolve.pgId"></pg-edit>',
+            resolve: {
+              lazy: /* @ngInject */ function lazyLoad($q, $ocLazyLoad) {
+                return $q(function resolveLogin(resolve) {
+                  require(['modules/huron/features/pagingGroup/edit'], loadModuleAndResolve($ocLazyLoad, resolve));
+                });
+              },
+              pgId: /* @ngInject */ function pgId($stateParams) {
+                var id = _.get($stateParams.feature, 'id');
+                return id;
+              }
+            },
+            params: {
+              feature: null
+            }
           });
 
         $stateProvider
@@ -2431,6 +2439,18 @@
             resolve: {
               hasF237FeatureToggle: /* @ngInject */ function (FeatureToggleService) {
                 return FeatureToggleService.supports(FeatureToggleService.features.atlasF237ResourceGroups);
+              }
+            }
+          })
+          .state('hds-settings', {
+            templateUrl: 'modules/hds/settings/settings.html',
+            controller: 'HDSSettingsController',
+            controllerAs: 'hdsSettings',
+            url: '/services/hds/settings',
+            parent: 'main',
+            resolve: {
+              hasHDSFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridDataSecurity);
               }
             }
           })

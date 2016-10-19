@@ -67,7 +67,7 @@ describe('Huron Auto Attendant', function () {
       utils.expectIsDisplayed(autoattendant.sayMessage);
 
     }, 60000);
-  
+
     it('should add a single phone number to the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
 
       autoattendant.scrollIntoView(autoattendant.lanesWrapper);

@@ -6,10 +6,11 @@
     .controller('DeviceUsageDistributionCtrl', DeviceUsageDistributionCtrl);
 
   /* @ngInject */
-  function DeviceUsageDistributionCtrl($log, $scope, $state, $stateParams, DeviceUsageDistributionReportService, DeviceUsageDistributionGraphService, deviceUsageFeatureToggle) {
+  function DeviceUsageDistributionCtrl($log, $state, $stateParams, DeviceUsageDistributionReportService, DeviceUsageDistributionGraphService, deviceUsageFeatureToggle) {
     var vm = this;
 
     vm.reportType = $stateParams.deviceReportType;
+    vm.loading = true;
 
     if (!deviceUsageFeatureToggle) {
       // simulate a 404
@@ -23,12 +24,17 @@
       var inUseData = DeviceUsageDistributionGraphService.getUsageDistributionData(devices);
       var chart = DeviceUsageDistributionGraphService.getUsageCharts(inUseData, "usageHours");
       chart.dataProvider = inUseData;
-      chart.listeners = [{
-        "event": "clickGraphItem",
-        "method": showList
-      }];
+      chart.listeners = [
+        { event: 'clickGraphItem', method: showList },
+        { event: 'dataUpdated', method: graphRendered }
+      ];
+
       graph = AmCharts.makeChart('device-usage-distribution-chart', chart);
     });
+
+    function graphRendered() {
+      vm.loading = false;
+    }
 
     vm.gridOptions = {
       multiSelect: false,
@@ -38,10 +44,10 @@
       enableColumnResizing: true,
       enableHorizontalScrollbar: 0,
       columnDefs: [{
-        field: 'name',
-        displayName: 'Device name',
+        field: 'deviceId',
+        displayName: 'Device Id',
       }, {
-        field: 'hours',
+        field: 'totalDuration',
         displayName: 'Hours active',
       }]
     };
@@ -64,7 +70,6 @@
 
       DeviceUsageDistributionReportService.getDeviceUsageReportData(limits[clickedIndex], limits[clickedIndex + 1]).then(function (devices) {
         vm.gridOptions.data = devices;
-        $scope.$apply();
       });
 
     }

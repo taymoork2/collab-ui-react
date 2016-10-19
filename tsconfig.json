@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "baseUrl": "./app",
     "module": "commonjs",
     "noUnusedLocals": true,
     "noUnusedParameters": true,

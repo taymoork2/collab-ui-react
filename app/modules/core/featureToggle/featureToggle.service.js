@@ -25,6 +25,7 @@
       atlasEmailStatus: 'atlas-email-status',
       atlasHelpDeskExt: 'atlas-helpdesk-extended-information',
       atlasHelpDeskOrderSearch: 'atlas-helpdesk-order-search',
+      atlasHybridServicesResourceList: 'atlas-hybrid-services-resource-list',
       atlasMediaServiceMetrics: 'atlas-media-service-metrics',
       atlasMediaServiceOnboarding: 'atlas-media-service-onboarding',
       atlasNewRoomSystems: 'atlas-new-roomSystems',
@@ -153,7 +154,8 @@
       globalStatus: 'global-status',
       atlasF237ResourceGroups: 'atlas-f237-resource-group',
       huronLocalDialing: 'huron-local-dialing',
-      huronDeviceE911: 'huron-device-e911-address'
+      huronDeviceE911: 'huron-device-e911-address',
+      atlasHybridDataSecurity: 'atlas-data-security'
     };
 
     var toggles = {};

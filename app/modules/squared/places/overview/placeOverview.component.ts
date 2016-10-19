@@ -34,7 +34,7 @@ class PlaceOverview implements ng.IComponentController {
     if (this.hasEntitlement('ciscouc')) {
       let service: IFeature = {
         name: this.$translate.instant('onboardModal.call'),
-        icon: this.$translate.instant('onboardModal.call'),
+        icon: 'icon-circle-call',
         state: 'communication',
         detail: this.$translate.instant('onboardModal.callFree'),
         actionAvailable: true,
