@@ -36,7 +36,8 @@ describe('Component: lineOverview', () => {
       '$scope',
       '$state',
       'LineOverviewService',
-      'DirectoryNumberOptionsService'
+      'DirectoryNumberOptionsService',
+      'CallerIDService'
     );
 
     this.existingLinePrimary = existingLinePrimary;

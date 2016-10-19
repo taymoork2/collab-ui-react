@@ -220,7 +220,7 @@
         if (response) {
           vm.headerTabs.push({
             title: $translate.instant('reportsPage.usageReports.usageReportTitle'),
-            state: 'reports.device-usage.overview'
+            state: 'reports.device-usage.timeline'
           });
         }
       });

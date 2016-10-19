@@ -12,7 +12,8 @@
         schedule: '@aaSchedule',
         menuId: '@aaMenuId',
         index: '=aaIndex',
-        keyIndex: '@aaKeyIndex'
+        keyIndex: '@aaKeyIndex',
+        type: '@aaMediaType',
       },
       controller: 'AAMessageTypeCtrl',
       controllerAs: 'aaMessageType',
