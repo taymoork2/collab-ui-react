@@ -1227,7 +1227,7 @@
     "voicemailPilotHelpText": "Usage of this E164 number incurs usage cost.",
     "errorGettingOptionaVmDidToggle": "There was a problem getting the optionalVmDid toggle.",
     "externalNumberDescriptionText": "Select a number that users can call to check their voicemail from outside the company network.",
-    "voicemailPrefixTitle": "Voicemail Access Prefix",
+    "voicemailPrefixTitle": "Voicemail ID Prefix",
     "voicemailPrefixDesc": "Select a prefix to reserve for dialing mailboxes from a device. Extensions between {{number}}{{extensionLength0}} and {{number}}{{extensionLength9}} are not recommended for assignment.",
     "dialing": "Dialing",
     "nationalDialingTitle": "National Dialing",
@@ -5469,7 +5469,7 @@
       "national": "National",
       "local": "Local"
     },
-    "vmprefix": "Voicemail Access Prefix",
+    "vmprefix": "Voicemail ID Prefix",
     "outboundDigit": "Outbound Dial Digit",
     "areaCode": "Area Code",
     "customerInfo": "Customer Information",
