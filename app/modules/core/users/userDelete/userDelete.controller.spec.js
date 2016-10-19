@@ -2,10 +2,10 @@
 
 describe('Controller: UserDeleteCtrl', function () {
   var $rootScope, $scope, $q, $controller, $timeout, $translate, controller;
-  var Userservice, Notification;
+  var Authinfo, FeatureToggleService, Notification, SunlightConfigService, Userservice;
   var stateParams = {
     deleteUserOrgId: '123',
-    deleteUserUuiD: '456',
+    deleteUserUuId: '456',
     deleteUsername: 'myUser'
   };
 
@@ -17,7 +17,7 @@ describe('Controller: UserDeleteCtrl', function () {
   beforeEach(initSpies);
   beforeEach(initController);
 
-  function dependencies(_$rootScope_, _$q_, _$controller_, _$timeout_, _$translate_, _Userservice_, _Notification_) {
+  function dependencies(_$rootScope_, _$q_, _$controller_, _$timeout_, _$translate_, _Authinfo_, _FeatureToggleService_, _Notification_, _SunlightConfigService_, _Userservice_) {
     $rootScope = _$rootScope_;
     $scope = $rootScope.$new();
     $q = _$q_;
@@ -26,6 +26,9 @@ describe('Controller: UserDeleteCtrl', function () {
     $translate = _$translate_;
     Userservice = _Userservice_;
     Notification = _Notification_;
+    SunlightConfigService = _SunlightConfigService_;
+    FeatureToggleService = _FeatureToggleService_;
+    Authinfo = _Authinfo_;
   }
 
   function initSpies() {
@@ -36,6 +39,14 @@ describe('Controller: UserDeleteCtrl', function () {
     spyOn(Notification, 'errorResponse');
     spyOn($rootScope, '$broadcast').and.callThrough();
     spyOn($translate, 'instant').and.returnValue('YES');
+    var deferred = $q.defer();
+    spyOn(SunlightConfigService, 'deleteUser').and.returnValue(
+      $q.when(deferred.promise)
+    );
+    spyOn(FeatureToggleService, 'atlasCareTrialsGetStatus').and.returnValue(
+      $q.when(true)
+    );
+    spyOn(Authinfo, 'isCare').and.returnValue(true);
   }
 
   function initController() {
@@ -93,12 +104,22 @@ describe('Controller: UserDeleteCtrl', function () {
         });
         expect(Notification.errorResponse).not.toHaveBeenCalled();
       });
+      it('should have called FeatureToggleService.atlasCareTrialsGetStatus', function () {
+        expect(FeatureToggleService.atlasCareTrialsGetStatus).toHaveBeenCalled();
+      });
+      it('should have called Authinfo.isCare', function () {
+        expect(Authinfo.isCare).toHaveBeenCalled();
+      });
+      it('should call SunlightConfigService.deleteUser', function () {
+        expect(SunlightConfigService.deleteUser).toHaveBeenCalledWith('456');
+      });
       it('should refresh the user list', function () {
         expect($rootScope.$broadcast.calls.mostRecent().args).toEqual(['USER_LIST_UPDATED']);
       });
       it('should have closed the modal', function () {
         expect($scope.$close).toHaveBeenCalled();
       });
+
     });
 
     describe('error delete', function () {
@@ -113,6 +134,15 @@ describe('Controller: UserDeleteCtrl', function () {
       it('should have notified error', function () {
         expect(Notification.success).not.toHaveBeenCalled();
         expect(Notification.errorResponse).toHaveBeenCalled();
+      });
+      it('should not call FeatureToggleService.atlasCareTrialsGetStatus', function () {
+        expect(FeatureToggleService.atlasCareTrialsGetStatus).not.toHaveBeenCalled();
+      });
+      it('should not have call Authinfo.isCare', function () {
+        expect(Authinfo.isCare).not.toHaveBeenCalled();
+      });
+      it('should not call SunlightConfigService.deleteUser', function () {
+        expect(SunlightConfigService.deleteUser).not.toHaveBeenCalled();
       });
       it('should not refresh the user list', function () {
         expect($rootScope.$broadcast.calls.mostRecent().args).not.toEqual(['USER_LIST_UPDATED']);

@@ -107,6 +107,8 @@
     "resendActivation": "Resend Activation",
     "deleteUserSuccess": "User {{email}} deleted successfully; in some cases it may take up to 24 hours before the user is removed from their Spark Rooms",
     "deleteUserError": "Error deleting user.",
+    "deleteCareUserSuccess": "User {{email}} deleted successfully from Care",
+    "deleteCareUserFailure": "Error deleting user {{email}} from Care.",
     "deleteUserDnFallbackError": "Error deleting user. The user's directory number is used as the fallback destination for Hunt Group(s).",
     "onboardSuccess": "{{email}} onboarded successfully",
     "onboardError": "{{email}} not onboarded. Status: {{status}}",
