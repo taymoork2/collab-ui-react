@@ -104,12 +104,13 @@ module.exports = (function makeWebpackConfig() {
     }),
   ];
 
-  if (!args.nolint) {
-    config.plugins.push(new StyleLintPlugin({
-      configFile: '.stylelintrc.js',
-      failOnError: true,
-    }));
-  }
+  // Activate once IntelliJ / WebStorm supports stylelint
+  // if (!args.nolint) {
+  //   config.plugins.push(new StyleLintPlugin({
+  //     configFile: '.stylelintrc.js',
+  //     failOnError: true,
+  //   }));
+  // }
 
   config.resolve = {
     extensions: ['', '.ts', '.js', '.json', '.css', '.scss', '.html'],
