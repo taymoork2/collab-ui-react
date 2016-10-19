@@ -64,7 +64,7 @@ describe('Validate Media Service Managemnt Page', function () {
       });
     });
 
-   describe('Resource page : ', function () {
+    describe('Resource page : ', function () {
       it('Navigate to Resource page', function () {
         browser.sleep(3000);
         navigation.clickServicesTab();
@@ -140,7 +140,7 @@ describe('Validate Media Service Managemnt Page', function () {
     describe('Side Panel : ', function () {
       var selectedClusterName;
       var selectedClusterStatus;
-      var selectedClusterNode;
+      //var selectedClusterNode;
       var selectedClusterReleaseChannel;
       beforeEach(function () {
         browser.sleep(3000);
@@ -160,7 +160,7 @@ describe('Validate Media Service Managemnt Page', function () {
             });
             mediaservice.nodesListFirst.getText().then(function (text3) {
               console.log(text3);
-              selectedClusterNode = text3;
+              //selectedClusterNode = text3;
             });
             element(by.css('div[ng-if="groupDetails.clusterDetail.upgradeSchedule"]')).element(by.xpath('following-sibling::div')).getText().then(function (text4) {
               console.log(text4);
@@ -196,9 +196,10 @@ describe('Validate Media Service Managemnt Page', function () {
         expect(mediaservice.clusterSettingsLink.getText()).toEqual(selectedClusterName);
         utils.click(mediaservice.clusterSettingsLink);
         browser.sleep(3000);
-        expect(mediaservice.clusterSettingsPageHeader.getText()).toEqual(selectedClusterName+" settings");
+        expect(mediaservice.clusterSettingsPageHeader.getText()).toEqual(selectedClusterName + " settings");
         utils.expectIsDisplayed(mediaservice.clusterUpgradeTitle);
         utils.expectIsDisplayed(mediaservice.clusterReleaseChannelTitle);
+        expect(selectedClusterReleaseChannel).toEqual("Stable");
         utils.expectIsDisplayed(mediaservice.clusterDeleteClusterTitle);
         utils.click(mediaservice.deleteClusterButton);
         utils.expectIsDisplayed(mediaservice.deleteClusterModalHeader);

@@ -68,7 +68,6 @@ var MediaServicePage = function () {
   this.deleteClusterModalCancel = element(by.css('button[ng-click="deleteClust.close()"]'));
 
 
-
   this.checkClusterSize = function () {
     element.all(by.binding('row.entity')).then(function (clusters) {
       expect(clusters.length).toBeGreaterThan(0);
