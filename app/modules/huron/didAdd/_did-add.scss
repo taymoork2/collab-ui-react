@@ -5,6 +5,7 @@
     display: block;
     text-align: center;
   }
+
   p {
     text-align: center;
   }
@@ -12,9 +13,11 @@
 
 .did-input {
   position: relative;
+
   .tokenfield {
     min-height: 44px;
   }
+
   .modal-note {
     font-size: 12px;
     padding-top: 12px;
@@ -32,6 +35,7 @@
   .modal-body {
     background-color: transparent;
   }
+
   .icon-spinner {
     border-color: $gray-lighter;
   }
@@ -41,10 +45,12 @@
   .icon-check {
     color: $gray-dark;
   }
+
   .btn {
     margin: 0 auto;
     display: block;
   }
+
   .modal-footer {
     text-align: center;
     margin-top: 0;
@@ -64,10 +70,13 @@
 .did-help-icon {
   @extend .icon;
   @extend .icon-help;
+
   font-size: 23px;
   vertical-align: middle;
+
   &:hover {
     color: $brand-primary;
   }
+
   color: $gray-dark;
 }

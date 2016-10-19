@@ -4,12 +4,15 @@
 #domainManagement {
   margin-bottom: -1.8rem;
   margin-top: -0.8rem;
+
   table.table {
     margin-top: -0.5rem;
     margin-bottom: 1rem;
+
     .header {
       display: none;
     }
+
     tr {
       border: none;
       padding-top: 0 !important;
@@ -22,7 +25,7 @@
         padding-top: 0 !important;
         padding-bottom: 0 !important;
 
-        span{
+        span {
           display: block;
           max-height: 40px !important;
           height: 40px;
@@ -32,23 +35,30 @@
         .icon {
           margin-right: 0.5rem;
         }
+
         .icon-circle {
-          font-size: .55em;
+          font-size: 0.55em;
         }
+
         .icon-circle.pending {
           color: $color-attention-base;
         }
-        .icon-circle.verified, .icon-circle.claimed {
+
+        .icon-circle.verified,
+        .icon-circle.claimed {
           color: $color-cta-base;
         }
+
         .icon-email {
-          font-size: .7em;
+          font-size: 0.7em;
         }
+
         .icon-trash {
           font-size: 1.2em;
           position: relative;
           top: 0.1rem;
         }
+
         button {
           position: relative;
           top: -0.05rem;
@@ -62,8 +72,8 @@
           padding-top: 2px !important;
         }
 
-        .verify-btn{
-          top:-0.85rem;
+        .verify-btn {
+          top: -0.85rem;
         }
 
         .dropdown-toggle {
@@ -72,39 +82,48 @@
           top: 0.1rem;
         }
       }
+
       .tokenCell {
         width: 6rem;
+
         .token {
           white-space: nowrap;
           overflow: hidden;
           text-overflow: ellipsis;
           width: 4rem;
         }
+
         .copy {
           width: 1rem;
           color: $color-primary;
         }
+
         span {
           float: left;
         }
       }
+
       .tableMail {
         display: block;
         width: 1.2rem !important;
       }
     }
   }
+
   .verifyDomainInput {
     margin-top: 2rem;
+
     input {
       max-width: 60% !important;
       margin-right: 1rem;
     }
-    input, button {
+
+    input,
+    button {
       float: left;
     }
-
   }
+
   .addDomain {
     margin-top: -2rem;
   }
@@ -115,20 +134,24 @@
  */
 .domainModal {
   position: relative;
+
   .error {
     color: $color-negative-base !important;
+
     span {
       margin-left: 0.5rem;
     }
   }
+
   .domainVerificationInfo {
     padding-bottom: 2rem;
-
   }
+
   .domainInput {
     font-size: 1.5rem;
     padding-bottom: 1rem !important;
   }
+
   .domainToken {
     padding-bottom: 1rem;
     margin-top: 0.5rem;
@@ -138,56 +161,66 @@
     word-break: break-all;
     width: 103%;
   }
+
   .domWarning {
-  //  background-color: $color-attention-base;
-    color:$color-attention-base;
+    //  background-color: $color-attention-base;
+    color: $color-attention-base;
     overflow: hidden;
-    width:100% !important;
-    height:60px !important;
+    width: 100% !important;
+    height: 60px !important;
     position: absolute;
     bottom: 0rem;
     padding-left: 2rem;
+
     p {
       width: 93%;
     }
+
     i {
       display: block;
       width: 7%;
       padding-top: 0.3rem;
     }
-    p, i {
+
+    p,
+    i {
       float: left;
       color: white;
     }
   }
+
   .domError {
     //background-color: $color-negative-base !important;
     background-color: transparent !important;
 
-    p,i{
-      color:$color-negative-base;
+    p,
+    i {
+      color: $color-negative-base;
     }
   }
+
   .tokenInfo {
     margin-bottom: 1rem;
   }
 }
 
 #domainModalAdd {
-    padding-bottom: 3rem;
-    p {
-      margin-bottom: 2rem;
-    }
-    input{
-      width: 100% !important;
-    }
+  padding-bottom: 3rem;
+
+  p {
+    margin-bottom: 2rem;
+  }
+
+  input {
+    width: 100% !important;
+  }
 }
 
 @media screen and (max-width: 500px) {
-
   #domainManagement #domainMenu span.actions-menu.dropdown.pull-right {
     margin-left: -1rem;
   }
+
   #domainManagement button.btn--cta.verify-btn.ng-scope {
     margin-left: -1.5rem;
   }
@@ -201,6 +234,7 @@
       }
     }
   }
+
   #domainManagement button.btn--cta.verify-btn.ng-scope {
     margin-left: 1rem !important;
   }
