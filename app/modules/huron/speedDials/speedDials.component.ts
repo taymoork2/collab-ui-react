@@ -176,8 +176,8 @@ class SpeedDialCtrl implements ng.IComponentController {
 export class SpeedDialComponent implements ng.IComponentOptions {
   public controller = SpeedDialCtrl;
   public templateUrl = 'modules/huron/speedDials/speedDials.html';
-  public bindings: { [binding: string]: string } = {
-    ownerId: '@',
+  public bindings = {
+    ownerId: '<',
     ownerType: '@',
   };
 }
