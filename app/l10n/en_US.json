@@ -1330,7 +1330,9 @@
     "unsupported": "You are using an <strong>outdated</strong> version of Internet Explorer. Please <a href='http://windows.microsoft.com/en-us/internet-explorer/download-ie' target='_blank'>upgrade your browser</a> to version 11 or higher.",
     "statusError": "Request failed with status: {{status}}.",
     "csvError": "Export failed.",
-    "videoError": "There is a problem with the video you are trying to play."
+    "videoError": "There is a problem with the video you are trying to play.",
+    "runtimeTitle": "Oops!",
+    "runtime": "An unexpected error has occurred. Our engineers are on it. If you need help to proceed, please <a href='https://support.ciscospark.com' target='_blank'>contact support</a>."
   },
   "spacesPage": {
     "addTag": "Add tag",

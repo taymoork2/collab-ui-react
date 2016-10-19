@@ -63,7 +63,7 @@
     "bootstrap-tokenfield": "~0.12.0",
     "clipboard": "~1.5.5",
     "collab-amcharts": "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/collab-amcharts/-/collab-amcharts-3.19.4.tgz",
-    "collab-ui": "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/collab-ui/-/collab-ui-2.31.2.tgz",
+    "collab-ui": "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/collab-ui/-/collab-ui-2.33.0.tgz",
     "collab-ui-angular": "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/collab-ui-angular/-/collab-ui-angular-1.6.0.tgz",
     "d3": "~3.5.5",
     "draggable.js": "git+https://github.com/gtramontina/draggable.js.git#v1.0.1",

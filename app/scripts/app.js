@@ -65,6 +65,7 @@
 
   angular.module('wx2AdminWebClientApp', [
     require('modules/core/scripts/controllers/bodyCtrl'),
+    require('modules/core/analytics'),
     require('modules/core/auth/auth'),
     require('modules/core/auth/token.service'),
     require('modules/core/config/config'),
@@ -98,7 +99,8 @@
     'oc.lazyLoad',
     'pascalprecht.translate',
     'ui.router',
-  ]).run(require('./apprun'));
+  ]).run(require('./apprun'))
+    .config(require('./app.exceptions.config').default);
   require('./appconfig');
 
   function requireAll(requireContext) {
