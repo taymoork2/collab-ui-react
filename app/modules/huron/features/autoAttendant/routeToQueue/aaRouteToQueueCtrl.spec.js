@@ -16,7 +16,6 @@ describe('Controller: AARouteToQueueCtrl', function () {
       name: 'AA2'
     }
   };
-
   var modal;
   var queueName = 'Chandan Test Queue';
   var queues = [{
@@ -84,8 +83,12 @@ describe('Controller: AARouteToQueueCtrl', function () {
   }));
 
   describe('openQueueTreatmentModal', function () {
+    var saved = {};
     var controller;
     beforeEach(function () {
+      saved.musicOnHold = AutoAttendantCeMenuModelService.newCeMenuEntry();
+      var moh = AutoAttendantCeMenuModelService.newCeActionEntry('play', '');
+      saved.musicOnHold.addAction(moh);
       spyOn($modal, 'open').and.returnValue({
         result: modal.promise
       });
@@ -98,6 +101,63 @@ describe('Controller: AARouteToQueueCtrl', function () {
       controller.openQueueTreatmentModal();
       $scope.$apply();
       expect($modal.open).toHaveBeenCalled();
+    });
+
+    describe('fromRouteCall', function () {
+      beforeEach(function () {
+        AutoAttendantCeMenuModelService.clearCeMenuMap();
+        aaUiModel[schedule] = AutoAttendantCeMenuModelService.newCeMenu();
+        aaUiModel[schedule].addEntryAt(index, AutoAttendantCeMenuModelService.newCeMenuEntry());
+        var action = AutoAttendantCeMenuModelService.newCeActionEntry('dummy', '');
+        action.queueSettings = {};
+        aaUiModel[schedule].entries[index].actions[0] = action;
+        $scope.fromRouteCall = true;
+        controller = $controller('AARouteToQueueCtrl', {
+          $scope: $scope
+        });
+        $scope.$apply();
+      });
+
+      it('should maintain a master copy of the model if not "saved"', function () {
+        controller.openQueueTreatmentModal();
+        $scope.$apply();
+        expect(controller.menuEntry.actions[0].description).toEqual('');
+        controller.menuEntry.actions[0].description = "Added text";
+        modal.reject();
+        $scope.$apply();
+        expect(controller.menuEntry.actions[0].description).toEqual('');
+      });
+    });
+
+    describe('from phone menu', function () {
+      beforeEach(function () {
+        $scope.menuKeyIndex = keyIndex;
+        $scope.menuId = 'menu0';
+        AutoAttendantCeMenuModelService.clearCeMenuMap();
+        aaUiModel[schedule] = AutoAttendantCeMenuModelService.newCeMenu();
+        aaUiModel[schedule].addEntryAt(index, AutoAttendantCeMenuModelService.newCeMenuEntry());
+        var action = AutoAttendantCeMenuModelService.newCeActionEntry('routeToQueue', '');
+        action.queueSettings = {};
+        aaUiModel[schedule].entries[keyIndex].actions[0] = action;
+        controller = $controller('AARouteToQueueCtrl', {
+          $scope: $scope
+        });
+        $scope.$apply();
+        controller.menuKeyEntry.actions = [];
+        controller.menuKeyEntry.actions[0] = action;
+        controller.hideQueues = false;
+        $scope.$apply();
+      });
+
+      it('should maintain a master copy of the model if not "saved"', function () {
+        controller.openQueueTreatmentModal();
+        $scope.$apply();
+        expect(controller.menuKeyEntry.actions[0].description).toEqual('');
+        controller.menuKeyEntry.actions[0].description = "Added text";
+        modal.reject();
+        $scope.$apply();
+        expect(controller.menuKeyEntry.actions[0].description).toEqual('');
+      });
     });
   });
 

@@ -1748,17 +1748,6 @@
             },
             data: {}
           })
-          .state('customer-overview.externalNumbers', {
-            controller: 'ExternalNumberDetailCtrl',
-            controllerAs: 'externalNumbers',
-            templateUrl: 'modules/huron/externalNumbers/externalNumberDetail.tpl.html',
-            resolve: {
-              data: /* @ngInject */ function ($state, $translate) {
-                $state.get('customer-overview.externalNumbers').data.displayName = $translate.instant('customerPage.phoneNumbers');
-              }
-            },
-            data: {}
-          })
           .state('customer-overview.customerAdministrators', {
             controller: 'CustomerAdministratorDetailCtrl',
             controllerAs: 'customerAdmin',
@@ -2450,6 +2439,18 @@
             resolve: {
               hasF237FeatureToggle: /* @ngInject */ function (FeatureToggleService) {
                 return FeatureToggleService.supports(FeatureToggleService.features.atlasF237ResourceGroups);
+              }
+            }
+          })
+          .state('hds-settings', {
+            templateUrl: 'modules/hds/settings/settings.html',
+            controller: 'HDSSettingsController',
+            controllerAs: 'hdsSettings',
+            url: '/services/hds/settings',
+            parent: 'main',
+            resolve: {
+              hasHDSFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridDataSecurity);
               }
             }
           })

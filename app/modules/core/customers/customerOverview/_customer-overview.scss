@@ -58,27 +58,6 @@
     }
   }
 
-  .external-number-detail {
-    .external-number-overview {
-      .section-title-row {
-        display: none;
-      }
-      #external-number-add {
-        display: block;
-        text-align: center;
-        padding-top: 0.175rem;
-        padding-bottom: 1.7rem;
-        border-bottom: 1px solid $gray-light-2;
-        color: $gray-dark-1;
-      }
-
-      .feature-list {
-        padding-bottom: .875rem;
-      }
-    }
-  }
-
-
   .webex-domains-list {
 
     .spinner-loading {

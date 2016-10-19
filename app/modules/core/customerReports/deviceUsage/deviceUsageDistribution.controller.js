@@ -10,6 +10,7 @@
     var vm = this;
 
     vm.reportType = $stateParams.deviceReportType;
+    vm.loading = true;
 
     if (!deviceUsageFeatureToggle) {
       // simulate a 404
@@ -23,12 +24,17 @@
       var inUseData = DeviceUsageDistributionGraphService.getUsageDistributionData(devices);
       var chart = DeviceUsageDistributionGraphService.getUsageCharts(inUseData, "usageHours");
       chart.dataProvider = inUseData;
-      chart.listeners = [{
-        "event": "clickGraphItem",
-        "method": showList
-      }];
+      chart.listeners = [
+        { event: 'clickGraphItem', method: showList },
+        { event: 'dataUpdated', method: graphRendered }
+      ];
+
       graph = AmCharts.makeChart('device-usage-distribution-chart', chart);
     });
+
+    function graphRendered() {
+      vm.loading = false;
+    }
 
     vm.gridOptions = {
       multiSelect: false,

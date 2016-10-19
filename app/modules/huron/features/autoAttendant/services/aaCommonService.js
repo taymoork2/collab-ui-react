@@ -13,6 +13,7 @@
     var aaDialByExtensionStatus = false;
     var aaCENumberStatus = false;
     var aaMediaUploadStatus = false;
+    var aaQueueSettingsStatus = false;
     var routeQueueToggle = false;
     var mediaUploadToggle = false;
     var uniqueId = 0;
@@ -26,6 +27,7 @@
       setDialByExtensionStatus: setDialByExtensionStatus,
       setCENumberStatus: setCENumberStatus,
       setMediaUploadStatus: setMediaUploadStatus,
+      setQueueSettingsStatus: setQueueSettingsStatus,
       setMediaUploadToggle: setMediaUploadToggle,
       setRouteQueueToggle: setRouteQueueToggle,
       isRouteQueueToggle: isRouteQueueToggle,
@@ -45,7 +47,7 @@
     /////////////////////
 
     function isFormDirty() {
-      return aaMediaUploadStatus || aaSayMessageForm || aaPhoneMenuOptions || aaActionStatus || aaDialByExtensionStatus || aaCENumberStatus;
+      return aaQueueSettingsStatus || aaMediaUploadStatus || aaSayMessageForm || aaPhoneMenuOptions || aaActionStatus || aaDialByExtensionStatus || aaCENumberStatus;
     }
 
     function isValid() {
@@ -83,6 +85,7 @@
       aaActionStatus = false;
       aaDialByExtensionStatus = false;
       aaMediaUploadStatus = false;
+      aaQueueSettingsStatus = false;
       aaCENumberStatus = false;
       routeQueueToggle = false;
       invalidList = {};
@@ -110,6 +113,11 @@
 
     function setRouteQueueToggle(status) {
       routeQueueToggle = status;
+    }
+
+
+    function setQueueSettingsStatus(status) {
+      aaQueueSettingsStatus = status;
     }
 
     function setMediaUploadToggle(status) {

@@ -42,25 +42,25 @@
 
 
     function openQueueTreatmentModal() {
+      // deep copy used to roll back from the modal changes
       var master = angular.copy(fromRouteCall ? vm.menuEntry.actions[0] : vm.menuKeyEntry.actions[0]);
       openQueueSettings().result.then(function () {
         // keep changes as modal was resolved with close
+        if (fromRouteCall) {
+          vm.menuEntry.actions[0].description = vm.menuEntry.actions[0].queueSettings;
+        } else {
+          vm.menuKeyEntry.actions[0].description = vm.menuKeyEntry.actions[0].queueSettings;
+        }
       }, function () {
-        //discard changes as modal was dismissed
+        // discard changes as modal was dismissed
         if (fromRouteCall) {
           vm.menuEntry.actions[0] = master;
         } else {
           vm.menuKeyEntry.actions[0] = master;
         }
-      }).finally(function () {
-        //set the metadata regardless
-        if (fromRouteCall) {
-          vm.menuEntry.actions[0].description = master.queueSettings;
-        } else {
-          vm.menuKeyEntry.actions[0].description = master.queueSettings;
-        }
       });
     }
+
     function openQueueSettings() {
       return $modal.open({
         templateUrl: 'modules/huron/features/autoAttendant/routeToQueue/aaNewTreatmentModal.tpl.html',
@@ -137,6 +137,19 @@
           vm.menuKeyEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
           var action = AutoAttendantCeMenuModelService.newCeActionEntry(rtQueue, '');
           vm.menuKeyEntry.addAction(action);
+        }
+        if (angular.isUndefined(vm.menuKeyEntry.actions[0].queueSettings)) {
+          vm.menuKeyEntry.actions[0].queueSettings = {};
+        }
+        if (angular.isUndefined(vm.menuKeyEntry.actions[0].queueSettings.musicOnHold)) {
+          vm.menuKeyEntry.actions[0].queueSettings.musicOnHold = AutoAttendantCeMenuModelService.newCeMenuEntry();
+          var mohAction = AutoAttendantCeMenuModelService.newCeActionEntry('play', '');
+          vm.menuKeyEntry.actions[0].queueSettings.musicOnHold.addAction(mohAction);
+        }
+        if (angular.isUndefined(vm.menuKeyEntry.actions[0].queueSettings.initialAnnouncement)) {
+          vm.menuKeyEntry.actions[0].queueSettings.initialAnnouncement = AutoAttendantCeMenuModelService.newCeMenuEntry();
+          var iaAction = AutoAttendantCeMenuModelService.newCeActionEntry('say', '');
+          vm.menuKeyEntry.actions[0].queueSettings.initialAnnouncement.addAction(iaAction);
         }
       }
 

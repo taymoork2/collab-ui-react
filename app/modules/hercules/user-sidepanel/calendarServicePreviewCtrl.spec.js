@@ -3,9 +3,9 @@
 describe('Directive Controller: CalendarServicePreviewCtrl', function () {
   beforeEach(angular.mock.module('Hercules'));
 
-  var $scope, $rootScope, $controller, $q, USSService, $state, $stateParams, FeatureToggleService, Notification, ClusterService, ResourceGroupService, $translate, Userservice;
+  var $scope, $rootScope, $controller, $q, USSService, $state, $stateParams, FeatureToggleService, Notification, ClusterService, ResourceGroupService, $translate, Userservice, Orgservice;
 
-  beforeEach(inject(function (_$rootScope_, _$controller_, _$state_, _$stateParams_, _USSService_, _$q_, _Notification_, _ClusterService_, _ResourceGroupService_, _FeatureToggleService_, _$translate_, _Userservice_) {
+  beforeEach(inject(function (_$rootScope_, _$controller_, _$state_, _$stateParams_, _USSService_, _$q_, _Notification_, _ClusterService_, _ResourceGroupService_, _FeatureToggleService_, _$translate_, _Userservice_, _Orgservice_) {
     $rootScope = _$rootScope_;
     $scope = $rootScope.$new();
     $controller = _$controller_;
@@ -19,6 +19,7 @@ describe('Directive Controller: CalendarServicePreviewCtrl', function () {
     $stateParams = _$stateParams_;
     $translate = _$translate_;
     Userservice = _Userservice_;
+    Orgservice = _Orgservice_;
 
     var resourceGroupsAsOptions = [];
     var userStatuses = [{ userId: '1234', state: 'notActivated', serviceId: 'squared-fusion-cal', entitled: true }];
@@ -30,6 +31,7 @@ describe('Directive Controller: CalendarServicePreviewCtrl', function () {
     spyOn(Notification, 'success');
     spyOn(Notification, 'notify');
     spyOn(Userservice, 'isInvitePending').and.returnValue(false);
+    spyOn(Orgservice, 'getOrg').and.returnValue($q.when({}));
     spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
     spyOn(ResourceGroupService, 'getAllAsOptions').and.returnValue($q.when(resourceGroupsAsOptions));
     spyOn(USSService, 'getStatusesForUser').and.returnValue($q.when(userStatuses));
@@ -42,6 +44,7 @@ describe('Directive Controller: CalendarServicePreviewCtrl', function () {
       $state: $state,
       $stateParams: $stateParams,
       Userservice: Userservice,
+      Orgservice: Orgservice,
       Notification: Notification,
       USSService: USSService,
       ClusterService: ClusterService,

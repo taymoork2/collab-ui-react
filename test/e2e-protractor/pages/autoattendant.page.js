@@ -17,6 +17,9 @@ var AutoAttendantPage = function () {
   this.queueSetting = element(by.id('queueSetting'));
   this.queueMin = element(by.linkText('15'));
   this.queueMinOption = element(by.id('queueMin')).all(by.tagName('li'));
+  this.okQueueTreatment = element(by.id('okTreatmentBtn'));
+  this.mohCustomUpload = element(by.id('uploadFileRadio1'));
+  this.mohDefaultUpload = element(by.id('musicOnHoldRadio1'));
 
   this.queueDestDisconnect = element(by.linkText('Disconnect'));
   this.queueDest = element(by.id('destinationSelect'));
