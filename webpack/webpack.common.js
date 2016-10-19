@@ -14,7 +14,7 @@ const args = require('yargs').argv;
 const path = require('path');
 const loaders = require('./loaders');
 const autoprefixer = require('autoprefixer');
-const StyleLintPlugin = require('stylelint-webpack-plugin');
+// const StyleLintPlugin = require('stylelint-webpack-plugin');
 
 const host = args.host || '127.0.0.1';
 const port = args.port || '8000';
