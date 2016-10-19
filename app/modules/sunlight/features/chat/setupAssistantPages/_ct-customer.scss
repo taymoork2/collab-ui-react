@@ -18,6 +18,7 @@
   .ct-customer-card {
     width: rem-calc(414px);
     @include vr-spacing(ml, 2);
+    @include vr-spacing(mt, 5);
     display: flex;
     flex-flow: column;
     .cardHeader1 {
@@ -315,7 +316,9 @@
     @include vr-spacing(mb, 0.5);
   }
   .customer-card-layout {
-    display: inline;
+    align-items: center;
+    justify-content: center;
+
   }
 }
 
