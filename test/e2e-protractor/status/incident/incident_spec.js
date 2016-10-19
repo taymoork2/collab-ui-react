@@ -1,7 +1,3 @@
-/**
- * Created by snzheng on 16/9/27.
- */
-
 'use strict';
 
 describe('incident list', function () {

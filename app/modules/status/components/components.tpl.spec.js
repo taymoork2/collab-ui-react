@@ -1,18 +1,11 @@
-/**
- * Created by snzheng on 16/9/21.
- */
-
 'use strict';
 
-xdescribe('components:showComponents', function () {
+describe('components:showComponents', function () {
   var $compile, $scope, $controller, controller, ComponentsService, statusService, $templateCache;
   var view;
   var hasData = 'status-components-list';
   var noData = 'centered-info-pane';
-  //var DELETE_BUTTON = '#deleteButton1';
-  //var EDIT_BUTTON = '#updateButton1';
   var ADD_BUTTON = '.add-resource-button';
-
   var $q;
   beforeEach(angular.mock.module('Status'));
   beforeEach(angular.mock.module('Huron'));

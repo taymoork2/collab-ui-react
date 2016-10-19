@@ -1,7 +1,3 @@
-/**
- * Created by snzheng on 16/10/14.
- */
-
 'use strict';
 
 xdescribe('UI: msgItemDirective', function () {

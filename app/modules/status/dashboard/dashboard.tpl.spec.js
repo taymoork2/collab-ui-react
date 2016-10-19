@@ -1,7 +1,3 @@
-/**
- * Created by snzheng on 16/9/23.
- */
-
 'use strict';
 
 xdescribe('incidents:createIncidents', function () {

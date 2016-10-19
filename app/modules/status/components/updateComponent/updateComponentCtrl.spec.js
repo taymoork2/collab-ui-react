@@ -1,7 +1,3 @@
-/**
- * Created by snzheng on 16/9/22.
- */
-
 'use strict';
 
 describe('controller:updateComponentCtrl', function () {

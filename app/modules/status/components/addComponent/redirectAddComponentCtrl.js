@@ -25,7 +25,6 @@
       $modalInstance.close();
     }
 
-    //获取group
     ComponentsService.getGroupComponents(statusService.getServiceId()).then(function (groupOptions) {
       _.forEach(groupOptions, function (group) {
         vm.groupOptions.unshift({

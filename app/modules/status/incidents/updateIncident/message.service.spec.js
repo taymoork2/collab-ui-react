@@ -1,10 +1,3 @@
-/**
- * Created by snzheng on 16/9/20.
- */
-/**
- * Created by pso on 16-8-23.
- */
-
 'use strict';
 
 describe('Message service', function () {

@@ -1,7 +1,3 @@
-/**
- * Created by snzheng on 16/9/25.
- */
-
 'use strict';
 
 describe('controller:addServiceCtrl', function () {
@@ -43,6 +39,5 @@ describe('controller:addServiceCtrl', function () {
   it('addService should be active', function () {
     controller.addService();
     expect(controller.validation).toHaveBeenCalled();
-    //expect(statusService.addService).toHaveBeenCalled();
   });
 });

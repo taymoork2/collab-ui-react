@@ -1,16 +1,12 @@
-/**
- * Created by snzheng on 16/9/22.
- */
-
 'use strict';
 
-xdescribe('components:addComponents', function () {
+describe('components:addComponents', function () {
   var $compile, $scope, $controller, controller, ComponentsService, statusService, $templateCache, $modalInstance;
   var view;
   var $q;
   var ADD_BUTTON = '.activate-button';
   var CLOSE_BUTTON = '.close';
-  var CANCLE_BUTTON = '.cancelCreateNewGroup';
+  var CANCEL_BUTTON = '.cancelCreateNewGroup';
   beforeEach(angular.mock.module('Status'));
   beforeEach(angular.mock.module('Huron'));
   beforeEach(angular.mock.module('Sunlight'));
@@ -45,7 +41,7 @@ xdescribe('components:addComponents', function () {
     expect(controller.closeAddModal).toHaveBeenCalled();
   });
   it('clicking button should call cancle', function () {
-    view.find(CANCLE_BUTTON).click();
+    view.find(CANCEL_BUTTON).click();
     expect(controller.cancelCreateNewGroup).toHaveBeenCalled();
   });
   it('clicking button should call addComponent', function () {

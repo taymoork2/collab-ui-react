@@ -1,7 +1,3 @@
-/**
- * Created by snzheng on 16/10/12.
- */
-
 'use strict';
 
 describe('update4 Incident', function () {

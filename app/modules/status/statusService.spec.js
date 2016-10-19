@@ -1,7 +1,3 @@
-/**
- * Created by snzheng on 16/9/26.
- */
-
 'use strict';
 
 describe('status service', function () {

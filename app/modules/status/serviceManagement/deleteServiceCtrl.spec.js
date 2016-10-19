@@ -1,7 +1,3 @@
-/**
- * Created by snzheng on 16/10/13.
- */
-
 'use strict';
 
 describe('delete service', function () {

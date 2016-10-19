@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject */
-  function ComponentsService($log, UrlConfig, $resource) {
+  function ComponentsService(UrlConfig, $resource) {
 
     var componentsUrl = UrlConfig.getStatusUrl() + '/services/:serviceId/components';
     var groupCompnentsUrl = UrlConfig.getStatusUrl() + '/services/:serviceId/components/groups';
@@ -20,13 +20,11 @@
       return $resource(groupCompnentsUrl).query({
         serviceId: serviceId
       }).$promise.then(function (response) {
-        $log.debug(response);
         return response;
       });
     }
 
     function addComponent(serviceId, component) {
-      $log.debug('serviceId ' + serviceId, ' component ', component);
       return $resource(componentsUrl).save({
         serviceId: serviceId
       }, component).$promise.then(function (response) {

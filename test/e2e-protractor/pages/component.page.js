@@ -1,7 +1,3 @@
-/**
- * Created by snzheng on 16/9/30.
- */
-
 'use strict';
 
 var componentPage = function () {
