@@ -1,12 +1,45 @@
 <div class="hds-page">
   <cs-page-header title="{{hdsSettings.pageTitle}}"></cs-page-header>
-  <div>
+    <!--p class="makeASelection"> <strong translate="hds.settings.serviceStatus" /></p-->
+
+    <setting-section setting="hdsSettings.serviceStatus">
+      <div class="form-group radioGroup">
+        <div class="cs-radio-group radioGroup">
+          <div class="cs-input-group cs-input-radio">
+            <div class="radioButton1">
+              <input type="radio" id="individualRadio1" ng-model="hdsSettings.radioModel" ng-value='1' ng-change="hdsSettings.onTrialProduction()">
+              <label for="individualRadio1">
+                <span translate="hds.settings.serviceStatusTrial"></span>
+              </label>
+            </div>
+            <div class="radioButton1">
+              <input type="radio" id="individualRadio2" ng-model="hdsSettings.radioModel" ng-value='2' ng-change="hdsSettings.onTrialProduction()">
+              <label for="individualRadio2">
+                <span translate="hds.settings.serviceStatusProduction"></span>
+              </label>
+            </div>
+          </div>
+          <div>
+          </div>
+        </div>
+      </div>
+    </setting-section>
+
     <setting-section setting="hdsSettings.deactivateService">
       <div class="sub-section">
-        <h5 class="sub-section__label" translate="hds.settings.deactivateServiceHeader"></h5>
+        <h5 class="sub-section__label" translate="hds.settings.deactivateServiceHeader">Test</h5>
         <p class="sub-section__description" translate="hds.settings.deactivateServiceDesc"></p>
         <button class="btn" translate="hds.settings.deactivateServiceButton" ng-click="hdsSettings.deactivate()"></button>
       </div>
     </setting-section>
+
+    <setting-section setting="hdsSettings.serviceDocumentationSoftware">
+      <div class="sub-section">
+        <!--h5 class="sub-section__label" translate="hds.settings.serviceDocumentationSoftware"></h5-->
+        <p class="sub-section__description" translate="hds.settings.serviceHelp" translate-values="{documentationUrl:hdsSettings.documentationUrl}"></p>
+        <p class="sub-section__description" translate="hds.settings.serviceDownload"></p>
+      </div>
+    </setting-section>
+
   </div>
 </div>

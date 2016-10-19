@@ -1910,7 +1910,17 @@
       "deactivateServiceHeader" : "Deactivate Hybrid Data Security",
       "deactivateServiceDesc" : "Deactivating Service...",
       "deactivateServiceButton" : "Deactivate",
-      "deactivateServiceConfirmation" : "Confirm Deactivation"
+      "deactivateServiceConfirmation" : "Confirm Deactivation",
+      "serviceStatus" : "Service Status",
+      "serviceStatusTrialMode" : "Trial Mode",
+      "serviceStatusProductionMode" : "Production Mode",
+      "serviceStatusTrial" : "Trial",
+      "serviceStatusProduction" : "Production",
+      "serviceStatusTrialStarted" : "Hybrid Data Security Trial Mode has started",
+      "serviceStatusProductionStarted" : "Hybrid Data Security Production Mode has started",
+      "serviceDocumentationSoftware" : "Documentation and Software",
+      "serviceHelp" : "Visit <a target='_blank' href='{{documentationUrl}}'>Help Central</a> whenever you need further information about Hybrid Services",
+      "serviceDownload" : "Download Cisco Expressway software from <a target='_blank' href='http://software.cisco.com'>software.cisco.com</a>"
     }
   },
   "ediscovery": {
