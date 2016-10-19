@@ -5,7 +5,7 @@
     .controller('UserDeleteCtrl', UserDeleteCtrl);
 
   /* @ngInject */
-  function UserDeleteCtrl($scope, $rootScope, $stateParams, $timeout, Authinfo, Userservice, Notification, $translate, SunlightConfigService, FeatureToggleService) {
+  function UserDeleteCtrl($scope, $rootScope, $stateParams, $timeout, $translate, Authinfo, FeatureToggleService, Notification, SunlightConfigService, Userservice) {
     var vm = this;
 
     vm.deleteUserOrgId = $stateParams.deleteUserOrgId;
@@ -72,7 +72,10 @@
       });
     }
 
-    function deleteFromCareFailure() {
+    function deleteFromCareFailure(response) {
+      if (response.status == 404) {
+        return;
+      }
       Notification.error('usersPage.deleteCareUserFailure', {
         email: vm.deleteUsername
       });
