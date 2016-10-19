@@ -1,0 +1,13 @@
+<div class="grid-filter" ng-class="{'dropdown' : $ctrl.getBreakpoint() === 'screen-xs' || $ctrl.getBreakpoint() === 'screen-sm'}">
+  <div class="dropdown-toggle filter" ng-if="$ctrl.getBreakpoint() === 'screen-xs' || $ctrl.getBreakpoint() === 'screen-sm'" ng-click="$ctrl.toggleOpen()">
+    <span class="name" ng-repeat="object in $ctrl.filterArray" ng-if="object.selected" translate="{{object.label}}"></span>
+    <i class="icon icon-chevron-down"></i>
+  </div>
+  <ul ng-class="{'dropdown-menu dropdown-primary': $ctrl.getBreakpoint() === 'screen-xs' || $ctrl.getBreakpoint() === 'screen-sm', 'visible-report-filter': ($ctrl.getBreakpoint() === 'screen-xs' || $ctrl.getBreakpoint() === 'screen-sm') && $ctrl.isOpen()}">
+    <li class="filter" ng-repeat="object in $ctrl.filterArray" ng-class="{'active' : object.selected}" ng-click="$ctrl.select(object)">
+      <a id="{{object.id}}">
+        <span class="name" translate="{{object.label}}"></span>
+      </a>
+    </li>
+  </ul>
+</div>

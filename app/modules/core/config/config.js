@@ -375,10 +375,12 @@
         'generateauthcode',
         'huntgroups',
         'huronCallPark',
+        'huronCallPickup',
         'hurondetails',
         'huronfeatures',
         'huronHuntGroup',
         'huronPagingGroup',
+        'huronPagingGroupEdit',
         'huronlines',
         'huronnewfeature',
         'huronsettings',
@@ -396,7 +398,8 @@
         'management-service',
         'services-overview',
         'resource-group-settings',
-        'cluster-list'
+        'cluster-list',
+        'hds-settings', //Temporrary entitlement until updated in org setting
       ],
       'spark-room-system': [
         'addDeviceFlow',
@@ -421,6 +424,9 @@
       ],
       'squared-team-member': [
         'organization'
+      ],
+      'hybrid-data-security': [
+        'hds-settings'
       ],
       'squared-fusion-media': [
         'add-resource',

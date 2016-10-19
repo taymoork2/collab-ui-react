@@ -1107,7 +1107,8 @@
         vm.confirmationDialogue = $translate.instant('sharedLinePanel.disassociateUser');
         $modal.open({
           templateUrl: 'modules/huron/sharedLine/disassociateSharedLineMember.tpl.html',
-          scope: $scope
+          scope: $scope,
+          type: 'dialog',
         }).result.then(function () {
           if (!removeLocal(userInfo.uuid) && userInfo.dnUsage !== 'Primary') {
             return SharedLineInfoService.disassociateSharedLineUser(userInfo.uuid, userInfo.userDnUuid, vm.directoryNumber.uuid)

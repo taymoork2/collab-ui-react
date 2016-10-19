@@ -1,8 +1,9 @@
-import { DialingType } from '../../../huron/dialing/index';
-import { DialingService } from '../../../huron/dialing';
-import { LineService, LineConsumerType, Line, LINE_CHANGE } from '../../../huron/lines/services';
-import { IActionItem } from '../../../core/components/sectionTitle/sectionTitle.component';
-import { IFeature } from '../../../core/components/featureList/featureList.component';
+import { DialingType } from 'modules/huron/dialing/index';
+import { DialingService } from 'modules/huron/dialing';
+import { LineService, LineConsumerType, Line, LINE_CHANGE } from 'modules/huron/lines/services';
+import { IActionItem } from 'modules/core/components/sectionTitle/sectionTitle.component';
+import { IFeature } from 'modules/core/components/featureList/featureList.component';
+import { Notification } from 'modules/core/notifications';
 
 class PlaceCallOverview implements ng.IComponentController {
 
@@ -20,7 +21,7 @@ class PlaceCallOverview implements ng.IComponentController {
     private $translate: ng.translate.ITranslateService,
     private LineService: LineService,
     private DialingService: DialingService,
-    private Notification,
+    private Notification: Notification,
   ) {
     this.currentPlace = this.$stateParams.currentPlace;
     this.$scope.$on(DialingType.INTERNATIONAL, (_e, data) => {

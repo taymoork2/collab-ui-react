@@ -1,4 +1,5 @@
-.timeline-report {
+.device-usage-report-pages {
+  .timeline-report {
     .range-wrapper {
         text-align: center;
         width: 100%;
@@ -14,4 +15,79 @@
       height: 400px;
       margin: 0 auto;
     }
+
+    .table-container {
+      height: 10em;
+      width: 100%;
+      margin: 0 auto;
+      h4 {
+        text-align: center;
+        margin-bottom: 0.5rem;
+      }
+      table {
+          display: flex;
+          flex-flow: column;
+          height: 100%;
+          width: 100%;
+
+          thead {
+              /* head takes the height it requires,
+              and it's not scaled when table is resized */
+              flex: 0 0 auto;
+              width: calc(100% - 0.9em);
+
+              display: table;
+              table-layout: fixed;
+
+              td {
+                font-weight: bold;
+                text-align: center;
+              }
+          }
+          tbody {
+              /* body takes all the remaining available space */
+              flex: 1 1 auto;
+              display: block;
+              overflow-y: scroll;
+              tr {
+                  width: 100%;
+                  display: table;
+                  table-layout: fixed;
+
+                  td {
+                    text-align: center;
+                  }
+              }
+          }
+      }
+
+    }
+  }
+  .device-usage-distribution-report {
+    height: 400px;
+    width: 90%;
+    margin: 0 auto;
+    margin-top: 2rem;
+  }
+  .device-details {
+    background:white;
+    width: 90%;
+    margin: 0 auto;
+    .device-list {
+      height:300px;
+      border:1px solid DarkGray;
+    }
+  }
+  .loading-indicator {
+    position: absolute;
+    top: 150px;
+    left: 40%;
+
+    .loading-text {
+      width: 200%;
+      background-color: white;
+      border: 1px solid gray;
+      text-align: center;
+    }
+  }
 }

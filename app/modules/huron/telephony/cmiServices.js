@@ -12,7 +12,7 @@
     .factory('DidAddEmailService', DidAddEmailService)
     .factory('IdentityOTPService', IdentityOTPService)
     .factory('UserOTPService', UserOTPService)
-    .factory('LineService', LineService)
+    .factory('LineResource', LineService)
     .factory('RemoteDestinationService', RemoteDestinationService)
     .factory('UnassignedDirectoryNumberService', UnassignedDirectoryNumberService)
     .factory('UserDirectoryNumberService', UserDirectoryNumberService)

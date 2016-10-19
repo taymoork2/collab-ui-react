@@ -1,4 +1,5 @@
-import { DigitalRiverService } from '../../../online/digitalRiver/digitalRiver.service';
+import { DigitalRiverService } from 'modules/online/digitalRiver/digitalRiver.service';
+import { Notification } from 'modules/core/notifications';
 
 const baseCategory = {
   label: undefined,
@@ -41,7 +42,7 @@ class MySubscriptionCtrl {
     private $translate: ng.translate.ITranslateService,
     private Authinfo,
     private DigitalRiverService: DigitalRiverService,
-    private Notification,
+    private Notification: Notification,
     private Orgservice,
     private ServiceDescriptor,
     private UrlConfig,

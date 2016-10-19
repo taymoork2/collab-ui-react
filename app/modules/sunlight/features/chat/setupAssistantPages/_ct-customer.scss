@@ -1,4 +1,5 @@
 .ct-customer {
+  align-items: center;
   @mixin placeholder {
     ::-webkit-input-placeholder {
       @content
@@ -16,6 +17,7 @@
 
   .ct-customer-card {
     width: rem-calc(414px);
+    @include vr-spacing(ml, 2);
     display: flex;
     flex-flow: column;
     .cardHeader1 {
@@ -129,7 +131,7 @@
       color: $gray-base;
       line-height: inherit;
       pointer-events: none;
-      position: absolute;
+      position: relative;
     }
     background-color: $white !important;
   }
@@ -311,6 +313,9 @@
   }
   .cs-input-group {
     @include vr-spacing(mb, 0.5);
+  }
+  .customer-card-layout {
+    display: inline;
   }
 }
 

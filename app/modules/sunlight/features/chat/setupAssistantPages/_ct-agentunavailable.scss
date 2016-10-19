@@ -1,5 +1,5 @@
 .ct-agent-unavailable {
-
+  align-items: center;
   @mixin placeholder {
     ::-webkit-input-placeholder {
       @content
@@ -15,33 +15,8 @@
     }
   }
 
-  .cs-card {
-    @include vr-spacing(ml, 2);
-    width: rem-calc(366px);
-    height: rem-calc(458px);
-    display: flex;
-    flex-flow: column;
-    .cardHeader1 {
-      text-align: center;
-      color: $gray-dark-1;
-    }
-    .articleHeight {
-      height: 100%;
-    }
-  }
-
-  .ct-article {
-    box-shadow: none;
-    border: 1px solid $gray-light-1;
-  }
-
   .ct-agent-unavailable-icon {
     color: $alert-color;
-  }
-
-  .unavailable-header {
-    text-align: center;
-    color: $gray-dark-1;
   }
 
   .unavailable-preview {
@@ -68,12 +43,14 @@
     }
 
     .unavailable-msg {
-      height: 12rem;
+      height: 14rem;
       width: rem-calc(300px);
       overflow: hidden;
       @include vr-spacing(mb, 1);
       @include vr-spacing(pv, 1);
       font-family: $brand-font-cisco-TT-Light;
+      color: $alert-color;
+      text-align: center;
     }
   }
 

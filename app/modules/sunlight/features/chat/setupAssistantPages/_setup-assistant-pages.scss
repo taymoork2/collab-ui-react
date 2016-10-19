@@ -18,6 +18,7 @@ $ct-desc-height: 32px;
   flex-wrap: nowrap;
   justify-content: center;
   align-items: center;
+  color: $gray-dark-2;
 }
 .ct-title-overview {
   font-family: $brand-font-thin
@@ -29,7 +30,7 @@ $ct-desc-height: 32px;
 
 .ct-title-desc {
   text-align: center;
-  color: $gray-dark-2;
+  color: $gray-base;
 }
 
 .ct-sa-content{
@@ -43,4 +44,24 @@ $ct-desc-height: 32px;
     @include vr-spacing(p, 0);
   }
 }
+
+.ct-card {
+  @include vr-spacing(ml, 2);
+  width: rem-calc(366px);
+  height: rem-calc(458px);
+  display: flex;
+  flex-flow: column;
+  .ct-card-info {
+    text-align: center;
+    color: $gray-dark-1;
+  }
+  .ct-article {
+    box-shadow: none;
+    border: 1px solid $gray-light-1;
+  }
+  .articleHeight {
+    height: 100%;
+  }
+}
+
 

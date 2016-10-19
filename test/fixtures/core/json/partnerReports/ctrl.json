@@ -3,6 +3,22 @@
   "ENGAGEMENT": "engagement",
   "QUALITY": "quality",
   "EMPTY": "empty",
+  "ERROR": "error",
+  "REFRESH": "refresh",
+  "SET": "set",
+  "reportFilter": [{
+    "id": "allReports",
+    "label": "reportsPage.all",
+    "selected": true
+  }, {
+    "id": "engagementReports",
+    "label": "reportsPage.engagement",
+    "selected": false
+  }, {
+    "id": "qualityReports",
+    "label": "reportsPage.quality",
+    "selected": false
+  }],
   "activeUserOptions": {
     "animate": false,
     "description": "activeUsers.description",
@@ -51,6 +67,24 @@
         "dummy": false
       },
       "title": "activeUsers.mostActiveUsers"
+    },
+    "avgRoomsOptions": {
+      "animate": false,
+      "description": "avgRooms.avgRoomsDescription",
+      "headerTitle": "avgRooms.avgRooms",
+      "id": "avgRooms",
+      "reportType": "barchart",
+      "state": "set",
+      "titlePopover": "undefined"
+    },
+    "filesSharedOptions": {
+      "animate": false,
+      "description": "filesShared.filesSharedDescription",
+      "headerTitle": "filesShared.filesShared",
+      "id": "filesShared",
+      "reportType": "barchart",
+      "state": "set",
+      "titlePopover": "undefined"
     },
     "populationOptions": {
       "animate": false,
