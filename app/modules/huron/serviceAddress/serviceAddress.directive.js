@@ -13,10 +13,13 @@
       controller: ServiceAddressCtrl,
       scope: {
         address: '=',
-        readOnly: '='
-      }
+        readOnly: '=',
+        hideSearch: '=',
+        formName: '=',
+        addressValidate: '&',
+        modify: '&'
+      },
     };
-
     return directive;
   }
 
@@ -39,13 +42,13 @@
     return directive;
 
     function isolateFormLink(scope, elm, attrs, formCtrl) {
-      if (!formCtrl || !scope.form) {
+      var parentFormCtrl = scope.$eval(attrs.isolateForm) || scope.form;
+
+      if (!formCtrl || !parentFormCtrl) {
         return;
       }
 
       var formCtlCopy = angular.copy(formCtrl);
-      var parentFormCtrl = scope.form;
-
       parentFormCtrl.$removeControl(formCtrl);
 
       // ripped this from an example

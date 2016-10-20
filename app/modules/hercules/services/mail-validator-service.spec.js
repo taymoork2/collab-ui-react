@@ -1,11 +1,11 @@
 'use strict';
 
 describe('MailValidatorService', function () {
-  beforeEach(module('wx2AdminWebClientApp'));
+  beforeEach(angular.mock.module('Hercules'));
 
   var Service;
 
-  beforeEach(inject(function ($injector, MailValidatorService) {
+  beforeEach(inject(function (MailValidatorService) {
     Service = MailValidatorService;
   }));
 

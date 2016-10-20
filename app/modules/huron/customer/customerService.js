@@ -22,7 +22,7 @@
 
     return service;
 
-    function createCustomer(uuid, name, email) {
+    function createCustomer(uuid, name) {
       var customer = angular.copy(customerPayload);
       customer.uuid = uuid;
       customer.name = name;

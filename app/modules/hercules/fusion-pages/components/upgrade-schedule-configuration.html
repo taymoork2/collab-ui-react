@@ -1,0 +1,38 @@
+<div class="upgrade-schedule-form">
+  <cs-select
+    class="upgrade-schedule-time"
+    is-disabled="$ctrl.syncing"
+    labelfield="label"
+    valuefield="value"
+    ng-model="$ctrl.formData.scheduleTime"
+    options="$ctrl.formOptions.time"
+    placeholder="'Select a time'"
+    >
+  </cs-select>
+  <cs-select
+    class="upgrade-schedule-day"
+    is-disabled="$ctrl.syncing || $ctrl.onlyDaily"
+    labelfield="label"
+    valuefield="value"
+    input-placeholder="sel.inputPlaceholder"
+    ng-model="$ctrl.formData.scheduleDay"
+    options="$ctrl.formOptions.day"
+    placeholder="'Select a day'"
+    >
+  </cs-select>
+  <cs-select
+    class="upgrade-schedule-timezone"
+    is-disabled="$ctrl.syncing"
+    labelfield="label"
+    valuefield="value"
+    filter="true"
+    ng-model="$ctrl.formData.scheduleTimeZone"
+    options="$ctrl.formOptions.timeZone"
+    placeholder="'Select a timezone'"
+    >
+  </cs-select>
+</div>
+<p>
+  <span translate="hercules.settings.scheduleUpgrade.postponeLabel"></span><br>
+  <strong class="upgrade-schedule-next-time">{{$ctrl.upgradeSchedule.nextUpgradeWindow.startTime | date:'MMM d, y h:mm a':$ctrl.nextUpdateOffset}}</strong> <a href="#" ng-click="$ctrl.postpone($event)" translate="hercules.settings.scheduleUpgrade.postponeAction" ng-if="!$ctrl.upgradeSchedule.moratoria.length > 0"></a>
+</p>

@@ -1,12 +1,18 @@
 <div class="add-user-container">
-  <h3 translate="firstTimeWizard.installTitle"></h3>
-  <p class="installStepHead" translate="firstTimeWizard.connectorSteps"></p>
-  <div class="installStep"><span translate="firstTimeWizard.installStep1" translate-value-download="{{dirSyncConnectorDownload}}"></span></div>
+  <h4 translate="firstTimeWizard.installTitle"></h4>
+  <h6 class="installStepHead" translate="firstTimeWizard.connectorSteps"></h6>
+  <div class="installStep"><span translate="firstTimeWizard.installStep1"
+                                 translate-value-download="{{dirSyncConnectorDownload}}"></span></div>
   <div class="installStep"><span translate="firstTimeWizard.installStep2"></span></div>
   <div class="installStepLast"><span translate="firstTimeWizard.installStep3"></span></div>
-  <div class="installStepWarning">
-  	<span class="alert-text" translate="firstTimeWizard.installWarning"></span>
-  	<span translate="firstTimeWizard.installWarningDescription"></span>
+  <div class="installStepWarning row">
+    <div class="column medium-9">
+      <i class="icon icon-warning warning-text"></i>
+      <div class="block">
+        <span class="alert-text" translate="firstTimeWizard.installWarning"></span>
+        <span translate="firstTimeWizard.installWarningDescription"></span>
+        <div><span translate="firstTimeWizard.nextSteps"></span></div>
+      </div>
+    </div>
   </div>
-  <div class="installStepWarning"><span translate="firstTimeWizard.nextSteps"></span></div>
 </div>

@@ -1,0 +1,15 @@
+{
+  "callparks": [{
+    "uuid": "abcd1234-abcd-abcd-abcddef123456",
+    "name": "Technical Support",
+    "startRange": "5010",
+    "endRange": "5010",
+    "memberCount": 2
+  }, {
+    "uuid": "bbcd1234-abcd-abcd-abcddef123456",
+    "name": "Marketing",
+    "startRange": "5010",
+    "endRange": "5012",
+    "memberCount": 3
+  }]
+}

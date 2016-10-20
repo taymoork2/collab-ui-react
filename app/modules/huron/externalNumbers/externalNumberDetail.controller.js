@@ -5,7 +5,7 @@
     .controller('ExternalNumberDetailCtrl', ExternalNumberDetail);
 
   /* @ngInject */
-  function ExternalNumberDetail($stateParams, $translate, $q, ExternalNumberService, ModalService, PstnSetupService, Notification, TelephoneNumberService, DialPlanService, $interval, $scope) {
+  function ExternalNumberDetail($interval, $scope, $stateParams, $translate, DialPlanService, ExternalNumberService, ModalService, Notification, TelephoneNumberService) {
     var vm = this;
     vm.currentCustomer = $stateParams.currentCustomer;
 
@@ -17,12 +17,15 @@
     vm.filteredPendingNumbers = [];
     vm.filteredUnassignedNumbers = [];
 
+    vm.showPstnSetup = false;
+
     vm.allText = $translate.instant('common.all');
     vm.pendingText = $translate.instant('common.pending');
     vm.unassignedText = $translate.instant('common.unassigned');
 
     vm.deleteNumber = deleteNumber;
     vm.listPhoneNumbers = listPhoneNumbers;
+    vm.getQuantity = getQuantity;
 
     vm.isNumberValid = TelephoneNumberService.validateDID;
 
@@ -69,7 +72,7 @@
         }) + '<br>' + $translate.instant('externalNumberPanel.deleteWarning'),
         close: $translate.instant('common.yes'),
         dismiss: $translate.instant('common.no'),
-        type: 'negative'
+        btnType: 'negative'
       }).result.then(function () {
         return ExternalNumberService.deleteNumber(vm.currentCustomer.customerOrgId, number)
           .then(function () {
@@ -88,10 +91,14 @@
     }
 
     function getNumbers() {
-      vm.allNumbers = ExternalNumberService.getAllNumbers();
-      vm.pendingNumbers = ExternalNumberService.getPendingNumbers();
+      vm.allNumbers = ExternalNumberService.getAllNumbers().concat(ExternalNumberService.getPendingOrders());
+      vm.pendingList = ExternalNumberService.getPendingNumbers().concat(ExternalNumberService.getPendingOrders());
       vm.unassignedNumbers = ExternalNumberService.getUnassignedNumbersWithoutPending();
       vm.refresh = false;
+    }
+
+    function getQuantity(type) {
+      return ExternalNumberService.getQuantity(type);
     }
   }
 })();

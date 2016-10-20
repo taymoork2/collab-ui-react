@@ -36,22 +36,26 @@
             model: 'CISCO_8865',
             enabled: false,
             quantity: 0,
-            readonly: false
+            readonly: false,
+            valid: true
           }, {
             model: 'CISCO_8845',
             enabled: false,
             quantity: 0,
-            readonly: false
+            readonly: false,
+            valid: true
           }, {
             model: 'CISCO_8841',
             enabled: false,
             quantity: 0,
-            readonly: false
+            readonly: false,
+            valid: true
           }, {
             model: 'CISCO_7841',
             enabled: false,
             quantity: 0,
-            readonly: false
+            readonly: false,
+            valid: true
           }]
         }
       };
@@ -61,8 +65,8 @@
     }
 
     function hasCallDevicesAvailable(details) {
-      var staticPhones = _.pluck(getData().details.phones, 'model');
-      var devices = _.pluck(_.get(details, 'devices', []), 'model');
+      var staticPhones = _.map(getData().details.phones, 'model');
+      var devices = _.map(_.get(details, 'devices', []), 'model');
 
       return _.difference(staticPhones, devices).length === getData().details.phones.length;
     }

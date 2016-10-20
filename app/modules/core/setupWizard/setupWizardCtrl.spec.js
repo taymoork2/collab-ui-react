@@ -1,25 +1,34 @@
 'use strict';
 
 describe('SetupWizardCtrl', function () {
-  beforeEach(module('Core'));
-  beforeEach(module('Huron'));
+  beforeEach(angular.mock.module('Core'));
+  beforeEach(angular.mock.module('Huron'));
+  beforeEach(angular.mock.module('Sunlight'));
 
-  var controller, $scope, $controller, Authinfo, $q, FeatureToggleService;
+  var $controller, $httpBackend, $scope, $q, Authinfo, FeatureToggleService, Orgservice;
 
-  beforeEach(inject(function ($rootScope, _$controller_, _$q_, _Authinfo_, _FeatureToggleService_) {
+  var usageFixture = getJSONFixture('core/json/organizations/usage.json');
+  var usageOnlySharedDevicesFixture = getJSONFixture('core/json/organizations/usageOnlySharedDevices.json');
+
+  beforeEach(inject(function ($rootScope, _$httpBackend_, _$controller_, _$q_, _Authinfo_, _FeatureToggleService_, _Orgservice_) {
+    $httpBackend = _$httpBackend_;
     $scope = $rootScope.$new();
     $q = _$q_;
     $controller = _$controller_;
     Authinfo = _Authinfo_;
     FeatureToggleService = _FeatureToggleService_;
+    Orgservice = _Orgservice_;
 
     spyOn(Authinfo, 'isCustomerAdmin').and.returnValue(true);
     spyOn(Authinfo, 'isSetupDone').and.returnValue(false);
     spyOn(Authinfo, 'isSquaredUC').and.returnValue(false);
+    spyOn(Authinfo, 'isCSB').and.returnValue(true);
+    spyOn(Authinfo, 'isCare').and.returnValue(false);
 
     spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(false));
     spyOn(FeatureToggleService, 'supportsDirSync').and.returnValue($q.when(false));
-    spyOn(FeatureToggleService, 'supportsCsvUpload').and.returnValue($q.when(false));
+    spyOn(FeatureToggleService, 'atlasDarlingGetStatus').and.returnValue($q.when(false));
+    spyOn(Orgservice, 'getAdminOrgUsage').and.returnValue($q.when(usageFixture));
   }));
 
   function _expectStepIndex(step, index) {
@@ -38,69 +47,6 @@ describe('SetupWizardCtrl', function () {
         name: subStep
       })
       .value()).toBe(index);
-  }
-
-  function _expectSubTabIndex(step, subTab, index) {
-    expect(_.chain($scope.tabs)
-      .find({
-        name: step
-      })
-      .get('subTabs')
-      .findIndex({
-        name: subTab.name
-      })
-      .value()).toBe(index);
-  }
-
-  function _expectSubTabSubStepIndex(step, subTab, subStep, index) {
-    expect(_.chain($scope.tabs)
-      .find({
-        name: step
-      })
-      .get('subTabs')
-      .find({
-        name: subTab
-      })
-      .get('steps')
-      .findIndex({
-        name: subStep.name
-      })
-      .value()).toBe(index);
-  }
-
-  function expectSubTabOrder(macroStep, subTabs) {
-    // verify substeps length
-    var subTabsVal = _.chain($scope.tabs)
-      .find({
-        name: macroStep
-      })
-      .get('subTabs')
-      .value();
-
-    expect(subTabsVal.length).toBe(subTabs.length);
-
-    _.forEach(subTabsVal, function (subTab, index) {
-      _expectSubTabIndex(macroStep, subTab, index);
-    });
-  }
-
-  function expectSubTabStepOrder(macroStep, subTab, steps) {
-    var stepsVal = _.chain($scope.tabs)
-      .find({
-        name: macroStep
-      })
-      .get('subTabs')
-      .find({
-        name: subTab
-      })
-      .get('steps')
-      .value();
-
-    expect(stepsVal.length).toBe(steps.length);
-
-    _.forEach(stepsVal, function (step, index) {
-      _expectSubTabSubStepIndex(macroStep, subTab, step, index);
-    });
   }
 
   function expectStepOrder(steps) {
@@ -126,36 +72,17 @@ describe('SetupWizardCtrl', function () {
   }
 
   function initController() {
-    controller = $controller('SetupWizardCtrl', {
+    $controller('SetupWizardCtrl', {
       $scope: $scope
     });
     $scope.$apply();
   }
 
-  /**
-   * convenience fn to see the proper ordering of setup tabs:
-   * shows tab name, subtab name (if present), and [step names]
-   *
-  function print() {
-    _.forEach($scope.tabs, function (macroStep) {
-      var microSteps = _.map(macroStep.steps, 'name');
-      if (microSteps.length !== 0) {
-        console.log(macroStep.name, microSteps);
-      } else {
-        _.forEach(macroStep.subTabs, function (subTab) {
-          var microSteps = _.map(subTab.steps, 'name');
-          console.log(macroStep.name, subTab.name, microSteps);
-        });
-      }
-    });
-  }
-  */
-
   describe('When all toggles are false (and Authinfo.isSetupDone is false as well)', function () {
     beforeEach(initController);
 
-    it('the wizard should have 5 macro-level steps', function () {
-      expectStepOrder(['planReview', 'messagingSetup', 'enterpriseSettings', 'addUsers', 'finish']);
+    it('the wizard should have 4 macro-level steps', function () {
+      expectStepOrder(['planReview', 'messagingSetup', 'enterpriseSettings', 'finish']);
     });
 
     it('planReview should have a single substep', function () {
@@ -166,19 +93,8 @@ describe('SetupWizardCtrl', function () {
       expectSubStepOrder('messagingSetup', ['setup']);
     });
 
-    it('enterpriseSettings should have five substeps', function () {
+    it('enterpriseSettings should have five steps', function () {
       expectSubStepOrder('enterpriseSettings', ['enterpriseSipUrl', 'init', 'exportMetadata', 'importIdp', 'testSSO']);
-    });
-
-    it('addUsers should have 3 sub tabs with substeps having 4, 5, and 4 entries respectively', function () {
-      var addUsers = _.find($scope.tabs, {
-        name: 'addUsers'
-      });
-      expect(addUsers.steps).toBeUndefined();
-      expectSubTabOrder('addUsers', ['simple', 'csv', 'advanced']);
-      expectSubTabStepOrder('addUsers', 'simple', ['init', 'manualEntry', 'assignServices', 'assignDnAndDirectLines']);
-      expectSubTabStepOrder('addUsers', 'csv', ['init', 'csvUpload', 'csvServices', 'csvProcessing', 'csvResult']);
-      expectSubTabStepOrder('addUsers', 'advanced', ['init', 'domainEntry', 'installConnector', 'syncStatus']);
     });
 
     it('finish should have a single substep', function () {
@@ -193,7 +109,7 @@ describe('SetupWizardCtrl', function () {
     });
 
     it('the wizard should not have the finish step', function () {
-      expectStepOrder(['planReview', 'messagingSetup', 'enterpriseSettings', 'addUsers']);
+      expectStepOrder(['planReview', 'messagingSetup', 'enterpriseSettings']);
     });
   });
 
@@ -203,8 +119,8 @@ describe('SetupWizardCtrl', function () {
       initController();
     });
 
-    it('the wizard should have the 6 steps', function () {
-      expectStepOrder(['planReview', 'serviceSetup', 'messagingSetup', 'enterpriseSettings', 'addUsers', 'finish']);
+    it('the wizard should have the 5 steps', function () {
+      expectStepOrder(['planReview', 'serviceSetup', 'messagingSetup', 'enterpriseSettings', 'finish']);
     });
 
     it('serviceSetup should have a single substep', function () {
@@ -224,8 +140,8 @@ describe('SetupWizardCtrl', function () {
       initController();
     });
 
-    it('the wizard should have 6 steps', function () {
-      expectStepOrder(['planReview', 'serviceSetup', 'messagingSetup', 'enterpriseSettings', 'addUsers', 'finish']);
+    it('the wizard should have 5 steps', function () {
+      expectStepOrder(['planReview', 'serviceSetup', 'messagingSetup', 'enterpriseSettings', 'finish']);
     });
 
     it('serviceSetup should have a single substep', function () {
@@ -233,50 +149,92 @@ describe('SetupWizardCtrl', function () {
     });
   });
 
-  describe('When csvupload is false and dirsync is enabled', function () {
+  describe('When dirsync is enabled', function () {
     beforeEach(function () {
       FeatureToggleService.supportsDirSync.and.returnValue($q.when(true));
       initController();
     });
 
-    it('the wizard should have communications as a step 5 steps', function () {
-      expectStepOrder(['planReview', 'messagingSetup', 'enterpriseSettings', 'addUsers', 'finish']);
+    it('the wizard should have 4 tabs', function () {
+      expectStepOrder(['planReview', 'messagingSetup', 'enterpriseSettings', 'finish']);
     });
 
-    it('addUsers should have 2 sub tabs with substeps having 5, and 7 entries respectively (with csvUpload, and with csvServices)', function () {
-      var addUsers = _.find($scope.tabs, {
-        name: 'addUsers'
-      });
-      expect(addUsers.steps).toBeUndefined();
-      expectSubTabOrder('addUsers', ['csv', 'advanced']);
-      expectSubTabStepOrder('addUsers', 'csv', ['init', 'csvUpload', 'csvServices', 'csvProcessing', 'csvResult']);
-      expectSubTabStepOrder('addUsers', 'advanced', ['init', 'domainEntry', 'installConnector', 'syncStatus', 'dirsyncServices', 'dirsyncProcessing', 'dirsyncResult']);
-    });
   });
 
-  describe('When csvupload is true and dirsync is enabled', function () {
+  describe('When Authinfo.isCSB is disabled', function () {
     beforeEach(function () {
-      FeatureToggleService.supportsDirSync.and.returnValue($q.when(true));
-      FeatureToggleService.supportsCsvUpload.and.returnValue($q.when(true));
+      Authinfo.isCSB.and.returnValue(false);
       initController();
     });
 
-    it('the wizard should have communications as a step 5 steps', function () {
+    it('the wizard should have 5 tabs', function () {
       expectStepOrder(['planReview', 'messagingSetup', 'enterpriseSettings', 'addUsers', 'finish']);
     });
 
-    it('addUsers should have 2 sub tabs with substeps having 5, and 7 entries respectively (with csvDownload, and without csvServices)', function () {
-      var addUsers = _.find($scope.tabs, {
-        name: 'addUsers'
-      });
-      expect(addUsers.steps).toBeUndefined();
-      expectSubTabOrder('addUsers', ['csv', 'advanced']);
-      expectSubTabStepOrder('addUsers', 'csv', ['init', 'csvDownload', 'csvUpload', 'csvProcessing', 'csvResult']);
-      expectSubTabStepOrder('addUsers', 'advanced', ['init', 'domainEntry', 'installConnector', 'syncStatus', 'dirsyncServices', 'dirsyncProcessing', 'dirsyncResult']);
+  });
+
+  describe('When Authinfo.isCare is enabled and addUsers too', function () {
+    beforeEach(function () {
+      Authinfo.isCare.and.returnValue(true);
+      Authinfo.isCSB.and.returnValue(false);
+      FeatureToggleService.atlasCareTrialsGetStatus = jasmine.createSpy().and.returnValue($q.when(true));
+      $httpBackend.expectGET(/.*atlas.*\/userauthinfo/g).respond(200, { roles: ['User', 'Full_Admin'] });
+      initController();
+      $httpBackend.flush();
+    });
+
+    it('the wizard should have the 6 steps', function () {
+      expectStepOrder(['planReview', 'messagingSetup', 'enterpriseSettings', 'careSettings', 'addUsers', 'finish']);
+    });
+
+    it('careSettings should have a single substep', function () {
+      expectSubStepOrder('careSettings', ['csonboard']);
     });
   });
 
-  describe('When csvupload is true and dirsync is enabled', function () {
+  describe('When Authinfo.isCare is enabled ', function () {
+    beforeEach(function () {
+      Authinfo.isCare.and.returnValue(true);
+      FeatureToggleService.atlasCareTrialsGetStatus = jasmine.createSpy().and.returnValue($q.when(true));
+      $httpBackend.expectGET(/.*atlas.*\/userauthinfo/g).respond(200, { roles: ['User', 'Full_Admin'] });
+      initController();
+      $httpBackend.flush();
+    });
+
+    it('the wizard should have the 5 steps', function () {
+      expectStepOrder(['planReview', 'messagingSetup', 'enterpriseSettings', 'careSettings', 'finish']);
+    });
+  });
+
+  describe('When Authinfo.isCare is enabled and not first time setup', function () {
+    beforeEach(function () {
+      Authinfo.isCare.and.returnValue(true);
+      FeatureToggleService.atlasCareTrialsGetStatus = jasmine.createSpy().and.returnValue($q.when(true));
+      Authinfo.isSetupDone.and.returnValue(true);
+      $httpBackend.expectGET(/.*atlas.*\/userauthinfo/g).respond(200, { roles: ['User', 'Full_Admin'] });
+      initController();
+      $httpBackend.flush();
+    });
+
+    it('the wizard should have the 4 steps', function () {
+      expectStepOrder(['planReview', 'messagingSetup', 'enterpriseSettings', 'careSettings']);
+    });
+  });
+
+  describe('Partner should not see Care', function () {
+    beforeEach(function () {
+      $httpBackend.expectGET(/.*atlas.*\/userauthinfo/g).respond(200, { roles: ['PARTNER_USER', 'PARTNER_ADMIN'] });
+      Authinfo.isCare.and.returnValue(true);
+      FeatureToggleService.atlasCareTrialsGetStatus = jasmine.createSpy().and.returnValue($q.when(true));
+      initController();
+    });
+
+    it('the wizard should have the 4 steps without care', function () {
+      expectStepOrder(['planReview', 'messagingSetup', 'enterpriseSettings', 'finish']);
+    });
+  });
+
+  describe('When dirsync is enabled', function () {
     beforeEach(function () {
       FeatureToggleService.supports.and.callFake(function (val) {
         if (val === FeatureToggleService.features.atlasSipUriDomainEnterprise) {
@@ -287,12 +245,22 @@ describe('SetupWizardCtrl', function () {
       initController();
     });
 
-    it('the wizard should have communications as a step 5 steps', function () {
-      expectStepOrder(['planReview', 'messagingSetup', 'enterpriseSettings', 'addUsers', 'finish']);
+    it('the wizard should have 4 tabs', function () {
+      expectStepOrder(['planReview', 'messagingSetup', 'enterpriseSettings', 'finish']);
+    });
+  });
+
+  describe('When there are only shared device licenses', function () {
+    beforeEach(function () {
+      FeatureToggleService.atlasDarlingGetStatus = jasmine.createSpy().and.returnValue($q.when(true));
+      Orgservice.getAdminOrgUsage = jasmine.createSpy().and.returnValue($q.when(usageOnlySharedDevicesFixture));
+
+      initController();
     });
 
-    it('enterpriseSettings should have five substeps', function () {
-      expectSubStepOrder('enterpriseSettings', ['enterpriseSipUrl', 'init', 'exportMetadata', 'importIdp', 'testSSO']);
+    it('the wizard should have 3 tabs', function () {
+      expectStepOrder(['planReview', 'enterpriseSettings', 'finish']);
+      expectSubStepOrder('enterpriseSettings', ['enterpriseSipUrl']);
     });
   });
 
@@ -300,26 +268,52 @@ describe('SetupWizardCtrl', function () {
     beforeEach(function () {
       Authinfo.isSetupDone.and.returnValue(true);
       Authinfo.isSquaredUC.and.returnValue(true);
+      Authinfo.isCare.and.returnValue(true);
 
       FeatureToggleService.supports.and.returnValue($q.when(true));
       FeatureToggleService.supportsDirSync.and.returnValue($q.when(true));
-      FeatureToggleService.supportsCsvUpload.and.returnValue($q.when(true));
+      FeatureToggleService.atlasCareTrialsGetStatus = jasmine.createSpy().and.returnValue($q.when(true));
 
+      $httpBackend.expectGET(/.*atlas.*\/userauthinfo/g).respond(200, { roles: ['User', 'Full_Admin'] });
       initController();
+      $httpBackend.flush();
     });
 
     it('the wizard should have a lot of settings', function () {
-      expectStepOrder(['planReview', 'serviceSetup', 'messagingSetup', 'enterpriseSettings', 'addUsers']);
-
+      expectStepOrder(['planReview', 'serviceSetup', 'messagingSetup', 'enterpriseSettings', 'careSettings']);
       expectSubStepOrder('planReview', ['init']);
       expectSubStepOrder('serviceSetup', ['init']);
       expectSubStepOrder('messagingSetup', ['setup']);
       expectSubStepOrder('enterpriseSettings', ['enterpriseSipUrl', 'init', 'exportMetadata', 'importIdp', 'testSSO']);
-
-      expectSubTabOrder('addUsers', ['csv', 'advanced']);
-      expectSubTabStepOrder('addUsers', 'csv', ['init', 'csvDownload', 'csvUpload', 'csvProcessing', 'csvResult']);
-      expectSubTabStepOrder('addUsers', 'advanced', ['init', 'domainEntry', 'installConnector', 'syncStatus', 'dirsyncServices', 'dirsyncProcessing', 'dirsyncResult']);
+      expectSubStepOrder('careSettings', ['csonboard']);
     });
-
   });
+
+  it('will filter tabs if onlyShowSingleTab is true', function () {
+    $controller('SetupWizardCtrl', {
+      $scope: $scope,
+      $stateParams: {
+        onlyShowSingleTab: true,
+        currentTab: 'messagingSetup'
+      }
+    });
+    $scope.$apply();
+
+    expectStepOrder(['messagingSetup']);
+  });
+
+  it('will filter steps if onlyShowSingleTab is true and currentStep is set.', function () {
+    $controller('SetupWizardCtrl', {
+      $scope: $scope,
+      $stateParams: {
+        currentTab: 'enterpriseSettings',
+        currentStep: 'init',
+        onlyShowSingleTab: true
+      }
+    });
+    $scope.$apply();
+    expectStepOrder(['enterpriseSettings']);
+    expectSubStepOrder('enterpriseSettings', ['init', 'exportMetadata', 'importIdp', 'testSSO']);
+  });
+
 });

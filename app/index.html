@@ -1,10 +1,6 @@
 <!doctype html>
-<html ng-app="wx2AdminWebClientApp">
+<html ng-app="wx2AdminWebClientApp" <%= htmlWebpackPlugin.options.ngStrictDi %>>
   <head>
-    <!-- build:js scripts/unsupported.js -->
-    <!-- unsupported:js -->
-    <!-- endinject -->
-    <!-- endbuild -->
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title ng-bind="Localize.varTitle()"></title>
@@ -12,22 +8,21 @@
     <meta name="viewport" content="width=device-width">
     <link rel="icon" type="image/png" href="images/favicon.ico">
     <link type="image/x-icon" rel="shortcut icon" href="images/favicon.ico"/>
-    <!-- build:css styles/main.css -->
-    <!-- inject:css -->
-    <!-- endinject -->
-    <!-- endbuild -->
+    <script type="text/javascript" src="//assets.adobedtm.com/2bcd47c09d46d6e1ea2fd7753b40afb656eb0683/satelliteLib-b40066032cf0a1b4f92efb2131e8178ab11ab006.js"></script>
   </head>
-  <body ng-controller="BodyCtrl as bodyCtrl" ng-class="{inverse: bodyCtrl.partner}" class="{{$root.bodyClass}}" ng-cloak cs-breakpoint="{0:'screen-xs', 769:'screen-sm', 993:'screen-md', 1201:'screen-lg'}">
+  <body ng-controller="BodyCtrl as bodyCtrl" ng-class="{inverse: bodyCtrl.partner}" class="{{$root.bodyClass}}" cs-breakpoint="{0:'screen-xs', 769:'screen-sm', 993:'screen-md', 1201:'screen-lg'}">
     <toaster-container></toaster-container>
-    <div ui-view="main"></div>
+    <div ui-view="main" ng-cloak></div>
 
-    <script>
-      var preload = new Image();
-      preload.src = "images/bg_3515.jpg";
-    </script>
-    <!-- build:js scripts/index.scripts.js -->
-    <!-- inject:js -->
-    <!-- endinject -->
-    <!-- endbuild -->
+    <noscript>
+      JavaScript is not enabled. Please enable it and reload the page.
+    </noscript>
+
+    <!--[if lt IE 11]>
+    <div class="unsupported-browser" translate="errors.unsupported">
+      You are using an <strong>outdated</strong> version of Internet Explorer. Please <a href='http://windows.microsoft.com/en-us/internet-explorer/download-ie' target='_blank'>upgrade your browser</a> to version 11 or higher.
+    </div>
+    <![endif]-->
+    <script type="text/javascript">if(typeof _satellite !== 'undefined'){_satellite.pageBottom();}</script>
   </body>
 </html>

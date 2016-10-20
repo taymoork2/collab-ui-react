@@ -1,7 +1,7 @@
 (function () {
   'use strict';
 
-  /*ngInject*/
+  /* @ngInject */
   function HelpdeskSearchHistoryService(Storage) {
     var self = this;
     self.limit = 10;
@@ -15,7 +15,7 @@
     }
 
     function saveSearch(s) {
-      var search = _.clone(s, true);
+      var search = _.cloneDeep(s);
       if (_.size(search.userSearchResults) > 0 || _.size(search.orgSearchResults) > 0 || _.size(search.deviceSearchResults) > 0) {
         removeSearch(search);
         if (self.searchHistory.length === self.limit) {

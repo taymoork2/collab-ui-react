@@ -1,7 +1,12 @@
 (function () {
   'use strict';
 
-  function HerculesNotificationsController(NotificationService, $state, $scope, $modal, $timeout, ServiceDescriptor) {
+  angular
+    .module('Hercules')
+    .directive('herculesNotifications', herculesNotificationsDirective);
+
+  /* @ngInject */
+  function HerculesNotificationsController(NotificationService, $state, $scope, $modal, ServiceDescriptor, ServiceStateChecker, USSService) {
     var vm = this;
     vm.notificationsLength = function () {
       return NotificationService.getNotificationLength();
@@ -14,12 +19,12 @@
     vm.showNotifications = false;
     vm.typeDisplayName = function (type) {
       switch (type) {
-      case NotificationService.types.ALERT:
-        return 'ALERT';
-      case NotificationService.types.NEW:
-        return 'NEW';
-      default:
-        return 'TO-DO';
+        case NotificationService.types.ALERT:
+          return 'ALERT';
+        case NotificationService.types.NEW:
+          return 'NEW';
+        default:
+          return 'TO-DO';
       }
     };
 
@@ -33,12 +38,6 @@
       }) ? NotificationService.types.ALERT : NotificationService.types.TODO;
     };
 
-    vm.navigateToDirSyncSetup = function () {
-      $state.go('setupwizardmodal', {
-        currentTab: 'addUsers'
-      });
-    };
-
     vm.navigateToUsers = function () {
       $state.go('users.list');
     };
@@ -47,19 +46,27 @@
       $state.go('call-service.settings');
     };
 
+    vm.locatedinCallSettings = function () {
+      return $state.is('call-service.settings');
+    };
+
     vm.navigateToCurrentServiceSettings = function () {
       vm.showNotifications = false;
       $state.go($state.current.name.split('.')[0] + '.settings');
     };
 
-    vm.showUserErrorsDialog = function (serviceId) {
+    vm.showUserErrorsDialog = function (servicesId) {
       $scope.modal = $modal.open({
-        controller: 'UserErrorsController',
-        controllerAs: 'userErrorsCtrl',
-        templateUrl: 'modules/hercules/expressway-service/user-errors.html',
+        controller: 'ExportUserStatusesController',
+        controllerAs: 'exportUserStatusesCtrl',
+        templateUrl: 'modules/hercules/user-statuses/export-user-statuses.html',
+        type: 'small',
         resolve: {
-          serviceId: function () {
-            return serviceId;
+          servicesId: function () {
+            return servicesId;
+          },
+          userStatusSummary: function () {
+            return USSService.extractSummaryForAService(servicesId);
           }
         }
       });
@@ -70,19 +77,16 @@
       NotificationService.removeNotification(notificationId);
     };
 
-    vm.addResourceButtonClicked = function () {
-      $modal.open({
-        controller: 'RedirectTargetController',
-        controllerAs: 'redirectTarget',
-        templateUrl: 'modules/hercules/redirect-target/redirect-target-dialog.html'
-      });
-    };
-
     vm.showEnterpriseSettings = function () {
       $state.go('setupwizardmodal', {
         currentTab: 'enterpriseSettings'
       });
     };
+
+    vm.setSipUriNotificationAcknowledged = function () {
+      ServiceStateChecker.setSipUriNotificationAcknowledgedAndRemoveNotification();
+    };
+
   }
 
   function herculesNotificationsDirective() {
@@ -99,7 +103,4 @@
     };
   }
 
-  angular
-    .module('Hercules')
-    .directive('herculesNotifications', herculesNotificationsDirective);
 })();

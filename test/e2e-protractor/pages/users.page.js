@@ -30,7 +30,7 @@ var UsersPage = function () {
 
   this.servicesPanelCommunicationsCheckbox = element(by.css('.indentedCheckbox'));
   this.listPanel = element(by.id('userslistpanel'));
-  this.manageDialog = element(by.id('modalContent'));
+  this.manageDialog = element(by.css('.modal-content'));
   this.deleteUserModal = element(by.id('deleteUserModal'));
   this.squaredPanel = element(by.id('conversations-link'));
   this.entitlementPanel = element(by.id('entitlementPanel'));
@@ -44,11 +44,10 @@ var UsersPage = function () {
   this.rolesPanel = element(by.id('roles-panel'));
   this.closeRolesPanel = element(by.id('close-roles'));
   this.closeSidePanel = element(by.css('.panel-close'));
-  this.messagingService = element.all(by.css('#Message .feature-arrow')).first();
-
-  this.communicationsService = element(by.css('#Call .feature-arrow'));
-  this.conferencingService = element(by.css('#Meeting .feature-arrow'));
-  this.contactCenterService = element(by.css('#ContactCenter .feature-arrow'));
+  this.messagingService = element(by.cssContainingText('.feature', 'Message')).element(by.css('.feature-arrow'));
+  this.communicationsService = element(by.cssContainingText('.feature', 'Call')).element(by.css('.feature-arrow'));
+  this.conferencingService = element(by.cssContainingText('.feature', 'Meeting')).element(by.css('.feature-arrow'));
+  this.contactCenterService = element(by.cssContainingText('.feature', 'Care')).element(by.css('.feature-arrow'));
   this.sunlightUserPanel = element(by.cssContainingText('.section-title-row', 'Channels'));
   this.sunlightChatChannel = element(by.css('label[for="sunlight-chat"]'));
   this.sunlightEmailChannel = element(by.css('label[for="sunlight-email"]'));
@@ -81,7 +80,8 @@ var UsersPage = function () {
   this.squaredCheckBox = element(by.css('label[for="chk_webExSquared"]'));
   this.squaredUCCheckBox = element(by.css('label[for="chk_ciscoUC"]'));
   this.paidMsgCheckbox = element(by.css('label[for="paid-msg"]'));
-  this.paidMtgCheckbox = element(by.cssContainingText('cs-checkbox', 'Meeting 25 Party'));
+  this.paidMtgCheckbox = element(by.css('label[for="paid-conf"]'));
+  this.paidCareCheckbox = element(by.cssContainingText('.cs-checkbox', 'Care'));
 
   this.closePreview = element(by.id('exitPreviewButton'));
   this.closeDetails = element(by.id('exit-details-btn'));
@@ -101,9 +101,10 @@ var UsersPage = function () {
 
   this.cancelButton = element(by.buttonText('Cancel'));
   this.saveButton = element(by.buttonText('Save'));
+  this.finishButton = element(by.buttonText('Finish'));
 
-  this.clearButton = element(by.id('btnClear'));
-  this.backButton = element(by.buttonText('Clear'));
+  this.clearButton = element(by.css('.clear-button'));
+  this.backButton = element(by.buttonText('Back'));
   this.nextButton = element(by.buttonText('Next'));
 
   this.currentPage = element(by.css('.pagination-current a'));
@@ -169,8 +170,8 @@ var UsersPage = function () {
   this.callServiceConnectStatus = element(by.id('callServiceConnectStatus'));
 
   this.msgRadio = element(by.repeater('license in msgFeature.licenses'));
-  this.messageService = element(by.id('Message'));
-  this.meetingService = element(by.id('Meeting'));
+  this.messageService = element(by.cssContainingText('.feature', 'Message'))
+  this.meetingService = element(by.cssContainingText('.feature', 'Meeting'))
 
   this.assertSorting = function (nameToSort) {
     this.queryResults.getAttribute('value').then(function (value) {
@@ -247,12 +248,13 @@ var UsersPage = function () {
     users.createUser(alias);
     utils.click(checkbox);
     utils.click(users.onboardButton);
-    notifications.assertSuccess('onboarded successfully');
+    utils.expectIsDisplayed(users.finishButton);
+    utils.click(users.finishButton);
     utils.expectIsNotDisplayed(users.manageDialog);
 
     activate.setup(null, alias);
     utils.search(alias);
-  }
+  };
 
   this.clickServiceCheckbox = function (alias, expectedMsgState, expectedMtgState, clickService) {
     function expectDisplayed(elem, state) {
@@ -272,13 +274,13 @@ var UsersPage = function () {
     utils.click(users.editServicesButton);
 
     utils.waitForModal().then(function () {
-      utils.expectCheckbox(users.paidMsgCheckbox, expectedMsgState);
-      utils.expectCheckbox(users.paidMtgCheckbox, expectedMtgState);
+      utils.expectInputCheckbox(users.paidMsgCheckbox, expectedMsgState);
+      utils.expectInputCheckbox(users.paidMtgCheckbox, expectedMtgState);
 
       // Uncheck license...
       utils.click(clickService);
       utils.click(users.saveButton);
-      notifications.assertSuccess('entitled successfully');
+      //notifications.assertSuccess('entitled successfully');
       utils.click(users.closeSidePanel);
     });
   };
@@ -295,7 +297,7 @@ var UsersPage = function () {
       .value();
     utils.writeFile(path, fileText);
     return userList;
-  }
+  };
 };
 
 module.exports = UsersPage;

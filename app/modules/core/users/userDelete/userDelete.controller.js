@@ -5,13 +5,12 @@
     .controller('UserDeleteCtrl', UserDeleteCtrl);
 
   /* @ngInject */
-  function UserDeleteCtrl($scope, $rootScope, $stateParams, $q, $timeout, Log, Userservice, Notification, Config, $translate, HuronUser, SyncService) {
+  function UserDeleteCtrl($scope, $rootScope, $stateParams, $timeout, $translate, Authinfo, FeatureToggleService, Notification, SunlightConfigService, Userservice) {
     var vm = this;
 
     vm.deleteUserOrgId = $stateParams.deleteUserOrgId;
     vm.deleteUserUuId = $stateParams.deleteUserUuId;
     vm.deleteUsername = $stateParams.deleteUsername;
-    vm.isMsgrSyncEnabled = false;
 
     vm.confirmation = '';
     var confirmationMatch = $translate.instant('usersPage.yes');
@@ -21,17 +20,7 @@
 
     init();
 
-    function init() {
-      getMessengerSyncStatus();
-    }
-
-    function getMessengerSyncStatus() {
-      SyncService.isMessengerSyncEnabled()
-        .then(function (isEnabled) {
-          vm.isMsgrSyncEnabled = isEnabled;
-        })
-        .catch(Log.error);
-    }
+    function init() {}
 
     function deleteCheck() {
       return vm.confirmation.toUpperCase() !== confirmationMatch;
@@ -39,10 +28,7 @@
 
     function deactivateUser() {
       startLoading();
-      // Delete Huron first
-      deleteHuron()
-        .catch(catchNotFound) // If no huron user, delete like normal
-        .then(deleteUser)
+      deleteUser()
         .then(deleteSuccess)
         .then(closeModal)
         .catch(deleteError)
@@ -53,30 +39,11 @@
       vm.loading = true;
     }
 
-    function deleteHuron() {
-      return $q(function (resolve, reject) {
-        Userservice.getUser(vm.deleteUserUuId, function (user) {
-          if (_.includes(user.entitlements, Config.entitlements.huron)) {
-            HuronUser.delete(vm.deleteUserUuId)
-              .then(resolve)
-              .catch(reject);
-          } else {
-            resolve();
-          }
-        });
-      });
-    }
-
-    function catchNotFound(response) {
-      if (_.get(response, 'status') !== 404) {
-        return $q.reject(response);
-      }
-    }
-
     function deleteUser() {
       var userData = {
         email: vm.deleteUsername
       };
+
       return Userservice.deactivateUser(userData);
     }
 
@@ -85,7 +52,33 @@
         email: vm.deleteUsername
       });
 
+      var userId = vm.deleteUserUuId;
+
+      FeatureToggleService.atlasCareTrialsGetStatus()
+      .then(function (careStatus) {
+        var isCareEnabled = Authinfo.isCare() && careStatus;
+        if (isCareEnabled) {
+          SunlightConfigService.deleteUser(userId)
+          .then(deleteFromCareSuccess)
+          .catch(deleteFromCareFailure);
+        }
+      });
       $timeout(refreshUserList, 500);
+    }
+
+    function deleteFromCareSuccess() {
+      Notification.success('usersPage.deleteCareUserSuccess', {
+        email: vm.deleteUsername
+      });
+    }
+
+    function deleteFromCareFailure(response) {
+      if (response.status == 404) {
+        return;
+      }
+      Notification.error('usersPage.deleteCareUserFailure', {
+        email: vm.deleteUsername
+      });
     }
 
     function refreshUserList() {
@@ -99,7 +92,12 @@
     }
 
     function deleteError(response) {
-      Notification.errorResponse(response, 'usersPage.deleteUserError');
+      var messageKey = 'usersPage.deleteUserError';
+      var message = _.get(response, 'data.message');
+      if (_.includes(message, 'DN_IS_FALLBACK')) {
+        messageKey = 'usersPage.deleteUserDnFallbackError';
+      }
+      Notification.errorResponse(response, messageKey);
     }
 
     function stopLoading() {

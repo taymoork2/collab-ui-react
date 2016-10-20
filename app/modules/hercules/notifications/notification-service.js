@@ -1,14 +1,9 @@
 (function () {
   'use strict';
 
-  function Notification(type, id, priority, template, tags, data) {
-    this.type = type;
-    this.template = template;
-    this.id = id;
-    this.priority = priority;
-    this.tags = tags;
-    this.data = data;
-  }
+  angular
+    .module('Hercules')
+    .service('NotificationService', NotificationService);
 
   /* @ngInject */
   function NotificationService() {
@@ -46,7 +41,13 @@
     };
   }
 
-  angular
-    .module('Hercules')
-    .service('NotificationService', NotificationService);
+  function Notification(type, id, priority, template, tags, data) {
+    this.type = type;
+    this.template = template;
+    this.id = id;
+    this.priority = priority;
+    this.tags = tags;
+    this.data = data;
+  }
+
 }());

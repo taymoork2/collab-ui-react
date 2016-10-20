@@ -2,10 +2,15 @@
   .icon-spinner {
     vertical-align: middle;
   }
+
+  #external-number-add {
+    display: none;
+  }
 }
 
-.external-number-detail {
-
+.external-number-detail,
+.pstn-order-detail,
+.pstn-order-overview {
   .tab-content {
     border: 0;
   }
@@ -21,6 +26,7 @@
       margin-left: 10px;
       vertical-align: middle;
     }
+
     .icon-refresh {
       cursor: pointer;
     }
@@ -35,6 +41,7 @@
     input {
       flex: 1;
     }
+
     .icon-search {
       font-size: 20px;
       right: 30px;
@@ -46,6 +53,31 @@
   .filter-count {
     margin-bottom: 15px;
     color: $gray-dark;
+  }
+
+  .bottom-pad {
+    padding-bottom: 1rem;
+  }
+}
+
+.pstn-order-detail {
+  .info-tooltip {
+    @include vr-spacing(p, 0.5);
+  }
+}
+
+.detail-group {
+  margin-left: 1.5rem;
+  margin-top: 1rem;
+  margin-right: 1.5rem;
+
+  .detail-group-item {
+    font-family: $brand-font-regular;
+    font-size: 0.875rem;
+    padding: 1.25rem 0.5rem;
+    height: 35px;
+    display: flex;
+    align-items: center;
   }
 }
 
@@ -71,14 +103,17 @@
       font-size: 16px;
       font-family: $brand-font-light;
     }
+
     .close {
       color: $brand-white;
       font-size: inherit;
       margin-left: -$close-button-size;
-      &:before {
+
+      &::before {
         font-size: $close-button-size;
       }
     }
+
     + .list-group-item {
       margin-top: 5px;
     }

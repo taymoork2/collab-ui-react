@@ -1,40 +1,23 @@
 <form name="rolesEdit.form" role="form">
   <cs-sp-buttons  ng-show="rolesEdit.form.$dirty" title="{{'rolesPanel.editUser' | translate}}">
-    <button id="saveButton" class="btn btn--primary" translate="common.save" ng-click="updateRoles()" type="submit" ></button>
-    <button id="cancelButton" translate="common.cancel" ng-click="resetRoles()"></button>
+    <button id="saveButton" class="btn btn--primary" translate="common.save" ng-click="updateRoles()" type="button"></button>
+    <button id="cancelButton" translate="common.cancel" ng-click="resetRoles()" type="button"></button>
   </cs-sp-buttons>
   <cs-sp-container>
     <div id="rolesDetailsPanel">
       <div class="edit-panel">
         <form name="rolesObj.form" role="form">
-          <!-- Keep the original code when not in Messenger User Sync Mode, reasons: 1. mg-disabled seems not working here 2. not sure if dirsyncEnabled well tested -->
-          <div ng-if="!isMsgrSyncEnabled"> <!-- not in messenger user sync mode -->
-            <div class="form-group">
-              <label for="firstNameInput" translate="rolesPanel.firstName"></label>
-              <input id="firstNameInput" type="text" class="form-control" name="firstName" ng-disabled="dirsyncEnabled" ng-model="currentUser.name.givenName">
-            </div>
-            <div class="form-group">
-              <label for="lastNameInput" translate="rolesPanel.lastName"></label>
-              <input id="lastNameInput" type="text" class="form-control" name="lastName" ng-disabled="dirsyncEnabled" ng-model="currentUser.name.familyName">
-            </div>
-            <div class="form-group">
-              <label for="displayNameInput" translate="usersPage.displayNameHeader"></label>
-              <input id="displayNameInput" type="text" class="form-control" name="displayName" ng-disabled="dirsyncEnabled" ng-model="currentUser.displayName">
-            </div>
+          <div class="form-group">
+            <label for="firstNameInput" translate="rolesPanel.firstName"></label>
+            <input id="firstNameInput" type="text" class="form-control" name="firstName" ng-disabled="dirsyncEnabled" ng-model="currentUser.name.givenName">
           </div>
-          <div ng-if="isMsgrSyncEnabled"> <!-- when in messenger user sync mode -->
-            <div class="form-group">
-              <label for="firstNameInput" translate="rolesPanel.firstName"></label>
-              <input id="firstNameInput" type="text" class="form-control" name="firstName" ng-model="currentUser.name.givenName" disabled="true">
-            </div>
-            <div class="form-group">
-              <label for="lastNameInput" translate="rolesPanel.lastName"></label>
-              <input id="lastNameInput" type="text" class="form-control" name="lastName" ng-model="currentUser.name.familyName" disabled="true">
-            </div>
-            <div class="form-group">
-              <label for="displayNameInput" translate="usersPage.displayNameHeader"></label>
-              <input id="displayNameInput" type="text" class="form-control" name="displayName" ng-model="currentUser.displayName" disabled="true">
-            </div>
+          <div class="form-group">
+            <label for="lastNameInput" translate="rolesPanel.lastName"></label>
+            <input id="lastNameInput" type="text" class="form-control" name="lastName" ng-disabled="dirsyncEnabled" ng-model="currentUser.name.familyName">
+          </div>
+          <div class="form-group">
+            <label for="displayNameInput" translate="usersPage.displayNameHeader"></label>
+            <input id="displayNameInput" type="text" class="form-control" name="displayName" ng-disabled="dirsyncEnabled" ng-model="currentUser.displayName">
           </div>
 
           <div class="form-group">
@@ -43,7 +26,7 @@
           </div>
 
           <div class="form-group">
-            <label for="sipAddressesInput" translate="usersPage.sipUri"></label>
+            <label for="sipAddressesInput" translate="usersPage.sipDomain"></label>
             <input id="sipAddressesInput" type="text" class="form-control" name="sipAddresses" value="{{sipAddr}}" disabled="true">
           </div>
 
@@ -61,6 +44,15 @@
                         isdisabled="isEditingSelf"></cs-radio>
               <i
                 tooltip-html-unsafe="<ul class='roles-tooltip'><li><i class='icon icon-check'></i>User Management</li><li><i class='icon icon-check'></i>Company Policy & Templates</li><li><i class='icon icon-check'></i>Analytics & Reports</li><li><i class='icon icon-check'></i>Support Metrics & Notifications</li><li><i class='icon icon-check'></i>Licenses & Upgrades</li><li><i class='icon icon-check'></i>Assign Roles</li></ul>"
+                tooltip-placement="right" tooltip-trigger="mouseenter"
+                class="icon icon-information role-information"></i>
+            </div>
+            <div class="admin-options" id="readonly-admin-options" ng-if="enableReadonlyAdminOption">
+              <cs-radio label="readonlyAdmin.label" value="readonlyAdmin.value" name="readonlyAdmin.name" id="readonlyAdmin.id"
+                        ng-click="clearCheckboxes();" ng-model="rolesObj.adminRadioValue"
+                        isdisabled="isEditingSelf"></cs-radio>
+              <i
+                tooltip-html-unsafe="Read-only view of the portal. No changes will be accepted."
                 tooltip-placement="right" tooltip-trigger="mouseenter"
                 class="icon icon-information role-information"></i>
             </div>
@@ -105,18 +97,40 @@
             </div>
           </div>
 
-          <div ng-if="(isPartner || delegatedAdministration) && showHelpDeskRole">
+          <div class="admin-roles-panel" ng-if="showHelpDeskRole">
             <p><span class="edit-title" translate="rolesPanel.helpdesk"></span></p>
 
             <div class="admin-options">
               <cs-checkbox ckid="helpdeskCkbx" class="indent-checkbox"
                            label="{{'ciRoles.atlas-portal.partner.helpdesk' | translate}}"
                            ng-model="rolesObj.helpdeskValue"
-                           isdisabled="isEditingSelf"></cs-checkbox>
+                           isdisabled="isEditingSelf" ng-click="helpdeskOnCheckedHandler()"></cs-checkbox>
               <i tooltip-html-unsafe="Access to Help Desk" tooltip-placement="right" tooltip-trigger="mouseenter"
                  class="icon icon-information role-information"></i>
             </div>
+            <div class="admin-options" ng-if="showOrderAdminRole">
+              <cs-checkbox ckid="orderadminCkbx" class="indent-nestedcheckbox"
+                           label="{{'ciRoles.atlas-portal.partner.orderadmin' | translate}}"
+                           ng-model="rolesObj.orderAdminValue"
+                           isdisabled="isEditingSelf" ng-click="orderadminOnCheckedHandler()"></cs-checkbox>
+              <i tooltip-html-unsafe="Access to Order Admin" tooltip-placement="right" tooltip-trigger="mouseenter"
+                 class="icon icon-information role-information"></i>
+            </div>
           </div>
+
+          <div class="admin-roles-panel" ng-if="showComplianceRole">
+            <p><span class="edit-title" translate="rolesPanel.compliance"></span></p>
+
+            <div class="admin-options">
+              <cs-checkbox ckid="complianceCkbx" class="indent-checkbox"
+                           label="{{'ciRoles.compliance' | translate}}"
+                           ng-model="rolesObj.complianceValue"
+                           isdisabled="isEditingSelf"></cs-checkbox>
+              <i tooltip-html-unsafe="Access to Activity Reports" tooltip-placement="right" tooltip-trigger="mouseenter"
+                 class="icon icon-information role-information"></i>
+            </div>
+          </div>
+
         </form>
       </div>
     </div>

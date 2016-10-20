@@ -1,25 +1,21 @@
 'use strict';
 
 describe('ResponseInterceptor', function () {
-  beforeEach(module('Core'));
+  beforeEach(angular.mock.module('core.responseinterceptor'));
 
-  var $httpBackend, Interceptor, Storage, Auth;
+  var Interceptor, Auth;
 
   beforeEach(function () {
-    module(function ($provide) {
-      Storage = {
-        get: sinon.stub()
-      };
+    angular.mock.module(function ($provide) {
       Auth = {
         logout: sinon.stub(),
         refreshAccessTokenAndResendRequest: sinon.stub()
       };
       $provide.value('Auth', Auth);
-      $provide.value('Storage', Storage);
     });
   });
 
-  beforeEach(inject(function ($injector, _ResponseInterceptor_) {
+  beforeEach(inject(function (_ResponseInterceptor_) {
     Interceptor = _ResponseInterceptor_;
   }));
 
@@ -61,8 +57,6 @@ describe('ResponseInterceptor', function () {
   });
 
   it('should logout when token has expired', function () {
-    Storage.get.onCall(0).returns(true);
-
     Interceptor.responseError({
       status: 400,
       data: {

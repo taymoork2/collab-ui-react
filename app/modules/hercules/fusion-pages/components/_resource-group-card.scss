@@ -1,0 +1,165 @@
+resource-group-card {
+  display: block;
+  width: 100%;
+
+  .icon-warning.danger {
+    color: $color-negative-base;
+  }
+
+  .cs-card-layout {
+    padding-bottom: 0 !important;
+    margin: 0 !important;
+  }
+
+  > .cs-card {
+    > article > header {
+      display: flex;
+      padding: 0 !important;
+      align-items: stretch;
+      border-bottom: 1px solid $gray-light-3;
+
+      > button > h4 {
+        @include text-overflow;
+
+        display: inline;
+        font-size: 16px;
+        margin-right: auto;
+      }
+    }
+
+    .resource-group-caret {
+      display: flex;
+      align-items: center;
+      flex: 1;
+      padding: 1.25rem 1rem 0.9375rem;
+      background-color: transparent;
+      color: inherit;
+      min-width: 0;
+      font-size: 1.25rem;
+      text-align: left;
+
+      .fa {
+        width: 1rem;
+        margin-top: -2px;
+      }
+
+      &:focus {
+        box-shadow: none;
+      }
+    }
+
+    .resource-group-release-channel,
+    .resource-group-release-cluster-number {
+      font-size: 14px;
+      margin-right: 1.25rem;
+    }
+
+    .resource-group-release-cluster-users {
+      display: flex;
+      align-items: center;
+      font-size: 14px;
+
+      .icon-warning {
+        margin-top: -4px;
+        margin-right: 3px;
+      }
+    }
+
+    .resource-group-settings-link {
+      color: inherit;
+      padding: 1.65rem 1rem 0;
+
+      .icon {
+        display: block;
+        margin-top: -2px;
+      }
+
+      &:focus {
+        box-shadow: none;
+      }
+    }
+
+    .resource-group-banner {
+      margin: 6px 1rem;
+      background-color: $color-attention-lighter;
+      padding: 0.75rem;
+      text-align: center;
+    }
+
+    .resource-group-banner-error {
+      background-color: $color-negative-lighter;
+    }
+
+    .resource-group-banner-message {
+      font-size: 14px;
+
+      a {
+        color: inherit;
+        text-decoration: underline;
+      }
+    }
+
+    .resource-group-empty {
+      height: 314px;
+      text-align: center;
+    }
+  }
+
+  // override the cluster-card design
+  cluster-card {
+    position: relative;
+
+    &::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 1px;
+    }
+
+    &:nth-child(3n)::after {
+      width: 0;
+    }
+
+    &:nth-child(3n+1)::after {
+      right: 5px;
+      background-color: $gray-light-3;
+    }
+
+    &:nth-child(3n+2)::after {
+      right: -2px;
+      background-color: $gray-light-3;
+    }
+
+    .cs-card {
+      article {
+        box-shadow: none;
+      }
+
+      header {
+        padding: 0 !important;
+
+        &::after {
+          height: 0 !important;
+          border-top: 0 !important;
+        }
+
+        h4 {
+          padding-top: 0;
+        }
+      }
+
+      .columns {
+        padding-left: 0;
+      }
+
+      footer a {
+        border-top: 0;
+      }
+    }
+  }
+
+  .icon-arrow-down-rotated {
+    transform: rotate(-90deg);
+  }
+}

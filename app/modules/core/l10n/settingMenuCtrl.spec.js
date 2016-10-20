@@ -1,7 +1,7 @@
 'use strict';
 
 describe('settingsMenuCtrl', function () {
-  beforeEach(module('Core'));
+  beforeEach(angular.mock.module('Core'));
 
   var controller, $translate;
 

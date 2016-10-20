@@ -3,8 +3,8 @@
 describe('Service: AAUiModelService', function () {
   var AAUiModelService;
 
-  beforeEach(module('uc.autoattendant'));
-  beforeEach(module('Huron'));
+  beforeEach(angular.mock.module('uc.autoattendant'));
+  beforeEach(angular.mock.module('Huron'));
 
   beforeEach(inject(function (_AAUiModelService_) {
     AAUiModelService = _AAUiModelService_;

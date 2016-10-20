@@ -2,22 +2,32 @@
 
 describe('Controller: AARouteCallMenuCtrl', function () {
   var controller;
-  var AAUiModelService, AutoAttendantCeService, AutoAttendantCeInfoModelService, AutoAttendantCeMenuModelService;
-  var $rootScope, $scope, $translate;
+  var AAUiModelService, AutoAttendantCeMenuModelService;
+  var $rootScope, $scope;
   var aaUiModel = {
     openHours: {}
   };
 
-  beforeEach(module('uc.autoattendant'));
-  beforeEach(module('Huron'));
+  var sortedOptions = [{
+    "label": 'autoAttendant.phoneMenuRouteAA',
+  }, {
+    "label": 'autoAttendant.phoneMenuRouteHunt',
+  }, {
+    "label": 'autoAttendant.phoneMenuRouteToExtNum',
+  }, {
+    "label": 'autoAttendant.phoneMenuRouteUser',
+  }, {
+    "label": 'autoAttendant.phoneMenuRouteVM',
+  }];
+  beforeEach(angular.mock.module('uc.autoattendant'));
+  beforeEach(angular.mock.module('Huron'));
+  beforeEach(angular.mock.module('Sunlight'));
 
-  beforeEach(inject(function ($controller, _$rootScope_, _AAUiModelService_, _AutoAttendantCeService_, _AutoAttendantCeInfoModelService_, _AutoAttendantCeMenuModelService_) {
+  beforeEach(inject(function ($controller, _$rootScope_, _AAUiModelService_, _AutoAttendantCeMenuModelService_) {
     $rootScope = _$rootScope_;
     $scope = $rootScope;
 
     AAUiModelService = _AAUiModelService_;
-    AutoAttendantCeService = _AutoAttendantCeService_;
-    AutoAttendantCeInfoModelService = _AutoAttendantCeInfoModelService_;
     AutoAttendantCeMenuModelService = _AutoAttendantCeMenuModelService_;
 
     spyOn(AAUiModelService, 'getUiModel').and.returnValue(aaUiModel);
@@ -59,6 +69,20 @@ describe('Controller: AARouteCallMenuCtrl', function () {
 
     });
 
+  });
+
+  /**
+   * Lable value is not read from properties file in unit test cases. it will treat the key provided into vm.options for label
+   * as text only. Sorting is based on the key itself and not on values of title.
+   */
+  describe('Activate ', function () {
+    it('test for sorted options', function () {
+
+      for (var i = 0; i < sortedOptions.length; i++) {
+        expect(controller.options[i].label).toEqual(sortedOptions[i].label);
+      }
+
+    });
   });
 
 });

@@ -6,7 +6,7 @@
     .factory('DeviceService', DeviceService);
 
   /* @ngInject */
-  function DeviceService($rootScope, $http, Authinfo, UserEndpointService, SipEndpointService) {
+  function DeviceService($rootScope, Authinfo, UserEndpointService, SipEndpointService) {
     var currentDevice = {};
 
     var service = {
@@ -31,11 +31,11 @@
     function getTags(description) {
       try {
         var tags = JSON.parse(description);
-        return _.unique(tags);
+        return _.uniq(tags);
       } catch (e) {
         try {
           tags = JSON.parse("[\"" + description + "\"]");
-          return _.unique(tags);
+          return _.uniq(tags);
         } catch (e) {
           return [];
         }
@@ -54,9 +54,9 @@
 
     function loadDevices(userUuid) {
       return UserEndpointService.query({
-          customerId: Authinfo.getOrgId(),
-          userId: userUuid
-        }).$promise
+        customerId: Authinfo.getOrgId(),
+        userId: userUuid
+      }).$promise
         .then(function (devices) {
           var deviceList = [];
           for (var i = 0; i < devices.length; i++) {

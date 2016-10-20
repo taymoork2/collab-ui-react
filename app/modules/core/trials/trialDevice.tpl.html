@@ -1,0 +1,91 @@
+<!-- Call Trial Modal -->
+
+<!-- header -->
+<div class="modal-header">
+  <button type="button" class="close" ng-click="$dismiss()">
+    <span class="sr-only" translate="common.close"></span>
+  </button>
+  <h3 class="modal-title" translate="trialModal.call.title"></h3>
+</div>
+
+<!-- body -->
+<div class="modal-body trials">
+<!-- error state - cannot add more devices -->
+    <div ng-if="!callTrial.areAdditionalDevicesAllowed()">
+      <div class="splash-msg__title">
+        <h2 translate="trialModal.call.deviceTrialCapacityHeader"></h2>
+      </div>
+      <div class="splash-msg__description">
+        <div ng-if="callTrial.limitsError">
+          <p class="splash-msg__description text-center" translate="trialModal.call.deviceTrialUnavailable"></p>
+        </div>
+        <!-- TODO: Add tooltip when toolkit allows localized strings to contain the directive markup -->
+        <div ng-if="!callTrial.limitsError">
+          <p>
+            <span translate="trialModal.call.deviceTrialLimitReachedA"></span>
+            <span>
+              <a ng-href translate="trialModal.call.activeDeviceTrial" tooltip="{{::'trialModal.call.activeDeviceTrialTip' | translate}}" tooltip-trigger="mouseenter" tooltip-placement="top" tooltip-animation="false"></a>
+            </span>
+            <span translate="trialModal.call.deviceTrialLimitReachedB" translate-values="{number: callTrial.maxTrials}"></span>
+          </p>
+          <p>
+            <span translate="trialModal.call.deviceTrialLimitHelp"></span>
+          </p>
+        </div>
+      </div>
+    </div>
+  <form id="addDevicesForm" class="cs-form trial-modal" name="trialForm">
+    <!-- normal state -->
+  <div ng-if="callTrial.areAdditionalDevicesAllowed()">
+    <!-- select devices -->
+    <div class="cs-form__section">
+      <div class="section__info">
+        <h4 translate="trialModal.call.selectDevicesHeader"></h4>
+        <p class="section__description" translate="trialModal.call.deviceLimitDescription" translate-values='{ max: callTrial.maxTotalDevices}'></p>
+        <p class="section__description" translate="trialModal.call.trialDeviceShipmentLocations"></p>
+      </div>
+      <div class="section__content">
+        <div class="sub-section">
+          <h5 class="sub-section__label" translate="trialModal.call.meetingRoomCamera"></h5>
+          <formly-form model="callTrial.details.roomSystems" fields="callTrial.roomSystemFields"></formly-form>
+        </div>
+        <div class="sub-section">
+          <h5 class="sub-section__label" translate="trialModal.call.deskPhones" translate-values='{ max: callTrial.maxCallDevices}'></h5>
+          <formly-form model="callTrial.details.phones" fields="callTrial.deskPhoneFields"></formly-form>
+        </div>
+      </div>
+    </div>
+
+    <!-- shipping information -->
+    <div class="cs-form__section">
+      <div class="section__info">
+        <h4 translate="trialModal.call.shippingInfo"></h4>
+      </div>
+      <div class="section__content">
+        <formly-form model="callTrial.details.shippingInfo" fields="callTrial.shippingFields"></formly-form>
+      </div>
+    </div>
+    </div>
+  </form>
+</div>
+
+<!-- footer -->
+<div class="modal-footer trials">
+  <a class="alt-btn-link"
+    ng-hide="!callTrial.areAdditionalDevicesAllowed()"
+    ng-click="callTrial.skip(true); trial.nextStep()"
+    translate="trialModal.skip">
+  </a>
+  <button class="btn with-slim-offset offset-l"
+    ng-click="trial.previousStep()"
+    ng-disabled="trial.loading"
+    translate="common.back">
+  </button>
+  <button id="startTrialButton" class="btn btn--primary" type="button" cs-btn loading="trial.loading"
+      ng-click="trialForm.$setPristine(true); callTrial.skip(!callTrial.areAdditionalDevicesAllowed()); trial.nextStep()" ng-disabled="callTrial.areAdditionalDevicesAllowed() && (trialForm.$invalid || !callTrial.getTotalQuantity()>0)">
+      <span ng-if="!trial.hasNextStep()" translate="partnerHomePage.startTrial"></span>
+      <span ng-if="trial.hasNextStep()" translate="common.next"></span>
+    </span>
+  </button>
+  </div>
+</div>

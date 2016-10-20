@@ -7,7 +7,7 @@
 
   /* @ngInject */
 
-  function TelephonyInfoService($rootScope, $q, $translate, Authinfo, RemoteDestinationService, UserServiceCommon, UserDirectoryNumberService, AlternateNumberService, InternalNumberPoolService, ExternalNumberPoolService, ServiceSetup, DirectoryNumberUserService, DirectoryNumber, HuronCustomer, InternationalDialing, FeatureToggleService) {
+  function TelephonyInfoService($rootScope, $q, $translate, Authinfo, RemoteDestinationService, UserServiceCommon, UserDirectoryNumberService, InternalNumberPoolService, ExternalNumberPoolService, ServiceSetup, DirectoryNumberUserService, DirectoryNumber, HuronCustomer, InternationalDialing) {
 
     var broadcastEvent = "telephonyInfoUpdated";
 
@@ -188,9 +188,9 @@
 
     function getRemoteDestinationInfo(userUuid) {
       return RemoteDestinationService.query({
-          customerId: Authinfo.getOrgId(),
-          userId: userUuid
-        }).$promise
+        customerId: Authinfo.getOrgId(),
+        userId: userUuid
+      }).$promise
         .then(function (remoteDestinationInfo) {
           var snrInfo = angular.copy(telephonyInfo.snrInfo);
           if (remoteDestinationInfo) {
@@ -215,9 +215,9 @@
 
     function getUserDnInfo(userUuid) {
       return UserDirectoryNumberService.query({
-          customerId: Authinfo.getOrgId(),
-          userId: userUuid
-        }).$promise
+        customerId: Authinfo.getOrgId(),
+        userId: userUuid
+      }).$promise
         .then(function (userDnInfo) {
           if (userDnInfo) {
             var userDnList = [];
@@ -247,9 +247,9 @@
               }.bind(userLine));
 
               DirectoryNumberUserService.query({
-                  'customerId': Authinfo.getOrgId(),
-                  'directoryNumberId': userLine.uuid
-                }).$promise
+                'customerId': Authinfo.getOrgId(),
+                'directoryNumberId': userLine.uuid
+              }).$promise
                 .then(function (data) {
                   if (this.dnUsage === 'Primary') {
                     this.dnSharedUsage = 'Primary';
@@ -279,9 +279,9 @@
 
     function getTelephonyUserInfo(userUuid) {
       return UserServiceCommon.get({
-          customerId: Authinfo.getOrgId(),
-          userId: userUuid
-        }).$promise
+        customerId: Authinfo.getOrgId(),
+        userId: userUuid
+      }).$promise
         .then(function (telephonyUserInfo) {
           updateUserServices(telephonyUserInfo.services);
         })
@@ -311,14 +311,14 @@
     function loadInternalNumberPool(pattern, limit) {
       var intNumPool = [];
       var patternQuery = pattern ? '%' + pattern + '%' : undefined;
-      var patternlimit = limit ? limit : undefined;
+      var patternlimit = limit || undefined;
       return InternalNumberPoolService.query({
-          customerId: Authinfo.getOrgId(),
-          directorynumber: '',
-          order: 'pattern',
-          pattern: patternQuery,
-          limit: patternlimit
-        }).$promise
+        customerId: Authinfo.getOrgId(),
+        directorynumber: '',
+        order: 'pattern',
+        pattern: patternQuery,
+        limit: patternlimit
+      }).$promise
         .then(function (intPool) {
           for (var i = 0; i < intPool.length; i++) {
             var dn = {
@@ -347,11 +347,11 @@
       }];
       var patternQuery = pattern ? '%' + pattern + '%' : undefined;
       return ExternalNumberPoolService.query({
-          customerId: Authinfo.getOrgId(),
-          directorynumber: '',
-          order: 'pattern',
-          pattern: patternQuery
-        }).$promise
+        customerId: Authinfo.getOrgId(),
+        directorynumber: '',
+        order: 'pattern',
+        pattern: patternQuery
+      }).$promise
         .then(function (extPool) {
           for (var i = 0; i < extPool.length; i++) {
             var dn = {
@@ -373,12 +373,12 @@
 
     function loadExtPoolWithMapping(count) {
       return ExternalNumberPoolService.query({
-          customerId: Authinfo.getOrgId(),
-          directorynumber: '',
-          order: 'pattern',
-          automaptodn: true,
-          automaptodncount: count
-        }).$promise
+        customerId: Authinfo.getOrgId(),
+        directorynumber: '',
+        order: 'pattern',
+        automaptodn: true,
+        automaptodncount: count
+      }).$promise
         .then(function (extPool) {
           var extNumPool = extPool.map(function (extPoolValue) {
             var dn = {
@@ -410,30 +410,27 @@
     }
 
     function getUserInternationalDialingDetails(userUuid) {
-      return InternationalDialing.listCosRestrictions(userUuid).then(function (cosRestrictions) {
+      return InternationalDialing.listCosRestrictions(userUuid).then(function (cosRestriction) {
         var overRide = null;
         var custRestriction = null;
-        var cosRestriction = null;
 
-        for (var i = 0; i < cosRestrictions.length; i++) {
-          cosRestriction = cosRestrictions[i];
-          if (cosRestriction.user.length > 0) {
-            for (var j = 0; j < cosRestriction.user.length; j++) {
-              if (cosRestriction.user[j].restriction === INTERNATIONAL_DIALING) {
-                overRide = true;
-                break;
-              }
-            }
-          }
-          if (cosRestriction.customer.length > 0) {
-            for (var k = 0; k < cosRestriction.customer.length; k++) {
-              if (cosRestriction.customer[k].restriction === INTERNATIONAL_DIALING) {
-                custRestriction = true;
-                break;
-              }
+        if (cosRestriction.user.length > 0) {
+          for (var j = 0; j < cosRestriction.user.length; j++) {
+            if (cosRestriction.user[j].restriction === INTERNATIONAL_DIALING) {
+              overRide = true;
+              break;
             }
           }
         }
+        if (cosRestriction.customer.length > 0) {
+          for (var k = 0; k < cosRestriction.customer.length; k++) {
+            if (cosRestriction.customer[k].restriction === INTERNATIONAL_DIALING) {
+              custRestriction = true;
+              break;
+            }
+          }
+        }
+
         if (overRide) {
           if (cosRestriction.user[0].blocked) {
             telephonyInfo.internationalDialingStatus = cbNeverAllow;

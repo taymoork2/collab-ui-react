@@ -105,6 +105,7 @@
 
   "welcomeMenu": {
     "type": "MENU_WELCOME",
+    "id": "menu0",
     "headers": [],
     "entries": [{
       "description": "",

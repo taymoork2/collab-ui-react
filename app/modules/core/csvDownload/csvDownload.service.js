@@ -5,81 +5,197 @@
     .service('CsvDownloadService', CsvDownloadService);
 
   /* @ngInject */
-  function CsvDownloadService(Authinfo, $resource, UrlConfig) {
+  function CsvDownloadService(Authinfo, $window, $http, $q, UrlConfig, Utils, UserListService, UserCsvService, $timeout) {
     var objectUrl;
     var objectUrlTemplate;
     var typeTemplate = 'template';
     var typeUser = 'user';
     var typeHeaders = 'headers';
     var typeExport = 'export';
-    var csvUserResource = $resource(UrlConfig.getAdminServiceUrl() + 'csv/organizations/' + Authinfo.getOrgId() + '/users/:type', {
-      type: '@type'
-    }, {
-      get: {
-        method: 'GET',
-        // override transformResponse function because $resource
-        // returns string array in the case of CSV file download
-        transformResponse: function (data, headers) {
-          if (_.isString(data)) {
-            if (_.startsWith(data, '{') || _.startsWith(data, '[')) {
-              data = angular.fromJson(data);
-            } else {
-              data = {
-                content: data
-              };
-            }
-          }
-          return data;
-        }
-      }
-    });
+    var typeReport = 'report';
+    var typeAny = 'any';
+    var typeError = 'error';
+    var userExportUrl = UrlConfig.getAdminServiceUrl() + 'csv/organizations/' + Authinfo.getOrgId() + '/users/%s';
+    var downloadInProgress = false;
+    var isTooManyUsers = false;
+    var canceler, timeoutCanceler, objectBlob, templateBlob;
+    var userExportThreshold = 10000;
+    var reportCanceled = false;
 
     var service = {
       typeTemplate: typeTemplate,
       typeUser: typeUser,
+      typeAny: typeAny,
+      typeError: typeError,
+      userExportThreshold: userExportThreshold,
       getCsv: getCsv,
+      openInIE: openInIE,
       createObjectUrl: createObjectUrl,
       revokeObjectUrl: revokeObjectUrl,
       getObjectUrl: getObjectUrl,
       setObjectUrl: setObjectUrl,
       getObjectUrlTemplate: getObjectUrlTemplate,
-      setObjectUrlTemplate: setObjectUrlTemplate
+      setObjectUrlTemplate: setObjectUrlTemplate,
+      downloadInProgress: downloadInProgress,
+      cancelDownload: cancelDownload,
+      isReportCanceled: isReportCanceled
     };
 
     return service;
 
-    function getCsv(type) {
-      if (type === typeTemplate) {
-        return csvUserResource.get({
-          type: typeTemplate
-        }).$promise;
-      } else if (type === typeUser) {
-        return csvUserResource.get({
-          type: typeExport
-        }).$promise;
-      } else if (type === typeHeaders) {
-        return csvUserResource.get({
-          type: typeHeaders
-        }).$promise;
+    function getCsv(csvType, tooManyUsers, fileName, newUserExportToggle) {
+      tooManyUsers = _.isBoolean(tooManyUsers) ? tooManyUsers : false;
+      isTooManyUsers = tooManyUsers;
+      if (tooManyUsers) {
+        canceler = UserListService.exportCSV().then(function (csvData) {
+          var csvString = $.csv.fromObjects(csvData, {
+            headers: false
+          });
+          return createObjectUrl(csvString, csvType, fileName);
+        });
+        return canceler;
+      } else {
+        if (csvType === typeUser) {
+          reportCanceled = false;
+          return exportUserCsv(fileName, newUserExportToggle);
+        } else if (csvType === typeError) {
+          return exportErrorCsv(fileName);
+        } else {
+          return exportDataCsv(csvType, fileName);
+        }
       }
     }
 
-    function createObjectUrl(data, type) {
-      var blob = new Blob([data], {
+    function exportUserCsv(fileName, newUserExportToggle) {
+      var url = '';
+      if (newUserExportToggle) {
+        url = Utils.sprintf(userExportUrl, [typeReport]);
+        return generateUserReport(url).then(function (response) {
+          if ((response.status === 201 || response.status === 202) && response.data.id) {
+            url = url + '/' + response.data.id;
+            return getUserReport(url).then(function (csvData) {
+              return createObjectUrl(csvData.data, typeUser, fileName);
+            }).catch(function (response) {
+              return $q.reject(response);
+            }).finally(function () {
+              canceler = undefined;
+              timeoutCanceler = undefined;
+            });
+          } else {
+            return $q.reject(response);
+          }
+        });
+      } else {
+        url = Utils.sprintf(userExportUrl, [typeExport]);
+        canceler = $q.defer();
+        return $http.get(url, {
+          timeout: canceler.promise
+        }).then(function (csvData) {
+          return createObjectUrl(csvData.data, typeUser, fileName);
+        }).catch(function (response) {
+          return $q.reject(response);
+        }).finally(function () {
+          canceler = undefined;
+        });
+      }
+    }
+
+    function generateUserReport(url) {
+      return $http.post(url);
+    }
+
+    function getUserReport(url) {
+      canceler = $q.defer();
+      return $http.get(url, {
+        timeout: canceler.promise
+      }).then(function (response) {
+        if (response.status === 200) {
+          return $q.resolve(response);
+        } else {
+          // Set 3 second delay to limit the amount of times
+          // we continually hit the user reports REST api.
+          return (timeoutCanceler = $timeout(function () {
+            return getUserReport(url);
+          }, 3000));
+        }
+      }).catch(function (response) {
+        return $q.reject(response);
+      });
+    }
+
+    function exportErrorCsv(fileName) {
+      return $q(function (resolve) {
+        var csvErrorArray = UserCsvService.getCsvStat().userErrorArray;
+        var csvString = $.csv.fromObjects(_.union([{
+          row: 'Row Number',
+          email: 'User ID/Email',
+          error: 'Error Message'
+        }], csvErrorArray), {
+          headers: false
+        });
+        resolve(createObjectUrl(csvString, typeError, fileName));
+      });
+    }
+
+    function exportDataCsv(csvType, fileName) {
+      var url = Utils.sprintf(userExportUrl, [csvType]);
+      return $http.get(url).then(function (csvData) {
+        if (csvType === typeHeaders) {
+          return csvData.data;
+        } else {
+          return createObjectUrl(csvData.data, csvType, fileName);
+        }
+      });
+    }
+
+    function cancelDownload() {
+      if (!reportCanceled) {
+        reportCanceled = true;
+      }
+      if (!isTooManyUsers) {
+        if (canceler) {
+          canceler.resolve();
+        }
+        if (timeoutCanceler) {
+          $timeout.cancel(timeoutCanceler);
+        }
+      }
+    }
+
+    function createObjectUrl(data, type, fileName) {
+      var blob = new $window.Blob([data], {
         type: 'text/plain'
       });
-      var oUrl = (window.URL || window.webkitURL).createObjectURL(blob);
-      setObjectUrl(oUrl);
+      var oUrl = ($window.URL || $window.webkitURL).createObjectURL(blob);
       if (type === typeTemplate) {
+        templateBlob = blob;
         setObjectUrlTemplate(oUrl);
+      } else {
+        objectBlob = blob;
+        setObjectUrl(oUrl);
       }
+
+      // IE download option since IE won't download the created url
+      if ($window.navigator.msSaveOrOpenBlob) {
+        openInIE(type, fileName);
+      }
+
       return oUrl;
+    }
+
+    function openInIE(type, fileName) {
+      if (type === typeTemplate && templateBlob) {
+        $window.navigator.msSaveOrOpenBlob(templateBlob, fileName);
+      } else if (type !== typeTemplate && objectBlob) {
+        $window.navigator.msSaveOrOpenBlob(objectBlob, fileName);
+      }
     }
 
     function revokeObjectUrl() {
       if (getObjectUrl()) {
-        (window.URL || window.webkitURL).revokeObjectURL(getObjectUrl());
+        ($window.URL || $window.webkitURL).revokeObjectURL(getObjectUrl());
         setObjectUrl(null);
+        objectBlob = null;
       }
     }
 
@@ -97,6 +213,10 @@
 
     function setObjectUrlTemplate(oUrl) {
       objectUrlTemplate = oUrl;
+    }
+
+    function isReportCanceled() {
+      return reportCanceled;
     }
   }
 

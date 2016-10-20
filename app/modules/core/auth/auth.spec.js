@@ -1,25 +1,25 @@
 'use strict';
 
 describe('Auth Service', function () {
-  beforeEach(module('Core'));
+  beforeEach(angular.mock.module('core.auth'));
 
-  var Auth, Authinfo, $httpBackend, Config, Storage, $window, SessionStorage, $state, $q, OAuthConfig, UrlConfig;
+  var Auth, Authinfo, $httpBackend, Storage, SessionStorage, $rootScope, $state, $q, OAuthConfig, UrlConfig, WindowLocation, TokenService;
 
-  beforeEach(module(function ($provide) {
-    $provide.value('$window', $window = {});
-  }));
-
-  beforeEach(inject(function (_Auth_, _Authinfo_, _$httpBackend_, _Config_, _Storage_, _SessionStorage_, _$state_, _$q_, _OAuthConfig_, _UrlConfig_) {
+  beforeEach(inject(function (_Auth_, _Authinfo_, _$httpBackend_, _Storage_, _SessionStorage_, _TokenService_, _$rootScope_, _$state_, _$q_, _OAuthConfig_, _UrlConfig_, _WindowLocation_) {
+    $q = _$q_;
     Auth = _Auth_;
-    Config = _Config_;
+    $state = _$state_;
     Storage = _Storage_;
     Authinfo = _Authinfo_;
     UrlConfig = _UrlConfig_;
+    $rootScope = _$rootScope_;
     OAuthConfig = _OAuthConfig_;
     $httpBackend = _$httpBackend_;
     SessionStorage = _SessionStorage_;
-    $state = _$state_;
-    $q = _$q_;
+    TokenService = _TokenService_;
+    WindowLocation = _WindowLocation_;
+
+    spyOn(WindowLocation, 'set');
     spyOn($state, 'go').and.returnValue($q.when());
   }));
 
@@ -34,22 +34,27 @@ describe('Auth Service', function () {
   });
 
   it('should redirect to oauthUrl if redirectToLogin method is called with email', function () {
-    $window.location = {};
     OAuthConfig.getOauthLoginUrl = sinon.stub().returns('oauthURL');
     Auth.redirectToLogin('email@email.com');
-    expect($window.location.href).toBe('oauthURL');
+    expect(WindowLocation.set).toHaveBeenCalledWith('oauthURL');
   });
 
-  it('should get account info using correct API', function (done) {
+  it('should login if redirectToLogin method is called with sso=true', function () {
+    OAuthConfig.getOauthLoginUrl = sinon.stub().returns('oauthURL');
+    Auth.redirectToLogin(null, true);
+    expect(WindowLocation.set).toHaveBeenCalledWith('oauthURL');
+  });
+
+  it('should get customer account info using correct API', function (done) {
     UrlConfig.getAdminServiceUrl = sinon.stub().returns('foo/');
 
     $httpBackend
-      .expectGET('foo/organization/bar/accounts')
+      .expectGET('foo/customers?orgId=bar')
       .respond(200, {
         foo: 'bar'
       });
 
-    Auth.getAccount('bar').then(function (res) {
+    Auth.getCustomerAccount('bar').then(function (res) {
       expect(res.data.foo).toBe('bar');
       _.defer(done);
     });
@@ -61,6 +66,7 @@ describe('Auth Service', function () {
     OAuthConfig.getAccessTokenUrl = sinon.stub().returns('url');
     OAuthConfig.getNewAccessTokenPostData = sinon.stub().returns('data');
     OAuthConfig.getOAuthClientRegistrationCredentials = stubCredentials();
+    spyOn(Auth, 'verifyOauthState').and.returnValue(true);
 
     $httpBackend
       .expectPOST('url', 'data', assertCredentials)
@@ -68,7 +74,10 @@ describe('Auth Service', function () {
         access_token: 'accessTokenFromAPI'
       });
 
-    Auth.getNewAccessToken('argToGetNewAccessToken').then(function (accessToken) {
+    Auth.getNewAccessToken({
+      code: 'argToGetNewAccessToken',
+      state: '123-abc-456'
+    }).then(function (accessToken) {
       expect(accessToken).toBe('accessTokenFromAPI');
       expect(OAuthConfig.getNewAccessTokenPostData.getCall(0).args[0]).toBe('argToGetNewAccessToken');
       _.defer(done);
@@ -77,8 +86,23 @@ describe('Auth Service', function () {
     $httpBackend.flush();
   });
 
+  it('should not get new access token', function () {
+    OAuthConfig.getAccessTokenUrl = sinon.stub().returns('url');
+    OAuthConfig.getNewAccessTokenPostData = sinon.stub().returns('data');
+    OAuthConfig.getOAuthClientRegistrationCredentials = stubCredentials();
+    spyOn(Auth, 'verifyOauthState').and.returnValue(false);
+
+    Auth.getNewAccessToken({
+      code: 'argToGetNewAccessToken',
+      state: '123-abc-456'
+    }).catch(function (error) {
+      expect(error).toBeUndefined();
+    });
+    $rootScope.$apply();
+  });
+
   it('should refresh access token', function (done) {
-    Storage.get = sinon.stub().returns('fromStorage');
+    SessionStorage.get = sinon.stub().returns('fromStorage');
     OAuthConfig.getAccessTokenUrl = sinon.stub().returns('url');
     OAuthConfig.getOauthAccessCodeUrl = sinon.stub().returns('accessCodeUrl');
     OAuthConfig.getOAuthClientRegistrationCredentials = stubCredentials();
@@ -91,7 +115,7 @@ describe('Auth Service', function () {
 
     Auth.refreshAccessToken('argToGetNewAccessToken').then(function (accessToken) {
       expect(accessToken).toBe('accessTokenFromAPI');
-      expect(Storage.get.getCall(0).args[0]).toBe('refreshToken');
+      expect(SessionStorage.get.getCall(0).args[0]).toBe('refreshToken');
       expect(OAuthConfig.getOauthAccessCodeUrl.getCall(0).args[0]).toBe('fromStorage');
       _.defer(done);
     });
@@ -118,9 +142,26 @@ describe('Auth Service', function () {
     $httpBackend.flush();
   });
 
+  it('should return rejected promise if setAccessToken fails', function (done) {
+    OAuthConfig.getAccessTokenUrl = sinon.stub().returns('url');
+    OAuthConfig.getOAuthClientRegistrationCredentials = stubCredentials();
+    OAuthConfig.getAccessTokenPostData = sinon.stub().returns('data');
+
+    $httpBackend
+      .expectPOST('url', 'data', assertCredentials)
+      .respond(500, {});
+
+    Auth.setAccessToken().catch(function () {
+      _.defer(done);
+    });
+
+    $httpBackend.flush();
+  });
+
   it('should refresh token and resend request', function (done) {
     OAuthConfig.getOauth2Url = sinon.stub().returns('');
     OAuthConfig.getAccessTokenUrl = sinon.stub().returns('access_token_url');
+    TokenService.getRefreshToken = sinon.stub().returns('refresh_token');
 
     $httpBackend
       .expectPOST('access_token_url')
@@ -147,26 +188,77 @@ describe('Auth Service', function () {
     $httpBackend.flush();
   });
 
-  it('should logout', function () {
-    var loggedOut = sinon.stub();
-    $window.location = {};
-    Storage.clear = sinon.stub();
+  it('should not refresh token and resend request, should redirect to login', function () {
+    OAuthConfig.getOauth2Url = sinon.stub().returns('');
+    OAuthConfig.getAccessTokenUrl = sinon.stub().returns('access_token_url');
+    TokenService.getRefreshToken = sinon.stub().returns(null);
     OAuthConfig.getLogoutUrl = sinon.stub().returns('logoutUrl');
-    Storage.get = sinon.stub().returns('accessToken');
-    OAuthConfig.getOauthDeleteTokenUrl = sinon.stub().returns('OauthDeleteTokenUrl');
+
+    Auth.refreshAccessTokenAndResendRequest().catch(function () {
+      expect(WindowLocation.set).toHaveBeenCalledWith('logoutUrl');
+    });
+  });
+
+  it('should set refresh token', function () {
+    OAuthConfig.getAccessTokenUrl = sinon.stub().returns('url');
     OAuthConfig.getOAuthClientRegistrationCredentials = stubCredentials();
+    OAuthConfig.getAccessTokenPostData = sinon.stub().returns('data');
 
     $httpBackend
-      .expectPOST('OauthDeleteTokenUrl', 'token=accessToken', assertCredentials)
-      .respond(200, {});
+      .expectPOST('url', 'data', assertCredentials)
+      .respond(200, {
+        refresh_token: 'refreshTokenFromAPI'
+      });
 
-    Auth.logout().then(loggedOut);
+    Storage.clear();
+    Auth.setAccessToken().then(function () {
+      expect(TokenService.getRefreshToken()).toBe('refreshTokenFromAPI');
+    });
+
+    $httpBackend.flush();
+  });
+
+  it('should logout and redirect to a provided url', function () {
+    var loggedOut = sinon.stub();
+    Storage.clear = sinon.stub();
+    SessionStorage.get = sinon.stub().returns('accessToken');
+    OAuthConfig.getLogoutUrl = sinon.stub().returns('logoutUrl');
+    OAuthConfig.getOauthListTokenUrl = sinon.stub().returns('OauthListTokenUrl');
+    OAuthConfig.getOauthDeleteRefreshTokenUrl = sinon.stub().returns('refreshtoken=');
+    OAuthConfig.getClientId = sinon.stub().returns('ewvmpibn34inbr433f23f4');
+
+    $httpBackend
+      .expectGET('OauthListTokenUrl')
+      .respond(200, {
+        total: 1,
+        data: [{
+          device_type: null,
+          create_time: '2016-07-28 21:39:06',
+          client_id: 'ewvmpibn34inbr433f23f4',
+          last_used_time: '2016-07-28 21:39:06',
+          token_id: 'OauthDeleteRefreshTokenUrl',
+          client_name: 'Admin Portal'
+        }]
+      });
+
+    $httpBackend
+      .expectDELETE('refreshtoken=OauthDeleteRefreshTokenUrl')
+      .respond(204, 'No Content');
+
+    Auth.logoutAndRedirectTo().then(loggedOut);
 
     $httpBackend.flush();
 
-    expect(Storage.clear.callCount).toBe(1);
-    expect($window.location.href).toBe('logoutUrl');
     expect(loggedOut.callCount).toBe(1);
+    expect(Storage.clear.callCount).toBe(1);
+    expect(WindowLocation.set).toHaveBeenCalled();
+  });
+
+  it('should logout and redirect to the default logout url', function () {
+    OAuthConfig.getLogoutUrl = sinon.stub().returns('logoutUrl');
+    Auth.logoutAndRedirectTo = sinon.stub();
+    Auth.logout();
+    expect(Auth.logoutAndRedirectTo.calledWith('logoutUrl')).toBe(true);
   });
 
   describe('authorize', function () {
@@ -278,7 +370,6 @@ describe('Auth Service', function () {
           .expectGET('msn/orgs/1337/cisync/')
           .respond(200, {});
         Authinfo.initialize = sinon.stub();
-        Authinfo.initializeTabs = sinon.stub();
       });
 
       it('massaged services are used and webex api should be called', function (done) {
@@ -297,23 +388,13 @@ describe('Auth Service', function () {
         expect(result.services[0].sqService).toBe(undefined);
       });
 
-      it('will initialize tabs if not admin', function (done) {
-        Auth.authorize().then(function () {
-          _.defer(done);
-        });
-
-        $httpBackend.flush();
-
-        expect(Authinfo.initializeTabs.callCount).toBe(1);
-      });
-
       it('will fetch account info if admin', function (done) {
         Authinfo.isAdmin = sinon.stub().returns(true);
         Authinfo.getOrgId = sinon.stub().returns(42);
         Authinfo.updateAccountInfo = sinon.stub();
 
         $httpBackend
-          .expectGET('path/organization/42/accounts')
+          .expectGET('path/customers?orgId=42')
           .respond(200, {});
 
         Auth.authorize().then(function () {
@@ -321,14 +402,50 @@ describe('Auth Service', function () {
         });
 
         $httpBackend.flush();
-
-        expect(Authinfo.initializeTabs.callCount).toBe(1);
         expect(Authinfo.updateAccountInfo.callCount).toBe(1);
       });
 
     });
 
-    it('will add some webex stuff given some condition', function (done) {
+    describe('given admin has read only role', function () {
+
+      beforeEach(function () {
+        UrlConfig.getMessengerServiceUrl = sinon.stub().returns('msn');
+        $httpBackend
+          .expectGET('path/userauthinfo')
+          .respond(200, {
+            orgId: 1337,
+            services: [{
+              ciService: 'foo',
+              sqService: 'bar'
+            }]
+          });
+        $httpBackend
+          .expectGET('msn/orgs/1337/cisync/')
+          .respond(200, {});
+        Authinfo.initialize = sinon.stub();
+      });
+
+      it('will update account info', function (done) {
+        Authinfo.isReadOnlyAdmin = sinon.stub().returns(true);
+        Authinfo.getOrgId = sinon.stub().returns(42);
+        Authinfo.updateAccountInfo = sinon.stub();
+
+        $httpBackend
+          .expectGET('path/customers?orgId=42')
+          .respond(200, {});
+
+        Auth.authorize().then(function () {
+          _.defer(done);
+        });
+
+        $httpBackend.flush();
+        expect(Authinfo.updateAccountInfo.callCount).toBe(1);
+      });
+
+    });
+
+    it('will add some webex stuff given some condition && when no roles specified', function (done) {
       Authinfo.initialize = sinon.stub();
       UrlConfig.getMessengerServiceUrl = sinon.stub().returns('msn');
 
@@ -356,6 +473,116 @@ describe('Auth Service', function () {
       var result = Authinfo.initialize.getCall(0).args[0];
       expect(result.services.length).toBe(1);
       expect(result.services[0].ciName).toBe('webex-messenger');
+    });
+
+    it('will add some webex stuff given some condition && when Full_Admin', function (done) {
+      Authinfo.initialize = sinon.stub();
+      UrlConfig.getMessengerServiceUrl = sinon.stub().returns('msn');
+
+      $httpBackend
+        .expectGET('path/userauthinfo')
+        .respond(200, {
+          orgId: 1337,
+          roles: ['Full_Admin'],
+          services: []
+        });
+
+      $httpBackend
+        .expectGET('path/organizations/1337/services')
+        .respond(200, {
+          entitlements: ['foo']
+        });
+
+      $httpBackend
+        .expectGET('msn/orgs/1337/cisync/')
+        .respond(200, {
+          orgID: 'foo',
+          orgName: 'bar'
+        });
+
+      Auth.authorize().then(function () {
+        _.defer(done);
+      });
+      $httpBackend.flush();
+
+      expect(Authinfo.initialize.callCount).toBe(1);
+
+      var result = Authinfo.initialize.getCall(0).args[0];
+      expect(result.services.length).toBe(2);
+      expect(result.services[1].ciName).toBe('webex-messenger');
+    });
+
+    it('will not add some webex stuff given some condition && when Full_Admin && inactive wapi org', function (done) {
+      Authinfo.initialize = sinon.stub();
+      UrlConfig.getMessengerServiceUrl = sinon.stub().returns('msn');
+
+      $httpBackend
+        .expectGET('path/userauthinfo')
+        .respond(200, {
+          orgId: 1337,
+          roles: ['Full_Admin'],
+          services: []
+        });
+
+      $httpBackend
+        .expectGET('path/organizations/1337/services')
+        .respond(200, {
+          entitlements: ['foo']
+        });
+
+      $httpBackend
+        .expectGET('msn/orgs/1337/cisync/')
+        .respond(200, {
+          orgID: 'foo',
+          orgName: 'bar',
+          wapiOrgStatus: 'inactive'
+        });
+
+      Auth.authorize().then(function () {
+        _.defer(done);
+      });
+      $httpBackend.flush();
+
+      expect(Authinfo.initialize.callCount).toBe(1);
+
+      var result = Authinfo.initialize.getCall(0).args[0];
+      expect(result.services.length).toBe(1);
+    });
+
+    it('will not add some webex stuff given some condition && when PARTNER_ADMIN', function (done) {
+      Authinfo.initialize = sinon.stub();
+      UrlConfig.getMessengerServiceUrl = sinon.stub().returns('msn');
+
+      $httpBackend
+        .expectGET('path/userauthinfo')
+        .respond(200, {
+          orgId: 1337,
+          roles: ['PARTNER_ADMIN'],
+          services: []
+        });
+
+      $httpBackend
+        .expectGET('path/organizations/1337/services')
+        .respond(200, {
+          entitlements: []
+        });
+
+      $httpBackend
+        .expectGET('msn/orgs/1337/cisync/')
+        .respond(200, {
+          orgID: 'foo',
+          orgName: 'bar'
+        });
+
+      Auth.authorize().then(function () {
+        _.defer(done);
+      });
+      $httpBackend.flush();
+
+      expect(Authinfo.initialize.callCount).toBe(1);
+
+      var result = Authinfo.initialize.getCall(0).args[0];
+      expect(result.services.length).toBe(0);
     });
   });
 

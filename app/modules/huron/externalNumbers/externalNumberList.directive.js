@@ -14,7 +14,8 @@
         countTranslateKey: '@',
         externalNumbers: '=',
         tooltipText: '@',
-        tooltipClass: '@'
+        tooltipClass: '@',
+        quantity: '='
       }
     };
 

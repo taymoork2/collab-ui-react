@@ -1,9 +1,12 @@
 (function () {
   'use strict';
 
+  angular
+    .module('Squared')
+    .controller('HelpdeskUserController', HelpdeskUserController);
+
   /* @ngInject */
-  function HelpdeskUserController($stateParams, HelpdeskService, XhrNotificationService, USSService2, HelpdeskCardsUserService, Config,
-    LicenseService, HelpdeskHuronService, HelpdeskLogService, Authinfo) {
+  function HelpdeskUserController($modal, $stateParams, $translate, $window, Authinfo, Config, FeatureToggleService, HelpdeskCardsUserService, HelpdeskHuronService, HelpdeskLogService, HelpdeskService, LicenseService, Notification, USSService, WindowLocation, XhrNotificationService) {
     $('body').css('background', 'white');
     var vm = this;
     if ($stateParams.user) {
@@ -19,6 +22,7 @@
     }
     vm.resendInviteEmail = resendInviteEmail;
     vm.user = $stateParams.user;
+    vm.userStatusesAsString = '';
     vm.resendInviteEnabled = false;
     vm.messageCard = {};
     vm.meetingCard = {};
@@ -28,11 +32,36 @@
     vm.sendCode = sendCode;
     vm.downloadLog = downloadLog;
     vm.isAuthorizedForLog = isAuthorizedForLog;
+    vm.openExtendedInformation = openExtendedInformation;
+    vm.supportsExtendedInformation = false;
+    vm.cardsAvailable = false;
+
+    FeatureToggleService.supports(FeatureToggleService.features.atlasHelpDeskExt).then(function (result) {
+      vm.supportsExtendedInformation = result;
+    });
 
     HelpdeskService.getUser(vm.orgId, vm.userId).then(initUserView, XhrNotificationService.notify);
 
     function resendInviteEmail() {
-      HelpdeskService.resendInviteEmail(vm.user.displayName, vm.user.userName).then(angular.noop, XhrNotificationService.notify);
+      var trimmedUserData = {
+        displayName: vm.user.displayName,
+        email: vm.user.userName,
+        onlineOrderIds: _.get(vm.user, 'onlineOrderIds', [])
+      };
+      HelpdeskService.resendInviteEmail(trimmedUserData)
+        .then(function () {
+          Notification.success('helpdesk.resendSuccess');
+        })
+        .then(function () {
+          var prefix = 'helpdesk.userStatuses.';
+          for (var i = 0; i < vm.user.statuses.length; i++) {
+            var status = vm.user.statuses[i];
+            if (_.includes(prefix + 'rejected', status)) {
+              vm.user.statuses[i] = prefix + 'resent';
+            }
+          }
+        })
+        .catch(XhrNotificationService.notify);
     }
 
     function sendCode() {
@@ -42,9 +71,54 @@
       }, XhrNotificationService.notify);
     }
 
+    function openExtendedInformation() {
+      if (vm.supportsExtendedInformation) {
+        $modal.open({
+          templateUrl: "modules/squared/helpdesk/helpdesk-extended-information.html",
+          controller: 'HelpdeskExtendedInfoDialogController as modal',
+          modalId: "HelpdeskExtendedInfoDialog",
+          resolve: {
+            title: function () {
+              return 'helpdesk.userDetails';
+            },
+            data: function () {
+              return vm.user;
+            }
+          }
+        });
+      }
+    }
+
     function initUserView(user) {
       vm.user = user;
-      vm.resendInviteEnabled = _.includes(user.statuses, 'helpdesk.userStatuses.pending');
+      vm.resendInviteEnabled = _.some(user.statuses, function (_status) {
+        return /helpdesk.userStatuses..*-pending$/.test(_status);
+      });
+
+      FeatureToggleService.supports(FeatureToggleService.features.atlasEmailStatus)
+        .then(function (isSupported) {
+          if (!isSupported) {
+            return;
+          }
+
+          // TODO: investigate who owns this feature now and determine what the correct behavior should be now
+          HelpdeskService.isEmailBlocked(user.userName)
+            .then(function () {
+              vm.resendInviteEnabled = true;
+              var prefix = 'helpdesk.userStatuses.';
+              var statusToReplace = [prefix + 'active', prefix + 'inactive', prefix + 'invite-pending', prefix + 'resent'];
+              var i;
+              for (i = 0; i < vm.user.statuses.length; i++) {
+                var status = vm.user.statuses[i];
+                if (_.includes(statusToReplace, status)) {
+                  vm.user.statuses[i] = prefix + 'rejected';
+                }
+              }
+            });
+        });
+
+      vm.userStatusesAsString = getUserStatusesAsString(vm);
+
       vm.messageCard = HelpdeskCardsUserService.getMessageCardForUser(user);
       vm.meetingCard = HelpdeskCardsUserService.getMeetingCardForUser(user);
       vm.callCard = HelpdeskCardsUserService.getCallCardForUser(user);
@@ -53,17 +127,17 @@
       if (vm.hybridServicesCard.entitled) {
         HelpdeskService.getHybridStatusesForUser(vm.userId, vm.orgId).then(function (statuses) {
           _.each(statuses, function (status) {
-            status.collapsedState = USSService2.decorateWithStatus(status);
+            status.collapsedState = USSService.decorateWithStatus(status);
             switch (status.serviceId) {
-            case 'squared-fusion-cal':
-              vm.hybridServicesCard.cal.status = status;
-              break;
-            case 'squared-fusion-uc':
-              vm.hybridServicesCard.uc.status = status;
-              break;
-            case 'squared-fusion-ec':
-              vm.hybridServicesCard.ec.status = status;
-              break;
+              case 'squared-fusion-cal':
+                vm.hybridServicesCard.cal.status = status;
+                break;
+              case 'squared-fusion-uc':
+                vm.hybridServicesCard.uc.status = status;
+                break;
+              case 'squared-fusion-ec':
+                vm.hybridServicesCard.ec.status = status;
+                break;
             }
           });
         }, XhrNotificationService.notify);
@@ -91,16 +165,24 @@
         }, angular.noop);
       }
 
+      vm.cardsAvailable = true;
       angular.element(".helpdesk-details").focus();
     }
 
+    function getUserStatusesAsString(vm) {
+      var statuses = _.map(vm.user.statuses, function (_status) {
+        return $translate.instant(_status);
+      });
+      return statuses.join(',');
+    }
+
     function isAuthorizedForLog() {
-      return (Authinfo.isCisco() && (Authinfo.isSupportUser() || Authinfo.isAdmin() || Authinfo.isAppAdmin()));
+      return Authinfo.isCisco() && (Authinfo.isSupportUser() || Authinfo.isAdmin() || Authinfo.isAppAdmin() || Authinfo.isReadOnlyAdmin());
     }
 
     function downloadLog(filename) {
       HelpdeskLogService.downloadLog(filename).then(function (tempURL) {
-        window.location.assign(tempURL);
+        WindowLocation.set(tempURL);
       });
     }
 
@@ -109,15 +191,18 @@
         XhrNotificationService.notify(err);
       }
     }
-  }
 
-  function keyPressHandler(event) {
-    if (event.keyCode === 27) { // Esc
-      window.history.back();
+    function modalVisible() {
+      return $('#HelpdeskExtendedInfoDialog').is(':visible');
+    }
+
+    function keyPressHandler(event) {
+      if (!modalVisible()) {
+        if (event.keyCode === 27) { // Esc
+          $window.history.back();
+        }
+      }
     }
   }
 
-  angular
-    .module('Squared')
-    .controller('HelpdeskUserController', HelpdeskUserController);
 }());

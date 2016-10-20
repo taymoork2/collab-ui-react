@@ -1,12 +1,9 @@
 .call-metrics-customer {
-  .amExportButton {
-    left: 80%;
-    top: rem-calc(40);
-  }
   .amcharts-pie-label {
     font-family: $brand-font-cisco-TT-Regular;
     font-size: rem-calc(15);
   }
+
   .metrics-display {
     height: rem-calc(10);
     overflow: visible;
@@ -14,11 +11,13 @@
     text-align: center;
     top: rem-calc(-60);
     color: $gray-light-1;
+
     .metrics-numeral {
       font-size: rem-calc(25);
       font-weight: bold;
       padding: 0;
     }
+
     .metrics-text {
       font-size: rem-calc(15);
       position: relative;

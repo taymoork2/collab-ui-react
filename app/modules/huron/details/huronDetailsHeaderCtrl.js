@@ -6,7 +6,7 @@
     .controller('HuronDetailsHeaderCtrl', HuronDetailsHeaderCtrl);
 
   /* @ngInject */
-  function HuronDetailsHeaderCtrl($scope, $state, $q, Config, FeatureToggleService) {
+  function HuronDetailsHeaderCtrl() {
     var vm = this;
     vm.title = 'huronDetails.title';
     vm.back = false;

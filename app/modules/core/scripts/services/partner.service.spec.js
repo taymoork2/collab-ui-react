@@ -1,15 +1,15 @@
 'use strict';
 
 describe('Partner Service -', function () {
-  beforeEach(module('Core'));
-  beforeEach(module('Huron'));
+  beforeEach(angular.mock.module('Core'));
+  beforeEach(angular.mock.module('Huron'));
 
-  var $httpBackend, $translate, $rootScope, PartnerService, Authinfo, Config;
+  var $httpBackend, $q, $translate, $scope, Analytics, Auth, Authinfo, Config, PartnerService, TrialService, UrlConfig;
 
   var testData;
 
   beforeEach(function () {
-    module(function ($provide) {
+    angular.mock.module(function ($provide) {
       Authinfo = {
         getOrgId: function () {
           return '12345';
@@ -20,15 +20,22 @@ describe('Partner Service -', function () {
     });
   });
 
-  beforeEach(inject(function (_$httpBackend_, _$translate_, _$rootScope_, _PartnerService_, _Config_, _Authinfo_) {
+  beforeEach(inject(function (_$httpBackend_, _$q_, $rootScope, _$translate_, _Analytics_, _Auth_, _Authinfo_, _Config_, _PartnerService_, _TrialService_, _UrlConfig_) {
+    $scope = $rootScope.$new();
     $httpBackend = _$httpBackend_;
+    $q = _$q_;
     $translate = _$translate_;
-    PartnerService = _PartnerService_;
-    Config = _Config_;
+    Analytics = _Analytics_;
+    Auth = _Auth_;
     Authinfo = _Authinfo_;
-    $rootScope = _$rootScope_;
+    Config = _Config_;
+    PartnerService = _PartnerService_;
+    TrialService = _TrialService_;
+    UrlConfig = _UrlConfig_;
 
     testData = getJSONFixture('core/json/partner/partner.service.json');
+    spyOn(Auth, 'getAuthorizationUrlList').and.returnValue($q.when({}));
+    spyOn(Analytics, 'trackUserPatch');
   }));
 
   afterEach(function () {
@@ -52,7 +59,7 @@ describe('Partner Service -', function () {
   it('should successfully return an array of 3 customers from calling getTrialsList', function () {
     $httpBackend.whenGET(PartnerService.trialsUrl).respond(testData.trialsResponse.status, testData.trialsResponse.data);
 
-    PartnerService.getTrialsList(function (data, status) {
+    TrialService.getTrialsList(function (data, status) {
       expect(status).toBe(200);
       expect(data.trials.length).toBe(3);
       expect(data.trials).toEqual(testData.trialsResponse.data.trials);
@@ -70,6 +77,17 @@ describe('Partner Service -', function () {
       expect(data.organizations).toEqual(testData.managedOrgsResponse.data.organizations);
     });
 
+    $httpBackend.flush();
+  });
+
+  it('should successfully return an array of 5 customers from calling getManagedOrgsList with customerName search', function () {
+    var url = UrlConfig.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId() + '/managedOrgs' + '?customerName=searchStr';
+    $httpBackend.whenGET(url).respond(testData.managedOrgsResponse.data);
+    PartnerService.getManagedOrgsList('searchStr').then(function (response) {
+      expect(response.data.organizations).toEqual(testData.managedOrgsResponse.data.organizations);
+      expect(response.data.organizations.length).toBe(5);
+      expect(response.status).toBe(200);
+    });
     $httpBackend.flush();
   });
 
@@ -95,6 +113,7 @@ describe('Partner Service -', function () {
     expect(PartnerService.getLicense(testData.licenses, Config.offerCodes.MS)).toEqual(testData.licenses[0]);
     expect(PartnerService.getLicense(testData.licenses, Config.offerCodes.CF)).toEqual(testData.licenses[1]);
     expect(PartnerService.getLicense(testData.licenses, Config.offerCodes.CO)).toEqual(testData.licenses[2]);
+    expect(PartnerService.getLicense(testData.licenses, Config.offerCodes.CDC)).toEqual(testData.licenses[6]);
   });
 
   it('should successfully return a boolean on whether or not a license is available from calling isLicenseInfoAvailable', function () {
@@ -135,7 +154,7 @@ describe('Partner Service -', function () {
     PartnerService.setNotesSortOrder(customerActive);
     expect(customerActive.notes.sortOrder).toBe(PartnerService.customerStatus.NOTE_NOT_EXPIRED);
     expect(customerActive.notes.daysLeft).toBe(45);
-    expect(customerActive.notes.text).toBe('customerPage.daysRemaining');
+    expect(customerActive.notes.text).toBe('customerPage.daysLeftToPurchase');
 
     // Customer's isTrial, status, and daysLeft properties are true, "ACTIVE", and 0.
     var customerExpireToday = testData.customers[1];
@@ -148,8 +167,8 @@ describe('Partner Service -', function () {
     var customerExpired = testData.customers[2];
     PartnerService.setNotesSortOrder(customerExpired);
     expect(customerExpired.notes.sortOrder).toBe(PartnerService.customerStatus.NOTE_EXPIRED);
-    expect(customerExpired.notes.daysLeft).toBe(-1);
-    expect(customerExpired.notes.text).toBe('customerPage.expired');
+    expect(customerExpired.notes.daysLeft).toBe(-25);
+    expect(customerExpired.notes.text).toBe('customerPage.expiredWithGracePeriod');
 
     // Customer's status property is "PENDING"
     var customerNoLicense = testData.customers[3];
@@ -171,7 +190,7 @@ describe('Partner Service -', function () {
   });
 
   it('should successfully return an array of customers with additional properties from calling loadRetrievedDataToList', function () {
-    var returnList = PartnerService.loadRetrievedDataToList(_.get(testData, 'managedOrgsResponse.data.organizations', []), true);
+    var returnList = PartnerService.loadRetrievedDataToList(_.get(testData, 'managedOrgsResponse.data.organizations', []), true, true);
     var activeList = _.filter(returnList, {
       state: "ACTIVE"
     });
@@ -183,19 +202,29 @@ describe('Partner Service -', function () {
     expect(activeList.length).toBe(3);
     expect(expiredList.length).toBe(2);
 
-    // Two licenses converted to License List. First license has four entitlements
-    expect(returnList[0].licenseList.length).toBe(2);
+    // Three licenses converted to License List. First license has four entitlements
+    expect(returnList[0].licenseList.length).toBe(3);
     expect(returnList[0].licenseList[0].features.length).toBe(4);
     expect(returnList[0].licenseList[0].features).toEqual(testData.managedOrgsResponse.data.organizations[0].licenses[0].features);
 
     // Verify additional properties are set to the corresponding license object and added to customer object.
     expect(activeList[1].conferencing.features.length).toBe(3);
     expect(activeList[1].messaging.features.length).toBe(4);
+    expect(activeList[1].care.features.length).toBe(4);
+  });
+
+  it('should successfully return an object containing email, orgid, and orgname from getAdminOrg', function () {
+    var myOrg = getJSONFixture('core/json/organizations/Orgservice.json').getOrg;
+    var returnList = PartnerService.loadRetrievedDataToList([myOrg], false, true);
+
+    expect(returnList[0].customerOrgId).toBe(myOrg.id);
+    expect(returnList[0].customerName).toBe(myOrg.displayName);
+    expect(returnList[0].customerEmail).toBe(myOrg.email);
   });
 
   it('should verify that every org has a list of offers', function () {
     var returnList = PartnerService.loadRetrievedDataToList(testData.managedOrgsResponse.data.organizations, [], true);
-    var offers = _.pluck(returnList, 'offers');
+    var offers = _.map(returnList, 'offers');
 
     expect(offers.length).toBe(returnList.length);
 
@@ -206,16 +235,69 @@ describe('Partner Service -', function () {
 
   it('should successfully return an array of customers from calling exportCSV', function () {
     $httpBackend.whenGET(PartnerService.managedOrgsUrl).respond(testData.managedOrgsResponse.status, testData.managedOrgsResponse.data);
-
-    var promise = PartnerService.exportCSV();
+    var promise = PartnerService.exportCSV(false);
     promise.then(function (customers) {
       expect(customers).toEqual(testData.exportCSVResult);
     });
-
     $httpBackend.flush();
   });
 
+  it('should successfully return an array of customers with care entitlements from calling exportCSV', function () {
+    $httpBackend.whenGET(PartnerService.managedOrgsUrl).respond(testData.managedOrgsResponse.status, testData.managedOrgsResponse.data);
+    var promise = PartnerService.exportCSV(true);
+    promise.then(function (customers) {
+      expect(customers).toEqual(testData.exportCSVResultWithCare);
+    });
+    $httpBackend.flush();
+  });
+
+  describe('modifyManagedOrgs function', function () {
+    beforeEach(function () {
+      Auth.getAuthorizationUrlList.and.returnValue($q.when(testData.getAuthorizationUrlListResponse));
+      $scope.$apply();
+    });
+
+    it('should call a patch if organization is not matched', function () {
+      PartnerService.modifyManagedOrgs('b3f09da0-7729-47a5-8091-1aa07a3c8671');
+      $httpBackend.expectPATCH('https://identity.webex.com/identity/scim/12345/v1/Users/' + testData.getAuthorizationUrlListResponse.data.uuid).respond(200, testData.getAuthorizationUrlListResponse);
+      $httpBackend.flush();
+    });
+  });
+
   describe('helper functions -', function () {
+    describe('getTrialMeetingServices', function () {
+      var licenses;
+      beforeEach(function () {
+        licenses = _.cloneDeep(testData.licenses);
+      });
+
+      it('should return a list of meeting and webex for services for trials', function () {
+        licenses.push({
+          licenseId: 'EE_abdd0d28-a886-452a-b2b0-97861baa2a54',
+          offerName: 'EE',
+          licenseType: 'CONFERENCING',
+          volume: 100,
+          isTrial: true,
+        });
+        var list = PartnerService.getTrialMeetingServices(licenses);
+        expect(list.length).toBe(2);
+      });
+
+      it('should return a list of meeting and webex for services ONLY for trials', function () {
+        licenses.push({
+          "licenseId": "EE_abdd0d28-a886-452a-b2b0-97861baa2a54",
+          "offerName": "EE",
+          "licenseType": "CONFERENCING",
+          "volume": 100,
+          "isTrial": false,
+        });
+
+        var list = PartnerService.getTrialMeetingServices(licenses);
+        expect(list.length).toBe(1);
+      });
+
+    });
+
     describe('parseLicensesAndOffers -', function () {
       it('should return a default object if "offers" property is an empty list', function () {
         var data = PartnerService.parseLicensesAndOffers();
@@ -224,8 +306,7 @@ describe('Partner Service -', function () {
         expect(data.isSquaredUcOffer).toBe(false);
         expect(data.usage).toBe(0);
         expect(data.offer).toEqual({
-          userServices: '',
-          deviceBasedServices: ''
+          trialServices: []
         });
       });
 
@@ -234,7 +315,7 @@ describe('Partner Service -', function () {
           offers: [{
             usageCount: 1
           }]
-        });
+        }, { isCareEnabled: true });
         expect(data.usage).toBe(1);
       });
 
@@ -243,7 +324,7 @@ describe('Partner Service -', function () {
           offers: [{
             licenseCount: 10
           }]
-        });
+        }, { isCareEnabled: true });
         expect(data.licenses).toBe(10);
 
         data = PartnerService.parseLicensesAndOffers({
@@ -254,7 +335,7 @@ describe('Partner Service -', function () {
           }, {
             licenseCount: 20
           }]
-        });
+        }, { isCareEnabled: true });
         expect(data.licenses).toBe(20);
       });
 
@@ -264,49 +345,67 @@ describe('Partner Service -', function () {
             id: Config.offerTypes.roomSystems,
             licenseCount: 10,
           }]
-        });
+        }, { isCareEnabled: true });
         expect(data.deviceLicenses).toBe(10);
       });
 
-      it('should return an object with its "offer.userServices" property as a comma separated list with the translated "trials.message" l10n key, if the offers "id" property matches `Config.offerTypes.spark1` or `Config.offerTypes.message`', function () {
+      it('should return an object with its "offer.trialServices" array containing object with the name translated "trials.message" l10n key, if the offers "id" property matches `Config.offerTypes.spark1` or `Config.offerTypes.message`', function () {
         var data = PartnerService.parseLicensesAndOffers({
           offers: [{
             id: Config.offerTypes.spark1
           }]
-        });
-        expect(data.offer.userServices).toContain($translate.instant('trials.message'));
+        }, { isCareEnabled: true });
+        expect(_.map(data.offer.trialServices, function (o) { return o.name; })).toContain($translate.instant('trials.message'));
 
         data = PartnerService.parseLicensesAndOffers({
           offers: [{
             id: Config.offerTypes.message
           }]
-        });
-        expect(data.offer.userServices).toContain($translate.instant('trials.message'));
+        }, { isCareEnabled: true });
+        expect(_.map(data.offer.trialServices, function (o) { return o.name; })).toContain($translate.instant('trials.message'));
       });
 
-      it('should return an object with its "offer.userServices" property as a comma separated with the translated "trials.collab" l10n key, if the offers "id" property matches `Config.offerTypes.collab`', function () {
+      it('should return an object with its "offer.trialServices" array containing object with the name translated "trials.care" l10n key, if the offers "id" property matches `Config.offerTypes.care` and atlasCareTrials feature is enabled for the org', function () {
+        var data = PartnerService.parseLicensesAndOffers({
+          offers: [{
+            id: Config.offerTypes.care
+          }]
+        }, { isCareEnabled: true });
+        expect(_.map(data.offer.trialServices, function (o) { return o.name; })).toContain($translate.instant('trials.care'));
+      });
+
+      it('should return an object with its "offer.trialServices" array empty and without the translated "trials.care" l10n key, if atlasCareTrials feature is disabled for the org', function () {
+        var data = PartnerService.parseLicensesAndOffers({
+          offers: [{
+            id: Config.offerTypes.care
+          }]
+        }, { isCareEnabled: false });
+        expect(data.offer.trialServices.length).toEqual(0);
+      });
+
+      it('should return an object with its "offer.trialServices" array containing object with the name translated "trials.collab" l10n key, if the offers "id" property matches `Config.offerTypes.collab`', function () {
         var data = PartnerService.parseLicensesAndOffers({
           offers: [{
             id: Config.offerTypes.collab
           }]
-        });
-        expect(data.offer.userServices).toContain($translate.instant('trials.message'));
+        }, { isCareEnabled: true });
+        expect(_.map(data.offer.trialServices, function (o) { return o.name; })).toContain($translate.instant('trials.message'));
       });
 
-      it('should return an object with its "offer.userServices" property as a comma separated with the translated "trials.squaredUC" l10n key, if the offers "id" property matches `Config.offerTypes.call` or `Config.offerTypes.squaredUC`', function () {
+      it('should return an object with its "offer.trialServices" array containing object with the name translated "trials.squaredUC" l10n key, if the offers "id" property matches `Config.offerTypes.call` or `Config.offerTypes.squaredUC`', function () {
         var data = PartnerService.parseLicensesAndOffers({
           offers: [{
             id: Config.offerTypes.call
           }]
-        });
-        expect(data.offer.userServices).toContain($translate.instant('trials.call'));
+        }, { isCareEnabled: true });
+        expect(_.map(data.offer.trialServices, function (o) { return o.name; })).toContain($translate.instant('trials.call'));
 
         data = PartnerService.parseLicensesAndOffers({
           offers: [{
             id: Config.offerTypes.squaredUC
           }]
-        });
-        expect(data.offer.userServices).toContain($translate.instant('trials.call'));
+        }, { isCareEnabled: true });
+        expect(_.map(data.offer.trialServices, function (o) { return o.name; })).toContain($translate.instant('trials.call'));
       });
 
       it('should return an object with "isSquaredUcOffer" property set to `true`, only if any of the offers "id" property matches `Config.offerTypes.call` or `Config.offerTypes.squaredUC`', function () {
@@ -314,53 +413,317 @@ describe('Partner Service -', function () {
           offers: [{
             id: Config.offerTypes.call
           }]
-        });
+        }, { isCareEnabled: true });
         expect(data.isSquaredUcOffer).toBe(true);
 
         data = PartnerService.parseLicensesAndOffers({
           offers: [{
             id: Config.offerTypes.squaredUC
           }]
-        });
+        }, { isCareEnabled: true });
         expect(data.isSquaredUcOffer).toBe(true);
 
         data = PartnerService.parseLicensesAndOffers({
           offers: [{
-              id: Config.offerTypes.spark1
-            }, {
-              id: Config.offerTypes.squaredUC
-            }, // presence anywhere in this list will set the property to true
-            {
-              id: Config.offerTypes.collab
-            },
+            id: Config.offerTypes.spark1
+          }, {
+            id: Config.offerTypes.squaredUC
+          }, // presence anywhere in this list will set the property to true
+          {
+            id: Config.offerTypes.collab
+          },
           ]
-        });
+        }, { isCareEnabled: true });
         expect(data.isSquaredUcOffer).toBe(true);
       });
 
-      it('should return an object with its "offer.userServices" property as a comma separated with the translated "customerPage.EE" l10n key, if the offers "id" property matches `Config.offerTypes.webex` or `Config.offerTypes.meetings`', function () {
+      it('should set isSquaredUcOffer to true, only if any of the "licenseType" property matches the value for Config.licenseTypes.COMMUNICATION', function () {
+        var data = PartnerService.parseLicensesAndOffers({
+          licenses: [{
+            licenseType: Config.licenseTypes.COMMUNICATION
+          }]
+        }, { isCareEnabled: true });
+        expect(data.isSquaredUcOffer).toBe(true);
+
+        data = PartnerService.parseLicensesAndOffers({
+          licenses: [{
+            licenseType: Config.licenseTypes.MESSAGING
+          }, {
+            licenseType: Config.licenseTypes.COMMUNICATION
+          }, // presence anywhere in this list should set the property to true
+          {
+            licenseType: Config.licenseTypes.CONFERENCING
+          }
+          ]
+        }, { isCareEnabled: true });
+        expect(data.isSquaredUcOffer).toBe(true);
+
+        data = PartnerService.parseLicensesAndOffers({
+          licenses: [{
+            licenseType: Config.licenseTypes.MESSAGING
+          }, {
+            licenseType: Config.licenseTypes.CONFERENCING
+          }]
+        }, { isCareEnabled: true });
+        expect(data.isSquaredUcOffer).toBe(false);
+      });
+
+      it('should not throw errors when licenses have undefined values', function () {
+        var data = PartnerService.parseLicensesAndOffers({
+          licenses: [
+            undefined, {
+              licenseType: undefined
+            }
+          ]
+        }, { isCareEnabled: true });
+        expect(data.isSquaredUcOffer).toBe(false);
+
+        data = PartnerService.parseLicensesAndOffers({
+          licenses: [{
+            licenseType: undefined
+          }, {
+            licenseType: Config.licenseTypes.COMMUNICATION
+          },
+            undefined
+          ]
+        }, true);
+        expect(data.isSquaredUcOffer).toBe(true);
+      }, true);
+
+      it('should return an object with its "offer.trialServices" array containing object with the name translated "customerPage.EE" l10n key, if the offers "id" property matches `Config.offerTypes.webex` or `Config.offerTypes.meetings`', function () {
         var data = PartnerService.parseLicensesAndOffers({
           offers: [{
             id: Config.offerTypes.webex
           }]
-        });
-        expect(data.offer.userServices).toContain($translate.instant('customerPage.EE'));
+        }, { isCareEnabled: true });
+        expect(_.map(data.offer.trialServices, function (o) { return o.name; })).toContain($translate.instant('customerPage.EE'));
 
         data = PartnerService.parseLicensesAndOffers({
           offers: [{
             id: Config.offerTypes.meetings
           }]
-        });
-        expect(data.offer.userServices).toContain($translate.instant('customerPage.EE'));
+        }, { isCareEnabled: true });
+        expect(_.map(data.offer.trialServices, function (o) { return o.name; })).toContain($translate.instant('customerPage.EE'));
       });
 
-      it('should return an object with its "offer.deviceBasedServices" property as a comma separated with the translated "trials.roomSystem" l10n key, if the offers "id" property matches `Config.offerTypes.roomSystems`', function () {
+      it('should return an object with its "offer.trialServices" array containing object with the name translated "trials.roomSystem" l10n key, if the offers "id" property matches `Config.offerTypes.roomSystems`', function () {
         var data = PartnerService.parseLicensesAndOffers({
           offers: [{
             id: Config.offerTypes.roomSystems
           }]
+        }, { isCareEnabled: true });
+        expect(data.isRoomSystems).toBe(true);
+        expect(_.map(data.offer.trialServices, function (o) { return o.name; })).toContain($translate.instant('trials.roomSystem'));
+      });
+    });
+
+    describe('Helper functions related to getFreeOrActiveServices ', function () {
+      it('should createConferenceMapping with conferencing license type', function () {
+        var result = PartnerService.helpers.createConferenceMapping();
+        expect(result[Config.offerCodes.CF].licenseType).toBe(Config.licenseTypes.CONFERENCING);
+      });
+
+      it('should  createLicenseMapping with proper icons', function () {
+        var result = PartnerService.helpers.createLicenseMapping();
+        expect(result[Config.licenseTypes.COMMUNICATION].icon).toBe('icon-circle-call');
+
+      });
+
+      it('should  create FreeServicesMapping consisting of Messaging, Call, and Conferencing (CF) ', function () {
+        var result = PartnerService.helpers.createFreeServicesMapping();
+        expect(result.length).toBe(3);
+        expect(result[0].code).toBe(Config.offerCodes.MS);
+        expect(result[1].code).toBe(Config.offerCodes.CF);
+        expect(result[2].code).toBe(Config.offerCodes.CO);
+
+      });
+
+      it('should return TRUE from isDisplayableService for trial license if looking for trials', function () {
+        var licenseInfo = {
+          licenseType: Config.licenseTypes.MESSAGING,
+          volume: 10,
+          isTrial: true
+        };
+        var isTrial = true;
+        expect(PartnerService.helpers.isDisplayableService(licenseInfo, true, isTrial)).toBe(true);
+      });
+
+      it('should return FALSE from isDisplayableService for trial license if NOT looking for trials', function () {
+        var licenseInfo = {
+          licenseType: Config.licenseTypes.MESSAGING,
+          volume: 10,
+          isTrial: true
+        };
+        var options = { isTrial: false };
+        expect(PartnerService.helpers.isDisplayableService(licenseInfo, options)).toBe(false);
+      });
+
+      it('should return FALSE from isDisplayableService for storage license', function () {
+        var licenseInfo = {
+          licenseType: Config.licenseTypes.STORAGE,
+          volume: 10
+        };
+        var options = { isTrial: false, isCareEnabled: true };
+        expect(PartnerService.helpers.isDisplayableService(licenseInfo, options)).toBe(false);
+      });
+
+      it('should return the value of the toggle  from isDisplayableService for care license', function () {
+        var licenseInfo = {
+          licenseType: Config.licenseTypes.CARE,
+          volume: 10
+        };
+        var options = { isTrial: false, isCareEnabled: false };
+        expect(PartnerService.helpers.isDisplayableService(licenseInfo, options)).toBe(false);
+        options.isCareEnabled = true;
+        expect(PartnerService.helpers.isDisplayableService(licenseInfo, options)).toBe(true);
+      });
+
+      it('should return TRUE from isDisplayableService for care license for paid conference license ', function () {
+        var licenseInfo = {
+          licenseType: Config.licenseTypes.CONFERENCING,
+          volume: 10
+        };
+        var options = { isTrial: false, isCareEnabled: true };
+        expect(PartnerService.helpers.isDisplayableService(licenseInfo, options)).toBe(true);
+      });
+
+      it('should build a meeting service given conferencing mapping', function () {
+        var mapping = PartnerService.helpers.createConferenceMapping();
+        var licenseInfo = {
+          volume: 20
+        };
+        var result = new PartnerService.helpers.LicensedService(licenseInfo, mapping);
+        expect(result.icon).toBe('icon-circle-group');
+        expect(result.qty).toBe(20);
+
+      });
+      it('should build a non meeting service given license mapping', function () {
+        var mapping = PartnerService.helpers.createLicenseMapping();
+        var licenseInfo = {
+          licenseType: 'MESSAGING',
+          volume: 10
+        };
+        var result = new PartnerService.helpers.LicensedService(licenseInfo, mapping);
+        expect(result.licenseType).toBe(Config.licenseTypes.MESSAGING);
+        expect(result.qty).toBe(10);
+
+      });
+
+      it('should add a service if there is not already one with the same name', function () {
+        var service = {
+          qty: 20,
+          name: 'Spark Room System'
+        };
+        var services = [{
+          qty: 10,
+          name: 'Messaging'
+        }, {
+          qty: 20,
+          name: 'Call'
+        }];
+        PartnerService.helpers.addService(services, service);
+        expect(services.length).toBe(3);
+
+      });
+
+      it('should  sum quantities if there is already service with the same name', function () {
+        var service = {
+          qty: 20,
+          name: 'Spark Room System'
+        };
+        var services = [{
+          qty: 10,
+          name: 'Spark Room System'
+        }, {
+          qty: 20,
+          name: 'Call'
+        }];
+
+        PartnerService.helpers.addService(services, service);
+        expect(services.length).toBe(2);
+        expect(services[0].qty).toBe(30);
+      });
+    });
+
+    describe('getFreeOrActiveServices ', function () {
+      var customer;
+
+      beforeEach(function () {
+        customer = {
+          licenseList: testData.partialLicenseDataWithPaid
+        };
+      });
+
+      it('should return an object without free/paid services if none or only multiple conferencing services', function () {
+        var result = PartnerService.getFreeOrActiveServices(customer, { isTrial: false });
+        var meetingServices = _.find(result, {
+          isMeeting: true
         });
-        expect(data.offer.deviceBasedServices).toContain($translate.instant('trials.roomSystem'));
+        expect(meetingServices).toBeDefined();
+        expect(result.length).toBe(1);
+      });
+
+      it('should return  an array of free/paid services if present ', function () {
+        customer.licenseList[3].isTrial = false;
+        var options = { isCareEnabled: true, isTrial: false };
+        var result = PartnerService.getFreeOrActiveServices(customer, options);
+        expect(result).toBeDefined();
+        expect(result.length).toBe(2);
+      });
+
+      it('should return an array containing an object with  array of meeting services and total license quantity when multiple conf. services are active ', function () {
+        var options = { isCareEnabled: true, isTrial: false };
+        var result = PartnerService.getFreeOrActiveServices(customer, options);
+        var meeting = _.find(result, {
+          isMeeting: true
+        });
+        expect(meeting).toBeDefined();
+        expect(meeting.sub.length).toBe(3);
+        expect(meeting.qty).toBe(500);
+      });
+
+      it('should return an array with a meeting and no meeting subarray when only 1 conferencing service', function () {
+        var options = { isCareEnabled: true, isTrial: false };
+        _.each(customer.licenseList, function (license) {
+          license.isTrial = true;
+        });
+        customer.licenseList[2].isTrial = false;
+        var result = PartnerService.getFreeOrActiveServices(customer, options);
+        expect(result).toBeDefined();
+        expect(result[0].licenseType).toBe(Config.licenseTypes.CONFERENCING);
+        expect(result[0].sub).not.toBeDefined();
+      });
+    });
+
+    describe('massage data helpers', function () {
+      it('should set the correct purchase status', function () {
+        // purchased
+        var dataPurchased = testData.customers[6];
+        expect(PartnerService.helpers.calculatePurchaseStatus(dataPurchased)).toBe(true);
+        // active, but on trial
+        var dataNotPurchased1 = testData.customers[0];
+        expect(PartnerService.helpers.calculatePurchaseStatus(dataNotPurchased1)).toBe(false);
+        // not active
+        var dataNotPurchased2 = testData.customers[3];
+        expect(PartnerService.helpers.calculatePurchaseStatus(dataNotPurchased2)).toBe(false);
+      });
+
+      it('should set the service count properly', function () {
+        var dataPurchased = testData.customers[6];
+        dataPurchased.purchased = true;//this would be calculated in calculatePurchaseStatus
+        expect(PartnerService.helpers.calculateTotalLicenses(dataPurchased)).toBe(200);
+
+        var dataNotPurchased = testData.customers[7];
+        dataNotPurchased.purchased = false;
+        expect(PartnerService.helpers.calculateTotalLicenses(dataNotPurchased)).toBe(15);
+      });
+
+      it('should set the service column count correctly', function () {
+        var dataNoWebex = testData.customers[7];
+        expect(PartnerService.helpers.countUniqueServices(dataNoWebex)).toBe(1);
+
+        var dataWithWebex = testData.customers[8];// This has 2 webex's in it, should only count 1
+        expect(PartnerService.helpers.countUniqueServices(dataWithWebex)).toBe(2);
       });
     });
   });

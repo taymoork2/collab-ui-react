@@ -1,13 +1,13 @@
 <div class="ui-grid-cell-contents align-center">
-  <span ng-if="grid.appScope.isLicenseInfoAvailable(row.entity.licenseList) && grid.appScope.isLicenseTypeActive(row.entity, col.field)"
+  <span ng-if="grid.appScope.isLicenseTypeActive(row.entity, col.field)"
     class="badge"
     ng-class="{'badge-active': row.entity.status != 'CANCELED', 'badge-disabled': row.entity.status === 'CANCELED', 'selected' : row.isSelected}"
     translate="customerPage.active"></span>
-  <span ng-if="grid.appScope.isLicenseInfoAvailable(row.entity.licenseList) && grid.appScope.isLicenseTypeATrial(row.entity, col.field)"
+  <span ng-if="grid.appScope.isLicenseTypeATrial(row.entity, col.field)"
     class="badge"
     ng-class="{'badge-trial': row.entity.status != 'CANCELED', 'badge-disabled': row.entity.status === 'CANCELED', 'selected' : row.isSelected}"
     translate="customerPage.trial"></span>
-  <span ng-if="grid.appScope.isLicenseInfoAvailable(row.entity.licenseList) && grid.appScope.isLicenseTypeFree(row.entity, col.field)"
+  <span ng-if="grid.appScope.isLicenseTypeFree(row.entity, col.field)"
     ng-class="{'free': row.entity.status != 'CANCELED', 'free-disabled': row.entity.status === 'CANCELED', 'selected' : row.isSelected}"
     translate="customerPage.free"></span>
 </div>

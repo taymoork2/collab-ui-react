@@ -1,0 +1,73 @@
+if [ -z "${WX2_ADMIN_WEB_CLIENT_HOME}" ]; then
+    >&2 echo "Error: WX2_ADMIN_WEB_CLIENT_HOME is not set, please export this environment variable first."
+    return 1
+fi
+
+# minimum number of spec files before splitting should be considered
+min_count_spec_files_before_split=15
+
+# maximum number of spec files to allow 1 process to handle
+max_count_spec_files_allowed=999
+
+function num_cpus {
+    if [ "$(uname)" = "Darwin" ]; then
+        sysctl -n hw.ncpu
+    else
+        grep -c ^processor /proc/cpuinfo
+    fi
+}
+
+function mk_temp_dir_for_ktest {
+    mktemp -d -t ktest-all.XXXXX
+}
+
+# calc_lines_per_file -
+# - performs logic to determine an appropriate value to be used by the 'split' cmd
+# - if total specs is under the minimum value, the minimum value is output
+# - for anything else, the calculated result value is always offset by +1
+# - this is intentional, as this causes the 'split' cmd to favor placing more lines in all but
+#   the last file
+function calc_lines_per_file {
+    local total_lines=$1
+    local num_cores=${2:-$(num_cpus)}
+    local min=${3:-$min_count_spec_files_before_split}
+    local max=${4:-$max_count_spec_files_allowed}
+    local i=1
+    local num_lines=$(( total_lines / i ))
+
+    # early out if total lines could easily be processed by 1 process
+    if [ $num_lines -le $min ]; then
+        echo $min
+        return;
+    fi
+
+    # determine ideal split, keep track of i
+    while [ $(( total_lines / i )) -ge $min ]; do
+        let "i += 1"
+    done
+
+    # shellcheck disable=SC2086
+    # i greater than num cores available? use num cores available
+    if [ $i -gt $num_cores ]; then
+        i=$num_cores
+    fi
+
+    # determine final split
+    num_lines=$(( total_lines / i ))
+
+    # final split value higher than max allowed lines for 1 process? use max
+    if [ $num_lines -gt $max ]; then
+        num_lines=$max
+    fi
+
+    # final number to be offset by 1, to allow favoring all but the last process to be spawned
+    echo $(( num_lines + 1 ))
+}
+
+function mk_require_list_file {
+    sed -e "s/.*/require('&');/g" "$1"
+}
+
+function inject_require_list_file {
+    sed -e "/inject:file-list/ r $1" "$2"
+}

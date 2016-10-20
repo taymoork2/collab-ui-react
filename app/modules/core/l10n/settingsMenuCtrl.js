@@ -5,7 +5,7 @@
     .module('Core')
     .controller('SettingsMenuCtrl', SettingsMenuCtrl);
 
-  function SettingsMenuCtrl($state, $translate, Authinfo, $rootScope, languages) {
+  function SettingsMenuCtrl($state, $translate, $rootScope, languages) {
     var vm = this;
 
     vm.options = _.map(languages, function (lang) {
@@ -19,9 +19,12 @@
       return lang.value === $translate.use();
     }) || {};
 
+    // sets moment with the correct locale for entire app
+    moment.locale(vm.selected.value);
+
     vm.updateLanguage = function () {
       $translate.use(vm.selected.value).then(function () {
-        Authinfo.initializeTabs();
+        moment.locale(vm.selected.value);
         $state.go('login');
         $rootScope.$broadcast('TABS_UPDATED');
       });

@@ -1,0 +1,10 @@
+.unsupported-browser {
+  z-index: 100000000;
+  position: absolute;
+  background: maroon;
+  top: 0px;
+  left: 0px;
+  right: 0px;
+  padding: 3px 10px;
+  color: white;
+}

@@ -1,10 +1,13 @@
-'use strict';
+(function () {
+  'use strict';
 
-angular.module('Core')
+  angular.module('Core')
+    .directive('crServicesPanels', crServicesPanels);
 
-.directive('crServicesPanels', function () {
-  return {
-    restrict: 'EA',
-    templateUrl: 'modules/core/users/userAdd/servicesPanels.tpl.html'
-  };
-});
+  function crServicesPanels() {
+    return {
+      restrict: 'EA',
+      templateUrl: 'modules/core/users/userAdd/servicesPanels.tpl.html'
+    };
+  }
+})();

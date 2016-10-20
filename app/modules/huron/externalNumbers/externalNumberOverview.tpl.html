@@ -1,9 +1,32 @@
 <cs-sp-section class="external-number-overview">
   <div class="section-title-row">
     <span class="section-name" translate="customerPage.call"></span>
+     <span cs-dropdown class="actions-menu dropdown pull-right">
+        <button cs-dropdown-toggle class="actions-button btn--none dropdown-toggle">
+          <i class="icon icon-three-dots"></i>
+        </button>
+        <ul cs-dropdown-menu class="dropdown-menu dropdown-primary actions-services">
+          <li>
+            <a href ng-click="externalNumberOverview.isTerminusCustomer()">
+              <span translate="customerPage.addNumbers"></span>
+            </a>
+          </li>
+        </ul>
+    </span>
+  </div>
+  <div id="external-number-add">
+    <button class="btn btn--primary" role="button" ng-click="externalNumberOverview.isTerminusCustomer()" >
+      <span translate="customerPage.addNumbers"></span>
+    </button>
   </div>
   <div class="feature-list">
     <ul>
+      <li class="feature">
+        <a ui-sref="customer-overview.pstnOrderOverview({currentCustomer: externalNumberOverview.currentCustomer})">
+          <span class="feature-name" translate="customerPage.pstnOrders"></span>
+          <i class="feature-arrow"></i>
+        </a>
+      </li>
       <li class="feature">
         <a ui-sref="customer-overview.externalNumbers">
           <span class="feature-name" translate="customerPage.phoneNumbers"></span>

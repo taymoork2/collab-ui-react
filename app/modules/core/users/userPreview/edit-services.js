@@ -1,11 +1,14 @@
-'use strict';
+(function () {
+  'use strict';
 
-angular.module('Core')
+  angular.module('Core')
+    .directive('crEditServices', crEditServices);
 
-.directive('crEditServices', function () {
-  return {
-    restrict: 'EA',
-    templateUrl: 'modules/core/users/userPreview/editServices.tpl.html',
-    controller: 'OnboardCtrl'
-  };
-});
+  function crEditServices() {
+    return {
+      restrict: 'EA',
+      templateUrl: 'modules/core/users/userPreview/editServices.tpl.html',
+      controller: 'OnboardCtrl'
+    };
+  }
+})();

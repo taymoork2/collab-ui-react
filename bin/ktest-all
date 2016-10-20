@@ -1,0 +1,9 @@
+#!/bin/bash
+
+if [ -z "${WX2_ADMIN_WEB_CLIENT_HOME}" ]; then
+    >&2 echo "Error: WX2_ADMIN_WEB_CLIENT_HOME is not set, please export this environment variable first."
+    exit 1
+fi
+
+find "${WX2_ADMIN_WEB_CLIENT_HOME}/app" -iname \*spec.js -o -iname \*spec.ts \
+    | "${WX2_ADMIN_WEB_CLIENT_HOME}/bin/ktest" $@

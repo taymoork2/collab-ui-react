@@ -4,29 +4,16 @@
 /* global LONG_TIMEOUT */
 
 describe('Partner flow', function () {
-  var orgId;
-  var accessToken;
   var appWindow;
-
-  beforeEach(function () {
-    log.verbose = true;
-  });
-
-  afterEach(function () {
-    log.verbose = false;
-    utils.dumpConsoleErrors();
-  });
 
   describe('Login as partner admin user', function () {
 
     it('should login', function () {
-      login.login('partner-admin', '#/partner/overview').then(function (token) {
-        accessToken = token;
-      });
+      login.login('partner-admin', '#/partner/overview');
     });
 
     it('should display correct navigation colors', function () {
-      utils.expectClass(navigation.body, 'inverse');
+      utils.waitClass(navigation.body, 'inverse');
     });
 
     it('should display correct tabs for user based on role', function () {
@@ -43,6 +30,13 @@ describe('Partner flow', function () {
     it('should display partner support page', function () {
       utils.click(navigation.userInfoButton);
       utils.click(navigation.supportLink).then(navigation.launchSupportPage);
+    });
+  });
+
+  describe('Partner landing page reports', function () {
+    it('should show the reports', function () {
+      utils.expectIsDisplayed(partner.entitlementsChart);
+      utils.expectIsDisplayed(partner.entitlementsCount);
     });
   });
 
@@ -71,8 +65,13 @@ describe('Partner flow', function () {
 
       utils.expectIsDisabled(partner.startTrialButton);
 
-      utils.expectIsDisplayed(partner.messageTrialCheckbox);
-      utils.expectIsNotDisplayed(partner.squaredUCTrialCheckbox);
+      utils.expectCheckbox(partner.squaredUCTrialCheckbox, true);
+      utils.expectCheckbox(partner.roomSystemsTrialCheckbox, true);
+      utils.click(partner.squaredUCTrialCheckbox); // no PSTN on this trial
+      utils.click(partner.roomSystemsTrialCheckbox); // no room systems on this trial
+      utils.expectCheckbox(partner.squaredUCTrialCheckbox, false);
+      utils.expectCheckbox(partner.roomSystemsTrialCheckbox, false);
+      utils.setCheckboxIfDisplayed(partner.webexTrialCheckbox, false, 100);
 
       utils.sendKeys(partner.customerNameInput, partner.newTrial.customerName);
       utils.sendKeys(partner.customerEmailInput, partner.newTrial.customerEmail);
@@ -84,15 +83,15 @@ describe('Partner flow', function () {
 
     it('should find new trial', function (done) {
       utils.click(partner.trialFilter);
+      utils.search(partner.newTrial.customerName, -1);
       utils.expectIsDisplayed(partner.newTrialRow);
 
-      partner.retrieveOrgId(partner.newTrialRow).then(function (_orgId) {
-        orgId = _orgId;
+      partner.retrieveOrgId(partner.newTrialRow).then(function () {
         done();
       });
     }, LONG_TIMEOUT);
 
-    it('should edit an exisiting trial', function () {
+    xit('should edit an exisiting trial', function () {
       utils.click(partner.newTrialRow);
 
       utils.expectIsDisplayed(partner.previewPanel);
@@ -101,7 +100,7 @@ describe('Partner flow', function () {
 
       utils.waitForModal().then(function () {
         utils.expectIsDisplayed(partner.editTrialForm);
-        utils.expectClass(partner.messageTrialCheckbox, 'disabled');
+        utils.waitClass(partner.messageTrialCheckbox, 'disabled');
 
         utils.expectIsDisabled(partner.saveUpdateButton);
         utils.clear(partner.licenseCountInput);
@@ -143,8 +142,9 @@ describe('Partner flow', function () {
       utils.click(wizard.nextBtn);
 
       utils.expectTextToBeSet(wizard.mainviewTitle, 'Add Users');
+      utils.expectIsDisplayed(wizard.skipBtn);
       utils.click(wizard.nextBtn);
-      utils.click(wizard.finishBtn);
+      utils.click(wizard.saveBtn);
       notifications.clearNotifications();
 
       utils.expectTextToBeSet(wizard.mainviewTitle, 'Get Started');
@@ -161,10 +161,8 @@ describe('Partner flow', function () {
       appWindow = browser.getWindowHandle();
 
       utils.click(partner.exitPreviewButton);
-
-      utils.click(partner.actionsButton);
-      utils.expectIsDisplayed(partner.launchCustomerButton);
-      utils.click(partner.launchCustomerButton);
+      utils.click(partner.newTrialRow);
+      utils.click(partner.launchCustomerPanelButton);
       utils.switchToNewWindow().then(function () {
 
         // backend services are slow to check userauthinfo/accounts
@@ -180,16 +178,12 @@ describe('Partner flow', function () {
 
   }, LONG_TIMEOUT);
 
-  afterAll(function () {
-    deleteTrialUtils.deleteOrg(orgId, accessToken);
-  });
-
   describe('Partner launches its orgs portal', function () {
 
     it('should launch partners org view', function () {
       appWindow = browser.getWindowHandle();
 
-      utils.expectIsDisplayed(navigation.userInfoButton);
+      utils.search('', -1); // clear search
       utils.click(partner.allFilter);
       utils.click(partner.myOrganization);
       utils.click(partner.launchButton);
@@ -203,35 +197,27 @@ describe('Partner flow', function () {
 
         browser.close();
         browser.switchTo().window(appWindow);
-
+        utils.click(partner.exitPreviewButton);
       });
     }, LONG_TIMEOUT);
   });
 
-  describe('Partner landing page reports', function () {
-
-    it('should show the reports', function () {
-      navigation.clickHome();
-      utils.expectIsDisplayed(partner.entitlementsChart);
-      utils.expectIsDisplayed(partner.entitlementsCount);
+  describe("Delete the test customer", function () {
+    it('should login navigate to the test customer', function () {
+      utils.click(partner.trialFilter);
+      utils.search(partner.newTrial.customerName, -1);
+      utils.click(partner.newTrialRow);
+      utils.expectIsDisplayed(partner.previewPanel);
     });
 
-    it('should show active users chart', function () {
-      utils.click(partner.activeUsersTab);
-      utils.expectIsDisplayed(partner.activeUsersChart);
-      utils.expectIsDisplayed(partner.activeUsersCount);
-    });
-
-    it('should show average calls chart', function () {
-      utils.click(partner.averageCallsTab);
-      utils.expectIsDisplayed(partner.averageCallsChart);
-      utils.expectIsDisplayed(partner.averageCallsCount);
-    });
-
-    it('should show content shared chart', function () {
-      utils.click(partner.contentSharedTab);
-      utils.expectIsDisplayed(partner.contentSharedChart);
-      utils.expectIsDisplayed(partner.contentSharedCount);
+    it('should click the Delete Customer button', function () {
+      utils.scrollIntoView(partner.deleteCustomerButton);
+      utils.click(partner.deleteCustomerButton);
+      utils.waitForModal().then(function () {
+        utils.click(partner.deleteCustomerOrgConfirm).then(function () {
+          notifications.assertSuccess(partner.newTrial.customerName, 'successfully deleted');
+        });
+      });
     });
   });
 });

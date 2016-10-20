@@ -6,7 +6,7 @@
     .factory('ServiceSetup', ServiceSetup);
 
   /* @ngInject */
-  function ServiceSetup($q, Log, Authinfo, Notification, SiteService, InternalNumberRangeService, TimeZoneService, ExternalNumberPoolService, VoicemailTimezoneService, VoicemailService, CustomerCommonService, CustomerCosRestrictionServiceV2) {
+  function ServiceSetup($q, $translate, $filter, Authinfo, SiteService, InternalNumberRangeService, TimeZoneService, ExternalNumberPoolService, VoicemailTimezoneService, VoicemailService, CustomerCommonService, CustomerCosRestrictionServiceV2, CeSiteService) {
 
     return {
       internalNumberRanges: [],
@@ -41,6 +41,12 @@
         }, site).$promise;
       },
 
+      saveAutoAttendantSite: function (site) {
+        return CeSiteService.save({
+          customerId: Authinfo.getOrgId()
+        }, site).$promise;
+      },
+
       loadExternalNumberPool: function (pattern) {
         var extNumPool = [];
         var patternQuery = pattern ? '%' + pattern + '%' : undefined;
@@ -72,8 +78,24 @@
           customerId: Authinfo.getOrgId(),
           objectId: objectId
         }, {
-          timeZone: timeZone
+          timeZoneName: timeZone
         }).$promise;
+      },
+
+      updateVoicemailPostalcode: function (postalCode, objectId) {
+        return VoicemailTimezoneService.update({
+          customerId: Authinfo.getOrgId(),
+          objectId: objectId
+        }, {
+          postalCode: postalCode
+        }).$promise;
+      },
+
+      updateVoicemailUserTemplate: function (payload, objectId) {
+        return VoicemailTimezoneService.update({
+          customerId: Authinfo.getOrgId(),
+          objectId: objectId
+        }, payload).$promise;
       },
 
       getVoicemailPilotNumber: function () {
@@ -102,6 +124,21 @@
         }
       },
 
+      updateInternalNumberRange: function (internalNumberRange) {
+        if (angular.isDefined(internalNumberRange.uuid)) {
+          internalNumberRange.name = internalNumberRange.description = internalNumberRange.beginNumber + ' - ' + internalNumberRange.endNumber;
+          internalNumberRange.patternUsage = "Device";
+          return InternalNumberRangeService.save({
+            customerId: Authinfo.getOrgId(),
+            internalNumberRangeId: internalNumberRange.uuid
+          }, internalNumberRange, function (data, headers) {
+            internalNumberRange.uuid = headers('location').split("/").pop();
+          }).$promise;
+        } else {
+          return $q.when();
+        }
+      },
+
       deleteInternalNumberRange: function (internalNumberRange) {
         return InternalNumberRangeService.delete({
           customerId: Authinfo.getOrgId(),
@@ -121,12 +158,21 @@
         return TimeZoneService.query().$promise;
       },
 
+      getTranslatedTimeZones: function (timeZones) {
+        var localizedTimeZones = _.map(timeZones, function (timeZone) {
+          return _.extend(timeZone, {
+            label: $translate.instant('timeZones.' + timeZone.id)
+          });
+        });
+        return localizedTimeZones;
+      },
+
       isOverlapping: function (x1, x2, y1, y2) {
         return Math.max(x1, y1) <= Math.min(x2, y2);
       },
 
       listCosRestrictions: function () {
-        return CustomerCosRestrictionServiceV2.query({
+        return CustomerCosRestrictionServiceV2.get({
           customerId: Authinfo.getOrgId()
         }, angular.bind(this, function (cosRestrictions) {
           this.cosRestrictions = cosRestrictions;
@@ -147,6 +193,18 @@
         } else {
           return $q.when();
         }
+      },
+
+      generateVoiceMailNumber: function (customerId, countrycode) {
+        var customerUuid = customerId.replace(/-/g, "");
+        var str = '';
+        for (var i = 0; i < customerUuid.length; i++) {
+          var hextodec = parseInt(customerUuid[i], 16).toString(10);
+          str += parseInt(hextodec, 10) >= 10 ? hextodec : "0" + hextodec;
+        }
+        str = countrycode + str.replace(/^0+/, "");
+        var generatedVoicemailNumber = $filter('limitTo')(str, 40, 0);
+        return generatedVoicemailNumber;
       }
     };
   }

@@ -2,8 +2,7 @@
   <div class="aa-panel-body">
     <div class="aa-flex-row">
       <h3 class="text-info" translate="autoAttendant.builderNumbers"></h3>
-      <span class="aa-help-icon" popover="{{ :: 'autoAttendant.numberInfoPopover' | translate }}" popover-placement="right" popover-animation="true" popover-trigger="mouseenter" popover-append-to-body="false">
-      </span>
+      <aa-help content="{{ :: 'autoAttendant.numberInfoPopover' | translate }}" metric='Numbers-Title'></aa-help>
     </div>
     <div class="row" ng-controller="AABuilderNumbersCtrl as aa">
       <div class="aa-panel-numbers">

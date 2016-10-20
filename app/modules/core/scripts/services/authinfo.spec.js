@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Authinfo:', function () {
-  var provide, injector, Service;
+  var injector, Service;
 
   var defaultConfig = {
     restrictedStates: {
@@ -28,9 +28,7 @@ describe('Authinfo:', function () {
   };
 
   beforeEach(function () {
-    module('Core', function ($provide) {
-      provide = $provide;
-    });
+    angular.mock.module('Core');
     inject(function ($injector) {
       injector = $injector;
     });
@@ -56,44 +54,7 @@ describe('Authinfo:', function () {
       });
       Authinfo = setupUser();
 
-      accountData = {
-        accounts: [{
-          accountId: '1',
-          accountName: 'Atlas_Test_1',
-          accountOrgId: '1',
-          customerAdminEmail: 'test@test.com',
-          partnerId: '1',
-          partnerOrgId: '1',
-          licenses: [{
-            licenseId: 'MS_1',
-            offerName: 'MS',
-            licenseType: 'MESSAGING',
-            features: ['squared-room-moderation'],
-            volume: 100,
-            isTrial: true,
-            trialId: '1',
-            status: 'ACTIVE'
-          }, {
-            licenseId: 'CF_1',
-            offerName: 'CF',
-            licenseType: 'CONFERENCING',
-            features: ['squared-syncup'],
-            volume: 100,
-            isTrial: false,
-            trialId: '1',
-            status: 'ACTIVE'
-          }, {
-            licenseId: 'CO_1',
-            offerName: 'CO',
-            licenseType: 'COMMUNICATION',
-            features: ['ciscouc'],
-            volume: 100,
-            isTrial: true,
-            trialId: '1',
-            status: 'ACTIVE'
-          }]
-        }]
-      };
+      accountData = getJSONFixture('core/json/authInfo/msg_mtg_comm_Licenses.json');
     });
 
     it('should return true if license isTrial is true', function () {
@@ -267,101 +228,51 @@ describe('Authinfo:', function () {
 
       expect(Authinfo.isCiscoMock()).toBe(true);
     });
+
+    it('should return true if the parentState is support and the user is help desk and compliance user only', function () {
+      setupConfig();
+
+      var Authinfo = setupUser({
+        roles: ['Help_Desk', 'Compliance_User']
+      });
+
+      expect(Authinfo.isAllowedState('support')).toBe(true);
+    });
   });
 
-  describe('initializeTabs', function () {
-    var tabConfig;
-    beforeEach(function () {
-      tabConfig = [{
-        tab: 'tab1',
-        icon: 'tab1.icon',
-        title: 'tab1.title',
-        state: 'tab1',
-        link: '/tab1'
-      }, {
-        tab: 'tabMenu',
-        icon: 'tabMenu.icon',
-        title: 'tabMenu.title',
-        subPages: [{
-          tab: 'subTab1',
-          icon: 'subTab1.icon',
-          title: 'subTab1.title',
-          desc: 'subTab1.desc',
-          state: 'subTab1',
-          link: '/subTab1'
-        }, {
-          tab: 'subTab2',
-          icon: 'subTab2.icon',
-          title: 'subTab2.title',
-          desc: 'subTab2.desc',
-          state: 'subTab2',
-          link: '/subTab2'
+  describe('customer with CONFERENCING license', function () {
+    var accountData = {
+      "customers": [{
+        "customerId": "1",
+        "customerName": "Atlas_Test_1",
+        "licenses": [{
+          "licenseType": "CONFERENCING",
+          "siteUrl": "whatever"
         }]
-      }];
-      provide.value('tabConfig', tabConfig);
+      }]
+    };
+
+    it('is patched with Site_Admin role if customer has full admin role.', function () {
+      var Authinfo = setupUser({
+        roles: ['Full_Admin']
+      });
+      Authinfo.updateAccountInfo(accountData);
+      expect(Authinfo.getRoles()).toEqual(["Full_Admin", "Site_Admin"]);
     });
 
-    it('should remove all tabs not allowed', function () {
-      var Authinfo = setupUser();
-
-      Authinfo.initializeTabs();
-      expect(Authinfo.getTabs()).toEqual([]);
-    });
-
-    it('should remove a single tab that is not allowed', function () {
-      setupConfig({
-        publicStates: ['subTab1', 'subTab2']
+    it('is patched with Site_Admin role if customer has read only admin role.', function () {
+      var Authinfo = setupUser({
+        roles: ['Readonly_Admin']
       });
-      var Authinfo = setupUser();
-
-      Authinfo.initializeTabs();
-      _.remove(tabConfig, {
-        state: 'tab1'
-      });
-      expect(Authinfo.getTabs()).toEqual(tabConfig);
-    });
-
-    it('should remove a single subPage that is not allowed', function () {
-      setupConfig({
-        publicStates: ['tab1', 'subTab2']
-      });
-      var Authinfo = setupUser();
-
-      Authinfo.initializeTabs();
-      _.remove(tabConfig[1].subPages, {
-        state: 'subTab1'
-      });
-      expect(Authinfo.getTabs()).toEqual(tabConfig);
-    });
-
-    it('should remove a subPage parent if all subPages are not allowed', function () {
-      setupConfig({
-        publicStates: ['tab1']
-      });
-      var Authinfo = setupUser();
-
-      Authinfo.initializeTabs();
-      _.remove(tabConfig, {
-        tab: 'tabMenu'
-      });
-      expect(Authinfo.getTabs()).toEqual(tabConfig);
-    });
-
-    it('should keep tab structure if all pages are allowed', function () {
-      setupConfig({
-        publicStates: ['tab1', 'subTab1', 'subTab2']
-      });
-      var Authinfo = setupUser();
-
-      Authinfo.initializeTabs();
-      expect(Authinfo.getTabs()).toEqual(tabConfig);
+      Authinfo.updateAccountInfo(accountData);
+      expect(Authinfo.getRoles()).toEqual(["Readonly_Admin", "Site_Admin"]);
     });
   });
 
   function setupConfig(override) {
     override = override || {};
-    var configMock = angular.extend({}, defaultConfig, override);
-    provide.value('Config', configMock);
+    var Config = injector.get('Config');
+    angular.extend(Config, defaultConfig, override);
   }
 
   function setupUser(override) {

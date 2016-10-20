@@ -1,43 +1,21 @@
 @import '../userSettings/usersettings';
 @import '../siteSettings/sitesettings';
-
-.site-list {
-  background-color: $white;
-}
-.popout-link {
-  color: $link-color;
-  cursor: pointer;
-  border-radius: 0;
-
-  &:hover,
-  &:focus {
-    color: $link-hover-color;
-    text-decoration: none;
-    background-color: transparent;
-  }
-}
+@import '../siteCSVModal/site-csv-modals';
 
 .webex-reports {
   @extend %content-header;
 }
 
-.webex-alert-text {
-  color: $color-alerts-base;
-}
-
-.webex-attention-text {
-  color: $color-attention-base;
-}
-
 #webexSiteReports {
   .cs-card-container {
     @include vr-spacing(ph, 0);
-      .cs-card-layout {
-        @include vr-spacing(mb, 0);
-      }
+
+    .cs-card-layout {
+      @include vr-spacing(mb, 0);
     }
+  }
 }
 
 .webexlogo {
-   @include vr-spacing(pr, .25);
+  @include vr-spacing(pr, 0.25);
 }

@@ -5,25 +5,44 @@
 "use strict";
 
 describe(' sunlightConfigService', function () {
-  var sunlightConfigService, $httpBackend, $rootScope, sunlightUserConfigUrl, userData, userId, orgId;
+  var sunlightConfigService, $httpBackend, sunlightUserConfigUrl,
+    sunlightChatConfigUrl, sunlightChatTemplateUrl, chatConfig, userData, userId, orgId, csConnString, templateId;
+  var spiedAuthinfo = {
+    getOrgId: jasmine.createSpy('getOrgId').and.returnValue('deba1221-ab12-cd34-de56-abcdef123456')
+  };
   var errorData = {
     'errorType': 'Internal Server Error'
   };
 
-  beforeEach(module('Sunlight'));
+  beforeEach(angular.mock.module('Sunlight'));
+  beforeEach(angular.mock.module(function ($provide) {
+    $provide.value("Authinfo", spiedAuthinfo);
+  }));
 
   beforeEach(inject(function (_SunlightConfigService_, _$httpBackend_, UrlConfig) {
     sunlightConfigService = _SunlightConfigService_;
     $httpBackend = _$httpBackend_;
-    sunlightUserConfigUrl = UrlConfig.getSunlightConfigServiceUrl() + "/user/";
+    sunlightUserConfigUrl = UrlConfig.getSunlightConfigServiceUrl() + '/user';
     userData = getJSONFixture('sunlight/json/sunlightTestUser.json');
+    chatConfig = getJSONFixture('sunlight/json/features/config/sunlightTestChatConfig.json');
+    csConnString = 'FakeConnectionString';
     userId = '111';
     orgId = 'deba1221-ab12-cd34-de56-abcdef123456';
+    templateId = 'adba1221-ab12-cd34-de56-abcdef123456';
+    sunlightChatTemplateUrl = UrlConfig.getSunlightConfigServiceUrl() + '/organization/' + orgId + '/template';
+    sunlightChatConfigUrl = UrlConfig.getSunlightConfigServiceUrl() + '/organization/' + orgId + '/chat';
   }));
+
+  it('should get Chat Config for a give orgId', function () {
+    $httpBackend.whenGET(sunlightChatConfigUrl).respond(200, chatConfig);
+    sunlightConfigService.getChatConfig().then(function (response) {
+      expect(response.data.csConnString).toBe(csConnString);
+    });
+  });
 
   it('should get userInfo for a given userId', function () {
 
-    $httpBackend.whenGET(sunlightUserConfigUrl + userId).respond(200, userData);
+    $httpBackend.whenGET(sunlightUserConfigUrl + '/' + userId).respond(200, userData);
 
     sunlightConfigService.getUserInfo(userId).then(function (response) {
       expect(response.data.orgId).toBe(orgId);
@@ -34,9 +53,9 @@ describe(' sunlightConfigService', function () {
   });
 
   it('should fail to get userInfo for a given userId when there is an http error', function () {
-    $httpBackend.whenGET(sunlightUserConfigUrl + userId).respond(500, errorData);
+    $httpBackend.whenGET(sunlightUserConfigUrl + '/' + userId).respond(500, errorData);
 
-    sunlightConfigService.getUserInfo(userId).then(function (response) {}, function (response) {
+    sunlightConfigService.getUserInfo(userId).then(function () {}, function (response) {
       expect(response.status).toBe(500);
     });
     $httpBackend.flush();
@@ -44,7 +63,7 @@ describe(' sunlightConfigService', function () {
   });
 
   it('should fail to get userInfo when userId is not defined', function () {
-    sunlightConfigService.getUserInfo(undefined).then(function (data) {}, function (data) {
+    sunlightConfigService.getUserInfo(undefined).then(function () {}, function (data) {
       expect(data).toBe('usedId cannot be null or undefined');
     });
   });
@@ -52,7 +71,7 @@ describe(' sunlightConfigService', function () {
   it('should update userInfo in sunlight config service', function () {
     var userInfo = angular.copy(getJSONFixture('sunlight/json/sunlightTestUser.json'));
 
-    $httpBackend.whenPUT(sunlightUserConfigUrl + userId).respond(200, {});
+    $httpBackend.whenPUT(sunlightUserConfigUrl + '/' + userId).respond(200, {});
 
     sunlightConfigService.updateUserInfo(userInfo, userId).then(function (response) {
       expect(response.status).toBe(200);
@@ -62,12 +81,78 @@ describe(' sunlightConfigService', function () {
 
   it('should fail to update userInfo in sunlight config service when there is an http error', function () {
     var userInfo = angular.copy(getJSONFixture('sunlight/json/sunlightTestUser.json'));
-    $httpBackend.whenPUT(sunlightUserConfigUrl + userId).respond(500, errorData);
-    sunlightConfigService.updateUserInfo(userInfo, userId).then(function (response) {}, function (response) {
-      expect(JSON.stringify(response.data)).toBe(JSON.stringify(errorData));
+    $httpBackend.whenPUT(sunlightUserConfigUrl + '/' + userId).respond(500, errorData);
+    sunlightConfigService.updateUserInfo(userInfo, userId).then(function () {}, function (response) {
+      expect(response.data).toEqual(errorData);
       expect(response.status).toBe(500);
     });
     $httpBackend.flush();
   });
 
+  it('should create chat template in sunlight config service', function () {
+    var chatTemplate = angular.copy(getJSONFixture('sunlight/json/sunlightTestTemplate.json'));
+    $httpBackend.whenPOST(sunlightChatTemplateUrl).respond(201, {});
+    sunlightConfigService.createChatTemplate(chatTemplate).then(function (response) {
+      expect(response.status).toBe(201);
+    });
+    $httpBackend.flush();
+  });
+
+
+  it('should fail to create chat template in sunlight config service when there is a service error', function () {
+    var chatTemplate = angular.copy(getJSONFixture('sunlight/json/sunlightTestTemplate.json'));
+    $httpBackend.whenPOST(sunlightChatTemplateUrl).respond(500, errorData);
+    sunlightConfigService.createChatTemplate(chatTemplate).then(function (response) {
+      expect(response.data).toEqual(errorData);
+      expect(response.status).toBe(500);
+    });
+    $httpBackend.flush();
+  });
+
+  it('should update chat template in sunlight config service', function () {
+    var chatTemplate = angular.copy(getJSONFixture('sunlight/json/sunlightTestTemplate.json'));
+    $httpBackend.whenPUT(sunlightChatTemplateUrl + "/" + templateId).respond(200, {});
+    sunlightConfigService.editChatTemplate(chatTemplate, templateId).then(function (response) {
+      expect(response.status).toBe(200);
+    });
+    $httpBackend.flush();
+  });
+
+  it('should fail to edit chat template in sunlight config service when there is a service error', function () {
+    var chatTemplate = angular.copy(getJSONFixture('sunlight/json/sunlightTestTemplate.json'));
+    $httpBackend.whenPUT(sunlightChatTemplateUrl + "/" + templateId).respond(500, errorData);
+    sunlightConfigService.editChatTemplate(chatTemplate, templateId).then(function (response) {
+      expect(response.data).toEqual(errorData);
+      expect(response.status).toBe(500);
+    });
+    $httpBackend.flush();
+  });
+
+  it('should delete user for a given userId', function () {
+
+    $httpBackend.whenDELETE(sunlightUserConfigUrl + '/' + userId).respond(200);
+
+    sunlightConfigService.deleteUser(userId).then(function () {}, function (response) {
+      expect(response.status).toBe(200);
+    });
+    $httpBackend.flush();
+
+  });
+
+  it('should fail to delete user for a given userId when there is an http error', function () {
+    $httpBackend.whenDELETE(sunlightUserConfigUrl + '/' + userId).respond(500, errorData);
+
+    sunlightConfigService.deleteUser(userId).then(function () {}, function (response) {
+      expect(response.data).toEqual(errorData);
+      expect(response.status).toBe(500);
+    });
+    $httpBackend.flush();
+
+  });
+
+  it('should delete user in sunlight config service when there is a delete call', function () {
+    sunlightConfigService.deleteUser(undefined).then(function () {}, function (data) {
+      expect(data).toBe('usedId cannot be null or undefined');
+    });
+  });
 });

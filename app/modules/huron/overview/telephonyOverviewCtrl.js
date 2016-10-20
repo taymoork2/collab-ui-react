@@ -6,11 +6,26 @@
     .controller('TelephonyOverviewCtrl', TelephonyOverviewCtrl);
 
   /* @ngInject */
-  function TelephonyOverviewCtrl($stateParams, $state, $rootScope, $translate, TelephonyInfoService, FeatureToggleService, Userservice) {
+  function TelephonyOverviewCtrl($state, $stateParams, TelephonyInfoService) {
     var vm = this;
     vm.currentUser = $stateParams.currentUser;
+    vm.actionList = [{
+      actionKey: 'usersPreview.addNewLinePreview',
+      actionFunction: addNewLine,
+    }];
+    vm.reachedMaxLines = false;
 
     init();
+
+    function addNewLine() {
+      $state.go('user-overview.communication.directorynumber', {
+        directoryNumber: 'new'
+      });
+    }
+
+    vm.reachedMaxLines = function () {
+      return _.get(vm.telephonyInfo, 'directoryNumbers.length', 0) >= 25;
+    };
 
     function init() {
       // TODO: Change TelephonyInfoService to return directly from this instead of having

@@ -5,7 +5,7 @@
     .module('Messenger')
     .factory('SyncService', SyncService);
 
-  /** @ngInject */
+  /* @ngInject */
   function SyncService($http, $q, $translate, Config, Authinfo, Log, UrlConfig) {
     // Interface ---------------------------------------------------------------
 
@@ -16,6 +16,9 @@
       messenger: {
         on: {
           text: 'enabled'
+        },
+        on_nospark: {
+          text: 'enabled_nospark'
         },
         off: {
           text: 'disabled'
@@ -31,6 +34,9 @@
       }
     });
 
+    var syncStringFromServer = "";
+    var isEnabledNoSpark = false; // special handling to make sure we have no spark in any condition
+
     // Flag to notify when to fetch status from Msgr-Admin-Service
     //  - first time a user/client requests info from this service
     //  - when explicitly requested by a user/client
@@ -42,7 +48,14 @@
       messengerOrgId: 'Unknown',
       linkDate: 'Unknown',
       isAuthRedirect: false,
-      syncMode: syncModes.messenger.off
+      syncMode: syncModes.messenger.off,
+      // new data format embedded in ciSyncMode string -- "msgr_to_spark;pwd_sync=1:spark_ent=1:usr_dis=1:usr_del=1:usr_min=0"
+      // TODO: clean up when backend fully in new format
+      isNewDataFormat: false,
+      isPwdSync: true,
+      isSparkEnt: true,  // false -- no spark
+      isUsrDis: true,
+      isUsrMin: false   // true -- DirSync, read only as we don't change DirSync in messenger card
     };
 
     var serviceUrl = UrlConfig.getMessengerServiceUrl() + '/orgs/' + Authinfo.getOrgId() + '/cisync/';
@@ -59,6 +72,10 @@
         shouldFetch = true;
         return getSyncStatus();
       },
+      parseSyncMode: parseSyncMode,
+      getNewDataFormat: getNewDataFormat,
+      getNewDirSyncFlag: getNewDirSyncFlag,
+      getSimplifiedStatus: getSimplifiedStatus,
       setDirSyncMode: setDirSyncMode,
       setMessengerSyncMode: setMessengerSyncMode
     };
@@ -84,7 +101,7 @@
           Log.error('SyncService::fetchSyncStatus(): ' + error);
 
           defer.reject({
-            status: status,
+            status: response.status,
             message: error
           });
         });
@@ -119,21 +136,21 @@
       }
 
       switch (status) {
-      case 0:
-        result = $translate.instant(translatePrefix + 'http0');
-        break;
-      case 401:
-        result = $translate.instant(translatePrefix + 'http401');
-        break;
-      case 404:
-        result = $translate.instant(translatePrefix + 'http404');
-        break;
-      case 500:
-        result = $translate.instant(translatePrefix + 'http500');
-        break;
-      default:
-        result = $translate.instant(translatePrefix + 'httpUnknown');
-        break;
+        case 0:
+          result = $translate.instant(translatePrefix + 'http0');
+          break;
+        case 401:
+          result = $translate.instant(translatePrefix + 'http401');
+          break;
+        case 404:
+          result = $translate.instant(translatePrefix + 'http404');
+          break;
+        case 500:
+          result = $translate.instant(translatePrefix + 'http500');
+          break;
+        default:
+          result = $translate.instant(translatePrefix + 'httpUnknown');
+          break;
       }
 
       return result;
@@ -144,19 +161,24 @@
       syncStatus.messengerOrgName = status.orgName;
       syncStatus.linkDate = status.linkDate;
       syncStatus.isAuthRedirect = status.authRedirect;
-      syncStatus.syncMode = parseSyncMode(status.ciSyncMode);
+      syncStatus.syncMode = parseSyncMode(status.ciSyncMode); // this will parse new format data.
 
       return syncStatus;
     }
 
-    function getSimplifiedStatus(status) {
+    // this is the object used for controller
+    function getSimplifiedStatus() {
       return {
         messengerOrgName: syncStatus.messengerOrgName,
         messengerOrgId: syncStatus.messengerOrgId,
         linkDate: syncStatus.linkDate,
         isAuthRedirect: syncStatus.isAuthRedirect,
         isSyncEnabled: isSyncEnabledRaw(),
-        isMessengerSyncRawMode: isMessengerSyncRaw()
+        isMessengerSyncRawMode: isMessengerSyncRaw(),
+        isNewDataFormat: syncStatus.isNewDataFormat,
+        isPwdSync: syncStatus.isPwdSync,
+        isSparkEnt: syncStatus.isSparkEnt,
+        isUsrDis: syncStatus.isUsrDis
       };
     }
 
@@ -168,7 +190,7 @@
 
       if (shouldFetch) {
         fetchSyncStatus()
-          .then(function (status) {
+          .then(function () {
             defer.resolve(getSimplifiedStatus(syncStatus));
           }, function (errorObj) {
             defer.reject(errorObj);
@@ -181,6 +203,9 @@
     }
 
     function isDirSyncRaw() {
+      if (syncStatus.isNewDataFormat) {
+        return syncStatus.isUsrMin;
+      }
       return (syncModes.dirsync.on === syncStatus.syncMode || syncModes.dirsync.off === syncStatus.syncMode);
     }
 
@@ -224,7 +249,10 @@
     }
 
     function isMessengerSyncRaw() {
-      return (syncModes.messenger.on === syncStatus.syncMode || syncModes.messenger.off === syncStatus.syncMode);
+      if (syncStatus.isNewDataFormat) {
+        return !syncStatus.isUsrMin;
+      }
+      return (syncModes.messenger.on === syncStatus.syncMode || syncModes.messenger.off === syncStatus.syncMode || syncModes.messenger.on_nospark === syncStatus.syncMode);
     }
 
     function isMessengerSyncEnabled() {
@@ -264,27 +292,101 @@
     }
 
     function isSyncEnabledRaw() {
-      return (syncModes.messenger.on === syncStatus.syncMode || syncModes.dirsync.on === syncStatus.syncMode);
+      return (syncModes.messenger.on === syncStatus.syncMode || syncModes.dirsync.on === syncStatus.syncMode || syncModes.messenger.on_nospark === syncStatus.syncMode);
+    }
+
+    function getNewDataFormat() {
+      return syncStatus.isNewDataFormat;
+    }
+
+    function getNewDirSyncFlag() {
+      return syncStatus.isUsrMin;
+    }
+
+    function setSyncStatusNewDataDefaults() {
+      syncStatus.isPwdSync = true;
+      syncStatus.isSparkEnt = true;
+      syncStatus.isUsrDis = true;
+      syncStatus.isUsrMin = false;
     }
 
     function parseSyncMode(syncString) {
       var syncMode = syncModes.messenger.off;
 
+      // set to old data format by default, use new data format only when we detect it.
+      syncStringFromServer = syncString.trim();
+      syncStatus.isNewDataFormat = false;
+      setSyncStatusNewDataDefaults();
+
       switch (syncString) {
-      case syncModes.messenger.off.text:
-        syncMode = syncModes.messenger.off;
-        break;
-      case syncModes.messenger.on.text:
-        syncMode = syncModes.messenger.on;
-        break;
-      case syncModes.dirsync.off.text:
-        syncMode = syncModes.dirsync.off;
-        break;
-      case syncModes.dirsync.on.text:
-        syncMode = syncModes.dirsync.on;
-        break;
-      default:
-        Log.error('SyncService::parseSyncMode(): Invalid sync mode \'' + syncString + '\'. Setting to Messenger Sync Mode OFF.');
+        case syncModes.messenger.off.text:
+          syncMode = syncModes.messenger.off;
+          break;
+        case syncModes.messenger.on.text:
+          syncMode = syncModes.messenger.on;
+          break;
+        case syncModes.messenger.on_nospark.text:
+          isEnabledNoSpark = true;
+          syncStatus.isSparkEnt = false;
+          syncMode = syncModes.messenger.on_nospark;
+          break;
+        case syncModes.dirsync.off.text:
+          syncMode = syncModes.dirsync.off;
+          break;
+        case syncModes.dirsync.on.text:
+          syncMode = syncModes.dirsync.on;
+          break;
+        default:
+          // new data format handled here -- "msgr_to_spark;pwd_sync=1:spark_ent=1:usr_dis=1:usr_del=1:usr_min=0"
+          var arraySyncString = syncString.trim().split(";");
+          if (arraySyncString.length > 0) {
+            // parse other data first before PK parse because of dependency
+            if (arraySyncString.length > 1) {
+              var arrayOtherData = arraySyncString[1].trim().split(":");
+              _.forEach(arrayOtherData, function (data) {
+                // we only check non-default values
+                switch (data) {
+                  case "pwd_sync=0":
+                    syncStatus.isPwdSync = false;
+                    break;
+                  case "spark_ent=0":
+                    syncStatus.isSparkEnt = false;
+                    break;
+                  case "usr_dis=0":
+                    syncStatus.isUsrDis = false;
+                    break;
+                  case "usr_min=1":
+                    syncStatus.isUsrMin = true;
+                    break;
+                }
+              });
+            }
+            // parse primary key
+            var primaryKey = arraySyncString[0];
+            switch (primaryKey) {
+              case "msgr_to_spark":
+                syncStatus.isNewDataFormat = true;
+                syncMode = syncModes.messenger.on;
+                if (syncStatus.isUsrMin) {
+                  syncMode = syncModes.dirsync.on;
+                }
+                break;
+              case "spark_to_msgr":
+              case "disabled":
+                syncStatus.isNewDataFormat = true;
+                syncMode = syncModes.messenger.off;
+                if (syncStatus.isUsrMin) {
+                  syncMode = syncModes.dirsync.off;
+                }
+                break;
+              default:
+                // error
+                Log.error('SyncService::parseSyncMode(): Invalid sync mode \'' + syncString + '\'. Setting to Messenger Sync Mode OFF.');
+            }
+          } else {
+            // error
+            Log.error('SyncService::parseSyncMode(): Invalid sync mode \'' + syncString + '\'. Setting to Messenger Sync Mode OFF.');
+          }
       }
 
       return syncMode;
@@ -298,25 +400,102 @@
       syncStatus.syncMode = (isEnabled) ? syncModes.messenger.on : syncModes.messenger.off;
     }
 
-    function patchSync(isSyncEnabled, isAuthRedirect) {
+    function updateNewDataSyncString(syncString, re, key, value) {
+      var keyValue = key + "=";
+      if (value) {
+        keyValue += "1";
+      } else {
+        keyValue += "0";
+      }
+      if (syncString.includes(key + "=", 0)) {
+        return syncString.replace(re, keyValue);
+      } else {
+        return syncString.concat(":" + keyValue);
+      }
+    }
+    function updateSyncStatus(syncInfo) {
+      // other data, the below is 2 old flags with toggles
+      syncStatus.isPwdSync = syncInfo.isPwdSync;
+      syncStatus.isSparkEnt = syncInfo.isSparkEnt;
+      syncStatus.isUsrDis = syncInfo.isUsrDis;
+      // Update sync mode
+      if (isDirSyncRaw()) {
+        setDirSyncMode(syncInfo.isSyncEnabled);
+      } else {
+        setMessengerSyncMode(syncInfo.isSyncEnabled);
+      }
+      syncStatus.isAuthRedirect = syncInfo.isAuthRedirect;
+    }
+
+    function patchSync(syncInfo) {
       var defer = $q.defer();
 
       // Deep copy to prevent only reference copy
       var previousSettings = _.clone(syncStatus);
 
-      // Update sync mode
-      if (isDirSyncRaw()) {
-        setDirSyncMode(isSyncEnabled);
-      } else {
-        setMessengerSyncMode(isSyncEnabled);
-      }
-
-      syncStatus.isAuthRedirect = isAuthRedirect;
+      // update those changeable in UI
+      updateSyncStatus(syncInfo);
 
       var params = {
         ciSyncMode: syncStatus.syncMode.text,
         authRedirect: syncStatus.isAuthRedirect
       };
+      // new data format
+      if (syncStatus.isNewDataFormat) {
+        var primaryKey = "msgr_to_spark";
+        if (!syncInfo.isSyncEnabled) {
+          primaryKey = "disabled";
+        }
+        var newSyncString = primaryKey;
+        var indexSemicolon = syncStringFromServer.indexOf(";");
+        if (indexSemicolon >= 0) {
+          newSyncString = primaryKey + syncStringFromServer.substr(indexSemicolon, syncStringFromServer.length - 1);
+        }
+        // update other data
+        newSyncString = updateNewDataSyncString(newSyncString, /pwd_sync=[0-9]/, "pwd_sync", syncStatus.isPwdSync);
+        newSyncString = updateNewDataSyncString(newSyncString, /spark_ent=[0-9]/, "spark_ent", syncStatus.isSparkEnt);
+        newSyncString = updateNewDataSyncString(newSyncString, /usr_dis=[0-9]/, "usr_dis", syncStatus.isUsrDis);
+        newSyncString = updateNewDataSyncString(newSyncString, /usr_min=[0-9]/, "usr_min", syncStatus.isUsrMin);
+
+        params = {
+          ciSyncMode: newSyncString,
+          authRedirect: syncStatus.isAuthRedirect
+        };
+      } else {
+        // convert old format data to new data format when update clicked
+        if (isDirSyncRaw()) {
+          if (syncInfo.isSyncEnabled) {
+            newSyncString = "msgr_to_spark;pwd_sync=0:usr_dis=0:spark_ent=1:usr_min=1";
+          } else {
+            newSyncString = "disabled;usr_min=1";
+          }
+          params = {
+            ciSyncMode: newSyncString,
+            authRedirect: syncStatus.isAuthRedirect
+          };
+        } else {
+          // ***note*** we don't set isNewDataFormat after conversion, we get this when next fetch & parse
+          if (isEnabledNoSpark) {
+            // enabled_nospark -> msgr_to_spark;spark_ent=0:pwd_sync=1:usr_dis=1:usr_min=0
+            if (syncInfo.isSyncEnabled) {
+              newSyncString = "msgr_to_spark;spark_ent=0:pwd_sync=1:usr_dis=1:usr_min=0";
+            } else {
+              newSyncString = "disabled;spark_ent=0:pwd_sync=1:usr_dis=1:usr_min=0";
+            }
+            params = {
+              ciSyncMode: newSyncString,
+              authRedirect: syncStatus.isAuthRedirect
+            };
+          } else if (syncInfo.isSyncEnabled) {
+            // convert to new data format when enabling the msgr sync with the default values
+            newSyncString = "msgr_to_spark;pwd_sync=1:spark_ent=1:usr_dis=1:usr_min=0";
+            params = {
+              ciSyncMode: newSyncString,
+              authRedirect: syncStatus.isAuthRedirect
+            };
+          }
+        }
+      }
 
       $http.patch(serviceUrl, params).then(function (response) {
         defer.resolve('PATCH Status ' + response.status);
@@ -328,7 +507,7 @@
         syncStatus = previousSettings;
 
         defer.reject({
-          status: status,
+          status: response.status,
           message: error
         });
       });

@@ -4,6 +4,7 @@
 
 .huron-settings {
   @extend %content-header;
+
   position: relative;
 
   .loading-container {
@@ -12,35 +13,29 @@
   }
 
   .huron-settings-main-container {
-    display: flex;
-    flex-direction: row;
     overflow: hidden;
     overflow-y: auto;
-    height: 80vh;
-    color: $gray-darker;
     background: $brand-white;
-
-    .column {
-      flex: 1;
-      padding: rem(60) rem(30) rem(30) rem(30);
-    }
-
-    label {
-      font-size: 1.1rem;
-    }
 
     .trash-icon {
       @extend .icon;
       @extend .icon-trash;
+
       font-size: 1.7rem;
       color: $gray-light-1;
       cursor: pointer;
+
       &:hover {
         color: $color-primary-base;
       }
     }
 
-    .icon-button-delete, .service-setup-extension {
+    .hide-delete {
+      visibility: hidden;
+    }
+
+    .icon-button-delete,
+    .service-setup-extension {
       .formly-template-wrapper {
         margin-bottom: 0;
       }
@@ -54,12 +49,92 @@
       width: 100%;
     }
 
-    .international-dialing {
-      margin-top: 3rem;
+    .service-address-buttons {
+      margin-top: 1rem;
     }
 
-   .service-address-buttons {
-     margin-top: 1rem;
-   }
+    .control-label {
+      color: $gray-dark-4;
+    }
+
+    .description-block,
+    .section__description {
+      color: $gray-dark-1;
+    }
+
+    .vm-switch-margin {
+      @include vr-spacing(mt, 0.75, 0px, true);
+    }
+
+    .voicemail-spacing {
+      @include vr-spacing(pl, 2);
+      @include vr-spacing(mb, 2);
+    }
+
+    button.btn-link {
+      color: $color-primary-base;
+      background-color: transparent;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+
+      &:hover {
+        color: $white;
+        background-color: $gray-dark-2;
+      }
+    }
+
+    .voicemail-switch-width {
+      max-width: 40rem;
+    }
+
+    .save-section {
+      position: fixed;
+      bottom: 0;
+      display: flex;
+      align-items: center;
+      width: 100%;
+      padding: 1.25rem 8.25rem 1.25rem 4rem;
+      z-index: $zindex-popover;
+      background-color: $gray-light-4;
+
+      p {
+        flex: 1;
+      }
+    }
+
+    .service-setup-extension-length,
+    .inner-section-margin {
+      @include vr-spacing(mb, 2.25);
+    }
+
+    .msg-container {
+      min-width: vr-adjust(600px);
+    }
+  }
+
+  .alert {
+    margin-right: 0;
+    margin-left: 0;
+  }
+
+  .save-popup-margin {
+    margin-bottom: vr-adjust(60px);
+  }
+
+  .indent-area-code {
+    padding-left: vr-adjust(32px);
+  }
+
+  .cs-radio-group {
+    margin-bottom: 1rem;
+  }
+
+  .terminus-warning {
+    font-size: 0.75rem;
+
+    .icon-warning {
+      margin-right: 0.25rem;
+    }
   }
 }

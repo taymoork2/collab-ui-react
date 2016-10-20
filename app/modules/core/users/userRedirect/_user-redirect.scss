@@ -1,0 +1,33 @@
+.loading-icon {
+  height: vr-adjust(54);
+  padding-top: 10px;
+  margin-top: vr-adjust(50);
+  width: vr-adjust(280);
+  margin-left: auto;
+  margin-right: auto;
+  display: block;
+
+  span {
+    font-size: $h3-font-size;
+  }
+
+  text-align: center;
+  background-color: $brand-white;
+  border: $brand-white;
+}
+
+.alert::before {
+  content: '';
+}
+
+.results {
+  margin: 50px auto 0;
+  width: 280px;
+}
+
+/* Remove when Microsoft fixes flexbox problem *\
+   when min-height is defined.  See
+\* message-box in ToolKit.                */
+.vertical-ie-workaround {
+  height: 0px;
+}

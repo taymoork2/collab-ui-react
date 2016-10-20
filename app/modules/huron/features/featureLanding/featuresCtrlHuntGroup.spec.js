@@ -1,11 +1,12 @@
 /**
  * Created by sjalipar on 10/9/15.
  */
+
 'use strict';
 
 describe('Features Controller', function () {
 
-  var featureCtrl, $rootScope, $scope, $modal, $q, $state, $translate, $filter, $timeout, Authinfo, HuntGroupService, TelephoneNumberService, Log, Notification, getDeferred, HuronFeaturesListService, AutoAttendantCeInfoModelService, AAModelService, FeatureToggleService;
+  var featureCtrl, $rootScope, $scope, $modal, $q, $state, $filter, $timeout, Authinfo, HuntGroupService, TelephoneNumberService, Log, Notification, getDeferred, AutoAttendantCeInfoModelService, AAModelService, FeatureToggleService, CallParkService, PagingGroupService;
   var listOfHGs = getJSONFixture('huron/json/features/huntGroup/hgList.json');
   var hg = getJSONFixture('huron/json/features/huntGroup/oneHg.json');
   var emptyListOfHGs = [];
@@ -35,9 +36,10 @@ describe('Features Controller', function () {
     toggle: 'huronHuntGroup'
   }];
 
-  beforeEach(module('Huron'));
+  beforeEach(angular.mock.module('Huron'));
+  beforeEach(angular.mock.module('Sunlight'));
 
-  beforeEach(inject(function (_$rootScope_, $controller, _$q_, _$modal_, _$state_, _$filter_, _$timeout_, _Authinfo_, _HuntGroupService_, _TelephoneNumberService_, _HuronFeaturesListService_, _AutoAttendantCeInfoModelService_, _AAModelService_, _Log_, _Notification_, _FeatureToggleService_) {
+  beforeEach(inject(function (_$rootScope_, $controller, _$q_, _$modal_, _$state_, _$filter_, _$timeout_, _Authinfo_, _HuntGroupService_, _PagingGroupService_, _TelephoneNumberService_, _AutoAttendantCeInfoModelService_, _AAModelService_, _Log_, _Notification_, _FeatureToggleService_, _CallParkService_) {
     $rootScope = _$rootScope_;
     $scope = _$rootScope_.$new();
     $modal = _$modal_;
@@ -47,8 +49,9 @@ describe('Features Controller', function () {
     $q = _$q_;
     Authinfo = _Authinfo_;
     HuntGroupService = _HuntGroupService_;
+    CallParkService = _CallParkService_;
+    PagingGroupService = _PagingGroupService_;
     TelephoneNumberService = _TelephoneNumberService_;
-    HuronFeaturesListService = _HuronFeaturesListService_;
     AutoAttendantCeInfoModelService = _AutoAttendantCeInfoModelService_;
     AAModelService = _AAModelService_;
     Log = _Log_;
@@ -60,7 +63,9 @@ describe('Features Controller', function () {
 
     //Using a Jasmine Spy to return a promise when methods of the HuntGroupService are called
     spyOn(HuntGroupService, 'getListOfHuntGroups').and.returnValue(getDeferred.promise);
+    spyOn(CallParkService, 'getListOfCallParks').and.returnValue(getDeferred.promise);
     spyOn(AutoAttendantCeInfoModelService, 'getCeInfosList').and.returnValue(getDeferred.promise);
+    spyOn(PagingGroupService, 'getListOfPagingGroups').and.returnValue($q.when());
     spyOn(AAModelService, 'newAAModel').and.returnValue(getDeferred.promise);
     spyOn(FeatureToggleService, 'supports').and.returnValue(getDeferred.promise);
     spyOn($state, 'go');

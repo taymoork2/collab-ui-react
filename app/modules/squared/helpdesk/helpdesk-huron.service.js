@@ -1,7 +1,7 @@
 (function () {
   'use strict';
 
-  /*ngInject*/
+  /* @ngInject */
   function HelpdeskHuronService(HelpdeskService, $http, $q, HelpdeskMockData, UserServiceCommonV2, HuronConfig, UserEndpointService, SipEndpointService) {
 
     function getDevices(userId, orgId) {
@@ -9,9 +9,9 @@
         return deferredResolve(massageDevices(HelpdeskMockData.huronDevicesForUser));
       }
       return UserEndpointService.query({
-          customerId: orgId,
-          userId: userId
-        }).$promise
+        customerId: orgId,
+        userId: userId
+      }).$promise
         .then(function (devices) {
           var deviceList = [];
           for (var i = 0; i < devices.length; i++) {
@@ -188,7 +188,7 @@
               }));
             }
           });
-          $q.all(promises).then(function (data) {
+          $q.all(promises).then(function () {
             deferred.resolve(devices);
           });
         }
@@ -225,9 +225,9 @@
             }, angular.noop);
           } else {
             SipEndpointService.get({
-                customerId: device.organization.id,
-                sipEndpointId: device.uuid
-              })
+              customerId: device.organization.id,
+              sipEndpointId: device.uuid
+            })
               .$promise.then(function (endpoint) {
                 this.model = endpoint.model;
                 this.product = endpoint.product;
@@ -244,6 +244,22 @@
         }
       });
     }
+
+    function getOrgSiteInfo(orgId) {
+      return $http
+        .get(HuronConfig.getCmiUrl() + '/voice/customers/' + orgId + '/sites/')
+        .then(function (res) {
+          return $http.get(HuronConfig.getCmiUrl() + '/voice/customers/' + orgId + '/sites/' + res.data[0].uuid)
+            .then(extractData);
+        });
+    }
+
+    function getTenantInfo(orgId) {
+      return $http
+        .get(HuronConfig.getCmiUrl() + '/voice/customers/' + orgId)
+        .then(extractData);
+    }
+
 
     function extractData(res) {
       return res.data;
@@ -285,14 +301,14 @@
       }
       device.deviceStatus.statusKey = 'common.' + angular.lowercase(device.deviceStatus.status);
       switch (device.deviceStatus.status) {
-      case "Online":
-        device.deviceStatus.cssColorClass = 'helpdesk-green';
-        break;
-      case "Unknown":
-        device.deviceStatus.cssColorClass = 'helpdesk-grey';
-        break;
-      default:
-        device.deviceStatus.cssColorClass = 'helpdesk-red';
+        case "Online":
+          device.deviceStatus.cssColorClass = 'helpdesk-green';
+          break;
+        case "Unknown":
+          device.deviceStatus.cssColorClass = 'helpdesk-grey';
+          break;
+        default:
+          device.deviceStatus.cssColorClass = 'helpdesk-red';
       }
       return device;
     }
@@ -303,14 +319,14 @@
 
     function getNumberSortOrder(dnUsage) {
       switch (dnUsage) {
-      case 'primary':
-        return 1;
-      case 'primaryShared':
-        return 2;
-      case 'shared':
-        return 3;
-      default:
-        return 4;
+        case 'primary':
+          return 1;
+        case 'primaryShared':
+          return 2;
+        case 'shared':
+          return 3;
+        default:
+          return 4;
       }
     }
 
@@ -329,7 +345,9 @@
       setOwnerAndDeviceDetails: setOwnerAndDeviceDetails,
       getNumber: getNumber,
       findDevicesMatchingNumber: findDevicesMatchingNumber,
-      sanitizeNumberSearchInput: sanitizeNumberSearchInput
+      sanitizeNumberSearchInput: sanitizeNumberSearchInput,
+      getOrgSiteInfo: getOrgSiteInfo,
+      getTenantInfo: getTenantInfo
     };
   }
 

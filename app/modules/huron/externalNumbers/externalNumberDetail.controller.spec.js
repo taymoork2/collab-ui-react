@@ -1,15 +1,16 @@
 'use strict';
 
 describe('Controller: ExternalNumberDetailCtrl', function () {
-  var controller, $controller, $scope, $stateParams, $q, ModalService, ExternalNumberService, DialPlanService, Notification, $interval, $intervalSpy;
+  var controller, $controller, $interval, $intervalSpy, $q, $scope, $state, $stateParams, ModalService, ExternalNumberService, DialPlanService, Notification;
 
   var externalNumbers, modalDefer;
 
-  beforeEach(module('Huron'));
+  beforeEach(angular.mock.module('Huron'));
 
-  beforeEach(inject(function ($rootScope, _$controller_, _$stateParams_, _$q_, _ModalService_, _ExternalNumberService_, _DialPlanService_, _Notification_, _$interval_) {
+  beforeEach(inject(function ($rootScope, _$controller_, _$interval_, _$stateParams_, _$q_, _$state_, _ModalService_, _ExternalNumberService_, _DialPlanService_, _Notification_) {
     $scope = $rootScope.$new();
     $controller = _$controller_;
+    $state = _$state_;
     $stateParams = _$stateParams_;
     ModalService = _ModalService_;
     ExternalNumberService = _ExternalNumberService_;
@@ -30,11 +31,14 @@ describe('Controller: ExternalNumberDetailCtrl', function () {
 
     modalDefer = $q.defer();
     spyOn($interval, 'cancel').and.callThrough();
+    spyOn($state, 'go');
     $intervalSpy = jasmine.createSpy('$interval', $interval);
     $intervalSpy.and.callThrough();
     spyOn(ExternalNumberService, 'getAllNumbers').and.returnValue(externalNumbers);
     spyOn(ExternalNumberService, 'refreshNumbers').and.returnValue($q.when());
     spyOn(ExternalNumberService, 'deleteNumber').and.returnValue($q.when());
+    spyOn(ExternalNumberService, 'isTerminusCustomer').and.returnValue($q.when());
+    spyOn(ExternalNumberService, 'setAllNumbers');
     spyOn(ModalService, 'open').and.returnValue({
       result: modalDefer.promise
     });
@@ -90,7 +94,7 @@ describe('Controller: ExternalNumberDetailCtrl', function () {
     modalDefer.resolve();
     $scope.$apply();
 
-    expect(controller.allNumbers.length).toEqual(1);
+    expect(ExternalNumberService.setAllNumbers).toHaveBeenCalledWith([externalNumbers[1]]);
     expect(Notification.success).toHaveBeenCalled();
   });
 
@@ -117,5 +121,4 @@ describe('Controller: ExternalNumberDetailCtrl', function () {
     $scope.$destroy();
     expect($intervalSpy.cancel.calls.count()).toEqual(1);
   });
-
 });

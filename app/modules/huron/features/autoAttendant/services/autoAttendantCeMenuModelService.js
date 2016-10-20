@@ -215,11 +215,20 @@
     return this.url;
   };
 
+  var ceMenuMap = {};
+  var ceMenuCount = 0;
+
   function CeMenu() {
     this.type = '';
     this.headers = [];
     this.entries = [];
+    this.id = 'menu' + ceMenuCount++;
+    ceMenuMap[this.id] = this;
   }
+
+  CeMenu.prototype.getId = function () {
+    return this.id;
+  };
 
   CeMenu.prototype.setType = function (menuType) {
     this.type = menuType;
@@ -253,10 +262,12 @@
     return this.entries[index];
   };
 
-  function MainMenu() {
-    this.description = '';
-    this.prompts = {};
-    this.inputs = [];
+  function newRunActionsOnInput() {
+    var obj = {};
+    obj.description = '';
+    obj.prompts = {};
+    obj.inputs = [];
+    return obj;
   }
 
   function CustomAction() {
@@ -275,11 +286,16 @@
       getOptionMenu: getOptionMenu,
       getCombinedMenu: getCombinedMenu,
       updateScheduleActionSetMap: updateScheduleActionSetMap,
+      updateDefaultActionSet: updateDefaultActionSet,
       updateMenu: updateMenu,
       updateCombinedMenu: updateCombinedMenu,
       deleteMenu: deleteMenu,
       deleteCombinedMenu: deleteCombinedMenu,
       deleteScheduleActionSetMap: deleteScheduleActionSetMap,
+      getCeMenu: getCeMenu,
+      clearCeMenuMap: clearCeMenuMap,
+      deleteCeMenuMap: deleteCeMenuMap,
+      isCeMenu: isCeMenu,
 
       newCeMenu: function () {
         return new CeMenu();
@@ -299,9 +315,38 @@
 
     /////////////////////
 
+    function encodeUtf8(stringToEncode) {
+      if (stringToEncode) {
+        try {
+          var stringEncoded = encodeURIComponent(stringToEncode);
+          var encodedStringUnescaped = unescape(stringEncoded);
+          return encodedStringUnescaped;
+        } catch (exception) {
+          //exception can occur if string is ready encoded
+          return stringToEncode;
+        }
+      }
+      return stringToEncode;
+    }
+
+    function decodeUtf8(stringToDecode) {
+      if (stringToDecode) {
+        try {
+          var stringEscaped = escape(stringToDecode);
+          var escapedStringDecoded = decodeURIComponent(stringEscaped);
+          return escapedStringDecoded;
+
+        } catch (exception) {
+          // exception can occur if string was previously encoded non-utf-8
+          return stringToDecode;
+        }
+      }
+      return stringToDecode;
+    }
+
     function parseSayObject(menuEntry, inObject) {
       var action;
-      action = new Action('say', inObject.value);
+      action = new Action('say', decodeUtf8(inObject.value));
       if (angular.isDefined(inObject.voice)) {
         action.setVoice(inObject.voice);
       }
@@ -318,7 +363,7 @@
       var newActionArray = [];
       for (var i = 0; i < actions.length; i++) {
         newActionArray[i] = {};
-        newActionArray[i].value = (actions[i].getValue() ? actions[i].getValue() : '');
+        newActionArray[i].value = (actions[i].getValue() ? encodeUtf8(actions[i].getValue()) : '');
         if (angular.isDefined(actions[i].voice) && actions[i].voice.length > 0) {
           newActionArray[i].voice = actions[i].voice;
         }
@@ -341,7 +386,7 @@
         setDescription(action, inAction.play);
         menuEntry.addAction(action);
       } else if (angular.isDefined(inAction.say)) {
-        action = new Action('say', inAction.say.value);
+        action = new Action('say', decodeUtf8(inAction.say.value));
         setDescription(action, inAction.say);
         if (angular.isDefined(inAction.say.voice)) {
           action.setVoice(inAction.say.voice);
@@ -374,6 +419,11 @@
       } else if (angular.isDefined(inAction.repeatActionsOnInput)) {
         action = new Action('repeatActionsOnInput', '');
         setDescription(action, inAction.repeatActionsOnInput);
+        if (_.has(inAction.repeatActionsOnInput, 'level')) {
+          action.level = inAction.repeatActionsOnInput.level;
+        } else {
+          action.level = 0;
+        }
         menuEntry.addAction(action);
       } else if (angular.isDefined(inAction.routeToCollectedNumber)) {
         action = new Action('routeToCollectedNumber', '');
@@ -407,17 +457,33 @@
             angular.isDefined(inAction.runActionsOnInput.prompts.sayList)) {
             var sayList = inAction.runActionsOnInput.prompts.sayList;
             if (sayList.length > 0 && angular.isDefined(sayList[0].value)) {
-              action.value = inAction.runActionsOnInput.prompts.sayList[0].value;
+              action.value = decodeUtf8(inAction.runActionsOnInput.prompts.sayList[0].value);
+              action.voice = inAction.runActionsOnInput.voice;
+              action.description = inAction.runActionsOnInput.description;
+
+              action.maxNumberOfCharacters = inAction.runActionsOnInput.maxNumberOfCharacters;
+              action.minNumberOfCharacters = inAction.runActionsOnInput.minNumberOfCharacters;
+              menuEntry.voice = inAction.runActionsOnInput.voice;
+              menuEntry.language = inAction.runActionsOnInput.language;
+              menuEntry.attempts = inAction.runActionsOnInput.attempts;
+              menuEntry.addAction(action);
+
             }
           }
         }
-        menuEntry.addAction(action);
       } else if (angular.isDefined(inAction.goto)) {
         action = new Action('goto', inAction.goto.ceid);
         if (angular.isDefined(inAction.goto.description)) {
           setDescription(action, inAction.goto.description);
         }
 
+        menuEntry.addAction(action);
+      } else if (angular.isDefined(inAction.routeToQueue)) {
+        //this occurs on the way in from the db
+        action = new Action('routeToQueue', inAction.routeToQueue.id);
+        setDescription(action, inAction.routeToQueue);
+        cesTempMoh(action);
+        cesTempIa(action);
         menuEntry.addAction(action);
       } else {
         // insert an empty action
@@ -427,6 +493,64 @@
         }
         menuEntry.addAction(action);
       }
+    }
+
+    /*
+    * temporary solution to write to db until ces ready
+    */
+    function cesTempMoh(action) {
+      if (angular.isDefined(action.description)) {
+        try {
+          if (angular.isUndefined(action.queueSettings)) {
+            action.description = JSON.parse(action.description);
+            action.queueSettings = {};
+          }
+          action.queueSettings.musicOnHold = constructCesTodoMoh(action.description);
+        } catch (exception) {
+          action.queueSettings = {};
+        }
+      }
+    }
+
+    /*
+    * temporary solution to write to db until ces ready
+    */
+    function cesTempIa(action) {
+      if (angular.isDefined(action.description)) {
+        try {
+          if (angular.isUndefined(action.queueSettings)) {
+            action.description = JSON.parse(action.description);
+            action.queueSettings = {};
+          }
+          action.queueSettings.initialAnnouncement = constructCesTodoIa(action.description);
+        } catch (exception) {
+          action.queueSettings = {};
+        }
+      }
+    }
+
+    /*
+    * temporary solution to write to db until ces ready
+    */
+    function constructCesTodoMoh(parsedDescription) {
+      var musicOnHold = parsedDescription.musicOnHold.actions[0];
+      var playAction = new Action('play', musicOnHold.value);
+      playAction.setDescription(musicOnHold.description);
+      musicOnHold = new CeMenuEntry();
+      musicOnHold.addAction(playAction);
+      return musicOnHold;
+    }
+
+    /*
+    * temporary solution to write to db until ces ready
+    */
+    function constructCesTodoIa(parsedDescription) {
+      var initialAnnouncement = parsedDescription.initialAnnouncement.actions[0];
+      var action = new Action(initialAnnouncement.name, initialAnnouncement.value);
+      action.setDescription(initialAnnouncement.description);
+      initialAnnouncement = new CeMenuEntry();
+      initialAnnouncement.addAction(action);
+      return initialAnnouncement;
     }
 
     function parseActions(menuEntry, actions) {
@@ -450,21 +574,36 @@
         return undefined;
       }
       var ceActionArray = actionSet.actions;
+      var menuEntry;
 
       var menu = new CeMenu();
       menu.setType('MENU_WELCOME');
 
       for (var i = 0; i < ceActionArray.length; i++) {
+        // dial by extension(runActionsOnInput) and is now ok in the Welcome menu.
+        // if inputType is 2 then dial by extension, else make an option menu.
+
         if (angular.isUndefined(ceActionArray[i].runActionsOnInput) && angular.isUndefined(ceActionArray[i].runCustomActions)) {
-          var menuEntry = new CeMenuEntry();
+
+          menuEntry = new CeMenuEntry();
           parseAction(menuEntry, ceActionArray[i]);
           if (menuEntry.actions.length > 0) {
             menu.addEntry(menuEntry);
           }
         } else {
-          var optionMenu = getOptionMenuFromAction(ceActionArray[i]);
-          if (angular.isDefined(optionMenu)) {
-            menu.addEntry(optionMenu);
+          // check for dial by extension - inputType is only 2 for now.
+          if (_.has(ceActionArray[i], 'runActionsOnInput.inputType') &&
+            ceActionArray[i].runActionsOnInput.inputType === 2) {
+            menuEntry = new CeMenuEntry();
+            parseAction(menuEntry, ceActionArray[i]);
+            if (menuEntry.actions.length > 0) {
+              menu.addEntry(menuEntry);
+            }
+          } else {
+            var optionMenu = getOptionMenuFromAction(ceActionArray[i], actionSetName);
+            if (angular.isDefined(optionMenu)) {
+              menu.addEntry(optionMenu);
+            }
           }
         }
       }
@@ -481,6 +620,7 @@
       }
 
       var actionSet = getActionSet(ceRecord, actionSetName);
+
       if (angular.isUndefined(actionSet)) {
         return undefined;
       }
@@ -498,17 +638,14 @@
       // returns only the first menu it finds
       var i = getActionIndex(ceActionArray, 'runActionsOnInput');
       if (i >= 0) {
-        var menu = new CeMenu();
-        menu.setType('MENU_OPTION');
-        var ceActionsOnInput = ceActionArray[i].runActionsOnInput;
         if (angular.isDefined(ceActionArray[i]['runActionsOnInput'])) {
-          return getOptionMenuFromAction(ceActionArray[i]);
+          return getOptionMenuFromAction(ceActionArray[i], actionSetName);
         }
       }
       return undefined;
     }
 
-    function getOptionMenuFromAction(optionMenuAction) {
+    function getOptionMenuFromAction(optionMenuAction, actionSetName) {
 
       if (angular.isDefined(optionMenuAction) && angular.isDefined(optionMenuAction.runActionsOnInput)) {
         var menu = new CeMenu();
@@ -563,12 +700,27 @@
               // do not expose timeout entry by default
               menu.addHeader(timeoutMenuEntry);
             } else {
-              menuEntry = new CeMenuEntry();
-              menuEntry.setType('MENU_OPTION');
-              menuEntry.setDescription(menuOption.description || '');
-              menuEntry.setKey(menuOption.input || '');
-              parseActions(menuEntry, menuOption.actions);
-              menu.addEntry(menuEntry);
+              // A displayable menu entry from CeDefinition must have both input (key) and
+              // actions array defined.  It is better to skip any entry with either one of these
+              // attributes missing to keep the UI stable.
+              if (_.has(menuOption, 'input') && _.has(menuOption, 'actions')) {
+                // Looks for menu or submenu, i.e., a runActionsOnInput object that has an
+                // undefined runActionsOnInput.inputType or runActionsOnInput.inputType === 1.
+                // Note, runActionsOnInput.inputType equals 2 is dialByExt.
+                if (_.has(menuOption.actions[0], 'runActionsOnInput') &&
+                  (!_.has(menuOption.actions[0], 'runActionsOnInput.inputType') ||
+                    menuOption.actions[0].runActionsOnInput.inputType === 1)) {
+                  menuEntry = getOptionMenuFromAction(menuOption.actions[0], actionSetName);
+                  menuEntry.key = menuOption.input || '';
+                } else {
+                  menuEntry = new CeMenuEntry();
+                  menuEntry.setType('MENU_OPTION');
+                  menuEntry.setDescription(menuOption.description || '');
+                  menuEntry.setKey(menuOption.input || '');
+                  parseActions(menuEntry, menuOption.actions);
+                }
+                menu.addEntry(menuEntry);
+              }
             }
           }
           return menu;
@@ -638,29 +790,33 @@
       };
     }
 
-    function updateScheduleActionSetMap(ceRecord, actionSetName) {
+    function updateScheduleActionSetMap(ceRecord, actionSetName, actionSetValue) {
       if (!ceRecord.scheduleEventTypeMap) {
         ceRecord['scheduleEventTypeMap'] = {};
       }
       if (actionSetName === 'openHours') {
         ceRecord.scheduleEventTypeMap['open'] = actionSetName;
-        if (!ceRecord.scheduleEventTypeMap['closed']) {
-          ceRecord.defaultActionSet = 'openHours';
-        }
       } else if (actionSetName === 'closedHours') {
         ceRecord.scheduleEventTypeMap['closed'] = actionSetName;
-        ceRecord.defaultActionSet = 'closedHours';
       } else if (actionSetName === 'holidays') {
-        ceRecord.scheduleEventTypeMap['holiday'] = actionSetName;
-        if (!ceRecord.scheduleEventTypeMap['open'] && !ceRecord.scheduleEventTypeMap['closed']) {
-          ceRecord.defaultActionSet = 'holidays';
-        }
+        ceRecord.scheduleEventTypeMap['holiday'] = actionSetValue;
       }
     }
 
-    function updateCombinedMenu(ceRecord, actionSetName, aaCombinedMenu) {
+    function updateDefaultActionSet(ceRecord, hasClosedHours) {
+      if (angular.isUndefined(hasClosedHours) && !_.isEmpty(ceRecord.defaultActionSet)) {
+        return;
+      }
+      if (hasClosedHours) {
+        ceRecord.defaultActionSet = 'closedHours';
+      } else {
+        ceRecord.defaultActionSet = 'openHours';
+      }
+    }
 
-      updateScheduleActionSetMap(ceRecord, actionSetName);
+    function updateCombinedMenu(ceRecord, actionSetName, aaCombinedMenu, actionSetValue) {
+
+      updateScheduleActionSetMap(ceRecord, actionSetName, actionSetValue);
 
       updateMenu(ceRecord, actionSetName, aaCombinedMenu);
       if (aaCombinedMenu.length > 0) {
@@ -753,10 +909,6 @@
     }
 
     function updateCustomMenu(ceRecord, actionSetName, aaMenu) {
-      var funcname = 'updateCustomMenu';
-
-      // $log.log(funcname + ': ceRecord: ' + JSON.stringify(ceRecord));
-      // $log.log(funcname + ': aaMenu: ' + JSON.stringify(aaMenu));
       if (angular.isUndefined(aaMenu.type) || aaMenu.type !== 'MENU_CUSTOM') {
         return false;
       }
@@ -774,7 +926,6 @@
       for (var attr in customAction['runCustomActions']) {
         customAction['runCustomActions'][attr] = aaMenu.entries[0][attr];
       }
-      // $log.log(funcname + ': ceRecord: ' + JSON.stringify(ceRecord));
       return true;
     }
 
@@ -784,7 +935,7 @@
         var menuEntry = aaMenu.entries[i];
         newActionArray[i] = {};
         if (menuEntry.type === 'MENU_OPTION') {
-          newActionArray[i].runActionsOnInput = new MainMenu();
+          newActionArray[i].runActionsOnInput = newRunActionsOnInput();
           createOptionMenu(newActionArray[i].runActionsOnInput, menuEntry);
         } else {
           if (angular.isDefined(menuEntry.actions) && menuEntry.actions.length > 0) {
@@ -794,7 +945,7 @@
               newActionArray[i][actionName].description = menuEntry.actions[0].description;
             }
             if (actionName === 'say') {
-              newActionArray[i][actionName].value = menuEntry.actions[0].getValue();
+              newActionArray[i][actionName].value = encodeUtf8(menuEntry.actions[0].getValue());
               newActionArray[i][actionName].voice = menuEntry.actions[0].voice;
             } else if (actionName === 'play') {
               newActionArray[i][actionName].url = menuEntry.actions[0].getValue();
@@ -813,7 +964,21 @@
               newActionArray[i][actionName].ceid = menuEntry.actions[0].getValue();
             } else if (actionName === 'routeToHuntGroup') {
               newActionArray[i][actionName].id = menuEntry.actions[0].getValue();
+            } else if (actionName === 'routeToQueue') {
+              newActionArray[i][actionName] = populateRouteToQueue(menuEntry.actions[0]);
+              /*
+              *this code commented out may come back later, waiting on backend to be complete
+              */
+              //newActionArray[i][actionName].id = menuEntry.actions[0].getValue();
+            } else if (actionName === 'runActionsOnInput') {
+              if (menuEntry.actions[0].inputType === 2) {
+                newActionArray[i][actionName] = populateRunActionsOnInput(menuEntry.actions[0]);
+                newActionArray[i][actionName].attempts = menuEntry.attempts;
+                newActionArray[i][actionName].voice = menuEntry.actions[0].voice;
+                newActionArray[i][actionName].language = menuEntry.actions[0].language;
+              }
             }
+
           }
         }
       }
@@ -843,7 +1008,7 @@
         var val = actions[i].getValue();
         newActionArray[i][actionName] = {};
         if (actionName === 'say') {
-          newActionArray[i][actionName].value = val;
+          newActionArray[i][actionName].value = encodeUtf8(val);
           newActionArray[i][actionName].voice = actions[i].voice;
         } else if (actionName === 'play') {
           // convert unique filename to corresponding URL
@@ -861,20 +1026,39 @@
           newActionArray[i][actionName].id = val;
         } else if (actionName === 'goto') {
           newActionArray[i][actionName].ceid = val;
+        } else if (actionName === 'routeToQueue') {
+          newActionArray[i][actionName] = populateRouteToQueue(actions[i]);
+          /*
+          *this code commented out may come back later, waiting on backend to be complete
+          */
+          //newActionArray[i][actionName].id = val;
         } else if (actionName === 'disconnect') {
           if (val && val !== 'none') {
             newActionArray[i][actionName].treatment = val;
           }
         } else if (actionName === 'runActionsOnInput') {
           newActionArray[i][actionName] = populateRunActionsOnInput(actions[i]);
+        } else if (actionName === 'repeatActionsOnInput' && _.has(actions[i], 'level')) {
+          newActionArray[i][actionName].level = actions[i].level;
         }
+
         if (angular.isDefined(actions[i].description) && actions[i].description.length > 0) {
           newActionArray[i][actionName].description = actions[i].description;
         }
       }
       return newActionArray;
     }
-
+    /*
+    * Temp method for route to queue prior to CES def
+    */
+    function populateRouteToQueue(action) {
+      var newAction = {};
+      if (angular.isDefined(action.description)) {
+        newAction.id = action.value;
+        newAction.description = JSON.stringify(action.description);
+      }
+      return newAction;
+    }
     /*
      * Set the defaults for Dial by Extension
      */
@@ -886,7 +1070,8 @@
           var prompts = {};
           var sayListArr = [];
           var sayList = {};
-          sayList.value = action.value;
+          newAction.description = action.description;
+          sayList.value = encodeUtf8(action.value);
           sayListArr[0] = sayList;
           prompts.sayList = sayListArr;
           newAction.prompts = prompts;
@@ -897,8 +1082,8 @@
           rawInputAction.routeToExtension = routeToExtension;
           newAction.rawInputActions = [];
           newAction.rawInputActions[0] = rawInputAction;
-          newAction.minNumberOfCharacters = 4;
-          newAction.maxNumberOfCharacters = 4;
+          newAction.minNumberOfCharacters = action.minNumberOfCharacters;
+          newAction.maxNumberOfCharacters = action.maxNumberOfCharacters;
           newAction.attempts = 3;
           newAction.repeats = 2;
         }
@@ -917,11 +1102,29 @@
       for (var i = 0; i < aaMenu.entries.length; i++) {
         menuEntry = aaMenu.entries[i];
         // skip incomplete key/action definition
-        if (menuEntry.key && menuEntry.actions.length > 0 && menuEntry.actions[0].name) {
+        if (menuEntry.key && _.has(menuEntry, 'actions') && menuEntry.actions.length > 0 && menuEntry.actions[0].name) {
           var newOption = {};
           newOption.description = menuEntry.description;
           newOption.input = menuEntry.key;
           newOption.actions = createActionArray(menuEntry.actions);
+          newOptionArray.push(newOption);
+        } else if (menuEntry.key && _.has(menuEntry, 'entries') && _.has(menuEntry, 'headers')) {
+          newOption = {};
+          if (angular.isDefined(menuEntry.description)) {
+            newOption.description = menuEntry.description;
+          }
+          newOption.input = menuEntry.key;
+          newOption.actions = [];
+          newOption.actions[0] = {};
+          var _menu = newRunActionsOnInput();
+          // for submenu, always return to parent when invalid inputs timeout.
+          newOption.actions[0]['runActionsOnInput'] = _menu;
+          newOption.actions[0]['runActionsOnInput']['incompleteInputActions'] = [{
+            "repeatActionsOnInput": {
+              "level": -1
+            }
+          }];
+          createOptionMenu(_menu, menuEntry);
           newOptionArray.push(newOption);
         }
       }
@@ -937,7 +1140,9 @@
         inputAction.prompts = {};
         inputAction.prompts.description = menuEntry.description;
         inputAction.prompts.sayList = createSayList(menuEntry.actions);
-        inputAction.attempts = aaMenu.attempts;
+        if (_.has(aaMenu, 'attempts')) {
+          inputAction.attempts = aaMenu.attempts;
+        }
         inputAction.language = menuEntry.getLanguage();
         inputAction.voice = menuEntry.getVoice();
         // for Dial by Extension we need to copy the Phone Menu voice & language
@@ -984,7 +1189,7 @@
       if (angular.isUndefined(inputAction)) {
         var i = actionSet.actions.length;
         actionSet.actions[i] = {};
-        actionSet.actions[i].runActionsOnInput = new MainMenu();
+        actionSet.actions[i].runActionsOnInput = newRunActionsOnInput();
         inputAction = actionSet.actions[i];
       }
       createOptionMenu(inputAction.runActionsOnInput, aaMenu);
@@ -1056,28 +1261,19 @@
     function deleteScheduleActionSetMap(ceRecord, actionSetName) {
       // remove associated schedule to actionSet map, e.g.,
       // scheduleEventTypeMap.open = 'openHours'
+      var prop;
       if (!ceRecord.scheduleEventTypeMap) {
         return;
       }
-      var prop = _.find(Object.keys(ceRecord.scheduleEventTypeMap), function (prop) {
-        return this.scheduleEventTypeMap[prop] === this.actionSetName;
-      }, {
-        scheduleEventTypeMap: ceRecord.scheduleEventTypeMap,
-        actionSetName: actionSetName
-      });
+      if (actionSetName === 'holidays') {
+        prop = 'holiday';
+      } else if (actionSetName === 'closedHours') {
+        prop = 'closed';
+      } else {
+        prop = 'open';
+      }
       if (prop) {
         delete ceRecord.scheduleEventTypeMap[prop];
-        if (ceRecord.scheduleEventTypeMap) {
-          if (ceRecord.scheduleEventTypeMap.closed) {
-            ceRecord.defaultActionSet = ceRecord.scheduleEventTypeMap.closed;
-          } else if (ceRecord.scheduleEventTypeMap.open) {
-            ceRecord.defaultActionSet = ceRecord.scheduleEventTypeMap.open;
-          } else if (ceRecord.scheduleEventTypeMap.holiday) {
-            ceRecord.defaultActionSet = ceRecord.scheduleEventTypeMap.holiday;
-          } else {
-            delete ceRecord.defaultActionSet;
-          }
-        }
       }
     }
 
@@ -1108,6 +1304,40 @@
         }
       }
       return false;
+    }
+
+    function objectType(obj) {
+      if (obj) {
+        var text = obj.constructor.toString();
+        return text.match(/function (.*)\(/)[1];
+      } else {
+        return undefined;
+      }
+    }
+
+    function getCeMenu(id) {
+      return ceMenuMap[id];
+    }
+
+    function clearCeMenuMap() {
+      ceMenuMap = {};
+      ceMenuCount = 0;
+    }
+
+    function deleteCeMenuMap(menuId) {
+      var menu = ceMenuMap[menuId];
+      if (menu) {
+        _.forEach(menu.entries, function (entry) {
+          if (isCeMenu(entry)) {
+            deleteCeMenuMap(entry.getId());
+          }
+        });
+        delete ceMenuMap[menuId];
+      }
+    }
+
+    function isCeMenu(obj) {
+      return (objectType(obj) === 'CeMenu');
     }
   }
 })();

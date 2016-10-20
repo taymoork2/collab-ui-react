@@ -1,0 +1,51 @@
+<div class="modal-header">
+  <button type="button" class="close" ng-click="$dismiss()">
+    <span class="sr-only" translate="common.close"></span>
+  </button>
+  <h3 class="modal-title" translate="hercules.fusion.add-resource.title"></h3>
+</div>
+<div class="modal-body add-resource-modal" ng-switch="vm.UIstate">
+  <div ng-switch-when="loading" class="loading">
+    <div>
+      <span class="spinner--large">
+        <i class="icon icon-spinner"></i>
+      </span>
+    </div>
+  </div>
+  <div ng-switch-when="error" translate="hercules.fusion.add-resource.type.error"></div>
+  <div ng-switch-when="success">
+    <h4 translate="hercules.fusion.add-resource.type.title"></h4>
+    <form name="resourcesType">
+      <div class="cs-radio-group">
+        <input
+          cs-input
+          type="radio"
+          ng-model="vm.selectedType"
+          name="selectedType"
+          value="expressway"
+          id="selectedType_expressway"
+          ng-show="vm.isEntitledTo.expressway"
+          ng-disabled="!vm.hasSetup.expressway"
+          ng-keypress="vm.handleKeypress($event)"
+          cs-input-label="{{vm._translation.expressway}}"
+          cs-input-help-text="{{vm._translation.expresswayHelpText}}">
+        <input
+          cs-input
+          type="radio"
+          ng-model="vm.selectedType"
+          name="selectedType"
+          value="mediafusion"
+          id="selectedType_mediafusion"
+          ng-show="vm.isEntitledTo.mediafusion"
+          ng-disabled="!vm.hasSetup.mediafusion"
+          ng-keypress="vm.handleKeypress($event)"
+          cs-input-label="{{vm._translation.mediafusion}}"
+          cs-input-help-text="{{vm._translation.mediafusionHelpText}}">
+      </div>
+    </form>
+  </div>
+</div>
+<div class="modal-footer">
+  <button class="btn btn-default" ng-click="$dismiss()" translate="common.cancel"></button>
+  <button class="btn btn-primary" ng-click="vm.next()" ng-disabled="!vm.canGoNext()" translate="common.next"></button>
+</div>

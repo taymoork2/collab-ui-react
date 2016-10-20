@@ -4,7 +4,7 @@ describe('Controller: DidService', function () {
   var DidService;
   var didTestData = ['12223334444', '14443332222', '19998887777', '17776665555'];
 
-  beforeEach(module('Huron'));
+  beforeEach(angular.mock.module('Huron'));
 
   beforeEach(
     inject(

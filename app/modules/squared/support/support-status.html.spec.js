@@ -1,18 +1,18 @@
 'use strict';
-describe('Controller: SupportCtrl', function () {
-  beforeEach(module('wx2AdminWebClientApp'));
 
-  var Userservice, httpBackend, $compile, controller, Authinfo, $scope, $templateCache;
+describe('Controller: SupportCtrl', function () {
+  beforeEach(angular.mock.module('Squared'));
+
+  var Userservice, httpBackend, $compile, controller, Authinfo, $scope;
 
   function stubAllHttpGetRequests() {
     httpBackend.whenGET(/.*/).respond({});
   }
 
-  beforeEach(inject(function (_Userservice_, $httpBackend, _$templateCache_, _$compile_, $rootScope, $controller, _Authinfo_) {
+  beforeEach(inject(function (_Userservice_, $httpBackend, _$compile_, $rootScope, $controller, _Authinfo_) {
     Userservice = _Userservice_;
 
     Authinfo = _Authinfo_;
-    $templateCache = _$templateCache_;
     $compile = _$compile_;
     httpBackend = $httpBackend;
     $scope = $rootScope.$new();
@@ -36,7 +36,7 @@ describe('Controller: SupportCtrl', function () {
     it('shows tools card if user has helpdesk role', function () {
       Authinfo.isHelpDeskUser = sinon.stub().returns(true);
       $scope.$digest();
-      var hasToolsCard = _.contains(view.html(), "supportPageToolsCard");
+      var hasToolsCard = _.includes(view.html(), "supportPageToolsCard");
       expect(hasToolsCard).toBeTruthy();
     });
 
@@ -55,7 +55,7 @@ describe('Controller: SupportCtrl', function () {
       });
 
       $scope.$digest();
-      var hasToolsCard = _.contains(view.html(), "supportPageToolsCard");
+      var hasToolsCard = _.includes(view.html(), "supportPageToolsCard");
       expect(hasToolsCard).toBeTruthy();
     });
 
@@ -66,7 +66,7 @@ describe('Controller: SupportCtrl', function () {
         roles: ['noDevRole']
       });
       $scope.$digest();
-      var hasToolsCard = _.contains(view.html(), "supportPageToolsCard");
+      var hasToolsCard = _.includes(view.html(), "supportPageToolsCard");
       expect(hasToolsCard).toBeFalsy();
     });
 

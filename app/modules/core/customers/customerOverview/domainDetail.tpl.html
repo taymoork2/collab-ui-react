@@ -1,0 +1,20 @@
+<cs-sp-container class="domain-detail">
+  <cs-sp-section >
+    <div class="section-title-row">
+      <span class="section-name" translate="customerPage.domains"></span>
+    </div>
+    <div class="feature-list webex-domains-list" ng-if="domainDetail.domains">
+     <ul>
+       <li class="feature" ng-repeat="domain in domainDetail.domains track by $index">
+        <div class="feature-name">{{domain.siteUrl}}
+         <span class="secondary">{{domain.timeZone}}</span>
+       </div>
+       <div class="status pull-right" ng-show="domain.pending">
+        <i class="icon icon-circle trial-pending"></i>
+        <span translate="common.pending"></span>
+      </div>
+    </li>
+  </ul>
+  </div>
+</cs-sp-section>
+</cs-sp-container>

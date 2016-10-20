@@ -3,7 +3,7 @@
 
   angular
     .module('Huron')
-    .directive('ucDirectoryNumber', ucDirectoryNumber);
+    .directive('ucDirectoryNumberOld', ucDirectoryNumber);
 
   function ucDirectoryNumber() {
     var directive = {

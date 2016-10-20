@@ -9,6 +9,8 @@
     var vm = this;
     vm.validateAddress = validateAddress;
     vm.hasBackButton = hasBackButton;
+    vm.validateNext = validateNext;
+    vm.modify = modify;
     vm.goBack = goBack;
     vm.loading = false;
     vm.isValid = false;
@@ -23,28 +25,35 @@
       }
     }
 
-    function validateAddress() {
+    function modify() {
+      vm.address = {};
+      vm.isValid = false;
+    }
+
+    function validateNext() {
       if (vm.isValid) {
         goToOrderNumbers();
-      } else {
-        vm.loading = true;
-        PstnServiceAddressService.lookupAddress(vm.address)
-          .then(function (address) {
-            if (address) {
-              vm.address = address;
-              PstnSetup.setServiceAddress(address);
-              vm.isValid = true;
-            } else {
-              Notification.error('pstnSetup.serviceAddressNotFound');
-            }
-          })
-          .catch(function (response) {
-            Notification.errorResponse(response);
-          })
-          .finally(function () {
-            vm.loading = false;
-          });
       }
+    }
+
+    function validateAddress() {
+      vm.loading = true;
+      PstnServiceAddressService.lookupAddress(vm.address)
+        .then(function (address) {
+          if (address) {
+            vm.address = address;
+            PstnSetup.setServiceAddress(address);
+            vm.isValid = true;
+          } else {
+            Notification.error('pstnSetup.serviceAddressNotFound');
+          }
+        })
+        .catch(function (response) {
+          Notification.errorResponse(response);
+        })
+        .finally(function () {
+          vm.loading = false;
+        });
     }
 
     function goToOrderNumbers() {

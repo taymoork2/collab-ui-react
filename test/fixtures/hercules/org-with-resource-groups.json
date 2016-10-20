@@ -1,0 +1,266 @@
+{
+  "id": "fe5acf7a-6246-484f-8f43-3e8c910fc50d",
+  "clusters": [{
+    "id": "5076af59-64f1-48ad-be15-5abb69123c89",
+    "name": "Cisco Oppsal",
+    "connectors": [],
+    "releaseChannel": "beta",
+    "provisioning": [{
+      "connectorType": "mf_mgmt",
+      "provisionedVersion": "1.0",
+      "availableVersion": "1.0"
+    }],
+    "registered": true,
+    "targetType": "mf_mgmt",
+    "upgradeSchedule": {
+      "scheduleDays": ["sunday", "saturday", "tuesday", "wednesday", "thursday", "friday", "monday"],
+      "scheduleTime": "03:00",
+      "scheduleTimeZone": "America/Los_Angeles",
+      "moratoria": [],
+      "nextUpgradeWindow": {
+        "startTime": "2016-08-30T10:00:19.723Z",
+        "endTime": "2016-08-30T11:00:19.723Z"
+      }
+    }
+  }, {
+    "id": "a31a92df-4e16-4a7e-a1c2-30405b512350",
+    "name": "Augusta National Golf Club",
+    "connectors": [{
+      "id": "c_cal@0D10F849",
+      "connectorType": "c_cal",
+      "upgradeState": "upgraded",
+      "state": "running",
+      "hostname": "fms-quadruple03.rd.cisco.com",
+      "hostSerial": "0D10F849",
+      "alarms": [],
+      "runningVersion": "8.7-1.0.3337",
+      "registered": true
+    }, {
+      "id": "c_ucmc@07A00089",
+      "connectorType": "c_ucmc",
+      "upgradeState": "upgraded",
+      "state": "not_configured",
+      "hostname": "fms-quadruple02.rd.cisco.com",
+      "hostSerial": "07A00089",
+      "alarms": [],
+      "runningVersion": "8.7-1.0.2544",
+      "registered": true
+    }, {
+      "id": "c_cal@0379F08E",
+      "connectorType": "c_cal",
+      "upgradeState": "upgraded",
+      "state": "running",
+      "hostname": "fms-quadruple04.rd.cisco.com",
+      "hostSerial": "0379F08E",
+      "alarms": [],
+      "runningVersion": "8.7-1.0.3346",
+      "registered": true
+    }, {
+      "id": "c_mgmt@0D10F849",
+      "connectorType": "c_mgmt",
+      "upgradeState": "upgraded",
+      "state": "running",
+      "hostname": "fms-quadruple03.rd.cisco.com",
+      "hostSerial": "0D10F849",
+      "alarms": [],
+      "runningVersion": "8.7-1.0.321180",
+      "registered": true
+    }, {
+      "id": "c_ucmc@0D09EDC5",
+      "connectorType": "c_ucmc",
+      "upgradeState": "upgraded",
+      "state": "not_configured",
+      "hostname": "fms-quadruple01.rd.cisco.com",
+      "hostSerial": "0D09EDC5",
+      "alarms": [],
+      "runningVersion": "8.7-1.0.2544",
+      "registered": true
+    }, {
+      "id": "c_mgmt@0D09EDC5",
+      "connectorType": "c_mgmt",
+      "upgradeState": "upgraded",
+      "state": "running",
+      "hostname": "fms-quadruple01.rd.cisco.com",
+      "hostSerial": "0D09EDC5",
+      "alarms": [],
+      "runningVersion": "8.7-1.0.321180",
+      "registered": true
+    }, {
+      "id": "c_ucmc@0D10F849",
+      "connectorType": "c_ucmc",
+      "upgradeState": "upgraded",
+      "state": "not_configured",
+      "hostname": "fms-quadruple03.rd.cisco.com",
+      "hostSerial": "0D10F849",
+      "alarms": [],
+      "runningVersion": "8.7-1.0.2544",
+      "registered": true
+    }, {
+      "id": "c_mgmt@0379F08E",
+      "connectorType": "c_mgmt",
+      "upgradeState": "upgraded",
+      "state": "running",
+      "hostname": "fms-quadruple04.rd.cisco.com",
+      "hostSerial": "0379F08E",
+      "alarms": [],
+      "runningVersion": "8.7-1.0.321180",
+      "registered": true
+    }, {
+      "id": "c_cal@0D09EDC5",
+      "connectorType": "c_cal",
+      "upgradeState": "upgraded",
+      "state": "running",
+      "hostname": "fms-quadruple01.rd.cisco.com",
+      "hostSerial": "0D09EDC5",
+      "alarms": [],
+      "runningVersion": "8.7-1.0.3337",
+      "registered": true
+    }, {
+      "id": "c_mgmt@07A00089",
+      "connectorType": "c_mgmt",
+      "upgradeState": "upgraded",
+      "state": "running",
+      "hostname": "fms-quadruple02.rd.cisco.com",
+      "hostSerial": "07A00089",
+      "alarms": [],
+      "runningVersion": "8.7-1.0.321180",
+      "registered": true
+    }, {
+      "id": "c_cal@07A00089",
+      "connectorType": "c_cal",
+      "upgradeState": "upgraded",
+      "state": "running",
+      "hostname": "fms-quadruple02.rd.cisco.com",
+      "hostSerial": "07A00089",
+      "alarms": [],
+      "runningVersion": "8.7-1.0.3337",
+      "registered": true
+    }, {
+      "id": "c_ucmc@0379F08E",
+      "connectorType": "c_ucmc",
+      "upgradeState": "upgraded",
+      "state": "not_configured",
+      "hostname": "fms-quadruple04.rd.cisco.com",
+      "hostSerial": "0379F08E",
+      "alarms": [],
+      "runningVersion": "8.7-1.0.2544",
+      "registered": true
+    }],
+    "releaseChannel": "GA",
+    "provisioning": [{
+      "connectorType": "c_ucmc",
+      "provisionedVersion": "8.7-1.0.2544",
+      "availableVersion": "8.7-1.0.2544"
+    }, {
+      "connectorType": "c_mgmt",
+      "provisionedVersion": "8.7-1.0.321180",
+      "availableVersion": "8.7-1.0.321181"
+    }, {
+      "connectorType": "c_cal",
+      "provisionedVersion": "8.7-1.0.3346",
+      "availableVersion": "8.7-1.0.3346"
+    }],
+    "registered": true,
+    "targetType": "c_mgmt",
+    "upgradeSchedule": {
+      "scheduleDays": ["wednesday"],
+      "scheduleTime": "03:00",
+      "scheduleTimeZone": "Europe/Oslo",
+      "moratoria": [],
+      "nextUpgradeWindow": {
+        "startTime": "2016-08-31T01:00:19.725Z",
+        "endTime": "2016-08-31T02:00:19.725Z"
+      }
+    }
+  }, {
+    "id": "89f3fc3a-3498-11e6-8de3-005056b111e6",
+    "name": "Oslo Øst & Skinke",
+    "connectors": [],
+    "releaseChannel": "BETA",
+    "provisioning": [],
+    "registered": true,
+    "targetType": "c_mgmt",
+    "upgradeSchedule": {
+      "scheduleDays": ["sunday", "saturday", "tuesday", "wednesday", "thursday", "friday", "monday"],
+      "scheduleTime": "01:00",
+      "scheduleTimeZone": "America/New_York",
+      "moratoria": [],
+      "nextUpgradeWindow": {
+        "startTime": "2016-08-30T05:00:19.720Z",
+        "endTime": "2016-08-30T06:00:19.720Z"
+      }
+    },
+    "resourceGroupId": "2c2bdd6d-8149-4090-bbb6-fd87edd5416f"
+  }, {
+    "id": "40b4cc27-e058-40b2-8102-595d9eb33d5a",
+    "name": "Tom er en hippie",
+    "connectors": [{
+      "id": "c_mgmt@006A3AE5",
+      "connectorType": "c_mgmt",
+      "upgradeState": "upgraded",
+      "state": "offline",
+      "hostname": "tvasset-ex.rd.cisco.com",
+      "hostSerial": "006A3AE5",
+      "alarms": [{
+        "id": "60050",
+        "firstReported": "1470402342",
+        "lastReported": "1470403481",
+        "severity": "error",
+        "title": "[Hybrid services] Connectivity error",
+        "description": "Could not reach Cisco Collaboration Cloud address: https://hercules-integration.wbx2.com/v1/connectors",
+        "solution": "Check %s, or %s, or use network utilities %s, to verify this address",
+        "solutionReplacementValues": [{
+          "text": "DNS Settings",
+          "link": "https://tvasset-ex.rd.cisco.com/dns"
+        }, {
+          "text": "Proxy Settings",
+          "link": "https://tvasset-ex.rd.cisco.com/fusionproxy"
+        }, {
+          "text": "Ping",
+          "link": "https://tvasset-ex.rd.cisco.com/ping"
+        }]
+      }],
+      "runningVersion": "8.7-1.0.321171",
+      "registered": true
+    }],
+    "releaseChannel": "GA",
+    "provisioning": [{
+      "connectorType": "c_ucmc",
+      "provisionedVersion": "8.7-1.0.2265",
+      "availableVersion": "8.7-1.0.2544"
+    }, {
+      "connectorType": "c_mgmt",
+      "provisionedVersion": "8.7-1.0.321171",
+      "availableVersion": "8.7-1.0.321181"
+    }],
+    "registered": true,
+    "targetType": "c_mgmt",
+    "upgradeSchedule": {
+      "scheduleDays": ["sunday"],
+      "scheduleTime": "03:00",
+      "scheduleTimeZone": "America/Los_Angeles",
+      "moratoria": [],
+      "nextUpgradeWindow": {
+        "startTime": "2016-09-04T10:00:19.722Z",
+        "endTime": "2016-09-04T11:00:19.722Z"
+      }
+    }
+  }],
+  "resourceGroups": [{
+    "name": "ACE",
+    "id": "2c2bdd6d-8149-4090-bbb6-fd87edd5416f",
+    "releaseChannel": "BETA"
+  }, {
+    "name": "dsfsdf",
+    "id": "a47a2d2f-badd-4827-8839-799a12945326",
+    "releaseChannel": "stable"
+  }, {
+    "name": "🐷",
+    "id": "b5dee9c5-42dc-419b-9959-995ab6420278",
+    "releaseChannel": "latest"
+  }, {
+    "name": "Test",
+    "id": "17105ea2-15bb-400f-bf04-61f64f938c87",
+    "releaseChannel": "latest"
+  }]
+}

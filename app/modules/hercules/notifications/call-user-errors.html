@@ -1,0 +1,14 @@
+<strong translate="hercules.notifications.user-activation-errors.title"></strong>
+<div ng-repeat="service in notification.data">
+  <div ng-if="service.serviceId === 'squared-fusion-uc'">
+    <p translate="hercules.notifications.user-activation-errors.aware-user-errors"
+       translate-values="{numberUsers: service.error}"></p>
+  </div>
+  <div ng-if="service.serviceId === 'squared-fusion-ec'">
+    <p translate="hercules.notifications.user-activation-errors.connect-user-errors"
+       translate-values="{numberUsers: service.error}"></p>
+  </div>
+
+</div>
+<p><a href ng-click="notificationController.showUserErrorsDialog(['squared-fusion-uc', 'squared-fusion-ec'])"
+      translate="hercules.notifications.user-activation-errors.generate-report"></a></p>

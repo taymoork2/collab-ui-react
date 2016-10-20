@@ -1,0 +1,8 @@
+// Most CSS is reusing the toolkit forms styles
+setting-section {
+  display: block;
+}
+
+setting-section + setting-section {
+  border-top: 1px solid #D7D7D8;
+}

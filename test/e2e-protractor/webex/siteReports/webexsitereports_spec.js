@@ -1,122 +1,208 @@
 'use strict';
 
-sitereports.testInfo.describeCount = 0;
-while (1 >= sitereports.testInfo.describeCount) {
-  switch (sitereports.testInfo.describeCount) {
-  case 1:
-    sitereports.testInfo.testType = 'T30';
-    sitereports.testInfo.describeText = 'WebEx site reports iframe test for ' + sitereports.testInfo.testType + ' site ' + sitereports.t30Info.siteUrl;
-    break;
+/* global webExSiteReports */
+/* global webEx */
+/* global webExCommon */
 
-  default:
-    sitereports.testInfo.testType = 'T31';
-    sitereports.testInfo.describeText = 'WebEx site reports iframe test for ' + sitereports.testInfo.testType + ' site ' + sitereports.t31Info.siteUrl;
+webExCommon.testInfo.describeCount = 0;
+
+while (1 >= webExCommon.testInfo.describeCount) {
+  switch (webExCommon.testInfo.describeCount) {
+    case 1:
+      webExCommon.testInfo.testType = 'T30';
+      webExCommon.testInfo.describeText = 'WebEx site reports iframe test for BTS ' + webExCommon.testInfo.testType + ' site ' + webExCommon.BTS1.siteUrl;
+      break;
+
+    default:
+      webExCommon.testInfo.testType = 'T31';
+      webExCommon.testInfo.describeText = 'WebEx site reports iframe test for BTS ' + webExCommon.testInfo.testType + ' site ' + webExCommon.BTS4.siteUrl;
   }
 
-  describe(sitereports.testInfo.describeText, function () {
-    afterEach(function () {
-      utils.dumpConsoleErrors();
-    });
+  describe(webExCommon.testInfo.describeText, function () {
+    var setup = false;
 
-    if (sitereports.testInfo.testType == "T31") {
-      it('should signin as ' + sitereports.t31Info.testAdminUsername + ' for T31 site config test', function () {
-        login.loginThroughGui(sitereports.t31Info.testAdminUsername, sitereports.t31Info.testAdminPassword);
+    if (webExCommon.testInfo.testType == "T31") {
+      beforeAll(function () {
+        var promise = webEx.setup(
+          1,
+          'wbx-t31BTSTestAdmin-Reports-Configure',
+          webExCommon.BTS4.testAdminUsername,
+          webExCommon.BTS4.testAdminPassword,
+          webExCommon.BTS4.siteUrl
+        );
+
+        promise.then(
+          function success(ticket) {
+            setup = (null !== ticket);
+          },
+
+          function error() {
+            setup = false;
+          }
+        );
       });
     } else {
-      it('should signin as ' + sitereports.t30Info.testAdminUsername + ' for T30 site config test', function () {
-        login.loginThroughGui(sitereports.t30Info.testAdminUsername, sitereports.t30Info.testAdminPassword);
+      beforeAll(function () {
+        var promise = webEx.setup(
+          1,
+          'wbx-t30BTSTestAdmin-Reports-Configure',
+          webExCommon.BTS1.testAdminUsername,
+          webExCommon.BTS1.testAdminPassword,
+          webExCommon.BTS1.siteUrl
+        );
+
+        promise.then(
+          function success(ticket) {
+            setup = (null !== ticket);
+          },
+
+          function error() {
+            setup = false;
+          }
+        );
       });
     }
 
-    it('should navigate to webex site list', function () {
-      navigation.clickServicesTab();
-      utils.click(sitereports.conferencing);
-    });
+    if (webExCommon.testInfo.testType == "T31") {
+      it('should sign in as ' + webExCommon.BTS4.testAdminUsername + ' and navigate to webex site list', function () {
+        if (setup) {
+          navigation.clickServicesTab();
+          utils.click(webExSiteReports.conferencing);
+        }
+      });
 
-    if (sitereports.testInfo.testType == "T31") {
-      it('should click on reports cog for ' + sitesettings.t31Info.siteUrl + ' and navigate to webex reports index', function () {
-        utils.click(sitereports.T31ReportsCog);
-        utils.wait(sitereports.webexSiteReportsPanel);
-        utils.wait(sitereports.t31CardsSectionId);
+      it('should click on reports icon for ' + webExCommon.BTS4.siteUrl + ' and navigate to webex reports index', function () {
+        if (setup) {
+          utils.click(webExCommon.BTS4.reportsCog);
+          utils.wait(webExSiteReports.webexSiteReportsPanel);
+          utils.wait(webExCommon.BTS4.cardSectionId);
+        }
       });
     } else {
-      it('should click on reports cog for ' + sitesettings.t30Info.siteUrl + ' and navigate to webex reports index', function () {
-        utils.click(sitereports.T30ReportsCog);
-        utils.wait(sitereports.webexSiteReportsPanel);
-        utils.wait(sitereports.t30CardsSectionId);
+      it('should sign in as ' + webExCommon.BTS1.testAdminUsername + ' and navigate to webex site list', function () {
+        if (setup) {
+          navigation.clickServicesTab();
+          utils.click(webExSiteReports.conferencing);
+        }
+      });
+
+      it('should click on reports icon for ' + webExCommon.BTS1.siteUrl + ' and navigate to webex reports index', function () {
+        if (setup) {
+          utils.click(webExCommon.BTS1.reportsCog);
+          utils.wait(webExSiteReports.webexSiteReportsPanel);
+          utils.wait(webExCommon.BTS1.cardSectionId);
+        }
       });
     }
 
     it('should navigate to reports engagement', function () {
-      navigation.clickReports();
+      if (setup) {
+        navigation.clickReports();
+      }
     });
 
-    if (sitereports.testInfo.testType == "T31") {
-      it('should navigate to webex reports index for site ' + sitereports.testInfo.siteUrl, function () {
-        utils.click(sitereports.webexReportsLink);
-        utils.wait(sitereports.webexSiteReportsPanel);
-        utils.wait(sitereports.t31CardsSectionId);
+    if (webExCommon.testInfo.testType == "T31") {
+      it('should navigate to webex reports index for site ' + webExCommon.testInfo.siteUrl, function () {
+        if (setup) {
+          utils.click(webExSiteReports.webexReportsLink);
+          utils.wait(webExSiteReports.webexSiteReportsPanel);
+          utils.wait(webExCommon.BTS4.cardSectionId);
+        }
       });
     } else {
-      it('should navigate to webex reports index for site ' + sitereports.testInfo.siteUrl, function () {
-        utils.click(sitereports.webexReportsLink);
-        utils.wait(sitereports.webexSiteReportsPanel);
-        utils.wait(sitereports.t30CardsSectionId);
+      it('should navigate to webex reports index for site ' + webExCommon.testInfo.siteUrl, function () {
+        if (setup) {
+          utils.click(webExSiteReports.webexReportsLink);
+          utils.wait(webExSiteReports.webexSiteReportsPanel);
+          utils.wait(webExCommon.BTS1.cardSectionId);
+        }
       });
     }
 
     it('should not see last sync text or link', function () {
-      expect(sitereports.lastSyncElement.isPresent()).toBeFalsy();
+      if (setup) {
+        expect(webExSiteReports.lastSyncElement.isPresent()).toBeFalsy();
+      }
     });
 
     it('click on common reports meetings in progress link', function () {
-      utils.click(sitereports.webexCommonMeetingsInProgressLink);
-      utils.wait(sitereports.webexCommonMeetingsInProgressId);
+      if (setup) {
+        utils.click(webExSiteReports.webexCommonMeetingsInProgressLink);
+        utils.wait(webExSiteReports.webexCommonMeetingsInProgressId);
+      }
     });
 
     it('click on reports index breadcrumb and should navigate to site reports index', function () {
-      utils.click(sitereports.webexReportCrumb2);
-      utils.wait(sitereports.webexSiteReportsPanel);
+      if (setup) {
+        utils.click(webExSiteReports.webexReportCrumb2);
+        utils.wait(webExSiteReports.webexSiteReportsPanel);
+      }
+    });
+
+    it('click on common reports inactive users link', function () {
+      if (setup) {
+        utils.click(webExSiteReports.webexCommonInactiveUserLink);
+        utils.wait(webExSiteReports.webexCommonInactiveUserId);
+      }
+    });
+
+    it('click on reports index breadcrumb and should navigate to site reports index', function () {
+      if (setup) {
+        utils.click(webExSiteReports.webexReportCrumb2);
+        utils.wait(webExSiteReports.webexSiteReportsPanel);
+      }
     });
 
     it('click on common reports meeting usage link', function () {
-      utils.click(sitereports.webexCommonMeetingUsageLink);
-      utils.wait(sitereports.webexCommonMeetingUsageId);
+      if (setup) {
+        utils.click(webExSiteReports.webexCommonMeetingUsageLink);
+        utils.wait(webExSiteReports.webexCommonMeetingUsageId);
+      }
     });
 
     it('click on reports index breadcrumb and should navigate to site reports index', function () {
-      utils.click(sitereports.webexReportCrumb2);
-      utils.wait(sitereports.webexSiteReportsPanel);
+      if (setup) {
+        utils.click(webExSiteReports.webexReportCrumb2);
+        utils.wait(webExSiteReports.webexSiteReportsPanel);
+      }
     });
 
     it('click on common reports recording usage link', function () {
-      utils.click(sitereports.webexCommonRecordingUsageLink);
-      utils.wait(sitereports.webexCommonRecordingUsageId);
+      if (setup) {
+        utils.click(webExSiteReports.webexCommonRecordingUsageLink);
+        utils.wait(webExSiteReports.webexCommonRecordingUsageId);
+      }
     });
 
     it('click on reports index breadcrumb and should navigate to site reports index', function () {
-      utils.click(sitereports.webexReportCrumb2);
-      utils.wait(sitereports.webexSiteReportsPanel);
+      if (setup) {
+        utils.click(webExSiteReports.webexReportCrumb2);
+        utils.wait(webExSiteReports.webexSiteReportsPanel);
+      }
     });
 
     it('click on common reports storage usage link', function () {
-      utils.click(sitereports.webexCommonStorageUsageLink);
-      utils.wait(sitereports.webexCommonStorageUsageId);
+      if (setup) {
+        utils.click(webExSiteReports.webexCommonStorageUsageLink);
+        utils.wait(webExSiteReports.webexCommonStorageUsageId);
+      }
     });
 
     it('click on reports index breadcrumb and should navigate to site reports index', function () {
-      utils.click(sitereports.webexReportCrumb2);
-      utils.wait(sitereports.webexSiteReportsPanel);
+      if (setup) {
+        utils.click(webExSiteReports.webexCommonStorageUsageLink);
+        utils.wait(webExSiteReports.webexCommonStorageUsageId);
+      }
     });
 
     // it('should pause', function () {
     //   browser.pause()
     // });
 
-    it('should log out', function () {
+    it('should allow log out', function () {
       navigation.logout();
     });
   });
 
-  ++sitereports.testInfo.describeCount;
+  ++webExCommon.testInfo.describeCount;
 }

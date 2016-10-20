@@ -1,29 +1,104 @@
 /* globals TrialCallService, TrialDeviceService, TrialRoomSystemService*/
+
 'use strict';
 
 describe('Service: Trial Device Service:', function () {
-  beforeEach(module('core.trial'));
-  beforeEach(module('Core'));
+  beforeEach(angular.mock.module('core.trial'));
+  beforeEach(angular.mock.module('Core'));
 
   beforeEach(function () {
     bard.inject(this, 'TrialCallService', 'TrialRoomSystemService', 'TrialDeviceService');
   });
 
-  describe('Get List', function () {
-    it('should contain a list of countries', function () {
+  describe('Get Countries List', function () {
+    it('should contain only US if no argument is supplied', function () {
       var countries = TrialDeviceService.getCountries();
-      expect(countries.length).toBeTruthy();
+      expect(countries.length).toBe(1);
+      expect(countries).toContain({
+        country: 'United States',
+      });
     });
 
+    it('should have a longer list for only CISCO_SX10 and contain for example "Germany"', function () {
+      var countries = TrialDeviceService.getCountries(['CISCO_SX10']);
+      expect(countries.length).toBeGreaterThan(1);
+      expect(countries).toContain({
+        country: 'Germany',
+      });
+    });
+
+    it('should have a longer list for  CISCO_DX80 and contain for example "Germany"', function () {
+      var countries = TrialDeviceService.getCountries(['CISCO_DX80']);
+      expect(countries.length).toBeGreaterThan(1);
+      expect(countries).toContain({
+        country: 'Germany',
+      });
+    });
+
+    it('should have a longer list for CISCO_SX10 and CISCO_DX80 which contain for example "Germany"', function () {
+      var countries = TrialDeviceService.getCountries(['CISCO_SX10', 'CISCO_DX80']);
+      expect(countries.length).toBeGreaterThan(1);
+      expect(countries).toContain({
+        country: 'Germany',
+      });
+    });
+
+    it('should contain only US for MX300', function () {
+      var countries = TrialDeviceService.getCountries(['CISCO_MX300']);
+      expect(countries.length).toBe(1);
+      expect(countries).toContain({
+        country: 'United States',
+      });
+    });
+
+    it('should contain only US for CISCO_SX10, CISCO_DX80, and MX300 since MX300 is only US"', function () {
+      var countries = TrialDeviceService.getCountries(['CISCO_SX10', 'CISCO_DX80', 'MX300']);
+      expect(countries.length).toBe(1);
+      expect(countries).toContain({
+        country: 'United States',
+      });
+    });
+
+    it('should contain only US if unknown device is present', function () {
+      var countries = TrialDeviceService.getCountries(['CISCO_SX10', 'SOME_OTHER']);
+      expect(countries.length).toBe(1);
+      expect(countries).toContain({
+        country: 'United States',
+      });
+    });
+
+    it('should contain US only if one of the devices supplied only supports US shipping', function () {
+      var countries = TrialDeviceService.getCountries(['CISCO_SX10', 'CISCO_8841']);
+      expect(countries.length).toBe(1);
+      expect(countries).toContain({
+        country: 'United States',
+      });
+    });
+
+  });
+
+  describe('Get Country Code By Name', function () {
+    it('should return a country if it is in the list', function () {
+      var result = TrialDeviceService.getCountryCodeByName('Belgium');
+      expect(result).toBe('BE');
+
+    });
+    it('should return an empty object if country is not in the list', function () {
+      var result = TrialDeviceService.getCountryCodeByName('Blargh');
+      expect(result).toBeUndefined();
+    });
+  });
+
+  describe('Get States List', function () {
     it('should contain a list of states', function () {
       var states = TrialDeviceService.getStates();
-      expect(states.length).toEqual(50);
+      expect(states.length).toEqual(51);
     });
 
     it('should contain a unique list of states', function () {
       var states = TrialDeviceService.getStates();
       var uniqueStates = _.uniq(states);
-      expect(uniqueStates.length).toEqual(50);
+      expect(uniqueStates.length).toEqual(51);
     });
   });
 

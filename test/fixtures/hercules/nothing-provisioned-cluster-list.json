@@ -1,0 +1,45 @@
+[{
+  "url": "https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/89f3fc3a-3498-11e6-8de3-005056b111e6",
+  "id": "89f3fc3a-3498-11e6-8de3-005056b111e6",
+  "name": "Oslo Cluster",
+  "connectors": [],
+  "releaseChannel": "GA",
+  "provisioning": [],
+  "registered": true,
+  "targetType": "c_mgmt",
+  "upgradeScheduleUrl": "https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/89f3fc3a-3498-11e6-8de3-005056b111e6/upgradeSchedule",
+  "upgradeSchedule": {
+    "scheduleDays": ["sunday"],
+    "scheduleTime": "15:00",
+    "scheduleTimeZone": "Pacific/Tahiti",
+    "moratoria": [],
+    "nextUpgradeWindow": {
+      "startTime": "2016-08-08T01:00:02.507Z",
+      "endTime": "2016-08-08T02:00:02.507Z"
+    },
+    "url": "https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/89f3fc3a-3498-11e6-8de3-005056b111e6/upgradeSchedule"
+  },
+  "servicesStatuses": []
+}, {
+  "url": "https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/a31a92df-4e16-4a7e-a1c2-30405b512350",
+  "id": "a31a92df-4e16-4a7e-a1c2-30405b512350",
+  "name": "New York Cluster",
+  "connectors": [],
+  "releaseChannel": "GA",
+  "provisioning": [],
+  "registered": true,
+  "targetType": "c_mgmt",
+  "upgradeScheduleUrl": "https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/a31a92df-4e16-4a7e-a1c2-30405b512350/upgradeSchedule",
+  "upgradeSchedule": {
+    "scheduleDays": ["wednesday"],
+    "scheduleTime": "03:00",
+    "scheduleTimeZone": "Europe/Oslo",
+    "moratoria": [],
+    "nextUpgradeWindow": {
+      "startTime": "2016-08-03T01:00:02.505Z",
+      "endTime": "2016-08-03T02:00:02.505Z"
+    },
+    "url": "https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/a31a92df-4e16-4a7e-a1c2-30405b512350/upgradeSchedule"
+  },
+  "servicesStatuses": []
+}]

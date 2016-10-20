@@ -1,0 +1,16 @@
+{
+  "https://csdm-integration.wbx2.com/csdm/api/v1/organization/testOrg/places/a19b308a-PlaceWithDevice-71898e423bec": {
+    "orgId": "584cf4cd-eea7-4c8c-83ee-67d88fc6eab5",
+    "cisUuid": "a19b308a-PlaceWithDevice-71898e423bec",
+    "displayName": "PlaceWithDevice",
+    "url": "https://csdm-integration.wbx2.com/csdm/api/v1/organization/testOrg/places/a19b308a-PlaceWithDevice-71898e423bec",
+    "sipUrl": "foodelete1@trialorg.room.ciscospark.com"
+  },
+  "https://csdm-integration.wbx2.com/csdm/api/v1/organization/testOrg/places/938d9c32-placeWithoutDevice-88d7c1a7f63e": {
+    "orgId": "584cf4cd-eea7-4c8c-83ee-67d88fc6eab5",
+    "cisUuid": "938d9c32-placeWithoutDevice-88d7c1a7f63e",
+    "displayName": "PlaceWithoutMissingNonExistingDevice",
+    "url": "https://csdm-integration.wbx2.com/csdm/api/v1/organization/testOrg/places/938d9c32-placeWithoutDevice-88d7c1a7f63e",
+    "sipUrl": "foodelete2@trialorg.room.ciscospark.com"
+  }
+}

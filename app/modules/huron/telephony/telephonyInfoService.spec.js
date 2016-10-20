@@ -1,13 +1,14 @@
 'use strict';
 
 describe('Service: TelephonyInfoService', function () {
-  var $httpBackend, $q, HuronConfig, TelephonyInfoService, ServiceSetup, DirectoryNumber, HuronCustomer, InternationalDialing;
-  var $rootScope, FeatureToggleService, Authinfo;
+  var $httpBackend, $q, $translate, HuronConfig, TelephonyInfoService, ServiceSetup, DirectoryNumber, HuronCustomer, InternationalDialing;
+  var $rootScope, Authinfo;
 
   var internalNumbers, externalNumbers, getExternalNumberPool;
   var cosRestrictions;
 
-  beforeEach(module('Huron'));
+  beforeEach(angular.mock.module('Huron'));
+  beforeEach(angular.mock.module('Sunlight'));
 
   var customer = {
     "uuid": "84562afa-2f35-474f-ba0f-2def42864e12",
@@ -25,10 +26,11 @@ describe('Service: TelephonyInfoService', function () {
     }]
   };
 
-  beforeEach(inject(function (_$rootScope_, _$httpBackend_, _$q_, _HuronConfig_, _TelephonyInfoService_, _ServiceSetup_, _DirectoryNumber_, _HuronCustomer_, _Authinfo_, _InternationalDialing_) {
+  beforeEach(inject(function (_$rootScope_, _$httpBackend_, _$translate_, _$q_, _HuronConfig_, _TelephonyInfoService_, _ServiceSetup_, _DirectoryNumber_, _HuronCustomer_, _Authinfo_, _InternationalDialing_) {
     $httpBackend = _$httpBackend_;
     $q = _$q_;
     $rootScope = _$rootScope_;
+    $translate = _$translate_;
     HuronConfig = _HuronConfig_;
     TelephonyInfoService = _TelephonyInfoService_;
     ServiceSetup = _ServiceSetup_;
@@ -188,4 +190,17 @@ describe('Service: TelephonyInfoService', function () {
     });
   });
 
+  describe('getInternationalDialing function', function () {
+    beforeEach(function () {
+      spyOn($translate, 'instant');
+    });
+
+    it('should accept an object', function () {
+      var cosRestrictions = getJSONFixture('huron/json/user/cosRestrictionsObject.json');
+      InternationalDialing.listCosRestrictions.and.returnValue($q.when(cosRestrictions));
+      TelephonyInfoService.getUserInternationalDialingDetails();
+      $rootScope.$apply();
+      expect(TelephonyInfoService.getTelephonyInfo().internationalDialingStatus).toEqual('internationalDialingPanel.alwaysAllow');
+    });
+  });
 });

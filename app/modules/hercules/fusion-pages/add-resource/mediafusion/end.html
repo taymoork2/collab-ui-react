@@ -1,0 +1,13 @@
+<div class="modal-header">
+  <button type="button" class="close" ng-click="$dismiss()">
+    <span class="sr-only" translate="common.close"></span>
+  </button>
+  <h3 class="modal-title" translate="hercules.fusion.add-resource.title"></h3>
+</div>
+<div class="modal-body add-resource-modal">
+  <h4><span translate="mediaFusion.add-resource-dialog.grant-registration-success-header-new-cluster" translate-values="{hostname: vm.hostName, clustername: vm.selectedCluster}"></span></h4>
+  <p><span translate="mediaFusion.add-resource-dialog.grant-success-information"></span></p>
+</div>
+<div class="modal-footer">
+  <button class="btn btn-primary" ng-click="vm.next()" translate="mediaFusion.add-resource-dialog.register"></button>
+</div>

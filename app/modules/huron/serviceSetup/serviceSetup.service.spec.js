@@ -7,9 +7,9 @@ describe('Service: ServiceSetup', function () {
     getOrgId: jasmine.createSpy('getOrgId').and.returnValue('1')
   };
 
-  beforeEach(module('Huron'));
+  beforeEach(angular.mock.module('Huron'));
 
-  beforeEach(module(function ($provide) {
+  beforeEach(angular.mock.module(function ($provide) {
     $provide.value("Authinfo", Authinfo);
   }));
 
@@ -128,7 +128,7 @@ describe('Service: ServiceSetup', function () {
 
   describe('updateVoicemailTimezone', function () {
     var usertemplate = [{
-      timeZone: '20',
+      timeZoneName: 'America/Chicago',
       objectId: 'fd87d99c-98a4-45db-af59-ebb9a6f18fdd'
     }];
     beforeEach(function () {
@@ -136,14 +136,14 @@ describe('Service: ServiceSetup', function () {
     });
 
     it('should update timezone', function () {
-      ServiceSetup.updateVoicemailTimezone(usertemplate.timeZone, usertemplate.objectId);
+      ServiceSetup.updateVoicemailTimezone(usertemplate.timeZoneName, usertemplate.objectId);
       $httpBackend.flush();
     });
   });
 
   describe('listVoicemailTimezone', function () {
     var usertemplate = [{
-      timeZone: '20',
+      timeZoneName: 'America/Chicago',
       objectId: 'fd87d99c-98a4-45db-af59-ebb9a6f18fdd'
     }];
     beforeEach(function () {
@@ -217,6 +217,32 @@ describe('Service: ServiceSetup', function () {
     });
   });
 
+  describe('verifyIsObject', function () {
+    var testArray = [{
+      name: 'test'
+    }];
+
+    var testObject = {
+      name: 'test'
+    };
+
+    it('should receive an array and return an object', function () {
+      $httpBackend.expectGET(HuronConfig.getCmiV2Url() + '/customers/1/features/restrictions').respond(testArray);
+      ServiceSetup.listCosRestrictions();
+      $httpBackend.flush();
+
+      expect(ServiceSetup.cosRestrictions).toEqual(jasmine.objectContaining(testObject));
+    });
+
+    it('should receive an object and return an object', function () {
+      $httpBackend.expectGET(HuronConfig.getCmiV2Url() + '/customers/1/features/restrictions').respond(testObject);
+      ServiceSetup.listCosRestrictions();
+      $httpBackend.flush();
+
+      expect(ServiceSetup.cosRestrictions).toEqual(jasmine.objectContaining(testObject));
+    });
+  });
+
   describe('listInternalNumberRanges', function () {
     var internalNumberRanges = [{
       beginNumber: '5000',
@@ -237,7 +263,7 @@ describe('Service: ServiceSetup', function () {
 
   describe('getTimeZones', function () {
     beforeEach(function () {
-      $httpBackend.expectGET('/app/modules/huron/timeZones.json').respond(getJSONFixture('huron/json/timeZones/timeZones.json'));
+      $httpBackend.expectGET('/app/modules/huron/serviceSetup/jodaTimeZones.json').respond(getJSONFixture('huron/json/timeZones/timeZones.json'));
 
       it('should get time zones', function () {
         ServiceSetup.getTimeZones();
@@ -246,6 +272,17 @@ describe('Service: ServiceSetup', function () {
       });
     });
 
+  });
+
+  describe('generateVoiceMailNumber', function () {
+    var customerId = 'c127f0cb-8abf-4965-a013-ce41a0649b7e';
+    var countrycode = '+91';
+    var expectedVoiceMailPilot = '+911201020715001211081011150409060510000';
+    it('should generate generateVoiceMailNumber', function () {
+      var genNumber = ServiceSetup.generateVoiceMailNumber(customerId, countrycode);
+      expect(genNumber).toEqual(expectedVoiceMailPilot);
+      expect(genNumber.length).toEqual(40);
+    });
   });
 
 });

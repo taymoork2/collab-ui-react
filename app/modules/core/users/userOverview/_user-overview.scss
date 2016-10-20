@@ -1,21 +1,30 @@
-.feature-icon {
-  #Message & {
-    @extend .icon-circle-message;
+.pendingStatus {
+  background-color: $color-attention-light;
+  color: $white;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+
+  .pending-icon {
+    font-size: 1rem;
+    margin: 1rem;
+    margin-left: 1.5rem;
   }
-  #Call & {
-    @extend .icon-circle-call;
-  }
-  #Meeting & {
-    @extend .icon-circle-group;
-  }
-  #ContactCenter & {
-    /* This icon is used temporarily, will be changed later */
-   @extend .icon-circle-contact-centre;
+
+  .pending-text {
+    flex: 1;
+
+    .pendingTitle {
+      font-size: 1rem;
+      font-weight: bold;
+    }
+
+    .pendingMsg {
+      font-size: rem(14);
+    }
   }
 }
-.side-panel .no-services {
-  cursor: default;
-  .feature-arrow-match {
-    padding-right: rem-calc(23);
-  }
+
+.user-header-title {
+  max-width: 90%;
 }

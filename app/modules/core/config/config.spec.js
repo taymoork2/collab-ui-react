@@ -2,32 +2,25 @@
 
 describe('Config', function () {
 
-  beforeEach(module('wx2AdminWebClientApp'));
+  beforeEach(angular.mock.module('Core'));
 
-  var Config, $location, tabConfig;
-  beforeEach(inject(function (_$location_, _Config_, _tabConfig_) {
+  var Config, $location, tabConfig, Storage;
+  beforeEach(inject(function (_$location_, _Config_, _tabConfig_, _Storage_) {
     Config = _Config_;
+    Storage = _Storage_;
     tabConfig = _tabConfig_;
     $location = _$location_;
     spyOn($location, 'host');
   }));
 
+  afterEach(function () {
+    Storage.put('TEST_ENV_CONFIG', '');
+  });
+
   var devHost = 'localhost';
   var cfeHost = 'cfe-admin.ciscospark.com';
   var intHost = 'int-admin.ciscospark.com';
   var prodHost = 'admin.ciscospark.com';
-
-  var scope = encodeURIComponent('webexsquare:admin ciscouc:admin Identity:SCIM Identity:Config Identity:Organization cloudMeetings:login webex-messenger:get_webextoken ccc_config:admin');
-  var orgId = 'abc123efg456';
-  var siteURL = 'webex.com';
-
-  it('should exist', function () {
-    expect(Config).toBeDefined();
-  });
-
-  it('should have roleStates', function () {
-    expect(Config.roleStates).toBeDefined();
-  });
 
   it('partner_sales_admin should have correct roleStates', function () {
     expect(Config.roleStates.PARTNER_SALES_ADMIN).toContain('partneroverview');
@@ -78,6 +71,20 @@ describe('Config', function () {
 
     $location.host.and.returnValue('10.12.32.12');
     expect(Config.isDev()).toBe(false);
+
+    expect(Config.isDevHostName('0.0.0.0')).toBe(true);
+    expect(Config.isDevHostName('127.0.0.1')).toBe(true);
+    expect(Config.isDevHostName('localhost')).toBe(true);
+    expect(Config.isDevHostName('server')).toBe(true);
+    expect(Config.isDevHostName('dev-admin.ciscospark.com')).toBe(true);
+
+    expect(Config.canUseAbsUrlForDevLogin('http://127.0.0.1:8000')).toBe(true);
+    expect(Config.canUseAbsUrlForDevLogin('https://127.0.0.1:8000')).toBe(false);
+    expect(Config.canUseAbsUrlForDevLogin('https://127.0.0.1')).toBe(false);
+
+    expect(Config.canUseAbsUrlForDevLogin('http://dev-admin.ciscospark.com:8000')).toBe(true);
+    expect(Config.canUseAbsUrlForDevLogin('https://dev-admin.ciscospark.com:8000')).toBe(false);
+    expect(Config.canUseAbsUrlForDevLogin('http://dev-admin.ciscospark.com')).toBe(false);
   });
 
   it('should detect load test environment', function () {
@@ -123,7 +130,30 @@ describe('Config', function () {
 
   describe('service states', function () {
     it('spark-room-system should contain devices state', function () {
-      expect(Config.serviceStates['spark-room-system'][0]).toBe('devices');
+      expect(Config.serviceStates['spark-room-system']).toContain('devices');
+    });
+  });
+
+  describe('test env config', function () {
+    it('should have a default behaviour', function () {
+      expect(Config.isE2E()).toBe(false);
+      expect(Config.forceProdForE2E()).toBe(false);
+    });
+    it('should set env to prod', function () {
+      Config.setTestEnvConfig('e2e-prod');
+      expect(Config.isE2E()).toBe(true);
+      expect(Config.forceProdForE2E()).toBe(true);
+    });
+    it('should set env to int', function () {
+      Config.setTestEnvConfig('e2e-int');
+      expect(Config.isE2E()).toBe(true);
+      expect(Config.forceProdForE2E()).toBe(false);
+    });
+    it('should not be nulled', function () {
+      Config.setTestEnvConfig('e2e-int');
+      Config.setTestEnvConfig();
+      expect(Config.isE2E()).toBe(true);
+      expect(Config.forceProdForE2E()).toBe(false);
     });
   });
 });

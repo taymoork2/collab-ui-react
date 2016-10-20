@@ -1,45 +1,56 @@
 (function () {
   'use strict';
 
-  angular
-    .module('Core')
-    .factory('Orgservice', Orgservice);
+  module.exports = angular
+    .module('core.org', [
+      require('modules/core/auth/auth'),
+      require('modules/core/config/config'),
+      require('modules/core/config/urlConfig'),
+      require('modules/core/scripts/services/authinfo'),
+      require('modules/core/scripts/services/log'),
+      require('modules/core/scripts/services/utils'),
+    ])
+    .factory('Orgservice', Orgservice)
+    .name;
 
   /* @ngInject */
-  function Orgservice($http, $location, $q, $rootScope, Auth, Authinfo, Config, Log, Storage, UrlConfig) {
+  function Orgservice($http, $q, Auth, Authinfo, Config, Log, UrlConfig, Utils) {
     var service = {
       getOrg: getOrg,
       getAdminOrg: getAdminOrg,
+      getAdminOrgAsPromise: getAdminOrgAsPromise,
       getAdminOrgUsage: getAdminOrgUsage,
       getValidLicenses: getValidLicenses,
       getLicensesUsage: getLicensesUsage,
       getUnlicensedUsers: getUnlicensedUsers,
+      isSetupDone: isSetupDone,
       setSetupDone: setSetupDone,
       setOrgSettings: setOrgSettings,
       createOrg: createOrg,
+      deleteOrg: deleteOrg,
       listOrgs: listOrgs,
       getOrgCacheOption: getOrgCacheOption,
       getHybridServiceAcknowledged: getHybridServiceAcknowledged,
       setHybridServiceAcknowledged: setHybridServiceAcknowledged,
       getEftSetting: getEftSetting,
-      setEftSetting: setEftSetting
+      setEftSetting: setEftSetting,
+      setHybridServiceReleaseChannelEntitlement: setHybridServiceReleaseChannelEntitlement
     };
+
+    var savedOrgSettingsCache = [];
 
     return service;
 
-    function getOrg(callback, oid, disableCache) {
-      var scomUrl = null;
-      if (oid) {
-        scomUrl = UrlConfig.getScomUrl() + '/' + oid;
-      } else {
-        scomUrl = UrlConfig.getScomUrl() + '/' + Authinfo.getOrgId();
+    function getOrg(callback, orgId, disableCache) {
+      if (!orgId) {
+        orgId = Authinfo.getOrgId();
       }
+      var scomUrl = UrlConfig.getScomUrl() + '/' + orgId;
 
       if (disableCache) {
         scomUrl = scomUrl + '?disableCache=true';
       }
-
-      $http.get(scomUrl)
+      return $http.get(scomUrl)
         .success(function (data, status) {
           data = data || {};
           data.success = true;
@@ -50,6 +61,7 @@
           } else {
             data.orgSettings = JSON.parse(_.last(data.orgSettings));
           }
+          _.assign(data.orgSettings, getCachedOrgSettings(orgId));
 
           callback(data, status);
         })
@@ -61,7 +73,7 @@
         });
     }
 
-    function getAdminOrg(callback, oid) {
+    function getAdminOrg(callback, oid, disableCache) {
       var adminUrl = null;
       if (oid) {
         adminUrl = UrlConfig.getAdminServiceUrl() + 'organizations/' + oid;
@@ -69,7 +81,12 @@
         adminUrl = UrlConfig.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId();
       }
 
-      $http.get(adminUrl)
+      var cacheDisabled = !!disableCache;
+      return $http.get(adminUrl, {
+        params: {
+          disableCache: cacheDisabled
+        }
+      })
         .success(function (data, status) {
           data = data || {};
           data.success = true;
@@ -85,6 +102,25 @@
         });
     }
 
+    function getAdminOrgAsPromise(oid, disableCache) {
+      return getAdminOrg(_.noop, oid, disableCache)
+        .catch(function (data, status) {
+          data = _.extend({}, data, {
+            success: false,
+            status: status
+          });
+          return $q.reject(data);
+
+        })
+        .then(function (data, status) {
+          data = _.extend({}, data, {
+            success: true,
+            status: status
+          });
+          return data;
+        });
+    }
+
     function getAdminOrgUsage(oid) {
       var orgId = oid || Authinfo.getOrgId();
       var adminUrl = UrlConfig.getAdminServiceUrl() + 'customers/' + orgId + '/usage';
@@ -92,33 +128,36 @@
     }
 
     function getLicensesUsage() {
-      return getAdminOrgUsage().then(function (response) {
+      return getAdminOrgUsage()
+        .then(function (response) {
+          var usageLicenses = response.data || [];
+          var statusLicenses = Authinfo.getLicenses();
+          var trial = '';
 
-        var usageLicenses = response.data || [];
-        var statusLicenses = Authinfo.getLicenses();
-        var trial = '';
-
-        var result = [];
-        _.forEach(usageLicenses, function (usageLicense) {
-          var licenses = _.filter(usageLicense.licenses, function (license) {
-            var match = _.find(statusLicenses, {
-              'licenseId': license.licenseId
+          var result = [];
+          _.forEach(usageLicenses, function (usageLicense) {
+            var licenses = _.filter(usageLicense.licenses, function (license) {
+              var match = _.find(statusLicenses, {
+                'licenseId': license.licenseId
+              });
+              trial = license.isTrial ? 'Trial' : 'unknown';
+              return !(_.isUndefined(match) || match.status === 'CANCELLED' || match.status === 'SUSPENDED');
             });
-            trial = license.isTrial ? 'Trial' : 'unknown';
-            return !(match.status === 'CANCELLED' || match.status === 'SUSPENDED');
-          });
 
-          var subscription = {
-            "subscriptionId": usageLicense.subscriptionId ? usageLicense.subscriptionId : trial,
-            "licenses": licenses
-          };
-          result.push(subscription);
+            var subscription = {
+              "subscriptionId": usageLicense.subscriptionId ? usageLicense.subscriptionId : trial,
+              "internalSubscriptionId": usageLicense.internalSubscriptionId ?
+                usageLicense.internalSubscriptionId : trial,
+              "licenses": licenses
+            };
+            result.push(subscription);
+          });
+          return result;
+        })
+        .catch(function (err) {
+          Log.debug('Get existing admin org failed. Status: ' + JSON.stringify(_.pick(err, 'status', 'statusText')));
+          return $q.reject(err);
         });
-        return result;
-      }).catch(function (err) {
-        Log.debug('Get existing admin org failed. Status: ' + err);
-        throw err;
-      });
     }
 
     function getValidLicenses() {
@@ -149,12 +188,20 @@
       return d.promise;
     }
 
-    function getUnlicensedUsers(callback, oid) {
+    function getUnlicensedUsers(callback, oid, searchStr) {
       var adminUrl = null;
       if (oid) {
-        adminUrl = UrlConfig.getAdminServiceUrl() + 'organizations/' + oid + "/unlicensedUsers";
+        if (searchStr) {
+          adminUrl = UrlConfig.getAdminServiceUrl() + 'organizations/' + oid + "/unlicensedUsers?searchPrefix=" + searchStr;
+        } else {
+          adminUrl = UrlConfig.getAdminServiceUrl() + 'organizations/' + oid + "/unlicensedUsers";
+        }
       } else {
-        adminUrl = UrlConfig.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId() + "/unlicensedUsers";
+        if (searchStr) {
+          adminUrl = UrlConfig.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId() + "/unlicensedUsers?searchPrefix=" + searchStr;
+        } else {
+          adminUrl = UrlConfig.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId() + "/unlicensedUsers";
+        }
       }
 
       $http.get(adminUrl)
@@ -180,55 +227,63 @@
       });
     }
 
+    function getCachedOrgSettings(orgId) {
+      return _.chain(savedOrgSettingsCache)
+        .filter(function (cache) {
+          return cache.orgId === orgId && moment(cache.propertySaveTimeStamp).isAfter(moment().subtract(5, 'minutes'));
+        })
+        .map(function (cache) {
+          return cache.setting;
+        })
+        .reduce(function (result, setting) {
+          return _.merge(result, setting);
+        }, {})
+        .value();
+    }
+
     /**
      * Get the latest orgSettings, merge with new settings, and PATCH the org
      */
-    function setOrgSettings(orgId, settings, callback) {
+    function setOrgSettings(orgId, settings) {
       var orgUrl = UrlConfig.getAdminServiceUrl() + 'organizations/' + orgId + '/settings';
+      savedOrgSettingsCache.push({
+        orgId: orgId,
+        propertySaveTimeStamp: new Date(),
+        setting: _.clone(settings)
+      });
+      return getOrg(_.noop, orgId, true) //get retrieves the pushed value above, no need to re assign to orgSettings
+        .then(function (response) {
+          var orgSettings = _.get(response, 'data.orgSettings', {});
 
-      getOrg(function (orgData, orgStatus) {
-        var orgSettings = orgData.orgSettings;
-        _.assign(orgSettings, settings);
-
-        $http({
+          return $http({
             method: 'PATCH',
             url: orgUrl,
             data: orgSettings
-          })
-          .success(function (data, status) {
-            data = data || {};
-            data.success = true;
-            Log.debug('PATCHed orgSettings: ' + orgSettings);
-            callback(data, status);
-          })
-          .error(function (data, status) {
-            data = data || {};
-            data.success = false;
-            data.status = status;
-            callback(data, status);
           });
-      }, orgId, true);
+        });
     }
 
-    function createOrg(enc, callback) {
+    function createOrg(enc) {
       var orgUrl = UrlConfig.getAdminServiceUrl() + 'organizations';
       var orgRequest = {
         'encryptedQueryString': enc
       };
+      return Auth.setAccessToken().then(function () {
+        return $http.post(orgUrl, orgRequest).then(function (response) {
+          return response.data;
+        });
+      });
+    }
 
-      Auth.setAccessToken().then(function () {
-        $http.post(orgUrl, orgRequest)
-          .success(function (data, status) {
-            data = data || {};
-            data.success = true;
-            callback(data, status);
-          })
-          .error(function (data, status) {
-            data = data || {};
-            data.success = false;
-            data.status = status;
-            callback(data, status);
-          });
+    function deleteOrg(currentOrgId) {
+      if (!currentOrgId) {
+        return $q.reject('currentOrgId is not set');
+      }
+      var serviceUrl = UrlConfig.getAdminServiceUrl() + 'organizations/' + currentOrgId;
+
+      return $http({
+        method: 'DELETE',
+        url: serviceUrl
       });
     }
 
@@ -237,6 +292,17 @@
         return $q.reject('filter does not match requirements');
       }
       var orgUrl = UrlConfig.getProdAdminServiceUrl() + 'organizations?displayName=' + filter;
+
+      if (Utils.isUUID(filter)) {
+        return getAdminOrg(_.noop, filter).then(function (result) {
+          // return it in the same manner as listOrgs
+          return {
+            data: {
+              organizations: [result.data]
+            }
+          };
+        });
+      }
 
       return $http.get(orgUrl);
     }
@@ -283,6 +349,8 @@
         serviceUrl = serviceUrl.concat(Config.entitlements.fusion_uc);
       } else if (serviceName === 'call-connect-service') {
         serviceUrl = serviceUrl.concat(Config.entitlements.fusion_ec);
+      } else if (serviceName === 'squared-fusion-media') {
+        serviceUrl = serviceUrl.concat(Config.entitlements.mediafusion);
       } else {
         return $q(function (resolve, reject) {
           reject('serviceName is invalid: ' + serviceName);
@@ -325,6 +393,21 @@
           eft: setting
         }
       });
+    }
+
+    function isSetupDone(orgId) {
+      return $http.get(Auth.getAuthorizationUrl(orgId))
+        .then(function (data) {
+          return data.data.setupDone;
+        });
+    }
+
+    function setHybridServiceReleaseChannelEntitlement(orgId, channel, entitled) {
+      return $http
+        .post(UrlConfig.getAdminServiceUrl() + 'hybridservices/organizations/' + orgId + '/releaseChannels', {
+          channel: channel,
+          entitled: entitled
+        });
     }
   }
 })();

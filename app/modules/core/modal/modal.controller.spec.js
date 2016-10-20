@@ -7,16 +7,16 @@ describe('Controller: ModalCtrl', function () {
   var message = 'myMessage';
   var close = 'myClose';
   var dismiss = 'myDismiss';
-  var type = 'myType';
+  var btnType = 'myBtnType';
 
-  beforeEach(module('Core'));
+  beforeEach(angular.mock.module('Core'));
 
-  beforeEach(module(function ($provide) {
+  beforeEach(angular.mock.module(function ($provide) {
     $provide.value("title", title);
     $provide.value("message", message);
     $provide.value("close", close);
     $provide.value("dismiss", dismiss);
-    $provide.value("type", type);
+    $provide.value("btnType", btnType);
   }));
 
   beforeEach(inject(function ($rootScope, $controller) {
@@ -34,7 +34,7 @@ describe('Controller: ModalCtrl', function () {
     expect(controller.message).toEqual(message);
     expect(controller.close).toEqual(close);
     expect(controller.dismiss).toEqual(dismiss);
-    expect(controller.type).toEqual(type);
+    expect(controller.btnType).toEqual(btnType);
   });
 
 });

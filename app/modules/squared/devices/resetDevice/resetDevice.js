@@ -1,14 +1,16 @@
 (function () {
   'use strict';
+
   angular
     .module('Squared')
     .controller('ResetDeviceController',
 
       /* @ngInject */
-      function ($scope, $modalInstance, CsdmHuronDeviceService, XhrNotificationService, deviceOrCode) {
+      function ($modalInstance, CsdmHuronOrgDeviceService, XhrNotificationService, deviceOrCode) {
         var rdc = this;
 
         rdc.resetDevice = function () {
+          var CsdmHuronDeviceService = CsdmHuronOrgDeviceService.create();
           return CsdmHuronDeviceService.resetDevice(deviceOrCode.url)
             .then($modalInstance.close, XhrNotificationService.notify);
         };
@@ -20,6 +22,7 @@
       function ($modal) {
         function open(deviceOrCode) {
           return $modal.open({
+            type: 'dialog',
             resolve: {
               deviceOrCode: _.constant(deviceOrCode)
             },

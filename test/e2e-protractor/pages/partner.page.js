@@ -3,10 +3,17 @@
 var PartnerHomePage = function () {
 
   var randomNumber = utils.randomId();
+  var dateTime = utils.getDateTimeString();
+  var trialName = 'Atlas_Test_UI_' + dateTime + '_' + randomNumber;
+
+  this.pendingCount = 0;
+  this.timeStart = 0;
 
   this.newTrial = {
-    customerName: 'Atlas_Test_UI_' + randomNumber,
-    customerEmail: 'collabctg+Atlas_Test_UI_' + randomNumber + '@gmail.com'
+    customerName: trialName,
+    customerEmail: 'collabctg+' + trialName + '@gmail.com',
+    webexSiteURL: trialName.replace(/_/g, '-') + '.webex.com',
+    sipDomain: dateTime.replace(/_/g, '-')
   };
 
   this.editTrial = {
@@ -40,7 +47,7 @@ var PartnerHomePage = function () {
   };
 
   this.getDidTokenClose = function (did) {
-    return element.all(by.css('.token')).filter(function (elem, index) {
+    return element.all(by.css('.token')).filter(function (elem) {
       return elem.element(by.css('.token-label')).getText().then(function (text) {
         return text === utils.formatPhoneNumbers(did);
       });
@@ -52,7 +59,7 @@ var PartnerHomePage = function () {
   this.startTrialButton = element(by.id('startTrialButton'));
   this.startTrialWithSqUCButton = element(by.id('startTrial'));
   this.trialDoneButton = element(by.id('trialDone'));
-  this.customerNameInput = element(by.id('input_customerName'));
+  this.customerNameInput = element(by.id('customerName'));
   this.didAddModal = element(by.id('didAddModal'));
   this.addDidButton = element(by.id('addDidButton'));
   this.removeDidPanel = element(by.id('removeDidPanel'));
@@ -61,7 +68,7 @@ var PartnerHomePage = function () {
   this.notifyCustLaterLink = element(by.id('notifyCustLaterLink'));
   this.customerDidAdd = element(by.css('.did-input .tokenfield'));
   this.customerDidInput = element(by.id('didAddField-tokenfield'));
-  this.customerEmailInput = element(by.id('input_customerEmail'));
+  this.customerEmailInput = element(by.id('customerEmail'));
   this.licenseCount = element(by.id('licenseCount'));
   this.licenseCountInput = element(by.id('input_licenseCount'));
   this.trialRoomSystemsAmount = element(by.id('trialRoomSystemsAmount'));
@@ -78,41 +85,37 @@ var PartnerHomePage = function () {
   this.customerNameForm = element(by.id('customerNameForm'));
   this.customerEmailForm = element(by.id('customerEmailForm'));
   this.refreshButton = element(by.id('partnerRefreshData'));
-  this.entitlementsChart = element(by.id('avgEntitlementsdiv'));
-  this.entitlementsCount = element(by.binding('counts.entitlements'));
-  this.activeUsersTab = element(by.cssContainingText('li a', 'Daily Active Users'));
-  this.activeUsersChart = element(by.id('activeUsersdiv'));
-  this.activeUsersCount = element(by.binding('counts.activeUsers'));
-  this.averageCallsTab = element(by.cssContainingText('li a', 'Average Calls Per User'));
-  this.averageCallsChart = element(by.id('avgCallsdiv'));
-  this.averageCallsCount = element(by.binding('counts.averageCalls'));
-  this.contentSharedTab = element(by.cssContainingText('li a', 'Files Shared'));
-  this.contentSharedChart = element(by.id('contentShareddiv'));
-  this.contentSharedCount = element(by.binding('counts.contentShared'));
+  this.entitlementsChart = element(by.id('entitlementsdiv'));
+  this.entitlementsCount = element(by.binding('entCount'));
   this.noResultsAvailable = element(by.cssContainingText('span', 'No results available'));
   this.errorProcessing = element(by.cssContainingText('span', 'Error processing request'));
   this.selectRow = element(by.binding('row.entity'));
   this.previewPanel = element(by.css('.customer-overview'));
   this.customerInfo = element(by.id('customer-info'));
   this.trialInfo = element(by.id('trial-info'));
-  this.actionsButton = element(by.id(this.newTrial.customerName + 'ActionsButton'));
-  this.launchCustomerButton = element(by.id(this.newTrial.customerName + 'LaunchCustomerButton')).element(by.tagName('a'));
+  this.trialPending = element(by.css('.trial-pending'));
   this.launchCustomerPanelButton = element(by.id('launchCustomer'));
   this.exitPreviewButton = element(by.css('.panel-close'));
   this.partnerFilter = element(by.id('partnerFilter'));
   this.trialFilter = element(by.cssContainingText('.filter', 'Trial'));
+  this.searchFilter = element(by.id('searchFilter'));
   this.allFilter = element(by.cssContainingText('.filter', 'All'));
   this.partnerEmail = element.all(by.binding('userName'));
   this.messageTrialCheckbox = element(by.css('label[for="messageTrial"]'));
   this.roomSystemsCheckbox = element(by.css('label[for="trialRoomSystem"]'));
   this.roomSystemsCheckboxChecked = element(by.css('label[for="trialRoomSystemsChecked"]'));
-  this.squaredUCTrialCheckbox = element(by.css('label[for="squaredUCTrial"]'));
+  this.squaredUCTrialCheckbox = element(by.css('label[for="callTrial"]'));
+  this.roomSystemsTrialCheckbox = element(by.css('label[for="roomSystemsTrial"]'));
+  this.careTrialCheckbox = element(by.css('label[for="careTrial"]'));
+  this.webexTrialCheckbox = element(by.css('label[for="webexTrial"]'));
+  this.careLicenseCountTextbox = element(by.css('input[name="input_trialCareLicenseCount"]'));
   this.customerNameHeader = element(by.cssContainingText('.ngHeaderText ', 'Customer Name'));
   this.myOrganization = element(by.id('partner'));
   this.launchButton = element(by.id('launchPartner'));
   this.skipCustomerSetup = element(by.id('trialNotifyCustomer'));
-  this.closeBtnOnModal = element(by.id('btnCloseModal'));
+  this.closeBtnOnModal = element(by.id('modal-close'));
   this.videoModal = element(by.id('videoId'));
+  this.webexSiteURL = element(by.id('siteUrl'));
 
   this.viewAllLink = element(by.id('viewAllLink'));
   this.customerList = element(by.id('customerListPanel'));
@@ -138,6 +141,10 @@ var PartnerHomePage = function () {
   };
   this.deleteNumberModal = element(by.cssContainingText('.modal-header', 'Delete Number'));
   this.deleteNumberYes = element(by.buttonText('Yes'));
+  this.deleteCustomerButton = element(by.id('deleteCustomer'));
+  this.deleteCustomerOrgConfirm = element(by.css('.btn--alert'));
+
+  this.pageHeaderTitle = element(by.css('.page-header__title'));
 
   this.assertResultsLength = function () {
     element.all(by.binding('row.entity')).then(function (rows) {
@@ -149,6 +156,51 @@ var PartnerHomePage = function () {
     return trialRow.evaluate('row.entity.customerOrgId').then(function (orgId) {
       expect(orgId).not.toBeNull();
       return orgId;
+    });
+  };
+
+  this.expectTrialNotPending = function (isRecursion) {
+    // Helper function to refresh page and drill down to trial sidepanel
+    function refreshPageAndCheckIsPending() {
+      var timeNow = new Date();
+      console.log('Trial still pending, refreshing page ' + partner.pendingCount + ' time elapsed: ' + ((timeNow - partner.timeStart) / 60000) + ' minutes');
+      partner.pendingCount++;
+
+      browser.refresh();
+      utils.click(partner.trialFilter);
+      utils.search(partner.newTrial.customerName, -1);
+      utils.waitIsDisplayed(partner.newTrialRow);
+
+      utils.click(partner.newTrialRow);
+      utils.waitIsDisplayed(partner.previewPanel);
+      return utils.waitIsDisplayed(partner.trialPending, 55000).then(function () {
+        return true;
+      }, function () {
+        return false;
+      });
+    }
+
+    // If this is the first time through, reset the recursion count
+    if (!isRecursion || false) {
+      partner.pendingCount = 0;
+      partner.timeStart = new Date();
+    }
+
+    // Loop until status is no longer pending, or we timeout
+    return utils.waitIsNotDisplayed(partner.trialPending, 2 * 60000).then(function () {
+      return true;
+    }, function () {
+      // Long timeout
+      if (partner.pendingCount >= 15) {
+        return false;
+      }
+      // Refresh page and check again
+      return refreshPageAndCheckIsPending().then(function (result) {
+        if (result) {
+          return partner.expectTrialNotPending(true);
+        }
+        return true;
+      });
     });
   };
 
@@ -180,6 +232,13 @@ var PartnerHomePage = function () {
     }, 5000, 'Waiting for video to load');
   };
 
+  this.getMeetingLink = function (name) {
+    return element(by.cssContainingText('.btn-link', name));
+  };
+
+  this.getTrialConfigBtn = function (name) {
+    return element(by.id(name + '_webex-site-settings'));
+  };
 };
 
 module.exports = PartnerHomePage;

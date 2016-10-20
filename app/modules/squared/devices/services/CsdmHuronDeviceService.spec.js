@@ -1,13 +1,14 @@
 'use strict';
 
-describe('CsdmHuronDeviceService', function () {
-  beforeEach(module('Squared'));
-  beforeEach(module('Huron'));
+describe('CsdmHuronOrgDeviceService', function () {
+  beforeEach(angular.mock.module('Squared'));
+  beforeEach(angular.mock.module('Huron'));
+  beforeEach(angular.mock.module('Sunlight'));
 
-  var CsdmHuronDeviceService, Authinfo, $httpBackend, HuronConfig;
+  var csdmHuronOrgDeviceService, Authinfo, $httpBackend, HuronConfig;
 
-  beforeEach(inject(function (_CsdmHuronDeviceService_, _Authinfo_, _$httpBackend_, _HuronConfig_) {
-    CsdmHuronDeviceService = _CsdmHuronDeviceService_;
+  beforeEach(inject(function (CsdmHuronOrgDeviceService, _Authinfo_, _$httpBackend_, _HuronConfig_) {
+    csdmHuronOrgDeviceService = CsdmHuronOrgDeviceService.create();
     HuronConfig = _HuronConfig_;
     Authinfo = _Authinfo_;
     $httpBackend = _$httpBackend_;
@@ -31,7 +32,7 @@ describe('CsdmHuronDeviceService', function () {
       .expectGET('testHuronUrl/voice/customers/testOrg/users/testUserId/directorynumbers')
       .respond(200, []);
 
-    CsdmHuronDeviceService.getLinesForDevice(testDevice).then(function (res) {
+    csdmHuronOrgDeviceService.getLinesForDevice(testDevice).then(function (res) {
       expect(res.length).toBe(0);
       _.defer(done);
     });
@@ -60,7 +61,7 @@ describe('CsdmHuronDeviceService', function () {
       .expectGET('testHuronUrl/voice/customers/testOrg/directorynumbers/testNumberId/alternatenumbers?alternatenumbertype=%2BE.164+Number')
       .respond(200, []);
 
-    CsdmHuronDeviceService.getLinesForDevice(testDevice).then(function (res) {
+    csdmHuronOrgDeviceService.getLinesForDevice(testDevice).then(function (res) {
       expect(res.length).toBe(1);
       expect(res[0].directoryNumber).toBe('1234');
       expect(res[0].usage).toBe('Primary');
@@ -94,7 +95,7 @@ describe('CsdmHuronDeviceService', function () {
         numMask: '+47 1234'
       }]);
 
-    CsdmHuronDeviceService.getLinesForDevice(testDevice).then(function (res) {
+    csdmHuronOrgDeviceService.getLinesForDevice(testDevice).then(function (res) {
       expect(res.length).toBe(1);
       expect(res[0].directoryNumber).toBe('1234');
       expect(res[0].usage).toBe('Primary');
@@ -140,7 +141,7 @@ describe('CsdmHuronDeviceService', function () {
         numMask: '+47 5678'
       }]);
 
-    CsdmHuronDeviceService.getLinesForDevice(testDevice).then(function (res) {
+    csdmHuronOrgDeviceService.getLinesForDevice(testDevice).then(function (res) {
       expect(res.length).toBe(2);
       expect(res[0].directoryNumber).toBe('1234');
       expect(res[0].usage).toBe('Primary');
@@ -148,6 +149,18 @@ describe('CsdmHuronDeviceService', function () {
       expect(res[1].directoryNumber).toBe('5678');
       expect(res[1].usage).toBe('Undefined');
       expect(res[1].alternate).toBe('+47 5678');
+      _.defer(done);
+    });
+
+    $httpBackend.flush();
+  });
+
+  it('should call delete', function (done) {
+    $httpBackend
+      .expectDELETE('testUrl')
+      .respond(204);
+
+    csdmHuronOrgDeviceService.deleteDevice('testUrl').then(function () {
       _.defer(done);
     });
 

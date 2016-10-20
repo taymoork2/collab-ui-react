@@ -1,4 +1,11 @@
 .customer-overview {
+  .feature-details {
+    font-size: 0.875rem;
+  }
+
+  .feature-status {
+    font-size: 0.875rem;
+  }
 
   .button-container {
     left: -1px;
@@ -9,10 +16,10 @@
   }
 
   .trial-status {
-      margin-bottom: 4px;
-      display: flex;
-      justify-content: space-between;
-      font-family: $brand-font-light;
+    margin-bottom: 4px;
+    display: flex;
+    justify-content: space-between;
+    font-family: $brand-font-light;
   }
 
   .trial-danger {
@@ -24,13 +31,6 @@
   .status {
     i {
       padding-right: 0.5em;
-      font-size: 0.75em;
-    }
-
-    i.icon-circle {
-      &.trial-pending {
-        color: $color-attention-base;
-      }
     }
 
     span {
@@ -38,15 +38,14 @@
     }
   }
 
-  // .progress {
-  //   margin-bottom: auto;
-  // }
-
   .progress-bar {
     max-width: 100%;
+    height: 0.25rem;
   }
 
-  #launchCustomer, #launchPartner {
+  #launchCustomer,
+  #launchPartner,
+  #deleteCustomer {
     margin: 1rem 0;
     position: relative;
     left: 50%;
@@ -61,14 +60,67 @@
     }
   }
 
-  .trials-list {
-    .feature {
-        display: block;
-        margin-bottom: 16px;
+  .webex-domains-list {
+    .spinner-loading {
+      font-size: 1.5rem;
+      text-align: center;
     }
-    .feature-details.ng-binding {
-        padding: 0;
-        line-height: 1rem;
+
+    .subtitle {
+      font-size: 0.75rem;
+      color: $gray-base;
+    }
+
+    .feature-name {
+      color: $gray-dark-2;
+
+      .secondary {
+        margin-top: -0.5rem;
+        color: $gray-base;
+        display: block;
+      }
+    }
+
+    .status {
+      color: $gray-light-1;
+    }
+  }
+
+  .subscriptions-detail {
+    .button-container {
+      position: static;
+      background-color: transparent;
+      padding: 0;
+      border: none;
+    }
+
+    p.intro {
+      padding-bottom: 0.75rem;
+    }
+
+    h6 {
+      font-size: 0.75rem;
+    }
+
+    .feature-list li {
+      padding-bottom: 0.75rem;
+
+      ul li {
+        padding-bottom: 0;
+      }
+    }
+  }
+
+  .btn--delete {
+    font-size: 0.875rem;
+    color: $gray-light-1;
+
+    &:hover,
+    &:active,
+    &:focus {
+      color: $color-negative-base;
+      background-color: transparent;
+      outline: none;
     }
   }
 }

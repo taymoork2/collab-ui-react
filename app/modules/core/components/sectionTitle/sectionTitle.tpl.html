@@ -1,0 +1,13 @@
+<div class="section-title-row">
+  <span class="section-name" translate="{{$ctrl.titleKey}}"></span>
+  <span cs-dropdown class="actions-menu dropdown pull-right" ng-if="$ctrl.shouldShowActions()">
+    <button cs-dropdown-toggle class="actions-button btn--none dropdown-toggle">
+      <i class="icon icon-three-dots"></i>
+    </button>
+    <ul cs-dropdown-menu class="dropdown-menu dropdown-primary actions-services">
+      <li ng-repeat="action in $ctrl.actionList">
+        <a ng-click="action.actionFunction()" translate="{{action.actionKey}}"></a>
+      </li>
+    </ul>
+  </span>
+</div>

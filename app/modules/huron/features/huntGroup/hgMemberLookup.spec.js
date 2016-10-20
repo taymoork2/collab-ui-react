@@ -2,7 +2,7 @@
 
 describe('Controller: HuntGroupSetupAssistantCtrl - Hunt Member Lookup', function () {
 
-  var $httpBackend, filter, controller, $scope, Notification;
+  var $q, $httpBackend, filter, controller, $scope, Notification, HuntGroupFallbackDataService;
 
   var user1 = getJSONFixture('huron/json/features/huntGroup/user1.json');
   var user2 = getJSONFixture('huron/json/features/huntGroup/user2.json');
@@ -35,8 +35,8 @@ describe('Controller: HuntGroupSetupAssistantCtrl - Hunt Member Lookup', functio
     getOrgId: jasmine.createSpy('getOrgId').and.returnValue('1')
   };
 
-  beforeEach(module('Huron'));
-  beforeEach(module(function ($provide) {
+  beforeEach(angular.mock.module('Huron'));
+  beforeEach(angular.mock.module(function ($provide) {
     $provide.value("Authinfo", spiedAuthinfo);
   }));
 
@@ -48,11 +48,15 @@ describe('Controller: HuntGroupSetupAssistantCtrl - Hunt Member Lookup', functio
     $httpBackend.verifyNoOutstandingRequest();
   });
 
-  beforeEach(inject(function ($rootScope, $controller, _$httpBackend_, _$filter_, _Notification_) {
+  beforeEach(inject(function ($rootScope, $controller, _$q_, _$httpBackend_, _$filter_, _Notification_, _HuntGroupFallbackDataService_) {
     $scope = $rootScope.$new();
+    $q = _$q_;
     Notification = _Notification_;
     $httpBackend = _$httpBackend_;
     filter = _$filter_('huntMemberTelephone');
+    HuntGroupFallbackDataService = _HuntGroupFallbackDataService_;
+
+    spyOn(HuntGroupFallbackDataService, 'allowLocalValidation').and.returnValue($q.when(false));
 
     controller = $controller('HuntGroupSetupAssistantCtrl', {
       $scope: $scope,

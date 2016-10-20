@@ -1,10 +1,12 @@
 'use strict';
 
+/*global TIMEOUT, isSauce*/
+
 var config = require('./test.config.js');
 var request = require('request');
 var EC = protractor.ExpectedConditions;
 var path = require('path');
-var remote = require('../../../node_modules/gulp-protractor/node_modules/protractor/node_modules/selenium-webdriver/remote');
+var remote = require('selenium-webdriver/remote');
 var fs = require('fs');
 
 exports.getDateTimeString = function () {
@@ -16,19 +18,19 @@ exports.getDateTimeString = function () {
   var minute = now.getMinutes();
   var second = now.getSeconds();
   if (month.toString().length == 1) {
-    var month = '0' + month;
+    month = '0' + month;
   }
   if (day.toString().length == 1) {
-    var day = '0' + day;
+    day = '0' + day;
   }
   if (hour.toString().length == 1) {
-    var hour = '0' + hour;
+    hour = '0' + hour;
   }
   if (minute.toString().length == 1) {
-    var minute = '0' + minute;
+    minute = '0' + minute;
   }
   if (second.toString().length == 1) {
-    var second = '0' + second;
+    second = '0' + second;
   }
   var dateTime = year.toString() + month.toString() + day.toString() + '_' + hour.toString() + minute.toString() + second.toString();
   return dateTime;
@@ -66,6 +68,9 @@ exports.randomTestGmail = function () {
 };
 
 exports.randomTestGmailwithSalt = function (salt) {
+  if (!isSauce) {
+    salt = 'LOC_' + salt;
+  }
   return 'collabctg+' + salt + '_' + this.getDateTimeString() + '_' + this.randomId() + '@gmail.com';
 };
 
@@ -74,11 +79,10 @@ exports.sendRequest = function (options) {
   return flow.execute(function () {
     var defer = protractor.promise.defer();
     request(options, function (error, response, body) {
-      var status = response && response.statusCode ? response.statusCode : 'unknown';
-      if (error) {
-        defer.reject('Send request to ' + options.url + ' failed with status ' + status + '. Error: ' + error);
-      } else if (response && response.statusCode >= 400) {
-        defer.reject('Send request to ' + options.url + ' failed with status ' + status + '. Body: ' + body);
+      var status = _.get(response, 'statusCode');
+      if (error || status >= 400) {
+        console.error('Send ' + options.method + ' request to ' + options.url + ' failed with status ' + status + '.  ' + (error || body));
+        defer.reject(response);
       } else {
         defer.fulfill(body);
       }
@@ -116,6 +120,10 @@ exports.scrollBottom = function (selector) {
   browser.executeScript('$("' + selector + '").first().scrollTop($("' + selector + '").first().scrollHeight);');
 };
 
+exports.scrollIntoView = function (el) {
+  browser.executeScript('arguments[0].scrollIntoView()', el.getWebElement());
+};
+
 exports.refresh = function () {
   return browser.refresh();
 };
@@ -141,7 +149,7 @@ exports.wait = function (elem, timeout) {
       // handle a possible stale element
       log('Possible stale element: ' + elem.locator());
       return false;
-    });;
+    });
   }
   return browser.wait(logAndWait, timeout || TIMEOUT, 'Waiting for element to be visible: ' + elem.locator());
 };
@@ -153,7 +161,7 @@ exports.waitForPresence = function (elem, timeout) {
       // handle a possible stale element
       return false;
 
-    });;
+    });
   }
   return browser.wait(logAndWait, timeout || TIMEOUT, 'Waiting for element to be present: ' + elem.locator());
 };
@@ -201,9 +209,28 @@ exports.waitForTextBoxValue = function (elem) {
   });
 };
 
-exports.expectIsDisplayed = function (elem) {
+exports.waitForSpinner = function () {
+  var spinner = element.all(by.css('.icon-spinner')).get(0);
+
+  function waitSpinner() {
+    exports.expectIsNotDisplayed(spinner);
+  }
+
+  for (var i = 0; i < 3; i++) {
+    // Spinner may bounce repeatedly
+    exports.wait(spinner, 500).then(waitSpinner, waitSpinner);
+  }
+};
+
+exports.expectIsDisplayed = function (elem, timeout) {
+  return this.wait(elem, timeout || TIMEOUT).then(function () {
+    return expect(elem.isDisplayed()).toBeTruthy();
+  });
+};
+
+exports.expectIsReadOnly = function (elem) {
   this.wait(elem).then(function () {
-    expect(elem.isDisplayed()).toBeTruthy();
+    expect(elem.getAttribute("readonly")).toBeTruthy();
   });
 };
 
@@ -214,8 +241,6 @@ exports.expectAllDisplayed = function (elems) {
     });
   });
 };
-
-exports.expectAllNotDisplayed = this.expectIsNotDisplayed;
 
 exports.expectIsDisabled = function (elem) {
   this.wait(elem).then(function () {
@@ -259,8 +284,13 @@ exports.expectIsNotDisplayed = function (elem, timeout) {
       return EC.stalenessOf(elem)();
     });
   }
-  browser.wait(logAndWait, TIMEOUT, 'Waiting for element not to be visible: ' + elem.locator());
+
+  return browser.wait(logAndWait, timeout || TIMEOUT, 'Waiting for element not to be visible: ' + elem.locator());
 };
+
+exports.expectAllNotDisplayed = this.expectIsNotDisplayed;
+exports.waitIsNotDisplayed = this.expectIsNotDisplayed;
+exports.waitIsDisplayed = this.expectIsDisplayed;
 
 exports.expectTextToBeSet = function (elem, text, timeout) {
   browser.wait(function () {
@@ -271,6 +301,28 @@ exports.expectTextToBeSet = function (elem, text, timeout) {
       return false;
     });
   }, timeout || TIMEOUT, 'Waiting for Text to be set: ' + elem.locator() + ' ' + text);
+};
+
+exports.waitForAttribute = function (elem, attr, value) {
+  this.wait(elem).then(function () {
+    return browser.wait(function () {
+      return elem.getAttribute(attr).then(function (attrValue) {
+        log('Waiting for element: ' + elem.locator() + ' attribute ' + attr + ' ' + attrValue + ' to be ' + value);
+        return value === attrValue;
+      });
+    });
+  });
+};
+
+exports.waitForAttributeToContain = function (elem, attr, value) {
+  this.wait(elem).then(function () {
+    return browser.wait(function () {
+      return elem.getAttribute(attr).then(function (attrValue) {
+        log('Waiting for element: ' + elem.locator() + ' attribute ' + attr + ' ' + attrValue + ' to contain ' + value);
+        return _.includes(attrValue, value);
+      });
+    });
+  });
 };
 
 exports.expectValueToBeSet = function (elem, text, timeout) {
@@ -325,20 +377,18 @@ exports.click = function (elem, maxRetry) {
   return this.wait(elem).then(function () {
     return browser.wait(logAndWait, TIMEOUT, 'Waiting for element to be clickable: ' + elem.locator());
   }).then(function () {
-    var deferred = protractor.promise.defer();
     if (typeof maxRetry === 'undefined') {
       maxRetry = 10;
     }
     log('Click element: ' + elem.locator());
     if (maxRetry === 0) {
-      return elem.click().then(deferred.fulfill, deferred.reject);
+      return elem.click();
     } else {
-      return elem.click().then(deferred.fulfill, function (e) {
-        log('Failed to click element: ' + elem.locator() + ' Error: ' + (e && e.message || e));
+      return elem.click().then(_.noop, function (e) {
+        log('Failed to click element: ' + elem.locator() + ' Error: ' + ((e && e.message) || e));
         return exports.click(elem, --maxRetry);
       });
     }
-    return deferred.promise;
   });
 };
 
@@ -356,10 +406,37 @@ exports.clickLast = function (elem) {
 
 exports.clickAll = function (elems) {
   return this.wait(elems).then(function () {
-    elems.each(function (elem, index) {
+    elems.each(function (elem) {
       return exports.click(elem);
     });
   })
+};
+
+// Returns true if checkbox is checked
+exports.getCheckboxVal = function (elem) {
+  return this.wait(elem).then(function () {
+    var input = elem.element(by.xpath('..')).element(by.tagName('input'));
+    return input.getAttribute('ng-model').then(function (ngModel) {
+      return input.evaluate(ngModel).then(function (value) {
+        return value;
+      });
+    });
+  });
+};
+
+// Wait (timeout ms) for checkbox to be display, if it is, set it to val, if not return
+exports.setCheckboxIfDisplayed = function (elem, val, timeout) {
+  return this.wait(elem, timeout).then(function () {
+    return exports.getCheckboxVal(elem).then(function (curVal) {
+      if (curVal !== val) {
+        // checkbox value needs to be toggled
+        return exports.click(elem);
+      }
+    });
+  }, function () {
+    // checkbox not present, move on
+    return true;
+  });
 };
 
 exports.isSelected = function (elem) {
@@ -382,10 +459,19 @@ exports.sendKeys = function (elem, value) {
   });
 };
 
+exports.sendKeysUpArrow = function (element, howMany) {
+  var len = howMany || 1;
+  var upSeries = '';
+  _.times(len, function () {
+    upSeries += protractor.Key.ARROW_UP;
+  });
+  return element.sendKeys(upSeries);
+};
+
 exports.fileSendKeys = function (elem, value) {
   this.waitForPresence(elem).then(function () {
     log('Send file keys to element: ' + elem.locator() + ' ' + value);
-    browser.setFileDetector(new remote.FileDetector);
+    browser.setFileDetector(new remote.FileDetector());
     elem.sendKeys(value);
   });
 };
@@ -433,17 +519,24 @@ exports.expectTruthy = function (elem) {
   expect(elem).toBeTruthy();
 };
 
-exports.expectClass = function (elem, cls) {
-  return this.wait(elem).then(function () {
-    return elem.getAttribute('class').then(function (classes) {
-      log('Expect element to have class: ' + elem.locator() + ' ' + cls);
-      return classes.split(' ').indexOf(cls) !== -1;
-    });
+exports.waitClass = function (elem, cls, timeout) {
+  return this.wait(elem, timeout || TIMEOUT).then(function () {
+    browser.wait(function () {
+      return elem.getAttribute('class').then(function (classes) {
+        return classes !== undefined && classes !== null && classes.split(' ').indexOf(cls) !== -1;
+      }, function () {
+        return false;
+      });
+    }, timeout || TIMEOUT, 'Waiting for elem(' + elem.locator() + ') to contain class ' + cls);
   });
 };
 
 exports.clickEscape = function () {
   this.sendKeys(element(by.tagName('body')), protractor.Key.ESCAPE);
+};
+
+exports.clickEnter = function () {
+  this.sendKeys(element(by.tagName('body')), protractor.Key.ENTER);
 };
 
 exports.expectSwitchState = function (elem, value) {
@@ -462,9 +555,30 @@ exports.expectSwitchState = function (elem, value) {
 
 exports.expectCheckbox = function (elem, value) {
   return this.wait(elem).then(function () {
-    log('Waiting for element to be checked: ' + elem.locator() + ' ' + value);
-    var input = elem.element(by.xpath('..')).element(by.tagName('input'));
-    expect(input.isSelected()).toBe(value);
+    return browser.wait(function () {
+      log('Waiting for element to be checked: ' + elem.locator() + ' ' + value);
+      var input = elem.element(by.xpath('..')).element(by.tagName('input'));
+      return input.getAttribute('ng-model').then(function (ngModel) {
+        return input.evaluate(ngModel).then(function (_value) {
+          return value === _value;
+        });
+      });
+    }, TIMEOUT, 'Waiting for checkbox to be ' + value + ': ' + elem.locator());
+  });
+};
+
+exports.expectInputCheckbox = function (elem, value) {
+  return this.wait(elem).then(function () {
+    return browser.wait(function () {
+      log('Waiting for element to be checked: ' + elem.locator() + ' ' + value);
+      var input = elem.element(by.xpath('..')).element(by.tagName('input'));
+      return input.getAttribute('ng-model').then(function (ngModel) {
+        // Have to navigate up out of the isolated scope from cs-input
+        return input.element(by.xpath('../..')).evaluate(ngModel).then(function (_value) {
+          return value === _value;
+        });
+      });
+    }, TIMEOUT, 'Waiting for input checkbox to be ' + value + ': ' + elem.locator());
   });
 };
 
@@ -496,7 +610,6 @@ exports.findDirectoryNumber = function (message, lineNumber) {
 
 // use _searchCount = -1 for unbounded search
 exports.search = function (query, _searchCount) {
-  var spinner = element(by.css('.icon-spinner'));
   var searchCount = _searchCount || 1;
 
   function logAndWait() {
@@ -507,29 +620,25 @@ exports.search = function (query, _searchCount) {
     });
   }
 
-  function waitSpinner() {
-    exports.expectIsNotDisplayed(spinner);
-  }
-
   exports.click(exports.searchbox);
   exports.clear(exports.searchField);
   if (query) {
     exports.sendKeys(exports.searchField, query + protractor.Key.ENTER);
     exports.expectValueToBeSet(exports.searchField, query, TIMEOUT);
-    for (var i = 0; i < 3; i++) {
-      // Spinner may bounce repeatedly
-      exports.wait(spinner, 500).then(waitSpinner, waitSpinner);
-    }
+    exports.waitForSpinner();
   }
 
   if (searchCount > -1) {
     browser.wait(logAndWait, TIMEOUT, 'Waiting for ' + searchCount + ' search result');
   }
-  return exports.expectIsDisplayed(element(by.cssContainingText('.ui-grid .ui-grid-row .ui-grid-cell-contents', query)));
+
+  if (query) {
+    return exports.expectIsDisplayed(element.all(by.cssContainingText('.ui-grid .ui-grid-row .ui-grid-cell-contents', query)).get(0));
+  }
 };
 
 exports.clickUser = function (query) {
-  return this.click(element(by.cssContainingText('.ui-grid .ui-grid-row .ui-grid-cell-contents', query)));
+  return this.click(element.all(by.cssContainingText('.ui-grid .ui-grid-row .ui-grid-cell-contents', query)).get(0));
 };
 
 exports.searchAndClick = function (query) {
@@ -538,17 +647,7 @@ exports.searchAndClick = function (query) {
 };
 
 exports.expectRowIsNotDisplayed = function (text) {
-  this.expectIsNotDisplayed(element(by.cssContainingText('.ui-grid .ui-grid-row .ui-grid-cell-contents', text)));
-};
-
-exports.dumpConsoleErrors = function () {
-  browser.manage().logs().get('browser').then(function (browserLogs) {
-    browserLogs.forEach(function (log) {
-      if (log.level.value > 900) {
-        console.log('CONSOLE - ' + log.message);
-      }
-    });
-  });
+  this.expectIsNotDisplayed(element.all(by.cssContainingText('.ui-grid .ui-grid-row .ui-grid-cell-contents', text)).get(0));
 };
 
 exports.formatPhoneNumbers = function (value) {
@@ -575,19 +674,32 @@ exports.clickLastBreadcrumb = function () {
   this.click(element.all(by.css('.side-panel-container')).last().all(by.css('li[ng-repeat="crumb in breadcrumbs"] a')).last());
 };
 
-exports.switchToNewWindow = function () {
+function switchToWindow(handleIndex) {
   return browser.wait(function () {
     return browser.getAllWindowHandles().then(function (handles) {
-      if (handles && handles.length > 1) {
-        var newWindow = handles[1];
+      if (handles && handles.length > handleIndex) {
+        var newWindow = handles[handleIndex];
         browser.switchTo().window(newWindow);
         return true;
       } else {
         return false;
       }
     });
-  }, 40000, 'Waiting for a new window');
+  }, 40000, 'Waiting for window');
+}
+
+exports.switchToNewWindow = function () {
+  return switchToWindow(1);
 };
+
+exports.switchToOriginalWindow = function () {
+  return switchToWindow(0);
+};
+
+exports.closeAndSwitchToOriginalWindow = function () {
+  browser.close();
+  return this.switchToOriginalWindow();
+}
 
 exports.getInnerElementByTagName = function (outerElement, tagName) {
   return outerElement.element(by.tagName(tagName));
@@ -668,7 +780,7 @@ exports.deleteIfUserExists = function (name) {
   function waitUntilElemIsPresent(elem, timeout) {
     return exports.wait(elem, timeout).then(function () {
       return elem.isDisplayed();
-    })
+    });
   }
 };
 
@@ -683,6 +795,7 @@ exports.quickDeleteUser = function (bFirst, name) {
     exports.expectIsDisplayed(users.deleteUserModal);
     exports.click(users.deleteUserButton);
     notifications.assertSuccess(name, 'deleted successfully');
+    exports.waitForSpinner();
     return true;
   }, function () {
     log('user is not preset');
@@ -697,5 +810,10 @@ exports.quickDeleteUser = function (bFirst, name) {
 };
 
 exports.waitForModal = function () {
-  return this.wait(element(by.css('.modal-dialog')));
+  return this.wait(element(by.css('.reveal-modal')));
+};
+
+exports.selectDropdown = function (dropdown, option) {
+  this.click(element(by.css(dropdown + ' a.select-toggle')));
+  this.click(element(by.cssContainingText(dropdown + ' .select-options a', option)));
 };

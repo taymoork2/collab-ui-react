@@ -1,57 +1,68 @@
-
 .hg-edit {
   height: calc(100vh - #{($top-bar-height + $page-header-height)}) !important;
   overflow-y: auto;
   position: relative;
   background: $color-white;
+
   @include vr-spacing(mh, 0.5, 1px, true);
   @include vr-spacing(pb, 10);
-  > .row {
 
+  > .row {
     @include vr-spacing(pt, 2);
   }
+
   .cs-card.small {
     position: relative;
     width: 43%;
+
     @include vr-spacing(ph, 0);
+
     i {
       font-size: 1.5rem;
     }
+
     article > header {
-       @include vr-spacing(ph, 0.75);
+      @include vr-spacing(ph, 0.75);
     }
   }
+
   .load {
     font-size: 3rem;
     text-align: center;
-    height : 80vh;
-    display : flex;
+    height: 80vh;
+    display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
     justify-content: center;
     align-items: center;
   }
+
   form {
     @include vr-spacing(m, 2);
   }
+
   label {
     font-size: 1rem;
   }
+
   .hg-name .formly-input-wrapper {
     width: 20rem;
     font-family: $brand-font-light;
     font-size: $font-size-base;
   }
+
   .hg-num .formly-input-wrapper {
     width: 13rem;
     font-family: $brand-font-light;
     font-size: $font-size-base;
   }
+
   .hg-time .formly-input-wrapper {
     width: 8.5rem;
     font-family: $brand-font-light;
     font-size: $font-size-base;
   }
+
   .hg-num .formly-input-wrapper,
   .hg-time .formly-input-wrapper {
     @include vr-spacing(mb, 1);
@@ -62,7 +73,7 @@
       background: $gray-light-2;
     }
 
-    & span {
+    span {
       font-size: $font-size-h4;
       font-family: $brand-font-cisco-TT-Light;
       color: $gray-dark-2;
@@ -74,7 +85,8 @@
 
     li .hunt-member-line {
       @include vr-spacing(ph, 0.5);
-      & span {
+
+      span {
         font-size: 1rem;
       }
     }
@@ -83,22 +95,28 @@
 
 .hg-wrapper {
   @include vr-spacing(m, 1.5);
+
   .form-input {
     width: 40%;
   }
+
   p {
     @include vr-spacing(pb, 0.5);
   }
+
   .warning-typeahead {
     .icon {
       @extend .icon-warning;
-			font-size: .75rem;
+
+      font-size: 0.75rem;
       color: $color-attention;
     }
+
     .message {
       color: $color-attention;
     }
-    > input[type="text"] {
+
+    > input[type='text'] {
       border: 1px solid $color-attention;
     }
   }
@@ -107,8 +125,9 @@
 .hgmethods {
   margin-left: auto;
   margin-right: auto;
-  display : flex !important;
+  display: flex !important;
   flex-wrap: wrap;
+
   @include vr-spacing(mr, 0.5);
 }
 
@@ -125,28 +144,36 @@
 .hgmethod {
   display: flex !important;
   flex: none;
+
   &.current {
     > a {
       background: $gray-light-4;
     }
   }
+
   > a {
-    flex: 1;
     @include box-shadow(0px 1px 2px 1px rgba(52, 53, 55, 0.18));
+    @include vr-spacing(pb, 0.5);
+    @include vr-spacing(pt, 1);
+
+    flex: 1;
     border-radius: $card-border-radius;
     text-align: center;
-    @include vr-spacing(pb, .5);
-    @include vr-spacing(pt, 1);
     cursor: pointer;
+
     > div {
       color: $brand-info;
-      @include vr-spacing(pv,0.5)
+
+      @include vr-spacing(pv, 0.5);
     }
+
     > div > i {
       color: $gray-dark-2;
       font-size: 2.5rem;
     }
-    &:hover, &:focus {
+
+    &:hover,
+    &:focus {
       background: $gray-light-4;
     }
   }
@@ -154,13 +181,16 @@
 
 .hgmembers {
   @include vr-spacing(pt, 1);
+
   .form-input {
     width: 80%;
+
     @include vr-spacing(mb, 2);
   }
 
-  .select-member{
+  .select-member {
     @include vr-spacing(mb, 1.25);
+
     input {
       width: 78%;
     }
@@ -169,14 +199,18 @@
 
 .hgmember {
   width: rem-calc(250) !important;
+
   @include vr-spacing(mb, 0.5);
+
   .hg-edit & .cs-card.small {
     width: 100%;
   }
+
   &:focus {
     outline: none;
   }
 }
+
 .hgmember .hunt-member-card {
   @include vr-spacing(mt, 0);
 }
@@ -185,13 +219,13 @@
   display: none;
 }
 
-.drop-placeholder  {
+.drop-placeholder {
   height: rem-calc(40);
   width: rem-calc(250);
   border: 1px dashed $gray-base;
-  @include vr-spacing(mb, .5);
-}
 
+  @include vr-spacing(mb, 0.5);
+}
 
 .dragover {
   .cs-card.header-background header {

@@ -26,52 +26,18 @@
     state: 'users',
     link: '/users'
   }, {
+    tab: 'placeTab',
+    icon: 'icon-location',
+    title: 'tabs.placeTab',
+    feature: 'csdm-places',
+    state: 'places',
+    link: '/places'
+  }, {
     tab: 'servicesTab',
     icon: 'icon-cloud',
     title: 'tabs.servicesTab',
-    subPages: [{
-      title: 'tabs.conferencing',
-      desc: 'tabs.conferencingDesc',
-      state: 'site-list',
-      link: '#site-list'
-    }, {
-      title: 'tabs.huronLineDetailsTab',
-      desc: 'tabs.huronLineDetailsTabDesc',
-      state: 'huronsettings',
-      link: '#hurondetails/settings'
-    }, {
-      title: 'tabs.fusionDetailsTab',
-      desc: 'tabs.fusionDetailsTabDesc',
-      state: 'fusion',
-      link: '#fusion'
-    }, {
-      title: 'tabs.expresswayManagementServiceTab',
-      desc: 'tabs.expresswayManagementServiceTabDesc',
-      state: 'management-service',
-      link: '#services/expressway-management'
-    }, {
-      title: 'tabs.calendarServiceTab',
-      desc: 'tabs.calendarServiceTabDesc',
-      state: 'calendar-service',
-      link: '#services/calendar'
-    }, {
-      title: 'tabs.callServiceTab',
-      desc: 'tabs.callServiceTabDesc',
-      state: 'call-service',
-      link: '#services/call'
-    }, {
-      title: 'tabs.MediafusionDetailsTab',
-      desc: 'tabs.MediafusionDetailsTabDesc',
-      //state: 'mediafusionconnector',
-      //link: '#mediafusionconnector'
-      state: 'media-service',
-      link: '#mediaservice'
-    }, {
-      title: 'tabs.messengerTab',
-      desc: 'tabs.messengerTabDesc',
-      state: 'messenger',
-      link: '#messenger'
-    }]
+    state: 'services-overview',
+    link: 'services'
   }, {
     tab: 'deviceTab',
     icon: 'icon-devices',
@@ -101,17 +67,28 @@
     icon: 'icon-sliders',
     title: 'tabs.accountTab',
     state: 'profile',
+    feature: '!atlas-settings-page',
     link: '/profile'
   }, {
+    tab: 'settingsTab',
+    icon: 'icon-sliders',
+    title: 'tabs.settingsTab',
+    state: 'settings',
+    feature: "atlas-settings-page",
+    link: '/settings'
+  }, {
+    tab: 'organizationTab',
+    icon: 'icon-admin',
+    title: 'tabs.organizationTab',
+    state: 'organizations',
+    link: '/organizations'
+  }, {
+    // DEPRECATED - REPLACE WITH FEATURE TOGGLES - DO NOT ADD MORE PAGES UNDER developmentTab
     tab: 'developmentTab',
     icon: 'icon-tools',
     title: 'tabs.developmentTab',
+    hideProd: true,
     subPages: [{
-      title: 'tabs.organizationTab',
-      desc: 'tabs.organizationTabDesc',
-      state: 'organizations',
-      link: '#organizations'
-    }, {
       title: 'tabs.callRoutingTab',
       desc: 'tabs.callRoutingTabDesc',
       state: 'callrouting',
@@ -123,44 +100,24 @@
       link: '#mediaonhold'
     }, {
       title: 'tabs.metricsDetailsTab',
-      desc: 'tabs.metricsDetailsTabDesc',
-      state: 'metrics',
-      link: '#metrics'
-    }, {
-      title: 'tabs.thresholdDetailsTab',
-      desc: 'tabs.thresholdDetailsTabDesc',
-      state: 'threshold',
-      link: '#threshold'
-    }, {
-      title: 'tabs.meetingDetailsTab',
-      desc: 'tabs.meetingDetailsTabDesc',
-      state: 'meetings',
-      link: '#meetings'
-    }, {
-      title: 'tabs.vtsDetailsTab',
-      desc: 'tabs.vtsDetailsTabDesc',
-      state: 'vts',
-      link: '#vts'
-    }, {
-      title: 'tabs.entResUtilizationTab',
-      desc: 'tabs.entResUtilizationTabDesc',
-      state: 'utilization',
-      link: '#utilization'
-    }, {
-      title: 'tabs.alarmsTab',
-      desc: 'tabs.alarmsTabDesc',
-      state: 'alarms',
-      link: '#alarms'
-    }, {
-      title: 'tabs.eventsTab',
-      desc: 'tabs.eventsTabDesc',
-      state: 'events',
-      link: '#events'
+      //desc: 'tabs.metricsDetailsTabDesc',
+      state: 'media-service-v2',
+      link: '#mediaserviceV2'
     }]
-  }];
+  },
+    {
+      tab: 'statusTab',
+      icon: 'icon-bell',
+      title: 'tabs.statusTab',
+      desc: 'tabs.statusTabDesc',
+      feature: 'global-status',
+      state: 'status',
+      link: '/status'
+    }];
 
-  angular
-    .module('Core')
-    .value('tabConfig', tabs);
+  module.exports = angular
+    .module('core.tabconfig', [])
+    .value('tabConfig', tabs)
+    .name;
 
 }());

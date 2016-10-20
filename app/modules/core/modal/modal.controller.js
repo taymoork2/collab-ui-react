@@ -5,13 +5,13 @@
     .controller('ModalCtrl', ModalCtrl);
 
   /* @ngInject */
-  function ModalCtrl(title, message, close, dismiss, type) {
+  function ModalCtrl(title, message, close, dismiss, btnType) {
     var vm = this;
 
     vm.title = title;
     vm.message = message;
     vm.close = close;
     vm.dismiss = dismiss;
-    vm.type = type;
+    vm.btnType = btnType;
   }
 })();

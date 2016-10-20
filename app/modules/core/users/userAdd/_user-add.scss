@@ -18,10 +18,7 @@
   min-height: 225px;
   margin-bottom: 40px;
   margin-top: 35px;
-  padding-left: 30px;
-  padding-right: 30px;
-  padding-top: 25px;
-  padding-bottom: 29px;
+  padding: 25px 30px 29px;
 }
 
 .modal-useradd-body {
@@ -36,6 +33,16 @@
   border-top: 0px;
 }
 
+.modal-body {
+  .modal-spacing {
+    padding-bottom: 20px;
+  }
+}
+
+.modal-icon-flex-row {
+  width: 33px;
+}
+
 .adduser-desc {
   font-family: $brand-font-cisco-TT-Light;
   font-size: 16px;
@@ -43,6 +50,51 @@
   color: $gray-darkest;
   text-align: left;
   margin-bottom: 15px;
+}
+
+.onboard-users {
+  .unsynced-users {
+    display: inherit;
+    margin-bottom: 1rem;
+    color: $color-negative-base;
+
+    .icon-error {
+      margin-right: 0.5rem;
+      margin-top: 0.4rem;
+      font-size: medium;
+    }
+
+    p {
+      display: inline-block;
+    }
+  }
+
+  .flex-container {
+    display: flex;
+
+    .adduser-input-desc {
+      flex: 1 1 auto;
+    }
+  }
+
+  .clear-button {
+    float: right;
+    color: $gray-base;
+    min-width: 1rem;
+    border: none;
+    font-size: small;
+    flex: 0 0 auto;
+    width: 1.5rem;
+    height: 1.5rem;
+
+    &:active,
+    &:hover,
+    &:focus,
+    &:visited {
+      color: $brand-primary;
+      background-color: transparent;
+    }
+  }
 }
 
 #usersfield-tokenfield {
@@ -53,14 +105,6 @@
   text-align: left;
   width: 100%;
   background-color: transparent;
-}
-
-.adduser-input-desc {
-  font-family: $brand-font-cisco-TT-Light;
-  font-size: 12px;
-  color: $gray-darker;
-  margin-left: 15px;
-  margin-top: 10px;
 }
 
 .adduser-importlink {
@@ -74,10 +118,7 @@
 .hr-style {
   border: 0;
   height: 1px;
-  background-image: -webkit-linear-gradient(left, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0));
-  background-image: -moz-linear-gradient(left, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0));
-  background-image: -ms-linear-gradient(left, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0));
-  background-image: -o-linear-gradient(left, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0));
+  background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0));
   margin-top: 5px;
   margin-bottom: 15px;
   border-top: 1px solid #dddddd;
@@ -201,6 +242,7 @@
 .warning-icon {
   @extend .icon;
   @extend .icon-warning;
+
   margin-right: 12px;
   font-size: 15px;
   color: $brand-warning;
@@ -223,6 +265,7 @@
   float: left;
   min-height: 135px;
   min-width: 250px;
+
   label {
     margin-bottom: 0px;
   }
@@ -251,32 +294,37 @@
 }
 
 .user-input-option-radio-group {
-  margin-top: 15px;
-  margin-bottom: 15px;
+  margin-bottom: 2rem;
 }
 
-.user-name-email-input {
+.onboard-users .user-name-email-input {
   display: flex;
   align-items: center;
+
   .flex1 {
     flex: 1;
     margin-right: 5px;
   }
+
   .flex2 {
     flex: 2;
     margin-right: 5px;
   }
+
   .plus-icon {
     @extend .icon;
     @extend .icon-plus;
+
     border-radius: 50%;
     font-size: 25px;
     margin-left: 10px;
   }
+
   .plus-icon-inactive {
     color: $gray-lighter;
     background-color: $gray-lightest;
   }
+
   .plus-icon-active {
     cursor: pointer;
     color: $brand-white;
@@ -284,10 +332,9 @@
   }
 }
 
-
-/*-------------------------------------------------------------------
-  US196818 | Atlas - Add User Modal Update
--------------------------------------------------------------------*/
+// ------------------------------------------------------------------
+//  US196818 | Atlas - Add User Modal Update
+// ------------------------------------------------------------------
 
 .add-users,
 .edit-services {
@@ -296,18 +343,12 @@
       width: 100%;
       text-align: center;
       margin: 40px auto;
+
       &.ng-enter,
       &.ng-leave {
         transition: none;
       }
-      /* starting animations for enter */
-      &.ng-enter {}
-      /* terminal animations for enter */
-      &.ng-enter.ng-enter-active {}
-      /* starting animations for leave */
-      &.ng-leave {}
-      /* terminal animations for leave */
-      &.ng-leave.ng-leave-active {}
+
       .icon {
         font-size: 75px;
       }
@@ -327,20 +368,19 @@
   .tokenfield.form-control,
   .tokenfield.form-control-static {
     width: 100% !important;
+
     input.token-input {
       margin-top: 0;
       padding: 6px;
     }
   }
+
   .wizard-main & {
     margin-left: 2px;
     margin-right: 2px;
   }
-  .msgrsync-desc-adduser {
-    padding: 6px;
-    background-color: $brand-warning-light;
-  }
 }
+
 .collab-options {
   padding-bottom: 20px;
 }
@@ -354,7 +394,9 @@
   color: $gray-dark;
   font-family: $brand-font-extra-light;
   font-style: italic;
+  font-size: 12px;
   margin-left: 0;
+  margin-top: 10px;
 }
 
 .license-wrapper {
@@ -367,13 +409,12 @@
   }
 
   .license-wrapper {
-	margin-left: -20px;
-	margin-right: -20px;
-	margin-top: -20px;
+    margin-left: -20px;
+    margin-right: -20px;
   }
 
   .hybrid-services-panel {
-	margin-left: -20px;
+    margin-left: -20px;
     margin-right: -20px;
   }
 }
@@ -382,10 +423,12 @@
   .title-separator-pipe {
     color: $gray-light;
   }
+
   .onboard-label {
     margin-bottom: 20px;
     margin-top: 10px;
   }
+
   .wizard-main-title {
     color: $gray-dark-1;
   }
@@ -416,57 +459,70 @@
     padding-right: 0px;
     height: calc(100vh - 370px);
     width: 100%;
+
     .ngTopPanel {
       width: 100% !important;
       background-color: $gray-lightest;
       border-bottom: 1px solid $gray-light;
       box-sizing: content-box;
     }
+
     .ngHeaderContainer {
       width: 100% !important;
     }
+
     .ngHeaderRow {
       width: 100%;
     }
+
     .ngHeaderCell {
       width: 100%;
     }
+
     .ngHeaderText {
       padding-left: 20px;
     }
+
     .ngViewport {
       width: 100% !important;
     }
+
     .ngCanvas {
       margin-top: 10px;
       width: 100% !important;
     }
+
     .ngRow {
       border-width: 0px;
-      /* affects borders around grid rows */
+      // affects borders around grid rows
       width: 100%;
     }
+
     .ngRow:hover {
       background-color: transparent;
     }
+
     .ngCell {
       padding-top: 10px;
       padding-bottom: 10px;
     }
+
     .ngCellText {
       padding-top: 0px;
       padding-bottom: 0px;
       padding-left: 20px;
     }
+
     .name-display-style {
       font-size: 14px;
       color: $gray-darkest;
       text-align: left;
-      line-height: 1.0;
+      line-height: 1;
       display: block;
       margin-top: 0px;
       margin-bottom: 0px;
     }
+
     .email-display-style {
       font-family: Arial;
       font-size: 12px;
@@ -475,6 +531,7 @@
       margin-top: 0px;
       margin-bottom: 0px;
     }
+
     .error,
     .warning {
       font-family: Arial;
@@ -482,36 +539,45 @@
       text-align: left;
     }
   }
+
   .select-list {
     padding-top: 0px;
     padding-left: 0px;
   }
+
   .select-list.colt1 {
     width: 200px;
   }
+
   .select-list.colt2 {
     width: 90px;
     margin-left: auto;
     margin-right: auto;
   }
+
   .selected {
     a {
       background-color: transparent;
     }
+
     a .icon {
       background-color: transparent;
     }
   }
+
   .form-control.select-toggle {
     padding-top: 8px;
   }
+
   .form-control[disabled].select-toggle {
     border: 1px solid $brand-danger;
     background-color: transparent;
+
     .icon-arrow-down {
-      &:after {
-        /*this is the X icon that appears when no DNs are available*/
+      &::after {
+        // this is the X icon that appears when no DNs are available
         @extend %icon-error;
+
         top: 0;
         left: -12px;
         position: absolute;
@@ -523,13 +589,16 @@
       }
     }
   }
+
   .select-warning .select-toggle {
     border: 1px solid $brand-warning-dark;
     background-color: transparent;
+
     .icon-arrow-down {
-      &:after {
-        /*this is the X icon that appears when no DNs are available*/
+      &::after {
+        // this is the X icon that appears when no DNs are available
         @extend %icon-warning;
+
         top: 0;
         left: -12px;
         position: absolute;
@@ -541,26 +610,36 @@
       }
     }
   }
+
   .icon-arrow-down {
     padding-top: 0;
   }
+
   .ngHeaderText.colt2 {
     text-align: center;
   }
+
   .ngCell.colt2 {
     overflow: visible;
     padding-left: 20px;
+
     .dropdown-menu {
       right: 25px;
       left: auto;
       top: 70%;
     }
   }
+
   .ngCell.colt1 {
     overflow: visible;
     padding-left: 20px;
+
     .dropdown-menu {
       top: 70%;
     }
   }
+}
+
+.users-upload-results {
+  min-height: 0px;
 }

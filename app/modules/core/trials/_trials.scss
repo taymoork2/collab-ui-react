@@ -1,140 +1,290 @@
+// TODO: rip this out once confirmed no longer needed
 .trial-modal.form-horizontal {
   color: $gray-dark-2;
+
   .modal-header {
-    padding: 22px 30px 20px 30px;
+    padding: 22px 30px 20px;
   }
+
   .modal-title {
     font-family: $brand-font-extra-light;
     font-size: 26px;
   }
+
   .modal-body {
     width: auto;
-    padding: 13px 18px 10px 18px;
+    padding: 13px 18px 10px;
   }
+
   .modal-footer {
     .pad-top {
       padding-top: 5px;
     }
   }
+
   .formly-field-checkbox {
     padding-bottom: 0;
-    label,
-    .form-group {
+
+    .form-group,
+    label {
       margin: 0;
     }
   }
+
   .license-count {
     .formly-template-wrapper {
       margin: 0;
     }
   }
+
   .secondary-label {
     margin-left: 10px;
   }
+
   h6 {
     @include vr-spacing(mv, 0.5);
   }
+
   h4,
   h5 {
     @include vr-spacing(mb, 0.5);
   }
+
   select {
     background-color: $white;
   }
+
   label {
     color: $gray-dark-2;
     padding: 0;
   }
+
   .control-label {
     padding-top: 0;
   }
+
   .noresize textarea {
     resize: none;
   }
+
   .control-label {
     text-align: left;
   }
+
   .collapse-fields {
     .formly-field {
       padding-bottom: 5px;
     }
+
     .form-group {
       margin-bottom: 0;
     }
+
     .form-control {
       margin: 0;
     }
   }
+
   .small {
     color: $gray-light-1;
   }
+
   .indent {
     padding-left: 22px;
   }
+
   .pad-top {
     padding-top: 8px;
+
     .cs-input-checkbox {
       margin-bottom: 0;
     }
   }
+
   .did-input .tokenfield {
     min-height: rem(144px);
   }
+
   .token {
-      background-color: $color-primary-base;
+    background-color: $color-primary-base;
+    color: $white;
+
+    .close {
       color: $white;
-      .close {
-          color: $white;
-      }
-      padding: rem(6px) rem(6px);
+    }
+
+    padding: rem(6px);
   }
-  .no-pad {
-      padding-bottom: 0;
-  }
-  .no-flex {
-      flex: none;
-      -webkit-flex: none;
-  }
-  .max-width {
-    .select-toggle {
-        width: 100%;
+
+  .state-zip-wrapper {
+    /* nested form grid fix */
+    @include vr-spacing(pl, 0.75, 2px);
+    @include vr-spacing(pr, 0.75, 4px);
+
+    input {
+      @include vr-spacing(mb, 0.25);
     }
   }
+
+  .max-width {
+    .select-toggle {
+      width: 100%;
+    }
+  }
+
   .flex-row {
-      display:flex;
-      flex-direction:row;
+    display: flex;
+    flex-direction: row;
   }
+
   .pad-right {
-      padding-right:1.6rem;
+    padding-right: 1.6rem;
   }
+
   .flex1 {
-      flex:1;
-      padding-left: 1px;
+    flex: 1;
+    padding-left: 1px;
   }
+
   .legal-tooltip {
-      color: $gray-light-1;
-      padding-left: rem(5px);
-      margin-top: rem(5px);
+    color: $gray-light-1;
+    padding-left: rem(5px);
+    margin-top: rem(5px);
   }
+
   .tooltip-arrow {
-      top: rem(26px);
+    top: rem(26px);
   }
+
   .city-width input {
-      min-width: rem(258px);
+    min-width: rem(258px);
   }
 }
 
-.trial-modal--complete {
-  .row {
-    margin-bottom: 14px;
+.modal-footer.trials {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+
+  .btn {
+    margin-left: 8px;
   }
-  .icon {
-    margin-bottom: 1rem;
-    display: block;
+
+  .alt-btn-link {
+    color: $gray-dark-1;
+
+    &:hover {
+      color: $color-primary-base;
+    }
   }
-  h3 {
-    margin-bottom: 30px;
+}
+
+.trials {
+  // TODO: rip this out once we can rip out 'label' definition in '_temp.scss'
+  label {
+    margin-bottom: 0.25rem;
   }
+
+  .formly-field {
+    padding-bottom: 6px;
+  }
+
+  .cs-form__section {
+    padding-bottom: 2rem;
+
+    &:last-child {
+      padding-bottom: 1rem;
+    }
+
+    .section__content .sub-section {
+      margin-bottom: 0.7rem;
+    }
+  }
+
+  .section__description {
+    color: $gray-base;
+  }
+
+  .with-slim-offset {
+    &.medium-8 {
+      width: 60%;
+    }
+
+    &.medium-4 {
+      width: 36%;
+    }
+
+    &.medium-3 {
+      width: 21%;
+    }
+
+    &.offset-l {
+      margin-left: 16px;
+    }
+  }
+
+  &.modal-body {
+    .splash-msg {
+      margin: 3rem auto 0;
+      width: 34rem;
+      text-align: center;
+
+      .icon-check-mark-success {
+        color: $color-cta-base;
+        font-size: 6rem;
+      }
+
+      .splash-msg__title {
+        margin-top: 1.5rem;
+      }
+
+      .splash-msg__description {
+        margin-top: 1.5rem;
+        flex-grow: 2;
+
+        p {
+          text-align: left;
+          font-size: 1rem;
+
+          &:first-child {
+            margin-top: 0;
+          }
+        }
+      }
+    }
+  }
+
+  #webexTrialForm div[name='timeZone'] div.dropdown-menu {
+    max-height: 13rem;
+  }
+
+  .state-dropdown div.dropdown-menu {
+    max-height: vr-adjust(192px);
+  }
+
+  .did-input .tokenfield {
+    min-height: vr-adjust(144px);
+  }
+
+  .inline-row {
+    display: inline-block;
+  }
+
+  .skip_numbers {
+    color: $gray-dark-1;
+
+    @include vr-spacing(p, 1);
+
+    &:hover {
+      color: $color-primary-base;
+    }
+  }
+}
+
+.small-hint {
+  color: $gray-base;
+  font-size: 13px;
+  vertical-align: baseline;
 }
 
 .modal-title-wrap {
@@ -143,10 +293,13 @@
 
 #editTrialForm .progress-bar {
   max-width: 100%;
+  height: 0.25rem;
 }
+
 .progress-section {
   margin-top: 1rem;
 }
+
 .progress {
   margin-bottom: 0;
 }
@@ -176,6 +329,14 @@
 
   &.has-requested {
     color: $color-cta-base;
+
+    &.has-fail-partial {
+      color: $color-negative-base;
+    }
+
+    &.has-fail-total {
+      color: $color-negative-base;
+    }
 
     span.msg--requested {
       display: inline;

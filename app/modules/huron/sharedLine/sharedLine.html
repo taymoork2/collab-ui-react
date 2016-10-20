@@ -1,0 +1,76 @@
+<script type="text/ng-template" id="customTemplate.html">
+  <a>
+    <span ng-bind-html="match.label.firstName | typeaheadHighlight:query" ng-if="match.label.firstName"></span>
+    <span ng-bind-html="match.label.lastName | typeaheadHighlight:query" ng-if="match.label.lastName"></span>
+    <span ng-show="match.label.lastName">(<span ng-bind-html="match.label.userName | typeaheadHighlight:query"></span>)</span>
+    <span ng-show="!match.label.lastName && !match.label.displayName" ng-bind-html="match.label.userName | typeaheadHighlight:query"></span>
+    <span ng-show="!match.label.userName" ng-bind-html="match.label.displayName | typeaheadHighlight:query"></span>
+  </a>
+</script>
+<div ng-form="sharedLineForm" class="cs-form">
+  <div class="cs-form__section shared-line">
+    <div class="section__info">
+      <h4 class="section__title" translate="sharedLinePanel.title"></h4>
+      <p class="section__description" translate="sharedLinePanel.description"></p>
+    </div>
+    <div class="section__content">
+      <div class="form-group typeahead-form-group">
+        <div class="typeahead-dropdown">
+          <input
+            id="userInput"
+            type="text"
+            ng-model="$ctrl.selectedMember"
+            class="form-control"
+            typeahead="user for user in $ctrl.getUserList($viewValue) | limitTo:10"
+            typeahead-on-select="$ctrl.onSelectSharedLineMember($item)"
+            typeahead-template-url="customTemplate.html"
+            typeahead-wait-ms="500"
+            placeholder="{{'sharedLinePanel.addMember' | translate}}">
+          <i class="icon icon-search"></i>
+        </div>
+        <div ng-if="$ctrl.sharedLines.length || $ctrl.newSharedLineMembers.length">
+          <p class="no-margin"><span translate="sharedLinePanel.member"></span></p>
+          <cs-accordion close-others="$ctrl.oneAtATime">
+            <cs-accordion-group
+              ng-repeat="member in $ctrl.newSharedLineMembers"
+              id="{{member.uuid}}-AccordionGroup"
+              display-status="primary"
+              show-caret="true">
+              <cs-accordion-heading>{{$ctrl.getMemberDisplayName(member)}}<span class="pull-right caret"></span></cs-accordion-heading>
+              <ul class="list-group">
+                <li class="list-group-item">{{$ctrl.getMemberDisplayName(member)}}</li>
+              </ul>
+            </cs-accordion-group>
+            <cs-accordion-group
+              ng-repeat="sharedLine in $ctrl.sharedLines track by sharedLine.uuid"
+              id="{{sharedLine.uuid}}-AccordionGroup"
+              display-status="primary"
+              show-caret="true">
+              <cs-accordion-heading>{{$ctrl.getDisplayName(sharedLine)}}<span class="pull-right caret"></span></cs-accordion-heading>
+              <ul class="list-group">
+                <li class="list-group-item">{{$ctrl.getDisplayName(sharedLine)}}</li>
+                <cs-checkbox
+                  ng-repeat="phone in sharedLine.phones track by phone.uuid"
+                  class="list-group-item"
+                  ckid="{{$index}}-{{phone.model}}-{{sharedLine.uuid}}"
+                  ng-model="phone.assigned"
+                  label="{{phone.description}}"
+                  isdisabled="sharedLine.phones.length === 1"
+                  ng-click="$ctrl.onSharedLineChange()">
+                </cs-checkbox>
+                <a
+                  class="list-group-item list-item-anchor"
+                  ng-if="!sharedLine.primary"
+                  id="removeMemberLink"
+                  href=""
+                  translate="sharedLinePanel.remove"
+                  ng-click="$ctrl.onDeleteSharedLineMember(sharedLine)">
+                </a>
+              </ul>
+            </cs-accordion-group>
+          </cs-accordion>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,33 +1,25 @@
 {
-  "data": {
+  "data": [{
+    "orgId": "1eb65fdf-9643-417f-9974-ad72cae0e10f",
+    "orgName": "Cisco Systems, Inc.",
     "data": [{
-      "orgId": "1eb65fdf-9643-417f-9974-ad72cae0e10f",
-      "orgName": "Cisco Systems, Inc.",
-      "data": [{
-        "date": "2016-01-11T00:00:00.000Z",
-        "details": {
-          "totalSuccessfulCalls": "14503",
-          "totalQuestionableCalls": "209",
-          "totalAudioDuration": "169298.96666666667",
-          "totalFailedCalls": "51",
-          "totalCalls": "14554",
-          "sparkUcGroupCalls": "135",
-          "sparkUcOneOnOneCalls": "3001",
-          "sparkGroupCalls": "2519",
-          "sparkOneOnOneCalls": "8848",
-          "sparkUcVideoCalls": "1298",
-          "sparkUcAudioCalls": "1838",
-          "sparkVideoCalls": "11367"
-        }
-      }]
-    }],
-    "type": "callMetrics",
-    "date": "2016-01-12T16:52:23.813Z",
-    "spanCount": 7,
-    "spanType": "day",
-    "intervalCount": 7,
-    "intervalType": "day"
-  },
+      "date": "2016-01-11T00:00:00.000Z",
+      "details": {
+        "totalSuccessfulCalls": "14503",
+        "totalQuestionableCalls": "209",
+        "totalAudioDuration": "169298.96666666667",
+        "totalFailedCalls": "51",
+        "totalCalls": "14554",
+        "sparkUcGroupCalls": "135",
+        "sparkUcOneOnOneCalls": "3001",
+        "sparkGroupCalls": "2519",
+        "sparkOneOnOneCalls": "8848",
+        "sparkUcVideoCalls": "1298",
+        "sparkUcAudioCalls": "1838",
+        "sparkVideoCalls": "11367"
+      }
+    }]
+  }],
   "response": {
     "dataProvider": [{
       "callCondition": "callMetrics.audioCalls",

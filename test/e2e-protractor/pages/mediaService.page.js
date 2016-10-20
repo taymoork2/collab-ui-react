@@ -13,6 +13,30 @@ var MediaServicePage = function () {
   this.closeSidePanel = element(by.css('.panel-close'));
   this.hostDetails = element(by.binding('ecp.hosts[0].host_name'));
   this.hostTitle = element(by.binding('hostDetails.connector.host.host_name'));
+  this.metricsTab = element(by.css('a[href="#/reports/metrics"]'));
+  this.total_calls = element(by.cssContainingText('.metrics-header', 'Total Calls'));
+  this.averageutilization = element(by.cssContainingText('.metrics-header', 'Average Utilization'));
+  this.clusteravailability = element(by.cssContainingText('.metrics-header', 'Cluster Availability'));
+  this.timeFilter = element(by.css('#timeFilter'));
+  this.clusterFilter = element(by.css('#clusterFilter'));
+  this.internalNumberOptionFirst = element(by.css('.ng-pristine[name="timeFilter"]')).all(by.repeater('option in csSelect.options')).last().element(by.tagName('a'));
+  this.utilizationCard = element(by.css('#utilization-card'));
+  this.callVolumeCard = element(by.css('#call-volume-card'));
+  this.availabilityCard = element(by.css('#availability-card'));
+  this.utilizationTitle = element(by.cssContainingText('.report-section-header', 'Percentage Utilization'));
+  this.callVolumes = element(by.cssContainingText('.report-section-header', 'Total Calls'));
+  this.availabilityOfCluster = element(by.cssContainingText('.report-section-header', 'Cluster Availability'));
+  this.resourceButton = element(by.css('section a[href="#/mediaserviceV2"]'));
+  this.settingsButton = element(by.css('section a[href="#/mediaserviceV2/settings"]'));
+  this.resourceTab = element(by.css('li a[href="#/mediaserviceV2"]'));
+  this.settingsTab = element(by.css('li a[href="#/mediaserviceV2/settings"]'));
+  this.addResourceButton = element(by.cssContainingText('button', 'Add Resource'));
+  this.mediaCluster = element(by.cssContainingText('.ui-grid-header-cell-label', 'Media Clusters'));
+  this.serviceStatus = element(by.cssContainingText('.ui-grid-header-cell-label', 'Service Status'));
+  this.emailNotificationsHeading = element(by.cssContainingText('.section__title', 'Email Notifications'));
+  this.deactivateServiceHeading = element(by.cssContainingText('.section__title', 'Deactivate Service'));
+  this.documentationAndSoftware = element(by.cssContainingText('.section__title', 'Documentation and Software'));
+  this.deactivateButton = element(by.cssContainingText('button', 'Deactivate'));
 
   this.checkClusterSize = function () {
     element.all(by.binding('row.entity')).then(function (clusters) {
@@ -44,6 +68,24 @@ var MediaServicePage = function () {
       utils.expectIsDisplayed(mediaservice.mediaClusterList);
       utils.expectIsDisplayed(mediaservice.mfCluster);
     });
+  };
+
+  this.clickMetrics = function () {
+    navigation.clickReports();
+    utils.click(this.metricsTab);
+    navigation.expectCurrentUrl('/reports/metrics');
+  };
+
+  this.clickResource = function () {
+    navigation.clickServicesTab();
+    utils.click(this.resourceButton);
+    navigation.expectCurrentUrl('/mediaserviceV2');
+  };
+
+  this.clickSettings = function () {
+    navigation.clickServicesTab();
+    utils.click(this.settingsButton);
+    navigation.expectCurrentUrl('/mediaserviceV2/settings');
   };
 };
 

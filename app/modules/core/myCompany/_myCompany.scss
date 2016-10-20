@@ -1,0 +1,34 @@
+@import 'mySubscriptions/_mySubscription';
+
+.my-company-page {
+  @extend %grid-subheader;
+  @extend %content-subheader;
+
+  .my-company-info-state &,
+  .my-company-orders-state & {
+    @extend %page-background-white;
+  }
+
+  iframe {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border: none;
+  }
+}
+
+.btn--myCompany {
+  .icon {
+    position: static !important;
+    margin-left: 0.75rem !important;
+  }
+}
+
+.my-company-order-history-actions {
+  display: flex;
+  align-items: center;
+
+  .icon {
+    margin-right: 0.5rem;
+  }
+}

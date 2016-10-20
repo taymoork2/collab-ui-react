@@ -1,77 +1,99 @@
 (function () {
   'use strict';
 
-  angular.module('Core')
+  module.exports = angular.module('core.featuretoggle', [
+    require('modules/core/config/config'),
+    require('modules/core/scripts/services/authinfo'),
+    require('modules/core/scripts/services/org.service'),
+    require('modules/huron/telephony/telephonyConfig'),
+  ])
     .factory('HuronCustomerFeatureToggleService', HuronCustomerFeatureToggleService)
-    .factory('HuronUserFeatureToggleService', HuronUserFeatureToggleService)
-    .service('FeatureToggleService', FeatureToggleService);
+    .service('FeatureToggleService', FeatureToggleService)
+    .name;
 
   /* @ngInject */
-  function FeatureToggleService($resource, $q, Config, Authinfo, Orgservice, Userservice, HuronCustomerFeatureToggleService, HuronUserFeatureToggleService, UrlConfig) {
+  function FeatureToggleService($http, $q, $resource, $state, Authinfo, HuronCustomerFeatureToggleService, UrlConfig, Orgservice) {
     var features = {
-      pstnSetup: 'huron-pstn-setup',
-      csvUpload: 'atlas-csv-upload',
-      dirSync: 'dirSync',
-      atlasCloudberryTrials: 'atlas-cloudberry-trials',
-      atlasStormBranding: 'atlas-2015-storm-launch',
+      dirSync: 'atlas-dir-sync',
+      atlasBrandingWordingChange: 'atlas-branding-wording-change',
+      atlasCareTrials: 'atlas-care-trials',
+      atlasContextServiceTrials: 'atlas-context-service-trials',
+      atlasCsvEnhancement: 'atlas-csv-enhancement',
+      atlasCustomerListUpdate: 'atlas-customer-list-update',
+      atlasDarling: 'atlas-darling',
+      atlasDataRetentionSettings: 'atlas-data-retention-settings',
+      atlasEmailStatus: 'atlas-email-status',
+      atlasHelpDeskExt: 'atlas-helpdesk-extended-information',
+      atlasHelpDeskOrderSearch: 'atlas-helpdesk-order-search',
+      atlasHybridServicesResourceList: 'atlas-hybrid-services-resource-list',
+      atlasMediaServiceMetrics: 'atlas-media-service-metrics',
+      atlasMediaServiceOnboarding: 'atlas-media-service-onboarding',
+      atlasNewRoomSystems: 'atlas-new-roomSystems',
+      atlasNewUserExport: 'atlas-new-user-export',
+      atlasNurturingEmails: 'atlas-nurturing-emails',
+      atlasPinSettings: 'atlas-pin-settings',
+      atlasPMRonM2: 'atlas-pmr-on-m2',
+      atlasPstnTfn: 'atlas-pstn-tfn',
+      atlasReadOnlyAdmin: 'atlas-read-only-admin',
+      atlasReportsUpdate: 'atlas-reports-update',
+      atlasComplianceRole: 'atlas-compliance-role',
+      atlasSettingsPage: 'atlas-settings-page',
       atlasSipUriDomain: 'atlas-sip-uri-domain',
       atlasSipUriDomainEnterprise: 'atlas-sip-uri-domain-enterprise',
+      atlasUserPendingStatus: 'atlas-user-pending-status',
       atlasWebexTrials: 'atlas-webex-trials',
-      atlasDeviceTrials: 'atlas-device-trials',
-      atlasTrialConversion: 'atlas-trial-conversion',
-      huronClassOfService: 'COS',
-      huronInternationalDialingTrialOverride: 'huronInternationalDialingTrialOverride',
-      csdmHuron: 'csdm-huron',
+      atlasDeviceUsageReport: 'atlas-device-usage-report',
       androidAddGuestRelease: 'android-add-guest-release',
-      androidCallsTab: 'android-calls-tab',
       androidDirectUpload: 'android-direct-upload',
+      androidImportantFilter: 'android-important-filter',
       androidKmsMessagingApiV2: 'android-kms-messaging-api-v2',
       androidMentions: 'android-mentions',
       androidMessageSearch: 'android-message-search',
       androidModernTokenRefresh: 'android-modern-token-refresh',
-      androidOutboundDialing: 'android-outbound-dialing',
       androidTeams: 'android-teams',
-      androidUltrasoundProximity: 'android-ultrasound-proximity',
-      androidUltrasoundProximityR1: 'android-ultrasound-proximity-r1',
       atMentions: 'at-mentions',
       audioPairing: 'audio-pairing',
       bridgeMaxConvParticipants: 'bridge-max-conv-participants',
       callMultiDevice: 'call-multi-device',
       calliopeDiscovery: 'calliope-discovery',
-      callsTab: 'calls-tab',
+      callParkService: 'call-park-service',
+      huronCallPickup: 'huronCallPickup',
+      calsvcDetectCmrLoc: 'calsvc_detect_cmr_loc',
       clientRingbackV2: 'client-ringback-v2',
       console: 'console',
       deleteContent: 'delete-content',
-      dialOut: 'dial-out',
       disableCacheForFeatures: 'disableCacheForFeatures',
-      domainManagement: 'atlas-domain-management',
       enforceSparkContentEncryption: 'enforce-spark-content-encryption',
       featureToggleRules: 'feature-toggle-rules',
       feedbackViaEmail: 'feedback-via-email',
       filterBadges: 'filter-badges',
       flagMsg: 'flag-msg',
+      fmcCommandDispatch: 'fmc-command-dispatch',
       geoHintEnabled: 'geo-hint-enabled',
-      huronPstnPort: 'huron-pstn-port',
+      huronAACallQueue: 'huronAACallQueue',
+      huronAAMediaUpload: 'huron-aa-mediaupload',
+      huronClassOfService: 'COS',
+      huronInternationalDialingTrialOverride: 'huronInternationalDialingTrialOverride',
+      huronPagingGroup: 'huronPagingGroup',
+      huronNxxSearch: 'huron-nxx-search',
       iosActionBar: 'ios-action-bar',
       iosAecType: 'ios-aec-type',
-      iosCallsTab: 'ios-calls-tab',
       iosCameraview: 'ios-cameraview',
       iosCoBranding: 'ios-co-branding',
       iosFilterBadges: 'ios-filter-badges',
       iosFiltering: 'ios-filtering',
       iosImportantFilter: 'ios-important-filter',
+      iosImportantFilter2: 'ios-important-filter2',
       iosKmsMessagingApi3: 'ios-kms-messaging-api3',
       iosKmsMessagingApi4: 'ios-kms-messaging-api4',
       iosLocalNotification2: 'ios-local-notification2',
+      iosLocusUsingResource: 'ios-locus-using-resource',
       iosMentions: 'ios-mentions',
       iosMentionsFilter: 'ios-mentions-filter',
-      iosOutboundDialing: 'ios-outbound-dialing',
       iosSearchService: 'ios-search-service',
       iosSearchService2: 'ios-search-service2',
       iosTeams: 'ios-teams',
       iosTeams2: 'ios-teams2',
-      iosUltrasoundProximity: 'ios-ultrasound-proximity',
-      iosUltrasoundProximityR1: 'ios-ultrasound-proximity-r1',
       joinhubCreateARoom: 'joinhub-create-a-room',
       l2sipAllowSipForward: 'l2sip-allow-sip-forward',
       l2sipAllowSipTransfer: 'l2sip-allow-sip-transfer',
@@ -95,6 +117,7 @@
       newMessageBanner: 'new-message-banner',
       newMessageBannerAndroid: 'new-message-banner-android',
       newMessagesIndicator: 'new-messages-indicator',
+      osxImportantFilter: 'osx-important-filter',
       persistenceForFeatures: 'persistenceForFeatures',
       relevantRooms: 'relevant-rooms',
       sanitizeactivityOptimization: 'sanitizeactivity-optimization',
@@ -108,26 +131,32 @@
       titleEncryption: 'title-encryption',
       uploadCallLogs: 'upload-call-logs',
       userPresence: 'user-presence',
+      uwpImportantFilter: 'uwp-important-filter',
       webGuestCall: 'web-guest-call',
       webHuronCalls: 'web-huron-calls',
       webManualPairing: 'web-manual-pairing',
       webMentionsTab: 'web-mentions-tab',
-      webOutboundDialing: 'web-outbound-dialing',
       webRoapCalls: 'web-roap-calls',
       webTeams: 'web-teams',
       winGuestCall: 'win-guest-call',
       winHuronCalls: 'win-huron-calls',
+      winImporantFilter: 'win-important-filter',
       winMentionsList: 'win-mentions-list',
       winMentionsTab: 'win-mentions-tab',
-      winOutboundDialing: 'win-outbound-dialing',
       winProximityDeviceSelection: 'win-proximity-device-selection',
       winTeams: 'win-teams',
       zeroTouchMeeting: 'zero-touch-meeting',
       locationSharing: 'location-sharing',
       ceAllowNolockdown: 'ce-allow-nolockdown',
       webexCSV: 'webex-CSV',
-      webexClientLockdown: 'atlas-webex-clientlockdown',
-      huronCallTrials: 'huron-call-trials'
+      enableCrashLogs: 'csdm-enable-crash-logs',
+      csdmPlaces: 'csdm-places',
+      csdmPstn: 'csdm-pstn',
+      globalStatus: 'global-status',
+      atlasF237ResourceGroups: 'atlas-f237-resource-group',
+      huronLocalDialing: 'huron-local-dialing',
+      huronDeviceE911: 'huron-device-e911-address',
+      atlasHybridDataSecurity: 'atlas-data-security'
     };
 
     var toggles = {};
@@ -145,13 +174,17 @@
       }
     });
 
-    var userResource = $resource(UrlConfig.getFeatureToggleUrl() + '/locus/api/v1/features/users/:id', {
+    var userResource = $resource(UrlConfig.getWdmUrl() + '/features/users/:id', {
       id: '@id'
     }, {
       get: {
         method: 'GET',
         cache: true
       }
+    });
+
+    var dirSyncConfigurationResource = $resource(UrlConfig.getAdminServiceUrl() + 'organization/:customerId/dirsync', {
+      customerId: '@customerId'
     });
 
     var service = {
@@ -162,14 +195,25 @@
       getFeaturesForOrg: getFeaturesForOrg,
       setFeatureToggles: setFeatureToggles,
       generateFeatureToggleRule: generateFeatureToggleRule,
+      stateSupportsFeature: stateSupportsFeature,
       supports: supports,
-      supportsPstnSetup: supportsPstnSetup,
-      supportsCsvUpload: supportsCsvUpload,
       supportsDirSync: supportsDirSync,
-      features: features
+      features: features,
+      getCustomerHuronToggle: getCustomerHuronToggle
     };
 
+    init();
+
     return service;
+
+    function init() {
+      return _.reduce(features, function (status, feature, key) {
+        status[key + 'GetStatus'] = function () {
+          return supports(features[key]);
+        };
+        return status;
+      }, service);
+    }
 
     function getFeatureForUser(id, feature) {
       return getFeature(true, id, feature);
@@ -222,30 +266,22 @@
 
     function getHuronToggle(isUser, id, feature) {
       if (Authinfo.isSquaredUC()) {
-        if (isUser) {
-          return HuronUserFeatureToggleService.get({
-            userId: id,
-            featureName: feature
-          }).$promise.then(function (data) {
-            toggles[feature] = data.val;
-            return data.val;
-          }).catch(function (err) {
-            return false;
-          });
-        } else {
-          return HuronCustomerFeatureToggleService.get({
-            customerId: id,
-            featureName: feature
-          }).$promise.then(function (data) {
-            toggles[feature] = data.val;
-            return data.val;
-          }).catch(function (err) {
-            return false;
-          });
-        }
+        return getCustomerHuronToggle(id, feature);
       } else {
         return $q.when(false);
       }
+    }
+
+    function getCustomerHuronToggle(id, feature) {
+      return HuronCustomerFeatureToggleService.get({
+        customerId: id,
+        featureName: feature
+      }).$promise.then(function (data) {
+        toggles[feature] = data.val;
+        return data.val;
+      }).catch(function () {
+        return false;
+      });
     }
 
     function getFeature(isUser, id, feature) {
@@ -258,7 +294,7 @@
         return _.get(_.find(features.developer, {
           key: feature
         }), 'val', false);
-      }).catch(function (err) {
+      }).catch(function () {
         return false;
       });
 
@@ -271,19 +307,38 @@
       });
     }
 
+    function stateSupportsFeature(feature) {
+      return supports(feature).then(shouldFeatureAllowState);
+    }
+
+    function shouldFeatureAllowState(isSupported) {
+      if (!isSupported) {
+        if (currentlyInState()) {
+          return $q.reject('Requested feature is not supported by requested state');
+        } else {
+          $state.go('login');
+        }
+      }
+      return isSupported;
+    }
+
+    function currentlyInState() {
+      return !!$state.$current.name;
+    }
+
     function supports(feature) {
-      return $q(function (resolve, reject) {
-        if (feature === features.csvUpload && !Config.isProd()) {
-          resolve(true);
-        } else if (feature === features.dirSync) {
+      return $q(function (resolve) {
+        if (feature === features.dirSync) {
           supportsDirSync().then(function (enabled) {
             resolve(enabled);
           });
         } else if (angular.isDefined(toggles[feature])) {
           resolve(toggles[feature]);
         } else {
-          Userservice.getUser('me', function (data, status) {
-            getFeatureForUser(data.id, feature)
+          $http.get(UrlConfig.getScimUrl(Authinfo.getOrgId()) + '/me', {
+            cache: true,
+          }).then(function (response) {
+            return getFeatureForUser(_.get(response, 'data.id'), feature)
               .then(function (result) {
                 if (!result) {
                   return getHuronToggle(false, Authinfo.getOrgId(), feature);
@@ -294,31 +349,29 @@
                 toggles[feature] = toggleValue;
                 resolve(toggleValue);
               });
+          }).catch(function () {
+            return false;
           });
         }
       });
     }
 
-    function supportsPstnSetup() {
-      return supports(features.pstnSetup);
-    }
-
-    function supportsCsvUpload() {
-      return supports(features.csvUpload);
-    }
-
     function supportsDirSync() {
-      var deferred = $q.defer();
-      Orgservice.getOrgCacheOption(function (data, status) {
-        if (data.success) {
-          deferred.resolve(data.dirsyncEnabled);
-        } else {
-          deferred.reject(status);
-        }
-      }, null, {
-        cache: true
+      return dirSyncConfigurationResource.get({
+        customerId: Authinfo.getOrgId()
+      }).$promise.then(function (response) {
+        return response.serviceMode === 'ENABLED';
+      }).catch(function (response) {
+        Orgservice.getOrgCacheOption(function (data) {
+          if (data.success) {
+            return data.dirsyncEnabled;
+          } else {
+            return $q.reject(response);
+          }
+        }, null, {
+          cache: false
+        });
       });
-      return deferred.promise;
     }
 
     function setFeatureToggles(isUser, listOfFeatureToggleRules) {
@@ -363,19 +416,6 @@
         feature.val = false;
       }
     }
-  }
-
-  /* @ngInject */
-  function HuronUserFeatureToggleService($resource, HuronConfig) {
-    return $resource(HuronConfig.getMinervaUrl() + '/features/users/:userId/developer/:featureName', {
-      userId: '@userId',
-      featureName: '@featureName'
-    }, {
-      get: {
-        method: 'GET',
-        cache: true
-      }
-    });
   }
 
   /* @ngInject */

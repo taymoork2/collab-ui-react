@@ -1,25 +1,22 @@
-@import '../../bower_components/cisco-ui/scss/cisco-ui';
-
-$fa-font-path: "../fonts";
-
-@import "../../bower_components/font-awesome/scss/font-awesome";
+@import './variables';
+@import '~collab-ui/scss/collab-ui';
+@import '~ng-tags-input/build/ng-tags-input.css';
 
 // ******** Variables **********
-// @brand-font-folder: '../bower_components/bootstrap-cisco/fonts';
-// @icon-font-path: '../bower_components/bootstrap-cisco/fonts/';
 
 // ******* Variables & Mixins **************
-@import 'partials/variables';
-@import 'partials/mixins';
+@import './partials/variables';
+@import './partials/mixins';
 
 // ******* Resets & Globals **********
-@import 'partials/common';
+@import './partials/common';
+@import './unsupported';
 
 /**************************************************
  *  TODO: Styles in the _temp.scss file should be
  *  moved to the correct module where they belong
  *************************************************/
-@import 'temp';
+@import './temp';
 
 /*************************************
  *      Modules Style imports
@@ -27,9 +24,11 @@ $fa-font-path: "../fonts";
 @import '../modules/core/styles/core';
 @import '../modules/huron/styles/huron';
 @import '../modules/hercules/styles/hercules';
+@import '../modules/ediscovery/styles/ediscovery';
 @import '../modules/squared/styles/squared';
 @import '../modules/mediafusion/styles/mediafusion';
+@import '../modules/hds/hds';
+@import '../modules/services/servicesOverview';
 @import '../modules/webex/styles/webex';
 @import '../modules/sunlight/styles/sunlight';
 @import '../modules/messenger/styles/messenger';
-@import '../modules/digitalRiver/styles/digitalRiver';

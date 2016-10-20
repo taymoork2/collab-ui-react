@@ -6,7 +6,7 @@
     .controller('TrialWebexOverviewCtrl', TrialWebexOverviewCtrl);
 
   /* @ngInject */
-  function TrialWebexOverviewCtrl($stateParams, WebexTrialService) {
+  function TrialWebexOverviewCtrl($stateParams, TrialWebexService, TrialTimeZoneService) {
     var vm = this;
 
     vm.trialId = _.get($stateParams, 'currentCustomer.trialId');
@@ -21,10 +21,8 @@
 
     function init() {
       if (vm.trialId) {
-        WebexTrialService.getTrialStatus(vm.trialId).then(function (status) {
-          var timeZone = _.find(WebexTrialService.getTimeZones(), {
-            timeZoneId: status.timeZoneId
-          });
+        TrialWebexService.getTrialStatus(vm.trialId).then(function (status) {
+          var timeZone = TrialTimeZoneService.getTimeZone(status.timeZoneId);
           vm.webexTrialExists = status.trialExists;
           vm.pending = status.pending;
           vm.timezone = timeZone.label;

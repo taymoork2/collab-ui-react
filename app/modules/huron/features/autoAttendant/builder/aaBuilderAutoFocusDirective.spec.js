@@ -4,9 +4,9 @@ describe('Directive: aaBuilderAutofocus', function () {
   var $compile, $rootScope;
   var $timeout, element;
 
-  beforeEach(module('Huron'));
+  beforeEach(angular.mock.module('Huron'));
 
-  beforeEach(inject(function ($injector, _$compile_, _$rootScope_, _$timeout_) {
+  beforeEach(inject(function (_$compile_, _$rootScope_, _$timeout_) {
     $compile = _$compile_;
     $rootScope = _$rootScope_;
     $timeout = _$timeout_;

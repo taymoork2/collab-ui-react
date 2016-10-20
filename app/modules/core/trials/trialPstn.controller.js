@@ -6,21 +6,26 @@
     .controller('TrialPstnCtrl', TrialPstnCtrl);
 
   /* @ngInject */
-  function TrialPstnCtrl($scope, $timeout, $translate, Authinfo, DidService, Notification, PstnSetupService, TelephoneNumberService, TerminusCarrierService, TerminusStateService, TerminusResellerCarrierService, TrialPstnService) {
+  function TrialPstnCtrl($scope, $state, $timeout, $translate, Analytics, Authinfo, Notification, PstnSetupService, TelephoneNumberService, TerminusStateService, TrialPstnService) {
     var vm = this;
 
     vm.trialData = TrialPstnService.getData();
-    var customerId = Authinfo.getOrgId();
-    var pstnTokenLimit = 5;
+    vm.customerId = Authinfo.getOrgId();
+    var pstnTokenLimit = 10;
+    vm.SWIVEL = 'SWIVEL';
+    vm.providerImplementation = vm.SWIVEL;
 
     vm.getStateInventory = getStateInventory;
     vm.searchCarrierInventory = searchCarrierInventory;
     vm.checkForInvalidTokens = checkForInvalidTokens;
     vm.skip = skip;
+    vm.disableNextButton = disableNextButton;
+
+    vm._getCarriers = _getCarriers;
 
     //TATA Tokenfield
     vm.manualUnsavedTokens = [];
-    vm.manualTokenField = 'manualdidfield';
+    vm.manualTokenFieldId = 'manualdidfield';
     vm.manualTokenOptions = {
       delimiter: [',', ';'],
       createTokensOnBlur: true,
@@ -57,163 +62,114 @@
       model: vm.trialData.details,
       key: 'pstnProvider',
       type: 'select',
-      className: 'medium-10 columns',
+      className: 'medium-8',
       templateOptions: {
-        required: true,
-        labelClass: 'columns medium-2',
-        inputClass: 'columns medium-7',
-        label: $translate.instant('trialModal.pstn.provider'),
         labelfield: 'name',
-        options: []
+        required: true,
+        label: $translate.instant('trialModal.pstn.provider'),
+        options: [],
+        onChangeFn: function () {
+          vm.providerImplementation = vm.trialData.details.pstnProvider.apiImplementation;
+          resetNumbers();
+        }
       },
       controller: /* @ngInject */ function ($scope) {
-        TerminusResellerCarrierService.query({
-            resellerId: customerId
-          }).$promise.then(function (carriers) {
-            showCarriers(carriers);
-          })
-          .catch(function (response) {
-            TerminusCarrierService.query({
-              defaultOffer: 'true',
-              service: 'pstn'
-            }).$promise.then(function (carriers) {
-              showCarriers(carriers);
-            });
-          });
-
-        function showCarriers(carriers) {
-          angular.forEach(carriers, function (item) {
-            if (item.name === 'TATA') {
-              item.name = 'TATA Communication';
-            } else if (item.name === 'INTELEPEER') {
-              item.name = 'IntelePeer';
-            } else if (item.name === 'TELSTRA') {
-              item.name = 'Telstra';
-            }
-          });
-          $scope.to.options = carriers;
-
-          if (carriers.length === 1) {
-            vm.trialData.details.pstnProvider = carriers[0];
-          }
-        }
+        _getCarriers($scope);
       }
     }];
 
     vm.contractInfoFields = [{
       model: vm.trialData.details.pstnContractInfo,
       key: 'companyName',
-      type: 'input',
-      className: 'no-pad',
+      type: 'cs-input',
+      className: 'medium-12',
       templateOptions: {
         required: true,
         labelfield: 'label',
         label: $translate.instant('trialModal.pstn.company'),
-        labelClass: 'columns medium-5 text-right',
-        inputClass: 'columns medium-8',
         type: 'text',
       },
     }, {
       model: vm.trialData.details.pstnContractInfo,
       key: 'signeeFirstName',
-      type: 'input',
-      className: 'no-pad',
+      type: 'cs-input',
+      className: 'medium-12',
       templateOptions: {
         required: true,
         labelfield: 'label',
         label: $translate.instant('trialModal.pstn.firstName'),
-        labelClass: 'columns medium-5 text-right',
-        inputClass: 'columns medium-8',
         type: 'text',
       },
     }, {
       model: vm.trialData.details.pstnContractInfo,
       key: 'signeeLastName',
-      type: 'input',
-      className: 'no-pad',
+      type: 'cs-input',
+      className: 'medium-12',
       templateOptions: {
         required: true,
         labelfield: 'label',
         label: $translate.instant('trialModal.pstn.lastName'),
-        labelClass: 'columns medium-5 text-right',
-        inputClass: 'columns medium-8',
         type: 'text',
       },
     }, {
       model: vm.trialData.details.pstnContractInfo,
       key: 'email',
-      type: 'input',
-      className: 'no-pad',
+      type: 'cs-input',
+      className: 'medium-12',
       templateOptions: {
         required: true,
         labelfield: 'label',
         label: $translate.instant('trialModal.pstn.email'),
-        labelClass: 'columns medium-5 text-right',
-        inputClass: 'columns medium-8',
         type: 'email',
       },
     }];
 
     vm.pstnStateAreaFields = [{
-      type: 'inline',
-      className: 'row full',
+      model: vm.trialData.details.pstnNumberInfo,
+      key: 'state',
+      type: 'select',
+      className: 'medium-8 state-dropdown inline-row left',
       templateOptions: {
-        fields: [{
-          model: vm.trialData.details.pstnNumberInfo,
-          key: 'state',
-          type: 'select',
-          className: 'medium-6 columns max-width',
-          templateOptions: {
-            labelClass: 'columns medium-4 text-right',
-            inputClass: 'columns medium-7',
-            label: $translate.instant('pstnSetup.state'),
-            labelfield: 'name',
-            valuefield: 'abbreviation',
-            onChangeFn: getStateInventory,
-            options: []
-          },
-          controller: /* @ngInject */ function ($scope) {
-            TerminusStateService.query().$promise.then(function (states) {
-              $scope.to.options = states;
-            });
-          }
-        }, {
-          model: vm.trialData.details.pstnNumberInfo,
-          key: 'areaCode',
-          id: 'areaCode',
-          type: 'select',
-          className: 'medium-6 columns max-width',
-          templateOptions: {
-            labelClass: 'columns medium-5 text-right',
-            inputClass: 'columns medium-7',
-            label: $translate.instant('pstnSetup.areaCode'),
-            labelfield: 'code',
-            valuefield: 'code',
-            options: [],
-            onChangeFn: searchCarrierInventory
-          },
-          controller: /* @ngInject */ function ($scope) {
-            $scope.$watchCollection(function () {
-              return vm.areaCodeOptions;
-            }, function (newAreaCodes) {
-              newAreaCodes = newAreaCodes || [];
-              $scope.to.options = _.sortBy(newAreaCodes, 'code');
-            });
-          }
-        }]
+        inputClass: 'medium-11',
+        label: $translate.instant('pstnSetup.state'),
+        labelfield: 'name',
+        valuefield: 'abbreviation',
+        onChangeFn: getStateInventory,
+        options: [],
+        filter: true
+      },
+      controller: /* @ngInject */ function ($scope) {
+        TerminusStateService.query().$promise.then(function (states) {
+          $scope.to.options = states;
+        });
+      }
+    }, {
+      model: vm.trialData.details.pstnNumberInfo,
+      key: 'areaCode',
+      id: 'areaCode',
+      type: 'select',
+      className: 'medium-4 inline-row left',
+      templateOptions: {
+        required: true,
+        label: $translate.instant('pstnSetup.areaCode'),
+        labelfield: 'code',
+        valuefield: 'code',
+        options: [],
+        onChangeFn: searchCarrierInventory
+      },
+      controller: /* @ngInject */ function ($scope) {
+        $scope.$watchCollection(function () {
+          return vm.areaCodeOptions;
+        }, function (newAreaCodes) {
+          newAreaCodes = newAreaCodes || [];
+          $scope.to.options = _.sortBy(newAreaCodes, 'code');
+        });
       }
     }];
 
     init();
 
     function init() {
-      if (_.get(vm, 'trialData.details.pstnNumberInfo.numbers.length', 0) > 0) {
-        $timeout(function () {
-          $('#didAddField').tokenfield('setTokens', vm.trialData.details.pstnNumberInfo.numbers.toString());
-          reinitTokens();
-        }, 100);
-      }
-
       if (_.has(vm.trialData, 'details.pstnNumberInfo.state.abbreviation')) {
         getStateInventory();
       }
@@ -225,9 +181,18 @@
       if (_.has($scope, 'trial.details.customerEmail') && _.get(vm, 'trialData.details.pstnContractInfo.email') === '') {
         vm.trialData.details.pstnContractInfo.email = $scope.trial.details.customerEmail;
       }
+
+      $timeout(function () {
+        if (vm.trialData.details.pstnProvider.apiImplementation !== vm.SWIVEL) {
+          $('#didAddField').tokenfield('setTokens', vm.trialData.details.pstnNumberInfo.numbers.toString());
+        } else {
+          reinitTokens();
+        }
+      }, 100);
     }
 
     function skip(skipped) {
+      Analytics.trackTrialSteps(Analytics.eventNames.SKIP, $state.current.name, Authinfo.getOrgId());
       vm.trialData.enabled = !skipped;
       vm.trialData.skipped = skipped;
       $timeout($scope.trial.nextStep);
@@ -235,14 +200,16 @@
 
     function getStateInventory() {
       vm.areaCodeOptions = [];
+      vm.trialData.details.pstnNumberInfo.areaCode.code = null;
       PstnSetupService.getCarrierInventory(vm.trialData.details.pstnProvider.uuid, vm.trialData.details.pstnNumberInfo.state.abbreviation)
         .then(function (response) {
-          _.forEach(response.areaCodes, function (areaCode, index) {
+          _.forEach(response.areaCodes, function (areaCode) {
             if (areaCode.count >= pstnTokenLimit) {
               vm.areaCodeOptions.push(areaCode);
             }
           });
-        }).catch(function (response) {
+        })
+        .catch(function (response) {
           Notification.errorResponse(response, 'trialModal.pstn.error.areaCodes');
         });
     }
@@ -261,7 +228,8 @@
             vm.trialData.details.pstnNumberInfo.numbers.push(numberRanges[0][index]);
           }
           $('#didAddField').tokenfield('setTokens', vm.trialData.details.pstnNumberInfo.numbers.toString());
-        }).catch(function (response) {
+        })
+        .catch(function (response) {
           Notification.errorResponse(response, 'trialModal.pstn.error.numbers');
         });
     }
@@ -272,7 +240,7 @@
       e.attrs.label = TelephoneNumberService.getDIDLabel(tokenNumber);
     }
 
-    function editedToken(e) {
+    function editedToken() {
       $('#didAddField').tokenfield('setTokens', vm.trialData.details.pstnNumberInfo.numbers.toString());
       $('#didfield-tokenfield').attr('placeholder', '');
     }
@@ -289,17 +257,14 @@
         angular.element(e.relatedTarget).addClass('invalid');
         vm.invalidCount++;
       }
-      // add to service after validation/duplicate checks
-      DidService.addDid(e.attrs.value);
       vm.trialData.details.swivelNumbers.push(e.attrs.value);
       setPlaceholderText("");
     }
 
     function manualRemovedToken(e) {
-      DidService.removeDid(e.attrs.value);
-      var index = _.indexOf(vm.trialData.details.swivelNumbers, (e.attrs.value));
-      if (index > -1) {
-        vm.trialData.details.swivelNumbers.splice(index, 1);
+      removeNumber(e.attrs.value);
+      if (angular.element(e.relatedTarget).hasClass('invalid')) {
+        vm.invalidCount--;
       }
       $timeout(reinitTokens);
 
@@ -311,18 +276,23 @@
     }
 
     function manualEditToken(e) {
-      DidService.removeDid(e.attrs.value);
+      removeNumber(e.attrs.value);
       if (angular.element(e.relatedTarget).hasClass('invalid')) {
         vm.invalidCount--;
       }
     }
 
     function reinitTokens() {
-      var tmpDids = DidService.getDidList();
-      // reset invalid and list before setTokens
-      vm.invalidCount = 0;
-      DidService.clearDidList();
+      var tmpDids = _.clone(vm.trialData.details.swivelNumbers);
+      resetNumbers();
       $('#manualdidfield').tokenfield('setTokens', tmpDids.toString());
+    }
+
+    function removeNumber(value) {
+      var index = _.indexOf(vm.trialData.details.swivelNumbers, value);
+      if (index > -1) {
+        vm.trialData.details.swivelNumbers.splice(index, 1);
+      }
     }
 
     function validateDID(input) {
@@ -330,7 +300,7 @@
     }
 
     function isDidAlreadyPresent(input) {
-      return _.includes(DidService.getDidList(), input);
+      return _.includes(vm.trialData.details.swivelNumbers, input);
     }
 
     function setPlaceholderText(text) {
@@ -338,7 +308,56 @@
     }
 
     function checkForInvalidTokens() {
-      return vm.invalidCount > 0 ? false : true;
+      return vm.invalidCount <= 0;
+    }
+
+    function _getCarriers(localScope) {
+      PstnSetupService.listResellerCarriers().then(function (carriers) {
+        _showCarriers(carriers, localScope);
+      })
+        .catch(function () {
+          PstnSetupService.listDefaultCarriers().then(function (carriers) {
+            _showCarriers(carriers, localScope);
+          });
+        });
+    }
+
+    function _showCarriers(carriers, localScope) {
+      _.forEach(carriers, function (carrier) {
+        carrier.displayName = (carrier.displayName || carrier.name);
+        if (_.get(carrier, 'offers', []).length > 0) {
+          carrier.name = carrier.offers[0] + '-' + carrier.displayName;
+        } else if (_.get(carrier, 'offers', []).length === 0) {
+          carrier.name = carrier.vendor + '-' + carrier.displayName;
+        }
+        localScope.to.options.push(carrier);
+      });
+      if (localScope.to.options.length === 1) {
+        vm.trialData.details.pstnProvider = localScope.to.options[0];
+        vm.providerImplementation = localScope.to.options[0].apiImplementation;
+      }
+    }
+
+    function disableNextButton() {
+      if (!checkForInvalidTokens()) {
+        // there are invalid tokens
+        return true;
+      } else if (vm.providerImplementation === vm.SWIVEL && _.size(vm.trialData.details.swivelNumbers) === 0) {
+        // no swivel numbers entered
+        return true;
+      } else if (vm.providerImplementation !== vm.SWIVEL && _.size(vm.trialData.details.pstnNumberInfo.numbers) === 0) {
+        // no PSTN numbers
+        return true;
+      } else {
+        // have some valid numbers
+        return false;
+      }
+    }
+
+    function resetNumbers() {
+      vm.trialData.details.pstnNumberInfo.numbers = [];
+      vm.trialData.details.swivelNumbers = [];
+      vm.invalidCount = 0;
     }
   }
 })();

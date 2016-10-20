@@ -1,17 +1,14 @@
 'use strict';
 
 describe('Customer Reports', function () {
-  afterEach(function () {
-    utils.dumpConsoleErrors();
-  });
 
   it('should login', function () {
     login.login('pbr-admin');
   });
 
   describe('Reports Page', function () {
-    var time = ['Last Week', 'Last Month', 'Last Three Months'];
-    var lowerTime = ['last week', 'last month', 'last three months'];
+    var time = ['Last 7 Days', 'Last 4 Weeks', 'Last 3 Months'];
+    var lowerTime = ['last seven days', 'last four weeks', 'last three months'];
 
     it('should navigate to customer reports page', function () {
       navigation.clickReports();
@@ -43,7 +40,6 @@ describe('Customer Reports', function () {
       // Active Users
       utils.expectIsDisplayed(reports.activeHeader);
       utils.expectIsDisplayed(reports.activeCustomerDescription);
-      utils.expectTextToBeSet(reports.activeCustomerDescription, lowerTime[0]);
       utils.expectIsDisplayed(reports.activeUsers);
 
       // Most Active Users
@@ -51,7 +47,6 @@ describe('Customer Reports', function () {
       utils.expectIsNotDisplayed(reports.mostActiveSearch);
       utils.expectIsNotDisplayed(reports.activeUsersTable);
       utils.expectIsNotDisplayed(reports.mostActiveCarousel);
-      reports.showHideActiveVisibility(false, false);
 
       // Files Shared
       utils.expectIsDisplayed(reports.filesSharedHeader);
@@ -106,30 +101,17 @@ describe('Customer Reports', function () {
       utils.expectIsDisplayed(reports.endpointsDiv);
 
       // quality graphs
-      utils.expectIsNotDisplayed(reports.mediaHeader);
-      utils.expectIsNotDisplayed(reports.mediaFilter);
       utils.expectIsNotDisplayed(reports.mediaQualityDiv);
-
-      utils.expectIsNotDisplayed(reports.metricsHeader);
       utils.expectIsNotDisplayed(reports.metricsGraphDiv);
-      reports.metricsDataPresent(false);
     });
 
     it('should change to display only quality reports', function () {
       utils.click(reports.quality);
 
       // engagement graphs
-      utils.expectIsNotDisplayed(reports.totalRoomsHeader);
       utils.expectIsNotDisplayed(reports.totalRoomsGraph);
-
-      utils.expectIsNotDisplayed(reports.activeHeader);
       utils.expectIsNotDisplayed(reports.activeUsers);
-
-      utils.expectIsNotDisplayed(reports.filesSharedHeader);
       utils.expectIsNotDisplayed(reports.filesSharedDiv);
-
-      utils.expectIsNotDisplayed(reports.endpointsHeader);
-      utils.expectIsNotDisplayed(reports.endpointFilter);
       utils.expectIsNotDisplayed(reports.endpointsDiv);
 
       // quality graphs
@@ -156,7 +138,6 @@ describe('Customer Reports', function () {
       // Active Users
       utils.expectIsDisplayed(reports.activeHeader);
       utils.expectIsDisplayed(reports.activeCustomerDescription);
-      utils.expectTextToBeSet(reports.activeCustomerDescription, lowerTime[1]);
       utils.expectIsDisplayed(reports.activeUsers);
 
       // Most Active Users
@@ -164,7 +145,6 @@ describe('Customer Reports', function () {
       utils.expectIsNotDisplayed(reports.mostActiveSearch);
       utils.expectIsNotDisplayed(reports.activeUsersTable);
       utils.expectIsNotDisplayed(reports.mostActiveCarousel);
-      reports.showHideActiveVisibility(false, false);
 
       // Files Shared
       utils.expectIsDisplayed(reports.filesSharedHeader);

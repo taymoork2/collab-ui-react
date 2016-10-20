@@ -6,21 +6,37 @@
     .service('Userservice', Userservice);
 
   /* @ngInject */
-  function Userservice($http, $rootScope, $location, Storage, Config, Authinfo, Log, Auth, Utils, HuronUser, Notification, NAME_DELIMITER, $translate, $q, TelephoneNumberService, UrlConfig) {
+  function Userservice($http, $q, $rootScope, $translate, Authinfo, Config, HuronUser, Log, NAME_DELIMITER, Notification, SunlightConfigService, TelephoneNumberService, UrlConfig) {
     var userUrl = UrlConfig.getAdminServiceUrl();
 
     var service = {
       updateUsers: updateUsers,
       addUsers: addUsers,
       getUser: getUser,
+      getUserAsPromise: getUserAsPromise,
       updateUserProfile: updateUserProfile,
       inviteUsers: inviteUsers,
       sendEmail: sendEmail,
+      getUsersEmailStatus: getUsersEmailStatus,
       patchUserRoles: patchUserRoles,
       migrateUsers: migrateUsers,
       onboardUsers: onboardUsers,
       bulkOnboardUsers: bulkOnboardUsers,
-      deactivateUser: deactivateUser
+      deactivateUser: deactivateUser,
+      isHuronUser: isHuronUser,
+      isInvitePending: isInvitePending,
+      resendInvitation: resendInvitation,
+      sendSparkWelcomeEmail: sendSparkWelcomeEmail,
+      getUserPhoto: getUserPhoto,
+      isValidThumbnail: isValidThumbnail,
+      getFullNameFromUser: getFullNameFromUser,
+      getPrimaryEmailFromUser: getPrimaryEmailFromUser
+    };
+
+    var _helpers = {
+      isSunlightUserUpdateRequired: isSunlightUserUpdateRequired,
+      getUserLicence: getUserLicence,
+      createUserData: createUserData
     };
 
     return service;
@@ -58,7 +74,7 @@
       }
 
       if (userData.users.length > 0) {
-        $http({
+        return $http({
           method: 'PATCH',
           url: userUrl + 'organization/' + Authinfo.getOrgId() + '/users',
           data: userData
@@ -77,6 +93,8 @@
             callback(data, status, method, headers);
           }
         });
+      } else {
+        return $q.when();
       }
     }
 
@@ -107,6 +125,7 @@
         $http.post(userUrl + 'organization/' + Authinfo.getOrgId() + '/users', userData)
           .success(function (data, status) {
             data = data || {};
+            $rootScope.$broadcast('Userservice::updateUsers');
             data.success = true;
             callback(data, status);
           })
@@ -122,12 +141,20 @@
       }
     }
 
-    function getUser(userid, callback) {
+    // DEPRECATED
+    // - update all callers of this method to use 'getUserAsPromise()' instead, before removing
+    //   this implementataion
+    // - 'getUserAsPromise()' can then assume this name after all callers use promise-style
+    //   chaining
+    function getUser(userid, noCache, callback) {
       var scimUrl = UrlConfig.getScimUrl(Authinfo.getOrgId()) + '/' + userid;
-
-      $http.get(scimUrl, {
-          cache: true
-        })
+      // support the signature getUser(userid, noCache, callback) and getUser(userid, callback)
+      if (!_.isFunction(callback)) {
+        callback = noCache;
+      }
+      return $http.get(scimUrl, {
+        cache: !noCache
+      })
         .success(function (data, status) {
           data = data || {};
           data.success = true;
@@ -141,46 +168,53 @@
         });
     }
 
+    function getUserAsPromise(userId, httpConfig) {
+      var scimUrl = UrlConfig.getScimUrl(Authinfo.getOrgId()) + '/' + userId;
+      var _httpConfig = _.extend({}, httpConfig);
+      return $http.get(scimUrl, _httpConfig);
+    }
+
     function updateUserProfile(userid, userData, callback) {
       var scimUrl = UrlConfig.getScimUrl(Authinfo.getOrgId()) + '/' + userid;
 
-      if (userData) {
-
-        $http({
-            method: 'PATCH',
-            url: scimUrl,
-            data: userData
-          })
-          .success(function (data, status) {
-            data = data || {};
-            // This code is being added temporarily to update users on Squared UC
-            // Discussions are ongoing concerning how these common functions should be
-            // integrated.
-            if (data.entitlements && data.entitlements.indexOf(Config.entitlements.huron) !== -1) {
-              HuronUser.update(data.id, data)
-                .then(function () {
-                  data.success = true;
-                  callback(data, status);
-                }).catch(function (response) {
-                  // Notify Huron error
-                  Notification.errorResponse(response);
-
-                  // Callback update success
-                  data.success = true;
-                  callback(data, status);
-                });
-            } else {
-              data.success = true;
-              callback(data, status);
-            }
-          })
-          .error(function (data, status) {
-            data = data || {};
-            data.success = false;
-            data.status = status;
-            callback(data, status);
-          });
+      if (!userData) {
+        return $q.reject('Invalid user data');
       }
+
+      return $http({
+        method: 'PATCH',
+        url: scimUrl,
+        data: userData
+      })
+        .success(function (data, status) {
+          data = data || {};
+          // This code is being added temporarily to update users on Squared UC
+          // Discussions are ongoing concerning how these common functions should be
+          // integrated.
+          if (data.entitlements && data.entitlements.indexOf(Config.entitlements.huron) !== -1) {
+            HuronUser.update(data.id, data)
+              .then(function () {
+                data.success = true;
+                callback(data, status);
+              }).catch(function (response) {
+                // Notify Huron error
+                Notification.errorResponse(response);
+
+                // Callback update success
+                data.success = true;
+                callback(data, status);
+              });
+          } else {
+            data.success = true;
+            callback(data, status);
+          }
+        })
+        .error(function (data, status) {
+          data = data || {};
+          data.success = false;
+          data.status = status;
+          callback(data, status);
+        });
     }
 
     function inviteUsers(usersDataArray, entitlements, forceResend, callback) {
@@ -257,6 +291,18 @@
         });
     }
 
+    function getUsersEmailStatus(orgId, userId) {
+      if (orgId === null) {
+        $q.reject('No Org ID was passed');
+      }
+      if (userId === null) {
+        $q.reject('No User ID was passed');
+      }
+      var emailUrl = userUrl + 'organization/' + orgId + '/email/' + userId;
+
+      return $http.get(emailUrl);
+    }
+
     function patchUserRoles(email, name, roles, callback) {
       var patchUrl = userUrl + '/organization/' + Authinfo.getOrgId() + '/users/roles';
 
@@ -269,10 +315,10 @@
       };
 
       $http({
-          method: 'PATCH',
-          url: patchUrl,
-          data: requestBody
-        })
+        method: 'PATCH',
+        url: patchUrl,
+        data: requestBody
+      })
         .success(function (data, status) {
           data = data || {};
           data.success = true;
@@ -312,7 +358,11 @@
         });
     }
 
+    /**
+     * Onboard users that share the same set of entitlements and licenses
+     */
     function onboardUsers(usersDataArray, entitlements, licenses, cancelPromise) {
+      // bind the licenses and entitlements that are shared by all users
       var getUserPayload = getUserPayloadForOnboardAPI.bind({
         licenses: licenses,
         entitlements: entitlements
@@ -321,6 +371,9 @@
       return onboardUsersAPI(userPayload, cancelPromise);
     }
 
+    /**
+     * Onboard users with each user specifiying their own set of licenses and entitlements
+     */
     function bulkOnboardUsers(usersDataArray, cancelPromise) {
       var userPayload = getUserPayloadForOnboardAPI(usersDataArray, false);
       return onboardUsersAPI(userPayload, cancelPromise);
@@ -330,6 +383,9 @@
       return $http.delete(userUrl + 'organization/' + Authinfo.getOrgId() + '/user?email=' + encodeURIComponent(userData.email));
     }
 
+    /**
+     * Generate the payload used for onboard API call.
+     */
     function getUserPayloadForOnboardAPI(users, hasSameLicenses) {
       var thisParams = this;
       users = _.isArray(users) ? users : [];
@@ -403,14 +459,74 @@
 
     function onboardUsersAPI(userPayload, cancelPromise) {
       if (userPayload && _.isArray(userPayload.users) && userPayload.users.length > 0) {
-        return $http.post(userUrl + 'organization/' + Authinfo.getOrgId() + '/users/onboard', userPayload, {
+        var onboardUsersPromise = $http.post(userUrl + 'organization/' + Authinfo.getOrgId() + '/users/onboard', userPayload, {
           timeout: cancelPromise
         });
+        onboardUsersPromise.then(function (response) {
+          checkAndOnboardSunlightUser(response.data.userResponse, userPayload.users);
+        });
+        return onboardUsersPromise;
       } else {
         return $q.reject('No valid emails entered.');
       }
     }
 
+    function checkAndOnboardSunlightUser(userResponse, users) {
+      var userResponseSuccess = _.filter(userResponse, function (response) {
+        return response.status === 200;
+      });
+      _.each(userResponseSuccess, function (userResponseSuccess) {
+        var userLicenses = _helpers.getUserLicence(userResponseSuccess.email, users);
+        if (_helpers.isSunlightUserUpdateRequired(userLicenses)) {
+          var userData = _helpers.createUserData();
+          var userId = userResponseSuccess.uuid;
+          SunlightConfigService.updateUserInfo(userData, userId)
+            .then(function () {
+              checkAndPatchSyncKmsRole(userId);
+            }, function () {
+              Notification.error($translate.instant('usersPage.careAddUserError'));
+            });
+        }
+      });
+
+    }
+
+    function checkAndPatchSyncKmsRole(userId) {
+      getUser(userId, function (data) {
+        if (data.success) {
+          var hasSyncKms = _.find(data.roles, function (r) {
+            return r === Config.backend_roles.spark_synckms;
+          });
+          if (!hasSyncKms) {
+            var userRoleData = {
+              schemas: Config.scimSchemas,
+              roles: [Config.backend_roles.spark_synckms]
+            };
+            updateUserProfile(userId, userRoleData, function (data) {
+              if (!data.success) {
+                Notification.error($translate.instant('usersPage.careAddUserRoleError'));
+              }
+            });
+          }
+        }
+      });
+    }
+
+    function createUserData() {
+      var userData = {};
+      userData.alias = '';
+      userData.teamId = Authinfo.getOrgId();
+      userData.attributes = [];
+      userData.media = ['chat'];
+      userData.role = 'user';
+      return userData;
+    }
+
+    function getUserLicence(userEmail, users) {
+      return _.find(users, function (user) {
+        return userEmail === user.email;
+      }).licenses;
+    }
     /*
      * Modifies a license or entitlement array with properties specific for the user
      */
@@ -435,6 +551,85 @@
       });
     }
 
+    function isSunlightUserUpdateRequired(licenses) {
+      var addedSunlightLicense = _.find(licenses, function (license) {
+        return license.id.indexOf(Config.offerCodes.CDC) >= 0 && license.idOperation === 'ADD';
+      });
+      return typeof addedSunlightLicense !== 'undefined';
+    }
+
+    function isHuronUser(allEntitlements) {
+      return _.indexOf(allEntitlements, Config.entitlements.huron) >= 0;
+    }
+
+    function isInvitePending(user) {
+      return _.includes(user.accountStatus, 'pending');
+    }
+
+    function resendInvitation(userEmail, userName, uuid, userStatus, dirsyncEnabled, entitlements) {
+      if ((userStatus === 'pending' || userStatus === 'error') && !isHuronUser(entitlements)) {
+        return sendSparkWelcomeEmail(userEmail, userName);
+      } else if (isHuronUser(entitlements) && !dirsyncEnabled) {
+        return HuronUser.sendWelcomeEmail(userEmail, userName, uuid, Authinfo.getOrgId(), false);
+      }
+      return $q.reject('invitation not sent');
+    }
+
+    function sendSparkWelcomeEmail(userEmail, userName) {
+      var userData = [{
+        'address': userEmail,
+        'name': userName
+      }];
+
+      return $q(function (resolve, reject) {
+        inviteUsers(userData, null, true, function (data, status) {
+          if (data.success) {
+            resolve();
+          } else {
+            Log.debug('Resending failed. Status: ' + status);
+            reject(status);
+          }
+        });
+      });
+    }
+
+    function getUserPhoto(user) {
+      return _.chain(user)
+        .get('photos')
+        .find(function (photo) {
+          return photo.type === 'thumbnail';
+        })
+        .get('value')
+        .value();
+    }
+
+    function isValidThumbnail(user) {
+      var userPhotoValue = getUserPhoto(user);
+      return !(_.startsWith(userPhotoValue, 'file:') || _.isEmpty(userPhotoValue));
+    }
+
+    function getFullNameFromUser(user) {
+      var givenName = _.get(user, 'name.givenName', '');
+      var familyName = _.get(user, 'name.familyName', '');
+      if (givenName && familyName) {
+        return givenName + ' ' + familyName;
+      }
+      return (user.displayName) ? user.displayName : user.userName;
+    }
+
+    function getPrimaryEmailFromUser(user) {
+      var primaryEmail = _.chain(user)
+        .get('emails')
+        .find({ primary: true })
+        .get('value')
+        .value();
+
+      if (!primaryEmail) {
+        primaryEmail = _.get(user, 'userName');
+      }
+
+      return primaryEmail;
+    }
   }
 
 })();

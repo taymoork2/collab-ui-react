@@ -6,10 +6,11 @@
     .factory('OverviewCallCard', OverviewCallCard);
 
   /* @ngInject */
-  function OverviewCallCard(OverviewHelper) {
+  function OverviewCallCard(OverviewHelper, Authinfo) {
     return {
       createCard: function createCard() {
         var card = {};
+        card.isCSB = Authinfo.isCSB();
         card.template = 'modules/core/overview/genericCard.tpl.html';
         card.icon = 'icon-circle-call';
         card.desc = 'overview.cards.call.desc';
@@ -42,7 +43,7 @@
         card.licenseEventHandler = function (licenses) {
           card.allLicenses = licenses;
 
-          card.trial = _.any(filterLicenses(licenses), {
+          card.trial = _.some(filterLicenses(licenses), {
             'isTrial': true
           });
 

@@ -8,26 +8,29 @@
     },
     "trials": {
       "messageTrial": {
-        "type": "COLLAB",
+        "type": "MESSAGE",
         "enabled": false,
         "details": {}
       },
       "meetingTrial": {
-        "type": "MEETINGS",
+        "type": "MEETING",
         "enabled": false,
-        "details": {
-          "siteUrl": "now.istomorrow.org",
-          "timeZone": {
-            "label": "(GMT -8:00) Los Angeles",
-            "timeZoneId": "4",
-            "timeZoneName": "Los Angeles",
-            "DCName": "SJC",
-            "DCID": "PM"
-          }
+        "details": {}
+      },
+      "webexTrial": {
+        "type": "WEBEX",
+        "enabled": false,
+        "siteUrl": "now.istomorrow.org",
+        "timeZone": {
+          "label": "(GMT -8:00) Los Angeles",
+          "timeZoneId": "4",
+          "timeZoneName": "Los Angeles",
+          "DCName": "SJC",
+          "DCID": "PM"
         }
       },
       "callTrial": {
-        "type": "SQUAREDUC",
+        "type": "CALL",
         "enabled": false,
         "details": {
           "phones": [{
@@ -49,6 +52,14 @@
           }]
         }
       },
+      "careTrial": {
+        "type": "CARE",
+        "enabled": false,
+        "details": {
+          "enabled": false,
+          "quantity": 0
+        }
+      },
       "roomSystemTrial": {
         "type": "ROOMSYSTEMS",
         "enabled": false,
@@ -56,6 +67,14 @@
           "roomSystems": [{
             "model": "CISCO_SX10",
             "enabled": false,
+            "quantity": 0
+          }, {
+            "model": "CISCO_DX80",
+            "enabled": true,
+            "quantity": 0
+          }, {
+            "model": "CISCO_MX300",
+            "enabled": true,
             "quantity": 0
           }]
         }
@@ -69,7 +88,8 @@
           "phoneNumber": "+1 206 256 3000",
           "address": "2901 3rd Ave Seattle",
           "postalCode": " 98121",
-          "type": "CUSTOMER"
+          "type": "CUSTOMER",
+          "dealId": "Disabled deal"
         }
       }
     }
@@ -83,12 +103,17 @@
     },
     "trials": {
       "messageTrial": {
-        "type": "COLLAB",
+        "type": "MESSAGE",
         "enabled": true,
         "details": {}
       },
       "meetingTrial": {
-        "type": "MEETINGS",
+        "type": "MEETING",
+        "enabled": true,
+        "details": {}
+      },
+      "webexTrial": {
+        "type": "WEBEX",
         "enabled": true,
         "details": {
           "siteUrl": "now.istomorrow.org",
@@ -102,7 +127,7 @@
         }
       },
       "callTrial": {
-        "type": "SQUAREDUC",
+        "type": "CALL",
         "enabled": true,
         "details": {
           "phones": [{
@@ -124,6 +149,14 @@
           }]
         }
       },
+      "careTrial": {
+        "type": "CARE",
+        "enabled": true,
+        "details": {
+          "enabled": true,
+          "quantity": 10
+        }
+      },
       "roomSystemTrial": {
         "type": "ROOMSYSTEMS",
         "enabled": true,
@@ -132,6 +165,14 @@
             "model": "CISCO_SX10",
             "enabled": true,
             "quantity": 2
+          }, {
+            "model": "CISCO_DX80",
+            "enabled": true,
+            "quantity": 0
+          }, {
+            "model": "CISCO_MX300",
+            "enabled": true,
+            "quantity": 0
           }]
         }
       },
@@ -144,7 +185,8 @@
           "phoneNumber": "+1 206 256 3000",
           "address": "2901 3rd Ave Seattle",
           "postalCode": " 98121",
-          "type": "CUSTOMER"
+          "type": "CUSTOMER",
+          "dealId": "Skip device deal"
         }
       },
       "deviceTrial": {
@@ -156,7 +198,8 @@
           "phoneNumber": "+1 206 256 3000",
           "address": "2901 3rd Ave Seattle",
           "postalCode": " 98121",
-          "type": "CUSTOMER"
+          "type": "CUSTOMER",
+          "dealId": "Enabled deal"
         }
       }
     }

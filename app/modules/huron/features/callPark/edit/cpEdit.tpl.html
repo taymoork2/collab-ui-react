@@ -1,0 +1,83 @@
+<cs-page-header title="{{::cpe.title}}" back="cpe.back" back-url="cpe.huronFeaturesUrl"></cs-page-header>
+<script type="text/ng-template" id="userTemplate.html">
+  <a class="call-park-member-name" ng-if="match.label.displayUser">
+    <span ng-if="match.label.user.firstName !== null" ng-bind-html="match.label.user.firstName | typeaheadHighlight:query"></span>
+    <span ng-if="match.label.user.firstName !== null && match.label.user.lastName !== null && match.label.user.firstName.trim() !== '' && match.label.user.lastName.trim() !== ''">&nbsp;</span>
+    <span ng-if="match.label.user.lastName !== null" ng-bind-html="match.label.user.lastName | typeaheadHighlight:query"></span>
+    <span ng-if="match.label.user.firstName !== null || match.label.user.lastName !== null" ng-bind-html="' (' + match.label.user.userName + ')' | typeaheadHighlight:query"></span>
+    <span ng-if="match.label.user.firstName === null && match.label.user.lastName === null" ng-bind-html="match.label.user.userName | typeaheadHighlight:query"></span>
+  </a>
+  <div class="call-park-member-line">
+    <span ng-bind-html="(match.label.selectableNumber | callParkMemberTelephone) | typeaheadHighlight:query"></span>
+  </div>
+</script>
+<div class="save-section cp-save" ng-if="cpe.form.$dirty">
+  <p>{{:: 'callPark.saveLabel' | translate}}</p>
+  <button ng-click="cpe.resetForm()">{{:: 'usersPage.cancel' | translate}}</button>
+  <button class="btn btn--primary" cs-btn loading="cpe.saveInProgress" ng-click="cpe.saveForm()"
+          ng-disabled="cpe.showDisableSave()">{{:: 'usersPage.save' | translate}}
+  </button>
+</div>
+<div class="cp-edit">
+  <div ng-if="!cpe.isLoadingCompleted" class="load">
+    <i class='icon icon-spinner'></i>
+  </div>
+  <div class="row" ng-if="cpe.isLoadingCompleted">
+    <div class="medium-6 columns">
+      <form novalidate>
+        <ng-form form="cpe.form" model="cpe.model" role="form" name="cpe.form">
+          <label class="cs-input__label" for="call-park-name">{{:: 'callPark.nameLabel' | translate }}</label>
+          <p class="description-block" for="call-park-name">{{:: 'callPark.nameDesc' | translate }}</p>
+          <input id="call-park-name" type="text" required="required" class="cs-input" ng-model="cpe.name" ng-change="cpe.callback()" placeholder="{{:: 'callPark.nameLabel' | translate}}" />
+          <div edit-template-options options="cpe.cpNumberOptions" callback="cpe.callback()"></div>
+          <div edit-template-options options="cpe.cpReversionOptions" callback="cpe.callback()"></div>
+        </ng-form>
+      </form>
+    </div>
+    <div class="medium-6 columns">
+      <div class="cp-wrapper">
+        <div class="cpmembers">
+          <label>{{:: 'callPark.memberLabel' | translate}}</label>
+          <p>{{:: 'callPark.memberDesc' | translate}}</p>
+          <div class="form-input typeahead select-member" ng-class="{'warning-typeahead': cpe.isMembersInvalid()}">
+            <input type="text" ng-model="cpe.userSelected"
+                   typeahead="user for user in cpe.fetchMembers($viewValue) | limitTo: 10"
+                   typeahead-template-url="userTemplate.html" typeahead-on-select="cpe.selectCallParkMember($item)"
+                   placeholder="{{:: 'callPark.memberPlaceholder' | translate}}">
+
+            <div class="ellipsis warning-typeahead" ng-if="cpe.isMembersInvalid()">
+              <span class="icon"></span> <span class="message">{{:: 'callPark.invalidMember' | translate}}</span>
+            </div>
+          </div>
+          <div drop-list="cpe.selectedMembers" callback="cpe.callback()" unique="uuid">
+            <div ng-repeat="member in cpe.selectedMembers track by $index"
+                 drag-drop draggable="member" class="clearfix cpmember"
+                 on-enter-key="cpe.toggleMemberPanel(member.user)"
+                 ng-click="cpe.toggleMemberPanel(member.user)">
+              <div class="small header-background primary cs-card call-park-member-card">
+                <article>
+                  <header ng-class="{'open-panel' : cpe.openMemberPanelUuid === member.user.uuid}">
+                    <div class="header-with-right-icon">
+                      <h5 class="ellipsis"
+                          title="{{cpe.getDisplayName(member.user)}}">
+                        {{cpe.getDisplayName(member.user)}}</h5>
+                      <i class="icon icon-arrow-next icon-lg"></i>
+                    </div>
+                  </header>
+                  <section ng-if="(cpe.openMemberPanelUuid === member.user.uuid)">
+                    <fieldset>
+                      <p class="primary-number">{{ ::member.user.primaryNumber.internal }}</p>
+                      <p>
+                        <a href ng-click="cpe.unSelectCallParkMember(member)">{{:: 'callPark.removeMem' | translate}}</a>
+                      </p>
+                    </fieldset>
+                  </section>
+                </article>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

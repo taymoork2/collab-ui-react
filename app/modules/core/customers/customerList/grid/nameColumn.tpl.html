@@ -1,4 +1,4 @@
 <div class="ui-grid-cell-contents" ng-click="grid.appScope.partnerClicked(row.entity.customerOrgId)" ng-class="{'selected' : row.isSelected}">
-  <span translate="{{row.entity.customerName}}"></span>
+  <span ng-bind="row.entity.customerName"></span>
   <span ng-if="grid.appScope.isPartnerOrg(row.entity.customerOrgId)" id="partner" class="badge badge--managed" ng-class="row.isSelected ? 'orgselected' : 'orgnotselected'" translate="customerPage.myOrganization"></span>
 </div>

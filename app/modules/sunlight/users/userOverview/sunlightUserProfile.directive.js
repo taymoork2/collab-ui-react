@@ -1,5 +1,6 @@
 (function () {
   'use strict';
+
   angular.module('Sunlight')
     .directive('sunlightUserProfile', sunlightUserProfile);
 
@@ -9,5 +10,4 @@
       templateUrl: 'modules/sunlight/users/userOverview/sunlightUserProfile.tpl.html',
     };
   }
-})
-();
+})();

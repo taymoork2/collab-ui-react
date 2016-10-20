@@ -13,10 +13,10 @@ describe('Service: AACalendarService', function () {
   var successSpy;
   var failureSpy;
 
-  beforeEach(module('uc.autoattendant'));
-  beforeEach(module('Huron'));
+  beforeEach(angular.mock.module('uc.autoattendant'));
+  beforeEach(angular.mock.module('Huron'));
 
-  beforeEach(module(function ($provide) {
+  beforeEach(angular.mock.module(function ($provide) {
     $provide.value("Authinfo", Authinfo);
   }));
 
@@ -240,6 +240,43 @@ describe('Service: AACalendarService', function () {
     it('should notify on Internal Server error 500', function () {
       $httpBackend.whenDELETE(scheduleURL).respond(500);
       AACalendarService.deleteCalendar(calendarId).then(
+        successSpy,
+        failureSpy
+      );
+      $httpBackend.flush();
+      expect(successSpy).not.toHaveBeenCalled();
+      expect(failureSpy).toHaveBeenCalled();
+    });
+  });
+
+  describe('updateCalendarName', function () {
+    it('should notify on success', function () {
+      $httpBackend.whenGET(scheduleURL).respond(200, calendar);
+      $httpBackend.whenPUT(scheduleURL).respond(200);
+      AACalendarService.updateCalendarName(calendarId, 'AA').then(
+        successSpy,
+        failureSpy
+      );
+      $httpBackend.flush();
+      expect(successSpy).toHaveBeenCalled();
+      expect(failureSpy).not.toHaveBeenCalled();
+    });
+
+    it('should notify on updateCalendar failure', function () {
+      $httpBackend.whenGET(scheduleURL).respond(200, calendar);
+      $httpBackend.whenPUT(scheduleURL).respond(500);
+      AACalendarService.updateCalendarName(calendarId, 'AA').then(
+        successSpy,
+        failureSpy
+      );
+      $httpBackend.flush();
+      expect(successSpy).not.toHaveBeenCalled();
+      expect(failureSpy).toHaveBeenCalled();
+    });
+
+    it('should notify on readCalendar failure', function () {
+      $httpBackend.whenGET(scheduleURL).respond(500);
+      AACalendarService.updateCalendarName(calendarId, 'AA').then(
         successSpy,
         failureSpy
       );

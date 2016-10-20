@@ -1,11 +1,11 @@
 'use strict';
 
 describe('UserInfoController', function () {
-  beforeEach(module('Core'));
+  beforeEach(angular.mock.module('Core'));
 
-  var controller, $window, $scope, FeedbackService, Userservice, Utils, deferred, $rootScope;
+  var $window, $scope, FeedbackService, Userservice, Utils, deferred, $rootScope;
 
-  beforeEach(module('WebExApp'));
+  beforeEach(angular.mock.module('WebExApp'));
 
   beforeEach(inject(function (_$rootScope_, $controller, $q) {
     $rootScope = _$rootScope_;
@@ -27,7 +27,7 @@ describe('UserInfoController', function () {
       }
     };
 
-    controller = $controller('UserInfoController', {
+    $controller('UserInfoController', {
       Utils: Utils,
       $scope: $scope,
       $window: $window,
@@ -61,9 +61,9 @@ describe('UserInfoController', function () {
 
 describe('UserInfoController WebEx logout', function () {
   var Auth, deferredLogout, WebExUtilsFact, $timeout;
-  var $window, $scope, $rootScope;
+  var $scope, $rootScope;
 
-  beforeEach(module('WebExApp'));
+  beforeEach(angular.mock.module('WebExApp'));
 
   beforeEach(inject(function (_$rootScope_, $controller, $q, _Auth_, _WebExUtilsFact_, _$timeout_) {
     $rootScope = _$rootScope_;

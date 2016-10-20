@@ -1,21 +1,16 @@
-'use strict';
+(function () {
+  'use strict';
 
-angular.module('WebExApp').service('WebexClientVersion', [
-  '$q',
-  '$log',
-  '$filter',
-  '$http',
-  'Authinfo',
-  'UrlConfig',
-  'Notification',
-  function (
+  /* eslint no-template-curly-in-string: 0 */
+
+  angular.module('WebExApp').service('WebexClientVersion', WebexClientVersion);
+
+  /* @ngInject */
+  function WebexClientVersion(
     $q,
     $log,
-    $filter,
     $http,
-    Authinfo,
-    UrlConfig,
-    Notification
+    UrlConfig
   ) {
 
     var self = this;
@@ -38,11 +33,11 @@ angular.module('WebExApp').service('WebexClientVersion', [
 
     //reference http://www.codelord.net/2015/09/24/$q-dot-defer-youre-doing-it-wrong/
 
-    this.toggleWebexSelectLatestVersionAlways = function (partnerId, selectLatestVersion) {
+    this.toggleWebexSelectLatestVersionAlways = function () {
       $log.info("Togging");
     };
 
-    this.getToggle_webexSelectLatestVersionAlways = function (partnerId) {
+    this.getToggle_webexSelectLatestVersionAlways = function () {
       var selectLatest = "latest_version";
       return $q.when(selectLatest);
     };
@@ -118,17 +113,11 @@ angular.module('WebExApp').service('WebexClientVersion', [
     };
 
     this.postTemplate = function (orgId, useLatest, selectedVersion) {
-      var cr = function (resp) {
-        return resp;
-      };
       var j = self.getVersionJson("", orgId, selectedVersion, useLatest);
       return self.post('postTemplate', j, orgId);
     };
 
     this.putTemplate = function (orgId, useLatest, selectedVersion, partnerTemplate) {
-      var cr = function (resp) {
-        return resp;
-      };
       var j = self.getVersionJson(partnerTemplate, orgId, selectedVersion, useLatest);
       return self.put('putTemplate', j, partnerTemplate);
     };
@@ -144,15 +133,11 @@ angular.module('WebExApp').service('WebexClientVersion', [
           //post
           po(orgId, useLatest, selectedVersion).then(function (resp) {
             return resp;
-          }).catch(function (err) {
-
-          });
+          }).catch(function () {});
         } else {
           pu(orgId, useLatest, selectedVersion, pt).then(function (resp) {
             return resp;
-          }).catch(function (err) {
-
-          });
+          }).catch(function () {});
         }
       }); //end return
 
@@ -190,4 +175,4 @@ angular.module('WebExApp').service('WebexClientVersion', [
       return "testData";
     };
   }
-]);
+})();

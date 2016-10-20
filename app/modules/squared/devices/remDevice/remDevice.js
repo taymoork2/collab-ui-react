@@ -1,27 +1,26 @@
 (function () {
   'use strict';
+
   angular
     .module('Squared')
     .controller('RemDeviceController',
 
       /* @ngInject */
-      function ($scope, $modalInstance, CsdmCodeService, CsdmDeviceService, CsdmUnusedAccountsService, XhrNotificationService, deviceOrCode) {
+      function ($modalInstance, CsdmDataModelService, CsdmUnusedAccountsService, XhrNotificationService, deviceOrCode) {
         var rdc = this;
 
+        rdc.deviceOrCode = deviceOrCode;
+
         rdc.deleteDeviceOrCode = function () {
-          if (deviceOrCode.needsActivation) {
-            return CsdmCodeService.deleteCode(deviceOrCode)
-              .then($modalInstance.close, XhrNotificationService.notify);
-          } else if (deviceOrCode.isUnused) {
-            return CsdmUnusedAccountsService.deleteAccount(deviceOrCode)
+          if (rdc.deviceOrCode.isUnused) {
+            return CsdmUnusedAccountsService.deleteAccount(rdc.deviceOrCode)
               .then($modalInstance.close, XhrNotificationService.notify);
           } else {
-            return CsdmDeviceService.deleteDevice(deviceOrCode.url)
+            return CsdmDataModelService.deleteItem(rdc.deviceOrCode)
               .then($modalInstance.close, XhrNotificationService.notify);
           }
         };
       }
-
     )
     .service('RemDeviceModal',
       /* @ngInject */
@@ -33,7 +32,8 @@
             },
             controllerAs: 'rdc',
             controller: 'RemDeviceController',
-            templateUrl: 'modules/squared/devices/remDevice/remDevice.html'
+            templateUrl: 'modules/squared/devices/remDevice/remDevice.html',
+            type: 'dialog'
           }).result;
         }
 

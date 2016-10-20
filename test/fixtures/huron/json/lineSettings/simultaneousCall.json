@@ -1,0 +1,8 @@
+{
+  "url": "https://cmi.huron-int.com/api/v2/customers/bc7aa7cd-46ba-4ea5-bba6-0bfa3aab75d6/places/d68af0cd-a5b3-4857-86cd-6b7d13b5200e/numbers/759952ce-d1da-4ec0-98e7-66d98c590b85",
+  "uuid": "759952ce-d1da-4ec0-98e7-66d98c590b85",
+  "internal": "5004",
+  "external": null,
+  "siteToSite": "81005004",
+  "incomingCallMaximum": 2
+}

@@ -1,11 +1,13 @@
 <img
-  ng-if="!row.entity.isHuronDevice"
+  ng-if="row.entity.accountType === 'MACHINE'"
   class="space_avatar"
   ng-src="images/devices-hi/space_avatar.png"/>
-<span ng-if="row.entity.isHuronDevice && !row.entity.photos" class="user-img">
+<span ng-if="row.entity.accountType === 'PERSON' && !row.entity.photos" class="user-img">
     <i class="icon icon-user"></i>
   </span>
 <img
-  ng-if="row.entity.isHuronDevice && row.entity.photos"
+  ng-if="row.entity.accountType === 'PERSON' && row.entity.photos"
   class="user-img"
   ng-src="{{row.entity.photos[0].url}}"/>
+
+

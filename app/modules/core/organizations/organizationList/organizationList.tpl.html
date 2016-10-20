@@ -2,7 +2,7 @@
    <cs-page-header title="{{::'organizationsPage.organizations' | translate}}" id="organizationTitle"></cs-page-header>
   <cs-page-sub-header>
     <cs-page-sub-header-left>
-      <cs-searchfilter filters="filters" set-filter-fn="setFilter(filter.filterValue)" ng-model="placeholder.count" search-item-fn="filterList(searchStr)" placeholder-text="{{placeholder.name}}">
+      <cs-searchfilter filters="filters" set-filter-fn="setFilter(filter.filterValue)" ng-model="placeholder.count" search-item-fn="searchFn(searchStr)" placeholder-text="{{placeholder.name}}">
       </cs-searchfilter>
     </cs-page-sub-header-left>
     <cs-page-sub-header-right>

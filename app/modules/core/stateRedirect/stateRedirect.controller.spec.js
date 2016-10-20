@@ -4,7 +4,8 @@
   describe('Controller: StateRedirectCtrl', function () {
     var controller, $controller, $scope, Auth, PreviousState;
 
-    beforeEach(module('Core'));
+    beforeEach(angular.mock.module('core.stateredirect'));
+    beforeEach(angular.mock.module('ngSanitize'));
 
     beforeEach(inject(function ($rootScope, _$controller_, _Auth_, _PreviousState_) {
       $scope = $rootScope.$new();

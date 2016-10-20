@@ -3,9 +3,9 @@
 describe('Directive: ucActiveUserCustomer', function () {
   var $compile, $rootScope;
 
-  beforeEach(module('Core'));
+  beforeEach(angular.mock.module('Core'));
 
-  beforeEach(inject(function ($injector, _$compile_, _$rootScope_) {
+  beforeEach(inject(function (_$compile_, _$rootScope_) {
     $compile = _$compile_;
     $rootScope = _$rootScope_;
   }));

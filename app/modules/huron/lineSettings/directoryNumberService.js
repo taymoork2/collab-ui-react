@@ -64,9 +64,9 @@
     function getDirectoryNumberESN(uuid) {
       var esn;
       return DirectoryNumberService.get({
-          customerId: Authinfo.getOrgId(),
-          directoryNumberId: uuid
-        }).$promise
+        customerId: Authinfo.getOrgId(),
+        directoryNumberId: uuid
+      }).$promise
         .then(function (data) {
           if (typeof data.alternateNumbers.enterpriseNumber.pattern !== 'undefined') {
             esn = data.alternateNumbers.enterpriseNumber.pattern;
@@ -78,9 +78,9 @@
 
     function getDirectoryNumber(uuid) {
       return DirectoryNumberService.get({
-          customerId: Authinfo.getOrgId(),
-          directoryNumberId: uuid
-        }).$promise
+        customerId: Authinfo.getOrgId(),
+        directoryNumberId: uuid
+      }).$promise
         .then(function (data) {
           var dn = angular.copy(directoryNumberPayload);
           dn.uuid = data.uuid;

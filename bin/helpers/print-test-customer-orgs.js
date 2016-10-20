@@ -3,7 +3,8 @@
 var stdout = process.stdout;
 var getStdin = require('get-stdin');
 var _ = require('lodash');
-var orgs, re;
+var orgs;
+var re;
 
 // allow optional regex to be passed in from CLI
 re = _.get(process, 'argv[2]', 'Atlas_Test_');
@@ -22,7 +23,7 @@ stdout.on('error', function (err) {
 getStdin()
   .then(function (json) {
     orgs = JSON.parse(json).organizations;
-    orgs = _(orgs)
+    orgs = _.chain(orgs)
       .filter({
         'isAllowedToManage': true,
         'isTestOrg': true

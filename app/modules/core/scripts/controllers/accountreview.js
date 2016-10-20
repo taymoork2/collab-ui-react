@@ -1,11 +1,13 @@
-'use strict';
+(function () {
+  'use strict';
 
-angular.module('Core')
-  .controller('AccountReviewCtrl', ['$scope', '$location',
-    function ($scope, $location) {
+  angular.module('Core')
+    .controller('AccountReviewCtrl', AccountReviewCtrl);
 
-      $scope.nextStep = function () {
-        $location.path('/initialsetup/adduser');
-      };
-    }
-  ]);
+  /* @ngInject */
+  function AccountReviewCtrl($scope, $location) {
+    $scope.nextStep = function () {
+      $location.path('/initialsetup/adduser');
+    };
+  }
+})();

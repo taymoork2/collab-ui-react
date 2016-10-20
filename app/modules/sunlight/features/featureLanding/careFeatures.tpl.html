@@ -1,0 +1,46 @@
+ <div ng-switch on="careFeaturesCtrl.pageState">
+
+   <div class="care-no-features">
+     <!--Show New Feature when no features are present-->
+     <div ng-switch-when = "NewFeature" class="no-features content-container">
+       <i class="icon icon-circle-contact-centre"></i>
+       <div class="h2" translate="sunlightDetails.featuresNotYetConfiguredPage.createCT"></div>
+       <div class="h6 ct-desc" translate="sunlightDetails.featuresNotYetConfiguredPage.createCTDesc"></div>
+       <div class="new-btn">
+         <button type="button" class="btn--people" ui-sref="care.ChatSA" translate="sunlightDetails.featuresNotYetConfiguredPage.new"></button>
+       </div>
+     </div>
+
+     <!--This loading icon should be shown untill atleast one feature get loaded-->
+     <div ng-switch-when = "Loading" class="spinner-icon content-container">
+       <i class='icon icon-spinner icon-2x'></i>
+     </div>
+
+     <!--This Error Page should be shown only when all the features loading has failed-->
+     <div ng-switch-when = "Error" class="features-reload content-container">
+       <p class="h4" translate="sunlightDetails.sorryMessage"></p>
+       <div class="h2" translate="sunlightDetails.reloadMessage"></div>
+       <button type="button" class="btn btn--link" ng-click="careFeaturesCtrl.init()">Reload</button>
+     </div>
+   </div>
+
+   <div class="care-features">
+     <div ng-switch-when = "ShowFeatures">
+       <cs-page-sub-header>
+         <cs-page-sub-header-left>
+           <cs-searchfilter search-item-fn="careFeaturesCtrl.searchData(searchStr)" placeholder-text="{{careFeaturesCtrl.placeholder.name}}" hide-count="true">
+           </cs-searchfilter>
+         </cs-page-sub-header-left>
+         <cs-page-sub-header-right>
+           <button class="btn btn--people new-feature-button" ui-sref="care.ChatSA">
+             <span translate="sunlightDetails.newFeatureButtonText"></span>
+           </button>
+         </cs-page-sub-header-right>
+       </cs-page-sub-header>
+       <div class="content-container">
+         <care-feature-card></care-feature-card>
+       </div>
+     </div>
+   </div>
+
+</div>

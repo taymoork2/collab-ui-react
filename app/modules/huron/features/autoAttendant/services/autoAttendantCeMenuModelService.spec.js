@@ -35,27 +35,29 @@ describe('Service: AutoAttendantCeMenuModelService', function () {
 
   // Combined menu
   var combmenu = getJSONFixture('huron/json/autoAttendant/combinedMenu.json');
+  var submenu = getJSONFixture('huron/json/autoAttendant/submenu.json');
   var ceCombined = combmenu.ceCombined;
-  var combinedMenu = combmenu.combinedMenu;
+  var ceCombinedInputWithSubmenu = combmenu.ceCombinedInputWithSubmenu;
+  var combinedMenuWithSubmenu = combmenu.combinedMenuWithSubmenu;
 
   // Option menu
   var omenu = getJSONFixture('huron/json/autoAttendant/optionMenu.json');
   var ceOption = omenu.ceOption;
+  var expectedCeOption = omenu.expectedCeOption;
   var ceOptionUnsorted = omenu.ceOptionUnsorted;
   var optionMenu = omenu.optionMenu;
 
   // Custom menu
   var cmenu = getJSONFixture('huron/json/autoAttendant/customMenu.json');
   var ceCustom = cmenu.ceCustom;
-  var customWelcomeMenu = cmenu.customWelcomeMenu;
   var customMenu = cmenu.customMenu;
 
-  beforeEach(module('uc.autoattendant'));
-  beforeEach(module('Huron'));
+  beforeEach(angular.mock.module('uc.autoattendant'));
+  beforeEach(angular.mock.module('Huron'));
 
   beforeEach(inject(function (_AutoAttendantCeMenuModelService_) {
     AutoAttendantCeMenuModelService = _AutoAttendantCeMenuModelService_;
-
+    AutoAttendantCeMenuModelService.clearCeMenuMap();
   }));
 
   afterEach(function () {
@@ -84,13 +86,44 @@ describe('Service: AutoAttendantCeMenuModelService', function () {
     });
   });
 
+  describe('getCombinedMenu', function () {
+    it('should be able to read Combined Menu that has submenu', function () {
+      var _combinedMenu = AutoAttendantCeMenuModelService.getCombinedMenu(ceCombinedInputWithSubmenu, 'openHours');
+      expect(angular.equals(combinedMenuWithSubmenu, _combinedMenu)).toBe(true);
+    });
+  });
+
   describe('updateCombinedMenu', function () {
     it('should be able to update a ceRecord with combinedMenu', function () {
       var _ceRecord = angular.copy(ceInfos[0]);
       _ceRecord.callExperienceName = 'AA Combined';
       var _combinedMenu = AutoAttendantCeMenuModelService.getCombinedMenu(ceCombined, 'openHours');
-      var success = AutoAttendantCeMenuModelService.updateCombinedMenu(_ceRecord, 'openHours', _combinedMenu);
+      AutoAttendantCeMenuModelService.updateCombinedMenu(_ceRecord, 'openHours', _combinedMenu);
       expect(angular.equals(_ceRecord, ceCombined)).toBe(true);
+    });
+
+    it('should be able to update a ceRecord with submenu that has a Go Back', function () {
+      var _ceRecord = angular.copy(ceInfos[0]);
+      _ceRecord.callExperienceName = 'AA Combined';
+      _ceRecord.assignedResources[0]['id'] = "81005005";
+      _ceRecord.assignedResources[0]['number'] = "5005";
+      _ceRecord.defaultActionSet = 'openHours';
+
+      var _combinedMenu = AutoAttendantCeMenuModelService.getCombinedMenu(submenu.ceCombinedInputWithSubmenuGoBack, 'openHours');
+      AutoAttendantCeMenuModelService.updateCombinedMenu(_ceRecord, 'openHours', _combinedMenu);
+      expect(angular.equals(_ceRecord, submenu.ceCombinedWithSubmenuGoBack)).toBe(true);
+    });
+
+    it('should be able to update a ceRecord with submenu that has a DialByExt', function () {
+      var _ceRecord = angular.copy(ceInfos[0]);
+      _ceRecord.callExperienceName = 'AA Combined';
+      _ceRecord.assignedResources[0]['id'] = "81005005";
+      _ceRecord.assignedResources[0]['number'] = "5005";
+      _ceRecord.defaultActionSet = 'openHours';
+
+      var _combinedMenu = AutoAttendantCeMenuModelService.getCombinedMenu(submenu.ceCombinedInputWithSubmenuDialByExt, 'openHours');
+      AutoAttendantCeMenuModelService.updateCombinedMenu(_ceRecord, 'openHours', _combinedMenu);
+      expect(angular.equals(_ceRecord, submenu.ceCombinedWithSubmenuDialByExt)).toBe(true);
     });
   });
 
@@ -156,7 +189,7 @@ describe('Service: AutoAttendantCeMenuModelService', function () {
       var optionMenuSuccess = AutoAttendantCeMenuModelService.updateMenu(_ceRecord, 'openHours', _optionMenu);
       expect(welcomeMenuSuccess).toBe(true);
       expect(optionMenuSuccess).toBe(true);
-      expect(angular.equals(_ceRecord, ceOption)).toBe(true);
+      expect(angular.equals(_ceRecord, expectedCeOption)).toBe(true);
     });
   });
 
@@ -177,7 +210,7 @@ describe('Service: AutoAttendantCeMenuModelService', function () {
       var optionMenuSuccess = AutoAttendantCeMenuModelService.updateMenu(_ceRecord, 'openHours', _optionMenu);
       expect(welcomeMenuSuccess).toBe(true);
       expect(optionMenuSuccess).toBe(true);
-      expect(angular.equals(_ceRecord, ceOption)).toBe(true);
+      expect(angular.equals(_ceRecord, expectedCeOption)).toBe(true);
     });
   });
 
@@ -338,7 +371,7 @@ describe('Service: AutoAttendantCeMenuModelService', function () {
   });
 
   describe('newCeMenu', function () {
-    it('should return an AARecord object', function () {
+    it('should return an object of type CeMenu', function () {
       var _ceMenu = AutoAttendantCeMenuModelService.newCeMenu();
       _ceMenu.setType('MENU_OPTION');
       _ceMenu.addHeader(AutoAttendantCeMenuModelService.newCeMenuEntry());
@@ -346,28 +379,104 @@ describe('Service: AutoAttendantCeMenuModelService', function () {
       expect(_ceMenu.getType()).toBe('MENU_OPTION');
       expect(_ceMenu.headers.length).toBe(1);
       expect(_ceMenu.entries.length).toBe(1);
+      expect(_ceMenu.id).toBe('menu0');
+      expect(AutoAttendantCeMenuModelService.isCeMenu(_ceMenu)).toBe(true);
+    });
+
+    it('should return a new CeMenu object on each call', function () {
+      var _ceMenu = AutoAttendantCeMenuModelService.newCeMenu();
+      expect(_ceMenu.id).toBe('menu0');
+      _ceMenu = AutoAttendantCeMenuModelService.newCeMenu();
+      expect(_ceMenu.id).toBe('menu1');
+      _ceMenu = AutoAttendantCeMenuModelService.newCeMenu();
+      expect(_ceMenu.id).toBe('menu2');
+    });
+  });
+
+  describe('clearCeMenuMap', function () {
+    it('should reset the CeMenu internal count to 0', function () {
+      var _ceMenu = AutoAttendantCeMenuModelService.newCeMenu();
+      expect(_ceMenu.id).toBe('menu0');
+      _ceMenu = AutoAttendantCeMenuModelService.newCeMenu();
+      expect(_ceMenu.id).toBe('menu1');
+      AutoAttendantCeMenuModelService.clearCeMenuMap();
+      _ceMenu = AutoAttendantCeMenuModelService.newCeMenu();
+      expect(_ceMenu.id).toBe('menu0');
+    });
+  });
+
+  describe('getCeMenu', function () {
+    it('should return the CeMenu with the given menuId', function () {
+      AutoAttendantCeMenuModelService.newCeMenu();
+      AutoAttendantCeMenuModelService.newCeMenu();
+      AutoAttendantCeMenuModelService.newCeMenu();
+      expect(AutoAttendantCeMenuModelService.getCeMenu('menu0').id).toBe('menu0');
+      expect(AutoAttendantCeMenuModelService.getCeMenu('menu1').id).toBe('menu1');
+      expect(AutoAttendantCeMenuModelService.getCeMenu('menu2').id).toBe('menu2');
+    });
+  });
+
+  describe('deleteCeMenuMap', function () {
+    it('should remove the given menu and all of its submenus from the CeMenuMap', function () {
+      var _ceMenu0 = AutoAttendantCeMenuModelService.newCeMenu();
+      var _ceMenu1 = AutoAttendantCeMenuModelService.newCeMenu();
+      var _ceMenu2 = AutoAttendantCeMenuModelService.newCeMenu();
+      _ceMenu0.addEntry(_ceMenu1);
+      _ceMenu0.addEntry(_ceMenu2);
+      expect(AutoAttendantCeMenuModelService.getCeMenu('menu0').id).toBe('menu0');
+      expect(AutoAttendantCeMenuModelService.getCeMenu('menu1').id).toBe('menu1');
+      expect(AutoAttendantCeMenuModelService.getCeMenu('menu2').id).toBe('menu2');
+      AutoAttendantCeMenuModelService.deleteCeMenuMap('menu0');
+      expect(AutoAttendantCeMenuModelService.getCeMenu('menu0')).toBe(undefined);
+      expect(AutoAttendantCeMenuModelService.getCeMenu('menu1')).toBe(undefined);
+      expect(AutoAttendantCeMenuModelService.getCeMenu('menu2')).toBe(undefined);
     });
   });
 
   describe('updateScheduleActionSetMap', function () {
-    it('should set defaultActionSet and scheduleActionSetMap attributes in AARecord object', function () {
+    it('should set scheduleActionSetMap attributes in AARecord object', function () {
       var _ceRecord = {};
       AutoAttendantCeMenuModelService.updateScheduleActionSetMap(_ceRecord, 'openHours');
-      expect(_ceRecord.defaultActionSet).toBe('openHours');
       expect(angular.isDefined(_ceRecord.scheduleEventTypeMap)).toBe(true);
       expect(_ceRecord.scheduleEventTypeMap.open).toBe('openHours');
 
       _ceRecord = {};
       AutoAttendantCeMenuModelService.updateScheduleActionSetMap(_ceRecord, 'closedHours');
-      expect(_ceRecord.defaultActionSet).toBe('closedHours');
       expect(angular.isDefined(_ceRecord.scheduleEventTypeMap)).toBe(true);
       expect(_ceRecord.scheduleEventTypeMap.closed).toBe('closedHours');
 
       _ceRecord = {};
-      AutoAttendantCeMenuModelService.updateScheduleActionSetMap(_ceRecord, 'holidays');
-      expect(_ceRecord.defaultActionSet).toBe('holidays');
+      AutoAttendantCeMenuModelService.updateScheduleActionSetMap(_ceRecord, 'holidays', 'closedHours');
       expect(angular.isDefined(_ceRecord.scheduleEventTypeMap)).toBe(true);
-      expect(_ceRecord.scheduleEventTypeMap.holiday).toBe('holidays');
+      expect(_ceRecord.scheduleEventTypeMap.holiday).toBe('closedHours');
+    });
+  });
+
+  describe('updateDefaultActionSet', function () {
+    it('should set defaultActionSet to closedHours in AARecord object', function () {
+      var _ceRecord = {};
+      AutoAttendantCeMenuModelService.updateDefaultActionSet(_ceRecord, true);
+      expect(_ceRecord.defaultActionSet).toBe('closedHours');
+    });
+
+    it('should set defaultActionSet to openHours in AARecord object', function () {
+      var _ceRecord = {};
+      AutoAttendantCeMenuModelService.updateDefaultActionSet(_ceRecord, false);
+      expect(_ceRecord.defaultActionSet).toBe('openHours');
+    });
+
+    it('should set defaultActionSet to openHours in AARecord object with hasClosedHours undefined', function () {
+      var _ceRecord = {};
+      AutoAttendantCeMenuModelService.updateDefaultActionSet(_ceRecord, undefined);
+      expect(_ceRecord.defaultActionSet).toBe('openHours');
+    });
+
+    it('should not change defaultActionSet', function () {
+      var _ceRecord = {
+        defaultActionSet: 'test'
+      };
+      AutoAttendantCeMenuModelService.updateDefaultActionSet(_ceRecord, undefined);
+      expect(_ceRecord.defaultActionSet).toBe('test');
     });
   });
 
@@ -383,15 +492,12 @@ describe('Service: AutoAttendantCeMenuModelService', function () {
       };
       AutoAttendantCeMenuModelService.deleteScheduleActionSetMap(_ceRecord, 'closedHours');
       expect(angular.isUndefined(_ceRecord.scheduleEventTypeMap.closed)).toBe(true);
-      expect(_ceRecord.defaultActionSet).toBe('openHours');
 
       AutoAttendantCeMenuModelService.deleteScheduleActionSetMap(_ceRecord, 'openHours');
       expect(angular.isUndefined(_ceRecord.scheduleEventTypeMap.open)).toBe(true);
-      expect(_ceRecord.defaultActionSet).toBe('holidays');
 
       AutoAttendantCeMenuModelService.deleteScheduleActionSetMap(_ceRecord, 'holidays');
       expect(angular.isUndefined(_ceRecord.scheduleEventTypeMap.holiday)).toBe(true);
-      expect(angular.isUndefined(_ceRecord.defaultActionSet)).toBe(true);
     });
   });
 });

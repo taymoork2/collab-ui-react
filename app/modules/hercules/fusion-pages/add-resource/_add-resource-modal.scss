@@ -1,0 +1,24 @@
+.add-resource-modal {
+  .loading {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .spinner--large {
+    font-size: 3rem;
+  }
+
+  .select-resource-group {
+    margin-left: 2rem;
+  }
+
+  h4 {
+    margin-bottom: 1rem;
+  }
+}
+
+.select-resource-group-modal {
+  overflow: visible !important;
+}

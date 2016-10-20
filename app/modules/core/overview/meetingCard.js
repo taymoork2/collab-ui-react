@@ -6,10 +6,11 @@
     .factory('OverviewMeetingCard', OverviewMeetingCard);
 
   /* @ngInject */
-  function OverviewMeetingCard(OverviewHelper) {
+  function OverviewMeetingCard(OverviewHelper, Authinfo) {
     return {
       createCard: function createCard() {
         var card = {};
+        card.isCSB = Authinfo.isCSB();
         card.template = 'modules/core/overview/genericCard.tpl.html';
         card.icon = 'icon-circle-group';
         card.desc = 'overview.cards.meeting.desc';

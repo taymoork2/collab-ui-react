@@ -8,8 +8,8 @@
           <div>
             <div ng-repeat="health in healthMetrics">
               <a ng-href="{{statusPageUrl}}" target="_blank">
-                <div class="monitoring-cell" id="{{health.name}}" ng-class="{unknown:  'gray', error: 'red', major_outage: 'red', warning: 'orange', partial_outage: 'yellow', operational: 'green', degraded_performance:'yellow'}[health.status]">
-                  <i class="fa fa-circle"></i>&nbsp;&nbsp;
+                <div id="{{health.name}}">
+                   <i class="icon icon-circle status-indicator" ng-class="{unknown:  'disabled', error: 'danger', major_outage: 'danger', warning: 'warning', partial_outage: 'warning', operational: 'success', degraded_performance:'warning'}[health.status]"></i>
                   <span>{{health.name}}</span>
                 </div>
               </a>
@@ -31,6 +31,16 @@
           <p class="content" translate="supportPage.cards.tools.launchHelpdeskDesc"></p>
           <a target="_blank">
             <button id="toolsCardHelpdeskButton" ng-click="gotoHelpdesk()" class="btn btn--people btn--medium" style="margin-top: 20px;" translate="supportPage.cards.tools.viewHelpdeskSupport"></button>
+          </a>
+        </div>
+
+        <br>
+
+        <div ng-if="showEdiscoveryLink()">
+          <h5 translate="supportPage.cards.tools.ediscovery"></h5>
+          <p class="content" translate="supportPage.cards.tools.launchEdicoveryDesc"></p>
+          <a target="_blank">
+            <button id="toolsCardEdiscoveryButton" ng-click="gotoEdiscovery()" class="btn btn--people btn--medium" style="margin-top: 20px;" translate="supportPage.cards.tools.viewEdiscovery"></button>
           </a>
         </div>
 

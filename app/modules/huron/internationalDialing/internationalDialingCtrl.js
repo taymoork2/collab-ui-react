@@ -6,7 +6,7 @@
     .controller('InternationalDialingInfoCtrl', InternationalDialingInfoCtrl);
 
   /* @ngInject */
-  function InternationalDialingInfoCtrl($scope, $stateParams, $translate, $modal, $q, UserServiceCommon, Notification, InternationalDialing) {
+  function InternationalDialingInfoCtrl($stateParams, $translate, Notification, InternationalDialing) {
     var vm = this;
 
     var cbUseGlobal = {
@@ -54,30 +54,27 @@
     }
 
     function initInternationalDialing() {
-      return InternationalDialing.listCosRestrictions(vm.currentUser.id).then(function (cosRestrictions) {
+      return InternationalDialing.listCosRestrictions(vm.currentUser.id).then(function (cosRestriction) {
         var overRide = null;
         var custRestriction = null;
-        var cosRestriction = null;
 
-        angular.forEach(cosRestrictions, function (restriction) {
-          cosRestriction = restriction;
-          if (cosRestriction.user.length > 0) {
-            for (var j = 0; j < cosRestriction.user.length; j++) {
-              if (cosRestriction.user[j].restriction === InternationalDialing.INTERNATIONAL_DIALING) {
-                overRide = true;
-                break;
-              }
+        if (cosRestriction.user.length > 0) {
+          for (var j = 0; j < cosRestriction.user.length; j++) {
+            if (cosRestriction.user[j].restriction === InternationalDialing.INTERNATIONAL_DIALING) {
+              overRide = true;
+              break;
             }
           }
-          if (cosRestriction.customer.length > 0) {
-            for (var k = 0; k < cosRestriction.customer.length; k++) {
-              if (cosRestriction.customer[k].restriction === InternationalDialing.INTERNATIONAL_DIALING) {
-                custRestriction = true;
-                break;
-              }
+        }
+        if (cosRestriction.customer.length > 0) {
+          for (var k = 0; k < cosRestriction.customer.length; k++) {
+            if (cosRestriction.customer[k].restriction === InternationalDialing.INTERNATIONAL_DIALING) {
+              custRestriction = true;
+              break;
             }
           }
-        });
+        }
+
         if (overRide) {
           if (cosRestriction.user[0].blocked) {
             vm.model.internationalDialingEnabled = cbNeverAllow;
@@ -114,26 +111,26 @@
         restriction: InternationalDialing.INTERNATIONAL_DIALING,
         blocked: false
       };
-      var result = {
-        msg: null,
-        type: 'null'
-      };
 
       if (vm.model.internationalDialingEnabled.value === "0") {
         cosType.blocked = true;
       } else {
         cosType.blocked = false;
       }
+
+      vm.saveInProcess = true;
       return InternationalDialing.updateCosRestriction(vm.currentUser.id, vm.model.internationalDialingEnabled,
           vm.model.internationalDialingUuid, cosType).then(function () {
-          initInternationalDialing();
+            initInternationalDialing();
 
-          result.msg = $translate.instant('internationalDialingPanel.success');
-          result.type = 'success';
-          Notification.notify([result.msg], result.type);
-        })
+            Notification.success('internationalDialingPanel.success');
+            resetForm();
+          })
         .catch(function (response) {
-          Notification.errorResponse(response, $translate.instant('internationalDialingPanel.error'));
+          Notification.errorResponse(response, 'internationalDialingPanel.error');
+        })
+        .finally(function () {
+          vm.saveInProcess = false;
         });
     }
   }

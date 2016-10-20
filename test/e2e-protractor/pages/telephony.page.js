@@ -4,7 +4,7 @@ var TelephonyPage = function () {
   this.communicationPanel = element(by.cssContainingText('.section-title-row', 'Lines'));
   this.lineConfigurationPanel = element(by.cssContainingText('.section-title-row', 'Line Configuration'));
   this.close = element(by.id('close-preview-button'));
-  this.loadingSpinner = element(by.css('.icon-spinner'));
+  this.loadingSpinner = element.all(by.css('.icon-spinner')).get(0);
 
   this.lineConfigurationActionButton = this.lineConfigurationPanel.element(by.css('button.actions-button'));
   this.removeButton = element(by.cssContainingText('a', 'Remove Line'));

@@ -1,6 +1,3 @@
-// Karma configuration
-// http://karma-runner.github.io/0.10/config/configuration-file.html
-
 module.exports = function (config) {
   'use strict';
 
@@ -8,8 +5,20 @@ module.exports = function (config) {
     // base path, that will be used to resolve files and exclude
     basePath: '../',
 
-    // increase inactivity timeout
-    browserNoActivityTimeout: 30000,
+    // time (ms) karma server waits for a browser message before disconnecting from it
+    browserNoActivityTimeout: 15000,  // default 10000
+
+    // if a browser disconnects from karma server, re-attempt N times
+    //
+    // IMPORTANT:
+    // - the current combination of npm modules:
+    //   - karma@0.13.22
+    //   - karma-phantomjs-launcher@1.0.1
+    //   - phantomjs-prebuilt@2.1.7
+    // - ...exhibit what appears to be a race condition when spawning multiple tasks to
+    //   run karma tests in parallel (either via 'gulp karma-parallel' or 'ktest-all')
+    // - to mitigate this, we increment the disconnect tolerance to 2
+    browserDisconnectTolerance: 2,    // default 0
 
     // testing framework to use (jasmine/mocha/qunit/...)
     frameworks: ['jasmine', 'sinon'],
@@ -17,8 +26,17 @@ module.exports = function (config) {
     /**
      * This is the list of file patterns to load into the browser during testing.
      */
-    files: [, {
+    files: [
+      // inject:unitTestFiles
+      // end-inject:unitTestFiles
+      {
         pattern: 'test/fixtures/**/*.json',
+        watched: true,
+        served: true,
+        included: false
+      },
+      {
+        pattern: 'app/**/*.json',
         watched: true,
         served: true,
         included: false
@@ -28,16 +46,21 @@ module.exports = function (config) {
     preprocessors: {
       'build/scripts/**/*.js': ['coverage'],
       'build/templates-app.js': ['coverage'],
-      'build/modules/**/*.js': ['coverage']
+      'build/modules/**/*.js': ['coverage'],
+      'examples/unit/!(*.spec).js': ['coverage'],
+      'examples/unit/*.html': ['ng-html2js']
+    },
+
+    ngHtml2JsPreprocessor: {
+      moduleName: 'exampleTemplates'
     },
 
     coverageReporter: {
       dir: 'coverage/unit',
       reporters: [{
-        type: 'cobertura'
-      }, {
-        type: 'html',
-        subdir: 'report-html'
+        type: 'json',
+        subdir: 'json',
+        file: 'coverage-<module>.json'
       }]
     },
 
@@ -56,24 +79,21 @@ module.exports = function (config) {
 
     // Start these browsers, currently available:
     // - Chrome
-    // - ChromeCanary
     // - Firefox
-    // - Opera
-    // - Safari (only Mac)
-    // - PhantomJS2
-    // - IE (only Windows)
-    browsers: [process.env.atlas_karma_browser || 'PhantomJS2'],
+    // - PhantomJS
+    browsers: [process.env.atlas_karma_browser || 'PhantomJS'],
      //browsers: ['Chrome'],
 
     // Which plugins to enable
     plugins: [
-      'karma-coverage',
-      'karma-phantomjs2-launcher',
       'karma-chrome-launcher',
+      'karma-coverage',
+      'karma-firefox-launcher',
       'karma-jasmine',
-      'karma-sinon',
       'karma-junit-reporter',
-      'karma-htmlfile-reporter'
+      'karma-ng-html2js-preprocessor',
+      'karma-phantomjs-launcher',
+      'karma-sinon'
     ],
 
     // Continuous Integration mode
@@ -82,15 +102,15 @@ module.exports = function (config) {
 
     colors: true,
 
-    reporters: ['dots', 'junit', 'coverage', 'html'],
+    reporters: [
+      'dots'
+      // inject:reporters
+    ],
 
     junitReporter: {
+      useBrowserName: false,
       outputFile: 'test/unit-test-results.xml',
       suite: ''
-    },
-
-    htmlReporter: {
-      outputFile: 'test/unit-test-results.html'
     }
   });
 };

@@ -1,20 +1,23 @@
-'use strict';
+(function () {
+  'use strict';
 
-angular.module('Squared')
-  .service('CsdmConfigService', ['UrlConfig',
-    function ConfigService(UrlConfig) {
+  angular.module('Squared')
+    .service('CsdmConfigService', CsdmConfigService);
 
-      var getUrl = function () {
-        return UrlConfig.getCsdmServiceUrl();
-      };
+  /* @ngInject */
+  function CsdmConfigService(UrlConfig) {
 
-      var getEnrollmentServiceUrl = function () {
-        return UrlConfig.getEnrollmentServiceUrl();
-      };
+    var getUrl = function () {
+      return UrlConfig.getCsdmServiceUrl();
+    };
 
-      return {
-        getUrl: getUrl,
-        getEnrollmentServiceUrl: getEnrollmentServiceUrl
-      };
-    }
-  ]);
+    var getEnrollmentServiceUrl = function () {
+      return UrlConfig.getEnrollmentServiceUrl();
+    };
+
+    return {
+      getUrl: getUrl,
+      getEnrollmentServiceUrl: getEnrollmentServiceUrl
+    };
+  }
+})();

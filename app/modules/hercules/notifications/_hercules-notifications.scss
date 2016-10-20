@@ -1,4 +1,4 @@
-.hercules-notifications{
+.hercules-notifications {
   z-index: 999;
   margin-top: 0.5rem;
 
@@ -17,14 +17,16 @@
   .notification-todo {
     background-color: $brand-warning;
   }
+
   .notification-alert {
     background-color: $brand-danger;
   }
+
   .notification-new {
     background-color: $color-cta;
   }
 
-  .fa-bell {
+  .icon-bell {
     font-size: 20px;
   }
 
@@ -39,7 +41,7 @@
   }
 
   .notification-close {
-    padding: 4px 4px;
+    padding: 4px;
     cursor: pointer;
     display: block;
     //position: absolute;
@@ -49,7 +51,7 @@
   ul {
     background-color: $brand-white;
     top: 30px;
-    border: 1px solid #C6C7CA;
+    border: 1px solid #c6c7ca;
     margin-left: 0px;
     padding-top: 10px;
     padding-bottom: 10px;
@@ -59,17 +61,18 @@
     overflow: hidden;
     list-style-type: none;
     text-align: left;
-
     margin-left: 20px;
-
     padding-top: 10px;
     padding-bottom: 10px;
 
-    a, a:hover, a:active {
+    a,
+    a:hover,
+    a:active {
       position: static;
     }
 
-    .badge-wrapper, .notif-wrapper {
+    .badge-wrapper,
+    .notif-wrapper {
       float: left;
     }
 
@@ -90,28 +93,31 @@
     }
 
     span {
-      a, a:hover, a:visited, a:active {
+      a,
+      a:hover,
+      a:visited,
+      a:active {
         margin-left: 0;
         margin-right: 0;
         left: 0;
       }
     }
 
-    .notif:after {
-      content: "";
+    .notif::after {
+      content: '';
       position: absolute;
       border-left: 17px solid transparent;
       border-right: 17px solid transparent;
       top: -17px;
       left: 60px; //vr-adjust(58);
-      border-bottom: 17px solid #FFF;
+      border-bottom: 17px solid #fff;
       margin-top: 1px;
       z-index: 9999;
       margin-bottom: -1px;
     }
 
-    .notif:before {
-      content: "";
+    .notif::before {
+      content: '';
       position: absolute;
       border-left: 17px solid transparent;
       border-right: 17px solid transparent;
@@ -122,6 +128,7 @@
       border-bottom: 17px solid $gray-lighter;
     }
   }
+
   .amountBubble {
     position: absolute;
     top: -5px;
@@ -142,8 +149,8 @@
   }
 }
 
-@media screen and (max-width:903px){
-  .hercules-notifications{
+@media screen and (max-width: 903px) {
+  .hercules-notifications {
     left: 20px;
     top: 90px;
   }

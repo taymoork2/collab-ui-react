@@ -1,8 +1,9 @@
-<strong>Add Call Service Connect.
-  <i class="icon icon-remove icon-lg right notification-dismiss"
-     ng-click="notificationController.dismissNewServiceNotification(notification.id, 'squared-fusion-ec')"
-     tooltip-placement="top"
-     tooltip="Dismiss"
-     tooltip-animation="false"></i>
-</strong>
-<p>Activate Call Service Connect under <a href ng-click="notificationController.navigateToCallSettings()">Settings.</a></p>
+<strong translate="hercules.notifications.add-call-service-connect.title"></strong>
+<p ng-if="!notificationController.locatedinCallSettings()"
+   translate="hercules.notifications.add-call-service-connect.description"
+   translate-value-onclick="notificationController.navigateToCallSettings()"
+   translate-compile></p>
+
+<p ng-if="notificationController.locatedinCallSettings()"
+   translate="hercules.notifications.add-call-service-connect.description-already-in-settings-page">
+</p>

@@ -3,115 +3,152 @@
   @extend %page-content-padding;
 
   .indent {
-    padding: 1rem 1.5rem ;
+    padding: 1rem 1.5rem;
   }
 
   .status {
+    .red {
+      color: $color-negative-base;
+    }
+
+    .green {
+      color: $color-cta-base;
+    }
+
+    .grey {
+      color: $gray-base;
+    }
+
+    .yellow {
+      color: $color-attention-base;
+    }
+
+    .error {
+      color: $color-negative-base;
+    }
+
+    .ok {
+      color: $color-cta-base;
+    }
+
+    .warn {
+      color: $color-attention-base;
+    }
+
+    .helpdesk-warning {
+      color: $color-attention-base;
+    }
+
+    .icon-circle {
+      margin-right: 0.5rem;
+    }
+
     .help-desk {
       text-align: center;
     }
+
     .content {
-      padding-left: 0rem;
-      padding-top: 0.5rem;
-      padding-right: 0rem;
-      padding-bottom: 0rem;
+      padding: 0.5rem 0;
       font-size: 0.875rem;
     }
+
     .content-header {
       margin-top: 1rem;
     }
   }
 }
 
-.support-row{
+.support-row {
   margin-left: 15px;
   margin-right: 0px;
 }
 
-.search-panel{
+.search-panel {
   margin-bottom: 30px;
   padding: 20px;
   border-color: #999999;
   background-color: #ffffff;
 }
 
-.search-panel-input{
+.search-panel-input {
   padding-top: 20px;
 }
 
-.search-button-log{
+.search-button-log {
   padding-right: 10px;
 }
 
-.support-card{
+.support-card {
   background-color: #fff;
   margin-bottom: 12px;
   padding: 20px;
 }
 
-.healthy{
-  font-family:$brand-font-extra-light;
-  color:$brand-success;
+.healthy {
+  font-family: $brand-font-extra-light;
+  color: $brand-success;
   font-size: 20px;
   text-align: center;
 }
 
-.healthy-check{
-  color:$brand-success;
+.healthy-check {
+  color: $brand-success;
 }
 
-.support-info{
- font-family:$brand-font-extra-light;
- font-size: 20px;
- color: #444;
- display: block;
- padding-bottom: 10px;
+.support-info {
+  font-family: $brand-font-extra-light;
+  font-size: 20px;
+  color: #444;
+  display: block;
+  padding-bottom: 10px;
 }
 
-.display-link{
+.display-link {
   display: block;
   color: #3ca8e8;
   cursor: pointer;
 }
 
-.support-dsc{
+.support-dsc {
   margin-bottom: 5px;
   word-wrap: break-word;
 }
 
-.support-header{
+.support-header {
   margin-bottom: 5px;
   padding-top: 20px;
 }
 
-.support-header-help{
+.support-header-help {
   margin-top: 20px;
   margin-bottom: 5px;
 }
 
-.error-check{
-  color: $brand-danger
+.error-check {
+  color: $brand-danger;
 }
 
-.error-msg{
-  font-family:$brand-font-extra-light;
-  color:$brand-danger;
+.error-msg {
+  font-family: $brand-font-extra-light;
+  color: $brand-danger;
   font-size: 20px;
   text-align: center;
 }
 
-.systems-detail{
+.systems-detail {
   padding-top: 10px;
 }
 
-.health-card{
+.health-card {
   cursor: pointer;
 }
+
 .grid-icon {
-    text-align: center;
-    .icon {
-      font-size: 20px;
-    }
+  text-align: center;
+
+  .icon {
+    font-size: 20px;
+  }
 }
 
 .support-logs {
@@ -123,11 +160,12 @@
 }
 
 .support-logs .searchbox input {
-  font-size: .875rem;
+  font-size: 0.875rem;
   width: 25rem;
 }
 
-.support-logs .searchbox .searchinput > input, .support-logs .searchbox .searchinput > .input {
+.support-logs .searchbox .searchinput > input,
+.support-logs .searchbox .searchinput > .input {
   max-width: 500px;
 }
 
@@ -182,7 +220,7 @@
 }
 
 .support-logs .searchbox .searchinput {
-  margin-right: .5rem;
+  margin-right: 0.5rem;
 }
 
 .support-logs .search-button {
@@ -190,15 +228,11 @@
   float: left;
 }
 
-/*.support-logs .ui-grid-header {
-  border-bottom: 0;
-}*/
-
-
 //--------- billing ---------//
 .order-list {
   .ngCell.colt1 {
     overflow: visible;
+
     .dropdown-menu {
       right: 315px;
       left: auto;

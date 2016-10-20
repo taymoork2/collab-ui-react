@@ -1,0 +1,56 @@
+<form novalidate name="$ctrl.form" role="form" class="cs-form">
+  <cs-sp-buttons ng-if="$ctrl.form.$dirty" ng-init="$ctrl.initNewForm()">
+    <button cs-btn loading="$ctrl.saveInProcess" class="btn btn--primary" ng-click="$ctrl.saveLine()" ng-disabled="$ctrl.form.$invalid || $ctrl.saveDisabled() || $ctrl.saveInProcess" type="submit">
+      <span translate="common.save"></span>
+    </button>
+    <button cs-btn ng-click="$ctrl.onCancel()">
+      <span translate="common.cancel"></span>
+    </button>
+  </cs-sp-buttons>
+  <cs-sp-container>
+    <cs-sp-section>
+      <section-title
+        title-key="directoryNumberPanel.title"
+        action-list="$ctrl.actionList"
+        show-actions="$ctrl.showActions">
+      </section-title>
+      <uc-directory-number
+        show-internal-extensions="$ctrl.showExtensions"
+        esn-prefix="$ctrl.esnPrefix"
+        internal-selected="$ctrl.lineOverviewData.line.internal"
+        internal-numbers="$ctrl.internalNumbers"
+        internal-is-warn="$ctrl.internalIsWarn"
+        internal-warn-msg="$ctrl.internalWarnMsg"
+        external-selected="$ctrl.lineOverviewData.line.external"
+        external-numbers="$ctrl.externalNumbers"
+        on-change-fn="$ctrl.setDirectoryNumbers(internalNumber, externalNumber)">
+      </uc-directory-number>
+      <uc-call-forward
+        call-forward="$ctrl.lineOverviewData.callForward"
+        voicemail-enabled="$ctrl.voicemailEnabled"
+        on-change-fn="$ctrl.setCallForward(callForward)">
+      </uc-call-forward>
+      <uc-simultaneous-calls
+        incoming-call-maximum="$ctrl.lineOverviewData.line.incomingCallMaximum"
+        on-change-fn="$ctrl.setSimultaneousCalls(incomingCallMaximum)">
+      </uc-simultaneous-calls>
+      <uc-caller-id
+        caller-id-options="$ctrl.callerIdOptions"
+        custom-caller-id-name="$ctrl.lineOverviewData.callerId.customCallerIdName"
+        custom-caller-id-number="$ctrl.lineOverviewData.callerId.customCallerIdNumber"
+        caller-id-selected="$ctrl.lineOverviewData.callerId.externalCallerIdType"
+        direct-line="$ctrl.lineOverviewData.line.external"
+        on-change-fn="$ctrl.setCallerId(callerIdSelected, customCallerIdName, customCallerIdNumber, companyNumber);"
+        company-numbers="$ctrl.lineOverviewData.companyNumbers">
+      </uc-caller-id>
+      <uc-shared-line
+        shared-lines="$ctrl.lineOverviewData.sharedLines"
+        new-shared-line-members="$ctrl.newSharedLineMembers"
+        select-shared-line-user-fn="$ctrl.setNewSharedLineMembers(members)"
+        get-user-list-fn="$ctrl.getUserList(filter)"
+        on-shared-line-change-fn="$ctrl.setSharedLines(sharedLines)"
+        on-delete-shared-line-member-fn="$ctrl.deleteSharedLineMember(sharedLineMember)">
+      </uc-shared-line>
+    </cs-sp-section>
+  </cs-sp-container>
+</form>

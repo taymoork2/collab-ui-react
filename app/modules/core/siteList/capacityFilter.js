@@ -1,10 +1,15 @@
-'use strict';
+(function () {
+  'use strict';
 
-angular.module('Core').filter('capacityFilter', function ($filter) {
-  return function (capacity, offerName) {
-    if (capacity && offerName) {
-      return $filter('translate')(offerName);
-    }
-    return '';
-  };
-});
+  angular.module('Core').filter('capacityFilter', capacityFilter);
+
+  /* @ngInject */
+  function capacityFilter($filter) {
+    return function (capacity, offerName) {
+      if (capacity && offerName) {
+        return $filter('translate')(offerName);
+      }
+      return '';
+    };
+  }
+})();

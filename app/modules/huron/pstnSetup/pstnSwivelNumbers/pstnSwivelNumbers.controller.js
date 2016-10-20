@@ -5,7 +5,7 @@
     .controller('PstnSwivelNumbersCtrl', PstnSwivelNumbersCtrl);
 
   /* @ngInject */
-  function PstnSwivelNumbersCtrl($translate, $state, $timeout, PstnSetup, Notification, TelephoneNumberService) {
+  function PstnSwivelNumbersCtrl($translate, $state, $timeout, PstnSetup, PstnSetupService, Notification, TelephoneNumberService) {
     var vm = this;
 
     vm.hasCarriers = PstnSetup.isCarrierExists;
@@ -84,11 +84,11 @@
     }
 
     function setSwivelNumberTokens(tokens) {
-      angular.element('#' + vm.tokenfieldid).tokenfield('setTokens', tokens);
+      $('#' + vm.tokenfieldid).tokenfield('setTokens', tokens);
     }
 
     function getSwivelNumberTokens() {
-      return angular.element('#' + vm.tokenfieldid).tokenfield('getTokens');
+      return $('#' + vm.tokenfieldid).tokenfield('getTokens');
     }
 
     function validateSwivelNumbers() {
@@ -101,7 +101,18 @@
       } else if (tokens.length === 0) {
         Notification.error('pstnSetup.orderNumbersPrompt');
       } else {
+        //set numbers for if they go back
         PstnSetup.setNumbers(tokens);
+        var numbers = _.map(tokens, function (number) {
+          return number.value;
+        });
+        var swivelOrder = [{
+          data: {
+            numbers: numbers
+          },
+          type: PstnSetupService.NUMBER_ORDER
+        }];
+        PstnSetup.setOrders(swivelOrder);
         $state.go('pstnSetup.review');
       }
     }

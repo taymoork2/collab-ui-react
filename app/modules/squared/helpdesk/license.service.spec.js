@@ -1,6 +1,7 @@
 'use strict';
+
 describe('LicenseService', function () {
-  beforeEach(module('wx2AdminWebClientApp'));
+  beforeEach(angular.mock.module('Squared'));
 
   var LicenseService;
 
@@ -10,14 +11,10 @@ describe('LicenseService', function () {
 
   describe('Fetching data from helpdesk backend', function () {
 
-    var $httpBackend, urlBase, q;
-    beforeEach(inject(function (UrlConfig, _LicenseService_, _$q_, _$httpBackend_) {
-      q = _$q_;
+    var $httpBackend, urlBase;
+    beforeEach(inject(function (UrlConfig, _$httpBackend_) {
       urlBase = UrlConfig.getAdminServiceUrl();
       $httpBackend = _$httpBackend_;
-      $httpBackend
-        .when('GET', 'l10n/en_US.json')
-        .respond({});
     }));
 
     it('should get backend data from helpdesk/licences/<orgId>', function () {
@@ -223,8 +220,8 @@ describe('LicenseService', function () {
       "trialExpiresInDays": 0
     }, {
       "offerCode": "CO",
-      "type": "COMMUNICATIONS",
-      "name": "Communications",
+      "type": "COMMUNICATION",
+      "name": "Communication",
       "status": "ACTIVE",
       "volume": 1000,
       "isTrial": true,

@@ -1,8 +1,12 @@
 (function () {
   'use strict';
 
+  angular
+    .module('Squared')
+    .controller('HelpdeskOrgController', HelpdeskOrgController);
+
   /* @ngInject */
-  function HelpdeskOrgController($stateParams, HelpdeskService, XhrNotificationService, HelpdeskCardsOrgService, Config, $translate, LicenseService, $scope, $state, Authinfo, $window, UrlConfig) {
+  function HelpdeskOrgController($location, $anchorScroll, $stateParams, HelpdeskService, XhrNotificationService, HelpdeskCardsOrgService, Config, $translate, LicenseService, $scope, $modal, $state, Authinfo, $window, UrlConfig, FeatureToggleService) {
     $('body').css('background', 'white');
     var vm = this;
     if ($stateParams.org) {
@@ -11,6 +15,7 @@
     } else {
       vm.orgId = $stateParams.id;
     }
+
     vm.messageCard = {};
     vm.meetingCard = {};
     vm.callCard = {};
@@ -30,9 +35,71 @@
     vm.gotoSearchUsersAndDevices = gotoSearchUsersAndDevices;
     vm.usageText = usageText;
     vm.launchAtlasReadonly = launchAtlasReadonly;
-    vm.allowLaunchAtlas = vm.orgId != Authinfo.getOrgId() && Authinfo.getOrgId() === "ce8d17f8-1734-4a54-8510-fae65acc505e"; // Only show for help desk users in Marvel org (for testing)
+    vm.isTrials = isTrials;
+    vm.allowLaunchAtlas = false;
+    vm.openExtendedInformation = openExtendedInformation;
+    vm.supportsExtendedInformation = false;
+    vm.cardsAvailable = false;
+    vm.adminUsersAvailable = false;
+    vm.findServiceOrder = findServiceOrder;
+    vm.supportsLocalDialing = false;
 
     HelpdeskService.getOrg(vm.orgId).then(initOrgView, XhrNotificationService.notify);
+
+    FeatureToggleService.supports(FeatureToggleService.features.atlasHelpDeskExt).then(function (result) {
+      vm.supportsExtendedInformation = result;
+    });
+
+    FeatureToggleService.getCustomerHuronToggle(vm.orgId, FeatureToggleService.features.huronLocalDialing).then(function (result) {
+      vm.supportsLocalDialing = result;
+    });
+
+    scrollToTop();
+
+    function scrollToTop() {
+      if ($location && $anchorScroll) {
+        $location.hash('helpdeskPageTop');
+        $anchorScroll();
+      }
+    }
+
+    function setReadOnlyLaunchButtonVisibility(orgData) {
+      if (orgData.id == Authinfo.getOrgId()) {
+        vm.allowLaunchAtlas = false;
+      } else if (!orgData.orgSettings) {
+        vm.allowLaunchAtlas = true;
+      } else {
+        var orgSettings = JSON.parse(_.last(orgData.orgSettings));
+        vm.allowLaunchAtlas = orgSettings.allowReadOnlyAccess;
+      }
+    }
+
+    function isTrials(orgSettings) {
+      var eft = false;
+      if (orgSettings) {
+        var orgSettingsJson = JSON.parse(_.last(orgSettings));
+        eft = orgSettingsJson.isEFT;
+      }
+      return eft;
+    }
+
+    function openExtendedInformation() {
+      if (vm.supportsExtendedInformation) {
+        $modal.open({
+          templateUrl: "modules/squared/helpdesk/helpdesk-extended-information.html",
+          controller: 'HelpdeskExtendedInfoDialogController as modal',
+          modalId: "HelpdeskExtendedInfoDialog",
+          resolve: {
+            title: function () {
+              return 'helpdesk.customerDetails';
+            },
+            data: function () {
+              return vm.org;
+            }
+          }
+        });
+      }
+    }
 
     function initOrgView(org) {
       vm.org = org;
@@ -44,11 +111,13 @@
         initCards(licenses);
         findLicenseUsage();
       }, XhrNotificationService.notify);
-
       findManagedByOrgs(org);
       findWebExSites(org);
+      findServiceOrder(vm.orgId);
       findAdminUsers(org);
+      vm.supportedBy = isTrials(org.orgSettings) ? $translate.instant('helpdesk.trials') : $translate.instant('helpdesk.ts');
       angular.element(".helpdesk-details").focus();
+      setReadOnlyLaunchButtonVisibility(org);
     }
 
     function initCards(licenses) {
@@ -57,6 +126,7 @@
       vm.callCard = HelpdeskCardsOrgService.getCallCardForOrg(vm.org, licenses);
       vm.hybridServicesCard = HelpdeskCardsOrgService.getHybridServicesCardForOrg(vm.org);
       vm.roomSystemsCard = HelpdeskCardsOrgService.getRoomSystemsCardForOrg(vm.org, licenses);
+      vm.cardsAvailable = true;
     }
 
     function findManagedByOrgs(org) {
@@ -83,12 +153,27 @@
       }
     }
 
+    function findServiceOrder(orgId) {
+      HelpdeskService.getServiceOrder(orgId).then(function (order) {
+        var orderingSystemTypes = {
+          APP_DIRECT: 'Telstra AppDirect Marketplace(TAM)',
+          ATLAS_TRIALS: 'Spark Trial',
+          CCW: 'CCW',
+          CISCO_ONLINE_OPC: 'Spark Online Trial',
+          DIGITAL_RIVER: 'Digital River',
+          default: order.orderingTool
+        };
+        vm.orderSystem = orderingSystemTypes[order.orderingTool] || orderingSystemTypes['default'];
+      }, XhrNotificationService.notify);
+    }
+
     function findAdminUsers(org) {
-      HelpdeskService.searchUsers('', org.id, 100, 'id_full_admin').then(function (users) {
+      HelpdeskService.usersWithRole(org.id, 'id_full_admin', 100).then(function (users) {
         vm.adminUsers = users;
         vm.showAllAdminUsersText = $translate.instant('helpdesk.showAllAdminUsers', {
           numUsers: users.length
         });
+        vm.adminUsersAvailable = true;
       }, XhrNotificationService.notify);
     }
 
@@ -113,14 +198,20 @@
       vm.adminUserLimit = vm.initialAdminUserLimit;
     }
 
+    function modalVisible() {
+      return $('#HelpdeskExtendedInfoDialog').is(':visible');
+    }
+
     function keyPressHandler(event) {
-      switch (event.keyCode) {
-      case 27: // Esc
-        window.history.back();
-        break;
-      case 83: // S
-        gotoSearchUsersAndDevices();
-        break;
+      if (!modalVisible()) {
+        switch (event.keyCode) {
+          case 27: // Esc
+            $window.history.back();
+            break;
+          case 83: // S
+            gotoSearchUsersAndDevices();
+            break;
+        }
       }
     }
 
@@ -145,18 +236,14 @@
     function launchAtlasReadonly() {
       vm.launchingAtlas = true;
       HelpdeskService.elevateToReadonlyAdmin(vm.orgId).then(function () {
-          $window.open($state.href('login_swap', {
-            customerOrgId: vm.orgId,
-            customerOrgName: vm.org.displayName
-          }));
-        }, XhrNotificationService.notify)
+        $window.open($state.href('login_swap', {
+          customerOrgId: vm.orgId,
+          customerOrgName: vm.org.displayName
+        }));
+      }, XhrNotificationService.notify)
         .finally(function () {
           vm.launchingAtlas = false;
         });
     }
   }
-
-  angular
-    .module('Squared')
-    .controller('HelpdeskOrgController', HelpdeskOrgController);
 }());

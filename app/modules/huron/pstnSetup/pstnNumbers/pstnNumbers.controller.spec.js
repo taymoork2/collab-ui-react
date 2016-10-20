@@ -1,58 +1,124 @@
 'use strict';
 
 describe('Controller: PstnNumbersCtrl', function () {
-  var controller, $compile, $controller, $scope, $state, $q, $translate, PstnSetupService, PstnSetup, Notification, FeatureToggleService, TerminusStateService;
+  var controller, $compile, $scope, $state, $q, $translate, PstnSetupService, PstnSetup, Notification, TerminusStateService, FeatureToggleService;
 
   var customer = getJSONFixture('huron/json/pstnSetup/customer.json');
   var customerCarrierList = getJSONFixture('huron/json/pstnSetup/customerCarrierList.json');
   var orderCart = getJSONFixture('huron/json/pstnSetup/orderCart.json');
 
-  var singleOrder = '+12145551000';
-  var consecutiveOrder = ['+12145551000', '+12145551001'];
-  var nonconsecutiveOrder = ['+12145551000', '+12145551100'];
-  var portOrder = angular.copy(consecutiveOrder);
-  portOrder.type = 'port';
+  var singleOrder = {
+    "data": {
+      "numbers": "+12145551000"
+    },
+    "type": "NUMBER_ORDER"
+  };
+  var consecutiveOrder = {
+    "data": {
+      "numbers": [
+        "+12145551000",
+        "+12145551001"
+      ]
+    },
+    "type": "NUMBER_ORDER"
+  };
+  var nonconsecutiveOrder = {
+    "data": {
+      "numbers": [
+        "+12145551234",
+        "+12145551678"
+      ]
+    },
+    "type": "NUMBER_ORDER"
+  };
+  var portOrder = {
+    "data": {
+      "numbers": [
+        "+12145557001",
+        "+12145557002"
+      ]
+    },
+    "type": "PORT_ORDER"
+  };
+  var advancedOrder = {
+    data: {
+      areaCode: 321,
+      length: 2,
+      consecutive: false
+    },
+    type: "BLOCK_ORDER"
+  };
+  var advancedNxxOrder = {
+    data: {
+      areaCode: 321,
+      length: 2,
+      nxx: 201,
+      consecutive: false
+    },
+    type: "BLOCK_ORDER"
+  };
+  var advancedTollFreeOrder = {
+    data: {
+      areaCode: 800,
+      length: 3,
+      consecutive: false
+    },
+    type: "TOLLFREE_BLOCK_ORDER"
+  };
 
   var states = [{
     name: 'Texas',
     abbreviation: 'TX'
   }];
 
-  var areaCodes = [{
-    code: '123',
-    count: 15
-  }, {
-    code: '456',
-    count: 30
-  }];
+  var response = {
+    areaCodes: [{
+      code: '123',
+      count: 15
+    }, {
+      code: '456',
+      count: 30
+    }]
+  };
 
-  beforeEach(module('Huron'));
+  var serviceAddress = {
+    address1: '123 example st',
+    address2: '',
+    city: 'Sample',
+    state: 'TX',
+    zip: '77777'
+  };
 
-  beforeEach(inject(function ($rootScope, _$compile_, _$controller_, _$state_, _$q_, _$translate_, _PstnSetupService_, _PstnSetup_, _Notification_, _FeatureToggleService_, _TerminusStateService_) {
+  beforeEach(angular.mock.module('Huron'));
+  beforeEach(angular.mock.module('Sunlight')); // Remove this when FeatureToggleService is removed.
+
+  beforeEach(inject(function ($rootScope, _$compile_, _$state_, _$q_, _$translate_, _PstnSetupService_, _PstnSetup_, _Notification_, _TerminusStateService_, _FeatureToggleService_) {
     $scope = $rootScope.$new();
     $compile = _$compile_;
-    $controller = _$controller_;
     $state = _$state_;
     $q = _$q_;
     $translate = _$translate_;
     PstnSetupService = _PstnSetupService_;
     PstnSetup = _PstnSetup_;
     Notification = _Notification_;
-    FeatureToggleService = _FeatureToggleService_;
     TerminusStateService = _TerminusStateService_;
+    FeatureToggleService = _FeatureToggleService_;
 
     PstnSetup.setCustomerId(customer.uuid);
     PstnSetup.setCustomerName(customer.name);
     PstnSetup.setProvider(customerCarrierList[0]);
 
     spyOn(PstnSetupService, 'releaseCarrierInventory').and.returnValue($q.when());
+    spyOn(PstnSetupService, 'getCarrierInventory').and.returnValue($q.when(response));
+    spyOn(PstnSetupService, 'getCarrierTollFreeInventory').and.returnValue($q.when(response));
+    spyOn(PstnSetup, 'getServiceAddress').and.returnValue(serviceAddress);
     spyOn(Notification, 'error');
     spyOn($state, 'go');
-    spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
     spyOn(TerminusStateService, 'query').and.returnValue({
       '$promise': $q.when(states)
     });
     spyOn($translate, 'instant').and.callThrough();
+    spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(false));
 
     controller = compileTemplate();
   }));
@@ -65,91 +131,24 @@ describe('Controller: PstnNumbersCtrl', function () {
     return _.get(el.scope(), '$$childTail.pstnNumbers');
   }
 
-  function getFieldTemplateOptions(key) {
-    return _.chain(controller.fields)
-      .get('[0].templateOptions.fields')
-      .find({
-        key: key
-      })
-      .get('templateOptions')
-      .value();
-  }
-
   describe('initial/default data', function () {
     it('should not have an areaCodeOptions array', function () {
-      expect(controller.areaCodeOptions).toBeUndefined();
+      expect(controller.model.pstn.areaCodeOptions).toBeDefined();
+      expect(controller.model.tollFree.areaCodeOptions).toBeDefined();
     });
 
     it('should have 1 quantity', function () {
-      expect(controller.model.quantity).toEqual(1);
-    });
-  });
-
-  describe('State helpText', function () {
-    var stateTemplateOptions;
-    beforeEach(function () {
-      stateTemplateOptions = getFieldTemplateOptions('state');
+      expect(controller.model.pstn.quantity).toEqual(null);
+      expect(controller.model.tollFree.quantity).toEqual(1);
     });
 
-    it('should not have initial helpText', function () {
-      expect(stateTemplateOptions.helpText).toBeUndefined();
+    it('should have state set through pstnSetupService on first time', function () {
+      expect(controller.model.pstn.state).toEqual(states[0]);
     });
 
-    it('should not set helpText if state model is not set', function () {
-      controller.areaCodeOptions = areaCodes;
+    it('should have showTollFreeNumbers set to false if feature toggle returns false', function () {
       $scope.$apply();
-
-      expect(stateTemplateOptions.helpText).toBeUndefined();
-    });
-
-    it('should sum the area code counts when areaCodeOptions changes', function () {
-      controller.model.state = {}; // dummy selection
-      controller.areaCodeOptions = areaCodes;
-      $scope.$apply();
-
-      expect(stateTemplateOptions.helpText).toEqual('pstnSetup.numbers');
-      expect($translate.instant).toHaveBeenCalledWith('pstnSetup.numbers', {
-        count: 45
-      }, 'messageformat');
-    });
-  });
-
-  describe('Area Code helpText', function () {
-    var areaCodeTemplateOptions;
-    beforeEach(function () {
-      areaCodeTemplateOptions = getFieldTemplateOptions('areaCode');
-    });
-
-    it('should not have initial helpText', function () {
-      expect(areaCodeTemplateOptions.helpText).toBeUndefined();
-    });
-
-    it('should not have initial options', function () {
-      expect(areaCodeTemplateOptions.options).toEqual([]);
-    });
-
-    it('should update field options with areaCodeOptions', function () {
-      controller.areaCodeOptions = areaCodes;
-      $scope.$apply();
-
-      expect(areaCodeTemplateOptions.options).toEqual(areaCodes);
-    });
-
-    it('should not set helpText if area code model is not set', function () {
-      controller.model.areaCode = undefined;
-      $scope.$apply();
-
-      expect(areaCodeTemplateOptions.helpText).toBeUndefined();
-    });
-
-    it('should set the count of selected area code', function () {
-      controller.model.areaCode = areaCodes[0];
-      $scope.$apply();
-
-      expect(areaCodeTemplateOptions.helpText).toEqual('pstnSetup.numbers');
-      expect($translate.instant).toHaveBeenCalledWith('pstnSetup.numbers', {
-        count: 15
-      }, 'messageformat');
+      expect(controller.showTollFreeNumbers).toBe(false);
     });
   });
 
@@ -167,7 +166,7 @@ describe('Controller: PstnNumbersCtrl', function () {
     it('should update with new numbers', function () {
       controller.orderCart = orderCart;
       $scope.$apply();
-      expect(controller.orderNumbersTotal).toEqual(5);
+      expect(controller.orderNumbersTotal).toEqual(4);
       controller.goToReview();
       expect($state.go).toHaveBeenCalledWith('pstnSetup.review');
     });
@@ -189,6 +188,10 @@ describe('Controller: PstnNumbersCtrl', function () {
     it('should show quantity if is a port order', function () {
       expect(controller.showOrderQuantity(portOrder)).toBeTruthy();
     });
+
+    it('should show quantity if is an advanced order', function () {
+      expect(controller.showOrderQuantity(advancedOrder)).toBeTruthy();
+    });
   });
 
   describe('formatTelephoneNumber', function () {
@@ -207,11 +210,19 @@ describe('Controller: PstnNumbersCtrl', function () {
     it('should format a port order', function () {
       expect(controller.formatTelephoneNumber(portOrder)).toEqual('pstnSetup.portNumbersLabel');
     });
+
+    it('should format an advanced order', function () {
+      expect(controller.formatTelephoneNumber(advancedOrder)).toEqual('(' + advancedOrder.data.areaCode + ') XXX-XXXX');
+    });
+
+    it('should format an advanced order with nxx', function () {
+      expect(controller.formatTelephoneNumber(advancedNxxOrder)).toEqual('(' + advancedNxxOrder.data.areaCode + ') ' + advancedNxxOrder.data.nxx + '-XXXX');
+    });
   });
 
   describe('removeOrder', function () {
     beforeEach(function () {
-      controller.orderCart = [singleOrder, consecutiveOrder, nonconsecutiveOrder, portOrder];
+      controller.orderCart = [singleOrder, consecutiveOrder, nonconsecutiveOrder, portOrder, advancedOrder];
     });
 
     it('should remove a single order', function () {
@@ -240,6 +251,49 @@ describe('Controller: PstnNumbersCtrl', function () {
       $scope.$apply();
 
       expect(controller.orderCart).not.toContain(portOrder);
+    });
+
+    it('should remove an advanced order', function () {
+      controller.removeOrder(advancedOrder);
+      $scope.$apply();
+
+      expect(controller.orderCart).not.toContain(advancedOrder);
+    });
+  });
+
+  describe('addOrders', function () {
+    it('should add an advanced PSTN order', function () {
+      controller.model.pstn.areaCode = {
+        code: advancedOrder.data.areaCode
+      };
+      controller.model.pstn.quantity = advancedOrder.data.length;
+      controller.model.pstn.consecutive = advancedOrder.data.consecutive;
+      controller.addToCart(PstnSetupService.BLOCK_ORDER);
+      expect(controller.orderCart).toContain({
+        data: {
+          areaCode: advancedOrder.data.areaCode,
+          length: advancedOrder.data.length,
+          consecutive: advancedOrder.data.consecutive
+        },
+        type: PstnSetupService.BLOCK_ORDER
+      });
+    });
+
+    it('should add an advanced toll-free order', function () {
+      controller.model.tollFree.areaCode = {
+        code: advancedTollFreeOrder.data.areaCode
+      };
+      controller.model.tollFree.quantity = advancedTollFreeOrder.data.length;
+      controller.model.tollFree.consecutive = advancedTollFreeOrder.data.consecutive;
+      controller.addToCart(PstnSetupService.TOLLFREE_BLOCK_ORDER);
+      expect(controller.orderCart).toContain({
+        data: {
+          areaCode: advancedTollFreeOrder.data.areaCode,
+          length: advancedTollFreeOrder.data.length,
+          consecutive: advancedTollFreeOrder.data.consecutive
+        },
+        type: PstnSetupService.TOLLFREE_BLOCK_ORDER
+      });
     });
   });
 

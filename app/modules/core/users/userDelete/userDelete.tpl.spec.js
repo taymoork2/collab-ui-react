@@ -6,9 +6,9 @@ describe('Template: userDelete', function () {
   var DELETE_BUTTON = '#deleteUserButton';
   var DISABLED = 'disabled';
 
-  beforeEach(module('Core'));
-  beforeEach(module('Huron'));
-  beforeEach(module('Messenger'));
+  beforeEach(angular.mock.module('Core'));
+  beforeEach(angular.mock.module('Huron'));
+  beforeEach(angular.mock.module('Sunlight'));
 
   beforeEach(inject(dependencies));
   beforeEach(compileView);
@@ -44,12 +44,5 @@ describe('Template: userDelete', function () {
   it('clicking button should call delete', function () {
     view.find(DELETE_BUTTON).click();
     expect(controller.deactivateUser).toHaveBeenCalled();
-  });
-
-  it('should have disabled button with isMsgrSyncEnabled enabled', function () {
-    controller.isMsgrSyncEnabled = true;
-    $scope.$apply();
-
-    expect(view.find(DELETE_BUTTON).attr(DISABLED)).toEqual(DISABLED);
   });
 });

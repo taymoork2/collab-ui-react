@@ -1,8 +1,8 @@
 'use strict';
 
 describe('Directive: aaDialByExt', function () {
-  var $compile, $rootScope, $scope;
-  var AAUiModelService, AutoAttendantCeMenuModelService;
+  var $compile, $rootScope, $scope, $q;
+  var AAUiModelService, AutoAttendantCeMenuModelService, FeatureToggleService;
 
   var aaUiModel = {
     openHours: {},
@@ -10,34 +10,37 @@ describe('Directive: aaDialByExt', function () {
       name: 'aa'
     }
   };
-  var schedule = 'openHours';
-  var index = '0';
-  var keyIndex = '0';
 
-  beforeEach(module('Huron'));
+  beforeEach(angular.mock.module('Huron'));
+  beforeEach(angular.mock.module('Sunlight'));
 
-  beforeEach(inject(function ($injector, _$compile_, _$rootScope_, _AAUiModelService_, _AutoAttendantCeMenuModelService_) {
+  beforeEach(inject(function (_$compile_, _$rootScope_, _$q_, _AAUiModelService_, _AutoAttendantCeMenuModelService_, _FeatureToggleService_) {
     $compile = _$compile_;
     $rootScope = _$rootScope_;
     $scope = _$rootScope_;
+    $q = _$q_;
+
+    $scope.schedule = 'OpenHours';
+    $scope.index = '0';
+    $scope.keyIndex = '0';
+    $scope.menuId = 'menu1';
 
     AAUiModelService = _AAUiModelService_;
     AutoAttendantCeMenuModelService = _AutoAttendantCeMenuModelService_;
+    FeatureToggleService = _FeatureToggleService_;
 
-    $scope.schedule = schedule;
-    $scope.index = index;
-    $scope.aaKey = keyIndex;
+    spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
 
     spyOn(AAUiModelService, 'getUiModel').and.returnValue(aaUiModel);
+    AutoAttendantCeMenuModelService.clearCeMenuMap();
     aaUiModel.openHours = AutoAttendantCeMenuModelService.newCeMenu();
-    aaUiModel[schedule].addEntryAt(index, AutoAttendantCeMenuModelService.newCeMenu());
+    aaUiModel.openHours.addEntryAt(0, AutoAttendantCeMenuModelService.newCeMenu());
 
   }));
 
   it('replaces the element with the appropriate content', function () {
-    var element = $compile("<aa-dial-by-ext aa-schedule='openHours' aa-index='0' aa-key-index='0'></aa-dial-by-ext>")($rootScope);
+    var element = $compile("<aa-dial-by-ext aa-schedule='openHours' aa-menu-id='menu1' aa-index='0' aa-key-index='0'></aa-dial-by-ext>")($rootScope);
     $rootScope.$digest();
-
     expect(element.html()).toContain("aaDialByExtCtrl");
   });
 });

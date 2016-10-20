@@ -5,28 +5,31 @@
     position: relative;
     top: rem-calc(-5);
     z-index: 1000;
+
     .select-options {
       padding: 0;
     }
   }
+
   .barchart {
     position: relative;
     top: rem-calc(-20);
   }
-  .amExportButton {
-    top: rem-calc(40);
-  }
+
   .icon-information {
     position: relative;
     top: rem-calc(3);
     color: $gray-light-1;
   }
+
   .icon-information:hover {
     color: $color-primary-base;
   }
+
   .tooltip {
     width: rem-calc(325);
     max-width: rem-calc(325);
+
     .tooltip-inner {
       font-size: rem-calc(15);
       width: rem-calc(325);

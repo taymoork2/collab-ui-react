@@ -5,12 +5,7 @@
     .service('DummyCustomerReportService', DummyCustomerReportService);
 
   /* @ngInject */
-  function DummyCustomerReportService($translate, chartColors) {
-    var dayFormat = "MMM DD";
-    var monthFormat = "MMMM";
-    var dummyPopulation = null;
-    var customers = null;
-
+  function DummyCustomerReportService($translate, chartColors, ReportConstants) {
     return {
       dummyActiveUserData: dummyActiveUserData,
       dummyAvgRoomData: dummyAvgRoomData,
@@ -20,253 +15,193 @@
       dummyDeviceData: dummyDeviceData
     };
 
-    function dummyActiveUserData(filter) {
+    function getCommonData(filter, index) {
+      var count = ReportConstants.DAYS - index;
+      var date = moment().subtract(index, ReportConstants.DAY).format(ReportConstants.DAY_FORMAT);
+      if (filter.value === 1) {
+        count = ReportConstants.WEEKS - index;
+        date = moment().startOf(ReportConstants.WEEK).subtract(1 + (index * 7), ReportConstants.DAY).format(ReportConstants.DAY_FORMAT);
+      } else if (filter.value === 2) {
+        count = ReportConstants.MONTHS - index;
+        date = moment().subtract(index, ReportConstants.MONTH).format(ReportConstants.MONTH_FORMAT);
+      }
+
+      return {
+        date: date,
+        count: count
+      };
+    }
+
+    function getPercentage(numberOne, numberTwo) {
+      return Math.round((numberOne / numberTwo) * 100);
+    }
+
+    // should return one set of data for column version and one set for line graph version
+    // TODO: remove column version of data after feature toggle is removed
+    function dummyActiveUserData(filter, lineGraph) {
       var dummyGraph = [];
-      var abs = 0;
+      var timespan;
 
       if (filter.value === 0) {
-        for (var i = 7; i >= 1; i--) {
-          abs = 7 - i;
-          dummyGraph.push({
-            modifiedDate: moment().subtract(i, 'day').format(dayFormat),
-            totalRegisteredUsers: 25 + (25 * abs),
-            activeUsers: 25 * abs,
-            percentage: Math.round(((25 * abs) / (25 + (25 * abs))) * 100),
-            colorOne: chartColors.dummyGrayLight,
-            colorTwo: chartColors.dummyGray,
-            balloon: false
-          });
+        timespan = ReportConstants.DAYS - 1;
+        if (lineGraph) {
+          timespan = ReportConstants.DAYS;
         }
       } else if (filter.value === 1) {
-        for (var x = 3; x >= 0; x--) {
-          abs = 3 - x;
-          dummyGraph.push({
-            modifiedDate: moment().startOf('week').subtract(1 + (x * 7), 'day').format(dayFormat),
-            totalRegisteredUsers: 25 + (25 * abs),
-            activeUsers: 25 * abs,
-            percentage: Math.round(((25 * abs) / (25 + (25 * abs))) * 100),
-            colorOne: chartColors.dummyGrayLight,
-            colorTwo: chartColors.dummyGray,
-            balloon: false
-          });
+        timespan = ReportConstants.WEEKS;
+        if (lineGraph) {
+          timespan = ReportConstants.LINE_WEEKS;
         }
       } else {
-        for (var y = 2; y >= 0; y--) {
-          abs = 2 - y;
-          dummyGraph.push({
-            modifiedDate: moment().subtract(y, 'month').format(monthFormat),
-            totalRegisteredUsers: 25 + (25 * abs),
-            activeUsers: 25 * abs,
-            percentage: Math.round(((25 * abs) / (25 + (25 * abs))) * 100),
-            colorOne: chartColors.dummyGrayLight,
-            colorTwo: chartColors.dummyGray,
-            balloon: false
-          });
+        timespan = ReportConstants.MONTHS;
+        if (lineGraph) {
+          timespan = ReportConstants.YEAR;
         }
+      }
+      for (var i = timespan; i >= 0; i--) {
+        dummyGraph.push(getActiveUserDataPoint(filter, i, lineGraph, timespan - i));
       }
 
       return dummyGraph;
+    }
+
+    function getActiveUserDataPoint(filter, index, lineGraph, count) {
+      var date;
+
+      if (lineGraph) {
+        if (filter.value === 0) {
+          date = moment().subtract(index + 1, ReportConstants.DAY).format(ReportConstants.DAY_FORMAT);
+        } else {
+          date = moment().day(-1).subtract(index, ReportConstants.WEEK).format(ReportConstants.DAY_FORMAT);
+        }
+      } else {
+        if (filter.value === 0) {
+          index++;
+        }
+        var commonData = getCommonData(filter, index);
+        date = commonData.date;
+      }
+
+      var totalRegisteredUsers = 25 + (25 * count);
+      var activeUsers = 25 * count;
+
+      return {
+        date: date,
+        totalRegisteredUsers: totalRegisteredUsers,
+        activeUsers: activeUsers,
+        percentage: getPercentage(activeUsers, totalRegisteredUsers),
+        balloon: false
+      };
     }
 
     function dummyAvgRoomData(filter) {
-      var dummyGraph = [];
-      var abs = 0;
+      return getDummyData(filter, getAvgRoomDataPoint);
+    }
 
-      if (filter.value === 0) {
-        for (var i = 7; i >= 1; i--) {
-          abs = 7 - i;
-          dummyGraph.push({
-            modifiedDate: moment().subtract(i, 'day').format(dayFormat),
-            totalRooms: 10 + (10 * abs),
-            oneToOneRooms: 10 * abs,
-            groupRooms: 0,
-            avgRooms: 0,
-            colorOne: chartColors.dummyGrayLight,
-            colorTwo: chartColors.dummyGray,
-            balloon: false
-          });
-        }
-      } else if (filter.value === 1) {
-        for (var x = 3; x >= 0; x--) {
-          abs = 3 - x;
-          dummyGraph.push({
-            modifiedDate: moment().startOf('week').subtract(1 + (x * 7), 'day').format(dayFormat),
-            totalRooms: 10 + (10 * abs),
-            oneToOneRooms: 10 * abs,
-            avgRooms: 0,
-            groupRooms: 0,
-            colorOne: chartColors.dummyGrayLight,
-            colorTwo: chartColors.dummyGray,
-            balloon: false
-          });
-        }
-      } else {
-        for (var y = 2; y >= 0; y--) {
-          abs = 2 - y;
-          dummyGraph.push({
-            modifiedDate: moment().subtract(y, 'month').format(monthFormat),
-            totalRooms: 10 + (10 * abs),
-            oneToOneRooms: 10 * abs,
-            avgRooms: 0,
-            groupRooms: 0,
-            colorOne: chartColors.dummyGrayLight,
-            colorTwo: chartColors.dummyGray,
-            balloon: false
-          });
-        }
-      }
+    function getAvgRoomDataPoint(filter, index) {
+      var commonData = getCommonData(filter, index);
 
-      return dummyGraph;
+      return {
+        date: commonData.date,
+        totalRooms: 10 + (10 * commonData.count),
+        oneToOneRooms: 10 * commonData.count,
+        groupRooms: 0,
+        avgRooms: 0,
+        colorOne: chartColors.dummyGrayLight,
+        colorTwo: chartColors.dummyGray,
+        balloon: false
+      };
     }
 
     function dummyFilesSharedData(filter) {
-      var dummyGraph = [];
-      var abs = 0;
+      return getDummyData(filter, getFilesSharedDataPoint);
+    }
 
-      if (filter.value === 0) {
-        for (var i = 7; i >= 1; i--) {
-          abs = 7 - i;
-          dummyGraph.push({
-            modifiedDate: moment().subtract(i, 'day').format(dayFormat),
-            contentShared: 80 - (10 * abs),
-            contentShareSizes: 0,
-            color: chartColors.dummyGray,
-            balloon: false
-          });
-        }
-      } else if (filter.value === 1) {
-        for (var x = 3; x >= 0; x--) {
-          abs = 3 - x;
-          dummyGraph.push({
-            modifiedDate: moment().startOf('week').subtract(1 + (x * 7), 'day').format(dayFormat),
-            contentShared: 50 - (10 * abs),
-            contentShareSizes: 0,
-            color: chartColors.dummyGray,
-            balloon: false
-          });
-        }
-      } else {
-        for (var y = 2; y >= 0; y--) {
-          abs = 2 - y;
-          dummyGraph.push({
-            modifiedDate: moment().subtract(y, 'month').format(monthFormat),
-            contentShared: 40 - (10 * abs),
-            contentShareSizes: 0,
-            color: chartColors.dummyGray,
-            balloon: false
-          });
-        }
-      }
+    function getFilesSharedDataPoint(filter, index) {
+      var commonData = getCommonData(filter, index);
 
-      return dummyGraph;
+      return {
+        date: commonData.date,
+        contentShared: 80 - (10 * commonData.count),
+        contentShareSizes: 0,
+        color: chartColors.dummyGray,
+        balloon: false
+      };
     }
 
     function dummyMediaData(filter) {
-      var dummyGraph = [];
-      var abs = 0;
+      return getDummyData(filter, getMediaDataPoint);
+    }
 
-      if (filter.value === 0) {
-        for (var i = 7; i >= 1; i--) {
-          abs = 7 - i;
-          dummyGraph.push({
-            modifiedDate: moment().subtract(i + 1, 'day').format(dayFormat),
-            totalDurationSum: (25 + (15 * abs)) + (15 + (10 * abs)) + (5 + (5 * abs)),
-            goodQualityDurationSum: 25 + (15 * abs),
-            fairQualityDurationSum: 15 + (10 * abs),
-            poorQualityDurationSum: 5 + (5 * abs),
-            colorOne: chartColors.dummyGray,
-            colorTwo: chartColors.dummyGrayLight,
-            colorThree: chartColors.dummyGrayLighter,
-            balloon: false
-          });
-        }
-      } else if (filter.value === 1) {
-        for (var x = 3; x >= 0; x--) {
-          abs = 3 - x;
-          dummyGraph.push({
-            modifiedDate: moment().startOf('week').subtract(1 + (x * 7), 'day').format(dayFormat),
-            totalDurationSum: (25 + (15 * abs)) + (15 + (10 * abs)) + (5 + (5 * abs)),
-            goodQualityDurationSum: 25 + (15 * abs),
-            fairQualityDurationSum: 15 + (10 * abs),
-            poorQualityDurationSum: 5 + (5 * abs),
-            colorOne: chartColors.dummyGray,
-            colorTwo: chartColors.dummyGrayLight,
-            colorThree: chartColors.dummyGrayLighter,
-            balloon: false
-          });
-        }
-      } else {
-        for (var y = 2; y >= 0; y--) {
-          abs = 2 - y;
-          dummyGraph.push({
-            modifiedDate: moment().subtract(y, 'month').format(monthFormat),
-            totalDurationSum: (25 + (15 * abs)) + (15 + (10 * abs)) + (5 + (5 * abs)),
-            goodQualityDurationSum: 25 + (15 * abs),
-            fairQualityDurationSum: 15 + (10 * abs),
-            poorQualityDurationSum: 5 + (5 * abs),
-            colorOne: chartColors.dummyGray,
-            colorTwo: chartColors.dummyGrayLight,
-            colorThree: chartColors.dummyGrayLighter,
-            balloon: false
-          });
-        }
-      }
+    function getMediaDataPoint(filter, index) {
+      var commonData = getCommonData(filter, index);
+      var goodQualityDurationSum = 25 + (15 * commonData.count);
+      var fairQualityDurationSum = 15 + (10 * commonData.count);
+      var poorQualityDurationSum = 5 + (5 * commonData.count);
 
-      return dummyGraph;
+      return {
+        date: commonData.date,
+        totalDurationSum: goodQualityDurationSum + fairQualityDurationSum + poorQualityDurationSum,
+        partialSum: fairQualityDurationSum + poorQualityDurationSum,
+        goodQualityDurationSum: goodQualityDurationSum,
+        fairQualityDurationSum: fairQualityDurationSum,
+        poorQualityDurationSum: poorQualityDurationSum,
+        balloon: false
+      };
     }
 
     function dummyMetricsData() {
       return {
         dataProvider: [{
-          "callCondition": $translate.instant('callMetrics.audioCalls'),
-          "numCalls": 1000,
-          "percentage": 10,
-          "color": chartColors.dummyGrayLight
+          'callCondition': $translate.instant('callMetrics.audioCalls'),
+          'numCalls': 1000,
+          'percentage': 10,
+          'color': chartColors.dummyGrayLight
         }, {
-          "callCondition": $translate.instant('callMetrics.videoCalls'),
-          "numCalls": 9000,
-          "percentage": 90,
-          "color": chartColors.dummyGray
+          'callCondition': $translate.instant('callMetrics.videoCalls'),
+          'numCalls': 9000,
+          'percentage': 90,
+          'color': chartColors.dummyGray
         }],
         dummy: true
       };
     }
 
+    function getDeviceDataPoint(filter, index) {
+      var commonData = getCommonData(filter, index);
+
+      return {
+        date: commonData.date,
+        totalRegisteredDevices: 15 + (15 * commonData.count)
+      };
+    }
+
     function dummyDeviceData(filter) {
+      return [{
+        deviceType: $translate.instant('registeredEndpoints.allDevices'),
+        graph: getDummyData(filter, getDeviceDataPoint),
+        balloon: false
+      }];
+    }
+
+    function getDummyData(filter, callFunction) {
       var dummyGraph = [];
-      var abs = 0;
 
       if (filter.value === 0) {
-        for (var i = 7; i >= 1; i--) {
-          abs = 7 - i;
-          dummyGraph.push({
-            modifiedDate: moment().subtract(i, 'day').format(dayFormat),
-            totalRegisteredDevices: 15 + (15 * abs)
-          });
+        for (var i = ReportConstants.DAYS; i >= 1; i--) {
+          dummyGraph.push(callFunction(filter, i));
         }
       } else if (filter.value === 1) {
-        for (var x = 3; x >= 0; x--) {
-          abs = 3 - x;
-          dummyGraph.push({
-            modifiedDate: moment().startOf('week').subtract(1 + (x * 7), 'day').format(dayFormat),
-            totalRegisteredDevices: 15 + (15 * abs)
-          });
+        for (var x = ReportConstants.WEEKS; x >= 0; x--) {
+          dummyGraph.push(callFunction(filter, x));
         }
       } else {
-        for (var y = 2; y >= 0; y--) {
-          abs = 2 - y;
-          dummyGraph.push({
-            modifiedDate: moment().subtract(y, 'month').format(monthFormat),
-            totalRegisteredDevices: 15 + (15 * abs)
-          });
+        for (var y = ReportConstants.MONTHS; y >= 0; y--) {
+          dummyGraph.push(callFunction(filter, y));
         }
       }
 
-      return [{
-        deviceType: $translate.instant('registeredEndpoints.allDevices'),
-        graph: dummyGraph,
-        balloon: false
-      }];
+      return dummyGraph;
     }
   }
 })();

@@ -1,0 +1,43 @@
+<div ng-form="callerIdForm" class="cs-form">
+  <div class="cs-form__section">
+    <div class="section__info">
+      <h4 class="section__title" translate="callerIdPanel.title"></h4>
+    </div>
+    <div class="section__content">
+      <div class="cs-input-group">
+        <cs-select
+          name="callerIdSelection"
+          ng-model="$ctrl.callerIdSelected"
+          options="$ctrl.callerIdOptions"
+          on-change-fn="$ctrl.onChange()">
+        </cs-select>
+      </div>
+      <div ng-if="$ctrl.showCustom()">
+        <input
+          cs-input
+          type="text"
+          name="callerIdName"
+          ng-model="$ctrl.customCallerIdName"
+          cs-input-label="{{'callerIdPanel.customName' | translate}}"
+          ng-change="$ctrl.onChange()"
+          maxlength="30"
+          required>
+        <input
+          cs-input
+          type="text"
+          name="callerIdNumber"
+          ng-model="$ctrl.customCallerIdNumber"
+          cs-input-label="{{'callerIdPanel.customNumber' | translate}}"
+          ng-change="$ctrl.onChange()"
+          ng-pattern="/^(\+?)?[\d]{10,11}$/"
+          minlength="10"
+          maxlength="12"
+          required>
+      </div>
+      <div class="cs-input-group" ng-if="$ctrl.getSelected($ctrl.callerIdSelected.value).name || $ctrl.getSelected($ctrl.callerIdSelected.value).pattern">
+        <p class="cs-input__help-text">{{$ctrl.getSelected($ctrl.callerIdSelected.value).name}}</p>
+        <p class="cs-input__help-text">{{$ctrl.getSelected($ctrl.callerIdSelected.value).pattern}}</p>
+      </div>
+    </div>
+  </div>
+</div>

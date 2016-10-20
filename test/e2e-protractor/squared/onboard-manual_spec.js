@@ -3,20 +3,21 @@
 /* global inviteusers */
 /* global LONG_TIMEOUT */
 
-describe('Onboard users through Manual Invite', function () {
+xdescribe('Onboard users through Manual Invite', function () {
+  var token;
   var userList = [utils.randomTestGmailwithSalt('manual'), utils.randomTestGmailwithSalt('manual')];
 
-  afterEach(function () {
-    utils.dumpConsoleErrors();
-  });
-
   it('should login as an account admin', function () {
-    login.login('account-admin', '#/users');
+    login.login('account-admin', '#/users')
+      .then(function (_token) {
+        token = _token;
+        expect(token).toBeTruthy();
+      });
   });
 
   it('should Manually Invite multiple users by email address (Message On).', function () {
     // Select Invite from setup menu
-    utils.click(landing.serviceSetup);
+    utils.click(landing.serviceSetup); //TODO this is invalid, since the wizard will only be shown when !isSetupDone
     utils.click(navigation.addUsers);
     utils.expectTextToBeSet(wizard.mainviewTitle, 'Add Users');
 
@@ -33,7 +34,8 @@ describe('Onboard users through Manual Invite', function () {
     // Need a license for valid HS services
     utils.click(users.paidMsgCheckbox);
     utils.click(inviteusers.nextButton);
-    notifications.assertSuccess('onboarded successfully');
+    utils.expectIsDisplayed(users.saveButton);
+    utils.click(users.saveButton);
 
     _.each(userList, function (alias) {
       activate.setup(null, alias);
@@ -51,7 +53,9 @@ describe('Onboard users through Manual Invite', function () {
     });
   });
 
-  afterAll(function () {
-    _.each(userList, deleteUtils.deleteUser);
-  });
+  // afterAll(function () {
+    // _.each(userList, function (user) {
+    //   deleteUtils.deleteUser(user, token);
+    // });
+  // });
 });

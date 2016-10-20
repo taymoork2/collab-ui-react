@@ -1,5 +1,16 @@
 {
   "compilerOptions": {
+    "baseUrl": "./app",
+    "module": "commonjs",
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "preserveConstEnums": true,
+    "removeComments": false,
+    "sourceMap": true,
+    "strictNullChecks": true,
     "target": "ES5"
-  }
+  },
+  "exclude": [
+    "node_modules"
+  ]
 }

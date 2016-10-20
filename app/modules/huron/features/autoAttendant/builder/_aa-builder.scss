@@ -4,7 +4,6 @@ $aa-builder-border-size: 1px;
 $aa-builder-icon-color: $gray-light-1;
 $aa-builder-icon-hover-color: $gray-base;
 $aa-builder-icon-click-color: $color-primary-base;
-
 $aa-builder-text-color: $gray-dark-1;
 
 @mixin aa-builder-height($rem_offset) {
@@ -21,9 +20,10 @@ $aa-builder-text-color: $gray-dark-1;
 }
 
 .aa-nowrap {
-  white-space: nowrap;
   @include vr-spacing(m, 0);
   @include vr-spacing(p, 0);
+
+  white-space: nowrap;
   color: $aa-builder-text-color;
 }
 
@@ -37,12 +37,11 @@ $aa-builder-text-color: $gray-dark-1;
   margin: 0 $frame-margin-size $frame-margin-size $frame-margin-size;
 
   .aa-builder-container {
-    background-color: $gray-light-4;
-    overflow-y: auto;
-    overflow-x: hidden;
-
     $margin-top: 0.125rem;
 
+    background-color: $gray-light-4;
+    overflow-y: auto;
+    overflow-x: auto;
     margin-top: $margin-top;
 
     /* allows aa-builder-frame box-shadow to show */
@@ -64,36 +63,6 @@ $aa-builder-text-color: $gray-dark-1;
   align-items: center;
 }
 
-.aa-flex-item.schedule {
-  @include vr-spacing(pv, .25);
-  @include vr-spacing(ph, 2);
-}
-
-.aa-schedule-modal {
-  width: 785px;
-  background: #FFF none repeat scroll 0% 0%;
-  .aa-schedule-days {
-    padding: 4px;
-    label {
-      @include vr-spacing(mb, 0);
-    }
-  }
-  .aa-schedule-subtitle {
-    font-size: 20px
-  }
-  .aa-schedule-trash {
-    font-size: 35px;
-    color: #858688;
-    float: right;
-  }
-}
-
-.aa-schedule-container {
-  h3{
-    display: inline-block;
-  }
-}
-
 .aa-flex-row-item {
   display: flex;
   flex: 1 1 auto;
@@ -106,6 +75,12 @@ $aa-builder-text-color: $gray-dark-1;
   flex: 1 1 auto;
   align-items: flex-end;
   justify-content: center;
+}
+
+.aa-setup-assistant {
+  .cs-setupassistant--content {
+    height: auto;
+  }
 }
 
 #aa-header-row {
@@ -134,14 +109,14 @@ $aa-builder-text-color: $gray-dark-1;
 
 .aa-edit-icon {
   @extend .icon;
-
   @extend .icon-edit;
 
   font-size: 1.5rem;
   color: $aa-builder-icon-color;
-  @include vr-spacing(pl, .25);
-  @include vr-spacing(pt, .25);
-  @include vr-spacing(mb, .75);
+
+  @include vr-spacing(pl, 0.25);
+  @include vr-spacing(pt, 0.25);
+  @include vr-spacing(mb, 0.75);
 
   &:hover {
     cursor: pointer;
@@ -151,13 +126,13 @@ $aa-builder-text-color: $gray-dark-1;
 
 .aa-trash-icon {
   @extend .icon;
-
   @extend .icon-trash;
 
   font-size: 1.25rem;
   color: $aa-builder-icon-color;
-  @include vr-spacing(pl, .25);
-  @include vr-spacing(pt, .25);
+
+  @include vr-spacing(pl, 0.25);
+  @include vr-spacing(pt, 0.25);
 
   &:hover {
     cursor: pointer;
@@ -167,44 +142,23 @@ $aa-builder-text-color: $gray-dark-1;
 
 .aa-schedule-icon {
   @extend .icon;
-
   @extend .icon-clock;
 
   font-size: 2.5rem;
   color: $aa-builder-icon-color;
-  @include vr-spacing(p, .25);
 
-}
-
-.aa-help-icon {
-  @extend .icon;
-
-  @extend .icon-help;
-
-  font-size: 1rem;
-  color: $aa-builder-icon-color;
-  @include vr-spacing(pl, .25);
-  @include vr-spacing(pt, .25);
-
-  &:hover {
-    color: $aa-builder-icon-hover-color;
-  }
-}
-
-.aa-help-wrapper {
-    & .popover {
-    width: 60%;
-  }
+  @include vr-spacing(p, 0.25);
 }
 
 .aa-builder-number-tile {
   height: 2rem;
   width: 16rem;
-  margin: .125rem 0;
-  @include vr-spacing(p, .5);
+  margin: 0.125rem 0;
+
+  @include vr-spacing(p, 0.5);
 
   /* set to match the select-box's 3px radius */
-  border-radius: .188rem;
+  border-radius: 0.188rem;
   color: $color-white;
   background-color: $color-primary-base;
   display: inline-block;
@@ -212,17 +166,19 @@ $aa-builder-text-color: $gray-dark-1;
   transition: all 0.2s ease-in-out;
 
   .phone-number {
-    position: absolute;
-    @include vr-spacing(pt, .25);
+    display: inline-block;
+
+    @include vr-spacing(pt, 0.25);
   }
 
   &:hover {
     background-color: $color-primary-dark;
   }
 
-  & .icon {
+  .icon {
     float: right;
     font-size: 1rem;
+
     &:hover {
       cursor: pointer;
     }
@@ -237,13 +193,16 @@ $aa-builder-text-color: $gray-dark-1;
 
   @include aa-builder-height($h2-font-size);
 
-  width: 100vw;
+  width: 65vw;
   background-color: $color-white;
 
   #aa-name-detail {
     @extend h2;
 
+    line-height: 1;
+
     @include vr-spacing(mh, 0);
+
     width: 50vw;
     text-align: center;
     border: none;
@@ -256,7 +215,6 @@ $aa-builder-text-color: $gray-dark-1;
       border: none;
       outline: none;
       border-bottom: 1px solid $color-primary-darker;
-      -webkit-box-shadow: none;
       box-shadow: none;
       background-color: transparent;
     }
@@ -279,6 +237,7 @@ $aa-builder-text-color: $gray-dark-1;
 
 .aa-and-more {
   @include vr-spacing(ml, 1);
+
   color: $aa-builder-text-color;
 }
 
@@ -289,12 +248,14 @@ $aa-builder-text-color: $gray-dark-1;
 .aa-panel-numbers {
   @extend .panel;
 
+  text-align: left;
   width: 16rem;
+
   @include vr-spacing(mv, 1);
 }
 
 .aa-container {
-  overflow: visible;
+  width: 100%;
   padding: 0;
   min-height: 1px;
   align-items: center;
@@ -314,44 +275,62 @@ $aa-builder-text-color: $gray-dark-1;
 
 .aa-panel {
   @extend .panel;
-
   @extend .aa-transition;
 
-  display: inline-block;
   @include vr-spacing(m, 0);
+  @include vr-spacing(pl, 0.5);
+  @include vr-spacing(pr, 0.5);
 
-  @include vr-spacing(pl, .5);
-  @include vr-spacing(pr, .5);
+  white-space: normal;
   box-shadow: none;
-  line-height: .5rem;
+  line-height: 0.5rem;
 
   .text-info {
-    color: $brand-info;
+    color: $color-people-base;
     text-align: center;
+  }
+
+  .text-info-left {
+    color: $color-people-base;
+    text-align: left;
+
+    @include vr-spacing(pl, 0);
+    @include vr-spacing(pb, 1);
   }
 
   .aa-panel-body {
     @extend .panel-body;
 
-    margin: 0;
     @include vr-spacing(p, 1.25);
+
+    margin: 0;
     background-color: $color-white;
     border: $aa-builder-border-size solid $aa-builder-border-color;
-    border-radius: .25rem;
+    border-radius: 0.25rem;
 
     &:hover {
       border-color: $color-primary-base;
     }
   }
 
+  .aa-schedule-body {
+    @extend .aa-panel-body;
+
+    min-width: vr-adjust(300);
+
+    &:hover {
+      cursor: pointer;
+    }
+  }
+
   .aa-panel-body-endcall {
     @extend .aa-panel-body;
 
-    @include vr-spacing(pv, .25);
+    @include vr-spacing(pv, 0.25);
 
     .text-info {
-      @include vr-spacing(pl, .5);
-      @include vr-spacing(pt, .25);
+      @include vr-spacing(pl, 0.5);
+      @include vr-spacing(pt, 0.25);
     }
   }
 
@@ -360,61 +339,66 @@ $aa-builder-text-color: $gray-dark-1;
 
     @include vr-spacing(m, 0);
     @include vr-spacing(p, 0);
+
+    position: relative;
     text-align: center;
     vertical-align: middle;
 
-    & .popover {
+    .popover {
       background-color: transparent;
       border: 0;
-      @include vr-spacing(mt, 0);
-      color: $gray-dark-1;
+      min-width: vr-adjust(120);
+      color: $anchor-font-color-hover;
 
-      &.bottom >.arrow {
+      @include vr-spacing(m, 0);
+      @include vr-spacing(p, 0);
+
+      &.right > .arrow {
         background-color: transparent;
-        border-bottom-color: transparent;
+        border-right-color: transparent;
 
-        &:after {
+        &::after {
           border-color: transparent;
-          border-bottom-color: transparent;
+          border-right-color: transparent;
           border-width: 0;
         }
       }
 
-      & .popover-content {
+      .popover-content {
         font-size: $h6-font-size;
-        @include vr-spacing(pt, .25);
+
+        @include vr-spacing(p, 0.5);
       }
     }
-
   }
 }
 
-.aa-transition.ng-enter, .aa-transition.ng-leave {
-  transition: .5s ease all;
+.aa-transition.ng-enter,
+.aa-transition.ng-leave {
+  transition: 0.5s ease all;
 }
 
 .aa-transition.ng-enter,
 .aa-transition.ng-leave.ng-leave-active {
-  opacity:0;
+  opacity: 0;
 }
 
 .aa-transition.ng-leave,
 .aa-transition.ng-enter.ng-enter-active {
-  opacity:1;
+  opacity: 1;
 }
 
 .aa-add-step-icon {
   @extend .icon;
-
   @extend .icon-plus-circle;
 
-  font-size: 2.25rem;
+  font-size: 2rem;
   padding-right: $aa-builder-border-size;
-  color: $aa-builder-border-color;
+  color: $anchor-font-color;
 
   &:hover {
     cursor: pointer;
-    color: $aa-builder-icon-click-color;
+    color: $anchor-font-color-hover;
   }
 }
 
@@ -423,7 +407,6 @@ $aa-builder-text-color: $gray-dark-1;
 
   .aa-action-delete-icon {
     @extend .icon;
-
     @extend .icon-close;
 
     color: $gray-light-2;
@@ -436,20 +419,50 @@ $aa-builder-text-color: $gray-dark-1;
   }
 }
 
-.aa-flex-vertical-line {
+.aa-wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+
+  .aa-general-2-lanes {
+    min-width: vr-adjust(780);
+  }
+
+  .aa-lanes-wrapper {
+    display: flex;
+    align-items: flex-start;
+  }
+
+  .aa-lane {
+    @extend .aa-flex-container;
+
+    min-width: vr-adjust(390);
+
+    .aa-panel-lane {
+      @extend .aa-panel;
+      @extend .aa-max-width;
+    }
+  }
+}
+
+.aa-max-width {
+  max-width: 100%;
+}
+
+.aa-vertical-line {
   border-left: $aa-builder-border-size solid $aa-builder-border-color;
   min-height: 30px;
   display: flex;
   flex: 0 1 auto;
 }
 
-.aa-flex-vertical-spacer {
+.aa-vertical-spacer {
   min-height: 30px;
   display: flex;
   flex: 0 1 auto;
 }
 
-.aa-flex-horizontal-line {
+.aa-horizontal-line {
   border-bottom: $aa-builder-border-size solid $aa-builder-border-color;
   height: 1px;
   width: 100%;
@@ -457,7 +470,7 @@ $aa-builder-text-color: $gray-dark-1;
   flex: 0 1 auto;
 }
 
-.aa-flex-horizontal-line-right {
+.aa-horizontal-line-right {
   border-bottom: $aa-builder-border-size solid $aa-builder-border-color;
   height: 1px;
   min-width: 50%;
@@ -466,7 +479,7 @@ $aa-builder-text-color: $gray-dark-1;
   align-self: flex-end;
 }
 
-.aa-flex-horizontal-line-left {
+.aa-horizontal-line-left {
   border-bottom: $aa-builder-border-size solid $aa-builder-border-color;
   height: 1px;
   min-width: 50%;
@@ -483,7 +496,6 @@ $aa-builder-text-color: $gray-dark-1;
 
 .aa-endcall-icon {
   @extend .icon;
-
   @extend .icon-end-call;
 
   font-size: 2.25rem;
@@ -492,6 +504,7 @@ $aa-builder-text-color: $gray-dark-1;
 
 .loading-container {
   @include aa-builder-height($h2-font-size);
+
   display: flex;
   justify-content: center;
   align-items: center;

@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Service: Schedule Upgrade', function () {
-  beforeEach(module('Hercules'));
+  beforeEach(angular.mock.module('Hercules'));
 
   var $httpBackend, ScheduleUpgradeService;
 

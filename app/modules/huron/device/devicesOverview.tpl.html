@@ -1,17 +1,31 @@
+<div class="section-title-row">
+  <span class="section-name" translate="usersPreview.devicesPreview"></span>
+      <span cs-dropdown class="actions-menu dropdown pull-right" ng-if="userOverview.dropDownItems.length > 0">
+        <button cs-dropdown-toggle class="actions-button btn--none dropdown-toggle">
+          <i class="icon icon-three-dots"></i>
+        </button>
+        <ul cs-dropdown-menu class="dropdown-menu dropdown-primary actions-services">
+          <li><a ng-click="ucDevices.resetCode()" translate="usersPreview.generateActivationCode"></a></li>
+        </ul>
+      </span>
+</div>
+
 <div ng-if="ucDevices.showGenerateOtpButton">
   <div class="section-content">
     <div class="generate-activation-code" translate="usersPreview.generateActivationCodeText"></div>
     <div class="generate-activation-code" translate="usersPreview.generateActivationCodeDesc"></div>
-    <button class="btn btn--people btn-center" ui-sref="generateauthcode({currentUser: ucDevices.currentUser, activationCode: 'new'})" translate="usersPreview.generateActivationCode"></button>
-    </div>
+    <button class="btn btn--people btn-center"
+            ng-click="ucDevices.resetCode()"
+            translate="usersPreview.generateActivationCode"></button>
+  </div>
 </div>
+
 <div class="feature-list">
   <ul>
-    <li class="feature" ng-repeat="device in ucDevices.devices track by device.uuid">
-      <a ui-sref="user-overview.device({device: device})">
-        <span class="icon icon-spinner" ng-if="device.deviceStatus.progressStatus"></span>
-        <span class="default-status" ng-class="{'online-status': device.deviceStatus.status == 'Online'}" ng-if="!device.deviceStatus.progressStatus"></span>
-        <span class="feature-name">{{device.model}}</span>
+    <li class="feature" ng-repeat="device in ucDevices.devices">
+      <a ng-click="ucDevices.showDeviceDetails(device)">
+        <i class="icon icon-circle status-indicator" ng-class="device.cssColorClass"></i>
+        <span class="feature-name">{{device.product}}</span> <span class="feature-status" ng-if="device.addOnModuleCount > 0">{{ :: 'deviceOverviewPage.kemAbbreviation' | translate }}: {{device.addOnModuleCount}}</span>
         <i class="feature-arrow"></i>
       </a>
     </li>

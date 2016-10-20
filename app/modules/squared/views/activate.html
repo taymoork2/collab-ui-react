@@ -1,31 +1,34 @@
-<div id="webDiv" ng-show="Utils.isWeb()">
+<div id="webDiv">
   <div class="messagebox-backdrop">
     <div class="message-box">
-      <section id="provisionSuccess" ng-show="result.provisionSuccess">
+      <section class="message-box__content" id="provisionSuccess" ng-show="result.provisionSuccess">
         <i class="message-box__icon icon-circle-check"></i>
         <h3 class="message-box__title message-box__title--success" translate="activation.verificationComplete"></h3>
         <h5 class="message-box__details" translate="activation.returnToApp"></h5>
       </section>
-      <section id="codeExpired" ng-show="result.codeExpired">
+      <section class="message-box__content" id="codeExpired" ng-show="result.codeExpired">
         <i class="message-box__icon icon-circle-comp-negative"></i>
         <h3 class="message-box__title message-box__title--alert activate-error" translate="activation.codeExpired" translate-values="{ deviceName: deviceName }"></h3>
         <h5 class="message-box__details" translate="activation.requestNewCode" translate-values="{ deviceName: deviceName, userEmail:userEmail }"></h5>
         <button id="sendCodeLink" class="btn btn--people btn--expand" ng-click="resendCode()" translate="activation.sendCodeLink"></button>
       </section>
-      <section id="resendSuccess" ng-show="result.resendSuccess">
+      <section class="message-box__content" id="resendSuccess" ng-show="result.resendSuccess">
         <i class="message-box__icon icon-circle-check"></i>
         <h3 class="message-box__title message-box__title--success" translate="activation.newCodeSent"></h3>
         <h5 class="message-box__details" translate="activation.useLatestCode" translate-values="{ userEmail: userEmail }"></h5>
         <div id="testdata" eqp={{eqp}}></div>
       </section>
-      <section id="exception" ng-show="result.errmsg">
+      <section class="message-box__content" id="exception" ng-show="result.errmsg">
         <i class="message-box__icon icon-circle-comp-negative"></i>
         <h3 class="message-box__title message-box__title--alert" translate="activation.unexpectedError"></h3>
         <h5 class="message-box__details">{{result.errmsg}}</h5>
       </section>
-      <footer class="message-box__footer">
-        <i class="icon icon-cisco-logo icon-2x"></i>
-      </footer>
+    </div>
+    <div class="messagebox-backdrop__footer">
+      <i class="icon icon-cisco-logo"></i>
+      <div class="body-smallest">
+        <a href="http://www.ciscospark.com/terms-of-service.html" target="_blank" translate="loginPage.tos"></a> | <a href="http://www.cisco.com/web/siteassets/legal/privacy.html" target="_blank" translate="loginPage.privacy"></a> &copy; 2016 <span translate="loginPage.copyright"></span>
+      </div>
     </div>
   </div>
 </div>

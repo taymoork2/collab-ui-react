@@ -1,4 +1,3 @@
-/* global parseAddress */
 (function () {
   'use strict';
 
@@ -42,10 +41,10 @@
     function formatServiceAddress(_address) {
       // copy address for manipulation
       var address = angular.copy(_address);
-      // create a parseable address
-      var parseableAddress = _.chain([address.streetAddress, address.unit, address.city, address.state, address.zip]).compact().join(', ').value();
-      // merge in parsed street address values
-      _.merge(address, parseAddress.parseAddress(parseableAddress));
+      var streetAddressArray = _.get(address, 'streetAddress', '').split(/\s+/);
+      address.number = _.head(streetAddressArray);
+      address.street = _.tail(streetAddressArray).join(' ');
+
       // transform a return object based on our mapping structure
       var serviceAddress = _.transform(serviceAddressMapping, function (result, val, key) {
         // Set mapped value, default to empty string if not found
@@ -62,9 +61,9 @@
       // Remove empty values and convert to string
       parsedAddress.streetAddress = _.chain(parsedStreetAddress).reject(_.isEmpty).join(' ').value();
       // Filter the parsedAddress for properties that should exist in the addressMapping
-      var address = _.pick(parsedAddress, function (val, key) {
+      var address = _.pickBy(parsedAddress, function (val, key) {
         // parsed address key should exist in addressMapping value
-        return _.contains(addressMapping, key);
+        return _.includes(addressMapping, key);
       });
       return address;
     }
@@ -85,7 +84,7 @@
 
     function lookupAddress(address) {
       // format terminus payload and omit empty strings
-      var searchPayload = getTerminusAddress(_.omit(address, _.isEmpty));
+      var searchPayload = getTerminusAddress(_.omitBy(address, _.isEmpty));
       return TerminusLookupE911Service.save({}, searchPayload).$promise
         .then(function (response) {
           var address = _.get(response, 'addresses[0]');
@@ -113,8 +112,8 @@
 
     function listCustomerSites(customerId) {
       return TerminusCustomerSiteService.query({
-          customerId: customerId
-        }).$promise
+        customerId: customerId
+      }).$promise
         .then(function (sites) {
           var promises = [];
           // Lookup each site and add the serviceAddress to original response
@@ -164,6 +163,7 @@
         .then(function (sites) {
           var siteId = _.get(sites, '[0].uuid');
           if (siteId) {
+            site.serviceAddress.serviceName = _.get(sites, '[0].name');
             return updateSite(customerId, siteId, site);
           } else {
             return $q.reject('Site not found');

@@ -304,6 +304,9 @@
     }, {
       "siteUrl": "mock2.webex.com"
     }],
+    serviceOrder: {
+      "orderingTool": "Fancy Ordering Tool"
+    },
     licenses: [{
       "offerCode": "MS",
       "type": "MESSAGING",
@@ -380,8 +383,8 @@
       "trialExpiresInDays": 49
     }, {
       "offerCode": "CO",
-      "type": "COMMUNICATIONS",
-      "name": "Communications",
+      "type": "COMMUNICATION",
+      "name": "Communication",
       "status": "SUSPENDED",
       "volume": 1000,
       "trialExpiresInDays": 100,

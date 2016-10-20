@@ -3,9 +3,9 @@
 describe('Controller: TrialEmergAddressCtrl', function () {
   var controller, trials, $scope, TrialPstnService;
 
-  beforeEach(module('core.trial'));
-  beforeEach(module('Huron'));
-  beforeEach(module('Core'));
+  beforeEach(angular.mock.module('core.trial'));
+  beforeEach(angular.mock.module('Huron'));
+  beforeEach(angular.mock.module('Core'));
 
   beforeEach(inject(function ($rootScope, $controller, _TrialPstnService_) {
     $scope = $rootScope.$new();

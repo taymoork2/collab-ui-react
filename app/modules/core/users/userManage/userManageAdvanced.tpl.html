@@ -1,0 +1,28 @@
+<div class="modal-header">
+  <button type="button" class="close" ng-click="umac.onClose()" id="closeManageUsers">
+    <span class="sr-only" translate="common.close"></span>
+  </button>
+  <h3 class="modal-title" translate="usersPage.manageUsers"></h3>
+</div>
+
+<div class="modal-body user-manage user-csv user-csv-results user-manage-advanced-results">
+  <div ng-if="umac.getCurrentState() == 'dirsyncServices'">
+    <h3 translate="userManage.ad.typeLabel"></h3>
+  </div>
+  <div ng-if="umac.getCurrentState() == 'dirsyncResult'">
+    <h5 translate="userManage.advanced.updating"></h5>
+  </div>
+  <div ui-view class="flex-container flex-item-resize"></div>
+</div>
+
+<div class="modal-footer">
+  <div ng-if="!umac.showCloseButton">
+    <button type="button" cs-btn class="btn" ng-click="umac.onBack()"><span translate="common.back"></span></button>
+    <button type="button" cs-btn class="btn btn--primary" ng-click="umac.onNext()" loading="umac.isBusy" ng-disabled="umac.isNextDisabled"><span translate="common.next"></span></button>
+  </div>
+  <div ng-if="umac.showCloseButton">
+    <button type="button" cs-btn class="btn btn--primary" ng-click="umac.onClose()" loading="umac.isBusy" ng-disabled="umac.isNextDisabled"><span translate="common.done"></span></button>
+  </div>
+</div>
+
+

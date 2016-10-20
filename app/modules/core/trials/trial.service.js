@@ -14,12 +14,14 @@
   }
 
   /* @ngInject */
-  function TrialService($http, $q, Config, UrlConfig, Authinfo, LogMetricsService, TrialCallService, TrialMeetingService, TrialMessageService, TrialPstnService, TrialResource, TrialRoomSystemService, TrialDeviceService) {
+  function TrialService($http, $q, Authinfo, Config, LogMetricsService, TrialCallService, TrialCareService, TrialContextService, TrialDeviceService, TrialMeetingService, TrialMessageService, TrialPstnService, TrialResource, TrialRoomSystemService, TrialWebexService, UrlConfig) {
     var _trialData;
     var trialsUrl = UrlConfig.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/trials';
 
     var service = {
       getTrial: getTrial,
+      getTrialsList: getTrialsList,
+      getDeviceTrialsLimit: getDeviceTrialsLimit,
       editTrial: editTrial,
       startTrial: startTrial,
       getData: getData,
@@ -28,7 +30,9 @@
       getTrialPeriodData: getTrialPeriodData,
       calcDaysLeft: calcDaysLeft,
       calcDaysUsed: calcDaysUsed,
-      getExpirationPeriod: getExpirationPeriod
+      getExpirationPeriod: getExpirationPeriod,
+      shallowValidation: shallowValidation,
+      getDaysLeftForCurrentUser: getDaysLeftForCurrentUser,
     };
 
     return service;
@@ -41,13 +45,87 @@
       }).$promise;
     }
 
+    function getTrialsList(searchText) {
+      return $http.get(trialsUrl, {
+        params: {
+          customerName: searchText
+        }
+      });
+    }
+
+    function shallowValidation(key, val) {
+      var validationUrl = UrlConfig.getAdminServiceUrl() + 'orders/actions/shallowvalidation/invoke';
+
+      var config = {
+        method: 'POST',
+        url: validationUrl,
+        headers: {
+          'Content-Type': 'text/plain'
+        },
+        data: {
+          isTrial: true,
+          properties: [{
+            key: key,
+            value: val
+          }]
+        }
+      };
+
+      return $http(config).then(function (response) {
+        var data = response.data || {};
+        var obj = _.find(data.properties, {
+          key: key
+        });
+        if (angular.isUndefined(obj)) {
+          return {
+            error: 'trialModal.errorServerDown'
+          };
+        } else {
+          // we allow duplicate emails for the  the user who is a consumer
+          if (obj.isExist === 'true' && !(key === 'endCustomerEmail' && obj.isConsumer === 'true')) {
+            return {
+              error: 'trialModal.errorInUse'
+            };
+          } else if (obj.isValid === 'false') {
+            if (key === 'organizationName') {
+              return {
+                error: 'trialModal.errorInvalidName'
+              };
+            } else {
+              return {
+                error: 'trialModal.errorInvalid'
+              };
+            }
+          }
+          return {
+            unique: true
+          };
+        }
+      }).catch(function (response) {
+        return {
+          error: 'trialModal.errorServerDown',
+          status: response.status
+        };
+      });
+    }
+
+    function getDeviceTrialsLimit() {
+      return service.getTrialsList().then(function (response) {
+        return {
+          activeDeviceTrials: response.data.activeDeviceTrials,
+          maxDeviceTrials: response.data.activeDeviceTrialsLimit
+        };
+      });
+    }
+
     function editTrial(custId, trialId) {
       var data = _trialData;
       var trialData = {
-        'customerOrgId': custId,
-        'trialPeriod': data.details.licenseDuration,
-        'details': _getDetails(data),
-        'offers': _getOffers(data)
+        customerOrgId: custId,
+        trialPeriod: data.details.licenseDuration,
+        dealId: data.trials.deviceTrial.shippingInfo.dealId,
+        details: _getDetails(data),
+        offers: _getOffers(data)
       };
 
       var editTrialUrl = trialsUrl + '/' + trialId;
@@ -64,12 +142,13 @@
     function startTrial() {
       var data = _trialData;
       var trialData = {
-        'customerName': data.details.customerName,
-        'customerEmail': data.details.customerEmail,
-        'trialPeriod': data.details.licenseDuration,
-        'startDate': new Date(),
-        'details': _getDetails(data),
-        'offers': _getOffers(data)
+        customerName: data.details.customerName,
+        customerEmail: data.details.customerEmail,
+        trialPeriod: data.details.licenseDuration,
+        dealId: data.trials.deviceTrial.shippingInfo.dealId,
+        startDate: new Date(),
+        details: _getDetails(data),
+        offers: _getOffers(data)
       };
 
       function logStartTrialMetric(data, status) {
@@ -124,18 +203,22 @@
               })
               .value();
             details.devices = details.devices.concat(callDevices);
-          } else if (trial.type === Config.offerTypes.meetings) {
+          } else if (trial.type === Config.offerTypes.webex) {
             details.siteUrl = _.get(trial, 'details.siteUrl', '');
             details.timeZoneId = _.get(trial, 'details.timeZone.timeZoneId', '');
           }
-        })
-        .value();
+        });
 
       if (deviceDetails.skipDevices) {
         delete details.shippingInfo;
         details.devices = [];
       } else {
-        details.shippingInfo.state = _.get(details, 'shippingInfo.state.abbr', '');
+        var nestedState = _.get(details, 'shippingInfo.state.abbr');
+        // this will not be necessary after formly issue is fixed.
+        if (nestedState) {
+          details.shippingInfo.state = _.get(details, 'shippingInfo.state.abbr');
+        }
+        details.shippingInfo.state = details.shippingInfo.state || 'N/A';
 
         // formly will nest the country inside of itself, I think this is because
         // the country list contains country as a key, as well as the device.service
@@ -164,32 +247,37 @@
           enabled: true
         })
         .map(function (trial) {
-          if (trial.type === Config.offerTypes.pstn) {
-            return;
+          if (trial.type === Config.offerTypes.pstn || trial.type === Config.offerTypes.context) {
+            return undefined;
           }
-          var licenseCount = trial.type === Config.trials.roomSystems ?
+          var licenseCount =
+            (trial.type === Config.trials.roomSystems || trial.type === Config.offerTypes.care) ?
             trial.details.quantity : data.details.licenseCount;
           return {
-            'id': trial.type,
-            'licenseCount': licenseCount,
+            id: trial.type,
+            licenseCount: licenseCount,
           };
         })
-        .compact(data.trials)
+        .compact()
         .value();
     }
 
     function _makeTrial() {
       TrialMessageService.reset();
       TrialMeetingService.reset();
+      TrialWebexService.reset();
       TrialCallService.reset();
+      TrialCareService.reset();
       TrialRoomSystemService.reset();
       TrialDeviceService.reset();
       TrialPstnService.reset();
+      TrialContextService.reset();
 
       var defaults = {
         customerName: '',
         customerEmail: '',
         licenseDuration: 90,
+        dealId: '',
         licenseCount: 100
       };
 
@@ -198,12 +286,17 @@
         trials: {
           messageTrial: TrialMessageService.getData(),
           meetingTrial: TrialMeetingService.getData(),
+          webexTrial: TrialWebexService.getData(),
           callTrial: TrialCallService.getData(),
+          careTrial: TrialCareService.getData(),
           roomSystemTrial: TrialRoomSystemService.getData(),
           deviceTrial: TrialDeviceService.getData(),
-          pstnTrial: TrialPstnService.getData()
+          pstnTrial: TrialPstnService.getData(),
+          contextTrial: TrialContextService.getData()
         },
       };
+
+      _trialData.trials.deviceTrial.limitsPromise = service.getDeviceTrialsLimit();
 
       return _trialData;
     }
@@ -259,6 +352,11 @@
           var trialPeriod = trialPeriodData.trialPeriod;
           return calcDaysLeft(startDate, trialPeriod, currentDate);
         });
+    }
+
+    function getDaysLeftForCurrentUser() {
+      var trialIds = service.getTrialIds();
+      return service.getExpirationPeriod(trialIds);
     }
   }
 })();

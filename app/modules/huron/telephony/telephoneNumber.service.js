@@ -2,7 +2,7 @@
 (function () {
   'use strict';
 
-  angular.module('Huron')
+  angular.module('huron.telephoneNumber')
     .factory('TelephoneNumberService', TelephoneNumberService);
 
   /* @ngInject */
@@ -17,7 +17,10 @@
       validateDID: validateDID,
       getDIDValue: getDIDValue,
       getDIDLabel: getDIDLabel,
-      getExampleNumbers: getExampleNumbers
+      getExampleNumbers: getExampleNumbers,
+      getPhoneNumberType: getPhoneNumberType,
+      isTollFreeNumber: isTollFreeNumber,
+      isPossibleAreaCode: isPossibleAreaCode
     };
     var TOLL_FREE = 'TOLL_FREE';
     var PREMIUM_RATE = 'PREMIUM_RATE';
@@ -33,13 +36,13 @@
     return service;
 
     function setCountryCode(value) {
-      value = _.trimLeft(value, '+'); // remove the '+' sign if it exists
+      value = _.trimStart(value, '+'); // remove the '+' sign if it exists
       if (value === '1' || value === 1) {
         // Default to US due to shared codes
         setRegionCode('us');
       } else {
         countryCode = value;
-        regionCode = _.result(_.findWhere(CountryCodes, {
+        regionCode = _.result(_.find(CountryCodes, {
           number: countryCode
         }), 'code');
       }
@@ -51,13 +54,33 @@
 
     function setRegionCode(region) {
       regionCode = angular.isString(region) ? region.toLowerCase() : '';
-      countryCode = _.result(_.findWhere(CountryCodes, {
+      countryCode = _.result(_.find(CountryCodes, {
         code: regionCode
       }), 'number');
     }
 
+    function getPhoneNumberType(number) {
+      return phoneUtils.getNumberType(number, regionCode);
+    }
+
     function getRegionCode() {
       return regionCode;
+    }
+
+    function isTollFreeNumber(number) {
+      var res = false;
+      try {
+        var phoneNumberType;
+        if (phoneUtils.isValidNumberForRegion(number, regionCode)) {
+          phoneNumberType = phoneUtils.getNumberType(number, regionCode);
+          if (phoneNumberType === TOLL_FREE) {
+            res = true;
+          }
+        }
+      } catch (e) {
+        res = false;
+      }
+      return res;
     }
 
     function validateDID(number) {
@@ -67,12 +90,12 @@
         if (phoneUtils.isValidNumberForRegion(number, regionCode)) {
           phoneNumberType = phoneUtils.getNumberType(number, regionCode);
           switch (phoneNumberType) {
-          case TOLL_FREE:
-          case PREMIUM_RATE:
-            res = false;
-            break;
-          default:
-            res = true;
+            case PREMIUM_RATE:
+              res = false;
+              break;
+            case TOLL_FREE:
+            default:
+              res = true;
           }
         }
       } catch (e) {
@@ -101,6 +124,17 @@
 
     function getExampleNumbers() {
       return exampleNumbers[regionCode];
+    }
+
+    function isPossibleAreaCode(areaCode) {
+      //TODO: needs to be looked at again when service in other countries is available
+      if (regionCode === 'us') {
+        return phoneUtils.isPossibleNumber(areaCode + '0000000', regionCode);
+      } else if (regionCode === 'au') {
+        return phoneUtils.isValidNumber(areaCode + '00000000', regionCode);
+      } else {
+        return true;
+      }
     }
   }
 })();

@@ -6,7 +6,7 @@
     .factory('AutoAttendantCeService', AutoAttendantCeService);
 
   /* @ngInject */
-  function AutoAttendantCeService($q, CeService, Authinfo, AANumberAssignmentService, AACalendarService) {
+  function AutoAttendantCeService(CeService, Authinfo, AANumberAssignmentService) {
 
     var service = {
       listCes: listCes,
@@ -36,8 +36,8 @@
 
     function createCe(ceDefinition) {
       return CeService.save({
-          customerId: Authinfo.getOrgId()
-        },
+        customerId: Authinfo.getOrgId()
+      },
         ceDefinition
       ).$promise;
     }
@@ -45,9 +45,9 @@
     function updateCe(ceUrl, ceDefinition) {
       var aCeId = getCeId(ceUrl);
       return CeService.update({
-          customerId: Authinfo.getOrgId(),
-          ceId: aCeId
-        },
+        customerId: Authinfo.getOrgId(),
+        ceId: aCeId
+      },
         ceDefinition
       ).$promise;
     }
@@ -58,7 +58,7 @@
         customerId: Authinfo.getOrgId(),
         ceId: aCeId
       }).$promise.then(
-        function (response) {
+        function () {
           // on successful delete of AA, delete the AA mapping in CMI
           return AANumberAssignmentService.deleteAANumberAssignments(Authinfo.getOrgId(), aCeId);
         });
@@ -66,7 +66,7 @@
 
     /**
      * TODO: This method is for POC delete with ceURL
-     * and can be removed when POC code is removed 
+     * and can be removed when POC code is removed
      */
     function getCeId(ceUrl) {
       var aCeId;

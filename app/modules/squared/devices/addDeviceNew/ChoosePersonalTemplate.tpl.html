@@ -1,0 +1,54 @@
+<div class="modal-header">
+  <button type="button" class="close" ng-click="$dismiss()">
+  </button>
+  <h3 class="modal-title" translate="{{choosePersonal.wizardData.title}}"></h3>
+</div>
+<div class="modal-body device-wizard choose-personal">
+  <div class="chooseExistingUser">
+    <form class="chooseExistingUserForm" onsubmit="$('#next-button').click()">
+      <h4 translate="addDeviceWizard.choosePersonal.whichUser"></h4>
+      <p translate="addDeviceWizard.choosePersonal.existingUserInstructions"></p>
+      <div class="existingUserSpacing" ng-hide="choosePersonal.wizardData.allowUserCreation"></div>
+      <div>
+        <input type="text"
+               class="existingUserInput"
+               ng-model="choosePersonal.selected"
+               typeahead="user for user in choosePersonal.search($viewValue) | limitTo:6"
+               typeahead-loading="choosePersonal.isSearching"
+               typeahead-template-url="userTemplate.html"
+               typeahead-on-select="choosePersonal.selectUser($item)"
+               placeholder="{{'addDeviceWizard.choosePersonal.searchForUser' | translate}}"
+               typeahead-wait-ms="500"/>
+        <script type="text/ng-template" id="userTemplate.html">
+          <a>
+            <span ng-bind-html="match.label.extractedName | typeaheadHighlight:query" ></span>
+          </a>
+        </script>
+        <span ng-show="choosePersonal.isSearching" cs-loader class="loader-example--small"></span>
+        <span ng-show="choosePersonal.noResults" translate="addDeviceWizard.choosePersonal.noUserFound"></span>
+        <div class="errorBox" ng-if="choosePersonal.userError">
+          <i class="icon icon-warning"></i>
+          <span translate="addDeviceWizard.choosePersonal.userMissesUcEntitlement"></span>
+        </div>
+      </div>
+      <div class="scrollSpace"></div>
+    </form>
+  </div>
+</div>
+<div class="modal-footer">
+  <button
+    id="back-button"
+    class="btn"
+    sq-click-promise="choosePersonal.back()"
+    translate="common.back">
+  </button>
+  <button
+    cs-btn
+    loading="choosePersonal.isLoading"
+    id="create-place-button"
+    class="btn btn--primary"
+    ng-click="choosePersonal.next()"
+    ng-disabled="!choosePersonal.isNameValid()">
+    <span translate="common.next"></span>
+  </button>
+</div>

@@ -1,0 +1,36 @@
+<div class="sq-places-page-overview">
+  <div ui-view="header"></div>
+  <cs-sp-container>
+    <cs-sp-section ng-if="$ctrl.currentPlace.type === 'cloudberry'">
+      <div class="section-title-row">
+        <span class="section-name" translate="spacesPage.informationHeader"></span>
+      </div>
+      <div class="form-group" ng-show="$ctrl.currentPlace.sipUrl">
+        <label class="col-sm-4 control-label" translate="deviceOverviewPage.sipUrl"></label>
+        <div class="col-sm-8">
+          <p class="form-control-static">{{$ctrl.currentPlace.sipUrl}}</p>
+        </div>
+      </div>
+    </cs-sp-section>
+
+    <cs-sp-section ng-if="$ctrl.currentPlace.type === 'huron'">
+      <div class="section-title-row">
+        <span class="section-name" translate="placesPage.servicesHeader"></span>
+      </div>
+      <feature-list
+        features="$ctrl.services"
+        on-feature-click="$ctrl.clickService(feature)">
+      </feature-list>
+    </cs-sp-section>
+
+    <cs-sp-section>
+      <uc-device-list
+        owner-type="place"
+        device-list="$ctrl.deviceList"
+        multiple-otp="$ctrl.currentPlace.type !== 'cloudberry'"
+        on-generate-fn="$ctrl.onGenerateOtpFn()"
+        on-show-device-detail-fn="$ctrl.showDeviceDetails(device)">
+      </uc-device-list>
+    </cs-sp-section>
+  </cs-sp-container>
+</div>

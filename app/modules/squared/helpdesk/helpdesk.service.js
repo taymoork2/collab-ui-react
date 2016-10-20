@@ -1,12 +1,45 @@
 (function () {
   'use strict';
 
-  /*ngInject*/
+  /* @ngInject */
 
-  function HelpdeskService(ServiceDescriptor, $location, $http, Config, $q, HelpdeskMockData, CsdmConfigService, CsdmConverter, CacheFactory,
-    $translate, $timeout, USSService2, DeviceService, HelpdeskHttpRequestCanceller, UrlConfig) {
+  function HelpdeskService($http, $location, $q, $translate, $window, CacheFactory, Config, CsdmConfigService, CsdmConverter, FeatureToggleService, HelpdeskHttpRequestCanceller, HelpdeskMockData, ServiceDescriptor, UrlConfig, USSService) {
     var urlBase = UrlConfig.getAdminServiceUrl();
     var orgCache = CacheFactory.get('helpdeskOrgCache');
+    var service = {
+      usersWithRole: usersWithRole,
+      searchUsers: searchUsers,
+      searchOrgs: searchOrgs,
+      searchOrders: searchOrders,
+      getUser: getUser,
+      getOrg: getOrg,
+      isEmailBlocked: isEmailBlocked,
+      searchCloudberryDevices: searchCloudberryDevices,
+      getHybridServices: getHybridServices,
+      resendInviteEmail: resendInviteEmail,
+      getWebExSites: getWebExSites,
+      getServiceOrder: getServiceOrder,
+      getCloudberryDevice: getCloudberryDevice,
+      getOrgDisplayName: getOrgDisplayName,
+      findAndResolveOrgsForUserResults: findAndResolveOrgsForUserResults,
+      checkIfMobile: checkIfMobile,
+      sendVerificationCode: sendVerificationCode,
+      filterDevices: filterDevices,
+      getHybridStatusesForUser: getHybridStatusesForUser,
+      cancelAllRequests: cancelAllRequests,
+      noOutstandingRequests: noOutstandingRequests,
+      useMock: useMock,
+      elevateToReadonlyAdmin: elevateToReadonlyAdmin,
+      isSparkOnlineUser: isSparkOnlineUser,
+      getInviteResendUrl: getInviteResendUrl,
+      getInviteResendPayload: getInviteResendPayload,
+      invokeInviteEmail: invokeInviteEmail,
+      searchOrder: searchOrder,
+      getAccount: getAccount,
+      getOrder: getOrder,
+      getEmailStatus: getEmailStatus
+    };
+
     if (!orgCache) {
       orgCache = new CacheFactory('helpdeskOrgCache', {
         maxAge: 120 * 1000,
@@ -38,19 +71,19 @@
     //TODO: Useragent detection a probably not a reliable way to detect mobile device...
     var isMobile = {
       Android: function () {
-        return navigator.userAgent.match(/Android/i);
+        return $window.navigator.userAgent.match(/Android/i);
       },
       BlackBerry: function () {
-        return navigator.userAgent.match(/BlackBerry/i);
+        return $window.navigator.userAgent.match(/BlackBerry/i);
       },
       iOS: function () {
-        return navigator.userAgent.match(/iPhone|iPad|iPod/i);
+        return $window.navigator.userAgent.match(/iPhone|iPad|iPod/i);
       },
       Opera: function () {
-        return navigator.userAgent.match(/Opera Mini/i);
+        return $window.navigator.userAgent.match(/Opera Mini/i);
       },
       Windows: function () {
-        return navigator.userAgent.match(/IEMobile/i) || navigator.userAgent.match(/WPDesktop/i);
+        return $window.navigator.userAgent.match(/IEMobile/i) || $window.navigator.userAgent.match(/WPDesktop/i);
       },
       all: function () {
         return (isMobile.Android() || isMobile.BlackBerry() || isMobile.iOS() || isMobile.Opera() || isMobile.Windows());
@@ -70,7 +103,7 @@
     }
 
     function extractDevice(res) {
-      return CsdmConverter.convertDevice(res.data);
+      return CsdmConverter.convertCloudberryDevice(res.data);
     }
 
     function extractOrg(res) {
@@ -89,6 +122,11 @@
         }
       });
       return users;
+    }
+
+    function isSparkOnlineUser(user) {
+      var value = _.get(user, 'onlineOrderIds', []);
+      return (value) ? !!value.length : false;
     }
 
     function getCorrectedDisplayName(user) {
@@ -121,14 +159,22 @@
         });
     }
 
+    function usersWithRole(orgId, role, limit) {
+      if (useMock()) {
+        return deferredResolve(HelpdeskMockData.users);
+      }
+      return cancelableHttpGET(urlBase + 'helpdesk/organizations/' + orgId + '/users?limit=' + limit + (role ? '&role=' + encodeURIComponent(role) : ''))
+        .then(extractUsers);
+    }
+
     function searchUsers(searchString, orgId, limit, role, includeUnlicensed) {
       if (useMock()) {
         return deferredResolve(HelpdeskMockData.users);
       }
 
-      return cancelableHttpGET(urlBase + 'helpdesk/search/users?phrase=' + encodeURIComponent(searchString) + '&limit=' + limit + (orgId ?
-          '&orgId=' +
-          encodeURIComponent(orgId) : (includeUnlicensed ? '&includeUnlicensed=true' : '')) + (role ? '&role=' + encodeURIComponent(role) : ''))
+      var includeUnlicensedStr = includeUnlicensed ? '&includeUnlicensed=true' : '';
+      var roleStr = role ? '&role=' + encodeURIComponent(role) : '';
+      return cancelableHttpGET(urlBase + 'helpdesk/search/users?phrase=' + encodeURIComponent(searchString) + '&limit=' + limit + (orgId ? '&orgId=' + encodeURIComponent(orgId) : includeUnlicensedStr) + roleStr)
         .then(extractUsers);
     }
 
@@ -139,6 +185,15 @@
 
       return cancelableHttpGET(urlBase + 'helpdesk/search/organizations?phrase=' + encodeURIComponent(searchString) + '&limit=' + limit)
         .then(extractItems);
+    }
+
+    function searchOrders(searchString) {
+      // TODO - if (useMock()) {
+      //  return deferredResolve(HelpdeskMockData.orders);
+      //}
+
+      return cancelableHttpGET(urlBase + 'commerce/orders/search?webOrderId=' + encodeURIComponent(searchString))
+        .then(extractData);
     }
 
     function getUser(orgId, userId) {
@@ -202,7 +257,7 @@
 
     function searchCloudberryDevices(searchString, orgId, limit) {
       if (useMock()) {
-        return deferredResolve(filterDevices(searchString, CsdmConverter.convertDevices(HelpdeskMockData.devices), limit));
+        return deferredResolve(filterDevices(searchString, CsdmConverter.convertCloudberryDevices(HelpdeskMockData.devices), limit));
       }
       var devices = devicesInOrgCache.get(orgId);
       if (devices) {
@@ -211,7 +266,7 @@
       return $http
         .get(CsdmConfigService.getUrl() + '/organization/' + encodeURIComponent(orgId) + '/devices?checkOnline=false&isHelpDesk=true')
         .then(function (res) {
-          var devices = CsdmConverter.convertDevices(res.data);
+          var devices = CsdmConverter.convertCloudberryDevices(res.data);
           devicesInOrgCache.put(orgId, devices);
           return filterDevices(searchString, devices, limit);
         });
@@ -219,7 +274,7 @@
 
     function getCloudberryDevice(orgId, deviceId) {
       if (useMock()) {
-        var device = _.find(CsdmConverter.convertDevices(HelpdeskMockData.devices), function (val, key) {
+        var device = _.find(CsdmConverter.convertCloudberryDevices(HelpdeskMockData.devices), function (val, key) {
           var id = _.last(key.split('/'));
           return id === deviceId;
         });
@@ -236,7 +291,7 @@
       var macSearchString = searchString.replace(/[:/.-]/g, '');
       _.each(devices, function (device) {
         if ((device.displayName || '').toLowerCase().indexOf(searchString) != -1 || (device.mac || '').toLowerCase().replace(/[:]/g, '').indexOf(
-            macSearchString) != -1 || (device.serial || '').toLowerCase().indexOf(searchString) != -1) {
+            macSearchString) != -1 || (device.serial || '').toLowerCase().indexOf(searchString) != -1 || (device.cisUuid || '').toLowerCase().indexOf(searchString) != -1) {
           if (_.size(filteredDevices) < limit) {
             device.id = device.url.split('/').pop();
             filteredDevices.push(device);
@@ -264,6 +319,15 @@
         }
       } else {
         user.statuses = _.map(user.accountStatus, function (status) {
+          // notes:
+          // - 'pending' => CI status (see: https://wiki.cisco.com/display/PLATFORM/CI3.0+SCIM+API+-+Get+User )
+          // - by default, 'pending' alone means a normal user that was invited to Spark by their
+          //   admin but not yet accepted
+          // - if user is a Spark Online user (ie. they purchased Spark through Digital River), then
+          //   the user is the original purchaser, but has not registered yet
+          if (status === 'pending') {
+            status = (isSparkOnlineUser(user)) ? 'onboarding-pending' : 'invite-pending';
+          }
           return 'helpdesk.userStatuses.' + status;
         });
       }
@@ -301,15 +365,60 @@
       }
     }
 
-    function resendInviteEmail(displayName, email) {
-      return $http
-        .post(urlBase + 'helpdesk/actions/resendinvitation/invoke', {
-          inviteList: [{
-            displayName: displayName,
-            email: email
-          }]
+    function isEmailBlocked(email) {
+      return $http.get(urlBase + 'email/bounces?email=' + encodeURIComponent(email));
+    }
+
+    function resendInviteEmail(trimmedUserData) {
+      var email = trimmedUserData.email;
+      return FeatureToggleService.supports(FeatureToggleService.features.atlasEmailStatus)
+        .then(function (isSupported) {
+          if (!isSupported) {
+            return $q.reject();
+          }
+          return service.isEmailBlocked(email)
+            .then(function () {
+              return $http.delete(urlBase + 'email/bounces?email=' + email);
+            })
+            .then(function () {
+              return service.invokeInviteEmail(trimmedUserData);
+            });
         })
-        .then(extractData);
+        .catch(function () {
+          return service.invokeInviteEmail(trimmedUserData);
+        });
+    }
+
+    function getInviteResendUrl(trimmedUserData) {
+      var controllerAction = isSparkOnlineUser(trimmedUserData) ? 'resendonlineorderactivation' : 'resendinvitation';
+      return urlBase + 'helpdesk/actions/' + controllerAction + '/invoke';
+    }
+
+    function getInviteResendPayload(trimmedUserData) {
+      var displayName = trimmedUserData.displayName;
+      var email = trimmedUserData.email;
+      var onlineOrderIds = trimmedUserData.onlineOrderIds;
+      var payload = {
+        inviteList: [{
+          displayName: displayName,
+          email: email
+        }]
+      };
+      if (isSparkOnlineUser(trimmedUserData)) {
+        payload = {
+          onlineOrderIds: onlineOrderIds
+        };
+      }
+      return payload;
+    }
+
+    function invokeInviteEmail(trimmedUserData) {
+      var url = service.getInviteResendUrl(trimmedUserData);
+      var payload = service.getInviteResendPayload(trimmedUserData);
+      return $http.post(url, payload)
+        .then(function (res) {
+          return extractData(res);
+        });
     }
 
     function sendVerificationCode(displayName, email) {
@@ -332,6 +441,15 @@
         .then(extractItems);
     }
 
+    function getServiceOrder(orgId) {
+      if (useMock()) {
+        return deferredResolve(HelpdeskMockData.serviceOrder);
+      }
+      return $http
+        .get(urlBase + 'helpdesk/serviceorder/' + encodeURIComponent(orgId))
+        .then(extractData);
+    }
+
     function elevateToReadonlyAdmin(orgId) {
       return $http.post(urlBase + 'helpdesk/organizations/' + encodeURIComponent(orgId) + '/actions/elevatereadonlyadmin/invoke');
     }
@@ -340,7 +458,7 @@
       if (useMock()) {
         return deferredResolve(HelpdeskMockData.userStatuses);
       }
-      return USSService2.getStatusesForUserInOrg(userId, orgId);
+      return USSService.getStatusesForUserInOrg(userId, orgId);
     }
 
     function deferredResolve(resolved) {
@@ -357,27 +475,31 @@
       return HelpdeskHttpRequestCanceller.empty();
     }
 
-    return {
-      searchUsers: searchUsers,
-      searchOrgs: searchOrgs,
-      getUser: getUser,
-      getOrg: getOrg,
-      searchCloudberryDevices: searchCloudberryDevices,
-      getHybridServices: getHybridServices,
-      resendInviteEmail: resendInviteEmail,
-      getWebExSites: getWebExSites,
-      getCloudberryDevice: getCloudberryDevice,
-      getOrgDisplayName: getOrgDisplayName,
-      findAndResolveOrgsForUserResults: findAndResolveOrgsForUserResults,
-      checkIfMobile: checkIfMobile,
-      sendVerificationCode: sendVerificationCode,
-      filterDevices: filterDevices,
-      getHybridStatusesForUser: getHybridStatusesForUser,
-      cancelAllRequests: cancelAllRequests,
-      noOutstandingRequests: noOutstandingRequests,
-      useMock: useMock,
-      elevateToReadonlyAdmin: elevateToReadonlyAdmin
-    };
+    function searchOrder(orderId) {
+      return $http
+        .get(urlBase + 'commerce/orders/search?webOrderId=' + orderId)
+        .then(extractData);
+    }
+
+    function getAccount(accountId) {
+      return $http
+        .get(urlBase + 'accounts/' + accountId)
+        .then(extractData);
+    }
+
+    function getOrder(orderId) {
+      return $http
+        .get(urlBase + 'orders/' + orderId)
+        .then(extractData);
+    }
+
+    function getEmailStatus(email) {
+      return $http
+        .get(urlBase + "email?email=" + email)
+        .then(extractData);
+    }
+
+    return service;
   }
 
   angular.module('Squared')

@@ -1,24 +1,22 @@
 'use strict';
 
 describe('SparkDomainManagementService: Service', function () {
-  beforeEach(module('Core'));
+  beforeEach(angular.mock.module('Core'));
 
   var authInfo = {
     getOrgId: sinon.stub().returns('bcd7afcd-839d-4c61-a7a8-31c6c7f016d7')
   };
 
-  beforeEach(module(function ($provide) {
+  beforeEach(angular.mock.module(function ($provide) {
     $provide.value("Authinfo", authInfo);
   }));
 
-  var $httpBackend, Auth, Authinfo, Config, SparkDomainManagementService, $q;
+  var $httpBackend, SparkDomainManagementService;
   var sparkDomainRegex = /.*\/settings\/domain\.*/;
 
-  beforeEach(inject(function (_$q_, _$httpBackend_, _Config_, _SparkDomainManagementService_) {
+  beforeEach(inject(function (_$httpBackend_, _SparkDomainManagementService_) {
     $httpBackend = _$httpBackend_;
-    Config = _Config_;
     SparkDomainManagementService = _SparkDomainManagementService_;
-    $q = _$q_;
   }));
 
   afterEach(function () {
@@ -26,13 +24,13 @@ describe('SparkDomainManagementService: Service', function () {
     $httpBackend.verifyNoOutstandingRequest();
   });
 
-  it('should verify that a domain is passed for checkAvailability and addSipUriDomain calls', function () {
+  it('should verify that a domain is passed for checkAvailability and addSipDomain calls', function () {
     SparkDomainManagementService.checkDomainAvailability().catch(function (response) {
-      expect(response).toBe('A SIP URI Domain input value must be entered');
+      expect(response).toBe('A SIP Domain input value must be entered');
     });
 
-    SparkDomainManagementService.addSipUriDomain().catch(function (response) {
-      expect(response).toBe('A SIP URI Domain input value must be entered');
+    SparkDomainManagementService.addSipDomain().catch(function (response) {
+      expect(response).toBe('A SIP Domain input value must be entered');
     });
   });
 
@@ -70,7 +68,7 @@ describe('SparkDomainManagementService: Service', function () {
     $httpBackend.flush();
   });
 
-  it('should add a Sip Uri Domain', function () {
+  it('should add a Sip Domain', function () {
     $httpBackend.whenPOST(sparkDomainRegex).respond(function () {
       var data = {
         'isDomainAvailable': false,
@@ -79,7 +77,7 @@ describe('SparkDomainManagementService: Service', function () {
       return [200, data];
     });
 
-    SparkDomainManagementService.addSipUriDomain('shafiTest3').then(function (response) {
+    SparkDomainManagementService.addSipDomain('shafiTest3').then(function (response) {
       expect(response.data.isDomainReserved).toBe(true);
       expect(response.data.isDomainAvailable).toBe(false);
     });

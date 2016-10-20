@@ -1,9 +1,9 @@
 'use strict';
 
 describe('Controller: AADialByExtCtrl', function () {
-  var $controller;
-  var AAUiModelService, AutoAttendantCeInfoModelService, AutoAttendantCeMenuModelService, AAModelService;
-  var $rootScope, $scope, $translate;
+  var $controller, $q;
+  var AAUiModelService, AutoAttendantCeMenuModelService, AAModelService, FeatureToggleService;
+  var $rootScope, $scope;
 
   var aaModel = {
 
@@ -18,71 +18,81 @@ describe('Controller: AADialByExtCtrl', function () {
   var schedule = 'openHours';
   var index = '0';
   var keyIndex = '0';
+  var menuId = 'menu1';
 
   var data = getJSONFixture('huron/json/autoAttendant/aaPhoneMenuCtrl.json');
 
-  function raw2MenuEntry(raw) {
-    var _menuEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
-    angular.extend(_menuEntry, raw);
-    _menuEntry.actions = [];
-    for (var j = 0; j < raw.actions.length; j++) {
-      var _action = AutoAttendantCeMenuModelService.newCeActionEntry();
-      angular.extend(_action, raw.actions[j]);
-      _menuEntry.addAction(_action);
-    }
-    return _menuEntry;
-  }
+  beforeEach(angular.mock.module('uc.autoattendant'));
+  beforeEach(angular.mock.module('Huron'));
+  beforeEach(angular.mock.module('Sunlight'));
 
-  beforeEach(module('uc.autoattendant'));
-  beforeEach(module('Huron'));
-
-  beforeEach(inject(function (_$controller_, _$translate_, _$rootScope_, _AAUiModelService_, _AutoAttendantCeInfoModelService_, _AutoAttendantCeMenuModelService_, _AAModelService_) {
-    $translate = _$translate_;
+  beforeEach(inject(function (_$controller_, _$rootScope_, _$q_, _AAUiModelService_, _AutoAttendantCeMenuModelService_, _AAModelService_, _FeatureToggleService_) {
     $rootScope = _$rootScope_;
     $scope = $rootScope;
+    $q = _$q_;
 
     $controller = _$controller_;
     AAModelService = _AAModelService_;
     AAUiModelService = _AAUiModelService_;
-    AutoAttendantCeInfoModelService = _AutoAttendantCeInfoModelService_;
     AutoAttendantCeMenuModelService = _AutoAttendantCeMenuModelService_;
+    FeatureToggleService = _FeatureToggleService_;
 
     $scope.schedule = schedule;
     $scope.index = index;
     $scope.keyIndex = keyIndex;
 
-    spyOn(AAModelService, 'getAAModel').and.returnValue(aaModel);
-
-    spyOn(AAUiModelService, 'getUiModel').and.returnValue(aaUiModel);
-    aaUiModel[schedule] = AutoAttendantCeMenuModelService.newCeMenu();
-    aaUiModel[schedule].addEntryAt(index, AutoAttendantCeMenuModelService.newCeMenu());
   }));
 
   describe('AADialByExt', function () {
+    var controller;
+
+    beforeEach(inject(function ($controller) {
+      $scope = $rootScope;
+      $scope.keyIndex = '0';
+      $scope.menuId = menuId;
+
+      spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(false));
+      spyOn(AAModelService, 'getAAModel').and.returnValue(aaModel);
+
+      spyOn(AAUiModelService, 'getUiModel').and.returnValue(aaUiModel);
+      AutoAttendantCeMenuModelService.clearCeMenuMap();
+      aaUiModel[schedule] = AutoAttendantCeMenuModelService.newCeMenu();
+      aaUiModel[schedule].addEntryAt(index, AutoAttendantCeMenuModelService.newCeMenu());
+
+      // setup the options menu
+      controller = $controller('AADialByExtCtrl', {
+        $scope: $scope
+      });
+      $scope.$apply();
+    }));
 
     describe('activate', function () {
+
       it('should be able to create new AA entry', function () {
-        var controller = $controller('AADialByExtCtrl', {
-          $scope: $scope
-        });
+
         expect(controller).toBeDefined();
         expect(controller.menuEntry.actions[0].name).toEqual('runActionsOnInput');
         expect(controller.menuEntry.actions[0].value).toEqual('');
       });
 
       it('should initialize the message attribute', function () {
-        var controller = $controller('AADialByExtCtrl', {
-          $scope: $scope
-        });
-        expect(controller.message).toEqual('');
+
+        expect(controller.messageInput).toEqual('');
         controller.saveUiModel(); // GW test
       });
     });
 
     describe('activate', function () {
       it('should read an existing entry', function () {
-        var menuEntry = angular.copy(data.ceMenu);
-        aaUiModel[schedule].entries[0].addEntry(menuEntry.entries[1]);
+
+        var action = AutoAttendantCeMenuModelService.newCeActionEntry('runActionOnInput', '');
+        var menuEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
+
+        menuEntry.setType(data.ceMenu.type);
+        menuEntry.setKey(data.ceMenu.key);
+        menuEntry.addAction(action);
+
+        aaUiModel[schedule].entries[0].addEntry(menuEntry);
 
         var controller = $controller('AADialByExtCtrl', {
           $scope: $scope
@@ -94,19 +104,152 @@ describe('Controller: AADialByExtCtrl', function () {
 
     describe('saveUiModel', function () {
       it('should write UI entry back into UI model', function () {
-        var controller = $controller('AADialByExtCtrl', {
-          $scope: $scope
-        });
+
         var actionEntry = AutoAttendantCeMenuModelService.newCeActionEntry('runActionsOnInput', '');
         var menuEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
         menuEntry.addAction(actionEntry);
         aaUiModel[schedule].entries[0].addEntry(menuEntry);
         expect(controller.menuEntry.actions[0].value).toEqual('');
         var message = 'Enter the extension now.';
-        controller.message = message;
+        controller.messageInput = message;
         controller.saveUiModel();
         expect(controller.menuEntry.actions[0].value).toEqual(message);
       });
+    });
+  });
+
+  describe('create a RUNACTIONONINPUT from Dial By Extension', function () {
+    var controller;
+
+    beforeEach(inject(function ($controller) {
+      $scope = $rootScope;
+      $scope.keyIndex = undefined;
+
+      spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
+
+      spyOn(AAModelService, 'getAAModel').and.returnValue(aaModel);
+      spyOn(AAUiModelService, 'getUiModel').and.returnValue(aaUiModel);
+      aaUiModel[schedule] = AutoAttendantCeMenuModelService.newCeMenu();
+      aaUiModel[schedule].addEntryAt(index, AutoAttendantCeMenuModelService.newCeMenuEntry());
+
+      // setup the options menu
+      controller = $controller('AADialByExtCtrl', {
+        $scope: $scope
+      });
+      $scope.$apply();
+    }));
+
+    it('should initialize values for new Dial by Extension', function () {
+
+      expect(controller).toBeDefined();
+
+      expect(controller.menuEntry.actions[0].name).toEqual('runActionsOnInput');
+
+    });
+
+    it('should write voice and language to the model', function () {
+      var voiceOption = {};
+      voiceOption.value = "Claire";
+      var languageOption = {};
+      languageOption.value = "PigLatin";
+
+      expect(controller).toBeDefined();
+
+      controller.voiceOption.value = voiceOption;
+      controller.languageOption.value = languageOption;
+
+      controller.saveUiModel();
+      $scope.$apply();
+
+      expect(controller.menuEntry.actions[0].minNumberOfCharacters).toEqual(0);
+      expect(controller.menuEntry.actions[0].maxNumberOfCharacters).toEqual(0);
+
+      expect(controller.menuEntry.actions[0].voice.value).toEqual(voiceOption.value);
+      expect(controller.menuEntry.actions[0].language.value).toEqual(languageOption.value);
+    });
+
+    it('should set min and max number of characters to zero', function () {
+
+      expect(controller).toBeDefined();
+
+      $scope.$apply();
+
+      expect(controller.menuEntry.actions[0].minNumberOfCharacters).toEqual(0);
+      expect(controller.menuEntry.actions[0].maxNumberOfCharacters).toEqual(0);
+
+    });
+
+    it('should fetch message label', function () {
+
+      expect(controller).toBeDefined();
+
+      var label = controller.getMessageLabel();
+      $scope.$apply();
+
+      expect(label).toEqual('autoAttendant.sayMessage');
+    });
+
+  });
+
+  describe('create a RUNACTIONONINPUT from Dial By Extension', function () {
+    var controller;
+
+    beforeEach(inject(function ($controller) {
+      $scope = $rootScope;
+      $scope.keyIndex = undefined;
+
+      spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
+
+      spyOn(AAModelService, 'getAAModel').and.returnValue(aaModel);
+      spyOn(AAUiModelService, 'getUiModel').and.returnValue(aaUiModel);
+      aaUiModel[schedule] = AutoAttendantCeMenuModelService.newCeMenu();
+      aaUiModel[schedule].addEntryAt(index, AutoAttendantCeMenuModelService.newCeMenuEntry());
+      var actionEntry = AutoAttendantCeMenuModelService.newCeActionEntry('Dummy', '');
+
+      aaUiModel[schedule].entries[0].setVoice('Claire');
+      aaUiModel[schedule].entries[0].setLanguage('Dutch');
+
+      aaUiModel[schedule].entries[0].addAction(actionEntry);
+
+      // setup the options menu
+      controller = $controller('AADialByExtCtrl', {
+        $scope: $scope
+      });
+      $scope.$apply();
+    }));
+
+    it('should alter action type from dummy to runActionsOnInput', function () {
+
+      expect(controller).toBeDefined();
+
+      expect(controller.menuEntry.actions[0].minNumberOfCharacters).toEqual(0);
+      expect(controller.menuEntry.actions[0].getName()).toEqual('runActionsOnInput');
+      expect(controller.menuEntry.getVoice()).toEqual('Claire');
+
+    });
+
+    it('should set default language', function () {
+
+      expect(controller).toBeDefined();
+
+      controller.voiceBackup = {};
+      controller.languageOption = {};
+
+      controller.setVoiceOptions();
+      expect(controller.menuEntry.actions[0].getName()).toEqual('runActionsOnInput');
+      expect(controller.voiceOption.value).toEqual('Vanessa');
+
+    });
+    it('should find language', function () {
+
+      expect(controller).toBeDefined();
+
+      controller.voiceBackup = {};
+
+      controller.setVoiceOptions();
+      expect(controller.menuEntry.actions[0].getName()).toEqual('runActionsOnInput');
+      expect(controller.languageOption.value).toEqual('nl_NL');
+
     });
   });
 });

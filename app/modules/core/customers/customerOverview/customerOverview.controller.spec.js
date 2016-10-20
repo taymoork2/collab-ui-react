@@ -1,21 +1,15 @@
 'use strict';
 
 describe('Controller: CustomerOverviewCtrl', function () {
-  var controller, $scope, $stateParams, $state, $window, $q, currentCustomer, identityCustomer, Userservice, Authinfo, BrandService, FeatureToggleService, TrialService;
-
-  function LicenseFeature(name, state) {
-    this['id'] = name.toString();
-    this['properties'] = null;
-    //this['state'] = state ? 'ADD' : 'REMOVE';
-  }
+  var $controller, $scope, $stateParams, $state, $window, $q, modal, Authinfo, BrandService, controller, currentCustomer, FeatureToggleService, identityCustomer, newCustomerViewToggle, Orgservice, PartnerService, TrialService, Userservice, Notification;
 
   var licenseString = 'MC_cfb817d0-ddfe-403d-a976-ada57d32a3d7_100_t30citest.webex.com';
 
-  beforeEach(module('Core'));
+  beforeEach(angular.mock.module('Core'));
+  beforeEach(angular.mock.module('Huron'));
+  beforeEach(angular.mock.module('Sunlight'));
+  beforeEach(inject(function ($rootScope, _$controller_, _$stateParams_, _$state_, _$window_, _$q_, _$modal_, _FeatureToggleService_, _Orgservice_, _PartnerService_, _TrialService_, _Notification_) {
 
-  beforeEach(module('Huron'));
-
-  beforeEach(inject(function ($rootScope, $controller, _$stateParams_, _$state_, _$window_, _$q_, _FeatureToggleService_, _TrialService_) {
     $scope = $rootScope.$new();
     currentCustomer = {
       customerEmail: 'testuser@gmail.com',
@@ -34,6 +28,7 @@ describe('Controller: CustomerOverviewCtrl', function () {
     identityCustomer = {
       services: ['webex-squared', 'ciscouc']
     };
+    $scope.newCustomerViewToggle = newCustomerViewToggle;
     Userservice = {
       updateUsers: function () {}
     };
@@ -46,43 +41,77 @@ describe('Controller: CustomerOverviewCtrl', function () {
       },
       getOrgName: function () {
         return "xyz123";
+      },
+      isPartnerAdmin: function () {
+        return true;
+      },
+      getUserId: function () {
+        return 'D4C3B2A1';
+      },
+      isCare: function () {
+        return true;
       }
     };
     BrandService = {
       getSettings: function () {}
     };
+
     FeatureToggleService = _FeatureToggleService_;
+    Orgservice = _Orgservice_;
+    PartnerService = _PartnerService_;
 
     $stateParams = _$stateParams_;
     $stateParams.currentCustomer = currentCustomer;
     $state = _$state_;
     $window = _$window_;
     $q = _$q_;
+    modal = _$modal_;
+    $controller = _$controller_;
 
     $state.modal = {
       result: $q.when()
     };
 
     TrialService = _TrialService_;
+    Notification = _Notification_;
+    spyOn(Notification, 'errorWithTrackingId');
     spyOn($state, 'go').and.returnValue($q.when());
     spyOn($state, 'href').and.callThrough();
     spyOn($window, 'open');
-    spyOn(Userservice, 'updateUsers');
+    spyOn(Userservice, 'updateUsers').and.callFake(function (usersDataArray, licenses, entitlements, method, callback) {
+      callback();
+    });
     spyOn(BrandService, 'getSettings').and.returnValue($q.when({}));
-    spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
     spyOn(TrialService, 'getTrial').and.returnValue($q.when({}));
+    spyOn(Orgservice, 'getOrg').and.callFake(function (callback) {
+      callback(getJSONFixture('core/json/organizations/Orgservice.json').getOrg, 200);
+    });
+    spyOn(Orgservice, 'isSetupDone').and.returnValue($q.when(false));
+    spyOn(PartnerService, 'modifyManagedOrgs').and.returnValue($q.when({}));
+    spyOn($window, 'confirm').and.returnValue(true);
+    spyOn(FeatureToggleService, 'atlasCareTrialsGetStatus').and.returnValue(
+      $q.when(true)
+    );
+    spyOn(FeatureToggleService, 'atlasCustomerListUpdateGetStatus').and.returnValue($q.resolve(true));
+    spyOn(modal, 'open').and.callThrough();
 
+    initController();
+  }));
+
+  function initController() {
     controller = $controller('CustomerOverviewCtrl', {
       $scope: $scope,
       identityCustomer: identityCustomer,
       Userservice: Userservice,
       Authinfo: Authinfo,
       BrandService: BrandService,
-      FeatureToggleService: FeatureToggleService
+      FeatureToggleService: FeatureToggleService,
+      newCustomerViewToggle: newCustomerViewToggle,
+      $modal: modal
     });
 
     $scope.$apply();
-  }));
+  }
 
   xit('should transition to trialEdit.info state', function () {
     controller.openEditTrialModal();
@@ -94,6 +123,15 @@ describe('Controller: CustomerOverviewCtrl', function () {
     $scope.$apply(); // modal is closed and promise is resolved
     expect($state.go).toHaveBeenCalled();
     expect($state.go.calls.mostRecent().args[0]).toEqual('partnercustomers.list');
+  });
+
+  it('should display correct customer portal launch button via var isOrgSetup', function () {
+    // isOrgSetup is false from spyOn in beforeEach
+    expect(controller.isOrgSetup).toBe(false);
+
+    Orgservice.isSetupDone.and.returnValue($q.when(true));
+    initController();
+    expect(controller.isOrgSetup).toBe(true);
   });
 
   it('should display number of days left', function () {
@@ -108,8 +146,17 @@ describe('Controller: CustomerOverviewCtrl', function () {
 
   describe('launchCustomerPortal', function () {
     beforeEach(function () {
+      Userservice.updateUsers.and.returnValue($q.when());
       controller.launchCustomerPortal();
+      $scope.$apply();
     });
+
+    it('should call modifyManagedOrgs', function () {
+      expect(controller.customerOrgId).toBe(currentCustomer.customerOrgId);
+      expect(Authinfo.isPartnerAdmin()).toBe(true);
+      expect(PartnerService.modifyManagedOrgs).toHaveBeenCalled();
+    });
+
     it('should create proper url', function () {
       expect($state.href).toHaveBeenCalledWith('login_swap', {
         customerOrgId: controller.currentCustomer.customerOrgId,
@@ -117,16 +164,40 @@ describe('Controller: CustomerOverviewCtrl', function () {
       });
     });
 
-    it('should call Userservice.updateUsers with correct license', function () {
-      expect(Userservice.updateUsers).toHaveBeenCalledWith([{
-          address: "xyz123@gmail.com"
-        }], jasmine.any(Array),
-        //[new LicenseFeature(licenseString, true)],
-        null, 'updateUserLicense', jasmine.any(Function));
-    });
-
     it('should call $window.open', function () {
       expect($window.open).toHaveBeenCalled();
+    });
+  });
+
+  describe('launchCustomerPortal error', function () {
+    beforeEach(function () {
+      PartnerService.modifyManagedOrgs.and.returnValue($q.reject(400));
+      Userservice.updateUsers.and.returnValue($q.when());
+      controller.launchCustomerPortal();
+      $scope.$apply();
+    });
+
+    it('should cause a Notification if modifyManagedOrgs returns 400', function () {
+      expect(Notification.errorWithTrackingId).toHaveBeenCalled();
+    });
+  });
+
+  describe('should call isTestOrg successfully', function () {
+    it('should identify as a test org', function () {
+      expect(controller.isTest).toBe(true);
+    });
+  });
+
+  describe('should call deleteOrg successfully', function () {
+    it('should call deleteTestOrg', function () {
+      controller.deleteTestOrg();
+      expect(modal.open).toHaveBeenCalled();
+    });
+  });
+
+  describe('atlasCareTrialsGetStatus should be called', function () {
+    it('should have called FeatureToggleService.atlasCareTrialsGetStatus', function () {
+      expect(FeatureToggleService.atlasCareTrialsGetStatus).toHaveBeenCalled();
     });
   });
 

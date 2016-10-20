@@ -9,17 +9,14 @@
 
   /* @ngInject */
 
-  function AANumberAssignmentService($q, AssignAutoAttendantService, Authinfo, $http, ExternalNumberPoolService) {
+  function AANumberAssignmentService($q, AssignAutoAttendantService, TelephonyInfoService) {
 
-    var feature;
-    var customerId = Authinfo.getOrgId();
     var service = {
       setAANumberAssignment: setAANumberAssignment,
       getAANumberAssignments: getAANumberAssignments,
       deleteAANumberAssignments: deleteAANumberAssignments,
       setAANumberAssignmentWithErrorDetail: setAANumberAssignmentWithErrorDetail,
       checkAANumberAssignments: checkAANumberAssignments,
-      formatAAE164ResourcesBasedOnList: formatAAE164ResourcesBasedOnList,
       formatAAE164ResourcesBasedOnCMI: formatAAE164ResourcesBasedOnCMI,
       formatAAExtensionResourcesBasedOnCMI: formatAAExtensionResourcesBasedOnCMI,
       NUMBER_FORMAT_DIRECT_LINE: "NUMBER_FORMAT_DIRECT_LINE",
@@ -34,13 +31,13 @@
     // Get the assigned numbers for an AA
     function getAANumberAssignments(customerId, cesId) {
 
-      return AssignAutoAttendantService.query({
+      return AssignAutoAttendantService.get({
         customerId: customerId,
         cesId: cesId
       }).$promise.then(
         function (response) {
           // success
-          return response[0].numbers;
+          return response.numbers;
         },
         function (response) {
           // failure
@@ -62,24 +59,25 @@
           // let's just do it the straight-forward way...
 
           // find resources not in CMI
+          var matchResourceNumber = function (obj) {
+            return obj.number.replace(/\D/g, '') === resources[i].getNumber();
+          };
           var i = 0;
           for (i = 0; i < resources.length; i++) {
             // check to see if it's in the CMI assigned list
-            var cmiObj = cmiAssignedNumbers.filter(function (obj) {
-
-              return obj.number.replace(/\D/g, '') === resources[i].getNumber();
-            });
+            var cmiObj = cmiAssignedNumbers.filter(matchResourceNumber);
             if (!angular.isDefined(cmiObj) || cmiObj === null || cmiObj.length === 0) {
               onlyResources.push(resources[i].getNumber());
             }
           }
           // find CMI assigned numbers not in resources
+          var matchCmiAssignedNumber = function (obj) {
+            return obj.getNumber() === cmiAssignedNumbers[i].number.replace(/\D/g, '');
+          };
           for (i = 0; i < cmiAssignedNumbers.length; i++) {
             if (cmiAssignedNumbers[i].type != service.NUMBER_FORMAT_ENTERPRISE_LINE) {
               // check to see if it's in the resource list
-              var rscObj = resources.filter(function (obj) {
-                return obj.getNumber() === cmiAssignedNumbers[i].number.replace(/\D/g, '');
-              });
+              var rscObj = resources.filter(matchCmiAssignedNumber);
               if (!angular.isDefined(rscObj) || rscObj === null || rscObj.length === 0) {
                 onlyCMI.push(cmiAssignedNumbers[i].number);
               }
@@ -95,64 +93,52 @@
 
     }
 
-    // Format AA E164 resources based on a list of external numbers from CMI
-    function formatAAE164ResourcesBasedOnList(resources, externalNumberList) {
-      var formattedResources = _.map(resources, function (res) {
-        if (res.getType() === service.EXTERNAL_NUMBER) {
-          var fmtRes = angular.copy(res);
-          var extNum = _.find(externalNumberList, function (n) {
-            if (res.number)
-              return n.number.replace(/\D/g, '') === res.number.replace(/\D/g, '');
-            else
-              return n.number.replace(/\D/g, '') === res.id.replace(/\D/g, '');
+    function formatAAE164Resource(res, extNum) {
+      if (res.getType() === service.EXTERNAL_NUMBER) {
+        var fmtRes = angular.copy(res);
+        if (extNum instanceof Array) {
+          var num = res.id ? res.id.replace(/\D/g, '') : res.number.replace(/\D/g, '');
+          extNum = _.find(extNum, function (obj) {
+            return obj.pattern.replace(/\D/g, '') === num;
           });
-          if (extNum) {
-            // For external numbers, save the number in id so it's matched in call processsing
-            // Save the E164 in number
-            fmtRes.number = extNum.number;
-            fmtRes.id = extNum.number.replace(/\D/g, '');
-          } else {
-            // We didn't find in CMI - shouldn't happen - but let's try to fixup any empty fields
-            if (!fmtRes.number) {
-              fmtRes.number = fmtRes.id;
-            }
-            if (!fmtRes.id) {
-              fmtRes.id = fmtRes.number;
-            }
-          }
-          return fmtRes;
-        } else {
-          return res;
-        }
-      });
 
-      return formattedResources;
+        }
+
+        if (extNum) {
+          // For external numbers, save the number in id so it's matched in call processsing
+          // Save the E164 in number
+          fmtRes.number = extNum.pattern;
+          fmtRes.id = extNum.pattern.replace(/\D/g, '');
+        } else {
+          // We didn't find in CMI - shouldn't happen - but let's try to format fields
+          // Note we are returning a copy (see above), not altering input parms, so this leaves CE structures alone
+          // We should try to format as best as possible for CMI assignment
+          fmtRes.number = phoneUtils.formatE164(fmtRes.id, phoneUtils.getRegionCodeForNumber(fmtRes.id));
+          fmtRes.id = fmtRes.number.replace(/\D/g, '');
+        }
+        return fmtRes;
+      } else {
+        return res;
+      }
     }
 
     // Format AA E164 resources based on entries in CMI external number list
     function formatAAE164ResourcesBasedOnCMI(resources) {
 
-      return ExternalNumberPoolService.query({
-          customerId: Authinfo.getOrgId(),
-          order: 'pattern'
-        }).$promise
-        .then(function (extPool) {
+      var formattedResources = _.map(resources, function (res) {
 
-          var externalNumberList = [];
+        return TelephonyInfoService.loadExternalNumberPool(res.number.replace(/\D/g, '')).then(function (extNums) {
+          return formatAAE164Resource(res, extNums);
+        });
 
-          for (var i = 0; i < extPool.length; i++) {
+      });
 
-            var dn = {
-              id: extPool[i].uuid,
-              number: extPool[i].pattern
-            };
-
-            // the externalNumberList will contain the info as it came from CMI
-            externalNumberList.push(dn);
-
-          }
-
-          return formatAAE164ResourcesBasedOnList(resources, externalNumberList);
+      return $q.all(formattedResources).then(function (value) {
+        return value;
+      },
+        function (response) {
+          // if any promise fails, we want to fail (with the details) so further promises don't execute (save fails)
+          return $q.reject(response);
         });
 
     }
@@ -167,6 +153,12 @@
 
       return getAANumberAssignments(orgId, cesId).then(function (cmiAssignedNumbers) {
 
+        var inCMIAssignedList = function (obj) {
+          return obj.type === service.NUMBER_FORMAT_ENTERPRISE_LINE && resources[i].getNumber() && endsWith(obj.number.replace(/\D/g, ''), resources[i].getNumber());
+        };
+        var inExtension = function (obj) {
+          return obj.type === service.NUMBER_FORMAT_EXTENSION && resources[i].getId() && endsWith(resources[i].getId().replace(/\D/g, ''), obj.number);
+        };
         var i = 0;
         for (i = 0; i < resources.length; i++) {
           if (resources[i].getType() === service.DIRECTORY_NUMBER) {
@@ -174,9 +166,7 @@
             // if we don't have an id, get it from CMI
             if (!resources[i].id) {
               // find it in CMI assigned list
-              var cmiObjESN = _.find(cmiAssignedNumbers, function (obj) {
-                return obj.type === service.NUMBER_FORMAT_ENTERPRISE_LINE && resources[i].getNumber() && endsWith(obj.number.replace(/\D/g, ''), resources[i].getNumber());
-              });
+              var cmiObjESN = _.find(cmiAssignedNumbers, inCMIAssignedList);
               if (angular.isDefined(cmiObjESN) && cmiObjESN.number) {
                 resources[i].setId(cmiObjESN.number);
               } else {
@@ -190,9 +180,7 @@
             // if we don't have a number, get it from CMI
             if (!resources[i].number) {
               // find it in CMI assigned list
-              var cmiObjExtension = _.find(cmiAssignedNumbers, function (obj) {
-                return obj.type === service.NUMBER_FORMAT_EXTENSION && resources[i].getId() && endsWith(resources[i].getId().replace(/\D/g, ''), obj.number);
-              });
+              var cmiObjExtension = _.find(cmiAssignedNumbers, inExtension);
               if (angular.isDefined(cmiObjExtension) && cmiObjExtension.number) {
                 resources[i].setNumber(cmiObjExtension.number);
               } else {
@@ -264,12 +252,12 @@
       // For an empty list, we're done, just ensure CMI has no numbers set
       if (resources.length === 0) {
 
-        return setAANumberAssignment(customerId, cesId, resources).then(function (result) {
-            return {
-              workingResources: [],
-              failedResources: []
-            };
-          },
+        return setAANumberAssignment(customerId, cesId, resources).then(function () {
+          return {
+            workingResources: [],
+            failedResources: []
+          };
+        },
           function (response) {
             // failure
             return $q.reject(response);
@@ -297,12 +285,12 @@
             myResourceList = angular.copy(restOfListResponse.workingResources);
             myResourceList.push(myResource);
             return setAANumberAssignment(customerId, cesId, myResourceList).then(
-              function (response) {
+              function () {
                 // successfully saved with the added one, add to working
                 restOfListResponse.workingResources.push(myResource);
                 return restOfListResponse;
               },
-              function (response) {
+              function () {
                 // failed to save with the added one, add to failed
                 restOfListResponse.failedResources.push(myResource);
                 return restOfListResponse;

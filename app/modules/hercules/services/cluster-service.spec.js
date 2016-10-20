@@ -1,22 +1,22 @@
 'use strict';
 
 describe('ClusterService', function () {
-  beforeEach(module('Core'));
-  beforeEach(module('Squared'));
-  beforeEach(module('Hercules'));
+  beforeEach(angular.mock.module('Core'));
+  beforeEach(angular.mock.module('Squared'));
+  beforeEach(angular.mock.module('Hercules'));
 
   var $rootScope, $httpBackend, ClusterService, CsdmPoller, forceAction;
 
-  beforeEach(module(function ($provide) {
+  beforeEach(angular.mock.module(function ($provide) {
     var Authinfo = {
       getOrgId: sinon.stub().returns('orgId')
     };
     $provide.value('Authinfo', Authinfo);
-    var ConfigService = {
-      getUrl: sinon.stub().returns('http://ulv.no'),
-      getUrlV2: sinon.stub().returns('http://elg.no')
+    var UrlConfig = {
+      getHerculesUrl: sinon.stub().returns('http://ulv.no'),
+      getHerculesUrlV2: sinon.stub().returns('http://elg.no')
     };
-    $provide.value('ConfigService', ConfigService);
+    $provide.value('UrlConfig', UrlConfig);
     forceAction = sinon.stub();
     CsdmPoller = {
       create: sinon.stub().returns({
@@ -40,6 +40,136 @@ describe('ClusterService', function () {
   it('should start polling right away', function () {
     $rootScope.$digest();
     expect(CsdmPoller.create.called).toBe(true);
+  });
+
+  describe('.mergeAllAlarms', function () {
+    var templateAlarm = {
+      id: 1,
+      title: 't',
+      firstReported: '1475651563',
+      lastReported: '1475753923',
+      description: 'd',
+      severity: 's',
+      solution: 'so',
+      solutionReplacementValues: [
+        {
+          text: 't',
+          link: 'l'
+        }
+      ]
+    };
+
+    it('should return an empty list when no alarms are present', function () {
+      var connectors = [
+        { alarms: [] },
+        { alarms: [] },
+      ];
+      var result = ClusterService._mergeAllAlarms(connectors);
+      expect(result.length).toBe(0);
+    });
+
+    it('should not return duplicate alarms', function () {
+      var connectors = [
+        { alarms: [templateAlarm] },
+        { alarms: [templateAlarm] },
+      ];
+      var result = ClusterService._mergeAllAlarms(connectors);
+      expect(result.length).toBe(1);
+      expect(result[0].id).toBe(1);
+      expect(result[0].title).toBe(templateAlarm.title);
+    });
+
+    it('should not return duplicate alarms, even when they have different firstReported values', function () {
+      var connectors = [
+        { alarms: [_.merge({}, templateAlarm, { firstReported: 'somethingelse' })] },
+        { alarms: [templateAlarm] },
+      ];
+      var result = ClusterService._mergeAllAlarms(connectors);
+      expect(result.length).toBe(1);
+    });
+
+    it('should return the oldest alarm and eliminate younger alarms as duplicates', function () {
+      var connectors = [
+        { alarms: [_.merge({}, templateAlarm, { firstReported: '3' })] },
+        { alarms: [_.merge({}, templateAlarm, { firstReported: '1' })] },
+        { alarms: [_.merge({}, templateAlarm, { firstReported: '2' })] },
+      ];
+      var result = ClusterService._mergeAllAlarms(connectors);
+      expect(result.length).toBe(1);
+      expect(result[0].firstReported).toBe('1');
+    });
+
+    it('should not return duplicate alarms, even when they have different lastReported values', function () {
+      var connectors = [
+        { alarms: [_.merge({}, templateAlarm, { lastReported: 'somethingelse' })] },
+        { alarms: [templateAlarm] },
+      ];
+      var result = ClusterService._mergeAllAlarms(connectors);
+      expect(result.length).toBe(1);
+    });
+
+    it('should not consider an alarm a duplicate of another alarm if their IDs are different', function () {
+      var connectors = [
+        { alarms: [_.merge({}, templateAlarm, { id: 'somethingelse' })] },
+        { alarms: [templateAlarm] },
+      ];
+      var result = ClusterService._mergeAllAlarms(connectors);
+      expect(result.length).toBe(2);
+    });
+
+    it('should not consider an alarm a duplicate of another alarm if their titles are different', function () {
+      var connectors = [
+        { alarms: [_.merge({}, templateAlarm, { title: 'somethingelse' })] },
+        { alarms: [templateAlarm] },
+      ];
+      var result = ClusterService._mergeAllAlarms(connectors);
+      expect(result.length).toBe(2);
+    });
+
+    it('should not consider an alarm a duplicate of another alarm if their descriptions are different', function () {
+      var connectors = [
+        { alarms: [_.merge({}, templateAlarm, { description: 'somethingelse' })] },
+        { alarms: [templateAlarm] },
+      ];
+      var result = ClusterService._mergeAllAlarms(connectors);
+      expect(result.length).toBe(2);
+    });
+
+    it('should not consider an alarm a duplicate of another alarm if their severities are different', function () {
+      var connectors = [
+        { alarms: [_.merge({}, templateAlarm, { severity: 'somethingelse' })] },
+        { alarms: [templateAlarm] },
+      ];
+      var result = ClusterService._mergeAllAlarms(connectors);
+      expect(result.length).toBe(2);
+    });
+
+    it('should not consider an alarm a duplicate of another alarm if their solutions are different', function () {
+      var connectors = [
+        { alarms: [_.merge({}, templateAlarm, { solution: 'somethingelse' })] },
+        { alarms: [templateAlarm] },
+      ];
+      var result = ClusterService._mergeAllAlarms(connectors);
+      expect(result.length).toBe(2);
+    });
+
+    it('should not consider an alarm a duplicate of another alarm if their solution replacement text values are different', function () {
+      var connectors = [
+        { alarms: [_.merge({}, templateAlarm, { solutionReplacementValues: [{ text: 'somethingelse', link: templateAlarm.solutionReplacementValues.link }] })] },
+        { alarms: [templateAlarm] },
+      ];
+      var result = ClusterService._mergeAllAlarms(connectors);
+      expect(result.length).toBe(2);
+    });
+
+    it('should not consider an alarm a duplicate of another alarm if their solution replacement link values are different', function () {
+      var connectors = [
+        { alarms: [_.merge({}, templateAlarm, { solutionReplacementValues: [{ text: templateAlarm.solutionReplacementValues.text, link: 'somethingelse' }] })] },
+        { alarms: [templateAlarm] },
+      ];
+      var result = ClusterService._mergeAllAlarms(connectors);
+      expect(result.length).toBe(2);
+    });
   });
 
   describe('.fetch', function () {
@@ -101,7 +231,7 @@ describe('ClusterService', function () {
       expect(clusterCache.c_cal[clusterId]).not.toBeDefined();
     });
 
-    it('should add aggregates and not touch the other information of the clusters', function () {
+    it('should add aggregates and filter connectors but not touch the other information of the cluster', function () {
       var response = org([
         cluster([
           connector('c_mgmt')
@@ -124,6 +254,10 @@ describe('ClusterService', function () {
       expect(managementCluster.provisioning).toEqual(originalCluster.provisioning);
       expect(managementCluster.connectors[0]).toEqual(originalCluster.connectors[0]);
       expect(managementCluster.aggregates).toBeDefined();
+      expect(managementCluster.aggregates.provisioning).toEqual(jasmine.objectContaining({
+        connectorType: 'c_mgmt',
+        availableVersion: '1.0'
+      }));
     });
 
     it('should merge all alarms and override the state if there are alarms', function () {
@@ -201,13 +335,11 @@ describe('ClusterService', function () {
       expect(managementCluster.aggregates.upgradeState).toBe('upgrading');
     });
 
-    it('should expose that an upgrade is available when there is one', function () {
+    it('should NOT say that an upgrade is available when there is none', function () {
       var response = org([
         cluster([
           connector('c_mgmt')
-        ], {
-          upgradeAvailable: ['c_mgmt']
-        })
+        ])
       ]);
       $httpBackend
         .when('GET', 'http://elg.no/organizations/orgId?fields=@wide')
@@ -220,42 +352,37 @@ describe('ClusterService', function () {
       var clusterCache = callback.getCall(0).args[0];
       var originalCluster = response.clusters[0];
       var managementCluster = clusterCache.c_mgmt[originalCluster.id];
-      expect(managementCluster.aggregates.provisioning).toEqual({
-        connectorType: 'c_mgmt',
-        availableVersion: '2.0',
-        provisionedVersion: '1.0',
-      });
+      expect(managementCluster.aggregates.upgradeAvailable).toBe(false);
+    });
+
+    it('should say that an upgrade is available when a connector is lagging behind', function () {
+      var response = org([
+        cluster([
+          connector('c_mgmt', {
+            runningVersion: 'whatever that is not 1.0 (latest availableVersion)'
+          })
+        ])
+      ]);
+      $httpBackend
+        .when('GET', 'http://elg.no/organizations/orgId?fields=@wide')
+        .respond(response);
+
+      var callback = sinon.stub();
+      ClusterService.fetch().then(callback);
+      $httpBackend.flush();
+
+      var clusterCache = callback.getCall(0).args[0];
+      var originalCluster = response.clusters[0];
+      var managementCluster = clusterCache.c_mgmt[originalCluster.id];
       expect(managementCluster.aggregates.upgradeAvailable).toBe(true);
     });
 
-    it('should say that upgrade is possible when connectors are fine and an upgrade available', function () {
-      var response = org([
-        cluster([
-          connector('c_mgmt')
-        ], {
-          upgradeAvailable: ['c_mgmt']
-        })
-      ]);
-      $httpBackend
-        .when('GET', 'http://elg.no/organizations/orgId?fields=@wide')
-        .respond(response);
-
-      var callback = sinon.stub();
-      ClusterService.fetch().then(callback);
-      $httpBackend.flush();
-
-      var clusterCache = callback.getCall(0).args[0];
-      var originalCluster = response.clusters[0];
-      var managementCluster = clusterCache.c_mgmt[originalCluster.id];
-      expect(managementCluster.aggregates.upgradePossible).toBe(true);
-    });
-
-    it('should say that upgrade is not possible when at least a connector is in state not_configured and an upgrade available', function () {
+    it('should warn about upgrades when an upgrade available BUT at least one connector is in state offline', function () {
       var response = org([
         cluster([
           connector('c_mgmt'),
           connector('c_mgmt', {
-            state: 'not_configured',
+            state: 'offline',
             hostname: 'host2.example.com'
           })
         ], {
@@ -273,7 +400,8 @@ describe('ClusterService', function () {
       var clusterCache = callback.getCall(0).args[0];
       var originalCluster = response.clusters[0];
       var managementCluster = clusterCache.c_mgmt[originalCluster.id];
-      expect(managementCluster.aggregates.upgradePossible).toBe(false);
+      expect(managementCluster.aggregates.upgradeAvailable).toBe(true);
+      expect(managementCluster.aggregates.upgradeWarning).toBe(false);
     });
 
     it('should add hosts to aggregates', function () {
@@ -341,6 +469,25 @@ describe('ClusterService', function () {
       expect(mgmtClusters.length).toBe(2);
       var ucmcClusters = ClusterService.getClustersByConnectorType('c_ucmc');
       expect(ucmcClusters.length).toBe(1);
+    });
+
+    it('should sort clusters by name', function () {
+      var response = org([
+        cluster([connector('c_mgmt')], { name: 'Z' }),
+        cluster([connector('c_mgmt')], { name: '👀' }),
+        cluster([connector('c_mgmt')], { name: 'A' }),
+      ]);
+
+      $httpBackend
+        .when('GET', 'http://elg.no/organizations/orgId?fields=@wide')
+        .respond(response);
+
+      ClusterService.fetch();
+      $httpBackend.flush();
+
+      var mgmtClusters = ClusterService.getClustersByConnectorType('c_mgmt');
+      expect(mgmtClusters[0].name).toBe('A');
+      expect(mgmtClusters[2].name).toBe('👀');
     });
   });
 
@@ -491,43 +638,6 @@ describe('ClusterService', function () {
     });
   });
 
-  describe('.deleteCluster', function () {
-    it('should be using the correct backend', function () {
-      $httpBackend
-        .when('DELETE', 'http://ulv.no/organizations/orgId/clusters/clusterid')
-        .respond(200);
-
-      var callback = sinon.stub();
-      ClusterService.deleteCluster('clusterid').then(callback);
-      $httpBackend.flush();
-
-      expect(callback.callCount).toBe(1);
-    });
-
-    it('should call poller.forceAction on success', function () {
-      $httpBackend
-        .when('DELETE', 'http://ulv.no/organizations/orgId/clusters/clusterid')
-        .respond(200);
-
-      ClusterService.deleteCluster('clusterid');
-      $httpBackend.flush();
-
-      expect(forceAction.callCount).toBe(1);
-    });
-
-    it('should fail on 500 errors', function () {
-      $httpBackend
-        .when('DELETE', 'http://ulv.no/organizations/orgId/clusters/clusterid')
-        .respond(500);
-
-      var callback = sinon.stub();
-      ClusterService.deleteCluster('clusterid').then(undefined, callback);
-      $httpBackend.flush();
-
-      expect(callback.callCount).toBe(1);
-    });
-  });
-
   function org(clusters) {
     return {
       id: _.uniqueId('org_'),
@@ -538,16 +648,19 @@ describe('ClusterService', function () {
 
   function cluster(connectors, options) {
     options = options || {};
-    var provisioning = _.map(options.upgradeAvailable, function (type) {
+    var typesUsed = _.chain(connectors)
+      .map('connectorType')
+      .uniq()
+      .value();
+    var provisioning = _.map(typesUsed, function (type) {
       return {
         connectorType: type,
-        availableVersion: '2.0',
-        provisionedVersion: '1.0',
+        availableVersion: _.includes(options.upgradeAvailable, type) ? '2.0' : '1.0'
       };
     });
     return {
       id: _.uniqueId('cluster_'),
-      name: 'Cluster',
+      name: options.name || 'Cluster',
       state: options.state || 'fused',
       provisioning: provisioning,
       connectors: connectors
@@ -567,7 +680,8 @@ describe('ClusterService', function () {
       hostname: options.hostname || 'host1.example.com',
       state: options.state || 'running',
       upgradeState: options.upgradeState || 'upgraded',
-      connectorType: type || 'c_mgmt'
+      connectorType: type || 'c_mgmt',
+      runningVersion: options.runningVersion || '1.0'
     };
   }
 });

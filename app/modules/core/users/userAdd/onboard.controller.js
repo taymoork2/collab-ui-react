@@ -6,15 +6,27 @@
     .controller('OnboardCtrl', OnboardCtrl);
 
   /*@ngInject*/
-  function OnboardCtrl($scope, $state, $stateParams, $q, $http, $window, Log, Authinfo, $rootScope, $translate, LogMetricsService, Config, GroupService, Notification, OnboardService, Userservice, $timeout, Utils, Orgservice, TelephonyInfoService, FeatureToggleService, NAME_DELIMITER, SyncService, TelephoneNumberService, DialPlanService, CsvDownloadService, TrackingId, chartColors) {
+  function OnboardCtrl($modal, $previousState, $q, $rootScope, $scope, $state, $stateParams, $timeout, $translate,
+                       addressparser, Authinfo, Analytics, chartColors, Config, DialPlanService, FeatureToggleService,
+                       Log, LogMetricsService, NAME_DELIMITER, Notification, OnboardService, Orgservice,
+                       SunlightConfigService, TelephonyInfoService, Userservice, Utils, UserCsvService, UserListService, WebExUtilsFact, ServiceSetup) {
+    var vm = this;
+
     $scope.hasAccount = Authinfo.hasAccount();
     $scope.usrlist = [];
     $scope.internalNumberPool = [];
     $scope.externalNumberPool = [];
-    $scope.isMsgrSyncEnabled = false;
     $scope.telephonyInfo = {};
+    $scope.cmrLicensesForMetric = {};
+    $scope.currentUserCount = 0;
 
-    $scope.getMessengerSyncStatus = getMessengerSyncStatus;
+    vm.maxUsersInManual = OnboardService.maxUsersInManual;
+
+    $scope.searchStr = '';
+    $scope.timeoutVal = 1000;
+    $scope.timer = 0;
+    $scope.searchPlaceholder = $translate.instant('usersPage.convertUserSearch');
+
     $scope.loadInternalNumberPool = loadInternalNumberPool;
     $scope.loadExternalNumberPool = loadExternalNumberPool;
     $scope.checkDnOverlapsSteeringDigit = checkDnOverlapsSteeringDigit;
@@ -25,17 +37,26 @@
     $scope.mapDidToDn = mapDidToDn;
     $scope.resetDns = resetDns;
     $scope.syncGridDidDn = syncGridDidDn;
+    $scope.filterList = filterList;
     $scope.isMapped = false;
     $scope.isMapInProgress = false;
     $scope.isResetInProgress = false;
     $scope.isMapEnabled = true;
     $scope.processing = false;
     $scope.PATTERN_LIMIT = 50;
+    $scope.messagingLicenseAvailability = 0;
+    $scope.communicationsLicenseAvailability = 0;
+    $scope.conferencingLicenseAvailability = 0;
     $scope.dirSyncConnectorDownload = "https://7f3b835a2983943a12b7-f3ec652549fc8fa11516a139bfb29b79.ssl.cf5.rackcdn.com/CloudConnectorManager/DirectoryConnector.zip";
 
+    var isFTW = false;
     $scope.isReset = false;
     $scope.showExtensions = true;
     $scope.isResetEnabled = false;
+
+    $scope.convertUsersFlow = false;
+    $scope.editServicesFlow = false;
+    $scope.hasSite = false;
 
     // model can be removed after switching to controllerAs
     $scope.model = {
@@ -62,6 +83,93 @@
     }];
 
     OnboardService.huronCallEntitlement = false;
+
+    $scope.shouldAddCallService = shouldAddCallService;
+    var currentUserHasCall = false;
+
+    $scope.isCareEnabled = false;
+    FeatureToggleService.atlasCareTrialsGetStatus().then(function (careStatus) {
+      $scope.isCareEnabled = careStatus && Authinfo.isCare();
+    });
+
+    initController();
+
+    /****************************** License Enforcement START *******************************/
+    //***
+    //***
+    //***********************************************************************************/
+
+    function setLicenseAvailability() {
+      return Orgservice.getLicensesUsage()
+        .then(function (result) {
+          $scope.licenses = result[0].licenses;
+          _.forEach($scope.licenses, function (license) {
+            switch (license.licenseType) {
+              case Config.licenseTypes.MESSAGING:
+                $scope.messagingLicenseAvailability = license.volume - license.usage;
+                break;
+              case Config.licenseTypes.COMMUNICATION:
+                $scope.communicationLicenseAvailability = license.volume - license.usage;
+                break;
+              case Config.licenseTypes.CONFERENCING:
+                $scope.conferencingLicenseAvailability = license.volume - license.usage;
+                break;
+              default:
+                break;
+            }
+          });
+        });
+    }
+
+    $scope.checkLicenseAvailability = function (licenseName, licenseModel) {
+      if (!licenseName || !licenseModel) {
+        return;
+      }
+      var licenseNamePrefix = licenseName.toLowerCase();
+      if ($scope[licenseNamePrefix + 'LicenseAvailability'] < $scope.currentUserCount) {
+        $scope.licenseCheckModal();
+      }
+
+    };
+
+    $scope.licenseCheckModal = function () {
+      if (Authinfo.isOnline()) {
+        $modal.open({
+          type: "dialog",
+          templateUrl: "modules/core/users/userAdd/licenseErrorModal.tpl.html",
+        }).result.then(function () {
+          FeatureToggleService.atlasSettingsPageGetStatus()
+            .then(function () {
+              $previousState.forget('modalMemo');
+              $state.go('my-company.subscriptions');
+            });
+        });
+      }
+    };
+
+    /****************************** License Enforcement END *******************************/
+    //***
+    //***
+    //***********************************************************************************/
+    function initController() {
+      $scope.currentUserCount = 1;
+      setLicenseAvailability();
+      checkSite();
+    }
+
+    $scope.isCsvEnhancement = false;
+    FeatureToggleService.supports(FeatureToggleService.features.csvEnhancement)
+      .then(function (result) {
+        $scope.isCsvEnhancement = result;
+      });
+
+    var rootState = $previousState.get().state.name;
+    $scope.onBack = function () {
+      $state.go(rootState);
+    };
+
+    // initiate the bulkSave operation for ADSync
+    $scope.bulkSave = bulkSave;
 
     /****************************** Did to Dn Mapping START *******************************/
     //***
@@ -92,7 +200,6 @@
     // Check to see if the currently selected directory number's first digit is
     // the same as the company steering digit.
     function checkDnOverlapsSteeringDigit(userEntity) {
-      var dnFirstCharacter = "";
       var steeringDigit = $scope.telephonyInfo.steeringDigit;
       return _.startsWith(_.get(userEntity, 'assignedDn.pattern'), steeringDigit);
     }
@@ -151,7 +258,7 @@
       });
 
       // don't select any DID on loading the page
-      _.forEach($scope.usrlist, function (user, index) {
+      _.forEach($scope.usrlist, function (user) {
         user.externalNumber = $scope.externalNumberPool[0];
         user.didDnMapMsg = undefined;
       });
@@ -165,7 +272,7 @@
         $scope.validateDnForUser();
         $scope.isReset = true;
         $scope.isResetInProgress = false;
-      }).catch(function (response) {
+      }).catch(function () {
         $scope.isResetInProgress = false;
         $scope.validateDnForUser();
       });
@@ -197,10 +304,10 @@
       };
       for (var i = 0; i < $scope.usrlist.length - 1; i++) {
         for (var j = i + 1; j < $scope.usrlist.length; j++) {
-          if (angular.isDefined($scope.usrlist[i].assignedDn) && angular.isDefined($scope.usrlist[j].assignedDn) && ($scope.usrlist[i].assignedDn.pattern !== "None") && ($scope.usrlist[i].assignedDn.pattern === $scope.usrlist[j].assignedDn.pattern)) {
+          if (angular.isDefined($scope.usrlist[i].assignedDn) && angular.isDefined($scope.usrlist[j].assignedDn) && ($scope.usrlist[i].assignedDn.uuid !== 'none') && ($scope.usrlist[i].assignedDn.pattern === $scope.usrlist[j].assignedDn.pattern)) {
             didDnDupe.dnDupe = true;
           }
-          if (angular.isDefined($scope.usrlist[i].externalNumber) && angular.isDefined($scope.usrlist[j].externalNumber) && ($scope.usrlist[i].externalNumber.pattern !== "None") && ($scope.usrlist[i].externalNumber.pattern === $scope.usrlist[j].externalNumber.pattern)) {
+          if (angular.isDefined($scope.usrlist[i].externalNumber) && angular.isDefined($scope.usrlist[j].externalNumber) && ($scope.usrlist[i].externalNumber.uuid !== 'none') && ($scope.usrlist[i].externalNumber.pattern === $scope.usrlist[j].externalNumber.pattern)) {
             didDnDupe.didDupe = true;
           }
           if (didDnDupe.dnDupe && didDnDupe.didDupe) {
@@ -224,13 +331,36 @@
     };
 
     $scope.assignServicesSave = function () {
-      if ($scope.radioStates.commRadio || $scope.entitlements.ciscoUC) {
+      if (shouldAddCallService()) {
         $scope.processing = true;
         activateDID();
         $state.go('users.add.services.dn');
       } else {
-        onboardUsers(true);
+        $scope.onboardUsers(true);
       }
+    };
+
+    $scope.editServicesSave = function () {
+      for (var licenseId in $scope.cmrLicensesForMetric) {
+        if ($scope.cmrLicensesForMetric[licenseId]) {
+          Analytics.trackSelectedCheckbox(licenseId);
+        }
+      }
+      if (shouldAddCallService()) {
+        $scope.processing = true;
+        $scope.editServicesFlow = true;
+        $scope.convertUsersFlow = false;
+
+        // Populate list with single user for updateUserLicense()
+        $scope.usrlist = [{
+          address: _.get($scope, 'currentUser.userName', '')
+        }];
+        activateDID();
+        $state.go('editService.dn');
+      } else {
+        $scope.updateUserLicense();
+      }
+
     };
 
     function toggleShowExtensions() {
@@ -292,15 +422,6 @@
       $scope.model.userInfoValid = false;
     }
 
-    function getMessengerSyncStatus() {
-      SyncService.isMessengerSyncEnabled()
-        .then(function (isIt) {
-          $scope.isMsgrSyncEnabled = isIt;
-        }, function (errorMsg) {
-          Log.error(errorMsg);
-        });
-    }
-
     function ServiceFeature(label, value, name, license) {
       this.label = label;
       this.value = value;
@@ -314,7 +435,7 @@
     }
 
     $scope.ConfirmAdditionalServiceSetup = function () {
-      var promise = (Notification.confirmation($translate.instant('usersPage.addtionalServiceSetupConfirmation')));
+      var promise = Notification.confirmation($translate.instant('usersPage.addtionalServiceSetupConfirmation'));
       promise.then(function () {
         $state.go('firsttimewizard');
       });
@@ -325,17 +446,25 @@
       return (!Authinfo.isSetupDone() && ((typeof $state.current.data === 'undefined') || (!$state.current.data.firstTimeSetup)));
     };
 
+    function checkSite() {
+      ServiceSetup.listSites().then(function () {
+        $scope.hasSite = (ServiceSetup.sites.length !== 0);
+      });
+    }
+
     var userEnts = null;
     var userLicenseIds = null;
+    var userInvites = null;
     $scope.cmrFeature = null;
     $scope.messageFeatures = [];
     $scope.conferenceFeatures = [];
     $scope.communicationFeatures = [];
+    $scope.careFeatures = [];
     $scope.licenses = [];
     $scope.populateConf = populateConf;
+    $scope.populateConfInvitations = populateConfInvitations;
     $scope.getAccountLicenses = getAccountLicenses;
-    var convertSuccess = [];
-    var convertFailures = [];
+    $scope.checkMessageVisibility = checkMessageVisibility;
     var convertUsersCount = 0;
     var convertStartTime = 0;
     var convertCancelled = false;
@@ -345,15 +474,39 @@
     $scope.messageFeatures.push(new ServiceFeature($translate.instant('onboardModal.msgFree'), 0, 'msgRadio', new FakeLicense('freeTeamRoom')));
     $scope.conferenceFeatures.push(new ServiceFeature($translate.instant('onboardModal.mtgFree'), 0, 'confRadio', new FakeLicense('freeConferencing')));
     $scope.communicationFeatures.push(new ServiceFeature($translate.instant('onboardModal.callFree'), 0, 'commRadio', new FakeLicense('advancedCommunication')));
+    $scope.careFeatures.push(new ServiceFeature($translate.instant('onboardModal.careFree'), 0, 'careRadio', new FakeLicense('freeCareService')));
     $scope.currentUser = $stateParams.currentUser;
+
+    $scope.currentUserDisplayName = function () {
+      if (_.isObject($scope.currentUser)) {
+        if (!_.isEmpty($scope.currentUser.displayName)) {
+          return _.trim($scope.currentUser.displayName);
+        } else if (_.isObject($scope.currentUser.name) && (!_.isEmpty($scope.currentUser.name.givenName) || !_.isEmpty($scope.currentUser.name.familyName))) {
+          return _.trim(($scope.currentUser.name.givenName || '') + ' ' + ($scope.currentUser.name.familyName || ''));
+        } else if (!_.isEmpty($scope.currentUser.userName)) {
+          return _.trim($scope.currentUser.userName);
+        }
+      }
+      // if all else fails, return Unknown
+      return _.trim($translate.instant('common.unknown'));
+    };
 
     if ($scope.currentUser) {
       userEnts = $scope.currentUser.entitlements;
       userLicenseIds = $scope.currentUser.licenseID;
+      userInvites = $scope.currentUser.invitations;
+      $scope.hybridCallServiceAware = userEnts && userEnts.indexOf('squared-fusion-uc') > -1;
     }
 
-    if (null !== Authinfo.getOrgId()) {
-      getMessengerSyncStatus();
+    function checkMessageVisibility(licenses, selectedSubscription) {
+      if (licenses.length === 1) {
+        var license = licenses[0];
+        if (license.billingServiceId && selectedSubscription) {
+          return license.billingServiceId === selectedSubscription;
+        }
+        return true;
+      }
+      return false;
     }
 
     function populateConf() {
@@ -381,19 +534,74 @@
       }
     }
 
+    function populateConfInvitations() {
+      if (userInvites && userInvites.cf) {
+        _.forEach($scope.allLicenses, function (siteObj) {
+          if (siteObj.siteUrl === '' && !siteObj.confModel) {
+            siteObj.confModel = siteObj.licenseId === userInvites.cf;
+          }
+          siteObj.confLic = _.map(siteObj.confLic, function (conf) {
+            if (!conf.confModel) {
+              conf.confModel = conf.licenseId === userInvites.cf;
+            }
+            return conf;
+          });
+        });
+      }
+    }
+
     $scope.radioStates = {
       commRadio: false,
-      msgRadio: false
+      msgRadio: false,
+      careRadio: false,
+      initialCareRadioState: false // For generating Metrics
     };
 
     if (userEnts) {
       for (var x = 0; x < userEnts.length; x++) {
         if (userEnts[x] === 'ciscouc') {
           $scope.radioStates.commRadio = true;
+          currentUserHasCall = true;
         } else if (userEnts[x] === 'squared-room-moderation') {
           $scope.radioStates.msgRadio = true;
+        } else if (userEnts[x] === 'cloud-contact-center') {
+          setCareSevice();
         }
       }
+    }
+
+    if (userInvites) {
+      if (userInvites.ms) {
+        $scope.radioStates.msgRadio = true;
+      }
+      if (userInvites.cc) {
+        setCareSevice();
+      }
+    }
+
+    function setCareSevice() {
+      SunlightConfigService.getUserInfo($scope.currentUser.id)
+          .then(function () {
+            Userservice.getUser($scope.currentUser.id, true, function (data) {
+              if (data.success) {
+                var hasSyncKms = _.find(data.roles, function (r) {
+                  return r === Config.backend_roles.spark_synckms;
+                });
+                if (hasSyncKms) {
+                  $scope.radioStates.careRadio = true;
+                  $scope.radioStates.initialCareRadioState = true;
+                }
+              }
+            });
+          },
+        function () {
+          $scope.radioStates.careRadio = false;
+        });
+    }
+
+
+    function shouldAddCallService() {
+      return !currentUserHasCall && ($scope.radioStates.commRadio || $scope.entitlements.ciscoUC);
     }
 
     function createFeatures(obj) {
@@ -410,17 +618,39 @@
       };
     }
 
-    $scope.checkCMR = function (confModel, cmrLics) {
-      if (!confModel) {
-        angular.forEach(cmrLics, function (cmrLic) {
-          cmrLic.cmrModel = confModel;
+    $scope.checkCMR = function (cfLic, cmrLics) {
+      if (cfLic.offerName === 'MC' || cfLic.offerName === 'EE') {
+        cmrLics.forEach(function (cmrLic) {
+          cmrLic.cmrModel = cfLic.confModel;
         });
       }
+    };
+
+    $scope.updateCmrLicensesForMetric = function (cmrModel, licenseId) {
+      $scope.cmrLicensesForMetric[licenseId] = !cmrModel;
     };
 
     var generateConfChk = function (confs, cmrs) {
       $scope.confChk = [];
       $scope.allLicenses = [];
+
+      var formatLicense = function (site) {
+        var confMatches = _.filter(confFeatures, {
+          siteUrl: site
+        });
+        var cmrMatches = _.filter(cmrFeatures, {
+          siteUrl: site
+        });
+        var isCISiteFlag = WebExUtilsFact.isCIEnabledSite(site);
+        return {
+          site: site,
+          billing: _.uniq(_.map(cmrMatches, 'billing').concat(_.map(confMatches, 'billing'))),
+          confLic: confMatches,
+          cmrLic: cmrMatches,
+          isCISite: isCISiteFlag,
+          siteAdminUrl: (isCISiteFlag ? '' : WebExUtilsFact.getSiteAdminUrl(site))
+        };
+      };
 
       for (var i in confs) {
         var temp = {
@@ -429,36 +659,34 @@
           confId: 'conf-' + i
         };
 
-        var confNoUrl = _.chain(confs).filter(function (conf) {
-          return conf.license.licenseType !== 'freeConferencing';
-        }).filter(function (conf) {
-          return !_.has(conf, 'license.siteUrl');
-        }).map(createFeatures).remove(undefined).value();
+        var confNoUrl = _.chain(confs)
+          .filter(function (conf) {
+            return conf.license.licenseType !== 'freeConferencing';
+          })
+          .filter(function (conf) {
+            return !_.has(conf, 'license.siteUrl');
+          })
+          .map(createFeatures)
+          .remove(undefined)
+          .value();
 
-        var confFeatures = _.chain(confs).filter('license.siteUrl')
-          .map(createFeatures).remove(undefined).value();
-        var cmrFeatures = _.chain(cmrs).filter('license.siteUrl')
-          .map(createFeatures).remove(undefined).value();
+        var confFeatures = _.chain(confs)
+          .filter('license.siteUrl')
+          .map(createFeatures)
+          .remove(undefined)
+          .value();
+        var cmrFeatures = _.chain(cmrs)
+          .filter('license.siteUrl')
+          .map(createFeatures)
+          .remove(undefined)
+          .value();
 
         var siteUrls = _.map(confFeatures, function (lic) {
           return lic.siteUrl;
         });
         siteUrls = _.uniq(siteUrls);
 
-        $scope.allLicenses = _.map(siteUrls, function (site) {
-          var confMatches = _.filter(confFeatures, {
-            siteUrl: site
-          });
-          var cmrMatches = _.filter(cmrFeatures, {
-            siteUrl: site
-          });
-          return {
-            site: site,
-            billing: _.uniq(_.pluck(cmrMatches, 'billing').concat(_.pluck(confMatches, 'billing'))),
-            confLic: confMatches,
-            cmrLic: cmrMatches
-          };
-        });
+        $scope.allLicenses = _.map(siteUrls, formatLicense);
         $scope.allLicenses = _.union(confNoUrl, $scope.allLicenses);
 
         for (var j in cmrs) {
@@ -475,6 +703,7 @@
       }
 
       populateConf();
+      populateConfInvitations();
     };
 
     $scope.isSubscribeable = function (license) {
@@ -507,7 +736,7 @@
           var copy = angular.copy(service);
           copy.licenses = [copy.license];
           delete copy.license;
-          _.merge(result, copy, function (left, right) {
+          _.mergeWith(result, copy, function (left, right) {
             if (_.isArray(left)) return left.concat(right);
           });
         });
@@ -520,7 +749,8 @@
       var services = {
         message: Authinfo.getMessageServices(),
         conference: Authinfo.getConferenceServices(),
-        communication: Authinfo.getCommunicationServices()
+        communication: Authinfo.getCommunicationServices(),
+        care: Authinfo.getCareServices()
       };
       if (services.message) {
         services.message = mergeMultipleLicenseSubscriptions(services.message);
@@ -543,29 +773,14 @@
       if (services.communication) {
         $scope.communicationFeatures = $scope.communicationFeatures.concat(services.communication);
       }
+      if (services.care) {
+        $scope.careFeatures = $scope.careFeatures.concat(services.care);
+      }
     };
 
     if (Authinfo.isInitialized()) {
       getAccountServices();
     }
-
-    GroupService.getGroupList(function (data, status) {
-      if (data.success) {
-        $scope.groups = data.groups || [];
-        if ($scope.groups && $scope.groups.length === 0) {
-          var defaultGroup = {
-            displayName: 'Default License Group'
-          };
-          $scope.groups.push(defaultGroup);
-        }
-        $scope.selectedGroup = $scope.groups[0];
-      } else {
-        Log.debug('Failed to retrieve group list. Status: ' + status);
-        Notification.notify([$translate.instant('onboardModal.apiError', {
-          status: status
-        })], 'error');
-      }
-    });
 
     $scope.collabRadio1 = {
       label: $translate.instant('onboardModal.enableCollab'),
@@ -636,13 +851,13 @@
 
     $scope.$watch('model.userList', function (newVal, oldVal) {
       if (newVal != oldVal) {
-        $scope.usrlist = $window.addressparser.parse($scope.model.userList);
+        $scope.usrlist = addressparser.parse($scope.model.userList);
       }
     });
 
     // To differentiate the user list change made by map operation
     //  and other manual/reset operation.
-    $scope.$watch('usrlist', function (newVal, oldVal) {
+    $scope.$watch('usrlist', function () {
       if ($scope.isMapped) {
         $scope.isMapped = false;
       } else {
@@ -663,7 +878,7 @@
 
         // Do not change wizard text when configuring bulk user services
         if (angular.isDefined($scope.wizard) && !($scope.wizard.current.step.name === 'csvServices' || $scope.wizard.current.step.name === 'dirsyncServices')) {
-          if ($scope.radioStates.commRadio) {
+          if (shouldAddCallService()) {
             $scope.$emit('wizardNextText', 'next');
           } else {
             $scope.$emit('wizardNextText', 'finish');
@@ -672,16 +887,21 @@
       }
     });
 
-    $scope.$watch('wizard.current.step', function (newVal, oldVal) {
+    $scope.$watch('wizard.current.step', function () {
       if (angular.isDefined($scope.wizard) && $scope.wizard.current.step.name === 'assignServices') {
-        if ($scope.radioStates.commRadio || $scope.entitlements.ciscoUC) {
+        if (shouldAddCallService()) {
           $scope.$emit('wizardNextText', 'next');
         } else {
           $scope.$emit('wizardNextText', 'finish');
         }
       } else if (angular.isDefined($scope.wizard) && $scope.wizard.current.step.name === 'assignDnAndDirectLines') {
-        $scope.isResetEnabled = false;
-        $scope.validateDnForUser();
+        if (!shouldAddCallService()) {
+          // we don't have call service, so skip to previous step
+          $scope.wizard.previousStep();
+        } else {
+          $scope.isResetEnabled = false;
+          $scope.validateDnForUser();
+        }
       }
     });
 
@@ -698,6 +918,7 @@
 
     $scope.addDnGridOptions = {
       data: 'usrlist',
+      enableHorizontalScrollbar: 0,
       enableRowSelection: false,
       multiSelect: false,
       rowHeight: 45,
@@ -709,22 +930,23 @@
         displayName: $translate.instant('usersPage.nameHeader'),
         sortable: false,
         cellTemplate: nameTemplate,
-        width: '42%',
-        height: 35
+        width: '*'
       }, {
         field: 'externalNumber',
         displayName: $translate.instant('usersPage.directLineHeader'),
         sortable: false,
         cellTemplate: externalExtensionTemplate,
-        width: '33%',
-        height: 35
+        maxWidth: 220,
+        minWidth: 140,
+        width: '*'
       }, {
         field: 'internalExtension',
         displayName: $translate.instant('usersPage.extensionHeader'),
         sortable: false,
         cellTemplate: internalExtensionTemplate,
-        width: '25%',
-        height: 35
+        maxWidth: 220,
+        minWidth: 140,
+        width: '*'
       }]
     };
     $scope.collabRadio = 1;
@@ -745,18 +967,43 @@
         if (!_.isArray(license) && license.confModel === state) {
           idList.push(license.licenseId);
         }
-        idList = idList.concat(_(license.confLic).filter({
-          confModel: state
-        }).pluck('licenseId').remove(undefined).value());
+        idList = idList.concat(_(license.confLic)
+          .filter({
+            confModel: state
+          })
+          .map('licenseId')
+          .remove(undefined)
+          .value()
+        );
 
-        idList = idList.concat(_(license.cmrLic).filter({
-          cmrModel: state
-        }).pluck('licenseId').remove(undefined).value());
+        idList = idList.concat(_(license.cmrLic)
+          .filter({
+            cmrModel: state
+          })
+          .map('licenseId')
+          .remove(undefined)
+          .value()
+        );
 
       });
 
       return idList;
     };
+
+    function filterList(str) {
+      if ($scope.timer) {
+        $timeout.cancel($scope.timer);
+        $scope.timer = 0;
+      }
+
+      $scope.timer = $timeout(function () {
+        if (str.length >= 3 || str === '') {
+          $scope.searchStr = str;
+          getUnlicensedUsers();
+          Analytics.trackConvertUser($state.current.name, Authinfo.getOrgId());
+        }
+      }, $scope.timeoutVal);
+    }
 
     /**
      * get the list of selected account licenses on the dialog
@@ -769,7 +1016,7 @@
         var msgIndex = $scope.radioStates.msgRadio ? 1 : 0;
         var selMsgService = $scope.messageFeatures[msgIndex];
         var licenses = selMsgService.license || selMsgService.licenses;
-        // Messaging: prefer selected subscription, if specified  
+        // Messaging: prefer selected subscription, if specified
         if (_.isArray(licenses)) {
           if (licenses.length > 1) {
             _.forEach(licenses, function (license) {
@@ -808,6 +1055,28 @@
         } else if ((action === 'patch') && ($scope.communicationFeatures.length > 1) && ('licenseId' in $scope.communicationFeatures[1].license)) {
           licenseList.push(new LicenseFeature($scope.communicationFeatures[1].license.licenseId, false));
         }
+
+        // Care: straightforward license, for now
+        var careIndex = $scope.radioStates.careRadio ? 1 : 0;
+        var selCareService = $scope.careFeatures[careIndex];
+        var licenseId = _.get(selCareService, 'license.licenseId', null);
+        if (licenseId) {
+          licenseList.push(new LicenseFeature(licenseId, true));
+        } else if (action === 'patch') {
+          licenseId = _.get($scope, 'careFeatures[1].license.licenseId', null);
+          if (licenseId) {
+            licenseList.push(new LicenseFeature(licenseId, false));
+          }
+        }
+
+        // Metrics for care entitlement for users
+        if ($scope.radioStates.careRadio !== $scope.radioStates.initialCareRadioState) {
+          if ($scope.radioStates.careRadio) {
+            LogMetricsService.logMetrics('Enabling care for user', LogMetricsService.getEventType('careEnabled'), LogMetricsService.getEventAction('buttonClick'), 200, moment(), 1, null);
+          } else {
+            LogMetricsService.logMetrics('Disabling care for user', LogMetricsService.getEventType('careDisabled'), LogMetricsService.getEventAction('buttonClick'), 200, moment(), 1, null);
+          }
+        }
       }
 
       return licenseList.length === 0 ? null : licenseList;
@@ -839,30 +1108,48 @@
         .value();
     };
 
-    var getEntitlementStrings = function (entList) {
-      var entStrings = [];
-      for (var e = 0; e < entList.length; e++) {
-        if (entList[e].entitlementName) {
-          entStrings.push(entList[e].entitlementName);
-        }
-      }
-      return entStrings;
-    };
-
     $scope.updateUserLicense = function () {
-      var user = [];
-      if ($scope.currentUser) {
+      var users = [];
+      if (_.get($scope, 'usrlist.length')) {
+        users = $scope.usrlist;
+      } else if ($scope.currentUser) {
         usersList = [];
         var userObj = {
           'address': $scope.currentUser.userName,
           'name': $scope.currentUser.name
         };
-        user.push(userObj);
-        usersList.push(user);
+        users.push(userObj);
+        usersList.push(users);
       }
       $scope.btnSaveEntLoad = true;
 
-      Userservice.updateUsers(user, getAccountLicenses('patch'), null, 'updateUserLicense', entitleUserCallback);
+      // make sure we have any internal extension and direct line set up for the users
+      _.forEach(users, function (user) {
+        user.internalExtension = _.get(user, 'assignedDn.pattern');
+        if (user.externalNumber && user.externalNumber.uuid && user.externalNumber.uuid !== 'none') {
+          user.directLine = user.externalNumber.pattern;
+        }
+      });
+
+      Userservice.onboardUsers(users, null, getAccountLicenses('patch'))
+        .then(successCallback)
+        .catch(errorCallback);
+
+      function successCallback(response) {
+        // adapt response to call existing entitleUserCallback
+        var rdata = response.data || {};
+        rdata.success = true;
+        $rootScope.$broadcast('Userservice::updateUsers');
+        entitleUserCallback(rdata, response.status, 'updateUserLicense', response.headers);
+      }
+
+      function errorCallback(response) {
+        var rdata = response || {};
+        rdata.success = false;
+        rdata.status = response.status || false;
+        entitleUserCallback(rdata, response.status, 'updateUserLicense', response.headers);
+      }
+
     };
 
     //****************MODAL INIT FUNCTION FOR INVITE AND ADD***************
@@ -914,12 +1201,14 @@
       var userCount = angular.element('.token-label').length;
       var action = 'finish';
       if (userCount > 0) {
+        $scope.currentUserCount = userCount;
         action = 'next';
       }
       $scope.$emit('wizardNextText', action);
     };
 
-    var invalidcount = 0;
+    $scope.invalidcount = 0;
+    $scope.invalidDirSyncUsersCount = 0;
     $scope.tokenfieldid = "usersfield";
     $scope.tokenplaceholder = $translate.instant('usersPage.userInput');
     $scope.tokenoptions = {
@@ -927,6 +1216,39 @@
       createTokensOnBlur: true
     };
     var isDuplicate = false;
+
+    FeatureToggleService.supportsDirSync().then(function (supportsDirSync) {
+      $scope.isDirSyncEnabled = supportsDirSync;
+    });
+
+    function setInvalidToken(token) {
+      angular.element(token.relatedTarget).addClass('invalid');
+      $scope.invalidcount++;
+    }
+
+    function validateDirSyncUser(e) {
+      if ($scope.isDirSyncEnabled) {
+        UserListService.queryUser(e.attrs.value)
+          .catch(function () {
+            setInvalidToken(e);
+            sortTokens();
+            $scope.invalidDirSyncUsersCount++;
+          });
+      }
+    }
+
+    $scope.getNumUsersInTokenField = function () {
+      return angular.element('#usersfield').tokenfield('getTokens').length;
+    };
+
+    $scope.hasErrors = function () {
+      var haserr = ($scope.invalidcount > 0);
+      if ($scope.isCsvEnhancement && $scope.getNumUsersInTokenField() >= vm.maxUsersInManual) {
+        haserr = true;
+      }
+      return haserr;
+    };
+
     $scope.tokenmethods = {
       createtoken: function (e) {
         //Removing anything in brackets from user data
@@ -939,23 +1261,27 @@
       },
       createdtoken: function (e) {
         if (!validateEmail(e.attrs.value) || isDuplicate) {
-          angular.element(e.relatedTarget).addClass('invalid');
-          invalidcount++;
+          setInvalidToken(e);
+        } else {
+          validateDirSyncUser(e);
         }
+        sortTokens();
         wizardNextText();
         checkPlaceholder();
       },
       edittoken: function (e) {
         if (angular.element(e.relatedTarget).hasClass('invalid')) {
-          invalidcount--;
+          $scope.invalidcount--;
         }
       },
-      removedtoken: function (e) {
+      removedtoken: function () {
         // Reset the token list and validate all tokens
         $timeout(function () {
-          invalidcount = 0;
+          $scope.invalidcount = 0;
+          $scope.invalidDirSyncUsersCount = 0;
           angular.element('#usersfield').tokenfield('setTokens', $scope.model.userList);
         }).then(function () {
+          sortTokens();
           wizardNextText();
           checkPlaceholder();
         });
@@ -993,6 +1319,12 @@
       return retString;
     }
 
+    function removeEmailFromTokenfield(email) {
+      $scope.model.userList = $scope.model.userList.split(', ').filter(function (token) {
+        return token.indexOf(email) === -1;
+      }).join(', ');
+    }
+
     var setPlaceholder = function (placeholder) {
       angular.element('.tokenfield.form-control #usersfield-tokenfield').attr('placeholder', placeholder);
     };
@@ -1006,31 +1338,63 @@
       }
     }
 
+    // sort the token list so that error tokens appear first in the list
+    function sortTokens() {
+      // this is just a sh*tty way of sorting this.  The only info we have
+      // if a token has an error is if it has an 'invalid' class on the element.
+      // the model.userList SHOULD contain this info, but it doesn't.  So,
+      // in order to sort all of the invalid tokens to the front of the list,
+      // we need to do this in the DOM directly. Thankfully, tokenfield doesn't
+      // break when we do this.
+      var start = $(angular.element('.tokenfield input[type=text]')[0]);
+      if (start.length > 0) {
+
+        var tokens = start.siblings('.token');
+        tokens.sort(function (a, b) {
+          var ainvalid = $(a).hasClass('invalid');
+          var binvalid = $(b).hasClass('invalid');
+          if (ainvalid && !binvalid) {
+            return -1;
+          } else if (!ainvalid && binvalid) {
+            return 1;
+          } else {
+            return 0;
+          }
+        });
+
+        tokens.detach().insertAfter(start);
+      }
+    }
+
     var getUsersList = function () {
-      return $window.addressparser.parse($scope.model.userList);
+      return addressparser.parse($scope.model.userList);
     };
 
     $scope.validateTokensBtn = function () {
       var usersListLength = angular.element('.token-label').length;
       $scope.validateTokens().then(function () {
-        if (invalidcount === 0 && usersListLength > 0) {
+        if ($scope.invalidcount === 0 && usersListLength > 0) {
+          $scope.currentUserCount = usersListLength;
           $state.go('users.add.services');
         } else if (usersListLength === 0) {
           Log.debug('No users entered.');
-          Notification.notify([$translate.instant('usersPage.noUsersInput')], 'error');
+          Notification.error('usersPage.noUsersInput');
         } else {
           Log.debug('Invalid users entered.');
-          Notification.notify([$translate.instant('usersPage.validEmailInput')], 'error');
+          Notification.error('usersPage.validEmailInput');
         }
       });
+    };
+
+    $scope.allowNext = function () {
+      return ($scope.model.userList && !$scope.hasErrors());
     };
 
     $scope.validateTokens = function () {
       wizardNextText();
       return $timeout(function () {
-        var tokenfield = angular.element('#usersfield');
         //reset the invalid count
-        invalidcount = 0;
+        $scope.invalidcount = 0;
         angular.element('#usersfield').tokenfield('setTokens', $scope.model.userList);
       }, 100);
     };
@@ -1062,7 +1426,8 @@
       angular.element('#usersfield').tokenfield('setTokens', ' ');
       $scope.model.userList = '';
       checkPlaceholder();
-      invalidcount = 0;
+      $scope.invalidcount = 0;
+      $scope.invalidDirSyncUsersCount = 0;
     };
 
     $scope.clearPanel = function () {
@@ -1070,118 +1435,188 @@
       $scope.results = null;
     };
 
-    function addErrorWithTrackingID(errorMsg, response, headers) {
-      var headersFunc = (response && response.headers) ? response.headers : headers;
-      if (_.isFunction(headersFunc)) {
-        if (errorMsg.length > 0 && !_.endsWith(errorMsg, '.')) {
-          errorMsg += '.';
-        }
-        var trackingId = headersFunc('TrackingID');
-        if (!trackingId || trackingId === 'null') {
-          // If TrackingID is not allowed by CORS, fallback to TrackingId service
-          errorMsg += ' TrackingID: ' + TrackingId.getWithoutSequence();
-        } else {
-          errorMsg += ' TrackingID: ' + trackingId;
-        }
-      }
-      return errorMsg;
-    }
-
     function onboardUsers(optionalOnboard) {
       var deferred = $q.defer();
       $scope.results = {
         resultList: []
       };
-      var isComplete = true;
       usersList = getUsersList();
       Log.debug('Entitlements: ', usersList);
 
       var successCallback = function (response) {
         Log.info('User onboard request returned:', response.data);
         $rootScope.$broadcast('USER_LIST_UPDATED');
-        var numAddedUsers = 0;
-        var hybridCheck = false;
-
+        $scope.numAddedUsers = 0;
+        $scope.numUpdatedUsers = 0;
         _.forEach(response.data.userResponse, function (user) {
           var userResult = {
             email: user.email,
             alertType: null
           };
 
-          var userStatus = user.status;
+          var httpStatus = user.httpStatus;
 
-          if (userStatus === 200 || userStatus === 201) {
-            userResult.message = $translate.instant('usersPage.onboardSuccess', {
-              email: userResult.email
-            });
-            userResult.alertType = 'success';
-            numAddedUsers++;
-          } else if (userStatus === 409) {
-            userResult.message = userResult.email + ' ' + user.message;
-          } else if (userStatus === 403 && user.message === '400081') {
-            userResult.message = $translate.instant('usersPage.userExistsError', {
-              email: userResult.email
-            });
-          } else if (userStatus === 403 && (user.message === '400084' || user.message === '400091')) {
-            userResult.message = $translate.instant('usersPage.claimedDomainError', {
-              email: userResult.email,
-              domain: userResult.email.split('@')[1]
-            });
-          } else if (userStatus === 403 && user.message === '400090') {
-            userResult.message = $translate.instant('usersPage.userExistsInDiffOrgError', {
-              email: userResult.email
-            });
-          } else if (userStatus === 400 && user.message === '400087') {
-            userResult.message = $translate.instant('usersPage.hybridServicesError');
-            hybridCheck = true;
-          } else if (userStatus === 400 && user.message === '400094') {
-            userResult.message = $translate.instant('usersPage.hybridServicesComboError');
-            hybridCheck = true;
-          } else {
-            userResult.message = $translate.instant('usersPage.onboardError', {
-              email: userResult.email,
-              status: userStatus
-            });
+          switch (httpStatus) {
+            case 200:
+            case 201: {
+              userResult.message = $translate.instant('usersPage.onboardSuccess', {
+                email: userResult.email
+              });
+              userResult.alertType = 'success';
+              if (httpStatus === 200) {
+                $scope.numUpdatedUsers++;
+              } else {
+                $scope.numAddedUsers++;
+              }
+              if (user.message === '700000') {
+                userResult.message = $translate.instant('usersPage.onboardedWithoutLicense', {
+                  email: userResult.email
+                });
+                userResult.alertType = 'warning';
+              }
+              break;
+            }
+            case 409: {
+              userResult.message = userResult.email + ' ' + user.message;
+              break;
+            }
+            case 403: {
+              switch (user.message) {
+                case Config.messageErrors.userExistsError: {
+                  userResult.message = $translate.instant('usersPage.userExistsError', {
+                    email: userResult.email
+                  });
+                  break;
+                }
+                case Config.messageErrors.userPatchError:
+                case Config.messageErrors.claimedDomainError: {
+                  userResult.message = $translate.instant('usersPage.claimedDomainError', {
+                    email: userResult.email,
+                    domain: userResult.email.split('@')[1]
+                  });
+                  break;
+                }
+                case Config.messageErrors.userExistsInDiffOrgError: {
+                  userResult.message = $translate.instant('usersPage.userExistsInDiffOrgError', {
+                    email: userResult.email
+                  });
+                  break;
+                }
+                case Config.messageErrors.notSetupForManUserAddError: {
+                  userResult.message = $translate.instant('usersPage.notSetupForManUserAddError', {
+                    email: userResult.email
+                  });
+                  break;
+                }
+                case Config.messageErrors.userExistsDomainClaimError: {
+                  userResult.message = $translate.instant('usersPage.userExistsDomainClaimError', {
+                    email: userResult.email
+                  });
+                  break;
+                }
+                case Config.messageErrors.unknownCreateUserError: {
+                  userResult.message = $translate.instant('usersPage.unknownCreateUserError');
+                  break;
+                }
+                case Config.messageErrors.unableToMigrateError: {
+                  userResult.message = $translate.instant('usersPage.unableToMigrateError', {
+                    email: userResult.email
+                  });
+                  break;
+                }
+                case Config.messageErrors.insufficientEntitlementsError: {
+                  userResult.message = $translate.instant('usersPage.insufficientEntitlementsError', {
+                    email: userResult.email
+                  });
+                  break;
+                }
+                default: {
+                  userResult.message = $translate.instant('usersPage.accessDeniedError', {
+                    email: userResult.email
+                  });
+                  break;
+                }
+              }
+              break;
+            }
+            case 400: {
+              switch (user.message) {
+                case Config.messageErrors.hybridServicesError: {
+                  userResult.message = $translate.instant('usersPage.hybridServicesError');
+                  break;
+                }
+                case Config.messageErrors.hybridServicesComboError: {
+                  userResult.message = $translate.instant('usersPage.hybridServicesComboError');
+                  break;
+                }
+                default: break;
+              }
+              break;
+            }
+            default: {
+              userResult.message = $translate.instant('usersPage.onboardError', {
+                email: userResult.email,
+                status: httpStatus
+              });
+              break;
+            }
           }
 
-          if (userStatus !== 200 && userStatus !== 201) {
+          if (httpStatus !== 200 && httpStatus !== 201) {
             userResult.alertType = 'danger';
-            isComplete = false;
           }
 
           $scope.results.resultList.push(userResult);
 
         });
 
-        if (numAddedUsers > 0) {
-          var msg = 'Invited ' + numAddedUsers + ' users';
-          LogMetricsService.logMetrics(msg, LogMetricsService.getEventType('inviteUsers'), LogMetricsService.getEventAction('buttonClick'), 200, moment(), numAddedUsers, null);
+        if ($scope.numAddedUsers > 0) {
+          var msg = 'Invited ' + $scope.numAddedUsers + ' users';
+          LogMetricsService.logMetrics(msg, LogMetricsService.getEventType('inviteUsers'), LogMetricsService.getEventAction('buttonClick'), 200, moment(), $scope.numAddedUsers, null);
         }
 
         //concatenating the results in an array of strings for notify function
-        var successes = [];
-        var errors = [];
+        $scope.results.errors = [];
+        $scope.results.warnings = [];
         for (var idx in $scope.results.resultList) {
-          if ($scope.results.resultList[idx].alertType === 'success') {
-            successes.push($scope.results.resultList[idx].message);
+          if ($scope.results.resultList[idx].alertType === 'success' && $scope.results.resultList[idx].email) {
+            removeEmailFromTokenfield($scope.results.resultList[idx].email);
+          } else if ($scope.results.resultList[idx].alertType === 'warning' && $scope.results.resultList[idx].email) {
+            $scope.results.warnings.push(UserCsvService.addErrorWithTrackingID($scope.results.resultList[idx].message, response));
           } else {
-            errors.push(addErrorWithTrackingID($scope.results.resultList[idx].message, response));
+            $scope.results.errors.push(UserCsvService.addErrorWithTrackingID($scope.results.resultList[idx].message, response));
           }
         }
+
+        $scope.skipErrorsOrFinish = function () {
+          if ($scope.results.errors.length > 0) {
+            return 'usersPage.skipErrorsAndFinish';
+          } else {
+            return 'common.finish';
+          }
+        };
+
+        $scope.goToUsersPage = function () {
+          $previousState.forget('modalMemo');
+          $state.go('users.list');
+        };
+
+        $scope.fixBulkErrors = function () {
+          if (isFTW) {
+            $scope.wizard.goToStep('manualEntry');
+          } else {
+            $state.go('users.add');
+          }
+        };
 
         //Displaying notifications
         if ($scope.results.resultList.length === usersList.length) {
           $scope.btnOnboardLoading = false;
-          Notification.notify(successes, 'success');
-          if (hybridCheck) {
-            Notification.error(errors[0]);
+          if (isFTW) {
+            deferred.resolve();
           } else {
-            Notification.error(errors);
+            $state.go('users.add.results');
           }
-          deferred.resolve();
-        }
-        if (angular.isFunction($scope.$dismiss) && successes.length === usersList.length) {
-          $scope.$dismiss();
         }
       };
 
@@ -1197,17 +1632,16 @@
               message: response.data.message
             });
           }
-          error = addErrorWithTrackingID(error, response);
+          error = UserCsvService.addErrorWithTrackingID(error, response);
         } else {
           error = 'Request failed.';
           if (_.isString(response.data)) {
             error += ' ' + response.data;
           }
-          error = addErrorWithTrackingID(error, response);
+          error = UserCsvService.addErrorWithTrackingID(error, response);
           Notification.notify(error, 'error');
         }
         Notification.notify([error], 'error');
-        isComplete = false;
         $scope.btnOnboardLoading = false;
         deferred.reject();
       };
@@ -1215,19 +1649,18 @@
       if (angular.isArray(usersList) && usersList.length > 0) {
         $scope.btnOnboardLoading = true;
 
-        var i, j;
-        for (i = 0; i < usersList.length; i++) {
+        _.each(usersList, function (userItem) {
           var userAndDnObj = $scope.usrlist.filter(function (user) {
-            return (user.address == usersList[i].address);
+            return (user.address == userItem.address);
           });
 
           if (userAndDnObj[0].assignedDn && userAndDnObj[0].assignedDn.pattern.length > 0) {
-            usersList[i].internalExtension = userAndDnObj[0].assignedDn.pattern;
+            userItem.internalExtension = userAndDnObj[0].assignedDn.pattern;
           }
-          if (userAndDnObj[0].externalNumber && userAndDnObj[0].externalNumber.pattern !== "None") {
-            usersList[i].directLine = userAndDnObj[0].externalNumber.pattern;
+          if (userAndDnObj[0].externalNumber && userAndDnObj[0].externalNumber.uuid !== 'none') {
+            userItem.directLine = userAndDnObj[0].externalNumber.pattern;
           }
-        }
+        });
 
         var tempUserArray = [],
           entitleList = [],
@@ -1240,7 +1673,7 @@
         }
         entitleList = entitleList.concat(getExtensionEntitlements('add'));
 
-        for (i = 0; i < usersList.length; i += chunk) {
+        for (var i = 0; i < usersList.length; i += chunk) {
           tempUserArray = usersList.slice(i, i + chunk);
           Userservice.onboardUsers(tempUserArray, entitleList, licenseList)
             .then(successCallback)
@@ -1270,74 +1703,89 @@
       $scope.results = {
         resultList: []
       };
+      $scope.numAddedUsers = 0;
+      $scope.numUpdatedUsers = 0;
+      $scope.results.errors = [];
       var isComplete = true;
 
       $rootScope.$broadcast('USER_LIST_UPDATED');
       if (data.success) {
         Log.info('User successfully updated', data);
 
-        for (var i = 0; i < data.userResponse.length; i++) {
-
+        var userResponseArray = _.get(data, 'userResponse');
+        _.forEach(userResponseArray, function (userResponseItem) {
           var userResult = {
-            email: data.userResponse[i].email,
+            email: userResponseItem.email,
             alertType: null
           };
 
-          var userStatus = data.userResponse[i].status;
+          var httpStatus = userResponseItem.status;
 
-          if (userStatus === 200) {
-            userResult.message = $translate.instant('onboardModal.result.200');
-            userResult.alertType = 'success';
-          } else if (userStatus === 404) {
-            userResult.message = $translate.instant('onboardModal.result.404');
-            userResult.alertType = 'danger';
-            isComplete = false;
-          } else if (userStatus === 409) {
-            userResult.message = $translate.instant('onboardModal.result.409');
-            userResult.alertType = 'danger';
-            isComplete = false;
-          } else {
-            userResult.message = $translate.instant('onboardModal.result.other', {
-              status: userStatus
-            });
-            userResult.alertType = 'danger';
-            isComplete = false;
+          switch (httpStatus) {
+            case 200:
+            case 201: {
+              userResult.message = $translate.instant('onboardModal.result.200');
+              userResult.alertType = 'success';
+              if (httpStatus === 200) {
+                $scope.numUpdatedUsers++;
+              } else if (httpStatus === 201) {
+                $scope.numAddedUsers++;
+              }
+              break;
+            }
+            case 404: {
+              userResult.message = $translate.instant('onboardModal.result.404');
+              userResult.alertType = 'danger';
+              isComplete = false;
+              break;
+            }
+            case 409: {
+              userResult.message = $translate.instant('onboardModal.result.409');
+              userResult.alertType = 'danger';
+              isComplete = false;
+              break;
+            }
+            default: {
+              if (userResponseItem.message === Config.messageErrors.hybridServicesComboError) {
+                userResult.message = $translate.instant('onboardModal.result.400094', {
+                  status: httpStatus
+                });
+                userResult.alertType = 'danger';
+                isComplete = false;
+              } else if (_.includes(userResponseItem.message, 'DN_IS_FALLBACK')) {
+                userResult.message = $translate.instant('onboardModal.result.deleteUserDnFallbackError');
+                userResult.alertType = 'danger';
+                isComplete = false;
+              } else {
+                userResult.message = $translate.instant('onboardModal.result.other', {
+                  status: httpStatus
+                });
+                userResult.alertType = 'danger';
+                isComplete = false;
+              }
+              break;
+            }
           }
+
           $scope.results.resultList.push(userResult);
           if (method !== 'convertUser') {
             $scope.$dismiss();
           }
-        }
+        });
 
-        //concatenating the results in an array of strings for notify function
-        var successes = [];
-        var errors = [];
-        var count_s = 0;
-        var count_e = 0;
+
         for (var idx in $scope.results.resultList) {
-          if ($scope.results.resultList[idx].alertType === 'success') {
-            successes[count_s] = $scope.results.resultList[idx].email + ' ' + $scope.results.resultList[idx].message;
-            count_s++;
-          } else {
-            errors.push(addErrorWithTrackingID($scope.results.resultList[idx].email + ' ' + $scope.results.resultList[idx].message, null, headers));
-            count_e++;
+          if ($scope.results.resultList[idx].alertType !== 'success') {
+            $scope.results.errors.push(UserCsvService.addErrorWithTrackingID($scope.results.resultList[idx].email + ' ' + $scope.results.resultList[idx].message, null, headers));
           }
         }
 
         //Displaying notifications
         if (method !== 'convertUser') {
-          if (successes.length + errors.length === usersList.length) {
+          if ($scope.results.errors.length) {
             $scope.btnOnboardLoading = false;
             $scope.btnSaveEntLoad = false;
-            Notification.notify(successes, 'success');
-            Notification.notify(errors, 'error');
-          }
-        } else {
-          if (count_s > 0) {
-            convertSuccess.push.apply(convertSuccess, successes);
-          }
-          if (count_e > 0) {
-            convertFailures.push.apply(convertFailures, errors);
+            Notification.notify($scope.results.errors, 'error');
           }
         }
 
@@ -1359,14 +1807,14 @@
             error += ' ' + data;
           }
         }
-        error = addErrorWithTrackingID(error, null, headers);
+        error = UserCsvService.addErrorWithTrackingID(error, null, headers);
         if (method !== 'convertUser') {
           Notification.notify([error], 'error');
           isComplete = false;
           $scope.btnOnboardLoading = false;
           $scope.btnSaveEntLoad = false;
         } else {
-          convertFailures.push(error);
+          $scope.results.errors.push(error);
         }
       }
 
@@ -1380,18 +1828,16 @@
         } else {
           if (convertBacked === false) {
             $scope.btnConvertLoad = false;
-            $scope.$dismiss();
+            $state.go('users.convert.results');
           } else {
             $state.go('users.convert', {});
           }
-          Notification.notify(convertSuccess, 'success');
-          Notification.notify(convertFailures, 'error');
-          var msg = 'Migrated ' + convertSuccess.length + ' users';
+          var msg = 'Migrated ' + $scope.numUpdatedUsers + ' users';
           var migratedata = {
             totalUsers: convertUsersCount,
-            successfullyConverted: convertSuccess.length
+            successfullyConverted: $scope.numUpdatedUsers
           };
-          LogMetricsService.logMetrics(msg, LogMetricsService.getEventType('convertUsers'), LogMetricsService.getEventAction('buttonClick'), 200, convertStartTime, convertSuccess.length, migratedata);
+          LogMetricsService.logMetrics(msg, LogMetricsService.getEventType('convertUsers'), LogMetricsService.getEventAction('buttonClick'), 200, convertStartTime, $scope.numUpdatedUsers, migratedata);
         }
       }
 
@@ -1422,6 +1868,7 @@
 
     // Wizard hook for next button
     $scope.manualEntryNext = function () {
+      isFTW = true;
       var deferred = $q.defer();
 
       if (getUsersList().length === 0) {
@@ -1429,7 +1876,7 @@
           deferred.reject();
         });
       } else {
-        if (invalidcount === 0) {
+        if ($scope.invalidcount === 0) {
           deferred.resolve();
         } else {
           var error = [$translate.instant('usersPage.validEmailInput')];
@@ -1444,26 +1891,21 @@
     $scope.assignServicesNext = function () {
       var deferred = $q.defer();
 
-      if ($scope.radioStates.commRadio || $scope.entitlements.ciscoUC) {
+      if (shouldAddCallService()) {
         $scope.processing = true;
         activateDID();
         deferred.resolve();
       } else {
-        return onboardUsers(true).then(function () {
-          if (angular.isDefined($scope.wizard)) {
-            $q.when($scope.wizard.nextTab()).then(function () {
-              deferred.reject();
-            });
-          } else {
-            deferred.resolve();
-          }
+        onboardUsers(true).then(function () {
+          deferred.reject(); // prevent the wizard from going forward
+          $scope.wizard.goToStep('addUsersResults');
         });
       }
       return deferred.promise;
     };
 
     $scope.getServicesNextText = function () {
-      if ($scope.radioStates.commRadio || $scope.entitlements.ciscoUC) {
+      if (shouldAddCallService()) {
         return 'common.next';
       } else {
         return 'common.save';
@@ -1477,14 +1919,14 @@
       // check for DiD duplicates
       if (didDnDupes.didDupe) {
         Log.debug('Duplicate Direct Line entered.');
-        Notification.notify([$translate.instant('usersPage.duplicateDidFound')], 'error');
+        Notification.error('usersPage.duplicateDidFound');
         deferred.reject();
         return deferred.promise;
       }
       // check for Dn duplicates
       if (didDnDupes.dnDupe) {
         Log.debug('Duplicate Internal Extension entered.');
-        Notification.notify([$translate.instant('usersPage.duplicateDnFound')], 'error');
+        Notification.error('usersPage.duplicateDnFound');
         deferred.reject();
         return deferred.promise;
       }
@@ -1567,18 +2009,18 @@
       // check for DiD duplicates
       if (didDnDupes.didDupe) {
         Log.debug('Duplicate Direct Line entered.');
-        Notification.notify([$translate.instant('usersPage.duplicateDidFound')], 'error');
+        Notification.error('usersPage.duplicateDidFound');
         return;
       }
       // check for Dn duplicates
       if (didDnDupes.dnDupe) {
         Log.debug('Duplicate Internal Extension entered.');
-        Notification.notify([$translate.instant('usersPage.duplicateDnFound')], 'error');
+        Notification.error('usersPage.duplicateDnFound');
         return;
       }
 
       // copy numbers to convertSelectedList
-      _.forEach($scope.usrlist, function (user, index) {
+      _.forEach($scope.usrlist, function (user) {
         var userArray = $scope.convertSelectedList.filter(function (selectedUser) {
           return user.address === selectedUser.userName;
         });
@@ -1599,11 +2041,11 @@
     };
 
     $scope.convertUsersNext = function () {
-      if ($scope.radioStates.commRadio || $scope.entitlements.ciscoUC) {
+      if (shouldAddCallService()) {
         $scope.processing = true;
         // Copying selected users to user list
         $scope.usrlist = [];
-        _.forEach($scope.convertSelectedList, function (selectedUser, index) {
+        _.forEach($scope.convertSelectedList, function (selectedUser) {
           var user = {};
           var givenName = "";
           var familyName = "";
@@ -1633,8 +2075,8 @@
       convertPending = true;
       convertCancelled = false;
       convertBacked = false;
-      convertSuccess = [];
-      convertFailures = [];
+      $scope.numAddedUsers = 0;
+      $scope.numUpdatedUsers = 0;
       convertStartTime = moment();
       convertUsersInBatch();
     };
@@ -1642,19 +2084,19 @@
     function convertUsersInBatch() {
       var batch = $scope.convertSelectedList.slice(0, Config.batchSize);
       $scope.convertSelectedList = $scope.convertSelectedList.slice(Config.batchSize);
-      Userservice.migrateUsers(batch, function (data, status) {
+      Userservice.migrateUsers(batch, function (data) {
         var successMovedUsers = [];
-
+        var match = function (batchObj) {
+          return user.address === batchObj.userName;
+        };
         for (var i = 0; i < data.userResponse.length; i++) {
           if (data.userResponse[i].status !== 200) {
-            convertFailures.push(data.userResponse[i].email + $translate.instant('homePage.convertError'));
+            $scope.results.errors.push(data.userResponse[i].email + $translate.instant('homePage.convertError'));
           } else {
             var user = {
               'address': data.userResponse[i].email
             };
-            var userArray = batch.filter(function (batchObj) {
-              return user.address === batchObj.userName;
-            });
+            var userArray = batch.filter(match);
             user.assignedDn = userArray[0].assignedDn;
             user.externalNumber = userArray[0].externalNumber;
             successMovedUsers.push(user);
@@ -1670,35 +2112,36 @@
             entitleList = getEntitlements('add');
           }
           entitleList = entitleList.concat(getExtensionEntitlements('add'));
-
+          convertPending = false;
           Userservice.updateUsers(successMovedUsers, licenseList, entitleList, 'convertUser', entitleUserCallback);
         } else {
           if ($scope.convertSelectedList.length > 0 && convertCancelled === false && convertBacked === false) {
             convertUsersInBatch();
           } else {
+            convertPending = false;
             if (convertBacked === false) {
               $scope.btnConvertLoad = false;
-              $scope.$dismiss();
+              $state.go('users.convert.results');
             } else {
               $state.go('users.convert', {});
             }
-            Notification.notify(convertSuccess, 'success');
-            Notification.notify(convertFailures, 'error');
-            var msg = 'Migrated ' + convertSuccess.length + ' users';
+            var msg = 'Migrated ' + $scope.numUpdatedUsers + ' users';
             var migratedata = {
               totalUsers: convertUsersCount,
-              successfullyConverted: convertSuccess.length
+              successfullyConverted: $scope.numUpdatedUsers
             };
-            LogMetricsService.logMetrics(msg, LogMetricsService.getEventType('convertUsers'), LogMetricsService.getEventAction('buttonClick'), 200, convertStartTime, convertSuccess.length, migratedata);
+            LogMetricsService.logMetrics(msg, LogMetricsService.getEventType('convertUsers'), LogMetricsService.getEventAction('buttonClick'), 200, convertStartTime, $scope.numUpdatedUsers, migratedata);
           }
         }
       });
     }
 
     var getUnlicensedUsers = function () {
+      $scope.showSearch = false;
       Orgservice.getUnlicensedUsers(function (data) {
         $scope.unlicensed = 0;
         $scope.unlicensedUsersList = null;
+        $scope.showSearch = true;
         if (data.success) {
           if (data.totalResults) {
             $scope.unlicensed = data.totalResults;
@@ -1708,11 +2151,11 @@
             });
           }
         }
-      });
+      }, null, $scope.searchStr);
     };
 
     $scope.convertDisabled = function () {
-      return ($scope.gridApi.selection.getSelectedRows().length === 0) ? true : false;
+      return $scope.gridApi.selection.getSelectedRows().length === 0;
     };
 
     getUnlicensedUsers();
@@ -1721,7 +2164,7 @@
       data: 'unlicensedUsersList',
       rowHeight: 45,
       enableHorizontalScrollbar: 0,
-      selectionRowHeaderWidth: 40,
+      selectionRowHeaderWidth: 50,
       enableRowHeaderSelection: true,
       enableFullRowSelection: true,
       useExternalSorting: false,
@@ -1741,110 +2184,28 @@
         field: 'displayName',
         displayName: $translate.instant('usersPage.displayNameHeader'),
         resizable: false,
-        sortable: true
+        sortable: true,
+        minWidth: 449,
+        maxWidth: 449
       }, {
         field: 'userName',
         displayName: $translate.instant('homePage.emailAddress'),
         resizable: false,
         sort: {
           direction: 'desc',
-          priority: 0
+          priority: 0,
+          minWidth: 449,
+          maxWidth: 449
         },
         sortCellFiltered: true
       }]
     };
 
-    /////////////////////////////
-    // Bulk CSV Onboarding logic
+    /////////////////////////////////
+    // DirSync Bulk Onboarding logic
     var userArray = [];
-    var isCsvValid = false;
     var cancelDeferred;
     var saveDeferred;
-    var csvHeaders;
-    var orgHeaders;
-    $scope.maxUsers = 250;
-    var isDirSync = false;
-    FeatureToggleService.supportsDirSync().then(function (enabled) {
-      isDirSync = enabled;
-    });
-
-    $scope.onFileSizeError = function () {
-      Notification.notify([$translate.instant('firstTimeWizard.csvMaxSizeError')], 'error');
-    };
-
-    $scope.onFileTypeError = function () {
-      Notification.notify([$translate.instant('firstTimeWizard.csvFileTypeError')], 'error');
-    };
-
-    $scope.$watch('model.file', function (value) {
-      $timeout(validateCsv);
-    });
-    $scope.resetFile = resetFile;
-
-    function validateCsv() {
-      if ($scope.model.file) {
-        setUploadProgress(0);
-        userArray = $.csv.toArrays($scope.model.file);
-        if (angular.isArray(userArray) && userArray.length > 0) {
-          if (userArray[0][0] === 'First Name') {
-            csvHeaders = userArray.shift();
-          }
-          if (userArray.length > 0 && userArray.length <= $scope.maxUsers) {
-            isCsvValid = true;
-          }
-        }
-        setUploadProgress(100);
-      } else {
-        isCsvValid = false;
-      }
-    }
-
-    function setUploadProgress(percent) {
-      $scope.model.uploadProgress = percent;
-      $scope.$digest();
-    }
-
-    function resetFile() {
-      $scope.model.file = null;
-    }
-
-    // Wizard hook
-    $scope.csvUploadNext = function () {
-      var deferred = $q.defer();
-
-      if (isCsvValid) {
-        deferred.resolve();
-      } else {
-        var error;
-        if (userArray.length > $scope.maxUsers) {
-          error = [$translate.instant('firstTimeWizard.csvMaxLinesError', {
-            max: String($scope.maxUsers)
-          })];
-        } else {
-          error = [$translate.instant('firstTimeWizard.uploadCsvEmpty')];
-        }
-        Notification.notify(error, 'error');
-        deferred.reject();
-      }
-
-      return deferred.promise;
-    };
-
-    // Wizard hook
-    $scope.csvProcessingNext = bulkSave;
-    // Feature toggle
-    FeatureToggleService.supportsCsvUpload().then(function (enabled) {
-      if (enabled) {
-        $scope.csvProcessingNext = bulkSaveWithIndividualLicenses;
-        $scope.maxUsers = 1100;
-        return CsvDownloadService.getCsv('headers').then(function (csvData) {
-          orgHeaders = angular.copy(csvData.columns || []);
-        }).catch(function (response) {
-          Notification.errorResponse(response, 'firstTimeWizard.downloadHeadersError');
-        });
-      }
-    });
-
     $scope.initBulkMetric = initBulkMetric;
     $scope.sendBulkMetric = sendBulkMetric;
 
@@ -1868,365 +2229,6 @@
       LogMetricsService.logMetrics('Finished bulk processing', eType, LogMetricsService.getEventAction('buttonClick'), 200, bulkStartLog, 1, data);
     }
 
-    function hasSparkCallLicense(inHeaders) {
-      var index = _.findIndex(inHeaders, function (h) {
-        return h.name == 'Spark Call';
-      });
-      return index !== -1;
-    }
-
-    function getBulkErrorResponse(status, messageCode, email) {
-      var responseMessage;
-      messageCode = messageCode || '';
-      email = email || '';
-
-      if (status === 400) {
-        if (messageCode === '400087') {
-          responseMessage = $translate.instant('usersPage.hybridServicesError');
-        } else if (messageCode === '400094') {
-          responseMessage = $translate.instant('usersPage.hybridServicesComboError');
-        } else {
-          responseMessage = $translate.instant('firstTimeWizard.bulk400Error');
-        }
-      } else if (status === 401) {
-        responseMessage = $translate.instant('firstTimeWizard.bulk401And403Error');
-      } else if (status === 403) {
-        if (messageCode === '400081') {
-          responseMessage = $translate.instant('usersPage.userExistsError', {
-            email: email
-          });
-        } else if (messageCode === '400084' || messageCode === '400091') {
-          responseMessage = $translate.instant('usersPage.claimedDomainError', {
-            email: email,
-            domain: email.split('@')[1]
-          });
-        } else if (messageCode === '400090') {
-          responseMessage = $translate.instant('usersPage.userExistsInDiffOrgError', {
-            email: email
-          });
-        } else {
-          responseMessage = $translate.instant('firstTimeWizard.bulk401And403Error');
-        }
-      } else if (status === 404) {
-        responseMessage = $translate.instant('firstTimeWizard.bulk404Error');
-      } else if (status === 408 || status == 504) {
-        responseMessage = $translate.instant('firstTimeWizard.bulk408Error');
-      } else if (status === 409) {
-        responseMessage = $translate.instant('firstTimeWizard.bulk409Error');
-      } else if (status === 500) {
-        responseMessage = $translate.instant('firstTimeWizard.bulk500Error');
-      } else if (status === 502 || status === 503) {
-        responseMessage = $translate.instant('firstTimeWizard.bulk502And503Error');
-      } else if (status === -1) {
-        responseMessage = $translate.instant('firstTimeWizard.bulkCancelledError');
-      } else {
-        responseMessage = $translate.instant('firstTimeWizard.processBulkError');
-      }
-      return responseMessage;
-    }
-
-    function bulkSaveWithIndividualLicenses() {
-      saveDeferred = $q.defer();
-      cancelDeferred = $q.defer();
-
-      $scope.model.userErrorArray = [];
-      $scope.model.numMaxUsers = userArray.length;
-      $scope.model.processProgress = $scope.model.numTotalUsers = $scope.model.numNewUsers = $scope.model.numExistingUsers = 0;
-
-      function addUserError(row, errorMsg) {
-        $scope.model.userErrorArray.push({
-          row: row,
-          error: errorMsg
-        });
-      }
-
-      function addUserErrorWithTrackingID(row, errorMsg, response) {
-        errorMsg = addErrorWithTrackingID(errorMsg, response);
-        addUserError(row, _.trim(errorMsg));
-      }
-
-      function successCallback(response, startIndex, length) {
-        if (_.isArray(response.data.userResponse)) {
-          var addedUsersList = [];
-
-          _.forEach(response.data.userResponse, function (user, index) {
-            if (user.status === 200 || user.status === 201) {
-              if (user.message === 'User Patched') {
-                $scope.model.numExistingUsers++;
-              } else {
-                $scope.model.numNewUsers++;
-              }
-              // Build list of successful onboards and patches
-              var addItem = {
-                address: user.email
-              };
-              if (addItem.address.length > 0) {
-                addedUsersList.push(addItem);
-              }
-            } else {
-              addUserErrorWithTrackingID(startIndex + index + 1, getBulkErrorResponse(user.status, user.message, user.email), response);
-            }
-          });
-        } else {
-          for (var i = 0; i < length; i++) {
-            addUserErrorWithTrackingID(startIndex + i + 1, $translate.instant('firstTimeWizard.processBulkResponseError'), response);
-          }
-        }
-      }
-
-      function errorCallback(response, startIndex, length) {
-        var responseMessage = getBulkErrorResponse(response.status);
-        for (var k = 0; k < length; k++) {
-          addUserErrorWithTrackingID(startIndex + k + 1, responseMessage, response);
-        }
-      }
-
-      function onboardCsvUsers(startIndex, userArray, csvPromise) {
-        return csvPromise.then(function () {
-          return $q(function (resolve, reject) {
-            if (userArray.length > 0) {
-              Userservice.bulkOnboardUsers(userArray, cancelDeferred.promise).then(function (response) {
-                successCallback(response, startIndex - userArray.length + 1, userArray.length);
-              }).catch(function (response) {
-                errorCallback(response, startIndex - userArray.length + 1, userArray.length);
-              }).finally(function () {
-                calculateProcessProgress();
-                resolve();
-              });
-            } else {
-              resolve();
-            }
-          });
-        });
-      }
-
-      function calculateProcessProgress() {
-        $scope.model.numTotalUsers = $scope.model.numNewUsers + $scope.model.numExistingUsers + $scope.model.userErrorArray.length;
-        $scope.model.processProgress = Math.round($scope.model.numTotalUsers / userArray.length * 100);
-
-        if ($scope.model.numTotalUsers >= userArray.length) {
-          $scope.model.userErrorArray.sort(function (a, b) {
-            return a.row - b.row;
-          });
-          $rootScope.$broadcast('USER_LIST_UPDATED');
-          resetFile();
-          saveDeferred.resolve();
-        }
-      }
-
-      function isValidDID(value) {
-        if (value) {
-          try {
-            return TelephoneNumberService.validateDID(value);
-          } catch (e) {
-            return false;
-          }
-        }
-        return true;
-      }
-
-      function findHeaderIndex(name) {
-        return _.findIndex(headers, function (h) {
-          return h.name == name;
-        });
-      }
-
-      function generateHeaders(serverHeaders, userHeaders) {
-        var returnHeaders = [];
-        var index = -1;
-        if (!serverHeaders || !userHeaders) {
-          return [];
-        } else {
-          _.forEach(userHeaders, function (uHeader) {
-            index = _.findIndex(serverHeaders, function (sHeader) {
-              return sHeader.name == uHeader;
-            });
-            if (index !== -1) {
-              returnHeaders.push(serverHeaders[index]);
-            }
-          });
-        }
-        return returnHeaders || [];
-      }
-
-      function checkCalendarService() {
-        return Orgservice.getHybridServiceAcknowledged().then(function (response) {
-          if (response.status === 200) {
-            _.forEach(response.data.items, function (item) {
-              if (item.id === Config.entitlements.fusion_cal) {
-                isCalendarServiceEnabled = item.enabled;
-              }
-            });
-          }
-        });
-      }
-
-      function isTrue(inputString) {
-        var bTrue = false;
-        if (angular.isString(inputString)) {
-          var inToUpper = inputString.toUpperCase();
-          bTrue = (inToUpper === 'T' || inToUpper === 'TRUE');
-        }
-        return bTrue;
-      }
-
-      function isFalse(inputString) {
-        var bFalse = false;
-        if (angular.isString(inputString)) {
-          var inToUpper = inputString.toUpperCase();
-          bFalse = (inToUpper === 'F' || inToUpper === 'FALSE');
-        }
-        return bFalse;
-      }
-
-      function processCsvRows() {
-        headers = generateHeaders(orgHeaders || null, csvHeaders || null);
-        csvChunk = hasSparkCallLicense(headers) ? 2 : 10; // Rate limit for Huron
-
-        // TODO
-        // deal with AUDP -- only one column - Phone Number
-
-        _.forEach(userArray, function (userRow, j) {
-          processingError = false;
-          var firstName = '',
-            lastName = '',
-            displayName = '',
-            id = '';
-          var directoryNumber = '',
-            directLine = '';
-          var idxDirectoryNumber = -1,
-            idxDirectLine = -1;
-          var licenseList = [];
-          var entitleList = [];
-          var numOfActiveMessageLicenses = 0;
-          var isWrongLicenseFormat = false;
-
-          // If we haven't met the chunk size, process the next user
-          if (tempUserArray.length < csvChunk) {
-            // Basic data
-            firstName = userRow[findHeaderIndex('First Name')];
-            lastName = userRow[findHeaderIndex('Last Name')];
-            displayName = userRow[findHeaderIndex('Display Name')];
-            id = userRow[findHeaderIndex('User ID/Email (Required)')];
-            idxDirectoryNumber = findHeaderIndex('Directory Number');
-            if (idxDirectoryNumber !== -1) {
-              directoryNumber = userRow[idxDirectoryNumber];
-            }
-            idxDirectLine = findHeaderIndex('Direct Line');
-            if (idxDirectLine !== -1) {
-              directLine = userRow[idxDirectLine];
-            }
-            licenseList = [];
-            entitleList = [];
-
-            // validations
-            if (!id) {
-              // Report required field is missing
-              processingError = true;
-              addUserError(j + 1, $translate.instant('firstTimeWizard.csvRequiredEmail'));
-            } else if (_.contains(uniqueEmails, id)) {
-              // Report a duplicate email
-              processingError = true;
-              addUserError(j + 1, $translate.instant('firstTimeWizard.csvDuplicateEmail'));
-            } else if (directLine && !isValidDID(directLine)) {
-              // Report an invalid DID format
-              processingError = true;
-              addUserError(j + 1, $translate.instant('firstTimeWizard.bulkInvalidDID'));
-            } else {
-              // get license and entitlements
-              _.forEach(headers, function (header, k) {
-                if (header.license) { // if this is a license column
-                  if (isTrue(userRow[k])) {
-                    licenseList.push(new LicenseFeature(header.license, true));
-                    // Check Active Spark Message
-                    if (header.name.toUpperCase().indexOf('SPARK MESSAGE') !== -1) {
-                      numOfActiveMessageLicenses++;
-                    }
-                  } else if (isFalse(userRow[k])) {
-                    // TODO - in phase 2, if allow license removal, then un-comment the next line
-                    // licenseList.push(new LicenseFeature(header.license, false));
-                    _.noop();
-                  } else {
-                    isWrongLicenseFormat = true;
-                  }
-                } else if (angular.isArray(header.entitlements) && header.entitlements.length > 0) {
-                  if (isTrue(userRow[k]) || isFalse(userRow[k])) {
-                    _.forEach(header.entitlements, function (entitlement) {
-                      // if lincense is Calendar Service, only process if it is enabled
-                      if (entitlement.toUpperCase().indexOf('SQUAREDFUSIONCAL') === -1 || isCalendarServiceEnabled) {
-                        if (isTrue(userRow[k])) {
-                          entitleList.push(new Feature(entitlement, true));
-                        } else if (isFalse(userRow[k])) {
-                          // TODO - in phase 2, if allow license removal, then un-comment the next line
-                          // entitleList.push(new Feature(entitlement, false));
-                          _.noop();
-                        }
-                      }
-                    });
-                  } else {
-                    isWrongLicenseFormat = true;
-                  }
-                }
-              });
-
-              if (isWrongLicenseFormat) {
-                processingError = true;
-                addUserError(j + 1, $translate.instant('firstTimeWizard.csvWrongLicenseFormat'));
-              } else if (numOfActiveMessageLicenses > 1) {
-                processingError = true;
-                addUserError(j + 1, $translate.instant('firstTimeWizard.tooManyActiveMessageLicenses'));
-              } else {
-                uniqueEmails.push(id);
-                // Do not send name and displayName if it's a DirSync org
-                if (isDirSync) {
-                  firstName = '';
-                  lastName = '';
-                  displayName = '';
-                }
-                tempUserArray.push({
-                  'address': id,
-                  'name': firstName + NAME_DELIMITER + lastName,
-                  'displayName': displayName,
-                  'internalExtension': directoryNumber,
-                  'directLine': directLine,
-                  'licenses': licenseList,
-                  'entitlements': entitleList
-                });
-              }
-            }
-          }
-
-          // Onboard all the previous users in the temp array if there was an error processing a row
-          if (processingError) {
-            csvPromise = onboardCsvUsers(j - 1, tempUserArray, csvPromise);
-            tempUserArray = [];
-          } else if (tempUserArray.length === csvChunk || j === (userArray.length - 1)) {
-            // Onboard the current temp array if we've met the chunk size or is the last user in list
-            csvPromise = onboardCsvUsers(j, tempUserArray, csvPromise);
-            tempUserArray = [];
-          }
-
-          calculateProcessProgress();
-        });
-      }
-
-      // Onboard users in chunks
-      // Separate chunks on invalid rows
-      var csvChunk = 0; // Rate limit for Huron
-      var csvPromise = $q.when();
-      var tempUserArray = [];
-      var uniqueEmails = [];
-      var processingError;
-      var headers;
-      var isCalendarServiceEnabled = false;
-
-      checkCalendarService().then(function () {
-        return processCsvRows();
-      });
-
-      return saveDeferred.promise;
-    }
-
     $scope.cancelProcessCsv = function () {
       cancelDeferred.resolve();
       saveDeferred.resolve();
@@ -2235,16 +2237,15 @@
     /////////////////////////////////
     // Bulk DirSync Onboarding logic
     // Wizard hooks
-    $scope.dirsyncProcessingNext = bulkSave;
-
     $scope.installConnectorNext = function () {
       return FeatureToggleService.supportsDirSync().then(function (dirSyncEnabled) {
         return $q(function (resolve, reject) {
           if (dirSyncEnabled) {
             // getStatus() is in the parent scope - AddUserCtrl
             if (angular.isFunction($scope.getStatus)) {
-              $scope.getStatus();
-              resolve();
+              return $scope.getStatus().then(function () {
+                resolve();
+              });
             } else {
               reject();
             }
@@ -2260,40 +2261,45 @@
     };
 
     $scope.syncStatusNext = function () {
-      var deferred = $q.defer();
-
-      if (!$scope.wizard.isLastStep()) {
-        // load synced users to userArray
-        // userList and useNameList are in the parent scope - AddUserCtrl
-        userArray = [];
-        if ($scope.userList && $scope.userList.length > 0) {
-          userArray = $scope.userList.map(function (user, idx) {
-            var userData = [];
-            userData.push(''); // DirSync can't change first name
-            userData.push(''); // DirSync can't change last name
-            userData.push(''); // DirSync can't change display name
-            userData.push(user.Email);
-            userData.push(''); // No Directory Number
-            userData.push(''); // No Direct Line
-            return userData;
-          });
-        }
-
-        if (userArray.length === 0) {
-          Notification.error('firstTimeWizard.uploadDirSyncEmpty');
-          deferred.reject();
+      return $q(function (resolve, reject) {
+        if (!$scope.wizard.isLastStep()) {
+          userArray = [];
+          if ($scope.userList && $scope.userList.length > 0) {
+            userArray = $scope.userList.map(function (user) {
+              return user.Email;
+            });
+          }
+          if (userArray.length === 0) {
+            Notification.error('firstTimeWizard.uploadDirSyncEmpty');
+            reject();
+          } else {
+            $scope.model.numMaxUsers = userArray.length;
+            resolve();
+          }
         } else {
-          deferred.resolve();
+          resolve();
         }
-      } else {
-        deferred.resolve();
-      }
-
-      return deferred.promise;
+      });
     };
 
-    // The existing bulkSave
-    // TODO- remove after the feature toggle of CSV is no longer active
+    // hack to allow adding services when exiting the users.manage.advanced.add.ob.syncStatus state
+    $scope.dirsyncInitForServices = function () {
+      userArray = [];
+      if ($scope.userList && $scope.userList.length > 0) {
+        userArray = $scope.userList.map(function (user) {
+          return user.Email;
+        });
+      }
+
+      if (userArray.length === 0) {
+        Notification.error('firstTimeWizard.uploadDirSyncEmpty');
+      } else {
+        $scope.model.numMaxUsers = userArray.length;
+      }
+    };
+
+    $scope.dirsyncProcessingNext = bulkSave;
+
     function bulkSave() {
       saveDeferred = $q.defer();
       cancelDeferred = $q.defer();
@@ -2301,17 +2307,27 @@
       $scope.model.userErrorArray = [];
       $scope.model.numMaxUsers = userArray.length;
       $scope.model.processProgress = $scope.model.numTotalUsers = $scope.model.numNewUsers = $scope.model.numExistingUsers = 0;
+      $scope.model.isProcessing = true;
+      $scope.model.cancelProcessCsv = $scope.cancelProcessCsv;
 
-      function addUserError(row, errorMsg) {
+      function addUserError(row, email, errorMsg) {
         $scope.model.userErrorArray.push({
           row: row,
+          email: email,
           error: errorMsg
+        });
+        UserCsvService.setCsvStat({
+          userErrorArray: [{
+            row: row,
+            email: email,
+            error: errorMsg
+          }]
         });
       }
 
-      function addUserErrorWithTrackingID(row, errorMsg, response) {
-        errorMsg = addErrorWithTrackingID(errorMsg, response);
-        addUserError(row, _.trim(errorMsg));
+      function addUserErrorWithTrackingID(row, errorMsg, response, email) {
+        errorMsg = UserCsvService.addErrorWithTrackingID(errorMsg, response);
+        addUserError(row, (email || ''), _.trim(errorMsg));
       }
 
       function successCallback(response, startIndex, length) {
@@ -2319,8 +2335,8 @@
           var addedUsersList = [];
 
           _.forEach(response.data.userResponse, function (user, index) {
-            if (user.status === 200 || user.status === 201) {
-              if (user.message === 'User Patched') {
+            if (user.httpStatus === 200 || user.httpStatus === 201) {
+              if (user.httpStatus === 200) {
                 $scope.model.numExistingUsers++;
               } else {
                 $scope.model.numNewUsers++;
@@ -2333,7 +2349,7 @@
                 addedUsersList.push(addItem);
               }
             } else {
-              addUserErrorWithTrackingID(startIndex + index + 1, getBulkErrorResponse(user.status, user.message, user.email), response);
+              addUserErrorWithTrackingID(startIndex + index + 1, UserCsvService.getBulkErrorResponse(user.httpStatus, user.message, user.email), response, user.email);
             }
           });
         } else {
@@ -2344,9 +2360,10 @@
       }
 
       function errorCallback(response, startIndex, length) {
-        var responseMessage = getBulkErrorResponse(response.status);
         for (var k = 0; k < length; k++) {
-          addUserErrorWithTrackingID(startIndex + k + 1, responseMessage, response);
+          var email = (response.config && response.config.data && _.isArray(response.config.data.users) ? response.config.data.users[k].email : null);
+          var responseMessage = UserCsvService.getBulkErrorResponse(response.status, null, email);
+          addUserErrorWithTrackingID(startIndex + k + 1, responseMessage, response, email);
         }
       }
 
@@ -2369,12 +2386,12 @@
 
       function onboardCsvUsers(startIndex, userArray, entitlementArray, licenseArray, csvPromise) {
         return csvPromise.then(function () {
-          return $q(function (resolve, reject) {
+          return $q(function (resolve) {
             if (userArray.length > 0) {
               Userservice.onboardUsers(userArray, entitlementArray, licenseArray, cancelDeferred.promise).then(function (response) {
-                successCallback(response, startIndex - userArray.length + 1, userArray.length);
+                successCallback(response, (startIndex - userArray.length) + 1, userArray.length);
               }).catch(function (response) {
-                errorCallback(response, startIndex - userArray.length + 1, userArray.length);
+                errorCallback(response, (startIndex - userArray.length) + 1, userArray.length);
               }).finally(function () {
                 calculateProcessProgress();
                 resolve();
@@ -2388,66 +2405,44 @@
 
       function calculateProcessProgress() {
         $scope.model.numTotalUsers = $scope.model.numNewUsers + $scope.model.numExistingUsers + $scope.model.userErrorArray.length;
-        $scope.model.processProgress = Math.round($scope.model.numTotalUsers / userArray.length * 100);
+        $scope.model.processProgress = Math.round(($scope.model.numTotalUsers / userArray.length) * 100);
+        $scope.model.importCompletedAt = Date.now();
 
         if ($scope.model.numTotalUsers >= userArray.length) {
           $scope.model.userErrorArray.sort(function (a, b) {
             return a.row - b.row;
           });
           $rootScope.$broadcast('USER_LIST_UPDATED');
-          resetFile();
           saveDeferred.resolve();
+          $scope.model.isProcessing = false;
+          $scope.$broadcast('timer-stop');
         }
-      }
-
-      function isValidDID(value) {
-        // If communication license is selected and a value is defined
-        if (isCommunicationSelected && value) {
-          try {
-            return TelephoneNumberService.validateDID(value);
-          } catch (e) {
-            return false;
-          }
-        }
-        return true;
       }
 
       // Onboard users in chunks
       // Separate chunks on invalid rows
-      var csvChunk = isCommunicationSelected ? 4 : 10; // Rate limit for Huron
+      var csvChunk = isCommunicationSelected ? 2 : 10; // Rate limit for Huron
       var csvPromise = $q.when();
       var tempUserArray = [];
       var uniqueEmails = [];
       var processingError;
-      _.forEach(userArray, function (userRow, j) {
+      _.forEach(userArray, function (userEmail, j) {
         processingError = false;
         // If we haven't met the chunk size, process the next user
         if (tempUserArray.length < csvChunk) {
           // Validate content in the row
-          if (userRow.length !== 6) {
-            // Report incorrect number of columns
-            processingError = true;
-            addUserError(j + 1, $translate.instant('firstTimeWizard.csvInvalidRow'));
-          } else if (!userRow[3]) {
-            // Report required field is missing
-            processingError = true;
-            addUserError(j + 1, $translate.instant('firstTimeWizard.csvRequiredEmail'));
-          } else if (_.contains(uniqueEmails, userRow[3])) {
+          if (_.includes(uniqueEmails, userEmail)) {
             // Report a duplicate email
             processingError = true;
             addUserError(j + 1, $translate.instant('firstTimeWizard.csvDuplicateEmail'));
-          } else if (!isValidDID(userRow[5])) {
-            // Report an invalid DID format
-            processingError = true;
-            addUserError(j + 1, $translate.instant('firstTimeWizard.bulkInvalidDID'));
           } else {
-            uniqueEmails.push(userRow[3]);
+            uniqueEmails.push(userEmail);
             tempUserArray.push({
-              address: userRow[3],
-              name: userRow[0] + NAME_DELIMITER + userRow[1],
-              displayName: userRow[2],
-              internalExtension: userRow[4],
-              directLine: userRow[5]
+              address: userEmail,
+              name: NAME_DELIMITER,
+              displayName: '',
+              internalExtension: '',
+              directLine: ''
             });
           }
         }

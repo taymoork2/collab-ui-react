@@ -5,7 +5,7 @@
     var PreviousState, $state;
     var state, stateParams;
 
-    beforeEach(module('Core'));
+    beforeEach(angular.mock.module('Core'));
 
     beforeEach(inject(function (_PreviousState_, _$state_) {
       PreviousState = _PreviousState_;

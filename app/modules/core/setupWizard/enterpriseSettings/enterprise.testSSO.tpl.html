@@ -2,9 +2,9 @@
   <i class="icon icon-circle-arrows-circular"></i>
   <h3 translate="ssoModal.testSSOSetupTitle"></h3>
   <p translate="ssoModal.testSSOSetupDesc"></p>
-  <button class="btn btn--people open-test" ng-click="openTest()"><span translate="ssoModal.launchSSOTestBtn"></span></button>
+  <button id="testSsoConnectionBtn" class="btn btn--people open-test" ng-click="openTest()"><span translate="ssoModal.launchSSOTestBtn"></span></button>
   <div ng-if="testOpened" class="final-SSO">
     <p translate="ssoModal.testSSOSetupDesc2"></p>
-    <cs-radiolist class="finalSSO" ng-model="options.enableSSO" options="enableSSOOptions"></cs-radiolist>
+    <cs-radiolist class="finalSSO" ng-model="options.enableSSORadioOption" options="enableSSOOptions"></cs-radiolist>
   </div>
 </div>

@@ -1,65 +1,73 @@
 .roles-panel {
   width: 700px;
   height: 100%;
+
   .edit-title {
-    font-family: "CiscoSansTT Extra Light";
+    font-family: 'CiscoSansTT Extra Light';
     font-size: 24px;
     line-height: 1;
     display: block;
     margin-bottom: 15px;
   }
+
   .role-information {
     font-size: 16px;
     vertical-align: middle;
   }
+
   .admin-options {
     display: block;
+
     .cs-radio {
       display: inline-block;
     }
   }
+
   .edit-panel {
     padding: 10px 10px 10px 20px;
   }
+
   .admin-roles-panel {
     padding: 20px 10px 20px 20px;
   }
+
   .description {
     display: block;
     margin-bottom: 15px;
   }
+
   .indented-checkbox {
     margin-left: 27px;
   }
+
   .form-group {
     padding-bottom: 5px;
   }
+
   .cancel {
     font-size: 40px;
     cursor: pointer;
     color: $gray-dark;
     text-align: right;
   }
+
   .heading-row {
     margin-bottom: 15px;
+
     .col-xs-9 {
       top: -8px;
     }
   }
+
   .cloudChkBox {
     margin-left: -15px;
   }
-  .roles-tooltip {
-    list-style-type: none;
-    text-align: left;
-    height: 100%;
-  }
+
   .tooltip-inner {
     max-width: 100%;
   }
+
   ul {
-    -webkit-padding-start: 5px;
-    -moz-padding-start: 5px;
     margin-bottom: 0px;
   }
 }
@@ -72,5 +80,14 @@
   .cs-radio {
     cursor: pointer;
     display: inline-block;
+  }
+}
+
+.admin-roles-panel,
+.roles-panel {
+  .roles-tooltip {
+    list-style-type: none;
+    text-align: left;
+    height: 100%;
   }
 }

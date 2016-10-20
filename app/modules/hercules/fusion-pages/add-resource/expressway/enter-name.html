@@ -1,0 +1,34 @@
+<div class="modal-header">
+  <button type="button" class="close" ng-click="$dismiss()">
+    <span class="sr-only" translate="common.close"></span>
+  </button>
+  <h3 class="modal-title" translate="hercules.fusion.add-resource.title"></h3>
+</div>
+<div class="modal-body add-resource-modal">
+  <h4 translate="hercules.addResourceDialog.enterDisplayName"></h4>
+  <form name="nameForm" novalidate>
+    <div class="row">
+      <div class="cs-input-group medium-12 columns">
+        <input
+          cs-input
+          ng-focus="true"
+          type="text"
+          name="name"
+          placeholder="{{vm._translation.placeholder}}"
+          cs-input-group-size="medium-10"
+          cs-input-help-text="{{vm._translation.help}}"
+          cs-input-messages="vm.validationMessages"
+          ng-minlength="{{vm.minlength}}"
+          ng-keypress="vm.handleKeypress($event)"
+          ng-required="true"
+          ng-model="vm.name">
+      </div>
+    </div>
+  </form>
+</div>
+<div class="modal-footer">
+  <button class="btn btn-default" ng-click="$dismiss()" translate="common.cancel"></button>
+  <button class="btn btn-primary" cs-btn loading="vm.provisioning" ng-disabled="!vm.canGoNext() || vm.provisioning" ng-click="vm.next()">
+    <span translate="common.next"></span>
+  </button>
+</div>

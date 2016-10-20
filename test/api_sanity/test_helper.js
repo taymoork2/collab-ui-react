@@ -1,6 +1,10 @@
+'use strict';
+
+/* global Promise */
+
 var _ = require('lodash');
 var request = require('request');
-var Promise = require('promise');
+var testConfig = require('../e2e-protractor/utils/test.config');
 
 var auth = {
   'sqtest-admin': {
@@ -25,8 +29,13 @@ var auth = {
   },
   'partner-sales-user': {
     user: 'phtest77+salesadmin@gmail.com',
-    pass: 'C1sc0123!',
+    pass: 'P@ssword123',
     org: '7e268021-dc11-4728-b39d-9ba0e0abb5e0'
+  },
+  'partner-reports-sales-admin': {
+    user: 'kingkuntauser4+1715@gmail.com',
+    pass: 'Cisco123!',
+    org: 'ce8d17f8-1734-4a54-8510-fae65acc505e'
   },
   'pbr-admin-test': {
     user: 'pbr-org-admin-test@wx2.example.com',
@@ -45,17 +54,17 @@ var auth = {
   },
   'huron-e2e': {
     user: 'admin@uc.e2e.huron-alpha.com',
-    pass: 'Cisco123!',
+    pass: 'C1sco123!',
     org: '30fdb01e-0bb2-4ed4-97f4-84a2289bdc79'
   },
   'huron-e2e-partner': {
     user: 'admin@ucpartner.e2e.huronalpha.com',
-    pass: 'Cisco123!!',
+    pass: 'C1sco123!',
     org: '666a7b2f-f82e-4582-9672-7f22829e728d'
   },
   'account-admin': {
     user: 'phtest77+acc2@gmail.com',
-    pass: 'C1sc0123!',
+    pass: 'Cisco123!!',
     org: '58f01b76-2b3f-4c91-ad8a-e2af626fc7a5'
   },
   'non-trial-admin': {
@@ -70,12 +79,12 @@ var auth = {
   },
   'support-admin': {
     user: 'sqtest-admin-support@squared.example.com',
-    pass: 'P@ssword123',
+    pass: 'C1sc0123!',
     org: '584cf4cd-eea7-4c8c-83ee-67d88fc6eab5'
   },
   'media-super-admin': {
     user: 'super-admin@mfusion1webex.com',
-    pass: 'C1sc0123!',
+    pass: 'C1sc01234!',
     org: 'baab1ece-498c-452b-aea8-1a727413c818'
   },
   'customer-support-admin': {
@@ -95,7 +104,7 @@ var auth = {
   },
   'multiple-subscription-user': {
     user: 'int-esub-1@mailinator.com',
-    pass: 'C1sc0123!',
+    pass: 'P@ssword123',
     org: '9d173ec9-198e-430d-9363-688a333bdee7'
   },
   'selfsign-sso-admin': {
@@ -103,15 +112,87 @@ var auth = {
     pass: 'C1sc0123!',
     org: 'e9e33cac-eb07-4c34-8240-d08a43d0adce'
   },
+  'sso-e2e-test-org': {
+    user: 'fakegmuser+ssotestorg@gmail.com',
+    pass: 'C1sc0123!',
+    org: '3aa8a8a2-b953-4905-b678-0ae0a3f489f8'
+  },
+  'sso-e2e-test-org-mailsac': {
+    user: 'abc@mailsac.com',
+    pass: 'P@ssword123',
+    org: '3aa8a8a2-b953-4905-b678-0ae0a3f489f8',
+    adId: 'atlasad\\abc',
+    adPass: 'P@ssword123'
+  },
   'mockcisco-support-user': {
     user: 'phtest77+testbilling@gmail.com',
     pass: 'C1sc0123!',
     org: 'd30a6828-dc35-4753-bab4-f9b468828688'
   },
   'contactcenter-admin': {
-    user: 'sikkimadmn@outlook.com',
-    pass: 'Cisco@123',
-    org: '021fffdc-dd5e-49ca-b9d6-013445e3c3ae'
+    user: 'sunlight-atlas-test-admn@outlook.com',
+    pass: 'C1sco123=',
+    org: '36de4632-ccb9-4edf-8124-b74ce6943285'
+  },
+  'aa-admin': {
+    user: 'indigoAA02+1@gmail.com',
+    pass: 'Cisc0123!',
+    org: '7e0f0f48-0582-444e-ac75-908a36b29539'
+  },
+  'wbx-t31BTSTestAdmin-Reports-Configure': {
+    user: 'provteam+mc200@csgtrials.webex.com',
+    pass: 'Cisco!23',
+    org: '2039e7a3-6feb-4293-b87d-354ba68b0295'
+  },
+  'wbx-t30BTSTestAdmin-Reports-Configure': {
+    user: 'provteam+mc25@csgtrials.webex.com',
+    pass: 'Cisco!23',
+    org: '52cd61a3-a950-47c3-8218-55429ff88eb7'
+  },
+  'wbx-t31BTSTestAdmin-UserSettings': {
+    user: 'T31-EE-lhsieh@mailinator.com',
+    pass: 'Cisco!23',
+    org: 'b98940d4-2985-46ef-8c1a-ae8c1ef723ad'
+  },
+  'wbx-t30BTSTestAdmin-UserSettings': {
+    user: 'provteam+ee@csgtrials.webex.com',
+    pass: 'Cisco!23',
+    org: 'fc3868a5-5bfd-47d5-b39f-52af4d6ede42'
+  },
+  'wbx-t31RegressionTestAdmin': {
+    user: 't31r1-regression-adm@mailinator.com',
+    pass: 'Cisco!23',
+    org: 'b322c279-22d8-488f-a670-cdcb6380033e'
+  },
+  'wbx-t30RegressionTestAdmin': {
+    user: 't30sp6-regression-adm@mailinator.com',
+    pass: 'Cisco!23',
+    org: 'a6c8fdc7-1b74-4d0c-9d24-bd8c20048a84'
+  },
+  'wbx-t30BTSTestAdmin-MultiLicense': {
+    user: 'provteam+mc25@csgtrials.webex.com',
+    pass: 'Cisco!23',
+    org: '52cd61a3-a950-47c3-8218-55429ff88eb7'
+  },
+  'wbx-t30BTSTestAdmin-SingleLicense': {
+    user: 'provteam+mc@csgtrials.webex.com',
+    pass: 'Cisco!23',
+    org: '0988dcdc-af6e-4624-9387-b4b6fa7df4e3'
+  },
+  'wbx-singleCenterLicenseTestAdmin': {
+    user: 't30sp6-regression-adm@mailinator.com',
+    pass: 'Cisco!23',
+    org: 'a6c8fdc7-1b74-4d0c-9d24-bd8c20048a84'
+  },
+  'wbx-multipleCenterLicenseTestAdmin': {
+    user: 't31r1-regression-adm@mailinator.com',
+    pass: 'Cisco!23',
+    org: 'b322c279-22d8-488f-a670-cdcb6380033e'
+  },
+  'wbx-siteCsvTestAdmin': {
+    user: 'dev-dmz-e2e@mailinator.com',
+    pass: 'Cisco!23',
+    org: '06db50d9-a129-4a1f-9ee9-bcff65246b15'
   }
 };
 
@@ -133,13 +214,13 @@ var getSSOToken = function (req, jar, creds) {
     req.post(opts, function (err, res, body) {
       if (err) {
         console.error(err, body);
-        reject('Failed to fetch SSO token from CI. Status: ' + (res != null ? res.statusCode : void 0));
+        reject('Failed to fetch SSO token from CI. Status: ' + (res != null ? res.statusCode : undefined));
       }
       var cookie = _.find(res.headers['set-cookie'], function (c) {
         return c.indexOf('cisPRODAMAuthCookie') !== -1;
       });
       if (!cookie) {
-        reject('Failed to retrieve a cookie with org credentials. Status: ' + (res != null ? res.statusCode : void 0));
+        reject('Failed to retrieve a cookie with org credentials. Status: ' + (res != null ? res.statusCode : undefined));
       }
       var token = cookie.match(/cisPRODAMAuthCookie=(.*); Domain/)[1];
       jar.setCookie('cisPRODiPlanetDirectoryPro=' + token + ' ; path=/; domain=.webex.com', 'https://idbroker.webex.com/');
@@ -164,7 +245,7 @@ var getAuthCode = function (req, creds) {
         response_type: 'code',
         redirect_uri: 'urn:ietf:wg:oauth:2.0:oob',
         client_id: clientId,
-        scope: 'webexsquare:admin ciscouc:admin Identity:SCIM Identity:Config Identity:Organization ccc_config:admin',
+        scope: testConfig.oauth2Scope,
         realm: '/' + creds.org,
         state: rand_str
       }
@@ -173,12 +254,12 @@ var getAuthCode = function (req, creds) {
       var ref;
       if (err) {
         console.error(err, body);
-        reject('Failed to fetch Auth Code from CI. Status: ' + (res != null ? res.statusCode : void 0));
+        reject('Failed to fetch Auth Code from CI. Status: ' + (res != null ? res.statusCode : undefined));
       }
-      var code = (ref = body.match(/<title>(.*)</)) != null ? ref[1] : void 0;
+      var code = (ref = body.match(/<title>(.*)</)) != null ? ref[1] : undefined;
       if (!code) {
         console.error(body);
-        reject('Failed to extract Auth Code. Status: ' + (res != null ? res.statusCode : void 0));
+        reject('Failed to extract Auth Code. Status: ' + (res != null ? res.statusCode : undefined));
       }
       resolve(code);
     });
@@ -203,23 +284,21 @@ var getAccessToken = function (req, code) {
       }
     };
     req.post(opts, function (err, res, body) {
-      var e;
       if (err) {
         console.error(err, body);
-        reject('Failed to fetch Access Token from CI. Status: ' + (res != null ? res.statusCode : void 0));
+        reject('Failed to fetch Access Token from CI. Status: ' + (res != null ? res.statusCode : undefined));
       }
       var obj = (function () {
         try {
           return JSON.parse(body);
         } catch (_error) {
-          e = _error;
-          console.error(body);
-          reject('Failed to parse Access Token JSON. Status: ' + (res != null ? res.statusCode : void 0));
+          console.error(_error);
+          reject('Failed to parse Access Token JSON. Status: ' + (res != null ? res.statusCode : undefined));
         }
       })();
-      if (!(obj != null ? obj.access_token : void 0)) {
+      if (!(obj != null ? obj.access_token : undefined)) {
         console.error(body);
-        reject('Failed to extract Access Token. Status: ' + (res != null ? res.statusCode : void 0));
+        reject('Failed to extract Access Token. Status: ' + (res != null ? res.statusCode : undefined));
       }
       resolve(obj.access_token);
     });

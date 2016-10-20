@@ -2,7 +2,7 @@
 
 describe('UrlConfigSpec', function () {
 
-  beforeEach(module('wx2AdminWebClientApp'));
+  beforeEach(angular.mock.module('core.urlconfig'));
 
   var UrlConfig, $location;
   beforeEach(inject(function (_$location_, _UrlConfig_) {
@@ -16,7 +16,6 @@ describe('UrlConfigSpec', function () {
   var intHost = 'int-admin.ciscospark.com';
   var prodHost = 'admin.ciscospark.com';
 
-  var scope = encodeURIComponent('webexsquare:admin ciscouc:admin Identity:SCIM Identity:Config Identity:Organization cloudMeetings:login webex-messenger:get_webextoken ccc_config:admin');
   var orgId = 'abc123efg456';
   var siteURL = 'webex.com';
 
@@ -47,15 +46,6 @@ describe('UrlConfigSpec', function () {
       }
     };
   };
-
-  it('should return correct admin client url', function () {
-    whenCalling('getAdminPortalUrl', orgId).expectUrlToBe({
-      dev: 'http://127.0.0.1:8000',
-      cfe: 'https://cfe-admin.ciscospark.com',
-      integration: 'https://int-admin.ciscospark.com/',
-      prod: 'https://admin.ciscospark.com/'
-    });
-  });
 
   it('should return correct identity user service url', function () {
     whenCalling('getScimUrl', orgId).expectUrlToBe({
@@ -111,15 +101,6 @@ describe('UrlConfigSpec', function () {
     });
   });
 
-  it('should always return metrics service url', function () {
-    whenCalling('getMetricsServiceUrl').expectUrlToBe({
-      dev: 'http://threshold-krishna.mmf-cf.huron.uno/threshold/api/v1',
-      cfe: 'http://threshold-krishna.mmf-cf.huron.uno/threshold/api/v1',
-      integration: 'http://threshold-krishna.mmf-cf.huron.uno/threshold/api/v1',
-      prod: 'http://threshold-krishna.mmf-cf.huron.uno/threshold/api/v1'
-    });
-  });
-
   it('should return correct feature toggle service url', function () {
     whenCalling('getFeatureToggleUrl').expectUrlToBe({
       dev: 'https://locus-a.wbx2.com',
@@ -129,21 +110,12 @@ describe('UrlConfigSpec', function () {
     });
   });
 
-  it('should return correct alarm service url', function () {
-    whenCalling('getAlarmServiceUrl').expectUrlToBe({
-      dev: 'http://multimediafusion-cf-fault.mmf-cf.huron.uno/mediafusion/v1/faultservice',
-      cfe: 'http://multimediafusion-cf-fault.mmf-cf.huron.uno/mediafusion/v1/faultservice',
-      integration: 'http://multimediafusion-cf-fault.mmf-cf.huron.uno/mediafusion/v1/faultservice',
-      prod: 'http://multimediafusion-cf-fault.mmf-cf.huron.uno/mediafusion/v1/faultservice'
-    });
-  });
-
-  it('should return correct fault service url', function () {
-    whenCalling('getFaultServiceUrl').expectUrlToBe({
-      dev: 'http://threshold-krishna.mmf-cf.huron.uno/threshold/api/v1',
-      cfe: 'http://threshold-krishna.mmf-cf.huron.uno/threshold/api/v1',
-      integration: 'http://threshold-krishna.mmf-cf.huron.uno/threshold/api/v1',
-      prod: 'http://threshold-krishna.mmf-cf.huron.uno/threshold/api/v1'
+  it('should return correct athena service url', function () {
+    whenCalling('getAthenaServiceUrl').expectUrlToBe({
+      dev: 'https://athena-integration.wbx2.com/athena/api/v1',
+      cfe: 'https://athena-e.wbx2.com/athena/api/v1',
+      integration: 'https://athena-integration.wbx2.com/athena/api/v1',
+      prod: 'https://athena-a.wbx2.com/athena/api/v1',
     });
   });
 
@@ -180,24 +152,6 @@ describe('UrlConfigSpec', function () {
       cfe: '.wbx2.com',
       integration: '.wbx2.com',
       prod: '.ciscospark.com'
-    });
-  });
-
-  it('should return correct meeting service url', function () {
-    whenCalling('getMeetingServiceUrl').expectUrlToBe({
-      dev: 'http://mf-meeting-service.mb-lab.huron.uno/admin/api/v1',
-      cfe: 'https://mf-meeting-service.mb-lab.huron.uno/admin/api/v1',
-      integration: 'https://mf-meeting-service.mb-lab.huron.uno/admin/api/v1',
-      prod: 'https://mf-meeting-service.mb-lab.huron.uno/admin/api/v1'
-    });
-  });
-
-  it('should return correct meeting service url', function () {
-    whenCalling('getMeetingInfoServiceUrl').expectUrlToBe({
-      dev: 'http://mf-meeting-service.mb-lab.huron.uno/admin/api/v1',
-      cfe: 'https://mf-meeting-service.mb-lab.huron.uno/admin/api/v1',
-      integration: 'https://mf-meeting-service.mb-lab.huron.uno/admin/api/v1',
-      prod: 'https://mf-meeting-service.mb-lab.huron.uno/admin/api/v1'
     });
   });
 
@@ -311,10 +265,10 @@ describe('UrlConfigSpec', function () {
 
   it('should return correct cdr url', function () {
     whenCalling('getCdrUrl').expectUrlToBe({
-      dev: 'https://hades.huron-int.com/api/v1/elasticsearch/_all/_search?pretty',
-      cfe: 'https://hades.huron-dev.com/api/v1/elasticsearch/_all/_search?pretty',
-      integration: 'https://hades.huron-int.com/api/v1/elasticsearch/_all/_search?pretty',
-      prod: 'https://hades.huron-dev.com/api/v1/elasticsearch/_all/_search?pretty'
+      dev: 'https://hades.huron-int.com/api/v1/elasticsearch/',
+      cfe: 'https://hades.huron-dev.com/api/v1/elasticsearch/',
+      integration: 'https://hades.huron-int.com/api/v1/elasticsearch/',
+      prod: 'https://hades.huron-dev.com/api/v1/elasticsearch/'
     });
   });
 
@@ -383,10 +337,19 @@ describe('UrlConfigSpec', function () {
 
   it('should return correct customer care url', function () {
     whenCalling('getSunlightConfigServiceUrl').expectUrlToBe({
-      dev: 'https://config.rciad.ciscoccservice.com/config/v1',
-      cfe: 'https://config.rciad.ciscoccservice.com/config/v1',
-      integration: 'https://config.rciad.ciscoccservice.com/config/v1',
-      prod: 'https://config.rciad.ciscoccservice.com/config/v1'
+      dev: 'https://config.dev.ciscoccservice.com/config/v1',
+      cfe: 'https://config.appstaging.ciscoccservice.com/config/v1',
+      integration: 'https://config.appstaging.ciscoccservice.com/config/v1',
+      prod: 'https://config.produs1.ciscoccservice.com/config/v1'
+    });
+  });
+
+  it('should return correct sunlight chat bubble url', function () {
+    whenCalling('getSunlightBubbleUrl').expectUrlToBe({
+      dev: 'https://bubble.dev.ciscoccservice.com',
+      cfe: 'https://bubble.appstaging.ciscoccservice.com',
+      integration: 'https://bubble.appstaging.ciscoccservice.com',
+      prod: 'https://bubble.produs1.ciscoccservice.com'
     });
   });
 
@@ -423,6 +386,15 @@ describe('UrlConfigSpec', function () {
       cfe: 'https://web.ciscospark.com/',
       integration: 'https://web.ciscospark.com/',
       prod: 'https://web.ciscospark.com/'
+    });
+  });
+
+  it('should return correct bmmp client url', function () {
+    whenCalling('getBmmpUrl', 'foo').expectUrlToBe({
+      dev: 'https://bmmp.dmz.ciscospark.com/api/v1',
+      cfe: 'https://bmmp.ciscospark.com/api/v1',
+      integration: 'https://bmmp.dmz.ciscospark.com/api/v1',
+      prod: 'https://bmmp.ciscospark.com/api/v1'
     });
   });
 

@@ -8,18 +8,22 @@
   <div class="overview-info">
     <div>{{(card.currentTitle || 'overview.thisMonth') | translate }}</div>
     <div class="overview-count">{{(card.current | number) || 'N/A'}}</div>
-    <div class="last-count">{{(card.previousTitle || 'overview.lastMonth') | translate }} {{(card.previous | number) ||
+    <section>
+      <a ng-if="card.isDeviceEnabled" ng-href="{{card.settingsUrl}}" type="button" class="btn btn--cta" translate="overview.cards.roomSystem.enableDevices"></a>
+      <div ng-if="!card.isDeviceEnabled" class="last-count">{{(card.previousTitle || 'overview.lastMonth') | translate }} {{(card.previous | number) ||
       'N/A'}}
-    </div>
+  	  </div>
+    </section>
   </div>
 </section>
 <footer class="footer-menu ng-isolate-scope overview-footer-content-trial"
         ng-class="{'overview-footer-content-trial' : card.trial ,  'overview-footer-content'  : !card.trial }"
         ng-if="card.enabled">
   <span class="footer-content">
-  <span class="badge warning ng-scope" ng-if="card.trial">Trial</span>
+  <span class="badge warning" ng-if="card.trial && (overview.trialDaysLeft > 0 || !overview.trialDaysLeft)" translate="customerPage.trial"></span>
+  <span class="badge alert" ng-if="card.trial && overview.trialDaysLeft <= 0" translate="customerPage.expired"></span>
   <a ng-href="{{overview.statusPageUrl}}" target="_blank" class="monitoring-cell" ng-show="card.showHealth">
-    <i class="icon icon-circle" ng-class="card.healthStatus || 'disabled'"></i>
+    <cs-statusindicator ng-model="card.healthStatus"></cs-statusindicator>
     <span>{{card.levelText}}</span>
   </a>
   </span>
@@ -56,9 +60,18 @@
 </section>
 <section ng-if="!card.enabled" class="disabled-section">
   <span>{{(card.notEnabledText || 'overview.notEnabledText') | translate}}</span>
-  <a ng-href="{{card.notEnabledAction}}" ng-if="card.notEnabledAction" target="_blank">{{card.notEnabledActionText |
+  <a ng-href="{{card.notEnabledAction}}" ng-if="card.notEnabledAction" target="_blank">{{::card.notEnabledActionText |
     translate}}</a>
 </section>
 <footer ng-if="!card.enabled && card.notEnabledFooter" class="disabled-footer">
-  <p>{{card.notEnabledFooter| translate}}</p>
+  <div ng-if="!card.isCSB">
+    <p>{{card.notEnabledFooter| translate}}</p>
+  </div>
+  <div ng-if="card.isCSB">
+    <p>
+      <span translate="overview.visitCsb"></span>
+      <a target="_blank" ui-sref="userRedirect" translate="overview.telstraMarketplace"></a>
+      <span translate="overview.toSubscribe"></span>
+    </p>
+  </div>
 </footer>

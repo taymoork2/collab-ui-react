@@ -1,8 +1,8 @@
 (function () {
   'use strict';
 
-  /*ngInject*/
-  function HelpdeskCardsOrgService(HelpdeskService, XhrNotificationService, Config, LicenseService) {
+  /* @ngInject */
+  function HelpdeskCardsOrgService(HelpdeskService, XhrNotificationService, Config, LicenseService, HelpdeskHuronService, $translate) {
 
     function getMessageCardForOrg(org, licenses) {
       var entitled = LicenseService.orgIsEntitledTo(org, 'webex-squared');
@@ -15,8 +15,23 @@
     }
 
     function getCallCardForOrg(org, licenses) {
-      var entitled = LicenseService.orgIsEntitledTo(org, 'ciscouc');
-      return new OrgCard(entitled, licenses, Config.licenseTypes.COMMUNICATIONS);
+      var callCard = {
+        entitled: LicenseService.orgIsEntitledTo(org, 'ciscouc'),
+        aggregatedLicenses: LicenseService.aggregatedLicenses(licenses, Config.licenseTypes.COMMUNICATION)
+      };
+      HelpdeskHuronService.getOrgSiteInfo(org.id).then(function (site) {
+        callCard.voiceMailPrefix = site.siteSteeringDigit + site.siteCode;
+        callCard.outboundDialDigit = site.steeringDigit;
+      });
+      HelpdeskHuronService.getTenantInfo(org.id).then(function (tenant) {
+        if (_.isEmpty(tenant.regionCode)) {
+          callCard.dialing = $translate.instant("helpdesk.dialingPlan.national");
+        } else {
+          callCard.dialing = $translate.instant("helpdesk.dialingPlan.local");
+          callCard.areaCode = tenant.regionCode;
+        }
+      });
+      return callCard;
     }
 
     function getRoomSystemsCardForOrg(org, licenses) {

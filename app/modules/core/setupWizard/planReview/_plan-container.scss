@@ -1,69 +1,92 @@
 %plan-container {
-  min-height: 515px;
   display: flex;
   flex-direction: column;
   flex: 1;
+
   .indentedCheckbox {
     margin: 0;
     padding-left: rem-calc(28);
+
     .cs-checkbox {
       padding-right: 1.5rem;
     }
   }
+
   .multiSub {
     margin: 0px 0px 0px auto;
     padding-bottom: 16px;
+
     .multiText {
       float: left;
       padding-top: 5px;
     }
+
     .multiSelect {
       width: 60%;
       float: right;
     }
   }
+
   .flex-row {
     @extend .row;
     @extend .full;
+
     display: flex;
+
     .columns {
       padding: 1.5rem;
     }
+
+    .small-3 {
+      &:not(:last-of-type) {
+        margin-right: 3px;
+      }
+    }
+
     .small-4 {
       &:not(:last-of-type) {
         margin-right: 3px;
       }
     }
+
     .column-title {
       background: $gray-light-4;
-      padding: 12px 0 14px 0;
+      padding: 12px 0 14px;
       line-height: 30px;
     }
+
     .column-free {
       background: $gray-light-4;
       min-height: 50px;
       line-height: 24px;
       font-size: 14px;
     }
+
     .column-mtg {
       padding-bottom: 0;
     }
+
     .column-trial {
       background: $gray-light-4;
     }
+
     .column-trial-header {
       @extend .h5;
+
       padding: 1.5rem;
       background: $color-attention;
       color: $white;
     }
+
     &.row-licenses {
       flex: 1;
+
       .columns {
         padding: 0;
         background: $gray-light-4;
         font-size: 14px;
       }
+
       .column-trial,
       .column-paid,
       .column-mtg {
@@ -71,55 +94,67 @@
       }
     }
   }
+
   .row-room {
     margin-top: 3px;
     background: $gray-light-4;
     display: flex;
     align-items: center;
     justify-content: center;
+
     .column-header {
       padding: 0;
       border-right: solid 1px $gray-light-2;
     }
   }
+
   .column-room {
     padding-top: 12px;
     line-height: 32px;
     text-align: center;
   }
+
   .room-systems {
     text-align: left;
     padding: 1.5rem;
   }
+
   .item-sparkRoom {
     color: $color-primary-base;
     font-family: $brand-font-light;
     font-size: 14px;
     line-height: 24px;
   }
+
   .spark-quantity {
     font-size: 14px;
     font-family: $brand-font-light;
     color: $gray-base;
     line-height: 24px;
   }
+
   .badge-trial {
     @extend .badge.badge-warning;
+
     display: inline-block;
   }
+
   .column-header {
     display: flex;
     align-items: center;
     justify-content: center;
+
     h3 {
       color: $gray-dark-2;
       margin-top: 2px;
     }
+
     .icon {
       font-size: 32px;
-      margin-right: .75rem;
+      margin-right: 0.75rem;
     }
   }
+
   .column-subsription-header {
     font-family: $brand-font-regular;
     font-size: 12px;
@@ -132,55 +167,67 @@
     &.free {
       background-color: $color-cta-lighter;
     }
+
     &.paid {
       background-color: $color-primary-lighter;
     }
+
     &.trial {
       background-color: $color-attention-lighter;
     }
   }
+
   .item-free {
     color: $text-color;
     font-family: $brand-font-light;
     line-height: 24px;
   }
+
   .item-paid {
-    padding: 0 0 24px 0;
+    padding: 0 0 24px;
     line-height: 24px;
+
     .sub-item {
       font-family: $brand-font-light;
       font-size: 14px;
       color: $gray-darker;
     }
+
     .quantity {
       font-family: $brand-font-light;
       font-size: 14px;
       color: $gray-base;
       display: inline-block;
+
       .quantity-padding {
         padding-right: 0;
         font-size: 14px;
         color: $gray-base;
       }
+
       .badge {
-        padding: 3px 9px 3px;
+        padding: 3px 9px;
       }
+
       .badge.badge-warning {
         background: $brand-warning-dark;
       }
     }
   }
+
   .item-license {
     color: $color-primary-base;
     font-family: $brand-font-light;
     font-size: 14px;
     line-height: 24px;
   }
+
   .item-mtg {
     color: $color-primary-base;
     font-family: $brand-font-light;
     font-size: 14px;
     line-height: 24px;
+
     .sub-item {
       padding-bottom: 24px;
       font-family: $brand-font-light;
@@ -188,23 +235,28 @@
       color: $gray-base;
       margin-bottom: 0;
     }
+
     .item-webex {
       color: $gray-dark-2;
       margin-right: 24px;
     }
+
     .quantity-mtg {
       font-family: $brand-font-light;
       font-size: 14px;
       color: $gray-base;
       display: inline-block;
+
       .badge {
-        padding: 3px 9px 3px;
+        padding: 3px 9px;
       }
+
       .badge.badge-warning {
         background: $brand-warning-dark;
       }
     }
   }
+
   .sub-line {
     border-bottom: 1px solid #ccc;
     padding-top: 5px;

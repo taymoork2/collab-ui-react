@@ -15,11 +15,14 @@ var Wizard = function () {
   this.mainviewTitle = element(by.css('.wizard-main-title'));
   this.mainviewSubtitle = element(by.css('.wizard h3'));
   this.radiobuttons = element.all(by.css('label.cs-radio'));
+  this.manualAddUsers = element(by.css('label.cs-radio[for="syncSimple"]'));
   this.beginBtn = element(by.id('wizardSaveNextBtn'));
-  this.backBtn = element(by.id('wizardBackBtn'));
-  this.nextBtn = element(by.id('wizardSaveNextBtn'));
-  this.saveBtn = element(by.id('wizardSaveNextBtn'));
-  this.finishBtn = element(by.id('wizardSaveNextBtn'));
+  this.backBtn = element(by.buttonText('Back'));
+  this.nextBtn = element(by.buttonText('Next'));
+  this.saveBtn = element(by.buttonText('Save'));
+  this.yesBtn = element(by.buttonText('Yes'));
+  this.skipBtn = element(by.css('.skip-link'));
+  this.finishBtn = element(by.buttonText('Finish'));
   this.esEvaluateBtn = element(by.css('[ng-click="evaluateStep(\'initial\', \'enterpriseSettings\')"]'));
   this.toExpCloudDataBtn = element.all(by.css('[ng-click="changeStep(\'exportCloudData\')"]'));
   this.toTestSSOBtn = element.all(by.css('[ng-click="changeStep(\'testSSO\')"]'));
@@ -31,6 +34,9 @@ var Wizard = function () {
   this.toInstallConnectorBtn = element.all(by.css('[ng-click="changeStep(\'installConnector\')"]'));
   this.toSyncStatusBtn = element.all(by.css('[ng-click="changeStep(\'syncStatus\')"]'));
   this.finishTab = element(by.id('wizard-finish-link'));
+  this.sipDomain = element(by.css('.sip-domain-input'));
+  this.sipURLExample = element(by.css('.url-examples-style'));
+  this.saveCheckbox = element(by.css('label[for="confirmSaveCheckBox"]'));
 
   this.clickPlanReview = function () {
     utils.click(this.reviewTab);

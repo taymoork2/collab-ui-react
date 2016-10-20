@@ -1,8 +1,9 @@
 (function () {
   'use strict';
 
-  angular.module('Core')
-    .directive('crFeatureToggle', crFeatureToggle);
+  module.exports = angular.module(require('./featureToggle.service'))
+    .directive('crFeatureToggle', crFeatureToggle)
+    .name;
 
   /* @ngInject */
   function crFeatureToggle(ngIfDirective, FeatureToggleService) {

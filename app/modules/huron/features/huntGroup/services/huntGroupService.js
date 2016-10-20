@@ -7,7 +7,7 @@
 
   /* @ngInject */
 
-  function huntGroupService($q, HuntGroupServiceV2, UserServiceCommonV2, UserSearchServiceV2, NumberSearchServiceV2, Authinfo, $http) {
+  function huntGroupService($q, HuntGroupServiceV2, UserServiceCommonV2, UserSearchServiceV2, NumberSearchServiceV2, Authinfo) {
 
     var customerId = Authinfo.getOrgId();
     var service = {
@@ -61,7 +61,8 @@
         var helper = getServiceHelper();
         helper.setService(UserSearchServiceV2);
         helper.setApiArgs({
-          name: hint
+          name: hint,
+          wide: true,
         });
         helper.setExtractData(function (data) {
           return data.users;
@@ -224,7 +225,7 @@
      */
     function constructUserNumberMappingForUI(users) {
       var huntMembers = [];
-      users.map(function (user) {
+      users.forEach(function (user) {
         var flatArr = user.numbers.map(function (number) {
           return {
             displayUser: false,

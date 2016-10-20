@@ -6,7 +6,7 @@
     .service('ClusterService', ClusterService);
 
   /* @ngInject */
-  function ClusterService($http, CsdmPoller, CsdmCacheUpdater, CsdmHubFactory, ConfigService, Authinfo) {
+  function ClusterService($http, CsdmPoller, CsdmCacheUpdater, CsdmHubFactory, UrlConfig, Authinfo) {
     var clusterCache = {
       c_mgmt: {},
       c_ucmc: {},
@@ -16,15 +16,19 @@
     var poller = CsdmPoller.create(fetch, hub);
 
     var service = {
-      deleteCluster: deleteCluster,
       deleteHost: deleteHost,
       fetch: fetch,
       getCluster: getCluster,
       getClustersByConnectorType: getClustersByConnectorType,
+      getAll: getAll,
       getConnector: getConnector,
       getRunningStateSeverity: getRunningStateSeverity,
       subscribe: hub.on,
-      upgradeSoftware: upgradeSoftware
+      upgradeSoftware: upgradeSoftware,
+      mergeRunningState: mergeRunningState,
+
+      // Internal functions exposed for easier testing.
+      _mergeAllAlarms: mergeAllAlarms,
     };
 
     return service;
@@ -46,37 +50,44 @@
       // we give a severity and a weight to all possible states
       // this has to be synced with the server generating the API consumed
       // by the general overview page (state of Call connectors, etc.)
-      var label, value;
+      var label, value, cssClass;
       switch (state) {
-      case 'running':
-        label = 'ok';
-        value = 0;
-        break;
-      case 'not_installed':
-        label = 'neutral';
-        value = 1;
-        break;
-      case 'disabled':
-      case 'downloading':
-      case 'installing':
-      case 'not_configured':
-      case 'uninstalling':
-      case 'registered':
-        label = 'warning';
-        value = 2;
-        break;
-      case 'has_alarms':
-      case 'offline':
-      case 'stopped':
-      case 'unknown':
-      default:
-        label = 'error';
-        value = 3;
+        case 'running':
+          label = 'ok';
+          value = 0;
+          cssClass = 'success';
+          break;
+        case 'not_installed':
+          label = 'neutral';
+          value = 1;
+          cssClass = 'disabled';
+          break;
+        case 'disabled':
+        case 'downloading':
+        case 'installing':
+        case 'not_configured':
+        case 'uninstalling':
+        case 'registered':
+        case 'initializing':
+          label = 'warning';
+          value = 2;
+          cssClass = 'warning';
+          break;
+        case 'has_alarms':
+        case 'offline':
+        case 'stopped':
+        case 'not_operational':
+        case 'unknown':
+        default:
+          label = 'error';
+          value = 3;
+          cssClass = 'danger';
       }
 
       return {
         label: label,
-        value: value
+        value: value,
+        cssClass: cssClass,
       };
     }
 
@@ -94,13 +105,36 @@
     }
 
     function mergeAllAlarms(connectors) {
-      return _.reduce(connectors, function (acc, connector) {
-        return acc.concat(connector.alarms);
-      }, []);
+      return _.chain(connectors)
+        .reduce(function (acc, connector) {
+          return acc.concat(connector.alarms);
+        }, [])
+        // This sort must happen before the uniqWith so that we keep the oldest alarm when
+        // finding duplicates (the order is preserved when running uniqWith, that is, the
+        // first entry of a set of duplicates is kept).
+        .sortBy(function (e) {
+          return e.firstReported;
+        })
+        .uniqWith(function (e1, e2) {
+          return e1.id === e2.id
+            && e1.title === e2.title
+            && e1.description === e2.description
+            && e1.severity === e2.severity
+            && e1.solution === e2.solution
+            && _.isEqual(e1.solutionReplacementValues, e2.solutionReplacementValues);
+        })
+        // We only sort by ID once we have pruned the duplicates, to save a few cycles.
+        // This sort makes sure refreshing the page will always keep things ordered the
+        // same way, even if a new alarm (with a 'younger' firstReportedBy) replaces an
+        // older alarm of the same ID.
+        .sortBy(function (e) {
+          return e.id;
+        })
+        .value();
     }
 
     function getUpgradeState(connectors) {
-      var allAreUpgraded = _.every(connectors, 'upgradeState', 'upgraded');
+      var allAreUpgraded = _.every(connectors, { upgradeState: 'upgraded' });
       return allAreUpgraded ? 'upgraded' : 'upgrading';
     }
 
@@ -110,28 +144,30 @@
         .reduce(getMostSevereRunningState, {
           stateSeverityValue: -1
         })
-        .get('state')
+        // .get('state')
         .value();
     }
 
     function buildAggregates(type, cluster) {
       var connectors = cluster.connectors;
-      var provisioning = _.find(cluster.provisioning, 'connectorType', type);
-      var upgradeAvailable = provisioning && provisioning.availableVersion && provisioning.provisionedVersion !== provisioning.availableVersion;
+      var provisioning = _.find(cluster.provisioning, { connectorType: type });
+      var upgradeAvailable = provisioning && _.some(cluster.connectors, function (connector) {
+        return provisioning.availableVersion && connector.runningVersion !== provisioning.availableVersion;
+      });
       var hosts = _.chain(connectors)
-        .pluck('hostname')
+        .map('hostname')
         .uniq()
         .value();
       return {
         alarms: mergeAllAlarms(connectors),
-        state: mergeRunningState(connectors),
+        state: mergeRunningState(connectors).state,
         upgradeState: getUpgradeState(connectors),
         provisioning: provisioning,
         upgradeAvailable: upgradeAvailable,
-        upgradePossible: upgradeAvailable && !_.any(cluster.connectors, 'state', 'not_configured'),
+        upgradeWarning: upgradeAvailable && !_.some(cluster.connectors, { state: 'offline' }),
         hosts: _.map(hosts, function (host) {
           // 1 host = 1 connector (for a given type)
-          var connector = _.find(connectors, 'hostname', host);
+          var connector = _.find(connectors, { hostname: host });
           return {
             alarms: connector.alarms,
             hostname: host,
@@ -154,7 +190,7 @@
       return _.chain(clusters)
         .map(function (cluster) {
           cluster = angular.copy(cluster);
-          cluster.connectors = _.filter(cluster.connectors, 'connectorType', type);
+          cluster.connectors = _.filter(cluster.connectors, { connectorType: type });
           return cluster;
         })
         .filter(function (cluster) {
@@ -165,11 +201,13 @@
 
     function fetch() {
       return $http
-        .get(ConfigService.getUrlV2() + '/organizations/' + Authinfo.getOrgId() + '?fields=@wide')
+        .get(UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '?fields=@wide')
         .then(extractDataFromResponse)
         .then(function (response) {
           // only keep fused clusters
-          return _.filter(response.clusters, 'state', 'fused');
+          return _.filter(response.clusters, function (cluster) {
+            return cluster.state ? cluster.state === 'fused' : true;
+          });
         })
         .then(function (clusters) {
           // start modeling the response to match how the UI uses it, per connectorType
@@ -189,9 +227,9 @@
         })
         .then(function (clusters) {
           var result = {
-            c_mgmt: _.indexBy(clusters.c_mgmt, 'id'),
-            c_ucmc: _.indexBy(clusters.c_ucmc, 'id'),
-            c_cal: _.indexBy(clusters.c_cal, 'id')
+            c_mgmt: _.keyBy(clusters.c_mgmt, 'id'),
+            c_ucmc: _.keyBy(clusters.c_ucmc, 'id'),
+            c_cal: _.keyBy(clusters.c_cal, 'id')
           };
           return result;
         })
@@ -203,16 +241,32 @@
         });
     }
 
+    function getAll() {
+      return $http
+        .get(UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '?fields=@wide')
+        .then(extractDataFromResponse)
+        .then(function (data) {
+          // only keep fused clusters
+          return _.filter(data.clusters, { state: 'fused' });
+        });
+    }
+
     function getCluster(type, id) {
       return clusterCache[type][id];
     }
 
     function getClustersByConnectorType(type) {
-      return _.values(clusterCache[type]);
+      var clusters = _.chain(clusterCache[type])
+        .values() // turn them to an array
+        .sortBy(function (cluster) {
+          return cluster.name.toLocaleUpperCase();
+        })
+        .value();
+      return clusters;
     }
 
-    function upgradeSoftware(clusterId, serviceType) {
-      var url = ConfigService.getUrl() + '/organizations/' + Authinfo.getOrgId() + '/clusters/' + clusterId + '/services/' + serviceType + '/upgrade';
+    function upgradeSoftware(clusterId, connectorType) {
+      var url = UrlConfig.getHerculesUrl() + '/organizations/' + Authinfo.getOrgId() + '/clusters/' + clusterId + '/services/' + connectorType + '/upgrade';
       return $http.post(url, '{}')
         .then(extractDataFromResponse)
         .then(function (data) {
@@ -221,18 +275,8 @@
         });
     }
 
-    function deleteCluster(id) {
-      var url = ConfigService.getUrl() + '/organizations/' + Authinfo.getOrgId() + '/clusters/' + id;
-      return $http.delete(url)
-        .then(extractDataFromResponse)
-        .then(function (data) {
-          poller.forceAction();
-          return data;
-        });
-    }
-
     function deleteHost(id, serial) {
-      var url = ConfigService.getUrl() + '/organizations/' + Authinfo.getOrgId() + '/clusters/' + id + '/hosts/' + serial;
+      var url = UrlConfig.getHerculesUrl() + '/organizations/' + Authinfo.getOrgId() + '/clusters/' + id + '/hosts/' + serial;
       return $http.delete(url)
         .then(extractDataFromResponse)
         .then(function (data) {
@@ -242,8 +286,9 @@
     }
 
     function getConnector(connectorId) {
-      var url = ConfigService.getUrl() + '/organizations/' + Authinfo.getOrgId() + '/connectors/' + connectorId;
+      var url = UrlConfig.getHerculesUrl() + '/organizations/' + Authinfo.getOrgId() + '/connectors/' + connectorId;
       return $http.get(url).then(extractDataFromResponse);
     }
+
   }
 }());

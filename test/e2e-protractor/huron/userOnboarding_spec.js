@@ -8,10 +8,6 @@ describe('Manual User Onboard with Numbers basic Test', function () {
     utils.loginToOnboardUsers('huron-int1', user);
   }, 120000);
 
-  afterEach(function () {
-    utils.dumpConsoleErrors();
-  });
-
   afterAll(function () {
     utils.deleteUser(user);
   });
@@ -64,7 +60,6 @@ xdescribe('User Onboarding with DN Mapping', function () {
   });
 
   afterEach(function () {
-    utils.dumpConsoleErrors();
     utils.deleteUser(user);
   });
 

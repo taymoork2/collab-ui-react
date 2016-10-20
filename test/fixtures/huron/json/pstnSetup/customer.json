@@ -2,6 +2,7 @@
   "uuid": "744d58c5-9205-47d6-b7de-a176e3ca431f",
   "name": "Atlas_Test_BMoney3",
   "email": "bmoney3@gmail.com",
+  "isTrial": true,
   "billingAddress": {
     "billingName": "Cisco Systems",
     "billingStreetNumber": "2200",

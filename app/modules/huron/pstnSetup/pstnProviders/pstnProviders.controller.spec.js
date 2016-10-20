@@ -6,10 +6,11 @@ describe('Controller: PstnProvidersCtrl', function () {
   var carrierList = getJSONFixture('huron/json/pstnSetup/carrierList.json');
   var customer = getJSONFixture('huron/json/pstnSetup/customer.json');
   var customerCarrierList = getJSONFixture('huron/json/pstnSetup/customerCarrierList.json');
+  var swivelCustomerCarrierList = getJSONFixture('huron/json/pstnSetup/swivelCustomerCarrierList.json');
   var resellerCarrierList = getJSONFixture('huron/json/pstnSetup/resellerCarrierList.json');
   var customerSiteList = getJSONFixture('huron/json/pstnSetup/customerSiteList.json');
 
-  beforeEach(module('Huron'));
+  beforeEach(angular.mock.module('Huron'));
 
   beforeEach(inject(function ($rootScope, _$controller_, _$q_, _$state_, _PstnSetup_, _PstnSetupService_, _PstnServiceAddressService_, _Notification_) {
     $scope = $rootScope.$new();
@@ -44,10 +45,27 @@ describe('Controller: PstnProvidersCtrl', function () {
 
       expect(controller.providers).toEqual([jasmine.objectContaining({
         name: PstnSetupService.INTELEPEER,
-        apiExists: true,
         vendor: PstnSetupService.INTELEPEER
       })]);
       expect($state.go).toHaveBeenCalledWith('pstnSetup.orderNumbers');
+      expect(PstnSetup.isCustomerExists()).toEqual(true);
+      expect(PstnSetup.isCarrierExists()).toEqual(true);
+      expect(PstnSetup.isResellerExists()).toEqual(false);
+      expect(PstnSetup.isSiteExists()).toEqual(true);
+    });
+
+    it('should be initialized Intelepeer-Swivel and transition to swivel state', function () {
+      controller = $controller('PstnProvidersCtrl', {
+        $scope: $scope
+      });
+      PstnSetupService.listCustomerCarriers.and.returnValue($q.when(swivelCustomerCarrierList));
+      $scope.$apply();
+
+      expect(controller.providers).toEqual([jasmine.objectContaining({
+        name: 'INTELEPEER-SWIVEL',
+        vendor: PstnSetupService.INTELEPEER
+      })]);
+      expect($state.go).toHaveBeenCalledWith('pstnSetup.swivelNumbers');
       expect(PstnSetup.isCustomerExists()).toEqual(true);
       expect(PstnSetup.isCarrierExists()).toEqual(true);
       expect(PstnSetup.isResellerExists()).toEqual(false);
@@ -63,7 +81,6 @@ describe('Controller: PstnProvidersCtrl', function () {
 
       expect(controller.providers).toEqual([jasmine.objectContaining({
         name: PstnSetupService.INTELEPEER,
-        apiExists: true,
         vendor: PstnSetupService.INTELEPEER
       })]);
       expect($state.go).toHaveBeenCalledWith('pstnSetup.serviceAddress');
@@ -85,11 +102,9 @@ describe('Controller: PstnProvidersCtrl', function () {
 
       expect(controller.providers).toEqual([jasmine.objectContaining({
         name: PstnSetupService.INTELEPEER,
-        apiExists: true,
         vendor: PstnSetupService.INTELEPEER
       }), jasmine.objectContaining({
         name: PstnSetupService.TATA,
-        apiExists: false,
         vendor: PstnSetupService.TATA
       })]);
       expect($state.go).not.toHaveBeenCalled();
@@ -113,11 +128,9 @@ describe('Controller: PstnProvidersCtrl', function () {
 
       expect(controller.providers).toEqual([jasmine.objectContaining({
         name: PstnSetupService.INTELEPEER,
-        apiExists: true,
         vendor: PstnSetupService.INTELEPEER
       }), jasmine.objectContaining({
         name: PstnSetupService.TATA,
-        apiExists: false,
         vendor: PstnSetupService.TATA
       })]);
       expect($state.go).not.toHaveBeenCalled();
@@ -165,7 +178,6 @@ describe('Controller: PstnProvidersCtrl', function () {
 
       expect(controller.providers).toEqual([jasmine.objectContaining({
         name: PstnSetupService.INTELEPEER,
-        apiExists: true,
         vendor: PstnSetupService.INTELEPEER
       })]);
       expect(PstnSetup.setSingleCarrierReseller).toHaveBeenCalledWith(true);

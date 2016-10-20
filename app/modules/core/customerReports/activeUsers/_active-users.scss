@@ -2,92 +2,127 @@
   .report-sides {
     margin: 0 rem-calc(25);
   }
+
+  .activity-filter {
+    float: right;
+    margin-right: rem-calc(25);
+    position: relative;
+    top: rem-calc(-5);
+    z-index: 1000;
+
+    .select-options {
+      padding: 0;
+    }
+  }
+
   .barchart {
     position: relative;
     top: rem-calc(-35);
+    height: vr-adjust(350);
   }
+
   .active-search {
     margin-bottom: rem-calc(20);
     margin-left: rem-calc(25);
     width: 40%;
     position: relative;
+
     i {
       left: rem-calc(10);
       position: absolute;
-      top: rem-calc(10)
+      top: rem-calc(10);
     }
+
     input {
       padding-left: rem-calc(30);
     }
   }
+
   .active-users-table {
     margin-bottom: rem-calc(25);
-    width: 95%
-  }
-  .empty-table {
     width: 95%;
-    margin: rem-calc(20);
-    text-align: center;
   }
+
   .horizontal-center {
     text-align: center;
   }
+
   .vertical-center {
     vertical-align: middle;
     text-overflow: ellipsis;
   }
+
   .bold {
     font-weight: bold;
   }
+
   .pointer {
     cursor: pointer;
   }
+
   .active-users-table {
-    th, td {
+    th,
+    td {
       border-right: rem-calc(1) solid $gray-dark-1;
     }
-    th:last-of-type, td:last-of-type {
+
+    th:last-of-type,
+    td:last-of-type {
       border-right: none;
     }
   }
+
   .carousel-control {
     padding: 9px 16px;
     background-color: $white;
+
     i {
       color: $color-primary-base;
     }
   }
+
   .carousel-control:focus {
     box-shadow: none;
   }
+
   .carousel-control:hover {
     background-color: $color-primary-base;
+
     i {
       color: $white;
     }
   }
+
   .carousel-control[disabled] {
     background-color: $gray-light-2;
+
     i {
       color: $gray-base;
     }
   }
+
   .active-carousel {
     position: relative;
     top: rem-calc(-10);
   }
+
   .carousel-btn {
     border: rem-calc(1) solid $gray-dark-1;
     color: $gray-dark-1;
   }
-  .carousel-btn:hover, .btn--none:focus, .btn--none:hover {
+
+  .carousel-btn:hover,
+  .btn--none:focus,
+  .btn--none:hover {
     border-color: transparent;
   }
+
   .table-spinner {
     height: 100px;
     position: relative;
     top: 40px;
     width: 100%;
+
     .icon-2x {
       font-size: 4em;
       position: absolute;

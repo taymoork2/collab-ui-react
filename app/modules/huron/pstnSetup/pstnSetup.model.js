@@ -5,7 +5,7 @@
     .factory('PstnSetup', PstnSetup);
 
   function PstnSetup() {
-    var customerId, customerName, customerFirstName, customerLastName, customerEmail, serviceAddress, customerExists, resellerExists, carrierExists, siteExists, provider, numbers, singleCarrierReseller, isTrial;
+    var customerId, customerName, customerFirstName, customerLastName, customerEmail, serviceAddress, customerExists, resellerExists, carrierExists, siteExists, provider, numbers, orders, singleCarrierReseller, isTrial;
 
     init();
     var model = {
@@ -36,6 +36,8 @@
       getProviderId: getProviderId,
       setNumbers: setNumbers,
       getNumbers: getNumbers,
+      setOrders: setOrders,
+      getOrders: getOrders,
       isSingleCarrierReseller: isSingleCarrierReseller,
       setSingleCarrierReseller: setSingleCarrierReseller,
       setIsTrial: setIsTrial,
@@ -57,14 +59,16 @@
       siteExists = false;
       provider = {};
       numbers = [];
+      orders = [];
       singleCarrierReseller = false;
-      isTrial = false;
+      isTrial = true;
     }
 
     function clearProviderSpecificData() {
       customerFirstName = '';
       customerLastName = '';
       numbers = [];
+      orders = [];
       serviceAddress = {};
     }
 
@@ -166,6 +170,14 @@
 
     function getNumbers() {
       return numbers;
+    }
+
+    function setOrders(_orders) {
+      orders = _orders;
+    }
+
+    function getOrders() {
+      return _.cloneDeep(orders);
     }
 
     function isSingleCarrierReseller() {

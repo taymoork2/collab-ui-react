@@ -2,8 +2,8 @@
 
 describe('Controller: AASayMessageCtrl', function () {
   var controller;
-  var AAUiModelService, AutoAttendantCeService, AutoAttendantCeInfoModelService, AutoAttendantCeMenuModelService, AALanguageService;
-  var $rootScope, $scope, $translate;
+  var AAUiModelService, AutoAttendantCeMenuModelService;
+  var $rootScope, $scope;
 
   var aaUiModel = {
     openHours: {}
@@ -12,8 +12,7 @@ describe('Controller: AASayMessageCtrl', function () {
   var index = '0';
   var keyIndex = '0';
   var valueInput = 'This is another test.';
-
-  var phoneMenuData = getJSONFixture('huron/json/autoAttendant/aaPhoneMenuCtrl.json');
+  var voice = 'Tom';
 
   function getBasePhoneMenuWithHeader() {
     var menu = AutoAttendantCeMenuModelService.newCeMenu();
@@ -21,25 +20,35 @@ describe('Controller: AASayMessageCtrl', function () {
     aaUiModel[schedule]['entries'][index] = menu;
     var headerEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
     headerEntry.setType("MENU_OPTION_ANNOUNCEMENT");
+    headerEntry.setVoice(voice);
     var headerSayAction = AutoAttendantCeMenuModelService.newCeActionEntry('say', '');
+    headerSayAction.setVoice(voice);
     headerEntry.addAction(headerSayAction);
     aaUiModel[schedule]['entries'][index]['headers'].push(headerEntry);
     return menu;
   }
 
-  beforeEach(module('uc.autoattendant'));
-  beforeEach(module('Huron'));
+  function getSubmenuWithHeader() {
+    var menu = AutoAttendantCeMenuModelService.newCeMenu();
+    menu.type = 'MENU_OPTION';
+    var headerEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
+    headerEntry.setType("MENU_OPTION_ANNOUNCEMENT");
+    var headerSayAction = AutoAttendantCeMenuModelService.newCeActionEntry('say', '');
+    headerSayAction.setVoice(voice);
+    headerEntry.addAction(headerSayAction);
+    menu['headers'].push(headerEntry);
+    return menu;
+  }
 
-  beforeEach(inject(function ($controller, _$translate_, _$rootScope_, _AAUiModelService_, _AutoAttendantCeService_, _AutoAttendantCeInfoModelService_, _AutoAttendantCeMenuModelService_, _AALanguageService_) {
+  beforeEach(angular.mock.module('uc.autoattendant'));
+  beforeEach(angular.mock.module('Huron'));
+  beforeEach(angular.mock.module('Sunlight'));
+
+  beforeEach(inject(function (_$rootScope_, _AAUiModelService_, _AutoAttendantCeMenuModelService_) {
     $rootScope = _$rootScope_;
     $scope = $rootScope;
-    $translate = _$translate_;
-
     AAUiModelService = _AAUiModelService_;
-    AutoAttendantCeService = _AutoAttendantCeService_;
-    AutoAttendantCeInfoModelService = _AutoAttendantCeInfoModelService_;
     AutoAttendantCeMenuModelService = _AutoAttendantCeMenuModelService_;
-    AALanguageService = _AALanguageService_;
 
     spyOn(AAUiModelService, 'getUiModel').and.returnValue(aaUiModel);
 
@@ -52,7 +61,7 @@ describe('Controller: AASayMessageCtrl', function () {
   }));
 
   describe('create say action', function () {
-    beforeEach(inject(function ($controller, _$rootScope_) {
+    beforeEach(inject(function ($controller) {
       $scope = $rootScope;
       controller = $controller('AASayMessageCtrl', {
         $scope: $scope
@@ -119,11 +128,13 @@ describe('Controller: AASayMessageCtrl', function () {
 
   describe('create say action as menu header for phone menu', function () {
 
-    beforeEach(inject(function ($controller, _$rootScope_) {
+    beforeEach(inject(function ($controller) {
       $scope = $rootScope;
       $scope.isMenuHeader = true;
+      $scope.menuId = 'menu0';
 
       // setup the options menu
+      AutoAttendantCeMenuModelService.clearCeMenuMap();
       var menu = AutoAttendantCeMenuModelService.newCeMenu();
       menu.type = 'MENU_OPTION';
       aaUiModel[schedule]['entries'][index] = menu;
@@ -164,11 +175,13 @@ describe('Controller: AASayMessageCtrl', function () {
   });
 
   describe('read back say action as menu header for phone menu', function () {
-    beforeEach(inject(function ($controller, _$rootScope_) {
+    beforeEach(inject(function ($controller) {
       $scope = $rootScope;
       $scope.isMenuHeader = true;
+      $scope.menuId = 'menu0';
 
       // setup the options menu
+      AutoAttendantCeMenuModelService.clearCeMenuMap();
       var menu = getBasePhoneMenuWithHeader();
       var keyEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
       keyEntry.type = "MENU_OPTION";
@@ -191,6 +204,7 @@ describe('Controller: AASayMessageCtrl', function () {
 
         expect(controller.actionEntry).toEqual(aaUiModel[schedule]['entries'][index]['headers'][0]['actions'][0]);
       });
+
     });
 
     describe('saveUiModel', function () {
@@ -210,12 +224,14 @@ describe('Controller: AASayMessageCtrl', function () {
   });
 
   describe('create say action as menu key for phone menu', function () {
-    beforeEach(inject(function ($controller, _$rootScope_) {
+    beforeEach(inject(function ($controller) {
       $scope = $rootScope;
       $scope.menuKeyIndex = keyIndex;
+      $scope.menuId = 'menu0';
 
       // setup the options menu
-      var menu = getBasePhoneMenuWithHeader();
+      AutoAttendantCeMenuModelService.clearCeMenuMap();
+      getBasePhoneMenuWithHeader();
       controller = $controller('AASayMessageCtrl', {
         $scope: $scope
       });
@@ -232,12 +248,130 @@ describe('Controller: AASayMessageCtrl', function () {
     });
   });
 
+  describe('Submenu header message', function () {
+    beforeEach(inject(function ($controller) {
+      $scope = $rootScope;
+      $scope.menuKeyIndex = undefined;
+      $scope.menuId = 'menu1';
+
+      // Create first action entry in submenu
+      var keyEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
+      keyEntry.type = "MENU_OPTION";
+      keyEntry.key = '0';
+      var emptyAction = AutoAttendantCeMenuModelService.newCeActionEntry();
+      keyEntry.addAction(emptyAction);
+
+      // Create and init submenu
+      AutoAttendantCeMenuModelService.clearCeMenuMap();
+      var menu = getBasePhoneMenuWithHeader();
+      var submenu = AutoAttendantCeMenuModelService.newCeMenu();
+      submenu.attempts = 4;
+      submenu.type = 'MENU_OPTION';
+      submenu.entries.push(keyEntry);
+      submenu.key = '0';
+
+      // Init main menu
+      menu.entries[index] = submenu;
+
+      controller = $controller('AASayMessageCtrl', {
+        $scope: $scope
+      });
+      $scope.$apply();
+
+      spyOn(controller, 'updateVoiceOption');
+    }));
+
+    describe('activate', function () {
+      it('should initialize say action in headers of new submenu with main menu voice', function () {
+        var submenu = AutoAttendantCeMenuModelService.getCeMenu($scope.menuId);
+        expect(submenu.headers[0].actions[0].name).toBe('say');
+        expect(submenu.headers[0].actions[0].getVoice()).toBe(voice);
+        expect(submenu.headers[0].getVoice()).toBe(voice);
+      });
+    });
+
+    describe('saveUiModel', function () {
+      it('should save header message into submenu', function () {
+        expect(controller).toBeDefined();
+        expect(controller.messageInput).not.toBeTruthy();
+
+        var message = "This is a test.";
+        controller.messageInput = message;
+        controller.saveUiModel();
+
+        var submenu = AutoAttendantCeMenuModelService.getCeMenu($scope.menuId);
+        expect(controller).toBeDefined();
+        expect(controller.messageInput).toEqual(message);
+        expect(submenu['headers'][0]['actions'].length).toEqual(1);
+        expect(submenu['headers'][0]['actions'][0].name).toEqual('say');
+        expect(submenu['headers'][0]['actions'][0].value).toEqual(message);
+        expect(controller.updateVoiceOption).not.toHaveBeenCalled();
+      });
+    });
+  });
+
+  describe('Main menu header message', function () {
+    beforeEach(inject(function ($controller) {
+      $scope = $rootScope;
+      $scope.menuKeyIndex = undefined;
+      $scope.isMenuHeader = true;
+      $scope.menuId = 'menu0';
+
+      // Create first action entry in submenu
+      var keyEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
+      keyEntry.type = "MENU_OPTION";
+      keyEntry.key = '0';
+      var sayAction = AutoAttendantCeMenuModelService.newCeActionEntry('say', '');
+      keyEntry.addAction(sayAction);
+
+      // Create and init submenu
+      AutoAttendantCeMenuModelService.clearCeMenuMap();
+      var menu = getBasePhoneMenuWithHeader();
+      var submenu = getSubmenuWithHeader();
+      submenu.attempts = 4;
+      submenu.entries.push(keyEntry);
+      submenu.key = '0';
+
+      // Init main menu
+      menu.entries[index] = submenu;
+
+      controller = $controller('AASayMessageCtrl', {
+        $scope: $scope
+      });
+      $scope.$apply();
+
+      spyOn(controller, 'updateVoiceOption').and.callThrough();
+    }));
+
+    describe('updateVoiceOption', function () {
+      it('should copy voice and lang from main menu into submenu(s) if submenu has say action', function () {
+        expect(controller).toBeDefined();
+        expect(controller.messageInput).not.toBeTruthy();
+
+        var message = "This is a test.";
+        controller.messageInput = message;
+        controller.saveUiModel();
+
+        expect(controller.messageInput).toEqual(message);
+        expect(controller.updateVoiceOption).toHaveBeenCalled();
+        var submenu = AutoAttendantCeMenuModelService.getCeMenu('menu1');
+        expect(submenu['headers'][0]['actions'].length).toEqual(1);
+        expect(submenu['headers'][0]['actions'][0].name).toEqual('say');
+        expect(submenu['headers'][0]['actions'][0].value).toEqual('');
+        expect(submenu['headers'][0]['actions'][0].voice).toEqual(voice);
+        expect(submenu['headers'][0].voice).toEqual(voice);
+      });
+    });
+  });
+
   describe('edit say action as menu key for phone menu', function () {
-    beforeEach(inject(function ($controller, _$rootScope_) {
+    beforeEach(inject(function ($controller) {
       $scope = $rootScope;
       $scope.menuKeyIndex = keyIndex;
+      $scope.menuId = 'menu0';
 
       // setup the options menu
+      AutoAttendantCeMenuModelService.clearCeMenuMap();
       var menu = getBasePhoneMenuWithHeader();
       var keyEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
       keyEntry.type = "MENU_OPTION";
@@ -248,6 +382,8 @@ describe('Controller: AASayMessageCtrl', function () {
         $scope: $scope
       });
       $scope.$apply();
+
+      spyOn(controller, 'updateVoiceOption');
     }));
 
     describe('saveUiModel', function () {
@@ -265,16 +401,19 @@ describe('Controller: AASayMessageCtrl', function () {
         expect(aaUiModel[schedule]['entries'][index]['entries'][keyIndex]['actions'].length).toEqual(2);
         expect(aaUiModel[schedule]['entries'][index]['entries'][keyIndex]['actions'][0].name).toEqual('say');
         expect(aaUiModel[schedule]['entries'][index]['entries'][keyIndex]['actions'][0].value).toEqual(message);
+        expect(controller.updateVoiceOption).not.toHaveBeenCalled();
       });
     });
   });
 
   describe('read back say action as menu key for phone menu', function () {
-    beforeEach(inject(function ($controller, _$rootScope_) {
+    beforeEach(inject(function ($controller) {
       $scope = $rootScope;
       $scope.menuKeyIndex = keyIndex;
+      $scope.menuId = 'menu0';
 
       // setup the phone menu
+      AutoAttendantCeMenuModelService.clearCeMenuMap();
       var menu = getBasePhoneMenuWithHeader();
       var keyEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
       keyEntry.type = "MENU_OPTION";

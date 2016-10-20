@@ -8,7 +8,17 @@ describe('Self Registration Activation Page', function () {
 
   afterEach(function () {
     browser.ignoreSynchronization = true;
-    utils.dumpConsoleErrors();
+  });
+
+  var token;
+
+  // TODO a random admin's bearer token can delete consumer users?
+  it('should get a bearer token for deleting users', function (done) {
+    helper.getBearerToken('partner-admin')
+      .then(function (bearerToken) {
+        token = bearerToken;
+        done();
+      });
   });
 
   describe('ios', function () {
@@ -60,7 +70,7 @@ describe('Self Registration Activation Page', function () {
     });
 
     it('should clean up ios data', function () {
-      deleteUtils.deleteUser(iosData.body.email);
+      deleteUtils.deleteUser(iosData.body.email, token);
     });
   });
 
@@ -85,7 +95,7 @@ describe('Self Registration Activation Page', function () {
     });
 
     it('should clean up', function () {
-      deleteUtils.deleteUser(androidData.body.email);
+      deleteUtils.deleteUser(androidData.body.email, token);
     });
   });
 });

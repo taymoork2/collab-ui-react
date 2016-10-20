@@ -1,0 +1,37 @@
+[{
+  "licenses": [{
+    "licenseId": "SD_e32425a1-2674-4d98-9e56",
+    "offerName": "SD",
+    "licenseType": "SHARED_DEVICES",
+    "features": ["spark-room-system"],
+    "volume": 3,
+    "status": "ACTIVE",
+    "usage": 0
+  }, {
+    "licenseId": "CO_3cd433a5-c140-4ee5-bfb8",
+    "offerName": "CO",
+    "licenseType": "COMMUNICATION",
+    "features": ["ciscouc"],
+    "volume": 5,
+    "status": "ACTIVE",
+    "usage": 2
+  }, {
+    "licenseId": "CF_76f44ca5-57b5-4460-920b",
+    "offerName": "CF",
+    "licenseType": "CONFERENCING",
+    "features": ["squared-syncup"],
+    "volume": 3,
+    "isTrial": true,
+    "trialId": "88059d26-fd0d-4d72-b129",
+    "status": "ACTIVE",
+    "usage": 2
+  }, {
+    "licenseId": "MS_e7c42363-fe44-4b67-acfc",
+    "offerName": "MS",
+    "licenseType": "MESSAGING",
+    "features": ["squared-room-moderation"],
+    "volume": 2,
+    "status": "ACTIVE",
+    "usage": 2
+  }]
+}]

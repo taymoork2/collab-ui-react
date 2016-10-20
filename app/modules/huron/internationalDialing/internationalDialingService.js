@@ -6,7 +6,7 @@
     .factory('InternationalDialing', InternationalDialing);
 
   /* @ngInject */
-  function InternationalDialing(Authinfo, $q, $translate, UserCosRestrictionServiceV2, FeatureToggleService) {
+  function InternationalDialing(Authinfo, UserCosRestrictionServiceV2, FeatureToggleService) {
 
     var disableInternationalDialing;
 
@@ -20,7 +20,7 @@
     return internationalDialing;
 
     function listCosRestrictions(curUserId) {
-      return UserCosRestrictionServiceV2.query({
+      return UserCosRestrictionServiceV2.get({
         customerId: Authinfo.getOrgId(),
         userId: curUserId
       }, angular.bind(this, function (cosRestrictions) {
@@ -53,7 +53,7 @@
     }
 
     function getLicenseCommunicationIsTrial(isOverride) {
-      if (!!isOverride) {
+      if (isOverride) {
         // customer has trial override for international dialing
         disableInternationalDialing = false;
         return disableInternationalDialing;

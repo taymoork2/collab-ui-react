@@ -5,12 +5,14 @@
     .module('Huron')
     .controller('SingleNumberReachInfoCtrl', SingleNumberReachInfoCtrl);
 
-  function SingleNumberReachInfoCtrl($scope, $stateParams, RemoteDestinationService, TelephonyInfoService, Notification, $translate, CountryCodes, $q) {
+  function SingleNumberReachInfoCtrl($scope, $stateParams, RemoteDestinationService, TelephonyInfoService, Notification, $translate, CountryCodes, $q, DialPlanService, Authinfo) {
     var vm = this;
     vm.currentUser = $stateParams.currentUser;
     vm.saveSingleNumberReach = saveSingleNumberReach;
     vm.reset = reset;
     vm.snrInfo = angular.copy(TelephonyInfoService.getTelephonyInfo().snrInfo);
+    vm.customerLocalDialing = false;
+    vm.regionCode = '';
 
     function getCountryInfo(code) {
       var deferred = $q.defer();
@@ -18,7 +20,7 @@
 
       if (angular.isString(code)) {
         code = code.toLowerCase();
-        angular.forEach(CountryCodes, function (value, key) {
+        angular.forEach(CountryCodes, function (value) {
           if (code === value.code) {
             deferred.resolve(value);
             isCountryCodeFound = true;
@@ -33,26 +35,6 @@
 
       return deferred.promise;
     }
-
-    vm.snrFormFields = [{
-      key: 'remoteDest',
-      type: 'countrylist',
-      templateOptions: {
-        placeholder: $translate.instant('singleNumberReachPanel.snrRemoteDestinationNumberPlaceholder'),
-        inputClass: 'col-sm-12',
-        maxLength: '24',
-        required: true,
-        options: [{
-          name: $translate.instant('singleNumberReachPanel.unitedStates'),
-          code: 'us',
-          number: '1'
-        }, {
-          name: $translate.instant('singleNumberReachPanel.austrailia'),
-          code: 'au',
-          number: '61'
-        }]
-      }
-    }];
 
     vm.snrWaitSecondsOptions = [{
       name: '20',
@@ -77,7 +59,34 @@
     }];
     vm.snrLineOption = vm.snrOptions[0];
 
-    init();
+    DialPlanService.getCustomerVoice(Authinfo.getOrgId()).then(function (response) {
+      vm.regionCode = response.regionCode;
+      vm.customerLocalDialing = !!vm.regionCode;
+
+      if (!vm.customerLocalDialing) {
+        vm.snrFormFields = [{
+          key: 'remoteDest',
+          type: 'countrylist',
+          templateOptions: {
+            placeholder: $translate.instant('singleNumberReachPanel.snrRemoteDestinationNumberPlaceholder'),
+            inputClass: 'col-sm-12',
+            maxLength: '24',
+            required: true,
+            options: [{
+              name: $translate.instant('singleNumberReachPanel.unitedStates'),
+              code: 'us',
+              number: '1'
+            }, {
+              name: $translate.instant('singleNumberReachPanel.austrailia'),
+              code: 'au',
+              number: '61'
+            }]
+          }
+        }];
+      }
+
+      init();
+    });
 
     $scope.$on('telephonyInfoUpdated', function () {
       init();
@@ -89,6 +98,11 @@
 
       if (snrInfo.remoteDest) {
         vm.snrInfo.remoteDest = snrInfo.remoteDest;
+      } else if (snrInfo.destination && vm.customerLocalDialing) {
+        vm.snrInfo.remoteDest = {
+          number: snrInfo.destination,
+          phoneNumber: snrInfo.destination
+        };
       } else if (snrInfo.destination) {
         getCountryInfo(phoneUtils.getRegionCodeForNumber(snrInfo.destination))
           .then(function (data) {
@@ -126,7 +140,7 @@
       }
     }
 
-    function reset(form) {
+    function reset() {
       resetForm();
       init();
     }
@@ -154,9 +168,9 @@
       };
 
       return RemoteDestinationService.save({
-          customerId: user.meta.organizationID,
-          userId: user.id
-        }, rdBean,
+        customerId: user.meta.organizationID,
+        userId: user.id
+      }, rdBean,
         function () {
           TelephonyInfoService.updateSnr(vm.snrInfo);
 
@@ -176,10 +190,10 @@
       };
 
       return RemoteDestinationService.delete({
-          customerId: user.meta.organizationID,
-          userId: user.id,
-          remoteDestId: vm.snrInfo.remoteDestinations[0].uuid
-        },
+        customerId: user.meta.organizationID,
+        userId: user.id,
+        remoteDestId: vm.snrInfo.remoteDestinations[0].uuid
+      },
         function () {
           vm.snrInfo.remoteDest.phoneNumber = null;
           vm.snrInfo.remoteDestinations = null;
@@ -206,10 +220,10 @@
       };
 
       return RemoteDestinationService.update({
-          customerId: user.meta.organizationID,
-          userId: user.id,
-          remoteDestId: vm.snrInfo.remoteDestinations[0].uuid
-        }, rdBean,
+        customerId: user.meta.organizationID,
+        userId: user.id,
+        remoteDestId: vm.snrInfo.remoteDestinations[0].uuid
+      }, rdBean,
         function () {
           vm.snrInfo.answerTooLateTimer = answerTooLateTimer;
           TelephonyInfoService.updateSnr(vm.snrInfo);
@@ -236,14 +250,14 @@
         }
       } else if (vm.snrInfo.singleNumberReachEnabled) {
         createRemoteDestinationInfo(vm.currentUser, vm.snrInfo.remoteDest, vm.snrWaitSeconds.value)
-          .then(function (response) {
+          .then(function () {
             TelephonyInfoService.getRemoteDestinationInfo(vm.currentUser.id);
             resetForm();
           });
       } else {
         // Nothing to delete, notify success
         resetForm();
-        Notification.notify([$translate.instant('singleNumberReachPanel.removeSuccess')], 'success');
+        Notification.success('singleNumberReachPanel.removeSuccess');
       }
     }
 

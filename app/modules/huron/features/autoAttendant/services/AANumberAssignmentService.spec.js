@@ -20,67 +20,58 @@ describe('Service: AANumberAssignmentService', function () {
     "uuid": "29d70b54-cf0a-4279-ad75-09116eedb7a7"
   }];
 
-  var cmiAAAsignment = {
+  var cmiAAAsignments = {
     "numbers": cmiAAAssignedNumbers,
     "url": "https://cmi.huron-int.com/api/v2/customers/3338d491-d6ca-4786-82ed-cbe9efb02ad2/features/autoattendants/23a42558-6485-4dab-9505-704b6204410c/numbers"
   };
 
-  var cmiAAAsignments = [cmiAAAsignment];
+  var onlyAA = [];
   var onlyCMI = [];
-  var $q;
 
   var successSpy;
   var failureSpy;
 
-  beforeEach(module('uc.autoattendant'));
-  beforeEach(module('Huron'));
+  beforeEach(angular.mock.module('uc.autoattendant'));
+  beforeEach(angular.mock.module('Huron'));
+  beforeEach(angular.mock.module('Sunlight'));
 
-  beforeEach(module(function ($provide) {
+  beforeEach(angular.mock.module(function ($provide) {
     $provide.value("Authinfo", Authinfo);
   }));
 
-  beforeEach(inject(function (_AANumberAssignmentService_, _$httpBackend_, _HuronConfig_, _$q_, _AutoAttendantCeInfoModelService_) {
+  beforeEach(inject(function (_AANumberAssignmentService_, _$httpBackend_, _HuronConfig_, _AutoAttendantCeInfoModelService_) {
     AANumberAssignmentService = _AANumberAssignmentService_;
     AutoAttendantCeInfoModelService = _AutoAttendantCeInfoModelService_;
     $httpBackend = _$httpBackend_;
     HuronConfig = _HuronConfig_;
     url = HuronConfig.getCmiV2Url() + '/customers/' + Authinfo.getOrgId() + '/features/autoattendants';
     cmiAAAsignmentURL = url + '/' + '2' + '/numbers';
-    $q = _$q_;
 
     successSpy = jasmine.createSpy('success');
     failureSpy = jasmine.createSpy('failure');
 
     $httpBackend.whenGET(cmiAAAsignmentURL).respond(cmiAAAsignments);
 
+    // for an external number query, return the number formatted with a +
+    var externalNumberQueryUri = /\/externalnumberpools\?directorynumber=&order=pattern&pattern=(.+)/;
+    $httpBackend.whenGET(externalNumberQueryUri)
+      .respond(function (method, url) {
+
+        var pattern = decodeURI(url).match(new RegExp(externalNumberQueryUri))[1];
+
+        var response = [{
+          'pattern': '+' + pattern.replace(/\D/g, ''),
+          'uuid': pattern.replace(/\D/g, '') + '-id'
+        }];
+
+        return [200, response];
+      });
+
   }));
 
   afterEach(function () {
     $httpBackend.verifyNoOutstandingExpectation();
     $httpBackend.verifyNoOutstandingRequest();
-  });
-
-  describe('formatAAE164ResourcesBasedOnList', function () {
-    it('should correctly format resources based on passed-in list', function () {
-
-      var resource = AutoAttendantCeInfoModelService.newResource();
-      resource.setType("externalNumber");
-      resource.setNumber("14084744458");
-      var resources = [];
-      resources.push(resource);
-
-      var externalNumberList = [];
-      externalNumberList.push({
-        id: "268CD1E7-432E-60E2-4342-1DAF1B52C856",
-        number: "+14084744458"
-      });
-
-      var formattedResources = AANumberAssignmentService.formatAAE164ResourcesBasedOnList(resources, externalNumberList);
-
-      expect(angular.equals(formattedResources[0].id, '14084744458')).toEqual(true);
-      expect(angular.equals(formattedResources[0].number, '+14084744458')).toEqual(true);
-    });
-
   });
 
   describe('formatAAE164ResourcesBasedOnCMI', function () {
@@ -92,7 +83,7 @@ describe('Service: AANumberAssignmentService', function () {
       var resources = [];
       resources.push(resource);
 
-      $httpBackend.whenGET(HuronConfig.getCmiUrl() + '/voice/customers/1/externalnumberpools?order=pattern').respond(200, [{
+      $httpBackend.whenGET(HuronConfig.getCmiUrl() + '/voice/customers/1/externalnumberpools?directorynumber=&order=pattern').respond(200, [{
         'pattern': '+14084744458',
         'uuid': '9999999991-id'
       }, {
@@ -108,6 +99,7 @@ describe('Service: AANumberAssignmentService', function () {
       $httpBackend.flush();
 
       var formattedResources = successSpy.calls.mostRecent().args[0];
+
       expect(angular.equals(formattedResources[0].id, '14084744458')).toEqual(true);
       expect(angular.equals(formattedResources[0].number, '+14084744458')).toEqual(true);
       expect(failureSpy).not.toHaveBeenCalled();
@@ -120,11 +112,11 @@ describe('Service: AANumberAssignmentService', function () {
 
       var resource = AutoAttendantCeInfoModelService.newResource();
       resource.setType("externalNumber");
-      resource.setId("+14084749999");
+      resource.setId("14084749999");
       var resources = [];
       resources.push(resource);
 
-      $httpBackend.whenGET(HuronConfig.getCmiUrl() + '/voice/customers/1/externalnumberpools?order=pattern').respond(200, [{
+      $httpBackend.whenGET(HuronConfig.getCmiUrl() + '/voice/customers/1/externalnumberpools?directorynumber=&order=pattern').respond(200, [{
         'pattern': '+14084744458',
         'uuid': '9999999991-id'
       }, {
@@ -140,7 +132,7 @@ describe('Service: AANumberAssignmentService', function () {
       $httpBackend.flush();
 
       var formattedResources = successSpy.calls.mostRecent().args[0];
-      expect(angular.equals(formattedResources[0].id, '+14084749999')).toEqual(true);
+      expect(angular.equals(formattedResources[0].id, '14084749999')).toEqual(true);
       expect(angular.equals(formattedResources[0].number, '+14084749999')).toEqual(true);
       expect(failureSpy).not.toHaveBeenCalled();
     });
@@ -228,7 +220,7 @@ describe('Service: AANumberAssignmentService', function () {
       var resources = [];
       resources.push(resource);
 
-      AANumberAssignmentService.checkAANumberAssignments(Authinfo.getOrgId(), '2', resources, cmiAAAsignments, onlyCMI).then(
+      AANumberAssignmentService.checkAANumberAssignments(Authinfo.getOrgId(), '2', resources, onlyAA, onlyCMI).then(
         successSpy,
         failureSpy
       );
@@ -251,7 +243,7 @@ describe('Service: AANumberAssignmentService', function () {
 
       $httpBackend.whenGET(HuronConfig.getCmiV2Url() + '/customers/999/features/autoattendants/000/numbers').respond(404);
 
-      AANumberAssignmentService.checkAANumberAssignments('999', '000', resources, cmiAAAsignments, onlyCMI).then(
+      AANumberAssignmentService.checkAANumberAssignments('999', '000', resources, onlyAA, onlyCMI).then(
         successSpy,
         failureSpy
       );
@@ -336,7 +328,7 @@ describe('Service: AANumberAssignmentService', function () {
       addResource(resources, "3333333333");
 
       // CMI assignment will fail when there is any bad number in the list
-      $httpBackend.when('PUT', cmiAAAsignmentURL).respond(function (method, url, data, headers) {
+      $httpBackend.when('PUT', cmiAAAsignmentURL).respond(function (method, url, data) {
         if (JSON.stringify(data).indexOf("bad") > -1) {
           return [500, 'bad'];
         } else {

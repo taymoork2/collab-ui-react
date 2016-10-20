@@ -1,11 +1,11 @@
-<div class="helpdesk-app-container">
+<div id="helpdeskPageTop" class="helpdesk-app-container">
   <cs-header navstyle="" headertitle="{{'helpdesk.navHeaderTitle' | translate}}" icon="icon-cisco-logo">
     <cs-header-left>
     </cs-header-left>
     <cs-header-right>
       <div cs-dropdown class="sparkstatus-info dropdown">
         <button cs-dropdown-toggle class="btn-sparkstatus dropdown-toggle" tabindex="0">
-          <span class="fa fa-circle" ng-class="{unknown:  'helpdesk-grey', error: 'helpdesk-error', major_outage: 'helpdesk-error', warning: 'helpdesk-warning', partial_outage: 'helpdesk-yellow', operational: 'helpdesk-ok', degraded_performance:'helpdesk-yellow'}[helpdeskHeaderCtrl.overallSparkStatus]">
+          <span class="icon icon-circle" ng-class="{unknown:  'helpdesk-grey', error: 'helpdesk-error', major_outage: 'helpdesk-error', warning: 'helpdesk-warning', partial_outage: 'helpdesk-yellow', operational: 'helpdesk-ok', degraded_performance:'helpdesk-yellow'}[helpdeskHeaderCtrl.overallSparkStatus]">
           </span>
         </button>
         <div cs-dropdown-menu class="helpdesk-spark-status-dropdown-menu" role="menu">
@@ -16,7 +16,7 @@
           <div class="content">
             <div ng-repeat="health in helpdeskHeaderCtrl.healthMetrics">
               <div ng-href="{{helpdeskHeaderCtrl.statusPageUrl}}" target="_blank">
-                <span class="fa fa-circle"  ng-class="{unknown:  'helpdesk-grey', error: 'helpdesk-error', major_outage: 'helpdesk-error', warning: 'helpdesk-warning', partial_outage: 'helpdesk-yellow', operational: 'helpdesk-ok', degraded_performance:'helpdesk-yellow'}[health.status]"></span>&nbsp;&nbsp;
+                <span class="icon icon-circle"  ng-class="{unknown:  'helpdesk-grey', error: 'helpdesk-error', major_outage: 'helpdesk-error', warning: 'helpdesk-warning', partial_outage: 'helpdesk-yellow', operational: 'helpdesk-ok', degraded_performance:'helpdesk-yellow'}[health.status]"></span>&nbsp;&nbsp;
                 {{health.name}}
               </div>
             </div>

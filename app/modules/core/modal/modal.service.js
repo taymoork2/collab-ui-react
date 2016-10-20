@@ -19,6 +19,7 @@
         templateUrl: 'modules/core/modal/modal.tpl.html',
         controller: 'ModalCtrl',
         controllerAs: 'modal',
+        type: 'dialog',
         resolve: {
           title: function () {
             return options.title || $translate.instant('common.modal');
@@ -27,12 +28,12 @@
             return options.message || '';
           },
           close: function () {
-            return options.close || $translate.instant('common.ok');
+            return !_.isUndefined(options.close) ? options.close : $translate.instant('common.ok');
           },
           dismiss: function () {
-            return options.dismiss || $translate.instant('common.cancel');
+            return !_.isUndefined(options.dismiss) ? options.dismiss : $translate.instant('common.cancel');
           },
-          type: function () {
+          btnType: function () {
             return 'btn--' + (options.type || 'primary');
           }
         }

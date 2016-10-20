@@ -6,7 +6,7 @@
     .controller('AARouteToUserCtrl', AARouteToUserCtrl);
 
   /* @ngInject */
-  function AARouteToUserCtrl($scope, $translate, AAUiModelService, AutoAttendantCeMenuModelService, AAModelService, $q, Authinfo, Userservice, UserListService, UserServiceVoice, AACommonService, LineService) {
+  function AARouteToUserCtrl($scope, $translate, AAUiModelService, AutoAttendantCeMenuModelService, $q, Authinfo, Userservice, UserListService, UserServiceVoice, AACommonService, LineResource) {
 
     var vm = this;
 
@@ -21,13 +21,12 @@
       order: 'ascending',
       maxCount: 10,
       startAt: 0,
-      minOffered: 5 // try to offer at least this many minimum matches (may require multiple GETs if lots of users don't have extensions or voicemail)
+      fullLoad: 10 // how many to query, a full listing
     };
 
     vm.selectPlaceholder = $translate.instant('autoAttendant.selectPlaceHolder');
     vm.inputPlaceHolder = $translate.instant('autoAttendant.inputPlaceHolder');
 
-    vm.aaModel = {};
     vm.uiMenu = {};
     vm.menuEntry = {
       entries: []
@@ -73,15 +72,17 @@
     // format name with extension
     function formatName(user, extension) {
       var name;
-      if (angular.isDefined(user.displayName))
+      if (angular.isDefined(user.displayName)) {
         name = user.displayName;
-      else
+      } else {
         name = user.userName;
+      }
 
-      if (angular.isDefined(extension) && extension.length > 0)
+      if (angular.isDefined(extension) && extension.length > 0) {
         return name + ' (' + extension + ')';
-      else
+      } else {
         return name;
+      }
     }
 
     // get user by uuid
@@ -111,7 +112,7 @@
               return formatName(userObj, '');
             }
           },
-          function (error) {
+          function () {
             return formatName(userObj, '');
           }
         );
@@ -126,11 +127,12 @@
       }).$promise.then(
         function (response) {
           // success
-          if (angular.isDefined(response.primaryDirectoryNumber) && response.primaryDirectoryNumber != null)
+          if (angular.isDefined(response.primaryDirectoryNumber) && response.primaryDirectoryNumber != null) {
             return response.primaryDirectoryNumber.pattern;
-          else
-          // the user actually has no extension - represented as null in the json, which works here as well
+          } else {
+            // the user actually has no extension - represented as null in the json, which works here as well
             return null;
+          }
         },
         function (response) {
           // failure
@@ -141,7 +143,7 @@
 
     // get extension's voicemail profile
     function getVoicemailProfile(pattern) {
-      return LineService.query({
+      return LineResource.query({
         customerId: Authinfo.getOrgId(),
         pattern: pattern
       }).$promise.then(
@@ -149,7 +151,7 @@
           // success
           return response[0].voiceMailProfile;
         },
-        function (response) {
+        function () {
           // failure
           return null;
         }
@@ -177,29 +179,35 @@
 
       var defer = $q.defer();
 
-      UserListService.listUsers(startat, vm.sort.maxCount, vm.sort.by, vm.sort.order, function (data, status) {
+      UserListService.listUsers(startat, vm.sort.maxCount, vm.sort.by, vm.sort.order, function (data) {
+
         if (data.success) {
           var userInfoPromises = [];
           _.each(data.Resources, function (aUser) {
+
             userInfoPromises.push(getUserExtension(aUser.id).then(function (extension) {
               // only add to the user list if they have a primary extension
               if (extension) {
                 // and for voicemail, only add to the list if they have a voicemail profile for the extension
-                if (angular.isDefined($scope.voicemail) && $scope.voicemail) {
-                  getVoicemailProfile(extension).then(function (voicemailProfile) {
+                if ($scope.voicemail) {
+                  return getVoicemailProfile(extension).then(function (voicemailProfile) {
                     if (voicemailProfile) {
-                      vm.users.push({
-                        description: formatName(aUser, extension),
-                        id: aUser.id
-                      });
+                      if (_.size(vm.users) < vm.sort.fullLoad) {
+                        vm.users.push({
+                          description: formatName(aUser, extension),
+                          id: aUser.id
+                        });
+                      }
                     }
                   });
                 } else {
                   // not voicemail, just add the user with extension
-                  vm.users.push({
-                    description: formatName(aUser, extension),
-                    id: aUser.id
-                  });
+                  if (_.size(vm.users) < vm.sort.fullLoad) {
+                    vm.users.push({
+                      description: formatName(aUser, extension),
+                      id: aUser.id
+                    });
+                  }
                 }
               }
             }, function (error) {
@@ -218,10 +226,14 @@
             // try to offer a minimum amount of matches.
             // if enough users didn't make it past sanity checks,
             // and we're still getting results back, then get some more.
-            if (_.size(vm.users) < vm.sort.minOffered && _.size(data.Resources) && !abortSearchPromise.promise.$$state.status) {
-              defer.resolve(getUsers(searchStr, startat + vm.sort.maxCount));
+            if (_.size(vm.users) < vm.sort.fullLoad && _.size(data.Resources) && !abortSearchPromise.promise.$$state.status) {
+
+              startat += vm.sort.maxCount;
+              defer.resolve(getUsers(searchStr, startat));
+
             } else {
               // otherwise we're done
+              vm.users.sort(AACommonService.sortByProperty('description'));
               defer.resolve(data.Resources);
             }
           });
@@ -236,15 +248,13 @@
     }
 
     function activate() {
-      vm.aaModel = AAModelService.getAAModel();
-      var ui = AAUiModelService.getUiModel();
 
-      vm.uiMenu = ui[$scope.schedule];
-      vm.menuEntry = vm.uiMenu.entries[$scope.index];
       var routeToUserOrVM = angular.isDefined($scope.voicemail) ? routeToVoiceMail : routeToUser;
 
       if ($scope.fromRouteCall) {
-
+        var ui = AAUiModelService.getUiModel();
+        vm.uiMenu = ui[$scope.schedule];
+        vm.menuEntry = vm.uiMenu.entries[$scope.index];
         fromRouteCall = true;
 
         if (vm.menuEntry.actions.length === 0) {
@@ -257,9 +267,8 @@
             vm.menuEntry.actions[0].setValue('');
           }
         }
-
       } else {
-
+        vm.menuEntry = AutoAttendantCeMenuModelService.getCeMenu($scope.menuId);
         if ($scope.keyIndex < vm.menuEntry.entries.length) {
           vm.menuKeyEntry = vm.menuEntry.entries[$scope.keyIndex];
         } else {
@@ -267,9 +276,7 @@
           var action = AutoAttendantCeMenuModelService.newCeActionEntry(routeToUserOrVM, '');
           vm.menuKeyEntry.addAction(action);
         }
-
       }
-
       populateUiModel();
 
     }

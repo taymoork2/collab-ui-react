@@ -7,15 +7,20 @@ namespace domainManagement {
     private _loadTime;
 
     /* @ngInject */
-    constructor(private $state, private $previousState, private DomainManagementService, $translate, private LogMetricsService) {
-      this._domain = $state.params.domain;
-      this._loggedOnUser = $state.params.loggedOnUser;
+    constructor(
+      private $previousState,
+      private $state,
+      private DomainManagementService,
+      private LogMetricsService,
+    ) {
+      this._domain = this.$state.params.domain;
+      this._loggedOnUser = this.$state.params.loggedOnUser;
       this._loadTime = moment();
 
       if (this._domain && this._domain.text && !this._domain.token) {
         DomainManagementService.getToken(this._domain.text).then((res) => {
           this._domain.token = res;
-        })
+        });
       }
     }
 
@@ -40,19 +45,20 @@ namespace domainManagement {
     }
 
     get operationAllowed() {
-      if (!this.domain.token)
+      if (!this.domain.token) {
         return false;
+      }
 
       return !this._error;
     }
 
     public verify() {
       let start = moment();
-      this.DomainManagementService.verifyDomain(this._domain.text).then(res => {
+      this.DomainManagementService.verifyDomain(this._domain.text).then(() => {
         this.recordMetrics({
           msg: 'ok',
           startLog: start,
-          data: {domain: this._domain.text, action: 'verify'}
+          data: { domain: this._domain.text, action: 'verify' },
         });
         this.$previousState.go();
       }, err => {
@@ -60,7 +66,7 @@ namespace domainManagement {
           msg: 'error',
           status: 500,
           startLog: start,
-          data: {domain: this._domain.text, error: err, action: 'verify'}
+          data: { domain: this._domain.text, error: err, action: 'verify' },
         });
         this._error = err;
       });
@@ -70,7 +76,7 @@ namespace domainManagement {
       this.recordMetrics({
         msg: 'cancel',
         status: 100,
-        data: {domain: this._domain.text, action: 'cancel'}
+        data: { domain: this._domain.text, action: 'cancel' },
       });
       this.$previousState.go();
     }
@@ -79,11 +85,11 @@ namespace domainManagement {
       this.recordMetrics({
         msg: 'read more',
         startLog: this._loadTime,
-        data: {domain: this._domain.text, action: 'manual'}
+        data: { domain: this._domain.text, action: 'manual' },
       });
     }
 
-    recordMetrics({msg, status = 200, startLog = moment(), data}) {
+    public recordMetrics({ msg, status = 200, startLog = moment(), data }) {
       this.LogMetricsService.logMetrics(
         'domainManage verify ' + msg,
         this.LogMetricsService.eventType.domainManageVerify,

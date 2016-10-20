@@ -2,12 +2,13 @@
   "customerOrgId": "5632f806-ad09-4a26-a0c0-a49a13f38873",
   "startDate": "2015-03-10T00:00:00.000Z",
   "trialPeriod": 180,
+  "dealId": "deal42",
   "offers": [{
-    "id": "SQUAREDUC",
+    "id": "CALL",
     "licenseCount": 100,
     "usageCount": 0
   }, {
-    "id": "COLLAB",
+    "id": "MESSAGE",
     "licenseCount": 100,
     "usageCount": 0
   }],
@@ -47,6 +48,18 @@
       "ciscouc"
     ],
     "volume": 100,
+    "isTrial": true,
+    "status": "ACTIVE"
+  }, {
+    "licenseId": "CDC_da652e7d-cd34-4545-8f23-936b74359afd",
+    "offerName": "CDC",
+    "licenseType": "CARE",
+    "features": [
+      "webex-squared",
+      "squared-call-initiation",
+      "cloud-contact-center"
+    ],
+    "volume": 30,
     "isTrial": true,
     "status": "ACTIVE"
   }],

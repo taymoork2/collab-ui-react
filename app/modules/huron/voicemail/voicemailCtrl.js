@@ -6,7 +6,7 @@
     .controller('VoicemailInfoCtrl', VoicemailInfoCtrl);
 
   /* @ngInject */
-  function VoicemailInfoCtrl($scope, $stateParams, $translate, $modal, $q, UserServiceCommon, TelephonyInfoService, Notification, LineSettings, DirectoryNumber) {
+  function VoicemailInfoCtrl($scope, $stateParams, $translate, $modal, UserServiceCommon, TelephonyInfoService, Notification, DirectoryNumber) {
     var vm = this;
     vm.currentUser = $stateParams.currentUser;
     vm.saveVoicemail = saveVoicemail;
@@ -17,7 +17,7 @@
     init();
 
     $scope.$on('telephonyInfoUpdated', function () {
-      vm.telephonyInfo = TelephonyInfoService.getTelephonyInfo();
+      init();
     });
 
     function init() {
@@ -50,8 +50,6 @@
     }
 
     function saveVoicemail() {
-      var promise;
-      var promises = [];
       var voicemailPayload = {
         'services': [],
         'voicemail': {}
@@ -74,7 +72,8 @@
       } else {
         $modal.open({
           templateUrl: 'modules/huron/voicemail/disableConfirmation.tpl.html',
-          scope: $scope
+          scope: $scope,
+          type: 'dialog'
         }).result.then(function () {
           for (var j = 0; j < vm.telephonyInfo.services.length; j++) {
             if (vm.telephonyInfo.services[j] === 'VOICEMAIL') {
@@ -101,9 +100,9 @@
       }
 
       UserServiceCommon.update({
-          customerId: vm.currentUser.meta.organizationID,
-          userId: vm.currentUser.id
-        }, voicemailPayload).$promise
+        customerId: vm.currentUser.meta.organizationID,
+        userId: vm.currentUser.id
+      }, voicemailPayload).$promise
         .then(function () {
           resetForm();
           result.msg = $translate.instant('voicemailPanel.success');

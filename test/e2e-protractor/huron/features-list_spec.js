@@ -1,13 +1,10 @@
 /**
  * Created by sjalipar on 11/2/15.
  */
+
 'use strict';
 
 xdescribe('Admin should be able to', function () {
-
-  afterEach(function () {
-    utils.dumpConsoleErrors();
-  });
 
   it('login as an account admin and goto Huron Features Page', function () {
     login.login('huron-int1', '#/hurondetails/features');

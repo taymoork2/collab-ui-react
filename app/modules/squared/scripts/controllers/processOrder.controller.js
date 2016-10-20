@@ -1,28 +1,31 @@
 (function () {
   'use strict';
 
-  /**
-   * @ngdoc function
-   * @name wx2AdminWebClientApp.controller:ProcessorderCtrl
-   * @description
-   * # ProcessorderCtrl
-   * Controller of the wx2AdminWebClientApp
-   */
-  angular.module('Squared')
+  angular
+    .module('Squared')
     .controller('ProcessorderCtrl', ProcessorderCtrl);
 
   /* @ngInject */
-  function ProcessorderCtrl($scope, $location, $window, Orgservice) {
-    $scope.enc = $location.search().enc;
-    $scope.isProcessing = true;
-    //TODO: redo #processOrderErrorModal modal dialogue conforming to angularjs conventions
-    Orgservice.createOrg($scope.enc, function (data, status) {
-      $scope.isProcessing = false;
-      if (data.success) {
-        $window.location.href = data.redirectUrl;
-      } else {
-        $('#processOrderErrorModal').modal('show');
-      }
-    });
+  function ProcessorderCtrl($location, $translate, Auth, Orgservice, ModalService) {
+    var vm = this;
+    var enc = $location.search().enc;
+
+    vm.isProcessing = true;
+
+    // 'createOrg()' provisions a limited-privilege access token in order to perform this operation,
+    // so we currently use 'logoutAndRedirectTo()' to clear tokens before allowing redirection
+    Orgservice.createOrg(enc)
+      .then(function (data) {
+        vm.isProcessing = false;
+        Auth.logoutAndRedirectTo(data.redirectUrl);
+      })
+      .catch(function () {
+        vm.isProcessing = false;
+        ModalService.open({
+          title: $translate.instant('processOrderPage.info'),
+          message: $translate.instant('processOrderPage.errOrgCreation'),
+          dismiss: false,
+        });
+      });
   }
 })();

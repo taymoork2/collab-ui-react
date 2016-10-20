@@ -5,34 +5,9 @@
     .service('CustomerReportService', CustomerReportService);
 
   /* @ngInject */
-  function CustomerReportService($http, $translate, $q, Config, Authinfo, Notification, Log, chartColors, UrlConfig) {
-    var urlBase = UrlConfig.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/reports/';
-    var detailed = 'detailed';
-    var topn = 'topn';
-    var timechart = 'timeCharts';
-    var activeUserUrl = '/activeUsers';
-    var groupUrl = '/conversations';
-    var oneToOneUrl = '/convOneOnOne';
-    var avgUrl = '/avgConversations';
-    var contentShared = '/contentShared';
-    var contentShareSizes = '/contentShareSizes';
-    var mediaQuality = '/callQuality';
-    var callMetrics = '/callMetrics';
-    var mostActiveUrl = 'useractivity';
-    var registeredEndpoints = 'trend/registeredEndpointsByDeviceType';
-    var customerView = '&isCustomerView=true';
-    var dateFormat = "MMM DD, YYYY";
-    var dayFormat = "MMM DD";
-    var monthFormat = "MMMM";
-    var timezone = "Etc/GMT";
-    var cacheValue = (parseInt(moment.utc().format('H')) >= 8);
-
-    var timeFilter = null;
-
+  function CustomerReportService($translate, $q, chartColors, CommonReportService, ReportConstants) {
     // Promise Tracking
-    var ABORT = 'ABORT';
-    var TIMEOUT = 'TIMEOUT';
-    var activePromse = null;
+    var activePromise = null;
     var mostActivePromise = null;
     var groupCancelPromise = null;
     var oneToOneCancelPromise = null;
@@ -53,93 +28,191 @@
       getDeviceData: getDeviceData
     };
 
-    function getActiveUserData(filter) {
-      // cancel any currently running jobs
-      if (activePromse !== null && angular.isDefined(activePromse)) {
-        activePromse.resolve(ABORT);
-      }
-      activePromse = $q.defer();
+    function getPercentage(numberOne, numberTwo) {
+      return Math.round((numberOne / numberTwo) * ReportConstants.PERCENTAGE_MULTIPLIER);
+    }
 
-      return getService(urlBase + detailed + activeUserUrl + getQuery(filter), activePromse).then(function (response) {
-        if (angular.isDefined(response) && angular.isDefined(response.data) && angular.isDefined(response.data.data) && angular.isArray(response.data.data) && angular.isDefined(response.data.data[0].data)) {
-          return adjustActiveUserData(response.data.data[0].data, filter);
-        } else {
-          return [];
-        }
-      }, function (response) {
-        return returnErrorCheck(response, 'Active user data not returned for customer.', $translate.instant('activeUsers.overallActiveUserGraphError'), []);
-      });
+    function getActiveUserData(filter, linegraph) {
+      // cancel any currently running jobs
+      if (activePromise) {
+        activePromise.resolve(ReportConstants.ABORT);
+      }
+      activePromise = $q.defer();
+
+      var returnData = {
+        graphData: [],
+        isActiveUsers: false
+      };
+
+      if (linegraph) {
+        var lineOptions = CommonReportService.getLineTypeOptions(filter, 'activeUsers');
+        return CommonReportService.getCustomerAltReportByType(lineOptions, activePromise).then(function (response) {
+          var data = _.get(response, 'data.data');
+          if (data) {
+            return adjustActiveLineData(data, filter, returnData);
+          } else {
+            return returnData;
+          }
+        }).catch(function (error) {
+          return CommonReportService.returnErrorCheck(error, 'activeUsers.overallActiveUserGraphError', returnData);
+        });
+
+      } else {
+        var options = CommonReportService.getCustomerOptions(filter, 'activeUsers', CommonReportService.DETAILED, undefined);
+        return CommonReportService.getCustomerReport(options, activePromise).then(function (response) {
+          var data = _.get(response, 'data.data[0].data');
+          if (data) {
+            return adjustActiveUserData(data, filter, returnData);
+          } else {
+            return returnData;
+          }
+        }).catch(function (error) {
+          return CommonReportService.returnErrorCheck(error, 'activeUsers.overallActiveUserGraphError', returnData);
+        });
+      }
     }
 
     function getMostActiveUserData(filter) {
       // cancel any currently running jobs
-      if (mostActivePromise !== null && angular.isDefined(mostActivePromise)) {
-        mostActivePromise.resolve(ABORT);
+      if (mostActivePromise) {
+        mostActivePromise.resolve(ReportConstants.ABORT);
       }
       mostActivePromise = $q.defer();
+      var returnObject = {
+        tableData: [],
+        error: false
+      };
 
-      var query = "?type=weeklyUsage&cache=";
-      if (filter.value === 1) {
-        query = "?type=monthlyUsage&cache=";
-      } else if (filter.value === 2) {
-        query = "?type=threeMonthUsage&cache=";
-      }
-
-      return getService(urlBase + mostActiveUrl + query + cacheValue, mostActivePromise).then(function (response) {
-        var data = [];
-        if (angular.isDefined(response) && angular.isDefined(response.data) && angular.isDefined(response.data.data) && angular.isArray(response.data.data)) {
-          angular.forEach(response.data.data, function (item, index, array) {
-            data.push({
-              'numCalls': parseInt(item.details.sparkCalls) + parseInt(item.details.sparkUcCalls),
-              'totalActivity': parseInt(item.details.totalActivity),
-              'sparkMessages': parseInt(item.details.sparkMessages),
-              'userId': item.details.userId,
-              'userName': item.details.userName
-            });
+      var lineOptions = CommonReportService.getTypeOptions(filter, 'mostActive');
+      return CommonReportService.getCustomerAltReportByType(lineOptions, mostActivePromise).then(function (response) {
+        var responseData = _.get(response, 'data.data');
+        if (responseData) {
+          _.forEach(responseData, function (item) {
+            var details = _.get(item, 'details');
+            if (details) {
+              returnObject.tableData.push({
+                numCalls: parseInt(details.sparkCalls, ReportConstants.INTEGER_BASE) + parseInt(item.details.sparkUcCalls, ReportConstants.INTEGER_BASE),
+                totalActivity: parseInt(details.totalActivity, ReportConstants.INTEGER_BASE),
+                sparkMessages: parseInt(details.sparkMessages, ReportConstants.INTEGER_BASE),
+                userName: details.userName
+              });
+            }
           });
         }
-        return data;
-      }, function (response) {
-        return returnErrorCheck(response, 'Most active user data not returned for customer.', $translate.instant('activeUsers.mostActiveError'), []);
+        return returnObject;
+      }).catch(function (error) {
+        returnObject.error = true;
+        return CommonReportService.returnErrorCheck(error, 'activeUsers.mostActiveError', returnObject);
       });
     }
 
-    function adjustActiveUserData(activeData, filter) {
+    function adjustActiveLineData(activeData, filter, returnData) {
       var emptyGraph = true;
       var graphItem = {
         totalRegisteredUsers: 0,
         activeUsers: 0,
         percentage: 0,
-        colorOne: chartColors.brandSuccessLight,
-        colorTwo: chartColors.brandSuccessDark,
         balloon: true
       };
-      var dayOffset = parseInt(moment.tz(activeData[(activeData.length - 1)].date, timezone).format('e'));
-      if (dayOffset >= 4) {
-        dayOffset = 7 - dayOffset;
-      } else {
-        dayOffset = -dayOffset;
-      }
-      var returnGraph = getReturnGraph(filter, dayOffset, graphItem);
+      var returnGraph = CommonReportService.getReturnLineGraph(filter, graphItem);
 
-      angular.forEach(activeData, function (item, index, activeArray) {
-        var date = moment.tz(item.date, timezone).format(dayFormat);
-        if (filter.value === 2) {
-          date = moment.tz(item.date, timezone).format(monthFormat);
+      _.forEach(activeData, function (item, index, activeArray) {
+        var date = CommonReportService.getModifiedLineDate(item.date);
+        var details = _.get(item, 'details[0]');
+        if (details) {
+          var activeUsers = parseInt(details.combinedActiveUsers, ReportConstants.INTEGER_BASE);
+          var totalRegisteredUsers = parseInt(details.totalSparkEntitled, ReportConstants.INTEGER_BASE);
+
+          // temporary fix for when totalRegisteredUsers equals 0 due to errors recording the number
+          if (totalRegisteredUsers <= 0) {
+            var previousTotal = 0;
+            var nextTotal = 0;
+            if (index !== 0) {
+              previousTotal = parseInt(activeArray[index - 1].details.totalRegisteredUsers, ReportConstants.INTEGER_BASE);
+            }
+            if (index < (activeArray.length - 1)) {
+              nextTotal = parseInt(activeArray[index + 1].details.totalRegisteredUsers, ReportConstants.INTEGER_BASE);
+            }
+
+            if (previousTotal < activeUsers && nextTotal < activeUsers) {
+              totalRegisteredUsers = activeUsers;
+            } else if (previousTotal > nextTotal) {
+              totalRegisteredUsers = previousTotal;
+            } else {
+              totalRegisteredUsers = nextTotal;
+            }
+          }
+
+          if (activeUsers > 0) {
+            returnData.isActiveUsers = true;
+          }
+
+          if (activeUsers > 0 || totalRegisteredUsers > 0) {
+            _.forEach(returnGraph, function (graphPoint) {
+              if (graphPoint.date === date) {
+                graphPoint.totalRegisteredUsers = totalRegisteredUsers;
+                graphPoint.activeUsers = activeUsers;
+                graphPoint.percentage = getPercentage(activeUsers, totalRegisteredUsers);
+                emptyGraph = false;
+              }
+            });
+          }
         }
+      });
 
-        var activeUsers = parseInt(item.details.activeUsers);
-        var totalRegisteredUsers = parseInt(item.details.totalRegisteredUsers);
+      if (!emptyGraph) {
+        returnData.graphData = trimEmptyDataSets(returnGraph);
+      }
+      return returnData;
+    }
+
+    function trimEmptyDataSets(graph) {
+      if (graph.length <= ReportConstants.THIRTEEN_WEEKS) {
+        return graph;
+      } else {
+        var returnGraph = [];
+        var emptyGraph = true;
+        _.forEach(graph, function (item, index) {
+          if (index !== 0 && emptyGraph) {
+            var totalUsers = _.get(item, 'totalRegisteredUsers');
+            var nextTotalUsers = _.get(graph[index + 1], 'totalRegisteredUsers');
+            if (totalUsers > 0 || nextTotalUsers > 0 || index >= (graph.length - ReportConstants.THIRTEEN_WEEKS)) {
+              emptyGraph = false;
+            }
+          }
+
+          if (!emptyGraph) {
+            returnGraph.push(item);
+          }
+        });
+        return returnGraph;
+      }
+    }
+
+    function adjustActiveUserData(activeData, filter, returnData) {
+      var emptyGraph = true;
+      var graphItem = {
+        totalRegisteredUsers: 0,
+        activeUsers: 0,
+        percentage: 0,
+        balloon: true
+      };
+      var returnGraph = CommonReportService.getReturnGraph(filter, activeData[(activeData.length - 1)].date, graphItem);
+
+      _.forEach(activeData, function (item, index, activeArray) {
+        var date = CommonReportService.getModifiedDate(item.date, filter);
+        var activeUsers = parseInt(item.details.activeUsers, ReportConstants.INTEGER_BASE);
+        var totalRegisteredUsers = parseInt(item.details.totalRegisteredUsers, ReportConstants.INTEGER_BASE);
 
         // temporary fix for when totalRegisteredUsers equals 0 due to errors recording the number
         if (totalRegisteredUsers <= 0) {
           var previousTotal = 0;
           var nextTotal = 0;
           if (index !== 0) {
-            previousTotal = parseInt(activeArray[index - 1].details.totalRegisteredUsers);
+            previousTotal = parseInt(activeArray[index - 1].details.totalRegisteredUsers, ReportConstants.INTEGER_BASE);
           }
           if (index < (activeArray.length - 1)) {
-            nextTotal = parseInt(activeArray[index + 1].details.totalRegisteredUsers);
+            nextTotal = parseInt(activeArray[index + 1].details.totalRegisteredUsers, ReportConstants.INTEGER_BASE);
           }
 
           if (previousTotal < activeUsers && nextTotal < activeUsers) {
@@ -151,85 +224,89 @@
           }
         }
 
+        if (activeUsers > 0) {
+          returnData.isActiveUsers = true;
+        }
+
         if (activeUsers > 0 || totalRegisteredUsers > 0) {
-          for (var i = 0; i < returnGraph.length; i++) {
-            if (returnGraph[i].modifiedDate === date) {
-              returnGraph[i].totalRegisteredUsers = totalRegisteredUsers;
-              returnGraph[i].activeUsers = activeUsers;
-              returnGraph[i].percentage = Math.round((activeUsers / totalRegisteredUsers) * 100);
+          _.forEach(returnGraph, function (graphPoint) {
+            if (graphPoint.date === date) {
+              graphPoint.totalRegisteredUsers = totalRegisteredUsers;
+              graphPoint.activeUsers = activeUsers;
+              graphPoint.percentage = getPercentage(activeUsers, totalRegisteredUsers);
               emptyGraph = false;
-              break;
             }
-          }
+          });
         }
       });
 
       if (!emptyGraph) {
-        return returnGraph;
-      } else {
-        return [];
+        returnData.graphData = returnGraph;
       }
+      return returnData;
     }
 
     function getAvgRoomData(filter) {
       // cancel any currently running jobs
-      if (groupCancelPromise !== null && angular.isDefined(groupCancelPromise)) {
-        groupCancelPromise.resolve(ABORT);
+      if (groupCancelPromise) {
+        groupCancelPromise.resolve(ReportConstants.ABORT);
       }
-      if (oneToOneCancelPromise !== null && angular.isDefined(oneToOneCancelPromise)) {
-        oneToOneCancelPromise.resolve(ABORT);
+      if (oneToOneCancelPromise) {
+        oneToOneCancelPromise.resolve(ReportConstants.ABORT);
       }
-      if (avgCancelPromise !== null && angular.isDefined(avgCancelPromise)) {
-        avgCancelPromise.resolve(ABORT);
+      if (avgCancelPromise) {
+        avgCancelPromise.resolve(ReportConstants.ABORT);
       }
       groupCancelPromise = $q.defer();
       oneToOneCancelPromise = $q.defer();
       avgCancelPromise = $q.defer();
 
+      var groupOptions = CommonReportService.getCustomerOptions(filter, 'conversations', CommonReportService.TIME_CHARTS, true);
+      var oneToOneOptions = CommonReportService.getCustomerOptions(filter, 'convOneOnOne', CommonReportService.TIME_CHARTS, true);
+      var avgOptions = CommonReportService.getCustomerOptions(filter, 'avgConversations', CommonReportService.TIME_CHARTS, true);
       var promises = [];
-      var query = getQuery(filter);
-
       var groupData = [];
-      var groupPromise = getService(urlBase + timechart + groupUrl + query + customerView, groupCancelPromise).success(function (response, status) {
-        groupData = response.data;
+      var oneToOneData = [];
+      var avgData = [];
+
+      var groupPromise = CommonReportService.getCustomerReport(groupOptions, groupCancelPromise).then(function (response) {
+        groupData = _.get(response, 'data.data', []);
         return;
-      }).error(function (response, status) {
-        groupData = returnErrorCheck(status, 'Group rooms data not returned for customer.', $translate.instant('avgRooms.groupError'), []);
+      }).catch(function (error) {
+        groupData = CommonReportService.returnErrorCheck(error, 'avgRooms.groupError', []);
         return;
       });
       promises.push(groupPromise);
 
-      var oneToOneData = [];
-      var oneToOnePromise = getService(urlBase + timechart + oneToOneUrl + query + customerView, oneToOneCancelPromise).success(function (response, status) {
-        oneToOneData = response.data;
+      var oneToOnePromise = CommonReportService.getCustomerReport(oneToOneOptions, oneToOneCancelPromise).then(function (response) {
+        oneToOneData = _.get(response, 'data.data', []);
         return;
-      }).error(function (response, status) {
-        oneToOneData = returnErrorCheck(status, 'One to One rooms data not returned for customer.', $translate.instant('avgRooms.oneToOneError'), []);
+      }).catch(function (error) {
+        oneToOneData = CommonReportService.returnErrorCheck(error, 'avgRooms.oneToOneError', []);
         return;
       });
       promises.push(oneToOnePromise);
 
-      var avgData = [];
-      var avgPromise = getService(urlBase + timechart + avgUrl + query + customerView, avgCancelPromise).success(function (response, status) {
-        avgData = response.data;
+      var avgPromise = CommonReportService.getCustomerReport(avgOptions, avgCancelPromise).then(function (response) {
+        avgData = _.get(response, 'data.data', []);
         return;
-      }).error(function (response, status) {
-        avgData = returnErrorCheck(status, 'Average rooms data not returned for customer.', $translate.instant('avgRooms.avgError'), []);
+      }).catch(function (error) {
+        avgData = CommonReportService.returnErrorCheck(error, 'avgRooms.avgError', []);
         return;
       });
       promises.push(avgPromise);
 
       return $q.all(promises).then(function () {
-        if (groupData !== ABORT && oneToOneData !== ABORT && avgData !== ABORT) {
+        if (groupData !== ReportConstants.ABORT && oneToOneData !== ReportConstants.ABORT && avgData !== ReportConstants.ABORT) {
           return combineAvgRooms(groupData, oneToOneData, avgData, filter);
         } else {
-          return ABORT;
+          return ReportConstants.ABORT;
         }
       }, function () {
-        if (groupData !== ABORT && oneToOneData !== ABORT && avgData !== ABORT) {
+        if (groupData !== ReportConstants.ABORT && oneToOneData !== ReportConstants.ABORT && avgData !== ReportConstants.ABORT) {
           return combineAvgRooms(groupData, oneToOneData, avgData, filter);
         } else {
-          return ABORT;
+          return ReportConstants.ABORT;
         }
       });
     }
@@ -243,86 +320,66 @@
         totalRooms: 0,
         avgRooms: 0
       };
-      var dayOffset = 0;
-      if (groupData.length > 0) {
-        dayOffset = parseInt(moment.tz(groupData[groupData.length - 1].date, timezone).format('e'));
-        if ((oneToOneData.length > 0) && (groupData[groupData.length - 1] < oneToOneData[oneToOneData.length - 1])) {
-          dayOffset = parseInt(moment.tz(oneToOneData[oneToOneData.length - 1].date, timezone).format('e'));
-        } else if ((avgData.length > 0) && (groupData[groupData.length - 1] < avgData[avgData.length - 1])) {
-          dayOffset = parseInt(moment.tz(avgData[avgData.length - 1].date, timezone).format('e'));
+      var date = '';
+      if (groupData[0] && oneToOneData[0] && avgData[0]) {
+        var groupDate = groupData[0].date;
+        var oneToOneDate = oneToOneData[0].date;
+        var avgDate = avgData[0].date;
+        if (groupData.length > 0) {
+          date = groupDate;
+          if ((oneToOneData.length > 0) && (groupDate < oneToOneDate)) {
+            date = oneToOneDate;
+          } else if ((avgData.length > 0) && (groupDate < avgDate)) {
+            date = avgDate;
+          }
+        } else if (oneToOneData.length > 0) {
+          date = oneToOneDate;
+          if ((avgData.length > 0) && (oneToOneDate < avgDate)) {
+            date = avgDate;
+          }
+        } else if (avgData.length > 0) {
+          date = avgDate;
         }
-      } else if (oneToOneData.length > 0) {
-        dayOffset = parseInt(moment.tz(oneToOneData[oneToOneData.length - 1].date, timezone).format('e'));
-        if ((avgData.length > 0) && (groupData[groupData.length - 1] < avgData[avgData.length - 1])) {
-          dayOffset = parseInt(moment.tz(avgData[avgData.length - 1].date, timezone).format('e'));
-        }
-      } else if (avgData.length > 0) {
-        dayOffset = parseInt(moment.tz(avgData[avgData.length - 1].date, timezone).format('e'));
       }
 
-      if (dayOffset >= 4) {
-        dayOffset = 7 - dayOffset;
-      } else {
-        dayOffset = -dayOffset;
-      }
-      var returnGraph = getReturnGraph(filter, dayOffset, graphItem);
+      var returnGraph = CommonReportService.getReturnGraph(filter, date, graphItem);
+      _.forEach(groupData, function (groupItem) {
+        var modDate = CommonReportService.getModifiedDate(groupItem.date, filter);
 
-      angular.forEach(groupData, function (groupItem, groupIndex, groupArray) {
-        var modDate = moment.tz(groupItem.date, timezone).format(dayFormat);
-        if (filter.value === 2) {
-          modDate = moment.tz(groupItem.date, timezone).format(monthFormat);
-        }
-
-        for (var index = 0; index < returnGraph.length; index++) {
-          var returnItem = returnGraph[index];
-
-          if (returnItem.modifiedDate === modDate) {
-            returnItem.groupRooms = parseInt(groupItem.count);
-            returnItem.totalRooms += parseInt(groupItem.count);
-
-            if (returnItem.groupRooms !== 0) {
+        _.forEach(returnGraph, function (returnItem) {
+          if (returnItem.date === modDate) {
+            returnItem.groupRooms = parseInt(groupItem.count, ReportConstants.INTEGER_BASE);
+            returnItem.totalRooms += parseInt(groupItem.count, ReportConstants.INTEGER_BASE);
+            if (returnItem.groupRooms > 0) {
               emptyGraph = false;
             }
-            break;
           }
-        }
+        });
       });
 
-      angular.forEach(oneToOneData, function (oneToOneItem, oneToOneIndex, oneToOneArray) {
-        var modDate = moment.tz(oneToOneItem.date, timezone).format(dayFormat);
-        if (filter.value === 2) {
-          modDate = moment.tz(oneToOneItem.date, timezone).format(monthFormat);
-        }
+      _.forEach(oneToOneData, function (oneToOneItem) {
+        var modDate = CommonReportService.getModifiedDate(oneToOneItem.date, filter);
 
-        for (var index = 0; index < returnGraph.length; index++) {
-          var returnItem = returnGraph[index];
-
-          if (returnItem.modifiedDate === modDate) {
-            returnItem.oneToOneRooms = parseInt(oneToOneItem.count);
-            returnItem.totalRooms += parseInt(oneToOneItem.count);
-            if (returnItem.oneToOneRooms !== 0) {
+        _.forEach(returnGraph, function (returnItem) {
+          if (returnItem.date === modDate) {
+            returnItem.oneToOneRooms = parseInt(oneToOneItem.count, ReportConstants.INTEGER_BASE);
+            returnItem.totalRooms += parseInt(oneToOneItem.count, ReportConstants.INTEGER_BASE);
+            if (returnItem.oneToOneRooms > 0) {
               emptyGraph = false;
             }
-            break;
           }
-        }
+        });
       });
 
       if (!emptyGraph) {
-        angular.forEach(avgData, function (avgItem, avgIndex, avgArray) {
-          var modDate = moment.tz(avgItem.date, timezone).format(dayFormat);
-          if (filter.value === 2) {
-            modDate = moment.tz(avgItem.date, timezone).format(monthFormat);
-          }
+        _.forEach(avgData, function (avgItem) {
+          var modDate = CommonReportService.getModifiedDate(avgItem.date, filter);
 
-          for (var index = 0; index < returnGraph.length; index++) {
-            var returnItem = returnGraph[index];
-
-            if (returnItem.modifiedDate === modDate) {
-              returnItem.avgRooms = parseFloat(avgItem.count).toFixed(2);
-              break;
+          _.forEach(returnGraph, function (returnItem) {
+            if (returnItem.date === modDate) {
+              returnItem.avgRooms = parseFloat(avgItem.count).toFixed(ReportConstants.FIXED);
             }
-          }
+          });
         });
 
         return returnGraph;
@@ -333,49 +390,50 @@
 
     function getFilesSharedData(filter) {
       // cancel any currently running jobs
-      if (contentSharedCancelPromise !== null && angular.isDefined(contentSharedCancelPromise)) {
-        contentSharedCancelPromise.resolve(ABORT);
+      if (contentSharedCancelPromise) {
+        contentSharedCancelPromise.resolve(ReportConstants.ABORT);
       }
-      if (contentShareSizesCancelPromise !== null && angular.isDefined(contentShareSizesCancelPromise)) {
-        contentShareSizesCancelPromise.resolve(ABORT);
+      if (contentShareSizesCancelPromise) {
+        contentShareSizesCancelPromise.resolve(ReportConstants.ABORT);
       }
       contentSharedCancelPromise = $q.defer();
       contentShareSizesCancelPromise = $q.defer();
 
+      var contentSharedOptions = CommonReportService.getCustomerOptions(filter, 'contentShared', CommonReportService.TIME_CHARTS, true);
+      var contentShareSizesOptions = CommonReportService.getCustomerOptions(filter, 'contentShareSizes', CommonReportService.TIME_CHARTS, true);
       var promises = [];
-      var query = getQuery(filter);
-
       var contentSharedData = [];
-      var contentSharedPromise = getService(urlBase + timechart + contentShared + query + customerView, contentSharedCancelPromise).success(function (response, status) {
-        contentSharedData = response.data;
+      var contentShareSizesData = [];
+
+      var contentSharedPromise = CommonReportService.getCustomerReport(contentSharedOptions, contentSharedCancelPromise).then(function (response) {
+        contentSharedData = _.get(response, 'data.data', []);
         return;
-      }).error(function (response, status) {
-        contentSharedData = returnErrorCheck(status, 'Shared content data not returned for customer.', $translate.instant('filesShared.contentSharedError'), []);
+      }).catch(function (error) {
+        contentSharedData = CommonReportService.returnErrorCheck(error, $translate.instant('filesShared.contentSharedError'), []);
         return;
       });
       promises.push(contentSharedPromise);
 
-      var contentShareSizesData = [];
-      var contentShareSizesPromise = getService(urlBase + timechart + contentShareSizes + query + customerView, contentShareSizesCancelPromise).success(function (response, status) {
-        contentShareSizesData = response.data;
+      var contentShareSizesPromise = CommonReportService.getCustomerReport(contentShareSizesOptions, contentShareSizesCancelPromise).then(function (response) {
+        contentShareSizesData = _.get(response, 'data.data', []);
         return;
-      }).error(function (response, status) {
-        contentShareSizesData = returnErrorCheck(status, 'Shared content data sizes not returned for customer.', $translate.instant('filesShared.contentShareSizesDataError'), []);
+      }).catch(function (error) {
+        contentShareSizesData = CommonReportService.returnErrorCheck(error, 'filesShared.contentShareSizesDataError', []);
         return;
       });
       promises.push(contentShareSizesPromise);
 
       return $q.all(promises).then(function () {
-        if (contentSharedData !== ABORT && contentShareSizesData !== ABORT) {
+        if (contentSharedData !== ReportConstants.ABORT && contentShareSizesData !== ReportConstants.ABORT) {
           return combineFilesShared(contentSharedData, contentShareSizesData, filter);
         } else {
-          return ABORT;
+          return ReportConstants.ABORT;
         }
       }, function () {
-        if (contentSharedData !== ABORT && contentShareSizesData !== ABORT) {
+        if (contentSharedData !== ReportConstants.ABORT && contentShareSizesData !== ReportConstants.ABORT) {
           return combineFilesShared(contentSharedData, contentShareSizesData, filter);
         } else {
-          return ABORT;
+          return ReportConstants.ABORT;
         }
       });
     }
@@ -389,57 +447,43 @@
         color: chartColors.brandSuccess
       };
 
-      var dayOffset = 0;
-      if (contentSharedData.length > 0) {
-        dayOffset = parseInt(moment.tz(contentSharedData[contentSharedData.length - 1].date, timezone).format('e'));
-        if ((contentShareSizesData.length > 0) && (contentSharedData[contentSharedData.length - 1] < contentShareSizesData[contentShareSizesData.length - 1])) {
-          dayOffset = parseInt(moment.tz(contentShareSizesData[contentShareSizesData.length - 1].date, timezone).format('e'));
+      var date = '';
+      if (contentSharedData[0] && contentShareSizesData[0]) {
+        var contentSharedDate = contentSharedData[0].date;
+        var contentShareSizesDate = contentShareSizesData[0].date;
+        if (contentSharedData.length > 0) {
+          date = contentSharedDate;
+          if ((contentShareSizesData.length > 0) && (contentSharedDate < contentShareSizesDate)) {
+            date = contentShareSizesDate;
+          }
+        } else if (contentShareSizesData.length > 0) {
+          date = contentShareSizesDate;
         }
-      } else if (contentShareSizesData.length > 0) {
-        dayOffset = parseInt(moment.tz(contentShareSizesData[contentShareSizesData.length - 1].date, timezone).format('e'));
       }
+      var returnGraph = CommonReportService.getReturnGraph(filter, date, graphItem);
 
-      if (dayOffset >= 4) {
-        dayOffset = 7 - dayOffset;
-      } else {
-        dayOffset = -dayOffset;
-      }
-      var returnGraph = getReturnGraph(filter, dayOffset, graphItem);
+      _.forEach(contentSharedData, function (contentItem) {
+        var modDate = CommonReportService.getModifiedDate(contentItem.date, filter);
 
-      angular.forEach(contentSharedData, function (contentItem, contentIndex, contentArray) {
-        var modDate = moment.tz(contentItem.date, timezone).format(dayFormat);
-        if (filter.value === 2) {
-          modDate = moment.tz(contentItem.date, timezone).format(monthFormat);
-        }
-
-        for (var index = 0; index < returnGraph.length; index++) {
-          var returnItem = returnGraph[index];
-
-          if (returnItem.modifiedDate === modDate) {
-            returnItem.contentShared = parseInt(contentItem.count);
+        _.forEach(returnGraph, function (returnItem) {
+          if (returnItem.date === modDate) {
+            returnItem.contentShared = parseInt(contentItem.count, ReportConstants.INTEGER_BASE);
             if (returnItem.contentShared !== 0) {
               emptyGraph = false;
             }
-            break;
           }
-        }
+        });
       });
 
       if (!emptyGraph) {
-        angular.forEach(contentShareSizesData, function (shareItem, shareIndex, shareArray) {
-          var modDate = moment.tz(shareItem.date, timezone).format(dayFormat);
-          if (filter.value === 2) {
-            modDate = moment.tz(shareItem.date, timezone).format(monthFormat);
-          }
+        _.forEach(contentShareSizesData, function (shareItem) {
+          var modDate = CommonReportService.getModifiedDate(shareItem.date, filter);
 
-          for (var index = 0; index < returnGraph.length; index++) {
-            var returnItem = returnGraph[index];
-
-            if (returnItem.modifiedDate === modDate) {
-              returnItem.contentShareSizes = parseFloat(shareItem.count).toFixed(2);
-              break;
+          _.forEach(returnGraph, function (returnItem) {
+            if (returnItem.date === modDate) {
+              returnItem.contentShareSizes = parseFloat(shareItem.count).toFixed(ReportConstants.FIXED);
             }
-          }
+          });
         });
 
         return returnGraph;
@@ -450,54 +494,60 @@
 
     function getCallMetricsData(filter) {
       // cancel any currently running jobs
-      if (metricsCancelPromise !== null && angular.isDefined(metricsCancelPromise)) {
-        metricsCancelPromise.resolve(ABORT);
+      if (metricsCancelPromise) {
+        metricsCancelPromise.resolve(ReportConstants.ABORT);
       }
       metricsCancelPromise = $q.defer();
       var returnArray = {
         dataProvider: [],
         displayData: {}
       };
+      var options = CommonReportService.getAltCustomerOptions(filter, 'callMetrics', CommonReportService.DETAILED, undefined);
 
-      return getService(urlBase + detailed + callMetrics + getAltQuery(filter), metricsCancelPromise).then(function (response, status) {
-        if (response !== null && angular.isDefined(response) && angular.isArray(response.data.data) && angular.isArray(response.data.data[0].data)) {
-          var details = response.data.data[0].data[0].details;
-          var totalCalls = parseInt(details.totalCalls);
+      return CommonReportService.getCustomerReport(options, metricsCancelPromise).then(function (response) {
+        var details = _.get(response, 'data.data[0].data[0].details');
+        if (details) {
+          var totalCalls = parseInt(details.totalCalls, ReportConstants.INTEGER_BASE);
           if (totalCalls > 0) {
+            var audioCalls = parseInt(details.sparkUcAudioCalls, ReportConstants.INTEGER_BASE);
+            var successfulCalls = parseInt(details.totalSuccessfulCalls, ReportConstants.INTEGER_BASE);
+            var videoCalls = parseInt(details.sparkUcVideoCalls, ReportConstants.INTEGER_BASE) + parseInt(details.sparkVideoCalls, ReportConstants.INTEGER_BASE);
+
             returnArray.dataProvider = [{
-              "callCondition": $translate.instant('callMetrics.audioCalls'),
-              "numCalls": parseInt(details.sparkUcAudioCalls),
-              "percentage": Math.round((parseInt(details.sparkUcAudioCalls) / parseInt(details.totalSuccessfulCalls)) * 100),
-              "color": chartColors.colorAttentionBase
+              callCondition: $translate.instant('callMetrics.audioCalls'),
+              numCalls: audioCalls,
+              percentage: getPercentage(audioCalls, successfulCalls),
+              color: chartColors.colorAttentionBase
             }, {
-              "callCondition": $translate.instant('callMetrics.videoCalls'),
-              "numCalls": parseInt(details.sparkUcVideoCalls) + parseInt(details.sparkVideoCalls),
-              "percentage": Math.round(((parseInt(details.sparkUcVideoCalls) + parseInt(details.sparkVideoCalls)) / parseInt(details.totalSuccessfulCalls)) * 100),
-              "color": chartColors.primaryColorBase
+              callCondition: $translate.instant('callMetrics.videoCalls'),
+              numCalls: videoCalls,
+              percentage: getPercentage(videoCalls, successfulCalls),
+              color: chartColors.primaryColorBase
             }];
 
             returnArray.displayData.totalCalls = totalCalls;
-            returnArray.displayData.totalAudioDuration = parseInt(details.totalAudioDuration);
-            returnArray.displayData.totalFailedCalls = parseFloat((parseFloat(details.totalFailedCalls) / totalCalls) * 100).toFixed(2);
+            returnArray.displayData.totalAudioDuration = parseInt(details.totalAudioDuration, ReportConstants.INTEGER_BASE);
+            returnArray.displayData.totalFailedCalls = parseFloat((parseFloat(details.totalFailedCalls) / totalCalls) * ReportConstants.PERCENTAGE_MULTIPLIER).toFixed(ReportConstants.FIXED);
           }
         }
         return returnArray;
-      }, function (response, status) {
-        return returnErrorCheck(response, 'Call metrics data not returned for customer.', $translate.instant('callMetrics.customerError'), returnArray);
+      }).catch(function (error) {
+        return CommonReportService.returnErrorCheck(error, 'callMetrics.customerError', returnArray);
       });
     }
 
     function getMediaQualityData(filter) {
       // cancel any currently running jobs
-      if (mediaCancelPromise !== null && angular.isDefined(mediaCancelPromise)) {
-        metricsCancelPromise.resolve(ABORT);
+      if (mediaCancelPromise) {
+        metricsCancelPromise.resolve(ReportConstants.ABORT);
       }
       mediaCancelPromise = $q.defer();
 
-      return getService(urlBase + detailed + mediaQuality + getQuery(filter), mediaCancelPromise).then(function (response, status) {
+      var options = CommonReportService.getCustomerOptions(filter, 'callQuality', CommonReportService.DETAILED, undefined);
+      return CommonReportService.getCustomerReport(options, mediaCancelPromise).then(function (response) {
         var emptyGraph = true;
-        if (response !== null && angular.isDefined(response)) {
-          var data = response.data.data[0].data;
+        var data = _.get(response, 'data.data[0].data');
+        if (data) {
           var graphItem = {
             totalDurationSum: 0,
             goodQualityDurationSum: 0,
@@ -516,24 +566,18 @@
             partialVideoSum: 0,
             balloon: true
           };
-          var dayOffset = parseInt(moment.tz(data[(data.length - 1)].date, timezone).format('e'));
-          if (dayOffset >= 4) {
-            dayOffset = 7 - dayOffset;
-          } else {
-            dayOffset = -dayOffset;
-          }
-          var graph = getReturnGraph(filter, dayOffset, graphItem);
+          var graph = CommonReportService.getReturnGraph(filter, data[data.length - 1].date, graphItem);
 
-          angular.forEach(data, function (item, index, array) {
-            var totalSum = parseInt(item.details.totalDurationSum);
-            var goodSum = parseInt(item.details.goodQualityDurationSum);
-            var fairSum = parseInt(item.details.fairQualityDurationSum);
-            var poorSum = parseInt(item.details.poorQualityDurationSum);
+          _.forEach(data, function (item) {
+            var totalSum = parseInt(item.details.totalDurationSum, ReportConstants.INTEGER_BASE);
+            var goodSum = parseInt(item.details.goodQualityDurationSum, ReportConstants.INTEGER_BASE);
+            var fairSum = parseInt(item.details.fairQualityDurationSum, ReportConstants.INTEGER_BASE);
+            var poorSum = parseInt(item.details.poorQualityDurationSum, ReportConstants.INTEGER_BASE);
             var partialSum = fairSum + poorSum;
 
-            var goodVideoQualityDurationSum = parseInt(item.details.sparkGoodVideoDurationSum) + parseInt(item.details.sparkUcGoodVideoDurationSum);
-            var fairVideoQualityDurationSum = parseInt(item.details.sparkFairVideoDurationSum) + parseInt(item.details.sparkUcFairVideoDurationSum);
-            var poorVideoQualityDurationSum = parseInt(item.details.sparkPoorVideoDurationSum) + parseInt(item.details.sparkUcPoorVideoDurationSum);
+            var goodVideoQualityDurationSum = parseInt(item.details.sparkGoodVideoDurationSum, ReportConstants.INTEGER_BASE) + parseInt(item.details.sparkUcGoodVideoDurationSum, ReportConstants.INTEGER_BASE);
+            var fairVideoQualityDurationSum = parseInt(item.details.sparkFairVideoDurationSum, ReportConstants.INTEGER_BASE) + parseInt(item.details.sparkUcFairVideoDurationSum, ReportConstants.INTEGER_BASE);
+            var poorVideoQualityDurationSum = parseInt(item.details.sparkPoorVideoDurationSum, ReportConstants.INTEGER_BASE) + parseInt(item.details.sparkUcPoorVideoDurationSum, ReportConstants.INTEGER_BASE);
             var totalVideoDurationSum = goodVideoQualityDurationSum + fairVideoQualityDurationSum + poorVideoQualityDurationSum;
             var partialVideoSum = fairVideoQualityDurationSum + poorVideoQualityDurationSum;
 
@@ -544,35 +588,31 @@
             var partialAudioSum = fairAudioQualityDurationSum + poorAudioQualityDurationSum;
 
             if (totalSum > 0 || goodSum > 0 || fairSum > 0 || poorSum > 0) {
-              var modifiedDate = moment.tz(item.date, timezone).format(monthFormat);
-              if (filter.value === 0 || filter.value === 1) {
-                modifiedDate = moment.tz(item.date, timezone).format(dayFormat);
-              }
+              var modifiedDate = CommonReportService.getModifiedDate(item.date, filter);
 
-              for (var i = 0; i < graph.length; i++) {
-                if (graph[i].modifiedDate === modifiedDate) {
-                  graph[i].totalDurationSum = totalSum;
-                  graph[i].goodQualityDurationSum = goodSum;
-                  graph[i].fairQualityDurationSum = fairSum;
-                  graph[i].poorQualityDurationSum = poorSum;
-                  graph[i].partialSum = partialSum;
+              _.forEach(graph, function (graphPoint) {
+                if (graphPoint.date === modifiedDate) {
+                  graphPoint.totalDurationSum = totalSum;
+                  graphPoint.goodQualityDurationSum = goodSum;
+                  graphPoint.fairQualityDurationSum = fairSum;
+                  graphPoint.poorQualityDurationSum = poorSum;
+                  graphPoint.partialSum = partialSum;
 
-                  graph[i].totalAudioDurationSum = totalAudioDurationSum;
-                  graph[i].goodAudioQualityDurationSum = goodAudioQualityDurationSum;
-                  graph[i].fairAudioQualityDurationSum = fairAudioQualityDurationSum;
-                  graph[i].poorAudioQualityDurationSum = poorAudioQualityDurationSum;
-                  graph[i].partialAudioSum = partialAudioSum;
+                  graphPoint.totalAudioDurationSum = totalAudioDurationSum;
+                  graphPoint.goodAudioQualityDurationSum = goodAudioQualityDurationSum;
+                  graphPoint.fairAudioQualityDurationSum = fairAudioQualityDurationSum;
+                  graphPoint.poorAudioQualityDurationSum = poorAudioQualityDurationSum;
+                  graphPoint.partialAudioSum = partialAudioSum;
 
-                  graph[i].totalVideoDurationSum = totalVideoDurationSum;
-                  graph[i].goodVideoQualityDurationSum = goodVideoQualityDurationSum;
-                  graph[i].fairVideoQualityDurationSum = fairVideoQualityDurationSum;
-                  graph[i].poorVideoQualityDurationSum = poorVideoQualityDurationSum;
-                  graph[i].partialVideoSum = partialVideoSum;
+                  graphPoint.totalVideoDurationSum = totalVideoDurationSum;
+                  graphPoint.goodVideoQualityDurationSum = goodVideoQualityDurationSum;
+                  graphPoint.fairVideoQualityDurationSum = fairVideoQualityDurationSum;
+                  graphPoint.poorVideoQualityDurationSum = poorVideoQualityDurationSum;
+                  graphPoint.partialVideoSum = partialVideoSum;
 
                   emptyGraph = false;
-                  break;
                 }
-              }
+              });
             }
           });
           if (emptyGraph) {
@@ -580,22 +620,23 @@
           }
         }
         return graph;
-      }, function (response) {
-        return returnErrorCheck(response, 'Call quality data not returned for customer.', $translate.instant('mediaQuality.customerError'), []);
+      }).catch(function (error) {
+        return CommonReportService.returnErrorCheck(error, 'mediaQuality.customerError', []);
       });
     }
 
     function getDeviceData(filter) {
       // cancel any currently running jobs
-      if (deviceCancelPromise !== null && angular.isDefined(deviceCancelPromise)) {
-        deviceCancelPromise.resolve(ABORT);
+      if (deviceCancelPromise) {
+        deviceCancelPromise.resolve(ReportConstants.ABORT);
       }
       deviceCancelPromise = $q.defer();
 
-      return getService(urlBase + registeredEndpoints + getQuery(filter, false), deviceCancelPromise).then(function (response) {
+      var options = CommonReportService.getTypeOptions(filter, 'deviceType');
+      return CommonReportService.getCustomerReportByType(options, deviceCancelPromise).then(function (response) {
         return analyzeDeviceData(response, filter);
-      }, function (response) {
-        return returnErrorCheck(response, 'Registered Endpoints data not returned for customer.', $translate.instant('registeredEndpoints.customerError'), {
+      }).catch(function (error) {
+        return CommonReportService.returnErrorCheck(error, 'registeredEndpoints.customerError', {
           graphData: [],
           filterArray: []
         });
@@ -607,30 +648,25 @@
         graphData: [],
         filterArray: []
       };
-      if (angular.isDefined(response) && angular.isDefined(response.data) && angular.isDefined(response.data.data) && angular.isArray(response.data.data) && angular.isDefined(response.data.data[0].data) && angular.isArray(response.data.data[0].data)) {
-        var data = response.data.data[0].data;
+      var data = _.get(response, 'data.data');
+      if (data) {
         var graphItem = {
           totalRegisteredDevices: 0
         };
-        var dayOffset = 0;
+        var date;
         var responseLength = 0;
 
-        angular.forEach(data, function (item, index, array) {
-          if (responseLength < item.details.length) {
-            responseLength = item.details.length;
-            dayOffset = parseInt(moment.tz(item.details[(item.details.length - 1)].recordTime, timezone).format('e'));
+        _.forEach(data, function (item) {
+          var details = _.get(item, 'details');
+          if (details && responseLength < details.length) {
+            responseLength = details.length;
+            date = details[responseLength - 1].recordTime;
           }
         });
-        if (dayOffset >= 4) {
-          dayOffset = 7 - dayOffset;
-        } else {
-          dayOffset = -dayOffset;
-        }
 
-        var baseGraph = getReturnGraph(filter, dayOffset, graphItem);
         deviceArray.graphData.push({
           deviceType: $translate.instant('registeredEndpoints.allDevices'),
-          graph: angular.copy(baseGraph),
+          graph: CommonReportService.getReturnGraph(filter, date, graphItem),
           emptyGraph: true,
           balloon: true
         });
@@ -641,7 +677,7 @@
         });
         filterIndex++;
 
-        angular.forEach(data, function (item, index, array) {
+        _.forEach(data, function (item) {
           deviceArray.filterArray.push({
             value: filterIndex,
             label: item.deviceType
@@ -649,118 +685,29 @@
           filterIndex++;
           var tempGraph = {
             deviceType: item.deviceType,
-            graph: angular.copy(baseGraph),
+            graph: CommonReportService.getReturnGraph(filter, date, graphItem),
             emptyGraph: true,
             balloon: true
           };
 
-          angular.forEach(item.details, function (detail, detailIndex, detailArray) {
-            if (detail.totalRegisteredDevices > 0) {
-              tempGraph.emptyGraph = false;
-              deviceArray.graphData[0].emptyGraph = false;
-              var modifiedDate = moment.tz(detail.recordTime, timezone).format(monthFormat);
-              if (filter.value === 0 || filter.value === 1) {
-                modifiedDate = moment.tz(detail.recordTime, timezone).format(dayFormat);
-              }
+          _.forEach(item.details, function (detail) {
+            var registeredDevices = parseInt(detail.totalRegisteredDevices, ReportConstants.INTEGER_BASE);
+            var modifiedDate = CommonReportService.getModifiedDate(detail.recordTime, filter);
 
-              for (var i = 0; i < baseGraph.length; i++) {
-                if (baseGraph[i].modifiedDate === modifiedDate) {
-                  tempGraph.graph[i].totalRegisteredDevices = parseInt(detail.totalRegisteredDevices);
-                  deviceArray.graphData[0].graph[i].totalRegisteredDevices += parseInt(detail.totalRegisteredDevices);
-                  break;
-                }
+            _.forEach(tempGraph.graph, function (graphPoint, index) {
+              if (graphPoint.date === modifiedDate && (registeredDevices > 0)) {
+                graphPoint.totalRegisteredDevices = registeredDevices;
+                deviceArray.graphData[0].graph[index].totalRegisteredDevices += registeredDevices;
+                tempGraph.emptyGraph = false;
+                deviceArray.graphData[0].emptyGraph = false;
               }
-            }
+            });
           });
           deviceArray.graphData.push(tempGraph);
         });
       }
 
       return deviceArray;
-    }
-
-    function getQuery(filter, cacheOption) {
-      if (angular.isUndefined(cacheOption) || cacheOption === null) {
-        cacheOption = cacheValue;
-      }
-      if (filter.value === 0) {
-        return '?&intervalCount=7&intervalType=day&spanCount=1&spanType=day&cache=' + cacheOption;
-      } else if (filter.value === 1) {
-        return '?&intervalCount=31&intervalType=day&spanCount=7&spanType=day&cache=' + cacheOption;
-      } else {
-        return '?&intervalCount=3&intervalType=month&spanCount=1&spanType=month&cache=' + cacheOption;
-      }
-    }
-
-    function getAltQuery(filter, cacheOption) {
-      if (angular.isUndefined(cacheOption) || cacheOption === null) {
-        cacheOption = cacheValue;
-      }
-      if (filter.value === 0) {
-        return '?&intervalCount=7&intervalType=day&spanCount=7&spanType=day&cache=' + cacheOption;
-      } else if (filter.value === 1) {
-        return '?&intervalCount=31&intervalType=day&spanCount=31&spanType=day&cache=' + cacheOption;
-      } else {
-        return '?&intervalCount=93&intervalType=day&spanCount=93&spanType=day&cache=' + cacheOption;
-      }
-    }
-
-    function getReturnGraph(filter, dayOffset, graphItem) {
-      var returnGraph = [];
-
-      if (filter.value === 0) {
-        for (var i = 6; i >= 0; i--) {
-          var tmpItem = angular.copy(graphItem);
-          tmpItem.modifiedDate = moment().tz(timezone).subtract(i + 1, 'day').format(dayFormat);
-          returnGraph.push(tmpItem);
-        }
-      } else if (filter.value === 1) {
-        for (var x = 3; x >= 0; x--) {
-          var temp = angular.copy(graphItem);
-          temp.modifiedDate = moment().tz(timezone).startOf('week').subtract(dayOffset + (x * 7), 'day').format(dayFormat);
-          returnGraph.push(temp);
-        }
-      } else {
-        for (var y = 2; y >= 0; y--) {
-          var item = angular.copy(graphItem);
-          item.modifiedDate = moment().tz(timezone).subtract(y, 'month').startOf('month').format(monthFormat);
-          returnGraph.push(item);
-        }
-      }
-
-      return returnGraph;
-    }
-
-    function getService(url, canceler) {
-      if (canceler === null || angular.isUndefined(canceler)) {
-        return $http.get(url);
-      } else {
-        return $http.get(url, {
-          timeout: canceler.promise
-        });
-      }
-    }
-
-    function returnErrorCheck(error, debugMessage, message, returnItem) {
-      if (error.status === 401 || error.status === 403) {
-        Log.debug('User not authorized to access reports.  Status: ' + error.status);
-        Notification.notify([$translate.instant('reportsPage.unauthorizedError')], 'error');
-        return returnItem;
-      } else if ((error.status !== 0) || (error.config.timeout.$$state.status === 0)) {
-        if (error.status !== 0) {
-          Log.debug(debugMessage + '  Status: ' + error.status + ' Response: ' + error.message);
-        } else {
-          Log.debug(debugMessage + '  Status: ' + error.status);
-        }
-        if (angular.isDefined(error.data) && angular.isDefined(error.data.trackingId) && (error.data.trackingId !== null)) {
-          Notification.notify([message + '<br>' + $translate.instant('reportsPage.trackingId') + error.data.trackingId], 'error');
-        } else {
-          Notification.notify([message], 'error');
-        }
-        return returnItem;
-      } else {
-        return ABORT;
-      }
     }
   }
 })();

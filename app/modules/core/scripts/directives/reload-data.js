@@ -1,7 +1,10 @@
-'use strict';
+(function () {
+  'use strict';
 
-angular.module('Squared')
-  .directive('crReloadData', function () {
+  angular.module('Squared')
+    .directive('crReloadData', crReloadData);
+
+  function crReloadData() {
     return {
       restrict: 'E',
       scope: {
@@ -10,7 +13,7 @@ angular.module('Squared')
       templateUrl: 'modules/core/scripts/directives/views/reload-data.html',
       link: function (scope) {
         scope.currentTime = scope.lastUpdatedTime;
-        scope.$watch('lastUpdatedTime', function (newVal, oldVal) {
+        scope.$watch('lastUpdatedTime', function (newVal) {
           if (newVal) {
             scope.currentTime = newVal;
             var date = moment(scope.currentTime);
@@ -19,4 +22,5 @@ angular.module('Squared')
         });
       }
     };
-  });
+  }
+})();

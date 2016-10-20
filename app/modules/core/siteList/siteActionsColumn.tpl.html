@@ -1,0 +1,77 @@
+
+<p class="ui-grid-cell-contents">
+  <span ng-if="!row.entity.isCI"
+        id="{{row.entity.license.siteUrl}}_isNotCI"
+        name="{{row.entity.license.siteUrl}}_isNotCI">
+    
+    <a target="_blank"
+       href= "{{row.entity.siteAdminUrl}}"
+       id="{{row.entity.license.siteUrl}}_siteAdminUrl">
+       
+      {{::'siteList.siteAdminUrl' | translate}}
+    </a>
+  </span>
+
+  <span ng-if="row.entity.isCI"
+        id="{{row.entity.license.siteUrl}}_isCI"
+        name="{{row.entity.license.siteUrl}}_isCI">
+		
+  <!-- Reports icon -->
+  <span ng-include="'modules/core/siteList/siteActionsReportsIcon.tpl.html'"></span>
+
+  <!-- Config icon -->
+  <span ng-include="'modules/core/siteList/siteActionsConfigIcon.tpl.html'"></span>
+  
+  <!-- CSV icon and results link -->
+  <span ng-include="'modules/core/siteList/siteActionsCsvIcon.tpl.html'"></span>
+  
+  <!-- Start of Loading indication -->
+  <span ng-if="(!row.entity.showCSVIconAndResults && !row.entity.showSiteLinks) || 
+               (row.entity.showCSVIconAndResults && (!row.entity.showSiteLinks || !row.entity.showCSVInfo))"
+        id="{{row.entity.license.siteUrl}}_loading"
+        name="{{row.entity.license.siteUrl}}_loading">
+        
+    <span>
+      &nbsp;&nbsp;&nbsp;
+    </span>
+    
+    <i id="{{row.entity.license.siteUrl}}_checkingServicesSpinner"
+        name="{{row.entity.license.siteUrl}}_checkingServicesSpinner"
+        class="icon icon-spinner grid-vcenter"></i>
+    
+    <span class="grid-vcenter"
+          translate="siteList.checkingServices"></span>
+  </span>
+  <!-- End of Loading indication -->
+  
+  <!-- Start of Error/warning indication -->
+  <span ng-if="row.entity.showSiteLinks && row.entity.isError"
+        id="{{row.entity.license.siteUrl}}_error"
+        name="{{row.entity.license.siteUrl}}_error">
+        
+    <span>
+      &nbsp;&nbsp;&nbsp;
+    </span>
+    
+    <span ng-if="row.entity.isWarn"
+          id="{{row.entity.license.siteUrl}}_warningIcon"
+          name="{{row.entity.license.siteUrl}}_warningIcon">
+
+      <i class="icon icon-warning attention-color grid-text-top"></i>
+
+      <span translate="siteList.authError"></span>
+    </span>
+
+    <span ng-if="!row.entity.isWarn"
+          id="{{row.entity.license.siteUrl}}_errorIcon"
+          name="{{row.entity.license.siteUrl}}_errorIcon">
+
+      <i class="icon icon-error error-color grid-text-top"></i>
+
+      <span translate="siteList.systemError" 
+            class="error-color"></span>
+    </span>
+  </span>
+  <!-- End of Error/warning indication -->
+  </span>
+</p>

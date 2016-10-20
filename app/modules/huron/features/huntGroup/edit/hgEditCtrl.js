@@ -48,6 +48,7 @@
     vm.selectedFallbackNumber = undefined;
     vm.selectedFallbackMember = undefined;
     vm.disableVoicemail = false;
+    vm.allowLocalValidation = false;
 
     vm.showDisableSave = showDisableSave;
 
@@ -66,6 +67,7 @@
     ////////////////
 
     function init() {
+      allowLocalValidation();
       HuntGroupEditDataService.reset();
       HuntGroupEditDataService.fetchHuntGroup(customerId, vm.hgId)
         .then(function (pristineData) {
@@ -147,7 +149,7 @@
 
     function showDisableSave() {
       return (vm.form.$invalid ||
-        HuntGroupFallbackDataService.isFallbackInvalid() ||
+        (HuntGroupFallbackDataService.isFallbackInvalid() && !vm.allowLocalValidation) ||
         vm.isMembersInvalid());
     }
 
@@ -161,7 +163,7 @@
     }
 
     function shouldShowFallbackWarning() {
-      return HuntGroupFallbackDataService.isFallbackInvalid();
+      return HuntGroupFallbackDataService.isFallbackInvalid() && !vm.allowLocalValidation;
     }
 
     function removeFallbackDest() {
@@ -250,7 +252,7 @@
         huntMethod: vm.model.huntMethod,
         maxRingSecs: vm.model.maxRingSecs.value,
         maxWaitMins: vm.model.maxWaitMins.value,
-        fallbackDestination: HuntGroupFallbackDataService.getFallbackDestinationJSON(),
+        fallbackDestination: HuntGroupFallbackDataService.getFallbackDestinationJSON(vm.allowLocalValidation),
         members: HuntGroupMemberDataService.getMembersNumberUuidJSON()
       };
     }
@@ -258,11 +260,11 @@
     function saveForm() {
       vm.saveInProgress = true;
       var updateJSONRequest = hgUpdateReqBody();
-      HuntGroupService.updateHuntGroup(customerId, vm.hgId, updateJSONRequest).then(function (data) {
+      HuntGroupService.updateHuntGroup(customerId, vm.hgId, updateJSONRequest).then(function () {
         vm.saveInProgress = false;
-        Notification.success($translate.instant('huronHuntGroup.successUpdate', {
+        Notification.success('huronHuntGroup.successUpdate', {
           huntGroupName: vm.model.name
-        }));
+        });
 
         HuntGroupEditDataService.setPristine(updateJSONRequest);
         HuntGroupFallbackDataService.setAsPristine();
@@ -270,7 +272,7 @@
         resetForm(false);
       }, function (data) {
         vm.saveInProgress = false;
-        Notification.errorResponse(data, $translate.instant('huronHuntGroup.errorUpdate'), {
+        Notification.errorResponse(data, 'huronHuntGroup.errorUpdate', {
           huntGroupName: vm.model.name
         });
       });
@@ -307,7 +309,7 @@
             vm.form.$setDirty();
           }
         },
-        controller: /* ngInject */ function ($scope) {
+        controller: /* @ngInject */ function ($scope) {
           $scope.to.options = vm.allPilotOptions;
           $scope.$watchCollection('model.numbers', function (value) {
             if (angular.equals(value, vm.selectedPilotNumbers)) {
@@ -356,6 +358,12 @@
         }
       }];
       vm.isLoadingCompleted = true;
+    }
+
+    function allowLocalValidation() {
+      HuntGroupFallbackDataService.allowLocalValidation().then(function (result) {
+        vm.allowLocalValidation = result;
+      });
     }
   }
 })();

@@ -36,7 +36,20 @@
             model: 'CISCO_SX10',
             enabled: false,
             quantity: 0,
-            readonly: false
+            readonly: false,
+            valid: true
+          }, {
+            model: 'CISCO_DX80',
+            enabled: false,
+            quantity: 0,
+            readonly: false,
+            valid: true
+          }, {
+            model: 'CISCO_MX300',
+            enabled: false,
+            quantity: 0,
+            readonly: false,
+            valid: true
           }],
         }
       };
@@ -46,8 +59,8 @@
     }
 
     function hasRoomSystemDeviceAvailable(details) {
-      var staticRoomSystems = _.pluck(getData().details.roomSystems, 'model');
-      var devices = _.pluck(_.get(details, 'devices', []), 'model');
+      var staticRoomSystems = _.map(getData().details.roomSystems, 'model');
+      var devices = _.map(_.get(details, 'devices', []), 'model');
 
       return _.difference(staticRoomSystems, devices).length === getData().details.roomSystems.length;
     }

@@ -1,24 +1,25 @@
-<div class="users-upload-results" ng-init="wizard.hasErrors=false; sendBulkMetric();">
-  <i ng-if="model.userErrorArray.length === 0" class="icon icon-check-mark-success"></i>
+<div class="users-upload-results" ng-init="wizard.hasErrors=false;">
+  <i ng-if="csv.model.userErrorArray.length === 0" class="icon icon-check-mark-success"></i>
   <div class="results-container">
-    <div class="result new-users" ng-class="{disabled: model.numNewUsers === 0}">
-      <div class="total">{{model.numNewUsers}}</div>
+    <div class="result new-users" ng-class="{disabled: csv.model.numNewUsers === 0}">
+      <div class="total">{{csv.model.numNewUsers}}</div>
       <h4 class="total-title" translate="firstTimeWizard.newUsers"></h4>
     </div>
-    <div class="result existing-users" ng-class="{disabled: model.numExistingUsers === 0}">
-      <div class="total">{{model.numExistingUsers}}</div>
+    <div class="result existing-users" ng-class="{disabled: csv.model.numExistingUsers === 0}">
+      <div class="total">{{csv.model.numExistingUsers}}</div>
       <h4 class="total-title" translate="firstTimeWizard.existingUsers"></h4>
     </div>
-    <div class="result error-users" ng-class="{disabled: model.userErrorArray.length === 0}">
-      <div class="total">{{model.userErrorArray.length}}</div>
+    <div class="result error-users" ng-class="{disabled: csv.model.userErrorArray.length === 0}">
+      <div class="total">{{csv.model.userErrorArray.length}}</div>
       <h4 class="total-title" translate="firstTimeWizard.errorUsers"></h4>
-      <div class="action-link" ng-if="model.userErrorArray.length > 0" ng-init="wizard.hasErrors=true;">
-        <i class="icon icon-error"></i><a href ng-click="wizard.resetSubTab(1)" translate="firstTimeWizard.fixBulkErrors"></a>
+      <div class="action-link" ng-if="csv.model.userErrorArray.length > 0" ng-init="wizard.hasErrors=true;">
+        <i class="icon icon-error"></i>
+        <a href ng-click="wizard.resetSubTab(1)" translate="firstTimeWizard.fixBulkErrors"></a>
       </div>
     </div>
   </div>
-  <div class="results-total">{{model.numTotalUsers}} <span translate="firstTimeWizard.totalProcessed"></span></div>
-  <div class="error-table table-header" ng-if="model.userErrorArray.length > 0">
+  <div class="results-total">{{csv.model.numTotalUsers}} <span translate="firstTimeWizard.totalProcessed"></span></div>
+  <div class="error-table table-header" ng-if="csv.model.userErrorArray.length > 0">
     <table class="table table-bordered">
       <colgroup>
         <col class="medium-2">
@@ -32,14 +33,14 @@
       </thead>
     </table>
   </div>
-  <div cs-scroll class="error-table table-body" ng-if="model.userErrorArray.length > 0">
+  <div cs-scroll class="error-table table-body" ng-if="csv.model.userErrorArray.length > 0">
     <table id="errorTable" class="table table-bordered">
       <colgroup>
         <col class="medium-2">
         <col class="medium-10">
       </colgroup>
       <tbody>
-        <tr ng-repeat="data in model.userErrorArray">
+        <tr ng-repeat="data in csv.model.userErrorArray">
           <td class="center">{{::data.row}}</td>
           <td>{{::data.error}}</td>
         </tr>

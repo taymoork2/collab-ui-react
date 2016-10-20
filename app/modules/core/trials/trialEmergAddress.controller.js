@@ -11,7 +11,8 @@
 
     vm.trial = TrialPstnService.getData();
 
-    vm.addressLoading = false;
+    vm.addressLoading = true;
+    vm.addressFound = false;
     vm.validation = false;
 
     vm.validateAddress = validateAddress;
@@ -19,94 +20,112 @@
     vm.skip = skip;
 
     vm.emergencyAddressFields = [{
-      type: 'inline',
-      className: 'medium-12 columns no-pad',
+      model: vm.trial.details.emergAddr,
+      key: 'streetAddress',
+      type: 'input',
+      className: 'medium-9 inline-row left',
       templateOptions: {
-        fields: [{
-          model: vm.trial.details.emergAddr,
-          key: 'streetAddress',
-          type: 'input',
-          className: 'medium-9 columns no-flex',
-          templateOptions: {
-            labelfield: 'label',
-            label: $translate.instant('trialModal.pstn.address'),
-            labelClass: 'columns medium-2 text-right',
-            inputClass: 'columns medium-9'
-          }
-        }, {
-          model: vm.trial.details.emergAddr,
-          key: 'unit',
-          type: 'input',
-          className: 'medium-3 columns no-flex',
-          templateOptions: {
-            labelfield: 'label',
-            label: $translate.instant('trialModal.pstn.unit'),
-            labelClass: 'columns medium-3 text-right',
-            inputClass: 'columns medium-8',
-
-          }
-        }]
+        required: true,
+        labelfield: 'label',
+        label: $translate.instant('trialModal.pstn.address'),
+        inputClass: 'medium-11'
+      },
+      expressionProperties: {
+        'templateOptions.disabled': function () {
+          return vm.addressFound;
+        }
+      }
+    }, {
+      model: vm.trial.details.emergAddr,
+      key: 'unit',
+      type: 'input',
+      className: 'medium-3 inline-row left',
+      templateOptions: {
+        labelfield: 'label',
+        label: $translate.instant('trialModal.pstn.unit')
+      },
+      expressionProperties: {
+        'templateOptions.disabled': function () {
+          return vm.addressFound;
+        }
       }
     }, {
       model: vm.trial.details.emergAddr,
       key: 'city',
       type: 'input',
-      className: 'medium-9 columns no-pad',
+      className: 'medium-12',
       templateOptions: {
+        required: true,
         labelfield: 'label',
         label: $translate.instant('trialModal.pstn.city'),
-        labelClass: 'columns medium-2 text-right',
-        inputClass: 'columns medium-9 city-width',
+      },
+      expressionProperties: {
+        'templateOptions.disabled': function () {
+          return vm.addressFound;
+        }
       }
     }, {
-      type: 'inline',
-      className: 'medium-9 columns no-pad',
+      model: vm.trial.details.emergAddr,
+      key: 'state',
+      type: 'select',
+      className: 'medium-8 inline-row left',
       templateOptions: {
-        fields: [{
-          model: vm.trial.details.emergAddr,
-          key: 'state',
-          type: 'select',
-          className: 'medium-5 columns max-width no-flex',
-          templateOptions: {
-            label: $translate.instant('trialModal.pstn.state'),
-            labelfield: 'abbreviation',
-            valuefield: 'abbreviation',
-            labelClass: 'columns medium-6 text-right',
-            inputClass: 'columns medium-9',
-            options: []
-          },
-          controller: /* @ngInject */ function ($scope) {
-            TerminusStateService.query().$promise.then(function (states) {
-              $scope.to.options = _.map(states, 'abbreviation');
-            });
-          }
-        }, {
-          model: vm.trial.details.emergAddr,
-          key: 'zip',
-          type: 'input',
-          className: 'medium-6 columns no-flex',
-          templateOptions: {
-            labelfield: 'label',
-            label: $translate.instant('trialModal.pstn.zip'),
-            labelClass: 'columns medium-6 text-right',
-            inputClass: 'columns medium-9',
-            onBlur: validateAddress
-          }
-        }]
+        required: true,
+        label: $translate.instant('trialModal.pstn.state'),
+        labelfield: 'name',
+        valuefield: 'abbreviation',
+        inputClass: 'medium-11',
+        options: [],
+        filter: true
+      },
+      controller: /* @ngInject */ function ($scope) {
+        TerminusStateService.query().$promise.then(function (states) {
+          $scope.to.options = states;
+        });
+      },
+      expressionProperties: {
+        'templateOptions.disabled': function () {
+          return vm.addressFound;
+        }
+      }
+    }, {
+      model: vm.trial.details.emergAddr,
+      key: 'zip',
+      type: 'input',
+      className: 'medium-4 inline-row left',
+      templateOptions: {
+        required: true,
+        labelfield: 'label',
+        label: $translate.instant('trialModal.pstn.zip'),
+        onBlur: validateAddress
+      },
+      expressionProperties: {
+        'templateOptions.disabled': function () {
+          return vm.addressFound;
+        }
       }
     }];
 
     function validateAddress() {
-      vm.validation = true;
       vm.addressLoading = true;
-      return PstnServiceAddressService.lookupAddress(vm.trial.details.emergAddr)
+      vm.validation = true;
+      return PstnServiceAddressService.lookupAddress({
+        streetAddress: vm.trial.details.emergAddr.streetAddress,
+        unit: vm.trial.details.emergAddr.unit,
+        city: vm.trial.details.emergAddr.city,
+        state: vm.trial.details.emergAddr.state.abbreviation,
+        zip: vm.trial.details.emergAddr.zip
+      })
         .then(function (response) {
           if (angular.isDefined(response)) {
+            vm.addressFound = true;
             _.extend(vm.trial.details.emergAddr, response);
           } else {
             vm.validation = false;
             Notification.error('trialModal.pstn.error.noAddress');
           }
+        })
+        .finally(function () {
           vm.addressLoading = false;
         });
     }
@@ -119,6 +138,7 @@
     function resetAddress() {
       TrialPstnService.resetAddress();
       vm.validation = false;
+      vm.addressFound = false;
     }
   }
 })();

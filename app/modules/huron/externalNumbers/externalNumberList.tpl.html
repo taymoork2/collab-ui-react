@@ -1,6 +1,6 @@
 <div class="tab-content center">
   <div class="total-count">
-    <span translate="{{::countTranslateKey}}" translate-values="{count: numbers.length}" translate-interpolation="messageformat"></span>
+    <span translate="{{::countTranslateKey}}" translate-values="{count: quantity}" translate-interpolation="messageformat"></span>
     <i class="icon icon-refresh" ng-click="externalNumbers.listPhoneNumbers()" ng-if="!externalNumbers.refresh"></i><i class="icon icon-spinner" ng-if="externalNumbers.refresh"></i>
     <i class="icon" ng-class="::tooltipClass" ng-if="::tooltipText" cs-tooltip="{{::tooltipText}}"></i>
   </div>
@@ -11,6 +11,11 @@
   <div ng-class="{invisible: !externalNumbers.filter}" class="filter-count" translate="externalNumberPanel.searchResults" translate-values="{count: filteredNumbers.length}" translate-interpolation="messageformat">
   </div>
   <ul class="list-group">
-    <li class="list-group-item list-token" ng-class="{'invalid-token': number.pattern === number.label}" ng-repeat="number in filteredNumbers = (numbers | externalNumberList: externalNumbers.filter) | orderBy:'pattern'"><span ng-bind="::number.label"></span><button ng-if="number.uuid && !number.directoryNumber" type="button" class="close" ng-click="externalNumbers.deleteNumber(number)"><span class="sr-only" translate="common.delete"></span></button></li>
+    <li class="list-group-item list-token" ng-class="{'invalid-token': number.pattern === number.label}" ng-repeat="number in filteredNumbers = (numbers | externalNumberList: externalNumbers.filter) | orderBy:'pattern'">
+      <span ng-bind="::number.label"></span>
+      <button ng-if="number.uuid && !number.directoryNumber" type="button" class="close" ng-click="externalNumbers.deleteNumber(number)">
+        <span class="sr-only" translate="common.delete"></span>
+      </button>
+    </li>
   </ul>
 </div>

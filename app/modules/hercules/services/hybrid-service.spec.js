@@ -1,12 +1,12 @@
 'use strict';
 
 describe('Service: HybridService', function () {
-  beforeEach(module('wx2AdminWebClientApp'));
+  beforeEach(angular.mock.module('Hercules'));
 
   var Service, $httpBackend, authinfo;
 
   beforeEach(function () {
-    module(function ($provide) {
+    angular.mock.module(function ($provide) {
       authinfo = {
         getOrgId: sinon.stub(),
         isEntitled: sinon.stub()
@@ -23,9 +23,6 @@ describe('Service: HybridService', function () {
   beforeEach(inject(function ($injector, _HybridService_) {
     Service = _HybridService_;
     $httpBackend = $injector.get('$httpBackend');
-    $httpBackend
-      .when('GET', 'l10n/en_US.json')
-      .respond({});
   }));
 
   afterEach(function () {

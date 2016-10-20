@@ -1,21 +1,16 @@
-<div id="domainManagement" ng-if="dv.feature">
-  <article>
-    <header>
-      <h6><strong translate="domainManagement.title"/></h6>
-    </header>
-    <section>
-      <p translate="domainManagement.description"></p>
-      <table class="table">
-        <tr class="header">
-          <th translate="domainManagement.list.domainHeader"></th>
-          <th translate="domainManagement.list.statusHeader"></th>
-          <th translate="domainManagement.list.actionsHeader"></th>
-        </tr>
-        <tr ng-repeat="domain in dv.domains">
-          <td><span>{{domain.text}}</span></td>
-          <td class="domain-status"><span><i class="icon icon-circle {{domain.status}}"></i>{{domain.status}}</span></td>
+<div id="domainManagement">
+  <section>
+    <table class="table">
+      <tr class="header">
+        <th translate="domainManagement.list.domainHeader"></th>
+        <th translate="domainManagement.list.statusHeader"></th>
+        <th translate="domainManagement.list.actionsHeader"></th>
+      </tr>
+      <tr ng-repeat="domain in dv.domains">
+        <td><span>{{domain.text}}</span></td>
+        <td class="domain-status"><span><i class="icon icon-circle {{domain.status}}"></i>{{domain.status}}</span></td>
 
-          <td id="domainMenu">
+        <td id="domainMenu">
             <span cs-dropdown class="actions-menu dropdown pull-right">
               <button cs-dropdown-toggle class="actions-button btn--none dropdown-toggle">
                 <i class="icon icon-three-dots"></i>
@@ -40,19 +35,17 @@
                 </li>
               </ul>
             </span>
-          </td>
-          <td>
+        </td>
+        <td>
             <span>
               <button ui-sref="domainmanagement.verify({domain: domain, loggedOnUser: dv.loggedOnUser})"
                       ng-if="domain.status==='pending'"
                       class="btn--primary verify-btn" translate="domainManagement.verifyDomain"></button>
             </span>
-          </td>
-        </tr>
-      </table>
-      <button class="btn--primary addDomain" ng-show="dv.loggedOnUser.isLoaded" translate="domainManagement.addDomain"
-              ui-sref="domainmanagement.add({loggedOnUser: dv.loggedOnUser})"></button>
-
-    </section>
-  </article>
+        </td>
+      </tr>
+    </table>
+    <button class="btn--primary addDomain" ng-show="dv.loggedOnUser.isLoaded" translate="domainManagement.addDomain"
+            ui-sref="domainmanagement.add({loggedOnUser: dv.loggedOnUser})"></button>
+  </section>
 </div>

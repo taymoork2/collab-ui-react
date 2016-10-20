@@ -6,102 +6,116 @@
     .controller('MessagingSetupCtrl', MessagingSetupCtrl);
 
   /* @ngInject */
-  function MessagingSetupCtrl($log, $scope, $translate, AccountOrgService, Authinfo, Notification) {
-    var vm = this;
+  function MessagingSetupCtrl($scope, $translate, AccountOrgService, Authinfo, FeatureToggleService, Notification) {
     var msgIntFlag = false;
-    var CurrentDataRetentionPeriod = null;
+    var currentDataRetentionPeriod = null;
+    var orgId = Authinfo.getOrgId();
+    var vm = this;
+    vm.showMessengerInterop = false;
     vm.msgIntegration = false;
     vm.dataShare = true;
-    vm.placeholder = 'Select retention time';
+    // US11663 - Hide data retention content for now.  Will be restored in the future.
+    vm.showDataRetentionContent = false;
+
+    vm.placeholder = $translate.instant('firstTimeWizard.messagingSetupPlaceholder');
     vm.selected = {
       label: '',
       value: ''
     };
     vm.options = [{
-      label: 'Delete immediately',
+      label: $translate.instant('firstTimeWizard.messagingSetupDataRetentionOption1'),
       value: 'immediate'
     }, {
-      label: '30 days',
+      label: $translate.instant('firstTimeWizard.messagingSetupDataRetentionOption2'),
       value: '30'
     }, {
-      label: '60 days',
+      label: $translate.instant('firstTimeWizard.messagingSetupDataRetentionOption3'),
       value: '60'
     }, {
-      label: '90 days',
+      label: $translate.instant('firstTimeWizard.messagingSetupDataRetentionOption4'),
       value: '90'
     }, {
-      label: 'Keep forever',
+      label: $translate.instant('firstTimeWizard.messagingSetupDataRetentionOption5'),
       value: 'indefinite'
     }];
-    $scope.showMessengerInterop = false;
 
-    var orgId = Authinfo.getOrgId();
-    AccountOrgService.getServices(orgId, null)
-      .success(function (data, status) {
-        var interopIndex = _.findIndex(data.entitlements, function (obj) {
-          return obj.serviceId == 'messengerInterop';
-        });
-        if (interopIndex > -1) {
-          vm.msgIntegration = true;
-          msgIntFlag = true;
-        }
-      });
+    FeatureToggleService.atlasDataRetentionSettingsGetStatus().then(function (toggle) {
+      vm.showDataRetentionContent = toggle;
+    }).finally(init);
 
-    AccountOrgService.getOrgSettings(orgId)
-      .success(function (data, status) {
-        var dataRetentionIndex = _.findIndex(data.settings, function (obj) {
-          return obj.key == 'dataRetentionPeriodDays';
-        });
-        if (dataRetentionIndex > -1) {
-          var selectedIndex = _.findIndex(vm.options, function (obj) {
-            return obj.value == data.settings[dataRetentionIndex].value;
+    function init() {
+      getServices();
+      getOrgSettings();
+    }
+
+    function getServices() {
+      AccountOrgService.getServices(orgId, null)
+        .then(function (response) {
+          var interopIndex = _.findIndex(response.data.entitlements, function (obj) {
+            return obj.serviceId === 'messengerInterop';
           });
-          vm.selected = vm.options[selectedIndex];
-          CurrentDataRetentionPeriod = data.settings[dataRetentionIndex].value;
-        }
-      });
+          if (interopIndex > -1) {
+            vm.msgIntegration = true;
+            msgIntFlag = true;
+          }
+        });
+    }
 
-    $scope.$on('wizard-messenger-setup-event', function () {
+    function getOrgSettings() {
+      AccountOrgService.getOrgSettings(orgId)
+        .then(function (response) {
+          var dataRetentionIndex = _.findIndex(response.data.settings, function (obj) {
+            return obj.key === 'dataRetentionPeriodDays';
+          });
+          if (dataRetentionIndex > -1) {
+            var selectedIndex = _.findIndex(vm.options, function (obj) {
+              return obj.value === response.data.settings[dataRetentionIndex].value;
+            });
+            vm.selected = vm.options[selectedIndex];
+            currentDataRetentionPeriod = response.data.settings[dataRetentionIndex].value;
+          }
+        });
+    }
 
-      if (!_.isEmpty(vm.selected.value) && !CurrentDataRetentionPeriod) {
+    $scope.setupNext = function () {
+      if (!_.isEmpty(vm.selected.value) && !currentDataRetentionPeriod) {
         AccountOrgService.addOrgDataRetentionPeriodDays(orgId, vm.selected.value)
-          .success(function (data, status) {
-            Notification.notify([$translate.instant('firstTimeWizard.messengerRetentionSuccess')], 'success');
+          .then(function () {
+            Notification.success('firstTimeWizard.messengerRetentionSuccess');
           })
-          .error(function (data, status) {
-            Notification.notify([$translate.instant('firstTimeWizard.messengerRetentionError')], 'error');
+          .catch(function () {
+            Notification.error('firstTimeWizard.messengerRetentionError');
           });
       }
 
-      if (!_.isEmpty(vm.selected.value) && CurrentDataRetentionPeriod && CurrentDataRetentionPeriod !== vm.selected.value) {
+      if (!_.isEmpty(vm.selected.value) && currentDataRetentionPeriod && currentDataRetentionPeriod !== vm.selected.value) {
         AccountOrgService.modifyOrgDataRetentionPeriodDays(orgId, vm.selected.value)
-          .success(function (data, status) {
-            Notification.notify([$translate.instant('firstTimeWizard.messengerRetentionEditSuccess')], 'success');
+          .then(function () {
+            Notification.success('firstTimeWizard.messengerRetentionEditSuccess');
           })
-          .error(function (data, status) {
-            Notification.notify([$translate.instant('firstTimeWizard.messengerRetentionEditError')], 'error');
+          .catch(function () {
+            Notification.error('firstTimeWizard.messengerRetentionEditError');
           });
       }
 
-      if (vm.msgIntegration === true && msgIntFlag === false) {
+      if (vm.msgIntegration && !msgIntFlag) {
         AccountOrgService.addMessengerInterop(orgId)
-          .success(function (data, status) {
-            Notification.notify([$translate.instant('firstTimeWizard.messengerEnableWebexSuccess')], 'success');
+          .then(function () {
+            Notification.success('firstTimeWizard.messengerEnableWebexSuccess');
           })
-          .error(function (data, status) {
-            Notification.notify([$translate.instant('firstTimeWizard.messengerEnableWebexError')], 'error');
+          .catch(function () {
+            Notification.error('firstTimeWizard.messengerEnableWebexError');
           });
-      } else if (vm.msgIntegration === false && msgIntFlag === true) {
+
+      } else if (!vm.msgIntegration && msgIntFlag) {
         AccountOrgService.deleteMessengerInterop(orgId)
-          .success(function (data, status) {
-            Notification.notify([$translate.instant('firstTimeWizard.messengerDisableWebexError')], 'success');
+          .then(function () {
+            Notification.success('firstTimeWizard.messengerDisableWebexError');
           })
-          .error(function (data, status) {
-            Notification.notify([$translate.instant('firstTimeWizard.messengerDisableWebexError')], 'error');
+          .catch(function () {
+            Notification.error('firstTimeWizard.messengerDisableWebexError');
           });
       }
-
-    });
-
+    };
   }
 })();

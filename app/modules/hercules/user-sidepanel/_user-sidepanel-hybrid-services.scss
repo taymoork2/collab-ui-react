@@ -1,0 +1,152 @@
+.cloud-extensions {
+  .status-error {
+    color: $brand-danger;
+  }
+
+  .status-warning {
+    color: $brand-warning-dark;
+  }
+
+  .status-notActivated {
+    color: $gray-dark;
+  }
+
+  .status-activated {
+    color: $brand-success;
+  }
+
+  .status-deactivated {
+    color: $gray-dark;
+  }
+
+  .status-off {
+    color: $gray-dark;
+  }
+
+  .cs-loading {
+    display: inline;
+    padding-left: 1rem;
+  }
+
+  .feature-list-loader {
+    padding-left: 0;
+    padding-right: 0.5rem;
+  }
+
+  .section-title-row {
+    align-items: center;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+
+    .toggle-switch {
+      margin-bottom: 0;
+    }
+  }
+
+  .info-description {
+    font-family: $brand-font-light;
+    letter-spacing: 0.02em;
+    line-height: inherit;
+  }
+
+  .extension-description {
+    color: $gray-dark;
+    font-family: $brand-font-light;
+    font-size: 13.5px;
+    letter-spacing: 0.02em;
+    line-height: inherit;
+    padding-bottom: 10px;
+  }
+
+  .row-hybrid {
+    background: $gray-lightest;
+    display: inline-flex;
+  }
+
+  .column-header {
+    text-align: left;
+    padding: 15px 20px 0px 40px;
+    display: flex;
+
+    h3 {
+      font-family: $brand-font-cisco-TT-Extra-Light;
+      padding-left: 12px;
+    }
+
+    .icon {
+      font-size: 35px;
+      display: inline-block;
+    }
+  }
+
+  &.hybrid-services-panel {
+    margin-top: 3px;
+    background-color: $gray-lightest;
+    font-family: $brand-font-light;
+    font-size: 14px;
+    color: $gray-darkest;
+
+    .hs-header {
+      padding-left: 15px;
+      font-family: $brand-font-cisco-TT-Extra-Light;
+    }
+
+    .hs-extension-list {
+      padding-top: 20px;
+    }
+
+    .indentedCB {
+      margin-left: 27px;
+    }
+  }
+}
+
+.cloud-extension-label {
+  font-weight: 500;
+  margin: 0;
+  font-size: 0.875rem;
+  line-height: 2.25rem;
+  font-family: $brand-font-light;
+}
+
+form {
+  margin-top: 15px;
+}
+
+.info-message {
+  position: relative;
+
+  .icon {
+    position: absolute;
+    color: $color-primary-base;
+    top: 3px;
+  }
+}
+
+.warning-message {
+  position: relative;
+  margin-top: 1rem;
+
+  .icon {
+    position: absolute;
+    color: $color-attention-base;
+    top: 3px;
+  }
+}
+
+.error-message {
+  position: relative;
+
+  .icon {
+    position: absolute;
+    color: $color-alerts-base;
+    top: 3px;
+  }
+}
+
+.message {
+  margin-left: 1.5rem;
+  font-size: 0.875rem;
+  max-width: 36rem;
+}

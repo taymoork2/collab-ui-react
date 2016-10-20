@@ -1,115 +1,148 @@
-'use strict';
+(function () {
+  'use strict';
 
-angular.module('Core')
-  .controller('leaderBoardCtrl', ['$q', '$scope', '$translate', 'Orgservice', 'Authinfo', 'FeatureToggleService',
-    function ($q, $scope, $translate, Orgservice, Authinfo, FeatureToggleService) {
+  angular.module('Core')
+    .controller('leaderBoardCtrl', leaderBoardCtrl)
+    .directive('crLeaderBoardBucket', crLeaderBoardBucket);
 
-      // TODO: revisit after graduation (2016-02-17) - see if this can be moved into the template
-      $scope.label = $translate.instant('leaderBoard.licenseUsage');
+  /* @ngInject */
+  function leaderBoardCtrl($scope, $translate, Authinfo, Config, Orgservice, TrialService, WebExUtilsFact) {
 
-      $scope.state = 'license'; // Possible values are license, warning or error
-      $scope.icon = 'check-gear';
+    var vm = this;
+    // TODO: revisit after graduation (2016-02-17) - see if this can be moved into the template
+    vm.label = $translate.instant('leaderBoard.licenseUsage');
 
-      $scope.bucketKeys = [
-        'messaging',
-        'cf',
-        'conferencing',
-        'communication',
-        'shared_devices',
-        'storage',
-        'sites'
-      ];
+    vm.state = 'license'; // Possible values are license, warning or error
+    vm.icon = 'check-gear';
+    vm.trialDaysLeft = undefined;
+    vm.roomSystemsCount = 0;
+    vm.buckets = [];
 
-      $scope.isCustomerAdmin = Authinfo.isCustomerAdmin();
-      $scope.isAtlasTrialConversion = false;
-      $scope.hasActiveTrial = false;
-      $scope.trialExistsInSubscription = trialExistsInSubscription;
+    var bucketKeys = [
+      'messaging',
+      'cf',
+      'conferencing',
+      'communication',
+      'shared_devices',
+      'storage',
+      'sites'
+    ];
 
-      var getLicenses = function () {
-        Orgservice.getLicensesUsage()
-          .then(function (subscriptions) {
-            // check if active trial exists
-            $scope.hasActiveTrial = _.some(subscriptions, trialExistsInSubscription);
+    vm.isCustomer = !Authinfo.isPartner();
+    vm.isAtlasTrialConversion = false;
+    vm.hasActiveTrial = false;
+    vm.trialExistsInSubscription = trialExistsInSubscription;
+    vm.init = init;
 
-            return subscriptions;
-          })
-          .then(function (subscriptions) {
-            $scope.buckets = [];
-            for (var index in subscriptions) {
-              var licenses = subscriptions[index]['licenses'];
-              var subscription = {};
-              subscription['subscriptionId'] = subscriptions[index]['subscriptionId'];
-              subscription['hasActiveTrial'] = trialExistsInSubscription(subscriptions[index]);
-              if (licenses.length === 0) {
-                $scope.bucketKeys.forEach(function (bucket) {
-                  subscription[bucket] = {};
-                  subscription[bucket].unlimited = true;
-                });
-              } else {
-                licenses.forEach(function (license) {
-                  var bucket = license.licenseType.toLowerCase();
-                  if (!(bucket === 'cmr' || bucket === 'conferencing')) {
-                    subscription[bucket] = {};
-                    var a = subscription[bucket];
-                    a['services'] = [];
-                  }
-                  if (license.offerName !== 'CF') {
-                    if (license.siteUrl) {
-                      if (!subscription['sites']) {
-                        subscription['sites'] = {};
-                      }
-                      if (!subscription['sites'][license.siteUrl]) {
-                        subscription['sites'][license.siteUrl] = [];
-                      }
-                      subscription['sites'][license.siteUrl].push(license);
-                      subscription['licensesCount'] = subscription.sites[license.siteUrl].length;
-                      subscription.count = Object.keys(subscription['sites']).length;
-                    } else {
-                      subscription[bucket]['services'].push(license);
-                    }
-                  } else {
-                    subscription['cf'] = {
-                      'services': []
-                    };
-                    subscription['cf']['services'].push(license);
-                  }
-                });
+    function getLicenses() {
+      Orgservice.getLicensesUsage()
+        .then(function (subscriptions) {
+          vm.roomSystemsCount = 0;
+          // check if active trial exists
+          vm.hasActiveTrial = _.some(subscriptions, trialExistsInSubscription);
+          return subscriptions;
+        })
+        .then(function (subscriptions) {
+          vm.buckets = [];
+          var updateSubscriptionBucket = function (bucket) {
+            subscription[bucket] = {};
+            subscription[bucket].unlimited = true;
+          };
+          var updateSubscriptionAndLicenses = function (license, licenseIndex) {
+            var bucket = license.licenseType.toLowerCase();
+
+            if (!(bucket === 'cmr' || bucket === 'conferencing')) {
+              subscription[bucket] = {};
+              var a = subscription[bucket];
+              a['services'] = [];
+              if (license.licenseType === Config.licenseTypes.SHARED_DEVICES) {
+                vm.roomSystemsCount = vm.roomSystemsCount + license.volume;
               }
-              $scope.buckets.push(subscription);
             }
-          });
-      };
 
-      function init() {
-        FeatureToggleService.supports(FeatureToggleService.features.atlasTrialConversion)
-          .then(function (enabled) {
-            $scope.isAtlasTrialConversion = enabled;
-          });
+            license.id = bucket + index + licenseIndex;
+            license.siteAdminUrl = null;
+            license.hideUsage = false;
 
-        getLicenses();
-      }
+            if (license.offerName !== 'CF') {
+              var licSiteUrl = license.siteUrl;
 
-      init();
+              if (licSiteUrl) {
+                if (!WebExUtilsFact.isCIEnabledSite(licSiteUrl)) {
+                  license.siteAdminUrl = WebExUtilsFact.getSiteAdminUrl(licSiteUrl);
+                  license.hideUsage = true;
+                }
 
-      $scope.$on('Userservice::updateUsers', function () {
-        getLicenses();
-      });
+                if (!subscription['sites']) {
+                  subscription['sites'] = {};
+                }
 
-      function trialExistsInSubscription(subscription) {
-        var licenses = _.get(subscription, 'licenses', []);
-        return _.some(licenses, function (license) {
-          return license.isTrial;
+                if (!subscription['sites'][licSiteUrl]) {
+                  subscription['sites'][licSiteUrl] = [];
+                }
+
+                subscription['sites'][licSiteUrl].push(license);
+                subscription['licensesCount'] = subscription.sites[license.siteUrl].length;
+                subscription.count = Object.keys(subscription['sites']).length;
+              } else {
+                subscription[bucket]['services'].push(license);
+              }
+            } else {
+              subscription['cf'] = {
+                'services': []
+              };
+              subscription['cf']['services'].push(license);
+            }
+          };
+          for (var index in subscriptions) {
+            var licenses = subscriptions[index]['licenses'];
+            var subscription = {};
+            subscription['subscriptionId'] = subscriptions[index]['subscriptionId'];
+            subscription['hasActiveTrial'] = trialExistsInSubscription(subscriptions[index]);
+            if (licenses.length === 0) {
+              bucketKeys.forEach(updateSubscriptionBucket);
+            } else {
+              licenses.forEach(updateSubscriptionAndLicenses);
+            }
+            vm.buckets.push(subscription);
+          }
         });
-      }
     }
-  ])
-  .directive('crLeaderBoardBucket', function () {
+
+    function init() {
+      getLicenses();
+      TrialService.getDaysLeftForCurrentUser().then(function (daysLeft) {
+        vm.trialDaysLeft = daysLeft;
+      });
+    }
+
+    init();
+
+    $scope.$on('Userservice::updateUsers', function () {
+      getLicenses();
+    });
+
+    $scope.$on('USER_LIST_UPDATED', function () {
+      getLicenses();
+    });
+
+    function trialExistsInSubscription(subscription) {
+      var licenses = _.get(subscription, 'licenses', []);
+      return _.some(licenses, function (license) {
+        return license.isTrial;
+      });
+    }
+  }
+
+  function crLeaderBoardBucket() {
     return {
       restrict: 'EA',
       controller: 'leaderBoardCtrl',
+      controllerAs: 'lBoardCtrl',
       scope: {
         bucketName: '='
       },
       templateUrl: 'modules/core/leaderBoard/leaderBoard.tpl.html'
     };
-  });
+  }
+})();

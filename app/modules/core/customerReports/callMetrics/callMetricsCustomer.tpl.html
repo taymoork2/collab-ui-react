@@ -1,11 +1,11 @@
-<cs-card id='call-metrics-customer' class="large report-card">
+<cs-card id='call-metrics-customer' class="large report-card" ng-class="{'hideCard': !nav.displayQuality}">
   <article>
     <header>
       <h4 class='report-section-header' translate='callMetrics.callMetrics'></h4>
     </header>
     <section>
       <div class="call-metrics-customer">
-        <p class="report-description">{{nav.metricsDescription}}</p>
+        <p class="report-description">{{nav.getDescription('callMetrics.customerDescription')}}</p>
         <div id="metricsGraphDiv" class="timechartDiv"></div>
         <div class="spinner-position" ng-if="nav.isRefresh(nav.metricStatus)">
           <i class='icon icon-spinner icon-2x'></i>

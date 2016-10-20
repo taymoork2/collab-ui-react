@@ -1,5 +1,7 @@
 'use strict';
 
+/*global TIMEOUT*/
+
 var Navigation = function () {
   this.body = element(by.tagName('body'));
 
@@ -15,6 +17,7 @@ var Navigation = function () {
   this.callSettings = element(by.css('a[href="#/hurondetails/settings"]'));
   this.fusionTab = element(by.css('a[href="#fusion"]'));
   this.reportsTab = element(by.css('li.reportTab > a'));
+  this.careReportsTab = element(by.cssContainingText('.nav-link', 'Care'));
   this.supportTab = element(by.css('li.supportTab > a'));
   this.cdrTab = element(by.css('a[href="#cdrsupport"]'));
   this.logsTab = element(by.css('a[href="#support"]'));
@@ -135,6 +138,11 @@ var Navigation = function () {
     this.expectCurrentUrl('/reports');
   };
 
+  this.clickCareReports = function () {
+    utils.click(this.careReportsTab);
+    this.expectCurrentUrl('/reports');
+  };
+
   this.clickSupport = function () {
     utils.click(this.supportTab);
     this.expectCurrentUrl('/support');
@@ -199,20 +207,25 @@ var Navigation = function () {
     });
   };
 
-  this.expectCurrentUrl = function (url) {
+  function doesCurrentUrlContainValues(urlArray) {
+    return function (currentUrl) {
+      log('Expecting ' + currentUrl + ' to contain ' + urlArray.join(' or '));
+      // See if currentUrl contains one of the urlArray values
+      return _.some(urlArray, _.partial(_.includes, currentUrl));
+    };
+  }
+
+  this.expectCurrentUrl = function () {
+    var urlArray = _.toArray(arguments);
     return browser.wait(function () {
-      return browser.getCurrentUrl().then(function (currentUrl) {
-        return currentUrl.indexOf(url) !== -1;
-      });
+      return browser.getCurrentUrl().then(doesCurrentUrlContainValues(urlArray));
     }, TIMEOUT);
   };
 
-  this.expectDriverCurrentUrl = function (url, url2) {
+  this.expectDriverCurrentUrl = function () {
+    var urlArray = _.toArray(arguments);
     return browser.wait(function () {
-      return browser.driver.getCurrentUrl().then(function (currentUrl) {
-        log('Expecting ' + currentUrl + ' to contain ' + url + ' or ' + url2);
-        return currentUrl.indexOf(url) !== -1 || currentUrl.indexOf(url2) !== -1;
-      });
+      return browser.driver.getCurrentUrl().then(doesCurrentUrlContainValues(urlArray));
     }, TIMEOUT);
   };
 
@@ -288,20 +301,18 @@ var Navigation = function () {
     return browser.get(getUrl(url));
   };
 
-  this.navigateToUsingIntegrationForTesting = function (url) {
-    return browser.get(url);
+  this.navigateUsingIntegrationBackend = function (url) {
+    return browser.get(getUrl(url, {
+      forceIntegration: true
+    }));
   };
 
-  function getUrl(url) {
-    var url = url || '#/login';
-    if (isProductionBackend) {
-      if (url.indexOf('?') > -1) {
-        url += '&';
-      } else {
-        url += '?';
-      }
-      url += 'test-env-config=e2e-prod';
-    }
+  function getUrl(url, opts) {
+    var forceIntegration = opts && opts.forceIntegration;
+    url = url || '#/login';
+    url += ~url.indexOf('?') ? '&' : '?';
+    url += 'test-env-config=';
+    url += isProductionBackend && !forceIntegration ? 'e2e-prod' : 'e2e';
     return url;
   }
 

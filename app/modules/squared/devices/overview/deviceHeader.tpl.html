@@ -1,10 +1,10 @@
 <cs-sp-header>
 
   <div class="header-image">
-    <div class="device-img" ng-if="!deviceOverview.currentDevice.isHuronDevice">
+    <div class="device-img" ng-if="deviceOverview.currentDevice.accountType === 'MACHINE'">
       <img src="images/devices-hi/space_avatar.png" />
     </div>
-    <div class="user-img" ng-if="deviceOverview.currentDevice.isHuronDevice">
+    <div class="user-img" ng-if="deviceOverview.currentDevice.accountType === 'PERSON'">
       <span ng-if="!deviceOverview.currentDevice.photos">
         <i class="icon icon-user"></i>
       </span>
@@ -15,17 +15,18 @@
 
   <div class="header-info">
     <div class="header-info-wrap">
-      <sq-editable-input
-        ng-if="deviceOverview.currentDevice.canEditDisplayName"
-        sq-save="deviceOverview.save(newText)"
-        ng-model="deviceOverview.currentDevice.displayName">
-      </sq-editable-input>
-      <div
-        id="header-title"
-        class="header-title"
-        title="{{deviceOverview.currentDevice.displayName}}"
-        ng-if="!deviceOverview.currentDevice.canEditDisplayName">
-        {{deviceOverview.currentDevice.displayName}}
+      <div class="header-title">
+        <sq-editable-input
+          ng-if="deviceOverview.currentDevice.canEditDisplayName"
+          sq-save="deviceOverview.save(newText)"
+          ng-model="deviceOverview.currentDevice.displayName">
+        </sq-editable-input>
+        <span
+          id="header-title"
+          title="{{deviceOverview.currentDevice.displayName}}"
+          ng-if="!deviceOverview.currentDevice.canEditDisplayName">
+          {{deviceOverview.currentDevice.displayName}}
+      </span>
       </div>
     </div>
   </div>

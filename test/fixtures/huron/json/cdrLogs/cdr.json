@@ -1,0 +1,385 @@
+[{
+  "key": "_event_seq",
+  "value": "1443629877290_103488"
+}, {
+  "key": "cdrID",
+  "value": "1443629956981_2975"
+}, {
+  "key": "dateTimeOrigination",
+  "value": 1443651360
+}, {
+  "key": "dateTimeAlert",
+  "value": 1443651361
+}, {
+  "key": "dateTimeConnect",
+  "value": 1443651369
+}, {
+  "key": "dateTimeDisconnect",
+  "value": 1443651386
+}, {
+  "key": "callSetupDelay",
+  "value": 1
+}, {
+  "key": "duration",
+  "value": 17
+}, {
+  "key": "callSecuredStatus",
+  "value": 2
+}, {
+  "key": "joinOnBehalfOf",
+  "value": 0
+}, {
+  "key": "comment",
+  "value": ""
+}, {
+  "key": "currentRoutingReason",
+  "value": 0
+}, {
+  "key": "calling_customerUUID",
+  "value": "7e88d491-d6ca-4786-82ed-cbe9efb02ad2"
+}, {
+  "key": "calling_partyNumber",
+  "value": "2400"
+}, {
+  "key": "calling_partyNumber_uri",
+  "value": "tipbu_auto_82316@int1.huron-alpha-com.wbx2.com"
+}, {
+  "key": "calling_partyNumberPartition",
+  "value": "7e88d491-d6ca-4786-82ed-cbe9efb02ad2_000001_EXT_RP"
+}, {
+  "key": "calling_externalCallerIdNumber",
+  "value": ""
+}, {
+  "key": "calling_externalCallerIdName",
+  "value": ""
+}, {
+  "key": "calling_audioBandwidth",
+  "value": 64
+}, {
+  "key": "calling_audioCodecSet",
+  "value": "opus(114), G722(9), ISAC(124), PCMU(0), PCMA(8), iLBC(116), G729(18), telephone-event(101)"
+}, {
+  "key": "calling_audioTransportAddress",
+  "value": "[192.168.91.51]:47142"
+}, {
+  "key": "calling_callTerminationOnBehalfOf",
+  "value": 12
+}, {
+  "key": "calling_cause_Location",
+  "value": 0
+}, {
+  "key": "calling_cause_Value",
+  "value": 16
+}, {
+  "key": "calling_cause_CallFailureReason",
+  "value": "cv"
+}, {
+  "key": "calling_cause_DebugDataFile",
+  "value": "ProcessSIPCdpc.cpp"
+}, {
+  "key": "calling_cause_DebugDataFunction",
+  "value": "sipDisconnIndAddCauseIE"
+}, {
+  "key": "calling_cause_DebugDataLine",
+  "value": 12775
+}, {
+  "key": "calling_sip_Cause_Value",
+  "value": 0
+}, {
+  "key": "calling_conversationID",
+  "value": 0
+}, {
+  "key": "calling_deviceName",
+  "value": "SEP74A02FC0A840"
+}, {
+  "key": "calling_callManagerDeviceType",
+  "value": 4
+}, {
+  "key": "calling_dtmfMethod",
+  "value": 0
+}, {
+  "key": "calling_ipAddr",
+  "value": "192.168.91.51"
+}, {
+  "key": "calling_legIdentifier",
+  "value": 53493761
+}, {
+  "key": "calling_nodeID",
+  "value": 3
+}, {
+  "key": "calling_presentationVideoCodecSet",
+  "value": ""
+}, {
+  "key": "calling_presentationVideoTransportAddr",
+  "value": "[]:0"
+}, {
+  "key": "calling_routingReason",
+  "value": 0
+}, {
+  "key": "calling_videoBandwidth",
+  "value": 4000
+}, {
+  "key": "calling_videoCodecSet",
+  "value": "H264(100), H264(126), H264(97)"
+}, {
+  "key": "calling_videoTransportAddress",
+  "value": "[192.168.91.51]:46706"
+}, {
+  "key": "calling_userUUID",
+  "value": "09f704cf-8232-423d-9da4-2474723b31ae"
+}, {
+  "key": "called_customerUUID",
+  "value": "7e88d491-d6ca-4786-82ed-cbe9efb02ad2"
+}, {
+  "key": "called_partyNumber",
+  "value": "3347"
+}, {
+  "key": "called_partyNumber_uri",
+  "value": "tipbu_auto_65607@int1.huron-alpha-com.wbx2.com"
+}, {
+  "key": "called_partyNumberPartition",
+  "value": "7e88d491-d6ca-4786-82ed-cbe9efb02ad2_000001_EXT_RP"
+}, {
+  "key": "called_partyPattern",
+  "value": "3347"
+}, {
+  "key": "called_partyPatternUsage",
+  "value": 2
+}, {
+  "key": "called_externalConnectedPartyIdNumber",
+  "value": ""
+}, {
+  "key": "called_externalConnectedPartyIdName",
+  "value": ""
+}, {
+  "key": "called_audioBandwidth",
+  "value": 64
+}, {
+  "key": "called_audioCodecSet",
+  "value": "G722(9), telephone-event(101)"
+}, {
+  "key": "called_audioTransportAddress",
+  "value": "[192.168.91.51]:47120"
+}, {
+  "key": "called_callTerminationOnBehalfOf",
+  "value": 0
+}, {
+  "key": "called_cause_Location",
+  "value": 0
+}, {
+  "key": "called_cause_Value",
+  "value": 31
+}, {
+  "key": "called_cause_CallFailureReason",
+  "value": ""
+}, {
+  "key": "called_cause_DebugDataFile",
+  "value": ""
+}, {
+  "key": "called_cause_DebugDataFunction",
+  "value": ""
+}, {
+  "key": "called_cause_DebugDataLine",
+  "value": 825830968
+}, {
+  "key": "called_sip_Cause_Value",
+  "value": 0
+}, {
+  "key": "called_conversationID",
+  "value": 0
+}, {
+  "key": "called_deviceName",
+  "value": "SEP74A02FC0A7FE"
+}, {
+  "key": "called_callManagerDeviceType",
+  "value": 4
+}, {
+  "key": "called_dtmfMethod",
+  "value": 0
+}, {
+  "key": "called_ipAddr",
+  "value": "10.74.63.162"
+}, {
+  "key": "called_legIdentifier",
+  "value": 53493762
+}, {
+  "key": "called_nodeID",
+  "value": 3
+}, {
+  "key": "called_presentationVideoCodecSet",
+  "value": ""
+}, {
+  "key": "called_presentationVideoTransportAddr",
+  "value": "[]:0"
+}, {
+  "key": "called_videoBandwidth",
+  "value": 4000
+}, {
+  "key": "called_videoCodecSet",
+  "value": "H264(100)"
+}, {
+  "key": "called_videoTransportAddress",
+  "value": "[192.168.91.51]:47114"
+}, {
+  "key": "called_userUUID",
+  "value": "6d98ce5f-ebd9-4e76-be2d-51a85009e9f9"
+}, {
+  "key": "originalCalled_partyNumber",
+  "value": "3347"
+}, {
+  "key": "originalCalled_partyNumber_uri",
+  "value": "tipbu_auto_65607@int1.huron-alpha-com.wbx2.com"
+}, {
+  "key": "originalCalled_partyNumberPartition",
+  "value": "7e88d491-d6ca-4786-82ed-cbe9efb02ad2_000001_EXT_RP"
+}, {
+  "key": "originalCalled_partyPattern",
+  "value": "3347"
+}, {
+  "key": "originalCalled_partyRedirectOnBehalfOf",
+  "value": 0
+}, {
+  "key": "originalCalled_partyRedirectReason",
+  "value": 0
+}, {
+  "key": "lastRedirecting_dn",
+  "value": "3347"
+}, {
+  "key": "lastRedirecting_dn_uri",
+  "value": "tipbu_auto_65607@int1.huron-alpha-com.wbx2.com"
+}, {
+  "key": "lastRedirecting_dnPartition",
+  "value": "7e88d491-d6ca-4786-82ed-cbe9efb02ad2_000001_EXT_RP"
+}, {
+  "key": "lastRedirecting_partyPattern",
+  "value": "3347"
+}, {
+  "key": "lastRedirecting_routingReason",
+  "value": 0
+}, {
+  "key": "lastRedirecting_onBehalfOf",
+  "value": 0
+}, {
+  "key": "lastRedirecting_redirectReason",
+  "value": 0
+}, {
+  "key": "outpulse_calledPartyNumber",
+  "value": ""
+}, {
+  "key": "outpulse_callingPartyNumber",
+  "value": ""
+}, {
+  "key": "outpulse_lastRedirectingNumber",
+  "value": ""
+}, {
+  "key": "outpulse_originalCalledPartyNumber",
+  "value": ""
+}, {
+  "key": "facCmc_authCodeDescription",
+  "value": ""
+}, {
+  "key": "facCmc_authCodeValue",
+  "value": ""
+}, {
+  "key": "facCmc_authLevel",
+  "value": 0
+}, {
+  "key": "facCmc_clientMatterCode",
+  "value": ""
+}, {
+  "key": "huntQueuing_huntPilotDN",
+  "value": ""
+}, {
+  "key": "huntQueuing_huntPilotPartition",
+  "value": ""
+}, {
+  "key": "huntQueuing_huntPilotPattern",
+  "value": ""
+}, {
+  "key": "huntQueuing_totalWaitTimeInQueue",
+  "value": -1
+}, {
+  "key": "mobile_callingPartyNumber",
+  "value": ""
+}, {
+  "key": "mobile_callType",
+  "value": 0
+}, {
+  "key": "mobile_origCallDuration",
+  "value": 0
+}, {
+  "key": "mobile_origDeviceName",
+  "value": ""
+}, {
+  "key": "mobile_calledPartyNumber",
+  "value": ""
+}, {
+  "key": "mobile_destCallDuration",
+  "value": 0
+}, {
+  "key": "mobile_destDeviceName",
+  "value": ""
+}, {
+  "key": "ims_icid",
+  "value": ""
+}, {
+  "key": "ims_origIOI",
+  "value": ""
+}, {
+  "key": "ims_termIOI",
+  "value": ""
+}, {
+  "key": "ims_incomingCID",
+  "value": ""
+}, {
+  "key": "ims_incomingOrigIOI",
+  "value": ""
+}, {
+  "key": "ims_incomingTermIOI",
+  "value": ""
+}, {
+  "key": "localSessionID",
+  "value": "6484a26700105000a00074a02fc0a840"
+}, {
+  "key": "remoteSessionID",
+  "value": "46d23e9a00105000a00074a02fc0a7fe"
+}, {
+  "key": "@version",
+  "value": "1"
+}, {
+  "key": "@timestamp",
+  "value": "2015-09-30T22:16:26.725Z"
+}, {
+  "key": "host",
+  "value": "192.168.91.62:45401"
+}, {
+  "key": "record_type",
+  "value": "event_record"
+}, {
+  "key": "eventType",
+  "value": "SAEVENT"
+}, {
+  "key": "ts",
+  "value": 1443651386725
+}, {
+  "key": "id",
+  "value": "CDR.CDR"
+}, {
+  "key": "level",
+  "value": "INFORMATIONAL"
+}, {
+  "key": "type",
+  "value": "ApplicationEvents"
+}, {
+  "key": "serviceID",
+  "value": "ccm"
+}, {
+  "key": "hostAddress",
+  "value": "192.168.91.62"
+}, {
+  "key": "portAddress",
+  "value": "45401"
+}, {
+  "key": "indexName",
+  "value": "huron-event-192.168.91.62:45401-ccm"
+}]

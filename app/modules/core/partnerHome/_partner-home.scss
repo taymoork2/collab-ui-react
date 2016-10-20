@@ -6,15 +6,19 @@
   .tab-content {
     border-color: $gray-light-2;
   }
+
   .tab-reports {
-    @include vr-spacing(mb,0.5);
+    @include vr-spacing(mb, 0.5);
   }
+
   .tabcontainer {
     background-color: $gray-light-4;
   }
+
   .report {
     height: 250px;
   }
+
   .report + .report-status {
     text-align: center;
     width: 100%;
@@ -22,43 +26,46 @@
     bottom: 125px;
     float: left;
   }
-  .tab-report {
-    height: 300px;
-  }
-  .tab-report + .report-status {
-    text-align: center;
-    width: 100%;
-    position: relative;
-    bottom: 150px;
-    float: left;
-  }
+
   .large section {
     padding: 0 1.5rem;
+
     .onboarded {
       border: 1px solid $gray-light-2;
     }
+
     .largetabs {
       padding: 0;
     }
   }
+
+  section.onboarded {
+    margin-bottom: rem-calc(24);
+  }
+
   .cstabs > li {
-    & > a {
+    > a {
+      @include vr-spacing(pt, 1, 2px);
+
       border-color: $gray-light-2;
       color: $gray-light-1;
-      @include vr-spacing(pt,1, 2px);
-      [class*="ng-"] {
+
+      [class*='ng-'] {
         .total {
-          @include vr-spacing(pt,0.5);
+          @include vr-spacing(pt, 0.5);
         }
       }
     }
+
     &.active > a {
       color: $gray-dark-1;
+
       &:hover {
         border-color: $gray-light-2;
       }
     }
   }
+
   #entitlementTitle {
     margin-left: 60px;
     font-size: 14px;
@@ -68,31 +75,30 @@
     align-items: baseline;
     justify-content: flex-end;
     line-height: 1;
+
     span {
       font-size: inherit;
     }
+
     span.total {
       font-size: 20px;
       padding-left: 8px;
     }
   }
+
   .tab-reports .nav-tabs li .total {
     font-size: 24px;
   }
-  #customerDropdown {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding-right: 0;
-    .icon {
-      font-size: 1.5rem;
-      line-height: 1rem;
-    }
-  }
-}
 
-.report-cards {
-  article {
-    padding: 1rem;
+  .report-status-partner {
+    height: 0;
+  }
+
+  #customerDropdown {
+    width: rem-calc(250);
+
+    .select-options {
+      padding: 0;
+    }
   }
 }

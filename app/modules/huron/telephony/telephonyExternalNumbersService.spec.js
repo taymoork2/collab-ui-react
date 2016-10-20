@@ -3,19 +3,19 @@
 describe('Service: ExternalNumberPool', function () {
   var $httpBackend, ExternalNumberPool, HuronConfig;
 
-  beforeEach(module('Huron'));
+  beforeEach(angular.mock.module('Huron'));
 
   var authInfo = {
     getOrgId: sinon.stub().returns('1')
   };
 
-  beforeEach(module(function ($provide) {
+  beforeEach(angular.mock.module(function ($provide) {
     $provide.value("Authinfo", authInfo);
   }));
 
   beforeEach(
     inject(
-      function (_$httpBackend_, $resource, _ExternalNumberPool_, _HuronConfig_) {
+      function (_$httpBackend_, _ExternalNumberPool_, _HuronConfig_) {
         $httpBackend = _$httpBackend_;
         ExternalNumberPool = _ExternalNumberPool_;
         HuronConfig = _HuronConfig_;

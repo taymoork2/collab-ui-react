@@ -6,32 +6,49 @@
     .controller('CustomerReportsCtrl', CustomerReportsCtrl);
 
   /* @ngInject */
-  function CustomerReportsCtrl($scope, $stateParams, $q, $timeout, $translate, Log, Authinfo, Config, CustomerReportService, DummyCustomerReportService, CustomerGraphService, WebexReportService, Userservice, WebExApiGatewayService, Storage) {
+  function CustomerReportsCtrl($state, $stateParams, $q, $timeout, $translate, Log, Authinfo, CustomerReportService, ReportConstants, DummyCustomerReportService, CustomerGraphService, WebexReportService, Userservice, WebExApiGatewayService, Storage, FeatureToggleService, MediaServiceActivationV2) {
     var vm = this;
     var ABORT = 'ABORT';
-    var REFRESH = 'refresh';
-    var SET = 'set';
-    var EMPTY = 'empty';
+
+    // Feature Toggles
+    var reportsUpdateToggle = FeatureToggleService.atlasReportsUpdateGetStatus();
+    var deviceUsageToggle = FeatureToggleService.atlasDeviceUsageReportGetStatus();
 
     vm.pageTitle = $translate.instant('reportsPage.pageTitle');
-    vm.allReports = 'all';
-    vm.engagement = 'engagement';
-    vm.quality = 'quality';
-    var currentFilter = vm.allReports;
+    vm.ALL = ReportConstants.ALL;
+    vm.ENGAGEMENT = ReportConstants.ENGAGEMENT;
+    vm.QUALITY = ReportConstants.QUALITY;
+    vm.currentFilter = vm.ALL;
+
+    vm.filterArray = _.cloneDeep(ReportConstants.filterArray);
+    vm.filterArray[0].toggle = function () {
+      resetCards(vm.ALL);
+    };
+    vm.filterArray[1].toggle = function () {
+      resetCards(vm.ENGAGEMENT);
+    };
+    vm.filterArray[2].toggle = function () {
+      resetCards(vm.QUALITY);
+    };
 
     vm.displayEngagement = true;
     vm.displayQuality = true;
 
+    vm.tab = $stateParams.tab;
+    vm.headerTabs = [{
+      title: $translate.instant('reportsPage.sparkReports'),
+      state: 'reports'
+    }];
+
+    var isActiveUsers = false;
     var activeUsersSort = ['userName', 'numCalls', 'sparkMessages', 'totalActivity'];
     var activeUsersChart = null;
-    var activeUserCard = null;
-    var previousSearch = "";
-    vm.activeUserDescription = "";
-    vm.mostActiveTitle = "";
-    vm.activeUserStatus = REFRESH;
-    vm.mostActiveUserStatus = REFRESH;
+    var previousSearch = '';
+    vm.threeMonthTooltip = $translate.instant('activeUsers.threeMonthsMessage');
+    vm.activeUserStatus = ReportConstants.REFRESH;
+    vm.mostActiveUserStatus = ReportConstants.REFRESH;
     vm.searchPlaceholder = $translate.instant('activeUsers.search');
-    vm.searchField = "";
+    vm.searchField = '';
     vm.mostActiveUsers = [];
     vm.showMostActiveUsers = false;
     vm.activeUserReverse = true;
@@ -39,21 +56,43 @@
     vm.activeUserCurrentPage = 0;
     vm.activeUserPredicate = activeUsersSort[3];
     vm.activeButton = [1, 2, 3];
+    vm.activeOptions = [{
+      value: 0,
+      label: $translate.instant('activeUsers.allUsers')
+    }, {
+      value: 1,
+      label: $translate.instant('activeUsers.activeUsers')
+    }];
+    vm.activeSelected = vm.activeOptions[0];
+    vm.displayActiveLineGraph = false;
 
     var avgRoomsChart = null;
-    var avgRoomsCard = null;
-    vm.avgRoomsDescription = "";
-    vm.avgRoomStatus = REFRESH;
+    vm.avgRoomOptions = {
+      animate: false,
+      description: 'avgRooms.avgRoomsDescription',
+      headerTitle: 'avgRooms.avgRooms',
+      id: 'avgRooms',
+      reportType: ReportConstants.BARCHART,
+      state: ReportConstants.REFRESH,
+      table: undefined,
+      titlePopover: ReportConstants.UNDEF,
+    };
 
     var filesSharedChart = null;
-    var filesSharedCard = null;
-    vm.filesSharedDescription = '';
-    vm.filesSharedStatus = REFRESH;
+    vm.filesSharedOptions = {
+      animate: false,
+      description: 'filesShared.filesSharedDescription',
+      headerTitle: 'filesShared.filesShared',
+      id: 'filesShared',
+      reportType: ReportConstants.BARCHART,
+      state: ReportConstants.REFRESH,
+      table: undefined,
+      titlePopover: ReportConstants.UNDEF,
+    };
 
     var mediaChart = null;
-    var mediaCard = null;
     var mediaData = [];
-    vm.mediaQualityStatus = REFRESH;
+    vm.mediaQualityStatus = ReportConstants.REFRESH;
     vm.mediaQualityPopover = $translate.instant('mediaQuality.packetLossDefinition');
     vm.mediaOptions = [{
       value: 0,
@@ -68,63 +107,73 @@
     vm.mediaSelected = vm.mediaOptions[0];
 
     var deviceChart = null;
-    var deviceCard = null;
     var currentDeviceGraphs = [];
     var defaultDeviceFilter = {
       value: 0,
       label: $translate.instant('registeredEndpoints.allDevices')
     };
-    vm.deviceStatus = REFRESH;
+    vm.deviceStatus = ReportConstants.REFRESH;
     vm.isDevicesEmpty = true;
-    vm.deviceDescription = '';
     vm.deviceFilter = [angular.copy(defaultDeviceFilter)];
     vm.selectedDevice = vm.deviceFilter[0];
 
     var metricsChart = null;
-    var metricsCard = null;
-    vm.metricsDescription = '';
-    vm.metricStatus = REFRESH;
+    vm.metricStatus = ReportConstants.REFRESH;
     vm.metrics = {};
 
-    vm.headerTabs = [{
-      title: $translate.instant('reportsPage.sparkReports'),
-      state: 'reports'
-    }];
+    var promises = {
+      mf: FeatureToggleService.atlasMediaServiceMetricsGetStatus(),
+      care: FeatureToggleService.atlasCareTrialsGetStatus(),
+      isMfEnabled: MediaServiceActivationV2.getMediaServiceState()
+    };
 
-    vm.timeOptions = [{
-      value: 0,
-      label: $translate.instant('reportsPage.week'),
-      description: $translate.instant('reportsPage.week2')
-    }, {
-      value: 1,
-      label: $translate.instant('reportsPage.month'),
-      description: $translate.instant('reportsPage.month2')
-    }, {
-      value: 2,
-      label: $translate.instant('reportsPage.threeMonths'),
-      description: $translate.instant('reportsPage.threeMonths2')
-    }];
+    $q.all(promises).then(function (features) {
+      if (features.mf && features.isMfEnabled) {
+        vm.headerTabs.unshift({
+          title: $translate.instant('mediaFusion.page_title'),
+          state: 'reports-metrics'
+        });
+      }
+      if (Authinfo.isCare() && features.care) {
+        vm.headerTabs.push({
+          title: $translate.instant('reportsPage.careTab'),
+          state: 'reports.care'
+        });
+      }
+    });
+
+    vm.timeOptions = _.cloneDeep(ReportConstants.timeFilter);
     vm.timeSelected = vm.timeOptions[0];
 
     vm.timeUpdate = timeUpdate;
     vm.mediaUpdate = mediaUpdate;
-    vm.resetCards = resetCards;
+    vm.activityUpdate = activityUpdate;
+    vm.isActiveDisabled = isActiveDisabled;
     vm.searchMostActive = searchMostActive;
     vm.deviceUpdate = deviceUpdate;
+    vm.getDescription = getDescription;
+    vm.getAltDescription = getAltDescription;
+    vm.getHeader = getHeader;
+    vm.getAltHeader = getAltHeader;
+    vm.goToUsersTab = goToUsersTab;
 
     // Graph data status checks
     vm.isRefresh = function (tab) {
-      return tab === REFRESH;
+      return tab === ReportConstants.REFRESH;
     };
 
     vm.isEmpty = function (tab) {
-      return tab === EMPTY;
+      return tab === ReportConstants.EMPTY;
+    };
+
+    vm.isError = function (tab) {
+      return tab === ReportConstants.ERROR;
     };
 
     // Controls for Most Active Users Table
     vm.mostActiveUserSwitch = function () {
       vm.showMostActiveUsers = !vm.showMostActiveUsers;
-      resizeCards();
+      resize(0);
     };
 
     vm.activePage = function (num) {
@@ -151,7 +200,7 @@
         vm.activeButton[2] = (num + 1);
       }
       vm.activeUserCurrentPage = num;
-      resizeCards();
+      resize(0);
     };
 
     vm.pageForward = function () {
@@ -167,36 +216,56 @@
     };
 
     function init() {
-      if (vm.showEngagement) {
-        setFilterBasedText();
-        $timeout(function () {
-          setDummyData();
-          setAllGraphs();
-        }, 30);
-      }
+      deviceUsageToggle.then(function (response) {
+        if (response) {
+          vm.headerTabs.push({
+            title: $translate.instant('reportsPage.usageReports.usageReportTitle'),
+            state: 'reports.device-usage.timeline'
+          });
+        }
+      });
+
+      reportsUpdateToggle.then(function (response) {
+        vm.displayActiveLineGraph = response;
+        if (vm.displayActiveLineGraph) {
+          vm.timeOptions[2].label = $translate.instant('reportsPage.threePlusMonths');
+        }
+
+        if (!vm.tab) {
+          $timeout(function () {
+            setDummyData();
+            setAllGraphs();
+          }, 30);
+        }
+      });
     }
 
     function timeUpdate() {
-      vm.activeUserStatus = REFRESH;
-      vm.mostActiveUserStatus = REFRESH;
-      vm.avgRoomStatus = REFRESH;
-      vm.filesSharedStatus = REFRESH;
-      vm.mediaQualityStatus = REFRESH;
-      vm.deviceStatus = REFRESH;
-      vm.metricStatus = REFRESH;
+      vm.activeUserStatus = ReportConstants.REFRESH;
+      vm.mostActiveUserStatus = ReportConstants.REFRESH;
+      vm.avgRoomOptions.state = ReportConstants.REFRESH;
+      vm.filesSharedOptions.state = ReportConstants.REFRESH;
+      vm.mediaQualityStatus = ReportConstants.REFRESH;
+      vm.deviceStatus = ReportConstants.REFRESH;
+      vm.metricStatus = ReportConstants.REFRESH;
       vm.metrics = {};
       vm.mediaSelected = vm.mediaOptions[0];
+      vm.activeSelected = vm.activeOptions[0];
 
-      setFilterBasedText();
       setDummyData();
       setAllGraphs();
     }
 
     function mediaUpdate() {
-      var tempMediaChart = CustomerGraphService.setMediaQualityGraph(mediaData, mediaChart, vm.mediaSelected);
-      if (tempMediaChart !== null && angular.isDefined(tempMediaChart)) {
-        mediaChart = tempMediaChart;
-      }
+      setMediaGraph(mediaData);
+    }
+
+    function activityUpdate() {
+      CustomerGraphService.showHideActiveLineGraph(activeUsersChart, vm.activeSelected);
+    }
+
+    function isActiveDisabled() {
+      return (vm.isEmpty(vm.activeUserStatus) || vm.isRefresh(vm.activeUserStatus) || !isActiveUsers);
     }
 
     function setAllGraphs() {
@@ -208,138 +277,135 @@
       setDeviceData();
     }
 
-    function resizeCards() {
-      setTimeout(function () {
+    function resize(delay) {
+      $timeout(function () {
         $('.cs-card-layout').masonry('layout');
-      }, 300);
+      }, delay);
     }
 
     function resetCards(filter) {
-      if (currentFilter !== filter) {
-        var engagementElems = [avgRoomsCard, activeUserCard, filesSharedCard, deviceCard];
-        var qualityElems = [mediaCard, metricsCard];
-
-        if (filter === vm.allReports) {
-          if (!vm.displayEngagement) {
-            $('.cs-card-layout').prepend(engagementElems).masonry('prepended', engagementElems);
-          }
-          if (!vm.displayQuality) {
-            $('.cs-card-layout').append(qualityElems).masonry('appended', qualityElems);
-          }
+      if (vm.currentFilter !== filter) {
+        vm.displayEngagement = false;
+        vm.displayQuality = false;
+        if (filter === vm.ALL || filter === vm.ENGAGEMENT) {
           vm.displayEngagement = true;
-          vm.displayQuality = true;
-        } else if (filter === vm.engagement) {
-          if (!vm.displayEngagement) {
-            $('.cs-card-layout').append(engagementElems).masonry('appended', engagementElems);
-          }
-          if (vm.displayQuality) {
-            $('.cs-card-layout').masonry('remove', qualityElems);
-          }
-          vm.displayEngagement = true;
-          vm.displayQuality = false;
-        } else if (filter === vm.quality) {
-          if (!vm.displayQuality) {
-            $('.cs-card-layout').append(qualityElems).masonry('appended', qualityElems);
-          }
-          if (vm.displayEngagement) {
-            $('.cs-card-layout').masonry('remove', engagementElems);
-          }
-          vm.displayEngagement = false;
+        }
+        if (filter === vm.ALL || filter === vm.QUALITY) {
           vm.displayQuality = true;
         }
-
-        currentFilter = filter;
-        resizeCards();
+        resize(500);
+        vm.currentFilter = filter;
       }
     }
 
-    function setFilterBasedText() {
-      vm.activeUserDescription = $translate.instant('activeUsers.customerPortalDescription', {
-        time: vm.timeSelected.description
-      });
-
-      vm.mostActiveTitle = $translate.instant("activeUsers.mostActiveUsers", {
-        time: vm.timeSelected.label
-      });
-
-      vm.avgRoomsDescription = $translate.instant("avgRooms.avgRoomsDescription", {
-        time: vm.timeSelected.description
-      });
-
-      vm.filesSharedDescription = $translate.instant("filesShared.filesSharedDescription", {
-        time: vm.timeSelected.description
-      });
-
-      vm.metricsDescription = $translate.instant("callMetrics.customerDescription", {
-        time: vm.timeSelected.description
-      });
-
-      vm.videoDescription = $translate.instant("callMetrics.videoDescription", {
-        time: vm.timeSelected.description
-      });
-
-      vm.deviceDescription = $translate.instant("registeredEndpoints.customerDescription", {
+    function getDescription(text) {
+      return $translate.instant(text, {
         time: vm.timeSelected.description
       });
     }
 
+    function getAltDescription(text) {
+      if (vm.timeSelected.value === ReportConstants.FILTER_THREE.value && vm.displayActiveLineGraph) {
+        return $translate.instant(text, {
+          time: $translate.instant('reportsPage.lastTwelveWeeks2')
+        });
+      } else {
+        return getDescription(text);
+      }
+    }
+
+    function getHeader(text) {
+      return $translate.instant(text, {
+        time: vm.timeSelected.label
+      });
+    }
+
+    function getAltHeader(text) {
+      if (vm.timeSelected.value === ReportConstants.FILTER_THREE.value && vm.displayActiveLineGraph) {
+        return $translate.instant(text, {
+          time: $translate.instant('reportsPage.lastTwelveWeeks')
+        });
+      } else {
+        return getHeader(text);
+      }
+    }
+
+    function goToUsersTab() {
+      $state.go('users.list');
+    }
+
     function setDummyData() {
-      setActiveGraph(DummyCustomerReportService.dummyActiveUserData(vm.timeSelected));
+      setActiveGraph(DummyCustomerReportService.dummyActiveUserData(vm.timeSelected, vm.displayActiveLineGraph));
       setAverageGraph(DummyCustomerReportService.dummyAvgRoomData(vm.timeSelected));
       setFilesGraph(DummyCustomerReportService.dummyFilesSharedData(vm.timeSelected));
       setMetricGraph(DummyCustomerReportService.dummyMetricsData());
       setDeviceGraph(DummyCustomerReportService.dummyDeviceData(vm.timeSelected));
-      setMediaGraph(DummyCustomerReportService.dummyMediaData(vm.timeSelected), {
-        value: 0
-      });
+      setMediaGraph(DummyCustomerReportService.dummyMediaData(vm.timeSelected));
 
-      resizeCards();
+      resize(0);
     }
 
     function setActiveGraph(data) {
-      var tempActiveUserChart = CustomerGraphService.setActiveUsersGraph(data, activeUsersChart);
+      var tempActiveUserChart;
+      if (vm.displayActiveLineGraph) {
+        tempActiveUserChart = CustomerGraphService.setActiveLineGraph(data, activeUsersChart, vm.timeSelected);
+      } else {
+        tempActiveUserChart = CustomerGraphService.setActiveUsersGraph(data, activeUsersChart);
+      }
+
       if (tempActiveUserChart !== null && angular.isDefined(tempActiveUserChart)) {
         activeUsersChart = tempActiveUserChart;
+        if (vm.displayActiveLineGraph) {
+          CustomerGraphService.showHideActiveLineGraph(activeUsersChart, vm.activeSelected);
+        }
       }
     }
 
     function setActiveUserData() {
+      // reset defaults
       vm.activeUsersTotalPages = 0;
       vm.activeUserCurrentPage = 0;
-      vm.searchField = "";
-      previousSearch = "";
+      vm.searchField = '';
+      previousSearch = '';
       vm.showMostActiveUsers = false;
-      CustomerReportService.getActiveUserData(vm.timeSelected).then(function (response) {
+      isActiveUsers = false;
+
+      CustomerReportService.getActiveUserData(vm.timeSelected, vm.displayActiveLineGraph).then(function (response) {
         if (response === ABORT) {
           return;
-        } else if (response.length === 0) {
-          vm.activeUserStatus = EMPTY;
+        } else if (_.isArray(response.graphData) && response.graphData.length === 0) {
+          vm.activeUserStatus = ReportConstants.EMPTY;
         } else {
-          setActiveGraph(response);
-          vm.activeUserStatus = SET;
-          CustomerReportService.getMostActiveUserData(vm.timeSelected).then(function (response) {
-            if (response === ABORT) {
-              return;
-            } else if (response.length === 0) {
-              vm.mostActiveUserStatus = EMPTY;
-            } else {
-              vm.activeUserPredicate = activeUsersSort[3];
-              vm.mostActiveUsers = response;
-              vm.activeUserCurrentPage = 1;
-              vm.activeButton = [1, 2, 3];
-              vm.mostActiveUserStatus = SET;
-            }
-            resizeCards();
-          });
+          setActiveGraph(response.graphData);
+          isActiveUsers = response.isActiveUsers;
+          vm.activeUserStatus = ReportConstants.SET;
         }
-        resizeCards();
+        resize(0);
       });
-      activeUserCard = document.getElementById('active-user-card');
+
+      CustomerReportService.getMostActiveUserData(vm.timeSelected).then(function (response) {
+        if (response === ABORT) {
+          return;
+        } else if (response.error) {
+          vm.mostActiveUserStatus = ReportConstants.ERROR;
+          vm.mostActiveUsers = response.tableData;
+        } else if (response.tableData.length === 0) {
+          vm.mostActiveUserStatus = ReportConstants.EMPTY;
+          vm.mostActiveUsers = response.tableData;
+        } else {
+          vm.activeUserPredicate = activeUsersSort[3];
+          vm.mostActiveUsers = response.tableData;
+          vm.activeUserCurrentPage = 1;
+          vm.activeButton = [1, 2, 3];
+          vm.mostActiveUserStatus = ReportConstants.SET;
+        }
+        resize(0);
+      });
     }
 
     function searchMostActive() {
       var returnArray = [];
-      angular.forEach(vm.mostActiveUsers, function (item, index, array) {
+      angular.forEach(vm.mostActiveUsers, function (item) {
         var userName = item.userName;
         if (vm.searchField === undefined || vm.searchField === '' || (angular.isDefined(userName) && (userName.toString().toLowerCase().replace(/_/g, ' ')).indexOf(vm.searchField.toLowerCase().replace(/_/g, ' ')) > -1)) {
           returnArray.push(item);
@@ -350,10 +416,8 @@
         vm.activeButton = [1, 2, 3];
         vm.activeUsersTotalPages = Math.ceil(returnArray.length / 5);
         previousSearch = vm.searchField;
+        resize(0);
       }
-      $timeout(function () {
-        resizeCards();
-      }, 10);
       return returnArray;
     }
 
@@ -369,12 +433,11 @@
         if (response === ABORT) {
           return;
         } else if (response.length === 0) {
-          vm.avgRoomStatus = EMPTY;
+          vm.avgRoomOptions.state = ReportConstants.EMPTY;
         } else {
           setAverageGraph(response);
-          vm.avgRoomStatus = SET;
+          vm.avgRoomOptions.state = ReportConstants.SET;
         }
-        avgRoomsCard = document.getElementById('avg-room-card');
       });
     }
 
@@ -390,17 +453,16 @@
         if (response === ABORT) {
           return;
         } else if (response.length === 0) {
-          vm.filesSharedStatus = EMPTY;
+          vm.filesSharedOptions.state = ReportConstants.EMPTY;
         } else {
           setFilesGraph(response);
-          vm.filesSharedStatus = SET;
+          vm.filesSharedOptions.state = ReportConstants.SET;
         }
-        filesSharedCard = document.getElementById('files-shared-card');
       });
     }
 
-    function setMediaGraph(data, mediaFilter) {
-      var tempMediaChart = CustomerGraphService.setMediaQualityGraph(data, mediaChart, mediaFilter);
+    function setMediaGraph(data) {
+      var tempMediaChart = CustomerGraphService.setMediaQualityGraph(data, mediaChart, vm.mediaSelected);
       if (tempMediaChart !== null && angular.isDefined(tempMediaChart)) {
         mediaChart = tempMediaChart;
       }
@@ -412,13 +474,12 @@
         if (response === ABORT) {
           return;
         } else if (response.length === 0) {
-          vm.mediaQualityStatus = EMPTY;
+          vm.mediaQualityStatus = ReportConstants.EMPTY;
         } else {
           mediaData = response;
-          setMediaGraph(mediaData, vm.mediaSelected);
-          vm.mediaQualityStatus = SET;
+          setMediaGraph(mediaData);
+          vm.mediaQualityStatus = ReportConstants.SET;
         }
-        mediaCard = document.getElementById('media-quality-card');
       });
     }
 
@@ -433,14 +494,13 @@
       CustomerReportService.getCallMetricsData(vm.timeSelected).then(function (response) {
         if (response === ABORT) {
           return;
-        } else if (response.dataProvider.length === 0) {
-          vm.metricStatus = EMPTY;
+        } else if (_.isArray(response.dataProvider) && response.dataProvider.length === 0) {
+          vm.metricStatus = ReportConstants.EMPTY;
         } else {
           setMetricGraph(response);
           vm.metrics = response.displayData;
-          vm.metricStatus = SET;
+          vm.metricStatus = ReportConstants.SET;
         }
-        metricsCard = document.getElementById('call-metrics-customer');
       });
     }
 
@@ -452,62 +512,59 @@
     }
 
     function setDeviceData() {
-      vm.deviceFilter = [angular.copy(defaultDeviceFilter)];
+      vm.deviceFilter = [_.cloneDeep(defaultDeviceFilter)];
       vm.selectedDevice = vm.deviceFilter[0];
       currentDeviceGraphs = [];
       vm.isDevicesEmpty = true;
+
       CustomerReportService.getDeviceData(vm.timeSelected).then(function (response) {
         if (response === ABORT) {
           return;
-        } else if (response.filterArray.length === 0) {
-          vm.deviceStatus = EMPTY;
+        } else if (response.emptyGraph) {
+          vm.deviceStatus = ReportConstants.EMPTY;
         } else {
           vm.deviceFilter = response.filterArray.sort(function (a, b) {
-            return a.label.localeCompare(b.label);
+            if (a.label) {
+              return a.label.localeCompare(b.label);
+            } else {
+              return a > b;
+            }
           });
           vm.selectedDevice = vm.deviceFilter[0];
           currentDeviceGraphs = response.graphData;
 
           if (!currentDeviceGraphs[vm.selectedDevice.value].emptyGraph) {
             setDeviceGraph(currentDeviceGraphs, vm.selectedDevice);
-            vm.deviceStatus = SET;
+            vm.deviceStatus = ReportConstants.SET;
             vm.isDevicesEmpty = false;
           } else {
-            vm.deviceStatus = EMPTY;
+            vm.deviceStatus = ReportConstants.EMPTY;
           }
         }
-        deviceCard = document.getElementById('device-card');
       });
     }
 
     function deviceUpdate() {
-      if (currentDeviceGraphs.length > 0 && !currentDeviceGraphs[vm.selectedDevice.value].emptyGraph) {
-        var tempDevicesChart = CustomerGraphService.setDeviceGraph(currentDeviceGraphs, deviceChart, vm.selectedDevice);
-        if (tempDevicesChart !== null && angular.isDefined(tempDevicesChart)) {
-          deviceChart = tempDevicesChart;
-        }
-        vm.deviceStatus = SET;
-      } else {
+      if (currentDeviceGraphs[vm.selectedDevice.value].emptyGraph) {
         var tempDeviceChart = CustomerGraphService.setDeviceGraph(DummyCustomerReportService.dummyDeviceData(vm.timeSelected), deviceChart);
         if (tempDeviceChart !== null && angular.isDefined(tempDeviceChart)) {
           deviceChart = tempDeviceChart;
         }
-        vm.deviceStatus = EMPTY;
+        vm.deviceStatus = ReportConstants.EMPTY;
+      } else {
+        var tempDevicesChart = CustomerGraphService.setDeviceGraph(currentDeviceGraphs, deviceChart, vm.selectedDevice);
+        if (tempDevicesChart !== null && angular.isDefined(tempDevicesChart)) {
+          deviceChart = tempDevicesChart;
+        }
+        vm.deviceStatus = ReportConstants.SET;
       }
     }
 
     // WEBEX side of the page has been copied from the existing reports page
-    $scope.webexReportsObject = {};
-    $scope.webexOptions = [];
-    $scope.webexSelected = null;
-
-    if ($stateParams.tab === 'webex') {
-      vm.showEngagement = false;
-      vm.showWebexReports = true;
-    } else {
-      vm.showEngagement = true;
-      vm.showWebexReports = false;
-    }
+    vm.webexReportsObject = {};
+    vm.webexOptions = [];
+    vm.webexSelected = null;
+    vm.updateWebexReports = updateWebexReports;
 
     function onlyUnique(value, index, self) {
       return self.indexOf(value) === index;
@@ -533,10 +590,10 @@
       webexSiteUrls.forEach(
         function chkWebexSiteUrl(url) {
           promiseChain.push(
-            WebExApiGatewayService.isSiteSupportsIframe(url).then(
+            WebExApiGatewayService.siteFunctions(url).then(
               function getSiteSupportsIframeSuccess(result) {
                 if (result.isAdminReportEnabled && result.isIframeSupported) {
-                  $scope.webexOptions.push(result.siteUrl);
+                  vm.webexOptions.push(result.siteUrl);
 
                   if (!vm.showWebexTab) {
                     vm.headerTabs.push({
@@ -549,7 +606,7 @@
                 }
               },
 
-              function getSiteSupportsIframeError(error) {
+              function getSiteSupportsIframeError() {
                 //no-op, but needed
               }
             )
@@ -563,15 +620,15 @@
           var logMsg = "";
 
           // if we are displaying the webex reports index page then go ahead with the rest of the code
-          if (vm.showWebexReports) {
+          if (vm.tab === 'webex') {
             // TODO: add code to sort the siteUrls in the dropdown to be in alphabetical order
 
             // get the information needed for the webex reports index page
             var stateParamsSiteUrl = $stateParams.siteUrl;
-            var stateParamsSiteUrlIndex = $scope.webexOptions.indexOf(stateParamsSiteUrl);
+            var stateParamsSiteUrlIndex = vm.webexOptions.indexOf(stateParamsSiteUrl);
 
             var storageReportsSiteUrl = Storage.get('webexReportsSiteUrl');
-            var storageReportsSiteUrlIndex = $scope.webexOptions.indexOf(storageReportsSiteUrl);
+            var storageReportsSiteUrlIndex = vm.webexOptions.indexOf(storageReportsSiteUrl);
 
             // initialize the site that the webex reports index page will display
             var webexSelected = null;
@@ -580,7 +637,7 @@
             } else if (-1 !== storageReportsSiteUrlIndex) { // otherwise, if a valid siteUrl is in the local storage, the reports index page should reflect that site
               webexSelected = storageReportsSiteUrl;
             } else { // otherwise, the reports index page should reflect the 1st site that is in the dropdown list
-              webexSelected = $scope.webexOptions[0];
+              webexSelected = vm.webexOptions[0];
             }
 
             logMsg = funcName + ": " + "\n" +
@@ -591,8 +648,8 @@
               "webexSelected=" + webexSelected;
             Log.debug(logMsg);
 
-            $scope.webexSelected = webexSelected;
-            $scope.updateWebexReports();
+            vm.webexSelected = webexSelected;
+            updateWebexReports();
           }
         }
       );
@@ -603,7 +660,7 @@
     } else {
       Userservice.getUser(
         'me',
-        function (data, status) {
+        function (data) {
           if (data.success) {
             if (data.emails) {
               Authinfo.setEmails(data.emails);
@@ -614,22 +671,24 @@
       );
     }
 
-    $scope.updateWebexReports = function () {
-      var storageReportsSiteUrl = Storage.get('webexReportsSiteUrl');
-      var scopeWebexSelected = $scope.webexSelected;
+    function updateWebexReports() {
+      var funcName = "updateWebexReports()";
+      var logMsg = "";
 
-      var logMsg = "updateWebexReports(): " + "\n" +
-        "scopeWebexSelected=" + scopeWebexSelected + "\n" +
-        "storageReportsSiteUrl=" + storageReportsSiteUrl;
+      var storageReportsSiteUrl = Storage.get('webexReportsSiteUrl');
+      var webexSelected = vm.webexSelected;
+
+      logMsg = funcName + "\n" +
+        "storageReportsSiteUrl=" + storageReportsSiteUrl + "\n" +
+        "webexSelected=" + webexSelected;
       Log.debug(logMsg);
 
-      $scope.webexReportsObject = WebexReportService.initReportsObject(scopeWebexSelected);
-      $scope.infoCardObj = $scope.webexReportsObject.infoCardObj;
+      vm.webexReportsObject = WebexReportService.initReportsObject(webexSelected);
 
-      if (scopeWebexSelected !== storageReportsSiteUrl) {
-        Storage.put('webexReportsSiteUrl', scopeWebexSelected);
+      if (webexSelected !== storageReportsSiteUrl) {
+        Storage.put('webexReportsSiteUrl', webexSelected);
       }
-    };
+    }
 
     init();
   }

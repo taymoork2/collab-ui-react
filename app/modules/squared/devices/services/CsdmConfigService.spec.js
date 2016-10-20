@@ -1,24 +1,11 @@
 'use strict';
 
 describe('CsdmConfigService', function () {
-  beforeEach(module('wx2AdminWebClientApp'));
+  beforeEach(angular.mock.module('Squared'));
 
-  var Service, win;
-  var rootPath;
+  var Service, rootPath;
 
-  beforeEach(function () {
-    module(function ($provide) {
-      win = {
-        location: {
-          search: ''
-        },
-        document: window.document
-      };
-      $provide.value('$window', win);
-    });
-  });
-
-  beforeEach(inject(function ($injector, _CsdmConfigService_, UrlConfig) {
+  beforeEach(inject(function (_CsdmConfigService_, UrlConfig) {
     Service = _CsdmConfigService_;
     rootPath = UrlConfig.getCsdmServiceUrl();
   }));

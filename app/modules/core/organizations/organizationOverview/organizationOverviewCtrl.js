@@ -4,35 +4,57 @@
   angular.module('Core')
     .controller('OrganizationOverviewCtrl', OrganizationOverviewCtrl);
 
-  /*ngInject*/
-  function OrganizationOverviewCtrl($stateParams, $rootScope, $scope, $state, Log, $filter, Orgservice, Notification) {
+  /* @ngInject */
+  function OrganizationOverviewCtrl($stateParams, $rootScope, $scope, $state, $filter, Orgservice, Notification) {
     var currentOrgId = $stateParams.currentOrganization.id;
-
     $scope.currentOrganization = $stateParams.currentOrganization;
     $scope.setEftToggle = setEftToggle;
     $scope.eftToggleLoading = true;
     $scope.updateEftToggle = updateEftToggle;
     $scope.currentOrganization.isEFT = false;
     $scope.currentEftSetting = false;
+    $scope.toggleReleaseChannelAllowed = toggleReleaseChannelAllowed;
+    $scope.showHybridServices = false;
 
     init();
 
     function init() {
+      initReleaseChannels();
       getOrgInfo();
       updateEftToggle();
     }
 
     function getOrgInfo() {
-      Orgservice.getAdminOrg(function (data, status) {
+      Orgservice.getAdminOrg(function (data) {
         if (data.success) {
-          $scope.org = data;
-          if (data.services) {
-            $scope.svcs = data.services;
-          }
+          $scope.currentOrganization = data;
+          initReleaseChannels();
         } else {
-          Log.debug('Get existing org failed. Status: ' + status);
+          Notification.error('organizationsPage.orgReadFailed');
         }
       }, $scope.currentOrganization.id, true);
+    }
+
+    function initReleaseChannels() {
+      $scope.showHybridServices = _.includes($scope.currentOrganization.services, 'squared-fusion-mgmt');
+      if ($scope.showHybridServices) {
+        var ReleaseChannel = function (name, allowed) {
+          this.name = name;
+          this.newAllow = allowed;
+          this.oldAllow = allowed;
+          this.reset = function () {
+            this.newAllow = this.oldAllow;
+          };
+          this.updated = function () {
+            this.oldAllow = this.newAllow;
+          };
+          this.hasChanged = function () {
+            return this.newAllow !== this.oldAllow;
+          };
+        };
+        $scope.betaChannel = new ReleaseChannel('beta', _.includes($scope.currentOrganization.services, 'squared-fusion-mgmt-channel-beta'));
+        $scope.latestChannel = new ReleaseChannel('latest', _.includes($scope.currentOrganization.services, 'squared-fusion-mgmt-channel-latest'));
+      }
     }
 
     function updateEftToggle() {
@@ -41,10 +63,10 @@
           _.set($scope, 'currentOrganization.isEFT', response.data.eft);
           $scope.currentEftSetting = response.data.eft;
         })
-        .catch(function (response) {
+        .catch(function () {
           Notification.error('organizationsPage.eftError');
         })
-        .finally(function (response) {
+        .finally(function () {
           $scope.eftToggleLoading = false;
         });
     }
@@ -54,15 +76,29 @@
         $scope.eftToggleLoading = true;
         Orgservice.setEftSetting(eft, currentOrgId)
           .then(updateEftToggle)
-          .catch(function (response) {
+          .catch(function () {
             _.set($scope, 'currentOrganization.isEFT', $scope.currentEftSetting);
             Notification.error('organizationsPage.eftError');
           })
-          .finally(function (response) {
+          .finally(function () {
             $scope.eftToggleLoading = false;
           });
       }
     }
+
+    function toggleReleaseChannelAllowed(channel) {
+      if (!channel.hasChanged()) {
+        return;
+      }
+      Orgservice.setHybridServiceReleaseChannelEntitlement(currentOrgId, channel.name, channel.newAllow).then(function () {
+        Notification.success('organizationsPage.releaseChannelToggleSuccess');
+        channel.updated();
+      }).catch(function () {
+        Notification.error('organizationsPage.releaseChannelToggleFailure');
+        channel.reset();
+      });
+    }
+
     //Making sure the search field is cleared
     $('#search-input').val('');
 
@@ -79,10 +115,6 @@
       $scope.exportBtn.disabled = true;
       $('#btncover').show();
     }
-
-    $scope.$on('AuthinfoUpdated', function () {
-      getOrgInfo();
-    });
 
     $scope.manageFeatures = function () {
       $state.go('organization-overview.features');

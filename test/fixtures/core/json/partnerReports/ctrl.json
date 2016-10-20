@@ -1,0 +1,142 @@
+{
+  "ALL": "all",
+  "ENGAGEMENT": "engagement",
+  "QUALITY": "quality",
+  "EMPTY": "empty",
+  "ERROR": "error",
+  "REFRESH": "refresh",
+  "SET": "set",
+  "reportFilter": [{
+    "id": "allReports",
+    "label": "reportsPage.all",
+    "selected": true
+  }, {
+    "id": "engagementReports",
+    "label": "reportsPage.engagement",
+    "selected": false
+  }, {
+    "id": "qualityReports",
+    "label": "reportsPage.quality",
+    "selected": false
+  }],
+  "activeUserOptions": {
+    "animate": false,
+    "description": "activeUsers.description",
+    "headerTitle": "activeUsers.activeUsers",
+    "id": "activeUsers",
+    "reportType": "barchart",
+    "state": "set",
+    "titlePopover": "undefined"
+  },
+  "activeUserSecondaryOptions": {
+      "broadcast": "ReportCard::UpdateSecondaryReport",
+      "description": "activeUsers.mostActiveDescription",
+      "display": true,
+      "state": "set",
+      "sortOptions": [{
+        "option": "userName",
+        "direction": false
+      }, {
+        "option": "orgName",
+        "direction": false
+      }, {
+        "option": "numCalls",
+        "direction": false
+      }, {
+        "option": "sparkMessages",
+        "direction": true
+      }, {
+        "option": "totalActivity",
+        "direction": true
+      }],
+      "table": {
+        "headers": [{
+          "title": "activeUsers.user",
+          "class": "col-md-4 pointer"
+        }, {
+          "title": "activeUsers.customer",
+          "class": "col-md-4 pointer"
+        }, {
+          "title": "activeUsers.calls",
+          "class": "horizontal-center col-md-2 pointer"
+        }, {
+          "title": "activeUsers.sparkMessages",
+          "class": "horizontal-center col-md-2 pointer"
+        }],
+        "data": [],
+        "dummy": false
+      },
+      "title": "activeUsers.mostActiveUsers"
+    },
+    "avgRoomsOptions": {
+      "animate": false,
+      "description": "avgRooms.avgRoomsDescription",
+      "headerTitle": "avgRooms.avgRooms",
+      "id": "avgRooms",
+      "reportType": "barchart",
+      "state": "set",
+      "titlePopover": "undefined"
+    },
+    "filesSharedOptions": {
+      "animate": false,
+      "description": "filesShared.filesSharedDescription",
+      "headerTitle": "filesShared.filesShared",
+      "id": "filesShared",
+      "reportType": "barchart",
+      "state": "set",
+      "titlePopover": "undefined"
+    },
+    "populationOptions": {
+      "animate": false,
+      "description": "activeUserPopulation.description",
+      "headerTitle": "activeUserPopulation.titleByCompany",
+      "id": "userPopulation",
+      "reportType": "barchart",
+      "state": "set",
+      "titlePopover": "undefined"
+    },
+    "mediaOptions": {
+      "animate": true,
+      "description": "mediaQuality.description",
+      "headerTitle": "mediaQuality.mediaQuality",
+      "id": "mediaQuality",
+      "reportType": "barchart",
+      "state": "set",
+      "titlePopover": "mediaQuality.packetLossDefinition"
+    },
+    "endpointOptions": {
+      "animate": true,
+      "description": "registeredEndpoints.description",
+      "headerTitle": "registeredEndpoints.registeredEndpoints",
+      "id": "reg-endpoints",
+      "reportType": "table",
+      "state": "set",
+      "table": {
+        "headers": [{
+          "title": "registeredEndpoints.company",
+          "class": "customer-data col-md-4"
+        }, {
+          "title": "registeredEndpoints.maxRegisteredDevices",
+          "class": "horizontal-center col-md-2"
+        }, {
+          "title": "registeredEndpoints.trend",
+          "class": "horizontal-center col-md-2"
+        }, {
+          "title": "registeredEndpoints.totalRegistered",
+          "class": "horizontal-center col-md-2"
+        }],
+        "data": [],
+        "dummy": false
+      },
+      "titlePopover": "undefined"
+    },
+    "callOptions": {
+      "animate": false,
+      "description": "callMetrics.callMetricsDesc",
+      "headerTitle": "callMetrics.callMetrics",
+      "id": "callMetrics",
+      "reportType": "donut",
+      "state": "set",
+      "titlePopover": "undefined"
+    }
+}

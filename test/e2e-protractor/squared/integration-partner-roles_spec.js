@@ -7,10 +7,6 @@ describe('Org Entitlement flow', function () {
   var newDisplayName = 'John Doe ' + utils.randomId();
   var searchStr = 'sq-testpaiduser@atlas.test.com';
 
-  afterEach(function () {
-    utils.dumpConsoleErrors();
-  });
-
   it('should login as non-sso admin user', function () {
     login.login('partner-admin');
   });

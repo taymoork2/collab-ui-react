@@ -2,7 +2,7 @@
 
 describe('Controller: HuntGroupSetupAssistantCtrl - Hunt Pilot Number Lookup', function () {
 
-  var $httpBackend, controller, $scope, HuntGroupService, Notification;
+  var $q, $httpBackend, controller, $scope, HuntGroupService, Notification, HuntGroupFallbackDataService;
 
   var someNumber = {
     "type": "INTERNAL",
@@ -26,8 +26,8 @@ describe('Controller: HuntGroupSetupAssistantCtrl - Hunt Pilot Number Lookup', f
     getOrgId: jasmine.createSpy('getOrgId').and.returnValue('1')
   };
 
-  beforeEach(module('Huron'));
-  beforeEach(module(function ($provide) {
+  beforeEach(angular.mock.module('Huron'));
+  beforeEach(angular.mock.module(function ($provide) {
     $provide.value("Authinfo", spiedAuthinfo);
   }));
 
@@ -38,12 +38,16 @@ describe('Controller: HuntGroupSetupAssistantCtrl - Hunt Pilot Number Lookup', f
     $httpBackend.verifyNoOutstandingRequest();
   });
 
-  beforeEach(inject(function ($rootScope, $controller, _$httpBackend_,
-    _HuntGroupService_, _Notification_) {
+  beforeEach(inject(function ($rootScope, $controller, _$q_, _$httpBackend_,
+    _HuntGroupService_, _Notification_, _HuntGroupFallbackDataService_) {
     $scope = $rootScope.$new();
+    $q = _$q_;
     HuntGroupService = _HuntGroupService_;
     Notification = _Notification_;
     $httpBackend = _$httpBackend_;
+    HuntGroupFallbackDataService = _HuntGroupFallbackDataService_;
+
+    spyOn(HuntGroupFallbackDataService, 'allowLocalValidation').and.returnValue($q.when(false));
 
     controller = $controller('HuntGroupSetupAssistantCtrl', {
       $scope: $scope,

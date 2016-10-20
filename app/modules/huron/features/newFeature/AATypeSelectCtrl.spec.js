@@ -2,21 +2,23 @@
 
 describe('Controller: AATypeSelectCtrl', function () {
 
-  beforeEach(module('Huron'));
+  beforeEach(angular.mock.module('Huron'));
 
-  var controller, $scope, $state, $q, $timeout;
+  var $scope, $state, $timeout;
   var modalFake = {
     close: jasmine.createSpy('modalInstance.close'),
     dismiss: jasmine.createSpy('modalInstance.dismiss')
   };
 
-  beforeEach(inject(function ($rootScope, $controller, _$state_, _$q_, _$timeout_) {
+  beforeEach(inject(function ($rootScope, $controller, _$state_, _$timeout_, Orgservice) {
     $scope = $rootScope.$new();
-    $q = _$q_;
     $state = _$state_;
     $timeout = _$timeout_;
     spyOn($state, 'go');
-    controller = $controller('AATypeSelectCtrl', {
+    spyOn(Orgservice, 'getOrg').and.callFake(function (callback) {
+      callback({}, 200);
+    });
+    $controller('AATypeSelectCtrl', {
       $scope: $scope,
       $modalInstance: modalFake,
       $timeout: $timeout,
@@ -26,26 +28,29 @@ describe('Controller: AATypeSelectCtrl', function () {
 
   it("ok function call results in closing the Modal with the value chosen when item is 1", function () {
     var item = {
-      id: 1
+      name: 'Basic'
     };
     $scope.ok(item);
     $scope.$apply();
     $timeout.flush();
     expect($state.go).toHaveBeenCalledWith('huronfeatures.aabuilder', {
       aaName: '',
-      aaTemplate: 'template1'
+      aaTemplate: 'Basic'
     });
     expect(modalFake.close).toHaveBeenCalledWith(item);
   });
 
   it("ok function call results in closing the Modal with the value chosen when item is 2", function () {
     var item = {
-      id: 2
+      name: 'Custom'
     };
     $scope.ok(item);
     $scope.$apply();
     $timeout.flush();
-    expect($state.go).toHaveBeenCalledWith('huronfeatures.aabuilder', {});
+    expect($state.go).toHaveBeenCalledWith('huronfeatures.aabuilder', {
+      aaName: '',
+      aaTemplate: 'Custom'
+    });
     expect(modalFake.close).toHaveBeenCalledWith(item);
   });
 

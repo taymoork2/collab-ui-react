@@ -5,10 +5,12 @@
     .service('CdrLadderDiagramService', CdrLadderDiagramService);
 
   /* @ngInject */
-  function CdrLadderDiagramService($rootScope, $http, $q, Config, $filter, $translate, Notification, Log, UrlConfig) {
+  function CdrLadderDiagramService($http, $q, Log, UrlConfig) {
     var callflowDiagramUrl = UrlConfig.getAdminServiceUrl() + 'callflow/ladderdiagram';
-    var TIMEOUT_IN_MILI = 8000;
-    var NOT_FOUND = 'Not Found';
+    var getActivitiesUrl = UrlConfig.getAdminServiceUrl() + 'callflow/activities';
+    var TIMEOUT_IN_MILI = 15000;
+    var TRANSITION_ARROW = "-[#009933]>";
+    var SME_NODE = 'SME';
     var serviceName = "Diagnostics Server";
     var retryError = "ElasticSearch GET request failed for reason: Observable onError";
     var skinParam = "skinparam backgroundColor #EEEBDC \n" +
@@ -33,13 +35,14 @@
     svc.events = null;
 
     function generateMessagebody(events) {
-      var messageBody = '@startuml \n autonumber \"<b>[0]\"\n';
+      var messageBody = '@startuml \n autonumber "<b>[0]"\n';
       var source = '';
       var remote = '';
       var note = '';
       var eventNote = '';
 
       messageBody += skinParam;
+
       for (var i = 0; i < events.length; i++) {
         if (events[i].type !== 'ApplicationEvents' && events[i].type !== undefined) {
           if (events[i].eventSource.hostname !== undefined && events[i].dataParam.direction !== undefined) {
@@ -49,24 +52,31 @@
             note = getNote(events[i]);
 
             if (source === null || source === "") {
-              source = NOT_FOUND;
+              source = SME_NODE;
             }
 
             if (remote === null || remote === "") {
-              remote = NOT_FOUND;
+              remote = SME_NODE;
             }
 
             //incommig call
             if (events[i].dataParam.direction === 'in') {
-              messageBody += '\"' + remote + '\"' + '->' + '\"' + source + '\"' + ': ';
+              if (!_.isUndefined(events[i].dataParam.callflowTransition) && (events[i].dataParam.callflowTransition)) {
+                messageBody += '"' + remote + '"' + TRANSITION_ARROW + '"' + source + '"' + ': ';
+              } else {
+                messageBody += '"' + remote + '"' + '->' + '"' + source + '"' + ': ';
+              }
             } else {
-              messageBody += '\"' + source + '\"' + '->' + '\"' + remote + '\"' + ': ';
+              if (!_.isUndefined(events[i].dataParam.callflowTransition) && (events[i].dataParam.callflowTransition)) {
+                messageBody += '"' + source + '"' + TRANSITION_ARROW + '"' + remote + '"' + ': ';
+              } else {
+                messageBody += '"' + source + '"' + '->' + '"' + remote + '"' + ': ';
+              }
             }
 
-            eventNote = '[' + (($filter('orderBy')(svc.events, ['"@timestamp"'])).indexOf(events[i]) + 1) + '] ';
-            eventNote += note;
+            eventNote = note;
             eventNote += events[i].dataParam.msgType;
-            messageBody += '\"' + eventNote.replace('"', ' ') + '\"\n';
+            messageBody += '"' + eventNote.replace('"', ' ') + '"\n';
           }
         }
       }
@@ -87,8 +97,12 @@
     }
 
     function getRemoteAlias(event) {
-      var remoteAlias = {};
-      if (event.dataParam.remoteName !== undefined && event.eventSource.hostname !== undefined) {
+      if (!_.isUndefined(event.dataParam.remoteAlias)) {
+        if (event.dataParam.remoteAlias.indexOf('Cisco') > -1 && event.dataParam.remoteAlias.indexOf('SME') > -1) {
+          return SME_NODE;
+        }
+      }
+      if (!_.isUndefined(event.dataParam.remoteName) && !_.isUndefined(event.eventSource.hostname)) {
         if (event.dataParam.remoteName.match(/^[0-9a-zA-Z]+$/i) && event.eventSource.hostname.indexOf('cms') > -1) {
           return 'Line Hedge';
         } else if (event.dataParam.remoteName.match(/^[0-9a-zA-Z]+$/i) && event.eventSource.hostname.indexOf('sme') > -1) {
@@ -102,7 +116,7 @@
         } else {
           return event.dataParam.remoteName.replace(/-/g, '\\-');
         }
-      } else if (event.eventSource.hostname !== undefined) {
+      } else if (!_.isUndefined(event.eventSource.hostname)) {
         if (event.eventSource.hostname.indexOf('line') > -1) {
           return 'Start Point';
         } else {
@@ -118,11 +132,12 @@
       return '';
     }
 
-    svc.query = function (esQuery) {
+    svc.query = function (esQuery, logstashPath) {
+      var cdrUrl = UrlConfig.getCdrUrl() + logstashPath + "/_search?pretty";
       var defer = $q.defer();
       $http({
         method: "POST",
-        url: UrlConfig.getCdrUrl(),
+        url: cdrUrl,
         data: esQuery,
         timeout: TIMEOUT_IN_MILI
       }).success(function (response) {
@@ -132,7 +147,7 @@
         if (status === 500 && response === retryError) {
           $http({
             method: "POST",
-            url: UrlConfig.getCdrUrl(),
+            url: cdrUrl,
             data: esQuery,
             timeout: TIMEOUT_IN_MILI
           }).success(function (secondaryResponse) {
@@ -156,16 +171,16 @@
     function proxyDiagnosticService(message) {
       var defer = $q.defer();
       $http({
-          method: "POST",
-          url: callflowDiagramUrl,
-          data: {
-            "data": message
-          },
-          headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json, application/xml'
-          }
-        })
+        method: "POST",
+        url: callflowDiagramUrl,
+        data: {
+          "data": message
+        },
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json, application/xml'
+        }
+      })
         .success(function (response) {
           defer.resolve(response);
         })
@@ -181,8 +196,31 @@
 
     svc.createLadderDiagram = function (events) {
       svc.events = events;
-      var message = generateMessagebody($filter('orderBy')(svc.events, ['"@timestamp"']));
+      var message = generateMessagebody(_.sortBy(svc.events, '@timestamp'));
       return proxyDiagnosticService(message);
+    };
+
+    svc.getActivities = function (locusid, start, end) {
+      var defer = $q.defer();
+      $http({
+        method: "GET",
+        url: getActivitiesUrl + "?id=lid." + locusid + "&start=" + start + "&end=" + end,
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        }
+      })
+        .success(function (response) {
+          defer.resolve(response);
+        })
+        .error(function (response, status) {
+          Log.debug('Failed to retrieve ladder diagram from ' + serviceName + ' server.');
+          defer.reject({
+            'response': response,
+            'status': status
+          });
+        });
+      return defer.promise;
     };
 
     return svc;

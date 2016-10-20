@@ -2,10 +2,7 @@
 
 /* global LONG_TIMEOUT */
 
-describe('First Time Wizard', function () {
-  afterEach(function () {
-    utils.dumpConsoleErrors();
-  });
+xdescribe('First Time Wizard', function () {
 
   it('should login as an admin user', function () {
     login.login('pbr-admin');
@@ -24,14 +21,18 @@ describe('First Time Wizard', function () {
     utils.expectTextToBeSet(wizard.mainviewTitle, 'Enterprise Settings');
     wizard.clickAddUsers();
     utils.expectTextToBeSet(wizard.mainviewTitle, 'Add Users');
+    utils.expectIsNotDisplayed(wizard.skipBtn);
+    utils.expectIsDisplayed(wizard.nextBtn);
+    utils.expectIsDisplayed(wizard.backBtn);
   });
 
   it('should complete custom sso provider flow', function () {
     wizard.clickPlanReview();
+    notifications.clearNotifications();
     utils.click(wizard.beginBtn);
     utils.click(wizard.saveBtn);
     utils.expectTextToBeSet(wizard.mainviewTitle, 'Enterprise Settings');
-    utils.expectTextToBeSet(wizard.mainviewSubtitle, 'SIP Domain');
+    utils.expectTextToBeSet(wizard.mainviewSubtitle, 'Spark SIP Address');
     utils.click(wizard.nextBtn);
     utils.expectTextToBeSet(wizard.mainviewSubtitle, 'Single Sign-On');
     utils.click(wizard.radiobuttons.last());
@@ -45,11 +46,11 @@ describe('First Time Wizard', function () {
 
   it('should complete simple add users flow', function () {
     wizard.clickAddUsers();
-    utils.click(wizard.radiobuttons.first());
+    utils.click(wizard.manualAddUsers);
     notifications.clearNotifications();
     utils.click(wizard.nextBtn);
     utils.expectIsDisplayed(users.addUsersField);
-    utils.click(wizard.finishBtn);
+    utils.click(users.saveButton);
     utils.clickEscape();
     utils.expectIsNotDisplayed(wizard.wizard);
   }, LONG_TIMEOUT);

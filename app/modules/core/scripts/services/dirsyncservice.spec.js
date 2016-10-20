@@ -1,13 +1,13 @@
 'use strict';
 
 describe('DirSyncService', function () {
-  beforeEach(module('Core'));
+  beforeEach(angular.mock.module('Core'));
   describe('getDirSyncStatus', function () {
 
     var $httpBackend, DirSyncService, UrlConfig, Authinfo, Log;
 
     beforeEach(function () {
-      module(function ($provide) {
+      angular.mock.module(function ($provide) {
         UrlConfig = {
           getAdminServiceUrl: function () {
             return '/foo/';

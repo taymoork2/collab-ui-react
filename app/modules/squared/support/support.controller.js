@@ -7,7 +7,7 @@
     .controller('SupportCtrl', SupportCtrl);
 
   /* @ngInject */
-  function SupportCtrl($scope, $filter, Notification, Log, Config, Utils, Storage, Authinfo, LogService, ReportsService, CallflowService, $translate, PageParam, $stateParams, FeedbackService, $window, Orgservice, Userservice, $state, ModalService, UrlConfig) {
+  function SupportCtrl($filter, $scope, $timeout, $translate, $state, $stateParams, $window, Authinfo, CallflowService, Config, FeedbackService, Log, LogService, ModalService, Notification, Orgservice, PageParam, ReportsService, UrlConfig, Userservice, Utils, WindowLocation) {
     $scope.showSupportDetails = false;
     $scope.showSystemDetails = false;
     $scope.problemHandler = ' by Cisco';
@@ -27,15 +27,24 @@
     $scope.gridRefresh = false;
     $scope.gotoHelpdesk = gotoHelpdesk;
     $scope.gotoCdrSupport = gotoCdrSupport;
+    $scope.gotoEdiscovery = gotoEdiscovery;
+
+    var vm = this;
+    vm.masonryRefreshed = false;
 
     function gotoHelpdesk() {
       var url = $state.href('helpdesk.search');
-      window.open(url, '_blank');
+      $window.open(url, '_blank');
     }
 
     function gotoCdrSupport() {
       var url = $state.href('cdrsupport');
-      window.open(url, '_self');
+      $window.open(url, '_self');
+    }
+
+    function gotoEdiscovery() {
+      var url = $state.href('ediscovery.search');
+      $window.open(url, '_blank');
     }
 
     function initializeShowCdrCallFlowLink() {
@@ -43,14 +52,25 @@
         if (user.success) {
           if (isCiscoDevRole(user.roles)) {
             $scope.showCdrCallFlowLink = true;
-            setTimeout(function () {
-              $('.cs-card-layout').masonry('layout');
-            }, 200);
+            reInstantiateMasonry();
           }
         } else {
           Log.debug('Get current user failed. Status: ' + status);
         }
       });
+    }
+
+    function reInstantiateMasonry() {
+      $timeout(function () {
+        $('.cs-card-layout').masonry('destroy');
+        $('.cs-card-layout').masonry({
+          itemSelector: '.cs-card',
+          columnWidth: '.cs-card',
+          isResizable: true,
+          percentPosition: true
+        });
+      }, 0);
+      vm.masonryRefreshed = true;
     }
 
     function isCiscoDevRole(roleArray) {
@@ -75,10 +95,14 @@
     $scope.showToolsCard = function () {
       // Preliminary hack to fix rendering problem for small width screens.
       // Without it, small screens may initially render card(s) partly on top of each other
-      setTimeout(function () {
-        $('.cs-card-layout').masonry('layout');
-      }, 200);
-      return $scope.showCdrCallFlowLink || $scope.showHelpdeskLink();
+      if (!vm.masonryRefreshed) {
+        reInstantiateMasonry();
+      }
+      return $scope.showCdrCallFlowLink || $scope.showHelpdeskLink() || $scope.showEdiscoveryLink();
+    };
+
+    $scope.showEdiscoveryLink = function () {
+      return Authinfo.isComplianceUser();
     };
 
     $scope.tabs = [{
@@ -86,14 +110,7 @@
       state: "support.status"
     }];
 
-    //TODO remove test
-    /*$scope.tabs.push({
-      title: $translate.instant('supportPage.tabs.logs'),
-      state: "support.logs"
-    });*/
-
-    //ADD BACK
-    if (Authinfo.isInDelegatedAdministrationOrg()) {
+    if (Authinfo.isInDelegatedAdministrationOrg() && !Authinfo.isHelpDeskAndComplianceUserOnly()) {
       $scope.tabs.push({
         title: $translate.instant('supportPage.tabs.logs'),
         state: "support.logs"
@@ -192,9 +209,9 @@
     var sortIcons = ['sortIconEmailAddress', 'sortIconDate', 'sortIconLocusId', 'sortIconCallStart'];
     for (var sortIcon in sortIcons) {
       if (sortIcons[sortIcon] === 'sortIconDate') {
-        $scope[sortIcons[sortIcon]] = 'fa-sort-desc';
+        $scope[sortIcons[sortIcon]] = 'icon-chevron-down';
       } else {
-        $scope[sortIcons[sortIcon]] = 'fa-sort';
+        $scope[sortIcons[sortIcon]] = 'icon-sort';
       }
     }
 
@@ -224,53 +241,17 @@
     function changeSortIcon(logsSortBy, sortIcon) {
       $scope.logsSortBy = logsSortBy;
       if ($scope.reverseLogs === true) {
-        $scope[sortIcon] = 'fa-sort-desc';
+        $scope[sortIcon] = 'icon-chevron-down';
       } else {
-        $scope[sortIcon] = 'fa-sort-asc';
+        $scope[sortIcon] = 'icon-chevron-up';
       }
 
       for (var otherIcon in sortIcons) {
         if (sortIcons[otherIcon] !== sortIcon) {
-          $scope[sortIcons[otherIcon]] = 'fa-sort';
+          $scope[sortIcons[otherIcon]] = 'icon-sort';
         }
       }
     }
-
-    var initializeTypeahead = function () {
-      var suggestUsersUrl = UrlConfig.getScimUrl(Authinfo.getOrgId()) + '?count=10&attributes=name,userName&filter=userName%20sw%20%22';
-      var engine = new Bloodhound({
-        datumTokenizer: Bloodhound.tokenizers.obj.whitespace('userName'),
-        queryTokenizer: Bloodhound.tokenizers.whitespace,
-        limit: 5,
-        remote: {
-          url: suggestUsersUrl,
-          filter: function (data) {
-            return data.Resources;
-          },
-          replace: function (url, query) {
-            return url + encodeURIComponent(query) + '%22'; //%22 is encoded double-quote
-          },
-          cache: true,
-          ajax: {
-            headers: {
-              'Authorization': 'Bearer ' + Storage.get('accessToken')
-            }
-          }
-        }
-      });
-
-      engine.initialize();
-
-      $('#logsearchfield').typeahead({
-        hint: true,
-        highlight: true,
-        minLength: 2
-      }, {
-        name: 'email',
-        displayKey: 'userName',
-        source: engine.ttAdapter()
-      });
-    };
 
     //TODO: Fix $(...).typeahead is not a function console error
     //initializeTypeahead();
@@ -311,17 +292,13 @@
 
               // retrieve locus and callstart from metadata
               var locus = '-NA-',
-                callstart = '-NA-',
-                feedbackid = '-NA-';
+                callstart = '-NA-';
               if (metadata) {
                 if (metadata.locusid) {
                   locus = metadata.locusid;
                 }
                 if (metadata.callstart) {
                   callstart = metadata.callstart;
-                }
-                if (metadata.feedbackid) {
-                  feedbackid = metadata.feedbackid;
                 }
               } else {
                 //no metadata, for backward compatibility get locus and callstart from log filename
@@ -367,9 +344,9 @@
           $scope.logSearchBtnLoad = false;
           $scope.gridRefresh = false;
           Log.debug('Failed to retrieve user logs. Status: ' + status);
-          Notification.notify([$translate.instant('supportPage.errLogQuery', {
+          Notification.error('supportPage.errLogQuery', {
             status: status
-          })], 'error');
+          });
         }
       });
     }
@@ -388,97 +365,10 @@
       return callstart;
     }
 
-    var getLogInfo = function (locusId, startTime) {
-      $scope.getPending = true;
-      ReportsService.getLogInfo(locusId, startTime, function (data, status) {
-        if (data.success) {
-          if (data.callRecords.length > 0) {
-            for (var index in data.callRecords) {
-              var errorInfo = data.callRecords[index].errorInfo;
-              var mediaStats = data.callRecords[index].mediaStats;
-              var audioStart, videoStart, audioRxJitter, audioTxJitter, videoRxJitter, videoTxJitter;
-              var audioRxLossRatio, audioTxLossRatio, videoRxLossRatio, videoTxLossRatio;
-              var component, errMessage;
-              var errorCode = 0;
-              var starttime = moment(data.callRecords[index].locusCallStartTime);
-              var graphUrl = UrlConfig.getLocusServiceUrl() + '/locus/api/v1/callflows?start=' + starttime + '&format=svg';
-              var graphUserIdUrl = graphUrl + '&uid=' + data.callRecords[index].userId;
-              var graphLocusIdUrl = graphUrl + '&lid=' + data.callRecords[index].locusId;
-              var graphTrackingIdUrl = graphUrl + '&tid=' + data.callRecords[index].trackingId;
-              if (mediaStats) {
-                audioStart = mediaStats.audioStart;
-                videoStart = mediaStats.videoStart;
-                audioRxJitter = mediaStats.audioRxJitter;
-                audioTxJitter = mediaStats.audioTxJitter;
-                videoRxJitter = mediaStats.videoRxJitter;
-                videoTxJitter = mediaStats.videoTxJitter;
-                audioRxLossRatio = mediaStats.audioRxLossRatio;
-                audioTxLossRatio = mediaStats.audioTxLossRatio;
-                videoRxLossRatio = mediaStats.videoRxLossRatio;
-                videoTxLossRatio = mediaStats.videoTxLossRatio;
-              }
-              if (errorInfo) {
-                if (errorInfo.component) {
-                  component = errorInfo.component;
-                  errorCode = 1;
-                }
-                if (errorInfo.message) {
-                  errMessage = errorInfo.message;
-                  errorCode = 1;
-                }
-              }
-              var info = {
-                userId: data.callRecords[index].userId,
-                emailAddress: data.callRecords[index].emailAddress,
-                orgId: data.callRecords[index].orgId,
-                locusId: data.callRecords[index].locusId,
-                locusCallStartTime: data.callRecords[index].locusCallStartTime,
-                deviceId: data.callRecords[index].deviceId,
-                isGroupCall: data.callRecords[index].isGroupCall,
-                callDuration: data.callRecords[index].callDuration,
-                usrAgent: data.callRecords[index].usrAgent,
-                networkName: data.callRecords[index].networkName,
-                networkType: data.callRecords[index].networkType,
-                trackingId: data.callRecords[index].trackingId,
-                audioStart: audioStart,
-                videoStart: videoStart,
-                audioRxJitter: audioRxJitter,
-                audioTxJitter: audioTxJitter,
-                videoRxJitter: videoRxJitter,
-                videoTxJitter: videoTxJitter,
-                audioRxLossRatio: audioRxLossRatio,
-                audioTxLossRatio: audioTxLossRatio,
-                videoRxLossRatio: videoRxLossRatio,
-                videoTxLossRatio: videoTxLossRatio,
-                errorCode: errorCode,
-                component: component,
-                errMessage: errMessage,
-                graphUserIdUrl: graphUserIdUrl,
-                graphLocusIdUrl: graphLocusIdUrl,
-                graphTrackingIdUrl: graphTrackingIdUrl
-              };
-              $scope.logInfo.push(info);
-            }
-          } else {
-            $scope.getPending = false;
-            angular.element('#logInfoPendingBtn').button('reset');
-            Log.debug('No records found for : ' + locusId + ' startTime :' + startTime);
-          }
-        } else {
-          Log.debug('Failed to retrieve log information. Status: ' + status);
-          $scope.getPending = false;
-          angular.element('#logInfoPendingBtn').button('reset');
-          Notification.notify([$translate.instant('supportPage.errCallInfoQuery', {
-            status: status
-          })], 'error');
-        }
-      });
-    };
-
     $scope.downloadLog = function (filename) {
       LogService.downloadLog(filename, function (data, status) {
         if (data.success) {
-          window.location.assign(data.tempURL);
+          WindowLocation.set(data.tempURL);
         } else {
           Log.debug('Failed to download log: ' + filename + '. Status: ' + status);
           Notification.notify([$translate.instant('supportPage.downloadLogFailed') + ': ' + filename + '. ' + $translate.instant(
@@ -490,7 +380,7 @@
     $scope.getCallflowCharts = function (orgId, userId, locusId, callStart, filename, isGetCallLogs) {
       CallflowService.getCallflowCharts(orgId, userId, locusId, callStart, filename, isGetCallLogs, function (data, status) {
         if (data.success) {
-          window.location.assign(data.resultsUrl);
+          WindowLocation.set(data.resultsUrl);
         } else {
           Log.debug('Failed to download the callflow results corresponding to logFile: ' + filename + '. Status: ' + status);
           Notification.notify([$translate.instant('supportPage.callflowResultsFailed') + ': ' + filename + '. Status: ' + status], 'error');
@@ -499,52 +389,18 @@
     };
 
     $scope.downloadFlow = function (downloadUrl) {
-      $scope.callInfoActive = false;
       $scope.logPanelActive = false;
       $scope.callFlowActive = true;
       $scope.callFlowUrl = downloadUrl;
     };
 
-    $scope.showCallInfo = function (emailAddress, locusId, startTime) {
-      $scope.callInfoActive = true;
-      $scope.logPanelActive = false;
-      $scope.callFlowActive = false;
-      $scope.logInfo = [];
-      $scope.emailAddress = emailAddress;
-      if (!locusId || locusId === '-NA-' || !startTime || startTime === '-NA-') {
-        $scope.getPending = false;
-        return;
-      }
-      getLogInfo(locusId, startTime);
-    };
-
-    $scope.showCallSummary = function (locusId, startTime) {
-      ReportsService.getCallSummary(locusId, startTime, function (data, status) {
-        if (data.success) {
-          var myWindow = window.open("", "Call Summary", "width=800, height=400");
-          setTimeout(function () {
-            myWindow.document.title = 'Call Summary';
-          }, 1000);
-          myWindow.document.write("<p><u><h3>Call Summary (locusId: " + locusId + ", callStartTime: " + startTime + ")" + "</h3></u></p>");
-          if (data.callRecords.length > 0) {
-            for (var index in data.callRecords) {
-              myWindow.document.write(data.callRecords[index] + "<br/>");
-            }
-          }
-          Log.info('Call summary: ' + data);
-        }
-      });
-    };
-
     $scope.closeCallInfo = function () {
-      $scope.callInfoActive = false;
       $scope.logPanelActive = true;
       $scope.callFlowActive = false;
     };
 
     $scope.closeCallFlow = function () {
       $scope.callFlowUrl = 'images/solid_white.png';
-      $scope.callInfoActive = true;
       $scope.logPanelActive = false;
       $scope.callFlowActive = false;
     };
@@ -579,12 +435,6 @@
       '<div class="grid-icon ui-grid-cell-contents"><a ng-click="grid.appScope.getCallflowCharts(row.entity.orgId, row.entity.userId, row.entity.locusId, row.entity.callStart, row.entity.fullFilename, false)"><span id="download-callflowCharts-icon"><i class="icon icon-download"></i></a></div>';
 
     var callFlowLogsTemplate = '<div class="grid-icon ui-grid-cell-contents"><a ng-click="grid.appScope.openDownloadCallLogModal(row.entity, true)"><span id="download-callflowCharts-icon"><i class="icon icon-download"></i></a></div>';
-
-    var callInfoTemplate =
-      '<div class="grid-icon ui-grid-cell-contents"><a ng-click="grid.appScope.showCallInfo(row.entity.emailAddress, row.entity.locusId, row.entity.callStart)"><span><i class="icon icon-information"></i></span></a></div>';
-
-    var callSummaryTemplate =
-      '<div class="grid-icon ui-grid-cell-contents"><a ng-click="grid.appScope.showCallSummary(row.entity.locusId, row.entity.callStart)"><span><i class="icon icon-information"></i></a></div>';
 
     $scope.gridOptions = {
       data: 'userLogs',
@@ -633,22 +483,6 @@
         cellTemplate: callFlowTemplate,
         cellClass: 'call-flow',
         headerCellClass: 'header-call-flow',
-        visible: Authinfo.isCisco()
-      }, {
-        field: 'callInfo',
-        displayName: $filter('translate')('supportPage.callAction'),
-        sortable: false,
-        cellTemplate: callInfoTemplate,
-        cellClass: 'call-info',
-        headerCellClass: 'header-call-info',
-        visible: Authinfo.isCisco()
-      }, {
-        field: 'callSummary',
-        displayName: $filter('translate')('supportPage.callSummaryAction'),
-        sortable: false,
-        cellTemplate: callSummaryTemplate,
-        cellClass: 'call-summary',
-        headerCellClass: 'header-call-summary',
         visible: Authinfo.isCisco()
       }]
     };

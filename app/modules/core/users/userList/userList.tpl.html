@@ -2,38 +2,45 @@
   <cs-page-header title="{{::pageTitle}}"></cs-page-header>
   <cs-page-sub-header>
     <cs-page-sub-header-left>
-      <cs-searchfilter filters="filters" set-filter-fn="setFilter(filter.filterValue)" ng-model="placeholder.count" search-item-fn="filterList(searchStr)" placeholder-text="{{placeholder.name}}">
+      <cs-searchfilter filters="filters" set-filter-fn="setFilter(filter.filterValue)" ng-model="placeholder.count"
+                       search-item-fn="filterList(searchStr)" placeholder-text="{{placeholder.name}}">
       </cs-searchfilter>
     </cs-page-sub-header-left>
-    <cs-page-sub-header-right ng-show="Utils.isAdminPage()">
-      <div class="export-users" cr-feature-toggle feature-hide="atlas-csv-upload" ng-controller="ExportCSVCtrl">
-        <a ng-if="!exporting" ng-csv="exportCSV()" filename="{{::'usersPage.csvFilename' | translate}}">
-          <span tooltip-placement="top" tooltip="{{::'usersPage.csvBtnTitle' | translate}}" tooltip-animation="false" tooltip-append-to-body="true"><i class="icon icon-content-share icon-lg"></i></span>
-        </a>
-        <a ng-if="exporting">
-          <span tooltip-placement="top" tooltip="{{::'usersPage.csvBtnExportingTitle' | translate}}" tooltip-animation="false" tooltip-append-to-body="true"><i class="icon icon-spinner icon-lg"></i></span>
-        </a>
-      </div>
-      <div>
-        <button id="addUsers" class="btn btn--people" ui-sref="users.add" translate="usersPage.inviteUsers"></button>
-      </div>
-      <div class="export-users" cr-feature-toggle feature-show="atlas-csv-upload">
-        <csv-download ng-if="obtainedTotalUserCount && totalUsers <= USER_EXPORT_THRESHOLD" type="user" filename="{{::'usersPage.csvFilename' | translate}}" icon="icon-content-share"></csv-download>
-        <div ng-if="obtainedTotalUserCount && totalUsers > USER_EXPORT_THRESHOLD" ng-controller="ExportCSVCtrl">
-          <a class="export-users" ng-if="!exporting" ng-csv="exportCSV()" filename="{{::'usersPage.csvFilename' | translate}}">
-            <span tooltip-placement="top" tooltip="{{::'usersPage.csvBtnTitle' | translate}}" tooltip-animation="false" tooltip-append-to-body="true"><i class="icon icon-content-share icon-lg"></i></span>
-          </a>
-          <a class="export-users" ng-if="exporting">
-            <span tooltip-placement="top" tooltip="{{::'usersPage.csvBtnExportingTitle' | translate}}" tooltip-animation="false" tooltip-append-to-body="true"><i class="icon icon-spinner icon-lg"></i></span>
-          </a>
+
+    <cs-page-sub-header-right class="action-panel" ng-show="Utils.isAdminPage()">
+      <!-- Pre-I-35 Feature -->
+      <div class="export-users" ng-if="!isCsvEnhancementToggled" >
+
+        <div ng-if="!isCSB">
+          <button id="addUsers" class="btn btn--people add-users-button" ui-sref="users.add" translate="usersPage.inviteUsers"></button>
         </div>
-        <div ng-if="!obtainedTotalUserCount">
-          <a class="export-users">
-            <span tooltip-placement="top" tooltip="{{::'usersPage.userGettingCount' | translate}}" tooltip-animation="false" tooltip-append-to-body="true"><i class="icon icon-spinner icon-lg"></i></span>
-          </a>
+        <div ng-if="isCSB">
+          <button class="btn btn--people add-users-button" ui-sref="userRedirect" translate="usersPage.inviteUsers"></button>
         </div>
+
+        <div class="dl-button">
+          <csv-download ng-if="obtainedTotalUserCount && totalUsers <= userExportThreshold" type="user" filename="{{::'usersPage.csvFilename' | translate}}" icon="icon-content-share"></csv-download>
+          <div ng-if="obtainedTotalUserCount && totalUsers > userExportThreshold" ng-controller="ExportCSVCtrl">
+            <a class="export-users" ng-if="!exporting" ng-csv="exportCSV()" filename="{{::'usersPage.csvFilename' | translate}}">
+              <span tooltip-placement="top" tooltip="{{::'usersPage.csvBtnTitle' | translate}}" tooltip-animation="false" tooltip-append-to-body="true"><i class="icon icon-content-share icon-lg"></i></span>
+            </a>
+            <a class="export-users" ng-if="exporting">
+              <span tooltip-placement="top" tooltip="{{::'usersPage.csvBtnExportingTitle' | translate}}" tooltip-animation="false" tooltip-append-to-body="true"><i class="icon icon-spinner icon-lg"></i></span>
+            </a>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Post-I-35 Feature -->
+      <div class="export-users" ng-if="isCsvEnhancementToggled">
+        <csv-download type="any" filename="exported_file.csv" no-icon status-message="{{::'usersPage.exportingUserAttributes' | translate}}" download-state="users.csv"></csv-download>
+        <button ng-disabled="!obtainedTotalUserCount" id="manageUsers" class="btn btn--people" ng-click="onManageUsers()"
+                translate="usersPage.manageUsers">
+        </button>
       </div>
     </cs-page-sub-header-right>
+
   </cs-page-sub-header>
   <div id="usersListPanel" class="row grid">
     <div gridscrollbar class="gridStyle" ui-grid="gridOptions" ui-grid-selection ui-grid-infinite-scroll></div>

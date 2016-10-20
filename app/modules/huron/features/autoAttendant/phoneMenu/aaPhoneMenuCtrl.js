@@ -16,8 +16,7 @@
   }
 
   /* @ngInject */
-  function AAPhoneMenuCtrl($scope, $translate, $filter, AAUiModelService, AutoAttendantCeMenuModelService, AAModelService, AACommonService, Config) {
-
+  function AAPhoneMenuCtrl($scope, $translate, AAUiModelService, AutoAttendantCeMenuModelService, AACommonService, AAScrollBar, FeatureToggleService, QueueHelperService) {
     var vm = this;
     vm.selectPlaceholder = $translate.instant('autoAttendant.selectPlaceholder');
     vm.actionPlaceholder = $translate.instant('autoAttendant.actionPlaceholder');
@@ -29,84 +28,59 @@
     };
     vm.menuEntry = {};
 
+    vm.queues = [];
     vm.addKeyAction = addKeyAction;
     vm.deleteKeyAction = deleteKeyAction;
     vm.keyChanged = keyChanged;
     vm.keyActionChanged = keyActionChanged;
-    vm.timeoutInvalidChanged = timeoutInvalidChanged;
     vm.populateOptionMenu = populateOptionMenu;
-    vm.createOptionMenu = createOptionMenu;
-
-    vm.repeatOptions = [{
-      label: $translate.instant('autoAttendant.phoneMenuRepeatOnce'),
-      name: 'phoneMenuRepeatOnce',
-      value: 2
-    }, {
-      label: $translate.instant('autoAttendant.phoneMenuRepeatTwice'),
-      name: 'phoneMenuRepeatTwice',
-      value: 3
-    }, {
-      label: $translate.instant('autoAttendant.phoneMenuRepeatThree'),
-      name: 'phoneMenuRepeatThree',
-      value: 4
-    }, {
-      label: $translate.instant('autoAttendant.phoneMenuRepeatFour'),
-      name: 'phoneMenuRepeatFour',
-      value: 5
-    }, {
-      label: $translate.instant('autoAttendant.phoneMenuRepeatFive'),
-      name: 'phoneMenuRepeatFive',
-      value: 6
-    }];
-
-    vm.timeoutActions = [{
-      label: $translate.instant('autoAttendant.phoneMenuContinue'),
-      name: 'phoneMenuContinue',
-      action: 'repeatActionsOnInput',
-      value: 1
-    }, {
-      label: $translate.instant('autoAttendant.repeatMenu'),
-      name: 'repeatMenu',
-      action: 'repeatActionsOnInput',
-      value: 2,
-      childOptions: vm.repeatOptions
-    }];
+    vm.addButtonZero = addButtonZero;
 
     // TBD means the action isn't supported in the backend yet
-    vm.keyActions = [
-      // {
-      //   label: $translate.instant('autoAttendant.phoneMenuPlaySubmenu'),
-      //   name: 'phoneMenuPlaySubmenu',
-      //   action: 'runActionsOnInput',
-      //   inputType: 1
-      // },
-      {
-        label: $translate.instant('autoAttendant.phoneMenuRepeatMenu'),
-        name: 'phoneMenuRepeatMenu',
-        action: 'repeatActionsOnInput'
-      }, {
-        label: $translate.instant('autoAttendant.actionSayMessage'),
-        name: 'phoneMenuSayMessage',
-        action: 'say'
-      }, {
-        label: $translate.instant('autoAttendant.phoneMenuDialExt'),
-        name: 'phoneMenuDialExt',
-        action: 'runActionsOnInput',
-        inputType: 2
-      }, {
-        label: $translate.instant('autoAttendant.phoneMenuRouteHunt'),
-        name: 'phoneMenuRouteHunt',
-        action: 'routeToHuntGroup'
-      }, {
-        label: $translate.instant('autoAttendant.phoneMenuRouteAA'),
-        name: 'phoneMenuRouteAA',
-        action: 'goto'
-      }, {
-        label: $translate.instant('autoAttendant.phoneMenuRouteUser'),
-        name: 'phoneMenuRouteUser',
-        action: 'routeToUser'
-      }
-    ];
+    /**
+     * This include the list of feature which are production ready.
+     * Adding option here lets it be visible in production. If option is not production ready
+     * add it under function addAvailableFeature.
+     */
+    vm.keyActions = [{
+      label: $translate.instant('autoAttendant.phoneMenuRepeatMenu'),
+      name: 'phoneMenuRepeatMenu',
+      action: 'repeatActionsOnInput',
+      level: 0
+    }, {
+      label: $translate.instant('autoAttendant.actionSayMessage'),
+      name: 'phoneMenuSayMessage',
+      action: 'say'
+    }, {
+      label: $translate.instant('autoAttendant.phoneMenuDialExt'),
+      name: 'phoneMenuDialExt',
+      action: 'runActionsOnInput',
+      inputType: 2
+    }, {
+      label: $translate.instant('autoAttendant.phoneMenuRouteHunt'),
+      name: 'phoneMenuRouteHunt',
+      action: 'routeToHuntGroup'
+    }, {
+      label: $translate.instant('autoAttendant.phoneMenuRouteAA'),
+      name: 'phoneMenuRouteAA',
+      action: 'goto'
+    }, {
+      label: $translate.instant('autoAttendant.phoneMenuRouteUser'),
+      name: 'phoneMenuRouteUser',
+      action: 'routeToUser'
+    }, {
+      label: $translate.instant('autoAttendant.phoneMenuRouteVM'),
+      name: 'phoneMenuRouteMailbox',
+      action: 'routeToVoiceMail'
+    }, {
+      label: $translate.instant('autoAttendant.phoneMenuRouteToExtNum'),
+      name: 'phoneMenuRouteToExtNum',
+      action: 'route'
+    }, {
+      label: $translate.instant('autoAttendant.phoneMenuPlaySubmenu'),
+      name: 'phoneMenuPlaySubmenu',
+      action: 'runActionsOnInput'
+    }];
 
     // search for a key action by its name
     function findKeyAction(name) {
@@ -135,6 +109,7 @@
       // remove key that is in use from creating the new key entry
       setAvailableKeys();
       setPhonemenuFormDirty();
+      AAScrollBar.resizeBuilderScrollBar();
     }
 
     // the user has pressed the trash can icon for a key/action pair
@@ -143,6 +118,7 @@
       vm.menuEntry.entries.splice(index, 1);
       setAvailableKeys();
       setPhonemenuFormDirty();
+      AAScrollBar.resizeBuilderScrollBar();
     }
 
     // the user has changed the key for an existing action
@@ -155,21 +131,43 @@
 
     // the user has changed the action for an existing key
     function keyActionChanged(index, keyAction) {
+      var entryI = vm.menuEntry.entries[index];
+      if (AutoAttendantCeMenuModelService.isCeMenu(entryI)) {
+        AutoAttendantCeMenuModelService.deleteCeMenuMap(entryI.getId());
+      }
       var _keyAction = findKeyAction(keyAction.name);
       if (angular.isDefined(_keyAction)) {
-        var phoneMenuEntry = vm.menuEntry.entries[index];
-        var action = phoneMenuEntry.actions[0];
-        action.name = keyAction.action;
-        // When switch between action, the action value is set to empty string,
-        // simplest way to handle action switching.
-        action.value = '';
-        delete action.inputType;
-        if (angular.isDefined(_keyAction.inputType)) {
-          // some action names are overloaded and are distinguished
-          // by inputType
-          action.inputType = _keyAction.inputType;
+        if (_keyAction.name === 'phoneMenuPlaySubmenu') {
+          // 1) Change of main menu attempts should copied into its submenus.
+          // See aaTimeoutInvalidCtrl.js.
+          // 2) New submenu attempts should be copied from its parent menu.
+          // See below.
+          var submenu = AutoAttendantCeMenuModelService.newCeMenu();
+          submenu.attempts = vm.menuEntry.attempts;
+          submenu.type = 'MENU_OPTION';
+          submenu.key = vm.menuEntry.entries[index].key;
+          vm.menuEntry.entries[index] = submenu;
+        } else {
+          var phoneMenuEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
+          // Phone menu option now could have multiple actions in it, e.g., say message.
+          // When switching between phone menu options, clear the actions array to
+          // make sure no old option data are carried over to the new option.
+          phoneMenuEntry.actions[0] = AutoAttendantCeMenuModelService.newCeActionEntry('', '');
+          phoneMenuEntry.type = 'MENU_OPTION';
+          phoneMenuEntry.key = vm.menuEntry.entries[index].key;
+          var action = phoneMenuEntry.actions[0];
+          action.name = keyAction.action;
+          if (angular.isDefined(_keyAction.inputType)) {
+            // some action names are overloaded and are distinguished
+            // by inputType
+            action.inputType = _keyAction.inputType;
+          } else if (_.has(_keyAction, 'level')) {
+            action.level = _keyAction.level;
+          }
+          vm.menuEntry.entries[index] = phoneMenuEntry;
         }
         setPhonemenuFormDirty();
+        AAScrollBar.resizeBuilderScrollBar();
       }
     }
 
@@ -213,63 +211,42 @@
       }
     }
 
-    function timeoutInvalidChanged() {
-      var entry = vm.menuEntry;
-      if (entry.type == "MENU_OPTION") {
-        setPhonemenuFormDirty();
-        // this is number of times to repeat the timeout/invalid menu
-        if (vm.selectedTimeout.value === 1) {
-          entry.attempts = vm.selectedTimeout.value;
-        } else if (vm.selectedTimeout.value === 2) {
-          if (angular.isDefined(vm.selectedTimeout.selectedChild)) {
-            entry.attempts = vm.selectedTimeout.selectedChild.value;
-          }
-        }
-      }
-    }
-
     function populateOptionMenu() {
       // populate with data from an existing AA
       var entry = vm.menuEntry;
+
       if (entry.type == "MENU_OPTION") {
-        if (angular.isDefined(entry.attempts)) {
-          // both timeout options have the same action name so
-          // we distinguish by the number of attempts allowed
-          if (entry.attempts === 1) {
-            vm.selectedTimeout = vm.timeoutActions[0];
-          } else {
-            vm.selectedTimeout = vm.timeoutActions[1];
-            vm.selectedTimeout.childOptions = vm.repeatOptions;
-            if (entry.attempts >= 2 && entry.attempts <= 6) {
-              vm.selectedTimeout.selectedChild = vm.repeatOptions[entry.attempts - 2];
-            } else {
-              // this case should never happens.
-              vm.selectedTimeout.selectedChild = vm.repeatOptions[0];
-            }
-          }
-        } else {
-          setDefaultTimeoutOption();
-        }
 
         var entries = entry.entries;
         if (entries.length > 0) {
           // add the key/action pairs
           for (var j = 0; j < entries.length; j++) {
             var menuEntry = entries[j];
-            if (menuEntry.actions.length > 0 && menuEntry.type == "MENU_OPTION") {
-              var keyAction = new KeyAction();
-              keyAction.key = menuEntry.key;
-              if (angular.isDefined(menuEntry.actions[0].name) && menuEntry.actions[0].name.length > 0) {
-                keyAction.action = _.find(vm.keyActions, function (keyAction) {
-                  return this === keyAction.action;
-                }, menuEntry.actions[0].name);
-              } else {
-                keyAction.action = {};
-                keyAction.action.name = "";
-                keyAction.action.label = "";
+            var keyAction = new KeyAction();
+            keyAction.key = menuEntry.key;
+            if (_.has(menuEntry, 'actions')) {
+              if (menuEntry.actions.length > 0 && menuEntry.type == "MENU_OPTION") {
+                if (angular.isDefined(menuEntry.actions[0].name) && menuEntry.actions[0].name.length > 0) {
+                  keyAction.action = _.find(vm.keyActions, _.bind(function (keyAction) {
+                    if (_.has(this, 'inputType')) {
+                      return this.name === keyAction.action && this.inputType === keyAction.inputType;
+                    } else if (!_.has(keyAction, 'inputType')) {
+                      return this.name === keyAction.action;
+                    }
+                    return false;
+                  }, menuEntry.actions[0]));
+                } else {
+                  keyAction.action = {};
+                  keyAction.action.name = "";
+                  keyAction.action.label = "";
+                }
               }
-              vm.selectedActions.push(keyAction);
+            } else {
+              keyAction.action = _.find(vm.keyActions, function (keyAction) {
+                return (keyAction.name === 'phoneMenuPlaySubmenu');
+              });
             }
+            vm.selectedActions.push(keyAction);
           }
         }
         // remove keys that are in use from the selection widget
@@ -277,72 +254,91 @@
       }
     }
 
-    function setDefaultTimeoutOption() {
-      // default option is repeat menu 3x
-      vm.selectedTimeout = vm.timeoutActions[1];
-      vm.selectedTimeout.childOptions = vm.repeatOptions;
-      vm.selectedTimeout.selectedChild = vm.repeatOptions[2];
-    }
-
-    function createOptionMenu() {
-      // we're adding a new AA so create the CeMenu
-      var menu = AutoAttendantCeMenuModelService.newCeMenu();
-      menu.type = 'MENU_OPTION';
-      vm.entries[$scope.index] = menu;
-
+    function addButtonZero() {
       var keyEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
       keyEntry.type = "MENU_OPTION";
       keyEntry.key = _.head(getAvailableKeys(''));
       var emptyAction = AutoAttendantCeMenuModelService.newCeActionEntry();
       keyEntry.addAction(emptyAction);
-      menu.entries.push(keyEntry);
-
-      menu.attempts = 4;
-      setDefaultTimeoutOption();
+      vm.menuEntry.entries.push(keyEntry);
 
       // remove key that is in use from creating the new key entry
       setAvailableKeys();
+
+      AAScrollBar.resizeBuilderScrollBar(AAScrollBar.delay.LONG); // delay resize for all transitions to finish (from action change)
     }
 
     function setPhonemenuFormDirty() {
       AACommonService.setPhoneMenuStatus(true);
     }
-
-    function addAvailableFeatures() {
-      if (Config.isDev() || Config.isIntegration()) {
-        vm.keyActions.push({
-          label: $translate.instant('autoAttendant.phoneMenuRouteVM'),
-          name: 'phoneMenuRouteMailbox',
-          action: 'routeToVoiceMail'
+    /**
+     * This push the Route To Queue option in Phone Menu List and push get all the queues
+    */
+    function getQueues() {
+      if (AACommonService.isRouteQueueToggle) {
+        return QueueHelperService.listQueues().then(function (aaQueueList) {
+          if (aaQueueList.length > 0) {
+            vm.keyActions.push({
+              label: $translate.instant('autoAttendant.phoneMenuRouteQueue'),
+              name: 'phoneMenuRouteQueue',
+              action: 'routeToQueue'
+            });
+            _.each(aaQueueList, function (aaQueue) {
+              var idPos = aaQueue.queueUrl.lastIndexOf("/");
+              vm.queues.push({
+                description: aaQueue.queueName,
+                id: aaQueue.queueUrl.substr(idPos + 1)
+              });
+            });
+          }
         });
-
-        vm.keyActions.push({
-          label: $translate.instant('autoAttendant.phoneMenuRouteToExtNum'),
-          name: 'phoneMenuRouteToExtNum',
-          action: 'route'
-        });
-
       }
+    }
+    /**
+     * This include the list of feature which are not production ready yet
+     */
+    function toggleRouteToQueueFeature() {
+      return FeatureToggleService.supports(FeatureToggleService.features.huronAACallQueue).then(function (result) {
+        if (result) {
+          AACommonService.setRouteQueueToggle(true);
+        } else {
+          AACommonService.setRouteQueueToggle(false);
+        }
+      }).catch(function () {
+        AACommonService.setRouteQueueToggle(false);
+      });
     }
 
     /////////////////////
 
     function activate() {
+      vm.keyActions.sort(AACommonService.sortByProperty('name'));
+
+      if (vm.menuEntry.type === 'MENU_OPTION') {
+        // If this is a new phone menu, add button zero
+        if (_.has(vm.menuEntry, 'headers.length') && vm.menuEntry.headers.length === 0 &&
+          _.has(vm.menuEntry, 'entries.length') && vm.menuEntry.entries.length === 0) {
+          addButtonZero();
+        }
+        populateOptionMenu();
+      }
+    }
+
+    /*
+     * Splitted original activate() into init() and activate() for submenu FeatureToggle.
+     * Need to combine them again when Feature Toggle is removed.
+     */
+    function init() {
       vm.schedule = $scope.schedule;
       var ui = AAUiModelService.getUiModel();
       vm.uiMenu = ui[vm.schedule];
       vm.entries = vm.uiMenu.entries;
       vm.menuEntry = vm.entries[$scope.index];
-
-      addAvailableFeatures();
-
-      if (vm.menuEntry.type === '') {
-        createOptionMenu();
-      } else if (vm.menuEntry.type === 'MENU_OPTION') {
-        populateOptionMenu();
-      }
+      vm.menuId = vm.menuEntry.id;
+      AACommonService.setRouteQueueToggle(false);
+      toggleRouteToQueueFeature().finally(getQueues().finally(activate));
     }
 
-    activate();
+    init();
   }
 })();

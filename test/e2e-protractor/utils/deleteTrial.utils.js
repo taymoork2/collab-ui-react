@@ -2,6 +2,8 @@
 
 /* global protractor */
 
+var _ = require('lodash');
+
 var config = require('./test.config.js');
 var utils = require('./test.utils.js');
 
@@ -32,12 +34,11 @@ var utils = require('./test.utils.js');
 
 function getBlackListOrgs() {
   var auth = helper.auth,
-    i,
     ret = {};
 
-  for (i in auth) {
-    ret[auth[i].org] = null;
-  }
+  _.forOwn(auth, function (value) {
+    ret[value.org] = null;
+  });
   return ret;
 }
 
@@ -68,7 +69,7 @@ exports.deleteOrg = function (orgId, token) {
     utils.sendRequest(options).then(function () {
       // console.log('org deleted successfully: ', orgId);
       defer.fulfill(200);
-    }, function (data) {
+    }, function () {
       // console.log('org deletion failed: ', orgId, data);
       defer.fulfill(200);
     });

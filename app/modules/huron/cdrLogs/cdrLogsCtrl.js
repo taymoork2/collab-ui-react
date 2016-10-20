@@ -13,12 +13,19 @@
     vm.UPLOAD = 2;
     var SPARKTRUNK = 'COMMON_TO_SQUARED_TRUNK';
     var SPARKINTTRUNK = 'COMMON_TO_SQUARED_INT_TRUNK';
+    var MAX_LIMIT = 28;
+    var LOGSTASH_WILDCARD = 'logstash*';
+    var INVALID_DATE = 'Invalid date';
 
     var timeFormat = 'hh:mm:ss A';
     var dateFormat = 'YYYY-MM-DD';
+    var dateLogstashFormat = 'YYYY.MM.DD';
+    var dateLogstashNodaysFormat = 'YYYY.MM.*';
+
     var filetype = "text/json, application/json";
     var errorStatus = [16, 19, 393216, 0, 17, 1, 21];
     var today = moment().format(dateFormat);
+    vm.logstashPath = '';
 
     formlyConfig.setType({
       name: 'custom-file',
@@ -40,6 +47,7 @@
       'endDate': moment().format(dateFormat),
       'hitSize': 50
     };
+    vm.updateLogstashPath = updateLogstashPath;
 
     //TODO: remove this once the ng-change is availabe with cs-datepicker directive!!
     $scope.cdr = {
@@ -88,7 +96,7 @@
     };
 
     vm.patterns = {
-      number: /^(\+1)?([0-9]+)$/,
+      number: /^(\+[1-9])?([0-9]+)$/,
       time: /^([0-2][0-9][:])([0-5][0-9][:])([0-5][0-9])([ ][apAP][mM])?$/
     };
 
@@ -97,7 +105,7 @@
       vm.gridData = null;
       vm.dataState = 1;
       vm.selectedCDR = null;
-      CdrService.query(vm.model).then(function (response) {
+      CdrService.query(vm.model, vm.logstashPath).then(function (response) {
         if (response !== ABORT) {
           vm.gridData = response;
           if (angular.isDefined(vm.gridData) && (vm.gridData.length > 0)) {
@@ -127,6 +135,33 @@
       vm.searchAndUploadForm.$setPristine();
     };
 
+    function updateLogstashPath() {
+      vm.logstashPath = "";
+      var startDate = moment(vm.model.startDate);
+      var diffDays = moment(vm.model.endDate).diff(moment(vm.model.startDate), 'days');
+      var diffMonths = moment(vm.model.endDate).diff(moment(vm.model.startDate), 'months');
+
+      if (diffDays < MAX_LIMIT) {
+        for (var i = 0; i <= diffDays; i++) {
+          vm.logstashPath += ((i > 0) ? "," : "") + "logstash-" + startDate.format(dateLogstashFormat);
+          startDate.add(1, 'days');
+        }
+      } else {
+        if (diffMonths < MAX_LIMIT) {
+          for (i = 0; i <= diffMonths; i++) {
+            vm.logstashPath += ((i > 0) ? "," : "") + "logstash-" + startDate.format(dateLogstashNodaysFormat);
+            startDate.add(1, 'months');
+          }
+        } else {
+          vm.logstashPath = LOGSTASH_WILDCARD;
+        }
+      }
+
+      if (vm.logstashPath.indexOf(INVALID_DATE) > 0) {
+        vm.logstashPath = LOGSTASH_WILDCARD;
+      }
+    }
+
     vm.validations = {
       callingNumber: function () {
         var isValid = true;
@@ -153,12 +188,18 @@
         vm.searchAndUploadForm.startDate.$setValidity("invalidRange", isValid);
         isValid = !!(moment(today).format() >= moment(vm.model.startDate).format());
         vm.searchAndUploadForm.startDate.$setValidity("invalidDate", isValid);
+        if (isValid) {
+          updateLogstashPath();
+        }
       },
       endDate: function () {
         var isValid = !!(moment(vm.model.endDate).format() >= moment(vm.model.startDate).format());
         vm.searchAndUploadForm.endDate.$setValidity("invalidRange", isValid);
         isValid = !!(moment(today).format() >= moment(vm.model.endDate).format());
         vm.searchAndUploadForm.endDate.$setValidity("invalidDate", isValid);
+        if (isValid) {
+          updateLogstashPath();
+        }
       }
     };
 
@@ -182,13 +223,13 @@
           maxSize: 10,
           maxSizeError: function () {
             $scope.$apply(function () {
-              Notification.notify($translate.instant('cdrLogs.jsonSizeError'), 'error');
+              Notification.error('cdrLogs.jsonSizeError');
             });
           },
           fileType: filetype,
           fileTypeError: function () {
             $scope.$apply(function () {
-              Notification.notify($translate.instant('cdrLogs.jsonTypeError'), 'error');
+              Notification.error('cdrLogs.jsonTypeError');
             });
           },
           fileSuffix: "json"
@@ -213,11 +254,11 @@
                 vm.gridData.push(addNames([jsonData.cdrs]));
               } else {
                 vm.dataState = 0;
-                Notification.notify($translate.instant('cdrLogs.jsonAllowedFormatError'), 'error');
+                Notification.error('cdrLogs.jsonAllowedFormatError');
               }
             } catch (SyntaxError) {
               vm.dataState = 0;
-              Notification.notify($translate.instant('cdrLogs.jsonSyntaxError'), 'error');
+              Notification.error('cdrLogs.jsonSyntaxError');
             }
           }
         },
@@ -235,8 +276,8 @@
 
     function addNames(cdrArray) {
       var x = 0;
-      angular.forEach(cdrArray, function (cdr, index, array) {
-        angular.forEach(cdr, function (item, itemIndex, itemArray) {
+      angular.forEach(cdrArray, function (cdr) {
+        angular.forEach(cdr, function (item) {
           item.name = "call0CDR" + x;
           x++;
         });
@@ -297,7 +338,7 @@
 
     function setupScrolling(gridData) {
       $timeout(function () {
-        angular.forEach(gridData, function (item, index, array) {
+        angular.forEach(gridData, function (item, index) {
           var scroll = $('#cdrtable' + index).getNiceScroll();
           if (scroll.length > 0) {
             scroll.remove();
@@ -324,8 +365,8 @@
       vm.selectedCDR = selectedCDR;
       var callCopy = angular.copy(call);
 
-      angular.forEach(callCopy, function (item, index, array) {
-        angular.forEach(item, function (cdr, cdrIndex, cdrArray) {
+      angular.forEach(callCopy, function (item) {
+        angular.forEach(item, function (cdr) {
           delete cdr['name'];
         });
       });
@@ -335,7 +376,8 @@
         call: callCopy,
         uniqueIds: CdrService.extractUniqueIds(call),
         events: vm.events,
-        imported: vm.imported
+        imported: vm.imported,
+        logstashPath: vm.logstashPath
       });
     }
 

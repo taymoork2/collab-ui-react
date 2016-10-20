@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject */
-  function HelpdeskCloudberryDeviceController($stateParams, HelpdeskService, XhrNotificationService, HelpdeskLogService, Authinfo) {
+  function HelpdeskCloudberryDeviceController($stateParams, HelpdeskService, XhrNotificationService, HelpdeskLogService, Authinfo, $window, WindowLocation) {
     $('body').css('background', 'white');
     var vm = this;
     vm.deviceId = $stateParams.id;
@@ -39,18 +39,18 @@
     }
 
     function isAuthorizedForLog() {
-      return (Authinfo.isCisco() && (Authinfo.isSupportUser() || Authinfo.isAdmin() || Authinfo.isAppAdmin()));
+      return (Authinfo.isCisco() && (Authinfo.isSupportUser() || Authinfo.isAdmin() || Authinfo.isAppAdmin() || Authinfo.isHelpDeskUser));
     }
 
     function downloadLog(filename) {
       HelpdeskLogService.downloadLog(filename).then(function (tempURL) {
-        window.location.assign(tempURL);
+        WindowLocation.set(tempURL);
       });
     }
 
     function keyPressHandler(event) {
       if (event.keyCode === 27) { // Esc
-        window.history.back();
+        $window.history.back();
       }
     }
   }

@@ -1,54 +1,94 @@
 'use strict';
 
+/* global jasmine, browser, _ */
+
 var HttpsProxyAgent = require("https-proxy-agent");
-var touch = require('touch');
 var fs = require('fs');
-var config = require('./gulp/gulp.config')();
+var appConfig = require('./config/config');
+var processEnvUtil = require('./utils/processEnvUtil')();
+var args = require('yargs').argv;
+var _ = require('lodash');
+
+var gatingSuites = _.chain(appConfig.e2eSuites).omit('huron').values().value();
 
 // http proxy agent is required if the host running the 'e2e' task is behind a proxy (ex. a Jenkins slave)
 // - sauce executors are connected out to the world through the host's network
 // - and at the end of each spec run, a connection back to sauce is made to report results
 var agent = mkProxyAgent();
 
-var TIMEOUT      = 1000 * 60;
+var TIMEOUT = 1000 * 60;
 var LONG_TIMEOUT = 1000 * 60 * 2;
 var VERY_LONG_TIMEOUT = 1000 * 60 * 5;
-var E2E_FAIL_RETRY = config.e2eFailRetry;
+var E2E_FAIL_RETRY = appConfig.e2eFailRetry;
 var NEWLINE = '\n';
+
+var maxInstances;
+if (process.env.SAUCE_MAX_INSTANCES) {
+  maxInstances = process.env.SAUCE_MAX_INSTANCES;
+} else if (process.env.SAUCE_USERNAME) {
+  maxInstances = 10;
+} else {
+  maxInstances = 1;
+}
 
 exports.config = {
   framework: "jasmine2",
 
+  suites: _.extend({}, appConfig.e2eSuites, {
+    jenkins: gatingSuites,
+  }),
+
   sauceUser: process.env.SAUCE_USERNAME,
   sauceKey: process.env.SAUCE_ACCESS_KEY,
   sauceAgent: process.env.SAUCE_USERNAME ? agent : undefined,
-  directConnect: process.env.SAUCE_USERNAME ? false : true,
+  directConnect: !process.env.SAUCE_USERNAME,
 
   capabilities: {
-    'browserName': 'chrome',
-    "screenResolution": "1680x1050",
-    'platform': process.env.SAUCE_USERNAME ? 'Windows 7' : undefined,
-    'tunnelIdentifier': process.env.SC_TUNNEL_IDENTIFIER,
-    'name': 'wx2-admin-web-client',
-    'build': process.env.BUILD_NUMBER,
+    browserName: 'chrome',
+    screenResolution: '1680x1050',
+    platform: process.env.SAUCE_USERNAME ? 'Windows 7' : undefined,
+    tunnelIdentifier: process.env.SC_TUNNEL_IDENTIFIER,
+    name: 'wx2-admin-web-client',
+    build: process.env.BUILD_NUMBER,
 
-    'chromeOptions': {
-      //'args': ['--disable-extensions', '--start-fullscreen']
-      'args': ['--disable-extensions', '--window-position=0,0', '--window-size=1280,900']
+    chromeOptions: {
+      // Get rid of --ignore-certificate yellow warning
+      args: ['--disable-extensions', '--window-position=0,0', '--window-size=1280,900', '--no-sandbox', '--test-type=browser'],
+      // For completeness setting the download path and avoiding download prompt default on chrome
+      prefs: {
+        download: {
+          prompt_for_download: false,
+          directory_upgrade: true,
+          default_directory: '/tmp/downloads',
+        },
+      },
     },
     shardTestFiles: true,
-    maxInstances: process.env.SAUCE_MAX_INSTANCES ? process.env.SAUCE_MAX_INSTANCES : process.env.SAUCE_USERNAME ? 10 : 1
+    maxInstances: maxInstances
   },
+
+  plugins: [{
+    package: 'protractor-console-plugin',
+    failOnWarning: false, // (Default - false),
+    failOnError: false, // (Default - true),
+    logWarnings: true, // (Default - true),
+    exclude: [ // Array of strings and regex (Default - [])
+      /executionContextId/,
+      /object Object/,
+      /favicon/
+    ]
+  }],
 
   // A base URL for your application under test. Calls to protractor.get()
   // with relative paths will be prepended with this.
   baseUrl: process.env.LAUNCH_URL || 'http://127.0.0.1:8000',
 
-  onPrepare: function() {
+  onPrepare: function () {
+    global._ = require('lodash');
     browser.ignoreSynchronization = true;
 
-    global.isProductionBackend = browser.params.isProductionBackend === 'true';
-
+    global.isSauce = !!(process.env.SAUCE_USERNAME && process.env.SAUCE_USERNAME.length > 0);
+    global.isProductionBackend = !!args.productionBackend;
     global.log = new Logger();
 
     var jasmineReporters = require('jasmine-reporters');
@@ -57,20 +97,22 @@ exports.config = {
     global.TIMEOUT = TIMEOUT;
     global.LONG_TIMEOUT = LONG_TIMEOUT;
 
+    global.getE2eRunCounter = processEnvUtil.getE2eRunCounter;
+    global.getE2eRunCounterMax = processEnvUtil.getE2eRunCounterMax;
+
     global.baseUrl = exports.config.baseUrl;
 
     global.helper = require('./test/api_sanity/test_helper');
-
     global.utils = require('./test/e2e-protractor/utils/test.utils.js');
     global.deleteUtils = require('./test/e2e-protractor/utils/delete.utils.js');
+    global.createUtils = require('./test/e2e-protractor/utils/create.utils.js');
     global.config = require('./test/e2e-protractor/utils/test.config.js');
     global.deleteTrialUtils = require('./test/e2e-protractor/utils/deleteTrial.utils.js');
-
-    global._ = require('lodash');
 
     var Navigation = require('./test/e2e-protractor/pages/navigation.page.js');
     var Notifications = require('./test/e2e-protractor/pages/notifications.page.js');
     var UsersPage = require('./test/e2e-protractor/pages/users.page.js');
+    var CustomersPage = require('./test/e2e-protractor/pages/customers.page.js');
     var LoginPage = require('./test/e2e-protractor/pages/login.page.js');
     var LandingPage = require('./test/e2e-protractor/pages/landing.page.js');
     var ManagePage = require('./test/e2e-protractor/pages/manage.page.js');
@@ -79,7 +121,6 @@ exports.config = {
     var CdrPage = require('./test/e2e-protractor/pages/cdr.page.js');
     var SSOWizardPage = require('./test/e2e-protractor/pages/ssowizard.page.js');
     var DirSyncWizardPage = require('./test/e2e-protractor/pages/dirsync.page.js');
-    var InvitePage = require('./test/e2e-protractor/pages/invite.page.js');
     var DownloadPage = require('./test/e2e-protractor/pages/download.page.js');
     var ActivatePage = require('./test/e2e-protractor/pages/activate.page.js');
     var SpacesPage = require('./test/e2e-protractor/pages/spaces.page.js');
@@ -87,15 +128,15 @@ exports.config = {
     var AutoAttendantPage = require('./test/e2e-protractor/pages/autoattendant.page.js');
     var PartnerHomePage = require('./test/e2e-protractor/pages/partner.page.js');
     var TelephonyPage = require('./test/e2e-protractor/pages/telephony.page.js');
-    var PartnerPage = require('./test/e2e-protractor/pages/partner.page.js');
     var FirstTimeWizard = require('./test/e2e-protractor/pages/wizard.page.js');
     var ServiceSetup = require('./test/e2e-protractor/pages/servicesetup.page.js');
     var RolesPage = require('./test/e2e-protractor/pages/roles.page.js');
-    var MeetingsPage = require('./test/e2e-protractor/pages/meetings.page.js');
-    var BasicSettigsPage = require('./test/e2e-protractor/pages/webexbasicsettings.page.js');
-    var SiteListPage = require('./test/e2e-protractor/pages/webexsitelist.page.js');
-    var SiteSettigsPage = require('./test/e2e-protractor/pages/webexsitesettings.page.js');
-    var SiteReportsPage = require('./test/e2e-protractor/pages/webexsitereports.page.js');
+    var WebExUserSettingsPage = require('./test/e2e-protractor/pages/webexusersettings.page.js');
+    var WebExSiteListPage = require('./test/e2e-protractor/pages/webexsitelist.page.js');
+    var WebExSiteSettigsPage = require('./test/e2e-protractor/pages/webexsitesettings.page.js');
+    var WebExSiteReportsPage = require('./test/e2e-protractor/pages/webexsitereports.page.js');
+    var WebExPage = require('./test/e2e-protractor/pages/webex.page.js');
+    var WebExCommon = require('./test/e2e-protractor/pages/webExCommon.page.js');
     var OrgProfilePage = require('./test/e2e-protractor/pages/orgprofile.page.js');
     var MediaServicePage = require('./test/e2e-protractor/pages/mediaService.page.js');
     var EnterpriseResourcePage = require('./test/e2e-protractor/pages/enterpriseResource.page.js');
@@ -107,10 +148,14 @@ exports.config = {
     var HuntGroup = require('./test/e2e-protractor/pages/HuntGroup.page.js');
     var EnterEmailAddrPage = require('./test/e2e-protractor/pages/enterEmailAddr.page.js');
     var CreateAccountPage = require('./test/e2e-protractor/pages/createAccount.page.js');
+    var CareLandingPage = require('./test/e2e-protractor/pages/careLanding.page.js');
+    var CareChatTemplateSetupPage = require('./test/e2e-protractor/pages/careChatTemplate.page.js');
+    var ManageUsersPage = require('./test/e2e-protractor/pages/manageUsers.page.js');
 
     global.notifications = new Notifications();
     global.navigation = new Navigation();
     global.users = new UsersPage();
+    global.customers = new CustomersPage();
     global.login = new LoginPage();
     global.landing = new LandingPage();
     global.manage = new ManagePage();
@@ -119,7 +164,6 @@ exports.config = {
     global.cdr = new CdrPage();
     global.ssowizard = new SSOWizardPage();
     global.disyncwizard = new DirSyncWizardPage();
-    global.invite = new InvitePage();
     global.download = new DownloadPage();
     global.activate = new ActivatePage();
     global.spaces = new SpacesPage();
@@ -127,15 +171,16 @@ exports.config = {
     global.autoattendant = new AutoAttendantPage();
     global.partner = new PartnerHomePage();
     global.telephony = new TelephonyPage();
-    global.partner = new PartnerPage();
     global.wizard = new FirstTimeWizard();
     global.servicesetup = new ServiceSetup();
     global.roles = new RolesPage();
     global.meetings = new MeetingsPage();
-    global.usersettings = new BasicSettigsPage();
-    global.sitelist = new SiteListPage();
-    global.sitesettings = new SiteSettigsPage();
-    global.sitereports = new SiteReportsPage();
+    global.webExUserSettings = new WebExUserSettingsPage();
+    global.webExSiteList = new WebExSiteListPage();
+    global.webExSiteSettings = new WebExSiteSettigsPage();
+    global.webExSiteReports = new WebExSiteReportsPage();
+    global.webEx = new WebExPage();
+    global.webExCommon = new WebExCommon();
     global.orgprofile = new OrgProfilePage();
     global.mediaservice = new MediaServicePage();
     global.enterpriseResource = new EnterpriseResourcePage();
@@ -147,13 +192,22 @@ exports.config = {
     global.huntGroup = new HuntGroup();
     global.enterEmailAddrPage = new EnterEmailAddrPage();
     global.createAccountPage = new CreateAccountPage();
+    global.careLandingPage = new CareLandingPage();
+    global.careChatTemplateSetupPage = new CareChatTemplateSetupPage();
+    global.manageUsersPage = new ManageUsersPage();
 
     function initReporters(config) {
-      var testFile = _.chain(config).get('specs[0]', '').split(config.configDir).takeRight().trimLeft('/').value();
+      var testFile = _.chain(config)
+        .get('specs[0]', '')
+        .split(config.configDir)
+        .takeRight()
+        .trimStart('/')
+        .value();
+      var jenkinsSubdir = processEnvUtil.isJenkins() ? process.env.BUILD_TAG : '';
 
       jasmine.getEnv().addReporter(
         new jasmineReporters.JUnitXmlReporter({
-          savePath: 'test/e2e-protractor/reports',
+          savePath: 'test/e2e-protractor/reports/' + jenkinsSubdir + '/run-' + processEnvUtil.getE2eRunCounter(),
           consolidateAll: false
         })
       );
@@ -195,8 +249,8 @@ exports.config = {
         }
 
         this.specDone = function (spec) {
-          if (spec.status === 'failed' && browser.params.isFailFast === 'true') {
-              disableSpecs();
+          if (spec.status === 'failed' && !args.nofailfast) {
+            disableSpecs();
           }
         };
       }
@@ -211,7 +265,7 @@ exports.config = {
     onComplete: null,
     isVerbose: true,
     showColors: true,
-    print: function() {},
+    print: function () {},
     includeStackTrace: true,
     defaultTimeoutInterval: VERY_LONG_TIMEOUT
   },
@@ -226,7 +280,7 @@ function Logger() {
   var lastLogMessageCount = 0;
 
   function log(message) {
-    if (log.verbose || browser.params.log === 'true') {
+    if (log.verbose || args.verbose) {
       if (lastLogMessage === message) {
         lastLogMessageCount++;
       } else {
@@ -243,7 +297,7 @@ function Logger() {
   return log;
 }
 
-function mkProxyAgent () {
+function mkProxyAgent() {
   if (process.env.SAUCE_ENABLE_WEB_PROXY === 'false') {
     return;
   }

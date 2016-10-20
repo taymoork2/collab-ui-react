@@ -1,7 +1,7 @@
 (function () {
   'use strict';
 
-  /*ngInject*/
+  /* @ngInject */
   function LicenseService(Config, $translate, $q, $http, $location, HelpdeskMockData, UrlConfig) {
     var urlBase = UrlConfig.getAdminServiceUrl();
 
@@ -29,7 +29,7 @@
 
     function userIsLicensedFor(user, offerCode) {
       if (user && user.licenseID) {
-        return _.any(user.licenseID, function (license) {
+        return _.some(user.licenseID, function (license) {
           return license.substring(0, 2) === offerCode;
         });
       }
@@ -85,11 +85,16 @@
           };
           aggregatedLics.push(aggregate);
         }
-        aggregate.isTrial = _.all(aggregate.licenses, {
+        aggregate.isTrial = _.every(aggregate.licenses, {
           isTrial: true
         });
-        aggregate.trialExpiresInDays = _.max(aggregate.licenses, 'trialExpiresInDays').trialExpiresInDays;
-        aggregate.usagePercentage = _.round((aggregate.totalUsage || 0) * 100 / aggregate.totalVolume);
+        if (aggregate.licenses && aggregate.licenses.length > 0) {
+          var max = _.maxBy(aggregate.licenses, 'trialExpiresInDays');
+          if (max) {
+            aggregate.trialExpiresInDays = max.trialExpiresInDays;
+          }
+        }
+        aggregate.usagePercentage = _.round(((aggregate.totalUsage || 0) * 100) / aggregate.totalVolume);
       });
       return aggregatedLics;
     }

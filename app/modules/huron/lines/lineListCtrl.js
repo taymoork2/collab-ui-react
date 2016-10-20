@@ -6,10 +6,11 @@
     .controller('LinesListCtrl', LinesListCtrl);
 
   /* @ngInject */
-  function LinesListCtrl($scope, $timeout, $translate, LineListService, Log, Config, Notification) {
+  function LinesListCtrl($scope, $templateCache, $timeout, $translate, LineListService, Log, Config, Notification) {
 
     var vm = this;
 
+    vm.tooltipTemplate = $templateCache.get('modules/huron/lines/tooltipTemplate.tpl.html');
     vm.currentDataPosition = 0;
     vm.gridRefresh = true; // triggers the spinner over the grid
     vm.searchStr = '';
@@ -19,6 +20,7 @@
     vm.userPreviewActive = false;
     vm.userDetailsActive = false;
     vm.load = false;
+    vm.sortColumn = sortColumn;
     $scope.gridData = [];
 
     vm.sort = {
@@ -29,19 +31,19 @@
     // Defines Grid Filter "All"
     vm.placeholder = {
       name: $translate.instant('linesPage.allLines'),
-      filterValue: 'all',
-      count: 0
+      filterValue: 'all'
     };
 
     // Defines Grid Filters "Unassigned" and "Assigned"
     vm.filters = [{
       name: $translate.instant('linesPage.unassignedLines'),
-      filterValue: 'unassignedLines',
-      count: 0
+      filterValue: 'unassignedLines'
     }, {
       name: $translate.instant('linesPage.assignedLines'),
-      filterValue: 'assignedLines',
-      count: 0
+      filterValue: 'assignedLines'
+    }, {
+      name: $translate.instant('linesPage.pending'),
+      filterValue: 'pending'
     }];
 
     // Set data filter
@@ -71,34 +73,16 @@
       }, vm.timeoutVal);
     };
 
-    // Get count of line association data;
-    // total, unassigned, assigned lines
-    function getCount() {
-      LineListService.getCount(vm.searchStr)
-        .then(function (response) {
-          vm.placeholder.count = response.totalCount || 0;
-          vm.filters[0].count = response.unassignedCount || 0;
-          vm.filters[1].count = response.assignedCount || 0;
-        })
-        .catch(function (response) {
-          Log.debug('Query for line association record counts failed.');
-          Notification.errorResponse(response, 'linesPage.getCountError');
-        });
-    } // End of function getCount
-
     // Get line association data to populate the grid
     function getLineList(startAt) {
       vm.gridRefresh = true;
-
-      // Update counts when line association data needs to be refreshed
-      getCount();
 
       // Clear currentLine if a new search begins
       var startIndex = startAt || 0;
       vm.currentLine = null;
 
       // Get "unassigned" internal and external lines
-      LineListService.getLineList(startIndex, Config.usersperpage, vm.sort.by, vm.sort.order, vm.searchStr, vm.activeFilter)
+      LineListService.getLineList(startIndex, Config.usersperpage, vm.sort.by, vm.sort.order, vm.searchStr, vm.activeFilter, $scope.gridData)
         .then(function (response) {
 
           $timeout(function () {
@@ -111,6 +95,12 @@
             $scope.gridData = $scope.gridData.concat(response);
           }
 
+          //function for sorting based on which piece of data the row has
+          angular.forEach($scope.gridData, function (row) {
+            row.displayField = function () {
+              return (this.userId ? this.userId : $translate.instant('linesPage.unassignedLines')) + (this.status ? ' - ' + this.status : '');
+            };
+          });
           vm.gridRefresh = false;
         })
         .catch(function (response) {
@@ -139,24 +129,28 @@
           if (vm.load) {
             vm.currentDataPosition++;
             vm.load = false;
-            getLineList(vm.currentDataPosition * Config.usersperpage + 1);
+            getLineList((vm.currentDataPosition * Config.usersperpage) + 1);
             $scope.gridApi.infiniteScroll.dataLoaded();
           }
         });
+        gridApi.core.on.sortChanged($scope, sortColumn);
       },
       columnDefs: [{
         field: 'internalNumber',
         displayName: $translate.instant('linesPage.internalNumberHeader'),
-        width: '30%',
+        width: '20%',
         cellClass: 'internalNumberColumn',
         sortable: true
       }, {
         field: 'externalNumber',
-        displayName: $translate.instant('linesPage.externalNumberHeader'),
-        sortable: true
+        displayName: $translate.instant('linesPage.phoneNumbers'),
+        sortable: true,
+        cellClass: 'externalNumberColumn',
+        width: '20%'
       }, {
-        field: 'userId',
-        displayName: $translate.instant('linesPage.userEmailHeader'),
+        field: 'displayField()',
+        displayName: $translate.instant('linesPage.assignedTo'),
+        cellTemplate: vm.tooltipTemplate,
         sortable: true,
         sort: {
           direction: 'asc',
@@ -166,27 +160,23 @@
       }]
     };
 
-    $scope.$on('ngGridEventSorted', function (event, data) {
-      // assume event data will always contain sort fields and directions
-      var sortBy = data.fields[0].toLowerCase();
-      var sortOrder = '-' + data.directions[0].toLowerCase();
-
-      if (vm.sort.by !== sortBy || vm.sort.order !== sortOrder) {
-        vm.sort.by = sortBy;
-        vm.sort.order = sortOrder;
-
-        if (vm.load) {
-          vm.load = false;
-          getLineList();
-        }
+    function sortColumn(scope, sortColumns) {
+      if (_.isUndefined(_.get(sortColumns, '[0]'))) {
+        return;
       }
-    });
+
+      if (vm.load) {
+        vm.load = false;
+        var sortBy = sortColumns[0].name === 'displayField()' ? 'userId' : sortColumns[0].name;
+        var sortOrder = '-' + sortColumns[0].sort.direction;
+        if (vm.sort.by !== sortBy || vm.sort.order !== sortOrder) {
+          vm.sort.by = sortBy.toLowerCase();
+          vm.sort.order = sortOrder.toLowerCase();
+        }
+        getLineList();
+      }
+    }
 
     getLineList();
-
-    // list is updated by adding or entitling a user
-    $scope.$on('lineListUpdated', function () {
-      getLineList();
-    });
   }
 })();

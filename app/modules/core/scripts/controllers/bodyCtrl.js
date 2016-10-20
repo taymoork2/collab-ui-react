@@ -1,26 +1,19 @@
 (function () {
   'use strict';
 
-  angular.module('Core')
-    .controller('BodyCtrl', BodyCtrl);
+  module.exports = angular.module('core.body', [
+    require('modules/core/scripts/services/authinfo')
+  ])
+    .controller('BodyCtrl', BodyCtrl)
+    .name;
 
   /* @ngInject */
-  function BodyCtrl($scope, $rootScope, $state) {
+  function BodyCtrl($scope, $rootScope, Authinfo) {
     var vm = this;
     vm.partner = false;
-    // vm.bodyClass = function() {
-    //   var state = $state.current;
-    //   var stateData = state.data;
-    //   var stateName = state.name;
-    //   if (stateData.bodyClass) {
-    //     return stateData.bodyClass;
-    //   } else {
-    //     return stateName.replace(/\./g, '-');
-    //   }
-    // };
     vm.bodyClass = $rootScope.bodyClass;
-    $scope.$on('InvertNavigation', function () {
-      vm.partner = true;
+    $scope.$on('AuthinfoUpdated', function () {
+      vm.partner = Authinfo.isPartner();
     });
   }
 })();

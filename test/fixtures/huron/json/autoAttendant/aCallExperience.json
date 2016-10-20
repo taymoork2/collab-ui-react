@@ -6,6 +6,11 @@
     "type": "directoryNumber",
     "trigger": "incomingCall"
   }],
+  "scheduleEventTypeMap": {
+    "holiday": "closedHours",
+    "closed": "closedHours",
+    "openHours": "openHours"
+  },
   "actionSets": [{
     "name": "regularOpenActions",
     "actions": [{

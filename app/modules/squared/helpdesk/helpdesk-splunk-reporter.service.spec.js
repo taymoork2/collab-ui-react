@@ -1,10 +1,11 @@
 'use strict';
+
 describe('Service: HelpdeskSplunkReporterService', function () {
-  beforeEach(module('wx2AdminWebClientApp'));
+  beforeEach(angular.mock.module('Squared'));
 
   var LogMetricsService, Service;
 
-  beforeEach(inject(function (_LogMetricsService_, _$httpBackend_, _ReportsService_, _$rootScope_, _HelpdeskSplunkReporterService_) {
+  beforeEach(inject(function (_LogMetricsService_, _HelpdeskSplunkReporterService_) {
     Service = _HelpdeskSplunkReporterService_;
     LogMetricsService = _LogMetricsService_;
   }));
@@ -12,13 +13,13 @@ describe('Service: HelpdeskSplunkReporterService', function () {
   describe("splunk reporting", function () {
 
     it("reportOperation reports to logMetricsService", function () {
-      var stub = sinon.stub(LogMetricsService, 'logMetrics');
+      sinon.stub(LogMetricsService, 'logMetrics');
       Service.reportOperation("whatever");
       expect(LogMetricsService.logMetrics.callCount).toBe(1);
     });
 
     it("reportStats reports to logMetriceService", function () {
-      var stub = sinon.stub(LogMetricsService, 'logMetrics');
+      sinon.stub(LogMetricsService, 'logMetrics');
       Service.reportStats("searchString", {}, moment(), "1234");
       expect(LogMetricsService.logMetrics.callCount).toBe(1);
     });

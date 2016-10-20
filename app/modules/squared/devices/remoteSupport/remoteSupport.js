@@ -1,11 +1,12 @@
 (function () {
   'use strict';
+
   angular
     .module('Squared')
     .controller('RemoteSupportController',
 
       /* @ngInject */
-      function ($scope, $q, $timeout, Notification, $translate, Utils, Authinfo, CsdmDeviceService, currentDevice) {
+      function ($q, $timeout, Utils, Authinfo, CsdmDeviceService, CsdmDataModelService, currentDevice) {
         var rs = this;
 
         rs.currentDevice = currentDevice;
@@ -33,7 +34,7 @@
         }
 
         function pollDeviceForNewRsuKey(endTime, deferred) {
-          CsdmDeviceService.getDevice(rs.currentDevice.url).then(function (device) {
+          CsdmDataModelService.reloadDevice(rs.currentDevice).then(function (device) {
             if (device.rsuKey != rs.oldRsuKey) {
               rs.resetDone = true;
               return deferred.resolve();
@@ -58,7 +59,8 @@
             },
             controllerAs: 'rs',
             controller: 'RemoteSupportController',
-            templateUrl: 'modules/squared/devices/remoteSupport/remoteSupport.html'
+            templateUrl: 'modules/squared/devices/remoteSupport/remoteSupport.html',
+            modalId: 'remoteSupportModal'
           }).result;
         }
 

@@ -6,7 +6,7 @@
     .factory('OverviewRoomSystemsCard', OverviewRoomSystemsCard);
 
   /* @ngInject */
-  function OverviewRoomSystemsCard(OverviewHelper) {
+  function OverviewRoomSystemsCard(OverviewHelper, Authinfo) {
     return {
       createCard: function createCard() {
 
@@ -25,6 +25,8 @@
         card.settingsUrl = '#/devices';
         card.helper = OverviewHelper;
         card.showHealth = true;
+        card.isCSB = Authinfo.isCSB();
+        card.isDeviceEnabled = false;
 
         card.healthStatusUpdatedHandler = function (data) {
           _.each(data.components, function (component) {

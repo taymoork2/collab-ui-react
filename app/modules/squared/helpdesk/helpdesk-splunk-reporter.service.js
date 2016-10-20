@@ -1,7 +1,7 @@
 (function () {
   'use strict';
 
-  /*ngInject*/
+  /* @ngInject */
   function HelpdeskSplunkReporterService(LogMetricsService) {
 
     function reportStats(searchString, res, startTime, orgId) {
@@ -72,6 +72,7 @@
       DEVICE_SEARCH_HURON_NUMBER: "Huron device number search",
       DEVICE_SEARCH_CLOUDBERRY: "Cloudberry device search",
       ORG_SEARCH: "Org search",
+      ORDER_SEARCH: "Order search",
       SEARCH_HISTORY: "searchHistory",
       SEARCH_HELP: "searchHelp",
       SPARK_STATUS: "sparkStatus"

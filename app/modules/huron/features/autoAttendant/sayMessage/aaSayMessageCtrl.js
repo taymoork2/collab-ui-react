@@ -2,42 +2,51 @@
   'use strict';
 
   angular
-    .module('uc.autoattendant')
-    .controller('AASayMessageCtrl', AASayMessageCtrl);
+  .module('uc.autoattendant')
+  .controller('AASayMessageCtrl', AASayMessageCtrl);
 
   /* @ngInject */
-  function AASayMessageCtrl($scope, $translate, AAUiModelService, AutoAttendantCeMenuModelService, AAModelService, AALanguageService, AACommonService) {
+  function AASayMessageCtrl($scope, $translate, AAUiModelService, AutoAttendantCeMenuModelService, AALanguageService, AACommonService) {
 
     var vm = this;
+
     var properties = {
-      NAME: "say",
+      NAME: ["play", "say"],
       REPEAT_NAME: "repeatActionsOnInput",
       LABEL: "label",
       VALUE: "value",
       HEADER_TYPE: "MENU_OPTION_ANNOUNCEMENT"
     };
+
     var sayMessageType = {
       ACTION: 1,
       MENUHEADER: 2,
-      MENUKEY: 3
+      MENUKEY: 3,
+      SUBMENU_HEADER: 4
     };
 
-    var messageInput = '';
     var languageOption = {
       label: '',
       value: ''
     };
+
     var voiceOption = {
       label: '',
       value: ''
     };
-    var selectPlaceholder = $translate.instant('autoAttendant.selectPlaceholder');
 
+
+    var actionType = {
+      PLAY: 0,
+      SAY: 1,
+    };
+
+    var selectPlaceholder = $translate.instant('autoAttendant.selectPlaceholder');
     vm.menuEntry = {};
     vm.actionEntry = {};
     vm.sayMessageType = sayMessageType.ACTION;
 
-    vm.messageInput = messageInput;
+    vm.messageInput = '';
     vm.messageInputPlaceholder = $translate.instant('autoAttendant.sayMessagePlaceholder');
 
     vm.languageOption = languageOption;
@@ -54,8 +63,23 @@
     vm.getFooter = getFooter;
     vm.getMessageLabel = getMessageLabel;
     vm.isMessageInputOnly = isMessageInputOnly;
+    vm.updateVoiceOption = updateVoiceOption;
+
+    vm.isMediaUploadToggle = isMediaUploadToggle;
 
     /////////////////////
+
+    //the media upload only is set for the say message action,
+    //not for phone menu, dial by ext, or submenu at this point
+    //and is also feature toggled
+    function isMediaUploadToggle() {
+      var mediaUploadOn = false;
+      if (vm.sayMessageType == sayMessageType.ACTION && (AACommonService.isMediaUploadToggle())) {
+        mediaUploadOn = true;
+      }
+
+      return mediaUploadOn;
+    }
 
     function setVoiceOptions() {
       vm.voiceOptions = _.sortBy(AALanguageService.getVoiceOptions(vm.languageOption), properties.LABEL);
@@ -64,12 +88,13 @@
 
     function getFooter() {
       switch (vm.sayMessageType) {
-      case sayMessageType.MENUKEY:
-        return '';
-      case sayMessageType.ACTION:
-        return 'autoAttendant.sayMessageUninterrupt';
-      case sayMessageType.MENUHEADER:
-        return 'autoAttendant.phoneMenuListening';
+        case sayMessageType.MENUKEY:
+        case sayMessageType.SUBMENU_HEADER:
+          return '';
+        case sayMessageType.ACTION:
+          return 'autoAttendant.sayMessageUninterrupt';
+        case sayMessageType.MENUHEADER:
+          return 'autoAttendant.phoneMenuListening';
       }
     }
 
@@ -79,20 +104,21 @@
 
     function isMessageInputOnly() {
       switch (vm.sayMessageType) {
-      case sayMessageType.MENUKEY:
-        return true;
-      case sayMessageType.ACTION:
-      case sayMessageType.MENUHEADER:
-        return false;
+        case sayMessageType.MENUKEY:
+        case sayMessageType.SUBMENU_HEADER:
+          return true;
+        case sayMessageType.ACTION:
+        case sayMessageType.MENUHEADER:
+          return false;
       }
     }
 
     function setVoiceOption() {
-      if (vm.voiceBackup && _.findWhere(vm.voiceOptions, {
-          "value": vm.voiceBackup.value
-        })) {
+      if (vm.voiceBackup && _.find(vm.voiceOptions, {
+        "value": vm.voiceBackup.value
+      })) {
         vm.voiceOption = vm.voiceBackup;
-      } else if (_.findWhere(vm.voiceOptions, AALanguageService.getVoiceOption())) {
+      } else if (_.find(vm.voiceOptions, AALanguageService.getVoiceOption())) {
         vm.voiceOption = AALanguageService.getVoiceOption();
       } else {
         vm.voiceOption = vm.voiceOptions[0];
@@ -100,61 +126,93 @@
     }
 
     function populateUiModel() {
-      vm.messageInput = vm.actionEntry.getValue();
-      vm.languageOptions = AALanguageService.getLanguageOptions();
+      if (!isMediaUploadToggle()) {
+        vm.messageInput = vm.actionEntry.getValue();
+      }
+
+      vm.languageOptions = _.sortBy(AALanguageService.getLanguageOptions(), properties.LABEL);
 
       vm.voiceOption = AALanguageService.getVoiceOption(vm.actionEntry.getVoice());
       vm.languageOption = AALanguageService.getLanguageOption(vm.actionEntry.getVoice());
+
       vm.voiceBackup = vm.voiceOption;
       setVoiceOptions();
     }
 
+    /*
+    * Update voice option in the menu's say-message keys, menu's submenus and its
+    * say-message keys.
+    */
+    function updateVoiceOption(menu) {
+      if (menu.entries) {
+        _.each(menu.entries, function (entry) {
+          if (AutoAttendantCeMenuModelService.isCeMenu(entry)) {
+            var submenuHeader = getSayActionHeader(entry);
+            if (submenuHeader) {
+              submenuHeader.setLanguage(AALanguageService.getLanguageCode(vm.languageOption));
+              submenuHeader.setVoice(vm.voiceOption.value);
+              var submenuKeyAction = getSayAction(submenuHeader);
+              if (submenuKeyAction) {
+                submenuKeyAction.setVoice(vm.voiceOption.value);
+              }
+            }
+            vm.updateVoiceOption(entry);
+          } else {
+            var keyAction = getSayAction(entry);
+            if (keyAction) {
+              keyAction.setVoice(vm.voiceOption.value);
+            }
+          }
+        });
+      }
+    }
+
     function saveUiModel() {
-      vm.actionEntry.setValue(vm.messageInput);
-      vm.actionEntry.setVoice(vm.voiceOption.value);
+      if (!isMediaUploadToggle()) {
+        vm.actionEntry.setValue(vm.messageInput);
+      }
+
       AACommonService.setSayMessageStatus(true);
 
-      switch (vm.sayMessageType) {
-      case sayMessageType.MENUHEADER:
-        {
-          // set values to be used for service invalid/timeout messages
-          var header = getSayActionHeader(vm.menuEntry);
-          header.setLanguage(AALanguageService.getLanguageCode(vm.languageOption));
-          header.setVoice(vm.voiceOption.value);
+      if (vm.sayMessageType === sayMessageType.SUBMENU_HEADER) {
+        return;
+      }
 
-          // set values for any say messages mapped to phone menu keys
-          if (vm.menuEntry.entries) {
-            _.each(vm.menuEntry.entries, function (entry) {
-              var keyAction = getSayAction(entry);
-              if (keyAction) {
-                keyAction.setVoice(vm.voiceOption.value);
-              }
-            });
+      vm.actionEntry.setVoice(vm.voiceOption.value);
+
+      switch (vm.sayMessageType) {
+        case sayMessageType.MENUHEADER:
+          {
+          // set values to be used for service invalid/timeout messages
+            var header = getSayActionHeader(vm.menuEntry);
+            header.setLanguage(AALanguageService.getLanguageCode(vm.languageOption));
+            header.setVoice(vm.voiceOption.value);
+
+            vm.updateVoiceOption(vm.menuEntry);
+            return;
           }
-          return;
-        }
-      case sayMessageType.MENUKEY:
-        {
+        case sayMessageType.MENUKEY:
+          {
           // add the default repeat menu action as needed
-          if (!getRepeatAction(vm.menuEntry.entries[$scope.menuKeyIndex])) {
-            var repeatAction = AutoAttendantCeMenuModelService.newCeActionEntry(properties.REPEAT_NAME, '');
-            vm.menuEntry.entries[$scope.menuKeyIndex].addAction(repeatAction);
+            if (!getRepeatAction(vm.menuEntry.entries[$scope.menuKeyIndex])) {
+              var repeatAction = AutoAttendantCeMenuModelService.newCeActionEntry(properties.REPEAT_NAME, '');
+              vm.menuEntry.entries[$scope.menuKeyIndex].addAction(repeatAction);
+            }
+            return;
           }
-          return;
-        }
-      case sayMessageType.ACTION:
+        case sayMessageType.ACTION:
         // no special handling
       }
     }
 
     function createMenuEntry() {
       var menuEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
-      menuEntry.addAction(createSayAction());
+      menuEntry.addAction(createSayAction(actionType.SAY));
       return menuEntry;
     }
 
-    function createSayAction() {
-      return AutoAttendantCeMenuModelService.newCeActionEntry(properties.NAME, '');
+    function createSayAction(which) {
+      return AutoAttendantCeMenuModelService.newCeActionEntry(properties.NAME[which], '');
     }
 
     function getSayActionHeader(menuEntry) {
@@ -169,7 +227,7 @@
     function getSayAction(menuEntry) {
       if (menuEntry && menuEntry.actions && menuEntry.actions.length > 0) {
         var action = _.find(menuEntry.actions, function (action) {
-          return action.name === properties.NAME;
+          return _.indexOf(properties.NAME, action.name) >= 0;
         });
         return action;
       }
@@ -185,69 +243,88 @@
     }
 
     function setActionEntry() {
+      var ui;
+
       switch (vm.sayMessageType) {
-      case sayMessageType.MENUHEADER:
-        {
-          var actionHeader = getSayActionHeader(vm.menuEntry);
-          var action = getSayAction(actionHeader);
-          if (action) {
+        case sayMessageType.MENUHEADER:
+        case sayMessageType.SUBMENU_HEADER:
+          {
+            vm.menuEntry = AutoAttendantCeMenuModelService.getCeMenu($scope.menuId);
+            var actionHeader = getSayActionHeader(vm.menuEntry);
+            var action = getSayAction(actionHeader);
+            if (action) {
             // existing say action from the existing header
-            vm.actionEntry = action;
-          } else {
-            // reset the headers and add new entry with say action
-            var headerEntry = createMenuEntry();
-            headerEntry.setType(properties.HEADER_TYPE);
-            vm.menuEntry.headers = [];
-            vm.menuEntry.headers.push(headerEntry);
-            vm.actionEntry = headerEntry.actions[0];
-          }
-          return;
-        }
-      case sayMessageType.MENUKEY:
-        {
-          if (vm.menuEntry.entries.length > $scope.menuKeyIndex && vm.menuEntry.entries[$scope.menuKeyIndex]) {
-            var keyAction = getSayAction(vm.menuEntry.entries[$scope.menuKeyIndex]);
-            if (keyAction) {
-              vm.actionEntry = keyAction;
+              vm.actionEntry = action;
             } else {
-              vm.actionEntry = createSayAction();
-              vm.menuEntry.entries[$scope.menuKeyIndex].actions[0] = vm.actionEntry;
+              // reset the headers and add new entry with say action
+              var headerEntry = createMenuEntry();
+              headerEntry.setType(properties.HEADER_TYPE);
+              vm.menuEntry.headers = [];
+              vm.menuEntry.headers.push(headerEntry);
+              vm.actionEntry = headerEntry.actions[0];
+
+              if (vm.sayMessageType === sayMessageType.SUBMENU_HEADER) {
+                // For new submenu, copy voice option from main menu
+                ui = AAUiModelService.getUiModel();
+                var uiMenu = ui[$scope.schedule];
+                var mainMenu = uiMenu.entries[$scope.index];
+                var mainMenuSayHeader = getSayActionHeader(mainMenu);
+
+                headerEntry.setVoice(mainMenuSayHeader.getVoice());
+                vm.actionEntry.setVoice(mainMenuSayHeader.getVoice());
+
+              }
             }
-          } else {
-            vm.menuEntry.entries[$scope.menuKeyIndex] = createMenuEntry();
-            vm.actionEntry = vm.menuEntry.entries[$scope.menuKeyIndex].actions[0];
+            return;
           }
+        case sayMessageType.MENUKEY:
+          {
+            vm.menuEntry = AutoAttendantCeMenuModelService.getCeMenu($scope.menuId);
+            if (vm.menuEntry.entries.length > $scope.menuKeyIndex && vm.menuEntry.entries[$scope.menuKeyIndex]) {
+              var keyAction = getSayAction(vm.menuEntry.entries[$scope.menuKeyIndex]);
+              if (keyAction) {
+                vm.actionEntry = keyAction;
+              } else {
+                vm.actionEntry = createSayAction(actionType.SAY);
+                vm.menuEntry.entries[$scope.menuKeyIndex].actions[0] = vm.actionEntry;
+              }
+            } else {
+              vm.menuEntry.entries[$scope.menuKeyIndex] = createMenuEntry();
+              vm.actionEntry = vm.menuEntry.entries[$scope.menuKeyIndex].actions[0];
+            }
 
           // set the voice from the menu header as needed
-          if (!vm.actionEntry.getVoice()) {
-            var sayHeader = getSayActionHeader(vm.menuEntry);
-            var headerSayAction = getSayAction(sayHeader);
-            if (angular.isDefined(headerSayAction)) {
-              vm.actionEntry.setVoice(headerSayAction.getVoice());
+            if (!vm.actionEntry.getVoice()) {
+              var sayHeader = getSayActionHeader(vm.menuEntry);
+              var headerSayAction = getSayAction(sayHeader);
+              if (angular.isDefined(headerSayAction)) {
+                vm.actionEntry.setVoice(headerSayAction.getVoice());
+              }
             }
+            return;
           }
-          return;
-        }
-      case sayMessageType.ACTION:
-        {
-          var sayAction = getSayAction(vm.menuEntry);
-          if (!sayAction) {
-            sayAction = createSayAction();
-            vm.menuEntry.addAction(sayAction);
+        case sayMessageType.ACTION:
+          {
+            ui = AAUiModelService.getUiModel();
+            uiMenu = ui[$scope.schedule];
+            vm.menuEntry = uiMenu.entries[$scope.index];
+            var sayAction = getSayAction(vm.menuEntry);
+            if (!sayAction) {
+              sayAction = createSayAction(actionType.SAY);
+              vm.menuEntry.addAction(sayAction);
+            }
+            vm.actionEntry = sayAction;
+
+            return;
           }
-          vm.actionEntry = sayAction;
-          return;
-        }
       }
     }
 
     function activate() {
-      var ui = AAUiModelService.getUiModel();
-      var uiMenu = ui[$scope.schedule];
-      vm.menuEntry = uiMenu.entries[$scope.index];
-
       if ($scope.isMenuHeader) {
         vm.sayMessageType = sayMessageType.MENUHEADER;
+      } else if ($scope.menuId && (!$scope.menuKeyIndex || $scope.menuKeyIndex <= -1)) {
+        vm.sayMessageType = sayMessageType.SUBMENU_HEADER;
       } else if ($scope.menuKeyIndex && $scope.menuKeyIndex > -1) {
         vm.sayMessageType = sayMessageType.MENUKEY;
       }

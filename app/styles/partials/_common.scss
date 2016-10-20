@@ -17,8 +17,6 @@ body {
   padding: 0;
 }
 
-.page-options-bar {}
-
 .content-view {
   overflow-x: hidden;
   min-height: 85vh;
@@ -55,17 +53,20 @@ body {
 
 @media print {
   body * {
-    display: none;
+    visibility: hidden !important;
+    height: 0;
   }
 
-  #printSection, #printSection * {
-    display: block;
+  #printSection,
+  #printSection * {
+    visibility: visible !important;
+    height: auto !important;
   }
 
   #printSection {
     position: absolute;
     left: 0;
-    top: 0;
+    top: 1rem;
   }
 
   .modal {
@@ -74,7 +75,10 @@ body {
   }
 }
 
-.pagination, .carousel, .panel-title a, a[ng-click] {
+.pagination,
+.carousel,
+.panel-title a,
+a[ng-click] {
   cursor: pointer;
 }
 
@@ -89,12 +93,16 @@ body {
   }
 }
 
-a[href="http://www.amcharts.com/javascript-charts/"] {
+a[href='http://www.amcharts.com/javascript-charts/'] {
   visibility: hidden;
 }
 
 .indent-checkbox .cs-input-checkbox {
   margin-left: 30px;
+}
+
+.indent-nestedcheckbox {
+  margin-left: 60px;
 }
 
 .vertical-align {
@@ -103,18 +111,16 @@ a[href="http://www.amcharts.com/javascript-charts/"] {
   transform: translateY(-50%);
 }
 
-.messagebox,
 .messagebox-backdrop {
-  background-image: url(../images/bg_3515.jpg);
+  background-image: url('../images/bg_3515.jpg');
+
+  .message-box::before {
+    background-image: url('../images/bg_3515.jpg');
+  }
 }
 
-
-.ui-grid-cell .dropdown-menu, .ui-grid-cell .dropdown-menu .sub-menu, .dropdown-menu .ui-grid-cell .sub-menu {
-  right: 15px;
-  left: auto;
-  top: 34px;
-}
-
-.actions-menu.open .dropdown-menu, .actions-menu.open .dropdown-menu .sub-menu, .dropdown-menu .actions-menu.open .sub-menu {
+.actions-menu.open .dropdown-menu,
+.actions-menu.open .dropdown-menu .sub-menu,
+.dropdown-menu .actions-menu.open .sub-menu {
   top: 34px;
 }

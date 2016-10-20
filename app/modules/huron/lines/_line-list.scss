@@ -5,22 +5,27 @@
 .line-list {
   @extend %grid-subheader;
 
-  & .ui-grid {
-    & .internalNumberColumn {
+  .ui-grid {
+    .internalNumberColumn,
+    .externalNumberColumn {
       text-align: center;
     }
-    .ui-grid-row  {
+
+    .ui-grid-row {
       &:hover {
         background-color: transparent;
       }
-  }
+    }
   }
 
-  &.ui-grid-cell:first-child ,
-  .ui-grid-header-cell:first-child  {
+  &.ui-grid-cell:first-child,
+  .ui-grid-header-cell {
     text-align: center;
   }
 
+  .ui-grid-header-cell:last-child {
+    text-align: left;
+  }
 }
 
 .line-list .page-sub-header .export-lines i {
@@ -31,4 +36,9 @@
 .line-list .page-sub-header .export-lines {
   display: inline-block;
   height: 22px;
+}
+
+.assignedTo {
+  @include vr-spacing(pt, 0.75);
+  @include vr-spacing(pl, 1.25);
 }

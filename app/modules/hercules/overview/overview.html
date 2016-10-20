@@ -1,0 +1,25 @@
+<div>
+  <div class="expressway-service hercules hercules-fix-paragraphs"
+       ng-class="{'with-user-statuses-bar': exp.servicesId[0] !== 'squared-fusion-mgmt'}">
+    <cs-page-header title="{{exp.pageTitle}}" tabs="exp.tabs" back="true" back-url="exp.backState"></cs-page-header>
+    <cs-page-sub-header>
+      <cs-page-sub-header-left>
+        <div style="position:relative">
+          <hercules-notifications filter-tag="exp.servicesId[0]"></hercules-notifications>
+        </div>
+      </cs-page-sub-header-left>
+      <cs-page-sub-header-right>
+        <div ng-if="exp.servicesId[0] !== 'squared-fusion-mgmt'">
+          <button class="btn btn--link"
+                  type="button"
+                  translate="hercules.overview.report"
+                  ng-click="exp.openUserStatusReportModal(exp.servicesId[0])">
+          </button>
+        </div>
+        <button class="btn btn--people add-resource-button" type="submit"
+                translate="hercules.overview.add-resource-button" ng-click="exp.openAddResourceModal()"></button>
+      </cs-page-sub-header-right>
+    </cs-page-sub-header>
+    <div ui-view="fullPane" class="small-padding-top content-container"></div>
+  </div>
+</div>

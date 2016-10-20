@@ -15,7 +15,14 @@ describe('Service: PstnSetupService', function () {
   var carrierIntelepeer = getJSONFixture('huron/json/pstnSetup/carrierIntelepeer.json');
   var resellerCarrierList = getJSONFixture('huron/json/pstnSetup/resellerCarrierList.json');
 
-  var numbers = ['123', '456'];
+  var orders = getJSONFixture('huron/json/orderManagement/orderManagement.json');
+  var acceptedOrder = getJSONFixture('huron/json/orderManagement/acceptedOrders.json');
+  var pendingOrder = _.cloneDeep(getJSONFixture('huron/json/lines/pendingNumbers.json'));
+
+  var onlyPstnNumbers = ['+14694691234', '+19724564567'];
+  var onlyTollFreeNumbers = []; // Add valid toll-free numbers when tollfree APIs are available
+  var invalidNumbers = ['123', '456'];
+  var numbers = onlyPstnNumbers.concat(onlyTollFreeNumbers, invalidNumbers);
 
   var customerPayload = {
     uuid: customerId,
@@ -34,20 +41,32 @@ describe('Service: PstnSetupService', function () {
 
   var blockOrderPayload = {
     "npa": "555",
-    "quantity": "20"
+    "quantity": "20",
+  };
+
+  var blockOrderPayloadWithNxx = {
+    "npa": "555",
+    "quantity": "20",
+    "sequential": true,
+    "nxx": "777"
   };
 
   var orderPayload = {
     numbers: numbers
   };
 
+  var pstnOrderPayload = {
+    numbers: onlyPstnNumbers
+  };
+
   var Authinfo = {
     getOrgId: jasmine.createSpy('getOrgId').and.returnValue(partnerId)
   };
 
-  beforeEach(module('Huron'));
+  beforeEach(angular.mock.module('Huron'));
+  beforeEach(angular.mock.module('Sunlight')); // Remove this when FeatureToggleService is removed.
 
-  beforeEach(module(function ($provide) {
+  beforeEach(angular.mock.module(function ($provide) {
     $provide.value("Authinfo", Authinfo);
   }));
 
@@ -71,7 +90,8 @@ describe('Service: PstnSetupService', function () {
       customerPayload.lastName,
       customerPayload.email,
       customerPayload.pstnCarrierId,
-      customerPayload.numbers
+      customerPayload.numbers,
+      customerPayload.trial
     );
     $httpBackend.flush();
   }
@@ -143,8 +163,14 @@ describe('Service: PstnSetupService', function () {
     $httpBackend.flush();
   });
 
+  it('should make a block order with nxx', function () {
+    $httpBackend.expectPOST(HuronConfig.getTerminusUrl() + '/customers/' + customerId + '/carriers/' + carrierId + '/did/block', blockOrderPayloadWithNxx).respond(201);
+    PstnSetupService.orderBlock(customerId, carrierId, blockOrderPayloadWithNxx.npa, blockOrderPayloadWithNxx.quantity, blockOrderPayloadWithNxx.sequential, blockOrderPayloadWithNxx.nxx);
+    $httpBackend.flush();
+  });
+
   it('should make a number order', function () {
-    $httpBackend.expectPOST(HuronConfig.getTerminusUrl() + '/customers/' + customerId + '/carriers/' + carrierId + '/did/order', orderPayload).respond(201);
+    $httpBackend.expectPOST(HuronConfig.getTerminusUrl() + '/customers/' + customerId + '/carriers/' + carrierId + '/did/order', pstnOrderPayload).respond(201);
     PstnSetupService.orderNumbers(customerId, carrierId, orderPayload.numbers);
     $httpBackend.flush();
   });
@@ -177,8 +203,41 @@ describe('Service: PstnSetupService', function () {
       expect(numbers).toContain(jasmine.objectContaining({
         pattern: '5125934450'
       }));
+      expect(numbers).toContain(jasmine.objectContaining({
+        pattern: '(123) XXX-XXXX',
+        quantity: 1
+      }));
+      expect(numbers).toContain(jasmine.objectContaining({
+        orderNumber: 654987
+      }));
     });
     $httpBackend.flush();
   });
 
+  it('should get orders and filter to formatted number orders', function () {
+    $httpBackend.expectGET(HuronConfig.getTerminusUrl() + '/customers/' + customerId + '/orders').respond(orders);
+    var promise = PstnSetupService.getFormattedNumberOrders(customerId);
+    promise.then(function (numbers) {
+      expect(numbers).toContain(jasmine.objectContaining(acceptedOrder[0]));
+      expect(numbers).toContain(jasmine.objectContaining(acceptedOrder[1]));
+    });
+    $httpBackend.flush();
+  });
+
+  it('should get translated order status message', function () {
+    var translated = PstnSetupService.translateStatusMessage(pendingOrder[0]);
+    expect(translated).toEqual('pstnSetup.orderStatus.trialStatus');
+  });
+
+  it('should get original order status message since it does not exist in translations', function () {
+    var translated = PstnSetupService.translateStatusMessage({
+      statusMessage: 'This should not be translated'
+    });
+    expect(translated).toEqual('This should not be translated');
+  });
+
+  it('should not get translated order status message since status is None', function () {
+    var translated = PstnSetupService.translateStatusMessage(orders[0]);
+    expect(translated).toEqual(undefined);
+  });
 });

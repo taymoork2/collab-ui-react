@@ -1,9 +1,9 @@
-@import "planReview/plan-review";
-@import "addUsers/add-users";
-@import "messageSettings/message-settings";
-@import "sipUriSettings/sip-uri";
-@import "enterpriseSettings/enterprise-settings";
-@import "finish/finish";
+@import 'planReview/plan-review';
+@import 'careSettings/care-settings';
+@import 'addUsers/add-users';
+@import 'messageSettings/message-settings';
+@import 'enterpriseSettings/enterprise-settings';
+@import 'finish/finish';
 
 .wizard-main-wrapper {
   .row {
@@ -16,74 +16,127 @@
     margin-left: 0;
     margin-right: 0;
   }
+
   .service-setup {
     label {
-      font-size: 24px;
-      line-height: 1;
+      line-height: 24px;
+      font-size: 16px;
+      color: $gray-dark-4;
       margin-bottom: 0;
       padding-bottom: 11px;
-      padding-top: 28px;
+
       &.toggle-switch {
         margin-bottom: -2px;
         padding-bottom: 0;
         padding-top: 0;
       }
     }
+
     .description-block {
       margin-top: 0;
+      color: $gray-dark-1;
     }
+
     .formly-field-group {
       margin-bottom: 0;
     }
+
     .form-group {
       margin-bottom: 0;
     }
+
     .hide-delete {
       visibility: hidden;
     }
-    a.select-toggle {
-      margin-bottom: 0;
-    }
-    .service-setup-timezone {
-      margin-bottom: -2px;
-      .formly-input-wrapper {
-        width: 50%;
-      }
-    }
-    .service-setup-steering-digit {
-      margin-bottom: -10px;
-      .formly-input-wrapper {
-        width: 100px;
-      }
-    }
-    .service-setup-site-code {
-      .formly-input-wrapper {
-        width: 100px;
-      }
-    }
+
     &.service-setup-extension {
       .formly-field-group {
         margin-bottom: 10px;
       }
     }
+
     .service-setup-extension-range {
-      width: 375px;
-      input {
-        width: 100%;
+      .popover {
+        right: 0;
+        left: -6.3rem;
+        width: 7.8rem;
+
+        .arrow {
+          right: 9px;
+        }
+      }
+
+      .has-error .form-control {
+        box-shadow: inset 0 0 0 2px $brand-danger;
       }
     }
+
     .service-setup-extension-range-to {
       margin-left: 10px;
       margin-right: 13px;
     }
-    .service-setup-company-voicemail ng-form {
-      width: 100%;
+
+    &.service-setup-company-voicemail-number {
+      margin-bottom: 1rem;
     }
-    .service-setup-company-voicemail-number {
-      width: 50%;
+
+    &.vm-access-padding > div > .cs-input-group {
+      margin-bottom: 0;
+
+      label {
+        padding-top: 0;
+      }
     }
+
+    &.voicemail-padding {
+      @include vr-spacing(pl, 2);
+      @include vr-spacing(mb, 1.5);
+    }
+
     .service-setup-moh {
       width: 50%;
+    }
+
+    &.swtich-margin {
+      @include vr-spacing(mt, 1);
+    }
+
+    .msg-container {
+      min-width: vr-adjust(600px);
+    }
+
+    .alert {
+      margin-right: 0;
+      margin-left: 0;
+    }
+  }
+
+  .voicemail-switch-width {
+    max-width: 40rem;
+  }
+
+  .bottom-margin {
+    @include vr-spacing(mb, 2.25);
+  }
+
+  .indent-area-code {
+    padding-left: vr-adjust(32px);
+  }
+
+  .cs-radio-group {
+    margin-bottom: 1rem;
+  }
+
+  .title-margin-bottom {
+    color: $gray-dark-4;
+    margin-bottom: vr-adjust(12px);
+  }
+
+  .terminus-warning {
+    font-size: 0.75rem;
+
+    .icon-warning {
+      margin-right: 0.25rem;
     }
   }
 }

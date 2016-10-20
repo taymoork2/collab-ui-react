@@ -1,0 +1,57 @@
+.add-resource {
+  button {
+    margin-left: 0.5rem;
+    transition: initial;
+  }
+
+  .modal-footer .btn + .btn {
+    transition: initial;
+  }
+
+  .cs-form {
+    margin-top: 10px;
+  }
+
+  p {
+    margin-bottom: 10px;
+    margin-top: 10px;
+  }
+
+  li.hostlist {
+    margin-left: 30px;
+  }
+
+  .addResourceModalInput {
+    margin-left: 30px;
+    margin-bottom: 20px;
+    width: 70%;
+    transition: initial;
+  }
+
+  .radioNoTranform {
+    transition: initial;
+  }
+
+  .privacy {
+    bottom: 12px;
+    color: $gray-light-1;
+  }
+}
+
+.inputbox {
+  margin-left: 5px;
+}
+
+.select-resource-group-step {
+  overflow: visible !important;
+}
+
+.select-resource-group {
+  margin-left: 2rem;
+}
+
+.cannotReadResourceGroupsError {
+  color: $color-alerts-base;
+  padding-left: 5px;
+}
+

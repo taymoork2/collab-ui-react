@@ -6,10 +6,11 @@
     .factory('DialPlanService', DialPlanService);
 
   /* @ngInject */
-  function DialPlanService($q, Authinfo, CustomerVoiceCmiService) {
+  function DialPlanService(Authinfo, CustomerVoiceCmiService) {
 
     var service = {
       getCustomerVoice: getCustomerVoice,
+      updateCustomerVoice: updateCustomerVoice,
       getCustomerDialPlanDetails: getCustomerDialPlanDetails,
       getCustomerDialPlanCountryCode: getCustomerDialPlanCountryCode
     };
@@ -24,10 +25,16 @@
       return CustomerVoiceCmiService.get(queryString).$promise;
     }
 
+    function updateCustomerVoice(customerId, payload) {
+      return CustomerVoiceCmiService.update({
+        customerId: customerId
+      }, payload).$promise;
+    }
+
     function getCustomerDialPlanCountryCode(customerId) {
       return getCustomerDialPlanDetails(customerId)
         .then(function (dialPlanDetails) {
-          return _.trimLeft(dialPlanDetails.countryCode, '+');
+          return _.trimStart(dialPlanDetails.countryCode, '+');
         });
     }
 

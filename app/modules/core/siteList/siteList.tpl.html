@@ -1,9 +1,8 @@
-<div id="site-list"
-     class="site-list"
-     ng-if='siteList.showGridData'>
+<div ng-if='siteList.showGridData'
+     id="site-list"
+     class="site-list">
      
-  <cs-page-header title="{{::'siteList.conferencing' | translate}}">
-  </cs-page-header>
+  <cs-page-header title="{{::'siteList.conferencing' | translate}}"></cs-page-header>
   
   <div gridscrollbar class="gridStyle" ui-grid="siteList.gridOptions"></div>
 </div>

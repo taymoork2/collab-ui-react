@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Service: CsdmCacheUpdaterSpec', function () {
-  beforeEach(module('wx2AdminWebClientApp'));
+  beforeEach(angular.mock.module('Squared'));
 
   var Updater;
 

@@ -1,0 +1,411 @@
+.template-anchor {
+  @extend .left;
+
+  @include vr-spacing(ml, 2);
+}
+
+.dialog-padding {
+  @include vr-spacing(mh, 1.5);
+}
+
+.user-csv {
+  .flex-container {
+    display: flex;
+    height: 100%;
+    flex-grow: 1;
+    flex-direction: column;
+    overflow-y: hidden;
+  }
+
+  &.modal-body .flex-container {
+    flex-shrink: 1;
+  }
+
+  .flex-item-resize {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
+    min-height: 0;
+  }
+
+  .flex-item-no-resize {
+    display: flex;
+    flex-direction: column;
+    flex: 0 0 auto;
+  }
+
+  .scroller {
+    overflow-y: scroll;
+  }
+}
+
+// Style the Upload/Export page
+.user-csv-bulk {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+
+  ul {
+    @include vr-spacing(mt, 1);
+
+    li {
+      list-style-type: none;
+      padding-bottom: 1rem;
+
+      .cs-input-radio.cs-input-group {
+        @include vr-spacing(mb, -0.25);
+      }
+
+      label {
+        @include vr-spacing(mb, 0.25);
+      }
+    }
+  }
+
+  .columns .box {
+    @extend .center;
+
+    @include vr-spacing(m, 1);
+
+    border: thin solid $gray-light-2;
+    color: $gray-base;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .box-content {
+      align-self: center;
+      width: 26rem;
+      height: 12rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: transparent;
+    }
+
+    .disabled {
+      color: $gray-light;
+
+      .icon,
+      .prompt label,
+      a,
+      h5 {
+        color: $gray-light;
+      }
+    }
+
+    .disable-mask {
+      width: 26rem;
+      height: 12rem;
+      display: block;
+      position: absolute;
+      top: 1rem;
+      left: 1rem;
+    }
+
+    .icon {
+      font-size: 3rem;
+      display: block;
+
+      &:hover,
+      &:active,
+      &:focus {
+        color: $brand-primary;
+      }
+    }
+
+    .prompt {
+      width: 14rem;
+      margin: 1rem auto 0;
+
+      label {
+        cursor: pointer;
+        color: $link-color;
+
+        &:hover {
+          color: $link-hover-color;
+        }
+
+        display: inline;
+      }
+    }
+
+    .user-csv-export {
+      .hotspot {
+        cursor: pointer;
+
+        &:hover {
+          color: $brand-primary;
+        }
+      }
+
+      .csv-download {
+        @include vr-spacing(m, 0);
+      }
+
+      .prompt {
+        width: 10rem;
+      }
+
+      .icon {
+        transform: scaleY(-1);
+      }
+
+      .icon-spinner {
+        margin: 0 auto;
+        transform: scaleY(1);
+      }
+    }
+
+    .flex-center-container {
+      flex: 1 1 auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+    }
+
+    cr-user-csv-file {
+      @extend .flex-center-container;
+    }
+
+    .user-csv-upload {
+      flex: 1 1 auto;
+      height: 100%;
+
+      .file-drop {
+        @extend .flex-center-container;
+
+        flex-direction: column;
+
+        &.dragover {
+          background: $color-primary-lighter;
+          border: dashed $color-primary;
+        }
+
+        input {
+          display: none;
+        }
+      }
+
+      .file-drop-inactive {
+        @extend .file-drop;
+
+        .file-drop-content {
+          background: $gray-light-4;
+
+          .icon-check {
+            color: $color-cta-base;
+          }
+        }
+
+        .file-name {
+          @include vr-spacing(mt, 0.25);
+        }
+      }
+
+      .csv-enable-remove {
+        display: flex;
+        align-content: center;
+        justify-content: center;
+
+        .csv-enable-remove-checkbox {
+          width: rem(400);
+
+          .cs-input__help-text {
+            font-style: italic;
+          }
+        }
+      }
+    }
+  }
+}
+
+// Style the Results page
+.user-csv-results {
+
+  // csv upload pane in dialog
+  .upload-progress {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .csv-process-content {
+      @include vr-spacing(mt, 1);
+
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+      width: 55%;
+
+      .progressbar {
+        @include vr-spacing(mb, 2.25);
+
+        width: 100%;
+      }
+
+      .csv-filename {
+        @include vr-spacing(mt, 0.25);
+
+        font-size: small;
+      }
+
+      .close-button {
+        @include vr-spacing(ml, 1);
+        @include vr-spacing(mt, -1.5);
+
+        font-size: medium;
+
+        a {
+          color: $gray-light-1;
+
+          &:hover {
+            color: $color-primary-base;
+          }
+        }
+      }
+
+      .retry-label span {
+        @extend .progressbar-progress;
+
+        float: none;
+      }
+    }
+  }
+
+  .upload-complete {
+    align-items: flex-start;
+
+    @include vr-spacing(mv, 0.5);
+  }
+
+  // boxes containing counts of added, updated, retry, and error users
+  .upload-stats {
+    @include vr-spacing(mb, 1);
+
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    height: 5rem;
+
+    .stat {
+      flex: 1 1 auto;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      background-color: $gray-light-4;
+      position: relative;
+
+      + .stat {
+        @include vr-spacing(ml, 1);
+      }
+
+      .total {
+        font-size: 2rem;
+        line-height: 1;
+        font-family: 'CiscoSansTT Thin';
+      }
+
+      .total-title {
+        @include vr-spacing(mb, 0.1);
+
+        font-size: 0.75rem;
+      }
+
+      &.disabled {
+        color: $gray-light-1;
+      }
+
+      &.new-users:not(.disabled) .total {
+        color: $color-cta-base;
+      }
+
+      &.updated-users:not(.disabled) .total {
+        color: $color-primary-base;
+      }
+
+      &.error-users:not(.disabled) .total {
+        color: $color-negative-light;
+      }
+
+      &.retry-users:not(.disabled) .total {
+        color: $brand-warning;
+      }
+    }
+  }
+
+  // Timer display
+  .upload-timer {
+    @include vr-spacing(mv, 1);
+    @include vr-spacing(mh, 0);
+
+    text-align: center;
+  }
+
+  // Error display
+  .upload-errors {
+    background-color: transparent;
+
+    .error-download {
+      display: flex;
+      justify-content: flex-end;
+      flex-direction: row;
+    }
+
+    .csv-download {
+      font-size: small;
+      margin: 0;
+    }
+
+    p {
+      .icon {
+        color: $gray-light-1;
+        top: 0.1rem;
+
+        &:hover {
+          color: $color-primary-base;
+        }
+      }
+    }
+
+    .row {
+      border-color: $gray-dark;
+      border-style: solid;
+      border-width: thin thin 0;
+      display: flex;
+    }
+
+    div.row:last-child {
+      border-bottom-width: thin;
+    }
+
+    .error-row {
+      padding: 0.5rem 1rem;
+      overflow-x: hidden;
+    }
+
+    .error-desc {
+      border-color: $gray-dark;
+      border-style: solid;
+      border-width: 0 0 0 thin;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      overflow: hidden;
+      padding: 0.5rem 1rem;
+    }
+
+    .table-header {
+      background-color: $gray-light-4;
+      color: $gray-dark;
+      text-align: left;
+      font-weight: bold;
+    }
+
+    .table-body {
+      color: $gray-base;
+    }
+  }
+}

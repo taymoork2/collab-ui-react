@@ -46,8 +46,8 @@ describe('Controller: CallParkCtrl', function () {
     }]
   }];
 
-  beforeEach(module('uc.callpark'));
-  beforeEach(module('Huron'));
+  beforeEach(angular.mock.module('uc.callpark'));
+  beforeEach(angular.mock.module('Huron'));
 
   beforeEach(inject(function (_$rootScope_, $controller, _CallPark_, _$modal_, _$q_) {
     $rootScope = _$rootScope_;

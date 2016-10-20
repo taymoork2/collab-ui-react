@@ -25,9 +25,9 @@
 
     function aaName2CeId(aaName) {
       var ceInfos = vm.aaModel.ceInfos;
-      var ceInfo = _.find(ceInfos, function (ceInfo) {
+      var ceInfo = _.find(ceInfos, _.bind(function (ceInfo) {
         return this === ceInfo.name;
-      }, aaName);
+      }, aaName));
       if (angular.isDefined(ceInfo)) {
         var index = ceInfo.ceUrl.lastIndexOf('/');
         if (index < 0) {
@@ -40,13 +40,13 @@
 
     function ceId2aaName(ceId) {
       var ceInfos = vm.aaModel.ceInfos;
-      var ceInfo = _.find(ceInfos, function (ceInfo) {
+      var ceInfo = _.find(ceInfos, _.bind(function (ceInfo) {
         var index = ceInfo.ceUrl.lastIndexOf('/');
         if (index < 0) {
           return false;
         }
         return this === ceInfo.ceUrl.substr(index + 1);
-      }, ceId);
+      }, ceId));
       if (angular.isDefined(ceInfo)) {
         return ceInfo.name;
       }
@@ -66,10 +66,9 @@
       var action;
 
       var uiModel = AAUiModelService.getUiModel();
-      var uiCombinedMenu = uiModel[$scope.schedule];
-      var uiPhoneMenu = uiCombinedMenu.entries[$scope.index];
 
       if ($scope.fromRouteCall) {
+        var uiCombinedMenu = uiModel[$scope.schedule];
         vm.menuEntry = uiCombinedMenu.entries[$scope.index];
         if (vm.menuEntry.actions.length === 0) {
           action = AutoAttendantCeMenuModelService.newCeActionEntry('goto', '');
@@ -82,7 +81,7 @@
           }
         }
       } else {
-
+        var uiPhoneMenu = AutoAttendantCeMenuModelService.getCeMenu($scope.menuId);
         // Read an existing routeToAA entry if exist or initialize it if not
         if ($scope.keyIndex < uiPhoneMenu.entries.length) {
           vm.menuEntry = uiPhoneMenu.entries[$scope.keyIndex];
@@ -97,7 +96,7 @@
       // Deduce list of Auto Attendants
       vm.aaModel = AAModelService.getAAModel();
       var ceInfos = vm.aaModel.ceInfos;
-      var options = _.pluck(ceInfos, 'name');
+      var options = _.map(ceInfos, 'name');
       options = _.without(options, uiModel.ceInfo.name);
       options.sort(function (a, b) {
         return a.localeCompare(b);

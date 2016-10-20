@@ -6,7 +6,7 @@
     .controller('HuronFeaturesCtrl', HuronFeaturesCtrl);
 
   /* @ngInject */
-  function HuronFeaturesCtrl($scope, $state, $filter, $timeout, $modal, $q, Authinfo, HuronFeaturesListService, HuntGroupService, AutoAttendantCeInfoModelService, Notification, Log) {
+  function HuronFeaturesCtrl($scope, $state, $filter, $timeout, $modal, $q, $translate, Authinfo, HuronFeaturesListService, HuntGroupService, CallParkService, PagingGroupService, AutoAttendantCeInfoModelService, Notification, Log, FeatureToggleService) {
 
     var vm = this;
     vm.searchData = searchData;
@@ -28,15 +28,36 @@
       'name': 'Search'
     };
     vm.filters = [{
-      name: 'All',
+      name: $translate.instant('common.all'),
       filterValue: 'all'
     }, {
-      name: 'Hunt Group',
-      filterValue: 'HG'
-    }, {
-      name: 'Auto Attendant',
+      name: $translate.instant('autoAttendant.title'),
       filterValue: 'AA'
+    }, {
+      name: $translate.instant('huronHuntGroup.modalTitle'),
+      filterValue: 'HG'
     }];
+
+    FeatureToggleService.supports(FeatureToggleService.features.callParkService).then(function (result) {
+      if (result) {
+        var cp = {
+          name: $translate.instant('callPark.title'),
+          filterValue: 'CP'
+        };
+        vm.filters.push(cp);
+      }
+    });
+
+    FeatureToggleService.supports(FeatureToggleService.features.huronPagingGroup).then(function (result) {
+      if (result) {
+        var pg = {
+          name: $translate.instant('pagingGroup.title'),
+          filterValue: 'PG'
+        };
+        vm.filters.push(pg);
+      }
+    });
+
     /* LIST OF FEATURES
      *
      *  To add a New Feature
@@ -59,6 +80,22 @@
       isEmpty: false,
       i18n: 'huronFeatureDetails.aaName',
       color: 'primary'
+    }, {
+      name: 'CP',
+      getFeature: CallParkService.getListOfCallParks,
+      formatter: HuronFeaturesListService.callParks,
+      isEmpty: false,
+      i18n: 'huronFeatureDetails.cpName',
+      color: 'cta'
+    }, {
+      name: 'PG',
+      getFeature: function () {
+        return PagingGroupService.getListOfPagingGroups();
+      },
+      formatter: HuronFeaturesListService.pagingGroups,
+      isEmpty: false,
+      i18n: 'huronFeatureDetails.pgName',
+      color: 'gray'
     }];
 
     init();
@@ -75,7 +112,7 @@
 
       handleFeaturePromises(featuresPromises);
 
-      $q.all(featuresPromises).then(function (responses) {
+      $q.all(featuresPromises).then(function () {
         showNewFeaturePageIfNeeded();
       });
     }
@@ -137,7 +174,6 @@
 
       var list = feature.formatter(data);
       if (list.length > 0) {
-
         vm.pageState = 'showFeatures';
         feature.isEmpty = false;
         vm.listOfFeatures = vm.listOfFeatures.concat(list);
@@ -157,6 +193,14 @@
         });
       } else if (feature.filterValue === 'HG') {
         $state.go('huntgroupedit', {
+          feature: feature
+        });
+      } else if (feature.filterValue === 'CP') {
+        $state.go('callparkedit', {
+          feature: feature
+        });
+      } else if (feature.filterValue === 'PG') {
+        $state.go('huronPagingGroupEdit', {
           feature: feature
         });
       }
@@ -259,7 +303,7 @@
       });
 
       /* Goto the corresponding Set up Assistant controller
-      based on the feature selected */
+       based on the feature selected */
       modalInstance.result.then(function (selectedFeature) {
         vm.feature = selectedFeature;
       }, function () {
