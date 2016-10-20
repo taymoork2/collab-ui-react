@@ -3,7 +3,12 @@
     <!--p class="makeASelection"> <strong translate="hds.settings.serviceStatus" /></p-->
 
     <setting-section setting="hdsSettings.serviceStatus">
-      <div class="form-group radioGroup">
+      <div ng-if="hdsSettings.loading">
+        <span class="spinner-example--large">
+          <i class="icon icon-spinner"></i>
+        </span>
+      </div>
+      <div ng-if="!hdsSettings.loading" class="form-group radioGroup">
         <div class="cs-radio-group radioGroup">
           <div class="cs-input-group cs-input-radio">
             <div class="radioButton1">
@@ -27,7 +32,7 @@
 
     <setting-section setting="hdsSettings.deactivateService">
       <div class="sub-section">
-        <h5 class="sub-section__label" translate="hds.settings.deactivateServiceHeader">Test</h5>
+        <h5 class="sub-section__label" translate="hds.settings.deactivateServiceHeader"></h5>
         <p class="sub-section__description" translate="hds.settings.deactivateServiceDesc"></p>
         <button class="btn" translate="hds.settings.deactivateServiceButton" ng-click="hdsSettings.deactivate()"></button>
       </div>

@@ -6,13 +6,14 @@
     .controller('HDSSettingsController', HDSSettingsController);
 
   /* @ngInject */
-  function HDSSettingsController($log, $translate, $state, $modal, hasHDSFeatureToggle, Notification) {
+  function HDSSettingsController($log, $translate, $state, $modal, hasHDSFeatureToggle, Notification, HDSService) {
     if (!hasHDSFeatureToggle) {
       $state.go('404');
       return;
     }
     var vm = this;
-    vm.radioModel = '1';
+    vm.loading = true;
+    vm.radioModel = undefined;
     vm.pageTitle = $translate.instant('hercules.hybridServiceNames.hybrid-data-security');
     vm.deactivate = deactivate;
     vm.deactivateService = {
@@ -26,17 +27,22 @@
       title: 'hds.settings.serviceDocumentationSoftware'
     };
     vm.documentationUrl = 'http://cisco.com';
+
+    HDSService.getServiceStatus().then(function (result) {
+      vm.radioModel = result;
+      vm.loading = false;
+    });
+
     function deactivate() {
-      $log.info('Deativating...');
       var res = $modal.open({
         templateUrl: 'modules/hds/settings/deactivate-modal/deactivate.html',
         controller: 'HDSDeactivateController',
         controllerAs: 'hdsDeactivate',
         type: 'small'
       });
-      $log.info(res);
       res.result.then(success).catch(cancel);
     }
+
     function success(result) {
       $log.info('Success', result);
     }
@@ -44,13 +50,13 @@
       $log.info('Cancel');
     }
 
-    function onTrialProduction() {
-      $log.info('Change', vm.radioModel);
+    function onTrialProduction() { s;
       var text = 'hds.settings.serviceStatusTrialStarted';
-      if (vm.radioModel != '1') {
+      if (vm.radioModel !== '1') {
         text = 'hds.settings.serviceStatusProductionStarted';
       }
       Notification.success(text);
     }
+
   }
 }());
