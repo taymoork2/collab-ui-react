@@ -1,5 +1,4 @@
 .customer-overview {
-
   .feature-details {
     font-size: 0.875rem;
   }
@@ -33,6 +32,7 @@
     i {
       padding-right: 0.5em;
     }
+
     span {
       font-size: 0.875em;
     }
@@ -43,7 +43,9 @@
     height: 0.25rem;
   }
 
-  #launchCustomer, #launchPartner, #deleteCustomer {
+  #launchCustomer,
+  #launchPartner,
+  #deleteCustomer {
     margin: 1rem 0;
     position: relative;
     left: 50%;
@@ -59,24 +61,23 @@
   }
 
   .webex-domains-list {
-
     .spinner-loading {
       font-size: 1.5rem;
       text-align: center;
     }
 
     .subtitle {
-      font-size: .75rem;
+      font-size: 0.75rem;
       color: $gray-base;
     }
 
     .feature-name {
       color: $gray-dark-2;
 
-     .secondary {
+      .secondary {
         margin-top: -0.5rem;
         color: $gray-base;
-        display:block;
+        display: block;
       }
     }
 
@@ -100,6 +101,7 @@
     h6 {
       font-size: 0.75rem;
     }
+
     .feature-list li {
       padding-bottom: 0.75rem;
 
@@ -110,13 +112,15 @@
   }
 
   .btn--delete {
-    font-size: .875rem;
-    color:  $gray-light-1;
-    &:hover, &:active, &:focus {
+    font-size: 0.875rem;
+    color: $gray-light-1;
+
+    &:hover,
+    &:active,
+    &:focus {
       color: $color-negative-base;
       background-color: transparent;
       outline: none;
     }
   }
-
 }

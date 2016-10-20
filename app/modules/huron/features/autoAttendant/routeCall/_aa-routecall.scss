@@ -5,35 +5,34 @@
 .aa-route-call-select {
   width: vr-adjust(300);
 
-  & .select-toggle {
+  .select-toggle {
     width: auto;
 
     @include vr-spacing(pr, 1.75);
 
-    & > i {
+    > i {
       &.icon {
         right: -0.25rem;
       }
     }
   }
 
-  & .aa-route-action {
-    & .csSelect-container {
+  .aa-route-action {
+    .csSelect-container {
       @include vr-spacing(pt, 1);
-      width : 100%;
-    }
 
+      width: 100%;
+    }
   }
 
-  & .select-list {
+  .select-list {
     .dropdown-menu {
       min-width: 100%;
       width: auto;
     }
   }
 
-  & .select-options > li > a {
+  .select-options > li > a {
     @include vr-spacing(pr, 1);
   }
-
 }

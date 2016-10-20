@@ -104,9 +104,14 @@
           }
         );
       } else if (vm.featureFilter === 'PG') {
-        PagingGroupService.deletePagingGroup(vm.featureId);
-          //ToDo will hookup with backend when is ready
-        deleteSuccess();
+        PagingGroupService.deletePagingGroup(vm.featureId).then(
+          function () {
+            deleteSuccess();
+          },
+          function (response) {
+            deleteError(response);
+          }
+        );
       } else {
         return;
       }

@@ -1,52 +1,54 @@
 .site-list {
-	@extend %grid-header;
-	@extend %page-background-white;
-	
-	.ui-grid-row {
-		&:hover {
-			background-color: transparent;
-		}
-	}
-        
-	.multi-center-license{
-		.tooltip-inner {
-			max-width: 400px;
-			&:hover {
-				color:$anchor-font-color-hover;
-			}
-		}
-	}
-      
-	.iconDisabled {
-		color: $gray-light-3;
-	}
+  @extend %grid-header;
+  @extend %page-background-white;
 
-	.iconEnabled {
-		color: $gray-light-1;
-	}
-    
-	.iconEnabledWithHover {
-		color: $gray-light-1;
-		&:hover {
-			color: $color-primary-base;
-			cursor:pointer;
-		}
-	}
-    
-	.grid-vcenter {
-		vertical-align: middle;
-	}
-    
-	.grid-text-top {
-		vertical-align: text-top;
-	}
-	
-	.error-color {
-		color: $color-alerts-base;
-	}
-	
-	.attention-color {
-  		color: $color-attention-base;
-	}
+  .ui-grid-row {
+    &:hover {
+      background-color: transparent;
+    }
+  }
+
+  .multi-center-license {
+    .tooltip-inner {
+      max-width: 400px;
+
+      &:hover {
+        color: $anchor-font-color-hover;
+      }
+    }
+  }
+
+  .iconDisabled {
+    color: $gray-light-3;
+  }
+
+  .iconEnabled {
+    color: $gray-light-1;
+  }
+
+  .iconEnabledWithHover {
+    color: $gray-light-1;
+
+    &:hover {
+      color: $color-primary-base;
+      cursor: pointer;
+    }
+  }
+
+  .grid-vcenter {
+    vertical-align: middle;
+  }
+
+  .grid-text-top {
+    vertical-align: text-top;
+  }
+
+  .error-color {
+    color: $color-alerts-base;
+  }
+
+  .attention-color {
+    color: $color-attention-base;
+  }
 }
 

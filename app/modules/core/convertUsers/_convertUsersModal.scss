@@ -2,6 +2,7 @@
   #convertCancelButton {
     margin-right: 10px;
   }
+
   .gridStyle {
     width: 898px;
     height: 491px;
@@ -32,13 +33,15 @@
       left: 10px;
     }
   }
-   .spinner-example--large {
+
+  .spinner-example--large {
     font-size: 2rem;
     padding-left: 425px;
   }
 
   .noUnlicensedUsers {
     @include vr-spacing(mt, 5);
+
     text-align: center;
   }
 }
