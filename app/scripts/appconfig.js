@@ -1051,6 +1051,7 @@
             params: {
               currentUser: {},
               entitlements: {},
+              queryuserslist: {},
               currentUserId: ''
             },
             data: {

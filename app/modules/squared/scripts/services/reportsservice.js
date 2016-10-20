@@ -127,13 +127,13 @@
 
       return $http.get(metricUrl)
         .success(function (data, status) {
-          data = data || {};
+          data = _.isObject(data) ? data : {};
           data.success = true;
           Log.debug('Callback for ' + metricType + ' for org=' + Authinfo.getOrgId());
           sendChartResponse(data, status, metricType);
         })
         .error(function (data, status) {
-          data = data || {};
+          data = _.isObject(data) ? data : {};
           data.success = false;
           data.status = status;
           data.errorMsg = data;
@@ -175,7 +175,7 @@
     function healthMonitor(callback) {
       $http.get(healthUrl)
         .success(function (data, status) {
-          data = data || {};
+          data = _.isObject(data) ? data : {};
           data.success = true;
           Log.debug('Callback for healthMonitor');
           callback(data, status);

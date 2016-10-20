@@ -52,7 +52,7 @@
       }
       return $http.get(scomUrl)
         .success(function (data, status) {
-          data = data || {};
+          data = _.isObject(data) ? data : {};
           data.success = true;
 
           if (_.isEmpty(data.orgSettings)) {
@@ -66,7 +66,7 @@
           callback(data, status);
         })
         .error(function (data, status) {
-          data = data || {};
+          data = _.isObject(data) ? data : {};
           data.success = false;
           data.status = status;
           callback(data, status);
@@ -88,7 +88,7 @@
         }
       })
         .success(function (data, status) {
-          data = data || {};
+          data = _.isObject(data) ? data : {};
           data.success = true;
           callback(data, status);
         })
@@ -206,12 +206,12 @@
 
       $http.get(adminUrl)
         .success(function (data, status) {
-          data = data || {};
+          data = _.isObject(data) ? data : {};
           data.success = true;
           callback(data, status);
         })
         .error(function (data, status) {
-          data = data || {};
+          data = _.isObject(data) ? data : {};
           data.success = false;
           data.status = status;
           callback(data, status);
@@ -321,12 +321,12 @@
 
       $http.get(scomUrl, config)
         .success(function (data, status) {
-          data = data || {};
+          data = _.isObject(data) ? data : {};
           data.success = true;
           callback(data, status);
         })
         .error(function (data, status) {
-          data = data || {};
+          data = _.isObject(data) ? data : {};
           data.success = false;
           data.status = status;
           callback(data, status);
