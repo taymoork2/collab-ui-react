@@ -3,7 +3,6 @@
 describe('Controller: UserDeleteCtrl', function () {
   var $rootScope, $scope, $q, $controller, $timeout, $translate, controller;
   var Authinfo, FeatureToggleService, Notification, SunlightConfigService, Userservice, SyncService;
-  var Authinfo, FeatureToggleService, Notification, SunlightConfigService, Userservice, SyncService;
   var stateParams = {
     deleteUserOrgId: '123',
     deleteUserUuId: '456',
