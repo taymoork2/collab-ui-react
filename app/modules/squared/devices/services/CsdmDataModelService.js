@@ -240,9 +240,9 @@
         });
     }
 
-    function createCmiPlace(name, directoryNumber) {
+    function createCmiPlace(name, directoryNumber, externalNumber) {
 
-      return CsdmHuronPlaceService.createCmiPlace(name, directoryNumber)
+      return CsdmHuronPlaceService.createCmiPlace(name, directoryNumber, externalNumber)
         .then(function (place) {
           placesDataModel[place.url] = place;
           addOrUpdatePlaceInDataModel(place);
