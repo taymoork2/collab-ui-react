@@ -6,19 +6,27 @@
     .service('HDSService', HDSService);
 
   /* @ngInject */
-  function HDSService($q) {
-
+  function HDSService($q, Orgservice) {
     var service = {
-      getServiceStatus: getServiceStatus
+      getServiceStatus: getServiceStatus,
+      getOrgSettings: getOrgSettings
     };
 
+
     return service;
+
+    function getOrgSettings() {
+      var promise = Orgservice.getOrg(_.noop);
+      var modifiedPromise = promise.then(function (response) {
+        return response.data.orgSettings;
+      });
+      return modifiedPromise;
+    }
 
     function getServiceStatus() {
       return $q(function (resolve) {
         resolve('2');
       });
     }
-
   }
 }());

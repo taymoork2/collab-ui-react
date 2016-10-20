@@ -13,6 +13,8 @@
     }
     var vm = this;
     vm.loading = true;
+    vm.loadingOrgSettings = true;
+    vm.getOrgSettingsFailed = false;
     vm.radioModel = undefined;
     vm.pageTitle = $translate.instant('hercules.hybridServiceNames.hybrid-data-security');
     vm.deactivate = deactivate;
@@ -23,10 +25,23 @@
     vm.serviceStatus = {
       title: 'hds.settings.serviceStatus'
     };
+    vm.orgSettings = {
+      title: 'hds.settings.orgSettings'
+    };
     vm.serviceDocumentationSoftware = {
       title: 'hds.settings.serviceDocumentationSoftware'
     };
     vm.documentationUrl = 'http://cisco.com';
+
+    HDSService.getOrgSettings().then(function (orgSettings) {
+      vm.kmsServer = orgSettings.kmsServer;
+      vm.kmsServerMachineAccount = orgSettings.kmsServerMachineAccount;
+      vm.loadingOrgSettings = false;
+    })
+    .catch(function (response) {
+      Notification.errorWithTrackingId(response, 'hds.settings.getOrgSettingsFailure');
+      vm.getOrgSettingsFailed = true;
+    });
 
     HDSService.getServiceStatus().then(function (result) {
       vm.radioModel = result;

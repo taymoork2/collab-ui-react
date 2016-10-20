@@ -30,6 +30,22 @@
       </div>
     </setting-section>
 
+    <setting-section setting="hdsSettings.orgSettings">
+      <div ng-if="hdsSettings.loadingOrgSettings && !hdsSettings.getOrgSettingsFailed">
+        <span class="spinner-example--large">
+          <i class="icon icon-spinner"></i>
+        </span>
+      </div>
+      <div ng-if="!hdsSettings.loadingOrgSettings && !hdsSettings.getOrgSettingsFailed" class="sub-section">
+        <div class="cs-input-group medium-4 columns">
+          <label class="cs-input__label" for="html-input-kms-server" translate="hds.settings.orgSettingsKmsServer"></label>
+          <input id="html-input-kms-server" class="cs-input" type="text" readonly ng-model="hdsSettings.kmsServer"></input>
+          <label class="cs-input__label" for="html-input-kms-machine-account" translate="hds.settings.orgSettingsKmsMachineAccount"></label>
+          <input id="html-input-kms-machine-account" class="cs-input" type="text" readonly ng-model="hdsSettings.kmsServerMachineAccount"></input>
+        </div>
+      </div>
+    </setting-section>
+
     <setting-section setting="hdsSettings.deactivateService">
       <div class="sub-section">
         <h5 class="sub-section__label" translate="hds.settings.deactivateServiceHeader"></h5>
@@ -40,7 +56,6 @@
 
     <setting-section setting="hdsSettings.serviceDocumentationSoftware">
       <div class="sub-section">
-        <!--h5 class="sub-section__label" translate="hds.settings.serviceDocumentationSoftware"></h5-->
         <p class="sub-section__description" translate="hds.settings.serviceHelp" translate-values="{documentationUrl:hdsSettings.documentationUrl}"></p>
         <p class="sub-section__description" translate="hds.settings.serviceDownload"></p>
       </div>
