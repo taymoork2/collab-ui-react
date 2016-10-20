@@ -152,6 +152,8 @@
       enableCrashLogs: 'csdm-enable-crash-logs',
       csdmPlaces: 'csdm-places',
       csdmPstn: 'csdm-pstn',
+      csdmDarling: 'csdm-darling',
+      csdmATA: 'csdm-ata',
       globalStatus: 'global-status',
       atlasF237ResourceGroups: 'atlas-f237-resource-group',
       huronLocalDialing: 'huron-local-dialing',
