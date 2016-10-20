@@ -28,7 +28,7 @@ describe('Controller: AANewTreatmentModalCtrl', function () {
   var iaAction = {};
   var schedule = 'openHours';
   var index = '0';
-  var menuId = 'menu0';
+  var menuId = 'menu2';
   var keyIndex = '0';
   var rtQ = 'routeToQueue';
   var play = 'play';
