@@ -1,4 +1,4 @@
-@import "../../../styles/common";
+@import '../../../styles/common';
 
 bmmp-subscription-upgrade-button.btn {
   display: inline-block;
@@ -23,12 +23,12 @@ bmmp-subscription-upgrade-button.btn {
       height: 100% !important;
       width: 100% !important;
       line-height: inherit !important;
-
     }
 
     .reveal-modal.dialog & .loading-button,
     .loading-button {
       display: inline-block !important;
+
       .loading {
         width: auto !important;
       }

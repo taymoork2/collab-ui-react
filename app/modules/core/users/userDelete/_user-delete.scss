@@ -9,19 +9,34 @@
 
 .delete-user-body {
   background-color: #eee;
-  font-family: "CiscoSansTT Light", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: 'CiscoSansTT Light', 'Helvetica Neue', Helvetica, Arial, sans-serif;
   font-size: 14px;
-  margin-bottom: 5px; }
-  .delete-user-body p {
-    font-family: "CiscoSansTT Light", "Helvetica Neue", Helvetica, Arial, sans-serif;
-    font-size: 14px; }
-  .delete-user-body p:last-of-type:not(.form-control-static) {
-    margin-bottom: 5px; }
-  .delete-user-body .form-group, .delete-user-body .formly-field-group {
-    padding-bottom: 10px; }
-    .delete-user-body .form-group:last-of-type, .delete-user-body .formly-field-group:last-of-type {
-      padding-bottom: 0; }
-  .delete-user-body .formly-field {
-    padding-bottom: 10px; }
-    .delete-user-body .formly-field.last-field {
-      padding-bottom: 0; }
+  margin-bottom: 5px;
+}
+
+.delete-user-body p {
+  font-family: 'CiscoSansTT Light', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-size: 14px;
+}
+
+.delete-user-body p:last-of-type:not(.form-control-static) {
+  margin-bottom: 5px;
+}
+
+.delete-user-body .form-group,
+.delete-user-body .formly-field-group {
+  padding-bottom: 10px;
+}
+
+.delete-user-body .form-group:last-of-type,
+.delete-user-body .formly-field-group:last-of-type {
+  padding-bottom: 0;
+}
+
+.delete-user-body .formly-field {
+  padding-bottom: 10px;
+}
+
+.delete-user-body .formly-field.last-field {
+  padding-bottom: 0;
+}

@@ -2,16 +2,17 @@ $aa-schedule-text-color: $gray-light-1;
 
 // Schedule Panel
 .aa-schedule-container {
-   &:hover {
+  &:hover {
     cursor: pointer;
+
     i {
       color: $aa-builder-icon-click-color;
     }
   }
- }
+}
 
 .aa-flex-item.schedule {
-  @include vr-spacing(pv, .25);
+  @include vr-spacing(pv, 0.25);
   @include vr-spacing(ph, 2);
 
   h3 {
@@ -19,8 +20,9 @@ $aa-schedule-text-color: $gray-light-1;
   }
 
   &-timezone {
-    @include vr-spacing(pt, .75);
-    @include vr-spacing(pb, .25)
+    @include vr-spacing(pt, 0.75);
+    @include vr-spacing(pb, 0.25);
+
     color: $aa-schedule-text-color;
   }
 }
@@ -36,159 +38,205 @@ $aa-schedule-text-color: $gray-light-1;
     line-height: 1;
     font-family: $brand-font-thin;
     font-weight: normal;
+
     &:hover {
       cursor: pointer;
+
       .icon {
         color: $aa-builder-icon-click-color;
       }
     }
+
     margin: -20px;
     padding: 20px;
   }
+
   .icon {
     color: $aa-builder-icon-color;
+
     &:hover {
       color: $aa-builder-icon-click-color;
     }
   }
 
   .aa-help-icon {
-    color:$color-primary-lighter;
+    color: $color-primary-lighter;
+
     &:hover {
       color: $white;
       cursor: pointer;
     }
+
     &:focus {
       color: $white;
       outline: none;
     }
   }
+
   .aa-help-wrapper {
-    & .popover {
+    .popover {
       @include vr-spacing(mt, 0);
     }
   }
+
   .down {
     color: $aa-builder-icon-click-color;
     transform: rotate(90deg);
   }
+
   &-hour {
     @include vr-spacing(pt, 1);
+
     border-bottom: 1px solid $gray;
+
     &:nth-of-type(1) {
       @include vr-spacing(mt, 1);
+
       border-top: 1px solid $gray;
     }
   }
+
   &-time {
     display: inline-block;
     vertical-align: text-top;
   }
+
   &-trash {
     font-size: 1.25rem;
     float: right;
+
     &:hover {
       cursor: pointer;
     }
   }
+
   &-days {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
   }
+
   &-add {
     i {
       @include vr-spacing(pr, 0.5);
     }
+
     > .icon {
       font-size: 1.25rem;
       vertical-align: middle;
       color: $anchor-font-color;
     }
+
     &:hover {
       cursor: pointer;
       color: $anchor-font-color-hover;
     }
   }
+
   &-holidays-behavior {
     @include vr-spacing(mt, 1);
   }
+
   &-recur-annually-box {
     @include vr-spacing(pt, 1.75);
   }
+
   &-holidays-recur-select-container {
     @include vr-spacing(mb, 6);
   }
+
   &-holidays-time {
     display: inline-block;
     vertical-align: top;
   }
+
   &-holidays-date {
     @include vr-spacing(mb, 1);
   }
+
   .cs-checkbox-group {
     display: inline-block;
+
     &.aa-schedule-holidays-behavior {
       @include vr-spacing(mb, 0);
     }
   }
+
   .accordion {
     border-top: 1px solid $gray;
     border-bottom: 1px solid $gray;
+
     .accordion--navigation {
       > a {
         background: transparent;
         border: none;
         border-top: 1px solid $gray;
         border-radius: 0;
+
         @include vr-spacing(mt, 0);
         @include vr-spacing(p, 0);
+
         color: $gray;
+
         > .row {
-          @include vr-spacing(pv, .5);
+          @include vr-spacing(pv, 0.5);
+
           .aa-schedule-holidays-name-collapse {
             width: 30%;
             float: left;
-            @include vr-spacing(pl, .5);
+
+            @include vr-spacing(pl, 0.5);
           }
+
           div {
             display: inline-block;
             font-size: $paragraph-font-size;
           }
         }
-        &:before {
+
+        &::before {
           content: none;
         }
+
         &.active {
           display: none;
         }
+
         &:hover {
           background: transparent;
           border-top: 1px solid $gray;
         }
+
         &:focus {
           box-shadow: none;
         }
+
         &.text-muted {
           color: $gray;
         }
       }
+
       .content {
         border-radius: 0;
         background: transparent;
         border: none;
         border-top: 1px solid $gray;
+
         @include vr-spacing(mt, 0);
         @include vr-spacing(pb, 1.5);
+
         &.active {
           background: transparent;
+
           @include vr-spacing(ph, 0);
         }
       }
+
       &:first-child {
         > a {
           border-top: none;
         }
+
         .content {
           border-top: none;
         }
@@ -198,6 +246,7 @@ $aa-schedule-text-color: $gray-light-1;
 
   .modal-body-gray {
     @include vr-spacing(p, 1.25);
+
     background-color: $gray-light-4;
     margin-bottom: 5px;
   }
@@ -205,12 +254,12 @@ $aa-schedule-text-color: $gray-light-1;
   .modal-footer {
     border-top: 5px solid $white;
   }
-
 }
 
 // Schedule Info Box
 .aa-schedule-info {
   @include vr-spacing(pt, 0.5);
+
   display: flex;
   align-items: flex-start;
 
@@ -223,29 +272,34 @@ $aa-schedule-text-color: $gray-light-1;
   }
 
   &-item {
-    @include vr-spacing(pb, .5);
+    @include vr-spacing(pb, 0.5);
+
     line-height: 1rem;
     text-align: left;
   }
 
   &-day {
     @extend .aa-schedule-info-item;
+
     @include vr-spacing(pr, 0.3);
   }
 
   &-hours {
     @extend .aa-schedule-info-item;
+
     color: $aa-schedule-text-color;
     text-align: left;
   }
 
   &-holidays-date {
     display: inline-block;
+
     @include vr-spacing(pr, 1);
   }
 
   &-holidays-name {
     display: inline-block;
+
     @include vr-spacing(pr, 1);
   }
 }
@@ -259,7 +313,8 @@ $aa-schedule-text-color: $gray-light-1;
 .error .cs-datapicker-normal {
   border-color: $color-alerts-base;
   background-color: $color-alerts-lighter;
-  input[type="text"][readonly].cs-datepicker-input {
+
+  input[type='text'][readonly].cs-datepicker-input {
     background-color: $color-alerts-lighter;
   }
 }
@@ -269,6 +324,7 @@ $aa-schedule-text-color: $gray-light-1;
   border-color: $color-alerts-base;
   background-color: $color-alerts-lighter;
 }
+
 .closed-holiday {
   padding-top: rem(12);
 }

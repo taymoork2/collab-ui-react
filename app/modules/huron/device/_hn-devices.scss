@@ -27,13 +27,14 @@
 }
 
 .default-status::before {
+  @include vr-spacing(mr, 0.5);
+
   content: '';
   width: 10px;
   height: 10px;
   display: inline-block;
   background-color: $brand-default;
   border-radius: 50%;
-  @include vr-spacing(mr, .5);
 }
 
 .online-status::before {
@@ -44,7 +45,7 @@
   color: $brand-danger;
 }
 
-.device-log-button{
+.device-log-button {
   margin-top: 10px;
 }
 
@@ -53,19 +54,22 @@
     font-family: $brand-font-cisco-TT-Extra-Light;
     font-size: 14px;
     padding-bottom: 10px;
+
     .activation-code-expires {
-    //  font-family: Arial;
+      //  font-family: Arial;
       font-size: 12px;
       color: $gray-light-1;
       padding-bottom: 8px;
     }
   }
+
   .generate-activation-code {
     font-size: 13px;
     line-height: 21px;
     padding-bottom: 10px;
     padding-right: rem-calc(70);
   }
+
   .activation-button {
     span {
       position: relative;
@@ -73,8 +77,9 @@
       font-size: 20px;
       color: $gray-dark-1;
     }
+
     display: flex;
-    justify-content:  space-between;
+    justify-content: space-between;
   }
 }
 
@@ -83,57 +88,59 @@
     display: flex;
     justify-content: space-between;
   }
+
   .form-group {
     margin-bottom: 0;
     margin-left: 22px;
   }
+
   .control-label {
     margin-top: 7px;
     text-align: left;
   }
+
   .row {
     padding-top: 20px;
   }
+
   .col-sm-5 {
     width: 37%;
   }
+
   .col-sm-7 {
     width: 63%;
   }
+
   .activation-code {
     padding-top: 65px;
     font-family: $brand-font-cisco-TT-Extra-Light;
     font-size: 26px;
     color: $brand-info;
   }
+
   .expiration {
     font-family: Arial;
     font-size: 12px;
   }
+
   .loading {
     width: 100%;
     text-align: center;
     margin: 40px auto;
-    &.ng-enter, &.ng-leave {
+
+    &.ng-enter,
+    &.ng-leave {
       transition: none;
     }
-    /* starting animations for enter */
 
-    &.ng-enter {}
-    /* terminal animations for enter */
-
-    &.ng-enter.ng-enter-active {}
-    /* starting animations for leave */
-
-    &.ng-leave {}
-    /* terminal animations for leave */
-
-    &.ng-leave.ng-leave-active {}
     .icon {
       font-size: 75px;
     }
   }
-  .modal-footer-left { float: left; }
+
+  .modal-footer-left {
+    float: left;
+  }
 }
 
 @media print {
@@ -144,12 +151,15 @@
       margin: 0;
       padding: 0;
     }
+
     .modal-header {
       display: none !important;
     }
+
     .modal-footer {
       display: none !important;
     }
   }
 }
+
 /*****  _hn-devices  *****/

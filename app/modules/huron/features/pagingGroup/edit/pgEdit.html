@@ -1,4 +1,7 @@
-<div class="pg-edit">
+<div ng-if="$ctrl.loading" class="load">
+    <i class='icon icon-spinner'></i>
+  </div>
+<div ng-if="!$ctrl.loading" class="pg-edit">
 	<form novalidate name="$ctrl.form" role="form" class="cs-form">
 		<cs-page-header title="{{$ctrl.pg.name}}" back="$ctrl.back" back-url="$ctrl.huronFeaturesUrl"></cs-page-header>
 		<div class="save-section pg-save" ng-if="$ctrl.formChanged">

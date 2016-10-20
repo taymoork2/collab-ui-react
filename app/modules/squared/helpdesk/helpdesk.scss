@@ -2,7 +2,6 @@
   @extend %page-background-white;
 }
 
-
 .helpdesk-app-container {
   background-color: $brand-white;
   overflow-x: hidden; // Remove horizontal IE/Edge scrollbar
@@ -10,60 +9,75 @@
     .sparkstatus-info {
       @extend .user-info;
     }
+
     .btn-sparkstatus {
       @extend .btn--user;
+
       border-left: 1px solid $gray-light !important;
     }
+
     .history-info {
       @extend .user-info;
     }
+
     .btn-history {
       @extend .btn--user;
+
       border-left: 1px solid $gray-light !important;
       color: $gray-light-1;
       font-size: 1.2rem;
+
       &:hover {
         color: $color-primary-base;
       }
     }
   }
+
   .pointer {
-    cursor:pointer;
+    cursor: pointer;
   }
 }
+
 .helpdesk-content-view {
-  font-family: "CiscoSansTT Light", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: 'CiscoSansTT Light', 'Helvetica Neue', Helvetica, Arial, sans-serif;
   background-color: $brand-white;
   margin-left: 2rem;
   margin-right: 2rem;
   padding-top: 4rem;
   padding-bottom: 2rem;
   min-height: 100vh;
+
   a:focus {
     outline: none;
     box-shadow: none;
   }
+
   p {
     margin-bottom: 1rem;
   }
+
   .circle-status-icon {
     font-size: 0.575rem;
     margin-right: 0.5rem;
   }
+
   .helpdesk-details {
     h3 {
       color: $gray-dark-4;
-      margin-bottom: 1.0rem;
+      margin-bottom: 1rem;
       word-wrap: break-word;
     }
+
     h4 {
       margin-top: 0;
       margin-bottom: 1rem;
     }
+
     .head {
       margin-bottom: 1rem;
       margin-top: 2rem;
     }
+
     .org-card-footer {
       background-color: $gray-light-4;
       padding-bottom: 0.5rem;
@@ -71,82 +85,102 @@
       padding-right: 1rem;
       border-radius: 0 0 3px 3px;
       font-size: 0.675rem;
+
       .status {
         line-height: 1rem;
       }
+
       .operational {
         color: $color-cta-base;
       }
+
       .warning,
       .partial_outage {
         color: $color-attention-base;
       }
+
       .error {
         color: $color-alerts-base;
       }
+
       .unknown {
         color: $gray-base;
       }
     }
+
     .customer-or-partner {
       font-size: 0.75rem;
       color: $gray-dark-1;
       margin-top: -0.5rem;
       margin-bottom: 1rem;
     }
+
     .device {
       margin-top: 1rem;
+
       .device-name {
         color: $gray-dark-4;
         margin-left: 0.5rem;
       }
     }
+
     .details-heading {
       color: $gray-dark-4;
       margin-bottom: 1rem;
     }
+
     .details-value {
       color: $gray-dark-1;
       word-wrap: break-word;
     }
+
     .details-value-device {
       color: $gray-dark-1;
       word-wrap: break-word;
     }
+
     .cs-card-layout.cs-card-block {
       padding-right: 0;
       padding-left: 1.5rem;
     }
+
     .text-align-center {
-      text-align:center;
+      text-align: center;
     }
+
     .large-number {
-      font-size:2rem;
+      font-size: 2rem;
       color: $color-primary-base;
       margin-top: 0.4rem;
     }
+
     .details-button {
       padding-top: 0.5rem;
       padding-bottom: 0.5rem;
     }
+
     .launch-button {
       margin-top: 1.5rem;
-      margin-bottom: 1.0rem;
+      margin-bottom: 1rem;
     }
+
     .user-img {
       height: 35px;
       width: 35px;
       margin-right: 0.5rem;
     }
+
     .icon-user {
       color: white;
       font-size: 30px;
       line-height: 35px;
       bottom: -5px;
     }
+
     .light {
       color: $gray-light-2;
     }
+
     .helpdesk-cards-loading {
       font-size: 1.5rem;
       padding-top: 2rem;
@@ -167,81 +201,102 @@
 .helpdesk-search {
   padding-top: 1rem;
   text-align: center;
+
   .pointer {
     cursor: pointer;
   }
+
   table {
     margin-left: auto;
     margin-right: auto;
+
     tbody {
       tr {
         border-top: transparent;
       }
+
       td a,
       .td a {
         color: $anchor-font-color;
       }
+
       td a:hover,
       .td a:hover {
         color: $anchor-font-color-hover;
       }
     }
   }
+
   .main-heading {
     display: inline-block;
     text-align: right;
+
     .help {
       color: $gray-light-1;
       position: relative;
       top: -0.6rem;
       padding-right: 2px;
-      font-size: 1.0rem;
+      font-size: 1rem;
       cursor: pointer;
+
       i {
         top: 2px;
         left: 3px;
       }
     }
+
     @media only screen and (max-width: 500px) {
       .help {
         font-size: 0.7rem;
       }
     }
   }
+
   h1 {
     color: $color-primary-base;
   }
+
   h2 {
     margin-bottom: 1rem;
   }
+
   h4 {
     margin-top: 1rem;
     margin-bottom: 1rem;
   }
+
   p {
     margin-bottom: 1rem;
   }
+
   .no-top-margin {
     margin-top: 0;
   }
-  .typeahead-large .input-description:before {
+
+  .typeahead-large .input-description::before {
     display: none;
   }
+
   .typeahead-large .input-description {
     padding: 0;
   }
+
   .typeahead-large {
     position: relative;
     max-width: 100%;
     margin-left: auto;
     margin-right: auto;
+
     .searchInputForm {
       margin-bottom: 0px;
     }
+
     input {
       font-size: 34px;
     }
-    form:not(.form-inline) input[type="search"], form:not(.form-inline) [type="search"].input {
+
+    form:not(.form-inline) input[type='search'],
+    form:not(.form-inline) [type='search'].input {
       max-width: 100%;
       display: block;
       height: auto;
@@ -249,6 +304,7 @@
       z-index: 1;
       border: 0px;
     }
+
     .icon-search {
       position: absolute;
       right: 0;
@@ -258,7 +314,8 @@
       height: 2.5rem;
       z-index: 3;
       min-width: 2.5rem;
-      @media screen and (-moz-images-in-menus:0) {
+
+      @media screen and (-moz-images-in-menus: 0) {
         top: 0 !important;
       }
     }
@@ -267,10 +324,7 @@
   .helpdesk-searching-org {
     margin-top: 1rem;
     height: 2.25rem;
-    padding-top: 0.25rem;
-    padding-bottom: 0.25rem;
-    padding-left: 0.5rem;
-    padding-right: 0.5rem;
+    padding: 0.25rem 0.5rem;
     border: 1px solid $gray-lighter;
     border-radius: 0.25rem;
     color: $brand-white;
@@ -278,88 +332,105 @@
     display: inline-block;
     vertical-align: top;
     transition: all 0.2s ease-in-out;
+
     .icon {
       float: right;
       font-size: 1rem;
       margin-left: 0.5rem;
       margin-top: 0.4rem;
+
       &:hover {
         font-weight: bold;
       }
     }
   }
+
   .helpdesk-please-wait {
     margin-top: 1rem;
   }
+
   .search-results {
     .icon-org-search {
       font-size: 1rem;
-      border:1px solid;
+      border: 1px solid;
       border-radius: 100%;
-      border-color:transparent;
-      padding:0.4rem;
+      border-color: transparent;
+      padding: 0.4rem;
+
       &:hover {
-        border-color:$gray-lighter;
-        color:$gray-darker;
+        border-color: $gray-lighter;
+        color: $gray-darker;
       }
     }
+
     .cs-card:first-child {
       margin-top: 0;
     }
+
     .cs-card:last-child {
       margin-bottom: 1rem;
     }
+
     .cs-card {
       header {
         h5 {
           color: $gray-dark-2;
           font-size: 1rem;
-          font-family: "CiscoSansTT Light", "Helvetica Neue", Helvetica, Arial, sans-serif;
+          font-family: 'CiscoSansTT Light', 'Helvetica Neue', Helvetica, Arial, sans-serif;
         }
       }
+
       section {
         text-align: left;
         padding-left: 1.5rem;
         padding-bottom: 1rem;
         overflow: hidden;
         color: $gray-base;
+
         div,
         span {
-          font-family: "CiscoSansTT Light", "Helvetica Neue", Helvetica, Arial, sans-serif;
+          font-family: 'CiscoSansTT Light', 'Helvetica Neue', Helvetica, Arial, sans-serif;
         }
+
         .belongs-to-org {
           padding-right: 0.5rem;
           font-size: 0.75rem;
         }
       }
     }
+
     .cs-card {
       .clickable-area {
         display: block;
-        background-color: rgba(0,0,0,0);
+        background-color: rgba(0, 0, 0, 0);
         width: 85%;
         height: 53px;
         position: absolute;
         top: 0;
       }
+
       article {
         border: 1px solid white;
       }
     }
+
     .cs-card:hover {
       article {
         border: 1px solid $brand-primary;
       }
     }
+
     .cs-card article:focus {
       outline: none !important;
       outline: 0 !important;
       border: 1px solid $brand-primary;
     }
+
     .cs-card:active {
       article {
         background-color: $brand-primary;
         color: white !important;
+
         header {
           h4,
           h5,
@@ -369,35 +440,36 @@
         }
       }
     }
+
     .search-customer-results {
-      padding-left:1rem;
+      padding-left: 1rem;
     }
-    .search-user-results{
+
+    .search-user-results {
       .cs-card {
-        article{
-          //min-height: 2rem;
-        }
         header {
           margin-bottom: -0.2rem;
           padding-top: 0.75rem;
         }
-        section{
-          div{
+
+        section {
+          div {
             margin-bottom: -0.3rem !important;
           }
         }
-        .user-org{
+
+        .user-org {
           margin-top: -0.2rem;
           margin-bottom: -0.1rem !important;
         }
       }
 
-      .search-result-picture{
+      .search-result-picture {
         position: absolute;
-        top:0.8rem;
-        left:1rem;
+        top: 0.8rem;
+        left: 1rem;
 
-        div{
+        div {
           display: block;
           width: 2rem;
           height: 2rem;
@@ -406,36 +478,42 @@
           border-radius: 50%;
           background-color: $gray-light-2;
           color: $gray-dark-2;
-          .icon{
+
+          .icon {
             top: 0.5rem;
             font-size: 1.75rem;
             color: white !important;
           }
         }
       }
-      .search-result-info{
-        padding-left:3rem;
+
+      .search-result-info {
+        padding-left: 3rem;
       }
     }
+
     .search-order-results {
-      padding-left:1rem;
+      padding-left: 1rem;
     }
   }
+
   .show-more-results {
     margin-bottom: 1rem;
   }
-  .search-device-results{
+
+  .search-device-results {
     .cs-card {
-      article{
+      article {
         min-height: 11rem;
       }
     }
-    .device-result-picture{
-      position: absolute;
-      top:0.8rem;
-      left:1rem;
 
-      div{
+    .device-result-picture {
+      position: absolute;
+      top: 0.8rem;
+      left: 1rem;
+
+      div {
         display: block;
         width: 3.5rem;
         height: 3.5rem;
@@ -443,12 +521,14 @@
         background-position: top center;
       }
     }
-    .device-result-info{
+
+    .device-result-info {
       position: absolute;
-      left:5rem;
+      left: 5rem;
     }
   }
 }
+
 .helpdesk-cards {
   .cs-card section {
     text-align: left;
@@ -457,70 +537,89 @@
     padding-right: 1.5rem;
     overflow: hidden;
     color: $gray-dark-1;
-    font-family: "CiscoSansTT Light", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-family: 'CiscoSansTT Light', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+
     .red {
       color: $color-alerts-base;
     }
   }
+
   .cta-base {
-    header:after {
+    header::after {
       border-top-color: $color-cta-base;
     }
   }
+
   .gray-light {
-    header:after {
+    header::after {
       border-top-color: $gray-light-1;
     }
   }
+
   h5 {
     margin-top: 0.5rem;
     color: black;
   }
+
   .badge {
     margin-bottom: 0;
-    padding: 0.1rem 0.5rem 0.1rem;
+    padding: 0.1rem 0.5rem;
   }
+
   .cs-donut-svg {
     margin-top: 1rem;
     margin-left: 0;
   }
+
   .cs-donut-text {
     font-size: 4rem;
   }
 }
+
 .helpdesk-help {
   p {
     margin-bottom: 0;
   }
-  p~h4 {
+
+  p ~ h4 {
     padding-top: 1rem;
   }
 }
+
 .helpdesk-red {
   color: $color-negative-base;
 }
+
 .helpdesk-green {
   color: $color-cta-base;
 }
+
 .helpdesk-grey {
   color: $gray-base;
 }
+
 .helpdesk-yellow {
   color: $color-attention-base;
 }
+
 .helpdesk-error {
   color: $color-negative-base;
 }
+
 .helpdesk-ok {
   color: $color-cta-base;
 }
+
 .helpdesk-warn {
   color: $color-attention-base;
 }
+
 .helpdesk-warning {
   color: $color-attention-base;
 }
-.helpdesk-search:focus, .helpdesk-details:focus {
+
+.helpdesk-search:focus,
+.helpdesk-details:focus {
   outline: none !important;
   outline: 0 !important;
   border: 0 !important;
@@ -532,6 +631,7 @@
   height: 100%;
   text-align: center;
   padding: 20%;
+
   p {
     margin-top: 1.5rem;
   }
@@ -540,32 +640,37 @@
 .helpdesk-header-dropdown-menu {
   max-height: none;
   width: 10rem;
+
   li {
-    font-size:0.75rem;
-    padding: 0.25rem 0.5rem 0.25rem 0.5rem !important;
+    font-size: 0.75rem;
+    padding: 0.25rem 0.5rem !important;
   }
+
   .clear-history {
     color: $color-primary-base;
   }
+
   .search-result {
     word-wrap: break-word;
   }
 }
 
-
-
 .helpdesk-history-dropdown-menu {
   @extend .helpdesk-header-dropdown-menu;
+
   width: 10rem;
 }
 
 .helpdesk-spark-status-dropdown-menu {
   @extend .helpdesk-header-dropdown-menu;
+
   width: 18rem;
+
   .header {
     padding: 1rem;
-    border-bottom:1px solid $gray-light-4;
+    border-bottom: 1px solid $gray-light-4;
   }
+
   .content {
     overflow: hidden;
     white-space: nowrap;
@@ -583,10 +688,12 @@
       display: block;
     }
   }
+
   .helpdesk-cards {
     .cs-card {
       padding: 0;
       width: 100%;
+
       article {
         width: 100%;
       }
@@ -598,11 +705,13 @@
   .helpdesk-cards {
     .cs-card-layout {
       width: 100%;
+
       .cs-card {
         width: 100%;
       }
     }
   }
+
   .helpdesk-content-view .helpdesk-details .cs-card-layout.cs-card-block {
     padding-right: 0;
     padding-left: 0.5rem;
@@ -611,33 +720,38 @@
   /*
    * TODO: This has to move to 640px when the new horizontal layout comes.
    */
-  .helpdesk-search{
+  .helpdesk-search {
     .search-results {
       margin-top: 0.5rem;
-      .cs-card{
-        .search-result-picture{
+
+      .cs-card {
+        .search-result-picture {
           display: none;
         }
-        .search-result-info{
+
+        .search-result-info {
           position: static;
         }
 
-        .device-result-picture{
+        .device-result-picture {
           display: none;
         }
-        .device-result-info{
+
+        .device-result-info {
           position: static;
         }
       }
     }
   }
 }
+
 @media only screen and (max-width: 640px) {
   .helpdesk-app-container {
     .fixed.top-bar- {
       .top-bar .left .name .header-title {
         display: none;
       }
+
       .top-bar .right .dropdown-menu {
         position: fixed !important;
         right: 0;
@@ -645,16 +759,20 @@
       }
     }
   }
+
   .helpdesk-search {
     padding-top: 0;
+
     h1 {
       font-size: 34px;
     }
+
     .typeahead-large {
       input {
         font-size: 26px;
         width: 100%;
       }
+
       .icon-search {
         font-size: 1rem;
         width: 2rem;
@@ -662,11 +780,13 @@
         min-width: 2rem;
       }
     }
+
     .search-results {
       margin-top: 0.5rem;
     }
   }
 }
+
 @media only screen and (max-width: 500px) {
   .helpdesk-cards {
     .cs-card-layout {
@@ -676,22 +796,27 @@
       }
     }
   }
+
   .details-value-device {
     margin-top: -1rem;
     margin-bottom: 1rem;
     width: 100%;
     display: block;
   }
+
   .helpdesk-search {
     padding-top: 0;
+
     h1 {
       font-size: 30px;
     }
+
     .typeahead-large {
       input {
         font-size: 20px;
         width: 100%;
       }
+
       .icon-search {
         font-size: 0.75rem;
         width: 1.5rem;
@@ -701,12 +826,14 @@
     }
   }
 }
+
 .helpdesk-dialog-progress {
-  text-align:center;
-  margin-top:auto;
-  margin-bottom:auto;
-  font-size:3rem;
+  text-align: center;
+  margin-top: auto;
+  margin-bottom: auto;
+  font-size: 3rem;
+
   .status {
-    padding-right:1rem;
+    padding-right: 1rem;
   }
 }

@@ -7,7 +7,7 @@ export default angular
     'atlas.templates',
     'cisco.ui',
     'pascalprecht.translate',
-    'ngResource',
+    require('angular-resource'),
     require('modules/core/scripts/services/authinfo'),
     require('modules/huron/telephony/telephonyConfig'),
   ])

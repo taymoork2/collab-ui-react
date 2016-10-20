@@ -12,28 +12,36 @@
     vm.inputPlaceHolder = $translate.instant('autoAttendant.inputPlaceHolder');
     vm.selectPlaceholder = $translate.instant('autoAttendant.selectPlaceHolder');
     vm.destinationOptions = [{
-      label: $translate.instant('autoAttendant.destinations.Disconnect')
+      label: $translate.instant('autoAttendant.destinations.Disconnect'),
+      name: 'Disconnect',
+      action: 'disconnect',
+      level: 0
     }, {
-      label: $translate.instant('autoAttendant.destinations.HuntGroup')
+      label: $translate.instant('autoAttendant.phoneMenuRouteHunt'),
+      name: 'destinationMenuRouteHunt',
+      action: 'routeToHuntGroup'
     }, {
-      label: $translate.instant('autoAttendant.destinations.Queue')
+      label: $translate.instant('autoAttendant.phoneMenuRouteAA'),
+      name: 'destinationMenuRouteAA',
+      action: 'goto'
     }, {
-      label: $translate.instant('autoAttendant.destinations.User')
+      label: $translate.instant('autoAttendant.phoneMenuRouteUser'),
+      name: 'destinationMenuRouteUser',
+      action: 'routeToUser'
     }, {
-      label: $translate.instant('autoAttendant.destinations.Voicemail')
+      label: $translate.instant('autoAttendant.phoneMenuRouteVM'),
+      name: 'destinationMenuRouteMailbox',
+      action: 'routeToVoiceMail'
     }, {
-      label: $translate.instant('autoAttendant.destinations.ExternalPhone')
-    }, {
-      label: $translate.instant('autoAttendant.destinations.AutoAttendant')
+      label: $translate.instant('autoAttendant.phoneMenuRouteToExtNum'),
+      name: 'destinationMenuRouteToExtNum',
+      action: 'route'
     }];
     vm.destination = vm.destinationOptions[0];
-    vm.selected = '';
-    vm.minute = '15';
     vm.musicOnHold = '';
     vm.menuEntry = undefined;
     vm.mohPlayAction = undefined;
     vm.iaAction = undefined;
-
     vm.ok = ok;
     vm.isSaveEnabled = isSaveEnabled;
     vm.uploadMohTrigger = uploadMohTrigger;
@@ -80,7 +88,13 @@
           label: i + 1
         });
       });
-      vm.minute = vm.minutes[14];
+      //setting maxWaitTime's default value
+      vm.maxWaitTime = vm.minutes[14];
+    }
+
+    //populating fallback drop down in sorted order
+    function populateDropDown() {
+      vm.destinationOptions.sort(AACommonService.sortByProperty('label'));
     }
 
     function populateMohRadio() {
@@ -115,6 +129,7 @@
     function initializeView() {
       populateMohRadio();
       populateMaxTime();
+      populateDropDown();
     }
 
     function populateUiModel() {

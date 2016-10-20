@@ -1,34 +1,55 @@
-import { IPagingGroup } from './pagingGroup';
+import { IPagingGroup } from 'modules/huron/features/pagingGroup/pagingGroup';
+
+interface IPagingGroupResource extends ng.resource.IResourceClass<ng.resource.IResource<IPagingGroup>> {
+  update: ng.resource.IResourceMethod<ng.resource.IResource<IPagingGroup>>;
+}
 
 export class PagingGroupService {
 
-  private pagingGroups: IPagingGroup[] = [];
+  private pgRes: IPagingGroupResource;
 
   /* @ngInject */
-  constructor(private $q: ng.IQService) {
+  constructor(private $resource: ng.resource.IResourceService,
+              private HuronConfig,
+              private Authinfo) {
+    this.pgRes = <IPagingGroupResource>this.$resource(this.HuronConfig.getPgUrl() + '/customers/:customerId/pagingGroups/:groupId', {},
+      {
+        update: {
+          method: 'PUT',
+        },
+      });
   }
 
   public getListOfPagingGroups(): ng.IPromise<IPagingGroup[]> {
-    return this.$q.resolve(this.pagingGroups);
+    return this.pgRes.get({
+      customerId: this.Authinfo.getOrgId(),
+    }).$promise.then((response) => _.get(response, 'pagingGroups'));
   }
 
-  public getPagingGroup(pgId: string): IPagingGroup {
-    return _.find(this.pagingGroups, { uuid: pgId });
+  public getPagingGroup(groupId: string): ng.IPromise<IPagingGroup> {
+    return this.pgRes.get({
+      customerId: this.Authinfo.getOrgId(),
+      groupId: groupId,
+    }).$promise;
   }
 
   public savePagingGroup(pg: IPagingGroup) {
-    this.pagingGroups.push(pg);
-  }
-
-  public deletePagingGroup(pgId: string) {
-    let index = _.findIndex(this.pagingGroups, { uuid: pgId });
-    this.pagingGroups.splice(index, 1);
+    return this.pgRes.save({
+      customerId: this.Authinfo.getOrgId(),
+    }, pg).$promise;
   }
 
   public updatePagingGroup(pg: IPagingGroup) {
-    let index = _.findIndex(this.pagingGroups, { uuid: pg.uuid });
-    this.pagingGroups.splice(index, 1);
-    this.pagingGroups.splice(index, 0, pg);
+    return this.pgRes.update({
+        customerId: this.Authinfo.getOrgId(),
+        groupId: pg.groupId,
+      }, pg).$promise;
   }
 
+  public deletePagingGroup(groupId: string) {
+    return this.pgRes.delete({
+      customerId: this.Authinfo.getOrgId(),
+      groupId: groupId,
+    }).$promise;
+  }
 }

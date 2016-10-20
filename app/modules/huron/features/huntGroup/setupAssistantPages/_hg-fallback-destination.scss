@@ -11,6 +11,7 @@
 
 .fallback-container .cs-card-layout {
   margin: auto;
+
   @include vr-spacing(mv, 0);
   @include vr-spacing(mb, 1);
 }
@@ -18,7 +19,7 @@
 .fallback-container-item {
   @include vr-spacing(pv, 1);
 
-  & label.cs-checkbox {
+  label.cs-checkbox {
     @include vr-spacing(m, 0);
   }
 }
