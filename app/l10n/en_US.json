@@ -3047,7 +3047,8 @@
         "reserveFail": "Numbers were not reserved",
         "customerFail": "Customer was not created",
         "orderFail": "Numbers were not ordered",
-        "siteFail": "Site was not created"
+        "siteFail": "Site was not created",
+        "exchanges": "Failed to get NXX (exchanges) for selected area code"
       }
     },
     "finish": {
