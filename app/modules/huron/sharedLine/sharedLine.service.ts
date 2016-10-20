@@ -148,7 +148,11 @@ export class SharedLineService {
       numberId: numberId,
       sharedLineId: sharedLineId,
     }, {
-      phones: data,
+      phones: _.map(data, (phone) => {
+        return {
+          uuid: phone.uuid,
+        };
+      }),
     }).$promise;
   }
 

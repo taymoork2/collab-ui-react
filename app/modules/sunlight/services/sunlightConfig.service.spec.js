@@ -127,4 +127,32 @@ describe(' sunlightConfigService', function () {
     });
     $httpBackend.flush();
   });
+
+  it('should delete user for a given userId', function () {
+
+    $httpBackend.whenDELETE(sunlightUserConfigUrl + '/' + userId).respond(200);
+
+    sunlightConfigService.deleteUser(userId).then(function () {}, function (response) {
+      expect(response.status).toBe(200);
+    });
+    $httpBackend.flush();
+
+  });
+
+  it('should fail to delete user for a given userId when there is an http error', function () {
+    $httpBackend.whenDELETE(sunlightUserConfigUrl + '/' + userId).respond(500, errorData);
+
+    sunlightConfigService.deleteUser(userId).then(function () {}, function (response) {
+      expect(response.data).toEqual(errorData);
+      expect(response.status).toBe(500);
+    });
+    $httpBackend.flush();
+
+  });
+
+  it('should delete user in sunlight config service when there is a delete call', function () {
+    sunlightConfigService.deleteUser(undefined).then(function () {}, function (data) {
+      expect(data).toBe('usedId cannot be null or undefined');
+    });
+  });
 });

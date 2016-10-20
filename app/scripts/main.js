@@ -74,6 +74,8 @@
 
   angular.module('Hercules', ['Core', 'Squared', 'core.onboard', 'ngTagsInput']);
 
+  angular.module('HDS', ['Core']);
+
   angular.module('Ediscovery', ['Core']);
 
   angular.module('Mediafusion', ['Core', 'Hercules', 'Squared']);
@@ -99,6 +101,7 @@
     'Hercules',
     'Ediscovery',
     'Mediafusion',
+    'HDS',
     'WebExApp',
     'Messenger',
     'Sunlight',

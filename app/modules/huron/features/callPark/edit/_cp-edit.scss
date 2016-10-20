@@ -1,64 +1,83 @@
-
 .cp-edit {
   height: calc(100vh - #{($top-bar-height + $page-header-height)}) !important;
   overflow-y: auto;
   position: relative;
   background: $color-white;
+
   @include vr-spacing(mh, 0.5, 1px, true);
   @include vr-spacing(pb, 10);
+
   > .row {
     @include vr-spacing(pt, 2);
   }
-  .cs-input, .form-control {
-    width: 50%
+
+  .cs-input,
+  .form-control {
+    width: 50%;
   }
+
   .cs-card.small {
     position: relative;
     width: 43%;
+
     @include vr-spacing(ph, 0);
+
     i {
       font-size: 1.5rem;
     }
+
     article > header {
-       @include vr-spacing(ph, 0.75);
+      @include vr-spacing(ph, 0.75);
     }
   }
+
   .load {
     font-size: 3rem;
     text-align: center;
-    height : 80vh;
-    display : flex;
+    height: 80vh;
+    display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
     justify-content: center;
     align-items: center;
   }
+
   form {
     @include vr-spacing(m, 2);
+
     max-width: 70%;
-    input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button { 
-      -webkit-appearance: none; 
-      margin: 0; 
+
+    input[type='number']::-webkit-inner-spin-button,
+    input[type='number']::-webkit-outer-spin-button {
+      /* stylelint-disable property-no-vendor-prefix */
+      -webkit-appearance: none;
+      /* stylelint-enable property-no-vendor-prefix */
+      margin: 0;
     }
   }
+
   label {
     font-size: 1rem;
   }
+
   .cp-name .formly-input-wrapper {
     width: 20rem;
     font-family: $brand-font-light;
     font-size: $font-size-base;
   }
+
   .cp-num .formly-input-wrapper {
     width: 13rem;
     font-family: $brand-font-light;
     font-size: $font-size-base;
   }
+
   .cp-time .formly-input-wrapper {
     width: 8.5rem;
     font-family: $brand-font-light;
     font-size: $font-size-base;
   }
+
   .cp-num .formly-input-wrapper,
   .cp-time .formly-input-wrapper {
     @include vr-spacing(mb, 1);
@@ -69,7 +88,7 @@
       background: $gray-light-2;
     }
 
-    & span {
+    span {
       font-size: $font-size-h4;
       font-family: $brand-font-cisco-TT-Light;
       color: $gray-dark-2;
@@ -81,7 +100,8 @@
 
     li .hunt-member-line {
       @include vr-spacing(ph, 0.5);
-      & span {
+
+      span {
         font-size: 1rem;
       }
     }
@@ -97,11 +117,13 @@
 }
 
 .cp-edit-range {
-  width: 100%; 
+  width: 100%;
+
   .columns {
     text-align: center;
     padding: 0;
   }
+
   .range-to {
     line-height: 2.2rem;
   }
@@ -109,22 +131,28 @@
 
 .cp-wrapper {
   @include vr-spacing(m, 1.5);
+
   .form-input {
     width: 40%;
   }
+
   p {
     @include vr-spacing(pb, 0.5);
   }
+
   .warning-typeahead {
     .icon {
       @extend .icon-warning;
-			font-size: .75rem;
+
+      font-size: 0.75rem;
       color: $color-attention;
     }
+
     .message {
       color: $color-attention;
     }
-    > input[type="text"] {
+
+    > input[type='text'] {
       border: 1px solid $color-attention;
     }
   }
@@ -141,14 +169,17 @@
 }
 
 .cpmembers {
-  @include vr-spacing(pt, .6);
+  @include vr-spacing(pt, 0.6);
+
   .form-input {
     width: 80%;
+
     @include vr-spacing(mb, 2);
   }
 
-  .select-member{
+  .select-member {
     @include vr-spacing(mb, 1.25);
+
     input {
       width: 78%;
     }
@@ -156,15 +187,19 @@
 }
 
 .cpmember {
-  width: rem-calc(250) !important;
   @include vr-spacing(mb, 0.5);
+
+  width: rem-calc(250) !important;
+
   .cp-edit & .cs-card.small {
     width: 100%;
   }
+
   &:focus {
     outline: none;
   }
 }
+
 .cpmember .hunt-member-card {
   @include vr-spacing(mt, 0);
 }
@@ -173,13 +208,13 @@
   display: none;
 }
 
-.drop-placeholder  {
+.drop-placeholder {
   height: rem-calc(40);
   width: rem-calc(250);
   border: 1px dashed $gray-base;
-  @include vr-spacing(mb, .5);
-}
 
+  @include vr-spacing(mb, 0.5);
+}
 
 .dragover {
   .cs-card.header-background header {

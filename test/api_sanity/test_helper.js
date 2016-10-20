@@ -112,6 +112,18 @@ var auth = {
     pass: 'C1sc0123!',
     org: 'e9e33cac-eb07-4c34-8240-d08a43d0adce'
   },
+  'sso-e2e-test-org': {
+    user: 'fakegmuser+ssotestorg@gmail.com',
+    pass: 'C1sc0123!',
+    org: '3aa8a8a2-b953-4905-b678-0ae0a3f489f8'
+  },
+  'sso-e2e-test-org-mailsac': {
+    user: 'abc@mailsac.com',
+    pass: 'P@ssword123',
+    org: '3aa8a8a2-b953-4905-b678-0ae0a3f489f8',
+    adId: 'atlasad\\abc',
+    adPass: 'P@ssword123'
+  },
   'mockcisco-support-user': {
     user: 'phtest77+testbilling@gmail.com',
     pass: 'C1sc0123!',

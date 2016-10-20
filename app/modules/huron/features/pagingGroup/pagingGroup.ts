@@ -1,7 +1,5 @@
-import { INumber } from './pgNumber.service';
-
 export interface IPagingGroup extends ng.resource.IResource<IPagingGroup> {
+  groupId?: string;
   name: string;
-  number: INumber;
-  uuid: string;
+  extension: string;
 }

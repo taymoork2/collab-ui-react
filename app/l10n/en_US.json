@@ -137,6 +137,8 @@
     "resendActivation": "Resend Activation",
     "deleteUserSuccess": "User {{email}} deleted successfully; in some cases it may take up to 24 hours before the user is removed from their Spark Rooms",
     "deleteUserError": "Error deleting user.",
+    "deleteCareUserSuccess": "User {{email}} deleted successfully from Care",
+    "deleteCareUserFailure": "Error deleting user {{email}} from Care.",
     "deleteUserDnFallbackError": "Error deleting user. The user's directory number is used as the fallback destination for Hunt Group(s).",
     "onboardSuccess": "{{email}} onboarded successfully",
     "onboardError": "{{email}} not onboarded. Status: {{status}}",
@@ -1345,12 +1347,16 @@
     "signInButton": "Sign In Again"
   },
   "errors": {
-    "status403": "Authorization failed. You do not have administrator priviledges. You will automatically be logged out in a few seconds.",
     "status401": "Authorization failed. Server unable to process authorization token. You will automatically be logged out in a few seconds.",
+    "status403": "Authorization failed. You do not have administrator priviledges. You will automatically be logged out in a few seconds.",
+    "status404": "Requested resource not found.",
+    "statusCancelled": "The request was cancelled.",
+    "statusOffline": "Your network is currently offline. Please try again.",
+    "statusRejected": "The request was unable to be made. Please try again.",
+    "statusUnknown": "An unknown error has occurred.",
     "serverDown": "Authorization failed. Server may be down, please contact system administrator. You will automatically be logged out in a few seconds.",
     "expired": "Your session is expired or unauthorized. You will automatically be logged out in a few seconds. Please login again to continue using the service.",
     "unsupported": "You are using an <strong>outdated</strong> version of Internet Explorer. Please <a href='http://windows.microsoft.com/en-us/internet-explorer/download-ie' target='_blank'>upgrade your browser</a> to version 11 or higher.",
-    "status404": "Requested resource not found.",
     "statusError": "Request failed with status: {{status}}.",
     "csvError": "Export failed.",
     "videoError": "There is a problem with the video you are trying to play."
@@ -1572,7 +1578,8 @@
     "hybridServiceNames": {
       "squared-fusion-mgmt": "Hybrid Management Service",
       "squared-fusion-uc": "Hybrid Call Service",
-      "squared-fusion-cal": "Hybrid Calendar Service"
+      "squared-fusion-cal": "Hybrid Calendar Service",
+      "hybrid-data-security": "Hybrid Data Security"
     },
     "connectorNames": {
       "squared-fusion-uc": "Call Connector",
@@ -1622,7 +1629,9 @@
         "squared-fusion-uc": "Users can share content from the Cisco Spark app during a call from their work phones and view their call history in the app.",
         "squared-fusion-cal": "Add @spark to an invitation to create a Cisco Spark room for your meeting. Add @webex to attach your WebEx Personal Room.",
         "squared-fusion-ec": "Users' incoming calls will ring their work phones and the Cisco Spark app. Users can call their colleagues from either their phones or the app, too."
-      }
+      },
+      "defaultWebExSite": "Default WebEx Site:",
+      "defaultWebExSiteNotSet": "Not set"
     },
     "alarms": {
       "alarms": "Alarms",
@@ -1659,7 +1668,7 @@
       "upgradeScheduleSubHeader": "Upgrade Schedule",
       "resourceGroupsHeader": "Resource Groups",
       "resourceGroupsSubHeader": "Resource Group",
-      "resourcegroupsParagraph": "Resource Groups are sets of clusters you can assign users to.",
+      "resourcegroupsParagraph": "Select the resource group this cluster belongs to.",
       "removeFromResourceGroupDialogHeader": "Remove from Resource Group",
       "removeFromResourceGroupDialogParagraph": "{{ClusterName}} will be removed from \"{{CurrentResourceGroup}}\".",
       "removeFromResourceGroupDialogConnectorsList": "The following connectors will be upgraded to \"Stable\" in the next upgrade window: ",
@@ -1671,7 +1680,7 @@
       "moveResourceGroupSuccess": "{{ClusterName}} has been assigned to \"{{NewResourceGroup}}\".",
       "releasechannelHeader": "Release Channel",
       "releasechannelSubHeader": "Release Channel",
-      "releasechannelParagraph": "The release channel for this cluster is defined by the Resource Group it belongs to.",
+      "releasechannelParagraph": "To change the release channel for this cluster, assign it to a resource group with the preferred release channel.",
       "deactivateServicesHeader": "Deactivate Services",
       "deactivateServicesParagraph": "Deactivate {{ServiceName}} to remove any service-related functionality from this cluster.",
       "deactivateServicesSubHeader": "Deactivate {{service}}",
@@ -1816,9 +1825,9 @@
         "expressway": "Expressway",
         "mediafusion": "Media",
         "no-services": "No services",
-        "missing-clusters": "<a ng-click=\"{{onclick}}\">Assign clusters</a> to complete this group",
+        "missing-clusters": "<a ng-click=\"{{onclick}}\">Assign clusters</a> and users to complete this group",
         "missing-users": "<a ng-click=\"{{onclick}}\">Assign users</a> to complete this group",
-        "users-in-limbo": "<a ng-click=\"{{onclick}}\">Remove</a> this group to unassign remaining users"
+        "users-in-limbo": "Either <a ng-click=\"{{onclick}}\">remove</a> this group to reset user assignments or <a ng-click=\"{{onclick}}\">assign clusters</a> to restore services."
       },
       "add-resource": {
         "title": "Add Resource",
@@ -1854,18 +1863,18 @@
       "add-resource-group": {
         "title": "Create new Resource Group",
         "name": {
-          "title": "Resource Group Details",
-          "description": "Resource groups are a set of clusters that you may assign users to.",
-          "subtitle": "Resource Group Name",
+          "title": "Resource Group name",
+          "description": "A resource group is a set of Expressway clusters to which you can assign a subset of your users. See the <strong>documentation</strong> for more guidance.",
+          "subtitle": "Name",
           "placeholder": "Enter name"
         },
         "release-channel": {
           "title": "Release Channel",
-          "description": "All the Hybrid services in the Resource Group will run on this release channel.",
+          "description": "All the Hybrid Services in this resource group will run on the release channel that you choose.",
           "stable": "Stable",
           "stableHelpText": "The official release software for Hybrid Services",
           "beta": "Beta",
-          "betaHelpText": "If you want your users to test new features before they are released",
+          "betaHelpText": "Use this channel so that users can test new features before they are released.",
           "latest": "Latest",
           "latestHelpText": "For developers and early adopters",
           "error": "Could not create the Resource Group",
@@ -1886,23 +1895,26 @@
     "resourceGroupSettings": {
       "pageTitle": "{{groupName}} Settings",
       "releaseChannelHeader": "Release Channel",
-      "releaseChannelDescription": "Select the Release Channel for all services in this group",
+      "releaseChannelDescription": "Select the release channel for all Hybrid Services running in this group.",
       "clustersHeader" : "Clusters",
       "clustersAssign" : "Assign Clusters",
-      "clustersDescription" : "Add one or more existing clusters to this group",
+      "clustersDescription" : "Add one or more existing Expressway clusters to this group.",
       "usersHeader": "Users",
       "usersAssign": "Assign Users",
-      "usersDescription": "To assign users to this Resource Group you can pick the Resource Group in the Hybrid Services section of the Overview panel in the Users page or assign them in bulk using CSV. Refer to documentation to assign users with CSV upload.",
+      "usersDescription1": "Choose users who you want to gain access to configuration in the resource group (for example, beta testers). You can:",
+      "usersDescription2": "Assign them individually from the <a ui-sref='users.list'>users page</a>.",
+      "usersDescription3": "Assign them in bulk using the <a ui-sref='users.list'>CSV template</a>.",
+      "usersDescription4": "Refer to <strong>documentation</strong> if you need help.",
       "renameGroup": "Rename",
-      "renameGroupDescription": "Rename the Resource Group",
+      "renameGroupDescription": "Rename the resource group",
       "removeGroup": "Remove",
-      "removeGroupDescription": "Remove the Resource Group from Cisco Collaboration Cloud",
+      "removeGroupDescription": "Remove the resource group from Cisco Collaboration Cloud",
       "groupNameCannotByEmpty": "Resource group name cannot be empty",
       "groupNameSaved": "Rename successful",
-      "duplicateName": "A Resource Group with that name already exists. Please choose another name.",
-      "loadFailed": "Unable to load the Resource Group details. Please try again later.",
+      "duplicateName": "A resource group with that name already exists. Please choose another name.",
+      "loadFailed": "Unable to load the resource group details. Please try again later.",
       "groupReleaseChannelSaved": "Release channel saved successfully",
-      "removeGroupReq": "To remove this Resource Group, all assigned clusters must be removed first",
+      "removeGroupReq": "To remove this resource group, all assigned clusters must be removed first",
       "deleteSuccess": "Resource group successfully removed",
       "orgHasNoAccessToChannel": "The resource group is configured with the “{{currentReleaseChannel}}” release channel, which is no longer available to your organization. Set the release channel to “{{stableReleaseChannel}}” to restore service.",
       "setToStable": "Set to {{stableReleaseChannel}}",
@@ -1911,9 +1923,9 @@
     "assignClustersModal": {
       "title": "Assign Clusters to <q>{{groupName}}</q>",
       "subtitle": "Assign existing",
-      "description": "Assign existing clusters to the <q>{{groupName}}</q> Resource Group by clicking on an available cluster.",
+      "description": "Move existing clusters to the resource group on the right.",
       "availableClusters": "Available Clusters",
-      "warning": "Possible service outage – Moving clusters to a Resource Group may cause a service outage while clusters and users are being moved.",
+      "warning": "Possible Service Outage - Moving clusters to a resource group may cause a service outage if available clusters don’t have enough capacity to host all users.",
       "noServices": "No services",
       "errorLoading": "Could not load the list of clusters."
     },
@@ -1929,6 +1941,15 @@
       "remove": "Remove"
     },
     "genericFailure": "An unexpected error occurred. Please try again later."
+  },
+  "hds" : {
+    "settings" : {
+      "deactivateService" : "Deactivate Service",
+      "deactivateServiceHeader" : "Deactivate Hybrid Data Security",
+      "deactivateServiceDesc" : "Deactivating Service...",
+      "deactivateServiceButton" : "Deactivate",
+      "deactivateServiceConfirmation" : "Confirm Deactivation"
+    }
   },
   "ediscovery": {
     "browserTabHeaderTitle": "Spark Activity Reports",
@@ -2386,12 +2407,15 @@
     "initialAnnouncement" : "Initial Announcement",
     "initialHelpText" : "This message will play for the caller upon entry into the queue.",
     "fallbackLabel": "Fallback" ,
-    "uploadedFile": "Uploaded File",
+    "uploadedFile": "Upload File",
     "uploadFailed": "File upload failed, unable to connect. Please try again.",
     "dragAndDropWav": "Drag and Drop .wav file here or click to browse",
     "import": "Import",
     "sayAndError": "For Say Messages and Error Messages",
     "callAssociatedAAPreview": "Call number associated with this auto attendant to preview.",
+    "holdMusic": "Hold Music",
+    "standardTransferMusic": "Cisco Standard Transfer Music",
+    "musicOnHoldHelp": "File will repeat while the caller is on hold.",
     "cancelUpload": "Are you sure you want to cancel this upload?",
     "overwriteUpload": "Are you sure you want to overwrite the current file?",
     "overwrite": "Overwrite",
@@ -2568,10 +2592,6 @@
     "code": "PI",
     "modalDescription": "Call Pickup feature allows users to pick up incoming calls within a group of users."
   },
-  "futureFeature":{
-    "title": "Future Feature",
-    "modalDescription": "Amazing new Spark Call feature coming soon"
-  },
   "pagingGroup": {
     "title": "Paging Group",
     "code": "PG",
@@ -2590,7 +2610,10 @@
     "pagingGroupName": "Paging Group Name",
     "pagingGroupNumber": "Paging Group Number",
     "saveLabel": "Do you want to save your changes?",
-    "successUpdate": "'{{pagingGroupName}}' paging group has been updated successfully"
+    "successUpdate": "'{{pagingGroupName}}' paging group has been updated successfully",
+    "successSave": "'{{pagingGroupName}}' paging group has been created successfully",
+    "errorUpdate": "Failed to update the paging group: '{{message}}'",
+    "errorSave": "Failed to create the paging group: '{{message}}'"
   },
 "telephonyPreview": {
     "lines": "Lines",

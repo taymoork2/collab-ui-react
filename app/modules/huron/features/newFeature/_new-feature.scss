@@ -3,11 +3,13 @@
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
+
   @include vr-spacing(pt, 0);
   @include vr-spacing(pr, 2);
   @include vr-spacing(pb, 2);
   @include vr-spacing(pl, 2);
-  & button {
+
+  button {
     // The button options in the body.
     display: flex;
     flex-direction: column;
@@ -16,26 +18,19 @@
     color: $gray-darkest;
     background-color: $gray-lightest;
     border-style: hidden;
-    @include vr-spacing(mr, .125);
-    @include vr-spacing(ml, .5);
+
+    @include vr-spacing(mr, 0.125);
+    @include vr-spacing(ml, 0.5);
     @include vr-spacing(mb, 1);
     @include vr-spacing(p, 0);
+
     &:hover {
       background-color: $gray-light;
     }
+
     &:first-child:nth-last-child(4),
     &:first-child:nth-last-child(4) ~ button {
       flex: 1 1 48%;
-    }
-  }
-
-  .future-feature{
-    pointer-events: none;
-    background-color: $white;
-    .feature-icon-month {
-      @include vr-spacing(pt, 2.5);
-      margin: 0 auto;
-      color: $gray-light-2;
     }
   }
 }
@@ -44,7 +39,6 @@
   flex-grow: 1;
   flex-basis: $flex-basis;
   max-width: 100%;
-
   $multiplier: 1;
   $current-width: 266px;
 
@@ -52,9 +46,10 @@
     $current-width: $current-width + $flex-basis;
     $multiplier: $multiplier + 1;
     $temp-max-width-percent: percentage(1/$multiplier);
+    $total: $flex-basis * $multiplier;
 
-    @media only screen and (min-width: $flex-basis * $multiplier) {
-        max-width: calc(#{$temp-max-width-percent} - .725rem);
+    @media only screen and (min-width: $total) {
+      max-width: calc(#{$temp-max-width-percent} - 0.725rem);
     }
   }
 }
@@ -70,6 +65,7 @@
 
 .feature-icon-container {
   @include vr-spacing(pt, 2.5);
+
   .icons {
     width: rem-calc(120);
     margin: 0 auto;
@@ -77,17 +73,20 @@
     flex-wrap: wrap;
     justify-content: center;
     color: $gray-base;
-    &.show-line:before {
+
+    &.show-line::before {
       content: ' ';
       border-left: 1px solid $gray-base;
       height: 1rem;
       position: relative;
       top: rem-calc(46);
     }
+
     &.no-line {
       padding-top: 1rem;
     }
-    &.show-tree-line:before {
+
+    &.show-tree-line::before {
       content: '\00a0\00a0\00a0\00a0\00a0\00a0\00a0\00a0\00a0\00a0\00a0\00a0\00a0';
       border-top: 1px solid $gray-base;
       border-left: 1px solid $gray-base;
@@ -99,9 +98,11 @@
       top: rem-calc(46);
     }
   }
+
   .icon {
     font-size: 24px;
     flex-basis: 50%;
+
     &:first-child {
       flex-basis: 100%;
       padding-bottom: 26px;
@@ -120,8 +121,9 @@
   border-radius: 50%;
   width: rem-calc(78);
   height: rem-calc(78);
-  @include vr-spacing(p, .625);
   padding-top: 12px;
+
+  @include vr-spacing(p, 0.625);
 }
 
 .feature-icon-color-AA {
@@ -140,12 +142,13 @@
   color: $gray-base;
 }
 
-.feature-icon-color-PI{
-  color: $color-attention-base
+.feature-icon-color-PI {
+  color: $color-attention-base;
 }
 
 .feature-label-container {
   @include vr-spacing(pt, 2);
+
   color: $color-people-light;
 }
 
@@ -153,6 +156,7 @@
   @include vr-spacing(pt, 2);
   @include vr-spacing(ph, 1.5);
   @include vr-spacing(pb, 1.5);
+
   &.text-center {
     padding: 20px 20%;
   }

@@ -14,8 +14,8 @@ var ReportsPage = function () {
 
   // Total Rooms
   this.totalRoomsHeader = element(by.cssContainingText('.report-section-header', 'Total Rooms'));
-  this.totalRoomsDescription = element(by.css('.customer-avg-rooms')).element(by.css('.report-description'));
-  this.totalRoomsGraph = element(by.id('avgRoomsdiv'));
+  this.totalRoomsDescription = element(by.id('avgRooms')).element(by.css('article section p'));
+  this.totalRoomsGraph = element(by.id('avgRoomsChart'));
 
   // active user
   this.activeHeader = element(by.cssContainingText('.report-section-header', 'Active Users'));
@@ -39,8 +39,8 @@ var ReportsPage = function () {
 
   // Files Shared
   this.filesSharedHeader = element(by.cssContainingText('.report-section-header', 'Files Shared'));
-  this.filesSharedDescription = element(by.css('.customer-files-shared')).element(by.css('.report-description'));
-  this.filesSharedDiv = element(by.id('filesSharedDiv'));
+  this.filesSharedDescription = element(by.id('filesShared')).element(by.css('article section p'));
+  this.filesSharedDiv = element(by.id('filesSharedChart'));
 
   // active user population
   this.activePopulationHeader = element(by.id('userPopulation')).element(by.cssContainingText('.report-section-header', 'Active User Population by Company'));
