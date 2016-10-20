@@ -497,7 +497,7 @@
     "betaFeatures": "Beta Features",
     "errorGettingToggles": "There was a problem getting the selected organizations feature toggles",
     "errorSettingToggle": "There was a problem setting a toggle",
-    "toggleModSuccess": "All modified toggles were updated",
+    "toggleModSuccess": "The Feature Toggle: {{featureToggleName}} was successfully set to {{toggleState}} for {{orgId}}",
     "startSearching": "To begin, search for an organization",
     "noSearchResults": "Search yielded no results",
     "allowBetaChannels": "Allow Beta Release Channel",

@@ -56,8 +56,8 @@ describe('Controller: OrganizationFeaturesCtrl', function () {
     toggle.model = !toggle.model;
 
     // invoke click callback
-    controller.handleClick();
-    expect(FeatureToggleService.generateFeatureToggleRule).toHaveBeenCalledWith(currentOrg.id, toggle.name, toggle.model);
+    controller.handleClick(toggle);
+    expect(FeatureToggleService.generateFeatureToggleRule).toHaveBeenCalled();
     expect(FeatureToggleService.setFeatureToggles).toHaveBeenCalled();
   });
 });
