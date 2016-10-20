@@ -73,7 +73,7 @@
 %aa-menu-actions {
   width: 100%;
   & .csSelect-container {
-    @include vr-spacing(pt, 1);
+    @include vr-spacing(pt, 0);
   }
 
   & textarea {

@@ -1,21 +1,7 @@
-.aa-message-type-select-list {
-  @include vr-spacing(mb, .75);
-  .select-toggle {
-    width: 100%;
-    @include vr-spacing(pr, 1.75);
-  }
-  .select-toggle > i {
-    @include vr-spacing(mr, 0);
-    @include vr-spacing(ml, -0.5);
-  }
-  .dropdown-menu {
-    width: 100%;
-  }
-}
-
 .aa-message-type-textarea {
-  @include vr-spacing(mb, 1);
+//  @include vr-spacing(mb, 1);
     line-height: 1.5rem;
+    @include vr-spacing(ml, 0);
     @include vr-spacing(pt, .75);
     @include vr-spacing(pb, .75);
     @include vr-spacing(pl, .75);

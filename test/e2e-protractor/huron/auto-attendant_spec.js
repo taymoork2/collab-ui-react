@@ -180,7 +180,8 @@ describe('Huron Auto Attendant', function () {
       utils.expectIsEnabled(autoattendant.saveButton);
 
       // language and voice
-      autoattendant.scrollIntoView(autoattendant.phonelanguageDropDownOptions);
+      // autoattendant.scrollIntoView(autoattendant.phonelanguageDropDownOptions);
+      autoattendant.scrollIntoView(autoattendant.phonesayMessageLanguage);
       utils.click(autoattendant.phonesayMessageLanguage);
       utils.click(autoattendant.phonelanguageDropDownOptions);
       utils.click(autoattendant.phonesayMessageVoice);
@@ -338,6 +339,8 @@ describe('Huron Auto Attendant', function () {
 
       // On timing issues here, see AUTOATTN-556
       utils.expectCount(autoattendant.phoneMenuAll, 2);
+
+      autoattendant.scrollIntoView(autoattendant.phonesayMessageLanguage);
 
       // Click on the language for the new (first) Phone Menu we just added
       utils.click(autoattendant.phoneSayMessageLanguageFirst);

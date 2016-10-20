@@ -73,12 +73,7 @@
     //not for phone menu, dial by ext, or submenu at this point
     //and is also feature toggled
     function isMediaUploadToggle() {
-      var mediaUploadOn = false;
-      if (vm.sayMessageType == sayMessageType.ACTION && (AACommonService.isMediaUploadToggle())) {
-        mediaUploadOn = true;
-      }
-
-      return mediaUploadOn;
+      return AACommonService.isMediaUploadToggle();
     }
 
     function setVoiceOptions() {
