@@ -3,7 +3,7 @@
 /* globals fit */
 
 describe('Controller: TrialPstnCtrl', function () {
-  var controller, trials, $httpBackend, $scope, $q, HuronConfig, TrialPstnService, TrialService, PstnSetupService;
+  var controller, trials, $httpBackend, $scope, $q, HuronConfig, TrialPstnService, TrialService, PstnSetupService, TerminusStateService, FeatureToggleService;
 
   var customerName = 'Wayne Enterprises';
   var customerEmail = 'batman@darknight.com';
@@ -12,6 +12,12 @@ describe('Controller: TrialPstnCtrl', function () {
     name: 'IntelePeer',
     uuid: '23453-235sdfaf-3245a-asdfa4'
   };
+
+  var states = [{
+    name: 'Texas',
+    abbreviation: 'TX'
+  }];
+
   var numberInfo = {
     state: {
       name: 'Texas',
@@ -61,16 +67,23 @@ describe('Controller: TrialPstnCtrl', function () {
   beforeEach(angular.mock.module('Huron'));
   beforeEach(angular.mock.module('Core'));
 
-  beforeEach(inject(function ($rootScope, _$q_, $controller, _$httpBackend_, _HuronConfig_, _TrialPstnService_, _TrialService_, _PstnSetupService_) {
+  beforeEach(inject(function ($rootScope, _$q_, $controller, _$httpBackend_, _HuronConfig_, _TrialPstnService_, _TrialService_, _PstnSetupService_, _TerminusStateService_, _FeatureToggleService_) {
     $scope = $rootScope.$new();
     $httpBackend = _$httpBackend_;
     HuronConfig = _HuronConfig_;
     TrialPstnService = _TrialPstnService_;
     TrialService = _TrialService_;
     PstnSetupService = _PstnSetupService_;
+    TerminusStateService = _TerminusStateService_;
+    FeatureToggleService = _FeatureToggleService_;
     $q = _$q_;
 
     spyOn(TrialService, 'getDeviceTrialsLimit');
+    spyOn(TerminusStateService, 'query').and.returnValue({
+      '$promise': $q.when(states)
+    });
+
+    spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
 
     //Test initialize
     $scope.trial = TrialService.getData();
@@ -124,7 +137,7 @@ describe('Controller: TrialPstnCtrl', function () {
 
       $httpBackend.flush();
 
-      expect(controller.areaCodeOptions).toEqual(newAreaCodes);
+      expect(controller.pstn.areaCodeOptions).toEqual(newAreaCodes);
     });
   });
 
