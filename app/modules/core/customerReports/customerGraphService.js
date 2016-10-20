@@ -12,7 +12,7 @@
     var spanClose = '</span>';
 
     // div variables
-    var activeUserDiv = 'activeUsersdiv';
+    var activeUserDiv = 'activeUsersChart';
     var avgRoomsdiv = 'avgRoomsChart';
     var filesSharedDiv = 'filesSharedChart';
     var mediaQualityDiv = 'mediaQualityChart';

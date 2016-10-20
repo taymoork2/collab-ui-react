@@ -79,7 +79,7 @@ class PartnerReportCtrl {
 
   // Active User Options
   public activeUserReportOptions: IReportCard = {
-    animate: false,
+    animate: true,
     description: 'activeUsers.description',
     headerTitle: 'activeUsers.activeUsers',
     id: 'activeUsers',
@@ -90,9 +90,13 @@ class PartnerReportCtrl {
   };
 
   public activeUserSecondaryReportOptions: ISecondaryReport = {
+    alternateTranslations: false,
     broadcast: 'ReportCard::UpdateSecondaryReport',
     description: 'activeUsers.mostActiveDescription',
     display: false,
+    emptyDescription: 'activeUsers.noActiveUsers',
+    errorDescription: 'activeUsers.errorActiveUsers',
+    search: false,
     state: this.ReportConstants.REFRESH,
     sortOptions: [{
       option: 'userName',
