@@ -1,5 +1,4 @@
 import { CallForward } from '../../callForward';
-import { BLOCK_CALLERID_TYPE, CUSTOM_COMPANY_TYPE, CallerIdConfig, CallerIdOption } from '../../callerId';
 import { LineService, LineConsumerType, LINE_CHANGE, Line } from '../services';
 import { LineOverviewService, LineOverviewData } from './index';
 import { DirectoryNumberOptionsService } from '../../directoryNumber';
@@ -14,7 +13,6 @@ class LineOverview implements ng.IComponentController {
   private ownerName: string;
   private numberId: string;
   private consumerType: LineConsumerType;
-
   public form: ng.IFormController;
   public saveInProcess: boolean = false;
   public actionList: Array<IActionItem>;
@@ -24,26 +22,9 @@ class LineOverview implements ng.IComponentController {
 
   // Directory Number properties
   public esnPrefix: string;
-  public internalIsWarn: boolean;
   public internalNumbers: Array<string>;
-  public internalWarnMsg: string;
   public externalNumbers: Array<string>;
   public showExtensions: boolean;
-
-  // Call Forward properties
-  public voicemailEnabled: boolean;
-
-  // Simultaneous Calls properties
-  public incomingCallMaximum: number;
-
-  // Caller Id Component Properties
-  public callerIdOptions: Array<Object> = [];
-  public callerIdSelected: Object;
-  public customCallerIdName: string;
-  public customCallerIdNumber: string;
-  public blockedCallerId_label: string;
-  public companyCallerId_label: string;
-  public custom_label: string;
 
   //SharedLine Properties
   public newSharedLineMembers: Array<Member> = [];
@@ -63,17 +44,12 @@ class LineOverview implements ng.IComponentController {
     private MemberService: MemberService,
     private Notification: Notification,
     private SharedLineService: SharedLineService,
-  ) {
-    this.blockedCallerId_label = $translate.instant('callerIdPanel.blockedCallerId');
-    this.companyCallerId_label = $translate.instant('callerIdPanel.companyCallerId');
-    this.custom_label = 'Custom';
-  }
+  ) { }
 
   public $onInit(): void {
     this.initActions();
     this.initConsumerType();
     this.initLineOverviewData();
-    this.initCallerId();
   }
 
   private initActions(): void {
@@ -123,10 +99,11 @@ class LineOverview implements ng.IComponentController {
     }
   }
 
-  public setCallerId(callerIdSelected, callerIdName, callerIdNumber): void {
-    this.customCallerIdName = callerIdName;
-    this.customCallerIdNumber = callerIdNumber;
-    this.callerIdSelected = callerIdSelected;
+  public setCallerId(callerIdSelected, callerIdName, callerIdNumber, companyNumber): void {
+    _.set(this.lineOverviewData, 'callerId.customCallerIdName', callerIdName);
+    _.set(this.lineOverviewData, 'callerId.customCallerIdNumber', callerIdNumber);
+    _.set(this.lineOverviewData, 'callerId.externalCallerIdType', _.get(callerIdSelected, 'value'));
+    _.set(this.lineOverviewData, 'callerId.companyNumber', companyNumber);
     this.checkForChanges();
   }
 
@@ -144,20 +121,22 @@ class LineOverview implements ng.IComponentController {
   }
 
   public deleteSharedLineMember(sharedLine: SharedLine): void {
-    this.deleteSharedLineMessage = this.$translate.instant('sharedLinePanel.disassociateUser', {
-        line: this.lineOverviewData.line.internal,
-        user: this.ownerName,
-      });
+    this.deleteSharedLineMessage = this.$translate.instant('sharedLinePanel.disassociateUser');
     this.$modal.open({
       templateUrl: 'modules/huron/sharedLine/removeSharedLineMember.html',
       scope: this.$scope,
       type: 'dialog',
     }).result.then( () => {
+      let redirect: boolean = _.isEqual(this.ownerId, _.get(sharedLine, 'place.uuid')) || _.isEqual(this.ownerId, _.get(sharedLine, 'user.uuid'));
       return this.SharedLineService.deleteSharedLine(this.consumerType, this.ownerId, this.lineOverviewData.line.uuid, sharedLine.uuid)
       .then( () => {
         this.$scope.$emit(LINE_CHANGE);
-        this.initLineOverviewData();
         this.Notification.success('directoryNumberPanel.disassociationSuccess');
+        if (redirect) {
+          this.$state.go(this.$state.$current.parent.name);
+        } else {
+          this.initLineOverviewData();
+        }
       })
       .catch( (response) => this.Notification.errorResponse(response, 'directoryNumberPanel.error'));
     });
@@ -233,11 +212,6 @@ class LineOverview implements ng.IComponentController {
     this.form.$setUntouched();
   }
 
-  private initCallerId(): void {
-    this.callerIdOptions.push(new CallerIdOption(this.custom_label, new CallerIdConfig('', '',  '', CUSTOM_COMPANY_TYPE)));
-    this.callerIdOptions.push(new CallerIdOption(this.blockedCallerId_label, new CallerIdConfig('', this.$translate.instant('callerIdPanel.blockedCallerIdDescription'), '', BLOCK_CALLERID_TYPE)));
-  }
-
   private setShowActionsFlag(line: Line): boolean {
     return (!!line.uuid && !line.primary);
   }
@@ -260,9 +234,9 @@ export class LineOverviewComponent implements ng.IComponentOptions {
   public templateUrl = 'modules/huron/lines/lineOverview/lineOverview.html';
   public bindings = {
     ownerType: '@',
-    ownerId: '@',
-    ownerName: '@',
-    numberId: '@',
+    ownerId: '<',
+    ownerName: '<',
+    numberId: '<',
     voicemailEnabled: '<',
   };
 }

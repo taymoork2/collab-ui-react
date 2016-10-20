@@ -6,8 +6,8 @@ describe('DeviceUsageMockService', function () {
 
   var $timeout, DeviceUsageMockService, DeviceUsageMockData;
 
-  var day1 = "20161001";
-  var day2 = "20161002";
+  var day1 = 20161001;
+  var day2 = 20161002;
 
   beforeEach(inject(function (_$timeout_, _DeviceUsageMockService_, _DeviceUsageMockData_) {
     DeviceUsageMockService = _DeviceUsageMockService_;

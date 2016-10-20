@@ -12,6 +12,7 @@ describe('Service: LineOverviewService', () => {
       'LineService',
       'CallForwardService',
       'SharedLineService',
+      'CallerIDService',
       '$rootScope',
       '$scope',
       '$q'
@@ -26,6 +27,12 @@ describe('Service: LineOverviewService', () => {
       siteToSite: '710012345',
       incomingCallMaximum: 2,
     });
+    this.callerId = {
+      externalCallerIdType: 'EXT_CALLER_ID_COMPANY_NUMBER',
+      companyNumber: '2234232',
+      customCallerIdName: null,
+      customCallerIdNumber: null,
+    };
 
     this.sharedLines = [
       new SharedLine({
@@ -93,6 +100,8 @@ describe('Service: LineOverviewService', () => {
     this.lineOverview.line = this.line;
     this.lineOverview.callForward = this.callForward;
     this.lineOverview.sharedLines = this.sharedLines;
+    this.lineOverview.callerId = this.callerId;
+    this.lineOverview.companyNumbers = [];
 
     this.getLineDefer = this.$q.defer();
     spyOn(this.LineService, 'getLine').and.returnValue(this.getLineDefer.promise);
@@ -118,7 +127,17 @@ describe('Service: LineOverviewService', () => {
     this.getSharedLinePhonesDefer = this.$q.defer();
     spyOn(this.SharedLineService, 'getSharedLinePhoneList').and.returnValue(this.getSharedLinePhonesDefer.promise);
 
+    this.getCallerIdDefer = this.$q.defer();
+    spyOn(this.CallerIDService, 'getCallerId').and.returnValue(this.getCallerIdDefer.promise);
+
+    this.updateCallerIdDefer = this.$q.defer();
+    spyOn(this.CallerIDService, 'updateCallerId').and.returnValue(this.updateCallerIdDefer.promise);
+
+    this.listCompanyNumbersDefer = this.$q.defer();
+    spyOn(this.CallerIDService, 'listCompanyNumbers').and.returnValue(this.listCompanyNumbersDefer.promise);
+
     spyOn(this.LineOverviewService, 'cloneLineOverviewData').and.callThrough();
+    spyOn(this.$q, 'all').and.callThrough();
   });
 
   describe('get exising line', () => {
@@ -127,6 +146,8 @@ describe('Service: LineOverviewService', () => {
       this.getCallForwardDefer.resolve(this.callForward);
       this.getSharedLinesDefer.resolve(this.sharedLines);
       this.getSharedLinePhonesDefer.resolve(this.sharedlinePhones);
+      this.getCallerIdDefer.resolve(this.callerId);
+      this.listCompanyNumbersDefer.resolve([]);
     });
     it('should call LineService.getLine and CallForward.getCallForward', function () {
       this.LineOverviewService.get(LineConsumerType.PLACES, '12345', '0000001').then( (lineOverview) => {
@@ -136,6 +157,7 @@ describe('Service: LineOverviewService', () => {
       expect(this.LineService.getLine).toHaveBeenCalled();
       expect(this.CallForwardService.getCallForward).toHaveBeenCalled();
       expect(this.SharedLineService.getSharedLineList).toHaveBeenCalled();
+      expect(this.CallerIDService.getCallerId).toHaveBeenCalled();
       expect(this.LineOverviewService.cloneLineOverviewData).toHaveBeenCalled();
     });
 
@@ -157,31 +179,44 @@ describe('Service: LineOverviewService', () => {
       this.$rootScope.$digest();
       expect(this.LineOverviewService.matchesOriginalConfig(this.lineOverview)).toBeTruthy();
     });
-  });
 
-  describe('update exising line', () => {
-    beforeEach(function () {
-      this.getLineDefer.resolve(_.cloneDeep(this.line));
-      this.getCallForwardDefer.resolve(_.cloneDeep(this.callForward));
-      this.getSharedLinesDefer.resolve(_.cloneDeep(this.sharedLines));
-      this.getSharedLinePhonesDefer.resolve(_.cloneDeep(this.sharedlinePhones));
-    });
-    it('should only update line when only line is changed', function () {
-      this.LineOverviewService.get(LineConsumerType.PLACES, '12345', '0000001');
-      this.$rootScope.$digest();
-      this.lineOverview.line.external = '+9725551212';
-      this.LineOverviewService.save(LineConsumerType.PLACES, '12345', '0000001',  this.lineOverview, []);
-      expect(this.LineService.updateLine).toHaveBeenCalled();
-      expect(this.CallForwardService.updateCallForward).not.toHaveBeenCalled();
-    });
+    describe('update exising line', () => {
+      beforeEach(function () {
+        this.getLineDefer.resolve(_.cloneDeep(this.line));
+        this.getCallForwardDefer.resolve(_.cloneDeep(this.callForward));
+        this.getSharedLinesDefer.resolve(_.cloneDeep(this.sharedLines));
+        this.getSharedLinePhonesDefer.resolve(_.cloneDeep(this.sharedlinePhones));
+        this.getCallerIdDefer.resolve(_.cloneDeep(this.callerId));
+      });
+      it('should only update line when only line is changed', function () {
+        this.LineOverviewService.get(LineConsumerType.PLACES, '12345', '0000001');
+        this.$rootScope.$digest();
+        this.lineOverview.line.external = '+9725551212';
+        this.LineOverviewService.save(LineConsumerType.PLACES, '12345', '0000001',  this.lineOverview, []);
+        expect(this.LineService.updateLine).toHaveBeenCalled();
+        expect(this.CallForwardService.updateCallForward).not.toHaveBeenCalled();
+        expect(this.CallerIDService.updateCallerId).not.toHaveBeenCalled();
+      });
 
-    it('should only update callForward when only callForward is changed', function () {
-      this.LineOverviewService.get(LineConsumerType.PLACES, '12345', '0000001');
-      this.$rootScope.$digest();
-      this.lineOverview.callForward.callForwardAll.destination = '88888';
-      this.LineOverviewService.save(LineConsumerType.PLACES, '12345', '0000001',  this.lineOverview, []);
-      expect(this.LineService.updateLine).not.toHaveBeenCalled();
-      expect(this.CallForwardService.updateCallForward).toHaveBeenCalled();
+      it('should only update callForward when only callForward is changed', function () {
+        this.LineOverviewService.get(LineConsumerType.PLACES, '12345', '0000001');
+        this.$rootScope.$digest();
+        this.lineOverview.callForward.callForwardAll.destination = '88888';
+        this.LineOverviewService.save(LineConsumerType.PLACES, '12345', '0000001',  this.lineOverview, []);
+        expect(this.LineService.updateLine).not.toHaveBeenCalled();
+        expect(this.CallForwardService.updateCallForward).toHaveBeenCalled();
+        expect(this.CallerIDService.updateCallerId).not.toHaveBeenCalled();
+      });
+
+      it('should only update callerId when only callerId is changed', function () {
+        this.LineOverviewService.get(LineConsumerType.PLACES, '12345', '0000001');
+        this.$rootScope.$digest();
+        this.lineOverview.callerId.externalCallerIdType = 'EXT_CALLER_ID_CUSTOM';
+        this.LineOverviewService.save(LineConsumerType.PLACES, '12345', '0000001',  this.lineOverview, []);
+        expect(this.LineService.updateLine).not.toHaveBeenCalled();
+        expect(this.CallForwardService.updateCallForward).not.toHaveBeenCalled();
+        expect(this.$q.all).toHaveBeenCalledWith([]);
+      });
     });
   });
 

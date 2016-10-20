@@ -5,15 +5,18 @@
     position: relative;
     top: rem-calc(-15);
     z-index: 1000;
+
     .select-options {
-    	padding: 0;
+      padding: 0;
     }
   }
+
   .device-number {
     font-size: rem-calc(18);
     color: $color-people-base;
     text-align: left;
   }
+
   .barchart {
     position: relative;
     top: rem-calc(-30);

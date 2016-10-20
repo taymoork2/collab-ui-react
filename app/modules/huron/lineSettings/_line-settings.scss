@@ -3,10 +3,12 @@
   .warning-icon {
     @extend .icon;
     @extend .icon-warning;
+
     font-size: 30px;
     color: $brand-warning;
     float: left;
   }
+
   .confirmation-message {
     margin-top: 7px;
     margin-left: 40px;
@@ -16,18 +18,23 @@
 .dn-help-icon {
   @extend .icon;
   @extend .icon-help;
+
   font-size: 23px;
   vertical-align: middle;
+
   &:hover {
     color: $brand-primary;
   }
+
   color: $gray-dark;
 }
 
 .esn-number-field {
-  &.steeringDigitOverlap, &.warningMargin {
+  &.steeringDigitOverlap,
+  &.warningMargin {
     margin-top: 26px;
   }
+
   .esn-extension {
     color: $text-color;
   }
@@ -42,20 +49,23 @@
 .top-padding-section-title {
   padding-top: 20px;
 }
+
 .side-panel-section {
-  & .dn-warning-text {
+  .dn-warning-text {
     @extend .warning;
+
     font-size: 0.75rem;
   }
 
-  & .warning {
-    & .select-toggle {
+  .warning {
+    .select-toggle {
       border-color: $brand-warning-dark;
 
-      & .icon-arrow-down {
-        &:after {
-          /*this is the X icon that appears when no DNs are available*/
+      .icon-arrow-down {
+        &::after {
+          // this is the X icon that appears when no DNs are available
           @extend %icon-warning;
+
           top: 0.125rem;
           left: -23px;
           position: absolute;
@@ -68,4 +78,5 @@
     }
   }
 }
+
 /*****  _line-settings  *****/

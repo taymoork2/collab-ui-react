@@ -1,38 +1,41 @@
 .hgmethods {
-
   &.large {
-    text-align:center;
+    text-align: center;
     flex-direction: column;
     flex-wrap: nowrap;
     justify-content: center;
     align-items: center;
     overflow-y: auto;
+
     > div {
       height: calc(100vh - #{$top-bar-height + $overlay-panel-height});
     }
   }
 
   .title {
-    color : $color-primary-base;
+    color: $color-primary-base;
     font-family: $brand-font-thin;
-    font-size : $font-size-h1;
+    font-size: $font-size-h1;
+
     @include vr-spacing(pt, 3);
   }
 
   .desc {
     @include vr-spacing(pt, 1);
     @include vr-spacing(pb, 2.5);
+
     color: $gray-dark-1;
     font-family: $brand-font-light;
-    font-size : $font-size-h4;
+    font-size: $font-size-h4;
   }
 
   .select-method {
     margin-left: auto;
     margin-right: auto;
-    display : flex;
+    display: flex;
     flex-wrap: wrap;
-    @include vr-spacing(pb,1);
+
+    @include vr-spacing(pb, 1);
   }
 }
 
@@ -40,30 +43,36 @@
   .hgmethod {
     display: flex;
     flex: none;
-    @include vr-spacing(ph,0.5);
-    @include vr-spacing(pb,1);
+
+    @include vr-spacing(ph, 0.5);
+    @include vr-spacing(pb, 1);
 
     > a {
       @include vr-spacing(p, 0.75);
       @include vr-spacing(pt, 2.8);
+
       > div {
         color: $color-people-base;
         font-family: $brand-font-extra-light;
         font-size: $font-size-h3;
-        @include vr-spacing(pt,2)
+
+        @include vr-spacing(pt, 2);
       }
+
       > p {
         color: $gray-dark-2;
         font-family: $brand-font-light;
         font-size: $font-size-base;
         text-align: left;
+
         @include vr-spacing(pt, 2.1);
         @include vr-spacing(pb, 0.75);
         @include vr-spacing(ph, 0.5);
       }
+
       > i {
         color: $gray-darkest;
-        font-size : 4rem;
+        font-size: 4rem;
       }
     }
   }

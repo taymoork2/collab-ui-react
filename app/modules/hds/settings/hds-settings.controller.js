@@ -50,7 +50,7 @@
       $log.info('Cancel');
     }
 
-    function onTrialProduction() { s;
+    function onTrialProduction() {
       var text = 'hds.settings.serviceStatusTrialStarted';
       if (vm.radioModel !== '1') {
         text = 'hds.settings.serviceStatusProductionStarted';

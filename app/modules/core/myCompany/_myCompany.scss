@@ -16,8 +16,9 @@
     border: none;
   }
 }
-.btn--myCompany{
-  .icon{
+
+.btn--myCompany {
+  .icon {
     position: static !important;
     margin-left: 0.75rem !important;
   }
@@ -26,6 +27,7 @@
 .my-company-order-history-actions {
   display: flex;
   align-items: center;
+
   .icon {
     margin-right: 0.5rem;
   }

@@ -1,10 +1,5 @@
 describe('Component: pgNumber setup', () => {
 
-  let testNumber = {
-    uuid: '22a2dc30-041f-4d25-9351-325eb1db7f79',
-    number: '2222',
-  };
-
   let successResponse = [{
     uuid: '22a2dc30-041f-4d25-9351-325eb1db7f79',
     pattern: '2222',
@@ -31,7 +26,7 @@ describe('Component: pgNumber setup', () => {
   });
 
   it('should select a number', function () {
-    this.controller.selectNumber(testNumber);
+    this.controller.selectNumber('2222');
     expect(this.controller.pagingGroupNumber).toEqual('2222');
   });
 

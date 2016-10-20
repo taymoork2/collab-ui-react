@@ -146,7 +146,12 @@
       holdActionDesc = "";
       holdActionValue = "";
 
-      if ($scope.keyIndex && $scope.menuId) { //came from a phone menu
+      if ($scope.type) {
+        var sourceMenu = AutoAttendantCeMenuModelService.getCeMenu($scope.menuId);
+        var sourceQueue = sourceMenu.entries[$scope.keyIndex];
+        var queueAction = sourceQueue.actions[0];
+        vm.menuEntry = queueAction.queueSettings[$scope.type];
+      } else if ($scope.keyIndex && $scope.menuId) { //came from a phone menu
         var phMenu = AutoAttendantCeMenuModelService.getCeMenu($scope.menuId);
         vm.menuEntry = phMenu.entries[$scope.keyIndex];
       } else { //came from a route call

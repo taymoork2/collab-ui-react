@@ -1,10 +1,11 @@
 %aa-menu-vertical-line {
   position: relative;
+
   @include vr-spacing(pb, 1);
 
-  &:before {
+  &::before {
     top: 0;
-    left: -.4rem;
+    left: -0.4rem;
     position: absolute;
     display: inline-block;
     content: '';
@@ -21,14 +22,16 @@
 %aa-menu-textarea {
   line-height: 1.25rem;
   width: 100%;
-  @include vr-spacing(pv, .50);
-  @include vr-spacing(ph, .75);
+
+  @include vr-spacing(pv, 0.5);
+  @include vr-spacing(ph, 0.75);
+
   resize: none;
 }
 
 %aa-menu-control-label {
-  @include vr-spacing(pl, .25);
-  @include vr-spacing(mt, .25);
+  @include vr-spacing(pl, 0.25);
+  @include vr-spacing(mt, 0.25);
   @include vr-spacing(mb, 0);
 }
 
@@ -36,34 +39,35 @@
   display: inline-block;
   line-height: 1.25rem;
 
-  @include vr-spacing(ml, .75);
-  @include vr-spacing(mt, -.25);
-
+  @include vr-spacing(ml, 0.75);
+  @include vr-spacing(mt, -0.25);
   @include vr-spacing(pb, 0);
 
   .icon {
-    @include vr-spacing(pr, .5);
-    @include vr-spacing(pl, .25);
+    @include vr-spacing(pr, 0.5);
+    @include vr-spacing(pl, 0.25);
+
     vertical-align: middle;
-    &:before {
+    font-size: 1.25rem;
+
+    &::before {
       background-color: $gray-light-3;
     }
-    font-size: 1.25rem;
   }
 }
 
 %aa-menu-select {
-
-  & .select-options, & .dropdown-menu {
+  .select-options,
+  .dropdown-menu {
     height: inherit;
     max-height: inherit;
   }
 
-  & .select-toggle {
+  .select-toggle {
     position: relative;
     z-index: 1;
 
-    & > i {
+    > i {
       @include vr-spacing(mr, 0);
       @include vr-spacing(ml, -0.5);
     }
@@ -72,32 +76,33 @@
 
 %aa-menu-actions {
   width: 100%;
-  & .csSelect-container {
+
+  .csSelect-container {
     @include vr-spacing(pt, 1);
   }
 
-  & textarea {
+  textarea {
     @extend %aa-menu-textarea;
   }
 
-  & .control-label {
+  .control-label {
     @extend %aa-menu-control-label;
   }
 
-  & form {
+  form {
     @include vr-spacing(mb, 0);
 
-    & .form-group {
-      @include vr-spacing(mb, .25);
+    .form-group {
+      @include vr-spacing(mb, 0.25);
     }
   }
 }
 
 @mixin aa-menu-key-button($background_color) {
-  & .select-toggle {
-    padding-left: .8rem;
-    padding-top: .5rem;
-    width: vr-adjust(56);;
+  .select-toggle {
+    padding-left: 0.8rem;
+    padding-top: 0.5rem;
+    width: vr-adjust(56);
   }
 
   // selected option
@@ -106,10 +111,10 @@
       &.select-toggle {
         color: $color-white;
 
-        &:after {
+        &::after {
           position: absolute;
           display: inline-block;
-          content: " ";
+          content: ' ';
           width: calc(1.75em + 1px);
           top: 0.2em;
           left: 0.3em;
@@ -129,77 +134,79 @@
 
   min-width: $aa-pm-action-max-width;
 
-  & .panel {
+  .panel {
     @include vr-spacing(m, 0);
-
     @include vr-spacing(pt, 1);
     @include vr-spacing(ph, 0);
     @include vr-spacing(pb, 1);
 
     background-color: $gray-light-3;
 
-     & ~ .panel {
+    ~ .panel {
       @include vr-spacing(mt, 0.5);
     }
   }
 
-  & .aa-pm-vertical-line {
+  .aa-pm-vertical-line {
     @extend %aa-menu-vertical-line;
   }
 
-  & .select-list {
+  .select-list {
     .dropdown-menu {
       min-width: 100%;
       width: auto;
     }
 
-    & .select-options > li > a {
+    .select-options > li > a {
       @include vr-spacing(pr, 1);
     }
   }
 
-  & .select-toggle {
-
+  .select-toggle {
     @include vr-spacing(pr, 1.75);
 
-    & > i {
+    > i {
       &.icon {
         right: -0.3rem;
       }
     }
   }
 
-  & .aa-trash-icon {
+  .aa-trash-icon {
     @include vr-spacing(pl, 0);
     @include vr-spacing(pt, 0);
+
     top: 0.5rem;
   }
 
-  & .aa-pm-action {
+  .aa-pm-action {
     @extend %aa-menu-actions;
+
     max-width: $aa-pm-action-max-width;
   }
 
-  & .aa-pm-timeout {
-    & .control-label {
+  .aa-pm-timeout {
+    .control-label {
       @extend %aa-menu-control-label;
-      @include vr-spacing(mt, .5);
+
+      @include vr-spacing(mt, 0.5);
     }
   }
 
-  & .aa-pm-key-select, .aa-pm-action-select {
+  .aa-pm-key-select,
+  .aa-pm-action-select {
     @extend %aa-menu-select;
   }
 
-  & .aa-pm-action-select {
+  .aa-pm-action-select {
     max-width: $aa-pm-action-max-width;
   }
 
-  & .aa-pm-key-select {
+  .aa-pm-key-select {
     @include aa-menu-key-button($color-cta-base);
   }
 
-  & .aa-pm-add-text {
+  .aa-pm-add-text {
     @extend %aa-menu-add-text;
   }
 }
