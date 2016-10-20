@@ -2,26 +2,25 @@
   display: flex;
   align-content: stretch;
   justify-content: center;
-
   margin: 3vh 4vw;
 
   .btn {
     margin: 0;
-
   }
+
   a {
     cursor: pointer;
   }
 
   .skip-link {
-    color: $gray-dark-1;
     @include vr-spacing(mr, 1);
+
+    color: $gray-dark-1;
 
     &:hover {
       color: $color-primary-base;
     }
   }
-
 }
 
 .wizard-main-wrapper {
@@ -37,15 +36,18 @@
   cursor: pointer;
   display: flex;
   align-items: center;
-  & + .wizard-side-item {
+
+  + .wizard-side-item {
     margin-top: 5px;
   }
+
   &:last-child {
     position: relative;
-    background-color: rgba(0,0,0, 0.6);
+    background-color: rgba(0, 0, 0, 0.6);
     height: 280px;
     cursor: default;
     flex: 1;
+
     .help-link {
       position: absolute;
       bottom: 30px;
@@ -53,10 +55,12 @@
       color: $gray-light-2;
       cursor: pointer;
       font-family: $brand-font-cisco-TT-Regular;
-      font-size: .75rem;
+      font-size: 0.75rem;
+
       span {
         font-size: inherit;
       }
+
       a {
         color: $gray-light-2;
       }
@@ -66,7 +70,8 @@
 
 // workaround for safari (see: https://github.com/philipwalton/flexbugs#9-some-html-elements-cant-be-flex-containers )
 // TODO: revisit and remove this once safari becomes compliant (>9.1.2)
-cr-wizard-main, cr-wizard-nav {
+cr-wizard-main,
+cr-wizard-nav {
   display: flex;
 }
 
@@ -76,16 +81,19 @@ cr-wizard-main, cr-wizard-nav {
   float: left;
   display: flex;
   flex-direction: column;
+
   .wizard-menu-text {
     flex: 1;
     padding: 18px 0 18px 20px;
     line-height: 1;
   }
+
   .wizard-menu-title {
     font-family: $brand-font-cisco-TT-Light;
     font-size: 20px;
     color: $brand-white;
   }
+
   .wizard-menu-subtitle {
     font-family: $brand-font-cisco-TT-Regular;
     font-size: 13px;
@@ -93,6 +101,7 @@ cr-wizard-main, cr-wizard-nav {
     margin-top: 10px;
     line-height: 20px;
   }
+
   .icon {
     margin-right: 40px;
     transform: translateX(50%);
@@ -100,10 +109,12 @@ cr-wizard-main, cr-wizard-nav {
     line-height: 28px;
     color: $gray-light;
   }
+
   .icon-plan-review,
   .icon-add-users {
     font-size: 20px;
   }
+
   .icon-check {
     font-size: 38px;
   }
@@ -112,9 +123,11 @@ cr-wizard-main, cr-wizard-nav {
 .wizard-nav-active {
   background-color: $brand-primary-dark;
   color: $brand-white;
+
   .wizard-menu-subtitle {
     color: $brand-white;
   }
+
   .icon {
     background-color: $component-active-bg;
     color: $component-active-color;
@@ -132,7 +145,8 @@ cr-wizard-main, cr-wizard-nav {
   cursor: default;
 }
 
-cr-wizard-main, .wizard-main {
+cr-wizard-main,
+.wizard-main {
   width: 100%;
 }
 
@@ -147,66 +161,68 @@ cr-wizard-main, .wizard-main {
   overflow-y: auto;
   display: flex;
   flex-direction: column;
+
   p {
     font-family: $brand-font-cisco-TT-Light;
   }
+
   label {
     font-weight: normal;
   }
-  .wizard-main-title span{
+
+  .wizard-main-title span {
     font-family: $brand-font-cisco-TT-Extra-Light;
     font-size: 36px;
   }
+
   .wizard-main-content {
     display: flex;
+
     .container-fluid {
       margin-left: 0;
       margin-right: 0;
     }
+
     flex-direction: column;
     flex: 1;
     overflow-y: auto;
     position: relative;
     padding-top: 15px;
+
     .align-middle {
       position: absolute;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
     }
+
     .loading {
       width: 100%;
       text-align: center;
       margin: 40px auto;
-      &.ng-enter, &.ng-leave {
+
+      &.ng-enter,
+      &.ng-leave {
         transition: none;
       }
-      /* starting animations for enter */
 
-      &.ng-enter {}
-      /* terminal animations for enter */
-
-      &.ng-enter.ng-enter-active {}
-      /* starting animations for leave */
-
-      &.ng-leave {}
-      /* terminal animations for leave */
-
-      &.ng-leave.ng-leave-active {}
       .icon {
         font-size: 75px;
       }
     }
   }
+
   .rbcontainer {
     position: relative;
     top: 4em;
     left: 15em;
+
     label {
       font-size: 18px;
       font-weight: normal;
       color: $gray-darker;
     }
+
     .ciscoRadiobutton:nth-child(2) {
       margin-top: 40px;
     }
@@ -223,6 +239,7 @@ cr-wizard-main, .wizard-main {
 
 .wizard-main-btns {
   padding-top: 32px;
+
   .btn--link {
     margin-right: 30px;
   }

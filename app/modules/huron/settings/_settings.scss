@@ -4,6 +4,7 @@
 
 .huron-settings {
   @extend %content-header;
+
   position: relative;
 
   .loading-container {
@@ -19,9 +20,11 @@
     .trash-icon {
       @extend .icon;
       @extend .icon-trash;
+
       font-size: 1.7rem;
       color: $gray-light-1;
       cursor: pointer;
+
       &:hover {
         color: $color-primary-base;
       }
@@ -31,7 +34,8 @@
       visibility: hidden;
     }
 
-    .icon-button-delete, .service-setup-extension {
+    .icon-button-delete,
+    .service-setup-extension {
       .formly-template-wrapper {
         margin-bottom: 0;
       }
@@ -45,33 +49,35 @@
       width: 100%;
     }
 
-   .service-address-buttons {
-     margin-top: 1rem;
-   }
+    .service-address-buttons {
+      margin-top: 1rem;
+    }
 
-   .control-label {
-     color: $gray-dark-4;
-   }
+    .control-label {
+      color: $gray-dark-4;
+    }
 
-   .description-block, .section__description {
-     color: $gray-dark-1;
-   }
+    .description-block,
+    .section__description {
+      color: $gray-dark-1;
+    }
 
-   .vm-switch-margin {
-     @include vr-spacing(mt, .75, 0px, true);
-   }
+    .vm-switch-margin {
+      @include vr-spacing(mt, 0.75, 0px, true);
+    }
 
-   .voicemail-spacing {
-     @include vr-spacing(pl, 2);
-     @include vr-spacing(mb, 2);
-   }
+    .voicemail-spacing {
+      @include vr-spacing(pl, 2);
+      @include vr-spacing(mb, 2);
+    }
 
-   button.btn-link {
+    button.btn-link {
       color: $color-primary-base;
       background-color: transparent;
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
+
       &:hover {
         color: $white;
         background-color: $gray-dark-2;
@@ -83,7 +89,7 @@
     }
 
     .save-section {
-      position: fixed; 
+      position: fixed;
       bottom: 0;
       display: flex;
       align-items: center;
@@ -97,7 +103,8 @@
       }
     }
 
-    .service-setup-extension-length, .inner-section-margin {
+    .service-setup-extension-length,
+    .inner-section-margin {
       @include vr-spacing(mb, 2.25);
     }
 
@@ -112,7 +119,7 @@
   }
 
   .save-popup-margin {
-    margin-bottom: vr-adjust(60px)
+    margin-bottom: vr-adjust(60px);
   }
 
   .indent-area-code {
@@ -124,9 +131,10 @@
   }
 
   .terminus-warning {
-    font-size: .75rem;
+    font-size: 0.75rem;
+
     .icon-warning {
-      margin-right: .25rem;
+      margin-right: 0.25rem;
     }
   }
 }

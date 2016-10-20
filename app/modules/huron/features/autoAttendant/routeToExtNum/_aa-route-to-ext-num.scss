@@ -1,17 +1,18 @@
 .aa-country-select {
-  & .country-list {
+  .country-list {
     .dropdown-menu {
       width: inherit;
     }
 
-   & .select-toggle > i {
+    .select-toggle > i {
       &.icon {
         right: -1rem;
       }
     }
   }
 
-  & cs-country-select {
+  cs-country-select {
+
     width: 100%;
   }
 }

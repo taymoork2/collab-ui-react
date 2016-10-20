@@ -6,5 +6,6 @@
 
 .limit-reach-warning {
   @include vr-spacing(pl, 0);
+
   color: $gray-dark-2;
 }

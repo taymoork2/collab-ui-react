@@ -46,6 +46,9 @@ describe('Component: lineOverview', () => {
     this.internalNumbers = internalNumbers;
     this.externalNumbers = externalNumbers;
 
+    this.$scope.ownerName = 'Bond James Bond';
+    this.$scope.ownerId = '007';
+
     this.getLineOverviewDataDefer = this.$q.defer();
     spyOn(this.LineOverviewService, 'get').and.returnValue(this.getLineOverviewDataDefer.promise);
 
@@ -65,8 +68,8 @@ describe('Component: lineOverview', () => {
   function initComponent() {
     this.compileComponent('ucLineOverview', {
       ownerType: 'place',
-      ownerName: 'Bond James Bond',
-      ownerId: '007',
+      ownerName: 'ownerName',
+      ownerId: 'ownerId',
       numberId: 'numberId',
     });
   }
