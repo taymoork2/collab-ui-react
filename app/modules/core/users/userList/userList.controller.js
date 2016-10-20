@@ -299,7 +299,7 @@
                     });
                     var hasCiscoUC = index > -1;
                     var isActiveUser = !_.isEmpty(user.entitlements) &&
-                                      (userHasSignedUp || isOnlineOrg || hasCiscoUC);
+                      (userHasSignedUp || isOnlineOrg || hasCiscoUC);
                     user.userStatus = isActiveUser ? 'active' : 'pending';
                   } else {
                     user.userStatus = (_.indexOf(user.accountStatus, 'pending') >= 0) ? 'pending' : 'active';
@@ -356,6 +356,7 @@
               } else {
                 UserListService.getUserCount().then(function (count) {
                   if (_.isNull(count) || _.isNaN(count) || count === -1) {
+                    // can't determine number of users, so assume over threshold
                     count = $scope.userExportThreshold + 1;
                   }
                   $scope.totalUsers = count;
