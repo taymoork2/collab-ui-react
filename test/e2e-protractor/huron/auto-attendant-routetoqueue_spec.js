@@ -105,7 +105,7 @@ describe('Huron Auto Attendant', function () {
       utils.expectIsEnabled(autoattendant.okQueueTreatment);
       expect(utils.isSelected(autoattendant.mohCustomUpload)).toBeTruthy();
       utils.click(autoattendant.okQueueTreatment);
-  });
+    });
 
     it('should be able to select all fallback options in Call treatment modal of the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
         // it is for selecting all the fallback options in the Call treatment modal
