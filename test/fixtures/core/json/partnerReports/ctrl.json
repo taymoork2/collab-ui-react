@@ -69,7 +69,7 @@
       "title": "activeUsers.mostActiveUsers"
     },
     "avgRoomsOptions": {
-      "animate": false,
+      "animate": true,
       "description": "avgRooms.avgRoomsDescription",
       "headerTitle": "avgRooms.avgRooms",
       "id": "avgRooms",
@@ -77,8 +77,17 @@
       "state": "set",
       "titlePopover": "undefined"
     },
-    "filesSharedOptions": {
+    "deviceOptions": {
       "animate": false,
+      "description": "registeredEndpoints.customerDescription",
+      "headerTitle": "registeredEndpoints.registeredEndpoints",
+      "id": "devices",
+      "reportType": "barchart",
+      "state": "set",
+      "titlePopover": "undefined"
+    },
+    "filesSharedOptions": {
+      "animate": true,
       "description": "filesShared.filesSharedDescription",
       "headerTitle": "filesShared.filesShared",
       "id": "filesShared",

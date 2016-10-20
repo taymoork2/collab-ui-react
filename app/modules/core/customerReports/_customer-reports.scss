@@ -1,8 +1,6 @@
 @import 'activeUsers/_active-users';
 @import '../../sunlight/reports/_care-task';
 @import 'callMetrics/_call-metrics-customer';
-@import 'mediaQuality/_media-quality-customer';
-@import 'registeredEndpoints/_registered-endpoints';
 
 @keyframes graphAxisFade {
   0% { opacity: 0; }
@@ -182,11 +180,6 @@
         text-align: center;
         margin: 0;
       }
-    }
-
-    .active-chart .amcharts-value-axis .amcharts-axis-label {
-      opacity: 0;
-      animation: graphAxisFade 2s ease-in-out 1 forwards;
     }
   }
 

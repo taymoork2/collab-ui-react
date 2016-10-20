@@ -1,5 +1,6 @@
 import {
   IReportCard,
+  IReportDropdown,
   IReportsTable,
   ITimespan,
   ISecondaryReport,
@@ -19,6 +20,7 @@ describe('Component: reportCard', () => {
   const table: string = 'section table';
   const id: string = '{{id}}';
   const chart: string = '#' + id + 'Chart';
+  const dropdown: string = '#' + id + 'Filter';
   const reportTable: string = '.report-table';
   const showHideLink: string = 'div.box-match a span';
   const carouselNumberButtons: string = 'div.box-match div.pull-right button.btn';
@@ -83,6 +85,7 @@ describe('Component: reportCard', () => {
       expect(this.view.find(headerTitle)).toHaveText(options.headerTitle);
       expect(this.view.find(cardDescription.replace(reportType, options.reportType))).toHaveText(options.description);
       expect(this.view).toContainElement(chart.replace(id, options.id));
+      expect(this.view).not.toContainElement(dropdown.replace(id, options.id));
 
       // table for the first report section should not be present
       expect(this.view).not.toContainElement(table);
@@ -153,27 +156,59 @@ describe('Component: reportCard', () => {
     });
   });
 
-  describe('donut chart only:', function () {
+  describe('donut chart and dropdown:', function () {
+    const dropdownClick = 'div.select-list div.dropdown a.select-toggle';
+    const hiddenSelect = 'select.hidden-select option';
+    const dropdownOptions = 'ul.select-options li a';
     let options: IReportCard = _.cloneDeep(ctrlData.callOptions);
     options.table = undefined;
+    let reportDropdown: IReportDropdown = {
+      array: [{
+        value: 0,
+        label: 'label one',
+      }, {
+        value: 1,
+        label: 'label two',
+      }],
+      click: jasmine.createSpy('toggle'),
+      disabled: false,
+      selected: {
+        value: 0,
+        label: 'label one',
+      },
+    };
 
     beforeEach(function () {
       this.$scope.timeFilter = timeFilter;
       this.$scope.options = options;
       this.$scope.show = true;
+      this.$scope.dropdown = reportDropdown;
       this.compileComponent('reportCard', {
         options: 'options',
+        dropdown: 'dropdown',
         show: 'show',
         time: 'timeFilter',
       });
     });
 
-    it('should instantiate with expected titles and secondary report not present', function () {
+    it('should instantiate with expected titles, dropdown, and secondary report not present', function () {
+      this.$timeout.flush();
       // check for header, description, and chart
       expect(this.view).toContainElement('#' + options.id);
       expect(this.view.find(headerTitle)).toHaveText(options.headerTitle);
       expect(this.view.find(cardDescription.replace(reportType, options.reportType))).toHaveText(options.description);
       expect(this.view).toContainElement(chart.replace(id, options.id));
+      expect(this.view).toContainElement(dropdown.replace(id, options.id));
+
+      // check the dropdown
+      expect(reportDropdown.click).not.toHaveBeenCalled();
+      expect(this.view.find(hiddenSelect)).toHaveText(reportDropdown.array[0].label);
+      this.view.find(dropdownClick).click();
+      this.$timeout.flush();
+      expect(this.view.find(dropdownOptions).length).toEqual(2);
+      this.view.find(dropdownOptions)[1].click();
+      expect(this.view.find(hiddenSelect)).toHaveText(reportDropdown.array[1].label);
+      expect(reportDropdown.click).toHaveBeenCalled();
 
       // table for the first report section should not be present
       expect(this.view).not.toContainElement(table);
@@ -209,6 +244,7 @@ describe('Component: reportCard', () => {
       expect(this.view.find(headerTitle)).toHaveText(options.headerTitle);
       expect(this.view.find(cardDescription.replace(reportType, options.reportType))).toHaveText(options.description);
       expect(this.view).toContainElement(table);
+      expect(this.view).not.toContainElement(dropdown.replace(id, options.id));
 
       // verify table headers
       let headers = this.view.find('thead th.bold.vertical-center');

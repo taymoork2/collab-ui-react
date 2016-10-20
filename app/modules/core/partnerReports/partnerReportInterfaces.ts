@@ -44,6 +44,18 @@ export interface ISecondaryReport {
   title: string;
 }
 
+export interface IReportDropdown {
+  array: Array<IDropdownOption>;
+  click: Function;
+  disabled: boolean;
+  selected: IDropdownOption;
+}
+
+export interface IDropdownOption {
+  value: number;
+  label: string;
+}
+
 export interface IReportsTable {
   headers: Array<IReportsHeader>;
   data: any;
