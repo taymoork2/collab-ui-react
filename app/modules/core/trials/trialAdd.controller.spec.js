@@ -33,10 +33,11 @@ describe('Controller: TrialAddCtrl', function () {
     spyOn(FeatureToggleService, 'atlasTrialsShipDevicesGetStatus').and.returnValue($q.when(false));
     spyOn(FeatureToggleService, 'atlasDarlingGetStatus').and.returnValue($q.when(true));
     spyOn(FeatureToggleService, 'supports').and.callFake(function (param) {
-      if (param != 'csdm-places') {
-        fail('the following toggle wasn\'t expected ' + param);  //taking control of which toggles this controller are using (explicit or implicit)
+      if (param == 'csdm-places' || param == 'csdm-pstn') {
+        return $q.when(false);
+      } else if (param != 'csdm-pstn') {
+        fail('the following toggle wasn\'t expected ' + param);
       }
-      return $q.when(false);
     });
 
     spyOn(Notification, 'notify');

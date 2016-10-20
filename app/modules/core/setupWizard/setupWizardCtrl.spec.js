@@ -24,6 +24,9 @@ describe('SetupWizardCtrl', function () {
     spyOn(Authinfo, 'isSquaredUC').and.returnValue(false);
     spyOn(Authinfo, 'isCSB').and.returnValue(true);
     spyOn(Authinfo, 'isCare').and.returnValue(false);
+    spyOn(Authinfo, 'getLicenses').and.returnValue([{
+      licenseType: 'SHARED_DEVICES'
+    }]);
 
     spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(false));
     spyOn(FeatureToggleService, 'supportsDirSync').and.returnValue($q.when(false));
@@ -117,6 +120,9 @@ describe('SetupWizardCtrl', function () {
   describe('When Authinfo.isSquaredUC is true and addClaimSipUrl is false', function () {
     beforeEach(function () {
       Authinfo.isSquaredUC.and.returnValue(true);
+      Authinfo.getLicenses.and.returnValue([{
+        licenseType: 'COMMUNICATION'
+      }]);
       initController();
     });
 
@@ -132,6 +138,9 @@ describe('SetupWizardCtrl', function () {
   describe('When Authinfo.isSquaredUC is true and addClaimSipUrl is true', function () {
     beforeEach(function () {
       Authinfo.isSquaredUC.and.returnValue(true);
+      Authinfo.getLicenses.and.returnValue([{
+        licenseType: 'COMMUNICATION'
+      }]);
       FeatureToggleService.supports.and.callFake(function (val) {
         if (val === FeatureToggleService.features.atlasSipUriDomain) {
           return $q.when(true);
@@ -269,6 +278,9 @@ describe('SetupWizardCtrl', function () {
     beforeEach(function () {
       Authinfo.isSetupDone.and.returnValue(true);
       Authinfo.isSquaredUC.and.returnValue(true);
+      Authinfo.getLicenses.and.returnValue([{
+        licenseType: 'COMMUNICATION'
+      }]);
       Authinfo.isCare.and.returnValue(true);
 
       FeatureToggleService.supports.and.returnValue($q.when(true));
