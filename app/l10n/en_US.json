@@ -100,6 +100,8 @@
     "partners": "Partner Administrators",
     "deleteUser": "Delete User",
     "deleteUserConfText": "Are you sure you want to delete {{email}}?",
+    "deleteMsgrUserConfText": "Unable to delete this user. All Jabber Messenger users must be managed from the ",
+    "orgAdminLinkText": "Messenger Org Admin tool.",
     "deleteUserSelfConfText": "Warning: You are about to delete yourself from the system. This will immediately revoke your access to this application and you will be immediately logged out. All your collaboration services will also be revoked.",
     "typeYestoDelete": "Type \"YES\" to confirm you would like to perform this operation.",
     "yes": "YES",
@@ -3045,7 +3047,8 @@
         "reserveFail": "Numbers were not reserved",
         "customerFail": "Customer was not created",
         "orderFail": "Numbers were not ordered",
-        "siteFail": "Site was not created"
+        "siteFail": "Site was not created",
+        "exchanges": "Failed to get NXX (exchanges) for selected area code"
       }
     },
     "finish": {
