@@ -153,7 +153,6 @@
       csdmPlaces: 'csdm-places',
       globalStatus: 'atlas-global-status',
       csdmPstn: 'csdm-pstn',
-      csdmDarling: 'csdm-darling',
       csdmATA: 'csdm-ata',
       atlasF237ResourceGroups: 'atlas-f237-resource-group',
       huronLocalDialing: 'huron-local-dialing',
