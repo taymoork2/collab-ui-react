@@ -1,6 +1,6 @@
 'use strict';
 
-var componentPage = function () {
+var ComponentPage = function () {
   this.addComponentBtn = element(by.css('.add-resource-button'));
   this.addComponent = element(by.css('.addComponent'));
   this.closeAddComponent = element(by.css('.close'));
@@ -14,4 +14,4 @@ var componentPage = function () {
   this.DELETEInput = element(by.css('.deleteIncidentPage input'));
   this.deleteComponentBtn = element(by.css('.deleteIncidentPage button'));
 };
-module.exports = componentPage;
+module.exports = ComponentPage;

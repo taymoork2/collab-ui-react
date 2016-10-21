@@ -1,6 +1,6 @@
 'use strict';
 
-var incidentPage = function () {
+var IncidentPage = function () {
   this.newIncident = element(by.css('.btn--primary'));
   this.createIncident = element(by.id('createIncidentPage'));
   this.incidentList = element(by.css('.incidentItem'));
@@ -28,4 +28,4 @@ var incidentPage = function () {
   this.deleteBtn = element(by.css('.btn--primary'));
 };
 
-module.exports = incidentPage;
+module.exports = IncidentPage;
