@@ -89,9 +89,7 @@
     'CareDetails'
   ]);
 
-  angular.module('Status.incidents', ['Core']);
-
-  angular.module('Status', ['Core', 'Status.incidents']);
+  angular.module('Status', ['Core']);
 
   module.exports = angular.module('Main', [
     'Core',
