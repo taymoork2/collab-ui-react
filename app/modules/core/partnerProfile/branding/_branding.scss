@@ -1,14 +1,13 @@
 .branding {
-
-  
   .radio-input-spacing {
     align-items: flex-start;
 
-    &:before {
-      margin-top: calc((#{$input-height-base} / 2) - 10px)
+    &::before {
+      margin-top: calc((#{$input-height-base} / 2) - 10px);
     }
 
-    > input, .radio-input-flex {
+    > input,
+    .radio-input-flex {
       flex: 1;
     }
   }
@@ -19,14 +18,13 @@
     max-height: 100%;
   }
 
-
   .drop-box {
     display: inline-block;
     width: 100%;
 
     @include vr-spacing(mb, 0.25);
-
     @include vr-spacing(p, 0.25);
+
     height: 150px;
     background-color: $brand-white;
     border: 1px solid $gray-light;
@@ -41,7 +39,7 @@
       border-color: $brand-danger;
     }
 
-    .icon-upload{
+    .icon-upload {
       font-size: 2.5rem;
     }
   }
@@ -53,9 +51,9 @@
   }
 
   .drop-box {
-    width:413px;
+    width: 413px;
     height: 95px;
-  } 
+  }
 }
 
 .branding-modal {
@@ -71,8 +69,6 @@
     overflow-y: auto;
     display: flex;
     height: calc(100vh - 210px);
-    -webkit-box-orient: vertical;
-    -webkit-box-direction: normal;
   }
 
   .item-padding-space {
@@ -90,8 +86,8 @@
       padding-left: 1rem;
     }
   }
-  .cs-card {
-    padding: 0
-  }
 
+  .cs-card {
+    padding: 0;
+  }
 }

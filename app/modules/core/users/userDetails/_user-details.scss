@@ -1,19 +1,22 @@
 .details-panel {
+  @extend .container-fluid;
+
   background-color: $body-bg;
   height: 100%;
   position: relative;
   width: calc(100% - 350px);
   overflow-y: auto;
-  @extend .container-fluid;
+
   .header-row {
     margin-bottom: 30px;
+
     h3 {
       margin: 0 40px 0 0;
       display: inline-block;
       vertical-align: middle;
-      float: left;
     }
   }
+
   .close-row {
     font-size: 13px;
     color: $gray-darker;
@@ -21,6 +24,7 @@
     width: 100%;
     text-align: right;
     cursor: pointer;
+
     .icon {
       font-size: 30px;
       text-align: left;
@@ -32,6 +36,7 @@
       vertical-align: middle;
     }
   }
+
   .details-body {
     width: 400px;
   }
@@ -47,7 +52,7 @@
 }
 
 .sub-details-full {
-  height: 100%
+  height: 100%;
 }
 
 .btn-remove {

@@ -63,9 +63,9 @@ describe('Customer Reports', function () {
 
       // Device Media Quality
       utils.expectIsDisplayed(reports.mediaHeader);
-      utils.expectIsDisplayed(reports.customerMediaDescription);
+      utils.expectIsDisplayed(reports.mediaDescription);
       utils.expectIsDisplayed(reports.mediaFilter);
-      utils.expectIsDisplayed(reports.mediaQualityDiv);
+      utils.expectIsDisplayed(reports.mediaQualityGraph);
 
       // Call Metrics
       utils.expectIsDisplayed(reports.metricsHeader);
@@ -101,7 +101,7 @@ describe('Customer Reports', function () {
       utils.expectIsDisplayed(reports.endpointsDiv);
 
       // quality graphs
-      utils.expectIsNotDisplayed(reports.mediaQualityDiv);
+      utils.expectIsNotDisplayed(reports.mediaQualityGraph);
       utils.expectIsNotDisplayed(reports.metricsGraphDiv);
     });
 
@@ -116,9 +116,9 @@ describe('Customer Reports', function () {
 
       // quality graphs
       utils.expectIsDisplayed(reports.mediaHeader);
-      utils.expectIsDisplayed(reports.customerMediaDescription);
+      utils.expectIsDisplayed(reports.mediaDescription);
       utils.expectIsDisplayed(reports.mediaFilter);
-      utils.expectIsDisplayed(reports.mediaQualityDiv);
+      utils.expectIsDisplayed(reports.mediaQualityGraph);
 
       utils.expectIsDisplayed(reports.metricsHeader);
       utils.expectIsDisplayed(reports.customerMetricsDescription);
@@ -161,9 +161,9 @@ describe('Customer Reports', function () {
 
       // Device Media Quality
       utils.expectIsDisplayed(reports.mediaHeader);
-      utils.expectIsDisplayed(reports.customerMediaDescription);
+      utils.expectIsDisplayed(reports.mediaDescription);
       utils.expectIsDisplayed(reports.mediaFilter);
-      utils.expectIsDisplayed(reports.mediaQualityDiv);
+      utils.expectIsDisplayed(reports.mediaQualityGraph);
 
       // Call Metrics
       utils.expectIsDisplayed(reports.metricsHeader);

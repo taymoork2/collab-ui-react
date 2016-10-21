@@ -49,9 +49,9 @@ var ReportsPage = function () {
 
   // registered endpoints graph/table
   this.endpointsHeader = element(by.cssContainingText('.report-section-header', 'Registered Endpoints'));
-  this.customerEndpointsDescription = element(by.css('.customer-devices')).element(by.css('.report-description'));
-  this.endpointFilter = element(by.id('deviceFilter'));
-  this.endpointsDiv = element(by.id('devicesDiv'));
+  this.customerEndpointsDescription = element(by.id('devices')).element(by.css('article section p'));
+  this.endpointFilter = element(by.id('devicesFilter'));
+  this.endpointsDiv = element(by.id('devicesChart'));
   this.endpointDescription = element(by.id('reg-endpoints')).element(by.css('article section p'));
   this.registeredEndpointsTable = element(by.id('reg-endpoints')).element(by.css('table.table'));
 
@@ -65,9 +65,7 @@ var ReportsPage = function () {
 
   // media quality
   this.mediaHeader = element(by.cssContainingText('.report-section-header', 'Device Media Quality'));
-  this.customerMediaDescription = element.all(by.css('.customer-media')).last().element(by.css('.report-description'));
-  this.mediaFilter = element(by.id('mediaFilter'));
-  this.mediaQualityDiv = element(by.id('mediaQualityDiv'));
+  this.mediaFilter = element(by.id('mediaQualityFilter'));
   this.mediaQualityGraph = element(by.id('mediaQualityChart'));
   this.mediaDescription = element(by.id('mediaQuality')).element(by.css('article section p'));
 

@@ -1,14 +1,18 @@
 .aa-help-icon {
   @extend .icon;
   @extend .icon-help;
+
   font-size: 1rem;
   color: $aa-builder-icon-color;
-  @include vr-spacing(pl, .25);
-  @include vr-spacing(pt, .25);
+
+  @include vr-spacing(pl, 0.25);
+  @include vr-spacing(pt, 0.25);
+
   &:hover {
     cursor: pointer;
     color: $aa-builder-icon-click-color;
   }
+
   &:focus {
     color: $aa-builder-icon-click-color;
     outline: none;
@@ -17,12 +21,14 @@
 
 .aa-help-wrapper {
   position: relative;
-  & .popover {
+
+  .popover {
     width: 75%;
-    @include vr-spacing(mt, .5);
+
+    @include vr-spacing(mt, 0.5);
   }
 
-  & .popover-content {
+  .popover-content {
     overflow: hidden;
   }
 }
