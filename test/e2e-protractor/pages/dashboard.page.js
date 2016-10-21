@@ -1,6 +1,6 @@
 'use strict';
 
-var dashboardPage = function () {
+var DashboardPage = function () {
   this.incidentBlock = element(by.css('.status-dashboard')).element(by.css('.first-block'));
   this.incidentTitle = element(by.css('.incidentListPageHeader h2'));
   this.componentBlock = element(by.css('.status-dashboard')).element(by.css('.second-block'));
@@ -15,4 +15,4 @@ var dashboardPage = function () {
   this.selectedStatus = element.all(by.css('.testDropdown .select-options li a')).first();
 };
 
-module.exports = dashboardPage;
+module.exports = DashboardPage;

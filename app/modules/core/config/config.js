@@ -137,8 +137,8 @@
         helpdesk: 'atlas-portal.partner.helpdesk',
         orderadmin: 'atlas-portal.partner.orderadmin',
         spark_synckms: 'spark.synckms',
-        readonly_admin: 'id_readonly_admin',
-        techsupport: 'atlas-portal.cisco.techsupport'
+        readonly_admin: 'id_readonly_admin'/*,
+        techsupport: 'atlas-portal.cisco.techsupport'*/
       },
 
       roles: {
@@ -153,8 +153,8 @@
         orderadmin: 'Order_Admin',
         spark_synckms: 'Spark_SyncKms',
         readonly_admin: 'Readonly_Admin',
-        compliance_user: 'Compliance_User',
-        techsupport: 'Tech_Support'
+        compliance_user: 'Compliance_User'/*,
+        techsupport: 'Tech_Support'*/
       },
 
       roleState: {
@@ -340,7 +340,7 @@
       WX2_User: ['overview', 'support', 'activateProduct'],
       WX2_Support: ['status', 'overview', 'reports', 'support'],
       WX2_SquaredInviter: [],
-      Tech_Support: ['status', 'overview', 'reports', 'support'],
+      // Tech_Support: ['status', 'overview', 'reports', 'support'],
       PARTNER_ADMIN: ['partneroverview', 'partnercustomers', 'customer-overview', 'partnerreports', 'trialAdd', 'trialEdit', 'profile', 'pstnSetup', 'video', 'settings'],
       PARTNER_SALES_ADMIN: ['overview', 'partneroverview', 'customer-overview', 'partnercustomers', 'partnerreports', 'trialAdd', 'trialEdit', 'pstnSetup', 'video', 'settings'],
       CUSTOMER_PARTNER: ['overview', 'partnercustomers', 'customer-overview'],
