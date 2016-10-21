@@ -1,0 +1,29 @@
+/*************************************
+ *      Status Style imports
+ ************************************/
+
+@import '../incidents/createIncident/_new-incident';
+@import '../incidents/incidentList/_incident-list';
+@import '../incidents/deleteIncident/_delete-incident';
+@import '../incidents/updateIncident/_update-incident';
+@import "../components/_component.scss";
+@import '../dashboard/_dash-board.scss';
+@import '../serviceManagement/_service-list.scss';
+
+div.status-page-wraper{
+  background:#fff;
+}
+div.status{
+  ul.select-options{
+    overflow-y: scroll;
+  }
+}
+.modal-content.small.status-add-service,.modal-content.small.status-edit-service,.modal-content.small.status-delete-service{
+  height: 235px;
+  div.marginInput{
+  	margin: 10px 0px;
+  }
+}
+.reveal-modal.full .modal-content.status-add-service,.reveal-modal.full .modal-content.status-edit-service,.reveal-modal.full .modal-content.status-delete-service{
+  top: 200px;
+}

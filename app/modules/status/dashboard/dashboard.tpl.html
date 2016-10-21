@@ -1,3 +1,107 @@
 <div class="status-dashboard">
-	 <cs-page-header id="statusPanel" title="{{::dashboardCtrl.pageTitle}}" back="false" tabs="dashboardCtrl.headerTabs"></cs-page-header>
+
+  <div class="first-block">
+
+    <div class="tab-content">
+
+      <div ng-if="!showList" class="noListNote">
+
+        <div id="createIncidentPage">
+          <h1>New Incident</h1>
+          <div class="incidentName">
+            <h3>Incident Name</h3>
+            <input placeholder="Incident Name" type="text" name="input" ng-model="newIncident.name" required ng-trim="false">
+          </div>
+
+          <div class="incidentStatus">
+            <h3>Incident Status</h3>
+            <label>
+              <input type="radio" ng-model="newIncident.status" value="investigating">
+              Investigating
+            </label>
+            <label>
+              <input type="radio" ng-model="newIncident.status" value="identified">
+              Identified
+            </label>
+            <label>
+              <input type="radio" ng-model="newIncident.status" value="monitoring">
+              Monitoring
+            </label>
+            <label>
+              <input type="radio" ng-model="newIncident.status" value="resolved">
+              Resolved
+            </label>
+          </div>
+
+          <div class="incidentMsg">
+            <h3>Message</h3>
+            <textarea ng-model="newIncident.msg" placeholder="Message"></textarea>
+          </div>
+          <input style="" class="btn btn--primary" type="button" value="CREATE INCIDENT" ng-click="dashboardCtrl.CreateIncident()">
+        </div>
+
+      </div>
+
+      <div ng-if="showList" class="incidentListPageHeader clearFloat">
+        <h2>Incidents</h2>
+        <input class="btn btn--primary" type="button" value="+ NEW INCIDENT" ng-click="toCreatePage()">
+      </div>
+
+      <div ng-if="showList" class="DincidentItem" ng-repeat="incident in incidentList | orderBy:'-incident.lastModifiedTime':true">
+        <div ng-if="incident.status!='resolved'" class="incidentInfo">
+          <div ng-if="incident.status!='resolved'" class="DincidentName clearFloat">
+            <span>{{incident.incidentName}}</span>
+          </div>
+
+          <a ng-if="incident.status!='resolved'" class="DoperationHref clearFloat" ui-sref="status.incidents.update( {incidentName:incident.incidentName, incidentId:incident.incidentId} )">UPDATE INCIDENT</a>
+
+        </div>
+
+        <div ng-if="incident.status!='resolved'" class="DoperationTime clearFloat" style="clear:both;">
+          <span class="info1">{{incident.status}}</span>
+          <span>{{incident.message}}</span>
+          <div class="time">{{incident.lastModifiedTime | date: 'medium'}}</div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <div class="second-block">
+    <div  id="title2">Component Statuses</div>
+    <div class="content-area2">
+
+      <div  ng-if="dbc.components.length">
+        <div class="componentData" ng-repeat="component in dbc.components | orderBy: 'position'" >
+          <div class="table-row" ng-init="hide = false">
+          <span class="Component-Name" ng-click="hide = !hide">{{component.componentName}}</span>
+          <span class="isOverridden setColor" ng-hide="component.isOverridden" ng-click="dbc.getOverriddenComponent(component)">Override this status</span>
+          <span class="isOverridden setColor" ng-show="component.isOverridden" ng-click="component.isOverridden=false">Use derived status</span>
+          <cs-select class="testDropdown" ng-model="component.statusObj" options="statuses" is-disabled="component.isOverridden" on-change-fn="dbc.modifyComponentStatus(component)">
+          </cs-select>
+          </div>
+          <div class="UL" ng-show="hide">
+            <div class="subRow" ng-repeat="subComponent in component.components">
+              <span class="component-name">{{subComponent.componentName}}</span>
+              <cs-select class="testDropdown" ng-model="subComponent.statusObj" options="statuses" on-change-fn="dbc.getChildStatus(subComponent, component)"></cs-select>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div ng-if="!dbc.components.length">
+        <div class="centered-info-pane">
+          <h3 translate="{{'statusPage.componentsPage.listing.noComponentHeading'}}"></h3>
+          <p translate="{{'statusPage.componentsPage.listing.noComponentText'}}"></p>
+        </div>
+      </div>
+    </div>
+    </div>
+
+
+
 </div>

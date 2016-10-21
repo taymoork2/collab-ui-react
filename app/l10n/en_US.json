@@ -1,22 +1,52 @@
 {
   "statusPage": {
     "pageTitle": "Status Management",
+    "serviceManagement": "Service Management",
     "dashboard": "Dashboard",
     "incidents": "Incidents",
     "components": "Components",
-    "addComponents": "Add A Component",
-    "componentName": "Component Name",
-    "componentDesc": "Description (optional)",
-    "componentGroup": "Component Group",
-    "nameCannotBeBlank": "Name can't be blank",
-    "createNewComponentGroup": "Create new component group",
-    "createComponent": "Create Component",
-    "componentInfo": "Component Info",
+    "addStatusPage": "Add Another Service",
     "editAction": "Edit",
     "deleteAction": "Delete",
     "update": "Update",
     "deleteWarning": "WARNING! Deleting a component cannot be undone. All associated data will be deleted as well. Please be absolutely sure this is what you want. <br /> Type DELETE in the box below for final confirmation, then hit the delete button.",
-    "permanentlyDelete": "Permanently DELETE {{componentName}}"
+    "permanentlyDelete": "Permanently DELETE {{componentName}}",
+    "componentsPage": {
+      "listing": {
+        "noComponentHeading": "No Component Added",
+        "noComponentText": "Click the ADD botton to get started."
+      },
+      "addComponent": {
+        "title": "ADD A COMPONENT",
+        "componentName": "Component Name",
+        "componentDesc": "Description (optional)",
+        "componentDesc-placeholder": "Frontend application and API servers",
+        "componentGroup": "Component Group",
+        "nameCannotBeBlank": "Name can't be blank",
+        "createNewComponentGroup": "Create new component group",
+        "createComponent": "Create Component",
+        "componentInfo": "Component Info",
+        "groupName": "Group name",
+        "cancelCreateNewGroup": "Cancel new group creation"
+      },
+      "updateComponent": {
+        "title": "Update A Component",
+        "componentName": "Component Name",
+        "componentDesc": "Description (optional)",
+        "componentDesc-placeholder": "Frontend application and API servers",
+        "componentGroup": "Component Group",
+        "nameCannotBeBlank": "Name can't be blank",
+        "createNewComponentGroup": "Create new component group",
+        "updateComponent": "Update Component",
+        "componentInfo": "Component Info",
+        "groupName": "Group name",
+        "cancelCreateNewGroup": "Cancel new group creation"
+      },
+      "delComponent":{
+        "delComponentBtn": "PERMANENTLY DELETE {{}}",
+        "delTips": "<p><em>WARNING! </em> <strong>Deleting a component cannot be undone. </strong> All associated data will be deleted as well. Please be absolutely sure this is what you want.</p><p>Type <em>DELETE </em> in the box below for final confirmation, then hit the delete button.</p>"
+      }
+    }
   },
   "loginPage": {
     "title": "Cloud Collaboration Management",
@@ -414,6 +444,7 @@
     "eventsTab": "Events",
     "eventsTabDesc": "Event Management",
     "helpdesk": "Help Desk",
+    "incidentsTab": "Incidents",
     "statusTab": "Status",
     "statusTabDesc": "Status Mannagement",
     "careTab": "Care",
@@ -1919,7 +1950,21 @@
       "deactivateServiceHeader" : "Deactivate Hybrid Data Security",
       "deactivateServiceDesc" : "Deactivating Service...",
       "deactivateServiceButton" : "Deactivate",
-      "deactivateServiceConfirmation" : "Confirm Deactivation"
+      "deactivateServiceConfirmation" : "Confirm Deactivation",
+      "serviceStatus" : "Service Status",
+      "serviceStatusTrialMode" : "Trial Mode",
+      "serviceStatusProductionMode" : "Production Mode",
+      "serviceStatusTrial" : "Trial",
+      "serviceStatusProduction" : "Production",
+      "serviceStatusTrialStarted" : "Hybrid Data Security Trial Mode has started",
+      "serviceStatusProductionStarted" : "Hybrid Data Security Production Mode has started",
+      "serviceDocumentationSoftware" : "Documentation and Software",
+      "serviceHelp" : "Visit <a target='_blank' href='{{documentationUrl}}'>Help Central</a> whenever you need further information about Hybrid Services",
+      "serviceDownload" : "Download Cisco Expressway software from <a target='_blank' href='http://software.cisco.com'>software.cisco.com</a>",
+      "orgSettings" : "Organization",
+      "orgSettingsKmsServer" : "Server",
+      "orgSettingsKmsMachineAccount"  : "Machine Account",
+      "getOrgSettingsFailure" : "Failed to retrieve organization data."
     }
   },
   "ediscovery": {
@@ -5102,7 +5147,8 @@
           "squared-fusion-cal": "Calendar",
           "squared-fusion-uc": "Call",
           "squared-fusion-mgmt": "Management",
-          "squared-fusion-media": "Media"
+          "squared-fusion-media": "Media",
+          "hybrid-data-security": "Data Security"
         }
       },
       "licenses": {

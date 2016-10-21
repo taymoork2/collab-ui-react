@@ -1,0 +1,45 @@
+<div class="incidentListPage">
+
+      <div class="tab-content">
+
+        <div class="incidentListPageHeader clearFloat">
+          <span class="incidentTitle">Incidents</span>
+          <input class="btn btn--primary" type="button" value="+ NEW INCIDENT" ng-click="toCreatePage()">
+        </div>
+
+        <div ng-if="!showList" class="noListNote">
+
+          <span>Looks like you've got a clean record</span>
+          <br/>
+          <span>When you have downtime: </span><a ui-sref=".new">Create your first incident</a>
+
+        </div>
+
+        <div ng-if="showList" class="incidentItem" ng-repeat="incident in incidentList | orderBy:'-incident.lastModifiedTime':true">
+
+          <div class="incidentName clearFloat">
+            <span>{{incident.incidentName}}</span>
+          </div>
+
+          <div class="operationHref clearFloat">
+            <div ng-if="incident.status!='resolved'">
+              <a ui-sref="status.incidents.update( {incidentName:incident.incidentName, incidentId:incident.incidentId} )">Update</a>
+              <a ui-sref="status.incidents.delete({ incidentName:incident.incidentName, incidentId:incident.incidentId })">Delete</a>
+            </div>
+            <div ng-if="incident.status=='resolved'">
+              <a ui-sref="status.incidents.view( {incidentName:incident.incidentName, incidentId:incident.incidentId} )">View Incident</a>
+              <a ui-sref="status.incidents.delete({ incidentName:incident.incidentName, incidentId:incident.incidentId })">Delete</a>
+            </div>
+          </div>
+
+
+          <div class="operationTime clearFloat">
+            <span class="setColor" ng-if="incident.status!='resolved'">Last updated on </span>
+            <span class="setColor" ng-if="incident.status=='resolved'">Resolved on </span>
+            <span class="modifiedTime setColor">{{incident.lastModifiedTime | date: 'medium'}}</span>
+          </div>
+
+        </div>
+
+      </div>
+</div>

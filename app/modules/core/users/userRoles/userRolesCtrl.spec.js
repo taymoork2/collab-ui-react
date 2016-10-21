@@ -142,6 +142,10 @@ describe('Controller: UserRolesCtrl', function () {
           roleName: 'Readonly_Admin',
           roleState: 'INACTIVE'
         }),
+        /*Object({
+          roleName: 'Tech_Support',
+          roleState: 'INACTIVE'
+        }),*/
         Object({
           roleName: 'Help_Desk',
           roleState: 'INACTIVE'
@@ -248,6 +252,10 @@ describe('Controller: UserRolesCtrl', function () {
           roleName: 'Readonly_Admin',
           roleState: 'INACTIVE'
         }),
+        /*Object({
+          roleName: 'Tech_Support',
+          roleState: 'INACTIVE'
+        }),*/
         Object({
           roleName: 'Help_Desk',
           roleState: 'ACTIVE'
@@ -266,6 +274,32 @@ describe('Controller: UserRolesCtrl', function () {
       var mockUser = spyOn(Userservice, 'patchUserRoles');
       $scope.updateRoles();
       expect(mockUser.calls.argsFor(0)[2]).toEqual(roles);
+    });
+  });
+
+  describe('Initialize isPartner from current org response', function () {
+    beforeEach(function () {
+      expect($scope.isPartner).toBeFalsy();
+    });
+    afterEach(function () {
+      initController();
+      expect($scope.isPartner).toBe(true);
+    });
+    it('should initialize from isPartner', function () {
+      Orgservice.getOrgCacheOption.and.callFake(function (callback) {
+        callback({
+          success: true,
+          isPartner: true,
+        });
+      });
+    });
+    it('should initialize from delegatedAdministration', function () {
+      Orgservice.getOrgCacheOption.and.callFake(function (callback) {
+        callback({
+          success: true,
+          delegatedAdministration: true,
+        });
+      });
     });
   });
 });

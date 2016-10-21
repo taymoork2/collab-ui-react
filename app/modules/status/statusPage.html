@@ -1,0 +1,19 @@
+<div class="status">
+  <cs-page-header id="statusPanel"
+                  title="{{::status.pageTitle}}"
+                  back="false"
+                  tabs="status.headerTabs">
+  </cs-page-header>
+
+  <div class="row">
+      <cs-select
+        ng-model="status.selected"
+        options="status.options"
+        placeholder="'Please choice a service'"
+        nested="false"
+        icon="icon-chevron-down">
+      </cs-select>
+  </div>
+
+  <div class="status-page-wraper" ui-view></div>
+</div>
