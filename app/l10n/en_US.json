@@ -1927,7 +1927,7 @@
       "serviceStatusProductionStarted" : "Hybrid Data Security Production Mode has started",
       "serviceDocumentationSoftware" : "Documentation and Software",
       "serviceHelp" : "Visit <a target='_blank' href='{{documentationUrl}}'>Help Central</a> whenever you need further information about Hybrid Services",
-      "serviceDownload" : "Download Hybrid Data Security software from <a target='_blank' href='http://software.cisco.com'>software.cisco.com</a>",
+      "serviceDownload" : "Download Cisco Expressway software from <a target='_blank' href='http://software.cisco.com'>software.cisco.com</a>",
       "orgSettings" : "Organization",
       "orgSettingsKmsServer" : "Server",
       "orgSettingsKmsMachineAccount"  : "Machine Account",
@@ -5113,7 +5113,8 @@
           "squared-fusion-cal": "Calendar",
           "squared-fusion-uc": "Call",
           "squared-fusion-mgmt": "Management",
-          "squared-fusion-media": "Media"
+          "squared-fusion-media": "Media",
+          "hybrid-data-security": "Data Security"
         }
       },
       "licenses": {
