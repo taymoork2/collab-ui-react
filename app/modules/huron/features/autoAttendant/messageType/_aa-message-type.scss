@@ -1,10 +1,9 @@
 .aa-message-type-textarea {
-//  @include vr-spacing(mb, 1);
-    line-height: 1.5rem;
-    @include vr-spacing(ml, 0);
-    @include vr-spacing(pt, .75);
-    @include vr-spacing(pb, .75);
-    @include vr-spacing(pl, .75);
-    @include vr-spacing(pr, .75);
-    resize: none;
-  }
+  line-height: 1.5rem;
+  @include vr-spacing(ml, 0);
+  @include vr-spacing(pt, .75);
+  @include vr-spacing(pb, .75);
+  @include vr-spacing(pl, .75);
+  @include vr-spacing(pr, .75);
+  resize: none;
+}

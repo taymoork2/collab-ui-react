@@ -14,11 +14,16 @@ describe('Controller: Customer Reports Ctrl', function () {
   var devicesJson = getJSONFixture('core/json/customerReports/devices.json');
 
   var avgRoomsCard = _.cloneDeep(ctrlData.avgRoomsOptions);
+  var deviceCard = _.cloneDeep(ctrlData.deviceOptions);
   var filesSharedCard = _.cloneDeep(ctrlData.filesSharedOptions);
+  var mediaOptions = _.cloneDeep(ctrlData.mediaOptions);
   avgRoomsCard.table = undefined;
+  deviceCard.table = undefined;
   filesSharedCard.table = undefined;
+  mediaOptions.description = 'mediaQuality.descriptionCustomer';
+  mediaOptions.table = undefined;
 
-  var mediaOptions = [{
+  var mediaArray = [{
     value: 0,
     label: 'reportsPage.allCalls'
   }, {
@@ -28,6 +33,11 @@ describe('Controller: Customer Reports Ctrl', function () {
     value: 2,
     label: 'reportsPage.videoCalls'
   }];
+  var mediaDropdown = {
+    array: mediaArray,
+    disabled: false,
+    selected: mediaArray[0]
+  };
 
   var headerTabs = [{
     title: 'mediaFusion.page_title',
@@ -210,15 +220,20 @@ describe('Controller: Customer Reports Ctrl', function () {
       expect(controller.metricStatus).toEqual(ctrlData.SET);
       expect(controller.metrics).toEqual(_.cloneDeep(metricsData.response.displayData));
 
-      expect(controller.mediaQualityStatus).toEqual(ctrlData.SET);
-      expect(controller.mediaOptions).toEqual(mediaOptions);
-      expect(controller.mediaSelected).toEqual(mediaOptions[0]);
+      expect(controller.avgRoomOptions).toEqual(avgRoomsCard);
+      expect(controller.filesSharedOptions).toEqual(filesSharedCard);
 
-      expect(controller.deviceStatus).toEqual(ctrlData.SET);
-      expect(controller.selectedDevice).toEqual(controller.deviceFilter[0]);
+      expect(controller.deviceOptions).toEqual(deviceCard);
       _.forEach(_.cloneDeep(devicesJson.response.filterArray), function (filter) {
-        expect(controller.deviceFilter).toContain(filter);
+        expect(controller.deviceDropdown.array).toContain(filter);
       });
+      expect(controller.deviceDropdown.disabled).toEqual(false);
+      expect(controller.deviceDropdown.selected).toEqual(controller.deviceDropdown.array[0]);
+
+      expect(controller.mediaOptions).toEqual(mediaOptions);
+      expect(controller.mediaDropdown.array).toEqual(mediaDropdown.array);
+      expect(controller.mediaDropdown.disabled).toEqual(mediaDropdown.disabled);
+      expect(controller.mediaDropdown.selected).toEqual(mediaDropdown.selected);
 
       var reportFilter = _.cloneDeep(ctrlData.reportFilter);
       _.forEach(controller.filterArray, function (filter, index) {
@@ -226,9 +241,6 @@ describe('Controller: Customer Reports Ctrl', function () {
         expect(filter.id).toEqual(reportFilter[index].id);
         expect(filter.selected).toEqual(reportFilter[index].selected);
       });
-
-      expect(controller.avgRoomOptions).toEqual(avgRoomsCard);
-      expect(controller.filesSharedOptions).toEqual(filesSharedCard);
 
       expect(controller.headerTabs).toEqual(headerTabs);
       expect(controller.timeOptions).toEqual(timeOptions);
@@ -267,13 +279,13 @@ describe('Controller: Customer Reports Ctrl', function () {
     it('should update the media graph on mediaUpdate', function () {
       controller.timeSelected = timeOptions[2];
       expect(this.CustomerGraphService.setMediaQualityGraph).toHaveBeenCalledTimes(2);
-      controller.mediaUpdate();
+      controller.mediaDropdown.click();
       expect(this.CustomerGraphService.setMediaQualityGraph).toHaveBeenCalledTimes(3);
     });
 
     it('should update the registered device graph on deviceUpdated', function () {
       expect(this.CustomerGraphService.setDeviceGraph).toHaveBeenCalledTimes(2);
-      controller.deviceUpdate();
+      controller.deviceDropdown.click();
       expect(this.CustomerGraphService.setDeviceGraph).toHaveBeenCalledTimes(3);
     });
   });

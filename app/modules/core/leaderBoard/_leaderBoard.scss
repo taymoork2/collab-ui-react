@@ -7,10 +7,12 @@
 }
 
 .leader-board {
-  padding: 30px, 0px, 30px, 0px;
+  padding: 30px 0px;
+
   .total-count {
     color: $gray-dark;
   }
+
   .text-center {
     font-size: 12px;
   }
@@ -75,10 +77,11 @@
 .leader-board .cs-card .header-section {
   padding-top: 12px;
   padding-bottom: 20px;
+
   &.cta-card {
-      &:after {
-        border-top: 5px solid $color-cta-base;
-      }
+    &::after {
+      border-top: 5px solid $color-cta-base;
+    }
   }
 }
 
@@ -95,13 +98,13 @@
 }
 
 .bucket-description {
-  font-family: "Arial";
+  font-family: Arial;
   font-size: 12px;
   color: $gray-darker;
 }
 
 .bucket-actions {
-  font-family: "Arial";
+  font-family: Arial;
   font-size: 13px;
   color: $brand-primary;
   float: left;
@@ -191,6 +194,7 @@
   .push-down-container-inner {
     padding-top: 0; // lose 20px
   }
+
   .leader-board {
     margin-top: 20px; // gain 20px
     &.has-active-trial {

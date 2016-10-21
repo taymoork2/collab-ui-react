@@ -1,19 +1,22 @@
 .aa-media-upload {
-
   .aa-box {
     display: inline-block;
-    @include vr-spacing(mb, .3);
-    @include vr-spacing(pt, .75);
-    @include vr-spacing(pl, .75);
-    @include vr-spacing(pr, .75);
+
+    @include vr-spacing(mb, 0.3);
+    @include vr-spacing(pt, 0.75);
+    @include vr-spacing(pl, 0.75);
+    @include vr-spacing(pr, 0.75);
+
     background-color: $brand-white;
     border: 1px solid $gray-light;
     height: 7.75rem;
     border-radius: 3px;
     color: $gray-light;
   }
+
   .aa-tall-box {
     @extend .aa-box;
+
     height: 9.25rem;
     @include vr-spacing(pt, 0);
     @include vr-spacing(pl, 0);
@@ -41,7 +44,6 @@
     .cancel-media {
       .cancel-media-icon {
         @extend .icon;
-
         @extend .icon-close;
 
         color: $gray-light-2;
@@ -59,36 +61,37 @@
     }
 
     .aa-progress {
-      margin-top: .4rem;
+      margin-top: 0.4rem;
     }
   }
 
-  & .aa-progress-supplementary {
-    @include vr-spacing(mv, .5);
-    @include vr-spacing(mr, .5);
-    @include vr-spacing(ml, .5);
+  .aa-progress-supplementary {
+    @include vr-spacing(mv, 0.5);
+    @include vr-spacing(mr, 0.5);
+    @include vr-spacing(ml, 0.5);
     @include vr-spacing(mt, 0);
+
     color: $gray-dark-4;
   }
 
-  & .aa-top-bottom-push {
-    @include vr-spacing(mv, .625);
+  .aa-top-bottom-push {
+    @include vr-spacing(mv, 0.625);
+
     color: $gray-dark-4;
     line-height: 1.25rem;
   }
 
-  & .spread-light {
+  .spread-light {
     color: $gray-light-1;
     line-height: 1rem;
   }
 
-  & .aa-center-small {
+  .aa-center-small {
     text-align: center;
-    font-size: .75rem;
+    font-size: 0.75rem;
   }
 
-  & .aa-text-info {
+  .aa-text-info {
     font-style: italic;
   }
-
 }

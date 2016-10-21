@@ -1,5 +1,6 @@
 module.exports = {
-  extends: ["../.eslintrc.js"],
+  extends: ['../.eslintrc.js'],
+  plugins: ['lodash', 'promise'],
   rules: {
     // custom rule defined in config/rules/protractor-guidelines.js
     // deactivated because tons of e2e tests do not pass it…
@@ -92,5 +93,9 @@ module.exports = {
     wizard: true,
     xdescribe: true,
     xit: true,
+    componentPage: true,
+    dashboardPage: true,
+    incidentPage: true,
+    serviceListPage: true,
   }
 };

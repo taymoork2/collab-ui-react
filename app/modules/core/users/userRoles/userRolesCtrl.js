@@ -69,6 +69,9 @@
           if (!$scope.showHelpDeskRole) {
             $scope.showHelpDeskRole = $scope.delegatedAdministration || $scope.helpDeskFeatureAllowed;
           }
+          if (!$scope.isPartner) {
+            $scope.isPartner = data.isPartner || data.delegatedAdministration;
+          }
         } else {
           Log.debug('Get existing org failed. Status: ' + status);
         }

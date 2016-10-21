@@ -1,0 +1,36 @@
+<div class="status-edit-service">
+  <div class="modal-header">
+    <button type="button" class="close" ng-click="esc.closeAddModal()">
+      <span class="sr-only" translate="common.close"></span>
+    </button>
+    <h5 class="modal-title">
+    <span>Edit Service</span>
+    </h5>
+  </div>
+
+  <div class="modal-body">
+    <div class="row">
+      <div class="columns medium-3">
+        <span>service name</span>
+      </div>
+      <div class="columns medium-9">
+        <input class="cs-input" type="text" ng-model="esc.service.serviceName">
+      </div>
+    </div>
+    <div class="row">
+      <div class="columns medium-3">
+        <span>service description</span>
+      </div>
+      <div class="columns medium-9">
+        <textarea ng-model="esc.service.description"></textarea>
+      </div>
+    </div>
+    <div class="row">
+      <div class="columns medium-12">
+        <button class="btn activate-button btn--primary" ng-class="{disabled:!esc.validation()}" ng-click="esc.editService()">
+          <span>EDIT</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

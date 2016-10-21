@@ -24,6 +24,7 @@
           $q.all({
             clusterList: FusionClusterService.getAll(),
             hasMediaFeatureToggle: FeatureToggleService.supports(FeatureToggleService.features.atlasMediaServiceOnboarding),
+            hasHDSFeatureToggle: FeatureToggleService.supports(FeatureToggleService.features.atlasHybridDataSecurity),
           })
             .then(function (response) {
               if (Authinfo.isEntitled(Config.entitlements.fusion_cal)) {
@@ -34,6 +35,9 @@
               }
               if (response.hasMediaFeatureToggle && Authinfo.isEntitled(Config.entitlements.mediafusion)) {
                 card.serviceList.push(FusionClusterService.getStatusForService('squared-fusion-media', response.clusterList));
+              }
+              if (response.hasHDSFeatureToggle && Authinfo.isEntitled(Config.entitlements.hds)) {
+                card.serviceList.push(FusionClusterService.getStatusForService('hybrid-data-security', response.clusterList));
               }
               card.enabled = _.some(card.serviceList, function (service) {
                 return service.setup;

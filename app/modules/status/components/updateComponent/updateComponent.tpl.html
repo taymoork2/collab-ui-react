@@ -1,0 +1,64 @@
+<div class="addComponent">
+  <div class="modal-header">
+    <button type="button" class="close" ng-click="updateCtrl.closeAddModal()">
+      <span class="sr-only" translate="common.close"></span>
+    </button>
+    <h5 class="modal-title">
+    <span translate="statusPage.componentsPage.updateComponent.title">
+    </span>
+    </h5>
+  </div>
+
+  <div class="modal-body">
+    <form name="addComponentForm" class="addComponentForm" novalidate>
+      <div>
+        <br>
+        <div class="row">
+          <div class="columns medium-4">
+            <span translate="statusPage.componentsPage.updateComponent.componentName"></span>
+          </div>
+          <div class="columns medium-8">
+            <input class="cs-input" ng-model="updateCtrl.componentName"
+                   placeholder="{{'statusPage.componentsPage.updateCtrl.componentName' | translate}} " type="text">
+          </div>
+        </div>
+        <div class="row">
+          <div class="columns medium-4">
+            <span translate="statusPage.componentsPage.updateComponent.componentDesc"></span>
+          </div>
+          <div class="columns medium-8">
+            <input class="cs-input" ng-model="updateCtrl.componentDesc"
+                   placeholder="{{'statusPage.componentsPage.updateComponent.componentDesc-placeholder' | translate}} "
+                   type="text">
+          </div>
+        </div>
+        <div class="row" ng-if="!updateCtrl.updateGroup">
+          <div class="columns medium-4">
+            <span translate="statusPage.componentsPage.updateComponent.componentGroup"></span>
+          </div>
+          <div class="columns medium-8">
+            <cs-select ng-show="updateCtrl.selectedGroup.value!=='createGroup'" is-warn="updateCtrl.selectedGroup==''"
+                       ng-model="updateCtrl.selectedGroup" options="updateCtrl.groupOptions"
+                       placeholder="updateCtrl.selectPlaceholder" on-change-fn="updateCtrl.groupSelect()">
+            </cs-select>
+            <div ng-show="updateCtrl.selectedGroup.value==='createGroup'">
+              <input class="cs-input" ng-model="updateCtrl.groupName"
+                     placeholder="{{'statusPage.componentsPage.updateComponent.groupName' | translate}} " type="text"
+                     ng-minlength="3" ng-maxlength="20">
+              <button class="cancelCreateNewGroup" ng-click="updateCtrl.cancelCreateNewGroup()">
+                <span translate="statusPage.componentsPage.updateComponent.cancelCreateNewGroup"></span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <div>
+      <button class="btn activate-button btn--primary" ng-class="{disabled:!updateCtrl.validation()}" ng-click="updateCtrl.createComponent()">
+        <span translate="statusPage.componentsPage.updateComponent.updateComponent"></span>
+      </button>
+    </div>
+  </div>
+</div>

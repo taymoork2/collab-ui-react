@@ -1,0 +1,110 @@
+<div id="incidentInfo">
+
+	<div>
+		<div class="incidentName" ng-mouseover="showEdit=true" ng-mouseleave="showEdit=false" ng-show="showIncidentName" ng-init="showIncidentName=true">
+			<span ng-class="incidentWithMsg.impact">{{incidentWithMsg.incidentName}}</span><a class="editButton" ng-show="showEdit" ng-click="showIncidentName=false">Edit</a>
+		</div>
+		<div class="editIncidentName" ng-hide="showIncidentName">
+			<input type="text" class="cs-input" ng-model="incidentWithMsg.incidentName"/>
+			<cs-select class="impactStatuses" ng-model="selectedImpactStatus" options="impactStatuses"></cs-select>
+			<input class="btn btn--primary" type="button" value="SAVE" ng-click="uic.modifyIncident()">
+			<a class="cancleModifyIncident" ng-click="uic.cancleModifyIncident()">Cancel</a>
+		</div>
+	</div>
+
+	<div class="addMsg">
+
+		<div class="incidentStatus">
+			<span class="labelTitle">Incident Status</span>
+			<div class="cs-radio-group">
+				<input
+	        cs-input
+	        type="radio"
+	        ng-model="incidentWithMsg.status"
+	        id="individualRadio1"
+	        name="individualRadio"
+	        value="investigating"
+	        ng-click="toOperational=false"
+	        cs-input-label="Investigating">
+	      <input
+	        cs-input
+	        type="radio"
+	        ng-model="incidentWithMsg.status"
+	        id="individualRadio2"
+	        name="individualRadio"
+	        value="identified"
+	        ng-click="toOperational=false"
+	        cs-input-label="Identified">
+	      <input
+	        cs-input
+	        type="radio"
+	        ng-model="incidentWithMsg.status"
+	        id="individualRadio3"
+	        name="individualRadio"
+	        value="monitoring"
+	        ng-click="toOperational=false"
+	        cs-input-label="Monitoring">
+	      <input
+	        cs-input
+	        type="radio"
+	        ng-model="incidentWithMsg.status"
+	        id="individualRadio4"
+	        name="individualRadio"
+	        value="resolved"
+	        ng-click="toOperational=true"
+	        cs-input-label="Resolved">
+			</div>
+			<div ng-model="toOperational" ng-init="toOperational=false" ng-show="toOperational">
+				<p ng-if="showOperational">
+					<span class="setColor">You can also </span><a ng-click="uic.toOperationalFUN()">set your components to operational.</a>
+				</p>
+				<p ng-if="!showOperational">
+					<span class="setColor">Components will be set to operational upon submission of this incident update.</span>
+				</p>
+			</div>
+		</div>
+
+		<div class="incidentMsg">
+			<span class="labelTitle">Message</span>
+			<textarea ng-model="msg" placeholder="Message"></textarea>
+		</div>
+
+		<div class="componentStatuses">
+			<span class="labelTitle">Component Statuses</span>
+			<p ng-show="!showComponent"><span class="setColor">You can also </span><a class="UpcomponentStatus" ng-click="showComponentFUN()">update a component's status.</a></p>
+			<div ng-show="showComponent">
+				<div ng-repeat="componentGroup in componentsTree">
+					<div class="groupComponent" ng-init="componentVisible=false">
+						<i class="icon icon-chevron-right" ng-click="componentVisible=true" ng-hide="componentVisible"></i>
+						<i class="icon icon-chevron-down" ng-click="componentVisible=false" ng-show="componentVisible"></i>
+						<span class="componentName">{{componentGroup.componentName}}</span>
+						<span class="isOverridden setColor" ng-hide="componentGroup.isOverridden" ng-click="getOverriddenComponent(componentGroup)">Override this status</span>
+						<span class="isOverridden setColor" ng-show="componentGroup.isOverridden" ng-click="componentGroup.isOverridden=false">Use derived status</span>
+
+						<cs-select class="componentSelect" ng-model="componentGroup.statusObj" options="componentStatuses" is-disabled="componentGroup.isOverridden" on-change-fn="setSelectedStatus(componentGroup)"></cs-select>
+
+					</div>
+					<div ng-repeat="component in componentGroup.components" ng-show="componentVisible">
+						<div class="component">
+							<span>{{component.componentName}}</span>
+
+							<cs-select class="componentSelect" ng-model="component.statusObj" options="componentStatuses" on-change-fn="getChildStatus(component,componentGroup)"></cs-select>
+
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<input class="btn btn--primary" type="button" value="UPDATE INCIDENT" ng-click="uic.addIncidentMsg()">
+
+	</div>
+
+	<div class="msgList">
+		<span class="msgListTitle">Previous Updates</span>
+		<div class="item" ng-repeat="msg in incidentWithMsg.messages">
+			<msg-item info='msg'></msg-item>
+		</div>
+	</div>
+
+</div>

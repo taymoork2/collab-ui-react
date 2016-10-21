@@ -6,7 +6,8 @@
     </header>
     <section class="report-{{$ctrl.options.reportType}}">
       <p>{{$ctrl.getDescription($ctrl.options.description)}}</p>
-      <div ng-if="!$ctrl.isTable()" id="{{::$ctrl.options.id}}Chart" ng-class="{'active-chart': $ctrl.isSet() && $ctrl.options.animate, 'barchart': !$ctrl.isDonut(), 'timechartDiv': $ctrl.isDonut()}"></div>
+      <cs-select ng-if="$ctrl.dropdown" id="{{::$ctrl.options.id}}Filter" class='report-dropdown' ng-model="$ctrl.dropdown.selected" options="$ctrl.dropdown.array" on-change-fn="$ctrl.dropdown.click()" is-disabled="$ctrl.dropdown.disabled"></cs-select>
+      <div ng-if="!$ctrl.isTable()" id="{{::$ctrl.options.id}}Chart" ng-class="{'active-chart': $ctrl.isSet() && $ctrl.options.animate, 'barchart': !$ctrl.isDonut(), 'barchart-shift': !$ctrl.isDonut() && $ctrl.dropdown, 'timechartDiv': $ctrl.isDonut()}"></div>
       <table ng-if="$ctrl.isTable()" class="table table-bordered" ng-class="{'dummyTable': $ctrl.options.table.dummy}">
         <thead>
           <th ng-repeat="header in $ctrl.options.table.headers" class="bold vertical-center {{header.class}}">{{$ctrl.getHeader(header.title)}}</th>

@@ -1,0 +1,58 @@
+div.incidentListPage{
+	padding:20px 100px;
+	.tab-content{
+		background-color: transparent;
+		border:none;
+	}
+	span.modifiedTime{
+		margin-left:10px;
+	}
+	.clearFloat:after{
+		clear:both;
+		content:'.';
+		display:block;
+		width: 0;
+		height: 0;
+		visibility:hidden;
+	}
+	div.incidentListPageHeader{
+		span.incidentTitle{
+			font-size:30px;
+			display:inline-block;
+			float:left;
+		}
+		input{
+			float:right;
+		}
+	}
+	div.noListNote{
+		border:1px dashed gray;padding:20px;
+	}
+	div.incidentItem{
+		margin-top:20px;
+		div.incidentName{
+			height:20px;
+			span{
+				float:left;
+				font-size:18px;
+			}
+		}
+		div.operationHref{
+			height:10px;
+			div{
+				float:right;
+				a{
+					margin-left:20px;
+				}
+			}
+		}
+		div.operationTime{
+			span{
+				float:left;
+			}
+			span.setColor{
+				color:#afafaf;
+			}
+		}
+	}
+}

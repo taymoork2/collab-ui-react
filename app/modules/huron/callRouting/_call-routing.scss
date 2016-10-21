@@ -1,4 +1,4 @@
-@import "callPark/_call-park";
+@import 'callPark/_call-park';
 
 .callrouting {
   display: flex;
@@ -6,7 +6,6 @@
 
   .callrouting-header {
     @extend .row;
-
     @extend .page-header;
   }
 
@@ -32,7 +31,7 @@
         }
       }
 
-      & ul {
+      ul {
         &.nav-stacked {
           list-style-type: none;
 
@@ -60,14 +59,13 @@
       height: calc(100vh - 150px);
 
       .callrouting-main-header {
-        margin: 28px 0px 33px 0px;
+        margin: 28px 0px 33px;
 
         .new-button {
           height: 33px;
 
           .info-icon {
             @extend .icon;
-
             @extend .icon-information;
 
             font-size: 29px;
@@ -94,7 +92,6 @@
           .information-content {
             font-family: $brand-font-cisco-TT-Light;
             font-size: 14px;
-            font-color: $gray-darkest;
             line-height: 20px;
           }
         }

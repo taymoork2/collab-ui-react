@@ -10,6 +10,7 @@ cluster-card {
 
       h4 {
         @include text-overflow;
+
         margin-right: 0.625rem;
       }
 
@@ -88,7 +89,7 @@ cluster-card {
     }
 
     .connection-status-cable-horizontal {
-      border-top: 1px solid #AEAEAF;
+      border-top: 1px solid #aeaeaf;
       width: 50%;
       position: absolute;
       top: 50%;
@@ -122,19 +123,21 @@ cluster-card {
         border-top: 1px solid $gray-light-3;
         width: 100%;
         font-size: 16px;
+
         &:focus {
-          box-shadow: none
+          box-shadow: none;
         }
       }
     }
 
     &.card-c_mgmt {
-      header:after {
+      header::after {
         border-top-color: $color-cta-base;
       }
     }
+
     &.card-mf_mgmt {
-      header:after {
+      header::after {
         border-top-color: $color-meetings-base;
       }
     }
@@ -148,6 +151,7 @@ cluster-card {
 @media only screen and (max-width: 470px) {
   cluster-card .cs-card .cluster-list-body {
     flex-direction: column;
+
     .connection-status {
       margin-top: 0.9375rem;
     }
@@ -158,6 +162,7 @@ cluster-card {
 // simulating .cs-card widths with cluster-card
 cluster-card {
   width: 100%;
+
   .cs-card.medium {
     width: 100%;
   }

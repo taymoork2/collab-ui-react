@@ -107,6 +107,32 @@ describe('Huron Auto Attendant', function () {
       utils.click(autoattendant.okQueueTreatment);
     });
 
+    it('should be able to select all fallback options in Call treatment modal of the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
+        // it is for selecting all the fallback options in the Call treatment modal
+      utils.expectIsDisplayed(autoattendant.queueDestDisconnect);
+      utils.click(autoattendant.queueDest);
+      utils.click(autoattendant.queueDestOption.get(1));
+      utils.click(autoattendant.queueDestAction);
+      utils.click(autoattendant.queueDestActionOption.get(1));
+      utils.click(autoattendant.queueDest);
+      utils.click(autoattendant.queueDestOption.get(2));
+      utils.click(autoattendant.queueDestAction);
+      utils.click(autoattendant.queueDestActionOption.get(1));
+      utils.click(autoattendant.queueDest);
+      utils.click(autoattendant.queueDestOption.get(3));
+      utils.expectIsDisplayed(autoattendant.queueDestRouteToPhoneNumber);
+      utils.click(autoattendant.queueDest);
+      utils.click(autoattendant.queueDestOption.get(4));
+      utils.click(autoattendant.queueDestAction);
+      utils.click(autoattendant.queueDestActionOption.get(1));
+      utils.click(autoattendant.queueDest);
+      utils.click(autoattendant.queueDestOption.get(5));
+      utils.expectIsDisplayed(autoattendant.queueDestAction);
+      utils.click(autoattendant.queueDest);
+      utils.click(autoattendant.queueDestOption.get(0));
+      utils.expectIsDisplayed(autoattendant.queueDestDisconnect);
+    });
+
     it('should open queue treatment modal and set the values of IA to the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
       utils.scrollIntoView(autoattendant.repeatPlus);
 

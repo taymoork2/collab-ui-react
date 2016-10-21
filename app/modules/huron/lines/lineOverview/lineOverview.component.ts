@@ -234,9 +234,9 @@ export class LineOverviewComponent implements ng.IComponentOptions {
   public templateUrl = 'modules/huron/lines/lineOverview/lineOverview.html';
   public bindings = {
     ownerType: '@',
-    ownerId: '@',
-    ownerName: '@',
-    numberId: '@',
+    ownerId: '<',
+    ownerName: '<',
+    numberId: '<',
     voicemailEnabled: '<',
   };
 }

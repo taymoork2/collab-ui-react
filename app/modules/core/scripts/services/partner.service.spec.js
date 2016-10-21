@@ -13,6 +13,9 @@ describe('Partner Service -', function () {
       Authinfo = {
         getOrgId: function () {
           return '12345';
+        },
+        getUserName: function () {
+          return 'fake-userName';
         }
       };
 
@@ -258,8 +261,8 @@ describe('Partner Service -', function () {
     });
 
     it('should call a patch if organization is not matched', function () {
-      PartnerService.modifyManagedOrgs('b3f09da0-7729-47a5-8091-1aa07a3c8671');
-      $httpBackend.expectPATCH('https://identity.webex.com/identity/scim/12345/v1/Users/' + testData.getAuthorizationUrlListResponse.data.uuid).respond(200, testData.getAuthorizationUrlListResponse);
+      $httpBackend.expectPATCH('https://atlas-integration.wbx2.com/admin/api/v1/organization/12345/users/roles').respond(200);
+      PartnerService.modifyManagedOrgs('fake-customer-org-id-1');
       $httpBackend.flush();
     });
   });

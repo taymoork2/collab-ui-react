@@ -1,22 +1,52 @@
 {
   "statusPage": {
     "pageTitle": "Status Management",
+    "serviceManagement": "Service Management",
     "dashboard": "Dashboard",
     "incidents": "Incidents",
     "components": "Components",
-    "addComponents": "Add A Component",
-    "componentName": "Component Name",
-    "componentDesc": "Description (optional)",
-    "componentGroup": "Component Group",
-    "nameCannotBeBlank": "Name can't be blank",
-    "createNewComponentGroup": "Create new component group",
-    "createComponent": "Create Component",
-    "componentInfo": "Component Info",
+    "addStatusPage": "Add Another Service",
     "editAction": "Edit",
     "deleteAction": "Delete",
     "update": "Update",
     "deleteWarning": "WARNING! Deleting a component cannot be undone. All associated data will be deleted as well. Please be absolutely sure this is what you want. <br /> Type DELETE in the box below for final confirmation, then hit the delete button.",
-    "permanentlyDelete": "Permanently DELETE {{componentName}}"
+    "permanentlyDelete": "Permanently DELETE {{componentName}}",
+    "componentsPage": {
+      "listing": {
+        "noComponentHeading": "No Component Added",
+        "noComponentText": "Click the ADD botton to get started."
+      },
+      "addComponent": {
+        "title": "ADD A COMPONENT",
+        "componentName": "Component Name",
+        "componentDesc": "Description (optional)",
+        "componentDesc-placeholder": "Frontend application and API servers",
+        "componentGroup": "Component Group",
+        "nameCannotBeBlank": "Name can't be blank",
+        "createNewComponentGroup": "Create new component group",
+        "createComponent": "Create Component",
+        "componentInfo": "Component Info",
+        "groupName": "Group name",
+        "cancelCreateNewGroup": "Cancel new group creation"
+      },
+      "updateComponent": {
+        "title": "Update A Component",
+        "componentName": "Component Name",
+        "componentDesc": "Description (optional)",
+        "componentDesc-placeholder": "Frontend application and API servers",
+        "componentGroup": "Component Group",
+        "nameCannotBeBlank": "Name can't be blank",
+        "createNewComponentGroup": "Create new component group",
+        "updateComponent": "Update Component",
+        "componentInfo": "Component Info",
+        "groupName": "Group name",
+        "cancelCreateNewGroup": "Cancel new group creation"
+      },
+      "delComponent":{
+        "delComponentBtn": "PERMANENTLY DELETE {{}}",
+        "delTips": "<p><em>WARNING! </em> <strong>Deleting a component cannot be undone. </strong> All associated data will be deleted as well. Please be absolutely sure this is what you want.</p><p>Type <em>DELETE </em> in the box below for final confirmation, then hit the delete button.</p>"
+      }
+    }
   },
   "loginPage": {
     "title": "Cloud Collaboration Management",
@@ -100,6 +130,8 @@
     "partners": "Partner Administrators",
     "deleteUser": "Delete User",
     "deleteUserConfText": "Are you sure you want to delete {{email}}?",
+    "deleteMsgrUserConfText": "Unable to delete this user. All Jabber Messenger users must be managed from the ",
+    "orgAdminLinkText": "Messenger Org Admin tool.",
     "deleteUserSelfConfText": "Warning: You are about to delete yourself from the system. This will immediately revoke your access to this application and you will be immediately logged out. All your collaboration services will also be revoked.",
     "typeYestoDelete": "Type \"YES\" to confirm you would like to perform this operation.",
     "yes": "YES",
@@ -107,6 +139,8 @@
     "resendActivation": "Resend Activation",
     "deleteUserSuccess": "User {{email}} deleted successfully; in some cases it may take up to 24 hours before the user is removed from their Spark Rooms",
     "deleteUserError": "Error deleting user.",
+    "deleteCareUserSuccess": "User {{email}} deleted successfully from Care",
+    "deleteCareUserFailure": "Error deleting user {{email}} from Care.",
     "deleteUserDnFallbackError": "Error deleting user. The user's directory number is used as the fallback destination for Hunt Group(s).",
     "onboardSuccess": "{{email}} onboarded successfully",
     "onboardError": "{{email}} not onboarded. Status: {{status}}",
@@ -410,6 +444,7 @@
     "eventsTab": "Events",
     "eventsTabDesc": "Event Management",
     "helpdesk": "Help Desk",
+    "incidentsTab": "Incidents",
     "statusTab": "Status",
     "statusTabDesc": "Status Mannagement",
     "careTab": "Care",
@@ -1915,7 +1950,21 @@
       "deactivateServiceHeader" : "Deactivate Hybrid Data Security",
       "deactivateServiceDesc" : "Deactivating Service...",
       "deactivateServiceButton" : "Deactivate",
-      "deactivateServiceConfirmation" : "Confirm Deactivation"
+      "deactivateServiceConfirmation" : "Confirm Deactivation",
+      "serviceStatus" : "Service Status",
+      "serviceStatusTrialMode" : "Trial Mode",
+      "serviceStatusProductionMode" : "Production Mode",
+      "serviceStatusTrial" : "Trial",
+      "serviceStatusProduction" : "Production",
+      "serviceStatusTrialStarted" : "Hybrid Data Security Trial Mode has started",
+      "serviceStatusProductionStarted" : "Hybrid Data Security Production Mode has started",
+      "serviceDocumentationSoftware" : "Documentation and Software",
+      "serviceHelp" : "Visit <a target='_blank' href='{{documentationUrl}}'>Help Central</a> whenever you need further information about Hybrid Services",
+      "serviceDownload" : "Download Cisco Expressway software from <a target='_blank' href='http://software.cisco.com'>software.cisco.com</a>",
+      "orgSettings" : "Organization",
+      "orgSettingsKmsServer" : "Server",
+      "orgSettingsKmsMachineAccount"  : "Machine Account",
+      "getOrgSettingsFailure" : "Failed to retrieve organization data."
     }
   },
   "ediscovery": {
@@ -2577,7 +2626,10 @@
     "pagingGroupName": "Paging Group Name",
     "pagingGroupNumber": "Paging Group Number",
     "saveLabel": "Do you want to save your changes?",
-    "successUpdate": "'{{pagingGroupName}}' paging group has been updated successfully"
+    "successUpdate": "'{{pagingGroupName}}' paging group has been updated successfully",
+    "successSave": "'{{pagingGroupName}}' paging group has been created successfully",
+    "errorUpdate": "Failed to update the paging group: '{{message}}'",
+    "errorSave": "Failed to create the paging group: '{{message}}'"
   },
 "telephonyPreview": {
     "lines": "Lines",
@@ -3040,7 +3092,8 @@
         "reserveFail": "Numbers were not reserved",
         "customerFail": "Customer was not created",
         "orderFail": "Numbers were not ordered",
-        "siteFail": "Site was not created"
+        "siteFail": "Site was not created",
+        "exchanges": "Failed to get NXX (exchanges) for selected area code"
       }
     },
     "finish": {
@@ -5094,7 +5147,8 @@
           "squared-fusion-cal": "Calendar",
           "squared-fusion-uc": "Call",
           "squared-fusion-mgmt": "Management",
-          "squared-fusion-media": "Media"
+          "squared-fusion-media": "Media",
+          "hybrid-data-security": "Data Security"
         }
       },
       "licenses": {
