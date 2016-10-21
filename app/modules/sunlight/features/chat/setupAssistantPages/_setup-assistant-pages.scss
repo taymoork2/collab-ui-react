@@ -64,9 +64,9 @@ $ct-desc-height: 32px;
 }
 .ct-card-center {
   justify-content: center;
+  width: 100% !important;
+
 }
-.ct-card-start {
-  justify-content: flex-start;
-}
+
 
 
