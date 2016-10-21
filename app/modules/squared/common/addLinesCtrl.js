@@ -65,7 +65,7 @@
             placeEntity.externalNumber = entity.externalNumber.pattern;
           }
 
-          CsdmDataModelService.createCmiPlace(entity.name, entity.assignedDn.pattern)
+          CsdmDataModelService.createCmiPlace(entity.name, entity.assignedDn.pattern, placeEntity.externalNumber)
             .then(successcb)
             .catch(function (error) {
               Notification.errorResponse(error, 'placesPage.placeError');

@@ -5,6 +5,7 @@
     .module('uc.autoattendant')
     .controller('AARouteToQueueCtrl', AARouteToQueueCtrl);
 
+
   /* @ngInject */
   function AARouteToQueueCtrl($scope, $translate, $modal, AAUiModelService, AutoAttendantCeMenuModelService, AACommonService) {
 
@@ -25,15 +26,20 @@
     };
     vm.menuKeyEntry = {};
 
+
     vm.openQueueTreatmentModal = openQueueTreatmentModal;
+
 
     vm.populateUiModel = populateUiModel;
     vm.saveUiModel = saveUiModel;
 
+
     var rtQueue = 'routeToQueue';
     var fromRouteCall = false;
 
+
     /////////////////////
+
 
     function openQueueTreatmentModal() {
       // deep copy used to roll back from the modal changes
@@ -146,6 +152,7 @@
           vm.menuKeyEntry.actions[0].queueSettings.initialAnnouncement.addAction(iaAction);
         }
       }
+
       populateUiModel();
     }
     activate();
