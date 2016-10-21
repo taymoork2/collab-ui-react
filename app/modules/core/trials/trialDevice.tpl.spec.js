@@ -2,7 +2,7 @@
 
 describe('Template: trialDevice.tpl.spec.js:', function () {
 
-  var $compile, $controller, $httpBackend, $scope, $templateCache;
+  var $compile, $controller, $httpBackend, $scope, $templateCache, Orgservice;
   var view;
   var skipBtn, backBtn;
 
@@ -12,15 +12,25 @@ describe('Template: trialDevice.tpl.spec.js:', function () {
   beforeEach(angular.mock.module('Huron'));
   beforeEach(angular.mock.module('Sunlight'));
   beforeEach(inject(dependencies));
+  beforeEach(initSpies);
   beforeEach(compileView);
 
   // TODO - remove $httpBackend when MX300 are officially supported
-  function dependencies(_$compile_, _$controller_, _$httpBackend_, _$rootScope_, _$templateCache_) {
+  function dependencies(_$compile_, _$controller_, _$httpBackend_, _$rootScope_, _$templateCache_, _Orgservice_) {
     $compile = _$compile_;
     $controller = _$controller_;
     $httpBackend = _$httpBackend_;
     $scope = _$rootScope_.$new();
     $templateCache = _$templateCache_;
+    Orgservice = _Orgservice_;
+  }
+
+  function initSpies() {
+    // TODO - remove $httpBackend when MX300 are officially supported
+    $httpBackend
+      .when('GET', 'https://identity.webex.com/identity/scim/null/v1/Users/me')
+      .respond({});
+    spyOn(Orgservice, 'getOrg');
   }
 
   function compileView() {
@@ -32,10 +42,6 @@ describe('Template: trialDevice.tpl.spec.js:', function () {
 
     view = $compile(angular.element(template))($scope);
 
-    // TODO - remove $httpBackend when MX300 are officially supported
-    $httpBackend
-      .when('GET', 'https://identity.webex.com/identity/scim/null/v1/Users/me')
-      .respond({});
     $scope.$apply();
   }
 

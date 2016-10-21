@@ -1,17 +1,21 @@
-/* globals $controller, $q, $rootScope, TrialWebexCtrl, TrialWebexService, TrialTimeZoneService*/
+/* globals $controller, $q, $rootScope, Orgservice, TrialWebexCtrl, TrialWebexService, TrialTimeZoneService, TrialService */
 
 'use strict';
 
 describe('Controller: Trial Webex', function () {
-  var controller;
+  var controller, scope;
   var trialData = getJSONFixture('core/json/trials/trialData.json');
 
   beforeEach(angular.mock.module('core.trial'));
   beforeEach(angular.mock.module('Core'));
+  beforeEach(angular.mock.module('Huron'));
+  beforeEach(angular.mock.module('Sunlight'));
 
   beforeEach(function () {
-    bard.inject(this, '$controller', '$q', '$rootScope', 'TrialWebexService', 'TrialTimeZoneService');
+    bard.inject(this, '$controller', '$q', '$rootScope', 'Orgservice', 'TrialWebexService', 'TrialTimeZoneService', 'TrialService');
+  });
 
+  beforeEach(function () {
     bard.mockService(TrialWebexService, {
       getData: trialData.enabled.trials.webexTrial,
       validateSiteUrl: function (siteUrl) {
@@ -33,8 +37,17 @@ describe('Controller: Trial Webex', function () {
       getTimeZones: $q.when([])
     });
 
-    controller = $controller('TrialWebexCtrl');
+    spyOn(Orgservice, 'getOrg');
+
+    initController();
   });
+
+  function initController() {
+    scope = $rootScope.$new();
+    scope.trialData = trialData.enabled;
+    controller = $controller('TrialWebexCtrl', { $scope: scope.$new() });
+    $rootScope.$apply();
+  }
 
   it('should resolve siteUrl validation when valid', function (done) {
     controller.validateSiteUrl('acmecorp.webex.com')
@@ -49,6 +62,7 @@ describe('Controller: Trial Webex', function () {
   });
 
   it('should reject siteUrl validation when invalid', function (done) {
+
     controller.validateSiteUrl('invalid.test.com')
       .then(function () {
         done.fail('validation promise was resolved');
