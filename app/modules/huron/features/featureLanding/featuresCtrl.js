@@ -38,26 +38,6 @@
       filterValue: 'HG'
     }];
 
-    FeatureToggleService.supports(FeatureToggleService.features.callParkService).then(function (result) {
-      if (result) {
-        var cp = {
-          name: $translate.instant('callPark.title'),
-          filterValue: 'CP'
-        };
-        vm.filters.push(cp);
-      }
-    });
-
-    FeatureToggleService.supports(FeatureToggleService.features.huronPagingGroup).then(function (result) {
-      if (result) {
-        var pg = {
-          name: $translate.instant('pagingGroup.title'),
-          filterValue: 'PG'
-        };
-        vm.filters.push(pg);
-      }
-    });
-
     /* LIST OF FEATURES
      *
      *  To add a New Feature
@@ -87,7 +67,9 @@
       isEmpty: false,
       i18n: 'huronFeatureDetails.cpName',
       color: 'cta'
-    }, {
+    }];
+
+    var pgFeature = {
       name: 'PG',
       getFeature: function () {
         return PagingGroupService.getListOfPagingGroups();
@@ -96,9 +78,30 @@
       isEmpty: false,
       i18n: 'huronFeatureDetails.pgName',
       color: 'gray'
-    }];
+    };
 
-    init();
+    FeatureToggleService.supports(FeatureToggleService.features.callParkService).then(function (result) {
+      if (result) {
+        var cp = {
+          name: $translate.instant('callPark.title'),
+          filterValue: 'CP'
+        };
+        vm.filters.push(cp);
+      }
+    });
+
+    FeatureToggleService.supports(FeatureToggleService.features.huronPagingGroup).then(function (result) {
+      if (result) {
+        var pg = {
+          name: $translate.instant('pagingGroup.title'),
+          filterValue: 'PG'
+        };
+        vm.filters.push(pg);
+        vm.features.push(pgFeature);
+      }
+      init();
+    });
+
 
     function init() {
       vm.loading = false;
