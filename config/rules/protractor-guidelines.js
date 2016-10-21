@@ -5,7 +5,7 @@ module.exports = function (context) {
   // utils
     'utils', 'deleteUtils', 'createUtils', 'deleteTrialUtils', 'helper',
   // page objects
-    'notifications', 'landing', 'login', 'enterEmailAddrPage', 'createAccountPage', 'navigation', 'users', 'reports', 'support', 'roles', 'partner', 'wizard', 'invite', 'activate',
+    'incidentPage', 'componentPage', 'dashboardPage', 'serviceListPage', 'notifications', 'landing', 'login', 'enterEmailAddrPage', 'createAccountPage', 'navigation', 'users', 'reports', 'support', 'roles', 'partner', 'wizard', 'invite', 'activate',
     'callrouting', 'autoattendant', 'servicesetup', 'telephony', 'huronFeatures', 'huntGroup', 'mediaservice', 'careLandingPage', 'careChatTemplateSetupPage',
   // Others
     'Math', '_'
