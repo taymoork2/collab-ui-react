@@ -5,6 +5,7 @@ var AutoAttendantPage = function () {
   this.playSubmenu = 'Play Submenu';
   this.goBack = 'Go Back';
   this.routeToQueue = 'Queue Call';
+
   this.key0 = '0';
   this.key1 = '1';
   this.key2 = '2';
@@ -19,6 +20,13 @@ var AutoAttendantPage = function () {
   this.okQueueTreatment = element(by.id('okTreatmentBtn'));
   this.mohCustomUpload = element(by.id('uploadFileRadio1'));
   this.mohDefaultUpload = element(by.id('musicOnHoldRadio1'));
+
+  this.queueDestDisconnect = element(by.linkText('Disconnect'));
+  this.queueDest = element(by.id('destinationSelect'));
+  this.queueDestOption = element(by.id('destinationSelect')).all(by.tagName('li'));
+  this.queueDestAction = element(by.linkText('Search or Select'));
+  this.queueDestActionOption = element(by.css('div.dropdown-menu.visible')).all(by.tagName('li'));
+  this.queueDestRouteToPhoneNumber = element(by.name('phoneNumberInput'));
 
   this.initialMessage = element(by.id('initialAnnouncement')).element(by.css('aa-message-type [name="messageInput"]'));
   this.initialMessageOptions = element(by.id('initialAnnouncement')).element(by.css('select[name="messageSelect"] + div a.select-toggle'));

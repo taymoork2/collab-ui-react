@@ -1,19 +1,22 @@
 .deleteClusterTableRow {
   border-top: 0;
   display: flex;
+
   td[disabled] {
     width: 40%;
     padding-left: 0rem;
-    color: #AEAEAF;
+    color: #aeaeaf;
   }
-  td{
+
+  td {
     width: 40%;
     padding-left: 0rem;
-  }  
+  }
 }
+
 .deleteClusterTableRow .alert {
-      margin-right: 0px;
-      margin-left: 0px;
+  margin-right: 0px;
+  margin-left: 0px;
 }
 
 .deleteClusterTableHeaderRow {
@@ -26,7 +29,7 @@
     background-color: white;
     width: 40%;
     padding-left: 0rem;
-    color: #AEAEAF;
+    color: #aeaeaf;
   }
 }
 
@@ -37,7 +40,7 @@
 
 .makeASelection {
   padding-top: 1rem;
-  padding-bottom: .4rem;
+  padding-bottom: 0.4rem;
 }
 
 .radioGroup {
@@ -45,11 +48,11 @@
 }
 
 .selectTheDest {
-  color: #AEAEAF;
+  color: #aeaeaf;
   font-style: italic;
 }
 
 .deleteClusterTableRow .select-list .msg-container {
-    position: inherit;
-    width: 100%;
+  position: inherit;
+  width: 100%;
 }

@@ -1,18 +1,24 @@
 .ct-agent-unavailable {
   align-items: center;
+
   @mixin placeholder {
+    /* stylelint-disable selector-no-vendor-prefix */
     ::-webkit-input-placeholder {
-      @content
+      @content;
     }
+
     :-moz-placeholder {
-      @content
+      @content;
     }
+
     ::-moz-placeholder {
-      @content
+      @content;
     }
+
     :-ms-input-placeholder {
-      @content
+      @content;
     }
+    /* stylelint-enable selector-no-vendor-prefix */
   }
 
   .ct-agent-unavailable-icon {
@@ -24,7 +30,8 @@
     flex-direction: column;
     flex-wrap: nowrap;
     align-items: center;
-    @include vr-spacing(mt,5);
+
+    @include vr-spacing(mt, 5);
 
     > button {
       width: 7rem;
@@ -37,17 +44,19 @@
       flex-wrap: nowrap;
       width: 80%;
       color: $alert-color;
+
       .icon-warning {
         font-size: 2rem;
       }
     }
 
     .unavailable-msg {
+      @include vr-spacing(mb, 1);
+      @include vr-spacing(pv, 1);
+
       height: 14rem;
       width: rem-calc(300px);
       overflow: hidden;
-      @include vr-spacing(mb, 1);
-      @include vr-spacing(pv, 1);
       font-family: $brand-font-cisco-TT-Light;
       color: $alert-color;
       text-align: center;
@@ -60,18 +69,20 @@
 
   .unavailable-attributes {
     @include vr-spacing(pl, 1);
+
     .message-area {
+      @include vr-spacing(p, 1);
+
       height: 5rem;
       width: 95%;
       resize: none;
       color: $gray-dark-1;
       font-size: $h6-font-size;
       line-height: 1.4rem;
-      @include vr-spacing(p, 1);
     }
   }
 
-  .unavailable-attributes-label{
+  .unavailable-attributes-label {
     font-family: $brand-font-cisco-TT-Regular;
   }
 

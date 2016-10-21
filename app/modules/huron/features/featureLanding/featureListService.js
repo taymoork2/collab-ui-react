@@ -112,9 +112,9 @@
       var formattedList = [];
       _.forEach(data, function (pagingGroup) {
         formattedCard.cardName = pagingGroup.name;
-        formattedCard.pgNumber = pagingGroup.number.number;
+        formattedCard.pgNumber = pagingGroup.extension;
         formattedCard.memberCount = pagingGroup.memberCount;
-        formattedCard.id = pagingGroup.uuid;
+        formattedCard.id = pagingGroup.groupId;
         formattedCard.featureName = 'huronFeatureDetails.pg';
         formattedCard.filterValue = 'PG';
         formattedList.push(formattedCard);

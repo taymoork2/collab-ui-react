@@ -10,31 +10,37 @@
       &.success {
         color: $color-cta-base;
       }
+
       &.disabled {
         color: $gray-base;
       }
     }
+
     .enterprise-sipDomain-page {
       margin-top: -1.25rem;
     }
-    #domainManagement{
-      .verify-btn{
-        top:0;
+
+    #domainManagement {
+      .verify-btn {
+        top: 0;
       }
     }
-    #brandingLogoPanel,#webex_client_versions_label_and_dropdown{
-      h4{
+
+    #brandingLogoPanel,
+    #webex_client_versions_label_and_dropdown {
+      h4 {
         font-size: 1rem;
         font-family: $brand-font-light;
         margin-bottom: 0.5rem;
       }
-      span{
+
+      span {
         font-family: $brand-font-light;
         margin-left: 0.05rem;
       }
     }
 
-    #webex_client_versions_label_and_dropdown .row{
+    #webex_client_versions_label_and_dropdown .row {
       margin-top: 2.5rem;
     }
   }

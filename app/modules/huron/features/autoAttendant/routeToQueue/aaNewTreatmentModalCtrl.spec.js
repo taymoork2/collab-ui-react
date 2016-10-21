@@ -32,6 +32,19 @@ describe('Controller: AANewTreatmentModalCtrl', function () {
   var keyIndex = '0';
   var rtQ = 'routeToQueue';
   var play = 'play';
+  var sortedOptions = [{
+    "label": 'autoAttendant.destinations.Disconnect',
+  }, {
+    "label": 'autoAttendant.phoneMenuRouteAA',
+  }, {
+    "label": 'autoAttendant.phoneMenuRouteHunt',
+  }, {
+    "label": 'autoAttendant.phoneMenuRouteToExtNum',
+  }, {
+    "label": 'autoAttendant.phoneMenuRouteUser',
+  }, {
+    "label": 'autoAttendant.phoneMenuRouteVM'
+  }];
 
   beforeEach(angular.mock.module('uc.autoattendant'));
   beforeEach(angular.mock.module('Huron'));
@@ -83,13 +96,18 @@ describe('Controller: AANewTreatmentModalCtrl', function () {
       expect(controller).toBeDefined();
     });
 
-    describe('drop downs', function () {
-      it("length of minutes should be 60.", function () {
-        expect(controller.minutes.length).toEqual(60);
-      });
+    it("default value of minute should be 15.", function () {
+      expect(controller.maxWaitTime.index).toEqual(14);
+    });
 
-      it("default value of minute should be 15.", function () {
-        expect(controller.minute.index).toEqual(14);
+    describe('FallBack', function () {
+      it('test for default option as Disconnect', function () {
+        expect(controller.destinationOptions[0].name).toEqual('Disconnect');
+      });
+      it('test for sorted order options in dropdown', function () {
+        for (var i = 1; i < sortedOptions.length; i++) {
+          expect(controller.destinationOptions[i].label).toEqual(sortedOptions[i].label);
+        }
       });
     });
 

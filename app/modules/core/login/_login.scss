@@ -1,8 +1,4 @@
-/*------------------------------------*\
-    #LOGIN SPLASH SCREEN
-\*------------------------------------*/
-
-@import "../../../styles/common";
+@import '../../../styles/common';
 
 .loading-icon {
   height: vr-adjust(54);
@@ -12,20 +8,22 @@
   margin-left: auto;
   margin-right: auto;
   display: block;
+
   span {
     font-size: $h3-font-size;
   }
+
   text-align: center;
   background-color: $brand-white;
   border: $brand-white;
 }
 
-.alert:before {
+.alert::before {
   content: '';
 }
 
 .results {
-  margin: 50px auto 0 auto;
+  margin: 50px auto 0;
   width: 280px;
 }
 

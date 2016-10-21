@@ -8,11 +8,12 @@
   }
 
   .sd-spacing-input {
-    @include vr-spacing(pr, .25);
+    @include vr-spacing(pr, 0.25);
   }
 
   .sd-label {
     color: $gray-dark-2;
+
     @include vr-spacing(pb, 0.25);
   }
 
@@ -21,11 +22,13 @@
     flex-wrap: wrap;
     justify-content: space-between;
     align-items: center;
-    @include vr-spacing(pv, .5);
+
+    @include vr-spacing(pv, 0.5);
     @include vr-spacing(ph, 2);
 
     .icon {
       color: $gray-light-1;
+
       &:hover {
         color: $color-primary-base;
       }
@@ -53,7 +56,7 @@
   .sd-container {
     margin-left: -1.5625rem;
     margin-right: -1.5625rem;
-    height: calc(100vh - #{$topbar-height} - 90px - 50px - 8rem); /*Removing top bar, header side bar and top content*/
+    height: calc(100vh - #{$topbar-height} - 90px - 50px - 8rem); // Removing top bar, header side bar and top content
     overflow: auto;
   }
 
@@ -65,13 +68,16 @@
   .sd-reorder-transit {
     background-color: $brand-primary;
     color: $brand-white;
-    .sd-label, .icon {
+
+    .sd-label,
+    .icon {
       color: $brand-white;
     }
   }
 
   .limit-reach-warning {
     @include vr-spacing(pl, 0);
+
     color: $gray-dark-2;
   }
 
@@ -87,5 +93,4 @@
   .warning .cs-input__messages {
     visibility: visible;
   }
-
 }

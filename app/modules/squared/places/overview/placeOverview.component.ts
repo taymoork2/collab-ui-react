@@ -36,7 +36,7 @@ class PlaceOverview implements ng.IComponentController {
         name: this.$translate.instant('onboardModal.call'),
         icon: 'icon-circle-call',
         state: 'communication',
-        detail: this.$translate.instant('onboardModal.callFree'),
+        detail: this.$translate.instant('onboardModal.paidComm'),
         actionAvailable: true,
       };
       this.services.push(service);
