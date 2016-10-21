@@ -3,12 +3,6 @@
 
   /* @ngInject  */
   function KemService($translate) {
-
-    var label = [$translate.instant('deviceOverviewPage.kemOptions.none'),
-      $translate.instant('deviceOverviewPage.kemOptions.one'),
-      $translate.instant('deviceOverviewPage.kemOptions.two'),
-      $translate.instant('deviceOverviewPage.kemOptions.three')
-    ];
     var kemConfig = {
       'Cisco 7811': {
         kemMax: 0,
@@ -56,6 +50,13 @@
       }
     };
 
+    function getLabel() {
+      return [$translate.instant('deviceOverviewPage.kemOptions.none'),
+        $translate.instant('deviceOverviewPage.kemOptions.one'),
+        $translate.instant('deviceOverviewPage.kemOptions.two'),
+        $translate.instant('deviceOverviewPage.kemOptions.three')];
+    }
+
     function isKEMAvailable(phoneModel) {
       if (kemConfig && _.has(kemConfig, phoneModel) && _.has(kemConfig[phoneModel], 'kemMax')) {
         return kemConfig[phoneModel].kemMax > 0;
@@ -64,6 +65,7 @@
     }
 
     function getOptionList(phoneModel) {
+      var label = getLabel();
       var kemMax = 0;
       if (kemConfig && _.has(kemConfig, phoneModel) && _.has(kemConfig[phoneModel], 'kemMax')) {
         kemMax = kemConfig[phoneModel].kemMax;
@@ -81,6 +83,7 @@
     }
 
     function getKemOption(kemNumber) {
+      var label = getLabel();
       if (kemNumber > 0 && kemNumber < label.length) {
         return {
           label: label[kemNumber],

@@ -14,10 +14,6 @@ export class GraphService {
   private CALL_METRICS_DIV: string = 'callMetricsChart';
 
   // popover balloon text
-  private activeUsersBalloonText: string;
-  private popBalloonTextOne: string;
-  private popBalloonTextTwo: string;
-  private callMetricsBalloonText: string;
   private mediaBalloonPartOne: string = '<span class="graph-text-balloon graph-number-color">';
   private mediaBalloonPartTwo: string = ':  <span class="graph-number">[[totalDurationSum]]</span></span><br><span class="graph-text-balloon graph-number-color">';
   private mediaBalloonPartThree: string = ':  <span class="graph-number">[[';
@@ -28,13 +24,7 @@ export class GraphService {
     private $translate: ng.translate.ITranslateService,
     private chartColors,
     private CommonGraphService
-  ) {
-    // popover balloon texts with translations
-    this.activeUsersBalloonText = '<span class="graph-text">' + $translate.instant('activeUsers.registeredUsers') + ' <span class="graph-number">[[totalRegisteredUsers]]</span></span><br><span class="graph-text">' + $translate.instant('activeUsers.active') + ' <span class="graph-number">[[percentage]]%</span></span>';
-    this.popBalloonTextOne = '<span class="percent-label">' + $translate.instant('activeUserPopulation.averageLabel') + '</span><br><span class="percent-large">[[percentage]]%</span>';
-    this.popBalloonTextTwo = '<span class="percent-label">' + $translate.instant('activeUserPopulation.averageLabel') + '<br>' + $translate.instant('activeUserPopulation.acrossCustomers') + '</span><br><span class="percent-large">[[overallPopulation]]%</span>';
-    this.callMetricsBalloonText = '<div class="donut-hover-text">[[label]]<br>[[numCalls]] ' + $translate.instant('callMetrics.calls') + ' ([[percents]]%)</div>';
-  }
+  ) {}
 
   // Active User Graph functions
   public getActiveUsersGraph(data: Array<IActiveUserData>, chart) {
@@ -75,6 +65,7 @@ export class GraphService {
   }
 
   private activeUserGraphs(data: Array<IActiveUserData>) {
+    const balloonText = '<span class="graph-text">' + this.$translate.instant('activeUsers.registeredUsers') + ' <span class="graph-number">[[totalRegisteredUsers]]</span></span><br><span class="graph-text">' + this.$translate.instant('activeUsers.active') + ' <span class="graph-number">[[percentage]]%</span></span>';
     const values = ['totalRegisteredUsers', 'activeUsers'];
     const titles = [this.$translate.instant('activeUsers.users'), this.$translate.instant('activeUsers.activeUsers')];
     let colors = [this.chartColors.brandSuccessLight, this.chartColors.brandSuccessDark];
@@ -90,7 +81,7 @@ export class GraphService {
       graphs[index].colorField = colors[index];
       graphs[index].legendColor = colors[index];
       graphs[index].valueField = value;
-      graphs[index].balloonText = this.activeUsersBalloonText;
+      graphs[index].balloonText = balloonText;
       graphs[index].showBalloon = data[0].balloon;
       graphs[index].clustered = false;
     });
@@ -221,6 +212,8 @@ export class GraphService {
   }
 
   private populationGraphs(data: Array<IPopulationData>) {
+    const balloonTextOne = '<span class="percent-label">' + this.$translate.instant('activeUserPopulation.averageLabel') + '</span><br><span class="percent-large">[[percentage]]%</span>';
+    const balloonTextTwo = '<span class="percent-label">' + this.$translate.instant('activeUserPopulation.averageLabel') + '<br>' + this.$translate.instant('activeUserPopulation.acrossCustomers') + '</span><br><span class="percent-large">[[overallPopulation]]%</span>';
     let color = this.chartColors.primaryColorBase;
     if (!data[0].balloon) {
       color = this.chartColors.grayLightThree;
@@ -232,7 +225,7 @@ export class GraphService {
     graph.fontSize = 26;
     graph.valueField = 'percentage';
     graph.columnWidth = 0.8;
-    graph.balloonText = this.popBalloonTextOne;
+    graph.balloonText = balloonTextOne;
     graph.showBalloon = data[0].balloon;
 
     let graphs: Array<any> = [graph, {
@@ -241,7 +234,7 @@ export class GraphService {
       lineThickness: 2,
       lineColor: color,
       balloonColor: this.chartColors.grayLightTwo,
-      balloonText: this.popBalloonTextTwo,
+      balloonText: balloonTextTwo,
       showBalloon: data[0].balloon,
       animationPlayed: true,
     }];
@@ -279,9 +272,13 @@ export class GraphService {
   }
 
   // Call Metrics Graph Functions
+  private getCallMetricsBallonText(): string {
+    return '<div class="donut-hover-text">[[label]]<br>[[numCalls]] ' + this.$translate.instant('callMetrics.calls') + ' ([[percents]]%)</div>';
+  }
+
   public getCallMetricsDonutChart(data: ICallMetricsData, chart) {
     if (data && chart) {
-      chart.balloonText = this.callMetricsBalloonText;
+      chart.balloonText = this.getCallMetricsBallonText();
       chart.textColor = this.chartColors.grayDarkThree;
       if (data.dummy) {
         chart.balloonText = '';
@@ -299,7 +296,7 @@ export class GraphService {
   }
 
   private createCallMetricsDonutChart(data: ICallMetricsData) {
-    let balloonText = this.callMetricsBalloonText;
+    let balloonText = this.getCallMetricsBallonText();
     let textColor = this.chartColors.grayDarkThree;
     if (data.dummy) {
       balloonText = '';
