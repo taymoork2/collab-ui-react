@@ -51,6 +51,10 @@
         refreshDelay: 900000 // 15 mins
       },
 
+      siteDomainUrl: {
+        webexUrl: '.webex.com'
+      },
+
       entitlements: {
         huron: 'ciscouc',
         squared: 'webex-squared',

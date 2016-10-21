@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Controller: EnterpriseSettingsCtrl', function () {
-  var $scope, Orgservice, $controller, Notification;
+  var $scope, $controller, $q, Orgservice, Notification, ServiceSetup;
   var orgServiceJSONFixture = getJSONFixture('core/json/organizations/Orgservice.json');
   var getOrgStatus = 200;
   var rootScope;
@@ -15,15 +15,18 @@ describe('Controller: EnterpriseSettingsCtrl', function () {
   }));
 
   beforeEach(angular.mock.module('Core'));
+  beforeEach(angular.mock.module('Huron'));
 
   beforeEach(installPromiseMatchers);
 
-  beforeEach(inject(function ($rootScope, _$controller_, _Notification_, _Orgservice_) {
+  beforeEach(inject(function ($rootScope, _$controller_, _$q_, _Notification_, _Orgservice_, _ServiceSetup_) {
     $scope = $rootScope.$new();
     rootScope = $rootScope;
     $controller = _$controller_;
+    $q = _$q_;
     Orgservice = _Orgservice_;
     Notification = _Notification_;
+    ServiceSetup = _ServiceSetup_;
 
     $scope.wizard = {
       nextTab: sinon.stub()
@@ -34,7 +37,10 @@ describe('Controller: EnterpriseSettingsCtrl', function () {
     spyOn(Orgservice, 'getOrg').and.callFake(function (callback) {
       callback(orgServiceJSONFixture.getOrg, getOrgStatus);
     });
+    spyOn(Orgservice, 'validateSiteUrl').and.returnValue($q.when({ isValid: true }));
     spyOn(Notification, 'error');
+    spyOn(ServiceSetup, 'getTimeZones').and.returnValue($q.when());
+    spyOn(ServiceSetup, 'getTranslatedTimeZones').and.returnValue(['1', '2', '3']);
   }));
 
   function initController() {
@@ -112,5 +118,13 @@ describe('Controller: EnterpriseSettingsCtrl', function () {
       expect(promise).toBeResolved();
     });
 
+  });
+
+  describe('test Personal Meeting Room Setup', function () {
+    beforeEach(initController);
+
+    it('should shallow validate the Sip Domain', function () {
+      expect(Orgservice.validateSiteUrl).toHaveBeenCalledWith('amtest2.ciscospark.com');
+    });
   });
 });

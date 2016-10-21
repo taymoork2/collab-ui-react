@@ -28,6 +28,7 @@ describe('SetupWizardCtrl', function () {
     spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(false));
     spyOn(FeatureToggleService, 'supportsDirSync').and.returnValue($q.when(false));
     spyOn(FeatureToggleService, 'atlasDarlingGetStatus').and.returnValue($q.when(false));
+    spyOn(FeatureToggleService, 'atlasPMRonM2GetStatus').and.returnValue($q.when(false));
     spyOn(Orgservice, 'getAdminOrgUsage').and.returnValue($q.when(usageFixture));
   }));
 
