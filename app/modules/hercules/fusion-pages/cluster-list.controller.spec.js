@@ -1,25 +1,25 @@
 'use strict';
 
 describe('Controller: FusionClusterListController', function () {
-  var controller, $controller, $q, $rootScope, Authinfo, FusionClusterService, XhrNotificationService;
+  var controller, $controller, $q, $rootScope, Authinfo, FusionClusterService, Notification;
 
   beforeEach(angular.mock.module('Squared'));
   beforeEach(angular.mock.module('Hercules'));
   beforeEach(inject(dependencies));
   beforeEach(initSpies);
 
-  function dependencies(_$rootScope_, _$controller_, _$q_, _Authinfo_, _FusionClusterService_, _XhrNotificationService_) {
+  function dependencies(_$rootScope_, _$controller_, _$q_, _Authinfo_, _FusionClusterService_, _Notification_) {
     $rootScope = _$rootScope_;
     $controller = _$controller_;
     $q = _$q_;
     Authinfo = _Authinfo_;
     FusionClusterService = _FusionClusterService_;
-    XhrNotificationService = _XhrNotificationService_;
+    Notification = _Notification_;
   }
 
   function initSpies() {
     spyOn(FusionClusterService, 'getAll');
-    spyOn(XhrNotificationService, 'notify');
+    spyOn(Notification, 'errorWithTrackingId');
     spyOn(Authinfo, 'isEntitled').and.returnValue(true);
   }
 
@@ -47,14 +47,14 @@ describe('Controller: FusionClusterListController', function () {
   });
 
   describe('after loading clusters', function () {
-    it('should call XhrNotificationService.notify if loading failed', function () {
+    it('should call Notification.errorWithTrackingId if loading failed', function () {
       FusionClusterService.getAll.and.returnValue($q.reject());
       initController();
       expect(controller.loading).toBe(true);
-      expect(XhrNotificationService.notify).not.toHaveBeenCalled();
+      expect(Notification.errorWithTrackingId).not.toHaveBeenCalled();
       $rootScope.$apply(); // force FusionClusterService.getAll() to return
       expect(controller.loading).toBe(false);
-      expect(XhrNotificationService.notify).toHaveBeenCalled();
+      expect(Notification.errorWithTrackingId).toHaveBeenCalled();
     });
 
     it('should update filters and displayed clusters', function () {

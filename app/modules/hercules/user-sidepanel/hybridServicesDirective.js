@@ -90,7 +90,7 @@
         });
       })
       .catch(function (error) {
-        Notification.error('Error getting user information: ' + error);
+        Notification.errorWithTrackingId('Error getting user information: ' + error);
       });
 
     function checkEntitlements(options) {

@@ -6,7 +6,7 @@
     .controller('AddResourceController', AddResourceController);
 
   /* @ngInject */
-  function AddResourceController($modalInstance, $window, $translate, connectorType, servicesId, firstTimeSetup, XhrNotificationService, FusionClusterService, FusionUtils, $modal, $state, ResourceGroupService, FeatureToggleService) {
+  function AddResourceController($modalInstance, $window, $translate, connectorType, servicesId, firstTimeSetup, Notification, FusionClusterService, FusionUtils, $modal, $state, ResourceGroupService, FeatureToggleService) {
     var vm = this;
     vm.hostname = '';
     vm.releaseChannel = 'stable'; // clusters default to 'stable', must be changed via Resource Group
@@ -69,7 +69,9 @@
         .then(_.partial(provisionConnector, connectorType))
         .then(addPreregisteredClusterToAllowList)
         .then(displayResourceGroupsOrEndWizard)
-        .catch(XhrNotificationService.notify);
+        .catch(function (error) {
+          Notification.Notification.errorWithTrackingId(error, 'hercules.genericFailure');
+        });
     };
 
     function displayResourceGroupsOrEndWizard() {
@@ -119,8 +121,8 @@
         .then(getAllExpressways)
         .then(_.partial(removeAlreadyProvisionedExpressways, connectorType))
         .then(updateDropdownMenu)
-        .catch(function () {
-          XhrNotificationService.notify($translate.instant('hercules.addResourceDialog.cannotReadExpresswayList'));
+        .catch(function (error) {
+          Notification.errorWithTrackingId(error, 'hercules.addResourceDialog.cannotReadExpresswayList');
         });
     }
 
@@ -163,10 +165,10 @@
         .then(function () {
           vm.provisioningToExistingExpresswayCompleted = true;
           setHostNameForCluster(clusterId);
-        }, function () {
-          XhrNotificationService.notify($translate.instant('hercules.addResourceDialog.cannotProvisionConnector', {
+        }, function (response) {
+          Notification.errorWithTrackingId(response, 'hercules.addResourceDialog.cannotProvisionConnector', {
             ConnectorName: vm.localizedConnectorName
-          }));
+          });
         });
     }
 
@@ -269,7 +271,7 @@
       if (vm.selectedResourceGroup.value !== '') {
         ResourceGroupService.assign(vm.clusterId, vm.selectedResourceGroup.value)
           .catch(function () {
-            XhrNotificationService.notify($translate.instant('hercules.addResourceDialog.couldNotSaveResourceGroup'));
+            Notification.errorWithTrackingId('hercules.addResourceDialog.couldNotSaveResourceGroup');
           })
           .finally(function () {
             vm.preregistrationCompletedGoToExpressway = true;
