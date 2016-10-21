@@ -5479,8 +5479,13 @@
     "adminEmail": "Admin Email",
     "emailSent": "Last Email Sent",
     "partnerInfo": "Partner Information",
+    "hybridServicesDetails": "Hybrid Services Details",
     "partnerEmail": "Partner Email",
-    "hybridServicesDetails": "Hybrid Services Details"
+    "resendAdminEmail": "Resend",
+    "editAdminEmail": "Edit",
+    "resendTooltip": "Resends the welcome email.",
+    "resendMailSuccess": "Welcome email was successfully sent.",
+    "resendMailFailure": "Fail to resend wecome email."
   },
   "activation": {
     "verificationComplete": "Verification Complete",

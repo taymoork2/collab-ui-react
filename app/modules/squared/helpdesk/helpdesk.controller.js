@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject */
-  function HelpdeskController(HelpdeskSplunkReporterService, $q, HelpdeskService, $translate, $scope, $state, $modal, HelpdeskSearchHistoryService, HelpdeskHuronService, LicenseService, Config, $window, Authinfo, FeatureToggleService) {
+  function HelpdeskController(HelpdeskSplunkReporterService, $q, HelpdeskService, $translate, $scope, $state, $modal, HelpdeskSearchHistoryService, HelpdeskHuronService, LicenseService, Config, $window, Authinfo) {
     $scope.$on('$viewContentLoaded', function () {
       setSearchFieldFocus();
       $window.document.title = $translate.instant("helpdesk.browserTabHeaderTitle");
@@ -30,10 +30,7 @@
     vm.isCustomerHelpDesk = !Authinfo.isInDelegatedAdministrationOrg();
     vm.orderNumberSize = 8;
     vm.isOrderSearchEnabled = false;
-    FeatureToggleService.atlasHelpDeskOrderSearchGetStatus()
-      .then(function (result) {
-        vm.isOrderSearchEnabled = result;
-      });
+    vm.isOrderSearchEnabled = Authinfo.isCisco() || Authinfo.isCiscoMock();
 
     $scope.$on('helpdeskLoadSearchEvent', function (event, args) {
       var search = args.message;
@@ -136,6 +133,7 @@
           promises.push(searchOrders(vm.searchString));
         }
       } else {
+        vm.isOrderSearchEnabled = false;
         promises = promises.concat(searchDevices(vm.searchString, vm.currentSearch.orgFilter));
       }
 

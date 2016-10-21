@@ -11,8 +11,8 @@
   <div class="row full" ng-show="helpdeskOrderCtrl.account">
     <div class="helpdesk-orderDetail">
       <div class="orderTitle">
-        <h3>{{helpdeskOrderCtrl.order[0].externalOrderId}}</h3>
-        <h5>{{helpdeskOrderCtrl.order[0].orderContent.common.customerInfo.endCustomerInfo.name}}</h5>
+        <h2>{{helpdeskOrderCtrl.orderId}}</h2>
+        <h5>{{helpdeskOrderCtrl.customerName}}</h5>
       </div>
       <hr>
       <div class="row">
@@ -26,7 +26,7 @@
           <span>{{'helpdesk.webOrderId' | translate}}</span>
         </div>
         <div class="large-7 columns details-value">
-          <span>{{helpdeskOrderCtrl.order[0].externalOrderId}}</span>
+          <span>{{helpdeskOrderCtrl.orderId}}</span>
         </div>
       </div>
 
@@ -35,7 +35,7 @@
           <span>{{'helpdesk.orderProvision' | translate}}</span>
         </div>
         <div class="large-7 columns details-value">
-          <span>{{helpdeskOrderCtrl.order[0].orderReceived}}</span>
+          <span>{{helpdeskOrderCtrl.provisionTime}}</span>
         </div>
       </div>
 
@@ -44,7 +44,7 @@
           <span>{{'helpdesk.accountActivate' | translate}}</span>
         </div>
         <div class="large-7 columns details-value">
-          <span>{{helpdeskOrderCtrl.account.accountActivate}}</span>
+          <span>{{helpdeskOrderCtrl.accountActivated}}</span>
         </div>
       </div>
 
@@ -53,7 +53,8 @@
           <span>{{'helpdesk.companyName' | translate}}</span>
         </div>
         <div class="large-7 columns details-value">
-          <span>{{helpdeskOrderCtrl.account.accountName}}</span>
+          <span ng-if="!helpdeskOrderCtrl.isAccountActivated()">{{helpdeskOrderCtrl.accountName}}</span>
+          <a ng-href ng-click="helpdeskOrderCtrl.goToCustomerPage()" ng-if="helpdeskOrderCtrl.isAccountActivated()">{{helpdeskOrderCtrl.accountName}}</a>
         </div>
       </div>
 
@@ -62,7 +63,7 @@
           <span>{{'helpdesk.companyId' | translate}}</span>
         </div>
         <div class="large-7 columns details-value">
-          <span>{{helpdeskOrderCtrl.account.customerId}}</span>
+          <span>{{helpdeskOrderCtrl.customerId}}</span>
         </div>
       </div>
 
@@ -70,8 +71,25 @@
         <div class="large-5 columns details-heading">
           <span>{{'helpdesk.adminEmail' | translate}}</span>
         </div>
-        <div class="large-7 columns details-value">
-          <span>{{helpdeskOrderCtrl.account.customerAdminEmail}}</span>
+        <div class="large-7 columns details-value" ng-show="!helpdeskOrderCtrl.customerAdminEmailEdit">
+          <span style="margin-right: 1rem;">{{helpdeskOrderCtrl.customerAdminEmail}}</span>
+          <a ng-href class="ng-scope" ng-if="helpdeskOrderCtrl.isEditAllowed" style="margin-right: 0.5rem" ng-click="helpdeskOrderCtrl.showCustomerAdminEmailEdit()">
+            {{'helpdesk.editAdminEmail' | translate}}
+          </a>
+          <a ng-href class="ng-scope" ng-click="helpdeskOrderCtrl.resendAdminEmail(true)">
+            {{'helpdesk.resendAdminEmail' | translate}}
+          </a>
+          <i tooltip-html-unsafe="{{'helpdesk.resendTooltip' | translate}}" tooltip-placement="right" tooltip-trigger="mouseenter"
+                 class="icon icon-information icon-lg blue-icon-info"></i>
+        </div>
+        <div class="large-7 columns details-value" ng-show="helpdeskOrderCtrl.customerAdminEmailEdit">
+          <input ng-model="helpdeskOrderCtrl.customerAdminEmail" style="margin-right: 1rem;width: 300px;padding-top: 10px 5px;">
+          <a ng-href class="ng-scope" style="margin-right: 0.5rem" ng-click="helpdeskOrderCtrl.updateCustomerAdminEmail()">
+            {{'common.save' | translate}}
+          </a>
+          <a ng-href class="ng-scope" ng-click="helpdeskOrderCtrl.cancelCustomerAdminEmailEdit()">
+            {{'common.cancel' | translate}}
+          </a>
         </div>
       </div>
 
@@ -96,7 +114,7 @@
             <span>{{'helpdesk.managedBy' | translate}}</span>
           </div>
           <div class="large-7 columns details-value">
-            <span>{{helpdeskOrderCtrl.order[0].orderContent.common.customerInfo.partnerInfo.name}}</span>
+            <span>{{helpdeskOrderCtrl.managedBy}}</span>
           </div>
         </div>
 
@@ -104,9 +122,25 @@
           <div class="large-5 columns details-heading">
             <span>{{'helpdesk.partnerEmail' | translate}}</span>
           </div>
-          <div class="large-7 columns details-value">
-            <span>{{helpdeskOrderCtrl.order[0].orderContent.common.customerInfo.partnerInfo.adminDetails.emailId}}</span>
-          </div>
+          <div class="large-7 columns details-value" ng-show="!helpdeskOrderCtrl.partnerAdminEmailEdit">
+            <span style="margin-right: 1rem;">{{helpdeskOrderCtrl.partnerAdminEmail}}</span>
+            <a ng-href class="ng-scope" ng-if="helpdeskOrderCtrl.isEditAllowed" style="margin-right: 0.5rem" ng-click="helpdeskOrderCtrl.showPartnerAdminEmailEdit()">
+              {{'helpdesk.editAdminEmail' | translate}}
+            </a>
+            <a ng-href class="ng-scope" ng-click="helpdeskOrderCtrl.resendAdminEmail(false)">
+              {{'helpdesk.resendAdminEmail' | translate}}
+            </a>
+            <i tooltip-html-unsafe="{{'helpdesk.resendTooltip' | translate}}" tooltip-placement="right" tooltip-trigger="mouseenter"
+                 class="icon icon-information icon-lg blue-icon-info"></i>
+        </div>
+        <div class="large-7 columns details-value" ng-show="helpdeskOrderCtrl.partnerAdminEmailEdit">
+          <input ng-model="helpdeskOrderCtrl.partnerAdminEmail" style="margin-right: 1rem;width: 300px;padding-top: 10px 5px;">
+          <a ng-href class="ng-scope" style="margin-right: 0.5rem" ng-click="helpdeskOrderCtrl.updatePartnerAdminEmail()">
+            {{'common.save' | translate}}
+          </a>
+          <a ng-href class="ng-scope" ng-click="helpdeskOrderCtrl.cancelPartnerAdminEmailEdit()">
+            {{'common.cancel' | translate}}
+          </a>
         </div>
       </div>
 

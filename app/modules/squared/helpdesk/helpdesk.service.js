@@ -11,6 +11,7 @@
       searchUsers: searchUsers,
       searchOrgs: searchOrgs,
       searchOrders: searchOrders,
+      resendAdminEmail: resendAdminEmail,
       getUser: getUser,
       getOrg: getOrg,
       isEmailBlocked: isEmailBlocked,
@@ -194,6 +195,16 @@
 
       return cancelableHttpGET(urlBase + 'commerce/orders/search?webOrderId=' + encodeURIComponent(searchString))
         .then(extractData);
+    }
+
+    function resendAdminEmail(orderUUID, toCustomer) {
+      var url;
+      if (toCustomer === true) {
+        url = urlBase + "helpdesk/orders/" + orderUUID + "/actions/resendcustomeradminemail/invoke";
+      } else {
+        url = urlBase + "helpdesk/orders/" + orderUUID + "/actions/resendpartneradminemail/invoke";
+      }
+      return $http.post(url).then(extractData);
     }
 
     function getUser(orgId, userId) {
