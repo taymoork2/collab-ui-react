@@ -187,9 +187,6 @@
         });
     }
 
-    vm.invalidEmail = function (tag) {
-      Notification.errorWithTrackingId(tag.text + ' is not a valid email');
-    };
   }
 
   /* @ngInject */

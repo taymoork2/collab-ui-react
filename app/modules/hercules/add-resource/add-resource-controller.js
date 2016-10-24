@@ -70,7 +70,7 @@
         .then(addPreregisteredClusterToAllowList)
         .then(displayResourceGroupsOrEndWizard)
         .catch(function (error) {
-          Notification.Notification.errorWithTrackingId(error, 'hercules.genericFailure');
+          Notification.errorWithTrackingId(error, 'hercules.genericFailure');
         });
     };
 
