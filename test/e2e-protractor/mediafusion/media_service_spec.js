@@ -10,7 +10,7 @@ describe('Validate Media Service Managemnt Page', function () {
     }, 120000);
 
     //We are not currently running this because the pages are behind feature toggle and sometime feature toggle doesn't loads fast. We will enable them when we remove feature toggle.
-    describe('Metrics page : ', function () {
+    xdescribe('Metrics page : ', function () {
       it('Navigate to metrics page', function () {
         browser.sleep(5000);
         mediaservice.clickMetrics();
@@ -64,16 +64,14 @@ describe('Validate Media Service Managemnt Page', function () {
       });
     });
 
-    describe('Resource page : ', function () {
+    xdescribe('Resource page : ', function () {
       it('Navigate to Resource page', function () {
         browser.sleep(3000);
         navigation.clickServicesTab();
         browser.sleep(5000);
         mediaservice.resourceButton.isPresent().then(function (result) {
-          console.log(result);
           if (result) {
             mediaservice.settingsButton.isPresent().then(function (result1) {
-              console.log(result1);
               if (result1) {
                 mediaservice.clickResource();
                 utils.expectIsDisplayed(mediaservice.resourceTab);
@@ -91,7 +89,7 @@ describe('Validate Media Service Managemnt Page', function () {
       });
     });
 
-    describe('Settings page : ', function () {
+    xdescribe('Settings page : ', function () {
       beforeEach(function () {
         browser.sleep(3000);
         navigation.clickServicesTab();
@@ -137,7 +135,7 @@ describe('Validate Media Service Managemnt Page', function () {
       });
     });
 
-    describe('Side Panel : ', function () {
+    xdescribe('Side Panel : ', function () {
       var selectedClusterName;
       var selectedClusterStatus;
       //var selectedClusterNode;
@@ -151,19 +149,15 @@ describe('Validate Media Service Managemnt Page', function () {
             mediaservice.clickResource();
             utils.click(mediaservice.clusterFirstTr);
             mediaservice.clusterFirstTd.getText().then(function (text) {
-              console.log(text);
               selectedClusterName = text;
             });
             mediaservice.clusterSecondTd.getText().then(function (text1) {
-              console.log(text1);
               selectedClusterStatus = text1;
             });
-            mediaservice.nodesListFirst.getText().then(function (text3) {
-              console.log(text3);
+            //mediaservice.nodesListFirst.getText().then(function (text3) {
               //selectedClusterNode = text3;
-            });
+            //});
             element(by.css('div[ng-if="groupDetails.clusterDetail.upgradeSchedule"]')).element(by.xpath('following-sibling::div')).getText().then(function (text4) {
-              console.log(text4);
               selectedClusterReleaseChannel = text4;
             });
           }
@@ -206,39 +200,6 @@ describe('Validate Media Service Managemnt Page', function () {
         utils.click(mediaservice.deleteClusterModalCancel);
       });
     });
-    //Commenting the below codes to enable feature toggle for new media service page development.
-    /*it('Clicking on Media Service Management tab should change the view', function () {
-      navigation.clickMediaServiceManagement();
-    });
-
-    it('Check if Media Service is Activated', function () {
-      mediaservice.checkForActivation();
-    });
-
-    it('Check if Media Clusters are populated', function () {
-      mediaservice.checkClusterSize();
-    });
-
-    it('Should be able to view Cluster Details after clicking a Row ', function () {
-      mediaservice.clickOnMediaService();
-      utils.expectIsDisplayed(mediaservice.groupDetails);
-    });
-
-    it('Clicking on Alarms  should show the Alarm Details Page ', function () {
-      mediaservice.alarmDetailsPage();
-    });
-
-    it('Clicking on Host  should show the Host Details Page ', function () {
-      utils.click(mediaservice.hostDetails);
-      utils.expectIsDisplayed(mediaservice.hostTitle);
-      utils.click(mediaservice.closeSidePanel);
-    });
-
-    it('Clicking on Settings Tab should change the view', function () {
-      navigation.clickMediaServiceSettingsTab();
-      utils.expectIsDisplayed(mediaservice.emailnotification);
-    });*/
-
   });
 
   describe('Logout', function () {
