@@ -13,7 +13,7 @@
       TEST_KEY: '536df13b2664a85b06b0b6cf32721c24'
     };
 
-    var isTestOrg = null;
+    var isTestOrgPromise = null;
     var hasInit = false;
     var throwError = false;
 
@@ -81,10 +81,10 @@
           return reject();
         }
 
-        if (Config.isProd()) {
+        if (Config.isProd() && !Config.forceProdForE2E()) {
           resolve(token.PROD_KEY);
         } else {
-          checkIfTestOrg().then(function () {
+          checkIfTestOrg().then(function (isTestOrg) {
             if (isTestOrg) {
               resolve(token.TEST_KEY);
             } else {
@@ -105,14 +105,14 @@
      * Determines if it's a Test Org or not.
      */
     function checkIfTestOrg() {
-      if (!isTestOrg) {
-        isTestOrg = $q(function (resolve) {
+      if (!isTestOrgPromise) {
+        isTestOrgPromise = $q(function (resolve) {
           Orgservice.getOrg(function (response) {
-            resolve(response.isTestOrg);
+            resolve(_.get(response, 'isTestOrg'));
           });
         });
       }
-      return isTestOrg;
+      return isTestOrgPromise;
     }
 
     function _track(eventName, properties) {
