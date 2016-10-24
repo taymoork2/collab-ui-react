@@ -6,7 +6,7 @@
     .controller('DeviceUsageTimelineCtrl', DeviceUsageTimelineCtrl);
 
   /* @ngInject */
-  function DeviceUsageTimelineCtrl($state, $scope, DeviceUsageTimelineService, deviceUsageFeatureToggle) {
+  function DeviceUsageTimelineCtrl($state, $scope, DeviceUsageTimelineService, Notification, deviceUsageFeatureToggle) {
     var vm = this;
     var amChart;
     var apiToUse = 'mock';
@@ -59,52 +59,68 @@
     init();
 
     function init() {
-      DeviceUsageTimelineService.getDataForLastWeek(apiToUse).then(function (data) {
-        var chart = DeviceUsageTimelineService.getLineChart();
-        chart.listeners = [
-        { event: 'rollOverGraphItem', method: rollOverGraphItem },
-        { event: 'rollOutGraphItem', method: rollOutGraphItem },
-        { event: 'dataUpdated', method: graphRendered }
-        //{ event: 'clickGraphItem', method: clickGraphItem }
-        ];
-        chart.dataProvider = data;
-        amChart = AmCharts.makeChart('device-usage-timeline-chart', chart);
-        _.each(amChart.graphs, function (graph) {
-          graph.balloonFunction = renderBalloon;
-        });
+      var chart = DeviceUsageTimelineService.getLineChart();
+      chart.listeners = [
+      { event: 'rollOverGraphItem', method: rollOverGraphItem },
+      { event: 'rollOutGraphItem', method: rollOutGraphItem },
+      { event: 'dataUpdated', method: graphRendered }
+      //{ event: 'clickGraphItem', method: clickGraphItem }
+      ];
 
+      amChart = AmCharts.makeChart('device-usage-timeline-chart', chart);
+      _.each(amChart.graphs, function (graph) {
+        graph.balloonFunction = renderBalloon;
       });
+      DeviceUsageTimelineService.getDataForLastWeek(['ce', 'sparkboard'], apiToUse).then(function (data) {
+        amChart.dataProvider = data;
+        amChart.validateData();
+        vm.showDevices = false;
+      }).catch(handleReject);
     }
 
     function graphRendered() {
       vm.loading = false;
     }
 
+    function handleReject(reject) {
+      vm.loading = false;
+      var errors = [];
+      if (reject.data && reject.data.message) {
+        errors.push(reject.data.message);
+      } else {
+        errors.push(reject.statusText);
+      }
+      amChart.dataProvider = [];
+      amChart.validateData();
+      vm.dateRange = '';
+      Notification.notify(errors, 'error');
+    }
+
     function loadLastWeek() {
       vm.loading = true;
-      DeviceUsageTimelineService.getDataForLastWeek(apiToUse).then(function (data) {
+      DeviceUsageTimelineService.getDataForLastWeek(['ce', 'sparkboard'], apiToUse).then(function (data) {
         amChart.dataProvider = data;
         amChart.validateData();
         vm.showDevices = false;
-      });
+      }, handleReject);
     }
 
     function loadLastMonth() {
       vm.loading = true;
-      DeviceUsageTimelineService.getDataForLastMonth(apiToUse).then(function (data) {
+      DeviceUsageTimelineService.getDataForLastMonth(['ce', 'sparkboard'], apiToUse).then(function (data) {
         amChart.dataProvider = data;
         amChart.validateData();
         vm.showDevices = false;
-      });
+      }, handleReject);
     }
 
     function loadLast3Months() {
       vm.loading = true;
-      DeviceUsageTimelineService.getDataForLastMonths(3, 'day', apiToUse).then(function (data) {
+      DeviceUsageTimelineService.getDataForLastMonths(3, 'day', ['ce', 'sparkboard'], apiToUse).then(function (data) {
         amChart.dataProvider = data;
         amChart.validateData();
         vm.showDevices = false;
-      });
+      }, handleReject);
     }
 
     function rollOverGraphItem(event) {

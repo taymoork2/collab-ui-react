@@ -12,7 +12,7 @@ describe('DeviceUsageTimelineService', function () {
     $provide.value('Authinfo', Authinfo);
   }));
 
-  var DeviceUsageTimelineService, $httpBackend, urlBase;
+  var DeviceUsageTimelineService, $httpBackend, urlBase, $timeout;
 
   function createDayMockData(startDate, dayCount) {
     var items = [];
@@ -39,9 +39,10 @@ describe('DeviceUsageTimelineService', function () {
     };
   }
 
-  beforeEach(inject(function (_DeviceUsageTimelineService_, _$httpBackend_, UrlConfig) {
+  beforeEach(inject(function (_DeviceUsageTimelineService_, _$httpBackend_, UrlConfig, _$timeout_) {
     DeviceUsageTimelineService = _DeviceUsageTimelineService_;
     $httpBackend = _$httpBackend_;
+    $timeout = _$timeout_;
     urlBase = UrlConfig.getAdminServiceUrl();
   }));
 
@@ -57,11 +58,11 @@ describe('DeviceUsageTimelineService', function () {
     var end = moment().startOf('week').format('YYYY-MM-DD');
     var path = 'organizations/123/reports/device/call?intervalType=day&';
     var range = 'rangeStart=' + start.format('YYYY-MM-DD') + '&rangeEnd=' + end;
-    var deviceCategories = '&deviceCategories=ce,darling';
+    var deviceCategories = '&deviceCategories=ce,sparkboard';
     $httpBackend
       .when('GET', urlBase + path + range + deviceCategories)
       .respond(mockData);
-    DeviceUsageTimelineService.getDataForLastWeek('backend').then(function (data) {
+    DeviceUsageTimelineService.getDataForLastWeek(['ce,sparkboard'], 'backend').then(function (data) {
       expect(data.length).toEqual(7);
       _.each(data, function (item) {
         expect(item.totalDuration).toEqual('5.00');
@@ -78,11 +79,11 @@ describe('DeviceUsageTimelineService', function () {
     var end = moment().startOf('month').format('YYYY-MM-DD');
     var path = 'organizations/123/reports/device/call?intervalType=day&';
     var range = 'rangeStart=' + start.format('YYYY-MM-DD') + '&rangeEnd=' + end;
-    var deviceCategories = '&deviceCategories=ce,darling';
+    var deviceCategories = '&deviceCategories=ce,sparkboard';
     $httpBackend
       .when('GET', urlBase + path + range + deviceCategories)
       .respond(mockData);
-    DeviceUsageTimelineService.getDataForLastMonth('backend').then(function (data) {
+    DeviceUsageTimelineService.getDataForLastMonth(['ce', 'sparkboard'], 'backend').then(function (data) {
       expect(data.length).toEqual(30);
       _.each(data, function (item) {
         expect(item.totalDuration).toEqual('5.00');
@@ -90,6 +91,28 @@ describe('DeviceUsageTimelineService', function () {
       });
       done();
     });
+    $httpBackend.flush();
+  });
+
+  it('handles timeout', function (done) {
+    var start = moment().startOf('week').subtract(1, 'weeks');
+    var end = moment().startOf('week').format('YYYY-MM-DD');
+    var mockData = createDayMockData(start.format('YYYY-MM-DD'), 7);
+    var path = 'organizations/123/reports/device/call?intervalType=day&';
+    var range = 'rangeStart=' + start.format('YYYY-MM-DD') + '&rangeEnd=' + end;
+    var deviceCategories = '&deviceCategories=ce,sparkboard';
+    $httpBackend
+      .when('GET', urlBase + path + range + deviceCategories).respond(mockData);
+
+    DeviceUsageTimelineService.getDataForLastWeek(['ce,sparkboard'], 'backend').then(function () {
+      done();
+    }, function () {
+      done();
+    }).catch(function (reject) {
+      expect(reject.status).toEqual(-1);
+      done();
+    });
+    $timeout.flush();
     $httpBackend.flush();
   });
 });
