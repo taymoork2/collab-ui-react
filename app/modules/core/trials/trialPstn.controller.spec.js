@@ -3,7 +3,7 @@
 /* globals fit */
 
 describe('Controller: TrialPstnCtrl', function () {
-  var controller, trials, $httpBackend, $scope, $q, HuronConfig, TrialPstnService, TrialService, PstnSetupService, TerminusStateService, FeatureToggleService;
+  var controller, trials, $httpBackend, $scope, $q, HuronConfig, Orgservice, TrialPstnService, TrialService, PstnSetupService, TerminusStateService, FeatureToggleService;
 
   var customerName = 'Wayne Enterprises';
   var customerEmail = 'batman@darknight.com';
@@ -67,15 +67,18 @@ describe('Controller: TrialPstnCtrl', function () {
   beforeEach(angular.mock.module('Huron'));
   beforeEach(angular.mock.module('Core'));
 
-  beforeEach(inject(function ($rootScope, _$q_, $controller, _$httpBackend_, _HuronConfig_, _TrialPstnService_, _TrialService_, _PstnSetupService_, _TerminusStateService_, _FeatureToggleService_) {
+  beforeEach(inject(function ($rootScope, _$q_, $controller, _$httpBackend_, _HuronConfig_, _Orgservice_, _TrialPstnService_, _TrialService_, _PstnSetupService_, _TerminusStateService_, _FeatureToggleService_) {
+
     $scope = $rootScope.$new();
     $httpBackend = _$httpBackend_;
     HuronConfig = _HuronConfig_;
     TrialPstnService = _TrialPstnService_;
     TrialService = _TrialService_;
     PstnSetupService = _PstnSetupService_;
+
     TerminusStateService = _TerminusStateService_;
     FeatureToggleService = _FeatureToggleService_;
+    Orgservice = _Orgservice_;
     $q = _$q_;
 
     spyOn(TrialService, 'getDeviceTrialsLimit');
@@ -84,6 +87,7 @@ describe('Controller: TrialPstnCtrl', function () {
     });
 
     spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
+    spyOn(Orgservice, 'getOrg');
 
     //Test initialize
     $scope.trial = TrialService.getData();

@@ -112,7 +112,6 @@
     }
 
     function activate() {
-
       if ($scope.fromRouteCall) {
         var ui = AAUiModelService.getUiModel();
         vm.uiMenu = ui[$scope.schedule];
@@ -150,6 +149,13 @@
           vm.menuKeyEntry.actions[0].queueSettings.initialAnnouncement = AutoAttendantCeMenuModelService.newCeMenuEntry();
           var iaAction = AutoAttendantCeMenuModelService.newCeActionEntry('say', '');
           vm.menuKeyEntry.actions[0].queueSettings.initialAnnouncement.addAction(iaAction);
+        }
+        if (angular.isUndefined(vm.menuKeyEntry.actions[0].queueSettings.fallBack)) {
+          vm.menuKeyEntry.actions[0].queueSettings.fallBack = AutoAttendantCeMenuModelService.newCeMenuEntry();
+          var fbMaxTime = AutoAttendantCeMenuModelService.newCeActionEntry('time', '');
+          vm.menuKeyEntry.actions[0].queueSettings.fallBack.addAction(fbMaxTime);
+          var fbAction = AutoAttendantCeMenuModelService.newCeActionEntry('option', '');
+          vm.menuKeyEntry.actions[0].queueSettings.fallBack.addAction(fbAction);
         }
       }
 

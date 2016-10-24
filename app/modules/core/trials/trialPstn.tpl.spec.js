@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Template: trialPstn.tpl.spec.js:', function () {
-  var $q, $compile, $controller, $scope, $templateCache, TerminusStateService, FeatureToggleService;
+  var $q, $compile, $controller, $scope, $templateCache, Orgservice, TerminusStateService, FeatureToggleService;
   var view;
   var skipBtn, backBtn;
 
@@ -14,7 +14,8 @@ describe('Template: trialPstn.tpl.spec.js:', function () {
   beforeEach(inject(dependencies));
   beforeEach(compileView);
 
-  function dependencies(_$q_, _$compile_, _$controller_, _$rootScope_, _$templateCache_, _TerminusStateService_, _FeatureToggleService_) {
+
+  function dependencies(_$q_, _$compile_, _$controller_, _$rootScope_, _$templateCache_, _Orgservice_, _TerminusStateService_, _FeatureToggleService_) {
     $q = _$q_;
     $compile = _$compile_;
     $controller = _$controller_;
@@ -22,6 +23,7 @@ describe('Template: trialPstn.tpl.spec.js:', function () {
     $templateCache = _$templateCache_;
     TerminusStateService = _TerminusStateService_;
     FeatureToggleService = _FeatureToggleService_;
+    Orgservice = _Orgservice_;
 
     spyOn(TerminusStateService, 'query').and.returnValue({
       '$promise': $q.when(states)
@@ -30,6 +32,7 @@ describe('Template: trialPstn.tpl.spec.js:', function () {
   }
 
   function compileView() {
+    spyOn(Orgservice, 'getOrg');
     var template = $templateCache.get('modules/core/trials/trialPstn.tpl.html');
 
     $controller('TrialPstnCtrl', {

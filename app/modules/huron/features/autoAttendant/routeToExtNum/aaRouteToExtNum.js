@@ -120,7 +120,11 @@
       } else {
         vm.menuEntry = AutoAttendantCeMenuModelService.getCeMenu($scope.menuId);
         if ($scope.keyIndex < vm.menuEntry.entries.length) {
-          vm.menuKeyEntry = vm.menuEntry.entries[$scope.keyIndex];
+          if (vm.menuEntry.entries[$scope.keyIndex].actions[$scope.keyIndex].name == 'routeToQueue') {
+            vm.menuKeyEntry = vm.menuEntry.entries[$scope.keyIndex].actions[0].queueSettings.fallBack;
+          } else {
+            vm.menuKeyEntry = vm.menuEntry.entries[$scope.keyIndex];
+          }
         } else {
           vm.menuKeyEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
           var action = AutoAttendantCeMenuModelService.newCeActionEntry(rtExtNum, '');
@@ -134,7 +138,6 @@
         vm.uniqueCtrlIdentifer = AACommonService.makeKey($scope.schedule, vm.menuKeyEntry.routeToId);
 
       }
-
       populateUiModel();
 
     }

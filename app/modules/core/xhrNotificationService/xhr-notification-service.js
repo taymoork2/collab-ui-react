@@ -2,7 +2,7 @@
   'use strict';
 
   angular
-    .module('Hercules')
+    .module('Core')
     .service('XhrNotificationService', XhrNotificationService);
 
   /* @ngInject */

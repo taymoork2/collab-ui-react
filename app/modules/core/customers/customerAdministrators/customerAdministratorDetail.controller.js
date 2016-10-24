@@ -57,14 +57,13 @@
       var user = _.find(vm.foundUsers, {
         fullName: fullName
       });
-
       return CustomerAdministratorService.addCustomerAdmin(user, customerOrgId)
         .then(function () {
           vm.selected = '';
           vm.assignedAdmins.push(user);
           var uuid = _.get(user, 'uuid', 'N/A');
           Notification.success('customerAdminPanel.customerAdministratorAddSuccess');
-          Analytics.trackPartnerActions(Analytics.eventNames.ASSIGN, uuid, Authinfo.getOrgId());
+          Analytics.trackPartnerActions(Analytics.sections.PARTNER.eventNames.ASSIGN, uuid, Authinfo.getOrgId());
         })
         .catch(function () {
           Notification.error('customerAdminPanel.customerAdministratorAddFailure');
@@ -94,7 +93,7 @@
             });
             var uuid = _.get(user, 'uuid', 'N/A');
             Notification.success('customerAdminPanel.customerAdministratorRemoveSuccess');
-            Analytics.trackPartnerActions(Analytics.eventNames.REMOVE, uuid, Authinfo.getOrgId());
+            Analytics.trackPartnerActions(Analytics.sections.PARTNER.eventNames.REMOVE, uuid, Authinfo.getOrgId());
           })
           .catch(function () {
             Notification.error('customerAdminPanel.customerAdministratorRemoveFailure');

@@ -2,6 +2,7 @@
 
 describe('Service: Analytics', function () {
   var Config, Analytics, Orgservice, $q, $scope;
+  var trialData = getJSONFixture('core/json/trials/trialData.json');
 
   beforeEach(angular.mock.module('Core'));
   beforeEach(inject(dependencies));
@@ -61,21 +62,29 @@ describe('Service: Analytics', function () {
 
   describe('when calling trial events', function () {
     it('should call _track when trackTrialSteps is called', function () {
-      Analytics.trackTrialSteps(Analytics.eventNames.START, 'testUser', '123');
+      Analytics.trackTrialSteps(Analytics.eventNames.START, 'someState', '123');
       $scope.$apply();
       expect(Analytics._track).toHaveBeenCalled();
+    });
+    it('should send correct trial data', function () {
+      Analytics.trackTrialSteps(Analytics.eventNames.START, 'someState', '123', trialData.enabled);
+      $scope.$apply();
+      expect(Analytics._track).toHaveBeenCalled();
+      var props = Analytics._track.calls.mostRecent().args[1];
+      expect(props.duration).toBeDefined();
+      expect(props.servicesArray).toBeDefined();
     });
   });
 
   describe('when calling partner events', function () {
-    it('should call _track when trackPartnerActions is called', function () {
-      Analytics.trackPartnerActions(Analytics.eventNames.REMOVE, '4567', '1234');
+    it('should call _track when trackPartnerActions is called to remove', function () {
+      Analytics.trackPartnerActions(Analytics.sections.PARTNER.eventNames.REMOVE, 'removePage', '123');
       $scope.$apply();
       expect(Analytics._track).toHaveBeenCalled();
     });
 
-    it('should call _track when trackUserPatch is called', function () {
-      Analytics.trackUserPatch('123', '123');
+    it('should call _track when trackUserPatch is called to patch', function () {
+      Analytics.trackPartnerActions(Analytics.sections.PARTNER.eventNames.PATCH, '123', '456');
       $scope.$apply();
       expect(Analytics._track).toHaveBeenCalled();
     });
@@ -83,13 +92,13 @@ describe('Service: Analytics', function () {
 
   describe('when calling first time wizard events', function () {
     it('should call _track when trackSelectedCheckbox is called', function () {
-      Analytics.trackSelectedCheckbox('123');
+      Analytics.trackUserOnboarding(Analytics.sections.USER_ONBOARDING.eventNames.CMR_CHECKBOX, 'somePage', '123', { licenseId: '345' });
       $scope.$apply();
       expect(Analytics._track).toHaveBeenCalled();
     });
 
     it('should call _track when trackConvertUser is called', function () {
-      Analytics.trackConvertUser('1234', '1234');
+      Analytics.trackUserOnboarding(Analytics.sections.USER_ONBOARDING.eventNames.CONVERT_USER, 'somePage', '123', {});
       $scope.$apply();
       expect(Analytics._track).toHaveBeenCalled();
     });

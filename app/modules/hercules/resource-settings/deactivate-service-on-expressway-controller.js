@@ -6,7 +6,7 @@
     .controller('DeactivateServiceOnExpresswayModalController', DeactivateServiceOnExpresswayModalController);
 
   /* @ngInject */
-  function DeactivateServiceOnExpresswayModalController($modalInstance, FusionUtils, serviceId, clusterId, clusterName, FusionClusterService, XhrNotificationService, $translate) {
+  function DeactivateServiceOnExpresswayModalController($modalInstance, FusionUtils, serviceId, clusterId, clusterName, FusionClusterService, Notification, $translate) {
     var vm = this;
     vm.connectorId = serviceId;
     vm.clusterName = clusterName;
@@ -16,7 +16,9 @@
     function deactivateService() {
       FusionClusterService.deprovisionConnector(vm.clusterId, vm.connectorId)
         .then($modalInstance.close)
-        .catch(XhrNotificationService.notify);
+        .catch(function (error) {
+          Notification.errorWithTrackingId(error, 'hercules.genericFailure');
+        });
     }
 
     vm.localizedConnectorName = $translate.instant('hercules.connectorNameFromConnectorType.' + vm.connectorId);
