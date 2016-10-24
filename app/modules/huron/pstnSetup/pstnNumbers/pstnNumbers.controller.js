@@ -448,7 +448,7 @@
       $q.all(promises).then(function (results) {
         // sort our successful indexes and process from high to low
         _.forInRight(_.sortBy(results), function (indices) {
-          if (angular.isObject(indices) && _.isNumber(indices.searchResultsIndex) && _.isNumber(indices.searchResultsModelIndex)) {
+          if (_.isObject(indices) && _.isNumber(indices.searchResultsIndex) && _.isNumber(indices.searchResultsModelIndex)) {
             // clear the checkbox
             _.set(model.searchResultsModel, indices.searchResultsModelIndex, false);
             // remove from search result
