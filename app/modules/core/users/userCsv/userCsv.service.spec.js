@@ -45,129 +45,160 @@ describe('Controller: UserCsvService', function () {
   }));
 
   describe('UserCsvService', function () {
-    it('getCsvStat should return csvStat', function () {
-      expect(UserCsvService.getCsvStat()).toEqual(defaultCsvStat);
-    });
 
-    it('setCsvStat should update csvStat', function () {
-      UserCsvService.setCsvStat(updatedCsvStat, defaultCsvStat);
-      expect(UserCsvService.getCsvStat()).toEqual(updatedCsvStat);
-    });
-
-    it('getBulkErrorResponse should return expected response for status:400 messageCode:400087', function () {
-      expect(UserCsvService.getBulkErrorResponse(400, '400087', email)).toEqual('usersPage.hybridServicesError');
-    });
-
-    it('getBulkErrorResponse should return expected response for status:400 messageCode:400094', function () {
-      expect(UserCsvService.getBulkErrorResponse(400, '400094', email)).toEqual('usersPage.hybridServicesComboError');
-    });
-
-    it('getBulkErrorResponse should return expected response for status:400 messageCode:any', function () {
-      expect(UserCsvService.getBulkErrorResponse(400, null, email)).toEqual('firstTimeWizard.bulk400Error');
-    });
-
-    it('getBulkErrorResponse should return expected response for status:401 messageCode:any', function () {
-      expect(UserCsvService.getBulkErrorResponse(401, null, email)).toEqual('firstTimeWizard.bulk401And403Error');
-    });
-
-    it('getBulkErrorResponse should return expected response for status:403 messageCode:400081', function () {
-      expect(UserCsvService.getBulkErrorResponse(403, '400081', email)).toEqual('usersPage.userExistsError');
-    });
-
-    it('getBulkErrorResponse should return expected response for status:403 messageCode:400084', function () {
-      expect(UserCsvService.getBulkErrorResponse(403, '400084', email)).toEqual('usersPage.claimedDomainError');
-    });
-
-    it('getBulkErrorResponse should return expected response for status:403 messageCode:400091', function () {
-      expect(UserCsvService.getBulkErrorResponse(403, '400091', email)).toEqual('usersPage.claimedDomainError');
-    });
-
-    it('getBulkErrorResponse should return expected response for status:403 messageCode:400090', function () {
-      expect(UserCsvService.getBulkErrorResponse(403, '400090', email)).toEqual('usersPage.userExistsInDiffOrgError');
-    });
-
-    it('getBulkErrorResponse should return expected response for status:403 messageCode:400096', function () {
-      expect(UserCsvService.getBulkErrorResponse(403, '400096', email)).toEqual('usersPage.unknownCreateUserError');
-    });
-
-    it('getBulkErrorResponse should return expected response for status:403 messageCode:400110', function () {
-      expect(UserCsvService.getBulkErrorResponse(403, '400110', email)).toEqual('usersPage.notSetupForManUserAddError');
-    });
-
-    it('getBulkErrorResponse should return expected response for status:403 messageCode:400108', function () {
-      expect(UserCsvService.getBulkErrorResponse(403, '400108', email)).toEqual('usersPage.userExistsDomainClaimError');
-    });
-
-    it('getBulkErrorResponse should return expected response for status:403 messageCode:400109', function () {
-      expect(UserCsvService.getBulkErrorResponse(403, '400109', email)).toEqual('usersPage.unableToMigrateError');
-    });
-
-    it('getBulkErrorResponse should return expected response for status:403 messageCode:400111', function () {
-      expect(UserCsvService.getBulkErrorResponse(403, '400111', email)).toEqual('usersPage.insufficientEntitlementsError');
-    });
-
-    it('getBulkErrorResponse should return expected response for status:403 messageCode:any', function () {
-      expect(UserCsvService.getBulkErrorResponse(403, null, email)).toEqual('firstTimeWizard.bulk401And403Error');
-    });
-
-    it('getBulkErrorResponse should return expected response for status:404 messageCode:any', function () {
-      expect(UserCsvService.getBulkErrorResponse(404, null, email)).toEqual('firstTimeWizard.bulk404Error');
-    });
-
-    it('getBulkErrorResponse should return expected response for status:408 messageCode:any', function () {
-      expect(UserCsvService.getBulkErrorResponse(408, null, email)).toEqual('firstTimeWizard.bulk408Error');
-    });
-
-    it('getBulkErrorResponse should return expected response for status:504 messageCode:any', function () {
-      expect(UserCsvService.getBulkErrorResponse(504, null, email)).toEqual('firstTimeWizard.bulk408Error');
-    });
-
-    it('getBulkErrorResponse should return expected response for status:409 messageCode:any', function () {
-      expect(UserCsvService.getBulkErrorResponse(409, null, email)).toEqual('firstTimeWizard.bulk409Error');
-    });
-
-    it('getBulkErrorResponse should return expected response for status:500 messageCode:any', function () {
-      expect(UserCsvService.getBulkErrorResponse(500, null, email)).toEqual('firstTimeWizard.bulk500Error');
-    });
-
-    it('getBulkErrorResponse should return expected response for status:502 messageCode:any', function () {
-      expect(UserCsvService.getBulkErrorResponse(502, null, email)).toEqual('firstTimeWizard.bulk502And503Error');
-    });
-
-    it('getBulkErrorResponse should return expected response for status:503 messageCode:any', function () {
-      expect(UserCsvService.getBulkErrorResponse(503, null, email)).toEqual('firstTimeWizard.bulk502And503Error');
-    });
-
-    it('getBulkErrorResponse should return expected response for status:-1 messageCode:0', function () {
-      expect(UserCsvService.getBulkErrorResponse(-1, '0', email)).toEqual('firstTimeWizard.bulkCancelledErrorByUser');
-    });
-
-    it('getBulkErrorResponse should return expected response for status:-1 messageCode:null', function () {
-      expect(UserCsvService.getBulkErrorResponse(-1, null, email)).toEqual('firstTimeWizard.bulkCancelledErrorByServer');
-    });
-
-    it('getBulkErrorResponse should return expected response for status:null messageCode:null', function () {
-      expect(UserCsvService.getBulkErrorResponse(null, null, email)).toEqual('firstTimeWizard.processBulkError');
-    });
-
-    it('addErrorWithTrackingID should add trackingId when there is none', function () {
-      var responseWithHeader = UserCsvService.addErrorWithTrackingID(errorMsg, {
-        headers: headerFuncOne
+    describe('csvState', function () {
+      it('getCsvStat should return csvStat', function () {
+        expect(UserCsvService.getCsvStat()).toEqual(defaultCsvStat);
       });
-      var noResponseAndHeader = UserCsvService.addErrorWithTrackingID(errorMsg, null, headerFuncOne);
 
-      expect(responseWithHeader).toEqual(errorMsg + trackingId);
-      expect(noResponseAndHeader).toEqual(errorMsg + trackingId);
+      it('setCsvStat should update csvStat', function () {
+        UserCsvService.setCsvStat(updatedCsvStat, defaultCsvStat);
+        expect(UserCsvService.getCsvStat()).toEqual(updatedCsvStat);
+      });
+
+      it('setCsvStat should append to existing array properties', function () {
+        var csvStat = UserCsvService.getCsvStat();
+        expect(csvStat.userErrorArray).toHaveLength(0);
+
+        UserCsvService.setCsvStat({
+          userErrorArray: [{
+            row: 1,
+            email: email,
+            error: 'errorMsg'
+          }]
+        });
+        expect(csvStat.userErrorArray).toHaveLength(1);
+
+        UserCsvService.setCsvStat({
+          userErrorArray: [{
+            row: 2,
+            email: email,
+            error: 'errorMsg'
+          }]
+        });
+        expect(csvStat.userErrorArray).toHaveLength(2);
+
+      });
+
     });
 
-    it('addErrorWithTrackingID should use existing trackingId when there is one', function () {
-      var responseWithHeader = UserCsvService.addErrorWithTrackingID(errorMsg, {
-        headers: headerFuncTwo
+    describe('error responses', function () {
+      it('getBulkErrorResponse should return expected response for status:400 messageCode:400087', function () {
+        expect(UserCsvService.getBulkErrorResponse(400, '400087', email)).toEqual('usersPage.hybridServicesError');
       });
-      var noResponseAndHeader = UserCsvService.addErrorWithTrackingID(errorMsg, null, headerFuncTwo);
 
-      expect(responseWithHeader).toEqual(errorMsg + trackingId + dummyId);
-      expect(noResponseAndHeader).toEqual(errorMsg + trackingId + dummyId);
+      it('getBulkErrorResponse should return expected response for status:400 messageCode:400094', function () {
+        expect(UserCsvService.getBulkErrorResponse(400, '400094', email)).toEqual('usersPage.hybridServicesComboError');
+      });
+
+      it('getBulkErrorResponse should return expected response for status:400 messageCode:any', function () {
+        expect(UserCsvService.getBulkErrorResponse(400, null, email)).toEqual('firstTimeWizard.bulk400Error');
+      });
+
+      it('getBulkErrorResponse should return expected response for status:401 messageCode:any', function () {
+        expect(UserCsvService.getBulkErrorResponse(401, null, email)).toEqual('firstTimeWizard.bulk401And403Error');
+      });
+
+      it('getBulkErrorResponse should return expected response for status:403 messageCode:400081', function () {
+        expect(UserCsvService.getBulkErrorResponse(403, '400081', email)).toEqual('usersPage.userExistsError');
+      });
+
+      it('getBulkErrorResponse should return expected response for status:403 messageCode:400084', function () {
+        expect(UserCsvService.getBulkErrorResponse(403, '400084', email)).toEqual('usersPage.claimedDomainError');
+      });
+
+      it('getBulkErrorResponse should return expected response for status:403 messageCode:400091', function () {
+        expect(UserCsvService.getBulkErrorResponse(403, '400091', email)).toEqual('usersPage.claimedDomainError');
+      });
+
+      it('getBulkErrorResponse should return expected response for status:403 messageCode:400090', function () {
+        expect(UserCsvService.getBulkErrorResponse(403, '400090', email)).toEqual('usersPage.userExistsInDiffOrgError');
+      });
+
+      it('getBulkErrorResponse should return expected response for status:403 messageCode:400096', function () {
+        expect(UserCsvService.getBulkErrorResponse(403, '400096', email)).toEqual('usersPage.unknownCreateUserError');
+      });
+
+      it('getBulkErrorResponse should return expected response for status:403 messageCode:400110', function () {
+        expect(UserCsvService.getBulkErrorResponse(403, '400110', email)).toEqual('usersPage.notSetupForManUserAddError');
+      });
+
+      it('getBulkErrorResponse should return expected response for status:403 messageCode:400108', function () {
+        expect(UserCsvService.getBulkErrorResponse(403, '400108', email)).toEqual('usersPage.userExistsDomainClaimError');
+      });
+
+      it('getBulkErrorResponse should return expected response for status:403 messageCode:400109', function () {
+        expect(UserCsvService.getBulkErrorResponse(403, '400109', email)).toEqual('usersPage.unableToMigrateError');
+      });
+
+      it('getBulkErrorResponse should return expected response for status:403 messageCode:400111', function () {
+        expect(UserCsvService.getBulkErrorResponse(403, '400111', email)).toEqual('usersPage.insufficientEntitlementsError');
+      });
+
+      it('getBulkErrorResponse should return expected response for status:403 messageCode:any', function () {
+        expect(UserCsvService.getBulkErrorResponse(403, null, email)).toEqual('firstTimeWizard.bulk401And403Error');
+      });
+
+      it('getBulkErrorResponse should return expected response for status:404 messageCode:any', function () {
+        expect(UserCsvService.getBulkErrorResponse(404, null, email)).toEqual('firstTimeWizard.bulk404Error');
+      });
+
+      it('getBulkErrorResponse should return expected response for status:408 messageCode:any', function () {
+        expect(UserCsvService.getBulkErrorResponse(408, null, email)).toEqual('firstTimeWizard.bulk408Error');
+      });
+
+      it('getBulkErrorResponse should return expected response for status:504 messageCode:any', function () {
+        expect(UserCsvService.getBulkErrorResponse(504, null, email)).toEqual('firstTimeWizard.bulk408Error');
+      });
+
+      it('getBulkErrorResponse should return expected response for status:409 messageCode:any', function () {
+        expect(UserCsvService.getBulkErrorResponse(409, null, email)).toEqual('firstTimeWizard.bulk409Error');
+      });
+
+      it('getBulkErrorResponse should return expected response for status:500 messageCode:any', function () {
+        expect(UserCsvService.getBulkErrorResponse(500, null, email)).toEqual('firstTimeWizard.bulk500Error');
+      });
+
+      it('getBulkErrorResponse should return expected response for status:502 messageCode:any', function () {
+        expect(UserCsvService.getBulkErrorResponse(502, null, email)).toEqual('firstTimeWizard.bulk502And503Error');
+      });
+
+      it('getBulkErrorResponse should return expected response for status:503 messageCode:any', function () {
+        expect(UserCsvService.getBulkErrorResponse(503, null, email)).toEqual('firstTimeWizard.bulk502And503Error');
+      });
+
+      it('getBulkErrorResponse should return expected response for status:-1 messageCode:0', function () {
+        expect(UserCsvService.getBulkErrorResponse(-1, '0', email)).toEqual('firstTimeWizard.bulkCancelledErrorByUser');
+      });
+
+      it('getBulkErrorResponse should return expected response for status:-1 messageCode:null', function () {
+        expect(UserCsvService.getBulkErrorResponse(-1, null, email)).toEqual('firstTimeWizard.bulkCancelledErrorByServer');
+      });
+
+      it('getBulkErrorResponse should return expected response for status:null messageCode:null', function () {
+        expect(UserCsvService.getBulkErrorResponse(null, null, email)).toEqual('firstTimeWizard.processBulkError');
+      });
+
+      it('addErrorWithTrackingID should add trackingId when there is none', function () {
+        var responseWithHeader = UserCsvService.addErrorWithTrackingID(errorMsg, {
+          headers: headerFuncOne
+        });
+        var noResponseAndHeader = UserCsvService.addErrorWithTrackingID(errorMsg, null, headerFuncOne);
+
+        expect(responseWithHeader).toEqual(errorMsg + trackingId);
+        expect(noResponseAndHeader).toEqual(errorMsg + trackingId);
+      });
+
+      it('addErrorWithTrackingID should use existing trackingId when there is one', function () {
+        var responseWithHeader = UserCsvService.addErrorWithTrackingID(errorMsg, {
+          headers: headerFuncTwo
+        });
+        var noResponseAndHeader = UserCsvService.addErrorWithTrackingID(errorMsg, null, headerFuncTwo);
+
+        expect(responseWithHeader).toEqual(errorMsg + trackingId + dummyId);
+        expect(noResponseAndHeader).toEqual(errorMsg + trackingId + dummyId);
+      });
+
     });
   });
 });
