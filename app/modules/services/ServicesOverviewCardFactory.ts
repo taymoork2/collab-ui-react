@@ -8,6 +8,7 @@ import { ServicesOverviewHybridCalendarCard } from './hybridCalendarCard';
 import { ServicesOverviewHybridCallCard } from './hybridCallCard';
 import { ServicesOverviewHybridMediaCard } from './hybridMediaCard';
 import { ServicesOverviewHybridDataSecurityCard } from './hybridDataSecurityCard';
+
 angular
   .module('Hercules')
   .factory('ServicesOverviewCardFactory', ServicesOverviewCardFactory);

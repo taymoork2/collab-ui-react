@@ -78,7 +78,6 @@ export class ServicesOverviewHybridDataSecurityCard extends ServicesOverviewHybr
         if (i < this._step) {
            buttons[i].completed = true;
         }
-        //console.log('HybridDSCard.getButtons button ', i, ':', buttons[i].completed, 'routerState',  buttons[i].routerState);
       }
     }
 
@@ -100,6 +99,5 @@ export class ServicesOverviewHybridDataSecurityCard extends ServicesOverviewHybr
       cardClass: 'media',
       cardType: CardType.hybrid,
     }, FusionClusterStatesService);
-    console.log('HybridDSCard');
   }
 }
