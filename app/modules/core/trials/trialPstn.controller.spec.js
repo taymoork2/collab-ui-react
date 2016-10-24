@@ -56,6 +56,21 @@ describe('Controller: TrialPstnCtrl', function () {
     count: 25
   }];
 
+  var exchangesResponse = {
+    exchanges: [
+      { code: '731', count: 12 },
+      { code: '742', count: 23 },
+      { code: '421', count: 8 }
+    ]
+  };
+
+  var numbersResponse = {
+    numbers: [
+      "+17077318283", "+17077318284", "+17077318293", "+17077318294", "+17077318295",
+      "+17077318296", "+17077318297", "+17077318298", "+17077318315", "+17077318316"
+    ]
+  };
+
   var contractInfo = {
     companyName: 'Sample Company',
     signeeFirstName: 'Samp',
@@ -114,6 +129,22 @@ describe('Controller: TrialPstnCtrl', function () {
   it('should initialize with the company name and email', function () {
     expect(controller.trialData.details.pstnContractInfo.companyName).toEqual(customerName);
     expect(controller.trialData.details.pstnContractInfo.email).toEqual(customerEmail);
+  });
+
+  it('should reset NXX value when Area Code changes', function () {
+    var areaCode = areaCodeResponse.areaCodes[0];
+
+    controller.trialData.details.pstnProvider.uuid = carrierId;
+    controller.trialData.details.pstnNumberInfo.state = states[0];
+
+    $httpBackend.expectGET(HuronConfig.getTerminusUrl() + '/inventory/carriers/' + carrierId + '/did/count?groupBy=nxx&npa=' + areaCode.code + '&state=' + stateSearch).respond(exchangesResponse);
+
+    $httpBackend.expectGET(HuronConfig.getTerminusUrl() + '/inventory/carriers/' + carrierId + '/search?count=10&npa=' + areaCode.code + '&sequential=false' + stateSearch).respond(numbersResponse);
+
+    controller.trialData.details.pstnNumberInfo.areaCode = areaCode;
+    controller.trialData.details.pstnNumberInfo.nxx = exchangesResponse.exchanges[0];
+    controller.onAreaCodeChange();
+    expect(controller.trialData.details.pstnNumberInfo.nxx).toEqual(null);
   });
 
   describe('Enter info to the controller and expect the same out of the service', function () {
