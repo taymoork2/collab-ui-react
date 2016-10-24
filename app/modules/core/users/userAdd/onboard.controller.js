@@ -138,11 +138,8 @@
           type: "dialog",
           templateUrl: "modules/core/users/userAdd/licenseErrorModal.tpl.html",
         }).result.then(function () {
-          FeatureToggleService.atlasSettingsPageGetStatus()
-            .then(function () {
-              $previousState.forget('modalMemo');
-              $state.go('my-company.subscriptions');
-            });
+          $previousState.forget('modalMemo');
+          $state.go('my-company.subscriptions');
         });
       }
     };

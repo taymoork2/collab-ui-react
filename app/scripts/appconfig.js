@@ -605,12 +605,7 @@
             templateUrl: 'modules/core/settings/settings.tpl.html',
             controller: 'SettingsCtrl',
             controllerAs: 'settingsCtrl',
-            parent: 'main',
-            resolve: {
-              hasFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
-                return FeatureToggleService.atlasSettingsPageGetStatus();
-              }
-            }
+            parent: 'main'
           })
           .state('status', {
             url: '/status',
@@ -698,12 +693,7 @@
             controller: 'MyCompanyPageCtrl',
             controllerAs: 'mcp',
             parent: 'main',
-            abstract: true,
-            resolve: {
-              supportsMyCompany: /* @ngInject */ function (FeatureToggleService) {
-                return FeatureToggleService.stateSupportsFeature(FeatureToggleService.features.atlasSettingsPage);
-              }
-            }
+            abstract: true
           })
           .state('my-company.subscriptions', {
             url: '/my-company/subscriptions',

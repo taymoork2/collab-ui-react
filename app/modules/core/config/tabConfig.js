@@ -63,18 +63,10 @@
     link: '/support/status',
     state: 'support.status'
   }, {
-    tab: 'accountTab',
-    icon: 'icon-sliders',
-    title: 'tabs.accountTab',
-    state: 'profile',
-    feature: '!atlas-settings-page',
-    link: '/profile'
-  }, {
     tab: 'settingsTab',
     icon: 'icon-sliders',
     title: 'tabs.settingsTab',
     state: 'settings',
-    feature: "atlas-settings-page",
     link: '/settings'
   }, {
     tab: 'organizationTab',
