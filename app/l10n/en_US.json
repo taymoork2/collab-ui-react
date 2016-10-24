@@ -5615,6 +5615,17 @@
           "settings": "Settings"
         }
       },
+      "hybridDataSecurity": {
+        "title": "Hybrid Data Security",
+        "description": "Storage Node Setup in Progress",
+        "buttons": {
+          "installSoftware": "Install server software",
+          "createCluster": "Create cluster",
+          "registerNode": "Register node",
+          "configureNode": "Configure node",
+          "addUsers" : "Add users"
+        }
+      },
       "hybridContext": {
         "title": "Context",
         "description": "Enables a storage service that provides a repository of customer journey data for Cisco Contact Center customers.",
