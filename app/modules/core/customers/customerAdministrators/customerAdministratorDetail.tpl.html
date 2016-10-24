@@ -14,7 +14,12 @@
           typeahead-wait-ms="500"
           typeahead-no-results="customerAdmin.resultsError"
           ng-disabled="customerAdmin.disableAdminSearch" />
-        <span type="button" class="btn btn--primary inline search-add-button" ng-click="customerAdmin.addAdmin(customerAdmin.selected)">Add</span>
+        <button
+          cs-btn
+          loading="customerAdmin.loading"
+          class="btn btn--primary inline search-add-button"
+          ng-click="customerAdmin.addCustomerAdmin(customerAdmin.selected)"
+          ng-disabled="!customerAdmin.canAddUser()">Add</button>
       </div>
       <span ng-if="customerAdmin.resultsError">{{customerAdmin.resultsErrorMessage}}</span>
      </div>
@@ -23,10 +28,10 @@
     </div>
     <div class="feature-list">
       <ul>
-        <li class="feature" ng-repeat= "administrator in customerAdmin.administrators | orderBy: 'fullName'">
+        <li class="feature" ng-repeat= "user in customerAdmin.assignedAdmins | orderBy: 'fullName'">
           <a>
-            <span class="feature-name">{{administrator.fullName}}</span>
-            <span type="button" class="icon icon-close close-icon-height" ng-click="customerAdmin.removeSalesAdmin(administrator.uuid, administrator.fullName)">
+            <span class="feature-name">{{user.fullName}}</span>
+            <span type="button" class="icon icon-close close-icon-height" ng-click="customerAdmin.removeCustomerAdmin(user.fullName)">
             </span>
           </a>
         </li>

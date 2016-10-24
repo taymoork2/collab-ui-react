@@ -5,7 +5,7 @@
     .controller('ExpresswayEnterNameController', ExpresswayEnterNameController);
 
   /* @ngInject */
-  function ExpresswayEnterNameController($q, $stateParams, $translate, FusionClusterService, XhrNotificationService) {
+  function ExpresswayEnterNameController($q, $stateParams, $translate, FusionClusterService, Notification) {
     var vm = this;
     var wizardData = $stateParams.wizard.state().data;
     vm.name = '';
@@ -78,7 +78,9 @@
             }
           });
         })
-        .catch(XhrNotificationService.notify);
+        .catch(function (error) {
+          Notification.errorWithTrackingId(error, 'hercules.genericFailure');
+        });
     }
   }
 })();

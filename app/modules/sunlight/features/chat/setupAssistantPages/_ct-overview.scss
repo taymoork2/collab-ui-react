@@ -8,14 +8,16 @@
 
 .overview-card-layout {
   align-items: center;
+  .cs-card {
+    justify-content: center;
+  }
 }
 
 .ct-card-overview {
   height: rem-calc(220);
   width: rem-calc(350) !important;
-  box-shadow: 0px !important;
-
   @include vr-spacing(mt, 3.5);
+  box-shadow: none !important;
 
   .icon.ct-card-img {
     font-size: 4rem;
@@ -53,3 +55,4 @@
     align-items: center;
   }
 }
+

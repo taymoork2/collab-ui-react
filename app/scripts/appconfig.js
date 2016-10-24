@@ -1051,6 +1051,7 @@
             params: {
               currentUser: {},
               entitlements: {},
+              queryuserslist: {},
               currentUserId: ''
             },
             data: {
@@ -2383,11 +2384,8 @@
           })
           .state('huronPagingGroup', {
             url: '/huronPagingGroup',
-            views: {
-              'main@': {
-                template: '<pg-setup-assistant></pg-setup-assistant>',
-              }
-            },
+            parent: 'main',
+            template: '<pg-setup-assistant></pg-setup-assistant>',
             resolve: {
               lazy: /* @ngInject */ function lazyLoad($q, $ocLazyLoad) {
                 return $q(function resolveLogin(resolve) {

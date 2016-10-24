@@ -50,17 +50,20 @@
   </div>
   <hr/>
   <div class="row">
-    <div class="columns medium-4">
+    <div class="columns large-4 medium-4">
       <label class="h4 ng-scope" translate="autoAttendant.fallbackLabel"></label>
     </div>
-    <div class="columns medium-8">
+    <div class="columns large-8 medium-8">
       <div class="row">
         <div class="column">
           <p translate="autoAttendant.maxWaitTime"></p>
         </div>
       </div>
       <div class="row">
-        <div class="columns large-4 medium-5 small-6"><cs-select id="queueMin" ng-model="aaNewTreatmentModalCtrl.minute" options="aaNewTreatmentModalCtrl.minutes"   placeholder="aaNewTreatmentModalCtrl.selectPlaceholder" secondary-label="Minutes" labelfield="label" valuefield="label" icon="icon-chevron-down"></cs-select></div>
+        <div class="columns aa-selectmin-modal">
+          <cs-select id="queueMin" ng-model="aaNewTreatmentModalCtrl.maxWaitTime" options="aaNewTreatmentModalCtrl.minutes"   placeholder="aaNewTreatmentModalCtrl.selectPlaceholder" secondary-label="Minutes" labelfield="label" valuefield="label" icon="icon-chevron-down" >
+          </cs-select>
+        </div>
       </div>
       <div class="row">
         <div class="column">
@@ -70,18 +73,28 @@
         </div>
       </div>
       <div class="row">
-        <div class="column large-8 medium-8"><cs-select ng-model="aaNewTreatmentModalCtrl.destination" name="destinationSelect" options="aaNewTreatmentModalCtrl.destinationOptions"   labelfield="label" valuefield="label" icon="icon-chevron-down" placeholder="aaNewTreatmentModalCtrl.selectPlaceholder">
-        </cs-select> </div>
+        <div class="columns large-8 medium-10 small-10">
+          <cs-select id="destinationSelect" ng-model="aaNewTreatmentModalCtrl.destination" name="destinationSelect" options="aaNewTreatmentModalCtrl.destinationOptions" labelfield="label" valuefield="label" icon="icon-chevron-down" placeholder="aaNewTreatmentModalCtrl.selectPlaceholder">
+          </cs-select>
+          <div ng-switch="aaNewTreatmentModalCtrl.destination.name" class="aa-destination-container">
+            <aa-route-to-aa id="destinationMenuRouteAA" ng-switch-when="destinationMenuRouteAA" aa-menu-id="{{menuId}}" aa-index="index" aa-key-index="{{keyIndex}}"></aa-route-to-aa>
+            <aa-route-to-hg id="destinationMenuRouteHunt" ng-switch-when="destinationMenuRouteHunt"  aa-menu-id="{{menuId}}" aa-index="index" aa-key-index="{{keyIndex}}"></aa-route-to-hg>
+            <aa-route-to-user id="destinationMenuRouteMailbox" ng-switch-when="destinationMenuRouteMailbox" voicemail=true  aa-menu-id="{{menuId}}" aa-index="index" aa-key-index="{{keyIndex}}"></aa-route-to-user>
+            <aa-route-to-user id="destinationMenuRouteUser" ng-switch-when="destinationMenuRouteUser"  aa-menu-id="{{menuId}}" aa-index="index" aa-key-index="{{keyIndex}}"></aa-route-to-user>
+            <aa-route-to-ext-num id="destinationMenuRouteToExtNum" ng-switch-when="destinationMenuRouteToExtNum"  aa-menu-id="{{menuId}}" aa-index="index" aa-key-index="{{keyIndex}}"></aa-route-to-ext-num>
+          </div>
+        </div>
       </div>
       <div class="row">
-        <div class="column large-8 medium-8">
-          <p class="cs-input__help-text" translate="autoAttendant.destinationHelpMessage"></p>
+        <div class="columns large-8 medium-8">
+          <p class="cs-input__help-text" translate="autoAttendant.destinationHelpMessage"></p> 
         </div>
       </div>
     </div>
   </div>
 </div>
+
 <div class="modal-footer">
   <button id="cancelTreatmentFeature" class="btn" ng-click="$dismiss();" translate="common.cancel"></button>
-  <button id="okTreatmentBtn" class="btn btn-primary" ng-click="aaNewTreatmentModalCtrl.ok();" ng-disabled="!aaNewTreatmentModalCtrl.isSaveEnabled();" translate="common.ok"></button>
+  <button id="okTreatmentBtn"  class="btn btn-primary" ng-click="aaNewTreatmentModalCtrl.ok();" ng-disabled="!aaNewTreatmentModalCtrl.isSaveEnabled();" translate="common.ok"></button>
 </div>

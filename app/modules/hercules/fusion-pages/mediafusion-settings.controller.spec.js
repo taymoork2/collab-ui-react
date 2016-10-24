@@ -6,21 +6,20 @@ describe('Controller: MediafusionClusterSettingsController', function () {
   beforeEach(angular.mock.module('core.org'));
   beforeEach(angular.mock.module('Mediafusion'));
 
-  var $httpBackend, MediaClusterServiceV2, XhrNotificationService, FusionClusterService, controller, authInfo, $q, ResourceGroupService, $rootScope;
+  var $httpBackend, MediaClusterServiceV2, FusionClusterService, controller, authInfo, $q, ResourceGroupService, $rootScope;
   authInfo = {
     getOrgId: sinon.stub().returns('5632f806-ad09-4a26-a0c0-a49a13f38873')
   };
 
   beforeEach(angular.mock.module(function ($provide) {
-    $provide.value("Authinfo", authInfo);
+    $provide.value('Authinfo', authInfo);
   }));
 
-  beforeEach(inject(function (_$rootScope_, $translate, _FusionClusterService_, _XhrNotificationService_, _MediaClusterServiceV2_, _$httpBackend_, $controller, _$q_, _ResourceGroupService_) {
+  beforeEach(inject(function (_$rootScope_, $translate, _FusionClusterService_, _MediaClusterServiceV2_, _$httpBackend_, $controller, _$q_, _ResourceGroupService_) {
     $rootScope = _$rootScope_;
     $httpBackend = _$httpBackend_;
     $q = _$q_;
     MediaClusterServiceV2 = _MediaClusterServiceV2_;
-    XhrNotificationService = _XhrNotificationService_;
     FusionClusterService = _FusionClusterService_;
     ResourceGroupService = _ResourceGroupService_;
     $httpBackend.when('GET', 'https://hercules-integration.wbx2.com/hercules/api/v2/organizations/5632f806-ad09-4a26-a0c0-a49a13f38873?fields=@wide').respond({});
@@ -33,7 +32,6 @@ describe('Controller: MediafusionClusterSettingsController', function () {
       },
       $translate: $translate,
       MediaClusterServiceV2: MediaClusterServiceV2,
-      XhrNotificationService: XhrNotificationService,
       FusionClusterService: FusionClusterService,
       ResourceGroupService: ResourceGroupService,
     });

@@ -6,7 +6,7 @@
     .controller('FusionClusterListController', FusionClusterListController);
 
   /* @ngInject */
-  function FusionClusterListController($filter, $modal, $state, $translate, Authinfo, Config, hasF237FeatureToggle, hasMediaFeatureToggle, FusionClusterService, XhrNotificationService, WizardFactory) {
+  function FusionClusterListController($filter, $modal, $state, $translate, Authinfo, Config, hasF237FeatureToggle, hasMediaFeatureToggle, FusionClusterService, Notification, WizardFactory) {
 
     var vm = this;
     if (hasF237FeatureToggle) {
@@ -75,7 +75,10 @@
           clustersCache = clusters;
           updateFilters();
           vm.displayedClusters = clusters;
-        }, XhrNotificationService.notify)
+        })
+        .catch(function (error) {
+          Notification.errorWithTrackingId(error, 'hercules.genericFailure');
+        })
         .finally(function () {
           vm.loading = false;
         });
@@ -90,7 +93,9 @@
           updateFilters();
           vm.displayedGroups = groups;
         })
-        .catch(XhrNotificationService.notify)
+        .catch(function (error) {
+          Notification.errorWithTrackingId(error, 'hercules.genericFailure');
+        })
         .finally(function () {
           vm.loading = false;
         });
