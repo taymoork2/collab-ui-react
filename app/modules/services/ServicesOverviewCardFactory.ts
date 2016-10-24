@@ -7,7 +7,7 @@ import { ServicesOverviewHybridServicesCard } from './hybridServicesCard';
 import { ServicesOverviewHybridCalendarCard } from './hybridCalendarCard';
 import { ServicesOverviewHybridCallCard } from './hybridCallCard';
 import { ServicesOverviewHybridMediaCard } from './hybridMediaCard';
-
+import { ServicesOverviewHybridDataSecurityCard } from './hybridDataSecurityCard';
 angular
   .module('Hercules')
   .factory('ServicesOverviewCardFactory', ServicesOverviewCardFactory);
@@ -25,6 +25,7 @@ function ServicesOverviewCardFactory(Authinfo, FusionClusterStatesService) {
         new ServicesOverviewHybridCalendarCard(FusionClusterStatesService),
         new ServicesOverviewHybridCallCard(FusionClusterStatesService),
         new ServicesOverviewHybridMediaCard(FusionClusterStatesService),
+        new ServicesOverviewHybridDataSecurityCard(FusionClusterStatesService),
       ];
     },
   };
