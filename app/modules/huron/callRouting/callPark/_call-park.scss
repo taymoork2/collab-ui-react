@@ -7,15 +7,20 @@
   display: inline-block;
   vertical-align: top;
   transition: all 0.2s ease-in-out;
+
   &:hover {
     background-color: $gray-lightest;
   }
+
   .delete-btn {
     float: right;
+
     .delete-icon {
       @extend .icon;
       @extend .icon-close;
+
       font-size: 21px;
+
       &:hover {
         cursor: pointer;
         color: $brand-primary;
@@ -23,8 +28,10 @@
     }
   }
 }
+
 .callpark-tile {
   @include tile;
+
   .callpark-name {
     font-family: $brand-font-cisco-TT-Light;
     font-size: 16px;
@@ -32,6 +39,7 @@
     display: inline-block;
     vertical-align: top;
   }
+
   .callpark-pattern {
     font-family: $brand-font-cisco-TT-Extra-Light;
     font-size: 24px;
@@ -41,7 +49,6 @@
 }
 
 .call-park-detail {
-
   .form-horizontal .control-label {
     text-align: left;
     margin-right: 20px;
@@ -85,7 +92,6 @@
     margin-left: 0;
     margin-right: 0;
     margin-bottom: -15px;
-
   }
 
   .align-to {
@@ -93,7 +99,7 @@
     margin-right: 6px;
     padding-left: 0px;
   }
-  
+
   .margin-radio {
     margin-left: 20px;
     margin-right: 0;
@@ -102,9 +108,9 @@
   .align-radio {
     margin-top: 8px;
   }
-  
+
   .align-reversion-number {
-    margin-left : -12px;
+    margin-left: -12px;
     margin-top: -8px;
     margin-bottom: 0;
   }

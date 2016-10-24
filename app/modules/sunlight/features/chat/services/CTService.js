@@ -70,9 +70,7 @@
     }
 
     function labelForTime(time) {
-      var currentLanguage = $translate.use();
-      // Need to check for other languages
-      return (currentLanguage === 'en_US') ? moment(time, 'HH:mm').format('hh:mm A') : time;
+      return moment(time, 'HH:mm').format('hh:mm A');
     }
 
     function hoursWithSuffix(suffix) {

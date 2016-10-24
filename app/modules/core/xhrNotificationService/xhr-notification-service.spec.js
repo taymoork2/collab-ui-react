@@ -1,7 +1,7 @@
 'use strict';
 
 describe('XhrNotificationService', function () {
-  beforeEach(angular.mock.module('Hercules'));
+  beforeEach(angular.mock.module('Core'));
 
   var notification;
   beforeEach(function () {

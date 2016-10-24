@@ -1,23 +1,38 @@
 'use strict';
 
 describe('Template: trialPstn.tpl.spec.js:', function () {
-
-  var $compile, $controller, $scope, $templateCache;
+  var $q, $compile, $controller, $scope, $templateCache, Orgservice, TerminusStateService, FeatureToggleService;
   var view;
   var skipBtn, backBtn;
+
+  var states = [{
+    name: 'Texas',
+    abbreviation: 'TX'
+  }];
 
   beforeEach(angular.mock.module('Huron'));
   beforeEach(inject(dependencies));
   beforeEach(compileView);
 
-  function dependencies(_$compile_, _$controller_, _$rootScope_, _$templateCache_) {
+
+  function dependencies(_$q_, _$compile_, _$controller_, _$rootScope_, _$templateCache_, _Orgservice_, _TerminusStateService_, _FeatureToggleService_) {
+    $q = _$q_;
     $compile = _$compile_;
     $controller = _$controller_;
     $scope = _$rootScope_.$new();
     $templateCache = _$templateCache_;
+    TerminusStateService = _TerminusStateService_;
+    FeatureToggleService = _FeatureToggleService_;
+    Orgservice = _Orgservice_;
+
+    spyOn(TerminusStateService, 'query').and.returnValue({
+      '$promise': $q.when(states)
+    });
+    spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
   }
 
   function compileView() {
+    spyOn(Orgservice, 'getOrg');
     var template = $templateCache.get('modules/core/trials/trialPstn.tpl.html');
 
     $controller('TrialPstnCtrl', {
@@ -34,7 +49,6 @@ describe('Template: trialPstn.tpl.spec.js:', function () {
     function findSkipBtn() {
       skipBtn = view.find('a.alt-btn-link');
     }
-
     it('should match the selector \'a.alt-btn-lnk\'', function () {
       expect(skipBtn.length).toBe(1);
     });

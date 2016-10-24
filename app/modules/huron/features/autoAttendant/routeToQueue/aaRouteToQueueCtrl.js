@@ -5,6 +5,7 @@
     .module('uc.autoattendant')
     .controller('AARouteToQueueCtrl', AARouteToQueueCtrl);
 
+
   /* @ngInject */
   function AARouteToQueueCtrl($scope, $translate, $modal, AAUiModelService, AutoAttendantCeMenuModelService, AACommonService) {
 
@@ -25,15 +26,20 @@
     };
     vm.menuKeyEntry = {};
 
+
     vm.openQueueTreatmentModal = openQueueTreatmentModal;
+
 
     vm.populateUiModel = populateUiModel;
     vm.saveUiModel = saveUiModel;
 
+
     var rtQueue = 'routeToQueue';
     var fromRouteCall = false;
 
+
     /////////////////////
+
 
     function openQueueTreatmentModal() {
       // deep copy used to roll back from the modal changes
@@ -106,7 +112,6 @@
     }
 
     function activate() {
-
       if ($scope.fromRouteCall) {
         var ui = AAUiModelService.getUiModel();
         vm.uiMenu = ui[$scope.schedule];
@@ -145,7 +150,15 @@
           var iaAction = AutoAttendantCeMenuModelService.newCeActionEntry('say', '');
           vm.menuKeyEntry.actions[0].queueSettings.initialAnnouncement.addAction(iaAction);
         }
+        if (angular.isUndefined(vm.menuKeyEntry.actions[0].queueSettings.fallBack)) {
+          vm.menuKeyEntry.actions[0].queueSettings.fallBack = AutoAttendantCeMenuModelService.newCeMenuEntry();
+          var fbMaxTime = AutoAttendantCeMenuModelService.newCeActionEntry('time', '');
+          vm.menuKeyEntry.actions[0].queueSettings.fallBack.addAction(fbMaxTime);
+          var fbAction = AutoAttendantCeMenuModelService.newCeActionEntry('option', '');
+          vm.menuKeyEntry.actions[0].queueSettings.fallBack.addAction(fbAction);
+        }
       }
+
       populateUiModel();
     }
     activate();

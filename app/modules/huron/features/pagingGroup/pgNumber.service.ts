@@ -1,8 +1,3 @@
-export interface INumber extends ng.resource.IResource<INumber> {
-  uuid: string;
-  number: string;
-}
-
 interface ISearchData {
   customerId: string;
   directorynumber: string;
@@ -17,7 +12,7 @@ export class PagingNumberService {
               private Authinfo) {
   }
 
-  public getNumberSuggestions(hint?: string): ng.IPromise<INumber[]> {
+  public getNumberSuggestions(hint?: string): ng.IPromise<string[]> {
     let data: ISearchData = {
       customerId: this.Authinfo.getOrgId(),
       directorynumber: '',
@@ -28,10 +23,7 @@ export class PagingNumberService {
     }
     return this.InternalNumberPoolService.query(data).$promise.then(
       (response) => _.map(response, function (dn: any) {
-      return <INumber>{
-        uuid: dn.uuid,
-        number: dn.pattern,
-      };
+      return  dn.pattern;
     }));
   }
 

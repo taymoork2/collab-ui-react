@@ -68,7 +68,7 @@
 
     var avgRoomsChart = null;
     vm.avgRoomOptions = {
-      animate: false,
+      animate: true,
       description: 'avgRooms.avgRoomsDescription',
       headerTitle: 'avgRooms.avgRooms',
       id: 'avgRooms',
@@ -80,7 +80,7 @@
 
     var filesSharedChart = null;
     vm.filesSharedOptions = {
-      animate: false,
+      animate: true,
       description: 'filesShared.filesSharedDescription',
       headerTitle: 'filesShared.filesShared',
       id: 'filesShared',
@@ -92,9 +92,7 @@
 
     var mediaChart = null;
     var mediaData = [];
-    vm.mediaQualityStatus = ReportConstants.REFRESH;
-    vm.mediaQualityPopover = $translate.instant('mediaQuality.packetLossDefinition');
-    vm.mediaOptions = [{
+    var mediaArray = [{
       value: 0,
       label: $translate.instant('reportsPage.allCalls')
     }, {
@@ -104,7 +102,24 @@
       value: 2,
       label: $translate.instant('reportsPage.videoCalls')
     }];
-    vm.mediaSelected = vm.mediaOptions[0];
+    vm.mediaOptions = {
+      animate: true,
+      description: 'mediaQuality.descriptionCustomer',
+      headerTitle: 'mediaQuality.mediaQuality',
+      id: 'mediaQuality',
+      reportType: ReportConstants.BARCHART,
+      state: ReportConstants.REFRESH,
+      table: undefined,
+      titlePopover: 'mediaQuality.packetLossDefinition',
+    };
+    vm.mediaDropdown = {
+      array: mediaArray,
+      click: function () {
+        setMediaGraph(mediaData);
+      },
+      disabled: true,
+      selected: mediaArray[0]
+    };
 
     var deviceChart = null;
     var currentDeviceGraphs = [];
@@ -112,10 +127,30 @@
       value: 0,
       label: $translate.instant('registeredEndpoints.allDevices')
     };
-    vm.deviceStatus = ReportConstants.REFRESH;
-    vm.isDevicesEmpty = true;
-    vm.deviceFilter = [angular.copy(defaultDeviceFilter)];
-    vm.selectedDevice = vm.deviceFilter[0];
+    vm.deviceOptions = {
+      animate: false,
+      description: 'registeredEndpoints.customerDescription',
+      headerTitle: 'registeredEndpoints.registeredEndpoints',
+      id: 'devices',
+      reportType: ReportConstants.BARCHART,
+      state: ReportConstants.REFRESH,
+      table: undefined,
+      titlePopover: ReportConstants.UNDEF,
+    };
+    vm.deviceDropdown = {
+      array: [_.cloneDeep(defaultDeviceFilter)],
+      click: function () {
+        if (currentDeviceGraphs[vm.deviceDropdown.selected.value].emptyGraph) {
+          setDeviceGraph(DummyCustomerReportService.dummyDeviceData(vm.timeSelected));
+          vm.deviceOptions.state = ReportConstants.EMPTY;
+        } else {
+          setDeviceGraph(currentDeviceGraphs, vm.deviceDropdown.selected);
+          vm.deviceOptions.state = ReportConstants.SET;
+        }
+      },
+      disabled: true,
+      selected: _.cloneDeep(defaultDeviceFilter)
+    };
 
     var metricsChart = null;
     vm.metricStatus = ReportConstants.REFRESH;
@@ -146,11 +181,9 @@
     vm.timeSelected = vm.timeOptions[0];
 
     vm.timeUpdate = timeUpdate;
-    vm.mediaUpdate = mediaUpdate;
     vm.activityUpdate = activityUpdate;
     vm.isActiveDisabled = isActiveDisabled;
     vm.searchMostActive = searchMostActive;
-    vm.deviceUpdate = deviceUpdate;
     vm.getDescription = getDescription;
     vm.getAltDescription = getAltDescription;
     vm.getHeader = getHeader;
@@ -245,19 +278,15 @@
       vm.mostActiveUserStatus = ReportConstants.REFRESH;
       vm.avgRoomOptions.state = ReportConstants.REFRESH;
       vm.filesSharedOptions.state = ReportConstants.REFRESH;
-      vm.mediaQualityStatus = ReportConstants.REFRESH;
-      vm.deviceStatus = ReportConstants.REFRESH;
+      vm.mediaOptions.state = ReportConstants.REFRESH;
+      vm.deviceOptions.state = ReportConstants.REFRESH;
       vm.metricStatus = ReportConstants.REFRESH;
       vm.metrics = {};
-      vm.mediaSelected = vm.mediaOptions[0];
+      vm.mediaDropdown.selected = mediaArray[0];
       vm.activeSelected = vm.activeOptions[0];
 
       setDummyData();
       setAllGraphs();
-    }
-
-    function mediaUpdate() {
-      setMediaGraph(mediaData);
     }
 
     function activityUpdate() {
@@ -462,23 +491,25 @@
     }
 
     function setMediaGraph(data) {
-      var tempMediaChart = CustomerGraphService.setMediaQualityGraph(data, mediaChart, vm.mediaSelected);
+      var tempMediaChart = CustomerGraphService.setMediaQualityGraph(data, mediaChart, vm.mediaDropdown.selected);
       if (tempMediaChart !== null && angular.isDefined(tempMediaChart)) {
         mediaChart = tempMediaChart;
       }
     }
 
     function setMediaData() {
+      vm.mediaDropdown.disabled = true;
       mediaData = [];
       CustomerReportService.getMediaQualityData(vm.timeSelected).then(function (response) {
         if (response === ABORT) {
           return;
         } else if (response.length === 0) {
-          vm.mediaQualityStatus = ReportConstants.EMPTY;
+          vm.mediaOptions.state = ReportConstants.EMPTY;
         } else {
           mediaData = response;
           setMediaGraph(mediaData);
-          vm.mediaQualityStatus = ReportConstants.SET;
+          vm.mediaOptions.state = ReportConstants.SET;
+          vm.mediaDropdown.disabled = false;
         }
       });
     }
@@ -512,52 +543,38 @@
     }
 
     function setDeviceData() {
-      vm.deviceFilter = [_.cloneDeep(defaultDeviceFilter)];
-      vm.selectedDevice = vm.deviceFilter[0];
+      vm.deviceDropdown.array = [_.cloneDeep(defaultDeviceFilter)];
+      vm.deviceDropdown.selected = vm.deviceDropdown.array[0];
       currentDeviceGraphs = [];
-      vm.isDevicesEmpty = true;
+      vm.deviceDropdown.disabled = true;
 
       CustomerReportService.getDeviceData(vm.timeSelected).then(function (response) {
         if (response === ABORT) {
           return;
         } else if (response.emptyGraph) {
-          vm.deviceStatus = ReportConstants.EMPTY;
+          vm.deviceOptions.state = ReportConstants.EMPTY;
         } else {
-          vm.deviceFilter = response.filterArray.sort(function (a, b) {
-            if (a.label) {
-              return a.label.localeCompare(b.label);
-            } else {
-              return a > b;
-            }
-          });
-          vm.selectedDevice = vm.deviceFilter[0];
+          if (response.filterArray.length) {
+            vm.deviceDropdown.array = response.filterArray.sort(function (a, b) {
+              if (a.label) {
+                return a.label.localeCompare(b.label);
+              } else {
+                return a > b;
+              }
+            });
+          }
+          vm.deviceDropdown.selected = vm.deviceDropdown.array[0];
           currentDeviceGraphs = response.graphData;
 
-          if (!currentDeviceGraphs[vm.selectedDevice.value].emptyGraph) {
-            setDeviceGraph(currentDeviceGraphs, vm.selectedDevice);
-            vm.deviceStatus = ReportConstants.SET;
-            vm.isDevicesEmpty = false;
+          if (currentDeviceGraphs.length && !currentDeviceGraphs[vm.deviceDropdown.selected.value].emptyGraph) {
+            setDeviceGraph(currentDeviceGraphs, vm.deviceDropdown.selected);
+            vm.deviceOptions.state = ReportConstants.SET;
+            vm.deviceDropdown.disabled = false;
           } else {
-            vm.deviceStatus = ReportConstants.EMPTY;
+            vm.deviceOptions.state = ReportConstants.EMPTY;
           }
         }
       });
-    }
-
-    function deviceUpdate() {
-      if (currentDeviceGraphs[vm.selectedDevice.value].emptyGraph) {
-        var tempDeviceChart = CustomerGraphService.setDeviceGraph(DummyCustomerReportService.dummyDeviceData(vm.timeSelected), deviceChart);
-        if (tempDeviceChart !== null && angular.isDefined(tempDeviceChart)) {
-          deviceChart = tempDeviceChart;
-        }
-        vm.deviceStatus = ReportConstants.EMPTY;
-      } else {
-        var tempDevicesChart = CustomerGraphService.setDeviceGraph(currentDeviceGraphs, deviceChart, vm.selectedDevice);
-        if (tempDevicesChart !== null && angular.isDefined(tempDevicesChart)) {
-          deviceChart = tempDevicesChart;
-        }
-        vm.deviceStatus = ReportConstants.SET;
-      }
     }
 
     // WEBEX side of the page has been copied from the existing reports page

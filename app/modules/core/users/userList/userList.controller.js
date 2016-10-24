@@ -628,6 +628,7 @@
       $scope.roles = user.roles;
       $scope.queryuserslist = $scope.gridData;
       $state.go('user-overview', {
+        queryuserslist: $scope.queryuserslist,
         currentUserId: $scope.currentUser.id
       });
     }
