@@ -111,7 +111,7 @@
           if (userIsRefreshed) {
             // This means we've done a refresh and it didn't help so we give up with a cryptic error message
             $scope.extension.status = { state: 'unknown', entitled: true };
-            Notification.error('hercules.userSidepanel.refreshUserDidNoGood');
+            Notification.errorWithTrackingId('hercules.userSidepanel.refreshUserDidNoGood');
           } else {
             refreshUserInUss();
           }
@@ -240,7 +240,7 @@
         $scope.resourceGroup.cannotFindResouceGroup = false;
         Notification.success('hercules.resourceGroups.resourceGroupSaved');
       }).catch(function () {
-        Notification.error('hercules.resourceGroups.failedToSetGroup');
+        Notification.errorWithTrackingId('hercules.resourceGroups.failedToSetGroup');
       }).finally(function () {
         $scope.resourceGroup.saving = false;
         $scope.saving = $scope.savingEntitlements;

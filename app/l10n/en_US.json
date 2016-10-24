@@ -1,52 +1,22 @@
 {
   "statusPage": {
     "pageTitle": "Status Management",
-    "serviceManagement": "Service Management",
     "dashboard": "Dashboard",
     "incidents": "Incidents",
     "components": "Components",
-    "addStatusPage": "Add Another Service",
+    "addComponents": "Add A Component",
+    "componentName": "Component Name",
+    "componentDesc": "Description (optional)",
+    "componentGroup": "Component Group",
+    "nameCannotBeBlank": "Name can't be blank",
+    "createNewComponentGroup": "Create new component group",
+    "createComponent": "Create Component",
+    "componentInfo": "Component Info",
     "editAction": "Edit",
     "deleteAction": "Delete",
     "update": "Update",
     "deleteWarning": "WARNING! Deleting a component cannot be undone. All associated data will be deleted as well. Please be absolutely sure this is what you want. <br /> Type DELETE in the box below for final confirmation, then hit the delete button.",
-    "permanentlyDelete": "Permanently DELETE {{componentName}}",
-    "componentsPage": {
-      "listing": {
-        "noComponentHeading": "No Component Added",
-        "noComponentText": "Click the ADD botton to get started."
-      },
-      "addComponent": {
-        "title": "ADD A COMPONENT",
-        "componentName": "Component Name",
-        "componentDesc": "Description (optional)",
-        "componentDesc-placeholder": "Frontend application and API servers",
-        "componentGroup": "Component Group",
-        "nameCannotBeBlank": "Name can't be blank",
-        "createNewComponentGroup": "Create new component group",
-        "createComponent": "Create Component",
-        "componentInfo": "Component Info",
-        "groupName": "Group name",
-        "cancelCreateNewGroup": "Cancel new group creation"
-      },
-      "updateComponent": {
-        "title": "Update A Component",
-        "componentName": "Component Name",
-        "componentDesc": "Description (optional)",
-        "componentDesc-placeholder": "Frontend application and API servers",
-        "componentGroup": "Component Group",
-        "nameCannotBeBlank": "Name can't be blank",
-        "createNewComponentGroup": "Create new component group",
-        "updateComponent": "Update Component",
-        "componentInfo": "Component Info",
-        "groupName": "Group name",
-        "cancelCreateNewGroup": "Cancel new group creation"
-      },
-      "delComponent":{
-        "delComponentBtn": "PERMANENTLY DELETE {{}}",
-        "delTips": "<p><em>WARNING! </em> <strong>Deleting a component cannot be undone. </strong> All associated data will be deleted as well. Please be absolutely sure this is what you want.</p><p>Type <em>DELETE </em> in the box below for final confirmation, then hit the delete button.</p>"
-      }
-    }
+    "permanentlyDelete": "Permanently DELETE {{componentName}}"
   },
   "loginPage": {
     "title": "Cloud Collaboration Management",
@@ -444,7 +414,6 @@
     "eventsTab": "Events",
     "eventsTabDesc": "Event Management",
     "helpdesk": "Help Desk",
-    "incidentsTab": "Incidents",
     "statusTab": "Status",
     "statusTabDesc": "Status Mannagement",
     "careTab": "Care",
@@ -1468,8 +1437,8 @@
       "selectClusterPlaceholderNoneFound": "No eligible clusters found",
       "enterDisplayName": "Enter a name for the Expressway cluster:",
       "clusternameWatermark": "Enter cluster name…",
-      "cannotCreateCluster": "Could not create cluster. Try again later, or contact your Cisco technical support representative if the problem persists.",
-      "cannotProvisionConnector": "Could not provision {{ConnectorName}}. Try again later, or contact your Cisco technical support representative if the problem persists.",
+      "cannotCreateCluster": "Could not create cluster. Try again later.",
+      "cannotProvisionConnector": "Could not provision {{ConnectorName}}. Try again later.",
       "cannotFinalizeAllowlisting": "Could not finalize cluster provisioning. Try again later, or contact your Cisco technical support representative if the problem persists.",
       "connectorIsProvisioned": "The Expressway cluster {{ClusterName}} has been successfully provisioned with the following Hybrid Service:",
       "logInToConfigureThem": "{{ConnectorName}} will automatically be downloaded and installed on {{ClusterName}}, but you must <a href='https://{{hostname}}/fusionregistration' target='_blank'>log in to the Expressway</a> and configure and start {{ConnectorName}} to make it operational.",
@@ -1725,6 +1694,8 @@
         "connect": "Users' incoming calls will ring their work phones and the Cisco Spark app. Users can call their colleagues from either their phones or the app, too.",
         "certificatesHeading": "Certificates for Encrypted SIP Calls",
         "certificates": "Use certificates provided from the Cisco Collaboration default trust list or upload your own.  If you use your own, make sure the hostnames are on a verified domain. For help, click <a href=\"http://www.cisco.com/go/hybrid-services-call\" target=\"_blank\">here.</a>",
+        "certificatesCannotRead": "Could not read certificate list.",
+        "certificatesCannotDelete": "Could not delete certificate. Try again later",
         "certificatesEmailAddress": "Email Address",
         "certificatesCommonName": "Common Name",
         "certificatesOrganizationalUnit": "Organizational Unit",
@@ -3805,7 +3776,7 @@
       "deregisterCausesListItem2": "The pre-existing calls will continue.",
       "defuseAreYouSure": "Are you sure you want to deregister media server {{clusterName}} from organization {{organizationName}}?",
       "defuseCausesListItem1": "The cluster {{groupName}} will be removed from system.",
-      "deregisterErrorGeneric": "Unable to deregister {{clusterName}}. {{errorMessage}}",
+      "deregisterErrorGeneric": "Unable to deregister {{clusterName}}.",
       "releaseChannel": "Release Channel",
       "doYouStillWantToContinue": "Do you still want to continue ?",
       "youHostNoAvailable": "Your host will no longer be available in future",
@@ -5642,6 +5613,17 @@
         "buttons": {
           "resources": "Resources",
           "settings": "Settings"
+        }
+      },
+      "hybridDataSecurity": {
+        "title": "Hybrid Data Security",
+        "description": "Storage Node Setup in Progress",
+        "buttons": {
+          "installSoftware": "Install server software",
+          "createCluster": "Create cluster",
+          "registerNode": "Register node",
+          "configureNode": "Configure node",
+          "addUsers" : "Add users"
         }
       },
       "hybridContext": {

@@ -69,7 +69,6 @@ describe('Directive Controller: CallServicePreviewCtrl', function () {
     expect($scope.resourceGroup.show).toBeFalsy();
     expect(USSService.refreshEntitlementsForUser.calls.count()).toBe(0);
     expect(Notification.errorWithTrackingId.calls.count()).toBe(0);
-    expect(Notification.error.calls.count()).toBe(0);
   });
 
   it('should show the save button when entitled is toggled and remove when canceled', function () {
@@ -93,6 +92,6 @@ describe('Directive Controller: CallServicePreviewCtrl', function () {
     initController();
     expect($scope.callServiceAware.entitled).toBeTruthy();
     expect($scope.callServiceAware.status.state).toBe('unknown');
-    expect(Notification.error.calls.count()).toBe(1);
+    expect(Notification.errorWithTrackingId.calls.count()).toBe(1);
   });
 });

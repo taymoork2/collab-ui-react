@@ -484,6 +484,7 @@
         setDescription(action, inAction.routeToQueue);
         cesTempMoh(action);
         cesTempIa(action);
+        cesTempfallBack(action);
         menuEntry.addAction(action);
       } else {
         // insert an empty action
@@ -532,6 +533,23 @@
     /*
     * temporary solution to write to db until ces ready
     */
+    function cesTempfallBack(action) {
+      if (angular.isDefined(action.description)) {
+        try {
+          if (angular.isUnDefined(action.queueSettings)) {
+            action.description = JSON.parse(action.description);
+            action.queueSettings = {};
+          }
+          action.queueSettings.fallBack = constructCesTodofb(action.description);
+        } catch (exception) {
+          action.queueSettings = {};
+        }
+      }
+    }
+
+    /*
+    * temporary solution to write to db until ces ready
+    */
     function constructCesTodoMoh(parsedDescription) {
       var musicOnHold = parsedDescription.musicOnHold.actions[0];
       var playAction = new Action('play', musicOnHold.value);
@@ -551,6 +569,20 @@
       initialAnnouncement = new CeMenuEntry();
       initialAnnouncement.addAction(action);
       return initialAnnouncement;
+    }
+    /*
+    * temporary solution to write to db until ces ready
+    */
+    function constructCesTodofb(parsedDescription) {
+      var fallBackTime = parsedDescription.fallBack.actions[0];
+      var fallBackOption = parsedDescription.fallBack.actions[1];
+      var action = new Action(fallBackTime.name, fallBackTime.value);
+      action.setDescription(fallBackTime.description);
+      var fallBack = new CeMenuEntry();
+      fallBack.addAction(action);
+      action = new Action(fallBackOption.name, fallBackTime.value);
+      action.setDescrption(fallBackOption.description);
+      fallBack.addAction(action);
     }
 
     function parseActions(menuEntry, actions) {

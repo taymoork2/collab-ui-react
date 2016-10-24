@@ -1,0 +1,18 @@
+<!--<div class="row" ng-repeat="device in deviceUsage.leastUsedDevices">-->
+  <!--<div class="columns medium-4">{{device.name}}</div>-->
+  <!--<div class="columns medium-3">{{device.hours}} hours</div>-->
+  <!--<div class="columns medium-5"><i>(Last Call {{device.lastTime}})</i></div>-->
+<!--</div>-->
+
+<table class="table-condensed table">
+  <thead>
+    <th>Device</th>
+    <th>Hours Used</th>
+    <th>Last Used</th>
+  </thead>
+  <tr class="no-border" ng-repeat="device in deviceUsage.leastUsedDevices">
+    <td>{{device.name}}</td>
+    <td>{{device.hours}} hours</td>
+    <td>{{device.lastTime}})</td>
+  </tr>
+</table>

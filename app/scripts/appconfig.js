@@ -35,7 +35,6 @@
     .module('wx2AdminWebClientApp')
     .config(['$httpProvider', '$stateProvider', '$urlRouterProvider', '$translateProvider', '$compileProvider', 'languagesProvider',
       function ($httpProvider, $stateProvider, $urlRouterProvider, $translateProvider, $compileProvider, languagesProvider) {
-
         var sidepanelMemo = 'sidepanelMemo';
 
         // sidepanel helper
@@ -613,6 +612,25 @@
               }
             }
           })
+          .state('status', {
+            url: '/status',
+            templateUrl: 'modules/status/dashboard/dashboard.tpl.html',
+            controller: 'DashboardCtrl',
+            controllerAs: 'dashboardCtrl',
+            parent: 'main',
+            resolve: {
+              hasFeatureToggle: function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.globalStatus);
+              }
+            }
+          })
+          /*.state('status', {
+           url: '/status-conponents',
+           templateUrl: 'modules/status/components/components.tpl.html',
+           controller: 'ComponentsCtrl',
+           controllerAs: 'componentsCtrl',
+           parent: 'main'
+           })*/
           .state('authentication.enable3rdPartyAuth', {
             parent: 'modal',
             views: {
@@ -1033,6 +1051,7 @@
             params: {
               currentUser: {},
               entitlements: {},
+              queryuserslist: {},
               currentUserId: ''
             },
             data: {
@@ -2951,99 +2970,6 @@
               deleteFeatureName: null,
               deleteFeatureId: null,
               deleteFeatureType: null
-            }
-          })
-          .state('status', {
-            url: '/status',
-            templateUrl: 'modules/status/statusPage.html',
-            controller: 'statusPageCtrl',
-            controllerAs: 'status',
-            parent: 'main',
-            resolve: {
-              hasFeatureToggle: function (FeatureToggleService) {
-                return FeatureToggleService.supports(FeatureToggleService.features.globalStatus);
-              }
-            }
-          })
-          .state('status.dashboard', {
-            url: '/dashboard',
-            templateUrl: 'modules/status/dashboard/dashboard.tpl.html',
-            controller: 'DashboardCtrl',
-            controllerAs: 'dbc'
-          })
-          .state('status.components', {
-            url: '/components',
-            templateUrl: 'modules/status/components/components.tpl.html',
-            controller: 'componentsCtrl',
-            controllerAs: 'comp'
-          })
-          .state('status.components.deleteComponent', {
-            url: '/delete',
-            views: {
-              '@status': {
-                controller: 'RedirectDelComponentCtrl',
-                controllerAs: 'delComponent',
-                templateUrl: 'modules/status/components/deleteComponent/deleteComponent.tpl.html'
-              }
-            },
-            params: {
-              component: null
-            }
-          })
-          .state('status.incidents', {
-            url: '/incidents',
-            templateUrl: 'modules/status/incidents/incidentList/incidentList.tpl.html',
-            controller: 'IncidentListController',
-            controllerAs: 'shc'
-          })
-          .state('status.incidents.new', {
-            url: '/new',
-            views: {
-              '@status': {
-                templateUrl: 'modules/status/incidents/createIncident/createIncident.tpl.html',
-                controller: 'CreateIncidentController',
-                controllerAs: 'cic'
-              }
-            }
-          })
-          .state('status.incidents.delete', {
-            url: '/delete?incidentName&incidentId',
-            views: {
-              '@status': {
-                templateUrl: 'modules/status/incidents/deleteIncident/deleteIncident.tpl.html',
-                controller: 'DeleteIncidentController',
-                controllerAs: 'dic'
-              }
-            }
-          })
-          .state('status.incidents.update', {
-            url: '/update?incidentName&incidentId',
-            views: {
-              '@status': {
-                templateUrl: 'modules/status/incidents/updateIncident/updateIncident.tpl.html',
-                controller: 'UpdateIncidentController',
-                controllerAs: 'uic'
-              }
-            }
-          })
-          .state('status.incidents.view', {
-            url: '/view?incidentName&incidentId',
-            views: {
-              '@status': {
-                templateUrl: 'modules/status/incidents/viewIncident/incidentInfo.tpl.html',
-                controller: 'UpdateIncidentController',
-                controllerAs: 'uic'
-              }
-            }
-          })
-          .state('status.serviceList', {
-            url: '/serviceList',
-            views: {
-              '@status': {
-                templateUrl: 'modules/status/serviceManagement/serviceList.tpl.html',
-                controller: 'ServiceManagementCtrl',
-                controllerAs: 'smc'
-              }
             }
           });
       }

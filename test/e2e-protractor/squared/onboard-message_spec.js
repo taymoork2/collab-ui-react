@@ -17,6 +17,12 @@ describe('Onboard users with Message Service', function () {
 
     utils.click(users.saveButton);
     notifications.assertSuccess(testUser, 'entitlements were updated successfully');
+
+    // re-navigate breacrumb and verify value
+    utils.clickFirstBreadcrumb();
+    utils.click(users.messagingService);
+    utils.expectCheckbox(users.messengerInteropCheckbox, targetState);
+
     utils.click(users.closeSidePanel);
   }
 

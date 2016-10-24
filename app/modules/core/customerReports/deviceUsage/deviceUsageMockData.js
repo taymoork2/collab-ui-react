@@ -14,7 +14,7 @@
 
     var maxCallsPrDay = 10;
     var maxPairedCallsPrDay = 5;
-    var existingUniqueDeviceIds = createSetOfUniqueDeviceIds(100);
+    var existingUniqueDeviceIds = createSetOfUniqueDeviceIds(1000);
 
     var service = {
       getRawData: getRawData
@@ -60,7 +60,7 @@
         var registeredDate = moment(sample.date, apiDataFormat);
         return ((registeredDate.isBefore(endDate) && registeredDate.isAfter(startDate)) || registeredDate.isSame(endDate) || registeredDate.isSame(startDate));
       });
-      $log.info("After range filtering", rawDataWithinRange);
+      $log.info("Raw data after range filtering", rawDataWithinRange);
 
       return _.cloneDeep(rawDataWithinRange);
     }
@@ -74,7 +74,7 @@
         var noOfActiveDevicesToday = _.random(0, existingUniqueDeviceIds.length - 1);
         for (var i = 0; i < noOfActiveDevicesToday; i++) {
           var accountId = existingUniqueDeviceIds[i];
-          data.push(deviceDaySample(time, accountId, "ce"));
+          //data.push(deviceDaySample(time, accountId, "ce"));
           data.push(deviceDaySample(time, accountId, "darling"));
         }
         start.add(1, "days");

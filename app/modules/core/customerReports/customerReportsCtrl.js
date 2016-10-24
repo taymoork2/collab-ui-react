@@ -554,17 +554,19 @@
         } else if (response.emptyGraph) {
           vm.deviceOptions.state = ReportConstants.EMPTY;
         } else {
-          vm.deviceDropdown.array = response.filterArray.sort(function (a, b) {
-            if (a.label) {
-              return a.label.localeCompare(b.label);
-            } else {
-              return a > b;
-            }
-          });
+          if (response.filterArray.length) {
+            vm.deviceDropdown.array = response.filterArray.sort(function (a, b) {
+              if (a.label) {
+                return a.label.localeCompare(b.label);
+              } else {
+                return a > b;
+              }
+            });
+          }
           vm.deviceDropdown.selected = vm.deviceDropdown.array[0];
           currentDeviceGraphs = response.graphData;
 
-          if (!currentDeviceGraphs[vm.deviceDropdown.selected.value].emptyGraph) {
+          if (currentDeviceGraphs.length && !currentDeviceGraphs[vm.deviceDropdown.selected.value].emptyGraph) {
             setDeviceGraph(currentDeviceGraphs, vm.deviceDropdown.selected);
             vm.deviceOptions.state = ReportConstants.SET;
             vm.deviceDropdown.disabled = false;

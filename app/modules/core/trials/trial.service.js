@@ -14,7 +14,7 @@
   }
 
   /* @ngInject */
-  function TrialService($http, $q, Authinfo, Config, LogMetricsService, TrialCallService, TrialCareService, TrialContextService, TrialDeviceService, TrialMeetingService, TrialMessageService, TrialPstnService, TrialResource, TrialRoomSystemService, TrialWebexService, UrlConfig) {
+  function TrialService($http, $q, $state, Analytics, Authinfo, Config, LogMetricsService, TrialCallService, TrialCareService, TrialContextService, TrialDeviceService, TrialMeetingService, TrialMessageService, TrialPstnService, TrialResource, TrialRoomSystemService, TrialWebexService, UrlConfig) {
     var _trialData;
     var trialsUrl = UrlConfig.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/trials';
 
@@ -33,6 +33,7 @@
       getExpirationPeriod: getExpirationPeriod,
       shallowValidation: shallowValidation,
       getDaysLeftForCurrentUser: getDaysLeftForCurrentUser,
+      sendToAnalytics: sendToAnalytics
     };
 
     return service;
@@ -358,5 +359,10 @@
       var trialIds = service.getTrialIds();
       return service.getExpirationPeriod(trialIds);
     }
+
+    function sendToAnalytics(eventName, trialData, extraData) {
+      Analytics.trackTrialSteps(eventName, $state.current.name, Authinfo.getOrgId(), trialData, extraData);
+    }
+
   }
 })();
