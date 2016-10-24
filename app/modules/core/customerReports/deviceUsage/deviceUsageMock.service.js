@@ -6,26 +6,43 @@
     .service('DeviceUsageMockService', DeviceUsageMockService);
 
   /* @ngInject */
-  function DeviceUsageMockService($q, $http, DeviceUsageMockData) {
+  function DeviceUsageMockService(DeviceUsageMockData, $timeout, $http, $log) {
 
-    var useMock = true;
+    var deviceReportsUrlBase = "http://localhost:8080/atlas-server-1.0-SNAPSHOT/admin/api/v1/";
 
     var service = {
       getData: getData
     };
     return service;
 
+    function useMock() {
+      return true;
+    }
+
     // Main api supposed to simulate backend
     // Should be adjusted according to latest (preliminary) backend API
     function getData(startDate, endDate, all) {
-      if (useMock) {
+      if (useMock()) {
+        $log.warn("USING MOCK !!!!!");
+        var result;
         if (all === true) {
-          return $q.when(getRawData(startDate, endDate));
+          result = getRawData(startDate, endDate);
+          //return $q.when(getRawData(startDate, endDate));
         } else {
-          return $q.when(getDailySumPrType(startDate, endDate));
+          result = getDailySumPrType(startDate, endDate);
+          //return $q.when(getDailySumPrType(startDate, endDate));
         }
+        return $timeout(function () {
+          return result;
+        }, 2000);
       } else {
-        return $http.get("http://localhost:8080/atlas-server-1.0-SNAPSHOT/admin/api/v1/organization/1eb65fdf-9643-417f-9974-ad72cae0e10f/reports/device/call?intervalType=day&rangeStart=" + startDate + "&rangeEnd=" + endDate + "&accounts=__&sendMockData=false")
+        var deviceReportsUrl;
+        if (all === true) {
+          deviceReportsUrl = deviceReportsUrlBase + "organization/1eb65fdf-9643-417f-9974-ad72cae0e10f/reports/device/call?deviceCategory=ce,sparkboard&intervalType=day&rangeStart=" + startDate + "&rangeEnd=" + endDate + "&accounts=__&sendMockData=false";
+        } else {
+          deviceReportsUrl = deviceReportsUrlBase + "organization/1eb65fdf-9643-417f-9974-ad72cae0e10f/reports/device/call?deviceCategory=ce,sparkboard&intervalType=day&rangeStart=" + startDate + "&rangeEnd=" + endDate + "&sendMockData=false";
+        }
+        return $http.get(deviceReportsUrl)
           .then(function (samples) {
             return samples.data.items;
           });
@@ -49,5 +66,6 @@
       });
       return calculatedList;
     }
+
   }
 }());

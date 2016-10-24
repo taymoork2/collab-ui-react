@@ -12,6 +12,8 @@
     vm.reportType = $stateParams.deviceReportType;
     vm.loading = true;
 
+    vm.toggleGraph = toggleGraph;
+
     if (!deviceUsageFeatureToggle) {
       // simulate a 404
       $log.warn("State not allowed.");
@@ -21,9 +23,10 @@
     var graph;
 
     DeviceUsageDistributionReportService.getDeviceUsageReportData().then(function (devices) {
-      var inUseData = DeviceUsageDistributionGraphService.getUsageDistributionData(devices);
+      var inUseData = DeviceUsageDistributionGraphService.getUsageDistributionDataForGraph(devices);
       var chart = DeviceUsageDistributionGraphService.getUsageCharts(inUseData, "usageHours");
       chart.dataProvider = inUseData;
+      $log.warn("DATA PROVIDER SET!", inUseData);
       chart.listeners = [
         { event: 'clickGraphItem', method: showList },
         { event: 'dataUpdated', method: graphRendered }
@@ -34,6 +37,11 @@
 
     function graphRendered() {
       vm.loading = false;
+    }
+
+    vm.showGraph = false;
+    function toggleGraph() {
+      vm.showGraph = !vm.showGraph;
     }
 
     vm.gridOptions = {
@@ -69,11 +77,27 @@
       limits.push(_.last(limits));
 
       DeviceUsageDistributionReportService.getDeviceUsageReportData(limits[clickedIndex], limits[clickedIndex + 1]).then(function (devices) {
+        $log.warn("distrubutiondata", devices);
         vm.gridOptions.data = devices;
       });
 
     }
 
+    vm.leastUsedDevices = [
+      { name: "Bergen", hours: 2, lastTime: "6 days ago" },
+      { name: "Oslo", hours: 2, lastTime: "5 days ago" },
+      { name: "Trondheim", hours: 2, lastTime: "4 days ago" },
+      { name: "K2", hours: 3, lastTime: "4 days ago" },
+      { name: "MountEverest", hours: 3, lastTime: "3 days ago" }
+    ];
+
+    vm.mostUsedDevices = [
+      { name: "Spitsbergen", hours: 160 },
+      { name: "Molde", hours: 155 },
+      { name: "Trolltunga", hours: 145 },
+      { name: "Kilimanjaro", hours: 145 },
+      { name: "Didrik", hours: 140 }
+    ];
 
   }
 
