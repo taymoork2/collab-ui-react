@@ -479,6 +479,19 @@
               }
             }
           })
+          .state('addDeviceFlow.editServices', {
+            parent: 'modal',
+            params: {
+              wizard: null
+            },
+            views: {
+              'modal@': {
+                templateUrl: 'modules/squared/places/editServices/EditServicesTemplate.tpl.html',
+                controller: 'EditServicesCtrl',
+                controllerAs: 'editServices'
+              }
+            }
+          })
           .state('activate', {
             url: '/activate',
             views: {

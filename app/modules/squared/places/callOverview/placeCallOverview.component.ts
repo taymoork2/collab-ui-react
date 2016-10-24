@@ -56,12 +56,14 @@ class PlaceCallOverview implements ng.IComponentController {
   }
 
   private initActions(): void {
-    this.actionList = [{
-      actionKey: 'usersPreview.addNewLinePreview',
-      actionFunction: () => {
-        this.$state.go('place-overview.communication.line-overview');
-      },
-    }];
+    if (this.currentPlace.type === 'huron') {
+      this.actionList = [{
+        actionKey: 'usersPreview.addNewLinePreview',
+        actionFunction: () => {
+          this.$state.go('place-overview.communication.line-overview');
+        },
+      }];
+    }
   }
 
   private initFeatures(): void {
