@@ -21,7 +21,7 @@
     @include vr-spacing(pt, 0);
     @include vr-spacing(pl, 0);
     @include vr-spacing(pr, 0);
-    @include vr-spacing(pb, 0);
+    @include vr-spacing(pb, 1);
   }
 
   .aa-drop-box {
