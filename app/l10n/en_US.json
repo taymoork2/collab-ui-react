@@ -2738,7 +2738,20 @@
     "cancelDialog": "Are you sure you wish to cancel call pickup creation? This call pickup will not be saved.",
     "createHelpText": "Create",
     "nameHint": "This name is not visible to callers.",
-    "namePlaceholder": "Name the Call Pickup"
+    "namePlaceholder": "Name the Call Pickup",
+    "memberPlaceholder": "Select Members",
+    "pickupNameHint": "These users' or places' lines will be part of this call pickup. 2 members minimum",
+    "successSave": "'{{callPickupName}}' call pickup has been created successfully",
+    "errorSave": "Failed to create the Call Pickup: '{{message}}'",
+    "memberHint": "These users' or places' lines will be part of this call pickup",
+    "members": " Members",
+    "memberFetchFailure": "Unable to get members.",
+    "memberLimitExceeded": "Unable to add member. Call Pickup feature is limited to 30 members",
+    "maxMembersAllowed": "30",
+    "minMemberWarning": "You need to select at least one line for each member",
+    "memberWarning": "Member already added to another call pickup group. Do you wish to continue?",
+    "duplicateNameWarning": "A pickup group by same name already exists",
+    "removeMember": "Remove Member"
   },
   "pagingGroup": {
     "title": "Paging Group",
