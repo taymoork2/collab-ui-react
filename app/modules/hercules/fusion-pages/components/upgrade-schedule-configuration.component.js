@@ -70,7 +70,7 @@
         })
         .catch(function (error) {
           // Do not reset vm.syncing if there was an error
-          Notification.error(error.message || error.statusText);
+          Notification.errorWithTrackingId(error.message || error.statusText);
         });
     }
 
@@ -122,7 +122,7 @@
         })
         .then(updateUI)
         .catch(function (error) {
-          Notification.error(error.data.message);
+          Notification.errorWithTrackingId(error.data.message);
         })
         .finally(function () {
           vm.syncing = false;

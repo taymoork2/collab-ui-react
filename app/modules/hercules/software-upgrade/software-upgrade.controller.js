@@ -6,7 +6,7 @@
     .controller('SoftwareUpgradeController', SoftwareUpgradeController);
 
   /* @ngInject */
-  function SoftwareUpgradeController($translate, $modalInstance, servicesId, connectorType, availableVersion, cluster, ClusterService, FusionClusterService, XhrNotificationService) {
+  function SoftwareUpgradeController($translate, $modalInstance, servicesId, connectorType, availableVersion, cluster, ClusterService, FusionClusterService, Notification) {
     var vm = this;
     vm.upgrading = false;
     vm.availableVersion = availableVersion;
@@ -28,7 +28,10 @@
         .upgradeSoftware(cluster.id, connectorType)
         .then(function () {
           $modalInstance.close();
-        }, XhrNotificationService.notify)
+        })
+        .catch(function (error) {
+          Notification.errorWithTrackingId(error, 'hercules.genericFailure');
+        })
         .finally(function () {
           vm.upgrading = false;
         });

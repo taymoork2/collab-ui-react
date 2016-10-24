@@ -7,7 +7,6 @@
 <tags-input add-on-blur="true"
             on-tag-added="expresswayServiceSettings.writeConfig()"
             on-tag-removed="expresswayServiceSettings.writeConfig()"
-            on-invalid-tag="expresswayServiceSettings.invalidEmail($tag)"
             placeholder={{expresswayServiceSettings.localizedAddEmailWatermark}}
             ng-disabled="expresswayServiceSettings.savingEmail"
             ng-model="expresswayServiceSettings.emailSubscribers"
