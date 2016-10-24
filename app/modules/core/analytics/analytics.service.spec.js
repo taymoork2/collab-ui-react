@@ -68,6 +68,24 @@ describe('Service: Analytics', function () {
       $scope.$apply();
       expect(Analytics._track).toHaveBeenCalled();
     });
+    it('should not cause an error if duration or license count data is missing', function () {
+      var fakeTrialDataMissingDetails = {
+        randomValue: 'something',
+        details: {
+          licenseDuration: 1,
+          licenseCount: 1
+        }
+      };
+      delete fakeTrialDataMissingDetails.details;
+
+      Analytics.trackTrialSteps(Analytics.eventNames.START, 'someState', '123', fakeTrialDataMissingDetails);
+      $scope.$apply();
+      expect(Analytics.trackTrialSteps).not.toThrow();
+      expect(Analytics._track).toHaveBeenCalled();
+      var props = Analytics._track.calls.mostRecent().args[1];
+      expect(props.duration).toBeUndefined();
+      expect(props.licenseCount).toBeUndefined();
+    });
     it('should send correct trial data', function () {
       Analytics.trackTrialSteps(Analytics.eventNames.START, 'someState', '123', trialData.enabled);
       $scope.$apply();
