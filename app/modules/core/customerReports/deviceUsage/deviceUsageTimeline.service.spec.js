@@ -105,10 +105,9 @@ describe('DeviceUsageTimelineService', function () {
       .when('GET', urlBase + path + range + deviceCategories).respond(mockData);
 
     DeviceUsageTimelineService.getDataForLastWeek(['ce,sparkboard'], 'backend').then(function () {
+      fail();
       done();
-    }, function () {
-      done();
-    }).catch(function (reject) {
+    }, function (reject) {
       expect(reject.status).toEqual(-1);
       done();
     });
