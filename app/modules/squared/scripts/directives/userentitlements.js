@@ -130,17 +130,18 @@
           Notification.notify([entitleResult.msg], entitleResult.type);
           $scope.btn_saveLoad = false;
 
-          var index = $scope.queryuserslist.map(function (element) {
-            return element.id;
-          }).indexOf($scope.currentUser.id);
-          var updatedUser = $scope.queryuserslist[index];
-          for (var i = 0; i < $rootScope.services.length; i++) {
-            var service = $rootScope.services[i].serviceId;
-            var ciName = $rootScope.services[i].ciName;
-            if ($scope.entitlements[service] === true && updatedUser.entitlements.indexOf(ciName) === -1) {
-              updatedUser.entitlements.push(ciName);
-            } else if ($scope.entitlements[service] === false && updatedUser.entitlements.indexOf(ciName) > -1) {
-              updatedUser.entitlements.splice(updatedUser.entitlements.indexOf(ciName), 1);
+          var updatedUser = _.find($scope.queryuserslist, {
+            id: $scope.currentUser.id
+          });
+          if (updatedUser) {
+            for (var i = 0; i < $rootScope.services.length; i++) {
+              var service = $rootScope.services[i].serviceId;
+              var ciName = $rootScope.services[i].ciName;
+              if ($scope.entitlements[service] === true && updatedUser.entitlements.indexOf(ciName) === -1) {
+                updatedUser.entitlements.push(ciName);
+              } else if ($scope.entitlements[service] === false && updatedUser.entitlements.indexOf(ciName) > -1) {
+                updatedUser.entitlements.splice(updatedUser.entitlements.indexOf(ciName), 1);
+              }
             }
           }
           $rootScope.$broadcast('entitlementsUpdated');

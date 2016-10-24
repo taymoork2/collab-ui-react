@@ -37,6 +37,7 @@
       line-height: $h4-font-size;
 
       @include vr-spacing(pl, 1);
+      @include vr-spacing(m, 0);
     }
 
     .click-here {
@@ -45,4 +46,3 @@
     }
   }
 }
-

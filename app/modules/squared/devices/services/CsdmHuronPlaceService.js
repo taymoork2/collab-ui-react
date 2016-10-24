@@ -80,10 +80,11 @@
       });
     }
 
-    function createCmiPlace(name, directoryNumber) {
+    function createCmiPlace(name, directoryNumber, externalNumber) {
       return $http.post(cmiPlacesUrl, {
         displayName: name,
-        directoryNumber: directoryNumber
+        directoryNumber: directoryNumber,
+        externalNumber: externalNumber,
       }, {
         headers: {
           'Access-Control-Expose-Headers': 'Location'

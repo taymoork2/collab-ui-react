@@ -38,7 +38,7 @@
                   $stateParams.wizard.next();
                 }
               }, function () {
-                Notification.error('hercules.genericFailure');
+                Notification.errorWithTrackingId('hercules.genericFailure');
               });
           }
         });
@@ -54,7 +54,7 @@
           .then(function () {
             $stateParams.wizard.next();
           }, function () {
-            Notification.error('hercules.genericFailure');
+            Notification.errorWithTrackingId('hercules.genericFailure');
           });
       } else {
         $stateParams.wizard.next();

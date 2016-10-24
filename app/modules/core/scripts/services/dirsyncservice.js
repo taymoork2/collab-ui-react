@@ -13,13 +13,13 @@
       getDirSyncDomain: function (callback) {
         $http.get(dirsyncUrl)
           .success(function (data, status) {
-            data = data || {};
+            data = _.isObject(data) ? data : {};
             data.success = true;
             Log.debug('Retrieved dirsync status');
             callback(data, status);
           })
           .error(function (data, status) {
-            data = data || {};
+            data = _.isObject(data) ? data : {};
             data.success = false;
             data.status = status;
             callback(data, status);
@@ -31,13 +31,13 @@
 
         $http.get(dirsyncStatusUrl)
           .success(function (data, status) {
-            data = data || {};
+            data = _.isObject(data) ? data : {};
             data.success = true;
             Log.debug('Retrieved dirsync domain');
             callback(data, status);
           })
           .error(function (data, status) {
-            data = data || {};
+            data = _.isObject(data) ? data : {};
             data.success = false;
             data.status = status;
             callback(data, status);
@@ -52,13 +52,13 @@
 
         $http.post(domainUrl, payload)
           .success(function (data, status) {
-            data = data || {};
+            data = _.isObject(data) ? data : {};
             data.success = true;
             Log.debug('Created Directory Sync Domain: ' + domainName);
             callback(data, status);
           })
           .error(function (data, status) {
-            data = data || {};
+            data = _.isObject(data) ? data : {};
             data.success = false;
             data.status = status;
             callback(data, status);
@@ -77,13 +77,13 @@
           data: payload
         })
           .success(function (data, status) {
-            data = data || {};
+            data = _.isObject(data) ? data : {};
             data.success = true;
             Log.debug('Started Directory Sync');
             callback(data, status);
           })
           .error(function (data, status) {
-            data = data || {};
+            data = _.isObject(data) ? data : {};
             data.success = false;
             data.status = status;
             callback(data, status);

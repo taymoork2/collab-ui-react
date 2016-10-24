@@ -6,7 +6,7 @@
     .controller('MediafusionClusterSettingsController', MediafusionClusterSettingsController);
 
   /* @ngInject */
-  function MediafusionClusterSettingsController($stateParams, $translate, FusionClusterService, XhrNotificationService, MediaClusterServiceV2, $modal, FusionUtils, Notification, ResourceGroupService) {
+  function MediafusionClusterSettingsController($stateParams, $translate, FusionClusterService, MediaClusterServiceV2, $modal, FusionUtils, Notification, ResourceGroupService) {
     var vm = this;
     vm.backUrl = 'cluster-list';
     vm.upgradeSchedule = {
@@ -37,7 +37,10 @@
               });
             }
           });
-        }, XhrNotificationService.notify);
+        })
+        .catch(function (error) {
+          Notification.errorWithTrackingId(error, 'hercules.genericFailure');
+        });
     };
     vm.populateChannels();
 
@@ -48,8 +51,9 @@
         MediaClusterServiceV2.updateV2Cluster(vm.cluster.id, vm.displayName, vm.selected.value)
           .then(function () {
             Notification.success('hercules.fusion.add-resource-group.release-channel.saveReleaseChannelSuccess');
-          }, function () {
-            Notification.error('hercules.fusion.add-resource-group.release-channel.saveReleaseChannelError');
+          })
+          .catch(function (error) {
+            Notification.errorWithTrackingId(error, 'hercules.fusion.add-resource-group.release-channel.saveReleaseChannelError');
           });
       }
     };
@@ -83,7 +87,10 @@
               clusterName: cluster.name
             });
           }
-        }, XhrNotificationService.notify);
+        })
+        .catch(function (error) {
+          Notification.errorWithTrackingId(error, 'hercules.genericFailure');
+        });
     }
   }
 })();

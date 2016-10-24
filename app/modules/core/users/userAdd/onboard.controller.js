@@ -343,7 +343,8 @@
     $scope.editServicesSave = function () {
       for (var licenseId in $scope.cmrLicensesForMetric) {
         if ($scope.cmrLicensesForMetric[licenseId]) {
-          Analytics.trackSelectedCheckbox(licenseId);
+          Analytics.trackUserOnboarding(Analytics.sections.USER_ONBOARDING.eventNames.CMR_CHECKBOX, $state.current.name, Authinfo.getOrgId(), { licenseId: licenseId });
+
         }
       }
       if (shouldAddCallService()) {
@@ -1000,7 +1001,8 @@
         if (str.length >= 3 || str === '') {
           $scope.searchStr = str;
           getUnlicensedUsers();
-          Analytics.trackConvertUser($state.current.name, Authinfo.getOrgId());
+          Analytics.trackUserOnboarding(Analytics.sections.USER_ONBOARDING.eventNames.CONVERT_USER, $state.current.name, Authinfo.getOrgId());
+
         }
       }, $scope.timeoutVal);
     }

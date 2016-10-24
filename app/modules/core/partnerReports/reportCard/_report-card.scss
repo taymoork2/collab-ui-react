@@ -36,7 +36,21 @@
     padding-left: rem-calc(24);
     padding-right: rem-calc(24);
   }
-
+  .report-dropdown {
+    float: right;
+    margin-right: rem-calc(35);
+    position: relative;
+    top: rem-calc(-15);
+    width: rem-calc(200);
+    z-index: 1000;
+    .select-options {
+    	padding: 0;
+    }
+  }
+  .barchart-shift {
+    position: relative;
+    top: rem-calc(-64);
+  }
   .report-table {
     .table-bordered {
       width: 95%;
@@ -126,7 +140,6 @@
       }
     }
   }
-
   .percent-large {
     font-size: vr-adjust(24);
     font-family: $brand-font-cisco-TT-Light;
@@ -190,7 +203,10 @@
       color: $gray-base;
     }
   }
-
+  .active-chart .amcharts-value-axis .amcharts-axis-label {
+    opacity: 0;
+    animation: graphAxisFade 2s ease-in-out 1 forwards;
+  }
   #avgRoomsChart {
     .room-number {
       font-size: rem-calc(18);

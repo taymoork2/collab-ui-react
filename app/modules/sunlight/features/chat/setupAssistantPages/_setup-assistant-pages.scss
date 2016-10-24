@@ -72,8 +72,5 @@ $ct-desc-height: 32px;
 
 .ct-card-center {
   justify-content: center;
-}
-
-.ct-card-start {
-  justify-content: flex-start;
+  width: 100% !important;
 }

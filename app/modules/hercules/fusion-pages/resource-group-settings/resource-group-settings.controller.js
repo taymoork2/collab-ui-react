@@ -6,7 +6,7 @@
     .controller('ResourceGroupSettingsController', ResourceGroupSettingsController);
 
   /* @ngInject */
-  function ResourceGroupSettingsController($stateParams, ResourceGroupService, XhrNotificationService, Notification, $translate, $state, FusionClusterService, $modal) {
+  function ResourceGroupSettingsController($stateParams, ResourceGroupService, Notification, $translate, $state, FusionClusterService, $modal) {
     var vm = this;
     vm.backUrl = 'cluster-list';
     vm.releaseChannel = {
@@ -46,7 +46,7 @@
           });
           getAllowedReleaseChannels();
         }, function () {
-          Notification.error('hercules.resourceGroupSettings.loadFailed');
+          Notification.errorWithTrackingId('hercules.resourceGroupSettings.loadFailed');
         });
     }
 
@@ -61,7 +61,7 @@
 
     function setGroupName(newName) {
       if (newName.length === 0) {
-        Notification.error('hercules.resourceGroupSettings.groupNameCannotByEmpty');
+        Notification.errorWithTrackingId('hercules.resourceGroupSettings.groupNameCannotByEmpty');
         return;
       }
       ResourceGroupService.setName(vm.group.id, newName)
@@ -73,9 +73,9 @@
           Notification.success('hercules.resourceGroupSettings.groupNameSaved');
         }, function (response) {
           if (response.status === 409) {
-            Notification.error('hercules.resourceGroupSettings.duplicateName');
+            Notification.errorWithTrackingId('hercules.resourceGroupSettings.duplicateName');
           } else {
-            Notification.error('hercules.genericFailure');
+            Notification.errorWithTrackingId('hercules.genericFailure');
           }
         });
     }
@@ -92,7 +92,10 @@
             }
             setSelectedReleaseChannelOption();
           });
-        }, XhrNotificationService.notify);
+        })
+        .catch(function (error) {
+          Notification.errorWithTrackingId(error, 'hercules.genericFailure');
+        });
     }
 
     function releaseChannelChanged() {
