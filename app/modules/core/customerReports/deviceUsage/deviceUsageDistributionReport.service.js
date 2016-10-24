@@ -43,11 +43,12 @@
           updatedList.push(d);
         }
       });
+      $log.info("After summing data from same device", updatedList);
       return updatedList;
     }
 
     function getDeviceUsageReportData(min, max) {
-      return DeviceUsageMockService.getData("2016-10-01", "2016-10-08", true)
+      return DeviceUsageMockService.getData("2016-10-11", "2016-10-18", true)
         .then(convertTimeAndDuration)
         .then(sumUsageDataFromSameDevice)
         .then(function (data) {
