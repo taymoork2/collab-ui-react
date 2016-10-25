@@ -32,6 +32,14 @@
       }
     }
 
+    function pstnFeatureIsEnabled() {
+      if ($window.location.search.indexOf("enablePstn=true") > -1) {
+        return $q.when(true);
+      } else {
+        return FeatureToggleService.supports(FeatureToggleService.features.csdmPstn);
+      }
+    }
+
     function updatePlaceName(placeUrl, name) {
       return $http.patch(placeUrl, {
         name: name
@@ -53,14 +61,26 @@
       });
     }
 
+    function updatePlace(placeUrl, entitlements, directoryNumber, externalNumber) {
+      return $http.patch(placeUrl, {
+        directoryNumber: directoryNumber,
+        externalNumber: externalNumber,
+        entitlements: entitlements
+      }).then(function (res) {
+        return CsdmConverter.convertPlace(res.data);
+      });
+    }
+
     return {
       placesFeatureIsEnabled: placesFeatureIsEnabled,
+      pstnFeatureIsEnabled: pstnFeatureIsEnabled,
       deletePlace: deletePlace,
       deleteItem: deletePlace,
       createCsdmPlace: createCsdmPlace,
       getPlacesList: getPlacesList,
       updatePlaceName: updatePlaceName,
-      getPlacesUrl: getPlacesUrl
+      getPlacesUrl: getPlacesUrl,
+      updatePlace: updatePlace
     };
   }
 

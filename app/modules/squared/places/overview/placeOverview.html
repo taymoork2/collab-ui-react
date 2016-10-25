@@ -1,6 +1,17 @@
 <div class="sq-places-page-overview">
   <div ui-view="header"></div>
   <cs-sp-container>
+    <cs-sp-section ng-if="$ctrl.currentPlace.type === 'huron' || $ctrl.showPstn === true">
+      <section-title
+        title-key="placesPage.servicesHeader"
+        action-list="$ctrl.actionList">
+      </section-title>
+      <feature-list
+        features="$ctrl.services"
+        on-feature-click="$ctrl.clickService(feature)">
+      </feature-list>
+    </cs-sp-section>
+
     <cs-sp-section ng-if="$ctrl.currentPlace.type === 'cloudberry'">
       <div class="section-title-row">
         <span class="section-name" translate="spacesPage.informationHeader"></span>
@@ -11,16 +22,6 @@
           <p class="form-control-static">{{$ctrl.currentPlace.sipUrl}}</p>
         </div>
       </div>
-    </cs-sp-section>
-
-    <cs-sp-section ng-if="$ctrl.currentPlace.type === 'huron'">
-      <div class="section-title-row">
-        <span class="section-name" translate="placesPage.servicesHeader"></span>
-      </div>
-      <feature-list
-        features="$ctrl.services"
-        on-feature-click="$ctrl.clickService(feature)">
-      </feature-list>
     </cs-sp-section>
 
     <cs-sp-section>
