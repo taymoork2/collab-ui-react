@@ -479,6 +479,19 @@
               }
             }
           })
+          .state('addDeviceFlow.editServices', {
+            parent: 'modal',
+            params: {
+              wizard: null
+            },
+            views: {
+              'modal@': {
+                templateUrl: 'modules/squared/places/editServices/EditServicesTemplate.tpl.html',
+                controller: 'EditServicesCtrl',
+                controllerAs: 'editServices'
+              }
+            }
+          })
           .state('activate', {
             url: '/activate',
             views: {
@@ -2346,7 +2359,17 @@
             }
           })
           .state('huronCallPickup', {
-            url: '/huronCallPickup',
+            url: '/callPickup',
+            parent: 'main',
+            template: '<call-pickup-setup-assistant></call-pickup-setup-assistant>',
+            resolve: {
+              lazy: /* @ngInject */ function lazyLoad($q, $ocLazyLoad) {
+                return $q(function resolveLogin(resolve) {
+                  require(['modules/huron/features/callPickup/callPickupSetupAssistant'], loadModuleAndResolve($ocLazyLoad, resolve));
+                });
+              }
+            }
+
           })
           .state('huronCallPark', {
             url: '/huronCallPark',

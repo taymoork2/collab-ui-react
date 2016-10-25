@@ -1330,7 +1330,9 @@
     "unsupported": "You are using an <strong>outdated</strong> version of Internet Explorer. Please <a href='http://windows.microsoft.com/en-us/internet-explorer/download-ie' target='_blank'>upgrade your browser</a> to version 11 or higher.",
     "statusError": "Request failed with status: {{status}}.",
     "csvError": "Export failed.",
-    "videoError": "There is a problem with the video you are trying to play."
+    "videoError": "There is a problem with the video you are trying to play.",
+    "runtimeTitle": "Oops!",
+    "runtime": "An unexpected error has occurred. Our engineers are on it. If you need help to proceed, please <a href='https://support.ciscospark.com' target='_blank'>contact support</a>."
   },
   "spacesPage": {
     "addTag": "Add tag",
@@ -2577,7 +2579,15 @@
   "callPickup": {
     "title": "Call Pickup",
     "code": "PI",
-    "modalDescription": "Call Pickup feature allows users to pick up incoming calls within a group of users."
+    "modalDescription": "Call Pickup feature allows users to pick up incoming calls within a group of users.",
+    "createTitle": "Create Call Pickup",
+    "cancelHeader": "Cancel Call Pickup Creation",
+    "confirmButton": "Cancel Creation",
+    "continueButton": "Continue Creation",
+    "cancelDialog": "Are you sure you wish to cancel call pickup creation? This call pickup will not be saved.",
+    "createHelpText": "Create",
+    "nameHint": "This name is not visible to callers.",
+    "namePlaceholder": "Name the Call Pickup"
   },
   "pagingGroup": {
     "title": "Paging Group",
@@ -5613,6 +5623,17 @@
         "buttons": {
           "resources": "Resources",
           "settings": "Settings"
+        }
+      },
+      "hybridDataSecurity": {
+        "title": "Hybrid Data Security",
+        "description": "Storage Node Setup in Progress",
+        "buttons": {
+          "installSoftware": "Install server software",
+          "createCluster": "Create cluster",
+          "registerNode": "Register node",
+          "configureNode": "Configure node",
+          "addUsers" : "Add users"
         }
       },
       "hybridContext": {

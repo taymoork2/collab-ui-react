@@ -1,18 +1,20 @@
 'use strict';
 
 describe('Service: Analytics', function () {
-  var Config, Analytics, Orgservice, $q, $scope;
+  var Config, Analytics, Authinfo, Orgservice, $q, $scope, $state;
   var trialData = getJSONFixture('core/json/trials/trialData.json');
 
-  beforeEach(angular.mock.module('Core'));
+  beforeEach(angular.mock.module(require('./index')));
   beforeEach(inject(dependencies));
   beforeEach(initSpies);
 
-  function dependencies(_$q_, $rootScope, _Config_, _Analytics_, _Orgservice_) {
+  function dependencies(_$q_, $rootScope, _$state_, _Config_, _Analytics_, _Authinfo_, _Orgservice_) {
     $scope = $rootScope.$new();
     $q = _$q_;
+    $state = _$state_;
     Config = _Config_;
     Analytics = _Analytics_;
+    Authinfo = _Authinfo_;
     Orgservice = _Orgservice_;
   }
 
@@ -104,4 +106,23 @@ describe('Service: Analytics', function () {
     });
   });
 
+  describe('when calling track error', function () {
+    beforeEach(function () {
+      spyOn(Authinfo, 'getUserId').and.returnValue('111');
+      spyOn(Authinfo, 'getOrgId').and.returnValue('999');
+      _.set($state, '$current.name', 'my-state');
+    });
+    it('should send necessary properties in event', function () {
+      var error = new Error('Something went wrong');
+      Analytics.trackError(error, 'some cause');
+      $scope.$apply();
+      expect(Analytics._track).toHaveBeenCalledWith('Runtime Error', jasmine.objectContaining({
+        message: 'Something went wrong',
+        cause: 'some cause',
+        userId: '111',
+        orgId: '999',
+        state: 'my-state'
+      }));
+    });
+  });
 });
