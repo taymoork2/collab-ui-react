@@ -6,7 +6,7 @@
     .controller('DeviceUsageTimelineCtrl', DeviceUsageTimelineCtrl);
 
   /* @ngInject */
-  function DeviceUsageTimelineCtrl($state, $scope, DeviceUsageTimelineService, Notification, deviceUsageFeatureToggle) {
+  function DeviceUsageTimelineCtrl($state, $scope, DeviceUsageTimelineService, Notification, deviceUsageFeatureToggle, DeviceUsageCommonService) {
     var vm = this;
     var amChart;
     var apiToUse = 'mock';
@@ -18,43 +18,21 @@
       $state.go('login');
     }
 
-    vm.dateRanges = [{
-      label: 'Last Week',
-      value: 'last_week',
-      name: 'dateRange',
-      id: 'week'
-    }, {
-      label: 'Last Month',
-      value: 'last_month',
-      name: 'dateRange',
-      id: 'month'
-    }, {
-      label: 'Last 3 Months',
-      value: 'last_3_months',
-      name: 'dateRange',
-      id: 'last_3_months'
-    }];
-
-    vm.dateRange = 'last_week';
-
-    //vm.showDevices = false;
-    //var lastDataPointIndex = null;
-
-    vm.rangeChange = function () {
-      switch (vm.dateRange) {
-        case 'last_week':
+    $scope.$on('time-range-changed', function (event, timeSelected) {
+      switch (timeSelected.value) {
+        case 0:
           loadLastWeek();
           break;
-        case 'last_month':
+        case 1:
           loadLastMonth();
           break;
-        case 'last_3_months':
+        case 2:
           loadLast3Months();
           break;
         default:
           loadLastWeek();
       }
-    };
+    });
 
     init();
 
@@ -71,11 +49,29 @@
       _.each(amChart.graphs, function (graph) {
         graph.balloonFunction = renderBalloon;
       });
-      DeviceUsageTimelineService.getDataForLastWeek(['ce', 'sparkboard'], apiToUse).then(function (data) {
-        amChart.dataProvider = data;
-        amChart.validateData();
-        vm.showDevices = false;
-      }).catch(handleReject);
+      loadInitData();
+    }
+
+    function loadChartData(data) {
+      amChart.dataProvider = data;
+      amChart.validateData();
+      vm.showDevices = false;
+    }
+
+    function loadInitData() {
+      switch (DeviceUsageCommonService.getTimeSelected()) {
+        case 0:
+          DeviceUsageTimelineService.getDataForLastWeek(['ce', 'sparkboard'], apiToUse).then(loadChartData, handleReject);
+          break;
+        case 1:
+          DeviceUsageTimelineService.getDataForLastMonth(['ce', 'sparkboard'], apiToUse).then(loadChartData, handleReject);
+          break;
+        case 2:
+          DeviceUsageTimelineService.getDataForLastMonths(3, 'day', ['ce', 'sparkboard'], apiToUse).then(loadChartData, handleReject);
+          break;
+        default:
+          DeviceUsageTimelineService.getDataForLastWeek(['ce', 'sparkboard'], apiToUse).then(loadChartData, handleReject);
+      }
     }
 
     function graphRendered() {

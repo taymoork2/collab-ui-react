@@ -6,13 +6,18 @@
     .controller('DeviceUsageHeaderCtrl', DeviceUsageHeaderCtrl);
 
   /* @ngInject */
-  function DeviceUsageHeaderCtrl($modal, $log, $state, $translate, deviceUsageFeatureToggle) {
+  function DeviceUsageHeaderCtrl($scope, $modal, $log, $state, $translate, deviceUsageFeatureToggle, ReportConstants, DeviceUsageCommonService) {
     var vm = this;
     if (!deviceUsageFeatureToggle) {
       // simulate a 404
       $log.warn("State not allowed.");
       $state.go('login');
     }
+
+    vm.timeUpdate = timeUpdate;
+
+    vm.timeOptions = _.cloneDeep(ReportConstants.timeFilter);
+    vm.timeSelected = vm.timeOptions[0];
 
     vm.headerTabs = [{
       title: $translate.instant('reportsPage.sparkReports'),
@@ -29,10 +34,10 @@
       // },
       {
         title: $translate.instant('reportsPage.usageReports.timeline'),
-        state: "reports.device-usage.timeline"
+        state: 'reports.device-usage.timeline'
       }, {
         title: $translate.instant('reportsPage.usageReports.distribution'),
-        state: "reports.device-usage.distribution"
+        state: 'reports.device-usage.distribution'
       }];
 
     vm.pageTitle = $translate.instant('reportsPage.usageReports.usageReportTitle');
@@ -41,6 +46,11 @@
       type: 'small',
       templateUrl: "modules/core/customerReports/deviceUsage/alpha.html",
     });
+
+    function timeUpdate() {
+      $scope.$broadcast('time-range-changed', vm.timeSelected);
+      DeviceUsageCommonService.setTimeSelected(vm.timeSelected.value);
+    }
 
   }
 
