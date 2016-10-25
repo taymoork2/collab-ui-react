@@ -10,10 +10,9 @@ describe('$exceptionHandler', function () {
       $exceptionHandlerProvider.mode('log');
     });
 
-    this.injectDependencies('$httpBackend', '$scope', 'Analytics', 'Notification', 'BadService');
+    this.injectDependencies('$httpBackend', '$scope', 'Analytics', 'BadService');
     this.$httpBackend.whenGET('l10n/en_US.json').respond(200);
     spyOn(this.Analytics, 'trackError');
-    spyOn(this.Notification, 'warning');
   });
 
   it('should invoke handler on uncaught errors', function () {
@@ -21,7 +20,6 @@ describe('$exceptionHandler', function () {
       this.BadService.badFunction();
     });
 
-    expect(this.Notification.warning).toHaveBeenCalled();
     expect(this.Analytics.trackError).toHaveBeenCalled();
     expect(this.Analytics.trackError.calls.mostRecent().args[0].message).toEqual('bad problem');
   });
