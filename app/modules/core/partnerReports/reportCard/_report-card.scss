@@ -163,6 +163,23 @@
     color: $gray-darkest;
   }
 
+  .report-search {
+    margin-bottom: rem-calc(20);
+    margin-left: rem-calc(25);
+    width: 40%;
+    position: relative;
+
+    i {
+      left: rem-calc(10);
+      position: absolute;
+      top: rem-calc(10);
+    }
+
+    input {
+      padding-left: rem-calc(30);
+    }
+  }
+
   .carousel-btn {
     border: 1px solid $gray-dark-1;
     color: $gray-dark-1;
@@ -203,6 +220,21 @@
       color: $gray-base;
     }
   }
+
+  .table-spinner {
+    height: 100px;
+    position: relative;
+    top: 40px;
+    width: 100%;
+
+    .icon-2x {
+      font-size: 4em;
+      position: absolute;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+  }
+
   .active-chart .amcharts-value-axis .amcharts-axis-label {
     opacity: 0;
     animation: graphAxisFade 2s ease-in-out 1 forwards;
