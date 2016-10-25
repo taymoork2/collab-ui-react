@@ -32,10 +32,16 @@
       }
     }
 
-    function updatePlaceName(placeUrl, name) {
-      return $http.patch(placeUrl, {
+    function updateItemName(place, name) {
+      return $http.patch(place.url, {
         name: name
       }).then(function (res) {
+        return CsdmConverter.convertPlace(res.data);
+      });
+    }
+
+    function fetchPlace(placeUrl) {
+      return $http.get(placeUrl).then(function (res) {
         return CsdmConverter.convertPlace(res.data);
       });
     }
@@ -57,9 +63,10 @@
       placesFeatureIsEnabled: placesFeatureIsEnabled,
       deletePlace: deletePlace,
       deleteItem: deletePlace,
+      fetchItem: fetchPlace,
       createCsdmPlace: createCsdmPlace,
       getPlacesList: getPlacesList,
-      updatePlaceName: updatePlaceName,
+      updateItemName: updateItemName,
       getPlacesUrl: getPlacesUrl
     };
   }

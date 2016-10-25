@@ -130,7 +130,7 @@ describe('Service: CsdmDataModelService', function () {
       });
     });
 
-    describe('reloadDevice', function () {
+    describe('reloadItem', function () {
       it(' should reload a device and update the device in both devices and places', function () {
         executeGetCallsAndInitPromises();
         var deviceToReloadUrl = "https://csdm-integration.wbx2.com/csdm/api/v1/organization/584cf4cd-eea7-4c8c-83ee-67d88fc6eab5/devices/b528e32d-ed35-4e00-a20d-d4d3519efb4f";
@@ -146,7 +146,7 @@ describe('Service: CsdmDataModelService', function () {
 
             var originalDevice = devices[deviceToReloadUrl];
 
-            CsdmDataModelService.reloadDevice(originalDevice).then(function (reloadedDevice) {
+            CsdmDataModelService.reloadItem(originalDevice).then(function (reloadedDevice) {
 
               expect(reloadedDevice.displayName).toEqual(newDispName);
               expect(originalDevice.displayName).toEqual(newDispName);
@@ -696,6 +696,35 @@ describe('Service: CsdmDataModelService', function () {
         expectCall = true;
       });
       $rootScope.$digest();
+      expect(expectCall).toBe(true);
+    });
+
+    it('get should return an updated huron item and update the model when a code was activated', function () {
+
+      var expectCall;
+      var placeToUpdateUrl = huronPlaceWithoutDeviceUrl;
+      var placeToUpdateId = huronPlaceWithoutDeviceUrl.split('/').slice(-1)[0];
+      var placeToFindDevicesUrl = 'https://csdm-integration.wbx2.com/csdm/api/v1/organization/testOrg/users/' + placeToUpdateId + '/huronDevices/';
+
+      var phonesForPlace = { 'http://new/device': { 'url': 'http://new/device' } };
+      $httpBackend.expectGET(placeToFindDevicesUrl).respond(phonesForPlace);
+
+      CsdmDataModelService.getPlacesMap().then(function (places) {
+        expect(Object.keys(places).length).toBe(initialPlaceCount);
+        var placeToUpdate = places[placeToUpdateUrl];
+
+        expect(Object.keys(placeToUpdate.devices)).toHaveLength(0);
+        expect(Object.keys(placeToUpdate.codes)).toHaveLength(0);
+
+        CsdmDataModelService.reloadItem(placeToUpdate).then(function () {
+
+          expect(Object.keys(placeToUpdate.devices)).toHaveLength(1);
+          expect(Object.keys(placeToUpdate.codes)).toHaveLength(0);
+
+          expectCall = true;
+        });
+      });
+      $httpBackend.flush();
       expect(expectCall).toBe(true);
     });
 

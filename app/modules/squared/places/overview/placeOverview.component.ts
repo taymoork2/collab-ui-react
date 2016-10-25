@@ -13,9 +13,9 @@ class PlaceOverview implements ng.IComponentController {
     private $state: ng.ui.IStateService,
     private $stateParams,
     private $translate: ng.translate.ITranslateService,
-    private CsdmPlaceService,
     private CsdmHuronPlaceService,
     private CsdmHuronUserDeviceService,
+    private CsdmDataModelService,
     private Authinfo,
     private XhrNotificationService,
     private CsdmCodeService,
@@ -23,6 +23,7 @@ class PlaceOverview implements ng.IComponentController {
   ) {
     this.currentPlace = this.$stateParams.currentPlace;
     this.csdmHuronUserDeviceService = this.CsdmHuronUserDeviceService.create(this.currentPlace.cisUuid);
+    CsdmDataModelService.reloadItem(this.currentPlace);
   }
 
   public $onInit(): void {
@@ -49,8 +50,8 @@ class PlaceOverview implements ng.IComponentController {
 
   public save(newName: string) {
     if (this.currentPlace.type === 'cloudberry') {
-      return this.CsdmPlaceService
-        .updatePlaceName(this.currentPlace.url, newName)
+      return this.CsdmDataModelService
+        .updateItemName(this.currentPlace, newName)
         .catch(this.XhrNotificationService.notify);
     }
     return this.CsdmHuronPlaceService

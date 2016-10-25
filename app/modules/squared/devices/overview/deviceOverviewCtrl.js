@@ -275,7 +275,7 @@
     }
 
     function pollDeviceForNewChannel(newValue, endTime, deferred) {
-      CsdmDataModelService.reloadDevice(deviceOverview.currentDevice).then(function (device) {
+      CsdmDataModelService.reloadItem(deviceOverview.currentDevice).then(function (device) {
         if (device.upgradeChannel.value == newValue) {
           Notification.success('deviceOverviewPage.channelUpdated');
           return deferred.resolve();

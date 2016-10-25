@@ -268,10 +268,12 @@
       return service.updateItemName(objectToUpdate, newName)
         .then(function () {
           var placeUrl = getPlaceUrl(objectToUpdate);
-          placesDataModel[placeUrl].displayName = newName;
+          var place = placesDataModel[placeUrl];
+          place.displayName = newName;
           var device = theDeviceMap[objectToUpdate.url];
           device.displayName = newName;
-          return device;
+
+          return objectToUpdate.isPlace ? place : device;
         });
     }
 
@@ -306,17 +308,36 @@
         });
     }
 
-    function reloadDevice(device) {
-      var service = getServiceForDevice(device);
+    function reloadItem(item) {
+      var service = getServiceForDevice(item);
       if (!service) {
         return $q.reject();
       }
 
-      return service.fetchDevice(device.url).then(function (reloadedDevice) {
+      if (item.isPlace && item.type === 'huron') {
+        return csdmHuronOrgDeviceService.getDevicesForPlace(item.cisUuid).then(function (devicesForPlace) {
 
-        CsdmCacheUpdater.updateOne(theDeviceMap, device.url, reloadedDevice);
-        return theDeviceMap[device.url];
-      });
+          var reloadedPlace = placesDataModel[item.url];
+          for (var devUrl in devicesForPlace) {
+            if (devicesForPlace[devUrl].displayName) {
+              item.displayName = devicesForPlace[devUrl].displayName;
+              reloadedPlace.displayName = devicesForPlace[devUrl].displayName;
+              break;
+            }
+          }
+
+          reloadedPlace.devices = devicesForPlace;
+          item.devices = devicesForPlace;
+
+          return reloadedPlace;
+        });
+      } else {
+        return service.fetchDevice(item.url).then(function (reloadedDevice) {
+
+          CsdmCacheUpdater.updateOne(theDeviceMap, item.url, reloadedDevice);
+          return reloadedDevice;
+        });
+      }
     }
 
     function hasDevices() {
@@ -390,7 +411,7 @@
       deleteItem: deleteItem,
       updateItemName: updateItemName,
       updateTags: updateTags,
-      reloadDevice: reloadDevice,
+      reloadItem: reloadItem,
       hasDevices: hasDevices,
       hasLoadedAllDeviceSources: hasLoadedAllDeviceSources,
       createCodeForExisting: createCodeForExisting,
