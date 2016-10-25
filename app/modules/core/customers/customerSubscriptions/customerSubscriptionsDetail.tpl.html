@@ -31,7 +31,9 @@
         </li>
         <li>
           <h6 translate="customerSubscriptions.partnerAdmin"></h6>
-          <div>{{customerOverview.partnerOrgName}} - {{customerSubscriptions.partnerEmail}}</div>
+          <div ng-repeat="partnerAdmin in customerSubscriptions.partnerAdmins">
+            {{partnerAdmin.name}} - {{partnerAdmin.email}}
+           </div>
         </li>
         <li ng-if="customerSubscriptions.subscriptions.length>0">
           <h6 translate="customerSubscriptions.webexSubscriptions"></h6>
