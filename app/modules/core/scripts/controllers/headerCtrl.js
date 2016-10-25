@@ -7,11 +7,8 @@
   /* @ngInject */
   function HeaderCtrl($translate, Utils, Authinfo) {
     var vm = this;
-    vm.newTabDisplay = true;
 
     vm.showOrgName = showOrgName;
-    vm.showFirstTimeSetupDropDown = showFirstTimeSetupDropDown;
-    vm.showLicenseUsageDropDown = showLicenseUsageDropDown;
     vm.showUserDropDown = showUserDropDown;
     vm.showMyCompany = showMyCompany;
     init();
@@ -26,14 +23,6 @@
 
     function showOrgName() {
       return (Authinfo.isPartnerAdmin() || Authinfo.isPartnerSalesAdmin()) && Utils.isAdminPage();
-    }
-
-    function showFirstTimeSetupDropDown() {
-      return false;
-    }
-
-    function showLicenseUsageDropDown() {
-      return false;
     }
 
     function showUserDropDown() {
