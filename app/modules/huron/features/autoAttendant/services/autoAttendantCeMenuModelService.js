@@ -484,6 +484,7 @@
         setDescription(action, inAction.routeToQueue);
         cesTempMoh(action);
         cesTempIa(action);
+        cesTempPa(action);
         menuEntry.addAction(action);
       } else {
         // insert an empty action
@@ -530,6 +531,23 @@
     }
 
     /*
+     * temporary solution to write to db until ces ready
+     */
+    function cesTempPa(action) {
+      if (angular.isDefined(action.description)) {
+        try {
+          if (angular.isUndefined(action.queueSettings)) {
+            action.description = JSON.parse(action.description);
+            action.queueSettings = {};
+          }
+          action.queueSettings.periodicAnnouncement = constructCesTodoPa(action.description);
+        } catch (exception) {
+          action.queueSettings = {};
+        }
+      }
+    }
+
+    /*
     * temporary solution to write to db until ces ready
     */
     function constructCesTodoMoh(parsedDescription) {
@@ -551,6 +569,18 @@
       initialAnnouncement = new CeMenuEntry();
       initialAnnouncement.addAction(action);
       return initialAnnouncement;
+    }
+
+    /*
+    * temporary solution to write to db until ces ready
+    */
+    function constructCesTodoPa(parsedDescription) {
+      var periodicAnnouncement = parsedDescription.periodicAnnouncement.actions[0];
+      var action = new Action(periodicAnnouncement.name, periodicAnnouncement.value);
+      action.setDescription(periodicAnnouncement.description);
+      periodicAnnouncement = new CeMenuEntry();
+      periodicAnnouncement.addAction(action);
+      return periodicAnnouncement;
     }
 
     function parseActions(menuEntry, actions) {

@@ -151,6 +151,11 @@
           var iaAction = AutoAttendantCeMenuModelService.newCeActionEntry('say', '');
           vm.menuKeyEntry.actions[0].queueSettings.initialAnnouncement.addAction(iaAction);
         }
+        if (angular.isUndefined(vm.menuKeyEntry.actions[0].queueSettings.periodicAnnouncement)) {
+          vm.menuKeyEntry.actions[0].queueSettings.periodicAnnouncement = AutoAttendantCeMenuModelService.newCeMenuEntry();
+          var paAction = AutoAttendantCeMenuModelService.newCeActionEntry('say', '');
+          vm.menuKeyEntry.actions[0].queueSettings.periodicAnnouncement.addAction(paAction);
+        }
       }
 
       populateUiModel();

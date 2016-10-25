@@ -106,7 +106,36 @@ describe('Huron Auto Attendant', function () {
       expect(utils.isSelected(autoattendant.mohCustomUpload)).toBeTruthy();
       utils.click(autoattendant.okQueueTreatment);
     });
+    
+    it('should click queue setting hyperlink and set and play periodic message and upload media to the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
+        // it is for selecting the queue for route to queue option
+      var absolutePath = utils.resolvePath(autoattendant.mediaFileToUpload);
+      utils.scroll(autoattendant.repeatPlus);
+      utils.click(autoattendant.queueSetting);
+      utils.click(autoattendant.periodicMessageTypeSelect);
+      utils.click(autoattendant.periodicMessageTypeSelectOption.get(1));
+      utils.click(autoattendant.periodicSayMessageInput);
+      utils.sendKeys(autoattendant.periodicSayMessageInput, "Welcome to Queue Settings Periodic Message");
+      utils.click(autoattendant.periodicMessageTypeSelect);
+      utils.click(autoattendant.periodicMessageTypeSelectOption.get(0));
+      utils.click(autoattendant.periodicMediaUploadInput);
+      $(autoattendant.mediaUploadSend).sendKeys(absolutePath);
+      // for now close the modal. when backend will come we will save the modal before closing. 
+      utils.click(autoattendant.scheduleCloseButton);
+    });
 
+    it('should click queue setting hyperlink and set periodic message minutes and seconds to the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
+      // it is for selecting the queue for route to queue option
+      utils.scroll(autoattendant.repeatPlus);
+      utils.click(autoattendant.queueSetting);
+      utils.click(autoattendant.periodicMin);
+      utils.click(autoattendant.periodicMinOption.get(1));
+      utils.click(autoattendant.periodicSec);
+      utils.click(autoattendant.periodicSecOption.get(2));
+    // for now close the modal. when backend will come we will save the modal before closing. 
+      utils.click(autoattendant.scheduleCloseButton);
+    });
+    
     it('should be able to select all fallback options in Call treatment modal of the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
         // it is for selecting all the fallback options in the Call treatment modal
       utils.expectIsDisplayed(autoattendant.queueDestDisconnect);

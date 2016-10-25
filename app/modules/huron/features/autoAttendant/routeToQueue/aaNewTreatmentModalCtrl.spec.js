@@ -6,6 +6,35 @@ describe('Controller: AANewTreatmentModalCtrl', function () {
   var AACommonService;
   var AutoAttendantCeMenuModelService;
 
+  var fakePeriodicMinute = [
+    {
+      index: 0,
+      label: 0
+    },
+    {
+      index: 3,
+      label: 3
+    },
+    {
+      index: 5,
+      label: 5
+    }
+  ];
+
+  var fakePeriodicSecond = [
+    {
+      index: 0,
+      label: 0
+    },
+    {
+      index: 6,
+      label: 30,
+    },
+    {
+      index: 5,
+      label: 5
+    }
+  ];
   var modalFake = {
     close: jasmine.createSpy('modalInstance.close'),
     dismiss: jasmine.createSpy('modalInstance.dismiss')
@@ -24,8 +53,10 @@ describe('Controller: AANewTreatmentModalCtrl', function () {
   var queueSettings = {};
   var musicOnHold = 'musicOnHold';
   var initialAnnouncement = 'initialAnnouncement';
+  var periodicAnnouncement = 'periodicAnnouncement';
   var playAction = {};
   var iaAction = {};
+  var paAction = {};
   var schedule = 'openHours';
   var index = '0';
   var menuId = 'menu2';
@@ -66,13 +97,17 @@ describe('Controller: AANewTreatmentModalCtrl', function () {
     menuEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
     musicOnHold = AutoAttendantCeMenuModelService.newCeMenuEntry();
     initialAnnouncement = AutoAttendantCeMenuModelService.newCeMenuEntry();
+    periodicAnnouncement = AutoAttendantCeMenuModelService.newCeMenuEntry();
     playAction = AutoAttendantCeMenuModelService.newCeActionEntry(play, '');
     iaAction = AutoAttendantCeMenuModelService.newCeActionEntry(play, '');
+    paAction = AutoAttendantCeMenuModelService.newCeActionEntry(play, '');
     routeToQueue = AutoAttendantCeMenuModelService.newCeActionEntry(rtQ, '');
     musicOnHold.addAction(playAction);
     initialAnnouncement.addAction(iaAction);
+    periodicAnnouncement.addAction(paAction);
     queueSettings.musicOnHold = musicOnHold;
     queueSettings.initialAnnouncement = initialAnnouncement;
+    queueSettings.periodicAnnouncement = periodicAnnouncement;
     routeToQueue.queueSettings = queueSettings;
     menuEntry.addAction(routeToQueue);
     uiMenu.addEntryAt(index, menuEntry);
@@ -98,6 +133,63 @@ describe('Controller: AANewTreatmentModalCtrl', function () {
 
     it("default value of minute should be 15.", function () {
       expect(controller.maxWaitTime.index).toEqual(14);
+    });
+
+    describe('Periodic Announcement', function () {
+      beforeEach(function () {
+      });
+      it("length of periodic minutes and seconds", function () {
+        expect(controller).toBeDefined();
+        expect(controller.periodicMinutes.length).toEqual(6);
+        expect(controller.periodicSeconds.length).toEqual(11);
+      });
+
+      it("default value of periodic minutes and seconds.", function () {
+        expect(controller.periodicMinute.index).toEqual(0);
+        expect(controller.periodicSecond.index).toEqual(8);
+      });
+
+      it("changedPeriodicSecValue function call with periodic seconds as 0 when minutes 0 results in periodic seconds to set to 5 automatically.", function () {
+        controller.changedPeriodicSecValue(fakePeriodicSecond[0], fakePeriodicMinute[0]);
+        expect(controller.periodicSecond.label).toEqual(5);
+        expect(controller.secondControl).toBe(false);
+      });
+
+      it("changedPeriodicMinValue function call with periodic minutes between 1-5 results in periodic seconds to alllow 0.", function () {
+        controller.changedPeriodicMinValue(fakePeriodicSecond[0], fakePeriodicMinute[1]);
+        expect(controller.periodicSecond.label).toEqual(0);
+        expect(controller.secondControl).toBe(false);
+      });
+
+      it("changedPeriodicMinValue function call with periodic minutes as 0 when seconds 0 results in periodic seconds to set to 5 automatically.", function () {
+        controller.changedPeriodicMinValue(fakePeriodicSecond[0], fakePeriodicMinute[0]);
+        expect(controller.periodicSecond.label).toEqual(5);
+        expect(controller.secondControl).toBe(false);
+      });
+
+      it("changedPeriodicMinValue function call with periodic minutes as 5 results in periodic seconds to set to 0 and disabled.", function () {
+        controller.changedPeriodicMinValue(fakePeriodicSecond[2], fakePeriodicMinute[2]);
+        expect(controller.periodicSecond.label).toEqual(0);
+        expect(controller.secondControl).toBe(true);
+      });
+
+      it("changedPeriodicMinValue function call with periodic minutes between 1-5 results in periodic seconds to set to any and enabled.", function () {
+        controller.changedPeriodicMinValue(fakePeriodicSecond[0], fakePeriodicMinute[1]);
+        expect(controller.periodicSecond.label).toEqual(0);
+        expect(controller.secondControl).toBe(false);
+      });
+
+      it("changedPeriodicSecValue function call with periodic minutes as 0 results in periodic seconds to set to any greater than 0.", function () {
+        controller.changedPeriodicSecValue(fakePeriodicSecond[1], fakePeriodicMinute[0]);
+        expect(controller.periodicSecond.label).toEqual(30);
+        expect(controller.secondControl).toBe(false);
+      });
+
+      it("changedPeriodicMinValue function call with periodic minutes between 1-5 results in periodic seconds to set to any.", function () {
+        controller.changedPeriodicMinValue(fakePeriodicSecond[1], fakePeriodicMinute[1]);
+        expect(controller.periodicSecond.label).toEqual(30);
+        expect(controller.secondControl).toBe(false);
+      });
     });
 
     describe('FallBack', function () {

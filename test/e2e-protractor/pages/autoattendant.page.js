@@ -20,7 +20,15 @@ var AutoAttendantPage = function () {
   this.okQueueTreatment = element(by.id('okTreatmentBtn'));
   this.mohCustomUpload = element(by.id('uploadFileRadio1'));
   this.mohDefaultUpload = element(by.id('musicOnHoldRadio1'));
+  this.periodicMessageTypeSelect = element(by.name('periodicMessageSelect'));
+  this.periodicMessageTypeSelectOption = element(by.name('periodicMessageSelect')).all(by.tagName('li'));
 
+
+  this.periodicMin = element(by.linkText('0'));
+  this.periodicMinOption = element(by.id('periodicMinId')).all(by.tagName('li'));
+  this.periodicSec = element(by.linkText('45'));
+  this.periodicSecOption = element(by.id('periodicSecId')).all(by.tagName('li'));
+  
   this.queueDestDisconnect = element(by.linkText('Disconnect'));
   this.queueDest = element(by.id('destinationSelect'));
   this.queueDestOption = element(by.id('destinationSelect')).all(by.tagName('li'));
