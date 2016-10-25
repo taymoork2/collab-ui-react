@@ -4,10 +4,6 @@
   @include vr-spacing(mt, 1);
   @include vr-spacing(mb, 1);
 
-  @media all and (min-width: 25rem) {
-    width: 21.5rem;
-  }
-
   .aa-message-textarea {
     @include vr-spacing(mb, 1);
     @include vr-spacing(pt, 0.75);
@@ -17,25 +13,6 @@
 
     line-height: 1.25rem;
     resize: none;
-  }
-
-  .aa-message-select-list {
-    @include vr-spacing(mb, 0.75);
-
-    .select-toggle {
-      width: 100%;
-
-      @include vr-spacing(pr, 1.75);
-    }
-
-    .select-toggle > i {
-      @include vr-spacing(mr, 0);
-      @include vr-spacing(ml, -0.5);
-    }
-
-    .dropdown-menu {
-      width: 100%;
-    }
   }
 
   .aa-message-footer {

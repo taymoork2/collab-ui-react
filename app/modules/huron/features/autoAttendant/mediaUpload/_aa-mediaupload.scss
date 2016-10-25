@@ -1,4 +1,9 @@
 .aa-media-upload {
+
+  .aa-flex-row-media-upload {
+    @extend .row;
+    @include vr-spacing(pt, 0.25);
+  }
   .aa-box {
     display: inline-block;
 
@@ -18,7 +23,7 @@
     @extend .aa-box;
 
     height: 9.25rem;
-    @include vr-spacing(pt, 0);
+    @include vr-spacing(pt, 0.85);
     @include vr-spacing(pl, 0);
     @include vr-spacing(pr, 0);
     @include vr-spacing(pb, 1);
