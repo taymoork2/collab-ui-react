@@ -1498,7 +1498,8 @@
       "upgraded": "Upgraded",
       "pending": "Pending",
       "initializing": "Initializing",
-      "not_operational": "Not Operational"
+      "not_operational": "Not Operational",
+      "urgentUpgradeAvailable": "Urgent upgrade available"
     },
     "userSidepanel": {
       "warningInvitePending": "This user has not yet accepted the invitation to join Cisco Spark. You can still enable {{ServiceName}}, but activation will not succeed until the user signs in.",
@@ -1616,6 +1617,7 @@
       "upgradeDone": "Upgrade completed!",
       "upToDate": "{{connectorType}} is up to date on this cluster.",
       "upgradePossible": "A new version is available for {{connectorType}}: {{availableVersion}}.",
+      "urgentUpgrade": "An urgent upgrade is available for {{connectorType}}: {{availableVersion}}.",
       "upgradeWarning": "This cluster has one or more nodes where {{ManagementConnector}} is not sending updates to {{CiscoCollaborationCloud}}. It is recommended to bring {{ManagementConnector}} online before initiating an upgrade."
     },
     "expresswayClusterSettings": {
@@ -1778,6 +1780,9 @@
       "types": {
         "expressway": "Expressway",
         "mediafusion": "Media"
+      },
+      "urgentUpgrade": {
+        "title": "Urgent Upgrade Schedule"
       },
       "list": {
         "title": "Clusters",

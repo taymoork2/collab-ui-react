@@ -2793,7 +2793,13 @@
             resolve: {
               hasF237FeatureToggle: /* @ngInject */ function (FeatureToggleService) {
                 return FeatureToggleService.supports(FeatureToggleService.features.atlasF237ResourceGroups);
-              }
+              },
+              hasEUFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasHerculesEmergencyUpgrade)
+                  .then(function (support) {
+                    return support;
+                  });
+              },
             }
           })
           .state('management-connector-details', {
