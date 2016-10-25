@@ -21,25 +21,25 @@
     vm.nextPage = nextPage;
     vm.evalKeyPress = evalKeyPress;
     vm.name = '';
-    vm.canCreateAA = true;
+    var canCreateAA = true;
 
     /////////////////////
 
     function saveAARecord() {
 
-      if (!AAValidationService.isNameValidationSuccess(vm.name, '')) {
+      if (!AAValidationService.isNameValidationSuccess(vm.name, '') || !canCreateAA) {
         return;
       }
 
-      if (vm.canCreateAA) {
+      if (canCreateAA) {
         saveUiModel();
-        vm.canCreateAA = false;
+        canCreateAA = false;
         $rootScope.$broadcast('AANameCreated');
       }
     }
 
     $scope.$on('AACreationFailed', function () {
-      vm.canCreateAA = true;
+      canCreateAA = true;
     });
 
     function saveUiModel() {
@@ -58,7 +58,7 @@
     }
 
     function nextButton() {
-      if (vm.name === '' || vm.canCreateAA === false) {
+      if (vm.name === '' || canCreateAA === false) {
         return false;
       } else {
         return true;
