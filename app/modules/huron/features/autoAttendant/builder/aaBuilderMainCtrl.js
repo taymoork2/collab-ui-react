@@ -152,7 +152,7 @@
         vm.ui.openHours = AutoAttendantCeMenuModelService.newCeMenu();
         vm.ui.openHours.setType('MENU_WELCOME');
       }
-      if (angular.isUndefined(vm.aaModel.aaRecord.scheduleEventTypeMap)) {
+      if (_.isUndefined(vm.aaModel.aaRecord.scheduleEventTypeMap)) {
         vm.aaModel.aaRecord.scheduleEventTypeMap = {};
       }
 
@@ -161,7 +161,7 @@
         vm.ui.holidaysValue = vm.aaModel.aaRecord.scheduleEventTypeMap.holiday;
       } else {
         vm.ui.isHolidays = false;
-        if (angular.isUndefined(vm.ui.holidays)) {
+        if (_.isUndefined(vm.ui.holidays)) {
           vm.ui.holidays = AutoAttendantCeMenuModelService.newCeMenu();
           vm.ui.holidays.setType('MENU_WELCOME');
         }
@@ -171,7 +171,7 @@
         vm.ui.isClosedHours = true;
       } else {
         vm.ui.isClosedHours = false;
-        if (angular.isUndefined(vm.ui.closedHours)) {
+        if (_.isUndefined(vm.ui.closedHours)) {
           vm.ui.closedHours = AutoAttendantCeMenuModelService.newCeMenu();
           vm.ui.closedHours.setType('MENU_WELCOME');
         }
@@ -437,14 +437,14 @@
         tname: vm.templateName
       });
 
-      if (angular.isUndefined(specifiedTemplate) || angular.isUndefined(specifiedTemplate.tname) || specifiedTemplate.tname.length === 0) {
+      if (_.isUndefined(specifiedTemplate) || _.isUndefined(specifiedTemplate.tname) || specifiedTemplate.tname.length === 0) {
         AANotificationService.error('autoAttendant.errorInvalidTemplate', {
           template: vm.templateName
         });
         return;
       }
 
-      if (angular.isUndefined(specifiedTemplate.actions) || specifiedTemplate.actions.length === 0) {
+      if (_.isUndefined(specifiedTemplate.actions) || specifiedTemplate.actions.length === 0) {
         AANotificationService.error('autoAttendant.errorInvalidTemplateDef', {
           template: vm.templateName
         });
@@ -462,7 +462,7 @@
           vm.ui.isClosedHours = true;
         }
 
-        if (angular.isUndefined(action.actionset)) {
+        if (_.isUndefined(action.actionset)) {
           AANotificationService.error('autoAttendant.errorInvalidTemplateDef', {
             template: vm.templateName
           });
@@ -496,7 +496,7 @@
 
     function selectAA(aaName) {
       vm.aaModel.aaName = aaName;
-      if (angular.isUndefined(vm.aaModel.aaRecord)) {
+      if (_.isUndefined(vm.aaModel.aaRecord)) {
         if (aaName === '') {
           vm.aaModel.aaRecord = AAModelService.getNewAARecord();
           vm.aaModel.aaRecordUUID = "";
