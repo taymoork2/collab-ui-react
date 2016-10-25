@@ -27,14 +27,17 @@ describe('Controller: TrialAddCtrl', function () {
     addContextSpy = spyOn(TrialContextService, 'addService').and.returnValue($q.when());
 
     spyOn(EmailService, 'emailNotifyTrialCustomer').and.returnValue($q.when());
-    spyOn(FeatureToggleService, 'supports').and.callFake(function (input) {
-      if (input === 'atlasTrialsShipDevices') {
-        return ($q.when(false));
-      } else {
-        return ($q.when(true));
-      }
-    });
+    spyOn(FeatureToggleService, 'atlasWebexTrialsGetStatus').and.returnValue($q.when(true));
+    spyOn(FeatureToggleService, 'atlasCareTrialsGetStatus').and.returnValue($q.when(true));
+    spyOn(FeatureToggleService, 'atlasContextServiceTrialsGetStatus').and.returnValue($q.when(true));
+    spyOn(FeatureToggleService, 'atlasTrialsShipDevicesGetStatus').and.returnValue($q.when(false));
     spyOn(FeatureToggleService, 'atlasDarlingGetStatus').and.returnValue($q.when(true));
+    spyOn(FeatureToggleService, 'supports').and.callFake(function (param) {
+      if (param != 'csdm-places') {
+        fail('the following toggle wasn\'t expected ' + param);  //taking control of which toggles this controller are using (explicit or implicit)
+      }
+      return $q.when(false);
+    });
 
     spyOn(Notification, 'notify');
     spyOn(Notification, 'errorResponse');

@@ -471,75 +471,76 @@
     ///////////////////////
 
     function init() {
-      $q.all([
-        FeatureToggleService.supports(FeatureToggleService.features.atlasWebexTrials),
-        FeatureToggleService.supports(FeatureToggleService.features.atlasCareTrials),
-        FeatureToggleService.supports(FeatureToggleService.features.atlasContextServiceTrials),
-        FeatureToggleService.atlasDarlingGetStatus()
-      ]).then(function (results) {
-        vm.showRoomSystems = true;
-        vm.roomSystemTrial.enabled = true;
-        vm.sparkBoardTrial.enabled = true;
-        vm.webexTrial.enabled = results[0];
-        vm.callTrial.enabled = vm.hasCallEntitlement;
-        vm.pstnTrial.enabled = vm.hasCallEntitlement;
-        vm.messageTrial.enabled = true;
-        vm.meetingTrial.enabled = true;
-        vm.showContextServiceTrial = true;
+      $q.all({
+        atlasWebexTrials: FeatureToggleService.atlasWebexTrialsGetStatus(),
+        atlasCareTrials: FeatureToggleService.atlasCareTrialsGetStatus(),
+        atlasContextServiceTrials: FeatureToggleService.atlasContextServiceTrialsGetStatus(),
+        atlasDarling: FeatureToggleService.atlasDarlingGetStatus(),
+        placesEnabled: CsdmPlaceService.placesFeatureIsEnabled()
+      })
+        .then(function (results) {
+          vm.showRoomSystems = true;
+          vm.roomSystemTrial.enabled = true;
+          vm.sparkBoardTrial.enabled = true;
+          vm.webexTrial.enabled = results.atlasWebexTrials;
+          vm.callTrial.enabled = vm.hasCallEntitlement;
+          vm.pstnTrial.enabled = vm.hasCallEntitlement;
+          vm.messageTrial.enabled = true;
+          vm.meetingTrial.enabled = true;
+          vm.showContextServiceTrial = true;
 
-        if (vm.webexTrial.enabled) {
-          vm.showWebex = true;
-          updateTrialService(messageTemplateOptionId);
-        }
-
-        vm.showCare = results[1];
-        vm.careTrial.enabled = results[1];
-        vm.sbTrial = results[3];
-
-        // TODO: US12063 overrides using this var but requests code to be left in for now
-        //var devicesModal = _.find(vm.trialStates, {
-        //  name: 'trialAdd.call'
-        // });
-        var meetingModal = _.find(vm.trialStates, {
-          name: 'trialAdd.webex'
-        });
-        var pstnModal = _.find(vm.trialStates, {
-          name: 'trialAdd.pstn'
-        });
-        var emergAddressModal = _.find(vm.trialStates, {
-          name: 'trialAdd.emergAddress'
-        });
-
-        pstnModal.enabled = vm.pstnTrial.enabled;
-        emergAddressModal.enabled = vm.pstnTrial.enabled;
-        meetingModal.enabled = results[0];
-        setDeviceModal();
-      }).finally(function () {
-        $scope.$watch(function () {
-          return vm.trialData.trials;
-        }, function (newVal, oldVal) {
-          if (newVal !== oldVal) {
-            toggleTrial();
+          if (vm.webexTrial.enabled) {
+            vm.showWebex = true;
+            updateTrialService(messageTemplateOptionId);
           }
-        }, true);
 
-        // Capture modal close and clear service
-        if ($state.modal) {
-          $state.modal.result.finally(function () {
-            TrialService.reset();
+          vm.showCare = results.atlasCareTrials;
+          vm.careTrial.enabled = results.atlasCareTrials;
+          vm.sbTrial = results.altasDarling;
+
+          // TODO: US12063 overrides using this var but requests code to be left in for now
+          //var devicesModal = _.find(vm.trialStates, {
+          //  name: 'trialAdd.call'
+          // });
+          var meetingModal = _.find(vm.trialStates, {
+            name: 'trialAdd.webex'
           });
-        }
+          var pstnModal = _.find(vm.trialStates, {
+            name: 'trialAdd.pstn'
+          });
+          var emergAddressModal = _.find(vm.trialStates, {
+            name: 'trialAdd.emergAddress'
+          });
 
-        //room system licence quantity
-        vm.roomSystemFields[1].model.quantity = vm.roomSystemTrial.enabled ? _roomSystemDefaultQuantity : 0;
-        //spark board licence quantity
-        vm.sparkBoardFields[1].model.quantity = vm.sparkBoardTrial.enabled ? _roomSystemDefaultQuantity : 0;
-        toggleTrial();
-      });
-      CsdmPlaceService.placesFeatureIsEnabled().then(function (result) {
-        vm.placesEnabled = result;
-        toggleTrial();
-      });
+          pstnModal.enabled = vm.pstnTrial.enabled;
+          emergAddressModal.enabled = vm.pstnTrial.enabled;
+          meetingModal.enabled = results.atlasWebexTrials;
+
+          vm.placesEnabled = results.placesEnabled;
+          setDeviceModal();
+        })
+        .finally(function () {
+          $scope.$watch(function () {
+            return vm.trialData.trials;
+          }, function (newVal, oldVal) {
+            if (newVal !== oldVal) {
+              toggleTrial();
+            }
+          }, true);
+
+          // Capture modal close and clear service
+          if ($state.modal) {
+            $state.modal.result.finally(function () {
+              TrialService.reset();
+            });
+          }
+
+          //room system licence quantity
+          vm.roomSystemFields[1].model.quantity = vm.roomSystemTrial.enabled ? _roomSystemDefaultQuantity : 0;
+          //spark board licence quantity
+          vm.sparkBoardFields[1].model.quantity = vm.sparkBoardTrial.enabled ? _roomSystemDefaultQuantity : 0;
+          toggleTrial();
+        });
     }
 
     function messageOfferDisabledExpression() {
@@ -797,7 +798,7 @@
       var isTestOrg = false;
 
       $q.all([
-        FeatureToggleService.supports('atlasTrialsShipDevices'),
+        FeatureToggleService.atlasTrialsShipDevicesGetStatus(),
         Orgservice.getAdminOrg(_.noop)
       ]).then(function (results) {
         overrideTestOrg = results[0];

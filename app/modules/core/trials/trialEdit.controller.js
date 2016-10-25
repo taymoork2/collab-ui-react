@@ -426,11 +426,11 @@
       var overrideTestOrg = false;
       var getAdminOrgError = false;
       var promises = {
-        ftWebex: FeatureToggleService.supports(FeatureToggleService.features.atlasWebexTrials),
-        ftContextServ: FeatureToggleService.supports(FeatureToggleService.features.atlasContextServiceTrials),
+        ftWebex: FeatureToggleService.atlasWebexTrialsGetStatus(),
+        ftContextServ: FeatureToggleService.atlasContextServiceTrialsGetStatus(),
         tcHasService: TrialContextService.trialHasService(vm.currentTrial.customerOrgId),
-        ftCareTrials: FeatureToggleService.supports(FeatureToggleService.features.atlasCareTrials),
-        ftShipDevices: FeatureToggleService.supports('atlasTrialsShipDevices'),  //TODO add true for shipping testing.
+        ftCareTrials: FeatureToggleService.atlasCareTrialsGetStatus(),
+        ftShipDevices: FeatureToggleService.atlasTrialsShipDevicesGetStatus(),  //TODO add true for shipping testing.
         adminOrg: Orgservice.getAdminOrgAsPromise().catch(function (err) {
           getAdminOrgError = true;
           return err;
