@@ -1,15 +1,18 @@
 (function () {
   'use strict';
 
-  angular
-    .module('Huron')
+  module.exports = angular
+    .module('huron.resources', [
+      require('angular-resource'),
+      require('modules/huron/telephony/telephonyConfig')
+    ])
     // Temporary email service for Huron add user email.  This will be removed when the squared/huron emails are integrated
     .factory('HuronEmailService', HuronEmailService)
     .factory('ActivationCodeEmailService', ActivationCodeEmailService)
     .factory('DidAddEmailService', DidAddEmailService)
     .factory('IdentityOTPService', IdentityOTPService)
     .factory('UserOTPService', UserOTPService)
-    .factory('LineService', LineService)
+    .factory('LineResource', LineService)
     .factory('RemoteDestinationService', RemoteDestinationService)
     .factory('UnassignedDirectoryNumberService', UnassignedDirectoryNumberService)
     .factory('UserDirectoryNumberService', UserDirectoryNumberService)
@@ -50,7 +53,8 @@
     .factory('DialPlanCmiService', DialPlanCmiService)
     .factory('DialPlanDetailsCmiService', DialPlanDetailsCmiService)
     .factory('UserCosRestrictionServiceV2', UserCosRestrictionServiceV2)
-    .factory('CustomerCosRestrictionServiceV2', CustomerCosRestrictionServiceV2);
+    .factory('CustomerCosRestrictionServiceV2', CustomerCosRestrictionServiceV2)
+    .name;
 
   /* @ngInject */
   function HuronEmailService($resource, HuronConfig) {

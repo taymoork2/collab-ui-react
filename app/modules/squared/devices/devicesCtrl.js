@@ -18,10 +18,8 @@
           vm.licenseError = vm.showLicenseWarning ? $translate.instant('spacesPage.licenseSuspendedWarning') : "";
         });
 
-        // Reset to defaults on pageload to wipe out any lingering settings from previous page visits
         vm.deviceFilter = DeviceFilter;
-        vm.deviceFilter.setCurrentSearch('');
-        vm.deviceFilter.setCurrentFilter('');
+        vm.deviceFilter.resetFilters();
 
         CsdmDataModelService.getDevicesMap().then(function (devicesMap) {
           vm.devicesMap = devicesMap;
@@ -39,14 +37,11 @@
         });
 
         vm.existsDevices = function () {
-          return (vm.shouldShowList() && (
-            CsdmDataModelService.hasDevices() ||
-            Object.keys(csdmHuronOrgDeviceService.getDeviceList()).length > 0));
+          return (vm.shouldShowList() && CsdmDataModelService.hasDevices());
         };
 
         vm.shouldShowList = function () {
-          return CsdmDataModelService.hasLoadedAnyData() &&
-            (csdmHuronOrgDeviceService.dataLoaded() || csdmHuronOrgDeviceService.getDeviceList().length > 0);
+          return CsdmDataModelService.hasLoadedAllDeviceSources();
         };
 
         vm.isEntitledToRoomSystem = function () {
@@ -65,7 +60,6 @@
 
           var allDevices = _.chain({})
             .extend(vm.devicesMap)
-            .extend(csdmHuronOrgDeviceService.getDeviceList())
             .extend(CsdmUnusedAccountsService.getAccountList())
             .values()
             .value();
@@ -231,6 +225,9 @@
         }
 
         function sortStateFn(a, b) {
+          if (!a) {
+            return b.priority;
+          }
           return a.priority - b.priority;
         }
       }

@@ -1,45 +1,100 @@
 <div class="modal-header">
-  <button type="button" class="close" ng-click="aaNewTreatmentModalCtrl.cancel()"></button>
+  <button type="button" class="close" ng-click="$dismiss();"></button>
   <h3 class="modal-title" translate="autoAttendant.queueSettings"></h3>
 </div>
-
 <div class="modal-body">
-	<div class="row">
-		<div class="columns medium-4"> 
-		  <label class="h4 ng-scope" translate="autoAttendant.fallbackLabel"></label>
-		</div>
-		<div class="columns medium-8">
-			<div class="row">
-				<div class="column">
-				  <p translate="autoAttendant.maxWaitTime"></p>
-				</div>
-			</div>
-			<div class="row">
-				<div class="columns large-4 medium-5 small-6"><cs-select id="queueMin" ng-model="aaNewTreatmentModalCtrl.minute" options="aaNewTreatmentModalCtrl.minutes"   placeholder="aaNewTreatmentModalCtrl.selectPlaceholder" secondary-label="Minutes" labelfield="label" valuefield="label" icon="icon-chevron-down"></cs-select></div>
-			</div>
-			<div class="row"> 
-				<div class="column">
-					<div class="aa-treatment-modal">
-					  <p translate="autoAttendant.destinationLabel"></p>
-					</div>
-				</div>
-			</div>
-			<div class="row">
-				<div class="column large-8 medium-8"><cs-select ng-model="aaNewTreatmentModalCtrl.destination" name="destinationSelect" options="aaNewTreatmentModalCtrl.destinationOptions"   labelfield="label" valuefield="label" icon="icon-chevron-down" placeholder="aaNewTreatmentModalCtrl.selectPlaceholder">
-				</cs-select> </div>
-			</div>
-			<div class="row">
-				<div class="column large-8 medium-8">
-				 <p class="cs-input__help-text" translate="autoAttendant.destinationHelpMessage"></p> 
-				 </div>
-			</div>
-		</div>
-	</div>
-</div>
-  
-<div class="modal-footer">
-	<button id="cancelTreatmentFeature" class="btn" ng-click="aaNewTreatmentModalCtrl.cancel();" translate="common.cancel"></button>
-	<button id="saveTreatmentBtn"  class="btn btn-primary" ng-click="aaNewTreatmentModalCtrl.cancel();">
-	<span translate="common.save"></span></button>
+  <div class="row">
+    <div class="large-4 medium-12 small-12 columns">
+      <label class="h4" translate="autoAttendant.holdMusic"></label>
+    </div>
+    <div class="large-8 medium-offset-4 medium-8 small-12 columns">
+      <form name="musicOnHoldForm">
+        <div class="cs-radio-group">
+          <input
+          cs-input
+          type="radio"
+          ng-model="aaNewTreatmentModalCtrl.musicOnHold"
+          id="musicOnHoldRadio1"
+          name="musicOnHoldRadio"
+          value="musicOnHoldDefault"
+          cs-input-label="{{ :: 'autoAttendant.standardTransferMusic' | translate }}">
+          <input
+          cs-input
+          type="radio"
+          ng-model="aaNewTreatmentModalCtrl.musicOnHold"
+          id="uploadFileRadio1"
+          name="uploadFileRadio"
+          value="musicOnHoldUpload"
+          cs-input-label="{{ :: 'autoAttendant.uploadedFile' | translate }}">
+        </div>
+      </form>
+    </div>
+    <div class="large-8 medium-8 small-12 columns">
+      <aa-media-upload id="mediaUploadInput{{ schedule + index + keyIndex }}" name="mediaUploadInput" aa-index="index" aa-schedule="{{ schedule }}" aa-menu-id="{{ menuId }}" aa-key-index="{{ keyIndex }}" aa-media-type="musicOnHold" aa-change="aaNewTreatmentModalCtrl.uploadMohTrigger();"></aa-media-upload>
+      <p class="cs-input__help-text" translate="autoAttendant.musicOnHoldHelp"></p>
+    </div>
+  </div>
+  <hr/>
+  <div class="row">
+    <div class="large-4 medium-12 small-12 columns">
+      <label class="h4" translate="autoAttendant.initialAnnouncement"></label>
+    </div>
+    <div class="columns large-8 medium-8">
+      <div class="row">
+        <aa-message-type aa-index="index" aa-schedule="{{schedule}}" aa-menu-id="{{menuId}}" aa-key-index="{{keyIndex}}" aa-media-type="initialAnnouncement" id="initialAnnouncement"></aa-message-type>
+      </div>
+      <div class="row">
+        <span class="small-12 columns cs-input__help-text" translate="autoAttendant.initialHelpText"></span>
+      </div>
+    </div>
+  </div>
+  <hr/>
+  <div class="row">
+    <div class="columns large-4 medium-4">
+      <label class="h4 ng-scope" translate="autoAttendant.fallbackLabel"></label>
+    </div>
+    <div class="columns large-8 medium-8">
+      <div class="row">
+        <div class="column">
+          <p translate="autoAttendant.maxWaitTime"></p>
+        </div>
+      </div>
+      <div class="row">
+        <div class="columns aa-selectmin-modal">
+          <cs-select id="queueMin" ng-model="aaNewTreatmentModalCtrl.maxWaitTime" options="aaNewTreatmentModalCtrl.minutes"   placeholder="aaNewTreatmentModalCtrl.selectPlaceholder" secondary-label="Minutes" labelfield="label" valuefield="label" icon="icon-chevron-down" >
+          </cs-select>
+        </div>
+      </div>
+      <div class="row">
+        <div class="column">
+          <div class="aa-treatment-modal">
+            <p translate="autoAttendant.destinationLabel"></p>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="columns large-8 medium-10 small-10">
+          <cs-select id="destinationSelect" ng-model="aaNewTreatmentModalCtrl.destination" name="destinationSelect" options="aaNewTreatmentModalCtrl.destinationOptions" labelfield="label" valuefield="label" icon="icon-chevron-down" placeholder="aaNewTreatmentModalCtrl.selectPlaceholder">
+          </cs-select>
+          <div ng-switch="aaNewTreatmentModalCtrl.destination.name" class="aa-destination-container">
+            <aa-route-to-aa id="destinationMenuRouteAA" ng-switch-when="destinationMenuRouteAA" aa-menu-id="{{menuId}}" aa-index="index" aa-key-index="{{keyIndex}}"></aa-route-to-aa>
+            <aa-route-to-hg id="destinationMenuRouteHunt" ng-switch-when="destinationMenuRouteHunt"  aa-menu-id="{{menuId}}" aa-index="index" aa-key-index="{{keyIndex}}"></aa-route-to-hg>
+            <aa-route-to-user id="destinationMenuRouteMailbox" ng-switch-when="destinationMenuRouteMailbox" voicemail=true  aa-menu-id="{{menuId}}" aa-index="index" aa-key-index="{{keyIndex}}"></aa-route-to-user>
+            <aa-route-to-user id="destinationMenuRouteUser" ng-switch-when="destinationMenuRouteUser"  aa-menu-id="{{menuId}}" aa-index="index" aa-key-index="{{keyIndex}}"></aa-route-to-user>
+            <aa-route-to-ext-num id="destinationMenuRouteToExtNum" ng-switch-when="destinationMenuRouteToExtNum"  aa-menu-id="{{menuId}}" aa-index="index" aa-key-index="{{keyIndex}}"></aa-route-to-ext-num>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="columns large-8 medium-8">
+          <p class="cs-input__help-text" translate="autoAttendant.destinationHelpMessage"></p> 
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
+<div class="modal-footer">
+  <button id="cancelTreatmentFeature" class="btn" ng-click="$dismiss();" translate="common.cancel"></button>
+  <button id="okTreatmentBtn"  class="btn btn-primary" ng-click="aaNewTreatmentModalCtrl.ok();" ng-disabled="!aaNewTreatmentModalCtrl.isSaveEnabled();" translate="common.ok"></button>
+</div>

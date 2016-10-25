@@ -34,14 +34,6 @@
     var BLOCK_ORDER = 'BLOCK_ORDER';
     var TOLLFREE_BLOCK_ORDER = 'TOLLFREE_BLOCK_ORDER';
     var TOLLFREE_ORDER = 'TOLLFREE_ORDER';
-    //translated order status
-    var SUCCESSFUL = $translate.instant('pstnOrderOverview.successful');
-    var IN_PROGRESS = $translate.instant('pstnOrderOverview.inProgress');
-    //translated order type
-    var ADVANCE_ORDER = $translate.instant('pstnOrderOverview.advanceOrder');
-    var NEW_NUMBER_ORDER = $translate.instant('pstnOrderOverview.newNumberOrder');
-    var PORT_NUMBER_ORDER = $translate.instant('pstnOrderOverview.portNumberOrder');
-    var TOLLFREE_NUMBER_ORDER = $translate.instant('pstnOrderOverview.tollFreeNumberOrder');
     //$resource constants
     var BLOCK = 'block';
     var ORDER = 'order';
@@ -51,6 +43,9 @@
     //misc
     var PSTN = "PSTN";
     var TYPE_PORT = "PORT";
+    var GROUP_BY = "groupBy";
+    var NPA = 'npa';
+    var NXX = 'nxx';
 
     var service = {
       createCustomer: createCustomer,
@@ -160,11 +155,18 @@
       return $q.all(promises);
     }
 
-    function getCarrierInventory(carrierId, state) {
-      return TerminusCarrierInventoryCount.get({
+    function getCarrierInventory(carrierId, state, npa) {
+      var config = {
         carrierId: carrierId,
         state: state
-      }).$promise;
+      };
+      if (_.isString(npa)) {
+        if (npa.length > 0) {
+          config[NPA] = npa;
+          config[GROUP_BY] = NXX;
+        }
+      }
+      return TerminusCarrierInventoryCount.get(config).$promise;
     }
 
     function getCarrierTollFreeInventory(carrierId) {
@@ -295,12 +297,15 @@
       });
     }
 
-    function orderBlock(customerId, carrierId, npa, quantity, isSequential) {
+    function orderBlock(customerId, carrierId, npa, quantity, isSequential, nxx) {
       var payload = {
         npa: npa,
         quantity: quantity,
         sequential: isSequential
       };
+      if (_.isString(nxx)) {
+        payload['nxx'] = nxx;
+      }
 
       return TerminusCustomerCarrierDidService.save({
         customerId: customerId,
@@ -406,19 +411,19 @@
               };
               //translate order status
               if (order.status === PROVISIONED) {
-                newOrder.status = SUCCESSFUL;
+                newOrder.status = $translate.instant('pstnOrderOverview.successful');
               } else if (order.status === PENDING) {
-                newOrder.status = IN_PROGRESS;
+                newOrder.status = $translate.instant('pstnOrderOverview.inProgress');
               }
               //translate order type
               if (order.operation === BLOCK_ORDER) {
-                newOrder.type = ADVANCE_ORDER;
+                newOrder.type = $translate.instant('pstnOrderOverview.advanceOrder');
               } else if (order.operation === NUMBER_ORDER) {
-                newOrder.type = NEW_NUMBER_ORDER;
+                newOrder.type = $translate.instant('pstnOrderOverview.newNumberOrder');
               } else if (order.operation === TOLLFREE_ORDER) {
-                newOrder.type = TOLLFREE_NUMBER_ORDER;
+                newOrder.type = $translate.instant('pstnOrderOverview.tollFreeNumberOrder');
               } else if (order.operation === PORT_ORDER) {
-                newOrder.type = PORT_NUMBER_ORDER;
+                newOrder.type = $translate.instant('pstnOrderOverview.portNumberOrder');
               }
               //create sort date and translate creation date
               var orderDate = new Date(order.created);

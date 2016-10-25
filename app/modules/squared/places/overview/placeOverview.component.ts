@@ -34,10 +34,10 @@ class PlaceOverview implements ng.IComponentController {
     if (this.hasEntitlement('ciscouc')) {
       let service: IFeature = {
         name: this.$translate.instant('onboardModal.call'),
-        icon: this.$translate.instant('onboardModal.call'),
+        icon: 'icon-circle-call',
         state: 'communication',
-        detail: this.$translate.instant('onboardModal.callFree'),
-        actionsAvailable: true,
+        detail: this.$translate.instant('onboardModal.paidComm'),
+        actionAvailable: true,
       };
       this.services.push(service);
     }
@@ -77,8 +77,8 @@ class PlaceOverview implements ng.IComponentController {
     return hasEntitlement;
   }
 
-  public serviceActions(feature): void {
-    this.$state.go('place-overview.' + feature);
+  public clickService(feature: IFeature): void {
+    this.$state.go('place-overview.' + feature.state);
   }
 
   private success(code): void {

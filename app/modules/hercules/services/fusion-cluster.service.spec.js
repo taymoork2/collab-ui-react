@@ -1,26 +1,31 @@
 'use strict';
 
 describe('Service: FusionClusterService', function () {
-  var FusionClusterService, $httpBackend;
+  var $httpBackend, $q, FusionClusterService, USSService;
 
   beforeEach(angular.mock.module('Hercules'));
+  // beforeEach(angular.mock.module('core.urlconfig'));
   beforeEach(angular.mock.module(mockDependencies));
   beforeEach(inject(dependencies));
 
-  function dependencies(_$httpBackend_, _FusionClusterService_) {
+  function dependencies(_$httpBackend_, _$q_, _FusionClusterService_, _USSService_) {
     $httpBackend = _$httpBackend_;
+    $q = _$q_;
     FusionClusterService = _FusionClusterService_;
+    USSService = _USSService_;
+    spyOn(USSService, 'getUserCountFromResourceGroup').and.returnValue($q.resolve({ numberOfUsers: 0 }));
   }
 
   function mockDependencies($provide) {
     var Authinfo = {
       getOrgId: sinon.stub().returns('0FF1C3'),
-      isEntitled: sinon.stub().returns(true)
+      isEntitled: sinon.stub().returns(true),
     };
     $provide.value('Authinfo', Authinfo);
     var UrlConfig = {
       getHerculesUrlV2: sinon.stub().returns('http://elg.no'),
-      getHerculesUrl: sinon.stub().returns('http://ulv.no')
+      getHerculesUrl: sinon.stub().returns('http://ulv.no'),
+      getUssUrl: sinon.stub().returns('http://whatever.no/'),
     };
     $provide.value('UrlConfig', UrlConfig);
   }
@@ -139,18 +144,6 @@ describe('Service: FusionClusterService', function () {
         .respond(204, '');
 
       FusionClusterService.addPreregisteredClusterToAllowList('ew.ree.online', 3600, 'f635d90f-d39b-4659-a983-cf13ca52a960');
-    });
-
-    it('should parse a connector list from a cluster object', function () {
-
-      var response = '{"url":"https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/e33defcf-2702-11e6-9998-005056bf13dd","id":"e33defcf-2702-11e6-9998-005056bf13dd","name":"boler.eu","connectors":[{"url":"https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/e33defcf-2702-11e6-9998-005056bf13dd/connectors/c_ucmc@03C36F68","id":"c_ucmc@03C36F68","connectorType":"c_ucmc","upgradeState":"upgraded","state":"not_configured","hostname":"cisco.boler.eu","hostSerial":"03C36F68","alarms":[],"runningVersion":"8.7-1.0.2094","packageUrl":"https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/channels/GA/packages/c_ucmc"},{"url":"https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/e33defcf-2702-11e6-9998-005056bf13dd/connectors/c_mgmt@03C36F68","id":"c_mgmt@03C36F68","connectorType":"c_mgmt","upgradeState":"upgraded","state":"running","hostname":"cisco.boler.eu","hostSerial":"03C36F68","alarms":[],"runningVersion":"8.7-1.0.321154","packageUrl":"https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/channels/GA/packages/c_mgmt"},{"url":"https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/e33defcf-2702-11e6-9998-005056bf13dd/connectors/c_cal@03C36F68","id":"c_cal@03C36F68","connectorType":"c_cal","upgradeState":"upgraded","state":"not_configured","hostname":"cisco.boler.eu","hostSerial":"03C36F68","alarms":[],"runningVersion":"8.7-1.0.2909","packageUrl":"https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/channels/GA/packages/c_cal"}],"releaseChannel":"GA","provisioning":[{"url":"https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/e33defcf-2702-11e6-9998-005056bf13dd/provisioning/c_cal","connectorType":"c_cal","provisionedVersion":"8.7-1.0.2909","availableVersion":"8.7-1.0.2909","packageUrl":"https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/channels/GA/packages/c_cal"},{"url":"https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/e33defcf-2702-11e6-9998-005056bf13dd/provisioning/c_mgmt","connectorType":"c_mgmt","provisionedVersion":"8.7-1.0.321154","availableVersion":"8.7-1.0.321154","packageUrl":"https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/channels/GA/packages/c_mgmt"},{"url":"https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/e33defcf-2702-11e6-9998-005056bf13dd/provisioning/c_ucmc","connectorType":"c_ucmc","provisionedVersion":"8.7-1.0.2094","availableVersion":"8.7-1.0.2094","packageUrl":"https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/channels/GA/packages/c_ucmc"}],"state":"fused"}';
-      $httpBackend
-        .expectGET('http://elg.no/organizations/0FF1C3/clusters/clusterId?fields=@wide')
-        .respond(200, response);
-      var connectorListPromise = FusionClusterService.getAllProvisionedConnectorTypes("clusterId");
-      connectorListPromise.then(function (allConnectors) {
-        expect(allConnectors.length).toBe(3);
-      });
     });
 
     it('should call FMS to deprovision a cluster', function () {
@@ -370,15 +363,13 @@ describe('Service: FusionClusterService', function () {
           "total": 4
         }]
       };
-      var result = FusionClusterService.buildSidepanelConnectorList(incomingCluster, 'c_cal');
-      expect(result.name).toBe('fms-quadruple.rd.cisco.com');
-      expect(result.id).toBe('1107700c-2eeb-11e6-8ebd-005056b10bf7');
-      expect(result.hosts.length).toBe(4);
-      expect(result.hosts[0].connectors[0].connectorType).not.toBe('c_ucmc');
-      expect(result.hosts[0].connectors.length).toBe(2);
-      expect(result.hosts[1].connectors.length).toBe(2);
-      expect(result.hosts[0].connectors[0].state).toBe('running');
-      expect(result.hosts[0].connectors[0].hostSerial).toBe(result.hosts[0].connectors[1].hostSerial);
+      var hosts = FusionClusterService.buildSidepanelConnectorList(incomingCluster, 'c_cal');
+      expect(hosts.length).toBe(4);
+      expect(hosts[0].connectors[0].connectorType).not.toBe('c_ucmc');
+      expect(hosts[0].connectors.length).toBe(2);
+      expect(hosts[1].connectors.length).toBe(2);
+      expect(hosts[0].connectors[0].state).toBe('running');
+      expect(hosts[0].connectors[0].hostSerial).toBe(hosts[0].connectors[1].hostSerial);
     });
 
   });

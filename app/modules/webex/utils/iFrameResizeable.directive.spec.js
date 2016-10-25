@@ -3,6 +3,7 @@
  */
 
 'use strict';
+
 xdescribe('iFrameResizable directive', function () {
   var elm;
   var window;

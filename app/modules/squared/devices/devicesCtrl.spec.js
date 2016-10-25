@@ -2,7 +2,7 @@
 
 describe('Controller: DevicesCtrl', function () {
   var $scope, $controller, controller, $httpBackend, $timeout;
-  var CsdmConfigService, AccountOrgService, CsdmHuronOrgDeviceService;
+  var CsdmConfigService, AccountOrgService;
 
   beforeEach(angular.mock.module('Squared'));
   beforeEach(angular.mock.module('Huron'));
@@ -13,18 +13,18 @@ describe('Controller: DevicesCtrl', function () {
   beforeEach(initSpies);
   beforeEach(initController);
 
-  function dependencies($rootScope, _$timeout_, _$controller_, _$httpBackend_, _CsdmConfigService_, _AccountOrgService_, _CsdmHuronOrgDeviceService_) {
+  function dependencies($rootScope, _$timeout_, _$controller_, _$httpBackend_, _CsdmConfigService_, _AccountOrgService_) {
     $scope = $rootScope.$new();
     $controller = _$controller_;
     $httpBackend = _$httpBackend_;
     $timeout = _$timeout_;
     CsdmConfigService = _CsdmConfigService_;
     AccountOrgService = _AccountOrgService_;
-    CsdmHuronOrgDeviceService = _CsdmHuronOrgDeviceService_;
   }
 
   function initSpies() {
     // TODO - eww this is wrong - Just make this init right now
+    $httpBackend.whenGET('https://csdm-integration.wbx2.com/csdm/api/v1/organization/null/huronDevices').respond([]);
     $httpBackend.whenGET(CsdmConfigService.getUrl() + '/organization/null/nonExistingDevices').respond(200);
     $httpBackend.whenGET(CsdmConfigService.getUrl() + '/organization/null/devices?checkDisplayName=false&checkOnline=false').respond(200);
     $httpBackend.whenGET(CsdmConfigService.getUrl() + '/organization/null/devices').respond(200);
@@ -35,9 +35,6 @@ describe('Controller: DevicesCtrl', function () {
 
     spyOn(AccountOrgService, 'getAccount').and.returnValue({
       success: _.noop
-    });
-    spyOn(CsdmHuronOrgDeviceService, 'create').and.returnValue({
-      on: _.noop
     });
   }
 

@@ -1,11 +1,12 @@
 (function () {
   'use strict';
+
   angular
     .module('Squared')
     .controller('RemPlaceController',
 
       /* @ngInject */
-      function ($modalInstance, CsdmDataModelService, CsdmHuronPlaceService, XhrNotificationService, place, $rootScope, $timeout) {
+      function ($modalInstance, CsdmDataModelService, XhrNotificationService, place, $rootScope, $timeout) {
         var rdc = this;
         rdc.place = place;
 
@@ -14,8 +15,7 @@
         };
 
         rdc.deletePlace = function () {
-          var deleteFunction = rdc.place.type === 'cloudberry' ? CsdmDataModelService.deleteItem : CsdmHuronPlaceService.deletePlace;
-          return deleteFunction(rdc.place)
+          return CsdmDataModelService.deleteItem(rdc.place)
             .then(function () {
               $modalInstance.close();
               $timeout(rdc.refreshPlaceList, 500);

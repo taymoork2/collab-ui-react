@@ -9,32 +9,22 @@ import {
 } from './partnerReportInterfaces';
 
 export class DummyReportService {
-  private dayFormat: string = 'MMM DD';
-  private monthFormat: string = 'MMMM';
-  private loadingCustomer: string;
-
-  // timespan values
-  private days = 7;
-  private weeks = 3;
-  private months = 2;
-
   /* @ngInject */
   constructor(
     private $translate: ng.translate.ITranslateService,
-    private chartColors
-  ) {
-    this.loadingCustomer = $translate.instant('activeUserPopulation.loadingCustomer');
-  }
+    private chartColors,
+    private ReportConstants
+  ) {}
 
   private getTimeAndOffset(filter: ITimespan, index) {
-    let offset = this.days - index;
-    let date: string = moment().subtract(index, 'day').format(this.dayFormat);
-    if (filter.value === 1) {
-      offset = this.weeks - index;
-      date = moment().startOf('week').subtract(1 + (index * 7), 'day').format(this.dayFormat);
-    } else if (filter.value === 2) {
-      offset = this.months - index;
-      date = moment().subtract(index, 'month').format(this.monthFormat);
+    let offset = this.ReportConstants.DAYS - index;
+    let date: string = moment().subtract(index, this.ReportConstants.DAY).format(this.ReportConstants.DAY_FORMAT);
+    if (filter.value === this.ReportConstants.FILTER_TWO.value) {
+      offset = this.ReportConstants.WEEKS - index;
+      date = moment().startOf(this.ReportConstants.WEEK).subtract(1 + (index * 7), this.ReportConstants.DAY).format(this.ReportConstants.DAY_FORMAT);
+    } else if (filter.value === this.ReportConstants.FILTER_THREE.value) {
+      offset = this.ReportConstants.MONTHS - index;
+      date = moment().subtract(index, this.ReportConstants.MONTH).format(this.ReportConstants.MONTH_FORMAT);
     }
 
     return {
@@ -46,16 +36,16 @@ export class DummyReportService {
   public dummyActiveUserData (filter: ITimespan): Array<IActiveUserData> {
     let dummyGraph: Array<IActiveUserData> = [];
 
-    if (filter.value === 0) {
-      for (let i = this.days; i >= 1; i--) {
+    if (filter.value === this.ReportConstants.FILTER_ONE.value) {
+      for (let i = this.ReportConstants.DAYS; i >= 1; i--) {
         dummyGraph.push(this.getActiveUserDatapoint(filter, i));
       }
-    } else if (filter.value === 1) {
-      for (let x = this.weeks; x >= 0; x--) {
+    } else if (filter.value === this.ReportConstants.FILTER_TWO.value) {
+      for (let x = this.ReportConstants.WEEKS; x >= 0; x--) {
         dummyGraph.push(this.getActiveUserDatapoint(filter, x));
       }
     } else {
-      for (let y = this.months; y >= 0; y--) {
+      for (let y = this.ReportConstants.MONTHS; y >= 0; y--) {
         dummyGraph.push(this.getActiveUserDatapoint(filter, y));
       }
     }
@@ -78,14 +68,16 @@ export class DummyReportService {
   }
 
   public dummyActivePopulationData(customers: Array<IReportsCustomer>): Array<IPopulationData> {
+    let loadingCustomer = this.$translate.instant('activeUserPopulation.loadingCustomer');
+
     if (customers && customers.length > 0) {
       let returnArray: Array<IPopulationData> = [];
       for (let index = 0; index < customers.length; index ++) {
-        returnArray.push(this.getActivePopulationDatapoint(this.loadingCustomer, index));
+        returnArray.push(this.getActivePopulationDatapoint(loadingCustomer, index));
       }
       return returnArray;
     } else {
-      return [this.getActivePopulationDatapoint(this.loadingCustomer, 0)];
+      return [this.getActivePopulationDatapoint(loadingCustomer, 0)];
     }
   }
 
@@ -103,16 +95,16 @@ export class DummyReportService {
   public dummyMediaQualityData(filter: ITimespan): Array<IMediaQualityData> {
     let dummyGraph: Array<IMediaQualityData> = [];
 
-    if (filter.value === 0) {
-      for (let i = this.days; i >= 1; i--) {
+    if (filter.value === this.ReportConstants.FILTER_ONE.value) {
+      for (let i = this.ReportConstants.DAYS; i >= 1; i--) {
         dummyGraph.push(this.getMediaDatapoint(filter, i));
       }
-    } else if (filter.value === 1) {
-      for (let x = this.weeks; x >= 0; x--) {
+    } else if (filter.value === this.ReportConstants.FILTER_TWO.value) {
+      for (let x = this.ReportConstants.WEEKS; x >= 0; x--) {
         dummyGraph.push(this.getMediaDatapoint(filter, x));
       }
     } else {
-      for (let y = this.months; y >= 0; y--) {
+      for (let y = this.ReportConstants.MONTHS; y >= 0; y--) {
         dummyGraph.push(this.getMediaDatapoint(filter, y));
       }
     }
@@ -159,7 +151,7 @@ export class DummyReportService {
   public dummyEndpointData(): Array<Array<IEndpointData>> {
     return [[{
       class: 'vertical-center customer-data',
-      output: [this.loadingCustomer],
+      output: [this.$translate.instant('activeUserPopulation.loadingCustomer')],
       splitClasses: undefined,
     }, {
       class: 'table-data',

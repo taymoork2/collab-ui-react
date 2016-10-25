@@ -1051,6 +1051,7 @@
             params: {
               currentUser: {},
               entitlements: {},
+              queryuserslist: {},
               currentUserId: ''
             },
             data: {
@@ -1545,10 +1546,7 @@
             }
           })
           .state('place-overview.communication.speedDials', {
-            templateProvider: /* @ngInject */ function ($stateParams) {
-              var ownerId = _.get($stateParams.currentPlace, 'cisUuid');
-              return '<uc-speed-dial owner-type="place" owner-id="' + ownerId + '"></uc-speed-dial>';
-            },
+            template: '<uc-speed-dial owner-type="places" owner-id="$resolve.ownerId"></uc-speed-dial>',
             data: {
               displayName: 'Speed Dials'
             },
@@ -1557,46 +1555,50 @@
                 return $q(function resolveLogin(resolve) {
                   require(['modules/huron/speedDials'], loadModuleAndResolve($ocLazyLoad, resolve));
                 });
-              }
+              },
+              ownerId: /* @ngInject */ function ($stateParams) {
+                return _.get($stateParams.currentPlace, 'cisUuid');
+              },
             }
           })
           .state('place-overview.communication.internationalDialing', {
-            templateProvider: /* @ngInject */ function ($stateParams) {
-              var watcher = $stateParams.watcher;
-              var selected = $stateParams.selected;
-              return '<uc-dialing watcher=' + watcher + ' selected="' + selected + '"></uc-dialing>';
-            },
+            template: '<uc-dialing  watcher="$resolve.watcher" selected="$resolve.selected" title="internationalDialingPanel.title"></uc-dialing>',
             params: {
               watcher: null,
               selected: null
             },
             data: {
               displayName: 'International Dialing'
-            }
+            },
+            resolve: {
+              watcher: /* @ngInject */ function ($stateParams) {
+                return _.get($stateParams, 'watcher');
+              },
+              selected: /* @ngInject */ function ($stateParams) {
+                return _.get($stateParams, 'selected');
+              },
+            },
           })
           .state('place-overview.communication.local', {
-            templateProvider: /* @ngInject */ function ($stateParams) {
-              var watcher = $stateParams.watcher;
-              var selected = $stateParams.selected;
-              return '<uc-dialing  watcher=' + watcher + ' selected="' + selected + '"></uc-dialing>';
-            },
+            template: '<uc-dialing  watcher="$resolve.watcher" selected="$resolve.selected" title="telephonyPreview.localDialing"></uc-dialing>',
             params: {
               watcher: null,
               selected: null
             },
             data: {
               displayName: 'Local Dialing'
-            }
+            },
+            resolve: {
+              watcher: /* @ngInject */ function ($stateParams) {
+                return _.get($stateParams, 'watcher');
+              },
+              selected: /* @ngInject */ function ($stateParams) {
+                return _.get($stateParams, 'selected');
+              },
+            },
           })
           .state('place-overview.communication.line-overview', {
-            // TODO(jlowery): remove templateProvider once we can upgrade ui-router to a
-            // version that supports route to component natively
-            templateProvider: /* @ngInject */ function ($stateParams) {
-              var ownerId = _.get($stateParams.currentPlace, 'cisUuid');
-              var ownerName = _.get($stateParams.currentPlace, 'displayName');
-              var numberId = $stateParams.numberId;
-              return '<uc-line-overview owner-type="place" owner-name="' + ownerName + '" owner-id="' + ownerId + '" number-id="' + numberId + '"></line-overview>';
-            },
+            template: '<uc-line-overview owner-type="place" owner-name="$resolve.ownerName" owner-id="$resolve.ownerId" number-id="$resolve.numberId"></uc-line-overview>',
             params: {
               numberId: '',
             },
@@ -1608,7 +1610,16 @@
                 return $q(function resolveLogin(resolve) {
                   require(['modules/huron/lines/lineOverview'], loadModuleAndResolve($ocLazyLoad, resolve));
                 });
-              }
+              },
+              ownerId: /* @ngInject */ function ($stateParams) {
+                return _.get($stateParams.currentPlace, 'cisUuid');
+              },
+              ownerName: /* @ngInject */ function ($stateParams) {
+                return _.get($stateParams.currentPlace, 'displayName');
+              },
+              numberId: /* @ngInject */ function ($stateParams) {
+                return _.get($stateParams, 'numberId', '');
+              },
             }
           })
           .state('devices', {
@@ -1745,17 +1756,6 @@
             },
             params: {
               currentCustomer: {}
-            },
-            data: {}
-          })
-          .state('customer-overview.externalNumbers', {
-            controller: 'ExternalNumberDetailCtrl',
-            controllerAs: 'externalNumbers',
-            templateUrl: 'modules/huron/externalNumbers/externalNumberDetail.tpl.html',
-            resolve: {
-              data: /* @ngInject */ function ($state, $translate) {
-                $state.get('customer-overview.externalNumbers').data.displayName = $translate.instant('customerPage.phoneNumbers');
-              }
             },
             data: {}
           })
@@ -1929,6 +1929,15 @@
               user: null,
               id: null,
               orgId: null
+            }
+          })
+          .state('helpdesk.order', {
+            url: '/order/:orderId/:id',
+            templateUrl: 'modules/squared/helpdesk/helpdesk-order.html',
+            controller: 'HelpdeskOrderController',
+            controllerAs: 'helpdeskOrderCtrl',
+            params: {
+              order: null
             }
           })
           .state('helpdesk.org', {
@@ -2336,6 +2345,19 @@
               detailsDependsList: null
             }
           })
+          .state('huronCallPickup', {
+            url: '/callPickup',
+            parent: 'main',
+            template: '<call-pickup-setup-assistant></call-pickup-setup-assistant>',
+            resolve: {
+              lazy: /* @ngInject */ function lazyLoad($q, $ocLazyLoad) {
+                return $q(function resolveLogin(resolve) {
+                  require(['modules/huron/features/callPickup/callPickupSetupAssistant'], loadModuleAndResolve($ocLazyLoad, resolve));
+                });
+              }
+            }
+
+          })
           .state('huronCallPark', {
             url: '/huronCallPark',
             parent: 'hurondetails',
@@ -2369,12 +2391,43 @@
             params: {
               feature: null
             }
+          })
+          .state('huronPagingGroup', {
+            url: '/huronPagingGroup',
+            parent: 'main',
+            template: '<pg-setup-assistant></pg-setup-assistant>',
+            resolve: {
+              lazy: /* @ngInject */ function lazyLoad($q, $ocLazyLoad) {
+                return $q(function resolveLogin(resolve) {
+                  require(['modules/huron/features/pagingGroup/pgSetupAssistant'], loadModuleAndResolve($ocLazyLoad, resolve));
+                });
+              }
+            }
+          })
+          .state('huronPagingGroupEdit', {
+            url: '/huronPagingGroupEdit',
+            parent: 'main',
+            template: '<pg-edit pg-id="$resolve.pgId"></pg-edit>',
+            resolve: {
+              lazy: /* @ngInject */ function lazyLoad($q, $ocLazyLoad) {
+                return $q(function resolveLogin(resolve) {
+                  require(['modules/huron/features/pagingGroup/edit'], loadModuleAndResolve($ocLazyLoad, resolve));
+                });
+              },
+              pgId: /* @ngInject */ function pgId($stateParams) {
+                var id = _.get($stateParams.feature, 'id');
+                return id;
+              }
+            },
+            params: {
+              feature: null
+            }
           });
 
         $stateProvider
           .state('services-overview', {
-            url: '/services/overview',
-            templateUrl: 'modules/hercules/servicesOverview/servicesOverview.html',
+            url: '/services',
+            templateUrl: 'modules/services/overview.html',
             controller: 'ServicesOverviewCtrl',
             controllerAs: 'servicesOverviewCtrl',
             parent: 'main'
@@ -2388,9 +2441,6 @@
             resolve: {
               hasF237FeatureToggle: /* @ngInject */ function (FeatureToggleService) {
                 return FeatureToggleService.supports(FeatureToggleService.features.atlasF237ResourceGroups);
-              },
-              hasF410FeatureToggle: /* @ngInject */ function (FeatureToggleService) {
-                return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridServicesResourceList);
               },
               hasMediaFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
                 return FeatureToggleService.supports(FeatureToggleService.features.atlasMediaServiceOnboarding);
@@ -2407,6 +2457,18 @@
             resolve: {
               hasF237FeatureToggle: /* @ngInject */ function (FeatureToggleService) {
                 return FeatureToggleService.supports(FeatureToggleService.features.atlasF237ResourceGroups);
+              }
+            }
+          })
+          .state('hds-settings', {
+            templateUrl: 'modules/hds/settings/settings.html',
+            controller: 'HDSSettingsController',
+            controllerAs: 'hdsSettings',
+            url: '/services/hds/settings',
+            parent: 'main',
+            resolve: {
+              hasHDSFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridDataSecurity);
               }
             }
           })
@@ -2668,9 +2730,6 @@
               connectorType: null
             },
             resolve: {
-              hasF410FeatureToggle: /* @ngInject */ function (FeatureToggleService) {
-                return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridServicesResourceList);
-              },
               hasF237FeatureToggle: /* @ngInject */ function (FeatureToggleService) {
                 return FeatureToggleService.supports(FeatureToggleService.features.atlasF237ResourceGroups);
               }

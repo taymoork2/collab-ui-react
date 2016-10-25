@@ -43,9 +43,13 @@
     vm.isPartnerAdmin = Authinfo.isPartnerAdmin();
     vm.currentAdminId = Authinfo.getUserId();
 
-    vm.freeOrPaidServices = null;
+    vm.freeOrPaidServices = [];
+    vm.trialActions = [];
 
     vm.newCustomerViewToggle = newCustomerViewToggle;
+
+    var QTY = _.toUpper($translate.instant('common.quantity'));
+    var FREE = _.toUpper($translate.instant('customerPage.free'));
 
     FeatureToggleService.atlasCareTrialsGetStatus()
       .then(function (result) {
@@ -63,10 +67,26 @@
       });
 
     function setOffers(isCareEnabled) {
-      var licAndOffers = PartnerService.parseLicensesAndOffers(vm.currentCustomer, isCareEnabled);
+      var licAndOffers = PartnerService.parseLicensesAndOffers(vm.currentCustomer, { isCareEnabled: isCareEnabled,
+        isTrial: true });
       vm.offer = vm.currentCustomer.offer = _.get(licAndOffers, 'offer');
+      vm.trialServices = _.chain(vm.currentCustomer.offer)
+        .get('trialServices')
+        .map(function (trialService) {
+          return _.assign({}, trialService, {
+            detail: trialService.qty + ' ' + QTY,
+            actionAvailable: hasSubview(trialService)
+          });
+        })
+        .value();
       if (vm.newCustomerViewToggle) {
-        vm.freeOrPaidServices = PartnerService.getFreeOrActiveServices(vm.currentCustomer, isCareEnabled);
+        vm.freeOrPaidServices = _.map(PartnerService.getFreeOrActiveServices(vm.currentCustomer, { isCareEnabled: isCareEnabled,
+          isTrial: false }), function (service) {
+          return _.assign({}, service, {
+            detail: service.free ? FREE : service.qty + ' ' + QTY,
+            actionAvailable: hasSubview(service)
+          });
+        });
       }
     }
 
@@ -85,9 +105,17 @@
 
     function init() {
       initCustomer();
+      initTrialActions();
       getLogoSettings();
       getIsTestOrg();
       getIsSetupDone();
+    }
+
+    function initTrialActions() {
+      vm.trialActions.push({
+        actionKey: 'customerPage.edit',
+        actionFunction: openEditTrialModal
+      });
     }
 
     function resetForm() {
@@ -127,12 +155,14 @@
         });
     }
 
+    // TODO: understand why this is needed
     function LicenseFeature(name, bAdd) {
       this['id'] = name.toString();
       this['idOperation'] = bAdd ? 'ADD' : 'REMOVE';
       this['properties'] = null;
     }
 
+    // TODO: understand why this is needed and possibly move this somewhere more appropriate
     function collectLicenseIdsForWebexSites(liclist) {
       var licIds = [];
       var i = 0;
@@ -173,12 +203,12 @@
           Userservice.updateUsers([emailObj], licIds, null, 'updateUserLicense', _.noop);
           openCustomerPortal();
         } else {
-          AccountOrgService.getAccount(vm.customerOrgId).then(function (data) {
-            var accountsLength = _.get(data, 'accounts.length');
+          AccountOrgService.getAccount(vm.customerOrgId).then(function (response) {
+            var accountsLength = _.get(response, 'data.accounts.length');
             if (accountsLength) {
               var updateUsersList = [];
               for (var i = 0; i < accountsLength; i++) {
-                var account = data.accounts[i];
+                var account = response.data.accounts[i];
                 var lics = account.licenses;
                 var licIds = collectLicenseIdsForWebexSites(lics);
                 updateUsersList.push(Userservice.updateUsers([emailObj], licIds, null, 'updateUserLicense', _.noop));
@@ -258,19 +288,18 @@
 
     function hasSubview(service) {
       var hasWebexOrMultMeeting = (service.hasWebex === true || service.isMeeting);
-      var hasCallDetail = isSquaredUC() && (service.isCall === true);
       if (!newCustomerViewToggle) {
         return false;
       } else {
-        return (hasCallDetail || hasWebexOrMultMeeting);
+        return hasWebexOrMultMeeting;
       }
     }
 
-    function goToSubview(service) {
+    function goToSubview(service, options) {
       if (service.hasWebex || service.isMeeting) {
-        $state.go('customer-overview.meetingDetail', { meetingLicenses: service.sub });
-      } else if (service.isCall) {
-        $state.go('customer-overview.externalNumberDetail', {});
+        var isTrial = _.get(options, 'isTrial', false);
+        var services = isTrial ? PartnerService.getTrialMeetingServices(vm.currentCustomer.licenseList) : service.sub;
+        $state.go('customer-overview.meetingDetail', { meetingLicenses: services });
       }
     }
 

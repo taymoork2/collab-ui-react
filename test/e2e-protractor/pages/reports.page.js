@@ -14,16 +14,15 @@ var ReportsPage = function () {
 
   // Total Rooms
   this.totalRoomsHeader = element(by.cssContainingText('.report-section-header', 'Total Rooms'));
-  this.totalRoomsDescription = element(by.css('.customer-avg-rooms')).element(by.css('.report-description'));
-  this.totalRoomsGraph = element(by.id('avgRoomsdiv'));
+  this.totalRoomsDescription = element(by.id('avgRooms')).element(by.css('article section p'));
+  this.totalRoomsGraph = element(by.id('avgRoomsChart'));
 
   // active user
   this.activeHeader = element(by.cssContainingText('.report-section-header', 'Active Users'));
-  this.partnerActiveHeader = element(by.id('activeUser')).element(by.cssContainingText('article header h4', 'Active Users'));
   this.activeCustomerDescription = element(by.css('.customer-active-user')).element(by.css('.report-description'));
-  this.activePartnerDescription = element(by.id('activeUser')).element(by.css('article section p'));
+  this.activePartnerDescription = element(by.id('activeUsers')).element(by.css('article section p'));
   this.activeUsers = element(by.id('activeUsersdiv'));
-  this.activeUsersChart = element(by.id('activeUserChart'));
+  this.activeUsersChart = element(by.id('activeUsersChart'));
 
   // most active users
   this.activeUsersTable = element(by.css('.active-users-table'));
@@ -40,40 +39,33 @@ var ReportsPage = function () {
 
   // Files Shared
   this.filesSharedHeader = element(by.cssContainingText('.report-section-header', 'Files Shared'));
-  this.filesSharedDescription = element(by.css('.customer-files-shared')).element(by.css('.report-description'));
-  this.filesSharedDiv = element(by.id('filesSharedDiv'));
+  this.filesSharedDescription = element(by.id('filesShared')).element(by.css('article section p'));
+  this.filesSharedDiv = element(by.id('filesSharedChart'));
 
   // active user population
-  this.activePopulationHeader = element(by.id('userPopulation')).element(by.cssContainingText('article header h4', 'Active User Population by Company'));
-  this.activePopulationDescription = element(by.id('activeUserPopulationDiv')).element(by.css('p'));
+  this.activePopulationHeader = element(by.id('userPopulation')).element(by.cssContainingText('.report-section-header', 'Active User Population by Company'));
+  this.activePopulationDescription = element(by.id('userPopulation')).element(by.css('p'));
   this.activePopulationGraph = element(by.id('userPopulationChart'));
 
-  // registered endpoints graph
+  // registered endpoints graph/table
   this.endpointsHeader = element(by.cssContainingText('.report-section-header', 'Registered Endpoints'));
-  this.customerEndpointsDescription = element(by.css('.customer-devices')).element(by.css('.report-description'));
-  this.endpointFilter = element(by.id('deviceFilter'));
-  this.endpointsDiv = element(by.id('devicesDiv'));
-
-  // registered endpoints table
-  this.regEndpointHeader = element(by.id('reg-endpoints')).element(by.cssContainingText('article header h4', 'Registered Endpoints'));
+  this.customerEndpointsDescription = element(by.id('devices')).element(by.css('article section p'));
+  this.endpointFilter = element(by.id('devicesFilter'));
+  this.endpointsDiv = element(by.id('devicesChart'));
   this.endpointDescription = element(by.id('reg-endpoints')).element(by.css('article section p'));
-  this.registeredEndpointsTable = element(by.css('.registeredEndpoints')).element(by.css('.table'));
+  this.registeredEndpointsTable = element(by.id('reg-endpoints')).element(by.css('table.table'));
 
   // call metrics
   this.metricsHeader = element(by.cssContainingText('.report-section-header', 'Call Metrics'));
   this.customerMetricsDescription = element(by.css('.call-metrics-customer')).element(by.css('.report-description'));
   this.metricsGraphDiv = element(by.id('metricsGraphDiv'));
   this.metricsData = element.all(by.css('.metrics-display'));
-  this.partnerMetricsHeader = element(by.id('callMetrics')).element(by.cssContainingText('article header h4', 'Call Metrics'));
   this.callMetricsGraph = element(by.id('callMetricsChart'));
   this.partnerMetricsDescription = element(by.id('callMetrics')).element(by.css('article section p'));
 
   // media quality
   this.mediaHeader = element(by.cssContainingText('.report-section-header', 'Device Media Quality'));
-  this.customerMediaDescription = element.all(by.css('.customer-media')).last().element(by.css('.report-description'));
-  this.mediaFilter = element(by.id('mediaFilter'));
-  this.mediaQualityDiv = element(by.id('mediaQualityDiv'));
-  this.partnerMediaHeader = element(by.id('mediaQuality')).element(by.cssContainingText('.report-section-header', 'Device Media Quality'));
+  this.mediaFilter = element(by.id('mediaQualityFilter'));
   this.mediaQualityGraph = element(by.id('mediaQualityChart'));
   this.mediaDescription = element(by.id('mediaQuality')).element(by.css('article section p'));
 

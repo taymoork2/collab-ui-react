@@ -4,6 +4,7 @@ describe('Service: ResourceGroupService', function () {
   var ResourceGroupService, $httpBackend, $rootScope, FusionClusterService, $q;
 
   beforeEach(angular.mock.module('Hercules'));
+  beforeEach(angular.mock.module('core.urlconfig'));
   beforeEach(angular.mock.module(mockDependencies));
   beforeEach(inject(dependencies));
 
@@ -17,11 +18,12 @@ describe('Service: ResourceGroupService', function () {
 
   function mockDependencies($provide) {
     var Authinfo = {
-      getOrgId: sinon.stub().returns('0FF1C3')
+      getOrgId: sinon.stub().returns('0FF1C3'),
     };
     $provide.value('Authinfo', Authinfo);
     var UrlConfig = {
-      getHerculesUrlV2: sinon.stub().returns('http://elg.no')
+      getHerculesUrlV2: sinon.stub().returns('http://elg.no'),
+      getUssUrl: sinon.stub().returns('http://whatever.no/'),
     };
     $provide.value('UrlConfig', UrlConfig);
   }

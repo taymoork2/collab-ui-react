@@ -1,4 +1,5 @@
 /* globals $httpBackend, $rootScope, Authinfo, Config, Userservice, UrlConfig */
+
 'use strict';
 
 describe('User Service', function () {
@@ -156,4 +157,85 @@ describe('User Service', function () {
 
   });
 
+  describe('getUserAsPromise():', function () {
+    it('should GET from CI to fetch details for a user for the current org', function () {
+      var fakeUserId = 'fake-userid';
+      var expectedUrl = 'https://identity.webex.com/identity/scim/abc123efg456/v1/Users/fake-userid';
+      $httpBackend.expectGET(expectedUrl).respond(200);
+      Userservice.getUserAsPromise(fakeUserId);
+      $httpBackend.flush();
+    });
+  });
+
+  describe('getFullNameFromUser():', function () {
+    it('should return conjunction of "name.givenName" and "name.familyName" if both are non-empty', function () {
+      var user = {
+        name: {
+          givenName: 'Homer',
+          familyName: 'Simpson'
+        }
+      };
+      expect(Userservice.getFullNameFromUser(user)).toBe('Homer Simpson');
+    });
+
+    it('should fallback to "displayName" if "name.givenName" and "name.familyName" are not both provided', function () {
+      var user = {
+        name: {
+          givenName: 'Bart',
+          familyName: '',
+        },
+        displayName: 'El Barto'
+      };
+      expect(Userservice.getFullNameFromUser(user)).toBe('El Barto');
+
+      user = {
+        name: {
+          givenName: 'Bart',
+        },
+        displayName: 'El Barto'
+      };
+      expect(Userservice.getFullNameFromUser(user)).toBe('El Barto');
+
+      user = {
+        name: {},
+        displayName: 'El Barto'
+      };
+      expect(Userservice.getFullNameFromUser(user)).toBe('El Barto');
+
+      user = {
+        displayName: 'El Barto'
+      };
+      expect(Userservice.getFullNameFromUser(user)).toBe('El Barto');
+    });
+
+    it('should fallback to "userName" if "name.givenName" and "name.familyName" and "displayName" are all not provided', function () {
+      var user = {
+        userName: 'chunkylover53@aol.com'
+      };
+      // like in the above case, any of these properties missing as well will cause the same fallback
+      expect(Userservice.getFullNameFromUser(user)).toBe('chunkylover53@aol.com');
+    });
+  });
+
+  describe('getPrimaryEmailFromUser():', function () {
+    it('should look in the "emails" for an object with "primary" set to true, and return the "value"-value', function () {
+      var user = {
+        emails: [{
+          primary: false,
+          value: 'foo-0@example.com'
+        }, {
+          primary: true,
+          value: 'foo-1@example.com'
+        }]
+      };
+      expect(Userservice.getPrimaryEmailFromUser(user)).toBe('foo-1@example.com');
+    });
+
+    it('should fallback to "userName" if there is no "emails" property', function () {
+      var user = {
+        userName: 'foo-2@example.com'
+      };
+      expect(Userservice.getPrimaryEmailFromUser(user)).toBe('foo-2@example.com');
+    });
+  });
 });

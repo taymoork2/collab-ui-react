@@ -1,15 +1,18 @@
 .typeahead-large {
   .ct-input-hint {
+    @include vr-spacing(p, 1);
+
     border: 0;
     width: 100%;
     text-align: center;
-    @include vr-spacing(p, 1);
     color: $gray;
     font-style: italic;
   }
+
   .ct-input-valid-border {
     border-top: solid 1px $gray-light;
   }
+
   .ct-input-invalid-border {
     border-top: solid 1px $color-negative-dark;
   }

@@ -1,4 +1,5 @@
 'use strict';
+
 describe('Service: HelpdeskSplunkReporterService', function () {
   beforeEach(angular.mock.module('Squared'));
 

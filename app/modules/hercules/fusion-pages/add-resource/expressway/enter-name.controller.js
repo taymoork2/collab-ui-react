@@ -5,10 +5,10 @@
     .controller('ExpresswayEnterNameController', ExpresswayEnterNameController);
 
   /* @ngInject */
-  function ExpresswayEnterNameController($q, $stateParams, $translate, FusionClusterService, XhrNotificationService) {
+  function ExpresswayEnterNameController($q, $stateParams, $translate, FusionClusterService, Notification) {
     var vm = this;
     var wizardData = $stateParams.wizard.state().data;
-    vm.name = wizardData.expressway.hostname;
+    vm.name = '';
     vm.next = next;
     vm.canGoNext = canGoNext;
     vm.handleKeypress = handleKeypress;
@@ -78,7 +78,9 @@
             }
           });
         })
-        .catch(XhrNotificationService.notify);
+        .catch(function (error) {
+          Notification.errorWithTrackingId(error, 'hercules.genericFailure');
+        });
     }
   }
 })();

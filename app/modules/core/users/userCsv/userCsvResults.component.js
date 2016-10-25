@@ -4,7 +4,6 @@
   angular.module('Core')
     .component('crUserCsvResults', {
       controller: UserCsvResultsController,
-      controllerAs: 'vm',
       templateUrl: 'modules/core/users/userCsv/userCsvResults.tpl.html',
       bindings: {
         onCancelImport: '&',
@@ -14,7 +13,7 @@
 
   ////////////////////
   /* @ngInject */
-  function UserCsvResultsController($scope) {
+  function UserCsvResultsController() {
     var vm = this;
 
     vm.$onInit = onInit;
@@ -22,7 +21,6 @@
     //////////////
 
     function onInit() {
-      $scope.csv = vm.csvData;
     }
 
   }

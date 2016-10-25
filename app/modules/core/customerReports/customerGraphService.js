@@ -5,48 +5,27 @@
     .service('CustomerGraphService', CustomerGraphService);
 
   /* @ngInject */
-  function CustomerGraphService($translate, CommonGraphService, chartColors) {
-    // Keys for base variables in CommonGraphService
-    var AXIS = 'axis';
-    var COLUMN = 'column';
-    var LEGEND = 'legend';
-    var LINE = 'line';
-    var NUMFORMAT = 'numFormat';
-    var CURSOR = 'cursor';
-    var SCROLL = 'scroll';
-
+  function CustomerGraphService($translate, CommonGraphService, ReportConstants, chartColors) {
     // reusable html for creating AmBalloon text
     var graphTextSpan = '<span class="graph-text">';
     var boldNumberSpan = '<span class="bold-number">';
     var spanClose = '</span>';
 
-    // variables for the active users section
+    // div variables
     var activeUserDiv = 'activeUsersdiv';
-    var activeUsersBalloonText = graphTextSpan + $translate.instant('activeUsers.registeredUsers') + ' <span class="graph-number">[[totalRegisteredUsers]]</span></span><br><span class="graph-text">' + $translate.instant('activeUsers.active') + ' <span class="graph-number">[[percentage]]%</span></span>';
-    var usersTitle = $translate.instant('activeUsers.users');
-    var activeUsersTitle = $translate.instant('activeUsers.activeUsers');
+    var avgRoomsdiv = 'avgRoomsChart';
+    var filesSharedDiv = 'filesSharedChart';
+    var mediaQualityDiv = 'mediaQualityChart';
+    var metricsGraphDiv = 'metricsGraphDiv';
+    var devicesDiv = 'devicesChart';
+
+    // filter variables
     var filterValue = 0;
     var timeFilterValue = 0;
 
-    // variables for the average rooms section
-    var avgRoomsdiv = 'avgRoomsdiv';
-    var avgRoomsBalloon = graphTextSpan + $translate.instant('avgRooms.group') + ' <span class="room-number">[[groupRooms]]</span><br>' + $translate.instant('avgRooms.oneToOne') + ' <span class="room-number">[[oneToOneRooms]]</span><br>' + $translate.instant('avgRooms.avgTotal') + ' <span class="room-number">[[avgRooms]]</span></span>';
-
-    // variables for the files shared section
-    var filesSharedDiv = 'filesSharedDiv';
-    var filesBalloon = graphTextSpan + $translate.instant('filesShared.filesShared') + ' <span class="graph-number">[[contentShared]]</span><br>' + $translate.instant('filesShared.fileSizes') + ' <span class="graph-number">[[contentShareSizes]] ' + $translate.instant('filesShared.gb ') + '</span></span>';
-
-    // variables for media Quality
-    var mediaQualityDiv = 'mediaQualityDiv';
-
     // variables for Call Metrics
-    var metricsGraphDiv = 'metricsGraphDiv';
     var metricsBalloonText = graphTextSpan + '[[numCalls]] [[callCondition]] ([[percentage]]%)' + spanClose;
     var metricsLabelText = '[[percents]]%<br>[[callCondition]]';
-
-    // variables for device registration
-    var devicesDiv = 'devicesDiv';
-    var deviceBalloonText = graphTextSpan + $translate.instant('registeredEndpoints.registeredEndpoints') + ' <span class="device-number">[[totalRegisteredDevices]]</span></span>';
 
     return {
       setActiveLineGraph: setActiveLineGraph,
@@ -71,9 +50,12 @@
 
         chart.chartScrollbar = undefined;
         chart.mouseWheelZoomEnabled = false;
-        if (timeFilter.value === 3) {
-          chart.chartScrollbar = CommonGraphService.getBaseVariable(SCROLL);
+        if (timeFilter.value === ReportConstants.FILTER_THREE.value && data.length > ReportConstants.THIRTEEN_WEEKS) {
+          chart.chartScrollbar = CommonGraphService.getBaseVariable(CommonGraphService.SCROLL);
           chart.mouseWheelZoomEnabled = true;
+          if (!data[0].balloon) {
+            chart.chartScrollbar.selectedBackgroundColor = chartColors.grayLightOne;
+          }
         }
 
         chart.graphs = getActiveLineGraphs(data);
@@ -82,7 +64,7 @@
         chart.validateNow();
       } else if (_.isArray(data) && data.length > 0) {
         chart = createActiveLineGraph(data);
-        chart.addListener("rendered", zoomActiveUserChart);
+        chart.addListener('rendered', zoomActiveUserChart);
       }
       return chart;
     }
@@ -90,23 +72,23 @@
     function zoomActiveUserChart(event) {
       var chart = _.get(event, 'chart');
       var chartData = _.get(event, 'chart.dataProvider');
-      if (chart && chartData && timeFilterValue === 3) {
-        chart.zoomToIndexes(chartData.length - 13, chartData.length - 1);
+      if (chart && chartData && (chartData.length > ReportConstants.THIRTEEN_WEEKS) && timeFilterValue === ReportConstants.FILTER_THREE.value) {
+        chart.zoomToIndexes(chartData.length - ReportConstants.THIRTEEN_WEEKS, chartData.length - 1);
       }
     }
 
     function createActiveLineGraph(data) {
-      var valueAxes = [CommonGraphService.getBaseVariable(AXIS)];
+      var valueAxes = [CommonGraphService.getBaseVariable(CommonGraphService.AXIS)];
       valueAxes[0].integersOnly = true;
 
-      var catAxis = CommonGraphService.getBaseVariable(AXIS);
+      var catAxis = CommonGraphService.getBaseVariable(CommonGraphService.AXIS);
       catAxis.startOnAxis = true;
       catAxis.gridAlpha = 1;
       catAxis.gridColor = chartColors.grayLightTwo;
       catAxis.tickLength = 5;
       catAxis.showFirstLabel = false;
 
-      var chartCursor = CommonGraphService.getBaseVariable(CURSOR);
+      var chartCursor = CommonGraphService.getBaseVariable(CommonGraphService.CURSOR);
       chartCursor.valueLineAlpha = 1;
       chartCursor.valueLineEnabled = true;
       chartCursor.valueLineBalloonEnabled = true;
@@ -117,32 +99,37 @@
         catAxis.gridColor = chartColors.grayLightThree;
       }
 
-      var chartData = CommonGraphService.getBaseSerialGraph(data, 0, valueAxes, getActiveLineGraphs(data), 'date', catAxis);
-      chartData.numberFormatter = CommonGraphService.getBaseVariable(NUMFORMAT);
-      chartData.legend = CommonGraphService.getBaseVariable(LEGEND);
+      var chartData = CommonGraphService.getBaseSerialGraph(data, 0, valueAxes, getActiveLineGraphs(data), CommonGraphService.DATE, catAxis);
+      chartData.numberFormatter = CommonGraphService.getBaseVariable(CommonGraphService.NUMFORMAT);
+      chartData.legend = CommonGraphService.getBaseVariable(CommonGraphService.LEGEND);
       chartData.chartCursor = chartCursor;
-      chartData.legend.labelText = '[[title]]';
+      chartData.legend.labelText = '[[' + CommonGraphService.TITLE + ']]';
       chartData.autoMargins = true;
       chartData.mouseWheelZoomEnabled = false;
-      if (timeFilterValue === 3) {
+
+      if (timeFilterValue === ReportConstants.FILTER_THREE.value && data.length > ReportConstants.THIRTEEN_WEEKS) {
         chartData.mouseWheelZoomEnabled = true;
-        chartData.chartScrollbar = CommonGraphService.getBaseVariable(SCROLL);
+        chartData.chartScrollbar = CommonGraphService.getBaseVariable(CommonGraphService.SCROLL);
+        if (!data[0].balloon) {
+          chartData.chartScrollbar.selectedBackgroundColor = chartColors.grayLightOne;
+        }
       }
 
       return AmCharts.makeChart(activeUserDiv, chartData);
     }
 
     function getActiveUserBalloonText(graphDataItem, graph) {
+      var usersTitle = $translate.instant('activeUsers.users');
       var data = _.get(graphDataItem, 'dataContext');
       var hiddenData = _.get(graph, 'data[0].category');
-      var title = _.get(graph, 'title');
+      var title = _.get(graph, CommonGraphService.TITLE);
       var balloonText = '';
 
       if (title === usersTitle && data.date !== hiddenData) {
         balloonText = graphTextSpan + $translate.instant('activeUsers.registeredUsers') + boldNumberSpan + ' ' + data.totalRegisteredUsers + spanClose + spanClose;
       } else if (data.date !== hiddenData) {
-        balloonText = graphTextSpan + activeUsersTitle + boldNumberSpan + ' ' + data.activeUsers;
-        if (filterValue === 0) {
+        balloonText = graphTextSpan + $translate.instant('activeUsers.activeUsers') + boldNumberSpan + ' ' + data.activeUsers;
+        if (filterValue === ReportConstants.FILTER_ONE.value) {
           balloonText += ' (' + data.percentage + '%)';
         }
         balloonText += spanClose + spanClose;
@@ -157,7 +144,7 @@
       var colorsTwo = _.clone(colors);
       var fillAlphas = [0.5, 0.5];
       var values = ['totalRegisteredUsers', 'activeUsers'];
-      var titles = [usersTitle, activeUsersTitle];
+      var titles = [$translate.instant('activeUsers.users'), $translate.instant('activeUsers.activeUsers')];
       var graphs = [];
 
       if (!data[0].balloon) {
@@ -167,7 +154,7 @@
       }
 
       _.forEach(values, function (value, index) {
-        graphs.push(CommonGraphService.getBaseVariable(LINE));
+        graphs.push(CommonGraphService.getBaseVariable(CommonGraphService.LINE));
         graphs[index].bullet = 'none';
         graphs[index].title = titles[index];
         graphs[index].lineColor = colorsTwo[index];
@@ -185,7 +172,7 @@
 
     function showHideActiveLineGraph(chart, filter) {
       filterValue = filter.value;
-      if (filter.value === 0) {
+      if (filter.value === ReportConstants.FILTER_ONE.value) {
         chart.showGraph(chart.graphs[0]);
       } else {
         chart.hideGraph(chart.graphs[0]);
@@ -194,51 +181,46 @@
     }
 
     function createActiveUsersGraph(data) {
-      // if there are no active users for this user
-      if (data === null || data === 'undefined' || data.length === 0) {
-        return;
-      }
-
-      var valueAxes = [CommonGraphService.getBaseVariable(AXIS)];
+      var valueAxes = [CommonGraphService.getBaseVariable(CommonGraphService.AXIS)];
       valueAxes[0].integersOnly = true;
       valueAxes[0].minimum = 0;
 
-      var catAxis = CommonGraphService.getBaseVariable(AXIS);
-      catAxis.gridPosition = 'start';
+      var catAxis = CommonGraphService.getBaseVariable(CommonGraphService.AXIS);
+      catAxis.gridPosition = CommonGraphService.START;
 
       var startDuration = 1;
       if (!data[0].balloon) {
         startDuration = 0;
       }
 
-      var chartData = CommonGraphService.getBaseSerialGraph(data, startDuration, valueAxes, activeUserGraphs(data), 'date', catAxis);
-      chartData.numberFormatter = CommonGraphService.getBaseVariable(NUMFORMAT);
-      chartData.legend = CommonGraphService.getBaseVariable(LEGEND);
-      chartData.legend.labelText = '[[title]]';
+      var chartData = CommonGraphService.getBaseSerialGraph(data, startDuration, valueAxes, activeUserGraphs(data), CommonGraphService.DATE, catAxis);
+      chartData.numberFormatter = CommonGraphService.getBaseVariable(CommonGraphService.NUMFORMAT);
+      chartData.legend = CommonGraphService.getBaseVariable(CommonGraphService.LEGEND);
+      chartData.legend.labelText = '[[' + CommonGraphService.TITLE + ']]';
 
       return AmCharts.makeChart(activeUserDiv, chartData);
     }
 
     function activeUserGraphs(data) {
+      var balloonText = graphTextSpan + $translate.instant('activeUsers.registeredUsers') + ' <span class="graph-number">[[totalRegisteredUsers]]</span></span><br><span class="graph-text">' + $translate.instant('activeUsers.active') + ' <span class="graph-number">[[percentage]]%</span></span>';
       var colors = [chartColors.brandSuccessLight, chartColors.brandSuccessDark];
       if (!data[0].balloon) {
         colors = [chartColors.dummyGrayLight, chartColors.dummyGray];
       }
       var values = ['totalRegisteredUsers', 'activeUsers'];
-      var titles = [usersTitle, activeUsersTitle];
+      var titles = [$translate.instant('activeUsers.users'), $translate.instant('activeUsers.activeUsers')];
+
       var graphs = [];
-
-      for (var i = 0; i < values.length; i++) {
-        graphs.push(CommonGraphService.getBaseVariable(COLUMN));
-        graphs[i].title = titles[i];
-        graphs[i].fillColors = colors[i];
-        graphs[i].legendColor = colors[i];
-        graphs[i].valueField = values[i];
-        graphs[i].balloonText = activeUsersBalloonText;
-        graphs[i].showBalloon = data[0].balloon;
-        graphs[i].clustered = false;
-      }
-
+      _.forEach(values, function (value, index) {
+        graphs.push(CommonGraphService.getBaseVariable(CommonGraphService.COLUMN));
+        graphs[index].title = titles[index];
+        graphs[index].fillColors = colors[index];
+        graphs[index].legendColor = colors[index];
+        graphs[index].valueField = value;
+        graphs[index].balloonText = balloonText;
+        graphs[index].showBalloon = data[0].balloon;
+        graphs[index].clustered = false;
+      });
       return graphs;
     }
 
@@ -275,14 +257,10 @@
     }
 
     function createAvgRoomsGraph(data) {
-      if (data.length === 0) {
-        return;
-      }
+      var catAxis = CommonGraphService.getBaseVariable(CommonGraphService.AXIS);
+      catAxis.gridPosition = CommonGraphService.START;
 
-      var catAxis = CommonGraphService.getBaseVariable(AXIS);
-      catAxis.gridPosition = 'start';
-
-      var valueAxes = [CommonGraphService.getBaseVariable(AXIS)];
+      var valueAxes = [CommonGraphService.getBaseVariable(CommonGraphService.AXIS)];
       valueAxes[0].totalColor = chartColors.brandWhite;
       valueAxes[0].integersOnly = true;
       valueAxes[0].minimum = 0;
@@ -292,33 +270,33 @@
         startDuration = 0;
       }
 
-      var chartData = CommonGraphService.getBaseSerialGraph(data, startDuration, valueAxes, avgRoomsGraphs(data), 'date', catAxis);
-      chartData.numberFormatter = CommonGraphService.getBaseVariable(NUMFORMAT);
-      chartData.legend = CommonGraphService.getBaseVariable(LEGEND);
+      var chartData = CommonGraphService.getBaseSerialGraph(data, startDuration, valueAxes, avgRoomsGraphs(data), CommonGraphService.DATE, catAxis);
+      chartData.numberFormatter = CommonGraphService.getBaseVariable(CommonGraphService.NUMFORMAT);
+      chartData.legend = CommonGraphService.getBaseVariable(CommonGraphService.LEGEND);
 
       return AmCharts.makeChart(avgRoomsdiv, chartData);
     }
 
     function avgRoomsGraphs(data) {
+      var balloonText = graphTextSpan + $translate.instant('avgRooms.group') + ' <span class="room-number">[[groupRooms]]</span><br>' + $translate.instant('avgRooms.oneToOne') + ' <span class="room-number">[[oneToOneRooms]]</span><br>' + $translate.instant('avgRooms.avgTotal') + ' <span class="room-number">[[avgRooms]]</span></span>';
       var titles = ['avgRooms.group', 'avgRooms.oneToOne'];
       var values = ['totalRooms', 'oneToOneRooms'];
       var colors = [chartColors.primaryColorLight, chartColors.primaryColorDarker];
       if (data[0].colorOne !== undefined && data[0].colorOne !== null) {
         colors = [data[0].colorOne, data[0].colorTwo];
       }
+
       var graphs = [];
-
-      for (var i = 0; i < values.length; i++) {
-        graphs.push(CommonGraphService.getBaseVariable(COLUMN));
-        graphs[i].title = $translate.instant(titles[i]);
-        graphs[i].fillColors = colors[i];
-        graphs[i].valueField = values[i];
-        graphs[i].legendColor = colors[i];
-        graphs[i].showBalloon = data[0].balloon;
-        graphs[i].balloonText = avgRoomsBalloon;
-        graphs[i].clustered = false;
-      }
-
+      _.forEach(values, function (value, index) {
+        graphs.push(CommonGraphService.getBaseVariable(CommonGraphService.COLUMN));
+        graphs[index].title = $translate.instant(titles[index]);
+        graphs[index].fillColors = colors[index];
+        graphs[index].valueField = value;
+        graphs[index].legendColor = colors[index];
+        graphs[index].showBalloon = data[0].balloon;
+        graphs[index].balloonText = balloonText;
+        graphs[index].clustered = false;
+      });
       return graphs;
     }
 
@@ -339,14 +317,10 @@
     }
 
     function createFilesSharedGraph(data) {
-      if (data.length === 0) {
-        return;
-      }
+      var catAxis = CommonGraphService.getBaseVariable(CommonGraphService.AXIS);
+      catAxis.gridPosition = CommonGraphService.START;
 
-      var catAxis = CommonGraphService.getBaseVariable(AXIS);
-      catAxis.gridPosition = 'start';
-
-      var valueAxes = [CommonGraphService.getBaseVariable(AXIS)];
+      var valueAxes = [CommonGraphService.getBaseVariable(CommonGraphService.AXIS)];
       valueAxes[0].totalColor = chartColors.brandWhite;
       valueAxes[0].integersOnly = true;
       valueAxes[0].minimum = 0;
@@ -356,20 +330,22 @@
         startDuration = 0;
       }
 
-      var chartData = CommonGraphService.getBaseSerialGraph(data, startDuration, valueAxes, filesSharedGraphs(data), 'date', catAxis);
-      chartData.numberFormatter = CommonGraphService.getBaseVariable(NUMFORMAT);
+      var chartData = CommonGraphService.getBaseSerialGraph(data, startDuration, valueAxes, filesSharedGraphs(data), CommonGraphService.DATE, catAxis);
+      chartData.numberFormatter = CommonGraphService.getBaseVariable(CommonGraphService.NUMFORMAT);
 
       return AmCharts.makeChart(filesSharedDiv, chartData);
     }
 
     function filesSharedGraphs(data) {
-      var graph = CommonGraphService.getBaseVariable(COLUMN);
+      var balloonText = graphTextSpan + $translate.instant('filesShared.filesShared') + ' <span class="graph-number">[[contentShared]]</span><br>' + $translate.instant('filesShared.fileSizes') + ' <span class="graph-number">[[contentShareSizes]] ' + $translate.instant('filesShared.gb ') + '</span></span>';
+
+      var graph = CommonGraphService.getBaseVariable(CommonGraphService.COLUMN);
       graph.title = $translate.instant('filesShared.filesShared');
       graph.fillColors = data[0].color;
       graph.colorField = data[0].color;
       graph.valueField = 'contentShared';
       graph.showBalloon = data[0].balloon;
-      graph.balloonText = filesBalloon;
+      graph.balloonText = balloonText;
 
       return [graph];
     }
@@ -377,7 +353,7 @@
     function setMediaQualityGraph(data, chart, filter) {
       if (_.isArray(data) && data.length > 0 && chart) {
         chart.startDuration = 1;
-        if (data[0].colorOne !== undefined && data[0].colorOne !== null) {
+        if (!data[0].balloon) {
           chart.startDuration = 0;
         }
 
@@ -390,38 +366,34 @@
       return chart;
     }
 
-    function createMediaGraph(data, mediaFilter) {
-      if (data.length === 0) {
-        return;
-      }
+    function createMediaGraph(data, filter) {
+      var catAxis = CommonGraphService.getBaseVariable(CommonGraphService.AXIS);
+      catAxis.gridPosition = CommonGraphService.START;
 
-      var catAxis = CommonGraphService.getBaseVariable(AXIS);
-      catAxis.gridPosition = 'start';
-
-      var valueAxes = [CommonGraphService.getBaseVariable(AXIS)];
+      var valueAxes = [CommonGraphService.getBaseVariable(CommonGraphService.AXIS)];
       valueAxes[0].integersOnly = true;
       valueAxes[0].minimum = 0;
       valueAxes[0].title = $translate.instant('mediaQuality.minutes');
 
       var startDuration = 1;
-      if (data[0].colorOne !== undefined && data[0].colorOne !== null) {
+      if (!data[0].balloon) {
         startDuration = 0;
       }
 
-      var chartData = CommonGraphService.getBaseSerialGraph(data, startDuration, valueAxes, mediaGraphs(data, mediaFilter), 'date', catAxis);
-      chartData.numberFormatter = CommonGraphService.getBaseVariable(NUMFORMAT);
-      chartData.legend = CommonGraphService.getBaseVariable(LEGEND);
+      var chartData = CommonGraphService.getBaseSerialGraph(data, startDuration, valueAxes, mediaGraphs(data, filter), CommonGraphService.DATE, catAxis);
+      chartData.numberFormatter = CommonGraphService.getBaseVariable(CommonGraphService.NUMFORMAT);
+      chartData.legend = CommonGraphService.getBaseVariable(CommonGraphService.LEGEND);
 
       return AmCharts.makeChart(mediaQualityDiv, chartData);
     }
 
-    function mediaGraphs(data, mediaFilter) {
+    function mediaGraphs(data, filter) {
       var values = ['totalDurationSum', 'partialSum', 'poorQualityDurationSum'];
       var balloonValues = ['goodQualityDurationSum', 'fairQualityDurationSum', 'poorQualityDurationSum'];
-      if (mediaFilter.value === 1) {
+      if (filter.value === ReportConstants.FILTER_TWO.value) {
         values = ['totalAudioDurationSum', 'partialAudioSum', 'poorAudioQualityDurationSum'];
         balloonValues = ['goodAudioQualityDurationSum', 'fairAudioQualityDurationSum', 'poorAudioQualityDurationSum'];
-      } else if (mediaFilter.value === 2) {
+      } else if (filter.value === ReportConstants.FILTER_THREE.value) {
         values = ['totalVideoDurationSum', 'partialVideoSum', 'poorVideoQualityDurationSum'];
         balloonValues = ['goodVideoQualityDurationSum', 'fairVideoQualityDurationSum', 'poorVideoQualityDurationSum'];
       }
@@ -431,20 +403,19 @@
       if (!data[0].balloon) {
         colors = [chartColors.dummyGrayLighter, chartColors.dummyGrayLight, chartColors.dummyGray];
       }
+
       var graphs = [];
-
-      for (var i = 0; i < values.length; i++) {
-        graphs.push(CommonGraphService.getBaseVariable(COLUMN));
-        graphs[i].title = $translate.instant(titles[i]);
-        graphs[i].fillColors = colors[i];
-        graphs[i].colorField = colors[i];
-        graphs[i].valueField = values[i];
-        graphs[i].legendColor = colors[i];
-        graphs[i].showBalloon = data[0].balloon;
-        graphs[i].balloonText = '<span class="graph-text">' + $translate.instant('mediaQuality.totalCalls') + ': ' + ' <span class="graph-media">[[' + values[0] + ']]</span><br>' + $translate.instant(titles[i]) + ': ' + '<span class="graph-media"> [[' + balloonValues[i] + ']]</span></span>';
-        graphs[i].clustered = false;
-      }
-
+      _.forEach(colors, function (color, index) {
+        graphs.push(CommonGraphService.getBaseVariable(CommonGraphService.COLUMN));
+        graphs[index].title = $translate.instant(titles[index]);
+        graphs[index].fillColors = color;
+        graphs[index].colorField = color;
+        graphs[index].valueField = values[index];
+        graphs[index].legendColor = color;
+        graphs[index].showBalloon = data[0].balloon;
+        graphs[index].balloonText = '<span class="graph-text">' + $translate.instant('mediaQuality.totalCalls') + ': ' + ' <span class="graph-media">[[' + values[0] + ']]</span><br>' + $translate.instant(titles[index]) + ': ' + '<span class="graph-media"> [[' + balloonValues[index] + ']]</span></span>';
+        graphs[index].clustered = false;
+      });
       return graphs;
     }
 
@@ -470,19 +441,15 @@
     }
 
     function createDeviceGraph(data, filter) {
-      if (data.length === 0) {
-        return;
-      }
-
       var graphNumber = 0;
       if (filter && filter.value > 0) {
         graphNumber = filter.value;
       }
 
-      var catAxis = CommonGraphService.getBaseVariable(AXIS);
-      catAxis.gridPosition = 'start';
+      var catAxis = CommonGraphService.getBaseVariable(CommonGraphService.AXIS);
+      catAxis.gridPosition = CommonGraphService.START;
 
-      var valueAxes = [CommonGraphService.getBaseVariable(AXIS)];
+      var valueAxes = [CommonGraphService.getBaseVariable(CommonGraphService.AXIS)];
       valueAxes[graphNumber].integersOnly = true;
       valueAxes[graphNumber].minimum = 0;
 
@@ -491,8 +458,8 @@
         startDuration = 0;
       }
 
-      var chartData = CommonGraphService.getBaseSerialGraph(data[graphNumber].graph, startDuration, valueAxes, deviceGraphs(data, filter), 'date', catAxis);
-      chartData.numberFormatter = CommonGraphService.getBaseVariable(NUMFORMAT);
+      var chartData = CommonGraphService.getBaseSerialGraph(data[graphNumber].graph, startDuration, valueAxes, deviceGraphs(data, filter), CommonGraphService.DATE, catAxis);
+      chartData.numberFormatter = CommonGraphService.getBaseVariable(CommonGraphService.NUMFORMAT);
       return AmCharts.makeChart(devicesDiv, chartData);
     }
 
@@ -507,12 +474,12 @@
         graphNumber = filter.value;
       }
 
-      var graph = CommonGraphService.getBaseVariable(COLUMN);
+      var graph = CommonGraphService.getBaseVariable(CommonGraphService.COLUMN);
       graph.title = $translate.instant('registeredEndpoints.registeredEndpoints');
       graph.fillColors = color;
       graph.colorField = color;
       graph.valueField = 'totalRegisteredDevices';
-      graph.balloonText = deviceBalloonText;
+      graph.balloonText = graphTextSpan + $translate.instant('registeredEndpoints.registeredEndpoints') + ' <span class="device-number">[[totalRegisteredDevices]]</span></span>';
       graph.showBalloon = data[graphNumber].balloon;
 
       return [graph];
@@ -522,7 +489,7 @@
       if (data && chart) {
         chart.balloonText = metricsBalloonText;
         if (data.dummy) {
-          chart.balloonText = "";
+          chart.balloonText = '';
         }
 
         chart.dataProvider = data.dataProvider;
@@ -536,10 +503,10 @@
     function createMetricsGraph(data) {
       var balloonText = metricsBalloonText;
       if (data.dummy) {
-        balloonText = "";
+        balloonText = '';
       }
 
-      var chartData = CommonGraphService.getBasePieChart(data.dataProvider, balloonText, "65%", "30%", metricsLabelText, true, "callCondition", "percentage", "color", "color");
+      var chartData = CommonGraphService.getBasePieChart(data.dataProvider, balloonText, '65%', '30%', metricsLabelText, true, 'callCondition', 'percentage', CommonGraphService.COLOR, CommonGraphService.COLOR);
       return AmCharts.makeChart(metricsGraphDiv, chartData);
     }
   }

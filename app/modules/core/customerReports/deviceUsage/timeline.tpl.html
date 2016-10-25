@@ -1,3 +1,41 @@
-<div id="device-usage-timeline-chart" style="height: 400px; width: 90%; margin: 0 auto; margin-top: 2rem">
-</div>
+<div class="row timeline-report">
+  <div class="columns full">
+    <div class="range-wrapper">
+      <input cs-input type="radio" ng-change="deviceUsage.rangeChange()" ng-model="deviceUsage.dateRange" id="{{range.id}}" name="" ng-value="::range.value" cs-input-label="{{::range.label}}" ng-repeat="range in deviceUsage.dateRanges">
+    </div>
+  </div>
+  <div class="columns full">
+    <div id="device-usage-timeline-chart" class="device-usage-timeline-chart">
+    </div>
+    <div ng-show="deviceUsage.loading" class="loading-indicator">
+      <div class="loading-text">
+        Collecting data
+        <div cs-loader class="loader-example--small"></div>
+      </div>
+    </div>
+  </div>
+  <div ng-show="deviceUsage.showDevices" class="columns full">
+    <div class="table-container">
+      <h4>Device usage on {{deviceUsage.dateForDevices}}</h4>
+      <table class="table table-condensed table-striped">
+        <thead>
+          <tr>
+            <td>Device Id</td>
+            <td>Video Calls</td>
+            <td>Video Duration</td>
+            <td>Paired Count</td>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-repeat="device in deviceUsage.devices">
+            <td>{{device.id}}</td>
+            <td>{{device.videoCount}}</td>
+            <td>{{device.video}}</td>
+            <td>{{device.pairedCount}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
 
+</div>

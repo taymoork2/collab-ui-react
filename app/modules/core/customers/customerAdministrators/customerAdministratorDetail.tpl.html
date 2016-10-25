@@ -4,17 +4,22 @@
       <span class="section-name" translate="customerAdminPanel.addAdministrators"></span>
     </div>
     <div class="search">
-  	  <i class="icon icon-search"></i>
-  	  <div class="align-search-inputs">
-	      <input id="stateInput" type="text" ng-model="customerAdmin.selected"
-	            typeahead-template-url="stateTemplate.html"
-	            typeahead="searchUser for searchUser in customerAdmin.getPartnerUsers($viewValue)"
-	            typeahead-on-select="customerAdmin.selectAdmin($item)"
-	            placeholder="Enter new Administrator name or username"
-	            typeahead-wait-ms="500"
-              typeahead-no-results="customerAdmin.resultsError"
-	            ng-disabled="customerAdmin.disableAdminSearch" />
-        <span type="button" class="btn btn--primary inline search-add-button" ng-click="customerAdmin.addAdmin(customerAdmin.selected)">Add</span>
+      <i class="icon icon-search"></i>
+      <div class="align-search-inputs">
+        <input id="stateInput" type="text" ng-model="customerAdmin.selected"
+          typeahead-template-url="stateTemplate.html"
+          typeahead="searchUser for searchUser in customerAdmin.getPartnerUsers($viewValue)"
+          typeahead-on-select="customerAdmin.selectAdmin($item)"
+          placeholder="Enter new Administrator name or username"
+          typeahead-wait-ms="500"
+          typeahead-no-results="customerAdmin.resultsError"
+          ng-disabled="customerAdmin.disableAdminSearch" />
+        <button
+          cs-btn
+          loading="customerAdmin.loading"
+          class="btn btn--primary inline search-add-button"
+          ng-click="customerAdmin.addCustomerAdmin(customerAdmin.selected)"
+          ng-disabled="!customerAdmin.canAddUser()">Add</button>
       </div>
       <span ng-if="customerAdmin.resultsError">{{customerAdmin.resultsErrorMessage}}</span>
      </div>
@@ -22,17 +27,17 @@
       <span class="section-name" translate="customerAdminPanel.administrators"></span>
     </div>
     <div class="feature-list">
-    	<ul>
-    		<li class="feature" ng-repeat= "administrator in customerAdmin.administrators | orderBy: 'fullName'">
-    			<a>
-    				<span class="feature-name">{{administrator.fullName}}</span>
-    				<span type="button" class="icon icon-close close-icon-height" ng-click="customerAdmin.removeSalesAdmin(administrator.uuid, administrator.fullName)">
-    				</span>
-    			</a>
-    		</li>
-    	</ul>
-  	</div>
+      <ul>
+        <li class="feature" ng-repeat= "user in customerAdmin.assignedAdmins | orderBy: 'fullName'">
+          <a>
+            <span class="feature-name">{{user.fullName}}</span>
+            <span type="button" class="icon icon-close close-icon-height" ng-click="customerAdmin.removeCustomerAdmin(user.fullName)">
+            </span>
+          </a>
+        </li>
+      </ul>
+    </div>
    <script type="text/ng-template" id="stateTemplate.html">
-      <a><span ng-bind-html="match.label | typeaheadHighlight:query"></span></a>
+     <a><span ng-bind-html="match.label | typeaheadHighlight:query"></span></a>
    </script>
 </cs-sp-container>

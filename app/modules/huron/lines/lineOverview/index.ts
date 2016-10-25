@@ -1,12 +1,14 @@
 import { LineOverviewComponent } from './lineOverview.component';
 import { LineOverviewService } from './lineOverview.service';
-import lineServiceModule from '../services';
+import lineService from '../services';
 import directoryNumber from '../../directoryNumber';
 import callForward from '../../callForward';
 import simultaneousCalls from '../../simultaneousCalls';
 import callerId from '../../callerId';
 import sharedLine from '../../sharedLine';
 import siteService from '../../sites';
+import memberService from '../../members';
+import notifications from 'modules/core/notifications';
 
 export * from './lineOverview.service';
 
@@ -18,12 +20,13 @@ export default angular
     directoryNumber,
     callForward,
     simultaneousCalls,
-    lineServiceModule,
+    lineService,
     callerId,
     sharedLine,
     require('modules/core/config/config'),
-    require('modules/core/notifications/notifications.module'),
+    notifications,
     siteService,
+    memberService,
   ])
   .component('ucLineOverview', new LineOverviewComponent())
   .service('LineOverviewService', LineOverviewService)

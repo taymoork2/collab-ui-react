@@ -105,6 +105,7 @@ describe('Controller: TrialAddCtrl', function () {
   it('should set call trial to false and disable pstn trial', function () {
     controller.pstnTrial.enabled = true;
     controller.callTrial.enabled = false;
+    controller.roomSystemTrial.enabled = false;
     $scope.$apply();
     expect(controller.pstnTrial.enabled).toBeFalsy();
   });

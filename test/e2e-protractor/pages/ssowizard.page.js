@@ -1,32 +1,45 @@
 'use strict';
 
+var fs = require('fs');
+var path = require('path');
+
 var SSOWizardPage = function () {
-
-  this.btnSSO = element(by.id('btnSSO'));
-  this.ssoModalHeader = element(by.id('ssoModalHeader'));
-
-  this.fileToUploadText = element(by.id('fileToUploadText'));
-  this.fileToUploadBtn = element(by.id('fileToUploadBtn'));
-  this.fileToUploadTextHolder = element(by.id('fileToUploadTextHolder'));
-  this.fileToUploadBtnHolder = element(by.id('fileToUploadBtnHolder'));
-  this.importCancelBtn = element(by.id('importCancelBtn'));
-  this.importNextBtn = element(by.id('importNextBtn'));
-
+  this.viewSsoSettings = element(by.id('viewSsoSettings'));
   this.downloadMeta = element(by.id('downloadMeta'));
-  this.exportCancelBtn = element(by.id('exportCancelBtn'));
-  this.exportBackBtn = element(by.id('exportBackBtn'));
-  this.exportNextBtn = element(by.id('exportNextBtn'));
+  this.testSsoConnectionBtn = element(by.id('testSsoConnectionBtn'));
+  this.fileToUploadBtnHolder = element(by.id('fileToUploadBtnHolder'));
 
-  this.ssoTestBtn = element(by.id('ssoTestBtn'));
-  this.testssoCancelBtn = element(by.id('testssoCancelBtn'));
-  this.testssoBackBtn = element(by.id('testssoBackBtn'));
-  this.testssoNextBtn = element(by.id('testssoNextBtn'));
+  this.nextBtnIsPresent = function () {
+    return browser.driver.isElementPresent(by.buttonText('Next'));
+  };
 
-  this.enablessoCancelBtn = element(by.id('enablessoCancelBtn'));
-  this.enablessoBackBtn = element(by.id('enablessoBackBtn'));
-  this.enablessoFinishBtn = element(by.id('enablessoFinishBtn'));
+  this.testBrowserFileDownload = function (filename) {
+    if (fs.existsSync(filename)) {
+      // Make sure the browser doesn't have to rename the download.
+      fs.unlinkSync(filename);
+    }
+    this.initiateMetaDataDownload();
+    browser.driver.wait(function () {
+      return fs.existsSync(filename);
+    }, 5000).then(function () {
+      expect(fs.readFileSync(filename, { encoding: 'utf8' }));
+    });
+  };
 
-  this.closeSSOModal = element(by.id('closeSSOModal'));
+  this.initiateMetaDataDownload = function () {
+    utils.waitForAttribute(this.downloadMeta, 'download', 'idb-meta-3aa8a8a2-b953-4905-b678-0ae0a3f489f8-SP.xml');
+    utils.click(ssowizard.downloadMeta);
+  };
+
+  this.uploadMetaData = function () {
+    var fileToUpload = '../data/federation-metadata.xml', absolutePath = path.resolve(__dirname, fileToUpload);
+    utils.fileSendKeys(this.fileToUploadBtnHolder, absolutePath);
+  };
+
+  this.expectSSOSucceeded = function () {
+    return expect($('.notificationWrap').getText()).toContain('Single Sign-on succeeded.');
+  };
+
 };
 
 module.exports = SSOWizardPage;

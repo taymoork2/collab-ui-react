@@ -2,9 +2,9 @@
   @extend %grid-subheader;
   @extend %page-background-white;
 
-  .ui-grid-cell:first-child ,
-  .ui-grid-header-cell:first-child  {
-   border-right: 0px;
+  .ui-grid-cell:first-child,
+  .ui-grid-header-cell:first-child {
+    border-right: 0px;
 
     .space_avatar {
       margin: 4px 5px 4px 30px;
@@ -14,45 +14,55 @@
 }
 
 .none_found {
+  @include vr-spacing(pt, 10);
+
   display: flex;
   flex-direction: column;
   overflow: hidden;
   overflow-y: auto;
   flex: 1;
-  @include vr-spacing(pt, 10);
   background-color: $gray-lightest;
   align-items: center;
   justify-content: center;
+
   i {
     font-size: 7em;
+
     @include vr-spacing(mb, 1.5);
   }
+
   button {
     @include vr-spacing(mt, 1);
   }
-  h4, h1 {
-    @include vr-spacing(mv, .5);
+
+  h4,
+  h1 {
+    @include vr-spacing(mv, 0.5);
   }
-  i, h5 {
+
+  i,
+  h5 {
     color: $gray-light-1;
   }
 }
-
 
 .sq-devices-page-overview {
   .activation-code-pane h3 {
     color: $color-people-light;
   }
+
   .message-container {
     position: absolute;
     left: 0;
     right: 0;
     padding: 50px;
     text-align: center;
+
     img {
       width: 200px;
     }
   }
+
   .add-device-modal .alert {
     border: 0;
     padding: 15px;
@@ -72,7 +82,7 @@
     background: white;
     border-radius: 100px;
     box-shadow: 1px 1px 5px #666;
-    padding: 9px 10px 6px 10px;
+    padding: 9px 10px 6px;
   }
 
   .btn-action {
@@ -82,11 +92,11 @@
   .activationOverview {
     display: flex;
     flex-direction: column;
-    align-items: center
+    align-items: center;
   }
 
   .activationImage {
-    margin: 15px 0 40px 0;
+    margin: 15px 0 40px;
     width: 116px;
   }
 
@@ -104,6 +114,7 @@
     display: flex;
     align-items: center;
     justify-content: flex-start;
+
     @include vr-spacing(pt, 1.5);
   }
 
@@ -114,6 +125,7 @@
 
   .overviewDescription {
     margin: 0 0 0 15px;
+
     p {
       font-size: 1.1rem;
     }
@@ -155,12 +167,14 @@
   margin-left: 10px;
 }
 
-.modal-success, .modal-warning {
+.modal-success,
+.modal-warning {
   padding: 10px 20px;
   margin: 0 30px;
   color: white;
   display: flex;
   align-items: center;
+
   i {
     padding-right: 15px;
     font-size: 1.5rem;
@@ -188,76 +202,95 @@
     white-space: nowrap;
     display: flex;
     align-items: center;
-    padding: 2px 8px 0 8px;
+    padding: 2px 8px 0;
     background-color: #eee;
-    color: #6A6B6C;
+    color: #6a6b6c;
   }
+
   .add-tag {
     background-color: #c5e9f7;
+
     i {
       font-size: 20px;
     }
   }
+
   .add-tag:hover {
     cursor: pointer;
     color: $link-color;
   }
+
   i {
     padding-left: 10px;
     font-size: 12px;
   }
+
   i:hover {
     cursor: pointer;
     color: $link-color;
   }
-  input[type=text] {
+
+  input[type='text'] {
     border: 0;
     margin: 0;
     padding: 0;
     display: inline;
     border-bottom: 1px solid $brand-primary;
-    width: 100px;
     border-radius: 0;
     transition: initial;
     font-size: 14px;
     outline: none !important;
     box-shadow: none !important;
   }
+
   a {
-    font-size: .7rem;
+    font-size: 0.7rem;
   }
 }
 
 /* widgets */
 .editable-input {
   padding-top: 5px;
-  &, .read-only-value, form {
+
+  &,
+  .read-only-value,
+  form {
     display: flex;
     align-items: center;
   }
-  i, input {
+
+  i,
+  input {
     font-size: 22px;
   }
+
   i {
     color: #999;
     cursor: pointer;
   }
-  i:hover, .read-only-value:hover i {
+
+  i:hover,
+  .read-only-value:hover i {
     color: #000;
   }
+
   .read-only-value span {
     cursor: pointer;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
   }
+
   input {
     width: 320px;
   }
+
   .read-only-value span {
     max-width: 320px;
   }
-  .read-only-value span, input {
+
+  .read-only-value span,
+  input {
     padding-right: 10px;
   }
 }
@@ -275,18 +308,23 @@
 
   .typeChoice {
     display: flex;
-    @media screen and (max-width: 500px){
+
+    @media screen and (max-width: 500px) {
       flex-wrap: wrap;
     }
 
     .typeButtonWrapper {
       flex-basis: 50%;
-      @media screen and (max-width: 500px){
+
+      @media screen and (max-width: 500px) {
         flex-grow: 1;
       }
+
       margin-bottom: 16px;
+
       .typeButton {
         @extend .ui-grid-disable-selection;
+
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -313,7 +351,8 @@
         border: solid 1px #049fd9;
       }
 
-      .typeButtonClicked, .typeButtonClicked:hover {
+      .typeButtonClicked,
+      .typeButtonClicked:hover {
         border: solid 2px #049fd9;
         padding: 0;
       }
@@ -328,6 +367,7 @@
 .errorBox {
   display: flex;
   align-items: flex-start;
+
   .icon {
     margin: 3px 8px 0 0;
     color: #f5a623;
@@ -336,12 +376,15 @@
 
 .choose-shared {
   display: flex;
-  .createNewPlace, .chooseExistingPlace {
+
+  .createNewPlace,
+  .chooseExistingPlace {
     flex-grow: 1;
     display: flex;
   }
 
-  .createNewPlaceForm, .chooseExistingPlaceForm {
+  .createNewPlaceForm,
+  .chooseExistingPlaceForm {
     //flex-basis: 50%;
     display: flex;
     flex-direction: column;
@@ -404,7 +447,7 @@
       height: 16px;
     }
 
-    .loading{
+    .loading {
       font-size: 3em;
     }
 
@@ -421,11 +464,17 @@
     .qrCodeButtons {
       margin-top: 32px;
 
-      a, span {
+      a,
+      span {
         font-size: 16px;
       }
-      .qrCodeRightButton {
-        margin-left: 24px;
+
+      a {
+        margin-right: 24px;
+
+        &:last-child {
+          margin-right: 0;
+        }
       }
     }
 
@@ -441,11 +490,13 @@
           width: 22px;
         }
 
-        .sendMailArrow, .userInput {
+        .sendMailArrow,
+        .userInput {
           margin-left: 8px;
         }
 
-        .selectedAddress, .userSearch {
+        .selectedAddress,
+        .userSearch {
           display: flex;
           justify-content: center;
 
@@ -478,9 +529,11 @@
       }
     }
   }
+
   .btn {
     transition: none;
   }
+
   #newRoom {
     margin-top: 10px;
     margin-bottom: 25px;
@@ -491,9 +544,11 @@
   h3 {
     display: flex;
   }
+
   input {
     margin-right: 15px;
   }
+
   #display-key {
     width: 100%;
   }
@@ -506,12 +561,15 @@
 .device-status-red {
   color: $brand-danger;
 }
+
 .device-status-yellow {
   color: $brand-warning;
 }
+
 .device-status-green {
   color: $brand-success;
 }
+
 .device-status-gray {
   color: $gray;
 }

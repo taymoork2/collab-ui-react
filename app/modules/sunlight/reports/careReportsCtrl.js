@@ -1,8 +1,9 @@
 (function () {
   'use strict';
+
   angular.module('Sunlight').controller('CareReportsController', CareReportsController);
   /* @ngInject */
-  function CareReportsController($timeout, $translate, CareReportsService, DummyCareReportService, Notification, SunlightReportService) {
+  function CareReportsController($timeout, $translate, CareReportsService, DummyCareReportService, Notification, ReportConstants, SunlightReportService) {
     var vm = this;
     var REFRESH = 'refresh';
     var SET = 'set';
@@ -20,7 +21,17 @@
     vm.currentFilter = vm.allReports;
     vm.displayEngagement = true;
     vm.displayQuality = true;
-    vm.resetCards = resetCards;
+
+    vm.filterArray = _.cloneDeep(ReportConstants.filterArray);
+    vm.filterArray[0].toggle = function () {
+      resetCards(vm.allReports);
+    };
+    vm.filterArray[1].toggle = function () {
+      resetCards(vm.engagement);
+    };
+    vm.filterArray[2].toggle = function () {
+      resetCards(vm.quality);
+    };
 
     vm.timeFilter = null;
 

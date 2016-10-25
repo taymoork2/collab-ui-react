@@ -5,18 +5,7 @@
     .service('DummyCustomerReportService', DummyCustomerReportService);
 
   /* @ngInject */
-  function DummyCustomerReportService($translate, chartColors) {
-    var dayFormat = 'MMM DD';
-    var monthFormat = 'MMMM';
-
-    // timespan values
-    var days = 7;
-    var weeks = 3;
-    var lineWeeks = 4;
-    var months = 2;
-    var thirteenWeeks = 12;
-    var year = 52;
-
+  function DummyCustomerReportService($translate, chartColors, ReportConstants) {
     return {
       dummyActiveUserData: dummyActiveUserData,
       dummyAvgRoomData: dummyAvgRoomData,
@@ -27,14 +16,14 @@
     };
 
     function getCommonData(filter, index) {
-      var count = days - index;
-      var date = moment().subtract(index, 'day').format(dayFormat);
+      var count = ReportConstants.DAYS - index;
+      var date = moment().subtract(index, ReportConstants.DAY).format(ReportConstants.DAY_FORMAT);
       if (filter.value === 1) {
-        count = weeks - index;
-        date = moment().startOf('week').subtract(1 + (index * 7), 'day').format(dayFormat);
+        count = ReportConstants.WEEKS - index;
+        date = moment().startOf(ReportConstants.WEEK).subtract(1 + (index * 7), ReportConstants.DAY).format(ReportConstants.DAY_FORMAT);
       } else if (filter.value === 2) {
-        count = months - index;
-        date = moment().subtract(index, 'month').format(monthFormat);
+        count = ReportConstants.MONTHS - index;
+        date = moment().subtract(index, ReportConstants.MONTH).format(ReportConstants.MONTH_FORMAT);
       }
 
       return {
@@ -54,22 +43,20 @@
       var timespan;
 
       if (filter.value === 0) {
-        timespan = days - 1;
+        timespan = ReportConstants.DAYS - 1;
         if (lineGraph) {
-          timespan = days;
+          timespan = ReportConstants.DAYS;
         }
       } else if (filter.value === 1) {
-        timespan = weeks;
+        timespan = ReportConstants.WEEKS;
         if (lineGraph) {
-          timespan = lineWeeks;
-        }
-      } else if (filter.value === 2) {
-        timespan = months;
-        if (lineGraph) {
-          timespan = thirteenWeeks;
+          timespan = ReportConstants.LINE_WEEKS;
         }
       } else {
-        timespan = year;
+        timespan = ReportConstants.MONTHS;
+        if (lineGraph) {
+          timespan = ReportConstants.YEAR;
+        }
       }
       for (var i = timespan; i >= 0; i--) {
         dummyGraph.push(getActiveUserDataPoint(filter, i, lineGraph, timespan - i));
@@ -83,9 +70,9 @@
 
       if (lineGraph) {
         if (filter.value === 0) {
-          date = moment().subtract(index + 1, 'day').format(dayFormat);
+          date = moment().subtract(index + 1, ReportConstants.DAY).format(ReportConstants.DAY_FORMAT);
         } else {
-          date = moment().day(-1).subtract(index, 'week').format(dayFormat);
+          date = moment().day(-1).subtract(index, ReportConstants.WEEK).format(ReportConstants.DAY_FORMAT);
         }
       } else {
         if (filter.value === 0) {
@@ -108,23 +95,7 @@
     }
 
     function dummyAvgRoomData(filter) {
-      var dummyGraph = [];
-
-      if (filter.value === 0) {
-        for (var i = days; i >= 1; i--) {
-          dummyGraph.push(getAvgRoomDataPoint(filter, i));
-        }
-      } else if (filter.value === 1) {
-        for (var x = weeks; x >= 0; x--) {
-          dummyGraph.push(getAvgRoomDataPoint(filter, x));
-        }
-      } else {
-        for (var y = months; y >= 0; y--) {
-          dummyGraph.push(getAvgRoomDataPoint(filter, y));
-        }
-      }
-
-      return dummyGraph;
+      return getDummyData(filter, getAvgRoomDataPoint);
     }
 
     function getAvgRoomDataPoint(filter, index) {
@@ -143,23 +114,7 @@
     }
 
     function dummyFilesSharedData(filter) {
-      var dummyGraph = [];
-
-      if (filter.value === 0) {
-        for (var i = days; i >= 1; i--) {
-          dummyGraph.push(getFilesSharedDataPoint(filter, i));
-        }
-      } else if (filter.value === 1) {
-        for (var x = weeks; x >= 0; x--) {
-          dummyGraph.push(getFilesSharedDataPoint(filter, x));
-        }
-      } else {
-        for (var y = months; y >= 0; y--) {
-          dummyGraph.push(getFilesSharedDataPoint(filter, y));
-        }
-      }
-
-      return dummyGraph;
+      return getDummyData(filter, getFilesSharedDataPoint);
     }
 
     function getFilesSharedDataPoint(filter, index) {
@@ -175,23 +130,7 @@
     }
 
     function dummyMediaData(filter) {
-      var dummyGraph = [];
-
-      if (filter.value === 0) {
-        for (var i = days; i >= 1; i--) {
-          dummyGraph.push(getMediaDataPoint(filter, i));
-        }
-      } else if (filter.value === 1) {
-        for (var x = weeks; x >= 0; x--) {
-          dummyGraph.push(getMediaDataPoint(filter, x));
-        }
-      } else {
-        for (var y = months; y >= 0; y--) {
-          dummyGraph.push(getMediaDataPoint(filter, y));
-        }
-      }
-
-      return dummyGraph;
+      return getDummyData(filter, getMediaDataPoint);
     }
 
     function getMediaDataPoint(filter, index) {
@@ -238,27 +177,31 @@
     }
 
     function dummyDeviceData(filter) {
+      return [{
+        deviceType: $translate.instant('registeredEndpoints.allDevices'),
+        graph: getDummyData(filter, getDeviceDataPoint),
+        balloon: false
+      }];
+    }
+
+    function getDummyData(filter, callFunction) {
       var dummyGraph = [];
 
       if (filter.value === 0) {
-        for (var i = days; i >= 1; i--) {
-          dummyGraph.push(getDeviceDataPoint(filter, i));
+        for (var i = ReportConstants.DAYS; i >= 1; i--) {
+          dummyGraph.push(callFunction(filter, i));
         }
       } else if (filter.value === 1) {
-        for (var x = weeks; x >= 0; x--) {
-          dummyGraph.push(getDeviceDataPoint(filter, x));
+        for (var x = ReportConstants.WEEKS; x >= 0; x--) {
+          dummyGraph.push(callFunction(filter, x));
         }
       } else {
-        for (var y = months; y >= 0; y--) {
-          dummyGraph.push(getDeviceDataPoint(filter, y));
+        for (var y = ReportConstants.MONTHS; y >= 0; y--) {
+          dummyGraph.push(callFunction(filter, y));
         }
       }
 
-      return [{
-        deviceType: $translate.instant('registeredEndpoints.allDevices'),
-        graph: dummyGraph,
-        balloon: false
-      }];
+      return dummyGraph;
     }
   }
 })();

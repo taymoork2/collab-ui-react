@@ -44,6 +44,7 @@
     'timer',
     'toaster',
     'dragularModule',
+    require('modules/core/analytics'),
     require('modules/core/featureToggle/featureToggle.service'),
     require('modules/core/scripts/services/org.service'),
     require('modules/online/digitalRiver').default // TODO make core.myCompany independent module
@@ -66,11 +67,15 @@
     'uc.hurondetails',
     'uc.cdrlogsupport',
     'ngIcal',
+    'huron.paging-group',
     'huron.telephoneNumber',
     require('modules/huron/telephony/telephonyConfig'),
+    require('modules/huron/telephony/cmiServices'),
   ]);
 
   angular.module('Hercules', ['Core', 'Squared', 'core.onboard', 'ngTagsInput']);
+
+  angular.module('HDS', ['Core']);
 
   angular.module('Ediscovery', ['Core']);
 
@@ -95,6 +100,7 @@
     'Hercules',
     'Ediscovery',
     'Mediafusion',
+    'HDS',
     'WebExApp',
     'Messenger',
     'Sunlight',

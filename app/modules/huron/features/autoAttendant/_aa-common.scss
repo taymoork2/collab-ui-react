@@ -1,0 +1,15 @@
+aa-message-line-break {
+  @include vr-spacing(mb, 0.5);
+
+  border-bottom: 2px solid $gray-light-1;
+  width: 97%;
+  margin-left: 1.5%;
+}
+
+.aa-message-subtext {
+  @include vr-spacing(mb, 0.75);
+
+  color: $gray-light-1;
+  font-style: italic;
+}
+

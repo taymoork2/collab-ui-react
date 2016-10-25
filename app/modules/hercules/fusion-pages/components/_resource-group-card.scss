@@ -2,6 +2,10 @@ resource-group-card {
   display: block;
   width: 100%;
 
+  .icon-warning.danger {
+    color: $color-negative-base;
+  }
+
   .cs-card-layout {
     padding-bottom: 0 !important;
     margin: 0 !important;
@@ -15,8 +19,9 @@ resource-group-card {
       border-bottom: 1px solid $gray-light-3;
 
       > button > h4 {
-        display: inline;
         @include text-overflow;
+
+        display: inline;
         font-size: 16px;
         margin-right: auto;
       }
@@ -37,15 +42,27 @@ resource-group-card {
         width: 1rem;
         margin-top: -2px;
       }
+
+      &:focus {
+        box-shadow: none;
+      }
     }
 
-    .resource-group-release-channel {
+    .resource-group-release-channel,
+    .resource-group-release-cluster-number {
       font-size: 14px;
       margin-right: 1.25rem;
     }
 
-    .resource-group-release-cluster-number {
+    .resource-group-release-cluster-users {
+      display: flex;
+      align-items: center;
       font-size: 14px;
+
+      .icon-warning {
+        margin-top: -4px;
+        margin-right: 3px;
+      }
     }
 
     .resource-group-settings-link {
@@ -56,6 +73,10 @@ resource-group-card {
         display: block;
         margin-top: -2px;
       }
+
+      &:focus {
+        box-shadow: none;
+      }
     }
 
     .resource-group-banner {
@@ -65,8 +86,13 @@ resource-group-card {
       text-align: center;
     }
 
+    .resource-group-banner-error {
+      background-color: $color-negative-lighter;
+    }
+
     .resource-group-banner-message {
       font-size: 14px;
+
       a {
         color: inherit;
         text-decoration: underline;
@@ -83,7 +109,7 @@ resource-group-card {
   cluster-card {
     position: relative;
 
-    &:after {
+    &::after {
       content: '';
       position: absolute;
       top: 0;
@@ -91,16 +117,16 @@ resource-group-card {
       width: 1px;
     }
 
-    &:nth-child(3n):after {
+    &:nth-child(3n)::after {
       width: 0;
     }
 
-    &:nth-child(3n+1):after {
+    &:nth-child(3n+1)::after {
       right: 5px;
       background-color: $gray-light-3;
     }
 
-    &:nth-child(3n+2):after {
+    &:nth-child(3n+2)::after {
       right: -2px;
       background-color: $gray-light-3;
     }
@@ -112,10 +138,12 @@ resource-group-card {
 
       header {
         padding: 0 !important;
-        &:after {
+
+        &::after {
           height: 0 !important;
           border-top: 0 !important;
         }
+
         h4 {
           padding-top: 0;
         }

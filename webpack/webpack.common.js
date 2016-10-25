@@ -1,19 +1,10 @@
-// notes:
-// - segfaults have been occurring more recently (roughly starting around 2016-07-ish)
-// - register this to acquire more debugging info
-// - TODO: consider removing this once no longer needed
-const segfaultHandler = require('segfault-handler');
-
-const dateStr = new Date().toISOString().replace(/:/g, '_');
-const crashLogFile = `webpack-segfault-crash--${dateStr}.log`;
-segfaultHandler.registerHandler(crashLogFile);
-
 const webpack = require('webpack');
 const _ = require('lodash');
 const args = require('yargs').argv;
 const path = require('path');
 const loaders = require('./loaders');
 const autoprefixer = require('autoprefixer');
+// const StyleLintPlugin = require('stylelint-webpack-plugin');
 
 const host = args.host || '127.0.0.1';
 const port = args.port || '8000';
@@ -102,6 +93,14 @@ module.exports = (function makeWebpackConfig() {
       X2JS: 'x2js',
     }),
   ];
+
+  // Activate once IntelliJ / WebStorm supports stylelint
+  // if (!args.nolint) {
+  //   config.plugins.push(new StyleLintPlugin({
+  //     configFile: '.stylelintrc.js',
+  //     failOnError: true,
+  //   }));
+  // }
 
   config.resolve = {
     extensions: ['', '.ts', '.js', '.json', '.css', '.scss', '.html'],

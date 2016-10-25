@@ -6,9 +6,13 @@
     .controller('TrialPstnCtrl', TrialPstnCtrl);
 
   /* @ngInject */
-  function TrialPstnCtrl($scope, $state, $timeout, $translate, Analytics, Authinfo, Notification, PstnSetupService, TelephoneNumberService, TerminusStateService, TrialPstnService) {
+  function TrialPstnCtrl($scope, $timeout, $translate, Analytics, Authinfo, Notification, PstnSetupService, TelephoneNumberService, TerminusStateService, FeatureToggleService, TrialPstnService, TrialService) {
     var vm = this;
 
+    var NXX = 'nxx';
+    var NXX_EMPTY = '--';
+
+    vm.parentTrialData = $scope.$parent.trialData;
     vm.trialData = TrialPstnService.getData();
     vm.customerId = Authinfo.getOrgId();
     var pstnTokenLimit = 10;
@@ -16,12 +20,23 @@
     vm.providerImplementation = vm.SWIVEL;
 
     vm.getStateInventory = getStateInventory;
+    vm.onAreaCodeChange = onAreaCodeChange;
+    vm.onNxxChange = onNxxChange;
     vm.searchCarrierInventory = searchCarrierInventory;
     vm.checkForInvalidTokens = checkForInvalidTokens;
     vm.skip = skip;
     vm.disableNextButton = disableNextButton;
+    vm.showNXXSearch = false;
 
     vm._getCarriers = _getCarriers;
+
+    vm.pstn = {
+      stateOptions: [],
+      areaCodeOptions: null,
+      areaCodeEnable: false,
+      nxxOptions: null,
+      nxxEnable: false
+    };
 
     //TATA Tokenfield
     vm.manualUnsavedTokens = [];
@@ -124,52 +139,15 @@
       },
     }];
 
-    vm.pstnStateAreaFields = [{
-      model: vm.trialData.details.pstnNumberInfo,
-      key: 'state',
-      type: 'select',
-      className: 'medium-8 state-dropdown inline-row left',
-      templateOptions: {
-        inputClass: 'medium-11',
-        label: $translate.instant('pstnSetup.state'),
-        labelfield: 'name',
-        valuefield: 'abbreviation',
-        onChangeFn: getStateInventory,
-        options: [],
-        filter: true
-      },
-      controller: /* @ngInject */ function ($scope) {
-        TerminusStateService.query().$promise.then(function (states) {
-          $scope.to.options = states;
-        });
-      }
-    }, {
-      model: vm.trialData.details.pstnNumberInfo,
-      key: 'areaCode',
-      id: 'areaCode',
-      type: 'select',
-      className: 'medium-4 inline-row left',
-      templateOptions: {
-        required: true,
-        label: $translate.instant('pstnSetup.areaCode'),
-        labelfield: 'code',
-        valuefield: 'code',
-        options: [],
-        onChangeFn: searchCarrierInventory
-      },
-      controller: /* @ngInject */ function ($scope) {
-        $scope.$watchCollection(function () {
-          return vm.areaCodeOptions;
-        }, function (newAreaCodes) {
-          newAreaCodes = newAreaCodes || [];
-          $scope.to.options = _.sortBy(newAreaCodes, 'code');
-        });
-      }
-    }];
-
     init();
 
     function init() {
+      TerminusStateService.query().$promise.then(function (states) {
+        vm.pstn.stateOptions = states;
+      });
+
+      toggleNXXSearchFeature();
+      TrialService.sendToAnalytics(Analytics.eventNames.ENTER_SCREEN, vm.parentTrialData);
       if (_.has(vm.trialData, 'details.pstnNumberInfo.state.abbreviation')) {
         getStateInventory();
       }
@@ -192,26 +170,89 @@
     }
 
     function skip(skipped) {
-      Analytics.trackTrialSteps(Analytics.eventNames.SKIP, $state.current.name, Authinfo.getOrgId());
+      TrialService.sendToAnalytics(Analytics.eventNames.SKIP, vm.parentTrialData);
       vm.trialData.enabled = !skipped;
       vm.trialData.skipped = skipped;
       $timeout($scope.trial.nextStep);
     }
 
-    function getStateInventory() {
-      vm.areaCodeOptions = [];
-      vm.trialData.details.pstnNumberInfo.areaCode.code = null;
-      PstnSetupService.getCarrierInventory(vm.trialData.details.pstnProvider.uuid, vm.trialData.details.pstnNumberInfo.state.abbreviation)
-        .then(function (response) {
-          _.forEach(response.areaCodes, function (areaCode) {
-            if (areaCode.count >= pstnTokenLimit) {
-              vm.areaCodeOptions.push(areaCode);
-            }
-          });
-        })
-        .catch(function (response) {
-          Notification.errorResponse(response, 'trialModal.pstn.error.areaCodes');
+    function toggleNXXSearchFeature() {
+      FeatureToggleService
+        .supports(FeatureToggleService.features.huronNxxSearch)
+        .then(function (result) {
+          vm.showNXXSearch = result;
         });
+    }
+
+    function getStateInventory() {
+      vm.pstn.areaCodeOptions = [];
+      vm.trialData.details.pstnNumberInfo.areaCode = null;
+      vm.trialData.details.pstnNumberInfo.nxx = null;
+      vm.pstn.nxxEnable = false;
+      resetNumbers();
+      PstnSetupService.getCarrierInventory(
+        vm.trialData.details.pstnProvider.uuid,
+        vm.trialData.details.pstnNumberInfo.state.abbreviation
+      ).then(
+        function (response) {
+          var options = [];
+          vm.pstn.areaCodeEnable = true;
+          _.forEach(response.areaCodes,
+            function (areaCode) {
+              if (areaCode.count >= pstnTokenLimit) {
+                options.push(areaCode);
+              }
+            }
+          );
+          vm.pstn.areaCodeOptions = _.sortBy(options, 'code');
+        }
+      ).catch(
+        function (response) {
+          Notification.errorResponse(response, 'trialModal.pstn.error.areaCodes');
+        }
+      );
+    }
+
+    function onAreaCodeChange() {
+      searchCarrierInventory();
+      //Get Exchanges
+      PstnSetupService.getCarrierInventory(
+        vm.trialData.details.pstnProvider.uuid,
+        vm.trialData.details.pstnNumberInfo.state.abbreviation,
+        vm.trialData.details.pstnNumberInfo.areaCode.code
+      ).then(
+        function (response) {
+          var options = [];
+          vm.pstn.nxxEnable = true;
+          _.forEach(response.exchanges,
+            function (exchange) {
+              if (exchange.count >= pstnTokenLimit) {
+                options.push(exchange);
+              }
+            }
+          );
+          vm.pstn.nxxOptions = _.sortBy(options, 'code');
+          vm.pstn.nxxOptions.unshift({ code: NXX_EMPTY });
+          vm.trialData.details.pstnNumberInfo.nxx = vm.pstn.nxxOptions[0];
+        }
+      ).catch(
+        function (response) {
+          Notification.errorResponse(response, 'trialModal.pstn.error.exchanges');
+        }
+      );
+    }
+
+    function onNxxChange() {
+      searchCarrierInventory();
+    }
+
+    function getNxxValue() {
+      if (vm.trialData.details.pstnNumberInfo.nxx !== null) {
+        if (vm.trialData.details.pstnNumberInfo.nxx.code !== NXX_EMPTY) {
+          return vm.trialData.details.pstnNumberInfo.nxx.code;
+        }
+      }
+      return null;
     }
 
     function searchCarrierInventory() {
@@ -221,6 +262,11 @@
         count: pstnTokenLimit.toString(),
         sequential: false
       };
+
+      var nxx = getNxxValue();
+      if (nxx !== null) {
+        params[NXX] = nxx;
+      }
 
       PstnSetupService.searchCarrierInventory(vm.trialData.details.pstnProvider.uuid, params)
         .then(function (numberRanges) {
@@ -325,6 +371,11 @@
     function _showCarriers(carriers, localScope) {
       _.forEach(carriers, function (carrier) {
         carrier.displayName = (carrier.displayName || carrier.name);
+        if (_.get(carrier, 'offers', []).length > 0) {
+          carrier.name = carrier.offers[0] + '-' + carrier.displayName;
+        } else if (_.get(carrier, 'offers', []).length === 0) {
+          carrier.name = carrier.vendor + '-' + carrier.displayName;
+        }
         localScope.to.options.push(carrier);
       });
       if (localScope.to.options.length === 1) {

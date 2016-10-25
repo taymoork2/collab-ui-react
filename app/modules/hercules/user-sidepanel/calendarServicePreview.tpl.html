@@ -13,7 +13,7 @@
       <p class="extension-description">{{'hercules.cloudExtensions.serviceDescriptions.' + extension.id |
         translate}}</p>
       <div ng-if="!isInvitePending">
-        <span class="cloud-extension-label">{{'cloudExtensions.status' | translate}}:</span>
+        <span class="cloud-extension-label" translate="cloudExtensions.status"></span>
         <span class="cloud-extension-label" ng-if="extension.entitled && extension.status"
               ng-class="extension.entitled && extension.status ? 'status-' + extension.status.state : 'disabled'"
               translate="hercules.activationStatus.{{getStatus(extension.status)}}"></span>
@@ -21,8 +21,14 @@
         <span cs-loader ng-if="!extension.status && extension.entitled"></span>
 
       </div>
+
+      <div class="cloud-extension-label" ng-show="extension.entitled && extension.id === 'squared-fusion-cal'">
+        <span class="cloud-extension-label" translate="hercules.cloudExtensions.defaultWebExSite"></span>
+        <span class="cloud-extension-label">{{extension.defaultWebExSiteName}}</span>
+      </div>
+
       <div ng-if="extension.entitled && extension.homedConnector">
-        <span class="cloud-extension-label">{{'cloudExtensions.host' | translate}}:</span>
+        <span class="cloud-extension-label" translate="cloudExtensions.host"></span>
         <span ng-if="extension.entitled && extension.homedConnector" class="cloud-extension-label">
           <a href="https://{{extension.homedConnector.host_name}}" target="_blank" style="color: #3ca8e8">{{extension.homedConnector.host_name}}</a>
         </span>

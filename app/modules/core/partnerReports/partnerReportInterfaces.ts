@@ -13,7 +13,49 @@ export interface IReportsCustomer {
   isSelected: boolean;
 }
 
+// used by the Reports Filter
+export interface IFilterObject {
+  id: string;
+  label: string;
+  selected: boolean;
+  toggle: Function | void;
+}
+
 // Table information used by the report-card
+export interface IReportCard {
+  // Top Report Variables
+  animate: boolean;
+  description: string;
+  headerTitle: string;
+  id: string;
+  reportType: string;
+  state: string;
+  table: IReportsTable | void;
+  titlePopover: string;
+}
+
+export interface ISecondaryReport {
+  broadcast: string;
+  description: string;
+  display: boolean;
+  state: string;
+  sortOptions: Array<IReportSortOption>;
+  table: IReportsTable | void;
+  title: string;
+}
+
+export interface IReportDropdown {
+  array: Array<IDropdownOption>;
+  click: Function;
+  disabled: boolean;
+  selected: IDropdownOption;
+}
+
+export interface IDropdownOption {
+  value: number;
+  label: string;
+}
+
 export interface IReportsTable {
   headers: Array<IReportsHeader>;
   data: any;

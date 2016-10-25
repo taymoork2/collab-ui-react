@@ -6,7 +6,7 @@
     .controller('HelpdeskUserController', HelpdeskUserController);
 
   /* @ngInject */
-  function HelpdeskUserController($modal, $stateParams, $translate, $window, Authinfo, Config, FeatureToggleService, HelpdeskCardsUserService, HelpdeskHuronService, HelpdeskLogService, HelpdeskService, LicenseService, USSService, WindowLocation, XhrNotificationService) {
+  function HelpdeskUserController($modal, $stateParams, $translate, $window, Authinfo, Config, FeatureToggleService, HelpdeskCardsUserService, HelpdeskHuronService, HelpdeskLogService, HelpdeskService, LicenseService, Notification, USSService, WindowLocation, XhrNotificationService) {
     $('body').css('background', 'white');
     var vm = this;
     if ($stateParams.user) {
@@ -43,15 +43,25 @@
     HelpdeskService.getUser(vm.orgId, vm.userId).then(initUserView, XhrNotificationService.notify);
 
     function resendInviteEmail() {
-      HelpdeskService.resendInviteEmail(vm.user.displayName, vm.user.userName).then(function () {
-        var prefix = 'helpdesk.userStatuses.';
-        for (var i = 0; i < vm.user.statuses.length; i++) {
-          var status = vm.user.statuses[i];
-          if (_.includes(prefix + 'rejected', status)) {
-            vm.user.statuses[i] = prefix + 'resent';
+      var trimmedUserData = {
+        displayName: vm.user.displayName,
+        email: vm.user.userName,
+        onlineOrderIds: _.get(vm.user, 'onlineOrderIds', [])
+      };
+      HelpdeskService.resendInviteEmail(trimmedUserData)
+        .then(function () {
+          Notification.success('helpdesk.resendSuccess');
+        })
+        .then(function () {
+          var prefix = 'helpdesk.userStatuses.';
+          for (var i = 0; i < vm.user.statuses.length; i++) {
+            var status = vm.user.statuses[i];
+            if (_.includes(prefix + 'rejected', status)) {
+              vm.user.statuses[i] = prefix + 'resent';
+            }
           }
-        }
-      }, XhrNotificationService.notify);
+        })
+        .catch(XhrNotificationService.notify);
     }
 
     function sendCode() {
@@ -84,20 +94,28 @@
       vm.resendInviteEnabled = _.some(user.statuses, function (_status) {
         return /helpdesk.userStatuses..*-pending$/.test(_status);
       });
-      if (FeatureToggleService.supports(FeatureToggleService.features.atlasEmailStatus)) {
-        HelpdeskService.isEmailBlocked(user.userName)
-          .then(function () {
-            vm.resendInviteEnabled = true;
-            var prefix = 'helpdesk.userStatuses.';
-            var statusToReplace = [prefix + 'active', prefix + 'inactive', prefix + 'invite-pending', prefix + 'resent'];
-            for (var i = 0; i < vm.user.statuses.length; i++) {
-              var status = vm.user.statuses[i];
-              if (_.includes(statusToReplace, status)) {
-                vm.user.statuses[i] = prefix + 'rejected';
+
+      FeatureToggleService.supports(FeatureToggleService.features.atlasEmailStatus)
+        .then(function (isSupported) {
+          if (!isSupported) {
+            return;
+          }
+
+          // TODO: investigate who owns this feature now and determine what the correct behavior should be now
+          HelpdeskService.isEmailBlocked(user.userName)
+            .then(function () {
+              vm.resendInviteEnabled = true;
+              var prefix = 'helpdesk.userStatuses.';
+              var statusToReplace = [prefix + 'active', prefix + 'inactive', prefix + 'invite-pending', prefix + 'resent'];
+              var i;
+              for (i = 0; i < vm.user.statuses.length; i++) {
+                var status = vm.user.statuses[i];
+                if (_.includes(statusToReplace, status)) {
+                  vm.user.statuses[i] = prefix + 'rejected';
+                }
               }
-            }
-          });
-      }
+            });
+        });
 
       vm.userStatusesAsString = getUserStatusesAsString(vm);
 

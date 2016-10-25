@@ -19,7 +19,40 @@
       "siteUrl": "AtlasTestRitwchau05.webex.com",
       "partnerEmail": "boulder.vail@gmail.com",
       "isCIUnifiedSite": true
-    }, {
+    },
+    {
+      "licenseId": "MC_2f09ab6d-81c2-46e8-a04d-677d4673faf9_AtlasTestRitwchau05.webex.com",
+      "offerName": "EC",
+      "licenseType": "CONFERENCING",
+      "billingServiceId": "Test-Sub-08072016b",
+      "features": [
+        "cloudmeetings"
+      ],
+      "volume": 40,
+      "isTrial": false,
+      "status": "PENDING",
+      "capacity": 100,
+      "siteUrl": "AtlasTestRitwchau05.webex.com",
+      "partnerEmail": "boulder.vail@gmail.com",
+      "isCIUnifiedSite": true
+    },
+    {
+      "licenseId": "MC_2f09ab6d-81c2-46e8-b04d-677d4673faf9_AtlasTestRitwchau05.webex.com",
+      "offerName": "EC",
+      "licenseType": "CONFERENCING",
+      "billingServiceId": "Test-Sub-08072016a",
+      "features": [
+        "cloudmeetings"
+      ],
+      "volume": 40,
+      "isTrial": false,
+      "status": "PENDING",
+      "capacity": 100,
+      "siteUrl": "AtlasTestRitwchau05.webex.com",
+      "partnerEmail": "boulder.vail@gmail.com",
+      "isCIUnifiedSite": true
+    },
+    {
       "licenseId": "MS_f2afedfa-4512-466f-9e42-2b3e72925e25",
       "offerName": "MS",
       "licenseType": "MESSAGING",

@@ -24,6 +24,7 @@
       atlasDataRetentionSettings: 'atlas-data-retention-settings',
       atlasEmailStatus: 'atlas-email-status',
       atlasHelpDeskExt: 'atlas-helpdesk-extended-information',
+      atlasHelpDeskOrderSearch: 'atlas-helpdesk-order-search',
       atlasHybridServicesResourceList: 'atlas-hybrid-services-resource-list',
       atlasMediaServiceMetrics: 'atlas-media-service-metrics',
       atlasMediaServiceOnboarding: 'atlas-media-service-onboarding',
@@ -37,7 +38,6 @@
       atlasReportsUpdate: 'atlas-reports-update',
       atlasComplianceRole: 'atlas-compliance-role',
       atlasSettingsPage: 'atlas-settings-page',
-      atlasShipDevicesInternational: 'atlas-ship-devices-international',
       atlasSipUriDomain: 'atlas-sip-uri-domain',
       atlasSipUriDomainEnterprise: 'atlas-sip-uri-domain-enterprise',
       atlasUserPendingStatus: 'atlas-user-pending-status',
@@ -57,6 +57,7 @@
       callMultiDevice: 'call-multi-device',
       calliopeDiscovery: 'calliope-discovery',
       callParkService: 'call-park-service',
+      huronCallPickup: 'huronCallPickup',
       calsvcDetectCmrLoc: 'calsvc_detect_cmr_loc',
       clientRingbackV2: 'client-ringback-v2',
       console: 'console',
@@ -73,9 +74,8 @@
       huronAAMediaUpload: 'huron-aa-mediaupload',
       huronClassOfService: 'COS',
       huronInternationalDialingTrialOverride: 'huronInternationalDialingTrialOverride',
-      huronKEM: 'huronKEM',
-      huronSpeedDial: 'huronSpeedDial',
       huronPagingGroup: 'huronPagingGroup',
+      huronNxxSearch: 'huron-nxx-search',
       iosActionBar: 'ios-action-bar',
       iosAecType: 'ios-aec-type',
       iosCameraview: 'ios-cameraview',
@@ -151,10 +151,13 @@
       webexCSV: 'webex-CSV',
       enableCrashLogs: 'csdm-enable-crash-logs',
       csdmPlaces: 'csdm-places',
+      csdmPstn: 'csdm-pstn',
+      csdmATA: 'csdm-ata',
       globalStatus: 'global-status',
       atlasF237ResourceGroups: 'atlas-f237-resource-group',
       huronLocalDialing: 'huron-local-dialing',
-      huronDeviceE911: 'huron-device-e911-address'
+      huronDeviceE911: 'huron-device-e911-address',
+      atlasHybridDataSecurity: 'atlas-data-security'
     };
 
     var toggles = {};
@@ -172,7 +175,7 @@
       }
     });
 
-    var userResource = $resource(UrlConfig.getFeatureToggleUrl() + '/locus/api/v1/features/users/:id', {
+    var userResource = $resource(UrlConfig.getWdmUrl() + '/features/users/:id', {
       id: '@id'
     }, {
       get: {

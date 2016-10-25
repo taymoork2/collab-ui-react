@@ -1,12 +1,14 @@
 /*************************************
  *      Atlas Core Style imports
  ************************************/
+@import '../components/featureList/featureList';
 @import '../components/setting-section';
 @import '../convertUsers/convertUsersModal';
 @import '../customers/customerList/customer-list';
 @import '../customers/customerOverview/customer-overview';
 @import '../customers/customerAdministrators/customer-admin';
 @import '../customerReports/customer-reports';
+@import '../customerReports/deviceUsage/device-usage';
 @import '../login/login';
 @import '../organizations/organizationOverview/organization-overview';
 @import '../organizations/organizationList/organization-list';

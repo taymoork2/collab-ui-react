@@ -6,7 +6,7 @@
     .controller('OverviewCtrl', OverviewCtrl);
 
   /* @ngInject */
-  function OverviewCtrl($rootScope, $scope, $translate, Authinfo, Config, FeatureToggleService, Log, Notification, Orgservice, OverviewCardFactory, OverviewNotificationFactory, ReportsService, SunlightReportService, TrialService, UrlConfig, hasCareFeatureToggle) {
+  function OverviewCtrl($rootScope, $scope, $timeout, $translate, Authinfo, Config, FeatureToggleService, Log, Notification, Orgservice, OverviewCardFactory, OverviewNotificationFactory, ReportsService, SunlightReportService, TrialService, UrlConfig, hasCareFeatureToggle) {
     var vm = this;
 
     vm.pageTitle = $translate.instant('overview.pageTitle');
@@ -39,10 +39,18 @@
       vm.hasMediaFeatureToggle = reply;
     });
 
+    // for smaller screens where the notifications are on top, the layout needs to resize after the notifications are loaded
+    function resizeNotifications() {
+      $timeout(function () {
+        $('.fourth.cs-card-layout').masonry('layout');
+      });
+    }
+
     function init() {
       removeCardUserTitle();
       if (!Authinfo.isSetupDone() && Authinfo.isCustomerAdmin()) {
         vm.notifications.push(OverviewNotificationFactory.createSetupNotification());
+        resizeNotifications();
       }
       Orgservice.getHybridServiceAcknowledged().then(function (response) {
         if (response.status === 200) {
@@ -59,6 +67,7 @@
               }
             }
           });
+          resizeNotifications();
         } else {
           Log.error("Error in GET service acknowledged status");
         }
@@ -107,6 +116,13 @@
             });
         }
       });
+
+      FeatureToggleService.atlasPMRonM2GetStatus().then(function (toggle) {
+        if (toggle) {
+          vm.notifications.push(OverviewNotificationFactory.createPMRNotification());
+        }
+      });
+
       TrialService.getDaysLeftForCurrentUser().then(function (daysLeft) {
         vm.trialDaysLeft = daysLeft;
       });

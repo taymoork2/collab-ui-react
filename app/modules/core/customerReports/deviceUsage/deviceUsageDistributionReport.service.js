@@ -5,43 +5,62 @@
     .service('DeviceUsageDistributionReportService', DeviceUsageDistributionReportService);
 
   /* @ngInject */
-  function DeviceUsageDistributionReportService($q) {
-
-    var reportData = createDummyDeviceUsageReportData();
+  function DeviceUsageDistributionReportService($log, DeviceUsageMockService) {
 
     return {
       getDeviceUsageReportData: getDeviceUsageReportData
     };
 
-    function getDeviceUsageReportData(min, max) {
-      if (_.isUndefined(min) || _.isUndefined(max)) {
-        return $q.when(reportData);
-      } else {
-        var withinRange = _.filter(reportData, function (d) {
-          return (d.hours >= min && d.hours <= max);
-        });
-        return $q.when(withinRange);
-      }
+    function secondsToHours(s) {
+      return s / 3600;
     }
 
-     // dummy data that represents x devices that has a (random) active hours
-    function createDummyDeviceUsageReportData() {
-      var random_mid_high = _.times(400, _.random.bind(_, 0, 100));
-      var random_low = _.times(400, _.random.bind(_, 0, 20));
-      var random_max = _.times(100, _.random.bind(_, 160, 168));
-      var allways_max = [168, 168, 168, 168, 168];
-      var zeros = [];
-      for (var i = 0; i < 5; i++) {
-        zeros.push(0);
-      }
+    function convertToDashedFormat(d) {
+      return d.substr(0, 4) + '-' + d.substr(4, 2) + '-' + d.substr(6, 2);
+    }
 
-      var randomHours = random_mid_high.concat(random_low).concat(zeros).concat(random_max).concat(allways_max);
-      var devices = [];
-      _.each(randomHours, function (hours, i) {
-        devices.push({ name: "device_" + i, hours: hours });
+    function convertTimeAndDuration(dataSamples) {
+      $log.info("Converting time and duration", dataSamples);
+      return _.each(dataSamples, function (key) {
+        try {
+          key.totalDuration = secondsToHours(key.totalDuration);
+          key.date = key.date.toString();
+          key.date = convertToDashedFormat(key.date);
+        } catch (ex) {
+          $log.error("Problems converting time or duration:", ex);
+        }
       });
-      return devices;
-      //return random_mid_high.concat(random_low).concat(zeros).concat(random_max).concat(allways_max);
     }
+
+    function sumUsageDataFromSameDevice(dataSamples) {
+      $log.info("Sum data from same device", dataSamples);
+      var updatedList = [];
+      _.each(dataSamples, function (d) {
+        var registeredDevice = _.find(updatedList, { accountId: d.accountId });
+        if (registeredDevice) {
+          registeredDevice.totalDuration += d.totalDuration;
+        } else {
+          updatedList.push(d);
+        }
+      });
+      $log.info("After summing data from same device", updatedList);
+      return updatedList;
+    }
+
+    function getDeviceUsageReportData(min, max) {
+      return DeviceUsageMockService.getData("2016-10-11", "2016-10-18", true)
+        .then(convertTimeAndDuration)
+        .then(sumUsageDataFromSameDevice)
+        .then(function (data) {
+          if (_.isUndefined(min) || _.isUndefined(max)) {
+            return data;
+          } else {
+            return _.filter(data, function (d) {
+              return (d.totalDuration >= min && d.totalDuration <= max);
+            });
+          }
+        });
+    }
+
   }
 })();

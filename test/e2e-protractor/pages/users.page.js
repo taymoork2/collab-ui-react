@@ -44,11 +44,10 @@ var UsersPage = function () {
   this.rolesPanel = element(by.id('roles-panel'));
   this.closeRolesPanel = element(by.id('close-roles'));
   this.closeSidePanel = element(by.css('.panel-close'));
-  this.messagingService = element.all(by.css('#Message .feature-arrow')).first();
-
-  this.communicationsService = element(by.css('#Call .feature-arrow'));
-  this.conferencingService = element(by.css('#Meeting .feature-arrow'));
-  this.contactCenterService = element(by.css('#ContactCenter .feature-arrow'));
+  this.messagingService = element(by.cssContainingText('.feature', 'Message')).element(by.css('.feature-arrow'));
+  this.communicationsService = element(by.cssContainingText('.feature', 'Call')).element(by.css('.feature-arrow'));
+  this.conferencingService = element(by.cssContainingText('.feature', 'Meeting')).element(by.css('.feature-arrow'));
+  this.contactCenterService = element(by.cssContainingText('.feature', 'Care')).element(by.css('.feature-arrow'));
   this.sunlightUserPanel = element(by.cssContainingText('.section-title-row', 'Channels'));
   this.sunlightChatChannel = element(by.css('label[for="sunlight-chat"]'));
   this.sunlightEmailChannel = element(by.css('label[for="sunlight-email"]'));
@@ -171,8 +170,8 @@ var UsersPage = function () {
   this.callServiceConnectStatus = element(by.id('callServiceConnectStatus'));
 
   this.msgRadio = element(by.repeater('license in msgFeature.licenses'));
-  this.messageService = element(by.id('Message'));
-  this.meetingService = element(by.id('Meeting'));
+  this.messageService = element(by.cssContainingText('.feature', 'Message'))
+  this.meetingService = element(by.cssContainingText('.feature', 'Meeting'))
 
   this.assertSorting = function (nameToSort) {
     this.queryResults.getAttribute('value').then(function (value) {

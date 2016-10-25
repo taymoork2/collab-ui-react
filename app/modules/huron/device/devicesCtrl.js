@@ -48,6 +48,7 @@
           data: {
             function: 'showCode',
             title: 'addDeviceWizard.newDevice',
+            accountType: 'personal',
             deviceType: 'huron',
             deviceName: vm.currentUser.displayName,
             activationCode: code.code,
@@ -76,6 +77,7 @@
 
     function activate() {
       vm.csdmHuronUserDeviceService = CsdmHuronUserDeviceService.create(vm.currentUser.id);
+      vm.csdmHuronUserDeviceService.fetch();
       vm.devices = vm.csdmHuronUserDeviceService.getDeviceList();
       OtpService.loadOtps(vm.currentUser.id).then(function (otpList) {
         vm.otps = otpList;

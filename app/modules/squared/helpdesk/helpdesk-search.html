@@ -6,6 +6,7 @@
     <span class="help" ng-click="helpdeskCtrl.showSearchHelp()">
       {{'helpdesk.searchHelp' | translate}}<i class="icon icon-help"></i>
     </span>
+
   </div>
 
   <div class="typeahead-large" style="text-align: left;">
@@ -16,7 +17,6 @@
              autocomplete="off"
              ng-model="helpdeskCtrl.searchString"
              autofocus="true"/>
-
       <button type="submit" tabindex="-1" class="btn btn--circle btn--primary icon icon-search"
               ng-click="helpdeskCtrl.search()" ng-disabled="helpdeskCtrl.searchString == ''"></button>
     </form>
@@ -37,7 +37,8 @@
 
   <div class="row full">
     <div class="medium-12 xlarge-10 centered columns end search-results">
-      <div class="search-user-results medium-6 large-5 xlarge-4 large-offset-1 xlarge-offset-2 columns"
+      <div ng-class="['search-user-results', 'medium-6', 'large-5', 'xlarge-4',
+             {'large-offset-1 xlarge-offset-2': !helpdeskCtrl.isOrderSearchEnabled}, 'columns']"
            ng-if="helpdeskCtrl.showUsersResultPane()">
         <h4 translate="helpdesk.users"></h4>
 
@@ -200,6 +201,51 @@
              class="show-more-results">
           <span translate="helpdesk.noMoreResults"></span>
         </div>
+      </div>
+
+      <div class="search-order-results medium-6 large-5 xlarge-4 columns end"
+           ng-if="helpdeskCtrl.showOrdersResultPane()">
+
+        <h4 translate="helpdesk.orders"></h4>
+
+        <div ng-if="helpdeskCtrl.searchingForOrders">
+          <span><i class="icon icon-spinner icon-2x"></i></span>
+
+          <p translate="helpdesk.searchingPleaseWait"></p>
+        </div>
+        <div ng-if="helpdeskCtrl.currentSearch.orderSearchFailure">
+          <p>{{helpdeskCtrl.currentSearch.orderSearchFailure}}</p>
+        </div>
+        <div
+          ng-if="!helpdeskCtrl.searchingForOrders && helpdeskCtrl.currentSearch.orderSearchResults.length == 0">
+          <p translate="helpdesk.noSearchHits"></p>
+        </div>
+
+        <div ng-if="helpdeskCtrl.currentSearch.orderSearchResults.length > 0">
+          <cs-card class="full pointer"
+                   ng-repeat="order in helpdeskCtrl.currentSearch.orderSearchResults | limitTo:helpdeskCtrl.currentSearch.orderLimit">
+            <article tabindex="{{$index * 10 + 3}}" ui-sref="helpdesk.order({order:order})">
+              <header>
+                <h5>
+                  {{order.externalOrderId}}
+                </h5>
+              </header>
+              <section>
+              </section>
+            </article>
+          </cs-card>
+        </div>
+
+        <div ng-if="helpdeskCtrl.currentSearch.orderSearchResults.length > helpdeskCtrl.currentSearch.orderLimit"
+             class="show-more-results">
+          <span><a href ng-click="helpdeskCtrl.showMoreResults('order')" translate="helpdesk.showMore"></a></span>
+        </div>
+
+        <div ng-if="helpdeskCtrl.currentSearch.orderLimit === helpdeskCtrl.searchResultsLimit && helpdeskCtrl.currentSearch.orgSearchResults.length >= helpdeskCtrl.searchResultsLimit"
+             class="show-more-results">
+          <span translate="helpdesk.noMoreResults"></span>
+        </div>
+
       </div>
 
 

@@ -1,5 +1,4 @@
 .cloud-extensions {
-
   .status-error {
     color: $brand-danger;
   }
@@ -34,16 +33,6 @@
     padding-right: 0.5rem;
   }
 
-  .feature-icon-extension {
-    @extend .icon;
-    font-size: rem-calc(25);
-    margin-right: 13px;
-    line-height: $feature-line-height;
-    &:before {
-      line-height: $feature-line-height;
-    }
-  }
-
   .section-title-row {
     align-items: center;
     display: flex;
@@ -69,6 +58,7 @@
     line-height: inherit;
     padding-bottom: 10px;
   }
+
   .row-hybrid {
     background: $gray-lightest;
     display: inline-flex;
@@ -83,6 +73,7 @@
       font-family: $brand-font-cisco-TT-Extra-Light;
       padding-left: 12px;
     }
+
     .icon {
       font-size: 35px;
       display: inline-block;
@@ -95,13 +86,16 @@
     font-family: $brand-font-light;
     font-size: 14px;
     color: $gray-darkest;
+
     .hs-header {
       padding-left: 15px;
       font-family: $brand-font-cisco-TT-Extra-Light;
     }
+
     .hs-extension-list {
       padding-top: 20px;
     }
+
     .indentedCB {
       margin-left: 27px;
     }
@@ -122,6 +116,7 @@ form {
 
 .info-message {
   position: relative;
+
   .icon {
     position: absolute;
     color: $color-primary-base;
@@ -132,6 +127,7 @@ form {
 .warning-message {
   position: relative;
   margin-top: 1rem;
+
   .icon {
     position: absolute;
     color: $color-attention-base;
@@ -141,6 +137,7 @@ form {
 
 .error-message {
   position: relative;
+
   .icon {
     position: absolute;
     color: $color-alerts-base;

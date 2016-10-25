@@ -4,12 +4,15 @@ class DialingCtrl implements ng.IComponentController {
   public selected: IOption;
   public initialSelection: IOption;
   public watcher: string;
+  public title: string;
   public options: IOption[] = [];
   public form: ng.IFormController;
 
+  /* @ngInject */
   public constructor(
     private DialingService: DialingService,
-    private $scope: ng.IScope) {
+    private $scope: ng.IScope,
+  ) {
     this.initialSelection = _.cloneDeep(this.selected);
     this.options.push(this.DialingService.cbUseGlobal);
     this.options.push(this.DialingService.cbAlwaysAllow);
@@ -30,8 +33,9 @@ class DialingCtrl implements ng.IComponentController {
 export class DialingComponent implements ng.IComponentOptions {
   public controller = DialingCtrl;
   public templateUrl = 'modules/huron/dialing/dialing.html';
-  public bindings = <{ [binding: string]: string }>{
-    watcher: '@',
-    selected: '@',
+  public bindings = {
+    watcher: '<',
+    selected: '<',
+    title: '@',
   };
 }

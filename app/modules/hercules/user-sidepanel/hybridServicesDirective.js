@@ -90,7 +90,7 @@
         });
       })
       .catch(function (error) {
-        Notification.error('Error getting user information: ' + error);
+        Notification.errorWithTrackingId('Error getting user information: ' + error);
       });
 
     function checkEntitlements(options) {
@@ -156,14 +156,14 @@
     }
 
     function getExtensions() {
-      return _.map(extensionEntitlements, function (extensionEntitlement) {
+      return _.compact(_.map(extensionEntitlements, function (extensionEntitlement) {
         if (Authinfo.isEntitled(extensionEntitlement)) {
           return {
             id: extensionEntitlement,
             entitled: hasEntitlement(extensionEntitlement)
           };
         }
-      });
+      }));
     }
 
     function getCallExtensions() {

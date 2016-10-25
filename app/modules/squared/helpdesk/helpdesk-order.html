@@ -1,0 +1,124 @@
+<div class="helpdesk-details" ng-keyup="helpdeskUserCtrl.keyPressHandler($event)" tabindex="1">
+  <div class="row head full">
+    <div class="columns large-12">
+      <a ui-sref="helpdesk.search">
+        <i class="icon icon-back icon-lg"></i>
+        <span translate="helpdesk.backToSearchResults"></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="row full" ng-show="helpdeskOrderCtrl.account">
+    <div class="helpdesk-orderDetail">
+      <div class="orderTitle">
+        <h3>{{helpdeskOrderCtrl.order[0].externalOrderId}}</h3>
+        <h5>{{helpdeskOrderCtrl.order[0].orderContent.common.customerInfo.endCustomerInfo.name}}</h5>
+      </div>
+      <hr>
+      <div class="row">
+        <div class="medium-5 columns details-heading">
+          <span><strong>{{'helpdesk.customerInfo' | translate}}</strong></span>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="medium-5 columns details-heading">
+          <span>{{'helpdesk.webOrderId' | translate}}</span>
+        </div>
+        <div class="large-7 columns details-value">
+          <span>{{helpdeskOrderCtrl.order[0].externalOrderId}}</span>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="large-5 columns details-heading">
+          <span>{{'helpdesk.orderProvision' | translate}}</span>
+        </div>
+        <div class="large-7 columns details-value">
+          <span>{{helpdeskOrderCtrl.order[0].orderReceived}}</span>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="large-5 columns details-heading">
+          <span>{{'helpdesk.accountActivate' | translate}}</span>
+        </div>
+        <div class="large-7 columns details-value">
+          <span>{{helpdeskOrderCtrl.account.accountActivate}}</span>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="large-5 columns details-heading">
+          <span>{{'helpdesk.companyName' | translate}}</span>
+        </div>
+        <div class="large-7 columns details-value">
+          <span>{{helpdeskOrderCtrl.account.accountName}}</span>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="large-5 columns details-heading">
+          <span>{{'helpdesk.companyId' | translate}}</span>
+        </div>
+        <div class="large-7 columns details-value">
+          <span>{{helpdeskOrderCtrl.account.customerId}}</span>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="large-5 columns details-heading">
+          <span>{{'helpdesk.adminEmail' | translate}}</span>
+        </div>
+        <div class="large-7 columns details-value">
+          <span>{{helpdeskOrderCtrl.account.customerAdminEmail}}</span>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="large-5 columns details-heading">
+          <span>{{'helpdesk.emailSent' | translate}}</span>
+        </div>
+        <div class="large-7 columns details-value">
+          <span>{{helpdeskOrderCtrl.customerEmailSent}}</span>
+        </div>
+      </div>
+
+      <div ng-show="helpdeskOrderCtrl.partnerInfo">
+        <div class="row">
+          <div class="medium-5 columns details-heading">
+            <span><strong>{{'helpdesk.partnerInfo' | translate}}</strong></span>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="large-5 columns details-heading">
+            <span>{{'helpdesk.managedBy' | translate}}</span>
+          </div>
+          <div class="large-7 columns details-value">
+            <span>{{helpdeskOrderCtrl.order[0].orderContent.common.customerInfo.partnerInfo.name}}</span>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="large-5 columns details-heading">
+            <span>{{'helpdesk.partnerEmail' | translate}}</span>
+          </div>
+          <div class="large-7 columns details-value">
+            <span>{{helpdeskOrderCtrl.order[0].orderContent.common.customerInfo.partnerInfo.adminDetails.emailId}}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="large-5 columns details-heading">
+          <span>{{'helpdesk.emailSent' | translate}}</span>
+        </div>
+        <div class="large-7 columns details-value">
+          <span>{{helpdeskOrderCtrl.partnerEmailSent}}</span>
+        </div>
+      </div>
+      <hr>
+    </div>
+  </div>
+</div>

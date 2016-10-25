@@ -1,5 +1,6 @@
 (function () {
   'use strict';
+
   angular.module('Squared')
     .controller('UserRolesCtrl', UserRolesCtrl);
 
@@ -11,7 +12,10 @@
     $scope.isPartner = SessionStorage.get('partnerOrgId');
     $scope.helpDeskFeatureAllowed = Authinfo.isCisco() || _.includes(['fe5acf7a-6246-484f-8f43-3e8c910fc50d'], Authinfo.getOrgId());
     $scope.showHelpDeskRole = $scope.isPartner || $scope.helpDeskFeatureAllowed;
-    $scope.showOrderAdminRole = Authinfo.isCisco() || Authinfo.isCiscoMock();
+    FeatureToggleService.supports(FeatureToggleService.features.atlasHelpDeskOrderSearch).then(function (result) {
+      $scope.showOrderAdminRole = result;
+    });
+    $scope.showOrderAdminRole = false;
     $scope.showComplianceRole = false;
     $scope.updateRoles = updateRoles;
     $scope.clearCheckboxes = clearCheckboxes;
@@ -64,6 +68,9 @@
           $scope.delegatedAdministration = data.delegatedAdministration;
           if (!$scope.showHelpDeskRole) {
             $scope.showHelpDeskRole = $scope.delegatedAdministration || $scope.helpDeskFeatureAllowed;
+          }
+          if (!$scope.isPartner) {
+            $scope.isPartner = data.isPartner || data.delegatedAdministration;
           }
         } else {
           Log.debug('Get existing org failed. Status: ' + status);

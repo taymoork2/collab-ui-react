@@ -1,5 +1,6 @@
 (function () {
   'use strict';
+
   var $q, $controller, Authinfo, Notification, CiService, SyncService;
   var $scope;
   var ctrl;

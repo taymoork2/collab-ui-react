@@ -5,7 +5,7 @@
     .controller('TrialAddCtrl', TrialAddCtrl);
 
   /* @ngInject */
-  function TrialAddCtrl($q, $scope, $state, $translate, $window, Analytics, Authinfo, Config, EmailService, FeatureToggleService, HuronCustomer, Notification, TrialContextService, TrialPstnService, TrialService, ValidationService, Orgservice) {
+  function TrialAddCtrl($q, $scope, $state, $translate, $window, Analytics, Authinfo, Config, EmailService, FeatureToggleService, HuronCustomer, Notification, TrialContextService, TrialPstnService, TrialService, ValidationService, Orgservice, CsdmPlaceService) {
     var vm = this;
     var _roomSystemDefaultQuantity = 5;
     var _careDefaultQuantity = 15;
@@ -18,7 +18,7 @@
     var debounceTimeout = 2000;
 
     vm.trialData = TrialService.getData();
-
+    $scope.trialData = vm.trialData;
     vm.nameError = false;
     vm.emailError = false;
     vm.uniqueName = false;
@@ -416,6 +416,7 @@
     vm.careLicenseInputDisabledExpression = careLicenseInputDisabledExpression;
     vm.validateCareLicense = validateCareLicense;
     vm.careLicenseCountLessThanTotalCount = careLicenseCountLessThanTotalCount;
+    vm.cancelModal = cancelModal;
     init();
 
     ///////////////////////
@@ -481,6 +482,10 @@
 
         toggleTrial();
       });
+      CsdmPlaceService.placesFeatureIsEnabled().then(function (result) {
+        vm.placesEnabled = result;
+        toggleTrial();
+      });
     }
 
     function messageOfferDisabledExpression() {
@@ -538,10 +543,10 @@
     }
 
     function toggleTrial() {
-      if (!vm.callTrial.enabled) {
+      if (!vm.callTrial.enabled && !(vm.roomSystemTrial.enabled && vm.placesEnabled)) {
         vm.pstnTrial.enabled = false;
       }
-      if (vm.callTrial.enabled && vm.hasCallEntitlement && !vm.pstnTrial.skipped) {
+      if ((vm.callTrial.enabled || (vm.roomSystemTrial.enabled && vm.placesEnabled)) && vm.hasCallEntitlement && !vm.pstnTrial.skipped) {
         vm.pstnTrial.enabled = true;
       }
 
@@ -573,14 +578,14 @@
     }
 
     function finishSetup() {
-      Analytics.trackTrialSteps(Analytics.eventNames.FINISH, $state.current.name, Authinfo.getOrgId());
+      sendToAnalytics(Analytics.sections.TRIAL.eventNames.FINISH);
       $state.go('trialAdd.finishSetup');
     }
 
     function previousStep() {
       var state = getBackState();
       if (state) {
-        Analytics.trackTrialSteps(Analytics.eventNames.BACK, state, Authinfo.getOrgId());
+        sendToAnalytics(Analytics.eventNames.BACK);
         $state.go(state);
       }
     }
@@ -601,7 +606,7 @@
       if (!hasNextStep()) {
         return startTrial(callback);
       } else {
-        Analytics.trackTrialSteps(Analytics.eventNames.NEXT, $state.current.name, Authinfo.getOrgId());
+        sendToAnalytics(Analytics.eventNames.NEXT);
         return $state.go(getNextState());
       }
     }
@@ -636,6 +641,7 @@
       vm.nameError = false;
       vm.emailError = false;
       vm.loading = true;
+      sendToAnalytics(Analytics.sections.TRIAL.eventNames.START_TRIAL);
 
       return TrialService.startTrial()
         .catch(function (response) {
@@ -695,6 +701,7 @@
           var successMessage = [$translate.instant('trialModal.addSuccess', {
             customerName: vm.details.customerName
           })];
+          sendToAnalytics(Analytics.sections.TRIAL.eventNames.FINISH);
           Notification.notify(successMessage, 'success');
 
           if (addNumbersCallback) {
@@ -714,10 +721,12 @@
     }
 
     function closeDialogBox() {
+      sendToAnalytics(Analytics.eventNames.NO);
       $state.modal.close();
     }
 
     function launchCustomerPortal() {
+      sendToAnalytics(Analytics.eventNames.YES);
       $window.open($state.href('login_swap', {
         customerOrgId: vm.customerOrgId,
         customerOrgName: vm.details.customerName
@@ -745,6 +754,14 @@
         // Display devices modal if not a test org or if toggle is set
         vm.devicesModal.enabled = !isTestOrg || overrideTestOrg;
       });
+    }
+
+    function cancelModal() {
+      $state.modal.dismiss();
+      sendToAnalytics(Analytics.eventNames.CANCEL_MODAL);
+    }
+    function sendToAnalytics(eventName, extraData) {
+      TrialService.sendToAnalytics(eventName, vm.trialData, extraData);
     }
   }
 })();

@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Controller: HuronFeatureDeleteCtrl', function () {
+describe('Huron Feature DeleteCtrl for AA', function () {
   var controller, Notification, AutoAttendantCeService, AutoAttendantCeInfoModelService, AAModelService, featDefer, AACalendarService;
   var $rootScope, $scope, $stateParams, $q, $timeout;
 
@@ -140,7 +140,7 @@ describe('Controller: HuronFeatureDeleteCtrl', function () {
   });
 });
 
-describe('Huron Feature DeleteCtrl', function () {
+describe('Huron Feature DeleteCtrl for HuntGroup', function () {
 
   var featureDeleteCtrl, rootScope, $scope, $stateParams, $q, $timeout, $translate, huntGroupService, autoAttendantCeService, Notification, Log, featureDelDeferred;
   var spiedAuthinfo = {
@@ -224,6 +224,92 @@ describe('Huron Feature DeleteCtrl', function () {
   });
 
   it('should give the an error notification when hunt group deletion fails', function () {
+    featureDeleteCtrl.deleteFeature();
+    featureDelDeferred.reject(failureResponse);
+    $scope.$apply();
+    $timeout.flush();
+    expect(Notification.error).toHaveBeenCalledWith(jasmine.any(String));
+  });
+
+});
+
+describe('Huron Feature DeleteCtrl for PagingGroup', function () {
+
+  var featureDeleteCtrl, rootScope, $scope, $stateParams, $q, $timeout, $translate, pagingGroupService, Notification, Log, featureDelDeferred;
+  var spiedAuthinfo = {
+    getOrgId: jasmine.createSpy('getOrgId').and.returnValue('1')
+  };
+  var successResponse = {
+    'status': 200,
+    'statusText': 'OK'
+  };
+  var failureResponse = {
+    'data': 'Internal Server Error',
+    'status': 500,
+    'statusText': 'Internal Server Error'
+  };
+
+  beforeEach(angular.mock.module('Huron'));
+  beforeEach(angular.mock.module(function ($provide) {
+    $provide.value("Authinfo", spiedAuthinfo);
+  }));
+
+  beforeEach(inject(function (_$rootScope_, $controller, _$timeout_, _$translate_, _$q_, Authinfo, _PagingGroupService_, _Notification_, _Log_) {
+    rootScope = _$rootScope_;
+    $scope = rootScope.$new();
+    $q = _$q_;
+    $translate = _$translate_;
+    $timeout = _$timeout_;
+    pagingGroupService = _PagingGroupService_;
+    Notification = _Notification_;
+    Log = _Log_;
+
+    featureDelDeferred = $q.defer();
+    spyOn(pagingGroupService, 'deletePagingGroup').and.returnValue(featureDelDeferred.promise);
+    spyOn(Notification, 'success');
+    spyOn(Notification, 'error');
+    spyOn(rootScope, '$broadcast').and.callThrough();
+
+    $stateParams = {
+      deleteFeatureId: 'aaaa',
+      deleteFeatureName: 'aaaa',
+      deleteFeatureType: 'PG'
+    };
+
+    featureDeleteCtrl = $controller('HuronFeatureDeleteCtrl', {
+      $rootScope: rootScope,
+      $scope: $scope,
+      $stateParams: $stateParams,
+      $timeout: $timeout,
+      $translate: $translate,
+      Authinfo: Authinfo,
+      PagingGroupService: pagingGroupService,
+      Log: Log,
+      Notification: Notification
+    });
+
+  }));
+
+  it('should broadcast HURON_FEATURE_DELETED event when paging group is deleted successfully', function () {
+    featureDeleteCtrl.deleteFeature();
+    featureDelDeferred.resolve(successResponse);
+    $scope.$apply();
+    $timeout.flush();
+    expect(rootScope.$broadcast).toHaveBeenCalledWith('HURON_FEATURE_DELETED');
+  });
+
+  it('should give a successful notification when paging group is deleted successfully', function () {
+    featureDeleteCtrl.deleteFeature();
+    featureDelDeferred.resolve(successResponse);
+    $scope.$apply();
+    $timeout.flush();
+    expect(Notification.success).toHaveBeenCalledWith(jasmine.any(String), {
+      featureName: $stateParams.deleteFeatureName,
+      featureType: jasmine.any(String)
+    });
+  });
+
+  it('should give the an error notification when paging group deletion fails', function () {
     featureDeleteCtrl.deleteFeature();
     featureDelDeferred.reject(failureResponse);
     $scope.$apply();

@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject */
-  function HelpdeskController(HelpdeskSplunkReporterService, $q, HelpdeskService, $translate, $scope, $state, $modal, HelpdeskSearchHistoryService, HelpdeskHuronService, LicenseService, Config, $window, Authinfo) {
+  function HelpdeskController(HelpdeskSplunkReporterService, $q, HelpdeskService, $translate, $scope, $state, $modal, HelpdeskSearchHistoryService, HelpdeskHuronService, LicenseService, Config, $window, Authinfo, FeatureToggleService) {
     $scope.$on('$viewContentLoaded', function () {
       setSearchFieldFocus();
       $window.document.title = $translate.instant("helpdesk.browserTabHeaderTitle");
@@ -15,6 +15,7 @@
     vm.initSearchWithoutOrgFilter = initSearchWithoutOrgFilter;
     vm.searchingForUsers = false;
     vm.searchingForOrgs = false;
+    vm.searchingForOrders = false;
     vm.searchingForDevices = false;
     vm.lookingUpOrgFilter = false;
     vm.searchString = '';
@@ -23,9 +24,16 @@
     vm.showDeviceResultPane = showDeviceResultPane;
     vm.showUsersResultPane = showUsersResultPane;
     vm.showOrgsResultPane = showOrgsResultPane;
+    vm.showOrdersResultPane = showOrdersResultPane;
     vm.setCurrentSearch = setCurrentSearch;
     vm.showSearchHelp = showSearchHelp;
     vm.isCustomerHelpDesk = !Authinfo.isInDelegatedAdministrationOrg();
+    vm.orderNumberSize = 8;
+    vm.isOrderSearchEnabled = false;
+    FeatureToggleService.atlasHelpDeskOrderSearchGetStatus()
+      .then(function (result) {
+        vm.isOrderSearchEnabled = result;
+      });
 
     $scope.$on('helpdeskLoadSearchEvent', function (event, args) {
       var search = args.message;
@@ -36,11 +44,13 @@
     function showSearchHelp() {
       var searchHelpUrl = "modules/squared/helpdesk/helpdesk-search-help-dialog.html";
       var searchHelpMobileUrl = "modules/squared/helpdesk/helpdesk-search-help-dialog-mobile.html";
+      var isSearchOrderEnabled = vm.isOrderSearchEnabled;
       $modal.open({
         templateUrl: HelpdeskService.checkIfMobile() ? searchHelpMobileUrl : searchHelpUrl,
         controller: function () {
           var vm = this;
           vm.isCustomerHelpDesk = !Authinfo.isInDelegatedAdministrationOrg();
+          vm.isOrderSearchEnabled = isSearchOrderEnabled;
         },
         controllerAs: 'searchHelpModalCtrl'
       });
@@ -63,9 +73,11 @@
       searchString: '',
       userSearchResults: null,
       orgSearchResults: null,
+      orderSearchResults: null,
       deviceSearchResults: null,
       userSearchFailure: null,
       orgSearchFailure: null,
+      orderSearchFailure: null,
       deviceSearchFailure: null,
       orgFilter: vm.isCustomerHelpDesk ? {
         id: Authinfo.getOrgId(),
@@ -74,17 +86,21 @@
       orgLimit: vm.searchResultsPageSize,
       userLimit: vm.searchResultsPageSize,
       deviceLimit: vm.searchResultsPageSize,
+      orderLimit: vm.searchResultsPageSize,
       initSearch: function (searchString) {
         this.searchString = searchString;
         this.userSearchResults = null;
         this.orgSearchResults = null;
+        this.orderSearchResults = null;
         this.deviceSearchResults = null;
         this.userSearchFailure = null;
         this.orgSearchFailure = null;
+        this.orderSearchFailure = null;
         this.deviceSearchFailure = null;
         this.orgLimit = vm.searchResultsPageSize;
         this.userLimit = vm.searchResultsPageSize;
         this.deviceLimit = vm.searchResultsPageSize;
+        this.orderLimit = vm.searchResultsPageSize;
         setSearchFieldFocus();
       },
       clear: function () {
@@ -116,6 +132,9 @@
       promises.push(searchUsers(vm.searchString, orgFilterId));
       if (!orgFilterId) {
         promises.push(searchOrgs(vm.searchString));
+        if (vm.isOrderSearchEnabled) {
+          promises.push(searchOrders(vm.searchString));
+        }
       } else {
         promises = promises.concat(searchDevices(vm.searchString, vm.currentSearch.orgFilter));
       }
@@ -194,7 +213,6 @@
         searchDone.resolve(stats(HelpdeskSplunkReporterService.ORG_SEARCH, vm.currentSearch.orgSearchFailure));
       }
       return searchDone.promise;
-
     }
 
     function searchDevices(searchString, org) {
@@ -291,6 +309,69 @@
       return [searchDone.promise, search2Done.promise];
     }
 
+    function searchOrders(searchString) {
+      var searchDone = $q.defer();
+      if (isValidOrderEntry(searchString)) {
+        vm.searchingForOrders = true;
+        HelpdeskService.searchOrders(searchString).then(function (res) {
+          var order = [];
+          var found = _.find(res, function (el) { return el.orderStatus === "PROVISIONED"; });
+          if (!_.isUndefined(found)) {
+            order.push(found);
+          }
+
+          if (order.length === 0) {
+            vm.currentSearch.orderSearchResults = null;
+            vm.currentSearch.orderSearchFailure = $translate.instant('helpdesk.noSearchHits');
+          } else {
+            vm.currentSearch.orderSearchResults = order;
+            vm.currentSearch.orderSearchFailure = null;
+          }
+          vm.searchingForOrders = false;
+          HelpdeskSearchHistoryService.saveSearch(vm.currentSearch);
+          vm.searchHistory = HelpdeskSearchHistoryService.getAllSearches();
+        }, function (err) {
+          vm.searchingForOrders = false;
+          vm.currentSearch.orderSearchResults = null;
+          vm.currentSearch.orderSearchFailure = null;
+          if (err.status === 404) {
+            var message = _.get(err.data, "message");
+            // TODO - Add an error code in backend, and check for it here instead of comparing message strings.
+            if (message && message.indexOf("No orders found" != -1)) {
+              vm.currentSearch.orderSearchFailure = $translate.instant('helpdesk.noSearchHits');
+            } else {
+              vm.currentSearch.orderSearchFailure = $translate.instant('helpdesk.badOrderSearchInput');
+            }
+          } else if (err.cancelled === true || err.timedout === true) {
+            vm.currentSearch.orderSearchFailure = $translate.instant('helpdesk.cancelled');
+          } else {
+            vm.currentSearch.orderSearchFailure = $translate.instant('helpdesk.unexpectedError');
+          }
+        }).finally(function () {
+          searchDone.resolve(stats(HelpdeskSplunkReporterService.ORDER_SEARCH, vm.currentSearch.orderSearchFailure || vm.currentSearch.orderSearchResults));
+        });
+      } else {
+        vm.searchingForOrders = false;
+        vm.currentSearch.orderSearchFailure = $translate.instant('helpdesk.badOrderSearchInput');
+        searchDone.resolve(stats(HelpdeskSplunkReporterService.ORDER_SEARCH, vm.currentSearch.orderSearchFailure));
+      }
+      return searchDone.promise;
+    }
+
+    function isValidOrderEntry(searchString) {
+      // A valid order search entry should has a prefix of 'ssw' or minimum 8-digit followed by a hyphen '-'
+      if (searchString.toLowerCase().indexOf("ssw") === 0) {
+        return true;
+      }
+      var n = searchString.search('-');
+      var prefix = (n === -1) ? searchString : searchString.substring(0, n);
+
+      if (!isNaN(prefix) && prefix.length >= vm.orderNumberSize) {
+        return true;
+      }
+      return false;
+    }
+
     function initSearchWithOrgFilter(org) {
       vm.lookingUpOrgFilter = true;
       vm.searchingForDevices = false;
@@ -327,6 +408,10 @@
       return vm.searchingForOrgs || vm.currentSearch.orgSearchResults || vm.currentSearch.orgSearchFailure;
     }
 
+    function showOrdersResultPane() {
+      return vm.searchingForOrders || vm.currentSearch.orderSearchResults || vm.currentSearch.orderSearchFailure;
+    }
+
     function showDeviceResultPane() {
       return vm.currentSearch.orgFilter && (vm.searchingForDevices || vm.currentSearch.deviceSearchResults || vm.currentSearch.deviceSearchFailure);
     }
@@ -342,6 +427,9 @@
           break;
         case 'org':
           vm.currentSearch.orgLimit += vm.searchResultsPageSize;
+          break;
+        case 'order':
+          vm.currentSearch.orderLimit += vm.searchResultsPageSize;
           break;
         case 'device':
           vm.currentSearch.deviceLimit += vm.searchResultsPageSize;

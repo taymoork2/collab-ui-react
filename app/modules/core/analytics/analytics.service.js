@@ -3,61 +3,73 @@
 (function () {
   'use strict';
 
-  angular
-    .module('Core')
-    .service('Analytics', Analytics);
+  module.exports = Analytics;
 
   /* @ngInject */
-  function Analytics($q, Config, Orgservice) {
-
-    var eventNames = {
-      START: 'start',
-      NEXT: 'next',
-      BACK: 'back',
-      SKIP: 'skip',
-      FINISH: 'finish',
-      ASSIGN: 'assign',
-      REMOVE: 'remove'
-    };
-
-    var service = {
-      _init: _init,
-      _track: _track,
-      trackEvent: trackEvent,
-      checkIfTestOrg: checkIfTestOrg,
-      trackTrialSteps: trackTrialSteps,
-      trackPartnerActions: trackPartnerActions,
-      trackUserPatch: trackUserPatch,
-      trackSelectedCheckbox: trackSelectedCheckbox,
-      trackConvertUser: trackConvertUser,
-      eventNames: eventNames
-    };
+  function Analytics($q, $state, Config, Orgservice, Authinfo) {
 
     var token = {
       PROD_KEY: 'a64cd4bbec043ed6bf9d5cd31e4b001c',
       TEST_KEY: '536df13b2664a85b06b0b6cf32721c24'
     };
 
-    var isTestOrg = null;
+    var isTestOrgPromise = null;
     var hasInit = false;
     var throwError = false;
 
-    /* Trial Event Names */
-    var START_TRIAL = 'Start Trial Button Click';
-    var NEXT_BUTTON = 'Next Button Clicked';
-    var BACK_BUTTON = 'Back Button Clicked';
-    var SKIP_BUTTON = 'Skip Button Clicked';
-    var FINISH_TRIAL = 'Finish Trial Setup';
+    var eventNames = {
+      START: 'Start',
+      NEXT: 'Next',
+      BACK: 'Back',
+      SKIP: 'Skip',
+      CANCEL: 'Cancel',
+      CANCEL_MODAL: 'Modal Closed by \'x\'',
+      FINISH: 'Finish',
+      YES: 'Yes Selected',
+      NO: 'No Selected',
+      ENTER_SCREEN: 'Entered Screen',
+      VALIDATION_ERROR: 'Validation Error',
+      RUNTIME_ERROR: 'Runtime Error'
+    };
+
+    var sections = {
+      TRIAL: {
+        name: 'Trial Flow',
+        eventNames: {
+          START_SETUP: 'Start Trial Setup',
+          START_TRIAL: 'Start Trial'
+        }
+      },
+      PARTNER: {
+        name: 'Partner',
+        eventNames: {
+          ASSIGN: 'Partner Admin Assigning',
+          REMOVE: 'Partner Admin Removal',
+          PATCH: 'Patch User Call'
+        }
+      },
+      USER_ONBOARDING: {
+        name: 'User Onboarding',
+        eventNames: {
+          CMR_CHECKBOX: 'CMR Checkbox Unselected',
+          CONVERT_USER: 'Convert User Search'
+        }
+      }
+    };
 
 
-    /* Partner Event Names */
-    var ASSIGN_PARTNER = 'Partner Admin Assigning';
-    var REMOVE_PARTNER = 'Partner Admin Removal';
-    var PATCH_USER = 'patch user call';
-
-    /* First Time Wizard Event Names */
-    var CMR_CHECKBOX = 'CMR checkbox unselected';
-    var CONVERT_USER = 'Convert User Search';
+    var service = {
+      _init: _init,
+      _track: _track,
+      checkIfTestOrg: checkIfTestOrg,
+      eventNames: eventNames,
+      sections: sections,
+      trackError: trackError,
+      trackEvent: trackEvent,
+      trackPartnerActions: trackPartnerActions,
+      trackTrialSteps: trackTrialSteps,
+      trackUserOnboarding: trackUserOnboarding
+    };
 
     return service;
 
@@ -69,10 +81,10 @@
           return reject();
         }
 
-        if (Config.isProd()) {
+        if (Config.isProd() && !Config.forceProdForE2E()) {
           resolve(token.PROD_KEY);
         } else {
-          checkIfTestOrg().then(function () {
+          checkIfTestOrg().then(function (isTestOrg) {
             if (isTestOrg) {
               resolve(token.TEST_KEY);
             } else {
@@ -93,120 +105,110 @@
      * Determines if it's a Test Org or not.
      */
     function checkIfTestOrg() {
-      if (!isTestOrg) {
-        isTestOrg = $q(function (resolve) {
+      if (!isTestOrgPromise) {
+        isTestOrgPromise = $q(function (resolve) {
           Orgservice.getOrg(function (response) {
-            resolve(response.isTestOrg);
+            resolve(_.get(response, 'isTestOrg'));
           });
         });
       }
-      return isTestOrg;
+      return isTestOrgPromise;
     }
 
     function _track(eventName, properties) {
-      mixpanel.track(eventName, properties || {});
+      mixpanel.track(eventName, properties);
     }
 
     /**
      *  Tracks the Event
      */
-    function trackEvent(eventName, properties) {
-      _init().then(function () {
-        service._track(eventName, properties);
+    function trackEvent(sectionName, eventName, properties) {
+      properties = properties || {};
+      properties.section = sectionName;
+      return _init().then(function () {
+        return service._track(eventName, properties);
       });
     }
 
     /**
      * Trial Events
      */
-
-    function trackTrialSteps(state, name, id) {
-      if (!state || !name || !id) {
-        $q.reject('state, name or id not passed');
+    function trackTrialSteps(eventName, fromState, orgId, trialData, additionalPayload) {
+      if (!eventName || !fromState || !orgId) {
+        return $q.reject('eventName, fromState or id not passed');
       }
 
-      var step = '';
+      var event = sections.TRIAL.name + ':  ' + eventName;
+      var properties = {
+        from: fromState,
+        orgId: orgId,
+      };
 
-      switch (state) {
-        case eventNames.START:
-          step = START_TRIAL;
-          break;
-        case eventNames.NEXT:
-          step = NEXT_BUTTON;
-          break;
-        case eventNames.BACK:
-          step = BACK_BUTTON;
-          break;
-        case eventNames.SKIP:
-          step = SKIP_BUTTON;
-          break;
-        case eventNames.FINISH:
-          step = FINISH_TRIAL;
-          break;
+      if (trialData) {
+        properties.servicesArray = _buildTrialDataArray(trialData.trials);
+        properties.duration = trialData.details.licenseDuration;
+        properties.licenseQty = trialData.details.licenseCount;
       }
-
-      trackEvent(step, {
-        from: name,
-        orgId: id
-      });
+      _.extend(properties, additionalPayload);
+      return trackEvent(sections.TRIAL.name, event, properties);
     }
+
 
     /**
      * Partner Events
      */
-    function trackPartnerActions(state, UUID, id) {
-      if (!state || !UUID || !id) {
-        $q.reject('state, uuid or id not passed');
+    function trackPartnerActions(state, orgId, UUID) {
+      if (!state || !UUID || !orgId) {
+        return $q.reject('state, uuid or orgId not passed');
       }
-
-      switch (state) {
-        case eventNames.ASSIGN:
-          trackEvent(ASSIGN_PARTNER, {
-            uuid: UUID,
-            orgId: id
-          });
-          break;
-        case eventNames.REMOVE:
-          trackEvent(REMOVE_PARTNER, {
-            uuid: UUID,
-            orgId: id
-          });
-          break;
-      }
-    }
-
-    function trackUserPatch(orgId, UUID) {
-      if (!orgId || !UUID) {
-        $q.reject('orgId or uuid not passed');
-      }
-
-      trackEvent(PATCH_USER, {
-        by: orgId,
-        uuid: UUID
-      });
+      state = sections.PARTNER.name + ': ' + state;
+      var properties = {
+        uuid: UUID,
+        orgId: orgId
+      };
+      return trackEvent(sections.PARTNER.name, state, properties);
     }
 
     /**
-     * First Time Wizard Events
-     */
-    function trackSelectedCheckbox(id) {
-      if (!id) {
-        $q.reject('id not passed');
+    * Onboarding. First Time Wizard Events
+    */
+
+    function trackUserOnboarding(state, name, orgId, additionalData) {
+      if (!state || !name || !orgId) {
+        return $q.reject('state, uuid or orgId not passed');
       }
 
-      trackEvent(CMR_CHECKBOX, {
-        licenseId: id
-      });
+      var properties = {
+        from: name,
+        orgId: orgId
+      };
+
+      if (state === sections.USER_ONBOARDING.eventNames.CMR_CHECKBOX) {
+        if (!additionalData.licenseId) {
+          $q.reject('license id not passed');
+        } else {
+          properties.licenseId = additionalData.licenseId;
+        }
+      }
+      state = sections.USER_ONBOARDING.name + ': ' + state;
+      return trackEvent(sections.USER_ONBOARDING.name, state, properties);
     }
 
-    function trackConvertUser(name, id) {
-      if (!name || !id) {
-        $q.reject('name or id not passed');
-      }
 
-      trackEvent(CONVERT_USER, {
-        from: name,
-        orgId: id
+    /* trial */
+
+    function _buildTrialDataArray(trialServices) {
+      return _.chain(trialServices).filter({ enabled: true }).map('type').value();
+    }
+
+    function trackError(errorObj, cause) {
+      trackEvent(undefined, eventNames.RUNTIME_ERROR, {
+        message: _.get(errorObj, 'message'),
+        stack: _.get(errorObj, 'stack'),
+        cause: cause,
+        userId: Authinfo.getUserId(),
+        orgId: Authinfo.getOrgId(),
+        state: _.get($state, '$current.name')
       });
     }
   }

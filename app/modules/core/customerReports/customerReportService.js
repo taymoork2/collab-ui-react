@@ -5,12 +5,8 @@
     .service('CustomerReportService', CustomerReportService);
 
   /* @ngInject */
-  function CustomerReportService($translate, $q, chartColors, CommonReportService) {
-    var detailed = 'detailed';
-    var timechart = 'timeCharts';
-
+  function CustomerReportService($translate, $q, chartColors, CommonReportService, ReportConstants) {
     // Promise Tracking
-    var ABORT = 'ABORT';
     var activePromise = null;
     var mostActivePromise = null;
     var groupCancelPromise = null;
@@ -33,13 +29,13 @@
     };
 
     function getPercentage(numberOne, numberTwo) {
-      return Math.round((numberOne / numberTwo) * 100);
+      return Math.round((numberOne / numberTwo) * ReportConstants.PERCENTAGE_MULTIPLIER);
     }
 
     function getActiveUserData(filter, linegraph) {
       // cancel any currently running jobs
       if (activePromise) {
-        activePromise.resolve(ABORT);
+        activePromise.resolve(ReportConstants.ABORT);
       }
       activePromise = $q.defer();
 
@@ -62,7 +58,7 @@
         });
 
       } else {
-        var options = CommonReportService.getCustomerOptions(filter, 'activeUsers', detailed, undefined);
+        var options = CommonReportService.getCustomerOptions(filter, 'activeUsers', CommonReportService.DETAILED, undefined);
         return CommonReportService.getCustomerReport(options, activePromise).then(function (response) {
           var data = _.get(response, 'data.data[0].data');
           if (data) {
@@ -76,10 +72,10 @@
       }
     }
 
-    function getMostActiveUserData(filter, linegraph) {
+    function getMostActiveUserData(filter) {
       // cancel any currently running jobs
       if (mostActivePromise) {
-        mostActivePromise.resolve(ABORT);
+        mostActivePromise.resolve(ReportConstants.ABORT);
       }
       mostActivePromise = $q.defer();
       var returnObject = {
@@ -87,48 +83,27 @@
         error: false
       };
 
-      if (linegraph) {
-        var lineOptions = CommonReportService.getTypeOptions(filter, 'mostActive');
-        return CommonReportService.getCustomerAltReportByType(lineOptions, mostActivePromise).then(function (response) {
-          var responseData = _.get(response, 'data.data');
-          if (responseData) {
-            _.forEach(responseData, function (item) {
-              var details = _.get(item, 'details');
-              if (details) {
-                returnObject.tableData.push({
-                  numCalls: parseInt(details.sparkCalls, 10) + parseInt(item.details.sparkUcCalls, 10),
-                  totalActivity: parseInt(details.totalActivity, 10),
-                  sparkMessages: parseInt(details.sparkMessages, 10),
-                  userName: details.userName
-                });
-              }
-            });
-          }
-          return returnObject;
-        }).catch(function (error) {
-          returnObject.error = true;
-          return CommonReportService.returnErrorCheck(error, 'activeUsers.mostActiveError', returnObject);
-        });
-      } else {
-        var options = CommonReportService.getTypeOptions(filter, 'useractivity');
-        return CommonReportService.getCustomerReportByType(options, mostActivePromise).then(function (response) {
-          var responseData = _.get(response, 'data.data');
-          if (responseData) {
-            _.forEach(responseData, function (item) {
+      var lineOptions = CommonReportService.getTypeOptions(filter, 'mostActive');
+      return CommonReportService.getCustomerAltReportByType(lineOptions, mostActivePromise).then(function (response) {
+        var responseData = _.get(response, 'data.data');
+        if (responseData) {
+          _.forEach(responseData, function (item) {
+            var details = _.get(item, 'details');
+            if (details) {
               returnObject.tableData.push({
-                numCalls: parseInt(item.details.sparkCalls, 10) + parseInt(item.details.sparkUcCalls, 10),
-                totalActivity: parseInt(item.details.totalActivity, 10),
-                sparkMessages: parseInt(item.details.sparkMessages, 10),
-                userName: item.details.userName
+                numCalls: parseInt(details.sparkCalls, ReportConstants.INTEGER_BASE) + parseInt(item.details.sparkUcCalls, ReportConstants.INTEGER_BASE),
+                totalActivity: parseInt(details.totalActivity, ReportConstants.INTEGER_BASE),
+                sparkMessages: parseInt(details.sparkMessages, ReportConstants.INTEGER_BASE),
+                userName: details.userName
               });
-            });
-          }
-          return returnObject;
-        }, function (error) {
-          returnObject.error = true;
-          return CommonReportService.returnErrorCheck(error, 'activeUsers.mostActiveError', returnObject);
-        });
-      }
+            }
+          });
+        }
+        return returnObject;
+      }).catch(function (error) {
+        returnObject.error = true;
+        return CommonReportService.returnErrorCheck(error, 'activeUsers.mostActiveError', returnObject);
+      });
     }
 
     function adjustActiveLineData(activeData, filter, returnData) {
@@ -145,18 +120,18 @@
         var date = CommonReportService.getModifiedLineDate(item.date);
         var details = _.get(item, 'details[0]');
         if (details) {
-          var activeUsers = parseInt(details.combinedActiveUsers, 10);
-          var totalRegisteredUsers = parseInt(details.totalSparkEntitled, 10);
+          var activeUsers = parseInt(details.combinedActiveUsers, ReportConstants.INTEGER_BASE);
+          var totalRegisteredUsers = parseInt(details.totalSparkEntitled, ReportConstants.INTEGER_BASE);
 
           // temporary fix for when totalRegisteredUsers equals 0 due to errors recording the number
           if (totalRegisteredUsers <= 0) {
             var previousTotal = 0;
             var nextTotal = 0;
             if (index !== 0) {
-              previousTotal = parseInt(activeArray[index - 1].details.totalRegisteredUsers, 10);
+              previousTotal = parseInt(activeArray[index - 1].details.totalRegisteredUsers, ReportConstants.INTEGER_BASE);
             }
             if (index < (activeArray.length - 1)) {
-              nextTotal = parseInt(activeArray[index + 1].details.totalRegisteredUsers, 10);
+              nextTotal = parseInt(activeArray[index + 1].details.totalRegisteredUsers, ReportConstants.INTEGER_BASE);
             }
 
             if (previousTotal < activeUsers && nextTotal < activeUsers) {
@@ -186,9 +161,32 @@
       });
 
       if (!emptyGraph) {
-        returnData.graphData = returnGraph;
+        returnData.graphData = trimEmptyDataSets(returnGraph);
       }
       return returnData;
+    }
+
+    function trimEmptyDataSets(graph) {
+      if (graph.length <= ReportConstants.THIRTEEN_WEEKS) {
+        return graph;
+      } else {
+        var returnGraph = [];
+        var emptyGraph = true;
+        _.forEach(graph, function (item, index) {
+          if (index !== 0 && emptyGraph) {
+            var totalUsers = _.get(item, 'totalRegisteredUsers');
+            var nextTotalUsers = _.get(graph[index + 1], 'totalRegisteredUsers');
+            if (totalUsers > 0 || nextTotalUsers > 0 || index >= (graph.length - ReportConstants.THIRTEEN_WEEKS)) {
+              emptyGraph = false;
+            }
+          }
+
+          if (!emptyGraph) {
+            returnGraph.push(item);
+          }
+        });
+        return returnGraph;
+      }
     }
 
     function adjustActiveUserData(activeData, filter, returnData) {
@@ -203,18 +201,18 @@
 
       _.forEach(activeData, function (item, index, activeArray) {
         var date = CommonReportService.getModifiedDate(item.date, filter);
-        var activeUsers = parseInt(item.details.activeUsers, 10);
-        var totalRegisteredUsers = parseInt(item.details.totalRegisteredUsers, 10);
+        var activeUsers = parseInt(item.details.activeUsers, ReportConstants.INTEGER_BASE);
+        var totalRegisteredUsers = parseInt(item.details.totalRegisteredUsers, ReportConstants.INTEGER_BASE);
 
         // temporary fix for when totalRegisteredUsers equals 0 due to errors recording the number
         if (totalRegisteredUsers <= 0) {
           var previousTotal = 0;
           var nextTotal = 0;
           if (index !== 0) {
-            previousTotal = parseInt(activeArray[index - 1].details.totalRegisteredUsers, 10);
+            previousTotal = parseInt(activeArray[index - 1].details.totalRegisteredUsers, ReportConstants.INTEGER_BASE);
           }
           if (index < (activeArray.length - 1)) {
-            nextTotal = parseInt(activeArray[index + 1].details.totalRegisteredUsers, 10);
+            nextTotal = parseInt(activeArray[index + 1].details.totalRegisteredUsers, ReportConstants.INTEGER_BASE);
           }
 
           if (previousTotal < activeUsers && nextTotal < activeUsers) {
@@ -251,21 +249,21 @@
     function getAvgRoomData(filter) {
       // cancel any currently running jobs
       if (groupCancelPromise) {
-        groupCancelPromise.resolve(ABORT);
+        groupCancelPromise.resolve(ReportConstants.ABORT);
       }
       if (oneToOneCancelPromise) {
-        oneToOneCancelPromise.resolve(ABORT);
+        oneToOneCancelPromise.resolve(ReportConstants.ABORT);
       }
       if (avgCancelPromise) {
-        avgCancelPromise.resolve(ABORT);
+        avgCancelPromise.resolve(ReportConstants.ABORT);
       }
       groupCancelPromise = $q.defer();
       oneToOneCancelPromise = $q.defer();
       avgCancelPromise = $q.defer();
 
-      var groupOptions = CommonReportService.getCustomerOptions(filter, 'conversations', timechart, true);
-      var oneToOneOptions = CommonReportService.getCustomerOptions(filter, 'convOneOnOne', timechart, true);
-      var avgOptions = CommonReportService.getCustomerOptions(filter, 'avgConversations', timechart, true);
+      var groupOptions = CommonReportService.getCustomerOptions(filter, 'conversations', CommonReportService.TIME_CHARTS, true);
+      var oneToOneOptions = CommonReportService.getCustomerOptions(filter, 'convOneOnOne', CommonReportService.TIME_CHARTS, true);
+      var avgOptions = CommonReportService.getCustomerOptions(filter, 'avgConversations', CommonReportService.TIME_CHARTS, true);
       var promises = [];
       var groupData = [];
       var oneToOneData = [];
@@ -299,16 +297,16 @@
       promises.push(avgPromise);
 
       return $q.all(promises).then(function () {
-        if (groupData !== ABORT && oneToOneData !== ABORT && avgData !== ABORT) {
+        if (groupData !== ReportConstants.ABORT && oneToOneData !== ReportConstants.ABORT && avgData !== ReportConstants.ABORT) {
           return combineAvgRooms(groupData, oneToOneData, avgData, filter);
         } else {
-          return ABORT;
+          return ReportConstants.ABORT;
         }
       }, function () {
-        if (groupData !== ABORT && oneToOneData !== ABORT && avgData !== ABORT) {
+        if (groupData !== ReportConstants.ABORT && oneToOneData !== ReportConstants.ABORT && avgData !== ReportConstants.ABORT) {
           return combineAvgRooms(groupData, oneToOneData, avgData, filter);
         } else {
-          return ABORT;
+          return ReportConstants.ABORT;
         }
       });
     }
@@ -322,24 +320,26 @@
         totalRooms: 0,
         avgRooms: 0
       };
-      var date;
-      var groupDate = _.get(groupData, '[groupData.length - 1].date');
-      var oneToOneDate = _.get(oneToOneData, '[oneToOneData.length - 1].date');
-      var avgDate = _.get(avgData, '[avgData.length - 1].date');
-      if (groupData.length > 0) {
-        date = groupDate;
-        if ((oneToOneData.length > 0) && (groupDate < oneToOneDate)) {
+      var date = '';
+      if (groupData[0] && oneToOneData[0] && avgData[0]) {
+        var groupDate = groupData[0].date;
+        var oneToOneDate = oneToOneData[0].date;
+        var avgDate = avgData[0].date;
+        if (groupData.length > 0) {
+          date = groupDate;
+          if ((oneToOneData.length > 0) && (groupDate < oneToOneDate)) {
+            date = oneToOneDate;
+          } else if ((avgData.length > 0) && (groupDate < avgDate)) {
+            date = avgDate;
+          }
+        } else if (oneToOneData.length > 0) {
           date = oneToOneDate;
-        } else if ((avgData.length > 0) && (groupDate < avgDate)) {
+          if ((avgData.length > 0) && (oneToOneDate < avgDate)) {
+            date = avgDate;
+          }
+        } else if (avgData.length > 0) {
           date = avgDate;
         }
-      } else if (oneToOneData.length > 0) {
-        date = oneToOneDate;
-        if ((avgData.length > 0) && (oneToOneDate < avgDate)) {
-          date = avgDate;
-        }
-      } else if (avgData.length > 0) {
-        date = avgDate;
       }
 
       var returnGraph = CommonReportService.getReturnGraph(filter, date, graphItem);
@@ -348,9 +348,9 @@
 
         _.forEach(returnGraph, function (returnItem) {
           if (returnItem.date === modDate) {
-            returnItem.groupRooms = parseInt(groupItem.count, 10);
-            returnItem.totalRooms += parseInt(groupItem.count, 10);
-            if (returnItem.groupRooms !== 0) {
+            returnItem.groupRooms = parseInt(groupItem.count, ReportConstants.INTEGER_BASE);
+            returnItem.totalRooms += parseInt(groupItem.count, ReportConstants.INTEGER_BASE);
+            if (returnItem.groupRooms > 0) {
               emptyGraph = false;
             }
           }
@@ -362,9 +362,9 @@
 
         _.forEach(returnGraph, function (returnItem) {
           if (returnItem.date === modDate) {
-            returnItem.oneToOneRooms = parseInt(oneToOneItem.count, 10);
-            returnItem.totalRooms += parseInt(oneToOneItem.count, 10);
-            if (returnItem.oneToOneRooms !== 0) {
+            returnItem.oneToOneRooms = parseInt(oneToOneItem.count, ReportConstants.INTEGER_BASE);
+            returnItem.totalRooms += parseInt(oneToOneItem.count, ReportConstants.INTEGER_BASE);
+            if (returnItem.oneToOneRooms > 0) {
               emptyGraph = false;
             }
           }
@@ -377,7 +377,7 @@
 
           _.forEach(returnGraph, function (returnItem) {
             if (returnItem.date === modDate) {
-              returnItem.avgRooms = parseFloat(avgItem.count).toFixed(2);
+              returnItem.avgRooms = parseFloat(avgItem.count).toFixed(ReportConstants.FIXED);
             }
           });
         });
@@ -391,16 +391,16 @@
     function getFilesSharedData(filter) {
       // cancel any currently running jobs
       if (contentSharedCancelPromise) {
-        contentSharedCancelPromise.resolve(ABORT);
+        contentSharedCancelPromise.resolve(ReportConstants.ABORT);
       }
       if (contentShareSizesCancelPromise) {
-        contentShareSizesCancelPromise.resolve(ABORT);
+        contentShareSizesCancelPromise.resolve(ReportConstants.ABORT);
       }
       contentSharedCancelPromise = $q.defer();
       contentShareSizesCancelPromise = $q.defer();
 
-      var contentSharedOptions = CommonReportService.getCustomerOptions(filter, 'contentShared', timechart, true);
-      var contentShareSizesOptions = CommonReportService.getCustomerOptions(filter, 'contentShareSizes', timechart, true);
+      var contentSharedOptions = CommonReportService.getCustomerOptions(filter, 'contentShared', CommonReportService.TIME_CHARTS, true);
+      var contentShareSizesOptions = CommonReportService.getCustomerOptions(filter, 'contentShareSizes', CommonReportService.TIME_CHARTS, true);
       var promises = [];
       var contentSharedData = [];
       var contentShareSizesData = [];
@@ -424,16 +424,16 @@
       promises.push(contentShareSizesPromise);
 
       return $q.all(promises).then(function () {
-        if (contentSharedData !== ABORT && contentShareSizesData !== ABORT) {
+        if (contentSharedData !== ReportConstants.ABORT && contentShareSizesData !== ReportConstants.ABORT) {
           return combineFilesShared(contentSharedData, contentShareSizesData, filter);
         } else {
-          return ABORT;
+          return ReportConstants.ABORT;
         }
       }, function () {
-        if (contentSharedData !== ABORT && contentShareSizesData !== ABORT) {
+        if (contentSharedData !== ReportConstants.ABORT && contentShareSizesData !== ReportConstants.ABORT) {
           return combineFilesShared(contentSharedData, contentShareSizesData, filter);
         } else {
-          return ABORT;
+          return ReportConstants.ABORT;
         }
       });
     }
@@ -447,16 +447,18 @@
         color: chartColors.brandSuccess
       };
 
-      var date;
-      var contentSharedDate = _.get(contentSharedData, '[contentSharedData.length - 1].date');
-      var contentShareSizesDate = _.get(contentShareSizesData, '[contentShareSizesData.length - 1].date');
-      if (contentSharedData.length > 0) {
-        date = contentSharedDate;
-        if ((contentShareSizesData.length > 0) && (contentSharedDate < contentShareSizesDate)) {
+      var date = '';
+      if (contentSharedData[0] && contentShareSizesData[0]) {
+        var contentSharedDate = contentSharedData[0].date;
+        var contentShareSizesDate = contentShareSizesData[0].date;
+        if (contentSharedData.length > 0) {
+          date = contentSharedDate;
+          if ((contentShareSizesData.length > 0) && (contentSharedDate < contentShareSizesDate)) {
+            date = contentShareSizesDate;
+          }
+        } else if (contentShareSizesData.length > 0) {
           date = contentShareSizesDate;
         }
-      } else if (contentShareSizesData.length > 0) {
-        date = contentShareSizesDate;
       }
       var returnGraph = CommonReportService.getReturnGraph(filter, date, graphItem);
 
@@ -465,7 +467,7 @@
 
         _.forEach(returnGraph, function (returnItem) {
           if (returnItem.date === modDate) {
-            returnItem.contentShared = parseInt(contentItem.count, 10);
+            returnItem.contentShared = parseInt(contentItem.count, ReportConstants.INTEGER_BASE);
             if (returnItem.contentShared !== 0) {
               emptyGraph = false;
             }
@@ -479,7 +481,7 @@
 
           _.forEach(returnGraph, function (returnItem) {
             if (returnItem.date === modDate) {
-              returnItem.contentShareSizes = parseFloat(shareItem.count).toFixed(2);
+              returnItem.contentShareSizes = parseFloat(shareItem.count).toFixed(ReportConstants.FIXED);
             }
           });
         });
@@ -493,23 +495,23 @@
     function getCallMetricsData(filter) {
       // cancel any currently running jobs
       if (metricsCancelPromise) {
-        metricsCancelPromise.resolve(ABORT);
+        metricsCancelPromise.resolve(ReportConstants.ABORT);
       }
       metricsCancelPromise = $q.defer();
       var returnArray = {
         dataProvider: [],
         displayData: {}
       };
-      var options = CommonReportService.getAltCustomerOptions(filter, 'callMetrics', detailed, undefined);
+      var options = CommonReportService.getAltCustomerOptions(filter, 'callMetrics', CommonReportService.DETAILED, undefined);
 
       return CommonReportService.getCustomerReport(options, metricsCancelPromise).then(function (response) {
         var details = _.get(response, 'data.data[0].data[0].details');
         if (details) {
-          var totalCalls = parseInt(details.totalCalls, 10);
+          var totalCalls = parseInt(details.totalCalls, ReportConstants.INTEGER_BASE);
           if (totalCalls > 0) {
-            var audioCalls = parseInt(details.sparkUcAudioCalls, 10);
-            var successfulCalls = parseInt(details.totalSuccessfulCalls, 10);
-            var videoCalls = parseInt(details.sparkUcVideoCalls, 10) + parseInt(details.sparkVideoCalls, 10);
+            var audioCalls = parseInt(details.sparkUcAudioCalls, ReportConstants.INTEGER_BASE);
+            var successfulCalls = parseInt(details.totalSuccessfulCalls, ReportConstants.INTEGER_BASE);
+            var videoCalls = parseInt(details.sparkUcVideoCalls, ReportConstants.INTEGER_BASE) + parseInt(details.sparkVideoCalls, ReportConstants.INTEGER_BASE);
 
             returnArray.dataProvider = [{
               callCondition: $translate.instant('callMetrics.audioCalls'),
@@ -524,8 +526,8 @@
             }];
 
             returnArray.displayData.totalCalls = totalCalls;
-            returnArray.displayData.totalAudioDuration = parseInt(details.totalAudioDuration, 10);
-            returnArray.displayData.totalFailedCalls = parseFloat((parseFloat(details.totalFailedCalls) / totalCalls) * 100).toFixed(2);
+            returnArray.displayData.totalAudioDuration = parseInt(details.totalAudioDuration, ReportConstants.INTEGER_BASE);
+            returnArray.displayData.totalFailedCalls = parseFloat((parseFloat(details.totalFailedCalls) / totalCalls) * ReportConstants.PERCENTAGE_MULTIPLIER).toFixed(ReportConstants.FIXED);
           }
         }
         return returnArray;
@@ -537,11 +539,11 @@
     function getMediaQualityData(filter) {
       // cancel any currently running jobs
       if (mediaCancelPromise) {
-        metricsCancelPromise.resolve(ABORT);
+        metricsCancelPromise.resolve(ReportConstants.ABORT);
       }
       mediaCancelPromise = $q.defer();
 
-      var options = CommonReportService.getCustomerOptions(filter, 'callQuality', detailed, undefined);
+      var options = CommonReportService.getCustomerOptions(filter, 'callQuality', CommonReportService.DETAILED, undefined);
       return CommonReportService.getCustomerReport(options, mediaCancelPromise).then(function (response) {
         var emptyGraph = true;
         var data = _.get(response, 'data.data[0].data');
@@ -564,18 +566,18 @@
             partialVideoSum: 0,
             balloon: true
           };
-          var graph = CommonReportService.getReturnGraph(filter, _.get(data, '[data.length - 1].date'), graphItem);
+          var graph = CommonReportService.getReturnGraph(filter, data[data.length - 1].date, graphItem);
 
           _.forEach(data, function (item) {
-            var totalSum = parseInt(item.details.totalDurationSum, 10);
-            var goodSum = parseInt(item.details.goodQualityDurationSum, 10);
-            var fairSum = parseInt(item.details.fairQualityDurationSum, 10);
-            var poorSum = parseInt(item.details.poorQualityDurationSum, 10);
+            var totalSum = parseInt(item.details.totalDurationSum, ReportConstants.INTEGER_BASE);
+            var goodSum = parseInt(item.details.goodQualityDurationSum, ReportConstants.INTEGER_BASE);
+            var fairSum = parseInt(item.details.fairQualityDurationSum, ReportConstants.INTEGER_BASE);
+            var poorSum = parseInt(item.details.poorQualityDurationSum, ReportConstants.INTEGER_BASE);
             var partialSum = fairSum + poorSum;
 
-            var goodVideoQualityDurationSum = parseInt(item.details.sparkGoodVideoDurationSum, 10) + parseInt(item.details.sparkUcGoodVideoDurationSum, 10);
-            var fairVideoQualityDurationSum = parseInt(item.details.sparkFairVideoDurationSum, 10) + parseInt(item.details.sparkUcFairVideoDurationSum, 10);
-            var poorVideoQualityDurationSum = parseInt(item.details.sparkPoorVideoDurationSum, 10) + parseInt(item.details.sparkUcPoorVideoDurationSum, 10);
+            var goodVideoQualityDurationSum = parseInt(item.details.sparkGoodVideoDurationSum, ReportConstants.INTEGER_BASE) + parseInt(item.details.sparkUcGoodVideoDurationSum, ReportConstants.INTEGER_BASE);
+            var fairVideoQualityDurationSum = parseInt(item.details.sparkFairVideoDurationSum, ReportConstants.INTEGER_BASE) + parseInt(item.details.sparkUcFairVideoDurationSum, ReportConstants.INTEGER_BASE);
+            var poorVideoQualityDurationSum = parseInt(item.details.sparkPoorVideoDurationSum, ReportConstants.INTEGER_BASE) + parseInt(item.details.sparkUcPoorVideoDurationSum, ReportConstants.INTEGER_BASE);
             var totalVideoDurationSum = goodVideoQualityDurationSum + fairVideoQualityDurationSum + poorVideoQualityDurationSum;
             var partialVideoSum = fairVideoQualityDurationSum + poorVideoQualityDurationSum;
 
@@ -626,7 +628,7 @@
     function getDeviceData(filter) {
       // cancel any currently running jobs
       if (deviceCancelPromise) {
-        deviceCancelPromise.resolve(ABORT);
+        deviceCancelPromise.resolve(ReportConstants.ABORT);
       }
       deviceCancelPromise = $q.defer();
 
@@ -655,10 +657,10 @@
         var responseLength = 0;
 
         _.forEach(data, function (item) {
-          var details = _.get(item.details);
+          var details = _.get(item, 'details');
           if (details && responseLength < details.length) {
             responseLength = details.length;
-            date = _.get(details, '[details.length - 1].recordTime');
+            date = details[responseLength - 1].recordTime;
           }
         });
 
@@ -689,19 +691,17 @@
           };
 
           _.forEach(item.details, function (detail) {
-            var registeredDevices = parseInt(detail.totalRegisteredDevices, 10);
-            if (registeredDevices > 0) {
-              tempGraph.emptyGraph = false;
-              deviceArray.graphData[0].emptyGraph = false;
-              var modifiedDate = CommonReportService.getModifiedDate(detail.recordTime, filter);
+            var registeredDevices = parseInt(detail.totalRegisteredDevices, ReportConstants.INTEGER_BASE);
+            var modifiedDate = CommonReportService.getModifiedDate(detail.recordTime, filter);
 
-              _.forEach(tempGraph.graph, function (graphPoint, index) {
-                if (graphPoint.date === modifiedDate) {
-                  graphPoint.totalRegisteredDevices = registeredDevices;
-                  deviceArray.graphData[0].graph[index].totalRegisteredDevices += registeredDevices;
-                }
-              });
-            }
+            _.forEach(tempGraph.graph, function (graphPoint, index) {
+              if (graphPoint.date === modifiedDate && (registeredDevices > 0)) {
+                graphPoint.totalRegisteredDevices = registeredDevices;
+                deviceArray.graphData[0].graph[index].totalRegisteredDevices += registeredDevices;
+                tempGraph.emptyGraph = false;
+                deviceArray.graphData[0].emptyGraph = false;
+              }
+            });
           });
           deviceArray.graphData.push(tempGraph);
         });

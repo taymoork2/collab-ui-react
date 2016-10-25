@@ -13,8 +13,10 @@
     var aaDialByExtensionStatus = false;
     var aaCENumberStatus = false;
     var aaMediaUploadStatus = false;
+    var aaQueueSettingsStatus = false;
     var routeQueueToggle = false;
     var mediaUploadToggle = false;
+    var uniqueId = 0;
 
     var invalidList = {};
     var service = {
@@ -25,13 +27,15 @@
       setDialByExtensionStatus: setDialByExtensionStatus,
       setCENumberStatus: setCENumberStatus,
       setMediaUploadStatus: setMediaUploadStatus,
+      setQueueSettingsStatus: setQueueSettingsStatus,
+      setMediaUploadToggle: setMediaUploadToggle,
       setRouteQueueToggle: setRouteQueueToggle,
       isRouteQueueToggle: isRouteQueueToggle,
-      setMediaUploadToggle: setMediaUploadToggle,
       isMediaUploadToggle: isMediaUploadToggle,
       isValid: isValid,
       setIsValid: setIsValid,
       getInvalid: getInvalid,
+      getUniqueId: getUniqueId,
       makeKey: makeKey,
       resetFormStatus: resetFormStatus,
       saveUiModel: saveUiModel,
@@ -43,7 +47,7 @@
     /////////////////////
 
     function isFormDirty() {
-      return aaMediaUploadStatus || aaSayMessageForm || aaPhoneMenuOptions || aaActionStatus || aaDialByExtensionStatus || aaCENumberStatus;
+      return aaQueueSettingsStatus || aaMediaUploadStatus || aaSayMessageForm || aaPhoneMenuOptions || aaActionStatus || aaDialByExtensionStatus || aaCENumberStatus;
     }
 
     function isValid() {
@@ -61,6 +65,10 @@
       return schedule + '-' + tag;
     }
 
+    function getUniqueId() {
+      return ++uniqueId;
+    }
+
     function setIsValid(element, validity) {
       if (!validity) {
         invalidList[element] = validity;
@@ -68,20 +76,19 @@
         delete invalidList[element];
       }
     }
-
+    function setMediaUploadStatus(status) {
+      aaMediaUploadStatus = status;
+    }
     function resetFormStatus() {
       aaSayMessageForm = false;
       aaPhoneMenuOptions = false;
       aaActionStatus = false;
       aaDialByExtensionStatus = false;
       aaMediaUploadStatus = false;
+      aaQueueSettingsStatus = false;
       aaCENumberStatus = false;
       routeQueueToggle = false;
       invalidList = {};
-    }
-
-    function setMediaUploadStatus(status) {
-      aaMediaUploadStatus = status;
     }
 
     function setSayMessageStatus(status) {
@@ -106,6 +113,11 @@
 
     function setRouteQueueToggle(status) {
       routeQueueToggle = status;
+    }
+
+
+    function setQueueSettingsStatus(status) {
+      aaQueueSettingsStatus = status;
     }
 
     function setMediaUploadToggle(status) {

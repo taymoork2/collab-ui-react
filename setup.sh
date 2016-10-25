@@ -107,7 +107,6 @@ time_start=$(date +"%s")
 # Install dependecies
 echo "Install all dependencies..."
 npm install || exit $?
-npm prune || exit $?
 
 # npm install succeeded
 # - make a tar archive of the npm-shrinkwrap.json file, and rm older versions

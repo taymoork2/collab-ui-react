@@ -57,6 +57,7 @@
         fusion_uc: 'squared-fusion-uc',
         fusion_cal: 'squared-fusion-cal',
         mediafusion: 'squared-fusion-media',
+        hds: 'hybrid-data-security',
         fusion_mgmt: 'squared-fusion-mgmt',
         room_system: 'spark-room-system',
         fusion_ec: 'squared-fusion-ec',
@@ -216,6 +217,20 @@
         hybridServicesComboError: '400094',
       },
 
+      webexSiteStatus: {
+        RECEIVED: 'RECEIVED',
+        PENDING_PARM: 'PENDING_PARM',
+        PROV_READY: 'PROV_READY',
+        PROVISIONING: 'PROVISIONING',
+        PROVISIONED: 'PROVISIONED',
+        REJECTED: 'REJECTED',
+        ERROR: 'ERROR',
+        PARTIAL: 'PARTIAL',
+        ABORTED: 'ABORTED',
+        TIMEOUT: 'TIMEOUT',
+        NA: 'NA'
+      },
+
       defaultEntitlements: ['webex-squared', 'squared-call-initiation'],
 
       batchSize: 10,
@@ -361,9 +376,12 @@
         'generateauthcode',
         'huntgroups',
         'huronCallPark',
+        'huronCallPickup',
         'hurondetails',
         'huronfeatures',
         'huronHuntGroup',
+        'huronPagingGroup',
+        'huronPagingGroupEdit',
         'huronlines',
         'huronnewfeature',
         'huronsettings',
@@ -381,7 +399,8 @@
         'management-service',
         'services-overview',
         'resource-group-settings',
-        'cluster-list'
+        'cluster-list',
+        'hds-settings', //Temporrary entitlement until updated in org setting
       ],
       'spark-room-system': [
         'addDeviceFlow',
@@ -406,6 +425,9 @@
       ],
       'squared-team-member': [
         'organization'
+      ],
+      'hybrid-data-security': [
+        'hds-settings'
       ],
       'squared-fusion-media': [
         'add-resource',

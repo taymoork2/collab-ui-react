@@ -304,10 +304,10 @@
       };
       for (var i = 0; i < $scope.usrlist.length - 1; i++) {
         for (var j = i + 1; j < $scope.usrlist.length; j++) {
-          if (angular.isDefined($scope.usrlist[i].assignedDn) && angular.isDefined($scope.usrlist[j].assignedDn) && ($scope.usrlist[i].assignedDn.pattern !== "None") && ($scope.usrlist[i].assignedDn.pattern === $scope.usrlist[j].assignedDn.pattern)) {
+          if (angular.isDefined($scope.usrlist[i].assignedDn) && angular.isDefined($scope.usrlist[j].assignedDn) && ($scope.usrlist[i].assignedDn.uuid !== 'none') && ($scope.usrlist[i].assignedDn.pattern === $scope.usrlist[j].assignedDn.pattern)) {
             didDnDupe.dnDupe = true;
           }
-          if (angular.isDefined($scope.usrlist[i].externalNumber) && angular.isDefined($scope.usrlist[j].externalNumber) && ($scope.usrlist[i].externalNumber.pattern !== "None") && ($scope.usrlist[i].externalNumber.pattern === $scope.usrlist[j].externalNumber.pattern)) {
+          if (angular.isDefined($scope.usrlist[i].externalNumber) && angular.isDefined($scope.usrlist[j].externalNumber) && ($scope.usrlist[i].externalNumber.uuid !== 'none') && ($scope.usrlist[i].externalNumber.pattern === $scope.usrlist[j].externalNumber.pattern)) {
             didDnDupe.didDupe = true;
           }
           if (didDnDupe.dnDupe && didDnDupe.didDupe) {
@@ -343,7 +343,8 @@
     $scope.editServicesSave = function () {
       for (var licenseId in $scope.cmrLicensesForMetric) {
         if ($scope.cmrLicensesForMetric[licenseId]) {
-          Analytics.trackSelectedCheckbox(licenseId);
+          Analytics.trackUserOnboarding(Analytics.sections.USER_ONBOARDING.eventNames.CMR_CHECKBOX, $state.current.name, Authinfo.getOrgId(), { licenseId: licenseId });
+
         }
       }
       if (shouldAddCallService()) {
@@ -1000,7 +1001,8 @@
         if (str.length >= 3 || str === '') {
           $scope.searchStr = str;
           getUnlicensedUsers();
-          Analytics.trackConvertUser($state.current.name, Authinfo.getOrgId());
+          Analytics.trackUserOnboarding(Analytics.sections.USER_ONBOARDING.eventNames.CONVERT_USER, $state.current.name, Authinfo.getOrgId());
+
         }
       }, $scope.timeoutVal);
     }
@@ -1126,7 +1128,7 @@
       // make sure we have any internal extension and direct line set up for the users
       _.forEach(users, function (user) {
         user.internalExtension = _.get(user, 'assignedDn.pattern');
-        if (user.externalNumber && user.externalNumber.pattern !== 'None') {
+        if (user.externalNumber && user.externalNumber.uuid && user.externalNumber.uuid !== 'none') {
           user.directLine = user.externalNumber.pattern;
         }
       });
@@ -1657,7 +1659,7 @@
           if (userAndDnObj[0].assignedDn && userAndDnObj[0].assignedDn.pattern.length > 0) {
             userItem.internalExtension = userAndDnObj[0].assignedDn.pattern;
           }
-          if (userAndDnObj[0].externalNumber && userAndDnObj[0].externalNumber.pattern !== "None") {
+          if (userAndDnObj[0].externalNumber && userAndDnObj[0].externalNumber.uuid !== 'none') {
             userItem.directLine = userAndDnObj[0].externalNumber.pattern;
           }
         });
@@ -1712,14 +1714,14 @@
       if (data.success) {
         Log.info('User successfully updated', data);
 
-        for (var i = 0; i < data.userResponse.length; i++) {
-
+        var userResponseArray = _.get(data, 'userResponse');
+        _.forEach(userResponseArray, function (userResponseItem) {
           var userResult = {
-            email: data.userResponse[i].email,
+            email: userResponseItem.email,
             alertType: null
           };
 
-          var httpStatus = data.userResponse[i].status;
+          var httpStatus = userResponseItem.status;
 
           switch (httpStatus) {
             case 200:
@@ -1746,10 +1748,14 @@
               break;
             }
             default: {
-              if (data.userResponse[i].message === Config.messageErrors.hybridServicesComboError) {
+              if (userResponseItem.message === Config.messageErrors.hybridServicesComboError) {
                 userResult.message = $translate.instant('onboardModal.result.400094', {
                   status: httpStatus
                 });
+                userResult.alertType = 'danger';
+                isComplete = false;
+              } else if (_.includes(userResponseItem.message, 'DN_IS_FALLBACK')) {
+                userResult.message = $translate.instant('onboardModal.result.deleteUserDnFallbackError');
                 userResult.alertType = 'danger';
                 isComplete = false;
               } else {
@@ -1767,7 +1773,8 @@
           if (method !== 'convertUser') {
             $scope.$dismiss();
           }
-        }
+        });
+
 
         for (var idx in $scope.results.resultList) {
           if ($scope.results.resultList[idx].alertType !== 'success') {

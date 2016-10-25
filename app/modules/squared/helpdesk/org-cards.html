@@ -135,14 +135,18 @@
           </div>
           <div ng-if="helpdeskOrgCtrl.supportsLocalDialing">
             <h5 translate="helpdesk.dialing"></h5>
-            <span>{{'helpdesk.dialingPlan.' + (helpdeskOrgCtrl.callCard.dialing | lowercase) | translate}}</span>
+            <span>{{helpdeskOrgCtrl.callCard.dialing}}</span>
+            <div ng-if="helpdeskOrgCtrl.callCard.areaCode">
+              <h5 translate="helpdesk.areaCode"></h5>
+              <span>{{helpdeskOrgCtrl.callCard.areaCode}}</span>
+            </div>
           </div>
           <div ng-if="helpdeskOrgCtrl.callCard.voiceMailPrefix">
             <h5 translate="helpdesk.vmprefix"></h5>
             <span>{{helpdeskOrgCtrl.callCard.voiceMailPrefix}}</span>
           </div>
           <div ng-if="helpdeskOrgCtrl.callCard.outboundDialDigit">
-            <h5 translate="helpdesk.outbounddigit"></h5>
+            <h5 translate="helpdesk.outboundDigit"></h5>
             <span>{{helpdeskOrgCtrl.callCard.outboundDialDigit}}</span>
           </div>
         </div>

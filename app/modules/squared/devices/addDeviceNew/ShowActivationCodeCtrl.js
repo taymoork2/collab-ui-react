@@ -4,7 +4,7 @@
   angular.module('Core')
     .controller('ShowActivationCodeCtrl', ShowActivationCodeCtrl);
   /* @ngInject */
-  function ShowActivationCodeCtrl($q, UserListService, OtpService, CsdmDataModelService, $stateParams, XhrNotificationService, ActivationCodeEmailService, $translate, Notification, CsdmEmailService, UrlConfig) {
+  function ShowActivationCodeCtrl($q, UserListService, OtpService, CsdmDataModelService, $stateParams, XhrNotificationService, ActivationCodeEmailService, $translate, Notification, CsdmEmailService) {
     var vm = this;
     vm.wizardData = $stateParams.wizard.state().data;
     vm.hideBackButton = vm.wizardData.function == "showCode";
@@ -16,6 +16,7 @@
     };
     vm.qrCode = undefined;
     vm.timeLeft = '';
+    vm.isLoading = true;
 
     vm.activationCode = vm.wizardData.activationCode || (vm.wizardData.code && vm.wizardData.code.activationCode) || '';
 
@@ -35,7 +36,7 @@
       );
     };
 
-    if (vm.wizardData.deviceType === 'huron') {
+    function generateQRCode() {
       OtpService.getQrCodeUrl(vm.wizardData.activationCode || vm.wizardData.code.activationCode).then(function (qrcode) {
         var arrayData = '';
         for (var i in Object.keys(qrcode)) {
@@ -44,14 +45,17 @@
           }
         }
         vm.qrCode = arrayData;
-      });
-    } else if (!vm.wizardData.code || !vm.wizardData.code.activationCode) {
-      var success = function success(code) {
         vm.isLoading = false;
+      });
+    }
+
+    if (vm.wizardData.deviceType !== 'huron' && (!vm.wizardData.code || !vm.wizardData.code.activationCode)) {
+      var success = function success(code) {
         if (code) {
           vm.wizardData.code = code;
           vm.activationCode = code.activationCode;
           vm.friendlyActivationCode = formatActivationCode(code.activationCode);
+          generateQRCode();
         }
       };
       var error =
@@ -65,7 +69,6 @@
           .then(success, error);
       } else {
         if (vm.wizardData.deviceType === "cloudberry") {
-          vm.isLoading = true;
           CsdmDataModelService.createCsdmPlace(vm.wizardData.deviceName, vm.wizardData.deviceType).then(function (place) {
             vm.place = place;
             CsdmDataModelService
@@ -76,6 +79,8 @@
           success();
         }
       }
+    } else {
+      generateQRCode();
     }
 
     vm.activationFlowType = function () {
@@ -151,7 +156,7 @@
     };
 
     vm.sendActivationCodeEmail = function sendActivationCodeEmail() {
-      if (vm.wizardData.deviceType === 'huron') {
+      if (vm.wizardData.deviceType === 'huron' && vm.wizardData.accountType === 'personal') {
         var emailInfo = {
           email: vm.email.to,
           firstName: vm.email.to,
@@ -179,17 +184,23 @@
             $translate.instant('generateActivationCodeModal.emailErrorTitle')
           );
         });
-      } else if (vm.wizardData.deviceType === 'cloudberry') {
-        var url = UrlConfig.getAdminServiceUrl() + 'organization/' + vm.wizardData.organizationId + '/deviceActivation/emailActivationCode';
+      } else {
         var cbEmailInfo = {
+          toCustomerId: vm.wizardData.organizationId,
           toUserId: vm.email.id,
+          machineAccountCustomerId: vm.wizardData.organizationId,
           machineAccountId: vm.wizardData.code.cisUuid,
           activationCode: vm.activationCode,
           expiryTime: vm.getExpiresOn()
         };
+        var mailFunction;
+        if (vm.wizardData.deviceType === 'cloudberry') {
+          mailFunction = CsdmEmailService.sendCloudberryEmail;
+        } else {
+          mailFunction = CsdmEmailService.sendHuronEmail;
+        }
 
-        CsdmEmailService
-          .sendCloudberryEmail(url, cbEmailInfo)
+        mailFunction(cbEmailInfo)
           .then(function () {
             Notification.notify(
               [$translate.instant('generateActivationCodeModal.emailSuccess', {

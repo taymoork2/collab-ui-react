@@ -2,34 +2,41 @@
   'use strict';
 
   angular.module('uc.autoattendant')
-    .controller('AAMediaUploadCtrl', AAMediaUploadCtrl);
+  .controller('AAMediaUploadCtrl', AAMediaUploadCtrl);
 
   /* @ngInject */
-  function AAMediaUploadCtrl($scope, $translate, Upload, ModalService, AANotificationService, AACommonService, AAMediaUploadService, AAUiModelService) {
+  function AAMediaUploadCtrl($scope, $translate, Upload, ModalService, AANotificationService, AACommonService, AAMediaUploadService, AAUiModelService, AutoAttendantCeMenuModelService) {
     var vm = this;
 
     vm.uploadFile = '';
     vm.uploadDate = '';
     vm.uploadDuration = '';
+    vm.fileLengthLowerLimit = 12;
+    vm.fileLengthUpperLimit = 15;
     vm.WAIT = "WAIT";
     vm.DOWNLOAD = "DOWNLOAD";
     vm.UPLOADED = "UPLOADED";
     vm.state = vm.WAIT;
     vm.menuEntry = {};
-    vm.wavFile = '';
     vm.dialogModalTypes = {
       cancel: 'cancel',
       overwrite: 'overwrite',
     };
-    vm.actionCopy = undefined;
 
     vm.upload = upload;
     vm.openModal = openModal;
+    vm.progress = 0;
+    vm.actionCopy = undefined;
 
+    var myActions = ["play", "runActionsOnInput"];
+    var mediaTypes = {
+      musicOnHold: 'musicOnHold',
+      initialAnnouncement: 'initialAnnouncement',
+      periodicAnnouncement: 'periodicAnnouncement',
+    };
+    var uniqueCtrlIdentifer = 'mediaUploadCtrl';
     var modalOpen = false;
     var modalCanceled = false;
-    var saveOn = 'uploadingInProgress';
-    var actionName = 'play';
     var uploadServProm = undefined;
 
     //////////////////////////////////////////////////////
@@ -62,7 +69,8 @@
     //upload set up ui model and state info
     function continueUpload(file) {
       Upload.mediaDuration(file).then(function (durationInSeconds) {
-        AACommonService.setIsValid(saveOn, false);
+        uniqueCtrlIdentifer += AACommonService.getUniqueId();
+        AACommonService.setIsValid(uniqueCtrlIdentifer, false);
         vm.uploadFile = file.name;
         vm.uploadDate = moment().format("MM/DD/YYYY");
         vm.uploadDuration = '(' + moment.utc(durationInSeconds * 1000).format('mm:ss') + ')';
@@ -87,6 +95,7 @@
         action.setDescription(JSON.stringify(fd));
         action.setValue('http://' + result.data.PlaybackUri);
         setActionCopy();
+        $scope.change();
       }
     }
 
@@ -98,13 +107,18 @@
     }
 
     function uploadProgress(evt) {
-      vm.progress = parseInt((100.0 * (evt.loaded / evt.total)), 10);
+      //dont divide by zero for progress calculation
+      if (angular.isDefined(evt) && !_.isEqual(evt.total, 0)) {
+        vm.progress = parseInt((100.0 * ((evt.loaded - 1) / evt.total)), 10);
+      } else {
+        vm.progress = 0;
+      }
     }
 
     //global media upload for save
     function cleanUp() {
       uploadServProm = undefined;
-      AACommonService.setIsValid(saveOn, true);
+      AACommonService.setIsValid(uniqueCtrlIdentifer, true);
       AACommonService.setMediaUploadStatus(true);
     }
 
@@ -211,35 +225,66 @@
       }
     }
 
+    function createPlayAction() {
+      return AutoAttendantCeMenuModelService.newCeActionEntry('play', '');
+    }
+
+
     function getPlayAction(menuEntry) {
       var playAction;
       if (menuEntry && menuEntry.actions && menuEntry.actions.length > 0) {
         playAction = _.find(menuEntry.actions, function (action) {
-          return action.getName() === actionName;
+          return _.indexOf(myActions, action.getName()) >= 0;
         });
         return playAction;
       }
     }
 
-    function populateUiModel() {
-      var ui = AAUiModelService.getUiModel();
-      var uiMenu = ui[$scope.schedule];
-      vm.menuEntry = uiMenu.entries[$scope.index];
-      var playAction = getPlayAction(vm.menuEntry);
-      if (angular.isDefined(playAction)) {
-        if (!_.isEmpty(playAction.getValue())) {
-          try {
-            var desc = JSON.parse(playAction.getDescription());
-            vm.uploadFile = desc.uploadFile;
-            vm.uploadDate = desc.uploadDate;
-            vm.uploadDuration = desc.uploadDuration;
-            vm.state = vm.UPLOADED;
-            vm.progress = 0;
-          } catch (exception) {
-            playAction.setValue('');
-            playAction.setDescription('');
-          }
+    function gatherMediaSource() {
+      if ($scope.type && _.includes(mediaTypes, $scope.type)) { //case of route to queue types
+        //type will be used to differentiate between the different media uploads on the queue modal
+        //get the entry mapped to a particular route to queue and
+        //mapped to a particular queue setting
+        var sourceMenu = AutoAttendantCeMenuModelService.getCeMenu($scope.menuId);
+        var sourceQueue = sourceMenu.entries[$scope.keyIndex];
+        var queueAction = sourceQueue.actions[0];
+        vm.menuEntry = queueAction.queueSettings[$scope.type];
+      } else { //case of no key input message types
+        //get the entry mapped to a plain message type
+        var ui = AAUiModelService.getUiModel();
+        var uiMenu = ui[$scope.schedule];
+        vm.menuEntry = uiMenu.entries[$scope.index];
+      }
+    }
+
+    function setUpEntry(action) {
+      if (_.startsWith(action.getValue().toLowerCase(), 'http')) {
+        try {
+          // description holds the file name plus the date plus the duration
+          //dont set up the vm until the desc is parsed properly
+          var desc = JSON.parse(action.getDescription());
+          vm.uploadFile = desc.uploadFile;
+          vm.uploadDate = desc.uploadDate;
+          vm.uploadDuration = desc.uploadDuration;
+          vm.state = vm.UPLOADED;
+          vm.progress = 0;
+        } catch (exception) {
+          //if somehow a bad format came through
+          //catch and keep disallowed
+          action.setValue('');
+          action.setDescription('');
         }
+      }
+    }
+
+    function populateUiModel() {
+      gatherMediaSource();
+      var action = getPlayAction(vm.menuEntry);
+      if (angular.isDefined(action)) {
+        setUpEntry(action);
+      } else {
+        // should not happen, created earlier but ..
+        vm.menuEntry.addAction(createPlayAction());
       }
     }
 
@@ -247,6 +292,13 @@
       populateUiModel();
       setActionCopy();
     }
+
+    $scope.$on('$destroy', function () {
+      if (angular.isDefined(uploadServProm)) {
+        modalCanceled = true;
+        uploadServProm.abort();
+      }
+    });
 
     activate();
 

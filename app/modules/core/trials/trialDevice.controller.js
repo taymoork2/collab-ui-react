@@ -6,8 +6,8 @@
     .controller('TrialDeviceController', TrialDeviceController);
 
   /* @ngInject */
-  // TODO - check for removal of $q and FeatureToggleService when DX80 and MX300 are officially supported
-  function TrialDeviceController($stateParams, $translate, FeatureToggleService, Notification, TrialCallService, TrialDeviceService, TrialRoomSystemService, ValidationService) {
+  // TODO - check for removal of $q and FeatureToggleService when MX300 are officially supported
+  function TrialDeviceController($scope, $stateParams, $translate, Analytics, FeatureToggleService, Notification, TrialCallService, TrialDeviceService, TrialRoomSystemService, TrialService, ValidationService) {
     var vm = this;
 
     var _trialCallData = TrialCallService.getData();
@@ -23,6 +23,7 @@
     var trialStartDate = _.get($stateParams, 'currentTrial.startDate');
     var grandfatherMaxDeviceDate = new Date(2016, 8, 1);
 
+    vm.parentTrialData = $scope.trialData;
     // merge is apparently not pass-by-reference
     vm.details = _.merge(_trialCallData.details, _trialRoomSystemData.details);
     vm.skipDevices = _trialDeviceData.skipDevices;
@@ -51,9 +52,8 @@
     vm.areAdditionalDevicesAllowed = areAdditionalDevicesAllowed;
     vm.areTemplateOptionsDisabled = _areTemplateOptionsDisabled;
     vm.getCountriesForSelectedDevices = getCountriesForSelectedDevices;
-    // TODO - Remove vm.showNewRoomSystems when DX80 and MX300 are officially supported
+    // TODO - Remove vm.showNewRoomSystems when MX300 are officially supported
     vm.showNewRoomSystems = false;
-    vm.supportsInternationalShipping = false;
     vm.selectedCountryCode = null;
 
     if (_.has($stateParams, 'details.details.shippingInformation.country')) {
@@ -171,10 +171,6 @@
           return !vm.canAddRoomSystemDevice;
         }
       },
-      // TODO - remove hideExpression when DX80 and MX300 are officially supported
-      hideExpression: function () {
-        return !vm.showNewRoomSystems;
-      },
       validators: _checkValidators()
     }, {
       model: vm.dx80,
@@ -209,10 +205,6 @@
           return vm.getQuantityInputDefault(vm.dx80, minRoomSystems);
         }
       },
-      // TODO - remove hideExpression when DX80 and MX300 are officially supported
-      hideExpression: function () {
-        return !vm.showNewRoomSystems;
-      },
       watcher: _addWatcher(),
       validators: _addRoomSystemValidators()
     }, {
@@ -230,7 +222,7 @@
           return !vm.canAddRoomSystemDevice;
         }
       },
-      // TODO - remove hideExpression when DX80 and MX300 are officially supported
+      // TODO - remove hideExpression when MX300 are officially supported
       hideExpression: function () {
         return !vm.showNewRoomSystems;
       },
@@ -267,7 +259,7 @@
           return vm.getQuantityInputDefault(vm.mx300, minRoomSystems);
         }
       },
-      // TODO - remove hideExpression when DX80 and MX300 are officially supported
+      // TODO - remove hideExpression when MX300 are officially supported
       hideExpression: function () {
         return !vm.showNewRoomSystems;
       },
@@ -690,36 +682,26 @@
 
     ////////////////
     function getCountriesForSelectedDevices() {
-      var selectedDevices = null;
-      if (vm.supportsInternationalShipping) {
-        selectedDevices = _.chain(_.union(vm.roomSystemFields, vm.deskPhoneFields))
-        .filter(function (e) {
-          return e.model.quantity > 0 && e.model.enabled === true && e.key === 'quantity';
-        })
-        .map(function (o) {
-          return o.model.model;
-        }).value();
-      }
+      var selectedDevices = _.chain(_.union(vm.roomSystemFields, vm.deskPhoneFields))
+      .filter(function (device) {
+        return device.model.quantity > 0 && device.model.enabled === true && device.key === 'quantity';
+      })
+      .map(function (device) {
+        return device.model.model;
+      }).value();
       return TrialDeviceService.getCountries(selectedDevices);
     }
 
     function init() {
-      var limitsPromise = TrialDeviceService.getLimitsPromise();
 
-      // TODO - remove feature toggle when DX80 and MX300 are officially supported
-      // Hides the DX80 and MX300 under a feature toggle
+      var limitsPromise = TrialDeviceService.getLimitsPromise();
+      TrialService.sendToAnalytics(Analytics.eventNames.ENTER_SCREEN, vm.parentTrialData);
+
+      // TODO - remove feature toggle when MX300 are officially supported
+      // Hides the MX300 under a feature toggle
       FeatureToggleService.supports(FeatureToggleService.features.atlasNewRoomSystems)
         .then(function (results) {
           vm.showNewRoomSystems = results;
-        });
-
-      // TODO: - remove toggle when shipping to additional countries is officially supported
-      // Hides options for international shipping
-
-      FeatureToggleService.atlasShipDevicesInternationalGetStatus()
-        .then(function (results) {
-          results = true;
-          vm.supportsInternationalShipping = results;
         });
 
       vm.canAddMoreDevices = vm.isEditing && vm.hasExistingDevices();
@@ -762,6 +744,7 @@
     }
 
     function skip(skipped) {
+      TrialService.sendToAnalytics(Analytics.eventNames.SKIP, vm.parentTrialData);
       _trialDeviceData.skipDevices = skipped;
     }
 

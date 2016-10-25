@@ -1,23 +1,5 @@
 .ct-profile {
-  .ct-profile-body {
-    .card-info {
-      text-align: center;
-    }
-  }
-
-  .ct-article {
-    box-shadow: none;
-    border: 1px solid $gray-light-1;
-  }
-
-  .cs-card {
-    @include vr-spacing(mt, 0);
-    @include vr-spacing(ml, 3);
-
-    section {
-      overflow: hidden;
-    }
-  }
+  align-items: center;
 
   .cs-card article.profile-preview {
     height: 26.5rem;
@@ -34,48 +16,60 @@
       background-color: $gray-light-4;
 
       .profile-name {
-        flex: 0 1 65%;
         @include vr-spacing(pb, 0.5);
+
+        flex: 0 1 65%;
         text-overflow: ellipsis;
         white-space: nowrap;
         overflow: hidden;
+        color: $color-primary-base;
 
         .agent {
           opacity: 0.5;
         }
       }
+
       .img {
         .icon-circle-computer-blank {
           font-size: 3rem;
         }
+
         .icon-user {
-         font-size: 2rem;
+          font-size: 2rem;
         }
+
         .uploded-org-img {
           height: 3rem;
           width: 3rem;
           border-radius: 50%;
           border: 1px solid $gray-light-1;
         }
+
         .agent {
           @include vr-spacing(mb, 0.5);
+
           height: 3rem;
           width: 3rem;
           border-radius: 50%;
-          border: 1px solid $gray-light-1;
-          background: $white;
-          >i {
-            top: 0.4rem;
-            left: 0.4rem;
-            color: $gray-light-1;
+          border: 1px solid $color-primary-base;
+          background: $color-primary-base;
+
+          > i {
+            top: 0.6rem;
+            left: 0.7rem;
+            color: $white;
+            font-size: 1.7rem;
           }
         }
       }
+
       .actions {
         flex: 0 1 15%;
+
         > i {
           font-size: 1rem;
         }
+
         .icon-minus {
           @include vr-spacing(pr, 0.5);
         }
@@ -87,15 +81,18 @@
         float: right;
 
         .customer-message {
-          color: $white;
           @include vr-spacing(p, 0.75);
-          border-radius: 2px 2px 0px 2px;
+
+          color: $white;
+          border-radius: 2px 2px 0px;
           background-color: $color-people-base;
         }
+
         .time {
           @include vr-spacing(mt, 0.5);
           @include vr-spacing(ml, 10);
         }
+
         .speech-bubble {
           top: 0.9375rem;
           right: 0.3125rem;
@@ -105,6 +102,7 @@
           overflow: hidden;
           display: inline-block;
           background-color: $color-people-base;
+
           > span {
             position: absolute;
             width: 3rem;
@@ -112,9 +110,11 @@
             border-radius: 100%;
             background-color: $white;
           }
+
           .top {
             top: -14px;
           }
+
           .right {
             right: -14px;
           }
@@ -123,17 +123,22 @@
 
       .agent-message-details {
         float: left;
+
         @include vr-spacing(mt, 1);
+
         .message {
           @include vr-spacing(p, 0.75);
+
           border-radius: 2px 2px 2px 0px;
           background-color: $gray-light-3;
         }
+
         .time {
           @include vr-spacing(mt, 0.5);
           @include vr-spacing(mb, 8.5);
           @include vr-spacing(pr, 9.5);
         }
+
         .speech-bubble {
           top: 0.9375rem;
           left: 0.3125rem;
@@ -143,6 +148,7 @@
           overflow: hidden;
           display: inline-block;
           background-color: $gray-light-3;
+
           > span {
             position: absolute;
             width: 3rem;
@@ -150,8 +156,14 @@
             border-radius: 100%;
             background-color: $white;
           }
-          .top { top: -14px; }
-          .left { left: -14px; }
+
+          .top {
+            top: -14px;
+          }
+
+          .left {
+            left: -14px;
+          }
         }
 
         .agent-status {
@@ -164,6 +176,7 @@
       text-align: start;
       color: $gray-light-1;
       border-top: 1px solid $gray-light-3;
+
       @include vr-spacing(pv, 0.75);
     }
   }
@@ -173,12 +186,15 @@
     width: 21.75rem;
     box-shadow: 0;
     background-color: $gray-light-4;
+
     @include vr-spacing(pt, 1);
     @include vr-spacing(ph, 1);
-    .subheader-text{
+
+    .subheader-text {
       @include vr-spacing(pt, 0);
       @include vr-spacing(pb, 0.5);
     }
+
     .agent-name-options {
       @include vr-spacing(mb, 0.5, 0px, true);
     }
@@ -190,40 +206,46 @@
         border-radius: 50%;
         position: relative;
         text-align: center;
+
         @include vr-spacing(ml, 5.5);
       }
+
       .preview-org-img {
-        font-size:7rem;
+        font-size: 7rem;
       }
+
       .uploaded-org-img {
         border-radius: 70%;
         border: 1px solid $gray-light-1;
         width: 7rem;
         height: 7rem;
       }
+
       .agent-img {
-        background: $white;
-        border: 1px solid $gray-light-1;
-        .icon-user {
-          font-size: 5rem;
-          top: 1rem;
-          color: $gray-light-1;
+        background: $color-primary-base;
+        border: 1px solid $color-primary-base;
+
+        .icon-user-chat {
+          font-size: 4rem;
+          top: 1.5rem;
+          color: $white;
         }
       }
     }
 
-    .ct-org-logo-text{
+    .ct-org-logo-text {
       @include vr-spacing(pb, 1);
+
       text-align: center;
       color: $color-cta-dark;
       font-size: 12px;
-      width: 95%;
+      width: 100%;
     }
 
     .ct-display-txt {
       @include vr-spacing(pb, 0.5);
+
       padding-top: 0;
     }
-
   }
 }

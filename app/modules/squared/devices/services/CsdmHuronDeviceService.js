@@ -9,9 +9,10 @@
   function CsdmHuronUserDeviceService($injector, Authinfo, CsdmConfigService) {
     function create(userId) {
       var devicesUrl = CsdmConfigService.getUrl() + '/organization/' + Authinfo.getOrgId() + '/users/' + userId + '/huronDevices';
-      return $injector.instantiate(CsdmHuronDeviceService, {
+      var service = $injector.instantiate(CsdmHuronDeviceService, {
         devicesUrl: devicesUrl
       });
+      return service;
     }
 
     return {
@@ -37,11 +38,6 @@
 
     function huronEnabled() {
       return $q.when(Authinfo.isSquaredUC());
-    }
-
-    function decodeHuronTags(description) {
-      var tagString = (description || "").replace(/\['/g, '["').replace(/']/g, '"]').replace(/',/g, '",').replace(/,'/g, ',"');
-      return tagString;
     }
 
     function getCmiUploadLogsUrl(userId, deviceId) {
@@ -78,7 +74,11 @@
       });
     }
 
-    fetch();
+    function fetchDevices() {
+      return $http.get(devicesUrl).then(function (res) {
+        return CsdmConverter.convertHuronDevices(res.data);
+      });
+    }
 
     function dataLoaded() {
       return !Authinfo.isSquaredUC() || loadedData;
@@ -88,18 +88,8 @@
       return deviceList;
     }
 
-    function update(url, obj) {
-      return $http.put(url, obj).then(function () {
-        var device = _.clone(deviceList[url]);
-        if (obj.description) {
-          try {
-            device.tags = JSON.parse(decodeHuronTags(obj.description));
-          } catch (e) {
-            device.tags = [];
-          }
-        }
-        return device;
-      });
+    function deleteItem(device) {
+      return $http.delete(device.url);
     }
 
     function deleteDevice(deviceUrl) {
@@ -157,9 +147,8 @@
       if (jsonTags.length >= 128) {
         return $q.reject("List of tags is longer than supported.");
       }
-      deviceList[url].tags = tags; // update ui asap
-      deviceList[url].tagString = tags.join(', '); // update ui asap
-      return update(url, {
+
+      return $http.put(url, {
         description: jsonTags
       });
     }
@@ -171,6 +160,10 @@
     }
 
     return {
+
+      fetchDevices: fetchDevices,
+      deleteItem: deleteItem,
+      updateTags: updateTags,
       dataLoaded: dataLoaded,
       getDeviceList: getDeviceList,
       deleteDevice: deleteDevice,
@@ -179,7 +172,8 @@
       setTimezoneForDevice: setTimezoneForDevice,
       resetDevice: resetDevice,
       uploadLogs: uploadLogs,
-      updateTags: updateTags
+
+      fetch: fetch,
     };
   }
 })();

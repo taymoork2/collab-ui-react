@@ -1,8 +1,58 @@
-<div id="device-usage-distribution-chart" style="height: 400px; width: 90%; margin: 0 auto; margin-top: 2rem">
-</div>
+<cs-card-layout block-view="true">
 
-<div style="background:white; width: 90%; margin: 0 auto">
-  <div style="height:300px;border:1px solid DarkGray" >
-    <div gridscrollbar class="gridStyle" ui-grid="deviceUsage.gridOptions" ui-grid-selection></div>
+
+  <cs-card class="medium header-border">
+    <article>
+      <header class="align-center">
+        <h4>Least Used</h4>
+      </header>
+      <section class="small-padding">
+
+        <div ng-include = "'/modules/core/customerReports/deviceUsage/leastUsedDevices.tpl.html'"/>
+
+      </section>
+    </article>
+  </cs-card>
+
+
+  <cs-card class="medium header-border">
+    <article>
+      <header class="align-center">
+        <h4>Most Used</h4>
+      </header>
+      <section class="small-padding">
+        <div ng-include = "'/modules/core/customerReports/deviceUsage/mostUsedDevices.tpl.html'"/>
+
+      </section>
+    </article>
+  </cs-card>
+
+
+  <cs-card class="medium header-border">
+    <article>
+      <section>
+        <div ng-include = "'/modules/core/customerReports/deviceUsage/keyholeview.tpl.html'"/>
+
+      </section>
+    </article>
+  </cs-card>
+
+
+  <cs-card class="full">
+    <article>
+      <section>
+        <div id="device-usage-distribution-chart" class="device-usage-distribution-report">
+        </div>
+      </section>
+    </article>
+  </cs-card>
+
+</cs-card-layout>
+
+
+<div ng-show="deviceUsage.loading" class="loading-indicator">
+  <div class="loading-text">
+    Collecting data
+    <div cs-loader class="loader-example--small"></div>
   </div>
 </div>

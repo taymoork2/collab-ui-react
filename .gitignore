@@ -24,6 +24,7 @@ stats.json
 .sonar
 .tmp
 .vscode
+yarn.lock
 
 build
 coverage
@@ -48,7 +49,5 @@ test/karma-unit-*
 test/karma-watch.js
 test/unit-test-results.html
 test/unit-test-results.xml
-
-webpack-segfault-crash--*log
 
 ?

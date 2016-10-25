@@ -1,0 +1,86 @@
+<cs-card id="{{::$ctrl.options.id}}" class="large" ng-class="{'hideCard': !$ctrl.show, 'report-box': !$ctrl.isTable(), 'report-card': $ctrl.isTable()}">
+  <article>
+    <header>
+      <span class='report-section-header' translate="{{::$ctrl.options.headerTitle}}"></span>
+      <i ng-if="$ctrl.isPopover()" class='icon icon-information' tooltip="{{::$ctrl.getPopoverText()}}" tooltip-trigger="mouseenter" tooltip-placement="right" tooltip-animation="true"></i>
+    </header>
+    <section class="report-{{$ctrl.options.reportType}}">
+      <p>{{$ctrl.getDescription($ctrl.options.description)}}</p>
+      <cs-select ng-if="$ctrl.dropdown" id="{{::$ctrl.options.id}}Filter" class='report-dropdown' ng-model="$ctrl.dropdown.selected" options="$ctrl.dropdown.array" on-change-fn="$ctrl.dropdown.click()" is-disabled="$ctrl.dropdown.disabled"></cs-select>
+      <div ng-if="!$ctrl.isTable()" id="{{::$ctrl.options.id}}Chart" ng-class="{'active-chart': $ctrl.isSet() && $ctrl.options.animate, 'barchart': !$ctrl.isDonut(), 'barchart-shift': !$ctrl.isDonut() && $ctrl.dropdown, 'timechartDiv': $ctrl.isDonut()}"></div>
+      <table ng-if="$ctrl.isTable()" class="table table-bordered" ng-class="{'dummyTable': $ctrl.options.table.dummy}">
+        <thead>
+          <th ng-repeat="header in $ctrl.options.table.headers" class="bold vertical-center {{header.class}}">{{$ctrl.getHeader(header.title)}}</th>
+        </thead>
+        <tbody>
+          <tr ng-repeat="customer in $ctrl.options.table.data | orderBy:'customer'">
+            <td ng-repeat="data in customer" class="{{data.class}}">
+              <div ng-if="data.output.length > 1">
+                <div class="{{data.splitClasses}}">{{data.output[0]}}</div>
+                <div class="{{data.splitClasses}}">{{data.output[1]}}</div>
+              </div>
+              <span ng-if="data.output.length === 1">{{data.output[0]}}</span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="spinner-position" ng-if="$ctrl.isRefresh()">
+        <i class='icon icon-spinner icon-2x'></i>
+      </div>
+      <div class="no-data-center" ng-if="$ctrl.isEmpty()">
+        <h3 class="no-data">
+          <i class='icon icon-warning no-data-warning'></i>
+          <span translate='reportsPage.noCustomerData'></span>
+        </h3>
+      </div>
+
+      <!-- Secondary Report Section - Table Only -->
+      <div ng-if="$ctrl.secondaryOptions.display">
+        <div ng-if="$ctrl.secondaryReport" class="report-table">
+          <h4 class="box-match">{{$ctrl.getHeader($ctrl.secondaryOptions.title)}}</h4>
+          <p>{{$ctrl.getDescription($ctrl.secondaryOptions.description)}}</p>
+          <table class="table table-bordered" ng-show="$ctrl.secondaryIsSet() || true">
+            <thead>
+              <th ng-repeat="header in $ctrl.secondaryOptions.table.headers" class="bold vertical-center {{header.class}}" ng-click="$ctrl.secondaryReportSort($index)">{{$ctrl.getHeader(header.title)}}</th>
+            </thead>
+            <tbody>
+              <tr ng-repeat="user in $ctrl.secondaryOptions.table.data | orderBy:$ctrl.getPredicate():$ctrl.getSortDirection()" ng-if="$ctrl.isActivePage($index)">
+                <td class="vertical-center">{{user.userName}}</td>
+                <td class="vertical-center">{{user.orgName}}</td>
+                <td class="vertical-center horizontal-center">{{user.numCalls}}</td>
+                <td class="vertical-center horizontal-center">{{user.sparkMessages}}</td>
+              </tr>
+            </tbody>
+          </table>
+          <div ng-if="$ctrl.secondaryIsRefresh()">
+            <i class='icon icon-spinner icon-2x'></i>
+          </div>
+          <div class="no-data-most-active" ng-if="$ctrl.secondaryIsEmpty()">
+            <h3 class="no-data">
+              <i class='icon icon-warning no-data-warning'></i>
+              <span translate='reportsPage.noCustomerData'></span>
+            </h3>
+          </div>
+        </div>
+        <div class="box-match">
+          <a ng-click="$ctrl.openCloseSecondaryReport()">
+            <span ng-if="!$ctrl.secondaryReport" translate="{{::$ctrl.options.id}}.show"></span>
+            <span ng-if="$ctrl.secondaryReport" translate="{{::$ctrl.options.id}}.hide"></span>
+          </a>
+          <div class="pull-right" ng-if="$ctrl.secondaryReport && ($ctrl.totalPages > 1)">
+            <button type="button" class="carousel-control" ng-click="$ctrl.pageBackward()" ng-show="$ctrl.totalPages > 3" ng-disabled="$ctrl.currentPage <= 1">
+              <i class='icon icon-chevron-left'></i>
+            </button>
+            <button type="button" class="btn" ng-click="$ctrl.changePage($ctrl.pagingButtons[0])" ng-class="{'btn--primary': $ctrl.isCurrentPage(0), 'btn--link carousel-btn': !$ctrl.isCurrentPage(0)}"><span>{{$ctrl.pagingButtons[0]}}</span></button>
+            <button type="button" class="btn" ng-click="$ctrl.changePage($ctrl.pagingButtons[1])" ng-class="{'btn--primary': $ctrl.isCurrentPage(1), 'btn--link carousel-btn': !$ctrl.isCurrentPage(1)}"><span>{{$ctrl.pagingButtons[1]}}</span></button>
+            <button type="button" class="btn" ng-click="$ctrl.changePage($ctrl.pagingButtons[2])" ng-class="{'btn--primary': $ctrl.isCurrentPage(2), 'btn--link carousel-btn': !$ctrl.isCurrentPage(2)}" ng-show="$ctrl.totalPages > 2"><span>{{$ctrl.pagingButtons[2]}}</span></button>
+            <button type="button" class="carousel-control" ng-click="$ctrl.pageForward()" ng-show="$ctrl.totalPages > 3" ng-disabled="$ctrl.currentPage >= $ctrl.totalPages">
+              <i class='icon icon-chevron-right'></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+    <footer></footer>
+  </article>
+</cs-card>

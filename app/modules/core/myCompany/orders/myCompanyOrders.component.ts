@@ -1,5 +1,6 @@
 import { IOrderDetail } from './myCompanyOrders.service';
-import { DigitalRiverService } from '../../../online/digitalRiver/digitalRiver.service';
+import { DigitalRiverService } from 'modules/online/digitalRiver/digitalRiver.service';
+import { Notification } from 'modules/core/notifications';
 
 class MyCompanyOrdersCtrl implements ng.IComponentController {
 
@@ -14,7 +15,7 @@ class MyCompanyOrdersCtrl implements ng.IComponentController {
   /* @ngInject */
   constructor(
     private DigitalRiverService: DigitalRiverService,
-    private Notification,
+    private Notification: Notification,
   ) {}
 
   public $onInit(): void {

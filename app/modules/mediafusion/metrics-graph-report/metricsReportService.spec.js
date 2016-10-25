@@ -2,7 +2,7 @@
 
 describe('Service: Metrics Reports Service', function () {
   var $httpBackend, MetricsReportService, Notification;
-  var callVolumeUrl, UtilizationUrl, clusterAvailabilityUrl, totalCallsCard, availabilityCard, utilizationCard;
+  var callVolumeUrl, UtilizationUrl, clusterAvailabilityUrl, totalCallsCard, availabilityCard;
 
   var callVolumeData = getJSONFixture('mediafusion/json/metrics-graph-report/callVolumeData.json');
   var callVolume = callVolumeData.callvolume;
@@ -21,10 +21,9 @@ describe('Service: Metrics Reports Service', function () {
   var totalcallsdata = totalCallsCardData.totolcalls;
   var availabilityCardData = getJSONFixture('mediafusion/json/metrics-graph-report/availabilityCardData.json');
   var availabilitydata = availabilityCardData.availability;
-  var utilizationCardData = getJSONFixture('mediafusion/json/metrics-graph-report/utilizationCardData.json');
-  var utilizationcarddata = utilizationCardData.utilization;
 
   var allClusters = 'mediaFusion.metrics.allclusters';
+  var sampleClusters = 'mediaFusion.metrics.sampleclusters';
 
   beforeEach(angular.mock.module('Mediafusion'));
 
@@ -36,7 +35,10 @@ describe('Service: Metrics Reports Service', function () {
     getOrgId: jasmine.createSpy('getOrgId').and.returnValue('1')
   };
   var error = {
-    message: 'error'
+    message: 'error',
+    data: {
+      trackingId: "id"
+    }
   };
 
   beforeEach(angular.mock.module(function ($provide) {
@@ -56,7 +58,6 @@ describe('Service: Metrics Reports Service', function () {
     clusterAvailabilityUrl = baseUrl + '/clusters_availability/?relativeTime=1d';
     totalCallsCard = baseUrl + '/total_calls/?relativeTime=1d';
     availabilityCard = baseUrl + '/agg_availability/?relativeTime=1d';
-    utilizationCard = baseUrl + '/agg_cpu_utilization/?relativeTime=1d';
 
   }));
 
@@ -105,7 +106,7 @@ describe('Service: Metrics Reports Service', function () {
   });
 
   describe('Percentage of CPU utilization', function () {
-    it('should get percentage utilization data', function () {
+    xit('should get percentage utilization data', function () {
       $httpBackend.whenGET(UtilizationUrl).respond(utilizationdata);
 
       MetricsReportService.getUtilizationData(timeFilter, allClusters).then(function (response) {
@@ -168,9 +169,9 @@ describe('Service: Metrics Reports Service', function () {
     });
 
     it('should notify an error for total number of calls failure', function () {
-      $httpBackend.whenGET(totalCallsCard).respond(500, error);
+      $httpBackend.when('GET', /^\w+.*/).respond(500, error);
 
-      MetricsReportService.getTotalCallsData(timeFilter, allClusters).then(function (response) {
+      MetricsReportService.getTotalCallsData(timeFilter, sampleClusters).then(function (response) {
         expect(response).toEqual([]);
         expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
       });
@@ -194,29 +195,6 @@ describe('Service: Metrics Reports Service', function () {
       $httpBackend.whenGET(availabilityCard).respond(500, error);
 
       MetricsReportService.getClusterAvailabilityData(timeFilter, allClusters).then(function (response) {
-        expect(response).toEqual([]);
-        expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
-      });
-
-      $httpBackend.flush();
-    });
-  });
-
-  describe('Aggregated Utilization Data', function () {
-    it('should get Average and Peak Utilization data', function () {
-      $httpBackend.whenGET(utilizationCard).respond(utilizationcarddata);
-
-      MetricsReportService.getCPUUtilizationData(timeFilter, allClusters).then(function (response) {
-        expect(response.data).toEqual(utilizationcarddata);
-      });
-
-      $httpBackend.flush();
-    });
-
-    it('should notify an error for Utilization data failure', function () {
-      $httpBackend.whenGET(utilizationCard).respond(500, error);
-
-      MetricsReportService.getCPUUtilizationData(timeFilter, allClusters).then(function (response) {
         expect(response).toEqual([]);
         expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
       });

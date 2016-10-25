@@ -235,7 +235,6 @@ describe('Huron Device', function () {
   var $scope, $controller, controller, $httpBackend;
   var $q, CsdmConfigService;
   var $stateParams, ServiceSetup, timeZone, newTimeZone;
-  var FeatureToggleService;
   var HuronConfig;
 
   beforeEach(angular.mock.module('Hercules'));
@@ -246,15 +245,13 @@ describe('Huron Device', function () {
   beforeEach(initSpies);
 
 
-  function dependencies(_$q_, $rootScope, _$controller_, _$httpBackend_, _CsdmConfigService_, _$stateParams_, _ServiceSetup_, _FeatureToggleService_, _HuronConfig_) {
+  function dependencies(_$q_, $rootScope, _$controller_, _$httpBackend_, _CsdmConfigService_, _ServiceSetup_, _HuronConfig_) {
     $scope = $rootScope.$new();
     $controller = _$controller_;
     $httpBackend = _$httpBackend_;
     $q = _$q_;
     CsdmConfigService = _CsdmConfigService_;
     ServiceSetup = _ServiceSetup_;
-    $stateParams = _$stateParams_;
-    FeatureToggleService = _FeatureToggleService_;
     HuronConfig = _HuronConfig_;
     $stateParams = {
       currentDevice: {
@@ -330,7 +327,6 @@ describe('Huron Device', function () {
   describe('kem support', function () {
     beforeEach(function () {
       $stateParams.currentDevice.product = 'Cisco 8865';
-      spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve(true));
       $httpBackend.whenGET(HuronConfig.getCmiUrl() + '/voice/customers/sipendpoints/addonmodules').respond(200, [{
         customerId: 'fake-customer-id',
         sipEndpointId: 'fake-huron-id',

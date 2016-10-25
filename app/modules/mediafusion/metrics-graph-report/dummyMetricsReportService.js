@@ -1,5 +1,6 @@
 (function () {
   'use strict';
+
   angular.module('Mediafusion').service('DummyMetricsReportService', DummyMetricsReportService);
   /* @ngInject */
   function DummyMetricsReportService($translate, chartColors) {

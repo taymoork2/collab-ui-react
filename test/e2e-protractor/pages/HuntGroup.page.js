@@ -1,6 +1,7 @@
 /**
  * Created by sjalipar on 11/4/15.
  */
+
 'use strict';
 
 var HuntGroup = function () {

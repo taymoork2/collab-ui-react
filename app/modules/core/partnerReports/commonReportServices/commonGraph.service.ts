@@ -1,4 +1,22 @@
 export class CommonGraphService {
+  public readonly AXIS: string = 'axis';
+  public readonly COLOR: string = 'color';
+  public readonly COLUMN: string = 'column';
+  public readonly CURSOR: string = 'cursor';
+  public readonly DATE: string = 'date';
+  public readonly LEGEND: string = 'legend';
+  public readonly LINE: string = 'line';
+  public readonly NUMFORMAT: string = 'numFormat';
+  public readonly SCROLL: string = 'scroll';
+  public readonly START: string = 'start';
+  public readonly TITLE: string = 'title';
+
+  // Balloon Object Types
+  public  readonly BRACKET_TYPE: string = 'bracket';
+  public readonly SPAN_TYPE: string = 'span';
+  public readonly TEXT_TYPE: string = 'text';
+  public readonly TRANSLATE_TYPE: string = 'translate';
+
   /* @ngInject */
   constructor(
     private chartColors,
@@ -41,7 +59,7 @@ export class CommonGraphService {
     },
     export: {
       enabled: true,
-      position: 'top-left',
+      position: 'bottom-right',
       libs: {
         autoLoad: false,
       },
@@ -110,19 +128,24 @@ export class CommonGraphService {
     }],
     scroll: {
       autoGridCount: true,
+      scrollbarHeight: 2,
+      backgroundAlpha: 1,
+      backgroundColor: this.chartColors.grayLightThree,
+      selectedBackgroundColor: this.chartColors.primaryColorBase,
+      selectedBackgroundAlpha: 1,
     },
   };
 
   public getBaseVariable(key: string): any {
     if (this.baseVariables[key]) {
-      return _.clone(this.baseVariables[key]);
+      return _.cloneDeep(this.baseVariables[key]);
     } else {
       return;
     }
   }
 
   public getBaseSerialGraph(data: Array<any>, startDuration: number, valueAxes: Array<any>, graphs: Array<any>, categoryField: string, catAxis: any): any {
-    return _.clone({
+    return _.cloneDeep({
       type: 'serial',
       startEffect: 'easeOutSine',
       addClassNames: true,
@@ -147,7 +170,7 @@ export class CommonGraphService {
   }
 
   public getBasePieChart(data: Array<any>, balloonText: string, innerRadius: string, radius: string, labelText: string, labelsEnabled: boolean, titleField: string, valueField: string, colorField: string, labelColorField: string): any {
-    return _.clone({
+    return _.cloneDeep({
       type: 'pie',
       balloon: this.baseVariables['balloon'],
       export: this.baseVariables['export'],

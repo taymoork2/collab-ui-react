@@ -3,9 +3,43 @@
 
   /* @ngInject */
 
-  function HelpdeskService($http, $location, $q, $translate, $window, CacheFactory, Config, CsdmConfigService, CsdmConverter, FeatureToggleService, HelpdeskHttpRequestCanceller, HelpdeskMockData, ServiceDescriptor, SessionStorage, UrlConfig, USSService) {
+  function HelpdeskService($http, $location, $q, $translate, $window, CacheFactory, Config, CsdmConfigService, CsdmConverter, FeatureToggleService, HelpdeskHttpRequestCanceller, HelpdeskMockData, ServiceDescriptor, UrlConfig, USSService) {
     var urlBase = UrlConfig.getAdminServiceUrl();
     var orgCache = CacheFactory.get('helpdeskOrgCache');
+    var service = {
+      usersWithRole: usersWithRole,
+      searchUsers: searchUsers,
+      searchOrgs: searchOrgs,
+      searchOrders: searchOrders,
+      getUser: getUser,
+      getOrg: getOrg,
+      isEmailBlocked: isEmailBlocked,
+      searchCloudberryDevices: searchCloudberryDevices,
+      getHybridServices: getHybridServices,
+      resendInviteEmail: resendInviteEmail,
+      getWebExSites: getWebExSites,
+      getServiceOrder: getServiceOrder,
+      getCloudberryDevice: getCloudberryDevice,
+      getOrgDisplayName: getOrgDisplayName,
+      findAndResolveOrgsForUserResults: findAndResolveOrgsForUserResults,
+      checkIfMobile: checkIfMobile,
+      sendVerificationCode: sendVerificationCode,
+      filterDevices: filterDevices,
+      getHybridStatusesForUser: getHybridStatusesForUser,
+      cancelAllRequests: cancelAllRequests,
+      noOutstandingRequests: noOutstandingRequests,
+      useMock: useMock,
+      elevateToReadonlyAdmin: elevateToReadonlyAdmin,
+      isSparkOnlineUser: isSparkOnlineUser,
+      getInviteResendUrl: getInviteResendUrl,
+      getInviteResendPayload: getInviteResendPayload,
+      invokeInviteEmail: invokeInviteEmail,
+      searchOrder: searchOrder,
+      getAccount: getAccount,
+      getOrder: getOrder,
+      getEmailStatus: getEmailStatus
+    };
+
     if (!orgCache) {
       orgCache = new CacheFactory('helpdeskOrgCache', {
         maxAge: 120 * 1000,
@@ -91,16 +125,8 @@
     }
 
     function isSparkOnlineUser(user) {
-      // TODO:
-      // - update this once backend API is implemented (property name might change, expected
-      //   value might change, etc.)
-      // - to force this value to true, in browser devtools console, run:
-      //   ```
-      //   sessionStorage.setItem('dev.helpdesk.isSparkOnlineUser', 1);
-      //   ```
-      var value = !!_.get(user, 'onlineOrderIds') || JSON.parse(SessionStorage.get('dev.helpdesk.isSparkOnlineUser'));
-
-      return value;
+      var value = _.get(user, 'onlineOrderIds', []);
+      return (value) ? !!value.length : false;
     }
 
     function getCorrectedDisplayName(user) {
@@ -159,6 +185,15 @@
 
       return cancelableHttpGET(urlBase + 'helpdesk/search/organizations?phrase=' + encodeURIComponent(searchString) + '&limit=' + limit)
         .then(extractItems);
+    }
+
+    function searchOrders(searchString) {
+      // TODO - if (useMock()) {
+      //  return deferredResolve(HelpdeskMockData.orders);
+      //}
+
+      return cancelableHttpGET(urlBase + 'commerce/orders/search?webOrderId=' + encodeURIComponent(searchString))
+        .then(extractData);
     }
 
     function getUser(orgId, userId) {
@@ -271,7 +306,6 @@
     function extractAndMassageUser(res) {
       var user = res.data || res;
       user.displayName = getCorrectedDisplayName(user);
-      user.isSparkOnlineUser = isSparkOnlineUser();
       user.isConsumerUser = user.orgId === Config.consumerOrgId;
       user.organization = {
         id: user.orgId
@@ -292,7 +326,7 @@
           // - if user is a Spark Online user (ie. they purchased Spark through Digital River), then
           //   the user is the original purchaser, but has not registered yet
           if (status === 'pending') {
-            status = (user.isSparkOnlineUser) ? 'onboarding-pending' : 'invite-pending';
+            status = (isSparkOnlineUser(user)) ? 'onboarding-pending' : 'invite-pending';
           }
           return 'helpdesk.userStatuses.' + status;
         });
@@ -335,29 +369,56 @@
       return $http.get(urlBase + 'email/bounces?email=' + encodeURIComponent(email));
     }
 
-    function resendInviteEmail(displayName, email) {
-      if (FeatureToggleService.supports(FeatureToggleService.features.atlasEmailStatus)) {
-        return isEmailBlocked(email).then(function () {
-          $http.delete(urlBase + 'email/bounces?email=' + email)
+    function resendInviteEmail(trimmedUserData) {
+      var email = trimmedUserData.email;
+      return FeatureToggleService.supports(FeatureToggleService.features.atlasEmailStatus)
+        .then(function (isSupported) {
+          if (!isSupported) {
+            return $q.reject();
+          }
+          return service.isEmailBlocked(email)
             .then(function () {
-              return invokeInviteEmail(displayName, email);
+              return $http.delete(urlBase + 'email/bounces?email=' + email);
+            })
+            .then(function () {
+              return service.invokeInviteEmail(trimmedUserData);
             });
-        }).catch(function () {
-          return invokeInviteEmail(displayName, email);
+        })
+        .catch(function () {
+          return service.invokeInviteEmail(trimmedUserData);
         });
-      } else {
-        return invokeInviteEmail(displayName, email);
-      }
     }
 
-    function invokeInviteEmail(displayName, email) {
-      return $http.post(urlBase + 'helpdesk/actions/resendinvitation/invoke', {
+    function getInviteResendUrl(trimmedUserData) {
+      var controllerAction = isSparkOnlineUser(trimmedUserData) ? 'resendonlineorderactivation' : 'resendinvitation';
+      return urlBase + 'helpdesk/actions/' + controllerAction + '/invoke';
+    }
+
+    function getInviteResendPayload(trimmedUserData) {
+      var displayName = trimmedUserData.displayName;
+      var email = trimmedUserData.email;
+      var onlineOrderIds = trimmedUserData.onlineOrderIds;
+      var payload = {
         inviteList: [{
           displayName: displayName,
           email: email
         }]
-      })
-        .then(extractData);
+      };
+      if (isSparkOnlineUser(trimmedUserData)) {
+        payload = {
+          onlineOrderIds: onlineOrderIds
+        };
+      }
+      return payload;
+    }
+
+    function invokeInviteEmail(trimmedUserData) {
+      var url = service.getInviteResendUrl(trimmedUserData);
+      var payload = service.getInviteResendPayload(trimmedUserData);
+      return $http.post(url, payload)
+        .then(function (res) {
+          return extractData(res);
+        });
     }
 
     function sendVerificationCode(displayName, email) {
@@ -414,30 +475,31 @@
       return HelpdeskHttpRequestCanceller.empty();
     }
 
-    return {
-      usersWithRole: usersWithRole,
-      searchUsers: searchUsers,
-      searchOrgs: searchOrgs,
-      getUser: getUser,
-      getOrg: getOrg,
-      isEmailBlocked: isEmailBlocked,
-      searchCloudberryDevices: searchCloudberryDevices,
-      getHybridServices: getHybridServices,
-      resendInviteEmail: resendInviteEmail,
-      getWebExSites: getWebExSites,
-      getServiceOrder: getServiceOrder,
-      getCloudberryDevice: getCloudberryDevice,
-      getOrgDisplayName: getOrgDisplayName,
-      findAndResolveOrgsForUserResults: findAndResolveOrgsForUserResults,
-      checkIfMobile: checkIfMobile,
-      sendVerificationCode: sendVerificationCode,
-      filterDevices: filterDevices,
-      getHybridStatusesForUser: getHybridStatusesForUser,
-      cancelAllRequests: cancelAllRequests,
-      noOutstandingRequests: noOutstandingRequests,
-      useMock: useMock,
-      elevateToReadonlyAdmin: elevateToReadonlyAdmin
-    };
+    function searchOrder(orderId) {
+      return $http
+        .get(urlBase + 'commerce/orders/search?webOrderId=' + orderId)
+        .then(extractData);
+    }
+
+    function getAccount(accountId) {
+      return $http
+        .get(urlBase + 'accounts/' + accountId)
+        .then(extractData);
+    }
+
+    function getOrder(orderId) {
+      return $http
+        .get(urlBase + 'orders/' + orderId)
+        .then(extractData);
+    }
+
+    function getEmailStatus(email) {
+      return $http
+        .get(urlBase + "email?email=" + email)
+        .then(extractData);
+    }
+
+    return service;
   }
 
   angular.module('Squared')

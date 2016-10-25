@@ -1,11 +1,15 @@
 'use strict';
+
 /*eslint-disable */
 
 describe('Huron Auto Attendant', function () {
+  var remote = require('selenium-webdriver/remote');
 
   var initialIgnoreSync = true;
 
   beforeAll(function () {
+
+    browser.setFileDetector(new remote.FileDetector());
 
     initialIgnoreSync = browser.ignoreSynchronization;
 
@@ -136,11 +140,16 @@ describe('Huron Auto Attendant', function () {
 
     it('should add Play Message, select Language and Voice to the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
       var absolutePath = utils.resolvePath(autoattendant.mediaFileToUpload);
+
       autoattendant.scrollIntoView(autoattendant.sayMessage);
 
       // media upload
+
       utils.click(autoattendant.messageOptions);
+
       utils.click(autoattendant.playMessageOption);
+      utils.wait(autoattendant.sayMediaUploadInput, 12000);
+
       $(autoattendant.mediaUploadSend).sendKeys(absolutePath);
 
       // and save
@@ -148,16 +157,21 @@ describe('Huron Auto Attendant', function () {
 
       utils.expectIsEnabled(autoattendant.saveButton);
       utils.click(autoattendant.saveButton);
+
       autoattendant.assertUpdateSuccess(deleteUtils.testAAName);
 
-      utils.expectIsDisabled(autoattendant.saveButton);
+      // don't leave the play mode on the screen, effects later tests
+      utils.click(autoattendant.messageOptions);
+
+      utils.click(autoattendant.sayMessageOption);
 
     }, 60000);
-//
 
     it('should add Phone Menu Say to the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
 
       autoattendant.scrollIntoView(autoattendant.phoneMenuSay);
+
+      utils.wait(autoattendant.phoneMenuSay, 12000);
 
       //Add Phone Menu Say Message
       utils.click(autoattendant.phoneMenuSay);
@@ -178,6 +192,7 @@ describe('Huron Auto Attendant', function () {
 
       //Add first Phone repeat Menu
       utils.click(autoattendant.phoneMenuKeys.first());
+
       autoattendant.scrollIntoView(autoattendant.phoneMenuKeyOptions.first().all(by.tagName('li')).first());
       utils.click(autoattendant.phoneMenuKeyOptions.first().all(by.tagName('li')).first());
       utils.click(autoattendant.phoneMenuAction.first());
@@ -196,7 +211,12 @@ describe('Huron Auto Attendant', function () {
       utils.click(autoattendant.phoneMenuKeyOptions.last().all(by.tagName('li')).last());
       utils.click(autoattendant.phoneMenuAction.last());
       utils.click(autoattendant.phoneMenuActionOptions.last().element(by.linkText('Say Message')));
+      utils.wait(autoattendant.phoneMenuActionTargets.last().element(by.tagName('textarea')), 12000);
+
       autoattendant.scrollIntoView(autoattendant.phoneMenuActionTargets.last().element(by.tagName('textarea')));
+
+      utils.wait(autoattendant.phoneMenuActionTargets.last().element(by.tagName('textarea')), 12000);
+
       utils.click(autoattendant.phoneMenuActionTargets.last().element(by.tagName('textarea')));
       utils.sendKeys(autoattendant.phoneMenuActionTargets.last().element(by.tagName('textarea')), "This is a phone menu say");
 
@@ -367,6 +387,10 @@ describe('Huron Auto Attendant', function () {
       // 3rd menu option is Dial By Extension
       utils.click(autoattendant.newStepSelectDialByExt);
 
+      utils.wait(autoattendant.dialByExtension, 12000);
+
+      autoattendant.scrollIntoView(autoattendant.dialByExtension);
+
       utils.expectIsDisplayed(autoattendant.dialByExtension);
 
       // say message
@@ -390,8 +414,34 @@ describe('Huron Auto Attendant', function () {
 
     }, 120000);
 
+    it('should add a Dial By Extension Play Message to the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
+      var absolutePath = utils.resolvePath(autoattendant.mediaFileToUpload);
+      autoattendant.scrollIntoView(autoattendant.dialByExtension);
+
+      // media upload
+
+      utils.click(autoattendant.dialByMessageOptions);
+
+      utils.click(autoattendant.dialByPlayMessageOption);
+
+      utils.wait(autoattendant.dialByMediaUploadInput, 12000);
+
+      $(autoattendant.mediaUploadSend).sendKeys(absolutePath);
+
+      // and save
+      utils.wait(autoattendant.saveButton, 12000);
+
+      utils.expectIsEnabled(autoattendant.saveButton);
+      utils.click(autoattendant.saveButton);
+      autoattendant.assertUpdateSuccess(deleteUtils.testAAName);
+
+      utils.expectIsDisabled(autoattendant.saveButton);
+
+    }, 60000);
+
     it('should add a Schedule to AA', function () {
       autoattendant.scrollIntoView(autoattendant.schedule);
+
       utils.click(autoattendant.schedule);
 
       utils.wait(autoattendant.addschedule, 12000);
@@ -513,6 +563,8 @@ describe('Huron Auto Attendant', function () {
       utils.wait(autoattendant.addAANumbers, 20000);
 
       utils.expectIsDisplayed(autoattendant.addAANumbers);
+      autoattendant.scrollIntoView(autoattendant.sayMessageAll.first());
+
       // Verify we have 3 Say Messages (2 sayMessage and PhoneMenu's) already:
       utils.expectCount(autoattendant.sayMessageAll, 4);
 
