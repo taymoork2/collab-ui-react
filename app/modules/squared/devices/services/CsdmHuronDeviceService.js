@@ -34,7 +34,7 @@
   }
 
   /* @ngInject  */
-  function CsdmHuronDeviceService($http, $q, $translate, Authinfo, HuronConfig, CsdmConverter, CmiKemService, KemService, Notification, devicesUrl) {
+  function CsdmHuronDeviceService($http, $q, Authinfo, HuronConfig, CsdmConverter, Notification, devicesUrl) {
 
     function huronEnabled() {
       return $q.when(Authinfo.isSquaredUC());

@@ -462,6 +462,7 @@
         'call-service',
         'cluster-list',
         'devices',
+        'places',
         'expressway-settings',
         'fusion',
         'hurondetails',

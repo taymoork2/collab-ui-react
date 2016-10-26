@@ -149,7 +149,7 @@
       };
       var closedHours = angular.copy(AAICalService.getDefaultDayHours());
       _.each(vm.days, function (day, index) {
-        if (angular.isUndefined(day.hours) || day.hours.length === 0) {
+        if (_.isUndefined(day.hours) || day.hours.length === 0) {
           //Inactive days will have all day closed 12:00am  - 12:00am
           dayhour.starttime = hh;
           dayhour.endtime = hh;

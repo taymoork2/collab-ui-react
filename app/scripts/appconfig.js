@@ -1407,7 +1407,19 @@
               },
             }
           })
-
+          .state('reports.device-usage.total', {
+            url: '/total',
+            templateUrl: 'modules/core/customerReports/deviceUsage/total.tpl.html',
+            controller: 'DeviceUsageCtrl',
+            controllerAs: 'deviceUsage',
+            params: {
+            },
+            resolve: {
+              deviceUsageFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasDeviceUsageReport);
+              },
+            }
+          })
           .state('webex-reports', {
             url: '/reports/webex',
             templateUrl: 'modules/core/customerReports/customerReports.tpl.html',
@@ -1821,17 +1833,16 @@
               meetingLicenses: {}
             }
           })
-          .state('customer-overview.externalNumberDetail', {
-            templateUrl: 'modules/core/customers/customerOverview/externalNumberDetail.tpl.html',
+          .state('customer-overview.externalNumbers', {
+            controller: 'ExternalNumberDetailCtrl',
+            controllerAs: 'externalNumbers',
+            templateUrl: 'modules/huron/externalNumbers/externalNumberDetail.tpl.html',
             resolve: {
               data: /* @ngInject */ function ($state, $translate) {
-                $state.get('customer-overview.externalNumberDetail').data.displayName = $translate.instant('customerPage.call');
+                $state.get('customer-overview.externalNumbers').data.displayName = $translate.instant('customerPage.phoneNumbers');
               }
             },
-            data: {},
-            params: {
-              meetingLicenses: {}
-            }
+            data: {}
           })
           .state('customer-overview.domainDetail', {
             controller: 'DomainDetailCtrl',

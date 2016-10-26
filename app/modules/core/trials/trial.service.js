@@ -77,7 +77,7 @@
         var obj = _.find(data.properties, {
           key: key
         });
-        if (angular.isUndefined(obj)) {
+        if (_.isUndefined(obj)) {
           return {
             error: 'trialModal.errorServerDown'
           };

@@ -107,7 +107,7 @@
     };
 
     var timezone = jstz.determine().name();
-    if (timezone === null || angular.isUndefined(timezone)) {
+    if (timezone === null || _.isUndefined(timezone)) {
       timezone = 'UTC';
     }
     vm.getExpiresOn = function () {

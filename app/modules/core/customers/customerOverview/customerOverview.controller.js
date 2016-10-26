@@ -137,7 +137,7 @@
     }
 
     function initCustomer() {
-      if (angular.isUndefined(vm.currentCustomer.customerEmail)) {
+      if (_.isUndefined(vm.currentCustomer.customerEmail)) {
         vm.currentCustomer.customerEmail = identityCustomer.email;
       }
     }

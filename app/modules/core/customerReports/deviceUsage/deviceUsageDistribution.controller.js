@@ -8,11 +8,14 @@
   /* @ngInject */
   function DeviceUsageDistributionCtrl($log, $state, $stateParams, DeviceUsageDistributionReportService, DeviceUsageDistributionGraphService, deviceUsageFeatureToggle) {
     var vm = this;
-
     vm.reportType = $stateParams.deviceReportType;
     vm.loading = true;
-
     vm.toggleGraph = toggleGraph;
+
+    //TODO: Replace by range selector
+    var now = new moment().format("YYYY-MM-DD");
+    var from = moment(now).subtract(30, "days").format("YYYY-MM-DD");
+    var to = moment(now).subtract(23, "days").format("YYYY-MM-DD");
 
     if (!deviceUsageFeatureToggle) {
       // simulate a 404
@@ -22,7 +25,7 @@
 
     var graph;
 
-    DeviceUsageDistributionReportService.getDeviceUsageReportData().then(function (devices) {
+    DeviceUsageDistributionReportService.getDeviceUsageReportData(from, to).then(function (devices) {
       var inUseData = DeviceUsageDistributionGraphService.getUsageDistributionDataForGraph(devices);
       var chart = DeviceUsageDistributionGraphService.getUsageCharts(inUseData, "usageHours");
       chart.dataProvider = inUseData;
@@ -76,28 +79,12 @@
       limits.unshift(0);
       limits.push(_.last(limits));
 
-      DeviceUsageDistributionReportService.getDeviceUsageReportData(limits[clickedIndex], limits[clickedIndex + 1]).then(function (devices) {
-        $log.warn("distrubutiondata", devices);
+      DeviceUsageDistributionReportService.getDeviceUsageReportData(to, from, limits[clickedIndex], limits[clickedIndex + 1]).then(function (devices) {
+        $log.info("getDeviceUsageReportData", devices);
         vm.gridOptions.data = devices;
       });
 
     }
-
-    vm.leastUsedDevices = [
-      { name: "Bergen", hours: 2, lastTime: "6 days ago" },
-      { name: "Oslo", hours: 2, lastTime: "5 days ago" },
-      { name: "Trondheim", hours: 2, lastTime: "4 days ago" },
-      { name: "K2", hours: 3, lastTime: "4 days ago" },
-      { name: "MountEverest", hours: 3, lastTime: "3 days ago" }
-    ];
-
-    vm.mostUsedDevices = [
-      { name: "Spitsbergen", hours: 160 },
-      { name: "Molde", hours: 155 },
-      { name: "Trolltunga", hours: 145 },
-      { name: "Kilimanjaro", hours: 145 },
-      { name: "Didrik", hours: 140 }
-    ];
 
   }
 

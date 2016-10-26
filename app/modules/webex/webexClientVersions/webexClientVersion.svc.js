@@ -90,11 +90,11 @@
       var relativeUrl = self.relativeUrls[name];
       var url = self.getAdminServiceUrl() + relativeUrl;
 
-      if (!angular.isUndefined(orgId)) {
+      if (!_.isUndefined(orgId)) {
         url = url.replace("${partnerId}", orgId);
       }
 
-      if (!angular.isUndefined(partnerTemplate)) {
+      if (!_.isUndefined(partnerTemplate)) {
         url = url.replace("${partnerTemplateId}", partnerTemplate);
       }
 

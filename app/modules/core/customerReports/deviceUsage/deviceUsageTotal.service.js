@@ -3,10 +3,10 @@
 
   angular
     .module('Core')
-    .service('DeviceUsageTimelineService', DeviceUsageTimelineService);
+    .service('DeviceUsageTotalService', DeviceUsageTotalService);
 
   /* @ngInject */
-  function DeviceUsageTimelineService($q, $timeout, $http, chartColors, DeviceUsageRawService, UrlConfig, Authinfo) {
+  function DeviceUsageTotalService($q, $timeout, $http, chartColors, DeviceUsageRawService, UrlConfig, Authinfo) {
 
     var localUrlBase = 'http://localhost:8080/atlas-server/admin/api/v1/organization';
     var urlBase = UrlConfig.getAdminServiceUrl() + 'organizations';
@@ -177,12 +177,16 @@
         ],
         'graphs': [
           {
-            'bullet': 'round',
+            'type': 'column', //line', //smoothedLine', //column',
+
+            //'bullet': 'round',
             'id': 'video',
             'title': 'Call Duration',
             'valueField': 'totalDuration',
             'lineThickness': 2,
-            'bulletSize': 10,
+            'fillAlphas': 0.6,
+            'lineAlpha': 0.0,
+            //'bulletSize': 10,
             'lineColor': chartColors.primaryColorDarker,
             'bulletColor': '#ffffff',
             'bulletBorderAlpha': 1,
@@ -224,7 +228,7 @@
           {
             'id': 'Title-1',
             'size': 15,
-            'text': 'Usage Timeline (mock data)'
+            'text': 'Device Usage'
           }
         ]
       };
