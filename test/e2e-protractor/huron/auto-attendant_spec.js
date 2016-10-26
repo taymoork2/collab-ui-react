@@ -278,8 +278,6 @@ describe('Huron Auto Attendant', function () {
     }, 120000);
 
     it('should add a 2nd Say Message via Add New Step to the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
-
-      autoattendant.scrollIntoView(autoattendant.sayMessageLanguage);
       // Bit of a kludge. We currently have 2 Say messages & will add a third.
       // If anybody adds more before this test case then things get dicey.
       // Adding code to verify we start with 1 & end with 2. If another test adds more this test fails immediately
@@ -338,16 +336,6 @@ describe('Huron Auto Attendant', function () {
 
       // On timing issues here, see AUTOATTN-556
       utils.expectCount(autoattendant.phoneMenuAll, 2);
-
-      autoattendant.scrollIntoView(autoattendant.phonesayMessageLanguage);
-
-      utils.click(autoattendant.phonesayMessageLanguage);
-
-      utils.click(autoattendant.phonelanguageDropDownOptions);
-
-      utils.click(autoattendant.phonesayMessageVoice);
-
-      utils.click(autoattendant.phonesayMessageVoiceOptions);;
 
       utils.click(autoattendant.saveButton);
 
