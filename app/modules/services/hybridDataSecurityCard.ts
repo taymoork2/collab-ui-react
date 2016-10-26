@@ -81,9 +81,6 @@ export class ServicesOverviewHybridDataSecurityCard extends ServicesOverviewHybr
       }
     }
 
-  public hybridMediaFeatureToggleEventHandler(hasFeature: boolean) {
-    this._display = hasFeature;
-  }
 
   /* @ngInject */
   public constructor(FusionClusterStatesService) {
