@@ -22,7 +22,7 @@ describe('Controller: AAMediaUploadCtrl', function () {
   var playAction = {};
   var schedule = 'openHours';
   var index = '0';
-  var menuId = 'menu2';
+  var menuId = 'menu0';
   var keyIndex = '0';
 
   var fileNameInvalid = "ILTQq4.jpg";
@@ -65,6 +65,8 @@ describe('Controller: AAMediaUploadCtrl', function () {
     uploadUrl: uploadUrl,
     uploadDuration: fileDuration,
   };
+  var menuOption = 'MENU_OPTION';
+  var menuOptionAnnouncement = 'MENU_OPTION_ANNOUNCEMENT';
 
   beforeEach(angular.mock.module('uc.autoattendant'));
   beforeEach(angular.mock.module('Huron'));
@@ -101,7 +103,8 @@ describe('Controller: AAMediaUploadCtrl', function () {
     ui[schedule] = uiMenu;
     menuEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
     uiMenu.addEntryAt(index, menuEntry);
-
+    playAction = AutoAttendantCeMenuModelService.newCeActionEntry('play', '');
+    menuEntry.actions[0] = playAction;
     controller = $controller('AAMediaUploadCtrl', {
       $scope: $scope,
     });
@@ -116,8 +119,13 @@ describe('Controller: AAMediaUploadCtrl', function () {
 
     describe('routeToQueue activate functionality', function () {
       beforeEach(inject(function ($controller) {
+        AutoAttendantCeMenuModelService.clearCeMenuMap();
+        uiMenu = AutoAttendantCeMenuModelService.newCeMenu();
+        ui[schedule] = uiMenu;
+        menuEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
+        uiMenu.addEntryAt(index, menuEntry);
         $scope.menuId = menuId;
-        $scope.keyIndex = keyIndex;
+        $scope.menuKeyIndex = keyIndex;
         $scope.type = 'musicOnHold';
         var routeToQueue = AutoAttendantCeMenuModelService.newCeActionEntry('routeToQueue', '');
         var queueSettings = {};
@@ -134,6 +142,77 @@ describe('Controller: AAMediaUploadCtrl', function () {
       }));
 
       it('should activate properly from routeToQueue musicOnHold path', function () {
+        expect(controller).toBeDefined();
+        expect(controller.uploadFile).toEqual('');
+        expect(controller.uploadDate).toEqual('');
+        expect(controller.uploadDuration).toEqual('');
+        expect(controller.state).toEqual(controller.WAIT);
+      });
+    });
+
+    describe('menu header activate functionality', function () {
+      beforeEach(inject(function () {
+        AutoAttendantCeMenuModelService.clearCeMenuMap();
+        uiMenu = AutoAttendantCeMenuModelService.newCeMenu();
+        uiMenu.type = menuOption;
+        ui[schedule].entries[index] = uiMenu;
+        menuEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
+        menuEntry.type = menuOptionAnnouncement;
+        menuEntry.voice = voice;
+        var playAction = AutoAttendantCeMenuModelService.newCeActionEntry('play', '');
+        playAction.voice = voice;
+        menuEntry.addAction(playAction);
+        ui[schedule].entries[index].headers.push(menuEntry);
+        $scope.menuId = menuId;
+      }));
+
+      it('should activate properly from menu header path', function () {
+        $scope.isMenuHeader = true;
+        controller = $controller('AAMediaUploadCtrl', {
+          $scope: $scope,
+        });
+        $scope.$apply();
+        expect(controller).toBeDefined();
+        expect(controller.uploadFile).toEqual('');
+        expect(controller.uploadDate).toEqual('');
+        expect(controller.uploadDuration).toEqual('');
+        expect(controller.state).toEqual(controller.WAIT);
+      });
+
+      it('should activate properly from sub menu header path', function () {
+        $scope.menuKeyIndex = -1;
+        controller = $controller('AAMediaUploadCtrl', {
+          $scope: $scope,
+        });
+        $scope.$apply();
+        expect(controller).toBeDefined();
+        expect(controller.uploadFile).toEqual('');
+        expect(controller.uploadDate).toEqual('');
+        expect(controller.uploadDuration).toEqual('');
+        expect(controller.state).toEqual(controller.WAIT);
+      });
+    });
+
+    describe('menu key activate functionality', function () {
+      beforeEach(inject(function () {
+        AutoAttendantCeMenuModelService.clearCeMenuMap();
+        uiMenu = AutoAttendantCeMenuModelService.newCeMenu();
+        uiMenu.type = menuOption;
+        ui[schedule].entries[index] = uiMenu;
+        menuEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
+        menuEntry.type = menuOption;
+        var playAction = AutoAttendantCeMenuModelService.newCeActionEntry('play', '');
+        menuEntry.addAction(playAction);
+        uiMenu.entries.push(menuEntry);
+        $scope.menuId = menuId;
+        $scope.menuKeyIndex = keyIndex;
+        controller = $controller('AAMediaUploadCtrl', {
+          $scope: $scope,
+        });
+        $scope.$apply();
+      }));
+
+      it('should activate properly from menu key path', function () {
         expect(controller).toBeDefined();
         expect(controller.uploadFile).toEqual('');
         expect(controller.uploadDate).toEqual('');
@@ -226,10 +305,6 @@ describe('Controller: AAMediaUploadCtrl', function () {
           modal.resolve();
           $scope.$apply();
           expect(controller.uploadFile).toBeFalsy();
-          expect(controller.uploadDate).toBeFalsy();
-          expect(controller.uploadDuration).toBeFalsy();
-          expect(playAction.value).toBeFalsy();
-          expect(playAction.description).toBeFalsy();
         });
       });
     });

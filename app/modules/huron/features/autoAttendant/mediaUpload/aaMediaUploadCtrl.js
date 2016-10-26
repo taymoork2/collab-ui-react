@@ -274,6 +274,7 @@
         }
       }
     }
+
     function fromRouteToQueue() {
       var sourceMenu = AutoAttendantCeMenuModelService.getCeMenu($scope.menuId);
       var sourceQueue = sourceMenu.entries[$scope.menuKeyIndex];
@@ -335,9 +336,7 @@
       } else {
         //case of no key input message types
         //get the entry mapped to a plain message type
-        var ui = AAUiModelService.getUiModel();
-        var uiMenu = ui[$scope.schedule];
-        vm.menuEntry = uiMenu.entries[$scope.index];
+        sourceType = messageType.ACTION;
       }
       setActionEntry();
     }
@@ -366,9 +365,7 @@
       if ($scope.fromSubMenu) {
         vm.isFromSubMenu = true;
       }
-
       gatherMediaSource();
-
       //set up the view according to the play
       setUpEntry(vm.actionEntry);
     }
