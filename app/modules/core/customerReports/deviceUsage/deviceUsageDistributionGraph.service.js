@@ -15,7 +15,7 @@
     };
 
     function getDistributionPoints(rawDeviceData) {
-      var noOfDistributionPoints = 4;
+      var noOfDistributionPoints = 10;
       //var hoursPrWeek = 168;
       //var max = hoursPrWeek;
       var max = _.maxBy(rawDeviceData, function (o) { return o.totalDuration; });
@@ -36,51 +36,42 @@
     }
 
     function getUsageDistributionDataForGraph(rawDeviceData) {
+      //console.log("getUsageDistributionDataForGraph", rawDeviceData);
       var result = [];
       var usageGroups = getUsageDistributionGroups(rawDeviceData);
-      var devicesWithNoUsage = usageGroups[0];
-      result.push({ "alpha": 1.0, "video": devicesWithNoUsage.length, "balloon": true, "whiteboard": devicesWithNoUsage.length * 2, "sharing": Math.round(devicesWithNoUsage.length / 1.5, 1), "usageHours": "No use", "labelColor": chartColors.brandDanger, "description": "have not been used" });
-      for (var i = 1; i < usageGroups.length - 1; i++) {
-        //var percentageSteps = 100 / (distributionPoints.length - 1);
+      for (var i = 0; i < usageGroups.length - 1; i++) {
         var noOfDevices = usageGroups[i].length;
         result.push({
           "alpha": 1.0,
           "video": noOfDevices,
           "balloon": true,
-          "whiteboard": 30 + Math.round(noOfDevices / 1.2, 1),
-          "sharing": Math.round(noOfDevices / 1.5, 1),
-          "usageHours": "< " + distributionPoints[i] + " hours",
+          //"whiteboard": 30 + Math.round(noOfDevices / 1.2, 1),
+          //"sharing": Math.round(noOfDevices / 1.5, 1),
+          "usageHours": "< " + distributionPoints[i + 1] + " hours",
           "description": "have between<br>" + ((i - 1) * 20) + " to " + (i * 20) + "% utilization"
         });
       }
-//      var devicesWithMaxUsage = usageGroups[usageGroups.length - 1];
-//      result.push({ "alpha": 1.0, "video": devicesWithMaxUsage.length, "balloon": true, "whiteboard": 0, "sharing": Math.round(devicesWithMaxUsage.length / 1.5, 1), "usageHours": "Most Used (" + _.last(distributionPoints) + ")", "labelColor": chartColors.brandDanger, "description": "have 100% utilization" });
       return result;
     }
 
     function groupUsageDataWithinDistributionBuckets(usageData, distributionPoints) {
       var usageGroups = [];
-      usageGroups[0] = usageData.filter(function (x) {
-        return x === 0;
-      });
-
       _.each(distributionPoints, function (limit, index) {
-        usageGroups.push(usageData.filter(function (x) {
-          if (index < distributionPoints.length - 1) {
-            return x > distributionPoints[index] && x < distributionPoints[index + 1];
-          } else {
-            return x === distributionPoints[index];
-          }
-        }));
+        var withinBucket = usageData.filter(function (sample) {
+          return sample >= distributionPoints[index] && sample < distributionPoints[index + 1];
+        });
+        usageGroups.push(withinBucket);
       });
       return usageGroups;
     }
 
     function calculateDistributionPoints(divisions, maxHours) {
       distributionPoints = [];
-      for (var x = 0; x <= divisions; x++) {
+      for (var x = 1; x <= divisions; x++) {
         distributionPoints.push(Math.round((maxHours / divisions) * x));
       }
+      distributionPoints.unshift(1);
+      distributionPoints.unshift(0);
       return distributionPoints;
     }
 
@@ -173,8 +164,11 @@
         }
       };
 
-      var titles = ["Video", "Whiteboard"];
-      var valueFields = ["video", "whiteboard"];
+//      var titles = ["Video", "Whiteboard"];
+//      var valueFields = ["video", "whiteboard"];
+
+      var titles = ["Video"];
+      var valueFields = ["video"];
       usageChart.graphs = usageGraphs(titles, valueFields);
 
       return usageChart;
@@ -186,7 +180,7 @@
 
       _.each(valueFields, function (val, i) {
         graphs.push({
-          'type': 'line', //line', //smoothedLine', //column',
+          'type': 'column', //line', //smoothedLine', //column',
           'fillAlphas': 0.6,
           'alphaField': "alpha",
           'lineAlpha': 0.0,

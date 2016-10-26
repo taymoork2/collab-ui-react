@@ -6,28 +6,16 @@
     .controller('DeviceOverviewCtrl', DeviceOverviewCtrl);
 
   /* @ngInject */
-  function DeviceOverviewCtrl($q, $state, $scope, $interval, XhrNotificationService, Notification, $stateParams, $translate, $timeout, Authinfo, FeedbackService, CsdmDeviceService, CsdmDataModelService, CsdmUpgradeChannelService, Utils, $window, RemDeviceModal, ResetDeviceModal, WizardFactory, channels, RemoteSupportModal, ServiceSetup, KemService, CmiKemService) {
+  function DeviceOverviewCtrl($q, $state, $scope, $interval, XhrNotificationService, Notification, $stateParams, $translate, $timeout, Authinfo, FeedbackService, CsdmDataModelService, CsdmDeviceService, CsdmUpgradeChannelService, Utils, $window, RemDeviceModal, ResetDeviceModal, WizardFactory, channels, RemoteSupportModal, ServiceSetup, KemService) {
     var deviceOverview = this;
     deviceOverview.currentDevice = $stateParams.currentDevice;
     var huronDeviceService = $stateParams.huronDeviceService;
 
     deviceOverview.linesAreLoaded = false;
     deviceOverview.tzIsLoaded = false;
-    deviceOverview.isError = false;
-    deviceOverview.isKEMAvailable = false;
     deviceOverview.isKEMAvailable = KemService.isKEMAvailable(deviceOverview.currentDevice.product);
     if (deviceOverview.isKEMAvailable) {
-      CmiKemService.getKEM(deviceOverview.currentDevice.huronId).then(
-        function (data) {
-          deviceOverview.currentDevice.kem = data;
-
-          deviceOverview.kemNumber = KemService.getKemOption(deviceOverview.currentDevice.kem.length);
-          deviceOverview.kemOptions = KemService.getOptionList(deviceOverview.currentDevice.product);
-        }
-      ).catch(function () {
-        deviceOverview.currentDevice.kem = [];
-        deviceOverview.isError = true;
-      });
+      deviceOverview.kemNumber = KemService.getKemOption(deviceOverview.currentDevice.addOnModuleCount);
     }
 
     if (deviceOverview.currentDevice.isHuronDevice) {
@@ -288,39 +276,5 @@
         }, 1000);
       });
     }
-
-    deviceOverview.saveKem = function () {
-      var device = deviceOverview.currentDevice;
-      var previousKemNumber = device.kem.length;
-      var newKemNumber = deviceOverview.kemNumber.value;
-      var diff = newKemNumber - previousKemNumber;
-      var promiseList = [];
-      if (diff > 0) {
-        _.times(diff, function (n) {
-          promiseList.push(CmiKemService.createKEM(device.huronId, previousKemNumber + 1 + n));
-        });
-      } else {
-        _.times(-diff, function (n) {
-          var module = _.find(device.kem, {
-            index: '' + (previousKemNumber - n)
-          });
-          promiseList.push(CmiKemService.deleteKEM(device.huronId, module.uuid));
-        });
-      }
-      $q.all(promiseList).then(
-        function () {
-          CmiKemService.getKEM(device.huronId).then(
-            function (data) {
-              deviceOverview.currentDevice.kem = data;
-              Notification.success('deviceOverviewPage.kemUpdated');
-            }
-          ).catch();
-        },
-        function () {
-          deviceOverview.kemNumber = KemService.getKemOption(previousKemNumber);
-          Notification.error('deviceOverviewPage.kemChangesFailed');
-        }
-      );
-    };
   }
 })();

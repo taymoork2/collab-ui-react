@@ -185,7 +185,7 @@
     }
 
     function getQuerys(link, cluster, time, cacheOption) {
-      if (angular.isUndefined(cacheOption) || cacheOption === null) {
+      if (_.isUndefined(cacheOption) || cacheOption === null) {
         cacheOption = cacheValue;
       }
       if (cluster == allClusters) {
@@ -208,7 +208,7 @@
     }
 
     function getService(url, canceler) {
-      if (canceler === null || angular.isUndefined(canceler)) {
+      if (canceler === null || _.isUndefined(canceler)) {
         return $http.get(url);
       } else {
         return $http.get(url, {

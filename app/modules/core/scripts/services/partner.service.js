@@ -245,7 +245,7 @@
     }
 
     function isLicenseFree(license) {
-      return license && angular.isUndefined(license.isTrial);
+      return license && _.isUndefined(license.isTrial);
     }
     // end series of fn's
 

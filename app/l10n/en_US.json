@@ -497,7 +497,7 @@
     "betaFeatures": "Beta Features",
     "errorGettingToggles": "There was a problem getting the selected organizations feature toggles",
     "errorSettingToggle": "There was a problem setting a toggle",
-    "toggleModSuccess": "All modified toggles were updated",
+    "toggleModSuccess": "The Feature Toggle: {{featureToggleName}} was successfully set to {{toggleState}} for {{orgId}}",
     "startSearching": "To begin, search for an organization",
     "noSearchResults": "Search yielded no results",
     "allowBetaChannels": "Allow Beta Release Channel",
@@ -561,7 +561,8 @@
       "peakHour": "Peak Hour",
       "distribution": "Distribution",
       "timeline": "Timeline",
-      "overview": "Overview"
+      "overview": "Overview",
+      "all": "All"
     }
   },
   "careReportsPage": {
@@ -3368,15 +3369,13 @@
     "timeZoneUpdateFailed": "Device did not update its Time Zone in time",
     "kem": "Key Expansion Module(s)",
     "kemAbbreviation": "KEM",
-    "kemDescription": "Key Expansion Modules (KEM) can be used to increase personal interaction while increasing responsiveness by adding single-button access to more people.",
+    "kemDescription": "Increases single-button access to more contacts and features.",
     "kemOptions": {
       "none": "None",
       "one": "One",
       "two": "Two",
       "three": "Three"
-    },
-    "kemUpdated": "Number of KEM updated.",
-    "kemChangesFailed": "Failed to save KEM changes."
+    }
   },
   "addDeviceWizard": {
     "newDevice": "New Device",

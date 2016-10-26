@@ -1,6 +1,7 @@
 import {
   IReportCard,
   IReportDropdown,
+  IReportLabel,
   IReportsTable,
   ITimespan,
   ISecondaryReport,
@@ -27,6 +28,9 @@ describe('Component: reportCard', () => {
   const carouselNumberButtons: string = 'div.box-match div.pull-right button.btn';
   const carouselLeft: string = 'div.box-match div.pull-right button.carousel-control i.icon.icon-chevron-left';
   const carouselRight: string = 'div.box-match div.pull-right button.carousel-control i.icon.icon-chevron-right';
+  const graphLabels: string = 'div.row div.columns.medium-4.label-display';
+  const numberLabels: string = graphLabels + ' p.label-number';
+  const textLabels: string = graphLabels + ' span.label-text';
 
   beforeEach(function () {
     this.initModules('Core');
@@ -88,8 +92,9 @@ describe('Component: reportCard', () => {
       expect(this.view).toContainElement(chart.replace(id, options.id));
       expect(this.view).not.toContainElement(dropdown.replace(id, options.id));
 
-      // table for the first report section should not be present
+      // table for the first report section and labels should not be present
       expect(this.view).not.toContainElement(table);
+      expect(this.view).not.toContainElement(graphLabels);
 
       // verify secondary report is not visible, but link to open it is present
       expect(this.view).not.toContainElement(reportTable);
@@ -165,11 +170,12 @@ describe('Component: reportCard', () => {
     });
   });
 
-  describe('donut chart and dropdown:', function () {
+  describe('donut chart, labels, and dropdown:', function () {
     const dropdownClick = 'div.select-list div.dropdown a.select-toggle';
     const hiddenSelect = 'select.hidden-select option';
     const dropdownOptions = 'ul.select-options li a';
     let options: IReportCard = _.cloneDeep(ctrlData.callOptions);
+    let labels: Array<IReportLabel> = _.cloneDeep(ctrlData.metricsLabels);
     options.table = undefined;
     let reportDropdown: IReportDropdown = {
       array: [{
@@ -192,20 +198,22 @@ describe('Component: reportCard', () => {
       this.$scope.options = options;
       this.$scope.show = true;
       this.$scope.dropdown = reportDropdown;
+      this.$scope.labels = labels;
       this.compileComponent('reportCard', {
         options: 'options',
         dropdown: 'dropdown',
         show: 'show',
         time: 'timeFilter',
+        labels: 'labels',
       });
     });
 
-    it('should instantiate with expected titles, dropdown, and secondary report not present', function () {
+    it('should instantiate with expected titles, labels, and dropdown present', function () {
       this.$timeout.flush();
       // check for header, description, and chart
       expect(this.view).toContainElement('#' + options.id);
       expect(this.view.find(headerTitle)).toHaveText(options.headerTitle);
-      expect(this.view.find(cardDescription.replace(reportType, options.reportType))).toHaveText(options.description);
+      expect(this.view.find(cardDescription.replace(reportType, options.reportType))[0].innerText).toEqual(options.description);
       expect(this.view).toContainElement(chart.replace(id, options.id));
       expect(this.view).toContainElement(dropdown.replace(id, options.id));
 
@@ -221,6 +229,14 @@ describe('Component: reportCard', () => {
 
       // table for the first report section should not be present
       expect(this.view).not.toContainElement(table);
+
+      // verify the labels are present
+      expect(this.view.find(graphLabels).length).toEqual(3);
+      let view = this.view;
+      _.forEach(labels, function (label, index) {
+        expect(view.find(numberLabels)[index].innerText).toEqual(label.number.toString());
+        expect(view.find(textLabels)[index].innerText).toEqual(label.text);
+      });
 
       // verify secondary report is not visible and link to open it is not present
       expect(this.view).not.toContainElement(reportTable);

@@ -40,7 +40,7 @@
       fd.append('file', file);
       return Upload.http({
         url: uploadUrl,
-        transformRequest: angular.identity,
+        transformRequest: _.identity,
         headers: {
           'Content-Type': undefined,
         },

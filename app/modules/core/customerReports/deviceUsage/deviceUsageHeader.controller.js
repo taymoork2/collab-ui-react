@@ -33,6 +33,9 @@
       // state: "reports.device-usage.overview"
       // },
       {
+        title: $translate.instant('reportsPage.usageReports.all'),
+        state: 'reports.device-usage.total'
+      }, {
         title: $translate.instant('reportsPage.usageReports.timeline'),
         state: 'reports.device-usage.timeline'
       }, {

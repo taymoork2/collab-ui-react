@@ -208,7 +208,7 @@
         return scope.model.searchUpload !== vm.UPLOAD;
       },
       uploadDisabled: function (viewValue, modelValue, scope) {
-        return angular.isUndefined(scope.model.uploadFile);
+        return _.isUndefined(scope.model.uploadFile);
       }
     };
 
