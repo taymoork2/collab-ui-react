@@ -180,7 +180,6 @@ describe('Huron Auto Attendant', function () {
       utils.expectIsEnabled(autoattendant.saveButton);
 
       // language and voice
-      // autoattendant.scrollIntoView(autoattendant.phonelanguageDropDownOptions);
       autoattendant.scrollIntoView(autoattendant.phonesayMessageLanguage);
       utils.click(autoattendant.phonesayMessageLanguage);
       utils.click(autoattendant.phonelanguageDropDownOptions);
@@ -342,11 +341,13 @@ describe('Huron Auto Attendant', function () {
 
       autoattendant.scrollIntoView(autoattendant.phonesayMessageLanguage);
 
-      // Click on the language for the new (first) Phone Menu we just added
-      utils.click(autoattendant.phoneSayMessageLanguageFirst);
+      utils.click(autoattendant.phonesayMessageLanguage);
 
-      // Set langauage to Galician
-      utils.click(autoattendant.phoneLanguageDropDownOptionsTenth);
+      utils.click(autoattendant.phonelanguageDropDownOptions);
+
+      utils.click(autoattendant.phonesayMessageVoice);
+
+      utils.click(autoattendant.phonesayMessageVoiceOptions);;
 
       utils.click(autoattendant.saveButton);
 
@@ -504,7 +505,7 @@ describe('Huron Auto Attendant', function () {
       utils.expectIsDisplayed(autoattendant.scheduleInfoOpenHours);
       utils.expectIsDisplayed(autoattendant.scheduleInfoClosedHours);
       utils.expectIsDisplayed(autoattendant.scheduleInfoHolidayHours);
-    }, 60000); 
+    }, 60000);
 
     it('should update a AA Schedule', function () {
       utils.wait(autoattendant.schedule, 12000);
