@@ -94,7 +94,15 @@
           .then(function (res) {
             $log.info("resolving", res);
             return res.data;
-          }));
+          })
+          .catch(function (err) {
+            $log.info("Problems resolving device", err);
+            return {
+              "displayName": "Unknown [" + device.accountId + "}"
+            };
+          })
+
+          );
       });
       return $q.all(promises);
     }

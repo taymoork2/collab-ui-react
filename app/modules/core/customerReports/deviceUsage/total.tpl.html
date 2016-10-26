@@ -1,7 +1,17 @@
 <cs-card-layout block-view="true">
 
 
-  <cs-card class="medium header-border">
+  <cs-card class="full header-border">
+    <article>
+      <section>
+        <div ng-include = "'/modules/core/customerReports/deviceUsage/keyholeview.tpl.html'"/>
+
+      </section>
+    </article>
+  </cs-card>
+
+
+  <cs-card class="large header-border">
     <article>
       <header class="align-center">
         <h4>Least Used</h4>
@@ -15,7 +25,7 @@
   </cs-card>
 
 
-  <cs-card class="medium header-border">
+  <cs-card class="large header-border">
     <article>
       <header class="align-center">
         <h4>Most Used</h4>
@@ -27,12 +37,10 @@
     </article>
   </cs-card>
 
-
-  <cs-card class="medium header-border">
+  <cs-card class="full header-border">
     <article>
       <section>
-        <div ng-include = "'/modules/core/customerReports/deviceUsage/keyholeview.tpl.html'"/>
-
+        Graph here...
       </section>
     </article>
   </cs-card>
@@ -40,48 +48,15 @@
 </cs-card-layout>
 
 
+<div class="total-report">
 
-
-
-  <div class="row total-report">
-  <!--
-  <div class="columns full">
-    <div class="range-wrapper">
-      <input cs-input type="radio" ng-change="deviceUsage.rangeChange()" ng-model="deviceUsage.dateRange" id="{{range.id}}" name="" ng-value="::range.value" cs-input-label="{{::range.label}}" ng-repeat="range in deviceUsage.dateRanges">
-    </div>
+  <div id="device-usage-total-chart" class="device-usage-total-chart">
   </div>
-  -->
-  <div class="columns full">
-    <div id="device-usage-total-chart" class="device-usage-total-chart">
-    </div>
-    <div ng-show="deviceUsage.loading" class="loading-indicator">
-      <div class="loading-text">
-        Collecting data
-        <div cs-loader class="loader-example--small"></div>
-      </div>
-    </div>
-  </div>
-  <div ng-show="deviceUsage.showDevices" class="columns full">
-    <div class="table-container">
-      <h4>Device usage on {{deviceUsage.dateForDevices}}</h4>
-      <table class="table table-condensed table-striped">
-        <thead>
-        <tr>
-          <td>Device Id</td>
-          <td>Video Calls</td>
-          <td>Video Duration</td>
-          <td>Paired Count</td>
-        </tr>
-        </thead>
-        <tbody>
-        <tr ng-repeat="device in deviceUsage.devices">
-          <td>{{device.id}}</td>
-          <td>{{device.videoCount}}</td>
-          <td>{{device.video}}</td>
-          <td>{{device.pairedCount}}</td>
-        </tr>
-        </tbody>
-      </table>
+
+  <div ng-show="deviceUsage.loading" class="loading-indicator">
+    <div class="loading-text">
+      Collecting data
+      <div cs-loader class="loader-example--small"></div>
     </div>
   </div>
 

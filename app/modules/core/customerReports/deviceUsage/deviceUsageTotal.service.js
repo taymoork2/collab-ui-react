@@ -228,7 +228,7 @@
           {
             'id': 'Title-1',
             'size': 15,
-            'text': 'Usage Timeline (mock data)'
+            'text': 'Device Usage'
           }
         ]
       };

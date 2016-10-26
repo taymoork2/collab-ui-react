@@ -33,14 +33,14 @@
       // state: "reports.device-usage.overview"
       // },
       {
+        title: $translate.instant('reportsPage.usageReports.all'),
+        state: 'reports.device-usage.total'
+      }, {
         title: $translate.instant('reportsPage.usageReports.timeline'),
         state: 'reports.device-usage.timeline'
       }, {
         title: $translate.instant('reportsPage.usageReports.distribution'),
         state: 'reports.device-usage.distribution'
-      }, {
-        title: $translate.instant('reportsPage.usageReports.total'),
-        state: 'reports.device-usage.total'
       }];
 
     vm.pageTitle = $translate.instant('reportsPage.usageReports.usageReportTitle');

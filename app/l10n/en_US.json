@@ -561,7 +561,8 @@
       "peakHour": "Peak Hour",
       "distribution": "Distribution",
       "timeline": "Timeline",
-      "overview": "Overview"
+      "overview": "Overview",
+      "all": "All"
     }
   },
   "careReportsPage": {
