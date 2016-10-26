@@ -768,11 +768,13 @@
           });
         } else if (!Authinfo.isSetupDone()) {
           // set voicemail toggle to enabled when non-test customer runs FTSW for the very first time
-          if (checkIfTestOrg()) {
-            vm.model.ftswCompanyVoicemail.ftswCompanyVoicemailEnabled = false;
-          } else {
-            vm.model.ftswCompanyVoicemail.ftswCompanyVoicemailEnabled = true;
-          }
+          return checkIfTestOrg().then(function (isTestOrg) {
+            if (isTestOrg) {
+              vm.model.ftswCompanyVoicemail.ftswCompanyVoicemailEnabled = false;
+            } else {
+              vm.model.ftswCompanyVoicemail.ftswCompanyVoicemailEnabled = true;
+            }
+          });
         }
       })
       .then(function () {

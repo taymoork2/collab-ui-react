@@ -41,8 +41,8 @@ describe('Partner Reports', function () {
     it('should show all reports', function () {
       // active users
       utils.expectIsDisplayed(reports.activeHeader);
-      utils.expectIsDisplayed(reports.activePartnerDescription);
-      utils.expectTextToBeSet(reports.activePartnerDescription, lowerTime[0]);
+      utils.expectIsDisplayed(reports.activeDescription);
+      utils.expectTextToBeSet(reports.activeDescription, lowerTime[0]);
       utils.expectIsDisplayed(reports.activeUsersChart);
 
       // most active users
@@ -90,7 +90,7 @@ describe('Partner Reports', function () {
 
       // engagement graphs
       utils.expectIsDisplayed(reports.activeHeader);
-      utils.expectIsDisplayed(reports.activePartnerDescription);
+      utils.expectIsDisplayed(reports.activeDescription);
       utils.expectIsDisplayed(reports.activeUsersChart);
 
       utils.expectIsDisplayed(reports.activePopulationHeader);
@@ -129,8 +129,8 @@ describe('Partner Reports', function () {
 
       // active users
       utils.expectIsDisplayed(reports.activeHeader);
-      utils.expectIsDisplayed(reports.activePartnerDescription);
-      utils.expectTextToBeSet(reports.activePartnerDescription, lowerTime[1]);
+      utils.expectIsDisplayed(reports.activeDescription);
+      utils.expectTextToBeSet(reports.activeDescription, lowerTime[1]);
       utils.expectIsDisplayed(reports.activeUsersChart);
 
       // most active users

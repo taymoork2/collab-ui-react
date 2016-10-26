@@ -22,6 +22,7 @@ describe('Component: reportCard', () => {
   const chart: string = '#' + id + 'Chart';
   const dropdown: string = '#' + id + 'Filter';
   const reportTable: string = '.report-table';
+  const search: string = 'div.report-search';
   const showHideLink: string = 'div.box-match a span';
   const carouselNumberButtons: string = 'div.box-match div.pull-right button.btn';
   const carouselLeft: string = 'div.box-match div.pull-right button.carousel-control i.icon.icon-chevron-left';
@@ -105,6 +106,7 @@ describe('Component: reportCard', () => {
       expect(this.view.find(showHideLink)).toHaveText(options.id + '.hide');
       expect(this.view).toContainElement(reportTable);
       expect(this.$scope.resize).toHaveBeenCalledTimes(1);
+      expect(this.view).not.toContainElement(search);
 
       // Verify table headers are populated
       let headers = this.view.find('thead th.bold.vertical-center');
@@ -153,6 +155,13 @@ describe('Component: reportCard', () => {
       expect(this.view.find(carouselNumberButtons)[0]).toContainText('2');
       expect(this.view.find(carouselNumberButtons)[1]).toContainText('3');
       expect(this.view.find(carouselNumberButtons)[2]).toContainText('4');
+
+      // turn on search and verify search works
+      this.$scope.secondaryOptions.search = true;
+      this.$scope.$apply();
+      expect(this.view).toContainElement(search);
+      this.view.find(search + ' input').val(sortedArray[0].userName).change();
+      checkTableEntries(this.view, 0, 1);
     });
   });
 

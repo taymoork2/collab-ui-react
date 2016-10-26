@@ -39,8 +39,8 @@ describe('Customer Reports', function () {
 
       // Active Users
       utils.expectIsDisplayed(reports.activeHeader);
-      utils.expectIsDisplayed(reports.activeCustomerDescription);
-      utils.expectIsDisplayed(reports.activeUsers);
+      utils.expectIsDisplayed(reports.activeDescription);
+      utils.expectIsDisplayed(reports.activeUsersChart);
 
       // Most Active Users
       utils.expectIsNotDisplayed(reports.mostActiveHeader);
@@ -88,8 +88,8 @@ describe('Customer Reports', function () {
       utils.expectIsDisplayed(reports.totalRoomsGraph);
 
       utils.expectIsDisplayed(reports.activeHeader);
-      utils.expectIsDisplayed(reports.activeCustomerDescription);
-      utils.expectIsDisplayed(reports.activeUsers);
+      utils.expectIsDisplayed(reports.activeDescription);
+      utils.expectIsDisplayed(reports.activeUsersChart);
 
       utils.expectIsDisplayed(reports.filesSharedHeader);
       utils.expectIsDisplayed(reports.filesSharedDescription);
@@ -110,7 +110,7 @@ describe('Customer Reports', function () {
 
       // engagement graphs
       utils.expectIsNotDisplayed(reports.totalRoomsGraph);
-      utils.expectIsNotDisplayed(reports.activeUsers);
+      utils.expectIsNotDisplayed(reports.activeUsersChart);
       utils.expectIsNotDisplayed(reports.filesSharedDiv);
       utils.expectIsNotDisplayed(reports.endpointsDiv);
 
@@ -137,8 +137,8 @@ describe('Customer Reports', function () {
 
       // Active Users
       utils.expectIsDisplayed(reports.activeHeader);
-      utils.expectIsDisplayed(reports.activeCustomerDescription);
-      utils.expectIsDisplayed(reports.activeUsers);
+      utils.expectIsDisplayed(reports.activeDescription);
+      utils.expectIsDisplayed(reports.activeUsersChart);
 
       // Most Active Users
       utils.expectIsNotDisplayed(reports.mostActiveHeader);

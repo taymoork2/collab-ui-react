@@ -146,8 +146,8 @@
 
       if (trialData) {
         properties.servicesArray = _buildTrialDataArray(trialData.trials);
-        properties.duration = trialData.details.licenseDuration;
-        properties.licenseQty = trialData.details.licenseCount;
+        properties.duration = _.get(trialData, 'details.licenseDuration');
+        properties.licenseQty = _.get(trialData, 'details.licenseCount');
       }
       _.extend(properties, additionalPayload);
       return trackEvent(sections.TRIAL.name, event, properties);
