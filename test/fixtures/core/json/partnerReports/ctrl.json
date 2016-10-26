@@ -82,7 +82,7 @@
     "titlePopover": "undefined"
   },
   "deviceOptions": {
-    "animate": false,
+    "animate": true,
     "description": "registeredEndpoints.customerDescription",
     "headerTitle": "registeredEndpoints.registeredEndpoints",
     "id": "devices",
@@ -151,5 +151,15 @@
     "reportType": "donut",
     "state": "set",
     "titlePopover": "undefined"
-  }
+  },
+  "metricsLabels": [{
+    "number": 14554,
+    "text": "callMetrics.totalCalls"
+  }, {
+    "number": 169298,
+    "text": "callMetrics.callMinutes"
+  }, {
+    "number": "0.35",
+    "text": "callMetrics.failureRate"
+  }]
 }

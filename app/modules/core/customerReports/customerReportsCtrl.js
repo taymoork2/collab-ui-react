@@ -167,7 +167,7 @@
       label: $translate.instant('registeredEndpoints.allDevices')
     };
     vm.deviceOptions = {
-      animate: false,
+      animate: true,
       description: 'registeredEndpoints.customerDescription',
       headerTitle: 'registeredEndpoints.registeredEndpoints',
       id: 'devices',
@@ -192,8 +192,26 @@
     };
 
     var metricsChart = null;
-    vm.metricStatus = ReportConstants.REFRESH;
-    vm.metrics = {};
+    vm.metricsOptions = {
+      animate: false,
+      description: 'callMetrics.customerDescription',
+      headerTitle: 'callMetrics.callMetrics',
+      id: 'callMetrics',
+      reportType: ReportConstants.DONUT,
+      state: ReportConstants.REFRESH,
+      table: undefined,
+      titlePopover: ReportConstants.UNDEF,
+    };
+    vm.metricsLabels = [{
+      number: 0,
+      text: 'callMetrics.totalCalls'
+    }, {
+      number: 0,
+      text: 'callMetrics.callMinutes'
+    }, {
+      number: 0,
+      text: 'callMetrics.failureRate'
+    }];
 
     var promises = {
       mf: FeatureToggleService.atlasMediaServiceMetricsGetStatus(),
@@ -277,8 +295,8 @@
       vm.filesSharedOptions.state = ReportConstants.REFRESH;
       vm.mediaOptions.state = ReportConstants.REFRESH;
       vm.deviceOptions.state = ReportConstants.REFRESH;
-      vm.metricStatus = ReportConstants.REFRESH;
-      vm.metrics = {};
+      vm.metricsOptions.state = ReportConstants.REFRESH;
+      setMetrics();
       vm.mediaDropdown.selected = mediaArray[0];
       if (vm.displayActiveLineGraph) {
         vm.activeDropdown.selected = vm.activeDropdown.array[0];
@@ -353,7 +371,7 @@
         tempActiveUserChart = CustomerGraphService.setActiveUsersGraph(data, activeUsersChart);
       }
 
-      if (tempActiveUserChart !== null && angular.isDefined(tempActiveUserChart)) {
+      if (tempActiveUserChart) {
         activeUsersChart = tempActiveUserChart;
         if (vm.displayActiveLineGraph) {
           CustomerGraphService.showHideActiveLineGraph(activeUsersChart, vm.activeDropdown.selected);
@@ -400,7 +418,7 @@
 
     function setAverageGraph(data) {
       var tempAvgRoomsChart = CustomerGraphService.setAvgRoomsGraph(data, avgRoomsChart);
-      if (tempAvgRoomsChart !== null && angular.isDefined(tempAvgRoomsChart)) {
+      if (tempAvgRoomsChart) {
         avgRoomsChart = tempAvgRoomsChart;
       }
     }
@@ -420,7 +438,7 @@
 
     function setFilesGraph(data) {
       var tempFilesSharedChart = CustomerGraphService.setFilesSharedGraph(data, filesSharedChart);
-      if (tempFilesSharedChart !== null && angular.isDefined(tempFilesSharedChart)) {
+      if (tempFilesSharedChart) {
         filesSharedChart = tempFilesSharedChart;
       }
     }
@@ -440,7 +458,7 @@
 
     function setMediaGraph(data) {
       var tempMediaChart = CustomerGraphService.setMediaQualityGraph(data, mediaChart, vm.mediaDropdown.selected);
-      if (tempMediaChart !== null && angular.isDefined(tempMediaChart)) {
+      if (tempMediaChart) {
         mediaChart = tempMediaChart;
       }
     }
@@ -464,8 +482,20 @@
 
     function setMetricGraph(data) {
       var tempMetricsChart = CustomerGraphService.setMetricsGraph(data, metricsChart);
-      if (tempMetricsChart !== null && angular.isDefined(tempMetricsChart)) {
+      if (tempMetricsChart) {
         metricsChart = tempMetricsChart;
+      }
+    }
+
+    function setMetrics(data) {
+      if (data) {
+        vm.metricsLabels[0].number = data.totalCalls;
+        vm.metricsLabels[1].number = data.totalAudioDuration;
+        vm.metricsLabels[2].number = data.totalFailedCalls;
+      } else {
+        _.forEach(vm.metricsLabels, function (label) {
+          label.number = 0;
+        });
       }
     }
 
@@ -474,18 +504,18 @@
         if (response === ABORT) {
           return;
         } else if (_.isArray(response.dataProvider) && response.dataProvider.length === 0) {
-          vm.metricStatus = ReportConstants.EMPTY;
+          vm.metricsOptions.state = ReportConstants.EMPTY;
         } else {
           setMetricGraph(response);
-          vm.metrics = response.displayData;
-          vm.metricStatus = ReportConstants.SET;
+          setMetrics(response.displayData);
+          vm.metricsOptions.state = ReportConstants.SET;
         }
       });
     }
 
     function setDeviceGraph(data, deviceFilter) {
       var tempDevicesChart = CustomerGraphService.setDeviceGraph(data, deviceChart, deviceFilter);
-      if (tempDevicesChart !== null && angular.isDefined(tempDevicesChart)) {
+      if (tempDevicesChart) {
         deviceChart = tempDevicesChart;
       }
     }

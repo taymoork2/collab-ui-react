@@ -69,8 +69,8 @@ describe('Customer Reports', function () {
 
       // Call Metrics
       utils.expectIsDisplayed(reports.metricsHeader);
-      utils.expectIsDisplayed(reports.customerMetricsDescription);
-      utils.expectIsDisplayed(reports.metricsGraphDiv);
+      utils.expectIsDisplayed(reports.metricsDescription);
+      utils.expectIsDisplayed(reports.callMetricsGraph);
       reports.metricsDataPresent(false);
     });
 
@@ -102,7 +102,7 @@ describe('Customer Reports', function () {
 
       // quality graphs
       utils.expectIsNotDisplayed(reports.mediaQualityGraph);
-      utils.expectIsNotDisplayed(reports.metricsGraphDiv);
+      utils.expectIsNotDisplayed(reports.callMetricsGraph);
     });
 
     it('should change to display only quality reports', function () {
@@ -121,8 +121,8 @@ describe('Customer Reports', function () {
       utils.expectIsDisplayed(reports.mediaQualityGraph);
 
       utils.expectIsDisplayed(reports.metricsHeader);
-      utils.expectIsDisplayed(reports.customerMetricsDescription);
-      utils.expectIsDisplayed(reports.metricsGraphDiv);
+      utils.expectIsDisplayed(reports.metricsDescription);
+      utils.expectIsDisplayed(reports.callMetricsGraph);
       reports.metricsDataPresent(false);
     });
 
@@ -167,8 +167,8 @@ describe('Customer Reports', function () {
 
       // Call Metrics
       utils.expectIsDisplayed(reports.metricsHeader);
-      utils.expectIsDisplayed(reports.customerMetricsDescription);
-      utils.expectIsDisplayed(reports.metricsGraphDiv);
+      utils.expectIsDisplayed(reports.metricsDescription);
+      utils.expectIsDisplayed(reports.callMetricsGraph);
       reports.metricsDataPresent(false);
     });
 
