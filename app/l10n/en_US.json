@@ -5592,7 +5592,8 @@
       },
       "meeting": {
         "title": "Meeting",
-        "description": "WebEx Meeting Center and Cisco Spark configurations for your organization and individuals."
+        "description": "WebEx Meeting Center and Cisco Spark configurations for your organization and individuals.",
+        "pmrText": "Configure your Personal Meeting Room"
       },
       "call": {
         "title": "Call",
