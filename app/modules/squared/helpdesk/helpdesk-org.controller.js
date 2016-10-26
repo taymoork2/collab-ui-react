@@ -6,7 +6,7 @@
     .controller('HelpdeskOrgController', HelpdeskOrgController);
 
   /* @ngInject */
-  function HelpdeskOrgController($location, $anchorScroll, $stateParams, HelpdeskService, XhrNotificationService, HelpdeskCardsOrgService, Config, $translate, LicenseService, $scope, $modal, $state, Authinfo, $window, UrlConfig, FeatureToggleService, FusionClusterService) {
+  function HelpdeskOrgController($location, $anchorScroll, $stateParams, HelpdeskService, XhrNotificationService, HelpdeskCardsOrgService, Config, $translate, LicenseService, $scope, $modal, $state, Authinfo, $window, UrlConfig, FeatureToggleService, FusionClusterService, Notification) {
     $('body').css('background', 'white');
     var vm = this;
     if ($stateParams.org) {
