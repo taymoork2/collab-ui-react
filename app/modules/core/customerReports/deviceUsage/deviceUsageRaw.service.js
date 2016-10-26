@@ -3,10 +3,10 @@
 
   angular
     .module('Core')
-    .service('DeviceUsageMockService', DeviceUsageMockService);
+    .service('DeviceUsageRawService', DeviceUsageRawService);
 
   /* @ngInject */
-  function DeviceUsageMockService(DeviceUsageMockData, $timeout, $http, $log) {
+  function DeviceUsageRawService(DeviceUsageMockData, $timeout, $http, $log, $location) {
 
     var deviceReportsUrlBase = "http://localhost:8080/atlas-server-1.0-SNAPSHOT/admin/api/v1/";
 
@@ -16,12 +16,15 @@
     return service;
 
     function useMock() {
+      $log.warn("************** LOCATION:", $location.absUrl());
+      //return $location.absUrl().match(/helpdesk-backend=mock/);
       return true;
     }
 
     // Main api supposed to simulate backend
     // Should be adjusted according to latest (preliminary) backend API
     function getData(startDate, endDate, all) {
+      $log.info("Getting data...");
       if (useMock()) {
         $log.warn("USING MOCK !!!!!");
         var result;
@@ -38,9 +41,9 @@
       } else {
         var deviceReportsUrl;
         if (all === true) {
-          deviceReportsUrl = deviceReportsUrlBase + "organization/1eb65fdf-9643-417f-9974-ad72cae0e10f/reports/device/call?deviceCategory=ce,sparkboard&intervalType=day&rangeStart=" + startDate + "&rangeEnd=" + endDate + "&accounts=__&sendMockData=false";
+          deviceReportsUrl = deviceReportsUrlBase + "organization/1eb65fdf-9643-417f-9974-ad72cae0e10f/reports/device/call?deviceCategories=ce,sparkboard&intervalType=day&rangeStart=" + startDate + "&rangeEnd=" + endDate + "&accounts=__&sendMockData=false";
         } else {
-          deviceReportsUrl = deviceReportsUrlBase + "organization/1eb65fdf-9643-417f-9974-ad72cae0e10f/reports/device/call?deviceCategory=ce,sparkboard&intervalType=day&rangeStart=" + startDate + "&rangeEnd=" + endDate + "&sendMockData=false";
+          deviceReportsUrl = deviceReportsUrlBase + "organization/1eb65fdf-9643-417f-9974-ad72cae0e10f/reports/device/call?deviceCategories=ce,sparkboard&intervalType=day&rangeStart=" + startDate + "&rangeEnd=" + endDate + "&sendMockData=false";
         }
         return $http.get(deviceReportsUrl)
           .then(function (samples) {

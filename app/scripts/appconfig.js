@@ -1407,7 +1407,19 @@
               },
             }
           })
-
+          .state('reports.device-usage.total', {
+            url: '/total',
+            templateUrl: 'modules/core/customerReports/deviceUsage/total.tpl.html',
+            controller: 'DeviceUsageCtrl',
+            controllerAs: 'deviceUsage',
+            params: {
+            },
+            resolve: {
+              deviceUsageFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasDeviceUsageReport);
+              },
+            }
+          })
           .state('webex-reports', {
             url: '/reports/webex',
             templateUrl: 'modules/core/customerReports/customerReports.tpl.html',

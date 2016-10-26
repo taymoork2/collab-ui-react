@@ -7,12 +7,12 @@
 <table class="table-condensed table">
   <thead>
     <th>Device</th>
-    <th>Hours Used</th>
-    <th>Last Used</th>
+    <th>Call Duration</th>
+    <th># Calls</th>
   </thead>
   <tr class="no-border" ng-repeat="device in deviceUsage.leastUsedDevices">
     <td>{{device.name}}</td>
-    <td>{{device.hours}} hours</td>
-    <td>{{device.lastTime}})</td>
+    <td>{{device.duration}}</td>
+    <td>{{device.calls}}</td>
   </tr>
 </table>
