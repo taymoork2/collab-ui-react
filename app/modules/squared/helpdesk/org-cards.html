@@ -203,7 +203,7 @@
 
   <cs-card class="large header-bar gray-light" ng-show="helpdeskOrgCtrl.hybridServicesCard.entitled">
     <article>
-      <header class="align-center">
+      <header class="align-center" ng-class="helpdeskOrgCtrl.loadingHSData ? 'wait' : 'pointer'" ng-click="helpdeskOrgCtrl.openHybridServicesModal()">
         <div class="overview-header">
           <i class="icon icon-circle-data"></i>{{'helpdesk.hybridServices' | translate}}
         </div>
