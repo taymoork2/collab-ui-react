@@ -8,7 +8,7 @@
     .controller('OverviewCtrl', OverviewCtrl);
 
   /* @ngInject */
-  function OverviewCtrl($rootScope, $scope, $timeout, $translate, Authinfo, Config, FeatureToggleService, Log, Notification, Orgservice, OverviewCardFactory, OverviewNotificationFactory, ReportsService, SunlightReportService, TrialService, UrlConfig, hasCareFeatureToggle) {
+  function OverviewCtrl($rootScope, $scope, $timeout, $translate, Authinfo, Config, FeatureToggleService, FusionClusterService, hasCareFeatureToggle, Log, Notification, Orgservice, OverviewCardFactory, OverviewNotificationFactory, ReportsService, SunlightReportService, TrialService, UrlConfig) {
     var vm = this;
 
     vm.pageTitle = $translate.instant('overview.pageTitle');
@@ -33,13 +33,10 @@
     vm.dismissNotification = dismissNotification;
 
     vm.hasMediaFeatureToggle = false;
-
-    function isFeatureToggled() {
-      return FeatureToggleService.supports(FeatureToggleService.features.atlasMediaServiceOnboarding);
-    }
-    isFeatureToggled().then(function (reply) {
-      vm.hasMediaFeatureToggle = reply;
-    });
+    FeatureToggleService.supports(FeatureToggleService.features.atlasMediaServiceOnboarding)
+      .then(function (reply) {
+        vm.hasMediaFeatureToggle = reply;
+      });
 
     // for smaller screens where the notifications are on top, the layout needs to resize after the notifications are loaded
     function resizeNotifications() {
@@ -55,6 +52,7 @@
     }
 
     function init() {
+      findAnyUrgentUpgradeInHybridServices();
       removeCardUserTitle();
       if (!Authinfo.isSetupDone() && Authinfo.isCustomerAdmin()) {
         vm.notifications.push(OverviewNotificationFactory.createSetupNotification());
@@ -134,6 +132,20 @@
       TrialService.getDaysLeftForCurrentUser().then(function (daysLeft) {
         vm.trialDaysLeft = daysLeft;
       });
+    }
+
+    function findAnyUrgentUpgradeInHybridServices() {
+      FusionClusterService.getAll()
+        .then(function (clusters) {
+          var clusterWithUrgentUpgrade = _.find(clusters, function (cluster) {
+            return _.some(cluster.provisioning, function (p) {
+              return p.availablePackageIsUrgent && p.connectorType !== 'c_mgmt';
+            });
+          });
+          if (clusterWithUrgentUpgrade) {
+            vm.notifications.push(OverviewNotificationFactory.createUrgentUpgradeNotification(clusterWithUrgentUpgrade));
+          }
+        });
     }
 
     function removeCardUserTitle() {

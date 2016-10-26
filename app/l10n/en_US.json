@@ -1036,7 +1036,8 @@
     "overview": "Overview",
     "notAvailable": "N/A",
     "ciscoCollaborationCloud": "Cisco Collaboration Cloud",
-    "trackingId": "Tracking Id: {{trackingId}}."
+    "trackingId": "Tracking Id: {{trackingId}}.",
+    "alert": "Alert"
   },
   "notifications": {
     "success": "Success notifications",
@@ -1107,7 +1108,8 @@
     "setUpPMRDescription": "The Personal Meeting Rooms feature has been added to your subscription.",
     "setUpPMRUrl": "Set Up PMR Now",
     "setUpHybridMediaService": "Hybrid Media Service is available. Extend cloud media to use premises-based resources for calls and meetings.",
-    "getStarted": "Get Started"
+    "urgentUpgrade": "An urgent upgrade is available for {{connector}} and it will upgrade during the next scheduled upgrade.",
+    "upgrade": "Upgrade now?"
   },
   "inviteModal": {
     "title": "Service Entitlement",
