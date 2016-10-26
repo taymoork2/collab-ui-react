@@ -772,7 +772,9 @@
             if (isTestOrg) {
               vm.model.ftswCompanyVoicemail.ftswCompanyVoicemailEnabled = false;
             } else {
-              vm.model.ftswCompanyVoicemail.ftswCompanyVoicemailEnabled = true;
+              // 2016-10-26 Setting default voicemail toggle position to false for non-test orgs
+              // until futher decisions are made on whether voicemail should be on or off by default.
+              vm.model.ftswCompanyVoicemail.ftswCompanyVoicemailEnabled = false;
             }
           });
         }
