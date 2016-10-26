@@ -81,7 +81,6 @@ export class ServicesOverviewHybridDataSecurityCard extends ServicesOverviewHybr
       }
     }
 
-
   /* @ngInject */
   public constructor(FusionClusterStatesService) {
     super({
