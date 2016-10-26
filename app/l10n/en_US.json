@@ -5364,7 +5364,6 @@
     },
     "enabledServices": "Active",
     "availableServices": "Available",
-    "none": "None",
     "webexsites": "WebEx Sites",
     "phoneNumbers": "Phone Numbers",
     "software": "Software",
@@ -5472,8 +5471,8 @@
     "adminEmail": "Admin Email",
     "emailSent": "Last Email Sent",
     "partnerInfo": "Partner Information",
-    "managedBy": "Managed By",
-    "partnerEmail": "Partner Email"
+    "partnerEmail": "Partner Email",
+    "hybridServicesDetails": "Hybrid Services Details"
   },
   "activation": {
     "verificationComplete": "Verification Complete",
