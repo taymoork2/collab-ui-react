@@ -116,6 +116,22 @@
         });
     };
 
+    var enableService = function (serviceId) {
+      var url = UrlConfig.getHerculesUrl() + '/organizations/' + Authinfo.getOrgId() + '/services/' + serviceId;
+      return $http.patch(url, {
+        enabled: true
+      })
+        .then(extractData);
+    };
+
+    var disableService = function (serviceId) {
+      var url = UrlConfig.getHerculesUrl() + '/organizations/' + Authinfo.getOrgId() + '/services/' + serviceId;
+      return $http.patch(url, {
+        enabled: false
+      })
+        .then(extractData);
+    };
+
     var isServiceEnabled = function (serviceId, callback) {
       $http
         .get(UrlConfig.getHerculesUrl() + '/organizations/' + Authinfo.getOrgId() + '/services')
@@ -154,7 +170,9 @@
       getEmailSubscribers: getEmailSubscribers,
       setEmailSubscribers: setEmailSubscribers,
       getDisableEmailSendingToUser: getDisableEmailSendingToUser,
-      setDisableEmailSendingToUser: setDisableEmailSendingToUser
+      setDisableEmailSendingToUser: setDisableEmailSendingToUser,
+      enableService: enableService,
+      disableService: disableService,
     };
   }
 }());

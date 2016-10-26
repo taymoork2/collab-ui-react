@@ -4,28 +4,30 @@
   </button>
   <h4 class="modal-title" translate="hercules.clusters.deregisterConfirmRemoval"></h4>
 </div>
-<div class="modal-body">
-  <div ng-show="clusterDeregister.error" class="alert alert-danger" style="margin-bottom: 30px">
-    {{clusterDeregister.error}}
-  </div>
-  <div ng-hide="clusterDeregister.error">
-    <p>{{clusterDeregister.deregisterAreYouSure}}</p>
-    <ul>
-      <li translate="hercules.clusters.deregisterCausesListItem1"></li>
-      <li translate="hercules.clusters.deregisterCausesListItem3"></li>
-    </ul>
-  </div>
+<div class="modal-body hercules-fix-paragraphs deregister-expressway-modal">
+
+  <p translate="hercules.clusters.deregisterOpening"></p>
+
+  <p>
+    <strong class="serviceicon">{{clusterDeregister.clustername}}</strong>
+  </p>
+
+  <p translate="hercules.settings.call.fromCiscoSpark"
+     translate-values="{orgName: clusterDeregister.companyName}"></p>
+
+  <p translate="hercules.clusters.willNoLongerBeUsed"></p>
+
 </div>
 <div class="modal-footer">
   <button class="btn btn-default"
           ng-click="$dismiss()"
           type="button"
-          translate="hercules.clusters.deregisterCancel"></button>
+          translate="common.cancel"></button>
   <button class="btn btn--negative"
           cs-btn
-          loading="clusterDeregister.deregistering"
+          loading="clusterDeregister.loading"
           type="button"
-          ng-disabled="vm.deregistering"
+          ng-disabled="vm.loading"
           ng-click="clusterDeregister.deregister()">
     <span translate="hercules.clusters.deregisterConfirmRemoval"></span>
   </button>

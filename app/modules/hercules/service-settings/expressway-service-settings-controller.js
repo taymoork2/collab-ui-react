@@ -124,22 +124,11 @@
       vm.writeEnableEmailSendingToUser(vm.enableEmailSendingToUser);
     };
 
-    vm.disableService = function (serviceId) {
-      ServiceDescriptor.setServiceEnabled(serviceId, false, function (error) {
-        // TODO: Strange callback result ???
-        if (error !== null) {
-          Notification.errorWithTrackingId(error, 'hercules.genericFailure');
-        } else {
-          $state.go('services-overview');
-        }
-      });
-    };
-
     vm.confirmDisable = function (serviceId) {
       $modal.open({
         templateUrl: 'modules/hercules/service-settings/confirm-disable-dialog.html',
         type: 'small',
-        controller: DisableConfirmController,
+        controller: 'DisableConfirmController',
         controllerAs: 'disableConfirmDialog',
         resolve: {
           serviceId: function () {
@@ -147,7 +136,7 @@
           }
         }
       }).result.then(function () {
-        vm.disableService(serviceId);
+        $state.go('services-overview');
       });
     };
 
@@ -187,23 +176,6 @@
         });
     }
 
-  }
-
-  /* @ngInject */
-  function DisableConfirmController(FusionUtils, $modalInstance, serviceId, $translate, Authinfo) {
-    var modalVm = this;
-    modalVm.serviceId = serviceId;
-    modalVm.serviceIconClass = FusionUtils.serviceId2Icon(serviceId);
-    modalVm.serviceName = $translate.instant('hercules.serviceNames.' + serviceId);
-    modalVm.connectorName = $translate.instant('hercules.connectorNames.' + serviceId);
-    modalVm.companyName = Authinfo.getOrgName();
-
-    modalVm.ok = function () {
-      $modalInstance.close();
-    };
-    modalVm.cancel = function () {
-      $modalInstance.dismiss();
-    };
   }
 
   /* @ngInject */

@@ -23,5 +23,10 @@
 </div>
 <div class="modal-footer deregister-expressway-modal">
   <button ng-click="disableConfirmDialog.cancel()" class="btn" translate="common.cancel"></button>
-  <button ng-click="disableConfirmDialog.ok()" class="btn btn--alert fix-alert-margins" translate="hercules.deactivateServiceSingleCluster.confirmButton"></button>
+  <button cs-btn
+          loading="disableConfirmDialog.loading"
+          ng-click="disableConfirmDialog.confirmDeactivation()"
+          class="btn btn--negative fix-alert-margins">
+    <span translate="hercules.deactivateServiceSingleCluster.confirmButton"></span>
+  </button>
 </div>

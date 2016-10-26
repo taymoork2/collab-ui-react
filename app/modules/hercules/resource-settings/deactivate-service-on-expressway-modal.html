@@ -20,8 +20,13 @@
   <p translate="hercules.deactivateServiceSingleCluster.notDeregistered" translate-values="{clusterName: deactivateServiceOnExpresswayModal.clusterName }"></p>
 
 </div>
-
 <div class="modal-footer deregister-expressway-modal">
-  <button class="btn" ng-click="$close('cancelled')" translate="hercules.clusters.deregisterCancel"></button>
-  <button class="btn btn--alert" id="confirm" ng-click="deactivateServiceOnExpresswayModal.deactivateService()" translate="hercules.deactivateServiceSingleCluster.confirmButton"></button>
+  <button class="btn" ng-click="$close('cancelled')" translate="common.cancel"></button>
+  <button cs-btn class="btn btn--negative"
+          ng-click="deactivateServiceOnExpresswayModal.deactivateService()"
+          ng-disabled="deactivateServiceOnExpresswayModal.loading"
+          loading="deactivateServiceOnExpresswayModal.loading"
+          id="confirm" >
+    <span translate="hercules.deactivateServiceSingleCluster.confirmButton"></span>
+  </button>
 </div>
