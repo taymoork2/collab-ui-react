@@ -40,7 +40,7 @@ describe('DeviceUsageDistributiongraphService', function () {
     ];
 
     var distribution = DeviceUsageDistributionGraphService.getUsageDistributionDataForGraph(rawData);
-    expect(distribution.length).toEqual(5);
+    expect(distribution.length).toEqual(11);
   });
 
 });

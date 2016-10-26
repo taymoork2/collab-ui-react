@@ -1,16 +1,16 @@
 'use strict';
 
-describe('DeviceUsageMockService', function () {
+describe('DeviceUsageRawService', function () {
 
   beforeEach(angular.mock.module('Core'));
 
-  var $timeout, DeviceUsageMockService, DeviceUsageMockData;
+  var $timeout, DeviceUsageRawService, DeviceUsageMockData;
 
   var day1 = 20161001;
   var day2 = 20161002;
 
-  beforeEach(inject(function (_$timeout_, _DeviceUsageMockService_, _DeviceUsageMockData_) {
-    DeviceUsageMockService = _DeviceUsageMockService_;
+  beforeEach(inject(function (_$timeout_, _DeviceUsageRawService_, _DeviceUsageMockData_) {
+    DeviceUsageRawService = _DeviceUsageRawService_;
     DeviceUsageMockData = _DeviceUsageMockData_;
     $timeout = _$timeout_;
   }));
@@ -41,7 +41,7 @@ describe('DeviceUsageMockService', function () {
       sinon.stub(DeviceUsageMockData, 'getRawData');
       DeviceUsageMockData.getRawData.withArgs(sinon.match.any, sinon.match.any).returns(rawData);
 
-      DeviceUsageMockService.getData(day1, day1).then(function (data) {
+      DeviceUsageRawService.getData(day1, day1).then(function (data) {
         expect(data.length).toEqual(1);
         expect(data[0].date).toEqual(day1);
         expect(data[0].deviceCategory).toEqual("ce");
@@ -77,7 +77,7 @@ describe('DeviceUsageMockService', function () {
       sinon.stub(DeviceUsageMockData, 'getRawData');
       DeviceUsageMockData.getRawData.withArgs(sinon.match.any, sinon.match.any).returns(rawData);
 
-      DeviceUsageMockService.getData(day1, day1).then(function (data) {
+      DeviceUsageRawService.getData(day1, day1).then(function (data) {
         expect(data.length).toEqual(2);
         expect(data[0].date).toEqual(day1);
         expect(data[0].deviceCategory).toEqual("ce");
@@ -137,7 +137,7 @@ describe('DeviceUsageMockService', function () {
       sinon.stub(DeviceUsageMockData, 'getRawData');
       DeviceUsageMockData.getRawData.withArgs(sinon.match.any, sinon.match.any).returns(rawData);
 
-      DeviceUsageMockService.getData(day1, day2).then(function (data) {
+      DeviceUsageRawService.getData(day1, day2).then(function (data) {
 
         expect(data.length).toEqual(3);
 
@@ -205,7 +205,7 @@ describe('DeviceUsageMockService', function () {
       sinon.stub(DeviceUsageMockData, 'getRawData');
       DeviceUsageMockData.getRawData.withArgs(sinon.match.any, sinon.match.any).returns(rawData);
 
-      DeviceUsageMockService.getData(day1, day2, true).then(function (data) {
+      DeviceUsageRawService.getData(day1, day2, true).then(function (data) {
         expect(data.length).toEqual(6);
         done();
       });

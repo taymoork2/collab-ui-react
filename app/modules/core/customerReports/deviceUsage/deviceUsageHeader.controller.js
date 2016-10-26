@@ -38,6 +38,9 @@
       }, {
         title: $translate.instant('reportsPage.usageReports.distribution'),
         state: 'reports.device-usage.distribution'
+      }, {
+        title: $translate.instant('reportsPage.usageReports.total'),
+        state: 'reports.device-usage.total'
       }];
 
     vm.pageTitle = $translate.instant('reportsPage.usageReports.usageReportTitle');
