@@ -766,7 +766,7 @@
       if (!customerId) {
         return $q.reject('A Customer Organization Id must be passed');
       } else {
-        url = siteListUrl.replace('%s', customerId);
+        url = _.replace(siteListUrl, '%s', customerId);
         return $http.get(url);
       }
     }

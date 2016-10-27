@@ -221,11 +221,7 @@
 
       FeatureToggleService.getFeaturesForUser(vm.currentUser.id).then(function (response) {
         vm.features = [];
-        if (!(response.data || response.data.developer)) {
-          return;
-        }
-        var allFeatures = response.data.developer;
-        _.each(allFeatures, function (el) {
+        _.forEach(_.get(response, 'developer'), function (el) {
           if (el.val !== 'false' && el.val !== '0') {
             var newEl = {
               key: el.key

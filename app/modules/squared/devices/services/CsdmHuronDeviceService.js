@@ -57,7 +57,7 @@
     }
 
     function encodeHuronTags(description) {
-      return (description || "").replace(/"/g, "'");
+      return _.replace(description, /"/g, "'");
     }
 
     var deviceList = {};

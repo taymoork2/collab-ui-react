@@ -78,7 +78,7 @@
     function stringifyField(data) {
       if (angular.isString(data)) {
         // Escape double quotes
-        data = data.replace(/"/g, '""');
+        data = _.replace(data, /"/g, '""');
         if (data.indexOf(separator) > -1 || data.indexOf('\n') > -1 || data.indexOf('\r') > -1) {
           data = '"' + data + '"';
         }
