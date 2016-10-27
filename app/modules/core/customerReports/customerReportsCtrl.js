@@ -261,7 +261,7 @@
         if (response) {
           vm.headerTabs.push({
             title: $translate.instant('reportsPage.usageReports.usageReportTitle'),
-            state: 'reports.device-usage.timeline'
+            state: 'reports.device-usage.total'
           });
         }
       });

@@ -2,10 +2,16 @@
 
 
   <cs-card class="full header-border">
+
     <article>
+      <header class="align-center">
+        <h4>Device Metrics</h4>
+        <div class="right" style="position:absolute; top:1rem; right:3rem">
+          <input class="btn btn--primary" type="button" value="Download full report">
+        </div>
+      </header>
       <section>
         <div ng-include = "'modules/core/customerReports/deviceUsage/keyholeview.tpl.html'"/>
-
       </section>
     </article>
   </cs-card>
@@ -37,10 +43,11 @@
     </article>
   </cs-card>
 
-  <cs-card class="full header-border">
+  <cs-card class="full">
     <article>
       <section>
-        Graph here...
+        <div id="device-usage-total-chart" class="device-usage-total-chart">
+        </div>
       </section>
     </article>
   </cs-card>
@@ -48,16 +55,10 @@
 </cs-card-layout>
 
 
-<div class="total-report">
-
-  <div id="device-usage-total-chart" class="device-usage-total-chart">
+<div ng-show="deviceUsage.loading" class="loading-indicator">
+  <div class="loading-text">
+    Collecting data
+    <div cs-loader class="loader-example--small"></div>
   </div>
-
-  <div ng-show="deviceUsage.loading" class="loading-indicator">
-    <div class="loading-text">
-      Collecting data
-      <div cs-loader class="loader-example--small"></div>
-    </div>
-  </div>
-
 </div>
+

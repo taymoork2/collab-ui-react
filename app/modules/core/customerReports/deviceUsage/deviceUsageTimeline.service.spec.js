@@ -60,7 +60,7 @@ describe('DeviceUsageTimelineService', function () {
     var range = 'rangeStart=' + start.format('YYYY-MM-DD') + '&rangeEnd=' + end;
     var deviceCategories = '&deviceCategories=ce,sparkboard';
     $httpBackend
-      .when('GET', urlBase + path + range + deviceCategories)
+      .when('GET', urlBase + path + range + deviceCategories + "&accounts=__")
       .respond(mockData);
     DeviceUsageTimelineService.getDataForLastWeek(['ce,sparkboard'], 'backend').then(function (data) {
       expect(data.length).toEqual(7);
@@ -81,7 +81,7 @@ describe('DeviceUsageTimelineService', function () {
     var range = 'rangeStart=' + start.format('YYYY-MM-DD') + '&rangeEnd=' + end;
     var deviceCategories = '&deviceCategories=ce,sparkboard';
     $httpBackend
-      .when('GET', urlBase + path + range + deviceCategories)
+      .when('GET', urlBase + path + range + deviceCategories + "&accounts=__")
       .respond(mockData);
     DeviceUsageTimelineService.getDataForLastMonth(['ce', 'sparkboard'], 'backend').then(function (data) {
       expect(data.length).toEqual(30);
@@ -102,7 +102,7 @@ describe('DeviceUsageTimelineService', function () {
     var range = 'rangeStart=' + start.format('YYYY-MM-DD') + '&rangeEnd=' + end;
     var deviceCategories = '&deviceCategories=ce,sparkboard';
     $httpBackend
-      .when('GET', urlBase + path + range + deviceCategories).respond(mockData);
+      .when('GET', urlBase + path + range + deviceCategories + "&accounts=__").respond(mockData);
 
     DeviceUsageTimelineService.getDataForLastWeek(['ce,sparkboard'], 'backend').then(function () {
       fail();

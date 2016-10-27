@@ -6,7 +6,7 @@
     .service('DeviceUsageTotalService', DeviceUsageTotalService);
 
   /* @ngInject */
-  function DeviceUsageTotalService($q, $timeout, $http, chartColors, DeviceUsageRawService, UrlConfig, Authinfo) {
+  function DeviceUsageTotalService($log, $q, $timeout, $http, chartColors, DeviceUsageRawService, UrlConfig, Authinfo) {
 
     var localUrlBase = 'http://localhost:8080/atlas-server/admin/api/v1/organization';
     var urlBase = UrlConfig.getAdminServiceUrl() + 'organizations';
@@ -14,6 +14,7 @@
     var timeoutInMillis = 10000;
 
     function getDataForLastWeek(deviceCategories, api) {
+      $log.info("dataForLastWeek", api);
       return getDataForPeriod('week', 1, 'day', deviceCategories, api);
     }
 
@@ -69,6 +70,7 @@
         url = url + 'intervalType=' + granularity;
         url = url + '&rangeStart=' + start + '&rangeEnd=' + end;
         url = url + '&deviceCategories=' + deviceCategories.join();
+        //url = url + '&accounts=__';
         url = url + '&sendMockData=false';
         return doRequest(url);
       } else {
@@ -76,6 +78,8 @@
         url = url + 'intervalType=' + granularity;
         url = url + '&rangeStart=' + start + '&rangeEnd=' + end;
         url = url + '&deviceCategories=' + deviceCategories.join();
+        //url = url + '&accounts=__';
+
         return doRequest(url);
       }
     }
@@ -97,6 +101,7 @@
     }
 
     function analyseReject(reject) {
+      $log.info("Argh! Problems rejectinh", reject);
       if (reject.status === -1) {
         reject.statusText = 'Operation timed Out';
         reject.data = {
