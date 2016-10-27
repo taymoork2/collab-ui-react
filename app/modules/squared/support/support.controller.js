@@ -443,6 +443,7 @@
       multiSelect: false,
       rowHeight: 45,
       enableRowHeaderSelection: false,
+      enableRowSelection: false,
       enableColumnResize: true,
       enableColumnMenus: false,
       onRegisterApi: function (gridApi) {
