@@ -6,8 +6,6 @@
       "oneToOneRooms": 0,
       "avgRooms": 0,
       "groupRooms": 0,
-      "colorOne": "#F3F3F3",
-      "colorTwo": "#ECECEC",
       "balloon": false
     }, {
       "date": "Aug 02",
@@ -15,8 +13,6 @@
       "oneToOneRooms": 10,
       "avgRooms": 0,
       "groupRooms": 0,
-      "colorOne": "#F3F3F3",
-      "colorTwo": "#ECECEC",
       "balloon": false
     }, {
       "date": "Aug 03",
@@ -24,8 +20,6 @@
       "oneToOneRooms": 20,
       "avgRooms": 0,
       "groupRooms": 0,
-      "colorOne": "#F3F3F3",
-      "colorTwo": "#ECECEC",
       "balloon": false
     }, {
       "date": "Aug 04",
@@ -33,8 +27,6 @@
       "oneToOneRooms": 30,
       "avgRooms": 0,
       "groupRooms": 0,
-      "colorOne": "#F3F3F3",
-      "colorTwo": "#ECECEC",
       "balloon": false
     }, {
       "date": "Aug 05",
@@ -42,8 +34,6 @@
       "oneToOneRooms": 40,
       "avgRooms": 0,
       "groupRooms": 0,
-      "colorOne": "#F3F3F3",
-      "colorTwo": "#ECECEC",
       "balloon": false
     }, {
       "date": "Aug 06",
@@ -51,8 +41,6 @@
       "oneToOneRooms": 50,
       "avgRooms": 0,
       "groupRooms": 0,
-      "colorOne": "#F3F3F3",
-      "colorTwo": "#ECECEC",
       "balloon": false
     }, {
       "date": "Aug 07",
@@ -60,8 +48,6 @@
       "oneToOneRooms": 60,
       "avgRooms": 0,
       "groupRooms": 0,
-      "colorOne": "#F3F3F3",
-      "colorTwo": "#ECECEC",
       "balloon": false
     }],
     "two": [{
@@ -70,8 +56,6 @@
       "oneToOneRooms": 0,
       "avgRooms": 0,
       "groupRooms": 0,
-      "colorOne": "#F3F3F3",
-      "colorTwo": "#ECECEC",
       "balloon": false
     }, {
       "date": "Jul 19",
@@ -79,8 +63,6 @@
       "oneToOneRooms": 10,
       "avgRooms": 0,
       "groupRooms": 0,
-      "colorOne": "#F3F3F3",
-      "colorTwo": "#ECECEC",
       "balloon": false
     }, {
       "date": "Jul 26",
@@ -88,8 +70,6 @@
       "oneToOneRooms": 20,
       "avgRooms": 0,
       "groupRooms": 0,
-      "colorOne": "#F3F3F3",
-      "colorTwo": "#ECECEC",
       "balloon": false
     }, {
       "date": "Aug 02",
@@ -97,8 +77,6 @@
       "oneToOneRooms": 30,
       "avgRooms": 0,
       "groupRooms": 0,
-      "colorOne": "#F3F3F3",
-      "colorTwo": "#ECECEC",
       "balloon": false
     }],
     "three": [{
@@ -107,8 +85,6 @@
       "oneToOneRooms": 0,
       "avgRooms": 0,
       "groupRooms": 0,
-      "colorOne": "#F3F3F3",
-      "colorTwo": "#ECECEC",
       "balloon": false
     }, {
       "date": "July",
@@ -116,8 +92,6 @@
       "oneToOneRooms": 10,
       "avgRooms": 0,
       "groupRooms": 0,
-      "colorOne": "#F3F3F3",
-      "colorTwo": "#ECECEC",
       "balloon": false
     }, {
       "date": "August",
@@ -125,8 +99,6 @@
       "oneToOneRooms": 20,
       "avgRooms": 0,
       "groupRooms": 0,
-      "colorOne": "#F3F3F3",
-      "colorTwo": "#ECECEC",
       "balloon": false
     }]
   },
@@ -147,11 +119,11 @@
   "callMetrics": {
     "dataProvider": [{
       "label": "callMetrics.callConditionFail",
-      "value": "200",
+      "value": 200,
       "color": "#EBEBEC"
     }, {
       "label": "callMetrics.callConditionSuccessful",
-      "value": "800",
+      "value": 800,
       "color": "#F5F5F6"
     }],
     "labelData": {
@@ -280,7 +252,7 @@
   "activeUserPopulation": [{
     "customerName": "activeUserPopulation.loadingCustomer",
     "percentage": 85,
-    "overallPopulation": 50, 
+    "overallPopulation": 50,
     "color": "#F5F5F6",
     "balloon": false,
     "labelColorField": "#ccc"
@@ -379,87 +351,73 @@
       "date": "Dec07",
       "contentShared": 80,
       "contentShareSizes": 0,
-      "color": "#ECECEC",
       "balloon": false
     }, {
       "date": "Dec08",
       "contentShared": 70,
       "contentShareSizes": 0,
-      "color": "#ECECEC",
       "balloon": false
     }, {
       "date": "Dec09",
       "contentShared": 60,
       "contentShareSizes": 0,
-      "color": "#ECECEC",
       "balloon": false
     }, {
       "date": "Dec10",
       "contentShared": 50,
       "contentShareSizes": 0,
-      "color": "#ECECEC",
       "balloon": false
     }, {
       "date": "Dec11",
       "contentShared": 40,
       "contentShareSizes": 0,
-      "color": "#ECECEC",
       "balloon": false
     }, {
       "date": "Dec12",
       "contentShared": 30,
       "contentShareSizes": 0,
-      "color": "#ECECEC",
       "balloon": false
     }, {
       "date": "Dec13",
       "contentShared": 20,
       "contentShareSizes": 0,
-      "color": "#ECECEC",
       "balloon": false
     }],
     "two": [{
       "date": "Nov21",
       "contentShared": 80,
       "contentShareSizes": 0,
-      "color": "#ECECEC",
       "balloon": false
     }, {
       "date": "Nov28",
       "contentShared": 70,
       "contentShareSizes": 0,
-      "color": "#ECECEC",
       "balloon": false
     }, {
       "date": "Dec05",
       "contentShared": 60,
       "contentShareSizes": 0,
-      "color": "#ECECEC",
       "balloon": false
     }, {
       "date": "Dec12",
       "contentShared": 50,
       "contentShareSizes": 0,
-      "color": "#ECECEC",
       "balloon": false
     }],
     "three": [{
       "date": "October",
       "contentShared": 80,
       "contentShareSizes": 0,
-      "color": "#ECECEC",
       "balloon": false
     }, {
       "date": "November",
       "contentShared": 70,
       "contentShareSizes": 0,
-      "color": "#ECECEC",
       "balloon": false
     }, {
       "date": "December",
       "contentShared": 60,
       "contentShareSizes": 0,
-      "color": "#ECECEC",
       "balloon": false
     }]
   }

@@ -22,7 +22,7 @@ class ReportService {
 
   private activeUserCustomerGraphs = {};
   private overallPopulation: number = 0;
-  private timeFilter: number | void;
+  private timeFilter: number | string | void;
 
   // promise tracking
   private ABORT: string = 'ABORT';
@@ -198,7 +198,7 @@ class ReportService {
 
       if (orgData) {
         // gather active user data for combining below
-        let orgActive = orgData.graphData;
+        let orgActive: Array<IActiveUserData> = orgData.graphData;
         activeDataSet.push(orgActive);
 
         if (orgActive && (orgActive.length > 0) && (date === '' || orgActive[(orgActive.length - 1)].date > date)) {
@@ -311,7 +311,7 @@ class ReportService {
       let data: any = _.get(response, 'data.data');
       if (data) {
         let graphItem: IMediaQualityData = {
-          date: undefined,
+          date: '',
           totalDurationSum: 0,
           goodQualityDurationSum: 0,
           fairQualityDurationSum: 0,
