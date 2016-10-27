@@ -15,7 +15,7 @@ export * from './lineOverview.service';
 export default angular
   .module('huron.line-overview', [
     'atlas.templates',
-    'cisco.ui',
+    'collab.ui',
     'pascalprecht.translate',
     directoryNumber,
     callForward,

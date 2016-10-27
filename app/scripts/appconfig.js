@@ -78,7 +78,13 @@
               $state.modal = $modal.open({
                 template: '<div ui-view="modal"></div>',
                 controller: 'ModalWizardCtrl',
-                windowTemplateUrl: 'modules/core/modal/wizardWindow.tpl.html',
+                // TODO(pajeter): remove inline template when cs-modal is updated
+                windowTemplate: '<div modal-render="{{$isRendered}}" tabindex="-1" role="dialog" class="modal-alt"' +
+                    'modal-animation-class="fade"' +
+                    'modal-in-class="in"' +
+                    'ng-style="{\'z-index\': 1051, display: \'block\', visibility: \'visible\', position: \'relative\'}">' +
+                    '<div class="modal-content" modal-transclude></div>' +
+                '</div>',
                 backdrop: 'static'
               });
               $state.modal.result.finally(function () {
@@ -188,6 +194,14 @@
             },
             authenticate: false
           })
+          .state('server-maintenance', {
+            views: {
+              'main@': {
+                templateUrl: 'modules/core/stateRedirect/serverMaintenance.tpl.html',
+              }
+            },
+            authenticate: false
+          })
           .state('404', {
             parent: 'stateRedirectLazyLoad',
             url: '/404',
@@ -277,7 +291,13 @@
               }
               $state.sidepanel = $modal.open({
                 template: '<cs-sidepanel></cs-sidepanel>',
-                windowTemplateUrl: 'sidepanel/sidepanel-modal.tpl.html',
+                // TODO(pajeter): remove inline template when cs-modal is updated
+                windowTemplate: '<div modal-render="{{$isRendered}}" tabindex="-1" role="dialog" class="sidepanel-modal"' +
+                      'modal-animation-class="fade"' +
+                      'modal-in-class="in"' +
+                      'ng-style="{\'z-index\': 1051, display: \'block\', visibility: \'visible\'}">' +
+                      '<div class="modal-content" modal-transclude></div>' +
+                 ' </div>',
                 backdrop: false,
                 keyboard: false
               });
@@ -476,6 +496,19 @@
                 templateUrl: 'modules/squared/devices/addDeviceNew/ShowActivationCodeTemplate.tpl.html',
                 controller: 'ShowActivationCodeCtrl',
                 controllerAs: 'showActivationCode'
+              }
+            }
+          })
+          .state('addDeviceFlow.editServices', {
+            parent: 'modal',
+            params: {
+              wizard: null
+            },
+            views: {
+              'modal@': {
+                templateUrl: 'modules/squared/places/editServices/EditServicesTemplate.tpl.html',
+                controller: 'EditServicesCtrl',
+                controllerAs: 'editServices'
               }
             }
           })
@@ -1051,6 +1084,7 @@
             params: {
               currentUser: {},
               entitlements: {},
+              queryuserslist: {},
               currentUserId: ''
             },
             data: {
@@ -1393,7 +1427,19 @@
               },
             }
           })
-
+          .state('reports.device-usage.total', {
+            url: '/total',
+            templateUrl: 'modules/core/customerReports/deviceUsage/total.tpl.html',
+            controller: 'DeviceUsageCtrl',
+            controllerAs: 'deviceUsage',
+            params: {
+            },
+            resolve: {
+              deviceUsageFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasDeviceUsageReport);
+              },
+            }
+          })
           .state('webex-reports', {
             url: '/reports/webex',
             templateUrl: 'modules/core/customerReports/customerReports.tpl.html',
@@ -1807,17 +1853,16 @@
               meetingLicenses: {}
             }
           })
-          .state('customer-overview.externalNumberDetail', {
-            templateUrl: 'modules/core/customers/customerOverview/externalNumberDetail.tpl.html',
+          .state('customer-overview.externalNumbers', {
+            controller: 'ExternalNumberDetailCtrl',
+            controllerAs: 'externalNumbers',
+            templateUrl: 'modules/huron/externalNumbers/externalNumberDetail.tpl.html',
             resolve: {
               data: /* @ngInject */ function ($state, $translate) {
-                $state.get('customer-overview.externalNumberDetail').data.displayName = $translate.instant('customerPage.call');
+                $state.get('customer-overview.externalNumbers').data.displayName = $translate.instant('customerPage.phoneNumbers');
               }
             },
-            data: {},
-            params: {
-              meetingLicenses: {}
-            }
+            data: {}
           })
           .state('customer-overview.domainDetail', {
             controller: 'DomainDetailCtrl',
@@ -2345,7 +2390,17 @@
             }
           })
           .state('huronCallPickup', {
-            url: '/huronCallPickup',
+            url: '/callPickup',
+            parent: 'main',
+            template: '<call-pickup-setup-assistant></call-pickup-setup-assistant>',
+            resolve: {
+              lazy: /* @ngInject */ function lazyLoad($q, $ocLazyLoad) {
+                return $q(function resolveLogin(resolve) {
+                  require(['modules/huron/features/callPickup/callPickupSetupAssistant'], loadModuleAndResolve($ocLazyLoad, resolve));
+                });
+              }
+            }
+
           })
           .state('huronCallPark', {
             url: '/huronCallPark',
@@ -2383,11 +2438,8 @@
           })
           .state('huronPagingGroup', {
             url: '/huronPagingGroup',
-            views: {
-              'main@': {
-                template: '<pg-setup-assistant></pg-setup-assistant>',
-              }
-            },
+            parent: 'main',
+            template: '<pg-setup-assistant></pg-setup-assistant>',
             resolve: {
               lazy: /* @ngInject */ function lazyLoad($q, $ocLazyLoad) {
                 return $q(function resolveLogin(resolve) {

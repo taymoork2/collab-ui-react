@@ -11,8 +11,7 @@
         vm.data = [];
         vm.placesLoaded = false;
         vm.placeFilter = PlaceFilter;
-        vm.placeFilter.setCurrentSearch('');
-        vm.placeFilter.setCurrentFilter('');
+        vm.placeFilter.resetFilters();
         var placesList;
 
         function init() {

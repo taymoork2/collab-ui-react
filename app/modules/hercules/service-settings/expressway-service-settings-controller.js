@@ -6,7 +6,7 @@
     .controller('ExpresswayServiceSettingsController', ExpresswayServiceSettingsController);
 
   /* @ngInject */
-  function ExpresswayServiceSettingsController($state, $modal, ServiceDescriptor, Authinfo, USSService, MailValidatorService, XhrNotificationService, CertService, Notification, FusionUtils, CertificateFormatterService, $translate) {
+  function ExpresswayServiceSettingsController($state, $modal, ServiceDescriptor, Authinfo, USSService, MailValidatorService, CertService, Notification, FusionUtils, CertificateFormatterService, $translate) {
     var vm = this;
     vm.emailSubscribers = '';
     vm.connectorType = $state.current.data.connectorType;
@@ -38,7 +38,7 @@
             // TODO: fix this callback crap!
             if (err) {
               vm.squaredFusionEc = !vm.squaredFusionEc;
-              Notification.error('hercules.errors.failedToEnableConnect');
+              Notification.errorWithTrackingId('hercules.errors.failedToEnableConnect');
             }
           }
         );
@@ -66,7 +66,7 @@
         Notification.success('hercules.errors.sipDomainSaved');
       }, function () {
         vm.savingSip = false;
-        Notification.error('hercules.errors.sipDomainInvalid');
+        Notification.errorWithTrackingId('hercules.errors.sipDomainInvalid');
       });
     };
 
@@ -87,14 +87,14 @@
         return data.text;
       }).toString();
       if (emailSubscribers && !MailValidatorService.isValidEmailCsv(emailSubscribers)) {
-        Notification.error('hercules.errors.invalidEmail');
+        Notification.errorWithTrackingId('hercules.errors.invalidEmail');
       } else {
         vm.savingEmail = true;
         ServiceDescriptor.setEmailSubscribers(vm.servicesId[0], emailSubscribers, function (statusCode) {
           if (statusCode === 204) {
             Notification.success('hercules.settings.emailNotificationsSavingSuccess');
           } else {
-            Notification.error('hercules.settings.emailNotificationsSavingError');
+            Notification.errorWithTrackingId('hercules.settings.emailNotificationsSavingError');
           }
           vm.savingEmail = false;
         });
@@ -113,7 +113,7 @@
       ServiceDescriptor.setDisableEmailSendingToUser(value)
         .catch(function () {
           vm.enableEmailSendingToUser = !vm.enableEmailSendingToUser;
-          return Notification.error('hercules.settings.emailUserNotificationsSavingError');
+          return Notification.errorWithTrackingId('hercules.settings.emailUserNotificationsSavingError');
         });
     }, 2000, {
       'leading': true,
@@ -128,7 +128,7 @@
       ServiceDescriptor.setServiceEnabled(serviceId, false, function (error) {
         // TODO: Strange callback result ???
         if (error !== null) {
-          XhrNotificationService.notify(error);
+          Notification.errorWithTrackingId(error, 'hercules.genericFailure');
         } else {
           $state.go('services-overview');
         }
@@ -155,7 +155,11 @@
       if (!file) {
         return;
       }
-      CertService.uploadCert(Authinfo.getOrgId(), file).then(readCerts, XhrNotificationService.notify);
+      CertService.uploadCert(Authinfo.getOrgId(), file)
+        .then(readCerts)
+        .catch(function (error) {
+          Notification.errorWithTrackingId(error, 'hercules.genericFailure');
+        });
     };
 
     vm.confirmCertDelete = function (cert) {
@@ -173,15 +177,16 @@
     };
 
     function readCerts() {
-      CertService.getCerts(Authinfo.getOrgId()).then(function (res) {
-        vm.certificates = res || [];
-        vm.formattedCertificateList = CertificateFormatterService.formatCerts(vm.certificates);
-      }, XhrNotificationService.notify);
+      CertService.getCerts(Authinfo.getOrgId())
+        .then(function (res) {
+          vm.certificates = res || [];
+          vm.formattedCertificateList = CertificateFormatterService.formatCerts(vm.certificates);
+        })
+        .catch(function (error) {
+          Notification.errorWithTrackingId(error, 'hercules.settings.call.certificatesCannotRead');
+        });
     }
 
-    vm.invalidEmail = function (tag) {
-      Notification.error(tag.text + ' is not a valid email');
-    };
   }
 
   /* @ngInject */
@@ -202,11 +207,15 @@
   }
 
   /* @ngInject */
-  function ConfirmCertificateDeleteController(CertService, $modalInstance, XhrNotificationService, cert) {
+  function ConfirmCertificateDeleteController(CertService, $modalInstance, Notification, cert) {
     var vm = this;
     vm.cert = cert;
     vm.remove = function () {
-      CertService.deleteCert(vm.cert.certId).then($modalInstance.close, XhrNotificationService.notify);
+      CertService.deleteCert(vm.cert.certId)
+        .then($modalInstance.close)
+        .catch(function (error) {
+          Notification.errorWithTrackingId(error, 'hercules.settings.call.certificatesCannotDelete');
+        });
     };
     vm.cancel = function () {
       $modalInstance.dismiss();

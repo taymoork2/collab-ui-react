@@ -18,10 +18,8 @@
           vm.licenseError = vm.showLicenseWarning ? $translate.instant('spacesPage.licenseSuspendedWarning') : "";
         });
 
-        // Reset to defaults on pageload to wipe out any lingering settings from previous page visits
         vm.deviceFilter = DeviceFilter;
-        vm.deviceFilter.setCurrentSearch('');
-        vm.deviceFilter.setCurrentFilter('');
+        vm.deviceFilter.resetFilters();
 
         CsdmDataModelService.getDevicesMap().then(function (devicesMap) {
           vm.devicesMap = devicesMap;

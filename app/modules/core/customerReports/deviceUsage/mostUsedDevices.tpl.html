@@ -1,0 +1,14 @@
+<table class="table-condensed table extreme-table">
+  <thead>
+  <th class="extreme-table-entry">Device Name</th>
+  <th class="extreme-table-entry">Hours Used</th>
+  <th class="extreme-table-entry"># Calls</th>
+
+  </thead>
+  <tr class="no-border" ng-repeat="device in deviceUsage.mostUsedDevices">
+    <td class="extreme-table-entry">{{device.name}}</td>
+    <td class="extreme-table-entry">{{device.duration}}</td>
+    <td class="extreme-table-entry">{{device.calls}}</td>
+
+  </tr>
+</table>

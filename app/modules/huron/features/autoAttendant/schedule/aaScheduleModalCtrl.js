@@ -101,7 +101,7 @@
       var atLeastOneDaySet = _.find(vm.openhours[index].days, {
         'active': true
       });
-      if (angular.isUndefined(atLeastOneDaySet)) {
+      if (_.isUndefined(atLeastOneDaySet)) {
         AANotificationService.error('autoAttendant.openHoursDaySelect');
         return true;
       }
@@ -368,7 +368,7 @@
         // copy value from modal to the ui model
         vm.ui.timeZone = vm.timeZone;
 
-        if (angular.isUndefined(vm.aaModel.aaRecord.assignedTimeZone)) {
+        if (_.isUndefined(vm.aaModel.aaRecord.assignedTimeZone)) {
           // log event for first-time timezone change in a schedule
           var type = 'change';
           Analytics.trackEvent(AAMetricNameService.TIME_ZONE, {
@@ -416,7 +416,7 @@
         }
         savePromise.then(
           function (response) {
-            if (angular.isUndefined(vm.aaModel.aaRecord.scheduleId) && !vm.isDeleted) {
+            if (_.isUndefined(vm.aaModel.aaRecord.scheduleId) && !vm.isDeleted) {
               //To avoid notification when a CE update fails during calendar creation,
               //and the newly created orphaned calendar is deleted.
               return;
@@ -441,7 +441,7 @@
                 statusText: response.statusText,
                 status: response.status
               });
-            } else if (angular.isUndefined(vm.aaModel.aaRecord.scheduleId)) {
+            } else if (_.isUndefined(vm.aaModel.aaRecord.scheduleId)) {
               //Calendar create failed
               AANotificationService.errorResponse(response, 'autoAttendant.errorCreateCe', {
                 name: calName,

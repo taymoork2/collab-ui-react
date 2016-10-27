@@ -1,16 +1,20 @@
-<div>
-  <div id="device-usage-distribution-chart" class="device-usage-distribution-report">
-  </div>
-  <div ng-show="deviceUsage.loading" class="loading-indicator">
-    <div class="loading-text">
-      Collecting data
-      <div cs-loader class="loader-example--small"></div>
-    </div>
-  </div>
-</div>
+<cs-card-layout block-view="true">
 
-<div class="device-details">
-  <div class="device-list">
-    <div gridscrollbar class="gridStyle" ui-grid="deviceUsage.gridOptions" ui-grid-selection></div>
+  <cs-card class="full">
+    <article>
+      <section>
+        <div id="device-usage-distribution-chart" class="device-usage-distribution-report">
+        </div>
+      </section>
+    </article>
+  </cs-card>
+
+</cs-card-layout>
+
+
+<div ng-show="deviceUsage.loading" class="loading-indicator">
+  <div class="loading-text">
+    Collecting data
+    <div cs-loader class="loader-example--small"></div>
   </div>
 </div>

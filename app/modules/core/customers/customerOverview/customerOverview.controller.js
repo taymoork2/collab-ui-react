@@ -56,7 +56,7 @@
         if (_.find(vm.currentCustomer.offers, { id: Config.offerTypes.roomSystems })) {
           vm.showRoomSystems = true;
         }
-        var isCareEnabled = result && Authinfo.isCare();
+        var isCareEnabled = result;
         setOffers(isCareEnabled);
       });
 
@@ -137,7 +137,7 @@
     }
 
     function initCustomer() {
-      if (angular.isUndefined(vm.currentCustomer.customerEmail)) {
+      if (_.isUndefined(vm.currentCustomer.customerEmail)) {
         vm.currentCustomer.customerEmail = identityCustomer.email;
       }
     }
@@ -203,12 +203,12 @@
           Userservice.updateUsers([emailObj], licIds, null, 'updateUserLicense', _.noop);
           openCustomerPortal();
         } else {
-          AccountOrgService.getAccount(vm.customerOrgId).then(function (data) {
-            var accountsLength = _.get(data, 'accounts.length');
+          AccountOrgService.getAccount(vm.customerOrgId).then(function (response) {
+            var accountsLength = _.get(response, 'data.accounts.length');
             if (accountsLength) {
               var updateUsersList = [];
               for (var i = 0; i < accountsLength; i++) {
-                var account = data.accounts[i];
+                var account = response.data.accounts[i];
                 var lics = account.licenses;
                 var licIds = collectLicenseIdsForWebexSites(lics);
                 updateUsersList.push(Userservice.updateUsers([emailObj], licIds, null, 'updateUserLicense', _.noop));

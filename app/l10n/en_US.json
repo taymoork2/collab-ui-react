@@ -100,6 +100,8 @@
     "partners": "Partner Administrators",
     "deleteUser": "Delete User",
     "deleteUserConfText": "Are you sure you want to delete {{email}}?",
+    "deleteMsgrUserConfText": "Unable to delete this user. All Jabber Messenger users must be managed from the ",
+    "orgAdminLinkText": "Messenger Org Admin tool.",
     "deleteUserSelfConfText": "Warning: You are about to delete yourself from the system. This will immediately revoke your access to this application and you will be immediately logged out. All your collaboration services will also be revoked.",
     "typeYestoDelete": "Type \"YES\" to confirm you would like to perform this operation.",
     "yes": "YES",
@@ -495,7 +497,7 @@
     "betaFeatures": "Beta Features",
     "errorGettingToggles": "There was a problem getting the selected organizations feature toggles",
     "errorSettingToggle": "There was a problem setting a toggle",
-    "toggleModSuccess": "All modified toggles were updated",
+    "toggleModSuccess": "The Feature Toggle: {{featureToggleName}} was successfully set to {{toggleState}} for {{orgId}}",
     "startSearching": "To begin, search for an organization",
     "noSearchResults": "Search yielded no results",
     "allowBetaChannels": "Allow Beta Release Channel",
@@ -559,7 +561,8 @@
       "peakHour": "Peak Hour",
       "distribution": "Distribution",
       "timeline": "Timeline",
-      "overview": "Overview"
+      "overview": "Overview",
+      "all": "All"
     }
   },
   "careReportsPage": {
@@ -1315,6 +1318,10 @@
     "tryAgainButton": "Try Again",
     "signInButton": "Sign In Again"
   },
+  "serverMaintenancePage": {
+    "title": "Server Maintenance",
+    "text": "We are currently undergoing routine maintenance. Please check back later."
+  },
   "errors": {
     "status401": "Authorization failed. Server unable to process authorization token. You will automatically be logged out in a few seconds.",
     "status403": "Authorization failed. You do not have administrator priviledges. You will automatically be logged out in a few seconds.",
@@ -1328,7 +1335,9 @@
     "unsupported": "You are using an <strong>outdated</strong> version of Internet Explorer. Please <a href='http://windows.microsoft.com/en-us/internet-explorer/download-ie' target='_blank'>upgrade your browser</a> to version 11 or higher.",
     "statusError": "Request failed with status: {{status}}.",
     "csvError": "Export failed.",
-    "videoError": "There is a problem with the video you are trying to play."
+    "videoError": "There is a problem with the video you are trying to play.",
+    "runtimeTitle": "Oops!",
+    "runtime": "An unexpected error has occurred. Our engineers are on it. If you need help to proceed, please <a href='https://support.ciscospark.com' target='_blank'>contact support</a>."
   },
   "spacesPage": {
     "addTag": "Add tag",
@@ -1435,8 +1444,8 @@
       "selectClusterPlaceholderNoneFound": "No eligible clusters found",
       "enterDisplayName": "Enter a name for the Expressway cluster:",
       "clusternameWatermark": "Enter cluster name…",
-      "cannotCreateCluster": "Could not create cluster. Try again later, or contact your Cisco technical support representative if the problem persists.",
-      "cannotProvisionConnector": "Could not provision {{ConnectorName}}. Try again later, or contact your Cisco technical support representative if the problem persists.",
+      "cannotCreateCluster": "Could not create cluster. Try again later.",
+      "cannotProvisionConnector": "Could not provision {{ConnectorName}}. Try again later.",
       "cannotFinalizeAllowlisting": "Could not finalize cluster provisioning. Try again later, or contact your Cisco technical support representative if the problem persists.",
       "connectorIsProvisioned": "The Expressway cluster {{ClusterName}} has been successfully provisioned with the following Hybrid Service:",
       "logInToConfigureThem": "{{ConnectorName}} will automatically be downloaded and installed on {{ClusterName}}, but you must <a href='https://{{hostname}}/fusionregistration' target='_blank'>log in to the Expressway</a> and configure and start {{ConnectorName}} to make it operational.",
@@ -1692,6 +1701,8 @@
         "connect": "Users' incoming calls will ring their work phones and the Cisco Spark app. Users can call their colleagues from either their phones or the app, too.",
         "certificatesHeading": "Certificates for Encrypted SIP Calls",
         "certificates": "Use certificates provided from the Cisco Collaboration default trust list or upload your own.  If you use your own, make sure the hostnames are on a verified domain. For help, click <a href=\"http://www.cisco.com/go/hybrid-services-call\" target=\"_blank\">here.</a>",
+        "certificatesCannotRead": "Could not read certificate list.",
+        "certificatesCannotDelete": "Could not delete certificate. Try again later",
         "certificatesEmailAddress": "Email Address",
         "certificatesCommonName": "Common Name",
         "certificatesOrganizationalUnit": "Organizational Unit",
@@ -1917,7 +1928,21 @@
       "deactivateServiceHeader" : "Deactivate Hybrid Data Security",
       "deactivateServiceDesc" : "Deactivating Service...",
       "deactivateServiceButton" : "Deactivate",
-      "deactivateServiceConfirmation" : "Confirm Deactivation"
+      "deactivateServiceConfirmation" : "Confirm Deactivation",
+      "serviceStatus" : "Service Status",
+      "serviceStatusTrialMode" : "Trial Mode",
+      "serviceStatusProductionMode" : "Production Mode",
+      "serviceStatusTrial" : "Trial",
+      "serviceStatusProduction" : "Production",
+      "serviceStatusTrialStarted" : "Hybrid Data Security Trial Mode has started",
+      "serviceStatusProductionStarted" : "Hybrid Data Security Production Mode has started",
+      "serviceDocumentationSoftware" : "Documentation and Software",
+      "serviceHelp" : "Visit <a target='_blank' href='{{documentationUrl}}'>Help Central</a> whenever you need further information about Hybrid Services",
+      "serviceDownload" : "Download Cisco Expressway software from <a target='_blank' href='http://software.cisco.com'>software.cisco.com</a>",
+      "orgSettings" : "Organization",
+      "orgSettingsKmsServer" : "Server",
+      "orgSettingsKmsMachineAccount"  : "Machine Account",
+      "getOrgSettingsFailure" : "Failed to retrieve organization data."
     }
   },
   "ediscovery": {
@@ -2562,7 +2587,15 @@
   "callPickup": {
     "title": "Call Pickup",
     "code": "PI",
-    "modalDescription": "Call Pickup feature allows users to pick up incoming calls within a group of users."
+    "modalDescription": "Call Pickup feature allows users to pick up incoming calls within a group of users.",
+    "createTitle": "Create Call Pickup",
+    "cancelHeader": "Cancel Call Pickup Creation",
+    "confirmButton": "Cancel Creation",
+    "continueButton": "Continue Creation",
+    "cancelDialog": "Are you sure you wish to cancel call pickup creation? This call pickup will not be saved.",
+    "createHelpText": "Create",
+    "nameHint": "This name is not visible to callers.",
+    "namePlaceholder": "Name the Call Pickup"
   },
   "pagingGroup": {
     "title": "Paging Group",
@@ -3048,7 +3081,8 @@
         "reserveFail": "Numbers were not reserved",
         "customerFail": "Customer was not created",
         "orderFail": "Numbers were not ordered",
-        "siteFail": "Site was not created"
+        "siteFail": "Site was not created",
+        "exchanges": "Failed to get NXX (exchanges) for selected area code"
       }
     },
     "finish": {
@@ -3342,15 +3376,13 @@
     "timeZoneUpdateFailed": "Device did not update its Time Zone in time",
     "kem": "Key Expansion Module(s)",
     "kemAbbreviation": "KEM",
-    "kemDescription": "Key Expansion Modules (KEM) can be used to increase personal interaction while increasing responsiveness by adding single-button access to more people.",
+    "kemDescription": "Increases single-button access to more contacts and features.",
     "kemOptions": {
       "none": "None",
       "one": "One",
       "two": "Two",
       "three": "Three"
-    },
-    "kemUpdated": "Number of KEM updated.",
-    "kemChangesFailed": "Failed to save KEM changes."
+    }
   },
   "addDeviceWizard": {
     "newDevice": "New Device",
@@ -3760,7 +3792,7 @@
       "deregisterCausesListItem2": "The pre-existing calls will continue.",
       "defuseAreYouSure": "Are you sure you want to deregister media server {{clusterName}} from organization {{organizationName}}?",
       "defuseCausesListItem1": "The cluster {{groupName}} will be removed from system.",
-      "deregisterErrorGeneric": "Unable to deregister {{clusterName}}. {{errorMessage}}",
+      "deregisterErrorGeneric": "Unable to deregister {{clusterName}}.",
       "releaseChannel": "Release Channel",
       "doYouStillWantToContinue": "Do you still want to continue ?",
       "youHostNoAvailable": "Your host will no longer be available in future",
@@ -3854,7 +3886,7 @@
       "cancel": "Cancel",
       "cluster-placeholder": "Create or select cluster",
       "hostname-placeholder": "Enter hostname or IP address",
-      "grant-registration-success-header-old-cluster": "You can now register the Hybrid Media Node <strong>{{hostname}}</strong>, assigned to <strong>{{clustername}}</strong> with the Cisco Collaboration Cloud.",
+      "grant-registration-success-header-old-cluster": "You can now register your Hybrid Media Node to the Cisco Collaboration Cloud.<br> Node IP address: {{hostname}}<br>Cluster: {{clustername}}",
       "grant-registration-success-header-new-cluster": "You can now register the Hybrid Media Node <strong>{{hostname}}</strong>, assigned to the new cluster <strong>{{clustername}}</strong> with the Cisco Collaboration Cloud.",
       "grant-success-information": "Go to your Hybrid Media Node within one hour to finish registration.",
       "next": "Next",
@@ -5102,7 +5134,8 @@
           "squared-fusion-cal": "Calendar",
           "squared-fusion-uc": "Call",
           "squared-fusion-mgmt": "Management",
-          "squared-fusion-media": "Media"
+          "squared-fusion-media": "Media",
+          "hybrid-data-security": "Data Security"
         }
       },
       "licenses": {
@@ -5337,7 +5370,6 @@
     },
     "enabledServices": "Active",
     "availableServices": "Available",
-    "none": "None",
     "webexsites": "WebEx Sites",
     "phoneNumbers": "Phone Numbers",
     "software": "Software",
@@ -5445,8 +5477,8 @@
     "adminEmail": "Admin Email",
     "emailSent": "Last Email Sent",
     "partnerInfo": "Partner Information",
-    "managedBy": "Managed By",
-    "partnerEmail": "Partner Email"
+    "partnerEmail": "Partner Email",
+    "hybridServicesDetails": "Hybrid Services Details"
   },
   "activation": {
     "verificationComplete": "Verification Complete",
@@ -5596,6 +5628,17 @@
         "buttons": {
           "resources": "Resources",
           "settings": "Settings"
+        }
+      },
+      "hybridDataSecurity": {
+        "title": "Hybrid Data Security",
+        "description": "Storage Node Setup in Progress",
+        "buttons": {
+          "installSoftware": "Install server software",
+          "createCluster": "Create cluster",
+          "registerNode": "Register node",
+          "configureNode": "Configure node",
+          "addUsers" : "Add users"
         }
       },
       "hybridContext": {

@@ -5,7 +5,7 @@ import pagingGroupService from 'modules/huron/features/pagingGroup';
 export default angular
   .module('huron.paging-group.edit', [
     'atlas.templates',
-    'cisco.ui',
+    'collab.ui',
     'pascalprecht.translate',
     require('modules/core/notifications').default,
     pagingGroupService,

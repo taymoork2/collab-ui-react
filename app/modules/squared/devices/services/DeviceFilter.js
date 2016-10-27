@@ -8,27 +8,34 @@
 
       var currentSearch, currentFilter, arr = [];
 
-      var filters = [{
-        count: 0,
-        name: $translate.instant('common.all'),
-        filterValue: 'all'
-      }, {
-        count: 0,
-        name: $translate.instant('CsdmStatus.OnlineWithIssues'),
-        filterValue: 'issues'
-      }, {
-        count: 0,
-        name: $translate.instant('CsdmStatus.Offline'),
-        filterValue: 'offline'
-      }, {
-        count: 0,
-        name: $translate.instant('CsdmStatus.RequiresActivation'),
-        filterValue: 'codes'
-      }, {
-        count: 0,
-        name: $translate.instant('CsdmStatus.Online'),
-        filterValue: 'online'
-      }];
+      var filters = [];
+      var resetFilters = function () {
+        // use to reset defaults to wipe out any lingering settings and keep translations fresh
+        filters = [{
+          count: 0,
+          name: $translate.instant('common.all'),
+          filterValue: 'all'
+        }, {
+          count: 0,
+          name: $translate.instant('CsdmStatus.OnlineWithIssues'),
+          filterValue: 'issues'
+        }, {
+          count: 0,
+          name: $translate.instant('CsdmStatus.Offline'),
+          filterValue: 'offline'
+        }, {
+          count: 0,
+          name: $translate.instant('CsdmStatus.RequiresActivation'),
+          filterValue: 'codes'
+        }, {
+          count: 0,
+          name: $translate.instant('CsdmStatus.Online'),
+          filterValue: 'online'
+        }];
+        setCurrentSearch('');
+        setCurrentFilter('');
+      };
+      resetFilters();
 
       var getFilters = function () {
         return filters;
@@ -166,6 +173,7 @@
       return {
         getFilters: getFilters,
         getFilteredList: getFilteredList,
+        resetFilters: resetFilters,
         setCurrentFilter: setCurrentFilter,
         setCurrentSearch: setCurrentSearch,
       };

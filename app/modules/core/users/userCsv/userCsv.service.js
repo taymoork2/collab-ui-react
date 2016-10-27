@@ -37,7 +37,7 @@
     }
 
     function setCsvStat(csvObject, resetArray) {
-      _.assign(csvStat, csvObject, function (a, b) {
+      _.assignInWith(csvStat, csvObject, function (a, b) {
         if (_.isArray(a)) {
           if (resetArray) {
             return b;

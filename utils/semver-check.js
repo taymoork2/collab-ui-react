@@ -1,9 +1,9 @@
 var isWindows = /^win/.test(process.platform);
 
 var nodeVersion = getParsedVersion(process.version);
-var isNodeValid = nodeVersion >= 4;
+var isNodeValid = ((nodeVersion >= 4) && (nodeVersion < 5)) || ((nodeVersion >= 6) && (nodeVersion < 7));
 if (!isNodeValid) {
-  console.log('NodeJS version should be at least version 4, current is:', process.version);
+  console.log('NodeJS should be version 4 or 6 - current is:', process.version);
   console.log('Consider using nvm: https://github.com/creationix/nvm');
   process.exit(1);
 }
@@ -17,10 +17,10 @@ if (isWindows) {
 }
 cp.stdout.on('data', function (data) {
   var npmVersion = getParsedVersion(data.toString());
-  var isNpmValid = (npmVersion >= 2) && (npmVersion < 3);
+  var isNpmValid = (npmVersion >= 2) && (npmVersion < 4);
   if (!isNpmValid) {
-    console.log('npm version should strictly be version 2, current is:', npmVersion);
-    console.log('`npm install -g npm@latest-2` may do the trick');
+    console.log('npm should be version 2 or 3 - current is:', npmVersion);
+    console.log('https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/blob/master/docs/setup.md');
     process.exit(1);
   }
 });

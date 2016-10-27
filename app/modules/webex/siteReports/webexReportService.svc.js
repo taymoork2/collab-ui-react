@@ -212,14 +212,14 @@
         return new UIsref(thelink, "ReportID", self.site_url);
       });
       this.isEmpty = function () {
-        return (angular.isUndefined(self.uisrefs)) || (self.uisrefs.length === 0);
+        return (_.isUndefined(self.uisrefs)) || (self.uisrefs.length === 0);
       };
       this.isNotEmpty = function () {
         return !self.isEmpty();
       };
       this.subsections = [];
       this.hasNoSubsections = function () {
-        return (angular.isUndefined(self.subsections)) || (self.subsections.length === 0);
+        return (_.isUndefined(self.subsections)) || (self.subsections.length === 0);
       };
       this.hasSubsections = function () {
         return !self.hasNoSubsections();
@@ -400,7 +400,7 @@
               ) {
 
                 reportsObject.hasLoadError = true;
-              } else if (angular.isUndefined(reportPagesInfoJson.bodyJson.ns1_siteAdminNavUrl)) {
+              } else if (_.isUndefined(reportPagesInfoJson.bodyJson.ns1_siteAdminNavUrl)) {
                 logMsg = funcName + "\n" +
                   "ERROR: ns1_siteAdminNavUrl is undefined" + "\n" +
                   "siteUrl=" + siteUrl;

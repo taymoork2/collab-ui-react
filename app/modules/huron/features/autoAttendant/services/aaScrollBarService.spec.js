@@ -1,5 +1,6 @@
   'use strict';
 
+  $.fn.getNiceScroll = sinon.spy();
   describe('Service:AAScrollBar', function () {
     var $timeout, $compile, $rootScope, $scope;
     var AAScrollBar, container, target0, target1;
@@ -14,7 +15,7 @@
 
       AAScrollBar = _AAScrollBar_;
 
-      container = angular.element("<><div style='height:100px;' id='builderScrollContainer' cs-scroll></div></body>");
+      container = angular.element("<><div style='height:100px;' id='builderScrollContainer' ></div></body>");
       target0 = angular.element("<div style='height:20px;' id='testTarget0'></div>");
       target1 = angular.element("<div style='height:200px;' id='testTarget1'></div>");
       container.appendTo(target0);

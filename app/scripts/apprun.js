@@ -4,7 +4,7 @@
   module.exports = wx2AdminWebClientApp;
 
   /* @ngInject */
-  function wx2AdminWebClientApp($animate, $interval, $location, $rootScope, $state, $translate, $window, Auth, Authinfo, Config, Localize, Log, LogMetricsService, OnlineUpgradeService, PreviousState, SessionStorage, TokenService, TrackingId, Utils) {
+  function wx2AdminWebClientApp($animate, $interval, $location, $rootScope, $state, $translate, $window, Auth, Authinfo, Config, HealthService, Localize, Log, LogMetricsService, OnlineUpgradeService, PreviousState, SessionStorage, TokenService, TrackingId, Utils) {
     //Expose the localize service globally.
     $rootScope.Localize = Localize;
     $rootScope.Utils = Utils;
@@ -50,7 +50,14 @@
           SessionStorage.put(storedState, to.name);
           SessionStorage.putObject(storedParams, toParams);
           SessionStorage.putObject(queryParams, $location.search());
-          $state.go('login');
+          HealthService.getHealthStatus()
+          .then(function (status) {
+            if (status === 'online') {
+              $state.go('login');
+            }
+          }).catch(function () {
+            $state.go('server-maintenance');
+          });
         }
       }
     });

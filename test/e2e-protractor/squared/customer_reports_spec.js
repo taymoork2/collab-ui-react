@@ -39,8 +39,8 @@ describe('Customer Reports', function () {
 
       // Active Users
       utils.expectIsDisplayed(reports.activeHeader);
-      utils.expectIsDisplayed(reports.activeCustomerDescription);
-      utils.expectIsDisplayed(reports.activeUsers);
+      utils.expectIsDisplayed(reports.activeDescription);
+      utils.expectIsDisplayed(reports.activeUsersChart);
 
       // Most Active Users
       utils.expectIsNotDisplayed(reports.mostActiveHeader);
@@ -63,14 +63,14 @@ describe('Customer Reports', function () {
 
       // Device Media Quality
       utils.expectIsDisplayed(reports.mediaHeader);
-      utils.expectIsDisplayed(reports.customerMediaDescription);
+      utils.expectIsDisplayed(reports.mediaDescription);
       utils.expectIsDisplayed(reports.mediaFilter);
-      utils.expectIsDisplayed(reports.mediaQualityDiv);
+      utils.expectIsDisplayed(reports.mediaQualityGraph);
 
       // Call Metrics
       utils.expectIsDisplayed(reports.metricsHeader);
-      utils.expectIsDisplayed(reports.customerMetricsDescription);
-      utils.expectIsDisplayed(reports.metricsGraphDiv);
+      utils.expectIsDisplayed(reports.metricsDescription);
+      utils.expectIsDisplayed(reports.callMetricsGraph);
       reports.metricsDataPresent(false);
     });
 
@@ -88,8 +88,8 @@ describe('Customer Reports', function () {
       utils.expectIsDisplayed(reports.totalRoomsGraph);
 
       utils.expectIsDisplayed(reports.activeHeader);
-      utils.expectIsDisplayed(reports.activeCustomerDescription);
-      utils.expectIsDisplayed(reports.activeUsers);
+      utils.expectIsDisplayed(reports.activeDescription);
+      utils.expectIsDisplayed(reports.activeUsersChart);
 
       utils.expectIsDisplayed(reports.filesSharedHeader);
       utils.expectIsDisplayed(reports.filesSharedDescription);
@@ -101,8 +101,8 @@ describe('Customer Reports', function () {
       utils.expectIsDisplayed(reports.endpointsDiv);
 
       // quality graphs
-      utils.expectIsNotDisplayed(reports.mediaQualityDiv);
-      utils.expectIsNotDisplayed(reports.metricsGraphDiv);
+      utils.expectIsNotDisplayed(reports.mediaQualityGraph);
+      utils.expectIsNotDisplayed(reports.callMetricsGraph);
     });
 
     it('should change to display only quality reports', function () {
@@ -110,19 +110,19 @@ describe('Customer Reports', function () {
 
       // engagement graphs
       utils.expectIsNotDisplayed(reports.totalRoomsGraph);
-      utils.expectIsNotDisplayed(reports.activeUsers);
+      utils.expectIsNotDisplayed(reports.activeUsersChart);
       utils.expectIsNotDisplayed(reports.filesSharedDiv);
       utils.expectIsNotDisplayed(reports.endpointsDiv);
 
       // quality graphs
       utils.expectIsDisplayed(reports.mediaHeader);
-      utils.expectIsDisplayed(reports.customerMediaDescription);
+      utils.expectIsDisplayed(reports.mediaDescription);
       utils.expectIsDisplayed(reports.mediaFilter);
-      utils.expectIsDisplayed(reports.mediaQualityDiv);
+      utils.expectIsDisplayed(reports.mediaQualityGraph);
 
       utils.expectIsDisplayed(reports.metricsHeader);
-      utils.expectIsDisplayed(reports.customerMetricsDescription);
-      utils.expectIsDisplayed(reports.metricsGraphDiv);
+      utils.expectIsDisplayed(reports.metricsDescription);
+      utils.expectIsDisplayed(reports.callMetricsGraph);
       reports.metricsDataPresent(false);
     });
 
@@ -137,8 +137,8 @@ describe('Customer Reports', function () {
 
       // Active Users
       utils.expectIsDisplayed(reports.activeHeader);
-      utils.expectIsDisplayed(reports.activeCustomerDescription);
-      utils.expectIsDisplayed(reports.activeUsers);
+      utils.expectIsDisplayed(reports.activeDescription);
+      utils.expectIsDisplayed(reports.activeUsersChart);
 
       // Most Active Users
       utils.expectIsNotDisplayed(reports.mostActiveHeader);
@@ -161,14 +161,14 @@ describe('Customer Reports', function () {
 
       // Device Media Quality
       utils.expectIsDisplayed(reports.mediaHeader);
-      utils.expectIsDisplayed(reports.customerMediaDescription);
+      utils.expectIsDisplayed(reports.mediaDescription);
       utils.expectIsDisplayed(reports.mediaFilter);
-      utils.expectIsDisplayed(reports.mediaQualityDiv);
+      utils.expectIsDisplayed(reports.mediaQualityGraph);
 
       // Call Metrics
       utils.expectIsDisplayed(reports.metricsHeader);
-      utils.expectIsDisplayed(reports.customerMetricsDescription);
-      utils.expectIsDisplayed(reports.metricsGraphDiv);
+      utils.expectIsDisplayed(reports.metricsDescription);
+      utils.expectIsDisplayed(reports.callMetricsGraph);
       reports.metricsDataPresent(false);
     });
 
