@@ -70,12 +70,14 @@
         url = url + '&rangeStart=' + start + '&rangeEnd=' + end;
         url = url + '&deviceCategories=' + deviceCategories.join();
         url = url + '&sendMockData=false';
+        url = url + '&accounts=__';
         return doRequest(url);
       } else {
         url = urlBase + '/' + Authinfo.getOrgId() + '/reports/device/call?';
         url = url + 'intervalType=' + granularity;
         url = url + '&rangeStart=' + start + '&rangeEnd=' + end;
         url = url + '&deviceCategories=' + deviceCategories.join();
+        url = url + '&accounts=__';
         return doRequest(url);
       }
     }
