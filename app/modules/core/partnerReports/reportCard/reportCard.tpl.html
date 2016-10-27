@@ -33,6 +33,12 @@
           <span translate='reportsPage.noCustomerData'></span>
         </h3>
       </div>
+      <div class="row" ng-if="$ctrl.isSet() && $ctrl.labels">
+        <div ng-repeat="label in $ctrl.labels" class="columns medium-4 label-display">
+          <p class="label-number">{{label.number}}</p>
+          <span class="label-text" translate='{{label.text}}'></span>
+        </div>
+      </div>
 
       <!-- Secondary Report Section - Table Only -->
       <div ng-if="$ctrl.secondaryOptions.display">
@@ -58,7 +64,7 @@
             <tbody>
               <tr ng-repeat="user in $ctrl.getTable() | orderBy:$ctrl.getPredicate():$ctrl.getSortDirection()" ng-if="$ctrl.isActivePage($index)">
                 <td class="vertical-center">{{user.userName}}</td>
-                <td class="vertical-center">{{user.orgName}}</td>
+                <td class="vertical-center" ng-if="$ctrl.secondaryOptions.table.headers.length > 3">{{user.orgName}}</td>
                 <td class="vertical-center horizontal-center">{{user.numCalls}}</td>
                 <td class="vertical-center horizontal-center">{{user.sparkMessages}}</td>
               </tr>

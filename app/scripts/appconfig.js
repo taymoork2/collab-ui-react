@@ -78,7 +78,13 @@
               $state.modal = $modal.open({
                 template: '<div ui-view="modal"></div>',
                 controller: 'ModalWizardCtrl',
-                windowTemplateUrl: 'modules/core/modal/wizardWindow.tpl.html',
+                // TODO(pajeter): remove inline template when cs-modal is updated
+                windowTemplate: '<div modal-render="{{$isRendered}}" tabindex="-1" role="dialog" class="modal-alt"' +
+                    'modal-animation-class="fade"' +
+                    'modal-in-class="in"' +
+                    'ng-style="{\'z-index\': 1051, display: \'block\', visibility: \'visible\', position: \'relative\'}">' +
+                    '<div class="modal-content" modal-transclude></div>' +
+                '</div>',
                 backdrop: 'static'
               });
               $state.modal.result.finally(function () {
@@ -188,6 +194,14 @@
             },
             authenticate: false
           })
+          .state('server-maintenance', {
+            views: {
+              'main@': {
+                templateUrl: 'modules/core/stateRedirect/serverMaintenance.tpl.html',
+              }
+            },
+            authenticate: false
+          })
           .state('404', {
             parent: 'stateRedirectLazyLoad',
             url: '/404',
@@ -277,7 +291,13 @@
               }
               $state.sidepanel = $modal.open({
                 template: '<cs-sidepanel></cs-sidepanel>',
-                windowTemplateUrl: 'sidepanel/sidepanel-modal.tpl.html',
+                // TODO(pajeter): remove inline template when cs-modal is updated
+                windowTemplate: '<div modal-render="{{$isRendered}}" tabindex="-1" role="dialog" class="sidepanel-modal"' +
+                      'modal-animation-class="fade"' +
+                      'modal-in-class="in"' +
+                      'ng-style="{\'z-index\': 1051, display: \'block\', visibility: \'visible\'}">' +
+                      '<div class="modal-content" modal-transclude></div>' +
+                 ' </div>',
                 backdrop: false,
                 keyboard: false
               });

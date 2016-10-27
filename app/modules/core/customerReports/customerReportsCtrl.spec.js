@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Controller: Customer Reports Ctrl', function () {
-  var controller, $scope, WebexReportService, WebExApiGatewayService, Userservice;
+  var controller, $scope, WebexReportService, WebExApiGatewayService, Userservice, $document;
 
   var dummyData = getJSONFixture('core/json/partnerReports/dummyReportData.json');
   var activeData = getJSONFixture('core/json/customerReports/activeUser.json');
@@ -18,10 +18,21 @@ describe('Controller: Customer Reports Ctrl', function () {
   var deviceCard = _.cloneDeep(ctrlData.deviceOptions);
   var filesSharedCard = _.cloneDeep(ctrlData.filesSharedOptions);
   var mediaOptions = _.cloneDeep(ctrlData.mediaOptions);
+  var metricsOptions = _.cloneDeep(ctrlData.callOptions);
+  var metricsLabels = _.cloneDeep(ctrlData.metricsLabels);
   activeOptions.description = 'activeUsers.customerPortalDescription';
   activeOptions.table = undefined;
   secondaryActiveOptions.description = 'activeUsers.customerMostActiveDescription';
   secondaryActiveOptions.search = true;
+  secondaryActiveOptions.table.data = _.cloneDeep(activeData.mostActiveResponse);
+  avgRoomsCard.table = undefined;
+  deviceCard.table = undefined;
+  filesSharedCard.table = undefined;
+  mediaOptions.description = 'mediaQuality.descriptionCustomer';
+  mediaOptions.table = undefined;
+  metricsOptions.description = 'callMetrics.customerDescription';
+  metricsOptions.table = undefined;
+
   secondaryActiveOptions.sortOptions = [{
     option: "userName",
     direction: false
@@ -35,6 +46,7 @@ describe('Controller: Customer Reports Ctrl', function () {
     option: "totalActivity",
     direction: true
   }];
+
   secondaryActiveOptions.table.headers = [{
     title: "activeUsers.user",
     class: "col-md-4 pointer"
@@ -45,12 +57,6 @@ describe('Controller: Customer Reports Ctrl', function () {
     title: "activeUsers.sparkMessages",
     class: "horizontal-center col-md-2 pointer"
   }];
-  secondaryActiveOptions.table.data = _.cloneDeep(activeData.mostActiveResponse);
-  avgRoomsCard.table = undefined;
-  deviceCard.table = undefined;
-  filesSharedCard.table = undefined;
-  mediaOptions.description = 'mediaQuality.descriptionCustomer';
-  mediaOptions.table = undefined;
 
   var mediaArray = [{
     value: 0,
@@ -106,6 +112,9 @@ describe('Controller: Customer Reports Ctrl', function () {
                             'FeatureToggleService',
                             'MediaServiceActivationV2');
     $scope = this.$rootScope.$new();
+    /* global document */
+    $document = angular.element(document);
+    $document.find('body').append('<div class="cs-card-layout"></div>');
 
     this.$httpBackend.whenGET('https://identity.webex.com/identity/scim/null/v1/Users/me').respond(200, {});
     spyOn(this.$rootScope, '$broadcast').and.callThrough();
@@ -234,9 +243,6 @@ describe('Controller: Customer Reports Ctrl', function () {
       expect(controller.displayEngagement).toBeTruthy();
       expect(controller.displayQuality).toBeTruthy();
 
-      expect(controller.metricStatus).toEqual(ctrlData.SET);
-      expect(controller.metrics).toEqual(_.cloneDeep(metricsData.response.displayData));
-
       expect(controller.activeOptions).toEqual(activeOptions);
       expect(controller.secondaryActiveOptions).toEqual(secondaryActiveOptions);
 
@@ -254,6 +260,9 @@ describe('Controller: Customer Reports Ctrl', function () {
       expect(controller.mediaDropdown.array).toEqual(mediaDropdown.array);
       expect(controller.mediaDropdown.disabled).toEqual(mediaDropdown.disabled);
       expect(controller.mediaDropdown.selected).toEqual(mediaDropdown.selected);
+
+      expect(controller.metricsOptions).toEqual(metricsOptions);
+      expect(controller.metricsLabels).toEqual(metricsLabels);
 
       var reportFilter = _.cloneDeep(ctrlData.reportFilter);
       _.forEach(controller.filterArray, function (filter, index) {

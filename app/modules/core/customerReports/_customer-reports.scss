@@ -1,5 +1,4 @@
 @import '../../sunlight/reports/_care-task';
-@import 'callMetrics/_call-metrics-customer';
 
 @keyframes graphAxisFade {
   0% { opacity: 0; }
@@ -96,25 +95,6 @@
     .report-description {
       position: relative;
       z-index: 100;
-    }
-
-    .timechartDiv {
-      font-size: rem-calc(11);
-      height: vr-adjust(380);
-      width: 70%;
-      margin-left: auto;
-      margin-right: auto;
-      position: relative;
-      top: rem-calc(-50);
-    }
-
-    .barchart {
-      font-size: rem-calc(11);
-      height: vr-adjust(375);
-      width: 85%;
-      margin-left: auto;
-      margin-right: auto;
-      z-index: 50;
     }
 
     .areachart {

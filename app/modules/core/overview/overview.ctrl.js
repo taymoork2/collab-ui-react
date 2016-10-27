@@ -1,6 +1,8 @@
 (function () {
   'use strict';
 
+  var Masonry = require('masonry-layout');
+
   angular
     .module('Core')
     .controller('OverviewCtrl', OverviewCtrl);
@@ -42,7 +44,13 @@
     // for smaller screens where the notifications are on top, the layout needs to resize after the notifications are loaded
     function resizeNotifications() {
       $timeout(function () {
-        $('.fourth.cs-card-layout').masonry('layout');
+        var $cardlayout = new Masonry('.fourth.cs-card-layout', {
+          itemSelector: '.cs-card',
+          columnWidth: '.cs-card',
+          resize: true,
+          percentPosition: true,
+        });
+        $cardlayout.layout();
       });
     }
 

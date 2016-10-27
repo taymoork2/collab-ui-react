@@ -76,6 +76,11 @@ export interface IReportSortOption {
   direction: boolean;
 }
 
+export interface IReportLabel {
+  number: number | string;
+  text: string;
+}
+
 // Endpoint interface
 export interface IEndpointData {
   class: string;

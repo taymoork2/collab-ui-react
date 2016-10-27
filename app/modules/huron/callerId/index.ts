@@ -10,7 +10,7 @@ export * from './callerId.service';
 export default angular
   .module('huron.caller-id', [
     'atlas.templates',
-    'cisco.ui',
+    'collab.ui',
     'pascalprecht.translate',
     require('angular-resource'),
     require('modules/core/scripts/services/authinfo'),

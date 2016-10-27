@@ -42,7 +42,9 @@ describe('Controller: Partner Reports', () => {
       this.initModules('Core', 'Huron');
       this.injectDependencies('$rootScope', '$controller', '$q', '$timeout', 'ReportService', 'GraphService', 'DummyReportService');
       $scope = this.$rootScope.$new();
-
+      /* global document */
+      let $document = angular.element(document);
+      $document.find('body').append('<div class="cs-card-layout"></div>');
       spyOn(this.$rootScope, '$broadcast').and.returnValue({});
       spyOn(this, '$timeout').and.callThrough();
       spyOn(this.ReportService, 'getOverallActiveUserData').and.returnValue(this.$q.when({}));

@@ -65,8 +65,8 @@ describe('Partner Reports', function () {
 
       // call metrics
       utils.expectIsDisplayed(reports.metricsHeader);
-      utils.expectIsDisplayed(reports.partnerMetricsDescription);
-      utils.expectTextToBeSet(reports.partnerMetricsDescription, lowerTime[0]);
+      utils.expectIsDisplayed(reports.metricsDescription);
+      utils.expectTextToBeSet(reports.metricsDescription, lowerTime[0]);
       utils.expectIsDisplayed(reports.callMetricsGraph);
 
       // device media quality
@@ -116,7 +116,7 @@ describe('Partner Reports', function () {
 
       // quality graphs
       utils.expectIsDisplayed(reports.metricsHeader);
-      utils.expectIsDisplayed(reports.partnerMetricsDescription);
+      utils.expectIsDisplayed(reports.metricsDescription);
       utils.expectIsDisplayed(reports.callMetricsGraph);
 
       utils.expectIsDisplayed(reports.mediaHeader);
@@ -152,8 +152,8 @@ describe('Partner Reports', function () {
 
       // call metrics
       utils.expectIsDisplayed(reports.metricsHeader);
-      utils.expectIsDisplayed(reports.partnerMetricsDescription);
-      utils.expectTextToBeSet(reports.partnerMetricsDescription, lowerTime[1]);
+      utils.expectIsDisplayed(reports.metricsDescription);
+      utils.expectTextToBeSet(reports.metricsDescription, lowerTime[1]);
       utils.expectIsDisplayed(reports.callMetricsGraph);
 
       // device media quality

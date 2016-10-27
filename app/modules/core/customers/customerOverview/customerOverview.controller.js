@@ -56,7 +56,7 @@
         if (_.find(vm.currentCustomer.offers, { id: Config.offerTypes.roomSystems })) {
           vm.showRoomSystems = true;
         }
-        var isCareEnabled = result && Authinfo.isCare();
+        var isCareEnabled = result;
         setOffers(isCareEnabled);
       });
 
