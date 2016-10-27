@@ -16,8 +16,6 @@ export class DummyReportService {
     private ReportConstants
   ) {}
 
-  private loadingCustomer: string = this.$translate.instant('activeUserPopulation.loadingCustomer');
-
   private getTimeAndOffset(filter: ITimespan, index) {
     let offset = this.ReportConstants.DAYS - index;
     let date: string = moment().subtract(index, this.ReportConstants.DAY).format(this.ReportConstants.DAY_FORMAT);
@@ -70,14 +68,16 @@ export class DummyReportService {
   }
 
   public dummyActivePopulationData(customers: Array<IReportsCustomer>): Array<IPopulationData> {
+    let loadingCustomer = this.$translate.instant('activeUserPopulation.loadingCustomer');
+
     if (customers && customers.length > 0) {
       let returnArray: Array<IPopulationData> = [];
       for (let index = 0; index < customers.length; index ++) {
-        returnArray.push(this.getActivePopulationDatapoint(this.loadingCustomer, index));
+        returnArray.push(this.getActivePopulationDatapoint(loadingCustomer, index));
       }
       return returnArray;
     } else {
-      return [this.getActivePopulationDatapoint(this.loadingCustomer, 0)];
+      return [this.getActivePopulationDatapoint(loadingCustomer, 0)];
     }
   }
 
@@ -151,7 +151,7 @@ export class DummyReportService {
   public dummyEndpointData(): Array<Array<IEndpointData>> {
     return [[{
       class: 'vertical-center customer-data',
-      output: [this.loadingCustomer],
+      output: [this.$translate.instant('activeUserPopulation.loadingCustomer')],
       splitClasses: undefined,
     }, {
       class: 'table-data',

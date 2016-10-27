@@ -11,7 +11,7 @@
       </button>
     </cs-page-sub-header-right>
   </cs-page-sub-header>
-  <div class="content-container" cs-scroll>
+  <div class="content-container" >
     <cs-accordion id="licenseWarning" ng-show="sc.showLicenseWarning">
       <cs-accordion-group show-caret="true" display-status="warning">
         <cs-accordion-heading>
@@ -37,7 +37,7 @@
     </div>
     <div ng-if="sc.shouldShowList()">
       <div ng-if="sc.existsDevices() && sc.updateListAndFilter().length > 0" id="roomsListPanel" class="row">
-        <div gridscrollbar class="gridStyle" ui-grid="sc.gridOptions" ui-grid-selection></div>
+        <div class="gridStyle" ui-grid="sc.gridOptions" ui-grid-selection></div>
       </div>
       <div ng-if="sc.updateListAndFilter().length === 0 && sc.existsDevices()">
         <div class="none_found">

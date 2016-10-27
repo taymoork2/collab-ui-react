@@ -75,7 +75,8 @@ exports.config = {
     exclude: [ // Array of strings and regex (Default - [])
       /executionContextId/,
       /object Object/,
-      /favicon/
+      /favicon/,
+      /\/browser\-sync\//,
     ]
   }],
 
@@ -151,10 +152,7 @@ exports.config = {
     var CareLandingPage = require('./test/e2e-protractor/pages/careLanding.page.js');
     var CareChatTemplateSetupPage = require('./test/e2e-protractor/pages/careChatTemplate.page.js');
     var ManageUsersPage = require('./test/e2e-protractor/pages/manageUsers.page.js');
-    var IncidentPage = require('./test/e2e-protractor/pages/incident.page.js');
-    var ComponentPage = require('./test/e2e-protractor/pages/component.page.js');
-    var DashboardPage = require('./test/e2e-protractor/pages/dashboard.page.js');
-    var ServiceListPage = require('./test/e2e-protractor/pages/serviceList.page.js');
+
     global.notifications = new Notifications();
     global.navigation = new Navigation();
     global.users = new UsersPage();
@@ -198,10 +196,7 @@ exports.config = {
     global.careLandingPage = new CareLandingPage();
     global.careChatTemplateSetupPage = new CareChatTemplateSetupPage();
     global.manageUsersPage = new ManageUsersPage();
-    global.incidentPage = new IncidentPage();
-    global.componentPage = new ComponentPage();
-    global.dashboardPage = new DashboardPage();
-    global.serviceListPage = new ServiceListPage();
+
     function initReporters(config) {
       var testFile = _.chain(config)
         .get('specs[0]', '')

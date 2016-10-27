@@ -334,7 +334,7 @@
       setNotesTextOrder();
       initColumns();
       FeatureToggleService.atlasCareTrialsGetStatus().then(function (careStatus) {
-        $scope.isCareEnabled = careStatus && Authinfo.isCare();
+        $scope.isCareEnabled = careStatus;
         // FIXME: Remove this if block once the customer list refactor goes live
         // (This check is taken care of in the compactServiceColumn directive)
         if (!$scope.isCareEnabled) {
@@ -714,7 +714,7 @@
 
     function openAddTrialModal() {
       if ($scope.isTestOrg) {
-        Analytics.trackTrialSteps(Analytics.eventNames.START, $state.current.name, Authinfo.getOrgId());
+        Analytics.trackTrialSteps(Analytics.sections.TRIAL.eventNames.START_SETUP, $state.current.name, Authinfo.getOrgId());
       }
       $state.go('trialAdd.info').then(function () {
         $state.modal.result.finally(resetLists);

@@ -6,12 +6,13 @@
     .controller('TrialPstnCtrl', TrialPstnCtrl);
 
   /* @ngInject */
-  function TrialPstnCtrl($scope, $state, $timeout, $translate, Analytics, Authinfo, Notification, PstnSetupService, TelephoneNumberService, TerminusStateService, FeatureToggleService, TrialPstnService) {
+  function TrialPstnCtrl($scope, $timeout, $translate, Analytics, Authinfo, Notification, PstnSetupService, TelephoneNumberService, TerminusStateService, FeatureToggleService, TrialPstnService, TrialService) {
     var vm = this;
 
     var NXX = 'nxx';
     var NXX_EMPTY = '--';
 
+    vm.parentTrialData = $scope.$parent.trialData;
     vm.trialData = TrialPstnService.getData();
     vm.customerId = Authinfo.getOrgId();
     var pstnTokenLimit = 10;
@@ -146,7 +147,7 @@
       });
 
       toggleNXXSearchFeature();
-
+      TrialService.sendToAnalytics(Analytics.eventNames.ENTER_SCREEN, vm.parentTrialData);
       if (_.has(vm.trialData, 'details.pstnNumberInfo.state.abbreviation')) {
         getStateInventory();
       }
@@ -169,7 +170,7 @@
     }
 
     function skip(skipped) {
-      Analytics.trackTrialSteps(Analytics.eventNames.SKIP, $state.current.name, Authinfo.getOrgId());
+      TrialService.sendToAnalytics(Analytics.eventNames.SKIP, vm.parentTrialData);
       vm.trialData.enabled = !skipped;
       vm.trialData.skipped = skipped;
       $timeout($scope.trial.nextStep);
@@ -213,6 +214,8 @@
     }
 
     function onAreaCodeChange() {
+      //Reset NXX after Area Code changed
+      vm.trialData.details.pstnNumberInfo.nxx = null;
       searchCarrierInventory();
       //Get Exchanges
       PstnSetupService.getCarrierInventory(

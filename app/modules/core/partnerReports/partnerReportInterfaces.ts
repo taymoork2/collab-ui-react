@@ -35,9 +35,13 @@ export interface IReportCard {
 }
 
 export interface ISecondaryReport {
+  alternateTranslations: boolean;
   broadcast: string;
   description: string;
   display: boolean;
+  emptyDescription: string;
+  errorDescription: string;
+  search: boolean;
   state: string;
   sortOptions: Array<IReportSortOption>;
   table: IReportsTable | void;
@@ -70,6 +74,11 @@ export interface IReportsHeader {
 export interface IReportSortOption {
   option: string;
   direction: boolean;
+}
+
+export interface IReportLabel {
+  number: number | string;
+  text: string;
 }
 
 // Endpoint interface

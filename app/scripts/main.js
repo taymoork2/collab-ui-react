@@ -6,7 +6,7 @@
   angular.module('Core', [
     'angular-cache',
     'atlas.templates',
-    'cisco.ui',
+    'collab.ui',
     'cisco.formly',
     'core.auth',
     'core.body',
@@ -44,6 +44,7 @@
     'timer',
     'toaster',
     'dragularModule',
+    require('modules/core/analytics'),
     require('modules/core/featureToggle/featureToggle.service'),
     require('modules/core/scripts/services/org.service'),
     require('modules/online/digitalRiver').default // TODO make core.myCompany independent module
@@ -89,9 +90,7 @@
     'CareDetails'
   ]);
 
-  angular.module('Status.incidents', ['Core']);
-
-  angular.module('Status', ['Core', 'Status.incidents']);
+  angular.module('Status', ['Core']);
 
   module.exports = angular.module('Main', [
     'Core',

@@ -1,13 +1,3 @@
-// notes:
-// - segfaults have been occurring more recently (roughly starting around 2016-07-ish)
-// - register this to acquire more debugging info
-// - TODO: consider removing this once no longer needed
-const segfaultHandler = require('segfault-handler');
-
-const dateStr = new Date().toISOString().replace(/:/g, '_');
-const crashLogFile = `webpack-segfault-crash--${dateStr}.log`;
-segfaultHandler.registerHandler(crashLogFile);
-
 const webpack = require('webpack');
 const _ = require('lodash');
 const args = require('yargs').argv;
@@ -124,6 +114,8 @@ module.exports = (function makeWebpackConfig() {
       x2js: 'x2js/xml2json.js',
       // Test aliases
       sinon: 'sinon/pkg/sinon.js',
+      imagesloaded: 'imagesloaded/imagesloaded.pkgd.js',
+      'masonry-layout': 'masonry-layout/dist/masonry.pkgd.js',
     },
     root: [
       path.resolve('./app'),

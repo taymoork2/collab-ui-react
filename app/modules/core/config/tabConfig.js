@@ -14,14 +14,6 @@
     state: 'partneroverview',
     link: '/partner/overview'
   }, {
-    tab: 'statusTab',
-    icon: 'icon-bell',
-    title: 'tabs.statusTab',
-    desc: 'tabs.statusTabDesc',
-    feature: 'atlas-global-status',
-    state: 'status',
-    link: '/status'
-  }, {
     tab: 'customerTab',
     icon: 'icon-user',
     title: 'tabs.customerTab',
@@ -112,7 +104,16 @@
       state: 'media-service-v2',
       link: '#mediaserviceV2'
     }]
-  }];
+  },
+    {
+      tab: 'statusTab',
+      icon: 'icon-bell',
+      title: 'tabs.statusTab',
+      desc: 'tabs.statusTabDesc',
+      feature: 'global-status',
+      state: 'status',
+      link: '/status'
+    }];
 
   module.exports = angular
     .module('core.tabconfig', [])

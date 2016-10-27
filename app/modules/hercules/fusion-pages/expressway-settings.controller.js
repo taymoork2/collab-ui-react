@@ -6,7 +6,7 @@
     .controller('ExpresswayClusterSettingsController', ExpresswayClusterSettingsController);
 
   /* @ngInject */
-  function ExpresswayClusterSettingsController($stateParams, FusionClusterService, XhrNotificationService, Notification, $modal, $state, $translate, ResourceGroupService, hasF237FeatureToggle) {
+  function ExpresswayClusterSettingsController($stateParams, FusionClusterService, Notification, $modal, $state, $translate, ResourceGroupService, hasF237FeatureToggle) {
     var vm = this;
     vm.backUrl = 'cluster-list';
     vm.enabledServices = [];
@@ -64,7 +64,10 @@
                 vm.selectedResourceGroup = group;
               });
           }
-        }, XhrNotificationService.notify);
+        })
+        .catch(function (error) {
+          Notification.errorWithTrackingId(error, 'hercules.genericFailure');
+        });
     }
 
     vm.showResourceGroupModal = function () {
@@ -95,7 +98,7 @@
               },
                 function () {
                   vm.selectedResourceGroup = vm.originalResourceGroup;
-                  Notification.error('hercules.genericFailure');
+                  Notification.errorWithTrackingId('hercules.genericFailure');
                 });
           })
           .catch(function () {
@@ -127,7 +130,7 @@
               },
                 function () {
                   vm.selectedResourceGroup = vm.originalResourceGroup;
-                  Notification.error('hercules.genericFailure');
+                  Notification.errorWithTrackingId('hercules.genericFailure');
                 });
           }).catch(function () {
             vm.selectedResourceGroup = vm.originalResourceGroup;
@@ -230,7 +233,7 @@
 
     function setClusterName(newClusterName) {
       if (newClusterName.length === 0) {
-        Notification.error('hercules.expresswayClusterSettings.clusterNameCannotByEmpty');
+        Notification.errorWithTrackingId('hercules.expresswayClusterSettings.clusterNameCannotByEmpty');
         return;
       }
       FusionClusterService.setClusterName(vm.cluster.id, newClusterName)
@@ -241,7 +244,7 @@
           });
           Notification.success('hercules.expresswayClusterSettings.clusterNameSaved');
         }, function () {
-          Notification.error('hercules.expresswayClusterSettings.clusterNameCannotBeSaved');
+          Notification.errorWithTrackingId('hercules.expresswayClusterSettings.clusterNameCannotBeSaved');
         });
     }
 

@@ -33,33 +33,45 @@
           <span translate='reportsPage.noCustomerData'></span>
         </h3>
       </div>
+      <div class="row" ng-if="$ctrl.isSet() && $ctrl.labels">
+        <div ng-repeat="label in $ctrl.labels" class="columns medium-4 label-display">
+          <p class="label-number">{{label.number}}</p>
+          <span class="label-text" translate='{{label.text}}'></span>
+        </div>
+      </div>
 
       <!-- Secondary Report Section - Table Only -->
       <div ng-if="$ctrl.secondaryOptions.display">
         <div ng-if="$ctrl.secondaryReport" class="report-table">
-          <h4 class="box-match">{{$ctrl.getHeader($ctrl.secondaryOptions.title)}}</h4>
-          <p>{{$ctrl.getDescription($ctrl.secondaryOptions.description)}}</p>
-          <table class="table table-bordered" ng-show="$ctrl.secondaryIsSet() || true">
+          <h4 class="box-match">{{$ctrl.getHeader($ctrl.secondaryOptions.title, $ctrl.secondaryOptions.alternateTranslations)}}</h4>
+          <p ng-if="!$ctrl.secondaryIsEmpty() && !$ctrl.secondaryIsError()">{{$ctrl.getDescription($ctrl.secondaryOptions.description, $ctrl.secondaryOptions.alternateTranslations)}}</p>
+          <p ng-if="$ctrl.secondaryIsEmpty()">
+            {{$ctrl.getDescription($ctrl.secondaryOptions.emptyDescription, $ctrl.secondaryOptions.alternateTranslations)}}
+            <a ng-click="$ctrl.goToUsersTab()" translate='activeUsers.usersTab'></a>
+          </p>
+          <p ng-if="$ctrl.secondaryIsError()">
+            <i class="icon icon-warning no-data-warning"></i>
+            <span translate="{{$ctrl.secondaryOptions.errorDescription}}"></span>
+          </p>
+          <div class="report-search" ng-if="$ctrl.secondaryIsSet() && $ctrl.secondaryOptions.search">
+            <i class="icon icon-search"></i>
+            <input type="text" placeholder="{{$ctrl.placeholder}}" ng-model="$ctrl.searchField"></input>
+          </div>
+          <table class="table table-bordered" ng-if="$ctrl.secondaryIsSet()">
             <thead>
-              <th ng-repeat="header in $ctrl.secondaryOptions.table.headers" class="bold vertical-center {{header.class}}" ng-click="$ctrl.secondaryReportSort($index)">{{$ctrl.getHeader(header.title)}}</th>
+              <th ng-repeat="header in $ctrl.secondaryOptions.table.headers" class="bold vertical-center {{header.class}}" ng-click="$ctrl.secondaryReportSort($index)">{{$ctrl.getHeader(header.title, $ctrl.secondaryOptions.alternateTranslations)}}</th>
             </thead>
             <tbody>
-              <tr ng-repeat="user in $ctrl.secondaryOptions.table.data | orderBy:$ctrl.getPredicate():$ctrl.getSortDirection()" ng-if="$ctrl.isActivePage($index)">
+              <tr ng-repeat="user in $ctrl.getTable() | orderBy:$ctrl.getPredicate():$ctrl.getSortDirection()" ng-if="$ctrl.isActivePage($index)">
                 <td class="vertical-center">{{user.userName}}</td>
-                <td class="vertical-center">{{user.orgName}}</td>
+                <td class="vertical-center" ng-if="$ctrl.secondaryOptions.table.headers.length > 3">{{user.orgName}}</td>
                 <td class="vertical-center horizontal-center">{{user.numCalls}}</td>
                 <td class="vertical-center horizontal-center">{{user.sparkMessages}}</td>
               </tr>
             </tbody>
           </table>
-          <div ng-if="$ctrl.secondaryIsRefresh()">
+          <div class="table-spinner" ng-if="$ctrl.secondaryIsRefresh()">
             <i class='icon icon-spinner icon-2x'></i>
-          </div>
-          <div class="no-data-most-active" ng-if="$ctrl.secondaryIsEmpty()">
-            <h3 class="no-data">
-              <i class='icon icon-warning no-data-warning'></i>
-              <span translate='reportsPage.noCustomerData'></span>
-            </h3>
           </div>
         </div>
         <div class="box-match">
@@ -67,7 +79,7 @@
             <span ng-if="!$ctrl.secondaryReport" translate="{{::$ctrl.options.id}}.show"></span>
             <span ng-if="$ctrl.secondaryReport" translate="{{::$ctrl.options.id}}.hide"></span>
           </a>
-          <div class="pull-right" ng-if="$ctrl.secondaryReport && ($ctrl.totalPages > 1)">
+          <div class="pull-right" ng-if="$ctrl.secondaryReport && ($ctrl.totalPages > 1) && $ctrl.secondaryIsSet()">
             <button type="button" class="carousel-control" ng-click="$ctrl.pageBackward()" ng-show="$ctrl.totalPages > 3" ng-disabled="$ctrl.currentPage <= 1">
               <i class='icon icon-chevron-left'></i>
             </button>

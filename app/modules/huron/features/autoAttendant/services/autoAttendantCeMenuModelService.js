@@ -484,6 +484,7 @@
         setDescription(action, inAction.routeToQueue);
         cesTempMoh(action);
         cesTempIa(action);
+        cesTempfallBack(action);
         menuEntry.addAction(action);
       } else {
         // insert an empty action
@@ -501,7 +502,7 @@
     function cesTempMoh(action) {
       if (angular.isDefined(action.description)) {
         try {
-          if (angular.isUndefined(action.queueSettings)) {
+          if (_.isUndefined(action.queueSettings)) {
             action.description = JSON.parse(action.description);
             action.queueSettings = {};
           }
@@ -518,11 +519,28 @@
     function cesTempIa(action) {
       if (angular.isDefined(action.description)) {
         try {
-          if (angular.isUndefined(action.queueSettings)) {
+          if (_.isUndefined(action.queueSettings)) {
             action.description = JSON.parse(action.description);
             action.queueSettings = {};
           }
           action.queueSettings.initialAnnouncement = constructCesTodoIa(action.description);
+        } catch (exception) {
+          action.queueSettings = {};
+        }
+      }
+    }
+
+    /*
+    * temporary solution to write to db until ces ready
+    */
+    function cesTempfallBack(action) {
+      if (angular.isDefined(action.description)) {
+        try {
+          if (angular.isUnDefined(action.queueSettings)) {
+            action.description = JSON.parse(action.description);
+            action.queueSettings = {};
+          }
+          action.queueSettings.fallBack = constructCesTodofb(action.description);
         } catch (exception) {
           action.queueSettings = {};
         }
@@ -552,6 +570,20 @@
       initialAnnouncement.addAction(action);
       return initialAnnouncement;
     }
+    /*
+    * temporary solution to write to db until ces ready
+    */
+    function constructCesTodofb(parsedDescription) {
+      var fallBackTime = parsedDescription.fallBack.actions[0];
+      var fallBackOption = parsedDescription.fallBack.actions[1];
+      var action = new Action(fallBackTime.name, fallBackTime.value);
+      action.setDescription(fallBackTime.description);
+      var fallBack = new CeMenuEntry();
+      fallBack.addAction(action);
+      action = new Action(fallBackOption.name, fallBackTime.value);
+      action.setDescrption(fallBackOption.description);
+      fallBack.addAction(action);
+    }
 
     function parseActions(menuEntry, actions) {
       for (var i = 0; i < actions.length; i++) {
@@ -561,16 +593,16 @@
 
     function getWelcomeMenu(ceRecord, actionSetName) {
 
-      if (angular.isUndefined(ceRecord) || angular.isUndefined(actionSetName)) {
+      if (_.isUndefined(ceRecord) || _.isUndefined(actionSetName)) {
         return undefined;
       }
 
       var actionSet = getActionSet(ceRecord, actionSetName);
-      if (angular.isUndefined(actionSet)) {
+      if (_.isUndefined(actionSet)) {
         return undefined;
       }
 
-      if (angular.isUndefined(actionSet.actions)) {
+      if (_.isUndefined(actionSet.actions)) {
         return undefined;
       }
       var ceActionArray = actionSet.actions;
@@ -583,7 +615,7 @@
         // dial by extension(runActionsOnInput) and is now ok in the Welcome menu.
         // if inputType is 2 then dial by extension, else make an option menu.
 
-        if (angular.isUndefined(ceActionArray[i].runActionsOnInput) && angular.isUndefined(ceActionArray[i].runCustomActions)) {
+        if (_.isUndefined(ceActionArray[i].runActionsOnInput) && _.isUndefined(ceActionArray[i].runCustomActions)) {
 
           menuEntry = new CeMenuEntry();
           parseAction(menuEntry, ceActionArray[i]);
@@ -615,17 +647,17 @@
      */
     function getOptionMenu(ceRecord, actionSetName) {
 
-      if (angular.isUndefined(ceRecord) || angular.isUndefined(actionSetName)) {
+      if (_.isUndefined(ceRecord) || _.isUndefined(actionSetName)) {
         return undefined;
       }
 
       var actionSet = getActionSet(ceRecord, actionSetName);
 
-      if (angular.isUndefined(actionSet)) {
+      if (_.isUndefined(actionSet)) {
         return undefined;
       }
 
-      if (angular.isUndefined(actionSet.actions)) {
+      if (_.isUndefined(actionSet.actions)) {
         return undefined;
       }
       var ceActionArray = actionSet.actions;
@@ -731,16 +763,16 @@
 
     function getCustomMenu(ceRecord, actionSetName) {
 
-      if (angular.isUndefined(ceRecord) || angular.isUndefined(actionSetName)) {
+      if (_.isUndefined(ceRecord) || _.isUndefined(actionSetName)) {
         return undefined;
       }
 
       var actionSet = getActionSet(ceRecord, actionSetName);
-      if (angular.isUndefined(actionSet)) {
+      if (_.isUndefined(actionSet)) {
         return undefined;
       }
 
-      if (angular.isUndefined(actionSet.actions)) {
+      if (_.isUndefined(actionSet.actions)) {
         return undefined;
       }
 
@@ -804,7 +836,7 @@
     }
 
     function updateDefaultActionSet(ceRecord, hasClosedHours) {
-      if (angular.isUndefined(hasClosedHours) && !_.isEmpty(ceRecord.defaultActionSet)) {
+      if (_.isUndefined(hasClosedHours) && !_.isEmpty(ceRecord.defaultActionSet)) {
         return;
       }
       if (hasClosedHours) {
@@ -829,7 +861,7 @@
       // manually add a disconnect action to each defined actionSet
       var actionSet = getActionSet(ceRecord, actionSetName);
       if (actionSet.actions && actionSet.actions.length > 0) {
-        if (angular.isUndefined(actionSet.actions[actionSet.actions.length - 1].disconnect)) {
+        if (_.isUndefined(actionSet.actions[actionSet.actions.length - 1].disconnect)) {
           addDisconnectAction(actionSet.actions);
         }
       }
@@ -842,11 +874,11 @@
      * actionName: 'play', 'route', etc.
      */
     function getActionIndex(actionArray, actionName) {
-      if (angular.isUndefined(actionArray) || actionArray === null) {
+      if (_.isUndefined(actionArray) || actionArray === null) {
         return -1;
       }
 
-      if (angular.isUndefined(actionName) || actionName === null) {
+      if (_.isUndefined(actionName) || actionName === null) {
         return -1;
       }
 
@@ -891,12 +923,12 @@
      * Construct and return one if not found.
      */
     function getAndCreateActionSet(ceRecord, actionSetName) {
-      if (angular.isUndefined(ceRecord.actionSets)) {
+      if (_.isUndefined(ceRecord.actionSets)) {
         ceRecord.actionSets = [];
       }
 
       var actionSet = getActionSet(ceRecord, actionSetName);
-      if (angular.isUndefined(actionSet)) {
+      if (_.isUndefined(actionSet)) {
         var i = ceRecord.actionSets.length;
         // add new actionSetName into actions array
         ceRecord.actionSets[i] = {};
@@ -909,14 +941,14 @@
     }
 
     function updateCustomMenu(ceRecord, actionSetName, aaMenu) {
-      if (angular.isUndefined(aaMenu.type) || aaMenu.type !== 'MENU_CUSTOM') {
+      if (_.isUndefined(aaMenu.type) || aaMenu.type !== 'MENU_CUSTOM') {
         return false;
       }
 
       var actionSet = getAndCreateActionSet(ceRecord, actionSetName);
 
       var customAction = getActionObject(actionSet.actions, 'runCustomActions');
-      if (angular.isUndefined(customAction)) {
+      if (_.isUndefined(customAction)) {
         var i = actionSet.actions.length;
         actionSet.actions[i] = {};
         actionSet.actions[i].runCustomActions = new CustomAction();
@@ -986,11 +1018,11 @@
     }
 
     function updateWelcomeMenu(ceRecord, actionSetName, aaMenu) {
-      if (angular.isUndefined(aaMenu.type) || aaMenu.type !== 'MENU_WELCOME') {
+      if (_.isUndefined(aaMenu.type) || aaMenu.type !== 'MENU_WELCOME') {
         return false;
       }
 
-      if (angular.isUndefined(ceRecord.actionSets)) {
+      if (_.isUndefined(ceRecord.actionSets)) {
         ceRecord.actionSets = [];
       }
 
@@ -1180,13 +1212,13 @@
     }
 
     function updateOptionMenu(ceRecord, actionSetName, aaMenu) {
-      if (angular.isUndefined(aaMenu.type) || aaMenu.type !== 'MENU_OPTION') {
+      if (_.isUndefined(aaMenu.type) || aaMenu.type !== 'MENU_OPTION') {
         return false;
       }
 
       var actionSet = getAndCreateActionSet(ceRecord, actionSetName);
       var inputAction = getActionObject(actionSet.actions, 'runActionsOnInput');
-      if (angular.isUndefined(inputAction)) {
+      if (_.isUndefined(inputAction)) {
         var i = actionSet.actions.length;
         actionSet.actions[i] = {};
         actionSet.actions[i].runActionsOnInput = newRunActionsOnInput();
@@ -1198,7 +1230,7 @@
     }
 
     function updateMenu(ceRecord, actionSetName, aaMenu) {
-      if (angular.isUndefined(aaMenu.type) || aaMenu.type === null) {
+      if (_.isUndefined(aaMenu.type) || aaMenu.type === null) {
         return false;
       }
       if (aaMenu.type === 'MENU_WELCOME') {
@@ -1218,26 +1250,26 @@
      */
     function deleteMenu(ceRecord, actionSetName, aaMenuType) {
 
-      if (angular.isUndefined(actionSetName) || actionSetName === null) {
+      if (_.isUndefined(actionSetName) || actionSetName === null) {
         return false;
       }
 
-      if (angular.isUndefined(aaMenuType) || aaMenuType === null) {
+      if (_.isUndefined(aaMenuType) || aaMenuType === null) {
         return false;
       }
 
-      if (angular.isUndefined(ceRecord) || ceRecord === null) {
+      if (_.isUndefined(ceRecord) || ceRecord === null) {
         return false;
       }
 
       // get the action object of actionSetName
       //
       var actionSet = getActionSet(ceRecord, actionSetName);
-      if (angular.isUndefined(actionSet)) {
+      if (_.isUndefined(actionSet)) {
         return false;
       }
 
-      if (angular.isUndefined(actionSet.actions)) {
+      if (_.isUndefined(actionSet.actions)) {
         return false;
       }
 
@@ -1283,11 +1315,11 @@
      */
     function deleteCombinedMenu(ceRecord, actionSetName) {
 
-      if (angular.isUndefined(actionSetName) || actionSetName === null) {
+      if (_.isUndefined(actionSetName) || actionSetName === null) {
         return false;
       }
 
-      if (angular.isUndefined(ceRecord) || ceRecord === null) {
+      if (_.isUndefined(ceRecord) || ceRecord === null) {
         return false;
       }
 

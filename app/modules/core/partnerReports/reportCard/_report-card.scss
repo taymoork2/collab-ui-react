@@ -33,8 +33,7 @@
   }
 
   .box-match {
-    padding-left: rem-calc(24);
-    padding-right: rem-calc(24);
+    @include vr-spacing(ph, 1.5);
   }
   .report-dropdown {
     float: right;
@@ -44,13 +43,53 @@
     width: rem-calc(200);
     z-index: 1000;
     .select-options {
-    	padding: 0;
+      @include vr-spacing(p, 0);
     }
   }
+
+  .label-display {
+    height: rem-calc(10);
+    overflow: visible;
+    position: relative;
+    text-align: center;
+    top: rem-calc(-60);
+    color: $gray-light-1;
+
+    .label-number {
+      font-size: rem-calc(25);
+      font-weight: bold;
+      @include vr-spacing(p, 0);
+    }
+
+    .label-text {
+      font-size: rem-calc(15);
+      position: relative;
+      top: rem-calc(-10);
+    }
+  }
+
+  .timechartDiv {
+    font-size: rem-calc(11);
+    height: vr-adjust(380);
+    width: 100%;
+    position: relative;
+    top: rem-calc(-50);
+  }
+
+  .barchart {
+    font-size: rem-calc(11);
+    height: vr-adjust(375);
+    width: 85%;
+    margin-left: auto;
+    margin-right: auto;
+    z-index: 50;
+  }
+
   .barchart-shift {
     position: relative;
     top: rem-calc(-64);
   }
+
   .report-table {
     .table-bordered {
       width: 95%;
@@ -71,14 +110,13 @@
     }
 
     .table-data {
-      padding: 0;
+      @include vr-spacing(p, 0);
     }
 
     .table-half {
       display: inline-block;
       width: 45%;
-      padding-bottom: 10px;
-      padding-top: 10px;
+      @include vr-spacing(pv, 0.5);
     }
 
     td,
@@ -103,7 +141,7 @@
     .customer-data {
       text-overflow: ellipsis;
       overflow: hidden;
-      padding-left: 20px;
+      @include vr-spacing(pl, 1.25);
       white-space: nowrap;
     }
 
@@ -163,6 +201,23 @@
     color: $gray-darkest;
   }
 
+  .report-search {
+    margin-bottom: rem-calc(20);
+    margin-left: rem-calc(25);
+    width: 40%;
+    position: relative;
+
+    i {
+      left: rem-calc(10);
+      position: absolute;
+      top: rem-calc(10);
+    }
+
+    input {
+      @include vr-spacing(pl, 1.75);
+    }
+  }
+
   .carousel-btn {
     border: 1px solid $gray-dark-1;
     color: $gray-dark-1;
@@ -176,7 +231,8 @@
   }
 
   .carousel-control {
-    padding: 9px 16px;
+    @include vr-spacing(pv, 0.5);
+    @include vr-spacing(ph, 1);
     background-color: $white;
 
     i {
@@ -203,6 +259,21 @@
       color: $gray-base;
     }
   }
+
+  .table-spinner {
+    height: 100px;
+    position: relative;
+    top: 40px;
+    width: 100%;
+
+    .icon-2x {
+      font-size: 4em;
+      position: absolute;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+  }
+
   .active-chart .amcharts-value-axis .amcharts-axis-label {
     opacity: 0;
     animation: graphAxisFade 2s ease-in-out 1 forwards;

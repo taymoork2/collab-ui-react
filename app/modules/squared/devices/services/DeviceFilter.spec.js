@@ -3,14 +3,50 @@
 describe('Service: DeviceFilter', function () {
   beforeEach(angular.mock.module('Squared'));
 
-  var DeviceFilter;
+  var DeviceFilter, translate;
 
-  beforeEach(inject(function (_DeviceFilter_) {
+  beforeEach(inject(function (_$translate_, _DeviceFilter_) {
     DeviceFilter = _DeviceFilter_;
+    translate = _$translate_;
+
+    spyOn(translate, 'instant').and.callThrough();
   }));
 
   it('should return a list of filters', function () {
     expect(DeviceFilter.getFilters().length).toBe(5);
+  });
+
+  it('should filters and settings', function () {
+    DeviceFilter.getFilteredList([{
+      isOnline: true
+    }, {
+      needsActivation: true
+    }, {
+      isOnline: true,
+      hasIssues: true
+    }, {
+      isOnline: false,
+      needsActivation: false
+    }, {
+      isUnused: true
+    }]);
+    var filters = DeviceFilter.getFilters();
+
+    expect(_.find(filters, {
+      filterValue: 'all'
+    }).count).toBe(5);
+    expect(_.find(filters, {
+      filterValue: 'codes'
+    }).count).toBe(1);
+    expect(_.find(filters, {
+      filterValue: 'issues'
+    }).count).toBe(1);
+    expect(_.find(filters, {
+      filterValue: 'online'
+    }).count).toBe(2);
+    expect(_.find(filters, {
+      filterValue: 'offline'
+    }).count).toBe(1);
   });
 
   it('should return a list of filters with correct count', function () {
@@ -80,8 +116,50 @@ describe('Service: DeviceFilter', function () {
     }).count).toBe(0);
   });
 
-  describe('get filtered list', function () {
+  it('should reset the filter when resetFilters() is called', function () {
+    var arr = [{
+      isOnline: true
+    }, {
+      needsActivation: false
+    }, {
+      displayName: 'yolo',
+      hasIssues: true,
+      isOnline: true
+    }, {
+      isOnline: false,
+      needsActivation: false
+    }, {
+      isUnused: true
+    }];
 
+    DeviceFilter.setCurrentSearch('yolo');
+    DeviceFilter.setCurrentFilter('online');
+    expect(DeviceFilter.getFilteredList(arr).length).toBe(1);
+
+    DeviceFilter.resetFilters();
+    expect(DeviceFilter.getFilters().length).toBe(5);
+    expect(translate.instant).toHaveBeenCalledTimes(5);
+    DeviceFilter.getFilteredList(arr);
+    var filters = DeviceFilter.getFilters();
+
+    expect(_.find(filters, {
+      filterValue: 'all'
+    }).count).toBe(5);
+    expect(_.find(filters, {
+      filterValue: 'codes'
+    }).count).toBe(0);
+    expect(_.find(filters, {
+      filterValue: 'issues'
+    }).count).toBe(1);
+    expect(_.find(filters, {
+      filterValue: 'online'
+    }).count).toBe(2);
+    expect(_.find(filters, {
+      filterValue: 'offline'
+    }).count).toBe(2);
+  });
+
+  describe('get filtered list', function () {
     it('should return all when no filter', function () {
       var arr = [{}, {}];
       expect(DeviceFilter.getFilteredList(arr).length).toBe(2);

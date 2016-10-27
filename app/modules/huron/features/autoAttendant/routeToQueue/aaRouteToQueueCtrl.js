@@ -112,7 +112,6 @@
     }
 
     function activate() {
-
       if ($scope.fromRouteCall) {
         var ui = AAUiModelService.getUiModel();
         vm.uiMenu = ui[$scope.schedule];
@@ -138,18 +137,25 @@
           var action = AutoAttendantCeMenuModelService.newCeActionEntry(rtQueue, '');
           vm.menuKeyEntry.addAction(action);
         }
-        if (angular.isUndefined(vm.menuKeyEntry.actions[0].queueSettings)) {
+        if (_.isUndefined(vm.menuKeyEntry.actions[0].queueSettings)) {
           vm.menuKeyEntry.actions[0].queueSettings = {};
         }
-        if (angular.isUndefined(vm.menuKeyEntry.actions[0].queueSettings.musicOnHold)) {
+        if (_.isUndefined(vm.menuKeyEntry.actions[0].queueSettings.musicOnHold)) {
           vm.menuKeyEntry.actions[0].queueSettings.musicOnHold = AutoAttendantCeMenuModelService.newCeMenuEntry();
           var mohAction = AutoAttendantCeMenuModelService.newCeActionEntry('play', '');
           vm.menuKeyEntry.actions[0].queueSettings.musicOnHold.addAction(mohAction);
         }
-        if (angular.isUndefined(vm.menuKeyEntry.actions[0].queueSettings.initialAnnouncement)) {
+        if (_.isUndefined(vm.menuKeyEntry.actions[0].queueSettings.initialAnnouncement)) {
           vm.menuKeyEntry.actions[0].queueSettings.initialAnnouncement = AutoAttendantCeMenuModelService.newCeMenuEntry();
           var iaAction = AutoAttendantCeMenuModelService.newCeActionEntry('say', '');
           vm.menuKeyEntry.actions[0].queueSettings.initialAnnouncement.addAction(iaAction);
+        }
+        if (_.isUndefined(vm.menuKeyEntry.actions[0].queueSettings.fallBack)) {
+          vm.menuKeyEntry.actions[0].queueSettings.fallBack = AutoAttendantCeMenuModelService.newCeMenuEntry();
+          var fbMaxTime = AutoAttendantCeMenuModelService.newCeActionEntry('time', '');
+          vm.menuKeyEntry.actions[0].queueSettings.fallBack.addAction(fbMaxTime);
+          var fbAction = AutoAttendantCeMenuModelService.newCeActionEntry('option', '');
+          vm.menuKeyEntry.actions[0].queueSettings.fallBack.addAction(fbAction);
         }
       }
 

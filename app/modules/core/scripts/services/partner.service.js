@@ -226,7 +226,7 @@
         if (response.status === 200 && (_.indexOf(response.data.managedOrgs, customerOrgId) < 0)) {
           var userName = Authinfo.getUserName();
           UserRoleService.enableFullAdmin(userName, customerOrgId);
-          Analytics.trackUserPatch(response.data.orgId, response.data.uuid);
+          Analytics.trackPartnerActions(Analytics.sections.TRIAL.eventNames.PATCH, response.data.orgId, response.data.uuid);
         }
       });
     }
@@ -245,7 +245,7 @@
     }
 
     function isLicenseFree(license) {
-      return license && angular.isUndefined(license.isTrial);
+      return license && _.isUndefined(license.isTrial);
     }
     // end series of fn's
 

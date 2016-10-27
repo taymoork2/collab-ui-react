@@ -3,7 +3,7 @@
 /* globals fit */
 
 describe('Controller: TrialPstnCtrl', function () {
-  var controller, trials, $httpBackend, $scope, $q, HuronConfig, TrialPstnService, TrialService, PstnSetupService, TerminusStateService, FeatureToggleService;
+  var controller, trials, $httpBackend, $scope, $q, HuronConfig, Orgservice, TrialPstnService, TrialService, PstnSetupService, TerminusStateService, FeatureToggleService;
 
   var customerName = 'Wayne Enterprises';
   var customerEmail = 'batman@darknight.com';
@@ -56,6 +56,21 @@ describe('Controller: TrialPstnCtrl', function () {
     count: 25
   }];
 
+  var exchangesResponse = {
+    exchanges: [
+      { code: '731', count: 12 },
+      { code: '742', count: 23 },
+      { code: '421', count: 8 }
+    ]
+  };
+
+  var numbersResponse = {
+    numbers: [
+      "+17077318283", "+17077318284", "+17077318293", "+17077318294", "+17077318295",
+      "+17077318296", "+17077318297", "+17077318298", "+17077318315", "+17077318316"
+    ]
+  };
+
   var contractInfo = {
     companyName: 'Sample Company',
     signeeFirstName: 'Samp',
@@ -67,15 +82,18 @@ describe('Controller: TrialPstnCtrl', function () {
   beforeEach(angular.mock.module('Huron'));
   beforeEach(angular.mock.module('Core'));
 
-  beforeEach(inject(function ($rootScope, _$q_, $controller, _$httpBackend_, _HuronConfig_, _TrialPstnService_, _TrialService_, _PstnSetupService_, _TerminusStateService_, _FeatureToggleService_) {
+  beforeEach(inject(function ($rootScope, _$q_, $controller, _$httpBackend_, _HuronConfig_, _Orgservice_, _TrialPstnService_, _TrialService_, _PstnSetupService_, _TerminusStateService_, _FeatureToggleService_) {
+
     $scope = $rootScope.$new();
     $httpBackend = _$httpBackend_;
     HuronConfig = _HuronConfig_;
     TrialPstnService = _TrialPstnService_;
     TrialService = _TrialService_;
     PstnSetupService = _PstnSetupService_;
+
     TerminusStateService = _TerminusStateService_;
     FeatureToggleService = _FeatureToggleService_;
+    Orgservice = _Orgservice_;
     $q = _$q_;
 
     spyOn(TrialService, 'getDeviceTrialsLimit');
@@ -84,6 +102,7 @@ describe('Controller: TrialPstnCtrl', function () {
     });
 
     spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
+    spyOn(Orgservice, 'getOrg');
 
     //Test initialize
     $scope.trial = TrialService.getData();
@@ -110,6 +129,22 @@ describe('Controller: TrialPstnCtrl', function () {
   it('should initialize with the company name and email', function () {
     expect(controller.trialData.details.pstnContractInfo.companyName).toEqual(customerName);
     expect(controller.trialData.details.pstnContractInfo.email).toEqual(customerEmail);
+  });
+
+  it('should reset NXX value when Area Code changes', function () {
+    var areaCode = areaCodeResponse.areaCodes[0];
+
+    controller.trialData.details.pstnProvider.uuid = carrierId;
+    controller.trialData.details.pstnNumberInfo.state = states[0];
+
+    $httpBackend.expectGET(HuronConfig.getTerminusUrl() + '/inventory/carriers/' + carrierId + '/did/count?groupBy=nxx&npa=' + areaCode.code + '&state=' + stateSearch).respond(exchangesResponse);
+
+    $httpBackend.expectGET(HuronConfig.getTerminusUrl() + '/inventory/carriers/' + carrierId + '/search?count=10&npa=' + areaCode.code + '&sequential=false' + stateSearch).respond(numbersResponse);
+
+    controller.trialData.details.pstnNumberInfo.areaCode = areaCode;
+    controller.trialData.details.pstnNumberInfo.nxx = exchangesResponse.exchanges[0];
+    controller.onAreaCodeChange();
+    expect(controller.trialData.details.pstnNumberInfo.nxx).toEqual(null);
   });
 
   describe('Enter info to the controller and expect the same out of the service', function () {

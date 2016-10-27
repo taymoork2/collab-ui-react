@@ -8,7 +8,7 @@ export default angular
   .module('huron.speed-dial', [
     'huron.telephoneNumber',
     'atlas.templates',
-    'cisco.ui',
+    'collab.ui',
     'pascalprecht.translate',
     'dragularModule',
     'Core',

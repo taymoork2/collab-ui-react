@@ -100,7 +100,7 @@
 
         var ret = AACommonService.getInvalid(AACommonService.makeKey(whichLane, entry.routeToId));
         /* getInvalid returns false if an error, undefined if no error */
-        return angular.isUndefined(ret);
+        return _.isUndefined(ret);
 
       }
 
@@ -161,7 +161,7 @@
 
         _.find(routeToCalls, function (routeTo) {
           if (routeTo.name === entry.actions[0].name) {
-            if (angular.isUndefined(saveKey)) {
+            if (_.isUndefined(saveKey)) {
               outErrors.push({
                 msg: routeTo.errPhoneMsg,
                 key: entry.key

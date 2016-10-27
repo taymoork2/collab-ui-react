@@ -5,6 +5,8 @@ export class Notification {
   private static readonly WARNING = 'warning';
   private static readonly ERROR = 'error';
   private static readonly TYPES = [Notification.SUCCESS, Notification.WARNING, Notification.ERROR];
+  private static readonly MESSAGES = 'messages';
+  private static readonly HTML_MESSAGES = 'htmlMessages';
   private static readonly NO_TIMEOUT = 0;
   private static readonly DEFAULT_TIMEOUT = 3000;
   private static readonly HTTP_STATUS = {
@@ -32,16 +34,16 @@ export class Notification {
     this.initOfflineListeners();
   }
 
-  public success(messageKey: string, messageParams?: Object, titleKey?: string): void {
-    this.notify(this.$translate.instant(messageKey, messageParams), Notification.SUCCESS, this.getTitle(titleKey));
+  public success(messageKey: string, messageParams?: Object, titleKey?: string, allowHtml: boolean = false): void {
+    this.notify(this.$translate.instant(messageKey, messageParams), Notification.SUCCESS, this.getTitle(titleKey), allowHtml);
   }
 
-  public warning(messageKey: string, messageParams?: Object, titleKey?: string): void {
-    this.notify(this.$translate.instant(messageKey, messageParams), Notification.WARNING, this.getTitle(titleKey));
+  public warning(messageKey: string, messageParams?: Object, titleKey?: string, allowHtml: boolean = false): void {
+    this.notify(this.$translate.instant(messageKey, messageParams), Notification.WARNING, this.getTitle(titleKey), allowHtml);
   }
 
-  public error(messageKey: string, messageParams?: Object, titleKey?: string): void {
-    this.notify(this.$translate.instant(messageKey, messageParams), Notification.ERROR, this.getTitle(titleKey));
+  public error(messageKey: string, messageParams?: Object, titleKey?: string, allowHtml: boolean = false): void {
+    this.notify(this.$translate.instant(messageKey, messageParams), Notification.ERROR, this.getTitle(titleKey), allowHtml);
   }
 
   public errorWithTrackingId(response: ng.IHttpPromiseCallbackArg<any>, errorKey?: string, errorParams?: Object): void {
@@ -66,7 +68,7 @@ export class Notification {
     }
   }
 
-  public notify(notifications: string[] | string, type: string = Notification.ERROR, title?: string): void {
+  public notify(notifications: string[] | string, type: string = Notification.ERROR, title?: string, allowHtml: boolean = false): void {
     if (this.preventToasters) {
       this.$log.warn('Deliberately prevented a notification:', notifications);
       return;
@@ -81,13 +83,15 @@ export class Notification {
       return;
     }
     let closeHtml = '<button type="button" class="close toast-close-button"><span class="sr-only">' + this.$translate.instant('common.close') + '</span></button>';
+    let directiveData = {};
+    _.set(directiveData, allowHtml ? Notification.HTML_MESSAGES : Notification.MESSAGES , notifications);
 
     this.toaster.pop({
       title: title,
       type: _.includes(Notification.TYPES, type) ? type : Notification.ERROR,
       body: 'cr-bind-unsafe-html',
       bodyOutputType: 'directive',
-      directiveData: { data: notifications },
+      directiveData: directiveData,
       timeout: type === Notification.SUCCESS ? this.successTimeout : this.failureTimeout,
       closeHtml: closeHtml,
     });

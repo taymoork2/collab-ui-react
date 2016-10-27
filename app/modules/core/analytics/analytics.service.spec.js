@@ -1,17 +1,20 @@
 'use strict';
 
 describe('Service: Analytics', function () {
-  var Config, Analytics, Orgservice, $q, $scope;
+  var Config, Analytics, Authinfo, Orgservice, $q, $scope, $state;
+  var trialData = getJSONFixture('core/json/trials/trialData.json');
 
-  beforeEach(angular.mock.module('Core'));
+  beforeEach(angular.mock.module(require('./index')));
   beforeEach(inject(dependencies));
   beforeEach(initSpies);
 
-  function dependencies(_$q_, $rootScope, _Config_, _Analytics_, _Orgservice_) {
+  function dependencies(_$q_, $rootScope, _$state_, _Config_, _Analytics_, _Authinfo_, _Orgservice_) {
     $scope = $rootScope.$new();
     $q = _$q_;
+    $state = _$state_;
     Config = _Config_;
     Analytics = _Analytics_;
+    Authinfo = _Authinfo_;
     Orgservice = _Orgservice_;
   }
 
@@ -61,21 +64,47 @@ describe('Service: Analytics', function () {
 
   describe('when calling trial events', function () {
     it('should call _track when trackTrialSteps is called', function () {
-      Analytics.trackTrialSteps(Analytics.eventNames.START, 'testUser', '123');
+      Analytics.trackTrialSteps(Analytics.eventNames.START, 'someState', '123');
       $scope.$apply();
       expect(Analytics._track).toHaveBeenCalled();
+    });
+    it('should not cause an error if duration or license count data is missing', function () {
+      var fakeTrialDataMissingDetails = {
+        randomValue: 'something',
+        details: {
+          licenseDuration: 1,
+          licenseCount: 1
+        }
+      };
+      delete fakeTrialDataMissingDetails.details;
+
+      Analytics.trackTrialSteps(Analytics.eventNames.START, 'someState', '123', fakeTrialDataMissingDetails);
+      $scope.$apply();
+      expect(Analytics.trackTrialSteps).not.toThrow();
+      expect(Analytics._track).toHaveBeenCalled();
+      var props = Analytics._track.calls.mostRecent().args[1];
+      expect(props.duration).toBeUndefined();
+      expect(props.licenseCount).toBeUndefined();
+    });
+    it('should send correct trial data', function () {
+      Analytics.trackTrialSteps(Analytics.eventNames.START, 'someState', '123', trialData.enabled);
+      $scope.$apply();
+      expect(Analytics._track).toHaveBeenCalled();
+      var props = Analytics._track.calls.mostRecent().args[1];
+      expect(props.duration).toBeDefined();
+      expect(props.servicesArray).toBeDefined();
     });
   });
 
   describe('when calling partner events', function () {
-    it('should call _track when trackPartnerActions is called', function () {
-      Analytics.trackPartnerActions(Analytics.eventNames.REMOVE, '4567', '1234');
+    it('should call _track when trackPartnerActions is called to remove', function () {
+      Analytics.trackPartnerActions(Analytics.sections.PARTNER.eventNames.REMOVE, 'removePage', '123');
       $scope.$apply();
       expect(Analytics._track).toHaveBeenCalled();
     });
 
-    it('should call _track when trackUserPatch is called', function () {
-      Analytics.trackUserPatch('123', '123');
+    it('should call _track when trackUserPatch is called to patch', function () {
+      Analytics.trackPartnerActions(Analytics.sections.PARTNER.eventNames.PATCH, '123', '456');
       $scope.$apply();
       expect(Analytics._track).toHaveBeenCalled();
     });
@@ -83,16 +112,35 @@ describe('Service: Analytics', function () {
 
   describe('when calling first time wizard events', function () {
     it('should call _track when trackSelectedCheckbox is called', function () {
-      Analytics.trackSelectedCheckbox('123');
+      Analytics.trackUserOnboarding(Analytics.sections.USER_ONBOARDING.eventNames.CMR_CHECKBOX, 'somePage', '123', { licenseId: '345' });
       $scope.$apply();
       expect(Analytics._track).toHaveBeenCalled();
     });
 
     it('should call _track when trackConvertUser is called', function () {
-      Analytics.trackConvertUser('1234', '1234');
+      Analytics.trackUserOnboarding(Analytics.sections.USER_ONBOARDING.eventNames.CONVERT_USER, 'somePage', '123', {});
       $scope.$apply();
       expect(Analytics._track).toHaveBeenCalled();
     });
   });
 
+  describe('when calling track error', function () {
+    beforeEach(function () {
+      spyOn(Authinfo, 'getUserId').and.returnValue('111');
+      spyOn(Authinfo, 'getOrgId').and.returnValue('999');
+      _.set($state, '$current.name', 'my-state');
+    });
+    it('should send necessary properties in event', function () {
+      var error = new Error('Something went wrong');
+      Analytics.trackError(error, 'some cause');
+      $scope.$apply();
+      expect(Analytics._track).toHaveBeenCalledWith('Runtime Error', jasmine.objectContaining({
+        message: 'Something went wrong',
+        cause: 'some cause',
+        userId: '111',
+        orgId: '999',
+        state: 'my-state'
+      }));
+    });
+  });
 });
