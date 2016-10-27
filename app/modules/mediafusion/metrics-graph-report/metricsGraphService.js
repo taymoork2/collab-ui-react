@@ -131,8 +131,8 @@
           'timestamp': timeStamp,
         };
       }
-      cluster = cluster.replace(/\s/g, '_');
-      daterange = daterange.replace(/\s/g, '_');
+      cluster = _.replace(cluster, /\s/g, '_');
+      daterange = _.replace(daterange, /\s/g, '_');
       var ExportFileName = 'MediaService_TotalCalls_' + cluster + '_' + daterange + '_' + new Date();
       var chartData = CommonMetricsGraphService.getBaseStackSerialGraph(data, startDuration, valueAxes, callVolumeGraphs(data, cluster), 'timestamp', catAxis, getBaseExportForGraph(exportFields, ExportFileName, columnNames));
       chartData.numberFormatter = CommonMetricsGraphService.getBaseVariable(NUMFORMAT);
@@ -268,8 +268,8 @@
       for (var key in columnNames) {
         exportFields.push(key);
       }
-      cluster = cluster.replace(/\s/g, '_');
-      dateLabel = dateLabel.replace(/\s/g, '_');
+      cluster = _.replace(cluster, /\s/g, '_');
+      dateLabel = _.replace(dateLabel, /\s/g, '_');
       var ExportFileName = 'MediaService_Utilization_' + cluster + '_' + dateLabel + '_' + new Date();
 
       var chartData = CommonMetricsGraphService.getBaseStackSerialGraph(data, startDuration, valueAxes, graphs, 'time', catAxis, getBaseExportForGraph(exportFields, ExportFileName, columnNames));
@@ -386,8 +386,8 @@
           'category': node,
         };
       }
-      cluster = cluster.replace(/\s/g, '_');
-      daterange = daterange.replace(/\s/g, '_');
+      cluster = _.replace(cluster, /\s/g, '_');
+      daterange = _.replace(daterange, /\s/g, '_');
       var ExportFileName = 'MediaService_Availability_' + cluster + '_' + daterange + '_' + new Date();
       var chartData = CommonMetricsGraphService.getGanttGraph(data.data[0].clusterCategories, valueAxis, getBaseExportForGraph(exportFields, ExportFileName, columnNames));
       chartData.legend = CommonMetricsGraphService.getBaseVariable(LEGEND);

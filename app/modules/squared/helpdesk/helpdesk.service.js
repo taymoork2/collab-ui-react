@@ -288,7 +288,7 @@
     function filterDevices(searchString, devices, limit) {
       searchString = searchString.toLowerCase();
       var filteredDevices = [];
-      var macSearchString = searchString.replace(/[:/.-]/g, '');
+      var macSearchString = _.replace(searchString, /[:/.-]/g, '');
       _.each(devices, function (device) {
         if ((device.displayName || '').toLowerCase().indexOf(searchString) != -1 || (device.mac || '').toLowerCase().replace(/[:]/g, '').indexOf(
             macSearchString) != -1 || (device.serial || '').toLowerCase().indexOf(searchString) != -1 || (device.cisUuid || '').toLowerCase().indexOf(searchString) != -1) {

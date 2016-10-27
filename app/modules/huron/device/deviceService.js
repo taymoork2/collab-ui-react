@@ -48,7 +48,7 @@
     }
 
     function decodeHuronTags(description) {
-      var tagString = (description || "").replace(/\['/g, '["').replace(/']/g, '"]').replace(/',/g, '",').replace(/,'/g, ',"');
+      var tagString = _.replace(description, /\['/g, '["').replace(/']/g, '"]').replace(/',/g, '",').replace(/,'/g, ',"');
       return tagString;
     }
 

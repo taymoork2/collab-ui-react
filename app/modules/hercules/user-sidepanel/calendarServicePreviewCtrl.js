@@ -63,7 +63,7 @@
         defaultWebExSiteName = _.find($scope.currentUser.userPreferences, function (userPreference) {
           return userPreference.indexOf("calSvcPreferredWebexSite") > 0;
         });
-        if (defaultWebExSiteName !== undefined) {
+        if (_.isString(defaultWebExSiteName)) {
           defaultWebExSiteName = defaultWebExSiteName.substring(defaultWebExSiteName.indexOf(":") + 1).replace(/"/g, '');
           $scope.extension.defaultWebExSiteName = defaultWebExSiteName;
         }
