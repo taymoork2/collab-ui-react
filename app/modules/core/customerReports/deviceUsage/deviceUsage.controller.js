@@ -44,7 +44,9 @@
       }
     });
 
-    init();
+    $scope.$watch(function () {
+      return angular.element('#device-usage-total-chart').is(':visible');
+    }, init);
 
     function init() {
       var chart = DeviceUsageTotalService.getLineChart();
@@ -197,12 +199,16 @@
       var hours = parseInt(sec / 3600, 10);
       var minutes = parseInt((sec - (hours * 3600)) / 60, 10);
       var seconds = Math.floor((sec - ((hours * 3600) + (minutes * 60))));
-      if (hours < 10) {
-        hours = pad(hours, 2);
+      if (hours > 99) {
+        return hours + "h ";
+      } else if (hours > 9) {
+        return hours + "h :" + pad(minutes, 2) + "m";
+      } else if (hours >= 1) {
+        return pad(hours, 2) + "h " + pad(minutes, 2) + "m";
+      } else {
+        return "    " + pad(minutes, 2) + "m " + pad(seconds, 2) + "s";
       }
-      return hours + ":" + pad(minutes, 2) + ":" + pad(seconds, 2);
     }
-
 
   }
 

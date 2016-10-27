@@ -30,10 +30,8 @@
         var result;
         if (all === true) {
           result = getRawData(startDate, endDate);
-          //return $q.when(getRawData(startDate, endDate));
         } else {
           result = getDailySumPrType(startDate, endDate);
-          //return $q.when(getDailySumPrType(startDate, endDate));
         }
         return $timeout(function () {
           return result;
