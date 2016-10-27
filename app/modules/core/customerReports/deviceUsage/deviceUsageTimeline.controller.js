@@ -9,7 +9,7 @@
   function DeviceUsageTimelineCtrl($state, $scope, DeviceUsageTimelineService, Notification, deviceUsageFeatureToggle, DeviceUsageCommonService) {
     var vm = this;
     var amChart;
-    var apiToUse = 'mock';
+    var apiToUse = 'local';
 
     vm.loading = true;
 
