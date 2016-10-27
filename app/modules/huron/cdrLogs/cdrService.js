@@ -35,7 +35,7 @@
 
     function getUser(userName, calltype) {
       var defer = $q.defer();
-      var name = userName.replace(/@/g, '%40').replace(/\+/g, '%2B');
+      var name = _.replace(userName, /@/g, '%40').replace(/\+/g, '%2B');
       var url = UrlConfig.getScimUrl(Authinfo.getOrgId()) + '?filter=username eq "' + name + '"';
 
       $http.get(url).success(function (data) {

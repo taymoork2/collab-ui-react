@@ -167,7 +167,7 @@
       // Workaround atob issue (InvalidCharacterError: DOM Exception 5
       // atob@[native code]) for Safari browser on how it handles
       // base64 encoded text string by removing all the whitespaces.
-      userReportData = userReportData.replace(/\s/g, '');
+      userReportData = _.replace(userReportData, /\s/g, '');
 
       // Decode base64 (convert ascii phbinary)
       var binData = $window.atob(userReportData);

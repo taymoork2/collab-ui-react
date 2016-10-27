@@ -196,13 +196,13 @@
       },
 
       generateVoiceMailNumber: function (customerId, countrycode) {
-        var customerUuid = customerId.replace(/-/g, "");
+        var customerUuid = _.replace(customerId, /-/g, "");
         var str = '';
         for (var i = 0; i < customerUuid.length; i++) {
           var hextodec = parseInt(customerUuid[i], 16).toString(10);
           str += parseInt(hextodec, 10) >= 10 ? hextodec : "0" + hextodec;
         }
-        str = countrycode + str.replace(/^0+/, "");
+        str = countrycode + _.replace(str, /^0+/, "");
         var generatedVoicemailNumber = $filter('limitTo')(str, 40, 0);
         return generatedVoicemailNumber;
       }
