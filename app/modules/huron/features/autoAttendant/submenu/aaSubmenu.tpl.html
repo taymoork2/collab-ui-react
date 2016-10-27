@@ -5,11 +5,11 @@
 </div>
 <div class="row aa-submenu">
   <div ng-if="aaSubmenu.selectedActions.length" class="row aa-sm-vertical-line" ng-repeat="submenuKeyAction in aaSubmenu.selectedActions">
-    <div class="small-3 columns aa-sm-collapse-left">
+    <div class="small-2 columns aa-sm-collapse-left">
       <cs-select ng-model="submenuKeyAction.key" options="submenuKeyAction.keys" placeholder="aaSubmenu.selectPlaceholder" on-change-fn="aaSubmenu.keyChanged($index, submenuKeyAction.key)" class="aa-sm-key-select" icon="icon-chevron-down" ng-class="{'not-selected':!submenuKeyAction.key}">
       </cs-select>
     </div>
-    <div class="small-8 columns">
+    <div class="small-9 columns">
       <cs-select ng-model="submenuKeyAction.action" valuefield="name" labelfield="label" options="aaSubmenu.keyActions" placeholder="aaSubmenu.actionPlaceholder" on-change-fn="aaSubmenu.keyActionChanged($index, submenuKeyAction.action)" class="aa-sm-action-select" icon="icon-chevron-down">
       </cs-select>
       <div ng-switch="submenuKeyAction.action.name" class="aa-sm-action">
