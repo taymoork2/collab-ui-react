@@ -6,7 +6,7 @@
     .controller('ExpresswayServiceClusterController', ExpresswayServiceClusterController);
 
   /* @ngInject */
-  function ExpresswayServiceClusterController($scope, $state, $modal, $stateParams, $translate, ClusterService, FusionUtils, $timeout, hasF237FeatureToggle, hasEUFeatureToggle, FusionClusterService) {
+  function ExpresswayServiceClusterController($scope, $state, $modal, $stateParams, $translate, ClusterService, FusionUtils, $timeout, hasF237FeatureToggle, hasEmergencyUpgradeFeatureToggle, FusionClusterService) {
     var vm = this;
     vm.state = $state;
     vm.clusterId = $stateParams.clusterId;
@@ -23,7 +23,7 @@
     vm.fakeUpgrade = false;
     vm.fakeManagementUpgrade = false;
     vm.hasF237FeatureToggle = hasF237FeatureToggle;
-    vm.hasEUFeatureToggle = hasEUFeatureToggle;
+    vm.hasEmergencyUpgradeFeatureToggle = hasEmergencyUpgradeFeatureToggle;
     vm.hasConnectorAlarm = hasConnectorAlarm;
 
     var promise = null;

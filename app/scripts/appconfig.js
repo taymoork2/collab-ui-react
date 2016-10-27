@@ -2508,7 +2508,7 @@
               hasF237FeatureToggle: /* @ngInject */ function (FeatureToggleService) {
                 return FeatureToggleService.supports(FeatureToggleService.features.atlasF237ResourceGroups);
               },
-              hasEUFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+              hasEmergencyUpgradeFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
                 return FeatureToggleService.supports(FeatureToggleService.features.atlasHerculesEmergencyUpgrade)
                   .then(function (support) {
                     return support;
@@ -2535,7 +2535,7 @@
             controllerAs: 'clusterSettings',
             parent: 'main',
             resolve: {
-              hasEUFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+              hasEmergencyUpgradeFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
                 return FeatureToggleService.supports(FeatureToggleService.features.atlasHerculesEmergencyUpgrade);
               },
             }
@@ -2794,7 +2794,7 @@
               hasF237FeatureToggle: /* @ngInject */ function (FeatureToggleService) {
                 return FeatureToggleService.supports(FeatureToggleService.features.atlasF237ResourceGroups);
               },
-              hasEUFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+              hasEmergencyUpgradeFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
                 return FeatureToggleService.supports(FeatureToggleService.features.atlasHerculesEmergencyUpgrade)
                   .then(function (support) {
                     return support;

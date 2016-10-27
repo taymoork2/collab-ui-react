@@ -46,7 +46,7 @@ describe('Controller: ExpresswayServiceClusterController', function () {
     controller = $controller('ExpresswayServiceClusterController', {
       $scope: $scope,
       hasF237FeatureToggle: true,
-      hasEUFeatureToggle: true,
+      hasEmergencyUpgradeFeatureToggle: true,
       ClusterService: clusterServiceMock,
       FusionClusterService: fusionClusterServiceMock,
       $stateParams: {

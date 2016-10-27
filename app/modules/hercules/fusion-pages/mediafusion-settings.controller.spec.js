@@ -34,7 +34,7 @@ describe('Controller: MediafusionClusterSettingsController', function () {
       MediaClusterServiceV2: MediaClusterServiceV2,
       FusionClusterService: FusionClusterService,
       ResourceGroupService: ResourceGroupService,
-      hasEUFeatureToggle: false,
+      hasEmergencyUpgradeFeatureToggle: false,
     });
 
   }));
