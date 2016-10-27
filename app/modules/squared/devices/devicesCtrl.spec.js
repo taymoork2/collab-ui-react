@@ -24,7 +24,7 @@ describe('Controller: DevicesCtrl', function () {
 
   function initSpies() {
     // TODO - eww this is wrong - Just make this init right now
-    $httpBackend.whenGET('https://csdm-integration.wbx2.com/csdm/api/v1/organization/null/huronDevices').respond([]);
+    $httpBackend.whenGET('https://csdm-integration.wbx2.com/csdm/api/v1/organization/null/devices/?type=huron').respond([]);
     $httpBackend.whenGET(CsdmConfigService.getUrl() + '/organization/null/nonExistingDevices').respond(200);
     $httpBackend.whenGET(CsdmConfigService.getUrl() + '/organization/null/devices?checkDisplayName=false&checkOnline=false').respond(200);
     $httpBackend.whenGET(CsdmConfigService.getUrl() + '/organization/null/devices').respond(200);
