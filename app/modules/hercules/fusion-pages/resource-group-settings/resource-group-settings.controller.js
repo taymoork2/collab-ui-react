@@ -148,6 +148,10 @@
         templateUrl: 'modules/hercules/fusion-pages/resource-group-settings/assign-clusters.html',
         type: 'full',
         windowClass: 'assign-clusters-modal',
+      }).result.then(function (result) {
+        if (result.change) {
+          Notification.success('hercules.resourceGroupSettings.assignSuccess');
+        }
       });
     }
 
