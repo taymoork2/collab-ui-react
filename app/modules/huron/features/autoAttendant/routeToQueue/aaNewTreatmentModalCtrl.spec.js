@@ -59,7 +59,7 @@ describe('Controller: AANewTreatmentModalCtrl', function () {
   var paAction = {};
   var schedule = 'openHours';
   var index = '0';
-  var menuId = 'menu2';
+  var menuId = 'menu0';
   var keyIndex = '0';
   var rtQ = 'routeToQueue';
   var play = 'play';
@@ -92,9 +92,11 @@ describe('Controller: AANewTreatmentModalCtrl', function () {
     $scope.menuId = menuId;
     $scope.keyIndex = keyIndex;
 
+    AutoAttendantCeMenuModelService.clearCeMenuMap();
     uiMenu = AutoAttendantCeMenuModelService.newCeMenu();
     ui[schedule] = uiMenu;
     menuEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
+    uiMenu.addEntryAt(index, menuEntry);
     musicOnHold = AutoAttendantCeMenuModelService.newCeMenuEntry();
     initialAnnouncement = AutoAttendantCeMenuModelService.newCeMenuEntry();
     periodicAnnouncement = AutoAttendantCeMenuModelService.newCeMenuEntry();
