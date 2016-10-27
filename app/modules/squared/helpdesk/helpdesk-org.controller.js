@@ -87,9 +87,8 @@
     function openExtendedInformation() {
       if (vm.supportsExtendedInformation) {
         $modal.open({
-          templateUrl: "modules/squared/helpdesk/helpdesk-extended-information.html",
+          templateUrl: 'modules/squared/helpdesk/helpdesk-extended-information.html',
           controller: 'HelpdeskExtendedInfoDialogController as modal',
-          modalId: "HelpdeskExtendedInfoDialog",
           resolve: {
             title: function () {
               return 'helpdesk.customerDetails';
@@ -252,9 +251,8 @@
       FusionClusterService.getAll(vm.orgId)
         .then(function (hsData) {
           $modal.open({
-            templateUrl: "modules/squared/helpdesk/helpdesk-extended-information.html",
+            templateUrl: 'modules/squared/helpdesk/helpdesk-extended-information.html',
             controller: 'HelpdeskExtendedInfoDialogController as modal',
-            modalId: "HelpdeskExtendedInfoDialog",
             resolve: {
               title: function () {
                 return 'helpdesk.hybridServicesDetails';
