@@ -3441,8 +3441,8 @@
       "insertRoomName": "Insert name of device location, e.g. 'Reception' or 'Boardroom'"
     },
     "assignPhoneNumber": {
-      "assignPhoneNumber": "Assign a phone number",
-      "assignPhoneNumberInstructions": "Using a Desk Phone requires a Cisco Spark Call license. Proceeding acknowledges that a Cisco Spark Call license will be assigned to this place, if it does not have one already."
+      "assignPhoneNumber": "Assign numbers",
+      "assignPhoneNumberInstructions": "Choose from the available phone numbers and extensions in the drop-down lists. These will become the primary line which you can use to reach this place."
     },
     "assignServices": {
       "assignServices": "Assign Services",
@@ -4697,6 +4697,7 @@
     "servicesHeader": "Services",
     "placeAdd": "Add Place",
     "placeError": "Add Place failed.",
+    "placeEditError": "Edit Place failed",
     "placesDefinition": "A place represents a physical location containing a device not owned by a specific user, such as a meeting room with a collaboration device or a reception with shared phones.",
     "placesUses": "You'll be able to view your places here - and the devices and configurations that belong to them.",
     "deletePlace": "Delete Place",

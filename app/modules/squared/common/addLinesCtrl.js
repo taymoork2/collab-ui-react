@@ -102,6 +102,10 @@
         CsdmDataModelService.updateCloudberryPlace(vm.wizardData.selectedPlace, entitlements, entity.assignedDn.pattern, placeEntity.externalNumber)
           .then(function () {
             $scope.$dismiss();
+            Notification.success("Line configuration saved successfully");
+          })
+          .catch(function (error) {
+            Notification.errorResponse(error, 'placesPage.placeEditError');
           });
       });
     };

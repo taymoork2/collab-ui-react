@@ -4,7 +4,7 @@
   angular.module('Core')
     .controller('EditServicesCtrl', EditServicesCtrl);
   /* @ngInject */
-  function EditServicesCtrl($stateParams, $scope, CsdmDataModelService) {
+  function EditServicesCtrl($stateParams, $scope, Notification, CsdmDataModelService) {
     var vm = this;
     vm.wizardData = $stateParams.wizard.state().data;
     vm.service = (vm.wizardData.entitlements || []).indexOf('ciscouc') > -1 ? 'sparkCall' : 'sparkOnly';
@@ -24,6 +24,10 @@
         CsdmDataModelService.updateCloudberryPlace(vm.wizardData.selectedPlace, entitlements)
           .then(function () {
             $scope.$dismiss();
+            Notification.success("Line configuration saved successfully");
+          })
+          .catch(function (error) {
+            Notification.errorResponse(error, 'placesPage.placeEditError');
           });
       } else {
         $scope.$dismiss();
