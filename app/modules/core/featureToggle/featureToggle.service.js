@@ -76,6 +76,8 @@
       huronInternationalDialingTrialOverride: 'huronInternationalDialingTrialOverride',
       huronPagingGroup: 'huronPagingGroup',
       huronNxxSearch: 'huron-nxx-search',
+      huronNetworkLocale: 'huron-l10n-network-locale',
+      huronUserLocale: 'huron-l10n-user-locale',
       iosActionBar: 'ios-action-bar',
       iosAecType: 'ios-aec-type',
       iosCameraview: 'ios-cameraview',

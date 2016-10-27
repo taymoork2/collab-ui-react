@@ -18,6 +18,8 @@ export class Site {
   public extensionLength: string;
   public voicemailPilotNumberGenerated: string;
   public emergencyCallBackNumber: EmergencyCallBackNumber;
+  public preferredLanguage: string;
+  public country: string;
 }
 
 interface ISiteResource extends ng.resource.IResourceClass<ng.resource.IResource<Site>> {}
@@ -39,6 +41,8 @@ export class HuronSiteService {
     'extensionLength',
     'voicemailPilotNumberGenerated',
     'emergencyCallBackNumber',
+    'preferredLanguage',
+    'country',
   ];
 
   /* @ngInject */

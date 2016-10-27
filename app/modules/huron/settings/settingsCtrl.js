@@ -27,6 +27,10 @@
       id: 'America/Los_Angeles',
       label: $translate.instant('timeZones.America/Los_Angeles')
     };
+    var DEFAULT_LANG = {
+      label: $translate.instant('languages.englishAmerican'),
+      value: 'en_US'
+    };
     var DEFAULT_SD = '9';
     var DEFAULT_SITE_SD = '8';
     var DEFAULT_EXT_LEN = '4';
@@ -52,6 +56,7 @@
     vm._voicemailNumberWatcher = _voicemailNumberWatcher;
     vm._voicemailEnabledWatcher = _voicemailEnabledWatcher;
     vm._buildTimeZoneOptions = _buildTimeZoneOptions;
+    vm._buildPreferredLanguageOptions = _buildPreferredLanguageOptions;
     vm._buildServiceNumberOptions = _buildServiceNumberOptions;
     vm._buildVoicemailNumberOptions = _buildVoicemailNumberOptions;
     vm._buildCallerIdOptions = _buildCallerIdOptions;
@@ -66,6 +71,7 @@
     vm.hasVoiceService = false;
     vm.assignedNumbers = [];
     vm.timeZoneOptions = [];
+    vm.preferredLanguageOptions = [];
     vm.unassignedExternalNumbers = [];
     vm.allExternalNumbers = [];
     vm.extensionLengthChanged = false;
@@ -93,7 +99,8 @@
         vmCluster: undefined,
         emergencyCallBackNumber: undefined,
         uuid: undefined,
-        voicemailPilotNumberGenerated: 'false'
+        voicemailPilotNumberGenerated: 'false',
+        preferredLanguage: DEFAULT_LANG
       },
       numberRanges: [],
       previousLength: DEFAULT_EXT_LEN,
@@ -273,6 +280,7 @@
       templateOptions: {
         inputClass: 'medium-5',
         label: $translate.instant('serviceSetupModal.timeZone'),
+        description: $translate.instant('serviceSetupModal.tzDescription'),
         options: [],
         labelfield: 'label',
         valuefield: 'id',
@@ -283,6 +291,24 @@
         _buildTimeZoneOptions($scope);
       }
 
+    }];
+
+    vm.preferredLanguageSelection = [{
+      model: vm.model.site,
+      key: 'preferredLanguage',
+      type: 'select',
+      className: 'service-setup service-setup-regional-settings',
+      templateOptions: {
+        inputClass: 'medium-5',
+        label: $translate.instant('serviceSetupModal.preferredLanguage'),
+        description: $translate.instant('serviceSetupModal.preferredLanguageDescription'),
+        options: [],
+        labelfield: 'label',
+        valuefield: 'value'
+      },
+      controller: /* @ngInject */ function ($scope) {
+        _buildPreferredLanguageOptions($scope);
+      }
     }];
 
     vm.extensionLengthSelection = [{
@@ -937,6 +963,10 @@
         siteData.timeZone = vm.model.site.timeZone.id;
       }
 
+      if (vm.model.site.preferredLanguage.value !== savedModel.site.preferredLanguage.value) {
+        siteData.preferredLanguage = vm.model.site.preferredLanguage.value;
+      }
+
       if (vm.model.site.extensionLength !== savedModel.site.extensionLength) {
         siteData.extensionLength = vm.model.site.extensionLength;
       }
@@ -1080,6 +1110,11 @@
               vm.model.site.timeZone = _.find(vm.timeZoneOptions, function (timezone) {
                 return timezone.id === site.timeZone;
               });
+              if (site.preferredLanguage) {
+                vm.model.site.preferredLanguage = _.find(vm.preferredLanguageOptions, function (language) {
+                  return language.value === site.preferredLanguage;
+                });
+              }
               vm.model.site.siteCode = site.siteCode;
               vm.model.site.vmCluster = site.vmCluster;
               vm.model.site.emergencyCallBackNumber = site.emergencyCallBackNumber;
@@ -1124,7 +1159,14 @@
     function loadTimeZoneOptions() {
       return ServiceSetup.getTimeZones()
         .then(function (timeZones) {
-          vm.timeZoneOptions = ServiceSetup.getTranslatedTimeZones(timeZones);
+          vm.timeZoneOptions = _.sortBy(ServiceSetup.getTranslatedTimeZones(timeZones), 'label');
+        });
+    }
+
+    function loadPreferredLanguageOptions() {
+      return ServiceSetup.getSiteLanguages()
+        .then(function (languages) {
+          vm.preferredLanguageOptions = _.sortBy(ServiceSetup.getTranslatedSiteLanguages(languages), 'label');
         });
     }
 
@@ -1317,6 +1359,7 @@
             promises.push(loadInternationalDialing());
             promises.push(loadDialPlan());
             promises.push(loadCallerId());
+            promises.push(loadPreferredLanguageOptions());
           }
 
           if (vm.hasVoicemailService) {
@@ -1617,6 +1660,7 @@
       vm.model.site.siteSteeringDigit = savedModel.site.siteSteeringDigit;
       vm.model.site.siteCode = savedModel.site.siteCode;
       vm.model.site.timeZone = savedModel.site.timeZone;
+      vm.model.site.preferredLanguage = savedModel.site.preferredLanguage;
       vm.model.site.voicemailPilotNumber = savedModel.site.voicemailPilotNumber;
       vm.model.site.vmCluster = savedModel.site.vmCluster;
       vm.model.site.emergencyCallBackNumber = savedModel.site.emergencyCallBackNumber;
@@ -1757,6 +1801,14 @@
         return vm.timeZoneOptions;
       }, function (timeZones) {
         localScope.to.options = timeZones;
+      });
+    }
+
+    function _buildPreferredLanguageOptions(localScope) {
+      localScope.$watchCollection(function () {
+        return vm.preferredLanguageOptions;
+      }, function (languages) {
+        localScope.to.options = languages;
       });
     }
 

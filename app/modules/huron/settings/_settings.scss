@@ -108,6 +108,11 @@
       @include vr-spacing(mb, 2.25);
     }
 
+    .service-setup-regional-settings,
+    .inner-section-margin {
+      @include vr-spacing(mt, 2.25);
+    }
+
     .msg-container {
       min-width: vr-adjust(600px);
     }

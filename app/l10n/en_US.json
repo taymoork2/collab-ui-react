@@ -1167,6 +1167,9 @@
     "ssoDisableSuccessNotification": "SSO is disabled <br/> User authentication configuration is now using simple built-in identity service."
   },
   "serviceSetupModal": {
+    "regionalSettings": "Regional Settings",
+    "preferredLanguage": "Preferred Language",
+    "preferredLanguageDescription": "Specify the language to use for Spark Call Services. Preferred language only applies to new users.",
     "timeZone": "Time Zone",
     "searchTimeZone": "Search for a time zone...",
     "tzDescription": "Specify the time zone to use for schedule-based call routing. For example, this time zone applies to calls routed based on business hours and holiday schedules.",
