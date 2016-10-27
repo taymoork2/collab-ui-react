@@ -65,7 +65,7 @@
             placeEntity.externalNumber = entity.externalNumber.pattern;
           }
 
-          CsdmDataModelService.createCmiPlace(entity.name, entity.assignedDn.pattern)
+          CsdmDataModelService.createCmiPlace(entity.name, entity.assignedDn.pattern, placeEntity.externalNumber)
             .then(successcb)
             .catch(function (error) {
               Notification.errorResponse(error, 'placesPage.placeError');
@@ -80,6 +80,30 @@
             .catch(failCallback);
       }
       addPlace();
+    };
+
+    vm.save = function () {
+      vm.isLoading = true;
+      _.forEach($scope.entitylist, function (entity) {
+        var placeEntity = {
+          name: entity.name,
+          directoryNumber: entity.assignedDn.pattern
+        };
+
+        if (entity.externalNumber && entity.externalNumber.pattern !== 'None') {
+          placeEntity.externalNumber = entity.externalNumber.pattern;
+        }
+
+        var entitlements = vm.wizardData.entitlements;
+        var sparkCallIndex = entitlements.indexOf('ciscouc');
+        if (sparkCallIndex == -1) {
+          entitlements.push('ciscouc');
+        }
+        CsdmDataModelService.updateCloudberryPlace(vm.wizardData.selectedPlace, entitlements, entity.assignedDn.pattern, placeEntity.externalNumber)
+          .then(function () {
+            $scope.$dismiss();
+          });
+      });
     };
 
     vm.back = function () {

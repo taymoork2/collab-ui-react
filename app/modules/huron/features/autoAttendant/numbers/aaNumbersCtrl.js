@@ -47,7 +47,7 @@
     // Add Number, top-level method called by UI
     function addNumber(number) {
 
-      if (angular.isUndefined(number) || number === '') {
+      if (_.isUndefined(number) || number === '') {
         return;
       }
 
@@ -57,7 +57,7 @@
       });
 
       // if it's in the available list, take it out, and add to CE resources
-      if (!angular.isUndefined(numobj) && numobj.length > 0) {
+      if (!_.isUndefined(numobj) && numobj.length > 0) {
 
         vm.availablePhoneNums = vm.availablePhoneNums.filter(function (obj) {
           return obj.value != number;
@@ -78,7 +78,7 @@
     // Remove number, top-level method called by UI
     function removeNumber(number) {
 
-      if (angular.isUndefined(number) || number === '') {
+      if (_.isUndefined(number) || number === '') {
         return;
       }
 

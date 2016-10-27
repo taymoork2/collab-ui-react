@@ -10,6 +10,7 @@
     var vm = this;
     vm.currentUser = $stateParams.currentUser;
     vm.entitlements = $stateParams.entitlements;
+    vm.queryuserslist = $stateParams.queryuserslist;
     vm.services = [];
     vm.dropDownItems = [];
     vm.titleCard = '';

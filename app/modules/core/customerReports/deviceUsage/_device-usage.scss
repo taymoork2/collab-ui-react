@@ -1,10 +1,16 @@
 .device-usage-report-pages {
-  .timeline-report {
-    .range-wrapper {
-      text-align: center;
-      width: 100%;
-      margin-left: 3rem;
+  .customer-report-filter {
+      width: 12.5rem;
+  }
+
+  .total-report {
+    .device-usage-total-chart {
+      height: 400px;
+      margin: 0 auto;
     }
+  }
+
+  .timeline-report {
 
     .cs-input-group {
       display: inline-block;
@@ -97,5 +103,13 @@
       border: 1px solid gray;
       text-align: center;
     }
+  }
+
+  .no-border {
+    border: none;
+  }
+
+  .small-padding {
+    padding: 1rem;
   }
 }

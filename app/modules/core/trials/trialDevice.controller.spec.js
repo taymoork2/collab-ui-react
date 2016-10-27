@@ -1,9 +1,9 @@
-/* globals $controller, $httpBackend, $q, $rootScope, FeatureToggleService, Notification, TrialDeviceController, TrialCallService, TrialDeviceService, TrialRoomSystemService*/
+/* globals $controller, $httpBackend, $q, $rootScope, FeatureToggleService, Notification, Orgservice, TrialDeviceController, TrialCallService, TrialDeviceService, TrialRoomSystemService*/
 
 'use strict';
 
 describe('Controller: TrialDeviceController', function () {
-  var controller;
+  var controller, scope;
   var trialData = getJSONFixture('core/json/trials/trialData.json');
 
   beforeEach(angular.mock.module('core.trial'));
@@ -14,7 +14,7 @@ describe('Controller: TrialDeviceController', function () {
 
   beforeEach(function () {
     // TODO - check for removal of $httpBackend and FeatureToggleService when MX300 are officially supported
-    bard.inject(this, '$controller', '$httpBackend', '$q', '$rootScope', 'FeatureToggleService', 'Notification', 'TrialCallService', 'TrialDeviceService', 'TrialRoomSystemService');
+    bard.inject(this, '$controller', '$httpBackend', '$q', '$rootScope', 'Analytics', 'FeatureToggleService', 'Notification', 'Orgservice', 'TrialCallService', 'TrialDeviceService', 'TrialRoomSystemService');
   });
 
   beforeEach(function () {
@@ -22,12 +22,16 @@ describe('Controller: TrialDeviceController', function () {
     $httpBackend
       .when('GET', 'https://identity.webex.com/identity/scim/null/v1/Users/me')
       .respond({});
+    spyOn(Orgservice, 'getOrg');
+
 
     initController();
   });
 
   function initController() {
-    controller = $controller('TrialDeviceController');
+    scope = $rootScope.$new();
+    scope.trialData = trialData.enabled;
+    controller = $controller('TrialDeviceController', { $scope: scope.$new() });
     $rootScope.$apply();
   }
 
@@ -185,8 +189,7 @@ describe('Controller: TrialDeviceController', function () {
           maxDeviceTrials: 20
         })
       });
-      controller = $controller('TrialDeviceController');
-      $rootScope.$apply();
+      initController();
 
       expect(controller.activeTrials).toEqual(17);
       expect(controller.maxTrials).toEqual(20);
@@ -201,8 +204,7 @@ describe('Controller: TrialDeviceController', function () {
           maxDeviceTrials: 20
         })
       });
-      controller = $controller('TrialDeviceController');
-      $rootScope.$apply();
+      initController();
 
       expect(controller.activeTrials).toEqual(20);
       expect(controller.maxTrials).toEqual(20);
@@ -214,8 +216,7 @@ describe('Controller: TrialDeviceController', function () {
         getData: trialData.enabled.trials.deviceTrial,
         getLimitsPromise: $q.reject()
       });
-      controller = $controller('TrialDeviceController');
-      $rootScope.$apply();
+      initController();
 
       expect(controller.limitsError).toBe(true);
       expect(controller.limitReached).toBe(true);
@@ -230,8 +231,7 @@ describe('Controller: TrialDeviceController', function () {
           maxDeviceTrials: 20
         })
       });
-      controller = $controller('TrialDeviceController');
-      $rootScope.$apply();
+      initController();
 
       expect(Notification.warning).toHaveBeenCalled();
     });
@@ -240,7 +240,6 @@ describe('Controller: TrialDeviceController', function () {
   describe('input quantity default setting', function () {
 
     it('should change the quantity to 0 when disabled', function () {
-      var controller = $controller('TrialDeviceController');
       var device = {
         model: 'CISCO_SX10',
         enabled: false,
@@ -253,8 +252,6 @@ describe('Controller: TrialDeviceController', function () {
     });
 
     it('should change the quantity to default when enabled and has quantity 0', function () {
-
-      var controller = $controller('TrialDeviceController');
       var device = {
         model: 'CISCO_SX10',
         enabled: true,
@@ -267,8 +264,6 @@ describe('Controller: TrialDeviceController', function () {
     });
 
     it('should not change the quantity when enabled and has quantity other than 0', function () {
-
-      var controller = $controller('TrialDeviceController');
       var device = {
         model: 'CISCO_SX10',
         enabled: true,
@@ -316,7 +311,7 @@ describe('Controller: TrialDeviceController', function () {
         }
       };
 
-      var controller = $controller('TrialDeviceController', { $stateParams: stateParams });
+      var controller = $controller('TrialDeviceController', { $scope: scope.$new(), $stateParams: stateParams });
 
       var valid1 = controller.validateInputQuantity(1, 1, {
         model: {
@@ -374,8 +369,7 @@ describe('Controller: TrialDeviceController', function () {
         }
       };
 
-      var controller = $controller('TrialDeviceController', { $stateParams: stateParams });
-
+      var controller = $controller('TrialDeviceController', { $scope: scope.$new(), $stateParams: stateParams });
       spyOn(controller, 'calcQuantity').and.returnValues(0, 1, 0, 7);
 
       var valid1 = controller.validateTotalQuantity(null, null, model);
@@ -468,7 +462,7 @@ describe('Controller: TrialDeviceController', function () {
         }
       };
 
-      var controller = $controller('TrialDeviceController', { $stateParams: stateParams });
+      var controller = $controller('TrialDeviceController', { $scope: scope.$new(), $stateParams: stateParams });
 
       spyOn(controller, 'calcQuantity').and.returnValue(5);
 
@@ -523,7 +517,7 @@ describe('Controller: TrialDeviceController', function () {
         getData: trialData.enabled.trials.roomSystemTrial,
       });
 
-      controller = $controller('TrialDeviceController');
+      initController();
       $rootScope.$apply();
 
       var total = controller.getTotalQuantity();
@@ -574,7 +568,7 @@ describe('Controller: TrialDeviceController', function () {
         })
       });
 
-      controller = $controller('TrialDeviceController');
+      initController();
       controller.canAddMoreDevices = false;
       $rootScope.$apply();
 
@@ -590,7 +584,7 @@ describe('Controller: TrialDeviceController', function () {
           maxDeviceTrials: 20
         })
       });
-      controller = $controller('TrialDeviceController');
+      initController();
       controller.canAddMoreDevices = false;
       $rootScope.$apply();
 
@@ -601,7 +595,6 @@ describe('Controller: TrialDeviceController', function () {
 
   describe('areTemplateOptionsDisabled function', function () {
     it('should set to true if device.enabled is false', function () {
-      var controller = $controller('TrialDeviceController');
       var device = {
         model: 'CISCO_SX10',
         enabled: false,
@@ -614,7 +607,6 @@ describe('Controller: TrialDeviceController', function () {
     });
 
     it('should set to false if device.enabled is true', function () {
-      var controller = $controller('TrialDeviceController');
       var device = {
         model: 'CISCO_DX80',
         enabled: true,
@@ -626,7 +618,6 @@ describe('Controller: TrialDeviceController', function () {
     });
 
     it('should set to false if device.readonly is true', function () {
-      var controller = $controller('TrialDeviceController');
       var device = {
         model: 'CISCO_MX300',
         enabled: false,
@@ -640,14 +631,12 @@ describe('Controller: TrialDeviceController', function () {
 
   describe('Shipping to additional countries ', function () {
     it('should show a larger list of countries when only CISCO_SX10 is selected', function () {
-      initController();
       controller.sx10.enabled = true;
       controller.sx10.quantity = 1;
       var countryList = controller.getCountriesForSelectedDevices();
       expect(countryList.length).toBeGreaterThan(1);
     });
     it('should have a list of countries to be US only when CISCO_SX10 and phone is selected', function () {
-      initController();
       controller.sx10.enabled = true;
       controller.sx10.quantity = 1;
       controller.phone8865.enabled = true;

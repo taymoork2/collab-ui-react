@@ -11,7 +11,7 @@
 <!-- body -->
 <div class="modal-body trials">
   <form id="callTrialForm" class="trial-modal" name="trialForm" novalidate>
-    
+
     <!-- provider selection -->
     <div class="cs-form__section">
       <div class="section__info">
@@ -21,7 +21,7 @@
         <formly-form model="pstnTrial.pstn.providerSelection" fields="pstnTrial.pstnProviderField"></formly-form>
       </div>
     </div>
-    
+
     <!-- manual number entry -->
     <div class="cs-form__section" ng-show="pstnTrial.providerImplementation === pstnTrial.SWIVEL || pstnTrial.trialData.details.pstnProvider.apiImplementation === pstnTrial.SWIVEL">
       <div class="section__info">
@@ -50,7 +50,7 @@
           </formly-form>
       </div>
     </div>
-    
+
     <!-- provider numbers -->
     <div class="cs-form__section" ng-hide="pstnTrial.providerImplementation === pstnTrial.SWIVEL || pstnTrial.trialData.details.pstnProvider.apiImplementation === pstnTrial.SWIVEL">
       <div class="section__info">
@@ -58,8 +58,58 @@
         <h6 class="section__description" translate="trialModal.pstn.pleaseAdd10"></h6>
       </div>
       <div class="section__content">
-        <formly-form model="pstnTrial.numberSearchInfo" fields="pstnTrial.pstnStateAreaFields">
-          </formly-form>
+        <form id="pstnNumberSearch">
+          <div class="row collapse-both">
+            <div class="medium-6 columns state-dropdown">
+              <p translate="pstnSetup.state"></p>
+              <cs-select
+                ng-model="pstnTrial.trialData.details.pstnNumberInfo.state"
+                options="pstnTrial.pstn.stateOptions"
+                labelfield="name"
+                valuefield="abbreviation"
+                placeholder="::'common.select' | translate"
+                input-placeholder=""
+                required="true"
+                filter="true"
+                refresh-data-fn="sel.getoptions(filter)"
+                on-change-fn="pstnTrial.getStateInventory()">
+              </cs-select>
+            </div>
+            <div class="medium-3 columns">
+              <p translate="pstnSetup.areaCode"></p>
+              <cs-select
+                ng-model="pstnTrial.trialData.details.pstnNumberInfo.areaCode"
+                is-disabled="!pstnTrial.pstn.areaCodeEnable"
+                options="pstnTrial.pstn.areaCodeOptions"
+                labelfield="code"
+                valuefield="code"
+                placeholder="::'common.select' | translate"
+                input-placeholder=""
+                required="true"
+                filter="true"
+                refresh-data-fn="sel.getoptions(filter)"
+                on-change-fn="pstnTrial.onAreaCodeChange()">
+              </cs-select>
+            </div>
+            <div class="medium-3 columns">
+              <div ng-if="pstnTrial.showNXXSearch">
+                <p translate="pstnSetup.nxx"></p>
+                <cs-select
+                  ng-model="pstnTrial.trialData.details.pstnNumberInfo.nxx"
+                  is-disabled="!pstnTrial.pstn.nxxEnable"
+                  options="pstnTrial.pstn.nxxOptions"
+                  labelfield="code"
+                  valuefield="code"
+                  placeholder="::'common.optional' | translate"
+                  input-placeholder=""
+                  filter="true"
+                  refresh-data-fn="sel.getoptions(filter)"
+                  on-change-fn="pstnTrial.onNxxChange()">
+                </cs-select>
+              </div>
+          </div>
+          </div>
+        </form>
         <h6 translate="trialModal.pstn.numbers"></h6>
         <div class="did-input">
           <cs-token-field tokens="pstnTrial.unsavedTokens" tokenfieldid="pstnTrial.tokenFieldId" tokenoptions="pstnTrial.tokenOptions" tokenmethods="pstnTrial.tokenMethods"></cs-token-field>

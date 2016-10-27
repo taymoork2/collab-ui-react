@@ -1,9 +1,12 @@
 import { IFeature } from '../../../core/components/featureList/featureList.component';
+import { IActionItem } from '../../../core/components/sectionTitle/sectionTitle.component';
 
 class PlaceOverview implements ng.IComponentController {
 
   public services: IFeature[] = [];
+  public actionList: IActionItem[] = [];
   public deviceList: Object = {};
+  public showPstn: boolean = false;
 
   private currentPlace;
   private csdmHuronUserDeviceService;
@@ -28,23 +31,76 @@ class PlaceOverview implements ng.IComponentController {
   public $onInit(): void {
     this.initDeviceList();
     this.initServices();
+    this.initActions();
   }
 
   private initServices(): void {
+    let service: IFeature;
     if (this.hasEntitlement('ciscouc')) {
-      let service: IFeature = {
+      service = {
         name: this.$translate.instant('onboardModal.call'),
         icon: 'icon-circle-call',
         state: 'communication',
-        detail: this.$translate.instant('onboardModal.callFree'),
+        detail: this.$translate.instant('onboardModal.paidComm'),
         actionAvailable: true,
       };
-      this.services.push(service);
+    } else {
+      service = {
+        name: this.$translate.instant('onboardModal.call'),
+        icon: 'icon-circle-call',
+        state: 'communication',
+        detail: this.$translate.instant('common.off'),
+        actionAvailable: false,
+      };
+    }
+    this.services.push(service);
+  }
+
+  private initActions(): void {
+    if (this.currentPlace.type === 'cloudberry') {
+      let overview = this;
+      this.CsdmPlaceService.pstnFeatureIsEnabled().then(function (result) {
+        overview.showPstn = result && overview.Authinfo.isSquaredUC();
+        if (result) {
+          overview.actionList = [{
+            actionKey: 'usersPreview.editServices',
+            actionFunction: () => {
+              overview.editCloudberryServices();
+            },
+          }];
+        }
+      });
     }
   }
 
   private initDeviceList(): void {
     this.deviceList = this.currentPlace.devices;
+  }
+
+  public editCloudberryServices(): void {
+    let wizardState = {
+      data: {
+        function: 'editServices',
+        accountType: 'shared',
+        showPlaces: true,
+        selectedPlace: this.currentPlace,
+        entitlements: this.currentPlace.entitlements,
+        deviceType: this.currentPlace.type,
+        title: 'usersPreview.editServices',
+      },
+      history: [],
+      currentStateName: 'addDeviceFlow.editServices',
+      wizardState: {
+        'addDeviceFlow.editServices': {
+          next: 'addDeviceFlow.addLines',
+        },
+        'addDeviceFlow.addLines': {},
+      },
+    };
+    let wizard = this.WizardFactory.create(wizardState);
+    this.$state.go(wizardState.currentStateName, {
+      wizard: wizard,
+    });
   }
 
   public save(newName: string) {

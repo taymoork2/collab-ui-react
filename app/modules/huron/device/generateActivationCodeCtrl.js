@@ -76,7 +76,7 @@
     function sendActivationCodeEmail() {
       var entitleResult;
       var timezone = jstz.determine().name();
-      if (timezone === null || angular.isUndefined(timezone)) {
+      if (timezone === null || _.isUndefined(timezone)) {
         timezone = 'UTC';
       }
       var expiresOn = moment(vm.otp.expiresOn).local().tz(timezone).format('MMMM DD, YYYY h:mm A (z)');

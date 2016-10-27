@@ -5,7 +5,7 @@
     .controller('MediafusionEnterNameController', MediafusionEnterNameController);
 
   /* @ngInject */
-  function MediafusionEnterNameController($stateParams, $translate, FusionClusterService, XhrNotificationService) {
+  function MediafusionEnterNameController($stateParams, $translate, FusionClusterService, Notification) {
     var vm = this;
     var wizardData = $stateParams.wizard.state().data;
     var clusterId = null;
@@ -70,7 +70,9 @@
             }
           });
         })
-        .catch(XhrNotificationService.notify);
+        .catch(function (error) {
+          Notification.errorWithTrackingId(error, 'hercules.genericFailure');
+        });
     }
   }
 })();

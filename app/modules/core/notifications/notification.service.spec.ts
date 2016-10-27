@@ -11,7 +11,7 @@ describe('Service: Notification', function () {
       type: type,
       body: 'cr-bind-unsafe-html',
       bodyOutputType: 'directive',
-      directiveData: { data: [message] },
+      directiveData: { messages: [message] },
       timeout: timeout,
       closeHtml: jasmine.any(String),
     };

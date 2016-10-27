@@ -90,7 +90,7 @@
         });
       })
       .catch(function (error) {
-        Notification.error('Error getting user information: ' + error);
+        Notification.errorWithTrackingId('Error getting user information: ' + error);
       });
 
     function checkEntitlements(options) {
@@ -105,7 +105,7 @@
               return extension.id === service.id;
             });
             // can't have huron (ciscouc) and call service at the same time
-            if (extension.id === 'squared-fusion-uc' && hasHuronEntitlement()) {
+            if (extension.id === 'squared-fusion-uc' && hasEntitlement('ciscouc')) {
               extension.enabled = false;
             }
             if (extension.enabled) {
@@ -185,10 +185,6 @@
       });
       return offerCodes.length > 0;
     }
-
-    var hasHuronEntitlement = function () {
-      return vm.user.entitlements.indexOf('ciscouc') > -1;
-    };
 
     var cancelStateChangeListener = $rootScope.$on('$stateChangeSuccess', function () {
       stopDelayedUpdates = true;

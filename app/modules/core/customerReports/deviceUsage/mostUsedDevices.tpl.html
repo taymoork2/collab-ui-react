@@ -1,0 +1,14 @@
+<table class="table-condensed table">
+  <thead>
+  <th>Device</th>
+  <th>Call Duration</th>
+  <th># Calls</th>
+
+  </thead>
+  <tr class="no-border" ng-repeat="device in deviceUsage.mostUsedDevices">
+    <td>{{device.name}}</td>
+    <td>{{device.duration}}</td>
+    <td>{{device.calls}}</td>
+
+  </tr>
+</table>

@@ -20,7 +20,7 @@
     "selected": false
   }],
   "activeUserOptions": {
-    "animate": false,
+    "animate": true,
     "description": "activeUsers.description",
     "headerTitle": "activeUsers.activeUsers",
     "id": "activeUsers",
@@ -29,114 +29,137 @@
     "titlePopover": "undefined"
   },
   "activeUserSecondaryOptions": {
-      "broadcast": "ReportCard::UpdateSecondaryReport",
-      "description": "activeUsers.mostActiveDescription",
-      "display": true,
-      "state": "set",
-      "sortOptions": [{
-        "option": "userName",
-        "direction": false
+    "alternateTranslations": false,
+    "broadcast": "ReportCard::UpdateSecondaryReport",
+    "description": "activeUsers.mostActiveDescription",
+    "display": true,
+    "emptyDescription": "activeUsers.noActiveUsers",
+    "errorDescription": "activeUsers.errorActiveUsers",
+    "search": false,
+    "state": "set",
+    "sortOptions": [{
+      "option": "userName",
+      "direction": false
+    }, {
+      "option": "orgName",
+      "direction": false
+    }, {
+      "option": "numCalls",
+      "direction": false
+    }, {
+      "option": "sparkMessages",
+      "direction": true
+    }, {
+      "option": "totalActivity",
+      "direction": true
+    }],
+    "table": {
+      "headers": [{
+        "title": "activeUsers.user",
+        "class": "col-md-4 pointer"
       }, {
-        "option": "orgName",
-        "direction": false
+        "title": "activeUsers.customer",
+        "class": "col-md-4 pointer"
       }, {
-        "option": "numCalls",
-        "direction": false
+        "title": "activeUsers.calls",
+        "class": "horizontal-center col-md-2 pointer"
       }, {
-        "option": "sparkMessages",
-        "direction": true
-      }, {
-        "option": "totalActivity",
-        "direction": true
+        "title": "activeUsers.sparkMessages",
+        "class": "horizontal-center col-md-2 pointer"
       }],
-      "table": {
-        "headers": [{
-          "title": "activeUsers.user",
-          "class": "col-md-4 pointer"
-        }, {
-          "title": "activeUsers.customer",
-          "class": "col-md-4 pointer"
-        }, {
-          "title": "activeUsers.calls",
-          "class": "horizontal-center col-md-2 pointer"
-        }, {
-          "title": "activeUsers.sparkMessages",
-          "class": "horizontal-center col-md-2 pointer"
-        }],
-        "data": [],
-        "dummy": false
-      },
-      "title": "activeUsers.mostActiveUsers"
+      "data": [],
+      "dummy": false
     },
-    "avgRoomsOptions": {
-      "animate": false,
-      "description": "avgRooms.avgRoomsDescription",
-      "headerTitle": "avgRooms.avgRooms",
-      "id": "avgRooms",
-      "reportType": "barchart",
-      "state": "set",
-      "titlePopover": "undefined"
+    "title": "activeUsers.mostActiveUsers"
+  },
+  "avgRoomsOptions": {
+    "animate": true,
+    "description": "avgRooms.avgRoomsDescription",
+    "headerTitle": "avgRooms.avgRooms",
+    "id": "avgRooms",
+    "reportType": "barchart",
+    "state": "set",
+    "titlePopover": "undefined"
+  },
+  "deviceOptions": {
+    "animate": true,
+    "description": "registeredEndpoints.customerDescription",
+    "headerTitle": "registeredEndpoints.registeredEndpoints",
+    "id": "devices",
+    "reportType": "barchart",
+    "state": "set",
+    "titlePopover": "undefined"
+  },
+  "filesSharedOptions": {
+    "animate": true,
+    "description": "filesShared.filesSharedDescription",
+    "headerTitle": "filesShared.filesShared",
+    "id": "filesShared",
+    "reportType": "barchart",
+    "state": "set",
+    "titlePopover": "undefined"
+  },
+  "populationOptions": {
+    "animate": false,
+    "description": "activeUserPopulation.description",
+    "headerTitle": "activeUserPopulation.titleByCompany",
+    "id": "userPopulation",
+    "reportType": "barchart",
+    "state": "set",
+    "titlePopover": "undefined"
+  },
+  "mediaOptions": {
+    "animate": true,
+    "description": "mediaQuality.description",
+    "headerTitle": "mediaQuality.mediaQuality",
+    "id": "mediaQuality",
+    "reportType": "barchart",
+    "state": "set",
+    "titlePopover": "mediaQuality.packetLossDefinition"
+  },
+  "endpointOptions": {
+    "animate": true,
+    "description": "registeredEndpoints.description",
+    "headerTitle": "registeredEndpoints.registeredEndpoints",
+    "id": "reg-endpoints",
+    "reportType": "table",
+    "state": "set",
+    "table": {
+      "headers": [{
+        "title": "registeredEndpoints.company",
+        "class": "customer-data col-md-4"
+      }, {
+        "title": "registeredEndpoints.maxRegisteredDevices",
+        "class": "horizontal-center col-md-2"
+      }, {
+        "title": "registeredEndpoints.trend",
+        "class": "horizontal-center col-md-2"
+      }, {
+        "title": "registeredEndpoints.totalRegistered",
+        "class": "horizontal-center col-md-2"
+      }],
+      "data": [],
+      "dummy": false
     },
-    "filesSharedOptions": {
-      "animate": false,
-      "description": "filesShared.filesSharedDescription",
-      "headerTitle": "filesShared.filesShared",
-      "id": "filesShared",
-      "reportType": "barchart",
-      "state": "set",
-      "titlePopover": "undefined"
-    },
-    "populationOptions": {
-      "animate": false,
-      "description": "activeUserPopulation.description",
-      "headerTitle": "activeUserPopulation.titleByCompany",
-      "id": "userPopulation",
-      "reportType": "barchart",
-      "state": "set",
-      "titlePopover": "undefined"
-    },
-    "mediaOptions": {
-      "animate": true,
-      "description": "mediaQuality.description",
-      "headerTitle": "mediaQuality.mediaQuality",
-      "id": "mediaQuality",
-      "reportType": "barchart",
-      "state": "set",
-      "titlePopover": "mediaQuality.packetLossDefinition"
-    },
-    "endpointOptions": {
-      "animate": true,
-      "description": "registeredEndpoints.description",
-      "headerTitle": "registeredEndpoints.registeredEndpoints",
-      "id": "reg-endpoints",
-      "reportType": "table",
-      "state": "set",
-      "table": {
-        "headers": [{
-          "title": "registeredEndpoints.company",
-          "class": "customer-data col-md-4"
-        }, {
-          "title": "registeredEndpoints.maxRegisteredDevices",
-          "class": "horizontal-center col-md-2"
-        }, {
-          "title": "registeredEndpoints.trend",
-          "class": "horizontal-center col-md-2"
-        }, {
-          "title": "registeredEndpoints.totalRegistered",
-          "class": "horizontal-center col-md-2"
-        }],
-        "data": [],
-        "dummy": false
-      },
-      "titlePopover": "undefined"
-    },
-    "callOptions": {
-      "animate": false,
-      "description": "callMetrics.callMetricsDesc",
-      "headerTitle": "callMetrics.callMetrics",
-      "id": "callMetrics",
-      "reportType": "donut",
-      "state": "set",
-      "titlePopover": "undefined"
-    }
+    "titlePopover": "undefined"
+  },
+  "callOptions": {
+    "animate": false,
+    "description": "callMetrics.callMetricsDesc",
+    "headerTitle": "callMetrics.callMetrics",
+    "id": "callMetrics",
+    "reportType": "donut",
+    "state": "set",
+    "titlePopover": "undefined"
+  },
+  "metricsLabels": [{
+    "number": 14554,
+    "text": "callMetrics.totalCalls"
+  }, {
+    "number": 169298,
+    "text": "callMetrics.callMinutes"
+  }, {
+    "number": "0.35",
+    "text": "callMetrics.failureRate"
+  }]
 }

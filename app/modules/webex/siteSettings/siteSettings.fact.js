@@ -233,7 +233,7 @@
             ) {
 
               _this.webExSiteSettingsObj.hasLoadError = true;
-            } else if (angular.isUndefined(settingPagesInfo.bodyJson.ns1_siteAdminNavUrl)) {
+            } else if (_.isUndefined(settingPagesInfo.bodyJson.ns1_siteAdminNavUrl)) {
               logMsg = funcName + "\n" +
                 "ERROR: ns1_siteAdminNavUrl is undefined" + "\n" +
                 "siteUrl=" + _this.webExSiteSettingsObj.siteUrl;

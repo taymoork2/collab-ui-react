@@ -111,7 +111,7 @@
         .then(function (otpInfo) {
           emailInfo.oneTimePassword = otpInfo.password;
           var timezone = jstz.determine().name();
-          if (timezone === null || angular.isUndefined(timezone)) {
+          if (timezone === null || _.isUndefined(timezone)) {
             timezone = 'UTC';
           }
           emailInfo.expiresOn = moment(otpInfo.expiresOn).local().tz(timezone).format('MMMM DD, YYYY h:mm A (z)');

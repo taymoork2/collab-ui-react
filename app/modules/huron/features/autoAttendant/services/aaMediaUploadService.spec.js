@@ -36,7 +36,7 @@ describe('Service: AAMediaUploadService', function () {
       fd.append('file', fileToUpload);
       postParams = {
         url: uploadUrl,
-        transFormRequest: angular.identity,
+        transFormRequest: _.identity,
         headers: {
           'Content-Type': undefined
         },

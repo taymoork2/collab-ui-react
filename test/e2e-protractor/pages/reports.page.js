@@ -19,9 +19,7 @@ var ReportsPage = function () {
 
   // active user
   this.activeHeader = element(by.cssContainingText('.report-section-header', 'Active Users'));
-  this.activeCustomerDescription = element(by.css('.customer-active-user')).element(by.css('.report-description'));
-  this.activePartnerDescription = element(by.id('activeUsers')).element(by.css('article section p'));
-  this.activeUsers = element(by.id('activeUsersdiv'));
+  this.activeDescription = element(by.id('activeUsers')).element(by.css('article section p'));
   this.activeUsersChart = element(by.id('activeUsersChart'));
 
   // most active users
@@ -49,25 +47,21 @@ var ReportsPage = function () {
 
   // registered endpoints graph/table
   this.endpointsHeader = element(by.cssContainingText('.report-section-header', 'Registered Endpoints'));
-  this.customerEndpointsDescription = element(by.css('.customer-devices')).element(by.css('.report-description'));
-  this.endpointFilter = element(by.id('deviceFilter'));
-  this.endpointsDiv = element(by.id('devicesDiv'));
+  this.customerEndpointsDescription = element(by.id('devices')).element(by.css('article section p'));
+  this.endpointFilter = element(by.id('devicesFilter'));
+  this.endpointsDiv = element(by.id('devicesChart'));
   this.endpointDescription = element(by.id('reg-endpoints')).element(by.css('article section p'));
   this.registeredEndpointsTable = element(by.id('reg-endpoints')).element(by.css('table.table'));
 
   // call metrics
   this.metricsHeader = element(by.cssContainingText('.report-section-header', 'Call Metrics'));
-  this.customerMetricsDescription = element(by.css('.call-metrics-customer')).element(by.css('.report-description'));
-  this.metricsGraphDiv = element(by.id('metricsGraphDiv'));
   this.metricsData = element.all(by.css('.metrics-display'));
   this.callMetricsGraph = element(by.id('callMetricsChart'));
-  this.partnerMetricsDescription = element(by.id('callMetrics')).element(by.css('article section p'));
+  this.metricsDescription = element(by.id('callMetrics')).element(by.css('article section p'));
 
   // media quality
   this.mediaHeader = element(by.cssContainingText('.report-section-header', 'Device Media Quality'));
-  this.customerMediaDescription = element.all(by.css('.customer-media')).last().element(by.css('.report-description'));
-  this.mediaFilter = element(by.id('mediaFilter'));
-  this.mediaQualityDiv = element(by.id('mediaQualityDiv'));
+  this.mediaFilter = element(by.id('mediaQualityFilter'));
   this.mediaQualityGraph = element(by.id('mediaQualityChart'));
   this.mediaDescription = element(by.id('mediaQuality')).element(by.css('article section p'));
 

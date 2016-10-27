@@ -188,6 +188,14 @@
             },
             authenticate: false
           })
+          .state('server-maintenance', {
+            views: {
+              'main@': {
+                templateUrl: 'modules/core/stateRedirect/serverMaintenance.tpl.html',
+              }
+            },
+            authenticate: false
+          })
           .state('404', {
             parent: 'stateRedirectLazyLoad',
             url: '/404',
@@ -476,6 +484,19 @@
                 templateUrl: 'modules/squared/devices/addDeviceNew/ShowActivationCodeTemplate.tpl.html',
                 controller: 'ShowActivationCodeCtrl',
                 controllerAs: 'showActivationCode'
+              }
+            }
+          })
+          .state('addDeviceFlow.editServices', {
+            parent: 'modal',
+            params: {
+              wizard: null
+            },
+            views: {
+              'modal@': {
+                templateUrl: 'modules/squared/places/editServices/EditServicesTemplate.tpl.html',
+                controller: 'EditServicesCtrl',
+                controllerAs: 'editServices'
               }
             }
           })
@@ -1051,6 +1072,7 @@
             params: {
               currentUser: {},
               entitlements: {},
+              queryuserslist: {},
               currentUserId: ''
             },
             data: {
@@ -1393,7 +1415,19 @@
               },
             }
           })
-
+          .state('reports.device-usage.total', {
+            url: '/total',
+            templateUrl: 'modules/core/customerReports/deviceUsage/total.tpl.html',
+            controller: 'DeviceUsageCtrl',
+            controllerAs: 'deviceUsage',
+            params: {
+            },
+            resolve: {
+              deviceUsageFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasDeviceUsageReport);
+              },
+            }
+          })
           .state('webex-reports', {
             url: '/reports/webex',
             templateUrl: 'modules/core/customerReports/customerReports.tpl.html',
@@ -1807,17 +1841,16 @@
               meetingLicenses: {}
             }
           })
-          .state('customer-overview.externalNumberDetail', {
-            templateUrl: 'modules/core/customers/customerOverview/externalNumberDetail.tpl.html',
+          .state('customer-overview.externalNumbers', {
+            controller: 'ExternalNumberDetailCtrl',
+            controllerAs: 'externalNumbers',
+            templateUrl: 'modules/huron/externalNumbers/externalNumberDetail.tpl.html',
             resolve: {
               data: /* @ngInject */ function ($state, $translate) {
-                $state.get('customer-overview.externalNumberDetail').data.displayName = $translate.instant('customerPage.call');
+                $state.get('customer-overview.externalNumbers').data.displayName = $translate.instant('customerPage.phoneNumbers');
               }
             },
-            data: {},
-            params: {
-              meetingLicenses: {}
-            }
+            data: {}
           })
           .state('customer-overview.domainDetail', {
             controller: 'DomainDetailCtrl',
@@ -2345,7 +2378,17 @@
             }
           })
           .state('huronCallPickup', {
-            url: '/huronCallPickup',
+            url: '/callPickup',
+            parent: 'main',
+            template: '<call-pickup-setup-assistant></call-pickup-setup-assistant>',
+            resolve: {
+              lazy: /* @ngInject */ function lazyLoad($q, $ocLazyLoad) {
+                return $q(function resolveLogin(resolve) {
+                  require(['modules/huron/features/callPickup/callPickupSetupAssistant'], loadModuleAndResolve($ocLazyLoad, resolve));
+                });
+              }
+            }
+
           })
           .state('huronCallPark', {
             url: '/huronCallPark',
@@ -2383,11 +2426,8 @@
           })
           .state('huronPagingGroup', {
             url: '/huronPagingGroup',
-            views: {
-              'main@': {
-                template: '<pg-setup-assistant></pg-setup-assistant>',
-              }
-            },
+            parent: 'main',
+            template: '<pg-setup-assistant></pg-setup-assistant>',
             resolve: {
               lazy: /* @ngInject */ function lazyLoad($q, $ocLazyLoad) {
                 return $q(function resolveLogin(resolve) {

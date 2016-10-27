@@ -1,8 +1,4 @@
-@import 'activeUsers/_active-users';
 @import '../../sunlight/reports/_care-task';
-@import 'callMetrics/_call-metrics-customer';
-@import 'mediaQuality/_media-quality-customer';
-@import 'registeredEndpoints/_registered-endpoints';
 
 @keyframes graphAxisFade {
   0% { opacity: 0; }
@@ -101,25 +97,6 @@
       z-index: 100;
     }
 
-    .timechartDiv {
-      font-size: rem-calc(11);
-      height: vr-adjust(380);
-      width: 70%;
-      margin-left: auto;
-      margin-right: auto;
-      position: relative;
-      top: rem-calc(-50);
-    }
-
-    .barchart {
-      font-size: rem-calc(11);
-      height: vr-adjust(375);
-      width: 85%;
-      margin-left: auto;
-      margin-right: auto;
-      z-index: 50;
-    }
-
     .areachart {
       font-size: rem-calc(11);
       height: vr-adjust(375);
@@ -182,11 +159,6 @@
         text-align: center;
         margin: 0;
       }
-    }
-
-    .active-chart .amcharts-value-axis .amcharts-axis-label {
-      opacity: 0;
-      animation: graphAxisFade 2s ease-in-out 1 forwards;
     }
   }
 

@@ -73,15 +73,9 @@
       <div class="section-title-row">
         <span class="section-name" translate="deviceOverviewPage.kem"></span>
       </div>
-      <div><p translate="deviceOverviewPage.kemDescription"></p></div>
-      <div class="dropdown-container">
-        <cs-select
-          name="kem" ng-model="deviceOverview.kemNumber" options="deviceOverview.kemOptions"
-          labelfield="label" is-error="{{deviceOverview.isError}}"
-          error-msg="{{::'spacesPage.retrieveKemFail' | translate}}"
-          valuefield="value"
-          on-change-fn="deviceOverview.saveKem()">
-        </cs-select>
+      <div class="kem-wrapper">
+        <p class="kem-description" translate="deviceOverviewPage.kemDescription"></p>
+        <p class="kem-number">{{deviceOverview.kemNumber}}</p>
       </div>
     </cs-sp-section>
 

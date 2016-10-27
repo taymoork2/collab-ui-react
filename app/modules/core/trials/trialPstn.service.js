@@ -45,6 +45,7 @@
           pstnNumberInfo: {
             state: {},
             areaCode: {},
+            nxx: {},
             numbers: []
           },
           emergAddr: {

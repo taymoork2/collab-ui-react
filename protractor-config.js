@@ -75,7 +75,8 @@ exports.config = {
     exclude: [ // Array of strings and regex (Default - [])
       /executionContextId/,
       /object Object/,
-      /favicon/
+      /favicon/,
+      /\/browser\-sync\//,
     ]
   }],
 

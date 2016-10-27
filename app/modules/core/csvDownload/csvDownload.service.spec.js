@@ -127,6 +127,33 @@ describe('Service: CsvDownloadService', function () {
         $httpBackend.flush();
       });
     });
+
+    describe('getCsv(template)', function () {
+
+      var templateData = 'First Name,Last Name,Display Name,User ID/Email (Required),Calendar Service,Call Service Aware,Call Service Connect,Meeting 25 Party,Spark Message,asdasjs.webex.com - WebEx Meeting Center,ironman.my.dmz.webex.com - WebEx Meeting Center,mcsqsite29.mydev.dmz.webex.com - ' +
+        'WebEx Meeting Center, mcsqsite30.mydev.dmz.webex.com - WebEx Meeting Center, testnam7oct1600qa.webex.com - WebEx Meeting Center, thanhho2016.mydev.dmz.webex.com - WebEx Meeting Center ' +
+        'John,Doe,John Doe,johndoe@example.com,true,true,true,true,true,true,true,true,true,true,true ' +
+        'Jane,Doe,Jane Doe,janedoe@example.com,false,false,false,false,false,false,false,false,false,false,false';
+
+      beforeEach(function () {
+        $httpBackend.expectGET(UrlConfig.getAdminServiceUrl() + 'csv/organizations/1/users/template').respond(templateData);
+      });
+
+      it('should get template when !tooManyUsers users', function () {
+        CsvDownloadService.getCsv(CsvDownloadService.typeTemplate, false, 'template.csv').then(function (data) {
+          expect(data).toContain('blob');
+        });
+        $httpBackend.flush();
+      });
+
+      it('should get template when tooManyUsers users', function () {
+        CsvDownloadService.getCsv(CsvDownloadService.typeTemplate, true, 'template.csv').then(function (data) {
+          expect(data).toContain('blob');
+        });
+        $httpBackend.flush();
+      });
+
+    });
   });
 
   describe('Browser: IE specific tests', function () {
@@ -135,7 +162,7 @@ describe('Service: CsvDownloadService', function () {
       $window.URL.createObjectURL = jasmine.createSpy('createObjectURL').and.callFake(function () {
         return 'blob';
       });
-      $window.navigator.msSaveOrOpenBlob = jasmine.createSpy('msSaveOrOpenBlob').and.callFake(function () {});
+      $window.navigator.msSaveOrOpenBlob = jasmine.createSpy('msSaveOrOpenBlob').and.callFake(function () { });
     });
 
     it('openInIE should only call msSaveOrOpenBlob when there is a saved blob of the correct type', function () {

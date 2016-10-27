@@ -1,0 +1,11 @@
+<div class = "name-detail">
+  <div class="typeahead-large">
+    <input id = "nameInput" class="form-control"
+         ng-class="{'error': $ctrl.errorNameInput}"
+         placeholder="{{:: 'callPickup.namePlaceholder' | translate}}"
+         ng-model="$ctrl.callPickupName"
+         ng-change="$ctrl.onChange()"
+         focus-on>
+    <p class="input-hint" translate="callPickup.nameHint"></p>
+  </div>
+</div>

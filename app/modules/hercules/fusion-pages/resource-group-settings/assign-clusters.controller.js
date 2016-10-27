@@ -36,7 +36,7 @@
           vm.loadingState = false;
         })
         .catch(function () {
-          Notification.error('hercules.assignClustersModal.errorLoading');
+          Notification.errorWithTrackingId('hercules.assignClustersModal.errorLoading');
         });
     }
 
@@ -106,7 +106,7 @@
           $modalInstance.close();
         })
         .catch(function () {
-          Notification.error('hercules.genericFailure');
+          Notification.errorWithTrackingId('hercules.genericFailure');
           vm.savingState = false;
           // refresh data with what worked
           return loadData();
