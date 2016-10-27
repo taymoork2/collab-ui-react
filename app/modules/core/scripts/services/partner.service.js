@@ -187,7 +187,7 @@
       }
 
       _.assign(this, service);
-      this.qty = licenseInfo.volume;
+      this.qty = licenseInfo.volume || 0;
 
     }
 
@@ -472,7 +472,7 @@
           if (!helpers.isDisplayableService(license, { isTrial: undefined, isShowCMR: false, isCareEnabled: isCareEnabled })) {
             return 0;
           } else {
-            return license.volume;
+            return license.volume || 0;
           }
         });
       } else {
