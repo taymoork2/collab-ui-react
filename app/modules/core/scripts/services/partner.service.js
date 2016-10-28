@@ -6,7 +6,7 @@
     .factory('ScimPatchService', ScimPatchService);
 
   /* @ngInject */
-  function PartnerService($http, $rootScope, $q, $translate, Analytics, Authinfo, Auth, Config, TrialService, UrlConfig) {
+  function PartnerService($http, $rootScope, $q, $translate, Analytics, Authinfo, Auth, Config, TrialService, UrlConfig, UserRoleService) {
     var managedOrgsUrl = UrlConfig.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId() + '/managedOrgs';
     var siteListUrl = UrlConfig.getAdminServiceUrl() + 'organizations/%s/sitesProvOrderStatus';
 
@@ -34,13 +34,11 @@
       calculatePurchaseStatus: _calculatePurchaseStatus,
       calculateTotalLicenses: _calculateTotalLicenses,
       countUniqueServices: _countUniqueServices
-
     };
 
     var factory = {
       customerStatus: customerStatus,
       getManagedOrgsList: getManagedOrgsList,
-      patchManagedOrgs: patchManagedOrgs,
       modifyManagedOrgs: modifyManagedOrgs,
       isLicenseATrial: isLicenseATrial,
       isLicenseActive: isLicenseActive,
@@ -115,7 +113,6 @@
       licenseMapping[Config.licenseTypes.COMMUNICATION] = {
         name: $translate.instant('trials.call'),
         icon: 'icon-circle-call',
-        isCall: true,
         order: 3
       };
 
@@ -158,7 +155,6 @@
         code: Config.offerCodes.CO,
         qty: 0,
         free: true,
-        isCall: true,
         order: 22
       }];
       return freeServices;
@@ -225,32 +221,12 @@
       });
     }
 
-    function patchManagedOrgs(uuid, customerOrgId) {
-      var authUrl = UrlConfig.getScimUrl(Authinfo.getOrgId()) + '/' + uuid;
-
-      var payload = {
-        'schemas': [
-          'urn:scim:schemas:core:1.0',
-          'urn:scim:schemas:extension:cisco:commonidentity:1.0'
-        ],
-        'managedOrgs': [{
-          'orgId': customerOrgId,
-          'role': 'ID_Full_Admin'
-        }]
-      };
-
-      return $http({
-        method: 'PATCH',
-        url: authUrl,
-        data: payload
-      });
-    }
-
     function modifyManagedOrgs(customerOrgId) {
       return Auth.getAuthorizationUrlList().then(function (response) {
         if (response.status === 200 && (_.indexOf(response.data.managedOrgs, customerOrgId) < 0)) {
-          patchManagedOrgs(response.data.uuid, customerOrgId);
-          Analytics.trackUserPatch(response.data.orgId, response.data.uuid);
+          var userName = Authinfo.getUserName();
+          UserRoleService.enableFullAdmin(userName, customerOrgId);
+          Analytics.trackPartnerActions(Analytics.sections.TRIAL.eventNames.PATCH, response.data.orgId, response.data.uuid);
         }
       });
     }
@@ -269,7 +245,7 @@
     }
 
     function isLicenseFree(license) {
-      return license && angular.isUndefined(license.isTrial);
+      return license && _.isUndefined(license.isTrial);
     }
     // end series of fn's
 
@@ -665,7 +641,6 @@
           case Config.offerTypes.squaredUC:
             partial.isSquaredUcOffer = true;
             trialService = userServiceMapping[Config.licenseTypes.COMMUNICATION];
-            trialService.isCall = true;
             break;
           case Config.offerTypes.webex:
           case Config.offerTypes.meetings:
@@ -791,7 +766,7 @@
       if (!customerId) {
         return $q.reject('A Customer Organization Id must be passed');
       } else {
-        url = siteListUrl.replace('%s', customerId);
+        url = _.replace(siteListUrl, '%s', customerId);
         return $http.get(url);
       }
     }

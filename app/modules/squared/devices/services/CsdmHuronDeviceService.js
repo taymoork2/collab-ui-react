@@ -8,7 +8,7 @@
 
   function CsdmHuronUserDeviceService($injector, Authinfo, CsdmConfigService) {
     function create(userId) {
-      var devicesUrl = CsdmConfigService.getUrl() + '/organization/' + Authinfo.getOrgId() + '/users/' + userId + '/huronDevices';
+      var devicesUrl = CsdmConfigService.getUrl() + '/organization/' + Authinfo.getOrgId() + '/devices/?cisUuid=' + userId + '&type=huron';
       var service = $injector.instantiate(CsdmHuronDeviceService, {
         devicesUrl: devicesUrl
       });
@@ -22,7 +22,7 @@
 
   function CsdmHuronOrgDeviceService($injector, Authinfo, CsdmConfigService) {
     function create() {
-      var devicesUrl = CsdmConfigService.getUrl() + '/organization/' + Authinfo.getOrgId() + '/huronDevices';
+      var devicesUrl = CsdmConfigService.getUrl() + '/organization/' + Authinfo.getOrgId() + '/devices/?type=huron';
       return $injector.instantiate(CsdmHuronDeviceService, {
         devicesUrl: devicesUrl
       });
@@ -34,7 +34,7 @@
   }
 
   /* @ngInject  */
-  function CsdmHuronDeviceService($http, $q, $translate, Authinfo, HuronConfig, CsdmConverter, CmiKemService, KemService, Notification, devicesUrl) {
+  function CsdmHuronDeviceService($http, $q, Authinfo, HuronConfig, CsdmConverter, Notification, devicesUrl) {
 
     function huronEnabled() {
       return $q.when(Authinfo.isSquaredUC());
@@ -57,7 +57,7 @@
     }
 
     function encodeHuronTags(description) {
-      return (description || "").replace(/"/g, "'");
+      return _.replace(description, /"/g, "'");
     }
 
     var deviceList = {};

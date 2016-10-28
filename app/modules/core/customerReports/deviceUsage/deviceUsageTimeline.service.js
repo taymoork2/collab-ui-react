@@ -6,82 +6,106 @@
     .service('DeviceUsageTimelineService', DeviceUsageTimelineService);
 
   /* @ngInject */
-  function DeviceUsageTimelineService($http, chartColors, DeviceUsageMockService, UrlConfig, Authinfo) {
+  function DeviceUsageTimelineService($q, $timeout, $http, chartColors, DeviceUsageRawService, UrlConfig, Authinfo) {
 
     var localUrlBase = 'http://localhost:8080/atlas-server/admin/api/v1/organization';
     var urlBase = UrlConfig.getAdminServiceUrl() + 'organizations';
 
-    function getDataForLastWeek(api) {
-      return getDataForPeriod('week', 1, 'day', api);
+    var timeoutInMillis = 10000;
+
+    function getDataForLastWeek(deviceCategories, api) {
+      return getDataForPeriod('week', 1, 'day', deviceCategories, api);
     }
 
-    function getDataForLastMonth(api) {
-      return getDataForPeriod('month', 1, 'day', api);
+    function getDataForLastMonth(deviceCategories, api) {
+      return getDataForPeriod('month', 1, 'day', deviceCategories, api);
     }
 
-    function getDataForLastMonths(count, granularity, api) {
-      return getDataForPeriod('month', count, granularity, api);
+    function getDataForLastMonths(count, granularity, deviceCategories, api) {
+      return getDataForPeriod('month', count, granularity, deviceCategories, api);
     }
 
-    function getDataForPeriod(period, count, granularity, api) {
-      return loadPeriodCallData(period, count, granularity, api);
+    function getDataForPeriod(period, count, granularity, deviceCategories, api) {
+      return loadPeriodCallData(period, count, granularity, deviceCategories, api);
     }
 
-    function getDataForRange(start, end, granularity, api) {
+    function getDataForRange(start, end, granularity, deviceCategories, api) {
       var startDate = moment(start);
       var endDate = moment(end);
       var now = moment();
 
       if (startDate.isValid() && endDate.isValid() && startDate.isBefore(endDate) && endDate.isBefore(now)) {
         if (api === 'mock') {
-          return DeviceUsageMockService.getData(start, end).then(function (data) {
+          return DeviceUsageRawService.getData(start, end).then(function (data) {
             return reduceAllData(data);
           });
         } else if (api === 'local') {
           var url = localUrlBase + '/1eb65fdf-9643-417f-9974-ad72cae0e10f/reports/device/call?';
           url = url + 'intervalType=' + granularity;
           url = url + '&rangeStart=' + start + '&rangeEnd=' + end;
-          url = url + '&deviceCategories=ce,darling';
-          return $http.get(url).then(function (response) {
-            return reduceAllData(response.data.items);
-          });
+          url = url + '&deviceCategories=' + deviceCategories.join();
+          url = url + '&sendMockData=false';
+          return doRequest(url);
         } else {
           url = urlBase + '/' + Authinfo.getOrgId() + '/reports/device/call?';
           url = url + 'intervalType=' + granularity;
           url = url + '&rangeStart=' + startDate.format('YYYY-MM-DD') + '&rangeEnd=' + endDate.format('YYYY-MM-DD');
           url = url + '&deviceCategories=ce,darling';
-          return $http.get(url).then(function (response) {
-            return reduceAllData(response.data.items);
-          });
+          return doRequest(url);
         }
       }
 
     }
 
-    function loadPeriodCallData(period, count, granularity, api) {
+    function loadPeriodCallData(period, count, granularity, deviceCategories, api) {
       var start = moment().startOf(period).subtract(count, period + 's').format('YYYY-MM-DD');
       var end = moment().startOf(period).format('YYYY-MM-DD');
       if (api === 'mock') {
-        return DeviceUsageMockService.getData(start, end).then(function (data) {
+        return DeviceUsageRawService.getData(start, end).then(function (data) {
           return reduceAllData(data);
         });
       } else if (api === 'local') {
-        var url = localUrlBase + '/1eb65fdf-9643-417f-9974-ad72cae0e10f/reports/device/call?';
+        var url = localUrlBase + '/' + Authinfo.getOrgId() + '/reports/device/call?';
         url = url + 'intervalType=' + granularity;
         url = url + '&rangeStart=' + start + '&rangeEnd=' + end;
-        url = url + '&deviceCategories=ce,darling';
-        return $http.get(url).then(function (response) {
-          return reduceAllData(response.data.items);
-        });
+        url = url + '&deviceCategories=' + deviceCategories.join();
+        url = url + '&sendMockData=false';
+        url = url + '&accounts=__';
+        return doRequest(url);
       } else {
         url = urlBase + '/' + Authinfo.getOrgId() + '/reports/device/call?';
         url = url + 'intervalType=' + granularity;
         url = url + '&rangeStart=' + start + '&rangeEnd=' + end;
-        url = url + '&deviceCategories=ce,darling';
-        return $http.get(url).then(function (response) {
-          return reduceAllData(response.data.items);
-        });
+        url = url + '&deviceCategories=' + deviceCategories.join();
+        url = url + '&accounts=__';
+        return doRequest(url);
       }
+    }
+
+    function doRequest(url) {
+      var deferred = $q.defer();
+      var timeout = {
+        timeout: deferred.promise
+      };
+      $timeout(function () {
+        deferred.resolve();
+      }, timeoutInMillis);
+
+      return $http.get(url, timeout).then(function (response) {
+        return reduceAllData(response.data.items);
+      }, function (reject) {
+        return $q.reject(analyseReject(reject));
+      });
+    }
+
+    function analyseReject(reject) {
+      if (reject.status === -1) {
+        reject.statusText = 'Operation timed Out';
+        reject.data = {
+          message: 'Operation timed out'
+        };
+      }
+      return reject;
     }
 
 

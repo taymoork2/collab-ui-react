@@ -1,5 +1,8 @@
 const path = require('path');
 
+const appPath = path.resolve('./app');
+const testPath = path.resolve('./test');
+
 exports.js = {
   test: /\.js$/,
   loaders: ['ng-annotate'],
@@ -8,12 +11,14 @@ exports.js = {
 
 exports.eslint = {
   test: /\.js$/,
+  include: [appPath, testPath],
   loaders: ['eslint'],
   exclude: [/node_modules/],
 };
 
 exports.tslint = {
   test: /\.ts$/,
+  include: [appPath, testPath],
   loaders: ['tslint'],
   exclude: [/node_modules/],
 };
@@ -32,7 +37,7 @@ exports.scss = {
 exports.html = {
   test: /\.html$/,
   exclude: /\/app\/index.html$/,
-  loader: `ngtemplate?module=atlas.templates&relativeTo=${path.resolve('./app')}/!raw`,
+  loader: `ngtemplate?module=atlas.templates&relativeTo=${appPath}/!raw`,
 };
 
 exports.assets = {

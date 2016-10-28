@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Controller: PartnerHomeCtrl', function () {
-  var $scope, $q, PartnerService;
+  var $scope, $q, PartnerService, $document;
 
   var trialsListFixture = getJSONFixture('core/json/partner/trialsResponse.json');
 
@@ -15,6 +15,12 @@ describe('Controller: PartnerHomeCtrl', function () {
   beforeEach(angular.mock.module(function ($provide) {
     $provide.value("Authinfo", authInfo);
   }));
+
+  beforeEach(function () {
+    /* global document */
+    $document = angular.element(document);
+    $document.find('body').append('<div class="cs-card-layout"></div>');
+  });
 
   beforeEach(inject(function ($rootScope, $controller, _PartnerService_, _$q_) {
     $scope = $rootScope.$new();

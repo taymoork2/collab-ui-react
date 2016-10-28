@@ -3,11 +3,14 @@ import { HuronSiteService } from '../../sites';
 import { CallForward, CallForwardAll, CallForwardBusy, CallForwardService } from '../../callForward';
 import { SharedLine, SharedLineService, SharedLinePhone, SharedLinePhoneListItem } from '../../sharedLine';
 import { Member } from '../../members';
+import { ICallerID, CallerIDService } from '../../callerId';
 
 export class LineOverviewData {
   public line: Line;
   public callForward: CallForward;
   public sharedLines: SharedLine[];
+  public callerId: ICallerID;
+  public companyNumbers: any;
 }
 
 export class LineOverviewService {
@@ -25,7 +28,8 @@ export class LineOverviewService {
     private CallForwardService: CallForwardService,
     private SharedLineService: SharedLineService,
     private Notification,
-    private $q: ng.IQService
+    private $q: ng.IQService,
+    private CallerIDService: CallerIDService,
   ) {}
 
   public get(consumerType: LineConsumerType, ownerId: string, numberId: string = ''): ng.IPromise<LineOverviewData> {
@@ -35,6 +39,8 @@ export class LineOverviewService {
     promises.push(this.getLine(consumerType, ownerId, numberId));
     promises.push(this.getCallForward(consumerType, ownerId, numberId));
     promises.push(this.getSharedLines(consumerType, ownerId, numberId));
+    promises.push(this.getCallerId(consumerType, ownerId, numberId));
+    promises.push(this.listCompanyNumbers());
     return this.$q.all(promises).then( (data) => {
       if (this.errors.length > 0) {
         this.Notification.notify(this.errors, 'error');
@@ -43,6 +49,8 @@ export class LineOverviewService {
       lineOverviewData.line = data[0];
       lineOverviewData.callForward = data[1];
       lineOverviewData.sharedLines = data[2];
+      lineOverviewData.callerId = data[3];
+      lineOverviewData.companyNumbers = data[4];
       this.lineOverviewDataCopy = this.cloneLineOverviewData(lineOverviewData);
       return lineOverviewData;
     });
@@ -140,7 +148,13 @@ export class LineOverviewService {
           this.Notification.notify(this.errors, 'error');
           return this.$q.reject();
         }
-        return this.get(consumerType, ownerId, this.lineOverviewDataCopy.line.uuid);
+        if (!_.isEqual(data.callerId, this.lineOverviewDataCopy.callerId)) {
+          return this.updateCallerId(consumerType, ownerId, numberId, data.callerId).then(() => {
+            return this.get(consumerType, ownerId, this.lineOverviewDataCopy.line.uuid);
+          });
+        } else {
+          return this.get(consumerType, ownerId, this.lineOverviewDataCopy.line.uuid);
+        }
       });
     }
   }
@@ -227,6 +241,20 @@ export class LineOverviewService {
         });
     }
   }
+  private getCallerId(consumerType: LineConsumerType, ownerId: string, numberId: string): ng.IPromise<ICallerID> {
+    if (!numberId) {
+      return this.$q.resolve({});
+    } else {
+      return this.CallerIDService.getCallerId(consumerType, ownerId, numberId)
+        .then(callerIdRes => {
+          return callerIdRes;
+        });
+    }
+  }
+
+  private listCompanyNumbers() {
+    return this.CallerIDService.listCompanyNumbers();
+  }
 
   private createSharedLine(consumerType: LineConsumerType, ownerId: string, numberId: string = '', data: Member) {
     return this.SharedLineService.createSharedLine(consumerType, ownerId, numberId, data).then( () => {
@@ -246,6 +274,10 @@ export class LineOverviewService {
     .catch(error => {
         this.errors.push(this.Notification.processErrorResponse(error, 'directoryNumberPanel.updateSharedLinePhoneError'));
     });
+  }
+
+  private updateCallerId(consumerType: LineConsumerType, ownerId: string, numberId: string | undefined, data: any) {
+    return this.CallerIDService.updateCallerId(consumerType, ownerId, numberId, data);
   }
 
   private cloneLineOverviewData(lineOverviewData: LineOverviewData): LineOverviewData {

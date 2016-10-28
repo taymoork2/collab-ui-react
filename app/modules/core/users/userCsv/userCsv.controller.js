@@ -352,9 +352,14 @@
     }
 
     function findHeaderIndex(name) {
-      return _.findIndex(headers, function (h) {
+      var index = _.findIndex(headers, function (h) {
         return h.name == name;
       });
+      if (index !== -1) {
+        return headers[index].csvColIndex;
+      } else {
+        return -1;
+      }
     }
 
     function generateHeaders(serverHeaders, userHeaders) {
@@ -363,12 +368,14 @@
       if (!serverHeaders || !userHeaders) {
         return [];
       } else {
-        _.forEach(userHeaders, function (uHeader) {
+        _.forEach(userHeaders, function (uHeader, k) {
           index = _.findIndex(serverHeaders, function (sHeader) {
             return sHeader.name == uHeader;
           });
           if (index !== -1) {
-            returnHeaders.push(serverHeaders[index]);
+            var h = serverHeaders[index];
+            h.csvColIndex = k;
+            returnHeaders.push(h);
           }
         });
       }
@@ -619,8 +626,8 @@
           addUserError(csvRowIndex, id, $translate.instant('firstTimeWizard.bulkInvalidDID'));
         } else {
           // get license and entitlements
-          _.forEach(headers, function (header, k) {
-            var input = _.trim(userRow[k]);
+          _.forEach(headers, function (header) {
+            var input = _.trim(userRow[header.csvColIndex]);
             if (header.license) { // if this is a license column
               if (isTrue(input)) {
                 licenseList.push(new LicenseFeature(header.license, true));

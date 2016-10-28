@@ -11,7 +11,7 @@
       </button>
     </cs-page-sub-header-right>
   </cs-page-sub-header>
-  <div class="content-container" cs-scroll>
+  <div class="content-container">
     <div ng-if="!sc.shouldShowList()">
       <div class="message-container">
         <div class="empty-devices-content">
@@ -23,7 +23,7 @@
     </div>
     <div ng-if="sc.shouldShowList()">
       <div ng-if="sc.existsDevices() && sc.updateListAndFilter().length > 0" id="roomsListPanel" class="row">
-        <div gridscrollbar class="gridStyle" ui-grid="sc.gridOptions" ui-grid-selection></div>
+        <div class="gridStyle" ui-grid="sc.gridOptions" ui-grid-selection></div>
       </div>
       <div ng-if="sc.updateListAndFilter().length === 0 && sc.existsDevices()">
         <div class="none_found">

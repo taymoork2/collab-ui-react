@@ -1,11 +1,19 @@
 <div class="row timeline-report">
+  <!--
   <div class="columns full">
     <div class="range-wrapper">
       <input cs-input type="radio" ng-change="deviceUsage.rangeChange()" ng-model="deviceUsage.dateRange" id="{{range.id}}" name="" ng-value="::range.value" cs-input-label="{{::range.label}}" ng-repeat="range in deviceUsage.dateRanges">
     </div>
   </div>
+  -->
   <div class="columns full">
     <div id="device-usage-timeline-chart" class="device-usage-timeline-chart">
+    </div>
+    <div ng-show="deviceUsage.loading" class="loading-indicator">
+      <div class="loading-text">
+        Collecting data
+        <div cs-loader class="loader-example--small"></div>
+      </div>
     </div>
   </div>
   <div ng-show="deviceUsage.showDevices" class="columns full">

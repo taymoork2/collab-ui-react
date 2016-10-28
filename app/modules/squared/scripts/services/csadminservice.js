@@ -21,12 +21,12 @@
       };
       $http.post(csadminUrl, csadminData)
         .success(function (data, status) {
-          data = data || {};
+          data = _.isObject(data) ? data : {};
           data.success = true;
           callback(data, status);
         })
         .error(function (data, status) {
-          data = data || {};
+          data = _.isObject(data) ? data : {};
           data.success = false;
           data.status = status;
           callback(data, status);

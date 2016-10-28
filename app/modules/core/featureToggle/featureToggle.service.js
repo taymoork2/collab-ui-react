@@ -151,10 +151,13 @@
       webexCSV: 'webex-CSV',
       enableCrashLogs: 'csdm-enable-crash-logs',
       csdmPlaces: 'csdm-places',
+      csdmPstn: 'csdm-pstn',
+      csdmATA: 'csdm-ata',
       globalStatus: 'global-status',
       atlasF237ResourceGroups: 'atlas-f237-resource-group',
       huronLocalDialing: 'huron-local-dialing',
-      huronDeviceE911: 'huron-device-e911-address'
+      huronDeviceE911: 'huron-device-e911-address',
+      atlasHybridDataSecurity: 'atlas-data-security'
     };
 
     var toggles = {};

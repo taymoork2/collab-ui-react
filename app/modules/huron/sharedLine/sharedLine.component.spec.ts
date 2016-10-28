@@ -75,6 +75,36 @@ describe('Component: sharedLine', () => {
         }),
         phones: [],
       }),
+      new SharedLine({
+        uuid: '0006',
+        primary: true,
+        place: new SharedLinePlace({
+          uuid: null,
+          displayName: null,
+        }),
+        user: new SharedLineUser({
+          uuid: '0007',
+          firstName: null,
+          lastName: null,
+          userName: 'super.scary.user@haunted.com',
+        }),
+        phones: [],
+      }),
+      new SharedLine({
+        uuid: '0008',
+        primary: true,
+        place: new SharedLinePlace({
+          uuid: null,
+          displayName: null,
+        }),
+        user: new SharedLineUser({
+          uuid: '0009',
+          firstName: '',
+          lastName: null,
+          userName: 'invisible.user@haunted.com',
+        }),
+        phones: [],
+      }),
     ];
     this.$scope.$apply();
   }
@@ -113,9 +143,11 @@ describe('Component: sharedLine', () => {
     beforeEach(initComponent);
 
     it('Should get all the sharedline users', function () {
-      expect(this.$scope.sharedLines).toHaveLength(2);
+      expect(this.$scope.sharedLines).toHaveLength(4);
       expect(this.view.find(ACCORDION_LIST).get(0)).toHaveText('Scary Place');
       expect(this.view.find(ACCORDION_LIST).get(1)).toHaveText('Scary User');
+      expect(this.view.find(ACCORDION_LIST).get(2)).toHaveText('super.scary.user@haunted.com');
+      expect(this.view.find(ACCORDION_LIST).get(3)).toHaveText('invisible.user@haunted.com');
     });
 
     it('should list accordion sharedline phones for a user', function () {

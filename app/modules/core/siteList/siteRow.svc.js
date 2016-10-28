@@ -507,7 +507,7 @@
               if (count > 1) {
                 siteRow.multipleWebexServicesLicensed = true;
                 siteRow.licenseTypeContentDisplay = $translate.instant('siteList.multipleLicenses');
-                siteRow.licenseTooltipDisplay = siteRow.licenseTooltipDisplay.replace("<br>", "");
+                siteRow.licenseTooltipDisplay = _.replace(siteRow.licenseTooltipDisplay, "<br>", "");
               } else {
                 siteRow.multipleWebexServicesLicensed = false;
                 siteRow.licenseTooltipDisplay = null;

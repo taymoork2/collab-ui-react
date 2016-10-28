@@ -79,14 +79,14 @@
           url: userUrl + 'organization/' + Authinfo.getOrgId() + '/users',
           data: userData
         }).success(function (data, status, headers) {
-          data = data || {};
+          data = _.isObject(data) ? data : {};
           $rootScope.$broadcast('Userservice::updateUsers');
           data.success = true;
           if (angular.isFunction(callback)) {
             callback(data, status, method, headers);
           }
         }).error(function (data, status, headers) {
-          data = data || {};
+          data = _.isObject(data) ? data : {};
           data.success = false;
           data.status = status;
           if (angular.isFunction(callback)) {
@@ -124,13 +124,13 @@
 
         $http.post(userUrl + 'organization/' + Authinfo.getOrgId() + '/users', userData)
           .success(function (data, status) {
-            data = data || {};
+            data = _.isObject(data) ? data : {};
             $rootScope.$broadcast('Userservice::updateUsers');
             data.success = true;
             callback(data, status);
           })
           .error(function (data, status) {
-            data = data || {};
+            data = _.isObject(data) ? data : {};
             data.success = false;
             data.status = status;
 
@@ -156,12 +156,12 @@
         cache: !noCache
       })
         .success(function (data, status) {
-          data = data || {};
+          data = _.isObject(data) ? data : {};
           data.success = true;
           callback(data, status);
         })
         .error(function (data, status) {
-          data = data || {};
+          data = _.isObject(data) ? data : {};
           data.success = false;
           data.status = status;
           callback(data, status);
@@ -187,7 +187,7 @@
         data: userData
       })
         .success(function (data, status) {
-          data = data || {};
+          data = _.isObject(data) ? data : {};
           // This code is being added temporarily to update users on Squared UC
           // Discussions are ongoing concerning how these common functions should be
           // integrated.
@@ -210,7 +210,7 @@
           }
         })
         .error(function (data, status) {
-          data = data || {};
+          data = _.isObject(data) ? data : {};
           data.success = false;
           data.status = status;
           callback(data, status);
@@ -257,12 +257,12 @@
 
         $http.post(apiUrl, userData)
           .success(function (data, status) {
-            data = data || {};
+            data = _.isObject(data) ? data : {};
             data.success = true;
             callback(data, status);
           })
           .error(function (data, status) {
-            data = data || {};
+            data = _.isObject(data) ? data : {};
             data.success = false;
             data.status = status;
             callback(data, status);
@@ -279,12 +279,12 @@
       };
       $http.post(userUrl + 'user/mail/provisioning', requestBody)
         .success(function (data, status) {
-          data = data || {};
+          data = _.isObject(data) ? data : {};
           data.success = true;
           callback(data, status);
         })
         .error(function (data, status) {
-          data = data || {};
+          data = _.isObject(data) ? data : {};
           data.success = false;
           data.status = status;
           callback(data, status);
@@ -320,12 +320,12 @@
         data: requestBody
       })
         .success(function (data, status) {
-          data = data || {};
+          data = _.isObject(data) ? data : {};
           data.success = true;
           callback(data, status);
         })
         .error(function (data, status) {
-          data = data || {};
+          data = _.isObject(data) ? data : {};
           data.success = false;
           data.status = status;
           callback(data, status);
@@ -346,12 +346,12 @@
 
       $http.post(userUrl + 'organization/' + Authinfo.getOrgId() + '/users/migrate', requestBody)
         .success(function (data, status) {
-          data = data || {};
+          data = _.isObject(data) ? data : {};
           data.success = true;
           callback(data, status);
         })
         .error(function (data, status) {
-          data = data || {};
+          data = _.isObject(data) ? data : {};
           data.success = false;
           data.status = status;
           callback(data, status);

@@ -4,6 +4,7 @@ class DialingCtrl implements ng.IComponentController {
   public selected: IOption;
   public initialSelection: IOption;
   public watcher: string;
+  public title: string;
   public options: IOption[] = [];
   public form: ng.IFormController;
 
@@ -32,8 +33,9 @@ class DialingCtrl implements ng.IComponentController {
 export class DialingComponent implements ng.IComponentOptions {
   public controller = DialingCtrl;
   public templateUrl = 'modules/huron/dialing/dialing.html';
-  public bindings = <{ [binding: string]: string }>{
-    watcher: '@',
-    selected: '@',
+  public bindings = {
+    watcher: '<',
+    selected: '<',
+    title: '@',
   };
 }

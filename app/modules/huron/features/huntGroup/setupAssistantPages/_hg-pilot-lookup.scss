@@ -7,15 +7,15 @@
 }
 
 .pilot-number-container {
+  @include vr-spacing(ml, 20, 0px, true);
+
   position: fixed;
   width: 40rem;
   max-height: 12rem;
   height: 100%;
   left: 50%;
-  @include vr-spacing(ml,20,0px,true);
   overflow: auto;
   display: flex;
-  //align-content: center;
   flex-flow: row wrap;
   flex: 1 1 auto;
   justify-content: center;
@@ -23,20 +23,20 @@
 }
 
 .hunt-member-card.pilot-number-item {
-
   width: 8rem !important;
 
-  & article header.open-panel {
-    border-radius : 0.25rem !important;
+  article header.open-panel {
+    border-radius: 0.25rem !important;
     cursor: default;
   }
 
-  & i, & i:hover {
+  i,
+  i:hover {
     color: $color-white;
     cursor: pointer;
   }
 
-  & .pilot-number {
+  .pilot-number {
     display: inline-block;
     min-width: 85%;
     text-align: left;

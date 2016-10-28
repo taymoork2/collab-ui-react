@@ -108,7 +108,7 @@
       if (validateDID(number)) {
         return phoneUtils.formatE164(number, regionCode);
       } else if (angular.isString(number)) {
-        return number.replace(filterRegex, '');
+        return _.replace(number, filterRegex, '');
       } else {
         return number;
       }

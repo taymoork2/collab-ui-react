@@ -7,7 +7,7 @@
 
   /* @ngInject */
   // TODO - check for removal of $q and FeatureToggleService when MX300 are officially supported
-  function TrialDeviceController($stateParams, $translate, FeatureToggleService, Notification, TrialCallService, TrialDeviceService, TrialRoomSystemService, ValidationService) {
+  function TrialDeviceController($scope, $stateParams, $translate, Analytics, FeatureToggleService, Notification, TrialCallService, TrialDeviceService, TrialRoomSystemService, TrialService, ValidationService) {
     var vm = this;
 
     var _trialCallData = TrialCallService.getData();
@@ -23,6 +23,7 @@
     var trialStartDate = _.get($stateParams, 'currentTrial.startDate');
     var grandfatherMaxDeviceDate = new Date(2016, 8, 1);
 
+    vm.parentTrialData = $scope.trialData;
     // merge is apparently not pass-by-reference
     vm.details = _.merge(_trialCallData.details, _trialRoomSystemData.details);
     vm.skipDevices = _trialDeviceData.skipDevices;
@@ -692,7 +693,9 @@
     }
 
     function init() {
+
       var limitsPromise = TrialDeviceService.getLimitsPromise();
+      TrialService.sendToAnalytics(Analytics.eventNames.ENTER_SCREEN, vm.parentTrialData);
 
       // TODO - remove feature toggle when MX300 are officially supported
       // Hides the MX300 under a feature toggle
@@ -741,6 +744,7 @@
     }
 
     function skip(skipped) {
+      TrialService.sendToAnalytics(Analytics.eventNames.SKIP, vm.parentTrialData);
       _trialDeviceData.skipDevices = skipped;
     }
 

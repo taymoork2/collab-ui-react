@@ -12,6 +12,7 @@ import {
   IIntervalQuery,
   IReportTypeQuery,
 } from './partnerReportInterfaces';
+import { Notification } from 'modules/core/notifications';
 
 class ReportService {
   private readonly POSITIVE: string = 'positive';
@@ -40,8 +41,8 @@ class ReportService {
     private CommonReportService,
     private ReportConstants,
     private chartColors,
-    private Notification,
-    private PartnerService
+    private Notification: Notification,
+    private PartnerService,
   ) {}
 
   private getPercentage(numberOne: number, numberTwo: number): number {
@@ -78,7 +79,7 @@ class ReportService {
         let overallRegistered = 0;
 
         _.forEach(data, (customer) => {
-          let customerData = this.formatActiveUserOrgData(customer, filter);
+          let customerData = this.formatActiveUserOrgData(customer);
           this.activeUserCustomerGraphs[customer.orgId] = customerData;
           overallActive += customerData.totalActive;
           overallRegistered += customerData.totalRegistered;
@@ -98,7 +99,7 @@ class ReportService {
     return this.activeUserDetailedPromise;
   }
 
-  private formatActiveUserOrgData(org, filter: ITimespan): IActiveUserCustomerData {
+  private formatActiveUserOrgData(org): IActiveUserCustomerData {
     let graphData: Array<IActiveUserData> = [];
     let populationData: IPopulationData = {
       customerName: org.orgId,
@@ -111,38 +112,19 @@ class ReportService {
     let totalActive = 0;
     let totalRegistered = 0;
 
-    _.forEach(_.get(org, 'data'), (item, index: any, array) => {
-      let date = _.get(item, 'date');
-      let details: any = _.get(item, 'details');
+    _.forEach(_.get(org, 'data'), (item: any): void => {
+      let date: string = item.date;
+      let details: any = item.details;
       if (details && date) {
         let activeUsers = parseInt(details.activeUsers, this.ReportConstants.INTEGER_BASE);
         let totalRegisteredUsers = parseInt(details.totalRegisteredUsers, this.ReportConstants.INTEGER_BASE);
-
-        // fix for when totalRegisteredUsers equals 0 due to errors recording the number
-        if (totalRegisteredUsers <= 0) {
-          let previousTotal = 0;
-          let nextTotal = 0;
-          if (index !== 0) {
-            previousTotal = parseInt(array[index - 1].details.totalRegisteredUsers, this.ReportConstants.INTEGER_BASE);
-          }
-          if (index < (array.length - 1)) {
-            nextTotal = parseInt(array[index + 1].details.totalRegisteredUsers, this.ReportConstants.INTEGER_BASE);
-          }
-          if (previousTotal < activeUsers && nextTotal < activeUsers) {
-            totalRegisteredUsers = activeUsers;
-          } else if (previousTotal > nextTotal) {
-            totalRegisteredUsers = previousTotal;
-          } else {
-            totalRegisteredUsers = nextTotal;
-          }
-        }
 
         if (activeUsers > 0 || totalRegisteredUsers > 0) {
           graphData.push({
             activeUsers: activeUsers,
             totalRegisteredUsers: totalRegisteredUsers,
             percentage: this.getPercentage(activeUsers, totalRegisteredUsers),
-            date: this.CommonReportService.getModifiedDate(date, filter),
+            date: date,
             balloon: true,
           });
 
@@ -252,22 +234,22 @@ class ReportService {
     let emptyGraph = true;
     _.forEach(activeDataSet, (item: Array<IActiveUserData>) => {
       if (item.length > 0) {
-        baseGraph = this.combineMatchingDates(baseGraph, item);
+        baseGraph = this.combineMatchingDates(baseGraph, item, filter);
         emptyGraph = false;
       }
     });
+
     if (!emptyGraph) {
       returnData.graphData = baseGraph;
     }
-
     return returnData;
   }
 
-  private combineMatchingDates(graphData: Array<IActiveUserData>, customerData: Array<IActiveUserData>): Array<IActiveUserData> {
+  private combineMatchingDates(graphData: Array<IActiveUserData>, customerData: Array<IActiveUserData>, filter: ITimespan): Array<IActiveUserData> {
     if (graphData.length > 0) {
       _.forEach(customerData, (datapoint: IActiveUserData) => {
         _.forEach(graphData, (graphpoint: IActiveUserData) => {
-          if (graphpoint.date === datapoint.date) {
+          if (graphpoint.date === this.CommonReportService.getModifiedDate(datapoint.date, filter)) {
             graphpoint.totalRegisteredUsers += datapoint.totalRegisteredUsers;
             graphpoint.activeUsers += datapoint.activeUsers;
             graphpoint.percentage = this.getPercentage(graphpoint.activeUsers, graphpoint.totalRegisteredUsers);
@@ -275,7 +257,6 @@ class ReportService {
         });
       });
     }
-
     return graphData;
   }
 

@@ -1,6 +1,6 @@
-import { IPagingGroup } from '../pagingGroup';
-import { INumber, PagingNumberService } from '../pgNumber.service';
-import { PagingGroupService } from '../pagingGroup.service';
+import { IPagingGroup } from 'modules/huron/features/pagingGroup/pagingGroup';
+import { PagingNumberService } from 'modules/huron/features/pagingGroup/pgNumber.service';
+import { PagingGroupService } from 'modules/huron/features/pagingGroup/pagingGroup.service';
 
 class PgEditComponentCtrl implements ng.IComponentController {
 
@@ -13,13 +13,14 @@ class PgEditComponentCtrl implements ng.IComponentController {
   public formChanged: boolean = false;
 
   //Paging group number
-  public number: INumber;
-  private availableNumbers: INumber[] = [];
+  public number: string;
+  private availableNumbers: string[] = [];
 
   public back: boolean = true;
   public huronFeaturesUrl: string = 'huronfeatures';
   public saveInProgress: boolean = false;
   public form: ng.IFormController;
+  public loading: boolean = true;
 
   /* @ngInject */
   constructor(private $state: ng.ui.IStateService,
@@ -31,9 +32,14 @@ class PgEditComponentCtrl implements ng.IComponentController {
 
   public $onInit(): void {
     if (this.pgId) {
-      this.pg = this.PagingGroupService.getPagingGroup(this.pgId);
-      this.name = this.pg.name;
-      this.number = this.pg.number;
+      this.PagingGroupService.getPagingGroup(this.pgId).then(
+        (data) => {
+          this.pg = data;
+          this.name = this.pg.name;
+          this.number = this.pg.extension;
+          this.loading = false;
+          }
+      );
       this.fetchNumbers();
     } else {
       this.$state.go(this.huronFeaturesUrl);
@@ -42,7 +48,7 @@ class PgEditComponentCtrl implements ng.IComponentController {
 
   public fetchNumbers(filter?: string): void {
     this.PagingNumberService.getNumberSuggestions(filter).then(
-      (data: INumber[]) => {
+      (data: string[]) => {
         this.availableNumbers = data;
       }, (response) => {
         this.Notification.errorResponse(response, 'pagingGroup.numberFetchFailure');
@@ -51,7 +57,7 @@ class PgEditComponentCtrl implements ng.IComponentController {
 
   public onCancel(): void {
     this.name = this.pg.name;
-    this.number = this.pg.number;
+    this.number = this.pg.extension;
     this.errorNameInput = false;
     this.formChanged = false;
     this.form.$setPristine();
@@ -69,16 +75,29 @@ class PgEditComponentCtrl implements ng.IComponentController {
   }
 
   public saveForm(): void {
-    let pg: IPagingGroup = <IPagingGroup>{
-      name: this.name,
-      number: this.number,
-      uuid: this.pg.uuid,
-    };
-    this.PagingGroupService.updatePagingGroup(pg);
-    this.Notification.success(this.$translate.instant('pagingGroup.successUpdate', {
-      pagingGroupName: this.name,
-    }));
-    this.$state.go(this.huronFeaturesUrl);
+    let pg: IPagingGroup = <IPagingGroup>{};
+    pg.groupId = this.pg.groupId;
+    pg.name = this.name;
+    pg.extension = this.number;
+    this.PagingGroupService.updatePagingGroup(pg).then(
+      (data) => {
+        this.Notification.success(this.$translate.instant('pagingGroup.successUpdate', {
+          pagingGroupName: data.name,
+        }));
+        this.$state.go(this.huronFeaturesUrl);
+      },
+      (error) => {
+        let message = '';
+        if (error && _.has(error, 'data')
+          && _.has(error.data, 'error')
+          && _.has(error.data.error, 'message')
+          && _.has(error.data.error.message, 'length')
+          && error.data.error.message.length > 0
+          && _.has(error.data.error.message[0], 'description')) {
+          message = error.data.error.message[0].description;
+        }
+        this.Notification.error('pagingGroup.errorUpdate', { message: message });
+      });
   }
 
 }

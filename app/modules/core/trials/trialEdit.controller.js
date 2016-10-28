@@ -5,7 +5,7 @@
     .controller('TrialEditCtrl', TrialEditCtrl);
 
   /* @ngInject */
-  function TrialEditCtrl($q, $state, $scope, $stateParams, $translate, $window, Authinfo, TrialService, Notification, Config, HuronCustomer, ValidationService, FeatureToggleService, TrialContextService, TrialDeviceService, TrialPstnService, Orgservice) {
+  function TrialEditCtrl($q, $state, $scope, $stateParams, $translate, $window, Analytics, Authinfo, Config, HuronCustomer, FeatureToggleService, Notification, Orgservice, TrialContextService, TrialDeviceService, TrialPstnService, TrialService, ValidationService) {
     var vm = this;
 
     vm.currentTrial = angular.copy($stateParams.currentTrial);
@@ -348,6 +348,7 @@
     vm.getDaysLeft = getDaysLeft;
     vm.launchCustomerPortal = launchCustomerPortal;
     vm.showDefaultFinish = showDefaultFinish;
+    vm.cancelModal = cancelModal;
     vm._helpers = {
       hasEnabled: hasEnabled,
       hasEnabledMessageTrial: hasEnabledMessageTrial,
@@ -491,10 +492,12 @@
     }
 
     function finishSetup() {
+      sendToAnalytics(Analytics.sections.TRIAL.eventNames.FINISH);
       $state.go('trialEdit.finishSetup');
     }
 
     function previousStep() {
+      sendToAnalytics(Analytics.eventNames.BACK);
       var state = getBackState();
       if (state) {
         $state.go(state);
@@ -517,6 +520,7 @@
       if (!hasNextStep()) {
         return editTrial(callback);
       } else {
+        sendToAnalytics(Analytics.eventNames.NEXT);
         return $state.go(getNextState());
       }
     }
@@ -558,6 +562,7 @@
     }
 
     function closeDialogBox() {
+      sendToAnalytics(Analytics.sections.TRIAL.eventNames.NO);
       $state.modal.close();
     }
 
@@ -566,6 +571,7 @@
       var custId = vm.currentTrial.customerOrgId;
       var trialId = vm.currentTrial.trialId;
       var showFinish = hasEnabledAnyTrial(vm, vm.preset);
+      sendToAnalytics(Analytics.sections.TRIAL.eventNames.START_TRIAL);
 
       return TrialService.editTrial(custId, trialId)
         .catch(function (response) {
@@ -759,6 +765,13 @@
       var canSeeDevicePage = vm.canSeeDevicePage;
 
       return TrialDeviceService.canAddDevice(stateDetails, roomSystemTrialEnabled, callTrialEnabled, canSeeDevicePage);
+    }
+    function cancelModal() {
+      $state.modal.dismiss();
+      sendToAnalytics(Analytics.eventNames.CANCEL_MODAL);
+    }
+    function sendToAnalytics(eventName, extraData) {
+      TrialService.sendToAnalytics(eventName, vm.trialData, extraData);
     }
   }
 })();

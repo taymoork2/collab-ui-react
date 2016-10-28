@@ -18,7 +18,7 @@
         return numbers;
       }
 
-      var search = _search.replace(nonDigitRegex, '');
+      var search = _.replace(_search, nonDigitRegex, '');
 
       return _.filter(numbers, filterNumber);
 

@@ -20,10 +20,10 @@
       loadInternalNumberPool: loadInternalNumberPool,
       loadExternalNumberPool: loadExternalNumberPool,
       returnInternalNumberlist: returnInternalNumberlist,
+      returnExternalNumberList: returnExternalNumberList,
       checkDnOverlapsSteeringDigit: checkDnOverlapsSteeringDigit,
       assignDNForUserList: assignDNForUserList,
       assignMapUserList: assignMapUserList,
-      getInternalNumberlist: getInternalNumberlist,
       getEntitylist: getEntitylist,
       setEntitylist: setEntitylist,
       getInternalNumberPool: getInternalNumberPool,
@@ -64,14 +64,6 @@
 
     function setEntitylist() {
       entitylist = _.cloneDeep(entitylist);
-    }
-
-    function getInternalNumberlist(pattern) {
-      if (pattern) {
-        loadInternalNumberPool(pattern);
-      } else {
-        return internalNumberPool;
-      }
     }
 
     function getInternalNumberPool() {
@@ -160,6 +152,14 @@
         loadInternalNumberPool(pattern);
       } else {
         return internalNumberPool;
+      }
+    }
+
+    function returnExternalNumberList(pattern) {
+      if (pattern) {
+        loadExternalNumberPool(pattern);
+      } else {
+        return externalNumberPool;
       }
     }
 

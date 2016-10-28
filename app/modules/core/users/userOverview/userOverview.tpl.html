@@ -2,7 +2,7 @@
 <div ng-if="userOverview.pendingStatus">
   <div ui-view="userPending"></div>
 </div>
-<cs-sp-container>
+<cs-sp-container ng-class="{'user-pending': userOverview.pendingStatus}">
   <cs-sp-section>
     <section-title
       title-key="usersPreview.servicesPreview"

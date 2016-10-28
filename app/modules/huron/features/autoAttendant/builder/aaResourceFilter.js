@@ -9,11 +9,11 @@
   /* @ngInject */
   function preferredAAResource() {
     return function (ceInfo) {
-      if (angular.isUndefined(ceInfo)) {
+      if (_.isUndefined(ceInfo)) {
         return "";
       }
       var resources = ceInfo.getResources();
-      if (!angular.isArray(resources) || angular.isUndefined(resources[0])) {
+      if (!angular.isArray(resources) || _.isUndefined(resources[0])) {
         return "";
       }
       // todo: priority for display is (1) E164 number, (2) extension, (3) from another AA
@@ -25,11 +25,11 @@
   /* @ngInject */
   function moreAAResources($translate) {
     return function (ceInfo) {
-      if (angular.isUndefined(ceInfo)) {
+      if (_.isUndefined(ceInfo)) {
         return "";
       }
       var resources = ceInfo.getResources();
-      if (!angular.isArray(resources) || angular.isUndefined(resources[0])) {
+      if (!angular.isArray(resources) || _.isUndefined(resources[0])) {
         return "";
       }
 
@@ -47,11 +47,11 @@
   /* @ngInject */
   function allAAResources() {
     return function (ceInfo) {
-      if (angular.isUndefined(ceInfo)) {
+      if (_.isUndefined(ceInfo)) {
         return "";
       }
       var resources = ceInfo.getResources();
-      if (!angular.isArray(resources) || angular.isUndefined(resources[0])) {
+      if (!angular.isArray(resources) || _.isUndefined(resources[0])) {
         return "";
       }
 

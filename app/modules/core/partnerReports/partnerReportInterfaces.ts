@@ -35,13 +35,29 @@ export interface IReportCard {
 }
 
 export interface ISecondaryReport {
+  alternateTranslations: boolean;
   broadcast: string;
   description: string;
   display: boolean;
+  emptyDescription: string;
+  errorDescription: string;
+  search: boolean;
   state: string;
   sortOptions: Array<IReportSortOption>;
   table: IReportsTable | void;
   title: string;
+}
+
+export interface IReportDropdown {
+  array: Array<IDropdownOption>;
+  click: Function;
+  disabled: boolean;
+  selected: IDropdownOption;
+}
+
+export interface IDropdownOption {
+  value: number;
+  label: string;
 }
 
 export interface IReportsTable {
@@ -58,6 +74,11 @@ export interface IReportsHeader {
 export interface IReportSortOption {
   option: string;
   direction: boolean;
+}
+
+export interface IReportLabel {
+  number: number | string;
+  text: string;
 }
 
 // Endpoint interface

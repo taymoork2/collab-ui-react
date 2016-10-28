@@ -44,16 +44,24 @@ exports.config = {
   directConnect: !process.env.SAUCE_USERNAME,
 
   capabilities: {
-    'browserName': 'chrome',
-    "screenResolution": "1680x1050",
-    'platform': process.env.SAUCE_USERNAME ? 'Windows 7' : undefined,
-    'tunnelIdentifier': process.env.SC_TUNNEL_IDENTIFIER,
-    'name': 'wx2-admin-web-client',
-    'build': process.env.BUILD_NUMBER,
+    browserName: 'chrome',
+    screenResolution: '1680x1050',
+    platform: process.env.SAUCE_USERNAME ? 'Windows 7' : undefined,
+    tunnelIdentifier: process.env.SC_TUNNEL_IDENTIFIER,
+    name: 'wx2-admin-web-client',
+    build: process.env.BUILD_NUMBER,
 
-    'chromeOptions': {
-      //'args': ['--disable-extensions', '--start-fullscreen']
-      'args': ['--disable-extensions', '--window-position=0,0', '--window-size=1280,900']
+    chromeOptions: {
+      // Get rid of --ignore-certificate yellow warning
+      args: ['--disable-extensions', '--window-position=0,0', '--window-size=1280,900', '--no-sandbox', '--test-type=browser'],
+      // For completeness setting the download path and avoiding download prompt default on chrome
+      prefs: {
+        download: {
+          prompt_for_download: false,
+          directory_upgrade: true,
+          default_directory: '/tmp/downloads',
+        },
+      },
     },
     shardTestFiles: true,
     maxInstances: maxInstances
@@ -62,12 +70,13 @@ exports.config = {
   plugins: [{
     package: 'protractor-console-plugin',
     failOnWarning: false, // (Default - false),
-    failOnError: false,   // (Default - true),
-    logWarnings: true,    // (Default - true),
-    exclude: [            // Array of strings and regex (Default - [])
+    failOnError: false, // (Default - true),
+    logWarnings: true, // (Default - true),
+    exclude: [ // Array of strings and regex (Default - [])
       /executionContextId/,
       /object Object/,
-      /favicon/
+      /favicon/,
+      /\/browser\-sync\//,
     ]
   }],
 

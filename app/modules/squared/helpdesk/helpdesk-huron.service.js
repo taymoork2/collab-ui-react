@@ -314,7 +314,7 @@
     }
 
     function sanitizeNumberSearchInput(searchString) {
-      return searchString.replace(/[-()]/g, '').replace(/\s/g, '');
+      return _.replace(searchString, /[-()]/g, '').replace(/\s/g, '');
     }
 
     function getNumberSortOrder(dnUsage) {

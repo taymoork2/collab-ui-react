@@ -6,10 +6,11 @@
     .controller('TrialEmergAddressCtrl', TrialEmergAddressCtrl);
 
   /* @ngInject */
-  function TrialEmergAddressCtrl($translate, Notification, PstnServiceAddressService, TerminusStateService, TrialPstnService) {
+  function TrialEmergAddressCtrl($scope, $translate, Analytics, Notification, PstnServiceAddressService, TerminusStateService, TrialPstnService, TrialService) {
     var vm = this;
 
     vm.trial = TrialPstnService.getData();
+    vm.parentTrialData = $scope.$parent.trialData;
 
     vm.addressLoading = true;
     vm.addressFound = false;
@@ -106,6 +107,8 @@
       }
     }];
 
+    TrialService.sendToAnalytics(Analytics.eventNames.ENTER, vm.parentTrialData);
+
     function validateAddress() {
       vm.addressLoading = true;
       vm.validation = true;
@@ -123,6 +126,8 @@
           } else {
             vm.validation = false;
             Notification.error('trialModal.pstn.error.noAddress');
+            TrialService.sendToAnalytics(Analytics.eventNames.VALIDATION_ERROR, vm.parentTrialData, { 'value': vm.trial.details.emergAddr, 'error': $translate.instant('trialModal.pstn.error.noAddress') });
+
           }
         })
         .finally(function () {
@@ -131,6 +136,7 @@
     }
 
     function skip(skipped) {
+      TrialService.sendToAnalytics(Analytics.eventNames.SKIP, vm.parentTrialData);
       vm.trial.enabled = !skipped;
       vm.trial.skipped = skipped;
     }

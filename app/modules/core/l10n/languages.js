@@ -135,7 +135,7 @@
     }
 
     function formatLanguage(language) {
-      return language.replace('-', '_');
+      return _.replace(language, '-', '_');
     }
   }
 

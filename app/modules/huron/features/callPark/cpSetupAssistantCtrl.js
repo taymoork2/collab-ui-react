@@ -343,10 +343,10 @@
       }
     }
 
-    function getExtensionLength(option) {
-      var currentInput = _.get(vm.cpNumberOptions, '[0].currentInput', false);
-      return currentInput === option ? 4 : null;
-    }
+    // function getExtensionLength(option) {
+    //   var currentInput = _.get(vm.cpNumberOptions, '[0].currentInput', false);
+    //   return currentInput === option ? 3 : null;
+    // }
 
     function initializeFields() {
       vm.cpNumberOptions = [{
@@ -358,23 +358,23 @@
             type: 'number',
             value: '',
             grid_size: 5,
-            maxlength: getExtensionLength(0),
-            minlength: getExtensionLength(0),
+            maxlength: 5,
+            minlength: 3,
             placeholder: $translate.instant('callPark.firstRange')
           },
           range_2: {
             type: 'number',
             value: '',
             grid_size: 5,
-            maxlength: getExtensionLength(1),
-            minlength: getExtensionLength(1),
+            maxlength: 5,
+            minlength: 3,
             placeholder: $translate.instant('callPark.secondRange')
           }
         }, {
           type: 'number',
           value: '',
-          maxlength: getExtensionLength(1),
-          minlength: getExtensionLength(1),
+          maxlength: 5,
+          minlength: 3,
           placeholder: $translate.instant('callPark.singleRange')
         }]
       }];
@@ -382,13 +382,13 @@
       $scope.numberOption = vm.cpNumberOptions[0];
 
       $scope.$watch('numberOption', function () {
-        var newLength = getExtensionLength(vm.cpNumberOptions[0].currentInput);
-        angular.forEach(vm.cpNumberOptions[0].inputs, function (input, index) {
-          var length = index == vm.cpNumberOptions[0].currentInput ? newLength : null;
+        // var newLength = getExtensionLength(vm.cpNumberOptions[0].currentInput);
+        angular.forEach(vm.cpNumberOptions[0].inputs, function (input) {
+          // var length = index == vm.cpNumberOptions[0].currentInput ? newLength : null;
           var values = (input.type === 'range') ? [input.range_1, input.range_2] : [input];
           angular.forEach(values, function (value) {
-            value.minlength = length;
-            value.maxlength = length;
+            value.minlength = 3;
+            value.maxlength = 5;
           });
         });
       }, true);

@@ -424,7 +424,7 @@
     }
 
     function getLanguageOptions() {
-      if (angular.isUndefined(languageOptions) || languageOptions.length === 0) {
+      if (_.isUndefined(languageOptions) || languageOptions.length === 0) {
         setLanguageOptions();
       }
       return languageOptions;

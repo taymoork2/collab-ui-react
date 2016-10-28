@@ -29,7 +29,7 @@
             return s.split('=');
           })
           .reduce(function (map, kv) {
-            map[kv[0]] = (kv[1] || '').replace(/^"|"$/g, '');
+            map[kv[0]] = _.replace(kv[1], /^"|"$/g, '');
             return map;
           }, {})
           .value();

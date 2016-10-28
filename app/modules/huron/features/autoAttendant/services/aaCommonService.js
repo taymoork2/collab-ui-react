@@ -13,6 +13,7 @@
     var aaDialByExtensionStatus = false;
     var aaCENumberStatus = false;
     var aaMediaUploadStatus = false;
+    var aaQueueSettingsStatus = false;
     var routeQueueToggle = false;
     var mediaUploadToggle = false;
     var uniqueId = 0;
@@ -26,6 +27,7 @@
       setDialByExtensionStatus: setDialByExtensionStatus,
       setCENumberStatus: setCENumberStatus,
       setMediaUploadStatus: setMediaUploadStatus,
+      setQueueSettingsStatus: setQueueSettingsStatus,
       setMediaUploadToggle: setMediaUploadToggle,
       setRouteQueueToggle: setRouteQueueToggle,
       isRouteQueueToggle: isRouteQueueToggle,
@@ -45,7 +47,7 @@
     /////////////////////
 
     function isFormDirty() {
-      return aaMediaUploadStatus || aaSayMessageForm || aaPhoneMenuOptions || aaActionStatus || aaDialByExtensionStatus || aaCENumberStatus;
+      return aaQueueSettingsStatus || aaMediaUploadStatus || aaSayMessageForm || aaPhoneMenuOptions || aaActionStatus || aaDialByExtensionStatus || aaCENumberStatus;
     }
 
     function isValid() {
@@ -83,6 +85,7 @@
       aaActionStatus = false;
       aaDialByExtensionStatus = false;
       aaMediaUploadStatus = false;
+      aaQueueSettingsStatus = false;
       aaCENumberStatus = false;
       routeQueueToggle = false;
       invalidList = {};
@@ -112,6 +115,11 @@
       routeQueueToggle = status;
     }
 
+
+    function setQueueSettingsStatus(status) {
+      aaQueueSettingsStatus = status;
+    }
+
     function setMediaUploadToggle(status) {
       mediaUploadToggle = status;
     }
@@ -135,7 +143,7 @@
       var closedHours = AutoAttendantCeMenuModelService.getCombinedMenu(aaRecord, 'closedHours');
       var holidays = AutoAttendantCeMenuModelService.getCombinedMenu(aaRecord, 'holidays');
       if (ui.isOpenHours) {
-        if (angular.isUndefined(openHours)) {
+        if (_.isUndefined(openHours)) {
           openHours = AutoAttendantCeMenuModelService.newCeMenu();
           openHours.setType('MENU_WELCOME');
         }
@@ -143,7 +151,7 @@
       }
 
       if (ui.isClosedHours || (ui.holidaysValue === 'closedHours' && ui.isHolidays)) {
-        if (angular.isUndefined(closedHours)) { //New
+        if (_.isUndefined(closedHours)) { //New
           closedHours = AutoAttendantCeMenuModelService.newCeMenu();
           closedHours.setType('MENU_WELCOME');
         }
@@ -153,7 +161,7 @@
       }
 
       if (ui.isHolidays && ui.holidaysValue !== 'closedHours') {
-        if (angular.isUndefined(holidays)) { //New
+        if (_.isUndefined(holidays)) { //New
           holidays = AutoAttendantCeMenuModelService.newCeMenu();
           holidays.setType('MENU_WELCOME');
         }

@@ -11,33 +11,21 @@
     var boldNumberSpan = '<span class="bold-number">';
     var spanClose = '</span>';
 
-    // variables for the active users section
-    var activeUserDiv = 'activeUsersdiv';
-    var activeUsersBalloonText = graphTextSpan + $translate.instant('activeUsers.registeredUsers') + ' <span class="graph-number">[[totalRegisteredUsers]]</span></span><br><span class="graph-text">' + $translate.instant('activeUsers.active') + ' <span class="graph-number">[[percentage]]%</span></span>';
-    var usersTitle = $translate.instant('activeUsers.users');
-    var activeUsersTitle = $translate.instant('activeUsers.activeUsers');
+    // div variables
+    var activeUserDiv = 'activeUsersChart';
+    var avgRoomsdiv = 'avgRoomsChart';
+    var filesSharedDiv = 'filesSharedChart';
+    var mediaQualityDiv = 'mediaQualityChart';
+    var metricsGraphDiv = 'callMetricsChart';
+    var devicesDiv = 'devicesChart';
+
+    // filter variables
     var filterValue = 0;
     var timeFilterValue = 0;
 
-    // variables for the average rooms section
-    var avgRoomsdiv = 'avgRoomsdiv';
-    var avgRoomsBalloon = graphTextSpan + $translate.instant('avgRooms.group') + ' <span class="room-number">[[groupRooms]]</span><br>' + $translate.instant('avgRooms.oneToOne') + ' <span class="room-number">[[oneToOneRooms]]</span><br>' + $translate.instant('avgRooms.avgTotal') + ' <span class="room-number">[[avgRooms]]</span></span>';
-
-    // variables for the files shared section
-    var filesSharedDiv = 'filesSharedDiv';
-    var filesBalloon = graphTextSpan + $translate.instant('filesShared.filesShared') + ' <span class="graph-number">[[contentShared]]</span><br>' + $translate.instant('filesShared.fileSizes') + ' <span class="graph-number">[[contentShareSizes]] ' + $translate.instant('filesShared.gb ') + '</span></span>';
-
-    // variables for media Quality
-    var mediaQualityDiv = 'mediaQualityDiv';
-
     // variables for Call Metrics
-    var metricsGraphDiv = 'metricsGraphDiv';
     var metricsBalloonText = graphTextSpan + '[[numCalls]] [[callCondition]] ([[percentage]]%)' + spanClose;
     var metricsLabelText = '[[percents]]%<br>[[callCondition]]';
-
-    // variables for device registration
-    var devicesDiv = 'devicesDiv';
-    var deviceBalloonText = graphTextSpan + $translate.instant('registeredEndpoints.registeredEndpoints') + ' <span class="device-number">[[totalRegisteredDevices]]</span></span>';
 
     return {
       setActiveLineGraph: setActiveLineGraph,
@@ -131,6 +119,7 @@
     }
 
     function getActiveUserBalloonText(graphDataItem, graph) {
+      var usersTitle = $translate.instant('activeUsers.users');
       var data = _.get(graphDataItem, 'dataContext');
       var hiddenData = _.get(graph, 'data[0].category');
       var title = _.get(graph, CommonGraphService.TITLE);
@@ -139,7 +128,7 @@
       if (title === usersTitle && data.date !== hiddenData) {
         balloonText = graphTextSpan + $translate.instant('activeUsers.registeredUsers') + boldNumberSpan + ' ' + data.totalRegisteredUsers + spanClose + spanClose;
       } else if (data.date !== hiddenData) {
-        balloonText = graphTextSpan + activeUsersTitle + boldNumberSpan + ' ' + data.activeUsers;
+        balloonText = graphTextSpan + $translate.instant('activeUsers.activeUsers') + boldNumberSpan + ' ' + data.activeUsers;
         if (filterValue === ReportConstants.FILTER_ONE.value) {
           balloonText += ' (' + data.percentage + '%)';
         }
@@ -155,7 +144,7 @@
       var colorsTwo = _.clone(colors);
       var fillAlphas = [0.5, 0.5];
       var values = ['totalRegisteredUsers', 'activeUsers'];
-      var titles = [usersTitle, activeUsersTitle];
+      var titles = [$translate.instant('activeUsers.users'), $translate.instant('activeUsers.activeUsers')];
       var graphs = [];
 
       if (!data[0].balloon) {
@@ -213,12 +202,13 @@
     }
 
     function activeUserGraphs(data) {
+      var balloonText = graphTextSpan + $translate.instant('activeUsers.registeredUsers') + ' <span class="graph-number">[[totalRegisteredUsers]]</span></span><br><span class="graph-text">' + $translate.instant('activeUsers.active') + ' <span class="graph-number">[[percentage]]%</span></span>';
       var colors = [chartColors.brandSuccessLight, chartColors.brandSuccessDark];
       if (!data[0].balloon) {
         colors = [chartColors.dummyGrayLight, chartColors.dummyGray];
       }
       var values = ['totalRegisteredUsers', 'activeUsers'];
-      var titles = [usersTitle, activeUsersTitle];
+      var titles = [$translate.instant('activeUsers.users'), $translate.instant('activeUsers.activeUsers')];
 
       var graphs = [];
       _.forEach(values, function (value, index) {
@@ -227,7 +217,7 @@
         graphs[index].fillColors = colors[index];
         graphs[index].legendColor = colors[index];
         graphs[index].valueField = value;
-        graphs[index].balloonText = activeUsersBalloonText;
+        graphs[index].balloonText = balloonText;
         graphs[index].showBalloon = data[0].balloon;
         graphs[index].clustered = false;
       });
@@ -288,6 +278,7 @@
     }
 
     function avgRoomsGraphs(data) {
+      var balloonText = graphTextSpan + $translate.instant('avgRooms.group') + ' <span class="room-number">[[groupRooms]]</span><br>' + $translate.instant('avgRooms.oneToOne') + ' <span class="room-number">[[oneToOneRooms]]</span><br>' + $translate.instant('avgRooms.avgTotal') + ' <span class="room-number">[[avgRooms]]</span></span>';
       var titles = ['avgRooms.group', 'avgRooms.oneToOne'];
       var values = ['totalRooms', 'oneToOneRooms'];
       var colors = [chartColors.primaryColorLight, chartColors.primaryColorDarker];
@@ -303,7 +294,7 @@
         graphs[index].valueField = value;
         graphs[index].legendColor = colors[index];
         graphs[index].showBalloon = data[0].balloon;
-        graphs[index].balloonText = avgRoomsBalloon;
+        graphs[index].balloonText = balloonText;
         graphs[index].clustered = false;
       });
       return graphs;
@@ -346,13 +337,15 @@
     }
 
     function filesSharedGraphs(data) {
+      var balloonText = graphTextSpan + $translate.instant('filesShared.filesShared') + ' <span class="graph-number">[[contentShared]]</span><br>' + $translate.instant('filesShared.fileSizes') + ' <span class="graph-number">[[contentShareSizes]] ' + $translate.instant('filesShared.gb ') + '</span></span>';
+
       var graph = CommonGraphService.getBaseVariable(CommonGraphService.COLUMN);
       graph.title = $translate.instant('filesShared.filesShared');
       graph.fillColors = data[0].color;
       graph.colorField = data[0].color;
       graph.valueField = 'contentShared';
       graph.showBalloon = data[0].balloon;
-      graph.balloonText = filesBalloon;
+      graph.balloonText = balloonText;
 
       return [graph];
     }
@@ -360,7 +353,7 @@
     function setMediaQualityGraph(data, chart, filter) {
       if (_.isArray(data) && data.length > 0 && chart) {
         chart.startDuration = 1;
-        if (data[0].colorOne !== undefined && data[0].colorOne !== null) {
+        if (!data[0].balloon) {
           chart.startDuration = 0;
         }
 
@@ -383,7 +376,7 @@
       valueAxes[0].title = $translate.instant('mediaQuality.minutes');
 
       var startDuration = 1;
-      if (data[0].colorOne !== undefined && data[0].colorOne !== null) {
+      if (!data[0].balloon) {
         startDuration = 0;
       }
 
@@ -486,7 +479,7 @@
       graph.fillColors = color;
       graph.colorField = color;
       graph.valueField = 'totalRegisteredDevices';
-      graph.balloonText = deviceBalloonText;
+      graph.balloonText = graphTextSpan + $translate.instant('registeredEndpoints.registeredEndpoints') + ' <span class="device-number">[[totalRegisteredDevices]]</span></span>';
       graph.showBalloon = data[graphNumber].balloon;
 
       return [graph];

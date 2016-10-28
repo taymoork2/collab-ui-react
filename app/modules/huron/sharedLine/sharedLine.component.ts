@@ -25,19 +25,15 @@ class SharedLineCtrl implements ng.IComponentController {
 
   public getDisplayName(sharedLine: SharedLine): string {
     if (_.get(sharedLine, 'user.userName')) {
-      let userName = _.get(sharedLine, 'user.firstName', '') + ' ' + _.get(sharedLine, 'user.lastName', '');
-      return userName.trim() || _.get(sharedLine, 'user.userName', '');
-    } else if (_.get(sharedLine, 'place.displayName')) {
+      return this.formatUserName(_.get<string>(sharedLine, 'user.firstName'), _.get<string>(sharedLine, 'user.lastName'), _.get<string>(sharedLine, 'user.userName'));
+    } else  {
       return _.get(sharedLine, 'place.displayName', '');
-    } else {
-      return '';
     }
   }
 
   public getMemberDisplayName(member: Member): string {
     if (member.type === USER_REAL_USER) {
-      let userName = _.get(member, 'firstName', '') + ' ' + _.get(member, 'lastName', '');
-      return userName.trim() || _.get(member, 'userName', '');
+      return this.formatUserName(_.get<string>(member, 'firstName'), _.get<string>(member, 'lastName'), _.get<string>(member, 'userName'));
     } else {
       return _.get(member, 'displayName', '');
     }
@@ -62,6 +58,17 @@ class SharedLineCtrl implements ng.IComponentController {
       sharedLines: _.cloneDeep(this.sharedLines),
     });
   }
+
+  private formatUserName(firstName: string, lastName: string, userName: string): string {
+    let _userName = userName;
+    let _firstName = firstName || '';
+    let _lastName = lastName || '';
+    if (_firstName.length > 0 || _lastName.length > 0) {
+      _userName = _.trim(_firstName + ' ' + _lastName);
+    }
+    return _userName;
+  }
+
 }
 
 export class SharedLineComponent implements ng.IComponentOptions {

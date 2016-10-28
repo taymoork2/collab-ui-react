@@ -101,7 +101,7 @@
       })
         .on('tokenfield:createtoken', function (e) {
           //Removing anything in brackets from user data
-          var value = e.attrs.value.replace(/\s*\([^)]*\)\s*/g, ' ');
+          var value = _.replace(e.attrs.value, /\s*\([^)]*\)\s*/g, ' ');
           e.attrs.value = value;
         })
         .on('tokenfield:createdtoken', function (e) {

@@ -19,28 +19,28 @@ describe('DeviceUsageDistributiongraphService', function () {
     var rawData = [
       {
         "accountId": "1111",
-        "date": "20161001",
+        "date": 20161001,
         "totalDuration": hours(12)
       },
       {
         "accountId": "2222",
-        "date": "20161001",
+        "date": 20161001,
         "totalDuration": hours(12)
       },
       {
         "accountId": "2222",
-        "date": "20161001",
+        "date": 20161001,
         "totalDuration": hours(48)
       },
       {
         "accountId": "4444",
-        "date": "20161001",
+        "date": 20161001,
         "totalDuration": hours(168)
       }
     ];
 
-    var distribution = DeviceUsageDistributionGraphService.getUsageDistributionData(rawData);
-    expect(distribution.length).toEqual(6);
+    var distribution = DeviceUsageDistributionGraphService.getUsageDistributionDataForGraph(rawData);
+    expect(distribution.length).toEqual(11);
   });
 
 });

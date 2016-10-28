@@ -58,6 +58,7 @@ describe('Controller: TrialEditCtrl:', function () {
         isTestOrg: true
       }
     }));
+    spyOn(Orgservice, 'getOrg');
 
     $httpBackend
       .when('GET', 'https://atlas-integration.wbx2.com/admin/api/v1/organizations/null?disableCache=false')

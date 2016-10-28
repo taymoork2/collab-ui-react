@@ -240,11 +240,23 @@
         });
     }
 
-    function createCmiPlace(name, directoryNumber) {
+    function createCmiPlace(name, directoryNumber, externalNumber) {
 
-      return CsdmHuronPlaceService.createCmiPlace(name, directoryNumber)
+      return CsdmHuronPlaceService.createCmiPlace(name, directoryNumber, externalNumber)
         .then(function (place) {
           placesDataModel[place.url] = place;
+          addOrUpdatePlaceInDataModel(place);
+          return place;
+        });
+    }
+
+    function updateCloudberryPlace(objectToUpdate, entitlements, directoryNumber, externalNumber) {
+      var placeUrl = getPlaceUrl(objectToUpdate);
+      return CsdmPlaceService.updatePlace(placeUrl, entitlements, directoryNumber, externalNumber)
+        .then(function (place) {
+          placesDataModel[place.url].entitlements = place.entitlements;
+          placesDataModel[place.url].directoryNumber = place.directoryNumber;
+          placesDataModel[place.url].externalNumber = place.externalNumber;
           addOrUpdatePlaceInDataModel(place);
           return place;
         });
@@ -395,7 +407,8 @@
       hasLoadedAllDeviceSources: hasLoadedAllDeviceSources,
       createCodeForExisting: createCodeForExisting,
       createCsdmPlace: createCsdmPlace,
-      createCmiPlace: createCmiPlace
+      createCmiPlace: createCmiPlace,
+      updateCloudberryPlace: updateCloudberryPlace
     };
   }
 

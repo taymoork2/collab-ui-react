@@ -1,5 +1,6 @@
 import { SpeedDialService, ISpeedDial } from './speedDial.service';
-import { IActionItem } from '../../core/components/sectionTitle/sectionTitle.component';
+import { IActionItem } from 'modules/core/components/sectionTitle/sectionTitle.component';
+import { Notification } from 'modules/core/notifications';
 
 interface IValidationMessages {
   required: string;
@@ -27,7 +28,7 @@ class SpeedDialCtrl implements ng.IComponentController {
     private $modal,
     private $translate: ng.translate.ITranslateService,
     private dragularService,
-    private Notification,
+    private Notification: Notification,
     private SpeedDialService: SpeedDialService,
   ) {
 
@@ -175,8 +176,8 @@ class SpeedDialCtrl implements ng.IComponentController {
 export class SpeedDialComponent implements ng.IComponentOptions {
   public controller = SpeedDialCtrl;
   public templateUrl = 'modules/huron/speedDials/speedDials.html';
-  public bindings: { [binding: string]: string } = {
-    ownerId: '@',
+  public bindings = {
+    ownerId: '<',
     ownerType: '@',
   };
 }
