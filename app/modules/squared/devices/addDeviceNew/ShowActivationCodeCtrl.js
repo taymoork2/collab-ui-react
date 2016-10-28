@@ -60,7 +60,7 @@
       };
       var error =
         function error(err) {
-          Notification.errorResponse(err);
+          Notification.errorWithTrackingId(err);
           vm.isLoading = false;
         };
       if (vm.place) {

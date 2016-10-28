@@ -60,7 +60,7 @@
     deviceOverview.save = function (newName) {
       return CsdmDataModelService
         .updateItemName(deviceOverview.currentDevice, newName)
-        .catch(Notification.errorResponse);
+        .catch(Notification.errorWithTrackingId);
     };
 
     function setTimeZone(timezone) {
@@ -76,7 +76,7 @@
         setTimeZone(newValue)
           .then(_.partial(waitForDeviceToUpdateTimeZone, newValue))
           .catch(function (error) {
-            Notification.errorResponse(error);
+            Notification.errorWithTrackingId(error);
             loadDeviceTimeZone();
           })
           .finally(function () {
@@ -128,7 +128,7 @@
         .then(function (res) {
           $window.open(res.data.url, '_blank');
         })
-        .catch(Notification.errorResponse);
+        .catch(Notification.errorWithTrackingId);
     };
 
     deviceOverview.deleteDevice = function () {
@@ -190,7 +190,7 @@
 
         return CsdmDataModelService
           .updateTags(deviceOverview.currentDevice, deviceOverview.currentDevice.tags.concat(tag))
-          .catch(Notification.errorResponse);
+          .catch(Notification.errorWithTrackingId);
 
       } else {
         deviceOverview.isAddingTag = false;
@@ -207,7 +207,7 @@
     deviceOverview.removeTag = function (tag) {
       var tags = _.without(deviceOverview.currentDevice.tags, tag);
       return CsdmDataModelService.updateTags(deviceOverview.currentDevice, tags)
-        .catch(Notification.errorResponse);
+        .catch(Notification.errorWithTrackingId);
     };
 
     deviceOverview.deviceHasInformation = deviceOverview.currentDevice.ip || deviceOverview.currentDevice.mac || deviceOverview.currentDevice.serial || deviceOverview.currentDevice.software || deviceOverview.currentDevice.hasRemoteSupport || deviceOverview.currentDevice.needsActivation;
@@ -243,7 +243,7 @@
         saveUpgradeChannel(newValue)
           .then(_.partial(waitForDeviceToUpdateUpgradeChannel, newValue))
           .catch(function (error) {
-            Notification.errorResponse(error);
+            Notification.errorWithTrackingId(error);
             resetSelectedChannel();
           })
           .finally(function () {
