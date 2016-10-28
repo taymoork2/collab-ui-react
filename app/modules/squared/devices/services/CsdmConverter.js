@@ -133,7 +133,7 @@
         this.isCode = true;
 
         this.url = obj.url;
-        this.type = 'cloudberry';
+        this.type = obj.type || 'cloudberry';
         this.cisUuid = obj.id;
         this.tags = getTags(obj.description);
         this.expiryTime = obj.expiryTime;

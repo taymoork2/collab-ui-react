@@ -71,12 +71,13 @@
       return $http.post(cmiOtpUri, {
         machineUuid: machineUuid
       }).then(function (res) {
-        var activationCode = {
+        return CsdmConverter.convertCode({
+          type: 'huron',
           activationCode: res.data.password,
           expiryTime: res.data.expiresOn,
-          cisUuid: machineUuid
-        };
-        return activationCode;
+          cisUuid: machineUuid,
+          state: 'UNCLAIMED'
+        });
       });
     }
 
