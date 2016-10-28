@@ -209,7 +209,7 @@
       var didList = [];
       var tokens = vm.unsavedTokens;
 
-      if (angular.isString(tokens) && tokens.length > 0) {
+      if (_.isString(tokens) && tokens.length > 0) {
         didList = tokens.split(',');
       }
 

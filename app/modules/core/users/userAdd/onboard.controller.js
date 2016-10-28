@@ -1787,14 +1787,14 @@
           error = $translate.instant('errors.statusError', {
             status: status
           });
-          if (data && angular.isString(data.message)) {
+          if (data && _.isString(data.message)) {
             error += ' ' + $translate.instant('usersPage.messageError', {
               message: data.message
             });
           }
         } else {
           error = 'Request failed.';
-          if (angular.isString(data)) {
+          if (_.isString(data)) {
             error += ' ' + data;
           }
         }

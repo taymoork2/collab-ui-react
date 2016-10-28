@@ -52,7 +52,7 @@
     }
 
     function setQRCode(code) {
-      if (angular.isString(code) && code.length > 0) {
+      if (_.isString(code) && code.length > 0) {
         OtpService.getQrCodeUrl(code).then(function (qrcode) {
           var arrayData = '';
           for (var i in Object.keys(qrcode)) {

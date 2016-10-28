@@ -39,7 +39,7 @@
       }
 
       function isSuffixValid(name) {
-        if (angular.isString(name)) {
+        if (_.isString(name)) {
           var nameParts = name.split('.');
           var suffix = nameParts[nameParts.length - 1];
           if (attrs.fileSuffix && attrs.fileSuffix.indexOf(suffix) > -1) {

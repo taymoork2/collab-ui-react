@@ -18,7 +18,7 @@
       var deferred = $q.defer();
       var isCountryCodeFound = false;
 
-      if (angular.isString(code)) {
+      if (_.isString(code)) {
         code = code.toLowerCase();
         angular.forEach(CountryCodes, function (value) {
           if (code === value.code) {
@@ -149,7 +149,7 @@
      * Temporary function until the country select can be changed to send the unformatted number
      */
     function removePhoneNumberFormatting(number) {
-      if (!number && !angular.isString(number)) {
+      if (!number && !_.isString(number)) {
         return number;
       }
       return _.replace(number, /[-\s]/g, "");

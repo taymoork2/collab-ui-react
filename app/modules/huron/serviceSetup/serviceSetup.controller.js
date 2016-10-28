@@ -1268,7 +1268,7 @@
           return $q.reject('No timeZone Id set');
         }
 
-        if (!angular.isString(timeZone)) {
+        if (!_.isString(timeZone)) {
           errors.push(Notification.error('serviceSetupModal.timezoneUpdateError'));
           return $q.reject('TimeZone Id is not a String');
         }
