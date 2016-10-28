@@ -314,23 +314,28 @@
         return $q.reject();
       }
 
-      if (item.isPlace && item.type === 'huron') {
-        return csdmHuronOrgDeviceService.getDevicesForPlace(item.cisUuid).then(function (devicesForPlace) {
+      if (item.isPlace) {
+        if (item.type === 'huron') {
+          return csdmHuronOrgDeviceService.getDevicesForPlace(item.cisUuid).then(function (devicesForPlace) {
 
-          var reloadedPlace = placesDataModel[item.url];
-          for (var devUrl in devicesForPlace) {
-            if (devicesForPlace[devUrl].displayName) {
-              item.displayName = devicesForPlace[devUrl].displayName;
-              reloadedPlace.displayName = devicesForPlace[devUrl].displayName;
-              break;
+            var reloadedPlace = placesDataModel[item.url];
+            for (var devUrl in devicesForPlace) {
+              var device = devicesForPlace[devUrl];
+              if (device.displayName) {
+                item.displayName = device.displayName;
+                reloadedPlace.displayName = device.displayName;
+              }
+              CsdmCacheUpdater.updateOne(theDeviceMap, devUrl, device);
             }
-          }
 
-          reloadedPlace.devices = devicesForPlace;
-          item.devices = devicesForPlace;
+            reloadedPlace.devices = devicesForPlace;
+            item.devices = devicesForPlace;
 
-          return reloadedPlace;
-        });
+            return reloadedPlace;
+          });
+        } else {
+          return $q.reject();
+        }
       } else {
         return service.fetchDevice(item.url).then(function (reloadedDevice) {
 

@@ -715,11 +715,15 @@ describe('Service: CsdmDataModelService', function () {
 
         expect(Object.keys(placeToUpdate.devices)).toHaveLength(0);
         expect(Object.keys(placeToUpdate.codes)).toHaveLength(0);
+        expect(initialDeviceMap['http://new/device']).toBeUndefined();
+        expect(Object.keys(initialDeviceMap)).not.toContain('http://new/device');
 
         CsdmDataModelService.reloadItem(placeToUpdate).then(function () {
 
           expect(Object.keys(placeToUpdate.devices)).toHaveLength(1);
           expect(Object.keys(placeToUpdate.codes)).toHaveLength(0);
+
+          expect(Object.keys(initialDeviceMap)).toContain('http://new/device');
 
           expectCall = true;
         });

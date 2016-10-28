@@ -26,7 +26,7 @@
     <cs-sp-section>
       <uc-device-list
         owner-type="place"
-        device-list="$ctrl.deviceList"
+        device-list="$ctrl.currentPlace.devices"
         multiple-otp="$ctrl.currentPlace.type !== 'cloudberry'"
         on-generate-fn="$ctrl.onGenerateOtpFn()"
         on-show-device-detail-fn="$ctrl.showDeviceDetails(device)">
