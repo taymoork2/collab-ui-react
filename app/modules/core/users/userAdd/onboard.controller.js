@@ -1637,7 +1637,7 @@
         deferred.reject();
       };
 
-      if (angular.isArray(usersList) && usersList.length > 0) {
+      if (_.isArray(usersList) && usersList.length > 0) {
         $scope.btnOnboardLoading = true;
 
         _.each(usersList, function (userItem) {
@@ -1837,7 +1837,7 @@
     //radio group
     $scope.entitlements = {};
     var setEntitlementList = function () {
-      if (angular.isArray($rootScope.services)) {
+      if (_.isArray($rootScope.services)) {
         for (var i = 0; i < $rootScope.services.length; i++) {
           var svc = $rootScope.services[i].serviceId;
 
@@ -1851,7 +1851,7 @@
     };
 
     $scope.$on('AuthinfoUpdated', function () {
-      if (angular.isArray($rootScope.services) && $rootScope.services.length === 0) {
+      if (_.isArray($rootScope.services) && $rootScope.services.length === 0) {
         $rootScope.services = Authinfo.getServices();
       }
       setEntitlementList();
@@ -2212,7 +2212,7 @@
       var data = {
         'newUsersCount': $scope.model.numNewUsers || 0,
         'updatedUsersCount': $scope.model.numExistingUsers || 0,
-        'errorUsersCount': angular.isArray($scope.model.userErrorArray) ? $scope.model.userErrorArray.length : 0
+        'errorUsersCount': _.isArray($scope.model.userErrorArray) ? $scope.model.userErrorArray.length : 0
       };
       LogMetricsService.logMetrics('Finished bulk processing', eType, LogMetricsService.getEventAction('buttonClick'), 200, bulkStartLog, 1, data);
     }

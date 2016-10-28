@@ -1356,7 +1356,7 @@
           var promises = [];
           var hasNewInternalNumberRange = false;
 
-          if (angular.isArray(vm.model.displayNumberRanges)) {
+          if (_.isArray(vm.model.displayNumberRanges)) {
             _.forEach(vm.model.displayNumberRanges, function (internalNumberRange) {
               if (_.isUndefined(internalNumberRange.uuid)) {
                 hasNewInternalNumberRange = true;
@@ -1867,7 +1867,7 @@
         customerId: Authinfo.getOrgId()
       }).$promise
         .then(function (extensionList) {
-          if (angular.isArray(extensionList) && extensionList.length > 0) {
+          if (_.isArray(extensionList) && extensionList.length > 0) {
             vm.model.disableExtensions = true;
           }
         });
@@ -1878,7 +1878,7 @@
         customerId: Authinfo.getOrgId()
       }).$promise
         .then(function (autoAttendant) {
-          if (angular.isArray(autoAttendant) && autoAttendant.length > 0) {
+          if (_.isArray(autoAttendant) && autoAttendant.length > 0) {
             vm.model.disableExtensions = true;
           }
         }).catch(function () {
@@ -1891,7 +1891,7 @@
         customerId: Authinfo.getOrgId()
       }).$promise
         .then(function (huntGroup) {
-          if (angular.isArray(huntGroup) && huntGroup.length > 0) {
+          if (_.isArray(huntGroup) && huntGroup.length > 0) {
             vm.model.disableExtensions = true;
           }
         }).catch(function () {

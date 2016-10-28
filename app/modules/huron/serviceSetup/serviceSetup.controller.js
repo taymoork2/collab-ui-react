@@ -822,7 +822,7 @@
         customerId: Authinfo.getOrgId()
       }).$promise
         .then(function (extensionList) {
-          if (angular.isArray(extensionList) && extensionList.length > 0) {
+          if (_.isArray(extensionList) && extensionList.length > 0) {
             vm.model.disableExtensions = true;
           }
         });
@@ -833,7 +833,7 @@
         customerId: Authinfo.getOrgId()
       }).$promise
         .then(function (autoAttendant) {
-          if (angular.isArray(autoAttendant) && autoAttendant.length > 0) {
+          if (_.isArray(autoAttendant) && autoAttendant.length > 0) {
             vm.model.disableExtensions = true;
           }
         }).catch(function () {
@@ -846,7 +846,7 @@
         customerId: Authinfo.getOrgId()
       }).$promise
         .then(function (huntGroup) {
-          if (angular.isArray(huntGroup) && huntGroup.length > 0) {
+          if (_.isArray(huntGroup) && huntGroup.length > 0) {
             vm.model.disableExtensions = true;
           }
         }).catch(function () {
@@ -1349,7 +1349,7 @@
 
       function saveInternalNumbers() {
         return $q.when(true).then(function () {
-          if (vm.hideFieldInternalNumberRange === false && (angular.isArray(_.get(vm, 'model.displayNumberRanges')))) {
+          if (vm.hideFieldInternalNumberRange === false && (_.isArray(_.get(vm, 'model.displayNumberRanges')))) {
             angular.forEach(vm.model.displayNumberRanges, function (internalNumberRange) {
               if (_.isUndefined(internalNumberRange.uuid)) {
                 return createInternalNumbers(internalNumberRange);

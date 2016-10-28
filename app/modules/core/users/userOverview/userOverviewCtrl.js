@@ -60,7 +60,7 @@
       icon: 'icon-circle-group',
       state: 'conferencing',
       detail: $translate.instant('onboardModal.mtgFree'),
-      actionAvailable: getDisplayableServices('CONFERENCING') || angular.isArray(vm.currentUser.trainSiteNames)
+      actionAvailable: getDisplayableServices('CONFERENCING') || _.isArray(vm.currentUser.trainSiteNames)
     };
     var contactCenterState = {
       name: $translate.instant('onboardModal.contactCenter'),
@@ -156,7 +156,7 @@
           return service.isConfigurable && service.licenseType === serviceName;
         });
       }
-      return angular.isArray(displayableServices) && (displayableServices.length > 0);
+      return _.isArray(displayableServices) && (displayableServices.length > 0);
     }
 
     function hasEntitlement(entitlement) {
@@ -261,7 +261,7 @@
       if (vm.currentUser.title) {
         vm.subTitleCard = vm.currentUser.title;
       }
-      if (angular.isArray(vm.currentUser.addresses) && vm.currentUser.addresses.length) {
+      if (_.isArray(vm.currentUser.addresses) && vm.currentUser.addresses.length) {
         vm.subTitleCard += ' ' + (vm.currentUser.addresses[0].locality || '');
       }
       if (!vm.subTitleCard && vm.titleCard != vm.currentUser.userName) {

@@ -11,7 +11,7 @@
       var deferred = $q.defer();
       if (!_.isUndefined($scope.wizard) && _.isFunction($scope.wizard.getRequiredTabs)) {
         var required = $scope.wizard.getRequiredTabs();
-        if (angular.isArray(required) && required.length > 0) {
+        if (_.isArray(required) && required.length > 0) {
           var errors = [];
           for (var i = 0; i < required.length; i++) {
             errors.push($translate.instant('firstTimeWizard.completeRequired', {

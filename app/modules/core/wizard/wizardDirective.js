@@ -145,9 +145,9 @@
 
     function getSteps() {
       var tab = getTab();
-      if (!_.isUndefined(tab) && angular.isArray(tab.steps)) {
+      if (!_.isUndefined(tab) && _.isArray(tab.steps)) {
         return tab.steps;
-      } else if (!_.isUndefined(tab) && angular.isArray(tab.subTabs) && tab.subTabs.length > 0) {
+      } else if (!_.isUndefined(tab) && _.isArray(tab.subTabs) && tab.subTabs.length > 0) {
         for (var i = 0; i < tab.subTabs.length; i++) {
           if (_.isUndefined(getSubTab()) || tab.subTabs[i] === getSubTab()) {
             vm.current.subTab = tab.subTabs[i];
@@ -243,7 +243,7 @@
 
     function previousTab() {
       var tabs = getTabs();
-      if (angular.isArray(tabs)) {
+      if (_.isArray(tabs)) {
         var tabIndex = tabs.indexOf(getTab());
         if (tabIndex > 0) {
           setTab(tabs[tabIndex - 1]);
@@ -254,7 +254,7 @@
     function nextTab() {
       var tabs = getTabs();
       vm.wizardNextLoad = false;
-      if (angular.isArray(tabs)) {
+      if (_.isArray(tabs)) {
         var tabIndex = tabs.indexOf(getTab());
         $scope.tabs[tabIndex].required = false;
         if (tabIndex + 1 < tabs.length) {
@@ -267,7 +267,7 @@
 
     function previousStep() {
       var steps = getSteps();
-      if (angular.isArray(steps)) {
+      if (_.isArray(steps)) {
         var index = steps.indexOf(getStep());
         if (index > 0) {
           setStep(steps[index - 1]);
@@ -301,7 +301,7 @@
           $rootScope.$broadcast('wizard-enterprise-sip-url-event');
         }
         var steps = getSteps();
-        if (angular.isArray(steps)) {
+        if (_.isArray(steps)) {
           var index = steps.indexOf(getStep());
           if (index + 1 < steps.length) {
             setStep(steps[index + 1]);
@@ -316,7 +316,7 @@
 
     function goToStep(requestedStep) {
       var steps = getSteps();
-      if (angular.isArray(steps)) {
+      if (_.isArray(steps)) {
         var index = _.map(steps, function (step) {
           return step.name;
         }).indexOf(requestedStep);

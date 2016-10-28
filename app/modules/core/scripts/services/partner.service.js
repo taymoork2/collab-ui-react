@@ -294,7 +294,7 @@
     }
 
     function isLicenseInfoAvailable(licenses) {
-      return angular.isArray(licenses);
+      return _.isArray(licenses);
     }
 
     function setServiceSortOrder(license) {
@@ -556,20 +556,20 @@
               licenseType: Config.licenseTypes.CARE
             });
 
-            if (messagingLicense && angular.isArray(messagingLicense.features)) {
+            if (messagingLicense && _.isArray(messagingLicense.features)) {
               exportedCustomer.messagingEntitlements = messagingLicense.features.join(' ');
             }
-            if (conferenceLicense && angular.isArray(conferenceLicense.features)) {
+            if (conferenceLicense && _.isArray(conferenceLicense.features)) {
               exportedCustomer.conferenceEntitlements = conferenceLicense.features.join(' ');
             }
-            if (communicationsLicense && angular.isArray(communicationsLicense.features)) {
+            if (communicationsLicense && _.isArray(communicationsLicense.features)) {
               exportedCustomer.communicationsEntitlements = communicationsLicense.features.join(' ');
             }
-            if (roomSystemsLicense && angular.isArray(roomSystemsLicense.features)) {
+            if (roomSystemsLicense && _.isArray(roomSystemsLicense.features)) {
               exportedCustomer.roomSystemsEntitlements = roomSystemsLicense.features.join(' ');
             }
             if (isCareEnabled) {
-              if (careLicense && angular.isArray(careLicense.features)) {
+              if (careLicense && _.isArray(careLicense.features)) {
                 exportedCustomer.careEntitlements = careLicense.features.join(' ');
               }
             }

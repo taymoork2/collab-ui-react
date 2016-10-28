@@ -25,7 +25,7 @@
     function createFile(header, content) {
       var csvContent = firstLine;
       // Check if there's a provided header array
-      if (angular.isArray(header)) {
+      if (_.isArray(header)) {
         var headerString = stringifyArray(header);
         csvContent += headerString + EOL;
       }

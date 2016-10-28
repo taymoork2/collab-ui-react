@@ -13,7 +13,7 @@
         return "";
       }
       var resources = ceInfo.getResources();
-      if (!angular.isArray(resources) || _.isUndefined(resources[0])) {
+      if (!_.isArray(resources) || _.isUndefined(resources[0])) {
         return "";
       }
       // todo: priority for display is (1) E164 number, (2) extension, (3) from another AA
@@ -29,7 +29,7 @@
         return "";
       }
       var resources = ceInfo.getResources();
-      if (!angular.isArray(resources) || _.isUndefined(resources[0])) {
+      if (!_.isArray(resources) || _.isUndefined(resources[0])) {
         return "";
       }
 
@@ -51,7 +51,7 @@
         return "";
       }
       var resources = ceInfo.getResources();
-      if (!angular.isArray(resources) || _.isUndefined(resources[0])) {
+      if (!_.isArray(resources) || _.isUndefined(resources[0])) {
         return "";
       }
 

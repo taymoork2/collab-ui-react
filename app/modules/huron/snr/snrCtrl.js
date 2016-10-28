@@ -238,7 +238,7 @@
     }
 
     function saveSingleNumberReach() {
-      if (angular.isArray(vm.snrInfo.remoteDestinations) && vm.snrInfo.remoteDestinations.length > 0) {
+      if (_.isArray(vm.snrInfo.remoteDestinations) && vm.snrInfo.remoteDestinations.length > 0) {
         if (!vm.snrInfo.singleNumberReachEnabled) {
           deleteRemoteDestinationInfo(vm.currentUser).then(function () {
             resetForm();
