@@ -153,7 +153,7 @@
               return (TelephoneNumberService.validateDID(resource.number));
             });
 
-            if (angular.isDefined(r)) {
+            if (!_.isUndefined(r)) {
               var index = _.indexOf(resources, r);
 
                 // if e164 number is already the 0th element, all done
@@ -362,7 +362,7 @@
       }
 
       var currentResources = [];
-      if (angular.isDefined(vm.ui.ceInfo) && angular.isDefined(vm.ui.ceInfo.resources)) {
+      if (!_.isUndefined(vm.ui.ceInfo) && !_.isUndefined(vm.ui.ceInfo.resources)) {
         currentResources = vm.ui.ceInfo.getResources();
       }
 

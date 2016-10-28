@@ -58,11 +58,11 @@
       $timeout(function () {
         var $target = $(targetId);
 
-        var targetHeight = angular.isDefined($target.outerHeight(true)) ? $target.outerHeight(true) : 0;
-        var targetEnd = angular.isDefined($target.offset()) ? $target.offset().top + targetHeight : targetHeight;
+        var targetHeight = !_.isUndefined($target.outerHeight(true)) ? $target.outerHeight(true) : 0;
+        var targetEnd = !_.isUndefined($target.offset()) ? $target.offset().top + targetHeight : targetHeight;
 
         var $container = $(containerId);
-        var containerEnd = angular.isDefined($container.offset()) && angular.isDefined($container.outerHeight(true)) ? $container.offset().top + $container.outerHeight(true) : 0;
+        var containerEnd = !_.isUndefined($container.offset()) && !_.isUndefined($container.outerHeight(true)) ? $container.offset().top + $container.outerHeight(true) : 0;
 
         // recheck scrollbar position
         resize();

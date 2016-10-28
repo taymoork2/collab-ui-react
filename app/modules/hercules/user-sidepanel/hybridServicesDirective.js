@@ -122,7 +122,7 @@
 
     // Periodically update the user statuses from USS
     function updateStatusForUser() {
-      if (angular.isDefined(vm.user)) {
+      if (!_.isUndefined(vm.user)) {
         USSService.getStatusesForUser(vm.user.id)
           .then(function (userStatuses) {
             _.forEach(vm.extensions, function (extension) {
@@ -149,7 +149,7 @@
     }
 
     function hasEntitlement(entitlement) {
-      if (!angular.isDefined(vm.user)) {
+      if (_.isUndefined(vm.user)) {
         return false;
       }
       return vm.user.entitlements && vm.user.entitlements.indexOf(entitlement) > -1;

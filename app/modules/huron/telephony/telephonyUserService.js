@@ -36,7 +36,7 @@
         }
       }
 
-      if (angular.isDefined(uuid)) {
+      if (!_.isUndefined(uuid)) {
         user.uuid = uuid;
       }
 

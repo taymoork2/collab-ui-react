@@ -301,7 +301,7 @@
     }
 
     function emailNotifyTrialCustomer() {
-      if (angular.isDefined($scope.trial)) {
+      if (!_.isUndefined($scope.trial)) {
         EmailService.emailNotifyTrialCustomer(
             $scope.trial.model.customerEmail,
             $scope.trial.model.licenseDuration,

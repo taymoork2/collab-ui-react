@@ -145,9 +145,9 @@
 
     function getSteps() {
       var tab = getTab();
-      if (angular.isDefined(tab) && angular.isArray(tab.steps)) {
+      if (!_.isUndefined(tab) && angular.isArray(tab.steps)) {
         return tab.steps;
-      } else if (angular.isDefined(tab) && angular.isArray(tab.subTabs) && tab.subTabs.length > 0) {
+      } else if (!_.isUndefined(tab) && angular.isArray(tab.subTabs) && tab.subTabs.length > 0) {
         for (var i = 0; i < tab.subTabs.length; i++) {
           if (_.isUndefined(getSubTab()) || tab.subTabs[i] === getSubTab()) {
             vm.current.subTab = tab.subTabs[i];
@@ -182,7 +182,7 @@
 
     function setSubTab(subTab) {
       vm.current.subTab = subTab;
-      if (angular.isDefined(subTab)) {
+      if (!_.isUndefined(subTab)) {
         setStep(getSteps()[0]);
       }
     }
