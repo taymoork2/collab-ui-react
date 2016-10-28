@@ -566,14 +566,14 @@ describe('Partner Service -', function () {
         expect(_.map(data.offer.trialServices, function (o) { return o.name; })).toContain($translate.instant('customerPage.EE'));
       });
 
-      it('should return an object with its "offer.trialServices" array containing object with the name translated "trials.roomSystem" l10n key, if the offers "id" property matches `Config.offerTypes.roomSystems`', function () {
+      it('should return an object with its "offer.trialServices" array containing object with the name translated "subscriptions.room" l10n key, if the offers "id" property matches `Config.offerTypes.roomSystems`', function () {
         var data = PartnerService.parseLicensesAndOffers({
           offers: [{
             id: Config.offerTypes.roomSystems
           }]
         }, { isCareEnabled: true });
         expect(data.isRoomSystems).toBe(true);
-        expect(_.map(data.offer.trialServices, function (o) { return o.name; })).toContain($translate.instant('trials.roomSystem'));
+        expect(_.map(data.offer.trialServices, function (o) { return o.name; })).toContain($translate.instant('subscriptions.room'));
       });
     });
 

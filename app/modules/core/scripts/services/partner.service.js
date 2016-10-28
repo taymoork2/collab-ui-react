@@ -131,7 +131,7 @@
       };
 
       licenseMapping[Config.licenseTypes.SHARED_DEVICES] = {
-        name: $translate.instant('trials.roomSystem'),
+        name: $translate.instant('subscriptions.room'),
         icon: 'icon-circle-telepresence',
         isRoom: true,
         order: 6
