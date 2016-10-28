@@ -41,7 +41,7 @@
     $scope.initNext = function () {
       var deferred = $q.defer();
 
-      if (angular.isDefined($scope.options.addUsers) && angular.isDefined($scope.wizard) && angular.isFunction($scope.wizard.setSubTab)) {
+      if (!_.isUndefined($scope.options.addUsers) && !_.isUndefined($scope.wizard) && angular.isFunction($scope.wizard.setSubTab)) {
         var simpleSubTab = _.find($scope.wizard.current.tab.subTabs, {
           name: 'simple'
         });
@@ -101,7 +101,7 @@
       })
         .on('tokenfield:createtoken', function (e) {
           //Removing anything in brackets from user data
-          var value = e.attrs.value.replace(/\s*\([^)]*\)\s*/g, ' ');
+          var value = _.replace(e.attrs.value, /\s*\([^)]*\)\s*/g, ' ');
           e.attrs.value = value;
         })
         .on('tokenfield:createdtoken', function (e) {

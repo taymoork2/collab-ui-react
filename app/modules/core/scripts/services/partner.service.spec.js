@@ -14,8 +14,8 @@ describe('Partner Service -', function () {
         getOrgId: function () {
           return '12345';
         },
-        getUserName: function () {
-          return 'fake-userName';
+        getPrimaryEmail: function () {
+          return 'fake-primaryEmail';
         }
       };
 
@@ -38,7 +38,7 @@ describe('Partner Service -', function () {
 
     testData = getJSONFixture('core/json/partner/partner.service.json');
     spyOn(Auth, 'getAuthorizationUrlList').and.returnValue($q.when({}));
-    spyOn(Analytics, 'trackUserPatch');
+    spyOn(Analytics, 'trackPartnerActions');
   }));
 
   afterEach(function () {

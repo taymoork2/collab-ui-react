@@ -110,12 +110,12 @@
     min-height: calc(100vh - 150px);
   }
 
-  .btn--alert {
+  .btn--negative {
     margin-left: 0;
   }
 
   .btn--primary,
-  .btn--alert {
+  .btn--negative {
     margin-top: 1rem;
     margin-bottom: 1rem;
   }
@@ -151,12 +151,6 @@
 /* Has to be fixed in TK before we can fix the code in Atlas */
 .black-header {
   color: black !important;
-}
-
-/* Fix alert crap */
-.fix-alert-margins {
-  margin-right: 0px;
-  margin-left: 0px;
 }
 
 .hercules-fix-paragraphs {

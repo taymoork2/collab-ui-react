@@ -437,17 +437,17 @@ describe('Service: AutoAttendantCeMenuModelService', function () {
     it('should set scheduleActionSetMap attributes in AARecord object', function () {
       var _ceRecord = {};
       AutoAttendantCeMenuModelService.updateScheduleActionSetMap(_ceRecord, 'openHours');
-      expect(angular.isDefined(_ceRecord.scheduleEventTypeMap)).toBe(true);
+      expect(!_.isUndefined(_ceRecord.scheduleEventTypeMap)).toBe(true);
       expect(_ceRecord.scheduleEventTypeMap.open).toBe('openHours');
 
       _ceRecord = {};
       AutoAttendantCeMenuModelService.updateScheduleActionSetMap(_ceRecord, 'closedHours');
-      expect(angular.isDefined(_ceRecord.scheduleEventTypeMap)).toBe(true);
+      expect(!_.isUndefined(_ceRecord.scheduleEventTypeMap)).toBe(true);
       expect(_ceRecord.scheduleEventTypeMap.closed).toBe('closedHours');
 
       _ceRecord = {};
       AutoAttendantCeMenuModelService.updateScheduleActionSetMap(_ceRecord, 'holidays', 'closedHours');
-      expect(angular.isDefined(_ceRecord.scheduleEventTypeMap)).toBe(true);
+      expect(!_.isUndefined(_ceRecord.scheduleEventTypeMap)).toBe(true);
       expect(_ceRecord.scheduleEventTypeMap.holiday).toBe('closedHours');
     });
   });
@@ -491,13 +491,13 @@ describe('Service: AutoAttendantCeMenuModelService', function () {
         }
       };
       AutoAttendantCeMenuModelService.deleteScheduleActionSetMap(_ceRecord, 'closedHours');
-      expect(angular.isUndefined(_ceRecord.scheduleEventTypeMap.closed)).toBe(true);
+      expect(_.isUndefined(_ceRecord.scheduleEventTypeMap.closed)).toBe(true);
 
       AutoAttendantCeMenuModelService.deleteScheduleActionSetMap(_ceRecord, 'openHours');
-      expect(angular.isUndefined(_ceRecord.scheduleEventTypeMap.open)).toBe(true);
+      expect(_.isUndefined(_ceRecord.scheduleEventTypeMap.open)).toBe(true);
 
       AutoAttendantCeMenuModelService.deleteScheduleActionSetMap(_ceRecord, 'holidays');
-      expect(angular.isUndefined(_ceRecord.scheduleEventTypeMap.holiday)).toBe(true);
+      expect(_.isUndefined(_ceRecord.scheduleEventTypeMap.holiday)).toBe(true);
     });
   });
 });

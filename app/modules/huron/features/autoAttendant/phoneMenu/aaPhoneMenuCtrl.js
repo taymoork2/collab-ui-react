@@ -137,7 +137,7 @@
         AutoAttendantCeMenuModelService.deleteCeMenuMap(entryI.getId());
       }
       var _keyAction = findKeyAction(keyAction.name);
-      if (angular.isDefined(_keyAction)) {
+      if (!_.isUndefined(_keyAction)) {
         if (_keyAction.name === 'phoneMenuPlaySubmenu') {
           // 1) Change of main menu attempts should copied into its submenus.
           // See aaTimeoutInvalidCtrl.js.
@@ -158,7 +158,7 @@
           phoneMenuEntry.key = vm.menuEntry.entries[index].key;
           var action = phoneMenuEntry.actions[0];
           action.name = keyAction.action;
-          if (angular.isDefined(_keyAction.inputType)) {
+          if (!_.isUndefined(_keyAction.inputType)) {
             // some action names are overloaded and are distinguished
             // by inputType
             action.inputType = _keyAction.inputType;
@@ -227,7 +227,7 @@
             keyAction.key = menuEntry.key;
             if (_.has(menuEntry, 'actions')) {
               if (menuEntry.actions.length > 0 && menuEntry.type == "MENU_OPTION") {
-                if (angular.isDefined(menuEntry.actions[0].name) && menuEntry.actions[0].name.length > 0) {
+                if (!_.isUndefined(menuEntry.actions[0].name) && menuEntry.actions[0].name.length > 0) {
                   keyAction.action = _.find(vm.keyActions, _.bind(function (keyAction) {
                     if (_.has(this, 'inputType')) {
                       return this.name === keyAction.action && this.inputType === keyAction.inputType;

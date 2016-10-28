@@ -18,7 +18,7 @@ describe('Service: CsdmDataModelService', function () {
   var codeUrl = 'https://csdm-integration.wbx2.com/csdm/api/v1/organization/584cf4cd-eea7-4c8c-83ee-67d88fc6eab5/codes/ad233bb2-code1-for-place-with-one-code-9333278b3a0c';
   var pWithOnlyCodeUrl = placesUrl + 'a19b308a-PlaceWithOnlyCode-71898e423bec';
 
-  var huronDevicesUrl = 'https://csdm-integration.wbx2.com/csdm/api/v1/organization/testOrg/huronDevices';
+  var huronDevicesUrl = 'https://csdm-integration.wbx2.com/csdm/api/v1/organization/testOrg/devices/?type=huron';
   var huronPlacesUrl = 'https://cmi.huron-int.com/api/v2/customers/testOrg/places/';
   var pWithHuronDevice2Url = huronPlacesUrl + '68351854-Place2WithHuronDevice-c9c844421ec2';
   var huronDevice2Url = 'https://cmi.huron-int.com/api/v1/voice/customers/3a6ff373-unittest-a27460e0ac5c/sipendpoints/2c586b22-hurondev_inplace2-ace151f631fa';
@@ -130,7 +130,7 @@ describe('Service: CsdmDataModelService', function () {
       });
     });
 
-    describe('reloadDevice', function () {
+    describe('reloadItem', function () {
       it(' should reload a device and update the device in both devices and places', function () {
         executeGetCallsAndInitPromises();
         var deviceToReloadUrl = "https://csdm-integration.wbx2.com/csdm/api/v1/organization/584cf4cd-eea7-4c8c-83ee-67d88fc6eab5/devices/b528e32d-ed35-4e00-a20d-d4d3519efb4f";
@@ -146,7 +146,7 @@ describe('Service: CsdmDataModelService', function () {
 
             var originalDevice = devices[deviceToReloadUrl];
 
-            CsdmDataModelService.reloadDevice(originalDevice).then(function (reloadedDevice) {
+            CsdmDataModelService.reloadItem(originalDevice).then(function (reloadedDevice) {
 
               expect(reloadedDevice.displayName).toEqual(newDispName);
               expect(originalDevice.displayName).toEqual(newDispName);
@@ -696,6 +696,39 @@ describe('Service: CsdmDataModelService', function () {
         expectCall = true;
       });
       $rootScope.$digest();
+      expect(expectCall).toBe(true);
+    });
+
+    it('get should return an updated huron item and update the model when a code was activated', function () {
+
+      var expectCall;
+      var placeToUpdateUrl = huronPlaceWithoutDeviceUrl;
+      var placeToUpdateId = huronPlaceWithoutDeviceUrl.split('/').slice(-1)[0];
+      var placeToFindDevicesUrl = 'https://csdm-integration.wbx2.com/csdm/api/v1/organization/testOrg/devices/?cisUuid=' + placeToUpdateId + '&type=huron';
+
+      var phonesForPlace = { 'http://new/device': { 'url': 'http://new/device' } };
+      $httpBackend.expectGET(placeToFindDevicesUrl).respond(phonesForPlace);
+
+      CsdmDataModelService.getPlacesMap().then(function (places) {
+        expect(Object.keys(places).length).toBe(initialPlaceCount);
+        var placeToUpdate = places[placeToUpdateUrl];
+
+        expect(Object.keys(placeToUpdate.devices)).toHaveLength(0);
+        expect(Object.keys(placeToUpdate.codes)).toHaveLength(0);
+        expect(initialDeviceMap['http://new/device']).toBeUndefined();
+        expect(Object.keys(initialDeviceMap)).not.toContain('http://new/device');
+
+        CsdmDataModelService.reloadItem(placeToUpdate).then(function () {
+
+          expect(Object.keys(placeToUpdate.devices)).toHaveLength(1);
+          expect(Object.keys(placeToUpdate.codes)).toHaveLength(0);
+
+          expect(Object.keys(initialDeviceMap)).toContain('http://new/device');
+
+          expectCall = true;
+        });
+      });
+      $httpBackend.flush();
       expect(expectCall).toBe(true);
     });
 

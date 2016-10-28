@@ -1,0 +1,19 @@
+<div>
+  <cs-overlay-panel class="callpickup overlay-panel typeahead-group"
+                    overlay-title="{{::'callPickup.createTitle' | translate}}" close="$ctrl.cancelModal()"
+                    ng-keyup="$ctrl.evalKeyPress($event.keyCode)">
+    <cs-setup-assistant previous="$ctrl.previousButton()"
+                        next="$ctrl.nextButton()"
+                        next-text="$ctrl.nextText()"
+                        previous-fn="$ctrl.previousPage()"
+                        next-fn="$ctrl.nextPage()">
+
+      <call-pickup-name
+           ng-if="$ctrl.getPageIndex() === 0"
+           on-update="$ctrl.onUpdateName(name, isValid)"
+           call-pickup-name="$ctrl.name"
+           ng-class="$ctrl.animation"></call-pickup-name>
+
+    </cs-setup-assistant>
+  </cs-overlay-panel>
+</div>

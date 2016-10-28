@@ -6,34 +6,22 @@
     .controller('ClusterDeregisterController', ClusterDeregisterController);
 
   /* @ngInject */
-  function ClusterDeregisterController(cluster, FusionClusterService, XhrNotificationService, $translate, $modalInstance) {
+  function ClusterDeregisterController(Authinfo, cluster, FusionClusterService, Notification, $modalInstance) {
     var vm = this;
-    vm.deregistering = false;
-
-    vm.deregisterAreYouSure = $translate.instant(
-      'hercules.clusters.deregisterAreYouSure', {
-        clusterName: cluster.name
-      });
-
-    vm.deregisterCausesListItem2 = $translate.instant(
-      'hercules.clusters.deregisterCausesListItem2', {
-        clusterName: cluster.name
-      });
+    vm.clustername = cluster.name;
+    vm.companyName = Authinfo.getOrgName();
+    vm.loading = false;
 
     vm.deregister = function () {
-      vm.deregistering = true;
+      vm.loading = true;
       FusionClusterService
         .deregisterCluster(cluster.id)
         .then(function () {
           $modalInstance.close();
-        }, function (err) {
-          vm.error = $translate.instant('hercules.clusters.deregisterErrorGeneric', {
-            clusterName: cluster.name,
-            errorMessage: XhrNotificationService.getMessages(err).join(', ')
-          });
         })
-        .finally(function () {
-          vm.deregistering = false;
+        .catch(function (error) {
+          Notification.errorWithTrackingId(error, 'hercules.genericFailure');
+          vm.loading = false;
         });
     };
   }

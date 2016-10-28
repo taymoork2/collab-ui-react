@@ -77,7 +77,7 @@ describe('Features Controller', function () {
     spyOn(AutoAttendantCeInfoModelService, 'getCeInfosList').and.returnValue($q.when([]));
     spyOn(PagingGroupService, 'getListOfPagingGroups').and.returnValue($q.when());
     spyOn(AAModelService, 'newAAModel').and.returnValue(getDeferred.promise);
-    spyOn(FeatureToggleService, 'supports').and.returnValue(getDeferred.promise);
+    spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
     spyOn($state, 'go');
     spyOn(Notification, 'success');
     spyOn(Notification, 'errorResponse');
@@ -126,6 +126,7 @@ describe('Features Controller', function () {
       });
   });
   it('should set the pageState to Loading when controller is getting data from back-end', function () {
+    $timeout.flush();
     expect(featureCtrl.pageState).toEqual('Loading');
     getDeferred.resolve(getCPListSuccessResp(listOfCPs));
     $scope.$apply();
@@ -133,6 +134,7 @@ describe('Features Controller', function () {
     expect(featureCtrl.pageState).toEqual('showFeatures');
   });
   it('should set the pageState to Reload when controller fails to load the data for all features from back-end', function () {
+    $timeout.flush();
     expect(featureCtrl.pageState).toEqual('Loading');
     getDeferred.reject(getCPListFailureResp);
     $scope.$apply();
@@ -159,6 +161,7 @@ describe('Features Controller', function () {
     expect(featureCtrl.listOfFeatures).not.toEqual(jasmine.arrayContaining([callParks.callparks[0]]));
   });
   it('should receive the HURON_FEATURE_DELETED event and set pageState to newFeature if they are no features to show', function () {
+    $timeout.flush();
     featureCtrl.listOfFeatures = [];
     expect(featureCtrl.pageState).toEqual('Loading');
     getDeferred.resolve(getCPListSuccessResp(singlePark));

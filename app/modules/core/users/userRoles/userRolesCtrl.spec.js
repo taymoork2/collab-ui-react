@@ -142,10 +142,6 @@ describe('Controller: UserRolesCtrl', function () {
           roleName: 'Readonly_Admin',
           roleState: 'INACTIVE'
         }),
-        /*Object({
-          roleName: 'Tech_Support',
-          roleState: 'INACTIVE'
-        }),*/
         Object({
           roleName: 'Help_Desk',
           roleState: 'INACTIVE'
@@ -252,10 +248,6 @@ describe('Controller: UserRolesCtrl', function () {
           roleName: 'Readonly_Admin',
           roleState: 'INACTIVE'
         }),
-        /*Object({
-          roleName: 'Tech_Support',
-          roleState: 'INACTIVE'
-        }),*/
         Object({
           roleName: 'Help_Desk',
           roleState: 'ACTIVE'

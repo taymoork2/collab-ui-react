@@ -178,7 +178,7 @@
 
       $http.get(url)
         .success(function (data, status) {
-          data = data || {};
+          data = _.isObject(data) ? data : {};
           data.success = true;
           callback(data, status);
         })

@@ -117,7 +117,7 @@
 
     function setPhoneMenuMinMaxEntry() {
       var action = vm.menuEntry.actions[0];
-      if (angular.isUndefined(action.minNumberOfCharacters)) {
+      if (_.isUndefined(action.minNumberOfCharacters)) {
         setActionMinMax(action);
       }
     }

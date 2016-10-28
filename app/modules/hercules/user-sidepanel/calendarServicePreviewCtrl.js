@@ -63,7 +63,7 @@
         defaultWebExSiteName = _.find($scope.currentUser.userPreferences, function (userPreference) {
           return userPreference.indexOf("calSvcPreferredWebexSite") > 0;
         });
-        if (defaultWebExSiteName !== undefined) {
+        if (_.isString(defaultWebExSiteName)) {
           defaultWebExSiteName = defaultWebExSiteName.substring(defaultWebExSiteName.indexOf(":") + 1).replace(/"/g, '');
           $scope.extension.defaultWebExSiteName = defaultWebExSiteName;
         }
@@ -239,8 +239,8 @@
         $scope.setShouldShowButtons();
         $scope.resourceGroup.cannotFindResouceGroup = false;
         Notification.success('hercules.resourceGroups.resourceGroupSaved');
-      }).catch(function () {
-        Notification.error('hercules.resourceGroups.failedToSetGroup');
+      }).catch(function (error) {
+        Notification.errorWithTrackingId(error, 'hercules.resourceGroups.failedToSetGroup');
       }).finally(function () {
         $scope.resourceGroup.saving = false;
         $scope.saving = $scope.savingEntitlements;

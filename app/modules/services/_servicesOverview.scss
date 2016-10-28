@@ -76,6 +76,23 @@
         section {
           position: relative;
 
+          .hds-card-list {
+            text-align: left;
+            margin-left: 0;
+
+            li {
+              list-style-position: inside;
+            }
+
+            a {
+              padding: 1px 0;
+            }
+
+            .icon {
+              color: green;
+            }
+          }
+
           .btn-link {
             margin-left: 0;
             text-overflow: ellipsis;

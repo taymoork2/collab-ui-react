@@ -6,7 +6,7 @@
     .controller('ExpresswayHostDetailsController', ExpresswayHostDetailsController);
 
   /* @ngInject */
-  function ExpresswayHostDetailsController($scope, $stateParams, $state, ClusterService, XhrNotificationService, $translate) {
+  function ExpresswayHostDetailsController($scope, $stateParams, $state, ClusterService, Notification, $translate) {
     var cluster;
     var vm = this;
     vm.deleteHost = deleteHost;
@@ -38,7 +38,10 @@
           } else {
             $state.sidepanel.close();
           }
-        }, XhrNotificationService.notify);
+        })
+        .catch(function (error) {
+          Notification.errorWithTrackingId(error, 'hercules.genericFailure');
+        });
     }
   }
 }());

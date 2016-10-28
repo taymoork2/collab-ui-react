@@ -152,7 +152,7 @@
       if (!number && !angular.isString(number)) {
         return number;
       }
-      return number.replace(/[-\s]/g, "");
+      return _.replace(number, /[-\s]/g, "");
     }
 
     function createRemoteDestinationInfo(user, destination, answerTooLateTimer) {

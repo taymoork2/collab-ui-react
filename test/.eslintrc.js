@@ -93,9 +93,5 @@ module.exports = {
     wizard: true,
     xdescribe: true,
     xit: true,
-    componentPage: true,
-    dashboardPage: true,
-    incidentPage: true,
-    serviceListPage: true,
   }
 };

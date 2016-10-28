@@ -28,3 +28,9 @@
 .user-header-title {
   max-width: 90%;
 }
+
+// taking the calculation from toolkit (100vh - 140px) and subtracting
+// the height of the user pending alert (60px) and the side-panel-padding
+.user-pending .side-panel-container {
+    height: calc(100vh - 140px - 60px - #{$side-panel-padding});
+}

@@ -19,9 +19,7 @@ var ReportsPage = function () {
 
   // active user
   this.activeHeader = element(by.cssContainingText('.report-section-header', 'Active Users'));
-  this.activeCustomerDescription = element(by.css('.customer-active-user')).element(by.css('.report-description'));
-  this.activePartnerDescription = element(by.id('activeUsers')).element(by.css('article section p'));
-  this.activeUsers = element(by.id('activeUsersdiv'));
+  this.activeDescription = element(by.id('activeUsers')).element(by.css('article section p'));
   this.activeUsersChart = element(by.id('activeUsersChart'));
 
   // most active users
@@ -57,11 +55,9 @@ var ReportsPage = function () {
 
   // call metrics
   this.metricsHeader = element(by.cssContainingText('.report-section-header', 'Call Metrics'));
-  this.customerMetricsDescription = element(by.css('.call-metrics-customer')).element(by.css('.report-description'));
-  this.metricsGraphDiv = element(by.id('metricsGraphDiv'));
   this.metricsData = element.all(by.css('.metrics-display'));
   this.callMetricsGraph = element(by.id('callMetricsChart'));
-  this.partnerMetricsDescription = element(by.id('callMetrics')).element(by.css('article section p'));
+  this.metricsDescription = element(by.id('callMetrics')).element(by.css('article section p'));
 
   // media quality
   this.mediaHeader = element(by.cssContainingText('.report-section-header', 'Device Media Quality'));

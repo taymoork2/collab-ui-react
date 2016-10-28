@@ -91,13 +91,13 @@
 
       return $http.get(listUrl)
         .success(function (data, status) {
-          data = data || {};
+          data = _.isObject(data) ? data : {};
           data.success = true;
           Log.debug('Callback with search=' + searchStr);
           callback(data, status, searchStr);
         })
         .error(function (data, status) {
-          data = data || {};
+          data = _.isObject(data) ? data : {};
           data.success = false;
           data.status = status;
           callback(data, status, searchStr);
@@ -117,13 +117,13 @@
         data: requestData
       })
         .success(function (data, status) {
-          data = data || {};
+          data = _.isObject(data) ? data : {};
           data.success = true;
           Log.debug('UserListService.generateUserReport - executing callback...');
           callback(data, status);
         })
         .error(function (data, status) {
-          data = data || {};
+          data = _.isObject(data) ? data : {};
           data.success = false;
           data.status = status;
           callback(data, status);
@@ -144,7 +144,7 @@
               getUserReports(userReportsID, callback);
             }, 3000);
           } else {
-            data = data || {};
+            data = _.isObject(data) ? data : {};
             data.success = true;
             Log.debug('UserListService.getUserReport - executing callback...');
             callback(data, status);
@@ -153,7 +153,7 @@
           }
         })
         .error(function (data, status) {
-          data = data || {};
+          data = _.isObject(data) ? data : {};
           data.success = false;
           data.status = status;
           callback(data, status);
@@ -167,7 +167,7 @@
       // Workaround atob issue (InvalidCharacterError: DOM Exception 5
       // atob@[native code]) for Safari browser on how it handles
       // base64 encoded text string by removing all the whitespaces.
-      userReportData = userReportData.replace(/\s/g, '');
+      userReportData = _.replace(userReportData, /\s/g, '');
 
       // Decode base64 (convert ascii phbinary)
       var binData = $window.atob(userReportData);
@@ -284,12 +284,12 @@
 
       $http.get(adminUrl)
         .success(function (data, status) {
-          data = data || {};
+          data = _.isObject(data) ? data : {};
           data.success = true;
           callback(data, status);
         })
         .error(function (data, status) {
-          data = data || {};
+          data = _.isObject(data) ? data : {};
           data.success = false;
           data.status = status;
           callback(data, status);

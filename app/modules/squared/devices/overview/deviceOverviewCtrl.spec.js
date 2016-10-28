@@ -235,7 +235,6 @@ describe('Huron Device', function () {
   var $scope, $controller, controller, $httpBackend;
   var $q, CsdmConfigService;
   var $stateParams, ServiceSetup, timeZone, newTimeZone;
-  var HuronConfig;
 
   beforeEach(angular.mock.module('Hercules'));
   beforeEach(angular.mock.module('Squared'));
@@ -245,14 +244,13 @@ describe('Huron Device', function () {
   beforeEach(initSpies);
 
 
-  function dependencies(_$q_, $rootScope, _$controller_, _$httpBackend_, _CsdmConfigService_, _ServiceSetup_, _HuronConfig_) {
+  function dependencies(_$q_, $rootScope, _$controller_, _$httpBackend_, _CsdmConfigService_, _ServiceSetup_) {
     $scope = $rootScope.$new();
     $controller = _$controller_;
     $httpBackend = _$httpBackend_;
     $q = _$q_;
     CsdmConfigService = _CsdmConfigService_;
     ServiceSetup = _ServiceSetup_;
-    HuronConfig = _HuronConfig_;
     $stateParams = {
       currentDevice: {
         isHuronDevice: true
@@ -322,26 +320,5 @@ describe('Huron Device', function () {
 
       expect($stateParams.huronDeviceService.setTimezoneForDevice).toHaveBeenCalledWith(jasmine.any(Object), newTimeZone.id);
     });
-  });
-
-  describe('kem support', function () {
-    beforeEach(function () {
-      $stateParams.currentDevice.product = 'Cisco 8865';
-      $httpBackend.whenGET(HuronConfig.getCmiUrl() + '/voice/customers/sipendpoints/addonmodules').respond(200, [{
-        customerId: 'fake-customer-id',
-        sipEndpointId: 'fake-huron-id',
-        addOnModuleId: 1
-      }]);
-    });
-    beforeEach(initController);
-
-    it('should fetch KEM info for the device', function () {
-      $httpBackend.flush();
-      expect(controller.currentDevice.kem).not.toBeNull();
-      expect(controller.currentDevice.kem).not.toBeUndefined();
-      expect(controller.kemNumber.value).toBe(1);
-      expect(controller.currentDevice.kem[0].customerId).toBe('fake-customer-id');
-    });
-
   });
 });

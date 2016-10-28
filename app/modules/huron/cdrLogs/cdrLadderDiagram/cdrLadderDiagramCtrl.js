@@ -77,11 +77,12 @@
       _.forEach(vm.events, function (event) {
         if (!_.isUndefined(event.eventSource)) {
           var message = JSON.parse(event.message);
-          if ((message.id === SIP_MESSAGE) && !_.isUndefined(message.dataParam.rawMsg) && (message.dataParam.rawMsg.indexOf(LOCUS) > 0)) {
+          var rawMsg = _.get(message, 'dataParam.rawMsg', '');
+          if ((message.id === SIP_MESSAGE) && rawMsg && (rawMsg.indexOf(LOCUS) > 0)) {
             if (_.isNull(locusId)) {
-              startIndex = message.dataParam.rawMsg.indexOf(LOCUS);
-              endIndex = message.dataParam.rawMsg.indexOf("Content-Length");
-              locusId = message.dataParam.rawMsg.substring(startIndex + 7, endIndex).replace("\\n", "").replace("\\r", "");
+              startIndex = rawMsg.indexOf(LOCUS);
+              endIndex = rawMsg.indexOf("Content-Length");
+              locusId = rawMsg.substring(startIndex + 7, endIndex).replace("\\n", "").replace("\\r", "");
               endIndex = locusId.indexOf("Content-Type");
               if (endIndex > 0) {
                 locusId = locusId.substring(0, endIndex);
@@ -381,7 +382,7 @@
           if (vm.call[i]['dataParam'][dataParamKeys[dpi]] !== undefined) {
             // we have to use replace becasue sometimes paramaters have ',' which messes up csv
             if (typeof vm.call[i]['dataParam'][dataParamKeys[dpi]] == 'string') {
-              csvCallBody += (vm.call[i]['dataParam'][dataParamKeys[dpi]]).replace(/,/g, ' ');
+              csvCallBody += _.replace(vm.call[i]['dataParam'][dataParamKeys[dpi]], /,/g, ' ');
             } else {
               csvCallBody += vm.call[i]['dataParam'][dataParamKeys[dpi]];
             }

@@ -13,13 +13,13 @@
 
         $http.get(remoteIdpUrl)
           .success(function (data, status) {
-            data = data || {};
+            data = _.isObject(data) ? data : {};
             data.success = true;
             Log.debug('Retrieved meta url');
             callback(data, status);
           })
           .error(function (data, status) {
-            data = data || {};
+            data = _.isObject(data) ? data : {};
             data.success = false;
             data.status = status;
             callback(data, status);
@@ -39,13 +39,13 @@
 
         $http.post(remoteIdpUrl, payload)
           .success(function (data, status) {
-            data = data || {};
+            data = _.isObject(data) ? data : {};
             data.success = true;
             Log.debug('Posted metadataXml: ' + metadataXmlContent);
             callback(data, status);
           })
           .error(function (data, status) {
-            data = data || {};
+            data = _.isObject(data) ? data : {};
             data.success = false;
             data.status = status;
             callback(data, status);
@@ -61,7 +61,7 @@
         };
 
         //for ssoEnabled=false we don't need a metadataXml so remove it if argument is undefined or null
-        if (!ssoEnabled && (angular.isUndefined(metadataXmlContent) || metadataXmlContent == null)) {
+        if (!ssoEnabled && (_.isUndefined(metadataXmlContent) || metadataXmlContent == null)) {
           delete payload.metadataXml;
         }
 
@@ -71,13 +71,13 @@
           data: payload
         })
           .success(function (data, status) {
-            data = data || {};
+            data = _.isObject(data) ? data : {};
             data.success = true;
             Log.debug('Posted metadataXml: ' + metadataXmlContent);
             callback(data, status);
           })
           .error(function (data, status) {
-            data = data || {};
+            data = _.isObject(data) ? data : {};
             data.success = false;
             data.status = status;
             callback(data, status);
@@ -101,13 +101,13 @@
         var hostedSpUrl = UrlConfig.getSSOSetupUrl() + Authinfo.getOrgId() + '/v1/samlmetadata/hosted/sp';
         $http.get(hostedSpUrl)
           .success(function (data, status) {
-            data = data || {};
+            data = _.isObject(data) ? data : {};
             data.success = true;
             Log.debug('Retrieved metadata file');
             callback(data, status);
           })
           .error(function (data, status) {
-            data = data || {};
+            data = _.isObject(data) ? data : {};
             data.success = false;
             data.status = status;
             callback(data, status);

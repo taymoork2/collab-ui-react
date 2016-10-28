@@ -1,52 +1,22 @@
 {
   "statusPage": {
     "pageTitle": "Status Management",
-    "serviceManagement": "Service Management",
     "dashboard": "Dashboard",
     "incidents": "Incidents",
     "components": "Components",
-    "addStatusPage": "Add Another Service",
+    "addComponents": "Add A Component",
+    "componentName": "Component Name",
+    "componentDesc": "Description (optional)",
+    "componentGroup": "Component Group",
+    "nameCannotBeBlank": "Name can't be blank",
+    "createNewComponentGroup": "Create new component group",
+    "createComponent": "Create Component",
+    "componentInfo": "Component Info",
     "editAction": "Edit",
     "deleteAction": "Delete",
     "update": "Update",
     "deleteWarning": "WARNING! Deleting a component cannot be undone. All associated data will be deleted as well. Please be absolutely sure this is what you want. <br /> Type DELETE in the box below for final confirmation, then hit the delete button.",
-    "permanentlyDelete": "Permanently DELETE {{componentName}}",
-    "componentsPage": {
-      "listing": {
-        "noComponentHeading": "No Component Added",
-        "noComponentText": "Click the ADD botton to get started."
-      },
-      "addComponent": {
-        "title": "ADD A COMPONENT",
-        "componentName": "Component Name",
-        "componentDesc": "Description (optional)",
-        "componentDesc-placeholder": "Frontend application and API servers",
-        "componentGroup": "Component Group",
-        "nameCannotBeBlank": "Name can't be blank",
-        "createNewComponentGroup": "Create new component group",
-        "createComponent": "Create Component",
-        "componentInfo": "Component Info",
-        "groupName": "Group name",
-        "cancelCreateNewGroup": "Cancel new group creation"
-      },
-      "updateComponent": {
-        "title": "Update A Component",
-        "componentName": "Component Name",
-        "componentDesc": "Description (optional)",
-        "componentDesc-placeholder": "Frontend application and API servers",
-        "componentGroup": "Component Group",
-        "nameCannotBeBlank": "Name can't be blank",
-        "createNewComponentGroup": "Create new component group",
-        "updateComponent": "Update Component",
-        "componentInfo": "Component Info",
-        "groupName": "Group name",
-        "cancelCreateNewGroup": "Cancel new group creation"
-      },
-      "delComponent":{
-        "delComponentBtn": "PERMANENTLY DELETE {{}}",
-        "delTips": "<p><em>WARNING! </em> <strong>Deleting a component cannot be undone. </strong> All associated data will be deleted as well. Please be absolutely sure this is what you want.</p><p>Type <em>DELETE </em> in the box below for final confirmation, then hit the delete button.</p>"
-      }
-    }
+    "permanentlyDelete": "Permanently DELETE {{componentName}}"
   },
   "loginPage": {
     "title": "Cloud Collaboration Management",
@@ -395,10 +365,6 @@
     "enabledBetaFeatures": "Enabled Beta Features",
     "otpShareButton": "Share"
   },
-  "settings": {
-    "title": "Service Setup",
-    "initialSetup": "Initial Setup"
-  },
   "tabs": {
     "overviewTab": "Overview",
     "customerTab": "Customers",
@@ -444,7 +410,6 @@
     "eventsTab": "Events",
     "eventsTabDesc": "Event Management",
     "helpdesk": "Help Desk",
-    "incidentsTab": "Incidents",
     "statusTab": "Status",
     "statusTabDesc": "Status Mannagement",
     "careTab": "Care",
@@ -528,7 +493,7 @@
     "betaFeatures": "Beta Features",
     "errorGettingToggles": "There was a problem getting the selected organizations feature toggles",
     "errorSettingToggle": "There was a problem setting a toggle",
-    "toggleModSuccess": "All modified toggles were updated",
+    "toggleModSuccess": "The Feature Toggle: {{featureToggleName}} was successfully set to {{toggleState}} for {{orgId}}",
     "startSearching": "To begin, search for an organization",
     "noSearchResults": "Search yielded no results",
     "allowBetaChannels": "Allow Beta Release Channel",
@@ -592,7 +557,8 @@
       "peakHour": "Peak Hour",
       "distribution": "Distribution",
       "timeline": "Timeline",
-      "overview": "Overview"
+      "overview": "Overview",
+      "all": "All"
     }
   },
   "careReportsPage": {
@@ -1348,6 +1314,10 @@
     "tryAgainButton": "Try Again",
     "signInButton": "Sign In Again"
   },
+  "serverMaintenancePage": {
+    "title": "Server Maintenance",
+    "text": "We are currently undergoing routine maintenance. Please check back later."
+  },
   "errors": {
     "status401": "Authorization failed. Server unable to process authorization token. You will automatically be logged out in a few seconds.",
     "status403": "Authorization failed. You do not have administrator priviledges. You will automatically be logged out in a few seconds.",
@@ -1361,7 +1331,9 @@
     "unsupported": "You are using an <strong>outdated</strong> version of Internet Explorer. Please <a href='http://windows.microsoft.com/en-us/internet-explorer/download-ie' target='_blank'>upgrade your browser</a> to version 11 or higher.",
     "statusError": "Request failed with status: {{status}}.",
     "csvError": "Export failed.",
-    "videoError": "There is a problem with the video you are trying to play."
+    "videoError": "There is a problem with the video you are trying to play.",
+    "runtimeTitle": "Oops!",
+    "runtime": "An unexpected error has occurred. Our engineers are on it. If you need help to proceed, please <a href='https://support.ciscospark.com' target='_blank'>contact support</a>."
   },
   "spacesPage": {
     "addTag": "Add tag",
@@ -1444,44 +1416,36 @@
       "add-resource-button-information": "Click \"Add Resource\" to start the registration and configuration of your Expressways.",
       "setupCloudSipUriHeader": "Define Spark SIP Address"
     },
-    "redirect-target-dialog": {
-      "title": "Register New Expressway",
-      "instructions-grant-registration": "Enter the hostname of the Expressway that you want to register with Cisco Collaboration Cloud.",
-      "hostname-placeholder": "Enter Expressway Hostname",
-      "activate-resource-button": "Next",
-      "register-resource-button": "Go to Expressway",
-      "grant-registration-success-header": "You may now register {{hostname}} with Cisco Collaboration Cloud.",
-      "grant-success-information": "Go to your Expressway within one hour to complete registration.",
-      "register-error-400": "Could not register Expressway. The hostname is not valid.",
-      "register-error-500": "Could not register Expressway. Try again later, or contact your Cisco technical support representative if the problem persists."
-    },
     "addResourceDialog": {
       "title": "{{ServiceName}} Setup",
-      "subtitle": "Deploy a new Expressway or select an existing one.",
-      "registerNewExpressway": "Enter the hostname of the new Expressway that you want to register with Cisco Collaboration Cloud.",
-      "addToExistingExpressway": "Select an existing Expressway to add resources to this service.",
+      "alreadyBeenSetupTitle": "Add Expressway Cluster",
+      "subtitle": "Deploy a new Expressway cluster, or select an existing one.",
+      "registerNewExpressway": "Enter the hostname of the master peer of the new Expressway cluster that you want to register.",
+      "addToExistingExpressway": "Select an existing Expressway cluster to add resources to this service.",
       "enterHostname": "Enter the hostname of the Expressway you want to register with Cisco Collaboration Cloud.",
       "enterHostnamePlaceholder": "Enter Expressway hostname",
-      "willBeInstalled": "{{ConnectorName}} will be installed as soon as you finish registration, enabling the Expressway for {{ServiceName}}.",
+      "willBeInstalled": "{{ConnectorName}} will be installed as soon as you finish registration, enabling the Expressway cluster for {{ServiceName}}.",
       "selectExisting": "Select an existing Expressway clusters",
       "selectClusterPlaceholder": "Select an Expressway cluster…",
       "selectClusterPlaceholderNoneFound": "No eligible clusters found",
       "enterDisplayName": "Enter a name for the Expressway cluster:",
       "clusternameWatermark": "Enter cluster name…",
-      "cannotCreateCluster": "Could not create cluster. Try again later, or contact your Cisco technical support representative if the problem persists.",
-      "cannotProvisionConnector": "Could not provision {{ConnectorName}}. Try again later, or contact your Cisco technical support representative if the problem persists.",
+      "cannotCreateCluster": "Could not create cluster. Try again later.",
+      "cannotProvisionConnector": "Could not provision {{ConnectorName}}. Try again later.",
       "cannotFinalizeAllowlisting": "Could not finalize cluster provisioning. Try again later, or contact your Cisco technical support representative if the problem persists.",
       "connectorIsProvisioned": "The Expressway cluster {{ClusterName}} has been successfully provisioned with the following Hybrid Service:",
       "logInToConfigureThem": "{{ConnectorName}} will automatically be downloaded and installed on {{ClusterName}}, but you must <a href='https://{{hostname}}/fusionregistration' target='_blank'>log in to the Expressway</a> and configure and start {{ConnectorName}} to make it operational.",
+      "youMayNowRegister": "You may now register {{hostname}} with Cisco Collaboration Cloud",
+      "registerResourceButton": "Go to Expressway",
       "cannotReadExpresswayList": "Failed to read list of existing Expressway clusters.",
       "confirmationDialogHeader": "Cancel Setup",
       "confirmationDialogBody": "Are you sure you want to cancel service setup?",
       "setupScreenBodyAboutToSetup": "You are about to set up:",
       "setupScreenBodyPrerequisites": "Verify that you have completed the prerequisites before you start configuring {{ServiceName}}.",
       "setupScreenBodyLinks": "Visit <a href=\"http://www.cisco.com/go/hybrid-services\" target=\"_blank\">Help Central</a> for further information about {{ServiceName}} prerequisites.",
-      "go-to-your-expressway": "Go to your Expressway within one hour to complete registration and configure {{ConnectorName}}.",
-      "selectResourceGroupPrompt": "Do you want to assign this Expressway to a Resource Group?",
-      "selectResourceGroup": "Select the Resource Group where you want to place the Expressway.",
+      "go-to-your-expressway": "Go to your Expressway cluster's master peer within one hour to complete registration and configure {{ConnectorName}}.",
+      "selectResourceGroupPrompt": "Do you want to assign this Expressway cluster to a Resource Group?",
+      "selectResourceGroup": "Select the Resource Group where you want to place the Expressway cluster.",
       "assignYes": "Yes, assign now",
       "assignNo": "No, don't assign",
       "selectGroup": "Select…",
@@ -1513,19 +1477,9 @@
         "no_clusters_heading": "No Cisco Expressway clusters registered",
         "no_clusters_text": "See required actions above and documentation to get started."
       },
-      "deregister": "Deregister",
-      "deregisterCancel": "Cancel",
-      "deregisterConfirm": "Confirm",
       "deregisterConfirmRemoval": "Confirm Removal",
-      "deregisterHeader": "Confirm Deregistration",
-      "deregisterAreYouSure": "You are about to deregister {{clusterName}} from Cisco Collaboration Cloud.",
-      "deregisterCausesListItem1": "This system will no longer be used for hybrid services.",
-      "deregisterCausesListItem2": "All connectors and related configuration will be removed from {{clusterName}}.",
-      "deregisterCausesListItem3": "If the system is in a cluster, you do not need to deregister the other peers. This will happen automatically.",
-      "deregisterErrorGeneric": "Unable to deregister {{clusterName}}. {{errorMessage}}",
-      "notInstalled": "{{serviceName}} is not installed on this cluster.",
-      "deregisterSectionHeader": "Deregister",
-      "deregisterSectionBody": "Disconnect this cluster from Cisco Collaboration Cloud and remove all connectors and related configuration."
+      "deregisterOpening": "You are about to deregister the Expressway cluster",
+      "willNoLongerBeUsed": "The Expressway cluster will no longer be used for Hybrid Services. All cluster peers will automatically be deregistered."
     },
     "status": {
       "unknown": "Status unknown",
@@ -1725,6 +1679,8 @@
         "connect": "Users' incoming calls will ring their work phones and the Cisco Spark app. Users can call their colleagues from either their phones or the app, too.",
         "certificatesHeading": "Certificates for Encrypted SIP Calls",
         "certificates": "Use certificates provided from the Cisco Collaboration default trust list or upload your own.  If you use your own, make sure the hostnames are on a verified domain. For help, click <a href=\"http://www.cisco.com/go/hybrid-services-call\" target=\"_blank\">here.</a>",
+        "certificatesCannotRead": "Could not read certificate list.",
+        "certificatesCannotDelete": "Could not delete certificate. Try again later",
         "certificatesEmailAddress": "Email Address",
         "certificatesCommonName": "Common Name",
         "certificatesOrganizationalUnit": "Organizational Unit",
@@ -2606,7 +2562,15 @@
   "callPickup": {
     "title": "Call Pickup",
     "code": "PI",
-    "modalDescription": "Call Pickup feature allows users to pick up incoming calls within a group of users."
+    "modalDescription": "Call Pickup feature allows users to pick up incoming calls within a group of users.",
+    "createTitle": "Create Call Pickup",
+    "cancelHeader": "Cancel Call Pickup Creation",
+    "confirmButton": "Cancel Creation",
+    "continueButton": "Continue Creation",
+    "cancelDialog": "Are you sure you wish to cancel call pickup creation? This call pickup will not be saved.",
+    "createHelpText": "Create",
+    "nameHint": "This name is not visible to callers.",
+    "namePlaceholder": "Name the Call Pickup"
   },
   "pagingGroup": {
     "title": "Paging Group",
@@ -3387,15 +3351,13 @@
     "timeZoneUpdateFailed": "Device did not update its Time Zone in time",
     "kem": "Key Expansion Module(s)",
     "kemAbbreviation": "KEM",
-    "kemDescription": "Key Expansion Modules (KEM) can be used to increase personal interaction while increasing responsiveness by adding single-button access to more people.",
+    "kemDescription": "Increases single-button access to more contacts and features.",
     "kemOptions": {
       "none": "None",
       "one": "One",
       "two": "Two",
       "three": "Three"
-    },
-    "kemUpdated": "Number of KEM updated.",
-    "kemChangesFailed": "Failed to save KEM changes."
+    }
   },
   "addDeviceWizard": {
     "newDevice": "New Device",
@@ -3460,12 +3422,19 @@
       "insertRoomName": "Insert name of device location, e.g. 'Reception' or 'Boardroom'"
     },
     "assignPhoneNumber": {
-      "assignPhoneNumber": "Assign a phone number",
-      "assignPhoneNumberInstructions": "Using a Desk Phone requires a Cisco Spark Call license. Proceeding acknowledges that a Cisco Spark Call license will be assigned to this place, if it does not have one already."
+      "assignPhoneNumber": "Assign numbers",
+      "assignPhoneNumberInstructions": "Choose from the available phone numbers and extensions in the drop-down lists. These will become the primary line which you can use to reach this place.",
+      "linesSaved": "Line configuration saved successfully",
+      "placeError": "Add Place failed.",
+      "placeEditError": "Edit Place failed"
     },
-    "assignServices": {
-      "assignServices": "Assign Services",
-      "selectEntitlements": "Select any entitlements that you wish to assign to this user."
+    "editServices": {
+      "whichServices": "Which services are needed in this place?",
+      "sparkOnly": "Spark only (default)",
+      "sparkOnlyHelp": "Calling to/from this place will only work through Cisco Spark or using SIP addresses.",
+      "sparkCall": "Spark Call (phone numbers)",
+      "sparkCallHelp": "If you have set up your organization's PSTN provider, this place will be able to call to/from landlines and mobile phones.",
+      "servicesSaved": "Services updated successfully"
     },
     "showActivationCode": {
       "activationCode": "Activation Code",
@@ -3805,7 +3774,7 @@
       "deregisterCausesListItem2": "The pre-existing calls will continue.",
       "defuseAreYouSure": "Are you sure you want to deregister media server {{clusterName}} from organization {{organizationName}}?",
       "defuseCausesListItem1": "The cluster {{groupName}} will be removed from system.",
-      "deregisterErrorGeneric": "Unable to deregister {{clusterName}}. {{errorMessage}}",
+      "deregisterErrorGeneric": "Unable to deregister {{clusterName}}.",
       "releaseChannel": "Release Channel",
       "doYouStillWantToContinue": "Do you still want to continue ?",
       "youHostNoAvailable": "Your host will no longer be available in future",
@@ -3899,7 +3868,7 @@
       "cancel": "Cancel",
       "cluster-placeholder": "Create or select cluster",
       "hostname-placeholder": "Enter hostname or IP address",
-      "grant-registration-success-header-old-cluster": "You can now register the Hybrid Media Node <strong>{{hostname}}</strong>, assigned to <strong>{{clustername}}</strong> with the Cisco Collaboration Cloud.",
+      "grant-registration-success-header-old-cluster": "You can now register your Hybrid Media Node to the Cisco Collaboration Cloud.<br> Node IP address: {{hostname}}<br>Cluster: {{clustername}}",
       "grant-registration-success-header-new-cluster": "You can now register the Hybrid Media Node <strong>{{hostname}}</strong>, assigned to the new cluster <strong>{{clustername}}</strong> with the Cisco Collaboration Cloud.",
       "grant-success-information": "Go to your Hybrid Media Node within one hour to finish registration.",
       "next": "Next",
@@ -4715,7 +4684,6 @@
     "actionHeader": "Actions",
     "servicesHeader": "Services",
     "placeAdd": "Add Place",
-    "placeError": "Add Place failed.",
     "placesDefinition": "A place represents a physical location containing a device not owned by a specific user, such as a meeting room with a collaboration device or a reception with shared phones.",
     "placesUses": "You'll be able to view your places here - and the devices and configurations that belong to them.",
     "deletePlace": "Delete Place",
@@ -5383,7 +5351,6 @@
     },
     "enabledServices": "Active",
     "availableServices": "Available",
-    "none": "None",
     "webexsites": "WebEx Sites",
     "phoneNumbers": "Phone Numbers",
     "software": "Software",
@@ -5491,8 +5458,8 @@
     "adminEmail": "Admin Email",
     "emailSent": "Last Email Sent",
     "partnerInfo": "Partner Information",
-    "managedBy": "Managed By",
-    "partnerEmail": "Partner Email"
+    "partnerEmail": "Partner Email",
+    "hybridServicesDetails": "Hybrid Services Details"
   },
   "activation": {
     "verificationComplete": "Verification Complete",
@@ -5644,6 +5611,17 @@
           "settings": "Settings"
         }
       },
+      "hybridDataSecurity": {
+        "title": "Hybrid Data Security",
+        "description": "Storage Node Setup in Progress",
+        "buttons": {
+          "installSoftware": "Install server software",
+          "createCluster": "Create cluster",
+          "registerNode": "Register node",
+          "configureNode": "Configure node",
+          "addUsers" : "Add users"
+        }
+      },
       "hybridContext": {
         "title": "Context",
         "description": "Enables a storage service that provides a repository of customer journey data for Cisco Contact Center customers.",
@@ -5672,6 +5650,18 @@
   },
   "readOnlyMessages": {
     "notAllowed": "Not allowed in read-only mode. Operation not executed."
+  },
+  "gemini": {
+    "services": {
+      "pageTitle": "Service"
+    },
+    "audiocca": "Cloud Connected Audio (CCA)",
+    "cca": {
+      "title": "Cloud Connected Audio"
+    },
+    "msg": {
+      "splsResponseErr": "No partner organization found, please contact ccaportal@cisco.com for help."
+    }
   },
   "timeZones": {
     "Etc/GMT+12": "Etc/GMT+12",

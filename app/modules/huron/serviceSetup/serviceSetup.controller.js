@@ -111,7 +111,7 @@
       greaterThan: function (viewValue, modelValue, scope) {
         var value = modelValue || viewValue;
         // we only validate this if beginNumber is valid or populated
-        if (angular.isUndefined(scope.model.beginNumber) || scope.model.beginNumber === "") {
+        if (_.isUndefined(scope.model.beginNumber) || scope.model.beginNumber === "") {
           return true;
         } else {
           return value >= scope.model.beginNumber;
@@ -119,7 +119,7 @@
       },
       lessThan: function (viewValue, modelValue, scope) {
         // we only validate this if endNumber is valid or populated
-        if (angular.isUndefined(scope.model.endNumber) || scope.model.endNumber === "") {
+        if (_.isUndefined(scope.model.endNumber) || scope.model.endNumber === "") {
           // trigger validation on endNumber field
           scope.fields[2].formControl.$validate();
         }
@@ -130,7 +130,7 @@
         var result = true;
         for (var i in vm.model.numberRanges) {
           // Don't validate ranges already in the model, ie. those that are already in the system
-          if (angular.isUndefined(scope.model.uuid) && !angular.equals(scope.model.uuid, '')) {
+          if (_.isUndefined(scope.model.uuid) && !angular.equals(scope.model.uuid, '')) {
             var beginNumber, endNumber;
             if (scope.index === 0) {
               beginNumber = value;
@@ -158,7 +158,7 @@
           property = 'endNumber';
         }
 
-        if (angular.isDefined(scope.model[property])) {
+        if (!_.isUndefined(scope.model[property])) {
           return true;
         } else {
           var found = false;
@@ -351,7 +351,7 @@
             },
             expressionProperties: {
               'templateOptions.disabled': function ($viewValue, $modelValue, scope) {
-                return vm.model.disableExtensions && angular.isDefined(scope.model.uuid);
+                return vm.model.disableExtensions && !_.isUndefined(scope.model.uuid);
               },
               'templateOptions.isWarn': vm.steerDigitOverLapValidation,
               'templateOptions.minlength': function () {
@@ -412,7 +412,7 @@
             },
             expressionProperties: {
               'templateOptions.disabled': function ($viewValue, $modelValue, scope) {
-                return vm.model.disableExtensions && angular.isDefined(scope.model.uuid);
+                return vm.model.disableExtensions && !_.isUndefined(scope.model.uuid);
               },
               // this expressionProperty is here simply to be run, the property `data.validate` isn't actually used anywhere
               // it retriggers validation
@@ -449,12 +449,12 @@
               }, function (displayNumberRanges) {
                 if (displayNumberRanges.length === 1) {
                   $scope.to.btnClass = 'btn-sm btn-link hide-delete';
-                } else if (displayNumberRanges.length > 1 && !vm.firstTimeSetup && angular.isUndefined($scope.model.uuid)) {
+                } else if (displayNumberRanges.length > 1 && !vm.firstTimeSetup && _.isUndefined($scope.model.uuid)) {
                   $scope.to.btnClass = 'btn-sm btn-link ';
-                } else if (displayNumberRanges.length > 1 && vm.firstTimeSetup && angular.isUndefined($scope.model.uuid)) {
+                } else if (displayNumberRanges.length > 1 && vm.firstTimeSetup && _.isUndefined($scope.model.uuid)) {
                   $scope.to.btnClass = 'btn-sm btn-link ';
                 } else if (vm.model.numberRanges.length === 1 && displayNumberRanges.length !== 1) {
-                  if (angular.isDefined(vm.model.numberRanges[0].uuid)) {
+                  if (!_.isUndefined(vm.model.numberRanges[0].uuid)) {
                     $scope.to.btnClass = 'btn-sm btn-link hide-delete';
                   }
 
@@ -768,11 +768,15 @@
           });
         } else if (!Authinfo.isSetupDone()) {
           // set voicemail toggle to enabled when non-test customer runs FTSW for the very first time
-          if (checkIfTestOrg()) {
-            vm.model.ftswCompanyVoicemail.ftswCompanyVoicemailEnabled = false;
-          } else {
-            vm.model.ftswCompanyVoicemail.ftswCompanyVoicemailEnabled = true;
-          }
+          return checkIfTestOrg().then(function (isTestOrg) {
+            if (isTestOrg) {
+              vm.model.ftswCompanyVoicemail.ftswCompanyVoicemailEnabled = false;
+            } else {
+              // 2016-10-26 Setting default voicemail toggle position to false for non-test orgs
+              // until futher decisions are made on whether voicemail should be on or off by default.
+              vm.model.ftswCompanyVoicemail.ftswCompanyVoicemailEnabled = false;
+            }
+          });
         }
       })
       .then(function () {
@@ -926,7 +930,7 @@
     }
 
     function deleteInternalNumberRange(internalNumberRange) {
-      if (angular.isDefined(internalNumberRange.uuid)) {
+      if (!_.isUndefined(internalNumberRange.uuid)) {
         ServiceSetup.deleteInternalNumberRange(internalNumberRange)
           .then(function () {
             // delete the range from DB list
@@ -1347,7 +1351,7 @@
         return $q.when(true).then(function () {
           if (vm.hideFieldInternalNumberRange === false && (angular.isArray(_.get(vm, 'model.displayNumberRanges')))) {
             angular.forEach(vm.model.displayNumberRanges, function (internalNumberRange) {
-              if (angular.isUndefined(internalNumberRange.uuid)) {
+              if (_.isUndefined(internalNumberRange.uuid)) {
                 return createInternalNumbers(internalNumberRange);
               } else if (vm.extensionLengthChanged) {
                 return updateInternalNumbers(internalNumberRange);

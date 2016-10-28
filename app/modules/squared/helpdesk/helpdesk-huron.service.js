@@ -249,8 +249,14 @@
       return $http
         .get(HuronConfig.getCmiUrl() + '/voice/customers/' + orgId + '/sites/')
         .then(function (res) {
-          return $http.get(HuronConfig.getCmiUrl() + '/voice/customers/' + orgId + '/sites/' + res.data[0].uuid)
-            .then(extractData);
+          if (_.isArray(res.data) && _.size(res.data) > 0) {
+            var uuid = _.get(res.data[0], 'uuid', -1);
+            if (uuid !== -1) {
+              return $http.get(HuronConfig.getCmiUrl() + '/voice/customers/' + orgId + '/sites/' + uuid)
+                .then(extractData);
+            }
+          }
+          return $q.reject(res);
         });
     }
 
@@ -259,7 +265,6 @@
         .get(HuronConfig.getCmiUrl() + '/voice/customers/' + orgId)
         .then(extractData);
     }
-
 
     function extractData(res) {
       return res.data;
@@ -314,7 +319,7 @@
     }
 
     function sanitizeNumberSearchInput(searchString) {
-      return searchString.replace(/[-()]/g, '').replace(/\s/g, '');
+      return _.replace(searchString, /[-()]/g, '').replace(/\s/g, '');
     }
 
     function getNumberSortOrder(dnUsage) {
@@ -353,4 +358,4 @@
 
   angular.module('Squared')
     .service('HelpdeskHuronService', HelpdeskHuronService);
-}());
+})();

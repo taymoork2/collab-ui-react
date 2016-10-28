@@ -37,8 +37,9 @@
                 } else {
                   $stateParams.wizard.next();
                 }
-              }, function () {
-                Notification.error('hercules.genericFailure');
+              })
+              .catch(function (error) {
+                Notification.errorWithTrackingId(error, 'hercules.genericFailure');
               });
           }
         });
@@ -53,8 +54,9 @@
         ResourceGroupService.assign(vm.clusterId, vm.selectedResourceGroup.value)
           .then(function () {
             $stateParams.wizard.next();
-          }, function () {
-            Notification.error('hercules.genericFailure');
+          })
+          .catch(function (error) {
+            Notification.errorWithTrackingId(error, 'hercules.genericFailure');
           });
       } else {
         $stateParams.wizard.next();

@@ -5,7 +5,7 @@
 </div>
 <div class="modal-body device-wizard">
   <h4 translate="addDeviceWizard.assignPhoneNumber.assignPhoneNumber"></h4>
-  <p class="wizardDescription" translation="addDeviceWizard.assignPhoneNumberInstructions"></p>
+  <p class="wizardDescription" translate="addDeviceWizard.assignPhoneNumber.assignPhoneNumberInstructions"></p>
 
   <div id="addDnAndExtToUserOptionButtons" class="page-option-buttons">
     <div >
@@ -18,7 +18,7 @@
   </div>
 
   <div class="addDnToUser grid">
-    <div gridscrollbar class="gridStyle" ui-grid="addLines.addDnGridOptions"></div>
+    <div class="gridStyle" ui-grid="addLines.addDnGridOptions"></div>
     <div class="grid-refresh" ng-if="gridRefresh">
       <i class='icon icon-spinner icon-2x'></i>
     </div>
@@ -33,12 +33,23 @@
       translate="common.back">
   </button>
   <button
-      cs-btn
-      loading="addLines.isLoading"
-      id="create-place-button"
-      class="btn btn--primary"
-      ng-disabled="addLines.isDisabled"
-      ng-click="addLines.next()">
-      <span translate="common.next"></span>
+    cs-btn
+    loading="addLines.isLoading"
+    id="create-place-button"
+    class="btn btn--primary"
+    ng-disabled="addLines.isDisabled"
+    ng-show="addLines.wizardData.deviceType === 'huron'"
+    ng-click="addLines.next()">
+    <span translate="common.next"></span>
+  </button>
+  <button
+    cs-btn
+    loading="addLines.isLoading"
+    id="create-place-button"
+    class="btn btn--primary"
+    ng-disabled="addLines.isDisabled"
+    ng-show="addLines.wizardData.deviceType === 'cloudberry'"
+    ng-click="addLines.save()">
+    <span translate="common.save"></span>
   </button>
 </div>

@@ -13,8 +13,8 @@
     vm.toggles = [];
 
     vm.resetForm = resetForm;
-    vm.updateToggles = updateToggles;
     vm.handleClick = handleClick;
+    vm.unalteredToggles = [];
 
     init();
     ////////////////
@@ -44,55 +44,51 @@
           });
 
           vm.defaults = dbFeatures.concat(stdFeatures);
+          vm.unalteredToggles = dbFeatures.concat(stdFeatures);
         })
         .catch(function () {
           Notification.error('organizationsPage.errorGettingToggles');
         })
-        .finally(vm.resetForm);
+        .finally(resetForm);
     }
 
     function resetForm() {
       vm.toggles = angular.copy(vm.defaults);
     }
 
-    function updateToggles() {
-      var changedToggles = findDifference();
+    function updateToggles(toggle) {
+      var featureToggleRules = FeatureToggleService.generateFeatureToggleRule(vm.currentOrganization.id, toggle.name, toggle.model);
 
-      var featureToggleRules = _.map(changedToggles, function (toggle) {
-        return FeatureToggleService.generateFeatureToggleRule(vm.currentOrganization.id, toggle.name, toggle.model);
-      });
-
-      if (featureToggleRules.length) {
-        FeatureToggleService.setFeatureToggles(false, featureToggleRules)
-          .catch(function () {
-            Notification.error('organizationsPage.errorSettingToggle');
-          })
-          .then(function () {
-            _.forEach(featureToggleRules, function (ftr) {
-              _.find(vm.defaults, {
-                name: ftr.key
-              }).model = ftr.val;
-            });
-            Notification.success('organizationsPage.toggleModSuccess');
-          })
-          .finally(resetForm);
-      }
+      FeatureToggleService.setFeatureToggles(false, featureToggleRules)
+        .then(function () {
+          var toggle = _.find(vm.defaults, {
+            name: featureToggleRules.key
+          });
+          if (_.has(toggle, 'model')) {
+            toggle.model = featureToggleRules.val;
+          }
+          Notification.success('organizationsPage.toggleModSuccess', {
+            featureToggleName: featureToggleRules.key,
+            orgId: featureToggleRules.orgId,
+            toggleState: featureToggleRules.val
+          });
+        })
+        .catch(function (response) {
+          Notification.errorResponse(response, 'organizationsPage.errorSettingToggle');
+        })
+        .finally(resetForm);
     }
 
-    function findDifference() {
-      var keyLessToggles = _.map(angular.copy(vm.toggles), function (value) {
-        delete value.key;
-        return value;
+    function handleClick(toggle) {
+      var clickedToggle = _.find(vm.unalteredToggles, {
+        name: toggle.name
       });
-      return _.filter(keyLessToggles, function (val, ind) {
-        if (!_.eq(val, vm.defaults[ind])) {
-          return val;
+      // Logic to capture one click with the right model value
+      if (_.has(clickedToggle, 'model')) {
+        if (clickedToggle.model !== toggle.model) {
+          updateToggles(toggle);
         }
-      });
-    }
-
-    function handleClick() {
-      updateToggles();
+      }
     }
   }
 })();

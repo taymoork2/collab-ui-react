@@ -135,7 +135,7 @@
     // the user has changed the action for an existing key
     function keyActionChanged(index, keyAction) {
       var _keyAction = findKeyAction(keyAction.name);
-      if (angular.isDefined(_keyAction)) {
+      if (!_.isUndefined(_keyAction)) {
         var phoneMenuEntry = vm.menuEntry.entries[index];
         // Phone menu option now could have multiple actions in it, e.g., say message.
         // When switching between phone menu options, clear the actions array to
@@ -144,7 +144,7 @@
         phoneMenuEntry.actions[0] = AutoAttendantCeMenuModelService.newCeActionEntry('', '');
         var action = phoneMenuEntry.actions[0];
         action.name = keyAction.action;
-        if (angular.isDefined(_keyAction.inputType)) {
+        if (!_.isUndefined(_keyAction.inputType)) {
           // some action names are overloaded and are distinguished
           // by inputType
           action.inputType = _keyAction.inputType;
@@ -193,7 +193,7 @@
             if (menuEntry.actions.length > 0 && menuEntry.type == "MENU_OPTION") {
               var keyAction = new KeyAction();
               keyAction.key = menuEntry.key;
-              if (angular.isDefined(menuEntry.actions[0].name) && menuEntry.actions[0].name.length > 0) {
+              if (!_.isUndefined(menuEntry.actions[0].name) && menuEntry.actions[0].name.length > 0) {
                 keyAction.action = _.find(vm.keyActions, _.bind(function (keyAction) {
                   if (this.name === 'repeatActionsOnInput') {
                     return (this.name === keyAction.action && this.level === keyAction.level);

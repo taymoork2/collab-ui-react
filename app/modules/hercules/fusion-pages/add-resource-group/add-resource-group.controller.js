@@ -49,9 +49,9 @@
         })
         .catch(function (response) {
           if (response.status === 409) {
-            Notification.error('hercules.resourceGroupSettings.duplicateName');
+            Notification.errorWithTrackingId(response, 'hercules.resourceGroupSettings.duplicateName');
           } else {
-            Notification.error('hercules.genericFailure');
+            Notification.errorWithTrackingId(response, 'hercules.genericFailure');
           }
         })
         .finally(function () {

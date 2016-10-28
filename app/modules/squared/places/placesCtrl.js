@@ -5,14 +5,14 @@
     .controller('PlacesCtrl',
 
       /* @ngInject */
-      function ($scope, $state, $templateCache, $translate, CsdmDataModelService, PlaceFilter, Authinfo, WizardFactory, RemPlaceModal) {
+      function ($rootScope, $scope, $state, $templateCache, $translate, CsdmDataModelService, PlaceFilter, Authinfo, WizardFactory, RemPlaceModal) {
         var vm = this;
 
         vm.data = [];
         vm.placesLoaded = false;
         vm.placeFilter = PlaceFilter;
-        vm.placeFilter.setCurrentSearch('');
-        vm.placeFilter.setCurrentFilter('');
+        vm.placeFilter.resetFilters();
+        var filteredPlaces;
         var placesList;
 
         function init() {
@@ -23,10 +23,15 @@
           CsdmDataModelService.getPlacesMap().then(function (list) {
             placesList = list;
             vm.placesLoaded = true;
+            vm.updateListAndFilter();
           });
         }
 
         init();
+
+        $rootScope.$on('PLACE_LIST_UPDATED', function () {
+          vm.updateListAndFilter();
+        });
 
         vm.existsDevices = function () {
           return (vm.shouldShowList() && (Object.keys(placesList).length > 0));
@@ -44,8 +49,23 @@
           return Authinfo.isSquaredUC();
         };
 
+        vm.setCurrentSearch = function (searchStr) {
+          vm.placeFilter.setCurrentSearch(searchStr);
+          vm.updateListAndFilter();
+        };
+
+        vm.setCurrentFilter = function (filterValue) {
+          vm.placeFilter.setCurrentFilter(filterValue);
+          vm.updateListAndFilter();
+        };
+
+        vm.placeList = function () {
+          return filteredPlaces;
+        };
+
         vm.updateListAndFilter = function () {
-          return PlaceFilter.getFilteredList(_.values(placesList));
+          filteredPlaces = PlaceFilter.getFilteredList(_.values(placesList));
+          return filteredPlaces;
         };
 
         vm.numDevices = function (place) {
@@ -60,7 +80,7 @@
         };
 
         vm.gridOptions = {
-          data: 'sc.updateListAndFilter()',
+          data: 'sc.placeList()',
           rowHeight: 45,
           enableRowHeaderSelection: false,
           enableColumnMenus: false,

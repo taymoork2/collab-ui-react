@@ -108,7 +108,7 @@
       CdrService.query(vm.model, vm.logstashPath).then(function (response) {
         if (response !== ABORT) {
           vm.gridData = response;
-          if (angular.isDefined(vm.gridData) && (vm.gridData.length > 0)) {
+          if (!_.isUndefined(vm.gridData) && (vm.gridData.length > 0)) {
             setupScrolling(vm.gridData);
           } else {
             vm.dataState = 0;
@@ -208,7 +208,7 @@
         return scope.model.searchUpload !== vm.UPLOAD;
       },
       uploadDisabled: function (viewValue, modelValue, scope) {
-        return angular.isUndefined(scope.model.uploadFile);
+        return _.isUndefined(scope.model.uploadFile);
       }
     };
 

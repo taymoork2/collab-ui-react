@@ -36,13 +36,13 @@ describe('Controller: RemPlaceController', function () {
       CsdmHuronPlaceService = _CsdmHuronPlaceService_;
 
       $httpBackend.whenGET('https://identity.webex.com/identity/scim/testOrg/v1/Users/me').respond({});
-      $httpBackend.whenGET('https://csdm-integration.wbx2.com/csdm/api/v1/organization/testOrg/huronDevices?checkDisplayName=false').respond([]);
+      $httpBackend.whenGET('https://csdm-integration.wbx2.com/csdm/api/v1/organization/testOrg/devices/?type=huron&checkDisplayName=false').respond([]);
       $httpBackend.whenGET('https://csdm-integration.wbx2.com/csdm/api/v1/organization/testOrg/devices?checkDisplayName=false&checkOnline=false').respond(initialDevices);
       $httpBackend.whenGET('https://csdm-integration.wbx2.com/csdm/api/v1/organization/testOrg/devices').respond(initialDevices);
       $httpBackend.whenGET('https://csdm-integration.wbx2.com/csdm/api/v1/organization/testOrg/nonExistingDevices').respond([]);
       $httpBackend.whenGET('https://csdm-integration.wbx2.com/csdm/api/v1/organization/testOrg/codes').respond(codes);
       $httpBackend.whenGET('https://csdm-integration.wbx2.com/csdm/api/v1/organization/testOrg/places/').respond(accounts);
-      $httpBackend.whenGET('https://csdm-integration.wbx2.com/csdm/api/v1/organization/testOrg/huronDevices').respond([]);
+      $httpBackend.whenGET('https://csdm-integration.wbx2.com/csdm/api/v1/organization/testOrg/devices/?type=huron').respond([]);
       $httpBackend.whenGET(huronPlacesUrl).respond(initialHuronPlaces);
 
       spyOn(CsdmPlaceService, 'deleteItem').and.returnValue($q.when());

@@ -64,7 +64,6 @@ describe('Directive Controller: CalendarServicePreviewCtrl', function () {
     expect($scope.resourceGroup.show).toBeFalsy();
     expect(USSService.refreshEntitlementsForUser.calls.count()).toBe(0);
     expect(Notification.errorWithTrackingId.calls.count()).toBe(0);
-    expect(Notification.error.calls.count()).toBe(0);
   });
 
   it('should show the save button when entitled is toggled and remove when canceled', function () {

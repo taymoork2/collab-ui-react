@@ -49,7 +49,7 @@
         val = _.find(vm.menuEntry.actions, {
           name: option.value
         });
-        if (angular.isDefined(val)) {
+        if (!_.isUndefined(val)) {
           if (val.name === option.value) {
             vm.selected = option;
             return true;

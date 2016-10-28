@@ -23,3 +23,14 @@
     }
   }
 }
+
+.callServiceRow {
+  padding: 30px 15px 15px 15px;
+  display: flex;
+
+  .callServiceTitle {
+    flex-basis: 30%;
+    display: flex;
+    align-items: baseline;
+  }
+}

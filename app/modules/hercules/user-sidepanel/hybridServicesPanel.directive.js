@@ -76,7 +76,7 @@
         .value();
 
       // Check before calling.
-      if (angular.isDefined(vm.updateEntitlements)) {
+      if (!_.isUndefined(vm.updateEntitlements)) {
         vm.updateEntitlements({
           'entitlements': vm.entitlements
         });

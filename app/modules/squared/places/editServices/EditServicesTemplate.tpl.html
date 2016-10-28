@@ -1,0 +1,64 @@
+<div class="modal-header">
+  <button type="button" class="close" ng-click="$dismiss()">
+  </button>
+  <h3 class="modal-title" translate="{{editServices.wizardData.title}}"></h3>
+</div>
+<div class="modal-body">
+  <div>
+    <form class="chooseServiceForm" onsubmit="$('#next-button').click()">
+      <h4 translate="addDeviceWizard.editServices.whichServices"></h4>
+      <div class="callServiceRow">
+        <div class="callServiceTitle">
+          <i class="icon icon-circle-call modal-icon-flex-row icon-lg"></i>
+          <h3 translate="onboardModal.call"></h3>
+        </div>
+        <div class="cs-radio-group callServiceControls">
+          <input
+            cs-input
+            type="radio"
+            ng-model="editServices.service"
+            id="service1"
+            name="service"
+            value="sparkOnly"
+            cs-input-label="{{'addDeviceWizard.editServices.sparkOnly' | translate}}"
+            cs-input-help-text="{{'addDeviceWizard.editServices.sparkOnlyHelp' | translate}}">
+          <input
+            cs-input
+            type="radio"
+            ng-model="editServices.service"
+            id="service2"
+            name="service"
+            value="sparkCall"
+            cs-input-label="{{'addDeviceWizard.editServices.sparkCall' | translate}}"
+            cs-input-help-text="{{'addDeviceWizard.editServices.sparkCallHelp' | translate}}">
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+<div class="modal-footer">
+
+  <button
+    type="button"
+    class="btn"
+    ng-click="$dismiss()"
+    translate="common.cancel">
+  </button>
+  <button
+    cs-btn
+    id="save-button"
+    loading="editServices.isLoading"
+    class="btn btn--primary"
+    ng-class="{'ng-hide':editServices.service === 'sparkCall'}"
+    ng-click="editServices.save()">
+    <span translate="common.save"></span>
+  </button>
+  <button
+    cs-btn
+    id="next-button"
+    class="btn btn--primary"
+    ng-class="{'ng-hide':editServices.service === 'sparkOnly'}"
+    ng-click="editServices.next()">
+    <span translate="common.next"></span>
+  </button>
+</div>
