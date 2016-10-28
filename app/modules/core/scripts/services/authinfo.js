@@ -224,6 +224,9 @@
       getCustomerId: function () {
         return authData.customerId;
       },
+      // FIXME: ATLAS-1402
+      // IMPORTANT: 'username' can possibly reflect a user's display name, use 'getPrimaryEmail()'
+      //   if needing the email value that the user logged in with
       getUserName: function () {
         return authData.username;
       },

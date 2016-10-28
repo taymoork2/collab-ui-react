@@ -14,8 +14,8 @@ describe('Partner Service -', function () {
         getOrgId: function () {
           return '12345';
         },
-        getUserName: function () {
-          return 'fake-userName';
+        getPrimaryEmail: function () {
+          return 'fake-primaryEmail';
         }
       };
 

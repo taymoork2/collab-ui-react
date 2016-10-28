@@ -224,8 +224,8 @@
     function modifyManagedOrgs(customerOrgId) {
       return Auth.getAuthorizationUrlList().then(function (response) {
         if (response.status === 200 && (_.indexOf(response.data.managedOrgs, customerOrgId) < 0)) {
-          var userName = Authinfo.getUserName();
-          UserRoleService.enableFullAdmin(userName, customerOrgId);
+          var primaryEmail = Authinfo.getPrimaryEmail();
+          UserRoleService.enableFullAdmin(primaryEmail, customerOrgId);
           Analytics.trackPartnerActions(Analytics.sections.TRIAL.eventNames.PATCH, response.data.orgId, response.data.uuid);
         }
       });
