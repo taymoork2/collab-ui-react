@@ -35,6 +35,19 @@ Adherence is mandatory. Please refactor non-compliant code.
 
 ## Contributing
 
+#### First Time Contributors
+
+Your first PR is an important one, and to help you acclimate to our coding style and patterns it is
+best to keep it simple. If you are new to the codebase, we ask that you keep your first PR **under
+500 lines max**.
+
+This helps your reviewers help you. The smaller you keep your PR, the sooner your reviewers can
+offer feedback, allowing you to learn best practices and respond with updates quicker. Remember that
+your first PR will very likely require multiple rounds of feedback and updates, so keep it small and
+lean to help this process flow quicker.
+
+#### Workflow
+
 1. Setup your repository
   * `git clone git@sqbu-github.cisco.com:WebExSquared/wx2-admin-web-client.git`
   * `origin` should be the above WebExSquared repo (`git remote -v` to see remote details)
