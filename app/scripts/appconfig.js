@@ -458,19 +458,6 @@
               wizard: null
             }
           })
-          .state('addDeviceFlow.addServices', {
-            parent: 'modal',
-            views: {
-              'modal@': {
-                controller: 'AddServicesCtrl',
-                controllerAs: 'addServices',
-                templateUrl: 'modules/squared/devices/addDeviceNew/AddServicesTemplate.tpl.html'
-              }
-            },
-            params: {
-              wizard: null
-            }
-          })
           .state('addDeviceFlow.addLines', {
             parent: 'modal',
             views: {
