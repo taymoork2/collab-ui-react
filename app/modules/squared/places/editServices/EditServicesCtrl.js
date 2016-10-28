@@ -24,10 +24,10 @@
         CsdmDataModelService.updateCloudberryPlace(vm.wizardData.selectedPlace, entitlements)
           .then(function () {
             $scope.$dismiss();
-            Notification.success("Line configuration saved successfully");
+            Notification.success("addDeviceWizard.editServices.servicesSaved");
           })
           .catch(function (error) {
-            Notification.errorResponse(error, 'placesPage.placeEditError');
+            Notification.errorResponse(error, 'addDeviceWizard.assignPhoneNumber.placeEditError');
           });
       } else {
         $scope.$dismiss();

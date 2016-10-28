@@ -68,7 +68,7 @@
           CsdmDataModelService.createCmiPlace(entity.name, entity.assignedDn.pattern, placeEntity.externalNumber)
             .then(successcb)
             .catch(function (error) {
-              Notification.errorResponse(error, 'placesPage.placeError');
+              Notification.errorResponse(error, 'addDeviceWizard.assignPhoneNumber.placeError');
             });
         });
       }
@@ -102,10 +102,10 @@
         CsdmDataModelService.updateCloudberryPlace(vm.wizardData.selectedPlace, entitlements, entity.assignedDn.pattern, placeEntity.externalNumber)
           .then(function () {
             $scope.$dismiss();
-            Notification.success("Line configuration saved successfully");
+            Notification.success("addDeviceWizard.assignPhoneNumber.linesSaved");
           })
           .catch(function (error) {
-            Notification.errorResponse(error, 'placesPage.placeEditError');
+            Notification.errorResponse(error, 'addDeviceWizard.assignPhoneNumber.placeEditError');
           });
       });
     };
