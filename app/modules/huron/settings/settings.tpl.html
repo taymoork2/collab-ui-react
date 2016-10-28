@@ -17,10 +17,33 @@
       </div>
       <div class="section__content">
         <div class="sub-section" ng-if="settings.showTimezoneAndVoicemail">
-          <formly-form model="settings.model" fields="settings.timeZoneSelection" form="settings.form"></formly-form>
+          <label class="control-label" for="timeZoneSelect" translate="serviceSetupModal.timeZone"></label>
+          <p class="description-block" translate="serviceSetupModal.tzDescription"></p>
+          <div class="medium-5">
+            <cs-select
+              name="timeZoneSelect"
+              ng-model="settings.model.site.timeZone"
+              options="settings.timeZoneOptions"
+              labelfield="label"
+              valuefield="id"
+              input-placeholder="settings.timeZoneInputPlaceholder"
+              filter="true"
+            ></cs-select>
+          </div>
         </div>
-        <div class="sub-section" cr-feature-toggle feature-show="huron-l10n-user-locale">
-          <formly-form model="settings.model" fields="settings.preferredLanguageSelection" form="settings.form"></formly-form>
+        <div class="sub-section service-setup service-setup-regional-settings" cr-feature-toggle feature-show="huron-l10n-user-locale">
+          <label class="control-label" translate="serviceSetupModal.preferredLanguage"></label>
+          <p class="description-block" translate="serviceSetupModal.preferredLanguageDescription"></p>
+          <div class="medium-5">
+            <cs-select
+              name="languageSelect"
+              ng-model="settings.model.site.preferredLanguage"
+              options="settings.preferredLanguageOptions"
+              labelfield="label"
+              valuefield="value"
+              filter="false"
+            ></cs-select>
+          </div>
         </div>
       </div>
     </div>

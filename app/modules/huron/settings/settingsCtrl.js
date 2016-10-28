@@ -71,6 +71,7 @@
     vm.hasVoiceService = false;
     vm.assignedNumbers = [];
     vm.timeZoneOptions = [];
+    vm.timeZoneInputPlaceholder = $translate.instant('serviceSetupModal.searchTimeZone');
     vm.preferredLanguageOptions = [];
     vm.unassignedExternalNumbers = [];
     vm.allExternalNumbers = [];
@@ -272,44 +273,6 @@
       }
       return false;
     };
-
-    vm.timeZoneSelection = [{
-      model: vm.model.site,
-      key: 'timeZone',
-      type: 'select',
-      templateOptions: {
-        inputClass: 'medium-5',
-        label: $translate.instant('serviceSetupModal.timeZone'),
-        description: $translate.instant('serviceSetupModal.tzDescription'),
-        options: [],
-        labelfield: 'label',
-        valuefield: 'id',
-        inputPlaceholder: $translate.instant('serviceSetupModal.searchTimeZone'),
-        filter: true
-      },
-      controller: /* @ngInject */ function ($scope) {
-        _buildTimeZoneOptions($scope);
-      }
-
-    }];
-
-    vm.preferredLanguageSelection = [{
-      model: vm.model.site,
-      key: 'preferredLanguage',
-      type: 'select',
-      className: 'service-setup service-setup-regional-settings',
-      templateOptions: {
-        inputClass: 'medium-5',
-        label: $translate.instant('serviceSetupModal.preferredLanguage'),
-        description: $translate.instant('serviceSetupModal.preferredLanguageDescription'),
-        options: [],
-        labelfield: 'label',
-        valuefield: 'value'
-      },
-      controller: /* @ngInject */ function ($scope) {
-        _buildPreferredLanguageOptions($scope);
-      }
-    }];
 
     vm.extensionLengthSelection = [{
       model: vm.model.site,
