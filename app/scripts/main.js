@@ -69,6 +69,7 @@
     'ngIcal',
     'huron.paging-group',
     'huron.telephoneNumber',
+    'huron.call-park',
     require('modules/huron/telephony/telephonyConfig'),
     require('modules/huron/telephony/cmiServices'),
   ]);

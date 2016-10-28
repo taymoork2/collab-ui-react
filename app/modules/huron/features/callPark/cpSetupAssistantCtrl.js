@@ -1,8 +1,6 @@
 (function () {
   'use strict';
 
-  /* eslint no-unreachable:0 */
-
   angular
     .module('Huron')
     .controller('CallParkSetupAssistantCtrl', CallParkSetupAssistantCtrl);
@@ -50,6 +48,7 @@
     vm.openMemberPanelUuid = undefined;
     vm.userSelected = undefined;
     vm.errorMemberInput = false;
+    vm.setCallParkName = setCallParkName;
 
     // ==================================================
     // The below methods have elevated access only to be
@@ -63,6 +62,10 @@
     function init() {
       CallParkMemberDataService.reset();
       initializeFields();
+    }
+
+    function setCallParkName(name) {
+      vm.callParkName = name;
     }
 
     function fetchNumbers(typedNumber) {
