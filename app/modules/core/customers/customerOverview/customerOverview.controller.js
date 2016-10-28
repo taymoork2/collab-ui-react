@@ -56,7 +56,7 @@
         if (_.find(vm.currentCustomer.offers, { id: Config.offerTypes.roomSystems })) {
           vm.showRoomSystems = true;
         }
-        var isCareEnabled = result && Authinfo.isCare();
+        var isCareEnabled = result;
         setOffers(isCareEnabled);
       });
 
@@ -137,7 +137,7 @@
     }
 
     function initCustomer() {
-      if (angular.isUndefined(vm.currentCustomer.customerEmail)) {
+      if (_.isUndefined(vm.currentCustomer.customerEmail)) {
         vm.currentCustomer.customerEmail = identityCustomer.email;
       }
     }

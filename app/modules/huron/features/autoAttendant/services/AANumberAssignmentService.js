@@ -60,7 +60,7 @@
 
           // find resources not in CMI
           var matchResourceNumber = function (obj) {
-            return obj.number.replace(/\D/g, '') === resources[i].getNumber();
+            return _.replace(obj.number, /\D/g, '') === resources[i].getNumber();
           };
           var i = 0;
           for (i = 0; i < resources.length; i++) {
@@ -72,7 +72,7 @@
           }
           // find CMI assigned numbers not in resources
           var matchCmiAssignedNumber = function (obj) {
-            return obj.getNumber() === cmiAssignedNumbers[i].number.replace(/\D/g, '');
+            return obj.getNumber() === _.replace(cmiAssignedNumbers[i].number, /\D/g, '');
           };
           for (i = 0; i < cmiAssignedNumbers.length; i++) {
             if (cmiAssignedNumbers[i].type != service.NUMBER_FORMAT_ENTERPRISE_LINE) {
@@ -97,9 +97,9 @@
       if (res.getType() === service.EXTERNAL_NUMBER) {
         var fmtRes = angular.copy(res);
         if (extNum instanceof Array) {
-          var num = res.id ? res.id.replace(/\D/g, '') : res.number.replace(/\D/g, '');
+          var num = res.id ? _.replace(res.id, /\D/g, '') : _.replace(res.number, /\D/g, '');
           extNum = _.find(extNum, function (obj) {
-            return obj.pattern.replace(/\D/g, '') === num;
+            return _.replace(obj.pattern, /\D/g, '') === num;
           });
 
         }
@@ -108,13 +108,13 @@
           // For external numbers, save the number in id so it's matched in call processsing
           // Save the E164 in number
           fmtRes.number = extNum.pattern;
-          fmtRes.id = extNum.pattern.replace(/\D/g, '');
+          fmtRes.id = _.replace(extNum.pattern, /\D/g, '');
         } else {
           // We didn't find in CMI - shouldn't happen - but let's try to format fields
           // Note we are returning a copy (see above), not altering input parms, so this leaves CE structures alone
           // We should try to format as best as possible for CMI assignment
           fmtRes.number = phoneUtils.formatE164(fmtRes.id, phoneUtils.getRegionCodeForNumber(fmtRes.id));
-          fmtRes.id = fmtRes.number.replace(/\D/g, '');
+          fmtRes.id = _.replace(fmtRes.number, /\D/g, '');
         }
         return fmtRes;
       } else {
@@ -154,10 +154,10 @@
       return getAANumberAssignments(orgId, cesId).then(function (cmiAssignedNumbers) {
 
         var inCMIAssignedList = function (obj) {
-          return obj.type === service.NUMBER_FORMAT_ENTERPRISE_LINE && resources[i].getNumber() && endsWith(obj.number.replace(/\D/g, ''), resources[i].getNumber());
+          return obj.type === service.NUMBER_FORMAT_ENTERPRISE_LINE && resources[i].getNumber() && endsWith(_.replace(obj.number, /\D/g, ''), resources[i].getNumber());
         };
         var inExtension = function (obj) {
-          return obj.type === service.NUMBER_FORMAT_EXTENSION && resources[i].getId() && endsWith(resources[i].getId().replace(/\D/g, ''), obj.number);
+          return obj.type === service.NUMBER_FORMAT_EXTENSION && resources[i].getId() && endsWith(_.replace(resources[i].getId(), /\D/g, ''), obj.number);
         };
         var i = 0;
         for (i = 0; i < resources.length; i++) {

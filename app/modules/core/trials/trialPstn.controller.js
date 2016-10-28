@@ -214,6 +214,8 @@
     }
 
     function onAreaCodeChange() {
+      //Reset NXX after Area Code changed
+      vm.trialData.details.pstnNumberInfo.nxx = null;
       searchCarrierInventory();
       //Get Exchanges
       PstnSetupService.getCarrierInventory(

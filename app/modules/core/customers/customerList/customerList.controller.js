@@ -334,7 +334,7 @@
       setNotesTextOrder();
       initColumns();
       FeatureToggleService.atlasCareTrialsGetStatus().then(function (careStatus) {
-        $scope.isCareEnabled = careStatus && Authinfo.isCare();
+        $scope.isCareEnabled = careStatus;
         // FIXME: Remove this if block once the customer list refactor goes live
         // (This check is taken care of in the compactServiceColumn directive)
         if (!$scope.isCareEnabled) {

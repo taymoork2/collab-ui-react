@@ -6,7 +6,7 @@
     .service('DeviceUsageTimelineService', DeviceUsageTimelineService);
 
   /* @ngInject */
-  function DeviceUsageTimelineService($q, $timeout, $http, chartColors, DeviceUsageMockService, UrlConfig, Authinfo) {
+  function DeviceUsageTimelineService($q, $timeout, $http, chartColors, DeviceUsageRawService, UrlConfig, Authinfo) {
 
     var localUrlBase = 'http://localhost:8080/atlas-server/admin/api/v1/organization';
     var urlBase = UrlConfig.getAdminServiceUrl() + 'organizations';
@@ -36,7 +36,7 @@
 
       if (startDate.isValid() && endDate.isValid() && startDate.isBefore(endDate) && endDate.isBefore(now)) {
         if (api === 'mock') {
-          return DeviceUsageMockService.getData(start, end).then(function (data) {
+          return DeviceUsageRawService.getData(start, end).then(function (data) {
             return reduceAllData(data);
           });
         } else if (api === 'local') {
@@ -61,7 +61,7 @@
       var start = moment().startOf(period).subtract(count, period + 's').format('YYYY-MM-DD');
       var end = moment().startOf(period).format('YYYY-MM-DD');
       if (api === 'mock') {
-        return DeviceUsageMockService.getData(start, end).then(function (data) {
+        return DeviceUsageRawService.getData(start, end).then(function (data) {
           return reduceAllData(data);
         });
       } else if (api === 'local') {
@@ -70,12 +70,14 @@
         url = url + '&rangeStart=' + start + '&rangeEnd=' + end;
         url = url + '&deviceCategories=' + deviceCategories.join();
         url = url + '&sendMockData=false';
+        url = url + '&accounts=__';
         return doRequest(url);
       } else {
         url = urlBase + '/' + Authinfo.getOrgId() + '/reports/device/call?';
         url = url + 'intervalType=' + granularity;
         url = url + '&rangeStart=' + start + '&rangeEnd=' + end;
         url = url + '&deviceCategories=' + deviceCategories.join();
+        url = url + '&accounts=__';
         return doRequest(url);
       }
     }

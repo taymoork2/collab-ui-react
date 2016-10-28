@@ -4,7 +4,7 @@ import callPickupName from './callPickupName';
 export default angular
   .module('huron.call-pickup.setup-assistant', [
     'atlas.templates',
-    'cisco.ui',
+    'collab.ui',
     'pascalprecht.translate',
      callPickupName,
   ])

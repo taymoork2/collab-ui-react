@@ -59,6 +59,16 @@
       });
     }
 
+    function updatePlace(placeUrl, entitlements, directoryNumber, externalNumber) {
+      return $http.patch(placeUrl, {
+        directoryNumber: directoryNumber,
+        externalNumber: externalNumber,
+        entitlements: entitlements
+      }).then(function (res) {
+        return CsdmConverter.convertPlace(res.data);
+      });
+    }
+
     return {
       placesFeatureIsEnabled: placesFeatureIsEnabled,
       deletePlace: deletePlace,
@@ -67,7 +77,8 @@
       createCsdmPlace: createCsdmPlace,
       getPlacesList: getPlacesList,
       updateItemName: updateItemName,
-      getPlacesUrl: getPlacesUrl
+      getPlacesUrl: getPlacesUrl,
+      updatePlace: updatePlace
     };
   }
 

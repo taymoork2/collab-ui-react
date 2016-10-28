@@ -250,6 +250,18 @@
         });
     }
 
+    function updateCloudberryPlace(objectToUpdate, entitlements, directoryNumber, externalNumber) {
+      var placeUrl = getPlaceUrl(objectToUpdate);
+      return CsdmPlaceService.updatePlace(placeUrl, entitlements, directoryNumber, externalNumber)
+        .then(function (place) {
+          placesDataModel[place.url].entitlements = place.entitlements;
+          placesDataModel[place.url].directoryNumber = place.directoryNumber;
+          placesDataModel[place.url].externalNumber = place.externalNumber;
+          addOrUpdatePlaceInDataModel(place);
+          return place;
+        });
+    }
+
     function createCodeForExisting(cisUuid) {
       return CsdmCodeService.createCodeForExisting(cisUuid)
         .then(function (newCode) {
@@ -421,7 +433,8 @@
       hasLoadedAllDeviceSources: hasLoadedAllDeviceSources,
       createCodeForExisting: createCodeForExisting,
       createCsdmPlace: createCsdmPlace,
-      createCmiPlace: createCmiPlace
+      createCmiPlace: createCmiPlace,
+      updateCloudberryPlace: updateCloudberryPlace
     };
   }
 

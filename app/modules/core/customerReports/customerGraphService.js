@@ -12,11 +12,11 @@
     var spanClose = '</span>';
 
     // div variables
-    var activeUserDiv = 'activeUsersdiv';
+    var activeUserDiv = 'activeUsersChart';
     var avgRoomsdiv = 'avgRoomsChart';
     var filesSharedDiv = 'filesSharedChart';
     var mediaQualityDiv = 'mediaQualityChart';
-    var metricsGraphDiv = 'metricsGraphDiv';
+    var metricsGraphDiv = 'callMetricsChart';
     var devicesDiv = 'devicesChart';
 
     // filter variables

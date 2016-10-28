@@ -60,7 +60,7 @@
 
     function hyphenateOtp(otp) {
       if (otp) {
-        return otp.replace(/(\d{4})(\d{4})(\d{4})(\d{4})/, "$1-$2-$3-$4");
+        return _.replace(otp, /(\d{4})(\d{4})(\d{4})(\d{4})/, "$1-$2-$3-$4");
       } else {
         return otp;
       }
@@ -68,7 +68,7 @@
 
     function convertExpiryTime(expiryTime) {
       var timezone = jstz.determine().name();
-      if (timezone === null || angular.isUndefined(timezone)) {
+      if (timezone === null || _.isUndefined(timezone)) {
         timezone = 'UTC';
       }
       return (moment(expiryTime).local().tz(timezone).format('MMMM DD, YYYY h:mm A (z)'));

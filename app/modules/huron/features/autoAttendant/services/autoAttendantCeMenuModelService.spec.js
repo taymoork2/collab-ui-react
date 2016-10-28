@@ -491,13 +491,13 @@ describe('Service: AutoAttendantCeMenuModelService', function () {
         }
       };
       AutoAttendantCeMenuModelService.deleteScheduleActionSetMap(_ceRecord, 'closedHours');
-      expect(angular.isUndefined(_ceRecord.scheduleEventTypeMap.closed)).toBe(true);
+      expect(_.isUndefined(_ceRecord.scheduleEventTypeMap.closed)).toBe(true);
 
       AutoAttendantCeMenuModelService.deleteScheduleActionSetMap(_ceRecord, 'openHours');
-      expect(angular.isUndefined(_ceRecord.scheduleEventTypeMap.open)).toBe(true);
+      expect(_.isUndefined(_ceRecord.scheduleEventTypeMap.open)).toBe(true);
 
       AutoAttendantCeMenuModelService.deleteScheduleActionSetMap(_ceRecord, 'holidays');
-      expect(angular.isUndefined(_ceRecord.scheduleEventTypeMap.holiday)).toBe(true);
+      expect(_.isUndefined(_ceRecord.scheduleEventTypeMap.holiday)).toBe(true);
     });
   });
 });

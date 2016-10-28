@@ -771,7 +771,7 @@
       sendToAnalytics(Analytics.eventNames.CANCEL_MODAL);
     }
     function sendToAnalytics(eventName, extraData) {
-      TrialService.sendToAnalytics(eventName, $state.current.name, vm.trialData, extraData);
+      TrialService.sendToAnalytics(eventName, vm.trialData, extraData);
     }
   }
 })();

@@ -35,7 +35,7 @@
 
     function getUser(userName, calltype) {
       var defer = $q.defer();
-      var name = userName.replace(/@/g, '%40').replace(/\+/g, '%2B');
+      var name = _.replace(userName, /@/g, '%40').replace(/\+/g, '%2B');
       var url = UrlConfig.getScimUrl(Authinfo.getOrgId()) + '?filter=username eq "' + name + '"';
 
       $http.get(url).success(function (data) {
@@ -66,7 +66,7 @@
       });
 
       var jsonUrl;
-      if (angular.isUndefined($window.navigator.msSaveOrOpenBlob)) {
+      if (_.isUndefined($window.navigator.msSaveOrOpenBlob)) {
         jsonUrl = ($window.URL || $window.webkitURL).createObjectURL(jsonBlob);
       }
 
@@ -158,7 +158,7 @@
           var results = [];
 
           var callingPromise = proxy(jsQuery, angular.copy(thisJob)).then(function (response) {
-            if (!angular.isUndefined(response.hits.hits) && (response.hits.hits.length > 0)) {
+            if (!_.isUndefined(response.hits.hits) && (response.hits.hits.length > 0)) {
               for (var i = 0; i < response.hits.hits.length; i++) {
                 results.push(response.hits.hits[i]._source);
               }
@@ -268,7 +268,7 @@
       var jsQuery = '{"query": {"filtered": {"query": {"bool": {"should": [' + generateHosts() + ']} },"filter": {"bool": {"should":[' + item + ']}}}},"size": 2000,"sort": [{"@timestamp": {"order": "desc"}}]}';
 
       return proxy(jsQuery, thisJob).then(function (response) {
-        if (!angular.isUndefined(response.hits.hits) && (response.hits.hits.length > 0)) {
+        if (!_.isUndefined(response.hits.hits) && (response.hits.hits.length > 0)) {
           for (var i = 0; i < response.hits.hits.length; i++) {
             cdrArray.push(response.hits.hits[i]._source);
           }

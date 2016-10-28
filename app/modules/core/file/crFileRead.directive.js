@@ -25,7 +25,7 @@
       element.on('click', onClick);
 
       function checkSize(size) {
-        if (angular.isUndefined(attrs.fileMaxSize) || (size / 1024) / 1024 < attrs.fileMaxSize) {
+        if (_.isUndefined(attrs.fileMaxSize) || (size / 1024) / 1024 < attrs.fileMaxSize) {
           return true;
         } else {
           if (angular.isFunction(scope.fileMaxSizeError)) {
@@ -36,7 +36,7 @@
       }
 
       function isTypeValid(type, name) {
-        if (angular.isUndefined(attrs.fileType) || (type && attrs.fileType.indexOf(type) > -1)) {
+        if (_.isUndefined(attrs.fileType) || (type && attrs.fileType.indexOf(type) > -1)) {
           return true;
         } else {
           if (isSuffixValid(name)) {

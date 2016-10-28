@@ -46,9 +46,9 @@
         .then(extractDataFromResponse);
     }
 
-    function getAll() {
+    function getAll(orgId) {
       return $http
-        .get(UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '?fields=@wide')
+        .get(UrlConfig.getHerculesUrlV2() + '/organizations/' + (orgId || Authinfo.getOrgId()) + '?fields=@wide')
         .then(extractClustersFromResponse)
         .then(addServicesStatuses)
         .then(sort);
