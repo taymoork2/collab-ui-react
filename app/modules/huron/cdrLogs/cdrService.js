@@ -295,7 +295,7 @@
     }
 
     function extractUniqueIds(cdrArray) {
-      if (!!_.isUndefined(cdrArray)) {
+      if (_.isUndefined(cdrArray)) {
         return [];
       }
       var uniqueIds = [];

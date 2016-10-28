@@ -167,7 +167,7 @@
       var abortSearchPromise = vm.abortSearchPromise;
 
       // if we didn't get a start-at, we are starting over
-      if (!!_.isUndefined(startat)) {
+      if (_.isUndefined(startat)) {
         startat = vm.sort.startAt;
         vm.users = [];
         if (vm.abortSearchPromise) {

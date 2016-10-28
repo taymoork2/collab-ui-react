@@ -134,7 +134,7 @@
         'hostname': hostname
       }, true)[0];
 
-      if (!!_.isUndefined(toCluster)) {
+      if (_.isUndefined(toCluster)) {
         vm.errorCount++;
         vm.failedHostMove.push(host.hostname);
         deleteCluster();

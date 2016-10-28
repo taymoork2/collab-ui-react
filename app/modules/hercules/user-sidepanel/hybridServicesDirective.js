@@ -149,7 +149,7 @@
     }
 
     function hasEntitlement(entitlement) {
-      if (!!_.isUndefined(vm.user)) {
+      if (_.isUndefined(vm.user)) {
         return false;
       }
       return vm.user.entitlements && vm.user.entitlements.indexOf(entitlement) > -1;

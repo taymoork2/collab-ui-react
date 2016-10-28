@@ -148,7 +148,7 @@
       vm.ui.closedHours = vm.ui.closedHours || AutoAttendantCeMenuModelService.getCombinedMenu(vm.aaModel.aaRecord, 'closedHours');
       vm.ui.holidays = vm.ui.holidays || AutoAttendantCeMenuModelService.getCombinedMenu(vm.aaModel.aaRecord, 'holidays');
       vm.ui.isOpenHours = true;
-      if (!!_.isUndefined(vm.ui.openHours)) {
+      if (_.isUndefined(vm.ui.openHours)) {
         vm.ui.openHours = AutoAttendantCeMenuModelService.newCeMenu();
         vm.ui.openHours.setType('MENU_WELCOME');
       }

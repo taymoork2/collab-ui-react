@@ -257,7 +257,7 @@
 
     function setAvailabilityGraph(data) {
       var tempData = angular.copy(data);
-      if (!!_.isUndefined(data.data[0].isDummy)) {
+      if (_.isUndefined(data.data[0].isDummy)) {
         var availabilityData = [];
         if (vm.clusterId === vm.allClusters) {
           _.forEach(data.data[0].clusterCategories, function (clusterCategory) {
@@ -286,7 +286,7 @@
       MetricsReportService.getAvailabilityData(vm.timeSelected, vm.clusterId).then(function (response) {
         if (response === vm.ABORT) {
           return;
-        } else if (!!_.isUndefined(response.data) || !angular.isArray(response.data) || response.data.length === 0 || !!_.isUndefined(response.data[0].clusterCategories) || response.data[0].clusterCategories.length === 0) {
+        } else if (_.isUndefined(response.data) || !angular.isArray(response.data) || response.data.length === 0 || _.isUndefined(response.data[0].clusterCategories) || response.data[0].clusterCategories.length === 0) {
           vm.availabilityStatus = vm.EMPTY;
         } else {
           deferred.promise.then(function () {
@@ -318,7 +318,7 @@
         MetricsReportService.getUtilizationData(vm.timeSelected, vm.allClusters).then(function (response) {
           if (response === vm.ABORT) {
             return;
-          } else if (!!_.isUndefined(response.graphData) || !!_.isUndefined(response.graphs) || response.graphData.length === 0) {
+          } else if (_.isUndefined(response.graphData) || _.isUndefined(response.graphs) || response.graphData.length === 0) {
             vm.utilizationStatus = vm.EMPTY;
           } else {
             deferred.promise.then(function () {
@@ -338,7 +338,7 @@
         MetricsReportService.getUtilizationData(vm.timeSelected, vm.allClusters).then(function (response) {
           if (response === vm.ABORT) {
             return;
-          } else if (!!_.isUndefined(response.graphData) || !!_.isUndefined(response.graphs) || response.graphData.length === 0) {
+          } else if (_.isUndefined(response.graphData) || _.isUndefined(response.graphs) || response.graphData.length === 0) {
             vm.utilizationStatus = vm.EMPTY;
           } else {
             for (var i = 0; i <= response.graphs.length; i++) {
@@ -365,19 +365,19 @@
         if (vm.clusterId === vm.allClusters) {
           if (response === vm.ABORT) {
             return;
-          } else if (!!_.isUndefined(response.data) || response.data.length === 0) {
+          } else if (_.isUndefined(response.data) || response.data.length === 0) {
             vm.onprem = vm.noData;
             vm.cloud = vm.noData;
             vm.total = vm.noData;
-          } else if (!!_.isUndefined(response.data.callsOnPremise) && !_.isUndefined(response.data.callsOverflow)) {
+          } else if (_.isUndefined(response.data.callsOnPremise) && !_.isUndefined(response.data.callsOverflow)) {
             vm.onprem = vm.noData;
             vm.cloud = response.data.callsOverflow;
             vm.total = vm.cloud;
-          } else if (!_.isUndefined(response.data.callsOnPremise) && !!_.isUndefined(response.data.callsOverflow)) {
+          } else if (!_.isUndefined(response.data.callsOnPremise) && _.isUndefined(response.data.callsOverflow)) {
             vm.onprem = response.data.callsOnPremise;
             vm.cloud = vm.noData;
             vm.total = vm.onprem;
-          } else if (!!_.isUndefined(response.data.callsOnPremise) && !!_.isUndefined(response.data.callsOverflow)) {
+          } else if (_.isUndefined(response.data.callsOnPremise) && _.isUndefined(response.data.callsOverflow)) {
             vm.onprem = vm.noData;
             vm.cloud = vm.noData;
             vm.total = vm.noData;
@@ -390,19 +390,19 @@
         } else {
           if (response === vm.ABORT) {
             return;
-          } else if (!!_.isUndefined(response.data) || response.data.length === 0) {
+          } else if (_.isUndefined(response.data) || response.data.length === 0) {
             vm.onprem = vm.noData;
             vm.cloud = vm.noData;
             vm.total = vm.noData;
-          } else if (!!_.isUndefined(response.data.callsOnPremise) && !_.isUndefined(response.data.callsRedirect)) {
+          } else if (_.isUndefined(response.data.callsOnPremise) && !_.isUndefined(response.data.callsRedirect)) {
             vm.onprem = vm.noData;
             vm.cloud = response.data.callsRedirect;
             vm.total = vm.cloud;
-          } else if (!_.isUndefined(response.data.callsOnPremise) && !!_.isUndefined(response.data.callsRedirect)) {
+          } else if (!_.isUndefined(response.data.callsOnPremise) && _.isUndefined(response.data.callsRedirect)) {
             vm.onprem = response.data.callsOnPremise;
             vm.cloud = vm.noData;
             vm.total = vm.onprem;
-          } else if (!!_.isUndefined(response.data.callsOnPremise) && !!_.isUndefined(response.data.callsRedirect)) {
+          } else if (_.isUndefined(response.data.callsOnPremise) && _.isUndefined(response.data.callsRedirect)) {
             vm.onprem = vm.noData;
             vm.cloud = vm.noData;
             vm.total = vm.noData;
@@ -421,7 +421,7 @@
       MetricsReportService.getClusterAvailabilityData(vm.timeSelected, vm.clusterId).then(function (response) {
         if (response === vm.ABORT) {
           return;
-        } else if (!!_.isUndefined(response.data) || response.data.length === 0 || !!_.isUndefined(response.data.availabilityPercent)) {
+        } else if (_.isUndefined(response.data) || response.data.length === 0 || _.isUndefined(response.data.availabilityPercent)) {
           vm.clusterAvailability = vm.EMPTY;
           vm.clusterAvailability = vm.noData;
         } else {
