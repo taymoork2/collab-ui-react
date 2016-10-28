@@ -491,7 +491,7 @@
             return vm.hideFieldInternalNumberRange;
           }
         },
-        controller: function ($scope) {
+        controller: /* @ngInject */ function ($scope) {
           $scope.$watch(function () {
             return vm.form.$invalid;
           }, function () {
@@ -531,7 +531,7 @@
         'templateOptions.isWarn': vm.siteSteeringDigitWarningValidation,
         'templateOptions.isError': vm.siteAndSteeringDigitErrorValidation
       },
-      controller: function ($scope) {
+      controller: /* @ngInject */ function ($scope) {
         _buildVoicemailPrefixOptions($scope, vm.steeringDigitSelection[0].templateOptions);
       }
     }];
@@ -606,7 +606,7 @@
         filter: true,
         warnMsg: $translate.instant('settingsServiceNumber.warning')
       },
-      controller: function ($scope) {
+      controller: /* @ngInject */ function ($scope) {
         _buildServiceNumberOptions($scope);
       },
       hideExpression: '!model.showServiceAddress',
@@ -671,7 +671,7 @@
               }
             }
           },
-          controller: function ($scope) {
+          controller: /* @ngInject */ function ($scope) {
             _buildCallerIdOptions($scope);
             _callerIdEnabledWatcher($scope);
             _voicemailNumberWatcher($scope);
@@ -738,7 +738,7 @@
           }
         }
       },
-      controller: function ($scope) {
+      controller: /* @ngInject */ function ($scope) {
         _buildVoicemailNumberOptions($scope);
         _voicemailEnabledWatcher($scope);
         _callerIdNumberWatcher($scope);
@@ -1413,16 +1413,14 @@
 
     function saveCallerId() {
       var rawPattern = TelephoneNumberService.getDIDValue(vm.model.callerId.callerIdNumber);
-
-      var existingCallerIdNumber = _.find(vm.allExternalNumbers, function (externalNumber) {
-        return externalNumber.uuid === _.get(vm, 'model.callerId.externalNumber.uuid');
+      var newCallerIdNumber = _.find(vm.allExternalNumbers, function (externalNumber) {
+        return externalNumber.pattern === rawPattern;
       });
-
       return $q.when(true)
         .then(function () {
           if (vm.model.callerId.callerIdEnabled && (vm.model.callerId.callerIdName && vm.model.callerId.callerIdNumber)) {
-            // save if unable to find a matching existing number OR if the number is changing
-            if (_.isUndefined(existingCallerIdNumber) || existingCallerIdNumber.pattern !== rawPattern) {
+            if (!(savedModel.callerId.callerIdEnabled) ||
+               (vm.model.callerId.uuid == "")) {
               var data = {
                 name: vm.model.callerId.callerIdName,
                 externalCallerIdType: COMPANY_CALLER_ID_TYPE,
@@ -1438,6 +1436,18 @@
                 .catch(function (response) {
                   return $q.reject(response);
                 });
+            } else if ((savedModel.callerId.callerIdEnabled) &&
+                      (savedModel.callerId.callerIdNumber !== vm.model.callerId.callerIdNumber)) {
+              var externalNumberData = {
+                uuid: newCallerIdNumber != null ? newCallerIdNumber.uuid : null
+              };
+              data = {
+                name: vm.model.callerId.callerIdName,
+                externalCallerIdType: COMPANY_CALLER_ID_TYPE,
+                pattern: rawPattern,
+                externalNumber: externalNumberData
+              };
+              return CallerId.updateCompanyNumber(savedModel.callerId.uuid, data);
             } else {
               // update if the name is changing
               if (vm.model.callerId.uuid && (vm.existingCallerIdName !== vm.model.callerId.callerIdName)) {
@@ -1628,7 +1638,6 @@
     $scope.$watchCollection(function () {
       return [vm.model.serviceNumber, vm.unassignedExternalNumbers];
     }, function (serviceNumber) {
-
       // indication that the service number is set, but not assigned to any device
       var found = Boolean(_.find(vm.unassignedExternalNumbers, function (externalNumber) {
         return externalNumber.pattern === _.get(serviceNumber[0], 'pattern');
