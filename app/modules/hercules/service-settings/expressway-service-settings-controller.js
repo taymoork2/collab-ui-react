@@ -38,7 +38,7 @@
             // TODO: fix this callback crap!
             if (err) {
               vm.squaredFusionEc = !vm.squaredFusionEc;
-              Notification.errorWithTrackingId('hercules.errors.failedToEnableConnect');
+              Notification.errorWithTrackingId(err, 'hercules.errors.failedToEnableConnect');
             }
           }
         );
@@ -60,14 +60,16 @@
     vm.updateSipDomain = function () {
       vm.savingSip = true;
 
-      USSService.updateOrg(vm.org).then(function () {
-        vm.storeEc(false);
-        vm.savingSip = false;
-        Notification.success('hercules.errors.sipDomainSaved');
-      }, function () {
-        vm.savingSip = false;
-        Notification.errorWithTrackingId('hercules.errors.sipDomainInvalid');
-      });
+      USSService.updateOrg(vm.org)
+          .then(function () {
+            vm.storeEc(false);
+            vm.savingSip = false;
+            Notification.success('hercules.errors.sipDomainSaved');
+          })
+            .catch(function (error) {
+              vm.savingSip = false;
+              Notification.errorWithTrackingId(error, 'hercules.errors.sipDomainInvalid');
+            });
     };
 
     ServiceDescriptor.getEmailSubscribers(vm.servicesId[0], function (error, emailSubscribers) {
@@ -87,14 +89,14 @@
         return data.text;
       }).toString();
       if (emailSubscribers && !MailValidatorService.isValidEmailCsv(emailSubscribers)) {
-        Notification.errorWithTrackingId('hercules.errors.invalidEmail');
+        Notification.error('hercules.errors.invalidEmail');
       } else {
         vm.savingEmail = true;
         ServiceDescriptor.setEmailSubscribers(vm.servicesId[0], emailSubscribers, function (statusCode) {
           if (statusCode === 204) {
             Notification.success('hercules.settings.emailNotificationsSavingSuccess');
           } else {
-            Notification.errorWithTrackingId('hercules.settings.emailNotificationsSavingError');
+            Notification.error('hercules.settings.emailNotificationsSavingError');
           }
           vm.savingEmail = false;
         });
@@ -111,9 +113,9 @@
 
     vm.writeEnableEmailSendingToUser = _.debounce(function (value) {
       ServiceDescriptor.setDisableEmailSendingToUser(value)
-        .catch(function () {
+        .catch(function (error) {
           vm.enableEmailSendingToUser = !vm.enableEmailSendingToUser;
-          return Notification.errorWithTrackingId('hercules.settings.emailUserNotificationsSavingError');
+          return Notification.errorWithTrackingId(error, 'hercules.settings.emailUserNotificationsSavingError');
         });
     }, 2000, {
       'leading': true,

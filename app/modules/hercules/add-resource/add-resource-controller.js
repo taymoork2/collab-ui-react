@@ -279,8 +279,8 @@
     vm.saveResourceGroup = function () {
       if (vm.selectedResourceGroup.value !== '') {
         ResourceGroupService.assign(vm.clusterId, vm.selectedResourceGroup.value)
-          .catch(function () {
-            Notification.errorWithTrackingId('hercules.addResourceDialog.couldNotSaveResourceGroup');
+          .catch(function (error) {
+            Notification.errorWithTrackingId(error, 'hercules.addResourceDialog.couldNotSaveResourceGroup');
           })
           .finally(function () {
             vm.preregistrationCompletedGoToExpressway = true;

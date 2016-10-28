@@ -87,6 +87,6 @@ describe('Directive Controller: CalendarServicePreviewCtrl', function () {
     initController();
     expect($scope.extension.entitled).toBeTruthy();
     expect($scope.extension.status.state).toBe('unknown');
-    expect(Notification.errorWithTrackingId.calls.count()).toBe(1);
+    expect(Notification.error.calls.count()).toBe(1);
   });
 });

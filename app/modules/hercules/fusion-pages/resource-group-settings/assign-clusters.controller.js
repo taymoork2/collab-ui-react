@@ -35,8 +35,8 @@
           vm.newData = angular.copy(vm.originalData);
           vm.loadingState = false;
         })
-        .catch(function () {
-          Notification.errorWithTrackingId('hercules.assignClustersModal.errorLoading');
+        .catch(function (error) {
+          Notification.errorWithTrackingId(error, 'hercules.assignClustersModal.errorLoading');
         });
     }
 
@@ -105,8 +105,8 @@
         .then(function () {
           $modalInstance.close();
         })
-        .catch(function () {
-          Notification.errorWithTrackingId('hercules.genericFailure');
+        .catch(function (error) {
+          Notification.errorWithTrackingId(error, 'hercules.genericFailure');
           vm.savingState = false;
           // refresh data with what worked
           return loadData();
