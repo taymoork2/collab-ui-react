@@ -207,10 +207,8 @@
             return vm.clusterId;
           }
         }
-      }).result.then(function (result) {
-        if (result !== 'cancelled') {
-          vm.enabledServices.splice(vm.enabledServices.indexOf(serviceId.toString()), 1);
-        }
+      }).result.then(function () {
+        vm.enabledServices.splice(vm.enabledServices.indexOf(serviceId.toString()), 1);
       });
     }
 
@@ -224,7 +222,7 @@
         controller: 'ClusterDeregisterController',
         controllerAs: 'clusterDeregister',
         templateUrl: 'modules/hercules/cluster-deregister/deregister-dialog.html',
-        type: 'small'
+        type: 'dialog'
       })
       .result.then(function () {
         $state.go('cluster-list');
