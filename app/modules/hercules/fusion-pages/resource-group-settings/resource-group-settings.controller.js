@@ -45,8 +45,9 @@
             groupName: group.name
           });
           getAllowedReleaseChannels();
-        }, function () {
-          Notification.errorWithTrackingId('hercules.resourceGroupSettings.loadFailed');
+        })
+        .catch(function (error) {
+          Notification.errorWithTrackingId(error, 'hercules.resourceGroupSettings.loadFailed');
         });
     }
 
@@ -61,7 +62,7 @@
 
     function setGroupName(newName) {
       if (newName.length === 0) {
-        Notification.errorWithTrackingId('hercules.resourceGroupSettings.groupNameCannotByEmpty');
+        Notification.error('hercules.resourceGroupSettings.groupNameCannotByEmpty');
         return;
       }
       ResourceGroupService.setName(vm.group.id, newName)
@@ -73,9 +74,9 @@
           Notification.success('hercules.resourceGroupSettings.groupNameSaved');
         }, function (response) {
           if (response.status === 409) {
-            Notification.errorWithTrackingId('hercules.resourceGroupSettings.duplicateName');
+            Notification.errorWithTrackingId(response, 'hercules.resourceGroupSettings.duplicateName');
           } else {
-            Notification.errorWithTrackingId('hercules.genericFailure');
+            Notification.errorWithTrackingId(response, 'hercules.genericFailure');
           }
         });
     }
@@ -169,8 +170,8 @@
           vm.channelHasBeenReset = true;
           Notification.success('hercules.resourceGroupSettings.groupReleaseChannelSaved');
         })
-        .catch(function () {
-          Notification.errorWithTrackingId('hercules.genericFailure');
+        .catch(function (error) {
+          Notification.errorWithTrackingId(error, 'hercules.genericFailure');
         });
     };
 

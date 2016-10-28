@@ -90,7 +90,7 @@
         });
       })
       .catch(function (error) {
-        Notification.errorWithTrackingId('Error getting user information: ' + error);
+        Notification.errorWithTrackingId(error, 'hercules.genericFailure');
       });
 
     function checkEntitlements(options) {

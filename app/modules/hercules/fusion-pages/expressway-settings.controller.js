@@ -98,7 +98,7 @@
               },
                 function () {
                   vm.selectedResourceGroup = vm.originalResourceGroup;
-                  Notification.errorWithTrackingId('hercules.genericFailure');
+                  Notification.error('hercules.genericFailure');
                 });
           })
           .catch(function () {
@@ -127,11 +127,10 @@
                 }) + ' ' + willUpgrade);
                 vm.releasechannelsSelected = $translate.instant('hercules.fusion.add-resource-group.release-channel.' + vm.selectedResourceGroup.releaseChannel);
                 vm.originalResourceGroup = vm.selectedResourceGroup;
-              },
-                function () {
-                  vm.selectedResourceGroup = vm.originalResourceGroup;
-                  Notification.errorWithTrackingId('hercules.genericFailure');
-                });
+              }).catch(function (error) {
+                vm.selectedResourceGroup = vm.originalResourceGroup;
+                Notification.errorWithTrackingId(error, 'hercules.genericFailure');
+              });
           }).catch(function () {
             vm.selectedResourceGroup = vm.originalResourceGroup;
           });
@@ -233,7 +232,7 @@
 
     function setClusterName(newClusterName) {
       if (newClusterName.length === 0) {
-        Notification.errorWithTrackingId('hercules.expresswayClusterSettings.clusterNameCannotByEmpty');
+        Notification.error('hercules.expresswayClusterSettings.clusterNameCannotByEmpty');
         return;
       }
       FusionClusterService.setClusterName(vm.cluster.id, newClusterName)
@@ -243,8 +242,9 @@
             clusterName: vm.cluster.name
           });
           Notification.success('hercules.expresswayClusterSettings.clusterNameSaved');
-        }, function () {
-          Notification.errorWithTrackingId('hercules.expresswayClusterSettings.clusterNameCannotBeSaved');
+        })
+        .catch(function (error) {
+          Notification.errorWithTrackingId(error, 'hercules.expresswayClusterSettings.clusterNameCannotBeSaved');
         });
     }
 
