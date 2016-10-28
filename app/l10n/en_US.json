@@ -365,10 +365,6 @@
     "enabledBetaFeatures": "Enabled Beta Features",
     "otpShareButton": "Share"
   },
-  "settings": {
-    "title": "Service Setup",
-    "initialSetup": "Initial Setup"
-  },
   "tabs": {
     "overviewTab": "Overview",
     "customerTab": "Customers",
