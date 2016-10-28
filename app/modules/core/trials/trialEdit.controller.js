@@ -645,7 +645,7 @@
                 return $q.reject(response);
               }).then(function () {
                 if (vm.pstnTrial.enabled) {
-                  return TrialPstnService.createPstnEntity(vm.customerOrgId);
+                  return TrialPstnService.createPstnEntity(vm.customerOrgId, response.data.customerName);
                 }
               });
           }
