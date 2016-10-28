@@ -481,7 +481,7 @@
         .then(function (results) {
           vm.showRoomSystems = true;
           vm.roomSystemTrial.enabled = true;
-          vm.sparkBoardTrial.enabled = true;
+          vm.sparkBoardTrial.enabled = results.atlasDarling;
           vm.webexTrial.enabled = results.atlasWebexTrials;
           vm.callTrial.enabled = vm.hasCallEntitlement;
           vm.pstnTrial.enabled = vm.hasCallEntitlement;
@@ -496,7 +496,7 @@
 
           vm.showCare = results.atlasCareTrials;
           vm.careTrial.enabled = results.atlasCareTrials;
-          vm.sbTrial = results.altasDarling;
+          vm.sbTrial = results.atlasDarling;
 
           // TODO: US12063 overrides using this var but requests code to be left in for now
           //var devicesModal = _.find(vm.trialStates, {

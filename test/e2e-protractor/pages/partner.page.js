@@ -106,6 +106,7 @@ var PartnerHomePage = function () {
   this.roomSystemsCheckboxChecked = element(by.css('label[for="trialRoomSystemsChecked"]'));
   this.squaredUCTrialCheckbox = element(by.css('label[for="callTrial"]'));
   this.roomSystemsTrialCheckbox = element(by.css('label[for="roomSystemsTrial"]'));
+  this.sparkBoardTrialCheckbox = element(by.css('label[for="sparkBoardTrial"]'));
   this.careTrialCheckbox = element(by.css('label[for="careTrial"]'));
   this.webexTrialCheckbox = element(by.css('label[for="webexTrial"]'));
   this.careLicenseCountTextbox = element(by.css('input[name="input_trialCareLicenseCount"]'));
