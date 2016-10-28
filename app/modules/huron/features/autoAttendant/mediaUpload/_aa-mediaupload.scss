@@ -22,7 +22,7 @@
   .aa-tall-box {
     @extend .aa-box;
 
-    height: 9.25rem;
+    height: 9rem;
     @include vr-spacing(pt, 0.85);
     @include vr-spacing(pl, 0);
     @include vr-spacing(pr, 0);
@@ -81,9 +81,13 @@
 
   .aa-top-bottom-push {
     @include vr-spacing(mv, 0.625);
-
     color: $gray-dark-4;
     line-height: 1.25rem;
+  }
+
+  .aa-upload-squish {
+    @extends .aa-top-bottom-push;
+    @include vr-spacing(mb, 0.25);
   }
 
   .spread-light {

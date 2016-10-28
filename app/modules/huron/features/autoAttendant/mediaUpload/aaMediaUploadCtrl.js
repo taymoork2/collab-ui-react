@@ -27,7 +27,9 @@
     vm.openModal = openModal;
     vm.progress = 0;
     vm.actionCopy = undefined;
-    vm.isFromSubMenu = false;
+    vm.isSquishable = isSquishable;
+
+    var maxLanes = 3;
 
     var mediaTypes = {
       musicOnHold: 'musicOnHold',
@@ -39,6 +41,7 @@
       NAME: ["play", "say", "runActionsOnInput"],
       HEADER_TYPE: "MENU_OPTION_ANNOUNCEMENT"
     };
+
     var messageType = {
       ACTION: 1,
       MENUHEADER: 2,
@@ -46,11 +49,15 @@
       SUBMENU_HEADER: 4,
       ROUTE_TO_QUEUE: 5,
     };
+
     var sourceType = messageType.ACTION;
     var uniqueCtrlIdentifer = 'mediaUploadCtrl';
     var modalOpen = false;
     var modalCanceled = false;
     var uploadServProm = undefined;
+    var menuKeyIndex;
+    var isMenuHeader;
+    var numLanes;
 
     //////////////////////////////////////////////////////
 
@@ -362,9 +369,6 @@
     }
 
     function populateUiModel() {
-      if ($scope.fromSubMenu) {
-        vm.isFromSubMenu = true;
-      }
       gatherMediaSource();
       //set up the view according to the play
       setUpEntry(vm.actionEntry);
@@ -377,7 +381,40 @@
       }
     });
 
+    function isSquishable() {
+      // if it is submenu header in the phone menu slightly squish the html to fit when open/closed and holidays are exposed.
+
+      var toSquish = (numLanes == maxLanes) && ((menuKeyIndex !== '') || (_.isEmpty(menuKeyIndex) && (isMenuHeader === 'false')));
+      return toSquish;
+
+//       return (numLanes == maxLanes) && (menuKeyIndex || ((!menuKeyIndex) && (isMenuHeader === 'false')));
+
+    }
+
+    function countLanes(ui) {
+      var n = 1; // always one lane, open hours
+
+      if (ui.isClosedHours) {
+        n++;
+      }
+      if (ui.isHolidays) {
+        if (ui.holidaysValue !== 'closedHours') {
+          n++;
+        }
+      }
+      return n;
+
+    }
+
+    function determineSquishability() {
+      var ui = AAUiModelService.getUiModel();
+      numLanes = countLanes(ui);
+      menuKeyIndex = $scope.menuKeyIndex;
+      isMenuHeader = $scope.isMenuHeader;
+    }
+
     function activate() {
+      determineSquishability();
       populateUiModel();
       setActionCopy();
     }

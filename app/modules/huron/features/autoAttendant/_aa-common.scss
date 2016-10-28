@@ -27,16 +27,8 @@ aa-message-line-break {
 
 .aa-message-subtext {
   @include vr-spacing(mb, 0.75);
+  @include vr-spacing(mt, 0.5);
 
   color: $gray-light-1;
   font-style: italic;
 }
-
-.aa-message-only-type {
-  @include vr-spacing(pl, 0);
-  @include vr-spacing(pr, 0);
-  @include vr-spacing(ml, 0);
-  @include vr-spacing(mt, 0);
-  @include vr-spacing(mb, 0);
-}
-

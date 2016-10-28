@@ -497,4 +497,61 @@ describe('Controller: AAMediaUploadCtrl', function () {
       });
     });
   });
+  describe('Squishability', function () {
+    var controller;
+
+    beforeEach(inject(function ($controller) {
+      $scope = $rootScope;
+      controller = $controller;
+
+      spyOn(AutoAttendantCeMenuModelService, 'getCeMenu').and.returnValue(menuEntry);
+    }));
+
+    it('should test Squishabilty for one lane', function () {
+      var c;
+
+      $scope.menuKeyIndex = '';
+      $scope.isMenuHeader = '';
+
+      c = controller('AAMediaUploadCtrl', {
+        $scope: $scope
+      });
+
+      expect(c.isSquishable()).toBeFalsy();
+
+    });
+    it('should test Squishabilty for two lanes', function () {
+      var c;
+
+      ui.isClosedHours = true;
+
+      $scope.menuKeyIndex = '';
+      $scope.isMenuHeader = '';
+
+      c = controller('AAMediaUploadCtrl', {
+        $scope: $scope
+      });
+
+      expect(c.isSquishable()).toBeFalsy();
+
+    });
+
+    it('should test Squishabilty for three lanes', function () {
+      var c;
+
+      ui.isClosedHours = true;
+      ui.isHolidays = true;
+
+      $scope.menuKeyIndex = '';
+      $scope.isMenuHeader = '';
+
+      c = controller('AAMediaUploadCtrl', {
+        $scope: $scope
+      });
+
+      expect(c.isSquishable()).toBeFalsy();
+
+    });
+  });
+
 });

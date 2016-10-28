@@ -1,7 +1,7 @@
 <div ng-if="aaDialByExtCtrl.isTextOnly" id="dialByTextOnly">
-  <div ng-if="!aaDialByExtCtrl.isMediaUploadToggle()" id="dialBySayTextOnly" >
+  <div ng-if="!aaDialByExtCtrl.isMediaUploadToggle()" id="dialBySayTextOnly" class="aa-message-panel-input-only">
     <label class= 'control-label' for="dialByMessageInput{{ schedule + index + keyIndex}}" translate="{{ :: aaDialByExtCtrl.getMessageLabel() }}"></label>
-    <textarea aa-key="$index" aa-keypress ng-change="aaDialByExtCtrl.saveUiModel()" ng-model="aaDialByExtCtrl.messageInput" type="text" id="dialByMessageInput{{ schedule + index + keyIndex}}" name="dialByMessageInput" placeholder="{{ :: aaDialByExtCtrl.messageInputPlaceholder }}" rows="4" maxlength="2000" ></textarea>
+    <textarea class="aa-message-textarea" aa-key="$index" aa-keypress ng-change="aaDialByExtCtrl.saveUiModel()" ng-model="aaDialByExtCtrl.messageInput" type="text" id="dialByMessageInput{{ schedule + index + keyIndex}}" name="dialByMessageInput" placeholder="{{ :: aaDialByExtCtrl.messageInputPlaceholder }}" rows="4" cols="31" maxlength="2000" ></textarea>
   </div>
   <div ng-if="aaDialByExtCtrl.isMediaUploadToggle()" id="dialByTextOnlyMedia" > 
     <aa-message-type aa-from-sub-menu={{fromSubMenu}} aa-menu-id={{menuId}} aa-key-index={{menuKeyIndex}} aa-index="index" aa-schedule="{{schedule}}"></aa-message-type>
@@ -15,7 +15,7 @@
     <div class="row">
       <div class="small-12 columns">
         <label for="dialByMessageInput{{ schedule + index }}" translate="{{ :: aaDialByExtCtrl.getMessageLabel() }}"></label>
-        <textarea class="aa-dial-by-message-textarea" aa-key="$index" aa-keypress ng-change="aaDialByExtCtrl.saveUiModel()" ng-model="aaDialByExtCtrl.messageInput" type="text" id="dialByMessageInput{{ schedule + index}}" name="dialByMessageInput" placeholder="{{ :: aaDialByExtCtrl.messageInputPlaceholder }}" cols="50" rows="5" maxlength="2000" ></textarea>
+        <textarea class="aa-dial-by-message-textarea" aa-key="$index" aa-keypress ng-change="aaDialByExtCtrl.saveUiModel()" ng-model="aaDialByExtCtrl.messageInput" type="text" id="dialByMessageInput{{ schedule + index}}" name="dialByMessageInput" placeholder="{{ :: aaDialByExtCtrl.messageInputPlaceholder }}" cols="31" rows="5" maxlength="2000" ></textarea>
       </div>
     </div>
     <div class="row">

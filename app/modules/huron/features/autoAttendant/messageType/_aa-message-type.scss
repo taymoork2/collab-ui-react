@@ -7,3 +7,11 @@
   @include vr-spacing(pr, .75);
   resize: none;
 }
+.aa-message-only-type {
+  @include vr-spacing(pl, 0);
+  @include vr-spacing(pr, 0);
+  @include vr-spacing(ml, 0);
+  @include vr-spacing(mt, 0);
+  @include vr-spacing(mb, 0);
+}
+

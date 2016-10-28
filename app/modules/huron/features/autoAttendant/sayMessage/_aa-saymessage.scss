@@ -1,8 +1,8 @@
 .aa-message-panel {
   width: 100%;
 
-  @include vr-spacing(mt, 1);
   @include vr-spacing(mb, 1);
+  @include vr-spacing(mt, 1);
 
   .aa-message-textarea {
     @include vr-spacing(mb, 1);
@@ -19,4 +19,8 @@
     color: $gray-base;
     white-space: nowrap;
   }
+}
+.aa-message-panel-input-only {
+  @extend .aa-message-panel;
+  @include vr-spacing(mt, 0);
 }
