@@ -303,6 +303,7 @@
         utilizationChart.chartCursor.valueLineBalloonEnabled = true;
         utilizationChart.chartCursor.valueLineEnabled = true;
         utilizationChart.chartCursor.categoryBalloonEnabled = true;
+        utilizationChart.chartCursor.oneBalloonOnly = true;
         if (isDummy) {
           utilizationChart.chartCursor.valueLineBalloonEnabled = false;
           utilizationChart.chartCursor.valueLineEnabled = false;
@@ -324,6 +325,7 @@
         utilizationChart.chartCursor.valueLineBalloonEnabled = true;
         utilizationChart.chartCursor.valueLineEnabled = true;
         utilizationChart.chartCursor.valueBalloonsEnabled = true;
+        utilizationChart.chartCursor.oneBalloonOnly = true;
         utilizationChart.chartCursor.balloonColor = chartColors.grayLight;
         if (isDummy) {
           utilizationChart.chartCursor.valueLineBalloonEnabled = false;
