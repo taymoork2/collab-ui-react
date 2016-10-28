@@ -20,6 +20,12 @@
     state: 'partnercustomers',
     link: '/partner/customers'
   }, {
+    tab: 'gemservicesTab',
+    icon: 'icon-cloud',
+    title: 'tabs.servicesTab',
+    state: 'gem-services',
+    link: '/partner/services/index'
+  }, {
     tab: 'userTab',
     icon: 'icon-user',
     title: 'tabs.userTab',

@@ -1748,6 +1748,18 @@
             template: '<div ui-view></div>',
             absract: true
           })
+          .state('gem-services', {
+            parent: 'partner',
+            url: '/services/index',
+            template: '<cca-card></cca-card>'
+          })
+          .state('gem-spList', {
+            parent: 'partner',
+            url: '/services/gemSPList',
+            templateUrl: "modules/gemini/common/gemspList.tpl.html",
+            controller: 'GemspListCtrl',
+            controllerAs: 'gsls'
+          })
           .state('partnercustomers.list', {
             url: '/customers',
             templateUrl: 'modules/core/customers/customerList/customerList.tpl.html',

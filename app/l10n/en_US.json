@@ -5667,6 +5667,18 @@
   "readOnlyMessages": {
     "notAllowed": "Not allowed in read-only mode. Operation not executed."
   },
+  "gemini": {
+    "services": {
+      "pageTitle": "Service"
+    },
+    "audiocca": "Cloud Connected Audio (CCA)",
+    "cca": {
+      "title": "Cloud Connected Audio"
+    },
+    "msg": {
+      "splsResponseErr": "No partner organization found, please contact ccaportal@cisco.com for help."
+    }
+  },
   "timeZones": {
     "Etc/GMT+12": "Etc/GMT+12",
     "Etc/GMT+11": "Etc/GMT+11",
