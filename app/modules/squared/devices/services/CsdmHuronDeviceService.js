@@ -9,10 +9,9 @@
   function CsdmHuronUserDeviceService($injector, Authinfo, CsdmConfigService) {
     function create(userId) {
       var devicesUrl = CsdmConfigService.getUrl() + '/organization/' + Authinfo.getOrgId() + '/devices/?cisUuid=' + userId + '&type=huron';
-      var service = $injector.instantiate(CsdmHuronDeviceService, {
+      return $injector.instantiate(CsdmHuronDeviceService, {
         devicesUrl: devicesUrl
       });
-      return service;
     }
 
     return {
@@ -34,10 +33,14 @@
   }
 
   /* @ngInject  */
-  function CsdmHuronDeviceService($http, $q, Authinfo, HuronConfig, CsdmConverter, Notification, devicesUrl) {
+  function CsdmHuronDeviceService($http, $q, Authinfo, HuronConfig, CsdmConverter, CsdmConfigService, devicesUrl) {
 
     function huronEnabled() {
       return $q.when(Authinfo.isSquaredUC());
+    }
+
+    function getFindDevicesUrl(userId) {
+      return CsdmConfigService.getUrl() + '/organization/' + Authinfo.getOrgId() + '/devices/?cisUuid=' + userId + '&type=huron';
     }
 
     function getCmiUploadLogsUrl(userId, deviceId) {
@@ -94,6 +97,12 @@
 
     function deleteDevice(deviceUrl) {
       return $http.delete(deviceUrl);
+    }
+
+    function getDevicesForPlace(cisUuid) {
+      return $http.get(getFindDevicesUrl(cisUuid)).then(function (res) {
+        return CsdmConverter.convertHuronDevices(res.data);
+      });
     }
 
     function getLinesForDevice(huronDevice) {
@@ -166,14 +175,14 @@
       updateTags: updateTags,
       dataLoaded: dataLoaded,
       getDeviceList: getDeviceList,
+      getDevicesForPlace: getDevicesForPlace,
       deleteDevice: deleteDevice,
       getLinesForDevice: getLinesForDevice,
       getTimezoneForDevice: getTimezoneForDevice,
       setTimezoneForDevice: setTimezoneForDevice,
       resetDevice: resetDevice,
       uploadLogs: uploadLogs,
-
-      fetch: fetch,
+      fetch: fetch
     };
   }
 })();

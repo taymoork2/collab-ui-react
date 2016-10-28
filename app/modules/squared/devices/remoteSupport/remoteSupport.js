@@ -34,7 +34,7 @@
         }
 
         function pollDeviceForNewRsuKey(endTime, deferred) {
-          CsdmDataModelService.reloadDevice(rs.currentDevice).then(function (device) {
+          CsdmDataModelService.reloadItem(rs.currentDevice).then(function (device) {
             if (device.rsuKey != rs.oldRsuKey) {
               rs.resetDone = true;
               return deferred.resolve();
