@@ -183,10 +183,10 @@
      */
     function getCeInfo(aaResourceRecord) {
       var ceInfo = new CeInfo();
-      if (angular.isDefined(aaResourceRecord.callExperienceName)) {
+      if (!_.isUndefined(aaResourceRecord.callExperienceName)) {
         ceInfo.setName(aaResourceRecord.callExperienceName);
       }
-      if (angular.isDefined(aaResourceRecord.callExperienceURL)) {
+      if (!_.isUndefined(aaResourceRecord.callExperienceURL)) {
         ceInfo.setCeUrl(aaResourceRecord.callExperienceURL);
       }
       if (angular.isArray(aaResourceRecord.assignedResources)) {
@@ -196,13 +196,13 @@
           resource.setTrigger(iResource.trigger);
           resource.setId(iResource.id);
           resource.setType(iResource.type);
-          if (angular.isDefined(iResource.number)) {
+          if (!_.isUndefined(iResource.number)) {
             resource.setNumber(iResource.number);
           }
           ceInfo.addResource(resource);
         }
       }
-      if (angular.isDefined(aaResourceRecord.scheduleId)) {
+      if (!_.isUndefined(aaResourceRecord.scheduleId)) {
         ceInfo.setSchedule(aaResourceRecord.scheduleId);
       }
       return ceInfo;

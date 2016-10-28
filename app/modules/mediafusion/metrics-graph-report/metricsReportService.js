@@ -30,7 +30,7 @@
     };
 
     function getUtilizationData(time, cluster) {
-      if (activePromiseForUtilization !== null && angular.isDefined(activePromiseForUtilization)) {
+      if (activePromiseForUtilization !== null && !_.isUndefined(activePromiseForUtilization)) {
         activePromiseForUtilization.resolve(ABORT);
       }
       activePromiseForUtilization = $q.defer();
@@ -39,7 +39,7 @@
         graphs: []
       };
       return getService(urlBase + getQuerys(utilizationUrl, cluster, time), activePromiseForUtilization).then(function (response) {
-        if (angular.isDefined(response) && angular.isDefined(response.data) && angular.isDefined(response.data.chartData) && angular.isArray(response.data.chartData) && angular.isDefined(response.data)) {
+        if (!_.isUndefined(response) && !_.isUndefined(response.data) && !_.isUndefined(response.data.chartData) && angular.isArray(response.data.chartData) && !_.isUndefined(response.data)) {
           returnData.graphData.push(response.data.chartData);
           return adjustUtilizationData(response.data.chartData, returnData, response.data.startTime, response.data.endTime, response.data.graphs);
         } else {
@@ -52,7 +52,7 @@
 
     function getCallVolumeData(time, cluster) {
       // cancel any currently running jobs
-      if (activePromise !== null && angular.isDefined(activePromise)) {
+      if (activePromise !== null && !_.isUndefined(activePromise)) {
         activePromise.resolve(ABORT);
       }
       activePromise = $q.defer();
@@ -60,7 +60,7 @@
         graphData: []
       };
       return getService(urlBase + getQuerys(callVolumeUrl, cluster, time), activePromise).then(function (response) {
-        if (angular.isDefined(response) && angular.isDefined(response.data[0]) && angular.isDefined(response.data[0].values) && angular.isArray(response.data[0].values) && angular.isDefined(response.data[0])) {
+        if (!_.isUndefined(response) && !_.isUndefined(response.data[0]) && !_.isUndefined(response.data[0].values) && angular.isArray(response.data[0].values) && !_.isUndefined(response.data[0])) {
           returnData.graphData.push(response.data[0].values);
           return adjustCallVolumeData(response.data[0].values, returnData, response.data[0].startTime, response.data[0].endTime);
         } else {
@@ -73,13 +73,13 @@
 
     function getAvailabilityData(time, cluster) {
       // cancel any currently running jobs
-      if (activePromiseForAvailability !== null && angular.isDefined(activePromiseForAvailability)) {
+      if (activePromiseForAvailability !== null && !_.isUndefined(activePromiseForAvailability)) {
         activePromiseForAvailability.resolve(ABORT);
       }
       activePromiseForAvailability = $q.defer();
       var returnData = [];
       return getService(urlBase + getQuerys(clusterAvailability, cluster, time), activePromiseForAvailability).then(function (response) {
-        if (angular.isDefined(response) && angular.isDefined(response.data) && angular.isDefined(response.data[0]) && angular.isDefined(response.data[0].clusterCategories) && angular.isArray(response.data[0].clusterCategories)) {
+        if (!_.isUndefined(response) && !_.isUndefined(response.data) && !_.isUndefined(response.data[0]) && !_.isUndefined(response.data[0].clusterCategories) && angular.isArray(response.data[0].clusterCategories)) {
           return response;
         } else {
           return returnData;
@@ -91,13 +91,13 @@
 
     function getClusterAvailabilityData(time, cluster) {
       // cancel any currently running jobs
-      if (activePromiseForClusterAvailability !== null && angular.isDefined(activePromiseForClusterAvailability)) {
+      if (activePromiseForClusterAvailability !== null && !_.isUndefined(activePromiseForClusterAvailability)) {
         activePromiseForClusterAvailability.resolve(ABORT);
       }
       activePromiseForClusterAvailability = $q.defer();
       var returnData = [];
       return getService(urlBase + getQuerys(agg_availability, cluster, time), activePromiseForClusterAvailability).then(function (response) {
-        if (angular.isDefined(response) && angular.isDefined(response.data)) {
+        if (!_.isUndefined(response) && !_.isUndefined(response.data)) {
           return response;
         } else {
           return returnData;
@@ -113,13 +113,13 @@
         cluster = cluster.toLowerCase();
       }
       // cancel any currently running jobs
-      if (activePromiseForTotalCalls !== null && angular.isDefined(activePromiseForTotalCalls)) {
+      if (activePromiseForTotalCalls !== null && !_.isUndefined(activePromiseForTotalCalls)) {
         activePromiseForTotalCalls.resolve(ABORT);
       }
       activePromiseForTotalCalls = $q.defer();
       var returnData = [];
       return getService(urlBase + getQuerys(total_calls, cluster, time), activePromiseForTotalCalls).then(function (response) {
-        if (angular.isDefined(response) && angular.isDefined(response.data)) {
+        if (!_.isUndefined(response) && !_.isUndefined(response.data)) {
           return response;
         } else {
           return returnData;
@@ -228,7 +228,7 @@
         } else {
           Log.debug(debugMessage + '  Status: ' + error.status);
         }
-        if (angular.isDefined(error.data) && angular.isDefined(error.data.trackingId) && (error.data.trackingId !== null)) {
+        if (!_.isUndefined(error.data) && !_.isUndefined(error.data.trackingId) && (error.data.trackingId !== null)) {
           Notification.notify([message + '<br>' + $translate.instant('reportsPage.trackingId') + error.data.trackingId], 'error');
         } else {
           Notification.notify([message], 'error');

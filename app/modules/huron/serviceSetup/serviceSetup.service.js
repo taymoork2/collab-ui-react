@@ -125,7 +125,7 @@
       },
 
       updateInternalNumberRange: function (internalNumberRange) {
-        if (angular.isDefined(internalNumberRange.uuid)) {
+        if (!_.isUndefined(internalNumberRange.uuid)) {
           internalNumberRange.name = internalNumberRange.description = internalNumberRange.beginNumber + ' - ' + internalNumberRange.endNumber;
           internalNumberRange.patternUsage = "Device";
           return InternalNumberRangeService.save({

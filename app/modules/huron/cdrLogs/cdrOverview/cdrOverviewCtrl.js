@@ -55,17 +55,17 @@
     };
 
     vm.cdrClick = function () {
-      if (angular.isDefined(vm.jsonBlob)) {
+      if (!_.isUndefined(vm.jsonBlob)) {
         CdrService.downloadInIE(vm.jsonBlob, vm.filename);
       }
     };
 
     function init() {
       var downloadData = CdrService.createDownload(call);
-      if (angular.isDefined(downloadData.jsonBlob)) {
+      if (!_.isUndefined(downloadData.jsonBlob)) {
         vm.jsonBlob = downloadData.jsonBlob;
       }
-      if (angular.isDefined(downloadData.jsonUrl)) {
+      if (!_.isUndefined(downloadData.jsonUrl)) {
         vm.jsonUrl = downloadData.jsonUrl;
       }
     }

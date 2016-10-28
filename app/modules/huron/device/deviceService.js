@@ -91,13 +91,13 @@
               status: true,
               ipaddress: true
             }).$promise.then(function (endpoint) {
-              if (angular.isDefined(endpoint.registrationStatus) && angular.lowercase(endpoint.registrationStatus) === 'registered') {
+              if (!_.isUndefined(endpoint.registrationStatus) && angular.lowercase(endpoint.registrationStatus) === 'registered') {
                 this.deviceStatus.status = 'Online';
               } else {
                 this.deviceStatus.status = 'Offline';
               }
 
-              if (angular.isDefined(endpoint.ipAddress) && endpoint.ipAddress !== null) {
+              if (!_.isUndefined(endpoint.ipAddress) && endpoint.ipAddress !== null) {
                 this.deviceStatus.ipAddress = endpoint.ipAddress;
               } else {
                 this.deviceStatus.ipAddress = 'unknown';

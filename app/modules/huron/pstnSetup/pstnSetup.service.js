@@ -453,7 +453,7 @@
         'Rejected': $translate.instant('pstnSetup.orderStatus.rejected')
       };
 
-      if (angular.isDefined(translations[order.statusMessage])) {
+      if (!_.isUndefined(translations[order.statusMessage])) {
         return translations[order.statusMessage];
       } else if (order.statusMessage !== 'None') {
         return order.statusMessage;

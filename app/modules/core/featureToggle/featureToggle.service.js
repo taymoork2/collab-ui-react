@@ -333,7 +333,7 @@
           supportsDirSync().then(function (enabled) {
             resolve(enabled);
           });
-        } else if (angular.isDefined(toggles[feature])) {
+        } else if (!_.isUndefined(toggles[feature])) {
           resolve(toggles[feature]);
         } else {
           $http.get(UrlConfig.getScimUrl(Authinfo.getOrgId()) + '/me', {

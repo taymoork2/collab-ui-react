@@ -71,7 +71,7 @@
       // Fetch list of trials based on email in edit box...
       return TrialService.shallowValidation(key, $viewValue).then(function (response) {
         vm.loading = false;
-        if (angular.isDefined(response.unique)) {
+        if (!_.isUndefined(response.unique)) {
           // name unique
           vm[uniqueFlag] = true;
           return true;

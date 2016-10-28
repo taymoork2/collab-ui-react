@@ -120,7 +120,7 @@
         zip: vm.trial.details.emergAddr.zip
       })
         .then(function (response) {
-          if (angular.isDefined(response)) {
+          if (!_.isUndefined(response)) {
             vm.addressFound = true;
             _.extend(vm.trial.details.emergAddr, response);
           } else {

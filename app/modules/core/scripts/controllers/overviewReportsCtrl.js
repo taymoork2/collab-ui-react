@@ -183,7 +183,7 @@
       });
       Log.debug(errorMessage + ' Status: ' + error.status);
 
-      if ((error.data !== null) && angular.isDefined(error.data) && angular.isDefined(error.data.trackingId) && (error.data.trackingId !== null)) {
+      if ((error.data !== null) && !_.isUndefined(error.data) && !_.isUndefined(error.data.trackingId) && (error.data.trackingId !== null)) {
         errorMessage += '<br>' + $translate.instant('reportsPage.trackingId') + error.data.trackingId;
       }
       Notification.notify(errorMessage, error);
