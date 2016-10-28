@@ -9,7 +9,9 @@ describe('OnboardCtrl: Ctrl', function () {
   }
 
   function initController() {
-    this.initController('OnboardCtrl');
+    this.initController('OnboardCtrl', {
+      $scope: this.$scope
+    });
   }
 
   function initDependencySpies() {
@@ -900,6 +902,37 @@ describe('OnboardCtrl: Ctrl', function () {
         this.$scope.radioStates.careRadio = false;
         this.$scope.getAccountLicenses();
         expect(this.LogMetricsService.logMetrics.calls.argsFor(0)[1]).toEqual('CAREDISABLED');
+      });
+    });
+
+    describe('checkDnOverlapsSteeringDigit function', function () {
+      var userObj;
+      beforeEach(initController);
+      beforeEach(function () {
+        userObj = {
+          assignedDn: {
+            pattern: '912'
+          }
+        };
+      });
+
+      it('should be true if pattern starts with telephonyInfo.steeringDigit', function () {
+        this.$scope.telephonyInfo = {
+          steeringDigit: '9'
+        };
+        expect(this.$scope.checkDnOverlapsSteeringDigit(userObj)).toBe(true);
+      });
+
+      it('should be false if pattern does not start with telephonyInfo.steeringDigit', function () {
+        this.$scope.telephonyInfo = {
+          steeringDigit: '5'
+        };
+        expect(this.$scope.checkDnOverlapsSteeringDigit(userObj)).toBe(false);
+      });
+
+      it('should be false if telephonyInfo has not been initialized', function () {
+        this.$scope.telephonyInfo = undefined;
+        expect(this.$scope.checkDnOverlapsSteeringDigit(userObj)).toBe(false);
       });
     });
   });

@@ -197,8 +197,7 @@
     // Check to see if the currently selected directory number's first digit is
     // the same as the company steering digit.
     function checkDnOverlapsSteeringDigit(userEntity) {
-      var steeringDigit = $scope.telephonyInfo.steeringDigit;
-      return _.startsWith(_.get(userEntity, 'assignedDn.pattern'), steeringDigit);
+      return _.startsWith(_.get(userEntity, 'assignedDn.pattern'), _.get($scope, 'telephonyInfo.steeringDigit'));
     }
 
     function returnInternalNumberlist(pattern) {

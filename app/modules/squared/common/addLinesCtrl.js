@@ -26,7 +26,7 @@
     vm.isLoading = false;
     vm.isDisabled = true;
 
-    $scope.returnInternalNumberlist = CommonLineService.returnInternalNumberlist;
+    $scope.returnInternalNumberlist = CommonLineService.returnInternalNumberList;
     $scope.returnExternalNumberList = CommonLineService.returnExternalNumberList;
     $scope.syncGridDidDn = syncGridDidDn;
     $scope.checkDnOverlapsSteeringDigit = CommonLineService.checkDnOverlapsSteeringDigit;
