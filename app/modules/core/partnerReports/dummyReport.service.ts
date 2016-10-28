@@ -133,11 +133,11 @@ export class DummyReportService {
     return {
       dataProvider: [{
         label: this.$translate.instant('callMetrics.callConditionFail'),
-        value: '200',
+        value: 200,
         color: this.chartColors.grayLightThree,
       }, {
         label: this.$translate.instant('callMetrics.callConditionSuccessful'),
-        value: '800',
+        value: 800,
         color: this.chartColors.grayLightFour,
       }],
       labelData: {

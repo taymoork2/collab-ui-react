@@ -243,7 +243,7 @@
     function setAvgRoomsGraph(data, chart) {
       if (_.isArray(data) && data.length > 0 && chart) {
         chart.startDuration = 1;
-        if (data[0].colorOne !== undefined && data[0].colorOne !== null) {
+        if (!data[0].balloon) {
           chart.startDuration = 0;
         }
 
@@ -266,7 +266,7 @@
       valueAxes[0].minimum = 0;
 
       var startDuration = 1;
-      if (data[0].colorOne !== undefined && data[0].colorOne !== null) {
+      if (!data[0].balloon) {
         startDuration = 0;
       }
 
@@ -282,8 +282,8 @@
       var titles = ['avgRooms.group', 'avgRooms.oneToOne'];
       var values = ['totalRooms', 'oneToOneRooms'];
       var colors = [chartColors.primaryColorLight, chartColors.primaryColorDarker];
-      if (data[0].colorOne !== undefined && data[0].colorOne !== null) {
-        colors = [data[0].colorOne, data[0].colorTwo];
+      if (!data[0].balloon) {
+        colors = [chartColors.dummyGrayLight, chartColors.dummyGray];
       }
 
       var graphs = [];
@@ -303,7 +303,7 @@
     function setFilesSharedGraph(data, chart) {
       if (_.isArray(data) && data.length > 0 && chart) {
         chart.startDuration = 1;
-        if (data[0].color === chartColors.dummyGray) {
+        if (!data[0].balloon) {
           chart.startDuration = 0;
         }
 
@@ -326,7 +326,7 @@
       valueAxes[0].minimum = 0;
 
       var startDuration = 1;
-      if (data[0].color === chartColors.dummyGray) {
+      if (!data[0].balloon) {
         startDuration = 0;
       }
 
@@ -337,12 +337,17 @@
     }
 
     function filesSharedGraphs(data) {
+      var color = chartColors.brandSuccess;
       var balloonText = graphTextSpan + $translate.instant('filesShared.filesShared') + ' <span class="graph-number">[[contentShared]]</span><br>' + $translate.instant('filesShared.fileSizes') + ' <span class="graph-number">[[contentShareSizes]] ' + $translate.instant('filesShared.gb ') + '</span></span>';
+
+      if (!data[0].balloon) {
+        color = chartColors.dummyGray;
+      }
 
       var graph = CommonGraphService.getBaseVariable(CommonGraphService.COLUMN);
       graph.title = $translate.instant('filesShared.filesShared');
-      graph.fillColors = data[0].color;
-      graph.colorField = data[0].color;
+      graph.fillColors = color;
+      graph.colorField = color;
       graph.valueField = 'contentShared';
       graph.showBalloon = data[0].balloon;
       graph.balloonText = balloonText;
