@@ -53,7 +53,7 @@ describe('Controller: AABuilderNumbersCtrl', function () {
       resource.setId(rawCeInfo.assignedResources[j].id);
       resource.setTrigger(rawCeInfo.assignedResources[j].trigger);
       resource.setType(rawCeInfo.assignedResources[j].type);
-      if (angular.isDefined(rawCeInfo.assignedResources[j].number)) {
+      if (!_.isUndefined(rawCeInfo.assignedResources[j].number)) {
         resource.setNumber(rawCeInfo.assignedResources[j].number);
       }
       _ceInfo.addResource(resource);

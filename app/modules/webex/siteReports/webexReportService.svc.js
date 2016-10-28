@@ -282,7 +282,7 @@
       var training_center = new ReportsSection("training_center", siteUrl, ["/u/y/z", "www.yahoo.com"], "TC", "en");
       var remote_access = new ReportsSection("remote_access", siteUrl, ["/u/y/z", "www.yahoo.com"], "RA", "en");
 
-      if (angular.isDefined(mapJson)) {
+      if (!_.isUndefined(mapJson)) {
         //use the above 5 lists to gather all the UISrefs
         [
           [common_reports_pageids, common_reports],

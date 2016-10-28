@@ -66,7 +66,7 @@
           for (i = 0; i < resources.length; i++) {
             // check to see if it's in the CMI assigned list
             var cmiObj = cmiAssignedNumbers.filter(matchResourceNumber);
-            if (!angular.isDefined(cmiObj) || cmiObj === null || cmiObj.length === 0) {
+            if (_.isUndefined(cmiObj) || cmiObj === null || cmiObj.length === 0) {
               onlyResources.push(resources[i].getNumber());
             }
           }
@@ -78,7 +78,7 @@
             if (cmiAssignedNumbers[i].type != service.NUMBER_FORMAT_ENTERPRISE_LINE) {
               // check to see if it's in the resource list
               var rscObj = resources.filter(matchCmiAssignedNumber);
-              if (!angular.isDefined(rscObj) || rscObj === null || rscObj.length === 0) {
+              if (_.isUndefined(rscObj) || rscObj === null || rscObj.length === 0) {
                 onlyCMI.push(cmiAssignedNumbers[i].number);
               }
             }
@@ -167,7 +167,7 @@
             if (!resources[i].id) {
               // find it in CMI assigned list
               var cmiObjESN = _.find(cmiAssignedNumbers, inCMIAssignedList);
-              if (angular.isDefined(cmiObjESN) && cmiObjESN.number) {
+              if (!_.isUndefined(cmiObjESN) && cmiObjESN.number) {
                 resources[i].setId(cmiObjESN.number);
               } else {
                 if (resources[i].getNumber()) {
@@ -181,7 +181,7 @@
             if (!resources[i].number) {
               // find it in CMI assigned list
               var cmiObjExtension = _.find(cmiAssignedNumbers, inExtension);
-              if (angular.isDefined(cmiObjExtension) && cmiObjExtension.number) {
+              if (!_.isUndefined(cmiObjExtension) && cmiObjExtension.number) {
                 resources[i].setNumber(cmiObjExtension.number);
               } else {
                 // if we can't do it from CMI, copy the id

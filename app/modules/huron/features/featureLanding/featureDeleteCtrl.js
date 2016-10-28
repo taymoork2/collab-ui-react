@@ -78,7 +78,7 @@
               .then(function () {
                 aaModel.ceInfos.splice(delPosition, 1);
                 AutoAttendantCeInfoModelService.deleteCeInfo(aaModel.aaRecords, ceInfoToDelete);
-                if (angular.isDefined(scheduleId)) {
+                if (!_.isUndefined(scheduleId)) {
                   AACalendarService.deleteCalendar(scheduleId);
                 }
                 deleteSuccess();

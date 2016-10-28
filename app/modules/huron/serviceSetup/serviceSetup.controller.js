@@ -158,7 +158,7 @@
           property = 'endNumber';
         }
 
-        if (angular.isDefined(scope.model[property])) {
+        if (!_.isUndefined(scope.model[property])) {
           return true;
         } else {
           var found = false;
@@ -351,7 +351,7 @@
             },
             expressionProperties: {
               'templateOptions.disabled': function ($viewValue, $modelValue, scope) {
-                return vm.model.disableExtensions && angular.isDefined(scope.model.uuid);
+                return vm.model.disableExtensions && !_.isUndefined(scope.model.uuid);
               },
               'templateOptions.isWarn': vm.steerDigitOverLapValidation,
               'templateOptions.minlength': function () {
@@ -412,7 +412,7 @@
             },
             expressionProperties: {
               'templateOptions.disabled': function ($viewValue, $modelValue, scope) {
-                return vm.model.disableExtensions && angular.isDefined(scope.model.uuid);
+                return vm.model.disableExtensions && !_.isUndefined(scope.model.uuid);
               },
               // this expressionProperty is here simply to be run, the property `data.validate` isn't actually used anywhere
               // it retriggers validation
@@ -454,7 +454,7 @@
                 } else if (displayNumberRanges.length > 1 && vm.firstTimeSetup && _.isUndefined($scope.model.uuid)) {
                   $scope.to.btnClass = 'btn-sm btn-link ';
                 } else if (vm.model.numberRanges.length === 1 && displayNumberRanges.length !== 1) {
-                  if (angular.isDefined(vm.model.numberRanges[0].uuid)) {
+                  if (!_.isUndefined(vm.model.numberRanges[0].uuid)) {
                     $scope.to.btnClass = 'btn-sm btn-link hide-delete';
                   }
 
@@ -930,7 +930,7 @@
     }
 
     function deleteInternalNumberRange(internalNumberRange) {
-      if (angular.isDefined(internalNumberRange.uuid)) {
+      if (!_.isUndefined(internalNumberRange.uuid)) {
         ServiceSetup.deleteInternalNumberRange(internalNumberRange)
           .then(function () {
             // delete the range from DB list
