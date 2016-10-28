@@ -18,7 +18,7 @@
     //ok, we need a unique global self.
     //the above self is overloaded in places.
 
-    //var loc = $translate.use().replace("_", "-");
+    //var loc = _.replace($translate.use(), "_", "-");
 
     var common_reports_pageids = ["meetings_in_progess",
       "meeting_usage",
@@ -232,7 +232,7 @@
         var theComparator = function (aRef, bRef) {
           var atranslatedString = aRef.reportPageId_translated;
           var btranslatedString = bRef.reportPageId_translated;
-          var loc = $translate.use().replace("_", "-");
+          var loc = _.replace($translate.use(), "_", "-");
           var compareResult = atranslatedString.localeCompare(btranslatedString, loc);
           return compareResult;
         };

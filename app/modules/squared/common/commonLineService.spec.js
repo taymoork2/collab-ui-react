@@ -41,8 +41,12 @@ describe('Service: CommonLineService', function () {
         expect(CommonLineService.assignDNForUserList).toBeDefined();
       });
 
-      it('getInternalNumberlist exists', function () {
-        expect(CommonLineService.getInternalNumberlist).toBeDefined();
+      it('returnInternalNumberlist exists', function () {
+        expect(CommonLineService.returnInternalNumberlist).toBeDefined();
+      });
+
+      it('returnExternalNumberlist exists', function () {
+        expect(CommonLineService.returnExternalNumberlist).toBeDefined();
       });
 
       it('getEntitylist exists', function () {

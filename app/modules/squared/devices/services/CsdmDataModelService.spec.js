@@ -18,7 +18,7 @@ describe('Service: CsdmDataModelService', function () {
   var codeUrl = 'https://csdm-integration.wbx2.com/csdm/api/v1/organization/584cf4cd-eea7-4c8c-83ee-67d88fc6eab5/codes/ad233bb2-code1-for-place-with-one-code-9333278b3a0c';
   var pWithOnlyCodeUrl = placesUrl + 'a19b308a-PlaceWithOnlyCode-71898e423bec';
 
-  var huronDevicesUrl = 'https://csdm-integration.wbx2.com/csdm/api/v1/organization/testOrg/huronDevices';
+  var huronDevicesUrl = 'https://csdm-integration.wbx2.com/csdm/api/v1/organization/testOrg/devices/?type=huron';
   var huronPlacesUrl = 'https://cmi.huron-int.com/api/v2/customers/testOrg/places/';
   var pWithHuronDevice2Url = huronPlacesUrl + '68351854-Place2WithHuronDevice-c9c844421ec2';
   var huronDevice2Url = 'https://cmi.huron-int.com/api/v1/voice/customers/3a6ff373-unittest-a27460e0ac5c/sipendpoints/2c586b22-hurondev_inplace2-ace151f631fa';

@@ -121,7 +121,7 @@
         });
         sd.edit = false;
         sd.label = speedDials.newLabel;
-        sd.number = speedDials.newNumber.replace(/ /g, '');
+        sd.number = _.replace(speedDials.newNumber, / /g, '');
         speedDials.newLabel = '';
         speedDials.newNumber = '';
       } else if (speedDials.reordering) {

@@ -302,7 +302,7 @@
       return TelephonyInfoService.loadInternalNumberPool(pattern).then(function (intPool) {
         for (var i = 0; i < intPool.length; i++) {
 
-          var number = intPool[i].pattern.replace(/\D/g, '');
+          var number = _.replace(intPool[i].pattern, /\D/g, '');
 
           vm.numberTypeList[number] = AANumberAssignmentService.DIRECTORY_NUMBER;
 
@@ -335,7 +335,7 @@
           // the externalNumberList will contain the info as it came from CMI
           vm.externalNumberList.push(dn);
 
-          var number = extPool[i].pattern.replace(/\D/g, '');
+          var number = _.replace(extPool[i].pattern, /\D/g, '');
 
           vm.numberTypeList[number] = AANumberAssignmentService.EXTERNAL_NUMBER;
 

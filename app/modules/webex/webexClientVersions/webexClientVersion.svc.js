@@ -91,11 +91,11 @@
       var url = self.getAdminServiceUrl() + relativeUrl;
 
       if (!_.isUndefined(orgId)) {
-        url = url.replace("${partnerId}", orgId);
+        url = _.replace(url, "${partnerId}", orgId);
       }
 
       if (!_.isUndefined(partnerTemplate)) {
-        url = url.replace("${partnerTemplateId}", partnerTemplate);
+        url = _.replace(url, "${partnerTemplateId}", partnerTemplate);
       }
 
       return url;
