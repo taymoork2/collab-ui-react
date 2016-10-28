@@ -98,10 +98,6 @@ class PlaceOverview implements ng.IComponentController {
     }
   }
 
-  public getDeviceList(): Array<IDevice> {
-    return this.currentPlace.devices;
-  }
-
   public editCloudberryServices(): void {
     let wizardState = {
       data: {

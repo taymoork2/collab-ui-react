@@ -704,7 +704,7 @@ describe('Service: CsdmDataModelService', function () {
       var expectCall;
       var placeToUpdateUrl = huronPlaceWithoutDeviceUrl;
       var placeToUpdateId = huronPlaceWithoutDeviceUrl.split('/').slice(-1)[0];
-      var placeToFindDevicesUrl = 'https://csdm-integration.wbx2.com/csdm/api/v1/organization/testOrg/users/' + placeToUpdateId + '/huronDevices/';
+      var placeToFindDevicesUrl = 'https://csdm-integration.wbx2.com/csdm/api/v1/organization/testOrg/devices/?cisUuid=' + placeToUpdateId + '&type=huron';
 
       var phonesForPlace = { 'http://new/device': { 'url': 'http://new/device' } };
       $httpBackend.expectGET(placeToFindDevicesUrl).respond(phonesForPlace);
