@@ -807,13 +807,6 @@
       autohidemode: "leave"
     };
 
-    angular.element('.wizard-main-wrapper').bind('resize', function () {
-      var nice = $('#errorTable').getNiceScroll();
-      if (nice !== null && nice !== undefined) {
-        nice.resize();
-      }
-    });
-
     var nameTemplate = '<div class="ui-grid-cell-contents"><span class="name-display-style">{{row.entity.name}}</span>' +
       '<span class="email-display-style">{{row.entity.address}}</span></div>';
 
@@ -2144,9 +2137,6 @@
           if (data.totalResults) {
             $scope.unlicensed = data.totalResults;
             $scope.unlicensedUsersList = data.resources;
-            $('.ui-grid-viewport').mouseover(function () {
-              $('.ui-grid-viewport').getNiceScroll().resize();
-            });
           }
         }
       }, null, $scope.searchStr);

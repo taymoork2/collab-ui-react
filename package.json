@@ -76,7 +76,6 @@
     "imagesloaded": "3.1.8",
     "jquery": "2.1.1",
     "jquery-csv": "~0.8.1",
-    "jquery.nicescroll": "^3.6.8",
     "jsdom": "^9.0.0",
     "json3": "~3.3.2",
     "jstimezonedetect": "~1.0.5",

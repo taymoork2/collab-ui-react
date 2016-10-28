@@ -16,7 +16,7 @@
   }
 
   /* @ngInject */
-  function AASubmenuCtrl($scope, $translate, AutoAttendantCeMenuModelService, AACommonService, AAScrollBar) {
+  function AASubmenuCtrl($scope, $translate, AutoAttendantCeMenuModelService, AACommonService) {
 
     var vm = this;
     vm.selectPlaceholder = $translate.instant('autoAttendant.selectPlaceholder');
@@ -111,7 +111,6 @@
       // remove key that is in use from creating the new key entry
       setAvailableKeys();
       setPhonemenuFormDirty();
-      AAScrollBar.resizeBuilderScrollBar();
     }
 
     // the user has pressed the trash can icon for a key/action pair
@@ -120,7 +119,6 @@
       vm.menuEntry.entries.splice(index, 1);
       setAvailableKeys();
       setPhonemenuFormDirty();
-      AAScrollBar.resizeBuilderScrollBar();
     }
 
     // the user has changed the key for an existing action
@@ -151,7 +149,6 @@
           action.level = _keyAction.level;
         }
         setPhonemenuFormDirty();
-        AAScrollBar.resizeBuilderScrollBar();
       }
     }
 
@@ -224,7 +221,6 @@
 
       // remove key that is in use from creating the new key entry
       setAvailableKeys();
-      AAScrollBar.resizeBuilderScrollBar();
     }
 
     function setPhonemenuFormDirty() {

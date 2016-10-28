@@ -6,7 +6,7 @@
     .controller('CdrLogsCtrl', CdrLogsCtrl);
 
   /* @ngInject */
-  function CdrLogsCtrl($scope, $state, $translate, $timeout, formlyConfig, CdrService, Notification, chartColors) {
+  function CdrLogsCtrl($scope, $state, $translate, formlyConfig, CdrService, Notification) {
     var vm = this;
     var ABORT = 'ABORT';
     vm.SEARCH = 1;
@@ -108,9 +108,7 @@
       CdrService.query(vm.model, vm.logstashPath).then(function (response) {
         if (response !== ABORT) {
           vm.gridData = response;
-          if (!_.isUndefined(vm.gridData) && (vm.gridData.length > 0)) {
-            setupScrolling(vm.gridData);
-          } else {
+          if (_.isUndefined(vm.gridData) || (vm.gridData.length === 0)) {
             vm.dataState = 0;
           }
         }
@@ -272,7 +270,6 @@
     vm.statusAvalibility = statusAvalibility;
     vm.getAccordionHeader = getAccordionHeader;
     vm.selectCDR = selectCDR;
-    vm.accordionClicked = accordionClicked;
 
     function addNames(cdrArray) {
       var x = 0;
@@ -336,31 +333,6 @@
       return header;
     }
 
-    function setupScrolling(gridData) {
-      $timeout(function () {
-        angular.forEach(gridData, function (item, index) {
-          var scroll = $('#cdrtable' + index).getNiceScroll();
-          if (scroll.length > 0) {
-            scroll.remove();
-          }
-
-          $('#cdrtable' + index).niceScroll({
-            cursorcolor: chartColors.gray,
-            cursorborder: "0px",
-            cursorwidth: "7px",
-            railpadding: {
-              top: 0,
-              right: 3,
-              left: 0,
-              bottom: 0
-            },
-            autohidemode: "leave"
-          });
-          $('#cdrtable' + index).getNiceScroll().resize();
-        });
-      }, 2000);
-    }
-
     function selectCDR(selectedCDR, call) {
       vm.selectedCDR = selectedCDR;
       var callCopy = angular.copy(call);
@@ -379,10 +351,6 @@
         imported: vm.imported,
         logstashPath: vm.logstashPath
       });
-    }
-
-    function accordionClicked(tableName) {
-      $('#' + tableName).getNiceScroll().resize();
     }
   }
 })();
