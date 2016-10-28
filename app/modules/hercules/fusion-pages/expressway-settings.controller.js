@@ -95,11 +95,11 @@
                 }) + ' ' + willUpgrade);
                 vm.releasechannelsSelected = $translate.instant('hercules.fusion.add-resource-group.release-channel.' + vm.selectedResourceGroup.releaseChannel);
                 vm.originalResourceGroup = vm.selectedResourceGroup;
-              },
-                function () {
-                  vm.selectedResourceGroup = vm.originalResourceGroup;
-                  Notification.error('hercules.genericFailure');
-                });
+              })
+              .catch(function (error) {
+                vm.selectedResourceGroup = vm.originalResourceGroup;
+                Notification.errorWithTrackingId(error, 'hercules.genericFailure');
+              });
           })
           .catch(function () {
             vm.selectedResourceGroup = vm.originalResourceGroup;
