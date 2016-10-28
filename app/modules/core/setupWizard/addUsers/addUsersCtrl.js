@@ -41,7 +41,7 @@
     $scope.initNext = function () {
       var deferred = $q.defer();
 
-      if (!_.isUndefined($scope.options.addUsers) && !_.isUndefined($scope.wizard) && angular.isFunction($scope.wizard.setSubTab)) {
+      if (!_.isUndefined($scope.options.addUsers) && !_.isUndefined($scope.wizard) && _.isFunction($scope.wizard.setSubTab)) {
         var simpleSubTab = _.find($scope.wizard.current.tab.subTabs, {
           name: 'simple'
         });

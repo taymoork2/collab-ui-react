@@ -259,7 +259,7 @@
         $scope.tabs[tabIndex].required = false;
         if (tabIndex + 1 < tabs.length) {
           setTab(tabs[tabIndex + 1]);
-        } else if (tabIndex + 1 === tabs.length && angular.isFunction($scope.finish)) {
+        } else if (tabIndex + 1 === tabs.length && _.isFunction($scope.finish)) {
           $scope.finish();
         }
       }

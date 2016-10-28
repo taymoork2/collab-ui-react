@@ -28,7 +28,7 @@
         if (_.isUndefined(attrs.fileMaxSize) || (size / 1024) / 1024 < attrs.fileMaxSize) {
           return true;
         } else {
-          if (angular.isFunction(scope.fileMaxSizeError)) {
+          if (_.isFunction(scope.fileMaxSizeError)) {
             scope.fileMaxSizeError();
           }
           return false;
@@ -41,7 +41,7 @@
         } else {
           if (isSuffixValid(name)) {
             return true;
-          } else if (angular.isFunction(scope.fileTypeError)) {
+          } else if (_.isFunction(scope.fileTypeError)) {
             scope.fileTypeError();
           }
           return false;

@@ -9,7 +9,7 @@
 
     $scope.initNext = function () {
       var deferred = $q.defer();
-      if (!_.isUndefined($scope.wizard) && angular.isFunction($scope.wizard.getRequiredTabs)) {
+      if (!_.isUndefined($scope.wizard) && _.isFunction($scope.wizard.getRequiredTabs)) {
         var required = $scope.wizard.getRequiredTabs();
         if (angular.isArray(required) && required.length > 0) {
           var errors = [];

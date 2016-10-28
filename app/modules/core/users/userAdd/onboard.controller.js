@@ -2230,7 +2230,7 @@
         return $q(function (resolve, reject) {
           if (dirSyncEnabled) {
             // getStatus() is in the parent scope - AddUserCtrl
-            if (angular.isFunction($scope.getStatus)) {
+            if (_.isFunction($scope.getStatus)) {
               return $scope.getStatus().then(function () {
                 resolve();
               });

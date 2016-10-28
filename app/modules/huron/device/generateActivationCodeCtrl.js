@@ -98,7 +98,7 @@
 
         Notification.notify([entitleResult.msg], entitleResult.type);
 
-        if (!_.isUndefined($state.modal) && angular.isFunction($state.modal.close)) {
+        if (!_.isUndefined($state.modal) && _.isFunction($state.modal.close)) {
           $state.modal.close();
         }
       }, function (error) {
