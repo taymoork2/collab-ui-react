@@ -6,7 +6,7 @@
 <div class="modal-body">
   <div>
     <form class="chooseServiceForm" onsubmit="$('#next-button').click()">
-      <h4>Which services are needed in this place?</h4>
+      <h4 translate="addDeviceWizard.editServices.whichServices"></h4>
       <div class="callServiceRow">
         <div class="callServiceTitle">
           <i class="icon icon-circle-call modal-icon-flex-row icon-lg"></i>
@@ -20,8 +20,8 @@
             id="service1"
             name="service"
             value="sparkOnly"
-            cs-input-label="Spark only (default)"
-            cs-input-help-text="Calling to/from this place will only work through Cisco Spark or using SIP addresses.">
+            cs-input-label="{{'addDeviceWizard.editServices.sparkOnly' | translate}}"
+            cs-input-help-text="{{'addDeviceWizard.editServices.sparkOnlyHelp' | translate}}">
           <input
             cs-input
             type="radio"
@@ -29,8 +29,8 @@
             id="service2"
             name="service"
             value="sparkCall"
-            cs-input-label="Spark Call (phone numbers)"
-            cs-input-help-text="If you have set up your organization's PSTN provider, this place will be able to call to/from landlines and mobile phones.">
+            cs-input-label="{{'addDeviceWizard.editServices.sparkCall' | translate}}"
+            cs-input-help-text="{{'addDeviceWizard.editServices.sparkCallHelp' | translate}}">
         </div>
       </div>
     </form>

@@ -458,19 +458,6 @@
               wizard: null
             }
           })
-          .state('addDeviceFlow.addServices', {
-            parent: 'modal',
-            views: {
-              'modal@': {
-                controller: 'AddServicesCtrl',
-                controllerAs: 'addServices',
-                templateUrl: 'modules/squared/devices/addDeviceNew/AddServicesTemplate.tpl.html'
-              }
-            },
-            params: {
-              wizard: null
-            }
-          })
           .state('addDeviceFlow.addLines', {
             parent: 'modal',
             views: {
@@ -1747,6 +1734,18 @@
             parent: 'partner',
             template: '<div ui-view></div>',
             absract: true
+          })
+          .state('gem-services', {
+            parent: 'partner',
+            url: '/services/index',
+            template: '<cca-card></cca-card>'
+          })
+          .state('gem-spList', {
+            parent: 'partner',
+            url: '/services/gemSPList',
+            templateUrl: "modules/gemini/common/gemspList.tpl.html",
+            controller: 'GemspListCtrl',
+            controllerAs: 'gsls'
           })
           .state('partnercustomers.list', {
             url: '/customers',

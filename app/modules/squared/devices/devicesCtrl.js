@@ -197,12 +197,8 @@
               },
               'addDeviceFlow.choosePersonal': {
                 nextOptions: {
-                  create: 'addDeviceFlow.addServices',
                   existing: 'addDeviceFlow.showActivationCode'
                 }
-              },
-              'addDeviceFlow.addServices': {
-                next: "addDeviceFlow.addLines"
               },
               'addDeviceFlow.chooseSharedSpace': {
                 nextOptions: {

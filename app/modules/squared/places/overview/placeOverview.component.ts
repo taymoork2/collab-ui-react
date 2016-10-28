@@ -58,14 +58,13 @@ class PlaceOverview implements ng.IComponentController {
 
   private initActions(): void {
     if (this.currentPlace.type === 'cloudberry') {
-      let overview = this;
-      this.CsdmPlaceService.pstnFeatureIsEnabled().then(function (result) {
-        overview.showPstn = result && overview.Authinfo.isSquaredUC();
+      this.CsdmPlaceService.pstnFeatureIsEnabled().then((result) => {
+        this.showPstn = result && this.Authinfo.isSquaredUC();
         if (result) {
-          overview.actionList = [{
+          this.actionList = [{
             actionKey: 'usersPreview.editServices',
             actionFunction: () => {
-              overview.editCloudberryServices();
+              this.editCloudberryServices();
             },
           }];
         }
@@ -84,6 +83,7 @@ class PlaceOverview implements ng.IComponentController {
         accountType: 'shared',
         showPlaces: true,
         selectedPlace: this.currentPlace,
+        deviceName: this.currentPlace.displayName,
         entitlements: this.currentPlace.entitlements,
         deviceType: this.currentPlace.type,
         title: 'usersPreview.editServices',

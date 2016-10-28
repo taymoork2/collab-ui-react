@@ -92,6 +92,8 @@
 
   angular.module('Status', ['Core']);
 
+  angular.module('Gemini', ['Core']);
+
   module.exports = angular.module('Main', [
     'Core',
     'Squared',
@@ -106,6 +108,7 @@
     'Sunlight',
     'Status',
     'oc.lazyLoad',
+    'Gemini'
   ]).config(require('./main.config'))
     .run(require('./main.run'))
     .name;

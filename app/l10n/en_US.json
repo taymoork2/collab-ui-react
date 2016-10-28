@@ -3444,12 +3444,19 @@
       "insertRoomName": "Insert name of device location, e.g. 'Reception' or 'Boardroom'"
     },
     "assignPhoneNumber": {
-      "assignPhoneNumber": "Assign a phone number",
-      "assignPhoneNumberInstructions": "Using a Desk Phone requires a Cisco Spark Call license. Proceeding acknowledges that a Cisco Spark Call license will be assigned to this place, if it does not have one already."
+      "assignPhoneNumber": "Assign numbers",
+      "assignPhoneNumberInstructions": "Choose from the available phone numbers and extensions in the drop-down lists. These will become the primary line which you can use to reach this place.",
+      "linesSaved": "Line configuration saved successfully",
+      "placeError": "Add Place failed.",
+      "placeEditError": "Edit Place failed"
     },
-    "assignServices": {
-      "assignServices": "Assign Services",
-      "selectEntitlements": "Select any entitlements that you wish to assign to this user."
+    "editServices": {
+      "whichServices": "Which services are needed in this place?",
+      "sparkOnly": "Spark only (default)",
+      "sparkOnlyHelp": "Calling to/from this place will only work through Cisco Spark or using SIP addresses.",
+      "sparkCall": "Spark Call (phone numbers)",
+      "sparkCallHelp": "If you have set up your organization's PSTN provider, this place will be able to call to/from landlines and mobile phones.",
+      "servicesSaved": "Services updated successfully"
     },
     "showActivationCode": {
       "activationCode": "Activation Code",
@@ -4699,7 +4706,6 @@
     "actionHeader": "Actions",
     "servicesHeader": "Services",
     "placeAdd": "Add Place",
-    "placeError": "Add Place failed.",
     "placesDefinition": "A place represents a physical location containing a device not owned by a specific user, such as a meeting room with a collaboration device or a reception with shared phones.",
     "placesUses": "You'll be able to view your places here - and the devices and configurations that belong to them.",
     "deletePlace": "Delete Place",
@@ -5666,6 +5672,18 @@
   },
   "readOnlyMessages": {
     "notAllowed": "Not allowed in read-only mode. Operation not executed."
+  },
+  "gemini": {
+    "services": {
+      "pageTitle": "Service"
+    },
+    "audiocca": "Cloud Connected Audio (CCA)",
+    "cca": {
+      "title": "Cloud Connected Audio"
+    },
+    "msg": {
+      "splsResponseErr": "No partner organization found, please contact ccaportal@cisco.com for help."
+    }
   },
   "timeZones": {
     "Etc/GMT+12": "Etc/GMT+12",
