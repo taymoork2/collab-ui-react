@@ -12,12 +12,17 @@
     vm.clusterName = clusterName;
     vm.clusterId = clusterId;
     vm.deactivateService = deactivateService;
+    vm.loading = false;
 
     function deactivateService() {
+      vm.loading = true;
       FusionClusterService.deprovisionConnector(vm.clusterId, vm.connectorId)
         .then($modalInstance.close)
         .catch(function (error) {
           Notification.errorWithTrackingId(error, 'hercules.genericFailure');
+        })
+        .finally(function () {
+          vm.loading = false;
         });
     }
 
