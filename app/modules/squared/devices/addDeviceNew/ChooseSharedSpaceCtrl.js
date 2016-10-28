@@ -4,7 +4,7 @@
   angular.module('Core')
     .controller('ChooseSharedSpaceCtrl', ChooseSharedSpaceCtrl);
   /* @ngInject */
-  function ChooseSharedSpaceCtrl(Userservice, CsdmDataModelService, CsdmHuronPlaceService, XhrNotificationService, $stateParams, $translate, Authinfo) {
+  function ChooseSharedSpaceCtrl(Userservice, CsdmDataModelService, CsdmHuronPlaceService, Notification, $stateParams, $translate, Authinfo) {
     var vm = this;
     vm.wizardData = $stateParams.wizard.state().data;
 
@@ -128,7 +128,7 @@
       }
 
       function error(err) {
-        XhrNotificationService.notify(err);
+        Notification.error(err);
         vm.isLoading = false;
       }
 

@@ -4,7 +4,7 @@
   angular.module('Core')
     .controller('ShowActivationCodeCtrl', ShowActivationCodeCtrl);
   /* @ngInject */
-  function ShowActivationCodeCtrl($q, UserListService, OtpService, CsdmDataModelService, $stateParams, XhrNotificationService, ActivationCodeEmailService, $translate, Notification, CsdmEmailService) {
+  function ShowActivationCodeCtrl($q, UserListService, OtpService, CsdmDataModelService, $stateParams, ActivationCodeEmailService, $translate, Notification, CsdmEmailService) {
     var vm = this;
     vm.wizardData = $stateParams.wizard.state().data;
     vm.hideBackButton = vm.wizardData.function == "showCode";
@@ -60,7 +60,7 @@
       };
       var error =
         function error(err) {
-          XhrNotificationService.notify(err);
+          Notification.errorResponse(err);
           vm.isLoading = false;
         };
       if (vm.place) {
