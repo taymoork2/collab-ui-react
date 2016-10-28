@@ -1475,8 +1475,8 @@
         "no_clusters_text": "See required actions above and documentation to get started."
       },
       "deregisterConfirmRemoval": "Confirm Removal",
-      "deregisterOpening": "You are about to deregister the following Expressway cluster:",
-      "willNoLongerBeUsed": "This Expressway cluster will no longer be used for Hybrid Services. All cluster peers will automatically be deregistered."
+      "deregisterOpening": "You are about to deregister the Expressway cluster",
+      "willNoLongerBeUsed": "The Expressway cluster will no longer be used for Hybrid Services. All cluster peers will automatically be deregistered."
     },
     "status": {
       "unknown": "Status unknown",

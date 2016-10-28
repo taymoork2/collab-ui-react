@@ -1,32 +1,32 @@
 <div class="modal-header deregister-expressway-modal">
-  <div class="modal-title"><span translate="common.deactivate"></span> <span translate="hercules.serviceNames.{{disableConfirmDialog.serviceId}}"></span></div>
+  <div class="modal-title"><span translate="common.deactivate"></span> <span translate="hercules.serviceNames.{{confirmDisableDialog.serviceId}}"></span></div>
 </div>
 <div class="modal-body hercules-fix-paragraphs deregister-expressway-modal">
   <p translate="hercules.settings.call.deactivateServiceOpening"></p>
   <p>
-    <i class="{{disableConfirmDialog.serviceIconClass}} icon-2x serviceicon"></i>
-    <strong translate="hercules.serviceNames.{{disableConfirmDialog.serviceId}}" class="serviceicon"></strong>
+    <i class="{{confirmDisableDialog.serviceIconClass}} icon-2x serviceicon"></i>
+    <strong translate="hercules.serviceNames.{{confirmDisableDialog.serviceId}}" class="serviceicon"></strong>
   </p>
 
   <p translate="hercules.settings.call.fromCiscoSpark"
-      translate-values="{orgName: disableConfirmDialog.companyName}"></p>
+      translate-values="{orgName: confirmDisableDialog.companyName}"></p>
 
   <p>
     <span translate="hercules.settings.call.connectorsAndDataWillBeWiped"
-     translate-values="{connectorName: disableConfirmDialog.connectorName}"></span>
+     translate-values="{connectorName: confirmDisableDialog.connectorName}"></span>
     <span translate="hercules.settings.call.usersWillBeDisentitled"
-       translate-values="{serviceName: disableConfirmDialog.serviceName}"></span>
+       translate-values="{serviceName: confirmDisableDialog.serviceName}"></span>
   </p>
 
   <p translate="hercules.settings.call.noClustersWillBeDeregistered"></p>
 
 </div>
 <div class="modal-footer deregister-expressway-modal">
-  <button ng-click="disableConfirmDialog.cancel()" class="btn" translate="common.cancel"></button>
+  <button ng-click="confirmDisableDialog.cancel()" class="btn" translate="common.cancel"></button>
   <button cs-btn
-          loading="disableConfirmDialog.loading"
-          ng-click="disableConfirmDialog.confirmDeactivation()"
-          class="btn btn--negative fix-alert-margins">
+          loading="confirmDisableDialog.loading"
+          ng-click="confirmDisableDialog.confirmDeactivation()"
+          class="btn btn--negative">
     <span translate="hercules.deactivateServiceSingleCluster.confirmButton"></span>
   </button>
 </div>

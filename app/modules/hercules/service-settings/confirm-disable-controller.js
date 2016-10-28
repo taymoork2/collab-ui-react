@@ -3,7 +3,7 @@
 
   angular
     .module('Hercules')
-    .controller('DisableConfirmController', DisableConfirmController);
+    .controller('ConfirmDisableController', DisableConfirmController);
 
   /* @ngInject */
   function DisableConfirmController($modalInstance, $translate, Authinfo, FusionUtils, Notification, ServiceDescriptor, serviceId) {

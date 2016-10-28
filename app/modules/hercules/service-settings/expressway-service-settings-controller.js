@@ -128,8 +128,8 @@
       $modal.open({
         templateUrl: 'modules/hercules/service-settings/confirm-disable-dialog.html',
         type: 'small',
-        controller: 'DisableConfirmController',
-        controllerAs: 'disableConfirmDialog',
+        controller: 'ConfirmDisableController',
+        controllerAs: 'confirmDisableDialog',
         resolve: {
           serviceId: function () {
             return serviceId;
@@ -188,9 +188,6 @@
         .catch(function (error) {
           Notification.errorWithTrackingId(error, 'hercules.settings.call.certificatesCannotDelete');
         });
-    };
-    vm.cancel = function () {
-      $modalInstance.dismiss();
     };
   }
 

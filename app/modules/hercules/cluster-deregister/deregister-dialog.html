@@ -6,16 +6,13 @@
 </div>
 <div class="modal-body hercules-fix-paragraphs deregister-expressway-modal">
 
-  <p translate="hercules.clusters.deregisterOpening"></p>
-
   <p>
-    <strong class="serviceicon">{{clusterDeregister.clustername}}</strong>
+    <span translate="hercules.clusters.deregisterOpening"></span>
+    <strong>{{clusterDeregister.clustername}}</strong>
+    <span translate="hercules.settings.call.fromCiscoSpark"
+          translate-values="{orgName: clusterDeregister.companyName}"></span>
+    <span translate="hercules.clusters.willNoLongerBeUsed"></span>
   </p>
-
-  <p translate="hercules.settings.call.fromCiscoSpark"
-     translate-values="{orgName: clusterDeregister.companyName}"></p>
-
-  <p translate="hercules.clusters.willNoLongerBeUsed"></p>
 
 </div>
 <div class="modal-footer">
