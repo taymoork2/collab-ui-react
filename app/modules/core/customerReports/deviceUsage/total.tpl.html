@@ -7,7 +7,13 @@
       <header class="align-center">
         <h4>Device Metrics</h4>
         <div class="right" style="position:absolute; top:1rem; right:3rem">
-          <input class="btn btn--primary" type="button" value="Download full report">
+
+          <button class="btn btn-primary"
+                ng-disabled="deviceUsage.exporting"
+                ng-click="deviceUsage.exportRawData()">Download Full Report</button>
+
+          <div cs-loader ng-show="deviceUsage.exporting" class="loader-example--small"></div>
+
         </div>
       </header>
       <section>
@@ -43,17 +49,12 @@
     </article>
   </cs-card>
 
-  <cs-card class="full">
-    <article>
-      <section>
-        <div id="device-usage-total-chart" class="device-usage-total-chart">
-        </div>
-      </section>
-    </article>
-  </cs-card>
-
 </cs-card-layout>
 
+<div class="card-look">
+  <div id="device-usage-total-chart" class="device-usage-total-chart">
+  </div>
+</div>
 
 <div ng-show="deviceUsage.loading" class="loading-indicator">
   <div class="loading-text">

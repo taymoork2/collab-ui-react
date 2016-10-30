@@ -13,35 +13,45 @@
 
     vm.leastUsedDevices = [];
     vm.mostUsedDevices = [];
-    // TODO: Replace by range selector...
-    var now = new moment().format("YYYY-MM-DD");
-    var from = moment(now).subtract(30, "days").format("YYYY-MM-DD");
-    var to = moment(now).subtract(23, "days").format("YYYY-MM-DD");
 
+    vm.totalDuration = "...";
+    vm.noOfCalls = "...";
+    vm.noOfDevices = "...";
 
     vm.loading = true;
+    vm.exporting = false;
+
+    var startDate;
+    var endDate;
+
+    vm.exportRawData = exportRawData;
 
     if (!deviceUsageFeatureToggle) {
       // simulate a 404
       $state.go('login');
     }
 
-    fillInHighScore();
-
     $scope.$on('time-range-changed', function (event, timeSelected) {
+      var dateRange;
       switch (timeSelected.value) {
         case 0:
+          dateRange = DeviceUsageTotalService.getDatesForLastWeek();
           loadLastWeek();
           break;
         case 1:
+          dateRange = DeviceUsageTotalService.getDatesForLastMonths(1);
           loadLastMonth();
           break;
         case 2:
+          dateRange = DeviceUsageTotalService.getDatesForLastMonths(3);
           loadLast3Months();
           break;
         default:
           loadLastWeek();
       }
+      startDate = dateRange.start;
+      endDate = dateRange.end;
+      fillInHighScore();
     });
 
     $scope.$watch(function () {
@@ -62,6 +72,7 @@
         graph.balloonFunction = renderBalloon;
       });
       loadInitData();
+      fillInHighScore();
     }
 
     function loadChartData(data) {
@@ -71,19 +82,27 @@
     }
 
     function loadInitData() {
+      var dateRange;
       switch (DeviceUsageCommonService.getTimeSelected()) {
         case 0:
+          dateRange = DeviceUsageTotalService.getDatesForLastWeek();
           DeviceUsageTotalService.getDataForLastWeek(['ce', 'sparkboard'], apiToUse).then(loadChartData, handleReject);
           break;
         case 1:
+          dateRange = DeviceUsageTotalService.getDatesForLastMonths(1);
           DeviceUsageTotalService.getDataForLastMonth(['ce', 'sparkboard'], apiToUse).then(loadChartData, handleReject);
           break;
         case 2:
+          dateRange = DeviceUsageTotalService.getDatesForLastMonths(3);
           DeviceUsageTotalService.getDataForLastMonths(3, 'day', ['ce', 'sparkboard'], apiToUse).then(loadChartData, handleReject);
           break;
         default:
+          dateRange = DeviceUsageTotalService.getDatesForLastWeek();
           DeviceUsageTotalService.getDataForLastWeek(['ce', 'sparkboard'], apiToUse).then(loadChartData, handleReject);
       }
+      startDate = dateRange.start;
+      endDate = dateRange.end;
+
     }
 
     function graphRendered() {
@@ -108,6 +127,7 @@
       vm.loading = true;
       DeviceUsageTotalService.getDataForLastWeek(['ce', 'sparkboard'], apiToUse).then(function (data) {
         amChart.dataProvider = data;
+        amChart.categoryAxis.title = 'Daily in Week';
         amChart.validateData();
         vm.showDevices = false;
       }, handleReject);
@@ -117,6 +137,7 @@
       vm.loading = true;
       DeviceUsageTotalService.getDataForLastMonth(['ce', 'sparkboard'], apiToUse).then(function (data) {
         amChart.dataProvider = data;
+        amChart.categoryAxis.title = 'Weekly Last Month';
         amChart.validateData();
         vm.showDevices = false;
       }, handleReject);
@@ -124,8 +145,9 @@
 
     function loadLast3Months() {
       vm.loading = true;
-      DeviceUsageTotalService.getDataForLastMonths(3, 'day', ['ce', 'sparkboard'], apiToUse).then(function (data) {
+      DeviceUsageTotalService.getDataForLastMonths(3, 'month', ['ce', 'sparkboard'], apiToUse).then(function (data) {
         amChart.dataProvider = data;
+        amChart.categoryAxis.title = 'Monthly';
         amChart.validateData();
         vm.showDevices = false;
       }, handleReject);
@@ -163,10 +185,27 @@
     }
 
     function fillInHighScore() {
-      DeviceUsageDistributionReportService.getAllDevicesSorted(from, to).then(function (devices) {
 
-        $log.warn("ALL DEVICES", devices);
+      $log.info("Calculating highscore based on dates:" + startDate + " to " + endDate);
+
+      DeviceUsageDistributionReportService.getAllDevicesSorted(startDate, endDate).then(function (devices) {
+
+        vm.leastUsedDevices = [];
+        vm.mostUsedDevices = [];
+
+        $log.warn("Calculate higscore based on all devices", devices);
         vm.noOfDevices = devices.length;
+        var totalDuration = 0;
+        var noOfCalls = 0;
+
+        _.each(devices, function (d) {
+          totalDuration += d.totalDuration;
+          noOfCalls += d.callCount;
+        });
+
+        vm.totalDuration = formatSecondsToHrsMinSec(totalDuration);
+        vm.noOfCalls = noOfCalls;
+
         $log.warn("top5", _.takeRight(devices, 5).reverse());
         $log.warn("bottom5", _.take(devices, 5));
 
@@ -202,12 +241,27 @@
       if (hours > 99) {
         return hours + "h ";
       } else if (hours > 9) {
-        return hours + "h :" + pad(minutes, 2) + "m";
+        return hours + "h " + pad(minutes, 2) + "m";
       } else if (hours >= 1) {
         return pad(hours, 2) + "h " + pad(minutes, 2) + "m";
+      } else if (minutes > 10) {
+        return pad(minutes, 2) + "m";
+      } else if (minutes > 1) {
+        return pad(minutes, 2) + "m " + pad(seconds, 2) + "s";
       } else {
-        return "    " + pad(minutes, 2) + "m " + pad(seconds, 2) + "s";
+        return "    " + pad(seconds, 2) + "s";
       }
+    }
+
+    function exportRawData() {
+      vm.exporting = true;
+      DeviceUsageTotalService.exportRawData(startDate, endDate).then(function () {
+        $log.info("export finished");
+        vm.exporting = false;
+      })
+      .catch(function (err) {
+        $log.warn("Export failed", err);
+      });
     }
 
   }

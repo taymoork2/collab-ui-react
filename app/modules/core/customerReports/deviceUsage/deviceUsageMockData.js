@@ -14,7 +14,7 @@
 
     var maxCallsPrDay = 10;
     var maxPairedCallsPrDay = 5;
-    var existingUniqueDeviceIds = createSetOfUniqueDeviceIds(1000);
+    var existingUniqueDeviceIds = createSetOfUniqueDeviceIds(100);
 
     var service = {
       getRawData: getRawData
@@ -22,8 +22,8 @@
     return service;
 
 
-    function secondsFromDays(days) {
-      return days * 60 * 60;
+    function secondsFromMinutes(days) {
+      return days * 60;
     }
 
     function deviceDaySample(date, accountId, deviceCategory) {
@@ -33,7 +33,7 @@
         'accountId': accountId,
         'pairedCount': _.random(0, maxPairedCallsPrDay),
         'deviceCategory': deviceCategory,
-        'totalDuration': secondsFromDays(_.random(1, 24))
+        'totalDuration': secondsFromMinutes(_.random(1, 300))
       };
     }
 
