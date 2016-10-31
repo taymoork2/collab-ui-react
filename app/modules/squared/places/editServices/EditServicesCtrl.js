@@ -17,7 +17,7 @@
 
     vm.save = function () {
       vm.isLoading = true;
-      var entitlements = vm.wizardData.entitlements;
+      var entitlements = (vm.wizardData.entitlements || []);
       var sparkCallIndex = entitlements.indexOf('ciscouc');
       if (sparkCallIndex > -1) {
         entitlements.splice(sparkCallIndex, 1);

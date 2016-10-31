@@ -11,6 +11,7 @@ class LineOverview implements ng.IComponentController {
   private ownerType: string;
   private ownerId: string;
   private ownerName: string;
+  private ownerPlaceType: string;
   private numberId: string;
   private consumerType: LineConsumerType;
   public form: ng.IFormController;
@@ -201,6 +202,10 @@ class LineOverview implements ng.IComponentController {
     });
   }
 
+  public isCloudberryPlace(): boolean {
+    return this.ownerPlaceType === 'cloudberry';
+  }
+
   private checkForChanges(): void {
     if (this.LineOverviewService.matchesOriginalConfig(this.lineOverviewData)) {
       this.resetForm();
@@ -236,6 +241,7 @@ export class LineOverviewComponent implements ng.IComponentOptions {
     ownerType: '@',
     ownerId: '<',
     ownerName: '<',
+    ownerPlaceType: '<',
     numberId: '<',
     voicemailEnabled: '<',
   };

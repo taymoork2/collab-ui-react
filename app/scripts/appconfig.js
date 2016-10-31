@@ -1620,7 +1620,7 @@
             },
           })
           .state('place-overview.communication.line-overview', {
-            template: '<uc-line-overview owner-type="place" owner-name="$resolve.ownerName" owner-id="$resolve.ownerId" number-id="$resolve.numberId"></uc-line-overview>',
+            template: '<uc-line-overview owner-type="place" owner-name="$resolve.ownerName" owner-id="$resolve.ownerId" owner-place-type="$resolve.ownerPlaceType" number-id="$resolve.numberId"></uc-line-overview>',
             params: {
               numberId: '',
             },
@@ -1638,6 +1638,9 @@
               },
               ownerName: /* @ngInject */ function ($stateParams) {
                 return _.get($stateParams.currentPlace, 'displayName');
+              },
+              ownerPlaceType: /* @ngInject */ function ($stateParams) {
+                return _.get($stateParams.currentPlace, 'type');
               },
               numberId: /* @ngInject */ function ($stateParams) {
                 return _.get($stateParams, 'numberId', '');

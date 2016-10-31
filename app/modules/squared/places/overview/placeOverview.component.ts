@@ -57,7 +57,7 @@ class PlaceOverview implements ng.IComponentController {
         name: this.$translate.instant('onboardModal.call'),
         icon: 'icon-circle-call',
         state: 'communication',
-        detail: this.$translate.instant('onboardModal.paidComm'),
+        detail: this.$translate.instant('placesPage.sparkCall'),
         actionAvailable: true,
       };
     } else {
@@ -65,7 +65,7 @@ class PlaceOverview implements ng.IComponentController {
         name: this.$translate.instant('onboardModal.call'),
         icon: 'icon-circle-call',
         state: 'communication',
-        detail: this.$translate.instant('common.off'),
+        detail: this.$translate.instant('placesPage.sparkOnly'),
         actionAvailable: false,
       };
     }
