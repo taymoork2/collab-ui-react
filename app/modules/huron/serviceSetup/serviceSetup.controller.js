@@ -1363,7 +1363,7 @@
 
       function setupVoiceService() {
         if (!vm.hasVoiceService) {
-          return HuronCustomer.put(vm.customer.name)
+          return HuronCustomer.put(_.get(vm.customer, 'name', undefined))
             .then(function () {
               vm.hasVoiceService = true;
             })
