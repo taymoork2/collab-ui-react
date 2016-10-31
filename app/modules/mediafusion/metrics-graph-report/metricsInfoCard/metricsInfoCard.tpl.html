@@ -64,16 +64,10 @@
             <div class="metrics-info">
                 <div class="no-data" ng-if="nav.clusterAvailability === nav.noData">{{nav.clusterAvailability}}</div>
                 <div ng-if="nav.clusterAvailability !== nav.noData">
-                    <div class="availability-counts">{{nav.clusterAvailability}} <a ng-if="nav.clusterAvailability"
-                    class="icon icon-info-outline media-tooltip" 
-                    tooltip-template="'modules/mediafusion/metrics-graph-report/metricsInfoCard/demo.tpl.html'"
-                    tooltip-placement="bottom-right"
-                    tooltip-animation="false"
-                    tooltip-class="custom-tooltip"></a>
-                    </div>
-                    <div class="spinner-position" ng-if="!nav.clusterAvailability">
-                      <i class='icon icon-spinner icon-2x'></i>
-                    </div>
+                    <div class="availability-counts">{{nav.clusterAvailability}}</div>
+                       <div class="spinner-position" ng-if="!nav.clusterAvailability">
+                          <i class='icon icon-spinner icon-2x'></i>
+                        </div>
                 </div>    
             </div>
         </section>
