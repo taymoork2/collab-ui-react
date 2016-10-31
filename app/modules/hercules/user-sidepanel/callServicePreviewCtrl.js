@@ -290,8 +290,8 @@
         $scope.setShouldShowButtons();
         $scope.resourceGroup.cannotFindResouceGroup = false;
         Notification.success('hercules.resourceGroups.resourceGroupSaved');
-      }).catch(function () {
-        Notification.error('hercules.resourceGroups.failedToSetGroup');
+      }).catch(function (error) {
+        Notification.errorWithTrackingId(error, 'hercules.resourceGroups.failedToSetGroup');
       }).finally(function () {
         $scope.resourceGroup.saving = false;
         $scope.saving = $scope.savingEntitlements;

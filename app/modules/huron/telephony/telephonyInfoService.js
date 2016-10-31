@@ -88,7 +88,7 @@
       if (telephonyInfo.siteSteeringDigit === '') {
         getPrimarySiteInfo();
       }
-      if (angular.isUndefined(telephonyInfo.hasCustomerVoicemail)) {
+      if (_.isUndefined(telephonyInfo.hasCustomerVoicemail)) {
         checkCustomerVoicemail();
       }
 
@@ -397,7 +397,7 @@
     }
 
     function checkCustomerVoicemail() {
-      if (angular.isUndefined(telephonyInfo.hasCustomerVoicemail)) {
+      if (_.isUndefined(telephonyInfo.hasCustomerVoicemail)) {
         telephonyInfo.hasCustomerVoicemail = false;
       }
       return HuronCustomer.get().then(function (customer) {

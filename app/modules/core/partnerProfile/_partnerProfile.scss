@@ -4,14 +4,11 @@
 
 .profile {
   @extend %content-subheader;
-
   @extend %page-background-white;
-
   @extend %page-content-padding;
 
-  & .profile-content-container {
+  .profile-content-container {
     @include vr-spacing(ph, 1.5);
-
     @include vr-spacing(pt, 3.75);
   }
 }
@@ -25,11 +22,11 @@
 }
 
 .partner-profile {
-  & label {
+  label {
     @include vr-spacing(mb, 0.25);
   }
 
-  & h5 {
+  h5 {
     @include vr-spacing(pb, 0.5);
   }
 
@@ -38,9 +35,11 @@
     top: rem-calc(3);
     color: $gray-light-1;
   }
+
   .icon-information:hover {
     color: $color-primary-base;
   }
+
   .tooltip-inner {
     max-width: 300px;
     text-align: left;
@@ -48,7 +47,7 @@
 
   background: $white;
 
-  & .form-section {
+  .form-section {
     @include vr-spacing(pb, 1);
   }
 
@@ -59,15 +58,16 @@
   .radio-input-spacing {
     align-items: flex-start;
 
-    &:before {
-      margin-top: calc((#{$input-height-base} / 2) - 10px)
+    &::before {
+      margin-top: calc((#{$input-height-base} / 2) - 10px);
     }
 
-    > input, .radio-input-flex {
+    > input,
+    .radio-input-flex {
       flex: 1;
     }
   }
-  
+
   .form-group {
     .col-xs-12 {
       padding-left: 5px;

@@ -8,7 +8,7 @@
 
   function CsdmHuronUserDeviceService($injector, Authinfo, CsdmConfigService) {
     function create(userId) {
-      var devicesUrl = CsdmConfigService.getUrl() + '/organization/' + Authinfo.getOrgId() + '/users/' + userId + '/huronDevices';
+      var devicesUrl = CsdmConfigService.getUrl() + '/organization/' + Authinfo.getOrgId() + '/devices/?cisUuid=' + userId + '&type=huron';
       return $injector.instantiate(CsdmHuronDeviceService, {
         devicesUrl: devicesUrl
       });
@@ -21,7 +21,7 @@
 
   function CsdmHuronOrgDeviceService($injector, Authinfo, CsdmConfigService) {
     function create() {
-      var devicesUrl = CsdmConfigService.getUrl() + '/organization/' + Authinfo.getOrgId() + '/huronDevices';
+      var devicesUrl = CsdmConfigService.getUrl() + '/organization/' + Authinfo.getOrgId() + '/devices/?type=huron';
       return $injector.instantiate(CsdmHuronDeviceService, {
         devicesUrl: devicesUrl
       });
@@ -33,15 +33,14 @@
   }
 
   /* @ngInject  */
-  function CsdmHuronDeviceService($http, $q, $translate, Authinfo, HuronConfig, CsdmConverter, CmiKemService, KemService, Notification, devicesUrl) {
+  function CsdmHuronDeviceService($http, $q, Authinfo, HuronConfig, CsdmConverter, CsdmConfigService, devicesUrl) {
 
     function huronEnabled() {
       return $q.when(Authinfo.isSquaredUC());
     }
 
-    function decodeHuronTags(description) {
-      var tagString = (description || "").replace(/\['/g, '["').replace(/']/g, '"]').replace(/',/g, '",').replace(/,'/g, ',"');
-      return tagString;
+    function getFindDevicesUrl(userId) {
+      return CsdmConfigService.getUrl() + '/organization/' + Authinfo.getOrgId() + '/devices/?cisUuid=' + userId + '&type=huron';
     }
 
     function getCmiUploadLogsUrl(userId, deviceId) {
@@ -61,7 +60,7 @@
     }
 
     function encodeHuronTags(description) {
-      return (description || "").replace(/"/g, "'");
+      return _.replace(description, /"/g, "'");
     }
 
     var deviceList = {};
@@ -78,7 +77,11 @@
       });
     }
 
-    fetch();
+    function fetchDevices() {
+      return $http.get(devicesUrl).then(function (res) {
+        return CsdmConverter.convertHuronDevices(res.data);
+      });
+    }
 
     function dataLoaded() {
       return !Authinfo.isSquaredUC() || loadedData;
@@ -88,22 +91,18 @@
       return deviceList;
     }
 
-    function update(url, obj) {
-      return $http.put(url, obj).then(function () {
-        var device = _.clone(deviceList[url]);
-        if (obj.description) {
-          try {
-            device.tags = JSON.parse(decodeHuronTags(obj.description));
-          } catch (e) {
-            device.tags = [];
-          }
-        }
-        return device;
-      });
+    function deleteItem(device) {
+      return $http.delete(device.url);
     }
 
     function deleteDevice(deviceUrl) {
       return $http.delete(deviceUrl);
+    }
+
+    function getDevicesForPlace(cisUuid) {
+      return $http.get(getFindDevicesUrl(cisUuid)).then(function (res) {
+        return CsdmConverter.convertHuronDevices(res.data);
+      });
     }
 
     function getLinesForDevice(huronDevice) {
@@ -157,9 +156,8 @@
       if (jsonTags.length >= 128) {
         return $q.reject("List of tags is longer than supported.");
       }
-      deviceList[url].tags = tags; // update ui asap
-      deviceList[url].tagString = tags.join(', '); // update ui asap
-      return update(url, {
+
+      return $http.put(url, {
         description: jsonTags
       });
     }
@@ -171,15 +169,20 @@
     }
 
     return {
+
+      fetchDevices: fetchDevices,
+      deleteItem: deleteItem,
+      updateTags: updateTags,
       dataLoaded: dataLoaded,
       getDeviceList: getDeviceList,
+      getDevicesForPlace: getDevicesForPlace,
       deleteDevice: deleteDevice,
       getLinesForDevice: getLinesForDevice,
       getTimezoneForDevice: getTimezoneForDevice,
       setTimezoneForDevice: setTimezoneForDevice,
       resetDevice: resetDevice,
       uploadLogs: uploadLogs,
-      updateTags: updateTags
+      fetch: fetch
     };
   }
 })();

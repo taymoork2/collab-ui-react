@@ -61,7 +61,7 @@ describe('Features Controller', function () {
     spyOn(PagingGroupService, 'getListOfPagingGroups').and.returnValue(getDeferred.promise);
     spyOn(AutoAttendantCeInfoModelService, 'getCeInfosList').and.returnValue($q.when([]));
     spyOn(AAModelService, 'newAAModel').and.returnValue(getDeferred.promise);
-    spyOn(FeatureToggleService, 'supports').and.returnValue(getDeferred.promise);
+    spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
     spyOn($state, 'go');
     spyOn(Notification, 'success');
     spyOn(Notification, 'errorResponse');
@@ -111,6 +111,7 @@ describe('Features Controller', function () {
       });
   });
   it('should set the pageState to Loading when controller is getting data from back-end', function () {
+    $timeout.flush();
     expect(featureCtrl.pageState).toEqual('Loading');
     getDeferred.resolve(getPGListSuccessResp(listOfPGs));
     $scope.$apply();
@@ -118,6 +119,7 @@ describe('Features Controller', function () {
     expect(featureCtrl.pageState).toEqual('showFeatures');
   });
   it('should set the pageState to Reload when controller fails to load the data for all features from back-end', function () {
+    $timeout.flush();
     expect(featureCtrl.pageState).toEqual('Loading');
     getDeferred.reject(getPGListFailureResp);
     $scope.$apply();
@@ -137,5 +139,11 @@ describe('Features Controller', function () {
     $timeout.flush();
     featureCtrl.searchData(pagingGroups.paginggroups[0].cardName);
     expect(featureCtrl.listOfFeatures).toEqual([pagingGroups.paginggroups[0]]);
+  });
+  it('should be able to edit an PagingGroup ', function () {
+    featureCtrl.editHuronFeature(pagingGroups.paginggroups[0]);
+    expect($state.go).toHaveBeenCalledWith('huronPagingGroupEdit', {
+      feature: pagingGroups.paginggroups[0]
+    });
   });
 });

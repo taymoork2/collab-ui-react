@@ -6,10 +6,16 @@
     .controller('DeviceUsageDistributionCtrl', DeviceUsageDistributionCtrl);
 
   /* @ngInject */
-  function DeviceUsageDistributionCtrl($log, $scope, $state, $stateParams, DeviceUsageDistributionReportService, DeviceUsageDistributionGraphService, deviceUsageFeatureToggle) {
+  function DeviceUsageDistributionCtrl($log, $state, $stateParams, DeviceUsageDistributionReportService, DeviceUsageDistributionGraphService, deviceUsageFeatureToggle) {
     var vm = this;
-
     vm.reportType = $stateParams.deviceReportType;
+    vm.loading = true;
+    vm.toggleGraph = toggleGraph;
+
+    //TODO: Replace by range selector
+    var now = new moment().format("YYYY-MM-DD");
+    var from = moment(now).subtract(30, "days").format("YYYY-MM-DD");
+    var to = moment(now).subtract(23, "days").format("YYYY-MM-DD");
 
     if (!deviceUsageFeatureToggle) {
       // simulate a 404
@@ -19,16 +25,27 @@
 
     var graph;
 
-    DeviceUsageDistributionReportService.getDeviceUsageReportData().then(function (devices) {
-      var inUseData = DeviceUsageDistributionGraphService.getUsageDistributionData(devices);
+    DeviceUsageDistributionReportService.getDeviceUsageReportData(from, to).then(function (devices) {
+      var inUseData = DeviceUsageDistributionGraphService.getUsageDistributionDataForGraph(devices);
       var chart = DeviceUsageDistributionGraphService.getUsageCharts(inUseData, "usageHours");
       chart.dataProvider = inUseData;
-      chart.listeners = [{
-        "event": "clickGraphItem",
-        "method": showList
-      }];
+      $log.warn("DATA PROVIDER SET!", inUseData);
+      chart.listeners = [
+        { event: 'clickGraphItem', method: showList },
+        { event: 'dataUpdated', method: graphRendered }
+      ];
+
       graph = AmCharts.makeChart('device-usage-distribution-chart', chart);
     });
+
+    function graphRendered() {
+      vm.loading = false;
+    }
+
+    vm.showGraph = false;
+    function toggleGraph() {
+      vm.showGraph = !vm.showGraph;
+    }
 
     vm.gridOptions = {
       multiSelect: false,
@@ -38,10 +55,10 @@
       enableColumnResizing: true,
       enableHorizontalScrollbar: 0,
       columnDefs: [{
-        field: 'name',
-        displayName: 'Device name',
+        field: 'deviceId',
+        displayName: 'Device Id',
       }, {
-        field: 'hours',
+        field: 'totalDuration',
         displayName: 'Hours active',
       }]
     };
@@ -62,13 +79,12 @@
       limits.unshift(0);
       limits.push(_.last(limits));
 
-      DeviceUsageDistributionReportService.getDeviceUsageReportData(limits[clickedIndex], limits[clickedIndex + 1]).then(function (devices) {
+      DeviceUsageDistributionReportService.getDeviceUsageReportData(to, from, limits[clickedIndex], limits[clickedIndex + 1]).then(function (devices) {
+        $log.info("getDeviceUsageReportData", devices);
         vm.gridOptions.data = devices;
-        $scope.$apply();
       });
 
     }
-
 
   }
 

@@ -6,78 +6,106 @@
     .service('DeviceUsageTimelineService', DeviceUsageTimelineService);
 
   /* @ngInject */
-  function DeviceUsageTimelineService($http, chartColors, DeviceUsageMockService, UrlConfig, Authinfo) {
+  function DeviceUsageTimelineService($q, $timeout, $http, chartColors, DeviceUsageRawService, UrlConfig, Authinfo) {
 
     var localUrlBase = 'http://localhost:8080/atlas-server/admin/api/v1/organization';
     var urlBase = UrlConfig.getAdminServiceUrl() + 'organizations';
 
-    function getDataForLastWeek(api) {
-      return getDataForPeriod('week', 1, 'day', api);
+    var timeoutInMillis = 10000;
+
+    function getDataForLastWeek(deviceCategories, api) {
+      return getDataForPeriod('week', 1, 'day', deviceCategories, api);
     }
 
-    function getDataForLastMonth(api) {
-      return getDataForPeriod('month', 1, 'day', api);
+    function getDataForLastMonth(deviceCategories, api) {
+      return getDataForPeriod('month', 1, 'day', deviceCategories, api);
     }
 
-    function getDataForLastMonths(count, granularity, api) {
-      return getDataForPeriod('month', count, granularity, api);
+    function getDataForLastMonths(count, granularity, deviceCategories, api) {
+      return getDataForPeriod('month', count, granularity, deviceCategories, api);
     }
 
-    function getDataForPeriod(period, count, granularity, api) {
-      return loadPeriodCallData(period, count, granularity, api);
+    function getDataForPeriod(period, count, granularity, deviceCategories, api) {
+      return loadPeriodCallData(period, count, granularity, deviceCategories, api);
     }
 
-    function getDataForRange(start, end, granularity, api) {
+    function getDataForRange(start, end, granularity, deviceCategories, api) {
       var startDate = moment(start);
       var endDate = moment(end);
       var now = moment();
 
       if (startDate.isValid() && endDate.isValid() && startDate.isBefore(endDate) && endDate.isBefore(now)) {
         if (api === 'mock') {
-          return DeviceUsageMockService.getData(start, end).then(function (data) {
+          return DeviceUsageRawService.getData(start, end).then(function (data) {
             return reduceAllData(data);
           });
         } else if (api === 'local') {
           var url = localUrlBase + '/1eb65fdf-9643-417f-9974-ad72cae0e10f/reports/device/call?';
           url = url + 'intervalType=' + granularity;
           url = url + '&rangeStart=' + start + '&rangeEnd=' + end;
-          return $http.get(url).then(function (response) {
-            return reduceAllData(response.data.items);
-          });
+          url = url + '&deviceCategories=' + deviceCategories.join();
+          url = url + '&sendMockData=false';
+          return doRequest(url);
         } else {
           url = urlBase + '/' + Authinfo.getOrgId() + '/reports/device/call?';
           url = url + 'intervalType=' + granularity;
           url = url + '&rangeStart=' + startDate.format('YYYY-MM-DD') + '&rangeEnd=' + endDate.format('YYYY-MM-DD');
-          return $http.get(url).then(function (response) {
-            return reduceAllData(response.data.items);
-          });
+          url = url + '&deviceCategories=ce,darling';
+          return doRequest(url);
         }
       }
 
     }
 
-    function loadPeriodCallData(period, count, granularity, api) {
+    function loadPeriodCallData(period, count, granularity, deviceCategories, api) {
       var start = moment().startOf(period).subtract(count, period + 's').format('YYYY-MM-DD');
       var end = moment().startOf(period).format('YYYY-MM-DD');
       if (api === 'mock') {
-        return DeviceUsageMockService.getData(start, end).then(function (data) {
+        return DeviceUsageRawService.getData(start, end).then(function (data) {
           return reduceAllData(data);
         });
       } else if (api === 'local') {
-        var url = localUrlBase + '/1eb65fdf-9643-417f-9974-ad72cae0e10f/reports/device/call?';
+        var url = localUrlBase + '/' + Authinfo.getOrgId() + '/reports/device/call?';
         url = url + 'intervalType=' + granularity;
         url = url + '&rangeStart=' + start + '&rangeEnd=' + end;
-        return $http.get(url).then(function (response) {
-          return reduceAllData(response.data.items);
-        });
+        url = url + '&deviceCategories=' + deviceCategories.join();
+        url = url + '&sendMockData=false';
+        url = url + '&accounts=__';
+        return doRequest(url);
       } else {
         url = urlBase + '/' + Authinfo.getOrgId() + '/reports/device/call?';
         url = url + 'intervalType=' + granularity;
         url = url + '&rangeStart=' + start + '&rangeEnd=' + end;
-        return $http.get(url).then(function (response) {
-          return reduceAllData(response.data.items);
-        });
+        url = url + '&deviceCategories=' + deviceCategories.join();
+        url = url + '&accounts=__';
+        return doRequest(url);
       }
+    }
+
+    function doRequest(url) {
+      var deferred = $q.defer();
+      var timeout = {
+        timeout: deferred.promise
+      };
+      $timeout(function () {
+        deferred.resolve();
+      }, timeoutInMillis);
+
+      return $http.get(url, timeout).then(function (response) {
+        return reduceAllData(response.data.items);
+      }, function (reject) {
+        return $q.reject(analyseReject(reject));
+      });
+    }
+
+    function analyseReject(reject) {
+      if (reject.status === -1) {
+        reject.statusText = 'Operation timed Out';
+        reject.data = {
+          message: 'Operation timed out'
+        };
+      }
+      return reject;
     }
 
 
@@ -85,20 +113,30 @@
       return _.chain(items).reduce(function (result, item) {
         if (typeof result[item.date] === 'undefined') {
           result[item.date] = {
-            videCount: 0,
-            video: 0,
-            wbCount: 0,
+            callCount: 0,
+            totalDuration: 0,
             pairedCount: 0,
-            sharedCount: 0,
-            devices: []
+            deviceCategories: []
           };
         }
-        result[item.date].videCount += item.count;
-        result[item.date].video += item.totalDuration;
+        result[item.date].callCount += item.callCount;
+        result[item.date].totalDuration += item.totalDuration;
         result[item.date].pairedCount += item.pairedCount;
-        result[item.date].devices.push(item.deviceId);
+        if (!result[item.date].deviceCategories[item.deviceCategory]) {
+          result[item.date].deviceCategories.push({
+            deviceCategory: item.deviceCategory,
+            totalDuration: item.totalDuration,
+            callCount: item.callCount,
+            pairedCount: item.pairedCount
+          });
+        } else {
+          result[item.date].deviceCategories[item.deviceCategory].totalDuration += item.totalDuration;
+          result[item.date].deviceCategories[item.deviceCategory].callCount += item.callCount;
+          result[item.date].deviceCategories[item.deviceCategory].pairedCount += item.pairedCount;
+        }
         return result;
       }, {}).map(function (value, key) {
+        value.totalDuration = (value.totalDuration / 60).toFixed(2);
         value.time = key.substr(0, 4) + '-' + key.substr(4, 2) + '-' + key.substr(6, 2);
         return value;
       }).value();
@@ -121,7 +159,12 @@
         },
         'chartCursor': {
           'enabled': true,
-          'categoryBalloonDateFormat': 'YYYY-MM-DD'
+          'categoryBalloonDateFormat': 'YYYY-MM-DD',
+          'valueLineEnabled': true,
+          'valueLineBalloonEnabled': true,
+          'cursorColor': chartColors.primaryColorDarker,
+          'cursorAlpha': 0.5,
+          'valueLineAlpha': 0.5
         },
         'chartScrollbar': {
           'scrollbarHeight': 2,
@@ -138,12 +181,15 @@
           {
             'bullet': 'round',
             'id': 'video',
-            'title': 'Video',
-            'valueField': 'video',
+            'title': 'Call Duration',
+            'valueField': 'totalDuration',
             'lineThickness': 2,
             'bulletSize': 10,
-            'lineColor': chartColors.primaryColorDarker
-          },
+            'lineColor': chartColors.primaryColorDarker,
+            'bulletColor': '#ffffff',
+            'bulletBorderAlpha': 1,
+            'useLineColorForBulletBorder': true
+          }
           /*
           {
             'bullet': 'diamond',
@@ -162,18 +208,19 @@
         'valueAxes': [
           {
             'id': 'ValueAxis-1',
-            'title': 'Activity Seconds'
+            'title': 'Call Minutes'
           }
         ],
         'allLabels': [
 
         ],
         'balloon': {
-
+          'cornerRadius': 4
         },
         'legend': {
           'enabled': true,
-          'useGraphSettings': true
+          'useGraphSettings': true,
+          'valueWidth': 100
         },
         'titles': [
           {

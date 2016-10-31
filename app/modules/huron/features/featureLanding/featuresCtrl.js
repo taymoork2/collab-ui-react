@@ -1,6 +1,8 @@
 (function () {
   'use strict';
 
+  var Masonry = require('masonry-layout');
+
   angular
     .module('Huron')
     .controller('HuronFeaturesCtrl', HuronFeaturesCtrl);
@@ -38,26 +40,6 @@
       filterValue: 'HG'
     }];
 
-    FeatureToggleService.supports(FeatureToggleService.features.callParkService).then(function (result) {
-      if (result) {
-        var cp = {
-          name: $translate.instant('callPark.title'),
-          filterValue: 'CP'
-        };
-        vm.filters.push(cp);
-      }
-    });
-
-    FeatureToggleService.supports(FeatureToggleService.features.huronPagingGroup).then(function (result) {
-      if (result) {
-        var pg = {
-          name: $translate.instant('pagingGroup.title'),
-          filterValue: 'PG'
-        };
-        vm.filters.push(pg);
-      }
-    });
-
     /* LIST OF FEATURES
      *
      *  To add a New Feature
@@ -87,7 +69,9 @@
       isEmpty: false,
       i18n: 'huronFeatureDetails.cpName',
       color: 'cta'
-    }, {
+    }];
+
+    var pgFeature = {
       name: 'PG',
       getFeature: function () {
         return PagingGroupService.getListOfPagingGroups();
@@ -96,9 +80,30 @@
       isEmpty: false,
       i18n: 'huronFeatureDetails.pgName',
       color: 'gray'
-    }];
+    };
 
-    init();
+    FeatureToggleService.supports(FeatureToggleService.features.callParkService).then(function (result) {
+      if (result) {
+        var cp = {
+          name: $translate.instant('callPark.title'),
+          filterValue: 'CP'
+        };
+        vm.filters.push(cp);
+      }
+    });
+
+    FeatureToggleService.supports(FeatureToggleService.features.huronPagingGroup).then(function (result) {
+      if (result) {
+        var pg = {
+          name: $translate.instant('pagingGroup.title'),
+          filterValue: 'PG'
+        };
+        vm.filters.push(pg);
+        vm.features.push(pgFeature);
+      }
+      init();
+    });
+
 
     function init() {
       vm.loading = false;
@@ -199,6 +204,10 @@
         $state.go('callparkedit', {
           feature: feature
         });
+      } else if (feature.filterValue === 'PG') {
+        $state.go('huronPagingGroupEdit', {
+          feature: feature
+        });
       }
     };
 
@@ -246,13 +255,13 @@
 
     function reInstantiateMasonry() {
       $timeout(function () {
-        $('.cs-card-layout').masonry('destroy');
-        $('.cs-card-layout').masonry({
+        var $cardlayout = new Masonry('.cs-card-layout', {
           itemSelector: '.cs-card',
           columnWidth: '.cs-card',
-          isResizable: true,
-          percentPosition: true
+          resize: true,
+          percentPosition: true,
         });
+        $cardlayout.layout();
       }, 0);
     }
 
@@ -272,7 +281,7 @@
           var cardToRefresh = _.find(listOfAllFeatures, function (feature) {
             return feature.cardName === ref;
           });
-          if (angular.isDefined(cardToRefresh)) {
+          if (!_.isUndefined(cardToRefresh)) {
             cardToRefresh.dependsNames.splice(cardToRefresh.dependsNames.indexOf(featureToBeDeleted.cardName), 1);
             if (cardToRefresh.dependsNames.length === 0) {
               cardToRefresh.hasDepends = false;

@@ -6,7 +6,7 @@
     .controller('HelpdeskOrgController', HelpdeskOrgController);
 
   /* @ngInject */
-  function HelpdeskOrgController($location, $anchorScroll, $stateParams, HelpdeskService, XhrNotificationService, HelpdeskCardsOrgService, Config, $translate, LicenseService, $scope, $modal, $state, Authinfo, $window, UrlConfig, FeatureToggleService) {
+  function HelpdeskOrgController($location, $anchorScroll, $stateParams, HelpdeskService, XhrNotificationService, HelpdeskCardsOrgService, Config, $translate, LicenseService, $scope, $modal, $state, Authinfo, $window, UrlConfig, FeatureToggleService, FusionClusterService, Notification) {
     $('body').css('background', 'white');
     var vm = this;
     if ($stateParams.org) {
@@ -42,11 +42,17 @@
     vm.cardsAvailable = false;
     vm.adminUsersAvailable = false;
     vm.findServiceOrder = findServiceOrder;
+    vm.supportsLocalDialing = false;
+    vm.openHybridServicesModal = openHybridServicesModal;
 
     HelpdeskService.getOrg(vm.orgId).then(initOrgView, XhrNotificationService.notify);
 
     FeatureToggleService.supports(FeatureToggleService.features.atlasHelpDeskExt).then(function (result) {
       vm.supportsExtendedInformation = result;
+    });
+
+    FeatureToggleService.getCustomerHuronToggle(vm.orgId, FeatureToggleService.features.huronLocalDialing).then(function (result) {
+      vm.supportsLocalDialing = result;
     });
 
     scrollToTop();
@@ -81,9 +87,8 @@
     function openExtendedInformation() {
       if (vm.supportsExtendedInformation) {
         $modal.open({
-          templateUrl: "modules/squared/helpdesk/helpdesk-extended-information.html",
+          templateUrl: 'modules/squared/helpdesk/helpdesk-extended-information.html',
           controller: 'HelpdeskExtendedInfoDialogController as modal',
-          modalId: "HelpdeskExtendedInfoDialog",
           resolve: {
             title: function () {
               return 'helpdesk.customerDetails';
@@ -238,6 +243,31 @@
       }, XhrNotificationService.notify)
         .finally(function () {
           vm.launchingAtlas = false;
+        });
+    }
+
+    function openHybridServicesModal() {
+      vm.loadingHSData = true;
+      FusionClusterService.getAll(vm.orgId)
+        .then(function (hsData) {
+          $modal.open({
+            templateUrl: 'modules/squared/helpdesk/helpdesk-extended-information.html',
+            controller: 'HelpdeskExtendedInfoDialogController as modal',
+            resolve: {
+              title: function () {
+                return 'helpdesk.hybridServicesDetails';
+              },
+              data: function () {
+                return hsData;
+              }
+            }
+          });
+        })
+        .catch(function (error) {
+          Notification.errorWithTrackingId(error, 'hercules.genericFailure');
+        })
+        .finally(function () {
+          vm.loadingHSData = false;
         });
     }
   }

@@ -6,7 +6,7 @@
     .controller('ExpresswayClusterSettingsController', ExpresswayClusterSettingsController);
 
   /* @ngInject */
-  function ExpresswayClusterSettingsController($stateParams, FusionClusterService, XhrNotificationService, Notification, $modal, $state, $translate, ResourceGroupService, hasF237FeatureToggle) {
+  function ExpresswayClusterSettingsController($stateParams, FusionClusterService, Notification, $modal, $state, $translate, ResourceGroupService, hasF237FeatureToggle) {
     var vm = this;
     vm.backUrl = 'cluster-list';
     vm.enabledServices = [];
@@ -36,11 +36,6 @@
     vm.deregisterCluster = deregisterCluster;
     vm.allowedChannels = [];
 
-    FusionClusterService.getAllProvisionedConnectorTypes($stateParams.id)
-      .then(function (allConnectorTypes) {
-        vm.enabledServices = allConnectorTypes;
-      });
-
     loadCluster($stateParams.id);
 
     function loadCluster(clusterid) {
@@ -54,6 +49,7 @@
             clusterName: cluster.name
           });
           vm.newClusterName = vm.cluster.name;
+          vm.enabledServices = _.map(cluster.provisioning, 'connectorType');
 
           if (vm.showResourceGroups) {
             ResourceGroupService.getAll()
@@ -68,7 +64,10 @@
                 vm.selectedResourceGroup = group;
               });
           }
-        }, XhrNotificationService.notify);
+        })
+        .catch(function (error) {
+          Notification.errorWithTrackingId(error, 'hercules.genericFailure');
+        });
     }
 
     vm.showResourceGroupModal = function () {
@@ -96,11 +95,11 @@
                 }) + ' ' + willUpgrade);
                 vm.releasechannelsSelected = $translate.instant('hercules.fusion.add-resource-group.release-channel.' + vm.selectedResourceGroup.releaseChannel);
                 vm.originalResourceGroup = vm.selectedResourceGroup;
-              },
-                function () {
-                  vm.selectedResourceGroup = vm.originalResourceGroup;
-                  Notification.error('hercules.genericFailure');
-                });
+              })
+              .catch(function (error) {
+                vm.selectedResourceGroup = vm.originalResourceGroup;
+                Notification.errorWithTrackingId(error, 'hercules.genericFailure');
+              });
           })
           .catch(function () {
             vm.selectedResourceGroup = vm.originalResourceGroup;
@@ -128,11 +127,10 @@
                 }) + ' ' + willUpgrade);
                 vm.releasechannelsSelected = $translate.instant('hercules.fusion.add-resource-group.release-channel.' + vm.selectedResourceGroup.releaseChannel);
                 vm.originalResourceGroup = vm.selectedResourceGroup;
-              },
-                function () {
-                  vm.selectedResourceGroup = vm.originalResourceGroup;
-                  Notification.error('hercules.genericFailure');
-                });
+              }).catch(function (error) {
+                vm.selectedResourceGroup = vm.originalResourceGroup;
+                Notification.errorWithTrackingId(error, 'hercules.genericFailure');
+              });
           }).catch(function () {
             vm.selectedResourceGroup = vm.originalResourceGroup;
           });
@@ -208,10 +206,8 @@
             return vm.clusterId;
           }
         }
-      }).result.then(function (result) {
-        if (result !== 'cancelled') {
-          vm.enabledServices.splice(vm.enabledServices.indexOf(serviceId.toString()), 1);
-        }
+      }).result.then(function () {
+        vm.enabledServices.splice(vm.enabledServices.indexOf(serviceId.toString()), 1);
       });
     }
 
@@ -225,7 +221,7 @@
         controller: 'ClusterDeregisterController',
         controllerAs: 'clusterDeregister',
         templateUrl: 'modules/hercules/cluster-deregister/deregister-dialog.html',
-        type: 'small'
+        type: 'dialog'
       })
       .result.then(function () {
         $state.go('cluster-list');
@@ -244,8 +240,9 @@
             clusterName: vm.cluster.name
           });
           Notification.success('hercules.expresswayClusterSettings.clusterNameSaved');
-        }, function () {
-          Notification.error('hercules.expresswayClusterSettings.clusterNameCannotBeSaved');
+        })
+        .catch(function (error) {
+          Notification.errorWithTrackingId(error, 'hercules.expresswayClusterSettings.clusterNameCannotBeSaved');
         });
     }
 

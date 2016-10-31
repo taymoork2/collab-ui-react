@@ -5,9 +5,9 @@
     .controller('DevicesCtrl',
 
       /* @ngInject */
-      function ($scope, $state, $translate, $templateCache, DeviceFilter, CsdmUnusedAccountsService, CsdmHuronOrgDeviceService, CsdmDataModelService, Authinfo, AccountOrgService, WizardFactory, CsdmPlaceService) {
+      function ($scope, $rootScope, $state, $translate, $templateCache, DeviceFilter, CsdmUnusedAccountsService, CsdmHuronOrgDeviceService, CsdmDataModelService, Authinfo, AccountOrgService, WizardFactory, CsdmPlaceService) {
         var vm = this;
-
+        var filteredDevices = [];
         AccountOrgService.getAccount(Authinfo.getOrgId()).success(function (data) {
           vm.showLicenseWarning = !!_.find(data.accounts, {
             licenses: [{
@@ -18,18 +18,24 @@
           vm.licenseError = vm.showLicenseWarning ? $translate.instant('spacesPage.licenseSuspendedWarning') : "";
         });
 
-        // Reset to defaults on pageload to wipe out any lingering settings from previous page visits
         vm.deviceFilter = DeviceFilter;
-        vm.deviceFilter.setCurrentSearch('');
-        vm.deviceFilter.setCurrentFilter('');
+        vm.deviceFilter.resetFilters();
+        $rootScope.$on('updateDeviceList', function () {
+          vm.updateListAndFilter();
+        });
 
         CsdmDataModelService.getDevicesMap().then(function (devicesMap) {
           vm.devicesMap = devicesMap;
+          vm.updateListAndFilter();
         });
 
-        CsdmDataModelService.devicePollerOn('data', angular.noop, {
-          scope: $scope
-        });
+        CsdmDataModelService.devicePollerOn('data',
+          function () {
+            vm.updateListAndFilter();
+          }, {
+            scope: $scope
+          }
+        );
 
         var csdmHuronOrgDeviceService = CsdmHuronOrgDeviceService.create(Authinfo.getOrgId());
 
@@ -38,15 +44,21 @@
           vm.showPlaces = result;
         });
 
+        vm.setCurrentSearch = function (searchStr) {
+          vm.deviceFilter.setCurrentSearch(searchStr);
+          vm.updateListAndFilter();
+        };
+        vm.setCurrentFilter = function (filterValue) {
+          vm.deviceFilter.setCurrentFilter(filterValue);
+          vm.updateListAndFilter();
+        };
+
         vm.existsDevices = function () {
-          return (vm.shouldShowList() && (
-            CsdmDataModelService.hasDevices() ||
-            Object.keys(csdmHuronOrgDeviceService.getDeviceList()).length > 0));
+          return (vm.shouldShowList() && CsdmDataModelService.hasDevices());
         };
 
         vm.shouldShowList = function () {
-          return CsdmDataModelService.hasLoadedAnyData() &&
-            (csdmHuronOrgDeviceService.dataLoaded() || csdmHuronOrgDeviceService.getDeviceList().length > 0);
+          return CsdmDataModelService.hasLoadedAllDeviceSources();
         };
 
         vm.isEntitledToRoomSystem = function () {
@@ -61,16 +73,17 @@
           return vm.isEntitledToRoomSystem() || vm.isEntitledToHuron();
         };
 
+        vm.deviceList = function () {
+          return filteredDevices;
+        };
         vm.updateListAndFilter = function () {
-
           var allDevices = _.chain({})
             .extend(vm.devicesMap)
-            .extend(csdmHuronOrgDeviceService.getDeviceList())
             .extend(CsdmUnusedAccountsService.getAccountList())
             .values()
             .value();
-
-          return vm.deviceFilter.getFilteredList(allDevices);
+          filteredDevices = vm.deviceFilter.getFilteredList(allDevices);
+          return filteredDevices;
         };
 
         vm.showDeviceDetails = function (device) {
@@ -82,7 +95,7 @@
         };
 
         vm.gridOptions = {
-          data: 'sc.updateListAndFilter()',
+          data: 'sc.deviceList()',
           rowHeight: 45,
           enableRowHeaderSelection: false,
           enableColumnMenus: false,
@@ -184,12 +197,8 @@
               },
               'addDeviceFlow.choosePersonal': {
                 nextOptions: {
-                  create: 'addDeviceFlow.addServices',
                   existing: 'addDeviceFlow.showActivationCode'
                 }
-              },
-              'addDeviceFlow.addServices': {
-                next: "addDeviceFlow.addLines"
               },
               'addDeviceFlow.chooseSharedSpace': {
                 nextOptions: {
@@ -231,6 +240,9 @@
         }
 
         function sortStateFn(a, b) {
+          if (!a) {
+            return b.priority;
+          }
           return a.priority - b.priority;
         }
       }

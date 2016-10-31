@@ -30,7 +30,7 @@ class DomainManagementService {
     private Authinfo,
     private Log,
     private UrlConfig,
-    private XhrNotificationService,
+    private Notification,
   ) {
 
     let orgId = this.Authinfo.getOrgId();
@@ -55,7 +55,7 @@ class DomainManagementService {
   }
 
   private getErrorMessage(errObject) {
-    return this.XhrNotificationService.getMessages([errObject])[0];
+    return this.Notification.processErrorResponse(errObject);
   }
 
   get states() {

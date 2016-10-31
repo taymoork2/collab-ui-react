@@ -4,7 +4,6 @@ $aa-builder-border-size: 1px;
 $aa-builder-icon-color: $gray-light-1;
 $aa-builder-icon-hover-color: $gray-base;
 $aa-builder-icon-click-color: $color-primary-base;
-
 $aa-builder-text-color: $gray-dark-1;
 
 @mixin aa-builder-height($rem_offset) {
@@ -21,9 +20,10 @@ $aa-builder-text-color: $gray-dark-1;
 }
 
 .aa-nowrap {
-  white-space: nowrap;
   @include vr-spacing(m, 0);
   @include vr-spacing(p, 0);
+
+  white-space: nowrap;
   color: $aa-builder-text-color;
 }
 
@@ -37,11 +37,11 @@ $aa-builder-text-color: $gray-dark-1;
   margin: 0 $frame-margin-size $frame-margin-size $frame-margin-size;
 
   .aa-builder-container {
+    $margin-top: 0.125rem;
+
     background-color: $gray-light-4;
     overflow-y: auto;
     overflow-x: auto;
-
-    $margin-top: 0.125rem;
     margin-top: $margin-top;
 
     /* allows aa-builder-frame box-shadow to show */
@@ -109,14 +109,14 @@ $aa-builder-text-color: $gray-dark-1;
 
 .aa-edit-icon {
   @extend .icon;
-
   @extend .icon-edit;
 
   font-size: 1.5rem;
   color: $aa-builder-icon-color;
-  @include vr-spacing(pl, .25);
-  @include vr-spacing(pt, .25);
-  @include vr-spacing(mb, .75);
+
+  @include vr-spacing(pl, 0.25);
+  @include vr-spacing(pt, 0.25);
+  @include vr-spacing(mb, 0.75);
 
   &:hover {
     cursor: pointer;
@@ -126,13 +126,13 @@ $aa-builder-text-color: $gray-dark-1;
 
 .aa-trash-icon {
   @extend .icon;
-
   @extend .icon-trash;
 
   font-size: 1.25rem;
   color: $aa-builder-icon-color;
-  @include vr-spacing(pl, .25);
-  @include vr-spacing(pt, .25);
+
+  @include vr-spacing(pl, 0.25);
+  @include vr-spacing(pt, 0.25);
 
   &:hover {
     cursor: pointer;
@@ -142,23 +142,23 @@ $aa-builder-text-color: $gray-dark-1;
 
 .aa-schedule-icon {
   @extend .icon;
-
   @extend .icon-clock;
 
   font-size: 2.5rem;
   color: $aa-builder-icon-color;
-  @include vr-spacing(p, .25);
 
+  @include vr-spacing(p, 0.25);
 }
 
 .aa-builder-number-tile {
   height: 2rem;
   width: 16rem;
-  margin: .125rem 0;
-  @include vr-spacing(p, .5);
+  margin: 0.125rem 0;
+
+  @include vr-spacing(p, 0.5);
 
   /* set to match the select-box's 3px radius */
-  border-radius: .188rem;
+  border-radius: 0.188rem;
   color: $color-white;
   background-color: $color-primary-base;
   display: inline-block;
@@ -167,16 +167,18 @@ $aa-builder-text-color: $gray-dark-1;
 
   .phone-number {
     display: inline-block;
-    @include vr-spacing(pt, .25);
+
+    @include vr-spacing(pt, 0.25);
   }
 
   &:hover {
     background-color: $color-primary-dark;
   }
 
-  & .icon {
+  .icon {
     float: right;
     font-size: 1rem;
+
     &:hover {
       cursor: pointer;
     }
@@ -198,7 +200,9 @@ $aa-builder-text-color: $gray-dark-1;
     @extend h2;
 
     line-height: 1;
+
     @include vr-spacing(mh, 0);
+
     width: 50vw;
     text-align: center;
     border: none;
@@ -211,7 +215,6 @@ $aa-builder-text-color: $gray-dark-1;
       border: none;
       outline: none;
       border-bottom: 1px solid $color-primary-darker;
-      -webkit-box-shadow: none;
       box-shadow: none;
       background-color: transparent;
     }
@@ -234,6 +237,7 @@ $aa-builder-text-color: $gray-dark-1;
 
 .aa-and-more {
   @include vr-spacing(ml, 1);
+
   color: $aa-builder-text-color;
 }
 
@@ -243,9 +247,10 @@ $aa-builder-text-color: $gray-dark-1;
 
 .aa-panel-numbers {
   @extend .panel;
-  text-align: left;
 
+  text-align: left;
   width: 16rem;
+
   @include vr-spacing(mv, 1);
 }
 
@@ -270,25 +275,25 @@ $aa-builder-text-color: $gray-dark-1;
 
 .aa-panel {
   @extend .panel;
-
   @extend .aa-transition;
 
   @include vr-spacing(m, 0);
+  @include vr-spacing(pl, 0.5);
+  @include vr-spacing(pr, 0.5);
 
-  @include vr-spacing(pl, .5);
-  @include vr-spacing(pr, .5);
   white-space: normal;
   box-shadow: none;
-  line-height: .5rem;
+  line-height: 0.5rem;
 
   .text-info {
-    color: $color-people-base;;
+    color: $color-people-base;
     text-align: center;
   }
 
   .text-info-left {
     color: $color-people-base;
     text-align: left;
+
     @include vr-spacing(pl, 0);
     @include vr-spacing(pb, 1);
   }
@@ -296,11 +301,12 @@ $aa-builder-text-color: $gray-dark-1;
   .aa-panel-body {
     @extend .panel-body;
 
-    margin: 0;
     @include vr-spacing(p, 1.25);
+
+    margin: 0;
     background-color: $color-white;
     border: $aa-builder-border-size solid $aa-builder-border-color;
-    border-radius: .25rem;
+    border-radius: 0.25rem;
 
     &:hover {
       border-color: $color-primary-base;
@@ -309,7 +315,9 @@ $aa-builder-text-color: $gray-dark-1;
 
   .aa-schedule-body {
     @extend .aa-panel-body;
+
     min-width: vr-adjust(300);
+
     &:hover {
       cursor: pointer;
     }
@@ -318,52 +326,56 @@ $aa-builder-text-color: $gray-dark-1;
   .aa-panel-body-endcall {
     @extend .aa-panel-body;
 
-    @include vr-spacing(pv, .25);
+    @include vr-spacing(pv, 0.25);
 
     .text-info {
-      @include vr-spacing(pl, .5);
-      @include vr-spacing(pt, .25);
+      @include vr-spacing(pl, 0.5);
+      @include vr-spacing(pt, 0.25);
     }
   }
 
   .aa-panel-round {
     @extend .panel-body;
+
     @include vr-spacing(m, 0);
     @include vr-spacing(p, 0);
+
     position: relative;
     text-align: center;
     vertical-align: middle;
 
-    & .popover {
+    .popover {
       background-color: transparent;
       border: 0;
       min-width: vr-adjust(120);
-      @include vr-spacing(m, 0);
-      @include vr-spacing(p,0);
       color: $anchor-font-color-hover;
+
+      @include vr-spacing(m, 0);
+      @include vr-spacing(p, 0);
 
       &.right > .arrow {
         background-color: transparent;
         border-right-color: transparent;
 
-        &:after {
+        &::after {
           border-color: transparent;
           border-right-color: transparent;
           border-width: 0;
         }
       }
 
-      & .popover-content {
+      .popover-content {
         font-size: $h6-font-size;
-        @include vr-spacing(p, .5);
+
+        @include vr-spacing(p, 0.5);
       }
     }
-
   }
 }
 
-.aa-transition.ng-enter, .aa-transition.ng-leave {
-  transition: .5s ease all;
+.aa-transition.ng-enter,
+.aa-transition.ng-leave {
+  transition: 0.5s ease all;
 }
 
 .aa-transition.ng-enter,
@@ -378,7 +390,6 @@ $aa-builder-text-color: $gray-dark-1;
 
 .aa-add-step-icon {
   @extend .icon;
-
   @extend .icon-plus-circle;
 
   font-size: 2rem;
@@ -396,7 +407,6 @@ $aa-builder-text-color: $gray-dark-1;
 
   .aa-action-delete-icon {
     @extend .icon;
-
     @extend .icon-close;
 
     color: $gray-light-2;
@@ -425,6 +435,7 @@ $aa-builder-text-color: $gray-dark-1;
 
   .aa-lane {
     @extend .aa-flex-container;
+
     min-width: vr-adjust(390);
 
     .aa-panel-lane {
@@ -485,7 +496,6 @@ $aa-builder-text-color: $gray-dark-1;
 
 .aa-endcall-icon {
   @extend .icon;
-
   @extend .icon-end-call;
 
   font-size: 2.25rem;
@@ -494,6 +504,7 @@ $aa-builder-text-color: $gray-dark-1;
 
 .loading-container {
   @include aa-builder-height($h2-font-size);
+
   display: flex;
   justify-content: center;
   align-items: center;

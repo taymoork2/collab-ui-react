@@ -5,42 +5,40 @@
     .controller('PlacesCtrl',
 
       /* @ngInject */
-      function ($scope, $state, $templateCache, $translate, CsdmDataModelService, CsdmHuronPlaceService, PlaceFilter, Authinfo, WizardFactory, RemPlaceModal) {
+      function ($rootScope, $scope, $state, $templateCache, $translate, CsdmDataModelService, PlaceFilter, Authinfo, WizardFactory, RemPlaceModal) {
         var vm = this;
 
         vm.data = [];
-        vm.csdmLoaded = false;
-        vm.huronLoaded = false;
+        vm.placesLoaded = false;
         vm.placeFilter = PlaceFilter;
-        vm.placeFilter.setCurrentSearch('');
-        vm.placeFilter.setCurrentFilter('');
-        var csdmPlacesList;
-        var huronPlacesList;
+        vm.placeFilter.resetFilters();
+        var filteredPlaces;
+        var placesList;
 
         function init() {
-          loadLists();
+          loadList();
         }
 
-        function loadLists() {
+        function loadList() {
           CsdmDataModelService.getPlacesMap().then(function (list) {
-            csdmPlacesList = list;
-            vm.csdmLoaded = true;
-          });
-          CsdmHuronPlaceService.getPlacesList().then(function (list) {
-            huronPlacesList = list;
-            vm.huronLoaded = true;
+            placesList = list;
+            vm.placesLoaded = true;
+            vm.updateListAndFilter();
           });
         }
 
         init();
 
+        $rootScope.$on('PLACE_LIST_UPDATED', function () {
+          vm.updateListAndFilter();
+        });
+
         vm.existsDevices = function () {
-          return (vm.shouldShowList()
-          && (Object.keys(csdmPlacesList).length > 0 || Object.keys(huronPlacesList).length > 0));
+          return (vm.shouldShowList() && (Object.keys(placesList).length > 0));
         };
 
         vm.shouldShowList = function () {
-          return vm.csdmLoaded && vm.huronLoaded;
+          return vm.placesLoaded;
         };
 
         vm.isEntitledToRoomSystem = function () {
@@ -51,13 +49,23 @@
           return Authinfo.isSquaredUC();
         };
 
+        vm.setCurrentSearch = function (searchStr) {
+          vm.placeFilter.setCurrentSearch(searchStr);
+          vm.updateListAndFilter();
+        };
+
+        vm.setCurrentFilter = function (filterValue) {
+          vm.placeFilter.setCurrentFilter(filterValue);
+          vm.updateListAndFilter();
+        };
+
+        vm.placeList = function () {
+          return filteredPlaces;
+        };
+
         vm.updateListAndFilter = function () {
-          var filtered = _.chain({})
-            .extend(csdmPlacesList)
-            .extend(huronPlacesList)
-            .values()
-            .value();
-          return PlaceFilter.getFilteredList(filtered);
+          filteredPlaces = PlaceFilter.getFilteredList(_.values(placesList));
+          return filteredPlaces;
         };
 
         vm.numDevices = function (place) {
@@ -72,7 +80,7 @@
         };
 
         vm.gridOptions = {
-          data: 'sc.updateListAndFilter()',
+          data: 'sc.placeList()',
           rowHeight: 45,
           enableRowHeaderSelection: false,
           enableColumnMenus: false,

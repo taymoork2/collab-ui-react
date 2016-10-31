@@ -4,12 +4,14 @@
 (function () {
   'use strict';
 
+  var Masonry = require('masonry-layout');
+
   angular
     .module('Huron')
     .controller('HuronFeatureDeleteCtrl', HuronFeatureDeleteCtrl);
 
   /* @ngInject */
-  function HuronFeatureDeleteCtrl($rootScope, $scope, $stateParams, $timeout, $translate, AAModelService, HuntGroupService, CallParkService, AutoAttendantCeService, AutoAttendantCeInfoModelService, Notification, Log, AACalendarService) {
+  function HuronFeatureDeleteCtrl($rootScope, $scope, $stateParams, $timeout, $translate, AAModelService, HuntGroupService, CallParkService, PagingGroupService, AutoAttendantCeService, AutoAttendantCeInfoModelService, Notification, Log, AACalendarService) {
     var vm = this;
     vm.deleteBtnDisabled = false;
     vm.deleteFeature = deleteFeature;
@@ -22,6 +24,8 @@
       vm.featureType = $translate.instant('huronHuntGroup.title');
     } else if (vm.featureFilter === 'CP') {
       vm.featureType = $translate.instant('callPark.title');
+    } else if (vm.featureFilter === 'PG') {
+      vm.featureType = $translate.instant('pagingGroup.title');
     } else {
       vm.featureType = 'Feature';
     }
@@ -33,13 +37,13 @@
 
     function reInstantiateMasonry() {
       $timeout(function () {
-        $('.cs-card-layout').masonry('destroy');
-        $('.cs-card-layout').masonry({
+        var $cardlayout = new Masonry('.cs-card-layout', {
           itemSelector: '.cs-card',
           columnWidth: '.cs-card',
-          isResizable: true,
-          percentPosition: true
+          resize: true,
+          percentPosition: true,
         });
+        $cardlayout.layout();
       }, 0);
     }
 
@@ -74,14 +78,14 @@
               .then(function () {
                 aaModel.ceInfos.splice(delPosition, 1);
                 AutoAttendantCeInfoModelService.deleteCeInfo(aaModel.aaRecords, ceInfoToDelete);
-                if (angular.isDefined(scheduleId)) {
+                if (!_.isUndefined(scheduleId)) {
                   AACalendarService.deleteCalendar(scheduleId);
                 }
                 deleteSuccess();
               },
-                function (response) {
-                  deleteError(response);
-                });
+              function (response) {
+                deleteError(response);
+              });
           });
       } else if (vm.featureFilter === 'HG') {
         HuntGroupService.deleteHuntGroup(vm.featureId).then(
@@ -94,6 +98,15 @@
         );
       } else if (vm.featureFilter === 'CP') {
         CallParkService.deleteCallPark(vm.featureId).then(
+          function () {
+            deleteSuccess();
+          },
+          function (response) {
+            deleteError(response);
+          }
+        );
+      } else if (vm.featureFilter === 'PG') {
+        PagingGroupService.deletePagingGroup(vm.featureId).then(
           function () {
             deleteSuccess();
           },

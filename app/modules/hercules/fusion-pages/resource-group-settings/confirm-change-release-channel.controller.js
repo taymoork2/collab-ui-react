@@ -17,8 +17,9 @@
         .then(function () {
           Notification.success('hercules.resourceGroupSettings.groupReleaseChannelSaved');
           $modalInstance.close();
-        }, function () {
-          Notification.error('hercules.genericFailure');
+        })
+        .catch(function (error) {
+          Notification.errorWithTrackingId(error, 'hercules.genericFailure');
         });
     }
   }

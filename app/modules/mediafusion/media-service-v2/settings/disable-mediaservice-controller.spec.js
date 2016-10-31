@@ -60,7 +60,9 @@ describe('Controller: DisableMediaServiceController', function () {
       'status': 204
     };
     spyOn(MediaClusterServiceV2, 'deleteClusterWithConnector').and.returnValue($q.when(respnse));
+    spyOn(MediaServiceActivationV2, 'setServiceEnabled');
     spyOn(MediaServiceActivationV2, 'setisMediaServiceEnabled');
+    spyOn(MediaServiceActivationV2, 'setServiceAcknowledged');
     spyOn(MediaServiceActivationV2, 'disableOrpheusForMediaFusion');
     spyOn(Notification, 'success');
     spyOn(modalInstance, 'close');
@@ -69,9 +71,24 @@ describe('Controller: DisableMediaServiceController', function () {
     httpMock.verifyNoOutstandingExpectation();
     expect(MediaClusterServiceV2.deleteClusterWithConnector).toHaveBeenCalled();
     expect(MediaClusterServiceV2.deleteClusterWithConnector.calls.count()).toEqual(2);
+    expect(MediaServiceActivationV2.setServiceEnabled).toHaveBeenCalled();
     expect(MediaServiceActivationV2.setisMediaServiceEnabled).toHaveBeenCalled();
+    expect(MediaServiceActivationV2.setServiceAcknowledged).toHaveBeenCalled();
     expect(MediaServiceActivationV2.disableOrpheusForMediaFusion).toHaveBeenCalled();
     expect(Notification.success).toHaveBeenCalled();
+    expect(modalInstance.close).toHaveBeenCalled();
+  });
+  it('should notify error when deactivate call fails', function () {
+    spyOn(MediaClusterServiceV2, 'deleteClusterWithConnector').and.returnValue($q.when({
+      'status': 500
+    }));
+    spyOn(Notification, 'error');
+    spyOn(modalInstance, 'close');
+    controller.clusterIds = ['cluster1', 'cluster2'];
+    controller.deactivate();
+    httpMock.verifyNoOutstandingExpectation();
+    expect(MediaClusterServiceV2.deleteClusterWithConnector).toHaveBeenCalled();
+    expect(Notification.error).toHaveBeenCalled();
     expect(modalInstance.close).toHaveBeenCalled();
   });
 });

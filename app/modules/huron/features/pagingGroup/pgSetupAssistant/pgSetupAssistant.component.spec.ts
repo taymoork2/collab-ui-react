@@ -1,7 +1,7 @@
-import { INumber } from './pgNumber/pgNumber.service';
-import { IPagingGroup } from '../pagingGroup';
-
 describe('Component: pgSetupAssistant', () => {
+
+  let saveFailureResp = getJSONFixture('huron/json/features/pagingGroup/errorResponse.json');
+  let pg = getJSONFixture('huron/json/features/pagingGroup/pg.json');
 
   beforeEach(function () {
     this.initModules('huron.paging-group.setup-assistant');
@@ -10,8 +10,21 @@ describe('Component: pgSetupAssistant', () => {
       '$modal',
       '$state',
       '$translate',
-      'PagingGroupService'
+      '$q',
+      'PagingGroupService',
+      'HuronConfig',
+      'Authinfo',
+      'Notification'
     );
+    spyOn(this.Authinfo, 'getOrgId').and.returnValue('12345');
+    spyOn(this.$state, 'go');
+    spyOn(this.$modal, 'open');
+    spyOn(this.Notification, 'success');
+    spyOn(this.Notification, 'error');
+    spyOn(this.Notification, 'errorResponse');
+
+    this.savePagingGroupDefer = this.$q.defer();
+    spyOn(this.PagingGroupService, 'savePagingGroup').and.returnValue(this.savePagingGroupDefer.promise);
   });
 
   function initComponent() {
@@ -64,48 +77,48 @@ describe('Component: pgSetupAssistant', () => {
 
     it('index = 0, name not empty, isValid undefined should return false', function () {
       this.controller.index = 0;
-      this.controller.name = 'PG 1';
+      this.controller.name = pg.name;
       this.controller.isNameValid = undefined;
       expect(this.controller.nextButton()).toBeFalsy();
     });
 
     it('index = 0, name not empty, isValid false should return false', function () {
       this.controller.index = 0;
-      this.controller.name = 'PG 1';
+      this.controller.name = pg.name;
       this.controller.isNameValid = false;
       expect(this.controller.nextButton()).toBeFalsy();
     });
 
     it('index = 0, name not empty, isValid true should return true', function () {
       this.controller.index = 0;
-      this.controller.name = 'PG 1';
+      this.controller.name = pg.name;
       this.controller.isNameValid = true;
       expect(this.controller.nextButton()).toBeTruthy();
     });
 
     it('index = 1, number undefined should return false', function () {
       this.controller.index = 1;
-      this.controller.number = undefined;
+      this.controller.number = '';
       expect(this.controller.nextButton()).toBeFalsy();
     });
 
     it('index = 1, number defined, isValid undefined should return false', function () {
       this.controller.index = 1;
-      this.controller.number = {};
+      this.controller.number = pg.extension;
       this.controller.isNumberValid = undefined;
       expect(this.controller.nextButton()).toBeFalsy();
     });
 
     it('index = 1, number defined, isValid false should return false', function () {
       this.controller.index = 1;
-      this.controller.number = {};
+      this.controller.number = pg.extension;
       this.controller.isNumberValid = false;
       expect(this.controller.nextButton()).toBeFalsy();
     });
 
     it('index = 1, number defined, isValid true should return true', function () {
       this.controller.index = 1;
-      this.controller.number = {};
+      this.controller.number = pg.extension;
       this.controller.isNumberValid = true;
       expect(this.controller.nextButton()).toBeTruthy();
     });
@@ -148,7 +161,7 @@ describe('Component: pgSetupAssistant', () => {
       this.$timeout.flush();
       this.$timeout.verifyNoPendingTasks();
       expect(this.controller.animation).toEqual('slide-left');
-      expect(this.controller.index).toEqual(2);
+      expect(this.controller.index).toEqual(1);
       expect(this.controller.savePagingGroup).toHaveBeenCalled();
     });
   });
@@ -181,6 +194,20 @@ describe('Component: pgSetupAssistant', () => {
       spyOn(this.controller, 'nextPage');
       spyOn(this.controller, 'nextButton').and.returnValue(true);
       this.controller.evalKeyPress(39);
+      expect(this.controller.nextPage).toHaveBeenCalled();
+    });
+
+    it('enter key and next button invalid should not call nextPage', function () {
+      spyOn(this.controller, 'nextPage');
+      spyOn(this.controller, 'nextButton').and.returnValue(false);
+      this.controller.evalKeyPress(13);
+      expect(this.controller.nextPage).not.toHaveBeenCalled();
+    });
+
+    it('enter key and next button valid should call nextPage', function () {
+      spyOn(this.controller, 'nextPage');
+      spyOn(this.controller, 'nextButton').and.returnValue(true);
+      this.controller.evalKeyPress(13);
       expect(this.controller.nextPage).toHaveBeenCalled();
     });
 
@@ -222,13 +249,8 @@ describe('Component: pgSetupAssistant', () => {
   describe('onUpdateNumber', () => {
     beforeEach(initComponent);
 
-    it('should change name and isNameValid', function () {
-      let number: INumber = <INumber> {
-        number: '5000',
-        type: 'internal',
-        directoryNumber: undefined,
-        uuid: '1',
-      };
+    it('should change number and isNumberValid', function () {
+      let number: string =  pg.extension;
       this.controller.onUpdateNumber(number, true);
       expect(this.controller.number).toEqual(number);
       expect(this.controller.isNumberValid).toBeTruthy();
@@ -238,26 +260,34 @@ describe('Component: pgSetupAssistant', () => {
   describe('savePagingGroup', () => {
     beforeEach(initComponent);
 
-    it('should change name and isNameValid', function () {
-      spyOn(this.PagingGroupService, 'savePagingGroup');
-      spyOn(this.$state, 'go');
-      let name: string = 'name';
-      let number: INumber = <INumber> {
-        number: '5000',
-        type: 'internal',
-        directoryNumber: undefined,
-        uuid: '1',
-      };
-      let pg: IPagingGroup = <IPagingGroup>{
-        name: name,
-        number: number,
-      };
-      this.controller.name = name;
-      this.controller.number = number;
+    it('should save with success', function () {
+      this.savePagingGroupDefer.resolve(pg);
+      this.controller.name = pg.name;
+      this.controller.number = pg.extension;
       this.controller.savePagingGroup();
-
-      expect(this.PagingGroupService.savePagingGroup).toHaveBeenCalledWith(pg);
+      this.$timeout.flush();
+      expect(this.Notification.success).toHaveBeenCalledWith('pagingGroup.successSave', { pagingGroupName: pg.name });
       expect(this.$state.go).toHaveBeenCalledWith('huronfeatures');
+    });
+
+    it('should save with failure', function () {
+      this.savePagingGroupDefer.reject(saveFailureResp);
+      this.controller.name = pg.name;
+      this.controller.number = pg.extension;
+      this.controller.savePagingGroup();
+      this.$timeout.flush();
+      expect(this.Notification.error).toHaveBeenCalledWith('pagingGroup.errorSave', { message: 'A group with this name already exists.' });
+      expect(this.$state.go).not.toHaveBeenCalledWith('huronfeatures');
+    });
+
+    it('should save with failure no error', function () {
+      this.savePagingGroupDefer.reject();
+      this.controller.name = pg.name;
+      this.controller.number = pg.extension;
+      this.controller.savePagingGroup();
+      this.$timeout.flush();
+      expect(this.Notification.error).toHaveBeenCalledWith('pagingGroup.errorSave', { message: '' });
+      expect(this.$state.go).not.toHaveBeenCalledWith('huronfeatures');
     });
   });
 
@@ -265,7 +295,6 @@ describe('Component: pgSetupAssistant', () => {
     beforeEach(initComponent);
 
     it('should call the modal', function () {
-      spyOn(this.$modal, 'open');
       this.controller.cancelModal();
       expect(this.$modal.open).toHaveBeenCalledWith({
         templateUrl: 'modules/huron/features/pagingGroup/pgSetupAssistant/pgCancelModal.tpl.html',

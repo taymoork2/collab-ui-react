@@ -5,6 +5,7 @@
     .module('uc.autoattendant')
     .controller('AARouteToQueueCtrl', AARouteToQueueCtrl);
 
+
   /* @ngInject */
   function AARouteToQueueCtrl($scope, $translate, $modal, AAUiModelService, AutoAttendantCeMenuModelService, AACommonService) {
 
@@ -25,19 +26,62 @@
     };
     vm.menuKeyEntry = {};
 
-    var rtQueue = 'routeToQueue';
-    var fromRouteCall = false;
+
     vm.openQueueTreatmentModal = openQueueTreatmentModal;
+
 
     vm.populateUiModel = populateUiModel;
     vm.saveUiModel = saveUiModel;
+
+
+    var rtQueue = 'routeToQueue';
+    var fromRouteCall = false;
+
+
     /////////////////////
+
+
     function openQueueTreatmentModal() {
-      $modal.open({
+      // deep copy used to roll back from the modal changes
+      var master = angular.copy(fromRouteCall ? vm.menuEntry.actions[0] : vm.menuKeyEntry.actions[0]);
+      openQueueSettings().result.then(function () {
+        // keep changes as modal was resolved with close
+        if (fromRouteCall) {
+          vm.menuEntry.actions[0].description = vm.menuEntry.actions[0].queueSettings;
+        } else {
+          vm.menuKeyEntry.actions[0].description = vm.menuKeyEntry.actions[0].queueSettings;
+        }
+      }, function () {
+        // discard changes as modal was dismissed
+        if (fromRouteCall) {
+          vm.menuEntry.actions[0] = master;
+        } else {
+          vm.menuKeyEntry.actions[0] = master;
+        }
+      });
+    }
+
+    function openQueueSettings() {
+      return $modal.open({
         templateUrl: 'modules/huron/features/autoAttendant/routeToQueue/aaNewTreatmentModal.tpl.html',
         controller: 'AANewTreatmentModalCtrl',
         controllerAs: 'aaNewTreatmentModalCtrl',
-        type: 'full'
+        type: 'full',
+        resolve: {
+          aa_schedule: function () {
+            return $scope.schedule;
+          },
+          aa_menu_id: function () {
+            return $scope.menuId;
+          },
+          aa_index: function () {
+            return $scope.index;
+          },
+          aa_key_index: function () {
+            return $scope.keyIndex;
+          },
+        },
+        modalClass: 'aa-queue-settings-modal'
       });
     }
 
@@ -68,7 +112,6 @@
     }
 
     function activate() {
-
       if ($scope.fromRouteCall) {
         var ui = AAUiModelService.getUiModel();
         vm.uiMenu = ui[$scope.schedule];
@@ -94,8 +137,28 @@
           var action = AutoAttendantCeMenuModelService.newCeActionEntry(rtQueue, '');
           vm.menuKeyEntry.addAction(action);
         }
-
+        if (_.isUndefined(vm.menuKeyEntry.actions[0].queueSettings)) {
+          vm.menuKeyEntry.actions[0].queueSettings = {};
+        }
+        if (_.isUndefined(vm.menuKeyEntry.actions[0].queueSettings.musicOnHold)) {
+          vm.menuKeyEntry.actions[0].queueSettings.musicOnHold = AutoAttendantCeMenuModelService.newCeMenuEntry();
+          var mohAction = AutoAttendantCeMenuModelService.newCeActionEntry('play', '');
+          vm.menuKeyEntry.actions[0].queueSettings.musicOnHold.addAction(mohAction);
+        }
+        if (_.isUndefined(vm.menuKeyEntry.actions[0].queueSettings.initialAnnouncement)) {
+          vm.menuKeyEntry.actions[0].queueSettings.initialAnnouncement = AutoAttendantCeMenuModelService.newCeMenuEntry();
+          var iaAction = AutoAttendantCeMenuModelService.newCeActionEntry('say', '');
+          vm.menuKeyEntry.actions[0].queueSettings.initialAnnouncement.addAction(iaAction);
+        }
+        if (_.isUndefined(vm.menuKeyEntry.actions[0].queueSettings.fallBack)) {
+          vm.menuKeyEntry.actions[0].queueSettings.fallBack = AutoAttendantCeMenuModelService.newCeMenuEntry();
+          var fbMaxTime = AutoAttendantCeMenuModelService.newCeActionEntry('time', '');
+          vm.menuKeyEntry.actions[0].queueSettings.fallBack.addAction(fbMaxTime);
+          var fbAction = AutoAttendantCeMenuModelService.newCeActionEntry('option', '');
+          vm.menuKeyEntry.actions[0].queueSettings.fallBack.addAction(fbAction);
+        }
       }
+
       populateUiModel();
     }
     activate();

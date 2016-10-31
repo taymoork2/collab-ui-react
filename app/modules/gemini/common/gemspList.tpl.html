@@ -1,0 +1,28 @@
+<div class="gemini-page">
+  <cs-page-header title="{{::'gemini.cca.title' | translate}}">service</cs-page-header>
+  <div class="cs-card-container multiple-layouts gemServices">
+
+    <div ng-if="gsls.loading" class="grid-refresh">
+      <span class="spinner-example-large">
+        <i class="icon icon-spinner icon-3x"></i>
+      </span>
+    </div>
+    <cs-card-layout class="three-fourths" ng-if="!gsls.loading">
+      <cs-card class="medium menu-card overview-card" ng-repeat="val in gsls.data">
+        <article>
+          <header>
+            <div class="header-with-left-icon">
+              <span  dropdown class="card-icon h3">
+                {{val.companyName| limitTo:1 | uppercase}}
+              </span>
+              <h4 class="title ellipsis text-left" title="{{val.companyName}}">{{val.companyName}}</h4>
+            </div>
+          </header>
+          <footer>
+            <h6 class="callback-groups text-left"><a href="javascript:void(0)">Callback Groups</a></h6>
+          </footer>
+        </article>
+      </cs-card>
+     </cs-card-layout>
+  </div>
+</div>

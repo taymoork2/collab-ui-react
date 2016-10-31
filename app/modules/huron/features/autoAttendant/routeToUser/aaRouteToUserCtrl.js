@@ -6,7 +6,7 @@
     .controller('AARouteToUserCtrl', AARouteToUserCtrl);
 
   /* @ngInject */
-  function AARouteToUserCtrl($scope, $translate, AAUiModelService, AutoAttendantCeMenuModelService, $q, Authinfo, Userservice, UserListService, UserServiceVoice, AACommonService, LineService) {
+  function AARouteToUserCtrl($scope, $translate, AAUiModelService, AutoAttendantCeMenuModelService, $q, Authinfo, Userservice, UserListService, UserServiceVoice, AACommonService, LineResource) {
 
     var vm = this;
 
@@ -72,13 +72,13 @@
     // format name with extension
     function formatName(user, extension) {
       var name;
-      if (angular.isDefined(user.displayName)) {
+      if (!_.isUndefined(user.displayName)) {
         name = user.displayName;
       } else {
         name = user.userName;
       }
 
-      if (angular.isDefined(extension) && extension.length > 0) {
+      if (!_.isUndefined(extension) && extension.length > 0) {
         return name + ' (' + extension + ')';
       } else {
         return name;
@@ -127,7 +127,7 @@
       }).$promise.then(
         function (response) {
           // success
-          if (angular.isDefined(response.primaryDirectoryNumber) && response.primaryDirectoryNumber != null) {
+          if (!_.isUndefined(response.primaryDirectoryNumber) && response.primaryDirectoryNumber != null) {
             return response.primaryDirectoryNumber.pattern;
           } else {
             // the user actually has no extension - represented as null in the json, which works here as well
@@ -143,7 +143,7 @@
 
     // get extension's voicemail profile
     function getVoicemailProfile(pattern) {
-      return LineService.query({
+      return LineResource.query({
         customerId: Authinfo.getOrgId(),
         pattern: pattern
       }).$promise.then(
@@ -167,7 +167,7 @@
       var abortSearchPromise = vm.abortSearchPromise;
 
       // if we didn't get a start-at, we are starting over
-      if (!angular.isDefined(startat)) {
+      if (_.isUndefined(startat)) {
         startat = vm.sort.startAt;
         vm.users = [];
         if (vm.abortSearchPromise) {
@@ -249,7 +249,7 @@
 
     function activate() {
 
-      var routeToUserOrVM = angular.isDefined($scope.voicemail) ? routeToVoiceMail : routeToUser;
+      var routeToUserOrVM = !_.isUndefined($scope.voicemail) ? routeToVoiceMail : routeToUser;
 
       if ($scope.fromRouteCall) {
         var ui = AAUiModelService.getUiModel();

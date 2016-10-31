@@ -8,27 +8,34 @@
 
       var currentSearch, currentFilter, arr = [];
 
-      var filters = [{
-        count: 0,
-        name: $translate.instant('common.all'),
-        filterValue: 'all'
-      }, {
-        count: 0,
-        name: $translate.instant('CsdmStatus.OnlineWithIssues'),
-        filterValue: 'issues'
-      }, {
-        count: 0,
-        name: $translate.instant('CsdmStatus.Offline'),
-        filterValue: 'offline'
-      }, {
-        count: 0,
-        name: $translate.instant('CsdmStatus.RequiresActivation'),
-        filterValue: 'codes'
-      }, {
-        count: 0,
-        name: $translate.instant('CsdmStatus.Online'),
-        filterValue: 'online'
-      }];
+      var filters = [];
+      var resetFilters = function () {
+        // use to reset defaults to wipe out any lingering settings and keep translations fresh
+        filters = [{
+          count: 0,
+          name: $translate.instant('common.all'),
+          filterValue: 'all'
+        }, {
+          count: 0,
+          name: $translate.instant('CsdmStatus.OnlineWithIssues'),
+          filterValue: 'issues'
+        }, {
+          count: 0,
+          name: $translate.instant('CsdmStatus.Offline'),
+          filterValue: 'offline'
+        }, {
+          count: 0,
+          name: $translate.instant('CsdmStatus.RequiresActivation'),
+          filterValue: 'codes'
+        }, {
+          count: 0,
+          name: $translate.instant('CsdmStatus.Online'),
+          filterValue: 'online'
+        }];
+        setCurrentSearch('');
+        setCurrentFilter('');
+      };
+      resetFilters();
 
       var getFilters = function () {
         return filters;
@@ -69,9 +76,8 @@
       };
 
       function isActivationCode(item) {
-        return item.needsActivation;
+        return item.needsActivation && !item.isUsed;
       }
-
       function hasIssues(item) {
         return item.hasIssues && item.isOnline && !item.isUnused;
       }
@@ -145,6 +151,9 @@
       }
 
       function matchesFilter(item) {
+        if (item.isCode && item.isUsed) {
+          return false;
+        }
         switch (currentFilter) {
           case 'all':
             return true;
@@ -164,6 +173,7 @@
       return {
         getFilters: getFilters,
         getFilteredList: getFilteredList,
+        resetFilters: resetFilters,
         setCurrentFilter: setCurrentFilter,
         setCurrentSearch: setCurrentSearch,
       };

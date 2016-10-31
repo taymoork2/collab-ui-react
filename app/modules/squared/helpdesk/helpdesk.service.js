@@ -10,6 +10,7 @@
       usersWithRole: usersWithRole,
       searchUsers: searchUsers,
       searchOrgs: searchOrgs,
+      searchOrders: searchOrders,
       getUser: getUser,
       getOrg: getOrg,
       isEmailBlocked: isEmailBlocked,
@@ -33,6 +34,10 @@
       getInviteResendUrl: getInviteResendUrl,
       getInviteResendPayload: getInviteResendPayload,
       invokeInviteEmail: invokeInviteEmail,
+      searchOrder: searchOrder,
+      getAccount: getAccount,
+      getOrder: getOrder,
+      getEmailStatus: getEmailStatus
     };
 
     if (!orgCache) {
@@ -90,11 +95,11 @@
     }
 
     function extractItems(res) {
-      return res.data.items;
+      return _.get(res, 'data.items');
     }
 
     function extractData(res) {
-      return res.data;
+      return _.get(res, 'data');
     }
 
     function extractDevice(res) {
@@ -102,14 +107,14 @@
     }
 
     function extractOrg(res) {
-      var org = res.data;
+      var org = extractData(res);
       orgCache.put(org.id, org);
       orgDisplayNameCache.put(org.id, org.displayName);
       return org;
     }
 
     function extractUsers(res) {
-      var users = res.data.items;
+      var users = extractItems(res);
       _.each(users, function (user) {
         user.displayName = getCorrectedDisplayName(user);
         if (user.organization) {
@@ -182,6 +187,15 @@
         .then(extractItems);
     }
 
+    function searchOrders(searchString) {
+      // TODO - if (useMock()) {
+      //  return deferredResolve(HelpdeskMockData.orders);
+      //}
+
+      return cancelableHttpGET(urlBase + 'commerce/orders/search?webOrderId=' + encodeURIComponent(searchString))
+        .then(extractData);
+    }
+
     function getUser(orgId, userId) {
       if (useMock()) {
         return deferredResolve(extractAndMassageUser(HelpdeskMockData.user));
@@ -217,14 +231,17 @@
         return deferredResolve(cachedDisplayName);
       }
       // Use the search function as it returns a lot less data
-      return searchOrgs(orgId, 1).then(function (result) {
-        if (result.length > 0) {
-          var org = result[0];
-          orgDisplayNameCache.put(org.id, org.displayName);
-          return org.displayName;
-        }
-        return '';
-      });
+      return searchOrgs(orgId, 1)
+        .then(function (result) {
+          if (_.isArray(result) && _.size(result) > 0) {
+            var org = result[0];
+            if (org.id && org.displayName) {
+              orgDisplayNameCache.put(org.id, org.displayName);
+              return org.displayName;
+            }
+          }
+          return $q.reject(result);
+        });
     }
 
     function getHybridServices(orgId) {
@@ -274,10 +291,10 @@
     function filterDevices(searchString, devices, limit) {
       searchString = searchString.toLowerCase();
       var filteredDevices = [];
-      var macSearchString = searchString.replace(/[:/.-]/g, '');
+      var macSearchString = _.replace(searchString, /[:/.-]/g, '');
       _.each(devices, function (device) {
         if ((device.displayName || '').toLowerCase().indexOf(searchString) != -1 || (device.mac || '').toLowerCase().replace(/[:]/g, '').indexOf(
-            macSearchString) != -1 || (device.serial || '').toLowerCase().indexOf(searchString) != -1 || (device.cisUuid || '').toLowerCase().indexOf(searchString) != -1) {
+          macSearchString) != -1 || (device.serial || '').toLowerCase().indexOf(searchString) != -1 || (device.cisUuid || '').toLowerCase().indexOf(searchString) != -1) {
           if (_.size(filteredDevices) < limit) {
             device.id = device.url.split('/').pop();
             filteredDevices.push(device);
@@ -461,9 +478,33 @@
       return HelpdeskHttpRequestCanceller.empty();
     }
 
+    function searchOrder(orderId) {
+      return $http
+        .get(urlBase + 'commerce/orders/search?webOrderId=' + orderId)
+        .then(extractData);
+    }
+
+    function getAccount(accountId) {
+      return $http
+        .get(urlBase + 'accounts/' + accountId)
+        .then(extractData);
+    }
+
+    function getOrder(orderId) {
+      return $http
+        .get(urlBase + 'orders/' + orderId)
+        .then(extractData);
+    }
+
+    function getEmailStatus(email) {
+      return $http
+        .get(urlBase + "email?email=" + email)
+        .then(extractData);
+    }
+
     return service;
   }
 
   angular.module('Squared')
     .service('HelpdeskService', HelpdeskService);
-}());
+})();

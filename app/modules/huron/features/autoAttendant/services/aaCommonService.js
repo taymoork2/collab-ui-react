@@ -13,8 +13,10 @@
     var aaDialByExtensionStatus = false;
     var aaCENumberStatus = false;
     var aaMediaUploadStatus = false;
+    var aaQueueSettingsStatus = false;
     var routeQueueToggle = false;
     var mediaUploadToggle = false;
+    var uniqueId = 0;
 
     var invalidList = {};
     var service = {
@@ -25,13 +27,15 @@
       setDialByExtensionStatus: setDialByExtensionStatus,
       setCENumberStatus: setCENumberStatus,
       setMediaUploadStatus: setMediaUploadStatus,
+      setQueueSettingsStatus: setQueueSettingsStatus,
+      setMediaUploadToggle: setMediaUploadToggle,
       setRouteQueueToggle: setRouteQueueToggle,
       isRouteQueueToggle: isRouteQueueToggle,
-      setMediaUploadToggle: setMediaUploadToggle,
       isMediaUploadToggle: isMediaUploadToggle,
       isValid: isValid,
       setIsValid: setIsValid,
       getInvalid: getInvalid,
+      getUniqueId: getUniqueId,
       makeKey: makeKey,
       resetFormStatus: resetFormStatus,
       saveUiModel: saveUiModel,
@@ -43,7 +47,7 @@
     /////////////////////
 
     function isFormDirty() {
-      return aaMediaUploadStatus || aaSayMessageForm || aaPhoneMenuOptions || aaActionStatus || aaDialByExtensionStatus || aaCENumberStatus;
+      return aaQueueSettingsStatus || aaMediaUploadStatus || aaSayMessageForm || aaPhoneMenuOptions || aaActionStatus || aaDialByExtensionStatus || aaCENumberStatus;
     }
 
     function isValid() {
@@ -61,6 +65,10 @@
       return schedule + '-' + tag;
     }
 
+    function getUniqueId() {
+      return ++uniqueId;
+    }
+
     function setIsValid(element, validity) {
       if (!validity) {
         invalidList[element] = validity;
@@ -68,20 +76,19 @@
         delete invalidList[element];
       }
     }
-
+    function setMediaUploadStatus(status) {
+      aaMediaUploadStatus = status;
+    }
     function resetFormStatus() {
       aaSayMessageForm = false;
       aaPhoneMenuOptions = false;
       aaActionStatus = false;
       aaDialByExtensionStatus = false;
       aaMediaUploadStatus = false;
+      aaQueueSettingsStatus = false;
       aaCENumberStatus = false;
       routeQueueToggle = false;
       invalidList = {};
-    }
-
-    function setMediaUploadStatus(status) {
-      aaMediaUploadStatus = status;
     }
 
     function setSayMessageStatus(status) {
@@ -108,6 +115,11 @@
       routeQueueToggle = status;
     }
 
+
+    function setQueueSettingsStatus(status) {
+      aaQueueSettingsStatus = status;
+    }
+
     function setMediaUploadToggle(status) {
       mediaUploadToggle = status;
     }
@@ -131,7 +143,7 @@
       var closedHours = AutoAttendantCeMenuModelService.getCombinedMenu(aaRecord, 'closedHours');
       var holidays = AutoAttendantCeMenuModelService.getCombinedMenu(aaRecord, 'holidays');
       if (ui.isOpenHours) {
-        if (angular.isUndefined(openHours)) {
+        if (_.isUndefined(openHours)) {
           openHours = AutoAttendantCeMenuModelService.newCeMenu();
           openHours.setType('MENU_WELCOME');
         }
@@ -139,7 +151,7 @@
       }
 
       if (ui.isClosedHours || (ui.holidaysValue === 'closedHours' && ui.isHolidays)) {
-        if (angular.isUndefined(closedHours)) { //New
+        if (_.isUndefined(closedHours)) { //New
           closedHours = AutoAttendantCeMenuModelService.newCeMenu();
           closedHours.setType('MENU_WELCOME');
         }
@@ -149,7 +161,7 @@
       }
 
       if (ui.isHolidays && ui.holidaysValue !== 'closedHours') {
-        if (angular.isUndefined(holidays)) { //New
+        if (_.isUndefined(holidays)) { //New
           holidays = AutoAttendantCeMenuModelService.newCeMenu();
           holidays.setType('MENU_WELCOME');
         }

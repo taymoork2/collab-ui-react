@@ -243,6 +243,7 @@
                   "actions": [{
                     "runActionsOnInput": {
                       "inputType": 2,
+                      "description": "",
                       "repeats": 2,
                       "language": "en_US",
                       "voice": "",
@@ -374,6 +375,7 @@
                         }]
                       },
                       "attempts": 3,
+                       "description":"",
                       "minNumberOfCharacters": 4,
                       "maxNumberOfCharacters": 4,
                       "rawInputActions": [{

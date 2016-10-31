@@ -5,17 +5,51 @@ export interface ISpeedDial {
   index: number;
 }
 
-export class SpeedDialService {
-  /* @ngInject */
-  constructor(private $q: ng.IQService) { }
+interface IDialResource extends ng.resource.IResourceClass<ng.resource.IResource<{speedDials: ISpeedDial[]}>> {
+  update: ng.resource.IResourceMethod<ng.resource.IResource<boolean>>;
+}
 
-  public getSpeedDials(_type: string, _id: string): ng.IPromise<{speedDials: ISpeedDial[]}> {
-    return this.$q.resolve({
-      speedDials: [],
+export class SpeedDialService {
+  private dialService: IDialResource;
+  /* @ngInject */
+  constructor(
+    private Authinfo,
+    private $resource: ng.resource.IResourceService,
+    private HuronConfig) {
+
+    let updateAction: ng.resource.IActionDescriptor = {
+      method: 'PUT',
+    };
+    this.dialService = <IDialResource>this.$resource(this.HuronConfig.getCmiV2Url() + '/customers/:customerId/:type/:userId/features/:bulk/speeddials', {},
+    {
+      update: updateAction,
     });
   }
 
+  public getSpeedDials(_type: string, _id: string): ng.IPromise<{speedDials: ISpeedDial[]}> {
+    return this.dialService.get({
+      type: _type,
+      customerId: this.Authinfo.getOrgId(),
+      userId: _id,
+    }).$promise;
+  }
+
   public updateSpeedDials(_type: string, _id: string, _list: ISpeedDial[]): ng.IPromise<boolean> {
-    return this.$q.resolve(true);
+    let data: { speedDials: ISpeedDial[] } = {
+      speedDials: [],
+    };
+    _.each(_list, function (sd) {
+        data.speedDials.push({
+          index: sd.index,
+          number: sd.number,
+          label: sd.label,
+        });
+      });
+    return this.dialService.update({
+      type: _type,
+      customerId: this.Authinfo.getOrgId(),
+      userId: _id,
+      bulk: 'bulk',
+    }, data).$promise;
   }
 }

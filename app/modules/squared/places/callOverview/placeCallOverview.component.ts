@@ -1,8 +1,9 @@
-import { DialingType } from '../../../huron/dialing/index';
-import { DialingService } from '../../../huron/dialing';
-import { LineService, LineConsumerType, Line, LINE_CHANGE } from '../../../huron/lines/services';
-import { IActionItem } from '../../../core/components/sectionTitle/sectionTitle.component';
-import { IFeature } from '../../../core/components/featureList/featureList.component';
+import { DialingType } from 'modules/huron/dialing/index';
+import { DialingService } from 'modules/huron/dialing';
+import { LineService, LineConsumerType, Line, LINE_CHANGE } from 'modules/huron/lines/services';
+import { IActionItem } from 'modules/core/components/sectionTitle/sectionTitle.component';
+import { IFeature } from 'modules/core/components/featureList/featureList.component';
+import { Notification } from 'modules/core/notifications';
 
 class PlaceCallOverview implements ng.IComponentController {
 
@@ -20,7 +21,7 @@ class PlaceCallOverview implements ng.IComponentController {
     private $translate: ng.translate.ITranslateService,
     private LineService: LineService,
     private DialingService: DialingService,
-    private Notification,
+    private Notification: Notification,
   ) {
     this.currentPlace = this.$stateParams.currentPlace;
     this.$scope.$on(DialingType.INTERNATIONAL, (_e, data) => {
@@ -55,23 +56,28 @@ class PlaceCallOverview implements ng.IComponentController {
   }
 
   private initActions(): void {
-    this.actionList = [{
-      actionKey: 'usersPreview.addNewLinePreview',
-      actionFunction: () => {
-        this.$state.go('place-overview.communication.line-overview');
-      },
-    }];
+    if (this.currentPlace.type === 'huron') {
+      this.actionList = [{
+        actionKey: 'usersPreview.addNewLinePreview',
+        actionFunction: () => {
+          this.$state.go('place-overview.communication.line-overview');
+        },
+      }];
+    }
   }
 
   private initFeatures(): void {
     this.features = [];
-    let service: IFeature = {
-      name: this.$translate.instant('telephonyPreview.speedDials'),
-      state: 'speedDials',
-      detail: undefined,
-      actionAvailable: true,
-    };
-    this.features.push(service);
+    let service: IFeature;
+    if (this.currentPlace.type === 'huron') {
+      service = {
+        name: this.$translate.instant('telephonyPreview.speedDials'),
+        state: 'speedDials',
+        detail: undefined,
+        actionAvailable: true,
+      };
+      this.features.push(service);
+    }
     service = {
       name: this.$translate.instant('telephonyPreview.internationalDialing'),
       state: 'internationalDialing',
@@ -79,13 +85,15 @@ class PlaceCallOverview implements ng.IComponentController {
       actionAvailable: true,
     };
     this.features.push(service);
-    service = {
-      name: this.$translate.instant('telephonyPreview.localDialing'),
-      state: 'local',
-      detail: this.DialingService.getLocalDialing(LineConsumerType.PLACES),
-      actionAvailable: true,
-    };
-    this.features.push(service);
+    if (this.currentPlace.type === 'huron') {
+      service = {
+        name: this.$translate.instant('telephonyPreview.localDialing'),
+        state: 'local',
+        detail: this.DialingService.getLocalDialing(LineConsumerType.PLACES),
+        actionAvailable: true,
+      };
+      this.features.push(service);
+    }
   }
 
   private initNumbers(): void {

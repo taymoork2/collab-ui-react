@@ -292,7 +292,7 @@
 
     $scope.$on('$stateChangeStart', function (event, toState) {
       if (vm.form.$dirty && toState.name === 'user-overview') {
-        if (angular.isDefined(toState)) {
+        if (!_.isUndefined(toState)) {
           event.preventDefault();
           $modal.open({
             templateUrl: 'modules/huron/lineSettings/confirmModal.tpl.html'
@@ -685,7 +685,7 @@
       var hasDirectLine = false;
       var hasCompanyCallerID = false;
       var isNewLine = true;
-      if (angular.isDefined(vm.telephonyInfo.currentDirectoryNumber.uuid) && vm.telephonyInfo.currentDirectoryNumber.uuid !== 'new') {
+      if (!_.isUndefined(vm.telephonyInfo.currentDirectoryNumber.uuid) && vm.telephonyInfo.currentDirectoryNumber.uuid !== 'new') {
         isNewLine = false;
       } else {
         isNewLine = true;
@@ -704,7 +704,7 @@
         })
           .then(function () {
             // Direct Line
-            if (angular.isDefined(vm.telephonyInfo.alternateDirectoryNumber.uuid) && vm.telephonyInfo.alternateDirectoryNumber.uuid !== '' && vm.telephonyInfo.alternateDirectoryNumber.uuid !== 'none') {
+            if (!_.isUndefined(vm.telephonyInfo.alternateDirectoryNumber.uuid) && vm.telephonyInfo.alternateDirectoryNumber.uuid !== '' && vm.telephonyInfo.alternateDirectoryNumber.uuid !== 'none') {
               hasDirectLine = true;
               var directLineUserName = getSharedLinePrimaryUserName();
               if (!directLineUserName) {
@@ -1077,7 +1077,7 @@
       vm.sharedLineUsers = [];
       vm.sharedLineEndpoints = [];
       vm.devices = [];
-      if (angular.isDefined(dnUuid) && dnUuid !== 'new') {
+      if (!_.isUndefined(dnUuid) && dnUuid !== 'new') {
         return SharedLineInfoService.loadSharedLineUsers(dnUuid, vm.currentUser.id)
           .then(function (users) {
             // If more than 1 user in the list, then the line is shared
@@ -1107,7 +1107,8 @@
         vm.confirmationDialogue = $translate.instant('sharedLinePanel.disassociateUser');
         $modal.open({
           templateUrl: 'modules/huron/sharedLine/disassociateSharedLineMember.tpl.html',
-          scope: $scope
+          scope: $scope,
+          type: 'dialog',
         }).result.then(function () {
           if (!removeLocal(userInfo.uuid) && userInfo.dnUsage !== 'Primary') {
             return SharedLineInfoService.disassociateSharedLineUser(userInfo.uuid, userInfo.userDnUuid, vm.directoryNumber.uuid)

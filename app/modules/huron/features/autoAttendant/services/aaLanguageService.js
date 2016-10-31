@@ -404,7 +404,7 @@
 
     function setLanguageOptions() {
       languageOptions = [];
-      if (angular.isDefined(languages)) {
+      if (!_.isUndefined(languages)) {
         _.each(languages, function (language) {
           languageOptions.push(createLanguageOption(language));
         });
@@ -412,7 +412,7 @@
     }
 
     function getLanguageOptions() {
-      if (angular.isUndefined(languageOptions) || languageOptions.length === 0) {
+      if (_.isUndefined(languageOptions) || languageOptions.length === 0) {
         setLanguageOptions();
       }
       return languageOptions;

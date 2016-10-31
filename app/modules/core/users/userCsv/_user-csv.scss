@@ -1,5 +1,6 @@
 .template-anchor {
   @extend .left;
+
   @include vr-spacing(ml, 2);
 }
 
@@ -40,7 +41,6 @@
 
 // Style the Upload/Export page
 .user-csv-bulk {
-
   display: flex;
   flex-direction: column;
   flex-wrap: nowrap;
@@ -48,6 +48,7 @@
 
   ul {
     @include vr-spacing(mt, 1);
+
     li {
       list-style-type: none;
       padding-bottom: 1rem;
@@ -64,7 +65,9 @@
 
   .columns .box {
     @extend .center;
+
     @include vr-spacing(m, 1);
+
     border: thin solid $gray-light-2;
     color: $gray-base;
     display: flex;
@@ -84,7 +87,10 @@
     .disabled {
       color: $gray-light;
 
-      .icon, .prompt label, a, h5 {
+      .icon,
+      .prompt label,
+      a,
+      h5 {
         color: $gray-light;
       }
     }
@@ -111,22 +117,24 @@
 
     .prompt {
       width: 14rem;
-      margin: 1rem auto 0 auto;
+      margin: 1rem auto 0;
 
       label {
         cursor: pointer;
         color: $link-color;
+
         &:hover {
           color: $link-hover-color;
         }
+
         display: inline;
       }
     }
 
     .user-csv-export {
-
       .hotspot {
         cursor: pointer;
+
         &:hover {
           color: $brand-primary;
         }
@@ -168,12 +176,14 @@
 
       .file-drop {
         @extend .flex-center-container;
+
         flex-direction: column;
 
         &.dragover {
           background: $color-primary-lighter;
           border: dashed $color-primary;
         }
+
         input {
           display: none;
         }
@@ -184,27 +194,31 @@
 
         .file-drop-content {
           background: $gray-light-4;
+
           .icon-check {
             color: $color-cta-base;
           }
         }
+
         .file-name {
-          @include vr-spacing(mt, .25);
+          @include vr-spacing(mt, 0.25);
         }
       }
+
       .csv-enable-remove {
         display: flex;
         align-content: center;
         justify-content: center;
+
         .csv-enable-remove-checkbox {
           width: rem(400);
+
           .cs-input__help-text {
             font-style: italic;
           }
         }
       }
     }
-
   }
 }
 
@@ -218,23 +232,30 @@
     justify-content: center;
 
     .csv-process-content {
+      @include vr-spacing(mt, 1);
+
       display: flex;
       flex-direction: row;
       align-items: center;
       justify-content: center;
-      @include vr-spacing(mt, 1);
       width: 55%;
+
       .progressbar {
-        width: 100%;
         @include vr-spacing(mb, 2.25);
+
+        width: 100%;
       }
+
       .csv-filename {
-        @include vr-spacing(mt, .25);
+        @include vr-spacing(mt, 0.25);
+
         font-size: small;
       }
+
       .close-button {
         @include vr-spacing(ml, 1);
         @include vr-spacing(mt, -1.5);
+
         font-size: medium;
 
         a {
@@ -244,10 +265,11 @@
             color: $color-primary-base;
           }
         }
-
       }
+
       .retry-label span {
         @extend .progressbar-progress;
+
         float: none;
       }
     }
@@ -255,16 +277,18 @@
 
   .upload-complete {
     align-items: flex-start;
-    @include vr-spacing(mv, .5);
+
+    @include vr-spacing(mv, 0.5);
   }
 
   // boxes containing counts of added, updated, retry, and error users
   .upload-stats {
+    @include vr-spacing(mb, 1);
+
     display: flex;
     flex-direction: row;
     justify-content: center;
     height: 5rem;
-    @include vr-spacing(mb, 1);
 
     .stat {
       flex: 1 1 auto;
@@ -273,33 +297,40 @@
       justify-content: center;
       align-items: center;
       background-color: $gray-light-4;
-
       position: relative;
-      & + .stat {
+
+      + .stat {
         @include vr-spacing(ml, 1);
       }
 
       .total {
         font-size: 2rem;
         line-height: 1;
-        font-family: "CiscoSansTT Thin";
+        font-family: 'CiscoSansTT Thin';
       }
+
       .total-title {
-        @include vr-spacing(mb, .1);
-        font-size: .75rem;
+        @include vr-spacing(mb, 0.1);
+
+        font-size: 0.75rem;
       }
+
       &.disabled {
         color: $gray-light-1;
       }
+
       &.new-users:not(.disabled) .total {
         color: $color-cta-base;
       }
+
       &.updated-users:not(.disabled) .total {
         color: $color-primary-base;
       }
+
       &.error-users:not(.disabled) .total {
         color: $color-negative-light;
       }
+
       &.retry-users:not(.disabled) .total {
         color: $brand-warning;
       }
@@ -310,12 +341,12 @@
   .upload-timer {
     @include vr-spacing(mv, 1);
     @include vr-spacing(mh, 0);
+
     text-align: center;
   }
 
   // Error display
   .upload-errors {
-
     background-color: transparent;
 
     .error-download {
@@ -332,7 +363,7 @@
     p {
       .icon {
         color: $gray-light-1;
-        top: .1rem;
+        top: 0.1rem;
 
         &:hover {
           color: $color-primary-base;
@@ -343,32 +374,27 @@
     .row {
       border-color: $gray-dark;
       border-style: solid;
-      border-left-width: thin;
-      border-right-width: thin;
-      border-top-width: thin;
-      border-bottom-width: 0;
+      border-width: thin thin 0;
       display: flex;
     }
+
     div.row:last-child {
       border-bottom-width: thin;
     }
 
     .error-row {
-      padding: .5rem 1rem .5rem 1rem;
+      padding: 0.5rem 1rem;
       overflow-x: hidden;
     }
 
     .error-desc {
       border-color: $gray-dark;
       border-style: solid;
-      border-right-width: 0;
-      border-left-width: thin;
-      border-top-width: 0;
-      border-bottom-width: 0;
+      border-width: 0 0 0 thin;
       text-overflow: ellipsis;
       white-space: nowrap;
       overflow: hidden;
-      padding: .5rem 1rem .5rem 1rem;
+      padding: 0.5rem 1rem;
     }
 
     .table-header {

@@ -1,34 +1,47 @@
 .ct-customer {
+  align-items: center;
+
   @mixin placeholder {
+    /* stylelint-disable selector-no-vendor-prefix */
     ::-webkit-input-placeholder {
-      @content
+      @content;
     }
+
     :-moz-placeholder {
-      @content
+      @content;
     }
+
     ::-moz-placeholder {
-      @content
+      @content;
     }
+
     :-ms-input-placeholder {
-      @content
+      @content;
     }
+    /* stylelint-enable selector-no-vendor-prefix */
   }
 
   .ct-customer-card {
+    @include vr-spacing(ml, 2);
+    @include vr-spacing(mt, 5);
+
     width: rem-calc(414px);
     display: flex;
     flex-flow: column;
+
     .cardHeader1 {
       text-align: center;
       color: $gray-dark-1;
     }
+
     .customerHeader {
-      background-color:$gray-light-4;
+      background-color: $gray-light-4;
       border-color: $gray-light-3;
       border-width: rem-calc(1px);
       border-style: solid;
+
       &:hover {
-        background-color:$color-primary-lighter;
+        background-color: $color-primary-lighter;
         cursor: pointer;
       }
     }
@@ -58,15 +71,16 @@
   }
 
   .welcomeText {
-    font-family: "CiscoSansTT Light";
+    @include vr-spacing(mb, 0);
+
+    font-family: 'CiscoSansTT Light';
     font-size: rem-calc(22px);
     color: $color-primary-base;
-    @include vr-spacing(mb, 0);
     max-width: 100%;
   }
 
   .orgText {
-    font-family: "CiscoSansTT Light";
+    font-family: 'CiscoSansTT Light';
     font-size: rem-calc(16px);
     color: $gray-dark-2;
     margin-bottom: 0;
@@ -76,12 +90,13 @@
     @include vr-spacing(mt, 1);
     @include vr-spacing(ml, 1);
     @include vr-spacing(mb, 0.25);
+
     color: $gray-dark-2;
-    opacity: .5;
+    opacity: 0.5;
     max-width: 70%;
   }
 
-  .textOverflow{
+  .textOverflow {
     text-overflow: ellipsis;
     overflow: hidden;
     white-space: nowrap;
@@ -91,23 +106,27 @@
     @include vr-spacing(mt, 0.25);
     @include vr-spacing(ml, 1);
     @include vr-spacing(mb, 0.25);
+
     color: $gray-dark-2;
-    opacity: .5;
+    opacity: 0.5;
   }
 
   .inputField {
     @include vr-spacing(ml, 1);
     @include vr-spacing(mb, 0.1);
-    font-family: "CiscoSansTT Light";
+
+    font-family: 'CiscoSansTT Light';
     color: $gray-dark-2;
   }
 
   .inputField_select {
     @include vr-spacing(ml, 1);
     @include vr-spacing(mb, 0.8);
+
     color: $gray-dark-2;
     width: 90%;
-    .form-control{
+
+    .form-control {
       background-color: white;
     }
   }
@@ -115,28 +134,34 @@
   .ct-left-cs-input {
     @include vr-spacing(ml, 1);
     @include vr-spacing(mb, 1);
+
     @extend .cs-input;
+
     border-color: $gray-light-3;
     cursor: default;
     color: $gray-dark-1;
     pointer-events: none;
-    font-family: "CiscoSansTT Light";
+    font-family: 'CiscoSansTT Light';
     font-size: rem-calc(16px);
     width: 90%;
+
     ~ i {
       @include vr-spacing(ml, -2.4);
+
       font-size: rem-calc(24px);
       color: $gray-base;
       line-height: inherit;
       pointer-events: none;
-      position: absolute;
+      position: relative;
     }
+
     background-color: $white !important;
   }
 
   .ct-footer {
     color: $gray-light-1;
     border-top: 1px solid $gray-light-3;
+
     @include vr-spacing(pv, 0.75);
     @include vr-spacing(pl, 0.5);
   }
@@ -175,10 +200,11 @@
   .ct-attribute-section.item-not-selected {
     display: flex;
     flex-flow: column;
+
     .ct-default-msg {
       text-align: center;
       flex: 0;
-      font-family: "CiscoSansTT Light";
+      font-family: 'CiscoSansTT Light';
       color: $gray-dark-1;
     }
   }
@@ -189,7 +215,8 @@
     @include vr-spacing(ml, 1);
     @include vr-spacing(mb, 0);
     @include vr-spacing(mt, 0);
-    font: italic 12px "CiscoSansTT Regular";
+
+    font: italic 12px 'CiscoSansTT Regular';
     color: $gray-light-1;
   }
 
@@ -197,25 +224,31 @@
     @include vr-spacing(mb, 0);
     @include vr-spacing(ml, 1);
     @include vr-spacing(pt, 0.5);
-    font-family: "CiscoSansTT Regular";
+
+    font-family: 'CiscoSansTT Regular';
   }
 
   .ct-attribute-field-textbox {
     @include placeholder {
       line-height: rem-calc(12px);
     }
-    font-family: "CiscoSansTT Light";
+
     @include vr-spacing(ml, 1);
+
+    font-family: 'CiscoSansTT Light';
     width: 90%;
   }
 
-  .ct-attribute-field-textbox_error{
+  .ct-attribute-field-textbox_error {
     @include placeholder {
       line-height: rem-calc(12px);
     }
-    font-family: "CiscoSansTT Light";
+
     @include vr-spacing(ml, 1);
+
+    font-family: 'CiscoSansTT Light';
     width: 90%;
+
     > div > div > a {
       border-color: $color-alerts-base;
     }
@@ -225,19 +258,19 @@
     @include vr-spacing(ml, 1);
     @include vr-spacing(mt, 1);
     @include vr-spacing(mb, 0);
-    font-family: "CiscoSansTT Light";
-  }
 
+    font-family: 'CiscoSansTT Light';
+  }
 
   .ct-flex-container {
     display: flex;
-    -webkit-flex-direction: row;
+    flex-direction: row;
     flex-flow: row;
   }
 
-
   .ct-attribute-row {
     width: 100%;
+
     .ct-customer-info-category-input {
       @include vr-spacing(mt, 0.25);
     }
@@ -254,6 +287,7 @@
   .right-inner-addon i {
     position: absolute;
     right: 0rem;
+
     @include vr-spacing(mv, 0.6);
     @include vr-spacing(mh, 2);
   }
@@ -262,22 +296,28 @@
     .tokenfield.form-control,
     .tokenfield.form-control-static {
       @include vr-spacing(mh, 1);
-      height:4rem;
-      overflow-y:auto;
+
+      height: 4rem;
+      overflow-y: auto;
       overflow-x: hidden;
+
       input.token-input {
         border-color: transparent;
         outline: 0;
         background-color: transparent;
         box-shadow: none;
       }
+
       .token {
         height: rem-calc(39px);
         pointer-events: none;
+
         .token-label {
           padding-top: rem-calc(3px);
+
           @include vr-spacing(mr, 0.5);
         }
+
         .close {
           font-size: 1.2em;
           padding-top: rem-calc(0px);
@@ -287,30 +327,44 @@
       }
     }
   }
+
   .ct-input-error {
     color: $color-alerts-base;
+    line-height: 1.25rem;
+
     @include vr-spacing(pl, 1);
     @include vr-spacing(pr, 1);
     @include vr-spacing(pb, 1);
-    line-height: 1.25rem;
   }
+
   .cs-input__messages {
     @include vr-spacing(pl, 1);
+
     padding-left: 1rem;
   }
+
   .ct-error-icon {
     float: left;
+
     @include vr-spacing(pb, 0.4);
     @include vr-spacing(pr, 0.4);
   }
+
   .ct-error-border {
     border-color: $color-alerts-base;
   }
+
   .ct-add-contain {
     cursor: pointer;
   }
+
   .cs-input-group {
     @include vr-spacing(mb, 0.5);
   }
-}
 
+  .customer-card-layout {
+    align-items: center;
+    justify-content: center;
+    width: 100% !important;
+  }
+}

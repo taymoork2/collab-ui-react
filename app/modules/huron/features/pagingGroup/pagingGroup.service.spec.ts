@@ -1,47 +1,145 @@
-import { IPagingGroup } from './pagingGroup';
-import { INumber } from './pgSetupAssistant/pgNumber/pgNumber.service';
-
 describe('Service: PagingGroupService', () => {
 
-  let pagingGroups: IPagingGroup[] = [];
+  let successSpy;
+  let failureSpy;
+  let pg = getJSONFixture('huron/json/features/pagingGroup/pg.json');
 
   beforeEach(function () {
     this.initModules('huron.paging-group');
     this.injectDependencies(
-      '$q',
-      '$scope',
-      'PagingGroupService'
+      '$httpBackend',
+      'PagingGroupService',
+      'Authinfo',
+      'HuronConfig'
     );
+    spyOn(this.Authinfo, 'getOrgId').and.returnValue('12345');
+    successSpy = jasmine.createSpy('success');
+    failureSpy = jasmine.createSpy('failure');
   });
 
-  it('getListOfPagingGroups: should get a paging group list', function () {
-    let pagingGroupsActual = undefined;
-    this.PagingGroupService.getListOfPagingGroups().then(function(response) {
-      pagingGroupsActual = response;
+  afterEach(function () {
+    this.$httpBackend.verifyNoOutstandingExpectation();
+    this.$httpBackend.verifyNoOutstandingRequest();
+  });
+
+  describe('getListOfPagingGroups: ', () => {
+    it('should call successSpy', function () {
+      this.$httpBackend.expectGET(this.HuronConfig.getPgUrl() + '/customers/' + this.Authinfo.getOrgId() + '/pagingGroups').respond(200);
+      this.PagingGroupService.getListOfPagingGroups().then(
+        successSpy,
+        failureSpy
+      );
+      this.$httpBackend.flush();
+      expect(successSpy).toHaveBeenCalled();
+      expect(failureSpy).not.toHaveBeenCalled();
     });
-    this.$scope.$digest();
-    expect(pagingGroupsActual).toEqual(pagingGroups);
-  });
 
-  it('savePagingGroup: should add a paging group to the list', function () {
-    let pg: IPagingGroup = <IPagingGroup> {
-      name: 'PG 1',
-      number: <INumber> {
-        directoryNumber: '',
-        number: '5004',
-        type: 'internal',
-        uuid: '1234',
-      },
-    };
-    this.PagingGroupService.savePagingGroup(pg);
-    expect(this.PagingGroupService.pagingGroups.length).toEqual(1);
-    let pagingGroupsActual = undefined;
-    this.PagingGroupService.getListOfPagingGroups().then(function(response) {
-      pagingGroupsActual = response;
+    it('should call failureSpy', function () {
+      this.$httpBackend.expectGET(this.HuronConfig.getPgUrl() + '/customers/' + this.Authinfo.getOrgId() + '/pagingGroups').respond(500);
+      this.PagingGroupService.getListOfPagingGroups().then(
+        successSpy,
+        failureSpy
+      );
+      this.$httpBackend.flush();
+      expect(successSpy).not.toHaveBeenCalled();
+      expect(failureSpy).toHaveBeenCalled();
     });
-    this.$scope.$digest();
-    pagingGroups.push(pg);
-    expect(pagingGroupsActual).toEqual(pagingGroups);
   });
 
+  describe('getPagingGroup: ', () => {
+    it('should call successSpy', function () {
+      this.$httpBackend.expectGET(this.HuronConfig.getPgUrl() + '/customers/' + this.Authinfo.getOrgId() + '/pagingGroups/' + pg.groupId).respond(200);
+      this.PagingGroupService.getPagingGroup(pg.groupId).then(
+        successSpy,
+        failureSpy
+      );
+      this.$httpBackend.flush();
+      expect(successSpy).toHaveBeenCalled();
+      expect(failureSpy).not.toHaveBeenCalled();
+    });
+
+    it('should call failureSpy', function () {
+      this.$httpBackend.expectGET(this.HuronConfig.getPgUrl() + '/customers/' + this.Authinfo.getOrgId() + '/pagingGroups/' + pg.groupId).respond(500);
+      this.PagingGroupService.getPagingGroup(pg.groupId).then(
+        successSpy,
+        failureSpy
+      );
+      this.$httpBackend.flush();
+      expect(successSpy).not.toHaveBeenCalled();
+      expect(failureSpy).toHaveBeenCalled();
+    });
+  });
+
+  describe('savePagingGroup: ', () => {
+    it('should success', function () {
+      this.$httpBackend.expectPOST(this.HuronConfig.getPgUrl() + '/customers/' + this.Authinfo.getOrgId() + '/pagingGroups').respond(200);
+      this.PagingGroupService.savePagingGroup(pg).then(
+        successSpy,
+        failureSpy
+      );
+      this.$httpBackend.flush();
+      expect(successSpy).toHaveBeenCalled();
+      expect(failureSpy).not.toHaveBeenCalled();
+    });
+
+    it('should fail', function () {
+      this.$httpBackend.expectPOST(this.HuronConfig.getPgUrl() + '/customers/' + this.Authinfo.getOrgId() + '/pagingGroups').respond(500);
+      this.PagingGroupService.savePagingGroup(pg).then(
+        successSpy,
+        failureSpy
+      );
+      this.$httpBackend.flush();
+      expect(successSpy).not.toHaveBeenCalled();
+      expect(failureSpy).toHaveBeenCalled();
+    });
+  });
+
+  describe('updatePagingGroup: ', () => {
+
+    it('should success', function () {
+      this.$httpBackend.expectPUT(this.HuronConfig.getPgUrl() + '/customers/' + this.Authinfo.getOrgId() + '/pagingGroups/' + pg.groupId).respond(200);
+      this.PagingGroupService.updatePagingGroup(pg).then(
+        successSpy,
+        failureSpy
+      );
+      this.$httpBackend.flush();
+      expect(successSpy).toHaveBeenCalled();
+      expect(failureSpy).not.toHaveBeenCalled();
+    });
+
+    it('should fail', function () {
+      this.$httpBackend.expectPUT(this.HuronConfig.getPgUrl() + '/customers/' + this.Authinfo.getOrgId() + '/pagingGroups/' + pg.groupId).respond(500);
+      this.PagingGroupService.updatePagingGroup(pg).then(
+        successSpy,
+        failureSpy
+      );
+      this.$httpBackend.flush();
+      expect(successSpy).not.toHaveBeenCalled();
+      expect(failureSpy).toHaveBeenCalled();
+    });
+  });
+
+  describe('deletePagingGroup: ', () => {
+    it('should success', function () {
+      this.$httpBackend.expectDELETE(this.HuronConfig.getPgUrl() + '/customers/' + this.Authinfo.getOrgId() + '/pagingGroups/' + pg.groupId).respond(200);
+      this.PagingGroupService.deletePagingGroup(pg.groupId).then(
+        successSpy,
+        failureSpy
+      );
+      this.$httpBackend.flush();
+      expect(successSpy).toHaveBeenCalled();
+      expect(failureSpy).not.toHaveBeenCalled();
+    });
+
+    it('should fail', function () {
+      this.$httpBackend.expectDELETE(this.HuronConfig.getPgUrl() + '/customers/' + this.Authinfo.getOrgId() + '/pagingGroups/' + pg.groupId).respond(500);
+      this.PagingGroupService.deletePagingGroup(pg.groupId).then(
+        successSpy,
+        failureSpy
+      );
+      this.$httpBackend.flush();
+      expect(successSpy).not.toHaveBeenCalled();
+      expect(failureSpy).toHaveBeenCalled();
+    });
+  });
 });

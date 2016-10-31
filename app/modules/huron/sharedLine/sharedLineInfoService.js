@@ -121,7 +121,7 @@
             promise =
               setDeviceSharedLine(device.uuid, dnuuid)
               .then(function (info) {
-                if (angular.isDefined(info)) {
+                if (!_.isUndefined(info)) {
                   this.isSharedLine = info.isSharedLine;
                   this.maxIndex = info.maxIndex;
                   this.endpointDnUuid = info.endpointDnUuid;
@@ -165,7 +165,7 @@
         'sipendpointId': deviceUuid
       }).$promise
         .then(function (endpointDn) {
-          if (angular.isDefined(endpointDn)) {
+          if (!_.isUndefined(endpointDn)) {
             angular.forEach(endpointDn, function (d) {
               if (d.directoryNumber.uuid === dnuuid) {
                 info.isSharedLine = true;

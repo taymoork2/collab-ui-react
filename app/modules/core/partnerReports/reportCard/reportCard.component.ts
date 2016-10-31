@@ -1,20 +1,17 @@
 import {
   ITimespan,
   IReportCard,
+  IReportDropdown,
   IReportSortOption,
+  IReportLabel,
   ISecondaryReport,
 } from '../partnerReportInterfaces';
 
 class ReportCardCtrl {
-  private static readonly DONUT: string = 'donut';
-  private static readonly EMPTY: string = 'empty';
-  private static readonly REFRESH: string = 'refresh';
-  private static readonly SET: string = 'set';
-  private static readonly TABLE: string = 'table';
-  private static readonly UNDEF: string = 'undefined';
-
   // overall Report Variables
   public options: IReportCard;
+  public dropdown: IReportDropdown;
+  public labels: Array<IReportLabel>;
   public show: boolean = true;
   public time: ITimespan;
 
@@ -33,12 +30,19 @@ class ReportCardCtrl {
   /* @ngInject */
   constructor(
     private $translate: ng.translate.ITranslateService,
-    private $scope: ng.IScope
+    private $scope: ng.IScope,
+    private $state,
+    private ReportConstants
   ) {
     this.setTotalPages();
     this.setSortOptions();
     this.setBroadcast();
   }
+
+  // searchfield variables
+  public readonly placeholder: string = this.$translate.instant('activeUsers.search');
+  public searchField: string = '';
+  private previousSearch: string = '';
 
   // Top Report Controls
   private getTranslation(text: string, displayType: string): string {
@@ -51,12 +55,24 @@ class ReportCardCtrl {
     }
   }
 
-  public getDescription(description): string {
-    return this.getTranslation(description, 'description');
+  public getDescription(description: string, useAlt: boolean): string {
+    if (this.time && this.time.value === this.ReportConstants.FILTER_THREE.value && useAlt) {
+      return this.$translate.instant(description, {
+        time: this.$translate.instant('reportsPage.lastTwelveWeeks2'),
+      });
+    } else {
+      return this.getTranslation(description, 'description');
+    }
   }
 
-  public getHeader(header): string {
-    return this.getTranslation(header, 'label');
+  public getHeader(header: string, useAlt: boolean): string {
+    if (this.time && this.time.value === this.ReportConstants.FILTER_THREE.value && useAlt) {
+      return this.$translate.instant(header, {
+        time: this.$translate.instant('reportsPage.lastTwelveWeeks'),
+      });
+    } else {
+      return this.getTranslation(header, 'label');
+    }
   }
 
   public getPopoverText(): string {
@@ -67,28 +83,32 @@ class ReportCardCtrl {
     }
   }
 
+  public goToUsersTab() {
+    this.$state.go('users.list');
+  }
+
   public isDonut(): boolean {
-    return this.options.reportType === ReportCardCtrl.DONUT;
+    return this.options.reportType === this.ReportConstants.DONUT;
   }
 
   public isEmpty(): boolean {
-    return this.options.state === ReportCardCtrl.EMPTY;
+    return this.options.state === this.ReportConstants.EMPTY;
   }
 
   public isPopover(): boolean {
-    return this.options.titlePopover !== ReportCardCtrl.UNDEF;
+    return this.options.titlePopover !== this.ReportConstants.UNDEF;
   }
 
   public isRefresh(): boolean {
-    return this.options.state === ReportCardCtrl.REFRESH;
+    return this.options.state === this.ReportConstants.REFRESH;
   }
 
   public isSet(): boolean {
-    return this.options.state === ReportCardCtrl.SET;
+    return this.options.state === this.ReportConstants.SET;
   }
 
   public isTable(): boolean {
-    return this.options.reportType === ReportCardCtrl.TABLE;
+    return this.options.reportType === this.ReportConstants.TABLE;
   }
 
   // Secondary Report Controls
@@ -97,6 +117,8 @@ class ReportCardCtrl {
       this.secondaryReport = false;
       this.currentPage = 1;
       this.pagingButtons = [1, 2, 3];
+      this.previousSearch = '';
+      this.searchField = '';
 
       this.setTotalPages();
       this.setSortOptions();
@@ -149,6 +171,25 @@ class ReportCardCtrl {
     return this.reverse;
   }
 
+  public getTable(): Array<any> {
+    let returnArray: Array<any> = [];
+    _.forEach(this.secondaryOptions.table.data, (item: any): void => {
+      let userName = item.userName;
+      if (this.searchField === undefined || this.searchField === '' || (userName && (userName.toString().toLowerCase().replace(/_/g, ' ')).indexOf(this.searchField.toLowerCase().replace(/_/g, ' ')) > -1)) {
+        returnArray.push(item);
+      }
+    });
+
+    if (this.totalPages !== Math.ceil(returnArray.length / 5) || this.previousSearch !== this.searchField) {
+      this.currentPage = 1;
+      this.pagingButtons = [1, 2, 3];
+      this.totalPages = Math.ceil(returnArray.length / 5);
+      this.previousSearch = this.searchField;
+      this.resize();
+    }
+    return returnArray;
+  }
+
   public isActivePage(selected): boolean {
     return this.currentPage === Math.ceil((selected + 1) / 5);
   }
@@ -163,15 +204,19 @@ class ReportCardCtrl {
   }
 
   public secondaryIsEmpty(): boolean {
-    return this.secondaryOptions.state === ReportCardCtrl.EMPTY;
+    return this.secondaryOptions.state === this.ReportConstants.EMPTY;
+  }
+
+  public secondaryIsError(): boolean {
+    return this.secondaryOptions.state === this.ReportConstants.ERROR;
   }
 
   public secondaryIsRefresh(): boolean {
-    return this.secondaryOptions.state === ReportCardCtrl.REFRESH;
+    return this.secondaryOptions.state === this.ReportConstants.REFRESH;
   }
 
   public secondaryIsSet(): boolean {
-    return this.secondaryOptions.state === ReportCardCtrl.SET;
+    return this.secondaryOptions.state === this.ReportConstants.SET;
   }
 
   public secondaryReportSort(selected) {
@@ -204,7 +249,9 @@ angular.module('Core')
     templateUrl: 'modules/core/partnerReports/reportCard/reportCard.tpl.html',
     controller: ReportCardCtrl,
     bindings: {
+      dropdown: '<',
       options: '<',
+      labels: '<',
       secondaryOptions: '<',
       resizePage: '&',
       show: '<',

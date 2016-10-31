@@ -6,7 +6,7 @@
     .controller('ExpresswayServiceSettingsController', ExpresswayServiceSettingsController);
 
   /* @ngInject */
-  function ExpresswayServiceSettingsController($state, $modal, ServiceDescriptor, Authinfo, USSService, MailValidatorService, XhrNotificationService, CertService, Notification, FusionUtils, CertificateFormatterService, $translate) {
+  function ExpresswayServiceSettingsController($state, $modal, ServiceDescriptor, Authinfo, USSService, MailValidatorService, CertService, Notification, FusionUtils, CertificateFormatterService, $translate) {
     var vm = this;
     vm.emailSubscribers = '';
     vm.connectorType = $state.current.data.connectorType;
@@ -38,7 +38,7 @@
             // TODO: fix this callback crap!
             if (err) {
               vm.squaredFusionEc = !vm.squaredFusionEc;
-              Notification.error('hercules.errors.failedToEnableConnect');
+              Notification.errorWithTrackingId(err, 'hercules.errors.failedToEnableConnect');
             }
           }
         );
@@ -60,14 +60,16 @@
     vm.updateSipDomain = function () {
       vm.savingSip = true;
 
-      USSService.updateOrg(vm.org).then(function () {
-        vm.storeEc(false);
-        vm.savingSip = false;
-        Notification.success('hercules.errors.sipDomainSaved');
-      }, function () {
-        vm.savingSip = false;
-        Notification.error('hercules.errors.sipDomainInvalid');
-      });
+      USSService.updateOrg(vm.org)
+          .then(function () {
+            vm.storeEc(false);
+            vm.savingSip = false;
+            Notification.success('hercules.errors.sipDomainSaved');
+          })
+            .catch(function (error) {
+              vm.savingSip = false;
+              Notification.errorWithTrackingId(error, 'hercules.errors.sipDomainInvalid');
+            });
     };
 
     ServiceDescriptor.getEmailSubscribers(vm.servicesId[0], function (error, emailSubscribers) {
@@ -111,9 +113,9 @@
 
     vm.writeEnableEmailSendingToUser = _.debounce(function (value) {
       ServiceDescriptor.setDisableEmailSendingToUser(value)
-        .catch(function () {
+        .catch(function (error) {
           vm.enableEmailSendingToUser = !vm.enableEmailSendingToUser;
-          return Notification.error('hercules.settings.emailUserNotificationsSavingError');
+          return Notification.errorWithTrackingId(error, 'hercules.settings.emailUserNotificationsSavingError');
         });
     }, 2000, {
       'leading': true,
@@ -124,30 +126,19 @@
       vm.writeEnableEmailSendingToUser(vm.enableEmailSendingToUser);
     };
 
-    vm.disableService = function (serviceId) {
-      ServiceDescriptor.setServiceEnabled(serviceId, false, function (error) {
-        // TODO: Strange callback result ???
-        if (error !== null) {
-          XhrNotificationService.notify(error);
-        } else {
-          $state.go('services-overview');
-        }
-      });
-    };
-
     vm.confirmDisable = function (serviceId) {
       $modal.open({
         templateUrl: 'modules/hercules/service-settings/confirm-disable-dialog.html',
         type: 'small',
-        controller: DisableConfirmController,
-        controllerAs: 'disableConfirmDialog',
+        controller: 'ConfirmDisableController',
+        controllerAs: 'confirmDisableDialog',
         resolve: {
           serviceId: function () {
             return serviceId;
           }
         }
       }).result.then(function () {
-        vm.disableService(serviceId);
+        $state.go('services-overview');
       });
     };
 
@@ -155,7 +146,11 @@
       if (!file) {
         return;
       }
-      CertService.uploadCert(Authinfo.getOrgId(), file).then(readCerts, XhrNotificationService.notify);
+      CertService.uploadCert(Authinfo.getOrgId(), file)
+        .then(readCerts)
+        .catch(function (error) {
+          Notification.errorWithTrackingId(error, 'hercules.genericFailure');
+        });
     };
 
     vm.confirmCertDelete = function (cert) {
@@ -173,43 +168,28 @@
     };
 
     function readCerts() {
-      CertService.getCerts(Authinfo.getOrgId()).then(function (res) {
-        vm.certificates = res || [];
-        vm.formattedCertificateList = CertificateFormatterService.formatCerts(vm.certificates);
-      }, XhrNotificationService.notify);
+      CertService.getCerts(Authinfo.getOrgId())
+        .then(function (res) {
+          vm.certificates = res || [];
+          vm.formattedCertificateList = CertificateFormatterService.formatCerts(vm.certificates);
+        })
+        .catch(function (error) {
+          Notification.errorWithTrackingId(error, 'hercules.settings.call.certificatesCannotRead');
+        });
     }
 
-    vm.invalidEmail = function (tag) {
-      Notification.error(tag.text + ' is not a valid email');
-    };
   }
 
   /* @ngInject */
-  function DisableConfirmController(FusionUtils, $modalInstance, serviceId, $translate, Authinfo) {
-    var modalVm = this;
-    modalVm.serviceId = serviceId;
-    modalVm.serviceIconClass = FusionUtils.serviceId2Icon(serviceId);
-    modalVm.serviceName = $translate.instant('hercules.serviceNames.' + serviceId);
-    modalVm.connectorName = $translate.instant('hercules.connectorNames.' + serviceId);
-    modalVm.companyName = Authinfo.getOrgName();
-
-    modalVm.ok = function () {
-      $modalInstance.close();
-    };
-    modalVm.cancel = function () {
-      $modalInstance.dismiss();
-    };
-  }
-
-  /* @ngInject */
-  function ConfirmCertificateDeleteController(CertService, $modalInstance, XhrNotificationService, cert) {
+  function ConfirmCertificateDeleteController(CertService, $modalInstance, Notification, cert) {
     var vm = this;
     vm.cert = cert;
     vm.remove = function () {
-      CertService.deleteCert(vm.cert.certId).then($modalInstance.close, XhrNotificationService.notify);
-    };
-    vm.cancel = function () {
-      $modalInstance.dismiss();
+      CertService.deleteCert(vm.cert.certId)
+        .then($modalInstance.close)
+        .catch(function (error) {
+          Notification.errorWithTrackingId(error, 'hercules.settings.call.certificatesCannotDelete');
+        });
     };
   }
 

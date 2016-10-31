@@ -161,7 +161,7 @@
     }
 
     function getProviderId() {
-      return angular.isObject(provider) ? provider.uuid : '';
+      return _.isObject(provider) ? provider.uuid : '';
     }
 
     function setNumbers(_numbers) {

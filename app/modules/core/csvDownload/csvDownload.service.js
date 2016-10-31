@@ -46,7 +46,7 @@
     function getCsv(csvType, tooManyUsers, fileName, newUserExportToggle) {
       tooManyUsers = _.isBoolean(tooManyUsers) ? tooManyUsers : false;
       isTooManyUsers = tooManyUsers;
-      if (tooManyUsers) {
+      if (csvType !== service.typeTemplate && tooManyUsers) {
         canceler = UserListService.exportCSV().then(function (csvData) {
           var csvString = $.csv.fromObjects(csvData, {
             headers: false
@@ -130,9 +130,10 @@
           row: 'Row Number',
           email: 'User ID/Email',
           error: 'Error Message'
-        }], csvErrorArray), {
-          headers: false
-        });
+        }],
+          csvErrorArray), {
+            headers: false
+          });
         resolve(createObjectUrl(csvString, typeError, fileName));
       });
     }

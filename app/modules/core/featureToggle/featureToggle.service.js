@@ -25,6 +25,7 @@
       atlasEmailStatus: 'atlas-email-status',
       atlasHelpDeskExt: 'atlas-helpdesk-extended-information',
       atlasHelpDeskOrderSearch: 'atlas-helpdesk-order-search',
+      atlasHybridServicesResourceList: 'atlas-hybrid-services-resource-list',
       atlasMediaServiceMetrics: 'atlas-media-service-metrics',
       atlasMediaServiceOnboarding: 'atlas-media-service-onboarding',
       atlasNewRoomSystems: 'atlas-new-roomSystems',
@@ -36,8 +37,6 @@
       atlasReadOnlyAdmin: 'atlas-read-only-admin',
       atlasReportsUpdate: 'atlas-reports-update',
       atlasComplianceRole: 'atlas-compliance-role',
-      atlasSettingsPage: 'atlas-settings-page',
-      atlasShipDevicesInternational: 'atlas-ship-devices-international',
       atlasSipUriDomain: 'atlas-sip-uri-domain',
       atlasSipUriDomainEnterprise: 'atlas-sip-uri-domain-enterprise',
       atlasUserPendingStatus: 'atlas-user-pending-status',
@@ -57,6 +56,7 @@
       callMultiDevice: 'call-multi-device',
       calliopeDiscovery: 'calliope-discovery',
       callParkService: 'call-park-service',
+      huronCallPickup: 'huronCallPickup',
       calsvcDetectCmrLoc: 'calsvc_detect_cmr_loc',
       clientRingbackV2: 'client-ringback-v2',
       console: 'console',
@@ -150,10 +150,14 @@
       webexCSV: 'webex-CSV',
       enableCrashLogs: 'csdm-enable-crash-logs',
       csdmPlaces: 'csdm-places',
+      csdmPstn: 'csdm-pstn',
+      csdmATA: 'csdm-ata',
       globalStatus: 'global-status',
       atlasF237ResourceGroups: 'atlas-f237-resource-group',
       huronLocalDialing: 'huron-local-dialing',
-      huronDeviceE911: 'huron-device-e911-address'
+      huronDeviceE911: 'huron-device-e911-address',
+      gemCCA: 'gem-cloud-connected-audio',
+      atlasHybridDataSecurity: 'atlas-data-security'
     };
 
     var toggles = {};
@@ -329,7 +333,7 @@
           supportsDirSync().then(function (enabled) {
             resolve(enabled);
           });
-        } else if (angular.isDefined(toggles[feature])) {
+        } else if (!_.isUndefined(toggles[feature])) {
           resolve(toggles[feature]);
         } else {
           $http.get(UrlConfig.getScimUrl(Authinfo.getOrgId()) + '/me', {

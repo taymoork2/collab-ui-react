@@ -1,16 +1,36 @@
-// Used by the time Filter
-export interface ITimespan {
-  value: number;
+// base interfaces
+export interface ICallMetricsBase {
+  labelData: ICallMetricsLabels;
+  dummy: boolean;
+}
+
+export interface IGraphBase {
+  date: string;
+  balloon: boolean;
+}
+
+export interface IDropdownBase {
+  value: number | string;
   label: string;
+}
+
+// Used by the time Filter
+export interface ITimespan extends IDropdownBase {
   description: string;
 }
 
 // Used by the Customer Filter
-export interface IReportsCustomer {
-  value: string;
-  label: string;
+export interface IReportsCustomer extends IDropdownBase {
   isAllowedToManage: boolean;
   isSelected: boolean;
+}
+
+// used by the Reports Filter
+export interface IFilterObject {
+  id: string;
+  label: string;
+  selected: boolean;
+  toggle: Function | void;
 }
 
 // Table information used by the report-card
@@ -27,13 +47,24 @@ export interface IReportCard {
 }
 
 export interface ISecondaryReport {
+  alternateTranslations: boolean;
   broadcast: string;
   description: string;
   display: boolean;
+  emptyDescription: string;
+  errorDescription: string;
+  search: boolean;
   state: string;
   sortOptions: Array<IReportSortOption>;
   table: IReportsTable | void;
   title: string;
+}
+
+export interface IReportDropdown {
+  array: Array<IDropdownBase>;
+  click: Function;
+  disabled: boolean;
+  selected: IDropdownBase;
 }
 
 export interface IReportsTable {
@@ -52,6 +83,11 @@ export interface IReportSortOption {
   direction: boolean;
 }
 
+export interface IReportLabel {
+  number: number | string;
+  text: string;
+}
+
 // Endpoint interface
 export interface IEndpointData {
   class: string;
@@ -60,10 +96,8 @@ export interface IEndpointData {
 }
 
 // Call Metrics Interfaces
-export interface ICallMetricsData {
+export interface ICallMetricsData extends ICallMetricsBase {
   dataProvider: Array<ICallMetricsDataProvider>;
-  labelData: ICallMetricsLabels;
-  dummy: boolean;
 }
 
 export interface ICallMetricsLabels {
@@ -72,21 +106,18 @@ export interface ICallMetricsLabels {
 }
 
 export interface ICallMetricsDataProvider {
+  value: number;
   label: string;
-  // value can be string or number
-  value: any;
   color: string;
 }
 
 // Media Quality Interface
-export interface IMediaQualityData {
-  date: string | void;
+export interface IMediaQualityData extends IGraphBase {
   totalDurationSum: number;
   partialSum: number;
   goodQualityDurationSum: number;
   fairQualityDurationSum: number;
   poorQualityDurationSum: number;
-  balloon: boolean;
 }
 
 // Active User interfaces
@@ -97,12 +128,10 @@ export interface IActiveUserCustomerData {
   totalRegistered: number;
 }
 
-export interface IActiveUserData {
-  date: string;
+export interface IActiveUserData extends IGraphBase {
   totalRegisteredUsers: number;
   activeUsers: number;
   percentage: number;
-  balloon: boolean;
 }
 
 export interface IActiveTableData {

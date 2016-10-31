@@ -6,7 +6,7 @@
   angular.module('Core', [
     'angular-cache',
     'atlas.templates',
-    'cisco.ui',
+    'collab.ui',
     'cisco.formly',
     'core.auth',
     'core.body',
@@ -44,6 +44,7 @@
     'timer',
     'toaster',
     'dragularModule',
+    require('modules/core/analytics'),
     require('modules/core/featureToggle/featureToggle.service'),
     require('modules/core/scripts/services/org.service'),
     require('modules/online/digitalRiver').default // TODO make core.myCompany independent module
@@ -68,11 +69,14 @@
     'ngIcal',
     'huron.paging-group',
     'huron.telephoneNumber',
+    'huron.call-park',
     require('modules/huron/telephony/telephonyConfig'),
     require('modules/huron/telephony/cmiServices'),
   ]);
 
   angular.module('Hercules', ['Core', 'Squared', 'core.onboard', 'ngTagsInput']);
+
+  angular.module('HDS', ['Core']);
 
   angular.module('Ediscovery', ['Core']);
 
@@ -89,6 +93,8 @@
 
   angular.module('Status', ['Core']);
 
+  angular.module('Gemini', ['Core']);
+
   module.exports = angular.module('Main', [
     'Core',
     'Squared',
@@ -97,11 +103,13 @@
     'Hercules',
     'Ediscovery',
     'Mediafusion',
+    'HDS',
     'WebExApp',
     'Messenger',
     'Sunlight',
     'Status',
     'oc.lazyLoad',
+    'Gemini'
   ]).config(require('./main.config'))
     .run(require('./main.run'))
     .name;

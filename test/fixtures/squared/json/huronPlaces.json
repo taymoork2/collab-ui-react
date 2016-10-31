@@ -1,0 +1,23 @@
+{
+  "places":
+  [
+    {
+      "uuid":"938d9c32-huronPlaceWithoutDevice-88d7c1a7f63ev",
+      "name":"mailto:huronPlaceWithoutDevice@hurondevicetimezone.wbx2.com",
+      "displayName":"HuronPlaceWithoutDevices",
+      "url":"https://cmi.huron-int.com/api/v2/customers/testOrg/places/938d9c32-huronPlaceWithoutDevice-88d7c1a7f63ev"
+    },
+    {
+      "uuid":"a19b308a-Place1WithHuronDevice-71898e423bec",
+      "name":"mailto:Place1WithHuronDevice@hurondevicetimezone.wbx2.com",
+      "displayName":"Place1WithHuronDevice",
+      "url":"https://cmi.huron-int.com/api/v2/customers/testOrg/places/a19b308a-Place1WithHuronDevice-71898e423bec"
+    },
+    {
+      "uuid":"68351854-Place2WithHuronDevice-c9c844421ec2",
+      "name":"mailto:Place2WithHuronDevice@hurondevicetimezone.wbx2.com",
+      "displayName":"Place2WithHuronDevice",
+      "url":"https://cmi.huron-int.com/api/v2/customers/testOrg/places/68351854-Place2WithHuronDevice-c9c844421ec2"
+    }
+  ]
+}

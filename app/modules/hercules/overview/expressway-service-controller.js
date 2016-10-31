@@ -19,9 +19,10 @@
     vm.servicesId = FusionUtils.connectorType2ServicesId(vm.connectorType);
     vm.route = FusionUtils.connectorType2RouteName(vm.connectorType); // kill?
     vm.loadingClusters = true;
+    vm.backState = 'services-overview';
 
     // Added for <cs-page-header>
-    vm.pageTitle = $translate.instant('hercules.serviceNames.' + vm.servicesId[0]);
+    vm.pageTitle = $translate.instant('hercules.hybridServiceNames.' + vm.servicesId[0]);
     vm.tabs = [{
       title: $translate.instant('common.resources'),
       state: vm.route + '.list'
@@ -50,7 +51,7 @@
         gridApi.selection.on.rowSelectionChanged($scope, function (row) {
           $scope.exp.showClusterSidepanel(row.entity);
         });
-        if (angular.isDefined($stateParams.clusterId) && $stateParams.clusterId !== null) {
+        if (!_.isUndefined($stateParams.clusterId) && $stateParams.clusterId !== null) {
           showClusterSidepanel(ClusterService.getCluster(vm.connectorType, $stateParams.clusterId));
         }
       },

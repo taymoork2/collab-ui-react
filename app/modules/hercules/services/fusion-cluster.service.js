@@ -14,7 +14,6 @@
       addPreregisteredClusterToAllowList: addPreregisteredClusterToAllowList,
       provisionConnector: provisionConnector,
       deprovisionConnector: deprovisionConnector,
-      getAllProvisionedConnectorTypes: getAllProvisionedConnectorTypes,
       getAll: getAll,
       get: get,
       buildSidepanelConnectorList: buildSidepanelConnectorList,
@@ -47,9 +46,9 @@
         .then(extractDataFromResponse);
     }
 
-    function getAll() {
+    function getAll(orgId) {
       return $http
-        .get(UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '?fields=@wide')
+        .get(UrlConfig.getHerculesUrlV2() + '/organizations/' + (orgId || Authinfo.getOrgId()) + '?fields=@wide')
         .then(extractClustersFromResponse)
         .then(addServicesStatuses)
         .then(sort);
@@ -188,13 +187,6 @@
         '/provisioning/actions/remove/invoke?connectorType=' + connectorType;
       return $http.post(url)
         .then(extractDataFromResponse);
-    }
-
-    function getAllProvisionedConnectorTypes(clusterId) {
-      return get(clusterId)
-        .then(function (data) {
-          return _.map(data.provisioning, 'connectorType');
-        });
     }
 
     function buildSidepanelConnectorList(cluster, connectorTypeToKeep) {

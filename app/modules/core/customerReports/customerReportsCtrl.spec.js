@@ -1,24 +1,64 @@
 'use strict';
 
 describe('Controller: Customer Reports Ctrl', function () {
-  var controller, $httpBackend, $scope, $state, $stateParams, $q, $translate, $timeout, Authinfo, Log, Config, CustomerReportService, DummyCustomerReportService, CustomerGraphService, WebexReportService, WebExApiGatewayService, Userservice, FeatureToggleService, MediaServiceActivationV2;
-  var activeUsersSort = ['userName', 'numCalls', 'sparkMessages', 'totalActivity'];
-  var REFRESH = 'refresh';
+  var controller, $scope, WebexReportService, WebExApiGatewayService, Userservice, $document;
 
   var dummyData = getJSONFixture('core/json/partnerReports/dummyReportData.json');
   var activeData = getJSONFixture('core/json/customerReports/activeUser.json');
-  var responseActiveData = activeData.activeResponse;
+  var ctrlData = getJSONFixture('core/json/partnerReports/ctrl.json');
   var roomData = getJSONFixture('core/json/customerReports/roomData.json');
   var fileData = getJSONFixture('core/json/customerReports/fileData.json');
   var mediaData = getJSONFixture('core/json/customerReports/mediaQuality.json');
   var metricsData = getJSONFixture('core/json/customerReports/callMetrics.json');
-  var dummyMetrics = angular.copy(metricsData);
-  dummyMetrics.dummy = true;
   var devicesJson = getJSONFixture('core/json/customerReports/devices.json');
-  var deviceResponse = angular.copy(devicesJson.response);
-  var dummyDevices = angular.copy(devicesJson.dummyData);
 
-  var mediaOptions = [{
+  var activeOptions = _.cloneDeep(ctrlData.activeUserOptions);
+  var secondaryActiveOptions = _.cloneDeep(ctrlData.activeUserSecondaryOptions);
+  var avgRoomsCard = _.cloneDeep(ctrlData.avgRoomsOptions);
+  var deviceCard = _.cloneDeep(ctrlData.deviceOptions);
+  var filesSharedCard = _.cloneDeep(ctrlData.filesSharedOptions);
+  var mediaOptions = _.cloneDeep(ctrlData.mediaOptions);
+  var metricsOptions = _.cloneDeep(ctrlData.callOptions);
+  var metricsLabels = _.cloneDeep(ctrlData.metricsLabels);
+  activeOptions.description = 'activeUsers.customerPortalDescription';
+  activeOptions.table = undefined;
+  secondaryActiveOptions.description = 'activeUsers.customerMostActiveDescription';
+  secondaryActiveOptions.search = true;
+  secondaryActiveOptions.table.data = _.cloneDeep(activeData.mostActiveResponse);
+  avgRoomsCard.table = undefined;
+  deviceCard.table = undefined;
+  filesSharedCard.table = undefined;
+  mediaOptions.description = 'mediaQuality.descriptionCustomer';
+  mediaOptions.table = undefined;
+  metricsOptions.description = 'callMetrics.customerDescription';
+  metricsOptions.table = undefined;
+
+  secondaryActiveOptions.sortOptions = [{
+    option: "userName",
+    direction: false
+  }, {
+    option: "numCalls",
+    direction: false
+  }, {
+    option: "sparkMessages",
+    direction: true
+  }, {
+    option: "totalActivity",
+    direction: true
+  }];
+
+  secondaryActiveOptions.table.headers = [{
+    title: "activeUsers.user",
+    class: "col-md-4 pointer"
+  }, {
+    title: "activeUsers.calls",
+    class: "horizontal-center col-md-2 pointer"
+  }, {
+    title: "activeUsers.sparkMessages",
+    class: "horizontal-center col-md-2 pointer"
+  }];
+
+  var mediaArray = [{
     value: 0,
     label: 'reportsPage.allCalls'
   }, {
@@ -28,10 +68,10 @@ describe('Controller: Customer Reports Ctrl', function () {
     value: 2,
     label: 'reportsPage.videoCalls'
   }];
-
-  var defaultDeviceFilter = {
-    value: 0,
-    label: 'registeredEndpoints.allDevices'
+  var mediaDropdown = {
+    array: mediaArray,
+    disabled: false,
+    selected: mediaArray[0]
   };
 
   var headerTabs = [{
@@ -58,400 +98,279 @@ describe('Controller: Customer Reports Ctrl', function () {
     description: 'reportsPage.threeMonths2'
   }];
 
-  beforeEach(angular.mock.module('Core'));
-  beforeEach(angular.mock.module('Huron'));
-  beforeEach(angular.mock.module('Sunlight'));
-  beforeEach(angular.mock.module('Mediafusion'));
+  beforeEach(function () {
+    this.initModules('Core', 'Huron', 'Sunlight', 'Mediafusion');
+    this.injectDependencies('$rootScope',
+                            '$timeout',
+                            '$q',
+                            '$httpBackend',
+                            '$controller',
+                            'Authinfo',
+                            'CustomerGraphService',
+                            'CustomerReportService',
+                            'DummyCustomerReportService',
+                            'FeatureToggleService',
+                            'MediaServiceActivationV2');
+    $scope = this.$rootScope.$new();
+    /* global document */
+    $document = angular.element(document);
+    $document.find('body').append('<div class="cs-card-layout"></div>');
 
-  describe('CustomerReportsCtrl - Expected Responses', function () {
-    beforeEach(inject(function ($rootScope, $controller, _$httpBackend_, _$state_, _$stateParams_, _$q_, _$translate_, _$timeout_, _Authinfo_, _Log_, _Config_, _CustomerReportService_, _DummyCustomerReportService_, _CustomerGraphService_, _FeatureToggleService_, _MediaServiceActivationV2_) {
-      $scope = $rootScope.$new();
-      $state = _$state_;
-      $stateParams = _$stateParams_;
-      $q = _$q_;
-      $translate = _$translate_;
-      $timeout = _$timeout_;
-      Authinfo = _Authinfo_;
-      Log = _Log_;
-      Config = _Config_;
-      CustomerReportService = _CustomerReportService_;
-      DummyCustomerReportService = _DummyCustomerReportService_;
-      CustomerGraphService = _CustomerGraphService_;
-      FeatureToggleService = _FeatureToggleService_;
-      MediaServiceActivationV2 = _MediaServiceActivationV2_;
-      $httpBackend = _$httpBackend_;
+    this.$httpBackend.whenGET('https://identity.webex.com/identity/scim/null/v1/Users/me').respond(200, {});
+    spyOn(this.$rootScope, '$broadcast').and.callThrough();
+    spyOn(this.Authinfo, 'isCare').and.returnValue(true);
 
-      $httpBackend.whenGET('https://identity.webex.com/identity/scim/null/v1/Users/me').respond(200, {});
-      spyOn(FeatureToggleService, 'atlasMediaServiceMetricsGetStatus').and.returnValue(
-        $q.when(true)
-      );
-      spyOn(Authinfo, 'isCare').and.returnValue(true);
-      spyOn(FeatureToggleService, 'atlasCareTrialsGetStatus').and.returnValue(
-        $q.when(true)
-      );
-      spyOn(MediaServiceActivationV2, 'getMediaServiceState').and.returnValue(
-        $q.resolve(true)
-      );
-      // Service Spies
-      spyOn(CustomerGraphService, 'setActiveUsersGraph').and.returnValue({
-        'dataProvider': dummyData.activeUser.one
-      });
-      spyOn(CustomerGraphService, 'setAvgRoomsGraph').and.returnValue({
-        'dataProvider': roomData.response
-      });
-      spyOn(CustomerGraphService, 'setFilesSharedGraph').and.returnValue({
-        'dataProvider': fileData.response
-      });
-      spyOn(CustomerGraphService, 'setMediaQualityGraph').and.returnValue({
-        'dataProvider': mediaData.response
-      });
-      spyOn(CustomerGraphService, 'setMetricsGraph').and.returnValue({
-        'dataProvider': metricsData.dataProvider
-      });
-      spyOn(CustomerGraphService, 'setDeviceGraph').and.returnValue({
-        'dataProvider': deviceResponse.graphData
-      });
+    spyOn(this.CustomerGraphService, 'setActiveUsersGraph').and.returnValue({
+      'dataProvider': _.cloneDeep(dummyData.activeUser.one)
+    });
+    spyOn(this.CustomerGraphService, 'setAvgRoomsGraph').and.returnValue({
+      'dataProvider': _.cloneDeep(roomData.response)
+    });
+    spyOn(this.CustomerGraphService, 'setFilesSharedGraph').and.returnValue({
+      'dataProvider': _.cloneDeep(fileData.response)
+    });
+    spyOn(this.CustomerGraphService, 'setMediaQualityGraph').and.returnValue({
+      'dataProvider': _.cloneDeep(mediaData.response)
+    });
+    spyOn(this.CustomerGraphService, 'setMetricsGraph').and.returnValue({
+      'dataProvider': _.cloneDeep(metricsData.response.dataProvider)
+    });
+    spyOn(this.CustomerGraphService, 'setDeviceGraph').and.returnValue({
+      'dataProvider': _.cloneDeep(devicesJson.response.graphData)
+    });
 
-      spyOn(DummyCustomerReportService, 'dummyActiveUserData').and.returnValue(dummyData.activeUser.one);
-      spyOn(DummyCustomerReportService, 'dummyAvgRoomData').and.returnValue(dummyData.avgRooms.one);
-      spyOn(DummyCustomerReportService, 'dummyFilesSharedData').and.returnValue(dummyData.filesShared.one);
-      spyOn(DummyCustomerReportService, 'dummyMediaData').and.returnValue(dummyData.mediaQuality.one);
-      spyOn(DummyCustomerReportService, 'dummyMetricsData').and.returnValue(dummyMetrics);
-      spyOn(DummyCustomerReportService, 'dummyDeviceData').and.returnValue(dummyDevices);
-
-      spyOn(CustomerReportService, 'getActiveUserData').and.returnValue($q.when(responseActiveData));
-      spyOn(CustomerReportService, 'getMostActiveUserData').and.returnValue($q.when({
-        tableData: _.clone(activeData.mostActiveResponse),
-        error: false
-      }));
-      spyOn(CustomerReportService, 'getAvgRoomData').and.returnValue($q.when(roomData.response));
-      spyOn(CustomerReportService, 'getFilesSharedData').and.returnValue($q.when(fileData.response));
-      spyOn(CustomerReportService, 'getMediaQualityData').and.returnValue($q.when(mediaData.response));
-      spyOn(CustomerReportService, 'getCallMetricsData').and.returnValue($q.when(metricsData));
-      spyOn(CustomerReportService, 'getDeviceData').and.returnValue($q.when(deviceResponse));
-
-      spyOn($state, 'go');
-
-      // Webex Requirements
-      WebexReportService = {
-        initReportsObject: function () {}
-      };
-
-      WebExApiGatewayService = {
-        siteFunctions: function (url) {
-          var defer = $q.defer();
-          defer.resolve({
-            siteUrl: url
-          });
-          return defer.promise;
-        }
-      };
-
-      Userservice = {
-        getUser: function (user) {
-          expect(user).toBe('me');
-        }
-      };
-
-      controller = $controller('CustomerReportsCtrl', {
-        $state: $state,
-        $stateParams: $stateParams,
-        $q: $q,
-        $translate: $translate,
-        Log: Log,
-        Config: Config,
-        CustomerReportService: CustomerReportService,
-        DummyCustomerReportService: DummyCustomerReportService,
-        CustomerGraphService: CustomerGraphService,
-        WebexReportService: WebexReportService,
-        WebExApiGatewayService: WebExApiGatewayService,
-        Userservice: Userservice,
-        FeatureToggleService: FeatureToggleService,
-        MediaServiceActivationV2: MediaServiceActivationV2
-      });
-
-      $scope.$apply();
-      $httpBackend.flush();
+    spyOn(this.CustomerReportService, 'getActiveUserData').and.returnValue(this.$q.when(_.cloneDeep(activeData.activeResponse)));
+    spyOn(this.CustomerReportService, 'getMostActiveUserData').and.returnValue(this.$q.when({
+      tableData: _.cloneDeep(activeData.mostActiveResponse),
+      error: false
     }));
+    spyOn(this.CustomerReportService, 'getAvgRoomData').and.returnValue(this.$q.when(_.cloneDeep(roomData.response)));
+    spyOn(this.CustomerReportService, 'getFilesSharedData').and.returnValue(this.$q.when(_.cloneDeep(fileData.response)));
+    spyOn(this.CustomerReportService, 'getMediaQualityData').and.returnValue(this.$q.when(_.cloneDeep(mediaData.response)));
+    spyOn(this.CustomerReportService, 'getCallMetricsData').and.returnValue(this.$q.when(_.cloneDeep(metricsData.response)));
+    spyOn(this.CustomerReportService, 'getDeviceData').and.returnValue(this.$q.when(_.cloneDeep(devicesJson.response)));
 
-    afterEach(function () {
-      $httpBackend.verifyNoOutstandingExpectation();
-      $httpBackend.verifyNoOutstandingRequest();
+    var dummyMetrics = _.cloneDeep(metricsData.response);
+    dummyMetrics.dummy = true;
+
+    spyOn(this.DummyCustomerReportService, 'dummyActiveUserData').and.returnValue(dummyData.activeUser.one);
+    spyOn(this.DummyCustomerReportService, 'dummyAvgRoomData').and.returnValue(dummyData.avgRooms.one);
+    spyOn(this.DummyCustomerReportService, 'dummyFilesSharedData').and.returnValue(dummyData.filesShared.one);
+    spyOn(this.DummyCustomerReportService, 'dummyMediaData').and.returnValue(dummyData.mediaQuality.one);
+    spyOn(this.DummyCustomerReportService, 'dummyMetricsData').and.returnValue(dummyMetrics);
+    spyOn(this.DummyCustomerReportService, 'dummyDeviceData').and.returnValue(_.cloneDeep(devicesJson.dummyData));
+
+    spyOn(this.FeatureToggleService, 'atlasMediaServiceMetricsGetStatus').and.returnValue(this.$q.when(true));
+    spyOn(this.FeatureToggleService, 'atlasCareTrialsGetStatus').and.returnValue(this.$q.when(true));
+    spyOn(this.MediaServiceActivationV2, 'getMediaServiceState').and.returnValue(this.$q.resolve(true));
+
+    // Webex Requirements
+    WebexReportService = {
+      initReportsObject: function () {}
+    };
+
+    WebExApiGatewayService = {
+      siteFunctions: function (url) {
+        var defer = this.$q.defer();
+        defer.resolve({
+          siteUrl: url
+        });
+        return defer.promise;
+      }
+    };
+
+    Userservice = {
+      getUser: function (user) {
+        expect(user).toBe('me');
+      }
+    };
+
+    controller = this.$controller('CustomerReportsCtrl', {
+      $state: this.$state,
+      $q: this.$q,
+      CustomerReportService: this.CustomerReportService,
+      DummyCustomerReportService: this.DummyCustomerReportService,
+      CustomerGraphService: this.CustomerGraphService,
+      WebexReportService: WebexReportService,
+      WebExApiGatewayService: WebExApiGatewayService,
+      Userservice: Userservice,
+      FeatureToggleService: this.FeatureToggleService,
+      MediaServiceActivationV2: this.MediaServiceActivationV2
     });
 
-    describe('Initializing Controller', function () {
-      it('should be created successfully and all expected calls completed', function () {
-        expect(controller).toBeDefined();
-        $timeout(function () {
-          expect(DummyCustomerReportService.dummyActiveUserData).toHaveBeenCalledWith(timeOptions[0], false);
-          expect(DummyCustomerReportService.dummyAvgRoomData).toHaveBeenCalledWith(timeOptions[0]);
-          expect(DummyCustomerReportService.dummyFilesSharedData).toHaveBeenCalledWith(timeOptions[0]);
-          expect(DummyCustomerReportService.dummyMediaData).toHaveBeenCalledWith(timeOptions[0]);
-          expect(DummyCustomerReportService.dummyMetricsData).toHaveBeenCalled();
-          expect(DummyCustomerReportService.dummyDeviceData).toHaveBeenCalledWith(timeOptions[0]);
+    $scope.$apply();
+    this.$httpBackend.flush();
+    this.$timeout.flush();
+  });
 
-          expect(CustomerReportService.getActiveUserData).toHaveBeenCalledWith(timeOptions[0], false);
-          expect(CustomerReportService.getMostActiveUserData).toHaveBeenCalledWith(timeOptions[0]);
-          expect(CustomerReportService.getAvgRoomData).toHaveBeenCalledWith(timeOptions[0]);
-          expect(CustomerReportService.getFilesSharedData).toHaveBeenCalledWith(timeOptions[0]);
-          expect(CustomerReportService.getMediaQualityData).toHaveBeenCalledWith(timeOptions[0]);
-          expect(CustomerReportService.getCallMetricsData).toHaveBeenCalledWith(timeOptions[0]);
-          expect(CustomerReportService.getDeviceData).toHaveBeenCalledWith(timeOptions[0]);
+  afterEach(function () {
+    this.$httpBackend.verifyNoOutstandingExpectation();
+    this.$httpBackend.verifyNoOutstandingRequest();
+  });
 
-          expect(CustomerGraphService.setActiveUsersGraph).toHaveBeenCalled();
-          expect(CustomerGraphService.setAvgRoomsGraph).toHaveBeenCalled();
-          expect(CustomerGraphService.setFilesSharedGraph).toHaveBeenCalled();
-          expect(CustomerGraphService.setMediaQualityGraph).toHaveBeenCalled();
-          expect(CustomerGraphService.setMetricsGraph).toHaveBeenCalled();
-          expect(CustomerGraphService.setDeviceGraph).toHaveBeenCalled();
-        }, 30);
-      });
+  describe('Initializing Controller', function () {
+    it('should be created successfully and all expected calls completed', function () {
+      expect(this.DummyCustomerReportService.dummyActiveUserData).toHaveBeenCalledWith(timeOptions[0], false);
+      expect(this.DummyCustomerReportService.dummyAvgRoomData).toHaveBeenCalledWith(timeOptions[0]);
+      expect(this.DummyCustomerReportService.dummyFilesSharedData).toHaveBeenCalledWith(timeOptions[0]);
+      expect(this.DummyCustomerReportService.dummyMediaData).toHaveBeenCalledWith(timeOptions[0]);
+      expect(this.DummyCustomerReportService.dummyMetricsData).toHaveBeenCalled();
+      expect(this.DummyCustomerReportService.dummyDeviceData).toHaveBeenCalledWith(timeOptions[0]);
 
-      it('should set all page variables', function () {
-        expect(controller.showWebexTab).toBeFalsy();
+      expect(this.CustomerReportService.getActiveUserData).toHaveBeenCalledWith(timeOptions[0], false);
+      expect(this.CustomerReportService.getMostActiveUserData).toHaveBeenCalledWith(timeOptions[0]);
+      expect(this.CustomerReportService.getAvgRoomData).toHaveBeenCalledWith(timeOptions[0]);
+      expect(this.CustomerReportService.getFilesSharedData).toHaveBeenCalledWith(timeOptions[0]);
+      expect(this.CustomerReportService.getMediaQualityData).toHaveBeenCalledWith(timeOptions[0]);
+      expect(this.CustomerReportService.getCallMetricsData).toHaveBeenCalledWith(timeOptions[0]);
+      expect(this.CustomerReportService.getDeviceData).toHaveBeenCalledWith(timeOptions[0]);
 
-        expect(controller.pageTitle).toEqual('reportsPage.pageTitle');
-        expect(controller.allReports).toEqual('all');
-        expect(controller.engagement).toEqual('engagement');
-        expect(controller.quality).toEqual('quality');
-        expect(controller.displayEngagement).toBeTruthy();
-        expect(controller.displayQuality).toBeTruthy();
-
-        expect(controller.activeUserStatus).toEqual(REFRESH);
-        expect(controller.showMostActiveUsers).toBeFalsy();
-        expect(controller.displayMostActive).toBeFalsy();
-        expect(controller.mostActiveUsers).toEqual([]);
-        expect(controller.searchField).toEqual('');
-        expect(controller.activeUserReverse).toBeTruthy();
-        expect(controller.activeUsersTotalPages).toEqual(0);
-        expect(controller.activeUserCurrentPage).toEqual(0);
-        expect(controller.activeUserPredicate).toEqual(activeUsersSort[3]);
-        expect(controller.activeButton).toEqual([1, 2, 3]);
-
-        expect(controller.avgRoomStatus).toEqual(REFRESH);
-        expect(controller.filesSharedStatus).toEqual(REFRESH);
-        expect(controller.metricStatus).toEqual(REFRESH);
-        expect(controller.metrics).toEqual({});
-
-        expect(controller.mediaQualityStatus).toEqual(REFRESH);
-        expect(controller.mediaOptions).toEqual(mediaOptions);
-        expect(controller.mediaSelected).toEqual(mediaOptions[0]);
-
-        expect(controller.deviceStatus).toEqual(REFRESH);
-        expect(controller.deviceFilter).toEqual([defaultDeviceFilter]);
-        expect(controller.selectedDevice).toEqual(defaultDeviceFilter);
-
-        expect(controller.headerTabs).toEqual(headerTabs);
-        expect(controller.timeOptions).toEqual(timeOptions);
-        expect(controller.timeSelected).toEqual(timeOptions[0]);
-      });
+      expect(this.CustomerGraphService.setActiveUsersGraph).toHaveBeenCalled();
+      expect(this.CustomerGraphService.setAvgRoomsGraph).toHaveBeenCalled();
+      expect(this.CustomerGraphService.setFilesSharedGraph).toHaveBeenCalled();
+      expect(this.CustomerGraphService.setMediaQualityGraph).toHaveBeenCalled();
+      expect(this.CustomerGraphService.setMetricsGraph).toHaveBeenCalled();
+      expect(this.CustomerGraphService.setDeviceGraph).toHaveBeenCalled();
     });
 
-    describe('filter changes', function () {
-      it('All graphs should update on time filter changes', function () {
-        controller.timeSelected = timeOptions[1];
-        controller.timeUpdate();
-        expect(controller.timeSelected).toEqual(timeOptions[1]);
+    it('should set all page variables', function () {
+      expect(controller.showWebexTab).toBeFalsy();
 
-        expect(DummyCustomerReportService.dummyActiveUserData).toHaveBeenCalledWith(timeOptions[1], false);
-        expect(DummyCustomerReportService.dummyAvgRoomData).toHaveBeenCalledWith(timeOptions[1]);
-        expect(DummyCustomerReportService.dummyFilesSharedData).toHaveBeenCalledWith(timeOptions[1]);
-        expect(DummyCustomerReportService.dummyMediaData).toHaveBeenCalledWith(timeOptions[1]);
-        expect(DummyCustomerReportService.dummyMetricsData).toHaveBeenCalled();
-        expect(DummyCustomerReportService.dummyDeviceData).toHaveBeenCalledWith(timeOptions[1]);
+      expect(controller.pageTitle).toEqual('reportsPage.pageTitle');
+      expect(controller.ALL).toEqual(ctrlData.ALL);
+      expect(controller.ENGAGEMENT).toEqual(ctrlData.ENGAGEMENT);
+      expect(controller.QUALITY).toEqual(ctrlData.QUALITY);
+      expect(controller.displayEngagement).toBeTruthy();
+      expect(controller.displayQuality).toBeTruthy();
 
-        expect(CustomerReportService.getActiveUserData).toHaveBeenCalledWith(timeOptions[1], false);
-        expect(CustomerReportService.getAvgRoomData).toHaveBeenCalledWith(timeOptions[1]);
-        expect(CustomerReportService.getFilesSharedData).toHaveBeenCalledWith(timeOptions[1]);
-        expect(CustomerReportService.getMediaQualityData).toHaveBeenCalledWith(timeOptions[1]);
-        expect(CustomerReportService.getCallMetricsData).toHaveBeenCalledWith(timeOptions[1]);
-        expect(CustomerReportService.getDeviceData).toHaveBeenCalledWith(timeOptions[1]);
+      expect(controller.activeOptions).toEqual(activeOptions);
+      expect(controller.secondaryActiveOptions).toEqual(secondaryActiveOptions);
 
-        expect(CustomerGraphService.setActiveUsersGraph).toHaveBeenCalled();
-        expect(CustomerGraphService.setAvgRoomsGraph).toHaveBeenCalled();
-        expect(CustomerGraphService.setFilesSharedGraph).toHaveBeenCalled();
-        expect(CustomerGraphService.setMediaQualityGraph).toHaveBeenCalled();
-        expect(CustomerGraphService.setMetricsGraph).toHaveBeenCalled();
-        expect(CustomerGraphService.setDeviceGraph).toHaveBeenCalled();
+      expect(controller.avgRoomOptions).toEqual(avgRoomsCard);
+      expect(controller.filesSharedOptions).toEqual(filesSharedCard);
+
+      expect(controller.deviceOptions).toEqual(deviceCard);
+      _.forEach(_.cloneDeep(devicesJson.response.filterArray), function (filter) {
+        expect(controller.deviceDropdown.array).toContain(filter);
+      });
+      expect(controller.deviceDropdown.disabled).toEqual(false);
+      expect(controller.deviceDropdown.selected).toEqual(controller.deviceDropdown.array[0]);
+
+      expect(controller.mediaOptions).toEqual(mediaOptions);
+      expect(controller.mediaDropdown.array).toEqual(mediaDropdown.array);
+      expect(controller.mediaDropdown.disabled).toEqual(mediaDropdown.disabled);
+      expect(controller.mediaDropdown.selected).toEqual(mediaDropdown.selected);
+
+      expect(controller.metricsOptions).toEqual(metricsOptions);
+      expect(controller.metricsLabels).toEqual(metricsLabels);
+
+      var reportFilter = _.cloneDeep(ctrlData.reportFilter);
+      _.forEach(controller.filterArray, function (filter, index) {
+        expect(filter.label).toEqual(reportFilter[index].label);
+        expect(filter.id).toEqual(reportFilter[index].id);
+        expect(filter.selected).toEqual(reportFilter[index].selected);
       });
 
-      it('should update the media graph on mediaUpdate', function () {
-        controller.timeSelected = timeOptions[2];
-        controller.mediaUpdate();
+      expect(controller.headerTabs).toEqual(headerTabs);
+      expect(controller.timeOptions).toEqual(timeOptions);
+      expect(controller.timeSelected).toEqual(timeOptions[0]);
+    });
+  });
 
-        expect(CustomerGraphService.setMediaQualityGraph).toHaveBeenCalled();
-        expect(CustomerGraphService.setActiveUsersGraph).not.toHaveBeenCalled();
-        expect(CustomerGraphService.setAvgRoomsGraph).not.toHaveBeenCalled();
-        expect(CustomerGraphService.setFilesSharedGraph).not.toHaveBeenCalled();
-        expect(CustomerGraphService.setMetricsGraph).not.toHaveBeenCalled();
-        expect(CustomerGraphService.setDeviceGraph).not.toHaveBeenCalled();
-      });
+  describe('filter changes', function () {
+    it('All graphs should update on time filter changes', function () {
+      controller.timeSelected = timeOptions[1];
+      controller.timeUpdate();
+      expect(controller.timeSelected).toEqual(timeOptions[1]);
 
-      it('should update the registered device graph on deviceUpdated', function () {
-        controller.deviceUpdate();
+      expect(this.DummyCustomerReportService.dummyActiveUserData).toHaveBeenCalledWith(timeOptions[1], false);
+      expect(this.DummyCustomerReportService.dummyAvgRoomData).toHaveBeenCalledWith(timeOptions[1]);
+      expect(this.DummyCustomerReportService.dummyFilesSharedData).toHaveBeenCalledWith(timeOptions[1]);
+      expect(this.DummyCustomerReportService.dummyMediaData).toHaveBeenCalledWith(timeOptions[1]);
+      expect(this.DummyCustomerReportService.dummyMetricsData).toHaveBeenCalled();
+      expect(this.DummyCustomerReportService.dummyDeviceData).toHaveBeenCalledWith(timeOptions[1]);
 
-        expect(CustomerReportService.getDeviceData).not.toHaveBeenCalled();
-        expect(CustomerGraphService.setActiveUsersGraph).not.toHaveBeenCalled();
-        expect(CustomerGraphService.setAvgRoomsGraph).not.toHaveBeenCalled();
-        expect(CustomerGraphService.setFilesSharedGraph).not.toHaveBeenCalled();
-        expect(CustomerGraphService.setMetricsGraph).not.toHaveBeenCalled();
-        expect(CustomerGraphService.setMediaQualityGraph).not.toHaveBeenCalled();
-      });
+      expect(this.CustomerReportService.getActiveUserData).toHaveBeenCalledWith(timeOptions[1], false);
+      expect(this.CustomerReportService.getAvgRoomData).toHaveBeenCalledWith(timeOptions[1]);
+      expect(this.CustomerReportService.getFilesSharedData).toHaveBeenCalledWith(timeOptions[1]);
+      expect(this.CustomerReportService.getMediaQualityData).toHaveBeenCalledWith(timeOptions[1]);
+      expect(this.CustomerReportService.getCallMetricsData).toHaveBeenCalledWith(timeOptions[1]);
+      expect(this.CustomerReportService.getDeviceData).toHaveBeenCalledWith(timeOptions[1]);
+
+      expect(this.CustomerGraphService.setActiveUsersGraph).toHaveBeenCalled();
+      expect(this.CustomerGraphService.setAvgRoomsGraph).toHaveBeenCalled();
+      expect(this.CustomerGraphService.setFilesSharedGraph).toHaveBeenCalled();
+      expect(this.CustomerGraphService.setMediaQualityGraph).toHaveBeenCalled();
+      expect(this.CustomerGraphService.setMetricsGraph).toHaveBeenCalled();
+      expect(this.CustomerGraphService.setDeviceGraph).toHaveBeenCalled();
     });
 
-    describe('helper functions', function () {
-      it('getDescription, getAltDescription, getAltHeader, and getHeader should return translated strings', function () {
-        expect(controller.getDescription('text')).toEqual('text');
-        expect(controller.getAltDescription('text')).toEqual('text');
-        expect(controller.getHeader('text')).toEqual('text');
-        expect(controller.getAltHeader('text')).toEqual('text');
-      });
-
-      it('goToUsersTab should send the customer to the users tab', function () {
-        controller.goToUsersTab();
-        expect($state.go).toHaveBeenCalled();
-      });
-
-      it('resetCards should alter the visible reports based on filters', function () {
-        controller.resetCards(controller.engagement);
-        expect(controller.displayEngagement).toBeTruthy();
-        expect(controller.displayQuality).toBeFalsy();
-
-        controller.resetCards(controller.quality);
-        expect(controller.displayEngagement).toBeFalsy();
-        expect(controller.displayQuality).toBeTruthy();
-
-        controller.resetCards(controller.allReports);
-        expect(controller.displayEngagement).toBeTruthy();
-        expect(controller.displayQuality).toBeTruthy();
-      });
-
-      it('searchMostActive should return a list of users based on mostActiveUsers and the searchField', function () {
-        expect(controller.searchMostActive()).toEqual([]);
-
-        controller.mostActiveUsers = _.clone(activeData.mostActiveResponse);
-        expect(controller.searchMostActive()).toEqual(_.clone(activeData.mostActiveResponse));
-
-        controller.searchField = 'le';
-        expect(controller.searchMostActive()).toEqual([_.clone(activeData.mostActiveResponse)[0], _.clone(activeData.mostActiveResponse)[11]]);
-      });
-
-      it('mostActiveUserSwitch should toggle the state for showMostActiveUsers', function () {
-        expect(controller.showMostActiveUsers).toBeFalsy();
-        controller.mostActiveUserSwitch();
-        expect(controller.showMostActiveUsers).toBeTruthy();
-        controller.mostActiveUserSwitch();
-        expect(controller.showMostActiveUsers).toBeFalsy();
-      });
-
-      it('activePage should return true when called with the same value as activeUserCurrentPage', function () {
-        controller.activeUserCurrentPage = 1;
-        expect(controller.activePage(controller.activeUserCurrentPage)).toBeTruthy();
-      });
-
-      it('activePage should return false when called with a different value as activeUserCurrentPage', function () {
-        expect(controller.activePage(7)).toBeFalsy();
-      });
-
-      it('changePage should change the value of activeUserCurrentPage', function () {
-        controller.changePage(3);
-        expect(controller.activeUserCurrentPage).toEqual(3);
-      });
-
-      it('isRefresh should return true when sent "refresh"', function () {
-        expect(controller.isRefresh('refresh')).toBeTruthy();
-      });
-
-      it('isRefresh should return false when sent "set", "error", or "empty"', function () {
-        expect(controller.isRefresh('set')).toBeFalsy();
-        expect(controller.isRefresh('empty')).toBeFalsy();
-        expect(controller.isRefresh('error')).toBeFalsy();
-      });
-
-      it('isEmpty should return true when sent "empty"', function () {
-        expect(controller.isEmpty('empty')).toBeTruthy();
-      });
-
-      it('isEmpty should return false when sent "set", "error", or "refresh"', function () {
-        expect(controller.isEmpty('set')).toBeFalsy();
-        expect(controller.isEmpty('refresh')).toBeFalsy();
-        expect(controller.isEmpty('error')).toBeFalsy();
-      });
-
-      it('isError should return true when sent "error"', function () {
-        expect(controller.isError('error')).toBeTruthy();
-      });
-
-      it('isError should return false when sent "set", "empty", or "refresh"', function () {
-        expect(controller.isError('set')).toBeFalsy();
-        expect(controller.isError('refresh')).toBeFalsy();
-        expect(controller.isError('empty')).toBeFalsy();
-      });
-
-      it('mostActiveSort should sort by userName', function () {
-        controller.mostActiveSort(0);
-        expect(controller.activeUserPredicate).toBe(activeUsersSort[0]);
-        expect(controller.activeUserReverse).toBeFalsy();
-      });
-
-      it('mostActiveSort should sort by calls', function () {
-        controller.mostActiveSort(1);
-        expect(controller.activeUserPredicate).toBe(activeUsersSort[1]);
-        expect(controller.activeUserReverse).toBeTruthy();
-      });
-
-      it('mostActiveSort should sort by posts', function () {
-        controller.mostActiveSort(2);
-        expect(controller.activeUserPredicate).toBe(activeUsersSort[2]);
-        expect(controller.activeUserReverse).toBeTruthy();
-      });
-
-      it('pageForward should change carousel button numbers', function () {
-        controller.activeUsersTotalPages = 4;
-        controller.activeUserCurrentPage = 1;
-
-        controller.pageForward();
-        expect(controller.activeButton[0]).toBe(1);
-        expect(controller.activeButton[1]).toBe(2);
-        expect(controller.activeButton[2]).toBe(3);
-        expect(controller.activeUserCurrentPage).toBe(2);
-
-        controller.pageForward();
-        expect(controller.activeButton[0]).toBe(2);
-        expect(controller.activeButton[1]).toBe(3);
-        expect(controller.activeButton[2]).toBe(4);
-        expect(controller.activeUserCurrentPage).toBe(3);
-      });
-
-      it('pageBackward should change carousel button numbers', function () {
-        controller.activeUsersTotalPages = 4;
-        controller.activeButton[0] = 2;
-        controller.activeButton[1] = 3;
-        controller.activeButton[2] = 4;
-        controller.activeUserCurrentPage = 3;
-
-        controller.pageBackward();
-        expect(controller.activeButton[0]).toBe(1);
-        expect(controller.activeButton[1]).toBe(2);
-        expect(controller.activeButton[2]).toBe(3);
-        expect(controller.activeUserCurrentPage).toBe(2);
-
-        controller.pageBackward();
-        expect(controller.activeButton[0]).toBe(1);
-        expect(controller.activeButton[1]).toBe(2);
-        expect(controller.activeButton[2]).toBe(3);
-        expect(controller.activeUserCurrentPage).toBe(1);
-      });
+    it('should update the media graph on mediaUpdate', function () {
+      controller.timeSelected = timeOptions[2];
+      expect(this.CustomerGraphService.setMediaQualityGraph).toHaveBeenCalledTimes(2);
+      controller.mediaDropdown.click();
+      expect(this.CustomerGraphService.setMediaQualityGraph).toHaveBeenCalledTimes(3);
     });
 
-    describe('webex tests', function () {
-      it('should show spark tab but not webex tab', function () {
-        expect(controller.tab).not.toBeDefined();
-      });
+    it('should update the registered device graph on deviceUpdated', function () {
+      expect(this.CustomerGraphService.setDeviceGraph).toHaveBeenCalledTimes(2);
+      controller.deviceDropdown.click();
+      expect(this.CustomerGraphService.setDeviceGraph).toHaveBeenCalledTimes(3);
+    });
+  });
 
-      it('should not have anything in the dropdown for webex reports', function () {
-        expect(controller.webexOptions.length).toBe(0);
-      });
+  describe('helper functions', function () {
+    it('getDescription and getHeader should return translated strings', function () {
+      expect(controller.getDescription('text')).toEqual('text');
+      expect(controller.getHeader('text')).toEqual('text');
+    });
+
+    it('resetCards should alter the visible filterArray[x].toggle based on filters', function () {
+      controller.filterArray[1].toggle(ctrlData.ENGAGEMENT);
+      expect(controller.displayEngagement).toBeTruthy();
+      expect(controller.displayQuality).toBeFalsy();
+
+      controller.filterArray[2].toggle(ctrlData.QUALITY);
+      expect(controller.displayEngagement).toBeFalsy();
+      expect(controller.displayQuality).toBeTruthy();
+
+      controller.filterArray[0].toggle(ctrlData.ALL);
+      expect(controller.displayEngagement).toBeTruthy();
+      expect(controller.displayQuality).toBeTruthy();
+    });
+
+    it('isRefresh should return true when sent "refresh" and false for all other options', function () {
+      expect(controller.isRefresh(ctrlData.REFRESH)).toBeTruthy();
+
+      expect(controller.isRefresh(ctrlData.SET)).toBeFalsy();
+      expect(controller.isRefresh(ctrlData.EMPTY)).toBeFalsy();
+      expect(controller.isRefresh(ctrlData.ERROR)).toBeFalsy();
+    });
+
+    it('isEmpty should return true when sent "empty" and false for all other options', function () {
+      expect(controller.isEmpty(ctrlData.EMPTY)).toBeTruthy();
+
+      expect(controller.isEmpty(ctrlData.SET)).toBeFalsy();
+      expect(controller.isEmpty(ctrlData.REFRESH)).toBeFalsy();
+      expect(controller.isEmpty(ctrlData.ERROR)).toBeFalsy();
+    });
+
+    it('isError should return true when sent "error" and false for all other options', function () {
+      expect(controller.isError(ctrlData.ERROR)).toBeTruthy();
+
+      expect(controller.isError(ctrlData.SET)).toBeFalsy();
+      expect(controller.isError(ctrlData.REFRESH)).toBeFalsy();
+      expect(controller.isError(ctrlData.EMPTY)).toBeFalsy();
+    });
+  });
+
+  describe('webex tests', function () {
+    it('should show spark tab but not webex tab', function () {
+      expect(controller.tab).not.toBeDefined();
+    });
+
+    it('should not have anything in the dropdown for webex reports', function () {
+      expect(controller.webexOptions.length).toBe(0);
     });
   });
 });

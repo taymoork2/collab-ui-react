@@ -34,14 +34,6 @@
     var BLOCK_ORDER = 'BLOCK_ORDER';
     var TOLLFREE_BLOCK_ORDER = 'TOLLFREE_BLOCK_ORDER';
     var TOLLFREE_ORDER = 'TOLLFREE_ORDER';
-    //translated order status
-    var SUCCESSFUL = $translate.instant('pstnOrderOverview.successful');
-    var IN_PROGRESS = $translate.instant('pstnOrderOverview.inProgress');
-    //translated order type
-    var ADVANCE_ORDER = $translate.instant('pstnOrderOverview.advanceOrder');
-    var NEW_NUMBER_ORDER = $translate.instant('pstnOrderOverview.newNumberOrder');
-    var PORT_NUMBER_ORDER = $translate.instant('pstnOrderOverview.portNumberOrder');
-    var TOLLFREE_NUMBER_ORDER = $translate.instant('pstnOrderOverview.tollFreeNumberOrder');
     //$resource constants
     var BLOCK = 'block';
     var ORDER = 'order';
@@ -419,19 +411,19 @@
               };
               //translate order status
               if (order.status === PROVISIONED) {
-                newOrder.status = SUCCESSFUL;
+                newOrder.status = $translate.instant('pstnOrderOverview.successful');
               } else if (order.status === PENDING) {
-                newOrder.status = IN_PROGRESS;
+                newOrder.status = $translate.instant('pstnOrderOverview.inProgress');
               }
               //translate order type
               if (order.operation === BLOCK_ORDER) {
-                newOrder.type = ADVANCE_ORDER;
+                newOrder.type = $translate.instant('pstnOrderOverview.advanceOrder');
               } else if (order.operation === NUMBER_ORDER) {
-                newOrder.type = NEW_NUMBER_ORDER;
+                newOrder.type = $translate.instant('pstnOrderOverview.newNumberOrder');
               } else if (order.operation === TOLLFREE_ORDER) {
-                newOrder.type = TOLLFREE_NUMBER_ORDER;
+                newOrder.type = $translate.instant('pstnOrderOverview.tollFreeNumberOrder');
               } else if (order.operation === PORT_ORDER) {
-                newOrder.type = PORT_NUMBER_ORDER;
+                newOrder.type = $translate.instant('pstnOrderOverview.portNumberOrder');
               }
               //create sort date and translate creation date
               var orderDate = new Date(order.created);
@@ -461,7 +453,7 @@
         'Rejected': $translate.instant('pstnSetup.orderStatus.rejected')
       };
 
-      if (angular.isDefined(translations[order.statusMessage])) {
+      if (!_.isUndefined(translations[order.statusMessage])) {
         return translations[order.statusMessage];
       } else if (order.statusMessage !== 'None') {
         return order.statusMessage;

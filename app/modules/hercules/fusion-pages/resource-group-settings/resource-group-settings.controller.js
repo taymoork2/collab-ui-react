@@ -6,7 +6,7 @@
     .controller('ResourceGroupSettingsController', ResourceGroupSettingsController);
 
   /* @ngInject */
-  function ResourceGroupSettingsController($stateParams, ResourceGroupService, XhrNotificationService, Notification, $translate, $state, FusionClusterService, $modal) {
+  function ResourceGroupSettingsController($stateParams, ResourceGroupService, Notification, $translate, $state, FusionClusterService, $modal) {
     var vm = this;
     vm.backUrl = 'cluster-list';
     vm.releaseChannel = {
@@ -45,8 +45,9 @@
             groupName: group.name
           });
           getAllowedReleaseChannels();
-        }, function () {
-          Notification.error('hercules.resourceGroupSettings.loadFailed');
+        })
+        .catch(function (error) {
+          Notification.errorWithTrackingId(error, 'hercules.resourceGroupSettings.loadFailed');
         });
     }
 
@@ -73,9 +74,9 @@
           Notification.success('hercules.resourceGroupSettings.groupNameSaved');
         }, function (response) {
           if (response.status === 409) {
-            Notification.error('hercules.resourceGroupSettings.duplicateName');
+            Notification.errorWithTrackingId(response, 'hercules.resourceGroupSettings.duplicateName');
           } else {
-            Notification.error('hercules.genericFailure');
+            Notification.errorWithTrackingId(response, 'hercules.genericFailure');
           }
         });
     }
@@ -92,7 +93,10 @@
             }
             setSelectedReleaseChannelOption();
           });
-        }, XhrNotificationService.notify);
+        })
+        .catch(function (error) {
+          Notification.errorWithTrackingId(error, 'hercules.genericFailure');
+        });
     }
 
     function releaseChannelChanged() {
@@ -166,8 +170,8 @@
           vm.channelHasBeenReset = true;
           Notification.success('hercules.resourceGroupSettings.groupReleaseChannelSaved');
         })
-        .catch(function () {
-          Notification.errorWithTrackingId('hercules.genericFailure');
+        .catch(function (error) {
+          Notification.errorWithTrackingId(error, 'hercules.genericFailure');
         });
     };
 

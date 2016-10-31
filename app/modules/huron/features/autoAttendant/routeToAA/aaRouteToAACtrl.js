@@ -28,7 +28,7 @@
       var ceInfo = _.find(ceInfos, _.bind(function (ceInfo) {
         return this === ceInfo.name;
       }, aaName));
-      if (angular.isDefined(ceInfo)) {
+      if (!_.isUndefined(ceInfo)) {
         var index = ceInfo.ceUrl.lastIndexOf('/');
         if (index < 0) {
           return '';
@@ -47,7 +47,7 @@
         }
         return this === ceInfo.ceUrl.substr(index + 1);
       }, ceId));
-      if (angular.isDefined(ceInfo)) {
+      if (!_.isUndefined(ceInfo)) {
         return ceInfo.name;
       }
       return '';

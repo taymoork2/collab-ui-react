@@ -14,6 +14,7 @@ describe('Service: LineService', () => {
     let getLineResponse: Line = {
       uuid: '0000000',
       primary: true,
+      shared: false,
       internal: '12345',
       external: '',
       siteToSite: '710012345',

@@ -226,12 +226,12 @@ describe('Controller: AAPhoneMenuCtrl', function () {
       controller.keyActionChanged(0, data.selectedActionsPlaySubmenu[0].action);
       expect(angular.equals(expectEntry2, controller.menuEntry.entries[0])).toEqual(true);
       var newSubmenuId = controller.menuEntry.entries[0].id;
-      expect(angular.isDefined(AutoAttendantCeMenuModelService.getCeMenu(newSubmenuId))).toBe(true);
+      expect(!_.isUndefined(AutoAttendantCeMenuModelService.getCeMenu(newSubmenuId))).toBe(true);
 
       controller.keyChanged(0, '1');
       controller.keyActionChanged(0, data.selectedActionsRepeatMenu[0].action);
       expect(angular.equals(expectEntry, controller.menuEntry.entries[0])).toEqual(true);
-      expect(angular.isDefined(AutoAttendantCeMenuModelService.getCeMenu(newSubmenuId))).toBe(false);
+      expect(!_.isUndefined(AutoAttendantCeMenuModelService.getCeMenu(newSubmenuId))).toBe(false);
     });
 
     it('should change Repeat-Menu to Play Submenu action in the model and copy the attempts from main menu', function () {

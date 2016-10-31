@@ -1,0 +1,25 @@
+<div class="enterprise-pmr-setup">
+    <h3 id="pmrSiteNameSetupTitle" translate="firstTimeWizard.setPMRSSetupTitle"></h3>
+    <div class="title space-flow">
+        <p class="paragraphSpacing"></p>
+    </div>
+    <div class="row-fluid">
+        <form name="sipDomainForm" novalidate>
+            <div class="row">
+                <label for= "siteURLSetup" translate="firstTimeWizard.setPMRSiteURL"></label>
+                <div class="cs-input-group medium-5 columns">
+                <input class="col-lg-5"
+                        id= "siteURLSetup"
+                        name="siteURLInput"
+                        type="text"
+                        ng-model="entprCtrl.inputValue">
+                </div>
+                <div class="col-lg-3 url-domain-padding">
+                    <span class="url-domain-font" translate="firstTimeWizard.pmrSiteURLDomain"></span>
+                    <i class="icon icon-question-circle help-button-color"></i>
+                </div>   
+            </div>
+        </form>
+        <formly-form model="entprCtrl.model" fields="entprCtrl.timeZoneSelection"></formly-form>
+    </div>
+</div>

@@ -41,7 +41,7 @@
               return new LicenseService.UserLicense(license);
             })
             .filter(function (license) {
-              return angular.isDefined(license.webExSite);
+              return !_.isUndefined(license.webExSite);
             })
             .groupBy('webExSite')
             .value();

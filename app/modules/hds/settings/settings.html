@@ -1,0 +1,65 @@
+<div class="hds-page">
+  <cs-page-header title="{{hdsSettings.pageTitle}}"></cs-page-header>
+    <!--p class="makeASelection"> <strong translate="hds.settings.serviceStatus" /></p-->
+
+    <setting-section setting="hdsSettings.serviceStatus">
+      <div ng-if="hdsSettings.loading">
+        <span class="spinner-example--large">
+          <i class="icon icon-spinner"></i>
+        </span>
+      </div>
+      <div ng-if="!hdsSettings.loading" class="form-group radioGroup">
+        <div class="cs-radio-group radioGroup">
+          <div class="cs-input-group cs-input-radio">
+            <div class="radioButton1">
+              <input type="radio" id="individualRadio1" ng-model="hdsSettings.radioModel" ng-value='1' ng-change="hdsSettings.onTrialProduction()">
+              <label for="individualRadio1">
+                <span translate="hds.settings.serviceStatusTrial"></span>
+              </label>
+            </div>
+            <div class="radioButton1">
+              <input type="radio" id="individualRadio2" ng-model="hdsSettings.radioModel" ng-value='2' ng-change="hdsSettings.onTrialProduction()">
+              <label for="individualRadio2">
+                <span translate="hds.settings.serviceStatusProduction"></span>
+              </label>
+            </div>
+          </div>
+          <div>
+          </div>
+        </div>
+      </div>
+    </setting-section>
+
+    <setting-section setting="hdsSettings.orgSettings">
+      <div ng-if="hdsSettings.loadingOrgSettings && !hdsSettings.getOrgSettingsFailed">
+        <span class="spinner-example--large">
+          <i class="icon icon-spinner"></i>
+        </span>
+      </div>
+      <div ng-if="!hdsSettings.loadingOrgSettings && !hdsSettings.getOrgSettingsFailed" class="sub-section">
+        <div class="cs-input-group medium-4 columns">
+          <label class="cs-input__label" for="html-input-kms-server" translate="hds.settings.orgSettingsKmsServer"></label>
+          <input id="html-input-kms-server" class="cs-input" type="text" readonly ng-model="hdsSettings.kmsServer"></input>
+          <label class="cs-input__label" for="html-input-kms-machine-account" translate="hds.settings.orgSettingsKmsMachineAccount"></label>
+          <input id="html-input-kms-machine-account" class="cs-input" type="text" readonly ng-model="hdsSettings.kmsServerMachineAccount"></input>
+        </div>
+      </div>
+    </setting-section>
+
+    <setting-section setting="hdsSettings.deactivateService">
+      <div class="sub-section">
+        <h5 class="sub-section__label" translate="hds.settings.deactivateServiceHeader"></h5>
+        <p class="sub-section__description" translate="hds.settings.deactivateServiceDesc"></p>
+        <button class="btn" translate="hds.settings.deactivateServiceButton" ng-click="hdsSettings.deactivate()"></button>
+      </div>
+    </setting-section>
+
+    <setting-section setting="hdsSettings.serviceDocumentationSoftware">
+      <div class="sub-section">
+        <p class="sub-section__description" translate="hds.settings.serviceHelp" translate-values="{documentationUrl:hdsSettings.documentationUrl}"></p>
+        <p class="sub-section__description" translate="hds.settings.serviceDownload"></p>
+      </div>
+    </setting-section>
+
+  </div>
+</div>

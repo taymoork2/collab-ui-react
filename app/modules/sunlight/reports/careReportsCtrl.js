@@ -1,9 +1,11 @@
 (function () {
   'use strict';
 
+  var Masonry = require('masonry-layout');
+
   angular.module('Sunlight').controller('CareReportsController', CareReportsController);
   /* @ngInject */
-  function CareReportsController($timeout, $translate, CareReportsService, DummyCareReportService, Notification, SunlightReportService) {
+  function CareReportsController($timeout, $translate, CareReportsService, DummyCareReportService, Notification, ReportConstants, SunlightReportService) {
     var vm = this;
     var REFRESH = 'refresh';
     var SET = 'set';
@@ -21,7 +23,17 @@
     vm.currentFilter = vm.allReports;
     vm.displayEngagement = true;
     vm.displayQuality = true;
-    vm.resetCards = resetCards;
+
+    vm.filterArray = _.cloneDeep(ReportConstants.filterArray);
+    vm.filterArray[0].toggle = function () {
+      resetCards(vm.allReports);
+    };
+    vm.filterArray[1].toggle = function () {
+      resetCards(vm.engagement);
+    };
+    vm.filterArray[2].toggle = function () {
+      resetCards(vm.quality);
+    };
 
     vm.timeFilter = null;
 
@@ -131,20 +143,26 @@
 
     function resizeCards() {
       $timeout(function () {
-        $('.cs-card-layout').masonry('destroy');
-        $('.cs-card-layout').masonry({
+        var $cardlayout = new Masonry('.cs-card-layout', {
           itemSelector: '.cs-card',
           columnWidth: '.cs-card',
-          isResizable: true,
-          percentPosition: true
+          resize: true,
+          percentPosition: true,
         });
+        $cardlayout.layout();
       }, 0);
     }
 
     function delayedResize() {
       // delayed resize necessary to fix any overlapping cards on smaller screens
       $timeout(function () {
-        $('.cs-card-layout').masonry('layout');
+        var $cardlayout = new Masonry('.cs-card-layout', {
+          itemSelector: '.cs-card',
+          columnWidth: '.cs-card',
+          resize: true,
+          percentPosition: true,
+        });
+        $cardlayout.layout();
       }, 500);
     }
 

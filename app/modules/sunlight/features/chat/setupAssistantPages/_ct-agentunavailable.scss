@@ -1,47 +1,28 @@
 .ct-agent-unavailable {
+  align-items: center;
 
   @mixin placeholder {
+    /* stylelint-disable selector-no-vendor-prefix */
     ::-webkit-input-placeholder {
-      @content
+      @content;
     }
+
     :-moz-placeholder {
-      @content
+      @content;
     }
+
     ::-moz-placeholder {
-      @content
+      @content;
     }
+
     :-ms-input-placeholder {
-      @content
+      @content;
     }
-  }
-
-  .cs-card {
-    @include vr-spacing(ml, 2);
-    width: rem-calc(366px);
-    height: rem-calc(458px);
-    display: flex;
-    flex-flow: column;
-    .cardHeader1 {
-      text-align: center;
-      color: $gray-dark-1;
-    }
-    .articleHeight {
-      height: 100%;
-    }
-  }
-
-  .ct-article {
-    box-shadow: none;
-    border: 1px solid $gray-light-1;
+    /* stylelint-enable selector-no-vendor-prefix */
   }
 
   .ct-agent-unavailable-icon {
     color: $alert-color;
-  }
-
-  .unavailable-header {
-    text-align: center;
-    color: $gray-dark-1;
   }
 
   .unavailable-preview {
@@ -49,7 +30,8 @@
     flex-direction: column;
     flex-wrap: nowrap;
     align-items: center;
-    @include vr-spacing(mt,5);
+
+    @include vr-spacing(mt, 5);
 
     > button {
       width: 7rem;
@@ -62,18 +44,22 @@
       flex-wrap: nowrap;
       width: 80%;
       color: $alert-color;
+
       .icon-warning {
         font-size: 2rem;
       }
     }
 
     .unavailable-msg {
-      height: 12rem;
-      width: 17rem;
-      overflow: hidden;
       @include vr-spacing(mb, 1);
       @include vr-spacing(pv, 1);
+
+      height: 14rem;
+      width: rem-calc(300px);
+      overflow: hidden;
       font-family: $brand-font-cisco-TT-Light;
+      color: $alert-color;
+      text-align: center;
     }
   }
 
@@ -83,18 +69,24 @@
 
   .unavailable-attributes {
     @include vr-spacing(pl, 1);
+
     .message-area {
+      @include vr-spacing(p, 1);
+
       height: 5rem;
-      width: 90%;
+      width: 95%;
       resize: none;
       color: $gray-dark-1;
       font-size: $h6-font-size;
       line-height: 1.4rem;
-      @include vr-spacing(p, 1);
     }
   }
 
-  .unavailable-attributes-label{
+  .unavailable-attributes-label {
     font-family: $brand-font-cisco-TT-Regular;
+  }
+
+  .no-click {
+    pointer-events: none;
   }
 }

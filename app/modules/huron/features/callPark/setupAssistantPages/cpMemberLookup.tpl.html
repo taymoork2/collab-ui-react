@@ -13,13 +13,15 @@
 <div class="call-park-member-lookup">
   <div class="typeahead-large">
     <input id="userInput" ng-model="callParkSA.userSelected"
-           ng-class="{'error': callParkSA.errorMemberInput}"
-           typeahead="user for user in callParkSA.fetchMembers($viewValue) | limitTo:10"
-           typeahead-on-select="callParkSA.selectCallParkMember($item)"
-           typeahead-template-url="userTemplate.html"
-           typeahead-min-length="3" typeahead-wait-ms="200"
-           placeholder="{{:: 'callPark.memberPlaceholder' | translate}}"
-           ng-keypress="callParkSA.enterNextPage($event.keyCode)" focus-on/>
+      ng-class="{'error': callParkSA.errorMemberInput}"
+      typeahead="user for user in callParkSA.fetchMembers($viewValue) | limitTo:10"
+      typeahead-on-select="callParkSA.selectCallParkMember($item)"
+      typeahead-template-url="userTemplate.html"
+      typeahead-min-length="3"
+      typeahead-wait-ms="200"
+      placeholder="{{:: 'callPark.memberPlaceholder' | translate}}"
+      ng-keypress="callParkSA.enterNextPage($event.keyCode)"
+      focus-on/>
     <p class="input-description" translate="callPark.memberHint"></p>
   </div>
   <cs-card-layout>

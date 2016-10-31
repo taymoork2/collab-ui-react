@@ -34,6 +34,7 @@
       setHybridServiceAcknowledged: setHybridServiceAcknowledged,
       getEftSetting: getEftSetting,
       setEftSetting: setEftSetting,
+      validateSiteUrl: validateSiteUrl,
       setHybridServiceReleaseChannelEntitlement: setHybridServiceReleaseChannelEntitlement
     };
 
@@ -52,7 +53,7 @@
       }
       return $http.get(scomUrl)
         .success(function (data, status) {
-          data = data || {};
+          data = _.isObject(data) ? data : {};
           data.success = true;
 
           if (_.isEmpty(data.orgSettings)) {
@@ -66,7 +67,7 @@
           callback(data, status);
         })
         .error(function (data, status) {
-          data = data || {};
+          data = _.isObject(data) ? data : {};
           data.success = false;
           data.status = status;
           callback(data, status);
@@ -88,7 +89,7 @@
         }
       })
         .success(function (data, status) {
-          data = data || {};
+          data = _.isObject(data) ? data : {};
           data.success = true;
           callback(data, status);
         })
@@ -206,12 +207,12 @@
 
       $http.get(adminUrl)
         .success(function (data, status) {
-          data = data || {};
+          data = _.isObject(data) ? data : {};
           data.success = true;
           callback(data, status);
         })
         .error(function (data, status) {
-          data = data || {};
+          data = _.isObject(data) ? data : {};
           data.success = false;
           data.status = status;
           callback(data, status);
@@ -321,12 +322,12 @@
 
       $http.get(scomUrl, config)
         .success(function (data, status) {
-          data = data || {};
+          data = _.isObject(data) ? data : {};
           data.success = true;
           callback(data, status);
         })
         .error(function (data, status) {
-          data = data || {};
+          data = _.isObject(data) ? data : {};
           data.success = false;
           data.status = status;
           callback(data, status);
@@ -408,6 +409,32 @@
           channel: channel,
           entitled: entitled
         });
+    }
+
+    function validateSiteUrl(siteUrl) {
+      var validationUrl = UrlConfig.getAdminServiceUrl() + '/orders/actions/shallowvalidation/invoke';
+      var config = {
+        method: 'POST',
+        url: validationUrl,
+        headers: {
+          'Content-Type': 'text/plain'
+        },
+        data: {
+          callbackUrl: 'https://api.cisco.com/sbp/provCallBack/',
+          properties: [{
+            key: 'siteUrl',
+            value: siteUrl
+          }]
+        }
+      };
+
+      return $http(config).then(function (response) {
+        var data = response.data.properties[0];
+        var isValid = (data.isValid === 'true' && data.errorCode === '0');
+        return {
+          isValid: isValid
+        };
+      });
     }
   }
 })();

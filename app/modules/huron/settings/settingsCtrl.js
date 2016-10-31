@@ -125,7 +125,7 @@
       greaterThan: function (viewValue, modelValue, scope) {
         var value = modelValue || viewValue;
         // we only validate this if beginNumber is valid or populated
-        if (angular.isUndefined(scope.model.beginNumber) || scope.model.beginNumber === "") {
+        if (_.isUndefined(scope.model.beginNumber) || scope.model.beginNumber === "") {
           return true;
         } else {
           return value >= scope.model.beginNumber;
@@ -133,7 +133,7 @@
       },
       lessThan: function (viewValue, modelValue, scope) {
         // we only validate this if endNumber is valid or populated
-        if (angular.isUndefined(scope.model.endNumber) || scope.model.endNumber === "") {
+        if (_.isUndefined(scope.model.endNumber) || scope.model.endNumber === "") {
           // trigger validation on endNumber field
           scope.fields[2].formControl.$validate();
         }
@@ -144,7 +144,7 @@
         var result = true;
         for (var i in vm.model.numberRanges) {
           // Don't validate ranges already in the model, ie. those that are already in the system
-          if (angular.isUndefined(scope.model.uuid) && !angular.equals(scope.model.uuid, '')) {
+          if (_.isUndefined(scope.model.uuid) && !angular.equals(scope.model.uuid, '')) {
             var beginNumber, endNumber;
             if (scope.index === 0) {
               beginNumber = value;
@@ -172,7 +172,7 @@
           property = 'endNumber';
         }
 
-        if (angular.isDefined(scope.model[property])) {
+        if (!_.isUndefined(scope.model[property])) {
           return true;
         } else {
           var found = false;
@@ -371,7 +371,7 @@
               },
               expressionProperties: {
                 'templateOptions.disabled': function ($viewValue, $modelValue, scope) {
-                  return vm.model.disableExtensions && angular.isDefined(scope.model.uuid);
+                  return vm.model.disableExtensions && !_.isUndefined(scope.model.uuid);
                 },
                 'templateOptions.isWarn': vm.steerDigitOverLapValidation,
                 'templateOptions.minlength': function () {
@@ -431,7 +431,7 @@
               },
               expressionProperties: {
                 'templateOptions.disabled': function ($viewValue, $modelValue, scope) {
-                  return vm.model.disableExtensions && angular.isDefined(scope.model.uuid);
+                  return vm.model.disableExtensions && !_.isUndefined(scope.model.uuid);
                 },
                 'data.validate': function (viewValue, modelValue, scope) {
                   return scope.fc && scope.fc.$validate();
@@ -460,12 +460,12 @@
                 }, function (displayNumberRanges) {
                   if (displayNumberRanges.length === 1) {
                     $scope.to.btnClass = 'trash-icon hide-delete';
-                  } else if (displayNumberRanges.length > 1 && !vm.firstTimeSetup && angular.isUndefined($scope.model.uuid)) {
+                  } else if (displayNumberRanges.length > 1 && !vm.firstTimeSetup && _.isUndefined($scope.model.uuid)) {
                     $scope.to.btnClass = 'trash-icon';
-                  } else if (displayNumberRanges.length > 1 && vm.firstTimeSetup && angular.isUndefined($scope.model.uuid)) {
+                  } else if (displayNumberRanges.length > 1 && vm.firstTimeSetup && _.isUndefined($scope.model.uuid)) {
                     $scope.to.btnClass = 'trash-icon';
                   } else if (vm.model.numberRanges.length === 1 && displayNumberRanges.length !== 1) {
-                    if (angular.isDefined(vm.model.numberRanges[0].uuid)) {
+                    if (!_.isUndefined(vm.model.numberRanges[0].uuid)) {
                       $scope.to.btnClass = 'trash-icon hide-delete';
                     }
                   }
@@ -491,7 +491,7 @@
             return vm.hideFieldInternalNumberRange;
           }
         },
-        controller: function ($scope) {
+        controller: /* @ngInject */ function ($scope) {
           $scope.$watch(function () {
             return vm.form.$invalid;
           }, function () {
@@ -531,7 +531,7 @@
         'templateOptions.isWarn': vm.siteSteeringDigitWarningValidation,
         'templateOptions.isError': vm.siteAndSteeringDigitErrorValidation
       },
-      controller: function ($scope) {
+      controller: /* @ngInject */ function ($scope) {
         _buildVoicemailPrefixOptions($scope, vm.steeringDigitSelection[0].templateOptions);
       }
     }];
@@ -606,7 +606,7 @@
         filter: true,
         warnMsg: $translate.instant('settingsServiceNumber.warning')
       },
-      controller: function ($scope) {
+      controller: /* @ngInject */ function ($scope) {
         _buildServiceNumberOptions($scope);
       },
       hideExpression: '!model.showServiceAddress',
@@ -671,7 +671,7 @@
               }
             }
           },
-          controller: function ($scope) {
+          controller: /* @ngInject */ function ($scope) {
             _buildCallerIdOptions($scope);
             _callerIdEnabledWatcher($scope);
             _voicemailNumberWatcher($scope);
@@ -738,7 +738,7 @@
           }
         }
       },
-      controller: function ($scope) {
+      controller: /* @ngInject */ function ($scope) {
         _buildVoicemailNumberOptions($scope);
         _voicemailEnabledWatcher($scope);
         _callerIdNumberWatcher($scope);
@@ -774,7 +774,7 @@
     }
 
     function deleteInternalNumberRange(internalNumberRange) {
-      if (angular.isDefined(internalNumberRange.uuid)) {
+      if (!_.isUndefined(internalNumberRange.uuid)) {
         ServiceSetup.deleteInternalNumberRange(internalNumberRange).then(function () {
           // delete the range from DB list
           var index = _.findIndex(vm.model.numberRanges, function (chr) {
@@ -1358,7 +1358,7 @@
 
           if (angular.isArray(vm.model.displayNumberRanges)) {
             _.forEach(vm.model.displayNumberRanges, function (internalNumberRange) {
-              if (angular.isUndefined(internalNumberRange.uuid)) {
+              if (_.isUndefined(internalNumberRange.uuid)) {
                 hasNewInternalNumberRange = true;
                 promises.push(ServiceSetup.createInternalNumberRange(internalNumberRange)
                   .catch(function (response) {
@@ -1413,16 +1413,14 @@
 
     function saveCallerId() {
       var rawPattern = TelephoneNumberService.getDIDValue(vm.model.callerId.callerIdNumber);
-
-      var existingCallerIdNumber = _.find(vm.allExternalNumbers, function (externalNumber) {
-        return externalNumber.uuid === _.get(vm, 'model.callerId.externalNumber.uuid');
+      var newCallerIdNumber = _.find(vm.allExternalNumbers, function (externalNumber) {
+        return externalNumber.pattern === rawPattern;
       });
-
       return $q.when(true)
         .then(function () {
           if (vm.model.callerId.callerIdEnabled && (vm.model.callerId.callerIdName && vm.model.callerId.callerIdNumber)) {
-            // save if unable to find a matching existing number OR if the number is changing
-            if (_.isUndefined(existingCallerIdNumber) || existingCallerIdNumber.pattern !== rawPattern) {
+            if (!(savedModel.callerId.callerIdEnabled) ||
+               (vm.model.callerId.uuid == "")) {
               var data = {
                 name: vm.model.callerId.callerIdName,
                 externalCallerIdType: COMPANY_CALLER_ID_TYPE,
@@ -1438,6 +1436,18 @@
                 .catch(function (response) {
                   return $q.reject(response);
                 });
+            } else if ((savedModel.callerId.callerIdEnabled) &&
+                      (savedModel.callerId.callerIdNumber !== vm.model.callerId.callerIdNumber)) {
+              var externalNumberData = {
+                uuid: newCallerIdNumber != null ? newCallerIdNumber.uuid : null
+              };
+              data = {
+                name: vm.model.callerId.callerIdName,
+                externalCallerIdType: COMPANY_CALLER_ID_TYPE,
+                pattern: rawPattern,
+                externalNumber: externalNumberData
+              };
+              return CallerId.updateCompanyNumber(savedModel.callerId.uuid, data);
             } else {
               // update if the name is changing
               if (vm.model.callerId.uuid && (vm.existingCallerIdName !== vm.model.callerId.callerIdName)) {
@@ -1628,7 +1638,6 @@
     $scope.$watchCollection(function () {
       return [vm.model.serviceNumber, vm.unassignedExternalNumbers];
     }, function (serviceNumber) {
-
       // indication that the service number is set, but not assigned to any device
       var found = Boolean(_.find(vm.unassignedExternalNumbers, function (externalNumber) {
         return externalNumber.pattern === _.get(serviceNumber[0], 'pattern');

@@ -1,87 +1,113 @@
 .shared-line {
   min-height: 100px;
+
   .shared-line-toggle {
     float: right;
     margin-bottom: 0px;
     margin-top: 14px;
   }
+
   .shared-line-title {
     padding-top: 20px;
   }
+
   .typeahead-dropdown {
     margin-bottom: 20px;
+
     .dropdown-menu {
       overflow-x: hidden;
       max-width: 100%;
     }
+
     display: flex;
     align-items: baseline;
   }
+
   .typeahead-form-group {
     position: relative;
   }
+
   .icon-search {
     font-size: 20px;
     top: 5px;
     right: 30px;
-    color: $gray-dark
+    color: $gray-dark;
   }
+
   .dropdown-menu {
     li {
-      small, label {
+      small,
+      label {
         padding: 6px 10px;
         margin-bottom: 0px;
       }
     }
+
     .active > a {
       background-color: $gray-dark;
     }
   }
+
   .device-dropdown > ul {
-    width: 100%
+    width: 100%;
   }
+
   .panel-body {
     padding: 0px;
   }
+
   .list-group {
+    list-style-type: none;
     margin-bottom: 0px;
   }
+
   .list-group-item {
     border: none;
+
     label {
       margin-bottom: 0px;
+
       label {
         margin-bottom: 0px;
       }
     }
   }
+
   .list-item-anchor {
     color: $brand-primary-light;
+
     &:hover {
       color: $brand-white;
       background-color: $gray-dark;
     }
   }
+
   .panel-heading {
     padding-top: 6px;
     padding-bottom: 6px;
     padding-left: 8px;
+
     a {
       color: $brand-white;
+
       &:hover {
         color: $brand-white;
       }
     }
   }
+
   .no-margin {
     margin: 0px;
   }
+
   .panel {
     margin-top: 0px;
   }
+
   .panel-title span {
     margin-left: 0px;
   }
+
   .accordion--navigation > a:hover {
     color: $brand-white;
   }

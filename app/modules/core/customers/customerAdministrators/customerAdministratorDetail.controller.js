@@ -5,7 +5,7 @@
     .controller('CustomerAdministratorDetailCtrl', CustomerAdministratorDetail);
 
   /* @ngInject */
-  function CustomerAdministratorDetail($stateParams, $translate, Analytics, Authinfo, Config, CustomerAdministratorService, Notification, ModalService) {
+  function CustomerAdministratorDetail($stateParams, $translate, Analytics, Authinfo, CustomerAdministratorService, ModalService, Notification, Userservice) {
     var vm = this;
     var currentCustomer = $stateParams.currentCustomer;
     var customerOrgId = currentCustomer.customerOrgId;
@@ -15,95 +15,65 @@
 
     vm.selected = '';
     vm.selectedAdmin = undefined;
-    vm.users = [];
-    vm.administrators = [];
-    vm.addAdmin = addAdmin;
+    vm.foundUsers = [];
+    vm.assignedAdmins = [];
+    vm.addCustomerAdmin = addCustomerAdmin;
+    vm.removeCustomerAdmin = removeCustomerAdmin;
     vm.getPartnerUsers = getPartnerUsers;
-    vm.removeSalesAdmin = removeSalesAdmin;
     vm.adminSuggestLimit = 8;
+    vm.loading = false;
+    vm.canAddUser = canAddUser;
     vm.resultsError = false;
     vm.resultsErrorMessage = '';
+    vm.selectAdmin = selectAdmin;
+    vm._helpers = {
+      getFoundUsers: getFoundUsers,
+      getAdminProfileFromUser: getAdminProfileFromUser,
+      canAddUser: canAddUser,
+      isUserAlreadyAssigned: isUserAlreadyAssigned,
+      resetResultsError: resetResultsError,
+      setResultsError: setResultsError
+    };
 
     init();
 
     function init() {
-      getAssignedSalesAdministrators();
-    }
-
-    vm.selectAdmin = function ($item) {
-      vm.selected = $item;
-    };
-
-    function addAdmin(fullName) {
-      var user = _.find(vm.users, {
-        fullName: fullName
-      });
-      if (_.has(user, 'uuid')) {
-        return CustomerAdministratorService.addCustomerAdmin(customerOrgId, user.uuid)
-          .then(addCustomerAdminToList)
-          .catch(function () {
-            Notification.error('customerAdminPanel.customerAdministratorAddFailure');
-          });
-      }
-    }
-
-    function addCustomerAdminToList(response) {
-      var fullName = '';
-      if (_.has(response.data, 'name')) {
-        var givenName = _.get(response.data, 'name.givenName');
-        var familyName = _.get(response.data, 'name.familyName');
-        if (givenName && familyName) {
-          fullName = givenName + ' ' + familyName;
-        }
-      } else if (_.has(response.data, 'displayName')) {
-        fullName = _.get(response.data, 'displayName');
-      } else {
-        fullName = _.get(response.data, 'username');
-      }
-      var userEmails = _.get(response.data, 'emails', []);
-      var email = '';
-      _.forEach(userEmails, function (emailDetail) {
-        if (emailDetail.primary === true) {
-          email = emailDetail.value;
-        }
-      });
-      var roles = _.get(response.data, 'roles', false);
-      var uuid = _.get(response.data, 'id');
-      var avatarSyncEnabled = _.get(response.data, 'avatarSyncEnabled');
-      var adminProfile = {
-        uuid: uuid,
-        fullName: fullName,
-        avatarSyncEnabled: avatarSyncEnabled,
-        email: email,
-        roles: roles
-      };
-      vm.administrators.push(adminProfile);
-
-      var isNotFullAdmin = Authinfo.hasRole(Config.backend_roles.full_admin);
-      var isNotSalesAdmin = Authinfo.hasRole(Config.backend_roles.sales);
-
-      if ((isNotFullAdmin && isNotSalesAdmin) || !roles) {
-        patchSalesAdminRole(email);
-      }
-      Notification.success('customerAdminPanel.customerAdministratorAddSuccess');
-      Analytics.trackPartnerActions(Analytics.eventNames.ASSIGN, uuid, Authinfo.getOrgId());
-    }
-
-    function patchSalesAdminRole(email) {
-      CustomerAdministratorService.patchSalesAdminRole(email)
+      CustomerAdministratorService.getCustomerAdmins(customerOrgId)
+        .then(function (response) {
+          var users = _.get(response, 'data.Resources', []);
+          vm.assignedAdmins = _.map(users, getAdminProfileFromUser);
+        })
         .catch(function () {
-          var someUser = _.find(vm.administrators, {
-            email: email
-          });
-          CustomerAdministratorService.removeCustomerSalesAdmin(customerOrgId, someUser.uuid)
-            .then(function () {
-              var index = vm.administrators.indexOf(someUser);
-              vm.administrators.splice(index, 1);
-            });
+          Notification.error('customerAdminPanel.customerAdministratorServiceError');
         });
     }
 
-    function removeSalesAdmin(uuid, fullName) {
+    function selectAdmin($item) {
+      vm.selected = $item;
+    }
+
+    function addCustomerAdmin(fullName) {
+      vm.loading = true;
+      var user = _.find(vm.foundUsers, {
+        fullName: fullName
+      });
+      return CustomerAdministratorService.addCustomerAdmin(user, customerOrgId)
+        .then(function () {
+          vm.selected = '';
+          vm.assignedAdmins.push(user);
+          var uuid = _.get(user, 'uuid', 'N/A');
+          Notification.success('customerAdminPanel.customerAdministratorAddSuccess');
+          Analytics.trackPartnerActions(Analytics.sections.PARTNER.eventNames.ASSIGN, uuid, Authinfo.getOrgId());
+        })
+        .catch(function () {
+          Notification.error('customerAdminPanel.customerAdministratorAddFailure');
+        })
+        .finally(function () {
+          vm.loading = false;
+        });
+    }
+
+    function removeCustomerAdmin(fullName) {
       ModalService.open({
         title: $translate.instant('customerAdminPanel.deleteAdministrator'),
         message: $translate.instant('customerAdminPanel.deleteConfirmation', {
@@ -113,110 +83,105 @@
         dismiss: $translate.instant('common.no'),
         btnType: 'negative'
       }).result.then(function () {
-        return CustomerAdministratorService.removeCustomerSalesAdmin(customerOrgId, uuid)
+        var user = _.find(vm.assignedAdmins, {
+          fullName: fullName
+        });
+        return CustomerAdministratorService.removeCustomerAdmin(user, customerOrgId)
           .then(function () {
-            var someUser = _.find(vm.administrators, {
-              uuid: uuid
+            _.remove(vm.assignedAdmins, {
+              fullName: fullName
             });
-            var index = vm.administrators.indexOf(someUser);
-            vm.administrators.splice(index, 1);
+            var uuid = _.get(user, 'uuid', 'N/A');
             Notification.success('customerAdminPanel.customerAdministratorRemoveSuccess');
-            Analytics.trackPartnerActions(Analytics.eventNames.REMOVE, uuid, Authinfo.getOrgId());
+            Analytics.trackPartnerActions(Analytics.sections.PARTNER.eventNames.REMOVE, uuid, Authinfo.getOrgId());
           })
           .catch(function () {
-            Notification.error('customerAdminPanel.customerAdministratorRemoverFailure');
+            Notification.error('customerAdminPanel.customerAdministratorRemoveFailure');
           });
       });
     }
 
+    function getFoundUsers(str, users, limit) {
+      var lcaseStr = str.toLowerCase();
+      var foundUsers = [];
+
+      _.every(users, function (user) {
+        var adminProfile;
+        var fullName = Userservice.getFullNameFromUser(user);
+        var email = Userservice.getPrimaryEmailFromUser(user);
+        var stringMatches = {
+          fullName: _.includes(fullName, lcaseStr),
+          displayName: _.includes(user.displayName, lcaseStr),
+          email: _.includes(email, lcaseStr)
+        };
+        if (_.some(stringMatches)) {
+          adminProfile = getAdminProfileFromUser(user);
+          foundUsers.push(adminProfile);
+        }
+        return foundUsers.length < limit;
+      });
+
+      return foundUsers;
+    }
+
     function getPartnerUsers(str) {
-      vm.resultsError = false;
+      resetResultsError();
       return CustomerAdministratorService.getPartnerUsers(str.split(' ')[0])
         .then(function (response) {
-          var resources = _.get(response, 'data.Resources', []);
-          var searchUsers = [];
-          var fullName = '';
-          var uuid = '';
-          _.every(resources, function (user) {
-            if (user.name) {
-              var givenName = user.name.givenName;
-              var familyName = user.name.familyName;
-              if (givenName && familyName) {
-                fullName = givenName + ' ' + familyName;
-              }
-            } else if (user.displayName) {
-              fullName = user.displayName;
-            } else {
-              fullName = user.userName;
-            }
-            uuid = user.id;
-            if (fullName.toLowerCase().indexOf(str.toLowerCase()) !== -1 ||
-              user.displayName.toLowerCase().indexOf(str.toLowerCase()) !== -1 ||
-              user.userName.toLowerCase().indexOf(str.toLowerCase()) !== -1) {
-              searchUsers.push(fullName);
-              vm.users.push({
-                fullName: fullName,
-                uuid: uuid
-              });
-            }
-            return searchUsers.length < vm.adminSuggestLimit;
-          });
+          var users = _.get(response, 'data.Resources', []);
+          var searchUsers = getFoundUsers(str, users, vm.adminSuggestLimit);
           if (searchUsers.length === 0) {
-            vm.resultsError = true;
-            vm.resultsErrorMessage = $translate.instant('customerAdminPanel.noResultsError');
+            setResultsError('customerAdminPanel.noResultsError');
+          } else {
+            vm.foundUsers = searchUsers;
+            return _.map(searchUsers, 'fullName');
           }
-          return searchUsers;
         })
         .catch(function (err) {
           if (_.get(err, 'status') === 403 && _.get(err, 'data.Errors[0].errorCode') === '200046') {
-            vm.resultsError = true;
-            vm.resultsErrorMessage = $translate.instant('customerAdminPanel.tooManyResultsError');
+            setResultsError('customerAdminPanel.tooManyResultsError');
           }
           Notification.error('customerAdminPanel.customerAdministratorServiceError');
         });
     }
 
-    function getAssignedSalesAdministrators() {
-      CustomerAdministratorService.getAssignedSalesAdministrators(customerOrgId)
-        .then(function (response) {
-          var resources = _.get(response, 'data.Resources', []);
-          _.forEach(resources, function (user) {
-            var fullName = '';
-            var uuid = '';
-            var avatarSyncEnabled = false;
-            var adminProfile = {};
-            if (user.name) {
-              var givenName = user.name.givenName;
-              var familyName = user.name.familyName;
-              if (givenName && familyName) {
-                fullName = givenName + ' ' + familyName;
-              }
-            } else if (user.displayName) {
-              fullName = user.displayName;
-            } else {
-              fullName = user.userName;
-            }
-            var userEmails = _.get(response.data, 'emails', []);
-            var email = '';
-            _.forEach(userEmails, function (emailDetail) {
-              if (emailDetail.primary === true) {
-                email = emailDetail.value;
-              }
-            });
-            uuid = user.id;
-            avatarSyncEnabled = user.avatarSyncEnabled;
-            adminProfile = {
-              uuid: uuid,
-              fullName: fullName,
-              avatarSyncEnabled: avatarSyncEnabled,
-              email: email
-            };
-            vm.administrators.push(adminProfile);
-          });
-        })
-        .catch(function () {
-          Notification.error('customerAdminPanel.customerAdministratorServiceError');
-        });
+    function getAdminProfileFromUser(user) {
+      var fullName = Userservice.getFullNameFromUser(user);
+      var email = Userservice.getPrimaryEmailFromUser(user);
+      var userName = _.get(user, 'userName');
+      var uuid = _.get(user, 'id');
+      var avatarSyncEnabled = _.get(user, 'avatarSyncEnabled', false);
+      var roles = _.get(user, 'roles', []);
+      var adminProfile = {
+        uuid: uuid,
+        userName: userName,
+        fullName: fullName,
+        email: email,
+        roles: roles,
+        avatarSyncEnabled: avatarSyncEnabled
+      };
+      return adminProfile;
+    }
+
+    function canAddUser() {
+      var fullName = vm.selected;
+      return fullName && !vm._helpers.isUserAlreadyAssigned(fullName);
+    }
+
+    function isUserAlreadyAssigned(fullName) {
+      return _.some(vm.assignedAdmins, {
+        fullName: fullName
+      });
+    }
+
+    function resetResultsError() {
+      vm.resultsError = false;
+      vm.resultsErrorMessage = '';
+    }
+
+    function setResultsError(translateKey) {
+      vm.resultsError = true;
+      vm.resultsErrorMessage = $translate.instant(translateKey);
     }
   }
 })();

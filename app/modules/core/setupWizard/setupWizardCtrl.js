@@ -35,7 +35,7 @@
       description: 'firstTimeWizard.enterpriseSettingsSub',
       icon: 'icon-settings',
       title: 'firstTimeWizard.enterpriseSettings',
-      controller: 'EnterpriseSettingsCtrl',
+      controller: 'EnterpriseSettingsCtrl as entprCtrl',
       steps: [{
         name: 'enterpriseSipUrl',
         template: 'modules/core/setupWizard/enterpriseSettings/enterprise.setSipDomain.tpl.html'
@@ -185,6 +185,20 @@
                 });
               }
             });
+        }
+      });
+
+      FeatureToggleService.atlasPMRonM2GetStatus().then(function (response) {
+        if (response) {
+          var step = {
+            name: 'enterprisePmrSetup',
+            template: 'modules/core/setupWizard/enterpriseSettings/enterprise.pmrSetup.tpl.html'
+          };
+          $scope.tabs = _.each($scope.tabs, function (tab) {
+            if (tab.name === 'enterpriseSettings') {
+              tab.steps.splice(1, 0, step);
+            }
+          });
         }
       });
 

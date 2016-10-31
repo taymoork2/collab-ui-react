@@ -98,7 +98,7 @@
 
     // If tabs change (feature support in SetupWizard) and a step is not defined, re-initialize
     $scope.$watchCollection('tabs', function (tabs) {
-      if (tabs && tabs.length > 0 && angular.isUndefined(vm.current.step)) {
+      if (tabs && tabs.length > 0 && _.isUndefined(vm.current.step)) {
         init();
       }
     });
@@ -145,11 +145,11 @@
 
     function getSteps() {
       var tab = getTab();
-      if (angular.isDefined(tab) && angular.isArray(tab.steps)) {
+      if (!_.isUndefined(tab) && angular.isArray(tab.steps)) {
         return tab.steps;
-      } else if (angular.isDefined(tab) && angular.isArray(tab.subTabs) && tab.subTabs.length > 0) {
+      } else if (!_.isUndefined(tab) && angular.isArray(tab.subTabs) && tab.subTabs.length > 0) {
         for (var i = 0; i < tab.subTabs.length; i++) {
-          if (angular.isUndefined(getSubTab()) || tab.subTabs[i] === getSubTab()) {
+          if (_.isUndefined(getSubTab()) || tab.subTabs[i] === getSubTab()) {
             vm.current.subTab = tab.subTabs[i];
             return tab.subTabs[i].steps;
           }
@@ -182,7 +182,7 @@
 
     function setSubTab(subTab) {
       vm.current.subTab = subTab;
-      if (angular.isDefined(subTab)) {
+      if (!_.isUndefined(subTab)) {
         setStep(getSteps()[0]);
       }
     }
@@ -406,7 +406,7 @@
 
     function hasDefaultButtons() {
       if (vm.current.step) {
-        return angular.isUndefined(vm.current.step.buttons);
+        return _.isUndefined(vm.current.step.buttons);
       }
       return false;
     }

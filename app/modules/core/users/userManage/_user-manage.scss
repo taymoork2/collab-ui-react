@@ -13,7 +13,7 @@
   flex: 1 1 auto;
 
   h4 {
-    @include vr-spacing(mb, .5);
+    @include vr-spacing(mb, 0.5);
   }
 
   .sync-container {
@@ -28,14 +28,14 @@
 
   .csv-export-link {
     @include vr-spacing(pl, 2);
-    @include vr-spacing(pv, .5);
+    @include vr-spacing(pv, 0.5);
 
     .cancel {
       display: inline-flex;
 
       .icon-spinner {
-        @include vr-spacing(ml, .25);
-        @include vr-spacing(mr, .5)
+        @include vr-spacing(ml, 0.25);
+        @include vr-spacing(mr, 0.5);
       }
     }
   }
@@ -55,16 +55,16 @@
   }
 
   .sync-status {
-
     .ds-inline {
       display: inline;
     }
 
     .icon-refresh {
+      @include vr-spacing(m, 0.5);
+
       font-weight: bolder;
       position: relative;
-      top: .1rem;
-      @include vr-spacing(m, .5);
+      top: 0.1rem;
     }
 
     .ui-grid .grid-refresh {
@@ -79,11 +79,11 @@
       padding-bottom: 1rem;
 
       h5 {
-        @include vr-spacing(ml, .5);
+        @include vr-spacing(ml, 0.5);
       }
 
       div.details {
-        @include vr-spacing(ml, .5);
+        @include vr-spacing(ml, 0.5);
 
         h5 {
           @include vr-spacing(ml, 0);
@@ -96,7 +96,7 @@
 
       .working {
         color: $brand-success;
-        top: .25rem;
+        top: 0.25rem;
         font-size: small;
       }
 
@@ -107,26 +107,25 @@
   }
 
   .divider {
+    @include vr-spacing(mb, 0.75);
+
     flex: 0 0 auto;
-    @include vr-spacing(mb, .75);
   }
 
   li {
-    list-style-type: none;
     @include vr-spacing(pb, 1);
+
+    list-style-type: none;
 
     .cs-input-radio.cs-input-group {
       @include vr-spacing(mb, 0);
 
       p {
         @extend .cs-radio-help;
+
         @include vr-spacing(pl, 0);
       }
     }
-
-    label {
-    }
-
   }
 
   .dirsync-info {
@@ -138,6 +137,6 @@
   }
 
   &.user-csv.modal-body.user-manage-advanced-results > .flex-container {
-      flex-shrink: 0;
+    flex-shrink: 0;
   }
 }

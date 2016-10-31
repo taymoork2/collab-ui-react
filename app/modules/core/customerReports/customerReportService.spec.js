@@ -214,7 +214,9 @@ describe('Service: Customer Reports Service', function () {
   describe('Call Metrics Service', function () {
     it('should getCallMetricsData', function () {
       spyOn(CommonReportService, 'getCustomerReport').and.returnValue($q.when({
-        data: _.clone(metricsData.data),
+        data: {
+          data: _.clone(metricsData.data)
+        },
       }));
 
       CustomerReportService.getCallMetricsData(defaults.timeFilter[0]).then(function (response) {

@@ -2,8 +2,8 @@
   @extend %grid-subheader;
   @extend %page-background-white;
 
-  .ui-grid-cell:first-child ,
-  .ui-grid-header-cell:first-child  {
+  .ui-grid-cell:first-child,
+  .ui-grid-header-cell:first-child {
     border-right: 0px;
 
     .place_avatar {
@@ -11,14 +11,26 @@
       width: 35px;
     }
   }
-  .emptyList{
+
+  .emptyList {
     text-align: center;
     width: 60%;
     margin-left: auto;
     margin-right: auto;
 
-    @media screen and (max-width: 640px){
+    @media screen and (max-width: 640px) {
       width: 90%;
     }
+  }
+}
+
+.callServiceRow {
+  padding: 30px 30px 15px 15px;
+  display: flex;
+
+  .callServiceTitle {
+    flex-basis: 30%;
+    display: flex;
+    align-items: baseline;
   }
 }

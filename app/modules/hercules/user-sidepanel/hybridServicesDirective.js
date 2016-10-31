@@ -90,7 +90,7 @@
         });
       })
       .catch(function (error) {
-        Notification.error('Error getting user information: ' + error);
+        Notification.errorWithTrackingId(error, 'hercules.genericFailure');
       });
 
     function checkEntitlements(options) {
@@ -105,7 +105,7 @@
               return extension.id === service.id;
             });
             // can't have huron (ciscouc) and call service at the same time
-            if (extension.id === 'squared-fusion-uc' && hasHuronEntitlement()) {
+            if (extension.id === 'squared-fusion-uc' && hasEntitlement('ciscouc')) {
               extension.enabled = false;
             }
             if (extension.enabled) {
@@ -122,7 +122,7 @@
 
     // Periodically update the user statuses from USS
     function updateStatusForUser() {
-      if (angular.isDefined(vm.user)) {
+      if (!_.isUndefined(vm.user)) {
         USSService.getStatusesForUser(vm.user.id)
           .then(function (userStatuses) {
             _.forEach(vm.extensions, function (extension) {
@@ -149,21 +149,21 @@
     }
 
     function hasEntitlement(entitlement) {
-      if (!angular.isDefined(vm.user)) {
+      if (_.isUndefined(vm.user)) {
         return false;
       }
       return vm.user.entitlements && vm.user.entitlements.indexOf(entitlement) > -1;
     }
 
     function getExtensions() {
-      return _.map(extensionEntitlements, function (extensionEntitlement) {
+      return _.compact(_.map(extensionEntitlements, function (extensionEntitlement) {
         if (Authinfo.isEntitled(extensionEntitlement)) {
           return {
             id: extensionEntitlement,
             entitled: hasEntitlement(extensionEntitlement)
           };
         }
-      });
+      }));
     }
 
     function getCallExtensions() {
@@ -185,10 +185,6 @@
       });
       return offerCodes.length > 0;
     }
-
-    var hasHuronEntitlement = function () {
-      return vm.user.entitlements.indexOf('ciscouc') > -1;
-    };
 
     var cancelStateChangeListener = $rootScope.$on('$stateChangeSuccess', function () {
       stopDelayedUpdates = true;

@@ -322,7 +322,6 @@ describe('UserListCtrl: Ctrl', function () {
   });
 
   describe('canShowUserDelete', function () {
-
     beforeEach(function () {
       initController();
       spyOn($scope, 'getUserLicenses').and.returnValue(true);
@@ -349,6 +348,10 @@ describe('UserListCtrl: Ctrl', function () {
       expect($scope.canShowUserDelete(this.user)).toBeTruthy();
     });
 
+    it('should return false when the user is a partner admin', function () {
+      $scope.userList.partnerUsers.push(this.user);
+      expect($scope.canShowUserDelete(this.user)).toBeFalsy();
+    });
   });
 
   describe('canShowResendInvite', function () {

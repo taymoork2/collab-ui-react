@@ -51,12 +51,17 @@
         refreshDelay: 900000 // 15 mins
       },
 
+      siteDomainUrl: {
+        webexUrl: '.webex.com'
+      },
+
       entitlements: {
         huron: 'ciscouc',
         squared: 'webex-squared',
         fusion_uc: 'squared-fusion-uc',
         fusion_cal: 'squared-fusion-cal',
         mediafusion: 'squared-fusion-media',
+        hds: 'hybrid-data-security',
         fusion_mgmt: 'squared-fusion-mgmt',
         room_system: 'spark-room-system',
         fusion_ec: 'squared-fusion-ec',
@@ -375,10 +380,12 @@
         'generateauthcode',
         'huntgroups',
         'huronCallPark',
+        'huronCallPickup',
         'hurondetails',
         'huronfeatures',
         'huronHuntGroup',
         'huronPagingGroup',
+        'huronPagingGroupEdit',
         'huronlines',
         'huronnewfeature',
         'huronsettings',
@@ -396,7 +403,8 @@
         'management-service',
         'services-overview',
         'resource-group-settings',
-        'cluster-list'
+        'cluster-list',
+        'hds-settings', //Temporrary entitlement until updated in org setting
       ],
       'spark-room-system': [
         'addDeviceFlow',
@@ -421,6 +429,9 @@
       ],
       'squared-team-member': [
         'organization'
+      ],
+      'hybrid-data-security': [
+        'hds-settings'
       ],
       'squared-fusion-media': [
         'add-resource',
@@ -455,6 +466,7 @@
         'call-service',
         'cluster-list',
         'devices',
+        'places',
         'expressway-settings',
         'fusion',
         'hurondetails',
