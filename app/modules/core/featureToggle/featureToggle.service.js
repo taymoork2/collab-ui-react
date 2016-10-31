@@ -154,7 +154,7 @@
       csdmPlaces: 'csdm-places',
       csdmPstn: 'csdm-pstn',
       csdmATA: 'csdm-ata',
-      globalStatus: 'global-status',
+      atlasGlobalServiceStatus: 'atlas-global-service-status',
       atlasF237ResourceGroups: 'atlas-f237-resource-group',
       huronLocalDialing: 'huron-local-dialing',
       huronDeviceE911: 'huron-device-e911-address',
