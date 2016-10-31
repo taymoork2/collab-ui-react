@@ -7,6 +7,7 @@ describe('Controller: Dummy Customer Reports', function () {
   const dummyData = getJSONFixture('core/json/partnerReports/dummyReportData.json');
   const devicesJson = getJSONFixture('core/json/customerReports/devices.json');
   const activeData = getJSONFixture('core/json/customerReports/activeUser.json');
+  const mediaData: any = getJSONFixture('core/json/customerReports/mediaQuality.json');
   const metrics = getJSONFixture('core/json/customerReports/callMetrics.json');
   const timeFilter: Array<ITimespan> = _.cloneDeep(defaults.timeFilter);
 
@@ -76,7 +77,7 @@ describe('Controller: Dummy Customer Reports', function () {
   });
 
   it('dummyMediaData should return the expected responses', function () {
-    let dummyMedia = _.cloneDeep(dummyData.mediaQuality);
+    let dummyMedia = _.cloneDeep(mediaData.dummyData);
     expect(this.DummyCustomerReportService.dummyMediaData(timeFilter[0])).toEqual(updateDates(dummyMedia.one, timeFilter[0]));
     expect(this.DummyCustomerReportService.dummyMediaData(timeFilter[1])).toEqual(updateDates(dummyMedia.two, timeFilter[1]));
     expect(this.DummyCustomerReportService.dummyMediaData(timeFilter[2])).toEqual(updateDates(dummyMedia.three, timeFilter[2]));

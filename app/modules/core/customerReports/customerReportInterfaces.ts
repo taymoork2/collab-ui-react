@@ -1,6 +1,7 @@
 import {
   ICallMetricsBase,
   IGraphBase,
+  IMediaQualityData,
 } from '../partnerReports/partnerReportInterfaces';
 
 export interface IAvgRoomData extends IGraphBase {
@@ -35,4 +36,17 @@ export interface IMetricsDataProvider {
   numCalls: number;
   percentage: number;
   color: string;
+}
+
+export interface IMediaData extends IMediaQualityData {
+  totalAudioDurationSum: number;
+  goodAudioQualityDurationSum: number;
+  fairAudioQualityDurationSum: number;
+  poorAudioQualityDurationSum: number;
+  partialAudioSum: number;
+  totalVideoDurationSum: number;
+  goodVideoQualityDurationSum: number;
+  fairVideoQualityDurationSum: number;
+  poorVideoQualityDurationSum: number;
+  partialVideoSum: number;
 }
