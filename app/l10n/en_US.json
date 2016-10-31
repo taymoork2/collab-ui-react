@@ -365,8 +365,6 @@
     "developmentTab": "Development",
     "organizationTab": "Manage Organizations",
     "organizationTabDesc": "Manage Organization Details, View Assigned Services, And Access Tools.",
-    "callRoutingTab": "Call Routing",
-    "callRoutingTabDesc": "Manage Call Routing Features Such As Call Park",
     "mediaOnHoldTab": "Media On Hold",
     "mediaOnHoldTabDesc": "Media On Hold Development Example",
     "metricsDetailsTab": "Media Service V2 Page",
@@ -2318,15 +2316,6 @@
     "weekOf": "Week Ending",
     "allCustomers": "All Customers"
   },
-  "callRouting": {
-    "title": "Call Routing",
-    "autoAttendantTitle": "Auto Attendant",
-    "callParkTitle": "Call Park",
-    "callPickUpTitle": "Call Pick Up",
-    "intercomGroupsTitle": "Intercom Groups",
-    "pagingGroupsTitle": "Paging Groups",
-    "huntGroupsTitle": "Hunt Groups"
-  },
   "autoAttendant": {
     "code": "AA",
     "title": "Auto Attendant",
@@ -2575,6 +2564,7 @@
   "callPark": {
     "code": "CP",
     "title": "Call Park",
+    "settingsTitle": "Call Park Settings",
     "modalDescription": "Call parks allow call recipients to place a call on hold so that it can be retrieved from another device.",
     "newCallPark": "Create Call Park",
     "callParkInformation": "Call Park information",
@@ -2599,8 +2589,7 @@
     "selectParkHint": "Number ranges are used for interdepartmental transfers while single park numbers are for individual use.",
     "namePlaceholder": "Name the Call Park",
     "numberPlaceholder": "Enter Number",
-    "memberPlaceholder": "Select Call Park Members",
-    "memberHint": "These users or or places' devices will be part of this call park.",
+    "memberHint": "These users or places' devices will be part of this call park.",
     "removeMem": "Remove Member",
     "nameHint": "The call park name appears on the call park members' devices.",
     "singleNumberPlaceholder": "Enter Single Number",
@@ -2632,7 +2621,8 @@
     "secondRange": "Ending #",
     "singleRange": "Single Park Number",
     "saveLabel": "Do you want to save your changes?",
-    "memberFetchFailure": "Unable to get members."
+    "memberFetchFailure": "Unable to get members.",
+    "membersTitle": "Members"
   },
   "callPickup": {
     "title": "Call Pickup",

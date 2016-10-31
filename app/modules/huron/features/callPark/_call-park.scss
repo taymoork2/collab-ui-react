@@ -1,8 +1,7 @@
 $overlay-panel-height: 93px;
 
-@import 'setupAssistantPages/cp-number-lookup';
-@import 'setupAssistantPages/cp-member-lookup';
-@import 'edit/cp-edit';
+@import 'callParkNumber/cp-number-lookup';
+@import 'callParkMember/cp-member-lookup';
 
 .callpark {
   &.overlay-panel {
