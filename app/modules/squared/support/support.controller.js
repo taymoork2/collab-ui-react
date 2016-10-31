@@ -380,14 +380,15 @@
     };
 
     $scope.getCallflowCharts = function (orgId, userId, locusId, callStart, filename, isGetCallLogs) {
-      CallflowService.getCallflowCharts(orgId, userId, locusId, callStart, filename, isGetCallLogs, function (data, status) {
-        if (data.success) {
-          WindowLocation.set(data.resultsUrl);
-        } else {
+      CallflowService.getCallflowCharts(orgId, userId, locusId, callStart, filename, isGetCallLogs)
+        .then(function (data) {
+          WindowLocation.set(_.get(data, 'resultsUrl'));
+        })
+        .catch(function (response) {
+          var status = _.get(response, 'status', 'Unknown');
           Log.debug('Failed to download the callflow results corresponding to logFile: ' + filename + '. Status: ' + status);
           Notification.notify([$translate.instant('supportPage.callflowResultsFailed') + ': ' + filename + '. Status: ' + status], 'error');
-        }
-      });
+        });
     };
 
     $scope.downloadFlow = function (downloadUrl) {
@@ -490,4 +491,4 @@
       }]
     };
   }
-}());
+})();
