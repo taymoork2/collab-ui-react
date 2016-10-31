@@ -286,7 +286,7 @@
       MetricsReportService.getAvailabilityData(vm.timeSelected, vm.clusterId).then(function (response) {
         if (response === vm.ABORT) {
           return;
-        } else if (_.isUndefined(response.data) || !angular.isArray(response.data) || response.data.length === 0 || _.isUndefined(response.data[0].clusterCategories) || response.data[0].clusterCategories.length === 0) {
+        } else if (_.isUndefined(response.data) || !_.isArray(response.data) || response.data.length === 0 || _.isUndefined(response.data[0].clusterCategories) || response.data[0].clusterCategories.length === 0) {
           vm.availabilityStatus = vm.EMPTY;
         } else {
           deferred.promise.then(function () {

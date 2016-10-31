@@ -246,9 +246,9 @@
             try {
               var jsonData = JSON.parse(scope.model.uploadFile);
               vm.gridData = [];
-              if (angular.isArray(jsonData.cdrs) && angular.isArray(jsonData.cdrs[0])) {
+              if (_.isArray(jsonData.cdrs) && _.isArray(jsonData.cdrs[0])) {
                 vm.gridData.push(addNames(jsonData.cdrs));
-              } else if (angular.isArray(jsonData.cdrs)) {
+              } else if (_.isArray(jsonData.cdrs)) {
                 vm.gridData.push(addNames([jsonData.cdrs]));
               } else {
                 vm.dataState = 0;

@@ -260,7 +260,7 @@
     }
 
     function isSquaredUC() {
-      if (angular.isArray(identityCustomer.services)) {
+      if (_.isArray(identityCustomer.services)) {
         return _.includes(identityCustomer.services, Config.entitlements.huron);
       }
       return false;

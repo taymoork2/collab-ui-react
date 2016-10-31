@@ -39,7 +39,7 @@
       var url = UrlConfig.getScimUrl(Authinfo.getOrgId()) + '?filter=username eq "' + name + '"';
 
       $http.get(url).success(function (data) {
-        if (angular.isArray(data.Resources) && (data.Resources.length > 0)) {
+        if (_.isArray(data.Resources) && (data.Resources.length > 0)) {
           defer.resolve(data.Resources[0].id);
         } else {
           Log.debug('User does not exist in this org.');

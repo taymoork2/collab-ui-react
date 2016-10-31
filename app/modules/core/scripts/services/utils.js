@@ -258,11 +258,11 @@
 
       getSqEntitlements: function (user) {
         var entitlements = {};
-        if (angular.isArray($rootScope.services)) {
+        if (_.isArray($rootScope.services)) {
           for (var i = $rootScope.services.length - 1; i >= 0; i--) {
             var service = $rootScope.services[i].serviceId;
             var ciName = $rootScope.services[i].ciName;
-            if (!_.isUndefined(user) && angular.isArray(user.entitlements) && user.entitlements.indexOf(ciName) > -1) {
+            if (!_.isUndefined(user) && _.isArray(user.entitlements) && user.entitlements.indexOf(ciName) > -1) {
               entitlements[service] = true;
               entitlements.webExSquared = true;
             } else {

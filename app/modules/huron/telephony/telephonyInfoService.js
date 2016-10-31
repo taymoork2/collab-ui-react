@@ -240,7 +240,7 @@
 
               // get External (alternate) number if exists
               DirectoryNumber.getAlternateNumbers(userLine.uuid).then(function (altNumList) {
-                if (angular.isArray(altNumList) && altNumList[0]) {
+                if (_.isArray(altNumList) && altNumList[0]) {
                   this.altDnUuid = altNumList[0].uuid;
                   this.altDnPattern = altNumList[0].numMask;
                 }
