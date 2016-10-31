@@ -68,13 +68,16 @@ class PlaceCallOverview implements ng.IComponentController {
 
   private initFeatures(): void {
     this.features = [];
-    let service: IFeature = {
-      name: this.$translate.instant('telephonyPreview.speedDials'),
-      state: 'speedDials',
-      detail: undefined,
-      actionAvailable: true,
-    };
-    this.features.push(service);
+    let service: IFeature;
+    if (this.currentPlace.type === 'huron') {
+      service = {
+        name: this.$translate.instant('telephonyPreview.speedDials'),
+        state: 'speedDials',
+        detail: undefined,
+        actionAvailable: true,
+      };
+      this.features.push(service);
+    }
     service = {
       name: this.$translate.instant('telephonyPreview.internationalDialing'),
       state: 'internationalDialing',
@@ -82,13 +85,15 @@ class PlaceCallOverview implements ng.IComponentController {
       actionAvailable: true,
     };
     this.features.push(service);
-    service = {
-      name: this.$translate.instant('telephonyPreview.localDialing'),
-      state: 'local',
-      detail: this.DialingService.getLocalDialing(LineConsumerType.PLACES),
-      actionAvailable: true,
-    };
-    this.features.push(service);
+    if (this.currentPlace.type === 'huron') {
+      service = {
+        name: this.$translate.instant('telephonyPreview.localDialing'),
+        state: 'local',
+        detail: this.DialingService.getLocalDialing(LineConsumerType.PLACES),
+        actionAvailable: true,
+      };
+      this.features.push(service);
+    }
   }
 
   private initNumbers(): void {

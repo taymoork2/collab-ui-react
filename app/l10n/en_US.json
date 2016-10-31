@@ -3451,7 +3451,7 @@
       "placeEditError": "Edit Place failed"
     },
     "editServices": {
-      "whichServices": "Which services are needed in this place?",
+      "whichServices": "Which service is needed in this place?",
       "sparkOnly": "Spark only (default)",
       "sparkOnlyHelp": "Calling to/from this place will only work through Cisco Spark or using SIP addresses.",
       "sparkCall": "Spark Call (phone numbers)",
@@ -4705,6 +4705,8 @@
     "noneFound": "No Places Found",
     "actionHeader": "Actions",
     "servicesHeader": "Services",
+    "sparkCall": "Spark Call",
+    "sparkOnly": "Spark only",
     "placeAdd": "Add Place",
     "placesDefinition": "A place represents a physical location containing a device not owned by a specific user, such as a meeting room with a collaboration device or a reception with shared phones.",
     "placesUses": "You'll be able to view your places here - and the devices and configurations that belong to them.",
