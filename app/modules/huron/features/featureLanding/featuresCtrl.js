@@ -1,14 +1,12 @@
 (function () {
   'use strict';
 
-  var Masonry = require('masonry-layout');
-
   angular
     .module('Huron')
     .controller('HuronFeaturesCtrl', HuronFeaturesCtrl);
 
   /* @ngInject */
-  function HuronFeaturesCtrl($scope, $state, $filter, $timeout, $modal, $q, $translate, Authinfo, HuronFeaturesListService, HuntGroupService, CallParkService, PagingGroupService, AutoAttendantCeInfoModelService, Notification, Log, FeatureToggleService) {
+  function HuronFeaturesCtrl($scope, $state, $filter, $modal, $q, $translate, Authinfo, HuronFeaturesListService, HuntGroupService, CallParkService, PagingGroupService, AutoAttendantCeInfoModelService, Notification, Log, FeatureToggleService, CardUtils) {
 
     var vm = this;
     vm.searchData = searchData;
@@ -254,15 +252,7 @@
     }
 
     function reInstantiateMasonry() {
-      $timeout(function () {
-        var $cardlayout = new Masonry('.cs-card-layout', {
-          itemSelector: '.cs-card',
-          columnWidth: '.cs-card',
-          resize: true,
-          percentPosition: true,
-        });
-        $cardlayout.layout();
-      }, 0);
+      CardUtils.resize();
     }
 
     function showReloadPageIfNeeded() {
