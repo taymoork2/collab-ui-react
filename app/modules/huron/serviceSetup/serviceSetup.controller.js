@@ -498,7 +498,7 @@
           return vm.hideFieldInternalNumberRange;
         }
       },
-      controller: function ($scope) {
+      controller: /* @ngInject */ function ($scope) {
         $scope.$watch(function () {
           return vm.form.$invalid;
         }, function () {
@@ -518,9 +518,9 @@
         label: $translate.instant('serviceSetupModal.voicemailPrefixTitle'),
         description: $translate.instant('serviceSetupModal.voicemailPrefixDesc',
           {
-            'number': vm.model.voicemailPrefix.value,
-            'extensionLength0': vm.model.previousLength === '5' ? '0000' : '000',
-            'extensionLength9': vm.model.previousLength === '5' ? '9999' : '999'
+            'number': vm.model.site.siteSteeringDigit.siteDialDigit,
+            'extensionLength0': vm.model.previousLength === '5' ? '00000' : '0000',
+            'extensionLength9': vm.model.previousLength === '5' ? '99999' : '9999'
           }),
         warnMsg: $translate.instant('serviceSetupModal.warning.siteSteering'),
         errorMsg: $translate.instant('serviceSetupModal.error.siteSteering'),
@@ -534,7 +534,7 @@
         'templateOptions.isWarn': vm.siteSteeringDigitWarningValidation,
         'templateOptions.isError': vm.siteAndSteeringDigitErrorValidation
       },
-      controller: function ($scope) {
+      controller: /* @ngInject */ function ($scope) {
         _buildVoicemailPrefixOptions($scope);
       }
     }];
@@ -629,7 +629,7 @@
           }
         }
       },
-      controller: function ($scope) {
+      controller: /* @ngInject */ function ($scope) {
         $scope.$watchCollection(function () {
           return vm.externalNumberPool;
         }, function (externalNumberPool) {
@@ -1448,14 +1448,14 @@
 
     function _buildVoicemailPrefixOptions($scope) {
       $scope.$watchCollection(function () {
-        return [vm.model.site.extensionLength, vm.model.voicemailPrefix];
+        return [vm.model.site.siteSteeringDigit, vm.model.site.extensionLength, vm.model.site.steeringDigit];
       }, function () {
         var extensionLength0, extensionLength9;
         switch (vm.model.site.extensionLength) {
           case '3':
-            vm.model.site.siteCode = '100';
-            extensionLength0 = '00';
-            extensionLength9 = '99';
+            vm.model.site.siteCode = '1000';
+            extensionLength0 = '000';
+            extensionLength9 = '999';
             break;
           case '4':
             vm.model.site.siteCode = '100';
@@ -1473,7 +1473,6 @@
             extensionLength9 = '999';
             break;
         }
-
         var values = [];
         _.forEach(vm.steeringDigits, function (digit) {
           values.push({
@@ -1483,7 +1482,7 @@
         });
         $scope.to.description = $translate.instant('serviceSetupModal.voicemailPrefixDesc',
           {
-            'number': vm.model.voicemailPrefix.value,
+            'number': vm.model.site.siteSteeringDigit.siteDialDigit,
             'extensionLength0': extensionLength0,
             'extensionLength9': extensionLength9
           });

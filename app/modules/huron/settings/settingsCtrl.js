@@ -241,9 +241,10 @@
       if (_.get(vm, 'model.site.siteSteeringDigit.siteDialDigit') === _.get(vm, 'model.site.steeringDigit')) {
         scope.fields[0].formControl.$setValidity('', false);
         return true;
+      } else {
+        scope.fields[0].formControl.$setValidity('', true);
+        return false;
       }
-      scope.fields[0].formControl.$setValidity('', true);
-      return false;
     };
 
     vm.steeringDigitWarningValidation = function () {
@@ -519,7 +520,7 @@
         label: $translate.instant('serviceSetupModal.voicemailPrefixTitle'),
         description: $translate.instant('serviceSetupModal.voicemailPrefixDesc',
           {
-            'number': vm.model.site.siteSteeringDigit.siteDialDigit,
+            'number': vm.model.site.siteSteeringDigit.voicemailPrefixLabel,
             'extensionLength0': vm.model.previousLength === '5' ? '0000' : '000',
             'extensionLength9': vm.model.previousLength === '5' ? '9999' : '999'
           }),
@@ -1829,19 +1830,19 @@
       });
     }
 
-    function _buildVoicemailPrefixOptions($scope) {
-      $scope.$watchCollection(function () {
+    function _buildVoicemailPrefixOptions(localScope) {
+      localScope.$watchCollection(function () {
         return [vm.model.site.siteSteeringDigit, vm.model.site.extensionLength, vm.model.site.steeringDigit];
       }, function () {
         var extensionLength0, extensionLength9;
         switch (vm.model.site.extensionLength) {
           case '3':
-            vm.model.site.siteCode = 100;
-            extensionLength0 = '00';
-            extensionLength9 = '99';
+            vm.model.site.siteCode = '1000';
+            extensionLength0 = '000';
+            extensionLength9 = '999';
             break;
           case '4':
-            vm.model.site.siteCode = 100;
+            vm.model.site.siteCode = '100';
             extensionLength0 = '000';
             extensionLength9 = '999';
             break;
@@ -1864,8 +1865,8 @@
             voicemailPrefixLabel: digit.concat(vm.model.site.siteCode)
           });
         });
-        $scope.to.description = $translate.instant('serviceSetupModal.voicemailPrefixDesc', { 'number': vm.model.site.siteSteeringDigit.siteDialDigit, 'extensionLength0': extensionLength0, 'extensionLength9': extensionLength9 });
-        $scope.to.options = values;
+        localScope.to.description = $translate.instant('serviceSetupModal.voicemailPrefixDesc', { 'number': vm.model.site.siteSteeringDigit.siteDialDigit, 'extensionLength0': extensionLength0, 'extensionLength9': extensionLength9 });
+        localScope.to.options = values;
       });
     }
 
