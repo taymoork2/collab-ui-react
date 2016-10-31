@@ -14,7 +14,7 @@
       return placesFeatureIsEnabled()
         .then(function (res) {
           if (res) {
-            return $http.get(csdmPlacesUrl)
+            return $http.get(csdmPlacesUrl + "?shallow=true&type=all")
               .then(function (res) {
                 return CsdmConverter.convertPlaces(res.data);
               });
