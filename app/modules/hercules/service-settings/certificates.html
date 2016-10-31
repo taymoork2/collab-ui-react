@@ -48,12 +48,14 @@
         <span>{{cert.expires | date:'fullDate'}}</span>
       </td>
       <td>
-        <i class="icon icon-trash icon-lg hercules-trash-icon right"
+        <i class="icon icon-trash icon-lg trash-icon right"
            style="margin-left: 10px; margin-top: 5px;"
            ng-click="expresswayServiceSettings.confirmCertDelete(cert)"
-           tooltip-placement="top"
-           tooltip="Delete Certificate"
-           tooltip-animation="false"></i>
+           popover-trigger="mouseenter"
+           popover-placement="top"
+           popover="{{'hercules.settings.call.certificateDeleteTooltip' |
+  translate}}">
+        </i>
       </td>
     </tr>
     </tbody>
