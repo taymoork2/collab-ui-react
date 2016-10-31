@@ -2,8 +2,8 @@
 
   describe('AddResourceControllerClusterViewV2', function () {
     beforeEach(angular.mock.module('Mediafusion'));
-    var redirectTargetPromise, $q, $window, httpBackend, controller, $state, $stateParams, AddResourceCommonServiceV2, XhrNotificationService, $translate;
-    beforeEach(inject(function (_XhrNotificationService_, _$translate_, _$window_, _$stateParams_, _AddResourceCommonServiceV2_, $httpBackend, $controller, _$q_) {
+    var redirectTargetPromise, $q, $window, httpBackend, controller, $state, $stateParams, AddResourceCommonServiceV2, Notification, $translate;
+    beforeEach(inject(function (_Notification_, _$translate_, _$window_, _$stateParams_, _AddResourceCommonServiceV2_, $httpBackend, $controller, _$q_) {
       $q = _$q_;
       httpBackend = $httpBackend;
       httpBackend.when('GET', /^\w+.*/).respond({});
@@ -25,10 +25,10 @@
       $window = _$window_;
       AddResourceCommonServiceV2 = _AddResourceCommonServiceV2_;
       $translate = _$translate_;
-      XhrNotificationService = _XhrNotificationService_;
+      Notification = _Notification_;
       controller = $controller('AddResourceControllerClusterViewV2', {
         $q: $q,
-        XhrNotificationService: XhrNotificationService,
+        Notification: Notification,
         $translate: $translate,
         $state: $state,
         $stateParams: $stateParams,

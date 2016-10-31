@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject */
-  function AddResourceCommonServiceV2(XhrNotificationService, $translate, $q, MediaClusterServiceV2, $window, MediaServiceActivationV2) {
+  function AddResourceCommonServiceV2(Notification, $translate, $q, MediaClusterServiceV2, $window, MediaServiceActivationV2) {
     var vm = this;
     vm.clusters = null;
     vm.onlineNodeList = [];
@@ -36,7 +36,10 @@
           vm.clusterList.sort();
           deferred.resolve(vm.clusterList);
 
-        }, XhrNotificationService.notify);
+        })
+        .catch(function (error) {
+          Notification.errorWithTrackingId(error, 'mediaFusion.genericError');
+        });
       return deferred.promise;
     }
 
@@ -44,12 +47,12 @@
       vm.clusterDetail = null;
       //Checking if the host is already present
       if (vm.onlineNodeList.indexOf(hostName) > -1) {
-        XhrNotificationService.notify($translate.instant('mediaFusion.add-resource-dialog.serverOnline'));
+        Notification.errorWithTrackingId('', 'mediaFusion.add-resource-dialog.serverOnline');
         return;
       }
 
       if (vm.offlineNodeList.indexOf(hostName) > -1) {
-        XhrNotificationService.notify($translate.instant('mediaFusion.add-resource-dialog.serverOffline'));
+        Notification.errorWithTrackingId('', 'mediaFusion.add-resource-dialog.serverOffline');
         return;
       }
 
@@ -68,7 +71,7 @@
           var error = $translate.instant('mediaFusion.clusters.clusterCreationFailed', {
             enteredCluster: enteredCluster
           });
-          XhrNotificationService.notify(error);
+          Notification.errorWithTrackingId('', error);
         });
         return deferred.promise;
       } else {

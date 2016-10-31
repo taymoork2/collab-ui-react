@@ -21,7 +21,6 @@ describe('Controller: DisableMediaServiceController', function () {
     $provide.value("Authinfo", authInfo);
   }));
 
-  //expect(XhrNotificationService.notify).toHaveBeenCalled();
   beforeEach(inject(function ($state, $controller, _$q_, $translate, _MediaServiceActivationV2_, _Notification_, _MediaClusterServiceV2_, _$httpBackend_) {
     $q = _$q_;
     MediaServiceActivationV2 = _MediaServiceActivationV2_;
@@ -82,13 +81,13 @@ describe('Controller: DisableMediaServiceController', function () {
     spyOn(MediaClusterServiceV2, 'deleteClusterWithConnector').and.returnValue($q.when({
       'status': 500
     }));
-    spyOn(Notification, 'error');
+    spyOn(Notification, 'errorWithTrackingId');
     spyOn(modalInstance, 'close');
     controller.clusterIds = ['cluster1', 'cluster2'];
     controller.deactivate();
     httpMock.verifyNoOutstandingExpectation();
     expect(MediaClusterServiceV2.deleteClusterWithConnector).toHaveBeenCalled();
-    expect(Notification.error).toHaveBeenCalled();
+    expect(Notification.errorWithTrackingId).toHaveBeenCalled();
     expect(modalInstance.close).toHaveBeenCalled();
   });
 });

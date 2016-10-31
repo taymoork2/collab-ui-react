@@ -82,3 +82,21 @@
   padding-top: 10px;
   color: #808080;
 }
+.media-tooltip{
+  color: #E39A20;
+  font-size: 1rem;
+  bottom: .75rem;
+}
+.media-tooltip:hover{
+  color: #D08D1D;
+}
+.tooltip {
+  .tooltip-inner {
+    background-color: #FFFFFF;
+    color: #000000;
+  }
+}
+.custom-tooltip {
+  background-color: #FFFFFF;
+  color: #000000;
+}
