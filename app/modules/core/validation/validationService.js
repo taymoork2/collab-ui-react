@@ -48,7 +48,7 @@
 
     function alertingName(viewValue, modelValue) {
       var value = modelValue || viewValue;
-      return /^[^\]"%<>\[&|{}]{0,}$/.test(value);
+      return /^[^\]"%<>[&|{}]{0,}$/.test(value);
     }
 
     function callForward(viewValue, modelValue) {
