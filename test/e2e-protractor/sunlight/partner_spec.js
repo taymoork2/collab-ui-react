@@ -25,6 +25,7 @@ describe('Spark Care Partner flow', function () {
       utils.expectCheckbox(partner.careTrialCheckbox, true);
       utils.expectCheckbox(partner.squaredUCTrialCheckbox, true);
       utils.expectCheckbox(partner.roomSystemsTrialCheckbox, true);
+      utils.expectCheckbox(partner.sparkBoardTrialCheckbox, true);
       utils.setCheckboxIfDisplayed(partner.webexTrialCheckbox, false, 100);
 
       utils.sendKeys(partner.customerNameInput, partner.newTrial.customerName);
@@ -33,6 +34,7 @@ describe('Spark Care Partner flow', function () {
       // Disable other offers
       utils.click(partner.squaredUCTrialCheckbox);
       utils.click(partner.roomSystemsTrialCheckbox);
+      utils.click(partner.sparkBoardTrialCheckbox);
 
       utils.click(partner.startTrialButton);
       notifications.assertSuccess(partner.newTrial.customerName, 'A trial was successfully started');

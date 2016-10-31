@@ -69,8 +69,10 @@ describe('Partner flow', function () {
       utils.expectCheckbox(partner.roomSystemsTrialCheckbox, true);
       utils.click(partner.squaredUCTrialCheckbox); // no PSTN on this trial
       utils.click(partner.roomSystemsTrialCheckbox); // no room systems on this trial
+      utils.click(partner.sparkBoardTrialCheckbox); // no spark board system on this trial
       utils.expectCheckbox(partner.squaredUCTrialCheckbox, false);
       utils.expectCheckbox(partner.roomSystemsTrialCheckbox, false);
+      utils.expectCheckbox(partner.sparkBoardTrialCheckbox, false);
       utils.setCheckboxIfDisplayed(partner.webexTrialCheckbox, false, 100);
 
       utils.sendKeys(partner.customerNameInput, partner.newTrial.customerName);

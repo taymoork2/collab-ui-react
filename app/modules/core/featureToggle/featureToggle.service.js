@@ -40,6 +40,7 @@
       atlasSipUriDomain: 'atlas-sip-uri-domain',
       atlasSipUriDomainEnterprise: 'atlas-sip-uri-domain-enterprise',
       atlasUserPendingStatus: 'atlas-user-pending-status',
+      atlasTrialsShipDevices: 'atlasTrialsShipDevices',
       atlasWebexTrials: 'atlas-webex-trials',
       atlasDeviceUsageReport: 'atlas-device-usage-report',
       androidAddGuestRelease: 'android-add-guest-release',

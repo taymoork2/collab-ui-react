@@ -25,6 +25,7 @@
 
     var helpers = {
       createConferenceMapping: _createConferenceMapping,
+      createRoomMapping: _createRoomMapping,
       createLicenseMapping: _createLicenseMapping,
       createFreeServicesMapping: _createFreeServicesMapping,
       LicensedService: _LicensedService,
@@ -99,7 +100,20 @@
         };
       });
       return conferenceMapping;
+    }
 
+    function _createRoomMapping() {
+      var offerMapping = {};
+      offerMapping[Config.offerCodes.SD] = {
+        translatedOfferCode: $translate.instant('trials.sharedDevice'),
+        icon: 'icon-circle-telepresence',
+        order: 6
+      };
+      offerMapping[Config.offerCodes.SB] = {
+        translatedOfferCode: $translate.instant('trials.sparkBoardSystem'),
+        icon: 'icon-circle-telepresence',
+        order: 6
+      };
     }
 
     function _createLicenseMapping() {
@@ -117,8 +131,9 @@
       };
 
       licenseMapping[Config.licenseTypes.SHARED_DEVICES] = {
-        name: $translate.instant('trials.roomSystem'),
+        name: $translate.instant('subscriptions.room'),
         icon: 'icon-circle-telepresence',
+        isRoom: true,
         order: 6
       };
 
@@ -606,6 +621,7 @@
       var isCareEnabled = _.get(options, 'isCareEnabled', true);
       var userServiceMapping = helpers.createLicenseMapping();
       var conferenceServices = [];
+      var roomServices = [];
       var trialService;
       var trialServices = [];
 
@@ -653,15 +669,27 @@
             break;
           case Config.offerTypes.meeting:
             conferenceServices.push({
+              offerType: offerInfo.id,
               name: $translate.instant('trials.meeting'),
               order: 1,
               qty: offerInfo.licenseCount
             });
             break;
           case Config.offerTypes.roomSystems:
-            trialService = userServiceMapping[Config.licenseTypes.SHARED_DEVICES];
-            partial.deviceLicenses = offerInfo.licenseCount;
-            partial.isRoomSystems = true;
+            roomServices.push({
+              offerType: offerInfo.id,
+              name: $translate.instant('trials.roomSystem'),
+              order: 1,
+              qty: offerInfo.licenseCount,
+            });
+            break;
+          case Config.offerTypes.sparkBoard:
+            roomServices.push({
+              offerType: offerInfo.id,
+              name: $translate.instant('trials.sparkBoardSystem'),
+              order: 2,
+              qty: offerInfo.licenseCount,
+            });
             break;
           case Config.offerTypes.care:
             if (isCareEnabled) {
@@ -686,6 +714,30 @@
         var licenseQty = conferenceServices[0].qty;
         var hasWebex = _.some(conferenceServices, { isWebex: true });
         trialServices.push({ name: name, sub: conferenceServices, qty: licenseQty, icon: 'icon-circle-group', order: 1, hasWebex: hasWebex });
+      }
+
+      if (roomServices.length > 0) {
+        trialService = userServiceMapping[Config.licenseTypes.SHARED_DEVICES];
+        partial.isRoomSystems = true;
+        var sbTrial = _.chain(roomServices)
+          .filter({ offerType: Config.offerTypes.sparkBoard })
+          .last()
+          .value();
+        var sdTrial = _.chain(roomServices)
+          .filter({ offerType: Config.offerTypes.roomSystems })
+          .last()
+          .value();
+        trialService.sub = [];
+        if (sbTrial) {
+          partial.deviceLicenses += sbTrial.qty || 0;
+          trialService.sub.push(sbTrial);
+        }
+        if (sdTrial) {
+          partial.deviceLicenses += sdTrial.qty || 0;
+          trialService.sub.push(sdTrial);
+        }
+        trialService.qty = partial.deviceLicenses;
+        trialServices.push(trialService);
       }
 
       partial.offer.trialServices = _.chain(trialServices).sortBy('order').uniq().value();
