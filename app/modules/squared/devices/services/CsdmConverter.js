@@ -210,16 +210,13 @@
       function Place(obj) {
         this.url = obj.url;
         this.isPlace = true;
-        this.type = obj.type || 'cloudberry';
+        this.type = obj.type || (obj.machineType == 'lyra_space' ? 'cloudberry' : 'huron');
         this.readableType = getLocalizedType(obj.type);
         this.entitlements = obj.entitlements;
         this.cisUuid = obj.cisUuid || obj.uuid;
         this.displayName = obj.displayName;
         this.sipUrl = obj.sipUrl;
-        this.devices = obj.type === 'huron' ? obj.phones : convertCloudberryDevices(obj.devices);
-        this.codes = obj.type === 'huron' ? null : convertCodes(obj.codes);
         this.numbers = obj.numbers;
-        this.isUnused = obj.devices || false;
         this.canDelete = true;
         this.accountType = obj.placeType || 'MACHINE';
         this.image = "images/devices-hi/unknown.png";

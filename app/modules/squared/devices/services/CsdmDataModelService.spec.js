@@ -19,12 +19,11 @@ describe('Service: CsdmDataModelService', function () {
   var pWithOnlyCodeUrl = placesUrl + 'a19b308a-PlaceWithOnlyCode-71898e423bec';
 
   var huronDevicesUrl = 'https://csdm-integration.wbx2.com/csdm/api/v1/organization/testOrg/devices/?type=huron';
-  var huronPlacesUrl = 'https://cmi.huron-int.com/api/v2/customers/testOrg/places/';
-  var pWithHuronDevice2Url = huronPlacesUrl + '68351854-Place2WithHuronDevice-c9c844421ec2';
+  var pWithHuronDevice2Url = placesUrl + '68351854-Place2WithHuronDevice-c9c844421ec2';
   var huronDevice2Url = 'https://cmi.huron-int.com/api/v1/voice/customers/3a6ff373-unittest-a27460e0ac5c/sipendpoints/2c586b22-hurondev_inplace2-ace151f631fa';
   var huronPersonalDeviceUrl = 'https://cmi.huron-int.com/api/v1/voice/customers/3a6ff373-unittest-a27460e0ac5c/sipendpoints/2c586b22-hurondev_inplace2-PERSON-ace151f631fa';
-  var nonExistentPlaceBasedOnPersonalUserUrl = huronPlacesUrl + '68351854-PERSON-c9c844421ec2';
-  var huronPlaceWithoutDeviceUrl = huronPlacesUrl + '938d9c32-huronPlaceWithoutDevice-88d7c1a7f63ev';
+  var nonExistentPlaceBasedOnPersonalUserUrl = placesUrl + '68351854-PERSON-c9c844421ec2';
+  var huronPlaceWithoutDeviceUrl = placesUrl + '938d9c32-huronPlaceWithoutDevice-88d7c1a7f63ev';
 
   var initialDeviceMap;
   var initialDevice1Reference;
@@ -32,7 +31,6 @@ describe('Service: CsdmDataModelService', function () {
   var initialPlaceMap;
   var initialPlaceCount;
 
-  var initialHuronPlaces = getJSONFixture('squared/json/huronPlaces.json');
   var initialHuronDevices = getJSONFixture('squared/json/huronDevices.json');
   var initialHttpDevices = getJSONFixture('squared/json/devices.json');
   var codes = getJSONFixture('squared/json/activationCodes.json');
@@ -52,9 +50,8 @@ describe('Service: CsdmDataModelService', function () {
     $httpBackend.whenGET(devicesUrl + '?checkDisplayName=false&checkOnline=false').respond(initialHttpDevices);
     $httpBackend.whenGET(devicesUrl).respond(initialHttpDevices);
     $httpBackend.whenGET(huronDevicesUrl).respond(initialHuronDevices);
-    $httpBackend.whenGET(huronPlacesUrl).respond(initialHuronPlaces);
     $httpBackend.whenGET('https://csdm-integration.wbx2.com/csdm/api/v1/organization/testOrg/codes').respond(codes);
-    $httpBackend.whenGET('https://csdm-integration.wbx2.com/csdm/api/v1/organization/testOrg/places/').respond(accounts);
+    $httpBackend.whenGET('https://csdm-integration.wbx2.com/csdm/api/v1/organization/testOrg/places/?shallow=true&type=all').respond(accounts);
     $httpBackend.whenGET('https://identity.webex.com/identity/scim/testOrg/v1/Users/me').respond({});
 
   }));
