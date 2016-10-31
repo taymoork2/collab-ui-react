@@ -73,6 +73,9 @@
         "MODEL_CISCO_7821": {
           displayName: "Cisco 7821"
         },
+        "MODEL_CISCO_7832": {
+          displayName: "Cisco 7832"
+        },
         "MODEL_CISCO_7841": {
           displayName: "Cisco 7841"
         },
@@ -102,6 +105,12 @@
         },
         "MODEL_CISCO_8865": {
           displayName: "Cisco 8865"
+        },
+        "MODEL_CISCO_8865NR": {
+          displayName: "Cisco 8865NR"
+        },
+        "MODEL_CISCO_ATA_190": {
+          displayName: "Cisco ATA 190"
         }
       };
 
