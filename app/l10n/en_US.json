@@ -1036,7 +1036,8 @@
     "overview": "Overview",
     "notAvailable": "N/A",
     "ciscoCollaborationCloud": "Cisco Collaboration Cloud",
-    "trackingId": "Tracking Id: {{trackingId}}."
+    "trackingId": "Tracking Id: {{trackingId}}.",
+    "alert": "Alert"
   },
   "notifications": {
     "success": "Success notifications",
@@ -1107,7 +1108,8 @@
     "setUpPMRDescription": "The Personal Meeting Rooms feature has been added to your subscription.",
     "setUpPMRUrl": "Set Up PMR Now",
     "setUpHybridMediaService": "Hybrid Media Service is available. Extend cloud media to use premises-based resources for calls and meetings.",
-    "getStarted": "Get Started"
+    "urgentUpgrade": "An urgent upgrade is available for {{connector}} and it will upgrade during the next scheduled upgrade.",
+    "upgrade": "Upgrade now?"
   },
   "inviteModal": {
     "title": "Service Entitlement",
@@ -1498,7 +1500,8 @@
       "upgraded": "Upgraded",
       "pending": "Pending",
       "initializing": "Initializing",
-      "not_operational": "Not Operational"
+      "not_operational": "Not Operational",
+      "urgentUpgradeAvailable": "Urgent upgrade available"
     },
     "userSidepanel": {
       "warningInvitePending": "This user has not yet accepted the invitation to join Cisco Spark. You can still enable {{ServiceName}}, but activation will not succeed until the user signs in.",
@@ -1616,6 +1619,7 @@
       "upgradeDone": "Upgrade completed!",
       "upToDate": "{{connectorType}} is up to date on this cluster.",
       "upgradePossible": "A new version is available for {{connectorType}}: {{availableVersion}}.",
+      "urgentUpgrade": "An urgent upgrade is available for {{connectorType}}: {{availableVersion}}.",
       "upgradeWarning": "This cluster has one or more nodes where {{ManagementConnector}} is not sending updates to {{CiscoCollaborationCloud}}. It is recommended to bring {{ManagementConnector}} online before initiating an upgrade."
     },
     "expresswayClusterSettings": {
@@ -1711,6 +1715,17 @@
         "postponeAction": "Postpone",
         "postponeModalTitle": "Postpone Upgrade",
         "postponeModalText": "Are you sure you want to postpone the scheduled upgrade to begin:"
+      },
+      "emergencyUpgrade": {
+        "expressway": {
+          "title": "Urgent upgrade schedule",
+          "description": "Select the urgent upgrade schedule for this cluster. When an upgrade is available, the connectors automatically upgrade during time that you select.",
+          "when": "Daily, on {{timezone}}"
+        },
+        "mediafusion": {
+          "title": "Urgent upgrade schedule",
+          "description": "Urgent upgrades for this cluster are applied as soon as they are available."
+        }
       }
     },
     "notifications": {
@@ -1767,6 +1782,9 @@
       "types": {
         "expressway": "Expressway",
         "mediafusion": "Media"
+      },
+      "urgentUpgrade": {
+        "title": "Urgent Upgrade Schedule"
       },
       "list": {
         "title": "Clusters",
