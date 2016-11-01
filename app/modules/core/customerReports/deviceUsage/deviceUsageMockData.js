@@ -6,7 +6,7 @@
     .service('DeviceUsageMockData', DeviceUsageMockData);
 
   /* @ngInject */
-  function DeviceUsageMockData($log) {
+  function DeviceUsageMockData($log, $timeout) {
 
     var apiDataFormat = "YYYYMMDD";
 
@@ -17,7 +17,8 @@
     var existingUniqueDeviceIds = createSetOfUniqueDeviceIds(100);
 
     var service = {
-      getRawData: getRawData
+      getRawData: getRawData,
+      getRawDataPromise: getRawDataPromise
     };
     return service;
 
@@ -63,6 +64,12 @@
       $log.info("Raw data after range filtering", rawDataWithinRange);
 
       return _.cloneDeep(rawDataWithinRange);
+    }
+
+    function getRawDataPromise(startDate, endDate) {
+      return $timeout(function () {
+        return getRawData(startDate, endDate);
+      }, 2000);
     }
 
     function assembleRawData(startDate, endDate) {
