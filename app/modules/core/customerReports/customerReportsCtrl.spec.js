@@ -11,6 +11,7 @@ describe('Controller: Customer Reports Ctrl', function () {
   var mediaData = getJSONFixture('core/json/customerReports/mediaQuality.json');
   var metricsData = getJSONFixture('core/json/customerReports/callMetrics.json');
   var devicesJson = getJSONFixture('core/json/customerReports/devices.json');
+  var defaults = getJSONFixture('core/json/partnerReports/commonReportService.json');
 
   var activeOptions = _.cloneDeep(ctrlData.activeUserOptions);
   var secondaryActiveOptions = _.cloneDeep(ctrlData.activeUserSecondaryOptions);
@@ -24,6 +25,8 @@ describe('Controller: Customer Reports Ctrl', function () {
   activeOptions.table = undefined;
   secondaryActiveOptions.description = 'activeUsers.customerMostActiveDescription';
   secondaryActiveOptions.search = true;
+  secondaryActiveOptions.sortOptions = _.cloneDeep(activeData.sortOptions);
+  secondaryActiveOptions.table.headers = _.cloneDeep(activeData.headers);
   secondaryActiveOptions.table.data = _.cloneDeep(activeData.mostActiveResponse);
   avgRoomsCard.table = undefined;
   deviceCard.table = undefined;
@@ -33,41 +36,8 @@ describe('Controller: Customer Reports Ctrl', function () {
   metricsOptions.description = 'callMetrics.customerDescription';
   metricsOptions.table = undefined;
 
-  secondaryActiveOptions.sortOptions = [{
-    option: "userName",
-    direction: false
-  }, {
-    option: "numCalls",
-    direction: false
-  }, {
-    option: "sparkMessages",
-    direction: true
-  }, {
-    option: "totalActivity",
-    direction: true
-  }];
-
-  secondaryActiveOptions.table.headers = [{
-    title: "activeUsers.user",
-    class: "col-md-4 pointer"
-  }, {
-    title: "activeUsers.calls",
-    class: "horizontal-center col-md-2 pointer"
-  }, {
-    title: "activeUsers.sparkMessages",
-    class: "horizontal-center col-md-2 pointer"
-  }];
-
-  var mediaArray = [{
-    value: 0,
-    label: 'reportsPage.allCalls'
-  }, {
-    value: 1,
-    label: 'reportsPage.audioCalls'
-  }, {
-    value: 2,
-    label: 'reportsPage.videoCalls'
-  }];
+  var timeOptions = _.cloneDeep(defaults.timeFilter);
+  var mediaArray = _.cloneDeep(mediaData.dropdownFilter);
   var mediaDropdown = {
     array: mediaArray,
     disabled: false,
@@ -83,19 +53,6 @@ describe('Controller: Customer Reports Ctrl', function () {
   }, {
     title: 'reportsPage.careTab',
     state: 'reports.care'
-  }];
-  var timeOptions = [{
-    value: 0,
-    label: 'reportsPage.week',
-    description: 'reportsPage.week2'
-  }, {
-    value: 1,
-    label: 'reportsPage.month',
-    description: 'reportsPage.month2'
-  }, {
-    value: 2,
-    label: 'reportsPage.threeMonths',
-    description: 'reportsPage.threeMonths2'
   }];
 
   beforeEach(function () {
