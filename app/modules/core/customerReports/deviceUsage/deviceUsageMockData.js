@@ -75,7 +75,7 @@
         for (var i = 0; i < noOfActiveDevicesToday; i++) {
           var accountId = existingUniqueDeviceIds[i];
           //data.push(deviceDaySample(time, accountId, "ce"));
-          data.push(deviceDaySample(time, accountId, "darling"));
+          data.push(deviceDaySample(time, accountId, "sparkboard"));
         }
         start.add(1, "days");
       }

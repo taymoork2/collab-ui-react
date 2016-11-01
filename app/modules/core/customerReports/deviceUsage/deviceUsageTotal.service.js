@@ -7,9 +7,11 @@
 
   /* @ngInject */
   function DeviceUsageTotalService($document, $window, $log, $q, $timeout, $http, chartColors, DeviceUsageRawService, UrlConfig, Authinfo) {
-
     var localUrlBase = 'http://localhost:8080/atlas-server/admin/api/v1/organization';
     var urlBase = UrlConfig.getAdminServiceUrl() + 'organizations';
+
+    var csdmUrlBase = UrlConfig.getCsdmServiceUrl() + '/organization';
+    var csdmUrl = csdmUrlBase + '/' + Authinfo.getOrgId() + '/places/';
 
     var timeoutInMillis = 10000;
 
@@ -30,7 +32,6 @@
       return loadPeriodCallData(period, count, granularity, deviceCategories, api);
     }
 
-
     function getDatesForLastWeek() {
       var start = moment().startOf('week').subtract(1, 'weeks').format('YYYY-MM-DD');
       var end = moment().startOf('week').subtract(1, 'days').format('YYYY-MM-DD');
@@ -49,7 +50,7 @@
       var start = moment().startOf(period).subtract(count, period + 's').format('YYYY-MM-DD');
       var end = moment().startOf(period).subtract(1, 'days').format('YYYY-MM-DD');
       if (api === 'mock') {
-        return DeviceUsageRawService.getData(start, end).then(function (data) {
+        return DeviceUsageRawService.getData(start, end, true).then(function (data) {
           return reduceAllData(data, granularity);
         });
       } else if (api === 'local') {
@@ -144,8 +145,63 @@
         value.time = timeFormatted;
         return value;
       }).value();
-      //extractAndSortAccounts(reduced);
       return reduced;
+    }
+
+    function extractAndSortAccounts(reduced) {
+      $log.info("sequence before sorting", reduced);
+      var sequence = _.chain(reduced).map(function (value) {
+        return value.accountIds;
+      })
+        .reduce(function (result, value) {
+          _.each(value, function (item) {
+            if (!result[item.accountId]) {
+              result[item.accountId] = {
+                callCount: item.callCount,
+                pairedCount: item.pairedCount,
+                totalDuration: item.totalDuration
+              };
+            } else {
+              result[item.accountId].callCount += item.callCount;
+              result[item.accountId].pairedCount += item.pairedCount;
+              result[item.accountId].totalDuration += item.totalDuration;
+            }
+          });
+          return result;
+        }, {})
+        .map(function (value, key) {
+          value.accountId = key;
+          return value;
+        })
+        .orderBy(['totalDuration'], ['desc'])
+        .value();
+
+      $log.info('sequence after sorting', sequence);
+      return sequence;
+    }
+
+    function extractStats(reduced, count) {
+      var accounts = extractAndSortAccounts(reduced);
+      var n = count || 5;
+      var stats = {
+        most: _.take(accounts, n),
+        least: _.takeRight(accounts, n).reverse(),
+        noOfDevices: accounts.length,
+        noOfCalls: calculateTotal(accounts).noOfCalls,
+        totalDuration: calculateTotal(accounts).totalDuration
+      };
+      $log.info('Extracted stats:', stats);
+      return stats;
+    }
+
+    function calculateTotal(accounts) {
+      var duration = 0;
+      var noOfCalls = 0;
+      _.each(accounts, function (a) {
+        duration += a.totalDuration;
+        noOfCalls += a.callCount;
+      });
+      return { totalDuration: duration, noOfCalls: noOfCalls };
     }
 
     function pickDateBucket(item, granularity) {
@@ -165,13 +221,6 @@
           return date.format('YYYYMMDD');
       }
     }
-
-//    function pickDateBucket(item, granularity) {
-//      var day = item.date.toString();
-//      var formattedDate = day.substr(0, 4) + '-' + day.substr(4, 2) + '-' + day.substr(6, 2);
-//      var date = moment(formattedDate);
-//      return date.startOf(granularity).format('YYYYMMDD');
-//    }
 
     function getLineChart() {
       return {
@@ -270,8 +319,6 @@
     }
 
     function exportRawData(startDate, endDate) {
-      //TODO remove hardcoded parameters
-      //var dateRange = getDatesForLastMonths(1);
       var granularity = "day";
       var deviceCategories = ['ce', 'sparkboard'];
 
@@ -285,7 +332,6 @@
 
       $log.info("Trying to export data using url:", url);
       return downloadReport(url);
-
     }
 
     // Mainly copied from Helpdesk's downloadReport
@@ -321,6 +367,25 @@
       });
     }
 
+    function resolveDeviceData(devices) {
+      var promises = [];
+      _.each(devices, function (device) {
+        promises.push($http.get(csdmUrl + device.accountId)
+          .then(function (res) {
+            $log.info("resolving", res);
+            return res.data;
+          })
+          .catch(function (err) {
+            $log.info("Problems resolving device", err);
+            return {
+              "displayName": "Unknown [" + device.accountId + "}"
+            };
+          })
+        );
+      });
+      return $q.all(promises);
+    }
+
     return {
       getDataForPeriod: getDataForPeriod,
       getDataForLastWeek: getDataForLastWeek,
@@ -330,7 +395,9 @@
       getLineChart: getLineChart,
       getDatesForLastWeek: getDatesForLastWeek,
       getDatesForLastMonths: getDatesForLastMonths,
-      exportRawData: exportRawData
+      exportRawData: exportRawData,
+      extractStats: extractStats,
+      resolveDeviceData: resolveDeviceData
     };
   }
 }());
