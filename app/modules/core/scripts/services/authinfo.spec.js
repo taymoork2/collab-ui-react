@@ -272,13 +272,13 @@ describe('Authinfo:', function () {
   function setupConfig(override) {
     override = override || {};
     var Config = injector.get('Config');
-    angular.extend(Config, defaultConfig, override);
+    _.assign(Config, defaultConfig, override);
   }
 
   function setupUser(override) {
     override = override || {};
     var Authinfo = Service();
-    var userData = angular.extend({}, defaultUser, override);
+    var userData = _.assign({}, defaultUser, override);
     Authinfo.initialize(userData);
     return Authinfo;
   }
