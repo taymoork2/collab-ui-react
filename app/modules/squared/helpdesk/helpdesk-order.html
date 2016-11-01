@@ -12,7 +12,7 @@
     <div class="helpdesk-orderDetail">
       <div class="orderTitle">
         <h2>{{helpdeskOrderCtrl.orderId}}</h2>
-        <h5>{{helpdeskOrderCtrl.customerName}}</h5>
+        <h5>{{helpdeskOrderCtrl.accountName}}</h5>
       </div>
       <hr>
       <div class="row">
@@ -44,7 +44,7 @@
           <span>{{'helpdesk.accountActivate' | translate}}</span>
         </div>
         <div class="large-7 columns details-value">
-          <span>{{helpdeskOrderCtrl.accountActivated}}</span>
+          <span>{{helpdeskOrderCtrl.accountActivationInfo}}</span>
         </div>
       </div>
 
@@ -72,8 +72,8 @@
           <span>{{'helpdesk.adminEmail' | translate}}</span>
         </div>
         <div class="large-7 columns details-value" ng-show="!helpdeskOrderCtrl.customerAdminEmailEdit">
-          <span style="margin-right: 1rem;">{{helpdeskOrderCtrl.customerAdminEmail}}</span>
-          <a ng-href class="ng-scope" ng-if="helpdeskOrderCtrl.isEditAllowed" style="margin-right: 0.5rem" ng-click="helpdeskOrderCtrl.showCustomerAdminEmailEdit()">
+          <span class="custom-spacing">{{helpdeskOrderCtrl.customerAdminEmail}}</span>
+          <a ng-href class="custom-spacing ng-scope" ng-if="helpdeskOrderCtrl.isEditAllowed" ng-click="helpdeskOrderCtrl.showCustomerAdminEmailEdit()">
             {{'helpdesk.editAdminEmail' | translate}}
           </a>
           <a ng-href class="ng-scope" ng-click="helpdeskOrderCtrl.resendAdminEmail(true)">
@@ -83,8 +83,8 @@
                  class="icon icon-information icon-lg blue-icon-info"></i>
         </div>
         <div class="large-7 columns details-value" ng-show="helpdeskOrderCtrl.customerAdminEmailEdit">
-          <input ng-model="helpdeskOrderCtrl.customerAdminEmail" style="margin-right: 1rem;width: 300px;padding-top: 10px 5px;">
-          <a ng-href class="ng-scope" style="margin-right: 0.5rem" ng-click="helpdeskOrderCtrl.updateCustomerAdminEmail()">
+          <input ng-model="helpdeskOrderCtrl.customerAdminEmail" class="edit-box-style custom-spacing">
+          <a ng-href class="custom-spacing ng-scope" ng-click="helpdeskOrderCtrl.updateCustomerAdminEmail()">
             {{'common.save' | translate}}
           </a>
           <a ng-href class="ng-scope" ng-click="helpdeskOrderCtrl.cancelCustomerAdminEmailEdit()">
@@ -102,7 +102,7 @@
         </div>
       </div>
 
-      <div ng-show="helpdeskOrderCtrl.partnerInfo">
+      <div ng-show="helpdeskOrderCtrl.partnerOrgId">
         <div class="row">
           <div class="medium-5 columns details-heading">
             <span><strong>{{'helpdesk.partnerInfo' | translate}}</strong></span>
@@ -123,8 +123,8 @@
             <span>{{'helpdesk.partnerEmail' | translate}}</span>
           </div>
           <div class="large-7 columns details-value" ng-show="!helpdeskOrderCtrl.partnerAdminEmailEdit">
-            <span style="margin-right: 1rem;">{{helpdeskOrderCtrl.partnerAdminEmail}}</span>
-            <a ng-href class="ng-scope" ng-if="helpdeskOrderCtrl.isEditAllowed" style="margin-right: 0.5rem" ng-click="helpdeskOrderCtrl.showPartnerAdminEmailEdit()">
+            <span class="custom-spacing">{{helpdeskOrderCtrl.partnerAdminEmail}}</span>
+            <a ng-href class="custom-spacing ng-scope" ng-if="helpdeskOrderCtrl.isEditAllowed" ng-click="helpdeskOrderCtrl.showPartnerAdminEmailEdit()">
               {{'helpdesk.editAdminEmail' | translate}}
             </a>
             <a ng-href class="ng-scope" ng-click="helpdeskOrderCtrl.resendAdminEmail(false)">
@@ -134,8 +134,8 @@
                  class="icon icon-information icon-lg blue-icon-info"></i>
         </div>
         <div class="large-7 columns details-value" ng-show="helpdeskOrderCtrl.partnerAdminEmailEdit">
-          <input ng-model="helpdeskOrderCtrl.partnerAdminEmail" style="margin-right: 1rem;width: 300px;padding-top: 10px 5px;">
-          <a ng-href class="ng-scope" style="margin-right: 0.5rem" ng-click="helpdeskOrderCtrl.updatePartnerAdminEmail()">
+          <input ng-model="helpdeskOrderCtrl.partnerAdminEmail" class="edit-box-style custom-spacing">
+          <a ng-href class="custom-spacing ng-scope" ng-click="helpdeskOrderCtrl.updatePartnerAdminEmail()">
             {{'common.save' | translate}}
           </a>
           <a ng-href class="ng-scope" ng-click="helpdeskOrderCtrl.cancelPartnerAdminEmailEdit()">

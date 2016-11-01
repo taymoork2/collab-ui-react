@@ -333,9 +333,9 @@
           vm.currentSearch.orderSearchResults = null;
           vm.currentSearch.orderSearchFailure = null;
           if (err.status === 404) {
-            var message = _.get(err.data, "message");
-            // TODO - Add an error code in backend, and check for it here instead of comparing message strings.
-            if (message && message.indexOf("No orders found" != -1)) {
+            var errorCode = _.get(err.data, "errorCode");
+            // Compare the error code with 'Order not found' (400117)
+            if (errorCode === 400117) {
               vm.currentSearch.orderSearchFailure = $translate.instant('helpdesk.noSearchHits');
             } else {
               vm.currentSearch.orderSearchFailure = $translate.instant('helpdesk.badOrderSearchInput');

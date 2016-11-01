@@ -6,7 +6,7 @@
     .controller('HelpdeskOrderController', HelpdeskOrderController);
 
   /* @ngInject */
-  function HelpdeskOrderController($stateParams, HelpdeskService, XhrNotificationService, Authinfo, Notification, $translate, $state, Log) {
+  function HelpdeskOrderController($stateParams, HelpdeskService, XhrNotificationService, Authinfo, Notification, $translate, $state) {
     $('body').css('background', 'white');
     var vm = this;
     if ($stateParams.order) {
@@ -14,11 +14,10 @@
     } else {
       vm.orderId = $stateParams.id;
     }
-    vm.customerAdminEmailEdit = false;
+    vm.customerAdminEmailEdit = vm.partnerAdminEmailEdit = false;
     vm.showCustomerAdminEmailEdit = showCustomerAdminEmailEdit;
     vm.updateCustomerAdminEmail = updateCustomerAdminEmail;
     vm.cancelCustomerAdminEmailEdit = cancelCustomerAdminEmailEdit;
-    vm.partnerAdminEmailEdit = false;
     vm.showPartnerAdminEmailEdit = showPartnerAdminEmailEdit;
     vm.updatePartnerAdminEmail = updatePartnerAdminEmail;
     vm.cancelPartnerAdminEmailEdit = cancelPartnerAdminEmailEdit;
@@ -28,9 +27,10 @@
     vm.isAccountActivated = isAccountActivated;
 
     // Get Order details
-    HelpdeskService.searchOrder(vm.orderId).then(initOrderView, XhrNotificationService.notify);
+    HelpdeskService.searchOrders(vm.orderId).then(initOrderView, XhrNotificationService.notify);
 
     function initOrderView(order) {
+      // Getting information from the order.
       vm.order = order;
       var orderObj = _.first(order);
       if (_.isUndefined(orderObj)) {
@@ -39,8 +39,7 @@
       vm.orderUuid = orderObj.orderUuid;
       var accountId = orderObj.accountId;
       vm.orderId = orderObj.externalOrderId;
-
-      // Get the account details.
+      // Getting the account details using the account Id from order.
       if (accountId) {
         HelpdeskService.getAccount(accountId)
         .then(function (account) {
@@ -48,16 +47,29 @@
           vm.accountName = account.accountName;
           vm.customerId = account.customerId;
           vm.accountOrgId = account.accountOrgId;
-          vm.customerName = _.get(orderObj, 'orderContent.common.customerInfo.endCustomerInfo.name');
           vm.customerAdminEmail = _.get(vm, 'account.customerAdminEmail');
-          vm.partnerInfo = _.get(orderObj, 'orderContent.common.customerInfo.partnerInfo');
-          vm.managedBy = vm.partnerInfo.name;
-          vm.partnerAdminEmail = _.get(vm, 'partnerInfo.adminDetails.emailId');
+          // Getting partner Info only if Partner OrgId exists.
+          vm.partnerOrgId = account.partnerOrgId;
+          if (vm.partnerOrgId) {
+            var licenses = _.get(account, 'licenses');
+            var license = _.first(licenses);
+            vm.partnerAdminEmail = license.partnerEmail;
+            // Getting the display name of the partner cited in account.
+            HelpdeskService.getOrg(vm.partnerOrgId).then(function (org) {
+              vm.managedBy = _.get(org, 'displayName', '');
+            }, XhrNotificationService.notify);
+          }
           vm.provisionTime = (new Date(orderObj.orderReceived)).toGMTString();
-          vm.accountActivated = "No";
+          vm.accountActivated = false;
+          vm.accountActivationInfo = $translate.instant('common.no');
           if (vm.accountOrgId) {
+            // Getting the activation time if the account has already been activated.
             HelpdeskService.getOrg(vm.accountOrgId).then(function (org) {
-              vm.accountActivated = (new Date(org.meta.created)).toGMTString();
+              var activationDate = _.get(org, 'meta.created');
+              if (activationDate) {
+                vm.accountActivated = true;
+                vm.accountActivationInfo = (new Date(activationDate)).toGMTString();
+              }
             });
           }
 
@@ -65,7 +77,7 @@
           // First, get latest date the welcome email was sent to customer.
           getEmailStatus(true);
           // If Partner is available, get the latest date welcome mail was sent to partner.
-          if (vm.partnerInfo) {
+          if (vm.partnerOrgId) {
             getEmailStatus(false);
           }
         });
@@ -77,17 +89,19 @@
       if (isCustomer) {
         HelpdeskService.getEmailStatus(vm.customerAdminEmail)
         .then(function (response) {
-          if (response.items && response.items.length > 0) {
-            var timestamp = response.items[0].timestamp;
-            vm.customerEmailSent = getUTCtime(timestamp);
+          // First element of response array is the latest.
+          var mailStat = _.first(response);
+          if (mailStat && mailStat.timestamp) {
+            vm.customerEmailSent = getUTCtime(mailStat.timestamp);
           }
         }, XhrNotificationService.notify);
       } else {
         HelpdeskService.getEmailStatus(vm.partnerAdminEmail)
         .then(function (response) {
-          if (response.items && response.items.length > 0) {
-            var timestamp = response.items[0].timestamp;
-            vm.partnerEmailSent = getUTCtime(timestamp);
+          // First element of response array is the latest.
+          var mailStat = _.first(response);
+          if (mailStat && mailStat.timestamp) {
+            vm.partnerEmailSent = getUTCtime(mailStat.timestamp);
           }
         }, XhrNotificationService.notify);
       }
@@ -134,8 +148,7 @@
     // Resend the welcome email to specified party.  Attempt to last send date.
     function resendAdminEmail(isCustomer) {
       HelpdeskService.resendAdminEmail(vm.orderUuid, isCustomer)
-        .then(function (res) {
-          Log.info(res);
+        .then(function () {
           getEmailStatus(isCustomer);
           var successMessage = [];
           successMessage.push($translate.instant('helpdesk.resendMailSuccess'));
@@ -156,7 +169,7 @@
 
     // Check if account has been activated.
     function isAccountActivated() {
-      return (vm.accountActivated !== "No");
+      return (vm.accountActivated);
     }
   }
 }());

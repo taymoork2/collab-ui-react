@@ -186,15 +186,26 @@
       padding-top: 2rem;
       text-align: center;
     }
-    .blue-icon-info {
-      color: #469fd9
-    }
   }
 }
 
 .helpdesk-orderDetail {
   width: 50%;
   margin: 0 auto;
+  .blue-icon-info {
+    color: #469fd9;
+  }
+  .custom-spacing {
+    margin-right: 0.5rem;
+  }
+  .edit-box-style {
+    margin-right: 1rem;
+    width: 300px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-left: 5px;
+    padding-right: 5px;
+  }
 }
 
 .orderTitle {

@@ -5485,7 +5485,7 @@
     "editAdminEmail": "Edit",
     "resendTooltip": "Resends the welcome email.",
     "resendMailSuccess": "Welcome email was successfully sent.",
-    "resendMailFailure": "Fail to resend wecome email."
+    "resendMailFailure": "Failed to resend welcome email."
   },
   "activation": {
     "verificationComplete": "Verification Complete",
