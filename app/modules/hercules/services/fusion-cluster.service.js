@@ -109,15 +109,15 @@
     }
 
     function extractData(response) {
-      return _.get(response, 'data');
+      return response.data;
     }
 
     function extractClustersFromResponse(response) {
-      return extractData(response).clusters;
+      return _.get(extractData(response), 'clusters', []);
     }
 
     function extractDataFromResponse(res) {
-      return _.get(res, 'data');
+      return res.data;
     }
 
     function addServicesStatuses(clusters) {
@@ -238,7 +238,7 @@
       return $http.get(url)
         .then(extractDataFromResponse)
         .then(function (data) {
-          return data.releaseNotes;
+          return _.get(data, 'releaseNotes', '');
         });
     }
 

@@ -31,24 +31,23 @@ describe('Service: FusionClusterService', function () {
   }
 
   describe('getAll()', function () {
-    afterEach(verifyHttpBackend);
 
-    function verifyHttpBackend() {
-      $httpBackend.flush();
+    afterEach(function () {
       $httpBackend.verifyNoOutstandingExpectation();
       $httpBackend.verifyNoOutstandingRequest();
-    }
+    });
 
     it('should call the right backend', function () {
       $httpBackend.expectGET('http://elg.no/organizations/0FF1C3?fields=@wide').respond([]);
       FusionClusterService.getAll();
+      $httpBackend.flush();
     });
 
     // state (fused, defused, etc.) will soon be removed from the API reponse!
     // the API will only return fused clusters
     it('should not crash if clusters do not have a state', function () {
       $httpBackend
-        .when('GET', 'http://elg.no/organizations/0FF1C3?fields=@wide')
+        .expectGET('http://elg.no/organizations/0FF1C3?fields=@wide')
         .respond({
           clusters: [{
             connectors: []
@@ -59,12 +58,30 @@ describe('Service: FusionClusterService', function () {
       FusionClusterService.getAll()
         .then(function (clusters) {
           expect(clusters.length).toBe(2);
+        })
+        .catch(function () {
+          expect('reject called').toBeFalsy();
         });
+      $httpBackend.flush();
+    });
+
+    it('should handle no data in response', function () {
+      $httpBackend
+        .expectGET('http://elg.no/organizations/0FF1C3?fields=@wide')
+        .respond();
+      FusionClusterService.getAll()
+        .then(function (clusters) {
+          expect(clusters.length).toBe(0);
+        })
+        .catch(function () {
+          expect('reject called').toBeFalsy();
+        });
+      $httpBackend.flush();
     });
 
     it('should add servicesStatuses property to each cluster', function () {
       $httpBackend
-        .when('GET', 'http://elg.no/organizations/0FF1C3?fields=@wide')
+        .expectGET('http://elg.no/organizations/0FF1C3?fields=@wide')
         .respond({
           clusters: [{
             state: 'fused',
@@ -98,7 +115,11 @@ describe('Service: FusionClusterService', function () {
           expect(clusters[0].servicesStatuses[1].total).toBe(0);
           expect(clusters[0].servicesStatuses[2].total).toBe(0);
           expect(clusters[1].servicesStatuses[0].total).toBe(1);
+        })
+        .catch(function () {
+          expect('reject called').toBeFalsy();
         });
+      $httpBackend.flush();
     });
   });
 
@@ -171,7 +192,6 @@ describe('Service: FusionClusterService', function () {
         .respond(200, 'dummy response');
       FusionClusterService.get('clusterId');
     });
-
   });
 
   describe('finding and filtering a cluster for the service specific sidepanel', function () {
@@ -378,7 +398,7 @@ describe('Service: FusionClusterService', function () {
 
     it('should return release notes', function () {
       $httpBackend
-        .when('GET', 'http://elg.no/organizations/0FF1C3/channels/stable/packages/c_cal?fields=@wide')
+        .expectGET('http://elg.no/organizations/0FF1C3/channels/stable/packages/c_cal?fields=@wide')
         .respond({
           releaseNotes: 'Example calendar connector release notes.'
         });
