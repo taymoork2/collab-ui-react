@@ -9,7 +9,7 @@
     .service('SunlightConfigService', sunlightConfigService);
 
   /* @ngInject */
-  function sunlightConfigService($http, UrlConfig, Authinfo) {
+  function sunlightConfigService($http, UrlConfig, Authinfo, TokenService, $window) {
     var sunlightUserConfigUrl = UrlConfig.getSunlightConfigServiceUrl() + '/user';
     var sunlightChatTemplateUrl = UrlConfig.getSunlightConfigServiceUrl() + '/organization/' + Authinfo.getOrgId() + '/template';
     var sunlightChatConfigBase = UrlConfig.getSunlightConfigServiceUrl() + '/organization';
@@ -20,7 +20,8 @@
       editChatTemplate: editChatTemplate,
       createUserInfo: createUserInfo,
       getChatConfig: getChatConfig,
-      deleteUser: deleteUser
+      deleteUser: deleteUser,
+      onBoardCare: onBoardCare
     };
 
     return service;
@@ -52,6 +53,13 @@
 
     function deleteUser(userId) {
       return $http.delete(sunlightUserConfigUrl + '/' + userId);
+    }
+
+    function onBoardCare() {
+      var callbackUrl = UrlConfig.getSunlightConfigServiceUrl() + '/organization/' + Authinfo.getOrgId() + '/csonboard?accessToken='
+        + TokenService.getAccessToken();
+      var ccfsUrl = UrlConfig.getCcfsUrl() + callbackUrl;
+      $window.open(ccfsUrl, '_blank');
     }
   }
 })();

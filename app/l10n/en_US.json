@@ -2144,7 +2144,7 @@
     "careSettings": "Care Settings",
     "careSettingsSub": "Setup Care Service",
     "careSettingsDescription": "Click here to complete Care setup.",
-    "careSettingsComplete": "Care setup is complete.",
+    "careSettingsComplete": "Care service has been setup successfully.",
     "careSettingsButton": "Setup Care",
     "careSettingsFetchFailed": "Error retrieving onboarding status.",
     "careSettingsTimeout": "Request timed out while checking Care setup status.",
@@ -4655,6 +4655,12 @@
     "sorryMessage": "Sorry, something went wrong ",
     "reloadMessage": "Please try reloading the page",
     "newFeatureButtonText": "New",
+    "settings": {
+      "setUpCare": "Care",
+      "setUpDescription": "Setup Care to add this license for your users so that your organization can take advantage of Care service.",
+      "setUpCareSuccess": "Care service has been setup successfully.",
+      "setUpCareFailure": "Failed to setup Care service. Please try again. Users cannot have Care license till this setup is complete."
+    },
     "featuresNotYetConfiguredPage": {
       "createCT": "Create a Chat Template",
       "createCTDesc": "A chat template is what your customer sees when chatting with an agent.",
@@ -5590,7 +5596,8 @@
         "title": "Care",
         "description": "Customer Care channel configurations for your organization.",
         "buttons": {
-          "features": "Features"
+          "features": "Features",
+          "settings": "Settings"
         }
       },
       "clusterList": {

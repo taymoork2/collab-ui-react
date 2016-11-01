@@ -2979,7 +2979,10 @@
           })
           .state('care.Settings', {
             url: '/settings',
-            parent: 'care.Details'
+            parent: 'care.Details',
+            templateUrl: 'modules/sunlight/settings/careSettings.tpl.html',
+            controller: 'CareLocalSettingsCtrl',
+            controllerAs: 'localCareSettings'
           })
           .state('care.Features', {
             url: '/features',
