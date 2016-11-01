@@ -137,14 +137,18 @@
     function findAnyUrgentUpgradeInHybridServices() {
       FusionClusterService.getAll()
         .then(function (clusters) {
-          var clusterWithUrgentUpgrade = _.find(clusters, function (cluster) {
-            return _.some(cluster.provisioning, function (p) {
-              return p.availablePackageIsUrgent && p.connectorType !== 'c_mgmt';
+          // c_mgmt will be tested when it will have its own service page back
+          var connectorsToTest = ['c_cal', 'c_ucmc'];
+          connectorsToTest.forEach(function (connectorType) {
+            var hasUrgentUpgrade = _.find(clusters, function (cluster) {
+              return _.some(cluster.provisioning, function (p) {
+                return p.connectorType === connectorType && p.availablePackageIsUrgent;
+              });
             });
+            if (hasUrgentUpgrade) {
+              vm.notifications.push(OverviewNotificationFactory.createUrgentUpgradeNotification(connectorType));
+            }
           });
-          if (clusterWithUrgentUpgrade) {
-            vm.notifications.push(OverviewNotificationFactory.createUrgentUpgradeNotification(clusterWithUrgentUpgrade));
-          }
         });
     }
 

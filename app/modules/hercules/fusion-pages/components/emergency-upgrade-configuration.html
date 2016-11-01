@@ -1,14 +1,10 @@
-<div class="row emergency-upgrade-schedule-form">
-  <div class="cs-input-group medium-2 columns">
-    <cs-select
-      class="emergency-upgrade-schedule-time"
-      is-disabled="$ctrl.syncing"
-      labelfield="label"
-      valuefield="value"
-      on-change-fn="$ctrl.onTimeChange($ctrl.formData.urgentScheduleTime)"
-      ng-model="$ctrl.formData.urgentScheduleTime"
-      options="$ctrl.formOptions.time">
-    </cs-select>
-  </div>
-  <p translate="hercules.settings.emergencyUpgrade.expressway.when" translate-value-timezone="{{$ctrl.timezone}}"></p>
-</div>
+<cs-select
+  class="emergency-upgrade-input-group"
+  is-disabled="$ctrl.syncing"
+  labelfield="label"
+  valuefield="value"
+  on-change-fn="$ctrl.onTimeChange($ctrl.formData.urgentScheduleTime)"
+  ng-model="$ctrl.formData.urgentScheduleTime"
+  options="$ctrl.formOptions.time">
+</cs-select>
+<p translate="hercules.settings.emergencyUpgrade.expressway.when" translate-value-timezone="{{$ctrl.timezone}}"></p>
