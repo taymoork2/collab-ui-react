@@ -21,6 +21,68 @@
     vm.loading = true;
     vm.exporting = false;
 
+    vm.deviceOptions = [
+      {
+        value: 0,
+        label: 'All',
+        description: 'All CE and SparkBoard devices'
+      },
+      {
+        value: 1,
+        label: 'CE',
+        description: 'All CE devices'
+      },
+      {
+        value: 2,
+        label: 'SparkBoard',
+        description: 'All SparkBoard devices'
+      }
+    ];
+    vm.deviceFilter = vm.deviceOptions[0];
+    //vm.currentFilter = vm.deviceOptions[0].value;
+
+    vm.deviceUpdate = function () {
+      //$log.info('deviceFilter', vm.deviceFilter);
+      switch (vm.deviceFilter.value) {
+        case 0:
+          loadChartDataForDeviceType(vm.reportData);
+          break;
+        case 1:
+          loadChartDataForDeviceType(extractDeviceType('ce'));
+          break;
+        case 2:
+          loadChartDataForDeviceType(extractDeviceType('sparkboard'));
+          break;
+      }
+    };
+
+    function extractDeviceType(deviceCategory) {
+      //$log.info('extract device type', deviceCategory);
+      $log.info('extractDeviceType data', vm.reportData);
+      var extract = _.chain(vm.reportData).reduce(function (result, item) {
+        if (typeof result[item.time] === 'undefined') {
+          result[item.time] = {
+            callCount: 0,
+            totalDuration: 0,
+            pairedCount: 0,
+          };
+        }
+        if (item.deviceCategories[deviceCategory]) {
+          result[item.time].callCount += item.deviceCategories[deviceCategory].callCount;
+          result[item.time].totalDuration += item.deviceCategories[deviceCategory].totalDuration;
+          result[item.time].pairedCount += item.deviceCategories[deviceCategory].pairedCount;
+        }
+        return result;
+      }, {}).map(function (value, key) {
+        value.totalDuration = (value.totalDuration / 60).toFixed(2);
+        // var timeFormatted = key.substr(0, 4) + '-' + key.substr(4, 2) + '-' + key.substr(6, 2);
+        value.time = key;
+        return value;
+      }).value();
+      $log.info('extractDeviceType extract', extract);
+      return extract;
+    }
+
     var startDate;
     var endDate;
 
@@ -33,6 +95,7 @@
 
     $scope.$on('time-range-changed', function (event, timeSelected) {
       var dateRange;
+      vm.deviceFilter = vm.deviceOptions[0];
       switch (timeSelected.value) {
         case 0:
           dateRange = DeviceUsageTotalService.getDatesForLastWeek();
@@ -116,6 +179,7 @@
     }
 
     function loadChartData(data, title) {
+      vm.reportData = data;
       amChart.dataProvider = data;
       amChart.validateData();
       if (title) {
@@ -123,6 +187,11 @@
       }
       vm.showDevices = false;
       fillInStats(data);
+    }
+
+    function loadChartDataForDeviceType(data) {
+      amChart.dataProvider = data;
+      amChart.validateData();
     }
 
     function loadLastWeek() {

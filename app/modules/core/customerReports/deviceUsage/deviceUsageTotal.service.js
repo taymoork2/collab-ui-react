@@ -262,7 +262,7 @@
         'graphs': [
           {
             'type': 'column', //line', //smoothedLine', //column',
-
+            'labelText': '[[value]]',
             //'bullet': 'round',
             'id': 'video',
             'title': 'Call Duration',
