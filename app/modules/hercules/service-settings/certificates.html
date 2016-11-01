@@ -1,10 +1,10 @@
 <h6><strong translate="hercules.settings.call.certificatesHeading"></strong></h6>
 <p translate="hercules.settings.call.certificates"></p>
 <div ng-if="expresswayServiceSettings.certificates.length == 0">
-  <p><em>No certificates uploaded. Using the default trust list.</em></p>
+  <p><em translate="hercules.settings.call.noUploadedcertificate"></em></p>
 </div>
 <div ng-if="expresswayServiceSettings.certificates.length > 0" class="hercules-certificates-table">
-  <p>Uploaded Certificates:</p>
+  <p><em translate="hercules.settings.call.uploadedcertificates"></em></p>
   <hr>
   <table class="table table-striped">
     <tbody>
@@ -52,7 +52,7 @@
            style="margin-left: 10px; margin-top: 5px;"
            ng-click="expresswayServiceSettings.confirmCertDelete(cert)"
            popover-trigger="mouseenter"
-           popover-placement="top"
+           popover-placement="left"
            popover="{{'hercules.settings.call.certificateDeleteTooltip' | translate}}">
         </i>
       </td>
