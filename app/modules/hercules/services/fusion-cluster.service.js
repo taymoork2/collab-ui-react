@@ -109,7 +109,7 @@
     }
 
     function extractData(response) {
-      return response.data;
+      return _.get(response, 'data');
     }
 
     function extractClustersFromResponse(response) {
@@ -117,7 +117,7 @@
     }
 
     function extractDataFromResponse(res) {
-      return res.data;
+      return _.get(res, 'data');
     }
 
     function addServicesStatuses(clusters) {

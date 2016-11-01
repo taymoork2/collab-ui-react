@@ -36,7 +36,7 @@
     ////////////////
 
     function extractDataFromResponse(res) {
-      return res.data;
+      return _.get(res, 'data');
     }
 
     function overrideStateIfAlarms(connector) {
