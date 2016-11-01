@@ -816,7 +816,7 @@
       sendToAnalytics(Analytics.eventNames.CANCEL_MODAL);
     }
     function sendToAnalytics(eventName, extraData) {
-      TrialService.sendToAnalytics(eventName, vm.trialData, extraData);
+      Analytics.trackTrialSteps(eventName, vm.trialData, extraData);
     }
   }
 })();
