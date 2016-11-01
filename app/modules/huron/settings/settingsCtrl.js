@@ -520,7 +520,7 @@
         label: $translate.instant('serviceSetupModal.voicemailPrefixTitle'),
         description: $translate.instant('serviceSetupModal.voicemailPrefixDesc',
           {
-            'number': vm.model.site.siteSteeringDigit.voicemailPrefixLabel,
+            'number': vm.model.site.siteSteeringDigit.siteDialDigit,
             'extensionLength0': vm.model.previousLength === '5' ? '0000' : '000',
             'extensionLength9': vm.model.previousLength === '5' ? '9999' : '999'
           }),
@@ -1865,8 +1865,8 @@
             voicemailPrefixLabel: digit.concat(vm.model.site.siteCode)
           });
         });
-        localScope.to.description = $translate.instant('serviceSetupModal.voicemailPrefixDesc', { 'number': vm.model.site.siteSteeringDigit.siteDialDigit, 'extensionLength0': extensionLength0, 'extensionLength9': extensionLength9 });
-        localScope.to.options = values;
+        $scope.to.description = $translate.instant('serviceSetupModal.voicemailPrefixDesc', { 'number': vm.model.site.siteSteeringDigit.siteDialDigit, 'extensionLength0': extensionLength0, 'extensionLength9': extensionLength9 });
+        $scope.to.options = values;
       });
     }
 
@@ -1875,7 +1875,7 @@
         customerId: Authinfo.getOrgId()
       }).$promise
         .then(function (extensionList) {
-          if (_.isArray(extensionList) && extensionList.length > 0) {
+          if (angular.isArray(extensionList) && extensionList.length > -1) {
             vm.model.disableExtensions = true;
           }
         });

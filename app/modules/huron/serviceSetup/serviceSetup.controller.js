@@ -518,7 +518,7 @@
         label: $translate.instant('serviceSetupModal.voicemailPrefixTitle'),
         description: $translate.instant('serviceSetupModal.voicemailPrefixDesc',
           {
-            'number': vm.model.site.siteSteeringDigit.siteDialDigit,
+            'number': vm.model.voicemailPrefix.value,
             'extensionLength0': vm.model.previousLength === '5' ? '00000' : '0000',
             'extensionLength9': vm.model.previousLength === '5' ? '99999' : '9999'
           }),
@@ -1448,7 +1448,7 @@
 
     function _buildVoicemailPrefixOptions($scope) {
       $scope.$watchCollection(function () {
-        return [vm.model.site.siteSteeringDigit, vm.model.site.extensionLength, vm.model.site.steeringDigit];
+        return [vm.model.site.extensionLength, vm.model.voicemailPrefix];
       }, function () {
         var extensionLength0, extensionLength9;
         switch (vm.model.site.extensionLength) {
@@ -1482,7 +1482,7 @@
         });
         $scope.to.description = $translate.instant('serviceSetupModal.voicemailPrefixDesc',
           {
-            'number': vm.model.site.siteSteeringDigit.siteDialDigit,
+            'number': vm.model.voicemailPrefix.value,
             'extensionLength0': extensionLength0,
             'extensionLength9': extensionLength9
           });
