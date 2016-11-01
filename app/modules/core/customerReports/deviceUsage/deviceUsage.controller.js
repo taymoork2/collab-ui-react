@@ -9,7 +9,7 @@
   function DeviceUsageCtrl($log, $state, $scope, DeviceUsageTotalService, Notification, deviceUsageFeatureToggle, DeviceUsageCommonService) {
     var vm = this;
     var amChart;
-    var apiToUse = 'local';
+    var apiToUse = 'mock';
 
     vm.leastUsedDevices = [];
     vm.mostUsedDevices = [];
