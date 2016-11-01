@@ -402,7 +402,7 @@
       };
 
       var licensesAndOffersData = parseLicensesAndOffers(customer, { isCareEnabled: isCareEnabled });
-      angular.extend(dataObj, licensesAndOffersData);
+      _.assign(dataObj, licensesAndOffersData);
 
       dataObj.isAllowedToManage = isTrialData || customer.isAllowedToManage;
       dataObj.isPartner = _.get(customer, 'isPartner', false);
@@ -505,12 +505,12 @@
     function initializeService(licenses, offerCode, serviceEntry, customerListToggle) {
       var licensesGotten = getLicense(licenses, offerCode, customerListToggle);
       if (!_.isArray(licensesGotten)) {
-        angular.extend(licensesGotten, serviceEntry);
+        _.assign(licensesGotten, serviceEntry);
         setServiceSortOrder(licensesGotten);
         return licensesGotten;
       } else {
         var result = {};
-        angular.extend(result, licensesGotten[0], serviceEntry);
+        _.assign(result, licensesGotten[0], serviceEntry);
         var qty = _.reduce(licensesGotten, function (volume, license) {
           return volume + license.volume;
         }, 0);

@@ -669,7 +669,7 @@
         })
         .then(function () {
           vm.loading = false;
-          angular.extend($stateParams.currentTrial, vm.currentTrial);
+          _.assign($stateParams.currentTrial, vm.currentTrial);
           Notification.success('trialModal.editSuccess', {
             customerName: vm.currentTrial.customerName
           });
