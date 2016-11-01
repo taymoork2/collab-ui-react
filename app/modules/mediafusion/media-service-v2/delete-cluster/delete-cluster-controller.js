@@ -192,7 +192,7 @@
         vm.failedToDelete = true;
         vm.ngDisable = true;
         var nodesString = '';
-        angular.forEach(vm.failedHostMove, function (value) {
+        _.forEach(vm.failedHostMove, function (value) {
           nodesString = value + ', ' + nodesString;
         });
         vm.unableToMoveNodes = $translate.instant(

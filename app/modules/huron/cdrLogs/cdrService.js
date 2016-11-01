@@ -211,7 +211,7 @@
 
     function generateHosts() {
       var hostsJson = '{"query_string":{"query":"id:CDR.CDR"}},';
-      angular.forEach(serverHosts, function (host, index) {
+      _.forEach(serverHosts, function (host, index) {
         hostsJson += '{"query_string":{"query":"id:CDR.CDR AND eventSource.hostname:\\"' + host + '\\""}}';
         if (index + 1 < serverHosts.length) {
           hostsJson += ',';

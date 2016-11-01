@@ -37,7 +37,7 @@
         .then(function (lineTemplates) {
           var siteId = Authinfo.getOrgId() + '_000001_ULT';
           if (_.isArray(lineTemplates.choice) && lineTemplates.choice.length > 0) {
-            angular.forEach(lineTemplates.choice, function (dataset) {
+            _.forEach(lineTemplates.choice, function (dataset) {
               if (siteId === dataset.value) {
                 lineTemplate = dataset;
               }

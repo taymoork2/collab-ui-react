@@ -18,7 +18,7 @@ describe('Controller: Overview Reports', function () {
 
   var customerList = [];
   customerList.push(allCustomers);
-  angular.forEach(customerData.customerOptions, function (org) {
+  _.forEach(customerData.customerOptions, function (org) {
     customerList.push({
       value: org.value,
       label: org.label

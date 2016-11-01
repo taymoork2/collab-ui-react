@@ -125,7 +125,7 @@
     function areOptionsInvalid() {
       var valid = false;
       var input;
-      angular.forEach(vm.cpNumberOptions, function (option) {
+      _.forEach(vm.cpNumberOptions, function (option) {
         input = option.inputs[option.currentInput];
         switch (input.type) {
           case 'range': valid = (isStringValid(input.range_1, 'value', "") === "" || isStringValid(input.range_2, 'value', "") === "") || valid;
@@ -252,7 +252,7 @@
 
     function fetchMembers(nameHint) {
       return $q.when(CallParkMemberDataService.fetchCallParkMembers(nameHint)).then(function (members) {
-        angular.forEach(members, function (member) {
+        _.forEach(members, function (member) {
           member.user.primaryNumber = _.find(member.user.numbers, {
             'primary': true
           });
@@ -386,10 +386,10 @@
 
       $scope.$watch('numberOption', function () {
         // var newLength = getExtensionLength(vm.cpNumberOptions[0].currentInput);
-        angular.forEach(vm.cpNumberOptions[0].inputs, function (input) {
+        _.forEach(vm.cpNumberOptions[0].inputs, function (input) {
           // var length = index == vm.cpNumberOptions[0].currentInput ? newLength : null;
           var values = (input.type === 'range') ? [input.range_1, input.range_2] : [input];
-          angular.forEach(values, function (value) {
+          _.forEach(values, function (value) {
             value.minlength = 3;
             value.maxlength = 5;
           });
