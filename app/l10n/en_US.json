@@ -1622,14 +1622,14 @@
       "pageTitle": "{{clusterName}} settings",
       "upgradeScheduleHeader": "Upgrade",
       "upgradeScheduleSubHeader": "Upgrade Schedule",
-      "resourceGroupsHeader": "Resource Groups",
+      "resourceGroupsHeader": "Resource Group",
       "resourceGroupsSubHeader": "Resource Group",
       "resourcegroupsParagraph": "Select the resource group this cluster belongs to.",
       "removeFromResourceGroupDialogHeader": "Remove from Resource Group",
       "removeFromResourceGroupDialogParagraph": "{{ClusterName}} will be removed from \"{{CurrentResourceGroup}}\".",
       "removeFromResourceGroupDialogConnectorsList": "The following connectors will be upgraded to \"Stable\" in the next upgrade window: ",
       "removeFromResourceGroupSuccess": "{{ClusterName}} has been removed from \"{{ResourceGroup}}\".",
-      "allConnectorsWillBeUpgraded": "All connectors will be upgraded in the next upgrade window.",
+      "allConnectorsWillBeUpgraded": "All connectors will be upgraded in the next scheduled upgrade.",
       "moveResourceGroupDialogHeader": "Assign Resource Group",
       "moveResourceGroupDialogParagraph": "{{ClusterName}} will be moved to \"{{NewResourceGroup}}\".",
       "moveResourceGroupDialogConnectorsList": "The following connectors will be upgraded in the next upgrade window: ",
@@ -1876,7 +1876,8 @@
       "deleteSuccess": "Resource group successfully removed",
       "orgHasNoAccessToChannel": "The resource group is configured with the “{{currentReleaseChannel}}” release channel, which is no longer available to your organization. Set the release channel to “{{stableReleaseChannel}}” to restore service.",
       "setToStable": "Set to {{stableReleaseChannel}}",
-      "failedToRemoveUsersFromGroup": "Remove group failed, unable to clear the existing user assignments"
+      "failedToRemoveUsersFromGroup": "Remove group failed, unable to clear the existing user assignments",
+      "assignSuccess": "The selected clusters are being moved. The connectors will be upgraded in the next upgrade window."
     },
     "assignClustersModal": {
       "title": "Assign Clusters to <q>{{groupName}}</q>",
