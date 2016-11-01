@@ -382,7 +382,7 @@
         HelpdeskService.getOrg(org.id).then(function (fullOrg) {
           vm.lookingUpOrgFilter = false;
           vm.currentSearch.orgFilter = fullOrg;
-        }, angular.noop);
+        }, _.noop);
       } else {
         HelpdeskService.cancelAllRequests().then(function () {
           vm.searchString = '';
@@ -390,7 +390,7 @@
           HelpdeskService.getOrg(org.id).then(function (fullOrg) {
             vm.lookingUpOrgFilter = false;
             vm.currentSearch.orgFilter = fullOrg;
-          }, angular.noop);
+          }, _.noop);
         });
       }
     }

@@ -361,7 +361,7 @@
                   user.organization.displayName = displayName;
                 }
               });
-            }, angular.noop);
+            }, _.noop);
           });
         }
 

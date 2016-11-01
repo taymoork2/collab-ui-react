@@ -111,8 +111,8 @@
         $timeout(function () {
           var downloadAnchor = angular.element('#download-csv-' + scope.webexCsvDownload.type);
 
-          scope.webexCsvDownload.tempFunction = scope.webexCsvDownload.downloadCsv || angular.noop;
-          scope.webexCsvDownload.downloadCsv = angular.noop;
+          scope.webexCsvDownload.tempFunction = scope.webexCsvDownload.downloadCsv || _.noop;
+          scope.webexCsvDownload.downloadCsv = _.noop;
           // scope.webexCsvDownload = removeFocus;
 
           downloadAnchor
@@ -127,7 +127,7 @@
       function changeAnchorAttrToOriginalState() {
         $timeout(function () {
           var downloadAnchor = angular.element('#download-csv-' + scope.webexCsvDownload.type);
-          scope.webexCsvDownload.downloadCsv = scope.webexCsvDownload.tempFunction || angular.noop;
+          scope.webexCsvDownload.downloadCsv = scope.webexCsvDownload.tempFunction || _.noop;
           downloadAnchor.attr({
             href: ''
           }).removeAttr('download');
