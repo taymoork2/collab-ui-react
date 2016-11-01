@@ -177,7 +177,6 @@
           Notification.errorWithTrackingId(error, 'hercules.settings.call.certificatesCannotRead');
         });
     }
-
   }
 
   /* @ngInject */
