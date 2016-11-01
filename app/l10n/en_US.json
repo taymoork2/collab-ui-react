@@ -1702,7 +1702,9 @@
         "sipDomainButtonTooltip": "Enter an SRV domain, hostname:port, or IP address:port that resolves to your Expressway-E for mutual TLS. If your SRV record is \"_sips._tcp.sipmtls.example.com\", then enter \"sipmtls.example.com\" here.",
         "sipDomainPlaceholder": "Enter a SIP Destination",
         "sipDomainExample": "For example: sipmtls.example.com",
-        "certificateDeleteTooltip": "Delete Certificate"
+        "certificateDeleteTooltip": "Delete Certificate",
+        "noUploadedcertificate": "No certificates uploaded. Using the default trust list.",
+        "uploadedcertificates": "Uploaded Certificates:"
       },
       "scheduleUpgrade": {
         "title": "Upgrade Schedule",
