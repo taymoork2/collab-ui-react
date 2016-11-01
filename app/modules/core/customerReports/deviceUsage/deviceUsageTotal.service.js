@@ -6,7 +6,7 @@
     .service('DeviceUsageTotalService', DeviceUsageTotalService);
 
   /* @ngInject */
-  function DeviceUsageTotalService($document, $window, $log, $q, $timeout, $http, chartColors, DeviceUsageRawService, UrlConfig, Authinfo) {
+  function DeviceUsageTotalService($document, $window, $log, $q, $timeout, $http, chartColors, DeviceUsageMockData, UrlConfig, Authinfo) {
     var localUrlBase = 'http://localhost:8080/atlas-server/admin/api/v1/organization';
     var urlBase = UrlConfig.getAdminServiceUrl() + 'organizations';
 
@@ -50,7 +50,7 @@
       var start = moment().startOf(period).subtract(count, period + 's').format('YYYY-MM-DD');
       var end = moment().startOf(period).subtract(1, 'days').format('YYYY-MM-DD');
       if (api === 'mock') {
-        return DeviceUsageRawService.getData(start, end, true).then(function (data) {
+        return DeviceUsageMockData.getRawDataPromise(start, end).then(function (data) {
           return reduceAllData(data, granularity);
         });
       } else if (api === 'local') {

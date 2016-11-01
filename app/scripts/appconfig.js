@@ -1380,7 +1380,7 @@
           })
           .state('reports.device-usage.distribution', {
             url: '/distribution',
-            templateUrl: 'modules/core/customerReports/deviceUsage/distribution.tpl.html',
+            templateUrl: 'modules/core/customerReports/deviceUsage/distribution/distribution.tpl.html',
             controller: 'DeviceUsageDistributionCtrl',
             controllerAs: 'deviceUsage',
             params: {
@@ -1393,7 +1393,7 @@
           })
           .state('reports.device-usage.timeline', {
             url: '/timeline',
-            templateUrl: 'modules/core/customerReports/deviceUsage/timeline.tpl.html',
+            templateUrl: 'modules/core/customerReports/deviceUsage/timeline/timeline.tpl.html',
             controller: 'DeviceUsageTimelineCtrl',
             controllerAs: 'deviceUsage',
             params: {
