@@ -377,7 +377,7 @@ describe('ClusterService', function () {
       expect(managementCluster.aggregates.upgradeAvailable).toBe(true);
     });
 
-    it('should warn about upgrades when an upgrade available BUT at least one connector is in state offline', function () {
+    it('should warn about upgrades when an upgrade available and at least one connector is in state offline', function () {
       var response = org([
         cluster([
           connector('c_mgmt'),
@@ -401,6 +401,29 @@ describe('ClusterService', function () {
       var originalCluster = response.clusters[0];
       var managementCluster = clusterCache.c_mgmt[originalCluster.id];
       expect(managementCluster.aggregates.upgradeAvailable).toBe(true);
+      expect(managementCluster.aggregates.upgradeWarning).toBe(true);
+    });
+
+    it('should not tag a healthy cluster as having an upgrade warning', function () {
+
+      var cluster = getJSONFixture('hercules/x2-alpha-vcscluster.json');
+      var response = org([
+        cluster, {
+          upgradeAvailable: ['c_mgmt']
+        }
+      ]);
+
+      $httpBackend
+        .when('GET', 'http://elg.no/organizations/orgId?fields=@wide')
+        .respond(response);
+
+      var callback = sinon.stub();
+      ClusterService.fetch().then(callback);
+      $httpBackend.flush();
+
+      var clusterCache = callback.getCall(0).args[0];
+      var managementCluster = clusterCache.c_mgmt['5689c2fc-dbe8-11e5-95a9-0050568c73c4'];
+
       expect(managementCluster.aggregates.upgradeWarning).toBe(false);
     });
 
