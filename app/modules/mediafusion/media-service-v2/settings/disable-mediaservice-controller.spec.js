@@ -21,7 +21,6 @@ describe('Controller: DisableMediaServiceController', function () {
     $provide.value("Authinfo", authInfo);
   }));
 
-  //expect(XhrNotificationService.notify).toHaveBeenCalled();
   beforeEach(inject(function ($state, $controller, _$q_, $translate, _MediaServiceActivationV2_, _Notification_, _MediaClusterServiceV2_, _$httpBackend_) {
     $q = _$q_;
     MediaServiceActivationV2 = _MediaServiceActivationV2_;

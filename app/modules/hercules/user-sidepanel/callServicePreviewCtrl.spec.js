@@ -92,6 +92,6 @@ describe('Directive Controller: CallServicePreviewCtrl', function () {
     initController();
     expect($scope.callServiceAware.entitled).toBeTruthy();
     expect($scope.callServiceAware.status.state).toBe('unknown');
-    expect(Notification.errorWithTrackingId.calls.count()).toBe(1);
+    expect(Notification.error.calls.count()).toBe(1);
   });
 });

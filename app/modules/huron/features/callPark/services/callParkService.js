@@ -69,7 +69,7 @@
     }
 
     function getNumberSuggestions(hint, assigned) {
-      assigned = angular.isDefined(assigned) ? assigned : false;
+      assigned = !_.isUndefined(assigned) ? assigned : false;
       if (suggestionsNeeded(hint)) {
         var helper = getNumbers();
         helper.setApiArgs({

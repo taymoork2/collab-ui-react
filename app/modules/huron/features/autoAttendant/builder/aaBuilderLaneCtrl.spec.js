@@ -1,6 +1,5 @@
 'use strict';
 
-$.fn.getNiceScroll = sinon.spy();
 describe('Controller: AABuilderLaneCtrl', function () {
   var controller;
   var AAUiModelService, AutoAttendantCeMenuModelService;

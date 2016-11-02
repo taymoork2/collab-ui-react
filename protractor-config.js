@@ -76,7 +76,7 @@ exports.config = {
       /executionContextId/,
       /object Object/,
       /favicon/,
-      /\/browser\-sync\//,
+      /\/browser-sync\//,
     ]
   }],
 

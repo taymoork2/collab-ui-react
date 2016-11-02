@@ -5,14 +5,14 @@
     .service('CallflowService', CallflowService);
 
   /* @ngInject */
-  function CallflowService($http, Log, UrlConfig) {
+  function CallflowService($http, UrlConfig) {
     var service = {
       getCallflowCharts: getCallflowCharts
     };
 
     return service;
 
-    function getCallflowCharts(orgId, userId, locusId, callStart, logfileFullName, isGetCallLogs, callback) {
+    function getCallflowCharts(orgId, userId, locusId, callStart, logfileFullName, isGetCallLogs) {
       var callflowChartsUrl = UrlConfig.getCallflowServiceUrl();
 
       if (isGetCallLogs === true) {
@@ -28,16 +28,9 @@
         callflowChartsUrl += '&start_ts=' + callStart;
       }
 
-      $http.get(callflowChartsUrl)
-        .success(function (data, status) {
-          data = _.isObject(data) ? data : {};
-          data.success = true;
-          Log.debug('Retrieved callflow charts corresponding to client logs: ' + data.resultsUrl);
-          callback(data, status);
-        })
-        .error(function (data, status) {
-          callback(data, status);
-        });
+      return $http.get(callflowChartsUrl).then(function (response) {
+        return _.get(response, 'data');
+      });
     }
   }
 })();

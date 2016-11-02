@@ -38,7 +38,7 @@
             // TODO: fix this callback crap!
             if (err) {
               vm.squaredFusionEc = !vm.squaredFusionEc;
-              Notification.errorWithTrackingId('hercules.errors.failedToEnableConnect');
+              Notification.errorWithTrackingId(err, 'hercules.errors.failedToEnableConnect');
             }
           }
         );
@@ -60,14 +60,16 @@
     vm.updateSipDomain = function () {
       vm.savingSip = true;
 
-      USSService.updateOrg(vm.org).then(function () {
-        vm.storeEc(false);
-        vm.savingSip = false;
-        Notification.success('hercules.errors.sipDomainSaved');
-      }, function () {
-        vm.savingSip = false;
-        Notification.errorWithTrackingId('hercules.errors.sipDomainInvalid');
-      });
+      USSService.updateOrg(vm.org)
+          .then(function () {
+            vm.storeEc(false);
+            vm.savingSip = false;
+            Notification.success('hercules.errors.sipDomainSaved');
+          })
+            .catch(function (error) {
+              vm.savingSip = false;
+              Notification.errorWithTrackingId(error, 'hercules.errors.sipDomainInvalid');
+            });
     };
 
     ServiceDescriptor.getEmailSubscribers(vm.servicesId[0], function (error, emailSubscribers) {
@@ -87,14 +89,14 @@
         return data.text;
       }).toString();
       if (emailSubscribers && !MailValidatorService.isValidEmailCsv(emailSubscribers)) {
-        Notification.errorWithTrackingId('hercules.errors.invalidEmail');
+        Notification.error('hercules.errors.invalidEmail');
       } else {
         vm.savingEmail = true;
         ServiceDescriptor.setEmailSubscribers(vm.servicesId[0], emailSubscribers, function (statusCode) {
           if (statusCode === 204) {
             Notification.success('hercules.settings.emailNotificationsSavingSuccess');
           } else {
-            Notification.errorWithTrackingId('hercules.settings.emailNotificationsSavingError');
+            Notification.error('hercules.settings.emailNotificationsSavingError');
           }
           vm.savingEmail = false;
         });
@@ -111,9 +113,9 @@
 
     vm.writeEnableEmailSendingToUser = _.debounce(function (value) {
       ServiceDescriptor.setDisableEmailSendingToUser(value)
-        .catch(function () {
+        .catch(function (error) {
           vm.enableEmailSendingToUser = !vm.enableEmailSendingToUser;
-          return Notification.errorWithTrackingId('hercules.settings.emailUserNotificationsSavingError');
+          return Notification.errorWithTrackingId(error, 'hercules.settings.emailUserNotificationsSavingError');
         });
     }, 2000, {
       'leading': true,
@@ -124,30 +126,19 @@
       vm.writeEnableEmailSendingToUser(vm.enableEmailSendingToUser);
     };
 
-    vm.disableService = function (serviceId) {
-      ServiceDescriptor.setServiceEnabled(serviceId, false, function (error) {
-        // TODO: Strange callback result ???
-        if (error !== null) {
-          Notification.errorWithTrackingId(error, 'hercules.genericFailure');
-        } else {
-          $state.go('services-overview');
-        }
-      });
-    };
-
     vm.confirmDisable = function (serviceId) {
       $modal.open({
         templateUrl: 'modules/hercules/service-settings/confirm-disable-dialog.html',
         type: 'small',
-        controller: DisableConfirmController,
-        controllerAs: 'disableConfirmDialog',
+        controller: 'ConfirmDisableController',
+        controllerAs: 'confirmDisableDialog',
         resolve: {
           serviceId: function () {
             return serviceId;
           }
         }
       }).result.then(function () {
-        vm.disableService(serviceId);
+        $state.go('services-overview');
       });
     };
 
@@ -190,23 +181,6 @@
   }
 
   /* @ngInject */
-  function DisableConfirmController(FusionUtils, $modalInstance, serviceId, $translate, Authinfo) {
-    var modalVm = this;
-    modalVm.serviceId = serviceId;
-    modalVm.serviceIconClass = FusionUtils.serviceId2Icon(serviceId);
-    modalVm.serviceName = $translate.instant('hercules.serviceNames.' + serviceId);
-    modalVm.connectorName = $translate.instant('hercules.connectorNames.' + serviceId);
-    modalVm.companyName = Authinfo.getOrgName();
-
-    modalVm.ok = function () {
-      $modalInstance.close();
-    };
-    modalVm.cancel = function () {
-      $modalInstance.dismiss();
-    };
-  }
-
-  /* @ngInject */
   function ConfirmCertificateDeleteController(CertService, $modalInstance, Notification, cert) {
     var vm = this;
     vm.cert = cert;
@@ -216,9 +190,6 @@
         .catch(function (error) {
           Notification.errorWithTrackingId(error, 'hercules.settings.call.certificatesCannotDelete');
         });
-    };
-    vm.cancel = function () {
-      $modalInstance.dismiss();
     };
   }
 

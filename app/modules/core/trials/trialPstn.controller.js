@@ -6,7 +6,7 @@
     .controller('TrialPstnCtrl', TrialPstnCtrl);
 
   /* @ngInject */
-  function TrialPstnCtrl($scope, $timeout, $translate, Analytics, Authinfo, Notification, PstnSetupService, TelephoneNumberService, TerminusStateService, FeatureToggleService, TrialPstnService, TrialService) {
+  function TrialPstnCtrl($scope, $timeout, $translate, Analytics, Authinfo, Notification, PstnSetupService, TelephoneNumberService, TerminusStateService, FeatureToggleService, TrialPstnService) {
     var vm = this;
 
     var NXX = 'nxx';
@@ -147,7 +147,7 @@
       });
 
       toggleNXXSearchFeature();
-      TrialService.sendToAnalytics(Analytics.eventNames.ENTER_SCREEN, vm.parentTrialData);
+      Analytics.trackTrialSteps(Analytics.eventNames.ENTER_SCREEN, vm.parentTrialData);
       if (_.has(vm.trialData, 'details.pstnNumberInfo.state.abbreviation')) {
         getStateInventory();
       }
@@ -170,7 +170,7 @@
     }
 
     function skip(skipped) {
-      TrialService.sendToAnalytics(Analytics.eventNames.SKIP, vm.parentTrialData);
+      Analytics.trackTrialSteps(Analytics.eventNames.SKIP, vm.parentTrialData);
       vm.trialData.enabled = !skipped;
       vm.trialData.skipped = skipped;
       $timeout($scope.trial.nextStep);

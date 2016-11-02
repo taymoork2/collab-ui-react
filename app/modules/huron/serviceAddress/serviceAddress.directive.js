@@ -63,7 +63,7 @@
           formCtrl.$pristine = false;
         },
       };
-      angular.extend(formCtrl, isolatedFormCtrl);
+      _.assign(formCtrl, isolatedFormCtrl);
 
     }
   }

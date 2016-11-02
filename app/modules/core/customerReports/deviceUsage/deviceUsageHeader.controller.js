@@ -6,7 +6,7 @@
     .controller('DeviceUsageHeaderCtrl', DeviceUsageHeaderCtrl);
 
   /* @ngInject */
-  function DeviceUsageHeaderCtrl($scope, $modal, $log, $state, $translate, deviceUsageFeatureToggle, ReportConstants, DeviceUsageCommonService) {
+  function DeviceUsageHeaderCtrl($scope, $log, $state, $translate, deviceUsageFeatureToggle, ReportConstants, DeviceUsageCommonService) {
     var vm = this;
     if (!deviceUsageFeatureToggle) {
       // simulate a 404
@@ -44,11 +44,6 @@
       }];
 
     vm.pageTitle = $translate.instant('reportsPage.usageReports.usageReportTitle');
-
-    $modal.open({
-      type: 'small',
-      templateUrl: "modules/core/customerReports/deviceUsage/alpha.html",
-    });
 
     function timeUpdate() {
       $scope.$broadcast('time-range-changed', vm.timeSelected);

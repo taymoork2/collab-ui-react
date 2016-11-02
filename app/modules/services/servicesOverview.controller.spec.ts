@@ -2,22 +2,24 @@ import { ServicesOverviewCtrl } from './servicesOverview.controller';
 
 describe('ServiceOverviewCtrl', () => {
 
-  let Config, $controller, $q, $rootScope, $scope, $httpBackend;
+  let Config, $controller, $q, $rootScope, $scope, $httpBackend, FeatureToggleService;
 
   beforeEach(angular.mock.module('Core'));
   beforeEach(angular.mock.module('Hercules'));
-  beforeEach(inject((_$controller_, _$q_, _$rootScope_, _Config_) => {
+  beforeEach(inject((_$controller_, _$q_, _$rootScope_, _Config_, _FeatureToggleService_) => {
     $controller = _$controller_;
     $q = _$q_;
     $rootScope = _$rootScope_;
     Config = _Config_;
     $scope = $rootScope.$new();
+    FeatureToggleService = _FeatureToggleService_;
   }));
 
   let ctrl: ServicesOverviewCtrl;
   beforeEach(inject(($injector) => {
     $httpBackend = $injector.get('$httpBackend');
     $httpBackend.when('GET', /\/hercules\/api\/v2\/organizations/).respond({});
+    spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(false));
   }));
 
   function initController({ F288 = true, MEDIA = true }) {

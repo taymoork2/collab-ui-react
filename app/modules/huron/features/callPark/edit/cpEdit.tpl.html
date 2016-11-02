@@ -1,4 +1,4 @@
-<cs-page-header title="{{::cpe.title}}" back="cpe.back" back-url="cpe.huronFeaturesUrl"></cs-page-header>
+<cs-page-header title="{{cpe.title}}" back="cpe.back" back-url="cpe.huronFeaturesUrl"></cs-page-header>
 <script type="text/ng-template" id="userTemplate.html">
   <a class="call-park-member-name" ng-if="match.label.displayUser">
     <span ng-if="match.label.user.firstName !== null" ng-bind-html="match.label.user.firstName | typeaheadHighlight:query"></span>

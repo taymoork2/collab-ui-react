@@ -21,15 +21,10 @@ export class SettingsCtrl {
 
   /* @ngInject */
   constructor(
-    private $state,
     private Authinfo,
     private Orgservice,
     private FeatureToggleService,
-    private hasFeatureToggle,
   ) {
-    if (!this.hasFeatureToggle) {
-      this.$state.go('login');
-    }
     // provide these settings to everyone
     this.initBranding();
     this.support = new SupportSetting();

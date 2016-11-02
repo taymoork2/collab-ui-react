@@ -8,7 +8,7 @@
     .controller('OverviewCtrl', OverviewCtrl);
 
   /* @ngInject */
-  function OverviewCtrl($rootScope, $scope, $timeout, $translate, Authinfo, Config, FeatureToggleService, Log, Notification, Orgservice, OverviewCardFactory, OverviewNotificationFactory, ReportsService, SunlightReportService, TrialService, UrlConfig, hasCareFeatureToggle) {
+  function OverviewCtrl($rootScope, $scope, $timeout, $translate, Authinfo, Config, FeatureToggleService, FusionClusterService, hasCareFeatureToggle, Log, Notification, Orgservice, OverviewCardFactory, OverviewNotificationFactory, ReportsService, SunlightReportService, TrialService, UrlConfig) {
     var vm = this;
 
     vm.pageTitle = $translate.instant('overview.pageTitle');
@@ -33,13 +33,10 @@
     vm.dismissNotification = dismissNotification;
 
     vm.hasMediaFeatureToggle = false;
-
-    function isFeatureToggled() {
-      return FeatureToggleService.supports(FeatureToggleService.features.atlasMediaServiceOnboarding);
-    }
-    isFeatureToggled().then(function (reply) {
-      vm.hasMediaFeatureToggle = reply;
-    });
+    FeatureToggleService.supports(FeatureToggleService.features.atlasMediaServiceOnboarding)
+      .then(function (reply) {
+        vm.hasMediaFeatureToggle = reply;
+      });
 
     // for smaller screens where the notifications are on top, the layout needs to resize after the notifications are loaded
     function resizeNotifications() {
@@ -55,6 +52,7 @@
     }
 
     function init() {
+      findAnyUrgentUpgradeInHybridServices();
       removeCardUserTitle();
       if (!Authinfo.isSetupDone() && Authinfo.isCustomerAdmin()) {
         vm.notifications.push(OverviewNotificationFactory.createSetupNotification());
@@ -62,7 +60,7 @@
       }
       Orgservice.getHybridServiceAcknowledged().then(function (response) {
         if (response.status === 200) {
-          angular.forEach(response.data.items, function (item) {
+          _.forEach(response.data.items, function (item) {
             if (!item.acknowledged) {
               if (item.id === Config.entitlements.fusion_cal) {
                 vm.notifications.push(OverviewNotificationFactory.createCalendarNotification());
@@ -114,7 +112,7 @@
                 if (sharedDevicesUsage === 0 && seaGullsUsage === 0) {
                   vm.notifications.push(OverviewNotificationFactory.createDevicesNotification('homePage.setUpDevices'));
                 } else if (seaGullsUsage === 0) {
-                  vm.notifications.push(OverviewNotificationFactory.createDevicesNotification('homePage.setUpSeaGullDevices'));
+                  vm.notifications.push(OverviewNotificationFactory.createDevicesNotification('homePage.setUpSparkBoardDevices'));
                 } else {
                   vm.notifications.push(OverviewNotificationFactory.createDevicesNotification('homePage.setUpSharedDevices'));
                 }
@@ -134,6 +132,24 @@
       TrialService.getDaysLeftForCurrentUser().then(function (daysLeft) {
         vm.trialDaysLeft = daysLeft;
       });
+    }
+
+    function findAnyUrgentUpgradeInHybridServices() {
+      FusionClusterService.getAll()
+        .then(function (clusters) {
+          // c_mgmt will be tested when it will have its own service page back
+          var connectorsToTest = ['c_cal', 'c_ucmc'];
+          connectorsToTest.forEach(function (connectorType) {
+            var hasUrgentUpgrade = _.find(clusters, function (cluster) {
+              return _.some(cluster.provisioning, function (p) {
+                return p.connectorType === connectorType && p.availablePackageIsUrgent;
+              });
+            });
+            if (hasUrgentUpgrade) {
+              vm.notifications.push(OverviewNotificationFactory.createUrgentUpgradeNotification(connectorType));
+            }
+          });
+        });
     }
 
     function removeCardUserTitle() {

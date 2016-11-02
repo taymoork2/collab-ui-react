@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Controller: UserOverviewCtrl', function () {
-  var controller, $scope, $httpBackend, $rootScope, Config, Authinfo, Auth, Userservice, FeatureToggleService, Notification, WebExUtilsFact;
+  var controller, $controller, $scope, $httpBackend, $rootScope, $q, Config, Authinfo, Auth, Userservice, FeatureToggleService, Notification, WebExUtilsFact;
 
   var $stateParams, currentUser, updatedUser, getUserFeatures, UrlConfig;
   var userEmail, userName, uuid, userStatus, dirsyncEnabled, entitlements, invitations;
@@ -11,10 +11,12 @@ describe('Controller: UserOverviewCtrl', function () {
   beforeEach(angular.mock.module('Sunlight'));
   beforeEach(angular.mock.module('WebExApp'));
 
-  beforeEach(inject(function ($controller, _$httpBackend_, $q, _$rootScope_, _Config_, _Authinfo_, _Auth_, _Userservice_, _FeatureToggleService_, _UrlConfig_, _Notification_, _WebExUtilsFact_) {
+  beforeEach(inject(function (_$controller_, _$httpBackend_, _$q_, _$rootScope_, _Config_, _Authinfo_, _Auth_, _Userservice_, _FeatureToggleService_, _UrlConfig_, _Notification_, _WebExUtilsFact_) {
+    $controller = _$controller_;
     $scope = _$rootScope_.$new();
     $httpBackend = _$httpBackend_;
     $rootScope = _$rootScope_;
+    $q = _$q_;
     Config = _Config_;
     Authinfo = _Authinfo_;
     Auth = _Auth_;
@@ -31,9 +33,7 @@ describe('Controller: UserOverviewCtrl', function () {
     updatedUser = angular.copy(currentUser);
     getUserFeatures = getJSONFixture('core/json/users/me/featureToggles.json');
     var deferred2 = $q.defer();
-    deferred2.resolve({
-      data: getUserFeatures
-    });
+    deferred2.resolve(getUserFeatures);
 
     $stateParams = {
       currentUser: currentUser
@@ -52,6 +52,7 @@ describe('Controller: UserOverviewCtrl', function () {
     spyOn(Auth, 'isOnlineOrg').and.returnValue($q.when(false));
     spyOn(Notification, 'success');
     spyOn(WebExUtilsFact, 'isCIEnabledSite').and.returnValue(true);
+    spyOn(Authinfo, 'isSquaredTeamMember').and.returnValue(false);
 
     // eww
     var userUrl = UrlConfig.getScimUrl(Authinfo.getOrgId()) + '/' + currentUser.id;
@@ -59,6 +60,10 @@ describe('Controller: UserOverviewCtrl', function () {
     var inviteUrl = UrlConfig.getAdminServiceUrl() + 'organization/' + currentUser.meta.organizationID + '/invitations/' + currentUser.id;
     $httpBackend.whenGET(inviteUrl).respond(invitations);
 
+    initController();
+  }));
+
+  function initController() {
     controller = $controller('UserOverviewCtrl', {
       $scope: $scope,
       $stateParams: $stateParams,
@@ -67,9 +72,8 @@ describe('Controller: UserOverviewCtrl', function () {
       Userservice: Userservice,
       FeatureToggleService: FeatureToggleService
     });
-
     $scope.$apply();
-  }));
+  }
 
   afterEach(function () {
     $httpBackend.verifyNoOutstandingExpectation();
@@ -77,6 +81,12 @@ describe('Controller: UserOverviewCtrl', function () {
   });
 
   describe('init', function () {
+    it('should handle an empty response from feature toggles', function () {
+      Authinfo.isSquaredTeamMember.and.returnValue(true);
+      FeatureToggleService.getFeaturesForUser.and.returnValue($q.resolve({}));
+      expect(initController).not.toThrow();
+    });
+
     it('should reload the user data from identity response when user list is updated', function () {
       expect(currentUser.entitlements.length).toEqual(2);
       updatedUser.entitlements.push('ciscouc');

@@ -60,7 +60,7 @@
 
     function hyphenateOtp(otp) {
       if (otp) {
-        return otp.replace(/(\d{4})(\d{4})(\d{4})(\d{4})/, "$1-$2-$3-$4");
+        return _.replace(otp, /(\d{4})(\d{4})(\d{4})(\d{4})/, "$1-$2-$3-$4");
       } else {
         return otp;
       }

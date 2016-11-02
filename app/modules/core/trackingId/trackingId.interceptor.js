@@ -48,11 +48,11 @@
       var regex = "^https://(?:";
       if (whitelistSubdomainArray.length) {
         regex += "(?!" + _.map(whitelistSubdomain, function (subdomain) {
-          return subdomain.replace(".", "\\.") + "\\." + blacklistDomain.replace(".", "\\.");
+          return _.replace(subdomain, ".", "\\.") + "\\." + _.replace(blacklistDomain, ".", "\\.");
         }).join('|');
         regex += ").*)";
       } else {
-        regex += ".*)" + blacklistDomain.replace(".", "\\.");
+        regex += ".*)" + _.replace(blacklistDomain, ".", "\\.");
       }
 
       return new RegExp(regex);

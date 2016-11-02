@@ -3,7 +3,7 @@
     <span class="sr-only" translate="common.close"></span>
   </button>
   <h5 class="modal-title" ng-if="vm.firstTimeSetup" translate="hercules.addResourceDialog.title" translate-values="{ServiceName: vm.localizedServiceName}"></h5>
-  <h5 class="modal-title" ng-if="!vm.firstTimeSetup" translate="hercules.overview.add-resource-button"></h5>
+  <h5 class="modal-title" ng-if="!vm.firstTimeSetup" translate="hercules.addResourceDialog.alreadyBeenSetupTitle"></h5>
 </div>
 
 <div class="modal-body add-resource">
@@ -151,7 +151,7 @@
   </div>
 
   <div ng-show="vm.preregistrationCompletedGoToExpressway">
-    <p><span translate="hercules.redirect-target-dialog.grant-registration-success-header"
+    <p><span translate="hercules.addResourceDialog.youMayNowRegister"
              translate-values="{hostname: vm.clustername || ''}"></span>
     </p>
 
@@ -189,29 +189,33 @@
   <button class="btn btn--primary"
           ng-show="vm.inWelcomeScreen()"
           ng-click="vm.completeWelcomeScreen()">
-    <span translate="hercules.redirect-target-dialog.activate-resource-button"></span>
+    <span translate="common.next"></span>
   </button>
 
   <button class="btn btn--primary"
           ng-show="vm.inHostnameSelectionScreen()"
           ng-click="vm.completeEnterHostnameScreen()"
           ng-disabled="!vm.hostname">
-    <span translate="hercules.redirect-target-dialog.activate-resource-button"></span>
+    <span translate="common.next"></span>
   </button>
 
-  <button class="btn btn--primary"
+  <button cs-btn
+          loading="vm.loading"
+          class="btn btn--primary"
           ng-show="vm.inClusterNameSelectionScreen()"
           ng-click="vm.completeClusterNameScreen()"
           ng-disabled="!vm.clustername">
-    <span translate="hercules.redirect-target-dialog.activate-resource-button"></span>
+    <span translate="common.next"></span>
   </button>
 
-  <button class="btn btn--primary"
+  <button cs-btn
+          loading="vm.loading"
+          class="btn btn--primary"
           ng-show="vm.inSelectExistingExpresswayScreen()"
           ng-click="vm.completeExistingExpresswayScreen()"
           ng-disabled="!vm.selectedCluster">
 
-    <span translate="hercules.redirect-target-dialog.activate-resource-button"></span>
+    <span translate="common.next"></span>
   </button>
 
   <button class="btn btn--primary"
@@ -220,7 +224,7 @@
           ng-disabled="!(vm.assignToResourceGroup === 'no' || vm.selectedResourceGroup.value !== '')"
           >
 
-    <span translate="hercules.redirect-target-dialog.activate-resource-button"></span>
+    <span translate="common.next"></span>
   </button>
 
   <button class="btn btn--primary"
@@ -228,7 +232,7 @@
           ng-click="vm.completeAddResourceModal()"
           ng-keyup="$event.keyCode == 13 && vm.completeAddResourceModal()"
   >
-    <span translate="hercules.redirect-target-dialog.register-resource-button"></span>
+    <span translate="hercules.addResourceDialog.registerResourceButton"></span>
   </button>
 
 </div>

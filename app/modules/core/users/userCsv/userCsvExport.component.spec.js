@@ -152,7 +152,7 @@ describe('crUserCsvExport Component', function () {
       this.clickElement('[ng-click="$ctrl.exportCsv()"]');
 
       // tell the modal it should cancel (Cancel)
-      fakeModal.result.cancelCallback = angular.noop;
+      fakeModal.result.cancelCallback = _.noop;
       fakeModal.dismiss();
       this.$scope.$apply();
 
