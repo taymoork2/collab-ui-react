@@ -165,7 +165,10 @@
 
     function canAddUser() {
       var fullName = vm.selected;
-      return fullName && !vm._helpers.isUserAlreadyAssigned(fullName);
+      var validUser = fullName && _.some(vm.foundUsers, {
+        fullName: fullName
+      });
+      return validUser && !vm._helpers.isUserAlreadyAssigned(fullName);
     }
 
     function isUserAlreadyAssigned(fullName) {

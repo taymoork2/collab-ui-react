@@ -274,9 +274,21 @@ describe('Controller: customerAdministratorDetailCtrl', function () {
 
       it('should call through to "isUserAlreadyAssigned()" and return the negated result if "selected" is truthy', function () {
         controller.selected = 'fake-user-1';
+        controller.foundUsers = [{ fullName: 'fake-user-1' }, { fullName: 'fake-user-2' }];
         spyOn(controller._helpers, 'isUserAlreadyAssigned').and.returnValue(true);
         expect(controller._helpers.canAddUser()).toBe(false);
         expect(controller._helpers.isUserAlreadyAssigned).toHaveBeenCalledWith('fake-user-1');
+      });
+      it('should return false is selected user does not match any of the found users', function () {
+        controller.selected = 'typed-in-gibberish';
+        controller.foundUsers = [{ fullName: 'fake-user-1' }, { fullName: 'fake-user-2' }];
+        expect(controller._helpers.canAddUser()).toBe(false);
+      });
+      it('should return true is selected user matches one of the found users and has not yet been assigned', function () {
+        controller.selected = 'fake-user-2';
+        controller.foundUsers = [{ fullName: 'fake-user-1' }, { fullName: 'fake-user-2' }];
+        spyOn(controller._helpers, 'isUserAlreadyAssigned').and.returnValue(false);
+        expect(controller._helpers.canAddUser()).toBe(true);
       });
     });
 
