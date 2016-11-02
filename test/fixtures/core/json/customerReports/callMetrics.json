@@ -36,7 +36,8 @@
       "totalCalls": 14554,
       "totalAudioDuration": 169298,
       "totalFailedCalls": "0.35"
-    }
+    },
+    "dummy": false
   },
   "dummyData": {
     "dataProvider": [{
@@ -50,10 +51,18 @@
       "percentage": 90,
       "color": "#ECECEC"
     }],
-    "labelData": {
-      "numTotalCalls": 0,
-      "numTotalMinutes": 0
-    },
     "dummy": true
-  }
+  },
+  "emptyData": [{
+    "callCondition": "callMetrics.audioCalls",
+    "numCalls": 0,
+    "percentage": 0,
+    "color": "#F5A623"
+  },
+  {
+    "callCondition": "callMetrics.videoCalls",
+    "numCalls": 0,
+    "percentage": 0,
+    "color": "#049FD9"
+  }]
 }

@@ -1,20 +1,33 @@
 import {
-  ICallMetricsBase,
+  IActiveUserData,
+  IActiveTableBase,
+  IDropdownBase,
   IGraphBase,
   IMediaQualityData,
 } from '../partnerReports/partnerReportInterfaces';
+
+export interface IActiveUserWrapper {
+  graphData: Array<IActiveUserData>;
+  isActiveUsers: boolean;
+}
+
+export interface IActiveTableWrapper {
+  tableData: Array<IActiveTableBase>;
+  error: boolean;
+}
 
 export interface IAvgRoomData extends IGraphBase {
   totalRooms: number;
   oneToOneRooms: number;
   groupRooms: number;
-  avgRooms: number;
+  avgRooms: number | string;
 }
 
 export interface IEndpointWrapper {
   deviceType: string;
   graph: Array<IEndpointData>;
   balloon: boolean;
+  emptyGraph: boolean;
 }
 
 export interface IEndpointData {
@@ -22,13 +35,26 @@ export interface IEndpointData {
   totalRegisteredDevices: number;
 }
 
-export interface IFilesShared extends IGraphBase {
-  contentShared: number;
-  contentShareSizes: number;
+export interface IEndpointContainer {
+  graphData: Array<IEndpointWrapper>;
+  filterArray: Array<IDropdownBase>;
 }
 
-export interface IMetricsData extends ICallMetricsBase {
+export interface IFilesShared extends IGraphBase {
+  contentShared: number;
+  contentShareSizes: number | string;
+}
+
+export interface IMetricsData {
   dataProvider: Array<IMetricsDataProvider>;
+  displayData: IMetricsLabel | undefined;
+  dummy: boolean;
+}
+
+export interface IMetricsLabel {
+  totalCalls: number;
+  totalAudioDuration: number;
+  totalFailedCalls: number | string;
 }
 
 export interface IMetricsDataProvider {
