@@ -458,7 +458,8 @@
       resolveDeviceData: resolveDeviceData,
       getDataForLastNTimeUnits: getDataForLastNTimeUnits,
       getDateRangeForPeriod: getDateRangeForPeriod,
-      getDateRangeForLastNTimeUnits: getDateRangeForLastNTimeUnits
+      getDateRangeForLastNTimeUnits: getDateRangeForLastNTimeUnits,
+      reduceAllData: reduceAllData
     };
   }
 }());
