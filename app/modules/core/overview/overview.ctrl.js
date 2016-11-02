@@ -112,7 +112,7 @@
                 if (sharedDevicesUsage === 0 && seaGullsUsage === 0) {
                   vm.notifications.push(OverviewNotificationFactory.createDevicesNotification('homePage.setUpDevices'));
                 } else if (seaGullsUsage === 0) {
-                  vm.notifications.push(OverviewNotificationFactory.createDevicesNotification('homePage.setUpSeaGullDevices'));
+                  vm.notifications.push(OverviewNotificationFactory.createDevicesNotification('homePage.setUpSparkBoardDevices'));
                 } else {
                   vm.notifications.push(OverviewNotificationFactory.createDevicesNotification('homePage.setUpSharedDevices'));
                 }
