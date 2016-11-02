@@ -31,7 +31,7 @@ describe('Service: AALanguageService', function () {
         if (!translation) throw new Error('Translation not found for ' + lang.label);
         count++;
       });
-      expect(count).toBe(25);
+      expect(count).toBe(26);
     });
   });
 
@@ -40,7 +40,7 @@ describe('Service: AALanguageService', function () {
     it('should return all language options', function () {
       var languageOptions = AALanguageService.getLanguageOptions();
       expect(languageOptions).toBeDefined();
-      expect(languageOptions.length).toEqual(25);
+      expect(languageOptions.length).toEqual(26);
 
       var languageOptions2 = AALanguageService.getLanguageOptions();
       expect(languageOptions2).toBeDefined();
