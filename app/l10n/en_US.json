@@ -1703,8 +1703,8 @@
         "sipDomainPlaceholder": "Enter a SIP Destination",
         "sipDomainExample": "For example: sipmtls.example.com",
         "certificateDeleteTooltip": "Delete Certificate",
-        "noUploadedcertificate": "No certificates uploaded. Using the default trust list.",
-        "uploadedcertificates": "Uploaded Certificates:"
+        "noUploadedCertificate": "No certificates uploaded. Using the default trust list.",
+        "uploadedCertificates": "Uploaded Certificates:"
       },
       "scheduleUpgrade": {
         "title": "Upgrade Schedule",
