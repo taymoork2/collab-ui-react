@@ -3607,6 +3607,7 @@
   "mediaFusion": {
     "page_title": "Hybrid Media Service",
     "add-resource-button": "Add Resource",
+    "genericError": "An unexpected error occurred. Please try again later.",
     "connectors": {
       "group_by": "Group services by:",
       "cluster_id": "Cluster",
