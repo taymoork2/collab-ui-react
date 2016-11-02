@@ -20,6 +20,21 @@
       return getDataForPeriod('week', 1, 'day', deviceCategories, api);
     }
 
+    function getDataForLastNTimeUnits(count, granularity, deviceCategories, api) {
+      var start, end;
+      if (granularity === 'day') {
+        start = moment().subtract(count, granularity + 's').format('YYYY-MM-DD');
+        end = moment().subtract(1, granularity + 's').format('YYYY-MM-DD');
+      } else if (granularity === 'week') {
+        //var test = moment().startOf('isoWeek').subtract(count, granularity's').format('YYYY-MM-DD');
+        //$log.info('test', test);
+        //start = moment().subtract(count, granularity + 's').isoWeekday(1).format('YYYY-MM-DD');
+        start = moment().startOf('isoWeek').subtract(count, granularity + 's').format('YYYY-MM-DD');
+        end = moment().subtract(1, granularity + 's').format('YYYY-MM-DD');
+      }
+      return getDataForRange(start, end, granularity, deviceCategories, api);
+    }
+
     function getDataForLastMonth(deviceCategories, api) {
       return getDataForPeriod('month', 1, 'week', deviceCategories, api);
     }
@@ -46,6 +61,36 @@
       return { start: start, end: end };
     }
 
+    function getDataForRange(start, end, granularity, deviceCategories, api) {
+      var startDate = moment(start);
+      var endDate = moment(end);
+      var now = moment();
+
+      if (startDate.isValid() && endDate.isValid() && startDate.isBefore(endDate) && endDate.isBefore(now)) {
+        if (api === 'mock') {
+          return DeviceUsageMockData.getRawDataPromise(start, end).then(function (data) {
+            return reduceAllData(data, granularity);
+          });
+        } else if (api === 'local') {
+          var url = localUrlBase + '/' + Authinfo.getOrgId() + '/reports/device/call?';
+          url = url + 'intervalType=' + granularity;
+          url = url + '&rangeStart=' + start + '&rangeEnd=' + end;
+          url = url + '&deviceCategories=' + deviceCategories.join();
+          url = url + '&accounts=__';
+          url = url + '&sendMockData=false';
+          return doRequest(url, granularity);
+        } else {
+          url = urlBase + '/' + Authinfo.getOrgId() + '/reports/device/call?';
+          url = url + 'intervalType=' + granularity;
+          url = url + '&rangeStart=' + start + '&rangeEnd=' + end;
+          url = url + '&deviceCategories=' + deviceCategories.join();
+          url = url + '&accounts=__';
+          return doRequest(url, granularity);
+        }
+      }
+
+    }
+
     function loadPeriodCallData(period, count, granularity, deviceCategories, api) {
       var start = moment().startOf(period).subtract(count, period + 's').format('YYYY-MM-DD');
       var end = moment().startOf(period).subtract(1, 'days').format('YYYY-MM-DD');
@@ -67,7 +112,6 @@
         url = url + '&rangeStart=' + start + '&rangeEnd=' + end;
         url = url + '&deviceCategories=' + deviceCategories.join();
         url = url + '&accounts=__';
-
         return doRequest(url, granularity);
       }
     }
@@ -212,11 +256,12 @@
         case 'day':
           return date.format('YYYYMMDD');
         case 'week':
-          var startOfMonth = moment(formattedDate).startOf('month');
-          if (date.isBefore(startOfMonth)) {
-            return startOfMonth.format('YYYYMMDD');
-          }
-          return date.format('YYYYMMDD');
+          return moment(formattedDate).startOf('isoWeek').format('YYYYMMDD');
+          // var startOfMonth = moment(formattedDate).startOf('month');
+          // if (date.isBefore(startOfMonth)) {
+          //   return startOfMonth.format('YYYYMMDD');
+          // }
+          // return date.format('YYYYMMDD');
         case 'month':
           return date.format('YYYYMMDD');
       }
@@ -242,20 +287,20 @@
         'chartCursor': {
           'enabled': true,
           'categoryBalloonDateFormat': 'YYYY-MM-DD',
-          'valueLineEnabled': true,
-          'valueLineBalloonEnabled': true,
+          //'valueLineEnabled': true,
+          //'valueLineBalloonEnabled': true,
           'cursorColor': chartColors.primaryColorDarker,
           'cursorAlpha': 0.5,
           'valueLineAlpha': 0.5
         },
-        'chartScrollbar': {
-          'scrollbarHeight': 2,
-          'offset': -1,
-          'backgroundAlpha': 0.1,
-          'backgroundColor': '#888888',
-          'selectedBackgroundColor': '#67b7dc',
-          'selectedBackgroundAlpha': 1
-        },
+        // 'chartScrollbar': {
+        //   'scrollbarHeight': 2,
+        //   'offset': -1,
+        //   'backgroundAlpha': 0.1,
+        //   'backgroundColor': '#888888',
+        //   'selectedBackgroundColor': '#67b7dc',
+        //   'selectedBackgroundAlpha': 1
+        // },
         'trendLines': [
 
         ],
@@ -263,6 +308,7 @@
           {
             'type': 'column', //line', //smoothedLine', //column',
             'labelText': '[[value]]',
+            'labelPosition': 'inside',
             //'bullet': 'round',
             'id': 'video',
             'title': 'Call Duration',
@@ -391,13 +437,14 @@
       getDataForLastWeek: getDataForLastWeek,
       getDataForLastMonth: getDataForLastMonth,
       getDataForLastMonths: getDataForLastMonths,
-      //getDataForRange: getDataForRange,
+      getDataForRange: getDataForRange,
       getLineChart: getLineChart,
       getDatesForLastWeek: getDatesForLastWeek,
       getDatesForLastMonths: getDatesForLastMonths,
       exportRawData: exportRawData,
       extractStats: extractStats,
-      resolveDeviceData: resolveDeviceData
+      resolveDeviceData: resolveDeviceData,
+      getDataForLastNTimeUnits: getDataForLastNTimeUnits
     };
   }
 }());

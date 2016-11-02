@@ -9,7 +9,7 @@
   function DeviceUsageCtrl($log, $state, $scope, DeviceUsageTotalService, Notification, deviceUsageFeatureToggle, DeviceUsageCommonService) {
     var vm = this;
     var amChart;
-    var apiToUse = 'mock';
+    var apiToUse = 'local';
 
     vm.leastUsedDevices = [];
     vm.mostUsedDevices = [];
@@ -98,15 +98,15 @@
       vm.deviceFilter = vm.deviceOptions[0];
       switch (timeSelected.value) {
         case 0:
-          dateRange = DeviceUsageTotalService.getDatesForLastWeek();
+          dateRange = DeviceUsageTotalService.getDatesForLastWeek(); // TODO Fix
           loadLastWeek();
           break;
         case 1:
-          dateRange = DeviceUsageTotalService.getDatesForLastMonths(1);
+          dateRange = DeviceUsageTotalService.getDatesForLastMonths(1); // TODO Fix
           loadLastMonth();
           break;
         case 2:
-          dateRange = DeviceUsageTotalService.getDatesForLastMonths(3);
+          dateRange = DeviceUsageTotalService.getDatesForLastMonths(3); // TODO Fix
           loadLast3Months();
           break;
         default:
@@ -140,20 +140,23 @@
       var dateRange;
       switch (DeviceUsageCommonService.getTimeSelected()) {
         case 0:
-          dateRange = DeviceUsageTotalService.getDatesForLastWeek();
-          DeviceUsageTotalService.getDataForLastWeek(['ce', 'sparkboard'], apiToUse).then(loadChartData, handleReject);
+          dateRange = DeviceUsageTotalService.getDatesForLastWeek(); //TODO Fix
+          //DeviceUsageTotalService.getDataForLastWeek(['ce', 'sparkboard'], apiToUse).then(loadChartData, handleReject);
+          DeviceUsageTotalService.getDataForLastNTimeUnits(7, 'day', ['ce', 'sparkboard'], apiToUse).then(loadChartData, handleReject);
           break;
         case 1:
-          dateRange = DeviceUsageTotalService.getDatesForLastMonths(1);
-          DeviceUsageTotalService.getDataForLastMonth(['ce', 'sparkboard'], apiToUse).then(loadChartData, handleReject);
+          dateRange = DeviceUsageTotalService.getDatesForLastMonths(1); // TODO Fix
+          //DeviceUsageTotalService.getDataForLastMonth(['ce', 'sparkboard'], apiToUse).then(loadChartData, handleReject);
+          DeviceUsageTotalService.getDataForLastNTimeUnits(4, 'week', ['ce', 'sparkboard'], apiToUse).then(loadChartData, handleReject);
           break;
         case 2:
-          dateRange = DeviceUsageTotalService.getDatesForLastMonths(3);
+          dateRange = DeviceUsageTotalService.getDatesForLastMonths(3); // TODO Fix
           DeviceUsageTotalService.getDataForLastMonths(3, 'day', ['ce', 'sparkboard'], apiToUse).then(loadChartData, handleReject);
           break;
         default:
-          dateRange = DeviceUsageTotalService.getDatesForLastWeek();
-          DeviceUsageTotalService.getDataForLastWeek(['ce', 'sparkboard'], apiToUse).then(loadChartData, handleReject);
+          dateRange = DeviceUsageTotalService.getDatesForLastWeek(); // TODO Fix
+          //DeviceUsageTotalService.getDataForLastWeek(['ce', 'sparkboard'], apiToUse).then(loadChartData, handleReject);
+          DeviceUsageTotalService.getDataForLastNTimeUnits(7, 'day', ['ce', 'sparkboard'], apiToUse).then(loadChartData, handleReject);
       }
       startDate = dateRange.start;
       endDate = dateRange.end;
@@ -181,10 +184,10 @@
     function loadChartData(data, title) {
       vm.reportData = data;
       amChart.dataProvider = data;
-      amChart.validateData();
       if (title) {
         amChart.categoryAxis.title = title;
       }
+      amChart.validateData();
       vm.showDevices = false;
       fillInStats(data);
     }
@@ -196,15 +199,22 @@
 
     function loadLastWeek() {
       vm.loading = true;
-      DeviceUsageTotalService.getDataForLastWeek(['ce', 'sparkboard'], apiToUse).then(function (data) {
+      // DeviceUsageTotalService.getDataForLastWeek(['ce', 'sparkboard'], apiToUse).then(function (data) {
+      //   loadChartData(data, 'Daily in Week');
+      // }, handleReject);
+
+      DeviceUsageTotalService.getDataForLastNTimeUnits(7, 'day', ['ce', 'sparkboard'], apiToUse).then(function (data) {
         loadChartData(data, 'Daily in Week');
       }, handleReject);
     }
 
     function loadLastMonth() {
       vm.loading = true;
-      DeviceUsageTotalService.getDataForLastMonth(['ce', 'sparkboard'], apiToUse).then(function (data) {
-        loadChartData(data, 'Weekly Last Month');
+      // DeviceUsageTotalService.getDataForLastMonth(['ce', 'sparkboard'], apiToUse).then(function (data) {
+      //   loadChartData(data, 'Weekly Last Month');
+      // }, handleReject);
+      DeviceUsageTotalService.getDataForLastNTimeUnits(4, 'week', ['ce', 'sparkboard'], apiToUse).then(function (data) {
+        loadChartData(data, 'Weekly Last 4 Weeks');
       }, handleReject);
     }
 
